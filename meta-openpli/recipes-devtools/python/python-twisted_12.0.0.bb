@@ -21,7 +21,7 @@ do_compile() {
 }
 
 do_install() {
-    distutils_do_install_keep
+    distutils_do_install_keep_pyo
 }
 
 PACKAGES =+ "${PN}-src"

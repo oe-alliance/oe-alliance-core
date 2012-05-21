@@ -1,12 +1,12 @@
 PRINC = "1"
 
-inherit setuptools openpli-distutils
+inherit openpli-distutils
 
 do_compile() {
 }
 
 do_install() {
-	distutils_do_install_keep
+	distutils_do_install_keep_pyo
 }
 
 do_install_append() {
