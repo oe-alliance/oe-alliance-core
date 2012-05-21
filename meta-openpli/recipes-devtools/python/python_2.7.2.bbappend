@@ -1,6 +1,6 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
-PRINC = "2"
+PRINC = "3"
 
 SRC_URI += " \
 			file://some_configure_fixes.patch;striplevel=0 \
@@ -24,7 +24,5 @@ FILES_${PN}-src += "${libdir}/python${PYTHON_MAJMIN}/*.py"
 FILES_${PN}-src += "${libdir}/python${PYTHON_MAJMIN}/*/*.py"
 FILES_${PN}-src += "${libdir}/python${PYTHON_MAJMIN}/*/*/*.py"
 
-do_install_append() {
-	rm -fR ${D}/usr/lib/python${PYTHON_MAJMIN}/*/test*
-	rm -fR ${D}/usr/lib/python${PYTHON_MAJMIN}/*/*/test*
-}
+# some additional tests
+FILES_${PN}-tests += "${libdir}/python${PYTHON_MAJMIN}/*/test* ${libdir}/python${PYTHON_MAJMIN}/*/*/test*"
