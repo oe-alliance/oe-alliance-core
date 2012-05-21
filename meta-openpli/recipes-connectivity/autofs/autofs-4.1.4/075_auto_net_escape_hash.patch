@@ -1,0 +1,16 @@
+#!/bin/sh /usr/share/dpatch/dpatch-run
+## 075_auto_net_escape_hash.dpatch
+##
+## DP: No description.
+
+@DPATCH@
+
+diff -Naur .B/samples/auto.net .A/samples/auto.net
+--- .B/samples/auto.net	2007-01-07 21:36:36.000000000 +0000
++++ .A/samples/auto.net	2007-01-07 21:36:36.000000000 +0000
+@@ -42,4 +42,4 @@
+ 	BEGIN	{ ORS=""; first=1 }
+ 		{ if (first) { print opts; first=0 }; print " \\\n\t" $1, key ":" $1 }
+ 	END	{ if (!first) print "\n"; else exit 1 }
+-	'
++	' | sed 's/#/\\#/g'

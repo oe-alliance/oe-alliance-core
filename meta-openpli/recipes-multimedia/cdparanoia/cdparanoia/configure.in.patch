@@ -1,0 +1,13 @@
+--- cdparanoia-III-10.2.old/configure.in	2009-12-02 22:44:37.000000000 +0100
++++ cdparanoia-III-10.2/configure.in	2009-12-02 22:45:04.000000000 +0100
+@@ -5,9 +5,7 @@
+ 
+ AC_CANONICAL_HOST
+ 
+-if test -z "$CC"; then
+-	AC_PROG_CC	
+-fi
++AC_PROG_CC	
+ AC_PROG_RANLIB
+ AC_CHECK_PROG(AR,ar,ar)
+ AC_CHECK_PROG(INSTALL,install,install)

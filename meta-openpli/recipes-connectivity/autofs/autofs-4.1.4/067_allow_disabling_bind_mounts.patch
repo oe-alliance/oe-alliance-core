@@ -1,0 +1,77 @@
+#!/bin/sh /usr/share/dpatch/dpatch-run
+## 067_allow_disabling_bind_mounts.dpatch
+##
+## DP: No description.
+
+@DPATCH@
+
+diff -Naur .B/modules/mount_bind.c .A/modules/mount_bind.c
+--- .B/modules/mount_bind.c	2005-01-10 13:28:29.000000000 +0000
++++ .A/modules/mount_bind.c	2007-01-07 21:36:35.000000000 +0000
+@@ -107,7 +107,7 @@
+ 	if (options == NULL || *options == '\0')
+ 		options = "defaults";
+ 
+-	if (bind_works) {
++	if (bind_works && strcmp(options, "symlink") != 0) {
+ 		int status, existed = 1;
+ 
+ 		debug(MODPREFIX "calling mkdir_path %s", fullpath);
+diff -Naur .B/modules/mount_nfs.c .A/modules/mount_nfs.c
+--- .B/modules/mount_nfs.c	2007-01-07 21:36:35.000000000 +0000
++++ .A/modules/mount_nfs.c	2007-01-07 21:36:35.000000000 +0000
+@@ -391,7 +391,8 @@
+ 	char *whatstr;
+ 	char *nfsoptions = NULL;
+ 	int local, err;
+-	int nosymlink = 0;
++	int nosymlink = 0;     /* Actually misnamed, should be "nobind" now */
++	int symlink = 0;       /* Prefer symlinks to bind mounts? */
+ 	int ro = 0;            /* Set if mount bind should be read-only */
+ 
+ 	debug(MODPREFIX "root=%s name=%s what=%s, fstype=%s, options=%s",
+@@ -405,7 +406,10 @@
+ 	strcpy(whatstr, what);
+ 
+ 	/* Extract "nosymlink" pseudo-option which stops local filesystems
+-	   from being symlinked */
++	   from being bind mounted, and "symlink" pseudo-option which does not
++	   do the exact opposite, but rather makes any bind mount into a
++	   symlink instead. (Both nosymlink and symlink at the same time
++	   make no sense, of course.) */
+ 	if (options) {
+ 		const char *comma;
+ 		char *nfsp;
+@@ -446,6 +450,8 @@
+ #endif
+ 			if (strncmp("nosymlink", cp, end - cp + 1) == 0)
+ 				nosymlink = 1;
++			else if (strncmp("symlink", cp, end - cp + 1) == 0)
++				symlink = 1;
+ 			else {
+ 				/* Check for options that also make sense
+ 				   with bind mounts */
+@@ -457,8 +463,8 @@
+ 			}
+ 		}
+ 
+-		debug(MODPREFIX "nfs options=\"%s\", nosymlink=%d, ro=%d",
+-		      nfsoptions, nosymlink, ro);
++		debug(MODPREFIX "nfs options=\"%s\", nosymlink=%d, symlink=%d, ro=%d",
++		      nfsoptions, nosymlink, symlink, ro);
+ 	}
+ 
+ 	local = 0;
+@@ -490,7 +496,11 @@
+ 	if (local) {
+ 		/* Local host -- do a "bind" */
+ 
+-		const char *bind_options = ro ? "ro" : "";
++		const char *bind_options;
++		if (symlink)
++			bind_options = "symlink";
++		else
++			bind_options = ro ? "ro" : "";
+ 
+ 		debug(MODPREFIX "%s is local, doing bind", name);
+ 

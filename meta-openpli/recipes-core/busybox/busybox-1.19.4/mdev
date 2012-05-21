@@ -1,0 +1,11 @@
+#!/bin/sh
+
+echo > /dev/mdev.seq
+
+echo "/sbin/mdev" >/proc/sys/kernel/hotplug
+
+touch /dev/.udev
+
+[ -d "/sys/kernel" ] || mount sysfs /sys -t sysfs
+
+mdev -s

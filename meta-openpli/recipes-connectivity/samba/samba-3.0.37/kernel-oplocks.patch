@@ -1,0 +1,20 @@
+Linux oplock support is conditional on HAVE_KERNEL_OPLOCKS_LINUX,
+not plain old LINUX.
+
+http://websvn.samba.org/cgi-bin/viewcvs.cgi?rev=23962&view=rev
+--- source/modules/vfs_default.c.orig	2010-09-06 17:37:48.256826182 +0200
++++ source/modules/vfs_default.c	2010-09-06 17:38:25.300843377 +0200
+@@ -813,10 +813,11 @@
+ 
+ 	START_PROFILE(syscall_linux_setlease);
+ 
+-#ifdef LINUX
++#ifdef HAVE_KERNEL_OPLOCKS_LINUX
+ 	/* first set the signal handler */
+-	if(linux_set_lease_sighandler(fd) == -1)
++	if(linux_set_lease_sighandler(fd) == -1) {
+ 		return -1;
++	}
+ 
+ 	result = linux_setlease(fd, leasetype);
+ #else

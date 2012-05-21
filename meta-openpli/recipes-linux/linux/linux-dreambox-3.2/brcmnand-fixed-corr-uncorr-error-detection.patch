@@ -1,0 +1,70 @@
+From 894d0934eae56efb33cc3902d6453b9141e0f93f Mon Sep 17 00:00:00 2001
+From: Andreas Monzner <andreas.monzner@multimedia-labs.de>
+Date: Wed, 1 Feb 2012 00:17:01 +0100
+Subject: [PATCH] brcmnand: use old way to detect correctable/uncorrectable
+ errors
+
+---
+ drivers/mtd/brcmnand/brcmnand_base.c |   19 +++++++++++--------
+ 1 files changed, 11 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/mtd/brcmnand/brcmnand_base.c b/drivers/mtd/brcmnand/brcmnand_base.c
+index d39484c..0b9d82e 100644
+--- a/drivers/mtd/brcmnand/brcmnand_base.c
++++ b/drivers/mtd/brcmnand/brcmnand_base.c
+@@ -1584,7 +1584,6 @@ printk("<-- %s err = %d\n", __FUNCTION__, err);}
+ 
+ #endif
+ 
+-#if 1
+ /* 
+  * SWLINUX-1584: Use HIF status register to check for errors.
+  * In the past we rely on the fact that the registers 
+@@ -1598,6 +1597,8 @@ printk("<-- %s err = %d\n", __FUNCTION__, err);}
+ 	BCHP_HIF_INTR2_CPU_STATUS_NAND_CORR_INTR_MASK |\
+ 	BCHP_HIF_INTR2_CPU_STATUS_NAND_UNC_INTR_MASK)
+ 	
++#if 0
++
+ /*
+  * Returns	 0: BRCMNAND_SUCCESS:	No errors
+  *			 1: Correctable error
+@@ -1661,15 +1662,14 @@ printk("-->%s\n", __FUNCTION__);}
+ 		return BRCMNAND_SUCCESS;
+ 
+ 	addr = chip->ctrl_read(BCHP_NAND_ECC_CORR_ADDR);
+-	if (addr) {
+-
+ #if CONFIG_MTD_BRCMNAND_VERSION >= CONFIG_MTD_BRCMNAND_VERS_1_0
+-		extAddr = chip->ctrl_read(BCHP_NAND_ECC_CORR_EXT_ADDR);
++	extAddr = chip->ctrl_read(BCHP_NAND_ECC_CORR_EXT_ADDR);
++#endif
++	if (addr || extAddr) {
++#if CONFIG_MTD_BRCMNAND_VERSION >= CONFIG_MTD_BRCMNAND_VERS_1_0
+ 		// Clear it
+ 		chip->ctrl_write(BCHP_NAND_ECC_CORR_EXT_ADDR, 0);
+ #endif
+-
+-		// Clear it
+ 		chip->ctrl_write(BCHP_NAND_ECC_CORR_ADDR, 0);
+ 		printk(KERN_WARNING "%s: Correctable ECC error at %08x:%08x\n", __FUNCTION__, extAddr, addr);
+ 		
+@@ -1677,10 +1677,13 @@ printk("-->%s\n", __FUNCTION__);}
+ 		err = BRCMNAND_CORRECTABLE_ECC_ERROR;
+ 	}
+ 
++	extAddr = 0;
+ 	addr = chip->ctrl_read(BCHP_NAND_ECC_UNC_ADDR);
+-	if (addr) {
+ #if CONFIG_MTD_BRCMNAND_VERSION >= CONFIG_MTD_BRCMNAND_VERS_1_0
+-		extAddr = chip->ctrl_read(BCHP_NAND_ECC_UNC_EXT_ADDR);
++	extAddr = chip->ctrl_read(BCHP_NAND_ECC_UNC_EXT_ADDR);
++#endif
++	if (addr || extAddr) {
++#if CONFIG_MTD_BRCMNAND_VERSION >= CONFIG_MTD_BRCMNAND_VERS_1_0
+ 		// Clear it
+ 		chip->ctrl_write(BCHP_NAND_ECC_UNC_EXT_ADDR, 0);
+ #endif
+-- 
+1.7.8.3
+

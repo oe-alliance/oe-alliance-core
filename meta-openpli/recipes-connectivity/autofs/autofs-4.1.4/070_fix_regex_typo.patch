@@ -1,0 +1,19 @@
+#!/bin/sh /usr/share/dpatch/dpatch-run
+## 070_fix_regex_typo.dpatch
+##
+## DP: No description.
+
+@DPATCH@
+
+diff -Naur .B/samples/rc.autofs.in .A/samples/rc.autofs.in
+--- .B/samples/rc.autofs.in	2007-01-07 21:36:35.000000000 +0000
++++ .A/samples/rc.autofs.in	2007-01-07 21:36:36.000000000 +0000
+@@ -148,7 +148,7 @@
+         cat /etc/auto.master | awk '{print $0}' | sed -e '/^#/d' -e '/^$/d' | (
+         while read auto_master_in
+         do
+-            if [ "`echo $auto_master_in | grep '^+'`" = "" ]; then
++            if [ "`echo $auto_master_in | grep '^\+'`" = "" ]; then
+                 echo $auto_master_in
+             else
+                 cat /etc/auto.master | grep '^\+' | sed -e '/^#/d' -e '/^$/d' | (

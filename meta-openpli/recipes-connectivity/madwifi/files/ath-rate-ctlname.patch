@@ -1,0 +1,108 @@
+--- madwifi-ng-r3314-20080131/ath_rate/amrr/amrr.c.orig	2012-03-23 22:35:59.470179233 +0100
++++ madwifi-ng-r3314-20080131/ath_rate/amrr/amrr.c	2012-03-23 22:36:09.654179557 +0100
+@@ -482,7 +482,7 @@
+  */
+ 
+ static ctl_table ath_rate_static_sysctls[] = {
+-	{ .ctl_name	= CTL_AUTO,
++	{ CTLNAME(CTL_AUTO)
+ 	  .procname	= "interval",
+ 	  .mode		= 0644,
+ 	  .data		= &ath_rateinterval,
+@@ -491,7 +491,7 @@
+ 	  .extra2	= &maxint,
+ 	  .proc_handler	= proc_dointvec_minmax
+ 	},
+-	{ .ctl_name	= CTL_AUTO,
++	{ CTLNAME(CTL_AUTO)
+ 	  .procname	= "max_success_threshold",
+ 	  .mode		= 0644,
+ 	  .data		= &ath_rate_max_success_threshold,
+@@ -500,7 +500,7 @@
+ 	  .extra2	= &maxint,
+ 	  .proc_handler	= proc_dointvec_minmax
+ 	},
+-	{ .ctl_name	= CTL_AUTO,
++	{ CTLNAME(CTL_AUTO)
+ 	  .procname	= "min_success_threshold",
+ 	  .mode		= 0644,
+ 	  .data		= &ath_rate_min_success_threshold,
+@@ -512,21 +512,21 @@
+ 	{ 0 }
+ };
+ static ctl_table ath_rate_table[] = {
+-	{ .ctl_name	= CTL_AUTO,
++	{ CTLNAME(CTL_AUTO)
+ 	  .procname	= "rate",
+ 	  .mode		= 0555,
+ 	  .child	= ath_rate_static_sysctls
+ 	}, { 0 }
+ };
+ static ctl_table ath_ath_table[] = {
+-	{ .ctl_name	= DEV_ATH,
++	{ CTLNAME(DEV_ATH)
+ 	  .procname	= "ath",
+ 	  .mode		= 0555,
+ 	  .child	= ath_rate_table
+ 	}, { 0 }
+ };
+ static ctl_table ath_root_table[] = {
+-	{ .ctl_name	= CTL_DEV,
++	{ CTLNAME(CTL_DEV)
+ 	  .procname	= "dev",
+ 	  .mode		= 0555,
+ 	  .child	= ath_ath_table
+--- madwifi-ng-r3314-20080131/ath_rate/onoe/onoe.c.orig	2012-03-23 22:32:40.918174219 +0100
++++ madwifi-ng-r3314-20080131/ath_rate/onoe/onoe.c	2012-03-23 22:35:37.146178724 +0100
+@@ -427,7 +427,7 @@
+  * Static (i.e. global) sysctls.
+  */
+ static ctl_table ath_rate_static_sysctls[] = {
+-	{ .ctl_name	= CTL_AUTO,
++	{ CTLNAME(CTL_AUTO)
+ 	  .procname	= "interval",
+ 	  .mode		= 0644,
+ 	  .data		= &ath_rateinterval,
+@@ -436,7 +436,7 @@
+ 	  .extra2	= &maxint,
+ 	  .proc_handler	= proc_dointvec_minmax
+ 	},
+-	{ .ctl_name	= CTL_AUTO,
++	{ CTLNAME(CTL_AUTO)
+ 	  .procname	= "raise",
+ 	  .mode		= 0644,
+ 	  .data		= &ath_rate_raise,
+@@ -445,7 +445,7 @@
+ 	  .extra2	= &maxpercent,
+ 	  .proc_handler	= proc_dointvec_minmax
+ 	},
+-	{ .ctl_name	= CTL_AUTO,
++	{ CTLNAME(CTL_AUTO)
+ 	  .procname	= "raise_threshold",
+ 	  .mode		= 0644,
+ 	  .data		= &ath_rate_raise_threshold,
+@@ -455,21 +455,21 @@
+ 	{ 0 }
+ };
+ static ctl_table ath_rate_table[] = {
+-	{ .ctl_name	= CTL_AUTO,
++	{ CTLNAME(CTL_AUTO)
+ 	  .procname	= "rate",
+ 	  .mode		= 0555,
+ 	  .child	= ath_rate_static_sysctls
+ 	}, { 0 }
+ };
+ static ctl_table ath_ath_table[] = {
+-	{ .ctl_name	= DEV_ATH,
++	{ CTLNAME(DEV_ATH)
+ 	  .procname	= "ath",
+ 	  .mode		= 0555,
+ 	  .child	= ath_rate_table
+ 	}, { 0 }
+ };
+ static ctl_table ath_root_table[] = {
+-	{ .ctl_name	= CTL_DEV,
++	{ CTLNAME(CTL_DEV)
+ 	  .procname	= "dev",
+ 	  .mode		= 0555,
+ 	  .child	= ath_ath_table

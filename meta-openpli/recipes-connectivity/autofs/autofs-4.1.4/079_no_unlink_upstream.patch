@@ -1,0 +1,55 @@
+#!/bin/sh /usr/share/dpatch/dpatch-run
+## 079_no_unlink_upstream.dpatch
+##
+## DP: No description.
+
+@DPATCH@
+
+diff -Naur .B/daemon/automount.c .A/daemon/automount.c
+--- .B/daemon/automount.c	2007-01-07 21:36:36.000000000 +0000
++++ .A/daemon/automount.c	2007-01-07 21:36:37.000000000 +0000
+@@ -232,16 +232,38 @@
+ static int rm_unwanted_fn(const char *file, const struct stat *st, int when, void *arg)
+ {
+ 	int rmsymlink = *(int *) arg;
++	struct stat newst;
+ 
+ 	if (when == 0) {
+ 		if (st->st_dev != ap.dev)
+ 			return 0;
+-	} else {
+-		info("rm_unwanted: %s\n", file);
+-		if (S_ISDIR(st->st_mode))
+-			rmdir(file);
+-		else if (!S_ISLNK(st->st_mode) || rmsymlink)
+-			unlink(file);
++		return 1;
++	}
++
++	if (lstat(file, &newst)) {
++		crit ("rm_unwanted: unable to stat file, possible race "
++		      "condition.");
++		return 0;
++	}
++
++	if (newst.st_dev != ap.dev) {
++		crit ("rm_unwanted: file %s has the wrong device, possible "
++		      "race condition.",file);
++		return 0;
++	}
++
++	if (S_ISDIR(newst.st_mode)) {
++		if (rmdir(file)) {
++			info ("rm_unwanted: unable to remove directory"
++			      " %s", file);
++			return 0;
++		}
++	} else if (S_ISREG(newst.st_mode)) {
++		crit ("rm_unwanted: attempting to remove files from a mounted "
++		      "directory.");
++		return 0;
++	} else if (S_ISLNK(newst.st_mode) && rmsymlink) {
++		unlink(file);
+ 	}
+ 
+ 	return 1;

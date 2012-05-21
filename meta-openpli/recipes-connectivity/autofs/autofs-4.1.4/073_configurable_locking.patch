@@ -1,0 +1,173 @@
+#!/bin/sh /usr/share/dpatch/dpatch-run
+## 073_configurable_locking.dpatch
+##
+## DP: No description.
+
+@DPATCH@
+
+diff -Naur .B/configure .A/configure
+--- .B/configure	2005-04-06 15:24:37.000000000 +0000
++++ .A/configure	2007-01-07 21:36:36.000000000 +0000
+@@ -842,6 +842,7 @@
+   --disable-FEATURE       do not include FEATURE (same as --enable-FEATURE=no)
+   --enable-FEATURE[=ARG]  include FEATURE [ARG=yes]
+ --disable-ext-env          disable search in environment for substitution variable
++--disable-mount-locking          disable use of locking when spawning mount command
+ 
+ Optional Packages:
+   --with-PACKAGE[=ARG]    use PACKAGE [ARG=yes]
+@@ -4308,6 +4309,23 @@
+ fi
+ 
+ #
++# Disable use of locking when spawning mount command
++#
++# Check whether --enable-mount-locking or --disable-mount-locking was given.
++if test "${enable_mount_locking+set}" = set; then
++  enableval="$enable_mount_locking"
++
++else
++  enableval=yes
++fi;
++if test x$enable_mount_locking = xyes -o x$enableval = xyes; then
++	cat >>confdefs.h <<\_ACEOF
++#define ENABLE_MOUNT_LOCKING 1
++_ACEOF
++
++fi
++
++#
+ # Write Makefile.conf and include/config.h
+ #
+           ac_config_headers="$ac_config_headers include/config.h"
+diff -Naur .B/configure.in .A/configure.in
+--- .B/configure.in	2005-04-06 15:24:37.000000000 +0000
++++ .A/configure.in	2007-01-07 21:36:36.000000000 +0000
+@@ -167,6 +167,16 @@
+ fi
+ 
+ #
++# Disable use of locking when spawning mount command
++#
++AC_ARG_ENABLE(mount-locking,
++--disable-mount-locking          disable use of locking when spawning mount command,,
++	enableval=yes)
++if test x$enable_mount_locking = xyes -o x$enableval = xyes; then
++	AC_DEFINE(ENABLE_MOUNT_LOCKING, 1)
++fi
++
++#
+ # Write Makefile.conf and include/config.h
+ #
+ AC_CONFIG_HEADER(include/config.h)
+diff -Naur .B/daemon/spawn.c .A/daemon/spawn.c
+--- .B/daemon/spawn.c	2005-02-10 12:56:53.000000000 +0000
++++ .A/daemon/spawn.c	2007-01-07 21:36:36.000000000 +0000
+@@ -322,6 +322,7 @@
+ 	return do_spawn(logpri, 0, prog, (const char **) argv);
+ }
+ 
++#ifdef ENABLE_MOUNT_LOCKING
+ int spawnll(int logpri, const char *prog, ...)
+ {
+ 	va_list arg;
+@@ -342,3 +343,4 @@
+ 
+ 	return do_spawn(logpri, 1, prog, (const char **) argv);
+ }
++#endif
+diff -Naur .B/include/automount.h .A/include/automount.h
+--- .B/include/automount.h	2005-01-26 13:03:02.000000000 +0000
++++ .A/include/automount.h	2007-01-07 21:36:36.000000000 +0000
+@@ -121,9 +121,13 @@
+ 
+ int aquire_lock(void);
+ void release_lock(void);
+-int spawnll(int logpri, const char *prog, ...);
+ int spawnl(int logpri, const char *prog, ...);
+-int spawnv(int logpri, const char *prog, const char *const *argv);
++#ifdef ENABLE_MOUNT_LOCKING
++int spawnll(int logpri, const char *prog, ...);
++#else
++#define spawnll	spawnl
++#endif
++int spawnv(int ogpri, const char *prog, const char *const *argv);
+ void reset_signals(void);
+ void ignore_signals(void);
+ void discard_pending(int sig);
+diff -Naur .B/include/config.h.in .A/include/config.h.in
+--- .B/include/config.h.in	2004-02-03 15:23:21.000000000 +0000
++++ .A/include/config.h.in	2007-01-07 21:36:36.000000000 +0000
+@@ -25,3 +25,5 @@
+ #undef HAVE_SLOPPY_MOUNT
+ 
+ #undef ENABLE_EXT_ENV
++
++#undef ENABLE_MOUNT_LOCKING
+diff -Naur .B/patches/util-linux-2.12a-flock.patch .A/patches/util-linux-2.12a-flock.patch
+--- .B/patches/util-linux-2.12a-flock.patch	1970-01-01 00:00:00.000000000 +0000
++++ .A/patches/util-linux-2.12a-flock.patch	2007-01-07 21:36:36.000000000 +0000
+@@ -0,0 +1,30 @@
++--- util-linux-2.12a/mount/fstab.c.flock	2005-09-17 01:36:03.000000000 +0800
+++++ util-linux-2.12a/mount/fstab.c	2005-09-17 01:41:12.000000000 +0800
++@@ -488,7 +488,7 @@ lock_mtab (void) {
++ 				}
++ 				/* proceed anyway */
++ 			}
++-			we_created_lockfile = 1;
+++			we_created_lockfile = fd;
++ 		} else {
++ 			static int tries = 0;
++ 
++@@ -510,9 +510,8 @@ lock_mtab (void) {
++ 					     MOUNTED_LOCK);
++ 				sleep(1);
++ 			}
+++			close(fd);
++ 		}
++-
++-		close(fd);
++ 	}
++ }
++ 
++@@ -520,6 +519,7 @@ lock_mtab (void) {
++ void
++ unlock_mtab (void) {
++ 	if (we_created_lockfile) {
+++		close(we_created_lockfile);
++ 		unlink (MOUNTED_LOCK);
++ 		we_created_lockfile = 0;
++ 	}
+diff -Naur .B/patches/util-linux-2.12q-flock.patch .A/patches/util-linux-2.12q-flock.patch
+--- .B/patches/util-linux-2.12q-flock.patch	1970-01-01 00:00:00.000000000 +0000
++++ .A/patches/util-linux-2.12q-flock.patch	2007-01-07 21:36:36.000000000 +0000
+@@ -0,0 +1,29 @@
++--- util-linux-2.12q/mount/fstab.c.flock	2005-09-17 01:10:37.000000000 +0800
+++++ util-linux-2.12q/mount/fstab.c	2005-09-17 01:16:51.000000000 +0800
++@@ -417,6 +417,7 @@
++ unlock_mtab (void) {
++ 	if (we_created_lockfile) {
++ 		unlink (MOUNTED_LOCK);
+++		close(we_created_lock_file);
++ 		we_created_lockfile = 0;
++ 	}
++ }
++@@ -528,6 +529,7 @@
++ 				}
++ 				/* proceed anyway */
++ 			}
+++			we_created_lock_file = fd;
++ 		} else {
++ 			static int tries = 0;
++ 
++@@ -549,9 +551,8 @@
++ 					     MOUNTED_LOCK);
++ 				sleep(1);
++ 			}
+++			close(fd);
++ 		}
++-
++-		close(fd);
++ 	}
++ }
++ 

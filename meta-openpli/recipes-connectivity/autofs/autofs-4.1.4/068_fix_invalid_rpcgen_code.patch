@@ -1,0 +1,21 @@
+#!/bin/sh /usr/share/dpatch/dpatch-run
+## 068_fix_invalid_rpcgen_code.dpatch
+##
+## DP: No description.
+
+@DPATCH@
+
+diff -Naur .B/lib/Makefile .A/lib/Makefile
+--- .B/lib/Makefile	2005-01-09 09:16:43.000000000 +0000
++++ .A/lib/Makefile	2007-01-07 21:36:36.000000000 +0000
+@@ -39,6 +39,10 @@
+ 
+ mount_xdr.c: mount.h
+ 	$(RPCGEN) -c -o mount_xdr.c mount.x
++	sed -i -e 's/IXDR_GET_LONG(\([^)]*\))/((long)IXDR_GET_U_INT32(\1))/' mount_xdr.c
++	sed -i -e 's/IXDR_PUT_LONG(\([^)]*\),\([^)]*\))/((long)IXDR_PUT_INT32(\1,(long)(\2)))/' mount_xdr.c
++	sed -i -e 's/IXDR_GET_SHORT(\([^)]*\))/((short)IXDR_GET_U_INT32(\1))/' mount_xdr.c
++	sed -i -e 's/IXDR_PUT_SHORT(\([^)]*\),\([^)]*\))/((long)IXDR_PUT_INT32(\1,(long)(\2)))/' mount_xdr.c
+ 
+ mount_xdr.o: mount_xdr.c
+ 	$(CC) $(CFLAGS) -Wno-unused-variable -o mount_xdr.o -c mount_xdr.c

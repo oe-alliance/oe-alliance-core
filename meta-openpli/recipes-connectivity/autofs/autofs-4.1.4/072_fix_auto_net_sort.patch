@@ -1,0 +1,19 @@
+#!/bin/sh /usr/share/dpatch/dpatch-run
+## 072_fix_auto_net_sort.dpatch
+##
+## DP: No description.
+
+@DPATCH@
+
+diff -Naur .B/samples/auto.net .A/samples/auto.net
+--- .B/samples/auto.net	2007-01-07 21:36:35.000000000 +0000
++++ .A/samples/auto.net	2007-01-07 21:36:36.000000000 +0000
+@@ -37,7 +37,7 @@
+ # Newer distributions get this right
+ SHOWMOUNT="$SMNT --no-headers -e $key"
+ 
+-$SHOWMOUNT | LC_ALL=C sort +0 | \
++$SHOWMOUNT | LC_ALL=C sort -k 1 | \
+ 	awk -v key="$key" -v opts="$opts" -- '
+ 	BEGIN	{ ORS=""; first=1 }
+ 		{ if (first) { print opts; first=0 }; print " \\\n\t" $1, key ":" $1 }

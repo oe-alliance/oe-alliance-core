@@ -1,0 +1,11 @@
+--- ~/makefile-deprecated~	2009-11-21 06:06:45.000000000 +0100
++++ ~/makefile-deprecated	2012-05-11 21:37:06.125458393 +0200
+@@ -109,8 +109,6 @@
+ 	CFLAGS += -g -DDEBUG
+ endif
+ 
+-CFLAGS += -I /usr/local/include -L /usr/local/lib -L /usr/lib
+-
+ ifndef USE_SOUND
+ 	ifdef USE_THREADS
+ 

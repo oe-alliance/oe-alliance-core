@@ -1,0 +1,19 @@
+Index: autofs-4.1.4/Makefile.rules
+===================================================================
+--- autofs-4.1.4.orig/Makefile.rules
++++ autofs-4.1.4/Makefile.rules
+@@ -27,10 +27,10 @@ STRIP     = :
+ #STRIP     = strip --strip-debug
+ #endif
+ 
+-CC        = gcc
+-CXX       = g++
+-CXXFLAGS  = $(CFLAGS)
+-LD        = ld
++CC        ?= gcc
++CXX       ?= g++
++CXXFLAGS  ?= $(CFLAGS)
++LD        ?= ld
+ SOLDFLAGS = -shared -Xlinker -rpath -Xlinker $(autofslibdir)
+ 
+ # Standard rules

@@ -1,0 +1,7 @@
+#
+# Irdeto guessing table
+#
+# format: <byte3>:<byte4-7>:<CAID>:<SID>
+#
+# 12:0000000A:12AB:CD01
+

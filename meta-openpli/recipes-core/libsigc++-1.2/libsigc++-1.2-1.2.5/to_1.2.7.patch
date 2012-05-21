@@ -1,0 +1,159 @@
+diff -Naur libsigc++-1.2.5/sigc++/macros/signal.h.m4 libsigc++-1.2.7/sigc++/macros/signal.h.m4
+--- libsigc++-1.2.5/sigc++/macros/signal.h.m4	2003-03-06 09:06:12.000000000 +0100
++++ libsigc++-1.2.7/sigc++/macros/signal.h.m4	2005-01-29 00:10:34.000000000 +0100
+@@ -82,6 +82,8 @@
+       bool empty();
+       void clear();
+       void cleanup(); // nothrow
++   private:
++      void _remove(SignalConnectionNode* c);
+   };
+ 
+ class LIBSIGC_API SignalBase
+diff -Naur libsigc++-1.2.5/sigc++/object.h libsigc++-1.2.7/sigc++/object.h
+--- libsigc++-1.2.5/sigc++/object.h	2003-05-08 21:35:11.000000000 +0200
++++ libsigc++-1.2.7/sigc++/object.h	2012-02-14 13:08:00.193044640 +0100
+@@ -69,7 +69,7 @@
+       virtual void unreference() const;
+       virtual void set_manage();
+ 
+-      ObjectBase& operator=(const ObjectBase& /* o */)
++      ObjectBase& operator=(const ObjectBase& o)
+         { return *this; }
+ 
+       ObjectBase()
+@@ -79,7 +79,11 @@
+         : control_(0) {}
+ 
+       virtual ~ObjectBase()=0;
+-      
++
++      Control_* control() const 
++        { 
++          return const_cast<ObjectBase *>(this)->control(); 
++        }
+       Control_* control() 
+         { 
+           if (!control_) 
+@@ -129,7 +133,6 @@
+       template <class T2>
+       Ptr(const Ptr<T2>& p2) 
+         {
+-          T* test_assignment_ = (T2*)0;
+           assign( p2.get() );
+         }
+ 
+@@ -144,7 +147,7 @@
+ 
+       template <class T2>
+       Ptr& operator=(const Ptr<T2>& p2)
+-        { T *test_assignment_=(T2*)0; reset(p2.get()); return *this; }
++        { reset(p2.get()); return *this; }
+     
+       Ptr& operator=(const Ptr& p)
+         { reset(p.get()); return *this; }
+@@ -175,7 +178,7 @@
+           if (control_)
+             control_->ref();
+         }
+-
++      
+       void reset(T* t = 0)
+         {
+           if (object_ == t)
+@@ -197,4 +200,3 @@
+ 
+ 
+ #endif // SIGC_OBJECT
+-
+diff -Naur libsigc++-1.2.5/sigc++/signal.cc libsigc++-1.2.7/sigc++/signal.cc
+--- libsigc++-1.2.5/sigc++/signal.cc	2002-12-12 20:18:24.000000000 +0100
++++ libsigc++-1.2.7/sigc++/signal.cc	2005-01-29 00:10:34.000000000 +0100
+@@ -93,33 +93,11 @@
+     defered_ = false;
+ 
+     SignalConnectionNode* i = begin_;
+-
+-    while(begin_ && begin_->defered_)
+-      begin_ = begin_->next_;
+-
+-    while(end_ && end_->defered_)
+-      end_ = end_->prev_;
+-
+-    // Hmm, this looks a bit tricky to me.  The code above removes all
+-    // elements from the front and the back that have defered_ = true set.
+-    // But the following loop unreferences *all* defered elements, including
+-    // those that are still in the list.
+-    //
+-    // I don't know whether this is a bug -- it's possible that defered nodes
+-    // are always at the front or back.  If not, a node could be unreferenced
+-    // twice which is bad.
+-    //
+-    // --Daniel
+-
+     while(i)
+     {
+       SignalConnectionNode* next = i->next_;
+-
+       if(i->defered_)
+-      {
+-        i->parent_ = 0;
+-        i->unreference();
+-      }
++	_remove(i);
+ 
+       i = next;
+     }
+@@ -141,7 +119,7 @@
+       begin_->prev_=c;
+     else
+       end_=c;
+-    end_=c;
++    begin_=c;
+     return c;
+   }
+ 
+@@ -161,21 +139,8 @@
+ 
+ void SignalNode::remove(SignalConnectionNode* c)
+   {
+-    if (!exec_count_)
+-      {
+-        if (c->prev_)
+-          c->prev_->next_=c->next_;
+-        else
+-          begin_=c->next_;
+-       
+-        if (c->next_)
+-          c->next_->prev_=c->prev_;
+-        else
+-          end_=c->prev_;
+-
+-        c->parent_ = 0;
+-        c->unreference();
+-      }
++    if(!exec_count_)
++      _remove(c);
+     else
+       {
+         c->defered_=true;
+@@ -184,6 +149,19 @@
+       }
+   }
+ 
++void SignalNode::_remove(SignalConnectionNode* c)
++  {
++    if (c->prev_)
++	c->prev_->next_=c->next_;
++    else
++	begin_=c->next_;
++    if (c->next_)
++	c->next_->prev_=c->prev_;
++    else
++	end_=c->prev_;
++    c->parent_ = 0;
++    c->unreference();
++  }
+ 
+ 
+ /**********************************************************/

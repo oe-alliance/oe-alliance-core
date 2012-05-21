@@ -1,0 +1,28 @@
+#
+# dvbapi configuration
+#
+# types:
+#	P - Priority
+#		format:
+#			P: <caid>:[<provider>]:[<srvid>]:[<ecmpid>]
+#	I - Ignore
+#		format:
+#			I: <caid>:[<provider>]:[<srvid>]:[<ecmpid>]
+#	M - Map
+#		format:
+#			M: <caid>:[<provider>]:[<srvid>]:[<ecmpid>] <target caid>:[<target provider>]
+#	D - Delay
+#		format:
+#			D: <caid>:[<provider>]:[<srvid>]:[<ecmpid>] <delay (ms)>
+#
+#
+#
+#p: 0500:023800			# prioritize 0500 with provider 023800
+#P: :::1BCD				# prioritize ecm stream with pid 1BCD on any channel
+#P: 1722				# prioritize 1722
+#P: 1830::EF75				# prioritize 1830 on channel EF75 only
+#M: 1830		1830:003411	# map caid 1830 always to provider 003411
+#D: 1702		200		# wait 200ms before writing cw on caid 1702
+#I: :002000				# ignore provider 002000 on every channel
+#I: 0					# ignore every caid that was not handled before
+

@@ -1,0 +1,12 @@
+diff --git a/drivers/mtd/brcmnand/brcmnand_priv.h b/drivers/mtd/brcmnand/brcmnand_priv.h
+index 02bbf3c..4011c77 100644
+--- a/drivers/mtd/brcmnand/brcmnand_priv.h
++++ b/drivers/mtd/brcmnand/brcmnand_priv.h
+@@ -28,6 +28,7 @@
+ 
+ #ifndef CONFIG_MTD_PARTITIONS
+ #define CONFIG_MTD_PARTITIONS
++#include "../mtdcore.h"
+ #endif
+ 
+ #include <linux/vmalloc.h>

@@ -1,0 +1,115 @@
+Upstream: OE-only
+
+Wprobe is "a module that exports measurement data from wireless driver to user space",
+which requires an additional out-of-tree kernel module.
+
+See https://dev.openwrt.org/browser/trunk/package/wprobe/.
+
+diff -Naur madwifi-ng-r3314-20080131.orig/ath/if_ath.c madwifi-ng-r3314-20080131/ath/if_ath.c
+--- madwifi-ng-r3314-20080131.orig/ath/if_ath.c	2010-10-26 11:15:51.000000000 +0000
++++ madwifi-ng-r3314-20080131/ath/if_ath.c	2010-10-26 11:19:02.000000000 +0000
+@@ -396,7 +396,6 @@
+ static int rfkill = 0;
+ static int tpc = 1;
+ static int xchanmode = -1;
+-#include "ath_wprobe.c"
+ 
+ static const struct ath_hw_detect generic_hw_info = {
+ 	.vendor_name = "Unknown",
+@@ -1539,7 +1538,6 @@
+ 		ath_hal_intrset(ah, sc->sc_imask);
+ 	}
+ 
+-	ath_init_wprobe_dev(avp);
+ 	return vap;
+ }
+ 
+@@ -1621,7 +1619,6 @@
+ 		decrease = 0;
+ 
+ 	ieee80211_vap_detach(vap);
+-	ath_remove_wprobe_dev(ATH_VAP(vap));
+ 	/* NB: memory is reclaimed through dev->destructor callback */
+ 	if (decrease)
+ 		sc->sc_nvaps--;
+@@ -6008,7 +6005,6 @@
+ 	/* Clean up node-specific rate things - this currently appears to 
+ 	 * always be a no-op */
+ 	sc->sc_rc->ops->node_cleanup(sc, ATH_NODE(ni));
+-	ath_wprobe_node_leave(ni->ni_vap, ni);
+ 
+ 	ATH_NODE_UAPSD_LOCK_IRQ(an);
+ #ifdef IEEE80211_DEBUG_REFCNT
+@@ -7046,8 +7042,6 @@
+ 				goto lookup_slowpath;
+ 			}
+ 			ATH_RSSI_LPF(ATH_NODE(ni)->an_avgrssi, rs->rs_rssi);
+-			ath_node_sample_rx(ni, rs);
+-			ath_wprobe_report_rx(ni->ni_vap, rs, skb);
+ 			type = ieee80211_input(ni->ni_vap, ni, skb, rs->rs_rssi, bf->bf_tsf);
+ 			ieee80211_unref_node(&ni);
+ 		} else {
+@@ -7063,12 +7057,8 @@
+ 				vap = ieee80211_find_rxvap(ic, wh->i_addr1);
+ 
+ 			if (vap) {
+-				ath_wprobe_report_rx(vap, rs, skb);
+ 				ni = ieee80211_find_rxnode(ic, vap, wh);
+ 			} else {
+-				TAILQ_FOREACH(vap, &ic->ic_vaps, iv_next) {
+-					ath_wprobe_report_rx(vap, rs, skb);
+-				}
+ 				ni = NULL;
+ 			}
+ 
+@@ -7076,7 +7066,6 @@
+ 				ieee80211_keyix_t keyix;
+ 
+ 				ATH_RSSI_LPF(ATH_NODE(ni)->an_avgrssi, rs->rs_rssi);
+-				ath_node_sample_rx(ni, rs);
+ 				type = ieee80211_input(vap, ni, skb, rs->rs_rssi, bf->bf_tsf);
+ 				/*
+ 				 * If the station has a key cache slot assigned
+@@ -8662,7 +8651,6 @@
+ 				sc->sc_stats.ast_tx_rssi = ts->ts_rssi;
+ 				ATH_RSSI_LPF(an->an_halstats.ns_avgtxrssi,
+ 					ts->ts_rssi);
+-					ath_node_sample_tx(&an->an_node, ts, bf->bf_skb);
+ 				if (bf->bf_skb->priority == WME_AC_VO ||
+ 				    bf->bf_skb->priority == WME_AC_VI)
+ 					ni->ni_ic->ic_wme.wme_hipri_traffic++;
+@@ -10175,7 +10163,6 @@
+ 	struct ath_softc *sc = netdev_priv(ic->ic_dev);
+ 
+ 	sc->sc_rc->ops->newassoc(sc, ATH_NODE(ni), isnew);
+-	ath_wprobe_node_join(ni->ni_vap, ni);
+ 
+ 	/* are we supporting compression? */
+ 	if (!(vap->iv_ath_cap & ni->ni_ath_flags & IEEE80211_NODE_COMP))
+diff -Naur madwifi-ng-r3314-20080131.orig/ath/if_athvar.h madwifi-ng-r3314-20080131/ath/if_athvar.h
+--- madwifi-ng-r3314-20080131.orig/ath/if_athvar.h	2010-10-26 11:15:51.000000000 +0000
++++ madwifi-ng-r3314-20080131/ath/if_athvar.h	2010-10-26 11:17:20.000000000 +0000
+@@ -46,7 +46,6 @@
+ #include "ah_desc.h"
+ #include "ah_os.h"
+ #include "if_athioctl.h"
+-#include <linux/wprobe.h>
+ #include "net80211/ieee80211.h"		/* XXX for WME_NUM_AC */
+ #include <asm/io.h>
+ #include <linux/list.h>
+@@ -361,7 +360,6 @@
+ /* driver-specific node state */
+ struct ath_node {
+ 	struct ieee80211_node an_node;		/* base class */
+-	struct wprobe_link an_wplink;
+ 	uint8_t an_wplink_active;
+ 	struct work_struct an_destroy;
+ 	u_int16_t an_decomp_index; 		/* decompression mask index */
+@@ -533,7 +531,6 @@
+ #else
+ 	unsigned int av_beacon_alloc;
+ #endif
+-	struct wprobe_iface av_wpif;
+ 	u32 av_rxframes;
+ 	u32 av_rxprobereq;
+ };

@@ -1,0 +1,16 @@
+[submodule "openembedded-core"]
+	path = openembedded-core
+	url = git://git.openembedded.org/openembedded-core-contrib
+	ignore = dirty
+[submodule "meta-openembedded"]
+	path = meta-openembedded
+	url = git://git.openembedded.org/meta-openembedded-contrib
+	ignore = dirty
+[submodule "bitbake"]
+	path = bitbake
+	url = git://git.openembedded.org/bitbake
+	ignore = dirty
+[submodule "meta-openpli/recipes-openpli/e2openplugins"]
+	path = meta-openpli/recipes-openpli/e2openplugins
+	url = git://github.com/E2OpenPlugins/e2openplugins.git
+	ignore = dirty

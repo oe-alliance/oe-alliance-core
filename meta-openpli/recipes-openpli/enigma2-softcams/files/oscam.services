@@ -1,0 +1,23 @@
+# oscam.server generated automatically by Streamboard OSCAM 1.00-unstable_svn build #5630
+# Read more: http://streamboard.gmc.to/oscam/browser/trunk/Distribution/doc/txt/oscam.services.txt
+# definition of services 
+#
+# format:
+# [name]
+# caid=CAID[,CAID]...
+# provid = provider ID[,provider ID]...
+# srvid = service ID[,service ID]...
+
+[service1]
+caid=0500
+provid=023800 
+#(if empty it's for all prov id's
+srvid=012d 
+# (if empty for all services on this caid and 
+
+[service2]
+caid=0100
+provid=00008d 
+#(if empty it's for all prov id's
+srvid=0ef3 
+# (if empty for all services on this caid and 

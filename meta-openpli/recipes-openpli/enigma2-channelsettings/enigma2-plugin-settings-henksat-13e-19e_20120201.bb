@@ -1,0 +1,8 @@
+DESCRIPTION = "Henksat 13E,19E"
+
+SETTINGS_FILENAME = "henksat_astra_1_hb_e2"
+
+include henksat.inc
+
+SRC_URI[md5sum] = "0b375e282399138de27f61e015e547c8"
+SRC_URI[sha256sum] = "0d60b8840397da2717b54635457169e678dc3dce36a4a11fe21a05df94d076b5"

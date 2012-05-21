@@ -1,0 +1,10 @@
+--- libxmlccwrap-0.0.12_org/xmlccwrap/xmlccwrap.cc	2003-12-18 23:48:08.000000000 +0100
++++ libxmlccwrap-0.0.12/xmlccwrap/xmlccwrap.cc	2007-10-24 22:54:15.000000000 +0200
+@@ -498,6 +500,7 @@
+     for (ElementIterator curnode = nodes.begin(); curnode != nodes.end(); curnode++)
+       add
+         (**curnode);
++    return *this;
+   }
+ 
+ 

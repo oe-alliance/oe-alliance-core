@@ -1,0 +1,29 @@
+diff --git a/scripts/ushare b/scripts/ushare
+index c06c658..6154e1a
+--- a/scripts/ushare
++++ b/scripts/ushare
+@@ -26,12 +26,22 @@ CONFIGFILE=/etc/ushare.conf
+ # abort if no executable exists
+ [ -x $DAEMON ] || exit 0
+ 
+-# Get lsb functions
+-. /lib/lsb/init-functions
+ . /etc/default/rcS
+ 
+ [ -f /etc/default/ushare ] && . /etc/default/ushare
+ 
++log_daemon_msg() {
++  echo -n $1
++}
++
++log_warning_msg() {
++  echo -n $1
++}
++
++log_end_msg() {
++  echo
++}
++
+ checkpid() {
+   [ -e $PIDFILE ] || touch $PIDFILE
+ }

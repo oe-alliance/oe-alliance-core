@@ -1,0 +1,22 @@
+#!/bin/sh /usr/share/dpatch/dpatch-run
+## 065_fix_master_map_in_ldap.dpatch
+##
+## DP: No description.
+
+@DPATCH@
+
+diff -Naur .B/samples/rc.autofs.in .A/samples/rc.autofs.in
+--- .B/samples/rc.autofs.in	2007-01-07 21:36:35.000000000 +0000
++++ .A/samples/rc.autofs.in	2007-01-07 21:36:35.000000000 +0000
+@@ -175,7 +175,11 @@
+ function getldapmounts()
+ {
+     if [ -x @@autofslibdir@@/autofs-ldap-auto-master ]; then
++	[ ! -z $LDAPURI ] && export LDAPURI="$LDAPURI"
++	[ ! -z $LDAPBASE ] && export LDAPBASE="$LDAPBASE"
+         @@autofslibdir@@/autofs-ldap-auto-master 2> /dev/null
++	@@autofslibdir@@/autofs-ldap-auto-master -m automountMap \
++	    -e automount -n ou -k cn -v automountInformation 2> /dev/null
+     fi
+ }
+ 

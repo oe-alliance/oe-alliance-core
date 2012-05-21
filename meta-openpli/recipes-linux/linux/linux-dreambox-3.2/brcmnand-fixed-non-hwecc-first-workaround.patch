@@ -1,0 +1,321 @@
+From 3d03c32d61c4772433060225db2892d66db9f6ed Mon Sep 17 00:00:00 2001
+From: Andreas Monzner <andreas.monzner@multimedia-labs.de>
+Date: Fri, 6 Apr 2012 17:37:04 +0200
+Subject: [PATCH] brcmnand: fixed workaround for dreamboxes without first
+ stage loader with enabled hw ecc
+
+---
+ drivers/mtd/brcmnand/bcm7xxx-nand.c  |   20 +++++----
+ drivers/mtd/brcmnand/brcmnand.h      |    2 +-
+ drivers/mtd/brcmnand/brcmnand_base.c |   80 +++++++++++++++++-----------------
+ drivers/mtd/brcmnand/brcmnand_bbt.c  |    4 +-
+ 4 files changed, 55 insertions(+), 51 deletions(-)
+
+diff --git a/drivers/mtd/brcmnand/bcm7xxx-nand.c b/drivers/mtd/brcmnand/bcm7xxx-nand.c
+index ab842e6..52b85d4 100644
+--- a/drivers/mtd/brcmnand/bcm7xxx-nand.c
++++ b/drivers/mtd/brcmnand/bcm7xxx-nand.c
+@@ -338,15 +338,6 @@ static int __devinit brcmnanddrv_probe(struct platform_device *pdev)
+ 
+ 	//brcmnand_sort_chipSelects(&info->brcmnand);
+ 
+-	// Each chip now will have its own BBT (per mtd handle)
+-	// Problem is we don't know how many CS's we get, until its too late
+-	if (brcmnand_scan(&info->mtd, cs, gNumNand)) {
+-		err = -ENXIO;
+-		goto out_free_info;
+-	}
+-
+-PRINTK("Master size=%08llx\n", info->mtd.size);	
+-
+ #ifdef CONFIG_MTD_PARTITIONS
+ 	/* allow cmdlineparts to override the default map */
+ 	err = parse_mtd_partitions(&info->mtd, part_probe_types,
+@@ -357,7 +348,18 @@ PRINTK("Master size=%08llx\n", info->mtd.size);
+ 		info->parts = cfg->nr_parts ? cfg->parts : NULL;
+ 		info->nr_parts = cfg->nr_parts;
+ 	}
++#endif
++
++	// Each chip now will have its own BBT (per mtd handle)
++	// Problem is we don't know how many CS's we get, until its too late
++	if (brcmnand_scan(&info->mtd, cs, gNumNand)) {
++		err = -ENXIO;
++		goto out_free_info;
++	}
+ 
++PRINTK("Master size=%08llx\n", info->mtd.size);	
++
++#ifdef CONFIG_MTD_PARTITIONS
+ 	// Add MTD partition have a dependency on the BBT
+ 	if (info->nr_parts) // Primary mtd
+ 		brcmnand_add_mtd_partitions(&info->mtd, info->parts, info->nr_parts);
+diff --git a/drivers/mtd/brcmnand/brcmnand.h b/drivers/mtd/brcmnand/brcmnand.h
+index 96de5d6..031d8cc 100644
+--- a/drivers/mtd/brcmnand/brcmnand.h
++++ b/drivers/mtd/brcmnand/brcmnand.h
+@@ -660,7 +660,7 @@ struct brcmnand_chip {
+ 
+ 	uint32_t (*ctrl_read) (uint32_t command);
+ 	void (*ctrl_write) (uint32_t command, uint32_t val);
+-	uint32_t (*ctrl_writeAddr)(struct mtd_info* mtd, loff_t addr, int cmdEndAddr);
++	uint32_t (*ctrl_writeAddr)(struct brcmnand_chip* chip, loff_t addr, int cmdEndAddr);
+ 
+ 	/*
+ 	 * THT: Private methods exported to BBT, equivalent to the methods defined in struct ecc_nand_ctl
+diff --git a/drivers/mtd/brcmnand/brcmnand_base.c b/drivers/mtd/brcmnand/brcmnand_base.c
+index 0b9d82e..170b871 100644
+--- a/drivers/mtd/brcmnand/brcmnand_base.c
++++ b/drivers/mtd/brcmnand/brcmnand_base.c
+@@ -1060,10 +1060,9 @@ if (gdebug > 3) printk("%s: offset=%0llx  cs=%d ldw = %08x, udw = %08x\n", __FUN
+  * Controller v3.3 or later allows heterogenous flashes
+  * Here offset is the offset from the start of the flash (CSn), as each flash has its own mtd handle
+  */
+-static uint32_t brcmnand_ctrl_writeAddr(struct mtd_info *mtd, loff_t offset, int cmdEndAddr) 
+-{
+-	struct brcmnand_chip* chip = mtd->priv;
+ 
++static uint32_t brcmnand_ctrl_writeAddr(struct brcmnand_chip* chip, loff_t offset, int cmdEndAddr) 
++{
+ #if CONFIG_MTD_BRCMNAND_VERSION <= CONFIG_MTD_BRCMNAND_VERS_0_1
+ 	uint32_t pAddr = offset + chip->pbase;
+ 	uint32_t ldw = 0;
+@@ -1095,28 +1094,31 @@ if (gdebug > 3) printk("%s: offset=%0llx  cs=%d ldw = %08x, udw = %08x\n", __FUN
+ #if defined(CONFIG_DREAMBOX) && !defined(CONFIG_DREAMBOX_FIRST_SUPPORTS_HW_ECC) \
+     && CONFIG_MTD_BRCMNAND_VERSION < CONFIG_MTD_BRCMNAND_VERS_3_3
+ 	{
+-		struct mtd_partition **parts = (struct mtd_partition**)(mtd+1);
+-		struct mtd_partition *part = *parts;
+-		static uint32_t bits_modified;
++		int *num_parts = (int*)(chip+1);
++		if (*num_parts) {
++			struct mtd_partition **parts = (struct mtd_partition**)(num_parts+1);
++			struct mtd_partition *part = *parts;
++			static uint32_t bits_modified;
+ 
+-		part++; // loader partition
++			part++; // loader partition
+ 
+-		if (unlikely(offset < part->size)) {
+-			uint32_t acc = brcmnand_ctrl_read(bchp_nand_acc_control(0));
+-			uint32_t ecc_bits = acc & (BCHP_NAND_ACC_CONTROL_RD_ECC_EN_MASK | BCHP_NAND_ACC_CONTROL_RD_ECC_BLK0_EN_MASK | BCHP_NAND_ACC_CONTROL_WR_ECC_EN_MASK);
++			if (unlikely(offset < part->size)) {
++				uint32_t acc = brcmnand_ctrl_read(bchp_nand_acc_control(0));
++				uint32_t ecc_bits = acc & (BCHP_NAND_ACC_CONTROL_RD_ECC_EN_MASK | BCHP_NAND_ACC_CONTROL_RD_ECC_BLK0_EN_MASK | BCHP_NAND_ACC_CONTROL_WR_ECC_EN_MASK);
+ 
+-			if ((ecc_bits | bits_modified) != bits_modified) {
++				if ((ecc_bits | bits_modified) != bits_modified) {
+ if (gdebug > 3) printk("disable ecc %08x %08x, old %08x\n", ecc_bits, bits_modified, acc);
+-				acc &= ~ecc_bits;
+-				brcmnand_ctrl_write(bchp_nand_acc_control(0), acc);
+-				bits_modified |= ecc_bits;
+-			}
+-		} else {
+-			if (bits_modified) {
+-				uint32_t acc = brcmnand_ctrl_read(bchp_nand_acc_control(0));
++					acc &= ~ecc_bits;
++					brcmnand_ctrl_write(bchp_nand_acc_control(0), acc);
++					bits_modified |= ecc_bits;
++				}
++			} else {
++				if (bits_modified) {
++					uint32_t acc = brcmnand_ctrl_read(bchp_nand_acc_control(0));
+ if (gdebug > 3) printk("re-enable ecc %08x %08x, old %08x\n", acc, bits_modified, acc);
+-				brcmnand_restore_ecc(chip, acc | bits_modified);
+-				bits_modified = 0;
++					brcmnand_restore_ecc(chip, acc | bits_modified);
++					bits_modified = 0;
++				}
+ 			}
+ 		}
+ 	}
+@@ -2482,7 +2484,7 @@ static int brcmnand_handle_false_read_ecc_unc_errors(
+ 	/* Disable ECC */
+ 	acc0 = brcmnand_disable_read_ecc(chip);
+ 
+-	chip->ctrl_writeAddr(mtd, offset, 0);
++	chip->ctrl_writeAddr(chip, offset, 0);
+ 	PLATFORM_IOFLUSH_WAR();
+ 	chip->ctrl_write(BCHP_NAND_CMD_START, OP_PAGE_READ);
+ 
+@@ -2791,7 +2793,7 @@ static int brcmnand_Hamming_WAR(struct mtd_info* mtd, loff_t offset, void* buffe
+ 		BDEV_WR(BCHP_HIF_INTR2_CPU_STATUS, intr_status);
+ #endif
+ 		
+-		chip->ctrl_writeAddr(mtd, offset, 0);
++		chip->ctrl_writeAddr(chip, offset, 0);
+ 		PLATFORM_IOFLUSH_WAR();
+ 		chip->ctrl_write(BCHP_NAND_CMD_START, OP_PAGE_READ);
+ 		
+@@ -2922,7 +2924,7 @@ printk("%s: before intr_status=%08x\n", __FUNCTION__, intr_status);
+ 		BDEV_WR(BCHP_HIF_INTR2_CPU_STATUS, intr_status);
+ #endif
+ 		
+-		chip->ctrl_writeAddr(mtd, sliceOffset, 0);
++		chip->ctrl_writeAddr(chip, sliceOffset, 0);
+ 		PLATFORM_IOFLUSH_WAR();
+ 		chip->ctrl_write(BCHP_NAND_CMD_START, OP_PAGE_READ);
+ 
+@@ -3092,7 +3094,7 @@ static void __maybe_unused debug_clear_ctrl_cache(struct mtd_info* mtd)
+ 	BDEV_WR(BCHP_HIF_INTR2_CPU_STATUS, intr_status);
+ #endif
+ 
+-	chip->ctrl_writeAddr(mtd, offset, 0); 
++	chip->ctrl_writeAddr(chip, offset, 0); 
+ 	PLATFORM_IOFLUSH_WAR();
+ 	chip->ctrl_write(BCHP_NAND_CMD_START, OP_PAGE_READ);
+ 
+@@ -3334,7 +3336,7 @@ brcmnand_edu_read_completion(struct mtd_info* mtd,
+ 				// Reset EDU
+ 				ISR_push_request(mtd, tmpBuf, NULL, tmpOffset);
+ #else
+-				lkgs =  chip->ctrl_writeAddr(mtd, gLastKnownGoodEcc, 0);
++				lkgs =  chip->ctrl_writeAddr(chip, gLastKnownGoodEcc, 0);
+ 				PLATFORM_IOFLUSH_WAR(); 
+ 				intr_status = EDU_read(buffer, lkgs);
+ #endif
+@@ -3456,7 +3458,7 @@ PRINTK("************* UNCORRECTABLE_ECC (offset=%0llx) ********************\n",
+ 			 * THT: Since EDU does not handle OOB area, unlike the UNC ERR case of the ctrl read,
+ 			 * we have to explicitly read the OOB, before calling the WAR routine.
+ 			 */
+-			chip->ctrl_writeAddr(mtd, offset, 0);
++			chip->ctrl_writeAddr(chip, offset, 0);
+ 			chip->ctrl_write(BCHP_NAND_CMD_START, OP_SPARE_AREA_READ);
+ 
+ 			// Wait until spare area is filled up
+@@ -3632,7 +3634,7 @@ PRINTK("************* UNCORRECTABLE_ECC (offset=%0llx) ********************\n",
+ 			 * THT: Since EDU does not handle OOB area, unlike the UNC ERR case of the ctrl read,
+ 			 * we have to explicitly read the OOB, before calling the WAR routine.
+ 			 */
+-			chip->ctrl_writeAddr(mtd, offset, 0);
++			chip->ctrl_writeAddr(chip, offset, 0);
+ 			chip->ctrl_write(BCHP_NAND_CMD_START, OP_SPARE_AREA_READ);
+ 
+ 			// Wait until spare area is filled up
+@@ -3769,7 +3771,7 @@ if (gdebug>3) printk("++++++++++++++++++++++++ %s: buffer not 32B aligned, tryin
+ 	intr_status = 0;
+ 	do {
+ 
+-		EDU_ldw =  chip->ctrl_writeAddr(mtd, sliceOffset, 0);
++		EDU_ldw =  chip->ctrl_writeAddr(chip, sliceOffset, 0);
+ 		PLATFORM_IOFLUSH_WAR(); 
+ 
+ 		if (intr_status & HIF_INTR2_EBI_TIMEOUT) {
+@@ -3874,7 +3876,7 @@ printk("-->%s: offset=%0llx\n", __FUNCTION__,  offset); }
+ 			//local_irq_save(irqflags);
+ 		}
+ 
+-		chip->ctrl_writeAddr(mtd, sliceOffset, 0);
++		chip->ctrl_writeAddr(chip, sliceOffset, 0);
+ 		chip->ctrl_write(BCHP_NAND_CMD_START, OP_SPARE_AREA_READ);
+ 
+ 		// Wait until spare area is filled up
+@@ -4127,7 +4129,7 @@ print_databuf(buffer, 32);}
+ 		ret =  -EINVAL;
+ 		goto out;
+ 	}
+-	chip->ctrl_writeAddr(mtd, sliceOffset, 0);
++	chip->ctrl_writeAddr(chip, sliceOffset, 0);
+ 
+ 
+ 	if (buffer) {
+@@ -4375,7 +4377,7 @@ PRINTK("%s: Buffer %p not suitable for EDU at %0llx, trying ctrl read op\n", __F
+ 
+ 	ret = ERESTARTSYS;
+ 	do {
+-		EDU_ldw = chip->ctrl_writeAddr(mtd, sliceOffset, 0);
++		EDU_ldw = chip->ctrl_writeAddr(chip, sliceOffset, 0);
+ 
+ // printk("EDU20\n");
+ 
+@@ -4512,7 +4514,7 @@ print_oobbuf(oobarea, 16);
+ 			__FUNCTION__, offset);
+ 	}
+ 	
+-	chip->ctrl_writeAddr(mtd, sliceOffset, 0);
++	chip->ctrl_writeAddr(chip, sliceOffset, 0);
+ 
+ #if 0
+ 	/* Must write data when NAND_COMPLEX_OOB_WRITE option is set */
+@@ -4976,7 +4978,7 @@ EDU_submit_read(eduIsrNode_t* req)
+ 
+  	spin_lock(&req->lock);
+ 
+- 	req->edu_ldw =  chip->ctrl_writeAddr(mtd, req->offset, 0);
++ 	req->edu_ldw =  chip->ctrl_writeAddr(chip, req->offset, 0);
+ 	PLATFORM_IOFLUSH_WAR(); 
+ 
+ 	//req->cmd = EDU_READ;
+@@ -5031,7 +5033,7 @@ int EDU_submit_write(eduIsrNode_t* req)
+ 	}
+ 
+ 
+-	req->edu_ldw = chip->ctrl_writeAddr(mtd, req->offset, 0);
++	req->edu_ldw = chip->ctrl_writeAddr(chip, req->offset, 0);
+ 
+ 
+ 	if (req->oobarea) {
+@@ -7088,7 +7090,7 @@ static int brcmnand_erase_nolock(struct mtd_info *mtd, struct erase_info *instr,
+ 			instr->state = MTD_ERASE_FAILED;
+ 			goto erase_one_block;
+ 		}
+-		chip->ctrl_writeAddr(mtd, addr, 0);
++		chip->ctrl_writeAddr(chip, addr, 0);
+ 		chip->ctrl_write(BCHP_NAND_CMD_START, OP_BLOCK_ERASE);
+ 
+ 		/* Wait until flash is ready */
+@@ -7231,7 +7233,7 @@ PRINTK(
+ 
+ 		//chip->command(mtd, ONENAND_CMD_ERASE, addr, block_size);
+ 
+-		chip->ctrl_writeAddr(mtd, addr, 0);
++		chip->ctrl_writeAddr(chip, addr, 0);
+ 	
+ 		chip->ctrl_write(BCHP_NAND_CMD_START, OP_BLOCK_ERASE);
+ 
+@@ -7507,9 +7509,9 @@ static int brcmnand_unlock(struct mtd_info *mtd, loff_t llofs, uint64_t len)
+ 	for (blkAddr = ofs; blkAddr <  (ofs + len); blkAddr = blkAddr + chip->blockSize) {
+ 
+ 		/* The following 2 commands share the same CMD_EXT_ADDR, as the block never cross a CS boundary */
+-		chip->ctrl_writeAddr(mtd, blkAddr, 0); 
++		chip->ctrl_writeAddr(chip, blkAddr, 0); 
+ 		/* Set end block address */
+-		chip->ctrl_writeAddr(mtd, blkAddr + chip->blockSize - 1, 1);
++		chip->ctrl_writeAddr(chip, blkAddr + chip->blockSize - 1, 1);
+ 		/* Write unlock command */
+ 		chip->ctrl_write(BCHP_NAND_CMD_START, OP_BLOCKS_UNLOCK);
+ 
+@@ -7521,7 +7523,7 @@ static int brcmnand_unlock(struct mtd_info *mtd, loff_t llofs, uint64_t len)
+ 			printk(KERN_ERR "block = %0llx, wp status = 0x%x\n", blkAddr, status);
+ 
+ 		/* Check lock status */
+-		chip->ctrl_writeAddr(mtd, blkAddr, 0); 
++		chip->ctrl_writeAddr(chip, blkAddr, 0); 
+ 		chip->ctrl_write(BCHP_NAND_CMD_START, OP_READ_BLOCKS_LOCK_STATUS);
+ 		status = chip->ctrl_read(BCHP_NAND_BLOCK_LOCK_STATUS);
+ 		//status = chip->read_word(chip->base + ONENAND_REG_WP_STATUS);
+diff --git a/drivers/mtd/brcmnand/brcmnand_bbt.c b/drivers/mtd/brcmnand/brcmnand_bbt.c
+index 50f5259..106fd4d 100644
+--- a/drivers/mtd/brcmnand/brcmnand_bbt.c
++++ b/drivers/mtd/brcmnand/brcmnand_bbt.c
+@@ -1714,7 +1714,7 @@ printk("%s: gClearBBT=clearbbt, start=%0llx, end=%0llx\n", __FUNCTION__,
+ 		
+ 		PRINTK("brcmnand flag=%d: Erasing block at %0llx\n", 
+ 			gClearBBT, bOffset);
+-		this->ctrl_writeAddr(mtd, bOffset, 0);
++		this->ctrl_writeAddr(this, bOffset, 0);
+ 
+ 		this->ctrl_write(BCHP_NAND_CMD_START, OP_BLOCK_ERASE);
+ 		// Wait until flash is ready
+@@ -1918,7 +1918,7 @@ PRINTK("Found bad block at offset %0llx\n", offs);
+ 			}
+ 			
+ 			//printk("brcmnand flag=%d: Erasing block at %08x\n", gClearBBT, bOffset);
+-			this->ctrl_writeAddr(mtd, bOffset, 0);
++			this->ctrl_writeAddr(this, bOffset, 0);
+ 
+ 			this->ctrl_write(BCHP_NAND_CMD_START, OP_BLOCK_ERASE);
+ 			// Wait until flash is ready
+-- 
+1.7.9.5
+

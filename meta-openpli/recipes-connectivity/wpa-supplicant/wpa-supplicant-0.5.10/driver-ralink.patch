@@ -1,0 +1,2167 @@
+diff -NaurEbB wpa_supplicant-0.5.10/Makefile wpa_supplicant-0.5.10_RALINK/Makefile
+--- wpa_supplicant-0.5.10/Makefile	2008-12-05 01:45:50.000000000 +0100
++++ wpa_supplicant-0.5.10_RALINK/Makefile	2008-12-05 01:36:46.000000000 +0100
+@@ -31,6 +31,7 @@
+ 	echo CONFIG_DRIVER_WEXT=y >> .config
+ 	echo CONFIG_WIRELESS_EXTENSION=y >> .config
+ 	echo CONFIG_DRIVER_ZYDAS=y >> .config
++	echo CONFIG_DRIVER_RALINK=y >> .config
+ 
+ install: all
+ 	mkdir -p $(DESTDIR)/usr/local/sbin/
+@@ -145,6 +146,11 @@
+ CONFIG_WIRELESS_EXTENSION=y
+ endif
+ 
++ifdef CONFIG_DRIVER_RALINK
++CFLAGS += -DCONFIG_DRIVER_RALINK
++OBJS_d += driver_ralink.o
++endif
++
+ ifdef CONFIG_DRIVER_BSD
+ CFLAGS += -DCONFIG_DRIVER_BSD
+ OBJS_d += driver_bsd.o
+diff -NaurEbB wpa_supplicant-0.5.10/driver.h wpa_supplicant-0.5.10_RALINK/driver.h
+--- wpa_supplicant-0.5.10/driver.h	2007-03-25 04:09:49.000000000 +0200
++++ wpa_supplicant-0.5.10_RALINK/driver.h	2008-12-05 01:36:46.000000000 +0100
+@@ -581,6 +581,10 @@
+ 	 */
+ 	void (*poll)(void *priv);
+ 
++#ifdef CONFIG_DRIVER_RALINK
++	void (*poll_ralink)(void *priv, void *ctx);
++#endif
++
+ 	/**
+ 	 * get_ifname - Get interface name
+ 	 * @priv: private driver interface data
+diff -NaurEbB wpa_supplicant-0.5.10/driver_ralink.c wpa_supplicant-0.5.10_RALINK/driver_ralink.c
+--- wpa_supplicant-0.5.10/driver_ralink.c	1970-01-01 01:00:00.000000000 +0100
++++ wpa_supplicant-0.5.10_RALINK/driver_ralink.c	2008-12-05 01:36:46.000000000 +0100
+@@ -0,0 +1,1502 @@
++/*
++ ***************************************************************************
++ * Ralink Tech Inc.
++ * 5F, No. 36 Taiyuan St.
++ * Jhubei City
++ * Hsinchu County 302, Taiwan, R.O.C.
++ *
++ * (c) Copyright 2002-2008, Ralink Technology, Inc.
++ *
++ * This program is free software; you can redistribute it and/or modify  * 
++ * it under the terms of the GNU General Public License as published by  * 
++ * the Free Software Foundation; either version 2 of the License, or     * 
++ * (at your option) any later version.                                   * 
++ *                                                                       * 
++ * This program is distributed in the hope that it will be useful,       * 
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of        * 
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         * 
++ * GNU General Public License for more details.                          * 
++ *                                                                       * 
++ * You should have received a copy of the GNU General Public License     * 
++ * along with this program; if not, write to the                         * 
++ * Free Software Foundation, Inc.,                                       * 
++ * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             * 
++ *                                                                       * 
++ ************************************************************************/
++/*
++ * WPA Supplicant - driver interaction with Ralink rt73.o driver
++ */
++
++#include <stdlib.h>
++#include <stdio.h>
++#include <unistd.h>
++#include <string.h>
++#include <sys/ioctl.h>
++#include <errno.h>
++#include <sys/socket.h>
++#include <net/if_arp.h>
++
++#include <linux/if_packet.h>
++#include <linux/if_ether.h>   /* The L2 protocols */
++#include <netinet/in.h>
++//#include <linux/wireless.h>
++#include "wireless_copy.h"
++
++#include "common.h"
++#include "driver.h"
++#include "l2_packet.h"
++#include "eloop.h"
++#include "wpa_supplicant.h"
++#include "priv_netlink.h"
++#include "wpa.h"
++#include "driver_ralink.h"
++#include "wpa_supplicant_i.h"
++#include "config_ssid.h"
++#include "config.h"
++
++static int scanning_done = 1;
++
++struct wpa_driver_ralink_data {
++	void *ctx;
++	int ioctl_sock;
++	int event_sock;
++	char ifname[IFNAMSIZ + 1];
++	u8 *assoc_req_ies;
++	size_t assoc_req_ies_len;
++	u8 *assoc_resp_ies;
++	size_t assoc_resp_ies_len;
++	int no_of_pmkid;
++	struct ndis_pmkid_entry *pmkid;
++	int we_version_compiled;
++};
++
++static int ralink_set_oid(struct wpa_driver_ralink_data *drv, unsigned short oid,
++			char *data, int len)
++{
++	char *buf;
++	struct iwreq iwr;
++	
++        buf = os_malloc(len);
++	if (buf == NULL)
++		return -1;
++	memset(buf, 0,len);
++       memset(&iwr, 0, sizeof(iwr));
++	strncpy(iwr.ifr_name, drv->ifname, IFNAMSIZ);
++	iwr.u.data.flags = oid;
++	iwr.u.data.flags |= OID_GET_SET_TOGGLE;
++		
++	if (data)
++		memcpy(buf, data, len);
++
++	iwr.u.data.pointer = (caddr_t) buf;
++	iwr.u.data.length = len;
++
++	if (ioctl(drv->ioctl_sock, RT_PRIV_IOCTL, &iwr) < 0)
++	{
++		wpa_printf(MSG_DEBUG, "%s: oid=0x%x len (%d) failed",
++			   __func__, oid, len);
++		os_free(buf);
++		return -1;
++	}
++	os_free(buf);
++	return 0;
++}
++
++static int wpa_driver_ralink_get_bssid(void *priv, u8 *bssid)
++{
++	struct wpa_driver_ralink_data *drv = priv;
++	struct iwreq iwr;
++	int ret = 0;
++
++    wpa_printf(MSG_DEBUG, "%s", __FUNCTION__);
++
++	memset(&iwr, 0, sizeof(iwr));
++	strncpy(iwr.ifr_name, drv->ifname, IFNAMSIZ);
++
++	if (ioctl(drv->ioctl_sock, SIOCGIWAP, &iwr) < 0)
++	{
++		perror("ioctl[SIOCGIWAP]");
++		ret = -1;
++	}
++	memcpy(bssid, iwr.u.ap_addr.sa_data, ETH_ALEN);
++
++	return ret;
++}
++
++static int wpa_driver_ralink_get_ssid(void *priv, u8 *ssid)
++{
++	struct wpa_driver_ralink_data *drv = priv;
++	struct wpa_supplicant *wpa_s = drv->ctx;
++	struct wpa_ssid *entry;
++	int ssid_len;
++	u8 bssid[ETH_ALEN];
++	u8 ssid_str[MAX_SSID_LEN];
++	struct iwreq iwr;
++	int result = 0;
++	int ret = 0;
++	BOOLEAN	ieee8021x_mode = FALSE;
++	BOOLEAN ieee8021x_required_key = FALSE;
++    wpa_printf(MSG_DEBUG, "%s", __FUNCTION__);
++
++	memset(&iwr, 0, sizeof(iwr));
++	strncpy(iwr.ifr_name, drv->ifname, IFNAMSIZ);
++	iwr.u.essid.pointer = (caddr_t) ssid;
++	iwr.u.essid.length = 32;
++
++	if (ioctl(drv->ioctl_sock, SIOCGIWESSID, &iwr) < 0)
++	{
++		perror("ioctl[SIOCGIWESSID]");
++		ret = -1;
++	} else
++		ret = iwr.u.essid.length;
++
++	if(ret <= 0)
++		return ret;
++		
++	ssid_len = ret;	
++	memset(ssid_str, 0, MAX_SSID_LEN);
++	memcpy(ssid_str, ssid, ssid_len);	
++				
++	if(wpa_s->conf->ap_scan == 0) 		
++	{
++		// Read BSSID form driver 
++		if (wpa_driver_ralink_get_bssid(priv, bssid) < 0)
++		{
++			wpa_printf(MSG_WARNING, "Could not read BSSID from driver.");
++			return ret;
++		}
++						
++		entry = wpa_s->conf->ssid;
++		while (entry)
++		{
++			if (!entry->disabled && ssid_len == entry->ssid_len && memcmp(ssid_str, entry->ssid, ssid_len) == 0 &&
++		    	(!entry->bssid_set || memcmp(bssid, entry->bssid, ETH_ALEN) == 0))
++			{		
++				// match the config of driver 
++				result = 1;
++				break;
++			}
++			entry = entry->next;
++		}
++		
++		if(result)
++		{
++			wpa_printf(MSG_DEBUG, "Ready to set 802.1x mode and ieee_required_keys parameters to driver");
++			
++			// set 802.1x mode and ieee_required_keys parameter
++			if(entry->key_mgmt == WPA_KEY_MGMT_IEEE8021X_NO_WPA)
++			{																
++				if ((entry->eapol_flags & (EAPOL_FLAG_REQUIRE_KEY_UNICAST | EAPOL_FLAG_REQUIRE_KEY_BROADCAST))) 									
++						ieee8021x_required_key = TRUE;
++						
++				ieee8021x_mode = TRUE;																																												
++			}
++						
++			if (ralink_set_oid(drv, OID_802_11_SET_IEEE8021X, (char *) &ieee8021x_mode, sizeof(BOOLEAN)) < 0)
++			{
++				wpa_printf(MSG_DEBUG, "RALINK: Failed to set OID_802_11_SET_IEEE8021X(%d)", (int) ieee8021x_mode);	
++			}
++			else
++			{
++				wpa_printf(MSG_DEBUG, "ieee8021x_mode is %s", ieee8021x_mode ? "TRUE" : "FALSE");
++			}				
++			
++			
++			if (ralink_set_oid(drv, OID_802_11_SET_IEEE8021X_REQUIRE_KEY, (char *) &ieee8021x_required_key, sizeof(BOOLEAN)) < 0)
++			{
++				wpa_printf(MSG_DEBUG, "ERROR: Failed to set OID_802_11_SET_IEEE8021X_REQUIRE_KEY(%d)", (int) ieee8021x_required_key);	
++			}
++			else
++			{		
++				wpa_printf(MSG_DEBUG, "ieee8021x_required_key is %s and eapol_flag(%d)", ieee8021x_required_key ? "TRUE" : "FALSE",
++																								entry->eapol_flags);
++			}		
++		}
++	}
++
++	return ret;
++}
++
++static int wpa_driver_ralink_set_ssid(struct wpa_driver_ralink_data *drv, 
++	const u8 *ssid, size_t ssid_len)
++{
++	NDIS_802_11_SSID *buf;
++	int ret = 0;
++	struct iwreq iwr;
++ 
++    wpa_printf(MSG_DEBUG, "%s", __FUNCTION__);
++
++    buf = (NDIS_802_11_SSID *)os_malloc(sizeof(NDIS_802_11_SSID));
++	if (buf == NULL)
++		return -1;
++	memset(buf, 0, sizeof(buf));
++	buf->SsidLength = ssid_len;
++	memcpy(buf->Ssid, ssid, ssid_len);
++	memset(&iwr, 0, sizeof(iwr));
++	strncpy(iwr.ifr_name, drv->ifname, IFNAMSIZ);
++		
++	iwr.u.data.flags = OID_802_11_SSID;
++	iwr.u.data.flags |= OID_GET_SET_TOGGLE;
++	iwr.u.data.pointer = (caddr_t) buf;
++	iwr.u.data.length = sizeof(NDIS_802_11_SSID);
++       
++	if (ioctl(drv->ioctl_sock, RT_PRIV_IOCTL, &iwr) < 0)
++	{
++		perror("ioctl[RT_PRIV_IOCTL] -- OID_802_11_SSID");
++		ret = -1;
++	}
++	os_free(buf);	
++	return ret;
++}
++
++static void wpa_driver_ralink_event_pmkid(struct wpa_driver_ralink_data *drv,
++					const u8 *data, size_t data_len)
++{
++	NDIS_802_11_PMKID_CANDIDATE_LIST *pmkid;
++	int i;
++	union wpa_event_data event;
++
++    wpa_printf(MSG_DEBUG, "%s", __FUNCTION__);
++
++	if (data_len < 8)
++	{
++		wpa_printf(MSG_DEBUG, "RALINK: Too short PMKID Candidate List "
++			   "Event (len=%d)", data_len);
++		return;
++	}
++	pmkid = (NDIS_802_11_PMKID_CANDIDATE_LIST *) data;
++	wpa_printf(MSG_DEBUG, "RALINK: PMKID Candidate List Event - Version %d "
++		   "NumCandidates %d",
++		   (int) pmkid->Version, (int) pmkid->NumCandidates);
++
++	if (pmkid->Version != 1) 
++	{
++		wpa_printf(MSG_DEBUG, "RALINK: Unsupported PMKID Candidate List "
++			   "Version %d", (int) pmkid->Version);
++		return;
++	}
++
++	if (data_len < 8 + pmkid->NumCandidates * sizeof(PMKID_CANDIDATE)) 
++	{
++		wpa_printf(MSG_DEBUG, "RALINK: PMKID Candidate List underflow");
++		
++		return;
++	}
++
++
++	
++	memset(&event, 0, sizeof(event));
++	for (i = 0; i < pmkid->NumCandidates; i++)
++	{
++		PMKID_CANDIDATE *p = &pmkid->CandidateList[i];
++		wpa_printf(MSG_DEBUG, "RALINK: %d: " MACSTR " Flags 0x%x",
++			   i, MAC2STR(p->BSSID), (int) p->Flags);
++		memcpy(event.pmkid_candidate.bssid, p->BSSID, ETH_ALEN);
++		event.pmkid_candidate.index = i;
++		event.pmkid_candidate.preauth =
++			p->Flags & NDIS_802_11_PMKID_CANDIDATE_PREAUTH_ENABLED;
++		wpa_supplicant_event(drv->ctx, EVENT_PMKID_CANDIDATE,
++				     &event);
++	}
++}
++
++static int wpa_driver_ralink_set_pmkid(struct wpa_driver_ralink_data *drv)
++{
++	int len, count, i, ret;
++	struct ndis_pmkid_entry *entry;
++	NDIS_802_11_PMKID *p;
++
++        wpa_printf(MSG_DEBUG, "%s", __FUNCTION__);
++
++	count = 0;
++	entry = drv->pmkid;
++	while (entry)
++	{
++		count++;
++		if (count >= drv->no_of_pmkid)
++			break;
++		entry = entry->next;
++	}
++	len = 8 + count * sizeof(BSSID_INFO);
++	p = os_malloc(len);
++	if (p == NULL)
++		return -1;
++	memset(p, 0, len);
++	p->Length = len;
++	p->BSSIDInfoCount = count;
++	entry = drv->pmkid;
++	for (i = 0; i < count; i++)
++	{
++		memcpy(&p->BSSIDInfo[i].BSSID, entry->bssid, ETH_ALEN);
++		memcpy(&p->BSSIDInfo[i].PMKID, entry->pmkid, 16);
++		entry = entry->next;
++	}
++	wpa_hexdump(MSG_MSGDUMP, "NDIS: OID_802_11_PMKID", (const u8 *) p, len);
++	ret = ralink_set_oid(drv, OID_802_11_PMKID, (char *) p, len);
++	os_free(p);
++	return ret;
++}
++
++static int wpa_driver_ralink_add_pmkid(void *priv, const u8 *bssid,
++				     const u8 *pmkid)
++{
++	struct wpa_driver_ralink_data *drv = priv;
++	struct ndis_pmkid_entry *entry, *prev;
++
++        wpa_printf(MSG_DEBUG, "%s", __FUNCTION__);
++
++	if (drv->no_of_pmkid == 0)
++		return 0;
++
++	prev = NULL;
++	entry = drv->pmkid;
++	while (entry)
++	{
++		if (memcmp(entry->bssid, bssid, ETH_ALEN) == 0)
++			break;
++		prev = entry;
++		entry = entry->next;
++	}
++
++	if (entry)
++	{
++		/* Replace existing entry for this BSSID and move it into the
++		 * beginning of the list. */
++		memcpy(entry->pmkid, pmkid, 16);
++		if (prev)
++		{
++			prev->next = entry->next;
++			entry->next = drv->pmkid;
++			drv->pmkid = entry;
++		}
++	}
++	else
++	{
++		entry = os_malloc(sizeof(*entry));
++		if (entry)
++		{
++			memcpy(entry->bssid, bssid, ETH_ALEN);
++			memcpy(entry->pmkid, pmkid, 16);
++			entry->next = drv->pmkid;
++			drv->pmkid = entry;
++		}
++	}
++
++	return wpa_driver_ralink_set_pmkid(drv);
++}
++
++
++static int wpa_driver_ralink_remove_pmkid(void *priv, const u8 *bssid,
++		 			const u8 *pmkid)
++{
++	struct wpa_driver_ralink_data *drv = priv;
++	struct ndis_pmkid_entry *entry, *prev;
++
++        wpa_printf(MSG_DEBUG, "%s", __FUNCTION__);
++
++	if (drv->no_of_pmkid == 0)
++		return 0;
++
++	entry = drv->pmkid;
++	prev = NULL;
++	drv->pmkid = NULL;
++	while (entry)
++	{
++		if (memcmp(entry->bssid, bssid, ETH_ALEN) == 0 &&
++		    memcmp(entry->pmkid, pmkid, 16) == 0)
++		{
++			if (prev)
++				prev->next = entry->next;
++			else
++				drv->pmkid = entry->next;
++			os_free(entry);
++			break;
++		}
++		prev = entry;
++		entry = entry->next;
++	}
++	return wpa_driver_ralink_set_pmkid(drv);
++}
++
++
++static int wpa_driver_ralink_flush_pmkid(void *priv)
++{
++	struct wpa_driver_ralink_data *drv = priv;
++	NDIS_802_11_PMKID p;
++	struct ndis_pmkid_entry *pmkid, *prev;
++
++        wpa_printf(MSG_DEBUG, "%s", __FUNCTION__);
++
++	if (drv->no_of_pmkid == 0)
++		return 0;
++
++	pmkid = drv->pmkid;
++	drv->pmkid = NULL;
++	while (pmkid)
++	{
++		prev = pmkid;
++		pmkid = pmkid->next;
++		os_free(prev);
++	}
++
++	memset(&p, 0, sizeof(p));
++	p.Length = 8;
++	p.BSSIDInfoCount = 0;
++	wpa_hexdump(MSG_MSGDUMP, "NDIS: OID_802_11_PMKID (flush)",
++		    (const u8 *) &p, 8);
++	return ralink_set_oid(drv, OID_802_11_PMKID, (char *) &p, 8);
++}
++
++static void
++wpa_driver_ralink_event_wireless_custom(struct wpa_driver_ralink_data *drv,
++				      void *ctx, char *custom)
++{
++	union wpa_event_data data;
++
++    wpa_printf(MSG_DEBUG, "%s", __FUNCTION__);
++
++	wpa_printf(MSG_DEBUG, "Custom wireless event: '%s'", custom);
++
++	memset(&data, 0, sizeof(data));
++	/* Host AP driver */
++	if (strncmp(custom, "MLME-MICHAELMICFAILURE.indication", 33) == 0)
++	{
++	    //receive a MICFAILURE report
++		data.michael_mic_failure.unicast =
++			strstr(custom, " unicast ") != NULL;
++		/* TODO: parse parameters(?) */
++		wpa_supplicant_event(ctx, EVENT_MICHAEL_MIC_FAILURE, &data);
++	}
++	else if (strncmp(custom, "ASSOCINFO_ReqIEs=", 17) == 0)
++	{
++        //receive assoc. req. IEs
++		char *spos;
++		int bytes;
++
++		spos = custom + 17;
++        //get IE's length
++		//bytes = strlen(spos);
++		bytes = drv->assoc_req_ies_len + drv->assoc_resp_ies_len;
++
++		if (!bytes)
++			return;
++		
++
++		data.assoc_info.req_ies = os_malloc(bytes);
++		if (data.assoc_info.req_ies == NULL)
++			return;
++
++		data.assoc_info.req_ies_len = bytes;
++		memcpy(data.assoc_info.req_ies, spos,  bytes);
++
++        //skip the '\0' byte
++		spos += bytes + 1;
++
++		data.assoc_info.resp_ies = NULL;
++		data.assoc_info.resp_ies_len = 0;
++
++		if (strncmp(spos, " RespIEs=", 9) == 0)
++		{
++            //receive assoc. resp. IEs
++			spos += 9;
++            //get IE's length
++			bytes = strlen(spos);
++			if (!bytes)
++				goto done;
++			
++
++			data.assoc_info.resp_ies = os_malloc(bytes);
++			if (data.assoc_info.resp_ies == NULL)
++				goto done;
++
++			data.assoc_info.resp_ies_len = bytes;
++			memcpy(data.assoc_info.resp_ies, spos,  bytes);
++		}
++
++		wpa_supplicant_event(ctx, EVENT_ASSOCINFO, &data);
++
++      //free allocated memory
++	done:
++		if(data.assoc_info.resp_ies != NULL)
++			os_free(data.assoc_info.resp_ies);
++		if(data.assoc_info.req_ies != NULL)
++			os_free(data.assoc_info.req_ies);
++	}
++}
++
++static void wpa_driver_ralink_event_wireless(struct wpa_driver_ralink_data *drv,
++					   void *ctx, char *data, int len)
++{
++	struct iw_event iwe_buf, *iwe = &iwe_buf;
++	char *pos, *end, *custom, *buf, *assoc_info_buf, *info_pos;
++	struct wpa_supplicant *wpa_s = ctx;
++	BOOLEAN  ieee8021x_required_key = FALSE;
++
++    wpa_printf(MSG_DEBUG, "%s", __FUNCTION__);
++
++        assoc_info_buf = info_pos = NULL;
++	pos = data;
++	end = data + len;
++
++	while (pos + IW_EV_LCP_LEN <= end)
++	{
++		/* Event data may be unaligned, so make a local, aligned copy
++		 * before processing. */
++		memcpy(&iwe_buf, pos, IW_EV_LCP_LEN);
++		wpa_printf(MSG_DEBUG, "Wireless event: cmd=0x%x len=%d",
++			   iwe->cmd, iwe->len);
++		if (iwe->len <= IW_EV_LCP_LEN)
++			return;
++
++		custom = pos + IW_EV_POINT_LEN;
++		
++		if (drv->we_version_compiled > 18 &&
++		    (iwe->cmd == IWEVCUSTOM))
++		{
++			/* WE-19 removed the pointer from struct iw_point */
++			char *dpos = (char *) &iwe_buf.u.data.length;
++			int dlen = dpos - (char *) &iwe_buf;
++			memcpy(dpos, pos + IW_EV_LCP_LEN,
++			       sizeof(struct iw_event) - dlen);
++		}
++		else
++		{
++			memcpy(&iwe_buf, pos, sizeof(struct iw_event));
++		    custom += IW_EV_POINT_OFF;
++        }
++
++		switch (iwe->cmd)
++		{
++		
++			case IWEVCUSTOM:
++				if (custom + iwe->u.data.length > end)
++					return;
++				buf = os_malloc(iwe->u.data.length + 1);
++				if (buf == NULL)
++					return;
++				memcpy(buf, custom, iwe->u.data.length);
++				buf[iwe->u.data.length] = '\0';
++
++        		if (wpa_s->conf->ap_scan == 1)
++				{
++			   		if ((iwe->u.data.flags == RT_ASSOC_EVENT_FLAG) || (iwe->u.data.flags == RT_REQIE_EVENT_FLAG) ||
++			       		(iwe->u.data.flags == RT_RESPIE_EVENT_FLAG) || (iwe->u.data.flags == RT_ASSOCINFO_EVENT_FLAG))
++			       	{
++						if (scanning_done == 0)
++						{
++							//free(buf); //<--carella modify
++							//return; //-->
++						}
++					}
++				}
++
++        if (iwe->u.data.flags == RT_ASSOC_EVENT_FLAG)
++		{
++	           wpa_printf(MSG_DEBUG, "Custom wireless event: receive ASSOCIATED_EVENT !!!");
++			wpa_drv_get_bssid(wpa_s, wpa_s->bssid);
++			   // determine whether the dynamic-WEP is used or not 
++			   if(wpa_s && wpa_s->current_ssid && wpa_s->current_ssid->key_mgmt == WPA_KEY_MGMT_IEEE8021X_NO_WPA)
++			   {
++					if ((wpa_s->current_ssid->eapol_flags &
++	      							(EAPOL_FLAG_REQUIRE_KEY_UNICAST | EAPOL_FLAG_REQUIRE_KEY_BROADCAST))) 
++					{			
++						//wpa_printf(MSG_DEBUG, "The current ssid - (%s), eapol_flag = %d.\n",  
++						//	 wpa_ssid_txt(wpa_s->current_ssid->ssid, wpa_s->current_ssid->ssid_len),wpa_s->current_ssid->eapol_flags);
++						ieee8021x_required_key = TRUE;						
++					}
++					
++					if (ralink_set_oid(drv, OID_802_11_SET_IEEE8021X_REQUIRE_KEY, (char *) &ieee8021x_required_key, sizeof(BOOLEAN)) < 0)
++					{
++							wpa_printf(MSG_DEBUG, "ERROR: Failed to set OID_802_11_SET_IEEE8021X_REQUIRE_KEY(%d)", 
++																		(int) ieee8021x_required_key);	
++				    }
++					
++					wpa_printf(MSG_DEBUG, "ieee8021x_required_key is %s and eapol_flag(%d).\n", ieee8021x_required_key ? "TRUE" : "FALSE",
++																								wpa_s->current_ssid->eapol_flags);					
++			   }
++
++               wpa_supplicant_event(ctx, EVENT_ASSOC, NULL);
++		}
++		else if (iwe->u.data.flags == RT_REQIE_EVENT_FLAG)
++		{
++			   wpa_printf(MSG_DEBUG, "Custom wireless event: receive ReqIEs !!!");
++			   drv->assoc_req_ies = os_malloc(iwe->u.data.length);
++
++			   if (drv->assoc_req_ies == NULL)
++			      return;
++
++               drv->assoc_req_ies_len = iwe->u.data.length;
++			   memcpy(drv->assoc_req_ies, custom, iwe->u.data.length);
++		}
++		else if (iwe->u.data.flags == RT_RESPIE_EVENT_FLAG)
++		{
++			   wpa_printf(MSG_DEBUG, "Custom wireless event: receive RespIEs !!!");
++			   drv->assoc_resp_ies = os_malloc(iwe->u.data.length);
++
++			   if (drv->assoc_resp_ies == NULL)
++			{
++				if (drv->assoc_req_ies != NULL)
++			    	os_free(drv->assoc_req_ies);
++			      return;
++			}
++
++               drv->assoc_resp_ies_len = iwe->u.data.length;
++			   memcpy(drv->assoc_resp_ies, custom, iwe->u.data.length);
++		}
++		else if (iwe->u.data.flags == RT_ASSOCINFO_EVENT_FLAG)
++		{
++			   wpa_printf(MSG_DEBUG, "Custom wireless event: receive ASSOCINFO_EVENT !!!");
++			   assoc_info_buf = os_malloc(drv->assoc_req_ies_len + drv->assoc_resp_ies_len + 1);
++
++			   if (assoc_info_buf == NULL)
++			{
++				if (drv->assoc_req_ies != NULL)
++			       	os_free(drv->assoc_req_ies);
++			      	if (drv->assoc_resp_ies != NULL)
++			       	os_free(drv->assoc_resp_ies);
++			    	os_free(buf);
++			      return;
++			}
++
++			   memcpy(assoc_info_buf, drv->assoc_req_ies, drv->assoc_req_ies_len);
++			   info_pos = assoc_info_buf + drv->assoc_req_ies_len;
++			   memcpy(info_pos , drv->assoc_resp_ies, drv->assoc_resp_ies_len);
++			   assoc_info_buf[drv->assoc_req_ies_len + drv->assoc_resp_ies_len] = '\0';
++			   wpa_driver_ralink_event_wireless_custom(drv, ctx, assoc_info_buf);
++			   os_free(drv->assoc_req_ies);
++			   os_free(drv->assoc_resp_ies);
++			       os_free(assoc_info_buf);
++			}
++		    else if (iwe->u.data.flags == RT_DISASSOC_EVENT_FLAG)
++			{
++			   wpa_printf(MSG_DEBUG, "Custom wireless event: receive DISASSOCIATED_EVENT !!!");
++               wpa_supplicant_event(ctx, EVENT_DISASSOC, NULL);
++			}
++			else if (iwe->u.data.flags == RT_PMKIDCAND_FLAG)
++			{
++			   wpa_printf(MSG_DEBUG, "Custom wireless event: receive PMKIDCAND_EVENT !!!");
++                            wpa_driver_ralink_event_pmkid(drv, (const u8 *)custom, iwe->u.data.length);
++			}
++            else
++			{
++			    wpa_driver_ralink_event_wireless_custom(drv, ctx, buf);
++            }
++			os_free(buf);
++			break;
++		
++		}
++
++		pos += iwe->len;
++	}
++}
++
++static void wpa_driver_ralink_event_rtm_newlink(struct wpa_driver_ralink_data *drv,
++					      void *ctx, struct nlmsghdr *h,
++					      int len)
++{
++	struct ifinfomsg *ifi;
++	int attrlen, nlmsg_len, rta_len;
++	struct rtattr * attr;
++
++    wpa_printf(MSG_DEBUG, "%s", __FUNCTION__);
++
++	if (len < sizeof(*ifi))
++		return;
++
++	ifi = NLMSG_DATA(h);
++    wpa_hexdump(MSG_DEBUG, "ifi: ", (u8 *)ifi, sizeof(struct ifinfomsg));
++	
++	nlmsg_len = NLMSG_ALIGN(sizeof(struct ifinfomsg));
++       
++	attrlen = h->nlmsg_len - nlmsg_len;
++	printf("attrlen=%d\n",attrlen);
++	if (attrlen < 0)
++		return;
++
++	attr = (struct rtattr *) (((char *) ifi) + nlmsg_len);
++    wpa_hexdump(MSG_DEBUG, "attr1: ", (u8 *)attr,sizeof(struct rtattr));
++	rta_len = RTA_ALIGN(sizeof(struct rtattr));
++	wpa_hexdump(MSG_DEBUG, "attr2: ", (u8 *)attr,rta_len);
++	while (RTA_OK(attr, attrlen))
++	{
++		printf("rta_type=%02x\n",attr->rta_type);
++		if (attr->rta_type == IFLA_WIRELESS)
++		{
++			wpa_driver_ralink_event_wireless(drv, ctx, ((char *) attr) + rta_len, attr->rta_len - rta_len);
++		} 
++		attr = RTA_NEXT(attr, attrlen);
++		wpa_hexdump(MSG_DEBUG, "attr3: ", (u8 *)attr,sizeof(struct rtattr));
++	}
++}
++
++static void wpa_driver_ralink_event_receive(int sock, void *ctx,
++					      void *sock_ctx)
++{
++	char buf[8192];
++	int left;
++	struct sockaddr_nl from;
++	socklen_t fromlen;
++	struct nlmsghdr *h;
++	
++    wpa_printf(MSG_DEBUG, "%s", __FUNCTION__);
++
++	fromlen = sizeof(from);
++	left = recvfrom(sock, buf, sizeof(buf), MSG_DONTWAIT, (struct sockaddr *) &from, &fromlen);
++
++	if (left < 0)
++	{
++		if (errno != EINTR && errno != EAGAIN)
++			perror("recvfrom(netlink)");
++		return;
++	}
++
++	h = (struct nlmsghdr *) buf;
++	wpa_hexdump(MSG_DEBUG, "h: ", (u8 *)h, h->nlmsg_len);
++
++	while (left >= sizeof(*h))
++	{
++		int len, plen;
++
++		len = h->nlmsg_len;
++		plen = len - sizeof(*h);
++		if (len > left || plen < 0)
++		{
++			wpa_printf(MSG_DEBUG, "Malformed netlink message: "
++				"len=%d left=%d plen=%d", len, left, plen);
++			break;
++		}
++
++		switch (h->nlmsg_type)
++		{
++		case RTM_NEWLINK:
++			wpa_driver_ralink_event_rtm_newlink(ctx, sock_ctx, h, plen);
++			break;
++		}
++
++		len = NLMSG_ALIGN(len);
++		left -= len;
++		h = (struct nlmsghdr *) ((char *) h + len);
++	}
++
++	if (left > 0)
++	{
++		wpa_printf(MSG_DEBUG, "%d extra bytes in the end of netlink "
++			   "message", left);
++	}
++
++}	
++
++static int
++ralink_get_we_version_compiled(struct wpa_driver_ralink_data *drv)
++{
++        struct iwreq iwr;
++	UINT   we_version_compiled = 0;
++
++	memset(&iwr, 0, sizeof(iwr));
++	strncpy(iwr.ifr_name, drv->ifname, IFNAMSIZ);
++	iwr.u.data.pointer = (caddr_t) &we_version_compiled;
++	iwr.u.data.flags = RT_OID_WE_VERSION_COMPILED;
++
++    if (ioctl(drv->ioctl_sock, RT_PRIV_IOCTL, &iwr) < 0)
++	{
++		wpa_printf(MSG_DEBUG, "%s:  failed", __func__);
++		return -1;
++	}
++	
++	drv->we_version_compiled = we_version_compiled;
++	
++	return 0;
++}
++
++static int
++ralink_set_iface_flags(void *priv, int dev_up)
++{
++	struct wpa_driver_ralink_data *drv = priv;
++	struct ifreq ifr;
++
++    wpa_printf(MSG_DEBUG, "%s", __FUNCTION__);
++
++	if (drv->ioctl_sock < 0)
++		return -1;
++
++	memset(&ifr, 0, sizeof(ifr));
++	snprintf(ifr.ifr_name, IFNAMSIZ, "%s", drv->ifname);
++
++	if (ioctl(drv->ioctl_sock, SIOCGIFFLAGS, &ifr) != 0)
++	{
++		perror("ioctl[SIOCGIFFLAGS]");
++		return -1;
++	}
++
++	if (dev_up)
++		ifr.ifr_flags |= IFF_UP;
++	else
++		ifr.ifr_flags &= ~IFF_UP;
++
++	if (ioctl(drv->ioctl_sock, SIOCSIFFLAGS, &ifr) != 0)
++	{
++		perror("ioctl[SIOCSIFFLAGS]");
++		return -1;
++	}
++	
++	return 0;
++}
++
++static void * wpa_driver_ralink_init(void *ctx, const char *ifname)
++{
++	int s;
++	struct wpa_driver_ralink_data *drv;
++	struct ifreq ifr;
++	struct sockaddr_nl local;
++    BOOLEAN  enable_wpa_supplicant;
++    struct wpa_supplicant *wpa_s = NULL;
++	struct wpa_ssid *entry;
++	int prio;
++
++    wpa_printf(MSG_DEBUG, "%s", __FUNCTION__);
++
++	/* open socket to kernel */
++	if ((s = socket(AF_INET, SOCK_DGRAM, 0)) < 0)
++	{
++		perror("socket");
++		return NULL;
++	}
++	/* do it */
++	strncpy(ifr.ifr_name, ifname, IFNAMSIZ);
++
++	if (ioctl(s, SIOCGIFINDEX, &ifr) < 0)
++	{
++		perror(ifr.ifr_name);
++		return NULL;
++	}
++
++
++	drv = os_malloc(sizeof(*drv));
++
++	if (drv == NULL)
++		return NULL;
++
++	memset(drv, 0, sizeof(*drv));
++	drv->ctx = ctx;
++	strncpy(drv->ifname, ifname, sizeof(drv->ifname));
++	drv->ioctl_sock = s;
++
++	//use netlink like this
++
++	s = socket(PF_NETLINK, SOCK_RAW, NETLINK_ROUTE);
++
++	if (s < 0)
++	{
++		perror("socket(PF_NETLINK,SOCK_RAW,NETLINK_ROUTE)");
++		close(drv->ioctl_sock);
++		os_free(drv);
++		return NULL;
++	}
++
++	memset(&local, 0, sizeof(local));
++	local.nl_family = AF_NETLINK;
++	local.nl_groups = RTMGRP_LINK;
++
++	if (bind(s, (struct sockaddr *) &local, sizeof(local)) < 0)
++	{
++		perror("bind(netlink)");
++		close(s);
++		close(drv->ioctl_sock);
++		os_free(drv);
++		return NULL;
++	}
++
++	eloop_register_read_sock(s, wpa_driver_ralink_event_receive, drv, ctx);
++	drv->event_sock = s;
++	drv->no_of_pmkid = 4; // Number of PMKID saved supporte
++
++    ralink_set_iface_flags(drv, 1);	/* mark up during setup */
++    ralink_get_we_version_compiled(drv);
++    wpa_driver_ralink_flush_pmkid(drv);
++
++    enable_wpa_supplicant = TRUE;
++    // trigger driver support wpa_supplicant
++	if (ralink_set_oid(drv, RT_OID_WPA_SUPPLICANT_SUPPORT, (char *) &enable_wpa_supplicant, sizeof(BOOLEAN)) < 0)
++	{
++		wpa_printf(MSG_DEBUG, "RALINK: Failed to set "
++			   "RT_OID_WPA_SUPPLICANT_SUPPORT(%d)",
++			   (int) enable_wpa_supplicant);	
++	}
++
++    wpa_s = drv->ctx;
++
++    if (wpa_s->conf->ap_scan == 1)
++       scanning_done = 0;
++
++	for(prio=0; prio<wpa_s->conf->num_prio; prio++)
++	{
++		for(entry=wpa_s->conf->pssid[prio]; entry; entry=entry->next)
++		{
++			if(entry->disabled)
++				continue;
++			wpa_driver_ralink_set_ssid(drv, entry->ssid, entry->ssid_len);
++			prio = wpa_s->conf->num_prio + 1;
++			break;
++		}
++	}
++	return drv;
++}
++
++static void wpa_driver_ralink_deinit(void *priv)
++{
++	struct wpa_driver_ralink_data *drv = priv;
++    BOOLEAN  enable_wpa_supplicant;
++
++    wpa_printf(MSG_DEBUG, "%s", __FUNCTION__);
++
++    enable_wpa_supplicant = FALSE;
++
++    // trigger driver disable wpa_supplicant support
++	if (ralink_set_oid(drv, RT_OID_WPA_SUPPLICANT_SUPPORT, (char *) &enable_wpa_supplicant, sizeof(BOOLEAN)) < 0)
++	{
++		wpa_printf(MSG_DEBUG, "RALINK: Failed to set "
++			   "RT_OID_WPA_SUPPLICANT_SUPPORT(%d)",
++			   (int) enable_wpa_supplicant);	
++	}
++
++    wpa_driver_ralink_flush_pmkid(drv);
++    sleep(1);
++    ralink_set_iface_flags(drv, 0);  
++
++	eloop_unregister_read_sock(drv->event_sock);
++	close(drv->event_sock);
++	close(drv->ioctl_sock);
++	os_free(drv);
++}
++
++static void wpa_driver_ralink_scan_timeout(void *eloop_ctx,
++					     void *timeout_ctx)
++{
++	wpa_printf(MSG_DEBUG, "%s", __FUNCTION__);
++
++	wpa_printf(MSG_DEBUG, "Scan timeout - try to get results");
++	wpa_supplicant_event(timeout_ctx, EVENT_SCAN_RESULTS, NULL);
++
++	scanning_done = 1;
++
++}
++
++static int wpa_driver_ralink_scan(void *priv, const u8 *ssid,
++				    size_t ssid_len)
++{
++	struct wpa_driver_ralink_data *drv = priv;
++	struct iwreq iwr;
++	int ret = 0;
++
++    wpa_printf(MSG_DEBUG, "%s", __FUNCTION__);
++
++	if (ssid_len > IW_ESSID_MAX_SIZE) {
++		wpa_printf(MSG_DEBUG, "%s: too long SSID (%lu)",
++			   __FUNCTION__, (unsigned long) ssid_len);
++		return -1;
++	}
++
++	wpa_driver_ralink_set_ssid(drv, ssid, ssid_len);
++
++	memset(&iwr, 0, sizeof(iwr));
++	strncpy(iwr.ifr_name, drv->ifname, IFNAMSIZ);
++
++	if (ioctl(drv->ioctl_sock, SIOCSIWSCAN, &iwr) < 0)
++	{
++		perror("ioctl[SIOCSIWSCAN]");
++		ret = -1;
++	}
++
++	/* Not all drivers generate "scan completed" wireless event, so try to
++	 * read results after a timeout. */
++	eloop_register_timeout(4, 0, wpa_driver_ralink_scan_timeout, drv, drv->ctx);
++
++    scanning_done = 0;
++
++	return ret;
++}
++
++static int
++wpa_driver_ralink_get_scan_results(void *priv,
++				     struct wpa_scan_result *results,
++				     size_t max_size)
++{
++	struct wpa_driver_ralink_data *drv = priv;
++	UCHAR *buf = NULL;
++	//NDIS_802_11_BSSID_LIST_EX *wsr = (NDIS_802_11_BSSID_LIST_EX *) buf; //<--carella modify
++	NDIS_802_11_BSSID_LIST_EX *wsr = NULL; //-->carella
++	NDIS_WLAN_BSSID_EX *wbi;
++	struct iwreq iwr;
++	int ap_num;
++    u8 *pos,*end;
++	   
++    wpa_printf(MSG_DEBUG, "%s", __FUNCTION__);
++
++	buf = (UCHAR *) os_malloc(RT_MAX_802_11_BSSID_LIST_EX);
++	if (buf == NULL)
++		return -1;
++
++        memset(buf, 0, RT_MAX_802_11_BSSID_LIST_EX);
++
++        wsr = (NDIS_802_11_BSSID_LIST_EX *) buf;
++
++	wsr->NumberOfItems = 0;
++	strncpy(iwr.ifr_name, drv->ifname, IFNAMSIZ);
++	iwr.u.data.pointer = (caddr_t) buf;
++	iwr.u.data.flags = OID_802_11_BSSID_LIST;
++
++    if (ioctl(drv->ioctl_sock, RT_PRIV_IOCTL, &iwr) < 0)
++	{
++		os_free(buf);
++		return -1;
++	}
++
++    memset(results, 0, max_size * sizeof(struct wpa_scan_result));
++
++    for (ap_num = 0, wbi = wsr->Bssid; ap_num < wsr->NumberOfItems; ++ap_num)
++	{
++		memcpy(results[ap_num].bssid, &wbi->MacAddress, ETH_ALEN);
++		memcpy(results[ap_num].ssid, wbi->Ssid.Ssid, wbi->Ssid.SsidLength);
++		results[ap_num].ssid_len = wbi->Ssid.SsidLength;
++		results[ap_num].freq = (wbi->Configuration.DSConfig / 1000);
++
++        /* get ie's */
++		wpa_hexdump(MSG_DEBUG, "RALINK: AP IEs",
++			    (u8 *) wbi + sizeof(*wbi) - 1, wbi->IELength);
++
++            pos = (u8 *) wbi + sizeof(*wbi) - 1;
++	    end = (u8 *) wbi + sizeof(*wbi) + wbi->IELength;
++	    
++	    if (wbi->IELength < sizeof(NDIS_802_11_FIXED_IEs))
++		    break;
++		   
++	    pos += sizeof(NDIS_802_11_FIXED_IEs) - 2;
++		memcpy(&results[ap_num].caps, pos, 2);
++		pos += 2;
++		
++	   	while (pos + 1 < end && pos + 2 + pos[1] <= end)
++		{
++		    u8 ielen = 2 + pos[1];
++
++	    	if (ielen > SSID_MAX_WPA_IE_LEN)
++			{
++			    pos += ielen;
++			    continue;
++		    }
++
++		    if (pos[0] == GENERIC_INFO_ELEM && pos[1] >= 4 &&
++		       	memcmp(pos + 2, "\x00\x50\xf2\x01", 4) == 0)
++			{
++			    memcpy(results[ap_num].wpa_ie, pos, ielen);
++			    results[ap_num].wpa_ie_len = ielen;
++		    }
++			else if (pos[0] == RSN_INFO_ELEM)
++			{
++			    memcpy(results[ap_num].rsn_ie, pos, ielen);
++			    results[ap_num].rsn_ie_len = ielen;
++		    }
++		    pos += ielen;
++	   }
++
++	   wbi = (NDIS_WLAN_BSSID_EX *) ((u8 *) wbi + wbi->Length);
++    }
++
++	os_free(buf);
++	return ap_num;
++}
++
++static int ralink_set_auth_mode(struct wpa_driver_ralink_data *drv, NDIS_802_11_AUTHENTICATION_MODE mode)
++{
++	NDIS_802_11_AUTHENTICATION_MODE auth_mode = mode;
++
++    wpa_printf(MSG_DEBUG, "%s", __FUNCTION__);
++
++	if (ralink_set_oid(drv, OID_802_11_AUTHENTICATION_MODE,
++			 (char *) &auth_mode, sizeof(auth_mode)) < 0)
++	{
++		wpa_printf(MSG_DEBUG, "RALINK: Failed to set "
++			   "OID_802_11_AUTHENTICATION_MODE (%d)",
++			   (int) auth_mode);
++		return -1;
++	}
++	return 0;
++}
++
++static int wpa_driver_ralink_remove_key(struct wpa_driver_ralink_data *drv,
++				      int key_idx, const u8 *addr,
++				      const u8 *bssid, int pairwise)
++{
++	NDIS_802_11_REMOVE_KEY rkey;
++	NDIS_802_11_KEY_INDEX index;
++	int res, res2;
++
++    wpa_printf(MSG_DEBUG, "%s", __FUNCTION__);
++
++	memset(&rkey, 0, sizeof(rkey));
++
++	rkey.Length = sizeof(rkey);
++	rkey.KeyIndex = key_idx;
++
++	if (pairwise)
++		rkey.KeyIndex |= 1 << 30;
++
++	memcpy(rkey.BSSID, bssid, ETH_ALEN);
++
++	res = ralink_set_oid(drv, OID_802_11_REMOVE_KEY, (char *) &rkey,
++			   sizeof(rkey));
++
++//AlbertY@20060210 removed it	
++	if(0)//if (!pairwise) 
++	{
++		res2 = ralink_set_oid(drv, OID_802_11_REMOVE_WEP,
++				    (char *) &index, sizeof(index));
++	}
++	else
++		res2 = 0;
++
++	if (res < 0 && res2 < 0)
++		return res;
++	return 0;
++}
++
++static int wpa_driver_ralink_add_wep(struct wpa_driver_ralink_data *drv,
++				   int pairwise, int key_idx, int set_tx,
++				   const u8 *key, size_t key_len)
++{
++	NDIS_802_11_WEP *wep;
++	size_t len;
++	int res;
++
++    wpa_printf(MSG_DEBUG, "%s", __FUNCTION__);
++
++	len = 12 + key_len;
++	wep = os_malloc(len);
++
++	if (wep == NULL)
++		return -1;
++
++	memset(wep, 0, len);
++	wep->Length = len;
++	wep->KeyIndex = key_idx;
++
++	if (set_tx)
++		wep->KeyIndex |= 1 << 31;
++#if 0 /* Setting bit30 does not seem to work with some NDIS drivers */
++	if (pairwise)
++		wep->KeyIndex |= 1 << 30;
++#endif
++	wep->KeyLength = key_len;
++	memcpy(wep->KeyMaterial, key, key_len);
++
++	wpa_hexdump_key(MSG_MSGDUMP, "RALINK: OID_802_11_ADD_WEP",
++			(const u8 *) wep, len);
++	res = ralink_set_oid(drv, OID_802_11_ADD_WEP, (char *) wep, len);
++
++	os_free(wep);
++
++	return res;
++}
++
++static int wpa_driver_ralink_set_key(void *priv, wpa_alg alg, const u8 *addr,
++				   int key_idx, int set_tx,
++				   const u8 *seq, size_t seq_len,
++				   const u8 *key, size_t key_len)
++{
++	struct wpa_driver_ralink_data *drv = priv;
++	size_t len;
++	NDIS_802_11_KEY *nkey;
++	int i, res, pairwise;
++	u8 bssid[ETH_ALEN];
++
++    wpa_printf(MSG_DEBUG, "%s", __FUNCTION__);
++
++	if (addr == NULL || memcmp(addr, "\xff\xff\xff\xff\xff\xff",
++				   ETH_ALEN) == 0)
++	{
++		/* Group Key */
++		pairwise = 0;
++		wpa_driver_ralink_get_bssid(drv, bssid);
++	}
++	else
++	{
++		/* Pairwise Key */
++		pairwise = 1;
++		memcpy(bssid, addr, ETH_ALEN);
++	}
++
++	if (alg == WPA_ALG_NONE || key_len == 0)
++	{
++		return wpa_driver_ralink_remove_key(drv, key_idx, addr, bssid,
++						  pairwise);
++	}
++
++	if (alg == WPA_ALG_WEP)
++	{
++		return wpa_driver_ralink_add_wep(drv, pairwise, key_idx, set_tx,
++					       key, key_len);
++	}
++
++	len = 12 + 6 + 6 + 8 + key_len;
++
++	nkey = os_malloc(len);
++
++	if (nkey == NULL)
++		return -1;
++
++	memset(nkey, 0, len);
++
++	nkey->Length = len;
++	nkey->KeyIndex = key_idx;
++
++	if (set_tx)
++		nkey->KeyIndex |= 1 << 31;
++
++	if (pairwise)
++		nkey->KeyIndex |= 1 << 30;
++
++	if (seq && seq_len)
++		nkey->KeyIndex |= 1 << 29;
++
++	nkey->KeyLength = key_len;
++	memcpy(nkey->BSSID, bssid, ETH_ALEN);
++
++	if (seq && seq_len)
++	{
++		for (i = 0; i < seq_len; i++)
++			nkey->KeyRSC |= seq[i] << (i * 8);
++	}
++	if (alg == WPA_ALG_TKIP && key_len == 32)
++	{
++		memcpy(nkey->KeyMaterial, key, 16);
++		memcpy(nkey->KeyMaterial + 16, key + 24, 8);
++		memcpy(nkey->KeyMaterial + 24, key + 16, 8);
++	}
++	else
++	{
++		memcpy(nkey->KeyMaterial, key, key_len);
++	}
++
++	wpa_hexdump_key(MSG_MSGDUMP, "RALINK: OID_802_11_ADD_KEY",
++			(const u8 *) nkey, len);
++	res = ralink_set_oid(drv, OID_802_11_ADD_KEY, (char *) nkey, len);
++	os_free(nkey);
++
++	return res;
++}
++
++static int wpa_driver_ralink_disassociate(void *priv, const u8 *addr,
++					int reason_code)
++{
++	struct wpa_driver_ralink_data *drv = priv;
++
++	wpa_printf(MSG_DEBUG, "%s", __FUNCTION__);
++	if (ralink_set_oid(drv, OID_802_11_DISASSOCIATE,
++			 "    ", 4) < 0)
++	{
++		wpa_printf(MSG_DEBUG, "RALINK: Failed to set "
++			   "OID_802_11_DISASSOCIATE");
++	}
++
++       return 0;
++}
++
++static int wpa_driver_ralink_deauthenticate(void *priv, const u8 *addr,
++					  int reason_code)
++{
++	wpa_printf(MSG_DEBUG, "%s", __FUNCTION__);
++	return wpa_driver_ralink_disassociate(priv, addr, reason_code);
++}
++
++static int
++wpa_driver_ralink_associate(void *priv,
++			  struct wpa_driver_associate_params *params)
++{
++	struct wpa_driver_ralink_data *drv = priv;
++	
++	NDIS_802_11_NETWORK_INFRASTRUCTURE mode;
++	NDIS_802_11_AUTHENTICATION_MODE auth_mode;
++	NDIS_802_11_WEP_STATUS encr, group;
++	BOOLEAN		ieee8021xMode;
++
++    wpa_printf(MSG_DEBUG, "%s", __FUNCTION__);
++
++	if (params->mode == IEEE80211_MODE_IBSS)
++		mode = Ndis802_11IBSS;
++	else
++		mode = Ndis802_11Infrastructure;
++
++	if (ralink_set_oid(drv, OID_802_11_INFRASTRUCTURE_MODE,
++			 (char *) &mode, sizeof(mode)) < 0)
++	{
++		wpa_printf(MSG_DEBUG, "RALINK: Failed to set "
++			   "OID_802_11_INFRASTRUCTURE_MODE (%d)",
++			   (int) mode);
++		/* Try to continue anyway */
++	}
++
++	if (params->wpa_ie == NULL || params->wpa_ie_len == 0)
++	{
++		if (params->auth_alg & AUTH_ALG_SHARED_KEY)
++		{
++			if (params->auth_alg & AUTH_ALG_OPEN_SYSTEM)
++				auth_mode = Ndis802_11AuthModeAutoSwitch;
++			else
++				auth_mode = Ndis802_11AuthModeShared;
++		}
++		else
++			auth_mode = Ndis802_11AuthModeOpen;
++	}
++	else if (params->wpa_ie[0] == RSN_INFO_ELEM)
++	{
++		if (params->key_mgmt_suite == KEY_MGMT_PSK)
++			auth_mode = Ndis802_11AuthModeWPA2PSK;
++		else
++			auth_mode = Ndis802_11AuthModeWPA2;
++	}
++	else
++	{
++		if (params->key_mgmt_suite == KEY_MGMT_WPA_NONE)
++			auth_mode = Ndis802_11AuthModeWPANone;
++		else if (params->key_mgmt_suite == KEY_MGMT_PSK)
++			auth_mode = Ndis802_11AuthModeWPAPSK;
++		else
++			auth_mode = Ndis802_11AuthModeWPA;
++	}
++
++	switch (params->pairwise_suite)
++	{
++		case CIPHER_CCMP:
++			encr = Ndis802_11Encryption3Enabled;
++		break;
++		case CIPHER_TKIP:
++			encr = Ndis802_11Encryption2Enabled;
++		break;
++		case CIPHER_WEP40:
++		case CIPHER_WEP104:
++			encr = Ndis802_11Encryption1Enabled;
++		break;
++		case CIPHER_NONE:
++			if (params->group_suite == CIPHER_CCMP)
++				encr = Ndis802_11Encryption3Enabled;
++			else if (params->group_suite == CIPHER_TKIP)
++				encr = Ndis802_11Encryption2Enabled;
++        		else
++            			encr = Ndis802_11EncryptionDisabled;
++		break;
++		default:
++			encr = Ndis802_11EncryptionDisabled;
++	};
++       
++	ralink_set_auth_mode(drv, auth_mode);
++
++	// notify driver that IEEE8021x mode is enabled
++	if(params->key_mgmt_suite == KEY_MGMT_802_1X_NO_WPA)
++		ieee8021xMode = TRUE;
++	else
++		ieee8021xMode = FALSE;	
++
++	if (ralink_set_oid(drv, OID_802_11_SET_IEEE8021X, (char *) &ieee8021xMode, sizeof(BOOLEAN)) < 0)
++	{
++		wpa_printf(MSG_DEBUG, "RALINK: Failed to set "
++			   "OID_802_11_SET_IEEE8021X(%d)",
++			   (int) ieee8021xMode);	
++	}
++
++	if (ralink_set_oid(drv, OID_802_11_WEP_STATUS,
++			 (char *) &encr, sizeof(encr)) < 0) {
++		wpa_printf(MSG_DEBUG, "RALINK: Failed to set "
++			   "OID_802_11_WEP_STATUS(%d)",
++			   (int) encr);
++	}
++
++	return wpa_driver_ralink_set_ssid(drv, params->ssid, params->ssid_len);
++}
++
++static int wpa_driver_ralink_get_associnfo(struct wpa_driver_ralink_data *drv)
++{
++	NDIS_802_11_ASSOCIATION_INFORMATION *buf;
++	int ret = 0;
++	struct iwreq iwr;
++ 
++    	wpa_printf(MSG_DEBUG, "%s", __FUNCTION__);
++
++    	buf = (NDIS_802_11_ASSOCIATION_INFORMATION *)os_malloc(sizeof(NDIS_802_11_ASSOCIATION_INFORMATION));
++	if (buf == NULL)
++		return -1;
++	memset(buf, 0, sizeof(buf));
++	memset(&iwr, 0, sizeof(iwr));
++	strncpy(iwr.ifr_name, drv->ifname, IFNAMSIZ);
++		
++	iwr.u.data.flags = OID_802_11_STATE;
++	iwr.u.data.flags |= OID_GET_SET_TOGGLE;
++	iwr.u.data.pointer = (caddr_t) buf;
++	iwr.u.data.length = sizeof(NDIS_802_11_ASSOCIATION_INFORMATION);
++
++	if (ioctl(drv->ioctl_sock, RT_PRIV_IOCTL, &iwr) < 0)
++	{
++		perror("ioctl[RT_PRIV_IOCTL] -- OID_802_11_SSID");
++		ret = -1;
++	}
++
++	if(((NDIS_802_11_ASSOCIATION_INFORMATION *)iwr.u.data.pointer)->AssociateResponseToMe)
++	{
++		printf("wpa_driver_ralink_get_associnfo: association success\n");
++		ret = 1;
++	}
++	else
++		printf("wpa_driver_ralink_get_associnfo: association fail\n");
++	os_free(buf);	
++	return ret;
++}
++
++static int wpa_driver_ralink_poll_timeout(void *eloop_ctx, void *ctx)
++{
++	struct wpa_driver_ralink_data *drv = eloop_ctx;
++	struct wpa_supplicant *wpa_s = ctx;
++	u8 bssid[ETH_ALEN];
++
++	if (wpa_driver_ralink_get_bssid(drv, bssid)) {
++		/* Disconnected */
++		wpa_printf(MSG_DEBUG, "%s: Disconnected!!", __FUNCTION__);
++	} else {
++		/* Connected */
++
++		if(wpa_driver_ralink_get_associnfo(drv) == 1)
++		{
++			wpa_printf(MSG_DEBUG, "%s: Connected!!", __FUNCTION__);
++			wpa_drv_get_bssid(wpa_s, wpa_s->bssid);
++			wpa_s->associate_state = 1;
++			wpa_supplicant_event(ctx, EVENT_ASSOC, NULL);
++		}
++		else
++			wpa_s->associate_state = 0;
++	}
++}
++
++static void wpa_driver_ralink_poll(void *priv, void *ctx)
++{
++	struct wpa_driver_ralink_data *drv = priv;
++	struct wpa_supplicant *wpa_s = ctx;
++
++	if(wpa_s->wpa_state < WPA_ASSOCIATED)
++		wpa_driver_ralink_poll_timeout(drv, ctx);
++}
++
++const struct wpa_driver_ops wpa_driver_ralink_ops = {
++	.name = "ralink",
++	.desc = "Ralink rt73 driver",
++	.get_bssid = wpa_driver_ralink_get_bssid,
++	.get_ssid = wpa_driver_ralink_get_ssid,
++	.set_key = wpa_driver_ralink_set_key,
++	.init = wpa_driver_ralink_init,
++	.deinit = wpa_driver_ralink_deinit,
++	.scan = wpa_driver_ralink_scan,
++	.get_scan_results = wpa_driver_ralink_get_scan_results,
++	.deauthenticate = wpa_driver_ralink_deauthenticate,
++	.disassociate = wpa_driver_ralink_disassociate,
++	.associate = wpa_driver_ralink_associate,
++	.add_pmkid = wpa_driver_ralink_add_pmkid,
++	.remove_pmkid = wpa_driver_ralink_remove_pmkid,
++	.flush_pmkid = wpa_driver_ralink_flush_pmkid,
++	.poll_ralink = wpa_driver_ralink_poll,
++};
+diff -NaurEbB wpa_supplicant-0.5.10/driver_ralink.h wpa_supplicant-0.5.10_RALINK/driver_ralink.h
+--- wpa_supplicant-0.5.10/driver_ralink.h	1970-01-01 01:00:00.000000000 +0100
++++ wpa_supplicant-0.5.10_RALINK/driver_ralink.h	2008-12-05 01:36:46.000000000 +0100
+@@ -0,0 +1,394 @@
++/*
++ ***************************************************************************
++ * Ralink Tech Inc.
++ * 5F, No. 36 Taiyuan St.
++ * Jhubei City
++ * Hsinchu County 302, Taiwan, R.O.C.
++ *
++ * (c) Copyright 2002-2008, Ralink Technology, Inc.
++ *
++ * This program is free software; you can redistribute it and/or modify  * 
++ * it under the terms of the GNU General Public License as published by  * 
++ * the Free Software Foundation; either version 2 of the License, or     * 
++ * (at your option) any later version.                                   * 
++ *                                                                       * 
++ * This program is distributed in the hope that it will be useful,       * 
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of        * 
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         * 
++ * GNU General Public License for more details.                          * 
++ *                                                                       * 
++ * You should have received a copy of the GNU General Public License     * 
++ * along with this program; if not, write to the                         * 
++ * Free Software Foundation, Inc.,                                       * 
++ * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             * 
++ *                                                                       * 
++ ************************************************************************/
++
++/*
++ * WPA Supplicant - driver interaction with Ralink rt73 driver driver
++ * 
++ *
++ *
++ */
++
++//#include <linux/wireless.h>
++
++// Ralink defined OIDs
++#if WIRELESS_EXT <= 11
++#ifndef SIOCDEVPRIVATE
++#define SIOCDEVPRIVATE                              0x8BE0
++#endif
++#define SIOCIWFIRSTPRIV								SIOCDEVPRIVATE
++#endif
++
++#define RT_PRIV_IOCTL								(SIOCIWFIRSTPRIV + 0x0E)  
++#define RTPRIV_IOCTL_SET							(SIOCIWFIRSTPRIV + 0x02)
++
++// IEEE 802.11 OIDs  &  Ralink defined OIDs  ******
++
++// (RaConfig Set/QueryInform) ==>
++#define OID_GET_SET_TOGGLE							0x8000
++
++#define OID_802_11_ADD_WEP                          0x0112
++#define OID_802_11_REMOVE_WEP                       0x0113
++#define OID_802_11_DISASSOCIATE                     0x0114
++#define OID_802_11_PRIVACY_FILTER                   0x0118
++#define OID_802_11_ASSOCIATION_INFORMATION          0x011E
++#define OID_802_11_BSSID_LIST_SCAN                  0x0508
++#define OID_802_11_SSID                             0x0509
++#define OID_802_11_BSSID                            0x050A
++#define OID_802_11_WEP_STATUS                       0x0510
++#define OID_802_11_AUTHENTICATION_MODE              0x0511
++#define OID_802_11_INFRASTRUCTURE_MODE              0x0512
++#define OID_802_11_TX_POWER_LEVEL                   0x0517
++#define OID_802_11_REMOVE_KEY                       0x0519
++#define OID_802_11_ADD_KEY                          0x0520
++#define OID_802_11_BSSID_LIST                       0x0609
++#define OID_802_3_CURRENT_ADDRESS                   0x060A
++#define OID_SET_COUNTERMEASURES                     0x0616
++#define OID_802_11_SET_IEEE8021X                    0x0617	// For IEEE8021x mode 
++#define OID_802_11_SET_IEEE8021X_REQUIRE_KEY        0x0618  // For DynamicWEP in IEEE802.1x mode
++#define OID_802_11_PMKID                            0x0620
++#define RT_OID_WPA_SUPPLICANT_SUPPORT               0x0621  // for trigger driver enable/disable wpa_supplicant support 
++#define RT_OID_WE_VERSION_COMPILED                  0x0622
++#define OID_802_11_STATE			    0x0623
++
++#define PACKED  __attribute__ ((packed))
++
++//wpa_supplicant event flags
++#define	RT_ASSOC_EVENT_FLAG                         0x0101
++#define	RT_DISASSOC_EVENT_FLAG                      0x0102
++#define	RT_REQIE_EVENT_FLAG                         0x0103
++#define	RT_RESPIE_EVENT_FLAG                        0x0104
++#define	RT_ASSOCINFO_EVENT_FLAG                     0x0105
++#define RT_PMKIDCAND_FLAG                           0x0106
++
++#define RT_MAX_802_11_BSSID_LIST_EX		16384
++//
++// IEEE 802.11 Structures and definitions
++//
++// new types for Media Specific Indications
++
++#ifndef ULONG
++#define CHAR            char
++#define INT             int
++#define SHORT           int
++#define UINT            u32
++#define ULONG           u32
++#define USHORT          u16
++#define UCHAR           u8
++
++#define uint32		u32
++#define uint8		u8
++
++
++#define BOOLEAN         u8
++//#define LARGE_INTEGER s64
++#define VOID            void
++#define LONG            int
++#define LONGLONG        s64
++#define ULONGLONG       u64
++typedef VOID            *PVOID;
++typedef CHAR            *PCHAR;
++typedef UCHAR           *PUCHAR;
++typedef USHORT          *PUSHORT;
++typedef LONG            *PLONG;
++typedef ULONG           *PULONG;
++
++typedef union _LARGE_INTEGER {
++    struct {
++        ULONG LowPart;
++        LONG HighPart;
++    }vv;
++    struct {
++        ULONG LowPart;
++        LONG HighPart;
++    } u;
++    s64 QuadPart;
++} LARGE_INTEGER;
++
++#endif
++
++#define NDIS_802_11_LENGTH_SSID         32
++#define NDIS_802_11_LENGTH_RATES        8
++#define NDIS_802_11_LENGTH_RATES_EX     16
++#define MAX_LEN_OF_SSID                 32
++#define MAC_ADDR_LEN                    6
++
++typedef UCHAR   NDIS_802_11_MAC_ADDRESS[6];
++
++// mask for authentication/integrity fields
++#define NDIS_802_11_AUTH_REQUEST_AUTH_FIELDS        0x0f
++
++#define NDIS_802_11_AUTH_REQUEST_REAUTH             0x01
++#define NDIS_802_11_AUTH_REQUEST_KEYUPDATE          0x02
++#define NDIS_802_11_AUTH_REQUEST_PAIRWISE_ERROR     0x06
++#define NDIS_802_11_AUTH_REQUEST_GROUP_ERROR        0x0E
++
++// Added new types for OFDM 5G and 2.4G
++typedef enum _NDIS_802_11_NETWORK_TYPE
++{
++    Ndis802_11FH, 
++    Ndis802_11DS, 
++    Ndis802_11OFDM5,
++    Ndis802_11OFDM24,
++    Ndis802_11Automode,
++    Ndis802_11NetworkTypeMax    // not a real type, defined as an upper bound
++} NDIS_802_11_NETWORK_TYPE, *PNDIS_802_11_NETWORK_TYPE;
++
++//
++// Received Signal Strength Indication
++//
++typedef LONG    NDIS_802_11_RSSI;           // in dBm
++
++typedef struct _NDIS_802_11_CONFIGURATION_FH
++{
++   ULONG           Length;            // Length of structure
++   ULONG           HopPattern;        // As defined by 802.11, MSB set 
++   ULONG           HopSet;            // to one if non-802.11
++   ULONG           DwellTime;         // units are Kusec
++} NDIS_802_11_CONFIGURATION_FH, *PNDIS_802_11_CONFIGURATION_FH;
++
++typedef struct _NDIS_802_11_CONFIGURATION
++{
++   ULONG                           Length;             // Length of structure
++   ULONG                           BeaconPeriod;       // units are Kusec
++   ULONG                           ATIMWindow;         // units are Kusec
++   ULONG                           DSConfig;           // Frequency, units are kHz
++   NDIS_802_11_CONFIGURATION_FH    FHConfig;
++} NDIS_802_11_CONFIGURATION, *PNDIS_802_11_CONFIGURATION;
++
++typedef  ULONG  NDIS_802_11_KEY_INDEX;
++typedef ULONGLONG   NDIS_802_11_KEY_RSC;
++
++// Key mapping keys require a BSSID
++typedef struct PACKED _NDIS_802_11_KEY
++{
++    ULONG           Length;             // Length of this structure
++    ULONG           KeyIndex;           
++    ULONG           KeyLength;          // length of key in bytes
++    NDIS_802_11_MAC_ADDRESS BSSID;
++    NDIS_802_11_KEY_RSC KeyRSC;
++    UCHAR           KeyMaterial[1];     // variable length depending on above field
++} NDIS_802_11_KEY, *PNDIS_802_11_KEY;
++
++typedef struct _NDIS_802_11_REMOVE_KEY
++{
++    ULONG                   Length;        // Length of this structure
++    ULONG                   KeyIndex;           
++    NDIS_802_11_MAC_ADDRESS BSSID;      
++} NDIS_802_11_REMOVE_KEY, *PNDIS_802_11_REMOVE_KEY;
++
++typedef struct PACKED _NDIS_802_11_WEP
++{
++   ULONG     Length;        // Length of this structure
++    ULONG           KeyIndex;           // 0 is the per-client key, 1-N are the
++                                        // global keys
++   ULONG     KeyLength;     // length of key in bytes
++   UCHAR     KeyMaterial[1];// variable length depending on above field
++} NDIS_802_11_WEP, *PNDIS_802_11_WEP;
++
++
++typedef enum _NDIS_802_11_NETWORK_INFRASTRUCTURE
++{
++   Ndis802_11IBSS,
++   Ndis802_11Infrastructure,
++   Ndis802_11AutoUnknown,
++   Ndis802_11InfrastructureMax     // Not a real value, defined as upper bound
++} NDIS_802_11_NETWORK_INFRASTRUCTURE, *PNDIS_802_11_NETWORK_INFRASTRUCTURE;
++
++// PMKID Structures
++typedef UCHAR   NDIS_802_11_PMKID_VALUE[16];
++
++typedef struct _BSSID_INFO
++{
++	NDIS_802_11_MAC_ADDRESS BSSID;
++	NDIS_802_11_PMKID_VALUE PMKID;
++} BSSID_INFO, *PBSSID_INFO;
++
++typedef struct _NDIS_802_11_PMKID
++{
++	ULONG Length;
++	ULONG BSSIDInfoCount;
++	BSSID_INFO BSSIDInfo[1];
++} NDIS_802_11_PMKID, *PNDIS_802_11_PMKID;
++
++//Added new types for PMKID Candidate lists.
++typedef struct _PMKID_CANDIDATE {
++	NDIS_802_11_MAC_ADDRESS BSSID;
++	ULONG Flags;
++} PMKID_CANDIDATE, *PPMKID_CANDIDATE;
++
++typedef struct _NDIS_802_11_PMKID_CANDIDATE_LIST
++{
++	ULONG Version;       // Version of the structure
++	ULONG NumCandidates; // No. of pmkid candidates
++	PMKID_CANDIDATE CandidateList[1];
++} NDIS_802_11_PMKID_CANDIDATE_LIST, *PNDIS_802_11_PMKID_CANDIDATE_LIST;
++
++//Flags for PMKID Candidate list structure
++#define NDIS_802_11_PMKID_CANDIDATE_PREAUTH_ENABLED	0x01
++
++// Add new authentication modes
++typedef enum _NDIS_802_11_AUTHENTICATION_MODE
++{
++   Ndis802_11AuthModeOpen,
++   Ndis802_11AuthModeShared,
++   Ndis802_11AuthModeAutoSwitch,
++   Ndis802_11AuthModeWPA,
++   Ndis802_11AuthModeWPAPSK,
++   Ndis802_11AuthModeWPANone,
++   Ndis802_11AuthModeWPA2,
++   Ndis802_11AuthModeWPA2PSK,    
++   Ndis802_11AuthModeMax           // Not a real mode, defined as upper bound
++} NDIS_802_11_AUTHENTICATION_MODE, *PNDIS_802_11_AUTHENTICATION_MODE;
++
++typedef UCHAR NDIS_802_11_RATES[NDIS_802_11_LENGTH_RATES];        // Set of 8 data rates
++typedef UCHAR NDIS_802_11_RATES_EX[NDIS_802_11_LENGTH_RATES_EX];  // Set of 16 data rates
++
++typedef struct PACKED _NDIS_802_11_SSID 
++{
++    ULONG   SsidLength;         // length of SSID field below, in bytes;
++                                // this can be zero.
++    UCHAR   Ssid[NDIS_802_11_LENGTH_SSID];           // SSID information field
++} NDIS_802_11_SSID, *PNDIS_802_11_SSID;
++
++
++typedef struct PACKED _NDIS_WLAN_BSSID
++{
++   ULONG                               Length;     // Length of this structure
++   NDIS_802_11_MAC_ADDRESS             MacAddress; // BSSID
++   UCHAR                               Reserved[2];
++   NDIS_802_11_SSID                    Ssid;       // SSID
++   ULONG                               Privacy;    // WEP encryption requirement
++    NDIS_802_11_RSSI                    Rssi;               // receive signal
++                                                            // strength in dBm
++   NDIS_802_11_NETWORK_TYPE            NetworkTypeInUse;
++   NDIS_802_11_CONFIGURATION           Configuration;
++   NDIS_802_11_NETWORK_INFRASTRUCTURE  InfrastructureMode;
++   NDIS_802_11_RATES                   SupportedRates;
++} NDIS_WLAN_BSSID, *PNDIS_WLAN_BSSID;
++
++typedef struct PACKED _NDIS_802_11_BSSID_LIST
++{
++   ULONG           NumberOfItems;      // in list below, at least 1
++   NDIS_WLAN_BSSID Bssid[1];
++} NDIS_802_11_BSSID_LIST, *PNDIS_802_11_BSSID_LIST;
++
++// Added Capabilities, IELength and IEs for each BSSID
++typedef struct PACKED _NDIS_WLAN_BSSID_EX
++{
++    ULONG                               Length;             // Length of this structure
++    NDIS_802_11_MAC_ADDRESS             MacAddress;         // BSSID
++    UCHAR                               Reserved[2];
++    NDIS_802_11_SSID                    Ssid;               // SSID
++    ULONG                               Privacy;            // WEP encryption requirement
++    NDIS_802_11_RSSI                    Rssi;               // receive signal
++                                                            // strength in dBm
++    NDIS_802_11_NETWORK_TYPE            NetworkTypeInUse;
++    NDIS_802_11_CONFIGURATION           Configuration;
++    NDIS_802_11_NETWORK_INFRASTRUCTURE  InfrastructureMode;
++    NDIS_802_11_RATES_EX                SupportedRates;
++    ULONG                               IELength;
++    UCHAR                               IEs[1];
++} NDIS_WLAN_BSSID_EX, *PNDIS_WLAN_BSSID_EX;
++
++typedef struct _NDIS_802_11_BSSID_LIST_EX
++{
++    ULONG                   NumberOfItems;      // in list below, at least 1
++    NDIS_WLAN_BSSID_EX      Bssid[1];
++} NDIS_802_11_BSSID_LIST_EX, *PNDIS_802_11_BSSID_LIST_EX;
++
++typedef struct _NDIS_802_11_FIXED_IEs 
++{
++    UCHAR Timestamp[8];
++    USHORT BeaconInterval;
++    USHORT Capabilities;
++} NDIS_802_11_FIXED_IEs, *PNDIS_802_11_FIXED_IEs;
++
++// Added new encryption types
++// Also aliased typedef to new name
++typedef enum _NDIS_802_11_WEP_STATUS
++{
++   Ndis802_11WEPEnabled,
++   Ndis802_11Encryption1Enabled = Ndis802_11WEPEnabled,
++   Ndis802_11WEPDisabled,
++   Ndis802_11EncryptionDisabled = Ndis802_11WEPDisabled,
++   Ndis802_11WEPKeyAbsent,
++   Ndis802_11Encryption1KeyAbsent = Ndis802_11WEPKeyAbsent,
++   Ndis802_11WEPNotSupported,
++   Ndis802_11EncryptionNotSupported = Ndis802_11WEPNotSupported,
++   Ndis802_11Encryption2Enabled,
++   Ndis802_11Encryption2KeyAbsent,
++   Ndis802_11Encryption3Enabled,
++   Ndis802_11Encryption3KeyAbsent
++} NDIS_802_11_WEP_STATUS, *PNDIS_802_11_WEP_STATUS,
++  NDIS_802_11_ENCRYPTION_STATUS, *PNDIS_802_11_ENCRYPTION_STATUS;
++
++typedef enum _NDIS_802_11_RELOAD_DEFAULTS
++{
++   Ndis802_11ReloadWEPKeys
++} NDIS_802_11_RELOAD_DEFAULTS, *PNDIS_802_11_RELOAD_DEFAULTS;
++
++#define NDIS_802_11_AI_REQFI_CAPABILITIES      1
++#define NDIS_802_11_AI_REQFI_LISTENINTERVAL    2
++#define NDIS_802_11_AI_REQFI_CURRENTAPADDRESS  4
++
++#define NDIS_802_11_AI_RESFI_CAPABILITIES      1
++#define NDIS_802_11_AI_RESFI_STATUSCODE        2
++#define NDIS_802_11_AI_RESFI_ASSOCIATIONID     4
++
++typedef struct _NDIS_802_11_AI_REQFI
++{
++    USHORT Capabilities;
++    USHORT ListenInterval;
++    NDIS_802_11_MAC_ADDRESS  CurrentAPAddress;
++} NDIS_802_11_AI_REQFI, *PNDIS_802_11_AI_REQFI;
++
++typedef struct _NDIS_802_11_AI_RESFI
++{
++    USHORT Capabilities;
++    USHORT StatusCode;
++    USHORT AssociationId;
++} NDIS_802_11_AI_RESFI, *PNDIS_802_11_AI_RESFI;
++
++typedef struct _NDIS_802_11_ASSOCIATION_INFORMATION
++{
++    ULONG                   Length;
++    USHORT                  AvailableRequestFixedIEs;
++    NDIS_802_11_AI_REQFI    RequestFixedIEs;
++    ULONG                   RequestIELength;
++    ULONG                   OffsetRequestIEs;
++    USHORT                  AvailableResponseFixedIEs;
++    NDIS_802_11_AI_RESFI    ResponseFixedIEs;
++    ULONG                   ResponseIELength;
++    ULONG                   OffsetResponseIEs;
++    ULONG                   AssociateResponseToMe;
++} NDIS_802_11_ASSOCIATION_INFORMATION, *PNDIS_802_11_ASSOCIATION_INFORMATION;
++
++struct ndis_pmkid_entry {
++	struct ndis_pmkid_entry *next;
++	u8 bssid[ETH_ALEN];
++	u8 pmkid[16];
++};
++
+diff -NaurEbB wpa_supplicant-0.5.10/drivers.c wpa_supplicant-0.5.10_RALINK/drivers.c
+--- wpa_supplicant-0.5.10/drivers.c	2008-12-05 01:45:50.000000000 +0100
++++ wpa_supplicant-0.5.10_RALINK/drivers.c	2008-12-05 01:36:46.000000000 +0100
+@@ -57,7 +57,9 @@
+ #ifdef CONFIG_DRIVER_TEST
+ extern struct wpa_driver_ops wpa_driver_test_ops; /* driver_test.c */
+ #endif /* CONFIG_DRIVER_TEST */
+-
++#ifdef CONFIG_DRIVER_RALINK
++extern struct wpa_driver_ops wpa_driver_ralink_ops; /* driver_ralink.c */
++#endif /* CONFIG_DRIVER_RALINK */
+ 
+ struct wpa_driver_ops *wpa_supplicant_drivers[] =
+ {
+@@ -103,5 +105,8 @@
+ #ifdef CONFIG_DRIVER_TEST
+ 	&wpa_driver_test_ops,
+ #endif /* CONFIG_DRIVER_TEST */
++#ifdef CONFIG_DRIVER_RALINK
++	&wpa_driver_ralink_ops,
++#endif /* CONFIG_DRIVER_RALINK */
+ 	NULL
+ };
+diff -NaurEbB wpa_supplicant-0.5.10/events.c wpa_supplicant-0.5.10_RALINK/events.c
+--- wpa_supplicant-0.5.10/events.c	2007-11-29 03:49:08.000000000 +0100
++++ wpa_supplicant-0.5.10_RALINK/events.c	2008-12-05 01:40:05.000000000 +0100
+@@ -283,11 +283,14 @@
+ 			break;
+ 		}
+ 
++/* carella modify */
++#ifndef CONFIG_DRIVER_RALINK
+ 		if (!(ie.group_cipher & ssid->group_cipher)) {
+ 			wpa_printf(MSG_DEBUG, "   skip RSN IE - GTK cipher "
+ 				   "mismatch");
+ 			break;
+ 		}
++#endif
+ 
+ 		if (!(ie.key_mgmt & ssid->key_mgmt)) {
+ 			wpa_printf(MSG_DEBUG, "   skip RSN IE - key mgmt "
+@@ -327,11 +330,14 @@
+ 			break;
+ 		}
+ 
++/* carella modify */
++#ifndef CONFIG_DRIVER_RALINK
+ 		if (!(ie.group_cipher & ssid->group_cipher)) {
+ 			wpa_printf(MSG_DEBUG, "   skip WPA IE - GTK cipher "
+ 				   "mismatch");
+ 			break;
+ 		}
++#endif
+ 
+ 		if (!(ie.key_mgmt & ssid->key_mgmt)) {
+ 			wpa_printf(MSG_DEBUG, "   skip WPA IE - key mgmt "
+@@ -391,9 +397,10 @@
+ 				wpa_printf(MSG_DEBUG, "   skip - disabled");
+ 				continue;
+ 			}
+-			if (bss->ssid_len != ssid->ssid_len ||
++			//if (bss->ssid_len != ssid->ssid_len || <--carella modify
++			if (bss->ssid_len && (bss->ssid_len != ssid->ssid_len || //-->carella
+ 			    os_memcmp(bss->ssid, ssid->ssid,
+-				      bss->ssid_len) != 0) {
++				      bss->ssid_len) != 0)) {
+ 				wpa_printf(MSG_DEBUG, "   skip - "
+ 					   "SSID mismatch");
+ 				continue;
+@@ -439,8 +447,10 @@
+ 				wpa_printf(MSG_DEBUG, "   skip - disabled");
+ 				continue;
+ 			}
++
+ 			if (ssid->ssid_len != 0 &&
+-			    (bss->ssid_len != ssid->ssid_len ||
++			//    (bss->ssid_len != ssid->ssid_len || <--carella modify
++			    bss->ssid_len && (bss->ssid_len != ssid->ssid_len ||//-->carella
+ 			     os_memcmp(bss->ssid, ssid->ssid,
+ 				       bss->ssid_len) != 0)) {
+ 				wpa_printf(MSG_DEBUG, "   skip - "
+@@ -684,9 +694,12 @@
+ 			wpa_clear_keys(wpa_s, bssid);
+ 		}
+ 		if (wpa_supplicant_select_config(wpa_s) < 0) {
++/* carell modfy */
++#if 0
+ 			wpa_supplicant_disassociate(wpa_s,
+ 						    REASON_DEAUTH_LEAVING);
+ 			return;
++#endif
+ 		}
+ 	}
+ 
+diff -NaurEbB wpa_supplicant-0.5.10/wpa_supplicant.c wpa_supplicant-0.5.10_RALINK/wpa_supplicant.c
+--- wpa_supplicant-0.5.10/wpa_supplicant.c	2008-02-17 19:42:02.000000000 +0100
++++ wpa_supplicant-0.5.10_RALINK/wpa_supplicant.c	2008-12-05 01:42:07.000000000 +0100
+@@ -35,6 +35,7 @@
+ #include "pmksa_cache.h"
+ #include "wpa_ctrl.h"
+ #include "mlme.h"
++#include "wpa_i.h"
+ 
+ const char *wpa_supplicant_version =
+ "wpa_supplicant v" VERSION_STR "\n"
+@@ -111,6 +112,9 @@
+ extern int wpa_debug_timestamp;
+ 
+ static void wpa_supplicant_scan(void *eloop_ctx, void *timeout_ctx);
++#ifdef CONFIG_DRIVER_RALINK
++static void wpa_supplicant_poll(void *wpa_s);
++#endif
+ 
+ #if defined(IEEE8021X_EAPOL) || !defined(CONFIG_NO_WPA)
+ static u8 * wpa_alloc_eapol(const struct wpa_supplicant *wpa_s, u8 type,
+@@ -519,11 +523,20 @@
+ 		bssid = wpa_s->pending_bssid;
+ 	wpa_msg(wpa_s, MSG_INFO, "Authentication with " MACSTR " timed out.",
+ 		MAC2STR(bssid));
++ 
++/* carella modify */
++#ifdef CONFIG_DRIVER_RALINK
++	wpa_s->wpa_state = WPA_SCANNING;
++	wpa_supplicant_poll(wpa_s);
++	if(!wpa_s->associate_state)
++#endif
++	{
+ 	wpa_blacklist_add(wpa_s, bssid);
+ 	wpa_sm_notify_disassoc(wpa_s->wpa);
+ 	wpa_supplicant_disassociate(wpa_s, REASON_DEAUTH_LEAVING);
+ 	wpa_s->reassociate = 1;
+ 	wpa_supplicant_req_scan(wpa_s, 0, 0);
++	}
+ }
+ 
+ 
+@@ -1178,14 +1191,18 @@
+ 
+ 	if (bss && bss->rsn_ie_len && (ssid->proto & WPA_PROTO_RSN) &&
+ 	    wpa_parse_wpa_ie(bss->rsn_ie, bss->rsn_ie_len, &ie) == 0 &&
++#ifndef CONFIG_DRIVER_RALINK
+ 	    (ie.group_cipher & ssid->group_cipher) &&
++#endif
+ 	    (ie.pairwise_cipher & ssid->pairwise_cipher) &&
+ 	    (ie.key_mgmt & ssid->key_mgmt)) {
+ 		wpa_msg(wpa_s, MSG_DEBUG, "RSN: using IEEE 802.11i/D9.0");
+ 		proto = WPA_PROTO_RSN;
+ 	} else if (bss && bss->wpa_ie_len && (ssid->proto & WPA_PROTO_WPA) &&
+ 		   wpa_parse_wpa_ie(bss->wpa_ie, bss->wpa_ie_len, &ie) == 0 &&
++#ifndef CONFIG_DRIVER_RALINK
+ 		   (ie.group_cipher & ssid->group_cipher) &&
++#endif
+ 		   (ie.pairwise_cipher & ssid->pairwise_cipher) &&
+ 		   (ie.key_mgmt & ssid->key_mgmt)) {
+ 		wpa_msg(wpa_s, MSG_DEBUG, "WPA: using IEEE 802.11i/D3.0");
+@@ -1232,7 +1249,11 @@
+ 				 bss ? bss->rsn_ie_len : 0))
+ 		return -1;
+ 
++#ifndef CONFIG_DRIVER_RALINK
+ 	sel = ie.group_cipher & ssid->group_cipher;
++#else
++	sel = ie.group_cipher;
++#endif
+ 	if (sel & WPA_CIPHER_CCMP) {
+ 		wpa_s->group_cipher = WPA_CIPHER_CCMP;
+ 		wpa_msg(wpa_s, MSG_DEBUG, "WPA: using GTK CCMP");
+@@ -1879,6 +1900,13 @@
+ {
+ 	return wpa_drv_remove_pmkid(wpa_s, bssid, pmkid);
+ }
++
++#ifdef CONFIG_DRIVER_RALINK
++static void wpa_supplicant_poll(void *wpa_s)
++{
++	wpa_drv_poll(wpa_s);
++}
++#endif
+ #endif /* CONFIG_NO_WPA */
+ 
+ 
+@@ -1919,6 +1947,14 @@
+ {
+ 	struct wpa_supplicant *wpa_s = ctx;
+ 
++//	if(wpa_s->wpa_state < WPA_ASSOCIATED) //<--carella modify
++	if((wpa_s->wpa->proto == WPA_PROTO_RSN &&  wpa_s->wpa->pmksa == NULL && wpa_s->wpa_state < WPA_ASSOCIATED) || //<--carella modify
++		(wpa_s->wpa->proto != WPA_PROTO_RSN && wpa_s->wpa_state < WPA_ASSOCIATED))
++	{
++		printf("wpa_supplicant_rx_eapol: wpa_s->wpa_state[%d] < WPA_ASSOCIATED\n", wpa_s->wpa_state);
++		return; //-->carella
++	}
++
+ 	wpa_printf(MSG_DEBUG, "RX EAPOL from " MACSTR, MAC2STR(src_addr));
+ 	wpa_hexdump(MSG_MSGDUMP, "RX EAPOL", buf, len);
+ 
+diff -NaurEbB wpa_supplicant-0.5.10/wpa_supplicant_i.h wpa_supplicant-0.5.10_RALINK/wpa_supplicant_i.h
+--- wpa_supplicant-0.5.10/wpa_supplicant_i.h	2007-12-28 01:50:15.000000000 +0100
++++ wpa_supplicant-0.5.10_RALINK/wpa_supplicant_i.h	2008-12-05 01:36:46.000000000 +0100
+@@ -342,6 +342,10 @@
+ 
+ 	struct wpa_client_mlme mlme;
+ 	int use_client_mlme;
++
++#ifdef CONFIG_DRIVER_RALINK
++	int associate_state;
++#endif
+ };
+ 
+ 
+@@ -577,9 +581,15 @@
+ 
+ static inline void wpa_drv_poll(struct wpa_supplicant *wpa_s)
+ {
++#ifdef CONFIG_DRIVER_RALINK
++	if (wpa_s->driver->poll_ralink) {
++		wpa_s->driver->poll_ralink(wpa_s->drv_priv, wpa_s);
++	}
++#else
+ 	if (wpa_s->driver->poll) {
+ 		wpa_s->driver->poll(wpa_s->drv_priv);
+ 	}
++#endif
+ }
+ 
+ static inline const char * wpa_drv_get_ifname(struct wpa_supplicant *wpa_s)

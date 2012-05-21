@@ -1,0 +1,27 @@
+Index: dvdfs-0.2/Makefile
+===================================================================
+--- dvdfs-0.2.orig/Makefile
++++ dvdfs-0.2/Makefile
+@@ -11,8 +11,8 @@ clean:
+ 	rm -f $(OBJS) dvdfs
+ 
+ %.o: %.cpp fusevfs.h util.h
+-	g++ -O2 -Wall `pkg-config fuse --cflags` -DFUSE_USE_VERSION=25 -o $@ -c $<
++	$(CXX) -O2 -Wall `pkg-config fuse --cflags` -DFUSE_USE_VERSION=25 -o $@ -c $<
+ 
+ dvdfs: $(OBJS)
+-	g++ -o dvdfs $(OBJS) `pkg-config fuse --libs` -ldvdread
++	$(CXX) -o dvdfs $(OBJS) `pkg-config fuse --libs` -ldvdread
+ 
+Index: dvdfs-0.2/dvdfs.cpp
+===================================================================
+--- dvdfs-0.2.orig/dvdfs.cpp
++++ dvdfs-0.2/dvdfs.cpp
+@@ -12,6 +12,7 @@ using namespace std;
+ #include <fuse.h>
+ #include <stdlib.h>
+ #include <stddef.h>
++#include <stdio.h>
+ #include <unistd.h>
+ #include <signal.h>
+ #include <time.h>

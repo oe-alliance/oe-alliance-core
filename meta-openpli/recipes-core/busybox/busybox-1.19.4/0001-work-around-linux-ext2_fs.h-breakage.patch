@@ -1,0 +1,50 @@
+From caf5768154301697430f0a3718838967d0f55f95 Mon Sep 17 00:00:00 2001
+From: Denys Vlasenko <vda.linux@googlemail.com>
+Date: Thu, 12 Apr 2012 14:01:10 +0200
+Subject: [PATCH 01/33] work around linux/ext2_fs.h breakage
+
+See https://bugzilla.kernel.org/show_bug.cgi?id=42986
+
+Signed-off-by: Denys Vlasenko <vda.linux@googlemail.com>
+---
+ e2fsprogs/tune2fs.c    |    6 ++++++
+ util-linux/mkfs_ext2.c |    6 ++++++
+ 2 files changed, 12 insertions(+)
+
+diff --git a/e2fsprogs/tune2fs.c b/e2fsprogs/tune2fs.c
+index 020bdaa..8da7432 100644
+--- a/e2fsprogs/tune2fs.c
++++ b/e2fsprogs/tune2fs.c
+@@ -8,6 +8,12 @@
+  */
+ #include "libbb.h"
+ #include <linux/fs.h>
++/*
++ * Work around linux/ext2_fs.h breakage.
++ * See https://bugzilla.kernel.org/show_bug.cgi?id=42986.
++ */
++typedef mode_t bb__umode_t;
++#define umode_t bb__umode_t
+ #include <linux/ext2_fs.h>
+ 
+ // storage helpers
+diff --git a/util-linux/mkfs_ext2.c b/util-linux/mkfs_ext2.c
+index 6cbbe0e..759bb0a 100644
+--- a/util-linux/mkfs_ext2.c
++++ b/util-linux/mkfs_ext2.c
+@@ -48,6 +48,12 @@
+ 
+ #include "libbb.h"
+ #include <linux/fs.h>
++/*
++ * Work around linux/ext2_fs.h breakage.
++ * See https://bugzilla.kernel.org/show_bug.cgi?id=42986.
++ */
++typedef mode_t bb__umode_t;
++#define umode_t bb__umode_t
+ #include <linux/ext2_fs.h>
+ 
+ #define ENABLE_FEATURE_MKFS_EXT2_RESERVED_GDT 0
+-- 
+1.7.9.5
+

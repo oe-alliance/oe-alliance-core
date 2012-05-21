@@ -1,0 +1,19 @@
+#!/bin/sh /usr/share/dpatch/dpatch-run
+## 071_fix_ldap_mounts.dpatch
+##
+## DP: No description.
+
+@DPATCH@
+
+diff -Naur .B/samples/rc.autofs.in .A/samples/rc.autofs.in
+--- .B/samples/rc.autofs.in	2007-01-07 21:36:36.000000000 +0000
++++ .A/samples/rc.autofs.in	2007-01-07 21:36:36.000000000 +0000
+@@ -319,7 +319,7 @@
+ 		maptype=`echo $map | cut -f1 -d:`
+ 		# Handle degenerate map specifiers
+ 		if [ "$maptype" = "$map" ] ; then
+-		    if [ "$map" = "hesiod" -o "$map" = "userhome" ] ; then
++		    if [ "$map" = "hesiod" -o "$map" = "userhome" -o "$map" = "ldap" ] ; then
+ 			maptype=$map
+ 			map=
+ 		    elif [ "$map" = "multi" ] ; then

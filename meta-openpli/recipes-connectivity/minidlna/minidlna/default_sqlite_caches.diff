@@ -1,0 +1,20 @@
+#Don't increase page_size and default_cache_size.
+#This patch reduces the memory footprint by about 50% without any major performance hits.
+Index: minidlna.c
+===================================================================
+RCS file: /cvsroot/minidlna/minidlna/minidlna.c,v
+retrieving revision 1.78
+diff -u -r1.78 minidlna.c
+--- a/minidlna.c	10 Jan 2012 02:50:33 -0000	1.78
++++ b/minidlna.c	23 Jan 2012 13:12:02 -0000
+@@ -320,10 +320,8 @@
+ 		DPRINTF(E_FATAL, L_GENERAL, "ERROR: Failed to open sqlite database!  Exiting...\n");
+ 	}
+ 	sqlite3_busy_timeout(db, 5000);
+-	sql_exec(db, "pragma page_size = 4096");
+ 	sql_exec(db, "pragma journal_mode = OFF");
+ 	sql_exec(db, "pragma synchronous = OFF;");
+-	sql_exec(db, "pragma default_cache_size = 8192;");
+ 	return new_db;
+ }
+ 

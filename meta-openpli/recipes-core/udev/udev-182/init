@@ -1,0 +1,45 @@
+#!/bin/sh
+
+### BEGIN INIT INFO
+# Provides:          udev
+# Required-Start:    mountvirtfs
+# Required-Stop:     
+# Default-Start:     S
+# Default-Stop:
+# Short-Description: Start udevd, populate /dev (symlinks only) and load drivers.
+### END INIT INFO
+
+export TZ=/etc/localtime
+
+[ -d /sys/class ] || exit 1
+[ -r /proc/mounts ] || exit 1
+[ -x /lib/udev/udevd ] || exit 1
+[ -f /etc/default/udev ] && . /etc/default/udev
+[ -f /etc/udev/udev.conf ] && . /etc/udev/udev.conf
+
+kill_udevd() {
+        pid=`pidof -x udevd`
+        [ -n "$pid" ] && kill $pid
+}
+
+export ACTION=add
+
+echo "Starting udev"
+
+if [ ! -e "/lib/modules/$(uname -r)"/modules.dep ] ; then
+	mkdir -p /lib/modules/$(uname -r)
+	depmod -ae
+fi
+
+# make_extra_nodes
+kill_udevd > "/dev/null" 2>&1
+
+# trigger the sorted events
+echo -e '\000\000\000\000' > /proc/sys/kernel/hotplug
+/lib/udev/udevd -d
+
+/usr/bin/udevadm control --env STARTUP=1
+/usr/bin/udevadm trigger --action=add
+#/usr/bin/udevadm settle
+
+exit 0

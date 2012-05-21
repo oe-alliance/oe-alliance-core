@@ -1,0 +1,31 @@
+diff -Nur mpd-0.11.5~/src/playlist.c mpd-0.11.5/src/playlist.c
+--- mpd-0.11.5~/src/playlist.c	2005-08-31 17:11:14.000000000 -0700
++++ mpd-0.11.5/src/playlist.c	2005-08-31 17:14:36.000000000 -0700
+@@ -49,6 +49,7 @@
+ #define PLAYLIST_STATE_FILE_CURRENT		"current: "
+ #define PLAYLIST_STATE_FILE_TIME		"time: "
+ #define PLAYLIST_STATE_FILE_CROSSFADE		"crossfade: "
++#define PLAYLIST_STATE_FILE_VOLUME              "volume: "
+ #define PLAYLIST_STATE_FILE_PLAYLIST_BEGIN	"playlist_begin"
+ #define PLAYLIST_STATE_FILE_PLAYLIST_END	"playlist_end"
+ 
+@@ -275,6 +276,8 @@
+ 			myfprintf(fp,"%s\n",PLAYLIST_STATE_FILE_STATE_STOP);
+ 			break;
+ 		}
++		myfprintf(fp,"%s%i\n",PLAYLIST_STATE_FILE_VOLUME,
++			  getVolumeLevel());
+ 		myfprintf(fp,"%s%i\n",PLAYLIST_STATE_FILE_RANDOM,
+ 				playlist.random);
+ 		myfprintf(fp,"%s%i\n",PLAYLIST_STATE_FILE_REPEAT,
+@@ -403,6 +406,10 @@
+ 				current = atoi(&(buffer
+ 					[strlen(PLAYLIST_STATE_FILE_CURRENT)]));
+ 			}
++			else if(strncmp(buffer,PLAYLIST_STATE_FILE_VOLUME,
++					strlen(PLAYLIST_STATE_FILE_VOLUME)) == 0) {
++			  changeVolumeLevel(1, atoi(&(buffer[strlen(PLAYLIST_STATE_FILE_VOLUME)])), 0);
++			}
+ 			else if(strncmp(buffer,
+ 				PLAYLIST_STATE_FILE_PLAYLIST_BEGIN,
+ 				strlen(PLAYLIST_STATE_FILE_PLAYLIST_BEGIN)

@@ -1,0 +1,18 @@
+#!/bin/sh /usr/share/dpatch/dpatch-run
+## 082_samples_makefile_typo.dpatch
+##
+## DP: No description.
+
+@DPATCH@
+
+diff -Naur .B/samples/Makefile .A/samples/Makefile
+--- .B/samples/Makefile	2005-01-04 14:36:54.000000000 +0000
++++ .A/samples/Makefile	2007-01-07 21:36:37.000000000 +0000
+@@ -42,6 +42,6 @@
+ 	install -c autofs-ldap-auto-master -m 755 $(INSTALLROOT)$(autofslibdir)
+ endif
+ 
+-clean):
++clean:
+ 	rm -f *.o *.s autofs-ldap-auto-master rc.autofs
+ 

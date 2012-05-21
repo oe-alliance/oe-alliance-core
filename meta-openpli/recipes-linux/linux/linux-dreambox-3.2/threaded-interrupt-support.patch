@@ -1,0 +1,98 @@
+From 1e2860643990a19617868d9dd4b161f79e67eebf Mon Sep 17 00:00:00 2001
+From: Andreas Monzner <andreas.monzner@multimedia-labs.de>
+Date: Fri, 13 Apr 2012 15:25:40 +0200
+Subject: worked on threaded interrupt support
+
+---
+ arch/mips/brcmstb/irq.c      |    2 +-
+ arch/mips/brcmstb/setup.c    |   10 ++++++++++
+ arch/mips/brcmstb/smp.c      |    4 ++--
+ drivers/tty/serial/bcm3250.c |    2 +-
+ 5 files changed, 15 insertions(+), 5 deletions(-)
+
+diff --git a/arch/mips/brcmstb/irq.c b/arch/mips/brcmstb/irq.c
+index eee3900..586a7fc 100644
+--- a/arch/mips/brcmstb/irq.c
++++ b/arch/mips/brcmstb/irq.c
+@@ -404,7 +404,7 @@ static int brcm_setup_upg_irq(void)
+ 	int ret;
+ 
+ 	ret = request_irq(BRCM_IRQ_UPG, brcm_upg_interrupt,
+-		IRQF_SHARED, "brcm_shared_upg", "brcm_shared_upg");
++		IRQF_SHARED | IRQF_NO_THREAD, "brcm_shared_upg", "brcm_shared_upg");
+ 	if (ret)
+ 		printk(KERN_ERR "error: can't request UPG interrupt\n");
+ 	return ret;
+diff --git a/arch/mips/brcmstb/setup.c b/arch/mips/brcmstb/setup.c
+index d8fb3cb..9a4e91f 100644
+--- a/arch/mips/brcmstb/setup.c
++++ b/arch/mips/brcmstb/setup.c
+@@ -61,6 +61,13 @@
+  * Platform device setup
+  ***********************************************************************/
+ 
++#ifdef CONFIG_BRCM_SHARED_UART_IRQ
++#define IRQ_THREADING \
++	.irqflags = IRQF_NO_THREAD
++#else
++#define IRQ_THREADING
++#endif
++
+ #ifdef CONFIG_BRCM_HAS_16550
+ #define BRCM_16550_PLAT_DEVICE(uart_addr, uart_irq) \
+ 	{ \
+@@ -70,6 +77,7 @@
+ 		.regshift = 2, \
+ 		.iotype = UPIO_MEM32, \
+ 		.flags = UPF_BOOT_AUTOCONF | UPF_IOREMAP, \
++		IRQ_THREADING \
+ 	},
+ 
+ #ifdef CONFIG_BRCM_HAS_PCU_UARTS
+@@ -108,11 +116,13 @@ static struct platform_device brcm_16550_uarts = {
+ 			.start = BPHYSADDR(BCHP_##uart##_REG_START), \
+ 			.end = BPHYSADDR(BCHP_##uart##_REG_END) + 3, \
+ 			.flags = IORESOURCE_MEM, \
++			IRQ_THREADING \
+ 		}, \
+ 		[1] = { \
+ 			.start = BRCM_IRQ_##uart, \
+ 			.end = BRCM_IRQ_##uart, \
+ 			.flags = IORESOURCE_IRQ, \
++			IRQ_THREADING \
+ 		}, \
+ 	}; \
+ 	static struct platform_device bcm3250_##uart##_device = { \
+diff --git a/arch/mips/brcmstb/smp.c b/arch/mips/brcmstb/smp.c
+index 2520852..3785616 100644
+--- a/arch/mips/brcmstb/smp.c
++++ b/arch/mips/brcmstb/smp.c
+@@ -92,10 +92,10 @@ static irqreturn_t brcmstb_ipi_interrupt(int irq, void *dev_id);
+ /* IRQ setup - runs on TP0 */
+ static void brcmstb_prepare_cpus(unsigned int max_cpus)
+ {
+-	if (request_irq(BRCM_IRQ_IPI0, brcmstb_ipi_interrupt, IRQF_DISABLED,
++	if (request_irq(BRCM_IRQ_IPI0, brcmstb_ipi_interrupt, IRQF_DISABLED | IRQF_NO_THREAD | IRQF_PERCPU,
+ 			"smp_ipi_tp0", NULL))
+ 		panic("Can't request TP0 IPI interrupt\n");
+-	if (request_irq(BRCM_IRQ_IPI1, brcmstb_ipi_interrupt, IRQF_DISABLED,
++	if (request_irq(BRCM_IRQ_IPI1, brcmstb_ipi_interrupt, IRQF_DISABLED | IRQF_NO_THREAD | IRQF_PERCPU,
+ 			"smp_ipi_tp1", NULL))
+ 		panic("Can't request TP1 IPI interrupt\n");
+ }
+diff --git a/drivers/tty/serial/bcm3250.c b/drivers/tty/serial/bcm3250.c
+index 65f422e..4803f4c 100644
+--- a/drivers/tty/serial/bcm3250.c
++++ b/drivers/tty/serial/bcm3250.c
+@@ -330,7 +330,7 @@ static int bcm97xxx_startup(struct uart_port *port)
+ 	/*
+ 	 * Allocate the IRQ
+ 	 */
+-	retval = request_irq(port->irq, bcm97xxx_interrupt, 0, "bcm3250_serial", port);
++	retval = request_irq(port->irq, bcm97xxx_interrupt, port->irqflags, "bcm3250_serial", port);
+ 	if (retval) {
+ 		printk(KERN_ERR "bcm3250_serial: bcm97xxx_startup - Can't get irq\n");
+ 		return retval;
+-- 
+1.7.9.5
+

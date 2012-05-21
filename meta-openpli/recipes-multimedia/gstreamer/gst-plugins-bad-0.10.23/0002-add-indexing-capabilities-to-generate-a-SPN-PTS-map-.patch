@@ -1,0 +1,423 @@
+From 0d5e73089dcf64398a4835d84c0dbcf77ef04e14 Mon Sep 17 00:00:00 2001
+From: Andreas Frisch <fraxinas@opendreambox.org>
+Date: Mon, 28 Mar 2011 10:31:23 +0200
+Subject: [PATCH 2/3] add indexing capabilities to generate a SPN/PTS map on
+ the fly in m2ts-mode
+
+---
+ gst/mpegtsmux/mpegtsmux.c |  234 ++++++++++++++++++++++++++++++++++++++++++++-
+ gst/mpegtsmux/mpegtsmux.h |   13 +++
+ 2 files changed, 243 insertions(+), 4 deletions(-)
+
+diff --git a/gst/mpegtsmux/mpegtsmux.c b/gst/mpegtsmux/mpegtsmux.c
+index a243e40..d5492a4 100644
+--- a/gst/mpegtsmux/mpegtsmux.c
++++ b/gst/mpegtsmux/mpegtsmux.c
+@@ -104,7 +104,8 @@
+   ARG_PROG_MAP,
+   ARG_M2TS_MODE,
+   ARG_PAT_INTERVAL,
+-  ARG_PMT_INTERVAL
++  ARG_PMT_INTERVAL,
++  ARG_ALIGNMENT
+ };
+ 
+ static GstStaticPadTemplate mpegtsmux_sink_factory =
+@@ -157,6 +158,12 @@
+ static void mpegtsdemux_set_header_on_caps (MpegTsMux * mux);
+ static gboolean mpegtsmux_sink_event (GstPad * pad, GstEvent * event);
+ static gboolean mpegtsmux_src_event (GstPad * pad, GstEvent * event);
++static void mpegtsmux_set_index (GstElement * element, GstIndex * index);
++static GstIndex *mpegtsmux_get_index (GstElement * element);
++
++static GstFormat pts_format;
++static GstFormat spn_format;
++guint get_packets_per_buffer (MpegTsMux * mux);
+ 
+ GST_BOILERPLATE (MpegTsMux, mpegtsmux, GstElement, GST_TYPE_ELEMENT);
+ 
+@@ -175,6 +182,10 @@
+       "MPEG Transport Stream Muxer", "Codec/Muxer",
+       "Multiplexes media streams into an MPEG Transport Stream",
+       "Fluendo <contact@fluendo.com>");
++
++  pts_format =
++      gst_format_register ("PTS", "MPEG System Presentation Time Stamp");
++  spn_format = gst_format_register ("SPN", "Source Packet Number");
+ }
+ 
+ static void
+@@ -191,6 +202,9 @@
+   gstelement_class->release_pad = mpegtsmux_release_pad;
+   gstelement_class->change_state = mpegtsmux_change_state;
+ 
++  gstelement_class->set_index = GST_DEBUG_FUNCPTR (mpegtsmux_set_index);
++  gstelement_class->get_index = GST_DEBUG_FUNCPTR (mpegtsmux_get_index);
++
+   g_object_class_install_property (G_OBJECT_CLASS (klass), ARG_PROG_MAP,
+       g_param_spec_boxed ("prog-map", "Program map",
+           "A GstStructure specifies the mapping from elementary streams to programs",
+@@ -213,6 +227,12 @@
+           "Set the interval (in ticks of the 90kHz clock) for writing out the PMT table",
+           1, G_MAXUINT, TSMUX_DEFAULT_PMT_INTERVAL,
+           G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
++
++  g_object_class_install_property (G_OBJECT_CLASS (klass), ARG_ALIGNMENT,
++      g_param_spec_uint ("alignment", "packet alignment",
++          "Queue this amount of ts/m2ts packets before pushing buffer. On EOS, pad with dummy packets until aligned. Default: 32 for m2ts streams, else disabled.",
++          0, G_MAXUINT, 0, G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
++
+ }
+ 
+ static void
+@@ -247,6 +267,15 @@
+   mux->streamheader_sent = FALSE;
+   mux->force_key_unit_event = NULL;
+   mux->pending_key_unit_ts = GST_CLOCK_TIME_NONE;
++
++  mux->spn_count = 0;
++
++  mux->element_index = NULL;
++  mux->element_index_writer_id = -1;
++
++  mux->arbitrary_align = FALSE;
++  mux->alignment_adapter = gst_adapter_new ();
++  mux->packets_per_buffer = 0;
+ }
+ 
+ static void
+@@ -288,6 +317,15 @@
+     g_list_free (mux->streamheader);
+     mux->streamheader = NULL;
+   }
++  if (mux->alignment_adapter) {
++    gst_adapter_clear (mux->alignment_adapter);
++    g_object_unref (mux->alignment_adapter);
++    mux->alignment_adapter = NULL;
++  }
++
++  if (mux->element_index)
++    gst_object_unref (mux->element_index);
++
+   GST_CALL_PARENT (G_OBJECT_CLASS, dispose, (object));
+ }
+ 
+@@ -331,12 +369,27 @@
+         walk = g_slist_next (walk);
+       }
+       break;
++    case ARG_ALIGNMENT:
++      mux->packets_per_buffer = g_value_get_uint (value);
++      mux->arbitrary_align = TRUE;
++      break;
+     default:
+       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+       break;
+   }
+ }
+ 
++guint
++get_packets_per_buffer (MpegTsMux * mux)
++{
++  if (mux->arbitrary_align == TRUE) {
++    return mux->packets_per_buffer;
++  } else if (mux->m2ts_mode) {
++    return BDMV_PACKETS_PER_BUFFER;
++  }
++  return DEFAULT_PACKETS_PER_BUFFER;
++}
++
+ static void
+ gst_mpegtsmux_get_property (GObject * object, guint prop_id,
+     GValue * value, GParamSpec * pspec)
+@@ -356,6 +409,9 @@
+     case ARG_PMT_INTERVAL:
+       g_value_set_uint (value, mux->pmt_interval);
+       break;
++    case ARG_ALIGNMENT:
++      g_value_set_uint (value, get_packets_per_buffer (mux));
++      break;
+     default:
+       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+       break;
+@@ -363,6 +419,37 @@
+ }
+ 
+ static void
++mpegtsmux_set_index (GstElement * element, GstIndex * index)
++{
++  MpegTsMux *mux = GST_MPEG_TSMUX (element);
++
++  GST_OBJECT_LOCK (mux);
++  if (mux->element_index)
++    gst_object_unref (mux->element_index);
++  mux->element_index = index ? gst_object_ref (index) : NULL;
++  GST_OBJECT_UNLOCK (mux);
++  GST_DEBUG_OBJECT (mux, "Set index %" GST_PTR_FORMAT, mux->element_index);
++  gst_index_add_format (index, mux->element_index_writer_id, pts_format);
++  gst_index_add_format (index, mux->element_index_writer_id, spn_format);
++}
++
++static GstIndex *
++mpegtsmux_get_index (GstElement * element)
++{
++  GstIndex *result = NULL;
++  MpegTsMux *mux = GST_MPEG_TSMUX (element);
++
++  GST_OBJECT_LOCK (mux);
++  if (mux->element_index)
++    result = gst_object_ref (mux->element_index);
++  GST_OBJECT_UNLOCK (mux);
++
++  GST_DEBUG_OBJECT (mux, "Returning index %" GST_PTR_FORMAT, result);
++
++  return result;
++}
++
++static void
+ release_buffer_cb (guint8 * data, void *user_data)
+ {
+   GstBuffer *buf = (GstBuffer *) user_data;
+@@ -505,6 +592,24 @@
+     ret = GST_FLOW_OK;
+   }
+ 
++  if (mux->element_index) {
++    gboolean parsed = FALSE;
++    if (ts_data->stream->is_video_stream) {
++      if (gst_structure_get_boolean (s, "parsed", &parsed) && parsed) {
++        if (mux->element_index_writer_id == -1) {
++          gst_index_get_writer_id (mux->element_index, GST_OBJECT (mux),
++              &mux->element_index_writer_id);
++          GST_INFO_OBJECT (mux,
++              "created GstIndex writer_id = %d for PID 0x%04x",
++              mux->element_index_writer_id, ts_data->pid);
++        }
++      } else
++        GST_WARNING_OBJECT (pad,
++            "Indexing capability for PID=0x%04x disabled - parsed input stream is required!",
++            ts_data->pid);
++    }
++  }
++
+ beach:
+   gst_caps_unref (caps);
+   return ret;
+@@ -659,6 +764,105 @@
+   return best;
+ }
+ 
++static GstFlowReturn
++aligned_push (MpegTsMux * mux, GstBuffer * buf)
++{
++  guint accu_bytes, packet_length;
++  GstBuffer *out_buf;
++
++  if (get_packets_per_buffer (mux) == 0) {
++    return gst_pad_push (mux->srcpad, buf);
++  }
++
++  packet_length = mux->m2ts_mode ? M2TS_PACKET_LENGTH : NORMAL_TS_PACKET_LENGTH;
++  gst_adapter_push (mux->alignment_adapter, buf);
++
++  accu_bytes = gst_adapter_available (mux->alignment_adapter);
++  GST_DEBUG_OBJECT (mux,
++      "Accumulating packet in alignment adapter, accu_bytes=%i", accu_bytes);
++
++  if (accu_bytes == get_packets_per_buffer (mux) * packet_length) {
++    out_buf = gst_adapter_take_buffer (mux->alignment_adapter, accu_bytes);
++    gst_buffer_set_caps (out_buf, GST_PAD_CAPS (mux->srcpad));
++    gst_adapter_clear (mux->alignment_adapter);
++    GST_DEBUG_OBJECT (mux,
++        "Accumulated desired amount of packets in alignment unit, handing off %i bytes",
++        accu_bytes);
++    return gst_pad_push (mux->srcpad, out_buf);
++  } else if (accu_bytes > get_packets_per_buffer (mux) * packet_length) {
++    GST_WARNING_OBJECT (mux, "Packet alignment error!");
++    gst_adapter_clear (mux->alignment_adapter);
++    return GST_FLOW_CUSTOM_ERROR;
++  }
++
++  return GST_FLOW_OK;
++}
++
++static void
++mpegtsmux_eos_align (MpegTsMux * mux)
++{
++  guint accu_bytes, packet_length, packets_needed, dummy_packet_count;
++  guint continuity_counter;
++  unsigned char header[4];
++  guint p;
++  GstBuffer *buf;
++  guint32 m2ts_header = 0;
++
++  accu_bytes = gst_adapter_available (mux->alignment_adapter);
++  packet_length = mux->m2ts_mode ? M2TS_PACKET_LENGTH : NORMAL_TS_PACKET_LENGTH;
++  packets_needed = get_packets_per_buffer (mux) - accu_bytes / packet_length;
++
++  if (get_packets_per_buffer (mux) == 0 || accu_bytes == 0) {
++    return;
++  }
++
++  GST_DEBUG_OBJECT (mux,
++      "received EOS - %i bytes accumulated in alignment adapter -> %i dummy packets needed for padding!\n",
++      accu_bytes, packets_needed);
++
++  if (mux->m2ts_mode) {
++    gst_adapter_copy (mux->alignment_adapter, header,
++        accu_bytes - packet_length, 4);
++    m2ts_header = GST_READ_UINT32_BE (header);
++    gst_adapter_copy (mux->alignment_adapter, header,
++        accu_bytes - packet_length + 7, 1);
++  } else {
++    gst_adapter_copy (mux->alignment_adapter, header,
++        accu_bytes - packet_length + 3, 1);
++  }
++
++  continuity_counter = header[0] & 0xF;
++
++  for (dummy_packet_count = 0; dummy_packet_count < packets_needed;
++      dummy_packet_count++) {
++    buf = gst_buffer_new_and_alloc (packet_length);
++    if (mux->m2ts_mode) {
++      // monotonically increase m2ts_header
++      m2ts_header++;
++      GST_WRITE_UINT32_BE (GST_BUFFER_DATA (buf), m2ts_header);
++      p = (guint) GST_BUFFER_DATA (buf) + 4;
++    } else {
++      p = (guint) GST_BUFFER_DATA (buf);
++    }
++    GST_WRITE_UINT8 (p++, TSMUX_SYNC_BYTE);
++    // dummy PID
++    GST_WRITE_UINT16_BE (p, 0x1FFF);
++    p += 2;
++    // adaptation field exists | no payload exists | continuity counter
++    GST_WRITE_UINT8 (p++, 0x20 + ((++continuity_counter) & 0xF));
++    // adaptation field length | flags
++    GST_WRITE_UINT16_BE (p, 0xB700);
++    p += 2;
++    // adaptation field
++    memset ((guint*)p, 0xFF, 0xB6);
++
++    aligned_push (mux, buf);
++    GST_LOG_OBJECT (mux,
++        "generated dummy packet %i with m2ts_header=0x%x, contiuity=0x%02x\n",
++        dummy_packet_count, m2ts_header, continuity_counter);
++  }
++}
++
+ #define COLLECT_DATA_PAD(collect_data) (((GstCollectData *)(collect_data))->pad)
+ 
+ static MpegTsPadData *
+@@ -971,6 +1175,7 @@
+   } else {
+     /* FIXME: Drain all remaining streams */
+     /* At EOS */
++    mpegtsmux_eos_align (mux);
+     gst_pad_push_event (mux->srcpad, gst_event_new_eos ());
+   }
+ 
+@@ -1081,7 +1286,7 @@
+     GST_LOG_OBJECT (mux, "marking as delta unit");
+     GST_BUFFER_FLAG_SET (buf, GST_BUFFER_FLAG_DELTA_UNIT);
+   } else {
+-    GST_DEBUG_OBJECT (mux, "marking as non-delta unit");
++    GST_DEBUG_OBJECT (mux, "marking as non-delta unit, spn %i", mux->spn_count);
+     mux->is_delta = TRUE;
+   }
+ }
+@@ -1104,6 +1309,8 @@
+     return FALSE;
+   }
+ 
++//   mux->spn_count++;
++
+   /* copies the TS data of 188 bytes to the m2ts buffer at an offset
+      of 4 bytes to leave space for writing the timestamp later */
+   memcpy (GST_BUFFER_DATA (buf) + 4, data, len);
+@@ -1168,13 +1375,25 @@
+         break;
+       gst_buffer_set_caps (out_buf, GST_PAD_CAPS (mux->srcpad));
+       GST_BUFFER_TIMESTAMP (out_buf) = MPEG_SYS_TIME_TO_GSTTIME (cur_pcr);
++      
++      mux->spn_count++;
++
++      if (mux->element_index) {
++        if (!GST_BUFFER_FLAG_IS_SET (out_buf, GST_BUFFER_FLAG_DELTA_UNIT)) {
++          gst_index_add_association (mux->element_index,
++              mux->element_index_writer_id,
++              GST_ASSOCIATION_FLAG_KEY_UNIT, spn_format,
++              mux->spn_count, pts_format,
++              GSTTIME_TO_MPEGTIME (GST_BUFFER_TIMESTAMP (out_buf)), NULL);
++        }
++      }
+ 
+       /* Write the 4 byte timestamp value, bottom 30 bits only = PCR */
+       GST_WRITE_UINT32_BE (GST_BUFFER_DATA (out_buf), cur_pcr & 0x3FFFFFFF);
+ 
+       GST_LOG_OBJECT (mux, "Outputting a packet of length %d PCR %"
+           G_GUINT64_FORMAT, M2TS_PACKET_LENGTH, cur_pcr);
+-      ret = gst_pad_push (mux->srcpad, out_buf);
++      ret = aligned_push (mux, out_buf);
+       if (G_UNLIKELY (ret != GST_FLOW_OK)) {
+         mux->last_flow_ret = ret;
+         return FALSE;
+@@ -1190,7 +1409,7 @@
+ 
+   GST_LOG_OBJECT (mux, "Outputting a packet of length %d PCR %"
+       G_GUINT64_FORMAT, M2TS_PACKET_LENGTH, new_pcr);
+-  ret = gst_pad_push (mux->srcpad, buf);
++  ret = aligned_push (mux, buf);
+   if (G_UNLIKELY (ret != GST_FLOW_OK)) {
+     mux->last_flow_ret = ret;
+     return FALSE;
+@@ -1221,7 +1440,7 @@
+ 
+   GST_BUFFER_TIMESTAMP (buf) = mux->last_ts;
+ 
+-  ret = gst_pad_push (mux->srcpad, buf);
++  ret = aligned_push (mux, buf);
+   if (G_UNLIKELY (ret != GST_FLOW_OK)) {
+     mux->last_flow_ret = ret;
+     return FALSE;
+@@ -1319,6 +1538,8 @@
+     case GST_STATE_CHANGE_READY_TO_NULL:
+       if (mux->adapter)
+         gst_adapter_clear (mux->adapter);
++      if (mux->alignment_adapter)
++        gst_adapter_clear (mux->alignment_adapter);
+       break;
+     default:
+       break;
+diff --git a/gst/mpegtsmux/mpegtsmux.h b/gst/mpegtsmux/mpegtsmux.h
+index 26003a8..1b88a33 100644
+--- a/gst/mpegtsmux/mpegtsmux.h
++++ b/gst/mpegtsmux/mpegtsmux.h
+@@ -130,6 +130,14 @@
+   gboolean streamheader_sent;
+   GstClockTime pending_key_unit_ts;
+   GstEvent *force_key_unit_event;
++
++  guint32 spn_count;
++  GstIndex *element_index;
++  gint      element_index_writer_id;
++ 
++  gboolean arbitrary_align;
++  guint packets_per_buffer;
++  GstAdapter *alignment_adapter;
+ };
+ 
+ struct MpegTsMuxClass  {
+@@ -186,6 +194,9 @@
+ #define MAX_PROG_NUMBER	32
+ #define DEFAULT_PROG_ID	0
+ 
++#define DEFAULT_PACKETS_PER_BUFFER 0
++#define BDMV_PACKETS_PER_BUFFER	   32
++
+ G_END_DECLS
+ 
+ #endif
+-- 
+1.7.5.4
+

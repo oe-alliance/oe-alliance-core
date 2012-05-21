@@ -1,0 +1,35 @@
+commit 534717020e6bd9459433d744bfd355d151e7b261
+Author: Martin Krause <martin.krause@tqs.de>
+Date:   Fri Mar 2 13:00:14 2012 +0100
+
+    Staging rtl8712: Remove double USB device IDs
+    
+    Remove copies of the double USB device IDs:
+    
+    - 0bda:8172
+    - 0bda:8174
+    
+    Signed-off-by: Martin Krause <martin.krause@tqs.de>
+    Acked-by: Larry Finger <Larry.Finger@lwfinger.net>
+    Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+diff --git a/drivers/staging/rtl8712/usb_intf.c b/drivers/staging/rtl8712/usb_intf.c
+index e01fe14..f8fbb57 100644
+--- a/drivers/staging/rtl8712/usb_intf.c
++++ b/drivers/staging/rtl8712/usb_intf.c
+@@ -109,7 +109,6 @@ static struct usb_device_id rtl871x_usb_id_tbl[] = {
+ 	/* Amigo */
+ 	{USB_DEVICE(0x0EB0, 0x9061)},
+ 	/* ASUS/EKB */
+-	{USB_DEVICE(0x0BDA, 0x8172)},
+ 	{USB_DEVICE(0x13D3, 0x3323)},
+ 	{USB_DEVICE(0x13D3, 0x3311)}, /* 11n mode disable */
+ 	{USB_DEVICE(0x13D3, 0x3342)},
+@@ -161,7 +160,6 @@ static struct usb_device_id rtl871x_usb_id_tbl[] = {
+ /* RTL8192SU */
+ 	/* Realtek */
+ 	{USB_DEVICE(0x0BDA, 0x8174)},
+-	{USB_DEVICE(0x0BDA, 0x8174)},
+ 	/* Belkin */
+ 	{USB_DEVICE(0x050D, 0x845A)},
+ 	/* Corega */

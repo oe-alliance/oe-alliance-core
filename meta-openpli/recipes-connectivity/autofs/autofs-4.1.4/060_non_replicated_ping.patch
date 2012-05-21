@@ -1,0 +1,228 @@
+#!/bin/sh /usr/share/dpatch/dpatch-run
+## 060_non_replicated_ping.dpatch
+##
+## DP: No description.
+
+@DPATCH@
+
+diff -Naur .B/modules/mount_nfs.c .A/modules/mount_nfs.c
+--- .B/modules/mount_nfs.c	2005-04-05 12:42:42.000000000 +0000
++++ .A/modules/mount_nfs.c	2007-01-07 21:36:35.000000000 +0000
+@@ -31,6 +31,7 @@
+ #include <netinet/in.h>
+ #include <linux/nfs.h>
+ #include <linux/nfs2.h>
++#include <ctype.h>
+ 
+ #define MODULE_MOUNT
+ #include "automount.h"
+@@ -105,28 +106,117 @@
+ 	
+ 	return 1;
+ }
++
++/*
++ * If the entry doesn't contain a ',' or doesn't contain more than
++ * one ':' then @what is not a replicated server entry.
++ */
++static int inline is_replicated_entry(char *what)
++{
++	return strchr(what, ',') ||
++		(strchr(what, ':') != strrchr(what, ':'));
++}
++
++/*
++ *  Check to see if the 'host:path' or 'host' is on the local machine
++ *  Returns < 0 if there is a host lookup problem, otherwise returns 0
++ *  if it's not a local mount, and returns > 0 if it is a local mount.
++ */
++int is_local_mount(const char *hostpath)
++{
++	struct hostent *he;
++	char **haddr;
++	char *delim;
++	char *hostname;
++	int hostnamelen;
++	int local = 0;
++
++	debug(MODPREFIX "is_local_mount: %s", hostpath);
++	delim = strpbrk(hostpath,":");
++
++	if (delim) 
++		hostnamelen = delim - hostpath; 
++	else 
++		hostnamelen = strlen(hostpath);
++
++	hostname = malloc(hostnamelen+1);
++	strncpy(hostname, hostpath, hostnamelen);
++	hostname[hostnamelen] = '\0';
++	he = gethostbyname(hostname);
++	if (!he) {
++		error(MODPREFIX "host %s: lookup failure", hostname);
++		return -1;
++	}
++
++	for (haddr = he->h_addr_list; *haddr; haddr++) {
++		local = is_local_addr(hostname, *haddr, he->h_length);
++		if (local < 0) 
++			return local;
++ 		if (local) {
++			debug(MODPREFIX "host %s: is localhost",
++					hostname);
++			return local;
++		}
++	}
++	return 0;
++}
++
+ /*
+  * Given a mount string, return (in the same string) the
+- * best mount to use based on weight/locality/rpctime
++ * best mount to use based on locality/weight/rpctime.
++ *
++ * If longtimeout is set to 0 then we only do 100 ms pings to hosts.  In
++ * the event that this fails, we call ourself recursively with the
++ * longtimeout option set to 1.  In this case we ping for up to 10s and
++ * skip logic for detecting if a localhost has been passed. (if a local
++ * host had been passed, we would have returned that mount as the best
++ * mount.  The skipping of local maps in this case is an optimization).
++ *
+  * - return -1 and what = '\0' on error,
+  *           1 and what = local mount path if local bind,
+  *     else  0 and what = remote mount path
+  */
+-int get_best_mount(char *what, const char *original, int longtimeout, int skiplocal)
++int get_best_mount(char *what, const char *original, int longtimeout)
+ {
+ 	char *p = what;
+ 	char *winner = NULL;
+ 	int winner_weight = INT_MAX, local = 0;
+ 	double winner_time = 0;
+-	char *delim;
++	char *delim, *pstrip;
+ 	int sec = (longtimeout) ? 10 : 0;
+ 	int micros = (longtimeout) ? 0 : 100000;
++	int skiplocal = longtimeout; /* clearly local is not available */
+ 
+ 	if (!p) {
+ 		*what = '\0';
+ 		return -1;
+ 	}
+ 
++	/*
++	 *  If only one mountpoint has been passed in, we don't need to
++	 *  do anything except strip whitespace from the end of the string.
++	 */
++	if (!is_replicated_entry(p)) {
++		for (pstrip = p+strlen(p) - 1; pstrip >= p; pstrip--) 
++			if (isspace(*pstrip))
++				*pstrip = '\0';
++
++		/* Check if the host is the localhost */
++		if (is_local_mount(p) > 0) {
++			debug(MODPREFIX "host %s: is localhost", p);
++
++			/* Strip off hostname and ':' */
++			delim = strchr(p,':');
++			while (delim && *delim != '\0') {
++				delim++;
++				*what = *delim;
++				what++;
++			}
++			return 1;
++		}
++		return 0;
++	}
++
+ 	while (p && *p) {
+ 		char *next;
+ 		unsigned int ping_stat = 0;
+@@ -171,37 +261,17 @@
+ 		/* p points to a server, "next is our next parse point */
+ 		if (!skiplocal) {
+ 			/* Check if it's localhost */
+-			struct hostent *he;
+-			char **haddr;
+-
+-			he = gethostbyname(p);
+-			if (!he) {
+-				error(MODPREFIX "host %s: lookup failure", p);
+-				p = next;
+-				continue;
+-			}
+-
+-			/* Check each host in round robin list */
+-			for (haddr = he->h_addr_list; *haddr; haddr++) {
+-				local = is_local_addr(p, *haddr, he->h_length);
+-
+-				if (local < 0)
+-					continue;
+-
+-				if (local) {
+-					winner = p;
+-					break;
+-				}
+-			}
+-			
++			local = is_local_mount(p);
+ 			if (local < 0) {
+ 				local = 0;
+ 				p = next;
+ 				continue;
+ 			}
+ 
+-			if (local)
++			if (local) {
++				winner = p;
+ 				break;
++			}
+ 		}
+ 
+ 		/* ping each (or the) entry to see if it's alive. */
+@@ -214,6 +284,7 @@
+ 		/* First unweighted or only host is alive so set winner */
+ 		if (!winner) {
+ 			winner = p;
++			winner_time = 1;
+ 			/* No more to check, return it */
+ 			if (!next || !*next)
+ 				break;
+@@ -256,7 +327,7 @@
+ 	 */
+ 	if (!local && winner_weight == INT_MAX) {
+ 		/* We had more than one contender and none responded in time */
+-		if (winner_time != 0 && winner_time > 500) {
++		if (winner_time == 0 || winner_time > 500) {
+ 			/* We've already tried a longer timeout */
+ 			if (!longtimeout) {
+ 				/* Reset string and try again */
+@@ -267,16 +338,14 @@
+ 				      "retrying with longer timeout",
+ 				      original);
+ 
+-				return get_best_mount(what, original, 1, 1);
++				return get_best_mount(what, original, 1);
+ 			}
+ 		}
+ 	}
+ 
+-	/* No winner found so bail */
+-	if (!winner) {
+-		*what = '\0';
+-		return 0;
+-	}
++	/* No winner found so return first */
++	if (!winner)
++		winner = what;
+ 
+ 	/*
+ 	 * We now have our winner, copy it to the front of the string,
+@@ -395,7 +464,7 @@
+ 		/* No colon, take this as a bind (local) entry */
+ 		local = 1;
+ 	} else if (!nosymlink) {
+-		local = get_best_mount(whatstr, what, 0, 0);
++		local = get_best_mount(whatstr, what, 0);
+ 		if (!*whatstr) {
+ 			warn(MODPREFIX "no host elected");
+ 			return 1;

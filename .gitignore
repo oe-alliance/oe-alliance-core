@@ -1,0 +1,8 @@
+/build-*
+/.deps/
+/meta-*/
+!/meta-openpli/
+/openembedded-core/
+/sources/
+*.swp
+site.conf

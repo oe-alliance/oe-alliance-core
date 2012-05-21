@@ -1,0 +1,82 @@
+#!/bin/sh /usr/share/dpatch/dpatch-run
+## 063_misc_fixes.dpatch
+##
+## DP: No description.
+
+@DPATCH@
+
+diff -Naur .B/lib/cache.c .A/lib/cache.c
+--- .B/lib/cache.c	2005-02-06 06:00:53.000000000 +0000
++++ .A/lib/cache.c	2007-01-07 21:36:35.000000000 +0000
+@@ -337,8 +337,10 @@
+ 		if (!path)
+ 			return;
+ 
+-		if (is_mounted(_PATH_MOUNTED, path))
++		if (is_mounted(_PATH_MOUNTED, path)) {
++			free(path);
+ 			continue;
++		}
+ 
+ 		if (me->age < age) {
+ 			mapent_hash[i] = me->next;
+diff -Naur .B/modules/lookup_file.c .A/modules/lookup_file.c
+--- .B/modules/lookup_file.c	2005-04-06 15:14:23.000000000 +0000
++++ .A/modules/lookup_file.c	2007-01-07 21:36:35.000000000 +0000
+@@ -157,6 +157,10 @@
+ 			break;
+ 
+ 		case st_compare:
++			if (kptr - key > KEY_MAX_LEN) {
++				state = st_badent;
++				break;
++			}
+ 			if (ch == '\n')
+ 				state = st_begin;
+ 			else if (isspace(ch) && !escape) {
+diff -Naur .B/modules/parse_sun.c .A/modules/parse_sun.c
+--- .B/modules/parse_sun.c	2007-01-07 21:36:35.000000000 +0000
++++ .A/modules/parse_sun.c	2007-01-07 21:36:35.000000000 +0000
+@@ -680,6 +680,10 @@
+ 	    "mounting root %s, mountpoint %s, what %s, fstype %s, options %s\n",
+ 	    root, mountpoint, what, fstype, options);
+ 
++	/* A malformed entry of the form key /xyz will trigger this case */
++	if (!what || *what == '\0')
++		return 1;
++
+ 	if (!strcmp(fstype, "nfs")) {
+ 		rv = mount_nfs->mount_mount(root, mountpoint, strlen(mountpoint),
+ 					    what, fstype, options, mount_nfs->context);
+@@ -695,6 +699,18 @@
+ 	return rv;
+ }
+ 
++static int key_exists(struct multi_mnt *list, char *path, int pathlen)
++{
++	struct multi_mnt *mmptr = list;
++
++	while (mmptr && pathlen == strlen(mmptr->path)) {
++		if (!strncmp(mmptr->path, path, pathlen))
++			return 1;
++		mmptr = mmptr->next;
++	}
++	return 0;
++}
++
+ /*
+  * Build list of mounts in shortest -> longest order.
+  * Pass in list head and return list head.
+@@ -725,6 +741,12 @@
+ 		mmptr = mmptr->next;
+ 	}
+ 
++	/* if a multimount entry has duplicate keys, it is invalid */
++	if (key_exists(mmptr, path, plen)) {
++		free(new);
++		return NULL;
++	}
++
+ 	if (old)
+ 		old->next = new;
+ 	new->next = mmptr;

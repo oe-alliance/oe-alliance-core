@@ -1,0 +1,13 @@
+Index: dvdfs-0.2/dvdfs.cpp
+===================================================================
+--- dvdfs-0.2.orig/dvdfs.cpp
++++ dvdfs-0.2/dvdfs.cpp
+@@ -357,7 +357,7 @@ int main(int argc, char *argv[]) {
+ 
+     vfs_root = new FuseDirectory();
+ 
+-    dvdfs_opts.device = "/dev/dvd";
++    dvdfs_opts.device = "/dev/sr0";
+     dvdfs_opts.includebups = 0;
+     dvdfs_opts.dynamic = 0;
+ 

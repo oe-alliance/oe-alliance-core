@@ -1,0 +1,11 @@
+--- a/net80211/ieee80211_linux.c	2012-01-27 22:35:51.890501496 +0100
++++ b/net80211/ieee80211_linux.c	2012-01-27 22:35:03.806502081 +0100
+@@ -405,7 +405,7 @@
+ int
+ ieee80211_load_module(const char *modname)
+ {
+-#ifdef CONFIG_KMOD
++#if defined(CONFIG_KMOD) || LINUX_VERSION_CODE > KERNEL_VERSION(2,6,28)
+ 	int rv;
+ 	rv = request_module(modname);
+ 	if (rv < 0)

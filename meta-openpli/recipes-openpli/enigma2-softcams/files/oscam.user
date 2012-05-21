@@ -1,0 +1,49 @@
+# oscam.user generated automatically by Streamboard OSCAM 1.00-svn build #5630
+# Read more: http://streamboard.gmc.to/oscam/browser/trunk/Distribution/doc/txt/oscam.user.txt
+
+# is needed for au
+
+[account]
+user 			= dvbapiau
+pwd 			=
+disabled 		= 0
+group 			= 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19 
+# put all reader groups otherwise you not have ecm from the non included group.
+uniq 			= 3
+monlevel 		= 0
+au 			= 1
+
+# for using mpcsmon
+
+[account]
+user 			= usermonitor
+pwd 			= pasword
+disabled 		= 0
+group 			= 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,19,19,20,21
+uniq 			= 1
+sleep 			= 0
+monlevel		= 4
+
+#[account]
+#user			= user2
+#pwd 			= pasword2
+#disabled		= 0
+#group			= 1,2,3,4,5,6,7,8,9,10,11,13,14,15,16
+#uniq			= 3
+#sleep			= 0
+#monlevel		= 0
+#service 		= !service1,!service2 
+#services defind in oscam.services if empty all services are allowed.
+#cccmaxhops		= 5
+#cccreshare		= 2 # note the difference with { 0:0:3 } from f line cccam . 
+#cccignorereshare	= 0
+#keepalive		= 1
+#hostname		= cccam.example.cx
+
+# f line in cccam would be like :
+# F: user pasword2 5 0 0 { 0:0:3 } { } { } cccam.example.cx
+# this users c line here server line in oscam.server has group 12 to avoid loop back I did not put group 12 in his user
+# account f line. Normally it's not needed... However some svn versions can have segfault errors and jumps out due to that loopback.
+# By doing this you will avoid that kind of problems.That's also the reason that i asign a different group to each reader.
+
+

@@ -1,0 +1,26 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 84_init_lsb_header.dpatch by  <hesso@pool.math.tu-berlin.de>
+##
+## DP: Add an LSB-conformant header to the initscript.
+
+@DPATCH@
+
+--- autofs-4.1.4+debian/samples/rc.autofs.in.orig	2007-07-05 16:43:32.000000000 +0200
++++ autofs-4.1.4+debian/samples/rc.autofs.in	2007-07-05 16:43:42.000000000 +0200
+@@ -9,6 +9,16 @@
+ # On most distributions, this file should be called:
+ # /etc/rc.d/init.d/autofs or /etc/init.d/autofs
+ #
++### BEGIN INIT INFO
++# Provides:            autofs
++# Required-Start:      $local_fs
++# Required-Stop:       $local_fs
++# Default-Start:       2 3 4 5
++# Default-Stop:                0 1 6
++# Short-Description:   automount daemon
++# Description:         daemon to mount (possibly remote) filesystems
++#                      automatically upon entering the mountpoint
++### END INIT INFO
+ 
+ # For Redhat-ish systems
+ #

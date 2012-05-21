@@ -1,0 +1,32 @@
+#! /bin/sh
+#
+# > update-rc.d mpd defaults 20
+#
+
+test -f /usr/bin/mpd || exit 0
+test -f /etc/mpd.conf || exit 0
+
+case "$1" in
+  start)
+    echo -n "Starting music player daemon: mpd"
+    start-stop-daemon --start --quiet --exec /usr/bin/mpd
+    echo "."
+    ;;
+  stop)
+    echo -n "Stopping music player daemon: mpd"
+    start-stop-daemon --stop --quiet --exec /usr/bin/mpd
+    echo "."
+    ;;
+  restart|force-reload)
+    echo -n "Restarting music player daemon: mpd"
+    start-stop-daemon --stop --quiet --exec /usr/bin/mpd
+    sleep 2
+    start-stop-daemon --start --quiet --exec /usr/bin/mpd
+    echo "."
+    ;;
+  *)
+    echo "Usage: /etc/init.d/mpd {start|stop|restart|force-reload}"
+    exit 1
+esac
+
+exit 0

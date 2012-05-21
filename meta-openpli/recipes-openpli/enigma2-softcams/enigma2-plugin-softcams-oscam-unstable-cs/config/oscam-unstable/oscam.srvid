@@ -1,0 +1,172 @@
+# oscam.server generated automatically by Streamboard OSCAM 1.00-unstable_svn build #5630
+# Read more: http://streamboard.gmc.to/oscam/browser/trunk/Distribution/doc/txt/oscam.srvid.txt
+# Télésat Belgium and others included into télésat
+# Biss tv France (absat),TNT France,Csat France
+#
+0100:362f|telesat|La Une|TV|
+0100:3630|telesat|La Deux|TV|
+0100:3631|telesat|RTL-TVI|TV|
+0100:3632|telesat|Club RTL|TV|
+0100:3633|telesat|Plug RTL|TV|
+0100,0500:01cc|telesatBissFr|AB3|TV|
+0100,0500:01d0|telesatBissFr|AB4|TV|
+0100,0500:012d|telesatBissFr|TF1|TV|
+0100,0500:012e|telesatBissFr|France 2 HD|TV|
+0100,0500:012f|telesatBissFr|France 3|TV|
+0100,0500:013a|telesatBissFr|France 4|TV|
+0100,0500:0131|telesatBissFr|France 5|TV|
+0100,0500:01a3|telesatBissFr|France O|TV|
+0100,0500:21fd|telesatCsat|Tele Maison|TV|
+0100,0500:428d|telesatCsat|Stylia|TV|
+0100,0500:2596|telesatCsat|Vivolta|TV|
+0100,0500:1fde|TelesatCsat|Comedie|TV|
+0100,0500:01a1|TelestaCsat|Direct Star|TV|
+0100,0500:1de1|TelesatCsat|June|TV|
+0100,0500:0137|TelesatBissFr|NT1|TV|
+0100,0500:01c4|TelesatBissFr|AB1|TV|
+0100,0500:3634|TelesatBissFr|DisneyChannel|TV|
+0100,0500:22ca|TelestaCsat|DisneyChannel+1|TV|
+0100,0500:2201|TelesatCsat|DisneyXDFrance|TV|
+0100,0500:22cb|TelesatCsat|PlayhouseDisney|TV|
+0100,0500:6f6f|TelesatCsat|Boomerang|TV|
+0100,0500:6f69|TelesatCsat|CartoonNetwork|TV|
+0100,0500:01a2|TelesatBissFr|Gulli|TV|
+0100,0500:6ff2,6ffc|TelesatCsat|Nickelodeon|TV|
+0100,0500:1fe2|TelesatCsat|TiJi|TV|
+0100,0500:24bc|TelesatCsat|Canal J|TV|
+0100,0500:1fda|TelesatCsat|Teletoon|TV|
+0100,0500:24c2|TelesatCsat|Teletoon+1|TV|
+0100,0500:2523|TelesatCsat|Piwi|TV|
+0100,0500:01ce|TelesatBissFr|Mangas|TV|
+0100,0500:6ff7|TelesatCsat|GameOne|TV|
+0100,0500:6f6d|TelesatCsat|TCM France|TV|
+0100,0500:01cd|TelesatBissFr|Action|TV|
+0100,0500:01c9|TelesatBissFr|CinePolar|TV|
+0100,0500:01c8|TelesatBissFr|CineFx|TV|
+0100,0500:01cf|TelesatBissFr|Encyclopedia|TV|
+0100,0500:1fd9|TelesatCsat|Planete|TV|
+0100,0500:2581|TelesatCsat|Histoire|TV|
+0100,0500:01cb|TelesatBissFr|Toute lhistoire|TV|
+0100,0500:01ca|TelesatBissFr|Escales|TV|
+0100,0500:01c6|TelesatBissFr|Animaux|TV|
+0100,0500:251e|TelesatCsat|UshuaiaTv|TV|
+0100,0500:1fdb|TelesatCsat|Voyage|TV|
+0100,0500:2204|TelesatCsat|NationalGeographic|TV|
+0100,0500:2522|TelesatCsat|NatGeographicWild|TV|
+0100,0500:01c7|TelesatBissFr|Chasse et peche|TV|
+0100,0500:01d4|TelesatBissFr|XXL|TV|
+0100,0500:01d5|TelesatBissFr|XXL PL|TV|
+0100,0500:07fa|TelesatCsat|Hustler|TV|
+0100,0500:31fa|TelesatCsat|Dorcel|TV|
+0100,0500:1fd7|TelesatCsat|Eurosport France|TV|
+0100,0500:3335|TelesatCsat|ESPN America|TV|
+0100,0500:01c5|TelesatBissFr|AB Moteurs|TV|
+0100,0500:6fec|TelesatCsat|MTV France|TV|
+0100,0500:7002|TelesatCsat|MTV Pulse|TV|
+0100,0500:7003|TelesatCsat|MTV Idol|TV|
+0100,0500:6ff3|TelesatCsat|MTV Rocks|TV|
+0100,0500:6fff|TelesatCsat|MTV Music|TV|
+0100,0500:6fef|TelesatCsat|MTV Dance|TV|
+0100,0500:6ff0|TelesatCsat|VH-1|TV|
+0100,0500:6ff1|TelesatCsat|VH-1 Classic|TV|
+0100,0500:20ad|TelesatCsat|MCM Top|TV|
+0100,0500:20a2|TelesatCsat|MCM Pop|TV|
+0100,0500:6fb8|TelesatCsat|MTVN HD|TV|
+#
+# Canal + Nederland
+#
+0100:177A|Canal Digitaal|Geschiedenis 24|TV
+0100:177F|Canal Digitaal|Holland Doc 24|TV
+0100:1784|Canal Digitaal|Consumenten 24|TV
+0100:1789|Canal Digitaal|Humor 24/Nost.Net|TV
+0100:1793|Canal Digitaal|Boomerang|TV
+0100:1798|Canal Digitaal|Discovery Science|TV
+0100:179D|Canal Digitaal|Discovery Travel & Living|TV
+0100:17A2|Canal Digitaal|Het Gesprek|TV
+0100:17AC|Canal Digitaal|Body in Balance|TV
+0100:17B1|Canal Digitaal|E! Entertainement|TV
+0100:17C0|Canal Digitaal|Ned2 HD|TV
+0100:17CA|Canal Digitaal|SBS6 HD|TV
+0100:13AE|Canal Digitaal|Nat Geo Wild|TV
+0100:13BA|Canal Digitaal|Retro Music TV|TV
+0100:1B62|Canal Digitaal|Discovery HD|TV
+0100:1B67|Canal Digitaal|NGC HD|TV
+0100:1B6C|Canal Digitaal|RTL4 HD|TV
+0100:1B71|Canal Digitaal|Brava HDTV|TV
+0100:1B7B|Canal Digitaal|Ned1 HD|TV
+0100:5156|Canal Digitaal|History|TV
+0100:5158|Canal Digitaal|Sport1.2/Eredivisie Live2|TV
+0100:13B1|Canal Digitaal|Eurosport HD|TV
+0100:13B2|Canal Digitaal|History HD|TV
+0100:51AE|Canal Digitaal|Film1.2|TV
+0100:51B3|Canal Digitaal|Film1.3|TV
+0100:51B8|Canal Digitaal|Film1 Action|TV
+0100:51BD|Canal Digitaal|Sport1|TV
+0100:51C2|Canal Digitaal|Sport1.2|TV
+0100:51C7|Canal Digitaal|Car Channel|TV
+0100:51D6|Canal Digitaal|Ned3 HD|TV
+0100:51DB|Canal Digitaal|Film1 HD|TV
+0100:51E0|Canal Digitaal|Sport1 HD|TV
+0100:5212|Canal Digitaal|RTL7 HD|TV
+0100:5217|Canal Digitaal|RTL5 HD|TV
+0100:521C|Canal Digitaal|Net5 HD|TV
+0100:5221|Canal Digitaal|Één HD|TV
+0100:5226|Canal Digitaal|Ketnet/Canvas HD|TV
+0100:522B|Canal Digitaal|Veronica/DisneyXD HD|TV
+0100:4F7E|Canal Digitaal|Bebe TV|TV
+0100:6FEF|Canal Digitaal|MTV Dance|TV
+0100:6FF0|Canal Digitaal|VH1|TV
+0100:6FF1|Canal Digitaal|VH1 Classic|TV
+0100:6FF3|Canal Digitaal|MTV Rocks|TV
+0100:6FB8|Canal Digitaal|MTVN HD|TV
+0100:1F47|Canal Digitaal|Mezzo|TV
+0100:6FFF|Canal Digitaal|MTV Music|TV
+0100:7007|Canal Digitaal|MTV NL|TV
+0100:2525|Canal Digitaal|Motors TV|TV
+0100:4F50|Canal Digitaal|JimJam|TV
+0100:4F55|Canal Digitaal|Hustler TV|TV
+0100:4F56|Canal Digitaal|Zone Reality|TV
+0100:4F57|Canal Digitaal|Extreme Sports|TV
+0100:219F|Canal Digitaal|Yacht & Sail|TV
+0100:07D4|Canal Digitaal|RTL4 SD|TV
+0100:07D5|Canal Digitaal|RTL5 SD|TV
+0100:07D6|Canal Digitaal|RTL7 SD|TV
+0100:07DA|Canal Digitaal|TV Oranje|TV
+0100:07DF|Canal Digitaal|Discovery|TV
+0100:07E4|Canal Digitaal|Animal Planet|TV
+0100:07E9|Canal Digitaal|Eurosport|TV
+0100:07EE|Canal Digitaal|Cartoon Network/TCM|TV
+0100:07F3|Canal Digitaal|RTL8 SD|TV
+0100:07F9|Canal Digitaal|Hallmark Channel|TV
+0100:07FD|Canal Digitaal|Dorcel TV|TV
+0100:4F62|Canal Digitaal|XXX Xtreme|TV
+0100:4F8E|Canal Digitaal|Eurosport 2|TV
+0100:0FA5|Canal Digitaal|Film1.1|TV
+0100:0FA6|Canal Digitaal|Sport1|TV
+0100:0FA7|Canal Digitaal|Film1.2|TV
+0100:0FAB|Canal Digitaal|Ned1 SD|TV
+0100:0FAC|Canal Digitaal|Ned2 SD|TV
+0100:0FAD|Canal Digitaal|Ned3 SD|TV
+0100:0FAE|Canal Digitaal|Nick/Comedy Central|TV
+0100:0FAF|Canal Digitaal|National Geographic|TV
+0100:138C|Canal Digitaal|Net5 SD|TV
+0100:138D|Canal Digitaal|SBS6 SD|TV
+0100:1397|Canal Digitaal|TMF|TV
+0100:139C|Canal Digitaal|Veronica/DisneyXD SD|TV
+0100:139F|Canal Digitaal|MGM Channel|TV
+0100:13A4|Canal Digitaal|Film1.3|TV
+0100:13A5|Canal Digitaal|Comedy Central|TV
+0100:13A6|Canal Digitaal|Eredivisie Live1|TV
+0100:3335|Canal Digitaal|ESPN America|TV
+0100:31E7|Canal Digitaal|Één SD|TV
+0100:31E8|Canal Digitaal|Ketnet/Canvas SD|TV
+0100:31F4|Canal Digitaal|Man-X|TV
+0100:0FCF|Canal Digitaal|Radio 4 Surround|Radio
+0100:13A8|Canal Digitaal|Radio 2|Radio
+0100:13A9|Canal Digitaal|3FM|Radio
+0100:13AB|Canal Digitaal|Radio 5|Radio
+0100:31EA|Canal Digitaal|VRT Radio 1|Radio
+0100:31EB|Canal Digitaal|VRT Radio 2|Radio
+0100:31EC|Canal Digitaal|MNM|Radio
+0100:31ED|Canal Digitaal|Studio Brussel|Radio
+0100:31EE|Canal Digitaal|Klara|Radio

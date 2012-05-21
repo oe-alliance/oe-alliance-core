@@ -1,0 +1,22 @@
+diff -Naur madwifi-ng-r3314-20080131-org/net80211/ieee80211_input.c madwifi-ng-r3314-20080131/net80211/ieee80211_input.c
+--- madwifi-ng-r3314-20080131-org/net80211/ieee80211_input.c	2012-01-28 19:27:10.000000000 +0100
++++ madwifi-ng-r3314-20080131/net80211/ieee80211_input.c	2012-01-28 19:47:34.109104724 +0100
+@@ -1223,6 +1223,7 @@
+ #endif
+ 		vap->iv_devstats.rx_packets++;
+ 		vap->iv_devstats.rx_bytes += skb->len;
++#if IEEE80211_VLAN_TAG_USED
+ 		if (ni->ni_vlan != 0 && vap->iv_vlgrp != NULL) {
+ 			/* attach vlan tag */
+ 			struct ieee80211_node *ni_tmp = SKB_CB(skb)->ni;
+@@ -1236,7 +1237,9 @@
+ 				vap->iv_devstats.rx_dropped++;
+ 			}
+ 			skb = NULL; /* SKB is no longer ours */
+-		} else {
++		} else
++#endif
++		{
+ 			struct ieee80211_node *ni_tmp = SKB_CB(skb)->ni;
+ 			if (netif_receive_skb(skb) == NET_RX_DROP) {
+ 				/* If netif_receive_skb dropped the packet because

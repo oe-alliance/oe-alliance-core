@@ -1,0 +1,6 @@
+#!/bin/sh
+# ppp.ip-down hook script for resolvconf
+# Written by Roy Marples <roy@marples.name> under the BSD-2 license
+
+[ -x /sbin/resolvconf ] || exit 0
+/sbin/resolvconf -f -d "$PPP_IFACE"

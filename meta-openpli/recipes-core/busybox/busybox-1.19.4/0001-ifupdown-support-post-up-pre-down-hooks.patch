@@ -1,0 +1,60 @@
+From b58a1a06ca695aed6a4f6e5039e2de0e5a3df111 Mon Sep 17 00:00:00 2001
+From: Peter Korsgaard <jacmet@sunsite.dk>
+Date: Wed, 19 Oct 2011 02:35:54 +0200
+Subject: [PATCH 1/6] ifupdown: support post-up / pre-down hooks
+
+function                                             old     new   delta
+set_environ                                          330     371     +41
+ifupdown_main                                       2156    2194     +38
+iface_up                                              97     113     +16
+iface_down                                            97     113     +16
+------------------------------------------------------------------------------
+(add/remove: 0/0 grow/shrink: 4/0 up/down: 111/0)             Total: 111 bytes
+
+Signed-off-by: Peter Korsgaard <jacmet@sunsite.dk>
+Signed-off-by: Denys Vlasenko <vda.linux@googlemail.com>
+---
+ networking/ifupdown.c |    6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/networking/ifupdown.c b/networking/ifupdown.c
+index 3820330..abc6b58 100644
+--- a/networking/ifupdown.c
++++ b/networking/ifupdown.c
+@@ -891,6 +891,8 @@ static struct interfaces_file_t *read_interfaces(const char *filename)
+ 				if (strcmp(first_word, "up") != 0
+ 				 && strcmp(first_word, "down") != 0
+ 				 && strcmp(first_word, "pre-up") != 0
++				 && strcmp(first_word, "pre-down") != 0
++				 && strcmp(first_word, "post-up") != 0
+ 				 && strcmp(first_word, "post-down") != 0
+ 				) {
+ 					int i;
+@@ -987,6 +989,8 @@ static void set_environ(struct interface_defn_t *iface, const char *mode)
+ 		if (strcmp(iface->option[i].name, "up") == 0
+ 		 || strcmp(iface->option[i].name, "down") == 0
+ 		 || strcmp(iface->option[i].name, "pre-up") == 0
++		 || strcmp(iface->option[i].name, "pre-down") == 0
++		 || strcmp(iface->option[i].name, "post-up") == 0
+ 		 || strcmp(iface->option[i].name, "post-down") == 0
+ 		) {
+ 			continue;
+@@ -1056,6 +1060,7 @@ static int iface_up(struct interface_defn_t *iface)
+ 	if (!execute_all(iface, "pre-up")) return 0;
+ 	if (!iface->method->up(iface, doit)) return 0;
+ 	if (!execute_all(iface, "up")) return 0;
++	if (!execute_all(iface, "post-up")) return 0;
+ 	return 1;
+ }
+ 
+@@ -1063,6 +1068,7 @@ static int iface_down(struct interface_defn_t *iface)
+ {
+ 	if (!iface->method->down(iface,check)) return -1;
+ 	set_environ(iface, "stop");
++	if (!execute_all(iface, "pre-down")) return 0;
+ 	if (!execute_all(iface, "down")) return 0;
+ 	if (!iface->method->down(iface, doit)) return 0;
+ 	if (!execute_all(iface, "post-down")) return 0;
+-- 
+1.7.9.5
+

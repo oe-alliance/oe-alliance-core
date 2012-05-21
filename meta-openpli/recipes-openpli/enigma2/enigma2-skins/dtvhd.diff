@@ -1,0 +1,40 @@
+--- ~/skins/dTV-HD/skin.xml.orig	2009-10-04 16:33:47.000000000 +0200
++++ ~/skins/dTV-HD/skin.xml	2009-10-04 16:38:49.000000000 +0200
+@@ -86,9 +86,17 @@
+ 		<widget source="session.CurrentService" render="Label" position="20,6" size="600,28" font="Regular;24" backgroundColor="black" transparent="1">
+ 			<convert type="ServiceName">Name</convert>
+ 		</widget>
+-		<widget source="session.CurrentService" render="Label" position="22,35" size="170,22" font="Regular;18" backgroundColor="black" foregroundColor="grey" transparent="1">
++		<widget source="session.CurrentService" render="Label" position="100,34" 	size="170,22" 	font="Regular;18" backgroundColor="black" foregroundColor="grey" transparent="1">
+ 			<convert type="ServiceName">Provider</convert>
+ 		</widget>
++		<widget source="session.CurrentService" render="Label" position="17,34" 		size="80,26" 	font="Regular;18" backgroundColor="transpBlack" foregroundColor="grey" transparent="1" >
++			<convert type="ServiceOrbitalPosition"></convert>
++		</widget>
++		<widget source="session.CurrentService" render="Label" position="450,34"   size="600,26" 	font="Regular;18" backgroundColor="transpBlack" foregroundColor="#e5b243" transparent="1" >
++			<convert type="ConfigEntryTest">config.usage.show_cryptoinfo,True</convert>
++			<convert type="ConditionalShowHide" />
++			<convert type="CryptoInfo">VerboseInfo</convert>
++		</widget>
+ 		<widget source="global.CurrentTime" render="Label" position="1012,7" size="80,25" font="Regular;24" valign="top" halign="right" backgroundColor="#333333" transparent="1">
+ 			<convert type="ClockToText">Default</convert>
+ 		</widget>
+@@ -233,7 +241,7 @@
+ 			<convert type="ServiceInfo">VideoHeight</convert>
+ 		</widget>		
+ 	</screen>
+-	<screen name="Volume" position="78,50" size="72,202" title="Volume" zPosition="1" backgroundColor="transparent2" flags="wfNoBorder">
++	<screen name="Volume"   position="78,250"  size="72,202"   title="Volume"  zPosition="1" backgroundColor="transparent2" flags="wfNoBorder">
+ 		<ePixmap pixmap="dTV-HD/volback.png" position="1,1" size="70,200" zPosition="-5" alphatest="blend" />
+ 		<eLabel text="VOL" position="11,5" size="50,20" font="Regular;18" halign="center" valign="center" foregroundColor="white" backgroundColor="background" transparent="1" />
+ 		<ePixmap pixmap="dTV-HD/vol.png" position="13,32" size="3,156" alphatest="blend" />
+@@ -527,6 +535,9 @@
+ 		<widget source="ServiceEvent" render="Label" position="815,180" zPosition="1" size="305,300" font="Regular;20" foregroundColor="#dddddd">
+ 			<convert type="EventName">ExtendedDescription</convert>
+ 		</widget>
++		<widget source="ServiceEvent" render="Label" 	position="820,490" zPosition="1" size="80,20" font="Regular;22" halign="center">
++			<convert type="ServiceOrbitalPosition"></convert>
++		</widget>	
+ 		<ePixmap pixmap="skin_default/icons/clock.png" position="1020,495" zPosition="1" size="14,14" alphatest="on" />
+ 		<widget source="global.CurrentTime" render="Label" position="1040,490" zPosition="1" size="70,20" font="Regular;22" halign="center">
+ 			<convert type="ClockToText"></convert>

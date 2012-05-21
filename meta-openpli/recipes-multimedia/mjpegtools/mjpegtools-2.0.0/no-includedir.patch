@@ -1,0 +1,63 @@
+Upstream-Status: Submitted [https://sourceforge.net/tracker/?func=detail&aid=3512932&group_id=5776&atid=105776]
+
+Signed-off-by: Andreas Oberritter <obi@opendreambox.org>
+diff -Naur mjpegtools-2.0.0.orig/lavtools/Makefile.am mjpegtools-2.0.0/lavtools/Makefile.am
+--- mjpegtools-2.0.0.orig/lavtools/Makefile.am	2011-05-11 20:17:16.000000000 +0200
++++ mjpegtools-2.0.0/lavtools/Makefile.am	2012-03-29 20:41:38.040971709 +0200
+@@ -2,7 +2,7 @@
+ 
+ MAINTAINERCLEANFILES = Makefile.in
+ 
+-AM_CPPFLAGS = -I$(top_srcdir) -I$(includedir) -I$(top_srcdir)/utils $(LIBQUICKTIME_CFLAGS)
++AM_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/utils $(LIBQUICKTIME_CFLAGS)
+ 
+ LIBMJPEGUTILS = $(top_builddir)/utils/libmjpegutils.la
+ if HAVE_ALTIVEC
+diff -Naur mjpegtools-2.0.0.orig/y4mdenoise/Makefile.am mjpegtools-2.0.0/y4mdenoise/Makefile.am
+--- mjpegtools-2.0.0.orig/y4mdenoise/Makefile.am	2011-05-21 14:08:44.000000000 +0200
++++ mjpegtools-2.0.0/y4mdenoise/Makefile.am	2012-03-29 20:41:17.720971074 +0200
+@@ -7,7 +7,7 @@
+ AM_CFLAGS = -DNDEBUG -finline-functions @PROGRAM_NOPIC@
+ AM_CXXFLAGS = -DNDEBUG -finline-functions @PROGRAM_NOPIC@
+ 
+-INCLUDES =  -I$(top_srcdir) -I$(includedir) -I$(top_srcdir)/utils
++INCLUDES =  -I$(top_srcdir) -I$(top_srcdir)/utils
+ 
+ LIBMJPEGUTILS = $(top_builddir)/utils/libmjpegutils.la
+ if HAVE_ALTIVEC
+diff -Naur mjpegtools-2.0.0.orig/y4mutils/Makefile.am mjpegtools-2.0.0/y4mutils/Makefile.am
+--- mjpegtools-2.0.0.orig/y4mutils/Makefile.am	2006-03-15 01:00:50.000000000 +0100
++++ mjpegtools-2.0.0/y4mutils/Makefile.am	2012-03-29 20:40:56.360970403 +0200
+@@ -3,7 +3,7 @@
+ MAINTAINERCLEANFILES = Makefile.in
+ 
+ AM_CFLAGS   = @PROGRAM_NOPIC@
+-AM_CPPFLAGS = -I$(top_srcdir) -I$(includedir) -I$(top_srcdir)/utils
++AM_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/utils
+ 
+ LIBMJPEGUTILS = $(top_builddir)/utils/libmjpegutils.la
+ if HAVE_ALTIVEC
+diff -Naur mjpegtools-2.0.0.orig/yuvcorrect/Makefile.am mjpegtools-2.0.0/yuvcorrect/Makefile.am
+--- mjpegtools-2.0.0.orig/yuvcorrect/Makefile.am	2005-10-14 22:00:59.000000000 +0200
++++ mjpegtools-2.0.0/yuvcorrect/Makefile.am	2012-03-29 20:41:05.304970685 +0200
+@@ -2,7 +2,7 @@
+ 
+ MAINTAINERCLEANFILES = Makefile.in
+ 
+-AM_CPPFLAGS = -I$(top_srcdir) -I$(includedir) -I$(top_srcdir)/utils
++AM_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/utils
+ 
+ LIBMJPEGUTILS = $(top_builddir)/utils/libmjpegutils.la
+ if HAVE_ALTIVEC
+diff -Naur mjpegtools-2.0.0.orig/yuvscaler/Makefile.am mjpegtools-2.0.0/yuvscaler/Makefile.am
+--- mjpegtools-2.0.0.orig/yuvscaler/Makefile.am	2005-10-14 22:00:18.000000000 +0200
++++ mjpegtools-2.0.0/yuvscaler/Makefile.am	2012-03-29 20:41:28.776971418 +0200
+@@ -2,7 +2,7 @@
+ 
+ MAINTAINERCLEANFILES = Makefile.in
+ 
+-AM_CPPFLAGS = -I$(top_srcdir) -I$(includedir) -I$(top_srcdir)/utils
++AM_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/utils
+ 
+ 
+ LIBMJPEGUTILS = $(top_builddir)/utils/libmjpegutils.la

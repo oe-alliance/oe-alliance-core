@@ -1,0 +1,105 @@
+# oscam.server generated automatically by Streamboard OSCAM 1.00-unstable_svn build #5630
+# Read more: http://streamboard.gmc.to/oscam/browser/trunk/Distribution/doc/txt/oscam.server.txt
+
+[reader]
+label                         = lower
+enable                        = 1
+protocol                      = internal
+device                        = /dev/sci0
+detect                        = cd
+mhz                           = 500
+cardmhz                       = 500
+caid                          = 
+ident                         =
+services                      = 
+group                         = 1
+emmcache                      = 1,3,15
+lb_weight                     = 100
+cccreshare                    = 3
+audisabled                    = 0
+
+# uncomment and enable this lines below only if devices are present 
+#[reader]
+#label                         = upper
+#enable                        = 0
+#protocol                      = internal
+#device                        = /dev/sci1
+#detect                        = cd
+#mhz                           = 500
+#cardmhz                       = 500
+#caid                          = 
+#ident                         =
+#services                      = 
+#group                         = 2
+#emmcache                      = 1,3,15
+#lb_weight                     = 100
+#cccreshare                    = 3
+#audisabled                    = 0
+
+#[reader]
+#label                         = smartreader
+#enable                        = 0
+#protocol                      = mouse
+# dreambox kernel does not support smartreader protocol so use mouse and set speed with ttyS0 tool
+# for devices boxes with libusb1.0.6 or greater and kernel above 2.6.30 use smartreader
+#device                        = /dev/ttyUSB0  
+# for smartreader protocol use bus:device
+#	bus:device	bus name and device name of the Smartreader+
+#			(get the names with lsusb 'Bus' and 'Device')
+#detect                        = cd
+#mhz                           = 600 
+# do not use with mouse do use with smartreader protocol
+#cardmhz                       = 600 
+# do not use with mouse do use with smartreader protocol
+#caid                          = 
+#ident                         =
+#services                      = 
+#group                         = 3
+#emmcache                      = 1,3,15
+#lb_weight                     = 100
+#cccreshare                    = 3
+#audisabled			= 0
+
+# uncomment and adapt to your needs the readers below this line or ad extra ones.
+#[reader]
+#label                         = pcserverlocalnetwork
+#enable                        = 1
+#protocol                      = cccam
+#device                        = 192.168.123.9,12000
+#account                       = user
+#password                      = pasword
+#reconnecttimeout              = 1
+#group                         = 5
+#emmcache                      = 1,2,15
+#lb_weight                     = 100
+#cccversion                    = 2.2.1
+#cccmaxhops                    = 5
+#ccckeepalive                  = 1
+#cccreshare                    = 3
+#audisabled                    = 0
+
+# on cccam it would be a c line like:
+#C: 192.168.123.9 12000 user pasword no { 0:0:5 }
+
+#[reader]
+#label 				= remoteccampeer
+#enable 			= 1
+#protocol			= cccam
+#device 			= cccam.example.cx,12925
+#account			= user
+#password			= password
+#services			= !service1,!service2 
+# (the ignored providers or channel see oscam.services)
+#reconnecttimeout 		= 2
+#group 				= 12
+#lb_weight			= 100
+#cccmaxhops			= 5
+#cccreshare			= 3
+#ccckeepalive			= 1
+#audisabled 			= 1 
+# the best is for NOT sending emm's to remote cccam peers
+#cccversion			= 2.2.1
+
+# on cccam it would have been a c line like :
+# C: cccam.example.cx 12925 user password no { 0:0:5 }
+

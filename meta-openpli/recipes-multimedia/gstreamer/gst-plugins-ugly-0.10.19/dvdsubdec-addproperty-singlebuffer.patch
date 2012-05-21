@@ -1,0 +1,103 @@
+From: Fraxinas <andreas.frisch@multimedia-labs.de>
+Subject: [PATCH] dvdsubdec: add singlebuffer property (fixes bug 619136)
+
+diff -u a/gst/dvdsub/gstdvdsubdec.c b/gst/dvdsub/gstdvdsubdec.c
+--- a/gst/dvdsub/gstdvdsubdec.c	2009-11-05 19:06:16.000000000 +0100
++++ b/gst/dvdsub/gstdvdsubdec.c	2010-05-26 16:27:06.000000000 +0200
+@@ -41,6 +41,10 @@
+ static GstClockTime gst_dvd_sub_dec_get_event_delay (GstDvdSubDec * dec);
+ static gboolean gst_dvd_sub_dec_sink_event (GstPad * pad, GstEvent * event);
+ static gboolean gst_dvd_sub_dec_sink_setcaps (GstPad * pad, GstCaps * caps);
++static void gst_dvd_sub_set_property (GObject * object, guint prop_id,
++    const GValue * value, GParamSpec * pspec);
++static void gst_dvd_sub_get_property (GObject * object, guint prop_id,
++    GValue * value, GParamSpec * pspec);
+ 
+ static GstFlowReturn gst_send_subtitle_frame (GstDvdSubDec * dec,
+     GstClockTime end_ts);
+@@ -100,6 +104,9 @@
+ }
+ RLE_state;
+ 
++#define ARG_SINGLEBUFFER		0x01
++#define DEFAULT_SINGLEBUFFER		FALSE
++
+ static void
+ gst_dvd_sub_dec_base_init (gpointer klass)
+ {
+@@ -123,6 +130,13 @@
+ 
+   gobject_class = (GObjectClass *) klass;
+ 
++  gobject_class->set_property = gst_dvd_sub_set_property;
++  gobject_class->get_property = gst_dvd_sub_get_property;
++
++  g_object_class_install_property (G_OBJECT_CLASS (klass), ARG_SINGLEBUFFER,
++      g_param_spec_boolean ("singlebuffer", "Single Buffer", "invoke only one single buffer upon changed dvd subpicture. false will output continuous video stream",
++          DEFAULT_SINGLEBUFFER, G_PARAM_READWRITE));
++  
+   gobject_class->finalize = gst_dvd_sub_dec_finalize;
+ }
+ 
+@@ -167,6 +181,40 @@
+   dec->out_buffer = NULL;
+   dec->buf_dirty = TRUE;
+   dec->use_ARGB = FALSE;
++  
++  dec->singlebuffer = DEFAULT_SINGLEBUFFER;
++}
++
++static void
++gst_dvd_sub_set_property (GObject * object, guint prop_id,
++    const GValue * value, GParamSpec * pspec)
++{
++  GstDvdSubDec *src;
++
++  src = GST_DVD_SUB_DEC (object);
++
++  switch (prop_id) {
++    case ARG_SINGLEBUFFER:
++      src->singlebuffer = g_value_get_boolean (value);
++      break;
++    default:
++      break;
++  }
++}
++
++static void
++gst_dvd_sub_get_property (GObject * object, guint prop_id, GValue * value,
++    GParamSpec * pspec)
++{
++  GstDvdSubDec *src;
++
++  src = GST_DVD_SUB_DEC (object);
++
++  switch (prop_id) {
++    case ARG_SINGLEBUFFER:
++      g_value_set_boolean (value, src->singlebuffer);
++      break;
++  }
+ }
+ 
+ static void
+@@ -697,6 +745,8 @@
+     dec->out_buffer = out_buf;
+     dec->buf_dirty = FALSE;
+   }
++  else if (dec->singlebuffer)
++	  goto out;
+ 
+   out_buf = gst_buffer_create_sub (dec->out_buffer, 0,
+       GST_BUFFER_SIZE (dec->out_buffer));
+diff -u a/gst/dvdsub/gstdvdsubdec.h b/gst/dvdsub/gstdvdsubdec.h
+--- a/gst/dvdsub//gstdvdsubdec.h	2009-05-21 20:45:29.000000000 +0200
++++ b/gst/dvdsub/gstdvdsubdec.h	2010-05-26 13:39:32.000000000 +0200
+@@ -91,6 +91,8 @@
+ 
+   GstBuffer *out_buffer;
+   gboolean buf_dirty;
++  
++  gboolean singlebuffer;
+ };
+ 
+ struct _GstDvdSubDecClass

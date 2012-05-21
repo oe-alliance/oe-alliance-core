@@ -1,0 +1,41 @@
+Index: ZD1211LnxDrv_2_22_0_0/Makefile
+===================================================================
+--- ZD1211LnxDrv_2_22_0_0.orig/Makefile	2010-12-13 15:10:36.000000000 +0000
++++ ZD1211LnxDrv_2_22_0_0/Makefile	2010-12-13 15:13:30.000000000 +0000
+@@ -5,10 +5,10 @@
+ #
+ 
+ HOST=
+-CC=$(HOST)gcc
+-LD=$(HOST)ld
+-KERN_VER=$(shell uname -r | cut -b1-3;)
+-KDIR := /lib/modules/$(shell uname -r)/build
++CC?=$(HOST)gcc
++LD?=$(HOST)ld
++KERN_VER ?= $(shell uname -r | cut -b1-3;)
++KDIR ?= /lib/modules/$(shell uname -r)/build
+ PWD := $(shell pwd)
+ 
+ SUBDIRS=.
+@@ -17,10 +17,10 @@
+ 
+ ifeq ($(KERN_VER), 2.6) 
+     KERN_26=y
+-    KERNEL_SOURCE=/usr/src/linux-2.6.9
++    KERNEL_SOURCE?=/usr/src/linux-2.6.9
+ else 
+     KERN_24=y
+-    KERNEL_SOURCE=/usr/src/linux-2.4
++    KERNEL_SOURCE?=/usr/src/linux-2.4
+ endif
+ 
+ SRC_DIR=src
+@@ -28,7 +28,7 @@
+ 
+ 
+ KERNRELEASE := $(shell uname -r;)
+-MODPATH := /lib/modules/$(KERNRELEASE)
++MODPATH ?= /lib/modules/$(KERNRELEASE)
+ 
+ 
+ 

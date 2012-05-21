@@ -1,0 +1,19 @@
+#!/bin/sh /usr/share/dpatch/dpatch-run
+## 020_auto_net_path_sortlocale_mountoptions.dpatch
+##
+## DP: No description.
+
+@DPATCH@
+
+diff -Naur .B/samples/auto.net .A/samples/auto.net
+--- .B/samples/auto.net	2005-04-05 13:02:09.000000000 +0000
++++ .A/samples/auto.net	2007-01-07 21:36:35.000000000 +0000
+@@ -11,7 +11,7 @@
+ 
+ # add "nosymlink" here if you want to suppress symlinking local filesystems
+ # add "nonstrict" to make it OK for some filesystems to not mount
+-opts="-fstype=nfs,hard,intr,nodev,nosuid"
++opts="-fstype=nfs,hard,intr,nodev,nosuid,nonstrict,async"
+ 
+ # Showmount comes in a number of names and varieties.  "showmount" is
+ # typically an older version which accepts the '--no-headers' flag

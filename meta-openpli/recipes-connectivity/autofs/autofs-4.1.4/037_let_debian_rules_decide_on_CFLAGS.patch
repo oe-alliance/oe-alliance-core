@@ -1,0 +1,34 @@
+#!/bin/sh /usr/share/dpatch/dpatch-run
+## 037_let_debian_rules_decide_on_CFLAGS.dpatch
+##
+## DP: No description.
+
+@DPATCH@
+
+diff -Naur .B/Makefile.rules .A/Makefile.rules
+--- .B/Makefile.rules	2004-01-29 16:01:22.000000000 +0000
++++ .A/Makefile.rules	2007-01-07 21:36:35.000000000 +0000
+@@ -17,15 +17,15 @@
+ # Compilers, linkers and flags
+ # The STRIP defined here *must not* remove any dynamic-loading symbols
+ 
+-ifdef DEBUG
+-CFLAGS    = -O2 -g -DDEBUG
+-LDFLAGS   = -g
++#ifdef DEBUG
++#CFLAGS    = -O2 -g -DDEBUG
++#LDFLAGS   = -g
+ STRIP     = :
+-else
+-CFLAGS    = -O3 -fomit-frame-pointer -Wall
+-LDFLAGS   = -s
+-STRIP     = strip --strip-debug
+-endif
++#else
++#CFLAGS    = -O3 -fomit-frame-pointer -Wall
++#LDFLAGS   = -s
++#STRIP     = strip --strip-debug
++#endif
+ 
+ CC        = gcc
+ CXX       = g++
