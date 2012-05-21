@@ -15,26 +15,7 @@ SRC_URI[sha256sum] = "e5561c9714583fd052ea9e0b10331609a719b3878f9d2593e4c57eab0b
 S = "${WORKDIR}/Twisted-${PV}"
 PR = "r1"
 
-inherit setuptools openpli-distutils
-
-do_compile() {
-}
-
-do_install() {
-    distutils_do_install_keep_pyo
-}
-
-PACKAGES =+ "${PN}-src"
-RDEPENDS_{PN}-src = "${PN}"
-FILES_${PN}-src = " \
-	${libdir}/${PYTHON_DIR}/site-packages/twisted/*.py \
-	${libdir}/${PYTHON_DIR}/site-packages/twisted/*/*.py \
-	${libdir}/${PYTHON_DIR}/site-packages/twisted/*/*/*.py \
-	"
-
-PACKAGES =+ "${PN}-selftest"
-RDEPENDS_{PN}-selftest = "${PN}"
-FILES_${PN}-selftest = "${libdir}/${PYTHON_DIR}/site-packages/twisted/*/test"
+inherit setuptools
 
 PACKAGES += "\
   ${PN}-zsh \
