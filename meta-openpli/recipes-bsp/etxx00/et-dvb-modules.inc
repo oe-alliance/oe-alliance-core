@@ -3,15 +3,12 @@ SECTION = "base"
 PRIORITY = "required"
 LICENSE = "CLOSED"
 
-KV = "3.3.0"
-SRCDATE = "20120331"
-
 PV = "${KV}+${SRCDATE}"
 MACHINE_KERNEL_PR_append = ".1"
 
-RDEPENDS_${PN} += "et-fpupdate"
+RDEPENDS_${PN} += "et-fpupdate-${MACHINE}"
 
-SRC_URI = "http://www.et-view.com/download/drivers/${MACHINE}-drivers-${KV}-${SRCDATE}.zip;name=${MACHINE}"
+SRC_URI = "http://www.et-view.com/download/drivers/${MACHINE}-drivers-${KV}-${SRCDATE}.zip"
 
 S = "${WORKDIR}"
 

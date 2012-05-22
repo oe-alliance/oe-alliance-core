@@ -5,14 +5,11 @@ LICENSE = "CLOSED"
 
 PR = "r4"
 
-FPVERSION = "15"
-FPUPDATE = "1.0"
-
 PV = "${FPVERSION}"
 
 SRC_URI = " \
 	http://www.et-view.com/download/fpupdate-${FPUPDATE}.zip \
-	http://www.et-view.com/download/avrmain-${MACHINE}-${FPVERSION}.zip;name=avrmain.${MACHINE} \
+	http://www.et-view.com/download/avrmain-${MACHINE}-${FPVERSION}.zip;name=avrmain \
 	"
 
 S = "${WORKDIR}"

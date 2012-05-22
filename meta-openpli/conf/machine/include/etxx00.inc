@@ -1,5 +1,5 @@
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS = "\
-	et-dvb-modules \
+	et-dvb-modules-${MACHINE} \
 	"
 
 DVBPROVIDER = "kernel"
