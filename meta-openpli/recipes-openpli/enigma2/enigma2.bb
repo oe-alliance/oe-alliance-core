@@ -11,6 +11,7 @@ DEPENDS = " \
 	openssl \
 	libxmlccwrap tuxtxt-enigma2 ethtool \
 	hotplug-e2-helper \
+	libdreamdvd \
 	"
 
 RDEPENDS_${PN} = " \
