@@ -6,3 +6,5 @@ SRCREV = "ee7b0b4c1b35264ed7e003782b501040b7b435fd"
 PR = "r0"
 
 inherit autotools pkgconfig schwerkraft-git
+
+SRC_URI_append = " file://skip_c.patch"

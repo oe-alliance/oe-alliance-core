@@ -1,0 +1,19 @@
+diff --git a/main.c b/main.c
+--- a/main.c
++++ b/main.c
+@@ -938,6 +938,15 @@ enum ddvd_result ddvd_run(struct ddvd *playerconfig)
+ 	msg = DDVD_SHOWOSD_TITLESTRING;
+ 	safe_write(message_pipe, &msg, sizeof(int));
+ 
++        if( dvdnav_title_play(dvdnav, 1 ) != DVDNAV_STATUS_OK)
++            printf("cannot set title (can't decrypt DVD?)" );
++
++        if( dvdnav_menu_call(dvdnav, DVD_MENU_Title ) != DVDNAV_STATUS_OK) {
++            /* Try going to menu root */
++            if( dvdnav_menu_call(dvdnav, DVD_MENU_Root) != DVDNAV_STATUS_OK)
++                    printf("cannot go to dvd menu");
++        }
++
+ 	/* the read loop which regularly calls dvdnav_get_next_block
+ 	 * and handles the returned events */
+ 	int reached_eof = 0;
