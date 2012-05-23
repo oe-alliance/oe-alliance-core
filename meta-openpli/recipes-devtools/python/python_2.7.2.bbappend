@@ -1,12 +1,13 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
-PRINC = "3"
+PRINC = "4"
 
 SRC_URI += " \
 			file://some_configure_fixes.patch;striplevel=0 \
 			file://fix_pthread_site.patch;striplevel=0 \
 			file://no-ldconfig.patch \
 			file://ctypes-error-handling-fix.patch \
+			file://setuptweaks-2.patch \
 "
 
 EXTRA_OECONF += " \
