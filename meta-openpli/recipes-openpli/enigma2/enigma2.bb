@@ -54,6 +54,7 @@ RDEPENDS_${PN} = " \
 	\
 	gst-plugins-bad-mpegdemux \
 	gst-plugins-bad-mms \
+	gst-plugins-bad-rtmp \
 	gst-plugins-bad-cdxaparse gst-plugins-bad-vcdsrc \
 	\
 	gst-plugins-ugly-dvdsub gst-plugins-ugly-mad \
@@ -102,7 +103,7 @@ inherit gitpkgv
 
 PV = "2.7+git${SRCPV}"
 PKGV = "2.7+git${GITPKGV}"
-PR = "r34"
+PR = "r35"
 
 ENIGMA2_BRANCH ?= "master"
 SRC_URI = "git://openpli.git.sourceforge.net/gitroot/openpli/enigma2;protocol=git;branch=${ENIGMA2_BRANCH}"
