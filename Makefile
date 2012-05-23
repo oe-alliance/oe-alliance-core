@@ -51,7 +51,7 @@ all: init
 	@echo
 	@echo " make -f Makefile image"
 	@echo "	or"
-	@echo " cd $(BUILDDIR) ; source env.source ; bitbake openpli-enigma2-image"
+	@echo " cd $(BUILD_DIR) ; source env.source ; bitbake openpli-enigma2-image"
 	@echo
 
 $(BBLAYERS):
