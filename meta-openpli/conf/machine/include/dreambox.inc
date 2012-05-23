@@ -6,6 +6,11 @@ GLIBC_EXTRA_OECONF = "--with-tls --with-__thread"
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "dreambox-dvb-modules-${MACHINE}"
 
+MACHINE_EXTRA_RRECOMMENDS = " \
+	gst-plugin-dreambox-dvbmediasink \
+	ntfs-3g \
+	"
+
 MACHINE_FEATURES += "alsa kernel26 wifi"
 MACHINE_FEATURES += "blindscan-dvbc"
 
