@@ -1,0 +1,158 @@
+diff --git a/lib/python/Plugins/SystemPlugins/Blindscan/plugin.py b/lib/python/Plugins/SystemPlugins/Blindscan/plugin.py
+index fb22f1e..013df5b 100644
+--- a/lib/python/Plugins/SystemPlugins/Blindscan/plugin.py
++++ b/lib/python/Plugins/SystemPlugins/Blindscan/plugin.py
+@@ -20,17 +20,17 @@ from enigma import eTimer, eDVBFrontendParametersSatellite, eComponentScan, eDVB
+ 
+ class Blindscan(ConfigListScreen, Screen):
+ 	skin="""
+-		<screen name="Blindscan" position="center,center" size="560,370" title="Blindscan">
+-			<ePixmap pixmap="Vu_HD/buttons/red.png" position="5,0" size="80,40" alphatest="on" />
+-			<ePixmap pixmap="Vu_HD/buttons/green.png" position="186,0" size="80,40" alphatest="on" />
+-			<ePixmap pixmap="Vu_HD/buttons/blue.png" position="372,0" size="80,40" alphatest="on" />
++		<screen name="Blindscan" position="center,center" size="560,380" title="Blindscan">
++			<ePixmap pixmap="skin_default/buttons/red.png" position="10,5" size="140,40" alphatest="on" />
++			<ePixmap pixmap="skin_default/buttons/green.png" position="210,5" size="140,40" alphatest="on" />
++			<ePixmap pixmap="skin_default/buttons/blue.png" position="410,5" size="140,40" alphatest="on" />
+ 
+-			<widget source="key_red" render="Label" position="28,0" zPosition="1" size="160,30" font="Regular;20" halign="center" valign="center" transparent="1"/>
+-			<widget source="key_green" render="Label" position="213,0" zPosition="1" size="160,30" font="Regular;20" halign="center" valign="center" transparent="1"/>
+-			<widget source="key_blue" render="Label" position="400,0" zPosition="1" size="160,30" font="Regular;20" halign="center" valign="center" transparent="1"/>
++			<widget source="key_red" render="Label" position="10,5" zPosition="1" size="140,40" font="Regular;20" halign="center" valign="center" backgroundColor="#9f1313" transparent="1"/>
++			<widget source="key_green" render="Label" position="210,5" zPosition="1" size="140,40" font="Regular;20" halign="center" valign="center" backgroundColor="#1f771f" transparent="1"/>
++			<widget source="key_blue" render="Label" position="410,5" zPosition="1" size="140,40" font="Regular;20" halign="center" valign="center" backgroundColor="#18188b" transparent="1"/>
+ 
+ 			<widget name="config" position="5,50" size="550,280" scrollbarMode="showOnDemand" />
+-			<widget name="introduction" position="0,345" size="560,20" font="Regular;20" halign="center" />
++			<widget name="introduction" position="0,345" size="560,35" font="Regular;20" halign="center" />
+ 		</screen>
+ 		"""
+ 	def __init__(self, session): 
+diff --git a/lib/python/Plugins/SystemPlugins/FPGAUpgrade/plugin.py b/lib/python/Plugins/SystemPlugins/FPGAUpgrade/plugin.py
+index 14b5087..279ce07 100644
+--- a/lib/python/Plugins/SystemPlugins/FPGAUpgrade/plugin.py
++++ b/lib/python/Plugins/SystemPlugins/FPGAUpgrade/plugin.py
+@@ -210,13 +210,13 @@ class UpgradeStatus(Screen):
+ class FPGAUpgrade(Screen):
+ 	skin = 	"""
+ 		<screen position="center,center" size="560,440" title="FPGA Upgrade" >
+-			<ePixmap pixmap="Vu_HD/buttons/red.png" position="0,7" size="80,40" alphatest="blend" />
+-			<ePixmap pixmap="Vu_HD/buttons/green.png" position="186,7" size="80,40" alphatest="blend" />
+-			<ePixmap pixmap="Vu_HD/buttons/blue.png" position="372,7" size="80,40" alphatest="blend" />
++			<ePixmap pixmap="skin_default/buttons/red.png" position="10,5" size="140,40" alphatest="on" />
++			<ePixmap pixmap="skin_default/buttons/green.png" position="210,5" size="140,40" alphatest="on" />
++			<ePixmap pixmap="skin_default/buttons/blue.png" position="410,5" size="140,40" alphatest="on" />
+ 
+-			<widget source="key_red" render="Label" position="28,0" zPosition="1" size="160,40" font="Regular;20" halign="center" valign="center" transparent="1"/>
+-			<widget source="key_green" render="Label" position="213,0" zPosition="1" size="160,40" font="Regular;20" halign="center" valign="center" transparent="1"/>
+-			<widget source="key_blue" render="Label" position="400,0" zPosition="1" size="160,40" font="Regular;20" halign="center" valign="center" transparent="1"/>
++			<widget source="key_red" render="Label" position="10,5" zPosition="1" size="140,40" font="Regular;20" halign="center" valign="center" backgroundColor="#9f1313" transparent="1"/>
++			<widget source="key_green" render="Label" position="210,5" zPosition="1" size="140,40" font="Regular;20" halign="center" valign="center" backgroundColor="#1f771f" transparent="1"/>
++			<widget source="key_blue" render="Label" position="410,5" zPosition="1" size="140,40" font="Regular;20" halign="center" valign="center" backgroundColor="#18188b" transparent="1"/>
+ 
+ 			<widget source="status" render="Label" position="15,45" zPosition="1" size="540,40" font="Regular;18" halign="left" valign="center" backgroundColor="#a08500" transparent="1" />
+ 			<widget name="file_list" position="0,100" size="555,325" scrollbarMode="showOnDemand" />
+diff --git a/lib/python/Plugins/SystemPlugins/FirmwareUpgrade/plugin.py b/lib/python/Plugins/SystemPlugins/FirmwareUpgrade/plugin.py
+index 0181fac..860762c 100644
+--- a/lib/python/Plugins/SystemPlugins/FirmwareUpgrade/plugin.py
++++ b/lib/python/Plugins/SystemPlugins/FirmwareUpgrade/plugin.py
+@@ -307,8 +307,8 @@ class UpgradeStatus(Screen):
+ class Filebrowser(Screen):
+ 	skin = 	"""
+ 		<screen position="center,center" size="500,260" title="File Browser" >
+-			<ePixmap pixmap="Vu_HD/buttons/blue.png" position="5,7" size="80,40" alphatest="blend" />
+-			<widget source="key_blue" render="Label" position="40,0" zPosition="1" size="300,40" font="Regular;20" halign="left" valign="center" transparent="1"/>
++			<ePixmap pixmap="skin_default/buttons/blue.png" position="10,5" size="140,40" alphatest="blend" />
++			<widget source="key_blue" render="Label" position="10,5" zPosition="1" size="140,40" font="Regular;20" halign="center" valign="center" transparent="1"/>
+ 			<widget name="file_list" position="0,50" size="500,160" scrollbarMode="showOnDemand" />
+ 
+ 			<widget source="status" render="Label" position="0,220" zPosition="1" size="500,40" font="Regular;18" halign="center" valign="center" backgroundColor="#a08500" transparent="1" />
+@@ -319,7 +319,7 @@ class Filebrowser(Screen):
+ 		Screen.__init__(self, session)
+                 self.session = session 
+ 		
+-		self["key_blue"] = StaticText(_("Download  the  firmware (latest)"))
++		self["key_blue"] = StaticText(_("Download"))
+ 
+ 		self["status"]    = StaticText(_(" "))
+ 		self["file_list"] = FileList("/", matchingPattern = "^.*")
+@@ -533,11 +533,11 @@ class Filebrowser(Screen):
+ class FirmwareUpgrade(Screen, ConfigListScreen):
+ 	skin = 	"""
+ 		<screen position="center,center" size="560,175" title="Firmware Upgrade" >
+-			<ePixmap pixmap="Vu_HD/buttons/red.png" position="125,7" size="80,40" alphatest="blend" />
+-			<ePixmap pixmap="Vu_HD/buttons/green.png" position="330,7" size="80,40" alphatest="blend" />
++			<ePixmap pixmap="skin_default/buttons/red.png" position="80,5" size="140,40" alphatest="on" />
++			<ePixmap pixmap="skin_default/buttons/green.png" position="340,5" size="140,40" alphatest="on" />
+ 
+-			<widget source="key_red" render="Label" position="160,0" zPosition="1" size="155,40" font="Regular;20" halign="left" valign="center" transparent="1" />
+-			<widget source="key_green" render="Label" position="365,0" zPosition="1" size="155,40" font="Regular;20" halign="left" valign="center" transparent="1" />
++			<widget source="key_red" render="Label" position="80,5" zPosition="1" size="140,40" font="Regular;20" halign="center" valign="center" backgroundColor="#9f1313" transparent="1" />
++			<widget source="key_green" render="Label" position="340,5" zPosition="1" size="140,40" font="Regular;20" halign="center" valign="center" backgroundColor="#1f771f" transparent="1" />
+ 
+ 			<widget name="config" zPosition="2" position="0,50" itemHeight="36" size="540,40" scrollbarMode="showOnDemand" transparent="1" />
+ 			<widget source="status" render="Label" position="0,100" zPosition="1" size="540,75" font="Regular;20" halign="center" valign="center" backgroundColor="#a08500" transparent="1" />
+diff --git a/lib/python/Plugins/SystemPlugins/LEDBrightnessSetup/plugin.py b/lib/python/Plugins/SystemPlugins/LEDBrightnessSetup/plugin.py
+index f5cc4fc..afd541b 100755
+--- a/lib/python/Plugins/SystemPlugins/LEDBrightnessSetup/plugin.py
++++ b/lib/python/Plugins/SystemPlugins/LEDBrightnessSetup/plugin.py
+@@ -59,14 +59,14 @@ ledsetup = LEDSetup()
+ class LEDBrightnessSetup(Screen,ConfigListScreen):
+ 	skin = """
+ 			<screen name="LEDBrightnessSetup" position="center,center" size="560,300" title="LED Brightness Setup">
+-			<ePixmap pixmap="Vu_HD/buttons/red.png" position="10,10" size="25,25" alphatest="on" />
+-			<ePixmap pixmap="Vu_HD/buttons/green.png" position="195,10" size="25,25" alphatest="on" />
+-			<ePixmap pixmap="Vu_HD/buttons/yellow.png" position="380,10" size="25,25" alphatest="on" />
+-			<widget source="key_red" render="Label" position="30,10" zPosition="1" size="140,25" font="Regular;20" halign="center" valign="center" transparent="1" />
+-			<widget source="key_green" render="Label" position="215,10" zPosition="1" size="140,25" font="Regular;20" halign="center" valign="center" transparent="1" />
+-			<widget source="key_yellow" render="Label" position="400,10" zPosition="1" size="140,25" font="Regular;20" halign="center" valign="center" transparent="1" />
++			<ePixmap pixmap="skin_default/buttons/red.png" position="10,5" size="140,40" alphatest="on" />
++			<ePixmap pixmap="skin_default/buttons/green.png" position="210,5" size="140,40" alphatest="on" />
++			<ePixmap pixmap="skin_default/buttons/yellow.png" position="410,5" size="140,40" alphatest="on" />
++			<widget source="key_red" render="Label" position="10,5" zPosition="1" size="140,40" font="Regular;20" halign="center" valign="center" backgroundColor="#9f1313" transparent="1"/>
++			<widget source="key_green" render="Label" position="210,5" zPosition="1" size="140,40" font="Regular;20" halign="center" valign="center" backgroundColor="#1f771f" transparent="1"/>
++			<widget source="key_yellow" render="Label" position="410,5" zPosition="1" size="140,40" font="Regular;20" halign="center" valign="center" backgroundColor="#a08500" transparent="1"/>
+ 			<widget name="config" zPosition="2" position="5,50" size="550,200" scrollbarMode="showOnDemand" transparent="1"/>
+-			<widget name="current_entry" position="130,240" size="300,30" font="Regular;18" halign="center" valign="center"/>
++			<widget name="current_entry" position="130,240" size="300,50" font="Regular;18" halign="center" valign="center"/>
+ 			</screen>"""
+ 
+ 	def __init__(self,session):
+diff --git a/lib/python/Plugins/SystemPlugins/ManualFancontrol/plugin.py b/lib/python/Plugins/SystemPlugins/ManualFancontrol/plugin.py
+index 8a0be65..6a31162 100755
+--- a/lib/python/Plugins/SystemPlugins/ManualFancontrol/plugin.py
++++ b/lib/python/Plugins/SystemPlugins/ManualFancontrol/plugin.py
+@@ -11,10 +11,10 @@ import NavigationInstance
+ class ManualFancontrol(Screen,ConfigListScreen):
+ 	skin = """
+ 			<screen name="ManualFancontrol" position="center,center" size="560,300" title="Fancontrol Settings in Standby mode" >
+-			<ePixmap pixmap="Vu_HD/buttons/red.png" position="10,10" size="25,25" alphatest="on" />
+-			<ePixmap pixmap="Vu_HD/buttons/green.png" position="290,10" size="25,25" alphatest="on" />
+-			<widget source="key_red" render="Label" position="40,10" zPosition="1" size="140,25" font="Regular;20" halign="center" valign="center" transparent="1" />
+-			<widget source="key_green" render="Label" position="320,10" zPosition="1" size="140,25" font="Regular;20" halign="center" valign="center" transparent="1" />
++			<ePixmap pixmap="skin_default/buttons/red.png" position="80,5" size="140,40" alphatest="on" />
++			<ePixmap pixmap="skin_default/buttons/green.png" position="340,5" size="140,40" alphatest="on" />
++			<widget source="key_red" render="Label" position="80,5" zPosition="1" size="140,40" font="Regular;20" halign="center" valign="center" backgroundColor="#9f1313" transparent="1" />
++			<widget source="key_green" render="Label" position="340,5" zPosition="1" size="140,40" font="Regular;20" halign="center" valign="center" backgroundColor="#1f771f" transparent="1" />
+ 			<widget name="config" zPosition="2" position="5,50" size="550,200" scrollbarMode="showOnDemand" transparent="1" />
+ 			<widget source="current" render="Label" position="150,270" zPosition="1" size="280,30" font="Regular;20" halign="center" valign="center" transparent="1" />
+ 			</screen>"""
+diff --git a/lib/python/Plugins/SystemPlugins/RemoteControlCode/plugin.py b/lib/python/Plugins/SystemPlugins/RemoteControlCode/plugin.py
+index 55a12f5..d11facc 100755
+--- a/lib/python/Plugins/SystemPlugins/RemoteControlCode/plugin.py
++++ b/lib/python/Plugins/SystemPlugins/RemoteControlCode/plugin.py
+@@ -41,10 +41,10 @@ class RemoteControlCodeInit:
+ class RemoteControlCode(Screen,ConfigListScreen,RemoteControlCodeInit):
+ 	skin = """
+ 			<screen name="RemoteControlCode" position="center,center" size="560,250" title="Remote Control System Code Setting" >
+-			<ePixmap pixmap="Vu_HD/buttons/red.png" position="10,10" size="25,25" alphatest="on" />
+-			<ePixmap pixmap="Vu_HD/buttons/green.png" position="290,10" size="25,25" alphatest="on" />
+-			<widget source="key_red" render="Label" position="40,10" zPosition="1" size="140,25" font="Regular;20" halign="center" valign="center" transparent="1" />
+-			<widget source="key_green" render="Label" position="320,10" zPosition="1" size="140,25" font="Regular;20" halign="center" valign="center" transparent="1" />
++			<ePixmap pixmap="skin_default/buttons/red.png" position="80,5" size="140,40" alphatest="on" />
++			<ePixmap pixmap="skin_default/buttons/green.png" position="340,5" size="140,40" alphatest="on" />
++			<widget source="key_red" render="Label" position="80,5" zPosition="1" size="140,40" font="Regular;20" halign="center" valign="center" backgroundColor="#9f1313" transparent="1" />
++			<widget source="key_green" render="Label" position="340,5" zPosition="1" size="140,40" font="Regular;20" halign="center" valign="center" backgroundColor="#1f771f" transparent="1" />
+ 			<widget name="config" zPosition="2" position="5,50" size="550,200" scrollbarMode="showOnDemand" transparent="1" />
+ 			</screen>"""
+ 

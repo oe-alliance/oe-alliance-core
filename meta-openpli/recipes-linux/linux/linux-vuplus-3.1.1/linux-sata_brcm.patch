@@ -1,0 +1,243 @@
+diff --git a/drivers/ata/sata_brcmstb.c b/drivers/ata/sata_brcmstb.c
+index 7ba20e0..ca02cdf 100644
+--- a/drivers/ata/sata_brcmstb.c
++++ b/drivers/ata/sata_brcmstb.c
+@@ -53,9 +53,7 @@
+ #include <linux/pm.h>
+ #include <linux/clk.h>
+ #include <linux/version.h>
+-#if LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 32)
+ #include <linux/pm_runtime.h>
+-#endif
+ 
+ #ifdef CONFIG_PPC_OF
+ #include <asm/prom.h>
+@@ -127,7 +125,7 @@ enum {
+ 	K2_SATA_TF_LBAM_OFFSET		= 0x10,
+ 	K2_SATA_TF_LBAH_OFFSET		= 0x14,
+ 	K2_SATA_TF_DEVICE_OFFSET	= 0x18,
+-	K2_SATA_TF_CMDSTAT_OFFSET      	= 0x1c,
++	K2_SATA_TF_CMDSTAT_OFFSET	= 0x1c,
+ 	K2_SATA_TF_CTL_OFFSET		= 0x20,
+ 
+ 	/* DMA base */
+@@ -142,7 +140,7 @@ enum {
+ 	/* Others */
+ 	K2_SATA_SICR1_OFFSET		= 0x80,
+ 	K2_SATA_SICR2_OFFSET		= 0x84,
+-	K2_SATA_SIMR_OFFSET		= 0x88,	/* SATA interrupt mask register */
++	K2_SATA_SIMR_OFFSET		= 0x88,	/* SATA intr mask register */
+ 	K2_SATA_MDIO_OFFSET		= 0x8c,	/* SATA MDIO access register */
+ 	K2_SATA_SCQR_OFFSET		= 0x94,	/* SATA command queue depth */
+ 	K2_SATA_QAL_OFFSET		= 0xa0,	/* QDMA ring address lower */
+@@ -330,6 +328,22 @@ static void brcm_EnableOOBWindowFix(void __iomem *mmio_base, int port)
+ 	mdio_write_reg(mmio_base, port, 0x0D, sval);
+ }
+ 
++static void brcm_Enable256AlignDetection(void __iomem *mmio_base, int port)
++{
++	uint32_t tmp32;
++	void __iomem *port_mmio;
++
++	port_mmio = PORT_BASE(mmio_base, port);
++
++	tmp32 = readl(port_mmio + K2_SATA_SICR1_OFFSET);
++	tmp32 |= 0x08000000;
++	writel(tmp32, port_mmio + K2_SATA_SICR1_OFFSET);
++
++	tmp32 = readl(port_mmio + K2_SATA_SICR2_OFFSET);
++	tmp32 |= 0x00800000;
++	writel(tmp32, port_mmio + K2_SATA_SICR2_OFFSET);
++}
++
+ static void brcm_AnalogReset(void __iomem *mmio_base, int port)
+ {
+ 	/* do analog reset */
+@@ -385,6 +399,8 @@ static void brcm_InitSata_1_5Gb(void __iomem *mmio_base, int port)
+ 	brcm_SetPllTxRxCtrl(mmio_base, port);
+ 	brcm_EnableOOBWindowFix(mmio_base, port);
+ 
++	brcm_Enable256AlignDetection(mmio_base, port);
++
+ 	if (!port) {
+ #ifdef CONFIG_BRCM_SATA_75MHZ_PLL
+ 		/* use 75Mhz PLL clock */
+@@ -446,6 +462,8 @@ static void brcm_InitSata2_3Gb(void __iomem *mmio_base, int port)
+ 	brcm_SetPllTxRxCtrl(mmio_base, port);
+ 	brcm_EnableOOBWindowFix(mmio_base, port);
+ 
++	brcm_Enable256AlignDetection(mmio_base, port);
++
+ 	if (!port) {
+ #ifdef CONFIG_BRCM_SATA_75MHZ_PLL
+ 		/* use 75Mhz PLL clock */
+@@ -758,11 +776,7 @@ static void k2_bmdma_setup_mmio(struct ata_queued_cmd *qc)
+ 	void __iomem *mmio = (void __iomem *) ap->ioaddr.bmdma_addr;
+ 	/* load PRD table addr. */
+ 	mb();	/* make sure PRD table writes are visible to controller */
+-#if LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 35)
+ 	writel(ap->bmdma_prd_dma, mmio + ATA_DMA_TABLE_OFS);
+-#else
+-	writel(ap->prd_dma, mmio + ATA_DMA_TABLE_OFS);
+-#endif
+ 
+ 	/* specify data direction, triple-check start bit is clear */
+ 	dmactl = readb(mmio + ATA_DMA_CMD);
+@@ -819,11 +833,7 @@ static void k2_bmdma_start_mmio(struct ata_queued_cmd *qc)
+ 
+ static int k2_sata_port_start(struct ata_port *ap)
+ {
+-#if LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 35)
+ 	ata_bmdma_port_start(ap);
+-#else
+-	ata_port_start(ap);
+-#endif
+ 	return 0;
+ }
+ 
+@@ -848,8 +858,7 @@ static irqreturn_t k2_sata_interrupt(int irq, void *dev_instance)
+ 
+ 		ap = host->ports[i];
+ 
+-		ata_for_each_link(link, ap, EDGE)
+-		{
++		ata_for_each_link(link, ap, EDGE) {
+ 			int rc;
+ 			unsigned int serror;
+ 
+@@ -887,11 +896,7 @@ static irqreturn_t k2_sata_interrupt(int irq, void *dev_instance)
+ 	if (handled & IRQ_HANDLED)
+ 		return handled;
+ 
+-#if LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 35)
+ 	return ata_bmdma_interrupt(irq, dev_instance);
+-#else
+-	return	ata_sff_interrupt(irq, dev_instance);
+-#endif
+ }
+ 
+ /*
+@@ -1044,10 +1049,7 @@ static void k2_sata_remove_one(struct pci_dev *pdev)
+ 	struct k2_host_priv *hp = host->private_data;
+ 
+ 	brcm_pm_unregister_cb("sata");
+-
+-#if LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 32)
+ 	pm_runtime_get_noresume(&pdev->dev);
+-#endif
+ 
+ 	K2_POWER_ON(host);
+ 	ata_pci_remove_one(pdev);
+@@ -1135,7 +1137,9 @@ static int k2_sata_resume(struct device *dev)
+ 		ap = host->ports[i];
+ 
+ 		ata_for_each_link(link, ap, EDGE) {
++			spin_unlock_irqrestore(&hp->lock, flags);
+ 			sata_std_hardreset(link, NULL, 1000);
++			spin_lock_irqsave(&hp->lock, flags);
+ 		}
+ 	}
+ 
+@@ -1144,7 +1148,6 @@ static int k2_sata_resume(struct device *dev)
+ 	return 0;
+ }
+ 
+-#if LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 32)
+ static int k2_sata_runtime_suspend(struct device *dev)
+ {
+ 	return k2_sata_suspend(dev);
+@@ -1162,8 +1165,6 @@ static int k2_sata_runtime_idle(struct device *dev)
+ 	return 0; /* ignored by pm core */
+ }
+ 
+-#endif
+-
+ /*
+  * Driver initialization
+  */
+@@ -1206,25 +1207,25 @@ static struct ata_port_operations k2_sata_ops = {
+ };
+ 
+ static const struct ata_port_info k2_port_info[] = {
+-	/* chip_sata1 */
+-	{
+-		.flags		= ATA_FLAG_SATA |
+-				  K2_FLAG_NO_ATAPI_DMA,
+-		.pio_mask	= 0x1f,
+-		.mwdma_mask	= 0x07,
+-		.udma_mask	= ATA_UDMA7,
+-		.port_ops	= &k2_sata_ops,
+-	},
+-	/* chip_sata2 */
+-	{
+-		.flags		= ATA_FLAG_SATA |
+-				  K2_FLAG_NO_ATAPI_DMA |
+-				  K2_FLAG_BRCM_SATA2,
+-		.pio_mask	= 0x1f,
+-		.mwdma_mask	= 0x07,
+-		.udma_mask	= ATA_UDMA7,
+-		.port_ops	= &k2_sata_ops,
+-	},
++        /* chip_sata1 */
++        {
++                .flags          = ATA_FLAG_SATA |
++                                  K2_FLAG_NO_ATAPI_DMA,
++                .pio_mask       = 0x1f,
++                .mwdma_mask     = 0x07,
++                .udma_mask      = ATA_UDMA7,
++                .port_ops       = &k2_sata_ops,
++        },
++        /* chip_sata2 */
++        {
++                .flags          = ATA_FLAG_SATA |
++                                  K2_FLAG_NO_ATAPI_DMA |
++                                  K2_FLAG_BRCM_SATA2,
++                .pio_mask       = 0x1f,
++                .mwdma_mask     = 0x07,
++                .udma_mask      = ATA_UDMA7,
++                .port_ops       = &k2_sata_ops,
++        },
+ };
+ 
+ static void k2_sata_setup_port(struct ata_ioports *port, void __iomem *base)
+@@ -1250,8 +1251,8 @@ static int k2_sata_init_one(struct pci_dev *pdev,
+ 				const struct pci_device_id *ent)
+ {
+ 	static int printed_version;
+-	const struct ata_port_info *ppi[] =
+-		{ &k2_port_info[ent->driver_data], NULL };
++	const struct ata_port_info *ppi[] = {
++		&k2_port_info[ent->driver_data], NULL };
+ 	struct ata_host *host;
+ 	void __iomem *mmio_base;
+ 	int n_ports, i, rc, bar_pos;
+@@ -1358,13 +1359,10 @@ static int k2_sata_init_one(struct pci_dev *pdev,
+ 
+ 	brcm_pm_register_cb("sata", k2_sata_pm_cb, host);
+ 
+-#if LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 32)
+ 	/* pci core incremented pm counter before calling probe,
+ 	 * we are decrementing it to enable runtime pm */
+ 	pm_runtime_put_noidle(&pdev->dev);
+ 
+-#endif
+-
+ 	return 0;
+ }
+ 
+@@ -1374,14 +1372,12 @@ static const struct pci_device_id k2_sata_pci_tbl[] = {
+ 	{ }
+ };
+ 
+-static struct dev_pm_ops k2_sata_pm_ops = {
++static const struct dev_pm_ops k2_sata_pm_ops = {
+ 	.suspend_noirq		= k2_sata_suspend,
+ 	.resume_noirq		= k2_sata_resume,
+-#if LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 32)
+ 	.runtime_suspend	= k2_sata_runtime_suspend,
+ 	.runtime_resume		= k2_sata_runtime_resume,
+ 	.runtime_idle		= k2_sata_runtime_idle,
+-#endif
+ };
+ 
+ static struct pci_driver k2_sata_pci_driver = {

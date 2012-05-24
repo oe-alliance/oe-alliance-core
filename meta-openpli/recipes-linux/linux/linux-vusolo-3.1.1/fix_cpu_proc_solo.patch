@@ -1,0 +1,13 @@
+diff --git a/arch/mips/kernel/cpu-probe.c b/arch/mips/kernel/cpu-probe.c
+index ebc0cd2..3e73ad3 100644
+--- a/arch/mips/kernel/cpu-probe.c
++++ b/arch/mips/kernel/cpu-probe.c
+@@ -823,7 +823,7 @@ static inline void cpu_probe_mips(struct cpuinfo_mips *c, unsigned int cpu)
+ 		break;
+ 	case PRID_IMP_34K:
+ 		c->cputype = CPU_34K;
+-		__cpu_name[cpu] = "MIPS 34Kc";
++		__cpu_name[cpu] = "Brcm4380";
+ 		break;
+ 	case PRID_IMP_74K:
+ 		c->cputype = CPU_74K;
