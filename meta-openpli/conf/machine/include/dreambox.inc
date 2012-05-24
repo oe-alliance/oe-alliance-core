@@ -11,8 +11,7 @@ MACHINE_EXTRA_RRECOMMENDS = " \
 	ntfs-3g \
 	"
 
-MACHINE_FEATURES += "alsa kernel26 wifi"
-MACHINE_FEATURES += "blindscan-dvbc"
+MACHINE_FEATURES += "alsa dvbapi5 switchoff tpm"
 
 PREFERRED_PROVIDER_virtual/bootloader = "dreambox-secondstage-${MACHINE}"
 PREFERRED_PROVIDER_virtual/kernel = "linux-dreambox"
