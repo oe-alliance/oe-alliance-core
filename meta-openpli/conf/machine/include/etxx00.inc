@@ -107,8 +107,7 @@ IMAGE_CMD_ubi_append = " \
 
 TARGET_FPU = "hard"
 
-MACHINE_FEATURES += "kernel26 alsa wifi nl80211"
-MACHINE_FEATURES += "32bpp hdtv 3dtv switchoff lpcm textlcd dvbapi5 blindscan-dvbs"
+MACHINE_FEATURES += "alsa usbhost wifi nl80211 3dtv dvbapi5 3dtv switchoff blindscan-dvbs"
 
 require conf/machine/include/tune-mips32.inc
 
