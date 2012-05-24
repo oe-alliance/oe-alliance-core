@@ -1,5 +1,6 @@
-CRIPTION = "Linux kernel for vuplus"
+DESCRIPTION = "Linux kernel for ${MACHINE}"
 LICENSE = "GPL"
+SECTION = "kernel"
 KV = "3.1.1"
 
 SRCREV = "r2"
