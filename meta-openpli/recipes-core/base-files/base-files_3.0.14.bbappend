@@ -8,6 +8,5 @@ do_install_append() {
 	ln -sf media/hdd ${D}/hdd
 	ln -sf media ${D}/mnt
 	rm -rf ${D}/media/*
-	rmdir ${D}/tmp
-	ln -s var/volatile/tmp ${D}/tmp
+	rm -fr ${D}/tmp
 }
