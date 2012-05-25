@@ -68,7 +68,7 @@ diff -Naurp vsftpd.orig/vsftpd.conf vsftpd/vsftpd.conf
  # You may specify an explicit list of local users to chroot() to their home
  # directory. If chroot_local_user is YES, then this list becomes a list of
  # users to NOT chroot().
-@@ -103,12 +125,20 @@ connect_from_port_20=YES
+@@ -103,12 +123,22 @@ connect_from_port_20=YES
  # the presence of the "-R" option, so there is a strong case for enabling it.
  #ls_recurse_enable=YES
  #
@@ -97,6 +97,8 @@ diff -Naurp vsftpd.orig/vsftpd.conf vsftpd/vsftpd.conf
 +# This option specifies the location of the RSA certificate to use for SSL
 +# encrypted connections.
 +rsa_cert_file=/etc/ssl/private/vsftpd.pem
++#
++local_root=/
 diff -Naurp vsftpd.orig/vsftpd.conf.5 vsftpd/vsftpd.conf.5
 --- vsftpd.orig/vsftpd.conf.5	2009-11-06 08:41:11.000000000 +0100
 +++ vsftpd/vsftpd.conf.5	2009-11-06 13:37:10.000000000 +0100
