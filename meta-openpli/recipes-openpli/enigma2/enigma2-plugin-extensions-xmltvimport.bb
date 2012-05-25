@@ -19,8 +19,8 @@ S = "${WORKDIR}/git/src"
 inherit distutils
 
 DEPENDS = "python"
-RDEPENDS = "python-compression python-shell"
-RRECOMMENDS = "${PN}-rytec"
+RDEPENDS_${PN} = "python-compression python-shell"
+RRECOMMENDS_${PN} = "${PN}-rytec"
 PACKAGES = "${PN}-dbg ${PN}"
 
 PLUGIN = "EPGImport"

@@ -1,6 +1,5 @@
 DESCRIPTION = "Skins for Enigma2"
 MAINTAINER = "schwerkraft"
-RDEPENDS = ""
 PACKAGES = "${PN}-meta ${PN}"
 PACKAGES_DYNAMIC = "enigma2-plugin-skins-*"
 

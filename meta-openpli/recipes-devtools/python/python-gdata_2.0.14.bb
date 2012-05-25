@@ -3,7 +3,7 @@ HOMEPAGE = "http://code.google.com/p/gdata-python-client/"
 SECTION = "devel/python"
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://README.txt;beginline=1;endline=13;md5=7a713fc5eed20ac1904c2efe0b816a33"
-RDEPENDS = "python-elementtree"
+RDEPENDS_${PN} = "python-elementtree"
 RDEPENDS_${PN}-tests = "${PN}"
 PR = "r1"
 

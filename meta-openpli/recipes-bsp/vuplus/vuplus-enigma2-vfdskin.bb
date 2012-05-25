@@ -1,6 +1,6 @@
 require conf/license/openpli-gplv2.inc
 
-RDEPENDS = "enigma2"
+RDEPENDS_${PN} = "enigma2"
 
 PR = "r0"
 

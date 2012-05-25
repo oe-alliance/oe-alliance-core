@@ -4,7 +4,7 @@ require conf/license/openpli-gplv2.inc
 
 PACKAGES = "${PN}"
 PACKAGE_ARCH = "all"
-RDEPENDS = "libcrypto"
+RDEPENDS_${PN} = "libcrypto"
 RPROVIDES_${PN} = "libcrypto${PV} libssl${PV}"
 PR = "r2"
 SRC_URI = ""

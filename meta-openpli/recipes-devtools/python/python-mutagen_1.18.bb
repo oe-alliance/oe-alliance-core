@@ -6,7 +6,7 @@ SRCNAME = "mutagen"
 PR = "r1"
 
 DEPENDS = "python"
-RDEPENDS = "python-shell"
+RDEPENDS_${PN} = "python-shell"
 
 SRC_URI = "http://mutagen.googlecode.com/files/mutagen-${PV}.tar.gz \
 	file://patch.diff \
