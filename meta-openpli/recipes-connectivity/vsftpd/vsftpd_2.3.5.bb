@@ -69,6 +69,7 @@ do_configure() {
         set_default ls_recurse_enable YES
         set_default secure_chroot_dir "${SECURE_CHROOT_DIR}"
         set_default rsa_cert_file "${RSA_CERT_FILE}"
+        set_default local_root "/"
 }
 do_compile() {
         oe_runmake 'CFLAGS=${CFLAGS}' 'LIBS=${LIBS}' 'LINK=${LINK}'
