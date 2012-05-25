@@ -3,7 +3,7 @@ LICENSE = "LGPL"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=e344c8fa836c3a41c4cbd79d7bd3a379"
 
-DEPENDS = "openssl"
+DEPENDS = "openssl zlib"
 
 inherit gitpkgv
 
