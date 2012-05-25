@@ -4,50 +4,53 @@ inherit task image
 
 IMAGE_INSTALL = " \
 	avahi-daemon \
-	openpli-bootlogo \
+	cifs \
 	distro-feed-configs \
+	dropbear \
 	early-configure \
+	e2fsprogs-e2fsck \
+	e2fsprogs-mke2fs \
 	fakelocale \
+	nfs-utils-client \
+	openpli-bootlogo \
 	opkg \
-	vsftpd \
 	sambaserver \
 	sdparm \
-	tuxbox-common \
-	tzdata \
-	util-linux-sfdisk \
-	nfs-utils-client \
-	cifs \
-	e2fsprogs-mke2fs \
-	e2fsprogs-e2fsck \
 	task-base \
 	task-core-boot \
-	volatile-media \
+	tuxbox-common \
 	tuxbox-links \
+	tzdata \
+	util-linux-sfdisk \
+	volatile-media \
+	vsftpd \
 	"
 
 OPTIONAL_PACKAGES ?= ""
 OPTIONAL_PACKAGES += " \
-	openvpn \
-	gdb strace \
-	procps \
-	openresolv \
-	tcpdump \
-	ntp \
-	samba \
-	openssh \
 	ctorrent \
-	sabnzbd \
-	wakelan \
-	inadyn-mt \
 	cups \
-	vim joe \
-	mc \
-	smartmontools \
+	gdb \
 	hdparm \
-	rsync \
-	ntfs-3g \
+	inadyn-mt \
+	joe \
+	mc \
 	mpd \
+	ntfs-3g \
+	ntp \
+	openresolv \
+	openssh \
+	openvpn \
 	parted \
+	procps \
+	rsync \
+	sabnzbd \
+	samba \
+	smartmontools \
+	strace \
+	tcpdump \
+	vim \
+	wakelan \
 	zeroconf \
 	"
 
