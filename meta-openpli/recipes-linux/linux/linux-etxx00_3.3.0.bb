@@ -9,7 +9,7 @@ SRC_URI[sha256sum] = "67f2c4cec122e1f1b070a7dbfdfe0ac8afb2a80bb0c7d226d516a83664
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-MACHINE_KERNEL_PR_append = ".5"
+MACHINE_KERNEL_PR_append = ".6"
 
 # By default, kernel.bbclass modifies package names to allow multiple kernels
 # to be installed in parallel. We revert this change and rprovide the versioned
@@ -43,7 +43,10 @@ SRC_URI += "http://www.et-view.com/download/linux-${PV}.tar.gz \
 	file://it913x-backports-from-kernel-3.4.patch \
 	file://it913x-backports-from-kernel-3.5.patch \
 	file://it913x-switch-off-PID-filter-by-default.patch \
+	file://it913x-fix-bulk-read-write-retry-loop.patch \
 	file://tda10071-BUGFIX-delivery-system.patch \
+	file://dvb-usb-dib0700-disable-sleep.patch \
+	file://dvb_usb_disable_rc_polling.patch \
 	"
 
 S = "${WORKDIR}/linux-${PV}"
