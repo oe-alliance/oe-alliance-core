@@ -1,4 +1,4 @@
-DESCRIPTION = "Utils for DVB-C blindscan"
+DESCRIPTION = "Utils for blindscan"
 SECTION = "base"
 PRIORITY = "optional"
 LICENSE = "CLOSED"
@@ -12,7 +12,7 @@ RPROVIDES_vuplus-blindscan-dvbc-utils += "virtual/blindscan-dvbc"
 SRC_URI = "http://archive.vuplus.com/download/utils/vuplus-blindscan-utils-${MACHINE}-${PV}.tar.bz2"
 
 PV = "2.0"
-PR = "r0"
+PR = "r1"
 
 S = "${WORKDIR}/blindscan-utils"
 
@@ -26,3 +26,5 @@ FILES_vuplus-blindscan-dvbs-utils = "${bindir}/vuplus_blindscan"
 FILES_vuplus-blindscan-dvbc-utils = "${bindir}/tda1002x"
 
 INHIBIT_PACKAGE_STRIP = "1"
+
+PACKAGE_ARCH := "${MACHINE_ARCH}"
