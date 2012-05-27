@@ -89,6 +89,7 @@ IMAGE_INSTALL += " \
 	tuxbox-common \
 	${ENIGMA2_PLUGINS} \
 	${@base_contains("MACHINE_FEATURES", "wifi", "${WIFI_DRIVERS}", "", d)} \
+	${@base_contains('MACHINE_FEATURES', 'pci', 'madwifi-ng madwifi-ng-modules', '',d)} \
 	"
 
 OPTIONAL_PACKAGES += " \
