@@ -70,6 +70,9 @@ PREFERRED_VERSION_linux-libc-headers = "3.1"
 
 PREFERRED_PROVIDER_virtual/kernel = "linux-${MACHINE}"
 
+PREFERRED_PROVIDER_virtual/blindscan-dvbc = "vuplus-blindscan-utils"
+PREFERRED_PROVIDER_virtual/blindscan-dvbs = "vuplus-blindscan-utils"
+
 EXTRA_IMAGEDEPENDS += "vuplus-makenfi-native"
 
 IMAGE_FSTYPES ?= "ubi"
