@@ -25,14 +25,6 @@ do_install_append() {
 
 FILES_kernel-image += "/${KERNEL_IMAGEDEST}/autoexec*.bat"
 
-python __anonymous () {
-        import bb, re
-        kv = d.getVar('DREAMBOX_KERNEL_VERSION', True)
-        pv = d.getVar('PV', True)
-        if kv != pv:
-                raise bb.parse.SkipPackage("incompatible with kernel version %s" % kv)
-}
-
 pkg_preinst_kernel-image() {
         if [ -z "$D" ] && mountpoint -q /${KERNEL_IMAGEDEST}; then mount -o remount,rw /${KERNEL_IMAGEDEST}; fi
 }
