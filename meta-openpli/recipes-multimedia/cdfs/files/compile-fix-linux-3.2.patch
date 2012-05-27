@@ -1,0 +1,15 @@
+diff -Naur cdfs-2.6.27-org/root.c cdfs-2.6.27/root.c
+--- cdfs-2.6.27-org/root.c	2012-01-29 01:46:36.000000000 +0100
++++ cdfs-2.6.27/root.c	2012-01-29 02:09:30.793696801 +0100
+@@ -518,7 +518,11 @@
+   
+   i->i_uid        = this_cd->uid;
+   i->i_gid        = this_cd->gid;
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(3,2,0)
++  set_nlink(i, 1);
++#else
+   i->i_nlink      = 1;
++#endif
+   i->i_op         = &cdfs_inode_operations;
+   i->i_fop        = NULL;
+   i->i_data.a_ops = NULL;

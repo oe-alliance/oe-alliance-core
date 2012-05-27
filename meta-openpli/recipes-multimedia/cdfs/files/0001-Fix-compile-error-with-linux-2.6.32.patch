@@ -1,0 +1,30 @@
+From 4aff257b7615a1b387797cd8dcc76aed3cc69ab8 Mon Sep 17 00:00:00 2001
+From: Andreas Oberritter <obi@opendreambox.org>
+Date: Mon, 7 Jun 2010 12:05:19 +0000
+Subject: [PATCH] Fix compile error with linux-2.6.32
+
+root.c: In function 'cdfs_init':
+root.c:646: error: 'CLONE_FS' undeclared (first use in this function)
+root.c:646: error: (Each undeclared identifier is reported only once
+root.c:646: error: for each function it appears in.)
+root.c:646: error: 'CLONE_FILES' undeclared (first use in this function)
+root.c:646: error: 'CLONE_SIGHAND' undeclared (first use in this function)
+---
+ root.c |    1 +
+ 1 files changed, 1 insertions(+), 0 deletions(-)
+
+diff --git a/root.c b/root.c
+index 966a855..0801051 100644
+--- a/root.c
++++ b/root.c
+@@ -25,6 +25,7 @@
+ #include "cdfs.h"
+ 
+ #include <linux/module.h>
++#include <linux/sched.h>
+ 
+ 
+ /*++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*
+-- 
+1.5.6.5
+

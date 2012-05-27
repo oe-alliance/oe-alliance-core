@@ -1,0 +1,27 @@
+--- a/root.c	2011-11-24 11:45:32.000000000 +0100
++++ b/root.c	2011-11-24 13:00:53.524700465 +0100
+@@ -598,7 +598,11 @@
+ #ifdef OLD_KERNEL
+ static DECLARE_FSTYPE_DEV(cdfs_fs_type, FSNAME, cdfs_mount);
+ #else
+-#if LINUX_VERSION_CODE >= KERNEL_VERSION(2,6,18)
++
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(2,6,37)
++static struct dentry *cdfs_mount(struct file_system_type *fs_type, int flags, const char *dev_name, void *data) {
++  return mount_bdev(fs_type, flags, dev_name, data, cdfs_fill_super);
++#elif LINUX_VERSION_CODE >= KERNEL_VERSION(2,6,18)
+ static int cdfs_get_sb(struct file_system_type *fs_type, int flags, const char *dev_name, void *data, struct vfsmount *mnt) {
+   return get_sb_bdev(fs_type, flags, dev_name, data, cdfs_fill_super, mnt);
+ #else
+@@ -610,7 +614,11 @@
+ static struct file_system_type cdfs_fs_type = {
+   .owner    = THIS_MODULE,
+   .name     = "cdfs",
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(2,6,37)
++  .mount    = cdfs_mount,
++#else
+   .get_sb   = cdfs_get_sb,
++#endif
+   .kill_sb  = kill_block_super,
+   .fs_flags = FS_REQUIRES_DEV
+ };
