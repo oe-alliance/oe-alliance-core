@@ -2,9 +2,10 @@ SUMMARY = "Dreambox second stage bootloader"
 SECTION = "base"
 LICENSE = "CLOSED"
 DEPENDS += "dreambox-buildimage-native"
-PROVIDES = "virtual/bootloader"
+PROVIDES += "virtual/bootloader"
+RPROVIDES_${PN} += "dreambox-secondstage"
 PRIORITY = "required"
-INC_PR = "r12"
+INC_PR = "r13"
 
 do_compile() {
         ${DREAMBOX_BUILDIMAGE} \
