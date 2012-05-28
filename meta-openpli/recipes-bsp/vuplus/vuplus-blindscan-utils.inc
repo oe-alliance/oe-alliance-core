@@ -12,7 +12,7 @@ RPROVIDES_vuplus-blindscan-dvbc-utils-${MACHINE} += "virtual/blindscan-dvbc"
 DOWNLOADMACHINE ?= "${MACHINE}"
 SRC_URI = "http://archive.vuplus.com/download/utils/vuplus-blindscan-utils-${DOWNLOADMACHINE}-${PV}.tar.bz2"
 
-PV = "2.0"
+PV = "3.1"
 PR = "r1"
 
 S = "${WORKDIR}/blindscan-utils"
