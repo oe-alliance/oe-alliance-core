@@ -6,6 +6,7 @@ IMAGE_INSTALL = " \
 	avahi-daemon \
 	cifs \
 	distro-feed-configs \
+	3rd-party-feed-configs \
 	dropbear \
 	early-configure \
 	e2fsprogs-e2fsck \
