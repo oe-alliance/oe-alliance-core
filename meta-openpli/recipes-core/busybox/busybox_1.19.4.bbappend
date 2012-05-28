@@ -20,6 +20,10 @@ SRC_URI += " \
 			file://inetd.conf \
 			"
 
+# we do not really depend on mtd-utils, but as mtd-utils replaces 
+# include/mtd/* we cannot build in parallel with mtd-utils
+DEPENDS += "mtd-utils"
+
 PACKAGES =+ "${PN}-inetd"
 INITSCRIPT_PACKAGES += "${PN}-inetd"
 INITSCRIPT_NAME_${PN}-inetd = "inetd.${BPN}" 
