@@ -3,14 +3,14 @@ require conf/license/openpli-gplv2.inc
 inherit task image
 
 IMAGE_INSTALL = " \
+	3rd-party-feed-configs \
 	avahi-daemon \
 	cifs \
 	distro-feed-configs \
-	3rd-party-feed-configs \
 	dropbear \
-	early-configure \
 	e2fsprogs-e2fsck \
 	e2fsprogs-mke2fs \
+	early-configure \
 	fakelocale \
 	nfs-utils-client \
 	openpli-bootlogo \
