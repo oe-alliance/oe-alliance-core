@@ -107,7 +107,7 @@ IMAGE_CMD_ubi_append = " \
 
 TARGET_FPU = "hard"
 
-MACHINE_FEATURES += "alsa usbhost wifi 3dtv switchoff blindscan-dvbs textlcd"
+MACHINE_FEATURES += "alsa usbhost wifi 3dtv switchoff blindscan-dvbs textlcd osdposition"
 
 require conf/machine/include/tune-mips32.inc
 
