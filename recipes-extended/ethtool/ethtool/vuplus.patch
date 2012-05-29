@@ -1,0 +1,32 @@
+Index: ethtool-4/ethtool.c
+===================================================================
+--- ethtool-4/ethtool.c	(revision 3)
++++ ethtool-4/ethtool.c	(working copy)
+@@ -1578,6 +1578,27 @@
+ 	} else if (errno != EOPNOTSUPP) {
+ 		perror("Cannot get link status");
+ 	}
++#if 1		/*	ikseong - check running flags	*/
++	else
++	{
++		if(ioctl(fd, SIOCGIFFLAGS, ifr) < 0)
++		{
++			fprintf(stdout,"SIOCGIFFLAGS error \n");
++		}
++		else
++		{
++			if((ifr->ifr_flags & IFF_RUNNING))
++			{
++				fprintf(stdout, "	Link detected: yes\n");
++			}
++			else
++			{
++				fprintf(stdout, "	Link detected: no\n");
++			}
++			allfail=0;
++		}
++	}
++#endif
+
+ 	if (allfail) {
+ 		fprintf(stdout, "No data available\n");

@@ -1,0 +1,142 @@
+#!/bin/sh -e
+#
+# uShare init script
+#
+### BEGIN INIT INFO
+# Provides:          ushare
+# Required-Start:    $local_fs $syslog $network
+# Should-Start:
+# Required-Stop:
+# Should-Stop:
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: uShare
+# Description:       uShare UPnP (TM) A/V & DLNA Media Server
+#                    You should edit configuration in /etc/ushare.conf file
+#                    See http://ushare.geexbox.org for details
+### END INIT INFO
+
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+DAEMON=/usr/bin/ushare
+NAME=ushare
+DESC="uShare UPnP A/V & DLNA Media Server"
+PIDFILE=/var/run/ushare.pid
+CONFIGFILE=/etc/ushare.conf
+
+# abort if no executable exists
+[ -x $DAEMON ] || exit 0
+
+# Get lsb functions
+if [ -f /lib/lsb/init-functions ]
+then
+    . /lib/lsb/init-functions
+else
+    # int log_begin_message (char *message)
+    log_begin_msg () {
+        if [ -z "$1" ]; then
+	    return 1
+        fi
+        echo " * $@"
+    }
+
+    # int log_end_message (int exitstatus)
+    log_end_msg () {
+	
+    # If no arguments were passed, return
+	[ -z "$1" ] && return 1
+	
+    # Only do the fancy stuff if we have an appropriate terminal
+    # and if /usr is already mounted
+	TPUT=/usr/bin/tput
+	EXPR=/usr/bin/expr
+	if [ -x $TPUT ] && [ -x $EXPR ] && $TPUT hpa 60 >/dev/null 2>&1; then
+	    COLS=`$TPUT cols`
+	    if [ -n "$COLS" ]; then
+		COL=`$EXPR $COLS - 7`
+	    else
+		COL=73
+	    fi
+	    UP=`$TPUT cuu1`
+	    END=`$TPUT hpa $COL`
+	    START=`$TPUT hpa 0`
+	    RED=`$TPUT setaf 1`
+	    NORMAL=`$TPUT op`
+	    if [ $1 -eq 0 ]; then
+		echo "$UP$END[ ok ]"
+	    else
+		echo -e "$UP$START $RED*$NORMAL$END[${RED}fail${NORMAL}]"
+	    fi
+	else
+	    if [ $1 -eq 0 ]; then
+		echo "   ...done."
+	    else
+		echo "   ...fail!"
+	    fi
+	fi
+	return $1
+    }
+    
+    log_warning_msg () {
+	if log_use_fancy_output; then
+	    YELLOW=`$TPUT setaf 3`
+	    NORMAL=`$TPUT op`
+	    echo "$YELLOW*$NORMAL $@"
+	else
+	    echo "$@"
+	fi
+    }
+
+fi
+
+. /etc/default/rcS
+
+[ -f /etc/default/ushare ] && . /etc/default/ushare
+
+checkpid() {
+  [ -e $PIDFILE ] || touch $PIDFILE
+}
+
+check_shares() {
+  if [ -r "$CONFIGFILE" ]; then
+    . $CONFIGFILE
+    [ -n "$USHARE_DIR" ] && return 0
+  fi
+  return 1
+}
+
+case "$1" in
+  start)
+    log_begin_msg "Starting $DESC: $NAME"
+    if ! $(check_shares); then
+      log_warning_msg "No shares avalaible ..."
+      log_end_msg 0
+    else
+      checkpid
+      start-stop-daemon --start --quiet --background --oknodo \
+        --make-pidfile --pidfile $PIDFILE \
+        --exec $DAEMON -- $USHARE_OPTIONS
+      log_end_msg $?
+    fi
+  ;;
+  stop)
+    log_begin_msg "Stopping $DESC: $NAME"
+    start-stop-daemon --stop --signal 2 --quiet --oknodo --pidfile $PIDFILE
+    log_end_msg $?
+  ;;
+  reload|force-reload)
+    log_begin_msg "Reloading $DESC: $NAME"
+    start-stop-daemon --stop --signal 1 --quiet --oknodo --pidfile $PIDFILE --exec $DAEMON
+    log_end_msg $?
+  ;;
+  restart)
+    $0 stop
+    $0 start
+  ;;
+  *)
+    N=/etc/init.d/$NAME
+    echo "Usage: $N {start|stop|restart|reload|force-reload}"
+    exit 1
+  ;;
+esac
+
+exit 0

@@ -1,0 +1,145 @@
+PRINC = "2"
+
+PACKAGES += " \
+			task-enigma2 \
+			task-feeds \
+			\
+			${@base_contains("DISTRO_FEATURES", "appletalk", "task-base-appletalk", "", d)} \
+			"
+
+RDEPENDS_task-base := "${@oe_filter_out('task-base-nfs', '${RDEPENDS_task-base}', d)}"
+RDEPENDS_task-base := "${@oe_filter_out('task-base-smbfs', '${RDEPENDS_task-base}', d)}"
+
+RCONFLICTS_task-enigma2_ = "enigma2-plugin-extensions-permanenttimeshift enigma2-plugin-systemplugins-skinselector"
+RREPLACES_task-enigma2 = "enigma2-plugin-extensions-permanenttimeshift enigma2-plugin-systemplugins-skinselector"
+
+WIFI_DRIVERS = " \
+	firmware-carl9170 \
+	firmware-htc7010 \
+	firmware-htc9271 \
+	firmware-rtl8192cu \
+	firmware-rtl8712u \
+	firmware-rt2870 \
+	firmware-rt73 \
+	firmware-zd1211 \
+	\
+	kernel-module-ath9k-htc \
+	kernel-module-carl9170 \
+	kernel-module-rtl8187 \
+	kernel-module-rt2500usb \
+	kernel-module-rt2800usb \
+	kernel-module-rt73usb \
+	kernel-module-r8712u \
+	kernel-module-zd1211rw \
+	rtl8192cu \
+	"
+
+DEPENDS_task-enigma2 = "enigma2 enigma2-plugins enigma2-pliplugins task-feeds"
+
+RDEPENDS_task-enigma2 = "\
+			aio-grab \
+			enigma2 \
+			enigma2-plugin-vix-core \
+			tuxbox-links \
+			tuxbox-common \
+			vix-distro-feed-configs \
+			"
+
+RRECOMMENDS_task-enigma2 = "\
+			enigma2-plugin-bootlogo-vix \
+			enigma2-plugin-extensions-audiosync \
+			enigma2-plugin-extensions-autotimer \
+			enigma2-plugin-extensions-audiosync \
+			enigma2-plugin-extensions-epgsearch \
+			enigma2-plugin-extensions-imdb \
+			enigma2-plugin-extensions-mediascanner \
+			enigma2-plugin-extensions-pictureplayer \
+			enigma2-plugin-extensions-openwebif \
+			enigma2-plugin-extensions-xmltvimport \
+			enigma2-plugin-systemplugins-crossepg \
+			enigma2-plugin-systemplugins-fastscan \
+			enigma2-plugin-systemplugins-hdmicec \
+			enigma2-plugin-systemplugins-networkbrowser \
+			enigma2-plugin-systemplugins-networkwizard \
+			enigma2-plugin-systemplugins-positionersetup \
+			enigma2-plugin-systemplugins-satfinder \
+			enigma2-plugin-systemplugins-videoenhancement \
+			enigma2-plugin-systemplugins-videomode \
+			\
+			${@base_contains("MACHINE_FEATURES", "dvb-c", "enigma2-plugin-systemplugins-cablescan" , "", d)} \
+			${@base_contains("MACHINE_FEATURES", "frontprocessor", "enigma2-plugin-systemplugins-frontprocessorupgrade" , "", d)} \
+			${@base_contains("MACHINE_FEATURES", "wifi", "enigma2-plugin-systemplugins-wirelesslan", "", d)} \
+			\
+			${@base_contains('OPENPLI_FEATURES', 'ci', 'enigma2-plugin-systemplugins-commoninterfaceassignment', '', d)} \
+			${@base_contains('OPENPLI_FEATURES', 'dvd', 'enigma2-plugin-extensions-cdinfo enigma2-plugin-extensions-dvdburn enigma2-plugin-extensions-dvdplayer', '', d)} \
+			${@base_contains('OPENPLI_FEATURES', 'fan', 'enigma2-plugin-systemplugins-fancontrol', '', d)} \
+			\
+			${@base_contains("MACHINE_FEATURES", "blindscan-dvbs", "enigma2-plugin-systemplugins-blindscan" , "", d)} \
+			"
+
+RRECOMMENDS_task-feeds = "\
+			bootlogos-enigma2-meta \
+			dvb-usb-drivers-meta \
+			channelsettings-enigma2-meta \
+			picons-enigma2-meta \
+			task-openplugins \
+			\
+			enigma2-skins \
+			enigma2-plugins \
+			enigma2-pliplugins \
+			enigma2-plugin-extensions-ambx \
+			enigma2-plugin-extensions-tuxcom \
+			enigma2-plugin-extensions-tuxterm \
+			enigma2-plugin-extensions-webinterface-old \
+			enigma2-plugin-security-firewall \
+			enigma2-plugin-skins-pli-hd \
+			enigma2-plugin-vix-magic-sd \
+			enigma2-plugin-vix-magic-hd \
+			enigma2-plugin-vix-magic-hd-lite \
+			enigma2-plugin-vix-magic-hd-night \
+			enigma2-plugin-vix-day-hd \
+			enigma2-plugin-vix-night-hd \
+			enigma2-plugin-vix-vixbmc-slim-hd \
+			enigma2-plugin-vix-vixbmc-night-hd \
+			${@base_contains("MACHINE_FEATURES", "fullgraphiclcd", "lcdpicons-enigma2-meta" , "", d)} \
+			\
+			ctorrent \
+			htop \
+			mc \
+			minidlna \
+			mpd \
+			ntfs-3g \
+			openresolv \
+			openssh \
+			openvpn \
+			parted \
+			procps \
+			rsync \
+			sabnzbd \
+			samba \
+			smartmontools \
+			strace \
+			tcpdump \
+			ushare \
+			vim \
+			wakelan \
+			zeroconf \
+			"
+
+RDEPENDS_task-base-smbfs += "\
+	cifs \
+	sambaserver"
+
+RRRECOMMENDS_task-base-appletalk = "\
+	kernel-module-appletalk \
+	kernel-module-llc \
+	kernel-module-psnap"
+
+RDEPENDS_task-base-appletalk = "\
+	netatalk"
+
+RDEPENDS_task-base-nfs += "\
+	nfs-utils \
+	nfs-utils-client \
+	portmap-utils"
+

@@ -1,0 +1,103 @@
+#!/bin/sh
+
+atalk_startup () {
+	if [ "${ATALKD_RUN}" != "no" ]; then
+		echo "Starting atalkd"
+		start-stop-daemon --start --quiet --exec /usr/sbin/atalkd
+
+		for reg in \
+			"${ATALK_NAME}:Workstation${ATALK_ZONE}" \
+			"${ATALK_NAME}:netatalk${ATALK_ZONE}"
+		do
+			echo "  Registering $reg"
+			/usr/bin/nbprgstr "$reg"
+		done
+
+		if [ "${PAPD_RUN}" = "yes" ]; then
+			echo "  Starting papd"
+			start-stop-daemon --start --quiet --exec /usr/sbin/papd
+		fi
+
+	fi
+
+	if [ "${CNID_METAD_RUN}" = "yes" ] ; then
+        	echo "Starting cnid_metad"
+		start-stop-daemon --start --quiet --exec /usr/sbin/cnid_metad
+	fi
+
+
+	if [ "${AFPD_RUN}" = "yes" ]; then
+		echo "Starting afpd"
+		start-stop-daemon --start --quiet --exec /usr/sbin/afpd -- \
+			${AFPD_UAMLIST} -g ${AFPD_GUEST} -c ${AFPD_MAX_CLIENTS} \
+			-n "${ATALK_NAME}${ATALK_ZONE}"
+	fi
+
+	if [ "${TIMELORD_RUN}" = "yes" ]; then
+		echo "Starting timelord"
+		start-stop-daemon --start --quiet --exec /usr/sbin/timelord
+	fi
+}
+
+start_netatalk () {
+	. /etc/netatalk/netatalk.conf
+
+        if [ x"${ATALK_BGROUND}" = x"yes" ]; then
+            echo "Starting netatalk in the background ... "
+            atalk_startup >& /dev/null &
+        else
+            atalk_startup
+        fi
+}
+
+stop_netatalk () {
+	. /etc/netatalk/netatalk.conf
+
+	if [ "${AFPD_RUN}" = "yes" ]; then
+		echo "Stopping afpd"
+		start-stop-daemon --stop --quiet --exec /usr/sbin/afpd
+	fi
+
+	if [ "${TIMELORD_RUN}" = "yes" ]; then
+		echo "Stopping timelord"
+		start-stop-daemon --stop --quiet --exec /usr/sbin/timelord
+	fi
+
+	if [ "${ATALKD_RUN}" != "no" ]; then
+		if [ "${PAPD_RUN}" = "yes" ]; then
+			echo "Stopping papd"
+			start-stop-daemon --stop --quiet --exec /usr/sbin/papd
+		fi
+
+		for reg in \
+			"${ATALK_NAME}:Workstation${ATALK_ZONE}" \
+			"${ATALK_NAME}:netatalk${ATALK_ZONE}"
+		do
+			echo "Unregistering $reg"
+			/usr/bin/nbpunrgstr "$reg"
+		done
+
+		echo "Stopping atalkd"
+		start-stop-daemon --stop --quiet --exec /usr/sbin/atalkd
+	fi
+
+	if [ "${CNID_METAD_RUN}" = "yes" ] ; then
+        	echo "Stopping cnid_metad"
+		start-stop-daemon --stop --quiet --exec /usr/sbin/cnid_metad
+	fi
+}
+
+case "$1" in
+        start)
+                start_netatalk
+                ;;
+        stop)
+                stop_netatalk
+                ;;
+        *)
+                echo "Usage: {start|stop}" >&2
+                exit 1
+                ;;
+esac
+
+exit 0

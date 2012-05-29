@@ -1,0 +1,159 @@
+--- /webinterface/src/web-data/tpl/default/index.html	2011-02-04 11:02:17.000000000 +0000
++++ /webinterface/src/web-data/tpl/default/index.html	2011-02-09 13:56:51.311381616 +0000
+@@ -7,7 +7,7 @@
+ 	<meta content="text/html; charset=UTF-8" http-equiv="content-type">
+ 	<META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
+ 	
+-	<title>Receiver WebControl</title>
++	<title>Vu+ Ultimo WebControl</title>
+ 	
+ 	<link href="/web-data/tpl/default/style.css" type="text/css" rel="stylesheet">
+ 	<link rel="shortcut icon" type="/web-data/image/x-icon" href="/web-data/img/favicon.ico">
+--- /webinterface/src/web-data/tpl/default/tplDeviceInfo.htm	2011-01-29 16:11:23.000000000 +0000
++++ /webinterface/src/web-data/tpl/default/tplDeviceInfo.htm	2011-02-04 11:44:59.681720050 +0000
+@@ -9,7 +9,7 @@
+ 							</tr>
+ 							<tr>
+ 								<td class="aboutElementLeft">Devicename:</td>
+-								<td class="aboutElementRight">${info.devicename}</td>
++								<td class="aboutElementRight">Vu+ Ultimo</td>
+ 							</tr>
+ 							<tr>
+ 								<td class="aboutElementLeft">Enigma Version:</td>
+diff -urN Original/webinterface/src/web-data/tpl/default/tplWebRemote.htm Patched/webinterface/src/web-data/tpl/default/tplWebRemote.htm
+--- /webinterface/src/web-data/tpl/default/tplWebRemote.htm	2010-09-09 11:10:09.000000000 +0100
++++ /webinterface/src/web-data/tpl/default/tplWebRemote.htm	2010-09-08 12:55:34.000000000 +0100
+@@ -13,53 +13,57 @@
+ 			Send "long" Keypress&nbsp;<input type="checkbox" id="long" name="long" /><br>
+ 		</center>
+ 		<br>
+-		<!--<center><input type="checkbox" id="getScreen" name="getScreen" checked>&nbsp;Show Screenshot</center><br>-->	
++		<!--<center><input type="checkbox" id="getScreen" name="getScreen" checked>&nbsp;Show Screenshot</center><br>-->
+ 		<map name="rc">
+-			<area shape="circle" coords="92,23,10" nohref onClick="opener.sendRemoteControlRequest(116)" alt="Power">
+-			<area shape="circle" coords="55,53,13" nohref onClick="opener.openGrabPicture()" alt="TV Screenshot">
+-			<area shape="circle" coords="37,82,10" nohref onClick="opener.sendRemoteControlRequest(2)" alt="1">
+-			<area shape="circle" coords="76,82,10" nohref onClick="opener.sendRemoteControlRequest(3)" alt="2">
+-			<area shape="circle" coords="115,83,10" nohref onClick="opener.sendRemoteControlRequest(4)" alt="3">
+-			<area shape="circle" coords="37,104,10" nohref onClick="opener.sendRemoteControlRequest(5)" alt="4">
+-			<area shape="circle" coords="76,105,10" nohref onClick="opener.sendRemoteControlRequest(6)" alt="5">
+-			<area shape="circle" coords="115,104,10" nohref onClick="opener.sendRemoteControlRequest(7)" alt="6">
+-			<area shape="circle" coords="38,125,10" nohref onClick="opener.sendRemoteControlRequest(8)" alt="7">
+-			<area shape="circle" coords="76,126,10" nohref onClick="opener.sendRemoteControlRequest(9)" alt="8">
+-			<area shape="circle" coords="115,126,10" nohref onClick="opener.sendRemoteControlRequest(10)" alt="9">
+-			<area shape="circle" coords="37,147,10" nohref onClick="opener.sendRemoteControlRequest(412)" alt="previous">
+-			<area shape="circle" coords="76,148,10" nohref onClick="opener.sendRemoteControlRequest(11)" alt="0">
+-			<area shape="circle" coords="115,148,10" nohref onClick="opener.sendRemoteControlRequest(407)" alt="next">
+-			<area shape="circle" coords="31,186,12" nohref onClick="opener.sendRemoteControlRequest(115)" alt="volume up">
+-			<area shape="circle" coords="77,179,10" nohref onClick="opener.sendRemoteControlRequest(113)" alt="mute">
+-			<area shape="circle" coords="124,185,12" nohref onClick="opener.sendRemoteControlRequest(402)" alt="bouquet up">
+-			<area shape="circle" coords="40,209,12" nohref onClick="opener.sendRemoteControlRequest(114)" alt="volume down">
+-			<area shape="circle" coords="77,202,10" nohref onClick="opener.sendRemoteControlRequest(174)" alt="lame">
+-			<area shape="circle" coords="113,210,12" nohref onClick="opener.sendRemoteControlRequest(403)" alt="bouquet down">
+-			<area shape="circle" coords="29,239,10" nohref onClick="opener.sendRemoteControlRequest(358)" alt="info">
+-			<area shape="circle" coords="79,239,12" nohref onClick="opener.sendRemoteControlRequest(103)" alt="up">
+-			<area shape="circle" coords="125,238,10" nohref onClick="opener.sendRemoteControlRequest(139)" alt="menu">
+-			<area shape="circle" coords="47,265,12" nohref onClick="opener.sendRemoteControlRequest(105)" alt="left">
+-			<area shape="circle" coords="77,265,12" nohref onClick="opener.sendRemoteControlRequest(352)" alt="OK">
+-			<area shape="circle" coords="107,267,12" nohref onClick="opener.sendRemoteControlRequest(106)" alt="right">
+-			<area shape="circle" coords="32,299,10" nohref onClick="opener.sendRemoteControlRequest(138)" alt="help">
+-			<area shape="circle" coords="77,292,12" nohref onClick="opener.sendRemoteControlRequest(108)" alt="down">
+-			<area shape="circle" coords="121,298,10" nohref onClick="opener.sendRemoteControlRequest(393)" alt="video">
+-			<area shape="circle" coords="35,334,10" nohref onClick="opener.sendRemoteControlRequest(398)" alt="red">
+-			<area shape="circle" coords="62,335,10" nohref onClick="opener.sendRemoteControlRequest(399)" alt="green">
+-			<area shape="circle" coords="91,335,10" nohref onClick="opener.sendRemoteControlRequest(400)" alt="yellow">
+-			<area shape="circle" coords="119,333,10" nohref onClick="opener.sendRemoteControlRequest(401)" alt="blue">
+-			<area shape="circle" coords="38,365,10" nohref onClick="opener.sendRemoteControlRequest(168)" alt="rewind">
+-			<area shape="circle" coords="65,366,10" nohref onClick="opener.sendRemoteControlRequest(164)" alt="play">
+-			<area shape="circle" coords="91,366,10" nohref onClick="opener.sendRemoteControlRequest(128)" alt="stop">
+-			<area shape="circle" coords="117,365,10" nohref onClick="opener.sendRemoteControlRequest(159)" alt="forward">
+-			<area shape="circle" coords="41,397,10" nohref onClick="opener.sendRemoteControlRequest(377)" alt="tv">
+-			<area shape="circle" coords="65,398,10" nohref onClick="opener.sendRemoteControlRequest(385)" alt="radio">
+-			<area shape="circle" coords="90,399,10" nohref onClick="opener.sendRemoteControlRequest(388)" alt="text">
+-			<area shape="circle" coords="113,398,10" nohref onClick="opener.sendRemoteControlRequest(167)" alt="record">
++			<area shape="circle" coords="35,30,10" nohref onClick="opener.sendRemoteControlRequest(113)" alt="Mute">
++			<area shape="circle" coords="107,30,10" nohref onClick="opener.sendRemoteControlRequest(116)" alt="Power">
++			<area shape="circle" coords="35,54,10" nohref onClick="opener.sendRemoteControlRequest(388)" alt="Teletext">
++			<area shape="circle" coords="59,54,10" nohref onClick="opener.sendRemoteControlRequest(370)" alt="Subtitle">
++			<area shape="circle" coords="83,54,10" nohref onClick="opener.sendRemoteControlRequest(102)" alt="Home">
++			<area shape="circle" coords="107,54,10" nohref onClick="opener.sendRemoteControlRequest(107)" alt="End">
++			<area shape="circle" coords="39,80,12" nohref onClick="opener.sendRemoteControlRequest(2)" alt="1">
++			<area shape="circle" coords="71,80,12" nohref onClick="opener.sendRemoteControlRequest(3)" alt="2">
++			<area shape="circle" coords="103,80,12" nohref onClick="opener.sendRemoteControlRequest(4)" alt="3">
++			<area shape="circle" coords="39,107,12" nohref onClick="opener.sendRemoteControlRequest(5)" alt="4">
++			<area shape="circle" coords="71,107,12" nohref onClick="opener.sendRemoteControlRequest(6)" alt="5">
++			<area shape="circle" coords="103,107,12" nohref onClick="opener.sendRemoteControlRequest(7)" alt="6">
++			<area shape="circle" coords="39,134,12" nohref onClick="opener.sendRemoteControlRequest(8)" alt="7">
++			<area shape="circle" coords="71,134,12" nohref onClick="opener.sendRemoteControlRequest(9)" alt="8">
++			<area shape="circle" coords="103,134,12" nohref onClick="opener.sendRemoteControlRequest(10)" alt="9">
++			<area shape="circle" coords="39,162,12" nohref onClick="opener.sendRemoteControlRequest(412)" alt="Previous">
++			<area shape="circle" coords="71,162,12" nohref onClick="opener.sendRemoteControlRequest(11)" alt="0">
++			<area shape="circle" coords="103,162,12" nohref onClick="opener.sendRemoteControlRequest(407)" alt="Next">
++			<area shape="circle" coords="35,187,10" nohref onClick="opener.sendRemoteControlRequest(398)" alt="Red">
++			<area shape="circle" coords="59,187,10" nohref onClick="opener.sendRemoteControlRequest(399)" alt="Green">
++			<area shape="circle" coords="83,187,10" nohref onClick="opener.sendRemoteControlRequest(400)" alt="Yellow">
++			<area shape="circle" coords="107,187,10" nohref onClick="opener.sendRemoteControlRequest(401)" alt="Blue">
++			<area shape="circle" coords="71,251,24" nohref onClick="opener.sendRemoteControlRequest(352)" alt="OK">
++			<area shape="rect" coords="46,211,92,224" nohref onClick="opener.sendRemoteControlRequest(103)" alt="Up">
++			<area shape="rect" coords="46,274,92,287" nohref onClick="opener.sendRemoteControlRequest(108)" alt="Down">
++			<area shape="rect" coords="31,227,44,271" nohref onClick="opener.sendRemoteControlRequest(105)" alt="Left">
++			<area shape="rect" coords="94,227,107,271" nohref onClick="opener.sendRemoteControlRequest(106)" alt="Right">
++			<area shape="circle" coords="41,308,14" nohref onClick="opener.sendRemoteControlRequest(115)" alt="Volume Up">
++			<area shape="circle" coords="41,339,12" nohref onClick="opener.sendRemoteControlRequest(114)" alt="Volume Down">
++			<area shape="circle" coords="100,308,14" nohref onClick="opener.sendRemoteControlRequest(402)" alt="Channel Up">
++			<area shape="circle" coords="100,339,12" nohref onClick="opener.sendRemoteControlRequest(403)" alt="Channel Down">
++			<area shape="circle" coords="71,311,8" nohref onClick="opener.sendRemoteControlRequest(174)" alt="Exit">
++			<area shape="circle" coords="71,334,8" nohref onClick="opener.sendRemoteControlRequest(358)" alt="EPG">
++			<area shape="circle" coords="37,363,8" nohref onClick="opener.sendRemoteControlRequest(139)" alt="Menu">
++			<area shape="circle" coords="60,363,8" nohref onClick="opener.sendRemoteControlRequest(393)" alt="Recording List">
++			<area shape="circle" coords="82,363,8" nohref onClick="opener.sendRemoteControlRequest(392)" alt="Audio">
++			<area shape="circle" coords="105,363,8" nohref onClick="opener.sendRemoteControlRequest(138)" alt="Help">
++			<area shape="circle" coords="37,385,8" nohref onClick="opener.sendRemoteControlRequest(168)" alt="Rewind">
++			<area shape="circle" coords="60,385,8" nohref onClick="opener.sendRemoteControlRequest(207)" alt="Play">
++			<area shape="circle" coords="82,385,8" nohref onClick="opener.sendRemoteControlRequest(119)" alt="Pause">
++			<area shape="circle" coords="105,385,8" nohref onClick="opener.sendRemoteControlRequest(208)" alt="Fast Forward">
++			<area shape="circle" coords="37,406,8" nohref onClick="opener.sendRemoteControlRequest(377)" alt="TV">
++			<area shape="circle" coords="60,406,8" nohref onClick="opener.sendRemoteControlRequest(167)" alt="Record">
++			<area shape="circle" coords="82,406,8" nohref onClick="opener.sendRemoteControlRequest(128)" alt="Stop">
++			<area shape="circle" coords="105,406,8" nohref onClick="opener.sendRemoteControlRequest(385)" alt="Radio">
+ 	    </map>
+-	    
++
+ 		<center>
+-			<img src="/web-data/img/rc.png" height="500" width="154" border="0" alt="Remote Control" usemap="#rc">
++			<img src="/web-data/img/rc.png" height="488" width="142" border="0" alt="Remote Control" usemap="#rc">
+ 		</center>
+ 
+ 	</body>
+diff -urN before/webinterface/src/WebChilds/Screengrab.py after/webinterface/src/WebChilds/Screengrab.py
+--- /webinterface/src/WebChilds/Screengrab.py	2010-10-14 14:03:49.000000000 +0100
++++ /webinterface/src/WebChilds/Screengrab.py	2010-10-14 14:10:06.000000000 +0100
+@@ -42,7 +42,7 @@
+ 							append("%s" % (request.args["jpgquali"][0]) )
+ 							del request.args['jpgquali']
+ 						else:
+-							append('80')
++							append('100')
+ 
+ 				elif key == 'filename':
+ 					filename = value[0]
+@@ -55,6 +55,7 @@
+ 				if key == "v" and osdOnly is True:
+ 					continue
+ 
++				append("-b")
+ 				append("-%s" %key )
+ 
+ 				if value:
+diff -urN before/webinterface/src/web-data/tools.js after/webinterface/src/web-data/tools.js
+--- /webinterface/src/web-data/tools.js	2010-10-14 14:03:49.000000000 +0100
++++ /webinterface/src/web-data/tools.js	2010-10-14 14:07:10.000000000 +0100
+@@ -1110,7 +1110,7 @@
+ 	}
+ 
+ 	downloadStart = new Date().getTime();
+-	buffer.src = '/grab?format=jpg&r=720&' + what + '&filename=/tmp/' + downloadStart;
++	buffer.src = '/grab?format=jpg&r=810&' + what + '&filename=/tmp/' + downloadStart;
+ }
+ 
+ function getVideoShot() {
