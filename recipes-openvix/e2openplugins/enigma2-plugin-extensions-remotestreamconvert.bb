@@ -1,8 +1,8 @@
 MODULE = "RemoteChannelStreamConverter"
 DESCRIPTION = "Fetch channels from remote bouquets and make them available locally"
 
-DEPENDS_${PN} = "enigma2"
-RDEPENDS_${PN} = "python-shell"
+DEPENDS = "enigma2 python"
+RDEPENDS = "python-shell"
 
 SRC_URI = "git://github.com/OpenViX/e2openplugin-${MODULE}.git;protocol=git"
 
