@@ -62,6 +62,8 @@ module_autoload_dvb-usb-vp702x = "dvb-usb-vp702x"
 module_autoload_dvb-usb-vp7045 = "dvb-usb-vp7045"
 module_autoload_smsusb = "smsdvb smsusb"
 
+include conf/machine/include/autoload-usbserial.inc
+
 MACHINE_EXTRA_RRECOMMENDS = " \
 	gst-plugin-dvbmediasink \
 	ntfs-3g \
