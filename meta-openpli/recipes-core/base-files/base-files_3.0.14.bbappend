@@ -1,6 +1,6 @@
-PRINC = "2"
+PRINC = "3"
 
-FILESEXTRAPATHS_prepend := "${THISDIR}/${P}:"
+FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
 do_install_append() {
 	rm -rf ${D}/mnt
