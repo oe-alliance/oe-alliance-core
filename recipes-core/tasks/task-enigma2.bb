@@ -56,7 +56,6 @@ RRECOMMENDS = "\
 	enigma2-plugin-extensions-xmltvimport \
 	enigma2-plugin-systemplugins-crossepg \
 	enigma2-plugin-systemplugins-fastscan \
-	enigma2-plugin-systemplugins-hdmicec \
 	enigma2-plugin-systemplugins-networkbrowser \
 	enigma2-plugin-systemplugins-networkwizard \
 	enigma2-plugin-systemplugins-positionersetup \
@@ -66,6 +65,7 @@ RRECOMMENDS = "\
 	\
 	${@base_contains("MACHINE_FEATURES", "dvb-c", "enigma2-plugin-systemplugins-cablescan" , "", d)} \
 	${@base_contains("MACHINE_FEATURES", "frontprocessor", "enigma2-plugin-systemplugins-frontprocessorupgrade" , "", d)} \
+	${@base_contains("MACHINE_FEATURES", "hdmicec", "enigma2-plugin-systemplugins-hdmicec" , "", d)} \
 	${@base_contains("MACHINE_FEATURES", "wifi", "enigma2-plugin-systemplugins-wirelesslan", "", d)} \
 	\
 	${@base_contains('OPENPLI_FEATURES', 'ci', 'enigma2-plugin-systemplugins-commoninterfaceassignment', '', d)} \
