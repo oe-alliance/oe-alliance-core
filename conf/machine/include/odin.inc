@@ -70,6 +70,8 @@ MACHINE_EXTRA_RRECOMMENDS = " \
 	gst-plugin-dvbmediasink \
 	"
 
+include conf/machine/include/autoload-usbserial.inc
+
 CHIPSET = "bcm7413"
 
 DVBMEDIASINK_CONFIG = "--with-wma --with-wmv --with-pcm --with-dtsdownmix"
@@ -114,7 +116,7 @@ IMAGE_CMD_ubi_append = " \
 
 TARGET_FPU = "hard"
 
-MACHINE_FEATURES += "3dtv alsa blindscan-dvbs hdmicec switchoff textlcd usbhost wifi"
+MACHINE_FEATURES += "3dtv alsa blindscan-dvbs hdmicec switchoff textlcd wifi"
 
 require conf/machine/include/tune-mips32.inc
 

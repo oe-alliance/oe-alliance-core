@@ -59,6 +59,8 @@ module_autoload_dvb-usb-vp702x = "dvb-usb-vp702x"
 module_autoload_dvb-usb-vp7045 = "dvb-usb-vp7045"
 module_autoload_smsusb = "smsdvb smsusb"
 
+include conf/machine/include/autoload-usbserial.inc
+
 MACHINE_EXTRA_RRECOMMENDS = " \
 	vuplus-shutdown \
 	gst-plugin-dvbmediasink \
@@ -104,6 +106,6 @@ IMAGE_CMD_ubi_append = " \
 
 TARGET_FPU = "hard"
 
-MACHINE_FEATURES += "alsa usbhost wifi 3dtv switchoff"
+MACHINE_FEATURES += "3dtv alsa switchoff wifi"
 
 require conf/machine/include/tune-mips32.inc
