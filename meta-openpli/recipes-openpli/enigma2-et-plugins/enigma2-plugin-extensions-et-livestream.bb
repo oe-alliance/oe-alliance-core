@@ -10,7 +10,6 @@ S = "${WORKDIR}/git"
 
 inherit gitpkgv
 
-SRCREV_pn-${PN} ?= "${AUTOREV}"
 PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"
 PR = "r0"

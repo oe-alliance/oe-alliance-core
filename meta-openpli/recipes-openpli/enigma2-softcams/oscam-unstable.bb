@@ -1,4 +1,3 @@
-SRCREV = "${AUTOREV}"
 MODULE = "1.10"
 OSCAMBIN = "oscam-unstable"
 OSCAMDEPENS = "openssl"
