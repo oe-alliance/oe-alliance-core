@@ -1,4 +1,4 @@
-PRINC = "1"
+PRINC = "2"
 
 DEFAULT_TIMEZONE = "CET"
 
@@ -23,6 +23,7 @@ FILES_${PN} = "                                          \
                 ${datadir}/zoneinfo/Asia/Baghdad         \
                 ${datadir}/zoneinfo/Asia/Baku            \
                 ${datadir}/zoneinfo/Asia/Bangkok         \
+                ${datadir}/zoneinfo/Asia/Calcutta        \
                 ${datadir}/zoneinfo/Asia/Colombo         \
                 ${datadir}/zoneinfo/Asia/Dhaka           \
                 ${datadir}/zoneinfo/Asia/Hong_Kong       \
@@ -53,6 +54,10 @@ FILES_${PN} = "                                          \
                 ${datadir}/zoneinfo/Australia/Hobart     \
                 ${datadir}/zoneinfo/Australia/Perth      \
                 ${datadir}/zoneinfo/Australia/Sydney     \
+                ${datadir}/zoneinfo/Brazil/East          \
+                ${datadir}/zoneinfo/Brazil/West          \
+                ${datadir}/zoneinfo/Canada/Newfoundland  \
+                ${datadir}/zoneinfo/Canada/Saskatchewan  \
                 ${datadir}/zoneinfo/CET                  \
                 ${datadir}/zoneinfo/CST6CDT              \
                 ${datadir}/zoneinfo/EST                  \
@@ -60,6 +65,7 @@ FILES_${PN} = "                                          \
                 ${datadir}/zoneinfo/Europe/Dublin        \
                 ${datadir}/zoneinfo/Europe/Istanbul      \
                 ${datadir}/zoneinfo/Europe/Moscow        \
+                ${datadir}/zoneinfo/MST                  \
                 ${datadir}/zoneinfo/MST7MDT              \
                 ${datadir}/zoneinfo/Pacific/Auckland     \
                 ${datadir}/zoneinfo/Pacific/Fiji         \
@@ -67,6 +73,7 @@ FILES_${PN} = "                                          \
                 ${datadir}/zoneinfo/Pacific/Honolulu     \
                 ${datadir}/zoneinfo/Pacific/Kwajalein    \
                 ${datadir}/zoneinfo/Pacific/Midway       \
+                ${datadir}/zoneinfo/Pacific/Pacific/Norfolk \
                 ${datadir}/zoneinfo/Pacific/Tongatapu    \
                 ${sysconfdir}/localtime                  \
                 ${sysconfdir}/timezone                   "
