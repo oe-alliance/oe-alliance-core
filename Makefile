@@ -121,7 +121,7 @@ LOCAL_CONF_HASH := $(call hash, \
 $(TOPDIR)/conf/local.conf: $(DEPDIR)/.local.conf.$(MACHINE).$(LOCAL_CONF_HASH)
 	@echo 'Generating $@'
 	@test -d $(@D) || mkdir -p $(@D)
-	@echo 'TOPDIR = "$(TOPDIR)"' >> $@
+	@echo 'TOPDIR = "$(TOPDIR)"' > $@
 	@echo 'MACHINE = "$(MACHINE)"' >> $@
 	@echo 'require $(TOPDIR)/conf/openpli.conf' >> $@
 
