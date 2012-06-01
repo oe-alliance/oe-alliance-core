@@ -75,8 +75,6 @@ PREFERRED_PROVIDER_virtual/kernel = "linux-${MACHINE}"
 PREFERRED_PROVIDER_virtual/blindscan-dvbc = "vuplus-blindscan-utils-${MACHINE}"
 PREFERRED_PROVIDER_virtual/blindscan-dvbs = "vuplus-blindscan-utils-${MACHINE}"
 
-EXTRA_IMAGEDEPENDS += "vuplus-makenfi-native"
-
 IMAGE_FSTYPES ?= "ubi"
 
 UBI_VOLNAME = "rootfs"
@@ -94,12 +92,10 @@ IMAGE_CMD_ubi_prepend = " \
         "
 
 IMAGE_CMD_ubi_append = " \
-        gzip -f -c ${DEPLOY_DIR_IMAGE}/vmlinux-${MACHINE}.bin > ${DEPLOY_DIR_IMAGE}/vmlinux-${MACHINE}.bin.gz; \
-        vfi3 ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.ubi ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.boot.jffs2 ${DEPLOY_DIR_IMAGE}/vmlinux-${MACHINE}.bin.gz > ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.nfi; \
         mkdir -p ${DEPLOY_DIR_IMAGE}/vuplus/${UPDATE_DIR}; \
         cp ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.ubi ${DEPLOY_DIR_IMAGE}/vuplus/${UPDATE_DIR}/root_cfe_auto.jffs2; \
         cp ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.boot.jffs2 ${DEPLOY_DIR_IMAGE}/vuplus/${UPDATE_DIR}/boot_cfe_auto.jffs2; \
-        cp ${DEPLOY_DIR_IMAGE}/vmlinux-${MACHINE}.bin.gz ${DEPLOY_DIR_IMAGE}/vuplus/${UPDATE_DIR}/kernel_cfe_auto.bin; \
+        gzip -f -c ${DEPLOY_DIR_IMAGE}/vmlinux-${MACHINE}.bin > ${DEPLOY_DIR_IMAGE}/vuplus/${UPDATE_DIR}/kernel_cfe_auto.bin; \
         cd ${DEPLOY_DIR_IMAGE}; \
         zip ${IMAGE_NAME}_usb.zip vuplus/${UPDATE_DIR}/*; \
         rm -rf vuplus; \
