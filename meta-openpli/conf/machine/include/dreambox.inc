@@ -11,6 +11,9 @@ include conf/machine/include/autoload-usbserial.inc
 MACHINE_EXTRA_RRECOMMENDS = " \
 	gst-plugin-dreambox-dvbmediasink \
 	ntfs-3g \
+	kernel-module-cifs \
+	kernel-module-hmac \
+	kernel-module-md4 \
 	"
 
 MACHINE_FEATURES += "alsa usbhost 3dtv switchoff tpm"
