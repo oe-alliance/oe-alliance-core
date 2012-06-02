@@ -7,4 +7,6 @@ PR = "r0"
 
 inherit autotools pkgconfig schwerkraft-git
 
-SRC_URI_append = " file://skip_c.patch"
+SRC_URI_append = " file://skip_c.patch \
+		file://fix_pts_calc.patch \
+		"
