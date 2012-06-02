@@ -116,9 +116,9 @@ $(TOPDIR)/conf/openpli.conf: $(DEPDIR)/.openpli.conf.$(OPENPLI_CONF_HASH)
 	@echo 'DISTRO = "openpli"' >> $@
 	@echo 'EXTRA_IMAGE_FEATURES = "debug-tweaks"' >> $@
 	@echo 'USER_CLASSES = "buildstats"' >> $@
-	if [ -f "$(CURDIR)/branding.conf" ]; then \
-		echo "### BRANDING >> $@; \
-		cat $(CURDIR)/branding.conf' >> $@; \
+	@if [ -f "$(CURDIR)/branding.conf" ]; then \
+		echo "Branding $@"; \
+		cat $(CURDIR)/branding.conf >> $@; \
 	fi
 
 LOCAL_CONF_HASH := $(call hash, \
