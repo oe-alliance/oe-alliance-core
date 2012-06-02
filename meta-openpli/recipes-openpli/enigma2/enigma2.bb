@@ -169,6 +169,9 @@ FILES_${PN}-src = "\
 RADIOMVI = "radio-hd.mvi"
 
 do_openpli_preinstall() {
+	if [ -n "${BRANDINGDIR}" -a -d "${BRANDINGDIR}/enigma2" ] ; then
+		cp -p ${BRANDINGDIR}/enigma2/* ${S}/data/.
+	fi
 	ln -f ${S}/data/${RADIOMVI} ${S}/data/radio.mvi
 	install -d ${D}${sysconfdir}/enigma2
 }

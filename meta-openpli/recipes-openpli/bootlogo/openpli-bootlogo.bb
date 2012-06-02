@@ -37,9 +37,13 @@ MVI = "${SWITCHOFFMVI}"
 MVISYMLINKS = "bootlogo_wait backdrop"
 
 do_install() {
+        if [ -n "${BRANDINGDIR}" -a -d "${BRANDINGDIR}/bootlogo" ] ; then
+                cp -p ${BRANDINGDIR}/bootlogo/* ${S}/.
+        fi
+
 	install -d ${D}/boot
 	install -d ${D}/usr/share
-	install -m 0755 ${BOOTLOGOMVI} ${D}/usr/share/bootlogo.mvi
+	install -m 0755 ${S}/${BOOTLOGOMVI} ${D}/usr/share/bootlogo.mvi
 	ln -sf /usr/share/bootlogo.mvi ${D}/boot/bootlogo.mvi
 	for i in ${MVI}; do
 		install -m 0755 ${S}/$i ${D}/usr/share/
