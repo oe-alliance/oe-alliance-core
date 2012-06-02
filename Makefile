@@ -117,7 +117,7 @@ $(TOPDIR)/conf/openpli.conf: $(DEPDIR)/.openpli.conf.$(OPENPLI_CONF_HASH)
 	@echo 'EXTRA_IMAGE_FEATURES = "debug-tweaks"' >> $@
 	@echo 'USER_CLASSES = "buildstats"' >> $@
 	@if [ -f "$(CURDIR)/branding.conf" ]; then \
-		echo "Branding $@"; \
+		echo "### BRANDING" >> $@; \
 		cat $(CURDIR)/branding.conf >> $@; \
 	fi
 
