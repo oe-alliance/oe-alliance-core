@@ -1,7 +1,11 @@
 #!/usr/bin/make -f
 
 # MACHINE examples: et5x00 et6x00 et9x00 dm500hd dm800se dm7020hd dm8000
-MACHINE ?= et9x00
+MACHINE ?= ${subst /,,${subst build-,,${firstword ${dir ${wildcard build-*/}}}}}
+
+ifeq "$(MACHINE)" ""
+	MACHINE=et9x00
+endif
 
 # Adjust according to the number CPU cores to use for parallel build.
 # Default: Number of processors in /proc/cpuinfo, if present, or 1.
@@ -49,13 +53,15 @@ all: init
 	@echo "Openembedded for the OpenPLi 3.0 environment has been initialized"
 	@echo "properly. Now you can start building your image, by doing either:"
 	@echo
-	@echo " make -f Makefile image"
+	@echo " MACHINE=$(MACHINE) make image"
 	@echo "	or"
 	@echo " cd $(BUILD_DIR) ; source env.source ; bitbake openpli-enigma2-image"
 	@echo
 
 $(BBLAYERS):
 	[ -d $@ ] || $(MAKE) $(MFLAGS) update
+
+initialize: init
 
 init: $(BBLAYERS) $(CONFFILES)
 
@@ -78,7 +84,7 @@ update:
 		echo "The openpli OE is now up-to-date."; \
 	fi
 
-.PHONY: all image init update usage
+.PHONY: all image init initialize update usage
 
 BITBAKE_ENV_HASH := $(call hash, \
 	'BITBAKE_ENV_VERSION = "0"' \
