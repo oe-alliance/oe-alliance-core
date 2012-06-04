@@ -5,7 +5,7 @@ PACKAGE_ARCH = "all"
 
 require conf/license/openvix-gplv2.inc
 
-SRCDATE = "2012-05-24--23-46-31"
+SRCDATE = "2012-06-02--16-02-54"
 PRIORITY = "required"
 PV = "${SRCDATE}"
 PR = "r2"
