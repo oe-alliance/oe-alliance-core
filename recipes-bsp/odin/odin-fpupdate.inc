@@ -8,8 +8,8 @@ PR = "r0"
 PV = "${FPVERSION}"
 
 SRC_URI = " \
-	http://feed.odin-support.com/download/fpupdate-${FPUPDATE}.zip \
-	http://feed.odin-support.com/download/avrmain-${MACHINE}-${FPVERSION}.zip \
+	http://feed.odin-support.com/download/fpupdate-${FPUPDATE}.zip;name=fpupdate \
+	http://feed.odin-support.com/download/avrmain-${MACHINE}-${FPVERSION}.zip;name=avrmain \
 	"
 
 S = "${WORKDIR}"
