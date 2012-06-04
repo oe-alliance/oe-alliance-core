@@ -8,10 +8,6 @@ MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS = "\
 	kernel-module-cdfs \
 	"
 
-EXTRA_IMAGEDEPENDS += "\
-	enigma2-plugin-extensions-et-livestream
-	"
-
 # WIFI modules
 module_autoload_ath9k = "ath9k"
 module_autoload_ath9k_htc = "ath9k_htc"
@@ -121,3 +117,8 @@ MACHINE_FEATURES += "3dtv alsa blindscan-dvbs hdmicec switchoff textlcd wifi"
 require conf/machine/include/tune-mips32.inc
 
 MACHINE_KERNEL_PR = "r0"
+
+EXTRA_IMAGEDEPENDS += "\
+	enigma2-plugin-extensions-et-livestream
+	"
+
