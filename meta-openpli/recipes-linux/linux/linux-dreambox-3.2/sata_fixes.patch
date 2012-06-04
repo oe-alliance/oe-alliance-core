@@ -1,0 +1,195 @@
+From 7debf3f097efe1f585628f2d82f9bda24337fbc5 Mon Sep 17 00:00:00 2001
+From: Andreas Monzner <andreas.monzner@dream-property.net>
+Date: Sat, 2 Jun 2012 00:43:13 +0200
+Subject: [PATCH] sata_brcmstb.c: ported some fixes
+
+---
+ drivers/ata/sata_brcmstb.c |   72 +++++++++++++++++++++++++++++++++++---------
+ 1 file changed, 57 insertions(+), 15 deletions(-)
+
+diff --git a/drivers/ata/sata_brcmstb.c b/drivers/ata/sata_brcmstb.c
+index 290e991..5c353f0 100644
+--- a/drivers/ata/sata_brcmstb.c
++++ b/drivers/ata/sata_brcmstb.c
+@@ -68,8 +68,8 @@
+ 
+ #include <asm/brcmstb/brcmstb.h>
+ 
+-static int ssc;	/* aka: bcmssc, gSataInterpolation */
+-static int s2;	/* aka: bcmsata2, gSata2_3Gbps */
++static int ssc;	/* aka: sata_brcmstb.ssc, gSataInterpolation */
++static int s2;	/* aka: sata_brcmstb.s2, gSata2_3Gbps */
+ 
+ module_param(ssc, int, 0444);
+ module_param(s2, int, 0444);
+@@ -105,10 +105,10 @@ static int k2_power_on(void *arg);
+ 	} while (0)
+ 
+ /*
+- * if bcmsata2=1, but device only support SATA I,
++ * if sata_bcmstb.s2=1, but device only support SATA I,
+  * then downgrade to SATA I and reset SATA core
+  */
+-#define	AUTO_NEG_SPEED
++//#define	AUTO_NEG_SPEED
+ 
+ static unsigned int new_speed_mask;
+ 
+@@ -262,7 +262,7 @@ static void bcm_sg_workaround(void __iomem *mmio_base, int port)
+ 	 * Do Interpolation when
+ 	 * spread spectrucm clocking (SSC) is NOT enabled. But, the code must
+ 	 * be used for a system with SSC-enabled drive.
+-	 * ssc is not zero when the argument bcmssc=1 is specified
++	 * ssc is not zero when the argument sata_brcmstb.ssc=1 is specified
+ 	 */
+ 	if (ssc) {
+ 		tmp16 = mdio_read_reg(mmio_base, port, 9);
+@@ -338,6 +338,22 @@ static void brcm_EnableOOBWindowFix(void __iomem *mmio_base, int port)
+ 	mdio_write_reg(mmio_base, port, 0x0D, sval);
+ }
+ 
++static void brcm_Enable256AlignDetection(void __iomem *mmio_base, int port)
++{
++	uint32_t tmp32;
++	void __iomem *port_mmio;
++
++	port_mmio = PORT_BASE(mmio_base, port);
++
++	tmp32 = readl(port_mmio + K2_SATA_SICR1_OFFSET);
++	tmp32 |= 0x08000000;
++	writel(tmp32, port_mmio + K2_SATA_SICR1_OFFSET);
++
++	tmp32 = readl(port_mmio + K2_SATA_SICR2_OFFSET);
++	tmp32 |= 0x00800000;
++	writel(tmp32, port_mmio + K2_SATA_SICR2_OFFSET);
++}
++
+ static void brcm_AnalogReset(void __iomem *mmio_base, int port)
+ {
+ 	/* do analog reset */
+@@ -348,6 +364,21 @@ static void brcm_AnalogReset(void __iomem *mmio_base, int port)
+ 	bcm_sg_workaround(mmio_base, port);
+ }
+ 
++static void brcm_EnableNewAsyncRecovery(void __iomem *mmio_base, int port)
++{
++	volatile uint32_t tmp32;
++	void __iomem *port_mmio = PORT_BASE(mmio_base, port);
++
++	/* Clear legacy mode */
++	tmp32 = readl(port_mmio + K2_SATA_SICR1_OFFSET);
++	writel((tmp32 & 0xFDFFFFFF), port_mmio + K2_SATA_SICR1_OFFSET);
++
++	/* Enable new Async recovery mode */
++	tmp32 = readl(port_mmio + K2_SATA_SICR2_OFFSET);
++	writel((tmp32 | 0x00400000), port_mmio + K2_SATA_SICR2_OFFSET);
++}
++
++
+ static void brcm_InitSata_1_5Gb(void __iomem *mmio_base, int port)
+ {
+ 	int tmp;
+@@ -373,10 +404,12 @@ static void brcm_InitSata_1_5Gb(void __iomem *mmio_base, int port)
+ 	mdio_write_reg(mmio_base, port, 0x13, tmp|2);
+ 	udelay(10000);
+ 
+-	/* disable 3G feature */
++#ifdef AUTO_NEG_SPEED
++	// disable 3G feature
+ 	tmp32 = readl(port_mmio + K2_SATA_F0_OFFSET);
+ 	writel(tmp32 & 0xfffffbff, port_mmio + K2_SATA_F0_OFFSET);
+ 	udelay(10000);
++#endif
+ 
+ 	/* enable 4G addressing support */
+ 	tmp32 = readl(port_mmio + K2_SATA_SICR2_OFFSET);
+@@ -393,6 +426,9 @@ static void brcm_InitSata_1_5Gb(void __iomem *mmio_base, int port)
+ 	brcm_SetPllTxRxCtrl(mmio_base, port);
+ 	brcm_EnableOOBWindowFix(mmio_base, port);
+ 
++	brcm_EnableNewAsyncRecovery(mmio_base, port);
++	brcm_Enable256AlignDetection(mmio_base, port);
++
+ 	if (!port) {
+ #ifdef CONFIG_BRCM_SATA_75MHZ_PLL
+ 		/* use 75Mhz PLL clock */
+@@ -454,6 +490,9 @@ static void brcm_InitSata2_3Gb(void __iomem *mmio_base, int port)
+ 	brcm_SetPllTxRxCtrl(mmio_base, port);
+ 	brcm_EnableOOBWindowFix(mmio_base, port);
+ 
++	brcm_EnableNewAsyncRecovery(mmio_base, port);
++	brcm_Enable256AlignDetection(mmio_base, port);
++
+ 	if (!port) {
+ #ifdef CONFIG_BRCM_SATA_75MHZ_PLL
+ 		/* use 75Mhz PLL clock */
+@@ -877,8 +916,7 @@ static irqreturn_t k2_sata_interrupt(int irq, void *dev_instance)
+ 
+ 		ap = host->ports[i];
+ 
+-		ata_for_each_link(link, ap, EDGE)
+-		{
++		ata_for_each_link(link, ap, EDGE) {
+ 			int rc;
+ 			unsigned int serror;
+ 
+@@ -919,7 +957,7 @@ static irqreturn_t k2_sata_interrupt(int irq, void *dev_instance)
+ #if LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 35)
+ 	return ata_bmdma_interrupt(irq, dev_instance);
+ #else
+-	return	ata_sff_interrupt(irq, dev_instance);
++	return ata_sff_interrupt(irq, dev_instance);
+ #endif
+ }
+ 
+@@ -1164,7 +1202,9 @@ static int k2_sata_resume(struct device *dev)
+ 		ap = host->ports[i];
+ 
+ 		ata_for_each_link(link, ap, EDGE) {
++			spin_unlock_irqrestore(&hp->lock, flags);
+ 			sata_std_hardreset(link, NULL, 1000);
++			spin_lock_irqsave(&hp->lock, flags);
+ 		}
+ 	}
+ 
+@@ -1237,7 +1277,8 @@ static struct ata_port_operations k2_sata_ops = {
+ static const struct ata_port_info k2_port_info[] = {
+ 	/* chip_sata1 */
+ 	{
+-		.flags		= ATA_FLAG_SATA /*| K2_FLAG_NO_ATAPI_DMA*/,
++		.flags		= ATA_FLAG_SATA /*| K2_FLAG_NO_ATAPI_DMA*/ |
++				  K2_FLAG_BRCM_SATA2,
+ 		.pio_mask	= 0x1f,
+ 		.mwdma_mask	= 0x07,
+ 		.udma_mask	= ATA_UDMA7,
+@@ -1277,8 +1320,8 @@ static int k2_sata_init_one(struct pci_dev *pdev,
+ 				const struct pci_device_id *ent)
+ {
+ 	static int printed_version;
+-	const struct ata_port_info *ppi[] =
+-		{ &k2_port_info[ent->driver_data], NULL };
++	const struct ata_port_info *ppi[] = {
++		&k2_port_info[ent->driver_data], NULL };
+ 	struct ata_host *host;
+ 	void __iomem *mmio_base;
+ 	int n_ports, i, rc, bar_pos;
+@@ -1344,7 +1387,6 @@ static int k2_sata_init_one(struct pci_dev *pdev,
+ 	 * All ports are on the same function. Multi-function device is no
+ 	 * longer available. This should not be seen in any system.
+ 	 */
+-
+ 	for (i = 0; i < host->n_ports; i++) {
+ 		struct ata_port *ap = host->ports[i];
+ 		unsigned int offset = PORT_BASE(0, i);
+@@ -1402,7 +1444,7 @@ static const struct pci_device_id k2_sata_pci_tbl[] = {
+ 	{ }
+ };
+ 
+-static struct dev_pm_ops k2_sata_pm_ops = {
++static const struct dev_pm_ops k2_sata_pm_ops = {
+ 	.suspend_noirq		= k2_sata_suspend,
+ 	.resume_noirq		= k2_sata_resume,
+ #if LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 32)
+-- 
+1.7.10
+
