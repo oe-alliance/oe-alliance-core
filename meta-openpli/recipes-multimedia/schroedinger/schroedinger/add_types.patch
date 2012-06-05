@@ -1,0 +1,12 @@
+diff --git a/schroedinger/schroorc.c b/schroedinger/schroorc.c
+index c38aa8f..678924e 100644
+--- a/schroedinger/schroorc.c
++++ b/schroedinger/schroorc.c
+@@ -7,6 +7,7 @@
+ #include <stdint.h>
+ #endif
+ 
++#include <alsa/sound/type_compat.h>
+ 
+ /* begin Orc C target preamble */
+ #define ORC_CLAMP(x,a,b) ((x)<(a) ? (a) : ((x)>(b) ? (b) : (x)))
