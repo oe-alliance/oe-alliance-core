@@ -9,8 +9,8 @@ SRC_URI = "http://download.savannah.nongnu.org/releases/${PN}/${PN}-${PV}.tar.bz
 	   file://hddtemp-no-nls-support.patch"
 SRC_URI[tar.md5sum] = "8b829339e1ae9df701684ec239021bb8"
 SRC_URI[tar.sha256sum] = "618541584054093d53be8a2d9e81c97174f30f00af91cb8700a97e442d79ef5b"
-SRC_URI[db.md5sum] = "5321858f8c028d4b1a91a8a5f951f2f8"
-SRC_URI[db.sha256sum] = "8b19e70228214562eb10a46bd73b6ea8601e996f2d6527907b560d35b33f5240"
+SRC_URI[db.md5sum] = "7b2651d53d10808e270bc386b6db89dd"
+SRC_URI[db.sha256sum] = "ca43f8ab1e4fb3919af940a2fe6a95feb03939f685450a48666763a3edc326bb"
 
 inherit autotools gettext
 
