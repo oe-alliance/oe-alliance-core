@@ -6,10 +6,12 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=b1a795ac1a06805cf8fd74920bc46b5c"
 DEPENDS = "libexif jpeg libid3tag flac libvorbis sqlite3 libav util-linux"
 SRCDATE = "20120408"
 PV = "1.0.99+cvs${SRCDATE}"
-PR = "r0"
+PR = "r1"
 
 SRC_URI = "cvs://anonymous@minidlna.cvs.sourceforge.net/cvsroot/minidlna;module=minidlna \
-           file://default_sqlite_caches.diff"
+		file://default_sqlite_caches.diff \
+		file://minidlna.conf \
+		file://init"
 
 S = "${WORKDIR}/${PN}"
 
@@ -18,3 +20,10 @@ inherit autotools gettext
 PACKAGES =+ "${PN}-utils"
 
 FILES_${PN}-utils = "${bindir}/test*"
+
+do_install_append() {
+	install -d ${D}${sysconfdir}
+	install -m 644 minidlna.conf ${D}${sysconfdir}
+	install -d ${D}${sysconfdir}/init.d/
+	install -m 755 ${WORKDIR}/init ${D}${sysconfdir}/init.d/${PN}
+}
