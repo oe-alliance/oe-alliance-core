@@ -32,12 +32,18 @@ OPTIONAL_PACKAGES ?= ""
 OPTIONAL_PACKAGES += " \
 	ctorrent \
 	cups \
+	dvbsnoop \
+	dvdfs \
 	gdb \
+	hddtemp \
 	hdparm \
 	inadyn-mt \
 	joe \
 	mc \
+	minidlna \
 	mpd \
+	mtd-utils \
+	nano \
 	ntfs-3g \
 	ntp \
 	openresolv \
