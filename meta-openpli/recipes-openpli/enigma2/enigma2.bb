@@ -4,19 +4,34 @@ LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=751419260aa954499f7abaabaa882bbe"
 
 DEPENDS = " \
-	jpeg libungif libmad libpng libsigc++-1.2 libfribidi libxml2 gettext-native \
-	freetype libdvbsi++ \
-	python python-twisted swig-native python-wifi python-imaging \
-	gstreamer gst-plugins-base \
-	openssl \
-	libxmlccwrap tuxtxt-enigma2 ethtool \
+	ethtool \
+	freetype \
+	gettext-native \
+	gst-plugins-base gstreamer \
 	hotplug-e2-helper \
-	libdreamdvd \
+	jpeg \
+	libdreamdvd libdvbsi++ libfribidi libmad libpng libsigc++-1.2 libungif libxml2 libxmlccwrap \
+	openssl \
+	python python-imaging python-twisted python-wifi \
+	swig-native \
+	tuxtxt-enigma2 \
 	"
 
 RDEPENDS_${PN} = " \
 	alsa-conf \
+	enigma2-fonts \
+	enigma2-plugin-skins-pli-hd \
+	ethtool \
 	glibc-gconv-iso8859-15 \
+	gst-plugin-subsink \
+	\
+	${PYTHON_RDEPS} \
+	${GST_BASE_RDEPS} \
+	${GST_GOOD_RDEPS} \
+	${GST_BAD_RDEPS} \
+	${GST_UGLY_RDEPS} \
+	"
+PYTHON_RDEPS = " \
 	python-codecs \
 	python-core \
 	python-crypt \
@@ -30,46 +45,68 @@ RDEPENDS_${PN} = " \
 	python-threading \
 	python-twisted-core \
 	python-twisted-web \
+	python-utf8-hack \
 	python-xml \
-	python-zopeinterface \
 	python-zlib \
-	enigma2-fonts \
-	glibc-gconv-iso8859-15 ethtool \
-	gst-plugin-subsink \
-	\
-	gst-plugins-base-alsa gst-plugins-base-app gst-plugins-base-audioconvert \
-	gst-plugins-base-audioresample gst-plugins-base-decodebin \
-	gst-plugins-base-decodebin2 gst-plugins-base-ogg \
-	gst-plugins-base-playbin gst-plugins-base-subparse \
-	gst-plugins-base-typefindfunctions gst-plugins-base-ivorbisdec gst-plugins-base-vorbis \
-	\
-	gst-plugins-good-apetag gst-plugins-good-audioparsers \
-	gst-plugins-good-autodetect gst-plugins-good-avi \
-	gst-plugins-good-flac gst-plugins-good-icydemux \
-	gst-plugins-good-id3demux gst-plugins-good-isomp4 \
-	gst-plugins-good-matroska gst-plugins-good-rtp gst-plugins-good-rtpmanager \
-	gst-plugins-good-rtsp gst-plugins-good-souphttpsrc \
-	gst-plugins-good-udp gst-plugins-good-wavparse \
+	python-zopeinterface \
+	"
+
+GST_BASE_RDEPS = " \
+	gst-plugins-base-alsa \
+	gst-plugins-base-app \
+	gst-plugins-base-audioconvert \
+	gst-plugins-base-audioresample \
+	gst-plugins-base-decodebin \
+	gst-plugins-base-decodebin2 \
+	gst-plugins-base-ivorbisdec \
+	gst-plugins-base-ogg \
+	gst-plugins-base-playbin \
+	gst-plugins-base-subparse \
+	gst-plugins-base-typefindfunctions \
+	gst-plugins-base-vorbis \
+	"
+
+GST_GOOD_RDEPS = " \
+	gst-plugins-good-apetag \
+	gst-plugins-good-audioparsers \
+	gst-plugins-good-autodetect \
+	gst-plugins-good-avi \
+	gst-plugins-good-flac \
 	gst-plugins-good-flv \
-	\
-	gst-plugins-bad-mpegdemux \
+	gst-plugins-good-icydemux \
+	gst-plugins-good-id3demux \
+	gst-plugins-good-isomp4 \
+	gst-plugins-good-matroska \
+	gst-plugins-good-rtp \
+	gst-plugins-good-rtpmanager \
+	gst-plugins-good-rtsp \
+	gst-plugins-good-souphttpsrc \
+	gst-plugins-good-udp \
+	gst-plugins-good-wavparse \
+	"
+
+GST_BAD_RDEPS = " \
+	gst-plugins-bad-cdxaparse \
 	gst-plugins-bad-mms \
+	gst-plugins-bad-mpegdemux \
 	gst-plugins-bad-rtmp \
-	gst-plugins-bad-cdxaparse gst-plugins-bad-vcdsrc \
-	\
-	gst-plugins-ugly-dvdsub gst-plugins-ugly-mad \
-	gst-plugins-ugly-mpegaudioparse gst-plugins-ugly-mpegstream \
-	gst-plugins-ugly-amrwbdec gst-plugins-ugly-amrnb \
-	gst-plugins-ugly-asf gst-plugins-ugly-cdio \
+	gst-plugins-bad-vcdsrc \
+	"
+
+GST_UGLY_RDEPS = " \
+	gst-plugins-ugly-amrnb \
+	gst-plugins-ugly-amrwbdec \
+	gst-plugins-ugly-asf \
+	gst-plugins-ugly-cdio \
+	gst-plugins-ugly-dvdsub \
+	gst-plugins-ugly-mad \
+	gst-plugins-ugly-mpegaudioparse \
+	gst-plugins-ugly-mpegstream \
 	"
 
 # DVD playback is integrated, we need the libraries
 RDEPENDS_${PN} += "libdreamdvd"
 RRECOMMENDS_${PN} = "libdvdcss"
-
-# PLi-HD is the default skin for HD hardware
-DEFAULTSKIN = "enigma2-plugin-skins-pli-hd"
-RDEPENDS_${PN} += "${DEFAULTSKIN}"
 
 # We depend on the font which we use for TXT subtitles (defined in skin_subtitles.xml)
 RDEPENDS_${PN} += "font-valis-enigma"
@@ -103,7 +140,7 @@ inherit gitpkgv
 
 PV = "2.7+git${SRCPV}"
 PKGV = "2.7+git${GITPKGV}"
-PR = "r35"
+PR = "r36"
 
 ENIGMA2_BRANCH ?= "master"
 SRC_URI = "git://openpli.git.sourceforge.net/gitroot/openpli/enigma2;protocol=git;branch=${ENIGMA2_BRANCH}"
@@ -123,9 +160,6 @@ PV_enigma2-fonts = "2010.11.14"
 PR_enigma2-fonts = "r0"
 PKGV_enigma2-fonts = "${PV_enigma2-fonts}"
 FILES_enigma2-fonts = "${datadir}/fonts"
-
-bindir = "/usr/bin"
-sbindir = "/usr/sbin"
 
 EXTRA_OECONF = "\
 	--with-libsdl=no --with-boxtype=${MACHINE} \
