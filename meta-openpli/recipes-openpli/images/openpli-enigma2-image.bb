@@ -83,6 +83,7 @@ ENIGMA2_OPTIONAL = " \
 	picons-enigma2-meta \
 	softcams-enigma2-meta \
 	task-openplugins \
+	${@base_contains("MACHINE_FEATURES", "blindscan-dvbs", "enigma2-plugin-systemplugins-satscan" , "", d)} \
 	"
 
 IMAGE_INSTALL += " \
