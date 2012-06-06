@@ -1,0 +1,12 @@
+--- djmount-0.71/configure.ac.orig	2006-08-27 22:12:33.000000000 +0200
++++ djmount-0.71/configure.ac	2012-04-19 08:56:31.412327597 +0200
+@@ -14,8 +14,8 @@
+ # share auxiliary files with sub-configure in "libupnp"
+ AC_CONFIG_AUX_DIR(libupnp/config.aux)
+ AC_CONFIG_MACRO_DIR(libupnp/m4)
+-AC_CONFIG_MACRO_DIR(m4)
+ AC_CONFIG_MACRO_DIR(gl/m4)
++AC_CONFIG_MACRO_DIR(m4)
+ 
+ AC_CONFIG_SRCDIR(djmount/djfs.c)
+ 
