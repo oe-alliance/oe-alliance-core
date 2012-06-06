@@ -1,13 +1,3 @@
-PRINC = "1"
-
-DEPENDS += " \
-		schroedinger \
-		libgsm \
-	"
-
-EXTRA_OECONF += " \
-		--enable-libgsm \
-		--enable-libschroedinger \
-	"
+PRINC = "2"
 
 RSUGGESTS_${PN} = ""
