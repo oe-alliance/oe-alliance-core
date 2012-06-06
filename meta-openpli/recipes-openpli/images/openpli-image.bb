@@ -32,6 +32,7 @@ OPTIONAL_PACKAGES ?= ""
 OPTIONAL_PACKAGES += " \
 	ctorrent \
 	cups \
+	djmount \
 	dvbsnoop \
 	dvdfs \
 	gdb \
