@@ -21,94 +21,43 @@ SRC_URI="git://git.assembla.com/openvix.2.git;protocol=git;branch=${ENIGMA2_BRAN
 
 SRC_URI_append_vuuno = " \
 			file://enigma2_remote_keymap.patch \
-			file://rc.png \
-			file://rcold.png \
-			file://rcpositions.xml \
-			file://arrowup.png \
-			file://arrowright.png \
-			file://arrowleft.png \
-			file://arrowdown.png \
 			"
 
 SRC_URI_append_vuultimo = " \
 			file://enigma2_remote_keymap.patch \
-			file://rc.png \
-			file://rcold.png \
-			file://rcpositions.xml \
-			file://arrowup.png \
-			file://arrowright.png \
-			file://arrowleft.png \
-			file://arrowdown.png \
 			"
 
 SRC_URI_append_vusolo = " \
 			file://enigma2_remote_keymap.patch \
-			file://rc.png \
-			file://rcold.png \
-			file://rcpositions.xml \
-			file://arrowup.png \
-			file://arrowright.png \
-			file://arrowleft.png \
-			file://arrowdown.png \
 			"
 
 SRC_URI_append_vuduo = " \
 			file://enigma2_remote_keymap.patch \
 			file://enigma2_VFD.patch \
-			file://rc.png \
-			file://rcold.png \
-			file://rcpositions.xml \
-			file://arrowup.png \
-			file://arrowright.png \
-			file://arrowleft.png \
-			file://arrowdown.png \
 			"
 
 SRC_URI_append_et5x00 = " \
 			file://enigma2_remote_keymap.patch \
-			file://rc.png \
-			file://rcold.png \
-			file://rcpositions.xml \
 			"
 
 SRC_URI_append_et6x00 = " \
 			file://enigma2_remote_keymap.patch \
-			file://rc.png \
-			file://rcold.png \
-			file://rcpositions.xml \
 			"
 
 SRC_URI_append_et9x00 = " \
 			file://enigma2_remote_keymap.patch \
-			file://rc.png \
-			file://rcold.png \
-			file://rcpositions.xml \
 			"
 
 SRC_URI_append_gbhd800se = " \
 			file://enigma2_remote_keymap.patch \
-			file://rc.png \
-			file://rcold.png \
-			file://rcpositions.xml \
 			"
 
 SRC_URI_append_odinm9 = " \
 			file://enigma2_remote_keymap.patch \
-			file://rc.png \
-			file://rcold.png \
-			file://rcpositions.xml \
 			"
 
 SRC_URI_append_tmtwin = " \
 			file://enigma2_remote_keymap.patch \
-			file://rc.png \
-			file://rcold.png \
-			file://rcpositions.xml \
-			file://rcpositions.xml \
-			file://arrowup.png \
-			file://arrowright.png \
-			file://arrowleft.png \
-			file://arrowdown.png \
 			"
 
 FILES_${PN} += " ${bindir}"
@@ -165,80 +114,6 @@ do_patch_prepend(){
 	for x in po_list:
 		enigma2changeword(x)
 	os.system('rm po_list')
-}
-
-do_compile_prepend_vuuno() {
-	install -m 0644 ${WORKDIR}/rcpositions.xml ${S}/data/
-	install -m 0644 ${WORKDIR}/rc.png ${S}/data/skin_default/
-	install -m 0644 ${WORKDIR}/rcold.png ${S}/data/skin_default/
-	install -m 0644 ${WORKDIR}/arrowup.png ${S}/data/skin_default/
-	install -m 0644 ${WORKDIR}/arrowright.png ${S}/data/skin_default/
-	install -m 0644 ${WORKDIR}/arrowleft.png ${S}/data/skin_default/
-	install -m 0644 ${WORKDIR}/arrowdown.png ${S}/data/skin_default/
-}
-
-do_compile_prepend_vuultimo() {
-	install -m 0644 ${WORKDIR}/rcpositions.xml ${S}/data/
-	install -m 0644 ${WORKDIR}/rc.png ${S}/data/skin_default/
-	install -m 0644 ${WORKDIR}/rcold.png ${S}/data/skin_default/
-	install -m 0644 ${WORKDIR}/arrowup.png ${S}/data/skin_default/
-	install -m 0644 ${WORKDIR}/arrowright.png ${S}/data/skin_default/
-	install -m 0644 ${WORKDIR}/arrowleft.png ${S}/data/skin_default/
-	install -m 0644 ${WORKDIR}/arrowdown.png ${S}/data/skin_default/
-}
-
-do_compile_prepend_vusolo() {
-	install -m 0644 ${WORKDIR}/rcpositions.xml ${S}/data/
-	install -m 0644 ${WORKDIR}/rc.png ${S}/data/skin_default/
-	install -m 0644 ${WORKDIR}/rcold.png ${S}/data/skin_default/
-	install -m 0644 ${WORKDIR}/arrowup.png ${S}/data/skin_default/
-	install -m 0644 ${WORKDIR}/arrowright.png ${S}/data/skin_default/
-	install -m 0644 ${WORKDIR}/arrowleft.png ${S}/data/skin_default/
-	install -m 0644 ${WORKDIR}/arrowdown.png ${S}/data/skin_default/
-}
-
-do_compile_prepend_vuduo() {
-	install -m 0644 ${WORKDIR}/rcpositions.xml ${S}/data/
-	install -m 0644 ${WORKDIR}/rc.png ${S}/data/skin_default/
-	install -m 0644 ${WORKDIR}/rcold.png ${S}/data/skin_default/
-	install -m 0644 ${WORKDIR}/arrowup.png ${S}/data/skin_default/
-	install -m 0644 ${WORKDIR}/arrowright.png ${S}/data/skin_default/
-	install -m 0644 ${WORKDIR}/arrowleft.png ${S}/data/skin_default/
-	install -m 0644 ${WORKDIR}/arrowdown.png ${S}/data/skin_default/
-}
-
-do_compile_prepend_et5x00() {
-	install -m 0644 ${WORKDIR}/rcpositions.xml ${S}/data/
-	install -m 0644 ${WORKDIR}/rc.png ${S}/data/skin_default/
-	install -m 0644 ${WORKDIR}/rcold.png ${S}/data/skin_default/
-}
-
-do_compile_prepend_et6x00() {
-	install -m 0644 ${WORKDIR}/rcpositions.xml ${S}/data/
-	install -m 0644 ${WORKDIR}/rc.png ${S}/data/skin_default/
-	install -m 0644 ${WORKDIR}/rcold.png ${S}/data/skin_default/
-}
-
-do_compile_prepend_et9x00() {
-	install -m 0644 ${WORKDIR}/rcpositions.xml ${S}/data/
-	install -m 0644 ${WORKDIR}/rc.png ${S}/data/skin_default/
-	install -m 0644 ${WORKDIR}/rcold.png ${S}/data/skin_default/
-}
-
-do_compile_prepend_odinm9() {
-	install -m 0644 ${WORKDIR}/rcpositions.xml ${S}/data/
-	install -m 0644 ${WORKDIR}/rc.png ${S}/data/skin_default/
-	install -m 0644 ${WORKDIR}/rcold.png ${S}/data/skin_default/
-}
-
-do_compile_prepend_tmtwin() {
-	install -m 0644 ${WORKDIR}/rcpositions.xml ${S}/data/
-	install -m 0644 ${WORKDIR}/rc.png ${S}/data/skin_default/
-	install -m 0644 ${WORKDIR}/rcold.png ${S}/data/skin_default/
-	install -m 0644 ${WORKDIR}/arrowup.png ${S}/data/skin_default/
-	install -m 0644 ${WORKDIR}/arrowright.png ${S}/data/skin_default/
-	install -m 0644 ${WORKDIR}/arrowleft.png ${S}/data/skin_default/
-	install -m 0644 ${WORKDIR}/arrowdown.png ${S}/data/skin_default/
 }
 
 def enigma2changeword2(file):
