@@ -203,14 +203,23 @@ FILES_${PN}-src = "\
 RADIOMVI = "radio-hd.mvi"
 
 do_openpli_preinstall() {
-	if [ -n "${BRANDINGDIR}" -a -d "${BRANDINGDIR}/enigma2" ] ; then
-		cp -p ${BRANDINGDIR}/enigma2/* ${S}/data/.
-	fi
 	ln -f ${S}/data/${RADIOMVI} ${S}/data/radio.mvi
 	install -d ${D}${sysconfdir}/enigma2
 }
 
 addtask openpli_preinstall after do_compile before do_install
+
+do_openpli_branding() {
+	if [ -n "${BRANDINGDIR}" -a -d "${BRANDINGDIR}/enigma2" ] ; then
+		cp -p ${BRANDINGDIR}/enigma2/* ${S}/data/.
+	fi
+	if [ -n "${CRASHADDR}" ] ; then
+		sed "s/^#define CRASH_EMAILADDR .*/#define CRASH_EMAILADDR \"${CRASHADDR}\"/" ${S}/main/bsod.cpp > ${S}/main/bsod.cpp.new && \
+		mv ${S}/main/bsod.cpp.new ${S}/main/bsod.cpp
+	fi
+}
+
+addtask openpli_branding after do_unpack before do_configure
 
 do_install_append() {
 	install -d ${D}/usr/share/keymaps
