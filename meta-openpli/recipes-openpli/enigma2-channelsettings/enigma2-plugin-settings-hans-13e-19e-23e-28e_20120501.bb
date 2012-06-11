@@ -1,8 +1,0 @@
-DESCRIPTION = "Hans 13E,19E,23E,28E"
-
-SETTINGS_FILENAME = "hans_13e_19e_23e_28e_e2"
-
-include hans.inc
-
-SRC_URI[md5sum] = "7dc9249dab1604e4785a30ba592c985e"
-SRC_URI[sha256sum] = "f7118d49cba392efc3a7fb7d07fbc66550c9186f36751efaa9b5498b6339e99e"
