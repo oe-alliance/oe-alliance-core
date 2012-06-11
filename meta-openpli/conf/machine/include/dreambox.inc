@@ -14,6 +14,7 @@ MACHINE_EXTRA_RRECOMMENDS = " \
 	kernel-module-cifs \
 	kernel-module-hmac \
 	kernel-module-md4 \
+	kernel-module-ecb \
 	"
 
 MACHINE_FEATURES += "alsa usbhost 3dtv switchoff tpm"
