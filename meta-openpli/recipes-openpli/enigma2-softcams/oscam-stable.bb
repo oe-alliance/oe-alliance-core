@@ -4,8 +4,9 @@ OSCAMBIN = "oscam-stable"
 OSCAMDEPENS = "openssl"
 OSCAMRDEPENDS ="openssl"
 URI = "svn://oscam.to/svn/oscam/tags;module=1.10;proto=http;scmdata=keep;rev=${SRCREV}"
-SSL = "DWITH_SSL=1"
-PCSC = "DHAVE_PCSC=0"
+SSL = "-DWITH_SSL=1"
+PCSC = "-DHAVE_PCSC=0"
+LIBUSB = "-DHAVE_LIBUSB=1"
 ALTERNATIVE_PRIORITY = "10"
 require oscam-bin.inc
 

@@ -2,7 +2,7 @@ DESCRIPTION = "Oscam binary, freshly compiled"
 LICENSE = "GPLv3"
 
 PV = "svn${SRCPV}"
-PR = "r0"
+PR = "r2"
 DEPENDS = "${OSCAMDEPENS}"
 RREPLACES_${PN} = "oscam-bin"
 RCONFLICTS_${PN} = "oscam-bin"
@@ -31,22 +31,23 @@ S = "${WORKDIR}/${MODULE}"
 
 do_generate_toolchain_file_append() {
 	echo "set( OPTIONAL_INCLUDE_DIR \"${STAGING_DIR_HOST}/usr/include/PCSC\" CACHE STRING \"Some optional include directories\" )" >> ${WORKDIR}/toolchain.cmake
-	echo "set( LIBUSBDIR ${STAGING_DIR}/${MULTIMACH_TARGET_SYS}/usr ) " >> ${WORKDIR}/toolchain.cmake \
+	echo "set( LIBUSBDIR ${STAGING_DIR_HOST} ) " >> ${WORKDIR}/toolchain.cmake \
 }
 
 EXTRA_OECMAKE += "\
 	-DOSCAM_SYSTEM_NAME=Tuxbox \
 	-DWEBIF=1 \
 	-DWITH_STAPI=0 \
-	-DHAVE_LIBUSB=0 \
-	-${SSL} \
-	-${PCSC} \
+	${LIBUSB} \
+	${SSL} \
+	${PCSC} \
 	"
 
 inherit cmake update-alternatives
 
 do_install_append() {
 	mv "${D}${bindir}/oscam" "${D}${bindir}/${PN}"
+	cp "${OECMAKE_BUILDPATH}/utils/list_smargo" "${D}${bindir}/list_smargo" \
 }
 
 ALTERNATIVE_NAME = "${OSCAMBIN}"
