@@ -6,9 +6,9 @@ PR = "r1"
 
 PACKAGES = "${PN}"
 
-SRC_URI = "http://www.rytec.be/tools/Rytec_E2_${SATNAMES}_${PV}.zip"
+SRC_URI = "http://www.rytec.be/tools/Rytec_E2_${SATNAMES}_${RYTECSETTINGS_SRCDATE}.zip"
 
-S = "${WORKDIR}/Rytec_E2_${SATNAMES}_${PV}"
+S = "${WORKDIR}/Rytec_E2_${SATNAMES}_${RYTECSETTINGS_SRCDATE}"
 
 FILES_${PN} = "/etc/enigma2/*"
 

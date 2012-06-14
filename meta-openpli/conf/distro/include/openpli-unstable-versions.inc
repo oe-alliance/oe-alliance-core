@@ -44,3 +44,7 @@ SRCREV_pn-enigma2-plugin-extensions-tuxcom ?= "${AUTOREV}"
 SRCREV_pn-enigma2-plugin-extensions-tuxterm ?= "${AUTOREV}"
 SRCREV_pn-oscam-experimental ?= "${AUTOREV}"
 SRCREV_pn-oscam-unstable = "${AUTOREV}"
+
+RYTECSETTINGS_SRCDATE ?= "20120614"
+SRCDATE_enigma2-plugin-settings-rytec-13e19e23e28e ?= "${RYTECSETTINGS_SRCDATE}"
+SRCDATE_enigma2-plugin-settings-rytec-motor ?= "${RYTECSETTINGS_SRCDATE}"
