@@ -16,6 +16,8 @@ python do_package_prepend () {
 	]
 	import os
 	top = '${D}${PLUGINPATH}/public/images/'
+	target_box = 'unknown.jpg'
+	target_remote = 'ow_remote.png'
 	for x in boxtypes:
 		if x[0] == '${MACHINE}':
 			target_box = x[1]
