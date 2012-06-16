@@ -3,9 +3,13 @@ LICENSE = "GPLv3"
 
 PV = "svn${SRCPV}"
 PR = "r3"
+
+DEPENDS = "libusb openssl"
+RDEPENDS_${PN} = "openssl oscam-util-list-smargo"
 RREPLACES_${PN} = "oscam-bin"
 RCONFLICTS_${PN} = "oscam-bin"
 RPROVIDES_${PN} = "${OSCAMBIN}"
+
 #the three options below are not needed but makes it easier to trace the cmake generated cross compile files
 #All generated files by cmake will be in a subdir called build_dir
 OECMAKE_BUILDPATH = "${WORKDIR}/${MODULE}/build_dir"
@@ -36,9 +40,9 @@ EXTRA_OECMAKE += "\
 	-DOSCAM_SYSTEM_NAME=Tuxbox \
 	-DWEBIF=1 \
 	-DWITH_STAPI=0 \
-	${LIBUSB} \
-	${SSL} \
-	${PCSC} \
+	-DHAVE_LIBUSB=1 \
+	-DWITH_SSL=1 \
+	-DHAVE_PCSC=0 \
 	"
 
 inherit cmake update-alternatives
