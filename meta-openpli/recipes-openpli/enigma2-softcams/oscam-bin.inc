@@ -2,12 +2,10 @@ DESCRIPTION = "Oscam binary, freshly compiled"
 LICENSE = "GPLv3"
 
 PV = "svn${SRCPV}"
-PR = "r2"
-DEPENDS = "${OSCAMDEPENS}"
+PR = "r3"
 RREPLACES_${PN} = "oscam-bin"
 RCONFLICTS_${PN} = "oscam-bin"
 RPROVIDES_${PN} = "${OSCAMBIN}"
-RDEPENDS_${PN} = "${OSCAMRDEPENDS}"
 #the three options below are not needed but makes it easier to trace the cmake generated cross compile files
 #All generated files by cmake will be in a subdir called build_dir
 OECMAKE_BUILDPATH = "${WORKDIR}/${MODULE}/build_dir"
@@ -47,7 +45,6 @@ inherit cmake update-alternatives
 
 do_install_append() {
 	mv "${D}${bindir}/oscam" "${D}${bindir}/${PN}"
-	cp "${OECMAKE_BUILDPATH}/utils/list_smargo" "${D}${bindir}/list_smargo" \
 }
 
 ALTERNATIVE_NAME = "${OSCAMBIN}"
