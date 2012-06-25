@@ -71,13 +71,6 @@ SRC_URI_append_odinm9= " \
 			file://rc.png \
 			file://dreamboxwebtv.png"
 
-SRC_URI_append_gbhd800se= " \
-			file://enigma2_plugins_WebInterface.patch \
-			file://dreamboxweb.png \
-			file://favicon.ico \
-			file://rc.png \
-			file://dreamboxwebtv.png"
-
 SRC_URI_append_tmtwin = " \
 			file://enigma2_plugins_WebInterface.patch \
 			file://dreamboxweb.png \
@@ -177,13 +170,6 @@ do_install_append_et9x00() {
 }
 
 do_install_append_odinm9() {
-	install -m 0644 ${WORKDIR}/dreamboxweb.png ${D}/usr/lib/enigma2/python/Plugins/Extensions/WebInterface/web-data/img/
-	install -m 0644 ${WORKDIR}/dreamboxwebtv.png ${D}/usr/lib/enigma2/python/Plugins/Extensions/WebInterface/web-data/tpl/default/streaminterface/img
-	install -m 0644 ${WORKDIR}/favicon.ico ${D}/usr/lib/enigma2/python/Plugins/Extensions/WebInterface/web-data/img/
-	install -m 0644 ${WORKDIR}/rc.png ${D}/usr/lib/enigma2/python/Plugins/Extensions/WebInterface/web-data/img/
-}
-
-do_install_append_gbhd800se() {
 	install -m 0644 ${WORKDIR}/dreamboxweb.png ${D}/usr/lib/enigma2/python/Plugins/Extensions/WebInterface/web-data/img/
 	install -m 0644 ${WORKDIR}/dreamboxwebtv.png ${D}/usr/lib/enigma2/python/Plugins/Extensions/WebInterface/web-data/tpl/default/streaminterface/img
 	install -m 0644 ${WORKDIR}/favicon.ico ${D}/usr/lib/enigma2/python/Plugins/Extensions/WebInterface/web-data/img/

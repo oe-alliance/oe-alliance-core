@@ -11,7 +11,7 @@ S = "${WORKDIR}"
 SRC_URI_gb800se = " file://burn.bat"
 SRC_URI_gb800ue = " file://burn.bat"
 SRC_URI_gb800solo = " file://burn.bat"
-SRC_URI_quattro = " file://burn.bat"
+SRC_URI_qbquad = " file://burn.bat"
 
 
 do_install_append_gb800se() {
@@ -27,7 +27,7 @@ do_install_append_gb800solo() {
 	install -m 0755 ${S}/burn.bat ${DEPLOY_DIR_IMAGE}/burn.bat
 }
 
-do_install_append_gbquattro() {
+do_install_append_gbquad() {
     install -d ${DEPLOY_DIR_IMAGE}
 	install -m 0755 ${S}/burn.bat ${DEPLOY_DIR_IMAGE}/burn.bat
 }

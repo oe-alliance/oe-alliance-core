@@ -18,7 +18,10 @@ URL_et6x00 = "http://www.xtrend-support.co.uk"
 URL_et9x00 = "http://www.xtrend-support.co.uk"
 URL_tmtwin = "http://www.technomate-support.co.uk"
 URL_odinm9 = "http://www.odin-support.co.uk"
-URL_gbhd800se = "http://www.gigablue-support.co.uk"
+URL_gb800solo = "http://www.gigablue-support.co.uk"
+URL_gb800se = "http://www.gigablue-support.co.uk"
+URL_gb800ue = "http://www.gigablue-support.co.uk"
+URL_gbquad = "http://www.gigablue-support.co.uk"
 
 SRC_URI = "file://releasenotes"
 
@@ -48,7 +51,7 @@ do_install() {
 				DRIVERS=`grep "SRCDATE = " ${LAYERDIR}/recipes-bsp/odin/odin-dvb-modules-${MACHINE}.bb | cut -b 12-19`
 			elif [ "${MACHINE}" = "tmtwin" ]; then
 				DRIVERS=`grep "SRCDATE = " ${LAYERDIR}/recipes-bsp/technomate/tm-dvb-modules.bb | cut -b 12-21`
-			elif [ "${MACHINE}" = "gbhd800se" ]; then
+			elif [ "${MACHINE}" = "gb800solo" -o "${MACHINE}" = "gb800se" -o "${MACHINE}" = "gb800ue" -o "${MACHINE}" = "gbquad" ]; then
 				DRIVERS=`grep "SRCDATE = " ${LAYERDIR}/recipes-bsp/gigablue/gigablue-dvb-modules.bb | cut -b 12-19`
 			else
 				DRIVERS='N/A'

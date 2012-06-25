@@ -48,7 +48,19 @@ SRC_URI_append_et9x00 = " \
 			file://enigma2_remote_keymap.patch \
 			"
 
-SRC_URI_append_gbhd800se = " \
+SRC_URI_append_gb800solo = " \
+			file://gb800-evfd.patch \
+			file://enigma2_remote_keymap.patch \
+			"
+SRC_URI_append_gb800se = " \
+			file://gb800-evfd.patch \
+			file://enigma2_remote_keymap.patch \
+			"
+SRC_URI_append_gb800ue = " \
+			file://gb800-evfd.patch \
+			file://enigma2_remote_keymap.patch \
+			"
+SRC_URI_append_gbquad = " \
 			file://enigma2_remote_keymap.patch \
 			"
 
@@ -101,8 +113,14 @@ do_patch_prepend(){
 		MACHINE1="Xtrend ET9"
 	elif "${MACHINE}" == "odinm9":
 		MACHINE1="Odin M9"
-	elif "${MACHINE}" == "gbhd800se":
-		MACHINE1="GigaBlue HD800SE"
+	elif "${MACHINE}" == "gb800solo":
+		MACHINE1="GigaBlue HD 800 Solo"
+	elif "${MACHINE}" == "gb800se":
+		MACHINE1="GigaBlue HD 800 SE"
+	elif "${MACHINE}" == "gb800ue":
+		MACHINE1="GigaBlue HD 800 UE"
+	elif "${MACHINE}" == "gbquad":
+		MACHINE1="GigaBlue HD Quad"
 	elif "${MACHINE}" == "tmtwin":
 		MACHINE1="Technomate"
 	import os
@@ -138,8 +156,14 @@ python do_setup_po_ipk () {
 		MACHINE1="Xtrend ET9"
 	elif "${MACHINE}" == "odinm9":
 		MACHINE1="Odin M9"
-	elif "${MACHINE}" == "gbhd800se":
-		MACHINE1="GigaBlue HD800SE"
+	elif "${MACHINE}" == "gb800solo":
+		MACHINE1="GigaBlue HD 800 Solo"
+	elif "${MACHINE}" == "gb800se":
+		MACHINE1="GigaBlue HD 800 SE"
+	elif "${MACHINE}" == "gb800ue":
+		MACHINE1="GigaBlue HD 800 UE"
+	elif "${MACHINE}" == "gbquad":
+		MACHINE1="GigaBlue HD Quad"
 	elif "${MACHINE}" == "tmtwin":
 		MACHINE1="Technomate"
 	import os

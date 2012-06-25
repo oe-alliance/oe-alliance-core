@@ -86,8 +86,14 @@ do_patch_prepend(){
 		MACHINE1="Xtrend ET6"
 	elif "${MACHINE}" == "et9x00":
 		MACHINE1="Xtrend ET9"
-	elif "${MACHINE}" == "gbhd800se":
+	elif "${MACHINE}" == "gb800solo":
+		MACHINE1="GigaBlue HD 800 Solo"
+	elif "${MACHINE}" == "gb800se":
 		MACHINE1="GigaBlue HD 800 SE"
+	elif "${MACHINE}" == "gb800ue":
+		MACHINE1="GigaBlue HD 800 UE"
+	elif "${MACHINE}" == "gbquad":
+		MACHINE1="GigaBlue HD Quad"
 	elif "${MACHINE}" == "odinm9":
 		MACHINE1="Odin M9"
 	elif "${MACHINE}" == "tmtwin":
@@ -123,8 +129,14 @@ python do_setup_po_ipk () {
 		MACHINE1="Xtrend ET6"
 	elif "${MACHINE}" == "et9x00":
 		MACHINE1="Xtrend ET9"
-	elif "${MACHINE}" == "gbhd800se":
+	elif "${MACHINE}" == "gb800solo":
+		MACHINE1="GigaBlue HD 800 Solo"
+	elif "${MACHINE}" == "gb800se":
 		MACHINE1="GigaBlue HD 800 SE"
+	elif "${MACHINE}" == "gb800ue":
+		MACHINE1="GigaBlue HD 800 UE"
+	elif "${MACHINE}" == "gbquad":
+		MACHINE1="GigaBlue HD Quad"
 	elif "${MACHINE}" == "odinm9":
 		MACHINE1="Odin M9"
 	elif "${MACHINE}" == "tmtwin":
