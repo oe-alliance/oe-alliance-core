@@ -1,0 +1,118 @@
+--- a/drivers/media/dvb/siano/smsdvb.c.orig	2011-02-25 13:08:07.000000000 +0200
++++ b/drivers/media/dvb/siano/smsdvb.c	2011-02-26 15:11:46.000000000 +0200
+@@ -753,12 +753,111 @@
+ 	struct smsdvb_client_t *client =
+ 		container_of(fe, struct smsdvb_client_t, frontend);
+ 
+-	sms_debug("");
++	struct TRANSMISSION_STATISTICS_S *td = &client->sms_stat_dvb.TransmissionData;
+ 
+-	/* todo: */
+-	memcpy(fep, &client->fe_params,
+-	       sizeof(struct dvb_frontend_parameters));
+ 
++	switch (td->Constellation) {
++	case 0:
++		fep->u.ofdm.constellation = QPSK;
++		break;
++	case 1:
++		fep->u.ofdm.constellation = QAM_16;
++		break;
++	case 2:
++		fep->u.ofdm.constellation = QAM_64;
++		break;
++	}
++
++	switch (td->TransmissionMode) {
++	case 2:
++		fep->u.ofdm.transmission_mode = TRANSMISSION_MODE_2K;
++		break;
++	case 8:
++		fep->u.ofdm.transmission_mode = TRANSMISSION_MODE_8K;
++	}
++
++	switch (td->GuardInterval) {
++	case 0:
++		fep->u.ofdm.guard_interval = GUARD_INTERVAL_1_32;
++		break;
++	case 1:
++		fep->u.ofdm.guard_interval = GUARD_INTERVAL_1_16;
++		break;
++	case 2:
++		fep->u.ofdm.guard_interval = GUARD_INTERVAL_1_8;
++		break;
++	case 3:
++		fep->u.ofdm.guard_interval = GUARD_INTERVAL_1_4;
++		break;
++	}
++
++	switch (td->Hierarchy) {
++	case 0:
++		fep->u.ofdm.hierarchy_information = HIERARCHY_NONE;
++		break;
++	case 1:
++		fep->u.ofdm.hierarchy_information = HIERARCHY_1;
++		break;
++	case 2:
++		fep->u.ofdm.hierarchy_information = HIERARCHY_2;
++		break;
++	case 3:
++		fep->u.ofdm.hierarchy_information = HIERARCHY_4;
++		break;
++	}
++
++	switch (td->CodeRate) {
++	case 0:
++		fep->u.ofdm.code_rate_HP = FEC_1_2;
++		break;
++	case 1:
++		fep->u.ofdm.code_rate_HP = FEC_2_3;
++		break;
++	case 2:
++		fep->u.ofdm.code_rate_HP = FEC_3_4;
++		break;
++	case 3:
++		fep->u.ofdm.code_rate_HP = FEC_5_6;
++		break;
++	case 4:
++		fep->u.ofdm.code_rate_HP = FEC_7_8;
++		break;
++	}
++
++	switch (td->LPCodeRate) {
++	case 0:
++		fep->u.ofdm.code_rate_LP = FEC_1_2;
++		break;
++	case 1:
++		fep->u.ofdm.code_rate_LP = FEC_2_3;
++		break;
++	case 2:
++		fep->u.ofdm.code_rate_LP = FEC_3_4;
++		break;
++	case 3:
++		fep->u.ofdm.code_rate_LP = FEC_5_6;
++		break;
++	case 4:
++		fep->u.ofdm.code_rate_LP = FEC_7_8;
++		break;
++	}
++
++	switch (td->Bandwidth) {
++	case 6:
++		fep->u.ofdm.bandwidth = BANDWIDTH_6_MHZ;
++		break;
++	case 7:
++		fep->u.ofdm.bandwidth = BANDWIDTH_7_MHZ;
++		break;
++	case 8:
++		fep->u.ofdm.bandwidth = BANDWIDTH_8_MHZ;
++		break;
++	}
++
++
++	fep->frequency = td->Frequency;
++	fep->inversion = INVERSION_AUTO;
++	
+ 	return 0;
+ }
+ 

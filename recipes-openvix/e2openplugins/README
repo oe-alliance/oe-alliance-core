@@ -1,0 +1,27 @@
+Create a folder e2openplugins in your OE recipes folder and clone the repo inside
+
+mkdir /your/oe/path/recipes/e2openplugins
+cd /your/oe/path/recipes/e2openplugins
+git clone git://github.com/E2OpenPlugins/e2openplugins.git .
+
+Edit the file "/your/oe/path/recipes/images/dreambox-image.bb"
+Change OPENDREAMBOX_COMMON from:
+
+OPENDREAMBOX_COMMON = "\
+	task-boot \
+	task-opendreambox-base \
+	task-opendreambox-dvbapi \
+	task-opendreambox-ui \
+"
+
+to:
+
+OPENDREAMBOX_COMMON = "\
+	task-boot \
+	task-opendreambox-base \
+	task-opendreambox-dvbapi \
+	task-opendreambox-ui \
+	task-openplugins \
+"
+
+Compile your OE :)

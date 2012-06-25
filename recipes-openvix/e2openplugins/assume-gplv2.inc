@@ -1,0 +1,4 @@
+LICENSE = "GPLv2"
+LIC_FILES_CHKSUM = "file://../LICENSE.GPLv2;md5=eb723b61539feef013de476e68b5c50a"
+
+SRC_URI += "file://LICENSE.GPLv2"

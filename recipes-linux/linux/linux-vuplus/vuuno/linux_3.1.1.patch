@@ -1,0 +1,43 @@
+diff --git a/arch/mips/brcmstb/board.c b/arch/mips/brcmstb/board.c
+index ab1cb65..4845952 100644
+--- a/arch/mips/brcmstb/board.c
++++ b/arch/mips/brcmstb/board.c
+@@ -718,15 +718,14 @@ void __init board_get_ram_size(unsigned long *dram0_mb, unsigned long *dram1_mb)
+ 
+ static struct mtd_partition fixed_partition_map[] = {
+         /* name                 offset          size */
+-        { name: "rootfs",               offset: 0,              size:0x1F200000 /* DEFAULT_ROOTFS_SIZE*/ },   /* rootfs is total nand size - 6 M Bytes. referr to cfe. bcm97335_devs.c */
+-        { name: "kernel",       offset: 0x1F200000,             size: 4<<20 },
+-        { name: "boot",         offset: 0x1F600000,             size: 4<<20 },
+-	{ name: "splash",       offset: 0x1FA00000,             size: 2<<20 },
+-        { name: "cfe",          offset: 0x1FC00000,             size: 1<<20 },
+-        { name: "mac",          offset: 0x1FD00000,             size: 1<<19 },
+-        { name: "env",          offset: 0x1FD80000,             size: 1<<19 },
+-        { name: "nvm",          offset: 0x1FE00000,             size: 1<<20 },
+-        { name: "data",         offset: 0x20000000,             size: 0x1FC00000 },
++        { name: "rootfs",       offset: 0,              	size: (128-4-4-2-3-1)<<20 },   /* rootfs is total nand size - 6 M Bytes. referr to cfe. bcm97335_devs.c */
++        { name: "kernel",       offset: 0x07200000,             size: 4<<20 },
++        { name: "boot",         offset: 0x07600000,             size: 4<<20 },
++	{ name: "splash",       offset: 0x07a00000,             size: 2<<20 },
++        { name: "cfe",          offset: 0x07c00000,             size: 1<<20 },
++        { name: "mac",          offset: 0x07d00000,             size: 1<<19 },
++        { name: "env",          offset: 0x07d80000,             size: 1<<19 },
++        { name: "nvm",          offset: 0x07e00000,             size: 1<<20 },
+         /* BBT 1MB not mountable by anyone */
+ /*        { name: "data",         offset: 0x20000000,             size: 0 },*/
+ /* Add 1 extra place-holder partition for splash, and a safety guard element */
+diff --git a/drivers/mtd/brcmnand/brcmnand_base.c b/drivers/mtd/brcmnand/brcmnand_base.c
+index 22035af..ca32167 100644
+--- a/drivers/mtd/brcmnand/brcmnand_base.c
++++ b/drivers/mtd/brcmnand/brcmnand_base.c
+@@ -226,8 +226,8 @@ static brcmnand_chip_Id brcmnand_chips[] = {
+ 		.options = NAND_USE_FLASH_BBT, 		/* Use BBT on flash */
+ 		.idOptions = 0,
+ 				//| NAND_COMPLEX_OOB_WRITE	/* Write data together with OOB for write_oob */
+-		.timing1 = 0, //00070000,
+-		.timing2 = 0,
++                .timing1 = 0x4232222D,
++                .timing2 = 0x00000D94,
+ 		.nop=8,
+ 		.ctrlVersion = 0, /* THT Verified on data-sheet 7/10/08: Allows 4 on main and 4 on OOB */
+ 	},
