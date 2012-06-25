@@ -1,0 +1,662 @@
+diff --git a/arch/mips/include/asm/system.h b/arch/mips/include/asm/system.h
+index 6018c80..d05b220 100644
+--- a/arch/mips/include/asm/system.h
++++ b/arch/mips/include/asm/system.h
+@@ -29,7 +29,7 @@
+  * switch_to(n) should switch tasks to task nr n, first
+  * checking that n isn't the current task, in which case it does nothing.
+  */
+-extern asmlinkage void *resume(void *last, void *next, void *next_ti);
++extern asmlinkage void *resume(void *last, void *next, void *next_ti, u32 __usedfpu);
+ 
+ struct task_struct;
+ 
+@@ -75,11 +75,14 @@ do {									\
+ 
+ #define switch_to(prev, next, last)					\
+ do {									\
++	u32 __usedfpu;							\
++									\
+ 	__mips_mt_fpaff_switch_to(prev);				\
+ 	if (cpu_has_dsp)						\
+ 		__save_dsp(prev);					\
+ 	__clear_software_ll_bit();					\
+-	(last) = resume(prev, next, task_thread_info(next));		\
++	__usedfpu = test_and_clear_tsk_thread_flag(prev, TIF_USEDFPU);	\
++	(last) = resume(prev, next, task_thread_info(next), __usedfpu);	\
+ } while (0)
+ 
+ #define finish_arch_switch(prev)					\
+diff --git a/arch/mips/include/asm/thread_info.h b/arch/mips/include/asm/thread_info.h
+index 97f8bf6..adda036 100644
+--- a/arch/mips/include/asm/thread_info.h
++++ b/arch/mips/include/asm/thread_info.h
+@@ -60,6 +60,8 @@ struct thread_info {
+ register struct thread_info *__current_thread_info __asm__("$28");
+ #define current_thread_info()  __current_thread_info
+ 
++#endif /* !__ASSEMBLY__ */
++
+ /* thread information allocation */
+ #if defined(CONFIG_PAGE_SIZE_4KB) && defined(CONFIG_32BIT)
+ #define THREAD_SIZE_ORDER (1)
+@@ -97,8 +99,6 @@ register struct thread_info *__current_thread_info __asm__("$28");
+ 
+ #define free_thread_info(info) kfree(info)
+ 
+-#endif /* !__ASSEMBLY__ */
+-
+ #define PREEMPT_ACTIVE		0x10000000
+ 
+ /*
+diff --git a/arch/mips/kernel/cpu-probe.c b/arch/mips/kernel/cpu-probe.c
+index c7d3cf1..63b87b6 100644
+--- a/arch/mips/kernel/cpu-probe.c
++++ b/arch/mips/kernel/cpu-probe.c
+@@ -353,7 +353,6 @@ static inline void cpu_probe_legacy(struct cpuinfo_mips *c, unsigned int cpu)
+ 				c->cputype = CPU_R3000A;
+ 				__cpu_name[cpu] = "R3000A";
+ 			}
+-			break;
+ 		} else {
+ 			c->cputype = CPU_R3000;
+ 			__cpu_name[cpu] = "R3000";
+diff --git a/arch/mips/kernel/octeon_switch.S b/arch/mips/kernel/octeon_switch.S
+index ce89c80..0441f54 100644
+--- a/arch/mips/kernel/octeon_switch.S
++++ b/arch/mips/kernel/octeon_switch.S
+@@ -31,7 +31,7 @@
+ 
+ /*
+  * task_struct *resume(task_struct *prev, task_struct *next,
+- *                     struct thread_info *next_ti)
++ *                     struct thread_info *next_ti, int usedfpu)
+  */
+ 	.align	7
+ 	LEAF(resume)
+diff --git a/arch/mips/kernel/perf_event_mipsxx.c b/arch/mips/kernel/perf_event_mipsxx.c
+index 315fc0b..dc6ffe0 100644
+--- a/arch/mips/kernel/perf_event_mipsxx.c
++++ b/arch/mips/kernel/perf_event_mipsxx.c
+@@ -162,11 +162,6 @@ static unsigned int counters_total_to_per_cpu(unsigned int counters)
+ 	return counters >> vpe_shift();
+ }
+ 
+-static unsigned int counters_per_cpu_to_total(unsigned int counters)
+-{
+-	return counters << vpe_shift();
+-}
+-
+ #else /* !CONFIG_MIPS_MT_SMP */
+ #define vpe_id()	0
+ 
+diff --git a/arch/mips/kernel/r2300_switch.S b/arch/mips/kernel/r2300_switch.S
+index 2938983..9c51be5 100644
+--- a/arch/mips/kernel/r2300_switch.S
++++ b/arch/mips/kernel/r2300_switch.S
+@@ -43,7 +43,7 @@
+ 
+ /*
+  * task_struct *resume(task_struct *prev, task_struct *next,
+- *                     struct thread_info *next_ti) )
++ *                     struct thread_info *next_ti, int usedfpu)
+  */
+ LEAF(resume)
+ 	mfc0	t1, CP0_STATUS
+@@ -51,18 +51,9 @@ LEAF(resume)
+ 	cpu_save_nonscratch a0
+ 	sw	ra, THREAD_REG31(a0)
+ 
+-	/*
+-	 * check if we need to save FPU registers
+-	 */
+-	lw	t3, TASK_THREAD_INFO(a0)
+-	lw	t0, TI_FLAGS(t3)
+-	li	t1, _TIF_USEDFPU
+-	and	t2, t0, t1
+-	beqz	t2, 1f
+-	nor	t1, zero, t1
++	beqz	a3, 1f
+ 
+-	and	t0, t0, t1
+-	sw	t0, TI_FLAGS(t3)
++	PTR_L	t3, TASK_THREAD_INFO(a0)
+ 
+ 	/*
+ 	 * clear saved user stack CU1 bit
+diff --git a/arch/mips/kernel/r4k_switch.S b/arch/mips/kernel/r4k_switch.S
+index 9414f93..42d2a39 100644
+--- a/arch/mips/kernel/r4k_switch.S
++++ b/arch/mips/kernel/r4k_switch.S
+@@ -41,7 +41,7 @@
+ 
+ /*
+  * task_struct *resume(task_struct *prev, task_struct *next,
+- *                     struct thread_info *next_ti)
++ *                     struct thread_info *next_ti, int usedfpu)
+  */
+ 	.align	5
+ 	LEAF(resume)
+@@ -53,16 +53,10 @@
+ 	/*
+ 	 * check if we need to save FPU registers
+ 	 */
+-	PTR_L	t3, TASK_THREAD_INFO(a0)
+-	LONG_L	t0, TI_FLAGS(t3)
+-	li	t1, _TIF_USEDFPU
+-	and	t2, t0, t1
+-	beqz	t2, 1f
+-	nor	t1, zero, t1
+ 
+-	and	t0, t0, t1
+-	LONG_S	t0, TI_FLAGS(t3)
++	beqz    a3, 1f
+ 
++	PTR_L	t3, TASK_THREAD_INFO(a0)
+ 	/*
+ 	 * clear saved user stack CU1 bit
+ 	 */
+diff --git a/arch/mips/kernel/traps.c b/arch/mips/kernel/traps.c
+index b4abf18..a9b9f9e 100644
+--- a/arch/mips/kernel/traps.c
++++ b/arch/mips/kernel/traps.c
+@@ -131,6 +131,9 @@ static void show_backtrace(struct task_struct *task, const struct pt_regs *regs)
+ 	unsigned long ra = regs->regs[31];
+ 	unsigned long pc = regs->cp0_epc;
+ 
++	if (!task)
++		task = current;
++
+ 	if (raw_show_trace || !__kernel_text_address(pc)) {
+ 		show_raw_backtrace(sp);
+ 		return;
+diff --git a/arch/mips/kernel/vmlinux.lds.S b/arch/mips/kernel/vmlinux.lds.S
+index 924da5e..df243a6 100644
+--- a/arch/mips/kernel/vmlinux.lds.S
++++ b/arch/mips/kernel/vmlinux.lds.S
+@@ -1,5 +1,6 @@
+ #include <asm/asm-offsets.h>
+ #include <asm/page.h>
++#include <asm/thread_info.h>
+ #include <asm-generic/vmlinux.lds.h>
+ 
+ #undef mips
+@@ -72,7 +73,7 @@ SECTIONS
+ 	.data : {	/* Data */
+ 		. = . + DATAOFFSET;		/* for CONFIG_MAPPED_KERNEL */
+ 
+-		INIT_TASK_DATA(PAGE_SIZE)
++		INIT_TASK_DATA(THREAD_SIZE)
+ 		NOSAVE_DATA
+ 		CACHELINE_ALIGNED_DATA(1 << CONFIG_MIPS_L1_CACHE_SHIFT)
+ 		READ_MOSTLY_DATA(1 << CONFIG_MIPS_L1_CACHE_SHIFT)
+diff --git a/arch/mips/mm/c-r4k.c b/arch/mips/mm/c-r4k.c
+index a79fe9a..95c78cb 100644
+--- a/arch/mips/mm/c-r4k.c
++++ b/arch/mips/mm/c-r4k.c
+@@ -978,7 +978,7 @@ static void __cpuinit probe_pcache(void)
+ 			c->icache.linesz = 2 << lsize;
+ 		else
+ 			c->icache.linesz = lsize;
+-		c->icache.sets = 64 << ((config1 >> 22) & 7);
++		c->icache.sets = 32 << (((config1 >> 22) + 1) & 7);
+ 		c->icache.ways = 1 + ((config1 >> 16) & 7);
+ 
+ 		icache_size = c->icache.sets *
+@@ -998,7 +998,7 @@ static void __cpuinit probe_pcache(void)
+ 			c->dcache.linesz = 2 << lsize;
+ 		else
+ 			c->dcache.linesz= lsize;
+-		c->dcache.sets = 64 << ((config1 >> 13) & 7);
++		c->dcache.sets = 32 << (((config1 >> 13) + 1) & 7);
+ 		c->dcache.ways = 1 + ((config1 >> 7) & 7);
+ 
+ 		dcache_size = c->dcache.sets *
+diff --git a/arch/mips/mm/fault.c b/arch/mips/mm/fault.c
+index 937cf33..69ebd58 100644
+--- a/arch/mips/mm/fault.c
++++ b/arch/mips/mm/fault.c
+@@ -42,6 +42,8 @@ asmlinkage void __kprobes do_page_fault(struct pt_regs *regs, unsigned long writ
+ 	const int field = sizeof(unsigned long) * 2;
+ 	siginfo_t info;
+ 	int fault;
++	unsigned int flags = FAULT_FLAG_ALLOW_RETRY | FAULT_FLAG_KILLABLE |
++						 (write ? FAULT_FLAG_WRITE : 0);
+ 
+ #if 0
+ 	printk("Cpu%d[%s:%d:%0*lx:%ld:%0*lx]\n", raw_smp_processor_id(),
+@@ -91,6 +93,7 @@ asmlinkage void __kprobes do_page_fault(struct pt_regs *regs, unsigned long writ
+ 	if (in_atomic() || !mm)
+ 		goto bad_area_nosemaphore;
+ 
++retry:
+ 	down_read(&mm->mmap_sem);
+ 	vma = find_vma(mm, address);
+ 	if (!vma)
+@@ -144,7 +147,11 @@ good_area:
+ 	 * make sure we exit gracefully rather than endlessly redo
+ 	 * the fault.
+ 	 */
+-	fault = handle_mm_fault(mm, vma, address, write ? FAULT_FLAG_WRITE : 0);
++	fault = handle_mm_fault(mm, vma, address, flags);
++
++	if ((fault & VM_FAULT_RETRY) && fatal_signal_pending(current))
++		return;
++
+ 	perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS, 1, regs, address);
+ 	if (unlikely(fault & VM_FAULT_ERROR)) {
+ 		if (fault & VM_FAULT_OOM)
+@@ -153,12 +160,27 @@ good_area:
+ 			goto do_sigbus;
+ 		BUG();
+ 	}
+-	if (fault & VM_FAULT_MAJOR) {
+-		perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS_MAJ, 1, regs, address);
+-		tsk->maj_flt++;
+-	} else {
+-		perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS_MIN, 1, regs, address);
+-		tsk->min_flt++;
++	if (flags & FAULT_FLAG_ALLOW_RETRY) {
++		if (fault & VM_FAULT_MAJOR) {
++			perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS_MAJ, 1,
++						  regs, address);
++			tsk->maj_flt++;
++		} else {
++			perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS_MIN, 1,
++						  regs, address);
++			tsk->min_flt++;
++		}
++		if (fault & VM_FAULT_RETRY) {
++			flags &= ~FAULT_FLAG_ALLOW_RETRY;
++
++			/*
++			 * No need to up_read(&mm->mmap_sem) as we would
++			 * have already released it in __lock_page_or_retry
++			 * in mm/filemap.c.
++			 */
++
++			goto retry;
++		}
+ 	}
+ 
+ 	up_read(&mm->mmap_sem);
+diff --git a/arch/mips/mti-malta/malta-pci.c b/arch/mips/mti-malta/malta-pci.c
+index bf80921..284dea5 100644
+--- a/arch/mips/mti-malta/malta-pci.c
++++ b/arch/mips/mti-malta/malta-pci.c
+@@ -241,8 +241,9 @@ void __init mips_pcibios_init(void)
+ 		return;
+ 	}
+ 
+-	if (controller->io_resource->start < 0x00001000UL)	/* FIXME */
+-		controller->io_resource->start = 0x00001000UL;
++	/* Change start address to avoid conflicts with ACPI and SMB devices */
++	if (controller->io_resource->start < 0x00002000UL)
++		controller->io_resource->start = 0x00002000UL;
+ 
+ 	iomem_resource.end &= 0xfffffffffULL;			/* 64 GB */
+ 	ioport_resource.end = controller->io_resource->end;
+@@ -253,7 +254,7 @@ void __init mips_pcibios_init(void)
+ }
+ 
+ /* Enable PCI 2.1 compatibility in PIIX4 */
+-static void __init quirk_dlcsetup(struct pci_dev *dev)
++static void __devinit quirk_dlcsetup(struct pci_dev *dev)
+ {
+ 	u8 odlc, ndlc;
+ 	(void) pci_read_config_byte(dev, 0x82, &odlc);
+diff --git a/arch/mips/pci/fixup-cobalt.c b/arch/mips/pci/fixup-cobalt.c
+index acacd14..3e7ce65 100644
+--- a/arch/mips/pci/fixup-cobalt.c
++++ b/arch/mips/pci/fixup-cobalt.c
+@@ -37,7 +37,7 @@
+ #define VIA_COBALT_BRD_ID_REG  0x94
+ #define VIA_COBALT_BRD_REG_to_ID(reg)	((unsigned char)(reg) >> 4)
+ 
+-static void qube_raq_galileo_early_fixup(struct pci_dev *dev)
++static void __devinit qube_raq_galileo_early_fixup(struct pci_dev *dev)
+ {
+ 	if (dev->devfn == PCI_DEVFN(0, 0) &&
+ 		(dev->class >> 8) == PCI_CLASS_MEMORY_OTHER) {
+@@ -51,68 +51,7 @@ static void qube_raq_galileo_early_fixup(struct pci_dev *dev)
+ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_MARVELL, PCI_DEVICE_ID_MARVELL_GT64111,
+ 	 qube_raq_galileo_early_fixup);
+ 
+-static void __devinit cobalt_legacy_ide_resource_fixup(struct pci_dev *dev,
+-						       struct resource *res)
+-{
+-	struct pci_controller *hose = (struct pci_controller *)dev->sysdata;
+-	unsigned long offset = hose->io_offset;
+-	struct resource orig = *res;
+-
+-	if (!(res->flags & IORESOURCE_IO) ||
+-	    !(res->flags & IORESOURCE_PCI_FIXED))
+-		return;
+-
+-	res->start -= offset;
+-	res->end -= offset;
+-	dev_printk(KERN_DEBUG, &dev->dev, "converted legacy %pR to bus %pR\n",
+-		   &orig, res);
+-}
+-
+-static void __devinit cobalt_legacy_ide_fixup(struct pci_dev *dev)
+-{
+-	u32 class;
+-	u8 progif;
+-
+-	/*
+-	 * If the IDE controller is in legacy mode, pci_setup_device() fills in
+-	 * the resources with the legacy addresses that normally appear on the
+-	 * PCI bus, just as if we had read them from a BAR.
+-	 *
+-	 * However, with the GT-64111, those legacy addresses, e.g., 0x1f0,
+-	 * will never appear on the PCI bus because it converts memory accesses
+-	 * in the PCI I/O region (which is never at address zero) into I/O port
+-	 * accesses with no address translation.
+-	 *
+-	 * For example, if GT_DEF_PCI0_IO_BASE is 0x10000000, a load or store
+-	 * to physical address 0x100001f0 will become a PCI access to I/O port
+-	 * 0x100001f0.  There's no way to generate an access to I/O port 0x1f0,
+-	 * but the VT82C586 IDE controller does respond at 0x100001f0 because
+-	 * it only decodes the low 24 bits of the address.
+-	 *
+-	 * When this quirk runs, the pci_dev resources should contain bus
+-	 * addresses, not Linux I/O port numbers, so convert legacy addresses
+-	 * like 0x1f0 to bus addresses like 0x100001f0.  Later, we'll convert
+-	 * them back with pcibios_fixup_bus() or pcibios_bus_to_resource().
+-	 */
+-	class = dev->class >> 8;
+-	if (class != PCI_CLASS_STORAGE_IDE)
+-		return;
+-
+-	pci_read_config_byte(dev, PCI_CLASS_PROG, &progif);
+-	if ((progif & 1) == 0) {
+-		cobalt_legacy_ide_resource_fixup(dev, &dev->resource[0]);
+-		cobalt_legacy_ide_resource_fixup(dev, &dev->resource[1]);
+-	}
+-	if ((progif & 4) == 0) {
+-		cobalt_legacy_ide_resource_fixup(dev, &dev->resource[2]);
+-		cobalt_legacy_ide_resource_fixup(dev, &dev->resource[3]);
+-	}
+-}
+-
+-DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_VIA, PCI_DEVICE_ID_VIA_82C586_1,
+-	  cobalt_legacy_ide_fixup);
+-
+-static void qube_raq_via_bmIDE_fixup(struct pci_dev *dev)
++static void __devinit qube_raq_via_bmIDE_fixup(struct pci_dev *dev)
+ {
+ 	unsigned short cfgword;
+ 	unsigned char lt;
+@@ -135,7 +74,7 @@ static void qube_raq_via_bmIDE_fixup(struct pci_dev *dev)
+ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_VIA, PCI_DEVICE_ID_VIA_82C586_1,
+ 	 qube_raq_via_bmIDE_fixup);
+ 
+-static void qube_raq_galileo_fixup(struct pci_dev *dev)
++static void __devinit qube_raq_galileo_fixup(struct pci_dev *dev)
+ {
+ 	if (dev->devfn != PCI_DEVFN(0, 0))
+ 		return;
+@@ -190,7 +129,7 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_MARVELL, PCI_DEVICE_ID_MARVELL_GT64111,
+ 
+ int cobalt_board_id;
+ 
+-static void qube_raq_via_board_id_fixup(struct pci_dev *dev)
++static void __devinit qube_raq_via_board_id_fixup(struct pci_dev *dev)
+ {
+ 	u8 id;
+ 	int retval;
+diff --git a/arch/mips/pci/fixup-fuloong2e.c b/arch/mips/pci/fixup-fuloong2e.c
+index d5d4c01..0857ab8 100644
+--- a/arch/mips/pci/fixup-fuloong2e.c
++++ b/arch/mips/pci/fixup-fuloong2e.c
+@@ -48,7 +48,7 @@ int pcibios_plat_dev_init(struct pci_dev *dev)
+ 	return 0;
+ }
+ 
+-static void __init loongson2e_nec_fixup(struct pci_dev *pdev)
++static void __devinit loongson2e_nec_fixup(struct pci_dev *pdev)
+ {
+ 	unsigned int val;
+ 
+@@ -60,7 +60,7 @@ static void __init loongson2e_nec_fixup(struct pci_dev *pdev)
+ 	pci_write_config_dword(pdev, 0xe4, 1 << 5);
+ }
+ 
+-static void __init loongson2e_686b_func0_fixup(struct pci_dev *pdev)
++static void __devinit loongson2e_686b_func0_fixup(struct pci_dev *pdev)
+ {
+ 	unsigned char c;
+ 
+@@ -135,7 +135,7 @@ static void __init loongson2e_686b_func0_fixup(struct pci_dev *pdev)
+ 	printk(KERN_INFO"via686b fix: ISA bridge done\n");
+ }
+ 
+-static void __init loongson2e_686b_func1_fixup(struct pci_dev *pdev)
++static void __devinit loongson2e_686b_func1_fixup(struct pci_dev *pdev)
+ {
+ 	printk(KERN_INFO"via686b fix: IDE\n");
+ 
+@@ -168,19 +168,19 @@ static void __init loongson2e_686b_func1_fixup(struct pci_dev *pdev)
+ 	printk(KERN_INFO"via686b fix: IDE done\n");
+ }
+ 
+-static void __init loongson2e_686b_func2_fixup(struct pci_dev *pdev)
++static void __devinit loongson2e_686b_func2_fixup(struct pci_dev *pdev)
+ {
+ 	/* irq routing */
+ 	pci_write_config_byte(pdev, PCI_INTERRUPT_LINE, 10);
+ }
+ 
+-static void __init loongson2e_686b_func3_fixup(struct pci_dev *pdev)
++static void __devinit loongson2e_686b_func3_fixup(struct pci_dev *pdev)
+ {
+ 	/* irq routing */
+ 	pci_write_config_byte(pdev, PCI_INTERRUPT_LINE, 11);
+ }
+ 
+-static void __init loongson2e_686b_func5_fixup(struct pci_dev *pdev)
++static void __devinit loongson2e_686b_func5_fixup(struct pci_dev *pdev)
+ {
+ 	unsigned int val;
+ 	unsigned char c;
+diff --git a/arch/mips/pci/fixup-lemote2f.c b/arch/mips/pci/fixup-lemote2f.c
+index 4b9768d..a7b917dcf 100644
+--- a/arch/mips/pci/fixup-lemote2f.c
++++ b/arch/mips/pci/fixup-lemote2f.c
+@@ -96,21 +96,21 @@ int pcibios_plat_dev_init(struct pci_dev *dev)
+ }
+ 
+ /* CS5536 SPEC. fixup */
+-static void __init loongson_cs5536_isa_fixup(struct pci_dev *pdev)
++static void __devinit loongson_cs5536_isa_fixup(struct pci_dev *pdev)
+ {
+ 	/* the uart1 and uart2 interrupt in PIC is enabled as default */
+ 	pci_write_config_dword(pdev, PCI_UART1_INT_REG, 1);
+ 	pci_write_config_dword(pdev, PCI_UART2_INT_REG, 1);
+ }
+ 
+-static void __init loongson_cs5536_ide_fixup(struct pci_dev *pdev)
++static void __devinit loongson_cs5536_ide_fixup(struct pci_dev *pdev)
+ {
+ 	/* setting the mutex pin as IDE function */
+ 	pci_write_config_dword(pdev, PCI_IDE_CFG_REG,
+ 			       CS5536_IDE_FLASH_SIGNATURE);
+ }
+ 
+-static void __init loongson_cs5536_acc_fixup(struct pci_dev *pdev)
++static void __devinit loongson_cs5536_acc_fixup(struct pci_dev *pdev)
+ {
+ 	/* enable the AUDIO interrupt in PIC  */
+ 	pci_write_config_dword(pdev, PCI_ACC_INT_REG, 1);
+@@ -118,14 +118,14 @@ static void __init loongson_cs5536_acc_fixup(struct pci_dev *pdev)
+ 	pci_write_config_byte(pdev, PCI_LATENCY_TIMER, 0xc0);
+ }
+ 
+-static void __init loongson_cs5536_ohci_fixup(struct pci_dev *pdev)
++static void __devinit loongson_cs5536_ohci_fixup(struct pci_dev *pdev)
+ {
+ 	/* enable the OHCI interrupt in PIC */
+ 	/* THE OHCI, EHCI, UDC, OTG are shared with interrupt in PIC */
+ 	pci_write_config_dword(pdev, PCI_OHCI_INT_REG, 1);
+ }
+ 
+-static void __init loongson_cs5536_ehci_fixup(struct pci_dev *pdev)
++static void __devinit loongson_cs5536_ehci_fixup(struct pci_dev *pdev)
+ {
+ 	u32 hi, lo;
+ 
+@@ -137,7 +137,7 @@ static void __init loongson_cs5536_ehci_fixup(struct pci_dev *pdev)
+ 	pci_write_config_dword(pdev, PCI_EHCI_FLADJ_REG, 0x2000);
+ }
+ 
+-static void __init loongson_nec_fixup(struct pci_dev *pdev)
++static void __devinit loongson_nec_fixup(struct pci_dev *pdev)
+ {
+ 	unsigned int val;
+ 
+diff --git a/arch/mips/pci/fixup-malta.c b/arch/mips/pci/fixup-malta.c
+index 0f48498..59cfbc8 100644
+--- a/arch/mips/pci/fixup-malta.c
++++ b/arch/mips/pci/fixup-malta.c
+@@ -49,7 +49,7 @@ int pcibios_plat_dev_init(struct pci_dev *dev)
+ 	return 0;
+ }
+ 
+-static void __init malta_piix_func0_fixup(struct pci_dev *pdev)
++static void __devinit malta_piix_func0_fixup(struct pci_dev *pdev)
+ {
+ 	unsigned char reg_val;
+ 	static int piixirqmap[16] __initdata = {  /* PIIX PIRQC[A:D] irq mappings */
+@@ -83,7 +83,7 @@ static void __init malta_piix_func0_fixup(struct pci_dev *pdev)
+ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_82371AB_0,
+ 	 malta_piix_func0_fixup);
+ 
+-static void __init malta_piix_func1_fixup(struct pci_dev *pdev)
++static void __devinit malta_piix_func1_fixup(struct pci_dev *pdev)
+ {
+ 	unsigned char reg_val;
+ 
+diff --git a/arch/mips/pci/fixup-rc32434.c b/arch/mips/pci/fixup-rc32434.c
+index 3d86823..76bb1be 100644
+--- a/arch/mips/pci/fixup-rc32434.c
++++ b/arch/mips/pci/fixup-rc32434.c
+@@ -47,7 +47,7 @@ int __devinit pcibios_map_irq(const struct pci_dev *dev, u8 slot, u8 pin)
+ 	return irq + GROUP4_IRQ_BASE + 4;
+ }
+ 
+-static void rc32434_pci_early_fixup(struct pci_dev *dev)
++static void __devinit rc32434_pci_early_fixup(struct pci_dev *dev)
+ {
+ 	if (PCI_SLOT(dev->devfn) == 6 && dev->bus->number == 0) {
+ 		/* disable prefetched memory range */
+diff --git a/arch/mips/pci/fixup-sb1250.c b/arch/mips/pci/fixup-sb1250.c
+index f0bb914..d02900a 100644
+--- a/arch/mips/pci/fixup-sb1250.c
++++ b/arch/mips/pci/fixup-sb1250.c
+@@ -15,7 +15,7 @@
+  * Set the BCM1250, etc. PCI host bridge's TRDY timeout
+  * to the finite max.
+  */
+-static void __init quirk_sb1250_pci(struct pci_dev *dev)
++static void __devinit quirk_sb1250_pci(struct pci_dev *dev)
+ {
+ 	pci_write_config_byte(dev, 0x40, 0xff);
+ }
+@@ -25,7 +25,7 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_SIBYTE, PCI_DEVICE_ID_BCM1250_PCI,
+ /*
+  * The BCM1250, etc. PCI/HT bridge reports as a host bridge.
+  */
+-static void __init quirk_sb1250_ht(struct pci_dev *dev)
++static void __devinit quirk_sb1250_ht(struct pci_dev *dev)
+ {
+ 	dev->class = PCI_CLASS_BRIDGE_PCI << 8;
+ }
+@@ -35,7 +35,7 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_SIBYTE, PCI_DEVICE_ID_BCM1250_HT,
+ /*
+  * Set the SP1011 HT/PCI bridge's TRDY timeout to the finite max.
+  */
+-static void __init quirk_sp1011(struct pci_dev *dev)
++static void __devinit quirk_sp1011(struct pci_dev *dev)
+ {
+ 	pci_write_config_byte(dev, 0x64, 0xff);
+ }
+diff --git a/arch/mips/pci/ops-bcm63xx.c b/arch/mips/pci/ops-bcm63xx.c
+index 822ae17..097239b 100644
+--- a/arch/mips/pci/ops-bcm63xx.c
++++ b/arch/mips/pci/ops-bcm63xx.c
+@@ -411,7 +411,7 @@ struct pci_ops bcm63xx_cb_ops = {
+  * only one IO window, so it  cannot be shared by PCI and cardbus, use
+  * fixup to choose and detect unhandled configuration
+  */
+-static void bcm63xx_fixup(struct pci_dev *dev)
++static void __devinit bcm63xx_fixup(struct pci_dev *dev)
+ {
+ 	static int io_window = -1;
+ 	int i, found, new_io_window;
+diff --git a/arch/mips/pci/ops-tx4927.c b/arch/mips/pci/ops-tx4927.c
+index a1e7e6d..bc13e29 100644
+--- a/arch/mips/pci/ops-tx4927.c
++++ b/arch/mips/pci/ops-tx4927.c
+@@ -495,7 +495,7 @@ irqreturn_t tx4927_pcierr_interrupt(int irq, void *dev_id)
+ }
+ 
+ #ifdef CONFIG_TOSHIBA_FPCIB0
+-static void __init tx4927_quirk_slc90e66_bridge(struct pci_dev *dev)
++static void __devinit tx4927_quirk_slc90e66_bridge(struct pci_dev *dev)
+ {
+ 	struct tx4927_pcic_reg __iomem *pcicptr = pci_bus_to_pcicptr(dev->bus);
+ 
+diff --git a/arch/mips/pci/pci-ip27.c b/arch/mips/pci/pci-ip27.c
+index 193e949..033299a 100644
+--- a/arch/mips/pci/pci-ip27.c
++++ b/arch/mips/pci/pci-ip27.c
+@@ -212,7 +212,7 @@ static inline void pci_enable_swapping(struct pci_dev *dev)
+ 	bridge->b_widget.w_tflush;	/* Flush */
+ }
+ 
+-static void __init pci_fixup_ioc3(struct pci_dev *d)
++static void __devinit pci_fixup_ioc3(struct pci_dev *d)
+ {
+ 	pci_disable_swapping(d);
+ }
+diff --git a/arch/mips/txx9/generic/pci.c b/arch/mips/txx9/generic/pci.c
+index 85a87de..88ea3b4 100644
+--- a/arch/mips/txx9/generic/pci.c
++++ b/arch/mips/txx9/generic/pci.c
+@@ -269,7 +269,7 @@ txx9_i8259_irq_setup(int irq)
+ 	return err;
+ }
+ 
+-static void __init quirk_slc90e66_bridge(struct pci_dev *dev)
++static void __devinit quirk_slc90e66_bridge(struct pci_dev *dev)
+ {
+ 	int irq;	/* PCI/ISA Bridge interrupt */
+ 	u8 reg_64;
+@@ -304,7 +304,7 @@ static void __init quirk_slc90e66_bridge(struct pci_dev *dev)
+ 	smsc_fdc37m81x_config_end();
+ }
+ 
+-static void quirk_slc90e66_ide(struct pci_dev *dev)
++static void __devinit quirk_slc90e66_ide(struct pci_dev *dev)
+ {
+ 	unsigned char dat;
+ 	int regs[2] = {0x41, 0x43};
+@@ -339,7 +339,7 @@ static void quirk_slc90e66_ide(struct pci_dev *dev)
+ }
+ #endif /* CONFIG_TOSHIBA_FPCIB0 */
+ 
+-static void tc35815_fixup(struct pci_dev *dev)
++static void __devinit tc35815_fixup(struct pci_dev *dev)
+ {
+ 	/* This device may have PM registers but not they are not suported. */
+ 	if (dev->pm_cap) {
+@@ -348,7 +348,7 @@ static void tc35815_fixup(struct pci_dev *dev)
+ 	}
+ }
+ 
+-static void final_fixup(struct pci_dev *dev)
++static void __devinit final_fixup(struct pci_dev *dev)
+ {
+ 	unsigned char bist;
+ 

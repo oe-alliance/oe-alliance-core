@@ -1,7 +1,7 @@
-PR = "${INC_PR}.18"
+PR = "${INC_PR}.19"
 
 PATCHREV = "b299a6a132d842b074b289b2568eece452d0663c"
-PATCHLEVEL = "19"
+PATCHLEVEL = "20"
 
 SRC_URI = " \
 			${KERNELORG_MIRROR}/linux/kernel/v3.x/linux-3.2.tar.bz2;name=kernel \
@@ -17,6 +17,7 @@ SRC_URI = " \
 			file://make-3.82-hack.patch \
 			file://load-average-calculation-fix.patch \
 			file://jffs2-compression-fixes.patch \
+			file://git.linux-mips.org-sync.patch \
 			file://defconfig \
 "
 
