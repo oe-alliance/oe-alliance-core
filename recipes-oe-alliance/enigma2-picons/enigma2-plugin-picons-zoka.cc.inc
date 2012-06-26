@@ -5,7 +5,7 @@ PACKAGE_ARCH = "all"
 
 require conf/license/license-gplv2.inc
 
-SRCDATE = "2012-06-02--16-02-54"
+SRCDATE = "2012-06-17--19-38-33"
 PRIORITY = "required"
 PV = "${SRCDATE}"
 PR = "r2"
