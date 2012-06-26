@@ -21,6 +21,10 @@ python do_package_prepend () {
 		('vusolo', 'solo.jpg', 'vu_normal.png'),
 		('vuultimo', 'ultimo.jpg', 'vu_ultimo.png'),
 		('vuuno', 'uno.jpg', 'vu_normal.png'),
+		('gb800se', 'Gigablue.jpg', 'gigablue_black.png'),
+		('gb800solo', 'Gigablue.jpg', 'gigablue_black.png'),
+		('gb800ue', 'Gigablue.jpg', 'gigablue_black.png'),
+		('gbquad', 'Gigablue.jpg', 'gigablue_black.png'),
 	]
 	import os
 	top = '${D}${PLUGINPATH}/public/images/'
