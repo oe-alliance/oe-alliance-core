@@ -29,6 +29,3 @@ do_install() {
 do_install_append() {
 	find ${D}/picon/ -name 'picon_default.png' -exec rm {} \;
 }
-
-RC_URI[md5sum] = "9ccf94dc6195faf373c84487a6b80397"
-SRC_URI[sha256sum] = "e9e7d7dfc2cd95d1fc47dc2235975e2eee5cf4284981f7e1ed09b3795fc5ec65"

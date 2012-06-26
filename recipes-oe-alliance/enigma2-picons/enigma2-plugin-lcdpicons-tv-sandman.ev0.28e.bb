@@ -29,6 +29,3 @@ do_install() {
 do_install_append() {
 	find ${D}/lcd_picon/ -name 'picon_default.png' -exec rm {} \;
 }
-
-SRC_URI[md5sum] = "bdc5b1a45df447944c9a825a9ed92f88"
-SRC_URI[sha256sum] = "bf84629c3113a3cc781e753f059b45e03bd4494c98b765b5505bbe5cdceea8ce"
