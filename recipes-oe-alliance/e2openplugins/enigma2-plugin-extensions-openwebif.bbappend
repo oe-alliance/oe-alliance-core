@@ -1,7 +1,8 @@
+MODULE = "OpenWebif"
 PRINC = "1"
 DEPENDS += "enigma2"
 
-SRC_URI = "git://github.com/OpenViX/e2openplugin-OpenWebif.git;protocol=git"
+SRC_URI = "git://github.com/oe-alliance/e2openplugin-${MODULE}.git;protocol=git"
 
 S="${WORKDIR}/git"
 

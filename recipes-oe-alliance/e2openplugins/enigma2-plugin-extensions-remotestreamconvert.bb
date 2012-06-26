@@ -4,7 +4,7 @@ DESCRIPTION = "Fetch channels from remote bouquets and make them available local
 DEPENDS = "enigma2 python"
 RDEPENDS = "python-shell"
 
-SRC_URI = "git://github.com/OpenViX/e2openplugin-${MODULE}.git;protocol=git"
+SRC_URI = "git://github.com/oe-alliance/e2openplugin-${MODULE}.git;protocol=git"
 
 S = "${WORKDIR}/git"
 

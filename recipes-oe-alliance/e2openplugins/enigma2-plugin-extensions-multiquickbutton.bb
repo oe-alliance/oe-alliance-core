@@ -13,7 +13,7 @@ PV = "2.7.11+git${SRCPV}"
 PKGV = "2.7.11+git${GITPKGV}"
 PR = "r6"
 
-SRC_URI = "git://github.com/OpenViX/e2openplugin-MultiQuickButton-vu.git;protocol=git"
+SRC_URI = "git://github.com/oe-alliance/e2openplugin-${MODULE}.git;protocol=git"
 
 S = "${WORKDIR}/git"
 
