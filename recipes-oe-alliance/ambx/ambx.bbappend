@@ -1,4 +1,4 @@
 PRINC = "1"
 
-SRC_URI = "git://git.assembla.com/openvix.14.git;protocol=git"
+SRC_URI = "git://github.com/oe-alliance/plugin-ambx.git;protocol=git"
 

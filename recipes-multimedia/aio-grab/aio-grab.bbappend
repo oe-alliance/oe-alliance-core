@@ -1,3 +1,3 @@
 PRINC = "1"
 
-SRC_URI="git://git.assembla.com/openvix.13.git;protocol=git"
+SRC_URI="git://github.com/oe-alliance/aio-grab.git;protocol=git"
