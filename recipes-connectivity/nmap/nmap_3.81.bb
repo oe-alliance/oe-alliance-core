@@ -2,7 +2,7 @@ DESCRIPTION = "Nmap is a command line portscanner."
 HOMEPAGE = "http://www.insecure.org/nmap/"
 SECTION = "console/network"
 
-require conf/license/openvix-gplv2.inc
+require conf/license/license-gplv2.inc
 
 DEPENDS = "libpcap libpcre"
 PR = "r0"

@@ -3,7 +3,7 @@ LICENSE = "proprietary"
 MAINTAINER = "ViX team"
 PACKAGE_ARCH = "all"
 
-require conf/license/openvix-gplv2.inc
+require conf/license/license-gplv2.inc
 
 SRCDATE = "2012-06-02--16-02-54"
 PRIORITY = "required"

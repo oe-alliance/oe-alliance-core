@@ -1,7 +1,7 @@
 DESCRIPTION = "Vix Core"
 MAINTAINER = "Andy Blackburn"
 
-require conf/license/openvix-gplv2.inc
+require conf/license/license-gplv2.inc
 
 PACKAGE_ARCH := "${MACHINE_ARCH}"
 

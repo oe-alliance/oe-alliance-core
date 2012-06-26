@@ -5,7 +5,7 @@ LICENSE = "BSD"
 DEPENDS = "virtual/libusb0"
 SRCNAME = "pyusb"
 
-require conf/license/openvix-gplv2.inc
+require conf/license/license-gplv2.inc
 
 inherit gitpkgv
 #SRCREV = ${AUTOREV}

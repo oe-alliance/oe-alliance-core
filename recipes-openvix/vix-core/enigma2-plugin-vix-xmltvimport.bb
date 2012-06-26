@@ -2,7 +2,7 @@ DESCRIPTION = "ViX sources and channels for the XMLTV importer"
 MAINTAINER = "AndyBlac, rytec"
 PACKAGE_ARCH = "all"
 
-require conf/license/openvix-gplv2.inc
+require conf/license/license-gplv2.inc
 
 PR = "r0"
 

@@ -1,6 +1,6 @@
 DESCRIPTION = "USB DVB driver for pctv452e chipsets"
 
-require conf/license/openvix-gplv2.inc
+require conf/license/license-gplv2.inc
 
 DVBPROVIDER ?= "v4l-dvb"
 

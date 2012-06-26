@@ -2,7 +2,7 @@ DESCRIPTION = "meta package for enigma2 lcdpicon sets"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 ALLOW_EMPTY_${PN} = "1"
 
-require conf/license/openvix-gplv2.inc
+require conf/license/license-gplv2.inc
 
 PV = "1.1"
 PR = "r0"

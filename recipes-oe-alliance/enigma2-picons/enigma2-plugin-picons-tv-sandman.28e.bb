@@ -4,7 +4,7 @@ PRIORITY = "required"
 MAINTAINER = "silverfox0786"
 PACKAGE_ARCH = "all"
 
-require conf/license/openvix-gplv2.inc
+require conf/license/license-gplv2.inc
 
 PR = "r1"
 SRCDATE = "20120309"

@@ -1,7 +1,7 @@
 SECTION = "net"
 PR = "0"
 
-require conf/license/openvix-gplv2.inc
+require conf/license/license-gplv2.inc
 
 DEPENDS = "cups db openssl"
 

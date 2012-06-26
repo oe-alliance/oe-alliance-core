@@ -1,6 +1,6 @@
 DESCRIPTION = "meta file for USB DVB drivers"
 
-require conf/license/openvix-gplv2.inc
+require conf/license/license-gplv2.inc
 
 DEPENDS = "\
 	enigma2-plugin-drivers-dvb-usb-dib0700 \

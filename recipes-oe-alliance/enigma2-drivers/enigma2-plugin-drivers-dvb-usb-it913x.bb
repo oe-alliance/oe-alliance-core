@@ -1,6 +1,6 @@
 DESCRIPTION = "USB DVB driver for it913x chipsets"
 
-require conf/license/openvix-gplv2.inc
+require conf/license/license-gplv2.inc
 
 DVBPROVIDER ?= "v4l-dvb"
 

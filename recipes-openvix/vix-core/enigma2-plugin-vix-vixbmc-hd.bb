@@ -1,7 +1,7 @@
 DESCRIPTION = "ViXBMC HD skins for Enigma2"
 MAINTAINER = "markus625"
 
-require conf/license/openvix-gplv2.inc
+require conf/license/license-gplv2.inc
 
 inherit gitpkgv
 EPSM = "enigma2-plugin-vix-vixbmc"

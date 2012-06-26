@@ -1,4 +1,4 @@
-require conf/license/openvix-gplv2.inc
+require conf/license/license-gplv2.inc
 
 SRC_URI = "http://enigma2.world-of-satellite.com/setting_bouquets/${SETTINGS_FILENAME}.tar.gz"
 

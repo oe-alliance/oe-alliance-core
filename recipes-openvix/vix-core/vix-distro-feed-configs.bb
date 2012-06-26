@@ -1,6 +1,6 @@
 DESCRIPTION = "Configuration files for online package repositories aka feeds"
 
-require conf/license/openvix-gplv2.inc
+require conf/license/license-gplv2.inc
 
 RCONFLICTS_${PN} = "distro-feed-configs"
 RREPLACES_${PN} = "distro-feed-configs"

@@ -4,7 +4,7 @@ PRIORITY = "required"
 MAINTAINER = "Ev0/Sandman"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-require conf/license/openvix-gplv2.inc
+require conf/license/license-gplv2.inc
 
 SRCDATE = "20120204"
 PV = "${SRCDATE}"

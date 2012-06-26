@@ -1,4 +1,4 @@
-require conf/license/openvix-gplv2.inc
+require conf/license/license-gplv2.inc
 
 RDEPENDS_${PN} += "showiframe"
 

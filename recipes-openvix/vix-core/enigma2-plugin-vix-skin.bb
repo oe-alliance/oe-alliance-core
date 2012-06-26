@@ -1,7 +1,7 @@
 DESCRIPTION = "ViX HD skins for Enigma2"
 MAINTAINER = "Andy Blackburn"
 
-require conf/license/openvix-gplv2.inc
+require conf/license/license-gplv2.inc
 
 inherit gitpkgv
 EPSM = "enigma2-plugin-vix"

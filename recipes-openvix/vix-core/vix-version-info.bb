@@ -3,7 +3,7 @@ SECTION = "base"
 PRIORITY = "required"
 MAINTAINER = "ViX team"
 
-require conf/license/openvix-gplv2.inc
+require conf/license/license-gplv2.inc
 
 PV = "${IMAGE_VERSION}"
 PR = "r${DATETIME}"

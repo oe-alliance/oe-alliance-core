@@ -1,6 +1,6 @@
 DESCRIPTION = "USB DVB driver for Afatech 9035 chipset"
 
-require conf/license/openvix-gplv2.inc
+require conf/license/license-gplv2.inc
 
 DVBPROVIDER ?= "v4l-dvb"
 

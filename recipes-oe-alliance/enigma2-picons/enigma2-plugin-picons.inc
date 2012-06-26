@@ -1,6 +1,6 @@
 DESCRIPTION = "enigma2 picons"
 
-require conf/license/openvix-gplv2.inc
+require conf/license/license-gplv2.inc
 
 DEPENDS = "pngcrush-native"
 

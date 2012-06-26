@@ -1,7 +1,7 @@
 DESCRIPTION = "Magic skins for Enigma2"
 MAINTAINER = "Rob van der Does"
 
-require conf/license/openvix-gplv2.inc
+require conf/license/license-gplv2.inc
 
 inherit gitpkgv
 
