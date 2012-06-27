@@ -14,7 +14,6 @@ IMAGE_INSTALL = " \
 	openvix-version-info \
 	openvix-enigma2 \
 	openvix-bootlogo \
-	/
 	avahi-daemon \
 	dropbear \
 	early-configure \

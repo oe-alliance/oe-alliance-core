@@ -14,7 +14,6 @@ IMAGE_INSTALL = " \
 	openmips-version-info \
 	openmips-enigma2 \
 	openmips-bootlogo \
-	/
 	avahi-daemon \
 	dropbear \
 	early-configure \
