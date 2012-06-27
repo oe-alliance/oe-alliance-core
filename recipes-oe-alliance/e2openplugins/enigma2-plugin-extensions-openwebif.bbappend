@@ -25,6 +25,7 @@ python do_package_prepend () {
 		('gb800solo', 'Gigablue.jpg', 'gigablue_black.png'),
 		('gb800ue', 'Gigablue.jpg', 'gigablue_black.png'),
 		('gbquad', 'Gigablue.jpg', 'gigablue_black.png'),
+		('venton-hdx', 'ini-3000', 'ini-3000.png'),
 	]
 	import os
 	top = '${D}${PLUGINPATH}/public/images/'

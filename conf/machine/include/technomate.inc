@@ -98,8 +98,9 @@ IMAGE_CMD_ubi_append = " \
 	cp ${DEPLOY_DIR_IMAGE}/splash_cfe_auto.bin ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/splash.bmp; \
 	mv ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.ubi ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/oe_rootfs.bin; \
 	gzip -f -c ${DEPLOY_DIR_IMAGE}/vmlinux-${MACHINE}.bin > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/oe_kernel.bin; \
+	echo ${DISTRO_NAME}-${DISTRO_VERSION}.${BUILD_VERSION} > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/imageversion; \
 	cd ${DEPLOY_DIR_IMAGE}; \
-	zip ${IMAGE_NAME}_usb.zip ${IMAGEDIR}/*; \
+	zip ${IMAGE_NAME}-${DATE}_usb.zip ${IMAGEDIR}/*; \
 	rm -rf ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.ubifs; \
 	rm -Rf ${IMAGEDIR}; \
 	"
