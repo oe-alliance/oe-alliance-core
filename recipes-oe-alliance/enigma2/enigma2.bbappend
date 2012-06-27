@@ -2,7 +2,7 @@ FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
 PRINC = "1"
 
-RDEPENDS_${PN} = " \
+RDEPENDS_${PN} += " \
 	python-email \
 	python-mime \
 	python-pyusb \
@@ -11,12 +11,7 @@ RDEPENDS_${PN} = " \
 
 DEFAULTSKIN = "${E2DEFAULTSKIN}"
 
-PV = "2.8+git${SRCPV}"
-PKGV = "2.8+git${GITPKGV}"
-PR = "r0"
-
-ENIGMA2_BRANCH ?= "master"
-SRC_URI="git://git.assembla.com/openvix.2.git;protocol=git;branch=${ENIGMA2_BRANCH}"
+include enigma2-${DISTRO_NAME}.inc
 
 SRC_URI_append_vuuno = " \
 			file://enigma2_remote_keymap.patch \
