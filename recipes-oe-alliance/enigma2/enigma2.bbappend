@@ -11,7 +11,11 @@ RDEPENDS_${PN} += " \
 
 DEFAULTSKIN = "${E2DEFAULTSKIN}"
 
-include enigma2-${DISTRO_NAME}.inc
+PV = "2.8+git${SRCPV}"
+PKGV = "2.8+git${GITPKGV}"
+PR = "r1"
+
+SRC_URI = "${ENIGMA2_URI}"
 
 SRC_URI_append_vuuno = " \
 			file://enigma2_remote_keymap.patch \

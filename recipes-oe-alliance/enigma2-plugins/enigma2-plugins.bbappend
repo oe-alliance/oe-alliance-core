@@ -6,9 +6,9 @@ PRINC = "1"
 
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r0"
+PR = "r2"
 
-SRC_URI="git://git.assembla.com/openvix.3.git;protocol=git"
+SRC_URI = "${ENIGMA2_PLUGINS_URI}"
 
 SRC_URI_append_vuuno = " \
 			file://dreambox_bouqueteditor.png \
