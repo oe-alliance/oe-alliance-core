@@ -3,7 +3,6 @@ SECTION = "base"
 PRIORITY = "required"
 LICENSE = "CLOSED"
 
-KV = "3.1.1"
 PV = "${KV}+${SRCDATE}"
 
 S = "${WORKDIR}"

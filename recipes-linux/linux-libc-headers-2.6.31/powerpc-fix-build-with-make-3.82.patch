@@ -1,0 +1,81 @@
+From patchwork Tue Aug  3 06:47:48 2010
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: powerpc: fix build with make 3.82
+Date: Mon, 02 Aug 2010 20:47:48 -0000
+From: Sam Ravnborg <sam@ravnborg.org>
+X-Patchwork-Id: 60728
+Message-Id: <20100803064748.GA19193@merkur.ravnborg.org>
+To: Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+	Paul Mackerras <paulus@samba.org>
+Cc: Michal Marek <mmarek@suse.cz>, linuxppc-dev@ozlabs.org,
+	Thomas Backlund <tmb@mandriva.org>
+
+Thomas Backlund reported that the powerpc build broke with make 3.82.
+It failed with the following message:
+
+    arch/powerpc/Makefile:183: *** mixed implicit and normal rules.  Stop.
+
+The fix is to avoid mixing non-wildcard and wildcard targets.
+
+Reported-by: Thomas Backlund <tmb@mandriva.org>
+Tested-by: Thomas Backlund <tmb@mandriva.org>
+Cc: Michal Marek <mmarek@suse.cz>
+Cc: stable <stable@kernel.org>
+Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
+
+---
+Hi Ben / Paul.
+
+This fixes powerc build with latest make version.
+The patch is on top of 2.6.35.
+But it is more of a coincidence that we see a make release
+right now and this issue is also present in older kernels.
+So I have added a "Cc: stable <stable@kernel.org>" because
+I consider this relevant for the stable kernel releases too.
+
+@Michal - you got a copy as information only.
+I fear we may see this bug for other parts of the kernel too.
+
+	Sam
+
+
+
+Also corrects the typo uImaged to uImage
+
+-Khem
+
+Index: linux-2.6.31/arch/powerpc/Makefile
+===================================================================
+--- linux-2.6.31.orig/arch/powerpc/Makefile
++++ linux-2.6.31/arch/powerpc/Makefile
+@@ -160,16 +160,24 @@ all: zImage
+ 
+ CPPFLAGS_vmlinux.lds	:= -Upowerpc
+ 
+-BOOT_TARGETS = zImage zImage.initrd uImage zImage% dtbImage% treeImage.% cuImage.% simpleImage.%
++# With make 3.82 we cannot mix normal and wildcard targets
++BOOT_TARGETS1 := zImage zImage.initrd uImage
++BOOT_TARGETS2 := zImage% dtbImage% treeImage.% cuImage.% simpleImage.%
+ 
+-PHONY += $(BOOT_TARGETS)
++PHONY += $(BOOT_TARGETS1) $(BOOT_TARGETS2)
+ 
+ boot := arch/$(ARCH)/boot
+ 
+-$(BOOT_TARGETS): vmlinux
++$(BOOT_TARGETS1): vmlinux
++	$(Q)$(MAKE) ARCH=ppc64 $(build)=$(boot) $(patsubst %,$(boot)/%,$@)
++$(BOOT_TARGETS2): vmlinux
++	$(Q)$(MAKE) ARCH=ppc64 $(build)=$(boot) $(patsubst %,$(boot)/%,$@)
++
++
++bootwrapper_install:
+ 	$(Q)$(MAKE) ARCH=ppc64 $(build)=$(boot) $(patsubst %,$(boot)/%,$@)
+ 
+-bootwrapper_install %.dtb:
++%.dtb:
+ 	$(Q)$(MAKE) ARCH=ppc64 $(build)=$(boot) $(patsubst %,$(boot)/%,$@)
+ 
+ define archhelp

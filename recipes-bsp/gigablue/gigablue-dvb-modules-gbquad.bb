@@ -1,6 +1,8 @@
-SRCDATE = "201200604"
+SRCDATE = "20120611"
 
-SRC_URI = "file://quad-dvb-modules-${SRCDATE}.tar.gz"
+KV = "2.6.37"
+
+SRC_URI = "file://gigablue-quad-drivers-${KV}-${SRCDATE}.zip"
 
 require gigablue-dvb-modules.inc
 

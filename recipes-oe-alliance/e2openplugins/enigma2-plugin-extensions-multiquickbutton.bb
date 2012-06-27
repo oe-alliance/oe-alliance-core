@@ -42,7 +42,7 @@ do_install_append() {
 
 do_install_po() {
 	install -d ${D}${datadir}/enigma2/po/
-	LANGS="ar bg ca cs da de el en en_GB es et fa fi fr fy he hr hu is it lt lv nl no pl pt ru sv sk sl sr th tr uk"
+	LANGS="ar bg ca cs da de el en en_GB es et fa fi fr fy he hr hu is it lt lv nl no pl pt ru sv sk sr th tr uk"
 	for lang in ${LANGS}; do
 		install -m 0755 ${S}/po/$lang.po ${D}${datadir}/enigma2/po/multiquickbutton-$lang.po
 	done

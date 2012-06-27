@@ -1,19 +1,21 @@
 DESCRIPTION = "Linux kernel for ${MACHINE}"
+DESCRIPTION = "Linux kernel for Gigablue HD ${MACHINE}"
 LICENSE = "GPL"
 SECTION = "kernel"
-KV = "2.6.37"
 
-SRCDATE = "20120529"
+SRCDATE = "20120611"
 MACHINE_KERNEL_PR_append = ".0"
 
+SRC_URI[md5sum] = "c0e884e5ba38ce0e499577995fcd1ca2"
+SRC_URI[sha256sum] = "0b89270b2d2b7f9649852290eba968770bd998d0ff675b45dce59afed1d52cc1"
 
+LIC_FILES_CHKSUM = "file://${WORKDIR}/stblinux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
+SRC_URI = "http://archiv.openmips.com/gigablue-quad-linux-${PV}_${SRCDATE}.tar.bz2 \
+	file://defconfig \
+	"
 
-SRC_URI = "http://archiv.openmips.com/gigablue-quattro-linux-${KV}_${SRCDATE}.tgz \
-		file://_defconfig"
-
-S = "${WORKDIR}/linux-${KV}"
+S = "${WORKDIR}/stblinux-${PV}"
 
 inherit kernel
 

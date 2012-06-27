@@ -9,6 +9,7 @@ MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS = "\
 	"
 
 # WIFI modules
+module_autoload_ath9k = "ath9k"
 module_autoload_ath9k_htc = "ath9k_htc"
 module_autoload_carl9170 = "carl9170"
 module_autoload_prism2_usb = "prism2_usb"
@@ -24,6 +25,7 @@ module_autoload_zd1211rw = "zd1211rw"
 
 # DVB modules
 module_autoload_em28xx-dvb = "em28xx-dvb"
+module_autoload_dvb-as102 = "dvb-as102"
 module_autoload_dvb-usb-a800 = "dvb-usb-a800"
 module_autoload_dvb-usb-a867 = "dvb-usb-a867"
 module_autoload_dvb-usb-af9005 = "dvb-usb-af9005"
@@ -55,7 +57,7 @@ module_autoload_dvb-usb-ttusb2 = "dvb-usb-ttusb2"
 module_autoload_dvb-ttusb-budget = "dvb-ttusb-budget"
 module_autoload_dvb-usb-nova-t-usb2 = "dvb-usb-nova-t-usb2"
 module_autoload_dvb-usb-umt-010 = "dvb-usb-umt-010"
-module_autoload_dvb-usb-vp702x = "dvb-usb-vp702x"
+module_autoload_dvb-usb-vp702x = "dvb-usb-vp702x" 
 module_autoload_dvb-usb-vp7045 = "dvb-usb-vp7045"
 module_autoload_smsusb = "smsdvb smsusb"
 
@@ -79,32 +81,9 @@ KERNEL_IMAGETYPE = "vmlinux"
 KERNEL_OUTPUT = "${KERNEL_IMAGETYPE}"
 KERNEL_CONSOLE = "ttyS0,115200n8"
 
-IMAGE_FSTYPES ?= "ubi"
-
-UBI_VOLNAME = "rootfs"
-MKUBIFS_ARGS = "-m 2048 -e 126976 -c 4096"
-UBINIZE_ARGS = "-m 2048 -p 128KiB"
-
-IMAGEDIR ?= "gigablue/${UPDATE_DIR}"
-
-IMAGE_CMD_ubi_append = " \
-	rm -rf ${IMAGE_ROOTFS}/boot/*; \
-	rm -rf ${IMAGE_ROOTFS}/tmp/*; \
-	mkdir -p ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}; \
-	cp ${DEPLOY_DIR_IMAGE}/splash_cfe_auto.bin ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/splash.bin; \
-	mv ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.ubi ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/rootfs.bin; \
-	gzip -f -c ${DEPLOY_DIR_IMAGE}/vmlinux-${MACHINE}.bin > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/kernel.bin; \
-	echo ${DISTRO_NAME}-${DISTRO_VERSION}-${DATE} > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/imageversion; \
-	echo "rename this file to 'force' to force an update without confirmation" > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/noforce; \
-	cd ${DEPLOY_DIR_IMAGE}; \
-	zip ${IMAGE_NAME}_usb.zip ${IMAGEDIR}/*; \
-	rm -rf ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.ubifs; \
-	rm -Rf vuplus; \
-	"
-
 TARGET_FPU = "hard"
 
-MACHINE_FEATURES += "3dtv alsa hdmicec switchoff wifi"
+MACHINE_FEATURES += "3dtv alsa hdmicec switchoff wifi ci"
 
 require conf/machine/include/tune-mips32.inc
 

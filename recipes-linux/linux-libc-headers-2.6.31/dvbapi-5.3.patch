@@ -1,0 +1,190 @@
+diff --git a/include/linux/dvb/audio.h b/include/linux/dvb/audio.h
+index fec66bd..24cca40 100644
+--- a/include/linux/dvb/audio.h
++++ b/include/linux/dvb/audio.h
+@@ -24,7 +24,7 @@
+ #ifndef _DVBAUDIO_H_
+ #define _DVBAUDIO_H_
+ 
+-#include <linux/types.h>
++#include <asm/types.h>
+ 
+ typedef enum {
+ 	AUDIO_SOURCE_DEMUX, /* Select the demux as the main source */
+diff --git a/include/linux/dvb/dmx.h b/include/linux/dvb/dmx.h
+index fef9437..698fe94 100644
+--- a/include/linux/dvb/dmx.h
++++ b/include/linux/dvb/dmx.h
+@@ -24,7 +24,7 @@
+ #ifndef _DVBDMX_H_
+ #define _DVBDMX_H_
+ 
+-#include <linux/types.h>
++#include <asm/types.h>
+ #ifdef __KERNEL__
+ #include <linux/time.h>
+ #else
+@@ -151,5 +151,7 @@ struct dmx_stc {
+ #define DMX_GET_CAPS             _IOR('o', 48, dmx_caps_t)
+ #define DMX_SET_SOURCE           _IOW('o', 49, dmx_source_t)
+ #define DMX_GET_STC              _IOWR('o', 50, struct dmx_stc)
++#define DMX_ADD_PID              _IOW('o', 51, __u16)
++#define DMX_REMOVE_PID           _IOW('o', 52, __u16)
+ 
+ #endif /*_DVBDMX_H_*/
+diff --git a/include/linux/dvb/frontend.h b/include/linux/dvb/frontend.h
+index 51c8d2d..0de9dc2 100644
+--- a/include/linux/dvb/frontend.h
++++ b/include/linux/dvb/frontend.h
+@@ -26,7 +26,7 @@
+ #ifndef _DVBFRONTEND_H_
+ #define _DVBFRONTEND_H_
+ 
+-#include <linux/types.h>
++#include <asm/types.h>
+ 
+ typedef enum fe_type {
+ 	FE_QPSK,
+@@ -62,6 +62,7 @@ typedef enum fe_caps {
+ 	FE_CAN_8VSB			= 0x200000,
+ 	FE_CAN_16VSB			= 0x400000,
+ 	FE_HAS_EXTENDED_CAPS		= 0x800000,   /* We need more bitspace for newer APIs, indicate this. */
++	FE_CAN_TURBO_FEC		= 0x8000000,  /* frontend supports "turbo fec modulation" */
+ 	FE_CAN_2G_MODULATION		= 0x10000000, /* frontend supports "2nd generation modulation" (DVB-S2) */
+ 	FE_NEEDS_BENDING		= 0x20000000, /* not supported anymore, don't use (frontend requires frequency bending) */
+ 	FE_CAN_RECOVER			= 0x40000000, /* frontend can recover from a cable unplug automatically */
+@@ -173,14 +174,21 @@ typedef enum fe_modulation {
+ typedef enum fe_transmit_mode {
+ 	TRANSMISSION_MODE_2K,
+ 	TRANSMISSION_MODE_8K,
+-	TRANSMISSION_MODE_AUTO
++	TRANSMISSION_MODE_AUTO,
++	TRANSMISSION_MODE_4K,
++	TRANSMISSION_MODE_1K,
++	TRANSMISSION_MODE_16K,
++	TRANSMISSION_MODE_32K,
+ } fe_transmit_mode_t;
+ 
+ typedef enum fe_bandwidth {
+ 	BANDWIDTH_8_MHZ,
+ 	BANDWIDTH_7_MHZ,
+ 	BANDWIDTH_6_MHZ,
+-	BANDWIDTH_AUTO
++	BANDWIDTH_AUTO,
++	BANDWIDTH_5_MHZ,
++	BANDWIDTH_10_MHZ,
++	BANDWIDTH_1_712_MHZ,
+ } fe_bandwidth_t;
+ 
+ 
+@@ -189,7 +197,10 @@ typedef enum fe_guard_interval {
+ 	GUARD_INTERVAL_1_16,
+ 	GUARD_INTERVAL_1_8,
+ 	GUARD_INTERVAL_1_4,
+-	GUARD_INTERVAL_AUTO
++	GUARD_INTERVAL_AUTO,
++	GUARD_INTERVAL_1_128,
++	GUARD_INTERVAL_19_128,
++	GUARD_INTERVAL_19_256,
+ } fe_guard_interval_t;
+ 
+ 
+@@ -268,15 +279,44 @@ struct dvb_frontend_event {
+ #define DTV_FE_CAPABILITY	16
+ #define DTV_DELIVERY_SYSTEM	17
+ 
+-#define DTV_API_VERSION				35
+-#define DTV_API_VERSION				35
+-#define DTV_CODE_RATE_HP			36
+-#define DTV_CODE_RATE_LP			37
+-#define DTV_GUARD_INTERVAL			38
+-#define DTV_TRANSMISSION_MODE			39
+-#define DTV_HIERARCHY				40
++/* ISDB-T and ISDB-Tsb */
++#define DTV_ISDBT_PARTIAL_RECEPTION	18
++#define DTV_ISDBT_SOUND_BROADCASTING	19
+ 
+-#define DTV_MAX_COMMAND				DTV_HIERARCHY
++#define DTV_ISDBT_SB_SUBCHANNEL_ID	20
++#define DTV_ISDBT_SB_SEGMENT_IDX	21
++#define DTV_ISDBT_SB_SEGMENT_COUNT	22
++
++#define DTV_ISDBT_LAYERA_FEC			23
++#define DTV_ISDBT_LAYERA_MODULATION		24
++#define DTV_ISDBT_LAYERA_SEGMENT_COUNT		25
++#define DTV_ISDBT_LAYERA_TIME_INTERLEAVING	26
++
++#define DTV_ISDBT_LAYERB_FEC			27
++#define DTV_ISDBT_LAYERB_MODULATION		28
++#define DTV_ISDBT_LAYERB_SEGMENT_COUNT		29
++#define DTV_ISDBT_LAYERB_TIME_INTERLEAVING	30
++
++#define DTV_ISDBT_LAYERC_FEC			31
++#define DTV_ISDBT_LAYERC_MODULATION		32
++#define DTV_ISDBT_LAYERC_SEGMENT_COUNT		33
++#define DTV_ISDBT_LAYERC_TIME_INTERLEAVING	34
++
++#define DTV_API_VERSION		35
++
++#define DTV_CODE_RATE_HP	36
++#define DTV_CODE_RATE_LP	37
++#define DTV_GUARD_INTERVAL	38
++#define DTV_TRANSMISSION_MODE	39
++#define DTV_HIERARCHY		40
++
++#define DTV_ISDBT_LAYER_ENABLED	41
++
++#define DTV_ISDBS_TS_ID		42
++
++#define DTV_DVBT2_PLP_ID	43
++
++#define DTV_MAX_COMMAND				DTV_DVBT2_PLP_ID
+ 
+ typedef enum fe_pilot {
+ 	PILOT_ON,
+@@ -308,6 +348,7 @@ typedef enum fe_delivery_system {
+ 	SYS_DMBTH,
+ 	SYS_CMMB,
+ 	SYS_DAB,
++	SYS_DVBT2,
+ } fe_delivery_system_t;
+ 
+ struct dtv_cmds_h {
+diff --git a/include/linux/dvb/net.h b/include/linux/dvb/net.h
+index f451e7e..59ed3fe 100644
+--- a/include/linux/dvb/net.h
++++ b/include/linux/dvb/net.h
+@@ -24,7 +24,7 @@
+ #ifndef _DVBNET_H_
+ #define _DVBNET_H_
+ 
+-#include <linux/types.h>
++#include <asm/types.h>
+ 
+ struct dvb_net_if {
+ 	__u16 pid;
+diff --git a/include/linux/dvb/version.h b/include/linux/dvb/version.h
+index 25b823b..1421cc8 100644
+--- a/include/linux/dvb/version.h
++++ b/include/linux/dvb/version.h
+@@ -24,6 +24,6 @@
+ #define _DVBVERSION_H_
+ 
+ #define DVB_API_VERSION 5
+-#define DVB_API_VERSION_MINOR 0
++#define DVB_API_VERSION_MINOR 3
+ 
+ #endif /*_DVBVERSION_H_*/
+diff --git a/include/linux/dvb/video.h b/include/linux/dvb/video.h
+index 1d750c0..3fccd5d 100644
+--- a/include/linux/dvb/video.h
++++ b/include/linux/dvb/video.h
+@@ -137,7 +137,7 @@ struct video_event {
+ #define VIDEO_EVENT_FRAME_RATE_CHANGED	2
+ #define VIDEO_EVENT_DECODER_STOPPED 	3
+ #define VIDEO_EVENT_VSYNC 		4
+-	__kernel_time_t timestamp;
++	time_t timestamp;
+ 	union {
+ 		video_size_t size;
+ 		unsigned int frame_rate;	/* in frames per 1000sec */
