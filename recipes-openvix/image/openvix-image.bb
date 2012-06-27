@@ -11,25 +11,27 @@ PR = "r${DATETIME}"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 IMAGE_INSTALL = " \
-			avahi-daemon \
-			dropbear \
-			early-configure \
-			e2fsprogs-mke2fs \
-			e2fsprogs-e2fsck \
-			fakelocale \
-			libavahi-client \
-			ntp \
-			opkg \
-			sdparm \
-			task-base \
-			task-core-boot \
-			task-enigma2 \
-			tzdata \
-			util-linux-sfdisk \
-			vix-version-info \
-			volatile-media \
-			vsftpd \
-			"
+	openvix-version-info \
+	openvix-enigma2 \
+	openvix-bootlogo \
+	/
+	avahi-daemon \
+	dropbear \
+	early-configure \
+	e2fsprogs-mke2fs \
+	e2fsprogs-e2fsck \
+	fakelocale \
+	libavahi-client \
+	ntp \
+	opkg \
+	sdparm \
+	task-base \
+	task-core-boot \
+	tzdata \
+	util-linux-sfdisk \
+	volatile-media \
+	vsftpd \
+	"
 
 export IMAGE_BASENAME = "openxix-image"
 IMAGE_LINGUAS = ""

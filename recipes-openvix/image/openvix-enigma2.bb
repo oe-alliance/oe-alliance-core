@@ -32,7 +32,7 @@ WIFI_DRIVERS = " \
 	rtl8192cu \
 	"
 
-DEPENDS = "enigma2 enigma2-plugins enigma2-pliplugins task-feeds"
+DEPENDS = "enigma2 enigma2-plugins enigma2-pliplugins openvix-feeds"
 
 RDEPENDS = "\
 	aio-grab \
@@ -40,7 +40,7 @@ RDEPENDS = "\
 	enigma2-plugin-vix-core \
 	tuxbox-links \
 	tuxbox-common \
-	vix-distro-feed-configs \
+	openvix-feed-configs \
 	"
 
 RRECOMMENDS = "\

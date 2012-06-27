@@ -7,8 +7,6 @@ PR = "r1"
 
 inherit task
 
-PACKAGES = "task-feeds"
-
 RRECOMMENDS = "\
 	bootlogos-enigma2-meta \
 	dvb-usb-drivers-meta \

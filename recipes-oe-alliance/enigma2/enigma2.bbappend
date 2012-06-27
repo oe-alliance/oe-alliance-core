@@ -9,8 +9,7 @@ RDEPENDS_${PN} = " \
 	python-subprocess \
 	"
 
-# ViX-Night-HD is the default skin.
-DEFAULTSKIN = "enigma2-plugin-vix-night-hd"
+DEFAULTSKIN = "${E2DEFAULTSKIN}"
 
 PV = "2.8+git${SRCPV}"
 PKGV = "2.8+git${GITPKGV}"
