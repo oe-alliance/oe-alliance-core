@@ -6,6 +6,9 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 require conf/license/license-gplv2.inc
 
+SRC_URI[md5sum] = "bdc5b1a45df447944c9a825a9ed92f88"
+SRC_URI[sha256sum] = "bf84629c3113a3cc781e753f059b45e03bd4494c98b765b5505bbe5cdceea8ce"
+
 SRCDATE = "20120204"
 PV = "${SRCDATE}"
 PR = "r2"
