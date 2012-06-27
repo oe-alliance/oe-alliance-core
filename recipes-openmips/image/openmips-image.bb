@@ -1,8 +1,8 @@
-DESCRIPTION = "OpenViX Image"
+DESCRIPTION = "OpenMips Image"
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "proprietary"
-MAINTAINER = "ViX team"
+MAINTAINER = "openmips team"
 
 require conf/license/license-gplv2.inc
 
@@ -59,7 +59,7 @@ generate_nfo() {
 			echo "Machine: ${MACHINE}" >> ${NFO}
 			DATE=`date +%Y-%m-%d' '%H':'%M`
 			echo "Date: ${DATE}" >> ${NFO}
-			echo "Issuer: Team VIX" >> ${NFO}
+			echo "Issuer: openMips Team" >> ${NFO}
 			echo "Link: ${DISTRO_FEED_URI}" >> ${NFO}
 			if [ "${DESC}" != "" ]; then
 					echo "Description: ${DESC}" >> ${NFO}

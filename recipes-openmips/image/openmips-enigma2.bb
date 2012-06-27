@@ -4,7 +4,7 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3
                     file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
 
 PV = "1.0"
-PR = "r1"
+PR = "r0"
 
 inherit task
 
@@ -37,17 +37,17 @@ DEPENDS = "enigma2 enigma2-plugins enigma2-pliplugins openmips-feeds"
 RDEPENDS = "\
 	aio-grab \
 	enigma2 \
-	enigma2-plugin-vix-core \
 	tuxbox-links \
 	tuxbox-common \
 	openmips-feed-configs \
 	"
 
 RRECOMMENDS = "\
-	enigma2-plugin-bootlogo-vix \
+	enigma2-plugin-extensions-ppanel \
+	enigma2-plugin-pli-softcamsetup \
+	enigma2-plugin-extensions-autobackup \
 	enigma2-plugin-extensions-audiosync \
 	enigma2-plugin-extensions-autotimer \
-	enigma2-plugin-extensions-audiosync \
 	enigma2-plugin-extensions-epgsearch \
 	enigma2-plugin-extensions-imdb \
 	enigma2-plugin-extensions-mediascanner \
@@ -62,6 +62,8 @@ RRECOMMENDS = "\
 	enigma2-plugin-systemplugins-satfinder \
 	enigma2-plugin-systemplugins-videoenhancement \
 	enigma2-plugin-systemplugins-videomode \
+	enigma2-plugin-extensions-streamtv \
+	enigma2-plugin-systemplugins-softwaremanager \
 	\
 	${@base_contains("MACHINE_FEATURES", "dvb-c", "enigma2-plugin-systemplugins-cablescan" , "", d)} \
 	${@base_contains("MACHINE_FEATURES", "frontprocessor", "enigma2-plugin-systemplugins-frontprocessorupgrade" , "", d)} \
@@ -74,4 +76,8 @@ RRECOMMENDS = "\
 	\
 	${@base_contains("MACHINE_FEATURES", "blindscan-dvbs", "enigma2-plugin-systemplugins-blindscan" , "", d)} \
 	"
+	
+ENIGMA2_PLUGINS_append_gb800se = "enigma2-plugin-systemplugins-vfd-giga"
+ENIGMA2_PLUGINS_append_gb800ue = "enigma2-plugin-systemplugins-vfd-giga"
+ENIGMA2_PLUGINS_append_gb800solo = "enigma2-plugin-systemplugins-vfd-giga"	
 

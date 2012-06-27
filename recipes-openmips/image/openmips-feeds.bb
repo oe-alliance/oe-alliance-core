@@ -3,12 +3,11 @@ LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3b58 \
                     file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
 PV = "1.0"
-PR = "r1"
+PR = "r0"
 
 inherit task
 
 RRECOMMENDS = "\
-	bootlogos-enigma2-meta \
 	dvb-usb-drivers-meta \
 	channelsettings-enigma2-meta \
 	picons-enigma2-meta \
@@ -31,6 +30,9 @@ RRECOMMENDS = "\
 	enigma2-plugin-vix-night-hd \
 	enigma2-plugin-vix-vixbmc-slim-hd \
 	enigma2-plugin-vix-vixbmc-night-hd \
+	enigma2-plugin-extensions-openairplay \
+	enigma2-plugin-extensions-et-livestream \
+	enigma2-plugin-extensions-mediatomb \
 	${@base_contains("MACHINE_FEATURES", "fullgraphiclcd", "lcdpicons-enigma2-meta" , "", d)} \
 	\
 	ctorrent \
