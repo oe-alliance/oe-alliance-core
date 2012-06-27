@@ -4,7 +4,7 @@ LICENSE = "GPL"
 SECTION = "kernel"
 
 SRCDATE = "20120611"
-MACHINE_KERNEL_PR_append = ".0"
+MACHINE_KERNEL_PR_append = ".1"
 
 SRC_URI[md5sum] = "c0e884e5ba38ce0e499577995fcd1ca2"
 SRC_URI[sha256sum] = "0b89270b2d2b7f9649852290eba968770bd998d0ff675b45dce59afed1d52cc1"
