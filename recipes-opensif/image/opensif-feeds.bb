@@ -8,21 +8,6 @@ PR = "r1"
 inherit task
 
 RRECOMMENDS = "\
-	bootlogos-enigma2-meta \
-	dvb-usb-drivers-meta \
-	channelsettings-enigma2-meta \
-	picons-enigma2-meta \
-	task-openplugins \
-	\
-	enigma2-skins \
-	enigma2-plugins \
-	enigma2-pliplugins \
-	enigma2-plugin-extensions-ambx \
-	enigma2-plugin-extensions-tuxcom \
-	enigma2-plugin-extensions-tuxterm \
-	enigma2-plugin-extensions-webinterface-old \
-	enigma2-plugin-security-firewall \
-	enigma2-plugin-skins-pli-hd \
 	enigma2-plugin-vix-magic-sd \
 	enigma2-plugin-vix-magic-hd \
 	enigma2-plugin-vix-magic-hd-lite \
@@ -31,32 +16,4 @@ RRECOMMENDS = "\
 	enigma2-plugin-vix-night-hd \
 	enigma2-plugin-vix-vixbmc-slim-hd \
 	enigma2-plugin-vix-vixbmc-night-hd \
-	${@base_contains("MACHINE_FEATURES", "fullgraphiclcd", "lcdpicons-enigma2-meta" , "", d)} \
-	\
-	ctorrent \
-	djmount \
-	dvbsnoop \
-	dvdfs \
-	htop \
-	hddtemp \
-	mc \
-	minidlna \
-	mpd \
-	nano \
-	ntfs-3g \
-	openresolv \
-	openssh \
-	openvpn \
-	parted \
-	procps \
-	rsync \
-	sabnzbd \
-	samba \
-	smartmontools \
-	strace \
-	tcpdump \
-	ushare \
-	vim \
-	wakelan \
-	zeroconf \
 	"

@@ -11,6 +11,7 @@ PR = "r${DATETIME}"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 IMAGE_INSTALL = " \
+	oe-alliance-enigma2 \
 	openvix-version-info \
 	openvix-enigma2 \
 	openvix-bootlogo \
