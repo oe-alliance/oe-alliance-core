@@ -6,14 +6,12 @@ KV = "3.2.2"
 SRCDATE = "20120228"
 MACHINE_KERNEL_PR_append = ".0"
 
-LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
+LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${KV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
 SRC_URI[md5sum] = "87e2da21128620725e31a6aee2878cb8"
 SRC_URI[sha256sum] = "d389252264369c9485689a99166881951040c2376afb9c3f44481f06748587b1"
 
 PV = "${KV}-${SRCDATE}"
-
-FILESEXTRAPATHS_prepend := "${THISDIR}/linux-venton-${KV}:"
 
 SRC_URI += "http://code-ini.com/software/kernel/linux-${KV}-${SRCDATE}.tar.gz \
 	file://defconfig \
