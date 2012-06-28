@@ -1,5 +1,5 @@
 DESCRIPTION = "UPnP media server"
-RDEPENDS_${PN} = "mediatomb expat ffmpeg sqlite3 libexif js zlib file id3lib"
+RDEPENDS_${PN} = "mediatomb expat libav sqlite3 libexif js zlib file id3lib"
 LICENSE = "proprietary"
 
 PV = "0.12.1"
