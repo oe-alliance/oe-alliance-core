@@ -1,0 +1,36 @@
+This patch makes MediaTomb only log a warning about the YouTube feature
+being enabled if it is actually enabled.
+
+Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com
+===================================================================
+--- mediatomb-0.12.1.orig/src/config_manager.cc
++++ mediatomb-0.12.1/src/config_manager.cc
+@@ -2035,6 +2035,15 @@ void ConfigManager::validate(String serv
+     NEW_BOOL_OPTION(temp == "yes" ? true : false);
+     SET_BOOL_OPTION(CFG_ONLINE_CONTENT_YOUTUBE_ENABLED);
+ 
++    if (temp == "yes")
++    {
++        log_warning("You enabled the YouTube feature, which allows you\n"
++"                             to watch YouTube videos on your UPnP device!\n"
++"                             Please check http://www.youtube.com/t/terms\n"
++"                             By using this feature you may be violating YouTube\n"
++"                             service terms and conditions!\n\n");
++    }
++
+     /// \todo well, tough scenario: YT service is disabled, but the database 
+     /// is populated with YT items from some time before. We still need to 
+     /// support playing them, but that requires a valid YT section and thus
+@@ -2119,12 +2128,6 @@ void ConfigManager::validate(String serv
+ 
+         NEW_OBJARR_OPTION(yt_opts);
+         SET_OBJARR_OPTION(CFG_ONLINE_CONTENT_YOUTUBE_TASK_LIST);
+-
+-        log_warning("You enabled the YouTube feature, which allows you\n"
+-"                             to watch YouTube videos on your UPnP device!\n"
+-"                             Please check http://www.youtube.com/t/terms\n"
+-"                             By using this feature you may be violating YouTube\n"
+-"                             service terms and conditions!\n\n");
+     }
+ #endif
+ 
