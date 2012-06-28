@@ -73,7 +73,7 @@ DEFAULTTUNE = "mips32el"
 
 GLIBC_EXTRA_OECONF = "--with-tls --with-__thread"
 	
-PREFERRED_PROVIDER_virtual/kernel = "linux-ventom"
+PREFERRED_PROVIDER_virtual/kernel = "linux-venton"
 
 PREFERRED_VERSION_linux-${MACHINE} = "3.2.2"
 PREFERRED_VERSION_linux-libc-headers = "3.2"
