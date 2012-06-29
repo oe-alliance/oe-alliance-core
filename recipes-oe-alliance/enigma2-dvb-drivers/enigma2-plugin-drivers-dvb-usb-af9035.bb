@@ -2,7 +2,7 @@ DESCRIPTION = "USB DVB driver for Afatech 9035 chipset"
 
 require conf/license/license-gplv2.inc
 
-DVBPROVIDER ?= "v4l-dvb"
+DVBPROVIDER ?= "kernel"
 
 RDEPENDS_${PN} = " \
 	${DVBPROVIDER}-module-dvb-usb-af9035 \
