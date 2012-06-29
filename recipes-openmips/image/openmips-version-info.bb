@@ -4,6 +4,8 @@ PRIORITY = "required"
 LICENSE = "proprietary"
 MAINTAINER = "OpenMips"
 
+require conf/license/license-gplv2.inc
+
 PV = "${IMAGE_VERSION}"
 PR = "r${DATETIME}-${DISTRO_TYPE}"
 PACKAGE_ARCH = "${MACHINE_ARCH}"

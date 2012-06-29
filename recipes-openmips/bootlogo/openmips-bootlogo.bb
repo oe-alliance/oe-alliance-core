@@ -4,6 +4,8 @@ PRIORITY = "required"
 LICENSE = "proprietary"
 MAINTAINER = "openMips"
 
+require conf/license/license-gplv2.inc
+
 RDEPENDS_${PN} += "showiframe"
 
 PV = "1.0"
