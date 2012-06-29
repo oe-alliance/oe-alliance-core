@@ -17,57 +17,18 @@ PR = "r1"
 
 SRC_URI = "${ENIGMA2_URI}"
 
-SRC_URI_append_vuuno = " \
-			file://enigma2_remote_keymap.patch \
-			"
-
-SRC_URI_append_vuultimo = " \
-			file://enigma2_remote_keymap.patch \
-			"
-
-SRC_URI_append_vusolo = " \
-			file://enigma2_remote_keymap.patch \
-			"
-
 SRC_URI_append_vuduo = " \
-			file://enigma2_remote_keymap.patch \
 			file://enigma2_VFD.patch \
-			"
-
-SRC_URI_append_et5x00 = " \
-			file://enigma2_remote_keymap.patch \
-			"
-
-SRC_URI_append_et6x00 = " \
-			file://enigma2_remote_keymap.patch \
-			"
-
-SRC_URI_append_et9x00 = " \
-			file://enigma2_remote_keymap.patch \
 			"
 
 SRC_URI_append_gb800solo = " \
 			file://gb800-evfd.patch \
-			file://enigma2_remote_keymap.patch \
 			"
 SRC_URI_append_gb800se = " \
 			file://gb800-evfd.patch \
-			file://enigma2_remote_keymap.patch \
 			"
 SRC_URI_append_gb800ue = " \
 			file://gb800-evfd.patch \
-			file://enigma2_remote_keymap.patch \
-			"
-SRC_URI_append_gbquad = " \
-			file://enigma2_remote_keymap.patch \
-			"
-
-SRC_URI_append_odinm9 = " \
-			file://enigma2_remote_keymap.patch \
-			"
-
-SRC_URI_append_tmtwin = " \
-			file://enigma2_remote_keymap.patch \
 			"
 
 FILES_${PN} += " ${bindir}"
@@ -195,7 +156,9 @@ do_install_append() {
 do_install_po() {
 	LANGS="ar bg ca cs da de el en en_GB es et fa fi fr fy he hr hu is it lt lv nl no pl pt ro ru sv sk sl sr th tr uk"
 	for lang in ${LANGS}; do
-		install -m 0755 ${S}/po/$lang.po ${D}${datadir}/enigma2/po/enigma2-$lang.po
+		if [ -e ${S}/po/$lang.po ]; then
+			install -m 0755 ${S}/po/$lang.po ${D}${datadir}/enigma2/po/enigma2-$lang.po
+		fi	
 	done
 }
 
