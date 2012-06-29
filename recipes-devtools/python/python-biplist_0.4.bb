@@ -10,6 +10,8 @@ DEPENDS = "python"
 LICENSE = "BSD"
 PR = "r1"
 
+require conf/license/license-gplv2.inc
+
 SRC_URI = "https://github.com/downloads/wooster/biplist/${SRCNAME}-${PV}.tar.gz"
 S = "${WORKDIR}/${SRCNAME}-${PV}"
 

@@ -7,6 +7,8 @@ LICENSE = "BSD"
 SRCNAME = "M2Crypto"
 PR = "ml0"
 
+require conf/license/license-gplv2.inc
+
 SRC_URI = "\
   http://pypi.python.org/packages/source/M/${SRCNAME}/${SRCNAME}-${PV}.tar.gz \
   file://install.patch \
