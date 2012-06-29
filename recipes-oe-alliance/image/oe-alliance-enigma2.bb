@@ -29,7 +29,7 @@ WIFI_DRIVERS = " \
 	rtl8192cu \
 	"
 
-DEPENDS = "enigma2 enigma2-plugins enigma2-pliplugins oe-alliance-plugins oe-alliance-feeds"
+DEPENDS = "enigma2 enigma2-plugins enigma2-pliplugins enigma2-oe-alliance-plugins oe-alliance-feeds"
 
 RDEPENDS = "\
 	aio-grab \
