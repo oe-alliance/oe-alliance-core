@@ -10,11 +10,15 @@ RDEPENDS_${PN} = "\
 	python-cheetah python-misc python-subprocess python-html python-email python-yenc \
 	"
 RRECOMMENDS_${PN} = "par2cmdline unrar"
-SRC_URI = "${SOURCEFORGE_MIRROR}/project/sabnzbdplus/sabnzbdplus-beta/${PV}/SABnzbd-${PV}-src.tar.gz \
+
+# Beta URI
+# SRC_URI = "${SOURCEFORGE_MIRROR}/project/sabnzbdplus/sabnzbdplus-beta/${PV}/SABnzbd-${PV}-src.tar.gz \
+
+SRC_URI = "${SOURCEFORGE_MIRROR}/project/sabnzbdplus/sabnzbdplus/${PV}/SABnzbd-${PV}-src.tar.gz \
 	file://sabnzbd"
 
-SRC_URI[md5sum] = "42473eaaa3cc00da111264ec06f8b7c5"
-SRC_URI[sha256sum] = "12c9adb3e13c45ac9e3b75b80b991c22a3d3b5c932f0da81a897c6ac4b0bacd0"
+SRC_URI[md5sum] = "b79f214ac491eb859b2c6c9124fc8d1b"
+SRC_URI[sha256sum] = "36ddfe48a770381bf8cdd4bd807416a09c7d05c4939c17861977d9413b1e3fa2"
 
 S = "${WORKDIR}/SABnzbd-${PV}"
 
