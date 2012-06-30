@@ -56,6 +56,7 @@ def enigma2changeword(file):
 
 do_patch_prepend(){
 	global MACHINE1
+	MACHINE1="Dreambox"
 	if "${MACHINE}" == "vuuno":
 		MACHINE1="Vu+ Uno"
 	elif "${MACHINE}" == "vuultimo":
@@ -101,6 +102,7 @@ def enigma2changeword2(file):
 
 python do_setup_po_ipk () {
 	global MACHINE1
+	MACHINE1="Dreambox"
 	if "${MACHINE}" == "vuuno":
 		MACHINE1="Vu+ Uno"
 	elif "${MACHINE}" == "vuultimo":
