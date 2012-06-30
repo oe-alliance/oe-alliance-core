@@ -1,0 +1,45 @@
+commit 07b99cf55ccf3b058a1159642a92200a274aa839
+Author: Martin Krause <martin.krause@tqs.de>
+Date:   Fri Mar 2 13:01:40 2012 +0100
+
+    Staging: rtl8712/rtl8192u: move USB device ID within staging drivers.
+    
+    It seems the USB device ID 0bda:8192 is wrongly assigned to the
+    RTL8192SU chip and not to the RTL8191SU chip in the USB database.
+    So this patch moves this device ID from the rtl8192u staging
+    driver to the rtl8712 staging driver.
+    
+    This patch was tested with a Radicom WIFIHU embedded wireless
+    module with a RTL8191SU chip and the USB device ID 0bda:8192.
+    Without the patch the rtl8192u driver claims this device, but
+    it does not work. With the patch the rtl8712 driver services
+    this device and it works.
+    
+    Signed-off-by: Martin Krause <martin.krause@tqs.de>
+    Acked-by: Larry Finger <Larry.Finger@lwfinger.net>
+    Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+diff --git a/drivers/staging/rtl8192u/r8192U_core.c b/drivers/staging/rtl8192u/r8192U_core.c
+index c09be0a..9c00865 100644
+--- a/drivers/staging/rtl8192u/r8192U_core.c
++++ b/drivers/staging/rtl8192u/r8192U_core.c
+@@ -105,7 +105,6 @@ u32 rt_global_debug_component = \
+ 
+ static const struct usb_device_id rtl8192_usb_id_tbl[] = {
+ 	/* Realtek */
+-	{USB_DEVICE(0x0bda, 0x8192)},
+ 	{USB_DEVICE(0x0bda, 0x8709)},
+ 	/* Corega */
+ 	{USB_DEVICE(0x07aa, 0x0043)},
+diff --git a/drivers/staging/rtl8712/usb_intf.c b/drivers/staging/rtl8712/usb_intf.c
+index f8fbb57..b0c4cdb 100644
+--- a/drivers/staging/rtl8712/usb_intf.c
++++ b/drivers/staging/rtl8712/usb_intf.c
+@@ -106,6 +106,7 @@ static struct usb_device_id rtl871x_usb_id_tbl[] = {
+ /* RTL8191SU */
+ 	/* Realtek */
+ 	{USB_DEVICE(0x0BDA, 0x8172)},
++	{USB_DEVICE(0x0BDA, 0x8192)},
+ 	/* Amigo */
+ 	{USB_DEVICE(0x0EB0, 0x9061)},
+ 	/* ASUS/EKB */
