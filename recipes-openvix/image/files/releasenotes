@@ -58,7 +58,7 @@ vix-skins: various fixes, and tweaks, new fonts, add new skin ViXBMC thanks 'mar
 vix-core: ImageManager: set correct files permissions.
 vuplus: update driver 20120228
 
-2.4 Build 4:
+2.4 Build 5:
 
 2.3 Build 204:
 enigma2: LogManager update for log locations.
