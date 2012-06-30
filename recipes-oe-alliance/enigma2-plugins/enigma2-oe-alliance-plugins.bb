@@ -10,7 +10,7 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r0"
+PR = "r1"
 
 SRC_URI="git://github.com/oe-alliance/oe-alliance-plugins.git;protocol=git"
 
@@ -24,8 +24,8 @@ EXTRA_OECONF = " \
 	--with-boxtype=${MACHINE} \
 "
 
-PACKAGES += "${PN}-meta ${PN}-po"
-FILES_${PN}-po = "${datadir}/enigma2/po/*.po"
+ALLOW_EMPTY_${PN} = "1"
+PACKAGES += "${PN}-meta"
 FILES_${PN}-meta = "${datadir}/meta"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
