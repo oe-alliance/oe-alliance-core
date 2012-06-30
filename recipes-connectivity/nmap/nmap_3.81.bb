@@ -4,8 +4,8 @@ SECTION = "console/network"
 
 require conf/license/license-gplv2.inc
 
-DEPENDS = "libcap libpcre"
-PR = "r2"
+DEPENDS = "libpcap libcap libpcre"
+PR = "r3"
 
 inherit autotools
 
