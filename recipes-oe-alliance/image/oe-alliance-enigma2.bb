@@ -43,8 +43,6 @@ RRECOMMENDS = "\
 	enigma2-plugin-extensions-mediascanner \
 	enigma2-plugin-extensions-pictureplayer \
 	enigma2-plugin-extensions-openwebif \
-	enigma2-plugin-extensions-xmltvimport \
-	enigma2-plugin-systemplugins-crossepg \
 	enigma2-plugin-systemplugins-fastscan \
 	enigma2-plugin-systemplugins-networkbrowser \
 	enigma2-plugin-systemplugins-networkwizard \
@@ -54,9 +52,15 @@ RRECOMMENDS = "\
 	enigma2-plugin-systemplugins-videomode \
 	\
 	${@base_contains("MACHINE_FEATURES", "blindscan-dvbs", "enigma2-plugin-systemplugins-blindscan" , "", d)} \
+	${@base_contains("MACHINE_FEATURES", "hdmicec", "enigma2-plugin-systemplugins-hdmicec" , "", d)} \
+	${@base_contains("MACHINE_FEATURES", "wifi", "enigma2-plugin-systemplugins-wirelesslan", "", d)} \
+	${@base_contains("MACHINE_FEATURES", "3dtvpli", "enigma2-plugin-systemplugins-osd3dsetup" , "", d)} \
+	${@base_contains("MACHINE_FEATURES", "dvb-c", "enigma2-plugin-systemplugins-cablescan" , "", d)} \
+	${@base_contains("MACHINE_FEATURES", "frontprocessor", "enigma2-plugin-systemplugins-frontprocessorupgrade" , "", d)} \
+	${@base_contains('MACHINE_FEATURES', 'ci', 'enigma2-plugin-systemplugins-commoninterfaceassignment', '', d)} \
+	${@base_contains('MACHINE_FEATURES', 'dvd', 'enigma2-plugin-extensions-cdinfo enigma2-plugin-extensions-dvdburn enigma2-plugin-extensions-dvdplayer', '', d)} \
+	${@base_contains('MACHINE_FEATURES', 'fanctrl', 'enigma2-plugin-systemplugins-fancontrol', '', d)} \
 	"
 
-ENIGMA2_PLUGINS_append_gb800se = "enigma2-plugin-systemplugins-vfd-giga"
-ENIGMA2_PLUGINS_append_gb800ue = "enigma2-plugin-systemplugins-vfd-giga"
-ENIGMA2_PLUGINS_append_gb800solo = "enigma2-plugin-systemplugins-vfd-giga"
+
 
