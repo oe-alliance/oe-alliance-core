@@ -8,7 +8,7 @@ require conf/license/license-gplv2.inc
 RDEPENDS_${PN} += "showiframe"
 
 PV = "${BINARY_VERSION}.${IMAGES_VERSION}"
-PR = "r4"
+PR = "r5"
 
 S = "${WORKDIR}"
 
@@ -64,6 +64,10 @@ do_install_append_odinm9() {
 do_install_append_tmtwin() {
 	install -d ${DEPLOY_DIR_IMAGE}
 	install -m 0644 ${S}/splash.bmp ${DEPLOY_DIR_IMAGE}/splash.bmp
+}
+do_install_append_venton-hdx() {
+	install -d ${DEPLOY_DIR_IMAGE}
+	install -m 0644 ${S}/splash.bin ${DEPLOY_DIR_IMAGE}/splash.bin
 }
 
 FILES_${PN} = "/boot /usr/share /etc/init.d"
