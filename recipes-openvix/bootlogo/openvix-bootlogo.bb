@@ -10,7 +10,7 @@ RDEPENDS_${PN} += "showiframe"
 PV = "${BINARY_VERSION}.${IMAGES_VERSION}"
 PR = "r4"
 
-S = "${WORKDIR}/${MACHINE}"
+S = "${WORKDIR}"
 
 INITSCRIPT_NAME = "bootlogo"
 INITSCRIPT_PARAMS = "start 21 S ."
