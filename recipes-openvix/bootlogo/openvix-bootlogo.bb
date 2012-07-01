@@ -1,15 +1,14 @@
-DESCRIPTION = "ViX bootlogo"
+DESCRIPTION = "openViX bootlogo"
 SECTION = "base"
 PRIORITY = "required"
-MAINTAINER = "ViX team"
-PACKAGE_ARCH = "${MACHINE_ARCH}"
+MAINTAINER = "openViX"
 
 require conf/license/license-gplv2.inc
 
 RDEPENDS_${PN} += "showiframe"
 
 PV = "${BINARY_VERSION}.${IMAGES_VERSION}"
-PR = "r3"
+PR = "r4"
 
 S = "${WORKDIR}/${MACHINE}"
 
@@ -18,7 +17,7 @@ INITSCRIPT_PARAMS = "start 21 S ."
 
 inherit update-rc.d
 
-SRC_URI = "http://enigma2.world-of-satellite.com/git-extras/vix-bootlogos-20120701.tgz"
+SRC_URI = "bootlogo.mvi backdrop.mvi radio.mvi bootlogo.sh"
 
 BINARY_VERSION = "1"
 BINARY_VERSION_mipsel = "8"
@@ -32,7 +31,6 @@ do_install() {
 	install -d ${D}/usr/share
 	install -m 0644 bootlogo.mvi ${D}/usr/share/bootlogo.mvi
 	install -m 0644 backdrop.mvi ${D}/usr/share/backdrop.mvi
-	install -m 0644 switchoff.mvi ${D}/usr/share/switchoff.mvi
 	install -d ${D}/usr/share/enigma2
 	install -m 0644 radio.mvi ${D}/usr/share/enigma2/radio.mvi
 	install -d ${D}/${sysconfdir}/init.d
