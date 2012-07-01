@@ -9,7 +9,7 @@ require conf/license/license-gplv2.inc
 RDEPENDS_${PN} += "showiframe"
 
 PV = "${BINARY_VERSION}.${IMAGES_VERSION}"
-PR = "r2"
+PR = "r3"
 
 S = "${WORKDIR}/${MACHINE}"
 
@@ -18,7 +18,7 @@ INITSCRIPT_PARAMS = "start 21 S ."
 
 inherit update-rc.d
 
-SRC_URI = "http://enigma2.world-of-satellite.com/git-extras/vix-bootlogos.tgz"
+SRC_URI = "http://enigma2.world-of-satellite.com/git-extras/vix-bootlogos-20120701.tgz"
 
 BINARY_VERSION = "1"
 BINARY_VERSION_mipsel = "8"
@@ -70,5 +70,5 @@ do_install_append_tmtwin() {
 
 FILES_${PN} = "/boot /usr/share /etc/init.d"
 
-SRC_URI[md5sum] = "082b7573ac5c66258e4e3e4bc656aab6"
-SRC_URI[sha256sum] = "d25d44405a6e4032177991a5dc8ae3f2820a4be70e93c08ec8fe4c33a4cb6bdd"
+SRC_URI[md5sum] = "e0447975ab957e77bd0d47ab0186a806"
+SRC_URI[sha256sum] = "6de5ffc6bc841331b8b256c5bd7ca06a0af945d2fa8715ca6828d6cea9cdfdd9"
