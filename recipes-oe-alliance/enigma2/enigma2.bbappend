@@ -153,6 +153,9 @@ do_install_append() {
 	install -d ${D}/usr/share/keymaps
 	find ${D}/usr/lib/enigma2/python/ -name '*.pyc' -exec rm {} \;
 	find ${D}/usr/lib/enigma2/python/Plugins/ -name '*.py' -exec rm {} \;
+	if [ -e ${S}/lib/python/Plugins/Extensions/DVDPlayer/plugin.py ]; then
+		cp ${S}/lib/python/Plugins/Extensions/DVDPlayer/plugin.py ${D}/usr/lib/enigma2/python/Plugins/Extensions/DVDPlayer/plugin.py
+	fi	
 }
 
 do_install_po() {
