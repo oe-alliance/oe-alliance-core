@@ -18,6 +18,14 @@ INITSCRIPT_PARAMS = "start 21 S ."
 inherit update-rc.d
 
 SRC_URI = "file://bootlogo.mvi file://backdrop.mvi file://radio.mvi file://bootlogo.sh"
+SRC_URI_append_vuuno = " file://splash_cfe_auto.bin"
+SRC_URI_append_vuultimo = " file://splash_cfe_auto.bin"
+SRC_URI_append_et5x00 = " file://splash.bin"
+SRC_URI_append_et6x00 = " file://splash.bin"
+SRC_URI_append_et9x00 = " file://splash.bin"
+SRC_URI_append_odin = " file://splash.bin"
+SRC_URI_append_venton-hdx = " file://splash.bin"
+SRC_URI_append_tmtwin = " file://splash.bmp"
 
 BINARY_VERSION = "1"
 BINARY_VERSION_mipsel = "8"
