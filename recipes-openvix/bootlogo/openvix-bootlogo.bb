@@ -17,7 +17,7 @@ INITSCRIPT_PARAMS = "start 21 S ."
 
 inherit update-rc.d
 
-SRC_URI = "bootlogo.mvi backdrop.mvi radio.mvi bootlogo.sh"
+SRC_URI = "file://bootlogo.mvi file://backdrop.mvi file://radio.mvi file://bootlogo.sh"
 
 BINARY_VERSION = "1"
 BINARY_VERSION_mipsel = "8"
