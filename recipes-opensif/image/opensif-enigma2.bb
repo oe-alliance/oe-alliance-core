@@ -14,7 +14,7 @@ RDEPENDS = "\
 	opensif-feed-configs \
 	"
 
-RRECOMMENDS_${PN} = " \
+RRECOMMENDS = "\
 	enigma2-plugin-extensions-autotimer \
 	enigma2-plugin-extensions-audiosync \
 	enigma2-plugin-extensions-epgsearch \
