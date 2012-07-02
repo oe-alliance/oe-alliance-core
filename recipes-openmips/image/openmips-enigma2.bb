@@ -13,11 +13,11 @@ RREPLACES = "enigma2-plugin-extensions-permanenttimeshift enigma2-plugin-systemp
 
 DEPENDS = "openmips-feeds"
 
-RDEPENDS = "\
+RDEPENDS_${PN} = " \
 	openmips-feed-configs \
 	"
 
-RRECOMMENDS = "\
+RRECOMMENDS_${PN} = " \
 	enigma2-plugin-extensions-ppanel \
 	enigma2-plugin-pli-softcamsetup \
 	enigma2-plugin-extensions-autobackup \

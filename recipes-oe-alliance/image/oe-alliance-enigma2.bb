@@ -31,14 +31,14 @@ WIFI_DRIVERS = " \
 
 DEPENDS = "enigma2 enigma2-plugins enigma2-pliplugins enigma2-oe-alliance-plugins oe-alliance-feeds"
 
-RDEPENDS = "\
+RDEPENDS_${PN} = " \
 	aio-grab \
 	enigma2 \
 	tuxbox-links \
 	tuxbox-common \
 	"
 
-RRECOMMENDS = "\
+RRECOMMENDS_${PN} = " \
 	enigma2-plugin-extensions-audiosync \
 	enigma2-plugin-extensions-mediascanner \
 	enigma2-plugin-extensions-pictureplayer \

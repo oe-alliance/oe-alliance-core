@@ -7,7 +7,7 @@ PR = "r1"
 
 inherit task
 
-RRECOMMENDS = "\
+RRECOMMENDS_${PN} = " \
 	enigma2-plugin-vix-magic-sd \
 	enigma2-plugin-vix-magic-hd \
 	enigma2-plugin-vix-magic-hd-lite \

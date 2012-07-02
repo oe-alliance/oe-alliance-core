@@ -13,11 +13,11 @@ RREPLACES = "enigma2-plugin-extensions-permanenttimeshift enigma2-plugin-systemp
 
 DEPENDS = "openvix-feeds"
 
-RDEPENDS = "\
+RDEPENDS_${PN} = " \
 	openvix-feed-configs \
 	"
 
-RRECOMMENDS = "\
+RRECOMMENDS_${PN} = " \
 	enigma2-plugin-vix-core \
 	enigma2-plugin-extensions-autotimer \
 	enigma2-plugin-extensions-audiosync \

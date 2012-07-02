@@ -7,7 +7,7 @@ PR = "r0"
 
 inherit task
 
-RRECOMMENDS = "\
+RRECOMMENDS_${PN} = " \
 	bootlogos-enigma2-meta \
 	dvb-usb-drivers-meta \
 	channelsettings-enigma2-meta \

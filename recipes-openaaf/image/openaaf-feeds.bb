@@ -7,7 +7,7 @@ PR = "r1"
 
 inherit task
 
-RRECOMMENDS = "\
+RRECOMMENDS_${PN} = " \
 	openaaf-picons-meta \
 	enigma2-plugin-vix-magic-sd \
 	enigma2-plugin-vix-magic-hd \
