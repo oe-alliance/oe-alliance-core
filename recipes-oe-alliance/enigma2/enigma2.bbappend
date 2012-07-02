@@ -9,7 +9,8 @@ RDEPENDS_${PN} += " \
 	python-subprocess \
 	"
 
-DEFAULTSKIN = "${E2DEFAULTSKIN}"
+#make sure default skin is installed.
+RDEPENDS_${PN} += "${E2DEFAULTSKIN} "
 
 PV = "2.8+git${SRCPV}"
 PKGV = "2.8+git${GITPKGV}"
@@ -84,7 +85,7 @@ do_patch_prepend(){
 	elif "${MACHINE}" == "tmtwin":
 		MACHINE1="Technomate"
 	elif "${MACHINE}" == "venton-hdx":
-		MACHINE1="Venton HD"	
+		MACHINE1="Venton HD"
 	import os
 	os.system("find ./ -name \"*.po\" > ./po_list")
 	os.system("find ./ -name \"*.py\" >> ./po_list")
@@ -130,7 +131,7 @@ python do_setup_po_ipk () {
 	elif "${MACHINE}" == "tmtwin":
 		MACHINE1="Technomate"
 	elif "${MACHINE}" == "venton-hdx":
-		MACHINE1="Venton HD"	
+		MACHINE1="Venton HD"
 	import os
 	os.system("find ./ -name \"*.po\" > ./po_list")
 	os.system("find ./ -name \"*.py\" >> ./po_list")
@@ -155,7 +156,7 @@ do_install_append() {
 	find ${D}/usr/lib/enigma2/python/Plugins/ -name '*.py' -exec rm {} \;
 	if [ -e ${S}/lib/python/Plugins/Extensions/DVDPlayer/plugin.py ]; then
 		cp ${S}/lib/python/Plugins/Extensions/DVDPlayer/plugin.py ${D}/usr/lib/enigma2/python/Plugins/Extensions/DVDPlayer/plugin.py
-	fi	
+	fi
 }
 
 do_install_po() {
@@ -163,7 +164,7 @@ do_install_po() {
 	for lang in ${LANGS}; do
 		if [ -e ${S}/po/$lang.po ]; then
 			install -m 0755 ${S}/po/$lang.po ${D}${datadir}/enigma2/po/enigma2-$lang.po
-		fi	
+		fi
 	done
 }
 
