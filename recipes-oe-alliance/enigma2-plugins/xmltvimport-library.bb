@@ -8,7 +8,7 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"
-PR = "r26"
+PR = "r27"
 
 SRC_URI = "git://git.assembla.com/openvix.6.git;protocol=git"
 
@@ -21,7 +21,7 @@ RDEPENDS = "python-compression python-shell"
 PACKAGES = "${PN} ${PN}-dbg"
 
 FILES_${PN} = "/usr/lib/enigma2/python/Plugins/Extensions/EPGImport/dreamcrc.so"
-FILES_${PN}-dbg = "/usr/lib/enigma2/python/Plugins/Extensions/EPGImport/.debug"
+FILES_${PN}-dbg = "/usr/lib/enigma2/python/Plugins/Extensions/EPGImport/.debug /usr/src/debug"
 
 do_install_append() {
 	# silly hacky me, this could be done by distutils, but i can't figure it out...
