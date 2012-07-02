@@ -49,6 +49,8 @@ SRC_URI += "http://www.et-view.com/download/linux-${PV}.tar.gz \
 	file://dvb_usb_disable_rc_polling.patch \
 	"
 
+SRC_URI_append_odinm9 = " file://board.patch"	
+
 SRC_URI_append_et5x00 = " file://disable_early_fb.patch"
 
 S = "${WORKDIR}/linux-${PV}"
@@ -74,11 +76,16 @@ kernel_do_install_append() {
 	gzip ${D}${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}
 }
 
+MTD_DEVICE_et9x00 = "mtd1"
+MTD_DEVICE_et6x00 = "mtd1"
+MTD_DEVICE_et5x00 = "mtd1"
+MTD_DEVICE_odinm9 = "mtd2"
+
 pkg_postinst_kernel-image () {
 	if [ "x$D" == "x" ]; then
 		if [ -f /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz ] ; then
-			flash_erase /dev/mtd1 0 0
-			nandwrite -p /dev/mtd1 /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz
+			flash_erase /dev/${MTD_DEVICE} 0 0
+			nandwrite -p /dev/${MTD_DEVICE}/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz
 			rm -f /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz
 		fi
 	fi
