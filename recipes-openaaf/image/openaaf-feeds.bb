@@ -19,6 +19,5 @@ RRECOMMENDS = "\
 	enigma2-plugin-vix-vixbmc-night-hd \
 	enigma2-plugin-extensions-project-valerie \
 	enigma2-plugin-extensions-xmltvimport \
-	enigma2-plugin-extensions-xmltvimport-rytec \
 	enigma2-plugin-systemplugins-crossepg \
 	"

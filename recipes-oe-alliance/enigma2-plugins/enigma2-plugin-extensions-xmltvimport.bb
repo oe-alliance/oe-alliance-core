@@ -1,29 +1,33 @@
-FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
+DESCRIPTION = "Imports xmltv files into the EPG cache of enigma2"
+MAINTAINER = "oe-alliance"
 
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://etc/epgimport/readme.txt;startline=1;endline=4;md5=c162054328d930d453543efef81be1d8"
 
-PRINC = "1"
+inherit gitpkgv
 
-SRC_URI = "git://git.assembla.com/openvix.6.git;protocol=git"
+PV = "1.0+git${SRCPV}"
+PKGV = "1.0+git${GITPKGV}"
+PR = "r26"
+
+SRC_URI = "git://github.com/oe-alliance/XMTV-Import.git;protocol=git"
 
 S = "${WORKDIR}/git"
 
 inherit autotools
 
-DEPENDS += " xmltvimport-library"
-RDEPENDS_${PN} += " xmltvimport-library"
-RRECOMMENDS_${PN} = "enigma2-plugin-vix-xmltvimport"
-PACKAGES =+ "${PN}-dbg"
-PACKAGES += "${PN}-src"
-PACKAGES += "${PN}-po"
+DEPENDS = "python xmltvimport-library"
+RDEPENDS_${PN} = "python-compression python-shell xmltvimport-library"
+RRECOMMENDS_${PN} = "${PN}-rytec"
+PACKAGES = "${PN}-dbg ${PN} ${PN}-src ${PN}-po"
+
 
 PLUGIN = "EPGImport"
 
 FILES_${PN} = "/usr/bin /usr/lib/enigma2/python /etc"
 FILES_${PN}-dbg = "/usr/lib/enigma2/python/Plugins/Extensions/${PLUGIN}/.debug"
 FILES_${PN}-src = "/usr/lib/enigma2/python/Plugins/Extensions/${PLUGIN}/*.py"
-FILES_${PN}-po = "${datadir}/enigma2/po/*.po"
+FILES_${PN}-po = "/usr/lib/enigma2/python/Plugins/Extensions/${PLUGIN}/po/*.po"
 
 EXTRA_OECONF = "\
 	--with-po \
