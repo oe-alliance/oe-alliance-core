@@ -33,7 +33,7 @@ IMAGE_INSTALL = " \
 	volatile-media \
 	vsftpd \
 	"
-	
+
 ENIGMA2_PLUGINS = "\
 	enigma2-plugin-extensions-autotimer \
 	enigma2-plugin-extensions-epgsearch \
@@ -53,18 +53,18 @@ ENIGMA2_PLUGINS = "\
 	enigma2-plugin-extensions-volume-adjust \
 	enigma2-plugin-extensions-autobackup \
 	enigma2-plugin-systemplugins-softwaremanager \
-"	
-	
+"
+
 ENIGMA2_PLUGINS_append_et5x00 = "swap-workaround"
 ENIGMA2_PLUGINS_append_vusolo = "swap-workaround"
-ENIGMA2_PLUGINS_append_gb800se = "vfdctl-giga swap-workaround"
-ENIGMA2_PLUGINS_append_gb800ue = "vfdctl-giga swap-workaround"
-ENIGMA2_PLUGINS_append_gb800solo = "vfdctl-giga swap-workaround"
+ENIGMA2_PLUGINS_append_gb800se = "swap-workaround"
+ENIGMA2_PLUGINS_append_gb800ue = "swap-workaround"
+ENIGMA2_PLUGINS_append_gb800solo = "swap-workaround"
 ENIGMA2_PLUGINS_append_dm800 = "swap-workaround"
 ENIGMA2_PLUGINS_append_dm800se = "swap-workaround"
-ENIGMA2_PLUGINS_append_dm500hd = "swap-workaround"	
-	
-	
+ENIGMA2_PLUGINS_append_dm500hd = "swap-workaround"
+
+
 
 export IMAGE_BASENAME = "openaaf-image"
 IMAGE_LINGUAS = ""
