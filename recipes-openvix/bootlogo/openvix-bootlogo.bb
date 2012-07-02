@@ -1,24 +1,31 @@
-DESCRIPTION = "ViX bootlogo"
+DESCRIPTION = "openViX bootlogo"
 SECTION = "base"
 PRIORITY = "required"
-MAINTAINER = "ViX team"
-PACKAGE_ARCH = "${MACHINE_ARCH}"
+MAINTAINER = "openViX"
 
 require conf/license/license-gplv2.inc
 
 RDEPENDS_${PN} += "showiframe"
 
 PV = "${BINARY_VERSION}.${IMAGES_VERSION}"
-PR = "r3"
+PR = "r5"
 
-S = "${WORKDIR}/${MACHINE}"
+S = "${WORKDIR}"
 
 INITSCRIPT_NAME = "bootlogo"
 INITSCRIPT_PARAMS = "start 21 S ."
 
 inherit update-rc.d
 
-SRC_URI = "http://enigma2.world-of-satellite.com/git-extras/vix-bootlogos-20120701.tgz"
+SRC_URI = "file://bootlogo.mvi file://backdrop.mvi file://radio.mvi file://bootlogo.sh"
+SRC_URI_append_vuuno = " file://splash_cfe_auto.bin"
+SRC_URI_append_vuultimo = " file://splash_cfe_auto.bin"
+SRC_URI_append_et5x00 = " file://splash.bin"
+SRC_URI_append_et6x00 = " file://splash.bin"
+SRC_URI_append_et9x00 = " file://splash.bin"
+SRC_URI_append_odin = " file://splash.bin"
+SRC_URI_append_venton-hdx = " file://splash.bin"
+SRC_URI_append_tmtwin = " file://splash.bmp"
 
 BINARY_VERSION = "1"
 BINARY_VERSION_mipsel = "8"
@@ -32,7 +39,6 @@ do_install() {
 	install -d ${D}/usr/share
 	install -m 0644 bootlogo.mvi ${D}/usr/share/bootlogo.mvi
 	install -m 0644 backdrop.mvi ${D}/usr/share/backdrop.mvi
-	install -m 0644 switchoff.mvi ${D}/usr/share/switchoff.mvi
 	install -d ${D}/usr/share/enigma2
 	install -m 0644 radio.mvi ${D}/usr/share/enigma2/radio.mvi
 	install -d ${D}/${sysconfdir}/init.d
@@ -66,6 +72,10 @@ do_install_append_odinm9() {
 do_install_append_tmtwin() {
 	install -d ${DEPLOY_DIR_IMAGE}
 	install -m 0644 ${S}/splash.bmp ${DEPLOY_DIR_IMAGE}/splash.bmp
+}
+do_install_append_venton-hdx() {
+	install -d ${DEPLOY_DIR_IMAGE}
+	install -m 0644 ${S}/splash.bin ${DEPLOY_DIR_IMAGE}/splash.bin
 }
 
 FILES_${PN} = "/boot /usr/share /etc/init.d"
