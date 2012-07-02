@@ -3,6 +3,8 @@ MAINTAINER = "oe-allaince"
 PACKAGE_ARCH = "all"
 LICENSE = "WTFPL"
 
+require conf/license/license-gplv2.inc
+
 PV = "1.0"
 PR = "r1"
 
