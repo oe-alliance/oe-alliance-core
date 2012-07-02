@@ -5,8 +5,8 @@ require conf/license/license-gplv2.inc
 
 PACKAGE_ARCH := "${MACHINE_ARCH}"
 
-DEPENDS = "enigma2 python mtd-utils"
-RDEPENDS = "mtd-utils"
+DEPENDS = "enigma2 python mtd-utils openvix-bootlogo"
+RDEPENDS = "mtd-utils openvix-bootlogo"
 
 RCONFLICTS_${PN} = "settings-autorestore"
 RREPLACES_${PN} = "settings-autorestore"
@@ -45,28 +45,28 @@ do_install_append() {
 }
 
 do_install_append_vuuno() {
-	install -m 0644 ${WORKDIR}/${MACHINE}/splash_cfe_auto.bin ${D}/usr/lib/enigma2/python/Plugins/SystemPlugins/ViX/splash_cfe_auto.bin
+	install -m 0644 ${DEPLOY_DIR_IMAGE}/splash_cfe_auto.bin ${D}/usr/lib/enigma2/python/Plugins/SystemPlugins/ViX/splash_cfe_auto.bin
 }
 do_install_append_vuultimo() {
-	install -m 0644 ${WORKDIR}/${MACHINE}/splash_cfe_auto.bin ${D}/usr/lib/enigma2/python/Plugins/SystemPlugins/ViX/splash_cfe_auto.bin
+	install -m 0644 ${DEPLOY_DIR_IMAGE}/splash_cfe_auto.bin ${D}/usr/lib/enigma2/python/Plugins/SystemPlugins/ViX/splash_cfe_auto.bin
 }
 do_install_append_et5x00() {
-	install -m 0644 ${WORKDIR}/${MACHINE}/splash.bin ${D}/usr/lib/enigma2/python/Plugins/SystemPlugins/ViX/splash.bin
+	install -m 0644 ${DEPLOY_DIR_IMAGE}/splash.bin ${D}/usr/lib/enigma2/python/Plugins/SystemPlugins/ViX/splash.bin
 }
 do_install_append_et6x00() {
-	install -m 0644 ${WORKDIR}/${MACHINE}/splash.bin ${D}/usr/lib/enigma2/python/Plugins/SystemPlugins/ViX/splash.bin
+	install -m 0644 ${DEPLOY_DIR_IMAGE}/splash.bin ${D}/usr/lib/enigma2/python/Plugins/SystemPlugins/ViX/splash.bin
 }
 do_install_append_et9x00() {
-	install -m 0644 ${WORKDIR}/${MACHINE}/splash.bin ${D}/usr/lib/enigma2/python/Plugins/SystemPlugins/ViX/splash.bin
+	install -m 0644 ${DEPLOY_DIR_IMAGE}/splash.bin ${D}/usr/lib/enigma2/python/Plugins/SystemPlugins/ViX/splash.bin
 }
 do_install_append_odinm9() {
-	install -m 0644 ${WORKDIR}/${MACHINE}/splash.bin ${D}/usr/lib/enigma2/python/Plugins/SystemPlugins/ViX/splash.bin
+	install -m 0644 ${DEPLOY_DIR_IMAGE}/splash.bin ${D}/usr/lib/enigma2/python/Plugins/SystemPlugins/ViX/splash.bin
 }
 do_install_append_tmtwin() {
-	install -m 0644 ${WORKDIR}/${MACHINE}/splash.bmp ${D}/usr/lib/enigma2/python/Plugins/SystemPlugins/ViX/splash.bmp
+	install -m 0644 ${DEPLOY_DIR_IMAGE}/splash.bmp ${D}/usr/lib/enigma2/python/Plugins/SystemPlugins/ViX/splash.bmp
 }
 do_install_append_venton-hdx() {
-	install -m 0644 ${WORKDIR}/${MACHINE}/splash.bmp ${D}/usr/lib/enigma2/python/Plugins/SystemPlugins/ViX/splash.bmp
+	install -m 0644 ${DEPLOY_DIR_IMAGE}/splash.bin ${D}/usr/lib/enigma2/python/Plugins/SystemPlugins/ViX/splash.bin
 }
 
 
@@ -103,7 +103,7 @@ do_patch_prepend(){
 	elif "${MACHINE}" == "tmtwin":
 		MACHINE1="Technomate"
 	elif "${MACHINE}" == "venton-hdx":
-		MACHINE1="Venton HD"		
+		MACHINE1="Venton HD"
 	import os
 	os.system("find ./ -name \"*.po\" > ./po_list")
 	os.system("find ./ -name \"*.py\" >> ./po_list")
@@ -148,7 +148,7 @@ python do_setup_po_ipk () {
 	elif "${MACHINE}" == "tmtwin":
 		MACHINE1="Technomate"
 	elif "${MACHINE}" == "venton-hdx":
-		MACHINE1="Venton HD"		
+		MACHINE1="Venton HD"
 	import os
 	os.system("find ./ -name \"*.po\" > ./po_list")
 	os.system("find ./ -name \"*.py\" >> ./po_list")
