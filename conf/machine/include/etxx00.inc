@@ -66,6 +66,7 @@ require conf/machine/include/tune-mips32.inc
 
 MACHINE_KERNEL_PR = "r0"
 
-EXTRA_IMAGEDEPENDS += " enigma2-plugin-extensions-et-livestream \
-					enigma2-plugin-systemplugins-choicerc \
-					"
+EXTRA_IMAGEDEPENDS += " \
+	enigma2-plugin-extensions-et-livestream \
+	enigma2-plugin-systemplugins-remotecontrolcode \
+	"
