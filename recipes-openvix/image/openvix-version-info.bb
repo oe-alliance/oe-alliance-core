@@ -22,7 +22,7 @@ URL_gb800solo = "http://www.gigablue-support.co.uk"
 URL_gb800se = "http://www.gigablue-support.co.uk"
 URL_gb800ue = "http://www.gigablue-support.co.uk"
 URL_gbquad = "http://www.gigablue-support.co.uk"
-URL_venton-hdx = "http://www.gigablue-support.co.uk"
+URL_venton-hdx = "http://www.venton-support.co.uk"
 
 SRC_URI = "file://releasenotes"
 
@@ -55,7 +55,7 @@ do_install() {
 			elif [ "${MACHINE}" = "gb800solo" -o "${MACHINE}" = "gb800se" -o "${MACHINE}" = "gb800ue" -o "${MACHINE}" = "gbquad" ]; then
 				DRIVERS=`grep "SRCDATE = " ${LAYERDIR}/recipes-bsp/gigablue/gigablue-dvb-modules-${MACHINE}.bb | cut -b 12-19`
 			elif [ "${MACHINE}" = "venton-hdx" ]; then
-				DRIVERS=`grep "SRCDATE = " ${LAYERDIR}/recipes-bsp/venton/venton-dvb-modules-hdx.bb | cut -b 12-19`				
+				DRIVERS=`grep "SRCDATE = " ${LAYERDIR}/recipes-bsp/venton/venton-dvb-modules-hdx.bb | cut -b 12-19`
 			else
 				DRIVERS='N/A'
 			fi
