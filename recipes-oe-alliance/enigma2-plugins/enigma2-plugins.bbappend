@@ -6,7 +6,6 @@ PRINC = "1"
 
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r2"
 
 SRC_URI = "${ENIGMA2_PLUGINS_URI}"
 
@@ -46,9 +45,6 @@ SRC_URI_append_tmtwin = " \
 EXTRA_OECONF += "\
 	--with-po --with-boxtype=${MACHINE} \
 "
-
-# Save po files
-PACKAGES += "${PN}-po"
 
 DEPENDS += " nmap \
 			${@base_contains("MACHINE_FEATURES", "tpm", "" , "enigma2-plugin-extensions-webinterface-old", d)}"
