@@ -84,7 +84,7 @@ do_patch_prepend(){
 		MACHINE1="GigaBlue HD Quad"
 	elif "${MACHINE}" == "tmtwin":
 		MACHINE1="Technomate"
-	elif "${MACHINE}" == "venton-hdx":
+	elif "${MACHINE}" == "ventonhdx":
 		MACHINE1="Venton HD"
 	import os
 	os.system("find ./ -name \"*.po\" > ./po_list")
@@ -130,7 +130,7 @@ python do_setup_po_ipk () {
 		MACHINE1="GigaBlue HD Quad"
 	elif "${MACHINE}" == "tmtwin":
 		MACHINE1="Technomate"
-	elif "${MACHINE}" == "venton-hdx":
+	elif "${MACHINE}" == "ventonhdx":
 		MACHINE1="Venton HD"
 	import os
 	os.system("find ./ -name \"*.po\" > ./po_list")

@@ -24,7 +24,7 @@ SRC_URI_append_et5x00 = " file://splash.bin"
 SRC_URI_append_et6x00 = " file://splash.bin"
 SRC_URI_append_et9x00 = " file://splash.bin"
 SRC_URI_append_odin = " file://splash.bin"
-SRC_URI_append_venton-hdx = " file://splash.bin"
+SRC_URI_append_ventonhdx = " file://splash.bin"
 SRC_URI_append_tmtwin = " file://splash.bmp"
 
 BINARY_VERSION = "1"
@@ -73,7 +73,7 @@ do_install_append_tmtwin() {
 	install -d ${DEPLOY_DIR_IMAGE}
 	install -m 0644 ${S}/splash.bmp ${DEPLOY_DIR_IMAGE}/splash.bmp
 }
-do_install_append_venton-hdx() {
+do_install_append_ventonhdx() {
 	install -d ${DEPLOY_DIR_IMAGE}
 	install -m 0644 ${S}/splash.bin ${DEPLOY_DIR_IMAGE}/splash.bin
 }

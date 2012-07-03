@@ -77,7 +77,7 @@ do_install_append_tmtwin() {
 	install -m 0755 ${S}/splash.bin ${DEPLOY_DIR_IMAGE}/splash.bmp
 }
 
-do_install_append_venton-hdx() {
+do_install_append_ventonhdx() {
     install -d ${DEPLOY_DIR_IMAGE}
 	install -m 0755 ${S}/splash.bin ${DEPLOY_DIR_IMAGE}/splash.bin
 }

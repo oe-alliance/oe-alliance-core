@@ -65,7 +65,7 @@ do_install_append_odinm9() {
 do_install_append_tmtwin() {
 	install -m 0644 ${DEPLOY_DIR_IMAGE}/splash.bmp ${D}/usr/lib/enigma2/python/Plugins/SystemPlugins/ViX/splash.bmp
 }
-do_install_append_venton-hdx() {
+do_install_append_ventonhdx() {
 	install -m 0644 ${DEPLOY_DIR_IMAGE}/splash.bin ${D}/usr/lib/enigma2/python/Plugins/SystemPlugins/ViX/splash.bin
 }
 
@@ -102,7 +102,7 @@ do_patch_prepend(){
 		MACHINE1="Odin M9"
 	elif "${MACHINE}" == "tmtwin":
 		MACHINE1="Technomate"
-	elif "${MACHINE}" == "venton-hdx":
+	elif "${MACHINE}" == "ventonhdx":
 		MACHINE1="Venton HD"
 	import os
 	os.system("find ./ -name \"*.po\" > ./po_list")
@@ -147,7 +147,7 @@ python do_setup_po_ipk () {
 		MACHINE1="Odin M9"
 	elif "${MACHINE}" == "tmtwin":
 		MACHINE1="Technomate"
-	elif "${MACHINE}" == "venton-hdx":
+	elif "${MACHINE}" == "ventonhdx":
 		MACHINE1="Venton HD"
 	import os
 	os.system("find ./ -name \"*.po\" > ./po_list")
