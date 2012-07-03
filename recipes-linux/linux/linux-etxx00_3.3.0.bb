@@ -23,6 +23,7 @@ SRC_URI += "http://www.et-view.com/download/linux-${PV}.tar.gz \
 	file://defconfig \
 	file://fix-proc-cputype.patch \
 	file://0001-Revert-MIPS-Add-fast-get_user_pages.patch \
+	file://disable_early_fb.patch \
 	file://iosched-slice_idle-1.patch \
 	file://add-dmx-source-timecode.patch \
 	file://rtl8712-release-firmware-fix.patch \
@@ -49,9 +50,7 @@ SRC_URI += "http://www.et-view.com/download/linux-${PV}.tar.gz \
 	file://dvb_usb_disable_rc_polling.patch \
 	"
 
-SRC_URI_append_odinm9 = " file://board.patch"	
-
-SRC_URI_append_et5x00 = " file://disable_early_fb.patch"
+SRC_URI_append_odinm9 = " file://board.patch"
 
 S = "${WORKDIR}/linux-${PV}"
 
