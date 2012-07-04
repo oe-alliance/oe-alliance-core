@@ -37,7 +37,7 @@ UBI_VOLNAME = "rootfs"
 MKUBIFS_ARGS = "-m 2048 -e 126976 -c 4096"
 UBINIZE_ARGS = "-m 2048 -p 128KiB"
 
-IMAGEDIR ?= "${MACHINE}"
+IMAGEDIR ?= "venton-hdx"
 
 IMAGE_CMD_ubi_append = " \
 	rm -rf ${IMAGE_ROOTFS}/boot/*; \
