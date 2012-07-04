@@ -17,8 +17,7 @@ PV = "2.0+git${SRCPV}"
 PKGV = "2.0+git${GITPKGV}"
 PR = "r2"
 
-SRC_URI="git://git.assembla.com/openvix.10.git;protocol=git \
-	http://enigma2.world-of-satellite.com/git-extras/vix-bootlogos.tgz"
+SRC_URI="git://git.assembla.com/openvix.10.git;protocol=git"
 
 S = "${WORKDIR}/git"
 
