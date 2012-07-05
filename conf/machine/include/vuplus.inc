@@ -42,10 +42,13 @@ UBINIZE_ARGS = "-m 2048 -p 128KiB"
 
 IMAGEDIR ?= "vuplus/${UPDATE_DIR}"
 
-IMAGE_CMD_ubi_append = " \
+IMAGE_CMD_ubi_prepend = " \
 	rm -rf ${IMAGE_ROOTFS}/boot/*; \
 	rm -rf ${IMAGE_ROOTFS}/tmp/*; \
 	mkdir -p ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}; \
+	"
+
+IMAGE_CMD_ubi_append = " \
 	mv ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.ubi ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/root_cfe_auto.jffs2; \
 	gzip -f -c ${DEPLOY_DIR_IMAGE}/vmlinux-${MACHINE}.bin > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/kernel_cfe_auto.bin; \
 	echo ${DISTRO_NAME}-${DISTRO_VERSION}.${BUILD_VERSION} > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/imageversion; \
