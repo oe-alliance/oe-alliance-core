@@ -64,7 +64,7 @@ MACHINE_FEATURES += "3dtv alsa blindscan-dvbs hdmicec switchoff textlcd wifi"
 
 require conf/machine/include/tune-mips32.inc
 
-MACHINE_KERNEL_PR = "r2"
+MACHINE_KERNEL_PR = "r3"
 
 EXTRA_IMAGEDEPENDS += " \
 	enigma2-plugin-extensions-et-livestream \
