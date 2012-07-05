@@ -1,6 +1,6 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
-PRINC = "1"
+PRINC = "2"
 
 RDEPENDS_${PN} += " \
 	python-email \
@@ -14,14 +14,11 @@ RDEPENDS_${PN} += "${E2DEFAULTSKIN} "
 
 PV = "2.8+git${SRCPV}"
 PKGV = "2.8+git${GITPKGV}"
-PR = "r1"
-
 SRC_URI = "${ENIGMA2_URI}"
 
 SRC_URI_append_vuduo = " \
-			file://enigma2_VFD.patch \
+			file://duo_VFD.patch \
 			"
-
 SRC_URI_append_gb800solo = " \
 			file://gb800-evfd.patch \
 			"
