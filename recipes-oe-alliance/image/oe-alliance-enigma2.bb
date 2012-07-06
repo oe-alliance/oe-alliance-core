@@ -4,7 +4,7 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3
                     file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
 
 PV = "1.0"
-PR = "r1"
+PR = "r2"
 
 inherit task
 
@@ -29,9 +29,10 @@ WIFI_DRIVERS = " \
 	rtl8192cu \
 	"
 
-DEPENDS = "enigma2 enigma2-plugins enigma2-pliplugins enigma2-oe-alliance-plugins oe-alliance-feeds"
+DEPENDS = "enigma2 enigma2-plugins enigma2-pliplugins enigma2-oe-alliance-plugins oe-alliance-feeds enigma2-3rdparty-plugins"
 
 RDEPENDS = "\
+	oe-alliance-feeds-configs \
 	aio-grab \
 	enigma2 \
 	tuxbox-links \

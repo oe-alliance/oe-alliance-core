@@ -4,7 +4,7 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3
                     file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
 
 PV = "1.0"
-PR = "r3"
+PR = "r4"
 
 inherit task
 
@@ -12,10 +12,6 @@ RCONFLICTS_ = "enigma2-plugin-extensions-permanenttimeshift enigma2-plugin-syste
 RREPLACES = "enigma2-plugin-extensions-permanenttimeshift enigma2-plugin-systemplugins-skinselector"
 
 DEPENDS = "openvix-feeds"
-
-RDEPENDS = "\
-	openvix-feed-configs \
-	"
 
 RRECOMMENDS = "\
 	enigma2-plugin-vix-core \
