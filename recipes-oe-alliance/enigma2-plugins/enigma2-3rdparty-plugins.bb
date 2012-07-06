@@ -9,7 +9,7 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r2"
+PR = "r3"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -180,7 +180,8 @@ do_install_et9x00() {
 	install -m 0644 ${S}/enigma2-plugin-extensions-webradiofs_7.73_mipsel.ipk ${DEPLOY_DIR_IPK}/3rdparty
 	install -m 0644 ${S}/enigma2-plugin-systemplugins-pipservicerelation_experimental-git20111106-r0_mipsel.ipk ${DEPLOY_DIR_IPK}/3rdparty
 	install -m 0644 ${S}/enigma2-plugin-weblinks-basic_1.3-r0_et9x00.ipk ${DEPLOY_DIR_IPK}/3rdparty
-	install -m 0644 ${S}/enigma2-plugin-weblinks-games_1.0-r0_et9x00.ipk ${DEPLOY_DIR_IPK}/3rdparty}
+	install -m 0644 ${S}/enigma2-plugin-weblinks-games_1.0-r0_et9x00.ipk ${DEPLOY_DIR_IPK}/3rdparty
+}
 
 do_install_tmtwin() {
 	install -d 0644 ${DEPLOY_DIR_IPK}/3rdparty
