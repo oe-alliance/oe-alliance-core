@@ -23,7 +23,7 @@ PACKAGES =+ "${PN}-src"
 PACKAGES =+ "${PN}-po"
 FILES_${PN} = "/tmp /etc /usr/lib"
 FILES_${PN}-src = "/usr/lib/enigma2/python/Plugins/Extensions/MultiQuickButton/*.py"
-FILES_${PN}-po = "${datadir}/enigma2/po/*.po"
+FILES_${PN}-po = "/usr/lib/enigma2/python/Plugins/Extensions/MultiQuickButton/locale/*.po"
 
 inherit autotools
 
@@ -39,18 +39,6 @@ EXTRA_OECONF = "\
 do_install_append() {
 	find ${D}/usr/lib/enigma2/python/Plugins/Extensions/MultiQuickButton/ -name '*.pyc' -exec rm {} \;
 }
-
-do_install_po() {
-	install -d ${D}${datadir}/enigma2/po/
-	LANGS="ar bg ca cs da de el en en_GB es et fa fi fr fy he hr hu is it lt lv nl no pl pt ru sv sk sr th tr uk"
-	for lang in ${LANGS}; do
-		if [ -e ${S}/po/$lang.po ]; then
-			install -m 0755 ${S}/po/$lang.po ${D}${datadir}/enigma2/po/multiquickbutton-$lang.po
-		fi	
-	done
-}
-
-addtask install_po before do_package after do_install
 
 pkg_postinst() {
 #!/bin/sh
