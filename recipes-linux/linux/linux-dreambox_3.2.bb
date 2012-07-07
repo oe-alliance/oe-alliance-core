@@ -18,6 +18,7 @@ SRC_URI = " \
 			file://load-average-calculation-fix.patch \
 			file://jffs2-compression-fixes.patch \
 			file://git.linux-mips.org-sync.patch \
+			file://dvb-usb-smsdvb_fix_frontend.patch \
 			file://defconfig \
 "
 
