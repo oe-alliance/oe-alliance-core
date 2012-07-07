@@ -1,4 +1,4 @@
-﻿DESCRIPTION = "3rd-Party plugins for Enigma2"
+DESCRIPTION = "3rd-Party plugins for Enigma2"
 MAINTAINER = "oe-alliance team"
 
 LICENSE = "Proprietary"
@@ -189,7 +189,6 @@ do_install_et9x00() {
 	install -m 0644 ${S}/enigma2-plugin-weblinks-games_1.0-r0_et9x00.ipk ${DEPLOY_DIR_IPK}/3rdparty}
 	install -m 0644 ${S}/enigma2-plugin-extensions-spinner-selector_2.0_mipsel.ipk ${DEPLOY_DIR_IPK}/3rdparty
 }
->>>>>>> origin/master
 
 do_install_tmtwin() {
 	install -d 0644 ${DEPLOY_DIR_IPK}/3rdparty
