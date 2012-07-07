@@ -8,7 +8,7 @@ require conf/license/license-gplv2.inc
 RDEPENDS_${PN} += "showiframe"
 
 PV = "${BINARY_VERSION}.${IMAGES_VERSION}"
-PR = "r5"
+PR = "r6"
 
 S = "${WORKDIR}"
 
@@ -18,6 +18,10 @@ INITSCRIPT_PARAMS = "start 21 S ."
 inherit update-rc.d
 
 SRC_URI = "file://bootlogo.mvi file://backdrop.mvi file://radio.mvi file://bootlogo.sh"
+SRC_URI_append_gb800se = "file://splash.bin"
+SRC_URI_append_gb800solo = "file://splash.bin"
+SRC_URI_append_gb800ue = "file://splash.bin file://lcdsplash.bin"
+SRC_URI_append_gbquad = "file://splash.bin file://lcdsplash.bin"
 SRC_URI_append_vuuno = " file://splash_cfe_auto.bin"
 SRC_URI_append_vuultimo = " file://splash_cfe_auto.bin"
 SRC_URI_append_et5x00 = " file://splash.bin"
@@ -45,6 +49,24 @@ do_install() {
 	install -m 0755 ${S}/bootlogo.sh ${D}/${sysconfdir}/init.d/bootlogo
 }
 
+do_install_append_gb800se() {
+    install -d ${DEPLOY_DIR_IMAGE}
+	install -m 0644 ${S}/splash.bin ${DEPLOY_DIR_IMAGE}/splash.bin
+}
+do_install_append_gb800solo() {
+    install -d ${DEPLOY_DIR_IMAGE}
+	install -m 0644 ${S}/splash.bin ${DEPLOY_DIR_IMAGE}/splash.bin
+}
+do_install_append_gb800ue() {
+    install -d ${DEPLOY_DIR_IMAGE}
+	install -m 0644 ${S}/splash.bin ${DEPLOY_DIR_IMAGE}/splash.bin
+	install -m 0644 ${S}/lcdsplash.bin ${DEPLOY_DIR_IMAGE}/lcdsplash.bin
+}
+do_install_append_gbquad() {
+    install -d ${DEPLOY_DIR_IMAGE}
+	install -m 0644 ${S}/splash.bin ${DEPLOY_DIR_IMAGE}/splash.bin
+	install -m 0644 ${S}/lcdsplash.bin ${DEPLOY_DIR_IMAGE}/lcdsplash.bin
+}
 do_install_append_vuuno() {
 	install -d ${DEPLOY_DIR_IMAGE}
 	install -m 0644 ${S}/splash_cfe_auto.bin ${DEPLOY_DIR_IMAGE}/splash_cfe_auto.bin
@@ -79,6 +101,3 @@ do_install_append_ventonhdx() {
 }
 
 FILES_${PN} = "/boot /usr/share /etc/init.d"
-
-SRC_URI[md5sum] = "e0447975ab957e77bd0d47ab0186a806"
-SRC_URI[sha256sum] = "6de5ffc6bc841331b8b256c5bd7ca06a0af945d2fa8715ca6828d6cea9cdfdd9"
