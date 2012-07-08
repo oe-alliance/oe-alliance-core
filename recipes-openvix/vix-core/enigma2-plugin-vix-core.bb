@@ -5,8 +5,8 @@ require conf/license/license-gplv2.inc
 
 PACKAGE_ARCH := "${MACHINE_ARCH}"
 
-DEPENDS = "enigma2 python mtd-utils openvix-bootlogo"
-RDEPENDS = "mtd-utils openvix-bootlogo"
+DEPENDS = "enigma2 python mtd-utils openvix-bootlogo python-process"
+RDEPENDS = "mtd-utils openvix-bootlogo python-process"
 
 RCONFLICTS_${PN} = "settings-autorestore"
 RREPLACES_${PN} = "settings-autorestore"
@@ -15,7 +15,7 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "2.0+git${SRCPV}"
 PKGV = "2.0+git${GITPKGV}"
-PR = "r2"
+PR = "r3"
 
 SRC_URI="git://git.assembla.com/openvix.10.git;protocol=git"
 
