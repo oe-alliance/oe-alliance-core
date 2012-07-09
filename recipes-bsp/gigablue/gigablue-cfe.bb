@@ -6,7 +6,7 @@ MAINTAINER = "openMips"
 
 require conf/license/license-gplv2.inc
 
-PR = "r4"
+PR = "r5"
 
 S = "${WORKDIR}"
 
