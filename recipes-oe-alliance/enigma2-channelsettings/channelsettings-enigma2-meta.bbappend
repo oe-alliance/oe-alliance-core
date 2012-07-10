@@ -52,7 +52,6 @@ DEPENDS += "\
 	enigma2-plugin-settings-predrag.motor.42e.to.30w \
 	enigma2-plugin-settings-sgtflipflop.28e \
 	enigma2-plugin-settings-sgtflipflop.multi \
-	enigma2-plugin-settings-vhannibal.dual \
 	enigma2-plugin-settings-vhannibal.dual.feeds \
 	enigma2-plugin-settings-vhannibal.dual.feeds.dtt.milano \
 	enigma2-plugin-settings-vhannibal.dual.feeds.dtt.napoli \
