@@ -3,8 +3,6 @@ FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 PRINC = "2"
 
 DEPENDS += "\
-	enigma2-plugin-settings-b16mcc.28e \
-	enigma2-plugin-settings-b16mcc.hd.swap.28e \
 	enigma2-plugin-settings-cajton.13e.19e.28e \
 	enigma2-plugin-settings-cajton.13e.19e \
 	enigma2-plugin-settings-cajton.68.5e.to.30w \
