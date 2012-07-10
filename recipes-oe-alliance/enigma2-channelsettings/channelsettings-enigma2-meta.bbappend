@@ -1,8 +1,10 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
-PRINC = "1"
+PRINC = "2"
 
 DEPENDS += "\
+	enigma2-plugin-settings-b16mcc.28e \
+	enigma2-plugin-settings-b16mcc.hd.swap.28e \
 	enigma2-plugin-settings-cajton.13e.19e.28e \
 	enigma2-plugin-settings-cajton.13e.19e \
 	enigma2-plugin-settings-cajton.68.5e.to.30w \
@@ -20,11 +22,11 @@ DEPENDS += "\
 	enigma2-plugin-settings-cst.dual2.db \
 	enigma2-plugin-settings-cst.dual3.db \
 	enigma2-plugin-settings-cst.dual4.db \
+	enigma2-plugin-settings-cst.five.1.db \
+	enigma2-plugin-settings-cst.five.2.db \
 	enigma2-plugin-settings-cst.four.db \
 	enigma2-plugin-settings-cst.four2.db \
 	enigma2-plugin-settings-cst.four3.db \
-	enigma2-plugin-settings-cst.five.1.db \
-	enigma2-plugin-settings-cst.five.2.db \
 	enigma2-plugin-settings-cst.mono.db \
 	enigma2-plugin-settings-cst.mono.db.dtt.mi \
 	enigma2-plugin-settings-cst.mono.db.dtt.na \
@@ -50,26 +52,27 @@ DEPENDS += "\
 	enigma2-plugin-settings-predrag.motor.42e.to.30w \
 	enigma2-plugin-settings-sgtflipflop.28e \
 	enigma2-plugin-settings-sgtflipflop.multi \
+	enigma2-plugin-settings-vhannibal.dual \
 	enigma2-plugin-settings-vhannibal.dual.feeds \
+	enigma2-plugin-settings-vhannibal.dual.feeds.dtt.milano \
+	enigma2-plugin-settings-vhannibal.dual.feeds.dtt.napoli \
+	enigma2-plugin-settings-vhannibal.dual.feeds.dtt.roma \
+	enigma2-plugin-settings-vhannibal.dual.feeds.dtt.torino \
 	enigma2-plugin-settings-vhannibal.hotbird \
+	enigma2-plugin-settings-vhannibal.hotbird.dtt.milano \
+	enigma2-plugin-settings-vhannibal.hotbird.dtt.napoli \
+	enigma2-plugin-settings-vhannibal.hotbird.dtt.roma \
+	enigma2-plugin-settings-vhannibal.hotbird.dtt.torino \
+	enigma2-plugin-settings-vhannibal.motor.and.dtt.forli \
+	enigma2-plugin-settings-vhannibal.motor.and.dtt.italia \
+	enigma2-plugin-settings-vhannibal.motor.and.dtt.milano \
+	enigma2-plugin-settings-vhannibal.motor.and.dtt.napoli \
+	enigma2-plugin-settings-vhannibal.motor.and.dtt.roma \
+	enigma2-plugin-settings-vhannibal.motor.and.dtt.torino \
 	enigma2-plugin-settings-vhannibal.motor \
 	enigma2-plugin-settings-vhannibal.quad.7e.13e.19e.42e \
 	enigma2-plugin-settings-vhannibal.quad.9e.13e.16e.19e \
 	enigma2-plugin-settings-vhannibal.quad.13e.19e.23e.28e \
 	enigma2-plugin-settings-vhannibal.quad.nordic \
 	enigma2-plugin-settings-vhannibal.trial.30w \
-	enigma2-plugin-settings-vhannibal.dual.feeds.dtt.milano \
-	enigma2-plugin-settings-vhannibal.dual.feeds.dtt.torino \
-	enigma2-plugin-settings-vhannibal.dual.feeds.dtt.napoli \
-	enigma2-plugin-settings-vhannibal.dual.feeds.dtt.roma \
-	enigma2-plugin-settings-vhannibal.hotbird.dtt.milano \
-	enigma2-plugin-settings-vhannibal.hotbird.dtt.torino \
-	enigma2-plugin-settings-vhannibal.hotbird.dtt.napoli \
-	enigma2-plugin-settings-vhannibal.hotbird.dtt.roma \
-	enigma2-plugin-settings-vhannibal.motor.and.dtt.forli \
-	enigma2-plugin-settings-vhannibal.motor.and.dtt.italia \
-	enigma2-plugin-settings-vhannibal.motor.and.dtt.milano \
-	enigma2-plugin-settings-vhannibal.motor.and.dtt.torino \
-	enigma2-plugin-settings-vhannibal.motor.and.dtt.napoli \
-	enigma2-plugin-settings-vhannibal.motor.and.dtt.roma \
-	"
+"
