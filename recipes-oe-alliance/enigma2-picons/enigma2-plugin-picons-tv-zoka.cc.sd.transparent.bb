@@ -12,5 +12,5 @@ python do_remove_tarball() {
 
 include enigma2-plugin-picons-zoka.cc.inc
 
-SRC_URI[md5sum] = "2b395b74cce73799ee11e6bc04bfc089"
-SRC_URI[sha256sum] = "23172c6d5c7c558a564d53cce86a14464f295a07ae943fdb1ad67dc745a36014"
+SRC_URI[md5sum] = "82d55b71ea09a68049e91873b32293d8"
+SRC_URI[sha256sum] = "646207e67ae86d230f8a73a2bb6013f68e3eefeecc314bb33549a5ebbd49a87e"
