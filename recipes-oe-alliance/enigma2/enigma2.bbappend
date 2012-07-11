@@ -30,7 +30,7 @@ SRC_URI_append_gb800ue = " \
 			"
 
 FILES_${PN} += " ${bindir}"
-PACKAGES =+ "${PN}-po"
+PACKAGES += "${PN}-po"
 
 EXTRA_OECONF += "\
 	--with-po \
