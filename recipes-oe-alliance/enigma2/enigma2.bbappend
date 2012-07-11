@@ -1,6 +1,6 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
-PRINC = "3"
+PRINC = "4"
 
 RDEPENDS_${PN} += " \
 	python-email \
