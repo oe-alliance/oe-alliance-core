@@ -27,7 +27,7 @@ SRC_URI_append_vuultimo = " file://splash_cfe_auto.bin"
 SRC_URI_append_et5x00 = " file://splash.bin"
 SRC_URI_append_et6x00 = " file://splash.bin"
 SRC_URI_append_et9x00 = " file://splash.bin"
-SRC_URI_append_odin = " file://splash.bin"
+SRC_URI_append_odinm9 = " file://splash.bin"
 SRC_URI_append_ventonhdx = " file://splash.bin"
 SRC_URI_append_tmtwin = " file://splash.bmp"
 
