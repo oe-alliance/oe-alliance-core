@@ -12,7 +12,7 @@ SRC_URI[sha256sum] = "393a9cb7ccb64b79e6ea4ba1bcaec9a9d9fadb113828cfb6dcd30c23ff
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
 SRC_URI = "http://en2.ath.cx/release/images/iqon/dev/linux-3.4.4-tm-${SRCDATE}.tar.gz \
-		file://${MACHINE}_defconfig"
+		file://defconfig"
 
 S = "${WORKDIR}/linux-${KV}-tm-${SRCDATE}"
 
