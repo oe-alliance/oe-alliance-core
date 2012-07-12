@@ -28,3 +28,6 @@ do_install() {
         echo $i >> ${D}/${sysconfdir}/modutils/_tm
 	done
 }
+
+SRC_URI[md5sum] = "490cbf118cce49a9317d01be97440a9a"
+SRC_URI[sha256sum] = "b0c4789d22ed565e4d401708229b04d9cee963fa73120b528da4f32d7aa22a2d"
