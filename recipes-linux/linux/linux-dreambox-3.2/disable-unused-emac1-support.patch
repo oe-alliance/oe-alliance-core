@@ -1,0 +1,34 @@
+From 16eb6ea3dadc5d5159a567b9ba624ac3b13786d9 Mon Sep 17 00:00:00 2001
+From: Andreas Monzner <andreas.monzner@dream-property.net>
+Date: Wed, 11 Jul 2012 02:04:10 +0200
+Subject: [PATCH] disable unused emac1 support
+
+---
+ arch/mips/brcmstb/Kconfig |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/mips/brcmstb/Kconfig b/arch/mips/brcmstb/Kconfig
+index 37ae01e..5287396 100644
+--- a/arch/mips/brcmstb/Kconfig
++++ b/arch/mips/brcmstb/Kconfig
+@@ -439,7 +439,7 @@ config BCM7405B0
+ 	select BRCM_UARTC_IS_16550
+ 	select BRCM_HAS_PCI23
+ 	select BRCM_HAS_EMAC_0
+-	select BRCM_HAS_EMAC_1
++	select BRCM_HAS_EMAC_1 if !DREAMBOX
+ 	select BRCM_HAS_NOR if !DREAMBOX
+ 	select BRCM_HAS_NAND if DREAMBOX
+ 	select BRCM_HAS_NAND_MAJOR_2
+@@ -458,7 +458,7 @@ config BCM7405D0
+ 	select BRCM_UARTC_IS_16550
+ 	select BRCM_HAS_PCI23
+ 	select BRCM_HAS_EMAC_0
+-	select BRCM_HAS_EMAC_1
++	select BRCM_HAS_EMAC_1 if !DREAMBOX
+ 	select BRCM_HAS_NAND
+ 	select BRCM_HAS_NAND_MAJOR_3
+ 	select BRCM_HAS_NAND_MINOR_2
+-- 
+1.7.10.4
+

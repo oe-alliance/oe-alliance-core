@@ -1,0 +1,53 @@
+From 0f6466632ffae9b94b829c2d55b887007da703fe Mon Sep 17 00:00:00 2001
+From: Andreas Monzner <andreas.monzner@dream-property.net>
+Date: Wed, 11 Jul 2012 01:53:51 +0200
+Subject: [PATCH 1/2] brcmstb/smp.c: optimized code a bit, add a kern warning
+ on send_ipi_single call to current_cpu
+
+---
+ arch/mips/brcmstb/smp.c |   20 +++++++++++++-------
+ 1 file changed, 13 insertions(+), 7 deletions(-)
+
+diff --git a/arch/mips/brcmstb/smp.c b/arch/mips/brcmstb/smp.c
+index 4538a93..1795483 100644
+--- a/arch/mips/brcmstb/smp.c
++++ b/arch/mips/brcmstb/smp.c
+@@ -247,12 +247,18 @@ static DEFINE_PER_CPU(int, ipi_action_mask);
+ static void brcmstb_send_ipi_single(int cpu, unsigned int action)
+ {
+ 	unsigned long flags;
++	int current_cpu = read_c0_brcm_cmt_local() >> 31;
+ 
+-	spin_lock_irqsave(&ipi_lock, flags);
+-	set_c0_cause(cpu ? C_SW1 : C_SW0);
+-	per_cpu(ipi_action_mask, cpu) |= action;
+-	irq_enable_hazard();
+-	spin_unlock_irqrestore(&ipi_lock, flags);
++	if (current_cpu == cpu) {
++		printk(KERN_WARNING "ignored IPI request to self (cpu%d)\n", current_cpu);
++		WARN_ON(1);
++	}
++	else {
++		spin_lock_irqsave(&ipi_lock, flags);
++		set_c0_cause(cpu ? C_SW1 : C_SW0);
++		per_cpu(ipi_action_mask, cpu) |= action;
++		spin_unlock_irqrestore(&ipi_lock, flags);
++	}
+ }
+ 
+ static irqreturn_t brcmstb_ipi_interrupt(int irq, void *dev_id)
+@@ -261,9 +267,9 @@ static irqreturn_t brcmstb_ipi_interrupt(int irq, void *dev_id)
+ 	int action, cpu = irq - BRCM_IRQ_IPI0;
+ 
+ 	spin_lock_irqsave(&ipi_lock, flags);
+-	action = __get_cpu_var(ipi_action_mask);
+-	per_cpu(ipi_action_mask, cpu) = 0;
+ 	clear_c0_cause(cpu ? C_SW1 : C_SW0);
++	action = per_cpu(ipi_action_mask, cpu);
++	per_cpu(ipi_action_mask, cpu) = 0;
+ 	spin_unlock_irqrestore(&ipi_lock, flags);
+ 
+ 	if (action & SMP_RESCHEDULE_YOURSELF)
+-- 
+1.7.10.4
+

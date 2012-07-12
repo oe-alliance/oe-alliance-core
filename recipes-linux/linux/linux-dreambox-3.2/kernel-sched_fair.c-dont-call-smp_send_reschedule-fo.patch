@@ -1,0 +1,27 @@
+From 21dd22ad2c391fcfa968251f36729cf02d3ee2eb Mon Sep 17 00:00:00 2001
+From: Andreas Monzner <andreas.monzner@dream-property.net>
+Date: Wed, 11 Jul 2012 01:54:27 +0200
+Subject: [PATCH 2/2] kernel/sched_fair.c: dont call smp_send_reschedule for
+ current cpu
+
+---
+ kernel/sched_fair.c |    3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/kernel/sched_fair.c b/kernel/sched_fair.c
+index 8a39fa3..e869a43 100644
+--- a/kernel/sched_fair.c
++++ b/kernel/sched_fair.c
+@@ -4529,6 +4529,9 @@ static void nohz_balancer_kick(int cpu)
+ 	if (!cpu_rq(ilb_cpu)->nohz_balance_kick) {
+ 		cpu_rq(ilb_cpu)->nohz_balance_kick = 1;
+ 
++		if (ilb_cpu == smp_processor_id())
++			return;
++
+ 		smp_mb();
+ 		/*
+ 		 * Use smp_send_reschedule() instead of resched_cpu().
+-- 
+1.7.10.4
+
