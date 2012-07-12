@@ -7,7 +7,7 @@ SRCDATE = "20120711"
 KV = "3.4.4"
 PV = "${KV}-${SRCDATE}"
 
-SRC_URI = "http://en2.ath.cx/release/images/iqon/dev/bcmlinuxdvb_7335-${PV}.tar.gz
+SRC_URI = "http://en2.ath.cx/release/images/iqon/dev/bcmlinuxdvb_7335-${PV}.tar.gz"
 
 S = "${WORKDIR}"
 
