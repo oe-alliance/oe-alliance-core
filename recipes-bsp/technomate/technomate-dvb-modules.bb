@@ -3,11 +3,11 @@ SECTION = "base"
 PRIORITY = "required"
 LICENSE = "CLOSED"
 
-SRCDATE = "20120525"
-KV = "2.6.18-7.3"
-PV = "${KV}+${SRCDATE}"
+SRCDATE = "20120711"
+KV = "3.4.4"
+PV = "${KV}-${SRCDATE}"
 
-SRC_URI = "http://en2.ath.cx/release/images/iqon/dev/bcmlinuxdvb_7335-${SRCDATE}.tar.gz"
+SRC_URI = "http://en2.ath.cx/release/images/iqon/dev/bcmlinuxdvb_7335-${PV}.tar.gz
 
 S = "${WORKDIR}"
 

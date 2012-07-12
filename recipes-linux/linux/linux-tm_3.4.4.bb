@@ -1,21 +1,20 @@
 DESCRIPTION = "Linux kernel for ${MACHINE}"
 LICENSE = "GPL"
 SECTION = "kernel"
+KV = "3.4.4"
 
-SRCREV = "r2"
-KV = "2.6.18-7.3"
-PV = "2.6.18"
-SRCDATE = "20120523"
-
+SRCDATE = "20120711"
 MACHINE_KERNEL_PR_append = ".0"
 
-MODULE = "stblinux-2.6.18"
+SRC_URI[md5sum] = "4dc3ac322453abbfaade7020cddea205"
+SRC_URI[sha256sum] = "1d18eb39677a23eace6b27ee25656c25f21b57be7e77a2adcdd15c76d1c3e875"
 
-SRC_URI = "http://en2.ath.cx/release/images/iqon/dev/stblinux-2.6.18-tmtwin-oe-${SRCDATE}.tar.gz \
-		file://${MACHINE}_defconfig \
-		"
+LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-S = "${WORKDIR}/stblinux-2.6.18-tmtwin-oe-${SRCDATE}"
+SRC_URI = "http://en2.ath.cx/release/images/iqon/dev/linux-3.4.4-tm-${SRCDATE}.tar.gz \
+		file://${MACHINE}_defconfig"
+
+S = "${WORKDIR}/linux-${KV}-tm-${SRCDATE}"
 
 inherit kernel
 
