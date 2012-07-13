@@ -14,7 +14,7 @@ PR = "r8"
 
 SRC_URI = "${ENIGMA2_PLUGINS_URI}"
 
-SRC_URI_append_vuuno = "
+SRC_URI_append_vuuno = " \
 			file://dreambox_bouqueteditor.png \
 			file://FC2dreambox.png"
 SRC_URI_append_vuultimo = " \
