@@ -43,6 +43,7 @@ DEPENDS += "\
 	enigma2-plugin-settings-likra.8sat \
 	enigma2-plugin-settings-likra.rotor \
 	enigma2-plugin-settings-mr.mister.multi.sat \
+	enigma2-plugin-settings-mr.mister.28.2e \
 	enigma2-plugin-settings-predrag.13e.19e \
 	enigma2-plugin-settings-predrag.19e.16e.13e.08w \
 	enigma2-plugin-settings-predrag.19e.16e.13e \
