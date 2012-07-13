@@ -1,53 +1,72 @@
+DESCRIPTION = "Additional plugins for Enigma2"
 MAINTAINER = "OpenvViX team <info@world-of-satellite.com>"
 
-FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
+LICENSE = "Proprietary"
+LIC_FILES_CHKSUM = "file://COPYING;md5=8e37f34d0e40d32ea2bc90ee812c9131"
 
-PRINC = "1"
+PACKAGES_DYNAMIC = "enigma2-plugin-(?!pli-).*"
+
+inherit gitpkgv
 
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
+PR = "r8"
 
 SRC_URI = "${ENIGMA2_PLUGINS_URI}"
 
-SRC_URI_append_vuuno = " \
+SRC_URI_append_vuuno = "
 			file://dreambox_bouqueteditor.png \
-			file://FC2dreambox.png \
-"
+			file://FC2dreambox.png"
 SRC_URI_append_vuultimo = " \
 			file://dreambox_bouqueteditor.png \
-			file://FC2dreambox.png \
-"
+			file://FC2dreambox.png"
 SRC_URI_append_vusolo = " \
-			file://dreambox_bouqueteditor.png \
-			"
+			file://dreambox_bouqueteditor.png"
 SRC_URI_append_vuduo = " \
-			file://dreambox_bouqueteditor.png \
-			"
-
+			file://dreambox_bouqueteditor.png"
 SRC_URI_append_et5x00 = " \
-			file://dreambox_bouqueteditor.png \
-			"
+			file://dreambox_bouqueteditor.png"
 SRC_URI_append_et6x00 = " \
-			file://dreambox_bouqueteditor.png \
-			"
+			file://dreambox_bouqueteditor.png"
 SRC_URI_append_et9x00 = " \
-			file://dreambox_bouqueteditor.png \
-			"
-
+			file://dreambox_bouqueteditor.png"
 SRC_URI_append_odinm9 = " \
-			file://dreambox_bouqueteditor.png \
-			"
-
+			file://dreambox_bouqueteditor.png"
 SRC_URI_append_tmtwin = " \
-			file://dreambox_bouqueteditor.png \
-			"
+			file://dreambox_bouqueteditor.png"
 
-EXTRA_OECONF += "\
-	--with-po --with-boxtype=${MACHINE} \
+EXTRA_OECONF = " \
+	BUILD_SYS=${BUILD_SYS} \
+	HOST_SYS=${HOST_SYS} \
+	STAGING_INCDIR=${STAGING_INCDIR} \
+	STAGING_LIBDIR=${STAGING_LIBDIR} \
+	--without-debug \
+	--with-po
+	--with-boxtype=${MACHINE} \
+	${@base_contains("MACHINE_FEATURES", "tpm", "--with-tpm" , "", d)} \
 "
 
-DEPENDS += " nmap \
-			${@base_contains("MACHINE_FEATURES", "tpm", "" , "enigma2-plugin-extensions-webinterface-old", d)}"
+CONFFILES_${PN} += "${sysconfdir}/enigma2/movietags"
+FILES_${PN} += " /usr/share/enigma2 /usr/share/fonts "
+FILES_${PN}-meta = "${datadir}/meta"
+PACKAGES += "${PN}-meta"
+PACKAGE_ARCH = "${MACHINE_ARCH}"
+
+inherit autotools
+
+S = "${WORKDIR}/git"
+
+DEPENDS = "enigma2 \
+	python-pyopenssl \
+	python-gdata \
+	streamripper \
+	python-mutagen \
+	python-twisted \
+	python-daap \
+	dvdbackup \
+	libcddb \
+	nmap \
+	${@base_contains("MACHINE_FEATURES", "tpm", "" , "enigma2-plugin-extensions-webinterface-old", d)}"
 
 do_install_append_vuuno() {
 	install -m 0644 ${WORKDIR}/FC2dreambox.png ${D}/usr/lib/enigma2/python/Plugins/Extensions/FanControl2/data/
@@ -77,6 +96,13 @@ do_install_append_odinm9() {
 }
 do_install_append_tmtwin() {
 	install -m 0644 ${WORKDIR}/dreambox_bouqueteditor.png ${D}/usr/lib/enigma2/python/Plugins/Extensions/WebBouquetEditor/web-data/
+}
+
+do_install_append() {
+	# remove unused .pyc files
+	find ${D}/usr/lib/enigma2/python/ -name '*.pyc' -exec rm {} \;
+	# remove leftover webinterface garbage
+	${@base_contains('MACHINE_FEATURES', 'tpm','','rm -rf ${D}/usr/lib/enigma2/python/Plugins/Extensions/WebInterface',d)}
 }
 
 python populate_packages_prepend () {
