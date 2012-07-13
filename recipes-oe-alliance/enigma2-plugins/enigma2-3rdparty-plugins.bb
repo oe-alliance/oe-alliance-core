@@ -1,4 +1,4 @@
-﻿DESCRIPTION = "3rd Party plugins for Enigma2"
+DESCRIPTION = "3rd Party plugins for Enigma2"
 MAINTAINER = "oe-alliance team"
 
 LICENSE = "Proprietary"
