@@ -1,4 +1,4 @@
-DESCRIPTION = "3rd Party plugins for Enigma2"
+﻿DESCRIPTION = "3rd Party plugins for Enigma2"
 MAINTAINER = "oe-alliance team"
 
 LICENSE = "Proprietary"
@@ -9,8 +9,7 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r16"
-
+PR = "r17"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
