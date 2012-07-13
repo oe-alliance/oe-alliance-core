@@ -1,5 +1,6 @@
-﻿MAINTAINER = "oe-alliance team"
-DESCRIPTION = "3rd-Party plugins for Enigma2"
+DESCRIPTION = "3rd Party plugins for Enigma2"
+MAINTAINER = "oe-alliance team"
+
 LICENSE = "Proprietary"
 LIC_FILES_CHKSUM = "file://COPYING;md5=8e37f34d0e40d32ea2bc90ee812c9131"
 
@@ -496,4 +497,3 @@ do_install_dm80se() {
 	install -m 0644 ${S}/enigma2-plugin-extensions-vcs_1.0-rc4_all.ipk ${DEPLOY_DIR_IPK}/3rdparty
 	install -m 0644 ${S}/enigma2-plugin-extensions-pluginspanel_1.0_all.ipk ${DEPLOY_DIR_IPK}/3rdparty
 }
-
