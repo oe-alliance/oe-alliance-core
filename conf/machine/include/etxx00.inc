@@ -70,3 +70,8 @@ EXTRA_IMAGEDEPENDS += " \
 	enigma2-plugin-extensions-et-livestream \
 	enigma2-plugin-systemplugins-remotecontrolcode \
 	"
+
+MACHINE_EXTRA_RDEPENDS = " \
+	enigma2-plugin-extensions-et-livestream \
+	enigma2-plugin-systemplugins-remotecontrolcode \
+	"
