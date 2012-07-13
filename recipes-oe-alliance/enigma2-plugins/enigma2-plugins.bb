@@ -41,7 +41,7 @@ EXTRA_OECONF = " \
 	STAGING_INCDIR=${STAGING_INCDIR} \
 	STAGING_LIBDIR=${STAGING_LIBDIR} \
 	--without-debug \
-	--with-po
+	--with-po \
 	--with-boxtype=${MACHINE} \
 	${@base_contains("MACHINE_FEATURES", "tpm", "--with-tpm" , "", d)} \
 "
