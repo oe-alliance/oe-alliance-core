@@ -11,7 +11,7 @@ inherit task
 RCONFLICTS_ = "enigma2-plugin-extensions-permanenttimeshift enigma2-plugin-systemplugins-skinselector"
 RREPLACES = "enigma2-plugin-extensions-permanenttimeshift enigma2-plugin-systemplugins-skinselector"
 
-DEPENDS = "openmips-feeds"
+DEPENDS = "enigma2-pliplugins openmips-feeds"
 
 RRECOMMENDS = "\
 	enigma2-plugin-extensions-ppanel \

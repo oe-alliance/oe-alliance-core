@@ -8,6 +8,7 @@ PR = "r1"
 inherit task
 
 RRECOMMENDS = "\
+	enigma2-pliplugins \
 	enigma2-plugin-vix-magic-sd \
 	enigma2-plugin-vix-magic-hd \
 	enigma2-plugin-vix-magic-hd-lite \

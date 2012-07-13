@@ -16,7 +16,6 @@ RRECOMMENDS = "\
 	\
 	enigma2-skins \
 	enigma2-plugins \
-	enigma2-pliplugins \
 	enigma2-plugin-extensions-ambx \
 	enigma2-plugin-extensions-tuxcom \
 	enigma2-plugin-extensions-tuxterm \

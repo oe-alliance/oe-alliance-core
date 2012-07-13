@@ -8,7 +8,7 @@ PR = "r2"
 
 inherit task
 
-DEPENDS = "openaaf-feeds"
+DEPENDS = "enigma2-pliplugins openaaf-feeds"
 
 RRECOMMENDS = "\
 	enigma2-plugin-extensions-autotimer \

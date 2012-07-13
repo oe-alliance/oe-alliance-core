@@ -8,7 +8,7 @@ PR = "r2"
 
 inherit task
 
-DEPENDS = "opensif-feeds"
+DEPENDS = "enigma2-pliplugins opensif-feeds"
 
 RRECOMMENDS = "\
 	enigma2-plugin-extensions-autotimer \
