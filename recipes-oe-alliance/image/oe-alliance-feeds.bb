@@ -28,16 +28,23 @@ RRECOMMENDS = "\
 	${@base_contains("MACHINE_FEATURES", "fullgraphiclcd", "lcdpicons-enigma2-meta" , "", d)} \
 	\
 	ctorrent \
+	cups \
 	djmount \
 	dvbsnoop \
 	dvdfs \
-	htop \
+	gdb \
 	hddtemp \
+	hdparm \
+	htop \
+	inadyn-mt \
+	joe \
 	mc \
 	minidlna \
 	mpd \
+	mtd-utils \
 	nano \
 	ntfs-3g \
+	ntp \
 	openresolv \
 	openssh \
 	openvpn \
@@ -53,4 +60,5 @@ RRECOMMENDS = "\
 	vim \
 	wakelan \
 	zeroconf \
+	iperf \
 	"
