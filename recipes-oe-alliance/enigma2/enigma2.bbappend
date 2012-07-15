@@ -1,12 +1,13 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
-PRINC = "4"
+PRINC = "5"
 
 RDEPENDS_${PN} += " \
 	python-email \
 	python-mime \
 	python-pyusb \
 	python-subprocess \
+	python-process \
 	"
 
 #make sure default skin is installed.
