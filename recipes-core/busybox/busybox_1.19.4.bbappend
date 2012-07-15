@@ -1,3 +1,3 @@
-PRINC = "2"
+PRINC = "14"
 
-FILESEXTRAPATHS_prepend := "${THISDIR}/${P}:"
+FILESEXTRAPATHS_prepend := "${THISDIR}/${DISTRO_NAME}:"
