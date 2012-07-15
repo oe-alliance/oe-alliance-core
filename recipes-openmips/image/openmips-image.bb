@@ -15,6 +15,7 @@ IMAGE_INSTALL = " \
 	openmips-version-info \
 	openmips-enigma2 \
 	openmips-bootlogo \
+	${ENIGMA2_PLUGINS} \
 	avahi-daemon \
 	dropbear \
 	early-configure \
@@ -32,6 +33,22 @@ IMAGE_INSTALL = " \
 	volatile-media \
 	vsftpd \
 	"
+	
+ENIGMA2_PLUGINS = "\
+	enigma2-plugin-extensions-autotimer \
+	enigma2-plugin-extensions-epgsearch \
+	enigma2-plugin-extensions-imdb \
+	enigma2-plugin-extensions-graphmultiepg \
+	enigma2-plugin-extensions-mediaplayer \
+	enigma2-plugin-extensions-cutlisteditor \
+	enigma2-plugin-systemplugins-videotune \
+	enigma2-plugin-systemplugins-vps \
+	enigma2-plugin-extensions-dvdplayer \
+	enigma2-plugin-systemplugins-autoresolution \
+	enigma2-plugin-extensions-autobackup \
+	enigma2-plugin-systemplugins-softwaremanager \
+	enigma2-plugin-systemplugins-hotplug \
+"	
 
 export IMAGE_BASENAME = "openmips-image"
 IMAGE_LINGUAS = ""
