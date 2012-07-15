@@ -1,5 +1,10 @@
 3.0 Build 59:
 feeds update code.
+vix-core: fix image manager.
+tm-twin: update drivers 20120710
+vuplus: update drivers 20120628
+pli merge
+e2-plugins: merge
 
 3.0 Build 28:
 initial test
