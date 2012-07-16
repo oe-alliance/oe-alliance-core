@@ -41,10 +41,10 @@ do_install() {
 			fi
 			# generate /etc/image-version
 			install -d ${D}/etc
-			echo "box_type=${MACHINE}" > etc/image-version
-			echo "build_type=${BUILDTYPE}" >> etc/image-version
-			echo "version=${IMAGE_VERSION}" >> etc/image-version
-			echo "build=${BUILD_VERSION}" >> etc/image-version
+			echo "box_type=${MACHINE}" > ${D}/etc/image-version
+			echo "build_type=${BUILDTYPE}" >> ${D}/etc/image-version
+			echo "version=${IMAGE_VERSION}" >> ${D}/etc/image-version
+			echo "build=${BUILD_VERSION}" >> ${D}/etc/image-version
 			if [ "${MACHINE}" = "vusolo" -o "${MACHINE}" = "vuduo" -o "${MACHINE}" = "vuuno" -o "${MACHINE}" = "vuultimo" ]; then
 				DRIVERS=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/vuplus/vuplus-dvb-modules-${MACHINE}.bb | cut -b 19-26`
 			elif [ "${MACHINE}" = "et5x00" -o "${MACHINE}" = "et6x00" -o "${MACHINE}" = "et9x00" ]; then
@@ -60,13 +60,13 @@ do_install() {
 			else
 				DRIVERS='N/A'
 			fi
-			echo "drivers=${DRIVERS}" >> etc/image-version
-			echo "date=${DATETIME}" >> etc/image-version
-			echo "comment=ViX" >> etc/image-version
-			echo "target=9" >> etc/image-version
-			echo "creator=openViX" >> etc/image-version
-			echo "url=${URL}" >> etc/image-version
-			echo "catalog=${URL}" >> etc/image-version
+			echo "drivers=${DRIVERS}" >> ${D}/etc/image-version
+			echo "date=${DATETIME}" >> ${D}/etc/image-version
+			echo "comment=ViX" >> ${D}/etc/image-version
+			echo "target=9" >> ${D}/etc/image-version
+			echo "creator=openViX" >> ${D}/etc/image-version
+			echo "url=${URL}" >> ${D}/etc/image-version
+			echo "catalog=${URL}" >> ${D}/etc/image-version
 
 			install -m 0644 ${WORKDIR}/releasenotes ${D}/etc/releasenotes
 }
