@@ -21,7 +21,7 @@ IMAGE_INSTALL = " \
 	e2fsprogs-e2fsck \
 	fakelocale \
 	libavahi-client \
-	ntp \
+	ntpdate \
 	opkg \
 	sdparm \
 	task-base \
