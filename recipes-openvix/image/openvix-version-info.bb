@@ -1,8 +1,10 @@
 DESCRIPTION = "ViX version info"
 SECTION = "base"
 PRIORITY = "required"
-LICENSE = "proprietary"
 MAINTAINER = "ViX team"
+LICENSE = "proprietary"
+LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3b58 \
+					file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
 
 PV = "${IMAGE_VERSION}"
 PR = "${BUILD_VERSION}"
