@@ -73,44 +73,4 @@ DEPENDS += "\
 	enigma2-plugin-settings-vhannibal.quad.13e.19e.23e.28e \
 	enigma2-plugin-settings-vhannibal.quad.nordic \
 	enigma2-plugin-settings-vhannibal.trial.30w \
-	enigma2-plugin-settings-Don@-Motor.28E-30W \
-	enigma2-plugin-settings-Don@-Motor.28E-30W \
-	enigma2-plugin-settings-Don@-Motor.42E-30W \
-	enigma2-plugin-settings-Don@-Motor.42E-30W \
-	enigma2-plugin-settings-Don@-Motor.75E-30W \
-	enigma2-plugin-settings-Don@-Motor.75E-30W \
-	enigma2-plugin-settings-Don@-Motor.90E-61W \
-	enigma2-plugin-settings-Don@-Motor.90E-61W \
-	enigma2-plugin-settings-Don@-Multifeed.13E \
-	enigma2-plugin-settings-Don@-Multifeed.13E \
-	enigma2-plugin-settings-Don@-Multifeed.19E+13E \
-	enigma2-plugin-settings-Don@-Multifeed.19E+13E \
-	enigma2-plugin-settings-Don@-Multifeed.19E+16E+13E+1W \
-	enigma2-plugin-settings-Don@-Multifeed.19E+16E+13E+1W \
-	enigma2-plugin-settings-Don@-Multifeed.19E+16E+13E+5E+1W+4W+5W \
-	enigma2-plugin-settings-Don@-Multifeed.19E+16E+13E+5E+1W+4W+5W \
-	enigma2-plugin-settings-Don@-Multifeed.19E+16E+13E \
-	enigma2-plugin-settings-Don@-Multifeed.19E+16E+13E \
-	enigma2-plugin-settings-Don@-Multifeed.19E \
-	enigma2-plugin-settings-Don@-Multifeed.19E \
-	enigma2-plugin-settings-Don@-Multifeed.23E+19E+13E \
-	enigma2-plugin-settings-Don@-Multifeed.23E+19E+13E \
-	enigma2-plugin-settings-Don@-Multifeed.23E+19E \
-	enigma2-plugin-settings-Don@-Multifeed.23E+19E \
-	enigma2-plugin-settings-Don@-Multifeed.28E+19E+16E+13E+1W \
-	enigma2-plugin-settings-Don@-Multifeed.28E+19E+16E+13E+1W \
-	enigma2-plugin-settings-Don@-Multifeed.28E+19E+16E+13E+5E+1W \
-	enigma2-plugin-settings-Don@-Multifeed.28E+19E+16E+13E+5E+1W \
-	enigma2-plugin-settings-Don@-Multifeed.28E+19E+16E+13E \
-	enigma2-plugin-settings-Don@-Multifeed.28E+19E+16E+13E \
-	enigma2-plugin-settings-Don@-Multifeed.28E+23E+19E+13E \
-	enigma2-plugin-settings-Don@-Multifeed.28E+23E+19E+13E \
-	enigma2-plugin-settings-Don@-Multifeed.28E+23E+19E+16E+13E+1W \
-	enigma2-plugin-settings-Don@-Multifeed.28E+23E+19E+16E+13E+1W \
-	enigma2-plugin-settings-Don@-Multifeed.28E+23E+19E+16E+13E+9E+7E+5E+1W \
-	enigma2-plugin-settings-Don@-Multifeed.28E+23E+19E+16E+13E+9E+7E+5E+1W \
-	enigma2-plugin-settings-Don@-Multifeed.33E+31E+28E+23E+19E+16E+13E+9E+5E+1W+4W+5W \
-	enigma2-plugin-settings-Don@-Multifeed.33E+31E+28E+23E+19E+16E+13E+9E+5E+1W+4W+5W \
-	enigma2-plugin-settings-Don@-Multifeed.39E+28E+23E+19E+16E+13E+9E+7E+5E+1W+4W+5W+8W+12W+15W \
-	enigma2-plugin-settings-Don@-Multifeed.39E+28E+23E+19E+16E+13E+9E+7E+5E+1W+4W+5W+8W+12W+15W \
 "

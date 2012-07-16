@@ -1,0 +1,5 @@
+DESCRIPTION = "Don@ E2 Settings File For 39E+28E+23E+19E+16E+13E+9E+7E+5E+1W+4W+5W+8W+12W+15W"
+
+SETTINGS_FILENAME = "Don@-Multifeed.39E+28E+23E+19E+16E+13E+9E+7E+5E+1W+4W+5W+8W+12W+15W"
+
+include oe-alliance-settings.inc
