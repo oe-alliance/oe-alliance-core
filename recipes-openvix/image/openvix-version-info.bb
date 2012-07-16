@@ -40,6 +40,7 @@ do_install() {
 				BUILDTYPE="0"
 			fi
 			# generate /etc/image-version
+			install -d ${D}/etc
 			echo "box_type=${MACHINE}" > etc/image-version
 			echo "build_type=${BUILDTYPE}" >> etc/image-version
 			echo "version=${IMAGE_VERSION}" >> etc/image-version
