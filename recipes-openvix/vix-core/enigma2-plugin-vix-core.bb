@@ -15,7 +15,7 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "2.0+git${SRCPV}"
 PKGV = "2.0+git${GITPKGV}"
-PR = "r3"
+PR = "r4"
 
 SRC_URI="git://git.assembla.com/openvix.10.git;protocol=git"
 
@@ -36,7 +36,7 @@ PACKAGES =+ "${PN}-po"
 FILES_${PN} = "/etc /usr/lib"
 FILES_${PN}-dbg = "/usr/lib/enigma2/python/Plugins/SystemPlugins/ViX/.debug/"
 FILES_${PN}-src = "/usr/lib/enigma2/python/Plugins/SystemPlugins/ViX/*.py"
-FILES_${PN}-po = "${datadir}/enigma2/po/*.po"
+FILES_${PN}-po = "/usr/lib/enigma2/python/Plugins/SystemPlugins/ViX/locale/*.po"
 
 # remove unused .pyc files
 do_install_append() {
@@ -75,6 +75,7 @@ def vixcorechangeword(file):
 
 do_patch_prepend(){
 	global MACHINE1
+	MACHINE1="Dreambox"
 	if "${MACHINE}" == "vuuno":
 		MACHINE1="Vu+ Uno"
 	elif "${MACHINE}" == "vuultimo":
@@ -89,6 +90,8 @@ do_patch_prepend(){
 		MACHINE1="Xtrend ET6"
 	elif "${MACHINE}" == "et9x00":
 		MACHINE1="Xtrend ET9"
+	elif "${MACHINE}" == "odinm9":
+		MACHINE1="Odin M9"
 	elif "${MACHINE}" == "gb800solo":
 		MACHINE1="GigaBlue HD 800 Solo"
 	elif "${MACHINE}" == "gb800se":
@@ -97,8 +100,6 @@ do_patch_prepend(){
 		MACHINE1="GigaBlue HD 800 UE"
 	elif "${MACHINE}" == "gbquad":
 		MACHINE1="GigaBlue HD Quad"
-	elif "${MACHINE}" == "odinm9":
-		MACHINE1="Odin M9"
 	elif "${MACHINE}" == "tmtwin":
 		MACHINE1="Technomate"
 	elif "${MACHINE}" == "ventonhdx":
@@ -120,6 +121,7 @@ def vixcorechangeword2(file):
 
 python do_setup_po_ipk () {
 	global MACHINE1
+	MACHINE1="Dreambox"
 	if "${MACHINE}" == "vuuno":
 		MACHINE1="Vu+ Uno"
 	elif "${MACHINE}" == "vuultimo":
@@ -134,6 +136,8 @@ python do_setup_po_ipk () {
 		MACHINE1="Xtrend ET6"
 	elif "${MACHINE}" == "et9x00":
 		MACHINE1="Xtrend ET9"
+	elif "${MACHINE}" == "odinm9":
+		MACHINE1="Odin M9"
 	elif "${MACHINE}" == "gb800solo":
 		MACHINE1="GigaBlue HD 800 Solo"
 	elif "${MACHINE}" == "gb800se":
@@ -142,8 +146,6 @@ python do_setup_po_ipk () {
 		MACHINE1="GigaBlue HD 800 UE"
 	elif "${MACHINE}" == "gbquad":
 		MACHINE1="GigaBlue HD Quad"
-	elif "${MACHINE}" == "odinm9":
-		MACHINE1="Odin M9"
 	elif "${MACHINE}" == "tmtwin":
 		MACHINE1="Technomate"
 	elif "${MACHINE}" == "ventonhdx":
@@ -164,10 +166,10 @@ do_install_append() {
 }
 
 do_install_po() {
-	install -d ${D}${datadir}/enigma2/po/
+	install -d ${D}/usr/lib/enigma2/python/Plugins/SystemPlugins/ViX/locale/
 	LANGS="ar bg ca cs da de el en en_GB es et fa fi fr fy he hr hu is it lt lv nl no pl pt ru sv sk sl sr th tr uk"
 	for lang in ${LANGS}; do
-		install -m 0755 ${S}/po/$lang.po ${D}${datadir}/enigma2/po/vix-core-$lang.po
+		install -m 0755 ${S}/po/$lang.po ${D}/usr/lib/enigma2/python/Plugins/SystemPlugins/ViX/locale/$lang.po
 	done
 }
 
