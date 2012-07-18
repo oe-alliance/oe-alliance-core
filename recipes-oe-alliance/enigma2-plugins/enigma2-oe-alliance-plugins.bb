@@ -32,7 +32,7 @@ inherit gitpkgv autotools
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r5"
+PR = "r6"
 
 SRC_URI="git://github.com/oe-alliance/oe-alliance-plugins.git;protocol=git"
 
@@ -51,7 +51,10 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 S = "${WORKDIR}/git"
 
-DEPENDS = "enigma2 gigablue-vfdctl librtmp"
+DEPENDS = "enigma2 \
+			${@base_contains("MACHINE_FEATURES", "blindscan-dvbc", "virtual/blindscan-dvbc" , "", d)} \
+			${@base_contains("MACHINE_FEATURES", "blindscan-dvbs", "virtual/blindscan-dvbs" , "", d)} \
+			librtmp"
 
 python populate_packages_prepend() {
 	enigma2_plugindir = bb.data.expand('${libdir}/enigma2/python/Plugins', d)
