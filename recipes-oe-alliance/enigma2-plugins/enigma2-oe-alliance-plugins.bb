@@ -32,7 +32,7 @@ inherit gitpkgv autotools
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r4"
+PR = "r5"
 
 SRC_URI="git://github.com/oe-alliance/oe-alliance-plugins.git;protocol=git"
 
@@ -51,7 +51,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 S = "${WORKDIR}/git"
 
-DEPENDS = "enigma2"
+DEPENDS = "enigma2 gigablue-vfdctl librtmp"
 
 python populate_packages_prepend() {
 	enigma2_plugindir = bb.data.expand('${libdir}/enigma2/python/Plugins', d)
