@@ -11,12 +11,28 @@ PROVIDES = "${PN} \
 	enigma2-plugin-systemplugins-remotecontrolcode \
 	"
 
-inherit gitpkgv
+DESCRIPTION_enigma2-plugin-systemplugins-blindscan = "blindscan..."
+RDEPENDS_enigma2-plugin-systemplugins-blindscan = "virtual/blindscan-dvbs"
+DESCRIPTION_enigma2-plugin-extensions-dlnabrowser = "this is dlna/upnp browser using djmount"
+RDEPENDS_enigma2-plugin-extensions-dlnabrowser = "djmount fuse-utils libfuse2 libupnp3 gst-plugin-neonhttpsrc"
+DESCRIPTION_enigma2-plugin-extensions-dlnaserver = "this is dlna server using minidlna"
+RDEPENDS_enigma2-plugin-extensions-dlnaserver = "minidlna libexif12 libavformat52 libavutil49 libavcodec52 libgsm1 libmp3lame0 libschroedinger-1.0-0 libtheora0 liboil"
+DESCRIPTION_enigma2-plugin-systemplugins-firmwareupgrade = "Upgrade your system Firmware"
+DESCRIPTION_enigma2-plugin-systemplugins-fpgaupgrade = "Upgrade your system FPGA"
+DESCRIPTION_enigma2-plugin-systemplugins-vfdcontrol = "vfd controller"
+RDEPENDS_enigma2-plugin-systemplugins-vfdcontrol = "gigablue-vfdctl"
+DESCRIPTION_enigma2-plugin-extensions-streamtv = "iptv player"
+RDEPENDS_enigma2-plugin-extensions-streamtv = "librtmp"
+DESCRIPTION_enigma2-plugin-systemplugins-fancontrol = "Control your internal system fan."
+DESCRIPTION_enigma2-plugin-extensions-vuplusevent = "Return the Love Event (only for genuine box)"
+DESCRIPTION_enigma2-plugin-systemplugins-remotecontrolcode = "Change Remote Control Code"
+
+inherit gitpkgv autotools
 
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r3"
+PR = "r4"
 
 SRC_URI="git://github.com/oe-alliance/oe-alliance-plugins.git;protocol=git"
 
@@ -25,67 +41,17 @@ EXTRA_OECONF = " \
 	HOST_SYS=${HOST_SYS} \
 	STAGING_INCDIR=${STAGING_INCDIR} \
 	STAGING_LIBDIR=${STAGING_LIBDIR} \
-	--without-debug \
 	--with-po \
-	--with-boxtype=${MACHINE} \
-"
+	--with-boxtype=${MACHINE}"
 
 ALLOW_EMPTY_${PN} = "1"
 PACKAGES += "${PN}-meta"
 FILES_${PN}-meta = "${datadir}/meta"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-inherit autotools
-
 S = "${WORKDIR}/git"
 
-DEPENDS = "enigma2 \
-	"
-
-python populate_packages_prepend () {
-	enigma2_plugindir = bb.data.expand('${libdir}/enigma2/python/Plugins', d)
-
-	do_split_packages(d, enigma2_plugindir, '(.*?/.*?)/.*', 'enigma2-plugin-%s', 'Enigma2 Plugin: %s', recursive=True, match_path=True, prepend=True)
-
-	def getControlLines(mydir, d, package):
-		import os
-		try:
-			src = open(mydir + package + "/CONTROL/control").read()
-		except IOError:
-			return
-		for line in src.split("\n"):
-			if line.startswith('Package: '):
-				full_package = line[9:]
-			elif line.startswith('Depends: '):
-				# some plugins still reference twisted-* dependencies, these packages are now called python-twisted-*
-				depends = line[9:].replace(',', '').split(' ')
-				rdepends = ''
-				for depend in depends:
-					if depend.startswith('twisted-'):
-						rdepends += ' ' + depend.replace('twisted-', 'python-twisted-')
-					else:
-						rdepends += ' ' + depend
-				bb.data.setVar('RDEPENDS_' + full_package, rdepends, d)
-			elif line.startswith('Recommends: '):
-				bb.data.setVar('RRECOMMENDS_' + full_package, line[12:], d)
-			elif line.startswith('Description: '):
-				bb.data.setVar('DESCRIPTION_' + full_package, line[13:], d)
-			elif line.startswith('Replaces: '):
-				bb.data.setVar('RREPLACES_' + full_package, ' '.join(line[10:].split(', ')), d)
-			elif line.startswith('Conflicts: '):
-				bb.data.setVar('RCONFLICTS_' + full_package, ' '.join(line[11:].split(', ')), d)
-			elif line.startswith('Maintainer: '):
-				bb.data.setVar('MAINTAINER_' + full_package, line[12:], d)
-
-	mydir = bb.data.getVar('D', d, 1) + "/../git/"
-	for package in bb.data.getVar('PACKAGES', d, 1).split():
-		getControlLines(mydir, d, package.split('-')[-1])
-}
-
-do_install_append() {
-	# remove unused .pyc files
-	find ${D}/usr/lib/enigma2/python/ -name '*.pyc' -exec rm {} \;
-}
+DEPENDS = "enigma2"
 
 python populate_packages_prepend() {
 	enigma2_plugindir = bb.data.expand('${libdir}/enigma2/python/Plugins', d)
