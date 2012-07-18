@@ -23,6 +23,7 @@ IMAGE_INSTALL = " \
 	e2fsprogs-e2fsck \
 	fakelocale \
 	libavahi-client \
+	libcrypto-compat \
 	ntp \
 	opkg \
 	sdparm \

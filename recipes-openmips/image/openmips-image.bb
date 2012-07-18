@@ -23,6 +23,7 @@ IMAGE_INSTALL = " \
 	e2fsprogs-e2fsck \
 	fakelocale \
 	libavahi-client \
+	libcrypto-compat \
 	ntp \
 	opkg \
 	sdparm \
@@ -33,7 +34,7 @@ IMAGE_INSTALL = " \
 	volatile-media \
 	vsftpd \
 	"
-	
+
 ENIGMA2_PLUGINS = "\
 	enigma2-plugin-extensions-autotimer \
 	enigma2-plugin-extensions-epgsearch \
@@ -48,7 +49,7 @@ ENIGMA2_PLUGINS = "\
 	enigma2-plugin-extensions-autobackup \
 	enigma2-plugin-systemplugins-softwaremanager \
 	enigma2-plugin-systemplugins-hotplug \
-"	
+"
 
 export IMAGE_BASENAME = "openmips-image"
 IMAGE_LINGUAS = ""
