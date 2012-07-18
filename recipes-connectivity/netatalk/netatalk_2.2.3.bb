@@ -1,11 +1,11 @@
 SECTION = "net"
-PR = "0"
+PR = "1"
 
 require conf/license/license-gplv2.inc
 
 DEPENDS = "cups db openssl"
 
-SRC_URI = "http://ovh.dl.sourceforge.net/sourceforge/netatalk/netatalk-${PV}.tar.gz;name=src \
+SRC_URI = "${SOURCEFORGE_MIRROR}/netatalk/netatalk-${PV}.tar.gz;name=src" \
 	   file://netatalk.conf \
 	   file://AppleVolumes.default \
 	   file://afpd.conf \
