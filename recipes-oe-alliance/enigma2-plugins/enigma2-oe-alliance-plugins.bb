@@ -5,16 +5,22 @@ LICENSE = "Proprietary"
 LIC_FILES_CHKSUM = "file://COPYING;md5=8e37f34d0e40d32ea2bc90ee812c9131"
 
 PROVIDES = "${PN} \
-	enigma2-plugin-systemplugins-vfdcontrol \
+	enigma2-plugin-systemplugins-blindscan \
+	enigma2-plugin-extensions-dlnabrowser \
+	enigma2-plugin-extensions-dlnaserver  \
 	enigma2-plugin-systemplugins-firmwareupgrade \
 	enigma2-plugin-systemplugins-fpgaupgrade \
+	enigma2-plugin-systemplugins-vfdcontrol \
+	enigma2-plugin-extensions-streamtv \
+	enigma2-plugin-systemplugins-fancontrol \
+	enigma2-plugin-extensions-vuplusevent \
 	enigma2-plugin-systemplugins-remotecontrolcode \
 	"
 
 DESCRIPTION_enigma2-plugin-systemplugins-blindscan = "blindscan..."
 RDEPENDS_enigma2-plugin-systemplugins-blindscan = "virtual/blindscan-dvbs"
 DESCRIPTION_enigma2-plugin-extensions-dlnabrowser = "this is dlna/upnp browser using djmount"
-RDEPENDS_enigma2-plugin-extensions-dlnabrowser = "djmount fuse-utils libfuse2 libupnp3 gst-plugin-neonhttpsrc"
+RDEPENDS_enigma2-plugin-extensions-dlnabrowser = "djmount fuse-utils libfuse2 libupnp3 gst-plugins-bad-neonhttpsrc"
 DESCRIPTION_enigma2-plugin-extensions-dlnaserver = "this is dlna server using minidlna"
 RDEPENDS_enigma2-plugin-extensions-dlnaserver = "minidlna libexif12 libavformat52 libavutil49 libavcodec52 libgsm1 libmp3lame0 libschroedinger-1.0-0 libtheora0 liboil"
 DESCRIPTION_enigma2-plugin-systemplugins-firmwareupgrade = "Upgrade your system Firmware"
@@ -27,12 +33,20 @@ DESCRIPTION_enigma2-plugin-systemplugins-fancontrol = "Control your internal sys
 DESCRIPTION_enigma2-plugin-extensions-vuplusevent = "Return the Love Event (only for genuine box)"
 DESCRIPTION_enigma2-plugin-systemplugins-remotecontrolcode = "Change Remote Control Code"
 
+DEPENDS = "enigma2 \
+	${@base_contains("MACHINE_FEATURES", "blindscan-dvbc", "virtual/blindscan-dvbc" , "", d)} \
+	${@base_contains("MACHINE_FEATURES", "blindscan-dvbs", "virtual/blindscan-dvbs" , "", d)} \
+	djmount \
+	librtmp \
+	minidlna \
+	"
+
 inherit gitpkgv autotools
 
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r6"
+PR = "r7"
 
 SRC_URI="git://github.com/oe-alliance/oe-alliance-plugins.git;protocol=git"
 
@@ -50,11 +64,6 @@ FILES_${PN}-meta = "${datadir}/meta"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 S = "${WORKDIR}/git"
-
-DEPENDS = "enigma2 \
-			${@base_contains("MACHINE_FEATURES", "blindscan-dvbc", "virtual/blindscan-dvbc" , "", d)} \
-			${@base_contains("MACHINE_FEATURES", "blindscan-dvbs", "virtual/blindscan-dvbs" , "", d)} \
-			librtmp"
 
 python populate_packages_prepend() {
 	enigma2_plugindir = bb.data.expand('${libdir}/enigma2/python/Plugins', d)
