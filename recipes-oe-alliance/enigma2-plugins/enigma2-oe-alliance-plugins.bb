@@ -39,6 +39,8 @@ DEPENDS = "enigma2 \
 	djmount \
 	librtmp \
 	minidlna \
+	libtheora \
+	libgsm \
 	"
 
 inherit gitpkgv autotools
