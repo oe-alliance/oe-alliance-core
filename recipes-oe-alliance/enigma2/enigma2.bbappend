@@ -1,6 +1,6 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
-PRINC = "6"
+PRINC = "7"
 
 RDEPENDS_${PN} += " \
 	python-email \
@@ -52,6 +52,7 @@ FILES_${PN}-po = "${datadir}/enigma2/po/*.po"
 def enigma2changeword(file):
 	fn = file[:-1]
 	os.system('sed -i "s/STB_BOX/' + MACHINE1 + '/g" ' + fn)
+	os.system('sed -i "s/STB-BOX/' + MACHINE1 + '/g" ' + fn)
 	os.system('sed -i "s/STB-GUI/Receiver/g" ' + fn)
 
 do_patch_prepend(){
