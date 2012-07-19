@@ -5,7 +5,7 @@ require conf/license/license-gplv2.inc
 RCONFLICTS_${PN} = "distro-feed-configs"
 RREPLACES_${PN} = "distro-feed-configs"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
-PR = "r1"
+PR = "r2"
 
 do_compile() {
 	mkdir -p ${S}/${sysconfdir}/opkg
@@ -16,7 +16,7 @@ do_compile() {
 do_install () {
 		install -d ${D}${sysconfdir}/opkg
 		install -m 0644 ${S}/${sysconfdir}/opkg/* ${D}${sysconfdir}/opkg/
-		if [ -e ${D}${sysconfdir}/opkg/mipsel-feed.conf] ; then
+		if [ -e ${D}${sysconfdir}/opkg/mipsel-feed.conf ] ; then
 			rm -f ${D}${sysconfdir}/opkg/mipsel-feed.conf
 		fi
 }
