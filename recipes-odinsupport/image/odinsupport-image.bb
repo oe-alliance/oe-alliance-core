@@ -12,9 +12,9 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 IMAGE_INSTALL = " \
 	oe-alliance-enigma2 \
-	odin-support-version-info \
-	odin-support-enigma2 \
-	odin-support-bootlogo \
+	odinsupport-version-info \
+	odinsupport-enigma2 \
+	odinsupport-bootlogo \
 	${ENIGMA2_PLUGINS} \
 	avahi-daemon \
 	dropbear \
@@ -51,7 +51,7 @@ ENIGMA2_PLUGINS = "\
 	enigma2-plugin-systemplugins-hotplug \
 "
 
-export IMAGE_BASENAME = "odin-support-image"
+export IMAGE_BASENAME = "odinsupport-image"
 IMAGE_LINGUAS = ""
 
 inherit image

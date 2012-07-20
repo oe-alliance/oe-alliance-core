@@ -5,7 +5,11 @@ require conf/license/license-gplv2.inc
 RCONFLICTS_${PN} = "distro-feed-configs"
 RREPLACES_${PN} = "distro-feed-configs"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
-PR = "r3"
+PR = "r4"
+
+if [ "${MACHINE}" = "odinm9" ] ; then
+    PACKAGE_ARCHS += " et9x00"
+fi
 
 do_compile() {
 	mkdir -p ${S}/${sysconfdir}/opkg
@@ -16,11 +20,6 @@ do_compile() {
 do_install () {
 		install -d ${D}${sysconfdir}/opkg
 		install -m 0644 ${S}/${sysconfdir}/opkg/* ${D}${sysconfdir}/opkg/
-		if [ "${MACHINE}" = "odinm9" ] ; then
-			if [ -e ${D}${sysconfdir}/opkg/et9x00-feed.conf] ; then
-				rm -rf ${D}${sysconfdir}/opkg/et9x00-feed.conf
-			fi
-		fi
 }
 
 CONFFILES_${PN} += '${@ " ".join( [ ( "${sysconfdir}/opkg/%s-feed.conf" % feed ) for feed in "all ${PACKAGE_EXTRA_ARCHS} ${MACHINE_ARCH} 3rdparty".split() ] ) }'

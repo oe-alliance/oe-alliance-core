@@ -8,7 +8,7 @@ PR = "r2"
 
 inherit task
 
-DEPENDS = "enigma2-pliplugins odin-support-feeds"
+DEPENDS = "enigma2-pliplugins odinsupport-feeds"
 
 RRECOMMENDS = "\
 	enigma2-plugin-extensions-autotimer \
