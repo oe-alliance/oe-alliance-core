@@ -2,14 +2,14 @@ DESCRIPTION = "Linux kernel for ${MACHINE}"
 SECTION = "kernel"
 LICENSE = "GPLv2"
 
-KERNEL_RELEASE = "3.3.0"
+KERNEL_RELEASE = "3.4.3"
 
-SRC_URI[md5sum] = "155f1c246dbc9e1148ef5857c0d880a5"
-SRC_URI[sha256sum] = "67f2c4cec122e1f1b070a7dbfdfe0ac8afb2a80bb0c7d226d516a83664adf140"
+SRC_URI[md5sum] = "57a986f69a0f0601b77710b4829e4b47"
+SRC_URI[sha256sum] = "d81d051e6f702fc4bda0cb6b18db7319ed3b36401a924b682b0b0b94e0c23ad7"
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-MACHINE_KERNEL_PR_append = ".7"
+MACHINE_KERNEL_PR_append = ".5"
 
 # By default, kernel.bbclass modifies package names to allow multiple kernels
 # to be installed in parallel. We revert this change and rprovide the versioned
@@ -23,10 +23,8 @@ SRC_URI += "http://www.et-view.com/download/linux-${PV}.tar.gz \
 	file://defconfig \
 	file://fix-proc-cputype.patch \
 	file://0001-Revert-MIPS-Add-fast-get_user_pages.patch \
-	file://disable_early_fb.patch \
 	file://iosched-slice_idle-1.patch \
 	file://add-dmx-source-timecode.patch \
-	file://rtl8712-release-firmware-fix.patch \
 	file://dvb-usb-af9035.patch \
 	file://tda18218-7mhz-lopass.patch \
 	file://dvb-usb-a867.patch \
@@ -35,17 +33,12 @@ SRC_URI += "http://www.et-view.com/download/linux-${PV}.tar.gz \
 	file://cxd2820r-changed-condition-to-break-out-from-wait-lock-loop.patch \
 	file://cxd2820r-output-full-range-SNR.patch \
 	file://cinergy_s2_usb_r2.patch \
-	file://as102-backports-from-kernel-3.4.patch \
 	file://as102-scale-MER-to-full-range.patch \
 	file://as102-adjust-signal-strength-report.patch \
-	file://em28xx-pre-allocate-DVB-isoc-transfer-buffers.patch \
 	file://em28xx-dvb-stop-URBs-when-stopping-the-streaming.patch \
 	file://af9015-output-full-range-SNR.patch \
-	file://it913x-backports-from-kernel-3.4.patch \
-	file://it913x-backports-from-kernel-3.5.patch \
 	file://it913x-switch-off-PID-filter-by-default.patch \
 	file://it913x-fix-bulk-read-write-retry-loop.patch \
-	file://tda10071-BUGFIX-delivery-system.patch \
 	file://dvb-usb-dib0700-disable-sleep.patch \
 	file://dvb_usb_disable_rc_polling.patch \
 	"

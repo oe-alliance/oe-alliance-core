@@ -28,8 +28,8 @@ GLIBC_EXTRA_OECONF = "--with-tls --with-__thread"
 PREFERRED_PROVIDER_virtual/kernel = "linux-etxx00"
 PREFERRED_PROVIDER_virtual/blindscan-dvbs = "et-blindscan-dvbs-utils"
 
-PREFERRED_VERSION_linux-etxx00 = "3.3.0"
-PREFERRED_VERSION_linux-libc-headers = "3.3"
+PREFERRED_VERSION_linux-etxx00 = "3.4.3"
+PREFERRED_VERSION_linux-libc-headers = "3.4"
 
 KERNEL_IMAGETYPE = "vmlinux"
 KERNEL_OUTPUT = "${KERNEL_IMAGETYPE}"

@@ -199,12 +199,12 @@ From: Gianluca Gennari <gennarone@gmail.com>
  create mode 100644 drivers/media/dvb/dvb-usb/tuner_tua9001.h
 
 diff --git a/drivers/media/dvb/dvb-usb/Kconfig b/drivers/media/dvb/dvb-usb/Kconfig
-index 787ffab..cbb591f 100644
+index 20024c9..1b76203 100644
 --- a/drivers/media/dvb/dvb-usb/Kconfig
 +++ b/drivers/media/dvb/dvb-usb/Kconfig
 @@ -351,6 +351,13 @@ config DVB_USB_AF9035
- 	help
- 	  Say Y here to support the Afatech AF9035 based DVB-T USB2.0 receiver
+         help
+           Say Y here to support the Afatech AF9035 based DVB-T USB2.0 receiver
  
 +config DVB_USB_RTL2832
 +	tristate "Realtek RTL2832 DVB-T USB2.0 support"
@@ -217,11 +217,11 @@ index 787ffab..cbb591f 100644
  	tristate "Intel CE6230 DVB-T USB2.0 support"
  	depends on DVB_USB
 diff --git a/drivers/media/dvb/dvb-usb/Makefile b/drivers/media/dvb/dvb-usb/Makefile
-index 4745905..834c2b2 100644
+index 7e2bcbd..02c5bc4 100644
 --- a/drivers/media/dvb/dvb-usb/Makefile
 +++ b/drivers/media/dvb/dvb-usb/Makefile
-@@ -115,6 +115,18 @@ dvb-usb-a867-objs := a867_af903x-core.o a867_af903x-devices.o a867_af903x-drv.o
- 			a867_user.o a867_mxl5007t.o a867_Maxlinear_MXL5007.o a867_Afa_AF9007.o
+@@ -120,6 +120,18 @@ dvb-usb-a867-objs := a867_af903x-core.o a867_af903x-devices.o a867_af903x-drv.o
+ 		     a867_user.o a867_mxl5007t.o a867_Maxlinear_MXL5007.o a867_Afa_AF9007.o
  obj-$(CONFIG_DVB_USB_A867) += dvb-usb-a867.o
  
 +dvb-usb-rtl2832-objs := demod_rtl2832.o dvbt_demod_base.o dvbt_nim_base.o foundation.o \
@@ -236,9 +236,9 @@ index 4745905..834c2b2 100644
 +			rtl2832u_ioctl.o nim_rtl2832_fc0013.o tuner_fc0013.o
 +obj-$(CONFIG_DVB_USB_RTL2832) += dvb-usb-rtl2832.o
 +
- ccflags-y += -Idrivers/media/dvb/dvb-core/ -Idrivers/media/dvb/frontends/
+ ccflags-y += -I$(srctree)/drivers/media/dvb/dvb-core
+ ccflags-y += -I$(srctree)/drivers/media/dvb/frontends/
  # due to tuner-xc3028
- ccflags-y += -Idrivers/media/common/tuners
 diff --git a/drivers/media/dvb/dvb-usb/demod_rtl2832.c b/drivers/media/dvb/dvb-usb/demod_rtl2832.c
 new file mode 100644
 index 0000000..f367f7f
@@ -14448,10 +14448,10 @@ index 0000000..fcbe3c1
 +
 +#endif
 diff --git a/drivers/media/dvb/dvb-usb/dvb-usb-ids.h b/drivers/media/dvb/dvb-usb/dvb-usb-ids.h
-index 9df8f28..442f15c 100644
+index 8444118..62fe518 100644
 --- a/drivers/media/dvb/dvb-usb/dvb-usb-ids.h
 +++ b/drivers/media/dvb/dvb-usb/dvb-usb-ids.h
-@@ -305,6 +305,7 @@
+@@ -313,6 +313,7 @@
  #define USB_PID_WINFAST_DTV_DONGLE_H			0x60f6
  #define USB_PID_WINFAST_DTV_DONGLE_STK7700P_2		0x6f01
  #define USB_PID_WINFAST_DTV_DONGLE_GOLD			0x6029

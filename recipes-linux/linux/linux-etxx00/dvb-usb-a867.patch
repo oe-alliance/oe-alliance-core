@@ -100,13 +100,13 @@ From: Gianluca Gennari <gennarone@gmail.com>
  create mode 100644 drivers/media/dvb/dvb-usb/a867_version.h
 
 diff --git a/drivers/media/dvb/dvb-usb/Kconfig b/drivers/media/dvb/dvb-usb/Kconfig
-index d2014c0..787ffab 100644
+index d3ffd16..20024c9 100644
 --- a/drivers/media/dvb/dvb-usb/Kconfig
 +++ b/drivers/media/dvb/dvb-usb/Kconfig
-@@ -415,3 +415,11 @@ config DVB_USB_MXL111SF
- 	select VIDEO_TVEEPROM
+@@ -434,3 +434,11 @@ config DVB_USB_RTL28XXU
+ 	select MEDIA_TUNER_MXL5005S if !MEDIA_TUNER_CUSTOMISE
  	help
- 	  Say Y here to support the MxL111SF USB2.0 DTV receiver.
+ 	  Say Y here to support the Realtek RTL28xxU DVB USB receiver.
 +
 +config DVB_USB_A867
 +	tristate "Avermedia A867 DVB support"
@@ -116,22 +116,22 @@ index d2014c0..787ffab 100644
 +	  Say Y here to support the Avermedia A867 device
 +
 diff --git a/drivers/media/dvb/dvb-usb/Makefile b/drivers/media/dvb/dvb-usb/Makefile
-index f8b1013..4745905 100644
+index 32489a8..7e2bcbd 100644
 --- a/drivers/media/dvb/dvb-usb/Makefile
 +++ b/drivers/media/dvb/dvb-usb/Makefile
-@@ -109,6 +109,12 @@ obj-$(CONFIG_DVB_USB_MXL111SF) += mxl111sf-tuner.o
- dvb-usb-af9035-objs = af9035.o
- obj-$(CONFIG_DVB_USB_AF9035) += dvb-usb-af9035.o
+@@ -114,6 +114,12 @@ obj-$(CONFIG_DVB_USB_MXL111SF) += mxl111sf-tuner.o
+ dvb-usb-rtl28xxu-objs = rtl28xxu.o
+ obj-$(CONFIG_DVB_USB_RTL28XXU) += dvb-usb-rtl28xxu.o
  
 +dvb-usb-a867-objs := a867_af903x-core.o a867_af903x-devices.o a867_af903x-drv.o \
-+			a867_af903x-fe.o a867_af903x-tuner.o a867_cmd.o a867_standard.o \
-+			a867_demodulator.o a867_demodulatorextend.o a867_usb2impl.o \
-+			a867_user.o a867_mxl5007t.o a867_Maxlinear_MXL5007.o a867_Afa_AF9007.o
++		     a867_af903x-fe.o a867_af903x-tuner.o a867_cmd.o a867_standard.o \
++		     a867_demodulator.o a867_demodulatorextend.o a867_usb2impl.o \
++		     a867_user.o a867_mxl5007t.o a867_Maxlinear_MXL5007.o a867_Afa_AF9007.o
 +obj-$(CONFIG_DVB_USB_A867) += dvb-usb-a867.o
 +
- ccflags-y += -Idrivers/media/dvb/dvb-core/ -Idrivers/media/dvb/frontends/
+ ccflags-y += -I$(srctree)/drivers/media/dvb/dvb-core
+ ccflags-y += -I$(srctree)/drivers/media/dvb/frontends/
  # due to tuner-xc3028
- ccflags-y += -Idrivers/media/common/tuners
 diff --git a/drivers/media/dvb/dvb-usb/a867_Afa_AF9007.c b/drivers/media/dvb/dvb-usb/a867_Afa_AF9007.c
 new file mode 100644
 index 0000000..0d65cf9
