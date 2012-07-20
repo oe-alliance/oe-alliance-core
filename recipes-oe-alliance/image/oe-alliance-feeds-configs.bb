@@ -5,9 +5,7 @@ require conf/license/license-gplv2.inc
 RCONFLICTS_${PN} = "distro-feed-configs"
 RREPLACES_${PN} = "distro-feed-configs"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
-PR = "r4"
-
-PACKAGE_ARCHS_odinm9_append += " et9x00"
+PR = "r5"
 
 do_compile() {
 	mkdir -p ${S}/${sysconfdir}/opkg
