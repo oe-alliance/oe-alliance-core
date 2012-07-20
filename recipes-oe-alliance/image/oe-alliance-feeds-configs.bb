@@ -7,9 +7,7 @@ RREPLACES_${PN} = "distro-feed-configs"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 PR = "r4"
 
-if [ "${MACHINE}" = "odinm9" ] ; then
-    PACKAGE_ARCHS += " et9x00"
-fi
+PACKAGE_ARCHS_odinm9_append += " et9x00"
 
 do_compile() {
 	mkdir -p ${S}/${sysconfdir}/opkg
