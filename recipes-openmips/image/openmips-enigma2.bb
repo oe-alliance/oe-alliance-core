@@ -16,12 +16,6 @@ DEPENDS = "enigma2-pliplugins openmips-feeds"
 RRECOMMENDS = "\
 	enigma2-plugin-extensions-ppanel \
 	enigma2-plugin-pli-softcamsetup \
-	enigma2-plugin-extensions-autobackup \
-	enigma2-plugin-extensions-audiosync \
-	enigma2-plugin-extensions-autotimer \
-	enigma2-plugin-extensions-epgsearch \
-	enigma2-plugin-extensions-imdb \
-	enigma2-plugin-extensions-streamtv \
 	enigma2-plugin-systemplugins-softwaremanager \
 	enigma2-plugin-systemplugins-skinselector \
 	\

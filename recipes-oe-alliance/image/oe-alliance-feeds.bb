@@ -61,4 +61,5 @@ RRECOMMENDS = "\
 	wakelan \
 	zeroconf \
 	iperf \
+	dosfstools \
 	"

@@ -33,22 +33,21 @@ IMAGE_INSTALL = " \
 	util-linux-sfdisk \
 	volatile-media \
 	vsftpd \
+	hddtemp \
+	dosfstools \
 	"
 
 ENIGMA2_PLUGINS = "\
-	enigma2-plugin-extensions-autotimer \
-	enigma2-plugin-extensions-epgsearch \
-	enigma2-plugin-extensions-imdb \
 	enigma2-plugin-extensions-graphmultiepg \
 	enigma2-plugin-extensions-mediaplayer \
 	enigma2-plugin-extensions-cutlisteditor \
 	enigma2-plugin-systemplugins-videotune \
-	enigma2-plugin-systemplugins-vps \
 	enigma2-plugin-extensions-dvdplayer \
 	enigma2-plugin-systemplugins-autoresolution \
-	enigma2-plugin-extensions-autobackup \
 	enigma2-plugin-systemplugins-softwaremanager \
 	enigma2-plugin-systemplugins-hotplug \
+	enigma2-plugin-systemplugins-devicemanager \
+	enigma2-plugin-systemplugins-swapmanager \
 "
 
 export IMAGE_BASENAME = "openmips-image"
