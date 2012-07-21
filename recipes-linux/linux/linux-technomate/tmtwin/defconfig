@@ -1,6 +1,6 @@
 #
 # Automatically generated file; DO NOT EDIT.
-# Linux/mips 3.4.4 Kernel Configuration
+# Linux/mips 3.4.6 Kernel Configuration
 #
 CONFIG_MIPS=y
 
@@ -2066,8 +2066,6 @@ CONFIG_FB=y
 # CONFIG_FB_CIRRUS is not set
 # CONFIG_FB_PM2 is not set
 # CONFIG_FB_CYBER2000 is not set
-# CONFIG_FB_ASILIANT is not set
-# CONFIG_FB_IMSTT is not set
 # CONFIG_FB_S1D13XXX is not set
 # CONFIG_FB_NVIDIA is not set
 # CONFIG_FB_RIVA is not set
@@ -2504,7 +2502,7 @@ CONFIG_EXT4_FS=y
 # CONFIG_EXT4_FS_XATTR is not set
 # CONFIG_EXT4_DEBUG is not set
 CONFIG_JBD=m
-CONFIG_JBD2=m
+CONFIG_JBD2=y
 # CONFIG_REISERFS_FS is not set
 # CONFIG_JFS_FS is not set
 # CONFIG_XFS_FS is not set
@@ -2581,13 +2579,7 @@ CONFIG_UBIFS_FS_ZLIB=y
 # CONFIG_UBIFS_FS_DEBUG is not set
 # CONFIG_LOGFS is not set
 # CONFIG_CRAMFS is not set
-CONFIG_SQUASHFS=m
-# CONFIG_SQUASHFS_XATTR is not set
-CONFIG_SQUASHFS_ZLIB=y
-# CONFIG_SQUASHFS_LZO is not set
-# CONFIG_SQUASHFS_XZ is not set
-# CONFIG_SQUASHFS_EMBEDDED is not set
-CONFIG_SQUASHFS_FRAGMENT_CACHE_SIZE=3
+# CONFIG_SQUASHFS is not set
 # CONFIG_VXFS_FS is not set
 # CONFIG_MINIX_FS is not set
 # CONFIG_MINIX_FS_NATIVE_ENDIAN is not set
@@ -2692,7 +2684,7 @@ CONFIG_DEBUG_KERNEL=y
 # CONFIG_LOCKUP_DETECTOR is not set
 # CONFIG_HARDLOCKUP_DETECTOR is not set
 # CONFIG_DETECT_HUNG_TASK is not set
-CONFIG_SCHED_DEBUG=y
+# CONFIG_SCHED_DEBUG is not set
 # CONFIG_SCHEDSTATS is not set
 # CONFIG_TIMER_STATS is not set
 # CONFIG_DEBUG_OBJECTS is not set

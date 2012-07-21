@@ -1,9 +1,9 @@
 DESCRIPTION = "Linux kernel for ${MACHINE}"
 LICENSE = "GPL"
 SECTION = "kernel"
-KV = "3.4.4"
+KV = "3.4.6"
 
-SRCDATE = "20120711"
+SRCDATE = "20120720"
 MACHINE_KERNEL_PR_append = ".0"
 
 SRC_URI[md5sum] = "fe7824f1b11869ce40422b115ceaadfa"
@@ -11,7 +11,7 @@ SRC_URI[sha256sum] = "393a9cb7ccb64b79e6ea4ba1bcaec9a9d9fadb113828cfb6dcd30c23ff
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${KV}-tm-${SRCDATE}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-SRC_URI = "http://en2.ath.cx/release/images/iqon/dev/linux-3.4.4-tm-${SRCDATE}.tar.gz \
+SRC_URI = "http://en2.ath.cx/release/images/iqon/dev/linux-${KV}-tm-${SRCDATE}.tar.gz \
 		file://defconfig"
 
 S = "${WORKDIR}/linux-${KV}-tm-${SRCDATE}"
@@ -40,8 +40,8 @@ kernel_do_install_append() {
 pkg_postinst_kernel-image () {
 	if [ "x$D" == "x" ]; then
 		if [ -f /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz ] ; then
-			flash_erase  /dev/mtd0 0 0
-			nandwrite -p /dev/mtd0 /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz
+			flash_erase /dev/mtd6 0 0
+			nandwrite -p /dev/mtd6 /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz
 			rm -f /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz
 		fi
 	fi
