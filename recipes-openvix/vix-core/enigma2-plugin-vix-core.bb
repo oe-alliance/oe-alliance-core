@@ -15,7 +15,7 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "2.0+git${SRCPV}"
 PKGV = "2.0+git${GITPKGV}"
-PR = "r5"
+PR = "r65"
 
 SRC_URI="git://git.assembla.com/openvix.10.git;protocol=git"
 
@@ -24,11 +24,13 @@ S = "${WORKDIR}/git"
 inherit autotools
 
 EXTRA_OECONF = "\
-	--with-po --with-libsdl=no --with-boxtype=${MACHINE} \
 	BUILD_SYS=${BUILD_SYS} \
 	HOST_SYS=${HOST_SYS} \
 	STAGING_INCDIR=${STAGING_INCDIR} \
 	STAGING_LIBDIR=${STAGING_LIBDIR} \
+	--with-po \
+	--with-libsdl=no \
+	--with-boxtype=${MACHINE} \
 "
 
 PACKAGES =+ "${PN}-src"
@@ -43,35 +45,11 @@ do_install_append() {
 	find ${D}/usr/lib/enigma2/python/Plugins/SystemPlugins/ViX/ -name '*.pyc' -exec rm {} \;
 }
 
-do_install_append_vuuno() {
-	install -m 0644 ${DEPLOY_DIR_IMAGE}/splash_cfe_auto.bin ${D}/usr/lib/enigma2/python/Plugins/SystemPlugins/ViX/splash_cfe_auto.bin
-}
-do_install_append_vuultimo() {
-	install -m 0644 ${DEPLOY_DIR_IMAGE}/splash_cfe_auto.bin ${D}/usr/lib/enigma2/python/Plugins/SystemPlugins/ViX/splash_cfe_auto.bin
-}
-do_install_append_et5x00() {
-	install -m 0644 ${DEPLOY_DIR_IMAGE}/splash.bin ${D}/usr/lib/enigma2/python/Plugins/SystemPlugins/ViX/splash.bin
-}
-do_install_append_et6x00() {
-	install -m 0644 ${DEPLOY_DIR_IMAGE}/splash.bin ${D}/usr/lib/enigma2/python/Plugins/SystemPlugins/ViX/splash.bin
-}
-do_install_append_et9x00() {
-	install -m 0644 ${DEPLOY_DIR_IMAGE}/splash.bin ${D}/usr/lib/enigma2/python/Plugins/SystemPlugins/ViX/splash.bin
-}
-do_install_append_odinm9() {
-	install -m 0644 ${DEPLOY_DIR_IMAGE}/splash.bin ${D}/usr/lib/enigma2/python/Plugins/SystemPlugins/ViX/splash.bin
-}
-do_install_append_tmtwin() {
-	install -m 0644 ${DEPLOY_DIR_IMAGE}/splash.bmp ${D}/usr/lib/enigma2/python/Plugins/SystemPlugins/ViX/splash.bmp
-}
-do_install_append_ventonhdx() {
-	install -m 0644 ${DEPLOY_DIR_IMAGE}/splash.bin ${D}/usr/lib/enigma2/python/Plugins/SystemPlugins/ViX/splash.bin
-}
-
-
 def vixcorechangeword(file):
 	fn = file[:-1]
 	os.system('sed -i "s/STB_BOX/' + MACHINE1 + '/g" ' + fn)
+	os.system('sed -i "s/STB-BOX/' + MACHINE1 + '/g" ' + fn)
+	os.system('sed -i "s/STB-GUI/Receiver/g" ' + fn)
 
 do_patch_prepend(){
 	global MACHINE1
@@ -118,6 +96,8 @@ do_patch_prepend(){
 def vixcorechangeword2(file):
 	fn = file[:-1]
 	os.system('sed -i "s/' + MACHINE1 + '/STB_BOX/g" ' + fn)
+	os.system('sed -i "s/' + MACHINE1 + '/STB-BOX/g" ' + fn)
+	os.system('sed -i "s/Receiver/STB-GUI/g" ' + fn)
 
 python do_setup_po_ipk () {
 	global MACHINE1
