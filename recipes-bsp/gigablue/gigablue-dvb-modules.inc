@@ -3,7 +3,7 @@ SECTION = "base"
 PRIORITY = "required"
 LICENSE = "CLOSED"
 
-PV = "${KV}+${SRCDATE}"
+PV = "${KV}+${SRCDATE}.1"
 MACHINE_KERNEL_PR_append = ".1"
 
 SRC_URI_append = " file://ddbootup"

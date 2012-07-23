@@ -5,12 +5,11 @@ LICENSE = "CLOSED"
 
 KV = "3.2.2"
 SRCDATE = "20120627"
+PV = "${KV}+${SRCDATE}.1"
 MACHINE_KERNEL_PR_append = ".1"
 
 SRC_URI[md5sum] = "2f229a9d1851a5ca01fb0facce76229f"
 SRC_URI[sha256sum] = "37be3794aa5ed1bac1d9fb8e448efad397047fc5396019f24bee4c65cbf6220c"
-
-PV = "${KV}+${SRCDATE}"
 
 RDEPENDS_${PN} += "venton-fpupdate-hdx"
 

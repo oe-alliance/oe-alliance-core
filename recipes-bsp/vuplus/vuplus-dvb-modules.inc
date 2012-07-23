@@ -4,7 +4,7 @@ PRIORITY = "required"
 LICENSE = "CLOSED"
 
 KV = "3.1.1"
-PV = "${KV}+${SRCDATE}"
+PV = "${KV}+${SRCDATE}.1"
 MACHINE_KERNEL_PR_append = ".1"
 
 VUPLUS_KERNEL_GCC = "4.4.3"
