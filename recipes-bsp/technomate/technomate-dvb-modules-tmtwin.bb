@@ -6,6 +6,7 @@ LICENSE = "CLOSED"
 SRCDATE = "20120720"
 KV = "3.4.6"
 PV = "${KV}-${SRCDATE}"
+MACHINE_KERNEL_PR_append = ".1"
 
 SRC_URI = "http://en2.ath.cx/release/images/iqon/dev/bcmlinuxdvb_7335-${PV}.tar.gz"
 
@@ -21,11 +22,11 @@ do_compile() {
 do_install() {
 	install -d ${D}/lib/modules/${KV}/extra
 	for f in lib/modules/${KV}/extra/*.ko; do
-        install -m 0644 $f ${D}/$f;
+		install -m 0644 $f ${D}/$f;
 	done
-	install -d ${D}/${sysconfdir}/modutils
-    for i in `ls ${D}/lib/modules/${KV}/extra | grep \\.ko | sed -e 's/.ko//g'`; do
-        echo $i >> ${D}/${sysconfdir}/modutils/_tm
+	install -d ${D}/${sysconfdir}/modules-load.d
+	for i in `ls ${D}/lib/modules/${KV}/extra | grep \\.ko | sed -e 's/.ko//g'`; do
+		echo $i >> ${D}/${sysconfdir}/modules-load.d/_${MACHINE}.conf
 	done
 }
 
