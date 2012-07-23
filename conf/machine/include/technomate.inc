@@ -55,7 +55,7 @@ IMAGE_CMD_ubi_append = " \
 	cd ${DEPLOY_DIR_IMAGE}; \
 	zip ${IMAGE_NAME}_usb.zip ${IMAGEDIR}/*; \
 	rm -f ${DEPLOY_DIR_IMAGE}/*.ubifs; \
-	rm -Rf ${IMAGEDIR}; \
+	rm -Rf update; \
 	"
 
 TARGET_FPU = "hard"
