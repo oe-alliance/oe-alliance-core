@@ -4,6 +4,9 @@ SECTION = "extra"
 PRIORITY = "optional"
 LICENSE = "GPLv2"
 
+RCONFLICTS_ = "gb-multiquickbutton"
+RREPLACES = "gb-multiquickbutton"
+
 DEPENDS = "enigma2"
 
 inherit gitpkgv
