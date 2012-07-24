@@ -8,7 +8,7 @@ KV = "3.4.6"
 PV = "${KV}+${SRCDATE}"
 PR = "r0"
 
-SRC_URI = "http://en2.ath.cx/release/images/iqon/dev/bcmlinuxdvb_7335-${KV}+${SRCDATE}.tar.gz"
+SRC_URI = "http://en2.ath.cx/release/images/iqon/dev/bcmlinuxdvb_7335-${KV}-${SRCDATE}.tar.gz"
 
 S = "${WORKDIR}"
 
@@ -30,5 +30,5 @@ do_install() {
 	done
 }
 
-SRC_URI[md5sum] = "cc89ddb1252e8a68017298359b7037aa"
-SRC_URI[sha256sum] = "ad8e6f82e3da315da4060b16980d85df68e8036af8cb2458c09650e77fa148ef"
+SRC_URI[md5sum] = "86fa6fa5d3fcb3c69f5b0981e255a35f"
+SRC_URI[sha256sum] = "a112552a9afa0a9805148b314f9b32565816fcf7b46682c0014de45f91f94f67"
