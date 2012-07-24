@@ -5,10 +5,10 @@ LICENSE = "CLOSED"
 
 SRCDATE = "20120720"
 KV = "3.4.6"
-PV = "${KV}+${SRCDATE}.1"
-MACHINE_KERNEL_PR_append = ".1"
+PV = "${KV}+${SRCDATE}"
+PR = "r2"
 
-SRC_URI = "http://en2.ath.cx/release/images/iqon/dev/bcmlinuxdvb_7335-${PV}.tar.gz"
+SRC_URI = "http://en2.ath.cx/release/images/iqon/dev/bcmlinuxdvb_7335-${KV}+${SRCDATE}.tar.gz"
 
 S = "${WORKDIR}"
 

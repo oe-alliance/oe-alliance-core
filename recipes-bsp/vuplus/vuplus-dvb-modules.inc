@@ -4,8 +4,8 @@ PRIORITY = "required"
 LICENSE = "CLOSED"
 
 KV = "3.1.1"
-PV = "${KV}+${SRCDATE}.1"
-MACHINE_KERNEL_PR_append = ".1"
+PV = "${KV}+${SRCDATE}"
+PR = "r2"
 
 VUPLUS_KERNEL_GCC = "4.4.3"
 SRC_URI = "http://archive.vuplus.com/download/drivers/vuplus-dvb-modules-${DOWNLOADMACHINE}-${KV}-${VUPLUS_KERNEL_GCC}-${SRCDATE}.tar.gz"
