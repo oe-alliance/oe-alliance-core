@@ -58,13 +58,7 @@ IMAGE_CMD_ubi_append = " \
 
 TARGET_FPU = "hard"
 
-MACHINE_FEATURES += "kernel26 alsa usbhost wifi nl80211"
-
-# openpli specific features:
-MACHINE_FEATURES += "32bpp hdtv 3dtv switchoff lpcm dvbapi5 dvb-c"
-
-
-GLIBC_EXTRA_OECONF = "--with-tls"
+MACHINE_FEATURES += "3dtv alsa hdmicec switchoff wifi dvb-c"
 
 require conf/machine/include/tune-mips32.inc
 
