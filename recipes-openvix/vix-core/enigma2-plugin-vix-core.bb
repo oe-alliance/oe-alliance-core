@@ -8,14 +8,20 @@ PACKAGE_ARCH := "${MACHINE_ARCH}"
 DEPENDS = "enigma2 mtd-utils python-process libcrypto-compat"
 RDEPENDS = "mtd-utils python-process libcrypto-compat"
 
+DEPENDS_append_gbsolo = "gigablue-cfe"
+RDEPENDS_append_gbsolo = "gigablue-cfe"
+
+DEPENDS_append_gbse = "gigablue-cfe"
+RDEPENDS_append_gbse = "gigablue-cfe"
+
 RCONFLICTS_${PN} = "settings-autorestore"
 RREPLACES_${PN} = "settings-autorestore"
 
 inherit gitpkgv
 SRCREV = "${AUTOREV}"
-PV = "2.0+git${SRCPV}"
-PKGV = "2.0+git${GITPKGV}"
-PR = "r65"
+PV = "2.1+git${SRCPV}"
+PKGV = "2.1+git${GITPKGV}"
+PR = "r0"
 
 SRC_URI="git://git.assembla.com/openvix.10.git;protocol=git"
 
@@ -143,6 +149,14 @@ python do_setup_po_ipk () {
 
 do_install_append() {
 	find ${D}/usr/lib/enigma2/python/ -name '*.pyc' -exec rm {} \;
+}
+
+do_install_append_gb800solo() {
+	install -m 0644 ${DEPLOY_DIR_IMAGE}/burn.bat ${D}/usr/lib/enigma2/python/Plugins/SystemPlugins/ViX/burn.bat
+}
+
+do_install_append_gb800se() {
+	install -m 0644 ${DEPLOY_DIR_IMAGE}/burn.bat ${D}/usr/lib/enigma2/python/Plugins/SystemPlugins/ViX/burn.bat
 }
 
 do_install_po() {
