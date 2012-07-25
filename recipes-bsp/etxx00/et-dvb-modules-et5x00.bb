@@ -1,7 +1,7 @@
-KV = "3.3.0"
-SRCDATE = "20120331"
+KV = "3.4.3"
+SRCDATE = "20120714"
 
 require et-dvb-modules.inc
 
-SRC_URI[md5sum] = "a089f6429994d20b6579c466450567b9"
-SRC_URI[sha256sum] = "17b2156b19c1b2558676d5d2793f8ade0236d5eb1af17d3391efd9205e2b0e5c"
+SRC_URI[md5sum] = "b59841fdcecc93f59ec98da7ba2f434b"
+SRC_URI[sha256sum] = "f37a8067c0c69e0efd8f993f6ec15bf1c5b038a33f3119872d6d437891b8329f"
