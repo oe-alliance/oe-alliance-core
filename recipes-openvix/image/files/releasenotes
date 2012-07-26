@@ -1,4 +1,7 @@
-3.0 Build 113:
+3.0 Build 114:
+enigma2: LogManager fix BSOD, when pressing OK if no logs are availible.
+
+3.0 Build 98:
 feeds update code.
 vix-core: fix image manager.
 tm-twin: update drivers 20120710
