@@ -1,6 +1,6 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
-PRINC = "7"
+PRINC = "8"
 
 RDEPENDS_${PN} += " \
 	python-email \
@@ -67,11 +67,11 @@ do_patch_prepend(){
 	elif "${MACHINE}" == "vuduo":
 		MACHINE1="Vu+ Duo"
 	elif "${MACHINE}" == "et5x00":
-		MACHINE1="Xtrend ET5"
+		MACHINE1="Xtrend ET5x00"
 	elif "${MACHINE}" == "et6x00":
-		MACHINE1="Xtrend ET6"
+		MACHINE1="Xtrend ET6x00"
 	elif "${MACHINE}" == "et9x00":
-		MACHINE1="Xtrend ET9"
+		MACHINE1="Xtrend ET9x00"
 	elif "${MACHINE}" == "odinm9":
 		MACHINE1="Odin M9"
 	elif "${MACHINE}" == "gb800solo":
@@ -113,11 +113,11 @@ python do_setup_po_ipk () {
 	elif "${MACHINE}" == "vuduo":
 		MACHINE1="Vu+ Duo"
 	elif "${MACHINE}" == "et5x00":
-		MACHINE1="Xtrend ET5"
+		MACHINE1="Xtrend ET5x00"
 	elif "${MACHINE}" == "et6x00":
-		MACHINE1="Xtrend ET6"
+		MACHINE1="Xtrend ET6x00"
 	elif "${MACHINE}" == "et9x00":
-		MACHINE1="Xtrend ET9"
+		MACHINE1="Xtrend ET9x00"
 	elif "${MACHINE}" == "odinm9":
 		MACHINE1="Odin M9"
 	elif "${MACHINE}" == "gb800solo":
