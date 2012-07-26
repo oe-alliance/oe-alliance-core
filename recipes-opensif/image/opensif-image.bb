@@ -36,6 +36,8 @@ IMAGE_INSTALL = " \
 export IMAGE_BASENAME = "openmips-image"
 IMAGE_LINGUAS = ""
 
+IMAGE_FEATURES += "package-management"
+
 inherit image
 
 rootfs_postprocess() {

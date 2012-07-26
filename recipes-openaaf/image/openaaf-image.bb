@@ -70,6 +70,8 @@ ENIGMA2_PLUGINS_append_dm500hd = "swap-workaround"
 export IMAGE_BASENAME = "openaaf-image"
 IMAGE_LINGUAS = ""
 
+IMAGE_FEATURES += "package-management"
+
 inherit image
 
 rootfs_postprocess() {

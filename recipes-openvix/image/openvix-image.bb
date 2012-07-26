@@ -35,4 +35,6 @@ IMAGE_INSTALL = " \
 export IMAGE_BASENAME = "openxix-image"
 IMAGE_LINGUAS = ""
 
+IMAGE_FEATURES += "package-management"
+
 inherit image
