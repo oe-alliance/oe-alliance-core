@@ -14,7 +14,7 @@ RRECOMMENDS = "\
 	enigma2-plugin-extensions-autotimer \
 	enigma2-plugin-extensions-epgsearch \
 	enigma2-plugin-extensions-imdb \
-	enigma2-plugin-extensions-aafpanel \
+	enigma2-plugin-extensions-odinpanel \
 	enigma2-plugin-systemplugins-softwaremanager \
 	\
 	${@base_contains("MACHINE_FEATURES", "blindscan-dvbs", "enigma2-plugin-systemplugins-blindscan" , "", d)} \
