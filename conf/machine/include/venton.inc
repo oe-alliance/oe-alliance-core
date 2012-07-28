@@ -60,5 +60,7 @@ TARGET_FPU = "hard"
 
 MACHINE_FEATURES += "3dtv alsa hdmicec switchoff wifi dvb-c"
 
+PREFERRED_PROVIDER_virtual/blindscan-dvbc = "venton-blindscan-dvbc-utils"
+
 require conf/machine/include/tune-mips32.inc
 
