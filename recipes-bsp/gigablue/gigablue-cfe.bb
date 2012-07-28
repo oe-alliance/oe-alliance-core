@@ -6,7 +6,7 @@ MAINTAINER = "openMips"
 
 require conf/license/license-gplv2.inc
 
-PR = "r6"
+PR = "r7"
 
 S = "${WORKDIR}"
 
@@ -15,6 +15,7 @@ SRC_URI_gb800ue = " file://prog.bmp file://conf.bmp"
 SRC_URI_gb800solo = " file://burn.bat"
 SRC_URI_qbquad = " file://prog.bmp file://conf.bmp"
 
+ALLOW_EMPTY_${PN} = "1"
 
 do_install_append_gb800se() {
     install -d ${DEPLOY_DIR_IMAGE}
