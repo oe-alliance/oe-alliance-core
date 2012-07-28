@@ -25,8 +25,6 @@ URL_gb800ue = "http://www.gigablue-support.co.uk"
 URL_gbquad = "http://www.gigablue-support.co.uk"
 URL_ventonhdx = "http://www.venton-support.co.uk"
 
-SRC_URI = "file://releasenotes"
-
 S = "${WORKDIR}"
 
 inherit autotools
@@ -67,9 +65,7 @@ do_install() {
 			echo "creator=openViX" >> ${D}/etc/image-version
 			echo "url=${URL}" >> ${D}/etc/image-version
 			echo "catalog=${URL}" >> ${D}/etc/image-version
-
-			install -m 0644 ${WORKDIR}/releasenotes ${D}/etc/releasenotes
 }
 
-FILES_${PN} = "/etc/image-version /etc/releasenotes"
+FILES_${PN} = "/etc/image-version"
 
