@@ -44,7 +44,7 @@ case "$ACTION" in
 			REMOVABLE=`cat /sys/block/$DEVBASE/removable`
 			readlink -fn /sys/block/$DEVBASE/device | grep -qs 'pci'
 			EXTERNAL=$?
-			if [ "${REMOVABLE}" -eq "0" -a $EXTERNAL -eq 0 ]; then
+			if [ "${REMOVABLE}" -eq "0" ]; then
 				# mount the first non-removable internal device on /media/hdd
 				DEVICETYPE="hdd"
 			else
@@ -76,7 +76,7 @@ case "$ACTION" in
 
 			# Remove mountpoint not being used
 			if [ -z "`grep $MOUNTPOINT /proc/mounts`" ];
-			then 
+			then
 				rm -rf $MOUNTPOINT
 			fi
 
