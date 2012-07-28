@@ -8,11 +8,11 @@ PACKAGE_ARCH := "${MACHINE_ARCH}"
 DEPENDS = "enigma2 mtd-utils python-process libcrypto-compat"
 RDEPENDS = "mtd-utils python-process libcrypto-compat"
 
-DEPENDS_append_gbsolo = "gigablue-cfe"
-RDEPENDS_append_gbsolo = "gigablue-cfe"
+DEPENDS_append_gb800solo = "gigablue-cfe"
+RDEPENDS_append_gb800solo = "gigablue-cfe"
 
-DEPENDS_append_gbse = "gigablue-cfe"
-RDEPENDS_append_gbse = "gigablue-cfe"
+DEPENDS_append_gb800se = "gigablue-cfe"
+RDEPENDS_append_gb800se = "gigablue-cfe"
 
 RCONFLICTS_${PN} = "settings-autorestore"
 RREPLACES_${PN} = "settings-autorestore"
