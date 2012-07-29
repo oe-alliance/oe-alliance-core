@@ -51,7 +51,6 @@ ENIGMA2_PLUGINS = "\
 	enigma2-plugin-extensions-dvdplayer \
 	enigma2-plugin-systemplugins-autoresolution \
 	enigma2-plugin-extensions-volume-adjust \
-	enigma2-plugin-extensions-autobackup \
 	enigma2-plugin-systemplugins-softwaremanager \
 	enigma2-plugin-systemplugins-hotplug \
 "
