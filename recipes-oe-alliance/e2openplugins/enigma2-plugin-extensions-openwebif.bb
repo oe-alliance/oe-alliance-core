@@ -1,22 +1,6 @@
 MODULE = "OpenWebif"
-DESCRIPTION = "Control your receiver with a browser"
-LICENSE = "GPLv2"
-LIC_FILES_CHKSUM = "file://README;firstline=10;lastline=12;md5=9c14f792d0aeb54e15490a28c89087f7"
-
-DEPENDS = "enigma2 python-cheetah-native"
-RDEPENDS_${PN} = "python-cheetah python-json python-unixadmin python-misc aio-grab"
-
-inherit gitpkgv
-SRCREV_pn-${PN} ?= "${AUTOREV}"
-PV = "0.1+git${SRCPV}"
-PKGV = "0.1+git${GITPKGV}"
-PR = "r2"
-
-# Just a quick hack to "compile" it
-do_compile() {
-	cheetah-compile -R --nobackup ${S}/plugin
-	python -O -m compileall ${S}
-}
+PRINC = "2"
+DEPENDS += "enigma2"
 
 SRC_URI = "git://github.com/oe-alliance/e2openplugin-${MODULE}.git;protocol=git"
 
@@ -59,12 +43,3 @@ python do_package_prepend () {
 			if target_remote != name and name != 'ow_remote.png':
 				os.remove(os.path.join(root, name))
 }
-
-PLUGINPATH = "/usr/lib/enigma2/python/Plugins/Extensions/${MODULE}"
-do_install() {
-	install -d ${D}${PLUGINPATH}
-	cp -rp ${S}/plugin/* ${D}${PLUGINPATH}
-}
-
-FILES_${PN} = "${PLUGINPATH}"
-
