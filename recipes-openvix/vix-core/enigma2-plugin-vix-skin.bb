@@ -8,7 +8,7 @@ EPSM = "enigma2-plugin-vix"
 SRCREV = "${AUTOREV}"
 PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"
-PR = "r6"
+PR = "r7"
 
 PACKAGES = "vix-hd-common ${EPSM}-day-hd ${EPSM}-night-hd"
 PROVIDES = "${PN} vix-hd-common ${EPSM}-day-hd ${EPSM}-night-hd"
