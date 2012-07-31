@@ -41,6 +41,7 @@ SRC_URI += "http://www.et-view.com/download/linux-${PV}.tar.gz \
 	file://it913x-fix-bulk-read-write-retry-loop.patch \
 	file://dvb-usb-dib0700-disable-sleep.patch \
 	file://dvb_usb_disable_rc_polling.patch \
+	file://cifs-fix-parsing-of-password-mount-option.patch \
 	"
 
 SRC_URI_append_odinm9 = " file://board.patch"
