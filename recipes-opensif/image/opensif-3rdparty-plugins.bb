@@ -124,7 +124,7 @@ do_install_dm7020hd() {
 	install -d 0644 ${DEPLOY_DIR_IPK}/3rdparty
 	install -m 0644 ${S}/enigma2-plugin-extensions-suomipoeka_1.0.1_all.ipk ${DEPLOY_DIR_IPK}/3rdparty
 	install -m 0644 ${S}/enigma2-plugin-extensions-enhancedpowersave_2.2.1-20120715_mipsel.ipk ${DEPLOY_DIR_IPK}/3rdparty
-s}
+}
 
 do_install_dm500hd() {
 	install -d 0644 ${DEPLOY_DIR_IPK}/3rdparty

@@ -25,7 +25,7 @@ BINARY_VERSION_mipsel = "10"
 IMAGES_VERSION = "1"
 IMAGES_VERSION_dm500hd = "2"
 IMAGES_VERSION_dm800se = "2"
-IMAGES_VERSION_dm7020hd= "2"
+IMAGES_VERSION_dm7020hd = "2"
 IMAGES_VERSION_dm8000 = "2"
 
 SRC_URI += "${@base_contains("MACHINE_FEATURES", "dreambox", "http://sources.dreamboxupdate.com/download/7020/bootlogo-${MACHINE}-${BINARY_VERSION}.elf" , "", d)}"
