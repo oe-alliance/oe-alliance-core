@@ -1,12 +1,13 @@
 MAINTAINER = "oe-alliance"
 
-PRINC = "4"
+PRINC = "5"
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
 SRC_URI += " \
 	file://cables.xml \
 	file://terrestrial.xml \
+	file://satellites.xml \
 	"
 
 DVB-S_LISTS = "satellites.xml"
