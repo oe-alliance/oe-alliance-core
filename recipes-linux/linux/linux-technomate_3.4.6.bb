@@ -6,8 +6,8 @@ KV = "3.4.6"
 SRCDATE = "20120801"
 MACHINE_KERNEL_PR_append = ".0"
 
-SRC_URI[md5sum] = "f06db57082dc8ef4287ad08f3b46db7f"
-SRC_URI[sha256sum] = "b581cab674db90ea3bbe6a5af7df8a36c5ddf46e2a52c0fc1ea3fe4f1cc9d797"
+SRC_URI[md5sum] = "04dcd882e3f72d12b58451dbc66b2a9b"
+SRC_URI[sha256sum] = "4c08d5e82d46f1634376b34163c38af425326426bf9b1240bebd7a9c3dcd804f"
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${KV}-tm-${SRCDATE}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
