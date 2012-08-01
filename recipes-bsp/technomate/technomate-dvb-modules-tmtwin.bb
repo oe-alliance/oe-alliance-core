@@ -3,7 +3,7 @@ SECTION = "base"
 PRIORITY = "required"
 LICENSE = "CLOSED"
 
-SRCDATE = "20120724"
+SRCDATE = "20120801"
 KV = "3.4.6"
 PV = "${KV}+${SRCDATE}"
 PR = "r0"
@@ -26,7 +26,8 @@ do_install() {
 	done
 	install -d ${D}/${sysconfdir}/modules-load.d
 	for i in `ls ${D}/lib/modules/${KV}/extra | grep \\.ko | sed -e 's/.ko//g'`; do
-		echo $i >> ${D}/${sysconfdir}/modules-load.d/_${MACHINE}.conf
+		echo $i _hwtype=$hwtypenum >> ${D}/${sysconfdir}/modules-load.d/_${MACHINE}.conf
+
 	done
 }
 
