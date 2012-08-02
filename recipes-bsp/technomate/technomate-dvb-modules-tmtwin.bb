@@ -3,7 +3,7 @@ SECTION = "base"
 PRIORITY = "required"
 LICENSE = "CLOSED"
 
-SRCDATE = "20120801"
+SRCDATE = "20120802"
 KV = "3.4.6"
 PV = "${KV}+${SRCDATE}"
 PR = "r0"
@@ -26,10 +26,10 @@ do_install() {
 	done
 	install -d ${D}/${sysconfdir}/modules-load.d
 	for i in `ls ${D}/lib/modules/${KV}/extra | grep \\.ko | sed -e 's/.ko//g'`; do
-		echo $i _hwtype=$hwtypenum >> ${D}/${sysconfdir}/modules-load.d/_${MACHINE}.conf
+		echo $i _hwtype=\$hwtypenum >> ${D}/${sysconfdir}/modules-load.d/_${MACHINE}.conf
 
 	done
 }
 
-SRC_URI[md5sum] = "259e6d054e10e43f0fdfcf223e351def"
-SRC_URI[sha256sum] = "e12325b0a3083e1dfd09400a8295472708118c226d86f7bb9c7b0a30cfbd60b8"
+SRC_URI[md5sum] = "8280b744f621e60d0a47e5e355f53f93"
+SRC_URI[sha256sum] = "2a7daf6f9a9ceb76842497d6b982d93c78ec32f45b2ffaa174fcd9cce6d9cd41"
