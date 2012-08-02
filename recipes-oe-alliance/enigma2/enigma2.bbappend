@@ -1,6 +1,6 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
-PRINC = "10"
+PRINC = "11"
 
 RDEPENDS_${PN} += " \
 	python-email \
@@ -33,8 +33,8 @@ SRC_URI_append_gb800ue = " \
 FILES_${PN} += " ${bindir}"
 
 # Save po files
+PACKAGES =+ "${PN}-po"
 FILES_${PN}-po = "${datadir}/enigma2/po/*.po"
-PACKAGES += "${PN}-po"
 
 EXTRA_OECONF += "\
 	--with-po \
