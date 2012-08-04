@@ -1,6 +1,6 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
-PRINC = "11"
+PRINC = "12"
 
 RDEPENDS_${PN} += " \
 	python-email \
@@ -10,8 +10,7 @@ RDEPENDS_${PN} += " \
 	python-process \
 	"
 
-#make sure default skin is installed.
-RDEPENDS_${PN} += "${E2DEFAULTSKIN} "
+RDEPENDS_${PN} := "${@oe_filter_out('enigma2-plugin-skins-pli-hd', '${RDEPENDS}', d)}"
 
 PV = "2.8+git${SRCPV}"
 PKGV = "2.8+git${GITPKGV}"
