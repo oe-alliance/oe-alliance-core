@@ -27,28 +27,6 @@ index 6018c80..d05b220 100644
  } while (0)
  
  #define finish_arch_switch(prev)					\
-diff --git a/arch/mips/include/asm/thread_info.h b/arch/mips/include/asm/thread_info.h
-index 97f8bf6..adda036 100644
---- a/arch/mips/include/asm/thread_info.h
-+++ b/arch/mips/include/asm/thread_info.h
-@@ -60,6 +60,8 @@ struct thread_info {
- register struct thread_info *__current_thread_info __asm__("$28");
- #define current_thread_info()  __current_thread_info
- 
-+#endif /* !__ASSEMBLY__ */
-+
- /* thread information allocation */
- #if defined(CONFIG_PAGE_SIZE_4KB) && defined(CONFIG_32BIT)
- #define THREAD_SIZE_ORDER (1)
-@@ -97,8 +99,6 @@ register struct thread_info *__current_thread_info __asm__("$28");
- 
- #define free_thread_info(info) kfree(info)
- 
--#endif /* !__ASSEMBLY__ */
--
- #define PREEMPT_ACTIVE		0x10000000
- 
- /*
 diff --git a/arch/mips/kernel/cpu-probe.c b/arch/mips/kernel/cpu-probe.c
 index c7d3cf1..63b87b6 100644
 --- a/arch/mips/kernel/cpu-probe.c
@@ -170,26 +148,6 @@ index b4abf18..a9b9f9e 100644
  	if (raw_show_trace || !__kernel_text_address(pc)) {
  		show_raw_backtrace(sp);
  		return;
-diff --git a/arch/mips/kernel/vmlinux.lds.S b/arch/mips/kernel/vmlinux.lds.S
-index 924da5e..df243a6 100644
---- a/arch/mips/kernel/vmlinux.lds.S
-+++ b/arch/mips/kernel/vmlinux.lds.S
-@@ -1,5 +1,6 @@
- #include <asm/asm-offsets.h>
- #include <asm/page.h>
-+#include <asm/thread_info.h>
- #include <asm-generic/vmlinux.lds.h>
- 
- #undef mips
-@@ -72,7 +73,7 @@ SECTIONS
- 	.data : {	/* Data */
- 		. = . + DATAOFFSET;		/* for CONFIG_MAPPED_KERNEL */
- 
--		INIT_TASK_DATA(PAGE_SIZE)
-+		INIT_TASK_DATA(THREAD_SIZE)
- 		NOSAVE_DATA
- 		CACHELINE_ALIGNED_DATA(1 << CONFIG_MIPS_L1_CACHE_SHIFT)
- 		READ_MOSTLY_DATA(1 << CONFIG_MIPS_L1_CACHE_SHIFT)
 diff --git a/arch/mips/mm/c-r4k.c b/arch/mips/mm/c-r4k.c
 index a79fe9a..95c78cb 100644
 --- a/arch/mips/mm/c-r4k.c
