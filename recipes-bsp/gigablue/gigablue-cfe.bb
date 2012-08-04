@@ -6,7 +6,7 @@ MAINTAINER = "openMips"
 
 require conf/license/license-gplv2.inc
 
-PR = "r9"
+PR = "r10"
 
 S = "${WORKDIR}"
 
@@ -33,7 +33,7 @@ do_install_append_gb800solo() {
 
 do_install_append_gbquad() {
     install -d ${DEPLOY_DIR_IMAGE}
-	install -m 0755 ${S}/prog.bmp ${DEPLOY_DIR_IMAGE}/imageversion.bin
-	install -m 0755 ${S}/conf.bmp ${DEPLOY_DIR_IMAGE}/lcdimageversion.bin
-	install -m 0755 ${S}/conf.bmp ${DEPLOY_DIR_IMAGE}/lcdwarning.bin
+	install -m 0755 ${S}/imageversion.bin ${DEPLOY_DIR_IMAGE}/imageversion.bin
+	install -m 0755 ${S}/lcdimageversion.bin ${DEPLOY_DIR_IMAGE}/lcdimageversion.bin
+	install -m 0755 ${S}/lcdwarning.bin ${DEPLOY_DIR_IMAGE}/lcdwarning.bin
 }
