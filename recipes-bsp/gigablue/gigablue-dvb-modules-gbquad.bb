@@ -1,6 +1,6 @@
 SRCDATE = "20120803"
 
-KV = "2.6.37"
+KV = "2.6.37-2.8"
 
 SRC_URI = "http://archiv.openmips.com/gigablue-quad-drivers-${KV}-${SRCDATE}.tar.gz"
 SRC_URI[md5sum] = "dbcfbbb6cb3b29871cc7d046403be721"
