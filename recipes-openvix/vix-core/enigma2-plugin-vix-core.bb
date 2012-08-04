@@ -21,9 +21,9 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "2.1+git${SRCPV}"
 PKGV = "2.1+git${GITPKGV}"
-PR = "r0"
+PR = "r1"
 
-SRC_URI="git://git.assembla.com/openvix.10.git;protocol=git"
+SRC_URI="git://github.com/OpenViX/vix-core.git;protocol=git"
 
 S = "${WORKDIR}/git"
 

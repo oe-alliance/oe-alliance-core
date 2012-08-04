@@ -8,7 +8,7 @@ EPSM = "enigma2-plugin-vix"
 SRCREV = "${AUTOREV}"
 PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"
-PR = "r7"
+PR = "r8"
 
 PACKAGES = "vix-hd-common ${EPSM}-day-hd ${EPSM}-night-hd"
 PROVIDES = "${PN} vix-hd-common ${EPSM}-day-hd ${EPSM}-night-hd"
@@ -20,7 +20,7 @@ RREPLACES_${EPSM}-day-hd = "enigma2-plugin-vix-skins-day-hd"
 RCONFLICTS_${EPSM}-night-hd = "enigma2-plugin-vix-skins-night-hd"
 RREPLACES_${EPSM}-night-hd = "enigma2-plugin-vix-skins-night-hd"
 
-SRC_URI="git://git.assembla.com/openvix.8.git;protocol=git"
+SRC_URI="git://github.com/OpenViX/vix-skins.git;protocol=git"
 
 FILES_vix-hd-common = "/usr/share/enigma2/ViX_HD_Common"
 FILES_${EPSM}-day-hd = "/usr/share/enigma2/ViX_Day_HD"

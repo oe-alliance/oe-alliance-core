@@ -9,7 +9,7 @@ EPSM = "enigma2-plugin-vix-magic"
 SRCREV = "${AUTOREV}"
 PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"
-PR = "r7"
+PR = "r8"
 
 RCONFLICTS_${EPSM}-sd = "enigma2-plugin-skins-magic"
 RREPLACES_${EPSM}-sd = "enigma2-plugin-skins-magic"
@@ -22,7 +22,7 @@ DESCRIPTION_font-valis-enigma = "Valis enigma font"
 PACKAGES = "font-valis-enigma vix-magic-hd-common ${EPSM}-sd ${EPSM}-hd ${EPSM}-ehd ${EPSM}-hd-lite ${EPSM}-hd-night ${EPSM}-ehd-lite"
 PROVIDES = "${PN} font-valis-enigma vix-magic-hd-common ${EPSM}-sd ${EPSM}-hd ${EPSM}-ehd ${EPSM}-hd-lite ${EPSM}-hd-night ${EPSM}-ehd-lite"
 
-SRC_URI="git://git.assembla.com/openvix.7.git;protocol=git"
+SRC_URI="git://github.com/OpenViX/vix-magic-skins.git;protocol=git"
 
 FILES_vix-magic-hd-common = "/usr/share/enigma2/Magic-HD-Common/"
 FILES_font-valis-enigma = "/usr/share/fonts/valis_enigma.ttf"
