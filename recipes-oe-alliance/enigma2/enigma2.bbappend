@@ -1,6 +1,6 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
-PRINC = "12"
+PRINC = "13"
 
 RDEPENDS_${PN} += " \
 	python-email \
@@ -10,7 +10,7 @@ RDEPENDS_${PN} += " \
 	python-process \
 	"
 
-RDEPENDS_${PN} := "${@oe_filter_out('enigma2-plugin-skins-pli-hd', '${RDEPENDS}', d)}"
+#RDEPENDS_${PN} := "${@oe_filter_out('enigma2-plugin-skins-pli-hd', '${RDEPENDS}', d)}"
 
 PV = "2.8+git${SRCPV}"
 PKGV = "2.8+git${GITPKGV}"
