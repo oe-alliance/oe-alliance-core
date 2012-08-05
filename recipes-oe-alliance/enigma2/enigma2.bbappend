@@ -1,8 +1,22 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
-PRINC = "13"
+PRINC = "14"
 
-RDEPENDS_${PN} += " \
+RDEPENDS_${PN} = " \
+	alsa-conf \
+	enigma2-fonts \
+	ethtool \
+	glibc-gconv-iso8859-15 \
+	gst-plugin-subsink \
+	\
+	${PYTHON_RDEPS} \
+	${GST_BASE_RDEPS} \
+	${GST_GOOD_RDEPS} \
+	${GST_BAD_RDEPS} \
+	${GST_UGLY_RDEPS} \
+	"
+
+PYTHON_RDEPS += " \
 	python-email \
 	python-mime \
 	python-pyusb \
@@ -10,7 +24,8 @@ RDEPENDS_${PN} += " \
 	python-process \
 	"
 
-#RDEPENDS_${PN} := "${@oe_filter_out('enigma2-plugin-skins-pli-hd', '${RDEPENDS}', d)}"
+#make sure default skin is installed.
+RDEPENDS_${PN} += "${E2DEFAULTSKIN} "
 
 PV = "2.8+git${SRCPV}"
 PKGV = "2.8+git${GITPKGV}"
