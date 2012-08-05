@@ -35,6 +35,7 @@ IMAGE_INSTALL = " \
 	vsftpd \
 	hddtemp \
 	dosfstools \
+	ntfs-3g \
 	"
 
 ENIGMA2_PLUGINS = "\
