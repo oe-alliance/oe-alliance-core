@@ -1,8 +1,11 @@
-PRINC = "2"
+PRINC = "3"
 
 SRC_URI += " \
-	file://udev-builtin-input_id.patch \
 	file://init \
+"
+
+SRC_URI_gbquad += " \
+	file://udev-builtin-input_id.patch \
 "
 
 inherit update-rc.d
