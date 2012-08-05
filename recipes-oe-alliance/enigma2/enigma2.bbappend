@@ -1,6 +1,6 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
-PRINC = "14"
+PRINC = "15"
 
 RDEPENDS_${PN} = " \
 	alsa-conf \
@@ -23,6 +23,10 @@ PYTHON_RDEPS += " \
 	python-subprocess \
 	python-process \
 	"
+
+# We depend on the font which we use for TXT subtitles (defined in skin_subtitles.xml)
+DEPENDS += "font-valis-enigma"
+RDEPENDS_${PN} += "font-valis-enigma"
 
 #make sure default skin is installed.
 RDEPENDS_${PN} += "${E2DEFAULTSKIN} "
