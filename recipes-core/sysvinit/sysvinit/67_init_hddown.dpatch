@@ -1,0 +1,153 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+# 67_init_hddown.dpatch by Sebastian Reichelt
+#
+# Make sure SATA disks are powered down as well as IDE disks.  This
+# patch could use some more work to make it more dynamic when
+# detecting SATA/SCSI disks.  Closes: #348172
+
+@DPATCH@
+--- sysvinit-2.86.ds1/src/hddown.c	2004-06-09 14:47:45.000000000 +0200
++++ sysvinit-2.86.ds1-new/src/hddown.c	2006-01-16 18:05:48.000000000 +0100
+@@ -25,18 +25,17 @@
+ /*
+  *	Find all IDE disks through /proc.
+  */
+-static int find_idedisks(char **dev, int maxdev)
++static int find_idedisks(const char **dev, int maxdev, int *count)
+ {
+ 	DIR *dd;
+ 	FILE *fp;
+ 	struct dirent *d;
+ 	char buf[256];
+-	int i = 0;
+ 
+ 	if ((dd = opendir(PROC_IDE)) == NULL)
+ 		return -1;
+ 
+-	while ((d = readdir(dd)) != NULL) {
++	while (*count < maxdev && (d = readdir(dd)) != NULL) {
+ 		if (strncmp(d->d_name, "hd", 2) != 0)
+ 			continue;
+ 		buf[0] = 0;
+@@ -50,21 +49,58 @@
+ 		}
+ 		fclose(fp);
+ 		snprintf(buf, sizeof(buf), DEV_BASE "/%s", d->d_name);
+-		dev[i++] = strdup(buf);
+-		if (i >= maxdev)
+-			break;
++		dev[(*count)++] = strdup(buf);
+ 	}
+ 	closedir(dd);
+-	if (i < maxdev) dev[i] = NULL;
+ 
+ 	return 0;
+ }
+ 
+ /*
+- *	Put an IDE disk in standby mode.
++ *	Find all SCSI/SATA disks.
++ */
++static int find_scsidisks(const char **dev, int maxdev, int *count)
++{
++	if (*count < maxdev) dev[(*count)++] = DEV_BASE "/sda";
++	if (*count < maxdev) dev[(*count)++] = DEV_BASE "/sdb";
++	if (*count < maxdev) dev[(*count)++] = DEV_BASE "/sdc";
++	if (*count < maxdev) dev[(*count)++] = DEV_BASE "/sdd";
++	if (*count < maxdev) dev[(*count)++] = DEV_BASE "/sde";
++	if (*count < maxdev) dev[(*count)++] = DEV_BASE "/sdf";
++	if (*count < maxdev) dev[(*count)++] = DEV_BASE "/sdg";
++	if (*count < maxdev) dev[(*count)++] = DEV_BASE "/sdh";
++
++	return 0;
++}
++
++/*
++ *	Open the device node of a disk.
++ */
++static int open_disk(const char *device)
++{
++	return open(device, O_RDWR);
++}
++
++/*
++ *	Open device nodes of all disks, and store the file descriptors in fds.
++ *	This has to be done in advance because accessing the device nodes
++ *	might cause a disk to spin back up.
++ */
++static int open_disks(const char **disks, int *fds, int count)
++{
++	int i;
++
++	for (i = 0; i < count; i++)
++		fds[i] = open_disk(disks[i]);
++
++	return 0;
++}
++
++/*
++ *	Put an IDE/SCSI/SATA disk in standby mode.
+  *	Code stolen from hdparm.c
+  */
+-static int do_standby_idedisk(char *device)
++static int do_standby_disk(int fd)
+ {
+ #ifndef WIN_STANDBYNOW1
+ #define WIN_STANDBYNOW1 0xE0
+@@ -74,9 +110,8 @@
+ #endif
+ 	unsigned char args1[4] = {WIN_STANDBYNOW1,0,0,0};
+ 	unsigned char args2[4] = {WIN_STANDBYNOW2,0,0,0};
+-	int fd;
+ 
+-	if ((fd = open(device, O_RDWR)) < 0)
++	if (fd < 0)
+ 		return -1;
+ 
+ 	if (ioctl(fd, HDIO_DRIVE_CMD, &args1) &&
+@@ -87,22 +122,37 @@
+ }
+ 
+ /*
+- *	First find all IDE disks, then put them in standby mode.
++ *	Put all specified disks in standby mode.
++ */
++static int do_standby_disks(const int *fds, int count)
++{
++	int i;
++
++	for (i = 0; i < count; i++)
++		do_standby_disk(fds[i]);
++
++	return 0;
++}
++
++/*
++ *	First find all IDE/SCSI/SATA disks, then put them in standby mode.
+  *	This has the side-effect of flushing the writecache,
+  *	which is exactly what we want on poweroff.
+  */
+ int hddown(void)
+ {
+-	char *disks[MAX_DISKS+1];
+-	int i;
++	const char *disks[MAX_DISKS];
++	int fds[MAX_DISKS];
++	int count = 0;
++	int result1, result2;
+ 
+-	if (find_idedisks(disks, MAX_DISKS) < 0)
+-		return -1;
++	result1 = find_idedisks(disks, MAX_DISKS, &count);
++	result2 = find_scsidisks(disks, MAX_DISKS, &count);
+ 
+-	for (i = 0; disks[i] && i < MAX_DISKS; i++)
+-		do_standby_idedisk(disks[i]);
++	open_disks(disks, fds, count);
++	do_standby_disks(fds, count);
+ 
+-	return 0;
++	return (result1 ? result1 : result2);
+ }
+ 
+ #else /* __linux__ */

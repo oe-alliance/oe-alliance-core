@@ -1,0 +1,16 @@
+--- a/rc	2012-03-06 01:33:16.778221585 +0100
++++ b/rc	2012-03-06 01:34:49.482223958 +0100
+@@ -26,11 +26,8 @@
+         progress=$progress_size
+     fi
+     #echo "PROGRESS is $progress $runlevel $first_step + ($step of $num_steps) $step_change $progress_size"
+-    #if type psplash-write >/dev/null 2>&1; then
+-    #    TMPDIR=/mnt/.psplash psplash-write "PROGRESS $progress" || true
+-    #fi
+-    if [ -e /mnt/.psplash/psplash_fifo ]; then
+-        echo "PROGRESS $progress" > /mnt/.psplash/psplash_fifo
++    if [ $progress -gt 0 -a -e /proc/progress ]; then
++        echo $(($progress / 2)) > /proc/progress
+     fi
+ }
+ 
