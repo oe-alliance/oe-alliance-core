@@ -1,0 +1,28 @@
+--- ~/skins/Nemesis.BlackbBox/skin.xml.orig	2009-10-04 16:49:25.000000000 +0200
++++ ~/skins/Nemesis.BlackBox/skin.xml	2009-10-04 17:12:42.000000000 +0200
+@@ -183,7 +183,10 @@
+ 		</widget>
+ 		<ePixmap position="5,100" pixmap="Nemesis.BlackBox/separator.png" size="560,4" />
+ 		<widget source="session.CurrentService" render="Label" position="12,104" size="385,17" font="Regular;16" valign="top" foregroundColor="grey" backgroundColor="background" transparent="1">
+-			<convert type="ServiceName">Provider</convert>
++			<convert type="ServiceOrbitalPosition"></convert>
++		</widget>
++		<widget source="session.CurrentService" render="Label" position="135,104" zPosition="1" size="300,20" font="Regular;16" valign="top"  halign="center" backgroundColor="#333333" transparent="1" >
++			<convert type="CryptoInfo">VerboseInfo</convert>
+ 		</widget>
+ 		<eLabel text="Free To Air" position="437,104" size="90,19" font="Regular;16" halign="right" valign="top" foregroundColor="grey" backgroundColor="background" transparent="1" />
+ 		<ePixmap pixmap="Nemesis.BlackBox/ico_crypt_off.png" position="537,106" size="18,12" alphatest="on" />
+@@ -220,9 +223,12 @@
+ 		<widget source="global.CurrentTime" render="Label" position="500,327" zPosition="1" size="50,20" font="Regular;19" halign="right">
+ 			<convert type="ClockToText"></convert>
+ 		</widget>
+-		<widget source="ServiceEvent" render="Label" position="210,347" zPosition="1" size="340,20" font="Regular;19" halign="right" noWrap="1">
++		<widget source="ServiceEvent" render="Label" position="210,347" zPosition="1" size="260,20" font="Regular;19" halign="right" noWrap="1">
+ 			<convert type="ServiceName">Name</convert>
+ 		</widget>
++		<widget source="ServiceEvent" render="Label" position="490,347" zPosition="1" size="60,20" font="Regular;18" halign="right" noWrap="1" >
++			<convert type="ServiceOrbitalPosition"></convert>
++		</widget>
+ 		<widget source="ServiceEvent" render="Label" position="10,347" zPosition="1" size="50,22" font="Regular;19">
+ 			<convert type="EventTime">StartTime</convert>
+ 			<convert type="ClockToText"></convert>
