@@ -13,7 +13,7 @@ inherit gitpkgv
 
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r9"
+PR = "r10"
 
 SRC_URI = "${ENIGMA2_PLUGINS_URI} file://pluginnotwanted"
 
@@ -127,18 +127,21 @@ python populate_packages_prepend () {
 
 	newlist = currentlist.split(" ")
 	for line in pkgnotwanted.split("\n"):
-		if line in newlist:
-			newlist.remove(line)
-		if line+'-src' in currentlist.split(" "):
-			newlist.remove(line+'-src')
-		if line+'-dev' in currentlist.split(" "):
-			newlist.remove(line+'-dev')
-		if line+'-staticdev' in currentlist.split(" "):
-			newlist.remove(line+'-staticdev')
-		if line+'-dbg' in currentlist.split(" "):
-			newlist.remove(line+'-dbg')
-		if line+'-po' in currentlist.split(" "):
-			newlist.remove(line+'-po')
+		try:
+			if line in newlist:
+				newlist.remove(line)
+			if line+'-src' in currentlist.split(" "):
+				newlist.remove(line+'-src')
+			if line+'-dev' in currentlist.split(" "):
+				newlist.remove(line+'-dev')
+			if line+'-staticdev' in currentlist.split(" "):
+				newlist.remove(line+'-staticdev')
+			if line+'-dbg' in currentlist.split(" "):
+				newlist.remove(line+'-dbg')
+			if line+'-po' in currentlist.split(" "):
+				newlist.remove(line+'-po')
+		except:
+			pass
 
 	bb.data.setVar('PACKAGES', ' '.join(newlist), d)
 
