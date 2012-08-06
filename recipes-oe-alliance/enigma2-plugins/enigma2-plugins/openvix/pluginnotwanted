@@ -1,6 +1,15 @@
 enigma2-plugin-extensions-advancedmovieselection
+enigma2-plugin-extensions-aihdcontroler
 enigma2-plugin-systemplugins-automatictimerlistcleanup
+enigma2-plugin-extensions-bonjour
+enigma2-plugin-extensions-cdinfo
+enigma2-plugin-extensions-easymedia
+enigma2-plugin-extensions-ecasa
+enigma2-plugin-extensions-eibox
+enigma2-plugin-extensions-emission
 enigma2-plugin-extensions-genuinedreambox
+enigma2-plugin-extensions-growlee
+enigma2-plugin-extensions-merlinepg
 enigma2-plugin-extensions-merlinepgcenter
 enigma2-plugin-extensions-mosaic
 enigma2-plugin-extensions-movielistpreview
@@ -10,6 +19,9 @@ enigma2-plugin-extensions-moviesearch
 enigma2-plugin-extensions-movieselectionquickbutton
 enigma2-plugin-extensions-mosaic
 enigma2-plugin-extensions-multirc
+enigma2-plugin-extensions-netcaster
+enigma2-plugin-extensions-pipzap
+enigma2-plugin-extensions-quickbutton
 enigma2-plugin-extensions-setpasswd
 enigma2-plugin-extensions-seekbar
 enigma2-plugin-systemplugins-startupservice
