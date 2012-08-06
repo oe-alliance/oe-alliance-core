@@ -13,9 +13,9 @@ inherit gitpkgv
 
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r8"
+PR = "r9"
 
-SRC_URI = "${ENIGMA2_PLUGINS_URI}"
+SRC_URI = "${ENIGMA2_PLUGINS_URI} file://pluginnotwanted"
 
 SRC_URI_append_vuuno = " \
 			file://dreambox_bouqueteditor.png \
@@ -116,6 +116,31 @@ python populate_packages_prepend () {
 	do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/.*\.a$', 'enigma2-plugin-%s-staticdev', '%s (static development)', recursive=True, match_path=True, prepend=True)
 	do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/(.*/)?\.debug/.*$', 'enigma2-plugin-%s-dbg', '%s (debug)', recursive=True, match_path=True, prepend=True)
 	do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/.*\/.*\.po$', 'enigma2-plugin-%s-po', '%s (translations)', recursive=True, match_path=True, prepend=True)
+
+# 	import logging
+# 	logger = logging.getLogger("BitBake.RunQueue")
+# 	logger.warning("PACKAGES %s ", currentlist)
+
+	currentlist = bb.data.getVar('PACKAGES', d, 1)
+	pkgnotwanted = open(bb.data.getVar('S', d, 1) + "/../pluginnotwanted").read()
+# 	logger.warning("NOT WANTED %s ", pkgnotwanted)
+
+	newlist = currentlist.split(" ")
+	for line in pkgnotwanted.split("\n"):
+		if line in newlist:
+			newlist.remove(line)
+		if line+'-src' in currentlist.split(" "):
+			newlist.remove(line+'-src')
+		if line+'-dev' in currentlist.split(" "):
+			newlist.remove(line+'-dev')
+		if line+'-staticdev' in currentlist.split(" "):
+			newlist.remove(line+'-staticdev')
+		if line+'-dbg' in currentlist.split(" "):
+			newlist.remove(line+'-dbg')
+		if line+'-po' in currentlist.split(" "):
+			newlist.remove(line+'-po')
+
+	bb.data.setVar('PACKAGES', ' '.join(newlist), d)
 
 	def getControlLines(mydir, d, package):
 		packagename = package[-1]
