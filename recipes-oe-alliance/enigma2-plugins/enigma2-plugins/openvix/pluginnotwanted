@@ -4,6 +4,7 @@ enigma2-plugin-systemplugins-automatictimerlistcleanup
 enigma2-plugin-extensions-bonjour
 enigma2-plugin-extensions-cdinfo
 enigma2-plugin-extensions-easymedia
+enigma2-plugin-extensions-easyinfo
 enigma2-plugin-extensions-ecasa
 enigma2-plugin-extensions-eibox
 enigma2-plugin-extensions-emission
@@ -15,7 +16,6 @@ enigma2-plugin-extensions-mosaic
 enigma2-plugin-extensions-movielistpreview
 enigma2-plugin-extensions-moviesearch
 enigma2-plugin-extensions-movieretitle
-enigma2-plugin-extensions-moviesearch
 enigma2-plugin-extensions-movieselectionquickbutton
 enigma2-plugin-extensions-mosaic
 enigma2-plugin-extensions-multirc
