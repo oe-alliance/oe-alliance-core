@@ -1,10 +1,10 @@
-PRINC = "3"
+PRINC = "4"
 
 SRC_URI += " \
 	file://init \
 "
 
-SRC_URI_gbquad += " \
+SRC_URI_append_gbquad= " \
 	file://udev-builtin-input_id.patch \
 "
 
