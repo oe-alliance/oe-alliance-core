@@ -13,7 +13,7 @@ inherit gitpkgv
 
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r10"
+PR = "r11"
 
 SRC_URI = "${ENIGMA2_PLUGINS_URI} file://pluginnotwanted"
 
