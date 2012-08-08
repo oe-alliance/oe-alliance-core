@@ -11,7 +11,7 @@ inherit task
 DEPENDS = "enigma2-pliplugins openaaf-feeds"
 
 RRECOMMENDS = "\
-	enigma2-plugin-drivers-usbserial
+	enigma2-plugin-drivers-usbserial \
 	enigma2-plugin-extensions-autotimer \
 	enigma2-plugin-extensions-epgsearch \
 	enigma2-plugin-extensions-imdb \
