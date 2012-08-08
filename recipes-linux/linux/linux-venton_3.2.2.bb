@@ -4,7 +4,7 @@ SECTION = "kernel"
 KV = "3.2.2"
 
 SRCDATE = "20120228"
-MACHINE_KERNEL_PR_append = ".0"
+MACHINE_KERNEL_PR_append = ".1"
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${KV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
@@ -53,9 +53,8 @@ do_configure_prepend() {
 }
 
 kernel_do_install_append() {
-	install -d ${D}/${KERNEL_IMAGEDEST}
-	install -m 0755 ${KERNEL_OUTPUT} ${D}/${KERNEL_IMAGEDEST}
-	gzip ${D}/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}
+	${STRIP} ${D}${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION}
+	gzip -9c ${D}${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION} > ${D}${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz
 }
 
 pkg_postinst_kernel-image () {
@@ -68,4 +67,4 @@ pkg_postinst_kernel-image () {
 	fi
 	true
 }
- 
+

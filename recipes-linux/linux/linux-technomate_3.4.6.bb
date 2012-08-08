@@ -4,7 +4,7 @@ SECTION = "kernel"
 KV = "3.4.6"
 
 SRCDATE = "20120802"
-MACHINE_KERNEL_PR_append = ".0"
+MACHINE_KERNEL_PR_append = ".1"
 
 SRC_URI[md5sum] = "8c49888b481fd0315eda972959a53e65"
 SRC_URI[sha256sum] = "46f40f2f9e4b774e46fb13b2c9b0e0b349763995021b4fa922c9c21aac6139e3"
@@ -32,9 +32,8 @@ do_configure_prepend() {
 }
 
 kernel_do_install_append() {
-	install -d ${D}${KERNEL_IMAGEDEST}
-	install -m 0755 ${KERNEL_OUTPUT} ${D}${KERNEL_IMAGEDEST}
-	gzip ${D}${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}
+	${STRIP} ${D}${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION}
+	gzip -9c ${D}${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION} > ${D}${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz
 }
 
 pkg_postinst_kernel-image () {
