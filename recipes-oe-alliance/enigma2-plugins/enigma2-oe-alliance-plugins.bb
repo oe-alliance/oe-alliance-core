@@ -30,6 +30,7 @@ RDEPENDS_enigma2-plugin-systemplugins-vfdcontrol = "gigablue-vfdctl"
 DESCRIPTION_enigma2-plugin-extensions-streamtv = "iptv player"
 RDEPENDS_enigma2-plugin-extensions-streamtv = "librtmp"
 DESCRIPTION_enigma2-plugin-systemplugins-fancontrol = "Control your internal system fan."
+RDEPENDS_enigma2-plugin-systemplugins-fancontrol_et9x00 = "hddtemp"
 DESCRIPTION_enigma2-plugin-extensions-vuplusevent = "Return the Love Event (only for genuine box)"
 DESCRIPTION_enigma2-plugin-systemplugins-remotecontrolcode = "Change Remote Control Code"
 
@@ -41,6 +42,7 @@ DEPENDS = "enigma2 \
 	minidlna \
 	libtheora \
 	libgsm \
+	hddtemp \
 	"
 
 inherit gitpkgv autotools
@@ -48,7 +50,7 @@ inherit gitpkgv autotools
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r8"
+PR = "r9"
 
 SRC_URI="git://github.com/oe-alliance/oe-alliance-plugins.git;protocol=git"
 
