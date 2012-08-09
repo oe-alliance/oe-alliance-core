@@ -2,7 +2,7 @@ MAINTAINER = "team@sabnzbd.org"
 LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYRIGHT.txt;md5=235357e51b50dc9738e5b57e2b49fb6a"
 
-PR = "r2"
+PR = "r0"
 
 DEPENDS = "python"
 RDEPENDS_${PN} = "\
@@ -20,8 +20,8 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/project/sabnzbdplus/sabnzbdplus/${PV}/SABnzbd-$
 	file://init-functions \
 	"
 
-SRC_URI[md5sum] = "b79f214ac491eb859b2c6c9124fc8d1b"
-SRC_URI[sha256sum] = "36ddfe48a770381bf8cdd4bd807416a09c7d05c4939c17861977d9413b1e3fa2"
+SRC_URI[md5sum] = "5a528e9ac07cce558c9a775d5d2b91d3"
+SRC_URI[sha256sum] = "a0d2e7c49d0c3231f1882cd0ef83883c3d03e189ddc8ef6120bcd63cc902f337"
 
 S = "${WORKDIR}/SABnzbd-${PV}"
 
