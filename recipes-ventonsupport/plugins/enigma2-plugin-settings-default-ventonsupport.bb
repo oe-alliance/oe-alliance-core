@@ -19,7 +19,7 @@ PROVIDES="virtual/enigma2-settings"
 
 FILES_${PN} = "/etc/enigma2/*"
 
-S="${WORKDIR}/${PN}"
+S="${WORKDIR}/enigma2-plugin-settings-default-ini"
 
 do_install() {
 	install -d ${D}/etc/enigma2
