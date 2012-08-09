@@ -40,8 +40,6 @@ DEPENDS = "enigma2 \
 	djmount \
 	librtmp \
 	minidlna \
-	libtheora \
-	libgsm \
 	hddtemp \
 	"
 
@@ -50,7 +48,7 @@ inherit gitpkgv autotools
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r10"
+PR = "r11"
 
 SRC_URI="git://github.com/oe-alliance/oe-alliance-plugins.git;protocol=git"
 
