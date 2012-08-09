@@ -58,7 +58,7 @@ IMAGE_CMD_ubi_append = " \
 
 TARGET_FPU = "hard"
 
-MACHINE_FEATURES += "3dtv alsa hdmicec switchoff wifi dvb-c"
+MACHINE_FEATURES += "3dtv alsa hdmicec switchoff wifi dvb-c blindscan-dvbc 3dtvpli"
 
 PREFERRED_PROVIDER_virtual/blindscan-dvbc = "venton-blindscan-dvbc-utils"
 
