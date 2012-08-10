@@ -9,19 +9,19 @@ require conf/license/license-gplv2.inc
 RDEPENDS_${PN} += "showiframe"
 
 PV = "1.0"
-PR = "r1"
+PR = "r2"
 
 S = "${WORKDIR}/"
 
 INITSCRIPT_NAME = "bootlogo"
-INITSCRIPT_PARAMS = "start 21 S ."
+INITSCRIPT_PARAMS = "start 05 S ."
 
 inherit update-rc.d
 
 SRC_URI = " \
 		file://bootlogo.sh \
 		 "
-		 
+
 SRC_URI_append_gb800se = " \
 					file://bootlogo.mvi \
 					file://splash.bin \
