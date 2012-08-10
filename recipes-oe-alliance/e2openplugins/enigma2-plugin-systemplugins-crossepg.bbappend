@@ -1,5 +1,8 @@
 MODULE = "CrossEPG"
-PRINC = "1"
+PRINC = "2"
+
+# Dunno why, but it sometime fails to build in parallel
+PARALLEL_MAKE = ""
 
 DEPENDS += "python-native"
 
