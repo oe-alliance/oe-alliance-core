@@ -11,6 +11,7 @@ inherit task
 WIFI_DRIVERS = " \
 	${@base_contains("MACHINE_FEATURES", "wifiusblegacy", \
 										"rt73 rt3070 rtl8192cu rtl871x", \
+	" \
 	firmware-carl9170 \
 	firmware-htc7010 \
 	firmware-htc9271 \
