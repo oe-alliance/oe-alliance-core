@@ -14,6 +14,7 @@ LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad
 SRC_URI = "http://archiv.openmips.com/gigablue-quad-linux-${PV}_${SRCDATE}.tgz \
 	file://defconfig \
 	file://memory-gcc464-fix.patch \
+	file://signal.c.patch \
 	"
 
 S = "${WORKDIR}/linux-${PV}"
