@@ -1,6 +1,6 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
-PRINC = "15"
+PRINC = "16"
 
 RDEPENDS_${PN} = " \
 	alsa-conf \
@@ -8,6 +8,7 @@ RDEPENDS_${PN} = " \
 	ethtool \
 	glibc-gconv-iso8859-15 \
 	gst-plugin-subsink \
+	hotplug-e2-helper \
 	\
 	${PYTHON_RDEPS} \
 	${GST_BASE_RDEPS} \
