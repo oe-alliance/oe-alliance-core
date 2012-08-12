@@ -9,14 +9,12 @@ PR = "r6"
 inherit task
 
 WIFI_DRIVERS = " \
+	${@base_contains("MACHINE_FEATURES", "wifiusblegacy", \
+										"rt73 rt3070 rtl8192cu rtl871x", \
 	firmware-carl9170 \
 	firmware-htc7010 \
 	firmware-htc9271 \
-	firmware-rtl8192cu \
-	firmware-rtl8712u \
 	firmware-rt2870 \
-	firmware-rt73 \
-	firmware-zd1211 \
 	\
 	kernel-module-ath9k-htc \
 	kernel-module-carl9170 \
@@ -27,6 +25,12 @@ WIFI_DRIVERS = " \
 	kernel-module-r8712u \
 	kernel-module-zd1211rw \
 	rtl8192cu \
+	", d)} \
+	\
+	firmware-rt73 \
+	firmware-zd1211 \
+	firmware-rtl8192cu \
+	firmware-rtl8712u \
 	"
 
 DEPENDS = "enigma2 enigma2-plugins enigma2-oe-alliance-plugins oe-alliance-feeds enigma2-3rdparty-plugins"

@@ -1,0 +1,10 @@
+--- a/include/linux/dm-ioctl.h	2012-08-11 14:48:18.000000000 +0200
++++ b/include/linux/dm-ioctl.h	2012-08-11 17:35:12.000000000 +0200
+@@ -9,6 +9,7 @@
+ #define _LINUX_DM_IOCTL_V4_H
+ 
+ #include <linux/types.h>
++#include <stdint.h>
+ 
+ #define DM_DIR "mapper"		/* Slashes not supported */
+ #define DM_MAX_TYPE_NAME 16

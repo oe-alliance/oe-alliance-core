@@ -19,7 +19,7 @@ MACHINE_EXTRA_RRECOMMENDS = " \
 	kernel-module-ecb \
 	"
 
-MACHINE_FEATURES += "alsa usbhost 3dtv switchoff tpm"
+MACHINE_FEATURES += "dreambox alsa usbhost 3dtv switchoff tpm"
 
 PREFERRED_PROVIDER_virtual/bootloader = "dreambox-secondstage-${MACHINE}"
 PREFERRED_PROVIDER_virtual/kernel = "linux-dreambox"

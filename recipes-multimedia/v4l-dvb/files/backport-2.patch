@@ -1,0 +1,74 @@
+commit 2f0c73d58ed8e1b8c8b6ba8f9e2c4fefd5e05b04
+Author: Andreas Oberritter <obi@linuxtv.org>
+Date:   Sun May 8 20:03:35 2011 -0300
+
+    [media] DVB: dtv_property_cache_submit shouldn't modifiy the cache
+    
+    - Use const pointers and remove assignments.
+    - delivery_system already gets assigned by DTV_DELIVERY_SYSTEM
+      and dtv_property_cache_sync.
+    
+    Signed-off-by: Andreas Oberritter <obi@linuxtv.org>
+    Signed-off-by: Mauro Carvalho Chehab <mchehab@redhat.com>
+
+diff -Naur a/linux/drivers/media/dvb/dvb-core/dvb_frontend.c b/linux/drivers/media/dvb/dvb-core/dvb_frontend.c
+--- a/linux/drivers/media/dvb/dvb-core/dvb_frontend.c	2011-08-09 18:41:03.000000000 +0200
++++ b/linux/drivers/media/dvb/dvb-core/dvb_frontend.c	2011-08-09 18:44:24.680231340 +0200
+@@ -1087,7 +1087,7 @@
+  */
+ static void dtv_property_legacy_params_sync(struct dvb_frontend *fe)
+ {
+-	struct dtv_frontend_properties *c = &fe->dtv_property_cache;
++	const struct dtv_frontend_properties *c = &fe->dtv_property_cache;
+ 	struct dvb_frontend_private *fepriv = fe->frontend_priv;
+ 	struct dvb_frontend_parameters *p = &fepriv->parameters;
+ 
+@@ -1099,14 +1099,12 @@
+ 		dprintk("%s() Preparing QPSK req\n", __func__);
+ 		p->u.qpsk.symbol_rate = c->symbol_rate;
+ 		p->u.qpsk.fec_inner = c->fec_inner;
+-		c->delivery_system = SYS_DVBS;
+ 		break;
+ 	case FE_QAM:
+ 		dprintk("%s() Preparing QAM req\n", __func__);
+ 		p->u.qam.symbol_rate = c->symbol_rate;
+ 		p->u.qam.fec_inner = c->fec_inner;
+ 		p->u.qam.modulation = c->modulation;
+-		c->delivery_system = SYS_DVBC_ANNEX_AC;
+ 		break;
+ 	case FE_OFDM:
+ 		dprintk("%s() Preparing OFDM req\n", __func__);
+@@ -1124,15 +1122,10 @@
+ 		p->u.ofdm.transmission_mode = c->transmission_mode;
+ 		p->u.ofdm.guard_interval = c->guard_interval;
+ 		p->u.ofdm.hierarchy_information = c->hierarchy;
+-		c->delivery_system = SYS_DVBT;
+ 		break;
+ 	case FE_ATSC:
+ 		dprintk("%s() Preparing VSB req\n", __func__);
+ 		p->u.vsb.modulation = c->modulation;
+-		if ((c->modulation == VSB_8) || (c->modulation == VSB_16))
+-			c->delivery_system = SYS_ATSC;
+-		else
+-			c->delivery_system = SYS_DVBC_ANNEX_B;
+ 		break;
+ 	}
+ }
+@@ -1142,7 +1135,7 @@
+  */
+ static void dtv_property_adv_params_sync(struct dvb_frontend *fe)
+ {
+-	struct dtv_frontend_properties *c = &fe->dtv_property_cache;
++	const struct dtv_frontend_properties *c = &fe->dtv_property_cache;
+ 	struct dvb_frontend_private *fepriv = fe->frontend_priv;
+ 	struct dvb_frontend_parameters *p = &fepriv->parameters;
+ 
+@@ -1183,7 +1176,7 @@
+ 
+ static void dtv_property_cache_submit(struct dvb_frontend *fe)
+ {
+-	struct dtv_frontend_properties *c = &fe->dtv_property_cache;
++	const struct dtv_frontend_properties *c = &fe->dtv_property_cache;
+ 
+ 	/* For legacy delivery systems we don't need the delivery_system to
+ 	 * be specified, but we populate the older structures from the cache

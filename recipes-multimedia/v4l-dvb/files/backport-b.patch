@@ -1,0 +1,41 @@
+commit 77b78eb0d4d21e70b09983aded1c4c0079705a57
+Author: Andreas Oberritter <obi@linuxtv.org>
+Date:   Thu Aug 4 13:10:27 2011 +0000
+
+    DVB: dvb_frontend: clear stale events on FE_SET_FRONTEND
+    
+    - Old events aren't very useful, so clear them before adding
+      the first event after an attempt to tune.
+    
+    Signed-off-by: Andreas Oberritter <obi@linuxtv.org>
+    Signed-off-by: ghost <andreas.monzner@multimedia-labs.de>
+
+diff --git a/linux/drivers/media/dvb/dvb-core/dvb_frontend.c b/linux/drivers/media/dvb/dvb-core/dvb_frontend.c
+index 7553358..9f39581 100644
+--- a/linux/drivers/media/dvb/dvb-core/dvb_frontend.c
++++ b/linux/drivers/media/dvb/dvb-core/dvb_frontend.c
+@@ -227,6 +227,16 @@ static int dvb_frontend_get_event(struct dvb_frontend *fe,
+ 	return 0;
+ }
+ 
++static void dvb_frontend_clear_events(struct dvb_frontend *fe)
++{
++	struct dvb_frontend_private *fepriv = fe->frontend_priv;
++	struct dvb_fe_events *events = &fepriv->events;
++
++	mutex_lock(&events->mtx);
++	events->eventr = events->eventw;
++	mutex_unlock(&events->mtx);
++}
++
+ static void dvb_frontend_init(struct dvb_frontend *fe)
+ {
+ 	dprintk ("DVB: initialising adapter %i frontend %i (%s)...\n",
+@@ -1908,6 +1908,7 @@ static int dvb_frontend_ioctl_legacy(struct file *file,
+ 		/* Request the search algorithm to search */
+ 		fepriv->algo_status |= DVBFE_ALGO_SEARCH_AGAIN;
+ 
++		dvb_frontend_clear_events(fe);
+ 		dvb_frontend_add_event(fe, 0);
+ 		dvb_frontend_wakeup(fe);
+ 		fepriv->status = 0;

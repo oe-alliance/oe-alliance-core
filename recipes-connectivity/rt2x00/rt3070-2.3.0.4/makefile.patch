@@ -1,0 +1,13 @@
+Index: DPO_RT3070_LinuxSTA_V2.3.0.4_20100604/Makefile
+===================================================================
+--- DPO_RT3070_LinuxSTA_V2.3.0.4_20100604.orig/Makefile
++++ DPO_RT3070_LinuxSTA_V2.3.0.4_20100604/Makefile
+@@ -304,7 +304,7 @@ ifeq ($(OSABL),YES)
+ 	cp -f $(RT28xx_DIR)/os/linux/rtnet$(CHIPSET)apsta.ko /tftpboot
+ endif
+ else
+-	cp -f $(RT28xx_DIR)/os/linux/rt$(CHIPSET)sta.ko /tftpboot
++#	cp -f $(RT28xx_DIR)/os/linux/rt$(CHIPSET)sta.ko /tftpboot
+ ifeq ($(OSABL),YES)
+ 	cp -f $(RT28xx_DIR)/os/linux/rtutil$(CHIPSET)sta.ko /tftpboot
+ 	cp -f $(RT28xx_DIR)/os/linux/rtnet$(CHIPSET)sta.ko /tftpboot

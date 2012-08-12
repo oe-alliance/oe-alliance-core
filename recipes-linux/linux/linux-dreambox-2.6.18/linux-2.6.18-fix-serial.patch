@@ -1,0 +1,218 @@
+--- linux-2.6.18/arch/mips/brcmstb/brcm97401c0/bcm_uart.c	2010-03-21 09:59:56.000000000 +0100
++++ linux-2.6.18-uart/arch/mips/brcmstb/brcm97401c0/bcm_uart.c	2010-03-21 17:45:16.000000000 +0100
+@@ -32,13 +32,13 @@
+ #define DFLT_BAUDRATE   115200
+ 
+ /*
+- * On the 7401C0, UARTB is the default, with UARTC being the 2nd serial port.  UARTA is not used,
++ * On the 7401C0, UARTB is the default, with UARTA being the 2nd serial port.  UARTC is not used,
+  * so we have the following mapping
+  *
+  *  Hardware			Linux
+- *  UARTA				Not used
+- *  UARTB				ttyS0
+- * 	UARTC				ttyS1  - 16550A style UART 
++ *  UARTA			ttyS1
++ *  UARTB			ttyS0
++ *  UARTC			Not used
+  */
+ 
+ typedef struct {
+@@ -52,7 +52,9 @@
+ 	unsigned long/*char*/	uTxData;
+ } 	Uart7401;
+ 
+-#define UART7401_UARTB_BASE		0xb04001a0  
++#define UART7401_UARTA_BASE		0xb0400180
++#define UART7401_UARTB_BASE		0xb04001a0
++#define stUartB ((volatile Uart7401 * const) UART7401_UARTA_BASE)
+ #define stUart ((volatile Uart7401 * const) UART7401_UARTB_BASE)
+ 
+ #define DFLT_BAUDRATE   115200
+@@ -118,7 +120,66 @@
+ 	return cData;
+ }
+ 
++/* --------------------------------------------------------------------------
++    Name: PutChar
++ Purpose: Send a character to the UART
++-------------------------------------------------------------------------- */
++void 
++//PutChar(char c)
++uartB_putc(char c)
++{
++
++#if 0
++    // Wait for Tx Data Register Empty
++    while (! (stUartB->uTxStatus & 0x1));
++
++    stUartB->uTxData = c;
++#else
++	while (!(*((volatile unsigned long*) 0xb0400198) & 1));
++
++	*((volatile unsigned long*) 0xb040019c) = c;
++#endif
++}
++
++
++/* --------------------------------------------------------------------------
++    Name: PutString
++ Purpose: Send a string to the UART
++-------------------------------------------------------------------------- */
++void 
++//PutString(const char *s)
++uartB_puts(const char *s)
++{
++    	while (*s) {
++        	if (*s == '\n') {
++            		uartB_putc('\r');
++        	}
++    		uartB_putc(*s++);
++    	}
++}
++
++
++/* --------------------------------------------------------------------------
++    Name: GetChar
++ Purpose: Get a character from the UART. Non-blocking
++-------------------------------------------------------------------------- */
++char 
++uartB_getc(void)
++{
++    	char cData = 0;
++	unsigned long uStatus = stUartB->uRxStatus;
++
++    	if (uStatus & 0x4) {
++        	cData = stUartB->uRxData;
++
++		// Check for Frame & Parity errors
++		if (uStatus & (0x10 | 0x20)) {
++           	 cData = 0;
++        	}
++    	}
+ 
++	return cData;
++}
+ 
+ /* --------------------------------------------------------------------------
+     Name: bcm71xx_uart_init
+@@ -141,10 +202,10 @@
+ 	// Set the BAUD rate
+ 	stUart->uBaudRateLo = (uBaudRate & 0xFF);
+ 	stUart->uBaudRateHi = ((uBaudRate >> 8) & 0xFF);
+-//	stUartB->uBaudRateLo = (uBaudRate & 0xFF);
+-//	stUartB->uBaudRateHi = ((uBaudRate >> 8) & 0xFF);
++	stUartB->uBaudRateLo = (uBaudRate & 0xFF);
++	stUartB->uBaudRateHi = ((uBaudRate >> 8) & 0xFF);
+ 
+ 	// Enable the UART, 8N1, Tx & Rx enabled
+ 	stUart->uControl = 0x16;
+-//	stUartB->uControl = 0x16;
++	stUartB->uControl = 0x16;
+ }
+--- linux-2.6.18/arch/mips/brcmstb/brcm97401c0/irq.c	2010-03-21 09:59:56.000000000 +0100
++++ linux-2.6.18-uart/arch/mips/brcmstb/brcm97401c0/irq.c	2010-03-21 17:46:23.000000000 +0100
+@@ -253,9 +253,9 @@
+  * so we have the following mapping
+  *
+  *  Hardware			Linux
+- *  UARTA				Not used
++ *  UARTA				UARTB
+  *  UARTB				UARTA
+- * 	UARTC				UARTB
++ *  UARTC				Not used
+  */
+ static void brcm_uart_enable(unsigned int irq)
+ {
+@@ -272,7 +272,7 @@
+ 	{
+ //printk("$$$$$$$$ UART B irq enabled. %d \n", irq);
+ 		CPUINT1C->IntrW0MaskClear = BCHP_HIF_CPU_INTR1_INTR_W0_STATUS_UPG_CPU_INTR_MASK;
+-		*((volatile unsigned long*)BCM_UPG_IRQ0_IRQEN) |= BCHP_IRQ0_IRQEN_uc_irqen_MASK;
++		*((volatile unsigned long*)BCM_UPG_IRQ0_IRQEN) |= BCHP_IRQ0_IRQEN_ua_irqen_MASK;
+ 	}
+ #if 0
+ 	else
+@@ -292,7 +292,7 @@
+ 	}
+ 	else if (irq == BCM_LINUX_UARTB_IRQ)
+ 	{
+-		*((volatile unsigned long*)BCM_UPG_IRQ0_IRQEN) &= ~(BCHP_IRQ0_IRQEN_uc_irqen_MASK);
++		*((volatile unsigned long*)BCM_UPG_IRQ0_IRQEN) &= ~(BCHP_IRQ0_IRQEN_ua_irqen_MASK);
+ 	}
+ 	local_irq_restore(flags);
+ }
+@@ -524,8 +524,8 @@
+ 					printk("unsolicited ENET interrupt!!!\n");
+ 			}
+ 			else if ((shift == BCHP_HIF_CPU_INTR1_INTR_W0_STATUS_UPG_CPU_INTR_SHIFT) 
+-					&& (*((volatile unsigned long*)BCM_UPG_IRQ0_IRQSTAT) & BCHP_IRQ0_IRQSTAT_ucirq_MASK) 
+-					&& (*((volatile unsigned long*)BCM_UPG_IRQ0_IRQEN) & BCHP_IRQ0_IRQEN_uc_irqen_MASK) )
++					&& (*((volatile unsigned long*)BCM_UPG_IRQ0_IRQSTAT) & BCHP_IRQ0_IRQSTAT_uairq_MASK) 
++					&& (*((volatile unsigned long*)BCM_UPG_IRQ0_IRQEN) & BCHP_IRQ0_IRQEN_ua_irqen_MASK) )
+ 			{
+ //printk("@@@@@@@UARTB IRQ %d\n", irq);				
+ 				do_IRQ(BCM_LINUX_UARTB_IRQ, regs);
+--- linux-2.6.18/arch/mips/brcmstb/brcm97401c0/uart_8250.c	2010-03-21 09:59:56.000000000 +0100
++++ linux-2.6.18-uart/arch/mips/brcmstb/brcm97401c0/uart_8250.c	2010-03-20 18:21:20.000000000 +0100
+@@ -41,6 +41,8 @@
+ #include <asm/io.h>
+ #include <linux/module.h>
+ 
++#if 0
++
+ static int shift = 2;
+ 
+ static void handle_gpio_mux(int uartNo)
+@@ -176,6 +178,7 @@
+ 	return serial_getc(UARTC_ADR_BASE);
+ }
+ 
++#endif
+ 
+ #if 1 /* Already defined elsewhere with the old bcm3250 serial driver */
+ 
+@@ -199,9 +202,9 @@
+ uart_init(unsigned long ignored)
+ {
+ 	void serial_bcm_init(unsigned long);
+-	serial_bcm_init(27000000);		/* Uart B */
+-#ifdef CONFIG_SERIAL_8250  && !defined(CONFIG_MIPS_BCM97455CX) && !defined(CONFIG_MIPS_BCM97455CX_NAND)
+-	serial_8250_init(1, NULL);				/* Uart C */
++	serial_bcm_init(27000000);		/* Uart B,A */
++#if defined(CONFIG_SERIAL_8250) && !defined(CONFIG_MIPS_BCM97455CX) && !defined(CONFIG_MIPS_BCM97455CX_NAND)
++//	serial_8250_init(1, NULL);				/* Uart C */
+ #endif
+ }
+ 
+--- linux-2.6.18/include/asm-mips/brcmstb/common/serial.h	2010-03-21 09:59:57.000000000 +0100
++++ linux-2.6.18-uart/include/asm-mips/brcmstb/common/serial.h	2010-03-21 17:44:08.000000000 +0100
+@@ -74,7 +74,7 @@
+ 	|| defined(CONFIG_MIPS_BCM7401C0) || defined(CONFIG_MIPS_BCM7402) \
+         || defined(CONFIG_MIPS_BCM7402S)  || defined(CONFIG_MIPS_BCM7403A0)
+ #define BRCM_SERIAL1_BASE	UARTB_ADR_BASE
+-#define BRCM_SERIAL2_BASE	UARTC_ADR_BASE
++#define BRCM_SERIAL2_BASE	UARTA_ADR_BASE
+ 
+ #else
+ #define BRCM_SERIAL1_BASE	UPG_UART_A_BASE
+--- linux-2.6.18/include/asm-mips/serial.h	2010-03-21 09:59:58.000000000 +0100
++++ linux-2.6.18-uart/include/asm-mips/serial.h	2010-03-21 11:02:36.000000000 +0100
+@@ -139,15 +139,10 @@
+   /* 2 legacy bcm3250 UARTs +  1 16550A compatible UART */
+ #define BRCM_SERIAL_PORT_DEFNS				\
+ 	_BRCM_SERIAL_INIT(BRCM_SERIAL1_IRQ, BRCM_SERIAL1_BASE), \
+-
+-#if 0 // UARTA is not used
+-	_BRCM_SERIAL_INIT(BRCM_SERIAL0_IRQ, BRCM_SERIAL0_BASE),
+-
+-#endif
++	_BRCM_SERIAL_INIT(BRCM_SERIAL2_IRQ, BRCM_SERIAL2_BASE),
+ 
+ #define BRCM_UART_PORT_DEFNS \
+-	_BRCM_16550_INIT(BRCM_SERIAL2_IRQ, BRCM_SERIAL2_BASE), \
+-
++	_BRCM_16550_INIT(BRCM_SERIAL2_IRQ, BRCM_SERIAL2_BASE),
+ 
+ #elif defined( CONFIG_MIPS_BCM7115 )
+ #define BRCM_SERIAL_PORT_DEFNS						\

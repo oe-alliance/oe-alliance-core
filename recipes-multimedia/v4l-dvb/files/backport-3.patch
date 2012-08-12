@@ -1,0 +1,45 @@
+commit 062fefd89c64f2cdb7b249653b7279384b4ed293
+Author: Andreas Oberritter <obi@linuxtv.org>
+Date:   Sun May 8 20:03:36 2011 -0300
+
+    [media] DVB: call get_property at the end of dtv_property_process_get
+    
+    - Drivers should be able to override properties returned to the user.
+    - The default values get prefilled from the cache.
+    
+    Signed-off-by: Andreas Oberritter <obi@linuxtv.org>
+    Signed-off-by: Mauro Carvalho Chehab <mchehab@redhat.com>
+
+diff -Naur a/linux/drivers/media/dvb/dvb-core/dvb_frontend.c b/linux/drivers/media/dvb/dvb-core/dvb_frontend.c
+--- a/linux/drivers/media/dvb/dvb-core/dvb_frontend.c	2011-08-09 18:49:55.528227327 +0200
++++ b/linux/drivers/media/dvb/dvb-core/dvb_frontend.c	2011-08-09 18:50:17.336227064 +0200
+@@ -1209,14 +1209,7 @@
+ 				    struct dtv_property *tvp,
+ 				    struct inode *inode, struct file *file)
+ {
+-	int r = 0;
+-
+-	/* Allow the frontend to validate incoming properties */
+-	if (fe->ops.get_property)
+-		r = fe->ops.get_property(fe, tvp);
+-
+-	if (r < 0)
+-		return r;
++	int r;
+ 
+ 	switch(tvp->cmd) {
+ 	case DTV_FREQUENCY:
+@@ -1333,6 +1326,13 @@
+ 		return -EINVAL;
+ 	}
+ 
++	/* Allow the frontend to override outgoing properties */
++	if (fe->ops.get_property) {
++		r = fe->ops.get_property(fe, tvp);
++		if (r < 0)
++			return r;
++	}
++
+ 	dtv_property_dump(tvp);
+ 
+ 	return 0;

@@ -1,0 +1,85 @@
+From 1532c32748658850d7d8b570187165c8bcb9858e Mon Sep 17 00:00:00 2001
+From: Ralf Baechle <ralf@linux-mips.org>
+Date: Tue, 20 Nov 2007 10:44:18 +0000
+Subject: [PATCH] [MIPS] Fix possible hang in LL/SC futex loops.
+
+The LL / SC loops in __futex_atomic_op() have the usual fixups necessary
+for memory acccesses to userspace from kernel space installed:
+
+        __asm__ __volatile__(
+        "       .set    push                            \n"
+        "       .set    noat                            \n"
+        "       .set    mips3                           \n"
+        "1:     ll      %1, %4  # __futex_atomic_op     \n"
+        "       .set    mips0                           \n"
+        "       " insn  "                               \n"
+        "       .set    mips3                           \n"
+        "2:     sc      $1, %2                          \n"
+        "       beqz    $1, 1b                          \n"
+        __WEAK_LLSC_MB
+        "3:                                             \n"
+        "       .set    pop                             \n"
+        "       .set    mips0                           \n"
+        "       .section .fixup,\"ax\"                  \n"
+        "4:     li      %0, %6                          \n"
+        "       j       2b                              \n"	<-----
+        "       .previous                               \n"
+        "       .section __ex_table,\"a\"               \n"
+        "       "__UA_ADDR "\t1b, 4b                    \n"
+        "       "__UA_ADDR "\t2b, 4b                    \n"
+        "       .previous                               \n"
+        : "=r" (ret), "=&r" (oldval), "=R" (*uaddr)
+        : "0" (0), "R" (*uaddr), "Jr" (oparg), "i" (-EFAULT)
+        : "memory");
+
+Notice the branch at the end of the fixup code, it goes back to the
+SC instruction.  The SC instruction took an exception so it will not have
+changed $1 so the loop will continue endless unless by coincidence the
+value to be stored from $1 happened to be zero.
+
+In case of a mappng that is valid things will obviously work and by mere
+coincidence we'll get away with it for a nonsense address too.  But as
+Kaz Kylheku <kaz@zeugmasystems.com> found if the mapping happens to
+disappear while a futex operation is running things will go wrong and the
+kernel will get stuck.
+
+Thanks to Kaz for helping me understand why futexes where going wrong and
+providing a test case.
+
+Signed-off-by: Ralf Baechle <ralf@linux-mips.org>
+(cherry picked from commit 3ae822ecf819860a30dabe3e0062feedfa7d416c)
+---
+ include/asm-mips/futex.h |    6 +++---
+ 1 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/include/asm-mips/futex.h b/include/asm-mips/futex.h
+index ed023ea..07d8e61 100644
+--- a/include/asm-mips/futex.h
++++ b/include/asm-mips/futex.h
+@@ -33,7 +33,7 @@
+ 		"	.set	mips0				\n"	\
+ 		"	.section .fixup,\"ax\"			\n"	\
+ 		"4:	li	%0, %6				\n"	\
+-		"	j	2b				\n"	\
++		"	j	3b				\n"	\
+ 		"	.previous				\n"	\
+ 		"	.section __ex_table,\"a\"		\n"	\
+ 		"	"__UA_ADDR "\t1b, 4b			\n"	\
+@@ -59,7 +59,7 @@
+ 		"	.set	mips0				\n"	\
+ 		"	.section .fixup,\"ax\"			\n"	\
+ 		"4:	li	%0, %6				\n"	\
+-		"	j	2b				\n"	\
++		"	j	3b				\n"	\
+ 		"	.previous				\n"	\
+ 		"	.section __ex_table,\"a\"		\n"	\
+ 		"	"__UA_ADDR "\t1b, 4b			\n"	\
+@@ -198,4 +198,4 @@ futex_atomic_cmpxchg_inatomic(int __user *uaddr, int oldval, int newval)
+ }
+ 
+ #endif
+-#endif
++#endif /* _ASM_FUTEX_H */
+-- 
+1.7.9
+

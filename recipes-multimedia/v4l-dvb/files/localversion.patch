@@ -1,0 +1,115 @@
+# HG changeset patch
+# User Andreas Oberritter <obi@linuxtv.org>
+# Date 1284119639 0
+# Node ID 008dba7f69aa8461f3210919fdc2396941241013
+# Parent  558dc662028e9ae5debcfb708da07ab67be8b3d8
+Support CONFIG_LOCALVERSION by parsing UTS_RELEASE
+
+diff --git a/v4l/Makefile b/v4l/Makefile
+--- a/v4l/Makefile
++++ b/v4l/Makefile
+@@ -236,22 +236,8 @@
+ $(obj)/.version:
+ ifneq ($(DIR),)
+ 	@echo "Searching in $(DIR)/Makefile for kernel version."
+-	@perl \
+-	-e '$$d="$(DIR)"; ' \
+-	-e 'S: open IN,"$$d/Makefile"; ' \
+-	-e 'while (<IN>) {' \
+-	-e '	if (/^VERSION\s*=\s*(\d+)/){ $$version=$$1; }' \
+-	-e '	elsif (/^PATCHLEVEL\s*=\s*(\d+)/){ $$level=$$1; }' \
+-	-e '	elsif (/^SUBLEVEL\s*=\s*(\d+)/){ $$sublevel=$$1; }' \
+-	-e '	elsif (/^EXTRAVERSION\s*=\s*(\S+)\n/){ $$extra=$$1; }' \
+-	-e '    elsif (/^KERNELSRC\s*:=\s*(\S.*)\n/ || /^MAKEARGS\s*:=\s*-C\s*(\S.*)\n/)' \
+-	-e '        { $$o=$$d; $$d=$$1; goto S; }' \
+-	-e '};' \
+-	-e 'printf ("VERSION=%s\nPATCHLEVEL:=%s\nSUBLEVEL:=%s\nKERNELRELEASE:=%s.%s.%s%s\n",' \
+-	-e '	$$version,$$level,$$sublevel,$$version,$$level,$$sublevel,$$extra);' \
+-	-e 'print "OUTDIR:=$$o\n" if($$o);' \
+-	-e 'print "SRCDIR:=$$d\n";' > $(obj)/.version
+-	@cat .version|grep KERNELRELEASE:|sed s,'KERNELRELEASE:=','Forcing compiling to version ',
++	@perl scripts/generate-dot-version.pl "$(DIR)" > $(obj)/.version
++	@grep KERNELRELEASE: $(obj)/.version | sed s,'KERNELRELEASE:=','Forcing compiling to version ',
+ 
+ 	@if [ ! -f $(DIR)/scripts/kallsyms ]; then \
+ 		echo "*** Warning: You should configure and build kernel before compiling V4L"; \
+diff --git a/v4l/scripts/generate-dot-version.pl b/v4l/scripts/generate-dot-version.pl
+new file mode 100755
+--- /dev/null
++++ b/v4l/scripts/generate-dot-version.pl
+@@ -0,0 +1,75 @@
++#!/usr/bin/perl -w
++
++use strict;
++
++my @headers = (
++	"generated/utsrelease.h",
++	"linux/utsrelease.h",
++	"linux/version.h",
++);
++
++if (@ARGV < 1) {
++	print "Usage: generate-dot-version <srcdir>\n";
++	exit 1;
++}
++
++my $srcdir = $ARGV[0];
++
++if (! -d $srcdir) {
++	print "Not a directory: $srcdir\n";
++	exit 1;
++}
++
++sub print_uts_release($)
++{
++	my $path = shift;
++
++	open IN, "<$path" or die $!;
++
++	while (<IN>) {
++		if (m/#define\s+UTS_RELEASE\s+"(\d+)\.(\d+)\.(\d+)(.*)"/) {
++			print "VERSION:=$1\n";
++			print "PATCHLEVEL:=$2\n";
++			print "SUBLEVEL:=$3\n";
++			print "KERNELRELEASE:=$1.$2.$3$4\n";
++			last;
++		}
++	}
++
++	close IN;
++}
++
++sub print_directories($)
++{
++	my $srcdir = shift;
++	my $outdir = undef;
++
++	open IN, "<$srcdir/Makefile" or die $!;
++
++	while (<IN>) {
++		if (m/^KERNELSRC\s*:=\s*(\S.*)\n/ || m/^MAKEARGS\s*:=\s*-C\s*(\S.*)\n/) {
++			$outdir = $srcdir;
++			$srcdir = $1;
++			last;
++		}
++	}
++
++	close IN;
++
++	if (defined $outdir) {
++		print "OUTDIR:=$outdir\n";
++	}
++
++	print "SRCDIR:=$srcdir\n";
++}
++
++for (@headers) {
++	my $path = "$srcdir/include/$_";
++	if (-f $path) {
++		print_uts_release($path);
++		last;
++	}
++}
++
++print_directories($srcdir);
++

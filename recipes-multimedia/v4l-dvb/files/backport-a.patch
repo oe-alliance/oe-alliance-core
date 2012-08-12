@@ -1,0 +1,26 @@
+commit bf2cc354668cd307cde6911bca31928a505f2b41
+Author: Andreas Oberritter <obi@linuxtv.org>
+Date:   Thu Aug 4 13:07:12 2011 +0000
+
+    DVB: dvb_frontend: avoid possible race condition on first event
+    
+    - Make sure the initial frontend event on FE_SET_FRONTEND gets
+      enqueued before the frontend thread wakes up.
+    
+    Signed-off-by: Andreas Oberritter <obi@linuxtv.org>
+    Signed-off-by: ghost <andreas.monzner@multimedia-labs.de>
+
+diff --git a/linux/drivers/media/dvb/dvb-core/dvb_frontend.c b/linux/drivers/media/dvb/dvb-core/dvb_frontend.c
+index b6904ed..7553358 100644
+--- a/linux/drivers/media/dvb/dvb-core/dvb_frontend.c
++++ b/linux/drivers/media/dvb/dvb-core/dvb_frontend.c
+@@ -1898,8 +1898,8 @@ static int dvb_frontend_ioctl_legacy(struct file *file,
+ 		/* Request the search algorithm to search */
+ 		fepriv->algo_status |= DVBFE_ALGO_SEARCH_AGAIN;
+ 
+-		dvb_frontend_wakeup(fe);
+ 		dvb_frontend_add_event(fe, 0);
++		dvb_frontend_wakeup(fe);
+ 		fepriv->status = 0;
+ 		err = 0;
+ 		break;

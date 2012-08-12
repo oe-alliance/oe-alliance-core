@@ -1,0 +1,16 @@
+diff --git a/arch/mips/kernel/proc.c b/arch/mips/kernel/proc.c
+index 3f725fe..b5f6630 100644
+--- a/arch/mips/kernel/proc.c
++++ b/arch/mips/kernel/proc.c
+@@ -96,9 +96,9 @@ static const char *cpu_name[] = {
+ 	[CPU_SR71000]	= "Sandcraft SR71000",
+ 	[CPU_PR4450]	= "Philips PR4450",
+ 	/* PR22847 - Add Broadcom models */
+-	[CPU_BMIPS3300]	= "BMIPS3300",
++	[CPU_BMIPS3300]	= "Brcm3300",
+ 	[CPU_BMIPS4350]	= "BMIPS4350",
+-	[CPU_BMIPS4380]	= "BMIPS4380",
++	[CPU_BMIPS4380]	= "Brcm4380",
+ 	[CPU_BMIPS5000]	= "BMIPS5000",
+ };
+ 

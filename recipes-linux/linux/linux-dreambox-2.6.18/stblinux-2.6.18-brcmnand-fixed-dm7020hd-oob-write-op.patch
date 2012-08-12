@@ -1,0 +1,27 @@
+commit 3f693583f72320960b11abc651a97244e334aa4f
+Author: ghost <andreas.monzner@multimedia-labs.de>
+Date:   Thu Sep 22 00:47:37 2011 +0200
+
+    brcmnand_base.c: fixed dm7020hd nand oob write only operation
+
+diff --git a/drivers/mtd/brcmnand/brcmnand_base.c b/drivers/mtd/brcmnand/brcmnand_base.c
+index 23fc1db..958bad6 100644
+--- a/drivers/mtd/brcmnand/brcmnand_base.c
++++ b/drivers/mtd/brcmnand/brcmnand_base.c
+@@ -8600,6 +8600,8 @@ printk("sun_top_strap=%08x\n", BDEV_RD(BCHP_SUN_TOP_CTRL_STRAP_VALUE_0));
+ 			acc_control = check_n_disable_wr_preempt(acc_control);
+ #endif
+ 
++/* 7020HD 4K SLC nand doesn't like this !!!!!!!!!!!! */
++#if 0
+ 			/*
+ 			 * Some new SLC flashes have 4KB page size, and need Partial Page Prog disabled
+ 			 * to satisfy NOP requirement, usually == 4
+@@ -8617,6 +8619,7 @@ printk("sun_top_strap=%08x\n", BDEV_RD(BCHP_SUN_TOP_CTRL_STRAP_VALUE_0));
+ 			} else {
+ 				printk("SLC flash: Corrected ACC_CONTROL = %08lx from %08lx\n", acc_control, org_acc_control);
+ 			}
++#endif
+ 		}
+ 
+ 

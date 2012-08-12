@@ -1,0 +1,16 @@
+Index: DPO_RT3070_LinuxSTA_V2.3.0.4_20100604/common/rtusb_dev_id.c
+===================================================================
+--- DPO_RT3070_LinuxSTA_V2.3.0.4_20100604.orig/common/rtusb_dev_id.c	2010-10-02 10:39:35.000000000 +0200
++++ DPO_RT3070_LinuxSTA_V2.3.0.4_20100604/common/rtusb_dev_id.c	2010-10-02 10:40:23.000000000 +0200
+@@ -106,6 +106,11 @@
+ 	{USB_DEVICE(0x07FA,0x7712)}, /* Edimax */
+ 	{USB_DEVICE(0x0789,0x0166)}, /* Edimax */
+ 	{USB_DEVICE(0x148F,0x2070)}, /* Edimax */
++	{USB_DEVICE(0x050d,0x935b)}, /* Belkin F6D4050v2 */
++	{USB_DEVICE(0x1737,0x0070)}, /* linksys */                                                                 
++	{USB_DEVICE(0x1737,0x0071)}, /* linksys */                                                                 
++	{USB_DEVICE(0x1737,0x0077)}, /* linksys */
++	{USB_DEVICE(0x1737,0x0078)}, /* linksys */
+ #endif // RT3070 //
+ 	{ }/* Terminating entry */
+ };

@@ -1,0 +1,10 @@
+--- wpa_supplicant/Makefile.org	2012-04-24 22:47:56.806329329 +0200
++++ wpa_supplicant/Makefile	2012-04-24 22:48:07.720451830 +0200
+@@ -758,6 +758,7 @@
+ ifdef TLS_FUNCS
+ OBJS += ../src/crypto/tls_gnutls.o
+ LIBS += -lgnutls -lgpg-error
++LIBS_p += -lgpg-error
+ ifdef CONFIG_GNUTLS_EXTRA
+ CFLAGS += -DCONFIG_GNUTLS_EXTRA
+ LIBS += -lgnutls-extra

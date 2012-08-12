@@ -1,0 +1,10 @@
+--- linux-2.6.18/include/linux/Kbuild-orig	2006-09-20 05:42:06.000000000 +0200
++++ linux-2.6.18/include/linux/Kbuild	2012-08-12 04:33:39.000000000 +0200
+@@ -28,6 +28,7 @@
+ 	sound.h stddef.h synclink.h telephony.h termios.h ticable.h	\
+ 	times.h tiocl.h tipc.h toshiba.h ultrasound.h un.h utime.h	\
+ 	utsname.h video_decoder.h video_encoder.h videotext.h vt.h	\
++	bsg.h fiemap.h oom.h \
+ 	wavefront.h wireless.h xattr.h x25.h zorro_ids.h
+ 
+ unifdef-y += acct.h adb.h adfs_fs.h agpgart.h apm_bios.h atalk.h	\

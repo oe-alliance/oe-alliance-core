@@ -1,0 +1,19 @@
+--- linux-2.6.18/include/asm-mips/ptrace.h	2010-01-18 22:57:15.000000000 +0100
++++ linux-2.6.18-brcm/include/asm-mips/ptrace.h	2010-01-18 22:59:08.000000000 +0100
+@@ -10,8 +10,6 @@
+ #define _ASM_PTRACE_H
+ 
+ 
+-#include <asm/isadep.h>
+-
+ /* 0 - 31 are integer registers, 32 - 63 are fp registers.  */
+ #define FPR_BASE	32
+ #define PC		64
+@@ -73,6 +71,7 @@
+ #ifdef __KERNEL__
+ 
+ #include <linux/linkage.h>
++#include <asm/isadep.h>
+ 
+ /*
+  * Does the process account for user or for system time?

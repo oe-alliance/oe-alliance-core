@@ -1,0 +1,84 @@
+commit 8fa1e238728f28fe47fb36b963f85fb77305a109
+Author: Andreas Oberritter <obi@linuxtv.org>
+Date:   Fri Aug 26 11:01:48 2011 +0000
+
+    fixup! DVB: dvb_frontend: convert semaphore to mutex
+    
+    Signed-off-by: ghost <andreas.monzner@multimedia-labs.de>
+
+diff --git a/linux/drivers/media/dvb/dvb-core/dvb_frontend.c b/linux/drivers/media/dvb/dvb-core/dvb_frontend.c
+index 326518f..7784d74 100644
+--- a/linux/drivers/media/dvb/dvb-core/dvb_frontend.c
++++ b/linux/drivers/media/dvb/dvb-core/dvb_frontend.c
+@@ -552,19 +552,8 @@
+ 
+ 	dprintk("%s\n", __func__);
+ 
+-	fepriv->check_wrapped = 0;
+-	fepriv->quality = 0;
+-	fepriv->delay = 3*HZ;
+-	fepriv->status = 0;
+-	fepriv->wakeup = 0;
+-	fepriv->reinitialise = 0;
+-
+-	dvb_frontend_init(fe);
+-
+ 	set_freezable();
+ 	while (1) {
+-		mutex_unlock(&fepriv->lock);	    /* is locked when we enter the thread... */
+-restart:
+ #if LINUX_VERSION_CODE < KERNEL_VERSION(2,6,24)
+ 		timeout = wait_event_interruptible_timeout(fepriv->wait_queue,
+ 			dvb_frontend_should_wakeup(fe) || kthread_should_stop(),
+@@ -583,7 +572,7 @@
+ 		}
+ 
+ 		if (try_to_freeze())
+-			goto restart;
++			continue;
+ 
+ 		if (mutex_lock_interruptible(&fepriv->lock))
+ 			break;
+@@ -674,6 +663,8 @@
+ 		} else {
+ 			dvb_frontend_swzigzag(fe);
+ 		}
++
++		mutex_unlock(&fepriv->lock);
+ 	}
+ 
+ 	if (dvb_powerdown_on_sleep) {
+@@ -790,6 +781,16 @@
+ 	fepriv->state = FESTATE_IDLE;
+ 	fepriv->exit = DVB_FE_NO_EXIT;
+ 	fepriv->thread = NULL;
++
++	fepriv->check_wrapped = 0;
++	fepriv->quality = 0;
++	fepriv->delay = 3*HZ;
++	fepriv->status = 0;
++	fepriv->wakeup = 0;
++	fepriv->reinitialise = 0;
++
++	dvb_frontend_init(fe);
++
+ 	mb();
+ 
+ 	fe_thread = kthread_run(dvb_frontend_thread, fe,
+@@ -797,11 +798,12 @@
+ 	if (IS_ERR(fe_thread)) {
+ 		ret = PTR_ERR(fe_thread);
+ 		printk("dvb_frontend_start: failed to start kthread (%d)\n", ret);
+-		mutex_unlock(&fepriv->lock);
+-		return ret;
++	} else {
++		fepriv->thread = fe_thread;
++		ret = 0;
+ 	}
+-	fepriv->thread = fe_thread;
+-	return 0;
++	mutex_unlock(&fepriv->lock);
++	return ret;
+ }
+ 
+ static void dvb_frontend_get_frequeny_limits(struct dvb_frontend *fe,

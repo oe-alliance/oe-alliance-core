@@ -1,0 +1,86 @@
+commit 6e7d9834a19c2925a237ed01eabe8dc42304df7d
+Author: Andreas Oberritter <obi@linuxtv.org>
+Date:   Sun May 8 20:03:40 2011 -0300
+
+    [media] DVB: dvb_frontend: add parameters_out
+    
+    - Holds the parameters detected by the demod.
+    - Updated on every call to get_frontend, either through ioctl or when
+      a frontend event occurs.
+    - Reset to input parameters after every call to set_frontend, tune or
+      search/track.
+    
+    Signed-off-by: Andreas Oberritter <obi@linuxtv.org>
+    Signed-off-by: Mauro Carvalho Chehab <mchehab@redhat.com>
+
+diff -Naur a/linux/drivers/media/dvb/dvb-core/dvb_frontend.c b/linux/drivers/media/dvb/dvb-core/dvb_frontend.c
+--- a/linux/drivers/media/dvb/dvb-core/dvb_frontend.c	2011-08-09 19:00:23.208219717 +0200
++++ b/linux/drivers/media/dvb/dvb-core/dvb_frontend.c	2011-08-09 19:00:30.096219633 +0200
+@@ -113,6 +113,7 @@
+ 	/* thread/frontend values */
+ 	struct dvb_device *dvbdev;
+ 	struct dvb_frontend_parameters parameters_in;
++	struct dvb_frontend_parameters parameters_out;
+ 	struct dvb_fe_events events;
+ 	struct semaphore sem;
+ 	struct list_head list_head;
+@@ -167,12 +168,11 @@
+ 
+ 	e = &events->events[events->eventw];
+ 
+-	memcpy (&e->parameters, &fepriv->parameters_in,
+-		sizeof (struct dvb_frontend_parameters));
+-
+ 	if (status & FE_HAS_LOCK)
+ 		if (fe->ops.get_frontend)
+-			fe->ops.get_frontend(fe, &e->parameters);
++			fe->ops.get_frontend(fe, &fepriv->parameters_out);
++
++	e->parameters = fepriv->parameters_out;
+ 
+ 	events->eventw = wp;
+ 
+@@ -360,6 +360,7 @@
+ 		fepriv->parameters_in.inversion = fepriv->inversion;
+ 	if (fe->ops.set_frontend)
+ 		fe_set_err = fe->ops.set_frontend(fe, &fepriv->parameters_in);
++	fepriv->parameters_out = fepriv->parameters_in;
+ 	if (fe_set_err < 0) {
+ 		fepriv->state = FESTATE_ERROR;
+ 		return fe_set_err;
+@@ -391,6 +392,7 @@
+ 			if (fe->ops.set_frontend)
+ 				retval = fe->ops.set_frontend(fe,
+ 							&fepriv->parameters_in);
++			fepriv->parameters_out = fepriv->parameters_in;
+ 			if (retval < 0)
+ 				fepriv->state = FESTATE_ERROR;
+ 			else
+@@ -613,6 +615,8 @@
+ 
+ 				if (fe->ops.tune)
+ 					fe->ops.tune(fe, params, fepriv->tune_mode_flags, &fepriv->delay, &s);
++				if (params)
++					fepriv->parameters_out = *params;
+ 
+ 				if (s != fepriv->status && !(fepriv->tune_mode_flags & FE_TUNE_MODE_ONESHOT)) {
+ 					dprintk("%s: state changed, adding current state\n", __func__);
+@@ -652,6 +656,7 @@
+ 					fepriv->algo_status |= DVBFE_ALGO_SEARCH_AGAIN;
+ 					fepriv->delay = HZ / 2;
+ 				}
++				fepriv->parameters_out = fepriv->parameters_in;
+ 				fe->ops.read_status(fe, &s);
+ 				if (s != fepriv->status) {
+ 					dvb_frontend_add_event(fe, s); /* update event list */
+@@ -1888,8 +1893,8 @@
+ 
+ 	case FE_GET_FRONTEND:
+ 		if (fe->ops.get_frontend) {
+-			memcpy (parg, &fepriv->parameters_in, sizeof (struct dvb_frontend_parameters));
+-			err = fe->ops.get_frontend(fe, (struct dvb_frontend_parameters*) parg);
++			err = fe->ops.get_frontend(fe, &fepriv->parameters_out);
++			memcpy(parg, &fepriv->parameters_out, sizeof(struct dvb_frontend_parameters));
+ 		}
+ 		break;
+ 

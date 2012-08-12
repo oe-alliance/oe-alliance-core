@@ -28,7 +28,18 @@ IMAGES_VERSION_dm800se = "2"
 IMAGES_VERSION_dm7020hd = "2"
 IMAGES_VERSION_dm8000 = "2"
 
-SRC_URI += "${@base_contains("MACHINE_FEATURES", "dreambox", "http://sources.dreamboxupdate.com/download/7020/bootlogo-${MACHINE}-${BINARY_VERSION}.elf" , "", d)}"
+SRC_URI += "${@base_contains("MACHINE_FEATURES", "dreambox", "http://sources.dreamboxupdate.com/download/7020/bootlogo-${MACHINE}-${BINARY_VERSION}.elf;name=bootlogo-${MACHINE}-${BINARY_VERSION}" , "", d)}"
+
+SRC_URI[bootlogo-dm800-10.md5sum] = "0ad1cee22268ecb6e71ca6f2e129d48a"
+SRC_URI[bootlogo-dm800-10.sha256sum] = "890c529fa06f3d4f83536c2423fc3a09c7134756f578018f10823d76492e3307"
+SRC_URI[bootlogo-dm500hd-10.md5sum] = "0e43d1d11914a331793ef119effdc6ef"
+SRC_URI[bootlogo-dm500hd-10.sha256sum] = "ac9c7ae0a487f5712712d88dc139ae6505d83b3cd8950aa7d0367d84ba6ff071"
+SRC_URI[bootlogo-dm800se-10.md5sum] = "826addc0d096c8caf81b406cc5c13085"
+SRC_URI[bootlogo-dm800se-10.sha256sum] = "43da0c972adee37e24caa654bebea4e17c6b1ef27d73e886dfc81f9d823d1685"
+SRC_URI[bootlogo-dm7020hd-10.md5sum] = "2f37855226ccdbf818e7b2aa5240fc26"
+SRC_URI[bootlogo-dm7020hd-10.sha256sum] = "f5c9551d4af70b0f6360ce193319d2516b1a6c5dbd38b84ba238fe9efff71f34"
+SRC_URI[bootlogo-dm8000-10.md5sum] = "8dab446be9dfd09751e66601b629b3c0"
+SRC_URI[bootlogo-dm8000-10.sha256sum] = "6a7a54c0c823d92772bb09c87fdf5f385ea11e8a7ab99f26a042ddd834276ca0"
 
 MVISYMLINKS = "bootlogo_wait backdrop switchoff"
 

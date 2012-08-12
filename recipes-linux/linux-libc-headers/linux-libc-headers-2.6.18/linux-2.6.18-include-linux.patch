@@ -1,0 +1,495 @@
+diff -urN a/include/linux/auto_fs4.h b/include/linux/auto_fs4.h
+--- a/include/linux/auto_fs4.h	2012-08-11 14:48:17.000000000 +0200
++++ b/include/linux/auto_fs4.h	2012-08-10 22:52:44.000000000 +0200
+@@ -11,6 +11,8 @@
+ #ifndef _LINUX_AUTO_FS4_H
+ #define _LINUX_AUTO_FS4_H
+ 
++#include <linux/types.h>
++
+ /* Include common v3 definitions */
+ #include <linux/auto_fs.h>
+ 
+@@ -86,6 +88,15 @@
+ 	struct autofs_v5_packet v5_packet;
+ };
+ 
++union autofs_v5_packet_union {
++        struct autofs_packet_hdr hdr;
++        struct autofs_v5_packet v5_packet;
++        autofs_packet_missing_indirect_t missing_indirect;
++        autofs_packet_expire_indirect_t expire_indirect;
++        autofs_packet_missing_direct_t missing_direct;
++        autofs_packet_expire_direct_t expire_direct;
++};
++
+ #define AUTOFS_IOC_EXPIRE_MULTI		_IOW(0x93,0x66,int)
+ #define AUTOFS_IOC_EXPIRE_INDIRECT	AUTOFS_IOC_EXPIRE_MULTI
+ #define AUTOFS_IOC_EXPIRE_DIRECT	AUTOFS_IOC_EXPIRE_MULTI
+diff -urN a/include/linux/bsg.h b/include/linux/bsg.h
+--- a/include/linux/bsg.h	1970-01-01 01:00:00.000000000 +0100
++++ b/include/linux/bsg.h	2012-07-06 17:46:11.000000000 +0200
+@@ -0,0 +1,65 @@
++#ifndef BSG_H
++#define BSG_H
++
++#include <linux/types.h>
++
++#define BSG_PROTOCOL_SCSI		0
++
++#define BSG_SUB_PROTOCOL_SCSI_CMD	0
++#define BSG_SUB_PROTOCOL_SCSI_TMF	1
++#define BSG_SUB_PROTOCOL_SCSI_TRANSPORT	2
++
++/*
++ * For flags member below
++ * sg.h sg_io_hdr also has bits defined for it's flags member. However
++ * none of these bits are implemented/used by bsg. The bits below are
++ * allocated to not conflict with sg.h ones anyway.
++ */
++#define BSG_FLAG_Q_AT_TAIL 0x10 /* default, == 0 at this bit, is Q_AT_HEAD */
++
++struct sg_io_v4 {
++	__s32 guard;		/* [i] 'Q' to differentiate from v3 */
++	__u32 protocol;		/* [i] 0 -> SCSI , .... */
++	__u32 subprotocol;	/* [i] 0 -> SCSI command, 1 -> SCSI task
++				   management function, .... */
++
++	__u32 request_len;	/* [i] in bytes */
++	__u64 request;		/* [i], [*i] {SCSI: cdb} */
++	__u64 request_tag;	/* [i] {SCSI: task tag (only if flagged)} */
++	__u32 request_attr;	/* [i] {SCSI: task attribute} */
++	__u32 request_priority;	/* [i] {SCSI: task priority} */
++	__u32 request_extra;	/* [i] {spare, for padding} */
++	__u32 max_response_len;	/* [i] in bytes */
++	__u64 response;		/* [i], [*o] {SCSI: (auto)sense data} */
++
++        /* "dout_": data out (to device); "din_": data in (from device) */
++	__u32 dout_iovec_count;	/* [i] 0 -> "flat" dout transfer else
++				   dout_xfer points to array of iovec */
++	__u32 dout_xfer_len;	/* [i] bytes to be transferred to device */
++	__u32 din_iovec_count;	/* [i] 0 -> "flat" din transfer */
++	__u32 din_xfer_len;	/* [i] bytes to be transferred from device */
++	__u64 dout_xferp;	/* [i], [*i] */
++	__u64 din_xferp;	/* [i], [*o] */
++
++	__u32 timeout;		/* [i] units: millisecond */
++	__u32 flags;		/* [i] bit mask */
++	__u64 usr_ptr;		/* [i->o] unused internally */
++	__u32 spare_in;		/* [i] */
++
++	__u32 driver_status;	/* [o] 0 -> ok */
++	__u32 transport_status;	/* [o] 0 -> ok */
++	__u32 device_status;	/* [o] {SCSI: command completion status} */
++	__u32 retry_delay;	/* [o] {SCSI: status auxiliary information} */
++	__u32 info;		/* [o] additional information */
++	__u32 duration;		/* [o] time to complete, in milliseconds */
++	__u32 response_len;	/* [o] bytes of response actually written */
++	__s32 din_resid;	/* [o] din_xfer_len - actual_din_xfer_len */
++	__s32 dout_resid;	/* [o] dout_xfer_len - actual_dout_xfer_len */
++	__u64 generated_tag;	/* [o] {SCSI: transport generated task tag} */
++	__u32 spare_out;	/* [o] */
++
++	__u32 padding;
++};
++
++
++#endif
+diff -urN a/include/linux/capability.h b/include/linux/capability.h
+--- a/include/linux/capability.h	2012-08-11 14:48:23.000000000 +0200
++++ b/include/linux/capability.h	2012-08-10 23:06:16.000000000 +0200
+@@ -264,5 +264,9 @@
+ 
+ #define CAP_AUDIT_CONTROL    30
+ 
++#define CAP_SETFCAP          31
++
++#define CAP_LAST_CAP         CAP_AUDIT_CONTROL
++
+ 
+ #endif /* !_LINUX_CAPABILITY_H */
+diff -urN a/include/linux/fiemap.h b/include/linux/fiemap.h
+--- a/include/linux/fiemap.h	1970-01-01 01:00:00.000000000 +0100
++++ b/include/linux/fiemap.h	2012-07-06 17:46:11.000000000 +0200
+@@ -0,0 +1,68 @@
++/*
++ * FS_IOC_FIEMAP ioctl infrastructure.
++ *
++ * Some portions copyright (C) 2007 Cluster File Systems, Inc
++ *
++ * Authors: Mark Fasheh <mfasheh@suse.com>
++ *          Kalpak Shah <kalpak.shah@sun.com>
++ *          Andreas Dilger <adilger@sun.com>
++ */
++
++#ifndef _LINUX_FIEMAP_H
++#define _LINUX_FIEMAP_H
++
++#include <linux/types.h>
++
++struct fiemap_extent {
++	__u64 fe_logical;  /* logical offset in bytes for the start of
++			    * the extent from the beginning of the file */
++	__u64 fe_physical; /* physical offset in bytes for the start
++			    * of the extent from the beginning of the disk */
++	__u64 fe_length;   /* length in bytes for this extent */
++	__u64 fe_reserved64[2];
++	__u32 fe_flags;    /* FIEMAP_EXTENT_* flags for this extent */
++	__u32 fe_reserved[3];
++};
++
++struct fiemap {
++	__u64 fm_start;		/* logical offset (inclusive) at
++				 * which to start mapping (in) */
++	__u64 fm_length;	/* logical length of mapping which
++				 * userspace wants (in) */
++	__u32 fm_flags;		/* FIEMAP_FLAG_* flags for request (in/out) */
++	__u32 fm_mapped_extents;/* number of extents that were mapped (out) */
++	__u32 fm_extent_count;  /* size of fm_extents array (in) */
++	__u32 fm_reserved;
++	struct fiemap_extent fm_extents[0]; /* array of mapped extents (out) */
++};
++
++#define FIEMAP_MAX_OFFSET	(~0ULL)
++
++#define FIEMAP_FLAG_SYNC	0x00000001 /* sync file data before map */
++#define FIEMAP_FLAG_XATTR	0x00000002 /* map extended attribute tree */
++
++#define FIEMAP_FLAGS_COMPAT	(FIEMAP_FLAG_SYNC | FIEMAP_FLAG_XATTR)
++
++#define FIEMAP_EXTENT_LAST		0x00000001 /* Last extent in file. */
++#define FIEMAP_EXTENT_UNKNOWN		0x00000002 /* Data location unknown. */
++#define FIEMAP_EXTENT_DELALLOC		0x00000004 /* Location still pending.
++						    * Sets EXTENT_UNKNOWN. */
++#define FIEMAP_EXTENT_ENCODED		0x00000008 /* Data can not be read
++						    * while fs is unmounted */
++#define FIEMAP_EXTENT_DATA_ENCRYPTED	0x00000080 /* Data is encrypted by fs.
++						    * Sets EXTENT_NO_BYPASS. */
++#define FIEMAP_EXTENT_NOT_ALIGNED	0x00000100 /* Extent offsets may not be
++						    * block aligned. */
++#define FIEMAP_EXTENT_DATA_INLINE	0x00000200 /* Data mixed with metadata.
++						    * Sets EXTENT_NOT_ALIGNED.*/
++#define FIEMAP_EXTENT_DATA_TAIL		0x00000400 /* Multiple files in block.
++						    * Sets EXTENT_NOT_ALIGNED.*/
++#define FIEMAP_EXTENT_UNWRITTEN		0x00000800 /* Space allocated, but
++						    * no data (i.e. zero). */
++#define FIEMAP_EXTENT_MERGED		0x00001000 /* File does not natively
++						    * support extents. Result
++						    * merged for efficiency. */
++#define FIEMAP_EXTENT_SHARED		0x00002000 /* Space shared with other
++						    * files. */
++
++#endif /* _LINUX_FIEMAP_H */
+diff -urN a/include/linux/fs.h b/include/linux/fs.h
+--- a/include/linux/fs.h	2012-08-11 14:48:24.000000000 +0200
++++ b/include/linux/fs.h	2012-08-11 00:24:44.000000000 +0200
+@@ -215,6 +215,49 @@
+ #define BMAP_IOCTL 1		/* obsolete - kept for compatibility */
+ #define FIBMAP	   _IO(0x00,1)	/* bmap access */
+ #define FIGETBSZ   _IO(0x00,2)	/* get the block size used for bmap */
++#define FIFREEZE        _IOWR('X', 119, int)    /* Freeze */
++#define FITHAW          _IOWR('X', 120, int)    /* Thaw */
++
++#define FS_IOC_GETFLAGS                 _IOR('f', 1, long)
++#define FS_IOC_SETFLAGS                 _IOW('f', 2, long)
++#define FS_IOC_GETVERSION               _IOR('v', 1, long)
++#define FS_IOC_SETVERSION               _IOW('v', 2, long)
++#define FS_IOC_FIEMAP                   _IOWR('f', 11, struct fiemap)
++#define FS_IOC32_GETFLAGS               _IOR('f', 1, int)
++#define FS_IOC32_SETFLAGS               _IOW('f', 2, int)
++#define FS_IOC32_GETVERSION             _IOR('v', 1, int)
++#define FS_IOC32_SETVERSION             _IOW('v', 2, int)
++
++/*
++ * Inode flags (FS_IOC_GETFLAGS / FS_IOC_SETFLAGS)
++ */
++#define FS_SECRM_FL                     0x00000001 /* Secure deletion */
++#define FS_UNRM_FL                      0x00000002 /* Undelete */
++#define FS_COMPR_FL                     0x00000004 /* Compress file */
++#define FS_SYNC_FL                      0x00000008 /* Synchronous updates */
++#define FS_IMMUTABLE_FL                 0x00000010 /* Immutable file */
++#define FS_APPEND_FL                    0x00000020 /* writes to file may only append */
++#define FS_NODUMP_FL                    0x00000040 /* do not dump file */
++#define FS_NOATIME_FL                   0x00000080 /* do not update atime */
++/* Reserved for compression usage... */
++#define FS_DIRTY_FL                     0x00000100
++#define FS_COMPRBLK_FL                  0x00000200 /* One or more compressed clusters */
++#define FS_NOCOMP_FL                    0x00000400 /* Don't compress */
++#define FS_ECOMPR_FL                    0x00000800 /* Compression error */
++/* End compression flags --- maybe not all used */
++#define FS_BTREE_FL                     0x00001000 /* btree format dir */
++#define FS_INDEX_FL                     0x00001000 /* hash-indexed directory */
++#define FS_IMAGIC_FL                    0x00002000 /* AFS directory */
++#define FS_JOURNAL_DATA_FL              0x00004000 /* Reserved for ext3 */
++#define FS_NOTAIL_FL                    0x00008000 /* file tail should not be merged */
++#define FS_DIRSYNC_FL                   0x00010000 /* dirsync behaviour (directories only) */
++#define FS_TOPDIR_FL                    0x00020000 /* Top of directory hierarchies*/
++#define FS_EXTENT_FL                    0x00080000 /* Extents */
++#define FS_DIRECTIO_FL                  0x00100000 /* Use direct i/o */
++#define FS_RESERVED_FL                  0x80000000 /* reserved for ext2 lib */
++
++#define FS_FL_USER_VISIBLE              0x0003DFFF /* User visible flags */
++#define FS_FL_USER_MODIFIABLE           0x000380FF /* User modifiable flags */
+ 
+ #define SYNC_FILE_RANGE_WAIT_BEFORE	1
+ #define SYNC_FILE_RANGE_WRITE		2
+diff -urN a/include/linux/input.h b/include/linux/input.h
+--- a/include/linux/input.h	2012-08-11 14:48:26.000000000 +0200
++++ b/include/linux/input.h	2012-08-10 21:56:09.000000000 +0200
+@@ -225,6 +225,7 @@
+ #define KEY_KPEQUAL		117
+ #define KEY_KPPLUSMINUS		118
+ #define KEY_PAUSE		119
++#define KEY_SCALE		120	/* AL Compiz Scale (Expose) */
+ 
+ #define KEY_KPCOMMA		121
+ #define KEY_HANGEUL		122
+@@ -260,6 +261,7 @@
+ #define KEY_WWW			150
+ #define KEY_MSDOS		151
+ #define KEY_COFFEE		152
++#define KEY_SCREENLOCK		KEY_COFFEE
+ #define KEY_DIRECTION		153
+ #define KEY_CYCLEWINDOWS	154
+ #define KEY_MAIL		155
+@@ -308,6 +310,7 @@
+ #define KEY_PAUSECD		201
+ #define KEY_PROG3		202
+ #define KEY_PROG4		203
++#define KEY_DASHBOARD		204	/* AL Dashboard */
+ #define KEY_SUSPEND		205
+ #define KEY_CLOSE		206
+ #define KEY_PLAY		207
+@@ -344,8 +347,25 @@
+ 
+ #define KEY_BATTERY		236
+ 
++#define KEY_BLUETOOTH		237
++#define KEY_WLAN		238
++#define KEY_UWB			239
++
+ #define KEY_UNKNOWN		240
+ 
++#define KEY_VIDEO_NEXT		241	/* drive next video source */
++#define KEY_VIDEO_PREV		242	/* drive previous video source */
++#define KEY_BRIGHTNESS_CYCLE	243	/* brightness up, after max is min */
++#define KEY_BRIGHTNESS_ZERO	244	/* brightness off, use ambient */
++#define KEY_DISPLAY_OFF		245	/* display device to off state */
++
++#define KEY_WIMAX		246
++#define KEY_RFKILL		247	/* Key that controls all radios */
++
++#define KEY_MICMUTE		248	/* Mute / unmute the microphone */
++
++/* Code 255 is reserved for special needs of AT keyboard driver */
++
+ #define BTN_MISC		0x100
+ #define BTN_0			0x100
+ #define BTN_1			0x101
+@@ -409,11 +429,13 @@
+ #define BTN_TOOL_FINGER		0x145
+ #define BTN_TOOL_MOUSE		0x146
+ #define BTN_TOOL_LENS		0x147
++#define BTN_TOOL_QUINTTAP	0x148	/* Five fingers on trackpad */
+ #define BTN_TOUCH		0x14a
+ #define BTN_STYLUS		0x14b
+ #define BTN_STYLUS2		0x14c
+ #define BTN_TOOL_DOUBLETAP	0x14d
+ #define BTN_TOOL_TRIPLETAP	0x14e
++#define BTN_TOOL_QUADTAP	0x14f	/* Four fingers on trackpad */
+ 
+ #define BTN_WHEEL		0x150
+ #define BTN_GEAR_DOWN		0x150
+@@ -484,6 +506,36 @@
+ #define KEY_TEEN		0x19e
+ #define KEY_TWEN		0x19f
+ 
++#define KEY_VIDEOPHONE		0x1a0	/* Media Select Video Phone */
++#define KEY_GAMES		0x1a1	/* Media Select Games */
++#define KEY_ZOOMIN		0x1a2	/* AC Zoom In */
++#define KEY_ZOOMOUT		0x1a3	/* AC Zoom Out */
++#define KEY_ZOOMRESET		0x1a4	/* AC Zoom */
++#define KEY_WORDPROCESSOR	0x1a5	/* AL Word Processor */
++#define KEY_EDITOR		0x1a6	/* AL Text Editor */
++#define KEY_SPREADSHEET		0x1a7	/* AL Spreadsheet */
++#define KEY_GRAPHICSEDITOR	0x1a8	/* AL Graphics Editor */
++#define KEY_PRESENTATION	0x1a9	/* AL Presentation App */
++#define KEY_DATABASE		0x1aa	/* AL Database App */
++#define KEY_NEWS		0x1ab	/* AL Newsreader */
++#define KEY_VOICEMAIL		0x1ac	/* AL Voicemail */
++#define KEY_ADDRESSBOOK		0x1ad	/* AL Contacts/Address Book */
++#define KEY_MESSENGER		0x1ae	/* AL Instant Messaging */
++#define KEY_DISPLAYTOGGLE	0x1af	/* Turn display (LCD) on and off */
++#define KEY_SPELLCHECK		0x1b0   /* AL Spell Check */
++#define KEY_LOGOFF		0x1b1   /* AL Logoff */
++
++#define KEY_DOLLAR		0x1b2
++#define KEY_EURO		0x1b3
++
++#define KEY_FRAMEBACK		0x1b4	/* Consumer - transport controls */
++#define KEY_FRAMEFORWARD	0x1b5
++#define KEY_CONTEXT_MENU	0x1b6	/* GenDesc - system context menu */
++#define KEY_MEDIA_REPEAT	0x1b7	/* Consumer - transport control */
++#define KEY_10CHANNELSUP	0x1b8	/* 10 channels up (10+) */
++#define KEY_10CHANNELSDOWN	0x1b9	/* 10 channels down (10-) */
++#define KEY_IMAGES		0x1ba	/* AL Image Browser */
++
+ #define KEY_DEL_EOL		0x1c0
+ #define KEY_DEL_EOS		0x1c1
+ #define KEY_INS_LINE		0x1c2
+@@ -519,10 +571,82 @@
+ #define KEY_BRL_DOT6		0x1f6
+ #define KEY_BRL_DOT7		0x1f7
+ #define KEY_BRL_DOT8		0x1f8
++#define KEY_BRL_DOT9		0x1f9
++#define KEY_BRL_DOT10		0x1fa
++
++#define KEY_NUMERIC_0		0x200	/* used by phones, remote controls, */
++#define KEY_NUMERIC_1		0x201	/* and other keypads */
++#define KEY_NUMERIC_2		0x202
++#define KEY_NUMERIC_3		0x203
++#define KEY_NUMERIC_4		0x204
++#define KEY_NUMERIC_5		0x205
++#define KEY_NUMERIC_6		0x206
++#define KEY_NUMERIC_7		0x207
++#define KEY_NUMERIC_8		0x208
++#define KEY_NUMERIC_9		0x209
++#define KEY_NUMERIC_STAR	0x20a
++#define KEY_NUMERIC_POUND	0x20b
++
++#define KEY_CAMERA_FOCUS	0x210
++#define KEY_WPS_BUTTON		0x211	/* WiFi Protected Setup key */
++
++#define KEY_TOUCHPAD_TOGGLE	0x212	/* Request switch touchpad on or off */
++#define KEY_TOUCHPAD_ON		0x213
++#define KEY_TOUCHPAD_OFF	0x214
++
++#define KEY_CAMERA_ZOOMIN	0x215
++#define KEY_CAMERA_ZOOMOUT	0x216
++#define KEY_CAMERA_UP		0x217
++#define KEY_CAMERA_DOWN		0x218
++#define KEY_CAMERA_LEFT		0x219
++#define KEY_CAMERA_RIGHT	0x21a
++
++#define BTN_TRIGGER_HAPPY		0x2c0
++#define BTN_TRIGGER_HAPPY1		0x2c0
++#define BTN_TRIGGER_HAPPY2		0x2c1
++#define BTN_TRIGGER_HAPPY3		0x2c2
++#define BTN_TRIGGER_HAPPY4		0x2c3
++#define BTN_TRIGGER_HAPPY5		0x2c4
++#define BTN_TRIGGER_HAPPY6		0x2c5
++#define BTN_TRIGGER_HAPPY7		0x2c6
++#define BTN_TRIGGER_HAPPY8		0x2c7
++#define BTN_TRIGGER_HAPPY9		0x2c8
++#define BTN_TRIGGER_HAPPY10		0x2c9
++#define BTN_TRIGGER_HAPPY11		0x2ca
++#define BTN_TRIGGER_HAPPY12		0x2cb
++#define BTN_TRIGGER_HAPPY13		0x2cc
++#define BTN_TRIGGER_HAPPY14		0x2cd
++#define BTN_TRIGGER_HAPPY15		0x2ce
++#define BTN_TRIGGER_HAPPY16		0x2cf
++#define BTN_TRIGGER_HAPPY17		0x2d0
++#define BTN_TRIGGER_HAPPY18		0x2d1
++#define BTN_TRIGGER_HAPPY19		0x2d2
++#define BTN_TRIGGER_HAPPY20		0x2d3
++#define BTN_TRIGGER_HAPPY21		0x2d4
++#define BTN_TRIGGER_HAPPY22		0x2d5
++#define BTN_TRIGGER_HAPPY23		0x2d6
++#define BTN_TRIGGER_HAPPY24		0x2d7
++#define BTN_TRIGGER_HAPPY25		0x2d8
++#define BTN_TRIGGER_HAPPY26		0x2d9
++#define BTN_TRIGGER_HAPPY27		0x2da
++#define BTN_TRIGGER_HAPPY28		0x2db
++#define BTN_TRIGGER_HAPPY29		0x2dc
++#define BTN_TRIGGER_HAPPY30		0x2dd
++#define BTN_TRIGGER_HAPPY31		0x2de
++#define BTN_TRIGGER_HAPPY32		0x2df
++#define BTN_TRIGGER_HAPPY33		0x2e0
++#define BTN_TRIGGER_HAPPY34		0x2e1
++#define BTN_TRIGGER_HAPPY35		0x2e2
++#define BTN_TRIGGER_HAPPY36		0x2e3
++#define BTN_TRIGGER_HAPPY37		0x2e4
++#define BTN_TRIGGER_HAPPY38		0x2e5
++#define BTN_TRIGGER_HAPPY39		0x2e6
++#define BTN_TRIGGER_HAPPY40		0x2e7
+ 
+ /* We avoid low common keys in module aliases so they don't get huge. */
+ #define KEY_MIN_INTERESTING	KEY_MUTE
+-#define KEY_MAX			0x1ff
++#define KEY_MAX			0x2ff
++#define KEY_CNT			(KEY_MAX+1)
+ 
+ /*
+  * Relative axes
+diff -urN a/include/linux/netlink.h b/include/linux/netlink.h
+--- a/include/linux/netlink.h	2012-08-11 14:48:28.000000000 +0200
++++ b/include/linux/netlink.h	2012-08-10 22:19:16.000000000 +0200
+@@ -21,6 +21,9 @@
+ #define NETLINK_DNRTMSG		14	/* DECnet routing messages */
+ #define NETLINK_KOBJECT_UEVENT	15	/* Kernel messages to userspace */
+ #define NETLINK_GENERIC		16
++/* leave room for NETLINK_DM (DM Events) */
++#define NETLINK_SCSITRANSPORT   18      /* SCSI Transports */
++#define NETLINK_ECRYPTFS        19
+ 
+ #define MAX_LINKS 32		
+ 
+diff -urN a/include/linux/oom.h b/include/linux/oom.h
+--- a/include/linux/oom.h	1970-01-01 01:00:00.000000000 +0100
++++ b/include/linux/oom.h	2012-07-06 17:46:12.000000000 +0200
+@@ -0,0 +1,22 @@
++#ifndef __INCLUDE_LINUX_OOM_H
++#define __INCLUDE_LINUX_OOM_H
++
++/*
++ * /proc/<pid>/oom_adj is deprecated, see
++ * Documentation/feature-removal-schedule.txt.
++ *
++ * /proc/<pid>/oom_adj set to -17 protects from the oom-killer
++ */
++#define OOM_DISABLE (-17)
++/* inclusive */
++#define OOM_ADJUST_MIN (-16)
++#define OOM_ADJUST_MAX 15
++
++/*
++ * /proc/<pid>/oom_score_adj set to OOM_SCORE_ADJ_MIN disables oom killing for
++ * pid.
++ */
++#define OOM_SCORE_ADJ_MIN	(-1000)
++#define OOM_SCORE_ADJ_MAX	1000
++
++#endif /* _INCLUDE_LINUX_OOM_H */
+diff -urN a/include/linux/prctl.h b/include/linux/prctl.h
+--- a/include/linux/prctl.h	2012-08-11 14:48:21.000000000 +0200
++++ b/include/linux/prctl.h	2012-08-10 22:13:42.000000000 +0200
+@@ -59,4 +59,29 @@
+ # define PR_ENDIAN_LITTLE	1	/* True little endian mode */
+ # define PR_ENDIAN_PPC_LITTLE	2	/* "PowerPC" pseudo little endian */
+ 
++/* Get/set process seccomp mode */
++#define PR_GET_SECCOMP  21
++#define PR_SET_SECCOMP  22
++
++/* Get/set the capability bounding set (as per security/commoncap.c) */
++#define PR_CAPBSET_READ 23
++#define PR_CAPBSET_DROP 24
++ 
++/* Get/set the process' ability to use the timestamp counter instruction */
++#define PR_GET_TSC 25
++#define PR_SET_TSC 26
++# define PR_TSC_ENABLE          1       /* allow the use of the timestamp counter */
++# define PR_TSC_SIGSEGV         2       /* throw a SIGSEGV instead of reading the TSC */
++
++/* Get/set securebits (as per security/commoncap.c) */
++#define PR_GET_SECUREBITS 27
++#define PR_SET_SECUREBITS 28
++ 
++/*
++ * Get/set the timerslack as used by poll/select/nanosleep
++ * A value of 0 means "use default"
++ */
++#define PR_SET_TIMERSLACK 29
++#define PR_GET_TIMERSLACK 30
++
+ #endif /* _LINUX_PRCTL_H */

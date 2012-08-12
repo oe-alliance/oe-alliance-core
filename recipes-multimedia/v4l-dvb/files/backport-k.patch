@@ -1,0 +1,36 @@
+commit 8c577726896d50db622d56a06920d19645e5aed8
+Author: ghost <andreas.monzner@multimedia-labs.de>
+Date:   Tue Sep 13 15:59:07 2011 +0200
+
+    DVB: dvb_frontend: fixed (slow) frontend thread shutdown on device close
+
+diff --git a/linux/drivers/media/dvb/dvb-core/dvb_frontend.c b/linux/drivers/media/dvb/dvb-core/dvb_frontend.c
+index 7784d74..6823c2b 100644
+--- a/linux/drivers/media/dvb/dvb-core/dvb_frontend.c	2011-09-07 12:32:24.000000000 +0200
++++ a/linux/drivers/media/dvb/dvb-core/dvb_frontend.c	2011-09-13 15:55:48.865742791 +0200
+@@ -514,7 +514,7 @@
+ 		return 1;
+ 
+ 	if (fepriv->dvbdev->writers == 1)
+-		if (time_after(jiffies, fepriv->release_jiffies +
++		if (time_after_eq(jiffies, fepriv->release_jiffies +
+ 				  dvb_shutdown_timeout * HZ))
+ 			return 1;
+ 
+@@ -2070,12 +2070,15 @@
+ 
+ 	dprintk ("%s\n", __func__);
+ 
+-	if ((file->f_flags & O_ACCMODE) != O_RDONLY)
++	if ((file->f_flags & O_ACCMODE) != O_RDONLY) {
+ 		fepriv->release_jiffies = jiffies;
++		mb();
++	}
+ 
+ 	ret = dvb_generic_release (inode, file);
+ 
+ 	if (dvbdev->users == -1) {
++		wake_up(&fepriv->wait_queue);
+ 		if (fepriv->exit != DVB_FE_NO_EXIT) {
+ 			fops_put(file->f_op);
+ 			file->f_op = NULL;

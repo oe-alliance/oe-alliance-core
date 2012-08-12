@@ -1,0 +1,24 @@
+commit 8a1147ee8a19ec6e2437bbb73d549ce8670a38e5
+Author: Andreas Oberritter <obi@linuxtv.org>
+Date:   Sun May 8 20:03:38 2011 -0300
+
+    [media] DVB: dvb_frontend: remove unused assignments
+    
+    Signed-off-by: Andreas Oberritter <obi@linuxtv.org>
+    Signed-off-by: Mauro Carvalho Chehab <mchehab@redhat.com>
+
+diff -Naur a/linux/drivers/media/dvb/dvb-core/dvb_frontend.c b/linux/drivers/media/dvb/dvb-core/dvb_frontend.c
+--- a/linux/drivers/media/dvb/dvb-core/dvb_frontend.c	2011-08-09 18:54:28.720224016 +0200
++++ b/linux/drivers/media/dvb/dvb-core/dvb_frontend.c	2011-08-09 18:54:36.168223926 +0200
+@@ -625,11 +625,9 @@
+ 				dvb_frontend_swzigzag(fe);
+ 				break;
+ 			case DVBFE_ALGO_CUSTOM:
+-				params = NULL; /* have we been asked to RETUNE ?	*/
+ 				dprintk("%s: Frontend ALGO = DVBFE_ALGO_CUSTOM, state=%d\n", __func__, fepriv->state);
+ 				if (fepriv->state & FESTATE_RETUNE) {
+ 					dprintk("%s: Retune requested, FESTAT_RETUNE\n", __func__);
+-					params = &fepriv->parameters_in;
+ 					fepriv->state = FESTATE_TUNED;
+ 				}
+ 				/* Case where we are going to search for a carrier

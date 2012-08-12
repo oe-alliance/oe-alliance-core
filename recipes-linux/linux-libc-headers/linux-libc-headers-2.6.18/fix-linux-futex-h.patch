@@ -1,0 +1,19 @@
+diff -Naur linux-2.6.18.orig/include/linux/futex.h linux-2.6.18/include/linux/futex.h
+--- linux-2.6.18.orig/include/linux/futex.h	2006-09-20 05:42:06.000000000 +0200
++++ linux-2.6.18/include/linux/futex.h	2012-02-22 02:01:06.397934576 +0100
+@@ -93,6 +93,7 @@
+  */
+ #define ROBUST_LIST_LIMIT	2048
+ 
++#ifdef __KERNEL__
+ long do_futex(u32 __user *uaddr, int op, u32 val, unsigned long timeout,
+ 	      u32 __user *uaddr2, u32 val2, u32 val3);
+ 
+@@ -110,6 +111,7 @@
+ {
+ }
+ #endif
++#endif /* __KERNEL__ */
+ 
+ #define FUTEX_OP_SET		0	/* *(int *)UADDR2 = OPARG; */
+ #define FUTEX_OP_ADD		1	/* *(int *)UADDR2 += OPARG; */

@@ -1,0 +1,11 @@
+--- 2009_0525_RT3070_Linux_STA_v2.1.1.0/Makefile	2009-05-20 20:33:56.000000000 -0700
++++ 2009_0525_RT3070_Linux_STA_v2.1.1.0/Makefile	2009-06-23 19:57:21.000000000 -0700
+@@ -153,7 +153,7 @@
+ else
+ 	cp -f os/linux/Makefile.6 $(RT28xx_DIR)/os/linux/Makefile
+ 	make  -C  $(LINUX_SRC) SUBDIRS=$(RT28xx_DIR)/os/linux modules
+-	cp -f $(RT28xx_DIR)/os/linux/rt$(CHIPSET)sta.ko /tftpboot
++#	cp -f $(RT28xx_DIR)/os/linux/rt$(CHIPSET)sta.ko /tftpboot
+ endif	
+ 
+ clean:

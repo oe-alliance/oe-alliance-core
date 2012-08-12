@@ -1,0 +1,18 @@
+--- a/include/asm-mips/socket.h	2006-09-20 05:42:06.000000000 +0200
++++ b/include/asm-mips/socket.h	2012-08-12 03:21:21.000000000 +0200
+@@ -70,6 +70,15 @@
+ #define SO_SNDBUFFORCE		31
+ #define SO_RCVBUFFORCE		33
+ #define SO_PASSSEC		34
++#define SO_TIMESTAMPNS          35
++#define SCM_TIMESTAMPNS         SO_TIMESTAMPNS
++
++#define SO_MARK                 36
++
++#define SO_TIMESTAMPING         37
++#define SCM_TIMESTAMPING        SO_TIMESTAMPING
++
++#define SO_RXQ_OVFL             40
+ 
+ #ifdef __KERNEL__
+ 
