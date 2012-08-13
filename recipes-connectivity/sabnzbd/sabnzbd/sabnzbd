@@ -21,7 +21,7 @@
 ### END INIT INFO
 
 DAEMON=/usr/lib/sabnzbd/SABnzbd.py
-SETTINGS=/usr/lib/sabnzbd/sabnzbd.conf
+SETTINGS=/etc/enigma2/sabnzbd.conf
 
 ([ -x $DAEMON ] && [ -r $SETTINGS ]) || exit 0
 
