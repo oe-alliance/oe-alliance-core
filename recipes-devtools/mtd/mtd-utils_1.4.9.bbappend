@@ -1,4 +1,4 @@
-PRINC = "3"
+PRINC = "4"
 
 SRC_URI_append_dm800= " \
 	file://disable-ubi.patch \
