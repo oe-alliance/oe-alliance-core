@@ -1,0 +1,17 @@
+--- a/drivers/media/dvb/dvb-core/dmxdev.c	2012-05-26 02:35:10.000000000 +0200
++++ b/drivers/media/dvb/dvb-core/dmxdev.c	2012-08-14 13:21:50.000000000 +0200
+@@ -1222,6 +1222,14 @@
+ 	} else
+ 		mask |= (POLLOUT | POLLWRNORM | POLLPRI);
+ 
++	if((wait) && (wait->key & POLLIN))
++	{
++		if(dmxdev->dvr_buffer.do_wait == 0)
++		{
++			return POLLIN;
++		}
++	}
++
+ 	return mask;
+ }
+ 

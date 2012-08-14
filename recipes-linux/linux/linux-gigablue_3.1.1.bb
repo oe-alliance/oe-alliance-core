@@ -4,7 +4,7 @@ SECTION = "kernel"
 KV = "3.1.1"
 
 SRCDATE = "20120526"
-MACHINE_KERNEL_PR_append = ".3"
+MACHINE_KERNEL_PR_append = ".4"
 
 SRC_URI[md5sum] = "5899790c27f6f4069fbceb64b67635eb"
 SRC_URI[sha256sum] = "9a99171a05781c545734c72ea08d3fe3bcb176070b43b7db63ef56a406f7925d"
@@ -16,6 +16,7 @@ SRC_URI = "http://archiv.openmips.com/linux-${KV}-gb800xx-${KV}_${SRCDATE}.tar.g
 		file://defconfig \
 		file://nor-maps-gb800solo.patch \
 		file://iosched-slice_idle-1.patch \
+		file://fix-eof-dmxdev.patch \
 		file://dvb-usb-af9035.patch \
 		file://dvb-usb-it9135.patch \
 		file://tda18218-7mhz-lopass.patch \
