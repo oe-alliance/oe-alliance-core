@@ -69,4 +69,5 @@ RRECOMMENDS = "\
 	dosfstools \
 	avahi-ui \
 	net-snmp \
+	transmission \
 	"
