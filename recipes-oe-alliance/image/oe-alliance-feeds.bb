@@ -3,7 +3,7 @@ LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3b58 \
                     file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
 PV = "1.0"
-PR = "r5"
+PR = "r6"
 
 inherit task
 
@@ -31,9 +31,11 @@ RRECOMMENDS = "\
 	${@base_contains("MACHINE_FEATURES", "fullgraphiclcd", "lcdpicons-enigma2-meta" , "", d)} \
 	\
 	autossh \
+	avahi-ui \
 	ctorrent \
 	cups \
 	djmount \
+	dosfstools \
 	dvbsnoop \
 	dvdfs \
 	gdb \
@@ -41,12 +43,14 @@ RRECOMMENDS = "\
 	hdparm \
 	htop \
 	inadyn-mt \
+	iperf \
 	joe \
 	mc \
 	minidlna \
 	mpd \
 	mtd-utils \
 	nano \
+	net-snmp \
 	ntfs-3g \
 	ntp \
 	openresolv \
@@ -60,14 +64,10 @@ RRECOMMENDS = "\
 	smartmontools \
 	sshpass \
 	strace \
+	transmission \
 	tcpdump \
 	ushare \
 	vim \
 	wakelan \
 	zeroconf \
-	iperf \
-	dosfstools \
-	avahi-ui \
-	net-snmp \
-	transmission \
 	"
