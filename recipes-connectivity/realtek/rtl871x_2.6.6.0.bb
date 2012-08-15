@@ -5,7 +5,7 @@ LICENSE = "GPL"
 LIC_FILES_CHKSUM = "file://../COPYING;md5=94d55d512a9ba36caa9b7df079bae19f"
 
 
-MACHINE_KERNEL_PR_append = ".4
+MACHINE_KERNEL_PR_append = ".4"
 
 SRC_URI = "http://downloads.pli-images.org/misc/rtl871x.tgz;name=rtl871x \
            file://mipsel-compatibility.patch \
