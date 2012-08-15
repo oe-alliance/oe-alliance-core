@@ -5,7 +5,7 @@ LICENSE = "GPL"
 LIC_FILES_CHKSUM = "file://../COPYING;md5=94d55d512a9ba36caa9b7df079bae19f"
 
 
-MACHINE_KERNEL_PR_append = ".2"
+MACHINE_KERNEL_PR_append = ".3"
 
 SRC_URI = "http://downloads.pli-images.org/misc/rtl871x.tgz;name=rtl871x \
            file://mipsel-compatibility.patch \
@@ -17,7 +17,7 @@ SRC_URI[rtl871x.sha256sum] = "a284769f8e23ca78149c117a601645353a35aacfc99027331d
 inherit module
 
 S = "${WORKDIR}/rtl871x"
- 
+
 EXTRA_OEMAKE = "KERNDIR=${STAGING_KERNEL_DIR}"
 
 do_compile () {
