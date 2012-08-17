@@ -1,0 +1,22 @@
+#! /bin/sh
+
+synctime(){
+	echo -n "NTP Syncing: "
+	/usr/bin/ntpdate -s -u pool.ntp.org
+	echo "done"
+}
+
+case "$1" in
+  start)
+  	synctime
+	;;
+  sync)
+  	synctime
+	;;
+  *)
+	echo "Usage: ntpdate { start | sync }" >&2
+	exit 1
+	;;
+esac
+
+exit 0
