@@ -4,7 +4,7 @@ PRIORITY = "required"
 LICENSE = "CLOSED"
 
 PV = "${KV}+${SRCDATE}"
-PR = "r2"
+PR = "r3"
 
 RDEPENDS_${PN} += "odin-fpupdate-${MACHINE}"
 
