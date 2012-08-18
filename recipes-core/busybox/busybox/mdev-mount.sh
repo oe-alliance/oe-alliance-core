@@ -68,7 +68,11 @@ case "$ACTION" in
 				elif [ "$MODEL" == "MS/MS-Pro       " ]; then
 					DEVICETYPE="mmc1"
 				else
-					DEVICETYPE="usb"
+					if grep -q "/media/hdd" /proc/mounts ; then
+						DEVICETYPE="usb"
+					else
+						DEVICETYPE="hdd"
+					fi
 				fi
 			fi
 			# Use mkdir as 'atomic' action, failure means someone beat us to the punch
