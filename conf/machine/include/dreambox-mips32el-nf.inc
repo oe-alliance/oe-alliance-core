@@ -11,10 +11,6 @@ MACHINE_ESSENTIAL_EXTRA_RDEPENDS ?= ""
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "\
 	dreambox-dvb-modules-${MACHINE} \
-"
-
-OLD_MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "\
-	kernel-module-nls-cp850 \
 	v4l-dvb-module-dvb-core \
 	v4l-dvb-module-stv0299 \
 "
@@ -33,6 +29,7 @@ MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS = "\
 	kernel-module-ntfs \
 	kernel-module-iso9660 \
 	kernel-module-udf \
+	kernel-module-nls-cp850 \
 	"
 module_autoload_cifs = "cifs"
 module_autoload_iso9660 = "iso9660"
