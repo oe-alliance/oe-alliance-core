@@ -5,10 +5,10 @@ PACKAGE_ARCH = "all"
 
 require conf/license/license-gplv2.inc
 
-SRCDATE = "10072012"
+SRCDATE = "18082012"
 
-SRC_URI[md5sum] = "3079118a9f02e6ff3fa4b25178f32800"
-SRC_URI[sha256sum] = "b686d7024e859f6baad4c0e6720bd460f4dae62b0582cad9a60a0f4c448391df"
+SRC_URI[md5sum] = "7663896022389da931dd2d43abc6a725"
+SRC_URI[sha256sum] = "d685c82f2a1b0a6e37f1e1b7b3b8da7720238a716349e00fe99aa1bab45a642d"
 
 SRC_URI = "http://code-ini.com/software/channelsettings/enigma2-plugin-settings-default-ini-${SRCDATE}.tar.gz"
 

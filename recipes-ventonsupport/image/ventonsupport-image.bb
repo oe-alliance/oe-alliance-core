@@ -54,10 +54,11 @@ ENIGMA2_PLUGINS = "\
 	enigma2-plugin-extensions-streamtv \
 	enigma2-plugin-extensions-dlnabrowser \
 	enigma2-plugin-extensions-dlnaserver \
-	enigma2-plugin-extensions-zdfmediathek \ 
+	enigma2-plugin-extensions-zdfmediathek \
+	enigma2-plugin-extensions-nstreamplayer \ 
 "
 
-export IMAGE_BASENAME = "ventonsupport-image"
+export IMAGE_BASENAME = "venton-hdx-image"
 IMAGE_LINGUAS = ""
 
 inherit image
@@ -83,7 +84,7 @@ generate_nfo() {
 			echo "Machine: ${MACHINE}" >> ${NFO}
 			DATE=`date +%Y-%m-%d' '%H':'%M`
 			echo "Date: ${DATE}" >> ${NFO}
-			echo "Issuer: INI" >> ${NFO}
+			echo "Issuer: Venton Support" >> ${NFO}
 			echo "Link: ${DISTRO_FEED_URI}" >> ${NFO}
 			if [ "${DESC}" != "" ]; then
 					echo "Description: ${DESC}" >> ${NFO}
