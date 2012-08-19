@@ -17,6 +17,7 @@ MACHINE_EXTRA_RRECOMMENDS = " \
 	kernel-module-hmac \
 	kernel-module-md4 \
 	kernel-module-ecb \
+	tpmd \
 	"
 
 MACHINE_FEATURES += "dreambox alsa usbhost 3dtv switchoff tpm"
