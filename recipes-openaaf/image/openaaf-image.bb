@@ -24,7 +24,7 @@ IMAGE_INSTALL = " \
 	fakelocale \
 	libavahi-client \
 	libcrypto-compat \
-	ntp \
+	ntpdate \
 	opkg \
 	sdparm \
 	task-base \
