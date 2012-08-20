@@ -13,5 +13,5 @@ python do_remove_tarball() {
 
 include enigma2-plugin-picons-ocram.inc
 
-SRC_URI[md5sum] = "a2fc03e3ad4730069fe80f60ba697560"
-SRC_URI[sha256sum] = "6efc55a10e38caec4c8a6c9bf8af12fc805a19cf2067390edfebca9f823b6e2f"
+SRC_URI[md5sum] = "47c3bc760e3d119201d85edf15aca167"
+SRC_URI[sha256sum] = "93b9849564d27779290dcb65676b2ccbb8047f61e4786d72d7e87be6cd130512"

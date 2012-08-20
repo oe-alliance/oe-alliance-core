@@ -34,6 +34,7 @@ IMAGE_INSTALL = " \
 	volatile-media \
 	vsftpd \
 	ntfs-3g \
+	hddtemp \
 	"
 
 ENIGMA2_PLUGINS = "\
