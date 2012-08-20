@@ -10,16 +10,18 @@ require conf/license/license-gplv2.inc
 inherit gitpkgv
 SRCREV = "${AUTOREV}"
 VER ="1.0"
-PR = "r1"
+PR = "r2"
 
+SRC_URI[md5sum] = "5a641a00bc03dc1e0e7018277fd91b01"
+SRC_URI[sha256sum] = "0c33c4853005cdbcd852f8deae7371b197fc6e41d34d26bdf0b0a5b939ad10e7"
 
-SRC_URI = "git://git@212.117.176.235:22225/opt/git/hdf-picons.git;protocol=ssh;user=git"
+SRC_URI = "http://addons.hdfreaks.cc/feeds/Picons-GBUE/hdf-picons.tar.gz"
 
-S = "${WORKDIR}/git"
+S = "${WORKDIR}/"
 
 FILES_${PN} = "/usr/* "
 
 do_install() {
-	echo "" "" "" "Kopiere Picons von ${S} nach ${D}"
+
 	cp -rp ${S}/usr ${D}/
 }

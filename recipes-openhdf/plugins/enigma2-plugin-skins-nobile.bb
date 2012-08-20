@@ -16,7 +16,8 @@ PR = "r3"
 
 SRC_URI = "http://addons.hdfreaks.cc/feeds/enigma2-plugins-skins-Nobile_mod_with_Second_Infobar.tar.gz"
 
-FILES_${PN} = "/usr/share/enigma2/"
+FILES_${PN} = "/usr/share/enigma2/ \
+	       /etc/enigma2/settings"
 
 
 S = "${WORKDIR}"
@@ -25,6 +26,8 @@ do_compile() {
 }
 
 do_install() {
+	mkdir -p ${D}/etc/enigma2/
+	echo "config.skin.primary_skin=Nobile/skin.xml" >> ${D}/etc/enigma2/settings
 	install -d ${D}/usr/share
 	cp -rp ${S}/usr/share/* ${D}/usr/share/
 	chmod -R a+rX ${D}/usr/share/enigma2/
