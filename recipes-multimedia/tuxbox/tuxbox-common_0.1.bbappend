@@ -1,6 +1,6 @@
 MAINTAINER = "oe-alliance"
 
-PRINC = "10"
+PRINC = "11"
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
