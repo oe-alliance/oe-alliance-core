@@ -9,7 +9,4 @@ ALLOW_EMPTY_${PN} = "1"
 PV = "1"
 PR = "r1"
 
-DEPENDS = " \
-		enigma2-plugin-settings-koivo \
-		enigma2-plugin-hdf-toolbox \
-"
+DEPENDS = " "

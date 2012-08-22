@@ -16,22 +16,26 @@ IMAGE_INSTALL = " \
 	openhdf-enigma2 \
 	openhdf-bootlogo \
 	${ENIGMA2_PLUGINS} \
-	openvpn \
+	avahi \
 	avahi-daemon \
 	dropbear \
 	early-configure \
 	e2fsprogs-mke2fs \
 	e2fsprogs-e2fsck \
 	fakelocale \
+	hddtemp \
 	libavahi-client \
 	libcrypto-compat \
+	ntfs-3g \
 	ntp \
+	openvpn \
 	opkg \
 	sdparm \
 	task-base \
 	task-core-boot \
 	tzdata \
 	util-linux-sfdisk \
+	ushare \
 	volatile-media \
 	vsftpd \
 	"
@@ -40,17 +44,11 @@ ENIGMA2_PLUGINS = "\
 	enigma2-plugin-extensions-autotimer \
 	enigma2-plugin-extensions-epgsearch \
 	enigma2-plugin-extensions-imdb \
-	enigma2-plugin-extensions-graphmultiepg \
-	enigma2-plugin-extensions-mediaplayer \
 	enigma2-plugin-extensions-cutlisteditor \
-	enigma2-plugin-systemplugins-videotune \
 	enigma2-plugin-systemplugins-vps \
-	enigma2-plugin-extensions-dvdplayer \
 	enigma2-plugin-systemplugins-autoresolution \
 	enigma2-plugin-extensions-autobackup \
-	enigma2-plugin-systemplugins-softwaremanager \
-	enigma2-plugin-systemplugins-hotplug \
-	enigma2-plugin-systemplugins-skinselector \
+	enigma2-plugin-extensions-cooltvguide \
 "
 
 export IMAGE_BASENAME = "OpenHDF-Image-PLi3.0"

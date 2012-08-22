@@ -8,7 +8,6 @@ PR = "r2"
 inherit task
 
 RRECOMMENDS = "\
-	enigma2-pliplugins \
 	openhdf-picons-meta \
 	openhdf-plugins-meta \
 	"

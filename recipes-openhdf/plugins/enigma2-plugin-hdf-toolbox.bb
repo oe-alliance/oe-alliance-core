@@ -6,17 +6,16 @@ MAINTAINER = "HDF-Team"
 
 require conf/license/license-gplv2.inc
 
-inherit autotools
+inherit gitpkgv
 SRCREV = "${AUTOREV}"
+PV = "1.0+git${SRCPV}"
+PKGV = "1.0+git${GITPKGV}"
 VER ="1.0"
-PR = "r1"
+PR = "r0"
 
-SRC_URI[md5sum] = "2172a08d465c333e9c2eee5419efc0b1"
-SRC_URI[sha256sum] = "117b4d6b5eb5065ce997746379c4156deec16ea6decbb30bf62369198ee3d591"
+SRC_URI = "git://212.117.176.235:22225/opt/git/hdf-toolbox.git;protocol=ssh;user=git"
 
-SRC_URI = "http://addons.hdfreaks.cc/HDF-Toolbox/release.tgz"
-
-S = "${WORKDIR}/"
+S = "${WORKDIR}/git"
 
 FILES_${PN} = "/usr/* "
 
