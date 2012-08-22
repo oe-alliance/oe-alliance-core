@@ -4,11 +4,11 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3
                     file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
 
 PV = "1.0"
-PR = "r5"
+PR = "r8"
 
 inherit task
 
-DEPENDS = "enigma2-pliplugins openhdf-feeds openhdf-plugins-meta openhdf-picons-meta"
+DEPENDS = "openhdf-feeds openhdf-plugins-meta openhdf-plugins-meta"
 
 RRECOMMENDS = "\
 	enigma2-plugin-hdf-toolbox \
@@ -22,11 +22,10 @@ RRECOMMENDS = "\
 	enigma2-plugin-extensions-mediaplayer \
 	enigma2-plugin-extensions-streamtv \
 	enigma2-plugin-extensions-zaphistorybrowser \
+	enigma2-plugin-extensions-webinterface \
 	enigma2-plugin-picons-openhdf-19 \
 	enigma2-plugin-pli-softcamsetup \
-	enigma2-plugin-skins-nobile \
 	enigma2-plugin-skins-fonts \
-	enigma2-plugin-settings-koivo \
 	enigma2-plugin-systemplugins-3dsettings \
 	enigma2-plugin-systemplugins-autoshutdown \
 	enigma2-plugin-systemplugins-hdmicec \

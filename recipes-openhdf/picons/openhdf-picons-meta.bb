@@ -9,6 +9,4 @@ ALLOW_EMPTY_${PN} = "1"
 PV = "1.0"
 PR = "r1"
 
-DEPENDS = " \
-		enigma2-plugin-picons-openhdf-19 \
-"
+DEPENDS = ""
