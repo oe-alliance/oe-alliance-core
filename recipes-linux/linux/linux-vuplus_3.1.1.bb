@@ -4,7 +4,7 @@ SECTION = "kernel"
 KV = "3.1.1"
 
 SRCREV = "r2"
-MACHINE_KERNEL_PR_append = ".3"
+MACHINE_KERNEL_PR_append = ".4"
 
 SRC_URI[md5sum] = "4dc3ac322453abbfaade7020cddea205"
 SRC_URI[sha256sum] = "1d18eb39677a23eace6b27ee25656c25f21b57be7e77a2adcdd15c76d1c3e875"
@@ -31,6 +31,8 @@ SRC_URI += "http://archive.vuplus.com/download/kernel/linux-${KV}_${SRCREV}.tar.
 	file://cinergy_s2_usb_r2.patch \
 	file://af9015-output-full-range-SNR.patch \
 	file://dvb-as102.patch \
+	file://em28xx_fix_terratec_entries.patch \
+	file://em28xx_add_terratec_h5_rev3.patch \
 	"
 
 SRC_URI_append_vusolo = " file://linux_3.1.1.patch"

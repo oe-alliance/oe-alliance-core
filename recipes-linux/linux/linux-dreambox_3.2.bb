@@ -1,7 +1,7 @@
 PR = "${INC_PR}.26"
 
 PATCHREV = "b299a6a132d842b074b289b2568eece452d0663c"
-PATCHLEVEL = "25"
+PATCHLEVEL = "26"
 
 SRC_URI = " \
 			${KERNELORG_MIRROR}/linux/kernel/v3.x/linux-3.2.tar.bz2;name=kernel \
@@ -21,6 +21,8 @@ SRC_URI = " \
 			file://brcmstb-smp.c-optimized-code-a-bit-add-a-kern-warnin.patch \
 			file://kernel-sched_fair.c-dont-call-smp_send_reschedule-fo.patch \
 			file://disable-unused-emac1-support.patch \
+			file://em28xx_fix_terratec_entries.patch \
+			file://em28xx_add_terratec_h5_rev3.patch \
 			file://defconfig \
 "
 
