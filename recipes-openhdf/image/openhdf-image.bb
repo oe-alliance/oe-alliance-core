@@ -42,20 +42,7 @@ IMAGE_INSTALL = " \
 	"
 
 ENIGMA2_PLUGINS = "\
-	enigma2-plugin-extensions-devicemanager \
-	enigma2-plugin-skins-nobile-mod \
-	enigma2-plugin-softcam-cccam230 \
-	enigma2-plugin-softcam-cccam230cardserver \
-	enigma2-plugin-softcam-cccam230configs \
-	enigma2-plugin-softcam-keys \
-	enigma2-plugin-softcam-oscamemuconfigs \
-	enigma2-plugin-softcam-oscamexp \
-	enigma2-plugin-softcam-oscamexpcardserver \
-	enigma2-plugin-softcam-oscamexpconfigs \
-	enigma2-plugin-softcam-oscamymod \
-	enigma2-plugin-softcam-oscamymodcardserver \
-	enigma2-plugin-softcam-scam359 \
-	enigma2-plugin-softcam-scam360 \
+	enigma2-plugin-settings-koivo \
 	enigma2-plugin-extensions-autotimer \
 	enigma2-plugin-extensions-epgsearch \
 	enigma2-plugin-extensions-imdb \
