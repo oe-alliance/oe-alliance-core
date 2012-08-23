@@ -15,6 +15,7 @@ IMAGE_INSTALL = " \
 	odinsupport-version-info \
 	odinsupport-enigma2 \
 	odinsupport-bootlogo \
+	odinsupport-feed-config \
 	${ENIGMA2_PLUGINS} \
 	avahi-daemon \
 	dropbear \
