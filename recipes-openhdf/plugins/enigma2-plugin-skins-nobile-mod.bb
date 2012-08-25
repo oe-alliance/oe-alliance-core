@@ -12,7 +12,7 @@ SRC_URI[sha256sum] = "bdb2826342cca78e67b7291f5b58f3781d3c836b59af8554d854be3b1b
 inherit gitpkgv
 SRCREV = "${AUTOREV}"
 VER ="1.0"
-PR = "r3"
+PR = "r5"
 
 SRC_URI = "http://addons.hdfreaks.cc/feeds/*git/enigma2-plugins-skins-nobile_hdf_mod.tar.gz"
 
@@ -26,8 +26,6 @@ do_compile() {
 }
 
 do_install() {
-mkdir -p ${D}/etc/enigma2/
-echo "config.skin.primary_skin=Nobile/skin.xml" >> ${D}/etc/enigma2/settings
 install -d ${D}/usr/share
 cp -rp ${S}/usr/share/* ${D}/usr/share/
 chmod -R a+rX ${D}/usr/share/enigma2/

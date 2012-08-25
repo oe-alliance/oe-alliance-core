@@ -9,4 +9,6 @@ ALLOW_EMPTY_${PN} = "1"
 PV = "1.0"
 PR = "r1"
 
-DEPENDS = ""
+DEPENDS = " \
+	enigma2-plugin-skins-nobile-mod \
+"

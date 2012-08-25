@@ -7,6 +7,6 @@ require conf/license/license-gplv2.inc
 
 ALLOW_EMPTY_${PN} = "1"
 PV = "1"
-PR = "r1"
+PR = "r5"
 
-DEPENDS = " "
+DEPENDS = ""

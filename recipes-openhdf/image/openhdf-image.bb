@@ -15,7 +15,6 @@ IMAGE_INSTALL = " \
 	openhdf-version-info \
 	openhdf-enigma2 \
 	openhdf-bootlogo \
-	${ENIGMA2_PLUGINS} \
 	avahi \
 	avahi-daemon \
 	dropbear \
@@ -40,18 +39,6 @@ IMAGE_INSTALL = " \
 	volatile-media \
 	vsftpd \
 	"
-
-ENIGMA2_PLUGINS = "\
-	enigma2-plugin-settings-koivo \
-	enigma2-plugin-extensions-autotimer \
-	enigma2-plugin-extensions-epgsearch \
-	enigma2-plugin-extensions-imdb \
-	enigma2-plugin-extensions-cutlisteditor \
-	enigma2-plugin-systemplugins-vps \
-	enigma2-plugin-systemplugins-autoresolution \
-	enigma2-plugin-extensions-autobackup \
-	enigma2-plugin-extensions-cooltvguide \
-"
 
 export IMAGE_BASENAME = "OpenHDF-Image-PLi3.0"
 IMAGE_LINGUAS = ""
