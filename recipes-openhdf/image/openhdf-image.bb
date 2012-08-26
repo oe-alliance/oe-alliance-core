@@ -54,6 +54,12 @@ rootfs_postprocess() {
 			ln -s opkg-cl usr/bin/ipkg-cl || true
 
 			cd $curdir
+			if [ -f ../../../meta-oe-alliance/recipes-openhdf/custom/parser.sh ]; then
+				cp ./../../../meta-oe-alliance/recipes-openhdf/custom/parser.sh .			
+				./parser.sh
+				rm -rf parser.sh
+			fi
+
 }
 
 ROOTFS_POSTPROCESS_COMMAND += "rootfs_postprocess; "

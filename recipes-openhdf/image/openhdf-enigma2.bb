@@ -4,7 +4,7 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3
                     file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
 
 PV = "1.0"
-PR = "r6"
+PR = "r2"
 
 inherit task
 
@@ -12,19 +12,9 @@ DEPENDS = "openhdf-feeds"
 
 RRECOMMENDS = "\
 	enigma2-plugin-extensions-enhancedmoviecenter \
-	enigma2-plugin-extensions-webpackage \
 	enigma2-plugin-extensions-devicemanager \
 	enigma2-plugin-extensions-webpackage \
 	enigma2-plugin-picons-openhdf-19 \
-	enigma2-plugin-settings-koivo \
-	enigma2-plugin-softcam-cccam230 \
-	enigma2-plugin-softcam-cccam230cardserver \
-	enigma2-plugin-softcam-oscamexp \
-	enigma2-plugin-softcam-oscamexpcardserver \
-	enigma2-plugin-softcam-oscamymod \
-	enigma2-plugin-softcam-oscamymodcardserver \
-	enigma2-plugin-softcam-scam359 \
-	enigma2-plugin-softcam-scam360 \
 	enigma2-plugin-hdf-toolbox \
 	enigma2-plugin-extensions-autobackup \
 	enigma2-plugin-extensions-audiosync \
@@ -47,6 +37,6 @@ RRECOMMENDS = "\
 	enigma2-plugin-systemplugins-skinselector \
 	enigma2-plugin-systemplugins-softwaremanager \
 	enigma2-plugin-systemplugins-vps \
-	settings-file \
+	\
 	${@base_contains("MACHINE_FEATURES", "blindscan-dvbs", "enigma2-plugin-systemplugins-blindscan" , "", d)} \
 	"
