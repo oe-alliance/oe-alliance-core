@@ -1,4 +1,4 @@
-SRCDATE = "20120820"
+SRCDATE = "20120824"
 
 require vuplus-dvb-modules.inc
 
