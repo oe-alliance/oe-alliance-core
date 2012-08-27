@@ -1,6 +1,6 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
-PRINC = "2"
+PRINC = "3"
 
 DEPENDS += "\
 	enigma2-plugin-settings-cajton.13e.19e.28e \
@@ -96,4 +96,5 @@ DEPENDS += "\
 	enigma2-plugin-settings-tuncay.astra \
 	enigma2-plugin-settings-tuncay.42e.19e.13e.7e \
 	enigma2-plugin-settings-tuncay.19e.13e.astra.hortbird \
+	enigma2-plugin-settings.vix.28.2e \
 "
