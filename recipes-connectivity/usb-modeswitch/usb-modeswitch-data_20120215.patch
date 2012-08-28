@@ -1,0 +1,15 @@
+diff --git a/usb_modeswitch.d/16d8:700b b/usb_modeswitch.d/16d8:700b
+index 6e8179f..826a2cb 100644
+--- a/usb_modeswitch.d/16d8:700b
++++ b/usb_modeswitch.d/16d8:700b
+@@ -1,6 +1,9 @@
+ # C-motech CHU-629S (Variant)
+ 
+-TargetClass=0xff
++DefaultVendor= 0x16d8
++DefaultProduct=0x700b
+ 
++TargetClass=0xff
++CheckSuccess=20
+ MessageContent="55534243123456782400000080000dfe524445564348473d4e444953000000"
+ 
