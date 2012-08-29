@@ -17,6 +17,8 @@ PROVIDES = "${PN} \
 	enigma2-plugin-systemplugins-remotecontrolcode \
 	"
 
+DESCRIPTION_enigma2-plugin-extensions-autobouquets-e2 = "28.2E stream bouquet downloader (Enigma2)"
+RDEPENDS_enigma2-plugin-extensions-autobouquets-e2 = "dvbsnoop"
 DESCRIPTION_enigma2-plugin-systemplugins-blindscan = "blindscan..."
 RDEPENDS_enigma2-plugin-systemplugins-blindscan = "virtual/blindscan-dvbs"
 DESCRIPTION_enigma2-plugin-extensions-dlnabrowser = "this is dlna/upnp browser using djmount"
