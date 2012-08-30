@@ -7,6 +7,9 @@ PR = "r1"
 
 inherit task
 
+RCONFLICTS_ = "enigma2-plugin-extensions-permanenttimeshift enigma2-plugin-systemplugins-skinselector"
+RREPLACES = "enigma2-plugin-extensions-permanenttimeshift enigma2-plugin-systemplugins-skinselector"
+
 RRECOMMENDS = "\
 	openaaf-picons-meta \
 	enigma2-pliplugins \

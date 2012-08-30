@@ -31,17 +31,16 @@ IMAGE_INSTALL = " \
 	util-linux-sfdisk \
 	volatile-media \
 	vsftpd \
-	openvpn \ 
-	inadyn-mt \
-	python-gdata \
-	nfs-utils \
 	hdparm \
 	dropbear \
-	djmount \
-	minidlna \	
+	python-gdata \
+	ntfs-3g \
 	"
 
 ENIGMA2_PLUGINS = "\
+	enigma2-plugin-extensions-autotimer \
+	enigma2-plugin-extensions-epgsearch \
+	enigma2-plugin-extensions-imdb \
 	enigma2-plugin-extensions-graphmultiepg \
 	enigma2-plugin-extensions-mediaplayer \
 	enigma2-plugin-extensions-cutlisteditor \
@@ -50,12 +49,14 @@ ENIGMA2_PLUGINS = "\
 	enigma2-plugin-systemplugins-softwaremanager \
 	enigma2-plugin-systemplugins-hotplug \
 	enigma2-plugin-systemplugins-crossepg \
+	enigma2-plugin-systemplugins-3gmodemmanager \
+	enigma2-plugin-systemplugins-skinselector \
 	enigma2-plugin-extensions-weatherplugin \
 	enigma2-plugin-extensions-streamtv \
 	enigma2-plugin-extensions-dlnabrowser \
 	enigma2-plugin-extensions-dlnaserver \
 	enigma2-plugin-extensions-zdfmediathek \
-	enigma2-plugin-extensions-nstreamplayer \ 
+	enigma2-plugin-extensions-nstreamplayer \
 "
 
 export IMAGE_BASENAME = "venton-hdx-image"
