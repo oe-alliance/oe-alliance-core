@@ -22,6 +22,11 @@ SRC_URI = " \
 		file://bootlogo.sh \
 		 "
 
+SRC_URI_append_et9x00 = " \
+					file://bootlogo.mvi \
+					file://splash.bin \
+					"		 
+
 SRC_URI_append_gb800se = " \
 					file://bootlogo.mvi \
 					file://splash.bin \
@@ -59,6 +64,11 @@ do_install() {
 	done;
 	install -d ${D}/${sysconfdir}/init.d
 	install -m 0755 ${S}/bootlogo.sh ${D}/${sysconfdir}/init.d/bootlogo
+}
+
+do_install_append_et9x00() {
+    install -d ${DEPLOY_DIR_IMAGE}
+	install -m 0755 ${S}/splash.bin ${DEPLOY_DIR_IMAGE}/splash.bin
 }
 
 do_install_append_gb800se() {
