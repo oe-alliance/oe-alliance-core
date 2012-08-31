@@ -9,7 +9,7 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r57"
+PR = "r58"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -30,6 +30,9 @@ S = "${WORKDIR}/git"
 
 DEPENDS = "enigma2"
 
+do_install_prepend() {
+	rm -rf ${DEPLOY_DIR_IPK}/3rdparty
+}
 do_install_vuuno() {
 	install -d 0644 ${DEPLOY_DIR_IPK}/3rdparty
 	install -m 0644 ${S}/enigma2-plugin-extensions-1channel_1.3_mipsel.ipk ${DEPLOY_DIR_IPK}/3rdparty
