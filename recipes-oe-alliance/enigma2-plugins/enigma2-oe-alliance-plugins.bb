@@ -17,8 +17,8 @@ PROVIDES = "${PN} \
 	enigma2-plugin-systemplugins-remotecontrolcode \
 	"
 
-DESCRIPTION_enigma2-plugin-extensions-autobouquets-e2 = "28.2E stream bouquet downloader (Enigma2)"
-RDEPENDS_enigma2-plugin-extensions-autobouquets-e2 = "dvbsnoop"
+DESCRIPTION_enigma2-plugin-extensions-autobouquets = "28.2E stream bouquet downloader (Enigma2)"
+RDEPENDS_enigma2-plugin-extensions-autobouquets = "dvbsnoop"
 DESCRIPTION_enigma2-plugin-systemplugins-blindscan = "blindscan..."
 RDEPENDS_enigma2-plugin-systemplugins-blindscan = "virtual/blindscan-dvbs"
 DESCRIPTION_enigma2-plugin-extensions-dlnabrowser = "this is dlna/upnp browser using djmount"
@@ -56,7 +56,7 @@ inherit gitpkgv autotools
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r12"
+PR = "r13"
 
 SRC_URI="git://github.com/oe-alliance/oe-alliance-plugins.git;protocol=git"
 
