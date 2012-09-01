@@ -13,6 +13,8 @@ MACHINE_EXTRA_RRECOMMENDS = " \
 	gigablue-cfe \
 	"
 
+PREFERRED_PROVIDER_virtual/blindscan-dvbc = "gigablue-blindscan-utils-${MACHINE}"	
+	
 include conf/machine/include/autoload-wifi.inc
 include conf/machine/include/autoload-dvb-usb.inc
 include conf/machine/include/autoload-usbserial.inc
