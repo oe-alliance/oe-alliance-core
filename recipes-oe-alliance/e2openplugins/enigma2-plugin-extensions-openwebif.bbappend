@@ -1,5 +1,5 @@
 MODULE = "OpenWebif"
-PRINC = "2"
+PRINC = "3"
 DEPENDS += "enigma2"
 
 SRC_URI = "git://github.com/oe-alliance/e2openplugin-${MODULE}.git;protocol=git"
@@ -26,7 +26,7 @@ python do_package_prepend () {
 		('gb800solo', 'Gigablue.jpg', 'gigablue_black.png'),
 		('gb800ue', 'Gigablue.jpg', 'gigablue_black.png'),
 		('gbquad', 'Gigablue.jpg', 'gigablue_black.png'),
-		('ventonhdx', 'ini-3000', 'ini-3000.png'),
+		('ventonhdx', 'ini-3000.jpg', 'ini-3000.png'),
 	]
 	import os
 	top = '${D}${PLUGINPATH}/public/images/'
@@ -38,9 +38,15 @@ python do_package_prepend () {
 	for root, dirs, files in os.walk(top + 'boxes', topdown=False):
 		for name in files:
 			if target_box != name and name != 'unknown.jpg':
-				os.remove(os.path.join(root, name))
+				if target_box == 'ini-3000.jpg' and (name != 'ini-3000.jpg' or name != 'ini-5000.jpg' or name != 'ini-7000.jpg':
+					os.remove(os.path.join(root, name))
+				else:
+					os.remove(os.path.join(root, name))
 	for root, dirs, files in os.walk(top + 'remotes', topdown=False):
 		for name in files:
 			if target_remote != name and name != 'ow_remote.png':
-				os.remove(os.path.join(root, name))
+				if target_remote == 'ini-3000.png' and (name != 'ini-3000.png' or name != 'ini-5000.png' or name != 'ini-7000.png':
+					os.remove(os.path.join(root, name))
+				else:
+					os.remove(os.path.join(root, name))
 }
