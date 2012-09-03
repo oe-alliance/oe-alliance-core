@@ -38,14 +38,14 @@ python do_package_prepend () {
 	for root, dirs, files in os.walk(top + 'boxes', topdown=False):
 		for name in files:
 			if target_box != name and name != 'unknown.jpg':
-				if target_box == 'ini-3000.jpg' and (name != 'ini-3000.jpg' or name != 'ini-5000.jpg' or name != 'ini-7000.jpg':
+				if target_box == 'ini-3000.jpg' and (name != 'ini-3000.jpg' or name != 'ini-5000.jpg' or name != 'ini-7000.jpg'):
 					os.remove(os.path.join(root, name))
 				else:
 					os.remove(os.path.join(root, name))
 	for root, dirs, files in os.walk(top + 'remotes', topdown=False):
 		for name in files:
 			if target_remote != name and name != 'ow_remote.png':
-				if target_remote == 'ini-3000.png' and (name != 'ini-3000.png' or name != 'ini-5000.png' or name != 'ini-7000.png':
+				if target_remote == 'ini-3000.png' and (name != 'ini-3000.png' or name != 'ini-5000.png' or name != 'ini-7000.png'):
 					os.remove(os.path.join(root, name))
 				else:
 					os.remove(os.path.join(root, name))
