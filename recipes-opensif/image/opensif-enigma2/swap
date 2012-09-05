@@ -1,0 +1,28 @@
+#!/bin/sh
+SETTINGS="/etc/settings.swap"
+
+if [ ! -f $SETTINGS ]; then
+	echo "swap: missing $SETTINGS"
+	exit 0
+fi
+
+. $SETTINGS
+
+case $1 in
+	start)
+		echo -n "swap: "
+		if [ $enable = "1" ]; then
+			/sbin/swapon $place/$filename
+			echo "ok"
+		else
+			echo "skipped (disabled)"
+		fi
+		;;
+	stop)
+		echo -n "swap: "
+		/sbin/swapoff $place/$filename
+		echo "stopped"
+		;;
+	*)
+		echo "Usage: $0 {start|stop}"
+esac

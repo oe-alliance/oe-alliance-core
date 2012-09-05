@@ -1,14 +1,16 @@
-DESCRIPTION = "OpenMips version info"
+DESCRIPTION = "SIFTeam version info"
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "proprietary"
-MAINTAINER = "OpenMips"
+MAINTAINER = "SIFTeam"
+
+require conf/license/license-gplv2.inc
 
 PV = "${IMAGE_VERSION}"
 PR = "r${DATETIME}-${DISTRO_TYPE}"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-URL = "http://www.openmips.com"
+URL = "http://forum.sifteam.eu"
 
 S = "${WORKDIR}"
 
@@ -30,9 +32,9 @@ do_install() {
 			echo "version=${IMAGE_VERSION}" >> ${D}/etc/image-version
 			echo "build=${BUILD_VERSION}" >> ${D}/etc/image-version
 			echo "date=${DATETIME}" >> ${D}/etc/image-version
-			echo "comment=openMips" >> ${D}/etc/image-version
+			echo "comment=opensif" >> ${D}/etc/image-version
 			echo "target=9" >> ${D}/etc/image-version
-			echo "creator=OpenMips" >> ${D}/etc/image-version
+			echo "creator=SIFTeam" >> ${D}/etc/image-version
 			echo "url=${URL}" >> ${D}/etc/image-version
 			echo "catalog=${URL}" >> ${D}/etc/image-version
 			echo "${MACHINE}" > ${D}/etc/model

@@ -1,8 +1,8 @@
-DESCRIPTION = "OpenViX Image"
+DESCRIPTION = "SIFTeam Image"
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "proprietary"
-MAINTAINER = "ViX team"
+MAINTAINER = "SIFTeam"
 
 require conf/license/license-gplv2.inc
 
@@ -12,9 +12,9 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 IMAGE_INSTALL = " \
 	oe-alliance-enigma2 \
-	openmips-version-info \
-	openmips-enigma2 \
-	openmips-bootlogo \
+	opensif-version-info \
+	opensif-enigma2 \
+	opensif-bootlogo \
 	avahi-daemon \
 	dropbear \
 	early-configure \
@@ -31,9 +31,10 @@ IMAGE_INSTALL = " \
 	util-linux-sfdisk \
 	volatile-media \
 	vsftpd \
+	nano \
 	"
 
-export IMAGE_BASENAME = "openmips-image"
+export IMAGE_BASENAME = "opensif-image"
 IMAGE_LINGUAS = ""
 
 IMAGE_FEATURES += "package-management"
