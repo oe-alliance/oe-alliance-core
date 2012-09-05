@@ -1,0 +1,177 @@
+From 6a837e3d15ab57c979c84526e589749f73128bc2 Mon Sep 17 00:00:00 2001
+From: Andreas Monzner <andreas.monzner@dream-property.net>
+Date: Fri, 31 Aug 2012 22:56:42 +0200
+Subject: [PATCH 2/2] MTD: dreambox_nand cleanup, speedup, implement
+ select_chip, write_buf and verify_buf
+
+---
+ drivers/mtd/nand/dreambox_nand.c |  101 ++++++++++++++++++++++++++++++++------
+ 1 file changed, 86 insertions(+), 15 deletions(-)
+
+diff --git a/drivers/mtd/nand/dreambox_nand.c b/drivers/mtd/nand/dreambox_nand.c
+index e291e94..3aff2a9 100644
+--- a/drivers/mtd/nand/dreambox_nand.c
++++ b/drivers/mtd/nand/dreambox_nand.c
+@@ -24,6 +24,9 @@
+ #include <linux/mtd/partitions.h>
+ #include <asm/io.h>
+ 
++#define PRINTK(...)
++//#define PRINTK(args...) printk(args)
++
+ static int fast_access;
+ 
+ static struct mtd_info *dreambox_mtd;
+@@ -76,6 +79,18 @@ static const struct mtd_partition partition_info[] = {
+ };
+ #endif
+ 
++static void dreambox_nand_select_chip(struct mtd_info *mtd, int chipnr)
++{
++	if (chipnr == -1) {
++		PRINTK(KERN_DEBUG "release chip\n");
++		writeb(0, (void __iomem *)0xBF030003);
++	}
++	else {
++		PRINTK(KERN_DEBUG "select chip\n");
++		writeb(0xEE, (void __iomem *)0xBF030003);
++	}
++}
++
+ /*
+  *	hardware specific access to control-lines
+  *  our hardware logic handles the line according to the addresses.
+@@ -85,20 +100,8 @@ static void dreambox_nand_cmd_ctrl(struct mtd_info *mtd, int cmd,
+ {
+ 	unsigned long addr;
+ 
+-	if ((ctrl & NAND_CTRL_CHANGE) &&
+-	    (!(ctrl & NAND_NCE)))
+-		writeb(0, (void __iomem *)0xBF030003);
+-
+ 	if (cmd == NAND_CMD_NONE) {
+-#ifdef CONFIG_SMP
+-		struct nand_chip *chip = mtd->priv;
+-		unsigned int i;
+-		for (i = 0; i < chip->chip_delay; i++) {
+-			if (chip->dev_ready(mtd))
+-				break;
+-			udelay(1);
+-		}
+-#endif
++		PRINTK(KERN_DEBUG "NAND_CMD_NONE\n");
+ 		return;
+ 	}
+ 
+@@ -107,14 +110,32 @@ static void dreambox_nand_cmd_ctrl(struct mtd_info *mtd, int cmd,
+ 	else
+ 		addr = likely(fast_access) ? 0xBF030002 : 0xBF030001;
+ 
++	PRINTK(KERN_DEBUG "%08x -> %02x (%s %s %s %s)\n",
++		addr, cmd & 0xFF,
++		ctrl & NAND_CLE ? "CLE" : "",
++		ctrl & NAND_ALE ? "ALE" : "",
++		ctrl & NAND_NCE ? "NCE" : "",
++		ctrl & 0x80 ? "CHANGE" : "");
++
+ 	writeb(cmd, (void __iomem *)addr);
+ }
+ 
+-static void dreambox_nand_read_buf(struct mtd_info *mtd, u_char *buf, int len)
++static uint8_t dreambox_nand_read_byte(struct mtd_info *mtd)
++{
++	struct nand_chip *chip = mtd->priv;
++
++	PRINTK(KERN_DEBUG "read byte\n");
++
++	return readb(chip->IO_ADDR_R);
++}
++
++static void dreambox_nand_read_buf(struct mtd_info *mtd, uint8_t *buf, int len)
+ {
+ 	struct nand_chip *chip = mtd->priv;
+ 	unsigned int offset = 0;
+ 
++	PRINTK(KERN_DEBUG "read %d bytes\n", len);
++
+ 	if (likely(fast_access)) {
+ 		while (offset < (len & ~3)) {
+ 			*(unsigned long *)&buf[offset] = readl(chip->IO_ADDR_R);
+@@ -125,6 +146,49 @@ static void dreambox_nand_read_buf(struct mtd_info *mtd, u_char *buf, int len)
+ 	readsb(chip->IO_ADDR_R, &buf[offset], len - offset);
+ }
+ 
++static void dreambox_nand_write_buf(struct mtd_info *mtd, const uint8_t *buf, int len)
++{
++	struct nand_chip *chip = mtd->priv;
++	unsigned int offset = 0;
++
++	PRINTK(KERN_DEBUG "write %d bytes\n", len);
++
++	if (likely(fast_access)) {
++		while (offset < (len & ~3)) {
++			writel(*(unsigned long *)&buf[offset], chip->IO_ADDR_W);
++			offset += 4;
++		}
++	}
++
++	writesb(chip->IO_ADDR_W, &buf[offset], len - offset);
++}
++
++static int dreambox_nand_verify_buf(struct mtd_info *mtd, const uint8_t *buf, int len)
++{
++	struct nand_chip *chip = mtd->priv;
++	unsigned int offset = 0;
++
++	PRINTK(KERN_DEBUG "verify %d bytes\n", len);
++
++	if (likely(fast_access)) {
++		while (offset < (len & ~3)) {
++			unsigned long tmp = readl(chip->IO_ADDR_R);
++			if (tmp != *(unsigned long *)&buf[offset])
++				return -EFAULT;
++			offset += 4;
++		}
++	}
++
++	while (len > offset) {
++		unsigned char tmp = readb(chip->IO_ADDR_R);
++		if (tmp != buf[offset])
++			return -EFAULT;
++		++offset;
++	}
++
++	return 0;
++}
++
+ #ifdef CONFIG_DREAMBOX_DM7025
+ static int dreambox_nand_dev_ready(struct mtd_info *mtd)
+ {
+@@ -174,7 +238,10 @@ static inline int gpio_get(int gpio)
+ 
+ static int dreambox_nand_dev_ready(struct mtd_info *mtd)
+ {
+-	return gpio_get(GPIO_NAND_BUSY);
++	int ret = gpio_get(GPIO_NAND_BUSY);
++	if (ret)
++		PRINTK(KERN_DEBUG "READY!\n");
++	return ret;
+ }
+ #endif
+ 
+@@ -239,8 +306,12 @@ static int __init dreambox_nand_init(void)
+ 	}
+ 
+ 	/* Set address of hardware control function */
++	this->select_chip = dreambox_nand_select_chip;
+ 	this->cmd_ctrl = dreambox_nand_cmd_ctrl;
++	this->read_byte = dreambox_nand_read_byte;
+ 	this->read_buf = dreambox_nand_read_buf;
++	this->write_buf = dreambox_nand_write_buf;
++	this->verify_buf = dreambox_nand_verify_buf;
+ 	/* command delay time (in us) */
+ 	this->chip_delay = 15;
+ 	/* return the status of the Ready/Busy line */
+-- 
+1.7.10.4
+

@@ -1,0 +1,39 @@
+From a6604e18a85ff7db61ab313f0e744dc07dd193f2 Mon Sep 17 00:00:00 2001
+From: Andreas Monzner <andreas.monzner@dream-property.net>
+Date: Fri, 31 Aug 2012 22:55:06 +0200
+Subject: [PATCH 1/2] MTD: fixed nand_wait_ready (2 jiffies?!?)
+
+---
+ drivers/mtd/nand/nand_base.c |    9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/mtd/nand/nand_base.c b/drivers/mtd/nand/nand_base.c
+index 3ed9c5e..e7d4472 100644
+--- a/drivers/mtd/nand/nand_base.c
++++ b/drivers/mtd/nand/nand_base.c
+@@ -505,7 +505,7 @@ static void panic_nand_wait_ready(struct mtd_info *mtd, unsigned long timeo)
+ void nand_wait_ready(struct mtd_info *mtd)
+ {
+ 	struct nand_chip *chip = mtd->priv;
+-	unsigned long timeo = jiffies + 2;
++	int cnt=0;
+ 
+ 	/* 400ms timeout */
+ 	if (in_interrupt() || oops_in_progress)
+@@ -517,7 +517,12 @@ void nand_wait_ready(struct mtd_info *mtd)
+ 		if (chip->dev_ready(mtd))
+ 			break;
+ 		touch_softlockup_watchdog();
+-	} while (time_before(jiffies, timeo));
++		udelay(1);
++	} while (++cnt < chip->chip_delay);
++
++	if (cnt == chip->chip_delay)
++		printk("!READY!\n");
++
+ 	led_trigger_event(nand_led_trigger, LED_OFF);
+ }
+ EXPORT_SYMBOL_GPL(nand_wait_ready);
+-- 
+1.7.10.4
+

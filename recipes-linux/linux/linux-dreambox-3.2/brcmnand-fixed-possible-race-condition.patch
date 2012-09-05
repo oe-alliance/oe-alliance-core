@@ -1,0 +1,73 @@
+From bbd3c55e9a510c757c458c17daab7e9a8cfa63d4 Mon Sep 17 00:00:00 2001
+From: Andreas Monzner <andreas.monzner@dream-property.net>
+Date: Wed, 29 Aug 2012 15:43:51 +0200
+Subject: [PATCH] brcmnand_base: fixed possible race condition on block erase,
+ only call mtd_erase_callback on userspace erase request,
+ fixed cet erasecallback call
+
+---
+ drivers/mtd/brcmnand/brcmnand_base.c |   16 ++++++----------
+ 1 file changed, 6 insertions(+), 10 deletions(-)
+
+diff --git a/drivers/mtd/brcmnand/brcmnand_base.c b/drivers/mtd/brcmnand/brcmnand_base.c
+index 170b871..2772f72 100644
+--- a/drivers/mtd/brcmnand/brcmnand_base.c
++++ b/drivers/mtd/brcmnand/brcmnand_base.c
+@@ -7088,6 +7088,7 @@ static int brcmnand_erase_nolock(struct mtd_info *mtd, struct erase_info *instr,
+ 		if (brcmnand_block_checkbad(mtd, addr, 0, allowbbt)) {
+ 			printk (KERN_ERR "%s: attempt to erase a bad block at addr 0x%08x\n", __FUNCTION__, (unsigned int) addr);
+ 			instr->state = MTD_ERASE_FAILED;
++			instr->fail_addr = addr;
+ 			goto erase_one_block;
+ 		}
+ 		chip->ctrl_writeAddr(chip, addr, 0);
+@@ -7115,10 +7116,6 @@ erase_one_block:
+ 
+ 	instr->state = MTD_ERASE_DONE;
+ 	ret = instr->state == MTD_ERASE_DONE ? 0 : -EIO;
+-	/* Do call back function */
+-	if (!ret) {
+-		mtd_erase_callback(instr);
+-	}
+ 
+ 	return ret;
+ }
+@@ -7265,10 +7262,6 @@ erase_one_block:
+ erase_exit:
+ 
+ 	ret = instr->state == MTD_ERASE_DONE ? 0 : -EIO;
+-	/* Do call back function */
+-	if (!ret) {
+-		mtd_erase_callback(instr);
+-	}
+ 
+ 	DEBUG(MTD_DEBUG_LEVEL0, "<--%s\n", __FUNCTION__);
+ 	return ret;
+@@ -7306,11 +7299,14 @@ static int brcmnand_erase(struct mtd_info *mtd, struct erase_info *instr)
+ 		/* Deselect and wake up anyone waiting on the device */
+ 	brcmnand_release_device(mtd);
+ 
++	if (!ret)
++		mtd_erase_callback(instr);
++
+ #ifdef CONFIG_MTD_BRCMNAND_CORRECTABLE_ERR_HANDLING
+ 		if (chip->cet) {
+ 			if (chip->cet->flags != BRCMNAND_CET_DISABLED && 
+ 					chip->cet->flags != BRCMNAND_CET_LAZY && allowbbt != 1) {
+-				len = instr->len;
++				len = instr->state == MTD_ERASE_DONE ? instr->len : instr->fail_addr - instr->addr;
+ 				addr = instr->addr;
+ 				while (len) {
+ 					/* Skip if bad block */
+@@ -7320,7 +7316,7 @@ static int brcmnand_erase(struct mtd_info *mtd, struct erase_info *instr)
+ 						addr = addr + block_size;
+ 						continue;
+ 					}
+-					if(brcmnand_cet_erasecallback(mtd, instr->addr) < 0) {
++					if(brcmnand_cet_erasecallback(mtd, addr) < 0) {
+ 						printk(KERN_INFO "Error in CET erase callback, disabling CET\n");
+ 						chip->cet->flags = BRCMNAND_CET_DISABLED;
+ 					}
+-- 
+1.7.10.4
+
