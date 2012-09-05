@@ -8,7 +8,6 @@ PR = "r3"
 inherit task
 
 RRECOMMENDS = "\
-	task-openplugins \
 	enigma2-pliplugins \
 	enigma2-plugin-skins-adriatic \
 	enigma2-plugin-skins-jules-black-hd \
