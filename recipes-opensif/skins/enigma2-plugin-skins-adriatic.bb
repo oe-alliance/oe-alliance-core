@@ -1,4 +1,4 @@
-DESCRIPTION = "Skin Red Heat HD. Daconi and mmark"
+DESCRIPTION = "Skin Adriatic HD. Daconi"
 MAINTAINER = "SIFTeam"
 
 require conf/license/license-gplv2.inc
@@ -7,7 +7,7 @@ inherit gitpkgv
 
 PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"
-PR = "r0"
+PR = "r1"
 SRCREV = ""
 
 SRC_URI = "git://github.com/SIFTeam/skin-adriatic.git;protocol=git"
