@@ -96,5 +96,7 @@ DEPENDS += "\
 	enigma2-plugin-settings-tuncay.astra \
 	enigma2-plugin-settings-tuncay.42e.19e.13e.7e \
 	enigma2-plugin-settings-tuncay.19e.13e.astra.hortbird \
+	enigma2-plugin-settings-tuncay.kabeldeutschland \
+	enigma2-plugin-settings-tuncay.combo.kabel.sat \
 	enigma2-plugin-settings-vix.28.2e \
 "
