@@ -36,6 +36,8 @@ IMAGE_INSTALL = " \
 	hddtemp \
 	dosfstools \
 	ntfs-3g \
+	task-base-smbfs \
+	task-base-nfs \
 	"
 
 ENIGMA2_PLUGINS = "\
