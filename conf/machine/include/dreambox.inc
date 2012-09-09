@@ -32,7 +32,7 @@ PREFERRED_VERSION_linux-dreambox = "3.2"
 
 KERNEL_IMAGETYPE = "vmlinux"
 KERNEL_OUTPUT = "${KERNEL_IMAGETYPE}"
-KERNEL_CONSOLE = "${@base_contains('OPENPLI_FEATURES', 'usbconsole', 'ttyS0,115200', 'null', d)}"
+KERNEL_CONSOLE = "${@base_contains('MACHINE_FEATURES', 'usbconsole', 'ttyS0,115200', 'null', d)}"
 
 MKUBIFS_ARGS = "-m 2048 -e 129024 -c 1996 -x favor_lzo -X 1"
 UBINIZE_ARGS = "-m 2048 -p 128KiB -s 512"
