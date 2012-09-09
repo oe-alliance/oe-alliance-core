@@ -48,7 +48,6 @@ ENIGMA2_PLUGINS = "\
 	enigma2-plugin-extensions-cooltvguide \
 	enigma2-plugin-extensions-enhancedmoviecenter \
 	enigma2-plugin-settings-defaultsat \
-	enigma2-plugin-systemplugins-vps \
 	enigma2-plugin-extensions-bmediacenter \
 	enigma2-plugin-extensions-dvdplayer \
 	enigma2-plugin-systemplugins-autoresolution \
