@@ -1,6 +1,6 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
-PRINC = "16"
+PRINC = "17"
 
 RDEPENDS_${PN} = " \
 	alsa-conf \
@@ -28,6 +28,8 @@ PYTHON_RDEPS += " \
 # We depend on the font which we use for TXT subtitles (defined in skin_subtitles.xml)
 DEPENDS += "font-valis-enigma"
 RDEPENDS_${PN} += "font-valis-enigma"
+
+RDEPENDS_${PN} += "${@base_contains("MACHINE_FEATURES", "blindscan-dvbc", "virtual/blindscan-dvbc" , "", d)}"
 
 #make sure default skin is installed.
 RDEPENDS_${PN} += "${E2DEFAULTSKIN} "

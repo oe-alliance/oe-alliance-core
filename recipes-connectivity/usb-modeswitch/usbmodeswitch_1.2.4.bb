@@ -4,10 +4,10 @@ require conf/license/license-gplv2.inc
 LICENSE = "GPL"
 DEPENDS = "libusb"
 
-SRC_URI[md5sum] = "9b29e8b0d93d7604a9e5efc4696d37a3"
-SRC_URI[sha256sum] = "924bf9357241c3d2de37b381ebbe82818fa3fd19fcffdc2dcaf2b5d17d29723b"
+SRC_URI[md5sum] = "dbd4ce7966d7b4a5a0604a8280f7164d"
+SRC_URI[sha256sum] = "d772b7438bb2efb524ab4c612198e4f4d4505e25b809d1d1ed4232a37ed78972"
 
-PV = "1.2.3"
+PV = "1.2.4"
 
 SRC_URI = "http://www.draisberghof.de/usb_modeswitch/usb-modeswitch-${PV}.tar.bz2"
 
