@@ -3,9 +3,8 @@ SECTION = "base"
 PRIORITY = "required"
 LICENSE = "CLOSED"
 
-# PV = "${KV}+${SRCDATE}"
-PV = "${KV}+20120909"
-PR = "r3"
+PV = "${KV}+${SRCDATE}"
+PR = "r4"
 
 SRC_URI_append = " file://ddbootup"
 
