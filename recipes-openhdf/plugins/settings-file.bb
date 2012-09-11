@@ -9,7 +9,7 @@ require conf/license/license-gplv2.inc
 inherit gitpkgv
 SRCREV = "${AUTOREV}"
 VER ="1.0"
-PR = "r3"
+PR = "r6"
 
 do_compile() {
 }
@@ -96,35 +96,4 @@ config.plugins.seriesplugin.pattern_description=S{season:02d}E{episode:02d} {tit
 config.plugins.pts.enabled=false
 config.ParentalControl.configured=true
 " >> ${D}/etc/enigma2/settings
-        echo "[
-	[
-		[ " SeriesPlugin " ],
-		[ " List of episode patterns in JSON notation " ],
-		[ " String printf pattern                        , Setup entry " ]
-	],
-	[
-		["Off"                                           , "Disabled"],
-		
-		["{org:s} S{season:02d}E{episode:02d}"           , "Org S01E01"],
-		["{org:s} S{season:d}E{episode:d}"               , "Org S1E1"],
-
-		["{org:s} S{season:02d}E{episode:02d} {title:s}" , "Org S01E01 Title"],
-		["{org:s} S{season:d}E{episode:d} {title:s}"     , "Org S1E1 Title"],
-
-		["{org:s} {title:s} S{season:02d}E{episode:02d}" , "Org Title S01E01"],
-		["{org:s} {title:s} S{season:d}E{episode:d}"     , "Org Title S1E1"],
-
-		["S{season:02d}E{episode:02d} {org:s}"           , "S01E01 Org"],
-		["S{season:d}E{episode:d} {org:s}"               , "S1E1 Org"],
-
-		["S{season:02d}E{episode:02d} {title:s} {org:s}" , "S01E01 Title Org"],
-		["S{season:d}E{episode:d} {title:s} {org:s}"     , "S1E1 Title Org"],
-
-		["{title:s} S{season:02d}E{episode:02d} {org:s}" , "Title S01E01 Org"],
-		["{title:s} S{season:d}E{episode:d} {org:s}"     , "Title S1E1 Org"],
-
-		["{title:s}"                                      , "Title"],
-		["{title:s} {org:s}"                              , "Title Org"]
-	]
-]" >> ${D}/etc/enigma2/seriesplugin.cfg
 }
