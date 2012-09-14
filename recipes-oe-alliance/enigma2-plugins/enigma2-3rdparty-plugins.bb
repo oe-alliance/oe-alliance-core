@@ -9,7 +9,7 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r61"
+PR = "r62"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -62,7 +62,6 @@ do_install_vuuno() {
 	install -m 0644 ${S}/enigma2-plugin-extensions-yampmusicplayer_1.6b-2012-05-23_mipsel.ipk ${DEPLOY_DIR_IPK}/3rdparty
 	install -m 0644 ${S}/enigma2-plugin-extensions-rtlxl_0.6_all.ipk ${DEPLOY_DIR_IPK}/3rdparty
 	install -m 0644 ${S}/enigma2-plugin-extensions-webmedia_9.0_oe2.0_mips32el.ipk ${DEPLOY_DIR_IPK}/3rdparty
-
 }
 
 do_install_vuultimo() {
@@ -125,8 +124,8 @@ do_install_vusolo() {
 	install -m 0644 ${S}/enigma2-plugin-extensions-pluginspanel_1.0_all.ipk ${DEPLOY_DIR_IPK}/3rdparty
 	install -m 0644 ${S}/enigma2-plugin-extensions-yampmusicplayer_1.6b-2012-05-23_mipsel.ipk ${DEPLOY_DIR_IPK}/3rdparty
 	install -m 0644 ${S}/enigma2-plugin-extensions-rtlxl_0.6_all.ipk ${DEPLOY_DIR_IPK}/3rdparty
-}	install -m 0644 ${S}/enigma2-plugin-extensions-webmedia_9.0_oe2.0_mips32el.ipk ${DEPLOY_DIR_IPK}/3rdparty
-
+	install -m 0644 ${S}/enigma2-plugin-extensions-webmedia_9.0_oe2.0_mips32el.ipk ${DEPLOY_DIR_IPK}/3rdparty
+}
 
 do_install_vuduo() {
 	install -d 0644 ${DEPLOY_DIR_IPK}/3rdparty
