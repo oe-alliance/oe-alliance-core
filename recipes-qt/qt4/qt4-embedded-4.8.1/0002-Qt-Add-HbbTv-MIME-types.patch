@@ -1,0 +1,147 @@
+From 8dac0c9a294996cdc95666cde57a00f7c15a0f15 Mon Sep 17 00:00:00 2001
+From: Stephan Reichholf <stephan.reichholf@dream-property.net>
+Date: Wed, 28 Mar 2012 13:52:55 +0200
+Subject: [PATCH 2/2] Qt: Add HbbTv MIME types
+
+---
+ .../Source/WebCore/dom/DOMImplementation.cpp       |    6 +++++-
+ .../Source/WebCore/dom/ProcessingInstruction.cpp   |    3 ++-
+ .../WebCore/dom/XMLDocumentParserLibxml2.cpp       |    1 +
+ .../Source/WebCore/dom/XMLDocumentParserQt.cpp     |    1 +
+ .../webkit/Source/WebCore/loader/FrameLoader.cpp   |    4 ++--
+ .../WebCore/loader/cache/CachedXSLStyleSheet.cpp   |    2 +-
+ .../Source/WebCore/platform/MIMETypeRegistry.cpp   |    5 ++++-
+ .../WebCore/platform/qt/MIMETypeRegistryQt.cpp     |    3 +++
+ 8 files changed, 19 insertions(+), 6 deletions(-)
+
+diff --git a/src/3rdparty/webkit/Source/WebCore/dom/DOMImplementation.cpp b/src/3rdparty/webkit/Source/WebCore/dom/DOMImplementation.cpp
+index c258a29..e33db09 100644
+--- a/src/3rdparty/webkit/Source/WebCore/dom/DOMImplementation.cpp
++++ b/src/3rdparty/webkit/Source/WebCore/dom/DOMImplementation.cpp
+@@ -274,7 +274,8 @@ PassRefPtr<CSSStyleSheet> DOMImplementation::createCSSStyleSheet(const String&,
+ 
+ bool DOMImplementation::isXMLMIMEType(const String& mimeType)
+ {
+-    if (mimeType == "text/xml" || mimeType == "application/xml" || mimeType == "text/xsl")
++    if (mimeType == "text/xml" || mimeType == "application/xml" || mimeType == "text/xsl" || 
++          mimeType == "application/vnd.hbbtv.xhtml+xml" || mimeType == "application/ce-html+xml" || mimeType == "application/x-ce-html+xml")
+         return true;
+     static const char* const validChars = "[0-9a-zA-Z_\\-+~!$\\^{}|.%'`#&*]"; // per RFCs: 3023, 2045
+     DEFINE_STATIC_LOCAL(RegularExpression, xmlTypeRegExp, (String("^") + validChars + "+/" + validChars + "+\\+xml$", TextCaseSensitive));
+@@ -311,6 +312,9 @@ PassRefPtr<Document> DOMImplementation::createDocument(const String& type, Frame
+     if (type == "text/html")
+         return HTMLDocument::create(frame, url);
+     if (type == "application/xhtml+xml"
++	|| type == "application/vnd.hbbtv.xhtml+xml"
++	|| type == "application/ce-html+xml"
++	|| type == "application/x-ce-html+xml"
+ #if ENABLE(XHTMLMP)
+         || type == "application/vnd.wap.xhtml+xml"
+ #endif
+diff --git a/src/3rdparty/webkit/Source/WebCore/dom/ProcessingInstruction.cpp b/src/3rdparty/webkit/Source/WebCore/dom/ProcessingInstruction.cpp
+index f7dcfd2..f20aab0 100644
+--- a/src/3rdparty/webkit/Source/WebCore/dom/ProcessingInstruction.cpp
++++ b/src/3rdparty/webkit/Source/WebCore/dom/ProcessingInstruction.cpp
+@@ -127,7 +127,8 @@ void ProcessingInstruction::checkStyleSheet()
+         m_isCSS = type.isEmpty() || type == "text/css";
+ #if ENABLE(XSLT)
+         m_isXSL = (type == "text/xml" || type == "text/xsl" || type == "application/xml" ||
+-                   type == "application/xhtml+xml" || type == "application/rss+xml" || type == "application/atom+xml");
++                   type == "application/xhtml+xml" || type == "application/rss+xml" || type == "application/atom+xml" ||
++                   type == "application/vnd.hbbtv.xhtml+xml" || type == "application/ce-html+xml" || type == "application/x-ce-html+xml");
+         if (!m_isCSS && !m_isXSL)
+ #else
+         if (!m_isCSS)
+diff --git a/src/3rdparty/webkit/Source/WebCore/dom/XMLDocumentParserLibxml2.cpp b/src/3rdparty/webkit/Source/WebCore/dom/XMLDocumentParserLibxml2.cpp
+index e82bf89..c2eb2ec 100644
+--- a/src/3rdparty/webkit/Source/WebCore/dom/XMLDocumentParserLibxml2.cpp
++++ b/src/3rdparty/webkit/Source/WebCore/dom/XMLDocumentParserLibxml2.cpp
+@@ -1266,6 +1266,7 @@ static void externalSubsetHandler(void* closure, const xmlChar*, const xmlChar*
+         || (extId == "-//W3C//DTD XHTML 1.1 plus MathML 2.0//EN")
+         || (extId == "-//W3C//DTD XHTML 1.1 plus MathML 2.0 plus SVG 1.1//EN")
+         || (extId == "-//WAPFORUM//DTD XHTML Mobile 1.0//EN")
++        || (extId == "-//HbbTV//1.1.1//EN")
+        )
+         getParser(closure)->setIsXHTMLDocument(true); // controls if we replace entities or not.
+ }
+diff --git a/src/3rdparty/webkit/Source/WebCore/dom/XMLDocumentParserQt.cpp b/src/3rdparty/webkit/Source/WebCore/dom/XMLDocumentParserQt.cpp
+index dc72276..8a5760f 100644
+--- a/src/3rdparty/webkit/Source/WebCore/dom/XMLDocumentParserQt.cpp
++++ b/src/3rdparty/webkit/Source/WebCore/dom/XMLDocumentParserQt.cpp
+@@ -696,6 +696,7 @@ void XMLDocumentParser::parseDtd()
+         || (publicId == QLatin1String("-//W3C//DTD XHTML Basic 1.0//EN"))
+         || (publicId == QLatin1String("-//W3C//DTD XHTML 1.1 plus MathML 2.0//EN"))
+         || (publicId == QLatin1String("-//W3C//DTD XHTML 1.1 plus MathML 2.0 plus SVG 1.1//EN"))
++        || (publicId == QLatin1String("-//HbbTV//1.1.1//EN"))
+ #if !ENABLE(XHTMLMP)
+         || (publicId == QLatin1String("-//WAPFORUM//DTD XHTML Mobile 1.0//EN"))
+ #endif
+diff --git a/src/3rdparty/webkit/Source/WebCore/loader/FrameLoader.cpp b/src/3rdparty/webkit/Source/WebCore/loader/FrameLoader.cpp
+index 4bef249..01ba5d7 100644
+--- a/src/3rdparty/webkit/Source/WebCore/loader/FrameLoader.cpp
++++ b/src/3rdparty/webkit/Source/WebCore/loader/FrameLoader.cpp
+@@ -129,9 +129,9 @@ using namespace SVGNames;
+ #endif
+ 
+ #if ENABLE(XHTMLMP)
+-static const char defaultAcceptHeader[] = "application/vnd.wap.xhtml+xml,application/xhtml+xml;profile='http://www.wapforum.org/xhtml',text/html,application/xml;q=0.9,*/*;q=0.8";
++static const char defaultAcceptHeader[] = "application/vnd.hbbtv.xhtml+xml,application/ce-html+xml,application/x-ce-html+xml,application/vnd.wap.xhtml+xml,application/xhtml+xml;profile='http://www.wapforum.org/xhtml',text/html,application/xml;q=0.9,*/*;q=0.8";
+ #else
+-static const char defaultAcceptHeader[] = "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8";
++static const char defaultAcceptHeader[] = "application/vnd.hbbtv.xhtml+xml,application/ce-html+xml,application/x-ce-html+xml,application/ce-html+xml,text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8";
+ #endif
+ 
+ static double storedTimeOfLastCompletedLoad;
+diff --git a/src/3rdparty/webkit/Source/WebCore/loader/cache/CachedXSLStyleSheet.cpp b/src/3rdparty/webkit/Source/WebCore/loader/cache/CachedXSLStyleSheet.cpp
+index ca7bf13..7030dd2 100644
+--- a/src/3rdparty/webkit/Source/WebCore/loader/cache/CachedXSLStyleSheet.cpp
++++ b/src/3rdparty/webkit/Source/WebCore/loader/cache/CachedXSLStyleSheet.cpp
+@@ -43,7 +43,7 @@ CachedXSLStyleSheet::CachedXSLStyleSheet(const String &url)
+ {
+     // It's XML we want.
+     // FIXME: This should accept more general xml formats */*+xml, image/svg+xml for example.
+-    setAccept("text/xml, application/xml, application/xhtml+xml, text/xsl, application/rss+xml, application/atom+xml");
++    setAccept("text/xml, application/xml, application/xhtml+xml, text/xsl, application/rss+xml, application/atom+xml, application/vnd.hbbtv.xhtml+xml, application/ce-html+xml, application/x-ce-html+xml");
+ }
+ 
+ void CachedXSLStyleSheet::didAddClient(CachedResourceClient* c)
+diff --git a/src/3rdparty/webkit/Source/WebCore/platform/MIMETypeRegistry.cpp b/src/3rdparty/webkit/Source/WebCore/platform/MIMETypeRegistry.cpp
+index c8fee4f..00a469e 100644
+--- a/src/3rdparty/webkit/Source/WebCore/platform/MIMETypeRegistry.cpp
++++ b/src/3rdparty/webkit/Source/WebCore/platform/MIMETypeRegistry.cpp
+@@ -205,6 +205,9 @@ static void initializeSupportedNonImageMimeTypes()
+         "text/",
+         "application/xml",
+         "application/xhtml+xml",
++        "application/vnd.hbbtv.xhtml+xml",
++        "application/ce-html+xml",
++        "application/x-ce-html+xml",
+         "application/vnd.wap.xhtml+xml",
+         "application/rss+xml",
+         "application/atom+xml",
+@@ -219,7 +222,7 @@ static void initializeSupportedNonImageMimeTypes()
+         // Note: ADDING a new type here will probably render it as HTML. This can
+         // result in cross-site scripting.
+     };
+-    COMPILE_ASSERT(sizeof(types) / sizeof(types[0]) <= 16,
++    COMPILE_ASSERT(sizeof(types) / sizeof(types[0]) <= 24,
+                    nonimage_mime_types_must_be_less_than_or_equal_to_16);
+ 
+     for (size_t i = 0; i < WTF_ARRAY_LENGTH(types); ++i)
+diff --git a/src/3rdparty/webkit/Source/WebCore/platform/qt/MIMETypeRegistryQt.cpp b/src/3rdparty/webkit/Source/WebCore/platform/qt/MIMETypeRegistryQt.cpp
+index 01cef12..b82ef14 100644
+--- a/src/3rdparty/webkit/Source/WebCore/platform/qt/MIMETypeRegistryQt.cpp
++++ b/src/3rdparty/webkit/Source/WebCore/platform/qt/MIMETypeRegistryQt.cpp
+@@ -66,6 +66,9 @@ static const ExtensionMap extensionMap[] = {
+     { "xpm", "image/x-xpm" },
+     { "xsl", "text/xsl" },
+     { "xhtml", "application/xhtml+xml" },
++    { "hbbtv", "application/vnd.hbbtv.xhtml+xml" },
++    { "cehtml", "application/ce-html+xml" },
++    { "xcehtml", "application/x-ce-html+xml" },
+     { "wml", "text/vnd.wap.wml" },
+     { "wmlc", "application/vnd.wap.wmlc" },
+     { 0, 0 }
+-- 
+1.7.5.4
+

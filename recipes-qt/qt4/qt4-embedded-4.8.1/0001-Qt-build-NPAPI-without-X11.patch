@@ -1,0 +1,470 @@
+From cca9f103aeb0f88fd56c347b843b445f636e7691 Mon Sep 17 00:00:00 2001
+From: Andreas Oberritter <obi@opendreambox.org>
+Date: Wed, 21 Dec 2011 17:24:36 +0100
+Subject: [PATCH 1/2] Qt: build NPAPI without X11
+
+---
+ src/3rdparty/webkit/Source/WebCore/WebCore.pro     |    9 ++-
+ src/3rdparty/webkit/Source/WebCore/bridge/npapi.h  |    8 +-
+ .../Source/WebCore/bridge/npruntime_internal.h     |    2 +-
+ src/3rdparty/webkit/Source/WebCore/features.pri    |    1 +
+ .../webkit/Source/WebCore/plugins/PluginView.cpp   |    4 +-
+ .../webkit/Source/WebCore/plugins/PluginView.h     |    4 +-
+ .../Source/WebCore/plugins/qt/PluginViewQt.cpp     |   62 ++++++++++++++++++++
+ 7 files changed, 78 insertions(+), 12 deletions(-)
+
+diff --git a/src/3rdparty/webkit/Source/WebCore/WebCore.pro b/src/3rdparty/webkit/Source/WebCore/WebCore.pro
+index ceceee8..ef4c7f9 100644
+--- a/src/3rdparty/webkit/Source/WebCore/WebCore.pro
++++ b/src/3rdparty/webkit/Source/WebCore/WebCore.pro
+@@ -2587,11 +2587,14 @@ contains(DEFINES, ENABLE_NETSCAPE_PLUGIN_API=1) {
+                 plugins/mac/PluginViewMac.mm
+         } else {
+             SOURCES += \
+-                plugins/qt/PluginContainerQt.cpp \
+                 plugins/qt/PluginPackageQt.cpp \
+                 plugins/qt/PluginViewQt.cpp
+-            HEADERS += \
+-                plugins/qt/PluginContainerQt.h
++            !embedded {
++                SOURCES += \
++                    plugins/qt/PluginContainerQt.cpp
++                HEADERS += \
++                    plugins/qt/PluginContainerQt.h
++            }
+         }
+     }
+ 
+diff --git a/src/3rdparty/webkit/Source/WebCore/bridge/npapi.h b/src/3rdparty/webkit/Source/WebCore/bridge/npapi.h
+index c217718..54fc0aa 100644
+--- a/src/3rdparty/webkit/Source/WebCore/bridge/npapi.h
++++ b/src/3rdparty/webkit/Source/WebCore/bridge/npapi.h
+@@ -89,7 +89,7 @@
+ #endif
+ #endif
+ 
+-#if defined(XP_UNIX)
++#if defined(XP_UNIX) && defined(Q_WS_X11)
+ #include <X11/Xlib.h>
+ #include <X11/Xutil.h>
+ #include <stdio.h>
+@@ -248,7 +248,7 @@ typedef enum {
+ /* Exact meaning must be spec'd in event model. */
+ #define kNPEventStartIME 2
+ 
+-#if defined(XP_UNIX)
++#if defined(XP_UNIX) && defined(Q_WS_X11)
+ /*
+  * Unix specific structures and definitions
+  */
+@@ -537,7 +537,7 @@ typedef struct _NPEvent
+   uint32_t wParam;
+   uint32_t lParam;
+ } NPEvent;
+-#elif defined(XP_UNIX)
++#elif defined(XP_UNIX) && defined(Q_WS_X11)
+ typedef XEvent NPEvent;
+ #else
+ typedef void*  NPEvent;
+@@ -551,7 +551,7 @@ typedef RgnHandle NPQDRegion;
+ typedef CGPathRef NPCGRegion;
+ #elif defined(XP_WIN)
+ typedef HRGN NPRegion;
+-#elif defined(XP_UNIX)
++#elif defined(XP_UNIX) && defined(Q_WS_X11)
+ typedef Region NPRegion;
+ #elif defined(XP_SYMBIAN)
+ typedef QRegion* NPRegion;
+diff --git a/src/3rdparty/webkit/Source/WebCore/bridge/npruntime_internal.h b/src/3rdparty/webkit/Source/WebCore/bridge/npruntime_internal.h
+index 2d7dc06..ec84b6c 100644
+--- a/src/3rdparty/webkit/Source/WebCore/bridge/npruntime_internal.h
++++ b/src/3rdparty/webkit/Source/WebCore/bridge/npruntime_internal.h
+@@ -29,7 +29,7 @@
+ #include "npfunctions.h"
+ #include "npruntime.h"
+ 
+-#ifdef XP_UNIX
++#if defined(XP_UNIX) && defined(Q_WS_X11)
+     #include <X11/Xresource.h>
+ 
+     #undef None
+diff --git a/src/3rdparty/webkit/Source/WebCore/features.pri b/src/3rdparty/webkit/Source/WebCore/features.pri
+index f04d0b4..48b2eb2 100644
+--- a/src/3rdparty/webkit/Source/WebCore/features.pri
++++ b/src/3rdparty/webkit/Source/WebCore/features.pri
+@@ -97,6 +97,7 @@ contains(DEFINES, ENABLE_SINGLE_THREADED=1) {
+ !contains(DEFINES, ENABLE_TILED_BACKING_STORE=.): DEFINES += ENABLE_TILED_BACKING_STORE=1
+ 
+ # Nescape plugins support (NPAPI)
++DEFINES += ENABLE_NETSCAPE_PLUGIN_API=1
+ !contains(DEFINES, ENABLE_NETSCAPE_PLUGIN_API=.) {
+     unix|win32-*:!embedded:!wince*: {
+         DEFINES += ENABLE_NETSCAPE_PLUGIN_API=1
+diff --git a/src/3rdparty/webkit/Source/WebCore/plugins/PluginView.cpp b/src/3rdparty/webkit/Source/WebCore/plugins/PluginView.cpp
+index b020946..62ebc41 100644
+--- a/src/3rdparty/webkit/Source/WebCore/plugins/PluginView.cpp
++++ b/src/3rdparty/webkit/Source/WebCore/plugins/PluginView.cpp
+@@ -369,7 +369,7 @@ void PluginView::stop()
+         PluginView::setCurrentPluginView(0);
+     }
+ 
+-#ifdef XP_UNIX
++#if defined(XP_UNIX) && defined(Q_WS_X11)
+     if (m_isWindowed && m_npWindow.ws_info)
+            delete (NPSetWindowCallbackStruct *)m_npWindow.ws_info;
+     m_npWindow.ws_info = 0;
+@@ -867,7 +867,7 @@ PluginView::PluginView(Frame* parentFrame, const IntSize& size, PluginPackage* p
+     , m_contextRef(0)
+     , m_fakeWindow(0)
+ #endif
+-#if defined(XP_UNIX) && ENABLE(NETSCAPE_PLUGIN_API)
++#if defined(XP_UNIX) && ENABLE(NETSCAPE_PLUGIN_API) && defined(Q_WS_X11)
+     , m_hasPendingGeometryChange(true)
+     , m_drawable(0)
+     , m_visual(0)
+diff --git a/src/3rdparty/webkit/Source/WebCore/plugins/PluginView.h b/src/3rdparty/webkit/Source/WebCore/plugins/PluginView.h
+index f528754..a49db47 100644
+--- a/src/3rdparty/webkit/Source/WebCore/plugins/PluginView.h
++++ b/src/3rdparty/webkit/Source/WebCore/plugins/PluginView.h
+@@ -416,7 +416,7 @@ private:
+         Point mousePosForPlugin(MouseEvent* event = 0) const;
+ #endif
+ 
+-#if defined(XP_UNIX) && ENABLE(NETSCAPE_PLUGIN_API)
++#if defined(XP_UNIX) && ENABLE(NETSCAPE_PLUGIN_API) && defined(Q_WS_X11)
+         bool m_hasPendingGeometryChange;
+         Pixmap m_drawable;
+         Visual* m_visual;
+@@ -432,7 +432,7 @@ private:
+         bool m_renderToImage;
+         void paintUsingImageSurfaceExtension(QPainter* painter, const IntRect& exposedRect);
+ #endif
+-#if defined(XP_UNIX) && ENABLE(NETSCAPE_PLUGIN_API)
++#if defined(XP_UNIX) && ENABLE(NETSCAPE_PLUGIN_API) && defined(Q_WS_X11)
+         void paintUsingXPixmap(QPainter* painter, const QRect &exposedRect);
+ #endif
+ #if USE(ACCELERATED_COMPOSITING_PLUGIN_LAYER)
+diff --git a/src/3rdparty/webkit/Source/WebCore/plugins/qt/PluginViewQt.cpp b/src/3rdparty/webkit/Source/WebCore/plugins/qt/PluginViewQt.cpp
+index 2fe69d1..bb27eb8 100644
+--- a/src/3rdparty/webkit/Source/WebCore/plugins/qt/PluginViewQt.cpp
++++ b/src/3rdparty/webkit/Source/WebCore/plugins/qt/PluginViewQt.cpp
+@@ -58,7 +58,9 @@
+ #include "Page.h"
+ #include "PlatformMouseEvent.h"
+ #include "PlatformKeyboardEvent.h"
++#if defined(Q_WS_X11)
+ #include "PluginContainerQt.h"
++#endif
+ #include "PluginDebug.h"
+ #include "PluginPackage.h"
+ #include "PluginMainThreadScheduler.h"
+@@ -78,6 +80,7 @@
+ #include <QPainter>
+ #include <QStyleOptionGraphicsItem>
+ #include <QWidget>
++#if defined(Q_WS_X11)
+ #include <QX11Info>
+ #include <X11/X.h>
+ #ifndef QT_NO_XRENDER
+@@ -85,6 +88,7 @@
+ #define Status int
+ #include <X11/extensions/Xrender.h>
+ #endif
++#endif
+ #include <runtime/JSLock.h>
+ #include <runtime/JSValue.h>
+ 
+@@ -111,11 +115,13 @@ public:
+     PluginGraphicsLayerQt(PluginView* view) : m_view(view) { }
+     ~PluginGraphicsLayerQt() { }
+ 
++#if defined(Q_WS_X11)
+     void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = 0)
+     {
+         Q_UNUSED(widget);
+         m_view->paintUsingXPixmap(painter, option->exposedRect.toRect());
+     }
++#endif
+ 
+ private:
+     PluginView* m_view;
+@@ -123,9 +129,13 @@ private:
+ 
+ bool PluginView::shouldUseAcceleratedCompositing() const
+ {
++#if defined(Q_WS_X11)
+     return m_parentFrame->page()->chrome()->client()->allowsAcceleratedCompositing()
+            && m_parentFrame->page()->settings()
+            && m_parentFrame->page()->settings()->acceleratedCompositingEnabled();
++#else
++    return false;
++#endif
+ }
+ #endif
+ 
+@@ -151,6 +161,7 @@ void PluginView::updatePluginWidget()
+     if (oldWindowRect.isEmpty())
+         show();
+ 
++#if defined(Q_WS_X11)
+     if (!m_isWindowed && m_windowRect.size() != oldWindowRect.size()) {
+ #if defined(MOZ_PLATFORM_MAEMO) && (MOZ_PLATFORM_MAEMO >= 5)
+         // On Maemo5, Flash always renders to 16-bit buffer
+@@ -170,6 +181,7 @@ void PluginView::updatePluginWidget()
+ 
+     // do not call setNPWindowIfNeeded immediately, will be called on paint()
+     m_hasPendingGeometryChange = true;
++#endif
+ 
+     // (i) in order to move/resize the plugin window at the same time as the
+     // rest of frame during e.g. scrolling, we set the window geometry
+@@ -279,6 +291,7 @@ void PluginView::paintUsingImageSurfaceExtension(QPainter* painter, const IntRec
+ }
+ #endif
+ 
++#if defined(Q_WS_X11)
+ void PluginView::paintUsingXPixmap(QPainter* painter, const QRect &exposedRect)
+ {
+     QPixmap qtDrawable = QPixmap::fromX11Pixmap(m_drawable, QPixmap::ExplicitlyShared);
+@@ -340,6 +353,7 @@ void PluginView::paintUsingXPixmap(QPainter* painter, const QRect &exposedRect)
+ 
+     painter->drawPixmap(QPoint(exposedRect.x(), exposedRect.y()), qtDrawable, exposedRect);
+ }
++#endif
+ 
+ void PluginView::paint(GraphicsContext* context, const IntRect& rect)
+ {
+@@ -361,12 +375,14 @@ void PluginView::paint(GraphicsContext* context, const IntRect& rect)
+         return;
+ #endif
+ 
++#if defined(Q_WS_X11)
+     if (!m_drawable
+ #if defined(MOZ_PLATFORM_MAEMO) && (MOZ_PLATFORM_MAEMO >= 5)
+         && m_image.isNull()
+ #endif
+        )
+         return;
++#endif
+ 
+     QPainter* painter = context->platformContext();
+     IntRect exposedRect(rect);
+@@ -380,9 +396,11 @@ void PluginView::paint(GraphicsContext* context, const IntRect& rect)
+     }
+ #endif
+ 
++#if defined(Q_WS_X11)
+     painter->translate(frameRect().x(), frameRect().y());
+     paintUsingXPixmap(painter, exposedRect);
+     painter->translate(-frameRect().x(), -frameRect().y());
++#endif
+ }
+ 
+ // TODO: Unify across ports.
+@@ -403,6 +421,7 @@ bool PluginView::dispatchNPEvent(NPEvent& event)
+     return accepted;
+ }
+ 
++#if defined(Q_WS_X11)
+ void setSharedXEventFields(XEvent* xEvent, QWidget* ownerWidget)
+ {
+     xEvent->xany.serial = 0; // we are unaware of the last request processed by X Server
+@@ -456,6 +475,7 @@ void setXKeyEventSpecificFields(XEvent* xEvent, KeyboardEvent* event)
+     xEvent->xkey.x_root = 0;
+     xEvent->xkey.y_root = 0;
+ }
++#endif
+ 
+ void PluginView::handleKeyboardEvent(KeyboardEvent* event)
+ {
+@@ -465,14 +485,21 @@ void PluginView::handleKeyboardEvent(KeyboardEvent* event)
+     if (event->type() != eventNames().keydownEvent && event->type() != eventNames().keyupEvent)
+         return;
+ 
++#if defined(Q_WS_X11)
+     XEvent npEvent;
+     initXEvent(&npEvent);
+     setXKeyEventSpecificFields(&npEvent, event);
+ 
+     if (!dispatchNPEvent(npEvent))
+         event->setDefaultHandled();
++#endif
++
++#if defined(Q_WS_QWS)
++    event->setDefaultHandled();
++#endif
+ }
+ 
++#if defined(Q_WS_X11)
+ static unsigned int inputEventState(MouseEvent* event)
+ {
+     unsigned int state = 0;
+@@ -547,6 +574,7 @@ static void setXCrossingEventSpecificFields(XEvent* xEvent, MouseEvent* event, c
+     xcrossing.same_screen = true;
+     xcrossing.focus = false;
+ }
++#endif
+ 
+ void PluginView::handleMouseEvent(MouseEvent* event)
+ {
+@@ -564,6 +592,7 @@ void PluginView::handleMouseEvent(MouseEvent* event)
+         focusPluginElement();
+     }
+ 
++#if defined(Q_WS_X11)
+     XEvent npEvent;
+     initXEvent(&npEvent);
+ 
+@@ -580,10 +609,16 @@ void PluginView::handleMouseEvent(MouseEvent* event)
+ 
+     if (!dispatchNPEvent(npEvent))
+         event->setDefaultHandled();
++#endif
++
++#if defined(Q_WS_QWS)
++    event->setDefaultHandled();
++#endif
+ }
+ 
+ void PluginView::handleFocusInEvent()
+ {
++#if defined(Q_WS_X11)
+     XEvent npEvent;
+     initXEvent(&npEvent);
+ 
+@@ -593,10 +628,12 @@ void PluginView::handleFocusInEvent()
+     event.detail = NotifyDetailNone;
+ 
+     dispatchNPEvent(npEvent);
++#endif
+ }
+ 
+ void PluginView::handleFocusOutEvent()
+ {
++#if defined(Q_WS_X11)
+     XEvent npEvent;
+     initXEvent(&npEvent);
+ 
+@@ -606,6 +643,7 @@ void PluginView::handleFocusOutEvent()
+     event.detail = NotifyDetailNone;
+ 
+     dispatchNPEvent(npEvent);
++#endif
+ }
+ 
+ void PluginView::setParent(ScrollView* parent)
+@@ -639,9 +677,11 @@ void PluginView::setNPWindowIfNeeded()
+     if (m_isWindowed && !platformPluginWidget())
+         return;
+ 
++#if defined(Q_WS_X11)
+     if (!m_hasPendingGeometryChange)
+         return;
+     m_hasPendingGeometryChange = false;
++#endif
+ 
+     if (m_isWindowed) {
+         platformPluginWidget()->setGeometry(m_windowRect);
+@@ -779,7 +819,12 @@ bool PluginView::platformGetValue(NPNVariable variable, void* value, NPError* re
+ {
+     switch (variable) {
+     case NPNVxDisplay:
++#if defined(Q_WS_QWS)
++        *reinterpret_cast<void**>(value) = 0;
++#endif
++#if defined(Q_WS_X11)
+         *(void **)value = QX11Info::display();
++#endif
+         *result = NPERR_NO_ERROR;
+         return true;
+ 
+@@ -788,9 +833,14 @@ bool PluginView::platformGetValue(NPNVariable variable, void* value, NPError* re
+         return true;
+ 
+     case NPNVnetscapeWindow: {
++#if defined(Q_WS_QWS)
++        *reinterpret_cast<void**>(value) = 0;
++#endif
++#if defined(Q_WS_X11)
+         void* w = reinterpret_cast<void*>(value);
+         QWebPageClient* client = m_parentFrame->view()->hostWindow()->platformPageClient();
+         *((XID *)w) = client ? client->ownerWidget()->window()->winId() : 0;
++#endif
+         *result = NPERR_NO_ERROR;
+         return true;
+     }
+@@ -851,6 +901,7 @@ void PluginView::forceRedraw()
+     invalidate();
+ }
+ 
++#if defined(Q_WS_X11)
+ static Display *getPluginDisplay()
+ {
+     // The plugin toolkit might run using a different X connection. At the moment, we only
+@@ -916,6 +967,7 @@ static void getVisualAndColormap(int depth, Visual **visual, Colormap *colormap)
+     if (*visual)
+         *colormap = XCreateColormap(QX11Info::display(), QX11Info::appRootWindow(), *visual, AllocNone);
+ }
++#endif
+ 
+ bool PluginView::platformStart()
+ {
+@@ -934,19 +986,25 @@ bool PluginView::platformStart()
+     }
+ 
+     if (m_isWindowed) {
++#if defined(Q_WS_X11)
+         QWebPageClient* client = m_parentFrame->view()->hostWindow()->platformPageClient();
+         if (m_needsXEmbed && client) {
+             setPlatformWidget(new PluginContainerQt(this, client->ownerWidget()));
+             // sync our XEmbed container window creation before sending the xid to plugins.
+             QApplication::syncX();
+         } else {
++#endif
+             notImplemented();
+             m_status = PluginStatusCanNotLoadPlugin;
+             return false;
++#if defined(Q_WS_X11)
+         }
++#endif
+     } else {
+         setPlatformWidget(0);
++#if defined(Q_WS_X11)
+         m_pluginDisplay = getPluginDisplay();
++#endif
+ 
+ #if USE(ACCELERATED_COMPOSITING) && !USE(TEXTURE_MAPPER)
+         if (shouldUseAcceleratedCompositing()) {
+@@ -961,6 +1019,7 @@ bool PluginView::platformStart()
+     if (!frameRect().isEmpty())
+         show();
+ 
++#if defined(Q_WS_X11)
+     NPSetWindowCallbackStruct* wsi = new NPSetWindowCallbackStruct();
+     wsi->type = 0;
+ 
+@@ -1002,6 +1061,7 @@ bool PluginView::platformStart()
+     }
+ 
+     m_npWindow.ws_info = wsi;
++#endif
+ 
+     if (!(m_plugin->quirks().contains(PluginQuirkDeferFirstSetWindowCall))) {
+         updatePluginWidget();
+@@ -1016,11 +1076,13 @@ void PluginView::platformDestroy()
+     if (platformPluginWidget())
+         delete platformPluginWidget();
+ 
++#if defined(Q_WS_X11)
+     if (m_drawable)
+         XFreePixmap(QX11Info::display(), m_drawable);
+ 
+     if (m_colormap)
+         XFreeColormap(QX11Info::display(), m_colormap);
++#endif
+ }
+ 
+ void PluginView::halt()
+-- 
+1.7.5.4
+
