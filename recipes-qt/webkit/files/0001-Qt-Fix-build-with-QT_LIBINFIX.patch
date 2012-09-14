@@ -1,0 +1,48 @@
+From d428adaf3bb444d8f004b344f472a89ec2db75a4 Mon Sep 17 00:00:00 2001
+From: Andreas Oberritter <obi@opendreambox.org>
+Date: Wed, 14 Sep 2011 15:34:34 +0200
+Subject: [PATCH] [Qt] Fix build with QT_LIBINFIX
+
+---
+ Source/WebKit.pri             |    4 ++--
+ Source/WebKit/qt/QtWebKit.pro |    2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/Source/WebKit.pri b/Source/WebKit.pri
+index 5bd9577..f449308 100644
+--- a/Source/WebKit.pri
++++ b/Source/WebKit.pri
+@@ -35,7 +35,7 @@ building-libs {
+         QT += webkit
+     } else {
+         QMAKE_LIBDIR = $$OUTPUT_DIR/lib $$QMAKE_LIBDIR
+-        QTWEBKITLIBNAME = QtWebKit
++        QTWEBKITLIBNAME = QtWebKit$$QT_LIBINFIX
+         mac:!static:contains(QT_CONFIG, qt_framework):!CONFIG(webkit_no_framework) {
+             LIBS += -framework $$QTWEBKITLIBNAME
+             QMAKE_FRAMEWORKPATH = $$OUTPUT_DIR/lib $$QMAKE_FRAMEWORKPATH
+@@ -46,7 +46,7 @@ building-libs {
+                 win32-g++*: LIBS += -l$$QTWEBKITLIBNAME
+                 else: LIBS += $${QTWEBKITLIBNAME}.lib
+             } else {
+-                LIBS += -lQtWebKit
++                LIBS += -l$$QTWEBKITLIBNAME
+                 symbian {
+                     TARGET.EPOCSTACKSIZE = 0x14000 // 80 kB
+                     # For EXEs only: set heap to usable value
+diff --git a/Source/WebKit/qt/QtWebKit.pro b/Source/WebKit/qt/QtWebKit.pro
+index 41b0d39..f2bf2da 100644
+--- a/Source/WebKit/qt/QtWebKit.pro
++++ b/Source/WebKit/qt/QtWebKit.pro
+@@ -2,7 +2,7 @@
+ CONFIG += building-libs
+ CONFIG += depend_includepath
+ 
+-TARGET = QtWebKit
++TARGET = QtWebKit$$QT_LIBINFIX
+ TEMPLATE = lib
+ 
+ DEFINES += BUILDING_WEBKIT
+-- 
+1.7.4.1
+
