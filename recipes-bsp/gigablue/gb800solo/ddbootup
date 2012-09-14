@@ -1,22 +1,13 @@
 #! /bin/sh 
 
-mkdir -p /dev/dvb /dev/pts /dev/dbox /dev/misc /dev/dvb/adapter0 /dev/loop /dev/i2c /dev/input /dev/sound /dev/fb /dev/vc /dev/mtdblock /dev/mtd /dev/tts
+echo "gb800solo" > /proc/stb/info/gbmodel
 
-mknod /dev/tty0 c 4 0 
-mknod /dev/tty1 c 4 1 
-mknod /dev/tty2 c 4 2
-mknod /dev/tty3 c 4 3
+mkdir -p /dev/loop /dev/sound /dev/vc /dev/tts
 
 mknod /dev/watchdog c 10 130
-
-mknod /dev/zero c 1 5
 
 mknod /dev/sound/dsp c 14 3
 mknod /dev/sound/mixer c 14 0
 mknod /dev/sound/mixer1 c 14 16
 
 mknod /dev/input/mouse0 c 13 32
-
-mknod /dev/i2c/0 c 89 0
-
-touch /dev/dbox/lcd0
