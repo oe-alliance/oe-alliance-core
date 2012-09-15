@@ -1,6 +1,6 @@
 DESCRIPTION = "arora webbrowser binary"
 PV = "0.10.1"
-PR = "r2"
+PR = "r3"
 
 require conf/license/license-gplv2.inc
 
@@ -13,6 +13,7 @@ SRC_URI_et9x00 = "http://archiv.openmips.com/arora_et9x00.tar.gz;name=et9x00"
 SRC_URI_dm7020hd = "http://archiv.openmips.com/arora_dm7020hd.tar.gz;name=dm7020hd"
 SRC_URI_dm8000 = "http://archiv.openmips.com/arora_dm8000.tar.gz;name=dm8000"
 SRC_URI_odinm9 = "http://archiv.openmips.com/arora_odinm9.tar.gz;name=odinm9"
+SRC_URI_gbquad = "http://archiv.openmips.com/arora_odinm9.tar.gz;name=gbquad"
 
 
 SRC_URI[vuplus.md5sum] = "2d4626aedf7ec0441d533f1ac95e7342"
@@ -29,6 +30,8 @@ SRC_URI[dm8000.md5sum] = "68c652861e87e4343f9d2e3c429e4bd7"
 SRC_URI[dm8000.sha256sum] = "4d6a4c50843f713ebc24dab0aa427566a8b3d4ee6d5bb27cc6880d6f6b3ec895"
 SRC_URI[odinm9.md5sum] = "089095aa3bcf5bcbe42dcd116afbede9"
 SRC_URI[odinm9.sha256sum] = "524ac7dcd2a94cd7b8ad8b5fc043a6351fbbc80affc171360fcb493c214971ab"
+SRC_URI[gbquad.md5sum] = "2894d903f18199d706f897e39d8f77a8"
+SRC_URI[gbquad.sha256sum] = "4f14411a44feb5befece23dfd06705142b9a96f1a9f11a7aaa976b915cb1caa6"
 
 S = "${WORKDIR}"
 
