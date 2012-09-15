@@ -55,7 +55,7 @@ ENIGMA2_PLUGINS = "\
 	enigma2-plugin-extensions-zaphistorybrowser \
 "
 
-ENIGMA2_PLUGINS_append_gbqaud = "webbrowser-utils enigma2-plugin-extensions-webbrowser"
+ENIGMA2_PLUGINS_append_gbquad = "webbrowser-utils enigma2-plugin-extensions-webbrowser"
 
 export IMAGE_BASENAME = "openmips-image"
 IMAGE_LINGUAS = ""
