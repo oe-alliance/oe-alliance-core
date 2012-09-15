@@ -1,6 +1,6 @@
 DESCRIPTION = "arora webbrowser binary"
 PV = "0.10.1"
-PR = "r3"
+PR = "r4"
 
 require conf/license/license-gplv2.inc
 
@@ -13,7 +13,7 @@ SRC_URI_et9x00 = "http://archiv.openmips.com/arora_et9x00.tar.gz;name=et9x00"
 SRC_URI_dm7020hd = "http://archiv.openmips.com/arora_dm7020hd.tar.gz;name=dm7020hd"
 SRC_URI_dm8000 = "http://archiv.openmips.com/arora_dm8000.tar.gz;name=dm8000"
 SRC_URI_odinm9 = "http://archiv.openmips.com/arora_odinm9.tar.gz;name=odinm9"
-SRC_URI_gbquad = "http://archiv.openmips.com/arora_odinm9.tar.gz;name=gbquad"
+SRC_URI_gbquad = "http://archiv.openmips.com/arora_gbquad.tar.gz;name=gbquad"
 
 
 SRC_URI[vuplus.md5sum] = "2d4626aedf7ec0441d533f1ac95e7342"
