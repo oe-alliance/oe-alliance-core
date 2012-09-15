@@ -159,6 +159,40 @@ do_install_vuduo() {
 	install -m 0644 ${S}/enigma2-plugin-extensions-webmedia_9.0_oe2.0_mips32el.ipk ${DEPLOY_DIR_IPK}/3rdparty
 }
 
+do_install_et4x00() {
+	install -d 0644 ${DEPLOY_DIR_IPK}/3rdparty
+	install -m 0644 ${S}/enigma2-plugin-extensions-1channel_1.3_mipsel.ipk ${DEPLOY_DIR_IPK}/3rdparty
+	install -m 0644 ${S}/enigma2-plugin-extensions-buyukbangpanel_1.3.2_all.ipk ${DEPLOY_DIR_IPK}/3rdparty
+	install -m 0644 ${S}/enigma2-plugin-dvb-sundtek.controlcenter_1.0-20110318-r2_mipsel.ipk ${DEPLOY_DIR_IPK}/3rdparty
+	install -m 0644 ${S}/enigma2-plugin-extensions-appletrailer_0.1_mipsel.ipk ${DEPLOY_DIR_IPK}/3rdparty
+	install -m 0644 ${S}/enigma2-plugin-extensions-atmolightd_0.6-r0_all.ipk ${DEPLOY_DIR_IPK}/3rdparty
+	install -m 0644 ${S}/enigma2-plugin-extensions-camofs_6.27_all.ipk ${DEPLOY_DIR_IPK}/3rdparty
+	install -m 0644 ${S}/enigma2-plugin-extensions-dreamexplorer_7.4-r1_mips32el.ipk ${DEPLOY_DIR_IPK}/3rdparty
+	install -m 0644 ${S}/enigma2-plugin-extensions-et-livestream_1.0-r0_mipsel.ipk ${DEPLOY_DIR_IPK}/3rdparty
+	install -m 0644 ${S}/enigma2-plugin-extensions-et-webbrowser_1.6.0-r0_et4x00.ipk ${DEPLOY_DIR_IPK}/3rdparty
+	install -m 0644 ${S}/enigma2-plugin-extensions-googlenewsreader_1.0_mips32el.ipk ${DEPLOY_DIR_IPK}/3rdparty
+	install -m 0644 ${S}/enigma2-plugin-extensions-hetweer_1.0_all.ipk ${DEPLOY_DIR_IPK}/3rdparty
+	install -m 0644 ${S}/enigma2-plugin-extensions-livefootball_4.3_mips32el.ipk ${DEPLOY_DIR_IPK}/3rdparty
+	install -m 0644 ${S}/enigma2-plugin-extensions-newtube_0.1a-r0_all.ipk ${DEPLOY_DIR_IPK}/3rdparty
+	install -m 0644 ${S}/enigma2-plugin-extensions-meteoviewer_1.68_mipsel.ipk ${DEPLOY_DIR_IPK}/3rdparty
+	install -m 0644 ${S}/enigma2-plugin-extensions-opkg-tools_1.2_mipsel.ipk ${DEPLOY_DIR_IPK}/3rdparty
+	install -m 0644 ${S}/enigma2-plugin-extensions-picturecenterfs_3.51_all.ipk ${DEPLOY_DIR_IPK}/3rdparty
+	install -m 0644 ${S}/enigma2-plugin-extensions-screensaver_5.6.9_all.ipk ${DEPLOY_DIR_IPK}/3rdparty
+	install -m 0644 ${S}/enigma2-plugin-extensions-screengrabber_2.1a_mips32el.ipk ${DEPLOY_DIR_IPK}/3rdparty
+	install -m 0644 ${S}/enigma2-plugin-extensions-sherlock-vuplus_5.01_mipsel.ipk ${DEPLOY_DIR_IPK}/3rdparty
+	install -m 0644 ${S}/enigma2-plugin-extensions-subtitleplayer_3.20_mipsel.ipk ${DEPLOY_DIR_IPK}/3rdparty
+	install -m 0644 ${S}/enigma2-plugin-extensions-systemtools-for-ppanels_0.83_mipsel.ipk ${DEPLOY_DIR_IPK}/3rdparty
+	install -m 0644 ${S}/enigma2-plugin-extensions-webradiofs_8.30_all.ipk ${DEPLOY_DIR_IPK}/3rdparty
+	install -m 0644 ${S}/enigma2-plugin-weblinks-basic_1.3-r0_et4x00.ipk ${DEPLOY_DIR_IPK}/3rdparty
+	install -m 0644 ${S}/enigma2-plugin-weblinks-games_1.0-r0_et4x00.ipk ${DEPLOY_DIR_IPK}/3rdparty
+	install -m 0644 ${S}/enigma2-plugin-extensions-spinner-selector_2.0_mipsel.ipk ${DEPLOY_DIR_IPK}/3rdparty
+	install -m 0644 ${S}/enigma2-plugin-extensions-vcs_1.0-rc5_all.ipk ${DEPLOY_DIR_IPK}/3rdparty
+	install -m 0644 ${S}/enigma2-plugin-extensions-pluginspanel_1.0_all.ipk ${DEPLOY_DIR_IPK}/3rdparty
+	install -m 0644 ${S}/enigma2-plugin-extensions-yampmusicplayer_1.6b-2012-05-23_mipsel.ipk ${DEPLOY_DIR_IPK}/3rdparty
+	install -m 0644 ${S}/enigma2-plugin-extensions-rtlxl_0.6_all.ipk ${DEPLOY_DIR_IPK}/3rdparty
+	install -m 0644 ${S}/enigma2-plugin-extensions-webmedia_9.0_oe2.0_mips32el.ipk ${DEPLOY_DIR_IPK}/3rdparty
+}
+
 do_install_et5x00() {
 	install -d 0644 ${DEPLOY_DIR_IPK}/3rdparty
 	install -m 0644 ${S}/enigma2-plugin-extensions-1channel_1.3_mipsel.ipk ${DEPLOY_DIR_IPK}/3rdparty

@@ -65,6 +65,10 @@ do_install_append_vuultimo() {
     install -d ${DEPLOY_DIR_IMAGE}
 	install -m 0755 ${S}/splash.bin ${DEPLOY_DIR_IMAGE}/splash_cfe_auto.bin
 }
+do_install_append_et4x00() {
+    install -d ${DEPLOY_DIR_IMAGE}
+	install -m 0755 ${S}/splash.bin ${DEPLOY_DIR_IMAGE}/splash.bin
+}
 do_install_append_et5x00() {
     install -d ${DEPLOY_DIR_IMAGE}
 	install -m 0755 ${S}/splash.bin ${DEPLOY_DIR_IMAGE}/splash.bin

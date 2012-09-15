@@ -27,6 +27,8 @@ SRC_URI_append_vusolo = " \
 			file://dreambox_bouqueteditor.png"
 SRC_URI_append_vuduo = " \
 			file://dreambox_bouqueteditor.png"
+SRC_URI_append_et4x00 = " \
+			file://dreambox_bouqueteditor.png"			
 SRC_URI_append_et5x00 = " \
 			file://dreambox_bouqueteditor.png"
 SRC_URI_append_et6x00 = " \
@@ -83,6 +85,9 @@ do_install_append_vusolo() {
 	install -m 0644 ${WORKDIR}/dreambox_bouqueteditor.png ${D}/usr/lib/enigma2/python/Plugins/Extensions/WebBouquetEditor/web-data/
 }
 do_install_append_vuduo() {
+	install -m 0644 ${WORKDIR}/dreambox_bouqueteditor.png ${D}/usr/lib/enigma2/python/Plugins/Extensions/WebBouquetEditor/web-data/
+}
+do_install_append_et4x00() {
 	install -m 0644 ${WORKDIR}/dreambox_bouqueteditor.png ${D}/usr/lib/enigma2/python/Plugins/Extensions/WebBouquetEditor/web-data/
 }
 do_install_append_et5x00() {

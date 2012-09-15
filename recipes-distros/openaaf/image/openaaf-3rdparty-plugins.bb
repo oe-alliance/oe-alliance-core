@@ -54,6 +54,12 @@ do_install_vuduo() {
 	install -m 0644 ${S}/enigma2-plugin-extensions-enhancedpowersave_2.2.1-20120715_mipsel.ipk ${DEPLOY_DIR_IPK}/3rdparty
 }
 
+do_install_et4x00() {
+	install -d 0644 ${DEPLOY_DIR_IPK}/3rdparty
+	install -m 0644 ${S}/enigma2-plugin-extensions-suomipoeka_1.0.1_all.ipk ${DEPLOY_DIR_IPK}/3rdparty
+	install -m 0644 ${S}/enigma2-plugin-extensions-enhancedpowersave_2.2.1-20120715_mipsel.ipk ${DEPLOY_DIR_IPK}/3rdparty
+}
+
 do_install_et5x00() {
 	install -d 0644 ${DEPLOY_DIR_IPK}/3rdparty
 	install -m 0644 ${S}/enigma2-plugin-extensions-suomipoeka_1.0.1_all.ipk ${DEPLOY_DIR_IPK}/3rdparty

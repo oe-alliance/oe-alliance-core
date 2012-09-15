@@ -87,6 +87,8 @@ do_patch_prepend(){
 		MACHINE1="Vu+ Solo"
 	elif "${MACHINE}" == "vuduo":
 		MACHINE1="Vu+ Duo"
+	elif "${MACHINE}" == "et4x00":
+		MACHINE1="Xtrend ET4x00"		
 	elif "${MACHINE}" == "et5x00":
 		MACHINE1="Xtrend ET5x00"
 	elif "${MACHINE}" == "et6x00":
@@ -133,6 +135,8 @@ python do_setup_po_ipk () {
 		MACHINE1="Vu+ Solo"
 	elif "${MACHINE}" == "vuduo":
 		MACHINE1="Vu+ Duo"
+	elif "${MACHINE}" == "et4x00":
+		MACHINE1="Xtrend ET4x00"		
 	elif "${MACHINE}" == "et5x00":
 		MACHINE1="Xtrend ET5x00"
 	elif "${MACHINE}" == "et6x00":
