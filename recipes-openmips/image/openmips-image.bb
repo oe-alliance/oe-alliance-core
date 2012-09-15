@@ -38,7 +38,6 @@ IMAGE_INSTALL = " \
 	ntfs-3g \
 	task-base-smbfs \
 	task-base-nfs \
-	webbrowser-utils \
 	"
 
 ENIGMA2_PLUGINS = "\
@@ -55,6 +54,8 @@ ENIGMA2_PLUGINS = "\
 	gb-multiquickbutton \
 	enigma2-plugin-extensions-zaphistorybrowser \
 "
+
+ENIGMA2_PLUGINS_append_gbqaud = "webbrowser-utils enigma2-plugin-extensions-webbrowser"
 
 export IMAGE_BASENAME = "openmips-image"
 IMAGE_LINGUAS = ""
