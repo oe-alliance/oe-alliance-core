@@ -26,7 +26,7 @@ PREFERRED_PROVIDER_virtual/kernel = "linux-technomate"
 PREFERRED_PROVIDER_virtual/blindscan-dvbs = "vuplus-blindscan-utils"
 PREFERRED_PROVIDER_virtual/blindscan-dvbc = "vuplus-blindscan-utils"
 
-PREFERRED_VERSION_linux-${MACHINE} = "3.5.1"
+PREFERRED_VERSION_linux-${MACHINE} = "3.5.3"
 PREFERRED_VERSION_linux-libc-headers = "3.5"
 
 KERNEL_IMAGETYPE = "vmlinux"
