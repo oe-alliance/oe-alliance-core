@@ -9,7 +9,7 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r64"
+PR = "r65"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -174,7 +174,7 @@ do_install_et4x00() {
 	install -m 0644 ${S}/enigma2-plugin-extensions-dreamexplorer_7.4-r1_mips32el.ipk ${DEPLOY_DIR_IPK}/3rdparty
 	install -m 0644 ${S}/enigma2-plugin-extensions-et-livestream_1.0-r0_mipsel.ipk ${DEPLOY_DIR_IPK}/3rdparty
 	install -m 0644 ${S}/enigma2-plugin-extensions-et-portal_1.1-r0_et4x00.ipk ${DEPLOY_DIR_IPK}/3rdparty
-	install -m 0644 ${S}/enigma2-plugin-extensions-et-webbrowser_1.6.0-r0_et4x00.ipk ${DEPLOY_DIR_IPK}/3rdparty
+	install -m 0644 ${S}/enigma2-plugin-extensions-et-webbrowser_1.5.3-r0_et4x00.ipk ${DEPLOY_DIR_IPK}/3rdparty
 	install -m 0644 ${S}/enigma2-plugin-extensions-googlenewsreader_1.0_mips32el.ipk ${DEPLOY_DIR_IPK}/3rdparty
 	install -m 0644 ${S}/enigma2-plugin-extensions-hetweer_1.0_all.ipk ${DEPLOY_DIR_IPK}/3rdparty
 	install -m 0644 ${S}/enigma2-plugin-extensions-livefootball_4.3_mips32el.ipk ${DEPLOY_DIR_IPK}/3rdparty
