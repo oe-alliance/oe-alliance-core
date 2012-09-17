@@ -8,6 +8,8 @@ PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"
 PR = "r1"
 
+DEPENDS = "enigma2"
+
 SRC_URI = "git://github.com/oe-alliance/oe-alliance-settings.git;protocol=git"
 S = "${WORKDIR}/git"
 
