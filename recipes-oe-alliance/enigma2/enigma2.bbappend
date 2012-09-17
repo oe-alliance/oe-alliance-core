@@ -1,6 +1,6 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
-PRINC = "17"
+PRINC = "18"
 
 RDEPENDS_${PN} = " \
 	alsa-conf \
@@ -51,7 +51,7 @@ SRC_URI_append_gb800ue = " \
 			file://gb800-evfd.patch \
 			"
 
-FILES_${PN} += " ${bindir}"
+FILES_${PN} += " ${bindir} ${sysconfdir}/e2-git.log"
 
 # Save po files
 PACKAGES =+ "${PN}-po"
@@ -88,7 +88,7 @@ do_patch_prepend(){
 	elif "${MACHINE}" == "vuduo":
 		MACHINE1="Vu+ Duo"
 	elif "${MACHINE}" == "et4x00":
-		MACHINE1="Xtrend ET4x00"		
+		MACHINE1="Xtrend ET4x00"
 	elif "${MACHINE}" == "et5x00":
 		MACHINE1="Xtrend ET5x00"
 	elif "${MACHINE}" == "et6x00":
@@ -136,7 +136,7 @@ python do_setup_po_ipk () {
 	elif "${MACHINE}" == "vuduo":
 		MACHINE1="Vu+ Duo"
 	elif "${MACHINE}" == "et4x00":
-		MACHINE1="Xtrend ET4x00"		
+		MACHINE1="Xtrend ET4x00"
 	elif "${MACHINE}" == "et5x00":
 		MACHINE1="Xtrend ET5x00"
 	elif "${MACHINE}" == "et6x00":
@@ -182,6 +182,8 @@ do_install_append() {
 	if [ -e ${S}/lib/python/Plugins/Extensions/DVDPlayer/plugin.py ]; then
 		cp ${S}/lib/python/Plugins/Extensions/DVDPlayer/plugin.py ${D}/usr/lib/enigma2/python/Plugins/Extensions/DVDPlayer/plugin.py
 	fi
+	install -d ${D}${sysconfdir}
+	git --git-dir=${S}/.git log --since=10.weeks --pretty=format:"%s" > ${D}${sysconfdir}/e2-git.log
 }
 
 do_install_po() {
