@@ -4,7 +4,7 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3
                     file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
 
 PV = "1.0"
-PR = "r11"
+PR = "r12"
 
 inherit task
 
@@ -14,7 +14,6 @@ WIFI_DRIVERS = " \
 	firmware-carl9170 \
 	firmware-htc7010 \
 	firmware-htc9271 \
-	firmware-rt2870 \
 	\
 	kernel-module-ath9k-htc \
 	kernel-module-carl9170 \
@@ -31,6 +30,7 @@ WIFI_DRIVERS = " \
 	firmware-zd1211 \
 	firmware-rtl8192cu \
 	firmware-rtl8712u \
+	firmware-rt2870 \
 	"
 
 DEPENDS = "enigma2 enigma2-plugins enigma2-oe-alliance-plugins oe-alliance-feeds enigma2-3rdparty-plugins"

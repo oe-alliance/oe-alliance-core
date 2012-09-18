@@ -18,14 +18,12 @@ do_install() {
 	install -m 0644 ${S}/os/linux/rt5370sta.ko ${D}${base_libdir}/modules/${KERNEL_VERSION}/kernel/drivers/net/wireless
 	install -d ${D}/etc/Wireless/RT2870STA
 	install -m 0644 ${S}/RT2870STA.dat ${D}/etc/Wireless/RT2870STA
-	install -d ${D}/lib/firmware
-	install -m 0644 ${S}/common/*.bin ${D}/lib/firmware/
 	install -d ${D}/etc/modutils
 	echo rt5370sta > ${D}/etc/modutils/rt5370
 }
 
 PACKAGES =+ "${PN}-firmware"
-FILES_${PN}-firmware = "/etc/Wireless /lib/firmware"
+FILES_${PN}-firmware = "/etc/Wireless"
 
 RDEPENDS_${PN} = "${PN}-firmware"
 
