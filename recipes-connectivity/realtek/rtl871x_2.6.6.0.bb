@@ -5,14 +5,14 @@ LICENSE = "GPL"
 LIC_FILES_CHKSUM = "file://../COPYING;md5=94d55d512a9ba36caa9b7df079bae19f"
 
 
-MACHINE_KERNEL_PR_append = ".4"
+MACHINE_KERNEL_PR_append = ".5"
 
-SRC_URI = "http://downloads.pli-images.org/misc/rtl871x.tgz;name=rtl871x \
+SRC_URI = "http://archiv.openmips.com/rtl871x.tar.gz;name=rtl871x \
            file://mipsel-compatibility.patch \
            file://COPYING"
 
-SRC_URI[rtl871x.md5sum] = "6fe8e065863937cabe03a439cbfc46f0"
-SRC_URI[rtl871x.sha256sum] = "a284769f8e23ca78149c117a601645353a35aacfc99027331d5f33224c3491e7"
+SRC_URI[rtl871x.md5sum] = "9da979c487f5c61a78111faa16450220"
+SRC_URI[rtl871x.sha256sum] = "5829d290dd60e5fb3de0f3eaa85b48de8b208ce8149b2f7d9b32c8ebc218ec82"
 
 inherit module
 
