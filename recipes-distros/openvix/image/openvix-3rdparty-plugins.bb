@@ -9,7 +9,7 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r0"
+PR = "r1"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -28,7 +28,7 @@ inherit autotools
 
 S = "${WORKDIR}/git"
 
-DEPENDS = "enigma2"
+DEPENDS = "enigma2 enigma2-3rdparty-plugins"
 
 do_install_vuuno() {
 	install -d 0644 ${DEPLOY_DIR_IPK}/3rdparty
