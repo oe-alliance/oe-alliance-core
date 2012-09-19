@@ -4,9 +4,9 @@ PRIORITY = "required"
 LICENSE = "CLOSED"
 
 SRCDATE = "20120915"
-KV = "3.5.1"
+KV = "3.5.3"
 PV = "${KV}+${SRCDATE}"
-PR = "r0"
+PR = "r1"
 
 SRC_URI = "http://en2.ath.cx/release/images/iqon/dev/bcmlinuxdvb_7335-${KV}-${SRCDATE}.tar.gz"
 
