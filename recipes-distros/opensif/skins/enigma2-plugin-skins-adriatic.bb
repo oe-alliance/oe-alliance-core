@@ -10,7 +10,7 @@ PKGV = "1.0+git${GITPKGV}"
 PR = "r1"
 SRCREV = ""
 
-SRC_URI = "git://github.com/SIFTeam/skin-adriatic.git;protocol=git"
+SRC_URI = "git://github.com/SIFTeam/skin-adriatic_turquoise.git;protocol=git"
 
 FILES_${PN} = "/usr/share/enigma2"
 
