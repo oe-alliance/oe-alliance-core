@@ -2,7 +2,7 @@
 
 notify() {
 	# we don't really depend on the hotplug_e2_helper, but when it exists, call it
-	if [ -x /usr/bin/hotplug_e2_helper ]; then
+	if [ -x /usr/bin/hotplug_e2_helper ] ; then
 		/usr/bin/hotplug_e2_helper $ACTION /block/$MDEV $PHYSDEVPATH
 	fi
 }
@@ -10,6 +10,10 @@ notify() {
 case "$ACTION" in
 	add|"")
 		ACTION="add"
+		FSTYPE=`blkid /dev/${MDEV} | grep -v 'TYPE="swap"' | grep ${MDEV} | sed -e "s/.*TYPE=//" -e 's/"//g'`
+		if [ -z "$FSTYPE" ] ; then
+			exit 0
+		fi
 		# check if already mounted
 		if grep -q "^/dev/${MDEV} " /proc/mounts ; then
 			# Already mounted
@@ -38,13 +42,12 @@ case "$ACTION" in
 			fi
 		fi
 		# first allow fstab to determine the mountpoint
-		if ! mount /dev/$MDEV > /dev/null 2>&1
-		then
+		if ! mount /dev/$MDEV > /dev/null 2>&1 ; then
 			# no fstab entry, use automatic mountpoint
 			REMOVABLE=`cat /sys/block/$DEVBASE/removable`
 			readlink -fn /sys/block/$DEVBASE/device | grep -qs 'pci'
 			EXTERNAL=$?
-			if [ "${REMOVABLE}" -eq "0" ]; then
+			if [ "${REMOVABLE}" -eq "0" -a $EXTERNAL -eq 0 ] ; then
 				# mount the first non-removable internal device on /media/hdd
 				DEVICETYPE="hdd"
 			else
@@ -79,13 +82,10 @@ case "$ACTION" in
 			MOUNTPOINT="/media/$DEVICETYPE"
 
 			# Remove mountpoint not being used
-			if [ -z "`grep $MOUNTPOINT /proc/mounts`" ];
-			then
+			if [ -z "`grep $MOUNTPOINT /proc/mounts`" ] ; then
 				rm -rf $MOUNTPOINT
 			fi
-
-			if ! mkdir $MOUNTPOINT
-			then
+			if ! mkdir $MOUNTPOINT ; then
 				MOUNTPOINT="/media/$MDEV"
 				mkdir -p $MOUNTPOINT
 			fi
@@ -94,8 +94,7 @@ case "$ACTION" in
 		;;
 	remove)
 		MOUNTPOINT=`grep "^/dev/$MDEV\s" /proc/mounts | cut -d' ' -f 2`
-		if [ -z "$MOUNTPOINT" ]
-		then
+		if [ -z "$MOUNTPOINT" ] ; then
 			MOUNTPOINT="/media/$MDEV"
 		fi
 		umount $MOUNTPOINT || umount /dev/$MDEV
