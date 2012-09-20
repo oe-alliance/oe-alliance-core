@@ -6,14 +6,13 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"
-PR = "r1"
+PR = "r2"
+PACKAGE_ARCH = "all"
 
 DEPENDS = "enigma2"
 
 SRC_URI = "git://github.com/oe-alliance/oe-alliance-settings.git;protocol=git"
 S = "${WORKDIR}/git"
-
-inherit gitpkgv allarch
 
 FILES_${PN} = "/etc/enigma2/"
 
