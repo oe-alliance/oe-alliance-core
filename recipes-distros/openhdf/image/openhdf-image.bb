@@ -54,8 +54,8 @@ rootfs_postprocess() {
 			ln -s opkg-cl usr/bin/ipkg-cl || true
 
 			cd $curdir
-			if [ -f ../../../meta-oe-alliance/recipes-openhdf/custom/parser.sh ]; then
-				cp ./../../../meta-oe-alliance/recipes-openhdf/custom/parser.sh .			
+			if [ -f ../../../meta-oe-alliance/recipes-distros/openhdf/custom/parser.sh ]; then
+				cp ./../../../meta-oe-alliance/recipes-distros/openhdf/custom/parser.sh .			
 				./parser.sh
 				rm -rf parser.sh
 			fi
@@ -72,7 +72,7 @@ generate_nfo() {
 			echo "Machine: ${MACHINE}" >> ${NFO}
 			DATE=`date +%Y-%m-%d' '%H':'%M`
 			echo "Date: ${DATE}" >> ${NFO}
-			echo "Issuer: openHDF Team" >> ${NFO}
+			echo "Issuer: oHDF Team" >> ${NFO}
 			echo "Link: ${DISTRO_FEED_URI}" >> ${NFO}
 			if [ "${DESC}" != "" ]; then
 					echo "Description: ${DESC}" >> ${NFO}
