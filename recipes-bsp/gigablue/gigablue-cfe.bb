@@ -3,10 +3,11 @@ SECTION = "base"
 PRIORITY = "required"
 LICENSE = "proprietary"
 MAINTAINER = "openMips"
+PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 require conf/license/license-gplv2.inc
 
-PR = "r11"
+PR = "r12"
 
 S = "${WORKDIR}"
 

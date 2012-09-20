@@ -1,6 +1,7 @@
 DESCRIPTION = "arora webbrowser binary"
+PACKAGE_ARCH = "${MACHINE_ARCH}"
 PV = "0.10.1"
-PR = "r4"
+PR = "r5"
 
 require conf/license/license-gplv2.inc
 

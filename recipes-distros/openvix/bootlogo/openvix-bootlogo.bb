@@ -2,13 +2,14 @@ DESCRIPTION = "openViX bootlogo"
 SECTION = "base"
 PRIORITY = "required"
 MAINTAINER = "openViX"
+PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 require conf/license/license-gplv2.inc
 
 RDEPENDS_${PN} += "showiframe"
 
 PV = "${BINARY_VERSION}.${IMAGES_VERSION}"
-PR = "r7"
+PR = "r8"
 
 S = "${WORKDIR}"
 

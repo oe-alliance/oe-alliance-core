@@ -1,6 +1,7 @@
 DESCRIPTION = "Linux kernel for ${MACHINE}"
 SECTION = "kernel"
 LICENSE = "GPLv2"
+PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 KERNEL_RELEASE = "3.4.3"
 
@@ -9,7 +10,7 @@ SRC_URI[sha256sum] = "d81d051e6f702fc4bda0cb6b18db7319ed3b36401a924b682b0b0b94e0
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-MACHINE_KERNEL_PR_append = ".9"
+MACHINE_KERNEL_PR_append = ".10"
 
 # By default, kernel.bbclass modifies package names to allow multiple kernels
 # to be installed in parallel. We revert this change and rprovide the versioned

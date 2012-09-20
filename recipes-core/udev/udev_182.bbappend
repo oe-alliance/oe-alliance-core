@@ -1,4 +1,5 @@
-PRINC = "4"
+PRINC = "5"
+PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 SRC_URI += " \
 	file://init \

@@ -1,4 +1,5 @@
-PRINC = "1"
+PRINC = "2"
+PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
