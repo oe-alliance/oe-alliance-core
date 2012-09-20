@@ -65,6 +65,7 @@ do_install() {
 			echo "creator=openViX" >> ${D}/etc/image-version
 			echo "url=${URL}" >> ${D}/etc/image-version
 			echo "catalog=${URL}" >> ${D}/etc/image-version
+}
 
 FILES_${PN} = "/etc/image-version /etc/oe-git.log /etc/e2-git.log"
 
