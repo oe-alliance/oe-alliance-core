@@ -1,6 +1,6 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
-PRINC = "18"
+PRINC = "19"
 
 RDEPENDS_${PN} = " \
 	alsa-conf \
@@ -184,6 +184,7 @@ do_install_append() {
 	fi
 	install -d ${D}${sysconfdir}
 	git --git-dir=${S}/.git log --since=10.weeks --pretty=format:"%s" > ${D}${sysconfdir}/e2-git.log
+	git --git-dir=${OE-ALLIANCE_BASE}/meta-oe-alliance/.git log --since=10.weeks --pretty=format:"%s" > ${D}${sysconfdir}/oe-git.log
 }
 
 do_install_po() {

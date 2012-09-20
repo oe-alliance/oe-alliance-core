@@ -66,9 +66,5 @@ do_install() {
 			echo "url=${URL}" >> ${D}/etc/image-version
 			echo "catalog=${URL}" >> ${D}/etc/image-version
 
-			cd ${OE-ALLIANCE_BASE}/meta-oe-alliance
-			git log --since=10.weeks --pretty=format:"%s" > ${D}/etc/oe-git.log
-}
-
 FILES_${PN} = "/etc/image-version /etc/oe-git.log /etc/e2-git.log"
 
