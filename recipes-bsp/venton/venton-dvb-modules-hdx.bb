@@ -4,11 +4,11 @@ PRIORITY = "required"
 LICENSE = "CLOSED"
 
 KV = "3.2.2"
-SRCDATE = "20120907"
+SRCDATE = "20120917"
 PV = "${KV}+${SRCDATE}"
-PR = "r5"
+PR = "r6"
 
-SRC_URI[md5sum] = "9fc24f7ac022979ed5158440f557286e"
+SRC_URI[md5sum] = "44fefa28a16b96c69fbcd8d8be3d7f91"
 SRC_URI[sha256sum] = "76b02f3835062594a19ac6edb6bb4e18e1c24821fb7929979567c925a1c45b08"
 
 RDEPENDS_${PN} += "venton-fpupdate-hdx"
