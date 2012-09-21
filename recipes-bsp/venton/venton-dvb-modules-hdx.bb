@@ -9,7 +9,7 @@ PV = "${KV}+${SRCDATE}"
 PR = "r6"
 
 SRC_URI[md5sum] = "44fefa28a16b96c69fbcd8d8be3d7f91"
-SRC_URI[sha256sum] = "76b02f3835062594a19ac6edb6bb4e18e1c24821fb7929979567c925a1c45b08"
+SRC_URI[sha256sum] = "aaa63daf21b260bd5f74542d39a390f89094e421983ca184c3781835b978502c"
 
 RDEPENDS_${PN} += "venton-fpupdate-hdx"
 
