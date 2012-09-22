@@ -38,6 +38,7 @@ IMAGE_INSTALL = " \
 	ntfs-3g \
 	task-base-smbfs \
 	task-base-nfs \
+	busybox-cron \
 	"
 
 ENIGMA2_PLUGINS = "\

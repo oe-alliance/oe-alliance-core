@@ -35,6 +35,7 @@ IMAGE_INSTALL = " \
 	vsftpd \
 	ntfs-3g \
 	hddtemp \
+	busybox-cron \
 	"
 
 ENIGMA2_PLUGINS = "\
