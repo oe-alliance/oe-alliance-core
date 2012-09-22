@@ -15,8 +15,11 @@ IMAGE_INSTALL = " \
 	openhdf-version-info \
 	openhdf-enigma2 \
 	openhdf-bootlogo \
+	${ENIGMA2_PLUGINS} \
 	avahi \
 	avahi-daemon \
+	busybox-cron \
+	dosfstools \
 	dropbear \
 	early-configure \
 	e2fsprogs-mke2fs \
@@ -40,8 +43,16 @@ IMAGE_INSTALL = " \
 	vsftpd \
 	"
 
+ENIGMA2_PLUGINS = " "
+ENIGMA2_PLUGINS_append_gb800solo = ""
+ENIGMA2_PLUGINS_append_gb800se = ""
+ENIGMA2_PLUGINS_append_gb800ue = "python-imaging"
+ENIGMA2_PLUGINS_append_gb800quad = "python-imaging webbrowser-utils enigma2-plugin-extensions-webbrowser"
+
 export IMAGE_BASENAME = "OpenHDF-Image-PLi3.0"
 IMAGE_LINGUAS = ""
+
+IMAGE_FEATURES += "package-management"
 
 inherit image
 
