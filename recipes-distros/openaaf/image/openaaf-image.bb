@@ -36,8 +36,14 @@ IMAGE_INSTALL = " \
 	ntfs-3g \
 	hddtemp \
 	busybox-cron \
+	${@base_contains("MACHINE_FEATURES", "smallflash", "", \
+	" \
+	task-base-smbfs-client \
+	task-base-smbfs \
+	task-base-nfs \
+	", d)} \
 	"
-
+	
 ENIGMA2_PLUGINS = "\
 	enigma2-plugin-extensions-autotimer \
 	enigma2-plugin-extensions-epgsearch \
