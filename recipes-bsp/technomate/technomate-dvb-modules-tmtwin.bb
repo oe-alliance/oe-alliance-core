@@ -31,5 +31,5 @@ do_install() {
 	done
 }
 
-SRC_URI[md5sum] = "6c1115d32f806d0479e5459382bd88a8"
-SRC_URI[sha256sum] = "5fc556d19693f50f7beb8cc210ec2d02fe6ad9587744ee41ec47cfc312037b73"
+SRC_URI[md5sum] = "0090b75f28c2a84328a4c5f3f5096c76"
+SRC_URI[sha256sum] = "c02f29a2062eecbc5f518dd43ff55e5a447b24dc04594bbb6acc11fcdad270ed"
