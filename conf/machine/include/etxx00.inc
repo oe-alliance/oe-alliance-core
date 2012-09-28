@@ -16,7 +16,6 @@ include conf/machine/include/autoload-wifi.inc
 include conf/machine/include/autoload-dvb-usb.inc
 include conf/machine/include/autoload-usbserial.inc
 
-CHIPSET = "bcm7413"
 
 DVBMEDIASINK_CONFIG = "--with-wma --with-wmv --with-pcm --with-dtsdownmix"
 
@@ -61,7 +60,6 @@ IMAGE_CMD_ubi_append = " \
 	rm -Rf ${IMAGEDIR}; \
 	"
 
-TARGET_FPU = "hard"
 
 MACHINE_FEATURES += "3dtv alsa blindscan-dvbs hdmicec switchoff textlcd wifi"
 
