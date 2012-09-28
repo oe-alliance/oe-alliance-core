@@ -4,8 +4,6 @@ MAINTAINER = "OE-Alliance team"
 
 PR = "r0"
 
-PV = "${PV}"
-
 SRC_URI += " \
 	file://cables.xml \
 	file://terrestrial.xml \
