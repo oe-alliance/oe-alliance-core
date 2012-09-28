@@ -1,7 +1,7 @@
 KV = "3.4.3"
-SRCDATE = "20120920"
+SRCDATE = "20120927"
 
 require odin-dvb-modules.inc
 
-SRC_URI[md5sum] = "ab38d98ba79ae02e58dffc6da53484a7"
-SRC_URI[sha256sum] = "de0d0bac71f8d17145dd989f3a6c32c88b84a4838af533ceb2ee44afa0d8d8dd"
+SRC_URI[md5sum] = "b9bbb7e674a6c057b78618e8cb19ecb2"
+SRC_URI[sha256sum] = "00820ac6ad62a3273e8a812dca36b4602108c128651257f366e51b06745dbf08"
