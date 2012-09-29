@@ -13,7 +13,7 @@ inherit gitpkgv
 
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r17"
+PR = "r19"
 
 SRC_URI = "${ENIGMA2_PLUGINS_URI} file://pluginnotwanted"
 
@@ -54,8 +54,8 @@ EXTRA_OECONF = " \
 CONFFILES_${PN} += "${sysconfdir}/enigma2/movietags"
 FILES_${PN} += " /usr/share/enigma2 /usr/share/fonts "
 FILES_${PN}-meta = "${datadir}/meta"
-FILES_enigma2-plugin-extensions-bmediacenter += " $(libdir)/enigma2/python/Components/Renderer/LizWatches.pyo $(libdir)/enigma2/python/Components/Converter/LizExtraNumText.pyo"
-FILES_enigma2-plugin-extensions-bmediacenter-src += " $(libdir)/enigma2/python/Components/Renderer/LizWatches.py $(libdir)/enigma2/python/Components/Converter/LizExtraNumText.py"
+FILES_enigma2-plugin-extensions-bmediacenter += " ${libdir}/enigma2/python/Components/Renderer/LizWatches.pyo ${libdir}/enigma2/python/Components/Converter/LizExtraNumText.pyo"
+FILES_enigma2-plugin-extensions-bmediacenter-src += " ${libdir}/enigma2/python/Components/Renderer/LizWatches.py ${libdir}/enigma2/python/Components/Converter/LizExtraNumText.py"
 
 PACKAGES += "${PN}-meta"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
