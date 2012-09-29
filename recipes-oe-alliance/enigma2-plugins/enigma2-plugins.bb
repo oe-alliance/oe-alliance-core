@@ -13,7 +13,7 @@ inherit gitpkgv
 
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r16"
+PR = "r17"
 
 SRC_URI = "${ENIGMA2_PLUGINS_URI} file://pluginnotwanted"
 
@@ -28,7 +28,7 @@ SRC_URI_append_vusolo = " \
 SRC_URI_append_vuduo = " \
 			file://dreambox_bouqueteditor.png"
 SRC_URI_append_et4x00 = " \
-			file://dreambox_bouqueteditor.png"			
+			file://dreambox_bouqueteditor.png"
 SRC_URI_append_et5x00 = " \
 			file://dreambox_bouqueteditor.png"
 SRC_URI_append_et6x00 = " \
@@ -54,6 +54,9 @@ EXTRA_OECONF = " \
 CONFFILES_${PN} += "${sysconfdir}/enigma2/movietags"
 FILES_${PN} += " /usr/share/enigma2 /usr/share/fonts "
 FILES_${PN}-meta = "${datadir}/meta"
+FILES_enigma2-plugin-extensions-bmediacenter += " $(libdir)/enigma2/python/Components/Renderer/LizWatches.pyo $(libdir)/enigma2/python/Components/Converter/LizExtraNumText.pyo"
+FILES_enigma2-plugin-extensions-bmediacenter-src += " $(libdir)/enigma2/python/Components/Renderer/LizWatches.py $(libdir)/enigma2/python/Components/Converter/LizExtraNumText.py"
+
 PACKAGES += "${PN}-meta"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
