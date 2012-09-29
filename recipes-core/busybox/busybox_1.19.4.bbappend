@@ -1,7 +1,3 @@
-PRINC = "19"
+PRINC = "20"
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
-
-SRC_URI += " \
-	file://mount_single_uuid.patch \
-	"
