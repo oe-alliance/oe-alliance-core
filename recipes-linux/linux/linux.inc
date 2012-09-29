@@ -3,7 +3,7 @@ SECTION = "kernel"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-inherit kernel siteinfo
+inherit kernel siteinfo machine_kernel_pr
 
 RPSRC = "http://www.rpsys.net/openzaurus/patches/archive"
 

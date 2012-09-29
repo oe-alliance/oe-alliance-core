@@ -1,7 +1,7 @@
-PR = "${INC_PR}.27"
+MACHINE_KERNEL_PR_append = ".${INC_PR}.28"
 
 PATCHREV = "b299a6a132d842b074b289b2568eece452d0663c"
-PATCHLEVEL = "28"
+PATCHLEVEL = "30"
 
 SRC_URI = " \
 			${KERNELORG_MIRROR}/linux/kernel/v3.x/linux-3.2.tar.bz2;name=kernel \
@@ -21,18 +21,18 @@ SRC_URI = " \
 			file://brcmstb-smp.c-optimized-code-a-bit-add-a-kern-warnin.patch \
 			file://kernel-sched_fair.c-dont-call-smp_send_reschedule-fo.patch \
 			file://disable-unused-emac1-support.patch \
+			file://brcmnand-fixed-possible-race-condition.patch \
+	        file://0001-nand_base.c-2ms-for-nand_wait_ready-is-not-enough.patch \
+			file://0002-MTD-dreambox_nand-cleanup-speedup-implement-select_c.patch \
 			file://em28xx_fix_terratec_entries.patch \
 			file://em28xx_add_terratec_h5_rev3.patch \
-			file://brcmnand-fixed-possible-race-condition.patch \			
-	        file://0001-MTD-fixed-nand_wait_ready-2-jiffies.patch \
-			file://0002-MTD-dreambox_nand-cleanup-speedup-implement-select_c.patch \
 			file://defconfig \
 "
 
 SRC_URI[kernel.md5sum] = "7ceb61f87c097fc17509844b71268935"
 SRC_URI[kernel.sha256sum] = "c881fc2b53cf0da7ca4538aa44623a7de043a41f76fd5d0f51a31f6ed699d463"
-SRC_URI[kernel-patch.md5sum] = "57756d87af3618aaef284b448db6b6e2"
-SRC_URI[kernel-patch.sha256sum] = "c48d1535814bf11d2d02b68d17a274cfe41c7b64d13af21a8eed450873d417ac"
+SRC_URI[kernel-patch.md5sum] = "008626f6c88d0d3660f088c56be73bc0"
+SRC_URI[kernel-patch.sha256sum] = "036178afd870667b022de02cb21a07d11205df6f6972205e989784cc9fc747f7"
 SRC_URI[dmm-patch.md5sum] = "c364975ed4c2d066634729827f8552b9"
 SRC_URI[dmm-patch.sha256sum] = "e56c75ad2c8e1d9328d55a7abf7c7ce805acb96354eb26449d5f91c65ad340a4"
 SRC_URI[unionfs.md5sum] = "06e7c9f6cafd49b72184be851116c511"

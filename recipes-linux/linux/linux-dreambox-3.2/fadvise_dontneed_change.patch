@@ -118,7 +118,7 @@ index 632b15e..f0a38dc 100644
 +			 * will have a chance to activate again if other
 +			 * processes touch it.
  			 */
-+			if (!invalidate /*&& PageActive(page)*/)
++			if (!invalidate && PageActive(page))
 +				ret = 0;
 +			else
 +				ret = invalidate_inode_page(page);
