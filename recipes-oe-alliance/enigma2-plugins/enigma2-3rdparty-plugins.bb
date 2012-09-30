@@ -9,7 +9,7 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r78"
+PR = "r79"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -38,7 +38,7 @@ do_install() {
 	install -m 0644 ${S}/enigma2-plugin-dvb-sundtek.controlcenter_1.0-20110318-r2_mipsel.ipk ${DEPLOY_DIR_IPK}/3rdparty
 	install -m 0644 ${S}/enigma2-plugin-extensions-appletrailer_0.1_mipsel.ipk ${DEPLOY_DIR_IPK}/3rdparty
 	install -m 0644 ${S}/enigma2-plugin-extensions-atmolightd_0.6-r0_all.ipk ${DEPLOY_DIR_IPK}/3rdparty
-	install -m 0644 ${S}/enigma2-plugin-extensions-camofs_6.27_all.ipk ${DEPLOY_DIR_IPK}/3rdparty
+	install -m 0644 ${S}/enigma2-plugin-extensions-camofs_6.30_all.ipk ${DEPLOY_DIR_IPK}/3rdparty
 	install -m 0644 ${S}/enigma2-plugin-extensions-dreamexplorer_7.4-r1_mips32el.ipk ${DEPLOY_DIR_IPK}/3rdparty
 	install -m 0644 ${S}/enigma2-plugin-extensions-picturecenterfs_3.51_all.ipk ${DEPLOY_DIR_IPK}/3rdparty
 	install -m 0644 ${S}/enigma2-plugin-extensions-googlenewsreader_1.0_mips32el.ipk ${DEPLOY_DIR_IPK}/3rdparty
