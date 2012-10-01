@@ -1,6 +1,6 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
-PRINC = "19"
+PRINC = "21"
 
 RDEPENDS_${PN} = " \
 	alsa-conf \
@@ -55,7 +55,7 @@ FILES_${PN} += " ${bindir} ${sysconfdir}/e2-git.log"
 
 # Save po files
 PACKAGES =+ "${PN}-po"
-FILES_${PN}-po = "${datadir}/enigma2/po/*.po"
+FILES_${PN}-po = "${datadir}/enigma2/po/*.po ${datadir}/enigma2/po/*.pot"
 
 EXTRA_OECONF += "\
 	--with-po \
@@ -68,6 +68,10 @@ FILES_${PN}-dbg += "\
 	/usr/lib/enigma2/python/*/*/*.debug \
 	/usr/lib/enigma2/python/*/*/*/.debug \
 	/usr/lib/enigma2/python/*/*/*/*/.debug \
+	"
+
+FILES_${PN}-src += "\
+	/usr/lib/enigma2/python/upgrade.py \
 	"
 
 def enigma2changeword(file):
@@ -194,6 +198,7 @@ do_install_po() {
 			install -m 0755 ${S}/po/$lang.po ${D}${datadir}/enigma2/po/enigma2-$lang.po
 		fi
 	done
+	install -m 0755 ${S}/po/enigma2.pot ${D}${datadir}/enigma2/po/enigma2.pot
 }
 
 addtask setup_po_ipk before do_package after do_install
