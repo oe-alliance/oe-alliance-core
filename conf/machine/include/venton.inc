@@ -24,9 +24,6 @@ GLIBC_EXTRA_OECONF = "--with-tls --with-__thread"
 
 PREFERRED_PROVIDER_virtual/kernel = "linux-venton"
 
-PREFERRED_VERSION_linux-${MACHINE} = "3.2.2"
-PREFERRED_VERSION_linux-libc-headers = "3.2"
-
 KERNEL_IMAGETYPE = "vmlinux"
 KERNEL_OUTPUT = "${KERNEL_IMAGETYPE}"
 KERNEL_CONSOLE = "ttyS0,115200n8"
@@ -55,8 +52,6 @@ IMAGE_CMD_ubi_append = " \
 	rm -f ${DEPLOY_DIR_IMAGE}/*.ubifs; \
 	rm -rf ${IMAGEDIR}; \
 	"
-
-TARGET_FPU = "hard"
 
 MACHINE_FEATURES += "3dtv alsa hdmicec switchoff wifi dvb-c blindscan-dvbc 3dtvpli"
 
