@@ -1,6 +1,6 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
-PRINC = "21"
+PRINC = "22"
 
 RDEPENDS_${PN} = " \
 	alsa-conf \
@@ -113,6 +113,8 @@ do_patch_prepend(){
 		MACHINE1="Technomate"
 	elif "${MACHINE}" == "ventonhdx":
 		MACHINE1="Venton HD"
+	elif "${MACHINE}" == "ventonhde":
+		MACHINE1="Venton HDe"	
 	import os
 	os.system("find ./ -name \"*.po\" > ./po_list")
 	os.system("find ./ -name \"*.py\" >> ./po_list")
@@ -161,6 +163,8 @@ python do_setup_po_ipk () {
 		MACHINE1="Technomate"
 	elif "${MACHINE}" == "ventonhdx":
 		MACHINE1="Venton HD"
+	elif "${MACHINE}" == "ventonhde":
+		MACHINE1="Venton HDe"	
 	import os
 	os.system("find ./ -name \"*.po\" > ./po_list")
 	os.system("find ./ -name \"*.py\" >> ./po_list")

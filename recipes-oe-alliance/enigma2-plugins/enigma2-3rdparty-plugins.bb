@@ -9,7 +9,7 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r79"
+PR = "r80"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -142,6 +142,11 @@ do_install_append_odinm9() {
 }
 
 do_install_append_ventonhdx() {
+# 	Install any packages that are only For this machines feed here, uncomment the line below and change as required
+# 	install -m 0644 ${S}/enigma2-plugin-private-menuluxipkg_4.1b_all.ipk ${DEPLOY_DIR_IPK}/private
+}
+
+do_install_append_ventonhde() {
 # 	Install any packages that are only For this machines feed here, uncomment the line below and change as required
 # 	install -m 0644 ${S}/enigma2-plugin-private-menuluxipkg_4.1b_all.ipk ${DEPLOY_DIR_IPK}/private
 }
