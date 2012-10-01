@@ -1,5 +1,5 @@
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS = "\
-	venton-dvb-modules-hdx \
+	${MACHINE}-dvb-modules \
 	"
 
 DVBPROVIDER = "kernel"
@@ -34,8 +34,6 @@ UBI_VOLNAME = "rootfs"
 MKUBIFS_ARGS = "-m 2048 -e 126976 -c 4096"
 UBINIZE_ARGS = "-m 2048 -p 128KiB"
 
-IMAGEDIR ?= "venton-hdx"
-
 IMAGE_CMD_ubi_prepend = " \
 	rm -rf ${IMAGE_ROOTFS}/boot/*; \
 	rm -rf ${IMAGE_ROOTFS}/tmp/*; \
@@ -47,13 +45,14 @@ IMAGE_CMD_ubi_append = " \
 	mv ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.ubi ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/rootfs.bin; \
 	gzip -f -9c ${DEPLOY_DIR_IMAGE}/vmlinux-${MACHINE}.bin > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/kernel.bin; \
 	echo ${DISTRO_NAME}-${DISTRO_VERSION}.${BUILD_VERSION} > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/imageversion; \
+	echo "rename this file to 'force' to force an update without confirmation" > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/noforce; \
 	cd ${DEPLOY_DIR_IMAGE}; \
 	zip ${IMAGE_NAME}_usb.zip ${IMAGEDIR}/*; \
 	rm -f ${DEPLOY_DIR_IMAGE}/*.ubifs; \
 	rm -rf ${IMAGEDIR}; \
 	"
 
-MACHINE_FEATURES += "3dtv alsa hdmicec switchoff wifi dvb-c blindscan-dvbc 3dtvpli"
+MACHINE_FEATURES += "3dtv alsa hdmicec switchoff wifi 3dtvpli"
 
 PREFERRED_PROVIDER_virtual/blindscan-dvbc = "venton-blindscan-dvbc-utils"
 
