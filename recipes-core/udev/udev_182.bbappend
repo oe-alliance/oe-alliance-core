@@ -13,6 +13,9 @@ SRC_URI_append_dm800= " \
 	file://udev-builtin-input_id.patch \
 "
 
+SRC_URI_append_ventonhde= " \
+	file://udev-builtin-input_id.patch \
+"
 inherit update-rc.d
 
 INITSCRIPT_NAME = "udev"

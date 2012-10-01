@@ -1,7 +1,6 @@
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS = "\
 	${MACHINE}-dvb-modules \
 	"
-
 DVBPROVIDER = "kernel"
 
 MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS = "\
@@ -12,7 +11,6 @@ MACHINE_EXTRA_RRECOMMENDS = " \
 	gst-plugin-dvbmediasink \
 	ntfs-3g \
 	"
-
 include conf/machine/include/autoload-wifi.inc
 include conf/machine/include/autoload-dvb-usb.inc
 include conf/machine/include/autoload-usbserial.inc
