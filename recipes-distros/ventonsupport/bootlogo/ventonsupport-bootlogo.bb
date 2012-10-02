@@ -8,7 +8,7 @@ require conf/license/license-gplv2.inc
 RDEPENDS_${PN} += "showiframe"
 
 PV = "${BINARY_VERSION}.${IMAGES_VERSION}"
-PR = "r7"
+PR = "r8"
 
 S = "${WORKDIR}"
 
@@ -19,6 +19,7 @@ inherit update-rc.d
 
 SRC_URI = "file://bootlogo.mvi file://backdrop.mvi file://radio.mvi file://bootlogo.sh file://bootlogo_wait.mvi"
 SRC_URI_append_ventonhdx = " file://splash.bin"
+SRC_URI_append_ventonhde = " file://splash.bin"
 
 BINARY_VERSION = "1"
 BINARY_VERSION_mipsel = "8"
@@ -36,6 +37,11 @@ do_install() {
 }
 
 do_install_append_ventonhdx() {
+	install -d ${DEPLOY_DIR_IMAGE}
+	install -m 0644 ${S}/splash.bin ${DEPLOY_DIR_IMAGE}/splash.bin
+}
+
+do_install_append_ventonhde() {
 	install -d ${DEPLOY_DIR_IMAGE}
 	install -m 0644 ${S}/splash.bin ${DEPLOY_DIR_IMAGE}/splash.bin
 }
