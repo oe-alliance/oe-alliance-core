@@ -4,7 +4,7 @@ LICENSE = "GPL"
 KV = "2.6.37"
 SRCDATE = "20120802"
 
-MACHINE_KERNEL_PR_append = ".1"
+MACHINE_KERNEL_PR_append = ".2"
 
 SRC_URI[md5sum] = "5c235158ae121f92ade610362e869499"
 SRC_URI[sha256sum] = "00b99615d7ef71fa32a2f0af7c3b73763203bbca9aa285cc4fabe241e70b3bee"
@@ -28,7 +28,7 @@ KERNEL_IMAGEDEST = "/tmp"
 FILES_kernel-image = "/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz"
 
 do_configure_prepend() {
-	oe_machinstall -m 0644 ${WORKDIR}/${MACHINE}_defconfig ${S}/.config
+	oe_machinstall -m 0644 ${WORKDIR}/defconfig ${S}/.config
 	oe_runmake oldconfig
 }
 
