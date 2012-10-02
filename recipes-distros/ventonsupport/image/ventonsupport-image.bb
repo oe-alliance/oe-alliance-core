@@ -16,6 +16,8 @@ IMAGE_INSTALL = " \
 	ventonsupport-bootlogo \
 	ventonsupport-version-info \
 	${ENIGMA2_PLUGINS} \
+	${ENIGMA2_INI_PLUGINS} \
+	${ENIGMA2_USB_DRV} \
 	avahi-daemon \
 	dropbear \
 	early-configure \
@@ -23,43 +25,64 @@ IMAGE_INSTALL = " \
 	e2fsprogs-e2fsck \
 	fakelocale \
 	libavahi-client \
-	ntp \
+	libcrypto-compat \
+	ntpdate \
 	opkg \
 	sdparm \
 	task-base \
 	task-core-boot \
 	tzdata \
 	util-linux-sfdisk \
-	volatile-media \
 	vsftpd \
-	hdparm \
-	dropbear \
-	python-gdata \
 	ntfs-3g \
+	hddtemp \
+	busybox-cron \
+	python-gdata \
 	"
 
 ENIGMA2_PLUGINS = "\
 	enigma2-plugin-extensions-autotimer \
 	enigma2-plugin-extensions-epgsearch \
 	enigma2-plugin-extensions-imdb \
-	enigma2-plugin-extensions-graphmultiepg \
 	enigma2-plugin-extensions-mediaplayer \
 	enigma2-plugin-extensions-cutlisteditor \
-	enigma2-plugin-systemplugins-videotune \
-	enigma2-plugin-systemplugins-autoresolution \
-	enigma2-plugin-systemplugins-softwaremanager \
-	enigma2-plugin-systemplugins-hotplug \
-	enigma2-plugin-systemplugins-crossepg \
-	enigma2-plugin-systemplugins-3gmodemmanager \
 	enigma2-plugin-extensions-foreca \
 	enigma2-plugin-extensions-streamtv \
 	enigma2-plugin-extensions-dlnabrowser \
 	enigma2-plugin-extensions-dlnaserver \
 	enigma2-plugin-extensions-zdfmediathek \
-	enigma2-plugin-extensions-nstreamplayer \
+	enigma2-plugin-extensions-addstreamurl \
+	enigma2-plugin-systemplugins-videotune \
+	enigma2-plugin-systemplugins-softwaremanager \
+	enigma2-plugin-systemplugins-hotplug \
+	enigma2-plugin-systemplugins-crossepg \
+	enigma2-plugin-systemplugins-3gmodemmanager \
+"
+ENIGMA2_INI_PLUGINS = "\
+	enigma2-plugin-picons-default-ventonsupport \
+	enigma2-plugin-extensions-inimytube \ 
+	enigma2-plugin-systemplugins-inivfd \
 "
 
-export IMAGE_BASENAME = "venton-hdx-image"
+ENIGMA2_USB_DRV = "\
+	${@base_contains("MACHINE_FEATURES", "kernel32", "enigma2-plugin-drivers-dvb-usb-af9035" , "", d)} \
+	enigma2-plugin-drivers-dvb-usb-dib0700 \
+	enigma2-plugin-drivers-dvb-usb-af9015 \
+	enigma2-plugin-drivers-dvb-usb-siano \
+	enigma2-plugin-drivers-dvb-usb-dw2102 \
+	${@base_contains("MACHINE_FEATURES", "kernel32", "enigma2-plugin-drivers-dvb-usb-as102" , "", d)} \
+	enigma2-plugin-drivers-dvb-usb-dtt200u \
+	enigma2-plugin-drivers-usbserial \
+	enigma2-plugin-drivers-dvb-usb-dib0700 \
+	enigma2-plugin-drivers-dvb-usb-af9015 \
+	enigma2-plugin-drivers-dvb-usb-siano \
+	${@base_contains("MACHINE_FEATURES", "kernel32", "enigma2-plugin-drivers-dvb-usb-em28xx" , "", d)} \
+	${@base_contains("MACHINE_FEATURES", "kernel32", "enigma2-plugin-drivers-dvb-usb-it913x" , "", d)} \
+	${@base_contains("MACHINE_FEATURES", "kernel32", "enigma2-plugin-drivers-dvb-usb-pctv452e" , "", d)} \
+"
+
+
+export IMAGE_BASENAME = "venton-image"
 IMAGE_LINGUAS = ""
 
 inherit image
