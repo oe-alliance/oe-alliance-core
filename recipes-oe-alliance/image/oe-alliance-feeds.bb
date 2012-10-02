@@ -3,7 +3,7 @@ LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3b58 \
                     file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
 PV = "1.0"
-PR = "r8"
+PR = "r9"
 
 inherit task
 
@@ -16,7 +16,6 @@ RRECOMMENDS = "\
 	picons-enigma2-meta \
 	task-openplugins \
 	\
-	enigma2-skins \
 	enigma2-plugins \
 	enigma2-plugin-drivers-ntfs-3g \
 	enigma2-plugin-drivers-usbserial \
