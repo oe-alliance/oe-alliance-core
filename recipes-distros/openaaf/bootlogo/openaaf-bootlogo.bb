@@ -8,7 +8,7 @@ require conf/license/license-gplv2.inc
 RDEPENDS_${PN} += "showiframe"
 
 PV = "2.0"
-PR = "r6"
+PR = "r7"
 
 S = "${WORKDIR}"
 
@@ -17,7 +17,7 @@ INITSCRIPT_PARAMS = "start 05 S ."
 
 inherit update-rc.d
 
-SRC_URI = "file://bootlogo.mvi file://bootlogo.jpg file://bootlogo.sh file://splash.bin file://lcdsplash.bin"
+SRC_URI = "file://bootlogo.mvi file://bootlogo.jpg file://bootlogo.sh file://splash.bin file://splash600.bin file://lcdsplash.bin"
 
 BINARY_VERSION = "1"
 BINARY_VERSION_mipsel = "10"
@@ -67,7 +67,7 @@ do_install_append_vuultimo() {
 }
 do_install_append_et4x00() {
     install -d ${DEPLOY_DIR_IMAGE}
-	install -m 0755 ${S}/splash.bin ${DEPLOY_DIR_IMAGE}/splash.bin
+	install -m 0755 ${S}/splash600.bin ${DEPLOY_DIR_IMAGE}/splash.bin
 }
 do_install_append_et5x00() {
     install -d ${DEPLOY_DIR_IMAGE}
