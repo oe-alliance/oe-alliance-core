@@ -1,6 +1,6 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
-PRINC = "22"
+PRINC = "23"
 
 RDEPENDS_${PN} = " \
 	alsa-conf \
@@ -190,6 +190,8 @@ do_install_append() {
 	if [ -e ${S}/lib/python/Plugins/Extensions/DVDPlayer/plugin.py ]; then
 		cp ${S}/lib/python/Plugins/Extensions/DVDPlayer/plugin.py ${D}/usr/lib/enigma2/python/Plugins/Extensions/DVDPlayer/plugin.py
 	fi
+	ln -s /usr/lib/enigma2/python/Tools/StbHardware.pyo ${D}/usr/lib/enigma2/python/Tools/DreamboxHardware.pyo
+	ln -s /usr/lib/python/Components/PackageInfo.pyo ${D}/usr/lib/python/Components/DreamboxInfoHandler.pyo
 	install -d ${D}${sysconfdir}
 	git --git-dir=${S}/.git log --since=10.weeks --pretty=format:"%s" > ${D}${sysconfdir}/e2-git.log
 	git --git-dir=${OE-ALLIANCE_BASE}/meta-oe-alliance/.git log --since=10.weeks --pretty=format:"%s" > ${D}${sysconfdir}/oe-git.log
