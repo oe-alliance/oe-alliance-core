@@ -114,7 +114,7 @@ do_patch_prepend(){
 	elif "${MACHINE}" == "ventonhdx":
 		MACHINE1="Venton HD"
 	elif "${MACHINE}" == "ventonhde":
-		MACHINE1="Venton HDe"	
+		MACHINE1="Venton HDe"
 	import os
 	os.system("find ./ -name \"*.po\" > ./po_list")
 	os.system("find ./ -name \"*.py\" >> ./po_list")
@@ -164,7 +164,7 @@ python do_setup_po_ipk () {
 	elif "${MACHINE}" == "ventonhdx":
 		MACHINE1="Venton HD"
 	elif "${MACHINE}" == "ventonhde":
-		MACHINE1="Venton HDe"	
+		MACHINE1="Venton HDe"
 	import os
 	os.system("find ./ -name \"*.po\" > ./po_list")
 	os.system("find ./ -name \"*.py\" >> ./po_list")
@@ -191,7 +191,7 @@ do_install_append() {
 		cp ${S}/lib/python/Plugins/Extensions/DVDPlayer/plugin.py ${D}/usr/lib/enigma2/python/Plugins/Extensions/DVDPlayer/plugin.py
 	fi
 	ln -s /usr/lib/enigma2/python/Tools/StbHardware.pyo ${D}/usr/lib/enigma2/python/Tools/DreamboxHardware.pyo
-	ln -s /usr/lib/python/Components/PackageInfo.pyo ${D}/usr/lib/python/Components/DreamboxInfoHandler.pyo
+	ln -s /usr/lib/python/Components/PackageInfo.pyo ${D}/usr/lib/enigma2/python/Components/DreamboxInfoHandler.pyo
 	install -d ${D}${sysconfdir}
 	git --git-dir=${S}/.git log --since=10.weeks --pretty=format:"%s" > ${D}${sysconfdir}/e2-git.log
 	git --git-dir=${OE-ALLIANCE_BASE}/meta-oe-alliance/.git log --since=10.weeks --pretty=format:"%s" > ${D}${sysconfdir}/oe-git.log
