@@ -9,7 +9,7 @@ require conf/license/license-gplv2.inc
 RDEPENDS_${PN} += "showiframe"
 
 PV = "${BINARY_VERSION}.${IMAGES_VERSION}"
-PR = "r1"
+PR = "r2"
 
 S = "${WORKDIR}"
 
@@ -25,12 +25,15 @@ SRC_URI_append_gb800ue = "file://splash.bin file://lcdsplash.bin"
 SRC_URI_append_gbquad = "file://splash.bin file://lcdsplash.bin"
 SRC_URI_append_vuuno = " file://splash_cfe_auto.bin"
 SRC_URI_append_vuultimo = " file://splash_cfe_auto.bin"
+SRC_URI_append_et4x00 = " file://splash.bin"
 SRC_URI_append_et5x00 = " file://splash.bin"
 SRC_URI_append_et6x00 = " file://splash.bin"
 SRC_URI_append_et9x00 = " file://splash.bin"
 SRC_URI_append_odinm9 = " file://splash.bin"
 SRC_URI_append_ventonhdx = " file://splash.bin"
+SRC_URI_append_ventonhde = " file://splash.bin"
 SRC_URI_append_tmtwin = " file://splash.bmp"
+SRC_URI_append_tm2t = " file://splash.bmp"
 
 BINARY_VERSION = "1"
 BINARY_VERSION_mipsel = "8"
@@ -76,6 +79,10 @@ do_install_append_vuultimo() {
 	install -d ${DEPLOY_DIR_IMAGE}
 	install -m 0644 ${S}/splash_cfe_auto.bin ${DEPLOY_DIR_IMAGE}/splash_cfe_auto.bin
 }
+do_install_append_et4x00() {
+	install -d ${DEPLOY_DIR_IMAGE}
+	install -m 644 ${S}/splash.bin ${DEPLOY_DIR_IMAGE}/splash.bin
+}
 do_install_append_et5x00() {
 	install -d ${DEPLOY_DIR_IMAGE}
 	install -m 644 ${S}/splash.bin ${DEPLOY_DIR_IMAGE}/splash.bin
@@ -93,6 +100,10 @@ do_install_append_odinm9() {
 	install -m 0644 ${S}/splash.bin ${DEPLOY_DIR_IMAGE}/splash.bin
 }
 do_install_append_tmtwin() {
+	install -d ${DEPLOY_DIR_IMAGE}
+	install -m 0644 ${S}/splash.bmp ${DEPLOY_DIR_IMAGE}/splash.bmp
+}
+do_install_append_tm2t() {
 	install -d ${DEPLOY_DIR_IMAGE}
 	install -m 0644 ${S}/splash.bmp ${DEPLOY_DIR_IMAGE}/splash.bmp
 }

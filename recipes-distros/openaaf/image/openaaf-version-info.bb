@@ -36,16 +36,16 @@ do_install() {
 				DRIVERS=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/etxx00/et-dvb-modules-${MACHINE}.bb | cut -b 12-19`
 			elif [ "${MACHINE}" = "odinm9" ]; then
 				DRIVERS=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/odin/odin-dvb-modules-${MACHINE}.bb | cut -b 12-19`
-			elif [ "${MACHINE}" = "tmtwin" ]; then
+			elif [ "${MACHINE}" = "tmtwin" -o "${MACHINE}" = "tm2t" ]; then
 				DRIVERS=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/technomate/technomate-dvb-modules-${MACHINE}.bb | cut -b 12-19`
 			elif [ "${MACHINE}" = "gb800solo" -o "${MACHINE}" = "gb800se" -o "${MACHINE}" = "gb800ue" -o "${MACHINE}" = "gbquad" ]; then
 				DRIVERS=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/gigablue/gigablue-dvb-modules-${MACHINE}.bb | cut -b 12-19`
-			elif [ "${MACHINE}" = "ventonhdx" ]; then
+			elif [ "${MACHINE}" = "ventonhdx" -o "${MACHINE}" = "ventonhde" ]; then
 				DRIVERS=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/venton/venton-dvb-modules-hdx.bb | cut -b 12-19`
 			else
 				DRIVERS='N/A'
 			fi
-			echo "drivers=${DRIVERS}" >> ${D}/etc/image-version			
+			echo "drivers=${DRIVERS}" >> ${D}/etc/image-version
 			echo "date=${DATETIME}" >> ${D}/etc/image-version
 			echo "comment=AAF" >> ${D}/etc/image-version
 			echo "target=9" >> ${D}/etc/image-version

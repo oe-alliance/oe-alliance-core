@@ -14,6 +14,7 @@ URL_vuuno = "http://www.vuplus-support.co.uk"
 URL_vuultimo = "http://www.vuplus-support.co.uk"
 URL_vusolo = "http://www.vuplus-support.co.uk"
 URL_vuduo = "http://www.vuplus-support.co.uk"
+URL_et4x00 = "http://www.xtrend-support.co.uk"
 URL_et5x00 = "http://www.xtrend-support.co.uk"
 URL_et6x00 = "http://www.xtrend-support.co.uk"
 URL_et9x00 = "http://www.xtrend-support.co.uk"
@@ -45,15 +46,15 @@ do_install() {
 			echo "build=${BUILD_VERSION}" >> ${D}/etc/image-version
 			if [ "${MACHINE}" = "vusolo" -o "${MACHINE}" = "vuduo" -o "${MACHINE}" = "vuuno" -o "${MACHINE}" = "vuultimo" ]; then
 				DRIVERS=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/vuplus/vuplus-dvb-modules-${MACHINE}.bb | cut -b 12-19`
-			elif [ "${MACHINE}" = "et5x00" -o "${MACHINE}" = "et6x00" -o "${MACHINE}" = "et9x00" ]; then
+			elif [ "${MACHINE}" = "et4x00" -o "${MACHINE}" = "et5x00" -o "${MACHINE}" = "et6x00" -o "${MACHINE}" = "et9x00" ]; then
 				DRIVERS=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/etxx00/et-dvb-modules-${MACHINE}.bb | cut -b 12-19`
 			elif [ "${MACHINE}" = "odinm9" ]; then
 				DRIVERS=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/odin/odin-dvb-modules-${MACHINE}.bb | cut -b 12-19`
-			elif [ "${MACHINE}" = "tmtwin" ]; then
+			elif [ "${MACHINE}" = "tmtwin" -o "${MACHINE}" = "tm2t" ]; then
 				DRIVERS=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/technomate/technomate-dvb-modules-${MACHINE}.bb | cut -b 12-19`
 			elif [ "${MACHINE}" = "gb800solo" -o "${MACHINE}" = "gb800se" -o "${MACHINE}" = "gb800ue" -o "${MACHINE}" = "gbquad" ]; then
 				DRIVERS=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/gigablue/gigablue-dvb-modules-${MACHINE}.bb | cut -b 12-19`
-			elif [ "${MACHINE}" = "ventonhdx" ]; then
+			elif [ "${MACHINE}" = "ventonhdx" -o "${MACHINE}" = "ventonhde" ]; then
 				DRIVERS=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/venton/venton-dvb-modules-hdx.bb | cut -b 12-19`
 			else
 				DRIVERS='N/A'

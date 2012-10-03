@@ -9,7 +9,7 @@ require conf/license/license-gplv2.inc
 RDEPENDS_${PN} += "showiframe"
 
 PV = "1.0"
-PR = "r3"
+PR = "r5"
 
 S = "${WORKDIR}/"
 
@@ -83,6 +83,9 @@ do_install_append_vuultimo() {
 }
 
 do_install_append_tmtwin() {
+	mv ${DEPLOY_DIR_IMAGE}/splash.bin ${DEPLOY_DIR_IMAGE}/splash.bmp
+}
+do_install_append_tm2t() {
 	mv ${DEPLOY_DIR_IMAGE}/splash.bin ${DEPLOY_DIR_IMAGE}/splash.bmp
 }
 

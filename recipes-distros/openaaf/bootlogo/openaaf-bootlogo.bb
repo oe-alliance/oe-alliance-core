@@ -8,7 +8,7 @@ require conf/license/license-gplv2.inc
 RDEPENDS_${PN} += "showiframe"
 
 PV = "2.0"
-PR = "r7"
+PR = "r8"
 
 S = "${WORKDIR}"
 
@@ -58,60 +58,64 @@ do_install() {
 }
 
 do_install_append_vuuno() {
-    install -d ${DEPLOY_DIR_IMAGE}
+	install -d ${DEPLOY_DIR_IMAGE}
 	install -m 0755 ${S}/splash.bin ${DEPLOY_DIR_IMAGE}/splash_cfe_auto.bin
 }
 do_install_append_vuultimo() {
-    install -d ${DEPLOY_DIR_IMAGE}
+	install -d ${DEPLOY_DIR_IMAGE}
 	install -m 0755 ${S}/splash.bin ${DEPLOY_DIR_IMAGE}/splash_cfe_auto.bin
 }
 do_install_append_et4x00() {
-    install -d ${DEPLOY_DIR_IMAGE}
+	install -d ${DEPLOY_DIR_IMAGE}
 	install -m 0755 ${S}/splash600.bin ${DEPLOY_DIR_IMAGE}/splash.bin
 }
 do_install_append_et5x00() {
-    install -d ${DEPLOY_DIR_IMAGE}
+	install -d ${DEPLOY_DIR_IMAGE}
 	install -m 0755 ${S}/splash.bin ${DEPLOY_DIR_IMAGE}/splash.bin
 }
 do_install_append_et6x00() {
-    install -d ${DEPLOY_DIR_IMAGE}
+	install -d ${DEPLOY_DIR_IMAGE}
 	install -m 0755 ${S}/splash.bin ${DEPLOY_DIR_IMAGE}/splash.bin
 }
 do_install_append_et9x00() {
-    install -d ${DEPLOY_DIR_IMAGE}
+	install -d ${DEPLOY_DIR_IMAGE}
 	install -m 0755 ${S}/splash.bin ${DEPLOY_DIR_IMAGE}/splash.bin
 }
 
 do_install_append_odinm9() {
-    install -d ${DEPLOY_DIR_IMAGE}
+	install -d ${DEPLOY_DIR_IMAGE}
 	install -m 0755 ${S}/splash.bin ${DEPLOY_DIR_IMAGE}/splash.bin
 }
 
 do_install_append_tmtwin() {
-    install -d ${DEPLOY_DIR_IMAGE}
+	install -d ${DEPLOY_DIR_IMAGE}
+	install -m 0755 ${S}/splash.bin ${DEPLOY_DIR_IMAGE}/splash.bmp
+}
+do_install_append_tm2t() {
+	install -d ${DEPLOY_DIR_IMAGE}
 	install -m 0755 ${S}/splash.bin ${DEPLOY_DIR_IMAGE}/splash.bmp
 }
 
 do_install_append_ventonhdx() {
-    install -d ${DEPLOY_DIR_IMAGE}
+	install -d ${DEPLOY_DIR_IMAGE}
 	install -m 0755 ${S}/splash.bin ${DEPLOY_DIR_IMAGE}/splash.bin
 }
 
 do_install_append_gb800se() {
-    install -d ${DEPLOY_DIR_IMAGE}
+	install -d ${DEPLOY_DIR_IMAGE}
 	install -m 0755 ${S}/splash.bin ${DEPLOY_DIR_IMAGE}/splash.bin
 }
 do_install_append_gb800solo() {
-    install -d ${DEPLOY_DIR_IMAGE}
+	install -d ${DEPLOY_DIR_IMAGE}
 	install -m 0755 ${S}/splash.bin ${DEPLOY_DIR_IMAGE}/splash.bin
 }
 do_install_append_gb800ue() {
-    install -d ${DEPLOY_DIR_IMAGE}
+	install -d ${DEPLOY_DIR_IMAGE}
 	install -m 0755 ${S}/splash.bin ${DEPLOY_DIR_IMAGE}/splash.bin
 	install -m 0755 ${S}/lcdsplash.bin ${DEPLOY_DIR_IMAGE}/lcdsplash.bin
 }
 do_install_append_gbquad() {
-    install -d ${DEPLOY_DIR_IMAGE}
+	install -d ${DEPLOY_DIR_IMAGE}
 	install -m 0755 ${S}/splash.bin ${DEPLOY_DIR_IMAGE}/splash.bin
 	install -m 0755 ${S}/lcdsplash.bin ${DEPLOY_DIR_IMAGE}/lcdsplash.bin
 }

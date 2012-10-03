@@ -13,7 +13,7 @@ inherit gitpkgv
 
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r20"
+PR = "r21"
 
 SRC_URI = "${ENIGMA2_PLUGINS_URI} file://pluginnotwanted"
 
@@ -38,6 +38,8 @@ SRC_URI_append_et9x00 = " \
 SRC_URI_append_odinm9 = " \
 			file://dreambox_bouqueteditor.png"
 SRC_URI_append_tmtwin = " \
+			file://dreambox_bouqueteditor.png"
+SRC_URI_append_tm2t = " \
 			file://dreambox_bouqueteditor.png"
 
 EXTRA_OECONF = " \
@@ -106,6 +108,9 @@ do_install_append_odinm9() {
 	install -m 0644 ${WORKDIR}/dreambox_bouqueteditor.png ${D}/usr/lib/enigma2/python/Plugins/Extensions/WebBouquetEditor/web-data/
 }
 do_install_append_tmtwin() {
+	install -m 0644 ${WORKDIR}/dreambox_bouqueteditor.png ${D}/usr/lib/enigma2/python/Plugins/Extensions/WebBouquetEditor/web-data/
+}
+do_install_append_tm2t() {
 	install -m 0644 ${WORKDIR}/dreambox_bouqueteditor.png ${D}/usr/lib/enigma2/python/Plugins/Extensions/WebBouquetEditor/web-data/
 }
 

@@ -6,7 +6,10 @@ LICENSE = "CLOSED"
 SRCDATE = "20120926"
 KV = "3.5.3"
 PV = "${KV}+${SRCDATE}"
-PR = "r1"
+PR = "r0"
+
+RCONFLICTS_${PN} = "technomate-dvb-modules-tmtwin"
+RREPLACES_${PN} = "technomate-dvb-modules-tmtwin"
 
 SRC_URI = "http://en2.ath.cx/release/images/iqon/dev/bcmlinuxdvb_7335-${KV}-${SRCDATE}.tar.gz"
 

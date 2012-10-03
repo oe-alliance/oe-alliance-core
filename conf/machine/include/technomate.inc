@@ -1,5 +1,5 @@
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS = " \
-	technomate-dvb-modules-${MACHINE} \
+	technomate-dvb-modules \
 	"
 
 DVBPROVIDER = "kernel"
