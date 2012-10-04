@@ -9,7 +9,7 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r81"
+PR = "r82"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -58,6 +58,7 @@ do_install() {
 	install -m 0644 ${S}/enigma2-plugin-extensions-yampmusicplayer_1.6b-2012-05-23_mipsel.ipk ${DEPLOY_DIR_IPK}/3rdparty
 	install -m 0644 ${S}/enigma2-plugin-extensions-rtlxl_0.6_all.ipk ${DEPLOY_DIR_IPK}/3rdparty
 	install -m 0644 ${S}/enigma2-plugin-systemplugins-recordinfobar_1.0-rc15_mipsel.ipk ${DEPLOY_DIR_IPK}/3rdparty
+	install -m 0644 ${S}/enigma2-plugin-extensions-transmission_2.61-r13447_mips32el.ipk ${DEPLOY_DIR_IPK}/3rdparty
 	install -m 0644 ${S}/enigma2-plugin-extensions-webmedia_9.0_oe2.0_mips32el.ipk ${DEPLOY_DIR_IPK}/3rdparty
 	install -m 0644 ${S}/enigma2-plugin-extensions-sherlock-vuplus_5.01_mipsel.ipk ${DEPLOY_DIR_IPK}/3rdparty
 }
