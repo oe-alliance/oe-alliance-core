@@ -7,7 +7,7 @@ MAINTAINER = "openmips team"
 require conf/license/license-gplv2.inc
 
 PV = "${IMAGE_VERSION}"
-PR = "r3${DATETIME}"
+PR = "r4${DATETIME}"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 IMAGE_INSTALL = " \
@@ -53,7 +53,6 @@ ENIGMA2_PLUGINS = "\
 	enigma2-plugin-systemplugins-hotplug \
 	enigma2-plugin-systemplugins-devicemanager \
 	enigma2-plugin-systemplugins-swapmanager \
-	gb-multiquickbutton \
 	enigma2-plugin-extensions-zaphistorybrowser \
 "
 
