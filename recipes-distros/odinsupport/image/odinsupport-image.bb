@@ -22,6 +22,7 @@ IMAGE_INSTALL = " \
 	early-configure \
 	e2fsprogs-mke2fs \
 	e2fsprogs-e2fsck \
+	e2fsprogs-tune2fs
 	fakelocale \
 	libavahi-client \
 	libcrypto-compat \
