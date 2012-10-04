@@ -14,7 +14,7 @@ VER ="6.0"
 PR = "r0"
 
 
-SRC_URI="git://github.com/xtrend-support/panel.git"
+SRC_URI="git://github.com/xtrend-support/xt-panel.git"
 
 S = "${WORKDIR}/git"
 
