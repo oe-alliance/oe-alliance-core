@@ -479,9 +479,9 @@ CONFIG_GETTY=y
 # Linux Ext2 FS Progs
 #
 CONFIG_CHATTR=y
-CONFIG_FSCK=y
+# CONFIG_FSCK is not set
 CONFIG_LSATTR=y
-CONFIG_TUNE2FS=y
+# CONFIG_TUNE2FS is not set
 
 #
 # Linux Module Utilities
