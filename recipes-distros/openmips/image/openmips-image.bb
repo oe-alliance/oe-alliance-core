@@ -7,7 +7,7 @@ MAINTAINER = "openmips team"
 require conf/license/license-gplv2.inc
 
 PV = "${IMAGE_VERSION}"
-PR = "r4${DATETIME}"
+PR = "r5${DATETIME}"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 IMAGE_INSTALL = " \
@@ -54,6 +54,7 @@ ENIGMA2_PLUGINS = "\
 	enigma2-plugin-systemplugins-devicemanager \
 	enigma2-plugin-systemplugins-swapmanager \
 	enigma2-plugin-extensions-zaphistorybrowser \
+	enigma2-plugin-extensions-gbaspectratioswitch \
 "
 
 ENIGMA2_PLUGINS_append_gbquad = "webbrowser-utils enigma2-plugin-extensions-webbrowser"
