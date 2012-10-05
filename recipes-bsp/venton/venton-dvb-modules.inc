@@ -3,7 +3,7 @@ SECTION = "base"
 PRIORITY = "required"
 LICENSE = "CLOSED"
 
-PR = "r5"
+PR = "r6"
 
 PV = "${KV}+${SRCDATE}"
 MACHINE_KERNEL_PR_append = ".0"
