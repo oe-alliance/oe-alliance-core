@@ -11,13 +11,13 @@ DEPENDS = "jpeg libpng zlib"
 
 PV = "1.0"
 PKGV = "1.0"
-PR = "r1"
+PR = "r2"
 
 SRC_URI = "file://grab"
 
 do_install() {
 	install -d "${D}/${bindir}"
-	install -m 0755 grab "${D}/${bindir}"
+	install -m 0755 "${WORKDIR}/grab" "${D}/${bindir}"
 }
 
 
