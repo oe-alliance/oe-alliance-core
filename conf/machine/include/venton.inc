@@ -1,5 +1,5 @@
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS = "\
-	${MACHINE}-dvb-modules \
+	venton-dvb-modules-${MACHINE} \
 	"
 DVBPROVIDER = "kernel"
 
