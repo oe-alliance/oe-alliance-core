@@ -7,7 +7,7 @@ MAINTAINER = "OpenAAF"
 require conf/license/license-gplv2.inc
 
 PV = "${IMAGE_VERSION}"
-PR = "r-${DATETIME}"
+PR = "${BUILD_VERSION}"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 URL = "http://www.aaf-digital.info"
