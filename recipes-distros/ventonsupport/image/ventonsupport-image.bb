@@ -24,6 +24,7 @@ IMAGE_INSTALL = " \
 	e2fsprogs-mke2fs \
 	e2fsprogs-e2fsck \
 	e2fsprogs-tune2fs \
+	e2fsprogs-blkid \
 	fakelocale \
 	libavahi-client \
 	libcrypto-compat \
@@ -61,7 +62,7 @@ ENIGMA2_PLUGINS = "\
 "
 ENIGMA2_INI_PLUGINS = "\
 	enigma2-plugin-picons-default-ventonsupport \
-	enigma2-plugin-extensions-inimytube \ 
+	enigma2-plugin-extensions-inimytube \
 	enigma2-plugin-systemplugins-inivfd \
 "
 

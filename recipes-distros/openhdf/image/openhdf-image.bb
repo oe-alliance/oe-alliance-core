@@ -25,6 +25,7 @@ IMAGE_INSTALL = " \
 	e2fsprogs-mke2fs \
 	e2fsprogs-e2fsck \
 	e2fsprogs-tune2fs \
+	e2fsprogs-blkid \
 	fakelocale \
 	hddtemp \
 	hdparm \
@@ -67,7 +68,7 @@ rootfs_postprocess() {
 
 			cd $curdir
 			if [ -f ../../../meta-oe-alliance/recipes-distros/openhdf/custom/parser.sh ]; then
-				cp ./../../../meta-oe-alliance/recipes-distros/openhdf/custom/parser.sh .			
+				cp ./../../../meta-oe-alliance/recipes-distros/openhdf/custom/parser.sh .
 				./parser.sh
 				rm -rf parser.sh
 			fi
