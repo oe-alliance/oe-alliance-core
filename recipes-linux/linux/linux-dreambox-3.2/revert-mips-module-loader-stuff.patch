@@ -1,0 +1,114 @@
+diff -Naur linux-3.2-broken/arch/mips/include/asm/module.h linux-3.2/arch/mips/include/asm/module.h
+--- linux-3.2-broken/arch/mips/include/asm/module.h	2012-10-04 14:40:09.713467966 +0200
++++ linux-3.2/arch/mips/include/asm/module.h	2012-01-05 00:55:44.000000000 +0100
+@@ -9,7 +9,6 @@
+ 	struct list_head dbe_list;
+ 	const struct exception_table_entry *dbe_start;
+ 	const struct exception_table_entry *dbe_end;
+-	struct mips_hi16 *r_mips_hi16_list;
+ };
+ 
+ typedef uint8_t Elf64_Byte;		/* Type for a 8-bit quantity.  */
+diff -Naur linux-3.2-broken/arch/mips/kernel/module.c linux-3.2/arch/mips/kernel/module.c
+--- linux-3.2-broken/arch/mips/kernel/module.c	2012-10-04 14:40:09.713467966 +0200
++++ linux-3.2/arch/mips/kernel/module.c	2012-01-05 00:55:44.000000000 +0100
+@@ -39,6 +39,8 @@
+ 	Elf_Addr value;
+ };
+ 
++static struct mips_hi16 *mips_hi16_list;
++
+ static LIST_HEAD(dbe_list);
+ static DEFINE_SPINLOCK(dbe_lock);
+ 
+@@ -126,8 +128,8 @@
+ 
+ 	n->addr = (Elf_Addr *)location;
+ 	n->value = v;
+-	n->next = me->arch.r_mips_hi16_list;
+-	me->arch.r_mips_hi16_list = n;
++	n->next = mips_hi16_list;
++	mips_hi16_list = n;
+ 
+ 	return 0;
+ }
+@@ -140,28 +142,18 @@
+ 	return 0;
+ }
+ 
+-static void free_relocation_chain(struct mips_hi16 *l)
+-{
+-	struct mips_hi16 *next;
+-
+-	while (l) {
+-		next = l->next;
+-		kfree(l);
+-		l = next;
+-	}
+-}
+-
+ static int apply_r_mips_lo16_rel(struct module *me, u32 *location, Elf_Addr v)
+ {
+ 	unsigned long insnlo = *location;
+-	struct mips_hi16 *l;
+ 	Elf_Addr val, vallo;
+ 
+ 	/* Sign extend the addend we extract from the lo insn.  */
+ 	vallo = ((insnlo & 0xffff) ^ 0x8000) - 0x8000;
+ 
+-	if (me->arch.r_mips_hi16_list != NULL) {
+-		l = me->arch.r_mips_hi16_list;
++	if (mips_hi16_list != NULL) {
++		struct mips_hi16 *l;
++
++		l = mips_hi16_list;
+ 		while (l != NULL) {
+ 			struct mips_hi16 *next;
+ 			unsigned long insn;
+@@ -196,7 +188,7 @@
+ 			l = next;
+ 		}
+ 
+-		me->arch.r_mips_hi16_list = NULL;
++		mips_hi16_list = NULL;
+ 	}
+ 
+ 	/*
+@@ -209,9 +201,6 @@
+ 	return 0;
+ 
+ out_danger:
+-	free_relocation_chain(l);
+-	me->arch.r_mips_hi16_list = NULL;
+-
+ 	pr_err("module %s: dangerous R_MIPS_LO16 REL relocation\n", me->name);
+ 
+ 	return -ENOEXEC;
+@@ -284,7 +273,6 @@
+ 	pr_debug("Applying relocate section %u to %u\n", relsec,
+ 	       sechdrs[relsec].sh_info);
+ 
+-	me->arch.r_mips_hi16_list = NULL;
+ 	for (i = 0; i < sechdrs[relsec].sh_size / sizeof(*rel); i++) {
+ 		/* This is where to make the change */
+ 		location = (void *)sechdrs[sechdrs[relsec].sh_info].sh_addr
+@@ -308,19 +296,6 @@
+ 			return res;
+ 	}
+ 
+-	/*
+-	 * Normally the hi16 list should be deallocated at this point.  A
+-	 * malformed binary however could contain a series of R_MIPS_HI16
+-	 * relocations not followed by a R_MIPS_LO16 relocation.  In that
+-	 * case, free up the list and return an error.
+-	 */
+-	if (me->arch.r_mips_hi16_list) {
+-		free_relocation_chain(me->arch.r_mips_hi16_list);
+-		me->arch.r_mips_hi16_list = NULL;
+-
+-		return -ENOEXEC;
+-	}
+-
+ 	return 0;
+ }
+ 
