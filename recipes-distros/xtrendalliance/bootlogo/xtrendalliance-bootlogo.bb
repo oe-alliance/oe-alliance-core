@@ -1,8 +1,8 @@
-DESCRIPTION = "Xtrend-Support bootlogo"
+DESCRIPTION = "Xtrend-Alliance bootlogo"
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "proprietary"
-MAINTAINER = "Xtrend-Support"
+MAINTAINER = "Xtrend-Alliance"
 
 require conf/license/license-gplv2.inc
 

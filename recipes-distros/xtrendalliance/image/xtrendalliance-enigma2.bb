@@ -11,7 +11,7 @@ inherit task
 #RCONFLICTS_ = "enigma2-plugin-extensions-permanenttimeshift enigma2-plugin-systemplugins-skinselector"
 #RREPLACES = "enigma2-plugin-extensions-permanenttimeshift enigma2-plugin-systemplugins-skinselector"
 
-DEPENDS = "enigma2-pliplugins xtrendsupport-feeds"
+DEPENDS = "enigma2-pliplugins xtrendalliance-feeds"
 
 RRECOMMENDS = "\
 	enigma2-plugin-drivers-usbserial \

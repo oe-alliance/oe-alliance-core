@@ -1,8 +1,8 @@
-DESCRIPTION = "Xtrend-Support Image"
+DESCRIPTION = "Xtrend-Alliance Image"
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "proprietary"
-MAINTAINER = "Xtrend-Support team"
+MAINTAINER = "Xtrend-Alliance team"
 
 require conf/license/license-gplv2.inc
 
@@ -12,9 +12,9 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 IMAGE_INSTALL = " \
 	oe-alliance-enigma2 \
-	xtrendsupport-version-info \
-	xtrendsupport-enigma2 \
-	xtrendsupport-bootlogo \
+	xtrendalliance-version-info \
+	xtrendalliance-enigma2 \
+	xtrendalliance-bootlogo \
 	${ENIGMA2_PLUGINS} \
 	avahi-daemon \
 	dropbear \
@@ -56,7 +56,7 @@ ENIGMA2_PLUGINS = "\
 "
 
 
-export IMAGE_BASENAME = "xtrendsupport-image"
+export IMAGE_BASENAME = "xtrendalliance-image"
 IMAGE_LINGUAS = ""
 
 IMAGE_FEATURES += "package-management"
