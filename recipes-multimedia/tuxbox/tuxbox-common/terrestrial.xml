@@ -545,6 +545,11 @@
         <transponder centre_frequency="762000000" bandwidth="0" constellation="1" code_rate_hp="1" code_rate_lp="6" guard_interval="3" transmission_mode="1" hierarchy_information="0" inversion="2" />
         <transponder centre_frequency="818000000" bandwidth="0" constellation="1" code_rate_hp="1" code_rate_lp="6" guard_interval="3" transmission_mode="1" hierarchy_information="0" inversion="2" />
     </terrestrial>
+	<terrestrial name="Heidelberg/BadenBaden/Donnersberg/Pforzheim(de)" flags="5">
+		<transponder centre_frequency="786000000" bandwidth="0" constellation="1"/>
+		<transponder centre_frequency="698000000" bandwidth="0" constellation="3"/>
+		<transponder centre_frequency="474000000" bandwidth="0" constellation="3"/>
+	</terrestrial>
     <terrestrial name="Copenhagen(dk)" flags="5">
         <transponder centre_frequency="213000000" bandwidth="0" constellation="2" code_rate_hp="1" code_rate_lp="6" guard_interval="2" transmission_mode="1" hierarchy_information="0" inversion="2" /> 
         <transponder centre_frequency="482000000" bandwidth="0" constellation="2" code_rate_hp="1" code_rate_lp="6" guard_interval="2" transmission_mode="1" hierarchy_information="0" inversion="2" /> 
