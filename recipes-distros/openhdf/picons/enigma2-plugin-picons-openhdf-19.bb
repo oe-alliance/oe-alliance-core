@@ -12,8 +12,8 @@ SRCREV = "${AUTOREV}"
 VER ="1.0"
 PR = "r2"
 
-SRC_URI[md5sum] = "5a641a00bc03dc1e0e7018277fd91b01"
-SRC_URI[sha256sum] = "0c33c4853005cdbcd852f8deae7371b197fc6e41d34d26bdf0b0a5b939ad10e7"
+SRC_URI[md5sum] = "8ee8bfd6802ee99fb38d03ca8d5ffd3c"
+SRC_URI[sha256sum] = "f3ea6f6172dd63d6ec0aee1e2aa47800c994f84a1748a613237478e6765056df"
 
 SRC_URI = "http://addons.hdfreaks.cc/feeds/Picons-GBUE/hdf-picons.tar.gz"
 
