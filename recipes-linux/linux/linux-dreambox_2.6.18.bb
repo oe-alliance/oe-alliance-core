@@ -1,4 +1,4 @@
-PR = "${INC_PR}.11"
+PR = "${INC_PR}.12"
 
 PATCHREV = "ac6cc9511a5f70eaa584c63fc5c3de33cae1d0e7"
 
@@ -23,6 +23,8 @@ SRC_URI = " \
         file://0001-Add-support-for-FTDI-FT4232H-based-devices.patch \
         file://0001-proc-mounts_poll-make-consistent-to-mdstat_poll.patch \
         file://0001-fixed-broken-usb-with-gcc-4.6.x.patch \
+        file://linux-2.6.18-fix-serial.patch \
+        file://stblinux-2.6.18-hw-ecc-compatibility.patch \
         file://linux-2.6.18-include-asm.patch \
         file://linux-2.6.18-include-linux.patch \
         file://linux-2.6.18-mod_devicetable_h.patch \
