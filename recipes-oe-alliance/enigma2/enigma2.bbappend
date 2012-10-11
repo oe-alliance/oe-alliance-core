@@ -1,6 +1,6 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
-PRINC = "25"
+PRINC = "26"
 
 RDEPENDS_${PN} = " \
 	alsa-conf \
@@ -49,12 +49,6 @@ SRC_URI_append_gb800se = " \
 			"
 SRC_URI_append_gb800ue = " \
 			file://gb800-evfd.patch \
-			"
-SRC_URI_append_gb800ue_openvix = " \
-			file://giga_lcd.patch \
-			"
-SRC_URI_append_gbquad_openvix = " \
-			file://giga_lcd.patch \
 			"
 
 FILES_${PN} += " ${bindir} ${sysconfdir}/e2-git.log"
