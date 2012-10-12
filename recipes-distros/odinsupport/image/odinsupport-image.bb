@@ -48,7 +48,8 @@ ENIGMA2_PLUGINS = "\
 	enigma2-plugin-extensions-mediaplayer \
 	enigma2-plugin-extensions-cutlisteditor \
 	enigma2-plugin-systemplugins-videotune \
-	enigma2-plugin-systemplugins-vps \
+	enigma2-plugin-extensions-cooltvguide \
+	enigma2-plugin-extensions-enhancedmoviecenter \
 	enigma2-plugin-extensions-dvdplayer \
 	enigma2-plugin-systemplugins-autoresolution \
 	enigma2-plugin-extensions-autobackup \
