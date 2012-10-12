@@ -8,9 +8,9 @@ require conf/license/license-gplv2.inc
 
 inherit gitpkgv
 SRCREV = "${AUTOREV}"
-PV = "6.0+git${SRCPV}"
-PKGV = "6.0+git${GITPKGV}"
-VER ="6.0"
+PV = "1.0+git${SRCPV}"
+PKGV = "1.0+git${GITPKGV}"
+VER ="1.0"
 PR = "r0"
 
 
@@ -23,4 +23,5 @@ FILES_${PN} = "/usr/*"
 
 do_install() {
 	cp -rp ${S}/usr ${D}/
+	chmod -R 777 ${D}/lib/enigma2/python/SystemPlugins/XTPanel
 }
