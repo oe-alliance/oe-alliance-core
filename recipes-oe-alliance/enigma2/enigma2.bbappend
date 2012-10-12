@@ -60,6 +60,7 @@ FILES_${PN}-po = "${datadir}/enigma2/po/*.po ${datadir}/enigma2/po/*.pot"
 EXTRA_OECONF += "\
 	--with-po \
 	${@base_contains("MACHINE_FEATURES", "fullgraphiclcd", "--with-fullgraphiclcd" , "", d)} \
+	${@base_contains("MACHINE_FEATURES", "gigabluelcd", "--with-gigabluelcd" , "", d)} \
 	"
 
 # some plugins contain so's, their stripped symbols should not end up in the enigma2 package
