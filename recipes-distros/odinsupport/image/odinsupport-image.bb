@@ -41,7 +41,6 @@ IMAGE_INSTALL = " \
 	"
 
 ENIGMA2_PLUGINS = "\
-	enigma2-plugin-extensions-autotimer \
 	enigma2-plugin-extensions-epgsearch \
 	enigma2-plugin-extensions-imdb \
 	enigma2-plugin-extensions-graphmultiepg \
