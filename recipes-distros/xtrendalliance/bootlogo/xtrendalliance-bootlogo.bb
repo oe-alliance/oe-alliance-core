@@ -9,7 +9,7 @@ require conf/license/license-gplv2.inc
 RDEPENDS_${PN} += "showiframe"
 
 PV = "1.0"
-PR = "r0"
+PR = "r1"
 
 S = "${WORKDIR}/"
 
@@ -19,20 +19,17 @@ INITSCRIPT_PARAMS = "start 05 S ."
 inherit update-rc.d
 
 SRC_URI = " \
-		file://bootlogo.sh \
-		 "
-
-SRC_URI = " \
 			file://bootlogo.mvi \
 			file://splash.bin \
+			file://bootlogo.sh \
 "		 
 
 BINARY_VERSION = "1"
-BINARY_VERSION_mipsel = "8"
+BINARY_VERSION_mipsel = "9"
 
 IMAGES_VERSION = "1"
 
-MVISYMLINKS = "bootlogo_wait backdrop switchoff.mvi"
+MVISYMLINKS = "bootlogo_wait backdrop switchoff"
 
 do_install() {
 	install -d ${D}/boot
@@ -45,31 +42,8 @@ do_install() {
 	done;
 	install -d ${D}/${sysconfdir}/init.d
 	install -m 0755 ${S}/bootlogo.sh ${D}/${sysconfdir}/init.d/bootlogo
-}
-
-do_install() {
     install -d ${DEPLOY_DIR_IMAGE}
 	install -m 0755 ${S}/splash.bin ${DEPLOY_DIR_IMAGE}/splash.bin
-}
-
-pkg_preinst() {
-	[ -d /proc/stb ] && mount -t jffs2 mtd:'boot partition' /boot
-	true
-}
-
-pkg_postinst() {
-	[ -d /proc/stb ] && umount /boot
-	true
-}
-
-pkg_prerm() {
-	[ -d /proc/stb ] && mount -t jffs2 mtd:'boot partition' /boot
-	true
-}
-
-pkg_postrm() {
-	[ -d /proc/stb ] && umount /boot
-	true
 }
 
 PACKAGE_ARCH := "${MACHINE_ARCH}"
