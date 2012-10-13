@@ -12,7 +12,7 @@ RREPLACES = "enigma2-plugin-extensions-permanenttimeshift enigma2-plugin-systemp
 
 RRECOMMENDS = "\
 	openaaf-picons-meta \
-	enigma2-pliplugins \
+	enigma2-plugin-settings-default-ventonsupport \
 	enigma2-plugin-vix-magic-sd \
 	enigma2-plugin-vix-magic-hd \
 	enigma2-plugin-vix-magic-hd-lite \
