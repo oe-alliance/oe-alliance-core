@@ -7,8 +7,8 @@ require conf/license/license-gplv2.inc
 
 SRCDATE = "18082012"
 
-SRC_URI[md5sum] = "7663896022389da931dd2d43abc6a725"
-SRC_URI[sha256sum] = "d685c82f2a1b0a6e37f1e1b7b3b8da7720238a716349e00fe99aa1bab45a642d"
+SRC_URI[md5sum] = "258e073ca4312f5740bf2545236cdb2e"
+SRC_URI[sha256sum] = "f48efa771ab2dfd92b5fd6fce9f6bb533cac5ac4f21b93d2e08589b999e9b1d7"
 
 SRC_URI = "http://code-ini.com/software/channelsettings/enigma2-plugin-settings-default-ini-${SRCDATE}.tar.gz"
 
