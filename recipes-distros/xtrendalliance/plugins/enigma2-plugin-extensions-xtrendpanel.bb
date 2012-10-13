@@ -1,8 +1,7 @@
 DESCRIPTION = "Xtrend-Alliance Panel"
-MAINTAINER = "pcd"
+MAINTAINER = "Xtrend-Team"
 SECTION = "base"
 LICENSE = "proprietary"
-PACKAGE_ARCH = "all"
 
 require conf/license/license-gplv2.inc
 
@@ -11,7 +10,7 @@ SRCREV = "${AUTOREV}"
 PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"
 VER ="1.0"
-PR = "r0"
+PR = "r1"
 
 
 SRC_URI="git://github.com/xtrend-alliance/xt-panel.git"
@@ -23,5 +22,5 @@ FILES_${PN} = "/usr/*"
 
 do_install() {
 	cp -rp ${S}/usr ${D}/
-	chmod -R 777 ${D}/lib/enigma2/python/SystemPlugins/XTPanel
+	chmod -R 777 ${D}/usr/lib/enigma2/python/SystemPlugins/XTPanel
 }
