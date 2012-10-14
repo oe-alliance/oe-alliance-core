@@ -1,5 +1,5 @@
 MODULE = "OpenWebif"
-PRINC = "5"
+PRINC = "6"
 DEPENDS += "enigma2"
 
 SRC_URI = "git://github.com/oe-alliance/e2openplugin-${MODULE}.git;protocol=git"
@@ -30,6 +30,7 @@ python do_package_prepend () {
 		('gbquad', 'gbquad.jpg', 'gigablue_black.png'),
 		('ventonhdx', 'ini-3000.jpg', 'ini-3000.png'),
 		('ventonhde', 'ini-3000.jpg', 'ini-3000.png'),
+		('xp1000', 'xp1000.jpg', 'xp1000.png'),
 	]
 	import os
 	top = '${D}${PLUGINPATH}/public/images/'

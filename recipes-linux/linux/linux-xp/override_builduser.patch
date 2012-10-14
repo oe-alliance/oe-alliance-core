@@ -1,0 +1,14 @@
+diff --git a/scripts/mkcompile_h b/scripts/mkcompile_h
+index f221ddf..7cea210 100755
+--- a/scripts/mkcompile_h
++++ b/scripts/mkcompile_h
+@@ -53,6 +53,9 @@ else
+ 	LINUX_COMPILE_HOST=$KBUILD_BUILD_HOST
+ fi
+ 
++LINUX_COMPILE_BY="no"
++LINUX_COMPILE_HOST="body"
++
+ UTS_VERSION="#$VERSION"
+ CONFIG_FLAGS=""
+ if [ -n "$SMP" ] ; then CONFIG_FLAGS="SMP"; fi
