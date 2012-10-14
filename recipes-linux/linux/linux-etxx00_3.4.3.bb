@@ -10,7 +10,7 @@ SRC_URI[sha256sum] = "d81d051e6f702fc4bda0cb6b18db7319ed3b36401a924b682b0b0b94e0
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-MACHINE_KERNEL_PR_append = ".10"
+MACHINE_KERNEL_PR_append = ".11"
 
 # By default, kernel.bbclass modifies package names to allow multiple kernels
 # to be installed in parallel. We revert this change and rprovide the versioned
@@ -73,6 +73,7 @@ kernel_do_install_append() {
 MTD_DEVICE_et9x00 = "mtd1"
 MTD_DEVICE_et6x00 = "mtd1"
 MTD_DEVICE_et5x00 = "mtd1"
+MTD_DEVICE_et4x00 = "mtd1"
 MTD_DEVICE_odinm9 = "mtd2"
 
 pkg_postinst_kernel-image () {
