@@ -2,7 +2,7 @@ DESCRIPTION = "OpenHDF Image"
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "proprietary"
-MAINTAINER = "openmips Team mod by HDF Team"
+MAINTAINER = "HDFreaks Team"
 
 require conf/license/license-gplv2.inc
 
@@ -48,10 +48,11 @@ IMAGE_INSTALL = " \
 ENIGMA2_PLUGINS = " "
 ENIGMA2_PLUGINS_append_gb800solo = ""
 ENIGMA2_PLUGINS_append_gb800se = ""
-ENIGMA2_PLUGINS_append_gb800ue = "python-imaging"
-ENIGMA2_PLUGINS_append_gb800quad = "python-imaging webbrowser-utils enigma2-plugin-extensions-webbrowser"
+ENIGMA2_PLUGINS_append_gb800ue = "python-imaging enigma2-plugin-extensions-etportal"
+ENIGMA2_PLUGINS_append_gbquad = "python-imaging webbrowser-utils enigma2-plugin-extensions-webbrowser enigma2-plugin-extensions-etportal"
+ENIGMA2_PLUGINS_append_tmtwin = "enigma2-plugin-systemplugins-osd3dsetup enigma2-plugin-extensions-etportal"
 
-export IMAGE_BASENAME = "OpenHDF-Image-PLi3.0"
+export IMAGE_BASENAME = "OpenHDF-Image"
 IMAGE_LINGUAS = ""
 
 IMAGE_FEATURES += "package-management"
@@ -61,6 +62,16 @@ inherit image
 rootfs_postprocess() {
 			curdir=$PWD
 			cd ${IMAGE_ROOTFS}
+
+			# softcam startup at boot
+			sed -i 's/: exit 0//g' etc/init.d/bootmisc.sh
+			echo "if [ -e /etc/init.d/softcam ] ; then" >> etc/init.d/bootmisc.sh
+			echo "        /etc/init.d/softcam restart " >> etc/init.d/bootmisc.sh
+			echo "fi" >> etc/init.d/bootmisc.sh
+			echo "if [ -e /etc/init.d/cardserver ] ; then" >> etc/init.d/bootmisc.sh
+			echo "        /etc/init.d/cardserver restart " >> etc/init.d/bootmisc.sh
+			echo ": exit 0" >> etc/init.d/bootmisc.sh
+			echo "fi" >> etc/init.d/bootmisc.sh
 
 			# because we're so used to it
 			ln -s opkg usr/bin/ipkg || true
@@ -72,6 +83,7 @@ rootfs_postprocess() {
 				./parser.sh
 				rm -rf parser.sh
 			fi
+			
 
 }
 

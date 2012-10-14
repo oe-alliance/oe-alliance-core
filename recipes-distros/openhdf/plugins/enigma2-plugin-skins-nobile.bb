@@ -6,13 +6,13 @@ MAINTAINER = "Nobile"
 
 require conf/license/license-gplv2.inc
 
-SRC_URI[md5sum] = "d917ac51301b4910a365dd8080f2de5e"
-SRC_URI[sha256sum] = "bdb2826342cca78e67b7291f5b58f3781d3c836b59af8554d854be3b1b0a903e"
+SRC_URI[md5sum] = "3ebfc56b70a41c4367c65bd72a45a7d9"
+SRC_URI[sha256sum] = "01cded3b447b87035482eaa8a6205739c077bfb0316c227e9d2532a11344c8ee"
 
 inherit gitpkgv
 SRCREV = "${AUTOREV}"
 VER ="1.0"
-PR = "r5"
+PR = "r9"
 
 SRC_URI = "http://addons.hdfreaks.cc/feeds/*git/enigma2-plugins-skins-nobile_hdf_mod.tar.gz"
 
@@ -28,5 +28,5 @@ do_compile() {
 do_install() {
 install -d ${D}/usr/share
 cp -rp ${S}/usr/share/* ${D}/usr/share/
-chmod -R a+rX ${D}/usr/share/enigma2/
+chmod -R 777 ${D}/usr/share/enigma2/
 }
