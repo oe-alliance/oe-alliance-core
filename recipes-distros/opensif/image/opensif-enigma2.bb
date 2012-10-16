@@ -4,7 +4,7 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3
                     file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
 
 PV = "1.0"
-PR = "r10"
+PR = "r11"
 
 INITSCRIPT_NAME = "swap"
 INITSCRIPT_PARAMS = "start 60 S ."
@@ -30,6 +30,7 @@ RRECOMMENDS = "\
 	enigma2-plugin-extensions-openairplay \
 	enigma2-plugin-extensions-graphmultiepg \
 	enigma2-plugin-systemplugins-skinselector \
+	enigma2-plugin-extensions-mediaplayer \
 	\
 	${@base_contains("MACHINE_FEATURES", "3dtv", "enigma2-plugin-systemplugins-osd3dsetup" , "", d)} \
 	"
