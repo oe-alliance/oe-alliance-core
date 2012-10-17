@@ -117,7 +117,9 @@ do_patch_prepend(){
 	elif "${MACHINE}" == "ventonhde":
 		MACHINE1="Venton HDe"
 	elif "${MACHINE}" == "xp1000":
-		MACHINE1="MaxDigital XP1000"	
+		MACHINE1="MaxDigital XP1000"
+	elif "${MACHINE}" == "ebox5000":
+		MACHINE1="MixOS 5000"	
 	import os
 	os.system("find ./ -name \"*.po\" > ./po_list")
 	os.system("find ./ -name \"*.py\" >> ./po_list")
@@ -168,6 +170,10 @@ python do_setup_po_ipk () {
 		MACHINE1="Venton HD"
 	elif "${MACHINE}" == "ventonhde":
 		MACHINE1="Venton HDe"
+	elif "${MACHINE}" == "xp1000":
+		MACHINE1="MaxDigital XP1000"
+	elif "${MACHINE}" == "ebox5000":
+		MACHINE1="MixOS 5000"	
 	import os
 	os.system("find ./ -name \"*.po\" > ./po_list")
 	os.system("find ./ -name \"*.py\" >> ./po_list")

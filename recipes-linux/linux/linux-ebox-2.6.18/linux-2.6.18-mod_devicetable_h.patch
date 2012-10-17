@@ -1,0 +1,11 @@
+--- linux-2.6.18/include/linux/mod_devicetable.h-orig	2006-09-20 05:42:06.000000000 +0200
++++ linux-2.6.18/include/linux/mod_devicetable.h	2012-08-12 04:50:50.000000000 +0200
+@@ -251,7 +251,7 @@
+ 
+ /* Input */
+ #define INPUT_DEVICE_ID_EV_MAX		0x1f
+-#define INPUT_DEVICE_ID_KEY_MAX		0x1ff
++#define INPUT_DEVICE_ID_KEY_MAX		0x2ff
+ #define INPUT_DEVICE_ID_REL_MAX		0x0f
+ #define INPUT_DEVICE_ID_ABS_MAX		0x3f
+ #define INPUT_DEVICE_ID_MSC_MAX		0x07

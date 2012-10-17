@@ -1,0 +1,31 @@
+diff --git a/include/linux/libata.h b/include/linux/libata.h
+index d909da0..ce12660 100644
+--- a/include/linux/libata.h
++++ b/include/linux/libata.h
+@@ -1220,26 +1220,13 @@ static inline u8 ata_busy_wait(struct ata_port *ap, unsigned int bits,
+ 			       unsigned int max)
+ {
+ 	u8 status;
+-	unsigned int org_max = max;
+-	unsigned long state_d0_timeout = 5000000;
+ 
+-d0_retry:
+ 	do {
+ 		udelay(10);
+ 		status = ata_chk_status(ap);
+ 		max--;
+ 	} while (status != 0xff && (status & bits) && (max > 0));
+ 
+-	if (!max && status == 0xD0 && state_d0_timeout >= (10000 + org_max*10)) {
+-		max = org_max;
+-		state_d0_timeout -= 10000;
+-		state_d0_timeout -= max * 10;
+-		printk(KERN_WARNING "ATA: ata_busy_wait 0xD0 timeout spinup?!? %lu msecs left\n",
+-			state_d0_timeout/1000);
+-		mdelay(10);
+-		goto d0_retry;
+-	}
+-
+ 	return status;
+ }
+ 

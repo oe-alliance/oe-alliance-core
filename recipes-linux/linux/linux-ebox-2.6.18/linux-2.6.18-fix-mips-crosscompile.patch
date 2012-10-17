@@ -1,0 +1,23 @@
+diff -Naur linux-2.6.18-org/arch/mips/Makefile linux-2.6.18/arch/mips/Makefile
+--- linux-2.6.18-org/arch/mips/Makefile	2010-02-10 15:07:09.000000000 +0100
++++ linux-2.6.18/arch/mips/Makefile	2010-02-10 15:07:56.000000000 +0100
+@@ -18,15 +18,15 @@
+ # Select the object file format to substitute into the linker script.
+ #
+ ifdef CONFIG_CPU_LITTLE_ENDIAN
+-32bit-tool-prefix	= mipsel-linux-
+-64bit-tool-prefix	= mips64el-linux-
++32bit-tool-prefix	= mipsel-oe-linux-
++64bit-tool-prefix	= mips64el-oe-linux-
+ 32bit-bfd		= elf32-tradlittlemips
+ 64bit-bfd		= elf64-tradlittlemips
+ 32bit-emul		= elf32ltsmip
+ 64bit-emul		= elf64ltsmip
+ else
+-32bit-tool-prefix	= mips-linux-
+-64bit-tool-prefix	= mips64-linux-
++32bit-tool-prefix	= mips-oe-linux-
++64bit-tool-prefix	= mips64-oe-linux-
+ 32bit-bfd		= elf32-tradbigmips
+ 64bit-bfd		= elf64-tradbigmips
+ 32bit-emul		= elf32btsmip

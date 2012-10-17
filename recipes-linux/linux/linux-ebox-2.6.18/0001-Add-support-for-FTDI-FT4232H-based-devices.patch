@@ -1,0 +1,74 @@
+From 832face506c5d3380ffd0dbaf493bedb73df2af9 Mon Sep 17 00:00:00 2001
+From: Andreas Monzner <andreas.monzner@multimedia-labs.de>
+Date: Mon, 20 Feb 2012 22:49:55 +0100
+Subject: [PATCH] Add support for FTDI FT4232H based devices
+
+---
+ drivers/usb/serial/ftdi_sio.c |   12 +++++++++---
+ drivers/usb/serial/ftdi_sio.h |   12 ++++++------
+ 2 files changed, 15 insertions(+), 9 deletions(-)
+
+diff --git a/drivers/usb/serial/ftdi_sio.c b/drivers/usb/serial/ftdi_sio.c
+index c6115aa..fb1c439 100644
+--- a/drivers/usb/serial/ftdi_sio.c
++++ b/drivers/usb/serial/ftdi_sio.c
+@@ -315,6 +315,7 @@ static struct usb_device_id id_table_combined [] = {
+ 	{ USB_DEVICE(FTDI_VID, FTDI_8U232AM_PID) },
+ 	{ USB_DEVICE(FTDI_VID, FTDI_8U232AM_ALT_PID) },
+ 	{ USB_DEVICE(FTDI_VID, FTDI_8U2232C_PID) },
++	{ USB_DEVICE(FTDI_VID, FTDI_4232H_PID) },
+ 	{ USB_DEVICE(FTDI_VID, FTDI_MICRO_CHAMELEON_PID) },
+ 	{ USB_DEVICE(FTDI_VID, FTDI_RELAIS_PID) },
+ 	{ USB_DEVICE(INTERBIOMETRICS_VID, INTERBIOMETRICS_IOBOARD_PID) },
+@@ -977,10 +978,15 @@ static void ftdi_determine_type(struct usb_serial_port *port)
+ 		/* Determine interface code. */
+ 		inter = serial->interface->altsetting->desc.bInterfaceNumber;
+ 		if (inter == 0) {
+-			priv->interface = PIT_SIOA;
+-		} else {
+-			priv->interface = PIT_SIOB;
++			priv->interface = INTERFACE_A;
++		} else  if (inter == 1) {
++			priv->interface = INTERFACE_B;
++		} else  if (inter == 2) {
++			priv->interface = INTERFACE_C;
++		} else  if (inter == 3) {
++			priv->interface = INTERFACE_D;
+ 		}
++
+ 		/* BM-type devices have a bug where bcdDevice gets set
+ 		 * to 0x200 when iSerialNumber is 0.  */
+ 		if (version < 0x500) {
+diff --git a/drivers/usb/serial/ftdi_sio.h b/drivers/usb/serial/ftdi_sio.h
+index 7729999..3e15c0a 100644
+--- a/drivers/usb/serial/ftdi_sio.h
++++ b/drivers/usb/serial/ftdi_sio.h
+@@ -27,6 +27,7 @@
+ #define FTDI_8U232AM_PID 0x6001 /* Similar device to SIO above */
+ #define FTDI_8U232AM_ALT_PID 0x6006 /* FTDI's alternate PID for above */
+ #define FTDI_8U2232C_PID 0x6010 /* Dual channel device */
++#define FTDI_4232H_PID	0x6011  /* Quad channel device */
+ #define FTDI_RELAIS_PID	0xFA10  /* Relais device from Rudolf Gugler */
+ #define FTDI_NF_RIC_VID	0x0DCD	/* Vendor Id */
+ #define FTDI_NF_RIC_PID	0x0001	/* Product Id */
+@@ -495,12 +496,11 @@
+  *
+  */
+ 
+-/* Port Identifier Table */
+-#define PIT_DEFAULT 		0 /* SIOA */
+-#define PIT_SIOA		1 /* SIOA */
+-/* The device this driver is tested with one has only one port */
+-#define PIT_SIOB		2 /* SIOB */
+-#define PIT_PARALLEL		3 /* Parallel */
++/* Interface indices for FT2232, FT2232H and FT4232H devices */
++#define INTERFACE_A		1
++#define INTERFACE_B		2
++#define INTERFACE_C		3
++#define INTERFACE_D		4
+ 
+ /* FTDI_SIO_RESET */
+ #define FTDI_SIO_RESET_REQUEST FTDI_SIO_RESET
+-- 
+1.7.9
+

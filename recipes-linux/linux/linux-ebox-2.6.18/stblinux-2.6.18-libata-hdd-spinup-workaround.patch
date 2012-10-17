@@ -1,0 +1,27 @@
+--- a/include/linux/libata.h	2012-01-07 21:40:15.000000000 +0100
++++ b/include/linux/libata.h	2012-01-10 11:27:43.835863448 +0100
+@@ -1244,7 +1244,23 @@
+ 
+ static inline u8 ata_wait_idle(struct ata_port *ap)
+ {
+-	u8 status = ata_busy_wait(ap, ATA_BUSY | ATA_DRQ, 3000);
++	int d0_tries = 167; // 5 seconds
++	u8 status;
++
++d0_retry:
++	status = ata_busy_wait(ap, ATA_BUSY | ATA_DRQ, 3000); // 30ms
++
++	if (status == 0xD0) {
++		if (d0_tries == 167)
++			printk(KERN_WARNING "ATA: start status D0 spinup wait!\n");
++		if (d0_tries) {
++			--d0_tries;
++			goto d0_retry;
++		}
++		printk(KERN_WARNING "ATA: status D0 spinup wait failed!!\n");
++	}
++	else if (d0_tries < 167)
++		printk(KERN_WARNING "ATA: status D0 spinup wait completed after %d msecs!\n", (167 - d0_tries) * 30);
+ 
+ 	if (status != 0xff && (status & (ATA_BUSY | ATA_DRQ))) {
+ 		//unsigned long l = ap->ioaddr.status_addr;
