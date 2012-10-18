@@ -28,7 +28,7 @@ PREFERRED_PROVIDER_virtual/kernel = "linux-etxx00"
 PREFERRED_PROVIDER_virtual/blindscan-dvbs = "et-blindscan-dvbs-utils"
 
 PREFERRED_VERSION_linux-etxx00 = "3.6.0"
-PREFERRED_VERSION_linux-libc-headers = "3.4"
+PREFERRED_VERSION_linux-libc-headers = "3.6"
 
 KERNEL_IMAGETYPE = "vmlinux"
 KERNEL_OUTPUT = "${KERNEL_IMAGETYPE}"
