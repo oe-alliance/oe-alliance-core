@@ -25,10 +25,10 @@ DEFAULTTUNE = "mips32el"
 
 GLIBC_EXTRA_OECONF = "--with-tls --with-__thread"
 
-PREFERRED_PROVIDER_virtual/kernel = "linux-etxx00"
+PREFERRED_PROVIDER_virtual/kernel = "linux-odin"
 PREFERRED_PROVIDER_virtual/blindscan-dvbs = "odin-blindscan-dvbs-utils"
 
-PREFERRED_VERSION_linux-etxx00 = "3.4.3"
+PREFERRED_VERSION_linux-odin = "3.4.3"
 PREFERRED_VERSION_linux-libc-headers = "3.4"
 
 KERNEL_IMAGETYPE = "vmlinux"
