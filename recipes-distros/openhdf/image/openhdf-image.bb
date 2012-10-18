@@ -63,16 +63,6 @@ rootfs_postprocess() {
 			curdir=$PWD
 			cd ${IMAGE_ROOTFS}
 
-			# softcam startup at boot
-			sed -i 's/: exit 0//g' etc/init.d/bootmisc.sh
-			echo "if [ -e /etc/init.d/softcam ] ; then" >> etc/init.d/bootmisc.sh
-			echo "        /etc/init.d/softcam restart " >> etc/init.d/bootmisc.sh
-			echo "fi" >> etc/init.d/bootmisc.sh
-			echo "if [ -e /etc/init.d/cardserver ] ; then" >> etc/init.d/bootmisc.sh
-			echo "        /etc/init.d/cardserver restart " >> etc/init.d/bootmisc.sh
-			echo ": exit 0" >> etc/init.d/bootmisc.sh
-			echo "fi" >> etc/init.d/bootmisc.sh
-
 			# because we're so used to it
 			ln -s opkg usr/bin/ipkg || true
 			ln -s opkg-cl usr/bin/ipkg-cl || true
@@ -83,7 +73,6 @@ rootfs_postprocess() {
 				./parser.sh
 				rm -rf parser.sh
 			fi
-			
 
 }
 
