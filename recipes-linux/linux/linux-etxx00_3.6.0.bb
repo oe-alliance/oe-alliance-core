@@ -3,14 +3,14 @@ SECTION = "kernel"
 LICENSE = "GPLv2"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-KERNEL_RELEASE = "3.4.3"
+KERNEL_RELEASE = "3.6.0"
 
-SRC_URI[md5sum] = "57a986f69a0f0601b77710b4829e4b47"
-SRC_URI[sha256sum] = "d81d051e6f702fc4bda0cb6b18db7319ed3b36401a924b682b0b0b94e0c23ad7"
+SRC_URI[md5sum] = "fad4c270fe68fcc8d15258c868bc2733"
+SRC_URI[sha256sum] = "df8c6071cbdd6a709aebb8a272dca60791edb379103597670609ef90e148d8bb"
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-MACHINE_KERNEL_PR_append = ".11"
+MACHINE_KERNEL_PR_append = ".1"
 
 # By default, kernel.bbclass modifies package names to allow multiple kernels
 # to be installed in parallel. We revert this change and rprovide the versioned
@@ -22,31 +22,24 @@ RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
 
 SRC_URI += "http://www.et-view.com/download/linux-${PV}.tar.gz \
 	file://defconfig \
-	file://fix-proc-cputype.patch \
+	file://0001-Revert-MIPS-mm-Add-compound-tail-page-_mapcount-when.patch \
 	file://0001-Revert-MIPS-Add-fast-get_user_pages.patch \
-	file://iosched-slice_idle-1.patch \
 	file://add-dmx-source-timecode.patch \
-	file://dvb-usb-af9035.patch \
-	file://tda18218-7mhz-lopass.patch \
-	file://dvb-usb-a867.patch \
-	file://dvb-usb-rtl2832.patch \
-	file://cxd2820r-enable-LNA-for-DVB-T.patch \
-	file://cxd2820r-changed-condition-to-break-out-from-wait-lock-loop.patch \
-	file://cxd2820r-output-full-range-SNR.patch \
-	file://cinergy_s2_usb_r2.patch \
-	file://as102-scale-MER-to-full-range.patch \
-	file://as102-adjust-signal-strength-report.patch \
-	file://em28xx-dvb-stop-URBs-when-stopping-the-streaming.patch \
 	file://af9015-output-full-range-SNR.patch \
-	file://it913x-switch-off-PID-filter-by-default.patch \
-	file://it913x-fix-bulk-read-write-retry-loop.patch \
+	file://as102-adjust-signal-strength-report.patch \
+	file://as102-scale-MER-to-full-range.patch \
+	file://cinergy_s2_usb_r2.patch \
+	file://cxd2820r-output-full-range-SNR.patch \
+	file://dvb-usb-a867.patch \
 	file://dvb-usb-dib0700-disable-sleep.patch \
+	file://dvb-usb-rtl2832.patch \
 	file://dvb_usb_disable_rc_polling.patch \
-	file://cifs-fix-parsing-of-password-mount-option.patch \
 	file://em28xx_add_terratec_h5_rev3.patch \
+	file://fix-proc-cputype.patch \
+	file://iosched-slice_idle-1.patch \
+	file://it913x-switch-off-PID-filter-by-default.patch \
+	file://tda18218-7mhz-lopass.patch \
 	"
-
-SRC_URI_append_odinm9 = " file://board.patch"
 
 S = "${WORKDIR}/linux-${PV}"
 
@@ -74,7 +67,6 @@ MTD_DEVICE_et9x00 = "mtd1"
 MTD_DEVICE_et6x00 = "mtd1"
 MTD_DEVICE_et5x00 = "mtd1"
 MTD_DEVICE_et4x00 = "mtd1"
-MTD_DEVICE_odinm9 = "mtd2"
 
 pkg_postinst_kernel-image () {
 	if [ "x$D" == "x" ]; then

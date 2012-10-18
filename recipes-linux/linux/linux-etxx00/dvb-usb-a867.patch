@@ -103,11 +103,11 @@ diff --git a/drivers/media/dvb/dvb-usb/Kconfig b/drivers/media/dvb/dvb-usb/Kconf
 index d3ffd16..20024c9 100644
 --- a/drivers/media/dvb/dvb-usb/Kconfig
 +++ b/drivers/media/dvb/dvb-usb/Kconfig
-@@ -434,3 +434,11 @@ config DVB_USB_RTL28XXU
- 	select MEDIA_TUNER_MXL5005S if !MEDIA_TUNER_CUSTOMISE
- 	help
- 	  Say Y here to support the Realtek RTL28xxU DVB USB receiver.
-+
+@@ -434,4 +434,10 @@ config DVB_USB_AF9035
+	select MEDIA_TUNER_TDA18218 if !MEDIA_TUNER_CUSTOMISE
+	help
+	  Say Y here to support the Afatech AF9035 based DVB USB receiver.
+-
 +config DVB_USB_A867
 +	tristate "Avermedia A867 DVB support"
 +	depends on DVB_USB
@@ -119,9 +119,9 @@ diff --git a/drivers/media/dvb/dvb-usb/Makefile b/drivers/media/dvb/dvb-usb/Make
 index 32489a8..7e2bcbd 100644
 --- a/drivers/media/dvb/dvb-usb/Makefile
 +++ b/drivers/media/dvb/dvb-usb/Makefile
-@@ -114,6 +114,12 @@ obj-$(CONFIG_DVB_USB_MXL111SF) += mxl111sf-tuner.o
- dvb-usb-rtl28xxu-objs = rtl28xxu.o
- obj-$(CONFIG_DVB_USB_RTL28XXU) += dvb-usb-rtl28xxu.o
+@@ -113,6 +113,12 @@ obj-$(CONFIG_DVB_USB_RTL28XXU) += dvb-usb-rtl28xxu.o
+ dvb-usb-af9035-objs = af9035.o
+ obj-$(CONFIG_DVB_USB_AF9035) += dvb-usb-af9035.o
  
 +dvb-usb-a867-objs := a867_af903x-core.o a867_af903x-devices.o a867_af903x-drv.o \
 +		     a867_af903x-fe.o a867_af903x-tuner.o a867_cmd.o a867_standard.o \
