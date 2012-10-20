@@ -8,7 +8,7 @@ inherit gitpkgv
 PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"
 PR = "r0"
-SRCREV = ""
+SRCREV = "${AUTOREV}"
 
 PV_font-daconi-digital-watch = "${PV}"
 PR_font-daconi-digital-watch = "r0"

@@ -8,7 +8,7 @@ inherit gitpkgv
 PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"
 PR = "r1"
-SRCREV = ""
+SRCREV = "${AUTOREV}"
 
 SRC_URI = "git://github.com/SIFTeam/skin-adriatic.git;protocol=git"
 

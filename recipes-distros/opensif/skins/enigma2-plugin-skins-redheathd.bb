@@ -8,7 +8,7 @@ inherit gitpkgv
 PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"
 PR = "r0"
-SRCREV = ""
+SRCREV = "${AUTOREV}"
 
 PV_font-nmsbd2 = "20120113"
 PR_font-nmsbd2 = "r0"

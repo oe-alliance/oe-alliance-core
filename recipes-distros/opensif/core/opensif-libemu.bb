@@ -7,7 +7,7 @@ RDEPENDS = "sockets curl python opkg libpcre libxml2"
 require conf/license/license-gplv2.inc
 
 inherit gitpkgv
-SRCREV = ""
+SRCREV = "${AUTOREV}"
 PV = "1.8-git${SRCPV}"
 PKGV = "1.8-git${GITPKGV}"
 PR = "r0"
