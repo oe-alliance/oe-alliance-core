@@ -9,7 +9,7 @@ require conf/license/license-gplv2.inc
 RDEPENDS_${PN} += "showiframe"
 
 PV = "${BINARY_VERSION}.${IMAGES_VERSION}"
-PR = "r3"
+PR = "r5"
 
 S = "${WORKDIR}"
 
@@ -31,7 +31,7 @@ SRC_URI_append_et9x00 = " file://splash.bin"
 SRC_URI_append_odinm9 = " file://splash.bin"
 SRC_URI_append_ventonhdx = " file://splash.bin"
 SRC_URI_append_tmtwin = " file://splash.bmp"
-SRC_URI_append_ixuss-one = " file://splash.bmp"
+SRC_URI_append_ixuss-one = " file://splash.bin"
 
 BINARY_VERSION = "1"
 BINARY_VERSION_mipsel = "8"
@@ -111,6 +111,7 @@ do_install_append_ventonhdx() {
 }
 do_install_append_ixuss-one() {
 	install -d ${DEPLOY_DIR_IMAGE}
-	install -m 0644 ${S}/splash.bmp ${DEPLOY_DIR_IMAGE}/logo.bmp
+	install -m 0644 ${S}/splash.bin ${DEPLOY_DIR_IMAGE}/splash.bin
+}
 
 FILES_${PN} = "/boot /usr/share /etc/init.d"
