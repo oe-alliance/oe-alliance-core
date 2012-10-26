@@ -1,8 +1,8 @@
-SRCDATE = "20120824"
+SRCDATE = "20121025"
 
 require vuplus-dvb-modules.inc
 
 DOWNLOADMACHINE = "${MACHINE}"
 
-SRC_URI[md5sum] = "8e27af7047cdfea1ead22f11b5a5f9b3"
-SRC_URI[sha256sum] = "99cd8adef8a728aa9fc889b9109071e2120ae90e251f9dca86844d4982afd201"
+SRC_URI[md5sum] = "b47fcb552cedd4cc11c5093b0a291cef"
+SRC_URI[sha256sum] = "e57e544b12beccec5a2c9fba3b36c52f2876a4cd43be5da39fd2f4a3fc39b9c1"
