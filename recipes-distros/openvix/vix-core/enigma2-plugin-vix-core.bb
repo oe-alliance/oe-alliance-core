@@ -6,7 +6,7 @@ require conf/license/license-gplv2.inc
 PACKAGE_ARCH := "${MACHINE_ARCH}"
 
 DEPENDS = "enigma2 mtd-utils python-process libcrypto-compat"
-RDEPENDS = "mtd-utils python-process libcrypto-compat"
+RDEPENDS = "mtd-utils python-process libcrypto-compat e2fsprogs-blkid"
 
 DEPENDS_append_gb800solo = " gigablue-cfe"
 RDEPENDS_append_gb800solo = " gigablue-cfe"
@@ -21,7 +21,7 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "2.1+git${SRCPV}"
 PKGV = "2.1+git${GITPKGV}"
-PR = "r2"
+PR = "r3"
 
 SRC_URI="git://github.com/OpenViX/vix-core.git;protocol=git"
 
