@@ -53,6 +53,7 @@ ENIGMA2_PLUGINS = "\
 	enigma2-plugin-systemplugins-autoresolution \
 	enigma2-plugin-systemplugins-softwaremanager \
 	enigma2-plugin-systemplugins-hotplug \
+	enigma2-plugin-systemplugins-osdpositionsetup \
 "
 
 
