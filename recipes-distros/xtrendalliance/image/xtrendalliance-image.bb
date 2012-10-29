@@ -54,7 +54,7 @@ ENIGMA2_PLUGINS = "\
 	enigma2-plugin-systemplugins-softwaremanager \
 	enigma2-plugin-systemplugins-hotplug \
 	enigma2-plugin-systemplugins-osdpositionsetup \
-	enigma2-plugin-extensions-et-portal_inofficial \
+	enigma2-plugin-extensions-et-portal-inofficial \
 "
 
 

@@ -32,6 +32,6 @@ DEPENDS = "enigma2 enigma2-3rdparty-plugins"
 
 do_install() {
 	install -d 0644 ${DEPLOY_DIR_IPK}/3rdparty
-	install -m 0644 ${S}/enigma2-plugin-extensions-et-portal_inofficial-1.8_all.ipk ${DEPLOY_DIR_IPK}/3rdparty
+	install -m 0644 ${S}/enigma2-plugin-extensions-et-portal-inofficial_1.8_all.ipk ${DEPLOY_DIR_IPK}/3rdparty
 }
 
