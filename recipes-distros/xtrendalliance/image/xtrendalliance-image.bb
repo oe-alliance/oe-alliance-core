@@ -57,6 +57,10 @@ ENIGMA2_PLUGINS = "\
 	enigma2-plugin-extensions-et-portal-inofficial \
 "
 
+ENIGMA2_PLUGINS_append_et4x00 = "enigma2-plugin-extensions-et-webbrowser"
+ENIGMA2_PLUGINS_append_et6x00 = "enigma2-plugin-extensions-et-webbrowser"
+ENIGMA2_PLUGINS_append_et9x00 = "enigma2-plugin-extensions-et-webbrowser"
+
 
 export IMAGE_BASENAME = "xtrendalliance-image"
 IMAGE_LINGUAS = ""
