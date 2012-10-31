@@ -9,7 +9,7 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r1"
+PR = "r2"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -32,5 +32,7 @@ DEPENDS = "enigma2 enigma2-3rdparty-plugins"
 
 do_install() {
 	install -d 0644 ${DEPLOY_DIR_IPK}/3rdparty
+
+  install -m 0644 ${S}/enigma2-plugin-pli-softcamsetup_3.0-r2_mips32el.ipk ${DEPLOY_DIR_IPK}/3rdparty 
 }
 

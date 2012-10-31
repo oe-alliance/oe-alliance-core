@@ -15,8 +15,6 @@ DEPENDS = "enigma2-pliplugins xtrendalliance-feeds"
 
 RRECOMMENDS = "\
 	enigma2-plugin-drivers-usbserial \
-	enigma2-plugin-extensions-ppanel \
-	enigma2-plugin-pli-softcamsetup \
 	enigma2-plugin-systemplugins-softwaremanager \
 	enigma2-plugin-systemplugins-skinselector \
 	enigma2-plugin-extensions-xtrendpanel \
