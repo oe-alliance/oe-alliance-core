@@ -14,6 +14,7 @@ IMAGE_INSTALL = " \
 	oe-alliance-enigma2 \
 	openhdf-version-info \
 	openhdf-enigma2 \
+	openhdf-feeds \
 	openhdf-bootlogo \
 	${ENIGMA2_PLUGINS} \
 	avahi \
