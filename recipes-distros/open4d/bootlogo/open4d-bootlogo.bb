@@ -9,7 +9,7 @@ require conf/license/license-gplv2.inc
 RDEPENDS_${PN} += "showiframe"
 
 PV = "${BINARY_VERSION}.${IMAGES_VERSION}"
-PR = "r2"
+PR = "r3"
 
 S = "${WORKDIR}"
 
@@ -34,6 +34,7 @@ SRC_URI_append_ventonhdx = " file://splash.bin"
 SRC_URI_append_ventonhde = " file://splash.bin"
 SRC_URI_append_tmtwin = " file://splash.bmp"
 SRC_URI_append_tm2t = " file://splash.bmp"
+SRC_URI_append_tmsingle = " file://splash.bmp"
 
 BINARY_VERSION = "1"
 BINARY_VERSION_mipsel = "8"
@@ -104,6 +105,10 @@ do_install_append_tmtwin() {
 	install -m 0644 ${S}/splash.bmp ${DEPLOY_DIR_IMAGE}/splash.bmp
 }
 do_install_append_tm2t() {
+	install -d ${DEPLOY_DIR_IMAGE}
+	install -m 0644 ${S}/splash.bmp ${DEPLOY_DIR_IMAGE}/splash.bmp
+}
+do_install_append_tmsingle() {
 	install -d ${DEPLOY_DIR_IMAGE}
 	install -m 0644 ${S}/splash.bmp ${DEPLOY_DIR_IMAGE}/splash.bmp
 }

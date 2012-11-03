@@ -1,6 +1,6 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
-PRINC = "26"
+PRINC = "27"
 
 RDEPENDS_${PN} = " \
 	alsa-conf \
@@ -110,7 +110,7 @@ do_patch_prepend(){
 		MACHINE1="GigaBlue HD 800 UE"
 	elif "${MACHINE}" == "gbquad":
 		MACHINE1="GigaBlue HD Quad"
-	elif "${MACHINE}" == "tmtwin" or "${MACHINE}" == "tm2t":
+	elif "${MACHINE}" == "tmtwin" or "${MACHINE}" == "tm2t" or "${MACHINE}" == "tmsingle":
 		MACHINE1="Technomate"
 	elif "${MACHINE}" == "ventonhdx":
 		MACHINE1="Venton HD"
@@ -164,7 +164,7 @@ python do_setup_po_ipk () {
 		MACHINE1="GigaBlue HD 800 UE"
 	elif "${MACHINE}" == "gbquad":
 		MACHINE1="GigaBlue HD Quad"
-	elif "${MACHINE}" == "tmtwin" or "${MACHINE}" == "tm2t":
+	elif "${MACHINE}" == "tmtwin" or "${MACHINE}" == "tm2t" or "${MACHINE}" == "tmsingle":
 		MACHINE1="Technomate"
 	elif "${MACHINE}" == "ventonhdx":
 		MACHINE1="Venton HD"
