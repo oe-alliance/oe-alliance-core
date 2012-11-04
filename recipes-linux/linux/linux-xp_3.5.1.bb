@@ -10,7 +10,7 @@ SRC_URI[sha256sum] = "3abe16a21183d72db7f8d07bf78bb704fb72ecaed35043e5d938368878
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-MACHINE_KERNEL_PR_append = ".0"
+MACHINE_KERNEL_PR_append = ".1"
 
 # By default, kernel.bbclass modifies package names to allow multiple kernels
 # to be installed in parallel. We revert this change and rprovide the versioned
@@ -25,6 +25,7 @@ SRC_URI += "http://www.xp-support.tv/support/linux/linux-${PV}-xp.tar.gz \
 	file://0001-Revert-MIPS-Add-fast-get_user_pages.patch \
 	file://add-dmx-source-timecode.patch \
 	file://af9015-output-full-range-SNR.patch \
+	file://af9033-output-full-range-SNR.patch \
 	file://as102-adjust-signal-strength-report.patch \
 	file://as102-scale-MER-to-full-range.patch \
 	file://cinergy_s2_usb_r2.patch \
@@ -38,6 +39,7 @@ SRC_URI += "http://www.xp-support.tv/support/linux/linux-${PV}-xp.tar.gz \
 	file://iosched-slice_idle-1.patch \
 	file://it913x-switch-off-PID-filter-by-default.patch \
 	file://tda18218-7mhz-lopass.patch \
+	file://tda18271-advertise-supported-delsys.patch \
 	"
 
 S = "${WORKDIR}/linux-${PV}"
