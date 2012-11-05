@@ -1,39 +1,137 @@
+driver for Avermedia A867;
+
+thanks to Ambrosa for the implementation of SNR report and several cleanups;
+
+added define to manage refactored RC code on recent v4l
+versions together with old kernels;
+modified frontend driver to work directly with the DVBv5
+data structure, as required in new kernel/v4l versions;
+
+this driver supports all kernels up to 3.4
+
+From: Gianluca Gennari <gennarone@gmail.com>
+---
+ drivers/media/dvb/dvb-usb/Kconfig                  |    8 +
+ drivers/media/dvb/dvb-usb/Makefile                 |    6 +
+ drivers/media/dvb/dvb-usb/a867_Afa_AF9007.c        |   50 +
+ drivers/media/dvb/dvb-usb/a867_Afa_AF9007.h        |   39 +
+ drivers/media/dvb/dvb-usb/a867_Afa_AF9007_Script.h |   93 +
+ drivers/media/dvb/dvb-usb/a867_Common.h            |  259 +
+ drivers/media/dvb/dvb-usb/a867_Maxlinear_MXL5007.c |  203 +
+ drivers/media/dvb/dvb-usb/a867_Maxlinear_MXL5007.h |   60 +
+ .../dvb/dvb-usb/a867_Maxlinear_MXL5007_Script.h    |   64 +
+ drivers/media/dvb/dvb-usb/a867_af903x-core.c       |  253 +
+ drivers/media/dvb/dvb-usb/a867_af903x-devices.c    |  278 +
+ drivers/media/dvb/dvb-usb/a867_af903x-drv.c        | 1238 ++
+ drivers/media/dvb/dvb-usb/a867_af903x-fe.c         |  936 ++
+ drivers/media/dvb/dvb-usb/a867_af903x-ioctl.h      |   29 +
+ drivers/media/dvb/dvb-usb/a867_af903x-tuner.c      |  122 +
+ drivers/media/dvb/dvb-usb/a867_af903x.h            |  311 +
+ drivers/media/dvb/dvb-usb/a867_aver_version.h      |    1 +
+ drivers/media/dvb/dvb-usb/a867_cmd.c               | 1005 ++
+ drivers/media/dvb/dvb-usb/a867_cmd.h               |  246 +
+ drivers/media/dvb/dvb-usb/a867_compat.h            |  503 +
+ drivers/media/dvb/dvb-usb/a867_debug.h             |    4 +
+ drivers/media/dvb/dvb-usb/a867_demodulator.c       |  540 +
+ drivers/media/dvb/dvb-usb/a867_demodulator.h       | 1495 +++
+ drivers/media/dvb/dvb-usb/a867_demodulatorextend.c |  607 +
+ drivers/media/dvb/dvb-usb/a867_demodulatorextend.h | 1326 ++
+ drivers/media/dvb/dvb-usb/a867_error.h             |  141 +
+ drivers/media/dvb/dvb-usb/a867_firmware.h          |10867 ++++++++++++++++
+ drivers/media/dvb/dvb-usb/a867_inttype.h           |   41 +
+ drivers/media/dvb/dvb-usb/a867_iocontrol.h         |  738 ++
+ drivers/media/dvb/dvb-usb/a867_mxl5007t.c          |  698 +
+ drivers/media/dvb/dvb-usb/a867_mxl5007t.h          |  135 +
+ drivers/media/dvb/dvb-usb/a867_ofdm.h              |   18 +
+ drivers/media/dvb/dvb-usb/a867_register.h          |13519 ++++++++++++++++++++
+ drivers/media/dvb/dvb-usb/a867_standard.c          | 4668 +++++++
+ drivers/media/dvb/dvb-usb/a867_standard.h          | 1142 ++
+ drivers/media/dvb/dvb-usb/a867_type.h              |  968 ++
+ drivers/media/dvb/dvb-usb/a867_usb-urb.c           |  247 +
+ drivers/media/dvb/dvb-usb/a867_usb2impl.c          |  171 +
+ drivers/media/dvb/dvb-usb/a867_usb2impl.h          |   38 +
+ drivers/media/dvb/dvb-usb/a867_user.c              |  236 +
+ drivers/media/dvb/dvb-usb/a867_user.h              |  155 +
+ drivers/media/dvb/dvb-usb/a867_userdef.h           |   25 +
+ drivers/media/dvb/dvb-usb/a867_variable.h          |  260 +
+ drivers/media/dvb/dvb-usb/a867_version.h           |    3 +
+ 44 files changed, 43746 insertions(+), 0 deletions(-)
+ create mode 100644 drivers/media/dvb/dvb-usb/a867_Afa_AF9007.c
+ create mode 100644 drivers/media/dvb/dvb-usb/a867_Afa_AF9007.h
+ create mode 100644 drivers/media/dvb/dvb-usb/a867_Afa_AF9007_Script.h
+ create mode 100644 drivers/media/dvb/dvb-usb/a867_Common.h
+ create mode 100644 drivers/media/dvb/dvb-usb/a867_Maxlinear_MXL5007.c
+ create mode 100644 drivers/media/dvb/dvb-usb/a867_Maxlinear_MXL5007.h
+ create mode 100644 drivers/media/dvb/dvb-usb/a867_Maxlinear_MXL5007_Script.h
+ create mode 100644 drivers/media/dvb/dvb-usb/a867_af903x-core.c
+ create mode 100644 drivers/media/dvb/dvb-usb/a867_af903x-devices.c
+ create mode 100644 drivers/media/dvb/dvb-usb/a867_af903x-drv.c
+ create mode 100644 drivers/media/dvb/dvb-usb/a867_af903x-fe.c
+ create mode 100644 drivers/media/dvb/dvb-usb/a867_af903x-ioctl.h
+ create mode 100644 drivers/media/dvb/dvb-usb/a867_af903x-tuner.c
+ create mode 100644 drivers/media/dvb/dvb-usb/a867_af903x.h
+ create mode 100644 drivers/media/dvb/dvb-usb/a867_aver_version.h
+ create mode 100644 drivers/media/dvb/dvb-usb/a867_cmd.c
+ create mode 100644 drivers/media/dvb/dvb-usb/a867_cmd.h
+ create mode 100644 drivers/media/dvb/dvb-usb/a867_compat.h
+ create mode 100644 drivers/media/dvb/dvb-usb/a867_debug.h
+ create mode 100644 drivers/media/dvb/dvb-usb/a867_demodulator.c
+ create mode 100644 drivers/media/dvb/dvb-usb/a867_demodulator.h
+ create mode 100644 drivers/media/dvb/dvb-usb/a867_demodulatorextend.c
+ create mode 100644 drivers/media/dvb/dvb-usb/a867_demodulatorextend.h
+ create mode 100644 drivers/media/dvb/dvb-usb/a867_error.h
+ create mode 100644 drivers/media/dvb/dvb-usb/a867_firmware.h
+ create mode 100644 drivers/media/dvb/dvb-usb/a867_inttype.h
+ create mode 100644 drivers/media/dvb/dvb-usb/a867_iocontrol.h
+ create mode 100644 drivers/media/dvb/dvb-usb/a867_mxl5007t.c
+ create mode 100644 drivers/media/dvb/dvb-usb/a867_mxl5007t.h
+ create mode 100644 drivers/media/dvb/dvb-usb/a867_ofdm.h
+ create mode 100644 drivers/media/dvb/dvb-usb/a867_register.h
+ create mode 100644 drivers/media/dvb/dvb-usb/a867_standard.c
+ create mode 100644 drivers/media/dvb/dvb-usb/a867_standard.h
+ create mode 100644 drivers/media/dvb/dvb-usb/a867_type.h
+ create mode 100644 drivers/media/dvb/dvb-usb/a867_usb-urb.c
+ create mode 100644 drivers/media/dvb/dvb-usb/a867_usb2impl.c
+ create mode 100644 drivers/media/dvb/dvb-usb/a867_usb2impl.h
+ create mode 100644 drivers/media/dvb/dvb-usb/a867_user.c
+ create mode 100644 drivers/media/dvb/dvb-usb/a867_user.h
+ create mode 100644 drivers/media/dvb/dvb-usb/a867_userdef.h
+ create mode 100644 drivers/media/dvb/dvb-usb/a867_variable.h
+ create mode 100644 drivers/media/dvb/dvb-usb/a867_version.h
+
 diff --git a/drivers/media/dvb/dvb-usb/Kconfig b/drivers/media/dvb/dvb-usb/Kconfig
-index 385ffa5..0701bad 100644
+index d3ffd16..20024c9 100644
 --- a/drivers/media/dvb/dvb-usb/Kconfig
 +++ b/drivers/media/dvb/dvb-usb/Kconfig
-@@ -348,6 +348,14 @@ config DVB_USB_AF9035
- 	help
- 	  Say Y here to support the Afatech AF9035 based DVB-T USB2.0 receiver
- 
+@@ -434,4 +434,10 @@ config DVB_USB_AF9035
+	select MEDIA_TUNER_TDA18218 if !MEDIA_TUNER_CUSTOMISE
+	help
+	  Say Y here to support the Afatech AF9035 based DVB USB receiver.
+-
 +config DVB_USB_A867
-+	tristate "Avermedia A867 DVB receiver"
++	tristate "Avermedia A867 DVB support"
 +	depends on DVB_USB
 +	default m
 +	help
-+	  Choose Y or M here if you have an Avermedia A867 device
-+	  To compile this driver as a module, choose M here
++	  Say Y here to support the Avermedia A867 device
 +
- config DVB_USB_CE6230
- 	tristate "Intel CE6230 DVB-T USB2.0 support"
- 	depends on DVB_USB && EXPERIMENTAL
 diff --git a/drivers/media/dvb/dvb-usb/Makefile b/drivers/media/dvb/dvb-usb/Makefile
-index f8b1013..4745905 100644
+index 32489a8..7e2bcbd 100644
 --- a/drivers/media/dvb/dvb-usb/Makefile
 +++ b/drivers/media/dvb/dvb-usb/Makefile
-@@ -109,6 +109,12 @@ obj-$(CONFIG_DVB_USB_MXL111SF) += mxl111sf-tuner.o
+@@ -113,6 +113,12 @@ obj-$(CONFIG_DVB_USB_RTL28XXU) += dvb-usb-rtl28xxu.o
  dvb-usb-af9035-objs = af9035.o
  obj-$(CONFIG_DVB_USB_AF9035) += dvb-usb-af9035.o
  
 +dvb-usb-a867-objs := a867_af903x-core.o a867_af903x-devices.o a867_af903x-drv.o \
-+			a867_af903x-fe.o a867_af903x-tuner.o a867_cmd.o a867_standard.o \
-+			a867_demodulator.o a867_demodulatorextend.o a867_usb2impl.o \
-+			a867_user.o a867_mxl5007t.o a867_Maxlinear_MXL5007.o a867_Afa_AF9007.o
++		     a867_af903x-fe.o a867_af903x-tuner.o a867_cmd.o a867_standard.o \
++		     a867_demodulator.o a867_demodulatorextend.o a867_usb2impl.o \
++		     a867_user.o a867_mxl5007t.o a867_Maxlinear_MXL5007.o a867_Afa_AF9007.o
 +obj-$(CONFIG_DVB_USB_A867) += dvb-usb-a867.o
 +
- ccflags-y += -Idrivers/media/dvb/dvb-core/ -Idrivers/media/dvb/frontends/
+ ccflags-y += -I$(srctree)/drivers/media/dvb/dvb-core
+ ccflags-y += -I$(srctree)/drivers/media/dvb/frontends/
  # due to tuner-xc3028
- ccflags-y += -Idrivers/media/common/tuners
 diff --git a/drivers/media/dvb/dvb-usb/a867_Afa_AF9007.c b/drivers/media/dvb/dvb-usb/a867_Afa_AF9007.c
 new file mode 100644
 index 0000000..0d65cf9
@@ -2633,10 +2731,10 @@ index 0000000..3a030a8
 +//EXPORT_SYMBOL(Device_init);
 diff --git a/drivers/media/dvb/dvb-usb/a867_af903x-fe.c b/drivers/media/dvb/dvb-usb/a867_af903x-fe.c
 new file mode 100644
-index 0000000..5f56ec0
+index 0000000..4f405f0
 --- /dev/null
 +++ b/drivers/media/dvb/dvb-usb/a867_af903x-fe.c
-@@ -0,0 +1,865 @@
+@@ -0,0 +1,936 @@
 +#include <linux/sched.h>
 +#include <linux/list.h>
 +#include <linux/module.h>
@@ -2658,7 +2756,11 @@ index 0000000..5f56ec0
 +
 +struct af903xm_state {
 +	struct dvb_frontend demod;
++#ifdef V4L2_ONLY_DVB_V5
++	uint32_t current_bandwidth_hz;
++#else
 +	fe_bandwidth_t current_bandwidth;
++#endif
 +	uint32_t current_frequency;
 +
 +	struct completion thread_exit;
@@ -2918,7 +3020,11 @@ index 0000000..5f56ec0
 +	
 +	// reset values
 +	state->current_frequency = 0;
++#ifdef V4L2_ONLY_DVB_V5
++	state->current_bandwidth_hz = 0;
++#else
 +	state->current_bandwidth = 0;
++#endif
 +
 +	af903x_start_monitor_thread(demod);
 +
@@ -2949,6 +3055,66 @@ index 0000000..5f56ec0
 +	return 0;
 +}
 +
++#ifdef V4L2_ONLY_DVB_V5
++static int af903x_get_frontend(struct dvb_frontend* fe)
++{
++	struct dtv_frontend_properties *fep = &fe->dtv_property_cache;
++	struct af903xm_state *state = fe->demodulator_priv;
++
++	deb_data("- Enter %s Function -\n",__FUNCTION__);
++
++	fep->frequency = state->current_frequency;
++	fep->inversion = INVERSION_AUTO;
++	fep->bandwidth_hz = state->current_bandwidth_hz;
++
++	return 0;
++}
++
++static int af903x_set_frontend(struct dvb_frontend* fe)
++{
++	struct dtv_frontend_properties *fep = &fe->dtv_property_cache;
++	struct af903xm_state *state = fe->demodulator_priv;
++	struct af903x_ofdm_channel ch;
++	u16 bw=0;
++	int ret=0;
++
++	deb_data("- Enter %s Function -\n",__FUNCTION__);
++
++
++	if( fep->frequency < A333_FREQ_MIN || fep->frequency > A333_FREQ_MAX ) {
++		deb_data("- %s freq=%d Hz out of range(%d~%d)-\n",__FUNCTION__, fep->frequency, 
++				A333_FREQ_MIN, A333_FREQ_MAX);
++		// set to zero so we can report unlock to AP, because return -EINVAL apparently 
++		// does not stop AP from continuing tuning.
++		state->current_frequency = 0;
++		return -EINVAL;
++	}
++
++	switch(fep->bandwidth_hz) {
++	case 8000000: bw=8; break;
++	case 7000000: bw=7; break;
++	case 6000000: bw=6; break;
++	default:
++		deb_data("- %s unknown bw value: %d -\n",__FUNCTION__, fep->bandwidth_hz);
++		return -EINVAL;
++	}
++
++
++	ch.RF_kHz           = fep->frequency / 1000;
++	ch.Bw               = bw;
++	deb_data("- %s freq=%d KHz, bw=%d MHz -\n",__FUNCTION__, ch.RF_kHz,  ch.Bw);
++
++	state->current_bandwidth_hz = fep->bandwidth_hz;
++	state->current_frequency = fep->frequency;
++
++	ret = af903x_tune(fe, &ch);
++
++	// start monitor thread if not yet.
++	af903x_start_monitor_thread(fe);
++	
++	return ret;
++}
++#else
 +static int af903x_get_frontend(struct dvb_frontend* fe,
 +				struct dvb_frontend_parameters *fep)
 +{
@@ -3014,6 +3180,7 @@ index 0000000..5f56ec0
 +	
 +	return ret;
 +}
++#endif
 +
 +static int af903x_read_status(struct dvb_frontend *fe, fe_status_t *stat)
 +{
@@ -3189,7 +3356,7 @@ index 0000000..5f56ec0
 +	Dword dwError = 0;
 +	u32 snr_val=0;
 +	u16 snr_max=0;
-+	u32 snr_16bit = 0;
++	u16 snr_16bit = 0;
 +
 +	*snr = 0;
 +
@@ -3222,10 +3389,7 @@ index 0000000..5f56ec0
 +		*snr = 0;
 +		return 1;
 +	}
-+	snr_16bit = (0xffff * *snr) / snr_max;
-+	if (snr_16bit > 0xffff) 
-+		snr_16bit = 0xffff;
-+
++	snr_16bit = (0xffff / snr_max) * *snr;
 +	deb_data("- Exit %s SNR %d dB , %d 16bit -\n",__FUNCTION__,*snr,snr_16bit);
 +
 +	if (dvb_usb_af903x_snrdb == 0)
@@ -3246,9 +3410,14 @@ index 0000000..5f56ec0
 +}
 +
 +static struct dvb_frontend_ops af903x_ops = {
++#ifdef V4L2_ONLY_DVB_V5
++	.delsys = { SYS_DVBT },
++#endif
 +	.info = {
 +		.name = "A867 USB DVB-T",
++#ifndef V4L2_ONLY_DVB_V5
 +		.type = FE_OFDM,
++#endif
 +		.frequency_min      = A333_FREQ_MIN,
 +		.frequency_max      = A333_FREQ_MAX,
 +		.frequency_stepsize = 62500,
@@ -3539,10 +3708,10 @@ index 0000000..14b6df9
 +#endif /* _AF903X-IOCTL_H_ */
 diff --git a/drivers/media/dvb/dvb-usb/a867_af903x-tuner.c b/drivers/media/dvb/dvb-usb/a867_af903x-tuner.c
 new file mode 100644
-index 0000000..62520c9
+index 0000000..6ad5768
 --- /dev/null
 +++ b/drivers/media/dvb/dvb-usb/a867_af903x-tuner.c
-@@ -0,0 +1,92 @@
+@@ -0,0 +1,122 @@
 +#include <linux/module.h>
 +#include <linux/moduleparam.h>
 +#include <linux/delay.h>
@@ -3554,6 +3723,35 @@ index 0000000..62520c9
 +#define IF2  36150       // IF2 frequency = 36.150 MHz
 +#define FREF 16000       // Quartz oscillator 16 MHz
 +
++#ifdef V4L2_ONLY_DVB_V5
++static int tuner_set_params(struct dvb_frontend *fe)
++{
++	struct dtv_frontend_properties *params = &fe->dtv_property_cache;
++	struct tuner_priv *priv=NULL;
++	DWORD dwError = Error_NO_ERROR;
++	DWORD freq = params->frequency ;// 1000; // Hz -> kHz
++
++	switch (params->delivery_system) {
++	case SYS_DVBT:
++	case SYS_DVBT2:
++	case SYS_ISDBT:
++	case SYS_DMBTH:
++		priv->bandwidth = params->bandwidth_hz;
++		break;
++	default:
++		priv->bandwidth = 0;
++		break;
++	}
++
++	deb_data("%s - freq : %d , bandwidth : %dn",__FUNCTION__, freq, priv->bandwidth);
++
++	/* here, frequency is expressed in KHz and bandwidth in MHz */
++	dwError =DL_Tuner_SetFreq(freq/1000, priv->bandwidth/1000000);
++	if (dwError) deb_data("tuner_set_params Fail !\n");
++	
++	return 0;
++}
++#else
 +static int tuner_set_params(struct dvb_frontend *fe, struct dvb_frontend_parameters *params)
 +{
 +	struct tuner_priv *priv=NULL;
@@ -3569,6 +3767,7 @@ index 0000000..62520c9
 +	
 +	return 0;
 +}
++#endif
 +static int tuner_get_frequency(struct dvb_frontend *fe, u32 *frequency)
 +{
 +	struct tuner_priv *priv = fe->tuner_priv;
@@ -3637,10 +3836,10 @@ index 0000000..62520c9
 +
 diff --git a/drivers/media/dvb/dvb-usb/a867_af903x.h b/drivers/media/dvb/dvb-usb/a867_af903x.h
 new file mode 100644
-index 0000000..150403a
+index 0000000..03f7ea9
 --- /dev/null
 +++ b/drivers/media/dvb/dvb-usb/a867_af903x.h
-@@ -0,0 +1,301 @@
+@@ -0,0 +1,311 @@
 + 
 +#ifndef _AF903X_H_
 +#define _AF903X_H_
@@ -3668,6 +3867,16 @@ index 0000000..150403a
 +#include "a867_type.h"
 +#include "a867_Common.h"
 +#include "a867_debug.h"
++
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(3,3,0)) || ((defined V4L2_VERSION) && (V4L2_VERSION >= 197120))
++/* all DVB frontend drivers now work directly with the DVBv5
++ * structure. This warrants that all drivers will be
++ * getting/setting frontend parameters on a consistent way, in
++ * order to avoid copying data from/to the DVBv3 structs
++ * without need.
++ */
++#define V4L2_ONLY_DVB_V5
++#endif
 +
 +#define ENABLE_TEST_FUNCTION 0
 +#define ENABLE_HW_PID 0
@@ -3944,7 +4153,7 @@ index 0000000..150403a
 +
 diff --git a/drivers/media/dvb/dvb-usb/a867_aver_version.h b/drivers/media/dvb/dvb-usb/a867_aver_version.h
 new file mode 100644
-index 0000000..c3213169
+index 0000000..c321316
 --- /dev/null
 +++ b/drivers/media/dvb/dvb-usb/a867_aver_version.h
 @@ -0,0 +1 @@
@@ -5723,13 +5932,13 @@ index 0000000..d043287
 + */
 diff --git a/drivers/media/dvb/dvb-usb/a867_debug.h b/drivers/media/dvb/dvb-usb/a867_debug.h
 new file mode 100644
-index 0000000..bda23fe
+index 0000000..08552fa
 --- /dev/null
 +++ b/drivers/media/dvb/dvb-usb/a867_debug.h
 @@ -0,0 +1,4 @@
 +
 +// turn on/off debug for all modules
-+#define	CONFIG_DVB_USB_DEBUG	0	
++//#define	CONFIG_DVB_USB_DEBUG	0	
 +
 diff --git a/drivers/media/dvb/dvb-usb/a867_demodulator.c b/drivers/media/dvb/dvb-usb/a867_demodulator.c
 new file mode 100644
@@ -43908,5 +44117,5 @@ index 0000000..c3d3ddd
 +#define Version_DATE		0x20080314
 +#define Version_BUILD		0x01
 -- 
-1.7.5.4
+1.7.0.4
 
