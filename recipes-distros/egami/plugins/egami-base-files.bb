@@ -15,7 +15,7 @@ INHIBIT_PACKAGE_STRIP = "1"
  
 ALLOW_EMPTY_${PN} = "1"
 
-PR = "r1"
+PR = "r2"
 
 S="${WORKDIR}/git/files"
 
