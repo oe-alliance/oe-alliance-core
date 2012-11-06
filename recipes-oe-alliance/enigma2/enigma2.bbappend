@@ -61,6 +61,8 @@ EXTRA_OECONF += "\
 	--with-po \
 	${@base_contains("MACHINE_FEATURES", "fullgraphiclcd", "--with-fullgraphiclcd" , "", d)} \
 	${@base_contains("MACHINE_FEATURES", "gigabluelcd", "--with-gigabluelcd" , "", d)} \
+	${@base_contains("MACHINE_FEATURES", "colorlcd220", "--with-colorlcd220" , "", d)} \
+	${@base_contains("MACHINE_FEATURES", "bwlcd255", "--with-bwlcd255" , "", d)} \
 	"
 
 # some plugins contain so's, their stripped symbols should not end up in the enigma2 package
@@ -119,7 +121,7 @@ do_patch_prepend(){
 	elif "${MACHINE}" == "xp1000":
 		MACHINE1="MaxDigital XP1000"
 	elif "${MACHINE}" == "ebox5000":
-		MACHINE1="MixOS 5000"	
+		MACHINE1="MixOS 5000"
 	import os
 	os.system("find ./ -name \"*.po\" > ./po_list")
 	os.system("find ./ -name \"*.py\" >> ./po_list")
@@ -173,7 +175,7 @@ python do_setup_po_ipk () {
 	elif "${MACHINE}" == "xp1000":
 		MACHINE1="MaxDigital XP1000"
 	elif "${MACHINE}" == "ebox5000":
-		MACHINE1="MixOS 5000"	
+		MACHINE1="MixOS 5000"
 	import os
 	os.system("find ./ -name \"*.po\" > ./po_list")
 	os.system("find ./ -name \"*.py\" >> ./po_list")
