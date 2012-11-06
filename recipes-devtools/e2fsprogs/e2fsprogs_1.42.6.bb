@@ -1,6 +1,6 @@
 require e2fsprogs.inc
 
-PR = "r5"
+PR = "r6"
 
 SRC_URI += "file://acinclude.m4 \
             file://remove.ldconfig.call.patch \
@@ -44,8 +44,6 @@ do_install_append () {
 # as an RDEPENDS_${PN} so that anything relying on it being in e2fsprogs
 # still works
 RDEPENDS_e2fsprogs = "e2fsprogs-blkid e2fsprogs-badblocks"
-RCONFLICTS_e2fsprogs = "util-linux-blkid"
-RREPLACES_e2fsprogs = "util-linux-blkid"
 
 PACKAGES =+ "e2fsprogs-blkid e2fsprogs-e2fsck e2fsprogs-mke2fs e2fsprogs-fsck e2fsprogs-tune2fs e2fsprogs-badblocks"
 PACKAGES =+ "libcomerr libss libe2p libext2fs"
