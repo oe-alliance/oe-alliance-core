@@ -3,16 +3,12 @@ SECTION = "base"
 PRIORITY = "required"
 LICENSE = "CLOSED"
 
-PR = "r6"
-
 PV = "${KV}+${SRCDATE}"
-MACHINE_KERNEL_PR_append = ".0"
-
-RDEPENDS_${PN} += "venton-fpupdate-hdx"
+PR = "r3"
 
 S = "${WORKDIR}"
 
-PACKAGE_STRIP = "no"
+INHIBIT_PACKAGE_STRIP = "1"
 
 inherit module
 
@@ -21,9 +17,9 @@ do_compile() {
 
 do_install() {
 	install -d ${D}/lib/modules/${KV}/extra
-	install -d ${D}/${sysconfdir}/modutils
+	install -d ${D}/${sysconfdir}/modules-load.d
 	for i in dvb; do
 		install -m 0755 ${WORKDIR}/$i.ko ${D}/lib/modules/${KV}/extra
-		echo $i >> ${D}/${sysconfdir}/modutils/_${MACHINE}
+		echo $i >> ${D}/${sysconfdir}/modules-load.d/_${MACHINE}.conf
 	done
 }

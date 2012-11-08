@@ -6,7 +6,7 @@ require conf/license/license-gplv2.inc
 PACKAGE_ARCH := "${MACHINE_ARCH}"
 
 DEPENDS = "enigma2 mtd-utils python-process libcrypto-compat"
-RDEPENDS = "mtd-utils python-process libcrypto-compat e2fsprogs-blkid"
+RDEPENDS = "mtd-utils python-process libcrypto-compat util-linux-blkid"
 
 DEPENDS_append_gb800solo = " gigablue-cfe"
 RDEPENDS_append_gb800solo = " gigablue-cfe"
@@ -21,7 +21,7 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "2.1+git${SRCPV}"
 PKGV = "2.1+git${GITPKGV}"
-PR = "r3"
+PR = "r5"
 
 SRC_URI="git://github.com/OpenViX/vix-core.git;protocol=git"
 
@@ -84,7 +84,7 @@ do_patch_prepend(){
 		MACHINE1="GigaBlue HD 800 UE"
 	elif "${MACHINE}" == "gbquad":
 		MACHINE1="GigaBlue HD Quad"
-	elif "${MACHINE}" == "tmtwin" or "${MACHINE}" == "tm2t":
+	elif "${MACHINE}" == "tmtwin" or "${MACHINE}" == "tm2t" or "${MACHINE}" == "tmsingle":
 		MACHINE1="Technomate"
 	elif "${MACHINE}" == "ventonhdx":
 		MACHINE1="Venton HD"
@@ -132,7 +132,7 @@ python do_setup_po_ipk () {
 		MACHINE1="GigaBlue HD 800 UE"
 	elif "${MACHINE}" == "gbquad":
 		MACHINE1="GigaBlue HD Quad"
-	elif "${MACHINE}" == "tmtwin" or "${MACHINE}" == "tm2t":
+	elif "${MACHINE}" == "tmtwin" or "${MACHINE}" == "tm2t" or "${MACHINE}" == "tmsingle":
 		MACHINE1="Technomate"
 	elif "${MACHINE}" == "ventonhdx":
 		MACHINE1="Venton HD"

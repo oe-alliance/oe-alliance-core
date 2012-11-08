@@ -52,6 +52,8 @@ ENIGMA2_PLUGINS_append_gb800se = ""
 ENIGMA2_PLUGINS_append_gb800ue = "python-imaging enigma2-plugin-extensions-etportal"
 ENIGMA2_PLUGINS_append_gbquad = "python-imaging webbrowser-utils enigma2-plugin-extensions-webbrowser enigma2-plugin-extensions-etportal"
 ENIGMA2_PLUGINS_append_tmtwin = "enigma2-plugin-systemplugins-osd3dsetup enigma2-plugin-extensions-etportal"
+ENIGMA2_PLUGINS_append_tm2t = "enigma2-plugin-systemplugins-osd3dsetup enigma2-plugin-extensions-etportal"
+ENIGMA2_PLUGINS_append_tmsingle = "enigma2-plugin-systemplugins-osd3dsetup enigma2-plugin-extensions-etportal"
 
 export IMAGE_BASENAME = "OpenHDF-Image"
 IMAGE_LINGUAS = ""

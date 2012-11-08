@@ -8,7 +8,7 @@ require conf/license/license-gplv2.inc
 RDEPENDS_${PN} += "showiframe"
 
 PV = "2.0"
-PR = "r9"
+PR = "r10"
 
 S = "${WORKDIR}"
 
@@ -95,8 +95,16 @@ do_install_append_tm2t() {
 	install -d ${DEPLOY_DIR_IMAGE}
 	install -m 0755 ${S}/splash.bin ${DEPLOY_DIR_IMAGE}/splash.bmp
 }
+do_install_append_tmsingle() {
+	install -d ${DEPLOY_DIR_IMAGE}
+	install -m 0755 ${S}/splash.bin ${DEPLOY_DIR_IMAGE}/splash.bmp
+}
 
 do_install_append_ventonhdx() {
+	install -d ${DEPLOY_DIR_IMAGE}
+	install -m 0755 ${S}/splash.bin ${DEPLOY_DIR_IMAGE}/splash.bin
+}
+do_install_append_ventonhde() {
 	install -d ${DEPLOY_DIR_IMAGE}
 	install -m 0755 ${S}/splash.bin ${DEPLOY_DIR_IMAGE}/splash.bin
 }

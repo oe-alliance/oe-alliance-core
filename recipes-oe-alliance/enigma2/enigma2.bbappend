@@ -1,6 +1,6 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
-PRINC = "26"
+PRINC = "27"
 
 RDEPENDS_${PN} = " \
 	alsa-conf \
@@ -61,6 +61,8 @@ EXTRA_OECONF += "\
 	--with-po \
 	${@base_contains("MACHINE_FEATURES", "fullgraphiclcd", "--with-fullgraphiclcd" , "", d)} \
 	${@base_contains("MACHINE_FEATURES", "gigabluelcd", "--with-gigabluelcd" , "", d)} \
+	${@base_contains("MACHINE_FEATURES", "colorlcd220", "--with-colorlcd220" , "", d)} \
+	${@base_contains("MACHINE_FEATURES", "bwlcd255", "--with-bwlcd255" , "", d)} \
 	"
 
 # some plugins contain so's, their stripped symbols should not end up in the enigma2 package
@@ -110,7 +112,7 @@ do_patch_prepend(){
 		MACHINE1="GigaBlue HD 800 UE"
 	elif "${MACHINE}" == "gbquad":
 		MACHINE1="GigaBlue HD Quad"
-	elif "${MACHINE}" == "tmtwin" or "${MACHINE}" == "tm2t":
+	elif "${MACHINE}" == "tmtwin" or "${MACHINE}" == "tm2t" or "${MACHINE}" == "tmsingle":
 		MACHINE1="Technomate"
 	elif "${MACHINE}" == "ventonhdx":
 		MACHINE1="Venton HD"
@@ -119,7 +121,7 @@ do_patch_prepend(){
 	elif "${MACHINE}" == "xp1000":
 		MACHINE1="MaxDigital XP1000"
 	elif "${MACHINE}" == "ebox5000":
-		MACHINE1="MixOS 5000"	
+		MACHINE1="MixOS 5000"
 	import os
 	os.system("find ./ -name \"*.po\" > ./po_list")
 	os.system("find ./ -name \"*.py\" >> ./po_list")
@@ -164,7 +166,7 @@ python do_setup_po_ipk () {
 		MACHINE1="GigaBlue HD 800 UE"
 	elif "${MACHINE}" == "gbquad":
 		MACHINE1="GigaBlue HD Quad"
-	elif "${MACHINE}" == "tmtwin" or "${MACHINE}" == "tm2t":
+	elif "${MACHINE}" == "tmtwin" or "${MACHINE}" == "tm2t" or "${MACHINE}" == "tmsingle":
 		MACHINE1="Technomate"
 	elif "${MACHINE}" == "ventonhdx":
 		MACHINE1="Venton HD"
@@ -173,7 +175,7 @@ python do_setup_po_ipk () {
 	elif "${MACHINE}" == "xp1000":
 		MACHINE1="MaxDigital XP1000"
 	elif "${MACHINE}" == "ebox5000":
-		MACHINE1="MixOS 5000"	
+		MACHINE1="MixOS 5000"
 	import os
 	os.system("find ./ -name \"*.po\" > ./po_list")
 	os.system("find ./ -name \"*.py\" >> ./po_list")
