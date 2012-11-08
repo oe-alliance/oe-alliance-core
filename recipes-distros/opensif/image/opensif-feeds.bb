@@ -12,6 +12,7 @@ RRECOMMENDS = "\
 	enigma2-pliplugins \
 	enigma2-skins \
 	enigma2-plugin-skins-adriatic \
+	enigma2-plugin-skins-adriatic32 \
 	enigma2-plugin-skins-jules-black-hd \
 	enigma2-plugin-skins-redheathd \
 	"
