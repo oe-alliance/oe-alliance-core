@@ -7,14 +7,14 @@ require conf/license/license-gplv2.inc
 
 PACKAGE_ARCH = "all"
 
-SRCDATE = "10072012"
+SRCDATE = "09112012"
 
-SRC_URI[md5sum] = "8d48064d8a2e45b5670d6c0948f97706"
-SRC_URI[sha256sum] = "2e861c27ccbd14154eedb275490abb6d0b9e889588d5a2cddd9ab7e54912d64b"
+SRC_URI[md5sum] = "e791bb9cacfe5d5078ff138fe797ca2f"
+SRC_URI[sha256sum] = "61de31d5d8eb9ea99ceb1a26245f972a8d03582e7ecbbc199c454306a8e7cadf"
 
 SRC_URI = "http://code-ini.com/software/channelsettings/enigma2-plugin-picons-default-ini-${SRCDATE}.tar.gz"
 
-PR = "r11"
+PR = "r12"
 PN = "enigma2-plugin-picons-default-ventonsupport"
 PACKAGES = "${PN}"
 
