@@ -8,7 +8,7 @@ require conf/license/license-gplv2.inc
 RDEPENDS_${PN} += "showiframe"
 
 PV = "2.0"
-PR = "r12"
+PR = "r13"
 
 S = "${WORKDIR}"
 
@@ -53,7 +53,7 @@ do_install() {
 		ln -sf /boot/bootlogo.mvi ${D}/boot/$i.mvi
 		ln -sf /usr/share/bootlogo.mvi ${D}/usr/share/$i.mvi;
 	done;
-	install -m 0644 radio.mvi ${D}/usr/share/enigma2/radio.mvi
+	install -m 0755 ${S}/radio.mvi ${D}/usr/share/enigma2/radio.mvi
 	install -d ${D}/${sysconfdir}/init.d
 	install -m 0755 ${S}/bootlogo.sh ${D}/${sysconfdir}/init.d/bootlogo
 }
