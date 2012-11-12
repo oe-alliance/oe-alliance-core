@@ -1,6 +1,6 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
-PRINC = "27"
+PRINC = "28"
 
 RDEPENDS_${PN} = " \
 	alsa-conf \
@@ -115,9 +115,15 @@ do_patch_prepend(){
 	elif "${MACHINE}" == "tmtwin" or "${MACHINE}" == "tm2t" or "${MACHINE}" == "tmsingle":
 		MACHINE1="Technomate"
 	elif "${MACHINE}" == "ventonhdx":
-		MACHINE1="Venton HD"
+		if "${DISTRO}" == "ventonsupport" or "${DISTRO}" == "egami":
+			MACHINE1="receiver"
+		else:
+			MACHINE1="Venton HDx"
 	elif "${MACHINE}" == "ventonhde":
-		MACHINE1="Venton HDe"
+		if "${DISTRO}" == "ventonsupport" or "${DISTRO}" == "egami":
+			MACHINE1="receiver"
+		else:
+			MACHINE1="Venton HDe"
 	elif "${MACHINE}" == "xp1000":
 		MACHINE1="MaxDigital XP1000"
 	elif "${MACHINE}" == "ebox5000":
