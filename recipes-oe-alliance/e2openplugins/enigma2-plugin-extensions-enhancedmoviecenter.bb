@@ -8,8 +8,8 @@ require conf/license/license-gplv2.inc
 
 inherit gitpkgv
 SRCREV = "${AUTOREV}"
-PV = "3.9.+git${SRCPV}"
-PKGV = "3.9.+git${GITPKGV}"
+PV = "4.0.+git${SRCPV}"
+PKGV = "4.0.+git${GITPKGV}"
 PR = "r0"
 
 
@@ -42,7 +42,7 @@ echo ""
 echo ""
 echo "***********************************"
 echo "*     Enhanced Movie Center       *"
-echo "*             V 3.9.x             *"
+echo "*             V 4.0               *"
 echo "*               by                *"
 echo "*   Coolman, Betonme & Swiss-MAD  *"
 echo "***********************************"
