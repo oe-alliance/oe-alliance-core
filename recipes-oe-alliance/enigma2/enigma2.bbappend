@@ -1,6 +1,6 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
-PRINC = "28"
+PRINC = "30"
 
 RDEPENDS_${PN} = " \
 	alsa-conf \
@@ -116,12 +116,12 @@ do_patch_prepend(){
 		MACHINE1="Technomate"
 	elif "${MACHINE}" == "ventonhdx":
 		if "${DISTRO}" == "ventonsupport" or "${DISTRO}" == "egami":
-			MACHINE1="receiver"
+			MACHINE1="linux receiver"
 		else:
 			MACHINE1="Venton HDx"
 	elif "${MACHINE}" == "ventonhde":
 		if "${DISTRO}" == "ventonsupport" or "${DISTRO}" == "egami":
-			MACHINE1="receiver"
+			MACHINE1="linux receiver"
 		else:
 			MACHINE1="Venton HDe"
 	elif "${MACHINE}" == "xp1000":
@@ -204,6 +204,9 @@ do_install_append() {
 	install -d ${D}/usr/share/keymaps
 	find ${D}/usr/lib/enigma2/python/ -name '*.pyc' -exec rm {} \;
 	find ${D}/usr/lib/enigma2/python/Plugins/ -name '*.py' -exec rm {} \;
+	if [ -e ${D}/usr/lib/enigma2/python/PowerManagerTimer.py ]; then
+		rm ${D}/usr/lib/enigma2/python/PowerManagerTimer.py
+	fi
 	if [ -e ${S}/lib/python/Plugins/Extensions/DVDPlayer/plugin.py ]; then
 		cp ${S}/lib/python/Plugins/Extensions/DVDPlayer/plugin.py ${D}/usr/lib/enigma2/python/Plugins/Extensions/DVDPlayer/plugin.py
 	fi
