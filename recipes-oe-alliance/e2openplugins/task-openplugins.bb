@@ -1,5 +1,5 @@
 DESCRIPTION = "E2OpenPlugins Task"
-PR = "r5"
+PR = "r6"
 
 inherit task
 
@@ -8,7 +8,6 @@ DEPENDS = " \
 	enigma2-plugin-extensions-antilogo \
 	enigma2-plugin-extensions-bitrate \
 	enigma2-plugin-extensions-buienradar \
-	enigma2-plugin-extensions-changerootpassword \
 	enigma2-plugin-extensions-foreca \
 	enigma2-plugin-extensions-meteoitalia2 \
 	enigma2-plugin-extensions-multiquickbutton \
@@ -26,6 +25,12 @@ DEPENDS = " \
 	enigma2-plugin-extensions-wakeonlan \
 	enigma2-plugin-systemplugins-autoshutdown \
 	enigma2-plugin-systemplugins-crossepg \
+	enigma2-plugin-extensions-setpicon \
+	enigma2-plugin-extensions-xpower \
+	enigma2-plugin-extensions-meteoviewer \
+	enigma2-plugin-extensions-snmpagent \
+	enigma2-plugin-extensions-systemtools \
+	enigma2-plugin-extensions-cacheflush \
 "
 
 require assume-gplv2.inc
