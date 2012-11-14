@@ -15,6 +15,7 @@ IMAGE_INSTALL = " \
 	xtrendalliance-version-info \
 	xtrendalliance-enigma2 \
 	xtrendalliance-bootlogo \
+	xtrendalliance-feed-config \
 	${ENIGMA2_PLUGINS} \
 	avahi-daemon \
 	dropbear \
