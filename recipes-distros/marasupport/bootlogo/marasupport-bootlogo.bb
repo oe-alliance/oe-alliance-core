@@ -8,7 +8,7 @@ require conf/license/license-gplv2.inc
 RDEPENDS_${PN} += "showiframe"
 
 PV = "2.0"
-PR = "r2"
+PR = "r3"
 
 S = "${WORKDIR}"
 
@@ -17,7 +17,7 @@ INITSCRIPT_PARAMS = "start 05 S ."
 
 inherit update-rc.d
 
-SRC_URI = "file://bootlogo.mvi file://bootlogo.sh file://splash.bin"
+SRC_URI = "file://bootlogo.mvi file://bootlogo.sh file://splash.bin file://radio.mvi"
 
 MVISYMLINKS = "bootlogo_wait backdrop switchoff"
 
