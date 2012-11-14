@@ -14,7 +14,7 @@ PKGV = "1.0+git${GITPKGV}"
 VER ="1.0"
 PR = "r0"
 
-SRC_URI="git://github.com/odin-support/default-skin.git"
+SRC_URI="git://github.com/settopbox-support/default-skin.git"
 
 S = "${WORKDIR}/git"
 
