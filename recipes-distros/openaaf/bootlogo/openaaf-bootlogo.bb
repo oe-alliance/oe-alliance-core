@@ -84,7 +84,7 @@ do_install_append_et9x00() {
 	install -m 0755 ${S}/splash.bin ${DEPLOY_DIR_IMAGE}/splash.bin
 }
 
-do_install_append_odinm9() {
+do_install_append_maram9() {
 	install -d ${DEPLOY_DIR_IMAGE}
 	install -m 0755 ${S}/splash.bin ${DEPLOY_DIR_IMAGE}/splash.bin
 }

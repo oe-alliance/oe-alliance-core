@@ -21,7 +21,7 @@ URL_et9x00 = "http://www.xtrend-support.co.uk"
 URL_tmtwin = "http://www.technomate-support.co.uk"
 URL_tmt2 = "http://www.technomate-support.co.uk"
 URL_tmsingle = "http://www.technomate-support.co.uk"
-URL_odinm9 = "http://www.odin-support.co.uk"
+URL_maram9 = "http://www.mara-support.co.uk"
 URL_gb800solo = "http://www.gigablue-support.co.uk"
 URL_gb800se = "http://www.gigablue-support.co.uk"
 URL_gb800ue = "http://www.gigablue-support.co.uk"
@@ -50,8 +50,8 @@ do_install() {
 				DRIVERS=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/vuplus/vuplus-dvb-modules-${MACHINE}.bb | cut -b 12-19`
 			elif [ "${MACHINE}" = "et4x00" -o "${MACHINE}" = "et5x00" -o "${MACHINE}" = "et6x00" -o "${MACHINE}" = "et9x00" ]; then
 				DRIVERS=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/etxx00/et-dvb-modules-${MACHINE}.bb | cut -b 12-19`
-			elif [ "${MACHINE}" = "odinm9" ]; then
-				DRIVERS=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/odin/odin-dvb-modules-${MACHINE}.bb | cut -b 12-19`
+			elif [ "${MACHINE}" = "maram9" ]; then
+				DRIVERS=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/mara/mara-dvb-modules-${MACHINE}.bb | cut -b 12-19`
 			elif [ "${MACHINE}" = "tmtwin" -o "${MACHINE}" = "tm2t" -o "${MACHINE}" = "tmsingle" ]; then
 				DRIVERS=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/technomate/technomate-dvb-modules.bb | cut -b 12-19`
 			elif [ "${MACHINE}" = "gb800solo" -o "${MACHINE}" = "gb800se" -o "${MACHINE}" = "gb800ue" -o "${MACHINE}" = "gbquad" ]; then

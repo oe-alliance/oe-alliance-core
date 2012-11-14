@@ -1,5 +1,5 @@
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS = "\
-	odin-dvb-modules-${MACHINE} \
+	mara-dvb-modules-${MACHINE} \
 	"
 
 DVBPROVIDER = "kernel"
@@ -25,10 +25,10 @@ DEFAULTTUNE = "mips32el"
 
 GLIBC_EXTRA_OECONF = "--with-tls --with-__thread"
 
-PREFERRED_PROVIDER_virtual/kernel = "linux-odin"
-PREFERRED_PROVIDER_virtual/blindscan-dvbs = "odin-blindscan-dvbs-utils"
+PREFERRED_PROVIDER_virtual/kernel = "linux-mara"
+PREFERRED_PROVIDER_virtual/blindscan-dvbs = "mara-blindscan-dvbs-utils"
 
-PREFERRED_VERSION_linux-odin = "3.4.3"
+PREFERRED_VERSION_linux-mara = "3.4.3"
 PREFERRED_VERSION_linux-libc-headers = "3.4"
 
 KERNEL_IMAGETYPE = "vmlinux"

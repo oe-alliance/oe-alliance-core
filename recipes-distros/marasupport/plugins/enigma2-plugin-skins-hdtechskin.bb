@@ -1,5 +1,5 @@
-DESCRIPTION = "Enigma2 Skin Odin-HD-Tech-Skin"
-MAINTAINER = "odin-support"
+DESCRIPTION = "Enigma2 Skin HD-Tech-Skin"
+MAINTAINER = "mara-support"
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "proprietary"

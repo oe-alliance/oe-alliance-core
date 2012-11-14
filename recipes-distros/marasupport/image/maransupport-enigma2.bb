@@ -8,12 +8,12 @@ PR = "r4"
 
 inherit task
 
-DEPENDS = "enigma2-pliplugins odinsupport-feeds"
+DEPENDS = "enigma2-pliplugins marasupport-feeds"
 
 RRECOMMENDS = "\
 	enigma2-plugin-extensions-epgsearch \
 	enigma2-plugin-extensions-imdb \
-	enigma2-plugin-extensions-odinpanel \
+	enigma2-plugin-extensions-infopanel \
 	enigma2-plugin-systemplugins-softwaremanager \
 	\
 	${@base_contains("MACHINE_FEATURES", "blindscan-dvbs", "enigma2-plugin-systemplugins-blindscan" , "", d)} \

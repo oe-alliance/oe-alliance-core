@@ -20,7 +20,7 @@ PKG_kernel-image = "kernel-image"
 RPROVIDES_kernel-base = "kernel-${KERNEL_VERSION}"
 RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
 
-SRC_URI += "http://feed.odin-support.com/download/linux-${PV}.tar.gz \
+SRC_URI += "http://feed.mara-support.com/download/linux-${PV}.tar.gz \
 	file://defconfig \
 	file://fix-proc-cputype.patch \
 	file://0001-Revert-MIPS-Add-fast-get_user_pages.patch \
@@ -46,7 +46,7 @@ SRC_URI += "http://feed.odin-support.com/download/linux-${PV}.tar.gz \
 	file://em28xx_add_terratec_h5_rev3.patch \
 	"
 
-SRC_URI_append_odinm9 = " file://board.patch"
+SRC_URI_append_maram9 = " file://board.patch"
 
 S = "${WORKDIR}/linux-${PV}"
 
@@ -70,7 +70,7 @@ kernel_do_install_append() {
 	gzip -9c ${D}${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION} > ${D}${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz
 }
 
-MTD_DEVICE_odinm9 = "mtd2"
+MTD_DEVICE_maram9 = "mtd2"
 
 pkg_postinst_kernel-image () {
 	if [ "x$D" == "x" ]; then

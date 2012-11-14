@@ -28,7 +28,7 @@ SRC_URI_append_vuultimo = " file://splash_cfe_auto.bin"
 SRC_URI_append_et5x00 = " file://splash.bin"
 SRC_URI_append_et6x00 = " file://splash.bin"
 SRC_URI_append_et9x00 = " file://splash.bin"
-SRC_URI_append_odinm9 = " file://splash.bin"
+SRC_URI_append_maram9 = " file://splash.bin"
 SRC_URI_append_ventonhdx = " file://splash.bin"
 SRC_URI_append_tmtwin = " file://splash.bmp"
 SRC_URI_append_tm2t = " file://splash.bmp"
@@ -95,7 +95,7 @@ do_install_append_et9x00() {
 	install -d ${DEPLOY_DIR_IMAGE}
 	install -m 0644 ${S}/splash.bin ${DEPLOY_DIR_IMAGE}/splash.bin
 }
-do_install_append_odinm9() {
+do_install_append_maram9() {
 	install -d ${DEPLOY_DIR_IMAGE}
 	install -m 0644 ${S}/splash.bin ${DEPLOY_DIR_IMAGE}/splash.bin
 }

@@ -1,8 +1,8 @@
-DESCRIPTION = "odin-support version info"
+DESCRIPTION = "mara-support version info"
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "proprietary"
-MAINTAINER = "odin-support Team"
+MAINTAINER = "mara-support Team"
 
 require conf/license/license-gplv2.inc
 
@@ -10,7 +10,7 @@ PV = "${IMAGE_VERSION}"
 PR = "${BUILD_VERSION}"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-URL = "http://http://www.odin-support.com"
+URL = "http://http://www.mara-support.com"
 
 S = "${WORKDIR}"
 
@@ -34,9 +34,9 @@ do_install() {
 			echo "version=${IMAGE_VERSION}" >> ${D}/etc/image-version
 			echo "build=${BUILD_VERSION}" >> ${D}/etc/image-version
 			echo "date=${DATETIME}" >> ${D}/etc/image-version
-			echo "comment=ODIN" >> ${D}/etc/image-version
+			echo "comment=MARA" >> ${D}/etc/image-version
 			echo "target=9" >> ${D}/etc/image-version
-			echo "creator=odin Support Team" >> ${D}/etc/image-version
+			echo "creator=Mara Support Team" >> ${D}/etc/image-version
 			echo "url=${URL}" >> ${D}/etc/image-version
 			echo "catalog=${URL}" >> ${D}/etc/image-version
 			echo "${MACHINE}" > ${D}/etc/model

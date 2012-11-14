@@ -74,8 +74,8 @@ do_patch_prepend(){
 		MACHINE1="Xtrend ET6"
 	elif "${MACHINE}" == "et9x00":
 		MACHINE1="Xtrend ET9"
-	elif "${MACHINE}" == "odinm9":
-		MACHINE1="Odin M9"
+	elif "${MACHINE}" == "maram9":
+		MACHINE1="Mara M9"
 	elif "${MACHINE}" == "gb800solo":
 		MACHINE1="GigaBlue HD 800 Solo"
 	elif "${MACHINE}" == "gb800se":
@@ -122,8 +122,8 @@ python do_setup_po_ipk () {
 		MACHINE1="Xtrend ET6"
 	elif "${MACHINE}" == "et9x00":
 		MACHINE1="Xtrend ET9"
-	elif "${MACHINE}" == "odinm9":
-		MACHINE1="Odin M9"
+	elif "${MACHINE}" == "maram9":
+		MACHINE1="Mara M9"
 	elif "${MACHINE}" == "gb800solo":
 		MACHINE1="GigaBlue HD 800 Solo"
 	elif "${MACHINE}" == "gb800se":
