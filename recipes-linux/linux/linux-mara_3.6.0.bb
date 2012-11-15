@@ -10,7 +10,7 @@ SRC_URI[sha256sum] = "df8c6071cbdd6a709aebb8a272dca60791edb379103597670609ef90e1
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-MACHINE_KERNEL_PR_append = ".13"
+MACHINE_KERNEL_PR_append = ".14"
 
 # By default, kernel.bbclass modifies package names to allow multiple kernels
 # to be installed in parallel. We revert this change and rprovide the versioned
@@ -43,7 +43,7 @@ SRC_URI += "http://feed.mara-support.com/download/linux-${PV}.tar.gz \
 	file://tda18271-advertise-supported-delsys.patch \
 	"
 
-SRC_URI_append_maram9 = " file://board.patch"
+SRC_URI_append_maram9 = " file://maram9-board.patch"
 
 S = "${WORKDIR}/linux-${PV}"
 
