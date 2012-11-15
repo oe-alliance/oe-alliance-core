@@ -1,24 +1,30 @@
---- a/arch/mips/brcmstb/board.c	2012-03-27 04:31:33.000000000 +0900
-+++ b/arch/mips/brcmstb/board.c	2012-05-30 14:30:51.000000000 +0900
-@@ -715,11 +715,18 @@
+--- a/arch/mips/brcmstb/board.c	2012-07-17 06:10:37.000000000 +0900
++++ b/arch/mips/brcmstb/board_new.c	2012-09-18 16:51:23.000000000 +0900
+@@ -764,14 +764,21 @@
  		.name = "complete",
  		.offset = 0,
  		.size = MTDPART_SIZ_FULL,
 -	}, {
--		.name = "kernel",
-+	},
++	}, 
 +	{
 +		.name = "backup",
- 		.offset = 0,
++               .offset = 256 * 1024 * 1024,
 +		.size = 8 * 1024 * 1024,
-+	}, 
++	},
 +	{
-+		.name = "kernel",
-+		.offset = MTDPART_OFS_APPEND,
- 		.size = 6 * 1024 * 1024,
+ 		.name = "kernel",
+-		.offset = 0,
+-		.size = 6 * 1024 * 1024,
 -	}, {
-+	}, 
-+	{
- 		.name = "rootfs",
+-		.name = "rootfs",
  		.offset = MTDPART_OFS_APPEND,
- 		.size = MTDPART_SIZ_FULL,
+-		.size = MTDPART_SIZ_FULL,
++                .size = 6 * 1024 * 1024,
++	},
++	{
++                .name = "rootfs",
++                .offset = MTDPART_OFS_APPEND,
++                .size = MTDPART_SIZ_FULL,
+ 	},
+ };
+ 

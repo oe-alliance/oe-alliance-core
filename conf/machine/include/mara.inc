@@ -28,8 +28,8 @@ GLIBC_EXTRA_OECONF = "--with-tls --with-__thread"
 PREFERRED_PROVIDER_virtual/kernel = "linux-mara"
 PREFERRED_PROVIDER_virtual/blindscan-dvbs = "mara-blindscan-dvbs-utils"
 
-PREFERRED_VERSION_linux-mara = "3.4.3"
-PREFERRED_VERSION_linux-libc-headers = "3.4"
+PREFERRED_VERSION_linux-mara = "3.6.0"
+PREFERRED_VERSION_linux-libc-headers = "3.6"
 
 KERNEL_IMAGETYPE = "vmlinux"
 KERNEL_OUTPUT = "${KERNEL_IMAGETYPE}"
@@ -41,7 +41,7 @@ UBI_VOLNAME = "rootfs"
 MKUBIFS_ARGS = "-m 2048 -e 126976 -c 4096"
 UBINIZE_ARGS = "-m 2048 -p 128KiB"
 
-IMAGEDIR ?= "${MACHINE}"
+IMAGEDIR ?= "marae2"
 
 IMAGE_CMD_ubi_prepend = " \
 	rm -rf ${IMAGE_ROOTFS}/boot/*; \
