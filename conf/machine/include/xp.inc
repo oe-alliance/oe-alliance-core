@@ -27,7 +27,7 @@ GLIBC_EXTRA_OECONF = "--with-tls --with-__thread"
 PREFERRED_PROVIDER_virtual/kernel = "linux-xp"
 
 PREFERRED_VERSION_linux-xp = "3.5.1"
-PREFERRED_VERSION_linux-libc-headers = "3.4"
+PREFERRED_VERSION_linux-libc-headers = "3.5"
 
 KERNEL_IMAGETYPE = "vmlinux"
 KERNEL_OUTPUT = "${KERNEL_IMAGETYPE}"
@@ -58,7 +58,6 @@ IMAGE_CMD_ubi_append = " \
 	rm -f ${DEPLOY_DIR_IMAGE}/*.ubifs; \
 	rm -Rf ${IMAGEDIR}; \
 	"
-
 
 MACHINE_FEATURES += "alsa wifi 3dtv switchoff textlcd hdmicec"
 
