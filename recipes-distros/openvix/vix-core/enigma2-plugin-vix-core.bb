@@ -68,12 +68,14 @@ do_patch_prepend(){
 		MACHINE1="Vu+ Solo"
 	elif "${MACHINE}" == "vuduo":
 		MACHINE1="Vu+ Duo"
+	elif "${MACHINE}" == "et4x00":
+		MACHINE1="Xtrend ET4x00"
 	elif "${MACHINE}" == "et5x00":
-		MACHINE1="Xtrend ET5"
+		MACHINE1="Xtrend ET5x00"
 	elif "${MACHINE}" == "et6x00":
-		MACHINE1="Xtrend ET6"
+		MACHINE1="Xtrend ET6x00"
 	elif "${MACHINE}" == "et9x00":
-		MACHINE1="Xtrend ET9"
+		MACHINE1="Xtrend ET9x00"
 	elif "${MACHINE}" == "maram9":
 		MACHINE1="Mara M9"
 	elif "${MACHINE}" == "gb800solo":
@@ -87,7 +89,19 @@ do_patch_prepend(){
 	elif "${MACHINE}" == "tmtwin" or "${MACHINE}" == "tm2t" or "${MACHINE}" == "tmsingle":
 		MACHINE1="Technomate"
 	elif "${MACHINE}" == "ventonhdx":
-		MACHINE1="Venton HD"
+		if "${DISTRO}" == "ventonsupport" or "${DISTRO}" == "egami":
+			MACHINE1="linux receiver"
+		else:
+			MACHINE1="Venton HDx"
+	elif "${MACHINE}" == "ventonhde":
+		if "${DISTRO}" == "ventonsupport" or "${DISTRO}" == "egami":
+			MACHINE1="linux receiver"
+		else:
+			MACHINE1="Venton HDe"
+	elif "${MACHINE}" == "xp1000":
+		MACHINE1="MaxDigital XP1000"
+	elif "${MACHINE}" == "ebox5000":
+		MACHINE1="MixOS 5000"
 	import os
 	os.system("find ./ -name \"*.po\" > ./po_list")
 	os.system("find ./ -name \"*.py\" >> ./po_list")
@@ -116,12 +130,14 @@ python do_setup_po_ipk () {
 		MACHINE1="Vu+ Solo"
 	elif "${MACHINE}" == "vuduo":
 		MACHINE1="Vu+ Duo"
+	elif "${MACHINE}" == "et4x00":
+		MACHINE1="Xtrend ET4x00"
 	elif "${MACHINE}" == "et5x00":
-		MACHINE1="Xtrend ET5"
+		MACHINE1="Xtrend ET5x00"
 	elif "${MACHINE}" == "et6x00":
-		MACHINE1="Xtrend ET6"
+		MACHINE1="Xtrend ET6x00"
 	elif "${MACHINE}" == "et9x00":
-		MACHINE1="Xtrend ET9"
+		MACHINE1="Xtrend ET9x00"
 	elif "${MACHINE}" == "maram9":
 		MACHINE1="Mara M9"
 	elif "${MACHINE}" == "gb800solo":
@@ -136,6 +152,12 @@ python do_setup_po_ipk () {
 		MACHINE1="Technomate"
 	elif "${MACHINE}" == "ventonhdx":
 		MACHINE1="Venton HD"
+	elif "${MACHINE}" == "ventonhde":
+		MACHINE1="Venton HDe"
+	elif "${MACHINE}" == "xp1000":
+		MACHINE1="MaxDigital XP1000"
+	elif "${MACHINE}" == "ebox5000":
+		MACHINE1="MixOS 5000"
 	import os
 	os.system("find ./ -name \"*.po\" > ./po_list")
 	os.system("find ./ -name \"*.py\" >> ./po_list")
