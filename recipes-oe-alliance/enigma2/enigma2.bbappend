@@ -1,6 +1,6 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
-PRINC = "30"
+PRINC = "31"
 
 RDEPENDS_${PN} = " \
 	alsa-conf \
@@ -75,6 +75,7 @@ FILES_${PN}-dbg += "\
 
 FILES_${PN}-src += "\
 	/usr/lib/enigma2/python/upgrade.py \
+	/usr/lib/enigma2/python/PowerManagerTimer.py \
 	"
 
 def enigma2changeword(file):
