@@ -10,7 +10,7 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "4.0.+git${SRCPV}"
 PKGV = "4.0.+git${GITPKGV}"
-PR = "r0"
+PR = "r1"
 
 
 SRC_URI="git://github.com/betonme/e2openplugin-EnhancedMovieCenter.git"
@@ -33,7 +33,7 @@ EXTRA_OECONF = "\
 	STAGING_LIBDIR=${STAGING_LIBDIR} \
 "
 
-CONFFILES_${PN} = "${sysconfdir}/emc-hide.cfg ${sysconfdir}/emc-noscan.cfg ${sysconfdir}/emc-permsort.cfg ${sysconfdir}/emc-topdir.cfg"
+CONFFILES_${PN} = "${sysconfdir}/enigma2/emc-hide.cfg ${sysconfdir}/enigma2/emc-noscan.cfg ${sysconfdir}/enigma2/emc-permsort.cfg ${sysconfdir}/enigma2/emc-topdir.cfg"
 
 
 pkg_postinst() {
