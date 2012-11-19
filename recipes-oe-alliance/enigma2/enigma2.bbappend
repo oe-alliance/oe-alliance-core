@@ -1,16 +1,18 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
-PRINC = "31"
+PRINC = "32"
 
 RDEPENDS_${PN} = " \
 	alsa-conf \
 	enigma2-fonts \
 	ethtool \
 	glibc-gconv-iso8859-15 \
-	gst-plugin-subsink \
 	hotplug-e2-helper \
-	\
 	${PYTHON_RDEPS} \
+	"
+
+RRECOMMENDS_${PN} = " \
+	gst-plugin-subsink \
 	${GST_BASE_RDEPS} \
 	${GST_GOOD_RDEPS} \
 	${GST_BAD_RDEPS} \
