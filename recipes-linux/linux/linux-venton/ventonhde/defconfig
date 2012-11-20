@@ -2561,8 +2561,8 @@ CONFIG_HAVE_ARCH_KGDB=y
 # CONFIG_KGDB is not set
 # CONFIG_TEST_KSTRTOX is not set
 # CONFIG_EARLY_PRINTK is not set
-CONFIG_CMDLINE_BOOL=y
-CONFIG_CMDLINE="ubi.mtd=rootfs rootfstype=ubifs root=ubi0:rootfs bmem=256M@512M bmem=16M console=ttyS0,115200n8"
+# CONFIG_CMDLINE_BOOL=y
+# CONFIG_CMDLINE="ubi.mtd=rootfs rootfstype=ubifs root=ubi0:rootfs bmem=256M@512M bmem=16M console=ttyS0,115200n8"
 # CONFIG_CMDLINE_OVERRIDE is not set
 # CONFIG_DEBUG_STACKOVERFLOW is not set
 # CONFIG_RUNTIME_DEBUG is not set
