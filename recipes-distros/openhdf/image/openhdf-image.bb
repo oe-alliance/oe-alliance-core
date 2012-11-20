@@ -32,6 +32,7 @@ IMAGE_INSTALL = " \
 	hdparm \
 	libavahi-client \
 	libcrypto-compat \
+	mediatomb \
 	ntfs-3g \
 	ntp \
 	openvpn \
@@ -47,10 +48,10 @@ IMAGE_INSTALL = " \
 	"
 
 ENIGMA2_PLUGINS = " "
-ENIGMA2_PLUGINS_append_gb800solo = ""
-ENIGMA2_PLUGINS_append_gb800se = ""
-ENIGMA2_PLUGINS_append_gb800ue = "python-imaging enigma2-plugin-extensions-etportal"
-ENIGMA2_PLUGINS_append_gbquad = "python-imaging webbrowser-utils enigma2-plugin-extensions-webbrowser enigma2-plugin-extensions-etportal"
+ENIGMA2_PLUGINS_append_gb800solo = "enigma2-plugin-extensions-gb-multiquickbutton"
+ENIGMA2_PLUGINS_append_gb800se = "enigma2-plugin-extensions-gb-multiquickbutton"
+ENIGMA2_PLUGINS_append_gb800ue = "enigma2-plugin-extensions-gb-multiquickbutton python-imaging enigma2-plugin-extensions-etportal"
+ENIGMA2_PLUGINS_append_gbquad = "enigma2-plugin-extensions-gb-multiquickbutton python-imaging webbrowser-utils enigma2-plugin-extensions-webbrowser enigma2-plugin-extensions-etportal"
 ENIGMA2_PLUGINS_append_tmtwin = "enigma2-plugin-systemplugins-osd3dsetup enigma2-plugin-extensions-etportal"
 ENIGMA2_PLUGINS_append_tm2t = "enigma2-plugin-systemplugins-osd3dsetup enigma2-plugin-extensions-etportal"
 ENIGMA2_PLUGINS_append_tmsingle = "enigma2-plugin-systemplugins-osd3dsetup enigma2-plugin-extensions-etportal"
