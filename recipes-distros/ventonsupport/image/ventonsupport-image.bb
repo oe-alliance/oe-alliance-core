@@ -65,7 +65,6 @@ ENIGMA2_PLUGINS = "\
 ENIGMA2_INI_PLUGINS = "\
 	enigma2-plugin-picons-default-ventonsupport \
 	enigma2-plugin-extensions-inimytube \
-	enigma2-plugin-systemplugins-inivfd \
 "
 
 ENIGMA2_USB_DRV = "\
