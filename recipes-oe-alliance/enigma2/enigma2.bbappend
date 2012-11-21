@@ -1,6 +1,6 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
-PRINC = "33"
+PRINC = "34"
 
 RDEPENDS_${PN} = " \
 	alsa-conf \
@@ -77,6 +77,7 @@ FILES_${PN}-dbg += "\
 
 FILES_${PN}-src += "\
 	/usr/lib/enigma2/python/upgrade.py \
+	/usr/lib/enigma2/python/PowerTimer.py \
 	"
 
 def enigma2changeword(file):
@@ -205,13 +206,6 @@ do_openpli_preinstall() {
 do_install_append() {
 	install -d ${D}/usr/share/keymaps
 	find ${D}/usr/lib/enigma2/python/ -name '*.pyc' -exec rm {} \;
-	find ${D}/usr/lib/enigma2/python/Plugins/ -name '*.py' -exec rm {} \;
-	if [ -e ${D}/usr/lib/enigma2/python/PowerTimer.py ]; then
-		rm ${D}/usr/lib/enigma2/python/PowerTimer.py
-	fi
-	if [ -e ${S}/lib/python/Plugins/Extensions/DVDPlayer/plugin.py ]; then
-		cp ${S}/lib/python/Plugins/Extensions/DVDPlayer/plugin.py ${D}/usr/lib/enigma2/python/Plugins/Extensions/DVDPlayer/plugin.py
-	fi
 	ln -s /usr/lib/enigma2/python/Tools/StbHardware.pyo ${D}/usr/lib/enigma2/python/Tools/DreamboxHardware.pyo
 	ln -s /usr/lib/python/Components/PackageInfo.pyo ${D}/usr/lib/enigma2/python/Components/DreamboxInfoHandler.pyo
 	install -d ${D}${sysconfdir}
