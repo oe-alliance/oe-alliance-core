@@ -4,7 +4,7 @@ PRIORITY = "required"
 LICENSE = "CLOSED"
 
 PV = "${KV}+${SRCDATE}"
-PR = "r6"
+PR = "r7"
 
 S = "${WORKDIR}"
 
@@ -20,6 +20,6 @@ do_install() {
 	install -d ${D}/${sysconfdir}/modules-load.d
 	for i in dvb; do
 		install -m 0755 ${WORKDIR}/$i.ko ${D}/lib/modules/${KV}/extra
-		echo $i >> ${D}/${sysconfdir}/modules-load.d/${MACHINE}.conf
+		echo $i >> ${D}/${sysconfdir}/modules-load.d/_${MACHINE}.conf
 	done
 }
