@@ -43,6 +43,7 @@ IMAGE_INSTALL = " \
 	ushare \
 	task-base-smbfs \
 	task-base-smbfs-client \
+	mc \
 	"
 
 ENIGMA2_PLUGINS = "\
