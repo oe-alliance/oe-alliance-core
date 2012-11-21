@@ -1,6 +1,6 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
-PRINC = "32"
+PRINC = "33"
 
 RDEPENDS_${PN} = " \
 	alsa-conf \
@@ -77,7 +77,6 @@ FILES_${PN}-dbg += "\
 
 FILES_${PN}-src += "\
 	/usr/lib/enigma2/python/upgrade.py \
-	/usr/lib/enigma2/python/PowerManagerTimer.py \
 	"
 
 def enigma2changeword(file):
@@ -207,8 +206,8 @@ do_install_append() {
 	install -d ${D}/usr/share/keymaps
 	find ${D}/usr/lib/enigma2/python/ -name '*.pyc' -exec rm {} \;
 	find ${D}/usr/lib/enigma2/python/Plugins/ -name '*.py' -exec rm {} \;
-	if [ -e ${D}/usr/lib/enigma2/python/PowerManagerTimer.py ]; then
-		rm ${D}/usr/lib/enigma2/python/PowerManagerTimer.py
+	if [ -e ${D}/usr/lib/enigma2/python/PowerTimer.py ]; then
+		rm ${D}/usr/lib/enigma2/python/PowerTimer.py
 	fi
 	if [ -e ${S}/lib/python/Plugins/Extensions/DVDPlayer/plugin.py ]; then
 		cp ${S}/lib/python/Plugins/Extensions/DVDPlayer/plugin.py ${D}/usr/lib/enigma2/python/Plugins/Extensions/DVDPlayer/plugin.py
