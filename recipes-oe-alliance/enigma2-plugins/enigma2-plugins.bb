@@ -35,7 +35,7 @@ SRC_URI_append_et6x00 = " \
 			file://dreambox_bouqueteditor.png"
 SRC_URI_append_et9x00 = " \
 			file://dreambox_bouqueteditor.png"
-SRC_URI_append_maram9 = " \
+SRC_URI_append_odinm9 = " \
 			file://dreambox_bouqueteditor.png"
 SRC_URI_append_tmtwin = " \
 			file://dreambox_bouqueteditor.png"
@@ -106,7 +106,7 @@ do_install_append_et6x00() {
 do_install_append_et9x00() {
 	install -m 0644 ${WORKDIR}/dreambox_bouqueteditor.png ${D}/usr/lib/enigma2/python/Plugins/Extensions/WebBouquetEditor/web-data/
 }
-do_install_append_maram9() {
+do_install_append_odinm9() {
 	install -m 0644 ${WORKDIR}/dreambox_bouqueteditor.png ${D}/usr/lib/enigma2/python/Plugins/Extensions/WebBouquetEditor/web-data/
 }
 do_install_append_tmtwin() {

@@ -1,5 +1,5 @@
 DESCRIPTION = "Enigma2 Skin HD-Tech-Skin"
-MAINTAINER = "mara-support"
+MAINTAINER = "odin-support"
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "proprietary"

@@ -8,7 +8,7 @@ PR = "r4"
 
 inherit task
 
-DEPENDS = "enigma2-pliplugins marasupport-feeds"
+DEPENDS = "enigma2-pliplugins odinsupport-feeds"
 
 RRECOMMENDS = "\
 	enigma2-plugin-extensions-epgsearch \

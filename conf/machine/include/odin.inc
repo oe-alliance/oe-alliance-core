@@ -1,5 +1,5 @@
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS = "\
-	mara-dvb-modules-${MACHINE} \
+	odin-dvb-modules-${MACHINE} \
 	"
 
 DVBPROVIDER = "kernel"
@@ -25,10 +25,10 @@ DEFAULTTUNE = "mips32el"
 
 GLIBC_EXTRA_OECONF = "--with-tls --with-__thread"
 
-PREFERRED_PROVIDER_virtual/kernel = "linux-mara"
-PREFERRED_PROVIDER_virtual/blindscan-dvbs = "mara-blindscan-dvbs-utils"
+PREFERRED_PROVIDER_virtual/kernel = "linux-odin"
+PREFERRED_PROVIDER_virtual/blindscan-dvbs = "odin-blindscan-dvbs-utils"
 
-PREFERRED_VERSION_linux-mara = "3.6.0"
+PREFERRED_VERSION_linux-odin = "3.6.0"
 PREFERRED_VERSION_linux-libc-headers = "3.6"
 
 KERNEL_IMAGETYPE = "vmlinux"
@@ -41,7 +41,7 @@ UBI_VOLNAME = "rootfs"
 MKUBIFS_ARGS = "-m 2048 -e 126976 -c 4096"
 UBINIZE_ARGS = "-m 2048 -p 128KiB"
 
-IMAGEDIR ?= "marae2"
+IMAGEDIR ?= "${MACHINE}"
 
 IMAGE_CMD_ubi_prepend = " \
 	rm -rf ${IMAGE_ROOTFS}/boot/*; \

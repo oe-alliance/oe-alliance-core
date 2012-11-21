@@ -142,7 +142,7 @@ do_install_append_gbquad() {
 # 	install -m 0644 ${S}/enigma2-plugin-private-menuluxipkg_4.1b_all.ipk ${DEPLOY_DIR_IPK}/private
 }
 
-do_install_append_maram9() {
+do_install_append_odinm9() {
 # 	Install any packages that are only For this machines feed here, uncomment the line below and change as required
 # 	install -m 0644 ${S}/enigma2-plugin-private-menuluxipkg_4.1b_all.ipk ${DEPLOY_DIR_IPK}/private
 }

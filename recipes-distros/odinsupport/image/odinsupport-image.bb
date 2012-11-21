@@ -1,8 +1,8 @@
-DESCRIPTION = "mara-support Image"
+DESCRIPTION = "odin-support Image"
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "proprietary"
-MAINTAINER = "mara-support team"
+MAINTAINER = "odin-support team"
 
 require conf/license/license-gplv2.inc
 
@@ -12,10 +12,10 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 IMAGE_INSTALL = " \
 	oe-alliance-enigma2 \
-	marasupport-version-info \
-	marasupport-enigma2 \
-	marasupport-bootlogo \
-	marasupport-feed-config \
+	odinsupport-version-info \
+	odinsupport-enigma2 \
+	odinsupport-bootlogo \
+	odinsupport-feed-config \
 	${ENIGMA2_PLUGINS} \
 	avahi-daemon \
 	dropbear \
@@ -56,7 +56,7 @@ ENIGMA2_PLUGINS = "\
 	enigma2-plugin-systemplugins-hotplug \
 "
 
-export IMAGE_BASENAME = "marasupport-image"
+export IMAGE_BASENAME = "odinsupport-image"
 IMAGE_LINGUAS = ""
 
 inherit image
@@ -82,7 +82,7 @@ generate_nfo() {
 			echo "Machine: ${MACHINE}" >> ${NFO}
 			DATE=`date +%Y-%m-%d' '%H':'%M`
 			echo "Date: ${DATE}" >> ${NFO}
-			echo "Issuer: mara-support" >> ${NFO}
+			echo "Issuer: odin-support" >> ${NFO}
 			echo "Link: ${DISTRO_FEED_URI}" >> ${NFO}
 			if [ "${DESC}" != "" ]; then
 					echo "Description: ${DESC}" >> ${NFO}

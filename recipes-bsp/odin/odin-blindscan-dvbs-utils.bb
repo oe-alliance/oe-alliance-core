@@ -4,7 +4,7 @@ PRIORITY = "optional"
 LICENSE = "CLOSED"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-SRC_URI = "file://mara_blindscan"
+SRC_URI = "file://odin_blindscan"
 
 PROVIDES += "virtual/blindscan-dvbs"
 RPROVIDES_${PN} += "virtual/blindscan-dvbs"
@@ -16,5 +16,5 @@ S = "${WORKDIR}/"
 
 do_install() {
 	install -d "${D}/${bindir}"
-	install -m 0755 "${S}/mara_blindscan" "${D}/${bindir}"
+	install -m 0755 "${S}/odin_blindscan" "${D}/${bindir}"
 }

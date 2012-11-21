@@ -1,7 +1,0 @@
-KV = "3.6.0"
-SRCDATE = "20121115"
-
-require mara-dvb-modules.inc
-
-SRC_URI[md5sum] = "4c2903568b074e904071a8774a2b3676"
-SRC_URI[sha256sum] = "f2e4e10c860191ae61a8e33ec9d3eb356bec5643b562110370e3764f08b82a02"

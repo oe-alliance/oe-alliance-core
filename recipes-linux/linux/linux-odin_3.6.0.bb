@@ -10,7 +10,7 @@ SRC_URI[sha256sum] = "df8c6071cbdd6a709aebb8a272dca60791edb379103597670609ef90e1
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-MACHINE_KERNEL_PR_append = ".14"
+MACHINE_KERNEL_PR_append = ".15"
 
 # By default, kernel.bbclass modifies package names to allow multiple kernels
 # to be installed in parallel. We revert this change and rprovide the versioned
@@ -20,7 +20,7 @@ PKG_kernel-image = "kernel-image"
 RPROVIDES_kernel-base = "kernel-${KERNEL_VERSION}"
 RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
 
-SRC_URI += "http://feed.mara-support.com/download/linux-${PV}.tar.gz \
+SRC_URI += "http://feed.odin-support.com/download/linux-${PV}.tar.gz \
 	file://defconfig \
 	file://0001-Revert-MIPS-mm-Add-compound-tail-page-_mapcount-when.patch \
 	file://0001-Revert-MIPS-Add-fast-get_user_pages.patch \
@@ -43,7 +43,7 @@ SRC_URI += "http://feed.mara-support.com/download/linux-${PV}.tar.gz \
 	file://tda18271-advertise-supported-delsys.patch \
 	"
 
-SRC_URI_append_maram9 = " file://maram9-board.patch"
+SRC_URI_append_odinm9 = " file://odinm9-board.patch"
 
 S = "${WORKDIR}/linux-${PV}"
 
@@ -67,7 +67,7 @@ kernel_do_install_append() {
 	gzip -9c ${D}${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION} > ${D}${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz
 }
 
-MTD_DEVICE_maram9 = "mtd2"
+MTD_DEVICE_odinm9 = "mtd2"
 
 pkg_postinst_kernel-image () {
 	if [ "x$D" == "x" ]; then

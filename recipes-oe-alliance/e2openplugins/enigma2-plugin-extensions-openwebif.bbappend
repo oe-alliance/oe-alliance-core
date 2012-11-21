@@ -17,7 +17,7 @@ python do_package_prepend () {
 		('et5x00', 'et5x00.jpg', 'et_rc5_normal.png'),
 		('et6x00', 'et5x00.jpg', 'et_rc5_normal.png'),
 		('et9x00', 'et9x00.jpg', 'et_rc7_normal.png'),
-		('maram9', 'maram9.jpg', 'maram9.png'),
+		('odinm9', 'odinm9.jpg', 'odinm9.png'),
 		('tmtwin', 'twin.jpg', 'tm_twin.png'),
 		('tm2t', '2t.jpg', 'tm_t2.png'),
 		('tmsingle', '2t.jpg', 'tm_t2.png'),

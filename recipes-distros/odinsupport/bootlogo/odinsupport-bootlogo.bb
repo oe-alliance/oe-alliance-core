@@ -1,7 +1,7 @@
-DESCRIPTION = "mara-support bootlogo"
+DESCRIPTION = "odin-support bootlogo"
 SECTION = "base"
 PRIORITY = "required"
-MAINTAINER = "mara-support Team"
+MAINTAINER = "odin-support Team"
 
 require conf/license/license-gplv2.inc
 

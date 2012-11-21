@@ -6,9 +6,9 @@ LICENSE = "CLOSED"
 PV = "${KV}+${SRCDATE}"
 PR = "r3"
 
-RDEPENDS_${PN} += "mara-fpupdate-${MACHINE}"
+RDEPENDS_${PN} += "odin-fpupdate-${MACHINE}"
 
-SRC_URI = "http://feed.mara-support.com/download/${MACHINE}-drivers-${KV}-${SRCDATE}.tar.gz"
+SRC_URI = "http://feed.odin-support.com/download/${MACHINE}-drivers-${KV}-${SRCDATE}.tar.gz"
 
 S = "${WORKDIR}"
 
