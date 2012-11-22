@@ -1,6 +1,6 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
-PRINC = "34"
+PRINC = "35"
 
 RDEPENDS_${PN} = " \
 	alsa-conf \
@@ -214,7 +214,7 @@ do_install_append() {
 }
 
 do_install_po() {
-	LANGS="ar bg ca cs da de el en en_GB es et fa fi fr fy he hr hu is it lt lv nl no pl pt ro ru sv sk sl sr th tr uk"
+	LANGS="ar bg ca cs da de el en en_GB es et fa fi fr fy he hr hu is it lt lv nl no nb pl pt pt_BR ro ru sv sk sl sr th tr uk"
 	for lang in ${LANGS}; do
 		if [ -e ${S}/po/$lang.po ]; then
 			install -m 0755 ${S}/po/$lang.po ${D}${datadir}/enigma2/po/enigma2-$lang.po
