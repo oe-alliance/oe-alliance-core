@@ -21,7 +21,7 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "2.1+git${SRCPV}"
 PKGV = "2.1+git${GITPKGV}"
-PR = "r6"
+PR = "r7"
 
 SRC_URI="git://github.com/OpenViX/vix-core.git;protocol=git"
 
@@ -187,7 +187,7 @@ do_install_po() {
 	for lang in ${LANGS}; do
 		install -m 0755 ${S}/po/$lang.po ${D}/usr/lib/enigma2/python/Plugins/SystemPlugins/ViX/locale/$lang.po
 	done
-	install -m 0755 ${S}/po/rcsc.pot ${D}/usr/lib/enigma2/python/Plugins/Extensions/RemoteChannelStreamConverter/po/vix.pot
+	install -m 0755 ${S}/po/vix.pot ${D}/usr/lib/enigma2/python/Plugins/Extensions/RemoteChannelStreamConverter/po/vix.pot
 }
 
 addtask setup_po_ipk before do_package after do_install
