@@ -131,6 +131,8 @@ do_patch_prepend(){
 		MACHINE1="MaxDigital XP1000"
 	elif "${MACHINE}" == "ebox5000":
 		MACHINE1="MixOS 5000"
+	elif "${MACHINE}" == "iclassm7":
+		MACHINE1="iclass"
 	import os
 	os.system("find ./ -name \"*.po\" > ./po_list")
 	os.system("find ./ -name \"*.py\" >> ./po_list")
@@ -185,6 +187,8 @@ python do_setup_po_ipk () {
 		MACHINE1="MaxDigital XP1000"
 	elif "${MACHINE}" == "ebox5000":
 		MACHINE1="MixOS 5000"
+	elif "${MACHINE}" == "iclassm7":
+		MACHINE1="iclass"
 	import os
 	os.system("find ./ -name \"*.po\" > ./po_list")
 	os.system("find ./ -name \"*.py\" >> ./po_list")
