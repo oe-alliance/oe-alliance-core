@@ -10,8 +10,6 @@ PV = "${IMAGE_VERSION}"
 PR = "${BUILD_VERSION}"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-URL = "http://http://www.iclass.com"
-
 S = "${WORKDIR}"
 
 inherit autotools
@@ -37,8 +35,6 @@ do_install() {
 			echo "comment=iclass" >> ${D}/etc/image-version
 			echo "target=9" >> ${D}/etc/image-version
 			echo "creator=iclass Team" >> ${D}/etc/image-version
-			echo "url=${URL}" >> ${D}/etc/image-version
-			echo "catalog=${URL}" >> ${D}/etc/image-version
 			echo "${MACHINE}" > ${D}/etc/model
 			if [ "${FEED_BASE}" = "beta" ] ; then
 				touch ${D}/etc/.beta
