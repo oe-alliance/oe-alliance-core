@@ -1,6 +1,6 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
-PRINC = "35"
+PRINC = "36"
 
 RDEPENDS_${PN} = " \
 	alsa-conf \
@@ -128,7 +128,10 @@ do_patch_prepend(){
 		else:
 			MACHINE1="Venton HDe"
 	elif "${MACHINE}" == "xp1000":
-		MACHINE1="MaxDigital XP1000"
+		if "${DISTRO}" == "mkdigital" or "${DISTRO}" == "openaaf":
+			MACHINE1="MK-Digital XP1000"
+		else:
+			MACHINE1="MaxDigital XP1000"
 	elif "${MACHINE}" == "ebox5000":
 		MACHINE1="MixOS 5000"
 	elif "${MACHINE}" == "iclassm7":
@@ -184,7 +187,10 @@ python do_setup_po_ipk () {
 	elif "${MACHINE}" == "ventonhde":
 		MACHINE1="Venton HDe"
 	elif "${MACHINE}" == "xp1000":
-		MACHINE1="MaxDigital XP1000"
+		if "${DISTRO}" == "mkdigital" or "${DISTRO}" == "openaaf":
+			MACHINE1="MK-Digital XP1000"
+		else:
+			MACHINE1="MaxDigital XP1000"
 	elif "${MACHINE}" == "ebox5000":
 		MACHINE1="MixOS 5000"
 	elif "${MACHINE}" == "iclassm7":
