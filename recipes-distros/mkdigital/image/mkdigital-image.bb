@@ -47,8 +47,6 @@ ENIGMA2_PLUGINS = "\
 	enigma2-plugin-extensions-mediaplayer \
 	enigma2-plugin-extensions-dvdplayer \
 	enigma2-plugin-systemplugins-hotplug \
-	enigma2-plugin-systemplugins-devicemanager \
-	enigma2-plugin-systemplugins-swapmanager \
 "
 
 
