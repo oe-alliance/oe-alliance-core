@@ -54,6 +54,7 @@ ENIGMA2_PLUGINS = "\
 	enigma2-plugin-extensions-autobackup \
 	enigma2-plugin-systemplugins-softwaremanager \
 	enigma2-plugin-systemplugins-hotplug \
+	enigma2-plugin-extensions-bmediacenter \
 "
 
 export IMAGE_BASENAME = "iclass-image"
