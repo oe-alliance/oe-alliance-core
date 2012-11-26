@@ -64,12 +64,10 @@ MACHINE_FEATURES += "alsa wifi 3dtv switchoff textlcd hdmicec"
 require conf/machine/include/tune-mips32.inc
 
 EXTRA_IMAGEDEPENDS += " \
-	enigma2-plugin-extensions-et-livestream \
 	enigma2-plugin-systemplugins-remotecontrolcode \
 	"
 
 MACHINE_EXTRA_RDEPENDS = " \
-	enigma2-plugin-extensions-et-livestream \
 	enigma2-plugin-systemplugins-remotecontrolcode \
 	"
 
