@@ -33,20 +33,13 @@ IMAGE_INSTALL = " \
 	util-linux-sfdisk \
 	volatile-media \
 	vsftpd \
-	ntfs-3g \
 	hddtemp \
-	task-base-smbfs-client \
-	task-base-smbfs \
-	task-base-nfs \
 	busybox-cron \
 	"
 
 ENIGMA2_PLUGINS = "\
 	enigma2-plugin-extensions-graphmultiepg \
 	enigma2-plugin-systemplugins-videotune \
-	enigma2-plugin-extensions-mediaplayer \
-	enigma2-plugin-extensions-dvdplayer \
-	enigma2-plugin-systemplugins-hotplug \
 	enigma2-plugin-settings-defaultsat \
 "
 
