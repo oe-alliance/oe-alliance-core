@@ -3,7 +3,7 @@ LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3b58 \
                     file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
 PV = "1.0"
-PR = "r14"
+PR = "r15"
 
 inherit task
 
@@ -76,7 +76,7 @@ RRECOMMENDS = "\
 	pyload \
 	"
 
-# RRECOMMENDS_append_vuuno = " vuplus-opera-browser-${MACHINE}"
-# RRECOMMENDS_append_vuultimo = " vuplus-opera-browser-${MACHINE}"
-# RRECOMMENDS_append_vusolo = " vuplus-opera-browser-${MACHINE}"
-# RRECOMMENDS_append_vuduo = " vuplus-opera-browser-${MACHINE}"
+RRECOMMENDS_append_vuuno = "enigma2-plugin-extensions-hbbtv"
+RRECOMMENDS_append_vuultimo = "enigma2-plugin-extensions-hbbtv"
+RRECOMMENDS_append_vusolo = "enigma2-plugin-extensions-hbbtv"
+RRECOMMENDS_append_vuduo = "enigma2-plugin-extensions-hbbtv"

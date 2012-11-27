@@ -16,6 +16,7 @@ PROVIDES = "${PN} \
 	enigma2-plugin-extensions-vuplusevent \
 	enigma2-plugin-systemplugins-remotecontrolcode \
 	enigma2-plugin-extensions-webbrowser \
+	enigma2-plugin-extensions-hbbtv \
 	"
 
 DESCRIPTION_enigma2-plugin-extensions-autobouquets = "28.2E stream bouquet downloader (Enigma2)"
@@ -42,6 +43,8 @@ RDEPENDS_enigma2-plugin-extensions-webbrowser = "python-gdata libqtwebkite4 webb
 FILES_enigma2-plugin-extensions-webbrowser_append = "${datadir}/keymaps"
 DESCRIPTION_enigma2-plugin-extension-openuitzendinggemist = "Watch NL-IP TV"
 DESCRIPTION_enigma2-plugin-extension-tunerserver = "Builds a virtual channels list"
+DESCRIPTION_enigma2-plugin-extension-hbbtv = "HbbTV player"
+RDEPENDS_enigma2-plugin-extensions-hbbtv = "vuplus-opera-browser-util"
 
 DEPENDS = "enigma2 \
 	${@base_contains("MACHINE_FEATURES", "blindscan-dvbc", "virtual/blindscan-dvbc" , "", d)} \
@@ -57,6 +60,7 @@ DEPENDS = "enigma2 \
 	wvstreams \
 	webbrowser-utils \
 	usbutils \
+	vuplus-opera-browser-util \
 	"
 
 inherit gitpkgv autotools
@@ -64,7 +68,7 @@ inherit gitpkgv autotools
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r22"
+PR = "r23"
 
 SRC_URI="git://github.com/oe-alliance/oe-alliance-plugins.git;protocol=git"
 
@@ -85,7 +89,7 @@ S = "${WORKDIR}/git"
 
 python populate_packages_prepend() {
 	enigma2_plugindir = bb.data.expand('${libdir}/enigma2/python/Plugins', d)
-	do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/[a-zA-Z0-9_]+.*$', 'enigma2-plugin-%s', '%s', recursive=True, match_path=True, prepend=True)
+	do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/[a-zA-Z0-9_]+.*$', 'enigma2-plugin-%s', '%s', recursive=True, match_path=True, prepend=True, extra_depends="enigma2")
 	do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/.*\.py$', 'enigma2-plugin-%s-src', '%s (source files)', recursive=True, match_path=True, prepend=True)
 	do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/.*\.la$', 'enigma2-plugin-%s-dev', '%s (development)', recursive=True, match_path=True, prepend=True)
 	do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/.*\.a$', 'enigma2-plugin-%s-staticdev', '%s (static development)', recursive=True, match_path=True, prepend=True)
