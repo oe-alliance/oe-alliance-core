@@ -60,7 +60,6 @@ DEPENDS = "enigma2 \
 	wvstreams \
 	webbrowser-utils \
 	usbutils \
-	vuplus-opera-browser-util \
 	"
 
 inherit gitpkgv autotools
@@ -68,7 +67,7 @@ inherit gitpkgv autotools
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r23"
+PR = "r24"
 
 SRC_URI="git://github.com/oe-alliance/oe-alliance-plugins.git;protocol=git"
 
