@@ -1,6 +1,6 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
-PRINC = "36"
+PRINC = "37"
 
 RDEPENDS_${PN} = " \
 	alsa-conf \
@@ -133,7 +133,7 @@ do_patch_prepend(){
 		else:
 			MACHINE1="MaxDigital XP1000"
 	elif "${MACHINE}" == "ebox5000":
-		MACHINE1="MixOS 5000"
+		MACHINE1="MixOS F5"
 	elif "${MACHINE}" == "iclassm7":
 		MACHINE1="iclass"
 	import os
@@ -192,7 +192,7 @@ python do_setup_po_ipk () {
 		else:
 			MACHINE1="MaxDigital XP1000"
 	elif "${MACHINE}" == "ebox5000":
-		MACHINE1="MixOS 5000"
+		MACHINE1="MixOS F5"
 	elif "${MACHINE}" == "iclassm7":
 		MACHINE1="iclass"
 	import os
