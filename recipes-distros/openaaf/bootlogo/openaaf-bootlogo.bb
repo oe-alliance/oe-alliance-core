@@ -8,7 +8,7 @@ require conf/license/license-gplv2.inc
 RDEPENDS_${PN} += "showiframe"
 
 PV = "2.0"
-PR = "r14"
+PR = "r15"
 
 S = "${WORKDIR}"
 
@@ -130,6 +130,11 @@ do_install_append_gbquad() {
 	install -m 0755 ${S}/lcdsplash.bin ${DEPLOY_DIR_IMAGE}/lcdsplash.bin
 }
 do_install_append_xp1000() {
+	install -d ${DEPLOY_DIR_IMAGE}
+	install -m 0755 ${S}/splash.bin ${DEPLOY_DIR_IMAGE}/splash.bin
+}
+
+do_install_append_iclassm7() {
 	install -d ${DEPLOY_DIR_IMAGE}
 	install -m 0755 ${S}/splash.bin ${DEPLOY_DIR_IMAGE}/splash.bin
 }
