@@ -48,6 +48,6 @@ INHIBIT_PACKAGE_STRIP = "1"
 
 FILES_${PN} = "/usr/lib /usr/local /usr/share /usr/bin /etc "
 
-SRC_URI[md5sum] = "e876156b6022758be206deef1312b941"
-SRC_URI[sha256sum] = "5394dde099e91b4642588f18455d10124e6dccaccbb780c5cf28cf64dcddfc49"
+SRC_URI[md5sum] = "5a8bf37321bcb2c8b23b4538d3862e87"
+SRC_URI[sha256sum] = "4e3a41188b81a871d7f0bf559d1cd0efc5f2faded9d37ca81c4e28e0675b5178"
 
