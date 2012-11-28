@@ -8,10 +8,10 @@ RDEPENS = "tslib-conf libts-1.0-0 libsysfs2 libgmp3 libmpfr1 "
 
 PACKAGE_ARCH := "${MACHINE_ARCH}"
 
-SRC_DATE = "20121106_0"
+SRC_DATE = "20121128_0"
 SRC_URI = "http://code.vuplus.com/download/build.fc3abf29fb03f797e78f907928125638/embedded/opera-sdk-build-package/opera-hbbtv_${SRC_DATE}.tar.gz"
 
-PR = "r7"
+PR = "r7_${SRC_DATE}"
 
 S = "${WORKDIR}/opera-hbbtv"
 
