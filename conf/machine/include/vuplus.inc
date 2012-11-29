@@ -25,9 +25,6 @@ GLIBC_EXTRA_OECONF = "--with-tls"
 
 PREFERRED_PROVIDER_virtual/kernel = "linux-vuplus"
 
-PREFERRED_VERSION_linux-vuplus = "3.1.1"
-PREFERRED_VERSION_linux-libc-headers = "3.1"
-
 PREFERRED_PROVIDER_virtual/blindscan-dvbc = "vuplus-blindscan-utils-${MACHINE}"
 PREFERRED_PROVIDER_virtual/blindscan-dvbs = "vuplus-blindscan-utils-${MACHINE}"
 
