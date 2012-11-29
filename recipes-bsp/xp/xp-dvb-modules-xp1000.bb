@@ -1,6 +1,6 @@
 KV = "3.5.1"
-SRCDATE = "20121102"
+SRCDATE = "20121129"
 
 require xp-dvb-modules.inc
-SRC_URI[md5sum] = "9c137752602c97310b30ea2c76fa6c10"
-SRC_URI[sha256sum] = "67781e62eb8de881a2ed80d6fe92a96a330d5fa20cc7aac2a91a3f45057cfa24"
+SRC_URI[md5sum] = "e2280d3e2133c9add609cf808d08388a"
+SRC_URI[sha256sum] = "723ed5f346c7b807f21c25708323f176677933303dd33c0fc39aecdd0fcfc986"
