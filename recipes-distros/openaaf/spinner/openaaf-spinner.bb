@@ -18,6 +18,7 @@ SRC_URI="file://wait1.png \
 		file://wait7.png"
 
 do_install() {
+	install -d ${D}/usr/share/enigma2/skin_default/spinner
 	install -m 0644 wait1.png ${D}/usr/share/enigma2/skin_default/spinner/wait1.png
 	install -m 0644 wait2.png ${D}/usr/share/enigma2/skin_default/spinner/wait2.png
 	install -m 0644 wait3.png ${D}/usr/share/enigma2/skin_default/spinner/wait3.png
