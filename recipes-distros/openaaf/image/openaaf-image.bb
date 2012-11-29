@@ -15,6 +15,7 @@ IMAGE_INSTALL = " \
 	openaaf-version-info \
 	openaaf-enigma2 \
 	openaaf-bootlogo \
+	openaaf-spinner \
 	${ENIGMA2_PLUGINS} \
 	avahi-daemon \
 	dropbear \
