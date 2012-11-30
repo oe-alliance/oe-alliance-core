@@ -4,13 +4,14 @@ PRIORITY = "required"
 LICENSE = "CLOSED"
 
 PV = "${KV}+${SRCDATE}"
-PR = "r0"
+PR = "r1"
 
 RDEPENDS_${PN}_et5x00 += "et-fpupdate-${MACHINE}"
 RDEPENDS_${PN}_et6x00 += "et-fpupdate-${MACHINE}"
 RDEPENDS_${PN}_et9x00 += "et-fpupdate-${MACHINE}"
 
-SRC_URI = "http://www.et-view.com/download/drivers/${MACHINE}-drivers-${KV}-${SRCDATE}.zip"
+#SRC_URI = "http://www.et-view.com/download/drivers/${MACHINE}-drivers-${KV}-${SRCDATE}.zip"
+SRC_URI = "http://www.et-view.com/download/prerelease-drivers/${MACHINE}-drivers-${KV}-${SRCDATE}.zip"
 
 S = "${WORKDIR}"
 
