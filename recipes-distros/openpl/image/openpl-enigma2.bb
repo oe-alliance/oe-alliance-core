@@ -4,19 +4,28 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3
                     file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
 
 PV = "1.0"
-PR = "r0"
+PR = "r1"
 
 inherit task
 
 DEPENDS = "enigma2-pliplugins openpl-feeds"
 
 RRECOMMENDS = "\
+	openpl-version-info \
 	enigma2-plugin-drivers-usbserial \
 	enigma2-plugin-extensions-ppanel \
 	enigma2-plugin-pli-softcamsetup \
-	enigma2-plugin-systemplugins-softwaremanager \
-	enigma2-plugin-systemplugins-skinselector \
 	enigma2-plugin-extensions-imdb \
-	\
+	enigma2-plugin-extensions-autotimer \
+	enigma2-plugin-extensions-epgsearch \
+	enigma2-plugin-extensions-graphmultiepg \
+	enigma2-plugin-extensions-cutlisteditor \
+	enigma2-plugin-extensions-mediaplayer \
+	enigma2-plugin-extensions-dvdplayer \
+	enigma2-plugin-systemplugins-videotune \
+	enigma2-plugin-systemplugins-autoresolution \
+	enigma2-plugin-systemplugins-softwaremanager \
+	enigma2-plugin-systemplugins-hotplug \
+	enigma2-plugin-systemplugins-skinselector \
 	${@base_contains("MACHINE_FEATURES", "3dtv", "enigma2-plugin-systemplugins-osd3dsetup" , "", d)} \
 	"
