@@ -9,7 +9,7 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r100"
+PR = "r101"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -176,4 +176,8 @@ do_install_append_dm800se() {
 do_install_append_dm800() {
 # 	Install any packages that are only For this machines feed here, uncomment the line below and change as required
 # 	install -m 0644 ${S}/enigma2-plugin-private-menuluxipkg_4.1b_all.ipk ${DEPLOY_DIR_IPK}/private
+}
+
+do_install_append_xtrendalliance() {
+	install -m 0644 ${S}/enigma2-plugin-extensions-backupsuite_11.1_mips32el.ipk ${DEPLOY_DIR_IPK}/3rdparty
 }

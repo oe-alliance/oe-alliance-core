@@ -4,14 +4,14 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3
                     file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
 
 PV = "1.0"
-PR = "r3"
+PR = "r4"
 
 inherit task
 
 #RCONFLICTS_ = "enigma2-plugin-extensions-permanenttimeshift enigma2-plugin-systemplugins-skinselector"
 #RREPLACES = "enigma2-plugin-extensions-permanenttimeshift enigma2-plugin-systemplugins-skinselector"
 
-DEPENDS = "enigma2-pliplugins xtrendalliance-feeds xtrendalliance-3rdparty-plugins"
+DEPENDS = "enigma2-pliplugins xtrendalliance-feeds"
 
 RRECOMMENDS = "\
 	xtrendalliance-version-info \
@@ -20,13 +20,6 @@ RRECOMMENDS = "\
 	enigma2-plugin-systemplugins-skinselector \
 	enigma2-plugin-extensions-xtrendpanel \
 	enigma2-plugin-pli-softcamsetup \
-	${ENIGMA2_PLUGINS} \
-	\
-	${@base_contains("MACHINE_FEATURES", "3dtv", "enigma2-plugin-systemplugins-osd3dsetup" , "", d)} \
-	"
-
-	
-ENIGMA2_PLUGINS = "\
 	enigma2-plugin-extensions-graphmultiepg \
 	enigma2-plugin-extensions-mediaplayer \
 	enigma2-plugin-extensions-cutlisteditor \
@@ -37,6 +30,13 @@ ENIGMA2_PLUGINS = "\
 	enigma2-plugin-systemplugins-osdpositionsetup \
 	enigma2-plugin-extensions-et-portal \
 	enigma2-plugin-extensions-backupsuite \
+	${ENIGMA2_PLUGINS} \
+	\
+	${@base_contains("MACHINE_FEATURES", "3dtv", "enigma2-plugin-systemplugins-osd3dsetup" , "", d)} \
+	"
+
+	
+ENIGMA2_PLUGINS = "\
 "
 
 ENIGMA2_PLUGINS_append_et4x00 = "enigma2-plugin-extensions-et-webbrowser"
