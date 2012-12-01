@@ -31,7 +31,7 @@ python do_package_prepend () {
 		('gbquad', 'gbquad.jpg', 'gigablue_black.png'),
 		('ventonhdx', 'ini-3000.jpg', 'ini-3000.png'),
 		('ventonhde', 'ini-3000.jpg', 'ini-3000.png'),
-		('xp1000', 'xp1000.jpg', 'xp1000.png'),
+		('xp1000', 'xp1000.jpg', 'xp_rc14_normal.png'),
 		('ebox5000', 'ebox5000.jpg', 'ebox5000.png'),
 		('iclassm7', 'iclassm7.jpg', 'iclassm7.png'),
 	]
