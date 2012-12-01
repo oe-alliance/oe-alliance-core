@@ -10,7 +10,6 @@ inherit task
 RRECOMMENDS = "\
 	enigma2-skins \
 	enigma2-pliplugins \
-	xtrendalliance-3rdparty-plugins \
 	enigma2-plugin-extensions-cooltvguide \
 	enigma2-plugin-extensions-enhancedmoviecenter \
 	"
