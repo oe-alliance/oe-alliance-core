@@ -1,6 +1,9 @@
+MACHINE_ESSENTIAL_EXTRA_DEPENDS = " \
+	vuplus-opera-browser-util \
+	"
+
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS = " \
 	vuplus-dvb-modules-${MACHINE} \
-	vuplus-opera-browser-util \
 	"
 
 DVBPROVIDER = "kernel"
