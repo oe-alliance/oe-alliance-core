@@ -10,16 +10,13 @@ inherit task
 
 RDEPENDS = "\
 	oe-alliance-enigma2 \
-	odinsupport-enigma2 \
-	odinsupport-bootlogo \
-	odinsupport-feed-config \
+	mkdigital-enigma2 \
+	mkdigital-bootlogo \
 	avahi-daemon \
 	dropbear \
 	early-configure \
 	e2fsprogs-mke2fs \
 	e2fsprogs-e2fsck \
-	e2fsprogs-tune2fs \
-	util-linux-blkid \
 	fakelocale \
 	libavahi-client \
 	libcrypto-compat \
@@ -32,6 +29,6 @@ RDEPENDS = "\
 	util-linux-sfdisk \
 	volatile-media \
 	vsftpd \
-	ntfs-3g \
 	hddtemp \
-"
+	busybox-cron \
+	"

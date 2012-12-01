@@ -10,9 +10,9 @@ inherit task
 
 RDEPENDS = "\
 	oe-alliance-enigma2 \
-	odinsupport-enigma2 \
-	odinsupport-bootlogo \
-	odinsupport-feed-config \
+	openmips-enigma2 \
+	openmips-bootlogo \
+	${ENIGMA2_PLUGINS} \
 	avahi-daemon \
 	dropbear \
 	early-configure \
@@ -32,6 +32,11 @@ RDEPENDS = "\
 	util-linux-sfdisk \
 	volatile-media \
 	vsftpd \
-	ntfs-3g \
 	hddtemp \
-"
+	dosfstools \
+	ntfs-3g \
+	task-base-smbfs-client \
+	task-base-smbfs \
+	task-base-nfs \
+	busybox-cron \
+	"
