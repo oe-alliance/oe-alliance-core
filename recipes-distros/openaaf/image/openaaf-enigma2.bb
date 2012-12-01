@@ -4,7 +4,7 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3
                     file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
 
 PV = "1.0"
-PR = "r8"
+PR = "r9"
 
 inherit task
 
@@ -14,7 +14,6 @@ RRECOMMENDS = "\
 	openaaf-version-info \
 	enigma2-plugin-settings-defaultsat \
 	enigma2-plugin-drivers-usbserial \
-	${ENIGMA2_PLUGINS} \
 	enigma2-plugin-extensions-infopanel \
 	enigma2-plugin-extensions-autotimer \
 	enigma2-plugin-extensions-epgsearch \
@@ -34,15 +33,11 @@ RRECOMMENDS = "\
 	${@base_contains("MACHINE_FEATURES", "3dtv", "enigma2-plugin-systemplugins-osd3dsetup" , "", d)} \
 	"
 
-	
-ENIGMA2_PLUGINS = "\
-"	
-	
-ENIGMA2_PLUGINS_append_et5x00 = "swap-workaround"
-ENIGMA2_PLUGINS_append_vusolo = "swap-workaround"
-ENIGMA2_PLUGINS_append_gb800se = "swap-workaround"
-ENIGMA2_PLUGINS_append_gb800ue = "swap-workaround"
-ENIGMA2_PLUGINS_append_gb800solo = "swap-workaround"
-ENIGMA2_PLUGINS_append_dm800 = "swap-workaround"
-ENIGMA2_PLUGINS_append_dm800se = "swap-workaround"
-ENIGMA2_PLUGINS_append_dm500hd = "swap-workaround"
+RRECOMMENDS_append_et5x00 = " swap-workaround"
+RRECOMMENDS_append_vusolo = " swap-workaround"
+RRECOMMENDS_append_gb800se = " swap-workaround"
+RRECOMMENDS_append_gb800ue = " swap-workaround"
+RRECOMMENDS_append_gb800solo = " swap-workaround"
+RRECOMMENDS_append_dm800 = " swap-workaround"
+RRECOMMENDS_append_dm800se = " swap-workaround"
+RRECOMMENDS_append_dm500hd = " swap-workaround"
