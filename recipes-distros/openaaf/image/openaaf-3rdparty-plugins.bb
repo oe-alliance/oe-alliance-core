@@ -9,7 +9,7 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r4"
+PR = "r5"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -32,7 +32,5 @@ DEPENDS = "enigma2 enigma2-3rdparty-plugins"
 
 do_install() {
 	install -d 0644 ${DEPLOY_DIR_IPK}/3rdparty
-	install -m 0644 ${S}/enigma2-plugin-extensions-suomipoeka_1.0.1_all.ipk ${DEPLOY_DIR_IPK}/3rdparty
-	install -m 0644 ${S}/enigma2-plugin-extensions-enhancedpowersave_2.2.1-20120715_mipsel.ipk ${DEPLOY_DIR_IPK}/3rdparty
 }
 
