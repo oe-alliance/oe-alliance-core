@@ -9,7 +9,7 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r103"
+PR = "r104"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -95,7 +95,7 @@ do_install_append_et4x00() {
 }
 do_install_append_et5x00() {
 # 	Install any packages that are only For this machines feed here,
-	install -m 0644 ${S}/enigma2-plugin-extensions-et-portal_1.8_all.ipk ${DEPLOY_DIR_IPK}/3rdparty
+	install -m 0644 ${S}/enigma2-plugin-extensions-et-portal_2.0_all.ipk ${DEPLOY_DIR_IPK}/3rdparty
 	install -m 0644 ${S}/enigma2-plugin-clearmem_1.07_mipsel.ipk ${DEPLOY_DIR_IPK}/3rdparty
 }
 do_install_append_et6x00() {
