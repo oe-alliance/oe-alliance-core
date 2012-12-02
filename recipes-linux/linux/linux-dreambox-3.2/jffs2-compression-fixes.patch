@@ -57,7 +57,7 @@ index 5b6c9d1..99e4c05 100644
  
  	if (c->mount_opts.override_compr)
  		mode = c->mount_opts.compr;
-@@ -168,63 +171,58 @@ uint16_t jffs2_compress(struct jffs2_sb_info *c, struct jffs2_inode_info *f,
+@@ -168,63 +171,60 @@ uint16_t jffs2_compress(struct jffs2_sb_info *c, struct jffs2_inode_info *f,
  		break;
  	case JFFS2_COMPR_MODE_SIZE:
  	case JFFS2_COMPR_MODE_FAVOURLZO:
@@ -149,6 +149,8 @@ index 5b6c9d1..99e4c05 100644
  			ret = best->compr;
  			*cpage_out = output_buf;
  		}
++		else
++			kfree(best_buf);
 -		spin_unlock(&jffs2_compressor_list_lock);
  		break;
  	case JFFS2_COMPR_MODE_FORCELZO:
