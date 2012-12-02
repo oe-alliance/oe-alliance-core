@@ -8,7 +8,7 @@ require conf/license/license-gplv2.inc
 RDEPENDS_${PN} += "showiframe"
 
 PV = "2.0"
-PR = "r15"
+PR = "r16"
 
 S = "${WORKDIR}"
 
@@ -19,34 +19,27 @@ inherit update-rc.d
 
 SRC_URI = "file://bootlogo.mvi file://bootlogo.jpg file://bootlogo.sh file://splash.bin file://splash600.bin file://lcdsplash.bin file://radio.mvi"
 
-BINARY_VERSION = "1"
-BINARY_VERSION_mipsel = "10"
+BINARY_VERSION = "1.3"
 
-IMAGES_VERSION = "1"
-IMAGES_VERSION_dm500hd = "2"
-IMAGES_VERSION_dm800se = "2"
-IMAGES_VERSION_dm7020hd = "2"
-IMAGES_VERSION_dm8000 = "2"
+SRC_URI += "${@base_contains("MACHINE_FEATURES", "dreambox", "http://dreamboxupdate.com/download/opendreambox/2.0.0/dreambox-bootlogo/dreambox-bootlogo_${BINARY_VERSION}_${MACHINE_ARCH}.tar.bz2;name=${MACHINE_ARCH}" , "", d)}"
 
-SRC_URI += "${@base_contains("MACHINE_FEATURES", "dreambox", "http://sources.dreamboxupdate.com/download/7020/bootlogo-${MACHINE}-${BINARY_VERSION}.elf;name=bootlogo-${MACHINE}-${BINARY_VERSION}" , "", d)}"
-
-SRC_URI[bootlogo-dm800-10.md5sum] = "0ad1cee22268ecb6e71ca6f2e129d48a"
-SRC_URI[bootlogo-dm800-10.sha256sum] = "890c529fa06f3d4f83536c2423fc3a09c7134756f578018f10823d76492e3307"
-SRC_URI[bootlogo-dm500hd-10.md5sum] = "0e43d1d11914a331793ef119effdc6ef"
-SRC_URI[bootlogo-dm500hd-10.sha256sum] = "ac9c7ae0a487f5712712d88dc139ae6505d83b3cd8950aa7d0367d84ba6ff071"
-SRC_URI[bootlogo-dm800se-10.md5sum] = "826addc0d096c8caf81b406cc5c13085"
-SRC_URI[bootlogo-dm800se-10.sha256sum] = "43da0c972adee37e24caa654bebea4e17c6b1ef27d73e886dfc81f9d823d1685"
-SRC_URI[bootlogo-dm7020hd-10.md5sum] = "2f37855226ccdbf818e7b2aa5240fc26"
-SRC_URI[bootlogo-dm7020hd-10.sha256sum] = "f5c9551d4af70b0f6360ce193319d2516b1a6c5dbd38b84ba238fe9efff71f34"
-SRC_URI[bootlogo-dm8000-10.md5sum] = "8dab446be9dfd09751e66601b629b3c0"
-SRC_URI[bootlogo-dm8000-10.sha256sum] = "6a7a54c0c823d92772bb09c87fdf5f385ea11e8a7ab99f26a042ddd834276ca0"
+SRC_URI[dm800.md5sum] = "0aacd07cc4d19b388c6441b007e3525a"
+SRC_URI[dm800.sha256sum] = "978a7c50fd0c963013477b5ba08462b35597ea130ae428c828bfcbb5c7cf4cac"
+SRC_URI[dm8000.md5sum] = "1b63ac7e2bd5c0db0748606acc310d47"
+SRC_URI[dm8000.sha256sum] = "91e4402190fe88cf394ae780141d968a1ebecd8db7b23c1f0ca3f4bfa9c9512a"
+SRC_URI[dm800se.md5sum] = "3413a894a3d77e02cae34b96d302817d"
+SRC_URI[dm800se.sha256sum] = "8a283442c231e82ee1a2093e53dc5bf52c478e12d22c79af7e7026b52711fc9c"
+SRC_URI[dm500hd.md5sum] = "b9ada70304ca1f9a8e36a55bd38834c6"
+SRC_URI[dm500hd.sha256sum] = "d4b0f650711d5d6fdecb42efe9e13987ef803cba829d0950e899608a784ae3b2"
+SRC_URI[dm7020hd.md5sum] = "f8e423dbf7661367659fa86a68b74bc4"
+SRC_URI[dm7020hd.sha256sum] = "118d7bb57c4b41dd45c7bdd9a056a0745454f42092692fb4309997e035eb6908"
 
 MVISYMLINKS = "bootlogo_wait backdrop switchoff"
 
 do_install() {
 	install -d ${D}/boot
 	install -d ${D}/usr/share
-	${@base_contains("MACHINE_FEATURES", "dreambox", "install -m 0755 ${S}/bootlogo-${MACHINE}-${BINARY_VERSION}.elf ${D}/boot/bootlogo.elf; install -m 0755 ${S}/bootlogo.jpg ${D}/boot/", "", d)}
+	${@base_contains("MACHINE_FEATURES", "dreambox", "install -m 0755 ${S}/dreambox-bootlogo_${BINARY_VERSION}_${MACHINE_ARCH}/bootlogo-${MACHINE_ARCH}.elf.gz ${D}/boot/; install -m 0755 ${S}/dreambox-bootlogo_${BINARY_VERSION}_${MACHINE_ARCH}/bootlogo-${MACHINE_ARCH}.jpg ${D}/boot/", "", d)}
 	install -m 0755 bootlogo.mvi ${D}/usr/share/bootlogo.mvi
 	ln -sf /usr/share/bootlogo.mvi ${D}/boot/bootlogo.mvi
 	for i in ${MVISYMLINKS}; do
@@ -141,23 +134,41 @@ do_install_append_iclassm7() {
 
 
 pkg_preinst() {
-	[ -d /proc/stb ] && mount -t jffs2 mtd:'boot partition' /boot
-	true
+	if [ -z "$D" ]
+	then
+		if mountpoint -q /boot
+		then
+			mount -o remount,rw,compr=none /boot
+		else
+			mount -t jffs2 -o rw,compr=none mtd:'boot partition' /boot
+		fi
+	fi
 }
 
 pkg_postinst() {
-	[ -d /proc/stb ] && umount /boot
-	true
+	if [ -z "$D" ]
+	then
+		umount /boot
+	fi
 }
 
 pkg_prerm() {
-	[ -d /proc/stb ] && mount -t jffs2 mtd:'boot partition' /boot
-	true
+	if [ -z "$D" ]
+	then
+		if mountpoint -q /boot
+		then
+			mount -o remount,rw,compr=none /boot
+		else
+			mount -t jffs2 -o rw,compr=none mtd:'boot partition' /boot
+		fi
+	fi
 }
 
 pkg_postrm() {
-	[ -d /proc/stb ] && umount /boot
-	true
+	if [ -z "$D" ]
+	then
+		umount /boot
+	fi
 }
 
 PACKAGE_ARCH := "${MACHINE_ARCH}"
