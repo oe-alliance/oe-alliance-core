@@ -4,7 +4,7 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3
                     file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
 
 PV = "1.0"
-PR = "r0"
+PR = "r1"
 
 inherit task
 
@@ -35,10 +35,4 @@ RDEPENDS = "\
 	ntfs-3g \
 	hddtemp \
 	busybox-cron \
-	${@base_contains("MACHINE_FEATURES", "smallflash", "", \
-	" \
-	task-base-smbfs-client \
-	task-base-smbfs \
-	task-base-nfs \
-	", d)} \
 	"
