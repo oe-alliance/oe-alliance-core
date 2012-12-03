@@ -20,7 +20,7 @@ RRECOMMENDS = "\
 	python-compression \
 	python-terminal \
 	python-textutils \
-	${@base_contains("MACHINE", "gbquad", "enigma2-plugin-skins-adriatic32" , "enigma2-plugin-skins-adriatic", d)} \
+	enigma2-plugin-skins-horizon \
 	enigma2-plugin-extensions-autotimer \
 	enigma2-plugin-extensions-audiosync \
 	enigma2-plugin-extensions-epgsearch \
