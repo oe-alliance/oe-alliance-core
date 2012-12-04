@@ -1,0 +1,15 @@
+diff --git a/arch/mips/brcmstb/board.c b/arch/mips/brcmstb/board.c
+index 6825ef1..f64b8bd 100644
+--- a/arch/mips/brcmstb/board.c
++++ b/arch/mips/brcmstb/board.c
+@@ -567,6 +567,10 @@ void board_pinmux_setup(void)
+ 
+ 	PINMUX(18, sgpio_00, 1);	/* MoCA I2C */
+ 	PINMUX(19, sgpio_01, 1);
++
++	PINMUX(6, gpio_006, 2);
++	PINMUX(6, gpio_007, 2);
++
+ #if defined(CONFIG_BCM7425B0)
+ 	brcm_moca_i2c_base = BPHYSADDR(BCHP_BSCC_REG_START);
+ #else

@@ -1,6 +1,6 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
-PRINC = "38"
+PRINC = "39"
 
 RDEPENDS_${PN} = " \
 	alsa-conf \
@@ -95,8 +95,12 @@ do_patch_prepend(){
 		MACHINE1="Vu+ Ultimo"
 	elif "${MACHINE}" == "vusolo":
 		MACHINE1="Vu+ Solo"
+	elif "${MACHINE}" == "vusolo2":
+		MACHINE1="Vu+ Solo2"
 	elif "${MACHINE}" == "vuduo":
 		MACHINE1="Vu+ Duo"
+	elif "${MACHINE}" == "vuduo2":
+		MACHINE1="Vu+ Duo2"
 	elif "${MACHINE}" == "et4x00":
 		MACHINE1="Xtrend ET4x00"
 	elif "${MACHINE}" == "et5x00":
@@ -160,8 +164,12 @@ python do_setup_po_ipk () {
 		MACHINE1="Vu+ Ultimo"
 	elif "${MACHINE}" == "vusolo":
 		MACHINE1="Vu+ Solo"
+	elif "${MACHINE}" == "vusolo2":
+		MACHINE1="Vu+ Solo2"
 	elif "${MACHINE}" == "vuduo":
 		MACHINE1="Vu+ Duo"
+	elif "${MACHINE}" == "vuduo2":
+		MACHINE1="Vu+ Duo2"
 	elif "${MACHINE}" == "et4x00":
 		MACHINE1="Xtrend ET4x00"
 	elif "${MACHINE}" == "et5x00":

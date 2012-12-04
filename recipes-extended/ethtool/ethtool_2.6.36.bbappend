@@ -1,11 +1,13 @@
-PRINC = "4"
+PRINC = "5"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
 SRC_URI_append_vuuno = " file://vuplus.patch"
 SRC_URI_append_vusolo = " file://vuplus.patch"
+SRC_URI_append_vusolo2 = " file://vuplus.patch"
 SRC_URI_append_vuduo = " file://vuplus.patch"
+SRC_URI_append_vuduo2 = " file://vuplus.patch"
 SRC_URI_append_vuultimo = " file://vuplus.patch"
 SRC_URI_append_tmtwin = " file://vuplus.patch"
 SRC_URI_append_tm2t = " file://vuplus.patch"

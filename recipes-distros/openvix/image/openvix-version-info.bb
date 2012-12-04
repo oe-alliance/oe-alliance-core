@@ -13,7 +13,9 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 URL_vuuno = "http://www.vuplus-support.co.uk"
 URL_vuultimo = "http://www.vuplus-support.co.uk"
 URL_vusolo = "http://www.vuplus-support.co.uk"
+URL_vusolo2 = "http://www.vuplus-support.co.uk"
 URL_vuduo = "http://www.vuplus-support.co.uk"
+URL_vuduo2 = "http://www.vuplus-support.co.uk"
 URL_et4x00 = "http://www.xtrend-support.co.uk"
 URL_et5x00 = "http://www.xtrend-support.co.uk"
 URL_et6x00 = "http://www.xtrend-support.co.uk"
@@ -46,7 +48,7 @@ do_install() {
 			echo "build_type=${BUILDTYPE}" >> ${D}/etc/image-version
 			echo "version=${IMAGE_VERSION}" >> ${D}/etc/image-version
 			echo "build=${BUILD_VERSION}" >> ${D}/etc/image-version
-			if [ "${MACHINE}" = "vusolo" -o "${MACHINE}" = "vuduo" -o "${MACHINE}" = "vuuno" -o "${MACHINE}" = "vuultimo" ]; then
+			if [ "${MACHINE}" = "vusolo" -o "${MACHINE}" = "vuduo" -o "${MACHINE}" = "vusolo2" -o "${MACHINE}" = "vuduo2" -o "${MACHINE}" = "vuuno" -o "${MACHINE}" = "vuultimo" ]; then
 				DRIVERS=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/vuplus/vuplus-dvb-modules-${MACHINE}.bb | cut -b 12-19`
 			elif [ "${MACHINE}" = "et4x00" -o "${MACHINE}" = "et5x00" -o "${MACHINE}" = "et6x00" -o "${MACHINE}" = "et9x00" ]; then
 				DRIVERS=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/etxx00/et-dvb-modules-${MACHINE}.bb | cut -b 12-19`
@@ -72,5 +74,5 @@ do_install() {
 			echo "catalog=${URL}" >> ${D}/etc/image-version
 }
 
-FILES_${PN} = "/etc/image-version /etc/oe-git.log /etc/e2-git.log"
+FILES_${PN} = "/etc/image-version"
 

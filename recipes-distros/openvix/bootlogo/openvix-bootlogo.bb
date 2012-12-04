@@ -9,7 +9,7 @@ require conf/license/license-gplv2.inc
 RDEPENDS_${PN} += "showiframe"
 
 PV = "${BINARY_VERSION}.${IMAGES_VERSION}"
-PR = "r12"
+PR = "r13"
 
 S = "${WORKDIR}"
 
@@ -23,6 +23,8 @@ SRC_URI_append_gb800se = "file://splash.bin"
 SRC_URI_append_gb800solo = "file://splash.bin"
 SRC_URI_append_gb800ue = "file://splash.bin file://lcdsplash.bin"
 SRC_URI_append_gbquad = "file://splash.bin file://lcdsplash.bin"
+SRC_URI_append_vusolo2 = " file://splash_cfe_auto.bin"
+SRC_URI_append_vuduo2 = " file://splash_cfe_auto.bin"
 SRC_URI_append_vuuno = " file://splash_cfe_auto.bin"
 SRC_URI_append_vuultimo = " file://splash_cfe_auto.bin"
 SRC_URI_append_et4x00 = " file://splash.bin"
@@ -74,6 +76,14 @@ do_install_append_gbquad() {
 	install -m 0644 ${S}/lcdsplash.bin ${DEPLOY_DIR_IMAGE}/lcdsplash.bin
 }
 
+do_install_append_vusolo2() {
+	install -d ${DEPLOY_DIR_IMAGE}
+	install -m 0644 ${S}/splash_cfe_auto.bin ${DEPLOY_DIR_IMAGE}/splash_cfe_auto.bin
+}
+do_install_append_vuduo2() {
+	install -d ${DEPLOY_DIR_IMAGE}
+	install -m 0644 ${S}/splash_cfe_auto.bin ${DEPLOY_DIR_IMAGE}/splash_cfe_auto.bin
+}
 do_install_append_vuuno() {
 	install -d ${DEPLOY_DIR_IMAGE}
 	install -m 0644 ${S}/splash_cfe_auto.bin ${DEPLOY_DIR_IMAGE}/splash_cfe_auto.bin

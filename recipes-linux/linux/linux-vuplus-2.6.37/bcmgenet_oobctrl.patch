@@ -1,0 +1,13 @@
+diff --git a/drivers/net/bcmgenet/bcmmii.c b/drivers/net/bcmgenet/bcmmii.c
+index 7e2027a..127d2d0 100755
+--- a/drivers/net/bcmgenet/bcmmii.c
++++ b/drivers/net/bcmgenet/bcmmii.c
+@@ -229,7 +229,7 @@ int mii_init(struct net_device *dev)
+ 	case BRCM_PHY_TYPE_EXT_RGMII:
+ 		GENET_RGMII_OOB_CTRL(pDevCtrl) |= RGMII_MODE_EN;
+ 		/* Don't shift tx clock by 90 degree, does it still needed? */
+-		GENET_RGMII_OOB_CTRL(pDevCtrl) |= (1 << 16);
++		//csh GENET_RGMII_OOB_CTRL(pDevCtrl) |= (1 << 16);
+ 		pDevCtrl->mii.supports_gmii = 1;
+ 		pDevCtrl->sys->sys_port_ctrl = PORT_MODE_EXT_GPHY;
+ 		mii_write(dev, pDevCtrl->phyAddr, MII_BMCR, bmcr|MII_BMCR);

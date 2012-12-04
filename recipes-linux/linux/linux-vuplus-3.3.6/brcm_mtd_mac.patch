@@ -1,0 +1,61 @@
+diff --git a/arch/mips/brcmstb/prom.c b/arch/mips/brcmstb/prom.c
+index 97691d1..995255d 100644
+--- a/arch/mips/brcmstb/prom.c
++++ b/arch/mips/brcmstb/prom.c
+@@ -223,6 +223,8 @@ static void __init __maybe_unused cfe_read_configuration(void)
+ 	FETCH("LINUX_FFS_SIZE", parse_hex, &brcm_mtd_rootfs_len);
+ 	FETCH("LINUX_PART_STARTAD", parse_hex, &brcm_mtd_kernel_start);
+ 	FETCH("LINUX_PART_SIZE", parse_hex, &brcm_mtd_kernel_len);
++	FETCH("LINUX_MACADDR_STARTAD", parse_hex, &brcm_mtd_macaddr_start);
++	FETCH("LINUX_MACADDR_SIZE", parse_hex, &brcm_mtd_macaddr_len);
+ 	FETCH("OCAP_PART_STARTAD", parse_hex, &brcm_mtd_ocap_start);
+ 	FETCH("OCAP_PART_SIZE", parse_hex, &brcm_mtd_ocap_len);
+ 	FETCH("FLASH_SIZE", parse_ulong, &brcm_mtd_flash_size_mb);
+diff --git a/drivers/brcmstb/board.c b/drivers/brcmstb/board.c
+index 936818b..5d2c870 100644
+--- a/drivers/brcmstb/board.c
++++ b/drivers/brcmstb/board.c
+@@ -34,6 +34,8 @@ unsigned long brcm_mtd_rootfs_start;
+ unsigned long brcm_mtd_rootfs_len;
+ unsigned long brcm_mtd_kernel_start;
+ unsigned long brcm_mtd_kernel_len;
++unsigned long brcm_mtd_macaddr_start;
++unsigned long brcm_mtd_macaddr_len;
+ unsigned long brcm_mtd_ocap_start;
+ unsigned long brcm_mtd_ocap_len;
+ unsigned long brcm_mtd_flash_size_mb;
+@@ -486,6 +488,8 @@ int __init board_get_partition_map(struct mtd_partition **p)
+ 	nr_parts = 2;
+ 	if (brcm_mtd_kernel_len != 0)
+ 		nr_parts++;
++	if (brcm_mtd_macaddr_len != 0)
++		nr_parts++;
+ 
+ 	ret = kzalloc(nr_parts * sizeof(struct mtd_partition), GFP_KERNEL);
+ 	if (!ret)
+@@ -504,6 +508,12 @@ int __init board_get_partition_map(struct mtd_partition **p)
+ 		ret[2].size = brcm_mtd_kernel_len;
+ 		ret[2].name = "kernel";
+ 	}
++	if (brcm_mtd_macaddr_len != 0) {
++		ret[3].offset = brcm_mtd_macaddr_start;
++		ret[3].size = brcm_mtd_macaddr_len;
++		ret[3].name = "mac";
++	}
++
+ 
+ 	*p = ret;
+ 	return nr_parts;
+diff --git a/include/linux/brcmstb/brcmstb.h b/include/linux/brcmstb/brcmstb.h
+index ffca523..eb25084 100644
+--- a/include/linux/brcmstb/brcmstb.h
++++ b/include/linux/brcmstb/brcmstb.h
+@@ -684,6 +684,8 @@ extern unsigned long brcm_mtd_rootfs_start;
+ extern unsigned long brcm_mtd_rootfs_len;
+ extern unsigned long brcm_mtd_kernel_start;
+ extern unsigned long brcm_mtd_kernel_len;
++extern unsigned long brcm_mtd_macaddr_start;
++extern unsigned long brcm_mtd_macaddr_len;
+ extern unsigned long brcm_mtd_ocap_start;
+ extern unsigned long brcm_mtd_ocap_len;
+ extern unsigned long brcm_mtd_flash_size_mb;

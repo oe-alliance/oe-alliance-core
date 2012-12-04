@@ -21,7 +21,7 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "2.1+git${SRCPV}"
 PKGV = "2.1+git${GITPKGV}"
-PR = "r9"
+PR = "r10"
 
 SRC_URI="git://github.com/OpenViX/vix-core.git;protocol=git"
 
@@ -66,8 +66,12 @@ do_patch_prepend(){
 		MACHINE1="Vu+ Ultimo"
 	elif "${MACHINE}" == "vusolo":
 		MACHINE1="Vu+ Solo"
+	elif "${MACHINE}" == "vusolo2":
+		MACHINE1="Vu+ Solo2"
 	elif "${MACHINE}" == "vuduo":
 		MACHINE1="Vu+ Duo"
+	elif "${MACHINE}" == "vuduo2":
+		MACHINE1="Vu+ Duo2"
 	elif "${MACHINE}" == "et4x00":
 		MACHINE1="Xtrend ET4x00"
 	elif "${MACHINE}" == "et5x00":
@@ -128,8 +132,12 @@ python do_setup_po_ipk () {
 		MACHINE1="Vu+ Ultimo"
 	elif "${MACHINE}" == "vusolo":
 		MACHINE1="Vu+ Solo"
+	elif "${MACHINE}" == "vusolo2":
+		MACHINE1="Vu+ Solo2"
 	elif "${MACHINE}" == "vuduo":
 		MACHINE1="Vu+ Duo"
+	elif "${MACHINE}" == "vuduo2":
+		MACHINE1="Vu+ Duo2"
 	elif "${MACHINE}" == "et4x00":
 		MACHINE1="Xtrend ET4x00"
 	elif "${MACHINE}" == "et5x00":

@@ -1,0 +1,28 @@
+diff --git a/arch/mips/brcmstb/Kconfig b/arch/mips/brcmstb/Kconfig
+index 86ba4c6..8bde45e 100644
+--- a/arch/mips/brcmstb/Kconfig
++++ b/arch/mips/brcmstb/Kconfig
+@@ -293,7 +293,6 @@ config BCM7425B0
+ 	select BRCM_UARTC_IS_16550
+ 	select BRCM_HAS_PCIE
+ 	select BRCM_HAS_GENET_0
+-	select BRCM_HAS_MOCA_20
+ 	select BRCM_MOCA_ON_GENET_1
+ 	select BRCM_GENET_V3
+ 	select BRCM_HAS_NOR
+@@ -1008,15 +1007,6 @@ config BRCM_HAS_GENET_0
+ 	bool
+ 	select BRCM_HAS_GENET
+ 
+-# select for standalone GENET_1
+-config BRCM_HAS_GENET_1
+-	bool
+-	select BRCM_HAS_GENET
+-
+-# MoCA controller
+-config BRCM_HAS_MOCA
+-	bool
+-
+ # Original MoCA 1.1
+ config BRCM_HAS_MOCA_11
+ 	bool
