@@ -1,4 +1,4 @@
-PR = "r0"
+PR = "r1"
 
 # DEPENDS = "fuse"
 # RDEPENDS_${PN} = "fuse"
@@ -7,7 +7,7 @@ inherit scons
 
 require conf/license/license-gplv2.inc
 
-SRC_URI = "http://exfat.googlecode.com/files/${PN}-${PV}.tar.gz"
+SRC_URI = "http://exfat.googlecode.com/files/${PN}-${PV}.tar.gz file://exfat-utils-sconstruct.patch"
 
 PACKAGES =+ "exfat-mkfs exfat-label exfat-fsck exfat-dump"
 
@@ -17,10 +17,6 @@ FILES_exfat-mkfs = "${sbindir}/mkexfatfs"
 FILES_exfat-label = "${sbindir}/exfatlabel"
 FILES_exfat-fsck = "${sbindir}/exfatfsck"
 FILES_exfat-dump = "${sbindir}/dumpexfat"
-
-scons_do_compile_prepend() {
-	export CC='${STAGING_BINDIR_NATIVE}/${MULTIMACH_HOST_SYS}/${CC}'
-}
 
 do_install() {
 	install -d ${D}/${sbindir}

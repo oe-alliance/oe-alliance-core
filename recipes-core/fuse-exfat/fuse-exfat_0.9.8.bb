@@ -1,4 +1,4 @@
-PR = "r0"
+PR = "r1"
 
 DEPENDS = "fuse"
 RDEPENDS_${PN} = "fuse"
@@ -7,11 +7,7 @@ inherit scons
 
 require conf/license/license-gplv2.inc
 
-SRC_URI = "http://exfat.googlecode.com/files/${PN}-${PV}.tar.gz"
-
-scons_do_compile_prepend() {
-	export CC='${STAGING_BINDIR_NATIVE}/${MULTIMACH_HOST_SYS}/${CC}'
-}
+SRC_URI = "http://exfat.googlecode.com/files/${PN}-${PV}.tar.gz file://fuse-exfat-sconstruct.patch"
 
 do_install() {
 	install -d ${D}/${sbindir}
