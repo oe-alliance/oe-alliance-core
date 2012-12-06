@@ -8,7 +8,7 @@ require conf/license/license-gplv2.inc
 RDEPENDS_${PN} += "showiframe"
 
 PV = "2.0"
-PR = "r16"
+PR = "r17"
 
 S = "${WORKDIR}"
 
@@ -130,6 +130,11 @@ do_install_append_xp1000() {
 do_install_append_iclassm7() {
 	install -d ${DEPLOY_DIR_IMAGE}
 	install -m 0755 ${S}/splash.bin ${DEPLOY_DIR_IMAGE}/splash.bin
+}
+
+do_install_append_ixussone() {
+	install -d ${DEPLOY_DIR_IMAGE}
+	install -m 0644 ${S}/splash.bin ${DEPLOY_DIR_IMAGE}/cfe-bootlogo.bmp
 }
 
 
