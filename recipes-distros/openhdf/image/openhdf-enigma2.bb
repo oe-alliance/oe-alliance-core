@@ -4,7 +4,7 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3
                     file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
 
 PV = "1.0"
-PR = "r17"
+PR = "r22"
 
 inherit task
 
@@ -20,18 +20,14 @@ RRECOMMENDS = "\
 	enigma2-plugin-extensions-autobackup \
 	enigma2-plugin-extensions-audiosync \
 	enigma2-plugin-extensions-cooltvguide \
-	enigma2-plugin-extensions-cutlisteditor \
 	enigma2-plugin-extensions-dvdplayer \
 	enigma2-plugin-extensions-dlnabrowser \
 	enigma2-plugin-extensions-epgsearch \
 	enigma2-plugin-extensions-foreca \
 	enigma2-plugin-extensions-graphmultiepg \
-	enigma2-plugin-extensions-imdb \
 	enigma2-plugin-extensions-mediaplayer \
-	enigma2-plugin-extensions-streamtv \
 	enigma2-plugin-extensions-virtualzap \
 	enigma2-plugin-extensions-zaphistorybrowser \
-        enigma2-plugin-picons-openhdf-19 \
 	enigma2-plugin-pli-softcamsetup \
 	enigma2-plugin-systemplugins-3dsettings \
 	enigma2-plugin-systemplugins-autoresolution \

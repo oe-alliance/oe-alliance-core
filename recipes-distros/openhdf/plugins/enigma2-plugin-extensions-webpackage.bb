@@ -9,10 +9,10 @@ require conf/license/license-gplv2.inc
 inherit gitpkgv
 SRCREV = "${AUTOREV}"
 VER ="1.0"
-PR = "r1"
+PR = "r2"
 
-SRC_URI[md5sum] = "0c25f53e3f259ba82b1916d95f17f57d"
-SRC_URI[sha256sum] = "828ac66679a44e10320c169a070dc6a7d764891659d9bdb92bab63d5b4d60506"
+SRC_URI[md5sum] = "791cde8bfd986b915f88d1838f02ad42"
+SRC_URI[sha256sum] = "a4aa3dff185858e4e558ee93522688da20b18620e7c72eca99b0ddf169374fc5"
 
 RDEPENDS_${PN} = "python-difflib openssl python-pyopenssl"
 
@@ -20,9 +20,9 @@ SRC_URI = "http://addons.hdfreaks.cc/feeds/*git/enigma2-plugins-web_package_mips
 
 S = "${WORKDIR}"
 
-FILES_${PN} = "/usr/*"
-
+FILES_${PN} = "/usr/* \
+		/etc/*"
 
 do_install() {
-        cp -rp ${S}/usr ${D}/
+cp -rp ${S}/usr ${S}/etc ${D}/
 }

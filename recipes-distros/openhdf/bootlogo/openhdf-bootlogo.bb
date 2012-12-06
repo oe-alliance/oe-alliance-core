@@ -1,7 +1,7 @@
-DESCRIPTION = "openViX bootlogo"
+DESCRIPTION = "openHDF bootlogo"
 SECTION = "base"
 PRIORITY = "required"
-MAINTAINER = "openViX"
+MAINTAINER = "openHDF"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 require conf/license/license-gplv2.inc
@@ -9,7 +9,7 @@ require conf/license/license-gplv2.inc
 RDEPENDS_${PN} += "showiframe"
 
 PV = "${BINARY_VERSION}.${IMAGES_VERSION}"
-PR = "r6"
+PR = "r7"
 
 S = "${WORKDIR}"
 
@@ -33,7 +33,7 @@ SRC_URI_append_ventonhdx = " file://splash.bin"
 SRC_URI_append_tmtwin = " file://splash.bmp"
 SRC_URI_append_tm2t = " file://splash.bmp"
 SRC_URI_append_tmsingle = " file://splash.bmp"
-SRC_URI_append_ixuss-one = " file://splash.bin"
+SRC_URI_append_ixussone = " file://splash.bin"
 
 BINARY_VERSION = "1"
 BINARY_VERSION_mipsel = "8"
@@ -115,9 +115,9 @@ do_install_append_ventonhdx() {
 	install -d ${DEPLOY_DIR_IMAGE}
 	install -m 0644 ${S}/splash.bin ${DEPLOY_DIR_IMAGE}/splash.bin
 }
-do_install_append_ixuss-one() {
+do_install_append_ixussone() {
 	install -d ${DEPLOY_DIR_IMAGE}
-	install -m 0644 ${S}/splash.bin ${DEPLOY_DIR_IMAGE}/splash.bin
+	install -m 0644 ${S}/splash.bin ${DEPLOY_DIR_IMAGE}/cfe-bootlogo.bmp
 }
 
 FILES_${PN} = "/boot /usr/share /etc/init.d"
