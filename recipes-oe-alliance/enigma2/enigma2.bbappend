@@ -140,6 +140,8 @@ do_patch_prepend(){
 		MACHINE1="MixOS F5"
 	elif "${MACHINE}" == "iclassm7":
 		MACHINE1="iclass"
+	elif "${MACHINE}" == "ixussone":
+		MACHINE1="IXUSS ONE"	
 	import os
 	os.system("find ./ -name \"*.po\" > ./po_list")
 	os.system("find ./ -name \"*.py\" >> ./po_list")
@@ -203,6 +205,8 @@ python do_setup_po_ipk () {
 		MACHINE1="MixOS F5"
 	elif "${MACHINE}" == "iclassm7":
 		MACHINE1="iclass"
+	elif "${MACHINE}" == "ixussone":
+		MACHINE1="IXUSS ONE"	
 	import os
 	os.system("find ./ -name \"*.po\" > ./po_list")
 	os.system("find ./ -name \"*.py\" >> ./po_list")

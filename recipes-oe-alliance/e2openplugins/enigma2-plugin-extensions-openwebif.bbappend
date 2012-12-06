@@ -36,6 +36,7 @@ python do_package_prepend () {
 		('xp1000', 'xp1000.jpg', 'xp_rc14_normal.png'),
 		('ebox5000', 'ebox5000.jpg', 'ebox5000.png'),
 		('iclassm7', 'iclassm7.jpg', 'iclassm7.png'),
+		('ixussone', 'ixussone.jpg', 'ixussone.png'),
 	]
 	import os
 	top = '${D}${PLUGINPATH}/public/images/'
