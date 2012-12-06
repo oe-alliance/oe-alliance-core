@@ -127,7 +127,7 @@ do_install_append_xp1000() {
 	install -m 0755 ${S}/splash.bin ${DEPLOY_DIR_IMAGE}/splash.bin
 }
 
-do_install_append_iclassm7() {
+do_install_append_odinm7() {
 	install -d ${DEPLOY_DIR_IMAGE}
 	install -m 0755 ${S}/splash.bin ${DEPLOY_DIR_IMAGE}/splash.bin
 }

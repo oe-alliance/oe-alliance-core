@@ -42,9 +42,8 @@ SRC_URI += "http://feed.odin-support.com/download/linux-${PV}.tar.gz \
 	file://tda18218-7mhz-lopass.patch \
 	file://tda18271-advertise-supported-delsys.patch \
 	file://linux-3.6.0-dvbsky.patch \
+	file://${MACHINE}-board.patch
 	"
-
-SRC_URI_append_odinm9 = " file://odinm9-board.patch"
 
 S = "${WORKDIR}/linux-${PV}"
 
@@ -69,6 +68,7 @@ kernel_do_install_append() {
 }
 
 MTD_DEVICE_odinm9 = "mtd2"
+MTD_DEVICE_odinm7 = "mtd2"
 
 pkg_postinst_kernel-image () {
 	if [ "x$D" == "x" ]; then

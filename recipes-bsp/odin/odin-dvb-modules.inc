@@ -6,7 +6,7 @@ LICENSE = "CLOSED"
 PV = "${KV}+${SRCDATE}"
 PR = "r3"
 
-RDEPENDS_${PN} += "odin-fpupdate-${MACHINE}"
+RDEPENDS_${PN}_odinm9 += "odin-fpupdate-${MACHINE}"
 
 SRC_URI = "http://feed.odin-support.com/download/${MACHINE}-drivers-${KV}-${SRCDATE}.tar.gz"
 

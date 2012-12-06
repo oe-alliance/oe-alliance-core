@@ -138,8 +138,8 @@ do_patch_prepend(){
 			MACHINE1="MaxDigital XP1000"
 	elif "${MACHINE}" == "ebox5000":
 		MACHINE1="MixOS F5"
-	elif "${MACHINE}" == "iclassm7":
-		MACHINE1="iclass"
+	elif "${MACHINE}" == "odinm7":
+		MACHINE1="Odin M7"
 	elif "${MACHINE}" == "ixussone":
 		MACHINE1="IXUSS ONE"	
 	import os
@@ -203,8 +203,8 @@ python do_setup_po_ipk () {
 			MACHINE1="MaxDigital XP1000"
 	elif "${MACHINE}" == "ebox5000":
 		MACHINE1="MixOS F5"
-	elif "${MACHINE}" == "iclassm7":
-		MACHINE1="iclass"
+	elif "${MACHINE}" == "odinm7":
+		MACHINE1="Odin M7"
 	elif "${MACHINE}" == "ixussone":
 		MACHINE1="IXUSS ONE"	
 	import os

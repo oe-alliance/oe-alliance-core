@@ -35,7 +35,7 @@ python do_package_prepend () {
 		('ventonhde', 'ini-3000.jpg', 'ini-3000.png'),
 		('xp1000', 'xp1000.jpg', 'xp_rc14_normal.png'),
 		('ebox5000', 'ebox5000.jpg', 'ebox5000.png'),
-		('iclassm7', 'iclassm7.jpg', 'iclassm7.png'),
+		('odinm7', 'odinm7.jpg', 'odinm7.png'),
 		('ixussone', 'ixussone.jpg', 'ixussone.png'),
 	]
 	import os
