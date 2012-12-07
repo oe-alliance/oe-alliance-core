@@ -29,6 +29,7 @@ RRECOMMENDS = "\
 	enigma2-plugin-extensions-openairplay \
 	enigma2-plugin-extensions-et-livestream \
 	enigma2-plugin-extensions-mediatomb \
+	enigma2-plugin-extensions-dreamplex \
 	${@base_contains("MACHINE_FEATURES", "fullgraphiclcd", "lcdpicons-enigma2-meta" , "", d)} \
 	\
 	autossh \
