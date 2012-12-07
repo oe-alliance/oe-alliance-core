@@ -1,0 +1,25 @@
+--- cdrkit-1.1.9/include/xconfig.h.in.orig	2006-12-02 12:10:05.000000000 +0100
++++ cdrkit-1.1.9/include/xconfig.h.in	2009-03-08 13:29:05.000000000 +0100
+@@ -233,7 +233,11 @@
+ /* If using network byte order             */
+ #cmakedefine WORDS_BIGENDIAN
+ /* If high bits come first in structures   */
+-#cmakedefine BITFIELDS_HTOL
++#ifdef WORDS_BIGENDIAN
++#define BITFIELDS_HTOL
++#else
++#define BITFIELDS_LTOH
++#endif
+ #define	HAVE_C_BIGENDIAN	/* Flag that WORDS_BIGENDIAN test was done */
+ #define	HAVE_C_BITFIELDS	/* Flag that BITFIELDS_HTOL test was done  */
+ 
+--- cdrkit-1.1.9/include/CMakeLists.txt.orig	2010-09-27 23:17:34.000000000 +0000
++++ cdrkit-1.1.9/include/CMakeLists.txt	2010-09-27 23:17:58.000000000 +0000
+@@ -35,7 +35,6 @@
+ INCLUDE(TestBigEndian)
+ TEST_BIG_ENDIAN(WORDS_BIGENDIAN)
+ 
+-TRY_RUN(BITFIELDS_HTOL TEST_DUMMY ${CMAKE_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/test_BITFIELDS_HTOL.c)
+ 
+ INCLUDE(CheckIncludeFiles)
+ 

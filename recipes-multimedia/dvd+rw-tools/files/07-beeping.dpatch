@@ -1,0 +1,27 @@
+#!/bin/sh /usr/share/dpatch/dpatch-run
+## 06-beeping.dpatch by Matt Zimmerman <mdz@canonical.com>
+##
+## DP: Disable obnoxious beeping.
+
+@DPATCH@
+
+diff -Naurp dvd+rw-tools-7.1.orig/growisofs.c dvd+rw-tools-7.1/growisofs.c
+--- dvd+rw-tools-7.1.orig/growisofs.c	2008-04-01 09:04:51.000000000 +0000
++++ dvd+rw-tools-7.1/growisofs.c	2008-04-01 09:08:58.000000000 +0000
+@@ -3453,14 +3453,14 @@ int main (int argc, char *argv[])
+     printf ("'\n");
+     fflush (stdout);
+ 
+-    if ((warn_for_isofs&2) && !dry_run && !no_tty_check)
++/*    if ((warn_for_isofs&2) && !dry_run && !no_tty_check)
+     {	fprintf (stderr,"Sleeping for 5 sec...\a"),	poll (NULL,0,1000);
+ 	fprintf (stderr,"\b\b\b\b\b\b\b\b4 sec...\a"),	poll (NULL,0,1000);
+ 	fprintf (stderr,"\b\b\b\b\b\b\b\b3 sec...\a"),	poll (NULL,0,1000);
+ 	fprintf (stderr,"\b\b\b\b\b\b\b\b2 sec...\a"),	poll (NULL,0,1000);
+ 	fprintf (stderr,"\b\b\b\b\b\b\b\b1 sec...\a"),	poll (NULL,0,1000);
+ 	fprintf (stderr,"\b\b\b\b\b\b\b\b0 sec...\r");
+-    }
++    } */
+ 
+ #if defined(__unix) || defined(__unix__)
+ 

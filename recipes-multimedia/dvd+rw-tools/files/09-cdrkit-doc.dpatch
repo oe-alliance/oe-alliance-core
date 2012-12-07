@@ -1,0 +1,227 @@
+#!/bin/sh /usr/share/dpatch/dpatch-run
+## 08-cdrkit-doc.dpatch by Daniel Baumann <daniel@debian.org>
+##
+## DP: Update any cdrtools related information in the documentation to cdrkit.
+
+@DPATCH@
+
+diff -Naurp dvd+rw-tools-7.1.orig/growisofs.1 dvd+rw-tools-7.1/growisofs.1
+--- dvd+rw-tools-7.1.orig/growisofs.1	2008-04-01 09:04:48.000000000 +0000
++++ dvd+rw-tools-7.1/growisofs.1	2008-04-01 09:16:16.000000000 +0000
+@@ -1,6 +1,6 @@
+ .TH GROWISOFS 1 "1 Mar 2008" "growisofs 7.1"
+ .SH NAME
+-growisofs \- combined mkisofs frontend/DVD recording program.
++growisofs \- combined genisoimage frontend/DVD recording program.
+ .SH SYNOPSIS
+ .B growisofs
+ [\fB\-dry\-run\fP]
+@@ -9,10 +9,10 @@ growisofs \- combined mkisofs frontend/D
+ [\fB\-speed=1\fP]
+ \-[\fBZ|M\fP]
+ .I /dev/dvd
+-.I <mkisofs-options>
++.I <genisoimage-options>
+ 
+ .SH DESCRIPTION
+-\fBgrowisofs\fP was originally designed as a frontend to \fBmkisofs\fP
++\fBgrowisofs\fP was originally designed as a frontend to \fBgenisoimage\fP
+ to facilitate appending of data to ISO9660 volumes residing on
+ random-access media such as DVD+RW, DVD\-RAM, plain files, hard disk
+ partitions. In the course of development general purpose DVD recording
+@@ -35,7 +35,7 @@ EXAMPLES section for further details.
+ Merge a new session to an existing one.
+ .TP
+ .BI \-version
+-Print version information and invoke \fBmkisofs\fP, also with \-version
++Print version information and invoke \fBgenisoimage\fP, also with \-version
+ option.
+ .TP
+ .BI \-dvd\-compat
+@@ -47,7 +47,7 @@ explicitly burn [otherwise optional] lea
+ .BI \-dry\-run
+ At dry\-run \fBgrowisofs\fP performs all the steps till, but not
+ including the first write operation. Most notably check for "overburn"
+-condition is performed, which implies that mkisofs is invoked and
++condition is performed, which implies that genisoimage is invoked and
+ terminated prematurely.
+ .TP
+ .BI \-overburn
+@@ -68,8 +68,8 @@ be found in \fBdvd+rw\-mediainfo\fP outp
+ recordings are commonly performed at ~1/2 of advertised speed, because
+ of defect management being in effect.
+ .TP
+-.BI <mkisofs-options>
+-More options can be found in the manpage for \fBmkisofs\fP.
++.BI <genisoimage-options>
++More options can be found in the manpage for \fBgenisoimage\fP.
+ 
+ .P
+ There are several undocumented options commonly denoted with
+@@ -82,7 +82,7 @@ these options undocumented is that those
+ need to use them directly can as well consult the source code or obtain
+ specific instructions elsewhere.
+ 
+-.SH DIFFERENCES WITH RUNNING MKISOFS DIRECTLY
++.SH DIFFERENCES WITH RUNNING GENISOIMAGE DIRECTLY
+ .P
+ When using growisofs you may not use the
+ .B \-o 
+@@ -99,7 +99,7 @@ will construct one for you;
+ Otherwise everything that applies to 
+ .I [multisession] 
+ mastering with 
+-.B mkisofs 
++.B genisoimage 
+ applies to 
+ .B growisofs 
+ as well. 
+@@ -107,7 +107,8 @@ as well. 
+ needs at least 
+ .B mkisofs
+ version 1.14, version 2.0 is required for multisession write-once
+-recordings.
++recordings or
++.B genisoimage.
+ 
+ .SH EXAMPLES
+ Actual device names vary from one operating system to another. We use
+@@ -146,12 +147,12 @@ command name is not intuitive in this co
+ .SH NOTES
+ If executed under sudo(8) growisofs refuses to start. This is done for
+ the following reason. Naturally growisofs has to access the data set to
+-be recorded to optical media, either indirectly by letting mkisofs
++be recorded to optical media, either indirectly by letting genisoimage
+ generate ISO9660 layout on-the-fly or directly if a pre-mastered image
+ is to be recorded. Being executed under sudo(8), growisofs effectively
+ grants sudoers read access to \fIany\fP file in the file system. The
+-situation is intensified by the fact that growisofs parses MKISOFS
+-environment variable in order to determine alternative path to mkisofs
++situation is intensified by the fact that growisofs parses GENISOIMAGE
++environment variable in order to determine alternative path to genisoimage
+ executable image. This means that being executed under sudo(8),
+ growisofs effectively grants sudoers right to execute program of their
+ choice with elevated privileges. If you for any reason still find the
+@@ -162,13 +163,13 @@ real growisofs binary.
+ .nf
+ 	#!/bin/ksh
+ 	unset SUDO_COMMAND
+-	export MKISOFS=/path/to/trusted/mkisofs
++	export GENISOIMAGE=/path/to/trusted/genisoimage
+ 	exec growisofs "$@"
+ .fi
+ 
+ But note that the recommended alternative to the above "workaround" is
+ actually to install growisofs set\-root\-uid, in which case it will drop
+-privileges prior accessing data or executing mkisofs in order to
++privileges prior accessing data or executing genisoimage in order to
+ preclude unauthorized access to the data.
+ 
+ If the media already carries isofs and \fBgrowisofs\fP is invoked with
+@@ -214,7 +215,7 @@ it gets pre-formatted with minimal spare
+ Most up-to-date information on dvd+rw\-tools is available at
+ http://fy.chalmers.se/~appro/linux/DVD+RW/.
+ .PP
+-The manpage for \fBmkisofs\fP.
++The manpage for \fBgenisoimage\fP.
+ 
+ .SH AUTHORS
+ Andy Polyakov <appro@fy.chalmers.se> stands for programming and on-line
+diff -Naurp dvd+rw-tools-7.1.orig/index.html dvd+rw-tools-7.1/index.html
+--- dvd+rw-tools-7.1.orig/index.html	2008-03-04 09:03:21.000000000 +0000
++++ dvd+rw-tools-7.1/index.html	2008-04-01 09:20:57.000000000 +0000
+@@ -137,7 +137,9 @@ SRC="japanese.gif" WIDTH=48 HEIGHT=19 BO
+ 	front-end to mkisofs,</B> i.e. invokes mkisofs to perform the
+ 	actual ISO9660 file system layout. Secondly, the DVD burners
+ 	available on the market can burn even CD-R[W] media and
+-	cdrecord is the tool for this job.</TR>
++	cdrecord is the tool for this job [and this job only].
++	Note that mkisofs is replaced with its successor genisoimage from
++	<A HREF="http://www.cdrkit.org/">cdrkit</a>.</TR>
+ </TABLE>
+ 
+ <!--
+@@ -480,13 +482,13 @@ are not capable of burning DVD+R is need
+ <A NAME="growisofs"><P></A><LI><P ALIGN="JUSTIFY"><B>Burning with <A
+ HREF="tools/growisofs.c">growisofs</A>.</B> There is hardly a need for
+ manual for growisofs. In a nutshell growisofs just passes all command
+-line arguments to mkisofs and dumps its output directly onto the media.
++line arguments to genisoimage and dumps its output directly onto the media.
+ The first part means that you basically can [well, <I>should</I>]
+-consult <A HREF="mkisofs.8.html">mkisofs manual page</A> and
++consult <A HREF="genisoimage.8.html">genisoimage manual page</A> and
+ accompanying reference documentation (including multisession related
+ section[s]) and the second part means that you shouldn't expect an
+ ISO-image on the standard output (nor make sure you have enough free
+-temporary storage<TT>:-)</TT>. Differences from mkisofs command line
++temporary storage<TT>:-)</TT>. Differences from genisoimage command line
+ are:
+ 
+ <P><UL>
+@@ -494,12 +496,12 @@ are:
+ <LI>you don't have to specify -C option, growisofs will construct one
+ for you;
+ <LI>there is internal -Z option for initial session recording, this
+-substitutes for originally suggested 'mkisofs | dd of=/dev/scd0';
++substitutes for originally suggested 'genisoimage | dd of=/dev/scd0';
+ </UL>
+ 
+ <P ALIGN="JUSTIFY">Otherwise <I>everything</I> that applies to
+-[multisession] mastering with mkisofs applies to growisofs as well. For
+-example just like with mkisofs you should make a note on which options
++[multisession] mastering with genisoimage applies to growisofs as well. For
++example just like with genisoimage you should make a note on which options
+ you used to master the initial &quot;session&quot; with and stick to
+ them, e.g.:
+ 
+@@ -508,9 +510,10 @@ growisofs -Z /dev/scd0 <FONT COLOR="red"
+ growisofs -M /dev/scd0 <FONT COLOR="red">-R -J</FONT> /more/files
+ </PRE></BLOCKQUOTE>
+ 
+-<P ALIGN="JUSTIFY">Oh! Do make sure you have at least mkisofs <FONT
+-COLOR="red">1.14</FONT> on your $PATH (mkisofs 1.14 is part of cdrtools
+-1.10). If you consider passing <TT>/same/files</TT> as argument, or in
++<P ALIGN="JUSTIFY">Oh! Do make sure you have genisoimage on your $PATH
++(genisoimage is part of <A HREF="http://www.cdrkit.org/">cdrkit</A>,
++or at least mkisofs <FONT COLOR="red">1.14</FONT> (mkisofs 1.14 is part of
++cdrtools 1.10). If you consider passing <TT>/same/files</TT> as argument, or in
+ other words consider deploying growisofs for <I>incremental</I>
+ multisession backups, then you shall find <A
+ HREF="mkisofs-2.01a16-root.diff">this '-old-root' extension</A> to
+@@ -586,7 +589,8 @@ through ide-scsi, the way it was under 2
+ unsupported it actually still works in 2.6 (I for one still use it).
+ 
+ <LI>If you go for BD-R/DVD&plusmn;R multisessioning, you have to use
+-mkisofs from <A HREF="ftp://ftp.berlios.de/pub/cdrecord/">cdrtools-2.0
++genisoimage from <A HREF="http://www.cdrkit.org/">cdrkit-1.0 or later</A>,
++or mkisofs from <A HREF="ftp://ftp.berlios.de/pub/cdrecord/">cdrtools-2.0
+ or later</A> or apply <A HREF="multi.diff">this patch</A>.
+ 
+ <LI>And when it comes to <B>DVD+R Double Layer and <NOBR>DVD-R</NOBR>
+@@ -630,7 +634,7 @@ working. To see it in action, insert for
+ access it, '<TT>dd if=/dev/scd<FONT COLOR="red">N</FONT> count=0</TT>'
+ would do. Then verify that kernel logs &quot;<TT>sr<FONT
+ COLOR="red">N</FONT>: mmc-3 profile: 1Ah</TT>&quot. You should now be
+-able to '<TT>mkisofs -pad . | dd of=/dev/scd<FONT COLOR="red">N</FONT>
++able to '<TT>genisoimage -pad . | dd of=/dev/scd<FONT COLOR="red">N</FONT>
+ obs=32k</TT>' or even '<TT>mke2fs -b 2048 /dev/scd<FONT
+ COLOR="red">N</FONT></TT>' and observe kernel logging &quot;<TT>sr<FONT
+ COLOR="red">N</FONT>: dirty DVD+RW media</TT>.&quot
+@@ -802,7 +806,7 @@ huge*.void</TT>'. Otherwise you might ha
+ <TR VALIGN="TOP" ALIGN="JUSTIFY">
+ <TD><FONT SIZE="-1"><SUP>(***)</SUP></FONT>
+ <TD><FONT SIZE="-1">E.g. when mastering DVD-Video disc:-) Note that
+-<TT>-dvd-video</TT> option [passed to mkisofs] engages
++<TT>-dvd-video</TT> option [passed to genisoimage] engages
+ <TT>-dvd-compat</TT> automatically.</FONT></TR>
+ </TABLE>
+ 
+@@ -908,7 +912,7 @@ Now, the problem is that isofs i-nodes<S
+ entries (light-greens), byte offsets from the beginning of media. This
+ means that no directory (green areas) may cross 4GB boundary without
+ being effectively corrupted<TT>:-(</TT> It should be noted that in
+-reality it's a bit better than it looks on the picture, as mkisofs
++reality it's a bit better than it looks on the picture, as genisoimage
+ collects all the directories in the beginning of any particular session
+ (there normally are no blues between greens). The <I>first</I> session
+ is therefore never subject to i-node wrap-around, but not the

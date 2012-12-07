@@ -1,0 +1,74 @@
+#!/bin/sh /usr/share/dpatch/dpatch-run
+## 07-cdrkit-code.dpatch by Daniel Baumann <daniel@debian.org>
+##
+## DP: Update any cdrtools related information in the code to cdrkit.
+
+@DPATCH@
+
+diff -Naurp dvd+rw-tools-7.1.orig/growisofs.c dvd+rw-tools-7.1/growisofs.c
+--- dvd+rw-tools-7.1.orig/growisofs.c	2008-04-01 09:08:58.000000000 +0000
++++ dvd+rw-tools-7.1/growisofs.c	2008-04-01 09:14:01.000000000 +0000
+@@ -2724,7 +2724,7 @@ void pipe_mkisofs_up (char *mkisofs_argv
+         perror (":-( unable to create pipe"), exit(FATAL_START(errno));
+ 
+     if ((mkisofs_pid=fork ()) == (pid_t)-1)
+-	perror (":-( unable to fork mkisofs"), exit(FATAL_START(errno));
++	perror (":-( unable to fork genisoimage"), exit(FATAL_START(errno));
+     else if (mkisofs_pid == 0)
+     {	dup2  (fildes[1],1);
+ 	close (fildes[0]);
+@@ -2844,7 +2844,7 @@ void pipe_mkisofs_up (char *mkisofs_argv
+     { DWORD ret;
+ 
+ 	if (GetExitCodeProcess (pi.hProcess,&ret) && ret)
+-	    fprintf (stderr,":-( mkisofs has failed: %d\n",ret),
++	    fprintf (stderr,":-( genisoimage has failed: %d\n",ret),
+ 	    exit (1);
+ 	else
+ 	    perror (":-( GetExitCodeProcess failed"), exit(errno);
+@@ -2963,8 +2963,8 @@ int main (int argc, char *argv[])
+ 	perror (NULL), exit (FATAL_START(errno));
+ 
+ #if defined(__unix) || defined(__unix__)
+-    env = getenv ("MKISOFS");
+-    mkisofs_argv[0] = (env?env:"mkisofs");
++    env = getenv ("GENISOIMAGE");
++    mkisofs_argv[0] = (env?env:"genisoimage");
+ #elif defined(_WIN32)
+     /*
+      * On Windows I insist on mkisofs.exe to reside in very same
+@@ -3151,8 +3151,8 @@ int main (int argc, char *argv[])
+ 	    else if (argv[i][1] == '?' || !strcmp(opt,"-help"))
+ 	    {	PRINT_VERSION (argv[0]);
+ 		printf ("- usage: %s [-dvd-compat] [-overburn] [-speed=1] \\\n"
+-			"         -[ZM] /dev/dvd <mkisofs options>\n",argv[0]);
+-		printf ("  for <mkisofs options> see 'mkisofs %s'\n",opt);
++			"         -[ZM] /dev/dvd <genisoimage options>\n",argv[0]);
++		printf ("  for <genisoimage options> see 'genisoimage %s'\n",opt);
+ 		exit (FATAL_START(EINVAL));
+ 	    }
+ 	    else if (strstr (opt,"-version"))
+@@ -3320,12 +3320,12 @@ int main (int argc, char *argv[])
+ 
+     if (imgfd<0)
+     {	if (mkisofs_argc==1 && dev_found!='F')
+-	    fprintf (stderr,"%s: no mkisofs options specified, "
++	    fprintf (stderr,"%s: no genisoimage options specified, "
+ 			    "aborting...\n",argv[0]),
+ 	    exit (FATAL_START(EINVAL));
+     }
+     else if ((mkisofs_argc-growisofs_argc)>1)
+-	fprintf (stderr,"%s: no mkisofs options are permitted with =, "
++	fprintf (stderr,"%s: no genisoimage options are permitted with =, "
+ 			"aborting...\n",argv[0]),
+ 	exit (FATAL_START(EINVAL));
+ 
+@@ -3576,7 +3576,7 @@ int main (int argc, char *argv[])
+ 
+ 	    if (saved_descriptors[i].type[0] != descr[i].type[0])
+ 	    {	fprintf (stderr,":-? volume descriptor mismatch, did you "
+-				"use same mkisofs options?\n");
++				"use same genisoimage options?\n");
+ 		break;
+ 	    }
+ 	    memcpy (descr+i,&saved_descriptors[i],sizeof(*descr));

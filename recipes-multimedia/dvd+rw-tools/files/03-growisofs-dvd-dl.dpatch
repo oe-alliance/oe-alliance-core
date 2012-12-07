@@ -1,0 +1,21 @@
+#!/bin/sh /usr/share/dpatch/dpatch-run
+## 03-growisofs-dvd-dl.dpatch by <joeshaw@suse.de>
+##
+## DP: Don't abort when a DVD-DL disk is underful (Closes: #340698).
+
+@DPATCH@
+
+diff -Naurp dvd+rw-tools-7.1.orig/growisofs_mmc.cpp dvd+rw-tools-7.1/growisofs_mmc.cpp
+--- dvd+rw-tools-7.1.orig/growisofs_mmc.cpp	2008-04-01 09:01:20.000000000 +0000
++++ dvd+rw-tools-7.1/growisofs_mmc.cpp	2008-04-01 09:02:59.000000000 +0000
+@@ -1640,9 +1640,7 @@ static void plus_r_dl_split (Scsi_Comman
+     blocks += 15, blocks &= ~15;
+ 
+     if (blocks <= split)
+-	fprintf (stderr,":-( more than 50%% of space will be *wasted*!\n"
+-			"    use single layer media for this recording\n"),
+-	exit (FATAL_START(EMEDIUMTYPE));
++	fprintf (stderr,":-? more than 50%% of space will be *wasted*!\n");
+ 
+     blocks /= 16;
+     blocks += 1;
