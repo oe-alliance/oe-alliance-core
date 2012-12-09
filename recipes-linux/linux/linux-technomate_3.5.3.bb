@@ -3,18 +3,18 @@ LICENSE = "GPL"
 SECTION = "kernel"
 KV = "3.5.3"
 
-SRCDATE = "20120915"
-MACHINE_KERNEL_PR_append = ".0"
+SRCDATE = "20121208"
+MACHINE_KERNEL_PR_append = ".3"
 
-SRC_URI[md5sum] = "66acfa1014f3d06bfc605510259c9918"
-SRC_URI[sha256sum] = "03338376b162220aac1126f2edbc670affc75c09029f5283772c77a78aa970ef"
+SRC_URI[md5sum] = "e157d238503c45a9119cbc6314c2dbe4"
+SRC_URI[sha256sum] = "8d6ed2917fa5da73915fbbbceef27c6e94f18d9b38224274bf0471881c30133f"
 
-LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${KV}-tm-${SRCDATE}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
+LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${KV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
 SRC_URI = "http://en2.ath.cx/release/images/iqon/dev/linux-${KV}-tm-${SRCDATE}.tar.gz \
 		file://defconfig"
 
-S = "${WORKDIR}/linux-${KV}-tm-${SRCDATE}"
+S = "${WORKDIR}/linux-${KV}"
 
 inherit kernel
 

@@ -8,7 +8,7 @@ require conf/license/license-gplv2.inc
 RDEPENDS_${PN} += "showiframe"
 
 PV = "2.0"
-PR = "r17"
+PR = "r18"
 
 S = "${WORKDIR}"
 
@@ -139,41 +139,49 @@ do_install_append_ixussone() {
 
 
 pkg_preinst() {
-	if [ -z "$D" ]
-	then
-		if mountpoint -q /boot
+	if grep dm /etc/hostname > /dev/null ; then
+		if [ -z "$D" ]
 		then
-			mount -o remount,rw,compr=none /boot
-		else
-			mount -t jffs2 -o rw,compr=none mtd:'boot partition' /boot
+			if mountpoint -q /boot
+			then
+				mount -o remount,rw,compr=none /boot
+			else
+				mount -t jffs2 -o rw,compr=none mtd:'boot partition' /boot
+			fi
 		fi
 	fi
 }
 
 pkg_postinst() {
-	if [ -z "$D" ]
-	then
-		umount /boot
-	fi
-}
-
-pkg_prerm() {
-	if [ -z "$D" ]
-	then
-		if mountpoint -q /boot
+	if grep dm /etc/hostname > /dev/null ; then
+		if [ -z "$D" ]
 		then
-			mount -o remount,rw,compr=none /boot
-		else
-			mount -t jffs2 -o rw,compr=none mtd:'boot partition' /boot
+			umount /boot
 		fi
 	fi
 }
 
+pkg_prerm() {
+	if grep dm /etc/hostname > /dev/null ; then
+		if [ -z "$D" ]
+		then
+			if mountpoint -q /boot
+			then
+				mount -o remount,rw,compr=none /boot
+			else
+				mount -t jffs2 -o rw,compr=none mtd:'boot partition' /boot
+			fi
+		fi
+	fi	
+}
+
 pkg_postrm() {
-	if [ -z "$D" ]
-	then
-		umount /boot
-	fi
+	if grep dm /etc/hostname > /dev/null ; then
+		if [ -z "$D" ]
+		then
+			umount /boot
+		fi
+	fi	
 }
 
 PACKAGE_ARCH := "${MACHINE_ARCH}"
