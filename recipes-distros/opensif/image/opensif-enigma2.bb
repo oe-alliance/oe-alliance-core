@@ -34,6 +34,7 @@ RRECOMMENDS = "\
 	enigma2-plugin-extensions-openairplay \
 	enigma2-plugin-extensions-graphmultiepg \
 	enigma2-plugin-systemplugins-skinselector \
+	enigma2-plugin-extensions-lcnscanner \
 	\
 	${@base_contains("MACHINE_FEATURES", "3dtv", "enigma2-plugin-systemplugins-osd3dsetup" , "", d)} \
 	"
