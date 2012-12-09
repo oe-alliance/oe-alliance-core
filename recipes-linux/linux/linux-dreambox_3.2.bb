@@ -28,6 +28,7 @@ SRC_URI = " \
 			file://nand-driver-smp-fixes.patch \
 			file://em28xx_fix_terratec_entries.patch \
 			file://em28xx_add_terratec_h5_rev3.patch \
+			file://dvb-usb-a867.patch \
 			file://defconfig \
 "
 
