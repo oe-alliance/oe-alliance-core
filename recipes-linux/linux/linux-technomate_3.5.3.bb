@@ -14,7 +14,7 @@ LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${KV}-tm-${SRCDATE}/COPYING;md5=d781
 SRC_URI = "http://en2.ath.cx/release/images/iqon/dev/linux-${KV}-tm-${SRCDATE}.tar.gz \
 		file://defconfig"
 
-S = "${WORKDIR}/linux-${KV}-tm-${SRCDATE}"
+S = "${WORKDIR}/linux-${KV}"
 
 inherit kernel
 
