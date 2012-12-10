@@ -1,12 +1,12 @@
 require conf/license/license-gplv2.inc
 
 PV = "1.0"
-PR = "r0"
+PR = "r1"
 
 SRC_URI = "file://ebox-shutdown.sh"
 
 INITSCRIPT_NAME = "ebox-shutdown"
-INITSCRIPT_PARAMS = "start 89 0 ."
+INITSCRIPT_PARAMS = "start 39 0 ."
 
 inherit autotools pkgconfig update-rc.d
 
