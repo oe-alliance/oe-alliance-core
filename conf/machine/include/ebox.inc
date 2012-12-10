@@ -4,6 +4,7 @@ MACHINE_ESSENTIAL_EXTRA_RDEPENDS = "\
 	
 MACHINE_EXTRA_RRECOMMENDS = " \
 	gst-plugin-dvbmediasink \
+	ebox-shutdown \
 	"
 
 include conf/machine/include/autoload-wifi.inc
