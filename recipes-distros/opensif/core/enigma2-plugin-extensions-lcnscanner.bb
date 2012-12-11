@@ -7,10 +7,10 @@ inherit gitpkgv
 
 PV = "1.0-git${SRCPV}"
 PKGV = "1.0-git${GITPKGV}"
-PR = "r0"
+PR = "r1"
 SRCREV = "${AUTOREV}" 
 
-SRC_URI="git://openee.git.sourceforge.net/gitroot/openee/lcnscanner;protocol=git"
+SRC_URI="git://github.com/SIFTeam/lcnscanner.git;protocol=git"
 S = "${WORKDIR}/git"
 
 FILES_${PN} = "/usr/*"
