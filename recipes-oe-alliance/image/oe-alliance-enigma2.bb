@@ -4,7 +4,7 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3
                     file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
 
 PV = "1.0"
-PR = "r18"
+PR = "r19"
 
 inherit task
 
@@ -52,7 +52,6 @@ RRECOMMENDS = "\
 	enigma2-plugin-extensions-mediascanner \
 	enigma2-plugin-extensions-pictureplayer \
 	enigma2-plugin-extensions-openwebif \
-	enigma2-plugin-systemplugins-fastscan \
 	enigma2-plugin-systemplugins-networkbrowser \
 	enigma2-plugin-systemplugins-networkwizard \
 	enigma2-plugin-systemplugins-positionersetup \
