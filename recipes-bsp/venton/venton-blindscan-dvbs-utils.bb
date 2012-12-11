@@ -12,11 +12,8 @@ SRC_URI = "file://${INIDVBCBIN}"
 PROVIDES += "virtual/blindscan-dvbs"
 RPROVIDES_${PN} += "virtual/blindscan-dvbs"
 
-RREPLACES_${PN} += "venton-blindscan-utils"
-RCONFLICTS_${PN} += "venton-blindscan-utils"
-
 PV = "2.0"
-PR = "r2"
+PR = "r3"
 
 S = "${WORKDIR}/"
 
