@@ -53,6 +53,7 @@ IMAGE_CMD_ubi_append = " \
 MACHINE_FEATURES += "3dtv alsa hdmicec switchoff wifi 3dtvpli"
 
 PREFERRED_PROVIDER_virtual/blindscan-dvbc = "venton-blindscan-dvbc-utils"
+PREFERRED_PROVIDER_virtual/blindscan-dvbs = "venton-blindscan-dvbs-utils"
 
 require conf/machine/include/tune-mips32.inc
 
