@@ -7,7 +7,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 require conf/license/license-gplv2.inc
 
-PR = "r18"
+PR = "r19"
 
 S = "${WORKDIR}"
 
@@ -34,5 +34,5 @@ do_install_append_gb800ue() {
 do_install_append_gbquad() {
     install -d ${DEPLOY_DIR_IMAGE}
 	install -m 0755 ${S}/gbquad/lcdwaitkey.bin ${DEPLOY_DIR_IMAGE}/lcdwaitkey.bin
-	install -m 0755 ${S}/gbquad/lcdwaitkey.bin ${DEPLOY_DIR_IMAGE}/lcdwarning.bin
+	install -m 0755 ${S}/gbquad/lcdwarning.bin ${DEPLOY_DIR_IMAGE}/lcdwarning.bin
 }
