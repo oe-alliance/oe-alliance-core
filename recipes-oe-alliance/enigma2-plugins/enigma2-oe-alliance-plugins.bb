@@ -19,8 +19,9 @@ PROVIDES = "${PN} \
 	enigma2-plugin-extensions-hbbtv \
 	"
 
-DESCRIPTION_enigma2-plugin-extensions-autobouquets = "28.2E stream bouquet downloader (Enigma2)"
-RDEPENDS_enigma2-plugin-extensions-autobouquets = "dvbsnoop"
+DESCRIPTION_enigma2-plugin-systemplugins-autobouquetsmaker = "Automatically build and update bouquets from the satellite stream."
+RREPLACES_enigma2-plugin-systemplugins-autobouquetsmaker = "enigma2-plugin-extensions-autobouquets"
+RCONFLICTS_enigma2-plugin-systemplugins-autobouquetsmaker = "enigma2-plugin-extensions-autobouquets"
 DESCRIPTION_enigma2-plugin-systemplugins-blindscan = "blindscan..."
 RDEPENDS_enigma2-plugin-systemplugins-blindscan = "virtual/blindscan-dvbs"
 DESCRIPTION_enigma2-plugin-extensions-dlnabrowser = "this is dlna/upnp browser using djmount"
@@ -68,7 +69,7 @@ inherit gitpkgv autotools
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r25"
+PR = "r28"
 
 SRC_URI="git://github.com/oe-alliance/oe-alliance-plugins.git;protocol=git"
 
