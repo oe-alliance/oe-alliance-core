@@ -7,13 +7,13 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 require conf/license/license-gplv2.inc
 
-PR = "r17"
+PR = "r18"
 
 S = "${WORKDIR}"
 
 SRC_URI_gb800se = " file://burn.bat"
-SRC_URI_gb800ue = " file://gb800ue/lcdwaitkey.bin file://gb800ue/lcdwarning.bin"
 SRC_URI_gb800solo = " file://burn.bat"
+SRC_URI_gb800ue = " file://gb800ue/lcdwaitkey.bin file://gb800ue/lcdwarning.bin"
 SRC_URI_gbquad = " file://gbquad/lcdwaitkey.bin file://gbquad/lcdwarning.bin"
 
 ALLOW_EMPTY_${PN} = "1"
