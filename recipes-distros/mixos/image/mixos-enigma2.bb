@@ -30,5 +30,6 @@ RRECOMMENDS = "\
 	enigma2-plugin-systemplugins-hotplug \
 	enigma2-plugin-systemplugins-devicemanager \
 	enigma2-plugin-systemplugins-swapmanager \
+	enigma2-plugin-systemplugins-osdpositionsetup \
 	${@base_contains("MACHINE_FEATURES", "3dtv", "enigma2-plugin-systemplugins-osd3dsetup" , "", d)} \
 	"
