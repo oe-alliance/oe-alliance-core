@@ -2,7 +2,7 @@ DESCRIPTION = "Tuxbox common files"
 LICENSE = "CLOSED"
 MAINTAINER = "OE-Alliance team"
 
-PR = "r7"
+PR = "r8"
 
 SRC_URI += " \
 	file://cables.xml \
