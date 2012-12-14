@@ -4,9 +4,9 @@ PRIORITY = "required"
 LICENSE = "CLOSED"
 
 PV = "${KV}+${SRCDATE}"
-PR = "r3"
+PR = "r4"
 
-SRC_URI = "http://source.mynonpublic.com/ixussone-drivers-${SRCDATE}.tar.gz"
+SRC_URI = "http://118.37.185.125/download/drivers/ixuss-one-drivers-${SRCDATE}.tgz"
 
 S = "${WORKDIR}"
 
