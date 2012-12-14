@@ -7,6 +7,7 @@ KV = "3.1.1"
 KV_vuduo2 = "3.3.6"
 KV_vusolo2 = "3.3.6"
 PV = "${KV}+${SRCDATE}"
+PR = "r6"
 
 VUPLUS_KERNEL_GCC = "4.4.3"
 SRC_URI = "http://archive.vuplus.com/download/drivers/vuplus-dvb-modules-${DOWNLOADMACHINE}-${KV}-${VUPLUS_KERNEL_GCC}-${SRCDATE}.tar.gz"
