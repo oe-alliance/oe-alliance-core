@@ -4,18 +4,15 @@ PRIORITY = "required"
 LICENSE = "CLOSED"
 
 KV = "3.1.1"
-KVPR = ""
+KV_vuduo2 = "3.3.6"
 KV_vusolo2 = "3.3.6"
-KVPR_vusolo2 = "-1.2"
-KV_vuduo2 = "2.6.37"
-
 PV = "${KV}+${SRCDATE}"
 PR = "r6"
 
 VUPLUS_KERNEL_GCC = "4.4.3"
 SRC_URI = "http://archive.vuplus.com/download/drivers/vuplus-dvb-modules-${DOWNLOADMACHINE}-${KV}-${VUPLUS_KERNEL_GCC}-${SRCDATE}.tar.gz"
-SRC_URI_solo2 = "http://archive.vuplus.com/download/drivers/beta/private/vuplus-dvb-modules-${DOWNLOADMACHINE}-${KV}-${VUPLUS_KERNEL_GCC}-${SRCDATE}.tar.gz"
-SRC_URI_duo2 = "http://archive.vuplus.com/download/drivers/beta/private/vuplus-dvb-modules-${DOWNLOADMACHINE}-${KV}-${VUPLUS_KERNEL_GCC}-${SRCDATE}.tar.gz"
+SRC_URI_vusolo2 = "http://archive.vuplus.com/download/drivers/beta/private/vuplus-dvb-modules-${DOWNLOADMACHINE}-${KV}-${VUPLUS_KERNEL_GCC}-${SRCDATE}.tar.gz "
+SRC_URI_vuduo2 = "http://archive.vuplus.com/download/drivers/beta/private/vuplus-dvb-modules-${DOWNLOADMACHINE}-${KV}-${VUPLUS_KERNEL_GCC}-${SRCDATE}.tar.gz "
 
 S = "${WORKDIR}"
 
@@ -27,12 +24,12 @@ do_compile() {
 }
 
 do_install() {
-	install -d ${D}/lib/modules/${KV}${KVPR}/extra
+	install -d ${D}/lib/modules/${KV}/extra
 	for f in *.ko; do
-		install -m 0644 ${WORKDIR}/$f ${D}/lib/modules/${KV}${KVPR}/extra/$f;
+		install -m 0644 ${WORKDIR}/$f ${D}/lib/modules/${KV}/extra/$f;
 	done
-	install -d ${D}/${sysconfdir}/modules-load.d
+	install -d ${D}/${sysconfdir}/modutils
 	for i in `ls | grep \\.ko | sed -e 's/.ko//g'`; do
-		echo $i >> ${D}/${sysconfdir}/modules-load.d/_${MACHINE}.conf
+		echo $i >> ${D}/${sysconfdir}/modutils/_vuplus
 	done
 }
