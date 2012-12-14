@@ -25,7 +25,7 @@ KERNEL_CONSOLE = "null"
 
 TARGET_FPU = "soft"
 
-MACHINE_FEATURES += "alsa dvbapi5 usbhost switchoff ci wifi wifiusblegacy textlcd"
+MACHINE_FEATURES += "alsa dvbapi5 usbhost switchoff ci wifi wifiusblegacy textlcd 3dtv"
 
 require conf/machine/include/tune-mips32.inc
 

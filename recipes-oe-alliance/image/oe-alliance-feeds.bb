@@ -8,6 +8,7 @@ PR = "r16"
 inherit task
 
 DEPENDS = "enigma2-plugin-drivers-usbserial"
+RECOMMENDS = "enigma2-plugin-extensions-et-livestream"
 
 RRECOMMENDS = "\
 	bootlogos-enigma2-meta \
