@@ -3,12 +3,13 @@ MAINTAINER = "markus625"
 
 require conf/license/license-gplv2.inc
 
-inherit gitpkgv
+inherit gitpkgv allarch
+
 EPSM = "enigma2-plugin-vix-vixbmc"
 SRCREV = "${AUTOREV}"
 PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"
-PR = "r3"
+PR = "r4"
 
 PACKAGES = "vix-vixbmc-hd-common ${EPSM}-slim-hd ${EPSM}-night-hd"
 PROVIDES = "${PN} vix-vixbmc-hd-common ${EPSM}-slim-hd ${EPSM}-night-hd"

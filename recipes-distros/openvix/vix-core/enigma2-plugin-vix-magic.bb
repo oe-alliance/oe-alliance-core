@@ -3,13 +3,13 @@ MAINTAINER = "Rob van der Does"
 
 require conf/license/license-gplv2.inc
 
-inherit gitpkgv
+inherit gitpkgv allarch
 
 EPSM = "enigma2-plugin-vix-magic"
 SRCREV = "${AUTOREV}"
 PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"
-PR = "r8"
+PR = "r9"
 
 RCONFLICTS_${EPSM}-sd = "enigma2-plugin-skins-magic"
 RREPLACES_${EPSM}-sd = "enigma2-plugin-skins-magic"
