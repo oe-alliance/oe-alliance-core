@@ -1,4 +1,4 @@
-require dreambox-secondstage.inc
+require recipes-bsp/dreambox/dreambox-secondstage.inc
 
 PR = "${INC_PR}.0"
 
