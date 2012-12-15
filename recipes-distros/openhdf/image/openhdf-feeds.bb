@@ -8,6 +8,13 @@ PR = "r5"
 inherit task
 
 RRECOMMENDS = "\
-	enigma2-skins \
+	openhdf-picons-meta \
 	openhdf-3rdparty-plugins \
+	enigma2-skins \
+	enigma2-pliplugins \
+	enigma2-plugin-extensions-project-valerie \
+	enigma2-plugin-extensions-xmltvimport \
+	enigma2-plugin-systemplugins-crossepg \
+	enigma2-plugin-extensions-cooltvguide \
+	enigma2-plugin-extensions-enhancedmoviecenter \
 	"

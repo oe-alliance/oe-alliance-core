@@ -1,13 +1,13 @@
-DESCRIPTION = "OE-Alliance OpenMips HDF Mod version info"
+DESCRIPTION = "OpenHDF version info"
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "proprietary"
-MAINTAINER = "OE-Alliance HDF Mod"
+MAINTAINER = "OpenHDF"
 
 require conf/license/license-gplv2.inc
 
 PV = "${IMAGE_VERSION}"
-PR = "r${DATETIME}-${DISTRO_TYPE}"
+PR = "${BUILD_VERSION}"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 URL = "http://www.hdfreaks.cc"
@@ -24,15 +24,38 @@ do_install() {
 			else
 				BUILDTYPE="0"
 			fi
-
-			install -d ${D}/etc
 			# generate /etc/image-version
+			install -d ${D}/etc
 			echo "box_type=${MACHINE}" > ${D}/etc/image-version
 			echo "build_type=${BUILDTYPE}" >> ${D}/etc/image-version
 			echo "version=${IMAGE_VERSION}" >> ${D}/etc/image-version
 			echo "build=${BUILD_VERSION}" >> ${D}/etc/image-version
+			if [ "${MACHINE}" = "vusolo" -o "${MACHINE}" = "vuduo" -o "${MACHINE}" = "vuuno" -o "${MACHINE}" = "vuultimo" ]; then
+				DRIVERS=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/vuplus/vuplus-dvb-modules-${MACHINE}.bb | cut -b 12-19`
+			elif [ "${MACHINE}" = "et4x00" -o "${MACHINE}" = "et5x00" -o "${MACHINE}" = "et6x00" -o "${MACHINE}" = "et9x00" ]; then
+				DRIVERS=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/etxx00/et-dvb-modules-${MACHINE}.bb | cut -b 12-19`
+			elif [ "${MACHINE}" = "odinm9" -o "${MACHINE}" = "odinm7"  ]; then
+				DRIVERS=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/odin/odin-dvb-modules-${MACHINE}.bb | cut -b 12-19`
+			elif [ "${MACHINE}" = "tmtwin" -o "${MACHINE}" = "tm2t" -o "${MACHINE}" = "tmsingle" ]; then
+				DRIVERS=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/technomate/technomate-dvb-modules.bb | cut -b 12-19`
+			elif [ "${MACHINE}" = "gb800solo" -o "${MACHINE}" = "gb800se" -o "${MACHINE}" = "gb800ue" -o "${MACHINE}" = "gbquad" ]; then
+				DRIVERS=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/gigablue/gigablue-dvb-modules-${MACHINE}.bb | cut -b 12-19`
+			elif [ "${MACHINE}" = "ventonhdx" -o "${MACHINE}" = "ventonhde" ]; then
+				DRIVERS=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/venton/venton-dvb-modules-${MACHINE}.bb | cut -b 12-19`
+			elif [ "${MACHINE}" = "xp1000" ]; then
+				DRIVERS=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/xp/xp-dvb-modules-${MACHINE}.bb | cut -b 12-19`
+			elif [ "${MACHINE}" = "ixussone" ]; then
+				DRIVERS=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/ixuss/ixuss-dvb-modules-${MACHINE}.bb | cut -b 12-19`	
+			elif [ "${MACHINE}" = "dm8000" -o "${MACHINE}" = "dm7020hd" -o "${MACHINE}" = "dm500hd" -o "${MACHINE}" = "dm800se" ]; then
+				DRIVERS="20120711"
+			elif [ "${MACHINE}" = "dm800" ]; then
+				DRIVERS="20120518"	
+			else
+				DRIVERS='N/A'
+			fi
+			echo "drivers=${DRIVERS}" >> ${D}/etc/image-version
 			echo "date=${DATETIME}" >> ${D}/etc/image-version
-			echo "comment=OpenHDF" >> ${D}/etc/image-version
+			echo "comment=HDF" >> ${D}/etc/image-version
 			echo "target=9" >> ${D}/etc/image-version
 			echo "creator=OpenHDF" >> ${D}/etc/image-version
 			echo "url=${URL}" >> ${D}/etc/image-version
@@ -40,5 +63,5 @@ do_install() {
 			echo "${MACHINE}" > ${D}/etc/model
 }
 
-FILES_${PN} += "/etc"
+FILES_${PN} += "/etc/model /etc/image-version /etc/oe-git.log /etc/e2-git.log"
 

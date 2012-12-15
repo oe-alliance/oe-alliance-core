@@ -1,5 +1,5 @@
 DESCRIPTION = "3rd Party plugins for Enigma2"
-MAINTAINER = "HDFreaks team"
+MAINTAINER = "OpenHDF Team"
 
 LICENSE = "Proprietary"
 LIC_FILES_CHKSUM = "file://COPYING;md5=8e37f34d0e40d32ea2bc90ee812c9131"
@@ -9,7 +9,7 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r3"
+PR = "r6"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -32,4 +32,6 @@ DEPENDS = "enigma2 enigma2-3rdparty-plugins"
 
 do_install() {
 	install -d 0644 ${DEPLOY_DIR_IPK}/3rdparty
+	install -m 0644 *.ipk ${DEPLOY_DIR_IPK}/3rdparty
 }
+
