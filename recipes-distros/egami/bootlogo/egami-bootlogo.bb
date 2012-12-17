@@ -18,7 +18,7 @@ INITSCRIPT_PARAMS = "start 05 S ."
 
 inherit update-rc.d
 
-SRC_URI = "file://bootlogo.mvi file://backdrop.mvi file://bootlogo_wait.mvi file://radio.mvi file://bootlogo.sh ${@base_contains("MACHINE_FEATURES", "bootsplash", "splash.bin" , "", d)}"
+SRC_URI = "file://bootlogo.mvi file://backdrop.mvi file://bootlogo_wait.mvi file://radio.mvi file://bootlogo.sh ${@base_contains("MACHINE_FEATURES", "bootsplash", "file://splash.bin" , "", d)}"
 
 FILES_${PN} = "/boot /usr/share /etc/init.d"
 
