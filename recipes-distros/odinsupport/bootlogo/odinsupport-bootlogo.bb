@@ -18,14 +18,13 @@ INITSCRIPT_PARAMS = "start 05 S ."
 
 inherit update-rc.d
 
-SRC_URI = "file://bootlogo.mvi file://backdrop.mvi file://radio.mvi file://bootlogo.sh ${@base_contains("MACHINE_FEATURES", "bootsplash", "file://splash.bin" , "", d)}"
+SRC_URI = "file://bootlogo.mvi file://radio.mvi file://bootlogo.sh ${@base_contains("MACHINE_FEATURES", "bootsplash", "file://splash.bin" , "", d)}"
 
 FILES_${PN} = "/boot /usr/share /etc/init.d"
 
 do_install() {
 	install -d ${D}/usr/share
 	install -m 0644 bootlogo.mvi ${D}/usr/share/bootlogo.mvi
-	install -m 0644 backdrop.mvi ${D}/usr/share/backdrop.mvi
 	install -d ${D}/usr/share/enigma2
 	install -m 0644 radio.mvi ${D}/usr/share/enigma2/radio.mvi
 	install -d ${D}/${sysconfdir}/init.d

@@ -18,7 +18,7 @@ INITSCRIPT_PARAMS = "start 05 S ."
 
 inherit update-rc.d
 
-SRC_URI = "file://bootlogo.mvi file://backdrop.mvi file://radio.mvi file://bootlogo.sh ${@base_contains("MACHINE_FEATURES", "bootsplash", "file://splash.bin" , "", d)}"
+SRC_URI = "file://bootlogo.mvi file://radio.mvi file://bootlogo.sh ${@base_contains("MACHINE_FEATURES", "bootsplash", "file://splash.bin" , "", d)}"
 SRC_URI_append_gb800ue = "file://lcdsplash.bin"
 SRC_URI_append_gbquad = "file://lcdsplash.bin"
 
@@ -44,7 +44,6 @@ do_install() {
 	${@base_contains("MACHINE_FEATURES", "dreambox", "install -m 0755 ${S}/dreambox-bootlogo_${BINARY_VERSION}_${MACHINE_ARCH}/bootlogo-${MACHINE_ARCH}.elf.gz ${D}/boot/; install -m 0755 ${S}/dreambox-bootlogo_${BINARY_VERSION}_${MACHINE_ARCH}/bootlogo-${MACHINE_ARCH}.jpg ${D}/boot/", "", d)}
 	install -d ${D}/usr/share
 	install -m 0644 bootlogo.mvi ${D}/usr/share/bootlogo.mvi
-	install -m 0644 backdrop.mvi ${D}/usr/share/backdrop.mvi
 	install -d ${D}/usr/share/enigma2
 	install -m 0644 radio.mvi ${D}/usr/share/enigma2/radio.mvi
 	install -d ${D}/${sysconfdir}/init.d
