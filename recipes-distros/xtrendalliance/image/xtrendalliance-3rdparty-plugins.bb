@@ -9,7 +9,7 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r5"
+PR = "r6"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -24,14 +24,18 @@ EXTRA_OECONF = " \
 ALLOW_EMPTY_${PN} = "1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-inherit autotools
+inherit autotools deploy
 
 S = "${WORKDIR}/git"
 
 DEPENDS = "enigma2 enigma2-3rdparty-plugins"
 
 do_install() {
-	install -d 0644 ${DEPLOY_DIR_IPK}/3rdparty
-	install -m 0644 ${S}/enigma2-plugin-extensions-backupsuite_11.1r1_mips32el.ipk ${DEPLOY_DIR_IPK}/3rdparty
 }
 
+do_deploy() {
+	install -d 0644 ${WORKDIR}/deploy-ipks/3rdparty
+	install -m 0644 enigma2-plugin-extensions-backupsuite_11.1r1_mips32el.ipk ${WORKDIR}/deploy-ipks/3rdparty
+}
+
+addtask deploy before do_build after do_install
