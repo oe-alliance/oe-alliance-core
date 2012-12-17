@@ -69,7 +69,7 @@ inherit gitpkgv autotools
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r28"
+PR = "r29"
 
 SRC_URI="git://github.com/oe-alliance/oe-alliance-plugins.git;protocol=git"
 
@@ -84,7 +84,6 @@ EXTRA_OECONF = " \
 ALLOW_EMPTY_${PN} = "1"
 PACKAGES += "${PN}-meta"
 FILES_${PN}-meta = "${datadir}/meta"
-PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 S = "${WORKDIR}/git"
 
