@@ -30,6 +30,7 @@ RRECOMMENDS = "\
 	enigma2-plugin-systemplugins-videotune \
 	enigma2-plugin-systemplugins-softwaremanager \
 	enigma2-plugin-systemplugins-skinselector \
+	enigma2-plugin-extensions-xmltvimport \
 	${@base_contains("MACHINE_FEATURES", "3dtv", "enigma2-plugin-systemplugins-osd3dsetup" , "", d)} \
 	"
 
