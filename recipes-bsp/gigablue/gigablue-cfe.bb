@@ -6,8 +6,9 @@ MAINTAINER = "openMips"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 require conf/license/license-gplv2.inc
+inherit deploy
 
-PR = "r19"
+PR = "r24"
 
 S = "${WORKDIR}"
 
@@ -18,21 +19,14 @@ SRC_URI_gbquad = " file://gbquad/lcdwaitkey.bin file://gbquad/lcdwarning.bin"
 
 ALLOW_EMPTY_${PN} = "1"
 
-do_install_append_gb800solo() {
-    install -d ${DEPLOY_DIR_IMAGE}
-	install -m 0755 ${S}/burn.bat ${DEPLOY_DIR_IMAGE}/burn.bat
+do_deploy() {
+	if [ -e burn.bat ]; then
+		install -m 0644 burn.bat ${DEPLOYDIR}/burn.bat
+	fi
+	if [ -e ${MACHINE}/lcdwaitkey.bin ]; then
+		install -m 0644 ${MACHINE}/lcdwaitkey.bin ${DEPLOYDIR}/lcdwaitkey.bin
+		install -m 0644 ${MACHINE}/lcdwarning.bin ${DEPLOYDIR}/lcdwarning.bin
+	fi
 }
-do_install_append_gb800se() {
-    install -d ${DEPLOY_DIR_IMAGE}
-	install -m 0755 ${S}/burn.bat ${DEPLOY_DIR_IMAGE}/burn.bat
-}
-do_install_append_gb800ue() {
-    install -d ${DEPLOY_DIR_IMAGE}
-	install -m 0755 ${S}/gb800ue/lcdwaitkey.bin ${DEPLOY_DIR_IMAGE}/lcdwaitkey.bin
-	install -m 0755 ${S}/gb800ue/lcdwarning.bin ${DEPLOY_DIR_IMAGE}/lcdwarning.bin
-}
-do_install_append_gbquad() {
-    install -d ${DEPLOY_DIR_IMAGE}
-	install -m 0755 ${S}/gbquad/lcdwaitkey.bin ${DEPLOY_DIR_IMAGE}/lcdwaitkey.bin
-	install -m 0755 ${S}/gbquad/lcdwarning.bin ${DEPLOY_DIR_IMAGE}/lcdwarning.bin
-}
+
+addtask deploy before do_build after do_install

@@ -9,7 +9,7 @@ require conf/license/license-gplv2.inc
 RDEPENDS_${PN} += "showiframe"
 
 PV = "3.0"
-PR = "r14"
+PR = "r15"
 
 S = "${WORKDIR}"
 
@@ -68,88 +68,35 @@ do_install() {
 	install -m 0755 ${S}/bootlogo.sh ${D}/${sysconfdir}/init.d/bootlogo
 }
 
-do_install_append_gb800se() {
-	install -d ${DEPLOY_DIR_IMAGE}
-	install -m 0644 ${S}/splash.bin ${DEPLOY_DIR_IMAGE}/splash.bin
-}
-do_install_append_gb800solo() {
-	install -d ${DEPLOY_DIR_IMAGE}
-	install -m 0644 ${S}/splash.bin ${DEPLOY_DIR_IMAGE}/splash.bin
-}
-do_install_append_gb800ue() {
-	install -d ${DEPLOY_DIR_IMAGE}
-	install -m 0644 ${S}/splash.bin ${DEPLOY_DIR_IMAGE}/splash.bin
-	install -m 0644 ${S}/lcdsplash.bin ${DEPLOY_DIR_IMAGE}/lcdsplash.bin
-}
-do_install_append_gbquad() {
-	install -d ${DEPLOY_DIR_IMAGE}
-	install -m 0644 ${S}/splash.bin ${DEPLOY_DIR_IMAGE}/splash.bin
-	install -m 0644 ${S}/lcdsplash.bin ${DEPLOY_DIR_IMAGE}/lcdsplash.bin
-}
-
-do_install_append_vusolo2() {
-	install -d ${DEPLOY_DIR_IMAGE}
-	install -m 0644 ${S}/splash_cfe_auto.bin ${DEPLOY_DIR_IMAGE}/splash_cfe_auto.bin
-}
-do_install_append_vuduo2() {
-	install -d ${DEPLOY_DIR_IMAGE}
-	install -m 0644 ${S}/splash_cfe_auto.bin ${DEPLOY_DIR_IMAGE}/splash_cfe_auto.bin
-}
-do_install_append_vuuno() {
-	install -d ${DEPLOY_DIR_IMAGE}
-	install -m 0644 ${S}/splash_cfe_auto.bin ${DEPLOY_DIR_IMAGE}/splash_cfe_auto.bin
-}
-do_install_append_vuultimo() {
-	install -d ${DEPLOY_DIR_IMAGE}
-	install -m 0644 ${S}/splash_cfe_auto.bin ${DEPLOY_DIR_IMAGE}/splash_cfe_auto.bin
+inherit deploy
+do_deploy() {
+	if [ -e splash.bin ]; then
+		install -m 0644 splash.bin ${DEPLOYDIR}/splash.bin
+	fi
+	if [ -e lcdsplash.bin ]; then
+		install -m 0644 lcdsplash.bin ${DEPLOYDIR}/lcdsplash.bin
+	fi
+	if [ -e splash_cfe_auto.bin ]; then
+		install -m 0644 splash_cfe_auto.bin ${DEPLOYDIR}/splash_cfe_auto.bin
+	fi
+	if [ -e splash.bmp ]; then
+		install -m 0644 splash.bmp ${DEPLOYDIR}/splash.bmp
+	fi
+	if [ -e splash.bin ]; then
+		install -m 0644 splash.bin ${DEPLOYDIR}/splash.bin
+	fi
+	if [ -e splash.bin ]; then
+		install -m 0644 splash.bin ${DEPLOYDIR}/splash.bin
+	fi
+	if [ -e splash.bin ]; then
+		install -m 0644 splash.bin ${DEPLOYDIR}/splash.bin
+	fi
+	if [ -e splash.bin ]; then
+		install -m 0644 splash.bin ${DEPLOYDIR}/splash.bin
+	fi
 }
 
-do_install_append_et4x00() {
-	install -d ${DEPLOY_DIR_IMAGE}
-	install -m 644 ${S}/splash.bin ${DEPLOY_DIR_IMAGE}/splash.bin
-}
-do_install_append_et5x00() {
-	install -d ${DEPLOY_DIR_IMAGE}
-	install -m 644 ${S}/splash.bin ${DEPLOY_DIR_IMAGE}/splash.bin
-}
-do_install_append_et6x00() {
-	install -d ${DEPLOY_DIR_IMAGE}
-	install -m 0644 ${S}/splash.bin ${DEPLOY_DIR_IMAGE}/splash.bin
-}
-do_install_append_et9x00() {
-	install -d ${DEPLOY_DIR_IMAGE}
-	install -m 0644 ${S}/splash.bin ${DEPLOY_DIR_IMAGE}/splash.bin
-}
-do_install_append_odinm9() {
-	install -d ${DEPLOY_DIR_IMAGE}
-	install -m 0644 ${S}/splash.bin ${DEPLOY_DIR_IMAGE}/splash.bin
-}
-
-do_install_append_tmtwin() {
-	install -d ${DEPLOY_DIR_IMAGE}
-	install -m 0644 ${S}/splash.bmp ${DEPLOY_DIR_IMAGE}/splash.bmp
-}
-do_install_append_tm2t() {
-	install -d ${DEPLOY_DIR_IMAGE}
-	install -m 0644 ${S}/splash.bmp ${DEPLOY_DIR_IMAGE}/splash.bmp
-}
-do_install_append_tmsingle() {
-	install -d ${DEPLOY_DIR_IMAGE}
-	install -m 0644 ${S}/splash.bmp ${DEPLOY_DIR_IMAGE}/splash.bmp
-}
-
-do_install_append_ventonhdx() {
-	install -d ${DEPLOY_DIR_IMAGE}
-	install -m 0644 ${S}/splash.bin ${DEPLOY_DIR_IMAGE}/splash.bin
-}
-do_install_append_ventonhde() {
-	install -d ${DEPLOY_DIR_IMAGE}
-	install -m 0644 ${S}/splash.bin ${DEPLOY_DIR_IMAGE}/splash.bin
-}
-do_install_append_xp1000() {
-	install -d ${DEPLOY_DIR_IMAGE}
-	install -m 0644 ${S}/splash.bin ${DEPLOY_DIR_IMAGE}/splash.bin
-}
+addtask deploy before do_build after do_install
 
 pkg_preinst() {
 	if grep dm /etc/hostname > /dev/null ; then
