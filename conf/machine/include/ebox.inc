@@ -7,9 +7,6 @@ MACHINE_EXTRA_RRECOMMENDS = " \
 	gst-plugin-dvbmediasink \
 	"
 
-include conf/machine/include/autoload-wifi.inc
-include conf/machine/include/autoload-usbserial.inc
-
 TARGET_ARCH = "mipsel"
 DEFAULTTUNE = "mips32el"
 

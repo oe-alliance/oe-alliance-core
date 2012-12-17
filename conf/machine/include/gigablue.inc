@@ -15,10 +15,6 @@ MACHINE_EXTRA_RRECOMMENDS = " \
 
 PREFERRED_PROVIDER_virtual/blindscan-dvbc = "gigablue-blindscan-utils-${MACHINE}"	
 	
-include conf/machine/include/autoload-wifi.inc
-include conf/machine/include/autoload-dvb-usb.inc
-include conf/machine/include/autoload-usbserial.inc
-
 DVBMEDIASINK_CONFIG = "--with-wmv"
 
 TARGET_ARCH = "mipsel"

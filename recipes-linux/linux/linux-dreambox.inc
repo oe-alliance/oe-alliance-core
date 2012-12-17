@@ -1,6 +1,6 @@
 require linux.inc
 
-INC_PR = "12"
+INC_PR = "13"
 
 PACKAGES_DYNAMIC = "kernel-*"
 

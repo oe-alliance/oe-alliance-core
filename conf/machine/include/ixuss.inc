@@ -12,10 +12,6 @@ MACHINE_EXTRA_RRECOMMENDS = " \
 	gst-plugin-dvbmediasink \
 	"
 
-include conf/machine/include/autoload-wifi.inc
-include conf/machine/include/autoload-dvb-usb.inc
-include conf/machine/include/autoload-usbserial.inc
-
 CHIPSET = "bcm7413"
 
 DVBMEDIASINK_CONFIG = "--with-wma --with-wmv --with-pcm --with-dtsdownmix"

@@ -1,5 +1,0 @@
-module_autoload_usbserial = "usbserial"
-module_autoload_ftdi_sio = "ftdi_sio"
-module_autoload_pl2303 = "pl2303"
-module_autoload_belkin_sa = "belkin_sa"
-module_autoload_keyspan = "keyspan"

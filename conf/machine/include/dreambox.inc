@@ -6,10 +6,6 @@ GLIBC_EXTRA_OECONF = "--with-tls --with-__thread"
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "dreambox-dvb-modules-${MACHINE}"
 
-include conf/machine/include/autoload-wifi.inc
-include conf/machine/include/autoload-dvb-usb.inc
-include conf/machine/include/autoload-usbserial.inc
-
 MACHINE_EXTRA_RRECOMMENDS = " \
 	gst-plugin-dreambox-dvbmediasink \
 	ntfs-3g \
