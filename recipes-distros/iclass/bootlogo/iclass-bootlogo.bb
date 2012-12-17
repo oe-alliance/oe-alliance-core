@@ -25,6 +25,7 @@ FILES_${PN} = "/boot /usr/share /etc/init.d"
 do_install() {
 	install -d ${D}/usr/share
 	install -m 0644 bootlogo.mvi ${D}/usr/share/bootlogo.mvi
+	ln -sf /usr/share/bootlogo.mvi ${D}/usr/share/backdrop.mvi
 	install -d ${D}/usr/share/enigma2
 	install -m 0644 radio.mvi ${D}/usr/share/enigma2/radio.mvi
 	install -d ${D}/${sysconfdir}/init.d
