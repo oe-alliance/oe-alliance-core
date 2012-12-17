@@ -8,7 +8,7 @@ require conf/license/license-gplv2.inc
 RDEPENDS_${PN} += "showiframe"
 
 PV = "2.0"
-PR = "r3"
+PR = "r4"
 
 S = "${WORKDIR}"
 
@@ -34,10 +34,25 @@ do_install() {
 	install -m 0755 ${S}/radio.mvi ${D}/usr/share/enigma2/radio.mvi
 	install -d ${D}/${sysconfdir}/init.d
 	install -m 0755 ${S}/bootlogo.sh ${D}/${sysconfdir}/init.d/bootlogo
-	install -d ${DEPLOY_DIR_IMAGE}
-	install -m 0755 ${S}/splash.bin ${DEPLOY_DIR_IMAGE}/splash.bin
 }
 
+inherit deploy
+do_deploy() {
+	if [ -e splash.bin ]; then
+		install -m 0644 splash.bin ${DEPLOYDIR}/splash.bin
+	fi
+	if [ -e lcdsplash.bin ]; then
+		install -m 0644 lcdsplash.bin ${DEPLOYDIR}/lcdsplash.bin
+	fi
+	if [ -e splash_cfe_auto.bin ]; then
+		install -m 0644 splash_cfe_auto.bin ${DEPLOYDIR}/splash_cfe_auto.bin
+	fi
+	if [ -e splash.bmp ]; then
+		install -m 0644 splash.bmp ${DEPLOYDIR}/splash.bmp
+	fi
+}
+
+addtask deploy before do_build after do_install
 
 pkg_preinst() {
 	[ -d /proc/stb ] && mount -t jffs2 mtd:'boot partition' /boot

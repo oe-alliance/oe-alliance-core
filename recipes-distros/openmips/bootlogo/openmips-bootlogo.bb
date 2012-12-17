@@ -9,7 +9,7 @@ require conf/license/license-gplv2.inc
 RDEPENDS_${PN} += "showiframe"
 
 PV = "1.0"
-PR = "r3"
+PR = "r4"
 
 S = "${WORKDIR}/"
 
@@ -66,29 +66,17 @@ do_install() {
 	install -m 0755 ${S}/bootlogo.sh ${D}/${sysconfdir}/init.d/bootlogo
 }
 
-do_install_append_et9x00() {
-    install -d ${DEPLOY_DIR_IMAGE}
-	install -m 0755 ${S}/splash.bin ${DEPLOY_DIR_IMAGE}/splash.bin
+inherit deploy
+do_deploy() {
+	if [ -e splash.bin ]; then
+		install -m 0644 splash.bin ${DEPLOYDIR}/splash.bin
+	fi
+	if [ -e lcdsplash.bin ]; then
+		install -m 0644 lcdsplash.bin ${DEPLOYDIR}/lcdsplash.bin
+	fi
 }
 
-do_install_append_gb800se() {
-    install -d ${DEPLOY_DIR_IMAGE}
-	install -m 0755 ${S}/splash.bin ${DEPLOY_DIR_IMAGE}/splash.bin
-}
-do_install_append_gb800solo() {
-    install -d ${DEPLOY_DIR_IMAGE}
-	install -m 0755 ${S}/splash.bin ${DEPLOY_DIR_IMAGE}/splash.bin
-}
-do_install_append_gb800ue() {
-    install -d ${DEPLOY_DIR_IMAGE}
-	install -m 0755 ${S}/splash.bin ${DEPLOY_DIR_IMAGE}/splash.bin
-	install -m 0755 ${S}/lcdsplash.bin ${DEPLOY_DIR_IMAGE}/lcdsplash.bin
-}
-do_install_append_gbquad() {
-    install -d ${DEPLOY_DIR_IMAGE}
-	install -m 0755 ${S}/splash.bin ${DEPLOY_DIR_IMAGE}/splash.bin
-	install -m 0755 ${S}/lcdsplash.bin ${DEPLOY_DIR_IMAGE}/lcdsplash.bin
-}
+addtask deploy before do_build after do_install
 
 pkg_preinst() {
 	[ -d /proc/stb ] && mount -t jffs2 mtd:'boot partition' /boot

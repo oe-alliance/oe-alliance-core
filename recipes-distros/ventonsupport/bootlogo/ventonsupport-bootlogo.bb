@@ -8,7 +8,7 @@ require conf/license/license-gplv2.inc
 RDEPENDS_${PN} += "showiframe"
 
 PV = "${BINARY_VERSION}.${IMAGES_VERSION}"
-PR = "r8"
+PR = "r9"
 
 S = "${WORKDIR}"
 
@@ -36,14 +36,13 @@ do_install() {
 	install -m 0755 ${S}/bootlogo.sh ${D}/${sysconfdir}/init.d/bootlogo
 }
 
-do_install_append_ventonhdx() {
-	install -d ${DEPLOY_DIR_IMAGE}
-	install -m 0644 ${S}/splash.bin ${DEPLOY_DIR_IMAGE}/splash.bin
+inherit deploy
+do_deploy() {
+	if [ -e splash.bin ]; then
+		install -m 0644 splash.bin ${DEPLOYDIR}/splash.bin
+	fi
 }
 
-do_install_append_ventonhde() {
-	install -d ${DEPLOY_DIR_IMAGE}
-	install -m 0644 ${S}/splash.bin ${DEPLOY_DIR_IMAGE}/splash.bin
-}
+addtask deploy before do_build after do_install
 
 FILES_${PN} = "/boot /usr/share /etc/init.d"

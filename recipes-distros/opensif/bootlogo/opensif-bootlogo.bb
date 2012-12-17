@@ -9,7 +9,7 @@ require conf/license/license-gplv2.inc
 RDEPENDS_${PN} += "showiframe"
 
 PV = "1.0"
-PR = "r9"
+PR = "r10"
 
 S = "${WORKDIR}/"
 
@@ -70,37 +70,23 @@ do_install() {
 		ln -sf /boot/bootlogo.mvi ${D}/boot/$i.mvi
 		ln -sf /usr/share/bootlogo.mvi ${D}/usr/share/$i.mvi;
 	done;
-	install -d ${DEPLOY_DIR_IMAGE}
-	install -m 0755 ${S}/splash.bin ${DEPLOY_DIR_IMAGE}/splash.bin
 	install -d ${D}/${sysconfdir}/init.d
 	install -m 0755 ${S}/bootlogo.sh ${D}/${sysconfdir}/init.d/bootlogo
 }
 
-do_install_append_gb800ue() {
-	install -m 0755 ${S}/lcdsplash.bin ${DEPLOY_DIR_IMAGE}/lcdsplash.bin
+
+inherit deploy
+do_deploy() {
+	if [ -e splash.bin ]; then
+		install -m 0644 splash.bin ${DEPLOYDIR}/splash.bin
+		install -m 0644 splash.bin ${DEPLOYDIR}/splash.bmp
+	fi
+	if [ -e lcdsplash.bin ]; then
+		install -m 0644 lcdsplash.bin ${DEPLOYDIR}/lcdsplash.bin
+	fi
 }
 
-do_install_append_gbquad() {
-	install -m 0755 ${S}/lcdsplash.bin ${DEPLOY_DIR_IMAGE}/lcdsplash.bin
-}
-
-do_install_append_vuuno() {
-	mv ${DEPLOY_DIR_IMAGE}/splash.bin ${DEPLOY_DIR_IMAGE}/splash_cfe_auto.bin
-}
-
-do_install_append_vuultimo() {
-	mv ${DEPLOY_DIR_IMAGE}/splash.bin ${DEPLOY_DIR_IMAGE}/splash_cfe_auto.bin
-}
-
-do_install_append_tmtwin() {
-	mv ${DEPLOY_DIR_IMAGE}/splash.bin ${DEPLOY_DIR_IMAGE}/splash.bmp
-}
-do_install_append_tm2t() {
-	mv ${DEPLOY_DIR_IMAGE}/splash.bin ${DEPLOY_DIR_IMAGE}/splash.bmp
-}
-do_install_append_tmsingle() {
-	mv ${DEPLOY_DIR_IMAGE}/splash.bin ${DEPLOY_DIR_IMAGE}/splash.bmp
-}
+addtask deploy before do_build after do_install
 
 pkg_preinst() {
 	[ -d /proc/stb ] && mount -t jffs2 mtd:'boot partition' /boot

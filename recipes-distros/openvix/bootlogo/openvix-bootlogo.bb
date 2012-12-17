@@ -82,18 +82,6 @@ do_deploy() {
 	if [ -e splash.bmp ]; then
 		install -m 0644 splash.bmp ${DEPLOYDIR}/splash.bmp
 	fi
-	if [ -e splash.bin ]; then
-		install -m 0644 splash.bin ${DEPLOYDIR}/splash.bin
-	fi
-	if [ -e splash.bin ]; then
-		install -m 0644 splash.bin ${DEPLOYDIR}/splash.bin
-	fi
-	if [ -e splash.bin ]; then
-		install -m 0644 splash.bin ${DEPLOYDIR}/splash.bin
-	fi
-	if [ -e splash.bin ]; then
-		install -m 0644 splash.bin ${DEPLOYDIR}/splash.bin
-	fi
 }
 
 addtask deploy before do_build after do_install
