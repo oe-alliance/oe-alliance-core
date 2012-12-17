@@ -50,7 +50,9 @@ IMAGE_CMD_ubi_append = " \
 	rm -rf ${IMAGEDIR}; \
 	"
 
-MACHINE_FEATURES += "3dtv alsa hdmicec switchoff wifi 3dtvpli"
+MACHINE_FEATURES += "3dtv alsa hdmicec switchoff wifi 3dtvpli bootsplash"
+
+BOOTLOGO_FILENAME = "splash.bin"
 
 PREFERRED_PROVIDER_virtual/blindscan-dvbc = "venton-blindscan-dvbc-utils"
 PREFERRED_PROVIDER_virtual/blindscan-dvbs = "venton-blindscan-dvbs-utils"

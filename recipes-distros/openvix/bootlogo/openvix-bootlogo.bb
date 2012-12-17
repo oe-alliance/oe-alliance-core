@@ -9,7 +9,7 @@ require conf/license/license-gplv2.inc
 RDEPENDS_${PN} += "showiframe"
 
 PV = "3.0"
-PR = "r15"
+PR = "r16"
 
 S = "${WORKDIR}"
 
@@ -18,26 +18,9 @@ INITSCRIPT_PARAMS = "start 05 S ."
 
 inherit update-rc.d
 
-SRC_URI = "file://bootlogo.mvi file://backdrop.mvi file://radio.mvi file://bootlogo.sh"
-SRC_URI_append_gb800se = "file://splash.bin"
-SRC_URI_append_gb800solo = "file://splash.bin"
-SRC_URI_append_gb800ue = "file://splash.bin file://lcdsplash.bin"
-SRC_URI_append_gbquad = "file://splash.bin file://lcdsplash.bin"
-SRC_URI_append_vusolo2 = " file://splash_cfe_auto.bin"
-SRC_URI_append_vuduo2 = " file://splash_cfe_auto.bin"
-SRC_URI_append_vuuno = " file://splash_cfe_auto.bin"
-SRC_URI_append_vuultimo = " file://splash_cfe_auto.bin"
-SRC_URI_append_et4x00 = " file://splash.bin"
-SRC_URI_append_et5x00 = " file://splash.bin"
-SRC_URI_append_et6x00 = " file://splash.bin"
-SRC_URI_append_et9x00 = " file://splash.bin"
-SRC_URI_append_odinm9 = " file://splash.bin"
-SRC_URI_append_ventonhdx = " file://splash.bin"
-SRC_URI_append_ventonhde = " file://splash.bin"
-SRC_URI_append_tmtwin = " file://splash.bmp"
-SRC_URI_append_tm2t = " file://splash.bmp"
-SRC_URI_append_tmsingle = " file://splash.bmp"
-SRC_URI_append_xp1000 = " file://splash.bin"
+SRC_URI = "file://bootlogo.mvi file://backdrop.mvi file://radio.mvi file://bootlogo.sh ${@base_contains("MACHINE_FEATURES", "bootsplash", "splash.bin" , "", d)}"
+SRC_URI_append_gb800ue = "file://lcdsplash.bin"
+SRC_URI_append_gbquad = "file://lcdsplash.bin"
 
 BINARY_VERSION = "1.3"
 
@@ -71,16 +54,10 @@ do_install() {
 inherit deploy
 do_deploy() {
 	if [ -e splash.bin ]; then
-		install -m 0644 splash.bin ${DEPLOYDIR}/splash.bin
+		install -m 0644 splash.bin ${DEPLOYDIR}/${BOOTLOGO_FILENAME}
 	fi
 	if [ -e lcdsplash.bin ]; then
 		install -m 0644 lcdsplash.bin ${DEPLOYDIR}/lcdsplash.bin
-	fi
-	if [ -e splash_cfe_auto.bin ]; then
-		install -m 0644 splash_cfe_auto.bin ${DEPLOYDIR}/splash_cfe_auto.bin
-	fi
-	if [ -e splash.bmp ]; then
-		install -m 0644 splash.bmp ${DEPLOYDIR}/splash.bmp
 	fi
 }
 

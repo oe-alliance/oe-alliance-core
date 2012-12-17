@@ -18,40 +18,27 @@ INITSCRIPT_PARAMS = "start 05 S ."
 
 inherit update-rc.d
 
-SRC_URI = " \
-			file://bootlogo.mvi \
-			file://splash.bin \
-			file://bootlogo.sh \
-"
+SRC_URI = " file://bootlogo.mvi ${@base_contains("MACHINE_FEATURES", "bootsplash", "splash.bin" , "", d)} file://bootlogo.sh"
 
-BINARY_VERSION = "1"
-BINARY_VERSION_mipsel = "9"
-
-IMAGES_VERSION = "1"
-
-MVISYMLINKS = "bootlogo_wait backdrop switchoff"
+FILES_${PN} = "/boot /usr/share /etc/init.d"
 
 do_install() {
-	install -d ${D}/boot
 	install -d ${D}/usr/share
-	install -m 0755 bootlogo.mvi ${D}/usr/share/bootlogo.mvi
-	ln -sf /usr/share/bootlogo.mvi ${D}/boot/bootlogo.mvi
-	for i in ${MVISYMLINKS}; do
-		ln -sf /boot/bootlogo.mvi ${D}/boot/$i.mvi
-		ln -sf /usr/share/bootlogo.mvi ${D}/usr/share/$i.mvi;
-	done;
+	install -m 0644 bootlogo.mvi ${D}/usr/share/bootlogo.mvi
 	install -d ${D}/${sysconfdir}/init.d
 	install -m 0755 ${S}/bootlogo.sh ${D}/${sysconfdir}/init.d/bootlogo
 }
 
-PACKAGE_ARCH := "${MACHINE_ARCH}"
-FILES_${PN} = "/boot /usr/share /etc/init.d"
-
 inherit deploy
 do_deploy() {
 	if [ -e splash.bin ]; then
-		install -m 0644 splash.bin ${DEPLOYDIR}/splash.bin
+		install -m 0644 splash.bin ${DEPLOYDIR}/${BOOTLOGO_FILENAME}
 	fi
 }
 
 addtask deploy before do_build after do_install
+
+
+PACKAGE_ARCH := "${MACHINE_ARCH}"
+FILES_${PN} = "/boot /usr/share /etc/init.d"
+

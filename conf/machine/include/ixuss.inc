@@ -60,6 +60,8 @@ IMAGE_CMD_ubi_append = " \
 
 TARGET_FPU = "hard"
 
-MACHINE_FEATURES += "3dtv alsa hdmicec switchoff textlcd wifi"
+MACHINE_FEATURES += "3dtv alsa hdmicec switchoff textlcd wifi bootsplash"
+
+BOOTLOGO_FILENAME = "cfe-bootlogo.bmp"
 
 require conf/machine/include/tune-mips32.inc

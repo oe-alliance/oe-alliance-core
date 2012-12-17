@@ -59,7 +59,9 @@ IMAGE_CMD_ubi_append = " \
 	rm -Rf ${IMAGEDIR}; \
 	"
 
-MACHINE_FEATURES += "alsa wifi 3dtv switchoff textlcd hdmicec"
+MACHINE_FEATURES += "alsa wifi 3dtv switchoff textlcd hdmicec bootsplash"
+
+BOOTLOGO_FILENAME = "splash.bin"
 
 require conf/machine/include/tune-mips32.inc
 

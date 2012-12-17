@@ -2,13 +2,14 @@ DESCRIPTION = "openAAF bootlogo"
 SECTION = "base"
 PRIORITY = "required"
 MAINTAINER = "AAF Team"
+PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 require conf/license/license-gplv2.inc
 
 RDEPENDS_${PN} += "showiframe"
 
 PV = "2.0"
-PR = "r19"
+PR = "r20"
 
 S = "${WORKDIR}"
 
@@ -17,7 +18,9 @@ INITSCRIPT_PARAMS = "start 05 S ."
 
 inherit update-rc.d
 
-SRC_URI = "file://bootlogo.mvi file://bootlogo.jpg file://bootlogo.sh file://splash.bin file://splash600.bin file://lcdsplash.bin file://radio.mvi"
+SRC_URI = "file://bootlogo.mvi file://backdrop.mvi file://radio.mvi file://bootlogo.sh ${@base_contains("MACHINE_FEATURES", "bootsplash", "splash.bin" , "", d)}"
+SRC_URI_append_gb800ue = "file://lcdsplash.bin"
+SRC_URI_append_gbquad = "file://lcdsplash.bin"
 
 BINARY_VERSION = "1.3"
 
@@ -34,20 +37,16 @@ SRC_URI[dm500hd.sha256sum] = "d4b0f650711d5d6fdecb42efe9e13987ef803cba829d0950e8
 SRC_URI[dm7020hd.md5sum] = "f8e423dbf7661367659fa86a68b74bc4"
 SRC_URI[dm7020hd.sha256sum] = "118d7bb57c4b41dd45c7bdd9a056a0745454f42092692fb4309997e035eb6908"
 
-MVISYMLINKS = "bootlogo_wait backdrop switchoff"
+FILES_${PN} = "/boot /usr/share /etc/init.d"
 
 do_install() {
-	install -d ${D}/boot
-	install -d ${D}/usr/share
+	${@base_contains("MACHINE_FEATURES", "dreambox", "install -d ${D}/boot", "", d)}
 	${@base_contains("MACHINE_FEATURES", "dreambox", "install -m 0755 ${S}/dreambox-bootlogo_${BINARY_VERSION}_${MACHINE_ARCH}/bootlogo-${MACHINE_ARCH}.elf.gz ${D}/boot/; install -m 0755 ${S}/dreambox-bootlogo_${BINARY_VERSION}_${MACHINE_ARCH}/bootlogo-${MACHINE_ARCH}.jpg ${D}/boot/", "", d)}
-	install -m 0755 bootlogo.mvi ${D}/usr/share/bootlogo.mvi
-	ln -sf /usr/share/bootlogo.mvi ${D}/boot/bootlogo.mvi
-	for i in ${MVISYMLINKS}; do
-		ln -sf /boot/bootlogo.mvi ${D}/boot/$i.mvi
-		ln -sf /usr/share/bootlogo.mvi ${D}/usr/share/$i.mvi;
-	done;
+	install -d ${D}/usr/share
+	install -m 0644 bootlogo.mvi ${D}/usr/share/bootlogo.mvi
+	install -m 0644 backdrop.mvi ${D}/usr/share/backdrop.mvi
 	install -d ${D}/usr/share/enigma2
-	install -m 0755 ${S}/radio.mvi ${D}/usr/share/enigma2/radio.mvi
+	install -m 0644 radio.mvi ${D}/usr/share/enigma2/radio.mvi
 	install -d ${D}/${sysconfdir}/init.d
 	install -m 0755 ${S}/bootlogo.sh ${D}/${sysconfdir}/init.d/bootlogo
 }
@@ -55,16 +54,10 @@ do_install() {
 inherit deploy
 do_deploy() {
 	if [ -e splash.bin ]; then
-		install -m 0644 splash.bin ${DEPLOYDIR}/splash.bin
+		install -m 0644 splash.bin ${DEPLOYDIR}/${BOOTLOGO_FILENAME}
 	fi
 	if [ -e lcdsplash.bin ]; then
 		install -m 0644 lcdsplash.bin ${DEPLOYDIR}/lcdsplash.bin
-	fi
-	if [ -e splash_cfe_auto.bin ]; then
-		install -m 0644 splash_cfe_auto.bin ${DEPLOYDIR}/splash_cfe_auto.bin
-	fi
-	if [ -e splash.bmp ]; then
-		install -m 0644 splash.bmp ${DEPLOYDIR}/splash.bmp
 	fi
 }
 

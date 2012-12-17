@@ -34,7 +34,9 @@ KERNEL_CONSOLE = "ttyS0,115200n8"
 
 TARGET_FPU = "hard"
 
-MACHINE_FEATURES += "3dtv alsa hdmicec switchoff wifi ci"
+MACHINE_FEATURES += "3dtv alsa hdmicec switchoff wifi ci bootsplash"
+
+BOOTLOGO_FILENAME = "splash.bin"
 
 require conf/machine/include/tune-mips32.inc
 

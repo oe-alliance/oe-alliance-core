@@ -3,13 +3,14 @@ SECTION = "base"
 PRIORITY = "required"
 LICENSE = "proprietary"
 MAINTAINER = "SIFTeam"
+PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 require conf/license/license-gplv2.inc
 
 RDEPENDS_${PN} += "showiframe"
 
 PV = "1.0"
-PR = "r10"
+PR = "r11"
 
 S = "${WORKDIR}/"
 
@@ -18,68 +19,43 @@ INITSCRIPT_PARAMS = "start 05 S ."
 
 inherit update-rc.d
 
-# This needs a small explanation; when the machine has 'switchoff' support, it switches itself off, so we don't need switchoff.mvi...
-SWITCHOFFMVI = "${@base_contains("MACHINE_FEATURES", "switchoff", "" , "switchoff.mvi", d)}"
+SRC_URI = "file://bootlogo.mvi file://backdrop.mvi file://radio.mvi file://bootlogo.sh ${@base_contains("MACHINE_FEATURES", "bootsplash", "splash.bin" , "", d)}"
+SRC_URI_append_gb800ue = "file://lcdsplash.bin"
+SRC_URI_append_gbquad = "file://lcdsplash.bin"
 
-SRC_URI = " \
-		file://bootlogo.mvi \
-		file://switchoff.mvi \
-		file://bootlogo.jpg \
-		file://bootlogo.sh \
-		file://splash.bin \
-		"
+BINARY_VERSION = "1.3"
 
-SRC_URI_append_gb800ue = " \
-				file://lcdsplash.bin \
-				"
-SRC_URI_append_gbquad = " \
-				file://lcdsplash.bin \
-				"
+SRC_URI += "${@base_contains("MACHINE_FEATURES", "dreambox", "http://dreamboxupdate.com/download/opendreambox/2.0.0/dreambox-bootlogo/dreambox-bootlogo_${BINARY_VERSION}_${MACHINE_ARCH}.tar.bz2;name=${MACHINE_ARCH}" , "", d)}"
 
-BINARY_VERSION = "1"
-BINARY_VERSION_mipsel = "9"
+SRC_URI[dm800.md5sum] = "0aacd07cc4d19b388c6441b007e3525a"
+SRC_URI[dm800.sha256sum] = "978a7c50fd0c963013477b5ba08462b35597ea130ae428c828bfcbb5c7cf4cac"
+SRC_URI[dm8000.md5sum] = "1b63ac7e2bd5c0db0748606acc310d47"
+SRC_URI[dm8000.sha256sum] = "91e4402190fe88cf394ae780141d968a1ebecd8db7b23c1f0ca3f4bfa9c9512a"
+SRC_URI[dm800se.md5sum] = "3413a894a3d77e02cae34b96d302817d"
+SRC_URI[dm800se.sha256sum] = "8a283442c231e82ee1a2093e53dc5bf52c478e12d22c79af7e7026b52711fc9c"
+SRC_URI[dm500hd.md5sum] = "b9ada70304ca1f9a8e36a55bd38834c6"
+SRC_URI[dm500hd.sha256sum] = "d4b0f650711d5d6fdecb42efe9e13987ef803cba829d0950e899608a784ae3b2"
+SRC_URI[dm7020hd.md5sum] = "f8e423dbf7661367659fa86a68b74bc4"
+SRC_URI[dm7020hd.sha256sum] = "118d7bb57c4b41dd45c7bdd9a056a0745454f42092692fb4309997e035eb6908"
 
-IMAGES_VERSION = "1"
-
-SRC_URI += "${@base_contains("MACHINE_FEATURES", "dreambox", "http://sources.dreamboxupdate.com/download/7020/bootlogo-${MACHINE}-${BINARY_VERSION}.elf;name=bootlogo-${MACHINE}-${BINARY_VERSION}" , "", d)}"
-SRC_URI[bootlogo-dm500hd-9.md5sum] = "9ffb05b39b89a3be1b9eebc523d7bc69"
-SRC_URI[bootlogo-dm500hd-9.sha256sum] = "ad1dce606f00a077f7d6433217d7c9a7ef9b849891983758e4e3745445ca8aea"
-SRC_URI[bootlogo-dm7020hd-9.md5sum] = "aedb57715e4ea7fe29bbe3a0ac6498cc"
-SRC_URI[bootlogo-dm7020hd-9.sha256sum] = "abda2e995a33fa3e4fef4a1470a71e912b43857f06b226780834c29db35ed583"
-SRC_URI[bootlogo-dm8000-9.md5sum] = "5b7aa440ef459b2470fe45af9e123811"
-SRC_URI[bootlogo-dm8000-9.sha256sum] = "81363d7ab6497da8a905080871ebc8268cf7a946d4ea0fa18d6f126ed77e13b7"
-SRC_URI[bootlogo-dm800-9.md5sum] = "92220b11663fad8b3f91f3a7ae986195"
-SRC_URI[bootlogo-dm800-9.sha256sum] = "0272e9e2f7828eb89345360dc41ccecdca9b1a5504047996061dec4a66527538"
-SRC_URI[bootlogo-dm800se-9.md5sum] = "208720ff116306a2f0eb6b8962325da9"
-SRC_URI[bootlogo-dm800se-9.sha256sum] = "724425bb280280ec0be6913f05840af385aee3f07318df7885b74c50353fdff6"
-
-MVI = "${SWITCHOFFMVI}"
-MVISYMLINKS = "bootlogo_wait backdrop"
+FILES_${PN} = "/boot /usr/share /etc/init.d"
 
 do_install() {
-	install -d ${D}/boot
+	${@base_contains("MACHINE_FEATURES", "dreambox", "install -d ${D}/boot", "", d)}
+	${@base_contains("MACHINE_FEATURES", "dreambox", "install -m 0755 ${S}/dreambox-bootlogo_${BINARY_VERSION}_${MACHINE_ARCH}/bootlogo-${MACHINE_ARCH}.elf.gz ${D}/boot/; install -m 0755 ${S}/dreambox-bootlogo_${BINARY_VERSION}_${MACHINE_ARCH}/bootlogo-${MACHINE_ARCH}.jpg ${D}/boot/", "", d)}
 	install -d ${D}/usr/share
-	${@base_contains("MACHINE_FEATURES", "dreambox", "install -m 0755 ${S}/bootlogo-${MACHINE}-${BINARY_VERSION}.elf ${D}/boot/bootlogo.elf; install -m 0755 ${S}/bootlogo.jpg ${D}/boot/", "", d)}
-	install -m 0755 bootlogo.mvi ${D}/usr/share/bootlogo.mvi
-	ln -sf /usr/share/bootlogo.mvi ${D}/boot/bootlogo.mvi
-	for i in ${MVI}; do
-		install -m 0755 ${S}/$i ${D}/usr/share/
-		ln -sf /usr/share/$i ${D}/boot/$i
-	done;
-	for i in ${MVISYMLINKS}; do
-		ln -sf /boot/bootlogo.mvi ${D}/boot/$i.mvi
-		ln -sf /usr/share/bootlogo.mvi ${D}/usr/share/$i.mvi;
-	done;
+	install -m 0644 bootlogo.mvi ${D}/usr/share/bootlogo.mvi
+	install -m 0644 backdrop.mvi ${D}/usr/share/backdrop.mvi
+	install -d ${D}/usr/share/enigma2
+	install -m 0644 radio.mvi ${D}/usr/share/enigma2/radio.mvi
 	install -d ${D}/${sysconfdir}/init.d
 	install -m 0755 ${S}/bootlogo.sh ${D}/${sysconfdir}/init.d/bootlogo
 }
 
-
 inherit deploy
 do_deploy() {
 	if [ -e splash.bin ]; then
-		install -m 0644 splash.bin ${DEPLOYDIR}/splash.bin
-		install -m 0644 splash.bin ${DEPLOYDIR}/splash.bmp
+		install -m 0644 splash.bin ${DEPLOYDIR}/${BOOTLOGO_FILENAME}
 	fi
 	if [ -e lcdsplash.bin ]; then
 		install -m 0644 lcdsplash.bin ${DEPLOYDIR}/lcdsplash.bin
@@ -89,24 +65,47 @@ do_deploy() {
 addtask deploy before do_build after do_install
 
 pkg_preinst() {
-	[ -d /proc/stb ] && mount -t jffs2 mtd:'boot partition' /boot
-	true
+	if grep dm /etc/hostname > /dev/null ; then
+		if [ -z "$D" ]
+		then
+			if mountpoint -q /boot
+			then
+				mount -o remount,rw,compr=none /boot
+			else
+				mount -t jffs2 -o rw,compr=none mtd:'boot partition' /boot
+			fi
+		fi
+	fi
 }
 
 pkg_postinst() {
-	[ -d /proc/stb ] && umount /boot
-	true
+	if grep dm /etc/hostname > /dev/null ; then
+		if [ -z "$D" ]
+		then
+			umount /boot
+		fi
+	fi
 }
 
 pkg_prerm() {
-	[ -d /proc/stb ] && mount -t jffs2 mtd:'boot partition' /boot
-	true
+	if grep dm /etc/hostname > /dev/null ; then
+		if [ -z "$D" ]
+		then
+			if mountpoint -q /boot
+			then
+				mount -o remount,rw,compr=none /boot
+			else
+				mount -t jffs2 -o rw,compr=none mtd:'boot partition' /boot
+			fi
+		fi
+	fi	
 }
 
 pkg_postrm() {
-	[ -d /proc/stb ] && umount /boot
-	true
+	if grep dm /etc/hostname > /dev/null ; then
+		if [ -z "$D" ]
+		then
+			umount /boot
+		fi
+	fi	
 }
-
-PACKAGE_ARCH := "${MACHINE_ARCH}"
-FILES_${PN} = "/boot /usr/share /etc/init.d"

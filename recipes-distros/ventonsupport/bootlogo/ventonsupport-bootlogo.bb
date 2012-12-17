@@ -2,13 +2,14 @@ DESCRIPTION = "Venton bootlogo"
 SECTION = "base"
 PRIORITY = "required"
 MAINTAINER = "Venton"
+PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 require conf/license/license-gplv2.inc
 
 RDEPENDS_${PN} += "showiframe"
 
-PV = "${BINARY_VERSION}.${IMAGES_VERSION}"
-PR = "r9"
+PV = "2.0"
+PR = "r10"
 
 S = "${WORKDIR}"
 
@@ -17,19 +18,14 @@ INITSCRIPT_PARAMS = "start 05 S ."
 
 inherit update-rc.d
 
-SRC_URI = "file://bootlogo.mvi file://backdrop.mvi file://radio.mvi file://bootlogo.sh file://bootlogo_wait.mvi"
-SRC_URI_append_ventonhdx = " file://splash.bin"
-SRC_URI_append_ventonhde = " file://splash.bin"
+SRC_URI = "file://bootlogo.mvi file://backdrop.mvi file://radio.mvi file://bootlogo.sh ${@base_contains("MACHINE_FEATURES", "bootsplash", "splash.bin" , "", d)}"
 
-BINARY_VERSION = "1"
-BINARY_VERSION_mipsel = "8"
-IMAGES_VERSION = "1"
+FILES_${PN} = "/boot /usr/share /etc/init.d"
 
 do_install() {
 	install -d ${D}/usr/share
 	install -m 0644 bootlogo.mvi ${D}/usr/share/bootlogo.mvi
 	install -m 0644 backdrop.mvi ${D}/usr/share/backdrop.mvi
-	install -m 0644 bootlogo_wait.mvi ${D}/usr/share/bootlogo_wait.mvi
 	install -d ${D}/usr/share/enigma2
 	install -m 0644 radio.mvi ${D}/usr/share/enigma2/radio.mvi
 	install -d ${D}/${sysconfdir}/init.d
@@ -39,10 +35,8 @@ do_install() {
 inherit deploy
 do_deploy() {
 	if [ -e splash.bin ]; then
-		install -m 0644 splash.bin ${DEPLOYDIR}/splash.bin
+		install -m 0644 splash.bin ${DEPLOYDIR}/${BOOTLOGO_FILENAME}
 	fi
 }
 
 addtask deploy before do_build after do_install
-
-FILES_${PN} = "/boot /usr/share /etc/init.d"
