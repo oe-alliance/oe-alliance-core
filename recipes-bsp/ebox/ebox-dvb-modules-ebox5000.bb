@@ -3,12 +3,12 @@ SECTION = "base"
 PRIORITY = "required"
 LICENSE = "CLOSED"
 
-SRCDATE = "20121211"
+SRCDATE = "20121217"
 KV = "2.6.18-7.4-ebox5000"
 PV = "${KV}+${SRCDATE}"
-PR = "r1"
+PR = "r2"
 
-SRC_URI = "http://archiv.mixos-support.com/ebox-dvb-modules-${MACHINE}-${KV}-${SRCDATE}.tar.bz2"
+SRC_URI = "http://archiv.mixos-support.com/ebox-dvb-modules-${MACHINE}-${KV}-${SRCDATE}.zip"
 
 
 S = "${WORKDIR}"
