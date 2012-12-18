@@ -1,6 +1,8 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
-PRINC = "4"
+PRINC = "5"
+
+inherit allarch
 
 DEPENDS += "\
 	enigma2-plugin-settings-cajton.13e.19e.28e \
