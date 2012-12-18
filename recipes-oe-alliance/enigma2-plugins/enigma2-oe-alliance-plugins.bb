@@ -49,6 +49,7 @@ DESCRIPTION_enigma2-plugin-extension-tunerserver = "Builds a virtual channels li
 DESCRIPTION_enigma2-plugin-extension-hbbtv = "HbbTV player"
 RDEPENDS_enigma2-plugin-extensions-hbbtv = "vuplus-opera-browser-util"
 DESCRIPTION_enigma2-plugin-systemplugins-transcodingsetup = "Setup transcoding of your VU+"
+RDEPENDS_enigma2-plugin-systemplugins-transcodingsetup = "enigma2-transtreamproxy"
 
 DEPENDS = "enigma2 \
 	${@base_contains("MACHINE_FEATURES", "blindscan-dvbc", "virtual/blindscan-dvbc" , "", d)} \
@@ -71,7 +72,7 @@ inherit gitpkgv autotools
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r31"
+PR = "r32"
 
 SRC_URI="git://github.com/oe-alliance/oe-alliance-plugins.git;protocol=git"
 
