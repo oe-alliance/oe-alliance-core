@@ -53,6 +53,16 @@ do_deploy_vuduo() {
 # 	install -m 0644 ${S}/enigma2-plugin-extensions-suomipoeka_1.0.1_all.ipk ${WORKDIR}/deploy-ipks/3rdparty
 # 	install -m 0644 ${S}/enigma2-plugin-extensions-enhancedpowersave_2.2.1-20120715_mipsel.ipk ${WORKDIR}/deploy-ipks/3rdparty
 }
+do_deploy_vusolo2() {
+	install -d 0644 ${WORKDIR}/deploy-ipks/3rdparty
+# 	install -m 0644 ${S}/enigma2-plugin-extensions-suomipoeka_1.0.1_all.ipk ${WORKDIR}/deploy-ipks/3rdparty
+# 	install -m 0644 ${S}/enigma2-plugin-extensions-enhancedpowersave_2.2.1-20120715_mipsel.ipk ${WORKDIR}/deploy-ipks/3rdparty
+}
+do_deploy_vuduo2() {
+	install -d 0644 ${WORKDIR}/deploy-ipks/3rdparty
+# 	install -m 0644 ${S}/enigma2-plugin-extensions-suomipoeka_1.0.1_all.ipk ${WORKDIR}/deploy-ipks/3rdparty
+# 	install -m 0644 ${S}/enigma2-plugin-extensions-enhancedpowersave_2.2.1-20120715_mipsel.ipk ${WORKDIR}/deploy-ipks/3rdparty
+}
 
 do_deploy_et4x00() {
 	install -d 0644 ${WORKDIR}/deploy-ipks/3rdparty
@@ -124,6 +134,12 @@ do_deploy_ventonhdx() {
 # 	install -m 0644 ${S}/enigma2-plugin-extensions-enhancedpowersave_2.2.1-20120715_mipsel.ipk ${WORKDIR}/deploy-ipks/3rdparty
 }
 do_deploy_ventonhde() {
+	install -d 0644 ${WORKDIR}/deploy-ipks/3rdparty
+# 	install -m 0644 ${S}/enigma2-plugin-extensions-suomipoeka_1.0.1_all.ipk ${WORKDIR}/deploy-ipks/3rdparty
+# 	install -m 0644 ${S}/enigma2-plugin-extensions-enhancedpowersave_2.2.1-20120715_mipsel.ipk ${WORKDIR}/deploy-ipks/3rdparty
+}
+
+do_deploy_xp1000() {
 	install -d 0644 ${WORKDIR}/deploy-ipks/3rdparty
 # 	install -m 0644 ${S}/enigma2-plugin-extensions-suomipoeka_1.0.1_all.ipk ${WORKDIR}/deploy-ipks/3rdparty
 # 	install -m 0644 ${S}/enigma2-plugin-extensions-enhancedpowersave_2.2.1-20120715_mipsel.ipk ${WORKDIR}/deploy-ipks/3rdparty

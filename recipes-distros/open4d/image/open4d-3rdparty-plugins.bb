@@ -128,6 +128,12 @@ do_deploy_ventonhde() {
 # 	install -m 0644 enigma2-plugin-extensions-enhancedpowersave_2.2.1-20120715_mipsel.ipk ${WORKDIR}/deploy-ipks/3rdparty
 }
 
+do_deploy_xp1000() {
+	install -d 0644 ${WORKDIR}/deploy-ipks/3rdparty
+# 	install -m 0644 enigma2-plugin-extensions-suomipoeka_1.0.1_all.ipk ${WORKDIR}/deploy-ipks/3rdparty
+# 	install -m 0644 enigma2-plugin-extensions-enhancedpowersave_2.2.1-20120715_mipsel.ipk ${WORKDIR}/deploy-ipks/3rdparty
+}
+
 do_deploy_dm8000() {
 	install -d 0644 ${WORKDIR}/deploy-ipks/3rdparty
 # 	install -m 0644 enigma2-plugin-extensions-suomipoeka_1.0.1_all.ipk ${WORKDIR}/deploy-ipks/3rdparty
