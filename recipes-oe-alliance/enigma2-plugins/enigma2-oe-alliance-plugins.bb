@@ -1,5 +1,6 @@
 DESCRIPTION = "Additional plugins for Enigma2"
 MAINTAINER = "oe-alliance team"
+PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 LICENSE = "Proprietary"
 LIC_FILES_CHKSUM = "file://COPYING;md5=8e37f34d0e40d32ea2bc90ee812c9131"
@@ -70,7 +71,7 @@ inherit gitpkgv autotools
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r30"
+PR = "r31"
 
 SRC_URI="git://github.com/oe-alliance/oe-alliance-plugins.git;protocol=git"
 
