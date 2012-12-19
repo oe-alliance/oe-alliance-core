@@ -9,7 +9,7 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r117"
+PR = "r118"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -33,7 +33,7 @@ do_install() {
 }
 
 do_deploy() {
-	install -d 0644 ${WORKDIR}/deploy-ipks/3rdparty
+	install -d 0755 ${WORKDIR}/deploy-ipks/3rdparty
 	install -m 0644 enigma2-plugin-extensions-1channel_1.4_mipsel.ipk ${WORKDIR}/deploy-ipks/3rdparty
 	install -m 0644 enigma2-plugin-extensions-appletrailer_0.1_mipsel.ipk ${WORKDIR}/deploy-ipks/3rdparty
 	install -m 0644 enigma2-plugin-extensions-atmolightd_0.6-r0_all.ipk ${WORKDIR}/deploy-ipks/3rdparty
