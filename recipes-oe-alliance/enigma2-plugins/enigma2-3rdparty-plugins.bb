@@ -9,7 +9,7 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r118"
+PR = "r156"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -176,4 +176,11 @@ do_deploy_append_dm800() {
 }
 
 addtask deploy before do_build after do_install
+addtask chmod before do_build after do_package_write_ipk
 
+do_chmod() {
+	pkgdir=${DEPLOY_DIR_IPK}/3rdparty
+	if [ -e $pkgdir ]; then
+		chmod 0755 $pkgdir
+	fi
+}
