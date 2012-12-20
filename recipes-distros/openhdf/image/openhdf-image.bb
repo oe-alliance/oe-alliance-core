@@ -2,7 +2,7 @@ DESCRIPTION = "OpenHDF Image"
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "proprietary"
-MAINTAINER = "openHDF Team"
+MAINTAINER = "OpenHDF Team"
 
 require conf/license/license-gplv2.inc
 
@@ -53,7 +53,7 @@ generate_nfo() {
 			echo "Machine: ${MACHINE}" >> ${NFO}
 			DATE=`date +%Y-%m-%d' '%H':'%M`
 			echo "Date: ${DATE}" >> ${NFO}
-			echo "Issuer: openHDF" >> ${NFO}
+			echo "Issuer: OpenHDF" >> ${NFO}
 			echo "Link: ${DISTRO_FEED_URI}" >> ${NFO}
 			if [ "${DESC}" != "" ]; then
 					echo "Description: ${DESC}" >> ${NFO}

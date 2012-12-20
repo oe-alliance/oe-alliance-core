@@ -4,11 +4,11 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3
                     file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
 
 PV = "1.0"
-PR = "r13"
+PR = "r28"
 
 inherit task
 
-DEPENDS = "enigma2-pliplugins openhdf-feeds openhdf-3rdparty-plugins"
+#DEPENDS = "enigma2-pliplugins openhdf-feeds openhdf-3rdparty-plugins"
 
 RRECOMMENDS = "\
 	openhdf-version-info \
@@ -18,6 +18,7 @@ RRECOMMENDS = "\
 	enigma2-plugin-extensions-devicemanager \
 	enigma2-plugin-extensions-epgsearch \
 	enigma2-plugin-extensions-et-portal \
+	enigma2-plugin-extensions-foreca \
 	enigma2-plugin-extensions-imdb \
 	enigma2-plugin-extensions-graphmultiepg \
 	enigma2-plugin-extensions-hdftoolbox \
@@ -25,6 +26,7 @@ RRECOMMENDS = "\
 	enigma2-plugin-extensions-cutlisteditor \
 	enigma2-plugin-extensions-dvdplayer \
 	enigma2-plugin-extensions-volume-adjust \
+	enigma2-plugin-extensions-virtualzap \
 	enigma2-plugin-extensions-webpackage \
 	enigma2-plugin-extensions-webmedia \
 	enigma2-plugin-pli-softcamsetup \
@@ -47,3 +49,6 @@ RRECOMMENDS_append_gb800solo = "enigma2-plugin-extensions-gb-multiquickbutton"
 RRECOMMENDS_append_gb800se = "enigma2-plugin-extensions-gb-multiquickbutton"
 RRECOMMENDS_append_gb800ue = "enigma2-plugin-extensions-gb-multiquickbutton python-imaging"
 RRECOMMENDS_append_gbquad = "enigma2-plugin-extensions-gb-multiquickbutton python-imaging webbrowser-utils enigma2-plugin-extensions-webbrowser"
+RRECOMMENDS_append_tmtwin = "enigma2-plugin-systemplugins-osd3dsetup"
+RRECOMMENDS_append_tm2t = "enigma2-plugin-systemplugins-osd3dsetup"
+RRECOMMENDS_append_tmsingle = "enigma2-plugin-systemplugins-osd3dsetup"
