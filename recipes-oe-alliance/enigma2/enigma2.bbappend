@@ -1,6 +1,6 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
-PRINC = "40"
+PRINC = "39"
 
 RDEPENDS_${PN} = " \
 	alsa-conf \
@@ -65,7 +65,6 @@ EXTRA_OECONF += "\
 	${@base_contains("MACHINE_FEATURES", "gigabluelcd", "--with-gigabluelcd" , "", d)} \
 	${@base_contains("MACHINE_FEATURES", "colorlcd220", "--with-colorlcd220" , "", d)} \
 	${@base_contains("MACHINE_FEATURES", "bwlcd255", "--with-bwlcd255" , "", d)} \
-	${@base_contains("MACHINE_FEATURES", "led4char", "--with-led4char" , "", d)} \
 	"
 
 # some plugins contain so's, their stripped symbols should not end up in the enigma2 package
