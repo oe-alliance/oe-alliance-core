@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=c54ce9345727175ff66d17b67ff51f58 \
 HOMEPAGE = "http://hostap.epitest.fi/wpa_supplicant/"
 DEPENDS = "openssl ${@base_contains("COMBINED_FEATURES", "madwifi", "madwifi-ng", "",d)}"
 
-PR = "r2"
+PR = "r3"
 
 #we introduce MY_ARCH to get 'armv5te' as arch instead of the misleading 'arm' on armv5te builds
 MY_ARCH := "${PACKAGE_ARCH}"
@@ -16,9 +16,7 @@ PACKAGE_ARCH = "${@base_contains('COMBINED_FEATURES', 'madwifi', '${MACHINE_ARCH
 SRC_URI = "http://hostap.epitest.fi/releases/wpa_supplicant-${PV}.tar.gz \
 	file://defconfig-openssl \
 	file://ifupdown.sh \
-	file://functions.sh"
-
-SRC_URI_append_openpli = " \
+	file://functions.sh \
 	file://driver-zydas.patch \
 	file://driver-ralink.patch \
 	"
@@ -45,7 +43,7 @@ do_configure () {
         fi
 }
 
-do_configure_append_openpli() {
+do_configure_append() {
 	echo "CONFIG_DRIVER_RALINK=y" >> .config
 	echo "CONFIG_DRIVER_ZYDAS=y" >> .config
 }
