@@ -6,7 +6,14 @@ DVBPROVIDER = "kernel"
 
 MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS = "\
 	kernel-module-cdfs \
+	kernel-module-ext2 \
+	kernel-module-ext3 \
+	kernel-module-ext4 \
 	"
+
+module_autoload_ext2 = "ext2"
+module_autoload_ext3 = "ext3"
+module_autoload_ext4 = "ext4"
 
 MACHINE_EXTRA_RRECOMMENDS = " \
 	gst-plugin-dvbmediasink \
