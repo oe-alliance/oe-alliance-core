@@ -33,6 +33,7 @@ RRECOMMENDS = "\
 	enigma2-plugin-extensions-dreamplex \
 	${@base_contains("MACHINE_FEATURES", "fullgraphiclcd", "lcdpicons-enigma2-meta" , "", d)} \
 	\
+	autofs \
 	autossh \
 	avahi-ui \
 	ctorrent \
@@ -41,6 +42,8 @@ RRECOMMENDS = "\
 	dosfstools \
 	dvbsnoop \
 	dvdfs \
+	exfat-utils \
+	fuse-exfat \
 	gdb \
 	hddtemp \
 	hdparm \
@@ -55,27 +58,28 @@ RRECOMMENDS = "\
 	nano \
 	net-snmp \
 	ntfs-3g \
-	fuse-exfat \
-	exfat-utils \
 	ntp \
 	openresolv \
 	openssh \
 	openvpn \
 	parted \
 	procps \
+	pyload \
 	rsync \
+	rtorrent \
 	sabnzbd \
 	samba \
 	smartmontools \
 	sshpass \
 	strace \
-	transmission \
 	tcpdump \
+	tmux \
+	transmission \
 	ushare \
 	vim \
 	wakelan \
+	xfsprogs \
 	zeroconf \
-	pyload \
 	"
 
 RRECOMMENDS_append_vuuno = "enigma2-plugin-extensions-hbbtv"
