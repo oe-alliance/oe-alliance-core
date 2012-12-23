@@ -1,4 +1,4 @@
-MACHINE_KERNEL_PR_append = ".${INC_PR}.31"
+MACHINE_KERNEL_PR_append = ".${INC_PR}.32"
 
 PATCHREV = "b299a6a132d842b074b289b2568eece452d0663c"
 PATCHLEVEL = "31"
@@ -29,6 +29,7 @@ SRC_URI = " \
 			file://em28xx_fix_terratec_entries.patch \
 			file://em28xx_add_terratec_h5_rev3.patch \
 			file://dvb-usb-a867.patch \
+			file://fix-dvb-siano-sms-order.patch \
 			file://defconfig \
 "
 

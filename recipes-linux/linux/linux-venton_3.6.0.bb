@@ -11,7 +11,7 @@ SRC_URI[sha256sum] = "7f2ad6f3133d6a06e5141ef8dc0c36578fb1041d9051bc7a45846680b6
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-MACHINE_KERNEL_PR_append = ".11"
+MACHINE_KERNEL_PR_append = ".12"
 
 # By default, kernel.bbclass modifies package names to allow multiple kernels
 # to be installed in parallel. We revert this change and rprovide the versioned
@@ -42,6 +42,7 @@ SRC_URI += "http://code-ini.com/software/kernel/linux-${KV}-${SRCDATE}.tar.gz \
 	file://it913x-switch-off-PID-filter-by-default.patch \
 	file://tda18218-7mhz-lopass.patch \
 	file://tda18271-advertise-supported-delsys.patch \
+	file://fix-dvb-siano-sms-order.patch \
 	file://linux-3.6.0-dvbsky.patch \
 	"
 
