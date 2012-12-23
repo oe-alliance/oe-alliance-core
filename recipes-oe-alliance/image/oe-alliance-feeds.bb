@@ -73,7 +73,6 @@ RRECOMMENDS = "\
 	sshpass \
 	strace \
 	tcpdump \
-	tmux \
 	transmission \
 	ushare \
 	vim \
