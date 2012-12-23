@@ -1,8 +1,12 @@
 MODULE = "OpenWebif"
-PRINC = "9"
+PRINC = "10"
 DEPENDS += "enigma2"
 
+FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
+
 SRC_URI = "git://github.com/oe-alliance/e2openplugin-${MODULE}.git;protocol=git"
+SRC_URI_append_vusolo2 = " file://openwebif_8001_8002.patch"
+SRC_URI_append_vuduo2 = " file://openwebif_8001_8002.patch"
 
 S="${WORKDIR}/git"
 
@@ -22,9 +26,9 @@ python do_package_prepend () {
 		('tm2t', '2t.jpg', 'tm_t2.png'),
 		('tmsingle', '2t.jpg', 'tm_t2.png'),
 		('vuduo', 'duo.jpg', 'vu_normal.png'),
-		('vuduo2', 'duo.jpg', 'vu_normal.png'),
+		('vuduo2', 'duo2.jpg', 'vu_normal.png'),
 		('vusolo', 'solo.jpg', 'vu_normal.png'),
-		('vusolo2', 'solo.jpg', 'vu_normal.png'),
+		('vusolo2', 'solo2.jpg', 'vu_normal.png'),
 		('vuultimo', 'ultimo.jpg', 'vu_ultimo.png'),
 		('vuuno', 'uno.jpg', 'vu_normal.png'),
 		('gb800se', 'gb800se.jpg', 'gigablue_black.png'),

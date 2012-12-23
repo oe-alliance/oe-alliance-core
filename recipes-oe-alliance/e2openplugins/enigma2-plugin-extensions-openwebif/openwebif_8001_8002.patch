@@ -1,0 +1,143 @@
+diff --git a/plugin/controllers/models/stream.py b/plugin/controllers/models/stream.py
+index fe4ddd4..71b1eaa 100644
+--- a/plugin/controllers/models/stream.py
++++ b/plugin/controllers/models/stream.py
+@@ -25,11 +25,21 @@ def getStream(session, request, m3ufile):
+ 	if "name" in request.args:
+ 		name = request.args["name"][0]
+ 	# #EXTINF:-1,%s\n  remove not compatiple with old api
+-	if sRef != '':
++
++	if "device" in request.args :
++		if request.args["device"][0] == "phone" :
++			portNumber = 8002;
++		else :
++			portNumber = config.OpenWebif.streamport.value
++	else : 
++		portNumber = config.OpenWebif.streamport.value
++	
++	if sRef != '' :
+ 		progopt="#EXTVLCOPT:program=%d\n" % (int(sRef.split(':')[3],16))
+ 	else:
+ 		progopt=""
+-	response = "#EXTM3U \n#EXTVLCOPT--http-reconnect=true \n%shttp://%s:%s/%s\n" % (progopt,request.getRequestHostname(),config.OpenWebif.streamport.value, sRef)
++	response = "#EXTM3U \n#EXTVLCOPT--http-reconnect=true \n%shttp://%s:%s/%s\n" % (progopt,request.getRequestHostname(), portNumber, sRef)
++	
+ 	request.setHeader('Content-Type', 'application/text')
+ 	return response
+ 
+diff --git a/plugin/controllers/views/ajax/channels.tmpl b/plugin/controllers/views/ajax/channels.tmpl
+index 5975ce8..2915c5b 100755
+--- a/plugin/controllers/views/ajax/channels.tmpl
++++ b/plugin/controllers/views/ajax/channels.tmpl
+@@ -12,9 +12,12 @@
+ 							<a href="#" onclick="open_epg_pop('$channel.ref')">
+ 							<img src="../images/ico_epg.png" title="Show EPG for $channel.name" border="0">
+ 							</a>
+-							<a target="_blank" href='/web/stream.m3u?ref=$channel.ref&name=$channel.name'>
++							<a href="#" onclick="jumper8001('$channel.ref', '$channel.name');">
+ 							<img align="top" src="../images/ico_stream.png" title="Stream $channel.name" border="0">
+ 							</a>
++							<a href="#" onclick="jumper8002('$channel.ref', '$channel.name');">
++							<img align="top" src="../images/ico_stream.png" title="Stream Port 8002 $channel.name" border="0">
++							</a>
+ 						</div>
+ 					
+ #if $channel.has_key('now_title')
+diff --git a/plugin/controllers/views/main.tmpl b/plugin/controllers/views/main.tmpl
+index 1844226..6dcfb66 100755
+--- a/plugin/controllers/views/main.tmpl
++++ b/plugin/controllers/views/main.tmpl
+@@ -9,6 +9,79 @@
+ <script type="text/javascript" src="/js/jquery-ui-1.8.18.custom.min.js"></script>
+ <script type="text/javascript" src="/js/openwebif.js"></script>
+ 
++<script>
++
++	// VuPlus Port Jumper 
++	// 2012.12.10
++
++	function getWinSize(win) { 			
++		if(!win) win = window; 			
++		var s = {}; 			
++		
++		if(typeof win.innerWidth != "undefined") {
++			s.screenWidth = win.screen.width;				
++			s.screenHeight = win.screen.height;			
++		} else {
++			s.screenWidth = 0;				
++			s.screenHeight = 0;			
++		} 			
++
++		return s; 		
++	}
++
++	function getDeviceType() {
++		var ss = getWinSize();	
++		var screenLen = 0;
++
++		// alert( ss.screenHeight );	
++		// alert( ss.screenWidth );	
++
++		if( ss.screenHeight > ss.screenWdith ) {		
++			screenLen = ss.screenHeight; 	
++		} else {		
++			screenLen = ss.screenWidth;	
++		}	
++
++		if( screenLen < 500 ) {		
++			return "phone";	
++		} else {
++			return "tab";	}
++	}
++
++	function getOSType() {
++		var agentStr = navigator.userAgent;
++		
++		if(agentStr.indexOf("iPod") > -1 || agentStr.indexOf("iPhone") > -1)				
++			return "ios";	
++		else if(agentStr.indexOf("Android") > -1)		
++			return "android";	
++		else		
++			return "unknown";
++	}
++
++	function jumper8002( sref, sname ) {
++		var deviceType = getDeviceType();
++
++		document.portForm.ref.value = sref;
++		document.portForm.name.value = sname;
++
++		document.portForm.device.value = "phone";
++		document.portForm.submit();
++	}
++
++	function jumper8001( sref, sname ) {
++		var deviceType = getDeviceType();
++
++		document.portForm.ref.value = sref;
++		document.portForm.name.value = sname;
++
++		document.portForm.device.value = "etc";
++		document.portForm.submit();
++	}
++
++</script>
++
++
+ <title>Open Webif</title>
+ </head>
+ 
+@@ -195,5 +268,12 @@
+ 			<div id="footer"><h3>&nbsp;&nbsp;<a href="https://github.com/E2OpenPlugins">E2OpenPlugins</a> | <a href="http://www.vuplus-community.net">Black Hole</a> | <a href="http://openpli.org">OpenPli</a> | <a href="http://forum.sifteam.eu">Sif</a> | <a href="http://www.vuplus-support.org">Vti</a></h3></div>
+ 		</div>
+ 	</div>
++	
++	<form name="portForm" action="/web/stream.m3u" method="GET" target="_blank">
++		<input type="hidden" name="ref">
++		<input type="hidden" name="name">
++		<input type="hidden" name="device">
++	</form>
++	
+ </body>
+ </html>
