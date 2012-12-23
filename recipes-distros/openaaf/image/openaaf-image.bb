@@ -10,14 +10,7 @@ PV = "${IMAGE_VERSION}"
 PR = "r${DATETIME}"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-IMAGE_INSTALL = "openaaf-base \
-				${@base_contains("MACHINE_FEATURES", "smallflash", "", \
-				" \
-				task-base-smbfs-client \
-				task-base-smbfs \
-				task-base-nfs \
-				", d)} \
-				"
+IMAGE_INSTALL = "openaaf-base"
 
 export IMAGE_BASENAME = "openaaf-image"
 IMAGE_LINGUAS = ""
