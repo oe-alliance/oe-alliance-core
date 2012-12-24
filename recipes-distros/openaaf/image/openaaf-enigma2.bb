@@ -4,7 +4,7 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3
                     file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
 
 PV = "1.0"
-PR = "r12"
+PR = "r13"
 
 inherit task
 
@@ -28,6 +28,7 @@ RRECOMMENDS = "\
 	enigma2-plugin-systemplugins-videotune \	
 	enigma2-plugin-systemplugins-softwaremanager \
 	enigma2-plugin-systemplugins-hotplug \
+	enigma2-plugin-systemplugins-positionersetup \
 	${@base_contains("MACHINE_FEATURES", "smallflash", "", \
 	" \
 	enigma2-plugin-extensions-enhancedmoviecenter \
