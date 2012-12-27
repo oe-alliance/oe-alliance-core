@@ -15,7 +15,7 @@ LIC_FILES_CHKSUM = "file://${WORKDIR}/linux/COPYING;md5=d7810fab7487fb0aad327b76
 SRC_URI = "http://archive.vuplus.com/download/kernel/stblinux-${KV}-3.1.tar.bz2 \
 	file://bmips-no-array-bounds.patch \
 	file://dvb-core.patch \
-	file://fix_cpu_proc.patch1 \
+	file://fix_cpu_proc.patch \
 	file://brcm_disable_enet1.patch \
 	file://bcmgenet_oobctrl.patch \
 	file://brcm_mtd_mac.patch \
