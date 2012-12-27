@@ -1,0 +1,17 @@
+diff --git a/drivers/brcmstb/board.c b/drivers/brcmstb/board.c
+index 5d2c870..92d54cc 100644
+--- a/drivers/brcmstb/board.c
++++ b/drivers/brcmstb/board.c
+@@ -499,9 +499,9 @@ int __init board_get_partition_map(struct mtd_partition **p)
+ 	ret[0].size = brcm_mtd_rootfs_len;
+ 	ret[0].name = "rootfs";
+ 
+-	ret[1].offset = 0;
+-	ret[1].size = MTDPART_SIZ_FULL;
+-	ret[1].name = "entire_device";
++	ret[1].offset = brcm_mtd_rootfs_start;
++	ret[1].size = brcm_mtd_rootfs_len;
++	ret[1].name = "rootfs(redundant)";
+ 
+ 	if (brcm_mtd_kernel_len != 0) {
+ 		ret[2].offset = brcm_mtd_kernel_start;

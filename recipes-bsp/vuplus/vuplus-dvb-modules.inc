@@ -14,7 +14,6 @@ PR = "r6"
 
 VUPLUS_KERNEL_GCC = "4.4.3"
 SRC_URI = "http://archive.vuplus.com/download/drivers/vuplus-dvb-modules-${DOWNLOADMACHINE}-${KV}-${VUPLUS_KERNEL_GCC}-${SRCDATE}.tar.gz"
-SRC_URI_solo2 = "http://archive.vuplus.com/download/drivers/beta/private/vuplus-dvb-modules-${DOWNLOADMACHINE}-${KV}-${VUPLUS_KERNEL_GCC}-${SRCDATE}.tar.gz"
 SRC_URI_duo2 = "http://archive.vuplus.com/download/drivers/beta/private/vuplus-dvb-modules-${DOWNLOADMACHINE}-${KV}-${VUPLUS_KERNEL_GCC}-${SRCDATE}.tar.gz"
 
 S = "${WORKDIR}"
