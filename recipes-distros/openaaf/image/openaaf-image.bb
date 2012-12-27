@@ -16,7 +16,8 @@ IMAGE_INSTALL = "openaaf-base \
 	task-base-smbfs-client \
 	task-base-smbfs \
 	task-base-nfs \
-	", d)} \"
+	", d)} \
+	"
 
 export IMAGE_BASENAME = "openaaf-image"
 IMAGE_LINGUAS = ""
