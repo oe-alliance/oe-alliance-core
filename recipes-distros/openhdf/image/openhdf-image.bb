@@ -2,7 +2,7 @@ DESCRIPTION = "OpenHDF Image"
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "proprietary"
-MAINTAINER = "OpenHDF Team"
+MAINTAINER = "openHDF team"
 
 require conf/license/license-gplv2.inc
 
@@ -11,13 +11,13 @@ PR = "r${DATETIME}"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 IMAGE_INSTALL = "openhdf-base \
-				${@base_contains("MACHINE_FEATURES", "smallflash", "", \
-				" \
-				task-base-smbfs-client \
-				task-base-smbfs \
-				task-base-nfs \
-				", d)} \
-				"
+  ${@base_contains("MACHINE_FEATURES", "smallflash", "", \
+  " \
+  task-base-smbfs-client \
+  task-base-smbfs \
+  task-base-nfs \
+  ", d)} \
+  "
 
 export IMAGE_BASENAME = "openhdf-image"
 IMAGE_LINGUAS = ""
@@ -66,3 +66,4 @@ generate_nfo() {
 do_rootfs_append() {
 			generate_nfo
 }
+

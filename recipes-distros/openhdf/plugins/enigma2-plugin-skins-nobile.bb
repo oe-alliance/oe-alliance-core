@@ -6,13 +6,13 @@ MAINTAINER = "Nobile"
 
 require conf/license/license-gplv2.inc
 
-SRC_URI[md5sum] = "1610f3a49d78c01b8529b5f0a63eacf5"
-SRC_URI[sha256sum] = "4a14e34f15635801b7e968ade423d283242cca16b054ac0ccc02469483adf958"
+SRC_URI[md5sum] = "850c31c69f9dff5237e964f64f3b1809"
+SRC_URI[sha256sum] = "f55ef11ec1003aa1b549536baaf4851f41395a5fddd9cc4d92b6e7fe8a0b7ba9"
 
 inherit gitpkgv
 SRCREV = "${AUTOREV}"
 VER ="1.0"
-PR = "r11"
+PR = "r15"
 
 SRC_URI = "http://addons.hdfreaks.cc/feeds/*git/enigma2-plugins-skins-nobile.tar.gz"
 

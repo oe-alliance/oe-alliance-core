@@ -1,5 +1,5 @@
 DESCRIPTION = "3rd Party plugins for Enigma2"
-MAINTAINER = "OpenHDF Team"
+MAINTAINER = "OpenHDF team"
 
 LICENSE = "Proprietary"
 LIC_FILES_CHKSUM = "file://COPYING;md5=8e37f34d0e40d32ea2bc90ee812c9131"
@@ -32,6 +32,7 @@ DEPENDS = "enigma2 enigma2-3rdparty-plugins"
 
 do_install() {
 }
+
 do_deploy() {
 	install -d 0644 ${WORKDIR}/deploy-ipks/3rdparty
 	install -m 0644 *.ipk ${WORKDIR}/deploy-ipks/3rdparty

@@ -55,7 +55,7 @@ do_install() {
 			fi
 			echo "drivers=${DRIVERS}" >> ${D}/etc/image-version
 			echo "date=${DATETIME}" >> ${D}/etc/image-version
-			echo "comment=HDF" >> ${D}/etc/image-version
+			echo "comment=HDFreaks" >> ${D}/etc/image-version
 			echo "target=9" >> ${D}/etc/image-version
 			echo "creator=OpenHDF" >> ${D}/etc/image-version
 			echo "url=${URL}" >> ${D}/etc/image-version
