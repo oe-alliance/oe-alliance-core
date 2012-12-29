@@ -1,12 +1,12 @@
 MODULE = "OpenWebif"
-PRINC = "10"
+PRINC = "11"
 DEPENDS += "enigma2"
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
 SRC_URI = "git://github.com/oe-alliance/e2openplugin-${MODULE}.git;protocol=git"
-SRC_URI_append_vusolo2 = " file://openwebif_8001_8002.patch"
-SRC_URI_append_vuduo2 = " file://openwebif_8001_8002.patch"
+SRC_URI_append_vusolo2 = " file://openwebif_transcoding.patch"
+SRC_URI_append_vuduo2 = " file://openwebif_transcoding.patch"
 
 S="${WORKDIR}/git"
 
