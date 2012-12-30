@@ -24,7 +24,6 @@ RRECOMMENDS = "\
 	python-compression \
 	python-terminal \
 	python-textutils \
-	enigma2-plugin-skins-horizon \
 	enigma2-plugin-extensions-autotimer \
 	enigma2-plugin-extensions-audiosync \
 	enigma2-plugin-extensions-epgsearch \
