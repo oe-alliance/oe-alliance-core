@@ -3,11 +3,12 @@ MAINTAINER = "SIFTeam"
 
 require conf/license/license-gplv2.inc
 
+inherit allarch
 inherit gitpkgv
 
 PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"
-PR = "r2"
+PR = "r3"
 SRCREV = "${AUTOREV}"
 
 PV_font-daconi-digital-bold = "20120921"

@@ -3,11 +3,12 @@ MAINTAINER = "SIFTeam"
 
 require conf/license/license-gplv2.inc
 
+inherit allarch
 inherit gitpkgv
 
 PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"
-PR = "r0"
+PR = "r1"
 SRCREV = "${AUTOREV}"
 
 SRC_URI = "git://github.com/SIFTeam/skin-horizon.git;protocol=git"
