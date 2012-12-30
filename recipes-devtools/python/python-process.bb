@@ -9,7 +9,7 @@ DEPENDS = "python"
 
 PV = "1.0"
 PKGV = "1.0"
-PR = "r0"
+PR = "r1"
 
 SRC_URI = "file://process.tgz"
 
