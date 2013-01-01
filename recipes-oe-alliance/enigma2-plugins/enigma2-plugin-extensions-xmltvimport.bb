@@ -8,7 +8,7 @@ inherit gitpkgv
 
 PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"
-PR = "r26"
+PR = "r27"
 
 SRC_URI = "git://github.com/oe-alliance/XMTV-Import.git;protocol=git"
 
@@ -19,15 +19,14 @@ inherit autotools
 DEPENDS = "python xmltvimport-library"
 RDEPENDS_${PN} = "python-compression python-shell xmltvimport-library"
 RRECOMMENDS_${PN} = "${PN}-rytec"
-PACKAGES = "${PN}-dbg ${PN} ${PN}-src ${PN}-po"
-
+PACKAGES = "${PN} ${PN}-dbg ${PN}-src ${PN}-po"
 
 PLUGIN = "EPGImport"
 
-FILES_${PN} = "/usr/bin /usr/lib/enigma2/python /etc"
-FILES_${PN}-dbg = "/usr/lib/enigma2/python/Plugins/Extensions/${PLUGIN}/.debug"
-FILES_${PN}-src = "/usr/lib/enigma2/python/Plugins/Extensions/${PLUGIN}/*.py"
-FILES_${PN}-po = "/usr/lib/enigma2/python/Plugins/Extensions/${PLUGIN}/po/*.po"
+FILES_${PN}-dbg = "${libdir}/enigma2/python/Plugins/Extensions/EPGImport/.debug"
+FILES_${PN}-src = "${libdir}/enigma2/python/Plugins/Extensions/EPGImport/*.py"
+FILES_${PN}-po = "${libdir}/enigma2/python/Plugins/Extensions/EPGImport/po/*.po"
+FILES_${PN} = "/usr/bin ${libdir}/enigma2/python/Plugins/Extensions/EPGImport /etc"
 
 EXTRA_OECONF = "\
 	--with-po \
