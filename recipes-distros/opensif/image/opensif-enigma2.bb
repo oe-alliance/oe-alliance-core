@@ -16,6 +16,7 @@ inherit task
 DEPENDS = "enigma2-pliplugins opensif-feeds"
 
 RRECOMMENDS = "\
+	cifs \
 	hddtemp \
 	ntfs-3g \
 	ntfsprogs \
