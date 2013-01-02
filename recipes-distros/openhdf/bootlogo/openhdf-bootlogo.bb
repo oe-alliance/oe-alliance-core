@@ -1,7 +1,7 @@
 DESCRIPTION = "OpenHDF bootlogo"
 SECTION = "base"
 PRIORITY = "required"
-MAINTAINER = "HDF Team"
+MAINTAINER = "OpenHDF Team"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 require conf/license/license-gplv2.inc

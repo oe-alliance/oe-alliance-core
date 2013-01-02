@@ -1,5 +1,5 @@
 DESCRIPTION = "3rd Party plugins for Enigma2"
-MAINTAINER = "OpenHDF team"
+MAINTAINER = "OpenHDF Team"
 
 LICENSE = "Proprietary"
 LIC_FILES_CHKSUM = "file://COPYING;md5=8e37f34d0e40d32ea2bc90ee812c9131"

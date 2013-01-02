@@ -2,7 +2,7 @@ DESCRIPTION = "OpenHDF Image"
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "proprietary"
-MAINTAINER = "openHDF team"
+MAINTAINER = "OpenHDF Team"
 
 require conf/license/license-gplv2.inc
 

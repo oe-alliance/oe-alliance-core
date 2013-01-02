@@ -1,31 +1,26 @@
-DESCRIPTION = "Enigma2 Skin Nobile Mod"
+MODULE = "Nobile-Mod"
+DESCRIPTION = "HDFreaks.cc Nobile Mod"
+MAINTAINER = "HDFreaks"
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "proprietary"
-MAINTAINER = "Nobile"
+PACKAGE_ARCH = "all"
 
 require conf/license/license-gplv2.inc
 
-SRC_URI[md5sum] = "850c31c69f9dff5237e964f64f3b1809"
-SRC_URI[sha256sum] = "f55ef11ec1003aa1b549536baaf4851f41395a5fddd9cc4d92b6e7fe8a0b7ba9"
-
 inherit gitpkgv
 SRCREV = "${AUTOREV}"
+PV = "1.0+git${SRCPV}"
+PKGV = "1.0+git${GITPKGV}"
 VER ="1.0"
-PR = "r15"
+PR = "r1"
 
-SRC_URI = "http://addons.hdfreaks.cc/feeds/*git/enigma2-plugins-skins-nobile.tar.gz"
+SRC_URI="git://github.com/openhdf/nobile-skin.git"
 
-FILES_${PN} = "/usr/share/enigma2/"
+S = "${WORKDIR}/git"
 
-
-S = "${WORKDIR}"
-
-do_compile() {
-}
+FILES_${PN} = "/usr/*"
 
 do_install() {
-install -d ${D}/usr/share
-cp -rp ${S}/usr/share/* ${D}/usr/share/
-chmod -R 777 ${D}/usr/share/enigma2/
+        cp -rp ${S}/usr ${D}/
 }
