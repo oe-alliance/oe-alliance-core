@@ -4,7 +4,7 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3
                     file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
 
 PV = "1.0"
-PR = "r14"
+PR = "r15"
 
 inherit task
 
@@ -43,3 +43,4 @@ RRECOMMENDS_append_gb800solo = " swap-workaround"
 RRECOMMENDS_append_dm800 = " swap-workaround"
 RRECOMMENDS_append_dm800se = " swap-workaround"
 RRECOMMENDS_append_dm500hd = " swap-workaround"
+RRECOMMENDS_append_vusolo2 = " enigma2-plugin-extensions-hbbtv"
