@@ -47,7 +47,7 @@ FILES_enigma2-plugin-extensions-webbrowser_append = "${datadir}/keymaps"
 DESCRIPTION_enigma2-plugin-extension-openuitzendinggemist = "Watch NL-IP TV"
 DESCRIPTION_enigma2-plugin-extension-tunerserver = "Builds a virtual channels list"
 DESCRIPTION_enigma2-plugin-extension-hbbtv = "HbbTV player"
-RDEPENDS_enigma2-plugin-extensions-hbbtv = "vuplus-opera-browser-util"
+RDEPENDS_enigma2-plugin-extensions-hbbtv = "tslib-conf libts-1.0-0 libsysfs2 libgmp3 libmpfr1 vuplus-opera-browser-util"
 DESCRIPTION_enigma2-plugin-systemplugins-transcodingsetup = "Setup transcoding of your VU+"
 RDEPENDS_enigma2-plugin-systemplugins-transcodingsetup = "vuplus-transtreamproxy"
 
@@ -72,7 +72,7 @@ inherit gitpkgv autotools
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r35"
+PR = "r36"
 
 SRC_URI="git://github.com/oe-alliance/oe-alliance-plugins.git;protocol=git"
 
