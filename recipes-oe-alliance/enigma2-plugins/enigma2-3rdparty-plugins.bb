@@ -9,7 +9,7 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r164"
+PR = "r165"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -47,6 +47,7 @@ do_deploy() {
 	install -m 0644 enigma2-plugin-extensions-googlenewsreader_1.0_mips32el.ipk ${WORKDIR}/deploy-ipks/3rdparty
 	install -m 0644 enigma2-plugin-extensions-hetweer_1.2_all.ipk ${WORKDIR}/deploy-ipks/3rdparty
 	install -m 0644 enigma2-plugin-extensions-hdmitest_0.4_mipsel.ipk ${WORKDIR}/deploy-ipks/3rdparty
+	install -m 0644 enigma2-plugin-extensions-icefilms_03-01-2013_mips32el.ipk ${WORKDIR}/deploy-ipks/3rdparty
 	install -m 0644 enigma2-plugin-extensions-livefootball_4.3_mips32el.ipk ${WORKDIR}/deploy-ipks/3rdparty
 	install -m 0644 enigma2-plugin-extensions-newtube_0.1a-r0_all.ipk ${WORKDIR}/deploy-ipks/3rdparty
 	install -m 0644 enigma2-plugin-extensions-opkg-tools_1.2_mipsel.ipk ${WORKDIR}/deploy-ipks/3rdparty
