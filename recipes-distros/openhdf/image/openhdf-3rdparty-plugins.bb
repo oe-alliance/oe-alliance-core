@@ -9,7 +9,7 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r7"
+PR = "r9"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -35,7 +35,30 @@ do_install() {
 
 do_deploy() {
 	install -d 0644 ${WORKDIR}/deploy-ipks/3rdparty
-	install -m 0644 *.ipk ${WORKDIR}/deploy-ipks/3rdparty
+        install -m 0644 *.ipk ${WORKDIR}/deploy-ipks/3rdparty
+        rm ${WORKDIR}/deploy-ipks/3rdparty/enigma2-plugin-extensions-et-openug*
+	rm ${WORKDIR}/deploy-ipks/3rdparty/enigma2-plugin-extensions-et-webbrowser*
+        rm ${WORKDIR}/deploy-ipks/3rdparty/enigma2-plugin-weblinks*
+}
+do_deploy_append_et9x00() {
+	install -m 0644 enigma2-plugin-extensions-et-openug*.ipk ${WORKDIR}/deploy-ipks/3rdparty
+	install -m 0644 enigma2-plugin-extensions-et-webbrowser*.ipk ${WORKDIR}/deploy-ipks/3rdparty
+	install -m 0644 enigma2-plugin-weblinks* ${WORKDIR}/deploy-ipks/3rdparty
+}
+do_deploy_append_et6x00() {
+	install -m 0644 enigma2-plugin-extensions-et-openug*.ipk ${WORKDIR}/deploy-ipks/3rdparty
+	install -m 0644 enigma2-plugin-extensions-et-webbrowser*.ipk ${WORKDIR}/deploy-ipks/3rdparty
+	install -m 0644 enigma2-plugin-weblinks* ${WORKDIR}/deploy-ipks/3rdparty
+}
+do_deploy_append_et5x00() {
+	install -m 0644 enigma2-plugin-extensions-et-openug*.ipk ${WORKDIR}/deploy-ipks/3rdparty
+	install -m 0644 enigma2-plugin-extensions-et-webbrowser*.ipk ${WORKDIR}/deploy-ipks/3rdparty
+	install -m 0644 enigma2-plugin-weblinks* ${WORKDIR}/deploy-ipks/3rdparty
+}
+do_deploy_append_et4x00() {
+	install -m 0644 enigma2-plugin-extensions-et-openug*.ipk ${WORKDIR}/deploy-ipks/3rdparty
+	install -m 0644 enigma2-plugin-extensions-et-webbrowser*.ipk ${WORKDIR}/deploy-ipks/3rdparty
+	install -m 0644 enigma2-plugin-weblinks* ${WORKDIR}/deploy-ipks/3rdparty
 }
 
 addtask deploy before do_build after do_install
