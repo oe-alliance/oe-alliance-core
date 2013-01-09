@@ -23,7 +23,7 @@ RRECOMMENDS = "\
 	enigma2-plugin-extensions-cutlisteditor \
 	enigma2-plugin-extensions-dvdplayer \
 	enigma2-plugin-extensions-zaphistorybrowser \
-	enigma2-plugin-extensions-gbaspectratioswitch \	
+	enigma2-plugin-extensions-gbaspectratioswitch \
 	enigma2-plugin-systemplugins-videotune \
 	enigma2-plugin-systemplugins-skinselector \
 	enigma2-plugin-systemplugins-autoresolution \
@@ -31,7 +31,6 @@ RRECOMMENDS = "\
 	enigma2-plugin-systemplugins-hotplug \
 	enigma2-plugin-systemplugins-devicemanager \
 	enigma2-plugin-systemplugins-swapmanager \
-	enigma2-plugin-systemplugins-positionersetup \
 	${@base_contains("MACHINE_FEATURES", "3dtv", "enigma2-plugin-systemplugins-osd3dsetup" , "", d)} \
 	"
 	
