@@ -1,5 +1,5 @@
 MODULE = "OpenWebif"
-PRINC = "12"
+PRINC = "13"
 DEPENDS += "enigma2"
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
@@ -22,9 +22,9 @@ python do_package_prepend () {
 		('et6x00', 'et5x00.jpg', 'et_rc5_normal.png'),
 		('et9x00', 'et9x00.jpg', 'et_rc7_normal.png'),
 		('odinm9', 'odinm9.jpg', 'odinm9.png'),
-		('tmtwin', 'twin.jpg', 'tm_twin.png'),
-		('tm2t', '2t.jpg', 'tm_t2.png'),
-		('tmsingle', '2t.jpg', 'tm_t2.png'),
+		('tmtwin', 'tmtwin.jpg', 'tm_twin.png'),
+		('tm2t', 'tm2t.jpg', 'tm_2t.png'),
+		('tmsingle', 'tmsingle.jpg', 'tm_2t.png'),
 		('vuduo', 'duo.jpg', 'vu_normal.png'),
 		('vuduo2', 'duo2.jpg', 'vu_normal.png'),
 		('vusolo', 'solo.jpg', 'vu_normal.png'),
