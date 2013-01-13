@@ -1,0 +1,26 @@
+diff -ruN Module/Makefile Module.orig/Makefile
+--- Module.orig/Makefile	2010-04-12 05:08:00.000000000 +0200
++++ Module/Makefile	2011-05-01 01:36:21.000000000 +0200
+@@ -21,11 +21,11 @@
+ endif
+ 
+ ## Comment/uncomment the following line to enable/disable
+-EXTRA_CFLAGS += -DDBG
++#EXTRA_CFLAGS += -DDBG
+ 
+ 
+ 
+-EXTRA_CFLAGS+= $(WFLAGS)
++#EXTRA_CFLAGS+= $(WFLAGS)
+ 
+ obj-m := rt61.o
+ 
+@@ -81,7 +81,7 @@
+ endif
+ 
+ all: 
+-	make -C /lib/modules/$(shell uname -r)/build SUBDIRS=$(shell pwd) modules
++	make -C $(LINUX_SRC) SUBDIRS=$(shell pwd) EXTRA_CFLAGS="$(WFLAGS)" modules
+ 
+ clean:
+ 	rm -rf *.o *~ .*.cmd *.ko *.mod.c .tmp_versions built-in.o
