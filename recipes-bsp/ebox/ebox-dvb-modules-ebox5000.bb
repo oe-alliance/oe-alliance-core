@@ -3,7 +3,7 @@ SECTION = "base"
 PRIORITY = "required"
 LICENSE = "CLOSED"
 
-SRCDATE = "20130110"
+SRCDATE = "20130113"
 KV = "2.6.18-7.4-ebox5000"
 PV = "${KV}+${SRCDATE}"
 PR = "r2"
@@ -31,5 +31,5 @@ do_install() {
 	done
 }
 
-SRC_URI[md5sum] = "22622476e4a933ccf209e9180a5b98da"
-SRC_URI[sha256sum] = "7fbb172fc282ccd132643f196e716d4e00721a8eae621df7c0a6c607937aa568"
+SRC_URI[md5sum] = "cf6ecc12a33bdb8b1a3b498e2c79ac4b"
+SRC_URI[sha256sum] = "9a1c0e1c538a3e80e40fa8e0ae8d226ce4d74ee684d0bd4b41a7b758f0d280c9"
