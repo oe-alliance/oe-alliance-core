@@ -10,9 +10,7 @@ PV = "${IMAGE_VERSION}"
 PR = "r${DATETIME}"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-IMAGE_INSTALL = "mkdigital-base \
-				enigma2-plugin-extensions-bmediacenter \
-"
+IMAGE_INSTALL = "mkdigital-base"
 
 export IMAGE_BASENAME = "mkdigital-image"
 IMAGE_LINGUAS = ""
