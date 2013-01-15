@@ -18,6 +18,9 @@ RRECOMMENDS = "\
 	enigma2-plugin-extensions-mediaplayer \
 	enigma2-plugin-extensions-dvdplayer \
 	enigma2-plugin-systemplugins-hotplug \
-	enigma2-plugin-systemplugins-devicemanager \	
+	enigma2-plugin-systemplugins-devicemanager \
+	enigma2-plugin-extensions-imdb \
+	enigma2-plugin-extensions-bmediacenter \
+	enigma2-plugin-extensions-vlcplayer \	
 	${@base_contains("MACHINE_FEATURES", "3dtv", "enigma2-plugin-systemplugins-osd3dsetup" , "", d)} \
 	"
