@@ -11,7 +11,7 @@ PACKAGE_ARCH := "${MACHINE_ARCH}"
 SRC_DATE = "20130114_2"
 SRC_URI = "http://code.vuplus.com/download/build.fc3abf29fb03f797e78f907928125638/embedded/opera-sdk-build-package/opera-hbbtv_${SRC_DATE}.tar.gz"
 
-PR = "r7_${SRC_DATE}"
+PR = "r8_${SRC_DATE}"
 
 S = "${WORKDIR}/opera-hbbtv"
 
@@ -48,6 +48,6 @@ INHIBIT_PACKAGE_STRIP = "1"
 
 FILES_${PN} = "/usr/lib /usr/local /usr/share /usr/bin /etc "
 
-SRC_URI[md5sum] = "5a8bf37321bcb2c8b23b4538d3862e87"
-SRC_URI[sha256sum] = "4e3a41188b81a871d7f0bf559d1cd0efc5f2faded9d37ca81c4e28e0675b5178"
+SRC_URI[md5sum] = "3264a9e55f8b05a2912a849510969254"
+SRC_URI[sha256sum] = "4b3db7d1caccfe1e877b1830dd8b5fa6ad001dbc2885017c03fbb17226390c99"
 
