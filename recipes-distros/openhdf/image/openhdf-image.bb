@@ -11,6 +11,7 @@ PR = "r${DATETIME}"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 IMAGE_INSTALL = "openhdf-base \
+  oe-alliance-enigma2 \
   ${@base_contains("MACHINE_FEATURES", "smallflash", "", \
   " \
   task-base-smbfs-client \

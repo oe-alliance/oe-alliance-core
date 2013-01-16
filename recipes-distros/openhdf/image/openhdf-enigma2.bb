@@ -4,7 +4,7 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3
                     file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
 
 PV = "1.0"
-PR = "r33"
+PR = "r35"
 
 inherit task
 
@@ -13,6 +13,7 @@ DEPENDS = "enigma2-pliplugins openhdf-feeds openhdf-3rdparty-plugins"
 RRECOMMENDS = "\
 	openhdf-version-info \
 	enigma2-plugin-skins-nobile \
+	enigma2-plugin-skins-army-mod \
 	enigma2-plugin-drivers-usbserial \
 	enigma2-plugin-extensions-autotimer \
 	enigma2-plugin-extensions-epgsearch \
@@ -25,6 +26,7 @@ RRECOMMENDS = "\
 	enigma2-plugin-extensions-volume-adjust \
 	enigma2-plugin-pli-softcamsetup \
 	enigma2-plugin-systemplugins-autoresolution \
+	enigma2-plugin-systemplugins-devicemanager \
 	enigma2-plugin-systemplugins-videotune \	
 	enigma2-plugin-systemplugins-softwaremanager \
 	enigma2-plugin-systemplugins-hotplug \
