@@ -9,9 +9,9 @@ DEPENDS = "enigma2"
 inherit gitpkgv
 
 SRCREV = "${AUTOREV}"
-PV = "2.7.11+git${SRCPV}"
-PKGV = "2.7.11+git${GITPKGV}"
-PR = "r7"
+PV = "2.8.4+git${SRCPV}"
+PKGV = "2.8.4+git${GITPKGV}"
+PR = "r0"
 
 SRC_URI = "git://github.com/oe-alliance/e2openplugin-${MODULE}.git;protocol=git"
 
