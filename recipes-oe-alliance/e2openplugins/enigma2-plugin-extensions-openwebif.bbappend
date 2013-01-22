@@ -1,6 +1,6 @@
 MODULE = "OpenWebif"
-PRINC = "13"
-DEPENDS += "enigma2"
+PRINC = "14"
+DEPENDS += "enigma2 python-pyopenssl"
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
