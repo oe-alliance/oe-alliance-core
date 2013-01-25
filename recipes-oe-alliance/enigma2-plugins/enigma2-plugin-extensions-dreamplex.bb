@@ -8,13 +8,13 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"
-PR = "r0"
+PR = "r1"
 
 SRC_URI = "git://github.com/DonDavici/DreamPlex.git;protocol=git"
 
 S = "${WORKDIR}/git"
 
-RDEPENDS_${PN} = "gst-plugins-bad-fragmented"
+RDEPENDS_${PN} = "gst-plugins-bad-fragmented curl"
 
 PLUGIN = "DreamPlex"
 
