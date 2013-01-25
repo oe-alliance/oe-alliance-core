@@ -1,0 +1,13 @@
+diff -ruN Python-2.7.2.orig/configure.in Python-2.7.2/configure.in
+--- Python-2.7.2.orig/configure.in	2013-01-25 22:28:31.312100573 +0100
++++ Python-2.7.2/configure.in	2013-01-25 22:27:13.824098699 +0100
+@@ -3130,6 +3130,9 @@
+ [ac_cv_buggy_getaddrinfo=yes]))
+ fi
+ 
++# this test fail with crosscompiling!!
++ac_cv_buggy_getaddrinfo=no
++
+ AC_MSG_RESULT($ac_cv_buggy_getaddrinfo)
+ 
+ if test $have_getaddrinfo = no -o "$ac_cv_buggy_getaddrinfo" = yes
