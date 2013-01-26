@@ -12,6 +12,8 @@ MACHINE_EXTRA_RRECOMMENDS = " \
 	ntfs-3g \
 	"
 
+DVBMEDIASINK_CONFIG = "--with-wma --with-wmv --with-pcm --with-dtsdownmix"
+	
 TARGET_ARCH = "mipsel"
 DEFAULTTUNE = "mips32el"
 

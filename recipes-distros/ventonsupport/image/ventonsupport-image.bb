@@ -61,6 +61,7 @@ ENIGMA2_PLUGINS = "\
 	enigma2-plugin-systemplugins-crossepg \
 	enigma2-plugin-systemplugins-3gmodemmanager \
 	enigma2-plugin-systemplugins-positionersetup \
+	enigma2-plugin-systemplugins-micomupgrade \	
 "
 ENIGMA2_INI_PLUGINS = "\
 	enigma2-plugin-picons-default-ventonsupport \
