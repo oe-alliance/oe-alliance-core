@@ -11,7 +11,7 @@ PACKAGE_ARCH := "${MACHINE_ARCH}"
 SRC_DATE = "20130122_0"
 SRC_URI = "http://code.vuplus.com/download/build.fc3abf29fb03f797e78f907928125638/embedded/opera-sdk-build-package/opera-hbbtv_${SRC_DATE}.tar.gz"
 
-PR = "r8_${SRC_DATE}"
+PR = "r9_${SRC_DATE}"
 
 S = "${WORKDIR}/opera-hbbtv"
 
@@ -43,10 +43,22 @@ do_install() {
 	cp -avR ${S}/plugin/* ${D}/usr/lib/enigma2/python/Plugins/Extensions/HbbTV
 }
 
+# Just a quick hack to "compile" the python parts.
+do_compile_append() {
+	python -O -m compileall ${S}
+}
 
 INHIBIT_PACKAGE_STRIP = "1"
 
-FILES_${PN} = "/usr/lib /usr/local /usr/share /usr/bin /etc "
+FILES_${PN}-src = "/usr/lib/enigma2/python/Plugins/Extensions/HbbTV/*.py"
+FILES_${PN} = "/usr/lib/enigma2/python/Plugins/Extensions/HbbTV/*.pyo \
+			   /usr/lib/enigma2/python/Plugins/Extensions/HbbTV/*.so \
+			   /usr/lib/directfb*.* \
+			   /usr/lib/lib*.* \
+			   /usr/local \
+			   /usr/share \
+			   /usr/bin \
+			   /etc "
 
 SRC_URI[md5sum] = "3b437bb48e9724b1df1224afb733a5a6"
 SRC_URI[sha256sum] = "f83161b34cf32d0190533195c0d27d2f4e3110d9bb315822db233dcc00760192"
