@@ -10,6 +10,11 @@ MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS = "\
 MACHINE_EXTRA_RRECOMMENDS = " \
 	gst-plugin-dvbmediasink \
 	ntfs-3g \
+	enigma2-plugin-systemplugins-micomupgrade \
+	"
+
+EXTRA_IMAGEDEPENDS = "\
+	enigma2-plugin-systemplugins-micomupgrade \
 	"
 
 DVBMEDIASINK_CONFIG = "--with-wma --with-wmv --with-pcm --with-dtsdownmix"
