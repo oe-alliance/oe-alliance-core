@@ -18,6 +18,7 @@ PROVIDES = "${PN} \
 	enigma2-plugin-systemplugins-remotecontrolcode \
 	enigma2-plugin-extensions-webbrowser \
 	enigma2-plugin-extensions-hbbtv \
+	enigma2-plugin-systemplugins-micomupgrade \
 	"
 
 DESCRIPTION_enigma2-plugin-systemplugins-autobouquetsmaker = "Automatically build and update bouquets from the satellite stream."
@@ -50,6 +51,7 @@ DESCRIPTION_enigma2-plugin-extension-hbbtv = "HbbTV player"
 RDEPENDS_enigma2-plugin-extensions-hbbtv = "tslib-conf libts-1.0-0 libsysfs2 libgmp10 libmpfr4 vuplus-opera-browser-util"
 DESCRIPTION_enigma2-plugin-systemplugins-transcodingsetup = "Setup transcoding of your VU+"
 RDEPENDS_enigma2-plugin-systemplugins-transcodingsetup = "vuplus-transtreamproxy"
+DESCRIPTION_enigma2-plugin-systemplugins-micomupgrade = "micomupgrade"
 
 DEPENDS = "enigma2 \
 	${@base_contains("MACHINE_FEATURES", "blindscan-dvbc", "virtual/blindscan-dvbc" , "", d)} \
@@ -75,7 +77,7 @@ inherit gitpkgv autotools
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r37"
+PR = "r38"
 
 SRC_URI="git://github.com/oe-alliance/oe-alliance-plugins.git;protocol=git"
 
