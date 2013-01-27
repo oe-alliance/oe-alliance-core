@@ -5,7 +5,7 @@ KV = "3.5.1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 SRCDATE = "20130103"
-MACHINE_KERNEL_PR_append = ".6"
+MACHINE_KERNEL_PR_append = ".7"
 
 SRC_URI[md5sum] = "dadedd29363a94aeda97fdae599ae533"
 SRC_URI[sha256sum] = "0f27a1c1ff68c9528500158423dc6139162cb8c08b9bf8331cff9a942a77c779"
@@ -30,7 +30,6 @@ SRC_URI = "http://archiv.openmips.com/gigablue-quad-linux-${PV}_${SRCDATE}.tgz \
 	file://em28xx_add_terratec_h5_rev3.patch \
 	file://iosched-slice_idle-1.patch \
 	file://it913x-switch-off-PID-filter-by-default.patch \
-	file://tda18218-7mhz-lopass.patch \
 	file://tda18271-advertise-supported-delsys.patch \
 	file://linux-3.6.0-dvbsky.patch \
 	"

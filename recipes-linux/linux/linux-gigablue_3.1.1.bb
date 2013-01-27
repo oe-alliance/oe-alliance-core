@@ -5,7 +5,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 KV = "3.1.1"
 
 SRCDATE = "20120526"
-MACHINE_KERNEL_PR_append = ".7"
+MACHINE_KERNEL_PR_append = ".8"
 
 SRC_URI[md5sum] = "5899790c27f6f4069fbceb64b67635eb"
 SRC_URI[sha256sum] = "9a99171a05781c545734c72ea08d3fe3bcb176070b43b7db63ef56a406f7925d"
@@ -20,7 +20,6 @@ SRC_URI = "http://archiv.openmips.com/linux-${KV}-gb800xx-${KV}_${SRCDATE}.tar.g
 		file://fix-eof-dmxdev.patch \
 		file://dvb-usb-af9035.patch \
 		file://dvb-usb-it9135.patch \
-		file://tda18218-7mhz-lopass.patch \
 		file://dvb-usb-a867.patch \
 		file://PCTV-DVB-S2-stick-460e.patch \
 		file://cxd2820r-enable-LNA-for-DVB-T.patch \

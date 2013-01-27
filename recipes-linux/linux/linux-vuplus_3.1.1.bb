@@ -5,7 +5,7 @@ KV = "3.1.1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 SRCREV = "r2"
-MACHINE_KERNEL_PR_append = ".7"
+MACHINE_KERNEL_PR_append = ".8"
 
 SRC_URI[md5sum] = "4dc3ac322453abbfaade7020cddea205"
 SRC_URI[sha256sum] = "1d18eb39677a23eace6b27ee25656c25f21b57be7e77a2adcdd15c76d1c3e875"
@@ -18,7 +18,6 @@ SRC_URI += "http://archive.vuplus.com/download/kernel/linux-${KV}_${SRCREV}.tar.
 	file://defconfig \
 	file://dvb-usb-af9035.patch \
 	file://dvb-usb-it9135.patch \
-	file://tda18218-7mhz-lopass.patch \
 	file://dvb-usb-a867.patch \
 	file://PCTV-DVB-S2-stick-460e.patch \
 	file://cxd2820r-enable-LNA-for-DVB-T.patch \
