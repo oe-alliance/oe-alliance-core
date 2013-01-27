@@ -1,0 +1,29 @@
+it913x: switch off PID filter by default
+
+PID filter can cause troubles, as reported by a few users, so switch it off
+by default as we do not need it anyway.
+
+From: Gianluca Gennari <gennarone@gmail.com>
+---
+ drivers/media/dvb/dvb-usb/it913x.c |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/media/dvb/dvb-usb/it913x.c b/drivers/media/dvb/dvb-usb/it913x.c
+index 482d249..614370c 100644
+--- a/drivers/media/dvb/dvb-usb/it913x.c
++++ b/drivers/media/dvb/dvb-usb/it913x.c
+@@ -48,9 +48,9 @@ module_param_named(debug, dvb_usb_it913x_debug, int, 0644);
+ MODULE_PARM_DESC(debug, "set debugging level (1=info (or-able))."
+ 			DVB_USB_DEBUG_STATUS);
+ 
+-static int pid_filter;
++static int pid_filter = 1;
+ module_param_named(pid, pid_filter, int, 0644);
+-MODULE_PARM_DESC(pid, "set default 0=on 1=off");
++MODULE_PARM_DESC(pid, "set 0=on default 1=off");
+ 
+ static int dvb_usb_it913x_firmware;
+ module_param_named(firmware, dvb_usb_it913x_firmware, int, 0644);
+-- 
+1.7.0.4
+

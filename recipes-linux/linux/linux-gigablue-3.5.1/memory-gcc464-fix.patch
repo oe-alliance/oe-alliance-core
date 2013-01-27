@@ -1,0 +1,19 @@
+--- a/Makefile	2012-02-10 20:09:44.000000000 +0100
++++ b/Makefile	2012-08-04 11:44:04.419222061 +0200
+@@ -352,10 +352,12 @@
+ KBUILD_CPPFLAGS := -D__KERNEL__
+ 
+ KBUILD_CFLAGS   := -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs \
+-		   -fno-strict-aliasing -fno-common \
+-		   -Werror-implicit-function-declaration \
+-		   -Wno-format-security \
+-		   -fno-delete-null-pointer-checks
++                   -fno-strict-aliasing -fno-common \
++                   -Werror-implicit-function-declaration \
++                   -Wno-error=array-bounds \
++                   -Wno-format-security \
++                   -fno-delete-null-pointer-checks
++
+ KBUILD_AFLAGS_KERNEL :=
+ KBUILD_CFLAGS_KERNEL :=
+ KBUILD_AFLAGS   := -D__ASSEMBLY__
