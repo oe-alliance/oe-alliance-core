@@ -42,6 +42,7 @@ SRC_URI += "http://www.et-view.com/download/linux-${PV}.tar.gz \
 	file://tda18271-advertise-supported-delsys.patch \
 	file://fix-dvb-siano-sms-order.patch \
 	file://linux-3.6.0-dvbsky.patch \
+	file://mxl5007t-add-no_probe-and-no_reset-parameters.patch \
 	"
 
 S = "${WORKDIR}/linux-${PV}"
