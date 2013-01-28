@@ -45,7 +45,7 @@ case "$ACTION" in
 		if ! mount /dev/$MDEV > /dev/null 2>&1 ; then
 			# no fstab entry, use automatic mountpoint
 			REMOVABLE=`cat /sys/block/$DEVBASE/removable`
-			readlink -fn /sys/block/$DEVBASE/device | grep -qs 'pci'
+			readlink -fn /sys/block/$DEVBASE/device | grep -qs 'pci\|ahci'
 			EXTERNAL=$?
 			if [ "${REMOVABLE}" -eq "0" -a $EXTERNAL -eq 0 ] ; then
 				# mount the first non-removable internal device on /media/hdd
