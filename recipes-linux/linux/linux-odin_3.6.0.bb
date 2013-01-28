@@ -43,6 +43,7 @@ SRC_URI += "http://feed.odin-support.com/download/linux-${PV}.tar.gz \
 	file://fix-dvb-siano-sms-order.patch \
 	file://linux-3.6.0-dvbsky.patch \
 	file://${MACHINE}-board.patch \
+	file://nfs-max-rwsize-8k.patch \
 	"
 
 S = "${WORKDIR}/linux-${PV}"

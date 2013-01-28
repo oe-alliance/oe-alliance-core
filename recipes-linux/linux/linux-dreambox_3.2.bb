@@ -32,6 +32,7 @@ SRC_URI = " \
 			file://fix-dvb-siano-sms-order.patch \
 			file://defconfig \
 			file://dvb-usb-af9035.patch \
+			file://nfs-max-rwsize-8k.patch \
 "
 
 SRC_URI[kernel.md5sum] = "7ceb61f87c097fc17509844b71268935"

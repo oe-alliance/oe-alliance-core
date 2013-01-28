@@ -43,6 +43,7 @@ SRC_URI += "http://www.et-view.com/download/linux-${PV}.tar.gz \
 	file://fix-dvb-siano-sms-order.patch \
 	file://linux-3.6.0-dvbsky.patch \
 	file://mxl5007t-add-no_probe-and-no_reset-parameters.patch \
+	file://nfs-max-rwsize-8k.patch \
 	"
 
 S = "${WORKDIR}/linux-${PV}"

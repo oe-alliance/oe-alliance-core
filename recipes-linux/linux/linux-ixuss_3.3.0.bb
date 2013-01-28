@@ -49,6 +49,7 @@ SRC_URI += "http://118.37.185.125/download/stblinux/stblinux-3.3.0-gcc44-2012081
 	file://dvb-usb-dib0700-disable-sleep.patch \
 	file://dvb_usb_disable_rc_polling.patch \
 	file://fix-dvb-siano-sms-order.patch \
+	file://nfs-max-rwsize-8k.patch \
 	"
 
 S = "${WORKDIR}/linux-${PV}"

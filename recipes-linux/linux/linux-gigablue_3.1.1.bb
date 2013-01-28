@@ -32,6 +32,7 @@ SRC_URI = "http://archiv.openmips.com/linux-${KV}-gb800xx-${KV}_${SRCDATE}.tar.g
 		file://af9015-output-full-range-SNR.patch \
 		file://dvb-as102.patch \
 		file://fix-dvb-siano-sms-order.patch \
+		file://nfs-max-rwsize-8k.patch \
 		"
 
 S = "${WORKDIR}/linux-${KV}"

@@ -32,6 +32,7 @@ SRC_URI += "http://archive.vuplus.com/download/kernel/linux-${KV}_${SRCREV}.tar.
 	file://em28xx_fix_terratec_entries.patch \
 	file://em28xx_add_terratec_h5_rev3.patch \
 	file://fix-dvb-siano-sms-order.patch \
+	file://nfs-max-rwsize-8k.patch \
 	"
 
 SRC_URI_append_vusolo = " file://linux_3.1.1.patch"
