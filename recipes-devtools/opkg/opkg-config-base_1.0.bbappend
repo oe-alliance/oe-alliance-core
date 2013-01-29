@@ -1,4 +1,4 @@
-PRINC = "3"
+PRINC = "4"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 do_compile_append_odinm9() {
