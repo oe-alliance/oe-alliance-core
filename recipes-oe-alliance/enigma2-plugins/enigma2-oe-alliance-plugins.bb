@@ -45,15 +45,15 @@ RDEPENDS_enigma2-plugin-systemplugins-3gmodemmanager = "ppp usbmodeswitch usbmod
 DESCRIPTION_enigma2-plugin-extensions-webbrowser = "Webbrowser launcher"
 RDEPENDS_enigma2-plugin-extensions-webbrowser = "python-gdata libqtwebkite4 webbrowser-utils qt4-embedded-fonts qt4-embedded-plugin-imageformat-gif qt4-embedded-plugin-imageformat-ico qt4-embedded-plugin-imageformat-jpeg qt4-embedded-plugin-imageformat-mng qt4-embedded-plugin-imageformat-svg qt4-embedded-plugin-imageformat-tiff qt4-embedded-plugin-iconengine-svgicon"
 FILES_enigma2-plugin-extensions-webbrowser_append = "${datadir}/keymaps"
-DESCRIPTION_enigma2-plugin-extension-openuitzendinggemist = "Watch NL-IP TV"
-DESCRIPTION_enigma2-plugin-extension-tunerserver = "Builds a virtual channels list"
-DESCRIPTION_enigma2-plugin-extension-hbbtv = "HbbTV player"
+DESCRIPTION_enigma2-plugin-extensions-ondemand-openuitzendinggemist = "Watch NL-IP TV"
+DESCRIPTION_enigma2-plugin-extensions-tunerserver = "Builds a virtual channels list"
+DESCRIPTION_enigma2-plugin-extensions-hbbtv = "HbbTV player"
 RDEPENDS_enigma2-plugin-extensions-hbbtv = "tslib-conf libts-1.0-0 libsysfs2 libgmp10 libmpfr4 vuplus-opera-browser-util"
 DESCRIPTION_enigma2-plugin-systemplugins-transcodingsetup = "Setup transcoding of your VU+"
 RDEPENDS_enigma2-plugin-systemplugins-transcodingsetup = "vuplus-transtreamproxy"
 DESCRIPTION_enigma2-plugin-systemplugins-micomupgrade = "micomupgrade"
-RDEPENDS_enigma2-plugin-extension-ondemand = "python-dnspython python-beautifulsoup"
-DESCRIPTION_enigma2-plugin-extension-ondemand = "Watch on demand TV."
+RDEPENDS_enigma2-plugin-extensions-ondemand = "python-dnspython python-beautifulsoup"
+DESCRIPTION_enigma2-plugin-extensions-ondemand = "Watch on demand TV."
 
 DEPENDS = "enigma2 \
 	${@base_contains("MACHINE_FEATURES", "blindscan-dvbc", "virtual/blindscan-dvbc" , "", d)} \
@@ -80,7 +80,7 @@ inherit gitpkgv autotools
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r39"
+PR = "r40"
 
 SRC_URI="git://github.com/oe-alliance/oe-alliance-plugins.git;protocol=git"
 
