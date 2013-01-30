@@ -52,7 +52,6 @@ ENIGMA2_PLUGINS = "\
 	enigma2-plugin-extensions-mediaplayer \
 	enigma2-plugin-extensions-cutlisteditor \
 	enigma2-plugin-extensions-foreca \
-	enigma2-plugin-extensions-streamtv \
 	enigma2-plugin-extensions-dlnabrowser \
 	enigma2-plugin-extensions-addstreamurl \
 	enigma2-plugin-systemplugins-videotune \

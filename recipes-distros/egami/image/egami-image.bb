@@ -55,8 +55,6 @@ ENIGMA2_PLUGINS = "\
 	enigma2-plugin-extensions-dlnabrowser \
 	enigma2-plugin-extensions-foreca \
 	enigma2-plugin-extensions-imdb \
-	enigma2-plugin-extensions-addstreamurl \
-	enigma2-plugin-extensions-zaphistorybrowser \
 	enigma2-plugin-systemplugins-videotune \
 	enigma2-plugin-systemplugins-softwaremanager \
 	enigma2-plugin-systemplugins-hotplug \
