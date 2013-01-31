@@ -5,17 +5,21 @@ require conf/license/license-gplv2.inc
 
 inherit gitpkgv allarch
 
-EPSM = "enigma2-plugin-vix-magic"
+EPSM = "enigma2-plugin-skins-vix"
 SRCREV = "${AUTOREV}"
 PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"
-PR = "r10"
+PR = "r11"
 
-RCONFLICTS_${EPSM}-sd = "enigma2-plugin-skins-magic"
-RREPLACES_${EPSM}-sd = "enigma2-plugin-skins-magic"
+RCONFLICTS_${EPSM}-hd = "enigma2-plugin-vix-magic-hd"
+RREPLACES_${EPSM}-hd = "enigma2-plugin-vix-magic-hd"
+RCONFLICTS_${EPSM}-hd-lite = "enigma2-plugin-vix-magic-hd-lite"
+RREPLACES_${EPSM}-hd-lite = "enigma2-plugin-vix-magic-hd-lite"
+RCONFLICTS_${EPSM}-hd-night = "enigma2-plugin-vix-magic-hd-night"
+RREPLACES_${EPSM}-hd-night = "enigma2-plugin-vix-magic-hd-night"
 
-PACKAGES = "vix-magic-hd-common ${EPSM}-hd ${EPSM}-ehd ${EPSM}-hd-lite ${EPSM}-hd-night ${EPSM}-ehd-lite"
-PROVIDES = "${PN} vix-magic-hd-common ${EPSM}-hd ${EPSM}-ehd ${EPSM}-hd-lite ${EPSM}-hd-night ${EPSM}-ehd-lite"
+PACKAGES = "vix-magic-hd-common ${EPSM}-hd ${EPSM}-hd-lite ${EPSM}-hd-night"
+PROVIDES = "${PN} vix-magic-hd-common ${EPSM}-hd ${EPSM}-hd-lite ${EPSM}-hd-night"
 
 SRC_URI="git://github.com/OpenViX/vix-magic-skins.git;protocol=git"
 

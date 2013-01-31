@@ -5,17 +5,21 @@ require conf/license/license-gplv2.inc
 
 inherit gitpkgv allarch
 
-EPSM = "enigma2-plugin-vix-vixbmc"
+EPSM = "enigma2-plugin-skins-vixbmc"
 SRCREV = "${AUTOREV}"
 PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"
-PR = "r5"
+PR = "r6"
 
 PACKAGES = "vix-vixbmc-hd-common ${EPSM}-slim-hd ${EPSM}-night-hd ${EPSM}-metropolis"
 PROVIDES = "${PN} vix-vixbmc-hd-common ${EPSM}-slim-hd ${EPSM}-night-hd ${EPSM}-metropolis"
 
-RCONFLICTS_vix-vixbmc-hd-common = "${EPSM}-hd-common"
-RREPLACES_vix-vixbmc-hd-common = "${EPSM}-hd-common"
+RCONFLICTS_${EPSM}-slim-hd = "enigma2-plugin-vix-vixbmc-slim-hd"
+RREPLACES_${EPSM}-slim-hd = "enigma2-plugin-vix-vixbmc-slim-hd"
+RCONFLICTS_${EPSM}-night-hd = "enigma2-plugin-vix-vixbmc-night-hd"
+RREPLACES_${EPSM}-night-hd = "enigma2-plugin-vix-vixbmc-night-hd"
+RCONFLICTS_${EPSM}-metropolis = "enigma2-plugin-vix-vixbmc-metropolis"
+RREPLACES_${EPSM}-metropolis = "enigma2-plugin-vix-vixbmc-metropolis"
 
 SRC_URI="git://github.com/OpenViX/vix-xbmc-skin.git;protocol=git"
 

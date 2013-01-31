@@ -5,30 +5,30 @@ require conf/license/license-gplv2.inc
 
 inherit gitpkgv allarch
 
-EPSM = "enigma2-plugin-vix"
+EPSM = "enigma2-plugin-skins-vix"
 SRCREV = "${AUTOREV}"
 PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"
-PR = "r9"
+PR = "r10"
 
-PACKAGES = "vix-hd-common ${EPSM}-day-hd ${EPSM}-night-hd"
-PROVIDES = "${PN} vix-hd-common ${EPSM}-day-hd ${EPSM}-night-hd"
+PACKAGES = "vix-skin-common ${EPSM}-day-hd ${EPSM}-night-hd"
+PROVIDES = "${PN} vix-skin-common ${EPSM}-day-hd ${EPSM}-night-hd"
 
-RCONFLICTS_vix-hd-common = "${EPSM}-hd-common"
-RREPLACES_vix-hd-common = "${EPSM}-hd-common"
-RCONFLICTS_${EPSM}-day-hd = "enigma2-plugin-vix-skins-day-hd"
-RREPLACES_${EPSM}-day-hd = "enigma2-plugin-vix-skins-day-hd"
-RCONFLICTS_${EPSM}-night-hd = "enigma2-plugin-vix-skins-night-hd"
-RREPLACES_${EPSM}-night-hd = "enigma2-plugin-vix-skins-night-hd"
+RCONFLICTS_vix-skin-common = "vix-hd-common"
+RREPLACES_vix-skin-common = "vix-hd-common"
+RCONFLICTS_${EPSM}-day-hd = "enigma2-plugin-vix-day-hd"
+RREPLACES_${EPSM}-day-hd = "enigma2-plugin-vix-day-hd"
+RCONFLICTS_${EPSM}-night-hd = "enigma2-plugin-vix-night-hd"
+RREPLACES_${EPSM}-night-hd = "enigma2-plugin-vix-night-hd"
 
 SRC_URI="git://github.com/OpenViX/vix-skins.git;protocol=git"
 
-FILES_vix-hd-common = "/usr/share/enigma2/ViX_HD_Common"
-FILES_${EPSM}-day-hd = "/usr/share/enigma2/ViX_Day_HD"
-FILES_${EPSM}-night-hd = "/usr/share/enigma2/ViX_Night_HD"
+FILES_vix-skin-common = "/usr/share/enigma2/ViX-Common"
+FILES_${EPSM}-day-hd = "/usr/share/enigma2/ViX-Day-HD"
+FILES_${EPSM}-night-hd = "/usr/share/enigma2/ViX-Night-HD"
 
-RDEPENDS_${EPSM}-day-hd = "vix-hd-common"
-RDEPENDS_${EPSM}-night-hd = "vix-hd-common"
+RDEPENDS_${EPSM}-day-hd = "vix-skin-common"
+RDEPENDS_${EPSM}-night-hd = "vix-skin-common"
 
 S = "${WORKDIR}/git"
 
