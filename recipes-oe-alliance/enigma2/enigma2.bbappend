@@ -1,6 +1,20 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
-PRINC = "40"
+PRINC = "41"
+
+DEPENDS = " \
+	ethtool \
+	freetype \
+	gettext-native \
+	gst-plugins-base gstreamer \
+	hotplug-e2-helper \
+	jpeg \
+	libdreamdvd libdvbsi++ libfribidi libmad libpng libsigc++-1.2 libungif libxml2 libxmlccwrap \
+	openssl \
+	python python-imaging python-twisted python-wifi \
+	swig-native \
+	tuxtxt-enigma2 \
+	"
 
 RDEPENDS_${PN} = " \
 	alsa-conf \
@@ -28,7 +42,6 @@ PYTHON_RDEPS += " \
 	"
 
 # We depend on the font which we use for TXT subtitles (defined in skin_subtitles.xml)
-DEPENDS += "font-valis-enigma"
 RDEPENDS_${PN} += "font-valis-enigma"
 
 RDEPENDS_${PN} += "${@base_contains("MACHINE_FEATURES", "blindscan-dvbc", "virtual/blindscan-dvbc" , "", d)}"
@@ -54,6 +67,15 @@ SRC_URI_append_gb800ue = " \
 			"
 
 FILES_${PN} += " ${bindir} ${sysconfdir}/e2-git.log"
+
+PV_font-valis-enigma = "2009.11.12"
+PR_font-valis-enigma = "r2"
+PKGV_font-valis-enigma = "${PV_font-valis-enigma}"
+DESCRIPTION_font-valis-enigma = "Valis enigma font"
+
+PACKAGES =+ " font-valis-enigma"
+PROVIDES =+ " font-valis-enigma"
+FILES_font-valis-enigma = "/usr/share/fonts/valis_enigma.ttf"
 
 # Save po files
 PACKAGES =+ "${PN}-po"
