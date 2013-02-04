@@ -1,0 +1,41 @@
+From c34eb67737ed1549592a073bbb0fb04700e28c0c Mon Sep 17 00:00:00 2001
+From: Andreas Monzner <andreas.monzner@dream-property.net>
+Date: Mon, 7 Jan 2013 16:21:55 +0100
+Subject: [PATCH] disable broken brcm shared uart irq support for bcm7400
+ (needs new dm8000 dreambox-dvb-modules)
+
+---
+ arch/mips/brcmstb/Kconfig |    2 +-
+ arch/mips/brcmstb/irq.c   |    2 ++
+ 2 files changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/arch/mips/brcmstb/Kconfig b/arch/mips/brcmstb/Kconfig
+index a6ce156..e81c8e7 100644
+--- a/arch/mips/brcmstb/Kconfig
++++ b/arch/mips/brcmstb/Kconfig
+@@ -380,7 +380,7 @@ config BCM7400E0
+ 	select BRCM_UARTA_IS_16550
+ 	select BRCM_UARTB_IS_16550 if !DREAMBOX_DM8000
+ 	select BRCM_UARTC_IS_16550 if !DREAMBOX_DM8000
+-	select BRCM_SHARED_UART_IRQ
++	select BRCM_SHARED_UART_IRQ if !DREAMBOX_DM8000
+ 	select BRCM_HAS_PCI23
+ 	select BRCM_HAS_EMAC_0
+ 	select BRCM_HAS_NOR if !DREAMBOX
+diff --git a/arch/mips/brcmstb/irq.c b/arch/mips/brcmstb/irq.c
+index 586a7fc..bd02e68 100644
+--- a/arch/mips/brcmstb/irq.c
++++ b/arch/mips/brcmstb/irq.c
+@@ -369,7 +369,9 @@ void __init arch_init_irq(void)
+ #elif defined(BCHP_IRQ0_IRQEN_uarta_irqen_MASK)
+ 	/* 7405 style - shared with L2 */
+ 	BDEV_WR(BCHP_IRQ0_IRQEN, BCHP_IRQ0_IRQEN_uarta_irqen_MASK
++#if defined(BCHP_IRQ0_IRQEN_uartb_irqen_MASK)
+ 		| BCHP_IRQ0_IRQEN_uartb_irqen_MASK
++#endif
+ #if defined(BCHP_IRQ0_IRQEN_uartc_irqen_MASK)
+ 		| BCHP_IRQ0_IRQEN_uartc_irqen_MASK
+ #endif
+-- 
+1.7.10.4
+

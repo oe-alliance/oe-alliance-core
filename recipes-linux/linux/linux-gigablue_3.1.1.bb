@@ -5,7 +5,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 KV = "3.1.1"
 
 SRCDATE = "20120526"
-MACHINE_KERNEL_PR_append = ".7"
+MACHINE_KERNEL_PR_append = ".8"
 
 SRC_URI[md5sum] = "5899790c27f6f4069fbceb64b67635eb"
 SRC_URI[sha256sum] = "9a99171a05781c545734c72ea08d3fe3bcb176070b43b7db63ef56a406f7925d"
@@ -33,6 +33,7 @@ SRC_URI = "http://archiv.openmips.com/linux-${KV}-gb800xx-${KV}_${SRCDATE}.tar.g
 		file://af9015-output-full-range-SNR.patch \
 		file://dvb-as102.patch \
 		file://fix-dvb-siano-sms-order.patch \
+		file://nfs-max-rwsize-8k.patch \
 		"
 
 S = "${WORKDIR}/linux-${KV}"

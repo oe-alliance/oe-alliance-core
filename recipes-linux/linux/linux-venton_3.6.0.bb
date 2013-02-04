@@ -11,7 +11,7 @@ SRC_URI[sha256sum] = "a6d387dcebe3eaafe8ccdb80deb848f65610e6c13fcea8e3ef6087d4b2
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-MACHINE_KERNEL_PR_append = ".13"
+MACHINE_KERNEL_PR_append = ".14"
 
 # By default, kernel.bbclass modifies package names to allow multiple kernels
 # to be installed in parallel. We revert this change and rprovide the versioned
@@ -40,10 +40,11 @@ SRC_URI += "http://code-ini.com/software/kernel/linux-${KV}-${SRCDATE}.tar.gz \
 	file://fix-proc-cputype.patch \
 	file://iosched-slice_idle-1.patch \
 	file://it913x-switch-off-PID-filter-by-default.patch \
-	file://tda18218-7mhz-lopass.patch \
 	file://tda18271-advertise-supported-delsys.patch \
 	file://fix-dvb-siano-sms-order.patch \
 	file://linux-3.6.0-dvbsky.patch \
+	file://mxl5007t-add-no_probe-and-no_reset-parameters.patch \
+	file://nfs-max-rwsize-8k.patch \
 	"
 
 S = "${WORKDIR}/linux-${PV}"

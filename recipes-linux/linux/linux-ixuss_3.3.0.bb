@@ -10,7 +10,7 @@ SRC_URI[sha256sum] = "f22fae6bdc12ae1127d1e9081e41ca497abee6c59e7e1f898eca630c20
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-MACHINE_KERNEL_PR_append = ".5"
+MACHINE_KERNEL_PR_append = ".6"
 
 # By default, kernel.bbclass modifies package names to allow multiple kernels
 # to be installed in parallel. We revert this change and rprovide the versioned
@@ -50,6 +50,7 @@ SRC_URI += "http://118.37.185.125/download/stblinux/stblinux-3.3.0-gcc44-2012081
 	file://dvb-usb-dib0700-disable-sleep.patch \
 	file://dvb_usb_disable_rc_polling.patch \
 	file://fix-dvb-siano-sms-order.patch \
+	file://nfs-max-rwsize-8k.patch \
 	"
 
 S = "${WORKDIR}/linux-${PV}"

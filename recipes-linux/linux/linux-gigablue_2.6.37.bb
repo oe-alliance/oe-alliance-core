@@ -4,7 +4,7 @@ LICENSE = "GPL"
 SECTION = "kernel"
 
 SRCDATE = "20120529"
-MACHINE_KERNEL_PR_append = ".11"
+MACHINE_KERNEL_PR_append = ".12"
 
 SRC_URI[md5sum] = "0ad9128167c2bd68e0228843f49f4090"
 SRC_URI[sha256sum] = "47a797ef5502019b3d48f22ef745e69c968629991c5bbf108cfe18d7268a7ec6"
@@ -16,6 +16,7 @@ SRC_URI = "http://archiv.openmips.com/gigablue-quad-linux-${PV}_${SRCDATE}.tgz \
 	file://memory-gcc464-fix.patch \
 	file://signal.c.patch \
 	file://fix-eof-dmxdev.patch \
+	file://nfs-max-rwsize-8k.patch \
 	"
 
 S = "${WORKDIR}/linux-${PV}"

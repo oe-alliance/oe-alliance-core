@@ -5,7 +5,7 @@ KV = "2.6.37"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 SRCREV = ""
-MACHINE_KERNEL_PR_append = ".0"
+MACHINE_KERNEL_PR_append = ".1"
 
 SRC_URI[md5sum] = "dd7df66b5a28bd30c11fcd473a0169cf"
 SRC_URI[sha256sum] = "bb1bc54ebafae37b384480f590ef201457b7ef24b064ee3477de80e257e05ff8"
@@ -19,6 +19,7 @@ SRC_URI = "http://archive.vuplus.com/download/kernel/stblinux-${KV}-3.1.tar.bz2 
 	file://brcm_disable_enet1.patch \
 	file://bcmgenet_oobctrl.patch \
 	file://brcm_mtd_mac.patch \
+	file://nfs-max-rwsize-8k.patch \
 	file://defconfig \
 	"
 

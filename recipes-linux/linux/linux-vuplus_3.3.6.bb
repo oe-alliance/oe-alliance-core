@@ -5,7 +5,7 @@ KV = "3.3.6"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 SRCREV = ""
-MACHINE_KERNEL_PR_append = ".12"
+MACHINE_KERNEL_PR_append = ".13"
 
 SRC_URI[md5sum] = "64bc9b526a668d6cad1ea83646137026"
 SRC_URI[sha256sum] = "da99dc00ad47696a7cf1f56fc90e42b51f3dbd2982a6f11a2ac5dc2d12f22b4f"
@@ -41,6 +41,7 @@ SRC_URI = "http://archive.vuplus.com/download/kernel/stblinux-${KV}-1.2.tar.bz2 
 	file://dvb-usb-dib0700-disable-sleep.patch \
 	file://dvb_usb_disable_rc_polling.patch \
 	file://fix-dvb-siano-sms-order.patch \
+	file://nfs-max-rwsize-8k.patch \
 	"
 
 S = "${WORKDIR}/linux"

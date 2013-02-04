@@ -1,7 +1,7 @@
 MACHINE_KERNEL_PR_append = ".${INC_PR}.32"
 
 PATCHREV = "b299a6a132d842b074b289b2568eece452d0663c"
-PATCHLEVEL = "31"
+PATCHLEVEL = "32"
 
 SRC_URI = " \
 			${KERNELORG_MIRROR}/linux/kernel/v3.x/linux-3.2.tar.bz2;name=kernel \
@@ -30,7 +30,9 @@ SRC_URI = " \
 			file://em28xx_add_terratec_h5_rev3.patch \
 			file://dvb-usb-a867.patch \
 			file://fix-dvb-siano-sms-order.patch \
+			file://dvb-usb-af9035.patch \
 			file://defconfig \
+			file://nfs-max-rwsize-8k.patch \
 "
 
 SRC_URI[kernel.md5sum] = "7ceb61f87c097fc17509844b71268935"
