@@ -27,8 +27,8 @@ do_install() {
 	install -m 0644 bootlogo.mvi ${D}/usr/share/bootlogo.mvi
 	install -m 0644 backdrop.mvi ${D}/usr/share/backdrop.mvi
 	install -m 0644 bootlogo_wait.mvi ${D}/usr/share/bootlogo_wait.mvi
-	install -d ${D}/usr/share/enigma2
-	install -m 0644 radio.mvi ${D}/usr/share/enigma2/radio.mvi
+	install -d ${D}/usr/share/enigma2/skin_default
+	install -m 0644 radio.mvi ${D}/usr/share/enigma2/skin_default/radio.mvi
 	install -d ${D}/${sysconfdir}/init.d
 	install -m 0755 ${S}/bootlogo.sh ${D}/${sysconfdir}/init.d/bootlogo
 }
