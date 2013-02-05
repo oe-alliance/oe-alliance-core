@@ -1,6 +1,6 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
-PRINC = "42"
+PRINC = "43"
 
 DEPENDS = " \
 	ethtool \
@@ -14,6 +14,7 @@ DEPENDS = " \
 	python python-imaging python-twisted python-wifi \
 	swig-native \
 	tuxtxt-enigma2 \
+	font-valis-hd \
 	"
 
 RDEPENDS_${PN} = " \
