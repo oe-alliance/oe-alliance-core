@@ -9,10 +9,10 @@ EPSM = "enigma2-plugin-skins-vix"
 SRCREV = "${AUTOREV}"
 PV = "2.0+git${SRCPV}"
 PKGV = "2.0+git${GITPKGV}"
-PR = "r2"
+PR = "r3"
 
-PACKAGES = "vix-skin-common ${EPSM}-day-hd ${EPSM}-night-hd vix-magic-hd-common ${EPSM}-magic-sd ${EPSM}-magic-hd-lite ${EPSM}-magic-hd-night vix-vixbmc-hd-common ${EPSM}-vixbmc-slim-hd ${EPSM}-vixbmc-night-hd ${EPSM}-vixbmc-metropolis"
-PROVIDES = "${PN} vix-skin-common ${EPSM}-day-hd ${EPSM}-night-hd vix-magic-hd-common ${EPSM}-magic-sd ${EPSM}-magic-hd-lite ${EPSM}-magic-hd-night vix-vixbmc-hd-common ${EPSM}-vixbmc-slim-hd ${EPSM}-vixbmc-night-hd ${EPSM}-vixbmc-metropolis"
+PACKAGES = "vix-skin-common ${EPSM}-day-hd ${EPSM}-night-hd vix-magic-hd-common ${EPSM}-magic-sd ${EPSM}-magic-hd ${EPSM}-magic-hd-night vix-vixbmc-hd-common ${EPSM}-vixbmc-slim-hd ${EPSM}-vixbmc-night-hd ${EPSM}-vixbmc-metropolis"
+PROVIDES = "${PN} vix-skin-common ${EPSM}-day-hd ${EPSM}-night-hd vix-magic-hd-common ${EPSM}-magic-sd ${EPSM}-magic-hd ${EPSM}-magic-hd-night vix-vixbmc-hd-common ${EPSM}-vixbmc-slim-hd ${EPSM}-vixbmc-night-hd ${EPSM}-vixbmc-metropolis"
 
 RCONFLICTS_vix-skin-common = "vix-hd-common"
 RREPLACES_vix-skin-common = "vix-hd-common"
