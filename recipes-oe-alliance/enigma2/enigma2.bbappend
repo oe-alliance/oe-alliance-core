@@ -1,6 +1,6 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
-PRINC = "43"
+PRINC = "44"
 
 DEPENDS = " \
 	ethtool \
@@ -20,6 +20,7 @@ DEPENDS = " \
 RDEPENDS_${PN} = " \
 	alsa-conf \
 	enigma2-fonts \
+	font-valis-hd \
 	ethtool \
 	glibc-gconv-iso8859-15 \
 	hotplug-e2-helper \
