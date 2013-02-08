@@ -22,6 +22,7 @@ MACHINE_EXTRA_RRECOMMENDS = " \
 	ntfs-3g \
 	kernel-module-hmac \
 	kernel-module-md4 \
+	tpmd \
 "
 
 MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS = "\
