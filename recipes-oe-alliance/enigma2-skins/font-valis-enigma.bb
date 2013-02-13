@@ -4,10 +4,12 @@ require conf/license/license-gplv2.inc
 PACKAGE_ARCH = "all"
 
 PV = "2009.11.12"
-PR = "r1"
+PR = "r3"
 
 
 SRC_URI="file://valis_enigma.ttf"
+
+FILES_${PN} = "/usr/*"
 
 do_install() {
 	install -d ${D}/usr/share/fonts
