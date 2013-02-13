@@ -1,6 +1,6 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
-PRINC = "44"
+PRINC = "45"
 
 DEPENDS = " \
 	ethtool \
@@ -69,15 +69,6 @@ SRC_URI_append_gb800ue = " \
 			"
 
 FILES_${PN} += " ${bindir} ${sysconfdir}/e2-git.log"
-
-PV_font-valis-enigma = "2009.11.12"
-PR_font-valis-enigma = "r2"
-PKGV_font-valis-enigma = "${PV_font-valis-enigma}"
-DESCRIPTION_font-valis-enigma = "Valis enigma font"
-
-PACKAGES =+ " font-valis-enigma"
-PROVIDES =+ " font-valis-enigma"
-FILES_font-valis-enigma = "/usr/share/fonts/valis_enigma.ttf"
 
 # Save po files
 PACKAGES =+ "${PN}-po"
