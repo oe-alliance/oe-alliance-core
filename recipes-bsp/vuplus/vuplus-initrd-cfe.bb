@@ -1,4 +1,4 @@
-DESCRIPTION = "Bootlogo support"
+DESCRIPTION = "2nd bootloader support"
 SECTION = "base"
 PRIORITY = "required"
 MAINTAINER = "openViX"
@@ -7,15 +7,14 @@ PACKAGE_ARCH := "${MACHINE_ARCH}"
 
 require conf/license/license-gplv2.inc
 
-PR = "r1"
+PR = "r2"
 ALLOW_EMPTY_${PN} = "1"
 
-SRC_URI_append_vuduo2 = " file://initrd_cfe_auto.bin"
-SRC_URI_append_vusolo2 = " file://initrd_cfe_auto.bin"
+SRC_URI_append = "http://archive.vuplus.com/download/kernel/vmlinuz-initrd_${MACHINE}_20130212.tar.gz"
 
 S = "${WORKDIR}/"
 
 do_install() {
 	install -d ${DEPLOY_DIR_IMAGE}
-	install -m 0755 ${S}/initrd_cfe_auto.bin ${DEPLOY_DIR_IMAGE}/initrd_cfe_auto.bin
+	install -m 0755 ${S}/vmlinuz-initrd-7346b0 ${DEPLOY_DIR_IMAGE}/initrd_cfe_auto.bin
 }
