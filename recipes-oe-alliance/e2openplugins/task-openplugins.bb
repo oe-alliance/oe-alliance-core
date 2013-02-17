@@ -1,5 +1,5 @@
 DESCRIPTION = "E2OpenPlugins Task"
-PR = "r6"
+PR = "r7"
 
 inherit task
 
@@ -23,7 +23,6 @@ DEPENDS = " \
 	enigma2-plugin-extensions-simpleumount \
 	enigma2-plugin-extensions-streaminterface \
 	enigma2-plugin-extensions-wakeonlan \
-	enigma2-plugin-systemplugins-autoshutdown \
 	enigma2-plugin-systemplugins-crossepg \
 	enigma2-plugin-extensions-setpicon \
 	enigma2-plugin-extensions-xpower \
