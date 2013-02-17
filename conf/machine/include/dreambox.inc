@@ -1,5 +1,7 @@
 # dreambox.inc
 
+include conf/machine/include/autoload-filesystems.inc
+
 EXTRA_IMAGEDEPENDS += "dreambox-secondstage-${MACHINE}"
 
 GLIBC_EXTRA_OECONF = "--with-tls --with-__thread"

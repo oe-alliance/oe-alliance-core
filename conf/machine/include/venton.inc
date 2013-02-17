@@ -17,6 +17,8 @@ EXTRA_IMAGEDEPENDS = "\
 	enigma2-plugin-systemplugins-micomupgrade \
 	"
 
+include conf/machine/include/autoload-filesystems.inc
+
 DVBMEDIASINK_CONFIG = "--with-wma --with-wmv --with-pcm --with-dtsdownmix"
 	
 TARGET_ARCH = "mipsel"

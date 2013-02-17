@@ -13,6 +13,8 @@ MACHINE_EXTRA_RRECOMMENDS = " \
 	gigablue-cfe \
 	"
 
+include conf/machine/include/autoload-filesystems.inc
+
 PREFERRED_PROVIDER_virtual/blindscan-dvbc = "gigablue-blindscan-utils-${MACHINE}"	
 	
 DVBMEDIASINK_CONFIG = "--with-wmv"

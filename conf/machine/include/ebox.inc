@@ -7,6 +7,8 @@ MACHINE_EXTRA_RRECOMMENDS = " \
 	gst-plugin-dvbmediasink \
 	"
 
+include conf/machine/include/autoload-filesystems.inc
+
 TARGET_ARCH = "mipsel"
 DEFAULTTUNE = "mips32el"
 

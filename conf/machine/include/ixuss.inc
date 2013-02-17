@@ -11,13 +11,15 @@ MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS = "\
 	kernel-module-ext4 \
 	"
 
+MACHINE_EXTRA_RRECOMMENDS = " \
+	gst-plugin-dvbmediasink \
+	"
+
 module_autoload_ext2 = "ext2"
 module_autoload_ext3 = "ext3"
 module_autoload_ext4 = "ext4"
 
-MACHINE_EXTRA_RRECOMMENDS = " \
-	gst-plugin-dvbmediasink \
-	"
+include conf/machine/include/autoload-filesystems.inc
 
 CHIPSET = "bcm7413"
 

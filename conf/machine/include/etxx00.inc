@@ -12,6 +12,8 @@ MACHINE_EXTRA_RRECOMMENDS = " \
 	gst-plugin-dvbmediasink \
 	"
 
+include conf/machine/include/autoload-filesystems.inc
+
 DVBMEDIASINK_CONFIG = "--with-wma --with-wmv --with-pcm --with-dtsdownmix"
 
 TARGET_ARCH = "mipsel"

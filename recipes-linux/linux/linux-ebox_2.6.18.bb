@@ -4,7 +4,7 @@ LICENSE = "GPL"
 SECTION = "kernel"
 
 KERNEL="2.6.18-7.3"
-MACHINE_KERNEL_PR_append = ".5"
+MACHINE_KERNEL_PR_append = ".6"
 
 SRC_URI[kernel.md5sum] = "3f1faf26f103724e86560baa8dfdf497"
 SRC_URI[kernel.sha256sum] = "91d9f753ff73401c9cda9efa0e40372c0fd40ffd366eac9da7981d40920765b2"
