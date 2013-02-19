@@ -7,16 +7,16 @@ PACKAGE_ARCH := "${MACHINE_ARCH}"
 
 require conf/license/license-gplv2.inc
 
-PR = "r2"
+PR = "r3"
 ALLOW_EMPTY_${PN} = "1"
 
-SRC_URI_append = "http://archive.vuplus.com/download/kernel/vmlinuz-initrd_${MACHINE}_20130212.tar.gz"
+SRC_URI = "http://archive.vuplus.com/download/kernel/vmlinuz-initrd_${MACHINE}_20130212.tar.gz"
 
 S = "${WORKDIR}/"
 
 do_install() {
-	install -d ${DEPLOY_DIR_IMAGE}
-	install -m 0755 ${S}/vmlinuz-initrd-7346b0 ${DEPLOY_DIR_IMAGE}/initrd_cfe_auto.bin
+	install -d ${DEPLOYDIR}
+	install -m 0755 ${S}/vmlinuz-initrd-7346b0 ${DEPLOYDIR}/initrd_cfe_auto.bin
 }
 
 SRC_URI[md5sum] = "3b45489e7902cbf98e9abdddea14567a"
