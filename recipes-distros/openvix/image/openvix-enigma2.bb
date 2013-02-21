@@ -14,6 +14,7 @@ RREPLACES = "enigma2-plugin-extensions-permanenttimeshift enigma2-plugin-systemp
 DEPENDS = "openvix-feeds"
 
 RDEPENDS = "\
+	enigma2-skindefault \
 	enigma2-spinner \
 	openvix-version-info \
 	enigma2-plugin-vix-core \
