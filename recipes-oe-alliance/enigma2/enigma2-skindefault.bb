@@ -8,7 +8,7 @@ inherit autotools gitpkgv allarch
 SRCREV = "${AUTOREV}"
 PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"
-PR = "r10"
+PR = "r11"
 
 SRC_URI = "git://github.com/oe-alliance/oe-alliance-e2-skindefault.git;protocol=git"
 
@@ -23,6 +23,8 @@ PACKAGES =+ " font-roboto-enigma"
 PROVIDES =+ " font-roboto-enigma"
 FILES_font-roboto-enigma = "${datadir}/fonts"
 FILES_${PN} = "${datadir}/enigma2"
+
+RDEPENDS_${PN} = "font-roboto-enigma"
 
 EXTRA_OECONF = "\
 	BUILD_SYS=${BUILD_SYS} \
