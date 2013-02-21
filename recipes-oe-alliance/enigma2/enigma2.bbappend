@@ -14,13 +14,11 @@ DEPENDS = " \
 	python python-imaging python-twisted python-wifi \
 	swig-native \
 	tuxtxt-enigma2 \
-	font-valis-hd \
 	"
 
 RDEPENDS_${PN} = " \
 	alsa-conf \
 	enigma2-fonts \
-	font-valis-hd \
 	ethtool \
 	glibc-gconv-iso8859-15 \
 	hotplug-e2-helper \
