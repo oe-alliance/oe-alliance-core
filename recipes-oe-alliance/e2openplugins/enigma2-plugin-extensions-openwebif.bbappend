@@ -42,6 +42,8 @@ python do_package_prepend () {
 		('ebox5000', 'ebox5000.jpg', 'ebox5000.png'),
 		('odinm7', 'odinm7.jpg', 'odinm7.png'),
 		('ixussone', 'ixussone.jpg', 'ixussone.png'),
+		('ixusszero', 'ixussone.jpg', 'ixussone.png'),
+		('ixussduo', 'ixussone.jpg', 'ixussone.png'),		
 	]
 	import os
 	top = '${D}${PLUGINPATH}/public/images/'

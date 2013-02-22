@@ -154,7 +154,11 @@ do_patch_prepend(){
 	elif "${MACHINE}" == "odinm7":
 		MACHINE1="Odin M7"
 	elif "${MACHINE}" == "ixussone":
-		MACHINE1="IXUSS ONE"	
+		MACHINE1="IXUSS ONE"
+	elif "${MACHINE}" == "ixusszero":
+		MACHINE1="IXUSS ZERO"
+	elif "${MACHINE}" == "ixussduo":
+		MACHINE1="IXUSS DUO"	
 	import os
 	os.system("find ./ -name \"*.po\" > ./po_list")
 	os.system("find ./ -name \"*.py\" >> ./po_list")
@@ -219,7 +223,11 @@ python do_setup_po_ipk () {
 	elif "${MACHINE}" == "odinm7":
 		MACHINE1="Odin M7"
 	elif "${MACHINE}" == "ixussone":
-		MACHINE1="IXUSS ONE"	
+		MACHINE1="IXUSS ONE"
+	elif "${MACHINE}" == "ixusszero":
+		MACHINE1="IXUSS ZERO"
+	elif "${MACHINE}" == "ixussduo":
+		MACHINE1="IXUSS DUO"
 	import os
 	os.system("find ./ -name \"*.po\" > ./po_list")
 	os.system("find ./ -name \"*.py\" >> ./po_list")
