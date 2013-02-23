@@ -1,4 +1,4 @@
-MACHINE_KERNEL_PR_append = ".${INC_PR}.33"
+MACHINE_KERNEL_PR_append = ".${INC_PR}.34"
 
 PATCHREV = "b299a6a132d842b074b289b2568eece452d0663c"
 PATCHLEVEL = "32"
@@ -33,6 +33,7 @@ SRC_URI = " \
 			file://dvb-usb-af9035.patch \
 			file://defconfig \
 			file://nfs-max-rwsize-8k.patch \
+			file://mipsel-compatibility.patch \
 "
 
 SRC_URI[kernel.md5sum] = "7ceb61f87c097fc17509844b71268935"
