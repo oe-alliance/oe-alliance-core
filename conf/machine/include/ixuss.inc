@@ -1,5 +1,5 @@
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS = "\
-	ixuss-dvb-modules-${MACHINE} \
+	${@base_contains("DISTRO_NAME", "openx2", "ixuss-openx2-dvb-modules-${MACHINE}","ixuss-dvb-modules-${MACHINE}", d)} \
 	"
 
 DVBPROVIDER = "kernel"
