@@ -4,9 +4,9 @@ PRIORITY = "required"
 LICENSE = "CLOSED"
 
 PV = "${KV}+${SRCDATE}"
-PR = "r11"
+PR = "r12"
 
-SRC_URI = "http://source.mynonpublic.com/ixuss-openx2-drivers-${SRCDATE}.tgz"
+SRC_URI = "http://source.mynonpublic.com/ixuss-${DOWNLOADMACHINE}-openx2-drivers-${SRCDATE}.tgz"
 
 S = "${WORKDIR}"
 
