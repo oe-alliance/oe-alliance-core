@@ -5,7 +5,7 @@ KV = "3.5.1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 SRCDATE = "20130103"
-MACHINE_KERNEL_PR_append = ".9"
+MACHINE_KERNEL_PR_append = ".10"
 
 SRC_URI[md5sum] = "dadedd29363a94aeda97fdae599ae533"
 SRC_URI[sha256sum] = "0f27a1c1ff68c9528500158423dc6139162cb8c08b9bf8331cff9a942a77c779"
@@ -14,6 +14,7 @@ LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad
 
 SRC_URI = "http://archiv.openmips.com/gigablue-quad-linux-${PV}_${SRCDATE}.tgz \
 	file://defconfig \
+	file://0001-Revert-MIPS-Add-fast-get_user_pages.patch \
 	file://bmips-no-array-bounds.patch \
 	file://memory-gcc464-fix.patch \
 	file://add-dmx-source-timecode.patch \
@@ -23,6 +24,7 @@ SRC_URI = "http://archiv.openmips.com/gigablue-quad-linux-${PV}_${SRCDATE}.tgz \
 	file://as102-scale-MER-to-full-range.patch \
 	file://cinergy_s2_usb_r2.patch \
 	file://cxd2820r-output-full-range-SNR.patch \
+	file://mxl5007t-add-no_probe-and-no_reset-parameters.patch \
 	file://dvb-usb-a867.patch \
 	file://dvb-usb-dib0700-disable-sleep.patch \
 	file://dvb-usb-rtl2832.patch \
@@ -33,6 +35,7 @@ SRC_URI = "http://archiv.openmips.com/gigablue-quad-linux-${PV}_${SRCDATE}.tgz \
 	file://tda18218-7mhz-lopass.patch \
 	file://tda18271-advertise-supported-delsys.patch \
 	file://linux-3.6.0-dvbsky.patch \
+	file://override_builduser.patch \
 	file://nfs-max-rwsize-8k.patch \
 	"
 
