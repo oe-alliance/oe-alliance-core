@@ -1,6 +1,6 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
-PRINC = "5"
+PRINC = "6"
 
 inherit allarch
 
@@ -80,16 +80,14 @@ DEPENDS += "\
 	enigma2-plugin-settings-dona.motor.75e.30w \
 	enigma2-plugin-settings-dona.motor.90e.61w \
 	enigma2-plugin-settings-dona.multifeed.13e \
-	enigma2-plugin-settings-dona.multifeed.19e.13e \
-	enigma2-plugin-settings-dona.multifeed.19e.16e.13e.1w \
-	enigma2-plugin-settings-dona.multifeed.19e.16e.13e.5e.1w.4w.5w \
-	enigma2-plugin-settings-dona.multifeed.19e.16e.13e \
 	enigma2-plugin-settings-dona.multifeed.19e \
-	enigma2-plugin-settings-dona.multifeed.23e.19e.13e \
+	enigma2-plugin-settings-dona.multifeed.19e.13e \
+	enigma2-plugin-settings-dona.multifeed.19e.16e.13e \
 	enigma2-plugin-settings-dona.multifeed.23e.19e \
+	enigma2-plugin-settings-dona.multifeed.23e.19e.13e \
+	enigma2-plugin-settings-dona.multifeed.28e.19e.16e.13e \
 	enigma2-plugin-settings-dona.multifeed.28e.19e.16e.13e.1w \
 	enigma2-plugin-settings-dona.multifeed.28e.19e.16e.13e.5e.1w \
-	enigma2-plugin-settings-dona.multifeed.28e.19e.16e.13e \
 	enigma2-plugin-settings-dona.multifeed.28e.23e.19e.13e \
 	enigma2-plugin-settings-dona.multifeed.28e.23e.19e.16e.13e.1w \
 	enigma2-plugin-settings-dona.multifeed.28e.23e.19e.16e.13e.9e.7e.5e.1w \
