@@ -4,11 +4,9 @@ PRIORITY = "required"
 LICENSE = "CLOSED"
 
 PV = "${KV}+${SRCDATE}"
-PR = "r10"
+PR = "r11"
 
-#SRC_URI = "http://118.37.185.125/download/drivers/ixuss-one-drivers-${SRCDATE}.tgz"
-#SRC_URI = "http://www.alisat.info/app/IXUSS%20ONE%20by%20Medialink/Source%20Code/ixuss-one-drivers-${SRCDATE}.tgz"
-SRC_URI = "http://source.mynonpublic.com/ixuss-one-drivers-${SRCDATE}.tgz"
+SRC_URI = "http://source.mynonpublic.com/ixuss-${DOWNLOADMACHINE}-drivers-${SRCDATE}.tgz"
 
 S = "${WORKDIR}"
 
