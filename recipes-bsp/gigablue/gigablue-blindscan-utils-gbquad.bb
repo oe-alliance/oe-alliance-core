@@ -13,8 +13,8 @@ RPROVIDES_gigablue-blindscan-dvbs-utils-${MACHINE} += "virtual/blindscan-dvbs"
 
 SRC_URI = "http://archiv.openmips.com/gigablue-blindscan-utils-${DOWNLOADMACHINE}-${PV}.tar.gz"
 
-PV = "3.3.8"
-PR = "r0"
+PV = "3.5.1"
+PR = "r1"
 
 S = "${WORKDIR}/blindscan-utils"
 
@@ -31,5 +31,5 @@ INHIBIT_PACKAGE_STRIP = "1"
 
 PACKAGE_ARCH := "${MACHINE_ARCH}"
 
-SRC_URI[md5sum] = "a6470f8ae050fa3fe21945f5d69dca3e"
-SRC_URI[sha256sum] = "fc567b5905b65ef33148592b3e0a4ba90a56db3cd4aa5518b3ad3bd2942be303"
+SRC_URI[md5sum] = "671e1e0a4f031e33e87f4bb06c3c73a3"
+SRC_URI[sha256sum] = "543d346d5d87816832c8d71a0e017ad11bacc136be17f5dd52cde828f4436afb"
