@@ -1,6 +1,6 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
-PRINC = "45"
+PRINC = "46"
 
 DEPENDS = " \
 	ethtool \
@@ -39,6 +39,7 @@ PYTHON_RDEPS += " \
 	python-pyusb \
 	python-subprocess \
 	python-process \
+	python-imaging \
 	"
 
 # We depend on the font which we use for TXT subtitles (defined in skin_subtitles.xml)
