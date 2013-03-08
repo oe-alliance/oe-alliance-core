@@ -1,18 +1,21 @@
-DESCRIPTION = "Sandman 28E vfd picons"
+DESCRIPTION = "Sandman 28E vfd picons, edited by Ev0"
 SECTION = "base"
 PRIORITY = "required"
-MAINTAINER = "Sandman"
+MAINTAINER = "Ev0/Sandman"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 require conf/license/license-gplv2.inc
 
-SRC_URI[md5sum] = "93e780e655d30f7cf46cf46685b9da9d"
-SRC_URI[sha256sum] = "012dde6fb4e4bc95955f22a2423d6b1a763b011463b0f42c10c06c3ff6028c50"
+SRC_URI[md5sum] = "bdc5b1a45df447944c9a825a9ed92f88"
+SRC_URI[sha256sum] = "bf84629c3113a3cc781e753f059b45e03bd4494c98b765b5505bbe5cdceea8ce"
 
-SRCDATE = "20120309"
+RCONFLICTS = "enigma2-plugin-lcdpicons-tv-sandman.ev0.28e"
+RREPLACES = "enigma2-plugin-lcdpicons-tv-sandman.ev0.28e"
+
+SRCDATE = "20120204"
 PV = "${SRCDATE}"
-PR = "r2"
-SETTINGS_FILENAME = "sandman.28e.vfd.picons"
+PR = "r3"
+SETTINGS_FILENAME = "ev0.28e.vfd.picons"
 
 SRC_URI = "http://enigma2.world-of-satellite.com/picons/${SETTINGS_FILENAME}_${PV}.tar.gz"
 
