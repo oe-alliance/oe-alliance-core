@@ -7,7 +7,7 @@ PACKAGE_ARCH = "all"
 require conf/license/license-gplv2.inc
 
 PV = "1.0"
-PR = "r2"
+PR = "r3"
 
 SRC_URI="file://wait1.png \
 		file://wait2.png \
@@ -22,13 +22,7 @@ S = "${WORKDIR}"
 
 do_install() {
 	install -d ${D}/usr/share/enigma2/skin_default/spinner
-	install -m 0644 ${S}/wait1.png ${D}/usr/share/enigma2/skin_default/spinner/wait1.png
-	install -m 0644 ${S}/wait2.png ${D}/usr/share/enigma2/skin_default/spinner/wait2.png
-	install -m 0644 ${S}/wait3.png ${D}/usr/share/enigma2/skin_default/spinner/wait3.png
-	install -m 0644 ${S}/wait4.png ${D}/usr/share/enigma2/skin_default/spinner/wait4.png
-	install -m 0644 ${S}/wait5.png ${D}/usr/share/enigma2/skin_default/spinner/wait5.png
-	install -m 0644 ${S}/wait6.png ${D}/usr/share/enigma2/skin_default/spinner/wait6.png
-	install -m 0644 ${S}/wait7.png ${D}/usr/share/enigma2/skin_default/spinner/wait7.png
+	install -m 0644 ${S}/*.png ${D}${datadir}/enigma2/spinner
 }
 
-FILES_${PN} = "/usr/share/enigma2/skin_default/spinner"
+FILES_${PN} = "${datadir}/enigma2"
