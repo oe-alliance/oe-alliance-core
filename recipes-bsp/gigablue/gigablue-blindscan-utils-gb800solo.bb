@@ -1,4 +1,4 @@
-DOWNLOADMACHINE = "gb800ue"
+DOWNLOADMACHINE = "gb800solo"
 PV = "3.1.1"
 PR = "r3"
 
