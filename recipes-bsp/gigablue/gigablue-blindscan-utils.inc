@@ -3,8 +3,7 @@ SECTION = "base"
 PRIORITY = "optional"
 LICENSE = "CLOSED"
 
-PACKAGES = "gigablue-blindscan-dvbc-utils-${MACHINE}"
-PACKAGES = "gigablue-blindscan-dvbs-utils-${MACHINE}"
+PACKAGES = "gigablue-blindscan-dvbs-utils-${MACHINE} gigablue-blindscan-dvbc-utils-${MACHINE}"
 
 PROVIDES += "virtual/blindscan-dvbc virtual/blindscan-dvbs"
 RPROVIDES_gigablue-blindscan-dvbc-utils-${MACHINE} += "virtual/blindscan-dvbc"
@@ -14,7 +13,7 @@ DOWNLOADMACHINE ?= "${MACHINE}"
 SRC_URI = "http://archiv.openmips.com/gigablue-blindscan-utils-${DOWNLOADMACHINE}-${PV}.tar.gz"
 
 PV = "3.1.1"
-PR = "r3"
+PR = "r4"
 
 S = "${WORKDIR}/blindscan-utils"
 
