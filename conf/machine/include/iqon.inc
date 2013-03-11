@@ -1,5 +1,5 @@
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS = " \
-	technomate-dvb-modules \
+	iqon-dvb-modules \
 	"
 
 DVBPROVIDER = "kernel"
@@ -20,7 +20,7 @@ DEFAULTTUNE = "mips32el"
 
 GLIBC_EXTRA_OECONF = "--with-tls"
 
-PREFERRED_PROVIDER_virtual/kernel = "linux-technomate"
+PREFERRED_PROVIDER_virtual/kernel = "linux-iqon"
 PREFERRED_PROVIDER_virtual/blindscan-dvbs = "vuplus-blindscan-utils"
 PREFERRED_PROVIDER_virtual/blindscan-dvbc = "vuplus-blindscan-utils"
 

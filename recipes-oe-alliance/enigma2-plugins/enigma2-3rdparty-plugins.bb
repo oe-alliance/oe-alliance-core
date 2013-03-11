@@ -82,11 +82,9 @@ do_deploy() {
 
 do_deploy_append_vuuno() {
 # 	Install any packages that are only For this machines feed here, uncomment the line below and change as required
-# 	install -m 0644 enigma2-plugin-private-menuluxipkg_4.1b_all.ipk ${WORKDIR}/deploy-ipks/private
 }
 do_deploy_append_vuultimo() {
 # 	Install any packages that are only For this machines feed here, uncomment the line below and change as required
-# 	install -m 0644 enigma2-plugin-private-menuluxipkg_4.1b_all.ipk ${WORKDIR}/deploy-ipks/private
 }
 do_deploy_append_vusolo() {
 # 	Install any packages that are only For this machines feed here,
@@ -123,67 +121,62 @@ do_deploy_append_et9x00() {
 
 do_deploy_append_tmtwin() {
 # 	Install any packages that are only For this machines feed here, uncomment the line below and change as required
-# 	install -m 0644 enigma2-plugin-private-menuluxipkg_4.1b_all.ipk ${WORKDIR}/deploy-ipks/private
 }
 do_deploy_append_tm2t() {
 # 	Install any packages that are only For this machines feed here, uncomment the line below and change as required
-# 	install -m 0644 enigma2-plugin-private-menuluxipkg_4.1b_all.ipk ${WORKDIR}/deploy-ipks/private
 }
 do_deploy_append_tmsingle() {
 # 	Install any packages that are only For this machines feed here, uncomment the line below and change as required
-# 	install -m 0644 enigma2-plugin-private-menuluxipkg_4.1b_all.ipk ${WORKDIR}/deploy-ipks/private
+}
+
+do_deploy_append_iqonios100hd() {
+# 	Install any packages that are only For this machines feed here, uncomment the line below and change as required
+}
+do_deploy_append_iqonios200hd() {
+# 	Install any packages that are only For this machines feed here, uncomment the line below and change as required
+}
+do_deploy_append_iqonios300hd() {
+# 	Install any packages that are only For this machines feed here, uncomment the line below and change as required
 }
 
 do_deploy_append_gb800se() {
 # 	Install any packages that are only For this machines feed here, uncomment the line below and change as required
-# 	install -m 0644 enigma2-plugin-private-menuluxipkg_4.1b_all.ipk ${WORKDIR}/deploy-ipks/private
 }
 do_deploy_append_gb800ue() {
 # 	Install any packages that are only For this machines feed here, uncomment the line below and change as required
-# 	install -m 0644 enigma2-plugin-private-menuluxipkg_4.1b_all.ipk ${WORKDIR}/deploy-ipks/private
 }
 do_deploy_append_gb800solo() {
 # 	Install any packages that are only For this machines feed here, uncomment the line below and change as required
-# 	install -m 0644 enigma2-plugin-private-menuluxipkg_4.1b_all.ipk ${WORKDIR}/deploy-ipks/private
 }
 do_deploy_append_gbquad() {
 # 	Install any packages that are only For this machines feed here, uncomment the line below and change as required
-# 	install -m 0644 enigma2-plugin-private-menuluxipkg_4.1b_all.ipk ${WORKDIR}/deploy-ipks/private
 }
 
 do_deploy_append_odinm9() {
 # 	Install any packages that are only For this machines feed here, uncomment the line below and change as required
-# 	install -m 0644 enigma2-plugin-private-menuluxipkg_4.1b_all.ipk ${WORKDIR}/deploy-ipks/private
 }
 
 do_deploy_append_ventonhdx() {
 # 	Install any packages that are only For this machines feed here, uncomment the line below and change as required
-# 	install -m 0644 enigma2-plugin-private-menuluxipkg_4.1b_all.ipk ${WORKDIR}/deploy-ipks/private
 }
 do_deploy_append_ventonhde() {
 # 	Install any packages that are only For this machines feed here, uncomment the line below and change as required
-# 	install -m 0644 enigma2-plugin-private-menuluxipkg_4.1b_all.ipk ${WORKDIR}/deploy-ipks/private
 }
 
 do_deploy_append_dm8000() {
 # 	Install any packages that are only For this machines feed here, uncomment the line below and change as required
-# 	install -m 0644 enigma2-plugin-private-menuluxipkg_4.1b_all.ipk ${WORKDIR}/deploy-ipks/private
 }
 do_deploy_append_dm7020hd() {
 # 	Install any packages that are only For this machines feed here, uncomment the line below and change as required
-# 	install -m 0644 enigma2-plugin-private-menuluxipkg_4.1b_all.ipk ${WORKDIR}/deploy-ipks/private
 }
 do_deploy_append_dm500hd() {
 # 	Install any packages that are only For this machines feed here, uncomment the line below and change as required
-# 	install -m 0644 enigma2-plugin-private-menuluxipkg_4.1b_all.ipk ${WORKDIR}/deploy-ipks/private
 }
 do_deploy_append_dm800se() {
 # 	Install any packages that are only For this machines feed here, uncomment the line below and change as required
-# 	install -m 0644 enigma2-plugin-private-menuluxipkg_4.1b_all.ipk ${WORKDIR}/deploy-ipks/private
 }
 do_deploy_append_dm800() {
 # 	Install any packages that are only For this machines feed here, uncomment the line below and change as required
-# 	install -m 0644 enigma2-plugin-private-menuluxipkg_4.1b_all.ipk ${WORKDIR}/deploy-ipks/private
 }
 
 addtask deploy before do_build after do_install

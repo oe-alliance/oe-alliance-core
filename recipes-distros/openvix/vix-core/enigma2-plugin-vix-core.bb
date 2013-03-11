@@ -90,8 +90,18 @@ do_patch_prepend(){
 		MACHINE1="GigaBlue HD 800 UE"
 	elif "${MACHINE}" == "gbquad":
 		MACHINE1="GigaBlue HD Quad"
-	elif "${MACHINE}" == "tmtwin" or "${MACHINE}" == "tm2t" or "${MACHINE}" == "tmsingle":
-		MACHINE1="Technomate"
+	elif "${MACHINE}" == "tmtwin":
+		MACHINE1="Technomate Twin OE"
+	elif "${MACHINE}" == "tm2t":
+		MACHINE1="Technomate 2T OE"
+	elif "${MACHINE}" == "tmsingle":
+		MACHINE1="Technomate Single"
+	elif "${MACHINE}" == "iqonios100hd":
+		MACHINE1="iqon IOS 100HD"
+	elif "${MACHINE}" == "iqonios200hd":
+		MACHINE1="iqon IOS 200HD"
+	elif "${MACHINE}" == "iqonios300hd":
+		MACHINE1="iqon IOS 300HD"
 	elif "${MACHINE}" == "ventonhdx":
 		if "${DISTRO}" == "ventonsupport" or "${DISTRO}" == "egami":
 			MACHINE1="linux receiver"
@@ -156,8 +166,18 @@ python do_setup_po_ipk () {
 		MACHINE1="GigaBlue HD 800 UE"
 	elif "${MACHINE}" == "gbquad":
 		MACHINE1="GigaBlue HD Quad"
-	elif "${MACHINE}" == "tmtwin" or "${MACHINE}" == "tm2t" or "${MACHINE}" == "tmsingle":
-		MACHINE1="Technomate"
+	elif "${MACHINE}" == "tmtwin":
+		MACHINE1="Technomate Twin OE"
+	elif "${MACHINE}" == "tm2t":
+		MACHINE1="Technomate 2T OE"
+	elif "${MACHINE}" == "tmsingle":
+		MACHINE1="Technomate Single"
+	elif "${MACHINE}" == "iqonios100hd":
+		MACHINE1="iqon IOS 100HD"
+	elif "${MACHINE}" == "iqonios200hd":
+		MACHINE1="iqon IOS 200HD"
+	elif "${MACHINE}" == "iqonios300hd":
+		MACHINE1="iqon IOS 300HD"
 	elif "${MACHINE}" == "ventonhdx":
 		MACHINE1="Venton HD"
 	elif "${MACHINE}" == "ventonhde":
