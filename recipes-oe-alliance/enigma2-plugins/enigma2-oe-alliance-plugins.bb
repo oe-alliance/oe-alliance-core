@@ -73,6 +73,7 @@ DEPENDS = "enigma2 \
 	gmp \
 	tslib \
 	mpfr \
+	vuplus-opera-browser-util \
 	"
 
 inherit gitpkgv autotools
