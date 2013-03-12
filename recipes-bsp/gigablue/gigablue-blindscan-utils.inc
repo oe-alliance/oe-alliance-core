@@ -12,9 +12,6 @@ RPROVIDES_gigablue-blindscan-dvbs-utils-${MACHINE} += "virtual/blindscan-dvbs"
 DOWNLOADMACHINE ?= "${MACHINE}"
 SRC_URI = "http://archiv.openmips.com/gigablue-blindscan-utils-${DOWNLOADMACHINE}-${PV}.tar.gz"
 
-PV = "3.1.1"
-PR = "r4"
-
 S = "${WORKDIR}/blindscan-utils"
 
 do_install() {

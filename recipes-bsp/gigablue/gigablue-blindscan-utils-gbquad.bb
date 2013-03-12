@@ -1,6 +1,6 @@
 DOWNLOADMACHINE = "gbquad"
 PV = "3.5.1"
-PR = "r2"
+PR = "r3"
 
 require gigablue-blindscan-utils.inc
 

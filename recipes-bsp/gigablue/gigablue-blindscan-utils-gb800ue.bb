@@ -1,6 +1,6 @@
 DOWNLOADMACHINE = "gb800ue"
 PV = "3.1.1"
-PR = "r3"
+PR = "r5"
 
 require gigablue-blindscan-utils.inc
 
