@@ -1,7 +1,8 @@
-PRINC = "1"
+LICENSE = "CLOSED"
 
-FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
-	
+DESCRIPTION = "Firmware for ds3xxx dvb frontend"
+PACKAGE_ARCH = "all"
+
 SRC_URI = "file://fw-ds3xxx.tar.gz"
 
 S = "${WORKDIR}"
@@ -12,6 +13,5 @@ do_install() {
 	install -m 0755 dvb-fe-ds3103.fw ${D}/lib/firmware/dvb-fe-ds3103.fw
 }
 
-FILES_${PN} = "/lib/firmware"
-
-
+PACKAGES = "${PN}"
+FILES_${PN} += "${base_libdir}/firmware"
