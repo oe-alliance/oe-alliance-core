@@ -182,7 +182,7 @@ do_patch_prepend(){
 		else:
 			MACHINE1="Venton HDe"
 	elif "${MACHINE}" == "xp1000":
-		if "${DISTRO}" == "mkdigital" or "${DISTRO}" == "openaaf":
+		if "${DISTRO}" == "mkdigital" or "${DISTRO}" == "openaaf" or "${DISTRO}" == "openhdf":
 			MACHINE1="MK-Digital XP1000"
 		else:
 			MACHINE1="MaxDigital XP1000"

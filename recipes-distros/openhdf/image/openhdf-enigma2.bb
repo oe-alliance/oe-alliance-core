@@ -4,7 +4,7 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3
                     file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
 
 PV = "1.0"
-PR = "r42"
+PR = "r43"
 
 inherit task
 
@@ -12,6 +12,7 @@ DEPENDS = "enigma2-pliplugins openhdf-feeds openhdf-3rdparty-plugins"
 
 RRECOMMENDS = "\
 	openhdf-version-info \
+	openhdf-skindefault \
 	enigma2-plugin-skins-nobile \
 	enigma2-plugin-skins-army-mod \
 	enigma2-plugin-drivers-usbserial \
@@ -39,21 +40,21 @@ RRECOMMENDS = "\
 	", d)} \
 	"
 
-RRECOMMENDS_append_gb800solo = "enigma2-plugin-extensions-gb-multiquickbutton"
-RRECOMMENDS_append_gb800se = "enigma2-plugin-extensions-gb-multiquickbutton"
-RRECOMMENDS_append_gb800ue = "enigma2-plugin-extensions-gb-multiquickbutton python-imaging"
-RRECOMMENDS_append_gbquad = "enigma2-plugin-extensions-gb-multiquickbutton python-imaging webbrowser-utils enigma2-plugin-extensions-webbrowser"
-RRECOMMENDS_append_tmtwin = "enigma2-plugin-extensions-multiquickbutton enigma2-plugin-systemplugins-osd3dsetup"
-RRECOMMENDS_append_tm2t = "enigma2-plugin-extensions-multiquickbutton enigma2-plugin-systemplugins-osd3dsetup"
-RRECOMMENDS_append_tmsingle = "enigma2-plugin-extensions-multiquickbutton enigma2-plugin-systemplugins-osd3dsetup"
-RRECOMMENDS_append_iqonios100hd = "enigma2-plugin-extensions-multiquickbutton enigma2-plugin-systemplugins-osd3dsetup"
-RRECOMMENDS_append_iqonios200hd = "enigma2-plugin-extensions-multiquickbutton enigma2-plugin-systemplugins-osd3dsetup"
-RRECOMMENDS_append_iqonios300hd = "enigma2-plugin-extensions-multiquickbutton enigma2-plugin-systemplugins-osd3dsetup"
-RRECOMMENDS_append_ixussone = "enigma2-plugin-extensions-ixuss-multiquickbutton"
-RRECOMMENDS_append_vuduo = "enigma2-plugin-extensions-multiquickbutton-vu" 
-RRECOMMENDS_append_vusolo = "enigma2-plugin-extensions-multiquickbutton-vu" 
-RRECOMMENDS_append_vusolo2 = "enigma2-plugin-extensions-multiquickbutton-vu" 
-RRECOMMENDS_append_et9x00 = "enigma2-plugin-extensions-et-multiquickbutton" 
-RRECOMMENDS_append_et6x00 = "enigma2-plugin-extensions-et-multiquickbutton" 
-RRECOMMENDS_append_et5x00 = "enigma2-plugin-extensions-et-multiquickbutton" 
-RRECOMMENDS_append_et4x00 = "enigma2-plugin-extensions-et-multiquickbutton" 
+RRECOMMENDS_append_gb800solo = ""
+RRECOMMENDS_append_gb800se = ""
+RRECOMMENDS_append_gb800ue = "python-imaging"
+RRECOMMENDS_append_gbquad = "python-imaging webbrowser-utils enigma2-plugin-extensions-webbrowser"
+RRECOMMENDS_append_tmtwin = "enigma2-plugin-systemplugins-osd3dsetup"
+RRECOMMENDS_append_tm2t = "enigma2-plugin-systemplugins-osd3dsetup"
+RRECOMMENDS_append_tmsingle = "enigma2-plugin-systemplugins-osd3dsetup"
+RRECOMMENDS_append_iqonios100hd = "enigma2-plugin-systemplugins-osd3dsetup"
+RRECOMMENDS_append_iqonios200hd = "enigma2-plugin-systemplugins-osd3dsetup"
+RRECOMMENDS_append_iqonios300hd = "enigma2-plugin-systemplugins-osd3dsetup"
+RRECOMMENDS_append_ixussone = ""
+RRECOMMENDS_append_vuduo = "" 
+RRECOMMENDS_append_vusolo = "" 
+RRECOMMENDS_append_vusolo2 = "" 
+RRECOMMENDS_append_et9x00 = "" 
+RRECOMMENDS_append_et6x00 = "" 
+RRECOMMENDS_append_et5x00 = "" 
+RRECOMMENDS_append_et4x00 = "" 
