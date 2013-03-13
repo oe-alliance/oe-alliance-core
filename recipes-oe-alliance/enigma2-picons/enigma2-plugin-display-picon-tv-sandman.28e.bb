@@ -9,12 +9,14 @@ require conf/license/license-gplv2.inc
 SRC_URI[md5sum] = "93e780e655d30f7cf46cf46685b9da9d"
 SRC_URI[sha256sum] = "012dde6fb4e4bc95955f22a2423d6b1a763b011463b0f42c10c06c3ff6028c50"
 
-RCONFLICTS = "enigma2-plugin-lcdpicons-tv-sandman.28e"
-RREPLACES = "enigma2-plugin-lcdpicons-tv-sandman.28e"
+RCONFLICTS = "enigma2-plugin-display-picon-tv-sandman.ev0.28e"
+RREPLACES = "enigma2-plugin-display-picon-tv-sandman.ev0.28e"
+RCONFLICTS = "enigma2-plugin-display-picon-tv-rossi2000.28.2e"
+RREPLACES = "enigma2-plugin-display-picon-tv-rossi2000.28.2e"
 
 SRCDATE = "20120309"
 PV = "${SRCDATE}"
-PR = "r4"
+PR = "r5"
 SETTINGS_FILENAME = "sandman.28e.vfd.picons"
 
 SRC_URI = "http://enigma2.world-of-satellite.com/picons/${SETTINGS_FILENAME}_${PV}.tar.gz"
