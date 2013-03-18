@@ -1,5 +1,5 @@
 MODULE = "OpenWebif"
-PRINC = "19"
+PRINC = "20"
 DEPENDS += "enigma2 python-pyopenssl"
 RDEPENDS_${PN} += " python-pyopenssl"
 
@@ -44,9 +44,9 @@ python do_package_prepend () {
 		('ixussone', 'ixussone.jpg', 'ixussone.png'),
 		('ixusszero', 'ixusszero.jpg', 'ixusszero.png'),
 		('ixussduo', 'ixussone.jpg', 'ixussone.png'),		
-		('iqonios100hd', 'ios100.jpg', 'iqon.png'),
-		('iqonios200hd', 'ios200.jpg', 'iqon.png'),
-		('iqonios300hd', 'ios300.jpg', 'iqon.png'),
+		('iqonios100hd', 'ios100hd.jpg', 'iqon.png'),
+		('iqonios200hd', 'ios200hd.jpg', 'iqon.png'),
+		('iqonios300hd', 'ios300hd.jpg', 'iqon.png'),
 	]
 	import os
 	top = '${D}${PLUGINPATH}/public/images/'
