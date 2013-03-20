@@ -12,9 +12,9 @@ SRCREV = "${AUTOREV}"
 PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"
 VER ="1.0"
-PR = "r0"
+PR = "r1"
 
-SRC_URI="git://git.openmips.com/adriatic32_turquoise.git"
+SRC_URI="git://github.com/openmips/adriatic32_turquoise.git;protocol=git"
 
 S = "${WORKDIR}/git"
 

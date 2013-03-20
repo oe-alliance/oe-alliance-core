@@ -11,9 +11,9 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "2.7.11+git${SRCPV}"
 PKGV = "2.7.11+git${GITPKGV}"
-PR = "r0"
+PR = "r1"
 
-SRC_URI = "git://git.openmips.com/MultiQuickButton.git;protocol=git"
+SRC_URI = "git://github.com/openmips/MultiQuickButton.git;protocol=git"
 
 S = "${WORKDIR}/git"
 
