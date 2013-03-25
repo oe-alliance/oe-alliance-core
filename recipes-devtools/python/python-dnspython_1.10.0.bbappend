@@ -1,6 +1,6 @@
-PRINC = "1"
+PRINC = "3"
 
-inherit setuptools openpli-distutils
+inherit openpli-distutils
 
 do_install() {
 	distutils_do_install_keep_pyo
