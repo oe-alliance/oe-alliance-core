@@ -4,6 +4,8 @@ SECTION = "devel/python"
 LICENSE = "BSD"
 LIC_FILES_CHKSUM = "file://COPYING.txt;md5=83e365dc17176bd72ba7d08ca0555efa"
 
+PR = "r1"
+
 SRC_URI = "http://www.crummy.com/software/BeautifulSoup/bs4/download/beautifulsoup4-${PV}.tar.gz"
 
 SRC_URI[md5sum] = "5aece3c0b8a080658155958111fa2fa9"
@@ -12,3 +14,14 @@ SRC_URI[sha256sum] = "f1e9b7b48e93efc044c79fa0ac5805094ab6f42f8946ec4abf840753e0
 S = "${WORKDIR}/beautifulsoup4-${PV}"
 
 inherit distutils
+
+FILES_${PN}-test = " \
+  ${libdir}/${PYTHON_DIR}/site-packages/*/test \
+  ${libdir}/${PYTHON_DIR}/site-packages/*/*/test \
+"
+
+FILES_${PN}-builder = " \
+  ${libdir}/${PYTHON_DIR}/site-packages/*/builder \
+"
+
+PACKAGES =+ "${PN}-test ${PN}-builder"
