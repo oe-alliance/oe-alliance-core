@@ -5,7 +5,7 @@ KV = "3.5.1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 SRCDATE = "20130103"
-MACHINE_KERNEL_PR_append = ".10"
+MACHINE_KERNEL_PR_append = ".11"
 
 SRC_URI[md5sum] = "dadedd29363a94aeda97fdae599ae533"
 SRC_URI[sha256sum] = "0f27a1c1ff68c9528500158423dc6139162cb8c08b9bf8331cff9a942a77c779"
@@ -37,6 +37,7 @@ SRC_URI = "http://archiv.openmips.com/gigablue-quad-linux-${PV}_${SRCDATE}.tgz \
 	file://linux-3.6.0-dvbsky.patch \
 	file://override_builduser.patch \
 	file://nfs-max-rwsize-8k.patch \
+	file://AX88772C_772B_772A_760_772_178_LINUX_Driver_v4.6.0.patch \
 	"
 
 S = "${WORKDIR}/linux-${PV}"
