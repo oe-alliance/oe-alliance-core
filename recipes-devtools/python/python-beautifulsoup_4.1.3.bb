@@ -4,7 +4,7 @@ SECTION = "devel/python"
 LICENSE = "BSD"
 LIC_FILES_CHKSUM = "file://COPYING.txt;md5=83e365dc17176bd72ba7d08ca0555efa"
 
-PR = "r1"
+PR = "r2"
 
 SRC_URI = "http://www.crummy.com/software/BeautifulSoup/bs4/download/beautifulsoup4-${PV}.tar.gz"
 
@@ -20,8 +20,4 @@ FILES_${PN}-test = " \
   ${libdir}/${PYTHON_DIR}/site-packages/*/*/test \
 "
 
-FILES_${PN}-builder = " \
-  ${libdir}/${PYTHON_DIR}/site-packages/*/builder \
-"
-
-PACKAGES =+ "${PN}-test ${PN}-builder"
+PACKAGES =+ "${PN}-test"
