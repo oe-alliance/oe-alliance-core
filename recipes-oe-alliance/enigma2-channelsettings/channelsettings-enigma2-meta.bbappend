@@ -12,7 +12,7 @@ DEPENDS += "\
 	enigma2-plugin-settings-catseye.5e.1w \
 	enigma2-plugin-settings-catseye.7w \
 	enigma2-plugin-settings-catseye.13e.19e.16e.23e \
-	enigma2-plugin-settings-catseye.28.2e \
+	enigma2-plugin-settings-catseye.28e \
 	enigma2-plugin-settings-catseye.75e.to.45w \
 	enigma2-plugin-settings-ciefp.fav.19e.16e.13e \
 	enigma2-plugin-settings-ciefp.fav.19e.16e.13e.08w \
