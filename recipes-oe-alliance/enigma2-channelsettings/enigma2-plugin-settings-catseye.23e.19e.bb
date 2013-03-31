@@ -1,0 +1,5 @@
+DESCRIPTION = "Catseye E2 Settings File For 23.5E 19.2E"
+
+SETTINGS_FILENAME = "23e.19e"
+
+include oe-alliance-settings.inc
