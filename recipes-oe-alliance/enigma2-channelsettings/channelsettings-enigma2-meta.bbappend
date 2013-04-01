@@ -1,13 +1,10 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
-PRINC = "7"
+PRINC = "8"
 
 inherit allarch
 
 DEPENDS += "\
-	enigma2-plugin-settings-cajton.13e.19e \
-	enigma2-plugin-settings-cajton.13e.19e.28e \
-	enigma2-plugin-settings-cajton.68.5e.to.30w \
 	enigma2-plugin-settings-catseye.23e.19e \
 	enigma2-plugin-settings-catseye.5e.1w \
 	enigma2-plugin-settings-catseye.7w \
@@ -58,6 +55,11 @@ DEPENDS += "\
 	enigma2-plugin-settings-dona.multifeed.33e.31e.28e.23e.19e.16e.13e.9e.5e.1w.4w.5w \
 	enigma2-plugin-settings-dona.multifeed.39e.28e.23e.19e.16e.13e.9e.7e.5e.1w.4w.5w.8w.12w.15w \
 	enigma2-plugin-settings-likra.rotor \
+	enigma2-plugin-settings-malimali.9e.13e.19e \
+	enigma2-plugin-settings-malimali.13e \
+	enigma2-plugin-settings-malimali.13e.19e \
+	enigma2-plugin-settings-malimali.19e \
+	enigma2-plugin-settings-malimali.motor.42e.to.30w \
 	enigma2-plugin-settings-predrag.13e.19e \
 	enigma2-plugin-settings-predrag.19e.16e.13e \
 	enigma2-plugin-settings-predrag.19e.16e.13e.08w \
