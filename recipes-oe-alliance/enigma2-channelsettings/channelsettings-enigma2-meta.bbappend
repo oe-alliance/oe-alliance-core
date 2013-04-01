@@ -1,6 +1,6 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
-PRINC = "8"
+PRINC = "9"
 
 inherit allarch
 
@@ -60,7 +60,7 @@ DEPENDS += "\
 	enigma2-plugin-settings-malimali.13e.19e \
 	enigma2-plugin-settings-malimali.19e \
 	enigma2-plugin-settings-malimali.motor.42e.to.30w \
-	enigma2-plugin-settings-predrag.13e.19e \
+	enigma2-plugin-settings-predrag.19e.13e \
 	enigma2-plugin-settings-predrag.19e.16e.13e \
 	enigma2-plugin-settings-predrag.19e.16e.13e.08w \
 	enigma2-plugin-settings-predrag.28e.23e.19e.13e \
