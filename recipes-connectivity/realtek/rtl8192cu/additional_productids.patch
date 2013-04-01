@@ -1,0 +1,19 @@
+--- a/os_dep/linux/usb_intf.c	2012-04-04 22:21:58.952093091 +0200
++++ b/os_dep/linux/usb_intf.c	2012-04-04 22:22:01.108093195 +0200
+@@ -114,6 +114,8 @@
+ 	{USB_DEVICE(0x4856, 0x0091)},//NetweeN - Feixun
+ 	{USB_DEVICE(0x2019, 0x4902)},//Planex - Etop
+ 	{USB_DEVICE(0x2019, 0xAB2E)},//SW-WF02-AD15 -Abocom
++	{USB_DEVICE(0x0846, 0x9041)},//NetGear WNA1000M
++	{USB_DEVICE(0x07b8, 0x8188)},//Abocom - Abocom
+ 
+ 	/****** 8188 RU ********/
+ 	{USB_DEVICE(0x0BDA, 0x317F)},//Netcore,Netcore
+@@ -121,6 +123,7 @@
+ 	/****** 8188CE-VAU ********/
+ 	{USB_DEVICE(0x13D3, 0x3359)},// - Azwave
+ 	{USB_DEVICE(0x13D3, 0x3358)},// - Azwave
++	{USB_DEVICE(0x9846, 0x9041)},//Netgear Cameo
+ 
+ 	/****** 8188CUS Slim Solo********/
+ 	{USB_DEVICE(0x04F2, 0xAFF7)},//XAVI - XAVI
