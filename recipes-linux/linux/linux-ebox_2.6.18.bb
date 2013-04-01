@@ -4,7 +4,7 @@ LICENSE = "GPL"
 SECTION = "kernel"
 
 KERNEL="2.6.18-7.3"
-MACHINE_KERNEL_PR_append = ".6"
+MACHINE_KERNEL_PR_append = ".7"
 
 SRC_URI[kernel.md5sum] = "3f1faf26f103724e86560baa8dfdf497"
 SRC_URI[kernel.sha256sum] = "91d9f753ff73401c9cda9efa0e40372c0fd40ffd366eac9da7981d40920765b2"
@@ -29,6 +29,7 @@ SRC_URI = "http://archiv.mixos-support.com/${MACHINE}-linux-${KERNEL}.tar.bz2;na
 	file://linux-2.6.18-include-linux.patch \
 	file://linux-2.6.18-mod_devicetable_h.patch \
 	file://nfs-max-rwsize-8k.patch \
+	file://ebox5000-flash.patch \
 	"
 
 S = "${WORKDIR}/linux-${PV}"
@@ -62,8 +63,8 @@ kernel_do_install_append() {
 pkg_postinst_kernel-image () {
 	if [ "x$D" == "x" ]; then
 		if [ -f /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz ] ; then
-			flash_erase /dev/mtd2 0 0
-			nandwrite -p /dev/mtd2 /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz
+			flash_erase /dev/mtd1 0 0
+			nandwrite -p /dev/mtd1 /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz
 		fi
 	fi
 	rm -f /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz
