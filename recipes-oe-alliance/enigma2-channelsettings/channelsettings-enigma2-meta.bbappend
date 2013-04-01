@@ -1,6 +1,6 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
-PRINC = "9"
+PRINC = "10"
 
 inherit allarch
 
@@ -60,11 +60,20 @@ DEPENDS += "\
 	enigma2-plugin-settings-malimali.13e.19e \
 	enigma2-plugin-settings-malimali.19e \
 	enigma2-plugin-settings-malimali.motor.42e.to.30w \
+	enigma2-plugin-settings-predrag.13e \
+	enigma2-plugin-settings-predrag.19e \
 	enigma2-plugin-settings-predrag.19e.13e \
+	enigma2-plugin-settings-predrag.19e.13e.7e.42e \
 	enigma2-plugin-settings-predrag.19e.16e.13e \
 	enigma2-plugin-settings-predrag.19e.16e.13e.08w \
+	enigma2-plugin-settings-predrag.28e.19e.13e.0.8w \
 	enigma2-plugin-settings-predrag.28e.23e.19e.13e \
-	enigma2-plugin-settings-predrag.28e.to.30w \
+	enigma2-plugin-settings-predrag.28e.23e.19e.16e.13e.7e.4.8e.0.8w.4.0w \
+	enigma2-plugin-settings-predrag.28e.26e.23e.19e.16e.13e.7.0e.0.8w.4.0w \
+	enigma2-plugin-settings-predrag.28e.30w \
+	enigma2-plugin-settings-predrag.39e.28e.19Ee.6e.13e.0.8w \
+	enigma2-plugin-settings-predrag.39e.28e.26e.19e.16e.13e.7.0e.0.8w \
+	enigma2-plugin-settings-predrag.39e.28e.26e.23e.19e.16e.13e.7.0e.0.8w.4.0w \
 	enigma2-plugin-settings-predrag.motor.42e.to.30w \
 	enigma2-plugin-settings-sgtflipflop.28e \
 	enigma2-plugin-settings-tuncay.19e.13e.astra.hortbird \
