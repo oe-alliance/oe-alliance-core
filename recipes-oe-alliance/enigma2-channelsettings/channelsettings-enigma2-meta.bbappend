@@ -43,8 +43,9 @@ DEPENDS += "\
 	enigma2-plugin-settings-dona.multifeed.19e \
 	enigma2-plugin-settings-dona.multifeed.19e.13e \
 	enigma2-plugin-settings-dona.multifeed.19e.16e.13e \
+	enigma2-plugin-settings-dona.multifeed.19e.16e.13e.1w \
 	enigma2-plugin-settings-dona.multifeed.19e.16e.13e.5e.1w \
-	enigma2-plugin-settings-dona.multifeed.23e.19e \
+	enigma2-plugin-settings-dona.multifeed.19e.16e.13e.5e.1w.4w.5w \
 	enigma2-plugin-settings-dona.multifeed.23e.19e.13e \
 	enigma2-plugin-settings-dona.multifeed.28e.19e.16e.13e \
 	enigma2-plugin-settings-dona.multifeed.28e.19e.16e.13e.1w \
