@@ -17,7 +17,7 @@ PKGV = "git${GITPKGV}"
 PR = "r0"
 
 # REMOTE GIT
-SRC_URI="git://openpli.git.sourceforge.net/gitroot/openpli/plugins-enigma2;protocol=git;branch=old \
+SRC_URI="git://git.code.sf.net/p/openpli/plugins-enigma2;protocol=git;branch=old \
 	 file://buildonlywebif.patch \
 	 file://webiftpm.patch \
 	"
