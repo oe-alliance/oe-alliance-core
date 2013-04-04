@@ -25,6 +25,7 @@ PROVIDES =+ " font-roboto-enigma"
 FILES_font-roboto-enigma = "${datadir}/fonts"
 FILES_${PN} = "${datadir}/enigma2"
 
+DEPENDS = "python"
 RDEPENDS_${PN} = "font-roboto-enigma"
 
 EXTRA_OECONF = "\
