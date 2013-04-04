@@ -1,6 +1,6 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
-PRINC = "12"
+PRINC = "13"
 
 inherit allarch
 
@@ -78,6 +78,18 @@ DEPENDS += "\
 	enigma2-plugin-settings-predrag.39e.28e.26e.23e.19e.16e.13e.7.0e.0.8w.4.0w \
 	enigma2-plugin-settings-predrag.motor.42e.to.30w \
 	enigma2-plugin-settings-sgtflipflop.28e \
+	enigma2-plugin-settings-satvenus.19e.13e \
+	enigma2-plugin-settings-satvenus.19e.16e.13e.1w \
+	enigma2-plugin-settings-satvenus.19e.16e.13e \
+	enigma2-plugin-settings-satvenus.23e.19e.13e \
+	enigma2-plugin-settings-satvenus.23e.19e.16e.13e \
+	enigma2-plugin-settings-satvenus.28e.19e.16e.13e \
+	enigma2-plugin-settings-satvenus.28e.23e.19e.13e \
+	enigma2-plugin-settings-satvenus.39e.28e.23e.19e.16e.13e.9e.1w \
+	enigma2-plugin-settings-satvenus.39e.28e.23e.19e.16e.13e.9e.5e.1w.4w.5w \
+	enigma2-plugin-settings-satvenus.39e.28e.23e.19e.16e.13e.9e.7e.5e.1w.4w.5w \
+	enigma2-plugin-settings-satvenus.motor.42e.to.30w \
+	enigma2-plugin-settings-satvenus.motor.75e.to.30w \
 	enigma2-plugin-settings-tuncay.19e.13e.astra.hortbird \
 	enigma2-plugin-settings-tuncay.42e.19e.13e.7e \
 	enigma2-plugin-settings-tuncay.astra \
@@ -85,11 +97,13 @@ DEPENDS += "\
 	enigma2-plugin-settings-tuncay.kabeldeutschland \
 	enigma2-plugin-settings-ureyesonly.28.2e \
 	enigma2-plugin-settings-vhannibal.dual.feeds \
+	enigma2-plugin-settings-vhannibal.dual.feeds.dtt.italia \
 	enigma2-plugin-settings-vhannibal.dual.feeds.dtt.milano \
 	enigma2-plugin-settings-vhannibal.dual.feeds.dtt.napoli \
 	enigma2-plugin-settings-vhannibal.dual.feeds.dtt.roma \
 	enigma2-plugin-settings-vhannibal.dual.feeds.dtt.torino \
 	enigma2-plugin-settings-vhannibal.hotbird \
+	enigma2-plugin-settings-vhannibal.hotbird.dtt.italia \
 	enigma2-plugin-settings-vhannibal.hotbird.dtt.milano \
 	enigma2-plugin-settings-vhannibal.hotbird.dtt.napoli \
 	enigma2-plugin-settings-vhannibal.hotbird.dtt.roma \
