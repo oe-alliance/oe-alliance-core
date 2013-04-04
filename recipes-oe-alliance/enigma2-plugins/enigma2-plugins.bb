@@ -13,7 +13,7 @@ inherit gitpkgv
 
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r25"
+PR = "r26"
 
 SRC_URI = "${ENIGMA2_PLUGINS_URI} file://pluginnotwanted"
 
@@ -54,6 +54,8 @@ FILES_${PN} += " /usr/share/enigma2 /usr/share/fonts "
 FILES_${PN}-meta = "${datadir}/meta"
 FILES_enigma2-plugin-extensions-bmediacenter += " ${libdir}/enigma2/python/Components/Renderer/LizWatches.pyo ${libdir}/enigma2/python/Components/Converter/LizExtraNumText.pyo"
 FILES_enigma2-plugin-extensions-bmediacenter-src += " ${libdir}/enigma2/python/Components/Renderer/LizWatches.py ${libdir}/enigma2/python/Components/Converter/LizExtraNumText.py"
+FILES_enigma2-plugin-extensions-eventlist += " ${libdir}/enigma2/python/Components/Converter/EventList.pyo ${libdir}/enigma2/python/Components/Converter/EventListDisplay.pyo"
+FILES_enigma2-plugin-extensions-eventlist-src += " ${libdir}/enigma2/python/Components/Converter/EventList.py ${libdir}/enigma2/python/Components/Converter/EventListDisplay.py"
 
 PACKAGES += "${PN}-meta"
 PACKAGE_ARCH = "${MACHINE_ARCH}"

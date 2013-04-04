@@ -9,7 +9,9 @@ PACKAGE_ARCH = "all"
 SRCREV = "${AUTOREV}"
 PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"
-PR = "r12"
+PR = "r13"
+
+DEPENDS = " python"
 
 SRC_URI = "git://github.com/oe-alliance/oe-alliance-e2-skindefault.git;protocol=git"
 

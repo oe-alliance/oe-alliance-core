@@ -19,8 +19,8 @@ EXTRA_IMAGEDEPENDS = "\
 
 include conf/machine/include/autoload-filesystems.inc
 
-DVBMEDIASINK_CONFIG = "--with-wma --with-wmv --with-pcm --with-dtsdownmix"
-	
+DVBMEDIASINK_CONFIG = "--with-wma --with-wmv --with-pcm"
+
 TARGET_ARCH = "mipsel"
 DEFAULTTUNE = "mips32el"
 
