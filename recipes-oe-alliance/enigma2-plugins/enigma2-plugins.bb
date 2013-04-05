@@ -13,7 +13,7 @@ inherit gitpkgv
 
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r28"
+PR = "r29"
 
 SRC_URI = "${ENIGMA2_PLUGINS_URI} file://pluginnotwanted"
 
@@ -57,7 +57,7 @@ FILES_enigma2-plugin-extensions-bmediacenter-src += " ${libdir}/enigma2/python/C
 FILES_enigma2-plugin-components-eventlist += " ${libdir}/enigma2/python/Components/Renderer/EventListDisplay.pyo ${libdir}/enigma2/python/Components/Converter/EventList.pyo"
 FILES_enigma2-plugin-components-eventlist-src += " ${libdir}/enigma2/python/Components/Renderer/EventListDisplay.py ${libdir}/enigma2/python/Components/Converter/EventList.py"
 
-PACKAGES += "${PN}-meta"
+PACKAGES += "${PN}-meta enigma2-plugin-components-eventlist-src"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 inherit autotools
