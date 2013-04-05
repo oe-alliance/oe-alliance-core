@@ -13,7 +13,7 @@ inherit gitpkgv
 
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r27"
+PR = "r28"
 
 SRC_URI = "${ENIGMA2_PLUGINS_URI} file://pluginnotwanted"
 
@@ -54,8 +54,8 @@ FILES_${PN} += " /usr/share/enigma2 /usr/share/fonts "
 FILES_${PN}-meta = "${datadir}/meta"
 FILES_enigma2-plugin-extensions-bmediacenter += " ${libdir}/enigma2/python/Components/Renderer/LizWatches.pyo ${libdir}/enigma2/python/Components/Converter/LizExtraNumText.pyo"
 FILES_enigma2-plugin-extensions-bmediacenter-src += " ${libdir}/enigma2/python/Components/Renderer/LizWatches.py ${libdir}/enigma2/python/Components/Converter/LizExtraNumText.py"
-FILES_enigma2-plugin-components-eventlist += " ${libdir}/enigma2/python/Components/Converter/EventList.pyo ${libdir}/enigma2/python/Components/Converter/EventListDisplay.pyo"
-FILES_enigma2-plugin-components-eventlist-src += " ${libdir}/enigma2/python/Components/Converter/EventList.py ${libdir}/enigma2/python/Components/Converter/EventListDisplay.py"
+FILES_enigma2-plugin-components-eventlist += " ${libdir}/enigma2/python/Components/Renderer/EventListDisplay.pyo ${libdir}/enigma2/python/Components/Converter/EventList.pyo"
+FILES_enigma2-plugin-components-eventlist-src += " ${libdir}/enigma2/python/Components/Renderer/EventListDisplay.py ${libdir}/enigma2/python/Components/Converter/EventList.py"
 
 PACKAGES += "${PN}-meta"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
