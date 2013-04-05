@@ -5,12 +5,12 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 KERNEL_RELEASE = "3.3.0"
 
-SRC_URI[md5sum] = "0f805b2e877ea475cbb2643fcad0daa5"
-SRC_URI[sha256sum] = "f22fae6bdc12ae1127d1e9081e41ca497abee6c59e7e1f898eca630c20dbe38b"
+SRC_URI[md5sum] = "a2fbd9e424a8d0d6157fcb25e08ec393"
+SRC_URI[sha256sum] = "5ad462c4a9b8433685eef816090cb9fbc83a88126ea1fc5c0495ad79bf849469"
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-MACHINE_KERNEL_PR_append = ".8"
+MACHINE_KERNEL_PR_append = ".9"
 
 # By default, kernel.bbclass modifies package names to allow multiple kernels
 # to be installed in parallel. We revert this change and rprovide the versioned
@@ -20,7 +20,7 @@ PKG_kernel-image = "kernel-image"
 RPROVIDES_kernel-base = "kernel-${KERNEL_VERSION}"
 RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
 
-SRC_URI += "http://118.37.185.125/download/stblinux/stblinux-3.3.0-gcc44-20120814-1.tgz \
+SRC_URI += "http://118.37.185.125/download/stblinux/stblinux-3.3.0-20130404.tgz \
 	file://defconfig \
 	file://fix-proc-cputype.patch \
 	file://0001-Revert-MIPS-Add-fast-get_user_pages.patch \
