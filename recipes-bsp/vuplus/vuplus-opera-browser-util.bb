@@ -11,29 +11,28 @@ PACKAGE_ARCH := "${MACHINE_ARCH}"
 SRC_DATE = "20130122_1"
 SRC_URI = "http://code.vuplus.com/download/build.fc3abf29fb03f797e78f907928125638/embedded/opera-sdk-build-package/opera-hbbtv_${SRC_DATE}.tar.gz"
 
-PR = "r9_${SRC_DATE}"
+PR = "r13_${SRC_DATE}"
 
 S = "${WORKDIR}/opera-hbbtv"
 
 do_install() {
 	install -d ${D}/usr/local/hbb-browser
-	mv ${S}/opera/lib/libopera.so ${S}/opera/lib/libopera.so.0
-	mv ${S}/opera/* ${D}/usr/local/hbb-browser/
+	cp -avR ${S}/opera/* ${D}/usr/local/hbb-browser/
 
 	install -d ${D}/etc
-	mv ${S}/dfb/etc/* ${D}/etc/
+	cp -avR ${S}/dfb/etc/* ${D}/etc/
 
 	install -d ${D}/usr/bin
-	mv ${S}/dfb/usr/bin/* ${D}/usr/bin/
+	cp -avR ${S}/dfb/usr/bin/* ${D}/usr/bin/
 
 	install -d ${D}/usr/lib
-	mv ${S}/dfb/usr/lib/* ${D}/usr/lib/
+	cp -avR ${S}/dfb/usr/lib/* ${D}/usr/lib/
 
 	install -d ${D}/usr/share
-	mv ${S}/dfb/usr/share/* ${D}/usr/share/
+	cp -avR ${S}/dfb/usr/share/* ${D}/usr/share/
 
 	install -d ${D}/usr/lib/enigma2/python/Plugins/Extensions/HbbTV
-	mv ${S}/plugin/* ${D}/usr/lib/enigma2/python/Plugins/Extensions/HbbTV
+	cp -avR ${S}/plugin/* ${D}/usr/lib/enigma2/python/Plugins/Extensions/HbbTV
 }
 
 # Just a quick hack to "compile" the python parts.
@@ -43,6 +42,7 @@ do_compile_append() {
 
 INHIBIT_PACKAGE_STRIP = "1"
 
+PACKAGES =+ "${PN}-src"
 FILES_${PN}-src = "/usr/lib/enigma2/python/Plugins/Extensions/HbbTV/*.py"
 FILES_${PN} = "/usr/lib/enigma2/python/Plugins/Extensions/HbbTV/*.pyo \
 			   /usr/lib/enigma2/python/Plugins/Extensions/HbbTV/*.so \
