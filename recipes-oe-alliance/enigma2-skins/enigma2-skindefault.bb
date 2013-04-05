@@ -9,9 +9,9 @@ PACKAGE_ARCH = "all"
 SRCREV = "${AUTOREV}"
 PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"
-PR = "r13"
+PR = "r14"
 
-DEPENDS = " python"
+DEPENDS = "enigma2"
 
 SRC_URI = "git://github.com/oe-alliance/oe-alliance-e2-skindefault.git;protocol=git"
 
@@ -27,7 +27,6 @@ PROVIDES =+ " font-roboto-enigma"
 FILES_font-roboto-enigma = "${datadir}/fonts"
 FILES_${PN} = "${datadir}/enigma2"
 
-DEPENDS = "python"
 RDEPENDS_${PN} = "font-roboto-enigma"
 
 EXTRA_OECONF = "\
