@@ -10,7 +10,7 @@ PV = "${IMAGE_VERSION}"
 PR = "${BUILD_VERSION}"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-URL = "http://www.aaf-digital.info"
+URL = "http://www.openaaf.com"
 
 S = "${WORKDIR}"
 
@@ -57,7 +57,7 @@ do_install() {
 			fi
 			echo "drivers=${DRIVERS}" >> ${D}/etc/image-version
 			echo "date=${DATETIME}" >> ${D}/etc/image-version
-			echo "comment=AAF" >> ${D}/etc/image-version
+			echo "comment=openAAF" >> ${D}/etc/image-version
 			echo "target=9" >> ${D}/etc/image-version
 			echo "creator=OpenAAF" >> ${D}/etc/image-version
 			echo "url=${URL}" >> ${D}/etc/image-version
