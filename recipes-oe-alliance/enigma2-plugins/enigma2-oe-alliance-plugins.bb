@@ -6,19 +6,25 @@ LICENSE = "Proprietary"
 LIC_FILES_CHKSUM = "file://COPYING;md5=8e37f34d0e40d32ea2bc90ee812c9131"
 
 PROVIDES = "${PN} \
+	enigma2-plugin-systemplugins-autobouquetsmaker \
 	enigma2-plugin-systemplugins-blindscan \
 	enigma2-plugin-extensions-dlnabrowser \
-	enigma2-plugin-extensions-dlnaserver  \
+	enigma2-plugin-extensions-dlnaserver \
 	enigma2-plugin-systemplugins-firmwareupgrade \
 	enigma2-plugin-systemplugins-fpgaupgrade \
 	enigma2-plugin-systemplugins-vfdcontrol \
 	enigma2-plugin-extensions-streamtv \
+	enigma2-plugin-systemplugins-tempfancontrol \
 	enigma2-plugin-systemplugins-fancontrol \
 	enigma2-plugin-extensions-vuplusevent \
 	enigma2-plugin-systemplugins-remotecontrolcode \
 	enigma2-plugin-extensions-webbrowser \
+	enigma2-plugin-extensions-ondemand-openuitzendinggemist \
+	enigma2-plugin-extensions-tunerserver \
 	enigma2-plugin-extensions-hbbtv \
+	enigma2-plugin-systemplugins-transcodingsetup \
 	enigma2-plugin-systemplugins-micomupgrade \
+	enigma2-plugin-extensions-ondemand \
 	"
 
 DESCRIPTION_enigma2-plugin-systemplugins-autobouquetsmaker = "Automatically build and update bouquets from the satellite stream."
@@ -48,7 +54,7 @@ FILES_enigma2-plugin-extensions-webbrowser_append = "${datadir}/keymaps"
 DESCRIPTION_enigma2-plugin-extensions-ondemand-openuitzendinggemist = "Watch NL-IP TV"
 DESCRIPTION_enigma2-plugin-extensions-tunerserver = "Builds a virtual channels list"
 DESCRIPTION_enigma2-plugin-extensions-hbbtv = "HbbTV player"
-RDEPENDS_enigma2-plugin-extensions-hbbtv = "tslib-conf libts-1.0-0 libsysfs2 libgmp10 libmpfr4 vuplus-opera-browser-util"
+RDEPENDS_enigma2-plugin-extensions-hbbtv = "tslib-conf libts-1.0-0 libsysfs2 libgmp10 libmpfr4 vuplus-opera-browser-util enigma2-hbbtv-util"
 DESCRIPTION_enigma2-plugin-systemplugins-transcodingsetup = "Setup transcoding of your VU+"
 RDEPENDS_enigma2-plugin-systemplugins-transcodingsetup = "vuplus-transtreamproxy"
 DESCRIPTION_enigma2-plugin-systemplugins-micomupgrade = "micomupgrade"
@@ -81,7 +87,7 @@ inherit gitpkgv autotools
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r46"
+PR = "r47"
 
 SRC_URI="git://github.com/oe-alliance/oe-alliance-plugins.git;protocol=git"
 
