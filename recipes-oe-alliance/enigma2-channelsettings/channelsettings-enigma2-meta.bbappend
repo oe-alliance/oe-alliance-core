@@ -55,6 +55,7 @@ DEPENDS += "\
 	enigma2-plugin-settings-dona.multifeed.28e.23e.19e.16e.13e.9e.7e.5e.1w \
 	enigma2-plugin-settings-dona.multifeed.33e.31e.28e.23e.19e.16e.13e.9e.5e.1w.4w.5w \
 	enigma2-plugin-settings-dona.multifeed.39e.28e.23e.19e.16e.13e.9e.7e.5e.1w.4w.5w.8w.12w.15w \
+	enigma2-plugin-settings-icesat.28e.23e.19e.13e \
 	enigma2-plugin-settings-likra.rotor \
 	enigma2-plugin-settings-malimali.9e.13e.19e \
 	enigma2-plugin-settings-malimali.13e \
@@ -85,6 +86,7 @@ DEPENDS += "\
 	enigma2-plugin-settings-satvenus.23e.19e.16e.13e \
 	enigma2-plugin-settings-satvenus.28e.19e.16e.13e \
 	enigma2-plugin-settings-satvenus.28e.23e.19e.13e \
+	enigma2-plugin-settings-satvenus.28e.23e.19e.16e.13e.9e.7e.5e.1w \
 	enigma2-plugin-settings-satvenus.39e.28e.23e.19e.16e.13e.9e.1w \
 	enigma2-plugin-settings-satvenus.39e.28e.23e.19e.16e.13e.9e.5e.1w.4w.5w \
 	enigma2-plugin-settings-satvenus.39e.28e.23e.19e.16e.13e.9e.7e.5e.1w.4w.5w \
