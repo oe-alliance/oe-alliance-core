@@ -13,8 +13,7 @@ TARGET_ARCH = "mipsel"
 DEFAULTTUNE = "mips32el"
 
 GLIBC_EXTRA_OECONF = "--with-tls --with-__thread"
-
-DVBMEDIASINK_CONFIG = "--with-dtsdownmix --with-limited-mpeg4v2"
+DVBMEDIASINK_CONFIG = "--with-wma --with-wmv --with-pcm --with-dtsdownmix"
 
 PREFERRED_PROVIDER_virtual/kernel = "linux-ebox"
 
@@ -22,9 +21,8 @@ KERNEL_IMAGETYPE = "vmlinux"
 KERNEL_OUTPUT = "${KERNEL_IMAGETYPE}"
 KERNEL_CONSOLE = "null"
 
-TARGET_FPU = "soft"
 
-MACHINE_FEATURES += "alsa dvbapi5 usbhost switchoff ci wifi wifiusblegacy textlcd 3dtv hdmicec wifi61"
+MACHINE_FEATURES += "alsa dvbapi5 usbhost switchoff wifi 3dtv hdmicec"
 
 require conf/machine/include/tune-mips32.inc
 
