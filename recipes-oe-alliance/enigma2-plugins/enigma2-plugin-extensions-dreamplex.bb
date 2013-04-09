@@ -5,10 +5,11 @@ require conf/license/license-gplv2.inc
 
 inherit gitpkgv
 
-SRCREV = "${AUTOREV}"
-PV = "1.0+git${SRCPV}"
-PKGV = "1.0+git${GITPKGV}"
-PR = "r3"
+# SRCREV = "${AUTOREV}"
+SRCREV = "ebdc7c77f88c7fb50c642703786ff7d50bf3bd80"
+PV = "1.03+git${SRCPV}"
+PKGV = "1.03+git${GITPKGV}"
+PR = "r0"
 
 SRC_URI = "git://github.com/DonDavici/DreamPlex.git;protocol=git"
 
