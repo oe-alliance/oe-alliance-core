@@ -9,7 +9,7 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r209"
+PR = "r210"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -50,9 +50,9 @@ do_deploy() {
 	install -m 0644 enigma2-plugin-extensions-hdmitest_0.4_mipsel.ipk ${WORKDIR}/deploy-ipks/3rdparty
 	install -m 0644 enigma2-plugin-extensions-livefootball_4.3_mips32el.ipk ${WORKDIR}/deploy-ipks/3rdparty
 	install -m 0644 enigma2-plugin-extensions-mediainfo_0.3.1_mips32el.ipk ${WORKDIR}/deploy-ipks/3rdparty
-	install -m 0644 enigma2-plugin-extensions-mediaportal_3.5.3_mips32el.ipk ${WORKDIR}/deploy-ipks/3rdparty
+	install -m 0644 enigma2-plugin-extensions-mediaportal_4.1_mips32el.ipk ${WORKDIR}/deploy-ipks/3rdparty
 	install -m 0644 enigma2-plugin-extensions-mtv_0.1_mips32el.ipk ${WORKDIR}/deploy-ipks/3rdparty
-	install -m 0644 enigma2-plugin-extensions-moviebrowser_1.6.2_mips32el.ipk ${WORKDIR}/deploy-ipks/3rdparty
+	install -m 0644 enigma2-plugin-extensions-moviebrowser_1.9rc1_mips32el.ipk ${WORKDIR}/deploy-ipks/3rdparty
 	install -m 0644 enigma2-plugin-extensions-navibar_1.1.1_all.ipk ${WORKDIR}/deploy-ipks/3rdparty
 	install -m 0644 enigma2-plugin-extensions-newtube_0.1a-r0_all.ipk ${WORKDIR}/deploy-ipks/3rdparty
 	install -m 0644 enigma2-plugin-extensions-opkg-tools_1.2_mipsel.ipk ${WORKDIR}/deploy-ipks/3rdparty
@@ -74,6 +74,7 @@ do_deploy() {
 	install -m 0644 enigma2-plugin-extensions-thetvdb_0.7-20120607-r1_mips32el.ipk ${WORKDIR}/deploy-ipks/3rdparty
 	install -m 0644 enigma2-plugin-extensions-tmdbinfo_1.0-20120508-r2_mips32el.ipk ${WORKDIR}/deploy-ipks/3rdparty
 	install -m 0644 enigma2-plugin-extensions-vcs_1.0-rc5_all.ipk ${WORKDIR}/deploy-ipks/3rdparty
+	install -m 0644 enigma2-plugin-extensions-vuplusforum_0.6rc2_mips32el.ipk ${WORKDIR}/deploy-ipks/3rdparty
 	install -m 0644 enigma2-plugin-extensions-webmedia_9.1_r3_all.ipk ${WORKDIR}/deploy-ipks/3rdparty
 	install -m 0644 enigma2-plugin-extensions-webradiofs_10.32_all.ipk ${WORKDIR}/deploy-ipks/3rdparty
 	install -m 0644 enigma2-plugin-extensions-wikipedia_0.9_mips32el.ipk ${WORKDIR}/deploy-ipks/3rdparty
