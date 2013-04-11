@@ -22,7 +22,8 @@ DEFAULTTUNE = "mips32el"
 GLIBC_EXTRA_OECONF = "--with-tls --with-__thread"
 
 PREFERRED_PROVIDER_virtual/kernel = "linux-odin"
-PREFERRED_PROVIDER_virtual/blindscan-dvbs = "odin-blindscan-dvbs-utils"
+PREFERRED_PROVIDER_virtual/blindscan-dvbc = "odin-blindscan-utils-${MACHINE}"
+PREFERRED_PROVIDER_virtual/blindscan-dvbs = "odin-blindscan-utils-${MACHINE}"
 
 PREFERRED_VERSION_linux-odin = "3.6.0"
 PREFERRED_VERSION_linux-libc-headers = "3.6"
