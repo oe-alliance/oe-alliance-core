@@ -5,7 +5,7 @@ LICENSE = "CLOSED"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PV = "3.6.0"
-PR = "r0"
+PR = "r1"
 
 require odin-blindscan-utils.inc
 

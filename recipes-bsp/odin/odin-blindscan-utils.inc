@@ -12,7 +12,7 @@ RPROVIDES_odin-blindscan-dvbs-utils-${MACHINE} += "virtual/blindscan-dvbs"
 DOWNLOADMACHINE ?= "${MACHINE}"
 SRC_URI = "http://feed.odin-support.com/download/odin-blindscan-utils-${MACHINE}-${PV}.tar.gz"
 
-S = "${WORKDIR}/blindscan-utils"
+S = "${WORKDIR}"
 
 do_install() {
 	install -d "${D}/${bindir}"
