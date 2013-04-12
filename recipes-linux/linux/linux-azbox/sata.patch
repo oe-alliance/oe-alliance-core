@@ -1,0 +1,12 @@
+diff -Naur a/drivers/ata/sata_tangox.c b/drivers/ata/sata_tangox.c
+--- a/drivers/ata/sata_tangox.c	2013-03-01 21:20:14.000000000 +0100
++++ b/drivers/ata/sata_tangox.c	2013-03-01 20:22:07.000000000 +0100
+@@ -43,7 +43,7 @@
+ #endif
+ #include "libata.h"
+ 
+-#define HSATA_TANGOX_DMA
++#undef HSATA_TANGOX_DMA
+ #undef HSATA_VERBOSE
+ 
+ MODULE_AUTHOR ("Sigma Designs Inc.");
