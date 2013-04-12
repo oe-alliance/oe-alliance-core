@@ -199,7 +199,10 @@ do_patch_prepend(){
 	elif "${MACHINE}" == "ebox7358":
 		MACHINE1="MixOS F7"		
 	elif "${MACHINE}" == "odinm7":
-		MACHINE1="Odin M7"
+		if "${DISTRO}" == "axassupport":
+			MACHINE1="CLASS M"
+		else:
+			MACHINE1="Odin M7"
 	elif "${MACHINE}" == "ixussone":
 		MACHINE1="IXUSS ONE"
 	elif "${MACHINE}" == "ixusszero":
@@ -280,7 +283,10 @@ python do_setup_po_ipk () {
 	elif "${MACHINE}" == "ebox7358":
 		MACHINE1="MixOS F7"		
 	elif "${MACHINE}" == "odinm7":
-		MACHINE1="Odin M7"
+		if "${DISTRO}" == "axassupport":
+			MACHINE1="CLASS M"
+		else:
+			MACHINE1="Odin M7"
 	elif "${MACHINE}" == "ixussone":
 		MACHINE1="IXUSS ONE"
 	elif "${MACHINE}" == "ixusszero":
