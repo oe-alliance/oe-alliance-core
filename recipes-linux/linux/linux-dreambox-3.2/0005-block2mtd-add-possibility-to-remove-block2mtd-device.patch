@@ -1,0 +1,68 @@
+From 6bb93105ac9909c6341636cb81f39f691ff4ef3c Mon Sep 17 00:00:00 2001
+From: Andreas Monzner <andreas.monzner@dream-property.net>
+Date: Mon, 11 Mar 2013 16:25:45 +0100
+Subject: [PATCH 5/7] block2mtd: add possibility to remove block2mtd devices
+ when block2mtd is compiled in kernel
+
+---
+ drivers/mtd/devices/block2mtd.c |   30 ++++++++++++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
+
+diff --git a/drivers/mtd/devices/block2mtd.c b/drivers/mtd/devices/block2mtd.c
+index a54d052..f95c0c5 100644
+--- a/drivers/mtd/devices/block2mtd.c
++++ b/drivers/mtd/devices/block2mtd.c
+@@ -22,6 +22,7 @@
+ #define ERROR(fmt, args...) printk(KERN_ERR "block2mtd: " fmt "\n" , ## args)
+ #define INFO(fmt, args...) printk(KERN_INFO "block2mtd: " fmt "\n" , ## args)
+ 
++extern int del_mtd_device(struct mtd_info *mtd);
+ 
+ /* Info for the block device */
+ struct block2mtd_dev {
+@@ -373,6 +374,31 @@ static int block2mtd_init_called = 0;
+ static char block2mtd_paramline[80 + 12 + 12]; /* 80 for device, 12 for erase size, 12 for writesize */
+ #endif
+ 
++static void remove_device_by_name(const char *name)
++{
++	struct list_head *pos, *next;
++	int name_offset = strlen("block2mtd: ");
++
++	list_for_each_safe(pos, next, &blkmtd_device_list) {
++		struct block2mtd_dev *dev = list_entry(pos, typeof(*dev), list);
++		if (!strcmp(name, dev->mtd.name + name_offset)) {
++			int err;
++			block2mtd_sync(&dev->mtd);
++			err = del_mtd_device(&dev->mtd);
++			if (err == 0) {
++				INFO("mtd%d: [%s] removed",
++						dev->mtd.index, name);
++				list_del(&dev->list);
++				block2mtd_free_device(dev);
++			} else
++				ERROR("mtd%d: [%s] cannot remove: %d",
++						dev->mtd.index, name, err);
++
++			return;
++		}
++	}
++	ERROR("no such device: %s", name);
++}
+ 
+ static int block2mtd_setup2(const char *val)
+ {
+@@ -404,6 +430,10 @@ static int block2mtd_setup2(const char *val)
+ 		parse_err("device name too long");
+ 
+ 	if (token[1]) {
++		if (!strcmp("remove", token[1])) {
++			remove_device_by_name(name);
++			return 0;
++		}
+ 		ret = parse_num(&erase_size, token[1]);
+ 		if (ret) {
+ 			parse_err("illegal erase size");
+-- 
+1.7.10.4
+
