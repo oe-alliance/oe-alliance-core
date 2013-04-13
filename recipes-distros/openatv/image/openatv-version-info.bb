@@ -10,7 +10,7 @@ PV = "${IMAGE_VERSION}"
 PR = "${BUILD_VERSION}"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-URL = "http://www.openatv.com"
+URL = "http://www.opena.tv"
 
 S = "${WORKDIR}"
 
