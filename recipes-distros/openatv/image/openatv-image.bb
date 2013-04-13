@@ -1,8 +1,8 @@
-DESCRIPTION = "OpenAAF Image"
+DESCRIPTION = "OpenATV Image"
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "proprietary"
-MAINTAINER = "openAAF team"
+MAINTAINER = "openATV team"
 
 require conf/license/license-gplv2.inc
 
@@ -10,7 +10,7 @@ PV = "${IMAGE_VERSION}"
 PR = "r${DATETIME}"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-IMAGE_INSTALL = "openaaf-base \
+IMAGE_INSTALL = "openatv-base \
 	${@base_contains("MACHINE_FEATURES", "smallflash", "", \
 	" \
 	task-base-smbfs-client \
@@ -19,7 +19,7 @@ IMAGE_INSTALL = "openaaf-base \
 	", d)} \
 	"
 
-export IMAGE_BASENAME = "openaaf-image"
+export IMAGE_BASENAME = "openatv-image"
 IMAGE_LINGUAS = ""
 
 IMAGE_FEATURES += "package-management"
@@ -48,7 +48,7 @@ generate_nfo() {
 			echo "Machine: ${MACHINE}" >> ${NFO}
 			DATE=`date +%Y-%m-%d' '%H':'%M`
 			echo "Date: ${DATE}" >> ${NFO}
-			echo "Issuer: openAAF" >> ${NFO}
+			echo "Issuer: openATV" >> ${NFO}
 			echo "Link: ${DISTRO_FEED_URI}" >> ${NFO}
 			if [ "${DESC}" != "" ]; then
 					echo "Description: ${DESC}" >> ${NFO}

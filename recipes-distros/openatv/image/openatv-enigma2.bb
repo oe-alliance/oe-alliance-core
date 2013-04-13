@@ -8,11 +8,11 @@ PR = "r19"
 
 inherit task
 
-DEPENDS = "enigma2-pliplugins openaaf-feeds openaaf-3rdparty-plugins"
+DEPENDS = "enigma2-pliplugins openatv-feeds openatv-3rdparty-plugins"
 
 RRECOMMENDS = "\
 	enigma2-skindefault \
-	openaaf-version-info \
+	openatv-version-info \
 	enigma2-plugin-settings-defaultsat \
 	enigma2-plugin-drivers-usbserial \
 	enigma2-plugin-extensions-infopanel \

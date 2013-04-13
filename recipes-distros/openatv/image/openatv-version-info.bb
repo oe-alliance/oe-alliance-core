@@ -1,8 +1,8 @@
-DESCRIPTION = "OpenAAF version info"
+DESCRIPTION = "OpenATV version info"
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "proprietary"
-MAINTAINER = "OpenAAF"
+MAINTAINER = "OpenATV"
 
 require conf/license/license-gplv2.inc
 

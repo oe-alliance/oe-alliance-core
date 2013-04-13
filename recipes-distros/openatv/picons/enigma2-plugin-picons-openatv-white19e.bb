@@ -1,5 +1,5 @@
-DESCRIPTION = "picons-openaaf-black28E"
-MAINTAINER = "AAF Team"
+DESCRIPTION = "plugin-picons-openatv-white19E"
+MAINTAINER = "ATV Team"
 SECTION = "base"
 LICENSE = "proprietary"
 PACKAGE_ARCH = "all"
@@ -11,10 +11,10 @@ SRCREV = "${AUTOREV}"
 PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"
 VER ="1.0"
-PR = "r0"
+PR = "r1"
 
 
-SRC_URI="git://github.com/openaaf-picons/enigma2-plugin-picons-openaaf-black28E.git"
+SRC_URI="git://github.com/openatv-picons/enigma2-plugin-picons-openatv-white19E.git"
 
 S = "${WORKDIR}/git"
 

@@ -1,5 +1,5 @@
-DESCRIPTION = "openaaf-spinner"
-MAINTAINER = "AAF Team"
+DESCRIPTION = "openatv-spinner"
+MAINTAINER = "ATV Team"
 SECTION = "base"
 LICENSE = "proprietary"
 PACKAGE_ARCH = "all"
@@ -7,7 +7,7 @@ PACKAGE_ARCH = "all"
 require conf/license/license-gplv2.inc
 
 PV = "1.0"
-PR = "r4"
+PR = "r5"
 
 SRC_URI="file://wait1.png \
 		file://wait2.png \

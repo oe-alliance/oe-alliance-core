@@ -1,7 +1,7 @@
-DESCRIPTION = "openAAF bootlogo"
+DESCRIPTION = "openATV bootlogo"
 SECTION = "base"
 PRIORITY = "required"
-MAINTAINER = "AAF Team"
+MAINTAINER = "ATV Team"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 require conf/license/license-gplv2.inc

@@ -89,7 +89,7 @@ void show_help()
 	printf("\tvfdctl v1.0 - usage:\n\
 	\tvfdctl [[-c] text] \n\
 	\t-c\tcentered output\n\
-	\t-a\tOpenAAF\n\
+	\t-a\tOpenATV\n\
 	\t-v\tverbose\n");
 }
 

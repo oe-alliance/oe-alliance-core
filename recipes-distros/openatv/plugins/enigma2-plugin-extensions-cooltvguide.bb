@@ -11,10 +11,10 @@ SRCREV = "${AUTOREV}"
 PV = "6.1+git${SRCPV}"
 PKGV = "6.1+git${GITPKGV}"
 VER ="6.1"
-PR = "r0"
+PR = "r1"
 
 
-SRC_URI="git://github.com/openaaf/enigma2-plugin-extensions-cooltvguide.git"
+SRC_URI="git://github.com/openatv/enigma2-plugin-extensions-cooltvguide.git"
 
 S = "${WORKDIR}/git"
 

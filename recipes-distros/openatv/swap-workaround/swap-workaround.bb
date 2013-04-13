@@ -1,5 +1,5 @@
 DESCRIPTION = "swap workaround for box with low memory"
-MAINTAINER = "AAF Team"
+MAINTAINER = "ATV Team"
 SECTION = "base"
 LICENSE = "proprietary"
 PACKAGE_ARCH = "all"
@@ -7,7 +7,7 @@ PACKAGE_ARCH = "all"
 require conf/license/license-gplv2.inc
 
 PV = "1.0"
-PR = "r0"
+PR = "r1"
 
 SRC_URI="file://swapfile"
 

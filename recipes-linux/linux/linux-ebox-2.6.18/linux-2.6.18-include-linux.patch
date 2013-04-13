@@ -1,5 +1,5 @@
-diff -urN /opt/zde2/oe-alliance/builds/openaaf/dm800/tmp/sysroots/dm800/usr/include/linux/auto_fs4.h usr/include/linux/auto_fs4.h
---- /opt/zde2/oe-alliance/builds/openaaf/dm800/tmp/sysroots/dm800/usr/include/linux/auto_fs4.h	2012-08-11 14:48:17.000000000 +0200
+diff -urN /opt/zde2/oe-alliance/builds/openatv/dm800/tmp/sysroots/dm800/usr/include/linux/auto_fs4.h usr/include/linux/auto_fs4.h
+--- /opt/zde2/oe-alliance/builds/openatv/dm800/tmp/sysroots/dm800/usr/include/linux/auto_fs4.h	2012-08-11 14:48:17.000000000 +0200
 +++ usr/include/linux/auto_fs4.h	2012-08-10 22:52:44.000000000 +0200
 @@ -11,6 +11,8 @@
  #ifndef _LINUX_AUTO_FS4_H
@@ -26,8 +26,8 @@ diff -urN /opt/zde2/oe-alliance/builds/openaaf/dm800/tmp/sysroots/dm800/usr/incl
  #define AUTOFS_IOC_EXPIRE_MULTI		_IOW(0x93,0x66,int)
  #define AUTOFS_IOC_EXPIRE_INDIRECT	AUTOFS_IOC_EXPIRE_MULTI
  #define AUTOFS_IOC_EXPIRE_DIRECT	AUTOFS_IOC_EXPIRE_MULTI
-diff -urN /opt/zde2/oe-alliance/builds/openaaf/dm800/tmp/sysroots/dm800/usr/include/linux/bsg.h usr/include/linux/bsg.h
---- /opt/zde2/oe-alliance/builds/openaaf/dm800/tmp/sysroots/dm800/usr/include/linux/bsg.h	1970-01-01 01:00:00.000000000 +0100
+diff -urN /opt/zde2/oe-alliance/builds/openatv/dm800/tmp/sysroots/dm800/usr/include/linux/bsg.h usr/include/linux/bsg.h
+--- /opt/zde2/oe-alliance/builds/openatv/dm800/tmp/sysroots/dm800/usr/include/linux/bsg.h	1970-01-01 01:00:00.000000000 +0100
 +++ usr/include/linux/bsg.h	2012-07-06 17:46:11.000000000 +0200
 @@ -0,0 +1,65 @@
 +#ifndef BSG_H
@@ -95,8 +95,8 @@ diff -urN /opt/zde2/oe-alliance/builds/openaaf/dm800/tmp/sysroots/dm800/usr/incl
 +
 +
 +#endif
-diff -urN /opt/zde2/oe-alliance/builds/openaaf/dm800/tmp/sysroots/dm800/usr/include/linux/capability.h usr/include/linux/capability.h
---- /opt/zde2/oe-alliance/builds/openaaf/dm800/tmp/sysroots/dm800/usr/include/linux/capability.h	2012-08-11 14:48:23.000000000 +0200
+diff -urN /opt/zde2/oe-alliance/builds/openatv/dm800/tmp/sysroots/dm800/usr/include/linux/capability.h usr/include/linux/capability.h
+--- /opt/zde2/oe-alliance/builds/openatv/dm800/tmp/sysroots/dm800/usr/include/linux/capability.h	2012-08-11 14:48:23.000000000 +0200
 +++ usr/include/linux/capability.h	2012-08-10 23:06:16.000000000 +0200
 @@ -264,5 +264,9 @@
  
@@ -108,8 +108,8 @@ diff -urN /opt/zde2/oe-alliance/builds/openaaf/dm800/tmp/sysroots/dm800/usr/incl
 +
  
  #endif /* !_LINUX_CAPABILITY_H */
-diff -urN /opt/zde2/oe-alliance/builds/openaaf/dm800/tmp/sysroots/dm800/usr/include/linux/fiemap.h usr/include/linux/fiemap.h
---- /opt/zde2/oe-alliance/builds/openaaf/dm800/tmp/sysroots/dm800/usr/include/linux/fiemap.h	1970-01-01 01:00:00.000000000 +0100
+diff -urN /opt/zde2/oe-alliance/builds/openatv/dm800/tmp/sysroots/dm800/usr/include/linux/fiemap.h usr/include/linux/fiemap.h
+--- /opt/zde2/oe-alliance/builds/openatv/dm800/tmp/sysroots/dm800/usr/include/linux/fiemap.h	1970-01-01 01:00:00.000000000 +0100
 +++ usr/include/linux/fiemap.h	2012-07-06 17:46:11.000000000 +0200
 @@ -0,0 +1,68 @@
 +/*
@@ -180,8 +180,8 @@ diff -urN /opt/zde2/oe-alliance/builds/openaaf/dm800/tmp/sysroots/dm800/usr/incl
 +						    * files. */
 +
 +#endif /* _LINUX_FIEMAP_H */
-diff -urN /opt/zde2/oe-alliance/builds/openaaf/dm800/tmp/sysroots/dm800/usr/include/linux/fs.h usr/include/linux/fs.h
---- /opt/zde2/oe-alliance/builds/openaaf/dm800/tmp/sysroots/dm800/usr/include/linux/fs.h	2012-08-11 14:48:24.000000000 +0200
+diff -urN /opt/zde2/oe-alliance/builds/openatv/dm800/tmp/sysroots/dm800/usr/include/linux/fs.h usr/include/linux/fs.h
+--- /opt/zde2/oe-alliance/builds/openatv/dm800/tmp/sysroots/dm800/usr/include/linux/fs.h	2012-08-11 14:48:24.000000000 +0200
 +++ usr/include/linux/fs.h	2012-08-11 00:24:44.000000000 +0200
 @@ -215,6 +215,49 @@
  #define BMAP_IOCTL 1		/* obsolete - kept for compatibility */
@@ -233,8 +233,8 @@ diff -urN /opt/zde2/oe-alliance/builds/openaaf/dm800/tmp/sysroots/dm800/usr/incl
  
  #define SYNC_FILE_RANGE_WAIT_BEFORE	1
  #define SYNC_FILE_RANGE_WRITE		2
-diff -urN /opt/zde2/oe-alliance/builds/openaaf/dm800/tmp/sysroots/dm800/usr/include/linux/input.h usr/include/linux/input.h
---- /opt/zde2/oe-alliance/builds/openaaf/dm800/tmp/sysroots/dm800/usr/include/linux/input.h	2012-08-11 14:48:26.000000000 +0200
+diff -urN /opt/zde2/oe-alliance/builds/openatv/dm800/tmp/sysroots/dm800/usr/include/linux/input.h usr/include/linux/input.h
+--- /opt/zde2/oe-alliance/builds/openatv/dm800/tmp/sysroots/dm800/usr/include/linux/input.h	2012-08-11 14:48:26.000000000 +0200
 +++ usr/include/linux/input.h	2012-08-10 21:56:09.000000000 +0200
 @@ -225,6 +225,7 @@
  #define KEY_KPEQUAL		117
@@ -421,8 +421,8 @@ diff -urN /opt/zde2/oe-alliance/builds/openaaf/dm800/tmp/sysroots/dm800/usr/incl
  
  /*
   * Relative axes
-diff -urN /opt/zde2/oe-alliance/builds/openaaf/dm800/tmp/sysroots/dm800/usr/include/linux/netlink.h usr/include/linux/netlink.h
---- /opt/zde2/oe-alliance/builds/openaaf/dm800/tmp/sysroots/dm800/usr/include/linux/netlink.h	2012-08-11 14:48:28.000000000 +0200
+diff -urN /opt/zde2/oe-alliance/builds/openatv/dm800/tmp/sysroots/dm800/usr/include/linux/netlink.h usr/include/linux/netlink.h
+--- /opt/zde2/oe-alliance/builds/openatv/dm800/tmp/sysroots/dm800/usr/include/linux/netlink.h	2012-08-11 14:48:28.000000000 +0200
 +++ usr/include/linux/netlink.h	2012-08-10 22:19:16.000000000 +0200
 @@ -21,6 +21,9 @@
  #define NETLINK_DNRTMSG		14	/* DECnet routing messages */
@@ -434,8 +434,8 @@ diff -urN /opt/zde2/oe-alliance/builds/openaaf/dm800/tmp/sysroots/dm800/usr/incl
  
  #define MAX_LINKS 32		
  
-diff -urN /opt/zde2/oe-alliance/builds/openaaf/dm800/tmp/sysroots/dm800/usr/include/linux/oom.h usr/include/linux/oom.h
---- /opt/zde2/oe-alliance/builds/openaaf/dm800/tmp/sysroots/dm800/usr/include/linux/oom.h	1970-01-01 01:00:00.000000000 +0100
+diff -urN /opt/zde2/oe-alliance/builds/openatv/dm800/tmp/sysroots/dm800/usr/include/linux/oom.h usr/include/linux/oom.h
+--- /opt/zde2/oe-alliance/builds/openatv/dm800/tmp/sysroots/dm800/usr/include/linux/oom.h	1970-01-01 01:00:00.000000000 +0100
 +++ usr/include/linux/oom.h	2012-07-06 17:46:12.000000000 +0200
 @@ -0,0 +1,22 @@
 +#ifndef __INCLUDE_LINUX_OOM_H
@@ -460,8 +460,8 @@ diff -urN /opt/zde2/oe-alliance/builds/openaaf/dm800/tmp/sysroots/dm800/usr/incl
 +#define OOM_SCORE_ADJ_MAX	1000
 +
 +#endif /* _INCLUDE_LINUX_OOM_H */
-diff -urN /opt/zde2/oe-alliance/builds/openaaf/dm800/tmp/sysroots/dm800/usr/include/linux/prctl.h usr/include/linux/prctl.h
---- /opt/zde2/oe-alliance/builds/openaaf/dm800/tmp/sysroots/dm800/usr/include/linux/prctl.h	2012-08-11 14:48:21.000000000 +0200
+diff -urN /opt/zde2/oe-alliance/builds/openatv/dm800/tmp/sysroots/dm800/usr/include/linux/prctl.h usr/include/linux/prctl.h
+--- /opt/zde2/oe-alliance/builds/openatv/dm800/tmp/sysroots/dm800/usr/include/linux/prctl.h	2012-08-11 14:48:21.000000000 +0200
 +++ usr/include/linux/prctl.h	2012-08-10 22:13:42.000000000 +0200
 @@ -59,4 +59,29 @@
  # define PR_ENDIAN_LITTLE	1	/* True little endian mode */

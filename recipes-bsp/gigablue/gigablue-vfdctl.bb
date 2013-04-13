@@ -1,5 +1,5 @@
 DESCRIPTION = "vfdctl is a little utility to control the display"
-MAINTAINER = "OpenAAF Team"
+MAINTAINER = "OpenATV Team"
 SECTION = "base"
 LICENSE = "proprietary"
 PACKAGE_ARCH = "all"

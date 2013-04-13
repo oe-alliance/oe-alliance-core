@@ -190,7 +190,7 @@ do_patch_prepend(){
 		else:
 			MACHINE1="Venton HDe"
 	elif "${MACHINE}" == "xp1000":
-		if "${DISTRO}" == "mkdigital" or "${DISTRO}" == "openaaf" or "${DISTRO}" == "openhdf":
+		if "${DISTRO}" == "mkdigital" or "${DISTRO}" == "openatv" or "${DISTRO}" == "openhdf":
 			MACHINE1="MK-Digital XP1000"
 		else:
 			MACHINE1="MaxDigital XP1000"
@@ -274,7 +274,7 @@ python do_setup_po_ipk () {
 	elif "${MACHINE}" == "ventonhde":
 		MACHINE1="Venton HDe"
 	elif "${MACHINE}" == "xp1000":
-		if "${DISTRO}" == "mkdigital" or "${DISTRO}" == "openaaf":
+		if "${DISTRO}" == "mkdigital" or "${DISTRO}" == "openatv":
 			MACHINE1="MK-Digital XP1000"
 		else:
 			MACHINE1="MaxDigital XP1000"
