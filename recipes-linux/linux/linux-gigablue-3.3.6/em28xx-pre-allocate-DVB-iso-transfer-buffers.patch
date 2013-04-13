@@ -1,0 +1,447 @@
+em28xx: pre-allocate DVB iso transfer buffers
+
+From: Gianluca Gennari <gennarone@gmail.com>
+---
+ drivers/media/video/em28xx/em28xx-cards.c |   16 +++-
+ drivers/media/video/em28xx/em28xx-core.c  |  140 +++++++++++++++++++----------
+ drivers/media/video/em28xx/em28xx-dvb.c   |   14 ++--
+ drivers/media/video/em28xx/em28xx-video.c |   10 ++-
+ drivers/media/video/em28xx/em28xx.h       |   23 ++++-
+ 5 files changed, 139 insertions(+), 64 deletions(-)
+
+diff --git a/drivers/media/video/em28xx/em28xx-cards.c b/drivers/media/video/em28xx/em28xx-cards.c
+index 4561cd8..ce1b60f 100644
+--- a/drivers/media/video/em28xx/em28xx-cards.c
++++ b/drivers/media/video/em28xx/em28xx-cards.c
+@@ -3307,6 +3307,17 @@ static int em28xx_usb_probe(struct usb_interface *interface,
+ 		goto unlock_and_free;
+ 	}
+ 
++	if (has_dvb) {
++		/* pre-allocate DVB isoc transfer buffers */
++		retval = em28xx_alloc_isoc(dev, EM28XX_DIGITAL_MODE,
++					   EM28XX_DVB_MAX_PACKETS,
++					   EM28XX_DVB_NUM_BUFS,
++					   dev->dvb_max_pkt_size);
++		if (retval) {
++			goto unlock_and_free;
++		}
++	}
++
+ 	request_modules(dev);
+ 
+ 	/* Should be the last thing to do, to avoid newer udev's to
+@@ -3379,7 +3390,7 @@ static void em28xx_usb_disconnect(struct usb_interface *interface)
+ 		     video_device_node_name(dev->vdev));
+ 
+ 		dev->state |= DEV_MISCONFIGURED;
+-		em28xx_uninit_isoc(dev);
++		em28xx_uninit_isoc(dev, dev->mode);
+ 		dev->state |= DEV_DISCONNECTED;
+ 		wake_up_interruptible(&dev->wait_frame);
+ 		wake_up_interruptible(&dev->wait_stream);
+@@ -3388,6 +3399,9 @@ static void em28xx_usb_disconnect(struct usb_interface *interface)
+ 		em28xx_release_resources(dev);
+ 	}
+ 
++	/* free DVB isoc buffers */
++	em28xx_uninit_isoc(dev, EM28XX_DIGITAL_MODE);
++
+ 	mutex_unlock(&dev->lock);
+ 
+ 	em28xx_close_extension(dev);
+diff --git a/drivers/media/video/em28xx/em28xx-core.c b/drivers/media/video/em28xx/em28xx-core.c
+index 0aacc96..b1e8a51 100644
+--- a/drivers/media/video/em28xx/em28xx-core.c
++++ b/drivers/media/video/em28xx/em28xx-core.c
+@@ -666,6 +666,7 @@ int em28xx_capture_start(struct em28xx *dev, int start)
+ 
+ 	return rc;
+ }
++EXPORT_SYMBOL_GPL(em28xx_capture_start);
+ 
+ int em28xx_vbi_supported(struct em28xx *dev)
+ {
+@@ -961,40 +962,46 @@ static void em28xx_irq_callback(struct urb *urb)
+ /*
+  * Stop and Deallocate URBs
+  */
+-void em28xx_uninit_isoc(struct em28xx *dev)
++void em28xx_uninit_isoc(struct em28xx *dev, enum em28xx_mode mode)
+ {
+ 	struct urb *urb;
++	struct em28xx_usb_isoc_bufs *isoc_bufs;
+ 	int i;
+ 
+-	em28xx_isocdbg("em28xx: called em28xx_uninit_isoc\n");
++	em28xx_isocdbg("em28xx: called em28xx_uninit_isoc in mode %d\n", mode);
++
++	if (mode == EM28XX_DIGITAL_MODE)
++		isoc_bufs = &dev->isoc_ctl.digital_bufs;
++	else
++		isoc_bufs = &dev->isoc_ctl.analog_bufs;
+ 
+ 	dev->isoc_ctl.nfields = -1;
+-	for (i = 0; i < dev->isoc_ctl.num_bufs; i++) {
+-		urb = dev->isoc_ctl.urb[i];
++	for (i = 0; i < isoc_bufs->num_bufs; i++) {
++		urb = isoc_bufs->urb[i];
+ 		if (urb) {
+ 			if (!irqs_disabled())
+ 				usb_kill_urb(urb);
+ 			else
+ 				usb_unlink_urb(urb);
+ 
+-			if (dev->isoc_ctl.transfer_buffer[i]) {
++			if (isoc_bufs->transfer_buffer[i]) {
+ 				usb_free_coherent(dev->udev,
+ 					urb->transfer_buffer_length,
+-					dev->isoc_ctl.transfer_buffer[i],
++					isoc_bufs->transfer_buffer[i],
+ 					urb->transfer_dma);
+ 			}
+ 			usb_free_urb(urb);
+-			dev->isoc_ctl.urb[i] = NULL;
++			isoc_bufs->urb[i] = NULL;
+ 		}
+-		dev->isoc_ctl.transfer_buffer[i] = NULL;
++		isoc_bufs->transfer_buffer[i] = NULL;
+ 	}
+ 
+-	kfree(dev->isoc_ctl.urb);
+-	kfree(dev->isoc_ctl.transfer_buffer);
++	kfree(isoc_bufs->urb);
++	kfree(isoc_bufs->transfer_buffer);
+ 
+-	dev->isoc_ctl.urb = NULL;
+-	dev->isoc_ctl.transfer_buffer = NULL;
+-	dev->isoc_ctl.num_bufs = 0;
++	isoc_bufs->urb = NULL;
++	isoc_bufs->transfer_buffer = NULL;
++	isoc_bufs->num_bufs = 0;
+ 
+ 	em28xx_capture_start(dev, 0);
+ }
+@@ -1003,91 +1010,130 @@ EXPORT_SYMBOL_GPL(em28xx_uninit_isoc);
+ /*
+  * Allocate URBs and start IRQ
+  */
+-int em28xx_init_isoc(struct em28xx *dev, int max_packets,
+-		     int num_bufs, int max_pkt_size,
+-		     int (*isoc_copy) (struct em28xx *dev, struct urb *urb))
++int em28xx_alloc_isoc(struct em28xx *dev, enum em28xx_mode mode,
++		     int max_packets, int num_bufs, int max_pkt_size)
+ {
+-	struct em28xx_dmaqueue *dma_q = &dev->vidq;
+-	struct em28xx_dmaqueue *vbi_dma_q = &dev->vbiq;
++	struct em28xx_usb_isoc_bufs *isoc_bufs;
+ 	int i;
+ 	int sb_size, pipe;
+ 	struct urb *urb;
+ 	int j, k;
+-	int rc;
+ 
+-	em28xx_isocdbg("em28xx: called em28xx_prepare_isoc\n");
++	em28xx_isocdbg("em28xx: called em28xx_alloc_isoc in mode %d\n", mode);
++
++	if (mode == EM28XX_DIGITAL_MODE)
++		isoc_bufs = &dev->isoc_ctl.digital_bufs;
++	else
++		isoc_bufs = &dev->isoc_ctl.analog_bufs;
+ 
+ 	/* De-allocates all pending stuff */
+-	em28xx_uninit_isoc(dev);
++	em28xx_uninit_isoc(dev, mode);
+ 
+-	dev->isoc_ctl.isoc_copy = isoc_copy;
+-	dev->isoc_ctl.num_bufs = num_bufs;
++	isoc_bufs->num_bufs = num_bufs;
+ 
+-	dev->isoc_ctl.urb = kzalloc(sizeof(void *)*num_bufs,  GFP_KERNEL);
+-	if (!dev->isoc_ctl.urb) {
++	isoc_bufs->urb = kzalloc(sizeof(void *)*num_bufs,  GFP_KERNEL);
++	if (!isoc_bufs->urb) {
+ 		em28xx_errdev("cannot alloc memory for usb buffers\n");
+ 		return -ENOMEM;
+ 	}
+ 
+-	dev->isoc_ctl.transfer_buffer = kzalloc(sizeof(void *)*num_bufs,
++	isoc_bufs->transfer_buffer = kzalloc(sizeof(void *)*num_bufs,
+ 					      GFP_KERNEL);
+-	if (!dev->isoc_ctl.transfer_buffer) {
++	if (!isoc_bufs->transfer_buffer) {
+ 		em28xx_errdev("cannot allocate memory for usb transfer\n");
+-		kfree(dev->isoc_ctl.urb);
++		kfree(isoc_bufs->urb);
+ 		return -ENOMEM;
+ 	}
+ 
+-	dev->isoc_ctl.max_pkt_size = max_pkt_size;
++	isoc_bufs->max_pkt_size = max_pkt_size;
++	isoc_bufs->num_packets = max_packets;
+ 	dev->isoc_ctl.vid_buf = NULL;
+ 	dev->isoc_ctl.vbi_buf = NULL;
+ 
+-	sb_size = max_packets * dev->isoc_ctl.max_pkt_size;
++	sb_size = isoc_bufs->num_packets * isoc_bufs->max_pkt_size;
+ 
+ 	/* allocate urbs and transfer buffers */
+-	for (i = 0; i < dev->isoc_ctl.num_bufs; i++) {
+-		urb = usb_alloc_urb(max_packets, GFP_KERNEL);
++	for (i = 0; i < isoc_bufs->num_bufs; i++) {
++		urb = usb_alloc_urb(isoc_bufs->num_packets, GFP_KERNEL);
+ 		if (!urb) {
+ 			em28xx_err("cannot alloc isoc_ctl.urb %i\n", i);
+-			em28xx_uninit_isoc(dev);
++			em28xx_uninit_isoc(dev, mode);
+ 			return -ENOMEM;
+ 		}
+-		dev->isoc_ctl.urb[i] = urb;
++		isoc_bufs->urb[i] = urb;
+ 
+-		dev->isoc_ctl.transfer_buffer[i] = usb_alloc_coherent(dev->udev,
++		isoc_bufs->transfer_buffer[i] = usb_alloc_coherent(dev->udev,
+ 			sb_size, GFP_KERNEL, &urb->transfer_dma);
+-		if (!dev->isoc_ctl.transfer_buffer[i]) {
++		if (!isoc_bufs->transfer_buffer[i]) {
+ 			em28xx_err("unable to allocate %i bytes for transfer"
+ 					" buffer %i%s\n",
+ 					sb_size, i,
+ 					in_interrupt() ? " while in int" : "");
+-			em28xx_uninit_isoc(dev);
++			em28xx_uninit_isoc(dev, mode);
+ 			return -ENOMEM;
+ 		}
+-		memset(dev->isoc_ctl.transfer_buffer[i], 0, sb_size);
++		memset(isoc_bufs->transfer_buffer[i], 0, sb_size);
+ 
+ 		/* FIXME: this is a hack - should be
+ 			'desc.bEndpointAddress & USB_ENDPOINT_NUMBER_MASK'
+ 			should also be using 'desc.bInterval'
+ 		 */
+ 		pipe = usb_rcvisocpipe(dev->udev,
+-				       dev->mode == EM28XX_ANALOG_MODE ?
++				       mode == EM28XX_ANALOG_MODE ?
+ 				       EM28XX_EP_ANALOG : EM28XX_EP_DIGITAL);
+ 
+ 		usb_fill_int_urb(urb, dev->udev, pipe,
+-				 dev->isoc_ctl.transfer_buffer[i], sb_size,
++				 isoc_bufs->transfer_buffer[i], sb_size,
+ 				 em28xx_irq_callback, dev, 1);
+ 
+-		urb->number_of_packets = max_packets;
++		urb->number_of_packets = isoc_bufs->num_packets;
+ 		urb->transfer_flags = URB_ISO_ASAP | URB_NO_TRANSFER_DMA_MAP;
+ 
+ 		k = 0;
+-		for (j = 0; j < max_packets; j++) {
++		for (j = 0; j < isoc_bufs->num_packets; j++) {
+ 			urb->iso_frame_desc[j].offset = k;
+ 			urb->iso_frame_desc[j].length =
+-						dev->isoc_ctl.max_pkt_size;
+-			k += dev->isoc_ctl.max_pkt_size;
++						isoc_bufs->max_pkt_size;
++			k += isoc_bufs->max_pkt_size;
+ 		}
+ 	}
++	return 0;
++}
++EXPORT_SYMBOL_GPL(em28xx_alloc_isoc);
++
++/*
++ * Allocate URBs and start IRQ
++ */
++int em28xx_init_isoc(struct em28xx *dev, enum em28xx_mode mode,
++		     int max_packets, int num_bufs, int max_pkt_size,
++		     int (*isoc_copy) (struct em28xx *dev, struct urb *urb))
++{
++	struct em28xx_dmaqueue *dma_q = &dev->vidq;
++	struct em28xx_dmaqueue *vbi_dma_q = &dev->vbiq;
++	struct em28xx_usb_isoc_bufs *isoc_bufs;
++	int i;
++	int rc;
++	int alloc;
++
++	em28xx_isocdbg("em28xx: called em28xx_init_isoc in mode %d\n", mode);
++
++	dev->isoc_ctl.isoc_copy = isoc_copy;
++
++	if (mode == EM28XX_DIGITAL_MODE) {
++		isoc_bufs = &dev->isoc_ctl.digital_bufs;
++		/* no need to free/alloc isoc buffers in digital mode */
++		alloc = 0;
++	} else {
++		isoc_bufs = &dev->isoc_ctl.analog_bufs;
++		alloc = 1;
++	}
++
++	if (alloc) {
++		rc = em28xx_alloc_isoc(dev, mode, max_packets,
++				       num_bufs, max_pkt_size);
++		if (rc)
++			return rc;
++	}
+ 
+ 	init_waitqueue_head(&dma_q->wq);
+ 	init_waitqueue_head(&vbi_dma_q->wq);
+@@ -1095,12 +1141,12 @@ int em28xx_init_isoc(struct em28xx *dev, int max_packets,
+ 	em28xx_capture_start(dev, 1);
+ 
+ 	/* submit urbs and enables IRQ */
+-	for (i = 0; i < dev->isoc_ctl.num_bufs; i++) {
+-		rc = usb_submit_urb(dev->isoc_ctl.urb[i], GFP_ATOMIC);
++	for (i = 0; i < isoc_bufs->num_bufs; i++) {
++		rc = usb_submit_urb(isoc_bufs->urb[i], GFP_ATOMIC);
+ 		if (rc) {
+ 			em28xx_err("submit of urb %i failed (error=%i)\n", i,
+ 				   rc);
+-			em28xx_uninit_isoc(dev);
++			em28xx_uninit_isoc(dev, mode);
+ 			return rc;
+ 		}
+ 	}
+diff --git a/drivers/media/video/em28xx/em28xx-dvb.c b/drivers/media/video/em28xx/em28xx-dvb.c
+index 25fc73f..4917b71 100644
+--- a/drivers/media/video/em28xx/em28xx-dvb.c
++++ b/drivers/media/video/em28xx/em28xx-dvb.c
+@@ -61,9 +61,6 @@ if (debug >= level) 						\
+ 	printk(KERN_DEBUG "%s/2-dvb: " fmt, dev->name, ## arg);	\
+ } while (0)
+ 
+-#define EM28XX_DVB_NUM_BUFS 5
+-#define EM28XX_DVB_MAX_PACKETS 64
+-
+ struct em28xx_dvb {
+ 	struct dvb_frontend        *fe[2];
+ 
+@@ -172,20 +169,21 @@ static int em28xx_start_streaming(struct em28xx_dvb *dvb)
+ 	max_dvb_packet_size = dev->dvb_max_pkt_size;
+ 	if (max_dvb_packet_size < 0)
+ 		return max_dvb_packet_size;
+-	dprintk(1, "Using %d buffers each with %d bytes\n",
++	dprintk(1, "Using %d buffers each with %d x %d bytes\n",
+ 		EM28XX_DVB_NUM_BUFS,
++		EM28XX_DVB_MAX_PACKETS,
+ 		max_dvb_packet_size);
+ 
+-	return em28xx_init_isoc(dev, EM28XX_DVB_MAX_PACKETS,
+-				EM28XX_DVB_NUM_BUFS, max_dvb_packet_size,
+-				em28xx_dvb_isoc_copy);
++	return em28xx_init_isoc(dev, EM28XX_DIGITAL_MODE,
++				EM28XX_DVB_MAX_PACKETS, EM28XX_DVB_NUM_BUFS,
++				max_dvb_packet_size, em28xx_dvb_isoc_copy);
+ }
+ 
+ static int em28xx_stop_streaming(struct em28xx_dvb *dvb)
+ {
+ 	struct em28xx *dev = dvb->adapter.priv;
+ 
+-	em28xx_uninit_isoc(dev);
++	em28xx_capture_start(dev, 0);
+ 
+ 	em28xx_set_mode(dev, EM28XX_SUSPEND);
+ 
+diff --git a/drivers/media/video/em28xx/em28xx-video.c b/drivers/media/video/em28xx/em28xx-video.c
+index 613300b..324b695 100644
+--- a/drivers/media/video/em28xx/em28xx-video.c
++++ b/drivers/media/video/em28xx/em28xx-video.c
+@@ -760,17 +760,19 @@ buffer_prepare(struct videobuf_queue *vq, struct videobuf_buffer *vb,
+ 			goto fail;
+ 	}
+ 
+-	if (!dev->isoc_ctl.num_bufs)
++	if (!dev->isoc_ctl.analog_bufs.num_bufs)
+ 		urb_init = 1;
+ 
+ 	if (urb_init) {
+ 		if (em28xx_vbi_supported(dev) == 1)
+-			rc = em28xx_init_isoc(dev, EM28XX_NUM_PACKETS,
++			rc = em28xx_init_isoc(dev, EM28XX_ANALOG_MODE,
++					      EM28XX_NUM_PACKETS,
+ 					      EM28XX_NUM_BUFS,
+ 					      dev->max_pkt_size,
+ 					      em28xx_isoc_copy_vbi);
+ 		else
+-			rc = em28xx_init_isoc(dev, EM28XX_NUM_PACKETS,
++			rc = em28xx_init_isoc(dev, EM28XX_ANALOG_MODE,
++					      EM28XX_NUM_PACKETS,
+ 					      EM28XX_NUM_BUFS,
+ 					      dev->max_pkt_size,
+ 					      em28xx_isoc_copy);
+@@ -2267,7 +2269,7 @@ static int em28xx_v4l2_close(struct file *filp)
+ 		v4l2_device_call_all(&dev->v4l2_dev, 0, core, s_power, 0);
+ 
+ 		/* do this before setting alternate! */
+-		em28xx_uninit_isoc(dev);
++		em28xx_uninit_isoc(dev, EM28XX_ANALOG_MODE);
+ 		em28xx_set_mode(dev, EM28XX_SUSPEND);
+ 
+ 		/* set alternate 0 */
+diff --git a/drivers/media/video/em28xx/em28xx.h b/drivers/media/video/em28xx/em28xx.h
+index 22e252b..2ae6815 100644
+--- a/drivers/media/video/em28xx/em28xx.h
++++ b/drivers/media/video/em28xx/em28xx.h
+@@ -151,12 +151,14 @@
+ 
+ /* number of buffers for isoc transfers */
+ #define EM28XX_NUM_BUFS 5
++#define EM28XX_DVB_NUM_BUFS 5
+ 
+ /* number of packets for each buffer
+    windows requests only 64 packets .. so we better do the same
+    this is what I found out for all alternate numbers there!
+  */
+ #define EM28XX_NUM_PACKETS 64
++#define EM28XX_DVB_MAX_PACKETS 64
+ 
+ #define EM28XX_INTERLACED_DEFAULT 1
+ 
+@@ -197,10 +199,13 @@ enum em28xx_mode {
+ 
+ struct em28xx;
+ 
+-struct em28xx_usb_isoc_ctl {
++struct em28xx_usb_isoc_bufs {
+ 		/* max packet size of isoc transaction */
+ 	int				max_pkt_size;
+ 
++		/* number of packets in each buffer */
++	int				num_packets;
++
+ 		/* number of allocated urbs */
+ 	int				num_bufs;
+ 
+@@ -209,6 +214,14 @@ struct em28xx_usb_isoc_ctl {
+ 
+ 		/* transfer buffers for isoc transfer */
+ 	char				**transfer_buffer;
++};
++
++struct em28xx_usb_isoc_ctl {
++		/* isoc transfer buffers for analog mode */
++	struct em28xx_usb_isoc_bufs	analog_bufs;
++
++		/* isoc transfer buffers for digital mode */
++	struct em28xx_usb_isoc_bufs	digital_bufs;
+ 
+ 		/* Last buffer command and region */
+ 	u8				cmd;
+@@ -676,10 +689,12 @@ int em28xx_vbi_supported(struct em28xx *dev);
+ int em28xx_set_outfmt(struct em28xx *dev);
+ int em28xx_resolution_set(struct em28xx *dev);
+ int em28xx_set_alternate(struct em28xx *dev);
+-int em28xx_init_isoc(struct em28xx *dev, int max_packets,
+-		     int num_bufs, int max_pkt_size,
++int em28xx_alloc_isoc(struct em28xx *dev, enum em28xx_mode mode,
++		      int max_packets, int num_bufs, int max_pkt_size);
++int em28xx_init_isoc(struct em28xx *dev, enum em28xx_mode mode,
++		     int max_packets, int num_bufs, int max_pkt_size,
+ 		     int (*isoc_copy) (struct em28xx *dev, struct urb *urb));
+-void em28xx_uninit_isoc(struct em28xx *dev);
++void em28xx_uninit_isoc(struct em28xx *dev, enum em28xx_mode mode);
+ int em28xx_isoc_dvb_max_packetsize(struct em28xx *dev);
+ int em28xx_set_mode(struct em28xx *dev, enum em28xx_mode set_mode);
+ int em28xx_gpio_set(struct em28xx *dev, struct em28xx_reg_seq *gpio);
+-- 
+1.7.5.4
+
