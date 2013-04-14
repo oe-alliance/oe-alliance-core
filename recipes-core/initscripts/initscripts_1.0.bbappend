@@ -1,3 +1,3 @@
-PRINC = "4"
+PRINC = "5"
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/${P}:"
