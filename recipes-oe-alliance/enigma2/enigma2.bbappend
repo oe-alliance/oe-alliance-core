@@ -27,6 +27,7 @@ RDEPENDS_${PN} = " \
 
 RRECOMMENDS_${PN} = " \
 	gst-plugin-subsink \
+	gst-plugin-libxt \
 	${GST_BASE_RDEPS} \
 	${GST_GOOD_RDEPS} \
 	${GST_BAD_RDEPS} \
