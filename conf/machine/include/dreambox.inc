@@ -1,12 +1,12 @@
 # dreambox.inc
 
-include conf/machine/include/autoload-filesystems.inc
-
 EXTRA_IMAGEDEPENDS += "dreambox-secondstage-${MACHINE}"
 
 GLIBC_EXTRA_OECONF = "--with-tls --with-__thread"
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "dreambox-dvb-modules-${MACHINE}"
+
+include conf/machine/include/autoload-filesystems.inc
 
 MACHINE_EXTRA_RRECOMMENDS = " \
 	gst-plugin-dreambox-dvbmediasink \
@@ -20,6 +20,8 @@ MACHINE_EXTRA_RRECOMMENDS = " \
 	"
 
 MACHINE_FEATURES += "dreambox alsa usbhost 3dtv switchoff tpm"
+# Add "dreambox" override for recipes
+MACHINEOVERRIDES .= ":dreambox"
 
 PREFERRED_PROVIDER_virtual/bootloader = "dreambox-secondstage-${MACHINE}"
 PREFERRED_PROVIDER_virtual/kernel = "linux-dreambox"
@@ -32,9 +34,6 @@ PREFERRED_VERSION_linux-dreambox = "3.2"
 KERNEL_IMAGETYPE = "vmlinux"
 KERNEL_OUTPUT = "${KERNEL_IMAGETYPE}"
 KERNEL_CONSOLE = "${@base_contains('MACHINE_FEATURES', 'usbconsole', 'ttyS0,115200', 'null', d)}"
-
-MKUBIFS_ARGS = "-m 2048 -e 129024 -c 1996 -x favor_lzo -X 1"
-UBINIZE_ARGS = "-m 2048 -p 128KiB -s 512"
 
 DREAMBOX_BUILDIMAGE = "buildimage --arch ${MACHINE} ${EXTRA_BUILDCMD} \
 	--erase-block-size ${DREAMBOX_ERASE_BLOCK_SIZE} \
