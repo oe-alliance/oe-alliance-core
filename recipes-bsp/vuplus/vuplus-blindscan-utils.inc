@@ -13,7 +13,7 @@ DOWNLOADMACHINE ?= "${MACHINE}"
 SRC_URI = "http://archive.vuplus.com/download/utils/vuplus-blindscan-utils-${DOWNLOADMACHINE}-${PV}.tar.bz2"
 
 PV = "3.2"
-PR = "r4"
+PR = "r5"
 
 S = "${WORKDIR}/blindscan-utils"
 
