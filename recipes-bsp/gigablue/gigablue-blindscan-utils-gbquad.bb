@@ -1,6 +1,8 @@
 DOWNLOADMACHINE = "gbquad"
 PV = "3.5.1"
-PR = "r3"
+PR = "r4"
+
+SRCDATE = "20130308"
 
 require gigablue-blindscan-utils.inc
 
