@@ -1,5 +1,5 @@
 MODULE = "OpenWebif"
-PRINC = "22"
+PRINC = "23"
 DEPENDS += "enigma2 python-pyopenssl"
 RDEPENDS_${PN} += " python-pyopenssl"
 
@@ -40,11 +40,11 @@ python do_package_prepend () {
 		('ventonhde', 'ini-3000.jpg', 'ini-3000.png'),
 		('xp1000', 'xp1000.jpg', 'xp_rc14_normal.png'),
 		('ebox5000', 'ebox5000.jpg', 'ebox5000.png'),
-		('ebox7358', 'ebox5000.jpg', 'ebox5000.png'),		
+		('ebox7358', 'ebox5000.jpg', 'ebox5000.png'),
 		('odinm7', 'odinm7.jpg', 'odinm7.png'),
 		('ixussone', 'ixussone.jpg', 'ixussone.png'),
 		('ixusszero', 'ixusszero.jpg', 'ixusszero.png'),
-		('ixussduo', 'ixussone.jpg', 'ixussone.png'),		
+		('ixussduo', 'ixussone.jpg', 'ixussone.png'),
 		('iqonios100hd', 'ios100hd.jpg', 'iqon.png'),
 		('iqonios200hd', 'ios200hd.jpg', 'iqon.png'),
 		('iqonios300hd', 'ios300hd.jpg', 'iqon.png'),
@@ -63,7 +63,7 @@ python do_package_prepend () {
 		for name in files:
 			if target_box != name and name != 'unknown.jpg':
 				if target_box == 'ini-3000.jpg':
-					if not (name == 'ini-3000.jpg' or name == 'ini-5000.jpg' or name == 'ini-7000.jpg'):
+					if not (name == 'ini-1000.jpg' or name == 'ini-3000.jpg' or name == 'ini-5000.jpg' or name == 'ini-7000.jpg'):
 						os.remove(os.path.join(root, name))
 				else:
 					os.remove(os.path.join(root, name))
@@ -71,7 +71,7 @@ python do_package_prepend () {
 		for name in files:
 			if target_remote != name and name != 'ow_remote.png':
 				if target_remote == 'ini-3000.png':
-					if not (name == 'ini-3000.png' or name == 'ini-5000.png' or name == 'ini-7000.png'):
+					if not (name == 'ini-1000.png' or name == 'ini-3000.png' or name == 'ini-5000.png' or name == 'ini-7000.png'):
 						os.remove(os.path.join(root, name))
 				else:
 					os.remove(os.path.join(root, name))
