@@ -1,0 +1,86 @@
+diff -Naur orig/data/keymap.xml git/data/keymap.xml
+--- orig/data/keymap.xml	2013-04-24 13:54:36.000000000 +0300
++++ git/data/keymap.xml	2013-04-24 13:19:00.000000000 +0300
+@@ -189,7 +189,7 @@
+ 
+ 	<map context="InfobarActions">
+ 		<key id="KEY_VIDEO" mapto="showMovies" flags="m" />
+-		<key id="KEY_RADIO" mapto="showRadio" flags="m" />
++		<key id="KEY_RADIO" mapto="toggleRadioTvIB" flags="m" />
+ 		<key id="KEY_TV" mapto="showTv" flags="m" />
+ 		<key id="KEY_FILE" mapto="showMovies" flags="m" />
+ 		<key id="KEY_TEXT" mapto="showText" flags="m" />
+@@ -475,7 +475,7 @@
+ 
+ 	<map context="TvRadioActions">
+ 		<key id="KEY_TV" mapto="keyTV" flags="m" />
+-		<key id="KEY_RADIO" mapto="keyRadio" flags="m" />
++		<key id="KEY_RADIO" mapto="toggleRadioTV" flags="m" />
+ 	</map>
+ 
+ 	<map context="TimerEditActions">
+diff -Naur orig/lib/python/Screens/ChannelSelection.py git/lib/python/Screens/ChannelSelection.py
+--- orig/lib/python/Screens/ChannelSelection.py	2013-04-24 13:43:47.000000000 +0300
++++ git/lib/python/Screens/ChannelSelection.py	2013-04-24 13:18:00.000000000 +0300
+@@ -1285,6 +1285,7 @@
+ 				"cancel": self.cancel,
+ 				"ok": self.channelSelected,
+ 				"keyRadio": self.doRadioButton,
++				"toggleRadioTV": self.toggleRadioTV,
+ 				"keyTV": self.doTVButton,
+ 			})
+ 
+@@ -1373,6 +1374,12 @@
+ 		else:
+ 			self.setModeRadio()
+ 
++	def toggleRadioTV(self):
++		if self.mode == MODE_RADIO:
++			self.setModeTv()
++		else:
++			self.setModeRadio()
++
+ 	def setModeRadio(self):
+ 		if self.revertMode is None:
+ 			self.revertMode = self.mode
+diff -Naur orig/lib/python/Screens/InfoBar.py git/lib/python/Screens/InfoBar.py
+--- orig/lib/python/Screens/InfoBar.py	2013-04-24 13:43:08.000000000 +0300
++++ git/lib/python/Screens/InfoBar.py	2013-04-24 14:31:40.000000000 +0300
+@@ -29,6 +29,9 @@
+ profile("LOAD:HelpableScreen")
+ from Screens.HelpMenu import HelpableScreen
+ 
++MODE_TV = 0
++MODE_RADIO = 1
++
+ class InfoBar(InfoBarBase, InfoBarShowHide,
+ 	InfoBarNumberZap, InfoBarChannelSelection, InfoBarMenu, InfoBarEPG, InfoBarRdsDecoder,
+ 	InfoBarInstantRecord, InfoBarAudioSelection, InfoBarRedButton, InfoBarTimerButton, InfoBarVmodeButton,
+@@ -47,10 +50,12 @@
+ 			{
+ 				"showMovies": (self.showMovies, _("Play recorded movies...")),
+ 				"showRadio": (self.showRadio, _("Show the radio player...")),
++				"toggleRadioTvIB": (self.toggleRadioTvIB,"Toggle Radio/TV"),
+ 				"showTv": (self.showTv, _("Show the tv player...")),
+ 			}, prio=2)
+ 		
+ 		self.allowPiP = True
++		self.mode = MODE_TV
+ 		
+ 		for x in HelpableScreen, \
+ 				InfoBarBase, InfoBarShowHide, \
+@@ -115,6 +120,14 @@
+ 			from Screens.ChannelSelection import ChannelSelectionRadio
+ 			self.session.openWithCallback(self.ChannelSelectionRadioClosed, ChannelSelectionRadio, self)
+ 
++	def toggleRadioTvIB(self):
++		if self.mode == MODE_TV:
++			self.mode = MODE_RADIO
++			self.showRadio()
++		else:
++			self.mode = MODE_TV
++			self.showTv()
++
+ 	def ChannelSelectionRadioClosed(self, *arg):
+ 		self.rds_display.show()  # in InfoBarRdsDecoder
+ 

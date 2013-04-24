@@ -67,6 +67,9 @@ SRC_URI_append_gb800se = " \
 SRC_URI_append_gb800ue = " \
 			file://gb800-evfd.patch \
 			"
+SRC_URI_append_odinm7 = " \
+			file://tv_radio.patch \
+			"
 
 FILES_${PN} += " ${bindir} ${sysconfdir}/e2-git.log"
 
