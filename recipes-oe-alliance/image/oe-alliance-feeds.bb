@@ -43,6 +43,7 @@ RRECOMMENDS = "\
 	dosfstools \
 	dvbsnoop \
 	dvdfs \
+	evtest \
 	exfat-utils \
 	fuse-exfat \
 	gdb \
