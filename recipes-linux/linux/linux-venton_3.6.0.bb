@@ -4,14 +4,14 @@ LICENSE = "GPLv2"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 KV = "3.6.0"
-SRCDATE = "20130118"
+SRCDATE = "20130426"
 
-SRC_URI[md5sum] = "f28c5166dce46e4b5a939718e58f2b22"
-SRC_URI[sha256sum] = "a6d387dcebe3eaafe8ccdb80deb848f65610e6c13fcea8e3ef6087d4b284c5c0"
+SRC_URI[md5sum] = "b0c7be039adbc6c13c97036c5e9c35d5"
+SRC_URI[sha256sum] = "505a82d811186068bc7932289a8b8bbeb7f3f454f095a426407cd854c0eca925"
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-MACHINE_KERNEL_PR_append = ".18"
+MACHINE_KERNEL_PR_append = ".19"
 
 # By default, kernel.bbclass modifies package names to allow multiple kernels
 # to be installed in parallel. We revert this change and rprovide the versioned
@@ -20,6 +20,7 @@ PKG_kernel-base = "kernel-base"
 PKG_kernel-image = "kernel-image"
 RPROVIDES_kernel-base = "kernel-${KERNEL_VERSION}"
 RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
+
 
 SRC_URI += "http://code-ini.com/software/kernel/linux-${KV}-${SRCDATE}.tar.gz \
 	file://defconfig \
@@ -70,6 +71,7 @@ kernel_do_install_append() {
 }
 
 MTD_DEVICE_ventonhdx = "mtd1"
+MTD_DEVICE_ventonhde = "mtd2"
 
 pkg_postinst_kernel-image () {
 	if [ "x$D" == "x" ]; then
