@@ -48,7 +48,7 @@ check_retval() {
 
 is_running() {
 	# returns 0 when running, 1 otherwise
-	PID="$(pgrep -f -x -u $USER "$PYTHONEXEC $DAEMON $DEFOPTS.*")"
+	PID="$(pgrep -f -n "$PYTHONEXEC $DAEMON $DEFOPTS.*")"
 	RET=$?
 	[ $RET -gt 1 ] && exit 1 || return $RET
 }
@@ -80,7 +80,7 @@ start_sab() {
 		check_retval
 		# create a pidfile; we don't use it but some monitoring app likes to have one
 		[ -w $(dirname $PIDFILE) ] && \
-			pgrep -f -x -n -u $USER "$PYTHONEXEC $DAEMON $OPTIONS" > $PIDFILE
+			pgrep -f -n "$PYTHONEXEC $DAEMON $OPTIONS" > $PIDFILE
 	else
 		log_success_msg "$DESC: already running (pid $PID)"
 	fi
