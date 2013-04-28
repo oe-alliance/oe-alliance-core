@@ -35,7 +35,7 @@ RRECOMMENDS = "\
 	", d)} \
 	${@base_contains("MACHINE_FEATURES", "dreambox", "enigma2-plugin-extensions-dflash", "", d)} \
 	"
-dreambox
+
 RRECOMMENDS_append_et5x00 = " swap-workaround"
 RRECOMMENDS_append_vusolo = " swap-workaround"
 RRECOMMENDS_append_gb800se = " swap-workaround"
