@@ -1,6 +1,6 @@
 MAINTAINER = "team@sabnzbd.org"
 LICENSE = "GPLv2+"
-LIC_FILES_CHKSUM = "file://COPYRIGHT.txt;md5=235357e51b50dc9738e5b57e2b49fb6a"
+LIC_FILES_CHKSUM = "file://COPYRIGHT.txt;md5=de848e27f035c0367b77e02c8139ee95"
 
 PR = "r1"
 
