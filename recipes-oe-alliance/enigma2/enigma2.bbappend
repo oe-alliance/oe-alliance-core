@@ -114,6 +114,7 @@ EXTRA_OECONF += "\
 	${@base_contains("MACHINE_FEATURES", "bwlcd255", "--with-bwlcd255" , "", d)} \
 	${@base_contains("MACHINE_FEATURES", "fullgraphiclcd", "--with-fullgraphiclcd" , "", d)} \
 	${@base_contains("MACHINE_FEATURES", "gigabluelcd", "--with-gigabluelcd" , "", d)} \
+	${@base_contains("MACHINE_FEATURES", "nolcd", "--with-nolcd" , "", d)} \	
 	"
 
 # some plugins contain so's, their stripped symbols should not end up in the enigma2 package
