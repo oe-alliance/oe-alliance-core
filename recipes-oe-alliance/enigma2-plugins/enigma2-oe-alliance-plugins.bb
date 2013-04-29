@@ -40,7 +40,6 @@ DESCRIPTION_enigma2-plugin-systemplugins-firmwareupgrade = "Upgrade your system 
 DESCRIPTION_enigma2-plugin-systemplugins-fpgaupgrade = "Upgrade your system FPGA"
 DESCRIPTION_enigma2-plugin-systemplugins-vfdcontrol = "vfd controller"
 RDEPENDS_enigma2-plugin-systemplugins-vfdcontrol = "gigablue-vfdctl"
-DESCRIPTION_enigma2-plugin-systemplugins-vfdcontrol2 = "vfd controller"
 DESCRIPTION_enigma2-plugin-extensions-streamtv = "iptv player"
 RDEPENDS_enigma2-plugin-extensions-streamtv = "librtmp"
 DESCRIPTION_enigma2-plugin-systemplugins-tempfancontrol = "Control your internal system fan."
