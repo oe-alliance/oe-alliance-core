@@ -9,7 +9,7 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r219"
+PR = "r220"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -168,23 +168,23 @@ do_deploy_append_ventonhde() {
 
 do_deploy_append_dm8000() {
 # 	Install any packages that are only For this machines feed here, uncomment the line below and change as required
-	install -m 0644 enigma2-plugin-extensions-dflash_9.4.2-r01_all.ipk ${WORKDIR}/deploy-ipks/3rdparty
+	install -m 0644 enigma2-plugin-extensions-dflash_9.4.2-r02_all.ipk ${WORKDIR}/deploy-ipks/3rdparty
 }
 do_deploy_append_dm7020hd() {
 # 	Install any packages that are only For this machines feed here, uncomment the line below and change as required
-	install -m 0644 enigma2-plugin-extensions-dflash_9.4.2-r01_all.ipk ${WORKDIR}/deploy-ipks/3rdparty
+	install -m 0644 enigma2-plugin-extensions-dflash_9.4.2-r02_all.ipk ${WORKDIR}/deploy-ipks/3rdparty
 }
 do_deploy_append_dm500hd() {
 # 	Install any packages that are only For this machines feed here, uncomment the line below and change as required
-	install -m 0644 enigma2-plugin-extensions-dflash_9.4.2-r01_all.ipk ${WORKDIR}/deploy-ipks/3rdparty
+	install -m 0644 enigma2-plugin-extensions-dflash_9.4.2-r02_all.ipk ${WORKDIR}/deploy-ipks/3rdparty
 }
 do_deploy_append_dm800se() {
 # 	Install any packages that are only For this machines feed here, uncomment the line below and change as required
-	install -m 0644 enigma2-plugin-extensions-dflash_9.4.2-r01_all.ipk ${WORKDIR}/deploy-ipks/3rdparty
+	install -m 0644 enigma2-plugin-extensions-dflash_9.4.2-r02_all.ipk ${WORKDIR}/deploy-ipks/3rdparty
 }
 do_deploy_append_dm800() {
 # 	Install any packages that are only For this machines feed here, uncomment the line below and change as required
-	install -m 0644 enigma2-plugin-extensions-dflash_9.4.2-r01_all.ipk ${WORKDIR}/deploy-ipks/3rdparty
+	install -m 0644 enigma2-plugin-extensions-dflash_9.4.2-r02_all.ipk ${WORKDIR}/deploy-ipks/3rdparty
 }
 
 addtask deploy before do_build after do_install
