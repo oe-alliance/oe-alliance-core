@@ -11,3 +11,5 @@ mknod /dev/sound/mixer c 14 0
 mknod /dev/sound/mixer1 c 14 16
 
 mknod /dev/input/mouse0 c 13 32
+
+ln -s /proc/vfd /dev/dbox/oled0
