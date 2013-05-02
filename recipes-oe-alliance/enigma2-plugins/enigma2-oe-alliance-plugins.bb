@@ -25,6 +25,7 @@ PROVIDES = "${PN} \
 	enigma2-plugin-systemplugins-transcodingsetup \
 	enigma2-plugin-systemplugins-micomupgrade \
 	enigma2-plugin-extensions-ondemand \
+	enigma2-plugin-extensions-fempa \
 	"
 
 DESCRIPTION_enigma2-plugin-systemplugins-autobouquetsmaker = "Automatically build and update bouquets from the satellite stream."
@@ -60,6 +61,7 @@ RDEPENDS_enigma2-plugin-systemplugins-transcodingsetup = "vuplus-transtreamproxy
 DESCRIPTION_enigma2-plugin-systemplugins-micomupgrade = "micomupgrade"
 RDEPENDS_enigma2-plugin-extensions-ondemand = "python-dnspython python-beautifulsoup python-lxml python-simplejson python-pyamf"
 DESCRIPTION_enigma2-plugin-extensions-ondemand = "Watch on demand TV."
+DESCRIPTION_enigma2-plugin-extensions-fempa = "Norwegian P4 FEM PAA radio show player."
 
 DEPENDS = "enigma2 \
 	${@base_contains("MACHINE_FEATURES", "blindscan-dvbc", "virtual/blindscan-dvbc" , "", d)} \
@@ -87,7 +89,7 @@ inherit gitpkgv autotools
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r47"
+PR = "r48"
 
 SRC_URI="git://github.com/oe-alliance/oe-alliance-plugins.git;protocol=git"
 
