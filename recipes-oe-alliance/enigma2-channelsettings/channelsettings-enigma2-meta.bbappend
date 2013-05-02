@@ -1,6 +1,6 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
-PRINC = "14"
+PRINC = "15"
 
 inherit allarch
 
@@ -55,7 +55,6 @@ DEPENDS += "\
 	enigma2-plugin-settings-dona.multifeed.28e.23e.19e.16e.13e.9e.7e.5e.1w \
 	enigma2-plugin-settings-dona.multifeed.33e.31e.28e.23e.19e.16e.13e.9e.5e.1w.4w.5w \
 	enigma2-plugin-settings-dona.multifeed.39e.28e.23e.19e.16e.13e.9e.7e.5e.1w.4w.5w.8w.12w.15w \
-	enigma2-plugin-settings-icesat.28e.23e.19e.13e \
 	enigma2-plugin-settings-likra.rotor \
 	enigma2-plugin-settings-malimali.9e.13e.19e \
 	enigma2-plugin-settings-malimali.13e \
@@ -92,6 +91,8 @@ DEPENDS += "\
 	enigma2-plugin-settings-satvenus.39e.28e.23e.19e.16e.13e.9e.7e.5e.1w.4w.5w \
 	enigma2-plugin-settings-satvenus.motor.42e.to.30w \
 	enigma2-plugin-settings-satvenus.motor.75e.to.30w \
+	enigma2-plugin-settings-swallow.19e \
+	enigma2-plugin-settings-swallow.19e.13e \
 	enigma2-plugin-settings-tuncay.19e.13e.astra.hortbird \
 	enigma2-plugin-settings-tuncay.42e.19e.13e.7e \
 	enigma2-plugin-settings-tuncay.astra \
