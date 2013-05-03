@@ -1,7 +1,7 @@
-MACHINE_KERNEL_PR_append = ".${INC_PR}.38"
+MACHINE_KERNEL_PR_append = ".${INC_PR}.39"
 
 PATCHREV = "4e0356d04e89df800361b9252f990716f5523c6e"
-PATCHLEVEL = "41"
+PATCHLEVEL = "44"
 
 SRC_URI = " \
 			${KERNELORG_MIRROR}/linux/kernel/v3.x/linux-3.2.tar.bz2;name=kernel \
@@ -15,7 +15,6 @@ SRC_URI = " \
 			file://rtl8712-backport-c.patch \
 			file://rtl8712-backport-d.patch \
 			file://make-3.82-hack.patch \
-			file://mips-compile-fix-3.2.41.patch \
 			file://0001-SCSI-sd-Use-SCSI-read-write-16-with-32-bit-LBA-drive.patch \
 			file://0002-add-crypto-api-xz-support.patch \
 			file://0003-add-XZ-compression-support-to-UBIFS.patch \
@@ -34,8 +33,8 @@ SRC_URI = " \
 
 SRC_URI[kernel.md5sum] = "7ceb61f87c097fc17509844b71268935"
 SRC_URI[kernel.sha256sum] = "c881fc2b53cf0da7ca4538aa44623a7de043a41f76fd5d0f51a31f6ed699d463"
-SRC_URI[kernel-patch.md5sum] = "99af954e7baed6ef1e4fa0e22a422f8e"
-SRC_URI[kernel-patch.sha256sum] = "7508fd0d4171479f4ecab7520ec7be1878888e959dd2006385056728179043a8"
+SRC_URI[kernel-patch.md5sum] = "1f0449a3358ddb9c59fe9ddd6876f522"
+SRC_URI[kernel-patch.sha256sum] = "beaff55b35bfac550cf3dfae03c379e1dd7a2ef8a2bfa57b86848cb081731c56"
 SRC_URI[dmm-patch.md5sum] = "d17d65e9978343d540e0b60767a82286"
 SRC_URI[dmm-patch.sha256sum] = "576356545de7f587d164d1cee2cb17b6c1ce3efbe2e01ff785c13ec2d544d220"
 SRC_URI[unionfs.md5sum] = "06e7c9f6cafd49b72184be851116c511"
