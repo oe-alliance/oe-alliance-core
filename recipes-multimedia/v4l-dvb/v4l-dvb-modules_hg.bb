@@ -2,7 +2,7 @@ DEPENDS += "module-init-tools"
 RDEPENDS_${PN} += "module-init-tools-depmod"
 SRCDATE = "20100904"
 PV = "0.0+hg${SRCDATE}"
-PR = "${INC_PR}.0"
+PR = "${INC_PR}.1"
 
 SRC_URI = "hg://linuxtv.org/hg/;module=v4l-dvb;rev=${SRCREV} \
            file://defconfig \
