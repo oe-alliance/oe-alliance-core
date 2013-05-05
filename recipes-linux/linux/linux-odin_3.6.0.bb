@@ -71,7 +71,7 @@ kernel_do_install_append() {
 
 MTD_DEVICE_odinm9 = "mtd2"
 MTD_DEVICE_odinm7 = "mtd2"
-MTD_DEVICE_e3hd = "mtd2"
+MTD_DEVICE_e3hd = "mtd1"
 
 pkg_postinst_kernel-image () {
 	if [ "x$D" == "x" ]; then
