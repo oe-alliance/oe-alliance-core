@@ -80,7 +80,7 @@ do_configure_prepend() {
 		DRIVERSDATE=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/vuplus/vuplus-dvb-modules-${MACHINE}.bb | cut -b 12-19`
 	elif [ "${MACHINE}" = "et4x00" -o "${MACHINE}" = "et5x00" -o "${MACHINE}" = "et6x00" -o "${MACHINE}" = "et9x00" ]; then
 		DRIVERSDATE=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/etxx00/et-dvb-modules-${MACHINE}.bb | cut -b 12-19`
-	elif [ "${MACHINE}" = "odinm9" -o "${MACHINE}" = "odinm7" ]; then
+	elif [ "${MACHINE}" = "odinm9" -o "${MACHINE}" = "odinm7" -o "${MACHINE}" = "e3hd" ]; then
 		DRIVERSDATE=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/odin/odin-dvb-modules-${MACHINE}.bb | cut -b 12-19`
 	elif [ "${MACHINE}" = "iqonios100hd" -o "${MACHINE}" = "iqonios200hd" -o "${MACHINE}" = "iqonios300hd" -o "${MACHINE}" = "tmtwin" -o "${MACHINE}" = "tm2t" -o "${MACHINE}" = "tmsingle" ]; then
 		DRIVERSDATE=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/iqon/iqon-dvb-modules.bb | cut -b 12-19`
@@ -192,10 +192,7 @@ do_patch_prepend(){
 		else:
 			MACHINE1="Venton HDe"
 	elif "${MACHINE}" == "xp1000":
-		if "${DISTRO}" == "mkdigital" or "${DISTRO}" == "openatv" or "${DISTRO}" == "openhdf":
-			MACHINE1="MK-Digital XP1000"
-		else:
-			MACHINE1="MaxDigital XP1000"
+		MACHINE1="XP 1000"
 	elif "${MACHINE}" == "ebox5000":
 		MACHINE1="MixOS F5"
 	elif "${MACHINE}" == "ebox7358":
@@ -211,6 +208,8 @@ do_patch_prepend(){
 		MACHINE1="IXUSS ZERO"
 	elif "${MACHINE}" == "ixussduo":
 		MACHINE1="IXUSS DUO"
+	elif "${MACHINE}" == "e3hd":
+		MACHINE1="E3 HD"
 	import os
 	os.system("find ./ -name \"*.po\" > ./po_list")
 	os.system("find ./ -name \"*.py\" >> ./po_list")
@@ -276,10 +275,7 @@ python do_setup_po_ipk () {
 	elif "${MACHINE}" == "ventonhde":
 		MACHINE1="Venton HDe"
 	elif "${MACHINE}" == "xp1000":
-		if "${DISTRO}" == "mkdigital" or "${DISTRO}" == "openatv":
-			MACHINE1="MK-Digital XP1000"
-		else:
-			MACHINE1="MaxDigital XP1000"
+		MACHINE1="XP 1000"
 	elif "${MACHINE}" == "ebox5000":
 		MACHINE1="MixOS F5"
 	elif "${MACHINE}" == "ebox7358":
@@ -295,6 +291,8 @@ python do_setup_po_ipk () {
 		MACHINE1="IXUSS ZERO"
 	elif "${MACHINE}" == "ixussduo":
 		MACHINE1="IXUSS DUO"
+	elif "${MACHINE}" == "e3hd":
+			MACHINE1="E3 HD"
 	import os
 	os.system("find ./ -name \"*.po\" > ./po_list")
 	os.system("find ./ -name \"*.py\" >> ./po_list")

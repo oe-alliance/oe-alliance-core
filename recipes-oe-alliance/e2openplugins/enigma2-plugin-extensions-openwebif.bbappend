@@ -51,6 +51,7 @@ python do_package_prepend () {
 		('azboxme', 'unknown.jpg', 'dm_normal.png'),
 		('azboxhd', 'unknown.jpg', 'dm_normal.png'),
 		('azboxminime', 'unknown.jpg', 'dm_normal.png'),
+		('e3hd', 'e3hd.jpg', 'e3hd.png'),		
 	]
 	import os
 	top = '${D}${PLUGINPATH}/public/images/'

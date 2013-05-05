@@ -1,0 +1,198 @@
+diff -urN a/arch/mips/brcmstb/setup.c b/arch/mips/brcmstb/setup.c
+--- a/arch/mips/brcmstb/setup.c	2012-10-14 00:47:18.000000000 +0900
++++ b/arch/mips/brcmstb/setup.c	2013-03-07 11:10:53.715395299 +0900
+@@ -893,7 +893,7 @@
+ 		cs_info[i].len = 8192UL << (base & 0xf);
+ 
+ 		/* ignore what's on CS0 */
+-		if (i == 0) continue;
++		/* if (i == 0) continue; */
+ 
+ #ifdef BCHP_EBI_CS_CONFIG_0
+ 		config = BDEV_RD(BCHP_EBI_CS_CONFIG_0 + (i * 8));
+--- a/arch/mips/brcmstb/board.c	2013-03-21 12:18:24.000000000 +0900
++++ b/arch/mips/brcmstb/board.c	2013-03-21 15:18:07.000000000 +0900
+@@ -60,6 +60,11 @@
+  * Some boards override this - see below.
+  */
+ unsigned long brcm_ext_mii_mode = BRCM_PHY_TYPE_EXT_RGMII;
++#if defined(CONFIG_BCM7358)
++#define ODIN_E3  91
++#define ODIN_E3P 92
++static int odin_board_version;
++#endif
+ 
+ #ifdef CONFIG_BRCM_HAS_PCI23
+ 
+@@ -129,8 +134,131 @@
+ 		 BCHP_AON_PIN_CTRL_PIN_MUX_PAD_CTRL_##reg##_##field##_SHIFT)); \
+ 	} while (0)
+ 
++static int get_board_version(void)
++{
++#define BREG_Read32(reg)        BDEV_RD(reg)
++#define BREG_Write32(reg, data) BDEV_WR(reg, data)
++
++#define  GIO_AON_ODEN_LO        0x408c00     //GENERAL PURPOSE I/O OPEN DRAIN ENABLE [20:0]
++#define  GIO_AON_DATA_LO        0x408c04     //GENERAL PURPOSE I/O DATA [20:0]
++#define  GIO_AON_IODIR_LO       0x408c08     //GENERAL PURPOSE I/O DIRECTION [20:0]
++#define  GIO_AON_EC_LO          0x408c0c     //GENERAL PURPOSE I/O EDGE CONFIGURATION [20:0]
++#define  GIO_AON_EI_LO          0x408c10     //GENERAL PURPOSE I/O EDGE INSENSITIVE [20:0]
++#define  GIO_AON_MASK_LO        0x408c14     //GENERAL PURPOSE I/O INTERRUPT MASK [20:0]
++#define  GIO_AON_LEVEL_LO       0x408c18     //GENERAL PURPOSE I/O INTERRUPT TYPE [20:0]
++#define  GIO_AON_STAT_LO        0x408c1c     //GENERAL PURPOSE I/O INTERRUPT STATUS [20:0]
++#define  GIO_AON_ODEN_EXT       0x408c40     //GENERAL PURPOSE I/O OPEN DRAIN ENABLE [65:64] (SGPIO[1:0])
++#define  GIO_AON_DATA_EXT       0x408c44     //GENERAL PURPOSE I/O DATA [65:64] (SGPIO[1:0])
++#define  GIO_AON_IODIR_EXT      0x408c48     //GENERAL PURPOSE I/O DIRECTION [65:64] (SGPIO[1:0])
++#define  GIO_AON_EC_EXT         0x408c4c     //GENERAL PURPOSE I/O EDGE CONFIGURATION [65:64] (SGPIO[1:0])
++#define  GIO_AON_EI_EXT         0x408c50     //GENERAL PURPOSE I/O EDGE INSENSITIVE [65:64] (SGPIO[1:0])
++#define  GIO_AON_MASK_EXT       0x408c54     //GENERAL PURPOSE I/O INTERRUPT MASK [65:64] (SGPIO[1:0])
++#define  GIO_AON_LEVEL_EXT      0x408c58     //GENERAL PURPOSE I/O INTERRUPT TYPE [65:64] (SGPIO[1:0])
++#define  GIO_AON_STAT_EXT       0x408c5c     //GENERAL PURPOSE I/O INTERRUPT STATUS [65:64] (SGPIO[1:0])
++
++
++#define  GIO_ODEN_EXT_HI        0x406560        //GENERAL PURPOSE I/O OPEN DRAIN ENABLE [124:96]
++#define  GIO_DATA_EXT_HI        0x406564        //GENERAL PURPOSE I/O DATA [124:96]
++#define  GIO_IODIR_EXT_HI       0x406568        //GENERAL PURPOSE I/O DIRECTION [124:96]
++#define  GIO_EC_EXT_HI          0x40656c        //GENERAL PURPOSE I/O EDGE CONFIGURATION [124:96]
++#define  GIO_EI_EXT_HI          0x406570        //GENERAL PURPOSE I/O EDGE INSENSITIVE [124:96]
++#define  GIO_MASK_EXT_HI        0x406574        //GENERAL PURPOSE I/O INTERRUPT MASK [124:96]
++#define  GIO_LEVEL_EXT_HI       0x406578        //GENERAL PURPOSE I/O INTERRUPT TYPE [124:96]
++#define  GIO_STAT_EXT_HI        0x40657c        //GENERAL PURPOSE I/O INTERRUPT STATUS [124:96]
++
++        uint32_t val_120 = 0;
++        uint32_t val_121 = 0;
++        uint32_t val_122 = 0;
++
++        int ver;
++	uint32_t dwVal;
++	
++        PINMUX(15, gpio_120, 0);
++        PINMUX(15, gpio_121, 0);
++        PINMUX(15, gpio_122, 0);
++        PADCTRL(8, gpio_120_pad_ctrl, 1);
++        PADCTRL(8, gpio_121_pad_ctrl, 1);
++        PADCTRL(8, gpio_122_pad_ctrl, 1);
++
++        // GPIO 120 io read mode
++        dwVal = BREG_Read32(GIO_ODEN_EXT_HI);
++        dwVal = dwVal & (~(0x1 << 24));
++        BREG_Write32(GIO_ODEN_EXT_HI, dwVal);
++
++        dwVal = BREG_Read32(GIO_IODIR_EXT_HI);
++        dwVal = dwVal | (0x1 << 24);
++        BREG_Write32(GIO_IODIR_EXT_HI, dwVal);
++
++        dwVal = BREG_Read32(GIO_MASK_EXT_HI);
++        dwVal = dwVal & (~(0x1 << 24));
++        BREG_Write32(GIO_MASK_EXT_HI, dwVal);
++
++        PADCTRL(8, gpio_120_pad_ctrl, 0);
++
++        dwVal = BREG_Read32(GIO_DATA_EXT_HI);
++        dwVal = dwVal & (0x1 << 24);
++        val_120 = dwVal ? 1 : 0;
++
++        // GPIO 121 io read mode
++        dwVal = BREG_Read32(GIO_ODEN_EXT_HI);
++        dwVal = dwVal & (~(0x1 << 25));
++        BREG_Write32(GIO_ODEN_EXT_HI, dwVal);
++
++        dwVal = BREG_Read32(GIO_IODIR_EXT_HI);
++        dwVal = dwVal | (0x1 << 25);
++        BREG_Write32(GIO_IODIR_EXT_HI, dwVal);
++
++        dwVal = BREG_Read32(GIO_MASK_EXT_HI);
++        dwVal = dwVal & (~(0x1 << 25));
++        BREG_Write32(GIO_MASK_EXT_HI, dwVal);
++
++        PADCTRL(8, gpio_121_pad_ctrl, 0);
++
++        dwVal = BREG_Read32(GIO_DATA_EXT_HI);
++        dwVal = dwVal & (0x1 << 25);
++        val_121 = dwVal ? 1 : 0;
++
++        // GPIO 122 io read mode
++        dwVal = BREG_Read32(GIO_ODEN_EXT_HI);
++        dwVal = dwVal & (~(0x1 << 26));
++        BREG_Write32(GIO_ODEN_EXT_HI, dwVal);
++
++        dwVal = BREG_Read32(GIO_IODIR_EXT_HI);
++        dwVal = dwVal | (0x1 << 26);
++        BREG_Write32(GIO_IODIR_EXT_HI, dwVal);
++
++        dwVal = BREG_Read32(GIO_MASK_EXT_HI);
++        dwVal = dwVal & (~(0x1 << 26));
++        BREG_Write32(GIO_MASK_EXT_HI, dwVal);
++
++        PADCTRL(8, gpio_122_pad_ctrl, 0);
++
++        dwVal = BREG_Read32(GIO_DATA_EXT_HI);
++        dwVal = dwVal & (0x1 << 26);
++        val_122 = dwVal ? 1 : 0;
++
++        ver = 90;
++
++        if(val_120)
++                ver += (1 << 2);
++
++        if(val_121)
++                ver += (1 << 1);
++
++        if(val_122)
++                ver += 1;
++
++        return ver;
++
++
++}
++
+ void board_pinmux_setup(void)
+ {
++#if defined(CONFIG_BCM7358)
++	odin_board_version = get_board_version();
++#endif	
++
+ #if !defined(CONFIG_BRCM_IKOS)
+ #if defined(CONFIG_BCM7125)
+ 
+@@ -359,7 +487,7 @@
+ 	PINMUX(18, vo_656_6, 2);	/* SDIO_WPROT */
+ 
+ #elif defined(CONFIG_BCM7358) || defined(CONFIG_BCM7552)
+-
++	
+ 	PINMUX(11, gpio_89, 1);		/* UARTB TX */
+ 	PINMUX(11, gpio_90, 1);		/* UARTB RX */
+ 	PINMUX(11, gpio_91, 1);		/* UARTC TX */
+@@ -374,7 +502,9 @@
+ 	AON_PINMUX(2, aon_gpio_15, 5);
+ 	AON_PINMUX(2, aon_gpio_16, 5);
+ 	AON_PINMUX(2, aon_gpio_17, 5);
+-	AON_PINMUX(2, aon_gpio_18, 5);
++	if(odin_board_version == ODIN_E3P) {
++		AON_PINMUX(2, aon_gpio_18, 5);
++	}
+ 	AON_PINMUX(2, aon_gpio_19, 5);
+ 	AON_PINMUX(2, aon_gpio_20, 5);
+ 
+@@ -388,7 +518,9 @@
+ 	AON_PADCTRL(1, aon_gpio_15_pad_ctrl, 2);
+ 	AON_PADCTRL(1, aon_gpio_16_pad_ctrl, 2);
+ 	AON_PADCTRL(1, aon_gpio_17_pad_ctrl, 2);
+-	AON_PADCTRL(1, aon_gpio_18_pad_ctrl, 2);
++	if(odin_board_version == ODIN_E3P) {
++		AON_PADCTRL(1, aon_gpio_18_pad_ctrl, 2);
++	}
+ 	AON_PADCTRL(1, aon_gpio_19_pad_ctrl, 2);
+ 	AON_PADCTRL(1, aon_gpio_20_pad_ctrl, 2);
+ 
+@@ -766,7 +898,7 @@
+ 		.size = MTDPART_SIZ_FULL,
+ 	}, {
+ 		.name = "kernel",
+-		.offset = 0,
++		.offset = 4 * 1024 * 1024,
+ 		.size = 6 * 1024 * 1024,
+ 	}, {
+ 		.name = "rootfs",
