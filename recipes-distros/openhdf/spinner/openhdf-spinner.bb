@@ -9,7 +9,7 @@ require conf/license/license-gplv2.inc
 PV = "1.0"
 PR = "r1"
 
-SRC_URI="file://waiti*.png" 
+SRC_URI="file://wait*.png" 
 		
 S = "${WORKDIR}"		
 
