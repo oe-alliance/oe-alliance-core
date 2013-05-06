@@ -1,6 +1,6 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
-PRINC = "16"
+PRINC = "17"
 
 inherit allarch
 
@@ -76,7 +76,11 @@ DEPENDS += "\
 	enigma2-plugin-settings-predrag.39e.28e.19e.16e.13e.0.8w \
 	enigma2-plugin-settings-predrag.39e.28e.26e.19e.16e.13e.7.0e.0.8w \
 	enigma2-plugin-settings-predrag.39e.28e.26e.23e.19e.16e.13e.7.0e.0.8w.4.0w \
+	enigma2-plugin-settings-predrag.42e.19e.13e.7e \
 	enigma2-plugin-settings-predrag.motor.42e.to.30w \
+	enigma2-plugin-settings-rickysnake.13e.19e \
+	enigma2-plugin-settings-rickysnake.13e \
+	enigma2-plugin-settings-rickysnake.19e \
 	enigma2-plugin-settings-sgtflipflop.28e \
 	enigma2-plugin-settings-satvenus.19e.13e \
 	enigma2-plugin-settings-satvenus.19e.16e.13e.1w \
