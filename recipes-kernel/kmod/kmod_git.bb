@@ -9,7 +9,7 @@ inherit autotools gitpkgv
 
 PKGV = "${GITPKGVTAG}"
 SRCREV = "${AUTOREV}"
-SRC_URI = "git://github.com/profusion/kmod.git"i
+SRC_URI = "git://github.com/profusion/kmod.git"
 
 EXTRA_OECONF = "\
   --disable-manpages \
