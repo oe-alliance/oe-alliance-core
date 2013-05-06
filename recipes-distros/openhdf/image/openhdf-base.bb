@@ -9,8 +9,6 @@ PR = "r11"
 inherit task
 
 
-#oe-alliance-enigma2 \
-
 RDEPENDS = "\
 	oe-alliance-enigma2 \
 	openhdf-enigma2 \

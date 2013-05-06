@@ -34,6 +34,7 @@ rootfs_postprocess() {
 			# because we're so used to it
 			ln -s opkg usr/bin/ipkg || true
 			ln -s opkg-cl usr/bin/ipkg-cl || true
+			ln -s usr/lib/enigma2/spinner usr/lib/enigma2/skin_default/spinner || true
 
 			cd $curdir
 			if [ -f ../../../meta-oe-alliance/recipes-distros/openhdf/custom/parser.sh ]; then

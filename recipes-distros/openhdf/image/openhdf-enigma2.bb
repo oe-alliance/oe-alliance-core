@@ -4,7 +4,7 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3
                     file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
 
 PV = "1.0"
-PR = "r44"
+PR = "r45"
 
 inherit task
 
@@ -43,7 +43,7 @@ RRECOMMENDS = "\
 RRECOMMENDS_append_gb800solo = ""
 RRECOMMENDS_append_gb800se = ""
 RRECOMMENDS_append_gb800ue = "python-imaging"
-RRECOMMENDS_append_gbquad = "python-imaging webbrowser-utils enigma2-plugin-extensions-webbrowser"
+RRECOMMENDS_append_gbquad = "python-imaging"
 RRECOMMENDS_append_tmtwin = "enigma2-plugin-systemplugins-osd3dsetup"
 RRECOMMENDS_append_tm2t = "enigma2-plugin-systemplugins-osd3dsetup"
 RRECOMMENDS_append_tmsingle = "enigma2-plugin-systemplugins-osd3dsetup"
