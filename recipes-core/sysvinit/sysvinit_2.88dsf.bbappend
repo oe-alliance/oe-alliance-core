@@ -1,4 +1,6 @@
-PRINC = "12"
+PRINC = "13"
+
+PACKAGE_ARCH := "${MACHINE_ARCH}"
 
 SRC_URI += " \
 	file://67_init_hddown.dpatch \
