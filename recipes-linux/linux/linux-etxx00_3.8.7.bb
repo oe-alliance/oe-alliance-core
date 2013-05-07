@@ -3,14 +3,14 @@ SECTION = "kernel"
 LICENSE = "GPLv2"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-KERNEL_RELEASE = "3.6.0"
+KERNEL_RELEASE = "3.8.7"
 
-SRC_URI[md5sum] = "fad4c270fe68fcc8d15258c868bc2733"
-SRC_URI[sha256sum] = "df8c6071cbdd6a709aebb8a272dca60791edb379103597670609ef90e148d8bb"
+SRC_URI[md5sum] = "5f6aaac90a4587df34e418bedd7d40eb"
+SRC_URI[sha256sum] = "afc3e654b779f4b994a0d455d6ad12f46ff0dbec2fe222a4f55925744b498218"
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-MACHINE_KERNEL_PR_append = ".8"
+MACHINE_KERNEL_PR_append = ".2"
 
 # By default, kernel.bbclass modifies package names to allow multiple kernels
 # to be installed in parallel. We revert this change and rprovide the versioned
@@ -20,8 +20,9 @@ PKG_kernel-image = "kernel-image"
 RPROVIDES_kernel-base = "kernel-${KERNEL_VERSION}"
 RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
 
-SRC_URI += "http://et-view-support.com/Drivers/linux-${PV}.tar.gz \
+SRC_URI += "http://www.et-view.com/download/linux-${PV}.tar.gz \
 	file://defconfig \
+	file://0001-Revert-default-authentication-needs-to-be-at-least-n.patch \
 	file://0001-Revert-MIPS-mm-Add-compound-tail-page-_mapcount-when.patch \
 	file://0001-Revert-MIPS-Add-fast-get_user_pages.patch \
 	file://add-dmx-source-timecode.patch \
@@ -41,9 +42,9 @@ SRC_URI += "http://et-view-support.com/Drivers/linux-${PV}.tar.gz \
 	file://it913x-switch-off-PID-filter-by-default.patch \
 	file://tda18271-advertise-supported-delsys.patch \
 	file://fix-dvb-siano-sms-order.patch \
-	file://linux-3.6.0-dvbsky.patch \
 	file://mxl5007t-add-no_probe-and-no_reset-parameters.patch \
 	file://nfs-max-rwsize-8k.patch \
+	file://0001-rt2800usb-add-support-for-rt55xx.patch \
 	"
 
 S = "${WORKDIR}/linux-${PV}"
@@ -63,21 +64,25 @@ do_configure_prepend() {
 	oe_runmake oldconfig
 }
 
+# while kernel.bbclass does not support uabi
+kernel_do_compile() {
+	unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS MACHINE
+	oe_runmake ${KERNEL_IMAGETYPE_FOR_MAKE} ${KERNEL_ALT_IMAGETYPE} CC="${KERNEL_CC}" LD="${KERNEL_LD}"
+	if test "${KERNEL_IMAGETYPE_FOR_MAKE}.gz" = "${KERNEL_IMAGETYPE}"; then
+		gzip -9c < "${KERNEL_IMAGETYPE_FOR_MAKE}" > "${KERNEL_OUTPUT}"
+	fi
+}
+
 kernel_do_install_append() {
 	${STRIP} ${D}${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION}
 	gzip -9c ${D}${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION} > ${D}${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz
 }
 
-MTD_DEVICE_et9x00 = "mtd1"
-MTD_DEVICE_et6x00 = "mtd1"
-MTD_DEVICE_et5x00 = "mtd1"
-MTD_DEVICE_et4x00 = "mtd1"
-
 pkg_postinst_kernel-image () {
 	if [ "x$D" == "x" ]; then
 		if [ -f /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz ] ; then
-			flash_erase /dev/${MTD_DEVICE} 0 0
-			nandwrite -p /dev/${MTD_DEVICE} /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz
+			flash_erase /dev/mtd1 0 0
+			nandwrite -p /dev/mtd1 /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz
 			rm -f /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz
 		fi
 	fi

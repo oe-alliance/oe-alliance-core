@@ -1,8 +1,8 @@
-diff --git a/drivers/media/dvb/dvb-usb/dw2102.c b/drivers/media/dvb/dvb-usb/dw2102.c
-index 451c5a7..60dcb43 100644
---- a/drivers/media/dvb/dvb-usb/dw2102.c
-+++ b/drivers/media/dvb/dvb-usb/dw2102.c
-@@ -1181,6 +1181,13 @@ static int su3000_frontend_attach(struct dvb_usb_adapter *d)
+diff --git a/drivers/media/usb/dvb-usb/dw2102.c b/drivers/media/usb/dvb-usb/dw2102.c
+index 9382895..1ee3a84 100644
+--- a/drivers/media/usb/dvb-usb/dw2102.c
++++ b/drivers/media/usb/dvb-usb/dw2102.c
+@@ -1177,6 +1177,13 @@ static int su3000_frontend_attach(struct dvb_usb_adapter *d)
  {
  	u8 obuf[3] = { 0xe, 0x80, 0 };
  	u8 ibuf[] = { 0 };
@@ -16,7 +16,7 @@ index 451c5a7..60dcb43 100644
  
  	if (dvb_usb_generic_rw(d->dev, obuf, 3, ibuf, 1, 0) < 0)
  		err("command 0x0e transfer failed.");
-@@ -1451,6 +1458,7 @@ enum dw2102_table_entry {
+@@ -1447,6 +1454,7 @@ enum dw2102_table_entry {
  	TEVII_S480_1,
  	TEVII_S480_2,
  	X3M_SPC1400HD,
@@ -24,7 +24,7 @@ index 451c5a7..60dcb43 100644
  };
  
  static struct usb_device_id dw2102_table[] = {
-@@ -1469,6 +1477,7 @@ static struct usb_device_id dw2102_table[] = {
+@@ -1465,6 +1473,7 @@ static struct usb_device_id dw2102_table[] = {
  	[TEVII_S480_1] = {USB_DEVICE(0x9022, USB_PID_TEVII_S480_1)},
  	[TEVII_S480_2] = {USB_DEVICE(0x9022, USB_PID_TEVII_S480_2)},
  	[X3M_SPC1400HD] = {USB_DEVICE(0x1f4d, 0x3100)},
@@ -32,7 +32,7 @@ index 451c5a7..60dcb43 100644
  	{ }
  };
  
-@@ -1857,7 +1866,7 @@ static struct dvb_usb_device_properties su3000_properties = {
+@@ -1853,7 +1862,7 @@ static struct dvb_usb_device_properties su3000_properties = {
  		}},
  		}
  	},
@@ -41,7 +41,7 @@ index 451c5a7..60dcb43 100644
  	.devices = {
  		{ "SU3000HD DVB-S USB2.0",
  			{ &dw2102_table[GENIATECH_SU3000], NULL },
-@@ -1871,6 +1880,10 @@ static struct dvb_usb_device_properties su3000_properties = {
+@@ -1867,6 +1876,10 @@ static struct dvb_usb_device_properties su3000_properties = {
  			{ &dw2102_table[X3M_SPC1400HD], NULL },
  			{ NULL },
  		},
@@ -53,5 +53,4 @@ index 451c5a7..60dcb43 100644
  };
  
 -- 
-1.7.5.4
-
+1.7.9.5

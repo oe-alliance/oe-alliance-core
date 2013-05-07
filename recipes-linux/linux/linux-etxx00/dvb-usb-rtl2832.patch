@@ -12,7 +12,10 @@ ported it on kernels 3.0.x and 3.1.x;
 
 thanks to Hans-Frieder Vogt for the patch to support the 3.2 kernel;
 
-this patch supports up to kernel 3.6;
+this patch supports kernel 3.7 and beyond and can be applied also
+to the current media_build tree;
+the directory structure of media drivers has been reorganized
+in kernel 3.7, so this patch will not apply to older kernels.
 
 added define to manage refactored RC code on recent v4l
 versions together with old kernels (2.6.x);
@@ -25,6 +28,8 @@ fixed GetSignalStrength function so that the signal strength is not
 capped anymore to about 39%;
 implemented the .get_frontend() method properly, so now it is possible
 to retrieve the tuning parameters from the demodulator;
+fixed build on ARM/Android (thanks sonic74);
+fixed build on kernel 3.7 (thanks R00KIE);
 
 added definition of a new Leadteck USB stick:
 - Leadtek WinFast DTV Dongle Mini [ID 0413:6a03]
@@ -38,113 +43,198 @@ added definition of 3 new Terratec USB sticks:
 
 From: Gianluca Gennari <gennarone@gmail.com>
 ---
- drivers/media/dvb/dvb-usb/Kconfig                |     6 +
- drivers/media/dvb/dvb-usb/Makefile               |    12 +
- drivers/media/dvb/dvb-usb/demod_rtl2832.c        |  2872 +++
- drivers/media/dvb/dvb-usb/demod_rtl2832.h        |   466 +
- drivers/media/dvb/dvb-usb/demod_rtl2836.c        |  2049 ++
- drivers/media/dvb/dvb-usb/demod_rtl2836.h        |   376 +
- drivers/media/dvb/dvb-usb/demod_rtl2840.c        |  2437 +++
- drivers/media/dvb/dvb-usb/demod_rtl2840.h        |   386 +
- drivers/media/dvb/dvb-usb/dtmb_demod_base.c      |  1566 ++
- drivers/media/dvb/dvb-usb/dtmb_demod_base.h      |  2505 +++
- drivers/media/dvb/dvb-usb/dtmb_nim_base.c        |   545 +
- drivers/media/dvb/dvb-usb/dtmb_nim_base.h        |   967 +
- drivers/media/dvb/dvb-usb/dvbt_demod_base.c      |   816 +
- drivers/media/dvb/dvb-usb/dvbt_demod_base.h      |  2722 +++
- drivers/media/dvb/dvb-usb/dvbt_nim_base.c        |   531 +
- drivers/media/dvb/dvb-usb/dvbt_nim_base.h        |   964 +
- drivers/media/dvb/dvb-usb/foundation.c           |   352 +
- drivers/media/dvb/dvb-usb/foundation.h           |  1026 +
- drivers/media/dvb/dvb-usb/i2c_bridge.h           |   122 +
- drivers/media/dvb/dvb-usb/math_mpi.c             |  1054 +
- drivers/media/dvb/dvb-usb/math_mpi.h             |   201 +
- drivers/media/dvb/dvb-usb/nim_rtl2832_e4000.c    |  1001 +
- drivers/media/dvb/dvb-usb/nim_rtl2832_e4000.h    |   226 +
- drivers/media/dvb/dvb-usb/nim_rtl2832_fc0012.c   |   840 +
- drivers/media/dvb/dvb-usb/nim_rtl2832_fc0012.h   |   168 +
- drivers/media/dvb/dvb-usb/nim_rtl2832_fc0013.c   |  1053 +
- drivers/media/dvb/dvb-usb/nim_rtl2832_fc0013.h   |   170 +
- drivers/media/dvb/dvb-usb/nim_rtl2832_fc2580.c   |   343 +
- drivers/media/dvb/dvb-usb/nim_rtl2832_fc2580.h   |   141 +
- drivers/media/dvb/dvb-usb/nim_rtl2832_max3543.c  |   346 +
- drivers/media/dvb/dvb-usb/nim_rtl2832_max3543.h  |   145 +
- drivers/media/dvb/dvb-usb/nim_rtl2832_mt2063.c   |   360 +
- drivers/media/dvb/dvb-usb/nim_rtl2832_mt2063.h   |   160 +
- drivers/media/dvb/dvb-usb/nim_rtl2832_mt2266.c   |  1082 ++
- drivers/media/dvb/dvb-usb/nim_rtl2832_mt2266.h   |   264 +
- drivers/media/dvb/dvb-usb/nim_rtl2832_mxl5007t.c |   517 +
- drivers/media/dvb/dvb-usb/nim_rtl2832_mxl5007t.h |   165 +
- drivers/media/dvb/dvb-usb/nim_rtl2832_r820t.c    |   356 +
- drivers/media/dvb/dvb-usb/nim_rtl2832_r820t.h    |   143 +
- drivers/media/dvb/dvb-usb/nim_rtl2832_tda18272.c |   408 +
- drivers/media/dvb/dvb-usb/nim_rtl2832_tda18272.h |   148 +
- drivers/media/dvb/dvb-usb/nim_rtl2832_tua9001.c  |   340 +
- drivers/media/dvb/dvb-usb/nim_rtl2832_tua9001.h  |   137 +
- drivers/media/dvb/dvb-usb/nim_rtl2836_fc2580.c   |   308 +
- drivers/media/dvb/dvb-usb/nim_rtl2836_fc2580.h   |   140 +
- drivers/media/dvb/dvb-usb/nim_rtl2836_mxl5007t.c |   319 +
- drivers/media/dvb/dvb-usb/nim_rtl2836_mxl5007t.h |   150 +
- drivers/media/dvb/dvb-usb/nim_rtl2840_max3543.c  |   341 +
- drivers/media/dvb/dvb-usb/nim_rtl2840_max3543.h  |   146 +
- drivers/media/dvb/dvb-usb/nim_rtl2840_mt2063.c   |   307 +
- drivers/media/dvb/dvb-usb/nim_rtl2840_mt2063.h   |   163 +
- drivers/media/dvb/dvb-usb/qam_demod_base.c       |  1289 ++
- drivers/media/dvb/dvb-usb/qam_demod_base.h       |  2818 +++
- drivers/media/dvb/dvb-usb/qam_nim_base.c         |   496 +
- drivers/media/dvb/dvb-usb/qam_nim_base.h         |   879 +
- drivers/media/dvb/dvb-usb/rtl2832u.c             |  1745 ++
- drivers/media/dvb/dvb-usb/rtl2832u.h             |   277 +
- drivers/media/dvb/dvb-usb/rtl2832u_audio.c       |   926 +
- drivers/media/dvb/dvb-usb/rtl2832u_audio.h       |    67 +
- drivers/media/dvb/dvb-usb/rtl2832u_fe.c          |  4746 +++++
- drivers/media/dvb/dvb-usb/rtl2832u_fe.h          |   336 +
- drivers/media/dvb/dvb-usb/rtl2832u_io.c          |   912 +
- drivers/media/dvb/dvb-usb/rtl2832u_io.h          |   276 +
- drivers/media/dvb/dvb-usb/tuner_base.h           |  1913 ++
- drivers/media/dvb/dvb-usb/tuner_e4000.c          |  2482 +++
- drivers/media/dvb/dvb-usb/tuner_e4000.h          |   295 +
- drivers/media/dvb/dvb-usb/tuner_fc0012.c         |  1056 +
- drivers/media/dvb/dvb-usb/tuner_fc0012.h         |   292 +
- drivers/media/dvb/dvb-usb/tuner_fc0013.c         |  1261 ++
- drivers/media/dvb/dvb-usb/tuner_fc0013.h         |   307 +
- drivers/media/dvb/dvb-usb/tuner_fc2580.c         |   932 +
- drivers/media/dvb/dvb-usb/tuner_fc2580.h         |   461 +
- drivers/media/dvb/dvb-usb/tuner_max3543.c        |  1441 ++
- drivers/media/dvb/dvb-usb/tuner_max3543.h        |   572 +
- drivers/media/dvb/dvb-usb/tuner_mt2063.c         |  5264 +++++
- drivers/media/dvb/dvb-usb/tuner_mt2063.h         |  2206 +++
- drivers/media/dvb/dvb-usb/tuner_mt2266.c         |  3278 ++++
- drivers/media/dvb/dvb-usb/tuner_mt2266.h         |  1534 ++
- drivers/media/dvb/dvb-usb/tuner_mxl5007t.c       |  1267 ++
- drivers/media/dvb/dvb-usb/tuner_mxl5007t.h       |   788 +
- drivers/media/dvb/dvb-usb/tuner_r820t.c          |  3453 ++++
- drivers/media/dvb/dvb-usb/tuner_r820t.h          |   263 +
- drivers/media/dvb/dvb-usb/tuner_tda18272.c       | 21631 +++++++++++++++++++++
- drivers/media/dvb/dvb-usb/tuner_tda18272.h       |  7412 +++++++
- drivers/media/dvb/dvb-usb/tuner_tua9001.c        |  1245 ++
- drivers/media/dvb/dvb-usb/tuner_tua9001.h        |   493 +
- 86 files changed, 106975 insertions(+)
+ drivers/media/usb/dvb-usb/Kconfig                |    7 +
+ drivers/media/usb/dvb-usb/Makefile               |   12 +
+ drivers/media/usb/dvb-usb/demod_rtl2832.c        | 2872 +++
+ drivers/media/usb/dvb-usb/demod_rtl2832.h        |  466 +
+ drivers/media/usb/dvb-usb/demod_rtl2836.c        | 2049 ++
+ drivers/media/usb/dvb-usb/demod_rtl2836.h        |  376 +
+ drivers/media/usb/dvb-usb/demod_rtl2840.c        | 2437 +++
+ drivers/media/usb/dvb-usb/demod_rtl2840.h        |  386 +
+ drivers/media/usb/dvb-usb/dtmb_demod_base.c      | 1566 ++
+ drivers/media/usb/dvb-usb/dtmb_demod_base.h      | 2505 +++
+ drivers/media/usb/dvb-usb/dtmb_nim_base.c        |  545 +
+ drivers/media/usb/dvb-usb/dtmb_nim_base.h        |  967 +
+ drivers/media/usb/dvb-usb/dvbt_demod_base.c      |  816 +
+ drivers/media/usb/dvb-usb/dvbt_demod_base.h      | 2722 +++
+ drivers/media/usb/dvb-usb/dvbt_nim_base.c        |  531 +
+ drivers/media/usb/dvb-usb/dvbt_nim_base.h        |  964 +
+ drivers/media/usb/dvb-usb/foundation.c           |  352 +
+ drivers/media/usb/dvb-usb/foundation.h           | 1026 +
+ drivers/media/usb/dvb-usb/i2c_bridge.h           |  122 +
+ drivers/media/usb/dvb-usb/math_mpi.c             | 1054 ++
+ drivers/media/usb/dvb-usb/math_mpi.h             |  201 +
+ drivers/media/usb/dvb-usb/nim_rtl2832_e4000.c    | 1001 +
+ drivers/media/usb/dvb-usb/nim_rtl2832_e4000.h    |  226 +
+ drivers/media/usb/dvb-usb/nim_rtl2832_fc0012.c   |  840 +
+ drivers/media/usb/dvb-usb/nim_rtl2832_fc0012.h   |  168 +
+ drivers/media/usb/dvb-usb/nim_rtl2832_fc0013.c   | 1053 ++
+ drivers/media/usb/dvb-usb/nim_rtl2832_fc0013.h   |  170 +
+ drivers/media/usb/dvb-usb/nim_rtl2832_fc2580.c   |  343 +
+ drivers/media/usb/dvb-usb/nim_rtl2832_fc2580.h   |  141 +
+ drivers/media/usb/dvb-usb/nim_rtl2832_max3543.c  |  346 +
+ drivers/media/usb/dvb-usb/nim_rtl2832_max3543.h  |  145 +
+ drivers/media/usb/dvb-usb/nim_rtl2832_mt2063.c   |  360 +
+ drivers/media/usb/dvb-usb/nim_rtl2832_mt2063.h   |  160 +
+ drivers/media/usb/dvb-usb/nim_rtl2832_mt2266.c   | 1082 ++
+ drivers/media/usb/dvb-usb/nim_rtl2832_mt2266.h   |  264 +
+ drivers/media/usb/dvb-usb/nim_rtl2832_mxl5007t.c |  517 +
+ drivers/media/usb/dvb-usb/nim_rtl2832_mxl5007t.h |  165 +
+ drivers/media/usb/dvb-usb/nim_rtl2832_r820t.c    |  356 +
+ drivers/media/usb/dvb-usb/nim_rtl2832_r820t.h    |  143 +
+ drivers/media/usb/dvb-usb/nim_rtl2832_tda18272.c |  408 +
+ drivers/media/usb/dvb-usb/nim_rtl2832_tda18272.h |  148 +
+ drivers/media/usb/dvb-usb/nim_rtl2832_tua9001.c  |  340 +
+ drivers/media/usb/dvb-usb/nim_rtl2832_tua9001.h  |  137 +
+ drivers/media/usb/dvb-usb/nim_rtl2836_fc2580.c   |  308 +
+ drivers/media/usb/dvb-usb/nim_rtl2836_fc2580.h   |  140 +
+ drivers/media/usb/dvb-usb/nim_rtl2836_mxl5007t.c |  319 +
+ drivers/media/usb/dvb-usb/nim_rtl2836_mxl5007t.h |  150 +
+ drivers/media/usb/dvb-usb/nim_rtl2840_max3543.c  |  341 +
+ drivers/media/usb/dvb-usb/nim_rtl2840_max3543.h  |  146 +
+ drivers/media/usb/dvb-usb/nim_rtl2840_mt2063.c   |  307 +
+ drivers/media/usb/dvb-usb/nim_rtl2840_mt2063.h   |  163 +
+ drivers/media/usb/dvb-usb/qam_demod_base.c       | 1289 ++
+ drivers/media/usb/dvb-usb/qam_demod_base.h       | 2818 +++
+ drivers/media/usb/dvb-usb/qam_nim_base.c         |  496 +
+ drivers/media/usb/dvb-usb/qam_nim_base.h         |  879 +
+ drivers/media/usb/dvb-usb/rtl2832u.c             | 1745 ++
+ drivers/media/usb/dvb-usb/rtl2832u.h             |  277 +
+ drivers/media/usb/dvb-usb/rtl2832u_audio.c       |  926 +
+ drivers/media/usb/dvb-usb/rtl2832u_audio.h       |   67 +
+ drivers/media/usb/dvb-usb/rtl2832u_fe.c          | 4747 +++++
+ drivers/media/usb/dvb-usb/rtl2832u_fe.h          |  336 +
+ drivers/media/usb/dvb-usb/rtl2832u_io.c          |  912 +
+ drivers/media/usb/dvb-usb/rtl2832u_io.h          |  276 +
+ drivers/media/usb/dvb-usb/tuner_base.h           | 1913 ++
+ drivers/media/usb/dvb-usb/tuner_e4000.c          | 2482 +++
+ drivers/media/usb/dvb-usb/tuner_e4000.h          |  295 +
+ drivers/media/usb/dvb-usb/tuner_fc0012.c         | 1056 ++
+ drivers/media/usb/dvb-usb/tuner_fc0012.h         |  292 +
+ drivers/media/usb/dvb-usb/tuner_fc0013.c         | 1261 ++
+ drivers/media/usb/dvb-usb/tuner_fc0013.h         |  307 +
+ drivers/media/usb/dvb-usb/tuner_fc2580.c         |  932 +
+ drivers/media/usb/dvb-usb/tuner_fc2580.h         |  461 +
+ drivers/media/usb/dvb-usb/tuner_max3543.c        | 1441 ++
+ drivers/media/usb/dvb-usb/tuner_max3543.h        |  572 +
+ drivers/media/usb/dvb-usb/tuner_mt2063.c         | 5264 ++++++
+ drivers/media/usb/dvb-usb/tuner_mt2063.h         | 2206 +++
+ drivers/media/usb/dvb-usb/tuner_mt2266.c         | 3278 ++++
+ drivers/media/usb/dvb-usb/tuner_mt2266.h         | 1534 ++
+ drivers/media/usb/dvb-usb/tuner_mxl5007t.c       | 1267 ++
+ drivers/media/usb/dvb-usb/tuner_mxl5007t.h       |  788 +
+ drivers/media/usb/dvb-usb/tuner_r820t.c          | 3453 ++++
+ drivers/media/usb/dvb-usb/tuner_r820t.h          |  263 +
+ drivers/media/usb/dvb-usb/tuner_tda18272.c       |21631 ++++++++++++++++++++++
+ drivers/media/usb/dvb-usb/tuner_tda18272.h       | 7412 ++++++++
+ drivers/media/usb/dvb-usb/tuner_tua9001.c        | 1245 ++
+ drivers/media/usb/dvb-usb/tuner_tua9001.h        |  493 +
+ 86 files changed, 106977 insertions(+)
+ create mode 100644 drivers/media/usb/dvb-usb/demod_rtl2832.c
+ create mode 100644 drivers/media/usb/dvb-usb/demod_rtl2832.h
+ create mode 100644 drivers/media/usb/dvb-usb/demod_rtl2836.c
+ create mode 100644 drivers/media/usb/dvb-usb/demod_rtl2836.h
+ create mode 100644 drivers/media/usb/dvb-usb/demod_rtl2840.c
+ create mode 100644 drivers/media/usb/dvb-usb/demod_rtl2840.h
+ create mode 100644 drivers/media/usb/dvb-usb/dtmb_demod_base.c
+ create mode 100644 drivers/media/usb/dvb-usb/dtmb_demod_base.h
+ create mode 100644 drivers/media/usb/dvb-usb/dtmb_nim_base.c
+ create mode 100644 drivers/media/usb/dvb-usb/dtmb_nim_base.h
+ create mode 100644 drivers/media/usb/dvb-usb/dvbt_demod_base.c
+ create mode 100644 drivers/media/usb/dvb-usb/dvbt_demod_base.h
+ create mode 100644 drivers/media/usb/dvb-usb/dvbt_nim_base.c
+ create mode 100644 drivers/media/usb/dvb-usb/dvbt_nim_base.h
+ create mode 100644 drivers/media/usb/dvb-usb/foundation.c
+ create mode 100644 drivers/media/usb/dvb-usb/foundation.h
+ create mode 100644 drivers/media/usb/dvb-usb/i2c_bridge.h
+ create mode 100644 drivers/media/usb/dvb-usb/math_mpi.c
+ create mode 100644 drivers/media/usb/dvb-usb/math_mpi.h
+ create mode 100644 drivers/media/usb/dvb-usb/nim_rtl2832_e4000.c
+ create mode 100644 drivers/media/usb/dvb-usb/nim_rtl2832_e4000.h
+ create mode 100644 drivers/media/usb/dvb-usb/nim_rtl2832_fc0012.c
+ create mode 100644 drivers/media/usb/dvb-usb/nim_rtl2832_fc0012.h
+ create mode 100644 drivers/media/usb/dvb-usb/nim_rtl2832_fc0013.c
+ create mode 100644 drivers/media/usb/dvb-usb/nim_rtl2832_fc0013.h
+ create mode 100644 drivers/media/usb/dvb-usb/nim_rtl2832_fc2580.c
+ create mode 100644 drivers/media/usb/dvb-usb/nim_rtl2832_fc2580.h
+ create mode 100644 drivers/media/usb/dvb-usb/nim_rtl2832_max3543.c
+ create mode 100644 drivers/media/usb/dvb-usb/nim_rtl2832_max3543.h
+ create mode 100644 drivers/media/usb/dvb-usb/nim_rtl2832_mt2063.c
+ create mode 100644 drivers/media/usb/dvb-usb/nim_rtl2832_mt2063.h
+ create mode 100644 drivers/media/usb/dvb-usb/nim_rtl2832_mt2266.c
+ create mode 100644 drivers/media/usb/dvb-usb/nim_rtl2832_mt2266.h
+ create mode 100644 drivers/media/usb/dvb-usb/nim_rtl2832_mxl5007t.c
+ create mode 100644 drivers/media/usb/dvb-usb/nim_rtl2832_mxl5007t.h
+ create mode 100644 drivers/media/usb/dvb-usb/nim_rtl2832_r820t.c
+ create mode 100644 drivers/media/usb/dvb-usb/nim_rtl2832_r820t.h
+ create mode 100644 drivers/media/usb/dvb-usb/nim_rtl2832_tda18272.c
+ create mode 100644 drivers/media/usb/dvb-usb/nim_rtl2832_tda18272.h
+ create mode 100644 drivers/media/usb/dvb-usb/nim_rtl2832_tua9001.c
+ create mode 100644 drivers/media/usb/dvb-usb/nim_rtl2832_tua9001.h
+ create mode 100644 drivers/media/usb/dvb-usb/nim_rtl2836_fc2580.c
+ create mode 100644 drivers/media/usb/dvb-usb/nim_rtl2836_fc2580.h
+ create mode 100644 drivers/media/usb/dvb-usb/nim_rtl2836_mxl5007t.c
+ create mode 100644 drivers/media/usb/dvb-usb/nim_rtl2836_mxl5007t.h
+ create mode 100644 drivers/media/usb/dvb-usb/nim_rtl2840_max3543.c
+ create mode 100644 drivers/media/usb/dvb-usb/nim_rtl2840_max3543.h
+ create mode 100644 drivers/media/usb/dvb-usb/nim_rtl2840_mt2063.c
+ create mode 100644 drivers/media/usb/dvb-usb/nim_rtl2840_mt2063.h
+ create mode 100644 drivers/media/usb/dvb-usb/qam_demod_base.c
+ create mode 100644 drivers/media/usb/dvb-usb/qam_demod_base.h
+ create mode 100644 drivers/media/usb/dvb-usb/qam_nim_base.c
+ create mode 100644 drivers/media/usb/dvb-usb/qam_nim_base.h
+ create mode 100644 drivers/media/usb/dvb-usb/rtl2832u.c
+ create mode 100644 drivers/media/usb/dvb-usb/rtl2832u.h
+ create mode 100644 drivers/media/usb/dvb-usb/rtl2832u_audio.c
+ create mode 100644 drivers/media/usb/dvb-usb/rtl2832u_audio.h
+ create mode 100644 drivers/media/usb/dvb-usb/rtl2832u_fe.c
+ create mode 100644 drivers/media/usb/dvb-usb/rtl2832u_fe.h
+ create mode 100644 drivers/media/usb/dvb-usb/rtl2832u_io.c
+ create mode 100644 drivers/media/usb/dvb-usb/rtl2832u_io.h
+ create mode 100644 drivers/media/usb/dvb-usb/tuner_base.h
+ create mode 100644 drivers/media/usb/dvb-usb/tuner_e4000.c
+ create mode 100644 drivers/media/usb/dvb-usb/tuner_e4000.h
+ create mode 100644 drivers/media/usb/dvb-usb/tuner_fc0012.c
+ create mode 100644 drivers/media/usb/dvb-usb/tuner_fc0012.h
+ create mode 100644 drivers/media/usb/dvb-usb/tuner_fc0013.c
+ create mode 100644 drivers/media/usb/dvb-usb/tuner_fc0013.h
+ create mode 100644 drivers/media/usb/dvb-usb/tuner_fc2580.c
+ create mode 100644 drivers/media/usb/dvb-usb/tuner_fc2580.h
+ create mode 100644 drivers/media/usb/dvb-usb/tuner_max3543.c
+ create mode 100644 drivers/media/usb/dvb-usb/tuner_max3543.h
+ create mode 100644 drivers/media/usb/dvb-usb/tuner_mt2063.c
+ create mode 100644 drivers/media/usb/dvb-usb/tuner_mt2063.h
+ create mode 100644 drivers/media/usb/dvb-usb/tuner_mt2266.c
+ create mode 100644 drivers/media/usb/dvb-usb/tuner_mt2266.h
+ create mode 100644 drivers/media/usb/dvb-usb/tuner_mxl5007t.c
+ create mode 100644 drivers/media/usb/dvb-usb/tuner_mxl5007t.h
+ create mode 100644 drivers/media/usb/dvb-usb/tuner_r820t.c
+ create mode 100644 drivers/media/usb/dvb-usb/tuner_r820t.h
+ create mode 100644 drivers/media/usb/dvb-usb/tuner_tda18272.c
+ create mode 100644 drivers/media/usb/dvb-usb/tuner_tda18272.h
+ create mode 100644 drivers/media/usb/dvb-usb/tuner_tua9001.c
+ create mode 100644 drivers/media/usb/dvb-usb/tuner_tua9001.h
 
-diff --git a/drivers/media/dvb/dvb-usb/Kconfig b/drivers/media/dvb/dvb-usb/Kconfig
-index 9a338c2..49b8ca9 100644
---- a/drivers/media/dvb/dvb-usb/Kconfig
-+++ b/drivers/media/dvb/dvb-usb/Kconfig
-@@ -444,3 +444,9 @@ config DVB_USB_A867
+diff --git a/drivers/media/usb/dvb-usb/Kconfig b/drivers/media/usb/dvb-usb/Kconfig
+index caf84b0..6d88f37 100644
+--- a/drivers/media/usb/dvb-usb/Kconfig
++++ b/drivers/media/usb/dvb-usb/Kconfig
+@@ -318,3 +318,10 @@ config DVB_USB_A867
+ 	default m
  	help
  	  Say Y here to support the Avermedia A867 device
- 
++
 +config DVB_USB_RTL2832
 +	tristate "Realtek RTL2832 DVB-T USB2.0 support"
 +	depends on DVB_USB
 +	default m
 +	help
 +	  Say Y or M to support the Realtek RTL2832 DVB-T receiver
-diff --git a/drivers/media/dvb/dvb-usb/Makefile b/drivers/media/dvb/dvb-usb/Makefile
-index cefb22e..9bd684a 100644
---- a/drivers/media/dvb/dvb-usb/Makefile
-+++ b/drivers/media/dvb/dvb-usb/Makefile
-@@ -119,6 +119,18 @@ dvb-usb-a867-objs := a867_af903x-core.o a867_af903x-devices.o a867_af903x-drv.o
+diff --git a/drivers/media/usb/dvb-usb/Makefile b/drivers/media/usb/dvb-usb/Makefile
+index fbc6c9b..aaf0a9a 100644
+--- a/drivers/media/usb/dvb-usb/Makefile
++++ b/drivers/media/usb/dvb-usb/Makefile
+@@ -82,6 +82,18 @@ dvb-usb-a867-objs := a867_af903x-core.o a867_af903x-devices.o a867_af903x-drv.o
  		     a867_user.o a867_mxl5007t.o a867_Maxlinear_MXL5007.o a867_Afa_AF9007.o
  obj-$(CONFIG_DVB_USB_A867) += dvb-usb-a867.o
  
@@ -160,14 +250,14 @@ index cefb22e..9bd684a 100644
 +                        nim_rtl2832_fc0013.o tuner_fc0013.o rtl2832u_audio.o tuner_r820t.o nim_rtl2832_r820t.o
 +obj-$(CONFIG_DVB_USB_RTL2832) += dvb-usb-rtl2832.o
 +
- ccflags-y += -I$(srctree)/drivers/media/dvb/dvb-core
- ccflags-y += -I$(srctree)/drivers/media/dvb/frontends/
+ ccflags-y += -I$(srctree)/drivers/media/dvb-core
+ ccflags-y += -I$(srctree)/drivers/media/dvb-frontends/
  # due to tuner-xc3028
-diff --git a/drivers/media/dvb/dvb-usb/demod_rtl2832.c b/drivers/media/dvb/dvb-usb/demod_rtl2832.c
+diff --git a/drivers/media/usb/dvb-usb/demod_rtl2832.c b/drivers/media/usb/dvb-usb/demod_rtl2832.c
 new file mode 100644
 index 0000000..dcb57f4
 --- /dev/null
-+++ b/drivers/media/dvb/dvb-usb/demod_rtl2832.c
++++ b/drivers/media/usb/dvb-usb/demod_rtl2832.c
 @@ -0,0 +1,2872 @@
 +/**
 +
@@ -3041,11 +3131,11 @@ index 0000000..dcb57f4
 +
 +
 +
-diff --git a/drivers/media/dvb/dvb-usb/demod_rtl2832.h b/drivers/media/dvb/dvb-usb/demod_rtl2832.h
+diff --git a/drivers/media/usb/dvb-usb/demod_rtl2832.h b/drivers/media/usb/dvb-usb/demod_rtl2832.h
 new file mode 100644
 index 0000000..0c3674a
 --- /dev/null
-+++ b/drivers/media/dvb/dvb-usb/demod_rtl2832.h
++++ b/drivers/media/usb/dvb-usb/demod_rtl2832.h
 @@ -0,0 +1,466 @@
 +#ifndef __DEMOD_RTL2832_H
 +#define __DEMOD_RTL2832_H
@@ -3513,11 +3603,11 @@ index 0000000..0c3674a
 +
 +
 +#endif
-diff --git a/drivers/media/dvb/dvb-usb/demod_rtl2836.c b/drivers/media/dvb/dvb-usb/demod_rtl2836.c
+diff --git a/drivers/media/usb/dvb-usb/demod_rtl2836.c b/drivers/media/usb/dvb-usb/demod_rtl2836.c
 new file mode 100644
 index 0000000..90fae89
 --- /dev/null
-+++ b/drivers/media/dvb/dvb-usb/demod_rtl2836.c
++++ b/drivers/media/usb/dvb-usb/demod_rtl2836.c
 @@ -0,0 +1,2049 @@
 +/**
 +
@@ -5568,11 +5658,11 @@ index 0000000..90fae89
 +
 +
 +
-diff --git a/drivers/media/dvb/dvb-usb/demod_rtl2836.h b/drivers/media/dvb/dvb-usb/demod_rtl2836.h
+diff --git a/drivers/media/usb/dvb-usb/demod_rtl2836.h b/drivers/media/usb/dvb-usb/demod_rtl2836.h
 new file mode 100644
 index 0000000..af3c79e
 --- /dev/null
-+++ b/drivers/media/dvb/dvb-usb/demod_rtl2836.h
++++ b/drivers/media/usb/dvb-usb/demod_rtl2836.h
 @@ -0,0 +1,376 @@
 +#ifndef __DEMOD_RTL2836_H
 +#define __DEMOD_RTL2836_H
@@ -5950,11 +6040,11 @@ index 0000000..af3c79e
 +
 +
 +#endif
-diff --git a/drivers/media/dvb/dvb-usb/demod_rtl2840.c b/drivers/media/dvb/dvb-usb/demod_rtl2840.c
+diff --git a/drivers/media/usb/dvb-usb/demod_rtl2840.c b/drivers/media/usb/dvb-usb/demod_rtl2840.c
 new file mode 100644
 index 0000000..226caf9
 --- /dev/null
-+++ b/drivers/media/dvb/dvb-usb/demod_rtl2840.c
++++ b/drivers/media/usb/dvb-usb/demod_rtl2840.c
 @@ -0,0 +1,2437 @@
 +/**
 +
@@ -8393,11 +8483,11 @@ index 0000000..226caf9
 +
 +
 +
-diff --git a/drivers/media/dvb/dvb-usb/demod_rtl2840.h b/drivers/media/dvb/dvb-usb/demod_rtl2840.h
+diff --git a/drivers/media/usb/dvb-usb/demod_rtl2840.h b/drivers/media/usb/dvb-usb/demod_rtl2840.h
 new file mode 100644
 index 0000000..16f4723
 --- /dev/null
-+++ b/drivers/media/dvb/dvb-usb/demod_rtl2840.h
++++ b/drivers/media/usb/dvb-usb/demod_rtl2840.h
 @@ -0,0 +1,386 @@
 +#ifndef __DEMOD_RTL2840_H
 +#define __DEMOD_RTL2840_H
@@ -8785,11 +8875,11 @@ index 0000000..16f4723
 +
 +
 +#endif
-diff --git a/drivers/media/dvb/dvb-usb/dtmb_demod_base.c b/drivers/media/dvb/dvb-usb/dtmb_demod_base.c
+diff --git a/drivers/media/usb/dvb-usb/dtmb_demod_base.c b/drivers/media/usb/dvb-usb/dtmb_demod_base.c
 new file mode 100644
 index 0000000..b0de54a
 --- /dev/null
-+++ b/drivers/media/dvb/dvb-usb/dtmb_demod_base.c
++++ b/drivers/media/usb/dvb-usb/dtmb_demod_base.c
 @@ -0,0 +1,1566 @@
 +/**
 +
@@ -10357,11 +10447,11 @@ index 0000000..b0de54a
 +
 +
 +
-diff --git a/drivers/media/dvb/dvb-usb/dtmb_demod_base.h b/drivers/media/dvb/dvb-usb/dtmb_demod_base.h
+diff --git a/drivers/media/usb/dvb-usb/dtmb_demod_base.h b/drivers/media/usb/dvb-usb/dtmb_demod_base.h
 new file mode 100644
 index 0000000..3c04cff
 --- /dev/null
-+++ b/drivers/media/dvb/dvb-usb/dtmb_demod_base.h
++++ b/drivers/media/usb/dvb-usb/dtmb_demod_base.h
 @@ -0,0 +1,2505 @@
 +#ifndef __DTMB_DEMOD_BASE_H
 +#define __DTMB_DEMOD_BASE_H
@@ -12868,11 +12958,11 @@ index 0000000..3c04cff
 +
 +
 +#endif
-diff --git a/drivers/media/dvb/dvb-usb/dtmb_nim_base.c b/drivers/media/dvb/dvb-usb/dtmb_nim_base.c
+diff --git a/drivers/media/usb/dvb-usb/dtmb_nim_base.c b/drivers/media/usb/dvb-usb/dtmb_nim_base.c
 new file mode 100644
 index 0000000..541bd48
 --- /dev/null
-+++ b/drivers/media/dvb/dvb-usb/dtmb_nim_base.c
++++ b/drivers/media/usb/dvb-usb/dtmb_nim_base.c
 @@ -0,0 +1,545 @@
 +/**
 +
@@ -13419,11 +13509,11 @@ index 0000000..541bd48
 +
 +
 +
-diff --git a/drivers/media/dvb/dvb-usb/dtmb_nim_base.h b/drivers/media/dvb/dvb-usb/dtmb_nim_base.h
+diff --git a/drivers/media/usb/dvb-usb/dtmb_nim_base.h b/drivers/media/usb/dvb-usb/dtmb_nim_base.h
 new file mode 100644
 index 0000000..4c24bd3
 --- /dev/null
-+++ b/drivers/media/dvb/dvb-usb/dtmb_nim_base.h
++++ b/drivers/media/usb/dvb-usb/dtmb_nim_base.h
 @@ -0,0 +1,967 @@
 +#ifndef __DTMB_NIM_BASE_H
 +#define __DTMB_NIM_BASE_H
@@ -14392,11 +14482,11 @@ index 0000000..4c24bd3
 +
 +
 +#endif
-diff --git a/drivers/media/dvb/dvb-usb/dvbt_demod_base.c b/drivers/media/dvb/dvb-usb/dvbt_demod_base.c
+diff --git a/drivers/media/usb/dvb-usb/dvbt_demod_base.c b/drivers/media/usb/dvb-usb/dvbt_demod_base.c
 new file mode 100644
 index 0000000..d1bd1f6
 --- /dev/null
-+++ b/drivers/media/dvb/dvb-usb/dvbt_demod_base.c
++++ b/drivers/media/usb/dvb-usb/dvbt_demod_base.c
 @@ -0,0 +1,816 @@
 +/**
 +
@@ -15214,11 +15304,11 @@ index 0000000..d1bd1f6
 +
 +
 +
-diff --git a/drivers/media/dvb/dvb-usb/dvbt_demod_base.h b/drivers/media/dvb/dvb-usb/dvbt_demod_base.h
+diff --git a/drivers/media/usb/dvb-usb/dvbt_demod_base.h b/drivers/media/usb/dvb-usb/dvbt_demod_base.h
 new file mode 100644
 index 0000000..edf7f19
 --- /dev/null
-+++ b/drivers/media/dvb/dvb-usb/dvbt_demod_base.h
++++ b/drivers/media/usb/dvb-usb/dvbt_demod_base.h
 @@ -0,0 +1,2722 @@
 +#ifndef __DVBT_DEMOD_BASE_H
 +#define __DVBT_DEMOD_BASE_H
@@ -17942,11 +18032,11 @@ index 0000000..edf7f19
 +
 +
 +#endif
-diff --git a/drivers/media/dvb/dvb-usb/dvbt_nim_base.c b/drivers/media/dvb/dvb-usb/dvbt_nim_base.c
+diff --git a/drivers/media/usb/dvb-usb/dvbt_nim_base.c b/drivers/media/usb/dvb-usb/dvbt_nim_base.c
 new file mode 100644
 index 0000000..76a5e94
 --- /dev/null
-+++ b/drivers/media/dvb/dvb-usb/dvbt_nim_base.c
++++ b/drivers/media/usb/dvb-usb/dvbt_nim_base.c
 @@ -0,0 +1,531 @@
 +/**
 +
@@ -18479,11 +18569,11 @@ index 0000000..76a5e94
 +
 +
 +
-diff --git a/drivers/media/dvb/dvb-usb/dvbt_nim_base.h b/drivers/media/dvb/dvb-usb/dvbt_nim_base.h
+diff --git a/drivers/media/usb/dvb-usb/dvbt_nim_base.h b/drivers/media/usb/dvb-usb/dvbt_nim_base.h
 new file mode 100644
 index 0000000..c584735
 --- /dev/null
-+++ b/drivers/media/dvb/dvb-usb/dvbt_nim_base.h
++++ b/drivers/media/usb/dvb-usb/dvbt_nim_base.h
 @@ -0,0 +1,964 @@
 +#ifndef __DVBT_NIM_BASE_H
 +#define __DVBT_NIM_BASE_H
@@ -19449,11 +19539,11 @@ index 0000000..c584735
 +
 +
 +#endif
-diff --git a/drivers/media/dvb/dvb-usb/foundation.c b/drivers/media/dvb/dvb-usb/foundation.c
+diff --git a/drivers/media/usb/dvb-usb/foundation.c b/drivers/media/usb/dvb-usb/foundation.c
 new file mode 100644
 index 0000000..c5e8e52
 --- /dev/null
-+++ b/drivers/media/dvb/dvb-usb/foundation.c
++++ b/drivers/media/usb/dvb-usb/foundation.c
 @@ -0,0 +1,352 @@
 +/**
 +
@@ -19807,11 +19897,11 @@ index 0000000..c5e8e52
 +
 +
 +
-diff --git a/drivers/media/dvb/dvb-usb/foundation.h b/drivers/media/dvb/dvb-usb/foundation.h
+diff --git a/drivers/media/usb/dvb-usb/foundation.h b/drivers/media/usb/dvb-usb/foundation.h
 new file mode 100644
 index 0000000..d5dcf2d
 --- /dev/null
-+++ b/drivers/media/dvb/dvb-usb/foundation.h
++++ b/drivers/media/usb/dvb-usb/foundation.h
 @@ -0,0 +1,1026 @@
 +#ifndef __FOUNDATION_H
 +#define __FOUNDATION_H
@@ -20839,11 +20929,11 @@ index 0000000..d5dcf2d
 +
 +
 +#endif
-diff --git a/drivers/media/dvb/dvb-usb/i2c_bridge.h b/drivers/media/dvb/dvb-usb/i2c_bridge.h
+diff --git a/drivers/media/usb/dvb-usb/i2c_bridge.h b/drivers/media/usb/dvb-usb/i2c_bridge.h
 new file mode 100644
 index 0000000..ce67e8b
 --- /dev/null
-+++ b/drivers/media/dvb/dvb-usb/i2c_bridge.h
++++ b/drivers/media/usb/dvb-usb/i2c_bridge.h
 @@ -0,0 +1,122 @@
 +#ifndef __I2C_BRIDGE_H
 +#define __I2C_BRIDGE_H
@@ -20967,11 +21057,11 @@ index 0000000..ce67e8b
 +
 +
 +#endif
-diff --git a/drivers/media/dvb/dvb-usb/math_mpi.c b/drivers/media/dvb/dvb-usb/math_mpi.c
+diff --git a/drivers/media/usb/dvb-usb/math_mpi.c b/drivers/media/usb/dvb-usb/math_mpi.c
 new file mode 100644
 index 0000000..d3a2c7c
 --- /dev/null
-+++ b/drivers/media/dvb/dvb-usb/math_mpi.c
++++ b/drivers/media/usb/dvb-usb/math_mpi.c
 @@ -0,0 +1,1054 @@
 +/**
 +
@@ -22027,11 +22117,11 @@ index 0000000..d3a2c7c
 +
 +
 +
-diff --git a/drivers/media/dvb/dvb-usb/math_mpi.h b/drivers/media/dvb/dvb-usb/math_mpi.h
+diff --git a/drivers/media/usb/dvb-usb/math_mpi.h b/drivers/media/usb/dvb-usb/math_mpi.h
 new file mode 100644
 index 0000000..73a7d1d
 --- /dev/null
-+++ b/drivers/media/dvb/dvb-usb/math_mpi.h
++++ b/drivers/media/usb/dvb-usb/math_mpi.h
 @@ -0,0 +1,201 @@
 +#ifndef __MATH_MPI_H
 +#define __MATH_MPI_H
@@ -22234,11 +22324,11 @@ index 0000000..73a7d1d
 +
 +
 +#endif
-diff --git a/drivers/media/dvb/dvb-usb/nim_rtl2832_e4000.c b/drivers/media/dvb/dvb-usb/nim_rtl2832_e4000.c
+diff --git a/drivers/media/usb/dvb-usb/nim_rtl2832_e4000.c b/drivers/media/usb/dvb-usb/nim_rtl2832_e4000.c
 new file mode 100644
 index 0000000..c2e9df8
 --- /dev/null
-+++ b/drivers/media/dvb/dvb-usb/nim_rtl2832_e4000.c
++++ b/drivers/media/usb/dvb-usb/nim_rtl2832_e4000.c
 @@ -0,0 +1,1001 @@
 +/**
 +
@@ -23241,11 +23331,11 @@ index 0000000..c2e9df8
 +
 +
 +
-diff --git a/drivers/media/dvb/dvb-usb/nim_rtl2832_e4000.h b/drivers/media/dvb/dvb-usb/nim_rtl2832_e4000.h
+diff --git a/drivers/media/usb/dvb-usb/nim_rtl2832_e4000.h b/drivers/media/usb/dvb-usb/nim_rtl2832_e4000.h
 new file mode 100644
 index 0000000..e23c277
 --- /dev/null
-+++ b/drivers/media/dvb/dvb-usb/nim_rtl2832_e4000.h
++++ b/drivers/media/usb/dvb-usb/nim_rtl2832_e4000.h
 @@ -0,0 +1,226 @@
 +#ifndef __NIM_RTL2832_E4000
 +#define __NIM_RTL2832_E4000
@@ -23473,11 +23563,11 @@ index 0000000..e23c277
 +#endif
 +
 +
-diff --git a/drivers/media/dvb/dvb-usb/nim_rtl2832_fc0012.c b/drivers/media/dvb/dvb-usb/nim_rtl2832_fc0012.c
+diff --git a/drivers/media/usb/dvb-usb/nim_rtl2832_fc0012.c b/drivers/media/usb/dvb-usb/nim_rtl2832_fc0012.c
 new file mode 100644
 index 0000000..0db94c7
 --- /dev/null
-+++ b/drivers/media/dvb/dvb-usb/nim_rtl2832_fc0012.c
++++ b/drivers/media/usb/dvb-usb/nim_rtl2832_fc0012.c
 @@ -0,0 +1,840 @@
 +/**
 +
@@ -24319,11 +24409,11 @@ index 0000000..0db94c7
 +
 +
 +
-diff --git a/drivers/media/dvb/dvb-usb/nim_rtl2832_fc0012.h b/drivers/media/dvb/dvb-usb/nim_rtl2832_fc0012.h
+diff --git a/drivers/media/usb/dvb-usb/nim_rtl2832_fc0012.h b/drivers/media/usb/dvb-usb/nim_rtl2832_fc0012.h
 new file mode 100644
 index 0000000..befa45a
 --- /dev/null
-+++ b/drivers/media/dvb/dvb-usb/nim_rtl2832_fc0012.h
++++ b/drivers/media/usb/dvb-usb/nim_rtl2832_fc0012.h
 @@ -0,0 +1,168 @@
 +#ifndef __NIM_RTL2832_FC0012
 +#define __NIM_RTL2832_FC0012
@@ -24493,11 +24583,11 @@ index 0000000..befa45a
 +#endif
 +
 +
-diff --git a/drivers/media/dvb/dvb-usb/nim_rtl2832_fc0013.c b/drivers/media/dvb/dvb-usb/nim_rtl2832_fc0013.c
+diff --git a/drivers/media/usb/dvb-usb/nim_rtl2832_fc0013.c b/drivers/media/usb/dvb-usb/nim_rtl2832_fc0013.c
 new file mode 100644
 index 0000000..16740f3
 --- /dev/null
-+++ b/drivers/media/dvb/dvb-usb/nim_rtl2832_fc0013.c
++++ b/drivers/media/usb/dvb-usb/nim_rtl2832_fc0013.c
 @@ -0,0 +1,1053 @@
 +/**
 +
@@ -25552,11 +25642,11 @@ index 0000000..16740f3
 +
 +
 +
-diff --git a/drivers/media/dvb/dvb-usb/nim_rtl2832_fc0013.h b/drivers/media/dvb/dvb-usb/nim_rtl2832_fc0013.h
+diff --git a/drivers/media/usb/dvb-usb/nim_rtl2832_fc0013.h b/drivers/media/usb/dvb-usb/nim_rtl2832_fc0013.h
 new file mode 100644
 index 0000000..0888d6e
 --- /dev/null
-+++ b/drivers/media/dvb/dvb-usb/nim_rtl2832_fc0013.h
++++ b/drivers/media/usb/dvb-usb/nim_rtl2832_fc0013.h
 @@ -0,0 +1,170 @@
 +#ifndef __NIM_RTL2832_FC0013
 +#define __NIM_RTL2832_FC0013
@@ -25728,11 +25818,11 @@ index 0000000..0888d6e
 +#endif
 +
 +
-diff --git a/drivers/media/dvb/dvb-usb/nim_rtl2832_fc2580.c b/drivers/media/dvb/dvb-usb/nim_rtl2832_fc2580.c
+diff --git a/drivers/media/usb/dvb-usb/nim_rtl2832_fc2580.c b/drivers/media/usb/dvb-usb/nim_rtl2832_fc2580.c
 new file mode 100644
 index 0000000..7d12c5f
 --- /dev/null
-+++ b/drivers/media/dvb/dvb-usb/nim_rtl2832_fc2580.c
++++ b/drivers/media/usb/dvb-usb/nim_rtl2832_fc2580.c
 @@ -0,0 +1,343 @@
 +/**
 +
@@ -26077,11 +26167,11 @@ index 0000000..7d12c5f
 +
 +
 +
-diff --git a/drivers/media/dvb/dvb-usb/nim_rtl2832_fc2580.h b/drivers/media/dvb/dvb-usb/nim_rtl2832_fc2580.h
+diff --git a/drivers/media/usb/dvb-usb/nim_rtl2832_fc2580.h b/drivers/media/usb/dvb-usb/nim_rtl2832_fc2580.h
 new file mode 100644
 index 0000000..a5a7998
 --- /dev/null
-+++ b/drivers/media/dvb/dvb-usb/nim_rtl2832_fc2580.h
++++ b/drivers/media/usb/dvb-usb/nim_rtl2832_fc2580.h
 @@ -0,0 +1,141 @@
 +#ifndef __NIM_RTL2832_FC2580
 +#define __NIM_RTL2832_FC2580
@@ -26224,11 +26314,11 @@ index 0000000..a5a7998
 +#endif
 +
 +
-diff --git a/drivers/media/dvb/dvb-usb/nim_rtl2832_max3543.c b/drivers/media/dvb/dvb-usb/nim_rtl2832_max3543.c
+diff --git a/drivers/media/usb/dvb-usb/nim_rtl2832_max3543.c b/drivers/media/usb/dvb-usb/nim_rtl2832_max3543.c
 new file mode 100644
 index 0000000..6398437
 --- /dev/null
-+++ b/drivers/media/dvb/dvb-usb/nim_rtl2832_max3543.c
++++ b/drivers/media/usb/dvb-usb/nim_rtl2832_max3543.c
 @@ -0,0 +1,346 @@
 +/**
 +
@@ -26576,11 +26666,11 @@ index 0000000..6398437
 +
 +
 +
-diff --git a/drivers/media/dvb/dvb-usb/nim_rtl2832_max3543.h b/drivers/media/dvb/dvb-usb/nim_rtl2832_max3543.h
+diff --git a/drivers/media/usb/dvb-usb/nim_rtl2832_max3543.h b/drivers/media/usb/dvb-usb/nim_rtl2832_max3543.h
 new file mode 100644
 index 0000000..b2b61fc
 --- /dev/null
-+++ b/drivers/media/dvb/dvb-usb/nim_rtl2832_max3543.h
++++ b/drivers/media/usb/dvb-usb/nim_rtl2832_max3543.h
 @@ -0,0 +1,145 @@
 +#ifndef __NIM_RTL2832_MAX3543
 +#define __NIM_RTL2832_MAX3543
@@ -26727,11 +26817,11 @@ index 0000000..b2b61fc
 +#endif
 +
 +
-diff --git a/drivers/media/dvb/dvb-usb/nim_rtl2832_mt2063.c b/drivers/media/dvb/dvb-usb/nim_rtl2832_mt2063.c
+diff --git a/drivers/media/usb/dvb-usb/nim_rtl2832_mt2063.c b/drivers/media/usb/dvb-usb/nim_rtl2832_mt2063.c
 new file mode 100644
 index 0000000..3c475f9
 --- /dev/null
-+++ b/drivers/media/dvb/dvb-usb/nim_rtl2832_mt2063.c
++++ b/drivers/media/usb/dvb-usb/nim_rtl2832_mt2063.c
 @@ -0,0 +1,360 @@
 +/**
 +
@@ -27093,11 +27183,11 @@ index 0000000..3c475f9
 +
 +
 +
-diff --git a/drivers/media/dvb/dvb-usb/nim_rtl2832_mt2063.h b/drivers/media/dvb/dvb-usb/nim_rtl2832_mt2063.h
+diff --git a/drivers/media/usb/dvb-usb/nim_rtl2832_mt2063.h b/drivers/media/usb/dvb-usb/nim_rtl2832_mt2063.h
 new file mode 100644
 index 0000000..464d0c6
 --- /dev/null
-+++ b/drivers/media/dvb/dvb-usb/nim_rtl2832_mt2063.h
++++ b/drivers/media/usb/dvb-usb/nim_rtl2832_mt2063.h
 @@ -0,0 +1,160 @@
 +#ifndef __NIM_RTL2832_MT2063
 +#define __NIM_RTL2832_MT2063
@@ -27259,11 +27349,11 @@ index 0000000..464d0c6
 +#endif
 +
 +
-diff --git a/drivers/media/dvb/dvb-usb/nim_rtl2832_mt2266.c b/drivers/media/dvb/dvb-usb/nim_rtl2832_mt2266.c
+diff --git a/drivers/media/usb/dvb-usb/nim_rtl2832_mt2266.c b/drivers/media/usb/dvb-usb/nim_rtl2832_mt2266.c
 new file mode 100644
 index 0000000..cac01e3
 --- /dev/null
-+++ b/drivers/media/dvb/dvb-usb/nim_rtl2832_mt2266.c
++++ b/drivers/media/usb/dvb-usb/nim_rtl2832_mt2266.c
 @@ -0,0 +1,1082 @@
 +/**
 +
@@ -28347,11 +28437,11 @@ index 0000000..cac01e3
 +
 +
 +
-diff --git a/drivers/media/dvb/dvb-usb/nim_rtl2832_mt2266.h b/drivers/media/dvb/dvb-usb/nim_rtl2832_mt2266.h
+diff --git a/drivers/media/usb/dvb-usb/nim_rtl2832_mt2266.h b/drivers/media/usb/dvb-usb/nim_rtl2832_mt2266.h
 new file mode 100644
 index 0000000..2047220
 --- /dev/null
-+++ b/drivers/media/dvb/dvb-usb/nim_rtl2832_mt2266.h
++++ b/drivers/media/usb/dvb-usb/nim_rtl2832_mt2266.h
 @@ -0,0 +1,264 @@
 +#ifndef __NIM_RTL2832_MT2266
 +#define __NIM_RTL2832_MT2266
@@ -28617,11 +28707,11 @@ index 0000000..2047220
 +#endif
 +
 +
-diff --git a/drivers/media/dvb/dvb-usb/nim_rtl2832_mxl5007t.c b/drivers/media/dvb/dvb-usb/nim_rtl2832_mxl5007t.c
+diff --git a/drivers/media/usb/dvb-usb/nim_rtl2832_mxl5007t.c b/drivers/media/usb/dvb-usb/nim_rtl2832_mxl5007t.c
 new file mode 100644
 index 0000000..ef06a95
 --- /dev/null
-+++ b/drivers/media/dvb/dvb-usb/nim_rtl2832_mxl5007t.c
++++ b/drivers/media/usb/dvb-usb/nim_rtl2832_mxl5007t.c
 @@ -0,0 +1,517 @@
 +/**
 +
@@ -29140,11 +29230,11 @@ index 0000000..ef06a95
 +
 +
 +
-diff --git a/drivers/media/dvb/dvb-usb/nim_rtl2832_mxl5007t.h b/drivers/media/dvb/dvb-usb/nim_rtl2832_mxl5007t.h
+diff --git a/drivers/media/usb/dvb-usb/nim_rtl2832_mxl5007t.h b/drivers/media/usb/dvb-usb/nim_rtl2832_mxl5007t.h
 new file mode 100644
-index 0000000..bdf43ad
+index 0000000..bdf43adb
 --- /dev/null
-+++ b/drivers/media/dvb/dvb-usb/nim_rtl2832_mxl5007t.h
++++ b/drivers/media/usb/dvb-usb/nim_rtl2832_mxl5007t.h
 @@ -0,0 +1,165 @@
 +#ifndef __NIM_RTL2832_MXL5007T
 +#define __NIM_RTL2832_MXL5007T
@@ -29311,11 +29401,11 @@ index 0000000..bdf43ad
 +#endif
 +
 +
-diff --git a/drivers/media/dvb/dvb-usb/nim_rtl2832_r820t.c b/drivers/media/dvb/dvb-usb/nim_rtl2832_r820t.c
+diff --git a/drivers/media/usb/dvb-usb/nim_rtl2832_r820t.c b/drivers/media/usb/dvb-usb/nim_rtl2832_r820t.c
 new file mode 100644
 index 0000000..5309ac2
 --- /dev/null
-+++ b/drivers/media/dvb/dvb-usb/nim_rtl2832_r820t.c
++++ b/drivers/media/usb/dvb-usb/nim_rtl2832_r820t.c
 @@ -0,0 +1,356 @@
 +/**
 +
@@ -29673,11 +29763,11 @@ index 0000000..5309ac2
 +
 +
 +
-diff --git a/drivers/media/dvb/dvb-usb/nim_rtl2832_r820t.h b/drivers/media/dvb/dvb-usb/nim_rtl2832_r820t.h
+diff --git a/drivers/media/usb/dvb-usb/nim_rtl2832_r820t.h b/drivers/media/usb/dvb-usb/nim_rtl2832_r820t.h
 new file mode 100644
 index 0000000..1addd4e
 --- /dev/null
-+++ b/drivers/media/dvb/dvb-usb/nim_rtl2832_r820t.h
++++ b/drivers/media/usb/dvb-usb/nim_rtl2832_r820t.h
 @@ -0,0 +1,143 @@
 +#ifndef __NIM_RTL2832_R820T
 +#define __NIM_RTL2832_R820T
@@ -29822,11 +29912,11 @@ index 0000000..1addd4e
 +
 +
 +
-diff --git a/drivers/media/dvb/dvb-usb/nim_rtl2832_tda18272.c b/drivers/media/dvb/dvb-usb/nim_rtl2832_tda18272.c
+diff --git a/drivers/media/usb/dvb-usb/nim_rtl2832_tda18272.c b/drivers/media/usb/dvb-usb/nim_rtl2832_tda18272.c
 new file mode 100644
 index 0000000..364ea45
 --- /dev/null
-+++ b/drivers/media/dvb/dvb-usb/nim_rtl2832_tda18272.c
++++ b/drivers/media/usb/dvb-usb/nim_rtl2832_tda18272.c
 @@ -0,0 +1,408 @@
 +/**
 +
@@ -30236,11 +30326,11 @@ index 0000000..364ea45
 +
 +
 +
-diff --git a/drivers/media/dvb/dvb-usb/nim_rtl2832_tda18272.h b/drivers/media/dvb/dvb-usb/nim_rtl2832_tda18272.h
+diff --git a/drivers/media/usb/dvb-usb/nim_rtl2832_tda18272.h b/drivers/media/usb/dvb-usb/nim_rtl2832_tda18272.h
 new file mode 100644
 index 0000000..25c8ef1
 --- /dev/null
-+++ b/drivers/media/dvb/dvb-usb/nim_rtl2832_tda18272.h
++++ b/drivers/media/usb/dvb-usb/nim_rtl2832_tda18272.h
 @@ -0,0 +1,148 @@
 +#ifndef __NIM_RTL2832_TDA18272
 +#define __NIM_RTL2832_TDA18272
@@ -30390,11 +30480,11 @@ index 0000000..25c8ef1
 +#endif
 +
 +
-diff --git a/drivers/media/dvb/dvb-usb/nim_rtl2832_tua9001.c b/drivers/media/dvb/dvb-usb/nim_rtl2832_tua9001.c
+diff --git a/drivers/media/usb/dvb-usb/nim_rtl2832_tua9001.c b/drivers/media/usb/dvb-usb/nim_rtl2832_tua9001.c
 new file mode 100644
 index 0000000..92f2f5f
 --- /dev/null
-+++ b/drivers/media/dvb/dvb-usb/nim_rtl2832_tua9001.c
++++ b/drivers/media/usb/dvb-usb/nim_rtl2832_tua9001.c
 @@ -0,0 +1,340 @@
 +/**
 +
@@ -30736,11 +30826,11 @@ index 0000000..92f2f5f
 +
 +
 +
-diff --git a/drivers/media/dvb/dvb-usb/nim_rtl2832_tua9001.h b/drivers/media/dvb/dvb-usb/nim_rtl2832_tua9001.h
+diff --git a/drivers/media/usb/dvb-usb/nim_rtl2832_tua9001.h b/drivers/media/usb/dvb-usb/nim_rtl2832_tua9001.h
 new file mode 100644
 index 0000000..5eded7d
 --- /dev/null
-+++ b/drivers/media/dvb/dvb-usb/nim_rtl2832_tua9001.h
++++ b/drivers/media/usb/dvb-usb/nim_rtl2832_tua9001.h
 @@ -0,0 +1,137 @@
 +#ifndef __NIM_RTL2832_TUA9001
 +#define __NIM_RTL2832_TUA9001
@@ -30879,11 +30969,11 @@ index 0000000..5eded7d
 +#endif
 +
 +
-diff --git a/drivers/media/dvb/dvb-usb/nim_rtl2836_fc2580.c b/drivers/media/dvb/dvb-usb/nim_rtl2836_fc2580.c
+diff --git a/drivers/media/usb/dvb-usb/nim_rtl2836_fc2580.c b/drivers/media/usb/dvb-usb/nim_rtl2836_fc2580.c
 new file mode 100644
 index 0000000..f501e6e
 --- /dev/null
-+++ b/drivers/media/dvb/dvb-usb/nim_rtl2836_fc2580.c
++++ b/drivers/media/usb/dvb-usb/nim_rtl2836_fc2580.c
 @@ -0,0 +1,308 @@
 +/**
 +
@@ -31193,11 +31283,11 @@ index 0000000..f501e6e
 +
 +
 +
-diff --git a/drivers/media/dvb/dvb-usb/nim_rtl2836_fc2580.h b/drivers/media/dvb/dvb-usb/nim_rtl2836_fc2580.h
+diff --git a/drivers/media/usb/dvb-usb/nim_rtl2836_fc2580.h b/drivers/media/usb/dvb-usb/nim_rtl2836_fc2580.h
 new file mode 100644
 index 0000000..cc827ec
 --- /dev/null
-+++ b/drivers/media/dvb/dvb-usb/nim_rtl2836_fc2580.h
++++ b/drivers/media/usb/dvb-usb/nim_rtl2836_fc2580.h
 @@ -0,0 +1,140 @@
 +#ifndef __NIM_RTL2836_FC2580
 +#define __NIM_RTL2836_FC2580
@@ -31339,11 +31429,11 @@ index 0000000..cc827ec
 +#endif
 +
 +
-diff --git a/drivers/media/dvb/dvb-usb/nim_rtl2836_mxl5007t.c b/drivers/media/dvb/dvb-usb/nim_rtl2836_mxl5007t.c
+diff --git a/drivers/media/usb/dvb-usb/nim_rtl2836_mxl5007t.c b/drivers/media/usb/dvb-usb/nim_rtl2836_mxl5007t.c
 new file mode 100644
 index 0000000..8eaec8b
 --- /dev/null
-+++ b/drivers/media/dvb/dvb-usb/nim_rtl2836_mxl5007t.c
++++ b/drivers/media/usb/dvb-usb/nim_rtl2836_mxl5007t.c
 @@ -0,0 +1,319 @@
 +/**
 +
@@ -31664,11 +31754,11 @@ index 0000000..8eaec8b
 +
 +
 +
-diff --git a/drivers/media/dvb/dvb-usb/nim_rtl2836_mxl5007t.h b/drivers/media/dvb/dvb-usb/nim_rtl2836_mxl5007t.h
+diff --git a/drivers/media/usb/dvb-usb/nim_rtl2836_mxl5007t.h b/drivers/media/usb/dvb-usb/nim_rtl2836_mxl5007t.h
 new file mode 100644
 index 0000000..41e874f
 --- /dev/null
-+++ b/drivers/media/dvb/dvb-usb/nim_rtl2836_mxl5007t.h
++++ b/drivers/media/usb/dvb-usb/nim_rtl2836_mxl5007t.h
 @@ -0,0 +1,150 @@
 +#ifndef __NIM_RTL2836_MXL5007T
 +#define __NIM_RTL2836_MXL5007T
@@ -31820,11 +31910,11 @@ index 0000000..41e874f
 +#endif
 +
 +
-diff --git a/drivers/media/dvb/dvb-usb/nim_rtl2840_max3543.c b/drivers/media/dvb/dvb-usb/nim_rtl2840_max3543.c
+diff --git a/drivers/media/usb/dvb-usb/nim_rtl2840_max3543.c b/drivers/media/usb/dvb-usb/nim_rtl2840_max3543.c
 new file mode 100644
 index 0000000..25daa3f
 --- /dev/null
-+++ b/drivers/media/dvb/dvb-usb/nim_rtl2840_max3543.c
++++ b/drivers/media/usb/dvb-usb/nim_rtl2840_max3543.c
 @@ -0,0 +1,341 @@
 +/**
 +
@@ -32167,11 +32257,11 @@ index 0000000..25daa3f
 +
 +
 +
-diff --git a/drivers/media/dvb/dvb-usb/nim_rtl2840_max3543.h b/drivers/media/dvb/dvb-usb/nim_rtl2840_max3543.h
+diff --git a/drivers/media/usb/dvb-usb/nim_rtl2840_max3543.h b/drivers/media/usb/dvb-usb/nim_rtl2840_max3543.h
 new file mode 100644
 index 0000000..ff4ec2f
 --- /dev/null
-+++ b/drivers/media/dvb/dvb-usb/nim_rtl2840_max3543.h
++++ b/drivers/media/usb/dvb-usb/nim_rtl2840_max3543.h
 @@ -0,0 +1,146 @@
 +#ifndef __NIM_RTL2840_MAX3543_H
 +#define __NIM_RTL2840_MAX3543_H
@@ -32319,11 +32409,11 @@ index 0000000..ff4ec2f
 +
 +
 +#endif
-diff --git a/drivers/media/dvb/dvb-usb/nim_rtl2840_mt2063.c b/drivers/media/dvb/dvb-usb/nim_rtl2840_mt2063.c
+diff --git a/drivers/media/usb/dvb-usb/nim_rtl2840_mt2063.c b/drivers/media/usb/dvb-usb/nim_rtl2840_mt2063.c
 new file mode 100644
 index 0000000..3df31e6
 --- /dev/null
-+++ b/drivers/media/dvb/dvb-usb/nim_rtl2840_mt2063.c
++++ b/drivers/media/usb/dvb-usb/nim_rtl2840_mt2063.c
 @@ -0,0 +1,307 @@
 +/**
 +
@@ -32632,11 +32722,11 @@ index 0000000..3df31e6
 +
 +
 +
-diff --git a/drivers/media/dvb/dvb-usb/nim_rtl2840_mt2063.h b/drivers/media/dvb/dvb-usb/nim_rtl2840_mt2063.h
+diff --git a/drivers/media/usb/dvb-usb/nim_rtl2840_mt2063.h b/drivers/media/usb/dvb-usb/nim_rtl2840_mt2063.h
 new file mode 100644
 index 0000000..0e4e673
 --- /dev/null
-+++ b/drivers/media/dvb/dvb-usb/nim_rtl2840_mt2063.h
++++ b/drivers/media/usb/dvb-usb/nim_rtl2840_mt2063.h
 @@ -0,0 +1,163 @@
 +#ifndef __NIM_RTL2840_MT2063_H
 +#define __NIM_RTL2840_MT2063_H
@@ -32801,11 +32891,11 @@ index 0000000..0e4e673
 +
 +
 +#endif
-diff --git a/drivers/media/dvb/dvb-usb/qam_demod_base.c b/drivers/media/dvb/dvb-usb/qam_demod_base.c
+diff --git a/drivers/media/usb/dvb-usb/qam_demod_base.c b/drivers/media/usb/dvb-usb/qam_demod_base.c
 new file mode 100644
 index 0000000..8843ab5
 --- /dev/null
-+++ b/drivers/media/dvb/dvb-usb/qam_demod_base.c
++++ b/drivers/media/usb/dvb-usb/qam_demod_base.c
 @@ -0,0 +1,1289 @@
 +/**
 +
@@ -34096,11 +34186,11 @@ index 0000000..8843ab5
 +
 +
 +
-diff --git a/drivers/media/dvb/dvb-usb/qam_demod_base.h b/drivers/media/dvb/dvb-usb/qam_demod_base.h
+diff --git a/drivers/media/usb/dvb-usb/qam_demod_base.h b/drivers/media/usb/dvb-usb/qam_demod_base.h
 new file mode 100644
 index 0000000..ae292d8
 --- /dev/null
-+++ b/drivers/media/dvb/dvb-usb/qam_demod_base.h
++++ b/drivers/media/usb/dvb-usb/qam_demod_base.h
 @@ -0,0 +1,2818 @@
 +#ifndef __QAM_DEMOD_BASE_H
 +#define __QAM_DEMOD_BASE_H
@@ -36920,11 +37010,11 @@ index 0000000..ae292d8
 +
 +
 +#endif
-diff --git a/drivers/media/dvb/dvb-usb/qam_nim_base.c b/drivers/media/dvb/dvb-usb/qam_nim_base.c
+diff --git a/drivers/media/usb/dvb-usb/qam_nim_base.c b/drivers/media/usb/dvb-usb/qam_nim_base.c
 new file mode 100644
 index 0000000..726eab4
 --- /dev/null
-+++ b/drivers/media/dvb/dvb-usb/qam_nim_base.c
++++ b/drivers/media/usb/dvb-usb/qam_nim_base.c
 @@ -0,0 +1,496 @@
 +/**
 +
@@ -37422,11 +37512,11 @@ index 0000000..726eab4
 +
 +
 +
-diff --git a/drivers/media/dvb/dvb-usb/qam_nim_base.h b/drivers/media/dvb/dvb-usb/qam_nim_base.h
+diff --git a/drivers/media/usb/dvb-usb/qam_nim_base.h b/drivers/media/usb/dvb-usb/qam_nim_base.h
 new file mode 100644
 index 0000000..143f6d4
 --- /dev/null
-+++ b/drivers/media/dvb/dvb-usb/qam_nim_base.h
++++ b/drivers/media/usb/dvb-usb/qam_nim_base.h
 @@ -0,0 +1,879 @@
 +#ifndef __QAM_NIM_BASE_H
 +#define __QAM_NIM_BASE_H
@@ -38307,11 +38397,11 @@ index 0000000..143f6d4
 +
 +
 +#endif
-diff --git a/drivers/media/dvb/dvb-usb/rtl2832u.c b/drivers/media/dvb/dvb-usb/rtl2832u.c
+diff --git a/drivers/media/usb/dvb-usb/rtl2832u.c b/drivers/media/usb/dvb-usb/rtl2832u.c
 new file mode 100644
 index 0000000..4d0b710
 --- /dev/null
-+++ b/drivers/media/dvb/dvb-usb/rtl2832u.c
++++ b/drivers/media/usb/dvb-usb/rtl2832u.c
 @@ -0,0 +1,1745 @@
 +
 +#include <linux/module.h>
@@ -40058,11 +40148,11 @@ index 0000000..4d0b710
 +MODULE_VERSION("2.2.2");
 +MODULE_LICENSE("GPL");
 +
-diff --git a/drivers/media/dvb/dvb-usb/rtl2832u.h b/drivers/media/dvb/dvb-usb/rtl2832u.h
+diff --git a/drivers/media/usb/dvb-usb/rtl2832u.h b/drivers/media/usb/dvb-usb/rtl2832u.h
 new file mode 100644
 index 0000000..16ad113
 --- /dev/null
-+++ b/drivers/media/dvb/dvb-usb/rtl2832u.h
++++ b/drivers/media/usb/dvb-usb/rtl2832u.h
 @@ -0,0 +1,277 @@
 +
 +#ifndef _RTL2832U_H_
@@ -40341,11 +40431,11 @@ index 0000000..16ad113
 +
 +
 +
-diff --git a/drivers/media/dvb/dvb-usb/rtl2832u_audio.c b/drivers/media/dvb/dvb-usb/rtl2832u_audio.c
+diff --git a/drivers/media/usb/dvb-usb/rtl2832u_audio.c b/drivers/media/usb/dvb-usb/rtl2832u_audio.c
 new file mode 100644
-index 0000000..b569d3a
+index 0000000..88bc374
 --- /dev/null
-+++ b/drivers/media/dvb/dvb-usb/rtl2832u_audio.c
++++ b/drivers/media/usb/dvb-usb/rtl2832u_audio.c
 @@ -0,0 +1,926 @@
 +
 +
@@ -41135,7 +41225,7 @@ index 0000000..b569d3a
 +			p_state->rtl2832_audio_video_mode = RTK_VIDEO;
 +			return 1;//break;
 +
-+		case CR_D:
++		case CR_D_:
 +
 +			deb_info("CR_d\n");
 +
@@ -41154,7 +41244,7 @@ index 0000000..b569d3a
 +			deb_info("CR_d done\n");
 +			return 1;
 +
-+		case CR_A:
++		case CR_A_:
 +
 +			deb_info("CR_a\n");
 +
@@ -41273,11 +41363,11 @@ index 0000000..b569d3a
 +
 +
 +
-diff --git a/drivers/media/dvb/dvb-usb/rtl2832u_audio.h b/drivers/media/dvb/dvb-usb/rtl2832u_audio.h
+diff --git a/drivers/media/usb/dvb-usb/rtl2832u_audio.h b/drivers/media/usb/dvb-usb/rtl2832u_audio.h
 new file mode 100644
-index 0000000..58168f6
+index 0000000..ffe9266
 --- /dev/null
-+++ b/drivers/media/dvb/dvb-usb/rtl2832u_audio.h
++++ b/drivers/media/usb/dvb-usb/rtl2832u_audio.h
 @@ -0,0 +1,67 @@
 +
 +#ifndef __RTL2832U_AUDIO_H__
@@ -41298,7 +41388,7 @@ index 0000000..58168f6
 +#define V4L2_REFACTORED_MFE_CODE
 +#endif
 +
-+#if (LINUX_VERSION_CODE >= KERNEL_VERSION(3,8,0)) || (defined V4L2_VERSION)
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(3,7,0)) || (defined V4L2_VERSION)
 +#define NO_FE_IOCTL_OVERRIDE
 +#endif
 +
@@ -41321,9 +41411,9 @@ index 0000000..58168f6
 +{
 +	FE_ENABLE_FM=0,
 +	FE_DISABLE_FM,
-+	CR_D,
-+	CR_A,
-+	CR_S,
++	CR_D_,
++	CR_A_,
++	CR_S_,
 +	READ_BYTE,
 +	WRITE_BYTE,
 +	FE_ENABLE_DAB,
@@ -41346,12 +41436,12 @@ index 0000000..58168f6
 +
 +#endif
 +#endif
-diff --git a/drivers/media/dvb/dvb-usb/rtl2832u_fe.c b/drivers/media/dvb/dvb-usb/rtl2832u_fe.c
+diff --git a/drivers/media/usb/dvb-usb/rtl2832u_fe.c b/drivers/media/usb/dvb-usb/rtl2832u_fe.c
 new file mode 100644
-index 0000000..ba4a9a5
+index 0000000..0532d2b
 --- /dev/null
-+++ b/drivers/media/dvb/dvb-usb/rtl2832u_fe.c
-@@ -0,0 +1,4746 @@
++++ b/drivers/media/usb/dvb-usb/rtl2832u_fe.c
+@@ -0,0 +1,4747 @@
 +
 +#include "rtl2832u_fe.h"
 +#include "rtl2832u_io.h"
@@ -43835,6 +43925,7 @@ index 0000000..ba4a9a5
 +	struct dvb_frontend_parameters*	param)
 +{
 +	struct rtl2832_state* p_state = fe->demodulator_priv;
++	struct dvb_ofdm_parameters*	p_ofdm_param= &param->u.ofdm;
 +	unsigned long					frequency = param->frequency;
 +	int							bandwidth_mode;
 +	int	int_data;
@@ -43856,7 +43947,7 @@ index 0000000..ba4a9a5
 +
 +	if( mutex_lock_interruptible(&p_state->i2c_repeater_mutex) )	goto mutex_error;
 +	
-+	deb_info(" +%s frequency = %lu , bandwidth = %u\n", __FUNCTION__, frequency ,param->u.ofdm.bandwidth);
++	deb_info(" +%s frequency = %lu , bandwidth = %u\n", __FUNCTION__, frequency ,p_ofdm_param->bandwidth);
 +
 +	if(p_state->demod_type == RTL2832)
 +	{
@@ -43980,7 +44071,7 @@ index 0000000..ba4a9a5
 +//#endif
 +	
 +	//p_state->current_frequency = frequency;	
-+	//p_state->current_bandwidth = param->u.ofdm.bandwidth;	
++	//p_state->current_bandwidth = p_ofdm_param->bandwidth;	
 +
 +	deb_info(" -%s \n", __FUNCTION__);
 +
@@ -46098,11 +46189,11 @@ index 0000000..ba4a9a5
 +}
 +
 +
-diff --git a/drivers/media/dvb/dvb-usb/rtl2832u_fe.h b/drivers/media/dvb/dvb-usb/rtl2832u_fe.h
+diff --git a/drivers/media/usb/dvb-usb/rtl2832u_fe.h b/drivers/media/usb/dvb-usb/rtl2832u_fe.h
 new file mode 100644
 index 0000000..f7f05ce
 --- /dev/null
-+++ b/drivers/media/dvb/dvb-usb/rtl2832u_fe.h
++++ b/drivers/media/usb/dvb-usb/rtl2832u_fe.h
 @@ -0,0 +1,336 @@
 +
 +#ifndef __RTL2832U_FE_H__
@@ -46440,11 +46531,11 @@ index 0000000..f7f05ce
 +#endif // __RTD2830_PRIV_H__
 +
 +
-diff --git a/drivers/media/dvb/dvb-usb/rtl2832u_io.c b/drivers/media/dvb/dvb-usb/rtl2832u_io.c
+diff --git a/drivers/media/usb/dvb-usb/rtl2832u_io.c b/drivers/media/usb/dvb-usb/rtl2832u_io.c
 new file mode 100644
 index 0000000..c242c49
 --- /dev/null
-+++ b/drivers/media/dvb/dvb-usb/rtl2832u_io.c
++++ b/drivers/media/usb/dvb-usb/rtl2832u_io.c
 @@ -0,0 +1,912 @@
 +
 +
@@ -47358,11 +47449,11 @@ index 0000000..c242c49
 +
 +
 +
-diff --git a/drivers/media/dvb/dvb-usb/rtl2832u_io.h b/drivers/media/dvb/dvb-usb/rtl2832u_io.h
+diff --git a/drivers/media/usb/dvb-usb/rtl2832u_io.h b/drivers/media/usb/dvb-usb/rtl2832u_io.h
 new file mode 100644
 index 0000000..0b48acb
 --- /dev/null
-+++ b/drivers/media/dvb/dvb-usb/rtl2832u_io.h
++++ b/drivers/media/usb/dvb-usb/rtl2832u_io.h
 @@ -0,0 +1,276 @@
 +
 +
@@ -47640,11 +47731,11 @@ index 0000000..0b48acb
 +
 +
 +
-diff --git a/drivers/media/dvb/dvb-usb/tuner_base.h b/drivers/media/dvb/dvb-usb/tuner_base.h
+diff --git a/drivers/media/usb/dvb-usb/tuner_base.h b/drivers/media/usb/dvb-usb/tuner_base.h
 new file mode 100644
 index 0000000..e15ca3b
 --- /dev/null
-+++ b/drivers/media/dvb/dvb-usb/tuner_base.h
++++ b/drivers/media/usb/dvb-usb/tuner_base.h
 @@ -0,0 +1,1913 @@
 +#ifndef __TUNER_BASE_H
 +#define __TUNER_BASE_H
@@ -49559,11 +49650,11 @@ index 0000000..e15ca3b
 +
 +
 +#endif
-diff --git a/drivers/media/dvb/dvb-usb/tuner_e4000.c b/drivers/media/dvb/dvb-usb/tuner_e4000.c
+diff --git a/drivers/media/usb/dvb-usb/tuner_e4000.c b/drivers/media/usb/dvb-usb/tuner_e4000.c
 new file mode 100644
 index 0000000..11de716
 --- /dev/null
-+++ b/drivers/media/dvb/dvb-usb/tuner_e4000.c
++++ b/drivers/media/usb/dvb-usb/tuner_e4000.c
 @@ -0,0 +1,2482 @@
 +/**
 +
@@ -52047,11 +52138,11 @@ index 0000000..11de716
 +
 +
 +
-diff --git a/drivers/media/dvb/dvb-usb/tuner_e4000.h b/drivers/media/dvb/dvb-usb/tuner_e4000.h
+diff --git a/drivers/media/usb/dvb-usb/tuner_e4000.h b/drivers/media/usb/dvb-usb/tuner_e4000.h
 new file mode 100644
 index 0000000..3d6c29c
 --- /dev/null
-+++ b/drivers/media/dvb/dvb-usb/tuner_e4000.h
++++ b/drivers/media/usb/dvb-usb/tuner_e4000.h
 @@ -0,0 +1,295 @@
 +#ifndef __TUNER_E4000_H
 +#define __TUNER_E4000_H
@@ -52348,11 +52439,11 @@ index 0000000..3d6c29c
 +
 +
 +#endif
-diff --git a/drivers/media/dvb/dvb-usb/tuner_fc0012.c b/drivers/media/dvb/dvb-usb/tuner_fc0012.c
+diff --git a/drivers/media/usb/dvb-usb/tuner_fc0012.c b/drivers/media/usb/dvb-usb/tuner_fc0012.c
 new file mode 100644
 index 0000000..9c81e20
 --- /dev/null
-+++ b/drivers/media/dvb/dvb-usb/tuner_fc0012.c
++++ b/drivers/media/usb/dvb-usb/tuner_fc0012.c
 @@ -0,0 +1,1056 @@
 +/**
 +
@@ -53410,11 +53501,11 @@ index 0000000..9c81e20
 +
 +
 +
-diff --git a/drivers/media/dvb/dvb-usb/tuner_fc0012.h b/drivers/media/dvb/dvb-usb/tuner_fc0012.h
+diff --git a/drivers/media/usb/dvb-usb/tuner_fc0012.h b/drivers/media/usb/dvb-usb/tuner_fc0012.h
 new file mode 100644
 index 0000000..82e6bb2
 --- /dev/null
-+++ b/drivers/media/dvb/dvb-usb/tuner_fc0012.h
++++ b/drivers/media/usb/dvb-usb/tuner_fc0012.h
 @@ -0,0 +1,292 @@
 +#ifndef __TUNER_FC0012_H
 +#define __TUNER_FC0012_H
@@ -53708,11 +53799,11 @@ index 0000000..82e6bb2
 +
 +
 +#endif
-diff --git a/drivers/media/dvb/dvb-usb/tuner_fc0013.c b/drivers/media/dvb/dvb-usb/tuner_fc0013.c
+diff --git a/drivers/media/usb/dvb-usb/tuner_fc0013.c b/drivers/media/usb/dvb-usb/tuner_fc0013.c
 new file mode 100644
 index 0000000..63a6850
 --- /dev/null
-+++ b/drivers/media/dvb/dvb-usb/tuner_fc0013.c
++++ b/drivers/media/usb/dvb-usb/tuner_fc0013.c
 @@ -0,0 +1,1261 @@
 +/**
 +
@@ -54975,11 +55066,11 @@ index 0000000..63a6850
 +
 +
 +
-diff --git a/drivers/media/dvb/dvb-usb/tuner_fc0013.h b/drivers/media/dvb/dvb-usb/tuner_fc0013.h
+diff --git a/drivers/media/usb/dvb-usb/tuner_fc0013.h b/drivers/media/usb/dvb-usb/tuner_fc0013.h
 new file mode 100644
 index 0000000..f9f0801
 --- /dev/null
-+++ b/drivers/media/dvb/dvb-usb/tuner_fc0013.h
++++ b/drivers/media/usb/dvb-usb/tuner_fc0013.h
 @@ -0,0 +1,307 @@
 +#ifndef __TUNER_FC0013_H
 +#define __TUNER_FC0013_H
@@ -55288,11 +55379,11 @@ index 0000000..f9f0801
 +
 +
 +#endif
-diff --git a/drivers/media/dvb/dvb-usb/tuner_fc2580.c b/drivers/media/dvb/dvb-usb/tuner_fc2580.c
+diff --git a/drivers/media/usb/dvb-usb/tuner_fc2580.c b/drivers/media/usb/dvb-usb/tuner_fc2580.c
 new file mode 100644
 index 0000000..2d4ccc9
 --- /dev/null
-+++ b/drivers/media/dvb/dvb-usb/tuner_fc2580.c
++++ b/drivers/media/usb/dvb-usb/tuner_fc2580.c
 @@ -0,0 +1,932 @@
 +/**
 +
@@ -56226,11 +56317,11 @@ index 0000000..2d4ccc9
 +
 +
 +
-diff --git a/drivers/media/dvb/dvb-usb/tuner_fc2580.h b/drivers/media/dvb/dvb-usb/tuner_fc2580.h
+diff --git a/drivers/media/usb/dvb-usb/tuner_fc2580.h b/drivers/media/usb/dvb-usb/tuner_fc2580.h
 new file mode 100644
 index 0000000..906357d
 --- /dev/null
-+++ b/drivers/media/dvb/dvb-usb/tuner_fc2580.h
++++ b/drivers/media/usb/dvb-usb/tuner_fc2580.h
 @@ -0,0 +1,461 @@
 +#ifndef __TUNER_FC2580_H
 +#define __TUNER_FC2580_H
@@ -56693,11 +56784,11 @@ index 0000000..906357d
 +
 +
 +#endif
-diff --git a/drivers/media/dvb/dvb-usb/tuner_max3543.c b/drivers/media/dvb/dvb-usb/tuner_max3543.c
+diff --git a/drivers/media/usb/dvb-usb/tuner_max3543.c b/drivers/media/usb/dvb-usb/tuner_max3543.c
 new file mode 100644
 index 0000000..6158ee3
 --- /dev/null
-+++ b/drivers/media/dvb/dvb-usb/tuner_max3543.c
++++ b/drivers/media/usb/dvb-usb/tuner_max3543.c
 @@ -0,0 +1,1441 @@
 +/**
 +
@@ -58140,11 +58231,11 @@ index 0000000..6158ee3
 +
 +
 +
-diff --git a/drivers/media/dvb/dvb-usb/tuner_max3543.h b/drivers/media/dvb/dvb-usb/tuner_max3543.h
+diff --git a/drivers/media/usb/dvb-usb/tuner_max3543.h b/drivers/media/usb/dvb-usb/tuner_max3543.h
 new file mode 100644
 index 0000000..9b45888
 --- /dev/null
-+++ b/drivers/media/dvb/dvb-usb/tuner_max3543.h
++++ b/drivers/media/usb/dvb-usb/tuner_max3543.h
 @@ -0,0 +1,572 @@
 +#ifndef __TUNER_MAX3543_H
 +#define __TUNER_MAX3543_H
@@ -58718,11 +58809,11 @@ index 0000000..9b45888
 +
 +
 +#endif
-diff --git a/drivers/media/dvb/dvb-usb/tuner_mt2063.c b/drivers/media/dvb/dvb-usb/tuner_mt2063.c
+diff --git a/drivers/media/usb/dvb-usb/tuner_mt2063.c b/drivers/media/usb/dvb-usb/tuner_mt2063.c
 new file mode 100644
 index 0000000..e6e16bd
 --- /dev/null
-+++ b/drivers/media/dvb/dvb-usb/tuner_mt2063.c
++++ b/drivers/media/usb/dvb-usb/tuner_mt2063.c
 @@ -0,0 +1,5264 @@
 +/**
 +
@@ -63988,11 +64079,11 @@ index 0000000..e6e16bd
 +
 +
 +
-diff --git a/drivers/media/dvb/dvb-usb/tuner_mt2063.h b/drivers/media/dvb/dvb-usb/tuner_mt2063.h
+diff --git a/drivers/media/usb/dvb-usb/tuner_mt2063.h b/drivers/media/usb/dvb-usb/tuner_mt2063.h
 new file mode 100644
 index 0000000..5c56af1
 --- /dev/null
-+++ b/drivers/media/dvb/dvb-usb/tuner_mt2063.h
++++ b/drivers/media/usb/dvb-usb/tuner_mt2063.h
 @@ -0,0 +1,2206 @@
 +#ifndef __TUNER_MT2063_H
 +#define __TUNER_MT2063_H
@@ -66200,11 +66291,11 @@ index 0000000..5c56af1
 +
 +
 +#endif
-diff --git a/drivers/media/dvb/dvb-usb/tuner_mt2266.c b/drivers/media/dvb/dvb-usb/tuner_mt2266.c
+diff --git a/drivers/media/usb/dvb-usb/tuner_mt2266.c b/drivers/media/usb/dvb-usb/tuner_mt2266.c
 new file mode 100644
 index 0000000..b735924
 --- /dev/null
-+++ b/drivers/media/dvb/dvb-usb/tuner_mt2266.c
++++ b/drivers/media/usb/dvb-usb/tuner_mt2266.c
 @@ -0,0 +1,3278 @@
 +/**
 +
@@ -69484,11 +69575,11 @@ index 0000000..b735924
 +
 +
 +
-diff --git a/drivers/media/dvb/dvb-usb/tuner_mt2266.h b/drivers/media/dvb/dvb-usb/tuner_mt2266.h
+diff --git a/drivers/media/usb/dvb-usb/tuner_mt2266.h b/drivers/media/usb/dvb-usb/tuner_mt2266.h
 new file mode 100644
 index 0000000..8473076
 --- /dev/null
-+++ b/drivers/media/dvb/dvb-usb/tuner_mt2266.h
++++ b/drivers/media/usb/dvb-usb/tuner_mt2266.h
 @@ -0,0 +1,1534 @@
 +#ifndef __TUNER_MT2266_H
 +#define __TUNER_MT2266_H
@@ -71024,11 +71115,11 @@ index 0000000..8473076
 +
 +
 +#endif
-diff --git a/drivers/media/dvb/dvb-usb/tuner_mxl5007t.c b/drivers/media/dvb/dvb-usb/tuner_mxl5007t.c
+diff --git a/drivers/media/usb/dvb-usb/tuner_mxl5007t.c b/drivers/media/usb/dvb-usb/tuner_mxl5007t.c
 new file mode 100644
 index 0000000..9a238b2
 --- /dev/null
-+++ b/drivers/media/dvb/dvb-usb/tuner_mxl5007t.c
++++ b/drivers/media/usb/dvb-usb/tuner_mxl5007t.c
 @@ -0,0 +1,1267 @@
 +/**
 +
@@ -72297,11 +72388,11 @@ index 0000000..9a238b2
 +
 +
 +
-diff --git a/drivers/media/dvb/dvb-usb/tuner_mxl5007t.h b/drivers/media/dvb/dvb-usb/tuner_mxl5007t.h
+diff --git a/drivers/media/usb/dvb-usb/tuner_mxl5007t.h b/drivers/media/usb/dvb-usb/tuner_mxl5007t.h
 new file mode 100644
 index 0000000..9f63a99
 --- /dev/null
-+++ b/drivers/media/dvb/dvb-usb/tuner_mxl5007t.h
++++ b/drivers/media/usb/dvb-usb/tuner_mxl5007t.h
 @@ -0,0 +1,788 @@
 +#ifndef __TUNER_MXL5007T_H
 +#define __TUNER_MXL5007T_H
@@ -73091,11 +73182,11 @@ index 0000000..9f63a99
 +
 +
 +#endif
-diff --git a/drivers/media/dvb/dvb-usb/tuner_r820t.c b/drivers/media/dvb/dvb-usb/tuner_r820t.c
+diff --git a/drivers/media/usb/dvb-usb/tuner_r820t.c b/drivers/media/usb/dvb-usb/tuner_r820t.c
 new file mode 100644
 index 0000000..4a37f4e
 --- /dev/null
-+++ b/drivers/media/dvb/dvb-usb/tuner_r820t.c
++++ b/drivers/media/usb/dvb-usb/tuner_r820t.c
 @@ -0,0 +1,3453 @@
 +/**
 +
@@ -76550,11 +76641,11 @@ index 0000000..4a37f4e
 +	return RT_Success;
 +}
 +#endif 
-diff --git a/drivers/media/dvb/dvb-usb/tuner_r820t.h b/drivers/media/dvb/dvb-usb/tuner_r820t.h
+diff --git a/drivers/media/usb/dvb-usb/tuner_r820t.h b/drivers/media/usb/dvb-usb/tuner_r820t.h
 new file mode 100644
 index 0000000..24cc1f4
 --- /dev/null
-+++ b/drivers/media/dvb/dvb-usb/tuner_r820t.h
++++ b/drivers/media/usb/dvb-usb/tuner_r820t.h
 @@ -0,0 +1,263 @@
 +
 +#ifndef __TUNER_R820T_H
@@ -76819,11 +76910,11 @@ index 0000000..24cc1f4
 +
 +#endif
 +
-diff --git a/drivers/media/dvb/dvb-usb/tuner_tda18272.c b/drivers/media/dvb/dvb-usb/tuner_tda18272.c
+diff --git a/drivers/media/usb/dvb-usb/tuner_tda18272.c b/drivers/media/usb/dvb-usb/tuner_tda18272.c
 new file mode 100644
 index 0000000..7a4280b
 --- /dev/null
-+++ b/drivers/media/dvb/dvb-usb/tuner_tda18272.c
++++ b/drivers/media/usb/dvb-usb/tuner_tda18272.c
 @@ -0,0 +1,21631 @@
 +/**
 +
@@ -98456,11 +98547,11 @@ index 0000000..7a4280b
 +
 +
 +
-diff --git a/drivers/media/dvb/dvb-usb/tuner_tda18272.h b/drivers/media/dvb/dvb-usb/tuner_tda18272.h
+diff --git a/drivers/media/usb/dvb-usb/tuner_tda18272.h b/drivers/media/usb/dvb-usb/tuner_tda18272.h
 new file mode 100644
 index 0000000..528227c
 --- /dev/null
-+++ b/drivers/media/dvb/dvb-usb/tuner_tda18272.h
++++ b/drivers/media/usb/dvb-usb/tuner_tda18272.h
 @@ -0,0 +1,7412 @@
 +#ifndef __TUNER_TDA18272_H
 +#define __TUNER_TDA18272_H
@@ -105874,11 +105965,11 @@ index 0000000..528227c
 +
 +
 +#endif
-diff --git a/drivers/media/dvb/dvb-usb/tuner_tua9001.c b/drivers/media/dvb/dvb-usb/tuner_tua9001.c
+diff --git a/drivers/media/usb/dvb-usb/tuner_tua9001.c b/drivers/media/usb/dvb-usb/tuner_tua9001.c
 new file mode 100644
 index 0000000..404ea95
 --- /dev/null
-+++ b/drivers/media/dvb/dvb-usb/tuner_tua9001.c
++++ b/drivers/media/usb/dvb-usb/tuner_tua9001.c
 @@ -0,0 +1,1245 @@
 +/**
 +
@@ -107125,11 +107216,11 @@ index 0000000..404ea95
 +
 +
 +
-diff --git a/drivers/media/dvb/dvb-usb/tuner_tua9001.h b/drivers/media/dvb/dvb-usb/tuner_tua9001.h
+diff --git a/drivers/media/usb/dvb-usb/tuner_tua9001.h b/drivers/media/usb/dvb-usb/tuner_tua9001.h
 new file mode 100644
 index 0000000..dbfbce6
 --- /dev/null
-+++ b/drivers/media/dvb/dvb-usb/tuner_tua9001.h
++++ b/drivers/media/usb/dvb-usb/tuner_tua9001.h
 @@ -0,0 +1,493 @@
 +#ifndef __TUNER_TUA9001_H
 +#define __TUNER_TUA9001_H
@@ -107625,5 +107716,5 @@ index 0000000..dbfbce6
 +
 +#endif
 -- 
-1.8.0.3
+1.7.9.5
 

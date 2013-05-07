@@ -1,0 +1,14 @@
+--- ~/include/osdep_service.h.orig	2013-02-23 00:52:05.993478276 +0100
++++ ~/include/osdep_service.h	2013-02-23 00:52:11.709478275 +0100
+@@ -564,9 +564,11 @@
+ __inline static void thread_enter(void *context)
+ {
+ #ifdef PLATFORM_LINUX
++#if LINUX_VERSION_CODE < KERNEL_VERSION(3, 8, 0)
+ 	//struct net_device *pnetdev = (struct net_device *)context;
+ 	//daemonize("%s", pnetdev->name);
+ 	daemonize("%s", "RTKTHREAD");
++#endif
+ 	allow_signal(SIGTERM);
+ #endif
+ }

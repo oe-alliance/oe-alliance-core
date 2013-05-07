@@ -4,27 +4,25 @@ the SNR output in dBx10 as before.
 
 From: Gianluca Gennari <gennarone@gmail.com>
 ---
- drivers/media/dvb/frontends/af9013.c |    7 ++++++-
- 1 files changed, 6 insertions(+), 1 deletions(-)
+ drivers/media/dvb-frontends/af9013.c |    7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/media/dvb/frontends/af9013.c b/drivers/media/dvb/frontends/af9013.c
-index 6bcbcf5..ce175df 100644
---- a/drivers/media/dvb/frontends/af9013.c
-+++ b/drivers/media/dvb/frontends/af9013.c
-@@ -24,9 +24,11 @@
+diff --git a/drivers/media/dvb-frontends/af9013.c b/drivers/media/dvb-frontends/af9013.c
+index a204f28..1295487 100644
+--- a/drivers/media/dvb-frontends/af9013.c
++++ b/drivers/media/dvb-frontends/af9013.c
+@@ -24,6 +24,10 @@
  
  #include "af9013_priv.h"
  
--int af9013_debug;
-+int af9013_debug, af9013_snrdb;
- module_param_named(debug, af9013_debug, int, 0644);
- MODULE_PARM_DESC(debug, "Turn on/off frontend debugging (default:off).");
++int af9013_snrdb;
 +module_param_named(snrdb, af9013_snrdb, int, 0644);
 +MODULE_PARM_DESC(snrdb, "Turn on/off SNR output as dBx10 (default:off).");
- 
++
  struct af9013_state {
  	struct i2c_adapter *i2c;
-@@ -469,6 +471,9 @@ static int af9013_statistics_snr_result(struct dvb_frontend *fe)
+ 	struct dvb_frontend fe;
+@@ -471,6 +475,9 @@ static int af9013_statistics_snr_result(struct dvb_frontend *fe)
  	}
  	state->snr = tmp * 10; /* dB/10 */
  
@@ -33,7 +31,7 @@ index 6bcbcf5..ce175df 100644
 +
  	return ret;
  err:
- 	dbg("%s: failed=%d", __func__, ret);
+ 	dev_dbg(&state->i2c->dev, "%s: failed=%d\n", __func__, ret);
 -- 
-1.7.5.4
+1.7.9.5
 
