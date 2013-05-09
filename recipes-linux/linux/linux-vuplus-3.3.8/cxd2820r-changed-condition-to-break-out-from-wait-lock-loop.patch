@@ -1,0 +1,30 @@
+Changed condition to break out from wait lock loop;
+return DVBFE_ALGO_SEARCH_SUCCESS only if we have a lock;
+
+From: Gianluca Gennari <gennarone@gmail.com>
+---
+ drivers/media/dvb/frontends/cxd2820r_core.c |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/media/dvb/frontends/cxd2820r_core.c b/drivers/media/dvb/frontends/cxd2820r_core.c
+index 5c7c2aa..3bba37d 100644
+--- a/drivers/media/dvb/frontends/cxd2820r_core.c
++++ b/drivers/media/dvb/frontends/cxd2820r_core.c
+@@ -526,12 +526,12 @@ static enum dvbfe_search cxd2820r_search(struct dvb_frontend *fe)
+ 		if (ret)
+ 			goto error;
+ 
+-		if (status & FE_HAS_SIGNAL)
++		if (status & FE_HAS_LOCK)
+ 			break;
+ 	}
+ 
+ 	/* check if we have a valid signal */
+-	if (status) {
++	if (status & FE_HAS_LOCK) {
+ 		priv->last_tune_failed = 0;
+ 		return DVBFE_ALGO_SEARCH_SUCCESS;
+ 	} else {
+-- 
+1.7.5.4
+

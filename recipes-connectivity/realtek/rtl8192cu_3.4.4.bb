@@ -14,7 +14,7 @@ SRC_URI = "http://enigma2.world-of-satellite.com/git-extras/rtl8188C_8192C_usb_l
 
 S = "${WORKDIR}/rtl8188C_8192C_usb_linux_v3.4.4_4749.20121105"
 
-MACHINE_KERNEL_PR_append = ".1"
+MACHINE_KERNEL_PR_append = ".2"
 
 EXTRA_OEMAKE = "KSRC=${STAGING_KERNEL_DIR}"
 

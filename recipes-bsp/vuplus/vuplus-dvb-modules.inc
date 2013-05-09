@@ -5,12 +5,13 @@ LICENSE = "CLOSED"
 
 KV = "3.1.1"
 KVPR = ""
-KV_vusolo2 = "3.3.6"
-KVPR_vusolo2 = "-1.2"
-KV_vuduo2 = "2.6.37"
+KV_vusolo2 = "3.3.8"
+KVPR_vusolo2 = "-2.0"
+KV_vuduo2 = "3.3.8"
+KVPR_vuduo2 = "-2.0"
 
 PV = "${KV}+${SRCDATE}"
-PR = "r7"
+PR = "r8"
 
 VUPLUS_KERNEL_GCC = "4.4.3"
 DOWNLOADMACHINE ?= "${MACHINE}"
