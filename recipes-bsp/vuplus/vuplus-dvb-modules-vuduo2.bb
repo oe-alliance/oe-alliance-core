@@ -1,6 +1,6 @@
-SRCDATE = "20130506"
+SRCDATE = "20130509"
 
 require vuplus-dvb-modules.inc
 
-SRC_URI[md5sum] = "44c77a8d9c8ab131b02fbd7d581e455e"
-SRC_URI[sha256sum] = "75966b97ced208d108f05ac832cb224529225b05d705b7878db65818ba5f919e"
+SRC_URI[md5sum] = "feb6064fb3aa19f470f17f3fbdea9dd0"
+SRC_URI[sha256sum] = "980d1175b6112cdfa2a2d051e2c9f302f4d4bdb8502ee1f007be6cea03929dbe"
