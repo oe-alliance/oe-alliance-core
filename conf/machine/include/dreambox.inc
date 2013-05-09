@@ -18,6 +18,12 @@ MACHINE_EXTRA_RRECOMMENDS = " \
 	dreambox-boot-progress \
 	tpmd \
 	"
+	
+MACHINE_EXTRA_RRECOMMENDS_dm800se_append = " \
+	kernel-module-fuse \
+	kernel-module-nfsd \
+	kernel-module-exportfs \
+	"
 
 MACHINE_FEATURES += "dreambox alsa usbhost 3dtv switchoff tpm"
 # Add "dreambox" override for recipes
