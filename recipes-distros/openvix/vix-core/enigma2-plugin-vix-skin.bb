@@ -9,7 +9,7 @@ EPSM = "enigma2-plugin-skins-vix"
 SRCREV = "${AUTOREV}"
 PV = "2.0+git${SRCPV}"
 PKGV = "2.0+git${GITPKGV}"
-PR = "r12"
+PR = "r13"
 
 PACKAGES = "vix-skin-common ${EPSM}-day-hd ${EPSM}-night-hd ${EPSM}-magic-sd ${EPSM}-magic-hd ${EPSM}-magic-hd-light vix-mhdc ${EPSM}-magic-hd-noire ${EPSM}-magic-hd-night vix-vixbmc-hd-common ${EPSM}-vixbmc-slim-hd ${EPSM}-vixbmc-night-hd ${EPSM}-vixbmc-metropolis"
 PROVIDES = "${PN} vix-skin-common ${EPSM}-day-hd ${EPSM}-night-hd ${EPSM}-magic-sd ${EPSM}-magic-hd ${EPSM}-magic-hd-light vix-mhdc ${EPSM}-magic-hd-noire ${EPSM}-magic-hd-night vix-vixbmc-hd-common ${EPSM}-vixbmc-slim-hd ${EPSM}-vixbmc-night-hd ${EPSM}-vixbmc-metropolis"
@@ -39,7 +39,7 @@ FILES_${EPSM}-night-hd = "/usr/share/enigma2/ViX-Night-HD"
 
 FILES_${EPSM}-magic-sd = "/usr/share/enigma2/Magic-SD/"
 FILES_${EPSM}-magic-hd = "/usr/share/enigma2/Magic-HD/"
-FILES_${EPSM}-magic-hd = "/usr/share/enigma2/Magic-HD-Light/"
+FILES_${EPSM}-magic-hd-light = "/usr/share/enigma2/Magic-HD-Light/"
 
 FILES_vix-mhdc = "/usr/share/enigma2/MHDC"
 FILES_${EPSM}-magic-hd-noire = "/usr/share/enigma2/Magic-HD-Noire"
