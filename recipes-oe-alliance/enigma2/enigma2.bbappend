@@ -1,6 +1,6 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
-PRINC = "52"
+PRINC = "53"
 
 DEPENDS = " \
 	ethtool \
@@ -23,6 +23,7 @@ RDEPENDS_${PN} = " \
 	glibc-gconv-iso8859-15 \
 	hotplug-e2-helper \
 	${PYTHON_RDEPS} \
+	libdreamdvd \
 	"
 
 RRECOMMENDS_${PN} = " \
@@ -32,6 +33,7 @@ RRECOMMENDS_${PN} = " \
 	${GST_GOOD_RDEPS} \
 	${GST_BAD_RDEPS} \
 	${GST_UGLY_RDEPS} \
+	libdvdcss \
 	"
 
 PYTHON_RDEPS += " \
