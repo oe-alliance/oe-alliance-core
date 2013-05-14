@@ -4,6 +4,7 @@ MACHINE_ESSENTIAL_EXTRA_DEPENDS = " \
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS = " \
 	vuplus-dvb-modules-${MACHINE} \
+	rt5572 \
 	"
 
 DVBPROVIDER = "kernel"

@@ -15,9 +15,9 @@ diff --git a/drivers/net/wireless/rt2x00/Kconfig b/drivers/net/wireless/rt2x00/K
 index c7548da..6215acd 100644
 --- a/drivers/net/wireless/rt2x00/Kconfig
 +++ b/drivers/net/wireless/rt2x00/Kconfig
-@@ -99,6 +99,15 @@ config RT2800PCI_RT53XX
-          rt2800pci driver.
-          Supported chips: RT5390
+@@ -166,6 +166,15 @@ config RT2800USB_RT53XX
+         rt2800usb driver.
+         Supported chips: RT5370
  
 +config RT2800USB_RT55XX
 +       bool "rt2800usb - Include support for rt55xx devices (EXPERIMENTAL)"
@@ -28,9 +28,9 @@ index c7548da..6215acd 100644
 +         rt2800usb driver.
 +         Supported chips: RT5572
 +
- config RT2800PCI_RT3290
-        bool "rt2800pci - Include support for rt3290 devices (EXPERIMENTAL)"
-        depends on EXPERIMENTAL
+ config RT2800USB_UNKNOWN
+         bool "rt2800usb - Include support for unknown (USB) devices"
+         default n
 diff --git a/drivers/net/wireless/rt2x00/rt2800.h b/drivers/net/wireless/rt2x00/rt2800.h
 index 4db1088..a7630d5 100644
 --- a/drivers/net/wireless/rt2x00/rt2800.h
