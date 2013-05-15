@@ -1,6 +1,6 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
-PRINC = "53"
+PRINC = "54"
 
 DEPENDS = " \
 	ethtool \
@@ -23,7 +23,6 @@ RDEPENDS_${PN} = " \
 	glibc-gconv-iso8859-15 \
 	hotplug-e2-helper \
 	${PYTHON_RDEPS} \
-	libdreamdvd \
 	"
 
 RRECOMMENDS_${PN} = " \
@@ -33,7 +32,6 @@ RRECOMMENDS_${PN} = " \
 	${GST_GOOD_RDEPS} \
 	${GST_BAD_RDEPS} \
 	${GST_UGLY_RDEPS} \
-	libdvdcss \
 	"
 
 PYTHON_RDEPS += " \
@@ -44,6 +42,10 @@ PYTHON_RDEPS += " \
 	python-process \
 	python-imaging \
 	"
+
+# DVD playback is integrated, we need the libraries
+RDEPENDS_${PN} += "libdreamdvd"
+RRECOMMENDS_${PN} += "libdvdcss"
 
 # We depend on the font which we use for TXT subtitles (defined in skin_subtitles.xml)
 RDEPENDS_${PN} += "font-valis-enigma"
