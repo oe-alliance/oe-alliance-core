@@ -9,7 +9,7 @@ EPSM = "enigma2-plugin-skins-vix"
 SRCREV = "${AUTOREV}"
 PV = "2.0+git${SRCPV}"
 PKGV = "2.0+git${GITPKGV}"
-PR = "r13"
+PR = "r14"
 
 PACKAGES = "vix-skin-common ${EPSM}-day-hd ${EPSM}-night-hd ${EPSM}-magic-sd ${EPSM}-magic-hd ${EPSM}-magic-hd-light vix-mhdc ${EPSM}-magic-hd-noire ${EPSM}-magic-hd-night vix-vixbmc-hd-common ${EPSM}-vixbmc-slim-hd ${EPSM}-vixbmc-night-hd ${EPSM}-vixbmc-metropolis"
 PROVIDES = "${PN} vix-skin-common ${EPSM}-day-hd ${EPSM}-night-hd ${EPSM}-magic-sd ${EPSM}-magic-hd ${EPSM}-magic-hd-light vix-mhdc ${EPSM}-magic-hd-noire ${EPSM}-magic-hd-night vix-vixbmc-hd-common ${EPSM}-vixbmc-slim-hd ${EPSM}-vixbmc-night-hd ${EPSM}-vixbmc-metropolis"
@@ -55,7 +55,7 @@ RDEPENDS_${EPSM}-night-hd = "vix-skin-common font-roboto-enigma"
 
 RDEPENDS_${EPSM}-magic-sd = "font-valis-hd"
 RDEPENDS_${EPSM}-magic-hd = "font-valis-hd"
-RDEPENDS_${EPSM}-magic-hd-light = "font-valis-hd ${EPSM}-magic-hd"
+RDEPENDS_${EPSM}-magic-hd-light = "font-valis-hd"
 
 RDEPENDS_${EPSM}-magic-hd-noire = "font-valis-hd vix-mhdc"
 RDEPENDS_${EPSM}-magic-hd-night = "font-valis-hd vix-mhdc"
