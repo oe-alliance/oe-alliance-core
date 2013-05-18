@@ -10,3 +10,4 @@ SRC_URI_append_odinm9 = " file://0001-v4l2-fix-build-with-recent-kernels-the-v4l
 SRC_URI_append_ventonhde = " file://0001-v4l2-fix-build-with-recent-kernels-the-v4l2_buffer-i.patch"
 SRC_URI_append_ventonhdx = " file://0001-v4l2-fix-build-with-recent-kernels-the-v4l2_buffer-i.patch"
 SRC_URI_append_e3hd = " file://0001-v4l2-fix-build-with-recent-kernels-the-v4l2_buffer-i.patch"
+SRC_URI_append_ebox7358 = " file://0001-v4l2-fix-build-with-recent-kernels-the-v4l2_buffer-i.patch"
