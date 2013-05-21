@@ -1,0 +1,103 @@
+From 635c17a08ed9af0369ce6c30a55c1d965bf9816f Mon Sep 17 00:00:00 2001
+From: pieterg <pieterg@users.sourceforge.net>
+Date: Wed, 24 Apr 2013 19:45:23 +0200
+Subject: [PATCH 1/3] brmcnand_base: disable flash BBT on 64MB nand
+
+In general, having a flash-based BBT only makes
+sense if both kernel and bootloader are using it.
+And the secondstage loader seems to be ignoring it,
+in fact, it gets erased every time an nfi is flashed.
+
+So we'd rather use the 1MB for rootfs space, it's
+worth the additional BBT scan time during startup
+(which is only ~200ms for such a small device).
+---
+ drivers/mtd/brcmnand/brcmnand_base.c |    2 +-
+ drivers/mtd/brcmnand/brcmnand_bbt.c  |   55 +++++++++++++++++-----------------
+ 2 files changed, 29 insertions(+), 28 deletions(-)
+
+diff --git a/drivers/mtd/brcmnand/brcmnand_base.c b/drivers/mtd/brcmnand/brcmnand_base.c
+index 00a9ed5..85b8013 100644
+--- a/drivers/mtd/brcmnand/brcmnand_base.c
++++ b/drivers/mtd/brcmnand/brcmnand_base.c
+@@ -699,7 +699,7 @@ static brcmnand_chip_Id brcmnand_chips[] = {
+ 		.chipId = HYNIX_HY27US08121A,
+ 		.mafId = FLASHTYPE_HYNIX,
+ 		.chipIdStr = "Hynix HY27US08121A (dream)",
+-		.options = NAND_BBT_USE_FLASH,
++		.options = 0,
+ 		.idOptions = 0,
+ 		.timing1 = 0, 
+ 		.timing2 = 0,
+diff --git a/drivers/mtd/brcmnand/brcmnand_bbt.c b/drivers/mtd/brcmnand/brcmnand_bbt.c
+index 106fd4d..8a4bd49 100644
+--- a/drivers/mtd/brcmnand/brcmnand_bbt.c
++++ b/drivers/mtd/brcmnand/brcmnand_bbt.c
+@@ -2217,36 +2217,37 @@ printk("%s: bbt_td = bbt_slc_bch4_main_descr\n", __FUNCTION__);
+ 		}
+ 	}
+ 
++	if (this->bbt_td) {
++		/*
++		 * BBT partition occupies 1 MB at the end of the useable flash, so adjust maxblocks accordingly.
++		 * Only applies to flash with 512MB or less, since we don't have the extra reserved space at the
++		 * end of the flash (1FF0_0000 - 1FFF_FFFF).
++		 */
++		if (device_size(mtd) <= ( 512ULL << 20)) {
++			this->bbt_td->maxblocks = this->bbt_md->maxblocks = (1<<20) / this->blockSize;
++			
++		}
+ 
+-	/*
+-	 * BBT partition occupies 1 MB at the end of the useable flash, so adjust maxblocks accordingly.
+-	 * Only applies to flash with 512MB or less, since we don't have the extra reserved space at the
+-	 * end of the flash (1FF0_0000 - 1FFF_FFFF).
+-	 */
+-	if (device_size(mtd) <= ( 512ULL << 20)) {
+-		this->bbt_td->maxblocks = this->bbt_md->maxblocks = (1<<20) / this->blockSize;
+-		
+-	}
+-
+-	/*
+-	 * THT: 8/18/08: For MLC flashes with block size of 512KB, allocate 8 blocks or 4MB,
+-	 * (this is possible because this region is outside of the CFE allocated space of 1MB at 1FF0_0000).
+-	 */
+-	else  if (this->blockSize == (512*1024)) {
+-		this->bbt_td->maxblocks = this->bbt_md->maxblocks = 
+-			max(this->bbt_td->maxblocks, (int)((4<<20) / this->blockSize));
+-	}
++		/*
++		 * THT: 8/18/08: For MLC flashes with block size of 512KB, allocate 8 blocks or 4MB,
++		 * (this is possible because this region is outside of the CFE allocated space of 1MB at 1FF0_0000).
++		 */
++		else  if (this->blockSize == (512*1024)) {
++			this->bbt_td->maxblocks = this->bbt_md->maxblocks = 
++				max(this->bbt_td->maxblocks, (int)((4<<20) / this->blockSize));
++		}
+ 
+-	/* Reserve at least 8 blocks */
+-	else if (this->blockSize >= (1<<20)) {
+-		this->bbt_td->maxblocks = this->bbt_md->maxblocks = 
+-			max(this->bbt_td->maxblocks, 8);
+-	}
++		/* Reserve at least 8 blocks */
++		else if (this->blockSize >= (1<<20)) {
++			this->bbt_td->maxblocks = this->bbt_md->maxblocks = 
++				max(this->bbt_td->maxblocks, 8);
++		}
+ 
+-	this->bbtSize = this->bbt_td->maxblocks * this->blockSize;
+-PRINTK("%s: gClearBBT = %d\n", __FUNCTION__, gClearBBT);
+-	if (gClearBBT) {
+-		(void) brcmnand_preprocessKernelArg(mtd);
++		this->bbtSize = this->bbt_td->maxblocks * this->blockSize;
++	PRINTK("%s: gClearBBT = %d\n", __FUNCTION__, gClearBBT);
++		if (gClearBBT) {
++			(void) brcmnand_preprocessKernelArg(mtd);
++		}
+ 	}
+ 	
+ 	res =  brcmnand_scan_bbt (mtd, this->badblock_pattern);
+-- 
+1.7.9.5
+

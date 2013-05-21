@@ -1,6 +1,6 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
-PRINC = "54"
+PRINC = "55"
 
 DEPENDS = " \
 	ethtool \
@@ -26,6 +26,7 @@ RDEPENDS_${PN} = " \
 	"
 
 RRECOMMENDS_${PN} = " \
+	glib-networking \
 	gst-plugin-subsink \
 	gst-plugin-libxt \
 	${GST_BASE_RDEPS} \

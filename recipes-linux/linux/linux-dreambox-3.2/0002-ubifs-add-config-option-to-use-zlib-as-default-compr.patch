@@ -1,0 +1,48 @@
+From 31e16ac9bbefbc75b6e3537631ede8a3c64829ac Mon Sep 17 00:00:00 2001
+From: pieterg <pieterg@users.sourceforge.net>
+Date: Thu, 25 Apr 2013 15:45:55 +0200
+Subject: [PATCH 3/3] ubifs: add config option to use zlib as default
+ compressor
+
+---
+ fs/ubifs/Kconfig |    7 +++++++
+ fs/ubifs/sb.c    |    4 ++++
+ 2 files changed, 11 insertions(+)
+
+diff --git a/fs/ubifs/Kconfig b/fs/ubifs/Kconfig
+index 5934b99..6198326 100644
+--- a/fs/ubifs/Kconfig
++++ b/fs/ubifs/Kconfig
+@@ -44,6 +44,13 @@ config UBIFS_FS_ZLIB
+ 	help
+ 	  Zlib compresses better than LZO but it is slower. Say 'Y' if unsure.
+ 
++config UBIFS_FS_ZLIB_DEFAULT
++	bool "default ZLIB compression" if UBIFS_FS_ADVANCED_COMPR
++	depends on UBIFS_FS_ZLIB
++	default n
++	help
++	  Zlib compresses better than LZO but it is slower. Say 'Y' if you prefer space over speed
++
+ config UBIFS_FS_XZ
+ 	bool "XZ decompression support" if UBIFS_FS_ADVANCED_COMPR
+ 	depends on UBIFS_FS
+diff --git a/fs/ubifs/sb.c b/fs/ubifs/sb.c
+index b73ecd8..dd155ef 100644
+--- a/fs/ubifs/sb.c
++++ b/fs/ubifs/sb.c
+@@ -185,7 +185,11 @@ static int create_default_filesystem(struct ubifs_info *c)
+ 	if (c->mount_opts.override_compr)
+ 		sup->default_compr = cpu_to_le16(c->mount_opts.compr_type);
+ 	else
++#ifdef CONFIG_UBIFS_FS_ZLIB_DEFAULT
++		sup->default_compr = cpu_to_le16(UBIFS_COMPR_ZLIB);
++#else
+ 		sup->default_compr = cpu_to_le16(UBIFS_COMPR_LZO);
++#endif
+ 
+ 	generate_random_uuid(sup->uuid);
+ 
+-- 
+1.7.9.5
+
