@@ -5,7 +5,7 @@ KV = "3.5.1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 SRCDATE = "20130103"
-MACHINE_KERNEL_PR_append = ".11"
+MACHINE_KERNEL_PR_append = ".12"
 
 SRC_URI[md5sum] = "dadedd29363a94aeda97fdae599ae533"
 SRC_URI[sha256sum] = "0f27a1c1ff68c9528500158423dc6139162cb8c08b9bf8331cff9a942a77c779"
@@ -60,6 +60,7 @@ do_configure_prepend() {
 kernel_do_install_append() {
 	${STRIP} ${D}${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION}
 	gzip -9c ${D}${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION} > ${D}${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz
+	rm ${D}${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION}
 }
 
 pkg_postinst_kernel-image () {
