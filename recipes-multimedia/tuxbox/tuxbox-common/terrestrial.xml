@@ -20,54 +20,54 @@
 	standards to http://www.dream-multimedia-tv.de/board/
 -->
 <locations>
-	<terrestrial name="Scandinavia DVB-T/T2" flags="5">		
-		  <transponder centre_frequency="185000000" bandwidth="0" constellation="3"/>		
-		  <transponder centre_frequency="192000000" bandwidth="0" constellation="3"/>		
+	<terrestrial name="Scandinavia DVB-T/T2" flags="5">
+		  <transponder centre_frequency="185000000" bandwidth="0" constellation="3"/>
+		  <transponder centre_frequency="192000000" bandwidth="0" constellation="3"/>
 		  <transponder centre_frequency="199000000" bandwidth="0" constellation="3"/>
 		  <transponder centre_frequency="213000000" bandwidth="0" constellation="3"/>
 		  <transponder centre_frequency="474000000" bandwidth="0" constellation="3"/>
-		  <transponder centre_frequency="482000000" bandwidth="0" constellation="3"/>		
+		  <transponder centre_frequency="482000000" bandwidth="0" constellation="3"/>
 		  <transponder centre_frequency="490000000" bandwidth="0" constellation="3"/>
 		  <transponder centre_frequency="498000000" bandwidth="0" constellation="3"/>
-		  <transponder centre_frequency="506000000" bandwidth="0" constellation="3"/>		
-		  <transponder centre_frequency="514000000" bandwidth="0" constellation="3"/>		
-		  <transponder centre_frequency="522000000" bandwidth="0" constellation="3"/>	
-		  <transponder centre_frequency="530000000" bandwidth="0" constellation="3"/>		
+		  <transponder centre_frequency="506000000" bandwidth="0" constellation="3"/>
+		  <transponder centre_frequency="514000000" bandwidth="0" constellation="3"/>
+		  <transponder centre_frequency="522000000" bandwidth="0" constellation="3"/>
+		  <transponder centre_frequency="530000000" bandwidth="0" constellation="3"/>
 		  <transponder centre_frequency="538000000" bandwidth="0" constellation="3"/>
-		  <transponder centre_frequency="546000000" bandwidth="0" constellation="3"/>		
-		  <transponder centre_frequency="570000000" bandwidth="0" constellation="3"/>		
+		  <transponder centre_frequency="546000000" bandwidth="0" constellation="3"/>
+		  <transponder centre_frequency="570000000" bandwidth="0" constellation="3"/>
 		  <transponder centre_frequency="586000000" bandwidth="0" constellation="3"/>
 		  <transponder centre_frequency="594000000" bandwidth="0" constellation="3"/>
 		  <transponder centre_frequency="602000000" bandwidth="0" constellation="3"/>
 		  <transponder centre_frequency="610000000" bandwidth="0" constellation="3"/>
-		  <transponder centre_frequency="626000000" bandwidth="0" constellation="3"/>		
+		  <transponder centre_frequency="626000000" bandwidth="0" constellation="3"/>
 		  <transponder centre_frequency="634000000" bandwidth="0" constellation="3"/>
 		  <transponder centre_frequency="642000000" bandwidth="0" constellation="3"/>
-		  <transponder centre_frequency="650000000" bandwidth="0" constellation="3"/>		
-		  <transponder centre_frequency="666000000" bandwidth="0" constellation="3"/>		
-		  <transponder centre_frequency="674000000" bandwidth="0" constellation="3"/>	
-		  <transponder centre_frequency="682000000" bandwidth="0" constellation="3"/>		
-		  <transponder centre_frequency="690000000" bandwidth="0" constellation="3"/>		  		
+		  <transponder centre_frequency="650000000" bandwidth="0" constellation="3"/>
+		  <transponder centre_frequency="666000000" bandwidth="0" constellation="3"/>
+		  <transponder centre_frequency="674000000" bandwidth="0" constellation="3"/>
+		  <transponder centre_frequency="682000000" bandwidth="0" constellation="3"/>
+		  <transponder centre_frequency="690000000" bandwidth="0" constellation="3"/>
 		  <transponder centre_frequency="706000000" bandwidth="0" constellation="3"/>
-		  <transponder centre_frequency="730000000" bandwidth="0" constellation="3"/>		
-		  <transponder centre_frequency="746000000" bandwidth="0" constellation="3"/>		
-		  <transponder centre_frequency="754000000" bandwidth="0" constellation="3"/>	
-		  <transponder centre_frequency="778000000" bandwidth="0" constellation="3"/>		
+		  <transponder centre_frequency="730000000" bandwidth="0" constellation="3"/>
+		  <transponder centre_frequency="746000000" bandwidth="0" constellation="3"/>
+		  <transponder centre_frequency="754000000" bandwidth="0" constellation="3"/>
+		  <transponder centre_frequency="778000000" bandwidth="0" constellation="3"/>
 	</terrestrial>  
 	<terrestrial name="Russia: DVB-T/T2" flags="5">		
-		  <transponder centre_frequency="546000000" bandwidth="0" constellation="3"/>		
-		  <transponder centre_frequency="562000000" bandwidth="0" constellation="3"/>		
+		  <transponder centre_frequency="546000000" bandwidth="0" constellation="3"/>
+		  <transponder centre_frequency="562000000" bandwidth="0" constellation="3"/>
 		  <transponder centre_frequency="578000000" bandwidth="0" constellation="3"/>
 		  <transponder centre_frequency="586000000" bandwidth="0" constellation="3"/>
 		  <transponder centre_frequency="594000000" bandwidth="0" constellation="3"/>
-		  <transponder centre_frequency="602000000" bandwidth="0" constellation="3"/>		
+		  <transponder centre_frequency="602000000" bandwidth="0" constellation="3"/>
 		  <transponder centre_frequency="610000000" bandwidth="0" constellation="3"/>
 		  <transponder centre_frequency="618000000" bandwidth="0" constellation="3"/>
-		  <transponder centre_frequency="762000000" bandwidth="0" constellation="3"/>		
-		  <transponder centre_frequency="770000000" bandwidth="0" constellation="3"/>		
-		  <transponder centre_frequency="650000000" bandwidth="0" constellation="3"/>	
-		  <transponder centre_frequency="730000000" bandwidth="0" constellation="3"/>		
-		  <transponder centre_frequency="514000000" bandwidth="0" constellation="3"/>		
+		  <transponder centre_frequency="762000000" bandwidth="0" constellation="3"/>
+		  <transponder centre_frequency="770000000" bandwidth="0" constellation="3"/>
+		  <transponder centre_frequency="650000000" bandwidth="0" constellation="3"/>
+		  <transponder centre_frequency="730000000" bandwidth="0" constellation="3"/>
+		  <transponder centre_frequency="514000000" bandwidth="0" constellation="3"/>
 	</terrestrial>  
 	<terrestrial name="Australia: DVB-T Frequencies" flags="5">
 		<transponder centre_frequency="177500000" bandwidth="1" constellation="3"/>
@@ -434,6 +434,8 @@
         <transponder centre_frequency="858000000" bandwidth="0" constellation="2" code_rate_hp="6" code_rate_lp="6" guard_interval="0" transmission_mode="1" hierarchy_information="0" inversion="2" />
     </terrestrial>
     <terrestrial name="Polska(pl)" flags="5">
+	<transponder centre_frequency="470000000" bandwidth="0" constellation="2" code_rate_hp="1" code_rate_lp="0" guard_interval="3" transmission_mode="1" hierarchy_information="0" inversion="0" />      
+	<transponder centre_frequency="482000000" bandwidth="0" constellation="2" code_rate_hp="1" code_rate_lp="0" guard_interval="3" transmission_mode="1" hierarchy_information="0" inversion="0" />      
 	<transponder centre_frequency="490000000" bandwidth="0" constellation="2" code_rate_hp="1" code_rate_lp="0" guard_interval="3" transmission_mode="1" hierarchy_information="0" inversion="0" />
 	<transponder centre_frequency="506000000" bandwidth="0" constellation="2" code_rate_hp="1" code_rate_lp="0" guard_interval="3" transmission_mode="1" hierarchy_information="0" inversion="0" />
 	<transponder centre_frequency="594000000" bandwidth="0" constellation="2" code_rate_hp="1" code_rate_lp="0" guard_interval="3" transmission_mode="1" hierarchy_information="0" inversion="0" />
@@ -442,12 +444,19 @@
 	<transponder centre_frequency="618000000" bandwidth="0" constellation="2" code_rate_hp="1" code_rate_lp="0" guard_interval="3" transmission_mode="1" hierarchy_information="0" inversion="0" />
 	<transponder centre_frequency="626000000" bandwidth="0" constellation="2" code_rate_hp="1" code_rate_lp="0" guard_interval="3" transmission_mode="1" hierarchy_information="0" inversion="0" />
 	<transponder centre_frequency="642000000" bandwidth="0" constellation="2" code_rate_hp="1" code_rate_lp="0" guard_interval="3" transmission_mode="1" hierarchy_information="0" inversion="0" />
+	<transponder centre_frequency="658000000" bandwidth="0" constellation="2" code_rate_hp="1" code_rate_lp="0" guard_interval="3" transmission_mode="1" hierarchy_information="0" inversion="0" />
 	<transponder centre_frequency="666000000" bandwidth="0" constellation="2" code_rate_hp="1" code_rate_lp="0" guard_interval="3" transmission_mode="1" hierarchy_information="0" inversion="0" />
-	<transponder centre_frequency="674000000" bandwidth="0" constellation="2" code_rate_hp="1" code_rate_lp="0" guard_interval="3" transmission_mode="1" hierarchy_information="0" inversion="0" />	
-	<transponder centre_frequency="666000000" bandwidth="0" constellation="2" code_rate_hp="1" code_rate_lp="0" guard_interval="3" transmission_mode="1" hierarchy_information="0" inversion="0" />
+	<transponder centre_frequency="674000000" bandwidth="0" constellation="2" code_rate_hp="1" code_rate_lp="0" guard_interval="3" transmission_mode="1" hierarchy_information="0" inversion="0" />
 	<transponder centre_frequency="690000000" bandwidth="0" constellation="2" code_rate_hp="1" code_rate_lp="0" guard_interval="3" transmission_mode="1" hierarchy_information="0" inversion="0" />
+	<transponder centre_frequency="698000000" bandwidth="0" constellation="2" code_rate_hp="1" code_rate_lp="0" guard_interval="3" transmission_mode="1" hierarchy_information="0" inversion="0" />
+	<transponder centre_frequency="706000000" bandwidth="0" constellation="2" code_rate_hp="1" code_rate_lp="0" guard_interval="3" transmission_mode="1" hierarchy_information="0" inversion="0" />
+	<transponder centre_frequency="730000000" bandwidth="0" constellation="2" code_rate_hp="1" code_rate_lp="0" guard_interval="3" transmission_mode="1" hierarchy_information="0" inversion="0" />	
 	<transponder centre_frequency="746000000" bandwidth="0" constellation="2" code_rate_hp="1" code_rate_lp="0" guard_interval="3" transmission_mode="1" hierarchy_information="0" inversion="0" />
+	<transponder centre_frequency="762000000" bandwidth="0" constellation="2" code_rate_hp="1" code_rate_lp="0" guard_interval="3" transmission_mode="1" hierarchy_information="0" inversion="0" />
 	<transponder centre_frequency="770000000" bandwidth="0" constellation="2" code_rate_hp="1" code_rate_lp="0" guard_interval="3" transmission_mode="1" hierarchy_information="0" inversion="0" />
+	<transponder centre_frequency="786000000" bandwidth="0" constellation="2" code_rate_hp="1" code_rate_lp="0" guard_interval="3" transmission_mode="1" hierarchy_information="0" inversion="0" />
+	<transponder centre_frequency="794000000" bandwidth="0" constellation="2" code_rate_hp="1" code_rate_lp="0" guard_interval="3" transmission_mode="1" hierarchy_information="0" inversion="0" />
+	<transponder centre_frequency="802000000" bandwidth="0" constellation="2" code_rate_hp="1" code_rate_lp="0" guard_interval="3" transmission_mode="1" hierarchy_information="0" inversion="0" />
 	<transponder centre_frequency="818000000" bandwidth="0" constellation="2" code_rate_hp="1" code_rate_lp="0" guard_interval="3" transmission_mode="1" hierarchy_information="0" inversion="0" />    
     </terrestrial>
     <terrestrial name="Adelaide(au)" flags="5">
