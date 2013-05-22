@@ -3,7 +3,7 @@ SECTION = "base"
 PRIORITY = "optional"
 LICENSE = "GPL"
 
-PV = "1.2"
+PV = "1.3"
 PR = "r1"
 
 PROVIDES += "virtual/showiframe"
@@ -36,4 +36,3 @@ do_install() {
 }
 
 PACKAGE_ARCH := "${MACHINE_ARCH}"
-
