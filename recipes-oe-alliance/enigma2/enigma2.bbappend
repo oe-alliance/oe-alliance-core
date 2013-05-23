@@ -109,7 +109,7 @@ do_configure_prepend() {
 		DRIVERSDATE=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/venton/venton-dvb-modules-${MACHINE}.bb | cut -b 12-19`
 	elif [ "${MACHINE}" = "xp1000" ]; then
 		DRIVERSDATE=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/xp/xp-dvb-modules-${MACHINE}.bb | cut -b 12-19`
-	elif [ "${MACHINE}" = "ebox5000" -o "${MACHINE}" = "ebox7358" ]; then
+	elif [ "${MACHINE}" = "ebox5000" -o "${MACHINE}" = "ebox5100" -o "${MACHINE}" = "ebox7358" ]; then
 		DRIVERSDATE=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/ebox/ebox-dvb-modules-${MACHINE}.bb | cut -b 12-19`
 	elif [ "${MACHINE}" = "ixussone" -o "${MACHINE}" = "ixusszero" -o "${MACHINE}" = "ixussduo" ]; then
 		DRIVERSDATE=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/ixuss/ixuss-dvb-modules-${MACHINE}.bb | cut -b 12-19`
@@ -214,6 +214,8 @@ do_patch_prepend(){
 		MACHINE1="XP 1000"
 	elif "${MACHINE}" == "ebox5000":
 		MACHINE1="MixOS F5"
+	elif "${MACHINE}" == "ebox5100":
+		MACHINE1="MixOS F5 mini"	
 	elif "${MACHINE}" == "ebox7358":
 		MACHINE1="MixOS F7"		
 	elif "${MACHINE}" == "odinm7":
@@ -297,6 +299,8 @@ python do_setup_po_ipk () {
 		MACHINE1="XP 1000"
 	elif "${MACHINE}" == "ebox5000":
 		MACHINE1="MixOS F5"
+	elif "${MACHINE}" == "ebox5100":
+		MACHINE1="MixOS F5 mini"
 	elif "${MACHINE}" == "ebox7358":
 		MACHINE1="MixOS F7"		
 	elif "${MACHINE}" == "odinm7":

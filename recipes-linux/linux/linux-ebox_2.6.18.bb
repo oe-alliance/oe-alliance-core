@@ -29,7 +29,7 @@ SRC_URI = "http://archiv.mixos-support.com/${MACHINE}-linux-${KERNEL}.tar.bz2;na
 	file://linux-2.6.18-include-linux.patch \
 	file://linux-2.6.18-mod_devicetable_h.patch \
 	file://nfs-max-rwsize-8k.patch \
-	file://ebox5000-flash.patch \
+	file://ebox5x00-flash.patch \
 	"
 
 S = "${WORKDIR}/linux-${PV}"
