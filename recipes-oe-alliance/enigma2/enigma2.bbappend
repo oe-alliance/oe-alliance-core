@@ -60,9 +60,23 @@ PV = "2.8+git${SRCPV}"
 PKGV = "2.8+git${GITPKGV}"
 SRC_URI = "${ENIGMA2_URI}"
 
+
+SRC_URI_append_azboxhd = " \
+			file://azboxe2.patch \
+ 			file://lcdchar.patch \
+ 			file://vfdskin.patch \
+			"
+SRC_URI_append_azboxme = " \
+ 			file://azboxe2.patch \
+ 			file://vfdskin.patch \
+			"
+
+SRC_URI_append_azboxminime = " \
+ 			file://azboxe2.patch \
+			"
+
 SRC_URI_append_vuduo = " \
 			file://duo_VFD.patch \
-			"
 SRC_URI_append_gb800solo = " \
 			file://gb800-evfd.patch \
 			"

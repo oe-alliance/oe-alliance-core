@@ -1,0 +1,848 @@
+--- enigma2.orig/lib/gdi/lcd.cpp	2012-03-26 19:48:37.000000000 +0200
++++ enigma2/lib/gdi/lcd.cpp	2012-03-26 19:19:01.000000000 +0200
+@@ -60,9 +60,842 @@
+ {
+ 	if (lcdfd >= 0 && start.y() < 5)
+ 	{
+-		std::string message = text;
+-		message = replace_all(message, "\n", " ");
+-		::write(lcdfd, message.c_str(), message.size());
++		char *text2 = malloc (64);
++		int n = 0;
++		int fd = open("/proc/stb/info/model", O_RDONLY);
++		char tmp[255];
++		int rd = fd >= 0 ? read(fd, tmp, 255) : 0;
++		if (fd >= 0)
++			close(fd);
++		if (!strncmp(tmp, "premium+\n", rd) || !strncmp(tmp, "ultra\n", rd))
++		{
++			while (*text != 0 && n<63)
++			{
++				if (*text == 0xffffffC3)
++				{
++					++text;
++					switch (*text) 
++					{
++						case 0xffffff80: text2[n++] = 0xb7;     //Ã. - A
++										 break;
++						case 0xffffff81: text2[n++] = 0xb5;     //Ã~A - A
++										 break;
++						case 0xffffff82: text2[n++] = 0xb6;     //Ã. - A
++										 break;
++						case 0xffffff83: text2[n++] = 0xc7;     //Ã.  - A
++										 break;
++						case 0xffffff84: text2[n++] = 0x8E;     //Ã.
++										 break;
++						case 0xffffff85: text2[n++] = 0x8F;     //Ã.
++										 break;
++						case 0xffffff86: text2[n++] = 0x92;     //Ã.
++										 break;
++						case 0xffffff87: text2[n++] = 0x80;     //Ã.
++										 break;
++						case 0xffffff88: text2[n++] = 0xd4;     //Ã. -E
++										 break;
++						case 0xffffff89: text2[n++] = 0x90;     //Ã.
++										 break;
++						case 0xffffff8a: text2[n++] = 0xd2;     //Ã. - E
++										 break;
++						case 0xffffff8b: text2[n++] = 0xd3;     //Ã. - E
++										 break;
++						case 0xffffff8c: text2[n++] = 0xde;     //Ã. - I
++										 break;
++						case 0xffffff8d: text2[n++] = 0xd6;     //Ã~M - I
++										 break;
++						case 0xffffff8e: text2[n++] = 0xd7;     //Ã. - I
++										 break;
++						case 0xffffff8f: text2[n++] = 0xd8;     //Ã~O - I
++										 break;
++						case 0xffffff90: text2[n++] = 0xd0;     //Ã~P - D
++										 break;
++						case 0xffffff91: text2[n++] = 0xa5;     //Ã.
++										 break;
++						case 0xffffff92: text2[n++] = 0xe3;     //Ã. - O
++										 break;
++						case 0xffffff93: text2[n++] = 0xe0;     //Ã. - O
++										 break;
++						case 0xffffff94: text2[n++] = 0xe2;     //Ã. - O
++										 break;
++						case 0xffffff95: text2[n++] = 0xe5;     //Ã. - O
++										 break;
++						case 0xffffff96: text2[n++] = 0x99;     //Ã.
++										 break;
++						case 0xffffff97: text2[n++] = 0x78;     //x
++										 break;
++						case 0xffffff99: text2[n++] = 0xeb;     //Ã. - U
++										 break;
++						case 0xffffff9a: text2[n++] = 0xe9;     //Ã. - U
++										 break;
++						case 0xffffff9b: text2[n++] = 0xea;     //Ã.  - U
++										 break;
++						case 0xffffff9c: text2[n++] = 0x9a;     //Ã.
++										 break;
++						case 0xffffff9d: text2[n++] = 0xed;     //Ã~] - Y
++										 break;
++						case 0xffffffa0: text2[n++] = 0x85;     //Ã
++										 break;
++						case 0xffffffa1: text2[n++] = 0xa0;     //Ã¡
++										 break;
++						case 0xffffffa2: text2[n++] = 0x83;     //Ã¢
++										 break;
++						case 0xffffffa3: text2[n++] = 0xc6;     //Ã£
++										 break;
++						case 0xffffffa4: text2[n++] = 0x84;     //Ã¤
++										 break;
++						case 0xffffffa5: text2[n++] = 0x86;     //Ã¥
++										 break;
++						case 0xffffffa6: text2[n++] = 0x91;     //Ã¦
++										 break;
++						case 0xffffffa7: text2[n++] = 0x87;     //Ã§
++										 break;
++						case 0xffffffa8: text2[n++] = 0x8a;     //Ã¨
++										 break;
++						case 0xffffffa9: text2[n++] = 0x82;     //Ã©
++										 break;
++						case 0xffffffaa: text2[n++] = 0x88;     //Ãª
++										 break;
++						case 0xffffffab: text2[n++] = 0x89;     //Ã«
++										 break;
++						case 0xffffffac: text2[n++] = 0x8d;     //Ã¬
++										 break;
++						case 0xffffffad: text2[n++] = 0xa1;     //Ã­
++										 break;
++						case 0xffffffae: text2[n++] = 0x8c;     //Ã®
++										 break;
++						case 0xffffffaf: text2[n++] = 0x8b;     //Ã¯
++										 break;
++						case 0xffffffb1: text2[n++] = 0xa4;     //Ã±
++										 break;
++						case 0xffffffb2: text2[n++] = 0x95;     //Ã²
++										 break;
++						case 0xffffffb3: text2[n++] = 0xa2;     //Ã³
++										 break;
++						case 0xffffffb4: text2[n++] = 0x93;     //Ã´
++										 break;
++						case 0xffffffb5: text2[n++] = 0xe4;     //Ãµ
++										 break;
++						case 0xffffffb6: text2[n++] = 0x94;     //Ã¶
++										 break;
++						case 0xffffffb9: text2[n++] = 0x97;     //Ã¹
++										 break;
++						case 0xffffffba: text2[n++] = 0xa3;     //Ãº
++										 break;
++						case 0xffffffbb: text2[n++] = 0x96;     //Ã»
++										 break;
++						case 0xffffffbc: text2[n++] = 0x81;     //Ã¼
++										 break;
++						case 0xffffffbd: text2[n++] = 0xec;     //Ã½ - y
++										 break;
++						case 0xffffffbf: text2[n++] = 0x98;     //Ã¿
++										 break;
++						default:         text2[n++] = 0xffffffC3;
++										 text2[n++] = *text;
++										 break;
++					}
++					++text;
++				}
++				else if (*text == 0xffffffCe)
++				{
++					 ++text;
++					 switch (*text)
++					 {
++						case 0xffffff91: text2[n++] = 0x41;     //A
++										 break;
++						case 0xffffff92: text2[n++] = 0x42;     //B
++										 break;
++						case 0xffffff95: text2[n++] = 0x45;     //E
++										 break;
++						case 0xffffff96: text2[n++] = 0x5a;     //Z
++										 break;
++						case 0xffffff97: text2[n++] = 0x48;     //H
++										 break;
++						case 0xffffff99: text2[n++] = 0x49;     //I
++										 break;
++						case 0xffffff9a: text2[n++] = 0x4b;     //K
++										 break;
++						case 0xffffff9c: text2[n++] = 0x4d;     //M
++										 break;
++						case 0xffffff9d: text2[n++] = 0x4e;     //N
++										 break;
++						case 0xffffff9f: text2[n++] = 0x4f;     //O
++										 break;
++						case 0xffffffa1: text2[n++] = 0x50;     //P
++										 break;
++						case 0xffffffa3: text2[n++] = 0x15;     //Î£
++										 break;
++						case 0xffffffa4: text2[n++] = 0x54;     //T
++										 break;
++						case 0xffffffa5: text2[n++] = 0x59;     //Y
++										 break;
++						case 0xffffffa7: text2[n++] = 0x58;     //X
++										 break;
++						case 0xffffffa9: text2[n++] = 0xf4;     //Î© NO
++										 break;
++						case 0xffffffaa: text2[n++] = 0xd8;     //Ã~O - I
++										 break;
++						case 0xffffffab: text2[n++] = 0x59;     //Å¸ - Y
++										 break;
++						case 0xffffffb2: text2[n++] = 0xe1;     //Î²
++										 break;
++						case 0xffffffbc: text2[n++] = 0xe6;     //Î¼
++										 break;
++						case 0xffffffbd: text2[n++] = 0x76;     //v
++										 break;
++						case 0xffffffbf: text2[n++] = 0x6f;     //o
++										 break;
++						default:         text2[n++] = 0xffffffCe;
++										 text2[n++] = *text;
++										 break;
++					}
++					++text;
++				}
++				else if (*text == 0xffffffd0)
++				{
++					++text;
++					switch (*text)
++					{
++						case 0xffffff81: text2[n++] = 0xd3;     //¨ - ¨
++							break;
++						case 0xffffff84: text2[n++] = 0x45;     //ª - Å
++							break;
++						case 0xffffff86: text2[n++] = 0x49;     //² - ²
++							break;
++						case 0xffffff87: text2[n++] = 0xd8;     //¯ - ¯
++							break;
++						case 0xffffff90: text2[n++] = 0x41;     //À - A
++							break;
++						case 0xffffff91: text2[n++] = 0xb0;     //Á - Á
++							break;
++						case 0xffffff92: text2[n++] = 0x42;     //Â - Â
++							break;
++						case 0xffffff93: text2[n++] = 0xb1;     //Ã - Ã
++							break;
++						case 0xffffff94: text2[n++] = 0xb2;     //Ä - Ä
++							break;
++						case 0xffffff95: text2[n++] = 0x45;     //Å - Å
++							break;
++						case 0xffffff96: text2[n++] = 0xb3;     //Æ - Æ
++							break;
++						case 0xffffff97: text2[n++] = 0xb4;     //Ç - Ç
++							break;
++						case 0xffffff98: text2[n++] = 0xb8;     //È - È
++							break;
++						case 0xffffff99: text2[n++] = 0xb9;     //É - É
++							break;
++						case 0xffffff9a: text2[n++] = 0x4b;     //Ê - Ê
++							break;
++						case 0xffffff9b: text2[n++] = 0xba;     //Ë - Ë
++							break;
++						case 0xffffff9c: text2[n++] = 0x4d;     //Ì - Ì
++							break;
++						case 0xffffff9d: text2[n++] = 0x48;     //Í - Í
++							break;
++						case 0xffffff9e: text2[n++] = 0x4f;     //Î - Î
++							break;
++						case 0xffffff9f: text2[n++] = 0xbb;     //Ï - Ï
++							break;
++						case 0xffffffa0: text2[n++] = 0x50;     //Ð - Ð
++							break;
++						case 0xffffffa1: text2[n++] = 0x43;     //Ñ - Ñ
++							break;
++						case 0xffffffa2: text2[n++] = 0x54;     //Ò - Ò
++							break;
++						case 0xffffffa3: text2[n++] = 0xbc;     //Ó - Ó
++							break;
++						case 0xffffffa4: text2[n++] = 0xbf;     //Ô - Ô
++							break;
++						case 0xffffffa5: text2[n++] = 0x58;     //Õ - Õ
++							break;
++						case 0xffffffa6: text2[n++] = 0xc0;     //Ö - Ö
++							break;
++						case 0xffffffa7: text2[n++] = 0xc1;     //× - ×
++							break;
++						case 0xffffffa8: text2[n++] = 0xc2;     //Ø - Ø
++							break;
++						case 0xffffffa9: text2[n++] = 0xc3;     //Ù - Ù
++							break;
++						case 0xffffffaa: text2[n++] = 0xc4;     //Ú - Ú
++							break;
++						case 0xffffffab: text2[n++] = 0xc5;     //Û - Û
++							break;
++						case 0xffffffac: text2[n++] = 0x62;     //Ü - Ü
++							break;
++						case 0xffffffad: text2[n++] = 0xc8;     //Ý - Ý
++							break;
++						case 0xffffffae: text2[n++] = 0xc9;     //Þ - Þ
++							break;
++						case 0xffffffaf: text2[n++] = 0xca;     //ß - ß
++							break;
++						case 0xffffffb0: text2[n++] = 0x41;     //à - À
++							break;
++						case 0xffffffb1: text2[n++] = 0xb0;     //á - Á
++							break;
++						case 0xffffffb2: text2[n++] = 0x42;     //â - Â
++							break;
++						case 0xffffffb3: text2[n++] = 0xb1;     //ã - Ã
++							break;
++						case 0xffffffb4: text2[n++] = 0xb2;     //ä - Ä
++							break;
++						case 0xffffffb5: text2[n++] = 0x45;     //å - Å
++							break;
++						case 0xffffffb6: text2[n++] = 0xb3;     //æ - Æ
++							break;
++						case 0xffffffb7: text2[n++] = 0xb4;     //ç - Ç
++							break;
++						case 0xffffffb8: text2[n++] = 0xb8;     //è - È
++							break;
++						case 0xffffffb9: text2[n++] = 0xb9;     //é - É
++							break;
++						case 0xffffffba: text2[n++] = 0x4b;     //ê - Ê
++							break;
++						case 0xffffffbb: text2[n++] = 0xba;     //ë - Ë
++							break;
++						case 0xffffffbc: text2[n++] = 0x4d;     //ì - Ì
++							break;
++						case 0xffffffbd: text2[n++] = 0x48;     //í - Í
++							break;
++						case 0xffffffbe: text2[n++] = 0x4f;     //î - Î
++							break;
++						case 0xffffffbf: text2[n++] = 0xbb;     //ï - Ï
++							break;
++						default:	text2[n++] = 0xffffffd0;
++								text2[n++] = *text;
++								break;
++					}
++					++text;
++				}
++				else if (*text == 0xffffffd1)
++				{
++					++text;
++					switch (*text) 
++					{
++						case 0xffffff80: text2[n++] = 0x50;     //ð - Ð
++							break;
++						case 0xffffff81: text2[n++] = 0x43;     //ñ - Ñ
++							break;
++						case 0xffffff82: text2[n++] = 0x54;     //ò - Ò
++							break;
++						case 0xffffff83: text2[n++] = 0xbc;     //ó - Ó
++							break;
++						case 0xffffff84: text2[n++] = 0xbf;     //ô - Ô
++							break;
++						case 0xffffff85: text2[n++] = 0x58;     //õ - Õ
++							break;
++						case 0xffffff86: text2[n++] = 0xc0;     //ö - Ö
++							break;
++						case 0xffffff87: text2[n++] = 0xc1;     //÷ - ×
++							break;
++						case 0xffffff88: text2[n++] = 0xc2;     //ø - Ø
++							break;
++						case 0xffffff89: text2[n++] = 0xc3;     //ù - Ù
++							break;
++						case 0xffffff8a: text2[n++] = 0xc4;     //ú - Ú
++							break;
++						case 0xffffff8b: text2[n++] = 0xc5;     //û - Û
++							break;
++						case 0xffffff8c: text2[n++] = 0x62;     //ü - Ü
++							break;
++						case 0xffffff8d: text2[n++] = 0xc8;     //ý - Ý
++							break;
++						case 0xffffff8e: text2[n++] = 0xc9;     //þ - Þ
++							break;
++						case 0xffffff8f: text2[n++] = 0xca;     //ÿ - ß
++							break;
++						case 0xffffff91: text2[n++] = 0xd3;     //¸ - ¨
++							break;
++						case 0xffffff94: text2[n++] = 0x45;     //º - Å
++							break;
++						case 0xffffff96: text2[n++] = 0x49;     //³ - ²
++							break;
++						case 0xffffff97: text2[n++] = 0xd8;     //¿ - ¯
++							break;
++						default:	text2[n++] = 0xffffffd1;
++								text2[n++] = *text;
++								break;
++					}
++					++text;
++				}
++				else
++				{
++					text2[n++] = *text;
++					++text;
++				}
++			}
++			text2[n] = 0;
++		}
++		else
++		{
++			while (*text != 0 && n<63)
++			{
++				if (*text == 0x5c)
++				{
++					text2[n++] = 0x60; //
++					++text;
++				}
++				else if (*text == 0xffffffC3)
++				{
++					++text;
++					switch (*text) 
++					{
++						case 0xffffff80: text2[n++] = 0x41;     //Ã. - A
++										 break;
++						case 0xffffff81: text2[n++] = 0x41;     //Ã~A - A
++										 break;
++						case 0xffffff82: text2[n++] = 0x41;     //Ã. - A
++										 break;
++						case 0xffffff83: text2[n++] = 0x41;     //Ã.  - A
++										 break;
++						case 0xffffff84: text2[n++] = 0x8E;     //Ã.
++										 break;
++						case 0xffffff85: text2[n++] = 0x8F;     //Ã.
++										 break;
++						case 0xffffff86: text2[n++] = 0x92;     //Ã.
++										 break;
++						case 0xffffff87: text2[n++] = 0x80;     //Ã.
++										 break;
++						case 0xffffff88: text2[n++] = 0x45;     //Ã. -E
++										 break;
++						case 0xffffff89: text2[n++] = 0x90;     //Ã.
++										 break;
++						case 0xffffff8a: text2[n++] = 0x45;     //Ã. - E
++										 break;
++						case 0xffffff8b: text2[n++] = 0x45;     //Ã. - E
++										 break;
++						case 0xffffff8c: text2[n++] = 0x49;     //Ã. - I
++										 break;
++						case 0xffffff8d: text2[n++] = 0x49;     //Ã~M - I
++										 break;
++						case 0xffffff8e: text2[n++] = 0x49;     //Ã. - I
++										 break;
++						case 0xffffff8f: text2[n++] = 0x49;     //Ã~O - I
++										 break;
++						case 0xffffff90: text2[n++] = 0x44;     //Ã~P - D
++										 break;
++						case 0xffffff91: text2[n++] = 0x17;     //Ã.
++										 break;
++						case 0xffffff92: text2[n++] = 0x4f;     //Ã. - O
++										 break;
++						case 0xffffff93: text2[n++] = 0x4f;     //Ã. - O
++										 break;
++						case 0xffffff94: text2[n++] = 0x4f;     //Ã. - O
++										 break;
++						case 0xffffff95: text2[n++] = 0x4f;     //Ã. - O
++										 break;
++						case 0xffffff96: text2[n++] = 0x99;     //Ã.
++										 break;
++						case 0xffffff97: text2[n++] = 0x78;     //x
++										 break;
++						case 0xffffff99: text2[n++] = 0x55;     //Ã. - U
++										 break;
++						case 0xffffff9a: text2[n++] = 0x55;     //Ã. - U
++										 break;
++						case 0xffffff9b: text2[n++] = 0x55;     //Ã.  - U
++										 break;
++						case 0xffffff9c: text2[n++] = 0x9a;     //Ã.
++										 break;
++						case 0xffffff9d: text2[n++] = 0x59;     //Ã~] - Y
++										 break;
++						case 0xffffffa0: text2[n++] = 0x85;     //Ã
++										 break;
++						case 0xffffffa1: text2[n++] = 0x12;     //Ã¡
++										 break;
++						case 0xffffffa2: text2[n++] = 0x83;     //Ã¢
++										 break;
++						case 0xffffffa3: text2[n++] = 0xe1;     //Ã£
++										 break;
++						case 0xffffffa4: text2[n++] = 0x84;     //Ã¤
++										 break;
++						case 0xffffffa5: text2[n++] = 0x86;     //Ã¥
++										 break;
++						case 0xffffffa6: text2[n++] = 0x91;     //Ã¦
++										 break;
++						case 0xffffffa7: text2[n++] = 0x87;     //Ã§
++										 break;
++						case 0xffffffa8: text2[n++] = 0x8a;     //Ã¨
++										 break;
++						case 0xffffffa9: text2[n++] = 0x82;     //Ã©
++										 break;
++						case 0xffffffaa: text2[n++] = 0x88;     //Ãª
++										 break;
++						case 0xffffffab: text2[n++] = 0x89;     //Ã«
++										 break;
++						case 0xffffffac: text2[n++] = 0x8d;     //Ã¬
++										 break;
++						case 0xffffffad: text2[n++] = 0x13;     //Ã­
++										 break;
++						case 0xffffffae: text2[n++] = 0x8c;     //Ã®
++										 break;
++						case 0xffffffaf: text2[n++] = 0x8b;     //Ã¯
++										 break;
++						case 0xffffffb1: text2[n++] = 0x16;     //Ã±
++										 break;
++						case 0xffffffb2: text2[n++] = 0x95;     //Ã²
++										 break;
++						case 0xffffffb3: text2[n++] = 0x14;     //Ã³
++										 break;
++						case 0xffffffb4: text2[n++] = 0x93;     //Ã´
++										 break;
++						case 0xffffffb5: text2[n++] = 0xef;     //Ãµ
++										 break;
++						case 0xffffffb6: text2[n++] = 0x94;     //Ã¶
++										 break;
++						case 0xffffffb9: text2[n++] = 0x97;     //Ã¹
++										 break;
++						case 0xffffffba: text2[n++] = 0x15;     //Ãº
++										 break;
++						case 0xffffffbb: text2[n++] = 0x96;     //Ã»
++										 break;
++						case 0xffffffbc: text2[n++] = 0x81;     //Ã¼
++										 break;
++						case 0xffffffbd: text2[n++] = 0x79;     //Ã½ - y
++										 break;
++						case 0xffffffbf: text2[n++] = 0x98;     //Ã¿
++										 break;
++						default:         text2[n++] = 0xffffffC3;
++										 text2[n++] = *text;
++										 break;
++					}
++					++text;
++				}
++				else if (*text == 0xffffffCe)
++				{
++					++text;
++					switch (*text) 
++					{
++						case 0xffffff91: text2[n++] = 0x41;     //A
++										 break;
++						case 0xffffff92: text2[n++] = 0x42;     //B
++										 break;
++						case 0xffffff95: text2[n++] = 0x45;     //E
++										 break;
++						case 0xffffff96: text2[n++] = 0x5a;     //Z
++										 break;
++						case 0xffffff97: text2[n++] = 0x48;     //H
++										 break;
++						case 0xffffff99: text2[n++] = 0x49;     //I
++										 break;
++						case 0xffffff9a: text2[n++] = 0x4b;     //K
++										 break;
++						case 0xffffff9c: text2[n++] = 0x4d;     //M
++										 break;
++						case 0xffffff9d: text2[n++] = 0x4e;     //N
++										 break;
++						case 0xffffff9f: text2[n++] = 0x4f;     //O
++										 break;
++						case 0xffffffa1: text2[n++] = 0x50;     //P
++										 break;
++						case 0xffffffa3: text2[n++] = 0xf6;     //Î£
++										 break;
++						case 0xffffffa4: text2[n++] = 0x54;     //T
++										 break;
++						case 0xffffffa5: text2[n++] = 0x59;     //Y
++										 break;
++						case 0xffffffa7: text2[n++] = 0x58;     //X
++										 break;
++						case 0xffffffa9: text2[n++] = 0xf4;     //Î©
++										 break;
++						case 0xffffffaa: text2[n++] = 0x49;     //Ã~O - I
++										 break;
++						case 0xffffffab: text2[n++] = 0x59;     //Å¸ - Y
++										 break;
++						case 0xffffffac: text2[n++] = 0xe0;     //Î¬ - Î±
++										 break;
++						case 0xffffffad: text2[n++] = 0xe3;     //Î­ - Îµ
++										 break;
++						case 0xffffffb1: text2[n++] = 0xe0;     //Î±
++										 break;
++						case 0xffffffb2: text2[n++] = 0xe2;     //Î²
++										 break;
++						case 0xffffffb5: text2[n++] = 0xe3;     //Îµ
++										 break;
++						case 0xffffffb8: text2[n++] = 0xf2;     //Î¸
++										 break;
++						case 0xffffffbc: text2[n++] = 0xe4;     //Î¼
++										 break;
++						case 0xffffffbd: text2[n++] = 0x76;     //v
++										 break;
++						case 0xffffffbf: text2[n++] = 0x6f;     //o
++										 break;
++						default:         text2[n++] = 0xffffffCe;
++										 text2[n++] = *text;
++										 break;
++					}
++					++text;
++				}
++				else if (*text == 0xffffffd0)
++				{
++					++text;
++					switch (*text)
++					{
++						case 0xffffff81: 
++							text2[n++] = 0x59;     //¨ - YO
++							text2[n++] = 0x4f;	
++							break;
++						case 0xffffff84: 
++							text2[n++] = 0x45;     //ª - E
++							break;
++						case 0xffffff86: 
++							text2[n++] = 0x49;     //² - I
++							break;
++						case 0xffffff87: 
++	    					text2[n++] = 0x59;     //¯ - YI
++							text2[n++] = 0x49;
++							break;
++						case 0xffffff90: 
++							text2[n++] = 0x41;     //À - A
++							break;
++						case 0xffffff91: 
++							text2[n++] = 0x42;     //Á - B
++							break;
++						case 0xffffff92: 
++							text2[n++] = 0x56;     //Â - V
++							break;
++						case 0xffffff93: 
++							text2[n++] = 0x47;     //Ã - G
++							break;
++						case 0xffffff94: 
++							text2[n++] = 0x44;     //Ä - D
++							break;
++						case 0xffffff95: 
++							text2[n++] = 0x45;     //Å - E
++							break;
++						case 0xffffff96: 
++							text2[n++] = 0x5a;     //Æ - ZH
++							text2[n++] = 0x48;
++							break;
++						case 0xffffff97: 
++							text2[n++] = 0x5a;     //Ç - Z
++							break;
++						case 0xffffff98: 
++							text2[n++] = 0x49;     //È - I
++							break;
++						case 0xffffff99: 
++							text2[n++] = 0x4a;     //É - J
++							break;
++						case 0xffffff9a: 
++							text2[n++] = 0x4b;     //Ê - K
++							break;
++						case 0xffffff9b: 
++							text2[n++] = 0x4c;     //Ë - L
++							break;
++						case 0xffffff9c: 
++							text2[n++] = 0x4d;     //Ì - M
++							break;
++						case 0xffffff9d: 
++							text2[n++] = 0x4e;     //Í - N
++							break;
++						case 0xffffff9e: 
++							text2[n++] = 0x4f;     //Î - O
++							break;
++						case 0xffffff9f: 
++							text2[n++] = 0x50;     //Ï - P
++							break;
++						case 0xffffffa0: 
++							text2[n++] = 0x52;     //Ð - R
++							break;
++						case 0xffffffa1: 
++							text2[n++] = 0x53;     //Ñ - S
++							break;
++						case 0xffffffa2: 
++							text2[n++] = 0x54;     //Ò - T
++							break;
++						case 0xffffffa3: 
++							text2[n++] = 0x55;     //Ó - U
++							break;
++						case 0xffffffa4: 
++							text2[n++] = 0x46;     //Ô - F
++							break;
++						case 0xffffffa5: 
++							text2[n++] = 0x48;     //Õ - H
++							break;
++						case 0xffffffa6: 
++							text2[n++] = 0x43;     //Ö - C
++							break;
++						case 0xffffffa7: 
++							text2[n++] = 0x43;     //× - CH
++							text2[n++] = 0x48;
++							break;
++						case 0xffffffa8: 
++							text2[n++] = 0x53;     //Ø - SH
++							text2[n++] = 0x48;
++							break;
++						case 0xffffffa9: 
++							text2[n++] = 0x53;     //Ù - SHH
++							text2[n++] = 0x48;
++							text2[n++] = 0x48;
++							break;
++						case 0xffffffaa: 
++							text2[n++] = 0x22;     //Ú - "
++							break;
++						case 0xffffffab: 
++							text2[n++] = 0x59;     //Û - Y
++							break;
++						case 0xffffffac: 
++							text2[n++] = 0x27;     //Ü - '
++							break;
++						case 0xffffffad: 
++							text2[n++] = 0x45;     //Ý - EH
++							text2[n++] = 0x48;
++							break;
++						case 0xffffffae: 
++							text2[n++] = 0x59;     //Þ - YU
++							text2[n++] = 0x55;
++							break;
++						case 0xffffffaf: 
++							text2[n++] = 0x59;     //ß - YA
++							text2[n++] = 0x41;
++							break;
++						case 0xffffffb0: 
++							text2[n++] = 0x61;     //à - a
++							break;
++						case 0xffffffb1: 
++							text2[n++] = 0x62;     //á - b
++							break;
++						case 0xffffffb2: 
++							text2[n++] = 0x76;     //â - v
++							break;
++						case 0xffffffb3: 
++							text2[n++] = 0x67;     //ã - g
++							break;
++						case 0xffffffb4: 
++							text2[n++] = 0x64;     //ä - d
++							break;
++						case 0xffffffb5: 
++							text2[n++] = 0x65;     //å - e
++							break;
++						case 0xffffffb6: 
++							text2[n++] = 0x7a;     //æ - zh
++							text2[n++] = 0x68;
++							break;
++						case 0xffffffb7: 
++							text2[n++] = 0x7a;     //ç - z
++							break;
++						case 0xffffffb8: 
++							text2[n++] = 0x69;     //è - i
++							break;
++						case 0xffffffb9: 
++							text2[n++] = 0x6a;     //é - j
++							break;
++						case 0xffffffba: 
++							text2[n++] = 0x6b;     //ê - k
++							break;
++						case 0xffffffbb: 
++							text2[n++] = 0x6c;     //ë - l
++							break;
++						case 0xffffffbc: 
++							text2[n++] = 0x6d;     //ì - m
++							break;
++						case 0xffffffbd: 
++							text2[n++] = 0x6e;     //í - n
++							break;
++						case 0xffffffbe: 
++							text2[n++] = 0x6f;     //î - o
++							break;
++						case 0xffffffbf: 
++							text2[n++] = 0x70;     //ï - p
++							break;
++						default:
++							text2[n++] = 0xffffffd0;
++							text2[n++] = *text;
++							break;
++					}
++					++text;
++				}
++				else if (*text == 0xffffffd1)
++				{
++					++text;
++					switch (*text) {
++						case 0xffffff80: 
++							text2[n++] = 0x72;     //ð - r
++							break;
++						case 0xffffff81:
++							text2[n++] = 0x73;     //ñ - s
++							break;
++						case 0xffffff82:
++							text2[n++] = 0x74;     //ò - t
++							break;
++						case 0xffffff83:
++							text2[n++] = 0x75;     //ó - u
++							break;
++						case 0xffffff84:
++							text2[n++] = 0x66;     //ô - f
++							break;
++						case 0xffffff85:
++							text2[n++] = 0x68;     //õ - h
++							break;
++						case 0xffffff86:
++							text2[n++] = 0x63;     //ö - c
++							break;
++						case 0xffffff87:
++							text2[n++] = 0x63;     //÷ - ch
++							text2[n++] = 0x68;
++							break;
++						case 0xffffff88:
++							text2[n++] = 0x73;     //ø - sh
++							text2[n++] = 0x68;
++							break;
++						case 0xffffff89:
++							text2[n++] = 0x73;     //ù - shh
++							text2[n++] = 0x68;
++							text2[n++] = 0x68;
++							break;
++						case 0xffffff8a: 
++							text2[n++] = 0x22;     //ú - "
++							break;
++						case 0xffffff8b:
++							text2[n++] = 0x79;     //û - y
++							break;
++						case 0xffffff8c:
++							text2[n++] = 0x27;     //ü - '
++							break;
++						case 0xffffff8d:
++							text2[n++] = 0x65;     //ý - eh
++							text2[n++] = 0x68;
++							break;
++						case 0xffffff8e:
++							text2[n++] = 0x79;     //þ - yu
++							text2[n++] = 0x75;
++							break;
++						case 0xffffff8f:
++							text2[n++] = 0x79;     //ÿ - ya
++							text2[n++] = 0x61;
++							break;
++						case 0xffffff91:
++							text2[n++] = 0x79;     //¸ - yo
++							text2[n++] = 0x6f;
++							break;
++						case 0xffffff94:
++							text2[n++] = 0x65;     //º - e
++							break;
++						case 0xffffff96:
++							text2[n++] = 0x69;     //³ - i
++							break;
++						case 0xffffff97:
++							text2[n++] = 0x79;     //¿ - yi
++							text2[n++] = 0x69;
++							break;
++						default:
++							text2[n++] = 0xffffffd1;
++							text2[n++] = *text;
++							break;
++					}
++					++text;
++				}
++				else
++				{
++					text2[n++] = *text;
++					++text;
++				}
++			}
++			text2[n] = 0;
++		}
++		
++		std::string message = text2;
++		//if (message.size() > 32)  //63)
++		//	message = message.substr(0, 32); //63);
++		::write(lcdfd, message.c_str(), message.size());
+ 	}
+ }
+ #endif
