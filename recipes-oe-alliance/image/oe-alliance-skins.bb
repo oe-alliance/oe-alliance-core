@@ -21,4 +21,5 @@ RRECOMMENDS = "\
 	enigma2-plugin-skins-vix-vixbmc-slim-hd \
 	enigma2-plugin-skins-vix-vixbmc-night-hd \
 	enigma2-plugin-skins-vix-vixbmc-metropolis \
+	enigma2-plugin-skins-matrixhd \
 	"
