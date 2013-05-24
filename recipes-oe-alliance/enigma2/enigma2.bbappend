@@ -1,6 +1,6 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
-PRINC = "55"
+PRINC = "56"
 
 DEPENDS = " \
 	ethtool \
@@ -77,6 +77,7 @@ SRC_URI_append_azboxminime = " \
 
 SRC_URI_append_vuduo = " \
 			file://duo_VFD.patch \
+			"
 SRC_URI_append_gb800solo = " \
 			file://gb800-evfd.patch \
 			"
