@@ -132,7 +132,9 @@ do_deploy_append_tm2t() {
 do_deploy_append_tmsingle() {
 # 	Install any packages that are only For this machines feed here, uncomment the line below and change as required
 }
-
+do_deploy_append_tmnano() {
+# 	Install any packages that are only For this machines feed here, uncomment the line below and change as required
+}
 do_deploy_append_iqonios100hd() {
 # 	Install any packages that are only For this machines feed here, uncomment the line below and change as required
 }

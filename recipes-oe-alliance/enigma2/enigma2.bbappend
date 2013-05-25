@@ -195,6 +195,8 @@ do_patch_prepend(){
 		MACHINE1="Technomate 2T OE"
 	elif "${MACHINE}" == "tmsingle":
 		MACHINE1="Technomate Single"
+	elif "${MACHINE}" == "tmnano":
+		MACHINE1="Technomate Nano OE"
 	elif "${MACHINE}" == "iqonios100hd":
 		MACHINE1="iqon IOS 100HD"
 	elif "${MACHINE}" == "iqonios200hd":
@@ -286,6 +288,8 @@ python do_setup_po_ipk () {
 		MACHINE1="Technomate 2T OE"
 	elif "${MACHINE}" == "tmsingle":
 		MACHINE1="Technomate Single"
+	elif "${MACHINE}" == "tmnano":
+		MACHINE1="Technomate Nano OE"
 	elif "${MACHINE}" == "iqonios100hd":
 		MACHINE1="iqon IOS 100HD"
 	elif "${MACHINE}" == "iqonios200hd":

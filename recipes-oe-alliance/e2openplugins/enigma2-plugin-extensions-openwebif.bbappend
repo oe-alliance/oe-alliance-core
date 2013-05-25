@@ -26,6 +26,7 @@ python do_package_prepend () {
 		('tmtwin', 'tmtwin.jpg', 'tm_twin.png'),
 		('tm2t', 'tm2t.jpg', 'tm_2t.png'),
 		('tmsingle', 'tmsingle.jpg', 'tm_single.png'),
+		('tmnano', 'tmnano.jpg', 'tm_nano.png'),		
 		('vuduo', 'duo.jpg', 'vu_normal.png'),
 		('vuduo2', 'duo2.jpg', 'vu_normal.png'),
 		('vusolo', 'solo.jpg', 'vu_normal.png'),
