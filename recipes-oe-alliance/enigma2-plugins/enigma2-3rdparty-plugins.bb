@@ -9,7 +9,7 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r228"
+PR = "r229"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -86,17 +86,24 @@ do_deploy() {
 
 do_deploy_append_vuuno() {
 # 	Install any packages that are only For this machines feed here, uncomment the line below and change as required
+	install -m 0644 enigma2-plugin-extensions-sdg-imagedownloader-oe-2.0-vu-all.ipk ${WORKDIR}/deploy-ipks/3rdparty
 }
 do_deploy_append_vuultimo() {
 # 	Install any packages that are only For this machines feed here, uncomment the line below and change as required
+	install -m 0644 enigma2-plugin-extensions-sdg-imagedownloader-oe-2.0-vu-all.ipk ${WORKDIR}/deploy-ipks/3rdparty
 }
 do_deploy_append_vusolo() {
 # 	Install any packages that are only For this machines feed here,
+	install -m 0644 enigma2-plugin-extensions-sdg-imagedownloader-oe-2.0-vu-all.ipk ${WORKDIR}/deploy-ipks/3rdparty
 }
 do_deploy_append_vuduo() {
 # 	Install any packages that are only For this machines feed here,
+	install -m 0644 enigma2-plugin-extensions-sdg-imagedownloader-oe-2.0-vu-all.ipk ${WORKDIR}/deploy-ipks/3rdparty
 }
-
+do_deploy_append_vusolo2() {
+# 	Install any packages that are only For this machines feed here,
+	install -m 0644 enigma2-plugin-extensions-sdg-imagedownloader-oe-2.0-vu-all.ipk ${WORKDIR}/deploy-ipks/3rdparty
+}
 do_deploy_append_et4x00() {
 # 	Install any packages that are only For this machines feed here,
 	install -m 0644 enigma2-plugin-extensions-et-portal_3.0_all.ipk ${WORKDIR}/deploy-ipks/3rdparty
