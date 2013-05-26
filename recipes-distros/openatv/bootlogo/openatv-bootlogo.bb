@@ -9,7 +9,7 @@ require conf/license/license-gplv2.inc
 RDEPENDS_${PN} += "showiframe"
 
 PV = "2.0"
-PR = "r27"
+PR = "r28"
 
 S = "${WORKDIR}"
 
@@ -54,7 +54,7 @@ do_install() {
 inherit deploy
 do_deploy() {
 	if [ -e splash.bin ]; then
-		if [ "${MACHINE}" = "iqonios100hd" -o "${MACHINE}" = "iqonios200hd" -o "${MACHINE}" = "iqonios300hd" -o "${MACHINE}" = "tmtwin" -o "${MACHINE}" = "tm2t" -o "${MACHINE}" = "tmsingle" -o "${MACHINE}" = "tmnano"]; then
+		if [ "${MACHINE}" == "iqonios100hd" -o "${MACHINE}" == "iqonios200hd" -o "${MACHINE}" == "iqonios300hd" -o "${MACHINE}" == "tmtwin" -o "${MACHINE}" == "tm2t" -o "${MACHINE}" == "tmsingle" -o "${MACHINE}" == "tmnano"]; then
 			install -m 0644 splash.bmp ${DEPLOYDIR}/${BOOTLOGO_FILENAME}
 		else
 			install -m 0644 splash.bin ${DEPLOYDIR}/${BOOTLOGO_FILENAME}
