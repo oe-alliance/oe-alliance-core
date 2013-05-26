@@ -8,8 +8,6 @@ SRC_URI = "git://github.com/oe-alliance/e2openplugin-${MODULE}.git;protocol=git"
 
 S = "${WORKDIR}/git"
 
-
-
 PR = "r11"
 inherit gitpkgv
 
@@ -46,7 +44,7 @@ do_install_azboxme() {
 }
 
 do_install_azboxminime() {
-do_install_azboxme
+	do_install_azboxme
 }
 
 FILES_${PN} = "/usr/bin/"
