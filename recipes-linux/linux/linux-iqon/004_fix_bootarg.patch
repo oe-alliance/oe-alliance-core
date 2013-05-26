@@ -1,0 +1,28 @@
+--- linux-3.5.3/arch/mips/kernel/setup.c	2013-03-07 13:37:47.000000000 +0900
++++ linux-3.5.3.tmnano/arch/mips/kernel/setup.c	2013-04-24 17:57:35.486297524 +0900
+@@ -531,15 +531,25 @@
+         strncpy(hwtype,hwtypeLength,21);
+         pr_info("Found hwtype\n");
+ 		memset(boot_command_line,COMMAND_LINE_SIZE,0);
++#ifdef BRCM_HAS_NOR
+ 		sprintf(boot_command_line,"%s %s", "bmem=112M ubi.mtd=4 root=ubi0:rootfs rootfstype=ubifs rw console=ttyS0,115200n8 slab_max_order=0 rootflags=sync",hwtype);
+ 		sprintf(command_line,"%s %s", "bmem=112M ubi.mtd=4 root=ubi0:rootfs rootfstype=ubifs rw console=ttyS0,115200n8 slab_max_order=0 rootflags=sync",hwtype);
++#else
++		sprintf(boot_command_line,"%s %s", "bmem=112M ubi.mtd=0 root=ubi0:rootfs rootfstype=ubifs rw console=ttyS0,115200n8 slab_max_order=0 rootflags=sync",hwtype);
++		sprintf(command_line,"%s %s", "bmem=112M ubi.mtd=0 root=ubi0:rootfs rootfstype=ubifs rw console=ttyS0,115200n8 slab_max_order=0 rootflags=sync",hwtype);
++#endif
+ 	}
+ 	else
+ 	{
+         pr_info("Not  Found hwtypes\n");
+ 		memset(boot_command_line,COMMAND_LINE_SIZE,0);
++#ifdef BRCM_HAS_NOR
+ 		sprintf(boot_command_line,"%s", "bmem=112M ubi.mtd=4 root=ubi0:rootfs rootfstype=ubifs rw console=ttyS0,115200n8 rootflags=sync slab_max_order=0 hwtypenum=0");
+ 		sprintf(command_line,"%s", "bmem=112M ubi.mtd=4 root=ubi0:rootfs rootfstype=ubifs rw console=ttyS0,115200n8 rootflags=sync slab_max_order=0 hwtypenum=0");
++#else
++		sprintf(boot_command_line,"%s", "bmem=112M ubi.mtd=0 root=ubi0:rootfs rootfstype=ubifs rw console=ttyS0,115200n8 rootflags=sync slab_max_order=0 hwtypenum=0");
++		sprintf(command_line,"%s", "bmem=112M ubi.mtd=0 root=ubi0:rootfs rootfstype=ubifs rw console=ttyS0,115200n8 rootflags=sync slab_max_order=0 hwtypenum=0");
++#endif
+ 	}
+ #endif
+ 

@@ -1,0 +1,191 @@
+--- linux-3.5.3/arch/mips/brcmstb/setup.c	2012-12-08 17:25:02.000000000 +0900
++++ setup.c	2013-03-22 20:05:44.507446431 +0900
+@@ -45,7 +45,8 @@
+ #include <asm/war.h>
+ #include <linux/syscore_ops.h>
+ #include <asm/brcmstb/brcmstb.h>
+-
++#define TMTWIN 1
++#define TM_PATCH 1
+ #ifndef CONFIG_MTD
+ /* squash MTD warning on IKOS builds */
+ #define CONFIG_MTD_MAP_BANK_WIDTH_1 1
+@@ -54,7 +55,7 @@
+ #include <linux/mtd/mtd.h>
+ #include <linux/mtd/physmap.h>
+ #include <linux/mtd/map.h>
+-#define TM_PATCH 0
++
+ /* Extra SPI flash chip selects to scan at boot time (configurable) */
+ #define EXTRA_SPI_CS		0x00
+ 
+@@ -237,14 +238,13 @@
+ 
+ #endif /* defined(CONFIG_BRCM_HAS_SDIO_V0) */
+ /* uses uartc base address is 0xb0400b00, offset 0x80 for tx, 0x84 for int */
+-#if TM_PATCH
+ static void micom_send_data(const u8 *data, u8 count)
+ {
+ 	u8 i;
+ 
+ 	for(i = 0; i < count; i++)
+ 	{
+-#if 1
++#if 0
+ 		writel(data[i], (u8 *)0xb0400b80);
+ 		udelay(2000);
+ #else
+@@ -255,21 +255,71 @@
+ 	}
+ 
+ }
++
++#if 0 // mkseo_micom_check
++static int standby_micom(void)
++{
++	u8 micom_getversion_seq[3] = { 0x7f, 0x1, 0x12};
++	u8 i;
++	unsigned long  readdata[50];
++	int retValue = 0;
++	
++		micom_send_data(micom_getversion_seq, 3);
++	
++		/* standby micom information save */
++		for(i = 0; i < 20; i++)
++		{
++			readdata[i] = readl((u8 *)0xb0400b80);
++			udelay(1000);
++		}
++		
++		/* check micom [old or new] */
++		for(i = 0; i < 20; i++)
++		{
++			if(readdata[i] == 0x7F)
++				retValue = 1;
++		}
++		
++		if(retValue == 1)
++			printk(" it is new micom\n");
++		else
++			printk(" it is old micom\n");
++	
++	return retValue;
++}
++#endif
++
++#if 0 //@ NOTE :TM_PATCH
+ static void fixme_micom_send_data(const u8 *data, u8 count)
+ {
++	
++#if 1 // mkseo_micom_check
++	if(standby_micom() == 0)
++	{
++		/* only need for tmtwin micom */
++		micom_send_data(data, count);
++	}
++#else
+ 	/* only need for tmtwin micom */
+ 	micom_send_data(data, count);
++#endif // mkseo_micom_check
++
+ }
++#endif
+ 
+ static void micom_standby(void)
+ {
+ 	/* Last char 0x0a is power key value
+ 	   Enable this key to get on standby */
++
++	//@ NOTE :
++#if 0
+ 	u8 micom_init_seq[9] = { 0x7f, 0x7, 0x10, 0x84, 0x71, 0x1, 0x4, 0x4, 0x0a };
++#endif
+ 	u8 micom_standby[3] = { 0x7f, 0x1, 0x40 };
+ 
+ 	/* set micom to get power key */
+-	fixme_micom_send_data(micom_init_seq, 9);
++	//fixme_micom_send_data(micom_init_seq, 9); 
+ 
+ 	/* micom power off */
+ 	micom_send_data(micom_standby, 3);
+@@ -278,8 +328,6 @@
+ }
+ 
+ 
+-#endif
+-
+ #if defined(CONFIG_BRCM_HAS_SDIO_V1)
+ 
+ static void brcm_add_sdio_host(int id, uintptr_t cfg_base, uintptr_t host_base,
+@@ -796,17 +844,17 @@
+ 			primary_type = i;
+ 
+ 	/* ignore CFE variables; use hardcoded mtd config */
+-#if 0 /*TMTWIn*/
++#if TMTWIN == 0
+ 	primary = 0;
+ #endif
+ 	primary_type = TYPE_NAND;
+ 	nandcs[0] = 1;
+ 
+ 	/* scan each chip select to see what (if anything) lives there */
+-#if 0 /*TMTWIn*/
+-	for (i = 0; i < NUM_CS; i++) {
+-#else
++#if TMTWIN
+ 	for (i = 1; i < NUM_CS; i++) {
++#else
++	for (i = 0; i < NUM_CS; i++) {
+ #endif
+ 		u32 base, size, config __maybe_unused;
+ 
+@@ -934,9 +982,6 @@
+ 
+ static void brcm_machine_restart(char *command)
+ {
+-#if TM_PATCH
+-	static void (*back_to_prom)(void) = (void (*)(void)) 0xbfc00000;
+-#endif
+ /* PR21527 - Fix SMP reboot problem */
+ #ifdef CONFIG_SMP
+ 	printk("Broadcom eval board restart.\n");
+@@ -952,11 +997,7 @@
+ 		sw_master_reset_enable, 1);
+ 	BDEV_WR_F_RB(SUN_TOP_CTRL_SW_MASTER_RESET, chip_master_reset, 1);
+ #endif
+-#if TM_PATCH
+-	udelay(10);
+-	/* Reboot */
+-	back_to_prom();
+-#endif
++
+ 	while (1)
+ 		;
+ }
+@@ -988,26 +1029,7 @@
+ 	}
+ 	return str;
+ }
+-#if 0
+-static void brcm_resume(void)
+-{
+-	printk("Broadcom eval board resume.\n");
+-}
+ 
+-static void brcm_shutdown(void)
+-{
+-#if TM_PATCH 
+-	printk("Broadcom eval board shutdown.\n");
+-	micom_standby();
+-	while (1);
+-#endif
+-}
+-static struct syscore_ops bcm_syscore_ops = {
+-	.resume = brcm_resume,
+-	.shutdown = brcm_shutdown,
+-};
+-
+-#endif
+ void __init plat_mem_setup(void)
+ {
+ 	_machine_restart     = brcm_machine_restart;

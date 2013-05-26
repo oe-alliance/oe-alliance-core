@@ -1,0 +1,18 @@
+--- linux-3.5.3/arch/mips/brcmstb/Kconfig	2013-03-07 13:37:40.000000000 +0900
++++ linux-3.5.3.diff/arch/mips/brcmstb/Kconfig	2013-04-24 16:17:55.970397690 +0900
+@@ -234,7 +234,6 @@
+ 	select BRCM_HAS_PCI23
+ 	select BRCM_HAS_EMAC_0
+ 	select BRCM_HAS_EMAC_1
+-	select BRCM_HAS_NOR
+ 	select BRCM_HAS_NAND_MAJOR_2
+ 	select BRCM_HAS_NAND_MINOR_1
+ 	select BRCM_HAS_SATA2
+@@ -1495,6 +1494,7 @@
+ 
+ config BRCM_HAS_NOR
+ 	bool
++	default n
+ 
+ config BRCM_HAS_NAND_MINOR_0
+ 	bool

@@ -1,0 +1,100 @@
+--- linux-3.5.3/arch/mips/brcmstb/setup.c	2013-03-07 13:37:40.000000000 +0900
++++ linux-3.5.3.tmnano/arch/mips/brcmstb/setup.c	2013-04-24 18:18:23.038277596 +0900
+@@ -54,7 +54,7 @@
+ #include <linux/mtd/mtd.h>
+ #include <linux/mtd/physmap.h>
+ #include <linux/mtd/map.h>
+-#define TM_PATCH 0
++#define TM_PATCH 1
+ /* Extra SPI flash chip selects to scan at boot time (configurable) */
+ #define EXTRA_SPI_CS		0x00
+ 
+@@ -244,32 +244,23 @@
+ 
+ 	for(i = 0; i < count; i++)
+ 	{
+-#if 1
+-		writel(data[i], (u8 *)0xb0400b80);
+-		udelay(2000);
+-#else
+         __raw_writel(data[i], (u8 *)0xb0400b80);
+         mb();
+-#endif
+-		
+ 	}
+ 
+ }
+-static void fixme_micom_send_data(const u8 *data, u8 count)
+-{
+-	/* only need for tmtwin micom */
+-	micom_send_data(data, count);
+-}
+ 
+ static void micom_standby(void)
+ {
+ 	/* Last char 0x0a is power key value
+ 	   Enable this key to get on standby */
++#if 0
+ 	u8 micom_init_seq[9] = { 0x7f, 0x7, 0x10, 0x84, 0x71, 0x1, 0x4, 0x4, 0x0a };
++#endif
+ 	u8 micom_standby[3] = { 0x7f, 0x1, 0x40 };
+ 
+ 	/* set micom to get power key */
+-	fixme_micom_send_data(micom_init_seq, 9);
++//	fixme_micom_send_data(micom_init_seq, 9);
+ 
+ 	/* micom power off */
+ 	micom_send_data(micom_standby, 3);
+@@ -796,14 +787,14 @@
+ 			primary_type = i;
+ 
+ 	/* ignore CFE variables; use hardcoded mtd config */
+-#if 0 /*TMTWIn*/
++#ifdef CONFIG_BRCM_HAS_NOR
+ 	primary = 0;
+ #endif
+ 	primary_type = TYPE_NAND;
+ 	nandcs[0] = 1;
+ 
+ 	/* scan each chip select to see what (if anything) lives there */
+-#if 0 /*TMTWIn*/
++#ifndef CONFIG_BRCM_HAS_NOR 
+ 	for (i = 0; i < NUM_CS; i++) {
+ #else
+ 	for (i = 1; i < NUM_CS; i++) {
+@@ -863,6 +854,8 @@
+ 		}
+ 		if (first == -1 && cs_info[i].type != TYPE_NONE)
+ 			first = i;
++
++		printk("## i %d, type %d, first %d, primary %d\n", i, cs_info[i].type, first, primary);
+ 	}
+ 
+ 	if (primary == -1) {
+@@ -988,26 +981,7 @@
+ 	}
+ 	return str;
+ }
+-#if 0
+-static void brcm_resume(void)
+-{
+-	printk("Broadcom eval board resume.\n");
+-}
+-
+-static void brcm_shutdown(void)
+-{
+-#if TM_PATCH 
+-	printk("Broadcom eval board shutdown.\n");
+-	micom_standby();
+-	while (1);
+-#endif
+-}
+-static struct syscore_ops bcm_syscore_ops = {
+-	.resume = brcm_resume,
+-	.shutdown = brcm_shutdown,
+-};
+ 
+-#endif
+ void __init plat_mem_setup(void)
+ {
+ 	_machine_restart     = brcm_machine_restart;
