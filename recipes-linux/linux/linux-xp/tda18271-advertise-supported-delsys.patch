@@ -1,8 +1,8 @@
-diff --git a/drivers/media/common/tuners/tda18271-fe.c b/drivers/media/common/tuners/tda18271-fe.c
-index 2e67f44..53ac2a2 100644
---- a/drivers/media/common/tuners/tda18271-fe.c
-+++ b/drivers/media/common/tuners/tda18271-fe.c
-@@ -1320,6 +1320,16 @@ struct dvb_frontend *tda18271_attach(struct dvb_frontend *fe, u8 addr,
+diff --git a/drivers/media/tuners/tda18271-fe.c b/drivers/media/tuners/tda18271-fe.c
+index 72c26fd..229584e 100644
+--- a/drivers/media/tuners/tda18271-fe.c
++++ b/drivers/media/tuners/tda18271-fe.c
+@@ -1337,6 +1337,16 @@ struct dvb_frontend *tda18271_attach(struct dvb_frontend *fe, u8 addr,
  	memcpy(&fe->ops.tuner_ops, &tda18271_tuner_ops,
  	       sizeof(struct dvb_tuner_ops));
  

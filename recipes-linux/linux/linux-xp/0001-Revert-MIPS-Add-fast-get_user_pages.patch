@@ -14,23 +14,21 @@ The fast get_user_pages implementation breaks fuse on bmips
  delete mode 100644 arch/mips/mm/gup.c
 
 diff --git a/arch/mips/mm/Makefile b/arch/mips/mm/Makefile
-index 982420d..a02133f 100644
+index e841fb4..86d4eb1 100644
 --- a/arch/mips/mm/Makefile
 +++ b/arch/mips/mm/Makefile
-@@ -3,8 +3,8 @@
+@@ -3,7 +3,7 @@
  #
  
  obj-y				+= cache.o dma-default.o extable.o fault.o \
 -				   gup.o init.o mmap.o page.o page-funcs.o \
--				   tlbex.o tlbex-fault.o uasm.o
-+				   init.o mmap.o page.o page-funcs.o \
-+				   tlbex.o tlbex-fault.o uasm.o
-
++				   init.o mmap.o tlbex.o page.o page-funcs.o \
+ 				   tlbex.o tlbex-fault.o uasm.o
+ 
  obj-$(CONFIG_32BIT)		+= ioremap.o pgtable-32.o
- obj-$(CONFIG_64BIT)		+= pgtable-64.o
 diff --git a/arch/mips/mm/gup.c b/arch/mips/mm/gup.c
 deleted file mode 100644
-index 33aadbc..0000000
+index 443819b..0000000
 --- a/arch/mips/mm/gup.c
 +++ /dev/null
 @@ -1,315 +0,0 @@
@@ -283,7 +281,7 @@ index 33aadbc..0000000
 - * @nr_pages:	number of pages from start to pin
 - * @write:	whether pages will be written to
 - * @pages:	array that receives pointers to the pages pinned.
-- * 		Should be at least nr_pages long.
+- *		Should be at least nr_pages long.
 - *
 - * Attempt to pin user pages in memory without taking mm->mmap_sem.
 - * If not successful, it will fall back to taking the lock and

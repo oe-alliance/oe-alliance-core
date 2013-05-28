@@ -1,0 +1,60 @@
+From 8ebdfe634069ea8aa02df1b8cee72b2a239f22ce Mon Sep 17 00:00:00 2001
+From: slashdev <slashdev@gmx.com>
+Date: Mon, 25 Feb 2013 19:12:00 +0100
+Subject: [PATCH] Revert "default authentication needs to be at least ntlmv2
+ security for cifs mounts"
+
+This reverts commit 81bcd8b795229c70d7244898efe282846e3b14ce.
+
+This commit causes old samba server mounts to fail, unless ntlmv2
+security is explicitly requested in the mount options.
+Which is rather inconvenient, so revert this commit.
+---
+ fs/cifs/cifsglob.h |    2 +-
+ fs/cifs/connect.c  |   10 ++++++++++
+ 2 files changed, 11 insertions(+), 1 deletion(-)
+
+diff --git a/fs/cifs/cifsglob.h b/fs/cifs/cifsglob.h
+index e6899ce..c2bd4f9 100644
+--- a/fs/cifs/cifsglob.h
++++ b/fs/cifs/cifsglob.h
+@@ -1348,7 +1348,7 @@ require use of the stronger protocol */
+ #define   CIFSSEC_MUST_SEAL	0x40040 /* not supported yet */
+ #define   CIFSSEC_MUST_NTLMSSP	0x80080 /* raw ntlmssp with ntlmv2 */
+ 
+-#define   CIFSSEC_DEF (CIFSSEC_MAY_SIGN | CIFSSEC_MAY_NTLMSSP)
++#define   CIFSSEC_DEF (CIFSSEC_MAY_SIGN | CIFSSEC_MAY_NTLM | CIFSSEC_MAY_NTLMV2 | CIFSSEC_MAY_NTLMSSP)
+ #define   CIFSSEC_MAX (CIFSSEC_MUST_SIGN | CIFSSEC_MUST_NTLMV2)
+ #define   CIFSSEC_AUTH_MASK (CIFSSEC_MAY_NTLM | CIFSSEC_MAY_NTLMV2 | CIFSSEC_MAY_LANMAN | CIFSSEC_MAY_PLNTXT | CIFSSEC_MAY_KRB5 | CIFSSEC_MAY_NTLMSSP)
+ /*
+diff --git a/fs/cifs/connect.c b/fs/cifs/connect.c
+index 12b3da3..0f1a00d 100644
+--- a/fs/cifs/connect.c
++++ b/fs/cifs/connect.c
+@@ -2435,6 +2435,8 @@ cifs_set_cifscreds(struct smb_vol *vol __attribute__((unused)),
+ }
+ #endif /* CONFIG_KEYS */
+ 
++static bool warned_on_ntlm;  /* globals init to false automatically */
++
+ static struct cifs_ses *
+ cifs_get_smb_ses(struct TCP_Server_Info *server, struct smb_vol *volume_info)
+ {
+@@ -2511,6 +2513,14 @@ cifs_get_smb_ses(struct TCP_Server_Info *server, struct smb_vol *volume_info)
+ 	ses->cred_uid = volume_info->cred_uid;
+ 	ses->linux_uid = volume_info->linux_uid;
+ 
++	/* ntlmv2 is much stronger than ntlm security, and has been broadly
++	supported for many years, time to update default security mechanism */
++	if ((volume_info->secFlg == 0) && warned_on_ntlm == false) {
++		warned_on_ntlm = true;
++		cERROR(1, "default security mechanism requested.  The default "
++			"security mechanism will be upgraded from ntlm to "
++			"ntlmv2 in kernel release 3.3");
++	}
+ 	ses->overrideSecFlg = volume_info->secFlg;
+ 
+ 	mutex_lock(&ses->session_mutex);
+-- 
+1.7.9.5
+

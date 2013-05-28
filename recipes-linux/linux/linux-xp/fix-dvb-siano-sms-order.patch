@@ -1,0 +1,13 @@
+diff --git a/drivers/media/common/siano/sms-cards.c b/drivers/media/common/siano/sms-cards.c
+index 680c781..6dc48a0 100644
+--- a/drivers/media/common/siano/sms-cards.c
++++ b/drivers/media/common/siano/sms-cards.c
+@@ -294,6 +294,8 @@ EXPORT_SYMBOL_GPL(sms_board_lna_control);
+ int sms_board_load_modules(int id)
+ {
+ 	switch (id) {
++	case SMS1XXX_BOARD_SIANO_NOVA_A:
++	case SMS1XXX_BOARD_SIANO_NOVA_B:
+ 	case SMS1XXX_BOARD_HAUPPAUGE_CATAMOUNT:
+ 	case SMS1XXX_BOARD_HAUPPAUGE_OKEMO_A:
+ 	case SMS1XXX_BOARD_HAUPPAUGE_OKEMO_B:

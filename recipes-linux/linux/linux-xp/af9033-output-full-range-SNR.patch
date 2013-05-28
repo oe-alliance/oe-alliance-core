@@ -1,7 +1,7 @@
-diff --git a/drivers/media/dvb/frontends/af9033.c b/drivers/media/dvb/frontends/af9033.c
-index a389982..2c7276b 100644
---- a/drivers/media/dvb/frontends/af9033.c
-+++ b/drivers/media/dvb/frontends/af9033.c
+diff --git a/drivers/media/dvb-frontends/af9033.c b/drivers/media/dvb-frontends/af9033.c
+index 464ad87..28ec763 100644
+--- a/drivers/media/dvb-frontends/af9033.c
++++ b/drivers/media/dvb-frontends/af9033.c
 @@ -21,6 +21,10 @@
  
  #include "af9033_priv.h"
@@ -13,7 +13,7 @@ index a389982..2c7276b 100644
  struct af9033_state {
  	struct i2c_adapter *i2c;
  	struct dvb_frontend fe;
-@@ -746,6 +750,9 @@ static int af9033_read_snr(struct dvb_frontend *fe, u16 *snr)
+@@ -754,6 +758,9 @@ static int af9033_read_snr(struct dvb_frontend *fe, u16 *snr)
  
  	*snr = tmp * 10; /* dB/10 */
  
