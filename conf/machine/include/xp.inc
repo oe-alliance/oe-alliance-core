@@ -24,7 +24,7 @@ GLIBC_EXTRA_OECONF = "--with-tls --with-__thread"
 PREFERRED_PROVIDER_virtual/kernel = "linux-xp"
 
 PREFERRED_VERSION_linux-xp = "3.9.1"
-PREFERRED_VERSION_linux-libc-headers = "3.9"
+PREFERRED_VERSION_linux-libc-headers = "3.8"
 
 KERNEL_IMAGETYPE = "vmlinux"
 KERNEL_OUTPUT = "${KERNEL_IMAGETYPE}"
