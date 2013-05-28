@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!--
-	File created on Sunday, 26th of May 2013 09:04:06 [GMT]
+	File created on Tuesday, 28th of May 2013 21:14:13 [GMT]
 -->
 <satellites>
 	<sat name="177.0W C-band NSS 9" flags="0" position="-1771">
@@ -2986,6 +2986,9 @@
 	</sat>
 	<sat name="47.5E Intelsat 10" flags="0" position="475">
 		<transponder frequency="12602000" symbol_rate="27500000" polarization="1" fec_inner="3" system="0" modulation="1"/>
+	</sat>
+	<sat name="48.0E Eutelsat 48C" flags="0" position="480">
+		<transponder frequency="11225000" symbol_rate="3066000" polarization="1" fec_inner="3" system="0" modulation="1"/>
 	</sat>
 	<sat name="49.0E C-band Yamal 202" flags="0" position="491">
 		<transponder frequency="3589000" symbol_rate="3235000" polarization="2" fec_inner="3" system="0" modulation="1"/>
