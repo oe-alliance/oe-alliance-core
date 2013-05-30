@@ -1,3 +1,5 @@
+MACHINE_BRAND = "IXUSS"
+
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS = "\
 	${@base_contains("DISTRO_NAME", "openx2", "ixuss-openx2-dvb-modules-${MACHINE}","ixuss-dvb-modules-${MACHINE}", d)} \
 	"

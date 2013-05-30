@@ -1,5 +1,7 @@
 # dreambox.inc
 
+MACHINE_BRAND = "Dreambox"
+
 EXTRA_IMAGEDEPENDS += "dreambox-secondstage-${MACHINE}"
 
 GLIBC_EXTRA_OECONF = "--with-tls --with-__thread"

@@ -1,3 +1,5 @@
+MACHINE_BRAND = "GigaBlue"
+
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS = " \
 	gigablue-dvb-modules-${MACHINE} \
 	"

@@ -1,3 +1,5 @@
+MACHINE_BRAND = "Venton"
+
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS = "\
 	venton-dvb-modules-${MACHINE} \
 	"

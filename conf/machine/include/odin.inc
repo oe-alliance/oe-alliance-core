@@ -1,3 +1,5 @@
+MACHINE_BRAND = "Odin"
+
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS = "\
 	odin-dvb-modules-${MACHINE} \
 	"

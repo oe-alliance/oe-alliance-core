@@ -1,3 +1,5 @@
+MACHINE_BRAND = "MaxDigital"
+
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS = "\
 	xp-dvb-modules-${MACHINE} \
 	"

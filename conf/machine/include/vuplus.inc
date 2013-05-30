@@ -1,3 +1,5 @@
+MACHINE_BRAND = "Vu+"
+
 MACHINE_ESSENTIAL_EXTRA_DEPENDS = " \
 	vuplus-opera-browser-util \
 	"

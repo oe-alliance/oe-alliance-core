@@ -1,3 +1,5 @@
+MACHINE_BRAND = "EBox"
+
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS = "\
 	ebox-dvb-modules-${MACHINE} \
 	ebox-shutdown \

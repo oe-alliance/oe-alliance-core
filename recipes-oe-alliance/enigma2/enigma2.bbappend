@@ -126,6 +126,8 @@ do_configure_prepend() {
 EXTRA_OECONF += "\
 	--with-po \
 	--with-distro=${DISTRO_NAME} \
+	--with-machinebrand=${MACHINE_BRAND} \
+	--with-machinename=${MACHINE_NAME} \
 	--with-imageversion=${DISTRO_VERSION} \
 	--with-imagebuild=${BUILD_VERSION} \
 	--with-driverdate=${DRIVERSDATE} \
@@ -134,7 +136,7 @@ EXTRA_OECONF += "\
 	${@base_contains("MACHINE_FEATURES", "bwlcd255", "--with-bwlcd255" , "", d)} \
 	${@base_contains("MACHINE_FEATURES", "fullgraphiclcd", "--with-fullgraphiclcd" , "", d)} \
 	${@base_contains("MACHINE_FEATURES", "gigabluelcd", "--with-gigabluelcd" , "", d)} \
-	${@base_contains("MACHINE_FEATURES", "nolcd", "--with-nolcd" , "", d)} \	
+	${@base_contains("MACHINE_FEATURES", "nolcd", "--with-nolcd" , "", d)} \
 	"
 
 # some plugins contain so's, their stripped symbols should not end up in the enigma2 package

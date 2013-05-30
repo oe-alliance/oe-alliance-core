@@ -1,3 +1,5 @@
+MACHINE_BRAND = "XTrend"
+
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS = "\
 	et-dvb-modules-${MACHINE} \
 	"
