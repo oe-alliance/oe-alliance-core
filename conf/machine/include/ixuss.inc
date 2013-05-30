@@ -14,6 +14,7 @@ MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS = "\
 	"
 
 MACHINE_EXTRA_RRECOMMENDS = " \
+	ixuss-shutdown \
 	gst-plugin-dvbmediasink \
 	"
 
