@@ -1,7 +1,6 @@
 MACHINE_BRAND = "IXUSS"
 
-#	${@base_contains("DISTRO_NAME", "openx2", "ixuss-openx2-dvb-modules-${MACHINE}","ixuss-dvb-modules-${MACHINE}", d)} \
-MACHINE_ESSENTIAL_EXTRA_RDEPENDS = "\
+MACHINE_ESSENTIAL_EXTRA_RDEPENDS = " \
 	ixuss-dvb-modules-${MACHINE} \
 	"
 
