@@ -1,6 +1,6 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
-PRINC = "57"
+PRINC = "58"
 
 DEPENDS = " \
 	ethtool \
@@ -299,9 +299,15 @@ python do_setup_po_ipk () {
 	elif "${MACHINE}" == "iqonios300hd":
 		MACHINE1="iqon IOS 300HD"
 	elif "${MACHINE}" == "ventonhdx":
-		MACHINE1="Venton HD"
+		if "${DISTRO}" == "ventonsupport" or "${DISTRO}" == "egami" or "${DISTRO}" == "sezamsupport":
+			MACHINE1="linux box"
+		else:
+			MACHINE1="Venton HDx"
 	elif "${MACHINE}" == "ventonhde":
-		MACHINE1="Venton HDe"
+		if "${DISTRO}" == "ventonsupport" or "${DISTRO}" == "egami" or "${DISTRO}" == "sezamsupport":
+			MACHINE1="linux box"
+		else:
+			MACHINE1="Venton HDe"
 	elif "${MACHINE}" == "xp1000":
 		MACHINE1="XP 1000"
 	elif "${MACHINE}" == "ebox5000":
