@@ -5,6 +5,7 @@ require conf/license/openpli-gplv2.inc
 
 DEPENDS = "\
 	enigma2-plugin-drivers-network-usb-smsc75xx \
+	enigma2-plugin-drivers-network-usb-asix \
 	"
 
-PR = "r0"
+PR = "r1"
