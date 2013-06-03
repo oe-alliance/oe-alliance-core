@@ -12,11 +12,6 @@ MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS = "\
 MACHINE_EXTRA_RRECOMMENDS = " \
 	gst-plugin-dvbmediasink \
 	ntfs-3g \
-	enigma2-plugin-systemplugins-micomupgrade \
-	"
-
-EXTRA_IMAGEDEPENDS = "\
-	enigma2-plugin-systemplugins-micomupgrade \
 	"
 
 include conf/machine/include/autoload-filesystems.inc
