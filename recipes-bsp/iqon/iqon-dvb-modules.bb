@@ -3,7 +3,7 @@ SECTION = "base"
 PRIORITY = "required"
 LICENSE = "CLOSED"
 
-SRCDATE = "20130220"
+SRCDATE = "20130530"
 KV = "3.5.3"
 PV = "${KV}+${SRCDATE}"
 PR = "r1"
@@ -12,7 +12,6 @@ RCONFLICTS_${PN} = "technomate-dvb-modules"
 RREPLACES_${PN} = "technomate-dvb-modules"
 
 SRC_URI = "http://en2.ath.cx/release/images/iqon/dev/bcmlinuxdvb_7335-${KV}-${SRCDATE}.tar.gz;name=default"
-SRC_URI_tmnano = "http://en2.ath.cx/release/images/iqon/dev/bcmlinuxdvb_7335-${KV}-20130520.tar.gz;name=tmnano"
 
 S = "${WORKDIR}"
 
@@ -34,8 +33,5 @@ do_install() {
 	done
 }
 
-SRC_URI[default.md5sum] = "1921b69f30657df93ff1bb05a6764847"
-SRC_URI[default.sha256sum] = "8aaef78ac0bc078c8cbd5187edc1127f4ba0920fc32978790b67a9d8101dc0eb"
-
-SRC_URI[tmnano.md5sum]  = "764f933f202eaa40b5afee4b5dd7ce58"
-SRC_URI[tmnano.sha256sum] = "118b0eee0e897b2c1bc3ce0590676f81363a32db68c9bfda625e6a8c60b58d08"
+SRC_URI[default.md5sum] = "8b871752e814d9b0389e6d9b6c0e5e2f"
+SRC_URI[default.sha256sum] = "237a6128b51e0834e999d0e290f7217677af9e1f0770f2a936fd18922416dc1f"
