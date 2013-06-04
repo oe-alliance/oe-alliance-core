@@ -1,0 +1,14 @@
+--- AX88179_178A_LINUX_DRIVER_v1.4.0_SOURCE/ax88179_178a.c	2013-06-04 21:40:59.946908979 +0200
++++ AX88179_178A_LINUX_DRIVER_v1.4.0_SOURCE/ax88179_178a.c.1	2013-06-04 21:38:35.286910911 +0200
+@@ -867,11 +867,7 @@
+ 	.ndo_do_ioctl		= ax88179_ioctl,
+ 	.ndo_set_mac_address	= ax88179_set_mac_addr,
+ 	.ndo_validate_addr	= eth_validate_addr,
+-#if LINUX_VERSION_CODE <= KERNEL_VERSION(3, 2, 0)
+-	.ndo_set_multicast_list	= ax88179_set_multicast,
+-#else
+ 	.ndo_set_rx_mode	= ax88179_set_multicast,
+-#endif
+ #if LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 39)
+ 	.ndo_set_features	= ax88179_set_features,
+ #endif
