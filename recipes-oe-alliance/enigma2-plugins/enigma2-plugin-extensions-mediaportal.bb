@@ -8,9 +8,9 @@ require conf/license/license-gplv2.inc
 inherit gitpkgv
 
 SRCREV = "${AUTOREV}"
-PV = "4.2.2+git${SRCPV}"
-PKGV = "4.2.2+git${GITPKGV}"
-PR = "r2"
+PV = "4.3.1+git${SRCPV}"
+PKGV = "4.3.1+git${GITPKGV}"
+PR = "r3"
 
 SRC_URI = "git://github.com/dhwz/MediaPortal.git;protocol=git"
 
@@ -23,6 +23,7 @@ do_install() {
 	cp -rp ${S}/icons_wall ${D}/usr/lib/enigma2/python/Plugins/Extensions/MediaPortal
 	cp -rp ${S}/images ${D}/usr/lib/enigma2/python/Plugins/Extensions/MediaPortal
 	cp -rp ${S}/resources ${D}/usr/lib/enigma2/python/Plugins/Extensions/MediaPortal
+	cp -rp ${S}/skins ${D}/usr/lib/enigma2/python/Plugins/Extensions/MediaPortal
 	cp -rp ${S}/userfiles ${D}/usr/lib/enigma2/python/Plugins/Extensions/MediaPortal
 	cp -p ${S}/*.p?? ${D}/usr/lib/enigma2/python/Plugins/Extensions/MediaPortal
 }
