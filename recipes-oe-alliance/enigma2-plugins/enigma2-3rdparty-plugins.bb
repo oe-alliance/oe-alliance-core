@@ -9,7 +9,7 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r248"
+PR = "r249"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -51,7 +51,6 @@ do_deploy() {
 	install -m 0644 enigma2-plugin-extensions-iptv-list-updater_0.51-r01_all.ipk ${WORKDIR}/deploy-ipks/3rdparty
 	install -m 0644 enigma2-plugin-extensions-livefootball_4.3_mips32el.ipk ${WORKDIR}/deploy-ipks/3rdparty
 	install -m 0644 enigma2-plugin-extensions-mediainfo_0.6_r04_all.ipk ${WORKDIR}/deploy-ipks/3rdparty
-	install -m 0644 enigma2-plugin-extensions-mediaportal_4.3.1-r01_all.ipk ${WORKDIR}/deploy-ipks/3rdparty
 	install -m 0644 enigma2-plugin-extensions-mtv_0.1_mips32el.ipk ${WORKDIR}/deploy-ipks/3rdparty
 	install -m 0644 enigma2-plugin-extensions-moviebrowser_2.0_mips32el.ipk ${WORKDIR}/deploy-ipks/3rdparty
 	install -m 0644 enigma2-plugin-extensions-lcd4linux_3.2-r2_mips32el.ipk ${WORKDIR}/deploy-ipks/3rdparty
