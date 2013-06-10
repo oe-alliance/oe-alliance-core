@@ -1,9 +1,9 @@
 KV = "3.8.7"
-SRCDATE = "20130504"
+SRCDATE = "20130522"
 
 RDEPENDS_${PN} += "et-fpupdate-${MACHINE}"
 
 require et-dvb-modules.inc
 
-SRC_URI[md5sum] = "7f3388a5b1c4af40f72f6ade0ecd7c5d"
-SRC_URI[sha256sum] = "05e527fbeea05effbec1ca0914cc16b0e5f4155ace10b913fa98ce32ee5c0761"
+SRC_URI[md5sum] = "3d6807ff93f5e648c770884645d66ba8"
+SRC_URI[sha256sum] = "245befdc166c84eed305df61eb7b361af9e3e62cca741976b6ee21d4edb00cf8"
