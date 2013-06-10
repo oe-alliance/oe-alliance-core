@@ -1,6 +1,6 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
-PRINC = "59"
+PRINC = "60"
 
 DEPENDS = " \
 	ethtool \
@@ -94,7 +94,6 @@ FILES_${PN} += " ${bindir} ${sysconfdir}/e2-git.log"
 PACKAGES =+ "${PN}-po"
 FILES_${PN}-po = "${datadir}/enigma2/po/*.po ${datadir}/enigma2/po/*.pot"
 
-
 do_configure_prepend() {
 	if [ "${MACHINE}" = "vusolo" -o "${MACHINE}" = "vuduo" -o "${MACHINE}" = "vusolo2" -o "${MACHINE}" = "vuduo2" -o "${MACHINE}" = "vuuno" -o "${MACHINE}" = "vuultimo" ]; then
 		DRIVERSDATE=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/vuplus/vuplus-dvb-modules-${MACHINE}.bb | cut -b 12-19`
@@ -152,194 +151,6 @@ FILES_${PN}-src += "\
 	/usr/lib/enigma2/python/PowerTimer.py \
 	"
 
-def enigma2changeword(file):
-	fn = file[:-1]
-	os.system('sed -i "s/STB_BOX/' + MACHINE1 + '/g" ' + fn)
-	os.system('sed -i "s/STB-BOX/' + MACHINE1 + '/g" ' + fn)
-	os.system('sed -i "s/STB-GUI/Receiver/g" ' + fn)
-
-do_patch_prepend(){
-	global MACHINE1
-	MACHINE1="Dreambox"
-	if "${MACHINE}" == "vuuno":
-		MACHINE1="Vu+ Uno"
-	elif "${MACHINE}" == "vuultimo":
-		MACHINE1="Vu+ Ultimo"
-	elif "${MACHINE}" == "vusolo":
-		MACHINE1="Vu+ Solo"
-	elif "${MACHINE}" == "vusolo2":
-		MACHINE1="Vu+ Solo2"
-	elif "${MACHINE}" == "vuduo":
-		MACHINE1="Vu+ Duo"
-	elif "${MACHINE}" == "vuduo2":
-		MACHINE1="Vu+ Duo2"
-	elif "${MACHINE}" == "et4x00":
-		MACHINE1="Xtrend ET4x00"
-	elif "${MACHINE}" == "et5x00":
-		MACHINE1="Xtrend ET5x00"
-	elif "${MACHINE}" == "et6x00":
-		MACHINE1="Xtrend ET6x00"
-	elif "${MACHINE}" == "et9x00":
-		MACHINE1="Xtrend ET9x00"
-	elif "${MACHINE}" == "odinm9":
-		MACHINE1="Odin M9"
-	elif "${MACHINE}" == "gb800solo":
-		MACHINE1="GigaBlue HD 800 Solo"
-	elif "${MACHINE}" == "gb800se":
-		MACHINE1="GigaBlue HD 800 SE"
-	elif "${MACHINE}" == "gb800ue":
-		MACHINE1="GigaBlue HD 800 UE"
-	elif "${MACHINE}" == "gbquad":
-		MACHINE1="GigaBlue HD Quad"
-	elif "${MACHINE}" == "tmtwin":
-		MACHINE1="Technomate Twin OE"
-	elif "${MACHINE}" == "tm2t":
-		MACHINE1="Technomate 2T OE"
-	elif "${MACHINE}" == "tmsingle":
-		MACHINE1="Technomate Single"
-	elif "${MACHINE}" == "tmnano":
-		MACHINE1="Technomate Nano OE"
-	elif "${MACHINE}" == "iqonios100hd":
-		MACHINE1="iqon IOS 100HD"
-	elif "${MACHINE}" == "iqonios200hd":
-		MACHINE1="iqon IOS 200HD"
-	elif "${MACHINE}" == "iqonios300hd":
-		MACHINE1="iqon IOS 300HD"
-	elif "${MACHINE}" == "ventonhdx":
-		if "${DISTRO}" == "ventonsupport" or "${DISTRO}" == "egami" or "${DISTRO}" == "sezamsupport":
-			MACHINE1="linux box"
-		else:
-			MACHINE1="Venton HDx"
-	elif "${MACHINE}" == "ventonhde":
-		if "${DISTRO}" == "ventonsupport" or "${DISTRO}" == "egami" or "${DISTRO}" == "sezamsupport":
-			MACHINE1="linux box"
-		else:
-			MACHINE1="Venton HDe"
-	elif "${MACHINE}" == "xp1000":
-		MACHINE1="XP 1000"
-	elif "${MACHINE}" == "ebox5000":
-		MACHINE1="MixOS F5"
-	elif "${MACHINE}" == "ebox5100":
-		MACHINE1="MixOS F5 mini"	
-	elif "${MACHINE}" == "ebox7358":
-		MACHINE1="MixOS F7"		
-	elif "${MACHINE}" == "odinm7":
-		if "${DISTRO}" == "axassupport":
-			MACHINE1="CLASS M"
-		else:
-			MACHINE1="Odin M7"
-	elif "${MACHINE}" == "ixussone":
-		MACHINE1="IXUSS ONE"
-	elif "${MACHINE}" == "ixusszero":
-		MACHINE1="IXUSS ZERO"
-	elif "${MACHINE}" == "ixussduo":
-		MACHINE1="IXUSS DUO"
-	elif "${MACHINE}" == "e3hd":
-		MACHINE1="E3 HD"
-	import os
-	os.system("find ./ -name \"*.po\" > ./po_list")
-	os.system("find ./ -name \"*.py\" >> ./po_list")
-	os.system("find ./ -name \"*.xml\" >> ./po_list")
-	po_list = []
-	po_list = open('po_list','r+').readlines()
-	for x in po_list:
-		enigma2changeword(x)
-	os.system('rm po_list')
-}
-
-def enigma2changeword2(file):
-	fn = file[:-1]
-	os.system('sed -i "s/' + MACHINE1 + '/STB_BOX/g" ' + fn)
-
-python do_setup_po_ipk () {
-	global MACHINE1
-	MACHINE1="Dreambox"
-	if "${MACHINE}" == "vuuno":
-		MACHINE1="Vu+ Uno"
-	elif "${MACHINE}" == "vuultimo":
-		MACHINE1="Vu+ Ultimo"
-	elif "${MACHINE}" == "vusolo":
-		MACHINE1="Vu+ Solo"
-	elif "${MACHINE}" == "vusolo2":
-		MACHINE1="Vu+ Solo2"
-	elif "${MACHINE}" == "vuduo":
-		MACHINE1="Vu+ Duo"
-	elif "${MACHINE}" == "vuduo2":
-		MACHINE1="Vu+ Duo2"
-	elif "${MACHINE}" == "et4x00":
-		MACHINE1="Xtrend ET4x00"
-	elif "${MACHINE}" == "et5x00":
-		MACHINE1="Xtrend ET5x00"
-	elif "${MACHINE}" == "et6x00":
-		MACHINE1="Xtrend ET6x00"
-	elif "${MACHINE}" == "et9x00":
-		MACHINE1="Xtrend ET9x00"
-	elif "${MACHINE}" == "odinm9":
-		MACHINE1="Odin M9"
-	elif "${MACHINE}" == "gb800solo":
-		MACHINE1="GigaBlue HD 800 Solo"
-	elif "${MACHINE}" == "gb800se":
-		MACHINE1="GigaBlue HD 800 SE"
-	elif "${MACHINE}" == "gb800ue":
-		MACHINE1="GigaBlue HD 800 UE"
-	elif "${MACHINE}" == "gbquad":
-		MACHINE1="GigaBlue HD Quad"
-	elif "${MACHINE}" == "tmtwin":
-		MACHINE1="Technomate Twin OE"
-	elif "${MACHINE}" == "tm2t":
-		MACHINE1="Technomate 2T OE"
-	elif "${MACHINE}" == "tmsingle":
-		MACHINE1="Technomate Single"
-	elif "${MACHINE}" == "tmnano":
-		MACHINE1="Technomate Nano OE"
-	elif "${MACHINE}" == "iqonios100hd":
-		MACHINE1="iqon IOS 100HD"
-	elif "${MACHINE}" == "iqonios200hd":
-		MACHINE1="iqon IOS 200HD"
-	elif "${MACHINE}" == "iqonios300hd":
-		MACHINE1="iqon IOS 300HD"
-	elif "${MACHINE}" == "ventonhdx":
-		if "${DISTRO}" == "ventonsupport" or "${DISTRO}" == "egami" or "${DISTRO}" == "sezamsupport":
-			MACHINE1="linux box"
-		else:
-			MACHINE1="Venton HDx"
-	elif "${MACHINE}" == "ventonhde":
-		if "${DISTRO}" == "ventonsupport" or "${DISTRO}" == "egami" or "${DISTRO}" == "sezamsupport":
-			MACHINE1="linux box"
-		else:
-			MACHINE1="Venton HDe"
-	elif "${MACHINE}" == "xp1000":
-		MACHINE1="XP 1000"
-	elif "${MACHINE}" == "ebox5000":
-		MACHINE1="MixOS F5"
-	elif "${MACHINE}" == "ebox5100":
-		MACHINE1="MixOS F5 mini"
-	elif "${MACHINE}" == "ebox7358":
-		MACHINE1="MixOS F7"		
-	elif "${MACHINE}" == "odinm7":
-		if "${DISTRO}" == "axassupport":
-			MACHINE1="CLASS M"
-		else:
-			MACHINE1="Odin M7"
-	elif "${MACHINE}" == "ixussone":
-		MACHINE1="IXUSS ONE"
-	elif "${MACHINE}" == "ixusszero":
-		MACHINE1="IXUSS ZERO"
-	elif "${MACHINE}" == "ixussduo":
-		MACHINE1="IXUSS DUO"
-	elif "${MACHINE}" == "e3hd":
-			MACHINE1="E3 HD"
-	import os
-	os.system("find ./ -name \"*.po\" > ./po_list")
-	os.system("find ./ -name \"*.py\" >> ./po_list")
-	os.system("find ./ -name \"*.xml\" >> ./po_list")
-	po_list = []
-	po_list = open('po_list','r+').readlines()
-	for x in po_list:
-		enigma2changeword2(x)
-	os.system('rm po_list')
-}
-
 do_openpli_preinstall() {
 	if [ -e ${S}/data/${RADIOMVI} ]; then
 		ln -f ${S}/data/${RADIOMVI} ${S}/data/radio.mvi
@@ -356,19 +167,6 @@ do_install_append() {
 	git --git-dir=${S}/.git log --since=10.weeks --pretty=format:"%s" > ${D}${sysconfdir}/e2-git.log
 	git --git-dir=${OE-ALLIANCE_BASE}/meta-oe-alliance/.git log --since=10.weeks --pretty=format:"%s" > ${D}${sysconfdir}/oe-git.log
 }
-
-do_install_po() {
-	LANGS="ar bg ca cs da de el en en_GB es et fa fi fr fy he hr hu is it lt lv nl no nb pl pt pt_BR ro ru sv sk sl sr th tr uk"
-	for lang in ${LANGS}; do
-		if [ -e ${S}/po/$lang.po ]; then
-			install -m 0755 ${S}/po/$lang.po ${D}${datadir}/enigma2/po/enigma2-$lang.po
-		fi
-	done
-	install -m 0755 ${S}/po/enigma2.pot ${D}${datadir}/enigma2/po/enigma2.pot
-}
-
-addtask setup_po_ipk before do_package after do_install
-addtask install_po before do_package after do_setup_po_ipk
 
 python populate_packages_prepend() {
 	enigma2_plugindir = bb.data.expand('${libdir}/enigma2/python/Plugins', d)
