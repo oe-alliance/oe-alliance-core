@@ -4,7 +4,7 @@ MAINTAINER = "OE-Alliance team"
 LICENSE = "Proprietary"
 LIC_FILES_CHKSUM = "file://COPYING;md5=8e37f34d0e40d32ea2bc90ee812c9131"
 
-PACKAGES_DYNAMIC = "enigma2-plugin-(?!pli-).*"
+PACKAGES_DYNAMIC = "enigma2-plugin-(?!oea-).*"
 PROVIDES = "${PN} \
 	enigma2-plugin-extensions-fancontrol2 \
 	"
@@ -13,7 +13,7 @@ inherit gitpkgv
 
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r30"
+PR = "r31"
 
 SRC_URI = "${ENIGMA2_PLUGINS_URI} file://pluginnotwanted"
 
