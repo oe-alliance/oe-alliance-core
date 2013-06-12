@@ -70,8 +70,8 @@ kernel_do_install_append() {
 	rm ${D}${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION}
 }
 
-MTD_DEVICE_inihdx = "mtd1"
-MTD_DEVICE_inihde = "mtd2"
+MTD_DEVICE_ventonhdx = "mtd1"
+MTD_DEVICE_ventonhde = "mtd2"
 
 pkg_postinst_kernel-image () {
 	if [ "x$D" == "x" ]; then
