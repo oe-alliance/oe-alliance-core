@@ -9,7 +9,7 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r9"
+PR = "r10"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -34,7 +34,7 @@ do_install() {
 }
 
 do_deploy() {
-	install -d 0644 ${WORKDIR}/deploy-ipks/3rdparty
+	install -d 0755 ${WORKDIR}/deploy-ipks/3rdparty
 	install -m 0644 enigma2-plugin-extensions-backupsuite_11.1r1_mips32el.ipk ${WORKDIR}/deploy-ipks/3rdparty
 	install -m 0644 enigma2-plugin-extensions-xtrendforum_0.1_mips32el.ipk ${WORKDIR}/deploy-ipks/3rdparty
 }
