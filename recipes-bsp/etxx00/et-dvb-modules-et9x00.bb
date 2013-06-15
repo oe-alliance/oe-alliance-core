@@ -1,5 +1,5 @@
 KV = "3.8.7"
-SRCDATE = "20130523"
+SRCDATE = "20130522"
 
 RDEPENDS_${PN} += "et-fpupdate-${MACHINE}"
 
