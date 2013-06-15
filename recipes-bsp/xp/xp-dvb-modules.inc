@@ -4,10 +4,9 @@ PRIORITY = "required"
 LICENSE = "CLOSED"
 
 PV = "${KV}+${SRCDATE}"
-PR = "r1"
+PR = "r2"
 
-#SRC_URI = "http://www.xp-support.tv/support/drivers/${MACHINE}-drivers-${KV}-${SRCDATE}.zip"
-SRC_URI = "http://source.mynonpublic.com/support/drivers/${MACHINE}-drivers-${KV}-${SRCDATE}.zip"
+SRC_URI = "http://www.xp-support.tv/support/drivers/${MACHINE}-drivers-${KV}-${SRCDATE}.zip"
 
 S = "${WORKDIR}"
 
