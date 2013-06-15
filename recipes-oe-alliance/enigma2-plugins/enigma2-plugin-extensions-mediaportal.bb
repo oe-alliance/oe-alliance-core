@@ -1,5 +1,5 @@
 DESCRIPTION = "MediaPortal "
-RDEPENDS_${PN} = "python-json gst-plugins-good-flv gst-plugins-bad-rtmp librtmp"
+RDEPENDS_${PN} = "python-json python-html gst-plugins-good-flv gst-plugins-bad-rtmp librtmp"
 MAINTAINER = "dhwz"
 LICENSE = "proprietary"
 
@@ -10,7 +10,7 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "4.3.1+git${SRCPV}"
 PKGV = "4.3.1+git${GITPKGV}"
-PR = "r3"
+PR = "r4"
 
 SRC_URI = "git://github.com/dhwz/MediaPortal.git;protocol=git"
 
