@@ -1,0 +1,19 @@
+--- gst-plugins-good-0.10.30/gst/audioparsers/plugin.c~	2012-01-04 21:55:58.816556710 +0100
++++ gst-plugins-good-0.10.30/gst/audioparsers/plugin.c	2012-01-04 21:55:58.843221178 +0100
+@@ -34,13 +34,13 @@
+   gboolean ret;
+ 
+   ret = gst_element_register (plugin, "aacparse",
+-      GST_RANK_PRIMARY + 1, GST_TYPE_AAC_PARSE);
++      GST_RANK_PRIMARY + 2, GST_TYPE_AAC_PARSE);
+   ret &= gst_element_register (plugin, "amrparse",
+       GST_RANK_PRIMARY + 1, GST_TYPE_AMR_PARSE);
+   ret &= gst_element_register (plugin, "ac3parse",
+-      GST_RANK_PRIMARY + 1, GST_TYPE_AC3_PARSE);
++      GST_RANK_PRIMARY + 2, GST_TYPE_AC3_PARSE);
+   ret &= gst_element_register (plugin, "dcaparse",
+-      GST_RANK_PRIMARY + 1, GST_TYPE_DCA_PARSE);
++      GST_RANK_PRIMARY + 2, GST_TYPE_DCA_PARSE);
+   ret &= gst_element_register (plugin, "flacparse",
+       GST_RANK_PRIMARY + 1, GST_TYPE_FLAC_PARSE);
+   ret &= gst_element_register (plugin, "mpegaudioparse",

@@ -1,0 +1,28 @@
+From f80b60feb376b3ea0947631b8fd260fd690e4012 Mon Sep 17 00:00:00 2001
+From: Andreas Monzner <andreas.monzner@dream-property.net>
+Date: Thu, 27 Dec 2012 12:05:27 +0100
+Subject: [PATCH] accept substream syncwords (DTS-HD)
+
+---
+ gst/audioparsers/gstdcaparse.c |    5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/gst/audioparsers/gstdcaparse.c b/gst/audioparsers/gstdcaparse.c
+index 2bf0e38..3a87efb 100644
+--- a/gst/audioparsers/gstdcaparse.c
++++ b/gst/audioparsers/gstdcaparse.c
+@@ -377,6 +377,11 @@ gst_dca_parse_check_valid_frame (GstBaseParse * parse,
+ 
+       if (!gst_dca_parse_parse_header (dcaparse, &r, &s2, &r2, &c2, NULL, NULL,
+               &n2, &s3, &t)) {
++        guint32 marker = gst_byte_reader_peek_uint32_be_unchecked (&r);
++        if (marker == 0x64582025 || marker == 0x58642520) {
++          GST_DEBUG_OBJECT (dcaparse, "found substream syncword... accept it..");
++          return TRUE;
++        }
+         GST_DEBUG_OBJECT (dcaparse, "didn't find second syncword");
+         *skipsize = 4;
+         return FALSE;
+-- 
+1.7.10.4
+

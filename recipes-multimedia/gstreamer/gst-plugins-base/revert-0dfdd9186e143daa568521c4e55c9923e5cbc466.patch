@@ -1,0 +1,11 @@
+--- a/gst/playback/gstplaybin2.c	2013-06-13 22:39:44.788443932 +0200
++++ b/gst/playback/gstplaybin2.c	2013-06-13 22:39:46.308443783 +0200
+@@ -1356,7 +1356,7 @@
+         gst_element_factory_list_get_elements
+         (GST_ELEMENT_FACTORY_TYPE_AUDIOVIDEO_SINKS, GST_RANK_MARGINAL);
+     playbin->elements = g_list_concat (res, tmp);
+-    playbin->elements = g_list_sort (playbin->elements, compare_factories_func);
++    playbin->elements = g_list_sort (playbin->elements, gst_plugin_feature_rank_compare_func);
+     playbin->elements_cookie = gst_default_registry_get_feature_list_cookie ();
+   }
+ }

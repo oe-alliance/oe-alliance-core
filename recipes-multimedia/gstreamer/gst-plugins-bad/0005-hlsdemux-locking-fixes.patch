@@ -1,0 +1,110 @@
+--- a/gst/hls/gsthlsdemux.c
++++ b/gst/hls/gsthlsdemux.c
+@@ -1116,6 +1116,8 @@ gst_hls_demux_change_playlist (GstHLSDemux * demux, guint max_bitrate)
+   GList *previous_variant, *current_variant;
+   gint old_bandwidth, new_bandwidth;
+ 
++  GST_M3U8_CLIENT_LOCK (demux->client);
++
+   /* If user specifies a connection speed never use a playlist with a bandwidth
+    * superior than it */
+   if (demux->connection_speed != 0 && max_bitrate > demux->connection_speed)
+@@ -1131,11 +1133,11 @@ retry_failover_protection:
+ 
+   /* Don't do anything else if the playlist is the same */
+   if (new_bandwidth == old_bandwidth) {
++    GST_M3U8_CLIENT_UNLOCK (demux->client);
+     return TRUE;
+   }
+ 
+   demux->client->main->current_variant = current_variant;
+-  GST_M3U8_CLIENT_UNLOCK (demux->client);
+ 
+   gst_m3u8_client_set_current (demux->client, current_variant->data);
+ 
+@@ -1152,9 +1154,9 @@ retry_failover_protection:
+         gst_message_new_element (GST_OBJECT_CAST (demux), s));
+   } else {
+     GList *failover = NULL;
++    gboolean ret;
+ 
+     GST_INFO_OBJECT (demux, "Unable to update playlist. Switching back");
+-    GST_M3U8_CLIENT_LOCK (demux->client);
+ 
+     failover = g_list_previous (current_variant);
+     if (failover && new_bandwidth == GST_M3U8 (failover->data)->bandwidth) {
+@@ -1163,19 +1165,26 @@ retry_failover_protection:
+     }
+ 
+     demux->client->main->current_variant = previous_variant;
+-    GST_M3U8_CLIENT_UNLOCK (demux->client);
++
+     gst_m3u8_client_set_current (demux->client, previous_variant->data);
+     /*  Try a lower bitrate (or stop if we just tried the lowest) */
+     if (new_bandwidth ==
+         GST_M3U8 (g_list_first (demux->client->main->lists)->data)->bandwidth)
+-      return FALSE;
++
++      ret = FALSE;
+     else
+-      return gst_hls_demux_change_playlist (demux, new_bandwidth - 1);
++      ret = gst_hls_demux_change_playlist (demux, new_bandwidth - 1);
++
++    GST_M3U8_CLIENT_UNLOCK (demux->client);
++
++    return ret;
+   }
+ 
+   /* Force typefinding since we might have changed media type */
+   demux->do_typefind = TRUE;
+ 
++  GST_M3U8_CLIENT_UNLOCK (demux->client);
++
+   return TRUE;
+ }
+ 
+--- a/gst/hls/m3u8.c
++++ b/gst/hls/m3u8.c
+@@ -423,7 +423,8 @@ gst_m3u8_client_new (const gchar * uri)
+   client->current = NULL;
+   client->sequence = -1;
+   client->update_failed_count = 0;
+-  client->lock = g_mutex_new ();
++  client->lock = g_new0 (GStaticRecMutex, 1);
++  g_static_rec_mutex_init(client->lock);
+   gst_m3u8_set_uri (client->main, g_strdup (uri));
+ 
+   return client;
+@@ -435,7 +436,9 @@ gst_m3u8_client_free (GstM3U8Client * self)
+   g_return_if_fail (self != NULL);
+ 
+   gst_m3u8_free (self->main);
+-  g_mutex_free (self->lock);
++  g_static_rec_mutex_free (self->lock);
++  g_free (self->lock);
++
+   g_free (self);
+ }
+ 
+--- a/gst/hls/m3u8.h
++++ b/gst/hls/m3u8.h
+@@ -32,8 +32,8 @@ typedef struct _GstM3U8Client GstM3U8Client;
+ #define GST_M3U8(m) ((GstM3U8*)m)
+ #define GST_M3U8_MEDIA_FILE(f) ((GstM3U8MediaFile*)f)
+ 
+-#define GST_M3U8_CLIENT_LOCK(c) g_mutex_lock (c->lock);
+-#define GST_M3U8_CLIENT_UNLOCK(c) g_mutex_unlock (c->lock);
++#define GST_M3U8_CLIENT_LOCK(c) g_static_rec_mutex_lock (c->lock);
++#define GST_M3U8_CLIENT_UNLOCK(c) g_static_rec_mutex_unlock (c->lock);
+ 
+ struct _GstM3U8
+ {
+@@ -73,7 +73,7 @@ struct _GstM3U8Client
+   GstM3U8 *current;
+   guint update_failed_count;
+   gint sequence;                /* the next sequence for this client */
+-  GMutex *lock;
++  GStaticRecMutex *lock;
+ };
+ 
+ 

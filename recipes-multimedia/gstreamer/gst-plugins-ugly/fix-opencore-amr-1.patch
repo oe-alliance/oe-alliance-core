@@ -1,0 +1,55 @@
+Upstream-Status: Backport
+
+From 593ddf4bb9dc3c4d97bdde8d087db42147511274 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Tim-Philipp=20M=C3=BCller?= <tim.muller@collabora.co.uk>
+Date: Sat, 3 Mar 2012 16:56:13 +0000
+Subject: [PATCH 1/2] configure: get rid of non-pkg-config ways to check for
+ opencore-amr
+
+---
+ configure.ac |   22 ++++++++++------------
+ 1 file changed, 10 insertions(+), 12 deletions(-)
+
+diff --git a/configure.ac b/configure.ac
+index e5be3ed..3c2e341 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -250,12 +250,11 @@ AG_GST_CHECK_FEATURE(A52DEC, [a52dec], a52dec, [
+ dnl *** amr-nb ***
+ translit(dnm, m, l) AM_CONDITIONAL(USE_AMRNB, true)
+ AG_GST_CHECK_FEATURE(AMRNB, [amrnb library], amrnb, [
+-  PKG_CHECK_MODULES(AMRNB, opencore-amrnb, HAVE_AMRNB="yes",
+-      [ AG_GST_CHECK_LIBHEADER(AMRNB, opencore-amrnb,
+-		           Decoder_Interface_init, $LIBM,
+-		           opencore-amrnb/interf_dec.h,
+-			   AMRNB_LIBS="-lopencore-amrnb")
+-      ])
++  PKG_CHECK_MODULES(AMRNB, opencore-amrnb, [
++    HAVE_AMRNB="yes"
++  ], [
++    HAVE_AMRNB="no"
++  ])
+   AC_SUBST(AMRNB_CFLAGS)
+   AC_SUBST(AMRNB_LIBS)
+ ])
+@@ -263,12 +262,11 @@ AG_GST_CHECK_FEATURE(AMRNB, [amrnb library], amrnb, [
+ dnl *** amr-wb dec ***
+ translit(dnm, m, l) AM_CONDITIONAL(USE_AMRWB, true)
+ AG_GST_CHECK_FEATURE(AMRWB, [amrwb library], amrwbdec, [
+-  PKG_CHECK_MODULES(AMRWB, opencore-amrwb, HAVE_AMRWB="yes",
+-      [ AG_GST_CHECK_LIBHEADER(AMRWB, opencore-amrwb,
+-			   D_IF_decode, ,
+-			   opencore-amrwb/dec_if.h,
+-			   AMRWB_LIBS="-lopencore-amrwb")
+-      ])
++  PKG_CHECK_MODULES(AMRWB, opencore-amrwb, [
++    HAVE_AMRWB="yes"
++  ], [
++    HAVE_AMRWB="no"
++  ])
+   AC_SUBST(AMRWB_CFLAGS)
+   AC_SUBST(AMRWB_LIBS)
+ ])
+-- 
+1.7.9.5
+

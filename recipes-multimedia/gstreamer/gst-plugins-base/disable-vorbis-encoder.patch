@@ -1,0 +1,54 @@
+--- a/configure.ac	2012-08-25 00:33:07.000000000 +0200
++++ b/configure.ac	2012-08-25 00:34:12.730232665 +0200
+@@ -806,7 +806,7 @@
+ dnl AM_PATH_VORBIS only takes two options
+ translit(dnm, m, l) AM_CONDITIONAL(USE_VORBIS, true)
+ AG_GST_CHECK_FEATURE(VORBIS, [Xiph Vorbis audio codec], vorbis, [
+-  AG_GST_PKG_CHECK_MODULES(VORBIS, vorbis >= 1.0 vorbisenc >= 1.0)
++  AG_GST_PKG_CHECK_MODULES(VORBIS, vorbis >= 1.0)
+   if test $HAVE_VORBIS = no
+   then
+     XIPH_PATH_VORBIS(HAVE_VORBIS="yes", HAVE_VORBIS="no")
+--- a/ext/vorbis/gstvorbis.c	2012-08-25 00:34:05.086232463 +0200
++++ b/ext/vorbis/gstvorbis.c	2012-08-25 00:33:32.000000000 +0200
+@@ -36,10 +36,6 @@
+ static gboolean
+ plugin_init (GstPlugin * plugin)
+ {
+-  if (!gst_element_register (plugin, "vorbisenc", GST_RANK_PRIMARY,
+-          GST_TYPE_VORBISENC))
+-    return FALSE;
+-
+   if (!gst_element_register (plugin, "vorbisdec", GST_RANK_PRIMARY,
+           gst_vorbis_dec_get_type ()))
+     return FALSE;
+@@ -52,8 +48,6 @@
+           gst_vorbis_tag_get_type ()))
+     return FALSE;
+ 
+-  GST_DEBUG_CATEGORY_INIT (vorbisenc_debug, "vorbisenc", 0,
+-      "vorbis encoding element");
+   GST_DEBUG_CATEGORY_INIT (vorbisdec_debug, "vorbisdec", 0,
+       "vorbis decoding element");
+   GST_DEBUG_CATEGORY_INIT (vorbisparse_debug, "vorbisparse", 0,
+--- a/ext/vorbis/Makefile.am	2012-08-25 00:34:05.086232463 +0200
++++ b/ext/vorbis/Makefile.am	2012-08-25 00:33:32.000000000 +0200
+@@ -6,7 +6,6 @@
+ libgstvorbis_la_SOURCES = gstvorbis.c \
+ 			  gstvorbisdec.c \
+ 			  gstvorbisdeclib.c \
+-			  gstvorbisenc.c \
+ 			  gstvorbisparse.c \
+ 			  gstvorbistag.c \
+ 			  gstvorbiscommon.c
+--- a/m4/vorbis.m4	2012-08-25 00:34:05.086232463 +0200
++++ b/m4/vorbis.m4	2012-08-25 00:33:32.000000000 +0200
+@@ -26,7 +26,7 @@
+ 
+   VORBIS_LIBS="$VORBIS_LIBS -lvorbis -lm"
+   VORBISFILE_LIBS="-lvorbisfile"
+-  VORBISENC_LIBS="-lvorbisenc"
++  VORBISENC_LIBS=""
+ 
+   if test "x$vorbis_includes" != "x" ; then
+     VORBIS_CFLAGS="-I$vorbis_includes"

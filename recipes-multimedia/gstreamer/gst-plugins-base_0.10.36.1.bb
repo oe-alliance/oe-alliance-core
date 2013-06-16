@@ -1,0 +1,67 @@
+require recipes-multimedia/gstreamer/gst-plugins.inc
+
+LICENSE = "GPLv2+ & LGPLv2+"
+LIC_FILES_CHKSUM = "file://COPYING;md5=0636e73ff0215e8d672dc4c32c317bb3 \
+                    file://common/coverage/coverage-report.pl;beginline=2;endline=17;md5=622921ffad8cb18ab906c56052788a3f \
+                    file://COPYING.LIB;md5=55ca817ccb7d5b5b66355690e9abc605 \
+                    file://gst/ffmpegcolorspace/utils.c;beginline=1;endline=20;md5=9c83a200b8e597b26ca29df20fc6ecd0"
+
+DEPENDS += "${@base_contains('DISTRO_FEATURES', 'x11', 'virtual/libx11 libxv', '', d)}"
+DEPENDS += "alsa-lib freetype liboil libogg libvorbis libtheora avahi util-linux tremor orc orc-native"
+DEPENDS += "gstreamer"
+
+SRCREV = "bdb33163478fdf95938fbdca7eabad3ea920a277"
+
+PR = "r8"
+GIT_PV = ""
+
+inherit autotools pkgconfig gettext git-project
+
+SRC_URI = "git://anongit.freedesktop.org/gstreamer/${PN}"
+
+SRC_URI += " \
+	file://orc.m4-fix-location-of-orcc-when-cross-compiling.patch \
+	file://disable-vorbis-encoder.patch \
+	file://gst-plugins-base-tremor.patch \
+	file://configure.ac-fix-subparse-plugin.patch \
+	file://revert-0dfdd9186e143daa568521c4e55c9923e5cbc466.patch \
+"
+
+do_common_update() {
+	cd ${S}
+	# Make sure we have common
+	if test ! -f common/gst-autogen.sh;
+	then
+	  echo "+ Setting up common submodule"
+	  git submodule init
+	fi
+	git submodule update
+
+	# source helper functions
+	if test ! -f common/gst-autogen.sh;
+	then
+	  echo There is something wrong with your source tree.
+	  echo You are missing common/gst-autogen.sh
+	  exit 1
+	fi
+	. common/gst-autogen.sh
+	# install pre-commit hook for doing clean commits
+	if test ! \( -x .git/hooks/pre-commit -a -L .git/hooks/pre-commit \);
+	then
+	    rm -f .git/hooks/pre-commit
+	    ln -s ../../common/hooks/pre-commit.hook .git/hooks/pre-commit
+	fi
+
+	# GNU gettext automake support doesn't get along with git.
+	# https://bugzilla.gnome.org/show_bug.cgi?id=661128
+	autopoint || touch config.rpath
+	touch -t 200001010000 po/gst-plugins-base-0.10.pot
+}
+addtask common_update after do_unpack before do_patch
+
+do_configure_prepend() {
+	# This m4 file contains nastiness which conflicts with libtool 2.2.2
+	rm ${S}/m4/lib-link.m4 || true
+}
+
+require mips-only.inc

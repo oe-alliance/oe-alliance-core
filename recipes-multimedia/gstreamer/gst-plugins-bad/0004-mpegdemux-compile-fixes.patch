@@ -1,0 +1,30 @@
+diff -Naur git.org/gst/mpegdemux/gstmpegdemux.c git/gst/mpegdemux/gstmpegdemux.c
+--- git.org/gst/mpegdemux/gstmpegdemux.c	2012-08-01 19:21:08.662409533 +0200
++++ git/gst/mpegdemux/gstmpegdemux.c	2012-08-01 19:18:15.294405055 +0200
+@@ -292,7 +292,7 @@
+       if (stream->pad)
+         gst_element_remove_pad (GST_ELEMENT_CAST (demux), stream->pad);
+       if (stream->buf)
+-        free(stream->buf);
++        g_free(stream->buf);
+       if (stream->meta_buf)
+         gst_buffer_unref(stream->meta_buf);
+       g_free (stream);
+@@ -426,7 +426,7 @@
+   stream->segment_thresh = threshold;
+ 
+   if (threshold == VIDEO_SEGMENT_THRESHOLD) {
+-    stream->buf = malloc(64*1024);
++    stream->buf = g_malloc(64*1024);
+     stream->buf_pos = 0;
+     stream->meta_buf = gst_buffer_new();
+   }
+@@ -481,7 +481,7 @@
+ gst_flups_demux_send_data (GstFluPSDemux * demux, GstFluPSStream * stream,
+     GstBuffer * buf)
+ {
+-  GstFlowReturn result;
++  GstFlowReturn result = GST_FLOW_OK;
+   guint64 timestamp;
+   guint size;
+   gboolean sent = FALSE;

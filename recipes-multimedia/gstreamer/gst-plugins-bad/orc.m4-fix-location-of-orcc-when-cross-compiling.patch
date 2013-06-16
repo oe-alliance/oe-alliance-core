@@ -1,0 +1,39 @@
+From 114ec19a882192dfcb5f71bb12c811d0a3b7f324 Mon Sep 17 00:00:00 2001
+From: Andreas Oberritter <obi@opendreambox.org>
+Date: Tue, 8 May 2012 17:27:55 +0200
+Subject: [PATCH] orc.m4: fix location of orcc when cross-compiling
+
+* Prepend PKG_CONFIG_SYSROOT to orcc, so configure doesn't
+  accidentially use an incompatible version of orcc installed
+  on the build system.
+
+Signed-off-by: Andreas Oberritter <obi@opendreambox.org>
+---
+ m4/orc.m4 |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/common/m4/orc.m4 b/common/m4/orc.m4
+index 26b2459..81b111e 100644
+--- a/common/m4/orc.m4
++++ b/common/m4/orc.m4
+@@ -3,6 +3,8 @@ dnl pkg-config-based checks for Orc
+ dnl specific:
+ dnl ORC_CHECK([REQUIRED_VERSION])
+ 
++m4_pattern_allow(PKG_CONFIG_SYSROOT_DIR)
++
+ AC_DEFUN([ORC_CHECK],
+ [
+   ORC_REQ=ifelse([$1], , "0.4.6", [$1])
+@@ -24,7 +26,7 @@ AC_DEFUN([ORC_CHECK],
+       HAVE_ORC=yes
+       if test "x$ORCC" = "x" ; then
+         AC_MSG_CHECKING(for usable orcc)
+-        ORCC=`$PKG_CONFIG --variable=orcc orc-0.4`
++        ORCC=$PKG_CONFIG_SYSROOT_DIR`$PKG_CONFIG --variable=orcc orc-0.4`
+         dnl check whether the orcc found by pkg-config can be run from the build environment
+         dnl if this is not the case (e.g. when cross-compiling) fall back to orcc from PATH
+         AS_IF([$ORCC --version 1> /dev/null 2> /dev/null], [], [ORCC=`which orcc`])
+-- 
+1.7.9.5
+

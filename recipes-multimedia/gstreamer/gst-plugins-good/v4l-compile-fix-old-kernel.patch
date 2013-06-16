@@ -1,0 +1,14 @@
+diff -Naur git.org/sys/v4l2/gstv4l2object.c git/sys/v4l2/gstv4l2object.c
+--- git.org/sys/v4l2/gstv4l2object.c	2012-12-27 21:32:12.000000000 +0000
++++ git/sys/v4l2/gstv4l2object.c	2012-12-27 21:41:58.989064164 +0000
+@@ -2108,8 +2108,8 @@
+       *interlaced = FALSE;
+       break;
+     case V4L2_FIELD_INTERLACED:
+-    case V4L2_FIELD_INTERLACED_TB:
+-    case V4L2_FIELD_INTERLACED_BT:
++//    case V4L2_FIELD_INTERLACED_TB:
++//    case V4L2_FIELD_INTERLACED_BT:
+       *interlaced = TRUE;
+       break;
+     default:
