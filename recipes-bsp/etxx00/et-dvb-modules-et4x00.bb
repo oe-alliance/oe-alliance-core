@@ -1,5 +1,5 @@
 KV = "3.8.7"
-SRCDATE = "20130522"
+SRCDATE = "20130524"
 
 require et-dvb-modules.inc
 
