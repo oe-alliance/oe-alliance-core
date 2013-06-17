@@ -9,7 +9,7 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r256"
+PR = "r257"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -195,6 +195,8 @@ do_deploy_append_dm800() {
 # 	Install any packages that are only For this machines feed here, uncomment the line below and change as required
 	install -m 0644 enigma2-plugin-extensions-dflash_9.4.2-r02_all.ipk ${WORKDIR}/deploy-ipks/3rdparty
 }
+
+do_deploy_append = "${@base_contains("DISTRO_3RDPARTY", "True", "require recipes-distros/${DISTRO_NAME}/image/${DISTRO_NAME}-3rdparty-plugins.inc" , "", d)}"
 
 addtask deploy before do_build after do_install
 addtask chmod before do_build after do_package_write_ipk
