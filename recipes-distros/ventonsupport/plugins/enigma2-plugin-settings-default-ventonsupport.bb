@@ -15,7 +15,6 @@ SRC_URI = "http://code-ini.com/software/channelsettings/enigma2-plugin-settings-
 PR = "r4"
 PN = "enigma2-plugin-settings-default-ventonsupport"
 PACKAGES = "${PN}"
-PROVIDES="virtual/enigma2-settings"
 
 FILES_${PN} = "/etc/enigma2/*"
 

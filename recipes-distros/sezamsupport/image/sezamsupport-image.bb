@@ -17,7 +17,7 @@ IMAGE_INSTALL = " \
 	sezamsupport-version-info \
 	${ENIGMA2_PLUGINS} \
 	${ENIGMA2_INI_PLUGINS} \
-	${ENIGMA2_USB_DRV} \
+	${@base_contains("MACHINE", "ventonhdx", "${ENIGMA2_USB_DRV}" , "", d)} \
 	avahi-daemon \
 	dropbear \
 	early-configure \
@@ -40,7 +40,7 @@ IMAGE_INSTALL = " \
 	hddtemp \
 	busybox-cron \
 	python-gdata \
-	ushare \
+	minidlna \
 	task-base-smbfs \
 	task-base-smbfs-client \
 	mc \
@@ -51,16 +51,17 @@ ENIGMA2_PLUGINS = "\
 	enigma2-plugin-extensions-imdb \
 	enigma2-plugin-extensions-mediaplayer \
 	enigma2-plugin-extensions-cutlisteditor \
-	enigma2-plugin-extensions-foreca \
+	${@base_contains("MACHINE", "ventonhdx", "enigma2-plugin-extensions-foreca" , "", d)} \
 	enigma2-plugin-extensions-dlnabrowser \
-	enigma2-plugin-systemplugins-videotune \
+	${@base_contains("MACHINE", "ventonhdx", "enigma2-plugin-systemplugins-videotune" , "", d)} \
 	enigma2-plugin-systemplugins-softwaremanager \
 	enigma2-plugin-systemplugins-hotplug \
-	enigma2-plugin-systemplugins-3gmodemmanager \
+	${@base_contains("MACHINE", "ventonhdx", "enigma2-plugin-systemplugins-3gmodemmanager" , "", d)} \
 	enigma2-plugin-systemplugins-positionersetup \
+	${@base_contains("MACHINE", "ventonhdx", "enigma2-plugin-systemplugins-micomupgrade" , "", d)} \
 "
 ENIGMA2_INI_PLUGINS = "\
-	enigma2-plugin-picons-default-ventonsupport \
+	${@base_contains("MACHINE", "ventonhdx", "enigma2-plugin-picons-default-ventonsupport" , "", d)} \
 	enigma2-plugin-extensions-inimytube \
 "
 

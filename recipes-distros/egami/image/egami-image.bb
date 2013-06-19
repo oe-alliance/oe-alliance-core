@@ -15,9 +15,7 @@ IMAGE_INSTALL = " \
 	egami-enigma2 \
 	egami-bootlogo \
 	egami-version-info \
-	${ENIGMA2_PLUGINS} \
-	${ENIGMA2_INI_PLUGINS} \
-	${ENIGMA2_USB_DRV} \
+	${@base_contains("MACHINE", "ventonhdx", "${ENIGMA2_USB_DRV}" , "", d)} \
 	avahi-daemon \
 	dropbear \
 	early-configure \
@@ -40,35 +38,13 @@ IMAGE_INSTALL = " \
 	hddtemp \
 	busybox-cron \
 	python-gdata \
-	ushare \
+	${@base_contains("MACHINE", "ventonhdx", "minidlna" , "", d)} \
 	task-base-smbfs \
 	task-base-smbfs-client \
 	mc \
 	egami-base-files \
+	${@base_contains("MACHINE", "ventonhdx", "vuplus-opera-browser-util" , "", d)} \
 	"
-
-ENIGMA2_PLUGINS = "\
-	enigma2-plugin-extensions-epgsearch \
-	enigma2-plugin-extensions-imdb \
-	enigma2-plugin-extensions-mediaplayer \
-	enigma2-plugin-extensions-cutlisteditor \
-	enigma2-plugin-extensions-dlnabrowser \
-	enigma2-plugin-extensions-foreca \
-	enigma2-plugin-extensions-imdb \
-	enigma2-plugin-systemplugins-videotune \
-	enigma2-plugin-systemplugins-softwaremanager \
-	enigma2-plugin-systemplugins-hotplug \
-	enigma2-plugin-systemplugins-crossepg \
-	enigma2-plugin-systemplugins-3gmodemmanager \
-	enigma2-plugin-systemplugins-positionersetup \
-"
-
-ENIGMA2_INI_PLUGINS = "\
-	enigma2-plugin-picons-default-ventonsupport \
-	enigma2-plugin-extensions-inimytube \
-	enigma2-plugin-extensions-egamipermanentclock \
-	enigma2-plugin-extensions-egamiboot \
-"
 
 ENIGMA2_USB_DRV = "\
 	enigma2-plugin-drivers-dvb-usb-af9035 \

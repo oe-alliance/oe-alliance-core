@@ -18,8 +18,6 @@ PR = "r12"
 PN = "enigma2-plugin-picons-default-ventonsupport"
 PACKAGES = "${PN}"
 
-PROVIDES="virtual/enigma2-settings"
-
 FILES_${PN} = "/picon/*"
 
 S="${WORKDIR}/picon"
