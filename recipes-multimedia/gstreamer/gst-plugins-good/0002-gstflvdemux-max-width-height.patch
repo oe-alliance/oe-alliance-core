@@ -1,0 +1,16 @@
+--- a/gst/flv/gstflvdemux.c	2013-06-20 13:47:55.000000000 +0300
++++ b/gst/flv/gstflvdemux.c	2013-06-20 16:06:11.595680721 +0300
+@@ -1122,11 +1122,11 @@
+   gst_caps_set_simple (caps, "pixel-aspect-ratio", GST_TYPE_FRACTION,
+       demux->par_x, demux->par_y, NULL);
+ 
+-  if (G_LIKELY (demux->w)) {
++  if (G_LIKELY (demux->w) && demux->w <= 1920) {
+     gst_caps_set_simple (caps, "width", G_TYPE_INT, demux->w, NULL);
+   }
+ 
+-  if (G_LIKELY (demux->h)) {
++  if (G_LIKELY (demux->h) && demux->h <= 1080) {
+     gst_caps_set_simple (caps, "height", G_TYPE_INT, demux->h, NULL);
+   }
+ 
