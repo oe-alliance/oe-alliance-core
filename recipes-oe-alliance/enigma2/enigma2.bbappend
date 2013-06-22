@@ -1,6 +1,6 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
-PRINC = "61"
+PRINC = "62"
 
 DEPENDS = " \
 	ethtool \
@@ -64,11 +64,9 @@ SRC_URI = "${ENIGMA2_URI}"
 SRC_URI_append_azboxhd = " \
 			file://azboxe2.patch \
  			file://lcdchar.patch \
- 			file://vfdskin.patch \
 			"
 SRC_URI_append_azboxme = " \
  			file://azboxe2.patch \
- 			file://vfdskin.patch \
 			"
 
 SRC_URI_append_azboxminime = " \
