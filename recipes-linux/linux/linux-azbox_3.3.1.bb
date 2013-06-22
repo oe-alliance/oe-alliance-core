@@ -10,6 +10,13 @@ DEPENDS_azboxminime = "genromfs-native azbox-minime-packer"
 
 KV = "3.3.1"
 
+# By default, kernel.bbclass modifies package names to allow multiple kernels
+# to be installed in parallel. We revert this change and rprovide the versioned
+# package names instead, to allow only one kernel to be installed.
+PKG_kernel-base = "kernel-base"
+PKG_kernel-image = "kernel-image"
+RPROVIDES_kernel-base = "kernel-${KERNEL_VERSION}"
+RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
 SRC_URI += "http://azbox-enigma2-project.googlecode.com/files/linux-azbox-${KV}-new-2.tar.bz2;name=azbox-kernel \
 	   file://defconfig \
 	   file://genzbf.c \
@@ -43,10 +50,10 @@ export OS = "Linux"
 KERNEL_OBJECT_SUFFIX = "ko"
 KERNEL_OUTPUT = "zbimage-linux-xload"
 KERNEL_IMAGETYPE = "zbimage-linux-xload"
-KERNEL_IMAGEDEST = "/tmp"
+KERNEL_IMAGEDEST = "/boot"
 
 
-FILES_kernel-image = "/boot/zbimage-linux-xload"
+FILES_kernel-image = "/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}*"
 
 CFLAGS_prepend = "-I${WORKDIR} "
 
@@ -58,7 +65,7 @@ do_configure_prepend() {
 kernel_do_compile() {
 	gcc ${CFLAGS} ${WORKDIR}/genzbf.c -o ${WORKDIR}/genzbf
 	
-	install -m 0755 ${WORKDIR}/genzbf ${S}/arch/mips/boot/
+	install -m 0755 ${WORKDIR}/genzbf ${S}/arch/mips/${KERNEL_IMAGEDEST}/
 
 	unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS MACHINE
 	oe_runmake include/linux/version.h CC="${KERNEL_CC}" LD="${KERNEL_LD}"
@@ -67,7 +74,7 @@ kernel_do_compile() {
 }
 
 do_install_append () {
-	install -d ${D}/boot
-	install -m 0644 ${S}/arch/mips/boot/zbimage-linux-xload ${D}/boot/zbimage-linux-xload
+	install -d ${D}/${KERNEL_IMAGEDEST}
+	install -m 0644 ${S}/arch/mips/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE} ${D}/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}
 
 }
