@@ -4,7 +4,7 @@ LICENSE = "CLOSED"
 PROVIDES += "virtual/bootloader"
 RPROVIDES_${PN} += "dreambox-secondstage"
 PRIORITY = "required"
-INC_PR = "r19"
+INC_PR = "r20"
 
 do_install() {
 	install -d ${D}/tmp
@@ -14,8 +14,8 @@ do_install() {
 	--sector-size ${DREAMBOX_SECTOR_SIZE} \
 	--boot-partition=${DREAMBOX_PART0_SIZE}:secondstage-${MACHINE}-${PV}.bin \
 	> ${D}/tmp/secondstage-${MACHINE}.bin
-	install -d ${DEPLOYDIR}
-	install -m 0644 secondstage-${MACHINE}-${PV}.bin ${DEPLOYDIR}/secondstage-${MACHINE}.bin
+	install -d ${DEPLOY_DIR_IMAGE}
+	install -m 0644 ${S}/secondstage-${MACHINE}-${PV}.bin ${DEPLOY_DIR_IMAGE}/secondstage-${MACHINE}.bin
 }
 
 PACKAGES = "${PN} ${PN}-bin"
