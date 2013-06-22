@@ -1,0 +1,89 @@
+From d2e683c96d1c662810aa5e8de4712b094747c068 Mon Sep 17 00:00:00 2001
+From: ims <ims21@users.sourceforge.net>
+Date: Sun, 6 Jan 2013 23:36:15 +0100
+Subject: [PATCH] dvbaudiosink: Only ask pts from the driver when we've written data to the driver
+
+---
+ src/gstdvbaudiosink.c |   33 ++++++++++++++++++++++++---------
+ src/gstdvbaudiosink.h |    2 ++
+ 2 files changed, 26 insertions(+), 9 deletions(-)
+
+diff --git a/src/gstdvbaudiosink.c b/src/gstdvbaudiosink.c
+index 6d8dcc4..49d33c1 100644
+--- a/src/gstdvbaudiosink.c
++++ b/src/gstdvbaudiosink.c
+@@ -325,6 +325,7 @@ gst_dvbaudiosink_init (GstDVBAudioSink *klass, GstDVBAudioSinkClass * gclass)
+ 	klass->fd = -1;
+ 	klass->dump_fd = -1;
+ 	klass->dump_filename = NULL;
++	klass->data_written = FALSE;
+ 
+ 	gst_base_sink_set_sync (GST_BASE_SINK(klass), FALSE);
+ 	gst_base_sink_set_async_enabled (GST_BASE_SINK(klass), TRUE);
+@@ -435,17 +436,27 @@ gst_dvbaudiosink_get_decoder_time (GstDVBAudioSink *self)
+ {
+ 	if (self->bypass != -1) {
+ 		gint64 cur = 0;
+-		static gint64 last_pos = 0;
++		static gint64 last_pos = 0;
+ 
+-		ioctl(self->fd, AUDIO_GET_PTS, &cur);
+-
+-		/* workaround until driver fixed */
+-		if (cur)
+-			last_pos = cur;
++		// Only ask pts from the driver when we've written data to the driver
++		if (self->data_written)
++		{
++			ioctl(self->fd, AUDIO_GET_PTS, &cur);
++			if (cur)
++			{
++				last_pos = cur;
++			}
++			else
++			{
++				cur = last_pos;
++			}
++			cur *= 11111;
++		}
+ 		else
+-			cur = last_pos;
+-
+-		cur *= 11111;
++		{
++			last_pos = 0;
++			cur = 0;
++		}
+ 
+ 		return cur;
+ 	}
+@@ -1044,9 +1055,13 @@ next_chunk:
+ 	if (!self->temp_buffer || self->temp_bytes == self->block_align) {
+ 		ASYNC_WRITE(pes_header, pes_header_size);
+ 		if (!self->temp_buffer)
++		{
+ 			ASYNC_WRITE(data, size);
++			self->data_written = TRUE;
++		}
+ 		else {
+ 			ASYNC_WRITE(GST_BUFFER_DATA(self->temp_buffer), GST_BUFFER_SIZE(self->temp_buffer));
++			self->data_written = TRUE;
+ 			self->temp_bytes = 0;
+ 			if (self->bypass == 0xf) {
+ 				self->timestamp += 30*1000000; // always 30ms per chunk
+diff --git a/src/gstdvbaudiosink.h b/src/gstdvbaudiosink.h
+index bbe4551..61c9820 100644
+--- a/src/gstdvbaudiosink.h
++++ b/src/gstdvbaudiosink.h
+@@ -102,6 +102,8 @@ struct _GstDVBAudioSink
+ 	queue_entry_t *queue;
+ 
+ 	GstClockTime timestamp;
++
++	gboolean data_written;
+ };
+ 
+ struct _GstDVBAudioSinkClass
+-- 
+1.7.4.1
+

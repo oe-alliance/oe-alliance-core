@@ -12,7 +12,7 @@ DEPENDS += "gstreamer"
 
 SRCREV = "bdb33163478fdf95938fbdca7eabad3ea920a277"
 
-PR = "r8"
+PR = "r9"
 GIT_PV = ""
 
 inherit autotools pkgconfig gettext git-project
@@ -24,7 +24,7 @@ SRC_URI += " \
 	file://disable-vorbis-encoder.patch \
 	file://gst-plugins-base-tremor.patch \
 	file://configure.ac-fix-subparse-plugin.patch \
-	file://revert-0dfdd9186e143daa568521c4e55c9923e5cbc466.patch \
+	${@base_contains('MACHINE_BRAND', 'Dreambox', '', 'file://revert-0dfdd9186e143daa568521c4e55c9923e5cbc466.patch', d)} \
 "
 
 do_common_update() {
