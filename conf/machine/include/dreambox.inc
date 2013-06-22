@@ -21,7 +21,7 @@ MACHINE_EXTRA_RRECOMMENDS = " \
 	tpmd \
 	"
 	
-MACHINE_EXTRA_RRECOMMENDS_dm800se_append = " \
+MACHINE_EXTRA_RRECOMMENDS_append_dm800se = " \
 	kernel-module-fuse \
 	kernel-module-nfsd \
 	kernel-module-exportfs \
