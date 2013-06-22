@@ -1,7 +1,7 @@
 DESCRIPTION = "Linux kernel for ${MACHINE}"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${KV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
-MACHINE_KERNEL_PR_append = ".10"
+MACHINE_KERNEL_PR_append = ".11"
 
 DEPENDS = "genromfs-native"
 DEPENDS_azboxhd = "genromfs-native azbox-hd-buildimage"
@@ -11,7 +11,7 @@ DEPENDS_azboxminime = "genromfs-native azbox-minime-packer"
 KV = "3.3.1"
 
 SRC_URI += "http://azbox-enigma2-project.googlecode.com/files/linux-azbox-${KV}-new-2.tar.bz2;name=azbox-kernel \
-	   file://${MACHINE}_defconfig \
+	   file://defconfig \
 	   file://genzbf.c \
 	   file://sigblock.h \
 	   file://zboot.h \
