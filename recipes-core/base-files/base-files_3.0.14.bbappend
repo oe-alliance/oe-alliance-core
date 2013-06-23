@@ -1,4 +1,5 @@
-PRINC = "3"
+PRINC = "5"
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/${DISTRO_NAME}:"
+FILESEXTRAPATHS_prepend_azboxhd := "${THISDIR}/${MACHINE}:"
 
