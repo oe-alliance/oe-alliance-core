@@ -5,13 +5,14 @@ LICENSE = "CLOSED"
 
 KV = "3.3.1-opensat"
 
-SRCDATE = "14052013"
+SRCDATE = "20130514"
+SRCGET = "14052013"
 
 PV = "${KV}+${SRCDATE}"
 PR = "r1"
 
 
-SRC_URI = "http://azbox-enigma2-project.googlecode.com/files/${MACHINE}-dvb-modules-${KV}-oe-core-${SRCDATE}.tar.gz;name=azbox-dvb-modules-${MACHINE}"
+SRC_URI = "http://azbox-enigma2-project.googlecode.com/files/${MACHINE}-dvb-modules-${KV}-oe-core-${SRCGET}.tar.gz;name=azbox-dvb-modules-${MACHINE}"
 
 SRC_URI[azbox-dvb-modules-azboxhd.md5sum] = "cb3b81f2d1a8327e2290345645c58d46"
 SRC_URI[azbox-dvb-modules-azboxhd.sha256sum] = "e085c1384abb5e80f733404d1f6652ad603928014f1f3f7c700b653b59e26fb3"
