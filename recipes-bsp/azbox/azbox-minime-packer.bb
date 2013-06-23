@@ -4,7 +4,7 @@ LICENSE = "CLOSED"
 
 PROVIDES = "azbox-minime-packer"
 
-PV="1.3"
+PV="1.4"
 SRC_URI = "file://pack_minime_image.c \
 	   file://Makefile.am \
 	   file://configure.ac"
@@ -18,3 +18,5 @@ do_configure_prepend() {
 	install -m 0644 ${WORKDIR}/configure.ac ${S}
 	install -m 0644 ${WORKDIR}/Makefile.am ${S}
 }
+
+BBCLASSEXTEND = "native"

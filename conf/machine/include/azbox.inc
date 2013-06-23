@@ -1,0 +1,46 @@
+MACHINE_BRAND = "AZBOX"
+
+MACHINE_ESSENTIAL_EXTRA_RDEPENDS += " \
+	azbox-dvb-modules \				 
+	"
+
+DVBPROVIDER = "kernel"
+
+MACHINE_EXTRA_RRECOMMENDS += " \
+	gst-plugin-dvbmediasink \			
+	azbox-mrua \
+	azbox-compat \
+	"
+
+DVBMEDIASINK_CONFIG = "--with-wma --with-wmv --with-pcm"
+
+MACHINE_FEATURES += "kernel26 alsa usbhost wifi nl80211 3dtv switchoff lpcm textlcd 32bpp hdtv dvbapi5 dvb-c blindscan-dvbs"
+
+MACHINE_KERNEL_PR = "r4"
+
+PREFERRED_VERSION_linux-azbox = "3.3.1"
+PREFERRED_VERSION_linux-libc-headers = "3.3"
+
+GLIBC_EXTRA_OECONF = "--with-tls --with-__thread"
+
+PREFERRED_PROVIDER_virtual/kernel = "linux-azbox"
+PREFERRED_PROVIDER_virtual/blindscan-dvbs = "azbox-blindscan-dvbs-utils"
+
+require conf/machine/include/tune-mips32.inc
+include conf/machine/include/autoload-filesystems.inc
+
+SYSVINIT_ENABLED_GETTYS = ""
+
+EXTRA_IMAGEDEPENDS += " \
+	enigma2-plugin-systemplugins-rtisys \
+	enigma2-plugin-systemplugins-videosettingssetup \
+	enigma2-plugin-extensions-azplay \
+	enigma2-plugin-extensions-aziptv \
+	"
+
+MACHINE_EXTRA_RDEPENDS = " \
+	enigma2-plugin-systemplugins-rtisys \
+	enigma2-plugin-systemplugins-videosettingssetup \
+	enigma2-plugin-extensions-azplay \
+	enigma2-plugin-extensions-aziptv \
+	"
