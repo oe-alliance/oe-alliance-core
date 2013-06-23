@@ -50,22 +50,22 @@ export OS = "Linux"
 KERNEL_OBJECT_SUFFIX = "ko"
 KERNEL_OUTPUT = "zbimage-linux-xload"
 KERNEL_IMAGETYPE = "zbimage-linux-xload"
-KERNEL_IMAGEDEST = "/boot"
+KERNEL_IMAGEDEST = "/tmp"
 
 
-FILES_kernel-image = "/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}*"
+FILES_kernel-image = "/boot/zbimage-linux-xload"
 
 CFLAGS_prepend = "-I${WORKDIR} "
 
 do_configure_prepend() {
-	oe_machinstall -m 0644 ${WORKDIR}/${MACHINE}_defconfig ${S}/.config
+	oe_machinstall -m 0644 ${WORKDIR}/defconfig ${S}/.config
 	oe_runmake oldconfig
 }
 
 kernel_do_compile() {
 	gcc ${CFLAGS} ${WORKDIR}/genzbf.c -o ${WORKDIR}/genzbf
 	
-	install -m 0755 ${WORKDIR}/genzbf ${S}/arch/mips/${KERNEL_IMAGEDEST}/
+	install -m 0755 ${WORKDIR}/genzbf ${S}/arch/mips/boot/
 
 	unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS MACHINE
 	oe_runmake include/linux/version.h CC="${KERNEL_CC}" LD="${KERNEL_LD}"
@@ -74,7 +74,7 @@ kernel_do_compile() {
 }
 
 do_install_append () {
-	install -d ${D}/${KERNEL_IMAGEDEST}
-	install -m 0644 ${S}/arch/mips/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE} ${D}/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}
+	install -d ${D}/boot
+	install -m 0644 ${S}/arch/mips/boot/zbimage-linux-xload ${D}/boot/zbimage-linux-xload
 
 }
