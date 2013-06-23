@@ -1,0 +1,11 @@
+diff -Naur a/drivers/ide/tango2-bmide.c b/drivers/ide/tango2-bmide.c
+--- a/drivers/ide/tango2-bmide.c	2012-12-03 04:03:01.000000000 +0100
++++ b/drivers/ide/tango2-bmide.c	2013-04-01 17:23:11.000000000 +0200
+@@ -893,6 +893,7 @@
+ 	.dma_start		= tango2_bmide_dma_start,
+ 	.dma_end		= tango2_bmide_dma_end,
+ 	.dma_test_irq		= tango2_bmide_dma_test_irq,
++	.dma_timer_expiry		= ide_dma_sff_timer_expiry,
+ 	.dma_sff_read_status	= tango2_bmide_dma_sff_read_status,
+ 	};
+ 

@@ -1,14 +1,15 @@
 DESCRIPTION = "Linux kernel for ${MACHINE}"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${KV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
-MACHINE_KERNEL_PR_append = ".11"
+MACHINE_KERNEL_PR_append = ".12"
 
-DEPENDS = "genromfs-native"
-DEPENDS_azboxhd = "genromfs-native azbox-hd-buildimage"
-DEPENDS_azboxminime = "genromfs-native azbox-minime-packer"
+DEPENDS = "genromfs-native gcc"
+DEPENDS_azboxhd = "genromfs-native azbox-hd-buildimage gcc "
+DEPENDS_azboxminime = "genromfs-native azbox-minime-packer gcc"
 
 
 KV = "3.3.1"
+SRCDATE = "14052013"
 
 # By default, kernel.bbclass modifies package names to allow multiple kernels
 # to be installed in parallel. We revert this change and rprovide the versioned
@@ -26,21 +27,23 @@ SRC_URI += "http://azbox-enigma2-project.googlecode.com/files/linux-azbox-${KV}-
 	   file://sata.patch \
 	   "
 
-SRC_URI_append_azboxhd = "http://azbox-enigma2-project.googlecode.com/files/initramfs-${MACHINE}-15032013.tar.bz2;name=azbox-initrd-${MACHINE}"
+SRC_URI_append_azboxhd += "http://azbox-enigma2-project.googlecode.com/files/initramfs-${MACHINE}-oe-core-${SRCDATE}.tar.bz2;name=azbox-initrd-${MACHINE} \
+	   file://hdide.patch \
+	   "
 
-SRC_URI_append_azboxme = "http://azbox-enigma2-project.googlecode.com/files/initramfs-${MACHINE}-15032013.tar.bz2;name=azbox-initrd-${MACHINE}"
+SRC_URI_append_azboxme = "http://azbox-enigma2-project.googlecode.com/files/initramfs-${MACHINE}-oe-core-${SRCDATE}.tar.bz2;name=azbox-initrd-${MACHINE}"
 
-SRC_URI_append_azboxminime = "http://azbox-enigma2-project.googlecode.com/files/initramfs-${MACHINE}-15032013.tar.bz2;name=azbox-initrd-${MACHINE}"
+SRC_URI_append_azboxminime = "http://azbox-enigma2-project.googlecode.com/files/initramfs-${MACHINE}-oe-core-${SRCDATE}.tar.bz2;name=azbox-initrd-${MACHINE}"
 
 
 SRC_URI[azbox-kernel.md5sum] = "dfd04abeaf3741b3d2a44428ca5aeaa1"
 SRC_URI[azbox-kernel.sha256sum] = "31b73397220d85aedf3c914026371fc1eeac67e3de09a5610b70b209d2a8b9df"
-SRC_URI[azbox-initrd-azboxhd.md5sum] = "a0a198ee1cfb9279fb92f5c065f00cdc"
-SRC_URI[azbox-initrd-azboxhd.sha256sum] = "57fae25c41af7da6ad76ce38629dd42c36678d72697fadbe46d61b9c92de3e9d"
-SRC_URI[azbox-initrd-azboxme.md5sum] = "2fc504475612122aba41c1a21fea8e8b"
-SRC_URI[azbox-initrd-azboxme.sha256sum] = "4b85431c5773fdfec728d1f71e2ab070cd89c884b02498ad4c97dfaef5b66f0b"
-SRC_URI[azbox-initrd-azboxminime.md5sum] = "eb39ce5f39755ce1c2d350e617ab7ce7"
-SRC_URI[azbox-initrd-azboxminime.sha256sum] = "f96344068c37112d76f8ddd8bef53f2d9927492d93481f75e8234d54e77bc185"
+SRC_URI[azbox-initrd-azboxhd.md5sum] = "1c788f63ec2397064b70cf542888389a"
+SRC_URI[azbox-initrd-azboxhd.sha256sum] = "f5804ec6226fe9f2ba543aa1dcc457d134928eceb5e5e247bcdeeb61b1cc7cf9"
+SRC_URI[azbox-initrd-azboxme.md5sum] = "6b49d5de3533eb73d753b353eb8e0121"
+SRC_URI[azbox-initrd-azboxme.sha256sum] = "09d63650d18337a2b8a8ba7c9d33d2a1b939152f25990e3bfc3166eb5c1c4040"
+SRC_URI[azbox-initrd-azboxminime.md5sum] = "f9686a2373d3966f531ab783e41a2d80"
+SRC_URI[azbox-initrd-azboxminime.sha256sum] = "122a9f7e8b368b47e74eb8451d2dd856bed80dbe7e23c35cca63cb95dded891d"
 
 S = "${WORKDIR}/linux-${KV}"
 
