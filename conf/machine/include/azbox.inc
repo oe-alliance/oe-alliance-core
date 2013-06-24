@@ -1,7 +1,9 @@
 MACHINE_BRAND = "AZBOX"
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS += " \
-	azbox-dvb-modules \				 
+	azbox-dvb-modules \	
+	module-init-tools-cross \
+	module-init-tools \		
 	"
 
 DVBPROVIDER = "kernel"
@@ -10,8 +12,6 @@ MACHINE_EXTRA_RRECOMMENDS += " \
 	gst-plugin-dvbmediasink \			
 	azbox-mrua \
 	azbox-compat \
-	module-init-tools-cross \
-	module-init-tools \	
 	"
 
 DVBMEDIASINK_CONFIG = "--with-wma --with-wmv --with-pcm"
