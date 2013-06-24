@@ -2,8 +2,6 @@ MACHINE_BRAND = "AZBOX"
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS += " \
 	azbox-dvb-modules \	
-	module-init-tools-cross \
-	module-init-tools \		
 	"
 
 DVBPROVIDER = "kernel"
@@ -38,6 +36,8 @@ EXTRA_IMAGEDEPENDS += " \
 	enigma2-plugin-systemplugins-videosettingssetup \
 	enigma2-plugin-extensions-azplay \
 	enigma2-plugin-extensions-aziptv \
+	module-init-tools-cross \
+	module-init-tools \	
 	"
 
 MACHINE_EXTRA_RDEPENDS = " \
