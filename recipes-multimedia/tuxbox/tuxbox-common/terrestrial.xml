@@ -378,6 +378,7 @@
         <transponder centre_frequency="177500000" bandwidth="1" constellation="2" code_rate_hp="6" code_rate_lp="6" guard_interval="0" transmission_mode="1" hierarchy_information="0" inversion="2" />
         <transponder centre_frequency="186000000" bandwidth="1" constellation="2" code_rate_hp="6" code_rate_lp="6" guard_interval="0" transmission_mode="1" hierarchy_information="0" inversion="2" />
         <transponder centre_frequency="194500000" bandwidth="1" constellation="2" code_rate_hp="6" code_rate_lp="6" guard_interval="0" transmission_mode="1" hierarchy_information="0" inversion="2" />
+		<transponder centre_frequency="198500000" bandwidth="1" constellation="2" code_rate_hp="6" code_rate_lp="6" guard_interval="0" transmission_mode="1" hierarchy_information="0" inversion="2" />
         <transponder centre_frequency="203500000" bandwidth="1" constellation="2" code_rate_hp="6" code_rate_lp="6" guard_interval="0" transmission_mode="1" hierarchy_information="0" inversion="2" />
 	<transponder centre_frequency="205500000" bandwidth="1" constellation="2" code_rate_hp="6" code_rate_lp="6" guard_interval="0" transmission_mode="1" hierarchy_information="0" inversion="2" />
         <transponder centre_frequency="212500000" bandwidth="1" constellation="2" code_rate_hp="6" code_rate_lp="6" guard_interval="0" transmission_mode="1" hierarchy_information="0" inversion="2" />
