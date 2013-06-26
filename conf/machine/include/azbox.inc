@@ -1,18 +1,18 @@
 MACHINE_BRAND = "AZBOX"
 
-MACHINE_ESSENTIAL_EXTRA_RDEPENDS += " \
+MACHINE_ESSENTIAL_EXTRA_RDEPENDS = " \
 	azbox-dvb-modules \	
 	"
 
 DVBPROVIDER = "kernel"
 
-MACHINE_EXTRA_RRECOMMENDS += " \
+MACHINE_EXTRA_RRECOMMENDS = " \
 	gst-plugin-dvbmediasink \			
 	azbox-mrua \
 	azbox-compat \
 	"
 
-DVBMEDIASINK_CONFIG = "--with-wma --with-wmv --with-pcm"
+DVBMEDIASINK_CONFIG = "--with-wma --with-wmv --with-pcm --with-dtsdownmix"
 
 MACHINE_FEATURES += " kernel26 alsa usbhost wifi nl80211 3dtv switchoff lpcm textlcd 32bpp hdtv dvbapi5 dvb-c blindscan-dvbs"
 
