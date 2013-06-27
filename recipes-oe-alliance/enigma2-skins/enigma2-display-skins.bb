@@ -12,7 +12,7 @@ PACKAGE_ARCH := "${MACHINE_ARCH}"
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r4"
+PR = "r5"
 
 SRC_URI = "git://github.com/oe-alliance/enigma2-display-skins.git;protocol=git file://skinsnotwanted"
 
@@ -31,6 +31,7 @@ EXTRA_OECONF += "\
 	${@base_contains("MACHINE_FEATURES", "colorlcd", "--with-colorlcd" , "", d)} \
 	${@base_contains("MACHINE_FEATURES", "colorlcd128", "--with-colorlcd128" , "", d)} \
 	${@base_contains("MACHINE_FEATURES", "colorlcd220", "--with-colorlcd220" , "", d)} \
+	${@base_contains("MACHINE_FEATURES", "bwlcd140", "--with-bwlcd140" , "", d)} \
 	${@base_contains("MACHINE_FEATURES", "bwlcd255", "--with-bwlcd255" , "", d)} \
 	"
 
