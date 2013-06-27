@@ -5,7 +5,7 @@ KV = "3.3.8"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 SRCREV = ""
-MACHINE_KERNEL_PR_append = ".2"
+MACHINE_KERNEL_PR_append = ".3"
 
 SRC_URI[md5sum] = "bfd424a21d3daeb3a100bf8e7443d302"
 SRC_URI[sha256sum] = "f8a482de06251761d792ff7ea7fcb73eca4139e5cb80c3b38e39d1c4ef3a35c9"
@@ -21,8 +21,8 @@ SRC_URI = "http://archive.vuplus.com/download/kernel/stblinux-3.3.6-2.0.tar.bz2 
 	file://defconfig \
 	"
 
-SRC_URI_vuduo2 += "file://remove_genet1.patch \
-	file://nand_base.patch \
+SRC_URI_vuduo2 += "file://remove_genet1.patch;patch=1;pnum=1 \
+	file://nand_base.patch;patch=1;pnum=1 \
 	"
 
 SRC_URI += "file://dvb-usb-af9035.patch \
