@@ -4,7 +4,7 @@ SECTION = "kernel"
 KV = "3.6.11"
 
 SRCDATE = "0623"
-MACHINE_KERNEL_PR_append = ".6"
+MACHINE_KERNEL_PR_append = ".7"
 
 SRC_URI[md5sum] = "7e8e796b179efbb681c4aa579d7bb203"
 SRC_URI[sha256sum] = "acdccd09069191bea6a6cef3c6bc40c7f824c394625a060e340df2b63270a7a9"
@@ -36,7 +36,6 @@ SRC_URI = "http://archiv.mixos-support.com/${MACHINE}-linux-${KV}_${SRCDATE}.tar
 	file://linux-3.6.0-dvbsky.patch \
 	file://mxl5007t-add-no_probe-and-no_reset-parameters.patch \
 	file://nfs-max-rwsize-8k.patch \
-	file://0001-ntfs-bugfix.patch \
 	"
 
 S = "${WORKDIR}/linux-${KV}"
