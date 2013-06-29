@@ -13,7 +13,7 @@ inherit gitpkgv
 
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r31"
+PR = "r32"
 
 SRC_URI = "${ENIGMA2_PLUGINS_URI} file://pluginnotwanted"
 
@@ -47,6 +47,7 @@ EXTRA_OECONF = " \
 	--with-po \
 	--with-boxtype=${MACHINE} \
 	${@base_contains("MACHINE_FEATURES", "tpm", "--with-tpm" , "", d)} \
+	${@base_contains("DISTRO_FEATURES", "pli", "--with-pli" , "", d)} \	
 "
 
 RREPLACES_enigma2-plugin-skincomponents-eventlist = "enigma2-plugin-components-eventlist"
