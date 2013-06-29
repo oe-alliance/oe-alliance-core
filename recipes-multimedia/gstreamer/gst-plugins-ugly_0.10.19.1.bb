@@ -8,7 +8,7 @@ DEPENDS += "gst-plugins-base libid3tag libmad mpeg2dec liba52 lame libcdio openc
 
 EXTRA_OECONF += "--enable-orc"
 
-PR = "r3"
+PR = "r4"
 GIT_PV = ""
 
 SRCREV = "9afc696e5fa9fb980e02df5637f022796763216f"
@@ -56,6 +56,8 @@ addtask common_update after do_unpack before do_patch
 do_configure_prepend() {
 	# This m4 file contains nastiness which conflicts with libtool 2.2.2
 	rm ${S}/m4/lib-link.m4 || true
+	# manually provide remove-potcdate.sin, while our intltoolize does not install it
+	cp ${STAGING_DATADIR_NATIVE}/gettext/po/remove-potcdate.sin ${S}/po/
 }
 
 require mips-only.inc

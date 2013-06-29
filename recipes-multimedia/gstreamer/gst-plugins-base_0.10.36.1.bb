@@ -12,7 +12,7 @@ DEPENDS += "gstreamer"
 
 SRCREV = "bdb33163478fdf95938fbdca7eabad3ea920a277"
 
-PR = "r9"
+PR = "r10"
 GIT_PV = ""
 
 inherit autotools pkgconfig gettext git-project
@@ -62,6 +62,8 @@ addtask common_update after do_unpack before do_patch
 do_configure_prepend() {
 	# This m4 file contains nastiness which conflicts with libtool 2.2.2
 	rm ${S}/m4/lib-link.m4 || true
+	# manually provide remove-potcdate.sin, while our intltoolize does not install it
+	cp ${STAGING_DATADIR_NATIVE}/gettext/po/remove-potcdate.sin ${S}/po/
 }
 
 require mips-only.inc

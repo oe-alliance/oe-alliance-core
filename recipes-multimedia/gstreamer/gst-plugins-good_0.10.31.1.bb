@@ -8,7 +8,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=a6f89e2100d9b6cdffcea4f398e37343 \
 DEPENDS += "cdparanoia cairo jpeg libpng zlib libid3tag flac speex libsoup-2.4"
 DEPENDS += "gst-plugins-base"
 
-PR = "r4"
+PR = "r5"
 GIT_PV = ""
 
 SRCREV = "7768342230450559509e3e593b2ea33e81ea0ca4"
@@ -62,6 +62,8 @@ addtask common_update after do_unpack before do_patch
 do_configure_prepend() {
 	# This m4 file contains nastiness which conflicts with libtool 2.2.2
 	rm ${S}/m4/lib-link.m4 || true
+	# manually provide remove-potcdate.sin, while our intltoolize does not install it
+	cp ${STAGING_DATADIR_NATIVE}/gettext/po/remove-potcdate.sin ${S}/po/
 }
 
 require mips-only.inc
