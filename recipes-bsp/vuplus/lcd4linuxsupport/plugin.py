@@ -171,7 +171,7 @@ def lcdtimer(reason, **kwargs):
 def Plugins(**kwargs):
 	list = []
 	global lcd4linuxPluginPath
-	if os.path.exists(lcd4linuxPluginPath+"/plugin.py"):
+	if os.path.exists(lcd4linuxPluginPath+"/plugin.pyo"):
 		list.append(
 			PluginDescriptor(name="LCD4linuxSupport",
 			description="LCD4linuxSupport",
