@@ -6,12 +6,12 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 SRC_URI = "file://LCD4linux.tar.gz file://wetter.tar.gz file://duo2lcd4linux.patch;patch=1;pnum=1"
 
-DEPENDS_${PN} = "python-codecs python-datetime python-imaging python-textutils python-shell python-ctypes python-pyusb lcd4linux lcd4linuxsupport"
-RDEPENDS_${PN} = "enigma2 python-codecs python-datetime python-imaging python-textutils python-shell python-ctypes python-pyusb lcd4linux lcd4linuxsupport"
+DEPENDS = "python-codecs python-datetime python-imaging python-textutils python-shell python-ctypes python-pyusb lcd4linux lcd4linuxsupport"
+RDEPENDS = "enigma2 python-codecs python-datetime python-imaging python-textutils python-shell python-ctypes python-pyusb lcd4linux lcd4linuxsupport"
 
 S = "${WORKDIR}/LCD4linux"
 
-PR = "r8"
+PR = "r9"
 
 PLUGINPATH = "/usr/lib/enigma2/python/Plugins/Extensions/LCD4linux"
 
