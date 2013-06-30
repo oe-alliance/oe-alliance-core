@@ -8,11 +8,11 @@ require conf/license/license-gplv2.inc
 inherit gitpkgv
 
 SRCREV = "${AUTOREV}"
-PV = "4.3.1+git${SRCPV}"
-PKGV = "4.3.1+git${GITPKGV}"
+PV = "4.4.0+git${SRCPV}"
+PKGV = "4.4.0+git${GITPKGV}"
 PR = "r5"
 
-SRC_URI = "git://github.com/dhwz/MediaPortal.git;protocol=git"
+# SRC_URI = "git://github.com/dhwz/MediaPortal.git;protocol=git"
 SRC_URI = "git://github.com/HDMU/Mediaportal.git;protocol=git"
 
 S = "${WORKDIR}/git"
