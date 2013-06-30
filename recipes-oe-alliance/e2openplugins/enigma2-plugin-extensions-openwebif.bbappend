@@ -1,5 +1,5 @@
 MODULE = "OpenWebif"
-PRINC = "26"
+PRINC = "27"
 DEPENDS += "enigma2 python-pyopenssl"
 RDEPENDS_${PN} += " python-pyopenssl"
 
