@@ -9,7 +9,7 @@ SRC_URI = "file://plugin.py"
 
 S = "${WORKDIR}"
 
-PR = "r2"
+PR = "r3"
 
 PLUGINPATH = "/usr/lib/enigma2/python/Plugins/Extensions/LCD4linuxSupport"
 
