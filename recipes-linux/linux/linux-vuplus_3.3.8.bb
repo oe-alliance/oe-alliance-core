@@ -5,7 +5,7 @@ KV = "3.3.8"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 SRCREV = ""
-MACHINE_KERNEL_PR_append = ".4"
+MACHINE_KERNEL_PR_append = ".5"
 
 SRC_URI[md5sum] = "bfd424a21d3daeb3a100bf8e7443d302"
 SRC_URI[sha256sum] = "f8a482de06251761d792ff7ea7fcb73eca4139e5cb80c3b38e39d1c4ef3a35c9"
