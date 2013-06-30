@@ -1,0 +1,70 @@
+#!/bin/sh
+#
+# lcd4linux
+#
+PLUGINDIR="/usr/lib/enigma2/python/Plugins/Extensions/LCD4linux"
+DAEMON=/usr/bin/lcd4linux
+NICELEVEL="0"
+
+
+daemon_start() {
+	if [ -f $PLUGINDIR/dpf$1.conf ]; then
+		echo "Starting $DAEMON $1"
+		start-stop-daemon --start --nicelevel $NICELEVEL --quiet --pidfile /var/run/lcd4linux$1.pid --exec $DAEMON -- -q -p /var/run/lcd4linux$1.pid -f $PLUGINDIR/dpf$1.conf
+	else
+		echo $PLUGINDIR/dpf$1.conf nicht gefunden
+	fi
+}
+daemon_stop() {
+	if [ -f /var/run/lcd4linux$1.pid ]; then
+		echo "Stopping $DAEMON $1"
+		start-stop-daemon --oknodo --stop --quiet --pidfile /var/run/lcd4linux$1.pid --exec $DAEMON
+		sleep 2
+		echo "LCD::backlight(0)" | $DAEMON -i -f $PLUGINDIR/dpf$1.conf
+	fi
+}
+daemon_reload() {
+	if [ -f /var/run/lcd4linux$1.pid ]; then
+		start-stop-daemon --stop --signal 1 --quiet --pidfile /var/run/lcd4linux$1.pid --exec $DAEMON
+	fi
+}
+
+
+case "$1" in
+  start)
+		daemon_start 1
+		daemon_start 2
+	;;
+	start1)
+		daemon_start 1
+	;;
+	start2)
+		daemon_start 2
+	;;
+  stop)
+		daemon_stop 1
+		daemon_stop 2
+	;;
+  stop1)
+		daemon_stop 1
+	;;
+  stop2)
+		daemon_stop 2
+	;;
+  reload)
+		daemon_reload 1
+		daemon_reload 2
+  ;;
+  restart|force-reload)
+		daemon_stop 1
+		daemon_stop 2
+		sleep 4
+		daemon_start 1
+		daemon_start 2
+	;;
+  *)
+		echo "Usage: $0 {start|stop|restart|reload|force-reload|start1|start2|stop1|stop2}" >&2
+		exit 1
+	;;
+esac
+exit 0
