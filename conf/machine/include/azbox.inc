@@ -34,8 +34,6 @@ SYSVINIT_ENABLED_GETTYS = ""
 EXTRA_IMAGEDEPENDS += " \
 	enigma2-plugin-systemplugins-rtisys \
 	enigma2-plugin-systemplugins-videosettingssetup \
-	enigma2-plugin-extensions-azplay \
-	enigma2-plugin-extensions-aziptv \
 	module-init-tools-cross \
 	module-init-tools \	
 	"
@@ -43,6 +41,4 @@ EXTRA_IMAGEDEPENDS += " \
 MACHINE_EXTRA_RDEPENDS = " \
 	enigma2-plugin-systemplugins-rtisys \
 	enigma2-plugin-systemplugins-videosettingssetup \
-	enigma2-plugin-extensions-azplay \
-	enigma2-plugin-extensions-aziptv \
 	"
