@@ -1,5 +1,5 @@
 MODULE = "OpenWebif"
-PRINC = "25"
+PRINC = "26"
 DEPENDS += "enigma2 python-pyopenssl"
 RDEPENDS_${PN} += " python-pyopenssl"
 
@@ -14,7 +14,7 @@ S="${WORKDIR}/git"
 python do_package_prepend () {
 	boxtypes = [
 		('dm500hd', 'dm500hd.jpg', 'dm_normal.png'),
-		('dm7020hd', 'unknown.jpg', 'dm_normal.png'),
+		('dm7020hd', 'dm7020hd.jpg', 'dm_normal.png'),
 		('dm8000', 'dm8000.jpg', 'dm_normal.png'),
 		('dm800se', 'dm800se.jpg', 'dm_normal.png'),
 		('dm800', 'unknown.jpg', 'dm_normal.png'),
@@ -22,6 +22,7 @@ python do_package_prepend () {
 		('et5x00', 'et5x00.jpg', 'et_rc5_normal.png'),
 		('et6x00', 'et5x00.jpg', 'et_rc5_normal.png'),
 		('et9x00', 'et9x00.jpg', 'et_rc7_normal.png'),
+		('odinm7', 'odinm7.jpg', 'odinm7.png'),
 		('odinm9', 'odinm9.jpg', 'odinm9.png'),
 		('tmtwin', 'tmtwin.jpg', 'tm_twin.png'),
 		('tm2t', 'tm2t.jpg', 'tm_2t.png'),
@@ -43,7 +44,6 @@ python do_package_prepend () {
 		('ebox5000', 'ebox5000.jpg', 'ebox5000.png'),
 		('ebox5100', 'ebox5100.jpg', 'ebox5000.png'),		
 		('ebox7358', 'ebox7358.jpg', 'ebox5000.png'),
-		('odinm7', 'odinm7.jpg', 'odinm7.png'),
 		('ixussone', 'ixussone.jpg', 'ixussone.png'),
 		('ixusszero', 'ixusszero.jpg', 'ixusszero.png'),
 		('ixussduo', 'ixussone.jpg', 'ixussone.png'),
