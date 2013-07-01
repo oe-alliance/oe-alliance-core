@@ -3,7 +3,7 @@ SECTION = "base"
 PRIORITY = "required"
 LICENSE = "CLOSED"
 
-SRCDATE = "20130701"
+SRCDATE = "20130614"
 KV = "3.5.3"
 PV = "${KV}+${SRCDATE}"
 PR = "r1"
@@ -11,7 +11,7 @@ PR = "r1"
 RCONFLICTS_${PN} = "technomate-dvb-modules"
 RREPLACES_${PN} = "technomate-dvb-modules"
 
-SRC_URI = "http://en2.ath.cx/release/images/oedrivers/bcmlinuxdvb_7335-${KV}-${SRCDATE}.tar.gz;name=default"
+SRC_URI = "http://en2.ath.cx/release/images/oedrivers/bcmlinuxdvb_7335-${KV}-${SRCDATE}.tar.gz"
 
 S = "${WORKDIR}"
 
@@ -33,5 +33,5 @@ do_install() {
 	done
 }
 
-SRC_URI[default.md5sum] = "8352dcb94d90dfb422ace598c30bb0b4"
-SRC_URI[default.sha256sum] = "2d0edf820f9a55456623b76c128521907aeb2e7834e1e31559ac54305b5327d6"
+SRC_URI[md5sum] = "747b123884a9cc5eeaafd88a2e41a1d9"
+SRC_URI[sha256sum] = "d18f52a71ba36c3d34de8609a346992e90eae5ba0af44463652865c8234aefa8"
