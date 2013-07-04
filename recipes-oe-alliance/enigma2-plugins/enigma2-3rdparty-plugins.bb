@@ -9,7 +9,7 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r276"
+PR = "r277"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -104,6 +104,10 @@ do_deploy_append_vuduo() {
 	install -m 0644 enigma2-plugin-extensions-sdg-imagedownloader-v0.4-oe-2.0-vu-all.ipk ${WORKDIR}/deploy-ipks/3rdparty
 }
 do_deploy_append_vusolo2() {
+# 	Install any packages that are only For this machines feed here,
+	install -m 0644 enigma2-plugin-extensions-sdg-imagedownloader-v0.4-oe-2.0-vu-all.ipk ${WORKDIR}/deploy-ipks/3rdparty
+}
+do_deploy_append_duo2() {
 # 	Install any packages that are only For this machines feed here,
 	install -m 0644 enigma2-plugin-extensions-sdg-imagedownloader-v0.4-oe-2.0-vu-all.ipk ${WORKDIR}/deploy-ipks/3rdparty
 }
