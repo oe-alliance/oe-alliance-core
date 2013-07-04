@@ -12,6 +12,7 @@ include conf/machine/include/autoload-filesystems.inc
 
 MACHINE_EXTRA_RRECOMMENDS = " \
 	gst-plugin-dreambox-dvbmediasink \
+	gst-plugin-dtsdownmix \
 	ntfs-3g \
 	kernel-module-cifs \
 	kernel-module-hmac \

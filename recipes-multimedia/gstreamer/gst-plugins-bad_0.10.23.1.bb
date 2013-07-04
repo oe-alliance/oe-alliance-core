@@ -6,16 +6,15 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=0636e73ff0215e8d672dc4c32c317bb3 \
                     file://COPYING.LIB;md5=55ca817ccb7d5b5b66355690e9abc605 \
                     file://gst/tta/crc32.h;beginline=12;endline=29;md5=71a904d99ce7ae0c1cf129891b98145c"
 
-DEPENDS += "libmusicbrainz tremor curl libmms"
-DEPENDS += "gst-plugins-base"
+DEPENDS += "gst-plugins-base libmusicbrainz tremor curl libmms librtmp faad2"
 CONFLICTS = "librsvg"
 
-PR = "r4"
+PR = "r5"
 GIT_PV = ""
 
 SRCREV = "fb0d8700e71c4a6569ba023d16201087aec119fd"
 
-EXTRA_OECONF += "--disable-examples --disable-experimental --disable-sdl --disable-cdaudio --disable-directfb \
+EXTRA_OECONF += "--disable-examples --disable-experimental --disable-sdl --disable-cdaudio --disable-directfb --enable-faad \
                  --disable-vdpau --disable-apexsink --enable-orc --disable-mpeg2enc --disable-mplex --disable-rsvg --disable-uvch264"
 
 ARM_INSTRUCTION_SET = "arm"
@@ -27,6 +26,7 @@ SRC_URI += " \
         file://0004-mpegdemux-compile-fixes.patch \
         file://0005-hlsdemux-locking-fixes.patch \
         file://0006-hlsdemux-backport.patch \
+		file://0007-Lower-rank-of-faad-to-prevent-using-it-if-not-necess.patch \		
         file://orc.m4-fix-location-of-orcc-when-cross-compiling.patch \
 "
 

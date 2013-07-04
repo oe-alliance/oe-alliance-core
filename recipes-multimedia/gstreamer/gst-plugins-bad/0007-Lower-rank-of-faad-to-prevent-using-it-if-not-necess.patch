@@ -1,0 +1,25 @@
+From bf4042d879346bb90814856b7eb023706d1a8e15 Mon Sep 17 00:00:00 2001
+From: betacentauri <@>
+Date: Sat, 29 Jun 2013 14:33:34 +0200
+Subject: [PATCH] Lower rank of faad to prevent using it if not necessary
+
+---
+ ext/faad/gstfaad.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/ext/faad/gstfaad.c b/ext/faad/gstfaad.c
+index e106da9..82fd547 100644
+--- a/ext/faad/gstfaad.c
++++ b/ext/faad/gstfaad.c
+@@ -893,7 +893,7 @@ gst_faad_close_decoder (GstFaad * faad)
+ static gboolean
+ plugin_init (GstPlugin * plugin)
+ {
+-  return gst_element_register (plugin, "faad", GST_RANK_PRIMARY, GST_TYPE_FAAD);
++  return gst_element_register (plugin, "faad", GST_RANK_SECONDARY, GST_TYPE_FAAD);
+ }
+ 
+ GST_PLUGIN_DEFINE (GST_VERSION_MAJOR,
+-- 
+1.7.9.5
+
