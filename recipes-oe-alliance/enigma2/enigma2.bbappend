@@ -1,6 +1,6 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
-PRINC = "65"
+PRINC = "66"
 
 DEPENDS = " \
 	ethtool \
@@ -42,7 +42,6 @@ PYTHON_RDEPS += " \
 	python-subprocess \
 	python-process \
 	python-imaging \
-	python-textutils \
 	"
 
 # DVD playback is integrated, we need the libraries
