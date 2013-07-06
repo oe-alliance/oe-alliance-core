@@ -59,13 +59,13 @@ def writeHelligkeit_lver(hell):
 			g_min, g_max = getHellRange(plugin.config.plugins.LCD4linux.Helligkeit)
 		updateBrightness(int(hell), g_min, g_max)
 
-def writeHelligkeit(hell,hell2,STOP = False):
+def writeHelligkeit(hell,hell2,hell3,STOP = False):
 	global g_min
 	global g_max
 	global old_hell
 	global plugin_writeHelligkeit
 	global LCDType1_id
-	plugin_writeHelligkeit(hell, hell2, STOP)
+	plugin_writeHelligkeit(hell, hell2, hell3, STOP)
 	if plugin.LCD4linux.LCDType1.value == LCDType1_id:
 		if g_max is None:
 			g_min, g_max = getHellRange(plugin.LCD4linux.Helligkeit)
