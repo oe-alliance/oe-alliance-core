@@ -1,0 +1,22 @@
+--- git/setup.py	2013-07-06 17:37:02.000000000 +0100
++++ git/setup.py.new	2013-07-06 17:37:02.000000000 +0100
+@@ -8,11 +8,9 @@
+ def read(fname):
+     return open(os.path.join(os.path.dirname(__file__), fname)).read()
+ 
+-import cocy
+-
+ setup(
+     name = "cocy",
+-    version = cocy.__version__,
++    version = "0.15",
+     author = "Michael N. Lipp",
+     author_email = "mnl@mnl.de",
+     description = ("A components library for UPnP."),
+@@ -43,4 +41,4 @@
+                   'cocy.upnp': ['services/*.xml',
+                                 'templates/*']},
+    install_requires = ['Tenjin', 'rbtranslations', 'circuits-bricks'],
+-)
+\ No newline at end of file
++)

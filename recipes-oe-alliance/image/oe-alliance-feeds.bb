@@ -3,7 +3,7 @@ LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3b58 \
                     file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
 PV = "1.0"
-PR = "r23"
+PR = "r24"
 
 inherit task
 
@@ -36,7 +36,6 @@ RRECOMMENDS = "\
 	enigma2-plugin-extensions-mediaportal \
 	\
 	${@base_contains("MACHINE_FEATURES", "fullgraphiclcd", "lcdpicons-enigma2-meta" , "", d)} \
-	${@base_conditional("MACHINE", "vuduo2", "duo2lcd4linux lcd4linuxsupport", "", d)} \
 	\
 	autofs \
 	autossh \
@@ -71,6 +70,7 @@ RRECOMMENDS = "\
 	parted \
 	procps \
 	pyload \
+	python-circuits python-circuits-bricks python-cocy \
 	rsync \
 	rtorrent \
 	sabnzbd \
