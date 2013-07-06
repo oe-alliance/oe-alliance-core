@@ -66,7 +66,7 @@ DESCRIPTION_enigma2-plugin-extensions-ondemand = "Watch on demand TV."
 DESCRIPTION_enigma2-plugin-extensions-fempa = "Norwegian P4 FEM PAA radio show player."
 DESCRIPTION_enigma2-plugin-extensions-lcd4linux = "Web/DPF/Samsung LCD Ansteuerung"
 RDEPENDS_enigma2-plugin-extensions-lcd4linux = "python-icalendar python-pyusb python-codecs python-datetime python-imaging python-textutils python-shell python-ctypes libusb-0.1-4 python-mutagen python-zlib python-email python-subprocess"
-RDEPENDS_enigma2-plugin-extensions-lcd4linux_append_vuduo2 = "lcd4linuxsupport"
+RDEPENDS_enigma2-plugin-extensions-lcd4linux_append_vuduo2 = " lcd4linuxsupport"
 
 DEPENDS = "enigma2 \
 	${@base_contains("MACHINE_FEATURES", "blindscan-dvbc", "virtual/blindscan-dvbc" , "", d)} \
@@ -94,7 +94,7 @@ inherit gitpkgv autotools
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r50"
+PR = "r51"
 
 SRC_URI="git://github.com/oe-alliance/oe-alliance-plugins.git;protocol=git"
 
