@@ -1,8 +1,6 @@
-PRINC = "3"
+PRINC = "1"
 
-RDEPENDS_${PN} += "libusb1"
-
-inherit openpli-distutils
+inherit setuptools openpli-distutils
 
 do_install() {
 	distutils_do_install_keep_pyo
@@ -16,3 +14,4 @@ FILES_${PN}-src = " \
 	${libdir}/${PYTHON_DIR}/site-packages/*/*/*/*.py \
 	${libdir}/${PYTHON_DIR}/site-packages/*/*/*/*/*.py \
 	"
+
