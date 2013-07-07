@@ -4,7 +4,10 @@ SECTION = "devel/python"
 LICENSE = "BSD"
 LIC_FILES_CHKSUM = "file://LICENSE.rst;md5=8ff644958c37784425f321ace93fb329"
 
-PR = "r13"
+PR = "r14"
+
+DEPENDS = "python-pytz"
+RDEPENDS = "python-pytz"
 
 SRC_URI = "http://pypi.python.org/packages/source/i/icalendar/icalendar-${PV}.tar.gz"
 
