@@ -4,10 +4,10 @@ SECTION = "devel/python"
 LICENSE = "BSD"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=badb0fe9d510b2bd9dce482a5435b585"
 
-PR = "r2"
+PR = "r3"
 
-DEPENDS = "python-six"
-RDEPENDS = "python-six"
+DEPENDS_${PN} = "python-six"
+RDEPENDS_${PN} = "python-six"
 
 SRC_URI = "http://pypi.python.org/packages/source/p/python-dateutil/python-dateutil-${PV}.tar.gz"
 

@@ -4,10 +4,10 @@ SECTION = "devel/python"
 LICENSE = "BSD"
 LIC_FILES_CHKSUM = "file://LICENSE.rst;md5=8ff644958c37784425f321ace93fb329"
 
-PR = "r15"
+PR = "r16"
 
-DEPENDS = "python-pytz python-dateutil"
-RDEPENDS = "python-pytz python-dateutil"
+DEPENDS_${PN} = "python-pytz python-dateutil"
+RDEPENDS_${PN} = "python-pytz python-dateutil"
 
 SRC_URI = "http://pypi.python.org/packages/source/i/icalendar/icalendar-${PV}.tar.gz"
 
