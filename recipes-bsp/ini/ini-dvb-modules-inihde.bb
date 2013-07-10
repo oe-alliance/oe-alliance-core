@@ -6,5 +6,8 @@ SRC_URI[sha256sum] = "4c561213adf06a15b5a831357ea0cb342fbba0c4e29e411e386b72d307
 
 SRC_URI = "http://code-ini.com/software/drivers/ini-1000-drivers-${KV}-${SRCDATE}.zip"
 
+RREPLACES = "venton-dvb-modules-ventonhde"
+RCONFLICTS = "venton-dvb-modules-ventonhde"
+
 require ini-dvb-modules.inc
 
