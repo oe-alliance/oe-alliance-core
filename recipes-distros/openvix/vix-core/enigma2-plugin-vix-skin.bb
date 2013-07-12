@@ -9,10 +9,10 @@ EPSM = "enigma2-plugin-skins-vix"
 SRCREV = "${AUTOREV}"
 PV = "2.0+git${SRCPV}"
 PKGV = "2.0+git${GITPKGV}"
-PR = "r13"
+PR = "r14"
 
-PACKAGES = "vix-skin-common ${EPSM}-day-hd ${EPSM}-night-hd ${EPSM}-magic-sd ${EPSM}-magic-hd ${EPSM}-magic-hd-light vix-mhdc ${EPSM}-magic-hd-noire ${EPSM}-magic-hd-night vix-vixbmc-hd-common ${EPSM}-vixbmc-slim-hd ${EPSM}-vixbmc-night-hd ${EPSM}-vixbmc-metropolis"
-PROVIDES = "${PN} vix-skin-common ${EPSM}-day-hd ${EPSM}-night-hd ${EPSM}-magic-sd ${EPSM}-magic-hd ${EPSM}-magic-hd-light vix-mhdc ${EPSM}-magic-hd-noire ${EPSM}-magic-hd-night vix-vixbmc-hd-common ${EPSM}-vixbmc-slim-hd ${EPSM}-vixbmc-night-hd ${EPSM}-vixbmc-metropolis"
+PACKAGES = "vix-skin-common ${EPSM}-day-hd ${EPSM}-night-hd ${EPSM}-magic-sd ${EPSM}-magic-hd ${EPSM}-magic-hd-light vix-mhdc ${EPSM}-magic-hd-noire ${EPSM}-magic-hd-night vix-vixbmc-hd-common ${EPSM}-vixbmc-slim-hd ${EPSM}-vixbmc-night-hd ${EPSM}-vixbmc-metropolis ${EPSM}-mynovum-hd ${EPSM}-neonovum-hd"
+PROVIDES = "${PN} vix-skin-common ${EPSM}-day-hd ${EPSM}-night-hd ${EPSM}-magic-sd ${EPSM}-magic-hd ${EPSM}-magic-hd-light vix-mhdc ${EPSM}-magic-hd-noire ${EPSM}-magic-hd-night vix-vixbmc-hd-common ${EPSM}-vixbmc-slim-hd ${EPSM}-vixbmc-night-hd ${EPSM}-vixbmc-metropolis ${EPSM}-mynovum-hd ${EPSM}-neonovum-hd"
 
 RCONFLICTS_vix-skin-common = "vix-hd-common"
 RREPLACES_vix-skin-common = "vix-hd-common"
@@ -30,6 +30,10 @@ RCONFLICTS_${EPSM}-vixbmc-night-hd = "enigma2-plugin-vix-vixbmc-night-hd"
 RREPLACES_${EPSM}-vixbmc-night-hd = "enigma2-plugin-vix-vixbmc-night-hd"
 RCONFLICTS_${EPSM}-vixbmc-metropolis = "enigma2-plugin-vix-vixbmc-metropolis"
 RREPLACES_${EPSM}-vixbmc-metropolis = "enigma2-plugin-vix-vixbmc-metropolis"
+RCONFLICTS_${EPSM}-mynovum-hd = "enigma2-plugin-vix-mynovum-hd"
+RREPLACES_${EPSM}-mynovum-hd = "enigma2-plugin-vix-mynovum-hd"
+RCONFLICTS_${EPSM}-neonovum-hd = "enigma2-plugin-vix-neonovum-hd"
+RREPLACES_${EPSM}-neonovum-hd = "enigma2-plugin-vix-neonovum-hd"
 
 SRC_URI="git://github.com/OpenViX/vix-skins.git;protocol=git"
 
@@ -63,6 +67,10 @@ RDEPENDS_${EPSM}-magic-hd-night = "font-valis-hd vix-mhdc"
 RDEPENDS_${EPSM}-vixbmc-slim-hd = "vix-vixbmc-hd-common"
 RDEPENDS_${EPSM}-vixbmc-night-hd = "vix-vixbmc-hd-common"
 RDEPENDS_${EPSM}-vixbmc-metropolis = "vix-vixbmc-hd-common"
+
+FILES_${EPSM}-mynovum-hd = "/usr/share/enigma2/myNOVUM_HD/"
+
+FILES_${EPSM}-neonovum-hd = "/usr/share/enigma2/NeoNOVUM_HD/"
 
 S = "${WORKDIR}/git"
 
