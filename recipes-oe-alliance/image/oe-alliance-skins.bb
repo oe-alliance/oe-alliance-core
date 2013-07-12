@@ -24,5 +24,4 @@ RRECOMMENDS = "\
 	enigma2-plugin-skins-matrixhd \
 	enigma2-plugin-skins-vix-mynovum-hd \
 	enigma2-plugin-skins-vix neonovum-hd \
-
 	"
