@@ -9,7 +9,7 @@ EPSM = "enigma2-plugin-skins-vix"
 SRCREV = "${AUTOREV}"
 PV = "2.0+git${SRCPV}"
 PKGV = "2.0+git${GITPKGV}"
-PR = "r15"
+PR = "r16"
 
 PACKAGES = "vix-skin-common ${EPSM}-day-hd ${EPSM}-night-hd ${EPSM}-magic-sd ${EPSM}-magic-hd ${EPSM}-magic-hd-light vix-mhdc ${EPSM}-magic-hd-noire ${EPSM}-magic-hd-night vix-vixbmc-hd-common ${EPSM}-vixbmc-slim-hd ${EPSM}-vixbmc-night-hd ${EPSM}-vixbmc-metropolis"
 PROVIDES = "${PN} vix-skin-common ${EPSM}-day-hd ${EPSM}-night-hd ${EPSM}-magic-sd ${EPSM}-magic-hd ${EPSM}-magic-hd-light vix-mhdc ${EPSM}-magic-hd-noire ${EPSM}-magic-hd-night vix-vixbmc-hd-common ${EPSM}-vixbmc-slim-hd ${EPSM}-vixbmc-night-hd ${EPSM}-vixbmc-metropolis"
@@ -67,7 +67,7 @@ RDEPENDS_${EPSM}-vixbmc-metropolis = "vix-vixbmc-hd-common"
 S = "${WORKDIR}/git"
 
 do_install() {
-	install -d ${D}/usr/share
-	cp -rp ${S}/usr/share/* ${D}/usr/share/
+	install -d ${D}/usr/share/enigma2
+	cp -rp ${S}/* ${D}/usr/share/enigma2/
 	chmod -R a+rX ${D}/usr/share/enigma2/
 }
