@@ -4,7 +4,7 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3
                     file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
 
 PV = "1.0"
-PR = "r6"
+PR = "r7"
 
 inherit task
 
@@ -22,6 +22,6 @@ RRECOMMENDS = "\
 	enigma2-plugin-skins-vix-vixbmc-night-hd \
 	enigma2-plugin-skins-vix-vixbmc-metropolis \
 	enigma2-plugin-skins-matrixhd \
-	enigma2-plugin-skins-vix-mynovum-hd \
-	enigma2-plugin-skins-vix neonovum-hd \
+	enigma2-plugin-skins-mynovum-hd \
+	enigma2-plugin-skins-neonovum-hd \
 	"
