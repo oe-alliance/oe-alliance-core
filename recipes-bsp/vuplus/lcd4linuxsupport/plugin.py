@@ -130,7 +130,7 @@ class pngUtilTimer:
 					self.last_mod_time = modify_time
 					pngutiltime = time()
 					pngutil.send(self.PIC)
-					print "[LCD4linux Support] time (write to lcd) : ",time()-pngutiltime
+					# print "[LCD4linux Support] time (write to lcd) : ",time()-pngutiltime
 		self.updateTimer.start(500, True)
 
 	def setLcd4linuxDuo2(self):
