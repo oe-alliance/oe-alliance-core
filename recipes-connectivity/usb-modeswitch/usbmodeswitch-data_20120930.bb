@@ -27,5 +27,4 @@ do_install() {
 	install -m 0755 ${S}/usb_modeswitch.d/* ${D}/usr/share/usb_modeswitch/
 }
 
-PACKAGES =+ "usbmodeswitch-data"
 FILES_${PN} += "/etc /lib /usr"
