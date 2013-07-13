@@ -173,9 +173,9 @@ int PNGUtil::send(char* png_file_name)
 	{
 		int w=-1;
 		w = write(device_fd, row_pointers_bit_shift, height * width * 2);
-		printf("write ret : %d\n",w);
+		// printf("write ret : %d\n",w);
 //		ret = ioctl(device_fd, 0);
-		printf("write to /dev/lcd2 : %d\n",w);
+		// printf("write to /dev/lcd2 : %d\n",w);
 	}
 	return 1;
 }
