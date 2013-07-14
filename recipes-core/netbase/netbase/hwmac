@@ -1,0 +1,11 @@
+#!/bin/sh
+
+if [ -f /etc/hwmac ]; then
+	macadr=`cat /etc/hwmac`
+	if [  "$macadr" != "" ];then
+		route=`route -n |grep UG | awk '{print $2}'`
+		ifconfig eth0 down
+		ifconfig eth0 hw ether $macadr up
+		route add default gw $route eth0
+	fi
+fi
