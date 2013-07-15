@@ -2,12 +2,12 @@ DESCRIPTION = "PC/SC Lite smart card framework and applications"
 HOMEPAGE = "http://pcsclite.alioth.debian.org/"
 LICENSE = "BSD"
 LIC_FILES_CHKSUM = "file://COPYING;md5=a39d325b7d9cf2f07826a5154b16500c"
-DEPENDS = "udev libusb1"
+DEPENDS = "libusb1"
 RDEPENDS = "libusb1"
 RRECOMMENDS_${PN} = "ccid"
 
 PACKAGES =+ "${PN}-lib"
-PR = "r1"
+PR = "r2"
 
 SRC_URI = "https://alioth.debian.org/frs/download.php/3862/pcsc-lite-${PV}.tar.bz2 \
 	file://pcscd.init"
@@ -21,8 +21,8 @@ INITSCRIPT_NAME = "pcscd"
 INITSCRIPT_PARAMS = "defaults"
 
 EXTRA_OECONF = " \
-	--disable-libusb \
-	--enable-libudev \
+	--disable-libudev \
+	--enable-libusb \
 	--enable-usbdropdir=${libdir}/pcsc/drivers \
 	"
 
