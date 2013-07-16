@@ -9,7 +9,7 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r292"
+PR = "r293"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -183,6 +183,11 @@ do_deploy_append_gbquad() {
 
 do_deploy_append_odinm9() {
 # 	Install any packages that are only For this machines feed here, uncomment the line below and change as required
+}
+
+do_deploy_append_e3hd() {
+# 	Install any packages that are only For this machines feed here, uncomment the line below and change as required
+	install -m 0644 enigma2-plugin-extensions-opera_1.01_mips32el.ipk ${WORKDIR}/deploy-ipks/3rdparty
 }
 
 do_deploy_append_ventonhdx() {
