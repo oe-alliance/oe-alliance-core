@@ -1,0 +1,67 @@
+diff --git a/drivers/net/ethernet/broadcom/genet/bcmgenet.c b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
+old mode 100644
+new mode 100755
+index faf58ab..52e31ed
+--- a/drivers/net/ethernet/broadcom/genet/bcmgenet.c
++++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
+@@ -3123,6 +3123,34 @@ static int bcmgenet_set_wol(struct net_device *dev,
+ 		umac->mpd_ctrl |= MPD_PW_EN;
+ 	}
+ 
++	if (pDevCtrl->phyType == BRCM_PHY_TYPE_EXT_RGMII)
++	{
++		if(wol->wolopts & WAKE_MAGIC)
++		{
++			pDevCtrl->mii.mdio_write(dev, pDevCtrl->phyAddr, 0x1f, 0x0007);
++			pDevCtrl->mii.mdio_write(dev, pDevCtrl->phyAddr, 0x1e, 0x006e);
++			pDevCtrl->mii.mdio_write(dev, pDevCtrl->phyAddr, 0x15, dev->dev_addr[1]<<8 | dev->dev_addr[0]);
++			pDevCtrl->mii.mdio_write(dev, pDevCtrl->phyAddr, 0x16, dev->dev_addr[3]<<8 | dev->dev_addr[2]);
++			pDevCtrl->mii.mdio_write(dev, pDevCtrl->phyAddr, 0x17, dev->dev_addr[5]<<8 | dev->dev_addr[4]);
++			pDevCtrl->mii.mdio_write(dev, pDevCtrl->phyAddr, 0x1f, 0x0007);
++			pDevCtrl->mii.mdio_write(dev, pDevCtrl->phyAddr, 0x1e, 0x006d);
++			pDevCtrl->mii.mdio_write(dev, pDevCtrl->phyAddr, 0x16, 0x9fff);
++			pDevCtrl->mii.mdio_write(dev, pDevCtrl->phyAddr, 0x15, 0x1000);
++			pDevCtrl->mii.mdio_write(dev, pDevCtrl->phyAddr, 0x1e, 0x006d);
++			pDevCtrl->mii.mdio_write(dev, pDevCtrl->phyAddr, 0x19, 0x0001);
++			pDevCtrl->mii.mdio_write(dev, pDevCtrl->phyAddr, 0x1f, 0x0000);
++
++		}
++		else
++		{
++			pDevCtrl->mii.mdio_write(dev, pDevCtrl->phyAddr, 0x1f, 0x0007);
++			pDevCtrl->mii.mdio_write(dev, pDevCtrl->phyAddr, 0x1e, 0x006d);
++			pDevCtrl->mii.mdio_write(dev, pDevCtrl->phyAddr, 0x16, 0x9fff);
++			pDevCtrl->mii.mdio_write(dev, pDevCtrl->phyAddr, 0x15, 0x0000);
++			pDevCtrl->mii.mdio_write(dev, pDevCtrl->phyAddr, 0x1f, 0x0000);
++		}
++	}
++
+ 	device_set_wakeup_enable(&dev->dev, wol->wolopts);
+ 	pDevCtrl->wolopts = wol->wolopts;
+ 	return 0;
+diff --git a/kernel/printk.c b/kernel/printk.c
+index 1af3691..b0b73ff 100644
+--- a/kernel/printk.c
++++ b/kernel/printk.c
+@@ -1125,11 +1125,21 @@ MODULE_PARM_DESC(console_suspend, "suspend console during suspend"
+  *
+  * This disables printk() while we go into suspend states
+  */
++void (*brcm_s3_cb)(void);
++
++
++void register_brcm_s3_cb(void (*cb)(void))
++{
++	brcm_s3_cb = cb;
++}
++EXPORT_SYMBOL(register_brcm_s3_cb);
++
+ void suspend_console(void)
+ {
+ 	if (!console_suspend_enabled)
+ 		return;
+ 	printk("Suspending console(s) (use no_console_suspend to debug)\n");
++	if(brcm_s3_cb) brcm_s3_cb();
+ 	console_lock();
+ 	console_suspended = 1;
+ 	up(&console_sem);
