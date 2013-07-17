@@ -4,7 +4,7 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3
 					file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
 
 PV = "1.0"
-PR = "r12"
+PR = "r13"
 
 inherit task
 
@@ -27,7 +27,6 @@ RRECOMMENDS = "\
 	enigma2-plugin-extensions-imdb \
 	enigma2-plugin-extensions-xmltvimport \
 	enigma2-plugin-systemplugins-crossepg \
-	enigma2-plugin-systemplugins-videoenhancement \	
-	\
+	enigma2-plugin-systemplugins-videoenhancement \
 	"
 

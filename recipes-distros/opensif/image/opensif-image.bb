@@ -11,28 +11,10 @@ PR = "r${DATETIME}"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 IMAGE_INSTALL = " \
-	oe-alliance-enigma2 \
+	oe-alliance-base \
 	opensif-version-info \
 	opensif-enigma2 \
 	opensif-bootlogo \
-	avahi-daemon \
-	dropbear \
-	early-configure \
-	e2fsprogs-mke2fs \
-	e2fsprogs-e2fsck \
-	e2fsprogs-tune2fs \
-	e2fsprogs-blkid \
-	fakelocale \
-	libavahi-client \
-	ntp \
-	opkg \
-	sdparm \
-	task-base \
-	task-core-boot \
-	tzdata \
-	util-linux-sfdisk \
-	volatile-media \
-	vsftpd \
 	nano \
 	"
 

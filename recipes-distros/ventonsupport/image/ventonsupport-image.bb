@@ -11,30 +11,14 @@ PR = "r${DATETIME}"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 IMAGE_INSTALL = " \
-	oe-alliance-enigma2 \
+	oe-alliance-base \
 	ventonsupport-enigma2 \
 	ventonsupport-bootlogo \
 	ventonsupport-version-info \
 	${ENIGMA2_PLUGINS} \
 	${ENIGMA2_INI_PLUGINS} \
 	${@base_contains("MACHINE", "ventonhdx", "${ENIGMA2_USB_DRV}" , "", d)} \
-	avahi-daemon \
-	early-configure \
-	e2fsprogs-mke2fs \
-	e2fsprogs-e2fsck \
-	e2fsprogs-tune2fs \
-	e2fsprogs-blkid \
-	fakelocale \
-	libavahi-client \
 	libcrypto-compat \
-	ntpdate \
-	opkg \
-	sdparm \
-	task-base \
-	task-core-boot \
-	tzdata \
-	util-linux-sfdisk \
-	vsftpd \
 	ntfs-3g \
 	hddtemp \
 	busybox-cron \
