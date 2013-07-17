@@ -2,10 +2,12 @@ DESCRIPTION = "Merge machine and distro options to create a oe-allinace enigma2 
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3b58 \
                     file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
-PV = "1.0"
-PR = "r24"
 
 inherit task
+
+PV = "1.0"
+PR = "r25"
+PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 DEPENDS = "enigma2-plugin-drivers-usbserial"
 RECOMMENDS = "enigma2-plugin-extensions-et-livestream"

@@ -3,11 +3,11 @@ LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3b58 \
                     file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
 
-PV = "1.0"
-PR = "r27"
-PACKAGE_ARCH = "${MACHINE_ARCH}"
-
 inherit task
+
+PV = "1.0"
+PR = "r28"
+PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 WIFI_DRIVERS = " \
 	${@base_contains("MACHINE_FEATURES", "wifiusblegacy", "rt73 rt3070 rtl871x", \
