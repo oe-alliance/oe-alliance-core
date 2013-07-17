@@ -9,7 +9,7 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r294"
+PR = "r295"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -76,7 +76,7 @@ do_deploy() {
 	install -m 0644 enigma2-plugin-extensions-songs-to_0.1_mips32el.ipk ${WORKDIR}/deploy-ipks/3rdparty
 	install -m 0644 enigma2-plugin-extensions-sportmax_1.2_mips32el.ipk ${WORKDIR}/deploy-ipks/3rdparty
 	install -m 0644 enigma2-plugin-extensions-subtitleplayer_3.20_mipsel.ipk ${WORKDIR}/deploy-ipks/3rdparty
-	install -m 0644 enigma2-plugin-extensions-spinnerselector_2.0r5_mipsel.ipk ${WORKDIR}/deploy-ipks/3rdparty
+	install -m 0644 enigma2-plugin-extensions-spinnerselector_2.0r5_mips32el.ipk ${WORKDIR}/deploy-ipks/3rdparty
 	install -m 0644 enigma2-plugin-extensions-sport1ticker_0.4_all.ipk ${WORKDIR}/deploy-ipks/3rdparty
 	install -m 0644 enigma2-plugin-extensions-sportportal2013_all.ipk ${WORKDIR}/deploy-ipks/3rdparty
 	install -m 0644 enigma2-plugin-extensions-systemtools-for-ppanels_0.83_mipsel.ipk ${WORKDIR}/deploy-ipks/3rdparty
