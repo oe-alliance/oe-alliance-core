@@ -8,9 +8,9 @@ require conf/license/license-gplv2.inc
 
 inherit gitpkgv
 SRCREV = "${AUTOREV}"
-PV = "1.0.+git${SRCPV}"
-PKGV = "1.0.+git${GITPKGV}"
-PR = "r0"
+PV = "1.10.+git${SRCPV}"
+PKGV = "1.10.+git${GITPKGV}"
+PR = "r1"
 
 
 SRC_URI="git://github.com/Nobody28/IPTV-List-Updater.git"
@@ -21,7 +21,7 @@ PACKAGES =+ "${PN}-src"
 PACKAGES =+ "${PN}-po"
 FILES_${PN} = "/usr/lib"
 FILES_${PN}-src = "/usr/lib/enigma2/python/Plugins/Extensions/IPTV-List-Updater/*.py"
-FILES_${PN}-po = "/usr/lib/enigma2/python/Plugins/Extensions/IPTV-List-Updater/locale/*.po"
+FILES_${PN}-po = "/usr/lib/enigma2/python/Plugins/Extensions/IPTV-List-Updater/locale/*/*/*.po"
 
 inherit autotools
 
@@ -32,10 +32,6 @@ EXTRA_OECONF = "\
 	STAGING_INCDIR=${STAGING_INCDIR} \
 	STAGING_LIBDIR=${STAGING_LIBDIR} \
 "
-
-do_install() {
-	chmod -R 755  ${D}/usr/lib/enigma2/python/Plugins/Extensions/IPTV-List-Updater
-}
 
 pkg_postinst() {
 #!/bin/sh
