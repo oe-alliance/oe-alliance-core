@@ -10,7 +10,7 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "1.10.+git${SRCPV}"
 PKGV = "1.10.+git${GITPKGV}"
-PR = "r1"
+PR = "r2"
 
 
 SRC_URI="git://github.com/Nobody28/IPTV-List-Updater.git"
