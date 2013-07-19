@@ -36,6 +36,7 @@ RRECOMMENDS = "\
 	enigma2-plugin-extensions-mediatomb \
 	enigma2-plugin-extensions-dreamplex \
 	enigma2-plugin-extensions-mediaportal \
+	enigma2-plugin-extensions-iptvlistupdater \
 	\
 	${@base_contains("MACHINE_FEATURES", "fullgraphiclcd", "lcdpicons-enigma2-meta" , "", d)} \
 	\
