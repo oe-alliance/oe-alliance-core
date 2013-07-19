@@ -4,7 +4,7 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3
                     file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
 
 PV = "1.0"
-PR = "r17"
+PR = "r18"
 
 inherit task
 
@@ -34,7 +34,8 @@ RRECOMMENDS = "\
 	enigma2-plugin-extensions-xtrendforum \
 	enigma2-plugin-extensions-iptv-list-updater \
 	enigma2-plugin-skins-technihd \
-	enigma2-plugin-systemplugins-videoenhancement \	
+	enigma2-plugin-systemplugins-videoenhancement \
+	enigma2-plugin-extensions-iptvlistupdater \
 	${@base_contains("MACHINE_FEATURES", "3dtv", "enigma2-plugin-systemplugins-osd3dsetup" , "", d)} \
 	"
 

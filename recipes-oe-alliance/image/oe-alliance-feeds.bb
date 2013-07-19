@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3
 inherit task
 
 PV = "1.0"
-PR = "r25"
+PR = "r26"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 DEPENDS = "enigma2-plugin-drivers-usbserial"
@@ -36,6 +36,7 @@ RRECOMMENDS = "\
 	enigma2-plugin-extensions-mediatomb \
 	enigma2-plugin-extensions-dreamplex \
 	enigma2-plugin-extensions-mediaportal \
+	enigma2-plugin-extensions-iptvlistupdater \
 	\
 	${@base_contains("MACHINE_FEATURES", "fullgraphiclcd", "lcdpicons-enigma2-meta" , "", d)} \
 	\
