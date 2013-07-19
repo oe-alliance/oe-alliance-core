@@ -2,7 +2,7 @@ DESCRIPTION = "IPTV Bouquet Updater "
 MAINTAINER = "Nobody28 & satinfo"
 SECTION = "extra"
 PRIORITY = "optional"
-DEPENDS = "gst-plugins-bad-rtmp librtmp0 librtmp-bin"
+RDEPENDS = "gst-plugins-bad-rtmp librtmp"
 
 require conf/license/license-gplv2.inc
 
@@ -35,18 +35,18 @@ EXTRA_OECONF = "\
 
 pkg_postinst() {
 #!/bin/sh
-# Ein Shell Script welches nach Installation des Paketes ausgeführt wird 
+# Ein Shell Script welches nach Installation des Paketes ausgefÃ¼hrt wird 
 echo "********************************************************"
-echo "*  IPTV List Updater installed                         *"
-echo "*                                                      *"
-echo "*  Restart the Engima2 GUI to activate the plugin      *"
+echo "*	 IPTV List Updater installed						 *"
+echo "*														 *"
+echo "*	 Restart the Engima2 GUI to activate the plugin		 *"
 echo "********************************************************"
 exit 0
 }
 
 pkg_postrm() {
 #!/bin/sh
-# Ein Shell Script welches nach Entfernen des Paketes ausgeführt wird 
+# Ein Shell Script welches nach Entfernen des Paketes ausgefÃ¼hrt wird 
 echo "Removing IPTV List Updater Plugin from the system ..."
 rm -rf /usr/lib/enigma2/python/Plugins/Extensions/IPTV-List-Updater > /dev/null 2>&1
 rm -rf /usr/script/IPTV-List-update.sh > /dev/null 2>&1
@@ -55,7 +55,7 @@ exit 0
 
 pkg_preinst() {
 #!/bin/sh
-# Ein Shell Script welches vor Installation des Paketes ausgeführt wird 
+# Ein Shell Script welches vor Installation des Paketes ausgefÃ¼hrt wird 
 echo "Checking for an older version of IPTV List Updater in the system..."
 if [ -d /usr/lib/enigma2/python/Plugins/Extensions/IPTV-List-Updater ]
 	then
@@ -72,7 +72,7 @@ exit 0
 
 pkg_prerm() {
 #!/bin/sh
-# Ein Shell Script welches vor Entfernen des Paketes ausgeführt wird 
+# Ein Shell Script welches vor Entfernen des Paketes ausgefÃ¼hrt wird 
 rm /usr/lib/enigma2/python/Plugins/Extensions/IPTV-List-Updater/*.pyo > /dev/null 2>&1
 exit 0
 }
