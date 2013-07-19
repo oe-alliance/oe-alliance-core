@@ -1,4 +1,4 @@
-DESCRIPTION = "IPTV Bouquet Updater "
+DESCRIPTION = "IPTV Bouquet Updater Plugin by Nobody28 & satinfo "
 MAINTAINER = "Nobody28 & satinfo"
 SECTION = "extra"
 PRIORITY = "optional"
