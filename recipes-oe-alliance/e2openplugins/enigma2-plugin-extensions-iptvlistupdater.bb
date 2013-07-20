@@ -10,8 +10,10 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "1.10.+git${SRCPV}"
 PKGV = "1.10.+git${GITPKGV}"
-PR = "r2"
+PR = "r3"
 
+RREPLACES_enigma2-plugin-extensions-iptvlistupdater = "enigma2-plugin-extensions-iptv-list-updater"
+RCONFLICTS_enigma2-plugin-extensions-iptvlistupdater = "enigma2-plugin-extensions-iptv-list-updater"
 
 SRC_URI="git://github.com/Nobody28/IPTV-List-Updater.git"
 
