@@ -1,4 +1,4 @@
-require recipes-bsp/dreambox/dreambox-dvb-modules.inc
+require dreambox-dvb-modules.inc
 
 PR = "${INC_PR}.0"
 
