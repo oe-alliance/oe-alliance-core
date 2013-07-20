@@ -34,6 +34,9 @@ SRC_URI = " \
 			file://defconfig \
 "
 
+SRC_URI_append_dm800sev2 = " file://0001-add-support-for-DM800SEv2-and-DM500HDv2-simplified-1.patch"
+SRC_URI_append_dm500hdv2 = " file://0001-add-support-for-DM800SEv2-and-DM500HDv2-simplified-1.patch"
+
 SRC_URI[kernel.md5sum] = "7ceb61f87c097fc17509844b71268935"
 SRC_URI[kernel.sha256sum] = "c881fc2b53cf0da7ca4538aa44623a7de043a41f76fd5d0f51a31f6ed699d463"
 SRC_URI[kernel-patch.md5sum] = "1f0449a3358ddb9c59fe9ddd6876f522"

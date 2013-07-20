@@ -1,0 +1,146 @@
+From 202e033373b10f069b078d2d67933bcf51657151 Mon Sep 17 00:00:00 2001
+From: Andreas Monzner <andreas.monzner@dream-property.net>
+Date: Thu, 29 Nov 2012 00:34:21 +0100
+Subject: [PATCH] add support for DM800SEv2 and DM500HDv2, simplified 1MBIT
+ console support
+
+---
+ arch/mips/brcmstb/Kconfig  |    4 ++--
+ arch/mips/brcmstb/board.c  |    2 +-
+ arch/mips/brcmstb/prom.c   |    2 +-
+ arch/mips/dreambox/Kconfig |   23 ++++++++++++++++++++---
+ drivers/tty/serial/8250.c  |    2 +-
+ 5 files changed, 25 insertions(+), 8 deletions(-)
+
+diff --git a/arch/mips/brcmstb/Kconfig b/arch/mips/brcmstb/Kconfig
+index f0852cb..e81c8e7 100644
+--- a/arch/mips/brcmstb/Kconfig
++++ b/arch/mips/brcmstb/Kconfig
+@@ -435,7 +435,7 @@ config BCM7405B0
+ 	select BCM7405
+ 	select BMIPS4380
+ 	select BRCM_UARTA_IS_16550
+-	select BRCM_UARTB_IS_16550 if !DREAMBOX_DM500HD
++	select BRCM_UARTB_IS_16550 if !DREAMBOX_1MBIT_CONSOLE
+ 	select BRCM_UARTC_IS_16550
+ 	select BRCM_HAS_PCI23
+ 	select BRCM_HAS_EMAC_0
+@@ -454,7 +454,7 @@ config BCM7405D0
+ 	select BCM7405
+ 	select BMIPS4380
+ 	select BRCM_UARTA_IS_16550
+-	select BRCM_UARTB_IS_16550 if !(DREAMBOX_DM800SE || DREAMBOX_DM7020HD)
++	select BRCM_UARTB_IS_16550 if !DREAMBOX_1MBIT_CONSOLE
+ 	select BRCM_UARTC_IS_16550
+ 	select BRCM_HAS_PCI23
+ 	select BRCM_HAS_EMAC_0
+diff --git a/arch/mips/brcmstb/board.c b/arch/mips/brcmstb/board.c
+index ff1c219..53d24e9 100644
+--- a/arch/mips/brcmstb/board.c
++++ b/arch/mips/brcmstb/board.c
+@@ -159,7 +159,9 @@ void __init board_pinmux_setup(void)
+ 	brcm_ext_mii_mode = BRCM_PHY_TYPE_EXT_MII;
+ #endif
+ 
+-#elif defined(CONFIG_DREAMBOX_DM500HD) || defined(CONFIG_DREAMBOX_DM800SE) || defined(CONFIG_DREAMBOX_DM7020HD)
++#elif defined(CONFIG_DREAMBOX_DM7020HD) || \
++      defined(CONFIG_DREAMBOX_DM800SE) || defined(CONFIG_DREAMBOX_DM500HD) || \
++      defined(CONFIG_DREAMBOX_DM800SE_V2) || defined(CONFIG_DREAMBOX_DM500HD_V2)
+ 
+ 	PINMUX(9, gpio_074, 4);		// UARTC RTS
+ 	PINMUX(9, gpio_073, 4);		// UARTC CTS
+@@ -731,7 +731,7 @@ static struct mtd_partition fixed_partition_map[] = {
+ 	{ .name = "root partition",	.offset = 4 * 1024 * 1024,	.size = 60 * 1024 * 1024,	},
+ };
+ 
+-#elif defined(CONFIG_DREAMBOX_DM7020HD)
++#elif defined(CONFIG_DREAMBOX_DM7020HD) || defined(CONFIG_DREAMBOX_DM800SE_V2) || defined(CONFIG_DREAMBOX_DM500HD_V2)
+ 
+ static struct mtd_partition fixed_partition_map[] = {
+ 	{ .name = "complete",		.offset = 0,			.size = 1024 * 1024 * 1024,	},
+@@ -781,7 +781,7 @@
+  */
+ int __init board_get_partition_map(struct mtd_partition **p)
+ {
+-#if defined(CONFIG_DREAMBOX_DM7020HD)
++#if defined(CONFIG_DREAMBOX_DM7020HD)  || defined(CONFIG_DREAMBOX_DM800SE_V2) || defined(CONFIG_DREAMBOX_DM500HD_V2)
+ 	if (legacy_flash_map) {
+ 		*p = fixed_partition_map_legacy;
+ 		return ARRAY_SIZE(fixed_partition_map_legacy);
+diff --git a/arch/mips/brcmstb/prom.c b/arch/mips/brcmstb/prom.c
+index 1eac57d..9b1ea89 100644
+--- a/arch/mips/brcmstb/prom.c
++++ b/arch/mips/brcmstb/prom.c
+@@ -302,7 +302,7 @@ static inline void __init setup_early_16550(unsigned long base_pa)
+ 	sprintf(args, "uart,mmio,0x%08lx,115200n8", base_pa);
+ #endif
+ 
+-#if defined(CONFIG_DREAMBOX_DM800SE) || defined(CONFIG_DREAMBOX_DM500HD) || defined(CONFIG_DREAMBOX_DM7020HD)
++#ifdef CONFIG_DREAMBOX_1MBIT_CONSOLE
+ 	{
+ 		char *s = strstr(args, "115200n8");
+ 		if (s)
+diff --git a/arch/mips/dreambox/Kconfig b/arch/mips/dreambox/Kconfig
+index 7ba1e7d..f2d43cbc 100644
+--- a/arch/mips/dreambox/Kconfig
++++ b/arch/mips/dreambox/Kconfig
+@@ -6,10 +6,15 @@ config DREAMBOX
+ 	select FB_CFB_FILLRECT
+ 	select FB_CFB_IMAGEBLIT
+ 
++config DREAMBOX_1MBIT_CONSOLE
++	bool
++	default y if DREAMBOX_DM800SE || DREAMBOX_DM800SE_V2 || DREAMBOX_DM500HD || DREAMBOX_DM500HD_V2 || DREAMBOX_DM7020HD
++	default n if DREAMBOX_DM8000 || DREAMBOX_DM800
++
+ config DREAMBOX_SWAP_ATA_PORTS
+ 	bool "Swap SATA ports"
+-	default y if DREAMBOX_DM800SE
+-	default n if !DREAMBOX_DM800SE
++	default y if DREAMBOX_DM800SE || DREAMBOX_DM800SE_V2
++	default n if !(DREAMBOX_DM800SE || DREAMBOX_DM800SE_V2)
+ 
+ config DREAMBOX_FIRST_SUPPORTS_HW_ECC
+ 	bool
+@@ -23,13 +28,25 @@ config DREAMBOX_DM500HD
+ 	bool "DM 500 HD"
+ 	depends on BCM7405B0
+ 
++config DREAMBOX_DM500HD_V2
++	bool "DM 500 HDv2"
++	depends on BCM7405D0
++	select DREAMBOX_FIRST_SUPPORTS_HW_ECC
++	select BRCM_UPPER_MEMORY
++
+ config DREAMBOX_DM800
+ 	bool "DM 800 HD PVR"
+ 	depends on BCM7401C0
+ 
+ config DREAMBOX_DM800SE
+-	bool "DM 800 HD SE"
++	bool "DM 800 SE"
++	depends on BCM7405D0
++
++config DREAMBOX_DM800SE_V2
++	bool "DM 800 SEv2"
+ 	depends on BCM7405D0
++	select DREAMBOX_FIRST_SUPPORTS_HW_ECC
++	select BRCM_UPPER_MEMORY
+ 
+ config DREAMBOX_DM7020HD
+ 	bool "DM 7020 HD"
+diff --git a/drivers/tty/serial/8250.c b/drivers/tty/serial/8250.c
+index 2d2024d..5ff270d 100644
+--- a/drivers/tty/serial/8250.c
++++ b/drivers/tty/serial/8250.c
+@@ -2337,7 +2337,7 @@ serial8250_do_set_termios(struct uart_port *port, struct ktermios *termios,
+ 		cval |= UART_LCR_SPAR;
+ #endif
+ 
+-#if defined(CONFIG_DREAMBOX_DM500HD) || defined(CONFIG_DREAMBOX_DM800SE) || defined(CONFIG_DREAMBOX_DM7020HD)
++#ifdef CONFIG_DREAMBOX_1MBIT_CONSOLE
+ 	if (port->line == 0) {  // uart 0
+ 		quot = 5;
+ 		baud = 1000000;
+-- 
+1.7.10.4
