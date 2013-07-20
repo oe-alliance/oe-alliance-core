@@ -18,7 +18,7 @@ python do_package_prepend () {
 		('dm7020hd', 'dm7020hd.jpg', 'dm_normal.png'),
 		('dm8000', 'dm8000.jpg', 'dm_normal.png'),
 		('dm800se', 'dm800se.jpg', 'dm_normal.png'),
-		('dm800sev2', 'dm800se.jpg', 'dm_normal.png'),		
+		('dm800sev2', 'dm800se.jpg', 'dm_normal.png'),
 		('dm800', 'unknown.jpg', 'dm_normal.png'),
 		('et4x00', 'et4x00.jpg', 'et_rc13_normal.png'),
 		('et5x00', 'et5x00.jpg', 'et_rc5_normal.png'),
