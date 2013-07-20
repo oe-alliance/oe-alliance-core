@@ -49,7 +49,6 @@ pkg_postrm() {
 # Ein Shell Script welches nach Entfernen des Paketes ausgeführt wird 
 echo "Removing IPTV List Updater Plugin from the system ..."
 rm -rf /usr/lib/enigma2/python/Plugins/Extensions/IPTV-List-Updater > /dev/null 2>&1
-rm -rf /usr/script/IPTV-List-update.sh > /dev/null 2>&1
 exit 0
 }
 
@@ -60,7 +59,6 @@ echo "Checking for an older version of IPTV List Updater in the system..."
 if [ -d /usr/lib/enigma2/python/Plugins/Extensions/IPTV-List-Updater ]
 	then
 		rm -rf /usr/lib/enigma2/python/Plugins/Extensions/IPTV-List-Updater > /dev/null 2>&1
-		rm -rf /usr/script/IPTV-List-update.sh > /dev/null 2>&1
 		echo "An older version of IPTV List Updater was found and removed"
 		echo "Proceeding to installation..."
 	else
