@@ -23,7 +23,7 @@ do_package_remove_unused_ipk () {
 	set -x
 
 	ipkgarchs="${ALL_MULTILIB_PACKAGE_ARCHS} ${SDK_PACKAGE_ARCHS}"
-	unused="*-dbg_* *-dev_* *-doc_* *-po_* *-demos_* *-examples_* *-sourcecode_* *-locale-* *locale-base-es* *-localedata-*"
+	unused="*-dbg_* *-dev_* *-doc_* *-demos_* *-examples_* *-sourcecode_* *-locale-* *-localedata-*"
 
 	if [ ! -z "${DEPLOY_KEEP_PACKAGES}" ]; then
 		return
