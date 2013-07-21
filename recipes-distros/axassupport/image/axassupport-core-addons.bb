@@ -9,7 +9,7 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r0"
+PR = "r1"
 
 SRC_URI="git://github.com/AXAS/core-addons.git;protocol=git"
 
@@ -35,6 +35,7 @@ do_install() {
 do_deploy() {
 	install -d 0755 ${WORKDIR}/deploy-ipks/3rdparty
 	install -m 0644 enigma2-plugin-softcams-dgcrypt-axas_1.0s_mips32el.ipk ${WORKDIR}/deploy-ipks/3rdparty
+	install -m 0644 enigma2-plugin-extensions-backupsuite-axas_1.3_mips32el.ipk ${WORKDIR}/deploy-ipks/3rdparty
 }
 
 
