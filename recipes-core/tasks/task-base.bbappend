@@ -1,4 +1,4 @@
-PRINC = "17"
+PRINC = "18"
 
 PACKAGES += " \
 			${@base_contains("DISTRO_FEATURES", "appletalk", "task-base-appletalk", "", d)} \
