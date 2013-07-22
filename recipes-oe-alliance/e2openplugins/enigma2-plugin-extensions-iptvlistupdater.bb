@@ -6,16 +6,16 @@ RDEPENDS = "gst-plugins-bad-rtmp librtmp"
 
 require conf/license/license-gplv2.inc
 
-inherit gitpkgv
+inherit gitpkgv autotools
 SRCREV = "${AUTOREV}"
 PV = "1.10.+git${SRCPV}"
 PKGV = "1.10.+git${GITPKGV}"
-PR = "r3"
+PR = "r6"
 
 RREPLACES_enigma2-plugin-extensions-iptvlistupdater = "enigma2-plugin-extensions-iptv-list-updater"
 RCONFLICTS_enigma2-plugin-extensions-iptvlistupdater = "enigma2-plugin-extensions-iptv-list-updater"
 
-SRC_URI="git://github.com/Nobody28/IPTV-List-Updater.git"
+SRC_URI="git://github.com/Nobody28/IPTV-List-Updater.git;protocol=git"
 
 S = "${WORKDIR}/git"
 
@@ -25,54 +25,12 @@ FILES_${PN} = "/usr/lib"
 FILES_${PN}-src = "/usr/lib/enigma2/python/Plugins/Extensions/IPTV-List-Updater/*.py"
 FILES_${PN}-po = "/usr/lib/enigma2/python/Plugins/Extensions/IPTV-List-Updater/locale/*/*/*.po"
 
-inherit autotools
-
-EXTRA_OECONF = "\
-	--with-libsdl=no --with-boxtype=${MACHINE} --with-po \
-	BUILD_SYS=${BUILD_SYS} \
-	HOST_SYS=${HOST_SYS} \
-	STAGING_INCDIR=${STAGING_INCDIR} \
-	STAGING_LIBDIR=${STAGING_LIBDIR} \
-"
-
-pkg_postinst() {
-#!/bin/sh
-# Ein Shell Script welches nach Installation des Paketes ausgeführt wird 
-echo "********************************************************"
-echo "*	 IPTV List Updater installed						 *"
-echo "*														 *"
-echo "*	 Restart the Engima2 GUI to activate the plugin		 *"
-echo "********************************************************"
-exit 0
-}
-
-pkg_postrm() {
-#!/bin/sh
-# Ein Shell Script welches nach Entfernen des Paketes ausgeführt wird 
-echo "Removing IPTV List Updater Plugin from the system ..."
-rm -rf /usr/lib/enigma2/python/Plugins/Extensions/IPTV-List-Updater > /dev/null 2>&1
-exit 0
-}
-
-pkg_preinst() {
-#!/bin/sh
-# Ein Shell Script welches vor Installation des Paketes ausgeführt wird 
-echo "Checking for an older version of IPTV List Updater in the system..."
-if [ -d /usr/lib/enigma2/python/Plugins/Extensions/IPTV-List-Updater ]
-	then
-		rm -rf /usr/lib/enigma2/python/Plugins/Extensions/IPTV-List-Updater > /dev/null 2>&1
-		echo "An older version of IPTV List Updater was found and removed"
-		echo "Proceeding to installation..."
-	else
-		echo "IPTV List Updater was not found in the system"
-		echo "Proceeding to installation..."
-fi
-exit 0
-}
-
-pkg_prerm() {
-#!/bin/sh
-# Ein Shell Script welches vor Entfernen des Paketes ausgeführt wird 
-rm /usr/lib/enigma2/python/Plugins/Extensions/IPTV-List-Updater/*.pyo > /dev/null 2>&1
-exit 0
-}
+# python populate_packages_prepend() {
+# 	enigma2_plugindir = bb.data.expand('${libdir}/enigma2/python/Plugins', d)
+# 	do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/[a-zA-Z0-9_]+.*$', 'enigma2-plugin-%s', '%s', recursive=True, match_path=True, prepend=True, extra_depends="enigma2")
+# 	do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/.*\.py$', 'enigma2-plugin-%s-src', '%s (source files)', recursive=True, match_path=True, prepend=True)
+# 	do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/.*\.la$', 'enigma2-plugin-%s-dev', '%s (development)', recursive=True, match_path=True, prepend=True)
+# 	do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/.*\.a$', 'enigma2-plugin-%s-staticdev', '%s (static development)', recursive=True, match_path=True, prepend=True)
+# 	do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/(.*/)?\.debug/.*$', 'enigma2-plugin-%s-dbg', '%s (debug)', recursive=True, match_path=True, prepend=True)
+# 	do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/.*\/.*\.po$', 'enigma2-plugin-%s-po', '%s (translations)', recursive=True, match_path=True, prepend=True)
+# }

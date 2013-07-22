@@ -23,7 +23,7 @@ do_package_remove_unused_ipk () {
 	set -x
 
 	ipkgarchs="${ALL_MULTILIB_PACKAGE_ARCHS} ${SDK_PACKAGE_ARCHS}"
-	unused="*-dbg_* *-dev_* *-doc_* *-demos_* *-examples_* *-sourcecode_* *-locale-* *-localedata-*"
+	unused="*-dbg_* *-dev_* *-staticdev_* *-doc_* *-demos_* *-examples_* *-sourcecode_* *-locale-* *-localedata-*"
 
 	if [ ! -z "${DEPLOY_KEEP_PACKAGES}" ]; then
 		return
@@ -47,4 +47,4 @@ do_package_remove_unused_ipk () {
 		fi
 	done
 }
-addtask package_remove_unused_ipk before do_rootfs
+# addtask package_remove_unused_ipk before do_rootfs
