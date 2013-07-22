@@ -1,0 +1,22 @@
+Putting the dib7000p device in and out of sleep can trigger a race, 
+causing the usb device to stall (-EPIPE), resulting in i2c errors:
+
+DiB0070 I2C write failed
+DiB0070 I2C read failed
+
+As a workaround, do not put the device to sleep
+
+Perhaps the dib8000/9000 need the same workaround
+
+diff --git a/drivers/media/dvb/dvb-usb/dib0700_devices.c b/drivers/media/dvb/dvb-usb/dib0700_devices.c
+index f9e966a..7eff710 100644
+--- a/drivers/media/dvb/dvb-usb/dib0700_devices.c
++++ b/drivers/media/dvb/dvb-usb/dib0700_devices.c
+@@ -774,6 +774,7 @@ static int dib7070_tuner_reset(struct dvb_frontend *fe, int onoff)
+ static int dib7070_tuner_sleep(struct dvb_frontend *fe, int onoff)
+ {
+ 	deb_info("sleep: %d", onoff);
++	if (onoff) return 0;
+ 	return dib7000p_set_gpio(fe, 9, 0, onoff);
+ }
+ 

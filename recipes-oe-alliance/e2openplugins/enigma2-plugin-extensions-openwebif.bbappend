@@ -1,5 +1,5 @@
 MODULE = "OpenWebif"
-PRINC = "28"
+PRINC = "29"
 DEPENDS += "enigma2 python-pyopenssl"
 RDEPENDS_${PN} += " python-pyopenssl"
 
@@ -8,6 +8,7 @@ FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 SRC_URI = "git://github.com/oe-alliance/e2openplugin-${MODULE}.git;protocol=git"
 SRC_URI_append_vusolo2 = " file://openwebif_transcoding.patch"
 SRC_URI_append_vuduo2 = " file://openwebif_transcoding.patch"
+SRC_URI_append_inihdp = " file://openwebif_transcoding.patch"
 
 S="${WORKDIR}/git"
 
@@ -29,7 +30,7 @@ python do_package_prepend () {
 		('tmtwin', 'tmtwin.jpg', 'tm_twin.png'),
 		('tm2t', 'tm2t.jpg', 'tm_2t.png'),
 		('tmsingle', 'tmsingle.jpg', 'tm_single.png'),
-		('tmnano', 'tmnano.jpg', 'tm_nano.png'),		
+		('tmnano', 'tmnano.jpg', 'tm_nano.png'),
 		('vuduo', 'duo.jpg', 'vu_normal.png'),
 		('vuduo2', 'duo2.jpg', 'vu_normal.png'),
 		('vusolo', 'solo.jpg', 'vu_normal.png'),
@@ -42,9 +43,10 @@ python do_package_prepend () {
 		('gbquad', 'gbquad.jpg', 'gigablue_black.png'),
 		('ventonhdx', 'ini-3000.jpg', 'ini-3000.png'),
 		('ventonhde', 'ini-3000.jpg', 'ini-3000.png'),
+		('inihdp', 'ini-3000.jpg', 'ini-3000.png'),
 		('xp1000', 'xp1000.jpg', 'xp_rc14_normal.png'),
 		('ebox5000', 'ebox5000.jpg', 'ebox5000.png'),
-		('ebox5100', 'ebox5100.jpg', 'ebox5000.png'),		
+		('ebox5100', 'ebox5100.jpg', 'ebox5000.png'),
 		('ebox7358', 'ebox7358.jpg', 'ebox5000.png'),
 		('ixussone', 'ixussone.jpg', 'ixussone.png'),
 		('ixusszero', 'ixusszero.jpg', 'ixusszero.png'),
@@ -55,7 +57,7 @@ python do_package_prepend () {
 		('azboxme', 'unknown.jpg', 'dm_normal.png'),
 		('azboxhd', 'unknown.jpg', 'dm_normal.png'),
 		('azboxminime', 'unknown.jpg', 'dm_normal.png'),
-		('e3hd', 'e3hd.jpg', 'e3hd.png'),		
+		('e3hd', 'e3hd.jpg', 'e3hd.png'),
 	]
 	import os
 	top = '${D}${PLUGINPATH}/public/images/'
