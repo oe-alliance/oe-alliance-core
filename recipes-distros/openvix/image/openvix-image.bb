@@ -47,4 +47,4 @@ do_package_remove_unused_ipk () {
 		fi
 	done
 }
-addtask package_remove_unused_ipk before do_rootfs
+# addtask package_remove_unused_ipk before do_rootfs
