@@ -5,7 +5,7 @@ LICENSE = "CLOSED"
 RDEPENDS = "ncurses"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-INIDVBCBIN = "venton_blindscan"
+INIDVBCBIN = "ini_blindscan"
 
 SRC_URI = "file://${INIDVBCBIN}"
 
@@ -13,11 +13,11 @@ PROVIDES += "virtual/blindscan-dvbs"
 RPROVIDES_${PN} += "virtual/blindscan-dvbs"
 
 PV = "2.0"
-PR = "r3"
+PR = "r4"
 
 S = "${WORKDIR}/"
 
 do_install() {
 	install -d "${D}/${bindir}"
-	install -m 0755 "${S}/venton_blindscan" "${D}/${bindir}"
+	install -m 0755 "${S}/ini_blindscan" "${D}/${bindir}"
 }
