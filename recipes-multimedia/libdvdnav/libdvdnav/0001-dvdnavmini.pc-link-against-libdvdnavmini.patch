@@ -1,0 +1,25 @@
+upstream: Daniel Baumann <daniel@debian.org>
+status: pending
+
+From 2329cd28d7508f9809f849fa547362aa7df160ba Mon Sep 17 00:00:00 2001
+From: Andreas Oberritter <obi@opendreambox.org>
+Date: Fri, 8 Oct 2010 00:50:54 +0000
+Subject: [PATCH] dvdnavmini.pc: link against libdvdnavmini
+
+---
+ misc/dvdnavmini.pc.in |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/misc/dvdnavmini.pc.in b/misc/dvdnavmini.pc.in
+index 52945b3..773be2f 100644
+--- a/misc/dvdnavmini.pc.in
++++ b/misc/dvdnavmini.pc.in
+@@ -8,4 +8,4 @@ Description: DVD Navigation mini library
+ Version: @VERSION@
+ 
+ Cflags: -I${includedir} @DVDREAD_CFLAGS@ @THREAD_CFLAGS@
+-Libs: -L${libdir} -ldvdnav @THREAD_LIBS@
++Libs: -L${libdir} -ldvdnavmini @THREAD_LIBS@
+-- 
+1.7.1
+
