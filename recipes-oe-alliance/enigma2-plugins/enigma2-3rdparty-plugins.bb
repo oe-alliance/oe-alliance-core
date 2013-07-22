@@ -9,7 +9,7 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r305"
+PR = "r306"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -121,7 +121,6 @@ do_deploy_append_duo2() {
 }
 do_deploy_append_et4x00() {
 # 	Install any packages that are only For this machines feed here,
-	install -m 0644 enigma2-plugin-extensions-et-portal_3.0_all.ipk ${WORKDIR}/deploy-ipks/3rdparty
 	install -m 0644 enigma2-plugin-extensions-et-webbrowser_1.6.1-r1_et4x00.ipk ${WORKDIR}/deploy-ipks/3rdparty
 	install -m 0644 enigma2-plugin-weblinks-basic_1.3-r0_et4x00.ipk ${WORKDIR}/deploy-ipks/3rdparty
 	install -m 0644 enigma2-plugin-weblinks-games_1.0-r0_et4x00.ipk ${WORKDIR}/deploy-ipks/3rdparty
@@ -132,14 +131,12 @@ do_deploy_append_et5x00() {
 }
 do_deploy_append_et6x00() {
 # 	Install any packages that are only For this machines feed here,
-	install -m 0644 enigma2-plugin-extensions-et-portal_3.0_all.ipk ${WORKDIR}/deploy-ipks/3rdparty
 	install -m 0644 enigma2-plugin-extensions-et-webbrowser_1.6.2-r1_et6x00.ipk ${WORKDIR}/deploy-ipks/3rdparty
 	install -m 0644 enigma2-plugin-weblinks-basic_1.3-r0_et6x00.ipk ${WORKDIR}/deploy-ipks/3rdparty
 	install -m 0644 enigma2-plugin-weblinks-games_1.0-r0_et6x00.ipk ${WORKDIR}/deploy-ipks/3rdparty
 }
 do_deploy_append_et9x00() {
 # 	Install any packages that are only For this machines feed here,
-	install -m 0644 enigma2-plugin-extensions-et-portal_3.0_all.ipk ${WORKDIR}/deploy-ipks/3rdparty
 	install -m 0644 enigma2-plugin-extensions-et-webbrowser_1.6.1-r1_et9x00.ipk ${WORKDIR}/deploy-ipks/3rdparty
 	install -m 0644 enigma2-plugin-weblinks-basic_1.3-r0_et9x00.ipk ${WORKDIR}/deploy-ipks/3rdparty
 	install -m 0644 enigma2-plugin-weblinks-games_1.0-r0_et9x00.ipk ${WORKDIR}/deploy-ipks/3rdparty
