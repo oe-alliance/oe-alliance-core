@@ -9,7 +9,7 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r306"
+PR = "r307"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -127,7 +127,6 @@ do_deploy_append_et4x00() {
 }
 do_deploy_append_et5x00() {
 # 	Install any packages that are only For this machines feed here,
-	install -m 0644 enigma2-plugin-extensions-et-portal_3.0_all.ipk ${WORKDIR}/deploy-ipks/3rdparty
 }
 do_deploy_append_et6x00() {
 # 	Install any packages that are only For this machines feed here,
