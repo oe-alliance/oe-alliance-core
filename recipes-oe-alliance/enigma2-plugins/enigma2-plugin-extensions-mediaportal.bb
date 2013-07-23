@@ -10,10 +10,10 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "4.5.3+git${SRCPV}"
 PKGV = "4.5.3+git${GITPKGV}"
-PR = "r5"
+PR = "r6"
 
-# SRC_URI = "git://github.com/dhwz/MediaPortal.git;protocol=git"
-SRC_URI = "git://github.com/HDMU/Mediaportal.git;protocol=git"
+SRC_URI = "git://github.com/dhwz/MediaPortal.git;protocol=git"
+
 
 S = "${WORKDIR}/git"
 
