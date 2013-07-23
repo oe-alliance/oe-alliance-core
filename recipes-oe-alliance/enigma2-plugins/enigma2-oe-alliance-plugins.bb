@@ -93,7 +93,6 @@ DEPENDS = "enigma2 \
 	mpfr \
 	vuplus-opera-browser-util \
 	lcd4linux \
-	vuplus-checkvfd \
 	"
 
 inherit gitpkgv autotools
@@ -101,7 +100,7 @@ inherit gitpkgv autotools
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r56"
+PR = "r57"
 
 SRC_URI="git://github.com/oe-alliance/oe-alliance-plugins.git;protocol=git"
 
