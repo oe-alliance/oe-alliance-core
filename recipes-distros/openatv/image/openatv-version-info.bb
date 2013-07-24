@@ -52,7 +52,7 @@ do_install() {
 				DRIVERSDATE=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/azbox/azbox-dvb-modules.bb | cut -b 12-19`
 			elif [ "${MACHINE}" = "dm8000" ]; then
 				DRIVERSDATE="20130619"
-			elif [ "${MACHINE}" = "dm7020hd" -0 "${MACHINE}" = "dm7020hdv2" ]; then
+			elif [ "${MACHINE}" = "dm7020hd" ]; then
 				DRIVERSDATE="20130717"
 			elif [ "${MACHINE}" = "dm500hd" -o "${MACHINE}" = "dm800se" -o "${MACHINE}" = "dm500hdv2" -o "${MACHINE}" = "dm800sev2" ]; then
 				DRIVERSDATE="20130607"
