@@ -18,6 +18,9 @@ SRC_URI_append_dm8000 = " \
 SRC_URI_append_dm7020hd = " \
 			file://dreambox.patch \
 			"
+SRC_URI_append_dm7020hdv2 = " \
+			file://dreambox.patch \
+			"
 SRC_URI_append_dm800se = " \
 			file://dreambox.patch \
 			"
@@ -26,7 +29,7 @@ SRC_URI_append_dm500hdv2 = " \
 			"
 SRC_URI_append_dm800sev2 = " \
 			file://dreambox.patch \
-			"			
+			"
 			
 S = "${WORKDIR}/AX88179_178A_LINUX_DRIVER_v1.4.0_SOURCE"
 

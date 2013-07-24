@@ -1,5 +1,5 @@
 MODULE = "OpenWebif"
-PRINC = "30"
+PRINC = "31"
 DEPENDS += "enigma2 python-pyopenssl"
 RDEPENDS_${PN} += " python-pyopenssl"
 
@@ -17,6 +17,7 @@ python do_package_prepend () {
 		('dm500hd', 'dm500hd.jpg', 'dm_normal.png'),
 		('dm500hdv2', 'dm500hd.jpg', 'dm_normal.png'),
 		('dm7020hd', 'dm7020hd.jpg', 'dm_normal.png'),
+		('dm7020hdv2', 'dm7020hd.jpg', 'dm_normal.png'),		
 		('dm8000', 'dm8000.jpg', 'dm_normal.png'),
 		('dm800se', 'dm800se.jpg', 'dm_normal.png'),
 		('dm800sev2', 'dm800se.jpg', 'dm_normal.png'),
