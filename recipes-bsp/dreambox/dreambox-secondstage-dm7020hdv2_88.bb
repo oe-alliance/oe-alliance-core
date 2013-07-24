@@ -1,4 +1,4 @@
-require dreambox-secondstage.inc
+require dreambox-secondstage-dm7020hdv2.inc
 
 PR = "${INC_PR}.0"
 

@@ -1,4 +1,4 @@
-require dreambox-dvb-modules.inc
+require dreambox-dvb-modules-dm7020hdv2.inc
 
 PR = "${INC_PR}.0"
 
