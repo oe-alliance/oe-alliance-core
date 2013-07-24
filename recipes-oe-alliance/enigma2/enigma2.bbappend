@@ -1,6 +1,6 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
-PRINC = "66"
+PRINC = "67"
 
 DEPENDS = " \
 	ethtool \
