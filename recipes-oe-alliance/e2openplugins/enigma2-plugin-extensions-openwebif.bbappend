@@ -1,5 +1,5 @@
 MODULE = "OpenWebif"
-PRINC = "32"
+PRINC = "33"
 DEPENDS += "enigma2 python-pyopenssl"
 RDEPENDS_${PN} += " python-pyopenssl"
 
@@ -54,9 +54,9 @@ python do_package_prepend () {
 		('iqonios100hd', 'ios100hd.jpg', 'iqon.png'),
 		('iqonios200hd', 'ios200hd.jpg', 'iqon.png'),
 		('iqonios300hd', 'ios300hd.jpg', 'iqon.png'),
-		('azboxme', 'unknown.jpg', 'dm_normal.png'),
-		('azboxhd', 'unknown.jpg', 'dm_normal.png'),
-		('azboxminime', 'unknown.jpg', 'dm_normal.png'),
+		('azboxme', 'me.jpg', 'me.png'),
+		('azboxhd', 'premium.jpg', 'premium.png'),
+		('azboxminime', 'minime.jpg', 'me.png'),
 		('e3hd', 'e3hd.jpg', 'e3hd.png'),
 	]
 	import os
@@ -72,6 +72,9 @@ python do_package_prepend () {
 				if target_box == 'ini-3000.jpg':
 					if not (name == 'ini-1000.jpg' or name == 'ini-1000de.jpg' or name == 'ini-1000sv.jpg' or name == 'ini-3000.jpg' or name == 'ini-5000.jpg' or name == 'ini-5000sv.jpg' or name == 'ini-7000.jpg'):
 						os.remove(os.path.join(root, name))
+				elif target_box == 'premium.jpg':
+					if not (name == 'elite.jpg' or name == 'premium+.jpg' or name == 'ultra.jpg'):
+						os.remove(os.path.join(root, name))
 				else:
 					os.remove(os.path.join(root, name))
 	for root, dirs, files in os.walk(top + 'remotes', topdown=False):
@@ -80,6 +83,9 @@ python do_package_prepend () {
 				if target_remote == 'ini-3000.png':
 					if not (name == 'ini-1000.png' or name == 'ini-1000de.png' or name == 'ini-3000.png' or name == 'ini-5000.png' or name == 'miraclebox.png' or name == 'ini-7000.png'):
 						os.remove(os.path.join(root, name))
+				elif target_remote == 'premium.png':
+					if not (name == 'elite.png'):
+						os.remove(os.path.join(root, name))		
 				else:
 					os.remove(os.path.join(root, name))
 }
