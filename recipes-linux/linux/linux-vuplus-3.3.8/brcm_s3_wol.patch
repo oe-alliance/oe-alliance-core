@@ -1,3 +1,23 @@
+diff --git a/arch/mips/brcmstb/s3_standby.S b/arch/mips/brcmstb/s3_standby.S
+index f1d836a..038a67d 100644
+--- a/arch/mips/brcmstb/s3_standby.S
++++ b/arch/mips/brcmstb/s3_standby.S
+@@ -76,6 +76,7 @@
+ # save cp0 sr
+ 	sw	t1, 48(t0)
+ 
++#if 0
+ # Write-back gp registers - cache will be gone after wakeup
+ # align context area address to the cache line
+ 	addiu	t1, a2, -1
+@@ -118,6 +119,7 @@ skip_dram_encode:
+ 	sw	t1, 0(t0)
+ 	lw	zero, 0(t0)
+ 
++#endif
+ # deep power down request
+ pd_request:
+ 	li	t0, REG(BCHP_AON_CTRL_PM_CTRL)
 diff --git a/drivers/net/ethernet/broadcom/genet/bcmgenet.c b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
 old mode 100644
 new mode 100755
@@ -39,29 +59,31 @@ index faf58ab..52e31ed
  	device_set_wakeup_enable(&dev->dev, wol->wolopts);
  	pDevCtrl->wolopts = wol->wolopts;
  	return 0;
-diff --git a/kernel/printk.c b/kernel/printk.c
-index 1af3691..b0b73ff 100644
---- a/kernel/printk.c
-+++ b/kernel/printk.c
-@@ -1125,11 +1125,21 @@ MODULE_PARM_DESC(console_suspend, "suspend console during suspend"
+diff --git a/kernel/power/suspend.c b/kernel/power/suspend.c
+index 038d72b..dce3483 100644
+--- a/kernel/power/suspend.c
++++ b/kernel/power/suspend.c
+@@ -131,6 +131,15 @@ void __attribute__ ((weak)) arch_suspend_enable_irqs(void)
   *
-  * This disables printk() while we go into suspend states
+  * This function should be called after devices have been suspended.
   */
 +void (*brcm_s3_cb)(void);
 +
 +
 +void register_brcm_s3_cb(void (*cb)(void))
 +{
-+	brcm_s3_cb = cb;
++        brcm_s3_cb = cb;
 +}
 +EXPORT_SYMBOL(register_brcm_s3_cb);
 +
- void suspend_console(void)
+ static int suspend_enter(suspend_state_t state, bool *wakeup)
  {
- 	if (!console_suspend_enabled)
- 		return;
- 	printk("Suspending console(s) (use no_console_suspend to debug)\n");
+ 	int error;
+@@ -156,6 +165,7 @@ static int suspend_enter(suspend_state_t state, bool *wakeup)
+ 	if (suspend_test(TEST_PLATFORM))
+ 		goto Platform_wake;
+ 
 +	if(brcm_s3_cb) brcm_s3_cb();
- 	console_lock();
- 	console_suspended = 1;
- 	up(&console_sem);
+ 	error = disable_nonboot_cpus();
+ 	if (error || suspend_test(TEST_CPUS))
+ 		goto Enable_cpus;

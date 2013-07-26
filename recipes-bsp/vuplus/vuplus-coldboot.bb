@@ -3,7 +3,7 @@ MAINTAINER = "vuplus team"
 LICENSE = "CLOSED"
 
 PV = "1.0"
-PR = "r2"
+PR = "r3"
 
 SRC_URI = "file://coldboot file://coldboot.sh"
 
