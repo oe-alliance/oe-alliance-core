@@ -9,7 +9,7 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r311"
+PR = "r312"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -188,7 +188,11 @@ do_deploy_append_e3hd() {
 do_deploy_append_ventonhdx() {
 # 	Install any packages that are only For this machines feed here, uncomment the line below and change as required
 }
-do_deploy_append_ventonhde() {
+do_deploy_append_inihde() {
+# 	Install any packages that are only For this machines feed here, uncomment the line below and change as required
+}
+
+do_deploy_append_inihdp() {
 # 	Install any packages that are only For this machines feed here, uncomment the line below and change as required
 }
 

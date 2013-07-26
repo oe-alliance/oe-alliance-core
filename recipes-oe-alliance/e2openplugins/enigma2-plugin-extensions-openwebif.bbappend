@@ -1,5 +1,5 @@
 MODULE = "OpenWebif"
-PRINC = "31"
+PRINC = "32"
 DEPENDS += "enigma2 python-pyopenssl"
 RDEPENDS_${PN} += " python-pyopenssl"
 
@@ -42,7 +42,7 @@ python do_package_prepend () {
 		('gb800ue', 'gb800ue.jpg', 'gigablue_black.png'),
 		('gbquad', 'gbquad.jpg', 'gigablue_black.png'),
 		('ventonhdx', 'ini-3000.jpg', 'ini-3000.png'),
-		('ventonhde', 'ini-3000.jpg', 'ini-3000.png'),
+		('inihde', 'ini-3000.jpg', 'ini-3000.png'),
 		('inihdp', 'ini-3000.jpg', 'ini-3000.png'),
 		('xp1000', 'xp1000.jpg', 'xp_rc14_normal.png'),
 		('ebox5000', 'ebox5000.jpg', 'ebox5000.png'),
