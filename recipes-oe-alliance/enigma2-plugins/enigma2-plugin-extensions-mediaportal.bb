@@ -10,12 +10,12 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "4.5.3+git${SRCPV}"
 PKGV = "4.5.3+git${GITPKGV}"
-PR = "r6"
+PR = "r7"
 
 SRC_URI = "git://github.com/dhwz/MediaPortal.git;protocol=git"
 
 
-S = "${WORKDIR}/git"
+S = "${WORKDIR}/git/src"
 
 do_install() {
 	mkdir -p ${D}/usr/lib/enigma2/python/Plugins/Extensions/MediaPortal
