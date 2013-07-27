@@ -9,7 +9,7 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r312"
+PR = "r313"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -90,6 +90,7 @@ do_deploy() {
 	install -m 0644 enigma2-plugin-extensions-webradiofs_10.64_all.ipk ${WORKDIR}/deploy-ipks/3rdparty
 	install -m 0644 enigma2-plugin-extensions-wikipedia_1.8rc1_mips32el.ipk ${WORKDIR}/deploy-ipks/3rdparty
 	install -m 0644 enigma2-plugin-extensions-yampmusicplayer_2.1.1-2012-09-23_mipsel.ipk ${WORKDIR}/deploy-ipks/3rdparty
+	install -m 0644 enigma2-plugin-extensions-csfd_9_35-20130615_all.ipk ${WORKDIR}/deploy-ipks/3rdparty
 	for i in ${THIRDPARTY_EXTRA_PLUGINS}; do
 		install -m 0644 $i ${WORKDIR}/deploy-ipks/3rdparty;
 	done;
