@@ -14,6 +14,7 @@ DEPENDS = "\
 	${@base_contains("MACHINE", "vusolo2", "enigma2-plugin-drivers-network-usb-rt5572" , "", d)} \
 	${@base_contains("MACHINE", "vuduo2", "enigma2-plugin-drivers-network-usb-rt5572" , "", d)} \
 	${@base_contains("MACHINE", "gbquad", "enigma2-plugin-drivers-network-usb-rt3573" , "", d)} \
+	${@base_contains("MACHINE", "inihdp", "enigma2-plugin-drivers-network-usb-rt5572" , "", d)} \
 	"
 
-PR = "r3"
+PR = "r4"
