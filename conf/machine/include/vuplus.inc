@@ -1,6 +1,6 @@
 MACHINE_BRAND = "Vu+"
 
-MACHINE_ESSENTIAL_EXTRA_DEPENDS = " \
+EXTRA_IMAGEDEPENDS += "\
 	vuplus-opera-browser-util \
 	"
 

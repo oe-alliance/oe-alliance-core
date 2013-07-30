@@ -84,12 +84,10 @@ DEPENDS = "enigma2 \
 	usbmodeswitch-data \
 	wvdial \
 	wvstreams \
-	webbrowser-utils \
 	usbutils \
 	gmp \
 	tslib \
 	mpfr \
-	vuplus-opera-browser-util \
 	lcd4linux \
 	png-util \
 	"
@@ -99,7 +97,7 @@ inherit gitpkgv autotools
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r59"
+PR = "r65"
 
 SRC_URI="git://github.com/oe-alliance/oe-alliance-plugins.git;protocol=git"
 
