@@ -6,33 +6,25 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3
 inherit task
 
 PV = "1.0"
-PR = "r28"
+PR = "r29"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 WIFI_DRIVERS = " \
-	${@base_contains("MACHINE_FEATURES", "wifiusblegacy", "rt73 rt3070 rtl871x", \
-	" \
-	firmware-carl9170 \
-	firmware-htc7010 \
-	firmware-htc9271 \
-	\
-	kernel-module-ath9k-htc \
-	kernel-module-carl9170 \
-	kernel-module-rtl8187 \
-	kernel-module-rt2500usb \
-	kernel-module-rt2800usb \
-	kernel-module-rt73usb \
-	kernel-module-r8712u \
-	kernel-module-zd1211rw \
-	", d)} \
+	${@base_contains("MACHINE", "vuduo2", "enigma2-plugin-drivers-network-usb-rt5572", "", d)} \
 	${@base_contains("MACHINE_FEATURES", "wifi61", "rt61", "", d)} \
+	${@base_contains("MACHINE_FEATURES", "wifiusblegacy", "enigma2-plugin-drivers-network-usb-rt3070", " \
 	\
-	rtl8192cu \
-	firmware-rt73 \
-	firmware-zd1211 \
-	firmware-rtl8192cu \
-	firmware-rtl8712u \
-	firmware-rt2870 \
+	enigma2-plugin-drivers-network-usb-ath9k-htc \
+	enigma2-plugin-drivers-network-usb-carl9170 \
+	enigma2-plugin-drivers-network-usb-rt2800 \
+	enigma2-plugin-drivers-network-usb-rt2500 \
+	enigma2-plugin-drivers-network-usb-rtl8187 \
+	enigma2-plugin-drivers-network-usb-zd1211rw \
+	", d)} \
+	\
+	enigma2-plugin-drivers-network-usb-rt73 \
+	enigma2-plugin-drivers-network-usb-r8712u \
+	enigma2-plugin-drivers-network-usb-rtl8192cu \
 	"
 
 DEPENDS = "enigma2 enigma2-plugins enigma2-oe-alliance-plugins oe-alliance-feeds enigma2-3rdparty-plugins"
