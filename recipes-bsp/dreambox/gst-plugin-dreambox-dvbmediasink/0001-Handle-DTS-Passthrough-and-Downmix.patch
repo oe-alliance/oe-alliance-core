@@ -1,0 +1,64 @@
+From acba2c5049661b86d04b6650e4cc8186922aa3a8 Mon Sep 17 00:00:00 2001
+From: Athanasios Oikonomou <athoik@gmail.com>
+Date: Fri, 28 Jun 2013 21:48:07 +0300
+Subject: [PATCH 1/1] Handle DTS Passthrough and Downmix
+
+When downmix is enabled we remove on runtime the dts caps to give priority on dtsdownmix.
+---
+ src/gstdvbaudiosink.c |   21 ++++++++++++++++++++-
+ 1 file changed, 20 insertions(+), 1 deletion(-)
+
+diff --git a/src/gstdvbaudiosink.c b/src/gstdvbaudiosink.c
+index 93cb587..5256af2 100644
+--- a/src/gstdvbaudiosink.c
++++ b/src/gstdvbaudiosink.c
+@@ -62,6 +62,7 @@
+ #endif
+ #include <unistd.h>
+ #include <stdint.h>
++#include <stdio.h>
+ #include <string.h>
+ #include <sys/ioctl.h>
+ #include <sys/socket.h>
+@@ -299,6 +300,19 @@ gst_dvbaudiosink_base_init (gpointer klass)
+ 	gst_element_class_set_details (element_class, &element_details);
+ }
+ 
++static gboolean get_downmix_setting()
++{
++	FILE *f;
++	char buffer[32] = {0};
++	f = fopen("/proc/stb/audio/ac3", "r");
++	if (f)
++	{
++		fread(buffer, sizeof(buffer), 1, f);
++		fclose(f);
++	}
++	return !strncmp(buffer, "downmix", 7);
++}
++
+ static GstCaps *
+ gst_dvbaudiosink_get_caps (GstBaseSink *basesink)
+ {
+@@ -311,12 +325,17 @@ gst_dvbaudiosink_get_caps (GstBaseSink *basesink)
+ 		gst_caps_remove_structure(caps, 11); // remove WMA!!
+ 	}
+ 	else
+-		caps = gst_static_caps_get(&hwtemplate->static_caps);
++		caps = gst_caps_copy(&hwtemplate->static_caps.caps);
+ 
+ //	strcaps = gst_caps_to_string(caps);
+ //	GST_INFO_OBJECT (self, "dynamic caps for model %d '%s'", hwtype, gst_caps_to_string(caps));
+ //	g_free(strcaps);
+ 
++	if (hwtemplate == &sink_factory_broadcom_dts && get_downmix_setting()) {
++		gst_caps_remove_structure(caps, 9); // remove x-private1-dts
++		gst_caps_remove_structure(caps, 8); // remove x-dts
++	}
++
+ 	return caps;
+ }
+ 
+-- 
+1.7.9.5
+
