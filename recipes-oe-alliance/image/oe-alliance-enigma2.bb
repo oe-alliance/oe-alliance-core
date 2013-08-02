@@ -6,29 +6,10 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3
 inherit task
 
 PV = "1.0"
-PR = "r31"
+PR = "r32"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-OPTIONAL_WIFIDRIVERS = "${@base_contains("MACHINE_FEATURES", "wifiusblegacy", "enigma2-plugin-drivers-network-usb-rt3070", " \
-	enigma2-plugin-drivers-network-usb-ath9k-htc \
-	enigma2-plugin-drivers-network-usb-carl9170 \
-	enigma2-plugin-drivers-network-usb-rt2800 \
-	enigma2-plugin-drivers-network-usb-rt2500 \
-	enigma2-plugin-drivers-network-usb-rtl8187 \
-	enigma2-plugin-drivers-network-usb-zd1211rw \
-	", d)} \
-	enigma2-plugin-drivers-network-usb-rt73 \
-	enigma2-plugin-drivers-network-usb-r8712u \
-	"
-
-WIFI_DRIVERS = " \
-	${@base_contains("MACHINE", "vuduo2", "enigma2-plugin-drivers-network-usb-rt5572", "", d)} \
-	${@base_contains("MACHINE_BRAND", "Vu+", "enigma2-plugin-drivers-network-usb-rtl8192cu", "", d)} \
-	${@base_contains("MACHINE_FEATURES", "wifi61", "rt61", "", d)} \
-	${@base_contains("DISTRO_NAME", "openvix", "", "${OPTIONAL_WIFIDRIVERS}", d)} \
-	"
-
-DEPENDS = "enigma2 enigma2-plugins enigma2-oe-alliance-plugins oe-alliance-feeds enigma2-3rdparty-plugins"
+DEPENDS = "enigma2 enigma2-plugins enigma2-oe-alliance-plugins oe-alliance-feeds enigma2-3rdparty-plugins ${@base_contains("MACHINE_FEATURES", "wifi", "oe-alliance-wifi", "", d)}"
 
 RDEPENDS = "\
 	oe-alliance-feeds-configs \
@@ -55,7 +36,7 @@ RRECOMMENDS = "\
 	\
 	${@base_contains("MACHINE_FEATURES", "blindscan-dvbs", "enigma2-plugin-systemplugins-blindscan" , "", d)} \
 	${@base_contains("MACHINE_FEATURES", "hdmicec", "enigma2-plugin-systemplugins-hdmicec" , "", d)} \
-	${@base_contains("MACHINE_FEATURES", "wifi", "enigma2-plugin-systemplugins-wirelesslan ${WIFI_DRIVERS}", "", d)} \
+	${@base_contains("MACHINE_FEATURES", "wifi", "oe-alliance-wifi", "", d)} \
 	${@base_contains("MACHINE_FEATURES", "dvb-c", "enigma2-plugin-systemplugins-cablescan" , "", d)} \
 	${@base_contains("MACHINE_FEATURES", "frontprocessor", "enigma2-plugin-systemplugins-frontprocessorupgrade" , "", d)} \
 	${@base_contains("MACHINE_FEATURES", "ci", "enigma2-plugin-systemplugins-commoninterfaceassignment", "", d)} \
