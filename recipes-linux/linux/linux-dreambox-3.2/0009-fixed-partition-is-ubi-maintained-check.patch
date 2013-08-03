@@ -1,0 +1,96 @@
+From 43ab2e3df470c90602974bb552a22e2b56c408f4 Mon Sep 17 00:00:00 2001
+From: Andreas Monzner <andreas.monzner@dream-property.net>
+Date: Wed, 31 Jul 2013 23:47:23 +0200
+Subject: [PATCH] fixed partition is ubi maintained check
+
+---
+ drivers/mtd/brcmnand/brcmnand_base.c | 38 +++++++++++++++++++++++++++---------
+ 1 file changed, 29 insertions(+), 9 deletions(-)
+
+diff --git a/drivers/mtd/brcmnand/brcmnand_base.c b/drivers/mtd/brcmnand/brcmnand_base.c
+index 00a9ed5..dff454a 100644
+--- a/drivers/mtd/brcmnand/brcmnand_base.c
++++ b/drivers/mtd/brcmnand/brcmnand_base.c
+@@ -4094,6 +4094,28 @@ if (oobarea) { printk("Read OOB: "); print_oobbuf(write_oob, 512); }
+ #define edu_write_verify(...) (0)
+ #endif
+ 
++static int is_ubi_maintained(struct brcmnand_chip * chip, loff_t offset)
++{
++	int ret = 0;
++	int *num_parts = (int*)(chip+1);
++	if (*num_parts) {
++		struct mtd_partition **parts = (struct mtd_partition**)(num_parts+1);
++		struct mtd_partition *part = *parts;
++		int mtd_num = 0;
++		while (mtd_num < *num_parts) {
++			if (offset >= part->offset && offset < (part->offset + part->size)) {
++				struct mtd_info *mtd = get_mtd_device(NULL, mtd_num);
++				if (IS_ERR(mtd))
++					return ret;
++				ret |= (mtd->flags & (1<<31));
++			}
++			++part;
++			++mtd_num;
++		}
++	}
++
++	return !!ret;
++}
+ 
+ /**
+  * brcmnand_posted_write - [BrcmNAND Interface] Write a buffer to the flash cache
+@@ -4173,7 +4195,7 @@ if (gdebug > 3) {printk("%s: oob=\n", __FUNCTION__); print_oobbuf(oobarea, 16);}
+ 		else { // Need BBT
+ //printk("80 block mark bad\n");
+ #ifdef CONFIG_MTD_BRCMNAND_MARK_BADBLOCKS
+-			if (!(mtd->flags & (1<<31))) { // MTD device NOT maintained by UBI ?
++			if (!is_ubi_maintained(chip, offset)) { // MTD device NOT maintained by UBI ?
+ 				printk(KERN_WARNING "%s: Marking bad block @%08x\n", __FUNCTION__, (unsigned int) offset);
+ 				ret = chip->block_markbad(mtd, offset);
+ 				ret = -EINVAL;
+@@ -4554,7 +4576,7 @@ printk("****** Workaround, using OP_PROGRAM_PAGE instead of OP_PROGRAM_SPARE_ARE
+ 		int ret;
+ 
+ #ifdef CONFIG_MTD_BRCMNAND_MARK_BADBLOCKS
+-		if (!(mtd->flags & (1<<31))) { // MTD device NOT maintained by UBI ?
++		if (!is_ubi_maintained(chip, offset)) { // MTD device NOT maintained by UBI ?
+ 			printk(KERN_WARNING "%s: Marking bad block @%08x\n", __FUNCTION__, (unsigned int) offset);
+ 			ret = chip->block_markbad(mtd, offset);
+ 			return -EINVAL;
+@@ -5672,9 +5694,7 @@ printk("-->%s, offset=%0llx, len=%08x\n", __FUNCTION__, from, len);}
+ 	brcmnand_release_device(mtd);
+ 
+ #ifdef CONFIG_MTD_BRCMNAND_CORRECTABLE_ERR_HANDLING
+-	if (mtd->flags & (1<<31))
+-		;
+-	else if (unlikely(ret == -EUCLEAN && !atomic_read(&inrefresh))) {
++	if (unlikely(ret == -EUCLEAN && !atomic_read(&inrefresh) && !is_ubi_maintained(chip, from))) {
+ 		atomic_inc(&inrefresh);
+ 		if(brcmnand_refresh_blk(mtd, from) == 0) { 
+ 			ret = 0; 
+@@ -7312,9 +7332,7 @@ static int brcmnand_erase(struct mtd_info *mtd, struct erase_info *instr)
+ 		mtd_erase_callback(instr);
+ 
+ #ifdef CONFIG_MTD_BRCMNAND_CORRECTABLE_ERR_HANDLING
+-		if (mtd->flags & (1<<31))
+-			;
+-		else if (chip->cet) {
++		if (chip->cet) {
+ 			if (chip->cet->flags != BRCMNAND_CET_DISABLED && 
+ 					chip->cet->flags != BRCMNAND_CET_LAZY && allowbbt != 1) {
+ 				len = instr->state == MTD_ERASE_DONE ? instr->len : instr->fail_addr - instr->addr;
+@@ -7327,7 +7345,9 @@ static int brcmnand_erase(struct mtd_info *mtd, struct erase_info *instr)
+ 						addr = addr + block_size;
+ 						continue;
+ 					}
+-					if(brcmnand_cet_erasecallback(mtd, addr) < 0) {
++					if (is_ubi_maintained(chip, addr))
++						;
++					else if(brcmnand_cet_erasecallback(mtd, addr) < 0) {
+ 						printk(KERN_INFO "Error in CET erase callback, disabling CET\n");
+ 						chip->cet->flags = BRCMNAND_CET_DISABLED;
+ 					}
+-- 
+1.8.3.2
+

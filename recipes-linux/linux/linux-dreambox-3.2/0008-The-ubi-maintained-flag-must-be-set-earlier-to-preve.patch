@@ -1,0 +1,57 @@
+From fba157484336f1438f0cdb0f60a59a75b807235b Mon Sep 17 00:00:00 2001
+From: Andreas Monzner <andreas.monzner@dream-property.net>
+Date: Mon, 29 Jul 2013 11:36:00 +0200
+Subject: [PATCH] The ubi maintained flag must be set earlier to prevent the
+ broadcom driver nand blocks refreshes that are actually managed by UBI
+ Hopefully this fixes the problem that UBIFS partitions are mounted in
+ read-only mode.
+
+---
+ drivers/mtd/ubi/build.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/mtd/ubi/build.c b/drivers/mtd/ubi/build.c
+index 4f9ef05..4f3a1fd 100644
+--- a/drivers/mtd/ubi/build.c
++++ b/drivers/mtd/ubi/build.c
+@@ -876,6 +876,7 @@ int ubi_attach_mtd_dev(struct mtd_info *mtd, int ubi_num, int vid_hdr_offset)
+ {
+ 	struct ubi_device *ubi;
+ 	int i, err, ref = 0;
++	int was_ubi_maintained = mtd->flags & (1<<31); // DMM hack.. used in brcmand to detect mtd partitions used by UBI
+ 
+ 	/*
+ 	 * Check if we already have the same MTD device attached.
+@@ -962,6 +963,8 @@ int ubi_attach_mtd_dev(struct mtd_info *mtd, int ubi_num, int vid_hdr_offset)
+ 	if (err)
+ 		goto out_free;
+ 
++	mtd->flags |= (1<<31); // DMM hack.. used in brcmand to detect mtd partitions used by UBI
++
+ 	err = attach_by_scanning(ubi);
+ 	if (err) {
+ 		dbg_err("failed to attach by scanning, error %d", err);
+@@ -1020,8 +1023,6 @@ int ubi_attach_mtd_dev(struct mtd_info *mtd, int ubi_num, int vid_hdr_offset)
+ 	ubi_devices[ubi_num] = ubi;
+ 	ubi_notify_all(ubi, UBI_VOLUME_ADDED, NULL);
+ 
+-	mtd->flags |= (1<<31); // DMM hack.. used in brcmand to detect mtd partitions used by UBI
+-
+ 	return ubi_num;
+ 
+ out_debugfs:
+@@ -1043,6 +1044,11 @@ out_free:
+ 		put_device(&ubi->dev);
+ 	else
+ 		kfree(ubi);
++
++	// DMM hack.. used in brcmand to detect mtd partitions used by UBI
++	if (!was_ubi_maintained)
++		mtd->flags &= ~(1<<31);
++
+ 	return err;
+ }
+ 
+-- 
+1.8.3.2
+

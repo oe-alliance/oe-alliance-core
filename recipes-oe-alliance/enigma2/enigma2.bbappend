@@ -1,6 +1,6 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
-PRINC = "68"
+PRINC = "69"
 
 DEPENDS = " \
 	ethtool \
@@ -118,8 +118,10 @@ do_configure_prepend() {
 	elif [ "${MACHINE}" = "dm8000" ]; then
 		DRIVERSDATE="20130619"
 	elif [ "${MACHINE}" = "dm7020hd" ]; then
-		DRIVERSDATE="20130717"
-	elif [ "${MACHINE}" = "dm500hd" -o "${MACHINE}" = "dm800se" -o "${MACHINE}" = "dm500hdv2" -o "${MACHINE}" = "dm800sev2" ]; then
+		DRIVERSDATE="20130730"
+	elif [ "${MACHINE}" = "dm800sev2" ]; then
+		DRIVERSDATE="20130725"
+	elif [ "${MACHINE}" = "dm500hd" -o "${MACHINE}" = "dm800se" -o "${MACHINE}" = "dm500hdv2" ]; then
 		DRIVERSDATE="20130607"
 	elif [ "${MACHINE}" = "dm800" ]; then
 		DRIVERSDATE="20130501"
