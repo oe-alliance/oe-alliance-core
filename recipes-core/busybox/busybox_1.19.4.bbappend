@@ -1,4 +1,4 @@
-PRINC = "58"
+PRINC = "59"
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/${P}:"
 FILESEXTRAPATHS_prepend_azboxhd := "${THISDIR}/${PN}/${MACHINE}:"
