@@ -63,42 +63,43 @@ case "$ACTION" in
 				# mount the first non-removable internal device on /media/hdd
 				DEVICETYPE="hdd"
 			else
-				MODEL=`cat /sys/block/$DEVBASE/device/model`
-				if [ "$MODEL" == "USB CF Reader   " ]; then
-					DEVICETYPE="cf"
-				elif [ "$MODEL" == "Compact Flash   " ]; then
-					DEVICETYPE="cf"
-				elif [ "$MODEL" == "USB SD Reader   " ]; then
-					DEVICETYPE="mmc1"
-				elif [ "$MODEL" == "USB SD  Reader  " ]; then
-					DEVICETYPE="mmc1"
-				elif [ "$MODEL" == "SD/MMC          " ]; then
-					DEVICETYPE="mmc1"
-				elif [ "$MODEL" == "USB MS Reader   " ]; then
-					DEVICETYPE="mmc1"
-				elif [ "$MODEL" == "SM/xD-Picture   " ]; then
-					DEVICETYPE="mmc1"
-				elif [ "$MODEL" == "USB SM Reader   " ]; then
-					DEVICETYPE="mmc1"
-				elif [ "$MODEL" == "MS/MS-Pro       " ]; then
-					DEVICETYPE="mmc1"
-				else
-					if grep -q "/media/hdd" /proc/mounts ; then
-						DEVICETYPE="usb"
+				if [ -z "${LABEL}" ] ; then
+					MODEL=`cat /sys/block/$DEVBASE/device/model`
+					if [ "$MODEL" == "USB CF Reader   " ]; then
+						DEVICETYPE="cf"
+					elif [ "$MODEL" == "Compact Flash   " ]; then
+						DEVICETYPE="cf"
+					elif [ "$MODEL" == "USB SD Reader   " ]; then
+						DEVICETYPE="mmc1"
+					elif [ "$MODEL" == "USB SD  Reader  " ]; then
+						DEVICETYPE="mmc1"
+					elif [ "$MODEL" == "SD/MMC          " ]; then
+						DEVICETYPE="mmc1"
+					elif [ "$MODEL" == "USB MS Reader   " ]; then
+						DEVICETYPE="mmc1"
+					elif [ "$MODEL" == "SM/xD-Picture   " ]; then
+						DEVICETYPE="mmc1"
+					elif [ "$MODEL" == "USB SM Reader   " ]; then
+						DEVICETYPE="mmc1"
+					elif [ "$MODEL" == "MS/MS-Pro       " ]; then
+						DEVICETYPE="mmc1"
 					else
-						# mount the first removable device on /media/hdd only then no other internal hdd present
-						DEVICETYPE="hdd"
-						DEVLIST=`cat /proc/diskstats | cut -c 14- | cut -d " " -f1 | grep "sd[a-z][0-9]"`
-						for DEV in $DEVLIST; do
-							DEVBASE=`expr substr $DEV 1 3`
-							readlink -fn /sys/block/$DEVBASE/device | grep -qs 'pci\|ahci' >> /home/mount.log
-							EXTERNAL=$?
-							if [ "${REMOVABLE}" -eq "0" -a $EXTERNAL -eq 0 ] ; then
-								DEVICETYPE="usb"
-								break
-							fi
-						done
-					fi
+						if grep -q "/media/hdd" /proc/mounts ; then
+							DEVICETYPE="usb"
+						else
+							# mount the first removable device on /media/hdd only then no other internal hdd present
+							DEVICETYPE="hdd"
+							DEVLIST=`cat /proc/diskstats | cut -c 14- | cut -d " " -f1 | grep "sd[a-z][0-9]"`
+							for DEV in $DEVLIST; do
+								DEVBASE=`expr substr $DEV 1 3`
+								readlink -fn /sys/block/$DEVBASE/device | grep -qs 'pci\|ahci' >> /home/mount.log
+								EXTERNAL=$?
+								if [ "${REMOVABLE}" -eq "0" -a $EXTERNAL -eq 0 ] ; then
+									DEVICETYPE="usb"
+									break
+								fi
+							done
+						fi
 				else
 					DEVICETYPE="${LABEL}"
 				fi
