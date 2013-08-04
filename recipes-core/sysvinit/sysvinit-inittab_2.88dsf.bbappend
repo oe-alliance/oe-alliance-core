@@ -1,8 +1,10 @@
 DESCRIPTION = "Inittab for sysvinit"
 
+FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
+
 require conf/license/license-gplv2.inc
 
-PR = "r7"
+PRINC = "9"
 
 SRC_URI = "file://inittab"
 
