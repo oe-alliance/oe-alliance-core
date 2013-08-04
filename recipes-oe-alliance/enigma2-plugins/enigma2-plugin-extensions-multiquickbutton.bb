@@ -17,8 +17,6 @@ SRC_URI = "git://github.com/oe-alliance/e2openplugin-${MODULE}.git;protocol=git"
 
 S = "${WORKDIR}/git"
 
-require assume-gplv2.inc
-
 PACKAGES =+ "${PN}-src"
 PACKAGES =+ "${PN}-po"
 FILES_${PN} = "/tmp /etc /usr/lib"
