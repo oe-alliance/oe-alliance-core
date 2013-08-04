@@ -1,0 +1,3 @@
+[submodule "recipes-oe-alliance/e2openplugins"]
+	path = recipes-oe-alliance/e2openplugins
+	url = git://github.com/E2OpenPlugins/e2openplugins.git
