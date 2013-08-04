@@ -1,4 +1,5 @@
-SRC_URI = "git://github.com/oe-alliance/e2openplugin-${MODULE}.git;protocol=git"
+SRC_URI = "git://github.com/oe-alliance/e2openplugin-${MODULE}.git;protocol=git \
+		file://LICENSE.GPLv2"
 
 S = "${WORKDIR}/git"
 
