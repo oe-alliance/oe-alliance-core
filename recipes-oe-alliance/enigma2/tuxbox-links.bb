@@ -1,4 +1,4 @@
-require conf/license/openpli-gplv2.inc
+require conf/license/license-gplv2.inc
 
 PN = "tuxbox-links"
 PV = "1.0"

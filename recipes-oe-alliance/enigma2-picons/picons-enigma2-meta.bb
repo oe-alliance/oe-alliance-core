@@ -1,6 +1,6 @@
 # meta package for enigma2 picon sets
 
-require conf/license/openpli-gplv2.inc
+require conf/license/license-gplv2.inc
 
 PACKAGE_ARCH = "all"
 

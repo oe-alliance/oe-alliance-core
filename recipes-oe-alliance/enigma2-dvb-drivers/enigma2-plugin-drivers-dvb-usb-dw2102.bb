@@ -1,7 +1,7 @@
 DESCRIPTION = "USB DVB driver for DW210x/DW310x chipset"
 PACKAGE_ARCH = "all"
 
-require conf/license/openpli-gplv2.inc
+require conf/license/license-gplv2.inc
 
 DVBPROVIDER ?= "kernel"
 

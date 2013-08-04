@@ -3,7 +3,7 @@ PR = "r0"
 DESCRIPTION = "Run some scripts earlier than others"
 PACKAGES = "${PN}"
 
-require conf/license/openpli-gplv2.inc
+require conf/license/license-gplv2.inc
 
 SRC_URI = "file://${PN}.sh"
 

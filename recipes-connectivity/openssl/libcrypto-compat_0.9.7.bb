@@ -1,6 +1,6 @@
 DESCRIPTION = "Compatibility for packages that link to libcrypto or libssl 0.9.7"
 
-require conf/license/openpli-gplv2.inc
+require conf/license/license-gplv2.inc
 
 PACKAGE_ARCH = "all"
 RDEPENDS = "libcrypto libssl"

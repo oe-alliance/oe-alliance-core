@@ -1,6 +1,6 @@
 DESCRIPTION = "Inittab for sysvinit"
 
-require conf/license/openpli-gplv2.inc
+require conf/license/license-gplv2.inc
 
 PR = "r7"
 

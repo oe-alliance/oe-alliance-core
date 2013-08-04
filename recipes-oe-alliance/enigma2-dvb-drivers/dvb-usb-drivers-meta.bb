@@ -1,7 +1,7 @@
 DESCRIPTION = "meta file for USB DVB drivers"
 PACKAGE_ARCH = "all"
 
-require conf/license/openpli-gplv2.inc
+require conf/license/license-gplv2.inc
 
 DEPENDS = "\
 	enigma2-plugin-drivers-dvb-usb-dib0700 \

@@ -1,5 +1,5 @@
 DESCRIPTION = "meta file for enigma2 DVD writing support"
-require conf/license/openpli-gplv2.inc
+require conf/license/license-gplv2.inc
 DEPENDS = "\
 	mjpegtools \
 	dvdauthor \

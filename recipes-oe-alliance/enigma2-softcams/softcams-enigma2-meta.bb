@@ -1,6 +1,6 @@
 DESCRIPTION = "meta file for enigma2 softcam packages"
 
-require conf/license/openpli-gplv2.inc
+require conf/license/license-gplv2.inc
 
 PROVIDES = "softcams"
 

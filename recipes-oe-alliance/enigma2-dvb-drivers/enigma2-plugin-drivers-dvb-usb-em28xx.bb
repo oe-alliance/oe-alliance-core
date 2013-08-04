@@ -1,7 +1,7 @@
 DESCRIPTION = "USB DVB driver for EM28xx chipset"
 PACKAGE_ARCH = "all"
 
-require conf/license/openpli-gplv2.inc
+require conf/license/license-gplv2.inc
 
 DVBPROVIDER ?= "kernel"
 

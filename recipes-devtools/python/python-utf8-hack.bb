@@ -4,7 +4,7 @@ DEPENDS = "python"
 PRIORITY = "optional"
 PV = "0.2"
 
-require conf/license/openpli-gplv2.inc
+require conf/license/license-gplv2.inc
 
 inherit distutils-base
 

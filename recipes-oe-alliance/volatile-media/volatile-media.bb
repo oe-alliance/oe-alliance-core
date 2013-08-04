@@ -1,7 +1,7 @@
 DESCRIPTION = "Mounts and populates a tmpfs over /media"
 MAINTAINER = "PLi team"
 
-require conf/license/openpli-gplv2.inc
+require conf/license/license-gplv2.inc
 
 PV = "1.0"
 PR = "r2"

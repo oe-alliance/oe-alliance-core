@@ -1,7 +1,7 @@
 DESCRIPTION = "Create nifty light effects with an amBX kit"
 MAINTAINER = "MiLo @ pli-images.org"
 
-require conf/license/openpli-gplv2.inc
+require conf/license/license-gplv2.inc
 
 inherit gitpkgv
 

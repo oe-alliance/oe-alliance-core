@@ -1,7 +1,7 @@
 DESCRIPTION = "Runs a shell in an environment as emitted by BitBake to execute tasks"
 PR = "r3"
 
-require conf/license/openpli-gplv2.inc
+require conf/license/license-gplv2.inc
 
 inherit autotools pkgconfig
 

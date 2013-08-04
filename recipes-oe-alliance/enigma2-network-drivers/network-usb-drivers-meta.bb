@@ -1,7 +1,7 @@
 DESCRIPTION = "meta file for USB Network drivers"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-require conf/license/openpli-gplv2.inc
+require conf/license/license-gplv2.inc
 
 DEPENDS = "\
 	${@base_contains("MACHINE_FEATURES", "wifiusblegacy", "enigma2-plugin-drivers-network-usb-rt3070", " \

@@ -1,6 +1,6 @@
 DESCRIPTION = "USB serial drivers"
 
-require conf/license/openpli-gplv2.inc
+require conf/license/license-gplv2.inc
 
 RDEPENDS_${PN} = "kernel-module-usbserial kernel-module-ftdi-sio kernel-module-pl2303 kernel-module-belkin-sa kernel-module-keyspan"
 

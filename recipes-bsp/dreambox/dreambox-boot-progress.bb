@@ -5,7 +5,7 @@ DEPENDS = ""
 PV = "3"
 PR = "r0"
 
-require conf/license/openpli-gplv2.inc
+require conf/license/license-gplv2.inc
 
 SRC_URI = "file://progress"
 

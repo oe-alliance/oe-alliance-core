@@ -2,7 +2,7 @@ PV = "20110114"
 PR = "r0"
 DESCRIPTION = "Tune kernel parameters in /etc/sysconf"
 
-require conf/license/openpli-gplv2.inc
+require conf/license/license-gplv2.inc
 
 PACKAGES = "${PN}"
 

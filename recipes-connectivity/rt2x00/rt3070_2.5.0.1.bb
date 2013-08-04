@@ -1,4 +1,4 @@
-include conf/license/openpli-gplv2.inc
+include conf/license/license-gplv2.inc
 DESCRIPTION = "Ralink RT5370"
 HOMEPAGE = "http://eng.ralinktech.com.tw/support.php?s=2"
 SECTION = "kernel/modules"

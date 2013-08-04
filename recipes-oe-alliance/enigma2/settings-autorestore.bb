@@ -5,7 +5,7 @@ DESCRIPTION = "Autorecover settings and install packages at first boot from /med
 PACKAGES = "${PN}"
 MAINTAINER = "MiLo"
 
-require conf/license/openpli-gplv2.inc
+require conf/license/license-gplv2.inc
 
 # Need to tell bitbake that we have extra files installed
 FILES_${PN} = "/etc"
