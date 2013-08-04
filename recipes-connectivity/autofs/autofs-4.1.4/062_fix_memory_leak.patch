@@ -1,0 +1,32 @@
+#!/bin/sh /usr/share/dpatch/dpatch-run
+## 062_fix_memory_leak.dpatch
+##
+## DP: No description.
+
+@DPATCH@
+
+diff -Naur .B/modules/mount_nfs.c .A/modules/mount_nfs.c
+--- .B/modules/mount_nfs.c	2007-01-07 21:36:35.000000000 +0000
++++ .A/modules/mount_nfs.c	2007-01-07 21:36:35.000000000 +0000
+@@ -145,16 +145,20 @@
+ 	he = gethostbyname(hostname);
+ 	if (!he) {
+ 		error(MODPREFIX "host %s: lookup failure", hostname);
++		free(hostname);
+ 		return -1;
+ 	}
+ 
+ 	for (haddr = he->h_addr_list; *haddr; haddr++) {
+ 		local = is_local_addr(hostname, *haddr, he->h_length);
+-		if (local < 0) 
++		if (local < 0) {
++			free(hostname);
+ 			return local;
++		}
+  		if (local) {
+ 			debug(MODPREFIX "host %s: is localhost",
+ 					hostname);
++			free(hostname);
+ 			return local;
+ 		}
+ 	}

@@ -1,0 +1,1 @@
+OSCAMHOST= "streamboard.de.vu"

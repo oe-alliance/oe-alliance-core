@@ -1,0 +1,6 @@
+#!/bin/sh
+echo "--------------------------------------------------------------"
+echo "This is a placeholder. Rename your cam executable to"
+echo "/usr/bin/CustomCAM or change the /etc/init.d/softcam.CustomCAM"
+echo "script."
+echo "--------------------------------------------------------------"

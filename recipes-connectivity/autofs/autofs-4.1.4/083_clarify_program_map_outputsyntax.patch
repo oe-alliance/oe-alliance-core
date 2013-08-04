@@ -1,0 +1,19 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 083_clarify_program_map_outputsyntax.dpatch  <hesso@pool.math.tu-berlin.de>
+##
+## DP: Explicitly mention that the queried key has to be omitted in the output of
+## DP: program maps.
+
+@DPATCH@
+--- autofs-4.1.4+debian.orig/man/autofs.5	2007-06-30 00:29:12.000000000 +0200
++++ autofs-4.1.4+debian/man/autofs.5	2007-06-30 00:30:27.000000000 +0200
+@@ -153,7 +153,8 @@
+ .B program
+ map will be called as a script with the key as an argument.  It may
+ return no lines of output if there's an error, or one or more lines
+-containing a map (with \\ quoting line breaks).
++containing a map (starting with the second column, i.e. omitting the
++key, and quoting line breaks with \\).
+ .P
+ To use a 
+ .B program

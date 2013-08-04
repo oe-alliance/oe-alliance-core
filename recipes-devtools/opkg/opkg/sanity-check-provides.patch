@@ -1,0 +1,12 @@
+diff --git a/libopkg/pkg.c b/libopkg/pkg.c
+index d8c3984..cdcd39a 100644
+--- a/libopkg/pkg.c
++++ b/libopkg/pkg.c
+@@ -734,6 +734,7 @@ pkg_formatted_field(FILE *fp, pkg_t *pkg, const char *field)
+ 	       if (pkg->provides_count) {
+                   fprintf(fp, "Provides:");
+ 		  for(i = 1; i < pkg->provides_count; i++) {
++                      if (!pkg->provides[i]) break;
+                       fprintf(fp, "%s %s", i == 1 ? "" : ",",
+ 				      pkg->provides[i]->name);
+                   }

@@ -1,0 +1,11 @@
+--- cdparanoia-III-10.2/paranoia/Makefile.in.orig	2009-01-27 23:54:45.000000000 +0100
++++ cdparanoia-III-10.2/paranoia/Makefile.in	2009-01-27 23:55:05.000000000 +0100
+@@ -44,7 +44,7 @@
+ 	$(RANLIB) libcdda_paranoia.a
+ 
+ libcdda_paranoia.so: 	$(OFILES)	
+-	$(CC) -fpic -shared -o libcdda_paranoia.so.0.$(VERSION) -Wl,-soname -Wl,libcdda_paranoia.so.0 $(OFILES) -L ../interface -lcdda_interface
++	$(CC) -fpic -shared -o libcdda_paranoia.so.0.$(VERSION) $(LDFLAGS) -Wl,-soname -Wl,libcdda_paranoia.so.0 $(OFILES) -L ../interface -lcdda_interface
+ 	[ -e libcdda_paranoia.so.0 ] || ln -s libcdda_paranoia.so.0.$(VERSION) libcdda_paranoia.so.0
+ 	[ -e libcdda_paranoia.so ] || ln -s libcdda_paranoia.so.0.$(VERSION) libcdda_paranoia.so
+ 

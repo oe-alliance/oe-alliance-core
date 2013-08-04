@@ -1,0 +1,265 @@
+#!/bin/sh /usr/share/dpatch/dpatch-run
+## 076_ldap_deprecated.dpatch
+##
+## DP: No description.
+
+@DPATCH@
+
+diff -Naur .B/aclocal.m4 .A/aclocal.m4
+--- .B/aclocal.m4	2003-09-29 08:22:35.000000000 +0000
++++ .A/aclocal.m4	2007-01-07 21:36:36.000000000 +0000
+@@ -9,8 +9,8 @@
+ AC_DEFUN(AF_PATH_INCLUDE,
+ [AC_PATH_PROGS($1,$2,$3,$4)
+ if test -n "$$1"; then
+-  AC_DEFINE(HAVE_$1)
+-  AC_DEFINE_UNQUOTED(PATH_$1, "$$1")
++  AC_DEFINE(HAVE_$1,1,[define if you have $1])
++  AC_DEFINE_UNQUOTED(PATH_$1, "$$1", [define if you have $1])
+   HAVE_$1=1
+ else
+   HAVE_$1=0
+@@ -28,7 +28,7 @@
+ [if test -n "$MOUNT" ; then
+   AC_MSG_CHECKING([if mount accepts the -s option])
+   if "$MOUNT" -s > /dev/null 2>&1 ; then
+-    AC_DEFINE(HAVE_SLOPPY_MOUNT)
++    AC_DEFINE(HAVE_SLOPPY_MOUNT, 1, [define if the mount command supports the -s option])
+     AC_MSG_RESULT(yes)
+   else
+     AC_MSG_RESULT(no)
+diff -Naur .B/configure .A/configure
+--- .B/configure	2007-01-07 21:36:36.000000000 +0000
++++ .A/configure	2007-01-07 21:36:36.000000000 +0000
+@@ -1359,11 +1359,13 @@
+ test -n "$MOUNT" || MOUNT="/bin/mount"
+ 
+ if test -n "$MOUNT"; then
+-  cat >>confdefs.h <<\_ACEOF
++
++cat >>confdefs.h <<\_ACEOF
+ #define HAVE_MOUNT 1
+ _ACEOF
+ 
+-  cat >>confdefs.h <<_ACEOF
++
++cat >>confdefs.h <<_ACEOF
+ #define PATH_MOUNT "$MOUNT"
+ _ACEOF
+ 
+@@ -1418,11 +1420,13 @@
+ test -n "$UMOUNT" || UMOUNT="/bin/umount"
+ 
+ if test -n "$UMOUNT"; then
+-  cat >>confdefs.h <<\_ACEOF
++
++cat >>confdefs.h <<\_ACEOF
+ #define HAVE_UMOUNT 1
+ _ACEOF
+ 
+-  cat >>confdefs.h <<_ACEOF
++
++cat >>confdefs.h <<_ACEOF
+ #define PATH_UMOUNT "$UMOUNT"
+ _ACEOF
+ 
+@@ -1476,11 +1480,13 @@
+ done
+ 
+ if test -n "$E2FSCK"; then
+-  cat >>confdefs.h <<\_ACEOF
++
++cat >>confdefs.h <<\_ACEOF
+ #define HAVE_E2FSCK 1
+ _ACEOF
+ 
+-  cat >>confdefs.h <<_ACEOF
++
++cat >>confdefs.h <<_ACEOF
+ #define PATH_E2FSCK "$E2FSCK"
+ _ACEOF
+ 
+@@ -1534,11 +1540,13 @@
+ done
+ 
+ if test -n "$E3FSCK"; then
+-  cat >>confdefs.h <<\_ACEOF
++
++cat >>confdefs.h <<\_ACEOF
+ #define HAVE_E3FSCK 1
+ _ACEOF
+ 
+-  cat >>confdefs.h <<_ACEOF
++
++cat >>confdefs.h <<_ACEOF
+ #define PATH_E3FSCK "$E3FSCK"
+ _ACEOF
+ 
+@@ -1556,7 +1564,8 @@
+   echo "$as_me:$LINENO: checking if mount accepts the -s option" >&5
+ echo $ECHO_N "checking if mount accepts the -s option... $ECHO_C" >&6
+   if "$MOUNT" -s > /dev/null 2>&1 ; then
+-    cat >>confdefs.h <<\_ACEOF
++
++cat >>confdefs.h <<\_ACEOF
+ #define HAVE_SLOPPY_MOUNT 1
+ _ACEOF
+ 
+@@ -3403,6 +3412,7 @@
+ fi;
+ if test -z "$HAVE_LDAP"; then
+ 	HAVE_LDAP=0
++	LDAP_FLAGS="$LDAP_FLAGS -DLDAP_DEPRECATED=1"
+ 	echo "$as_me:$LINENO: checking for ldap_init in -lldap" >&5
+ echo $ECHO_N "checking for ldap_init in -lldap... $ECHO_C" >&6
+ if test "${ac_cv_lib_ldap_ldap_init+set}" = set; then
+@@ -4302,7 +4312,8 @@
+   enableval=yes
+ fi;
+ if test x$enable_ext_env = xyes; then
+-	cat >>confdefs.h <<\_ACEOF
++
++cat >>confdefs.h <<\_ACEOF
+ #define ENABLE_EXT_ENV 1
+ _ACEOF
+ 
+@@ -4319,7 +4330,8 @@
+   enableval=yes
+ fi;
+ if test x$enable_mount_locking = xyes -o x$enableval = xyes; then
+-	cat >>confdefs.h <<\_ACEOF
++
++cat >>confdefs.h <<\_ACEOF
+ #define ENABLE_MOUNT_LOCKING 1
+ _ACEOF
+ 
+diff -Naur .B/configure.in .A/configure.in
+--- .B/configure.in	2007-01-07 21:36:36.000000000 +0000
++++ .A/configure.in	2007-01-07 21:36:36.000000000 +0000
+@@ -118,6 +118,7 @@
+ )
+ if test -z "$HAVE_LDAP"; then
+ 	HAVE_LDAP=0
++	LDAP_FLAGS="$LDAP_FLAGS -DLDAP_DEPRECATED=1"
+ 	AC_CHECK_LIB(ldap, ldap_init, HAVE_LDAP=1 LIBLDAP="$LIBLDAP -lldap -llber -lresolv", ,
+ 		     -llber -lresolv $LIBS)
+ fi
+@@ -163,7 +164,7 @@
+ --disable-ext-env          disable search in environment for substitution variable,,
+ 	enableval=yes)
+ if test x$enable_ext_env = xyes; then
+-	AC_DEFINE(ENABLE_EXT_ENV, 1)
++	AC_DEFINE(ENABLE_EXT_ENV, 1, [leave this alone])
+ fi
+ 
+ #
+@@ -173,7 +174,7 @@
+ --disable-mount-locking          disable use of locking when spawning mount command,,
+ 	enableval=yes)
+ if test x$enable_mount_locking = xyes -o x$enableval = xyes; then
+-	AC_DEFINE(ENABLE_MOUNT_LOCKING, 1)
++	AC_DEFINE(ENABLE_MOUNT_LOCKING, 1, [disable mount table locking -- use this if your maps contain recursive mounts -- EXPERIMENTAL])
+ fi
+ 
+ #
+diff -Naur .B/include/config.h.in .A/include/config.h.in
+--- .B/include/config.h.in	2007-01-07 21:36:36.000000000 +0000
++++ .A/include/config.h.in	2007-01-07 21:36:36.000000000 +0000
+@@ -1,29 +1,80 @@
+-#ident "$Id: config.h.in,v 1.4 2004/02/03 15:23:21 raven Exp $"
+-/* -*- c -*-
+- *
+- * config.h.in: Pattern file for autofs to be filled in by configure
+- *
+- */
++/* include/config.h.in.  Generated from configure.in by autoheader.  */
+ 
+-/* Program paths */
++/* leave this alone */
++#undef ENABLE_EXT_ENV
++
++/* disable mount table locking -- use this if your maps contain recursive
++   mounts -- EXPERIMENTAL */
++#undef ENABLE_MOUNT_LOCKING
++
++/* define if you have E2FSCK */
++#undef HAVE_E2FSCK
++
++/* define if you have E3FSCK */
++#undef HAVE_E3FSCK
++
++/* Define to 1 if you have the <inttypes.h> header file. */
++#undef HAVE_INTTYPES_H
++
++/* Define to 1 if you have the <memory.h> header file. */
++#undef HAVE_MEMORY_H
++
++/* define if you have MOUNT */
+ #undef HAVE_MOUNT
+-#undef PATH_MOUNT
+ 
++/* define if the mount command supports the -s option */
++#undef HAVE_SLOPPY_MOUNT
++
++/* Define to 1 if you have the <stdint.h> header file. */
++#undef HAVE_STDINT_H
++
++/* Define to 1 if you have the <stdlib.h> header file. */
++#undef HAVE_STDLIB_H
++
++/* Define to 1 if you have the <strings.h> header file. */
++#undef HAVE_STRINGS_H
++
++/* Define to 1 if you have the <string.h> header file. */
++#undef HAVE_STRING_H
++
++/* Define to 1 if you have the <sys/stat.h> header file. */
++#undef HAVE_SYS_STAT_H
++
++/* Define to 1 if you have the <sys/types.h> header file. */
++#undef HAVE_SYS_TYPES_H
++
++/* define if you have UMOUNT */
+ #undef HAVE_UMOUNT
+-#undef PATH_UMOUNT
+ 
+-#undef HAVE_SMBMOUNT
+-#undef PATH_SMBMOUNT
++/* Define to 1 if you have the <unistd.h> header file. */
++#undef HAVE_UNISTD_H
+ 
+-#undef HAVE_E2FSCK
++/* Define to the address where bug reports for this package should be sent. */
++#undef PACKAGE_BUGREPORT
++
++/* Define to the full name of this package. */
++#undef PACKAGE_NAME
++
++/* Define to the full name and version of this package. */
++#undef PACKAGE_STRING
++
++/* Define to the one symbol short name of this package. */
++#undef PACKAGE_TARNAME
++
++/* Define to the version of this package. */
++#undef PACKAGE_VERSION
++
++/* define if you have E2FSCK */
+ #undef PATH_E2FSCK
+ 
+-#undef HAVE_E3FSCK
++/* define if you have E3FSCK */
+ #undef PATH_E3FSCK
+ 
+-/* Define this option if mount(8) supports the -s (sloppy) option */
+-#undef HAVE_SLOPPY_MOUNT
++/* define if you have MOUNT */
++#undef PATH_MOUNT
+ 
+-#undef ENABLE_EXT_ENV
++/* define if you have UMOUNT */
++#undef PATH_UMOUNT
+ 
+-#undef ENABLE_MOUNT_LOCKING
++/* Define to 1 if you have the ANSI C header files. */
++#undef STDC_HEADERS

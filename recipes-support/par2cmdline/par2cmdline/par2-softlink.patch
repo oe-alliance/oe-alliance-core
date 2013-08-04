@@ -1,0 +1,17 @@
+Index: par2cmdline-0.4/Makefile.am
+===================================================================
+--- par2cmdline-0.4.orig/Makefile.am	2004-04-12 18:40:40.000000000 +0200
++++ par2cmdline-0.4/Makefile.am	2011-01-08 16:26:40.920352838 +0100
+@@ -55,9 +55,9 @@
+ TESTS = pretest test1 test2 test3 test4 test5 test6 posttest
+ 
+ install-exec-hook :
+-	ln -f $(DESTDIR)$(bindir)/par2$(EXEEXT) $(DESTDIR)$(bindir)/par2create$(EXEEXT)
+-	ln -f $(DESTDIR)$(bindir)/par2$(EXEEXT) $(DESTDIR)$(bindir)/par2verify$(EXEEXT)
+-	ln -f $(DESTDIR)$(bindir)/par2$(EXEEXT) $(DESTDIR)$(bindir)/par2repair$(EXEEXT)
++	ln -s -f par2$(EXEEXT) $(DESTDIR)$(bindir)/par2create$(EXEEXT)
++	ln -s -f par2$(EXEEXT) $(DESTDIR)$(bindir)/par2verify$(EXEEXT)
++	ln -s -f par2$(EXEEXT) $(DESTDIR)$(bindir)/par2repair$(EXEEXT)
+ 
+ uninstall-hook :
+ 	rm -f $(DESTDIR)$(bindir)/par2create$(EXEEXT)

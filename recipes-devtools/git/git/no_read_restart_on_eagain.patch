@@ -1,0 +1,13 @@
+diff --git a/wrapper.c b/wrapper.c
+index 85f09df..6af2838 100644
+--- a/wrapper.c
++++ b/wrapper.c
+@@ -119,7 +119,7 @@ ssize_t xread(int fd, void *buf, size_t len)
+ 	ssize_t nr;
+ 	while (1) {
+ 		nr = read(fd, buf, len);
+-		if ((nr < 0) && (errno == EAGAIN || errno == EINTR))
++		if ((nr < 0) && (errno == EINTR))
+ 			continue;
+ 		return nr;
+ 	}

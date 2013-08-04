@@ -1,0 +1,7 @@
+#!/bin/sh
+
+if [ ! -f $OPKG_INTERCEPT_DIR/modprobe ]; then
+  echo "depmod -a" > $OPKG_INTERCEPT_DIR/modprobe
+  chmod +x $OPKG_INTERCEPT_DIR/modprobe
+fi
+echo "modprobe $@" >> $OPKG_INTERCEPT_DIR/modprobe

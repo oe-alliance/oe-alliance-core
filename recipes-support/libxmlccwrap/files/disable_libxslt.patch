@@ -1,0 +1,96 @@
+diff -Naur libxmlccwrap-0.0.12_org/configure.ac libxmlccwrap-0.0.12/configure.ac
+--- libxmlccwrap-0.0.12_org/configure.ac	2005-07-28 21:27:58.000000000 +0200
++++ libxmlccwrap-0.0.12/configure.ac	2007-10-29 15:36:49.000000000 +0100
+@@ -15,7 +15,7 @@
+ AM_PROG_LIBTOOL
+ 
+ AC_CHECK_LIB(xml2,main)
+-AC_CHECK_LIB(xslt,main)
++#AC_CHECK_LIB(xslt,main)
+ 
+ AC_OUTPUT([Makefile \
+           xmlccwrap/Makefile \
+diff -Naur libxmlccwrap-0.0.12_org/xmlccwrap/xmlccwrap.cc libxmlccwrap-0.0.12/xmlccwrap/xmlccwrap.cc
+--- libxmlccwrap-0.0.12_org/xmlccwrap/xmlccwrap.cc	2003-12-18 23:48:08.000000000 +0100
++++ libxmlccwrap-0.0.12/xmlccwrap/xmlccwrap.cc	2007-10-24 22:54:15.000000000 +0200
+@@ -23,8 +23,10 @@
+ #include <libxml/tree.h>
+ #include <libxml/HTMLparser.h>
+ #include <libxml/encoding.h>
++/*
+ #include <libxslt/xsltutils.h>
+ #include <libxslt/transform.h>
++*/
+ #include "xmlccwrap.h"
+ #include "libxmlexport.h"
+ 
+@@ -47,7 +49,7 @@
+   Element *readnode(xmlNodePtr);
+   void writenode(xmlDocPtr, Element *, xmlNodePtr, int = 0);
+ 
+-
++/*
+   XSLTTree::XSLTTree()
+   {
+     xsltP = 0;
+@@ -83,7 +85,7 @@
+   {
+     return xsltP;
+   }
+-
++*/
+ 
+   XMLTree::XMLTree() : _filename(), _root(), _compression(0)
+   { }
+@@ -380,7 +382,7 @@
+     return retval;
+   }
+ 
+-
++/*
+   bool XMLTree::xslt(const XSLTTree & xsltTree, const std::string & outputfile, ParameterMap & parameterMap)
+   {
+     bool ret = false;
+@@ -425,7 +427,7 @@
+     ParameterMap parameterMap;
+     return xslt(xsltTree, outputfile, parameterMap);
+   }
+-
++*/
+ 
+   const std::string & XMLTree::getErrorString()
+   {
+diff -Naur libxmlccwrap-0.0.12_org/xmlccwrap/xmlccwrap.h libxmlccwrap-0.0.12/xmlccwrap/xmlccwrap.h
+--- libxmlccwrap-0.0.12_org/xmlccwrap/xmlccwrap.h	2003-12-18 23:42:37.000000000 +0100
++++ libxmlccwrap-0.0.12/xmlccwrap/xmlccwrap.h	2007-10-24 22:54:15.000000000 +0200
+@@ -43,7 +41,7 @@
+     typedef std::multimap<std::string, std::string> ParameterMap;
+     typedef ParameterMap::value_type ValuePair;
+ 
+-
++/*
+     class XSLTTree
+     {
+       private:
+@@ -60,7 +58,7 @@
+         bool read(const std::string &fn);
+         const void * exportxsltStylesheetPtr() const;
+     };
+-
++*/
+ 
+     class XMLTree
+     {
+@@ -102,10 +100,10 @@
+         bool write(const std::string &fn);
+         const std::string & writeBuffer() const;
+ 
+-
++/*
+         bool xslt(const XSLTTree & xsltTree, const std::string & outputfile, ParameterMap & parameterMap);
+         bool xslt(const XSLTTree & xsltTree, const std::string & outputfile);
+-
++*/
+         const std::string & getErrorString();
+     };
+ 

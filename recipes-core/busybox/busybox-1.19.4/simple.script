@@ -1,0 +1,53 @@
+#!/bin/sh
+# Based on udhcpc script edited by Tim Riker <Tim@Rikers.org>
+
+[ -z "$1" ] && echo "Error: should be called from udhcpc" && exit 1
+
+RESOLV_CONF="/etc/resolv.conf"
+[ -n "$broadcast" ] && BROADCAST="broadcast $broadcast"
+[ -n "$subnet" ] && NETMASK="netmask $subnet"
+
+case "$1" in
+	deconfig)
+		if [ -x /sbin/resolvconf ]; then
+			/sbin/resolvconf -d "${interface}.udhcpc"
+		fi
+                ip addr flush dev $interface scope global
+                ip link set dev $interface up
+		;;
+
+	renew|bound)
+		if [ -z "$BROADCAST" ]; then
+			BROADCAST="broadcast +"
+		fi
+                ip addr add dev $interface local $ip/$mask $BROADCAST
+		if [ -n "$router" ] ; then
+                        while ip route del default 2>/dev/null ; do
+                               :
+                        done
+			metric=0
+			for i in $router ; do
+                                ip route add default via $i metric $metric
+                                metric=$(($metric + 1))
+			done
+		fi
+
+		# Update resolver configuration file
+		R=""
+		[ -n "$domain" ] && R="domain $domain
+"
+		for i in $dns; do
+			echo "$0: Adding DNS $i"
+			R="${R}nameserver $i
+"
+		done
+
+		if [ -x /sbin/resolvconf ]; then
+			echo -n "$R" | /sbin/resolvconf -a "${interface}.udhcpc"
+		else
+			echo -n "$R" > "$RESOLV_CONF"
+		fi
+		;;
+esac
+
+exit 0

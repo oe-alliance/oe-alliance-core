@@ -1,0 +1,13 @@
+Index: busybox-1.18.5/util-linux/mount.c
+===================================================================
+--- busybox-1.18.5.orig/util-linux/mount.c
++++ busybox-1.18.5/util-linux/mount.c
+@@ -1934,6 +1934,8 @@ int mount_main(int argc UNUSED_PARAM, ch
+ 		// "proc") or a full path from root
+ 		if (argv[0]) {
+ 
++			// Check for UUID= or LABEL= entries too
++			resolve_mount_spec(&mtcur->mnt_fsname);
+ 			// Is this what we're looking for?
+ 			if (strcmp(argv[0], mtcur->mnt_fsname) != 0
+ 			 && strcmp(storage_path, mtcur->mnt_fsname) != 0

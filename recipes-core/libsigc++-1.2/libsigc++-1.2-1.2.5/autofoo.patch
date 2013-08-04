@@ -1,0 +1,125 @@
+--- libsigc++-1.2.5-old/configure.in	2003-05-14 10:04:25.000000000 +0200
++++ libsigc++-1.2.5/configure.in	2004-07-03 10:00:13.000000000 +0200
+@@ -35,9 +35,9 @@
+ dnl AC_SUBST(SIGC_RELEASE, $SIGC_RELEASE)
+ AC_SUBST(SIGC_VERSION)
+ 
+-AC_DEFINE_UNQUOTED(SIGC_MAJOR_VERSION, $SIGC_MAJOR_VERSION)
+-AC_DEFINE_UNQUOTED(SIGC_MINOR_VERSION, $SIGC_MINOR_VERSION)
+-AC_DEFINE_UNQUOTED(SIGC_MICRO_VERSION, $SIGC_MICRO_VERSION)
++AC_DEFINE_UNQUOTED(SIGC_MAJOR_VERSION, $SIGC_MAJOR_VERSION, [library major version])
++AC_DEFINE_UNQUOTED(SIGC_MINOR_VERSION, $SIGC_MINOR_VERSION, [library minor version])
++AC_DEFINE_UNQUOTED(SIGC_MICRO_VERSION, $SIGC_MICRO_VERSION, [library micro version])
+ 
+ AC_CONFIG_AUX_DIR(scripts)
+ 
+@@ -50,6 +50,23 @@
+ 
+ dnl Specify a configuration file
+ AM_CONFIG_HEADER(sigc++/config/sigcconfig.h)
++AH_BOTTOM([
++// Window DLL declarations 
++
++#ifdef LIBSIGC_DLL
++ #if defined(LIBSIGC_COMPILATION) && defined(DLL_EXPORT)
++  #define LIBSIGC_API __declspec(dllexport)
++  #define LIBSIGC_TMPL 
++ #elif !defined(LIBSIGC_COMPILATION)
++  #define LIBSIGC_API __declspec(dllimport)
++  #define LIBSIGC_TMPL extern
++ #else
++  #define LIBSIGC_API
++ #endif /* LIBSIGC_COMPILATION - DLL_EXPORT */
++#else
++ #define LIBSIGC_API
++#endif /* LIBSIGC_DLL */
++])
+ 
+ AM_MAINTAINER_MODE
+ 
+@@ -288,10 +307,10 @@
+   };
+ ],[
+ ],
+-  AC_DEFINE(SIGC_CXX_EXPLICIT,explicit)
++  AC_DEFINE(SIGC_CXX_EXPLICIT,explicit,[if C++ compiler supports explicit])
+   ac_cxx_explicit=yes
+ ,
+-  AC_DEFINE(SIGC_CXX_EXPLICIT,)
++  AC_DEFINE(SIGC_CXX_EXPLICIT)
+   ac_cxx_explicit=no
+ )
+ AC_MSG_RESULT([$ac_cxx_explicit])
+@@ -305,7 +324,7 @@
+   };
+ ],[
+ ],
+-  AC_DEFINE(SIGC_CXX_EXPLICIT_COPY,explicit)
++  AC_DEFINE(SIGC_CXX_EXPLICIT_COPY,explicit,[if C++ compiler supports explicit copy ctor])
+   ac_cxx_explicit_copy_ctor=yes
+ ,
+   AC_DEFINE(SIGC_CXX_EXPLICIT_COPY,)
+@@ -413,7 +432,7 @@
+   k<void,void> a;
+ ],[
+   ac_cxx_partial_specialization=yes
+-  AC_DEFINE(SIGC_CXX_PARTIAL_SPEC)
++  AC_DEFINE(SIGC_CXX_PARTIAL_SPEC,,[if C++ compiler supports partial specialization])
+ ],[
+ #  config_error=yes
+   ac_cxx_partial_specialization=no
+@@ -434,7 +453,7 @@
+ ],[
+   ac_cxx_namespaces=yes
+   AC_MSG_RESULT([$ac_cxx_namespaces])
+-  AC_DEFINE(SIGC_CXX_NAMESPACES)
++  AC_DEFINE(SIGC_CXX_NAMESPACES,,[if C++ compiler supports name spaces])
+ ],[
+   ac_cxx_namespaces=no
+   AC_MSG_RESULT([$ac_cxx_namespaces])
+@@ -474,7 +493,7 @@
+ A<int> i;
+ ],[
+ ],[
+-  AC_DEFINE(SIGC_CXX_INT_CTOR)
++  AC_DEFINE(SIGC_CXX_INT_CTOR,,[if C++ compiler has intrinsic constructors])
+   ac_cxx_tmpl_intctor=yes
+ ],[
+   ac_cxx_tmpl_intctor=no
+@@ -515,7 +534,7 @@
+ ],[
+ ],[
+   ac_cxx_void_return=yes
+-  AC_DEFINE(SIGC_CXX_VOID_RETURN)
++  AC_DEFINE(SIGC_CXX_VOID_RETURN,,[if C++ compiler allows void returns])
+ ],[
+   ac_cxx_void_return=no
+ ])
+@@ -530,7 +549,7 @@
+ ],[
+ ],[
+   ac_cxx_void_cast_return=yes
+-  AC_DEFINE(SIGC_CXX_VOID_CAST_RETURN)
++  AC_DEFINE(SIGC_CXX_VOID_CAST_RETURN,,[if C++ compiler supports void cast return])
+ ],[
+   ac_cxx_void_cast_return=no
+ ])
+@@ -565,7 +584,7 @@
+     P<int&>::ptr q=b;
+ ],[
+   ac_cxx_specialize_references=yes
+-  AC_DEFINE(SIGC_CXX_SPECIALIZE_REFERENCES)
++  AC_DEFINE(SIGC_CXX_SPECIALIZE_REFERENCES,,[if C++ compiler allows specialization of references])
+ ],[
+   ac_cxx_specialize_references=no
+ ])
+--- libsigc++-1.2.5-old/Makefile.am	2004-06-27 12:45:19.000000000 +0200
++++ libsigc++-1.2.5/Makefile.am	2004-07-03 08:40:44.000000000 +0200
+@@ -1,6 +1,6 @@
+ SUBDIRS = sigc++ tests doc
+ DIST_SUBDIRS = $(SUBDIRS) examples scripts MSVC_6 MSVC_Net2003
+-ACLOCAL_AMFLAGS = -I $(srcdir)/scripts
++ACLOCAL_AMFLAGS = -I ./scripts
+ 
+ EXTRA_DIST = \
+ 	FEATURES IDEAS			\

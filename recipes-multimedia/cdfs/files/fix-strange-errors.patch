@@ -1,0 +1,11 @@
+diff -Naur cdfs-2.6.27-org/root.c cdfs-2.6.27/root.c
+--- cdfs-2.6.27-org/root.c	2012-01-30 00:28:59.358590769 +0100
++++ cdfs-2.6.27/root.c	2012-01-30 00:28:11.046589521 +0100
+@@ -584,6 +584,7 @@
+ 
+   PRINT("cdfs_iget BEFORE inode %ld\n", i->i_ino);
+   cdfs_read_inode(i);
++  unlock_new_inode(i);
+   PRINT("cdfs_iget AFTER inode %ld\n", i->i_ino);
+   return i;
+ }

@@ -1,0 +1,19 @@
+#!/bin/sh /usr/share/dpatch/dpatch-run
+## 069_support_spaces_in_smb_share_names.dpatch
+##
+## DP: No description.
+
+@DPATCH@
+
+diff -Naur .B/samples/auto.smb .A/samples/auto.smb
+--- .B/samples/auto.smb	2005-04-05 13:02:09.000000000 +0000
++++ .A/samples/auto.smb	2007-01-07 21:36:36.000000000 +0000
+@@ -20,7 +20,7 @@
+ 
+ $SMBCLIENT -gNL $key 2>/dev/null| awk -v key="$key" -v opts="$opts" -F'|' -- '
+ 	BEGIN	{ ORS=""; first=1 }
+-	/Disk/	{ if (first) { print opts; first=0 }; print " \\\n\t /" $2, "://" key "/" $2 }
++	/Disk/	{ if (first) { print opts; first=0 }; sub(/ /, "\\ ", $2); print " \\\n\t /" $2, "://" key "/" $2 }
+ 	END 	{ if (!first) print "\n"; else exit 1 }
+ 	'
+ 

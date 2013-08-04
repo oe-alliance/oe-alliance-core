@@ -1,0 +1,18 @@
+#!/bin/sh
+# HACK! ... FIXME!
+# The interrupt handler if madwifi-ng seems to be too slow respectively disable
+# interrups for too long. To prevent this, we are moving madwifi-ng interrupt to
+# CPU1, which will never be running audio/video specific code.
+if [ $IFACE != "ath0" ]; then
+    exit 0
+fi
+
+if [ $MODE = "start" ]; then
+    echo "move irq 33 to CPU1"
+    echo 2 > /proc/irq/33/smp_affinity
+elif [ $MODE = "stop" ]; then
+    echo "move irq 33 to CPU0"
+    echo 1 > /proc/irq/33/smp_affinity
+fi
+
+exit 0

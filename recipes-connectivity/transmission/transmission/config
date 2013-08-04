@@ -1,0 +1,9 @@
+# Default values for transmission daemon
+# please fill in and enable service.
+# Set DAEMON_USER to run under different credentials
+DAEMON_ENABLED="YES"
+DAEMON_USER=""
+DAEMON_GROUP=""
+DOWNLOAD_DIR="/media/hdd/torrents/"
+CONFIG_DIR="/var/lib/transmission-daemon"
+

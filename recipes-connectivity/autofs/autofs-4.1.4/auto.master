@@ -1,0 +1,11 @@
+#
+# $Id: auto.master,v 1.4 2005/01/04 14:36:54 raven Exp $
+#
+# Sample auto.master file
+# This is an automounter map and it has the following format
+# key [ -mount-options-separated-by-comma ] location
+# For details of the format look at autofs(5).
+#/smb	/etc/auto.smb
+#/net	/etc/auto.net
+/autofs     /etc/auto.hotplug
+/media/net  /etc/auto.network

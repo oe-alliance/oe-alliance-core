@@ -1,0 +1,80 @@
+diff -Naur madwifi-ng-r3314-20080131.org/ath/if_ath_pci.c madwifi-ng-r3314-20080131/ath/if_ath_pci.c
+--- madwifi-ng-r3314-20080131.org/ath/if_ath_pci.c	2013-03-21 14:27:45.536248136 +0100
++++ madwifi-ng-r3314-20080131/ath/if_ath_pci.c	2013-03-21 14:32:18.352245147 +0100
+@@ -153,6 +153,11 @@
+ 	[0] = 2UL \
+ } }
+ 
++#ifdef CONFIG_DREAMBOX_DM8000
++extern int g_pci_ebi_fastpath;
++extern struct mutex g_pci_ebi_lock;
++#endif
++
+ static int
+ ath_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ {
+@@ -165,10 +170,16 @@
+ 	u32 val;
+ 	u16 vdevice;
+ 	int i;
++	int ret = -ENODEV;
++
++#ifdef CONFIG_DREAMBOX_DM8000
++	mutex_lock(&g_pci_ebi_lock);
++#endif
+ 
+ 	if (pci_enable_device(pdev)) {
+ 		printk(KERN_ERR "%s: failed to enable PCI device\n", dev_info);
+-		return -EIO;
++		ret = -EIO;
++		goto error_out;
+ 	}
+ 
+ 	/* XXX 32-bit addressing only */
+@@ -285,6 +296,11 @@
+ 	}
+ #endif
+ 
++#ifdef CONFIG_DREAMBOX_DM8000
++	mutex_unlock(&g_pci_ebi_lock);
++	g_pci_ebi_fastpath = 1;
++#endif
++
+ 	if ((i = ath_attach(vdevice, dev, NULL)) != 0) {
+ 		printk(KERN_ERR "%s: ath_attach failed: %d\n", dev_info, i);
+ 		goto bad4;
+@@ -319,7 +335,16 @@
+ 	release_mem_region(phymem, pci_resource_len(pdev, 0));
+ bad:
+ 	pci_disable_device(pdev);
+-	return (-ENODEV);
++
++error_out:
++#ifdef CONFIG_DREAMBOX_DM8000
++	if (!g_pci_ebi_fastpath) {
++		mutex_unlock(&g_pci_ebi_lock);
++		g_pci_ebi_fastpath = 1;
++	}
++#endif
++
++	return ret;
+ }
+ 
+ static void
+@@ -451,9 +476,16 @@
+ static void __exit
+ exit_ath_pci(void)
+ {
++#ifdef CONFIG_DREAMBOX_DM8000
++	mutex_lock(&g_pci_ebi_lock);
++#endif
+ 	ath_sysctl_unregister();
+ 	pci_unregister_driver(&ath_pci_driver);
+ 
++#ifdef CONFIG_DREAMBOX_DM8000
++	mutex_unlock(&g_pci_ebi_lock);
++	g_pci_ebi_fastpath = 0;
++#endif
+ 	printk(KERN_INFO "%s: driver unloaded\n", dev_info);
+ }
+ module_exit(exit_ath_pci);

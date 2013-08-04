@@ -1,0 +1,41 @@
+#!/bin/sh
+
+PYLOAD_BIN="/usr/pyload/pyLoadCore.py"
+PYTHON_BIN="/usr/bin/python"
+PYLOAD_DEFAULTS="/usr/pyload/pyload-defaults.tar.gz"
+
+if [ "`cat /proc/mounts  | grep "\/media\/hdd" | wc -l`" = "0" ]; then
+	echo "No hdd found.. skip pyload"
+	exit 1
+fi
+
+case "$1" in
+	start)
+		if [ ! -d "/media/hdd/.pyload" ]; then
+			echo "initializating pyload default config"
+			tar zxf $PYLOAD_DEFAULTS -C /media/hdd/
+			ln -s /media/hdd/.pyload/Downloads /media/hdd/Downloads
+			echo "/media/hdd/.pyload" > /usr/pyload/module/config/configdir
+			echo "done"
+		fi
+		echo -n "* starting pyload... "
+		$PYTHON_BIN $PYLOAD_BIN --daemon
+		;;
+	stop)
+		echo -n "* stopping pyload... "
+		$PYTHON_BIN $PYLOAD_BIN --quit
+		echo "done."
+		;;
+	restart)
+		echo -n "* restarting pyload... "
+		$0 stop
+		$0 start
+		echo "done."
+		;;
+	*)
+		echo "Usage: $0 {start|stop|restart}"
+		exit 1
+		;;
+esac
+
+exit 0

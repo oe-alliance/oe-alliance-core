@@ -1,0 +1,11 @@
+--- ~/daemon.c.orig	2013-02-23 00:43:03.889478340 +0100
++++ ~/daemon.c	2013-02-23 00:43:08.485478340 +0100
+@@ -157,7 +157,7 @@
+ #ifdef OLD_KERNEL
+   exit_files(current);  /* daemonize doesn't do exit_files */
+   daemonize();
+-#else
++#elif LINUX_VERSION_CODE < KERNEL_VERSION(3, 8, 0)
+   daemonize("k"FSNAME"d");
+ 
+   /* Allow SIGTERM to quit properly when removing module */

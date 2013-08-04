@@ -1,0 +1,40 @@
+#!/bin/sh
+DAEMON=/usr/bin/djmount
+NAME=djmount
+DESC="UPnP client"
+MOUNTPOINT="/media/upnp/"
+ARGS=$MOUNTPOINT
+
+test -f $DAEMON || exit 0
+
+set -e
+
+case "$1" in
+start)
+	echo -n "* starting $DESC: $NAME... "
+	if ! test -d $MOUNTPOINT; then
+		mkdir $MOUNTPOINT
+	fi
+	modprobe -q fuse || true
+	start-stop-daemon -S -b -x $DAEMON -- $ARGS
+	echo "done."
+	;;
+stop)
+	echo -n "* stopping $DESC: $NAME... "
+	start-stop-daemon -K -x $DAEMON || true
+	modprobe -r -q fuse || true
+	echo "done."
+	;;
+restart)
+	echo "* restarting $DESC: $NAME... "
+	$0 stop
+	$0 start
+	echo "done."
+	;;
+*)
+	echo "Usage: $0 {start|stop|restart}"
+	exit 1
+	;;
+esac
+
+exit 0

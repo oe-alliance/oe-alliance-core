@@ -1,4 +1,7 @@
-PRINC = "6"
+PRINC = "7"
+
+FILESEXTRAPATHS_prepend := "${THISDIR}/${P}:"
+
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 SRC_URI += " \
@@ -16,6 +19,7 @@ SRC_URI_append_dm800= " \
 SRC_URI_append_ebox5100= " \
 	file://udev-builtin-input_id.patch \
 "
+
 inherit update-rc.d
 
 INITSCRIPT_NAME = "udev"
@@ -27,4 +31,3 @@ do_install_append () {
 	install -m 0755 ${WORKDIR}/init ${D}${sysconfdir}/init.d/udev
 }
 
-FILESEXTRAPATHS_prepend := "${THISDIR}/${P}:"

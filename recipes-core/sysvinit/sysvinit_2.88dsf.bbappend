@@ -1,4 +1,6 @@
-PRINC = "17"
+PRINC = "20"
+
+FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
 PACKAGE_ARCH := "${MACHINE_ARCH}"
 
@@ -11,5 +13,3 @@ SRC_URI += " \
 do_install_append() {
 	rm ${D}${sysconfdir}/rc*.d/*bootlogd
 }
-
-FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"

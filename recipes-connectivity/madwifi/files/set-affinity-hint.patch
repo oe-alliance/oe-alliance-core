@@ -1,0 +1,45 @@
+--- madwifi-ng-r3313-20080131.orig/ath/if_ath_pci.c	2012-04-11 19:58:53.000000000 +0200
++++ madwifi-ng-r3314-20080131/ath/if_ath_pci.c	2012-04-11 20:18:55.473141295 +0200
+@@ -148,6 +148,11 @@
+ 	{ ubnt, "SR9",     0x168c, 0x0013, 0x7777, 0x2009, 12 },
+ };
+ 
++#define CPU_MASK_CPU1 \
++(cpumask_t) { { \
++	[0] = 2UL \
++} }
++
+ static int
+ ath_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ {
+@@ -285,6 +290,13 @@
+ 		goto bad4;
+ 	}
+ 
++#if defined(CONFIG_DREAMBOX_DM8000) && LINUX_VERSION_CODE >= KERNEL_VERSION(2,6,35)
++	{
++		static cpumask_t m = CPU_MASK_CPU1;
++		irq_set_affinity_hint(dev->irq, &m);
++	}
++#endif
++
+ 	athname = ath_hal_probe(id->vendor, vdevice);
+ 	printk(KERN_INFO "%s: %s: %s: mem=0x%lx, irq=%d\n",
+ 		dev_info, dev->name, athname ? athname : "Atheros ???", phymem, dev->irq);
+@@ -317,8 +329,15 @@
+ 	struct ath_pci_softc *sc = netdev_priv(dev);
+ 
+ 	ath_detach(dev);
+-	if (dev->irq)
++	if (dev->irq) {
+ 		free_irq(dev->irq, dev);
++#if defined(CONFIG_DREAMBOX_DM8000) && LINUX_VERSION_CODE >= KERNEL_VERSION(2,6,35)
++		{
++			static cpumask_t m = CPU_MASK_ALL;
++			irq_set_affinity_hint(dev->irq, &m);
++		}
++#endif
++	}
+ 	iounmap(sc->aps_sc.sc_iobase);
+ 	release_mem_region(pci_resource_start(pdev, 0), pci_resource_len(pdev, 0));
+ 	pci_disable_device(pdev);

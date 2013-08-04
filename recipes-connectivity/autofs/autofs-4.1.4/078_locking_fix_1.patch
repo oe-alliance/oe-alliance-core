@@ -1,0 +1,82 @@
+#!/bin/sh /usr/share/dpatch/dpatch-run
+## 078_locking_fix_1.dpatch
+##
+## DP: No description.
+
+@DPATCH@
+
+diff -Naur .B/daemon/spawn.c .A/daemon/spawn.c
+--- .B/daemon/spawn.c	2007-01-07 21:36:36.000000000 +0000
++++ .A/daemon/spawn.c	2007-01-07 21:36:36.000000000 +0000
+@@ -214,14 +214,15 @@
+ 	sigfillset(&allsignals);
+ 	sigprocmask(SIG_BLOCK, &allsignals, &oldsig);
+ 
+-	if (pipe(pipefd))
++	if (pipe(pipefd)) {
++		if (use_lock)
++			release_lock();
++		sigprocmask(SIG_SETMASK, &oldsig, NULL);
+ 		return -1;
++	}
+ 
+ 	f = fork();
+-	if (f < 0) {
+-		sigprocmask(SIG_SETMASK, &oldsig, NULL);
+-		return -1;
+-	} else if (f == 0) {
++	if (f == 0) {
+ 		reset_signals();
+ 		close(pipefd[0]);
+ 		dup2(pipefd[1], STDOUT_FILENO);
+@@ -243,6 +244,8 @@
+ 
+ 		if (f < 0) {
+ 			close(pipefd[0]);
++			if (use_lock)
++				release_lock();
+ 			sigprocmask(SIG_SETMASK, &oldsig, NULL);
+ 			return -1;
+ 		}
+@@ -287,11 +290,11 @@
+ 		if (waitpid(f, &status, 0) != f)
+ 			status = -1;	/* waitpid() failed */
+ 
+-		sigprocmask(SIG_SETMASK, &oldsig, NULL);
+-
+ 		if (use_lock)
+ 			release_lock();
+ 
++		sigprocmask(SIG_SETMASK, &oldsig, NULL);
++
+ 		return status;
+ 	}
+ }
+diff -Naur .B/lib/lock.c .A/lib/lock.c
+--- .B/lib/lock.c	2005-01-17 15:09:28.000000000 +0000
++++ .A/lib/lock.c	2007-01-07 21:36:36.000000000 +0000
+@@ -208,9 +208,6 @@
+  */
+ static int wait_for_lockf(const char *lockf)
+ {
+-	struct timespec t = { 0, WAIT_INTERVAL };
+-	struct timespec r;
+-	int ts_size = sizeof(struct timespec);
+ 	int tries = WAIT_TRIES;
+ 	int status = 0;
+ 	struct stat st;
+@@ -218,10 +215,13 @@
+ 	while (tries-- && !status) {
+ 		status = stat(lockf, &st);
+ 		if (!status) {
++			struct timespec t = { 0, WAIT_INTERVAL };
++			struct timespec r;
++
+ 			while (nanosleep(&t, &r) == -1 && errno == EINTR) {
+ 				if (got_term)
+ 					return 0;
+-				memcpy(&t, &r, ts_size);
++				memcpy(&t, &r, sizeof(struct timespec));
+ 			}
+ 		}
+ 	}

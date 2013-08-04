@@ -1,0 +1,71 @@
+Index: autofs-4.1.4/man/Makefile
+===================================================================
+--- autofs-4.1.4.orig/man/Makefile	2003-09-29 10:22:35.000000000 +0200
++++ autofs-4.1.4/man/Makefile	2006-06-19 15:09:33.124583912 +0200
+@@ -14,9 +14,9 @@
+ 
+ install: all
+ 	install -d -m 755 $(INSTALLROOT)$(mandir)/man5
+-	install -c *.5 -m 644 $(INSTALLROOT)$(mandir)/man5
++	install -c -m 644 *.5 $(INSTALLROOT)$(mandir)/man5
+ 	install -d -m 755 $(INSTALLROOT)$(mandir)/man8
+-	install -c *.8 -m 644 $(INSTALLROOT)$(mandir)/man8
++	install -c -m 644 *.8 $(INSTALLROOT)$(mandir)/man8
+ 
+ clean:
+ 	rm -f $(GENFILES)
+Index: autofs-4.1.4/modules/Makefile
+===================================================================
+--- autofs-4.1.4.orig/modules/Makefile	2004-08-29 14:46:23.000000000 +0200
++++ autofs-4.1.4/modules/Makefile	2006-06-19 15:09:33.125583760 +0200
+@@ -53,7 +53,7 @@
+ # mount_smbfs.so is an obsolete module which must be removed
+ install: all
+ 	install -d -m 755 $(INSTALLROOT)$(autofslibdir)
+-	install -c $(MODS) -m 755 $(INSTALLROOT)$(autofslibdir)
++	install -c -m 755 $(MODS) $(INSTALLROOT)$(autofslibdir)
+ 	-rm -f $(INSTALLROOT)$(autofslibdir)/mount_smbfs.so
+ ifeq ($(EXT2FS), 1)
+  ifeq ($(EXT3FS), 1)
+Index: autofs-4.1.4/samples/Makefile
+===================================================================
+--- autofs-4.1.4.orig/samples/Makefile	2005-01-04 15:36:54.000000000 +0100
++++ autofs-4.1.4/samples/Makefile	2006-06-19 15:09:33.125583760 +0200
+@@ -27,19 +27,19 @@
+ install: all
+ 	install -d -m 755 $(INSTALLROOT)/etc
+ 	-mv -f $(INSTALLROOT)/etc/auto.master $(INSTALLROOT)/etc/auto.master.old
+-	install -c auto.master -m 644 $(INSTALLROOT)/etc
++	install -c -m 644 auto.master $(INSTALLROOT)/etc
+ 	-mv -f $(INSTALLROOT)/etc/auto.misc $(INSTALLROOT)/etc/auto.misc.old
+-	install -c auto.misc   -m 644 $(INSTALLROOT)/etc
++	install -c -m 644 auto.misc $(INSTALLROOT)/etc
+ 	-mv -f $(INSTALLROOT)/etc/auto.net $(INSTALLROOT)/etc/auto.net.old
+-	install -c auto.net    -m 755 $(INSTALLROOT)/etc
++	install -c -m 755 auto.net $(INSTALLROOT)/etc
+ 	-mv -f $(INSTALLROOT)/etc/auto.smb $(INSTALLROOT)/etc/auto.smb.old
+-	install -c auto.smb    -m 755 $(INSTALLROOT)/etc
++	install -c -m 755 auto.smb    $(INSTALLROOT)/etc
+ 	install -d -m 755 $(INSTALLROOT)$(initdir)
+-	install -c rc.autofs   -m 755 $(INSTALLROOT)$(initdir)/autofs
++	install -c -m 755 rc.autofs   $(INSTALLROOT)$(initdir)/autofs
+ 	install -d -m 755 $(INSTALLROOT)$(autofslibdir)
+ 	install -d -m 755 $(INSTALLROOT)/var/run/autofs
+ ifeq ($(LDAP), 1)
+-	install -c autofs-ldap-auto-master -m 755 $(INSTALLROOT)$(autofslibdir)
++	install -c -m 755 autofs-ldap-auto-master $(INSTALLROOT)$(autofslibdir)
+ endif
+ 
+ clean):
+Index: autofs-4.1.4/daemon/Makefile
+===================================================================
+--- autofs-4.1.4.orig/daemon/Makefile	2006-06-19 15:10:47.526273136 +0200
++++ autofs-4.1.4/daemon/Makefile	2006-06-19 15:10:58.661580312 +0200
+@@ -26,6 +26,6 @@
+ 
+ install: all
+ 	install -d -m 755 $(INSTALLROOT)$(sbindir)
+-	install -c automount -m 755 $(INSTALLROOT)$(sbindir)
++	install -c -m 755 automount $(INSTALLROOT)$(sbindir)
+ 
+ 

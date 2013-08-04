@@ -1,0 +1,45 @@
+#!/bin/sh /usr/share/dpatch/dpatch-run
+## 064_support_options_on_nis_maps.dpatch
+##
+## DP: No description.
+
+@DPATCH@
+
+diff -Naur .B/samples/rc.autofs.in .A/samples/rc.autofs.in
+--- .B/samples/rc.autofs.in	2005-04-11 11:30:54.000000000 +0000
++++ .A/samples/rc.autofs.in	2007-01-07 21:36:35.000000000 +0000
+@@ -129,7 +129,17 @@
+     else
+         map="$1"
+     fi
+-    /usr/bin/ypcat -k "$map" 2> /dev/null | sed -e '/^#/d' -e '/^$/d'
++
++    # Append the map's options at the _start_ if there are any options already
++    # (ie. myopt -> $2,myopt), otherwise just append them at the end.
++    if [ -z "$2" ]; then
++        /usr/bin/ypcat -k "$map" 2> /dev/null | sed -e '/^#/d' -e '/^$/d'
++    else
++        /usr/bin/ypcat -k "$map" 2> /dev/null |
++        sed -e '/^#/d' -e '/^$/d' \
++            -e "s/^[ \t]*\([^ \t]\+\)[ \t]\+\([^ \t]\+\)[ \t]\+-\([^ \t]\+\)/\1 \2 $2,\3/" \
++            -e "s/^[ \t]*\([^ \t]\+\)[ \t]\+\([^ \t]\+\)[ \t]*$/\1 \2 $2/"
++    fi    
+ }
+ 
+ function getfilemounts()
+@@ -141,10 +151,11 @@
+             if [ "`echo $auto_master_in | grep '^+'`" = "" ]; then
+                 echo $auto_master_in
+             else
+-                for nismap in `cat /etc/auto.master | grep '^\+' |
+-                        sed -e '/^#/d' -e '/^$/d'`; do
+-                    catnismap `echo "$nismap" | sed -e 's/^\+//'`
+-                done
++                cat /etc/auto.master | grep '^\+' | sed -e '/^#/d' -e '/^$/d' | (
++                    while read map options; do
++                        catnismap `echo "$map" | sed -e 's/^\+//'` $options
++                    done
++                )
+             fi
+         done
+         )

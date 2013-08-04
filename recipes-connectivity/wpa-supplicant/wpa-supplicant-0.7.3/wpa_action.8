@@ -1,0 +1,148 @@
+.TH WPA_ACTION "8" "26 May 2006" "" ""
+.SH NAME
+wpa_action \- wpa_cli action script
+.SH SYNOPSIS
+\fBwpa_action\fR \fIIFACE ACTION\fR
+.SH "DESCRIPTION"
+\fBwpa_action\fR is a shell script designed to control the \fBifupdown\fR
+framework according to \fIACTION\fR events received from \fBwpa_supplicant\fR.
+\fBwpa_cli\fR receives \fICONNECTED\fR and \fIDISCONNECTED\fR events from
+\fBwpa_supplicant\fR via the crtl_iface socket and gives the \fIACTION\fR event
+to the \fBwpa_action\fR script as an argument, along with the \fIIFACE\fR to be
+acted upon.
+.PP
+\fBwpa_action\fR also receives an environment variable from \fBwpa_cli\fR,
+\fIWPA_ID_STR\fR, containing an alphanumeric identification string for the
+\fICURRENT\fR network block. \fIWPA_ID_STR\fR is provided by the 'id_str'
+network block option of \fBwpa_supplicant.conf\fR, and provides a means to map
+the \fIACTION\fR to a \fILOGICAL\fR interface configured in the \fBinterfaces\fR
+file.
+.PP
+If either the ifupdown \fBinterfaces\fR or \fIifstate\fR file cannot be found,
+\fBwpa_action\fR will exit silently (status 0). \fBwpa_action\fR will search
+the following locations for their existance:
+.nf
+	/etc/network/run/ifstate
+	/var/run/network/ifstate
+	/etc/network/interfaces
+.fi
+.PP
+.SH IFACE
+Network interface to be acted upon, for example 'eth1' or 'wlan0'.
+.SH ACTION
+An \fIACTION\fR to be performed on the \fIIFACE\fR.
+.TP
+\fBCONNECTED\fR
+\fBwpa_supplicant\fR has completed authentication.
+\fBifup\fR \fIIFACE=WPA_ID_STR\fR is invoked and the action is logged to
+syslog. Network settings for the \fILOGICAL\fR interface \fIWPA_ID_STR\fR
+are applied.
+.TP
+\fBDISCONNECTED\fR
+\fBwpa_supplicant\fR has detected disconnection.
+\fBifdown\fR \fIIFACE=WPA_ID_STR\fR is invoked and the action is logged to
+syslog. Network settings for the \fILOGICAL\fR interface \fIWPA_ID_STR\fR
+are undone.
+.TP
+\fBstop\fR
+The 'stop' \fIACTION\fR is a called manually by the user, to stop the 
+\fBwpa_cli\fR daemon, invoke \fBifdown\fR \fIIFACE\fR (if the \fIIFACE\fR is
+present in the \fIifstate\fR file) and stop the \fBwpa_supplicant\fR daemon.
+.TP
+\fBreload\fR
+The 'reload' \fIACTION\fR can be used to reload the \fBwpa_supplicant\fR
+configuration file specified by \fIwpa-roam\fR . 'restart' is a synonym 
+for 'reload' and can be used equally. The action is logged to
+\fI/var/log/wpa_action.log\fR.
+.SH ENVIRONMENT
+An alphanumeric identification string provided by the 'id_str' network block
+option of \fBwpa_supplicant.conf\fR is exported to \fBwpa_action\fR as an 
+environment variable, \fIWPA_ID_STR\fR. When 'id_str' is not configured for the
+\fICURRENT\fR network block, 'default' is substituted for the absent
+\fIWPA_ID_STR\fR environment variable.
+.PP
+A unique network identifier, \fIWPA_ID\fR, is exported to \fBwpa_action\fR. It
+is the number assigned to the \fICURRENT\fR \fBwpa_supplicant\fR network block
+(network_id).
+.SH USAGE
+The only reasons for \fBwpa_action\fR to be explicitly executed by the user is
+to stop \fBwpa_cli\fR from controlling \fBifupdown\fR or reload the 
+\fIwpa_supplicant.conf\fR file after editing.
+.PP
+.RS
+\fBwpa_action\fR \fIeth1 stop\fR
+.RE
+.PP
+Otherwise, \fBwpa_action\fR is given as an argument to a \fBwpa_cli\fR
+daemon.
+.PP
+.RS
+\fBwpa_cli\fR \fI-i eth1 -a /sbin/wpa_action -B\fR
+.RE
+.PP
+This can be done by using the \fIwpa-roam\fR option in the \fBinterfaces\fR
+file. \fIwpa-roam\fR takes one argument, a user provided 
+\fBwpa_supplicant.conf\fR file. 
+.PP
+The inet \fIMETHOD\fR must be 'manual' for this interface, as it will
+be configured according to \fBwpa_cli\fR action events. Also supply a 'default'
+\fBinterfaces\fR stanza using the dhcp inet \fIMETHOD\fR so that networks
+without an 'id_str' option can fallback to attempting to receive an ip via
+dhcp. If one or more networks requires additional network configuration,
+provide an unique 'id_str' for each network, and an \fBinterfaces\fR stanza
+using the 'id_str' value as a \fILOGICAL\fR interface. The following interfaces
+file is configured to use dhcp for any network without an 'id_str', a static ip
+for the network with an 'id_str' of 'home_static' and dhcp plus an additional
+post-up command for the network with an 'id_str' of 'uni'.
+.PP
+An example wpa_supplicant.conf configured to roam between 3 different networks:
+.PP
+.RS
+.nf
+network={
+	ssid="foo"
+	id_str="uni"
+	key_mgmt=NONE
+}
+
+network={
+	ssid="bar"
+	id_str="home_static"
+	psk=123456789...
+}
+
+network={
+	ssid=""
+	key_mgmt=NONE
+}
+.fi
+.RE
+.PP
+The corresponding \fBinterfaces\fR file would contain \fILOGICAL\fR interfaces,
+that correlate to each unique 'id_str' provided by the configuration file:
+.PP
+.RS
+.nf
+iface eth1 inet manual
+	wpa-driver wext
+	wpa-roam /etc/wpa_supplicant/wpa_supplicant.conf
+
+iface default inet dhcp
+
+iface uni inet dhcp
+
+iface home_static inet static
+        address 192.168.0.20
+        netmask 255.255.255.0
+        network 192.168.0.0
+        broadcast 192.168.0.255
+        gateway 192.168.0.1
+.fi
+.RE
+.PP
+.SH SEE ALSO
+\fBwpa_cli(8)\fR, \fBwpa_supplicant(8)\fR, \fBwpa_supplicant.conf(5)\fR,
+\fBifup(8)\fR, \fBinterfaces(5)\fR
+.SH AUTHOR
+This manual page was written by Kel Modderman <kel@otaku42.de> for
+the Debian GNU system (but may be used by others).

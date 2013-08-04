@@ -1,0 +1,27 @@
+#!/bin/sh
+
+test -x /usr/bin/tpmd || exit 0
+test -x /usr/bin/wdog || exit 0
+
+case "$1" in
+  start)
+    echo -n "Starting tpmd"
+    start-stop-daemon -q -p /var/run/tpmd.pid -x /usr/bin/wdog -S -b -m -- -d tpmd
+    echo "."
+    ;;
+  stop)
+    echo -n "Stopping tpmd"
+    start-stop-daemon -q -p /var/run/tpmd.pid -x /usr/bin/wdog -K
+    echo "."
+    ;;
+  restart|reload|force-reload)
+    $0 stop
+    sleep 1
+    $0 start
+    ;;
+  *)
+    echo "Usage: /etc/init.d/tpmd {start|stop|restart|reload|force-reload}"
+    exit 1
+esac
+
+exit 0

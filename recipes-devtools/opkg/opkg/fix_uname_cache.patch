@@ -1,0 +1,34 @@
+diff --git a/libbb/unarchive.c b/libbb/unarchive.c
+index d583767..703d8d0 100644
+--- a/libbb/unarchive.c
++++ b/libbb/unarchive.c
+@@ -446,12 +446,12 @@ static bool update_unamecache(char *uname) {
+ 	struct passwd *passwd;
+ 	if (!uname)
+ 		return FALSE;
+-	if (!uname_cache[0] && strcmp(uname_cache, uname) == 0)
++	if (strcmp(uname_cache, uname) == 0)
+ 		return TRUE;
+ 	passwd = getpwnam(uname);
+ 	if (passwd) {
+ 		uid_cache = passwd->pw_uid;
+-		strncpy(uname, uname_cache, 32);
++		strncpy(uname_cache, uname, 32);
+ 		return TRUE;
+ 	}
+ 	return FALSE;
+@@ -464,12 +464,12 @@ static bool update_gnamecache(char *gname) {
+ 	struct group *group;
+ 	if (!gname)
+ 		return FALSE;
+-	if (!gname_cache[0] && strcmp(gname_cache, gname) == 0)
++	if (strcmp(gname_cache, gname) == 0)
+ 		return TRUE;
+ 	group = getgrnam(gname);
+ 	if (group) {
+ 		gid_cache = group->gr_gid;
+-		strncpy(gname, gname_cache, 32);
++		strncpy(gname_cache, gname, 32);
+ 		return TRUE;
+ 	}
+ 	return FALSE;

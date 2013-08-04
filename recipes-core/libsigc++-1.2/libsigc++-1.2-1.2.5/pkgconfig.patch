@@ -1,0 +1,13 @@
+
+#
+# Patch managed by http://www.holgerschurig.de/patcher.html
+#
+
+--- libsigc++-1.2.5/sigc++-1.2.pc.in~pkgconfig
++++ libsigc++-1.2.5/sigc++-1.2.pc.in
+@@ -7,4 +7,4 @@
+ Description: Type-safe signal and callback system for C++
+ Version: @VERSION@
+ Libs: -L${libdir} -lsigc-1.2
+-Cflags: -I${exec_prefix}/lib/sigc++-1.2/include -I${includedir}/sigc++-1.2
++Cflags: -I${libdir}/sigc++-1.2/include -I${includedir}/sigc++-1.2

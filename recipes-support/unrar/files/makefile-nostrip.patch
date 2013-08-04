@@ -1,0 +1,13 @@
+Index: unrar/makefile.unix
+===================================================================
+--- unrar.orig/makefile.unix	2010-03-30 17:26:26.000000000 +0200
++++ unrar/makefile.unix	2011-01-09 10:04:56.992152378 +0100
+@@ -9,7 +9,7 @@
+ #CXX=g++
+ #CXXFLAGS=-O2
+ DEFINES=-D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE
+-STRIP=strip
++STRIP=echo
+ DESTDIR=/usr
+ 
+ # Linux using LCC

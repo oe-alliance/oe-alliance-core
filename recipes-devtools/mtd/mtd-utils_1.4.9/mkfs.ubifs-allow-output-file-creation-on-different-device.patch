@@ -1,0 +1,36 @@
+diff --git a/mkfs.ubifs/mkfs.ubifs.c b/mkfs.ubifs/mkfs.ubifs.c
+index f77e5e6..e002be5 100644
+--- a/mkfs.ubifs/mkfs.ubifs.c
++++ b/mkfs.ubifs/mkfs.ubifs.c
+@@ -324,6 +324,22 @@ static int in_path(const char *dir_name, const char *file_name)
+ 	return ret;
+ }
+
++/*
++ * same_device - determine if a file is on the same blockdevice as a directory.
++ * @dir_name: directory path name
++ * @file_name: file path name
++ */
++static int same_device(const char *dir_name, const char *file_name)
++{
++	struct stat stat1, stat2;
++
++	if (stat(dir_name, &stat1) == -1)
++		return -1;
++	if (stat(file_name, &stat2) == -1)
++		return -1;
++	return stat1.st_dev == stat2.st_dev;
++}
++
+ /**
+  * calc_min_log_lebs - calculate the minimum number of log LEBs needed.
+  * @max_bud_bytes: journal size (buds only)
+@@ -376,7 +392,7 @@ static int validate_options(void)
+
+ 	if (!output)
+ 		return err_msg("no output file or UBI volume specified");
+-	if (root && in_path(root, output))
++	if (root && same_device(root, output) && in_path(root, output))
+ 		return err_msg("output file cannot be in the UBIFS root "
+ 			       "directory");
+ 	if (!is_power_of_2(c->min_io_size))

@@ -1,0 +1,43 @@
+From c011ab2fb52c2ee03aa9544b0d242683ee4362e1 Mon Sep 17 00:00:00 2001
+From: Andreas Oberritter <obi@opendreambox.org>
+Date: Fri, 27 Apr 2012 01:40:25 +0200
+Subject: [PATCH 6/6] get_linux_version_code: don't fail on 3.0-foo
+
+Fixes segmentation fault in mount (nfs):
+
+ #0 __GI_____strtol_l_internal (nptr=0x0, endptr=0x0, base=10, group=<optimized out>, loc=0x77f6f3c8) at strtol_l.c:298
+ #1 __GI_strtol (nptr=<optimized out>, endptr=<optimized out>, base=<optimized out>) at strtol.c:110
+ #2 get_linux_version_code () at libbb/kernel_version.c:34
+ #3 find_kernel_nfs_mount_version () at util-linux/mount.c:979
+
+Signed-off-by: Andreas Oberritter <obi@opendreambox.org>
+---
+ libbb/kernel_version.c |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/libbb/kernel_version.c b/libbb/kernel_version.c
+index a168a1e..12f1146 100644
+--- a/libbb/kernel_version.c
++++ b/libbb/kernel_version.c
+@@ -20,7 +20,7 @@
+ int FAST_FUNC get_linux_version_code(void)
+ {
+ 	struct utsname name;
+-	char *s;
++	char *s, *t;
+ 	int i, r;
+ 
+ 	if (uname(&name) == -1) {
+@@ -31,7 +31,8 @@ int FAST_FUNC get_linux_version_code(void)
+ 	s = name.release;
+ 	r = 0;
+ 	for (i = 0; i < 3; i++) {
+-		r = r * 256 + atoi(strtok(s, "."));
++		t = strtok(s, ".");
++		r = r * 256 + (t ? atoi(t) : 0);
+ 		s = NULL;
+ 	}
+ 	return r;
+-- 
+1.7.9.5
+

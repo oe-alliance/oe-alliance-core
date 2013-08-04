@@ -1,0 +1,18 @@
+#!/bin/sh /usr/share/dpatch/dpatch-run
+## 042_default_auto_master_all_commented_out.dpatch by
+##
+## DP: No description.
+
+@DPATCH@
+
+diff -Naur .B/samples/auto.master .A/samples/auto.master
+--- .B/samples/auto.master	2005-01-04 14:36:54.000000000 +0000
++++ .A/samples/auto.master	2007-01-07 21:36:35.000000000 +0000
+@@ -7,5 +7,5 @@
+ # For details of the format look at autofs(5).
+ #/misc	/etc/auto.misc --timeout=60
+ #/smb	/etc/auto.smb
+-/misc	/etc/auto.misc
+-/net	/etc/auto.net
++#/misc	/etc/auto.misc
++#/net	/etc/auto.net

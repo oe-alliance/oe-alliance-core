@@ -1,0 +1,13 @@
+Index: dropbear-2012.55/options.h
+===================================================================
+--- dropbear-2012.55.orig/options.h
++++ dropbear-2012.55/options.h
+@@ -144,7 +144,7 @@ much traffic. */
+ #endif
+ 
+ /* Whether to do reverse DNS lookups. */
+-#define DO_HOST_LOOKUP
++/* #define DO_HOST_LOOKUP */
+ 
+ /* Whether to print the message of the day (MOTD). This doesn't add much code
+  * size */

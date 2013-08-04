@@ -1,0 +1,19 @@
+#!/bin/sh /usr/share/dpatch/dpatch-run
+## 081_auto_net_showmount_quotes.dpatch
+##
+## DP: No description.
+
+@DPATCH@
+
+diff -Naur .B/samples/auto.net .A/samples/auto.net
+--- .B/samples/auto.net	2007-01-07 21:36:36.000000000 +0000
++++ .A/samples/auto.net	2007-01-07 21:36:37.000000000 +0000
+@@ -32,7 +32,7 @@
+ 	done
+ done
+ 
+-[ -x $SMNT ] || exit 1
++[ -x "$SMNT" ] || exit 1
+ 
+ # Newer distributions get this right
+ SHOWMOUNT="$SMNT --no-headers -e $key"

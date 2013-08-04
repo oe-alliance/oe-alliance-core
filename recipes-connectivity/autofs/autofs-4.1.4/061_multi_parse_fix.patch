@@ -1,0 +1,60 @@
+#!/bin/sh /usr/share/dpatch/dpatch-run
+## 061_multi_parse_fix.dpatch
+##
+## DP: No description.
+
+@DPATCH@
+
+diff -Naur .B/modules/parse_sun.c .A/modules/parse_sun.c
+--- .B/modules/parse_sun.c	2005-04-05 12:42:42.000000000 +0000
++++ .A/modules/parse_sun.c	2007-01-07 21:36:35.000000000 +0000
+@@ -766,7 +766,16 @@
+ {
+ 	const char *p = (char *) mapent;
+ 	int multi = 0;
+-	int first_chunk = 0;
++	int not_first_chunk = 0;
++
++	if (!p) {
++		crit("check_is_multi: unexpected NULL map entry pointer");
++		return 0;
++	}
++	
++	/* If first character is "/" it's a multi-mount */
++	if (*p == '/')
++		return 1;
+ 
+ 	while (*p) {
+ 		p = skipspace(p);
+@@ -779,7 +788,7 @@
+ 		 * path that begins with '/' indicates a mutil-mount
+ 		 * entry.
+ 		 */
+-		if (first_chunk) {
++		if (not_first_chunk) {
+ 			if (*p == '/' || *p == '-') {
+ 				multi = 1;
+ 				break;
+@@ -796,7 +805,7 @@
+ 		 * after which it's a multi mount.
+ 		 */
+ 		p += chunklen(p, check_colon(p));
+-		first_chunk++;
++		not_first_chunk++;
+ 	}
+ 
+ 	return multi;
+@@ -883,7 +892,12 @@
+ 				return 1;
+ 			}
+ 
+-			path = dequote(p, l = chunklen(p, 0));
++			if (*p != '/') {
++				l = 0;
++				path = dequote("/", 1);
++			} else
++				 path = dequote(p, l = chunklen(p, 0));
++
+ 			if (!path) {
+ 				error(MODPREFIX "out of memory");
+ 				free(myoptions);

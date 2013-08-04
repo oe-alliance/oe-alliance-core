@@ -1,0 +1,28 @@
+#!/bin/sh /usr/share/dpatch/dpatch-run
+## 067_ldap_no_first_message.dpatch
+##
+## DP: No description.
+
+@DPATCH@
+
+diff -Naur .B/modules/lookup_ldap.c .A/modules/lookup_ldap.c
+--- .B/modules/lookup_ldap.c	2005-02-27 05:37:14.000000000 +0000
++++ .A/modules/lookup_ldap.c	2007-01-07 21:36:35.000000000 +0000
+@@ -437,7 +437,7 @@
+ 
+ 	e = ldap_first_entry(ldap, result);
+ 	if (!e) {
+-		crit(MODPREFIX "got answer, but no first entry for %s", query);
++		debug(MODPREFIX "got answer, but no first entry for %s", query);
+ 		ldap_msgfree(result);
+ 		ldap_unbind(ldap);
+ 		return CHE_MISSING;
+@@ -545,7 +545,7 @@
+ 
+ 	e = ldap_first_entry(ldap, result);
+ 	if (!e) {
+-		crit(MODPREFIX "got answer, but no first entry for %s", query);
++		debug(MODPREFIX "got answer, but no first entry for %s", query);
+ 		ldap_msgfree(result);
+ 		ldap_unbind(ldap);
+ 		return CHE_MISSING;

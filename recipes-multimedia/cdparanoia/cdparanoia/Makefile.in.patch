@@ -1,0 +1,13 @@
+--- cdparanoia-III-10.2/Makefile.in.orig	2009-01-27 23:32:15.000000000 +0100
++++ cdparanoia-III-10.2/Makefile.in	2009-01-27 23:32:53.000000000 +0100
+@@ -87,8 +87,9 @@
+ 		$(LIBDIR)/libcdda_paranoia.so
+ 
+ cdparanoia:	$(OFILES) $(LIBDEP)
+-		$(LD) $(CFLAGS) $(LDFLAGS) $(OFILES) \
++		$(LD) $(CFLAGS) \
+ 		-L$(PWD)/paranoia -L$(PWD)/interface \
++		$(LDFLAGS) $(OFILES) \
+ 		-o cdparanoia $(LIBS)
+ 
+ .c.o:

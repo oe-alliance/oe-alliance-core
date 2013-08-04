@@ -1,0 +1,24 @@
+#!/bin/sh /usr/share/dpatch/dpatch-run
+## 066_canonicalise_mount_points.dpatch
+##
+## DP: No description.
+
+@DPATCH@
+
+diff -Naur .B/samples/rc.autofs.in .A/samples/rc.autofs.in
+--- .B/samples/rc.autofs.in	2007-01-07 21:36:35.000000000 +0000
++++ .A/samples/rc.autofs.in	2007-01-07 21:36:35.000000000 +0000
+@@ -244,6 +244,13 @@
+ 		continue
+ 	    fi
+ 
++	    # If possible, canonicalise the path so it will always unmount
++	    # cleanly.
++	    link=`readlink -f "$dir"`
++	    if [ ! -z "$link" ]; then
++		    dir="$link"
++	    fi
++
+ 	    # Do not include a map if it is a duplicate, maps on top of
+ 	    # another map or another map, maps on top of it.
+ 	    for knownmap in $knownmaps

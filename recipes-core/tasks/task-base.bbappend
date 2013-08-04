@@ -1,4 +1,5 @@
 PRINC = "22"
+PRINC_dreambox = "3"
 
 PACKAGES += " \
 			${@base_contains("DISTRO_FEATURES", "appletalk", "task-base-appletalk", "", d)} \

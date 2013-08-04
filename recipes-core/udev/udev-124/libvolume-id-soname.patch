@@ -1,0 +1,12 @@
+diff -uNr udev-124-orig/extras/volume_id/lib/Makefile udev-124/extras/volume_id/lib/Makefile
+--- udev-124-orig/extras/volume_id/lib/Makefile	2008-06-12 01:24:30.000000000 -0400
++++ udev-124/extras/volume_id/lib/Makefile	2009-01-14 23:32:42.000000000 -0500
+@@ -113,7 +113,7 @@
+ ifeq ($(libdir),$(usrlibdir))
+ 	ln -sf $(SHLIB) $(DESTDIR)$(usrlibdir)/libvolume_id.so
+ else
+-	ln -sf $(libdir)/$(SHLIB) $(DESTDIR)$(usrlibdir)/libvolume_id.so
++	ln -sf ../..$(libdir)/$(SHLIB) $(DESTDIR)$(usrlibdir)/libvolume_id.so
+ endif
+ 	$(INSTALL) -d $(DESTDIR)$(usrlibdir)/pkgconfig
+ 	$(INSTALL_DATA) libvolume_id.pc $(DESTDIR)$(usrlibdir)/pkgconfig/libvolume_id.pc

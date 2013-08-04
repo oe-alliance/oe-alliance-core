@@ -1,0 +1,11 @@
+#!/bin/sh
+# ifdown hook script for resolvconf
+# Written by Roy Marples <roy@marples.name> under the BSD-2 license
+
+[ -x /sbin/resolvconf ] || exit 0
+case "$ADDRFAM" in
+	inet|inet6) : ;;
+	*) exit 0;;
+esac
+[ "$METHOD" = dhcp ] && /sbin/resolvconf -f -d "$IFACE"
+/sbin/resolvconf -f -d "$IFACE.$ADDRFAM"

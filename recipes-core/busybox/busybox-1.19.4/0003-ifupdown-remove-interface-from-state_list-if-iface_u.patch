@@ -1,0 +1,31 @@
+From a7b406ba64b7a4d9c9610726cb72568fc9848f5d Mon Sep 17 00:00:00 2001
+From: Lauri Hintsala <lauri.hintsala@bluegiga.com>
+Date: Wed, 14 Dec 2011 16:49:58 +0200
+Subject: [PATCH 3/6] ifupdown: remove interface from state_list if iface_up
+ fails
+
+Fix the issue where interface is set to the configured state even if
+configuration has failed. Add error check to state setting logic.
+
+Signed-off-by: Lauri Hintsala <lauri.hintsala@bluegiga.com>
+Signed-off-by: Denys Vlasenko <vda.linux@googlemail.com>
+---
+ networking/ifupdown.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/networking/ifupdown.c b/networking/ifupdown.c
+index 5946323..9c2cad2 100644
+--- a/networking/ifupdown.c
++++ b/networking/ifupdown.c
+@@ -1311,7 +1311,7 @@ int ifupdown_main(int argc UNUSED_PARAM, char **argv)
+ 			llist_t *state_list = read_iface_state();
+ 			llist_t *iface_state = find_iface_state(state_list, iface);
+ 
+-			if (cmds == iface_up) {
++			if (cmds == iface_up && !any_failures) {
+ 				char * const newiface = xasprintf("%s=%s", iface, liface);
+ 				if (iface_state == NULL) {
+ 					llist_add_to_end(&state_list, newiface);
+-- 
+1.7.9.5
+

@@ -1,0 +1,40 @@
+diff --git a/Makefile.am b/Makefile.am
+index d8e112d..6b26dbe 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -1,10 +1,10 @@
+ AUTOMAKE_OPTIONS = foreign
+ 
+-SUBDIRS = schroedinger doc tools testsuite
++SUBDIRS = schroedinger doc tools
+ 
+ DISTCHECK_CONFIGURE_FLAGS=--enable-gtk-doc
+ 
+-DIST_SUBDIRS = schroedinger doc tools testsuite
++DIST_SUBDIRS = schroedinger doc tools
+ 
+ EXTRA_DIST = COPYING COPYING.GPL COPYING.LGPL COPYING.MIT COPYING.MPL \
+ 	     autogen.sh schroedinger.spec TODO NEWS
+diff --git a/configure.ac b/configure.ac
+index aebb716..5c4ab3e 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -227,18 +227,6 @@ doc/Makefile
+ schroedinger/Makefile
+ schroedinger/cuda/Makefile
+ schroedinger/opengl/Makefile
+-testsuite/Makefile
+-testsuite/cache/Makefile
+-testsuite/cuda/Makefile
+-testsuite/perf/Makefile
+-testsuite/coder/Makefile
+-testsuite/dirac/Makefile
+-testsuite/installation/Makefile
+-testsuite/manual/Makefile
+-testsuite/opengl/Makefile
+-testsuite/prototype/Makefile
+-testsuite/streams/Makefile
+-testsuite/tables2/Makefile
+ tools/Makefile
+ schroedinger/schroversion.h
+ schroedinger-uninstalled.pc

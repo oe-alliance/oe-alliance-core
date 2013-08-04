@@ -1,0 +1,101 @@
+--- madwifi-ng-r3314-20080131.org/net80211/ieee80211_scan.c	2012-08-06 22:13:42.000000000 +0200
++++ madwifi-ng-r3314-20080131/net80211/ieee80211_scan.c	2012-08-08 22:38:46.518295928 +0200
+@@ -47,6 +47,13 @@
+ #include <linux/etherdevice.h>
+ #include <linux/random.h>
+ #include <linux/interrupt.h>
++
++#define USE_WORKQUEUE
++
++#ifdef USE_WORKQUEUE
++#include <linux/workqueue.h>
++#endif
++
+ #include <linux/delay.h>
+ 
+ #include "if_media.h"
+@@ -67,6 +74,9 @@
+ 	u_int ss_duration;			/* duration for next scan */
+ 	struct tasklet_struct ss_pwrsav;	/* sta ps ena tasklet */
+ 	struct timer_list ss_scan_timer;	/* scan timer */
++#ifdef USE_WORKQUEUE
++	struct work_struct scan_next_work;
++#endif
+ };
+ #define	SCAN_PRIVATE(ss)	((struct scan_state *) ss)
+ 
+@@ -96,8 +106,14 @@
+ 
+ static void scan_restart_pwrsav(unsigned long);
+ static void scan_next(unsigned long);
++#ifdef USE_WORKQUEUE
++static void scan_next_timer(unsigned long);
++static void scan_next_work_cb(struct work_struct *work);
++static struct workqueue_struct *scan_wq;
++#endif
+ 
+ DEFINE_SPINLOCK(channel_lock);
++EXPORT_SYMBOL(channel_lock);
+ static LIST_HEAD(channels_inuse);
+ 
+ struct channel_inuse {
+@@ -224,9 +238,16 @@
+ 	MALLOC(ss, struct scan_state *, sizeof(struct scan_state),
+ 		M_80211_SCAN, M_NOWAIT | M_ZERO);
+ 	if (ss != NULL) {
++		if (!scan_wq)
++			scan_wq = alloc_workqueue("madwifi_scan", 0, 1);
+ 		init_timer(&ss->ss_scan_timer);
+-		ss->ss_scan_timer.function = scan_next;
+ 		ss->ss_scan_timer.data = (unsigned long) ss;
++#ifdef USE_WORKQUEUE
++		ss->ss_scan_timer.function = scan_next_timer;
++		INIT_WORK(&ss->scan_next_work, scan_next_work_cb);
++#else
++		ss->ss_scan_timer.function = scan_next;
++#endif
+ 		tasklet_init(&ss->ss_pwrsav, scan_restart_pwrsav,
+ 			(unsigned long) ss);
+ 		ic->ic_scan = &ss->base;
+@@ -241,6 +262,9 @@
+ 
+ 	if (ss != NULL) {
+ 		del_timer(&SCAN_PRIVATE(ss)->ss_scan_timer);
++#ifdef USE_WORKQUEUE
++		flush_workqueue(scan_wq);
++#endif
+ 		tasklet_kill(&SCAN_PRIVATE(ss)->ss_pwrsav);
+ 		if (ss->ss_ops != NULL) {
+ 			ss->ss_ops->scan_detach(ss);
+@@ -276,6 +300,9 @@
+ 	if (ss->ss_vap == vap) {
+ 		if (ic->ic_flags & IEEE80211_F_SCAN) {
+ 			del_timer(&SCAN_PRIVATE(ss)->ss_scan_timer);
++#ifdef USE_WORKQUEUE
++			flush_workqueue(scan_wq);
++#endif
+ 			ic->ic_flags &= ~IEEE80211_F_SCAN;
+ 		}
+ 		if (ss->ss_ops != NULL) {
+@@ -911,6 +938,21 @@
+ #undef ISCAN_REP
+ }
+ 
++#ifdef USE_WORKQUEUE
++static void
++scan_next_timer(unsigned long arg)
++{
++	struct scan_state *ss = (struct scan_state *) arg;
++	queue_work_on(1, scan_wq, &ss->scan_next_work);
++}
++
++static void scan_next_work_cb(struct work_struct *work)
++{
++	struct scan_state *s = container_of(work, struct scan_state, scan_next_work);
++	scan_next((unsigned long)s);
++}
++#endif
++
+ #ifdef IEEE80211_DEBUG
+ static void
+ dump_probe_beacon(u_int8_t subtype, int isnew,

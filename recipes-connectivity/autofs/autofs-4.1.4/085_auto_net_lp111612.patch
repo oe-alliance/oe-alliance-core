@@ -1,0 +1,20 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 085-auto.net-lp111612 by Morten Kjeldgaard <mok@bioxray.au.dk>
+##
+## All lines beginning with `## DP:' are a description of the patch.
+## DP: Fix problem with directories exported multiple times to different 
+## DP: hosts (LP: #111612).
+
+@DPATCH@
+
+--- samples/auto.net	2008-04-09 16:32:59.000000000 +0200
++++ foo/samples/auto.net	2008-04-09 16:34:29.000000000 +0200
+@@ -37,7 +37,7 @@
+ # Newer distributions get this right
+ SHOWMOUNT="$SMNT --no-headers -e $key"
+ 
+-$SHOWMOUNT | LC_ALL=C sort -k 1 | \
++$SHOWMOUNT | LC_ALL=C cut -d' ' -f1 | LC_ALL=C sort -k 1 | \
+ 	awk -v key="$key" -v opts="$opts" -- '
+ 	BEGIN	{ ORS=""; first=1 }
+ 		{ if (first) { print opts; first=0 }; print " \\\n\t" $1, key ":" $1 }

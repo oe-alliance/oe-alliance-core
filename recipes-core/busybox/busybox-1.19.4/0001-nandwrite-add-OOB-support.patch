@@ -1,0 +1,59 @@
+From 4e95ad0951507611644fe7b2a87684938b43218d Mon Sep 17 00:00:00 2001
+From: pieterg <pieterg@users.sourceforge.net>
+Date: Sat, 27 Apr 2013 17:30:36 +0200
+Subject: [PATCH] nandwrite: add OOB support
+
+---
+ miscutils/nandwrite.c |   14 +++++++++++---
+ 1 file changed, 11 insertions(+), 3 deletions(-)
+
+diff --git a/miscutils/nandwrite.c b/miscutils/nandwrite.c
+index 562a342..74fd5b3 100644
+--- a/miscutils/nandwrite.c
++++ b/miscutils/nandwrite.c
+@@ -34,6 +34,7 @@
+ //usage:	"Write to the specified MTD device\n"
+ //usage:     "\n	-p	Pad to page size"
+ //usage:     "\n	-s ADDR	Start address"
++//usage:     "\n	-o	Write oob data"
+ 
+ //usage:#define nanddump_trivial_usage
+ //usage:	"[-o] [-b] [-s ADDR] [-f FILE] MTD_DEVICE"
+@@ -51,9 +52,9 @@
+ #define IS_NANDDUMP  (ENABLE_NANDDUMP && (!ENABLE_NANDWRITE || (applet_name[4] == 'd')))
+ #define IS_NANDWRITE (ENABLE_NANDWRITE && (!ENABLE_NANDDUMP || (applet_name[4] != 'd')))
+ 
+-#define OPT_p  (1 << 0) /* nandwrite only */
+-#define OPT_o  (1 << 0) /* nanddump only */
++#define OPT_o  (1 << 0)
+ #define OPT_s  (1 << 1)
++#define OPT_p  (1 << 2) /* nandwrite only */
+ #define OPT_b  (1 << 2)
+ #define OPT_f  (1 << 3)
+ #define OPT_l  (1 << 4)
+@@ -116,7 +117,7 @@ int nandwrite_main(int argc UNUSED_PARAM, char **argv)
+ 		opts = getopt32(argv, "os:bf:l:", &opt_s, &opt_f, &opt_l);
+ 	} else { /* nandwrite */
+ 		opt_complementary = "-1:?2";
+-		opts = getopt32(argv, "ps:", &opt_s);
++		opts = getopt32(argv, "os:p", &opt_s);
+ 	}
+ 	argv += optind;
+ 
+@@ -217,6 +218,13 @@ int nandwrite_main(int argc UNUSED_PARAM, char **argv)
+ 			xwrite(output_fd, oobbuf, meminfo.oobsize);
+ 		}
+ 
++		if (IS_NANDWRITE && (opts & OPT_o)) {
++			/* read oob data */
++			full_read(input_fd, oobbuf, meminfo.oobsize);
++			oob.start = mtdoffset;
++			xioctl(fd, MEMWRITEOOB, &oob);
++		}
++
+ 		mtdoffset += meminfo_writesize;
+ 		if (cnt < meminfo_writesize)
+ 			break;
+-- 
+1.7.9.5
+

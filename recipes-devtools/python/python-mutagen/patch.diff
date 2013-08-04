@@ -1,0 +1,12 @@
+diff -Naur mutagen/easymp4.py mutagen_pach/easymp4.py
+--- mutagen/mutagen/easymp4.py	2009-08-10 12:57:55.000000000 +0200
++++ mutagen/mutagen/easymp4.py	2010-01-11 19:24:05.000000000 +0100
+@@ -204,7 +204,7 @@
+     '\xa9cmt': 'comment',
+     'desc': 'description',
+     '\xa9grp': 'grouping',
+-    '\xa9grn': 'genre',
++    '\xa9gen': 'genre',
+     'cprt': 'copyright',
+     'soal': 'albumsort',
+     'soaa': 'albumartistsort',
