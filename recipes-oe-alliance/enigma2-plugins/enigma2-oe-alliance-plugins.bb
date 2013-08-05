@@ -6,7 +6,7 @@ LICENSE = "Proprietary"
 LIC_FILES_CHKSUM = "file://COPYING;md5=8e37f34d0e40d32ea2bc90ee812c9131"
 
 PACKAGES_DYNAMIC = "enigma2-plugin-(?!oealliance-).*"
-PROVIDES = "${PN} \
+PROVIDES += " \
 	enigma2-plugin-systemplugins-autobouquetsmaker \
 	enigma2-plugin-systemplugins-blindscan \
 	enigma2-plugin-extensions-dlnabrowser \
@@ -28,6 +28,27 @@ PROVIDES = "${PN} \
 	enigma2-plugin-extensions-ondemand \
 	enigma2-plugin-extensions-fempa \
 	enigma2-plugin-extensions-lcd4linux \
+	"
+
+DEPENDS = "enigma2 \
+	${@base_contains("MACHINE_FEATURES", "blindscan-dvbc", "virtual/blindscan-dvbc" , "", d)} \
+	${@base_contains("MACHINE_FEATURES", "blindscan-dvbs", "virtual/blindscan-dvbs" , "", d)} \
+	python-dnspython python-beautifulsoup python-lxml python-simplejson python-pyamf python-icalendar python-pyusb \
+	djmount \
+	librtmp \
+	minidlna \
+	hddtemp \
+	ppp \
+	usbmodeswitch \
+	usbmodeswitch-data \
+	wvdial \
+	wvstreams \
+	usbutils \
+	gmp \
+	tslib \
+	mpfr \
+	lcd4linux \
+	png-util \
 	"
 
 DESCRIPTION_enigma2-plugin-systemplugins-autobouquetsmaker = "Automatically build and update bouquets from the satellite stream."
@@ -71,33 +92,12 @@ RDEPENDS_enigma2-plugin-extensions-lcd4linux_append_vuduo2 = " png-util"
 RDEPENDS_enigma2-plugin-extensions-lcd4linux_append_openatv = " enigma2-plugin-extensions-lcd4linux-src"
 RDEPENDS_enigma2-plugin-extensions-lcd4linux_append_openmips = " enigma2-plugin-extensions-lcd4linux-src"
 
-DEPENDS = "enigma2 \
-	${@base_contains("MACHINE_FEATURES", "blindscan-dvbc", "virtual/blindscan-dvbc" , "", d)} \
-	${@base_contains("MACHINE_FEATURES", "blindscan-dvbs", "virtual/blindscan-dvbs" , "", d)} \
-	python-dnspython python-beautifulsoup python-lxml python-simplejson python-pyamf python-icalendar python-pyusb \
-	djmount \
-	librtmp \
-	minidlna \
-	hddtemp \
-	ppp \
-	usbmodeswitch \
-	usbmodeswitch-data \
-	wvdial \
-	wvstreams \
-	usbutils \
-	gmp \
-	tslib \
-	mpfr \
-	lcd4linux \
-	png-util \
-	"
-
 inherit gitpkgv autotools
 
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r65"
+PR = "r68"
 
 SRC_URI="git://github.com/oe-alliance/oe-alliance-plugins.git;protocol=git"
 
