@@ -1,19 +1,6 @@
-DESCRIPTION = "Handle your EPG on enigma2 from various sources (opentv, mhw, xmltv, custom sources)"
-HOMEPAGE = "https://github.com/E2OpenPlugins/e2openplugin-CrossEPG"
-MODULE = "CrossEPG"
-LICENSE = "LGPLv2.1"
-LIC_FILES_CHKSUM = "file://LICENSE.TXT;md5=4fbd65380cdd255951079008b364516c"
+PRINC = "8"
 
-PROVIDES = "enigma2-plugin-systemplugins-crossepg"
-
-DEPENDS = "python-native libxml2 zlib python"
-
-inherit gitpkgv python-dir
-
-SRCREV = "${AUTOREV}"
-PV = "0.6.2+git${SRCPV}"
-PKGV = "0.6.2+git${GITPKGV}"
-PR = "r7"
+FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
 SRC_URI = "git://github.com/oe-alliance/e2openplugin-${MODULE}.git;protocol=git"
 
@@ -51,6 +38,6 @@ python populate_packages_prepend() {
 	do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/.*\/.*\.po$', 'enigma2-plugin-%s-po', '%s (translations)', recursive=True, match_path=True, prepend=True)
 }
 
-FILES_${PN} += " /usr/crossepg /usr/python2.7"
-FILES_${PN}-src += " /usr/lib/python2.7/crossepg.py"
-FILES_${PN}-dbg += "/usr/crossepg/scripts/mhw2epgdownloader/.debug"
+FILES_enigma2-plugin-systemplugins-crossepg += " /usr/crossepg /usr/python2.7"
+FILES_enigma2-plugin-systemplugins-crossepg-src += " /usr/lib/python2.7/crossepg.py"
+FILES_enigma2-plugin-systemplugins-crossepg-dbg += "/usr/crossepg/scripts/mhw2epgdownloader/.debug"
