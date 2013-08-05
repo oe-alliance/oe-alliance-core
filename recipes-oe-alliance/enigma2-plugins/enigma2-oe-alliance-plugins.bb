@@ -6,6 +6,11 @@ LICENSE = "Proprietary"
 LIC_FILES_CHKSUM = "file://COPYING;md5=8e37f34d0e40d32ea2bc90ee812c9131"
 
 PACKAGES_DYNAMIC = "enigma2-plugin-(?!oealliance-).*"
+
+PACKAGES += " \
+	enigma2-plugin-extensions-hbbtv \
+	"
+
 PROVIDES += " \
 	enigma2-plugin-systemplugins-autobouquetsmaker \
 	enigma2-plugin-systemplugins-blindscan \
@@ -44,9 +49,6 @@ DEPENDS = "enigma2 \
 	wvdial \
 	wvstreams \
 	usbutils \
-	gmp \
-	tslib \
-	mpfr \
 	lcd4linux \
 	png-util \
 	"
@@ -79,7 +81,8 @@ FILES_enigma2-plugin-extensions-webbrowser_append = "${datadir}/keymaps"
 DESCRIPTION_enigma2-plugin-extensions-ondemand-openuitzendinggemist = "Watch NL-IP TV"
 DESCRIPTION_enigma2-plugin-extensions-tunerserver = "Builds a virtual channels list"
 DESCRIPTION_enigma2-plugin-extensions-hbbtv = "HbbTV player"
-RDEPENDS_enigma2-plugin-extensions-hbbtv = "tslib-conf libts-1.0-0 libsysfs2 libgmp10 libmpfr4 vuplus-opera-browser-util enigma2-hbbtv-util"
+RDEPENDS_enigma2-plugin-extensions-hbbtv = "vuplus-opera-browser-util enigma2-hbbtv-util"
+DEPENDS_enigma2-plugin-extensions-hbbtv = "vuplus-opera-browser-util"
 DESCRIPTION_enigma2-plugin-systemplugins-transcodingsetup = "Setup transcoding of your VU+"
 RDEPENDS_enigma2-plugin-systemplugins-transcodingsetup = "vuplus-transtreamproxy"
 DESCRIPTION_enigma2-plugin-systemplugins-micomupgrade = "micomupgrade"
@@ -97,7 +100,7 @@ inherit gitpkgv autotools
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r68"
+PR = "r69"
 
 SRC_URI="git://github.com/oe-alliance/oe-alliance-plugins.git;protocol=git"
 
