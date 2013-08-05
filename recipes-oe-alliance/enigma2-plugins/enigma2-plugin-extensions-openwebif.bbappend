@@ -1,5 +1,6 @@
-PRINC = "35"
+PRINC = "36"
 
+PACKAGE_ARCH = "${MACHINE_ARCH}"
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
 SRC_URI = "git://github.com/oe-alliance/e2openplugin-${MODULE}.git;protocol=git"
