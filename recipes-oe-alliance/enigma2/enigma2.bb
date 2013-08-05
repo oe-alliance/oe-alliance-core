@@ -158,7 +158,7 @@ inherit gitpkgv autotools pkgconfig
 
 PV = "2.8+git${SRCPV}"
 PKGV = "2.8+git${GITPKGV}"
-PR = "r119"
+PR = "r120"
 
 SRC_URI = "${ENIGMA2_URI}"
 
@@ -207,7 +207,7 @@ EXTRA_OECONF = "\
 	STAGING_INCDIR=${STAGING_INCDIR} \
 	STAGING_LIBDIR=${STAGING_LIBDIR} \
 	--with-distro=${DISTRO_NAME} \
-	--with-boxtype=${MACHINE} \
+	${@base_contains("MACHINEBUILD", "odinm6", "--with-boxtype=${MACHINEBUILD}" , "--with-boxtype=${MACHINE}", d)} \
 	--with-machinebrand=${MACHINE_BRAND} \
 	--with-machinename=${MACHINE_NAME} \
 	--with-imageversion=${DISTRO_VERSION} \

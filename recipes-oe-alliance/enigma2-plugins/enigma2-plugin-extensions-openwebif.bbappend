@@ -1,4 +1,4 @@
-PRINC = "36"
+PRINC = "37"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
@@ -85,6 +85,9 @@ python do_package_prepend () {
 				elif target_box == 'premium.jpg':
 					if not (name == 'elite.jpg' or name == 'premium+.jpg' or name == 'ultra.jpg'):
 						os.remove(os.path.join(root, name))
+				elif target_box == 'odinm7.jpg':
+					if not (name == 'starsatlx.jpg'):
+						os.remove(os.path.join(root, name))
 				else:
 					os.remove(os.path.join(root, name))
 	for root, dirs, files in os.walk(top + 'remotes', topdown=False):
@@ -95,7 +98,10 @@ python do_package_prepend () {
 						os.remove(os.path.join(root, name))
 				elif target_remote == 'premium.png':
 					if not (name == 'elite.png'):
-						os.remove(os.path.join(root, name))		
+						os.remove(os.path.join(root, name))
+				elif target_remote == 'odinm7.png':
+					if not (name == 'starsatlx.png'):
+						os.remove(os.path.join(root, name))
 				else:
 					os.remove(os.path.join(root, name))
 }
