@@ -9,7 +9,8 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r322"
+PV = "2.0"
+PR = "r1"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -29,210 +30,155 @@ inherit autotools deploy
 S = "${WORKDIR}/git"
 
 DEPENDS = "enigma2"
+
+THIRDPARTY_PLUGINS = " \
+	enigma2-plugin-dvb-sundtek.controlcenter_1.0-20110318-r2_mipsel.ipk \
+	enigma2-plugin-extensions-aspectratioswitch_0.8_mips32el.ipk \
+	enigma2-plugin-extensions-airplayer_0.3.9_mips32el.ipk \
+	enigma2-plugin-extensions-atmolightd_0.7-pre22_all.ipk \
+	enigma2-plugin-extensions-autobouquets-e2_201303010205-r1_mips32el.ipk \
+	enigma2-plugin-extensions-boblight-enigma2_0.7r7_Beta_mips32el.ipk \
+	enigma2-plugin-extensions-buyukbangpanel_1.3.2_all.ipk \
+	enigma2-plugin-extensions-camofs_7.45_all.ipk \
+	enigma2-plugin-extensions-csfd_9_35-20130615_all.ipk \
+	enigma2-plugin-extensions-cubic_streamer_0.7.3_mips32el.ipk \
+	enigma2-plugin-extensions-dreamexplorer_7.4-r1_mips32el.ipk \
+	enigma2-plugin-extensions-facebook_0.6_mips32el.ipk \
+	enigma2-plugin-extensions-filesearchfs_2.53_all.ipk \
+	enigma2-plugin-extensions-focusonline_0.7rc5_mips32el.ipk \
+	enigma2-plugin-extensions-gmailreader-oe2.0_1.3_all.ipk \
+	enigma2-plugin-extensions-googlenewsreader_1.0_mips32el.ipk \
+	enigma2-plugin-extensions-heizoelpreisefs_3.70_all.ipk \
+	enigma2-plugin-extensions-hetweer_1.2_all.ipk \
+	enigma2-plugin-extensions-hdmitest_0.4_mipsel.ipk \
+	enigma2-plugin-extensions-kicker_2.9rc4_mips32el.ipk \
+	enigma2-plugin-extensions-livefootball_4.4_mips32el.ipk \
+	enigma2-plugin-extensions-mediainfo_0.6_r04_all.ipk \
+	enigma2-plugin-extensions-mediatomb_0.12.1-r3_mips32el.ipk \
+	enigma2-plugin-extensions-msnwetter_0.6_mips32el.ipk \
+	enigma2-plugin-extensions-mtv_0.1_mips32el.ipk \
+	enigma2-plugin-extensions-moviebrowser_2.1rc1_mips32el.ipk \
+	enigma2-plugin-extensions-mp3browser_0.4_mips32el.ipk \
+	enigma2-plugin-extensions-navibar_1.1.1_all.ipk \
+	enigma2-plugin-extensions-newtube_0.1a-r0_all.ipk \
+	enigma2-plugin-extensions-opkg-tools_1.3_mipsel.ipk \
+	enigma2-plugin-extensions-planerfs_4.84_all.ipk \
+	enigma2-plugin-extensions-pluginspanel_1.0_r01_all.ipk \
+	enigma2-plugin-extensions-picturecenterfs_3.71_all.ipk \
+	enigma2-plugin-extensions-radiode_0.1_mips32el.ipk \
+	enigma2-plugin-extensions-radioonline-oe2.0_1.0_all.ipk \
+	enigma2-plugin-extensions-screensaver_5.6.9_all.ipk \
+	enigma2-plugin-extensions-screengrabber_2.1a_mips32el.ipk \
+	enigma2-plugin-extensions-seriesplugin_0.8.7.3_mips32el.ipk \
+	enigma2-plugin-extensions-sherlock-vuplus_5.01_mipsel.ipk \
+	enigma2-plugin-extensions-skyrecorder_1.2.4r1_all.ipk \
+	enigma2-plugin-extensions-songs-to_0.1_mips32el.ipk \
+	enigma2-plugin-extensions-sportmax_1.2_mips32el.ipk \
+	enigma2-plugin-extensions-subtitleplayer_3.20_mipsel.ipk \
+	enigma2-plugin-extensions-spinnerselector_2.0r5_mips32el.ipk \
+	enigma2-plugin-extensions-sport1ticker_0.4_all.ipk \
+	enigma2-plugin-extensions-sportportal_2013_all.ipk \
+	enigma2-plugin-extensions-systemtools-for-ppanels_0.83_mipsel.ipk \
+	enigma2-plugin-extensions-thetvdb_0.7-20120607-r1_mips32el.ipk \
+	enigma2-plugin-extensions-tmdbinfo_1.0-20120508-r2_mips32el.ipk \
+	enigma2-plugin-extensions-transmission_2.76-r13884_mips32el.ipk \
+	enigma2-plugin-extensions-tsmedia-oe2.0_3.4_all.ipk \
+	enigma2-plugin-extensions-vcs_1.0-rc5_all.ipk \
+	enigma2-plugin-extensions-vuplusforum_0.6rc2_mips32el.ipk \
+	enigma2-plugin-extensions-webmedia_10.0_r01_oe2.0_all.ipk \
+	enigma2-plugin-extensions-webradiofs_11.06_all.ipk \
+	enigma2-plugin-extensions-wikipedia_1.8rc1_mips32el.ipk \
+	enigma2-plugin-extensions-yampmusicplayer_2.1.1-2012-09-23_mipsel.ipk \
+	enigma2-plugin-systemplugins-recordinfobar_1.0-rc15_mipsel.ipk \
+	"
+
+# 	Install any packages t_append =hat are only For this machines feed here, uncomment the line below and change as required
+THIRDPARTY_MACHINE_PLUGINS_vuuno = " \
+	enigma2-plugin-extensions-sdg-imagedownloader-v0.5-oe-2.0-vu-all.ipk \
+	"
+THIRDPARTY_MACHINE_PLUGINS_vuultimo = " \
+	enigma2-plugin-extensions-sdg-imagedownloader-v0.5-oe-2.0-vu-all.ipk \
+	"
+THIRDPARTY_MACHINE_PLUGINS_vusolo = " \
+	enigma2-plugin-extensions-sdg-imagedownloader-v0.5-oe-2.0-vu-all.ipk \
+	"
+THIRDPARTY_MACHINE_PLUGINS_vuduo = " \
+	enigma2-plugin-extensions-sdg-imagedownloader-v0.5-oe-2.0-vu-all.ipk \
+	"
+THIRDPARTY_MACHINE_PLUGINS_vusolo2 = " \
+	enigma2-plugin-extensions-sdg-imagedownloader-v0.5-oe-2.0-vu-all.ipk \
+	"
+THIRDPARTY_MACHINE_PLUGINS_vuduo2 = " \
+	enigma2-plugin-extensions-sdg-imagedownloader-v0.5-oe-2.0-vu-all.ipk \
+	"
+THIRDPARTY_MACHINE_PLUGINS_et4x00 = " \
+	enigma2-plugin-extensions-et-webbrowser_1.6.1-r1_et4x00.ipk \
+	enigma2-plugin-weblinks-basic_1.3-r0_et4x00.ipk \
+	enigma2-plugin-weblinks-games_1.0-r0_et4x00.ipk \
+	"
+THIRDPARTY_MACHINE_PLUGINS_et5x00 = " \
+	"
+THIRDPARTY_MACHINE_PLUGINS_et6x00 = " \
+	enigma2-plugin-extensions-et-webbrowser_1.6.2-r1_et6x00.ipk \
+	enigma2-plugin-weblinks-basic_1.3-r0_et6x00.ipk \
+	enigma2-plugin-weblinks-games_1.0-r0_et6x00.ipk \
+	"
+THIRDPARTY_MACHINE_PLUGINS_et9x00 = " \
+	enigma2-plugin-extensions-et-webbrowser_1.6.1-r1_et9x00.ipk \
+	enigma2-plugin-weblinks-basic_1.3-r0_et9x00.ipk \
+	enigma2-plugin-weblinks-games_1.0-r0_et9x00.ipk \
+	"
+
+THIRDPARTY_MACHINE_PLUGINS_e3hd = " \
+	enigma2-plugin-extensions-opera_1.01_mips32el.ipk \
+	"
+
+THIRDPARTY_MACHINE_PLUGINS_dm8000 = " \
+	enigma2-plugin-extensions-dflash_9.4.2-r02_all.ipk \
+	"
+THIRDPARTY_MACHINE_PLUGINS_dm7020hd = " \
+	enigma2-plugin-extensions-dflash_9.4.2-r02_all.ipk \
+	"
+THIRDPARTY_MACHINE_PLUGINS_dm500hd = " \
+	enigma2-plugin-extensions-dflash_9.4.2-r02_all.ipk \
+	"
+THIRDPARTY_MACHINE_PLUGINS_dm800se = " \
+	enigma2-plugin-extensions-dflash_9.4.2-r02_all.ipk \
+	"
+THIRDPARTY_MACHINE_PLUGINS_dm7020hdv2 = " \
+	enigma2-plugin-extensions-dflash_9.4.2-r02_all.ipk \
+	"
+THIRDPARTY_MACHINE_PLUGINS_dm500hdv2 = " \
+	enigma2-plugin-extensions-dflash_9.4.2-r02_all.ipk \
+	"
+THIRDPARTY_MACHINE_PLUGINS_dm800sev2 = " \
+	enigma2-plugin-extensions-dflash_9.4.2-r02_all.ipk \
+	"
+THIRDPARTY_MACHINE_PLUGINS_dm800 = " \
+	enigma2-plugin-extensions-dflash_9.4.2-r02_all.ipk \
+	"
+
 do_install() {
 }
 
 do_deploy() {
 	install -d 0755 ${WORKDIR}/deploy-ipks/3rdparty
-	install -m 0644 enigma2-plugin-dvb-sundtek.controlcenter_1.0-20110318-r2_mipsel.ipk ${WORKDIR}/deploy-ipks/3rdparty
-	install -m 0644 enigma2-plugin-extensions-aspectratioswitch_0.8_mips32el.ipk ${WORKDIR}/deploy-ipks/3rdparty
-	install -m 0644 enigma2-plugin-extensions-airplayer_0.3.9_mips32el.ipk ${WORKDIR}/deploy-ipks/3rdparty
-	install -m 0644 enigma2-plugin-extensions-atmolightd_0.7-pre22_all.ipk ${WORKDIR}/deploy-ipks/3rdparty
-	install -m 0644 enigma2-plugin-extensions-autobouquets-e2_201303010205-r1_mips32el.ipk ${WORKDIR}/deploy-ipks/3rdparty
-	install -m 0644 enigma2-plugin-extensions-boblight-enigma2_0.7r7_Beta_mips32el.ipk ${WORKDIR}/deploy-ipks/3rdparty
-	install -m 0644 enigma2-plugin-extensions-buyukbangpanel_1.3.2_all.ipk ${WORKDIR}/deploy-ipks/3rdparty
-	install -m 0644 enigma2-plugin-extensions-camofs_7.45_all.ipk ${WORKDIR}/deploy-ipks/3rdparty
-	install -m 0644 enigma2-plugin-extensions-csfd_9_35-20130615_all.ipk ${WORKDIR}/deploy-ipks/3rdparty
-	install -m 0644 enigma2-plugin-extensions-cubic_streamer_0.7.3_mips32el.ipk ${WORKDIR}/deploy-ipks/3rdparty
-	install -m 0644 enigma2-plugin-extensions-dreamexplorer_7.4-r1_mips32el.ipk ${WORKDIR}/deploy-ipks/3rdparty
-	install -m 0644 enigma2-plugin-extensions-facebook_0.6_mips32el.ipk ${WORKDIR}/deploy-ipks/3rdparty
-	install -m 0644 enigma2-plugin-extensions-filesearchfs_2.53_all.ipk ${WORKDIR}/deploy-ipks/3rdparty
-	install -m 0644 enigma2-plugin-extensions-focusonline_0.7rc5_mips32el.ipk ${WORKDIR}/deploy-ipks/3rdparty
-	install -m 0644 enigma2-plugin-extensions-gmailreader-oe2.0_1.3_all.ipk ${WORKDIR}/deploy-ipks/3rdparty
-	install -m 0644 enigma2-plugin-extensions-googlenewsreader_1.0_mips32el.ipk ${WORKDIR}/deploy-ipks/3rdparty
-	install -m 0644 enigma2-plugin-extensions-heizoelpreisefs_3.70_all.ipk ${WORKDIR}/deploy-ipks/3rdparty
-	install -m 0644 enigma2-plugin-extensions-hetweer_1.2_all.ipk ${WORKDIR}/deploy-ipks/3rdparty
-	install -m 0644 enigma2-plugin-extensions-hdmitest_0.4_mipsel.ipk ${WORKDIR}/deploy-ipks/3rdparty
-	install -m 0644 enigma2-plugin-extensions-kicker_2.9rc4_mips32el.ipk ${WORKDIR}/deploy-ipks/3rdparty
-	install -m 0644 enigma2-plugin-extensions-livefootball_4.4_mips32el.ipk ${WORKDIR}/deploy-ipks/3rdparty
-	install -m 0644 enigma2-plugin-extensions-mediainfo_0.6_r04_all.ipk ${WORKDIR}/deploy-ipks/3rdparty
-	install -m 0644 enigma2-plugin-extensions-mediatomb_0.12.1-r3_mips32el.ipk ${WORKDIR}/deploy-ipks/3rdparty
-	install -m 0644 enigma2-plugin-extensions-msnwetter_0.6_mips32el.ipk ${WORKDIR}/deploy-ipks/3rdparty
-	install -m 0644 enigma2-plugin-extensions-mtv_0.1_mips32el.ipk ${WORKDIR}/deploy-ipks/3rdparty
-	install -m 0644 enigma2-plugin-extensions-moviebrowser_2.1rc1_mips32el.ipk ${WORKDIR}/deploy-ipks/3rdparty
-	install -m 0644 enigma2-plugin-extensions-mp3browser_0.4_mips32el.ipk ${WORKDIR}/deploy-ipks/3rdparty
-	install -m 0644 enigma2-plugin-extensions-navibar_1.1.1_all.ipk ${WORKDIR}/deploy-ipks/3rdparty
-	install -m 0644 enigma2-plugin-extensions-newtube_0.1a-r0_all.ipk ${WORKDIR}/deploy-ipks/3rdparty
-	install -m 0644 enigma2-plugin-extensions-opkg-tools_1.3_mipsel.ipk ${WORKDIR}/deploy-ipks/3rdparty
-	install -m 0644 enigma2-plugin-extensions-planerfs_4.84_all.ipk ${WORKDIR}/deploy-ipks/3rdparty
-	install -m 0644 enigma2-plugin-extensions-pluginspanel_1.0_r01_all.ipk ${WORKDIR}/deploy-ipks/3rdparty
-	install -m 0644 enigma2-plugin-extensions-picturecenterfs_3.71_all.ipk ${WORKDIR}/deploy-ipks/3rdparty
-	install -m 0644 enigma2-plugin-extensions-radiode_0.1_mips32el.ipk ${WORKDIR}/deploy-ipks/3rdparty
-	install -m 0644 enigma2-plugin-extensions-radioonline-oe2.0_1.0_all.ipk ${WORKDIR}/deploy-ipks/3rdparty
-	install -m 0644 enigma2-plugin-extensions-screensaver_5.6.9_all.ipk ${WORKDIR}/deploy-ipks/3rdparty
-	install -m 0644 enigma2-plugin-extensions-screengrabber_2.1a_mips32el.ipk ${WORKDIR}/deploy-ipks/3rdparty
-	install -m 0644 enigma2-plugin-extensions-seriesplugin_0.8.7.3_mips32el.ipk ${WORKDIR}/deploy-ipks/3rdparty
-	install -m 0644 enigma2-plugin-extensions-sherlock-vuplus_5.01_mipsel.ipk ${WORKDIR}/deploy-ipks/3rdparty
-	install -m 0644 enigma2-plugin-extensions-skyrecorder_1.2.4r1_all.ipk ${WORKDIR}/deploy-ipks/3rdparty
-	install -m 0644 enigma2-plugin-extensions-songs-to_0.1_mips32el.ipk ${WORKDIR}/deploy-ipks/3rdparty
-	install -m 0644 enigma2-plugin-extensions-sportmax_1.2_mips32el.ipk ${WORKDIR}/deploy-ipks/3rdparty
-	install -m 0644 enigma2-plugin-extensions-subtitleplayer_3.20_mipsel.ipk ${WORKDIR}/deploy-ipks/3rdparty
-	install -m 0644 enigma2-plugin-extensions-spinnerselector_2.0r5_mips32el.ipk ${WORKDIR}/deploy-ipks/3rdparty
-	install -m 0644 enigma2-plugin-extensions-sport1ticker_0.4_all.ipk ${WORKDIR}/deploy-ipks/3rdparty
-	install -m 0644 enigma2-plugin-extensions-sportportal_2013_all.ipk ${WORKDIR}/deploy-ipks/3rdparty
-	install -m 0644 enigma2-plugin-extensions-systemtools-for-ppanels_0.83_mipsel.ipk ${WORKDIR}/deploy-ipks/3rdparty
-	install -m 0644 enigma2-plugin-extensions-thetvdb_0.7-20120607-r1_mips32el.ipk ${WORKDIR}/deploy-ipks/3rdparty
-	install -m 0644 enigma2-plugin-extensions-tmdbinfo_1.0-20120508-r2_mips32el.ipk ${WORKDIR}/deploy-ipks/3rdparty
-	install -m 0644 enigma2-plugin-extensions-transmission_2.76-r13884_mips32el.ipk ${WORKDIR}/deploy-ipks/3rdparty
-	install -m 0644 enigma2-plugin-extensions-tsmedia-oe2.0_3.4_all.ipk ${WORKDIR}/deploy-ipks/3rdparty
-	install -m 0644 enigma2-plugin-extensions-vcs_1.0-rc5_all.ipk ${WORKDIR}/deploy-ipks/3rdparty
-	install -m 0644 enigma2-plugin-extensions-vuplusforum_0.6rc2_mips32el.ipk ${WORKDIR}/deploy-ipks/3rdparty
-	install -m 0644 enigma2-plugin-extensions-webmedia_10.0_r01_oe2.0_all.ipk ${WORKDIR}/deploy-ipks/3rdparty
-	install -m 0644 enigma2-plugin-extensions-webradiofs_11.06_all.ipk ${WORKDIR}/deploy-ipks/3rdparty
-	install -m 0644 enigma2-plugin-extensions-wikipedia_1.8rc1_mips32el.ipk ${WORKDIR}/deploy-ipks/3rdparty
-	install -m 0644 enigma2-plugin-extensions-yampmusicplayer_2.1.1-2012-09-23_mipsel.ipk ${WORKDIR}/deploy-ipks/3rdparty
-	install -m 0644 enigma2-plugin-systemplugins-recordinfobar_1.0-rc15_mipsel.ipk ${WORKDIR}/deploy-ipks/3rdparty
+	for i in ${THIRDPARTY_PLUGINS}; do
+		if [ -f $i ]; then
+			install -m 0644 $i ${WORKDIR}/deploy-ipks/3rdparty;
+		fi
+	done;
+	for i in ${THIRDPARTY_MACHINE_PLUGINS}; do
+		if [ -f $i ]; then
+			install -m 0644 $i ${WORKDIR}/deploy-ipks/3rdparty;
+		fi
+	done;
 	for i in ${THIRDPARTY_EXTRA_PLUGINS}; do
-		install -m 0644 $i ${WORKDIR}/deploy-ipks/3rdparty;
+		if [ -f $i ]; then
+			install -m 0644 $i ${WORKDIR}/deploy-ipks/3rdparty;
+		fi
 	done;
 }
-
-do_deploy_append_vuuno() {
-# 	Install any packages that are only For this machines feed here, uncomment the line below and change as required
-	install -m 0644 enigma2-plugin-extensions-sdg-imagedownloader-v0.5-oe-2.0-vu-all.ipk ${WORKDIR}/deploy-ipks/3rdparty
-}
-do_deploy_append_vuultimo() {
-# 	Install any packages that are only For this machines feed here, uncomment the line below and change as required
-	install -m 0644 enigma2-plugin-extensions-sdg-imagedownloader-v0.5-oe-2.0-vu-all.ipk ${WORKDIR}/deploy-ipks/3rdparty
-}
-do_deploy_append_vusolo() {
-# 	Install any packages that are only For this machines feed here,
-	install -m 0644 enigma2-plugin-extensions-sdg-imagedownloader-v0.5-oe-2.0-vu-all.ipk ${WORKDIR}/deploy-ipks/3rdparty
-}
-do_deploy_append_vuduo() {
-# 	Install any packages that are only For this machines feed here,
-	install -m 0644 enigma2-plugin-extensions-sdg-imagedownloader-v0.5-oe-2.0-vu-all.ipk ${WORKDIR}/deploy-ipks/3rdparty
-}
-do_deploy_append_vusolo2() {
-# 	Install any packages that are only For this machines feed here,
-	install -m 0644 enigma2-plugin-extensions-sdg-imagedownloader-v0.5-oe-2.0-vu-all.ipk ${WORKDIR}/deploy-ipks/3rdparty
-}
-do_deploy_append_duo2() {
-# 	Install any packages that are only For this machines feed here,
-	install -m 0644 enigma2-plugin-extensions-sdg-imagedownloader-v0.5-oe-2.0-vu-all.ipk ${WORKDIR}/deploy-ipks/3rdparty
-}
-do_deploy_append_et4x00() {
-# 	Install any packages that are only For this machines feed here,
-	install -m 0644 enigma2-plugin-extensions-et-webbrowser_1.6.1-r1_et4x00.ipk ${WORKDIR}/deploy-ipks/3rdparty
-	install -m 0644 enigma2-plugin-weblinks-basic_1.3-r0_et4x00.ipk ${WORKDIR}/deploy-ipks/3rdparty
-	install -m 0644 enigma2-plugin-weblinks-games_1.0-r0_et4x00.ipk ${WORKDIR}/deploy-ipks/3rdparty
-}
-do_deploy_append_et5x00() {
-# 	Install any packages that are only For this machines feed here,
-}
-do_deploy_append_et6x00() {
-# 	Install any packages that are only For this machines feed here,
-	install -m 0644 enigma2-plugin-extensions-et-webbrowser_1.6.2-r1_et6x00.ipk ${WORKDIR}/deploy-ipks/3rdparty
-	install -m 0644 enigma2-plugin-weblinks-basic_1.3-r0_et6x00.ipk ${WORKDIR}/deploy-ipks/3rdparty
-	install -m 0644 enigma2-plugin-weblinks-games_1.0-r0_et6x00.ipk ${WORKDIR}/deploy-ipks/3rdparty
-}
-do_deploy_append_et9x00() {
-# 	Install any packages that are only For this machines feed here,
-	install -m 0644 enigma2-plugin-extensions-et-webbrowser_1.6.1-r1_et9x00.ipk ${WORKDIR}/deploy-ipks/3rdparty
-	install -m 0644 enigma2-plugin-weblinks-basic_1.3-r0_et9x00.ipk ${WORKDIR}/deploy-ipks/3rdparty
-	install -m 0644 enigma2-plugin-weblinks-games_1.0-r0_et9x00.ipk ${WORKDIR}/deploy-ipks/3rdparty
-}
-
-do_deploy_append_tmtwin() {
-# 	Install any packages that are only For this machines feed here, uncomment the line below and change as required
-}
-do_deploy_append_tm2t() {
-# 	Install any packages that are only For this machines feed here, uncomment the line below and change as required
-}
-do_deploy_append_tmsingle() {
-# 	Install any packages that are only For this machines feed here, uncomment the line below and change as required
-}
-do_deploy_append_tmnano() {
-# 	Install any packages that are only For this machines feed here, uncomment the line below and change as required
-}
-do_deploy_append_iqonios100hd() {
-# 	Install any packages that are only For this machines feed here, uncomment the line below and change as required
-}
-do_deploy_append_iqonios200hd() {
-# 	Install any packages that are only For this machines feed here, uncomment the line below and change as required
-}
-do_deploy_append_iqonios300hd() {
-# 	Install any packages that are only For this machines feed here, uncomment the line below and change as required
-}
-
-do_deploy_append_gb800se() {
-# 	Install any packages that are only For this machines feed here, uncomment the line below and change as required
-}
-do_deploy_append_gb800ue() {
-# 	Install any packages that are only For this machines feed here, uncomment the line below and change as required
-}
-do_deploy_append_gb800solo() {
-# 	Install any packages that are only For this machines feed here, uncomment the line below and change as required
-}
-do_deploy_append_gbquad() {
-# 	Install any packages that are only For this machines feed here, uncomment the line below and change as required
-}
-
-do_deploy_append_odinm9() {
-# 	Install any packages that are only For this machines feed here, uncomment the line below and change as required
-}
-
-do_deploy_append_e3hd() {
-# 	Install any packages that are only For this machines feed here, uncomment the line below and change as required
-	install -m 0644 enigma2-plugin-extensions-opera_1.01_mips32el.ipk ${WORKDIR}/deploy-ipks/3rdparty
-}
-
-do_deploy_append_ventonhdx() {
-# 	Install any packages that are only For this machines feed here, uncomment the line below and change as required
-}
-do_deploy_append_inihde() {
-# 	Install any packages that are only For this machines feed here, uncomment the line below and change as required
-}
-
-do_deploy_append_inihdp() {
-# 	Install any packages that are only For this machines feed here, uncomment the line below and change as required
-}
-
-do_deploy_append_dm8000() {
-# 	Install any packages that are only For this machines feed here, uncomment the line below and change as required
-	install -m 0644 enigma2-plugin-extensions-dflash_9.4.2-r02_all.ipk ${WORKDIR}/deploy-ipks/3rdparty
-}
-do_deploy_append_dm7020hd() {
-# 	Install any packages that are only For this machines feed here, uncomment the line below and change as required
-	install -m 0644 enigma2-plugin-extensions-dflash_9.4.2-r02_all.ipk ${WORKDIR}/deploy-ipks/3rdparty
-}
-do_deploy_append_dm500hd() {
-# 	Install any packages that are only For this machines feed here, uncomment the line below and change as required
-	install -m 0644 enigma2-plugin-extensions-dflash_9.4.2-r02_all.ipk ${WORKDIR}/deploy-ipks/3rdparty
-}
-do_deploy_append_dm800se() {
-# 	Install any packages that are only For this machines feed here, uncomment the line below and change as required
-	install -m 0644 enigma2-plugin-extensions-dflash_9.4.2-r02_all.ipk ${WORKDIR}/deploy-ipks/3rdparty
-}
-do_deploy_append_dm7020hdv2() {
-# 	Install any packages that are only For this machines feed here, uncomment the line below and change as required
-	install -m 0644 enigma2-plugin-extensions-dflash_9.4.2-r02_all.ipk ${WORKDIR}/deploy-ipks/3rdparty
-}
-do_deploy_append_dm500hdv2() {
-# 	Install any packages that are only For this machines feed here, uncomment the line below and change as required
-	install -m 0644 enigma2-plugin-extensions-dflash_9.4.2-r02_all.ipk ${WORKDIR}/deploy-ipks/3rdparty
-}
-do_deploy_append_dm800sev2() {
-# 	Install any packages that are only For this machines feed here, uncomment the line below and change as required
-	install -m 0644 enigma2-plugin-extensions-dflash_9.4.2-r02_all.ipk ${WORKDIR}/deploy-ipks/3rdparty
-}
-do_deploy_append_dm800() {
-# 	Install any packages that are only For this machines feed here, uncomment the line below and change as required
-	install -m 0644 enigma2-plugin-extensions-dflash_9.4.2-r02_all.ipk ${WORKDIR}/deploy-ipks/3rdparty
-}
-
-addtask deploy before do_build after do_install
-addtask chmod before do_build after do_package_write_ipk
 
 do_chmod() {
 	pkgdir=${DEPLOY_DIR_IPK}/3rdparty
@@ -240,3 +186,7 @@ do_chmod() {
 		chmod 0755 $pkgdir
 	fi
 }
+
+addtask deploy before do_build after do_install
+addtask chmod before do_build after do_package_write_ipk
+
