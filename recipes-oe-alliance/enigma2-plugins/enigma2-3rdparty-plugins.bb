@@ -10,7 +10,7 @@ SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
 PV = "2.0"
-PR = "r1"
+PR = "r2"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -39,7 +39,7 @@ THIRDPARTY_PLUGINS = " \
 	enigma2-plugin-extensions-autobouquets-e2_201303010205-r1_mips32el.ipk \
 	enigma2-plugin-extensions-boblight-enigma2_0.7r7_Beta_mips32el.ipk \
 	enigma2-plugin-extensions-buyukbangpanel_1.3.2_all.ipk \
-	enigma2-plugin-extensions-camofs_7.45_all.ipk \
+	enigma2-plugin-extensions-camofs_7.46_all.ipk \
 	enigma2-plugin-extensions-csfd_9_35-20130615_all.ipk \
 	enigma2-plugin-extensions-cubic_streamer_0.7.3_mips32el.ipk \
 	enigma2-plugin-extensions-dreamexplorer_7.4-r1_mips32el.ipk \
@@ -81,6 +81,7 @@ THIRDPARTY_PLUGINS = " \
 	enigma2-plugin-extensions-systemtools-for-ppanels_0.83_mipsel.ipk \
 	enigma2-plugin-extensions-thetvdb_0.7-20120607-r1_mips32el.ipk \
 	enigma2-plugin-extensions-tmdbinfo_1.0-20120508-r2_mips32el.ipk \
+	enigma2-plugin-extensions-translator_0.4_mips32el.ipk \
 	enigma2-plugin-extensions-transmission_2.76-r13884_mips32el.ipk \
 	enigma2-plugin-extensions-tsmedia-oe2.0_3.4_all.ipk \
 	enigma2-plugin-extensions-vcs_1.0-rc5_all.ipk \
