@@ -13,6 +13,7 @@ MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "\
 	dreambox-dvb-modules-${MACHINE} \
 	v4l-dvb-module-dvb-core \
 	v4l-dvb-module-stv0299 \
+	libusb-legacy \
 "
 
 include conf/machine/include/autoload-usbserial.inc
