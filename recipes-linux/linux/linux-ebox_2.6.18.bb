@@ -4,7 +4,7 @@ LICENSE = "GPL"
 SECTION = "kernel"
 
 KERNEL="2.6.18-7.3"
-MACHINE_KERNEL_PR_append = ".8"
+MACHINE_KERNEL_PR_append = ".9"
 
 SRC_URI[kernel.md5sum] = "3f1faf26f103724e86560baa8dfdf497"
 SRC_URI[kernel.sha256sum] = "91d9f753ff73401c9cda9efa0e40372c0fd40ffd366eac9da7981d40920765b2"
@@ -30,6 +30,7 @@ SRC_URI = "http://archiv.mixos-support.com/${MACHINE}-linux-${KERNEL}.tar.bz2;na
 	file://linux-2.6.18-mod_devicetable_h.patch \
 	file://nfs-max-rwsize-8k.patch \
 	file://ebox5x00-flash.patch \
+	file://linux-2.6.18-usb_core_sysfs.patch \
 	"
 
 S = "${WORKDIR}/linux-${PV}"
