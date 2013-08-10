@@ -6,7 +6,7 @@ DEFAULTTUNE = "mips32el"
 require conf/machine/include/dreambox.inc
 require conf/machine/include/tune-mips32.inc
 
-MACHINE_ESSENTIAL_EXTRA_DEPENDS += " \
+MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS += " \
 	kernel-module-stv0299 \	
 	"
 
