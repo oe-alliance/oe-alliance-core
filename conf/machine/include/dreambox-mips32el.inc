@@ -6,4 +6,8 @@ DEFAULTTUNE = "mips32el"
 require conf/machine/include/dreambox.inc
 require conf/machine/include/tune-mips32.inc
 
-MACHINE_KERNEL_PR = "r14"
+MACHINE_EXTRA_RRECOMMENDS += " \
+	kernel-module-stv0299 \	
+	"
+
+MACHINE_KERNEL_PR = "r15"
