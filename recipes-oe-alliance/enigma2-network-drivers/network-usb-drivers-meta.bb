@@ -4,24 +4,23 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 require conf/license/license-gplv2.inc
 
 DEPENDS = "\
-	${@base_contains("MACHINE_FEATURES", "wifiusblegacy", "enigma2-plugin-drivers-network-usb-rt3070", " \
-	\
+	${@base_contains("MACHINE_FEATURES", "wifiusblegacy", "", " \
 	enigma2-plugin-drivers-network-usb-ath9k-htc \
-	enigma2-plugin-drivers-network-usb-asix \
-	enigma2-plugin-drivers-network-usb-ax88179-178a \
 	enigma2-plugin-drivers-network-usb-carl9170 \
-	enigma2-plugin-drivers-network-usb-rt2800 \
 	enigma2-plugin-drivers-network-usb-rt2500 \
+	enigma2-plugin-drivers-network-usb-rt2800 \
 	enigma2-plugin-drivers-network-usb-rtl8187 \
 	enigma2-plugin-drivers-network-usb-smsc75xx \
 	enigma2-plugin-drivers-network-usb-zd1211rw \
 	", d)} \
-	enigma2-plugin-drivers-network-usb-rtl8192cu \
+	enigma2-plugin-drivers-network-usb-asix \
+	enigma2-plugin-drivers-network-usb-ax88179-178a \
 	enigma2-plugin-drivers-network-usb-rt73 \
+	enigma2-plugin-drivers-network-usb-rt3070 \
+	enigma2-plugin-drivers-network-usb-rt3573 \
+	enigma2-plugin-drivers-network-usb-rt5572 \
 	enigma2-plugin-drivers-network-usb-r8712u \
-	${@base_contains("MACHINE_BRAND", "Vu+", "enigma2-plugin-drivers-network-usb-rt5572" , "", d)} \
-	${@base_contains("MACHINE", "gbquad", "enigma2-plugin-drivers-network-usb-rt3573 enigma2-plugin-drivers-network-usb-rt5572" , "", d)} \
-	${@base_contains("MACHINE", "inihdp", "enigma2-plugin-drivers-network-usb-rt5572" , "", d)} \
+	enigma2-plugin-drivers-network-usb-rtl8192cu \
 	"
 
-PR = "r6"
+PR = "r7"
