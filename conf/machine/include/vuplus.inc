@@ -1,4 +1,4 @@
-MACHINE_BRAND = "Vu+"
+MACHINE_BRAND = "Vu⁺"
 
 EXTRA_IMAGEDEPENDS += "\
 	vuplus-opera-browser-util \
