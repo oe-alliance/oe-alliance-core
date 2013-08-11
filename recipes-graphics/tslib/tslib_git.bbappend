@@ -1,3 +1,4 @@
-PRINC = "1"
+PRINC = "3"
 
-RPROVIDES =+ " libts-1.0-0"
+PROVIDES =+ " libts-1.0-0"
+PACKAGES =+ " libts-1.0-0"

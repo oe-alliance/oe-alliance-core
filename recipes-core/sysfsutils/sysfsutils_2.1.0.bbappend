@@ -1,3 +1,4 @@
-PRINC = "1"
+PRINC = "3"
 
-RPROVIDES =+ " libsysfs2"
+PROVIDES =+ " libsysfs2"
+PACKAGES =+ " libsysfs2"
