@@ -53,6 +53,7 @@ THIRDPARTY_PLUGINS = " \
 	enigma2-plugin-extensions-hetweer_1.2_all.ipk \
 	enigma2-plugin-extensions-hdmitest_0.4_mipsel.ipk \
 	enigma2-plugin-extensions-kicker_2.9rc4_mips32el.ipk \
+	enigma2-plugin-extensions-kino_1.1rc2_mips32el.ipk \
 	enigma2-plugin-extensions-livefootball_4.4_mips32el.ipk \
 	enigma2-plugin-extensions-mediainfo_0.6_r04_all.ipk \
 	enigma2-plugin-extensions-mediatomb_0.12.1-r3_mips32el.ipk \
