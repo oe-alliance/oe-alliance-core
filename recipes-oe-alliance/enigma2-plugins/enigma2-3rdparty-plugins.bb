@@ -10,7 +10,7 @@ SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
 PV = "2.0"
-PR = "r8"
+PR = "r9"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -52,7 +52,7 @@ THIRDPARTY_PLUGINS = " \
 	enigma2-plugin-extensions-heizoelpreisefs_3.70_all.ipk \
 	enigma2-plugin-extensions-hetweer_1.2_all.ipk \
 	enigma2-plugin-extensions-hdmitest_0.4_mipsel.ipk \
-	enigma2-plugin-extensions-kicker_2.9rc4_mips32el.ipk \
+	enigma2-plugin-extensions-kicker_2.9rc5_mips32el.ipk \
 	enigma2-plugin-extensions-kino_1.1rc2_mips32el.ipk \
 	enigma2-plugin-extensions-livefootball_4.4_mips32el.ipk \
 	enigma2-plugin-extensions-mediainfo_0.6_r04_all.ipk \
@@ -60,7 +60,7 @@ THIRDPARTY_PLUGINS = " \
 	enigma2-plugin-extensions-msnwetter_0.6_mips32el.ipk \
 	enigma2-plugin-extensions-mtv_0.1_mips32el.ipk \
 	enigma2-plugin-extensions-moviebrowser_2.1rc5_mips32el.ipk \
-	enigma2-plugin-extensions-mp3browser_0.4_mips32el.ipk \
+	enigma2-plugin-extensions-mp3browser_0.5rc1_mips32el.ipk \
 	enigma2-plugin-extensions-navibar_1.1.1_all.ipk \
 	enigma2-plugin-extensions-newtube_0.1a-r0_all.ipk \
 	enigma2-plugin-extensions-opkg-tools_1.3_mipsel.ipk \
