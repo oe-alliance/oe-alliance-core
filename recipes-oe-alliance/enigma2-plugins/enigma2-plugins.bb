@@ -13,30 +13,9 @@ inherit gitpkgv
 
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r32"
+PR = "r33"
 
 SRC_URI = "${ENIGMA2_PLUGINS_URI} file://pluginnotwanted"
-
-SRC_URI_append_vuuno = " \
-			file://dreambox_bouqueteditor.png \
-			file://FC2dreambox.png"
-SRC_URI_append_vuultimo = " \
-			file://dreambox_bouqueteditor.png \
-			file://FC2dreambox.png"
-SRC_URI_append_vusolo = " \
-			file://dreambox_bouqueteditor.png"
-SRC_URI_append_vuduo = " \
-			file://dreambox_bouqueteditor.png"
-SRC_URI_append_et4x00 = " \
-			file://dreambox_bouqueteditor.png"
-SRC_URI_append_et5x00 = " \
-			file://dreambox_bouqueteditor.png"
-SRC_URI_append_et6x00 = " \
-			file://dreambox_bouqueteditor.png"
-SRC_URI_append_et9x00 = " \
-			file://dreambox_bouqueteditor.png"
-SRC_URI_append_odinm9 = " \
-			file://dreambox_bouqueteditor.png"
 
 EXTRA_OECONF = " \
 	BUILD_SYS=${BUILD_SYS} \
@@ -47,7 +26,7 @@ EXTRA_OECONF = " \
 	--with-po \
 	--with-boxtype=${MACHINE} \
 	${@base_contains("MACHINE_FEATURES", "tpm", "--with-tpm" , "", d)} \
-	${@base_contains("DISTRO_FEATURES", "pli", "--with-pli" , "", d)} \	
+	${@base_contains("DISTRO_FEATURES", "pli", "--with-pli" , "", d)} \
 "
 
 RREPLACES_enigma2-plugin-skincomponents-eventlist = "enigma2-plugin-components-eventlist"
@@ -79,36 +58,6 @@ DEPENDS = "enigma2 \
 	libcddb \
 	nmap \
 	${@base_contains("MACHINE_FEATURES", "tpm", "" , "enigma2-plugin-extensions-webinterface-old", d)}"
-
-do_install_append_vuuno() {
-	install -m 0644 ${WORKDIR}/FC2dreambox.png ${D}/usr/lib/enigma2/python/Plugins/Extensions/FanControl2/data/
-	install -m 0644 ${WORKDIR}/dreambox_bouqueteditor.png ${D}/usr/lib/enigma2/python/Plugins/Extensions/WebBouquetEditor/web-data/
-}
-do_install_append_vuultimo() {
-	install -m 0644 ${WORKDIR}/FC2dreambox.png ${D}/usr/lib/enigma2/python/Plugins/Extensions/FanControl2/data/
-	install -m 0644 ${WORKDIR}/dreambox_bouqueteditor.png ${D}/usr/lib/enigma2/python/Plugins/Extensions/WebBouquetEditor/web-data/
-}
-do_install_append_vusolo() {
-	install -m 0644 ${WORKDIR}/dreambox_bouqueteditor.png ${D}/usr/lib/enigma2/python/Plugins/Extensions/WebBouquetEditor/web-data/
-}
-do_install_append_vuduo() {
-	install -m 0644 ${WORKDIR}/dreambox_bouqueteditor.png ${D}/usr/lib/enigma2/python/Plugins/Extensions/WebBouquetEditor/web-data/
-}
-do_install_append_et4x00() {
-	install -m 0644 ${WORKDIR}/dreambox_bouqueteditor.png ${D}/usr/lib/enigma2/python/Plugins/Extensions/WebBouquetEditor/web-data/
-}
-do_install_append_et5x00() {
-	install -m 0644 ${WORKDIR}/dreambox_bouqueteditor.png ${D}/usr/lib/enigma2/python/Plugins/Extensions/WebBouquetEditor/web-data/
-}
-do_install_append_et6x00() {
-	install -m 0644 ${WORKDIR}/dreambox_bouqueteditor.png ${D}/usr/lib/enigma2/python/Plugins/Extensions/WebBouquetEditor/web-data/
-}
-do_install_append_et9x00() {
-	install -m 0644 ${WORKDIR}/dreambox_bouqueteditor.png ${D}/usr/lib/enigma2/python/Plugins/Extensions/WebBouquetEditor/web-data/
-}
-do_install_append_odinm9() {
-	install -m 0644 ${WORKDIR}/dreambox_bouqueteditor.png ${D}/usr/lib/enigma2/python/Plugins/Extensions/WebBouquetEditor/web-data/
-}
 
 do_install_append() {
 	# remove unused .pyc files
