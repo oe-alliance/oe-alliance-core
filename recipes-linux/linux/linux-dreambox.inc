@@ -1,6 +1,6 @@
 require linux.inc
 
-INC_PR = "16"
+INC_PR = "17"
 
 PACKAGES_DYNAMIC = "kernel-*"
 
@@ -11,7 +11,6 @@ KERNEL_BUILTIN_MODULES = ""
 KERNEL_BUILTIN_MODULES_dm8000 = "\
 	kernel-module-aes-generic \
 	kernel-module-crc32c \
-	kernel-module-fuse \
 	kernel-module-mac80211 \
 	kernel-module-cfg80211 \
 	kernel-module-ath \
@@ -19,18 +18,6 @@ KERNEL_BUILTIN_MODULES_dm8000 = "\
 	kernel-module-sr-mod \
 	kernel-module-isofs \
 	kernel-module-udf \
-	kernel-module-stv0299 \
-	"
-KERNEL_BUILTIN_MODULES_dm800se = "\
-	kernel-module-fuse \
-	kernel-module-stv0299 \
-	"
-KERNEL_BUILTIN_MODULES_dm7020hd = "\
-	kernel-module-fuse \
-	kernel-module-stv0299 \
-	"
-KERNEL_BUILTIN_MODULES_dm500hd = "\
-	kernel-module-fuse \
 	"
 
 # By default, kernel.bbclass modifies package names to allow multiple kernels
