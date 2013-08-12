@@ -8,7 +8,7 @@ inherit gitpkgv allarch
 SRCREV = "${AUTOREV}"
 PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"
-PR = "r1"
+PR = "r2"
 
 PACKAGES += "armymoodbluehd-components"
 PROVIDES += "armymoodbluehd-components"
@@ -25,5 +25,4 @@ S = "${WORKDIR}/git"
 do_install() {
 	install -d ${D}/usr/
 	cp -rp ${S}/usr/* ${D}/usr/
-	install -d ${D}/tmp
 }
