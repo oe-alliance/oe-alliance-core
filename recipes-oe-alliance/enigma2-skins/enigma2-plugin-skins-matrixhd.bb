@@ -9,7 +9,7 @@ EPSM = "enigma2-plugin-skins"
 SRCREV = "${AUTOREV}"
 PV = "2.0+git${SRCPV}"
 PKGV = "2.0+git${GITPKGV}"
-PR = "r15"
+PR = "r16"
 
 PACKAGES += "matrixhd-components"
 PROVIDES += "matrixhd-components"
@@ -36,13 +36,14 @@ S = "${WORKDIR}/git"
 do_install() {
 	install -d ${D}/usr/
 	cp -rp ${S}/usr/* ${D}/usr/
-	cp -p ${S}/usr/lib/enigma2/python/Components/Renderer/RunningText.py ${D}/temp/RunningText.py
+	install -d ${D}/tmp
+	cp -p ${S}/usr/lib/enigma2/python/Components/Renderer/RunningText.py ${D}/tmp/RunningText.py
 	chmod -R a+rX ${D}/usr/
 }
 
 pkg_preinst_matrixhd-components() {
 #!/bin/sh
 if [ ! -f /usr/lib/enigma2/python/Components/Renderer/RunningText.pyo ];then
-	cp -rp /temp/RunningText.py /usr/lib/enigma2/python/Components/Renderer/RunningText.py
+	cp -p /tmp/RunningText.py /usr/lib/enigma2/python/Components/Renderer/RunningText.py
 fi
 }
