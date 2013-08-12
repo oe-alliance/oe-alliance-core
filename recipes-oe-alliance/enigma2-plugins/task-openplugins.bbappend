@@ -1,4 +1,4 @@
-PRINC = "8"
+PRINC = "9"
 
 DEPENDS = " \
 	enigma2-plugin-extensions-addstreamurl \
@@ -15,7 +15,6 @@ DEPENDS = " \
 	enigma2-plugin-extensions-permanentvfdclock \
 	enigma2-plugin-extensions-ppanel \
 	enigma2-plugin-extensions-remotecontrolchannel \
-	enigma2-plugin-extensions-remotestreamconvert \
 	enigma2-plugin-extensions-shootyourscreen \
 	enigma2-plugin-extensions-simpleumount \
 	enigma2-plugin-extensions-streaminterface \
