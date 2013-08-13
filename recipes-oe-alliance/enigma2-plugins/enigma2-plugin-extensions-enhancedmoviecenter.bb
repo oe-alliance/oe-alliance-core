@@ -2,7 +2,7 @@ DESCRIPTION = "Filemanager MoviePlayer Extentions"
 MAINTAINER = "Coolman, Betonme & Swiss-MAD"
 SECTION = "extra"
 PRIORITY = "optional"
-RDEPENDS = "python-json python-html gst-plugins-good-flv gst-plugins-bad-rtmp librtmp"
+RDEPENDS = "python-json python-html gst-plugins-good-flv gst-plugins-bad-rtmp librtmp0"
 
 require conf/license/license-gplv2.inc
 
@@ -10,7 +10,7 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "4.0.+git${SRCPV}"
 PKGV = "4.0.+git${GITPKGV}"
-PR = "r4"
+PR = "r5"
 
 
 SRC_URI="git://github.com/betonme/e2openplugin-EnhancedMovieCenter.git"
