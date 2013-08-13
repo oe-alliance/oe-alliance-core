@@ -93,6 +93,7 @@ DESCRIPTION_enigma2-plugin-extensions-lcd4linux = "Web/DPF/Samsung LCD Ansteueru
 DEPENDS_enigma2-plugin-extensions-lcd4linux = "lcd4linux png-util"
 RDEPENDS_enigma2-plugin-extensions-lcd4linux = "lcd4linux enigma2-plugin-extensions-lcd4linux-src python-icalendar python-pyusb python-codecs python-datetime python-imaging python-textutils python-shell python-ctypes libusb-0.1-4 python-mutagen python-zlib python-email python-subprocess"
 RDEPENDS_enigma2-plugin-extensions-lcd4linux_append_vuduo2 = " png-util"
+FILES_enigma2-plugin-extensions-lcd4linux = "${libdir}/enigma2/python/Components/Renderer"
 DESCRIPTION_enigma2-plugin-extensions-remotechannelstreamconverter = "Fetch channels from remote bouquets and make them available locally"
 RDEPENDS_enigma2-plugin-extensions-remotechannelstreamconverter = "python-shell"
 RREPLACES_enigma2-plugin-extensions-remotechannelstreamconverter = "enigma2-plugin-extensions-remotestreamconvert"
@@ -102,7 +103,7 @@ inherit gitpkgv autotools
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r76"
+PR = "r77"
 
 SRC_URI="git://github.com/oe-alliance/oe-alliance-plugins.git;protocol=git"
 
