@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3
 inherit task
 
 PV = "1.0"
-PR = "r5"
+PR = "r6"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 OPTIONAL_WIFIDRIVERS = "${@base_contains("MACHINE_FEATURES", "wifiusblegacy", "enigma2-plugin-drivers-network-usb-rt3070", " \
@@ -29,6 +29,7 @@ RRECOMMENDS = "\
 	${@base_contains("MACHINE", "inihdp", "enigma2-plugin-drivers-network-usb-rt5572", "", d)} \
 	${@base_contains("MACHINE_BRAND", "Vu+", "enigma2-plugin-drivers-network-usb-rtl8192cu", "", d)} \
 	${@base_contains("MACHINE_BRAND", "GigaBlue", "enigma2-plugin-drivers-network-usb-rtl8192cu", "", d)} \
+	${@base_contains("MACHINE_BRAND", "ini", "enigma2-plugin-drivers-network-usb-rtl8192cu", "", d)} \
 	${@base_contains("MACHINE_FEATURES", "wifi61", "rt61", "", d)} \
 	${@base_contains("DISTRO_FEATURES", "wifi-extra", "${OPTIONAL_WIFIDRIVERS}", "", d)} \
 	"
