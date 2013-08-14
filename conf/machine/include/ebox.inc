@@ -24,7 +24,7 @@ KERNEL_OUTPUT = "${KERNEL_IMAGETYPE}"
 KERNEL_CONSOLE = "null"
 
 
-MACHINE_FEATURES += "alsa dvbapi5 usbhost switchoff wifi 3dtv hdmicec"
+MACHINE_FEATURES += "alsa dvbapi5 usbhost switchoff wifi 3dtv hdmicec boxmodel"
 
 require conf/machine/include/tune-mips32.inc
 

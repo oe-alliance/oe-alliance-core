@@ -35,6 +35,7 @@ RRECOMMENDS = "\
 	enigma2-plugin-extensions-cooltvguide \
 	", d)} \
 	${@base_contains("MACHINE_FEATURES", "dreambox", "enigma2-plugin-extensions-dflash", "", d)} \
+	${@base_contains("MACHINE_FEATURES", "boxmodel", "boxmodel", "", d)} \	
 	"
 
 RRECOMMENDS_append_et5x00 = " swap-workaround"
@@ -46,5 +47,6 @@ RRECOMMENDS_append_dm800 = " swap-workaround"
 RRECOMMENDS_append_dm800se = " swap-workaround"
 RRECOMMENDS_append_dm500hd = " swap-workaround"
 RRECOMMENDS_append_ebox5000 = " swap-workaround"
+RRECOMMENDS_append_ebox5100 = " swap-workaround"
 RRECOMMENDS_append_vusolo2 = " enigma2-plugin-extensions-hbbtv"
 RRECOMMENDS_append_vuduo2 = " enigma2-plugin-extensions-hbbtv"

@@ -35,7 +35,7 @@ KERNEL_CONSOLE = "ttyS0,115200n8"
 
 TARGET_FPU = "hard"
 
-MACHINE_FEATURES += "3dtv alsa hdmicec switchoff wifi ci bootsplash"
+MACHINE_FEATURES += "3dtv alsa hdmicec switchoff wifi ci bootsplash boxmodel"
 
 BOOTLOGO_FILENAME = "splash.bin"
 
