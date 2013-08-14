@@ -5,11 +5,14 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=e344c8fa836c3a41c4cbd79d7bd3a379"
 
 DEPENDS = "openssl zlib"
 
+PROVIDES =+ " librtmp0"
+PACKAGES =+ " librtmp0"
+
 inherit gitpkgv
 
 PKGV = "2.4+git${GITPKGV}"
 PV = "2.4+git${SRCPV}"
-PR = "r1"
+PR = "r2"
 
 SRC_URI = "git://git.ffmpeg.org/rtmpdump;protocol=git"
 
