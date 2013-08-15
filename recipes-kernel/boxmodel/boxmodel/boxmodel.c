@@ -9,9 +9,6 @@
 #include <linux/ioctl.h>
 #include <linux/init.h>
 #include <linux/proc_fs.h>
-#include <asm/uaccess.h>
-#include <linux/semaphore.h>
-#include <linux/cdev.h>
 
 
 static struct proc_dir_entry* Our_Proc_Dir;

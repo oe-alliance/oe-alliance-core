@@ -13,7 +13,7 @@ SRC_URI = "file://boxmodel.c file://Makefile"
 
 S = "${WORKDIR}"
 PV = "1.0"
-PR = "r7"
+PR = "r8"
 
 inherit module
 
