@@ -1,4 +1,4 @@
-DESCRIPTION = "Enigma2 Skin adriatic32_turquoise"
+DESCRIPTION = "Enigma2 Skin om-black"
 MAINTAINER = "openmips"
 SECTION = "base"
 PRIORITY = "required"
@@ -12,9 +12,9 @@ SRCREV = "${AUTOREV}"
 PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"
 VER ="1.0"
-PR = "r1"
+PR = "r2"
 
-SRC_URI="git://github.com/openmips/adriatic32_turquoise.git;protocol=git"
+SRC_URI="git://github.com/openmips/default-skin.git;protocol=git"
 
 S = "${WORKDIR}/git"
 
