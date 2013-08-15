@@ -9,7 +9,7 @@ require conf/license/license-gplv2.inc
 RDEPENDS_${PN} += "showiframe"
 
 PV = "2.0"
-PR = "r31"
+PR = "r32"
 
 S = "${WORKDIR}"
 
@@ -21,6 +21,7 @@ inherit update-rc.d
 SRC_URI = "file://bootlogo.mvi file://radio.mvi file://bootlogo.sh ${@base_contains("MACHINE_FEATURES", "bootsplash", "file://splash.bin file://splash.bmp" , "", d)} "
 SRC_URI_append_gb800ue = "file://lcdsplash.bin"
 SRC_URI_append_gbquad = "file://lcdsplash.bin"
+SRC_URI_append_gb800ueplus = "file://lcdsplash.bin"
 
 BINARY_VERSION = "1.3"
 
