@@ -1,4 +1,4 @@
-PRINC = "38"
+PRINC = "39"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
@@ -82,7 +82,7 @@ python do_package_prepend () {
 		for name in files:
 			if target_box != name and name != 'unknown.jpg':
 				if target_box == 'ini-3000.jpg':
-					if not (name == 'ini-1000.jpg' or name == 'ini-1000de.jpg' or name == 'ini-1000sv.jpg' or name == 'ini-3000.jpg' or name == 'ini-5000.jpg' or name == 'ini-5000sv.jpg' or name == 'ini-7000.jpg'):
+					if not (name == 'ini-1000.jpg' or name == 'xpeedlx1.jpg' or name == 'xpeedlx2.jpg' or name == 'ini-1000sv.jpg' or name == 'ini-3000.jpg' or name == 'ini-5000.jpg' or name == 'ini-5000sv.jpg' or name == 'ini-7000.jpg'):
 						os.remove(os.path.join(root, name))
 				elif target_box == 'premium.jpg':
 					if not (name == 'elite.jpg' or name == 'premium+.jpg' or name == 'ultra.jpg'):
