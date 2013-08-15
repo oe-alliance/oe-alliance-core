@@ -8,9 +8,9 @@ require conf/license/license-gplv2.inc
 inherit gitpkgv
 
 SRCREV = "${AUTOREV}"
-PV = "4.7.0+git${SRCPV}"
-PKGV = "4.7.0+git${GITPKGV}"
-PR = "r10"
+PV = "4.7.1+git${SRCPV}"
+PKGV = "4.7.1+git${GITPKGV}"
+PR = "r11"
 
 SRC_URI = "git://github.com/dhwz/MediaPortal.git;protocol=git"
 
