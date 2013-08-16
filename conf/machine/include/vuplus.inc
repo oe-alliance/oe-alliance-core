@@ -1,9 +1,5 @@
 MACHINE_BRAND = "Vu+"
 
-EXTRA_IMAGEDEPENDS += "\
-	vuplus-opera-browser-util \
-	"
-
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS = " \
 	vuplus-dvb-modules-${MACHINE} \
 	"

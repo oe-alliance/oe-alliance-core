@@ -10,10 +10,6 @@ MACHINE_EXTRA_RRECOMMENDS = " \
 	gst-plugin-dvbmediasink \
 	"
 
-EXTRA_IMAGEDEPENDS = "\
-	vuplus-opera-browser-util \
-	"
-
 include conf/machine/include/autoload-filesystems.inc
 
 DVBMEDIASINK_CONFIG = "--with-wma --with-wmv --with-pcm"
