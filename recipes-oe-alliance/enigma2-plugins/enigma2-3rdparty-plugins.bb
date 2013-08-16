@@ -10,7 +10,7 @@ SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
 PV = "2.0"
-PR = "r13"
+PR = "r17"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -19,7 +19,6 @@ EXTRA_OECONF = " \
 	HOST_SYS=${HOST_SYS} \
 	STAGING_INCDIR=${STAGING_INCDIR} \
 	STAGING_LIBDIR=${STAGING_LIBDIR} \
-	--with-boxtype=${MACHINE} \
 "
 
 ALLOW_EMPTY_${PN} = "1"
@@ -168,6 +167,7 @@ do_install() {
 
 do_deploy() {
 	install -d 0755 ${WORKDIR}/deploy-ipks/3rdparty
+	install -d 0755 ${WORKDIR}/deploy-ipks/${MACHINE}_3rdparty
 	for i in ${THIRDPARTY_PLUGINS}; do
 		if [ -f $i ]; then
 			install -m 0644 $i ${WORKDIR}/deploy-ipks/3rdparty;
@@ -175,7 +175,7 @@ do_deploy() {
 	done;
 	for i in ${THIRDPARTY_MACHINE_PLUGINS}; do
 		if [ -f $i ]; then
-			install -m 0644 $i ${WORKDIR}/deploy-ipks/3rdparty;
+			install -m 0644 $i ${WORKDIR}/deploy-ipks/${MACHINE}_3rdparty;
 		fi
 	done;
 	for i in ${THIRDPARTY_EXTRA_PLUGINS}; do
@@ -187,6 +187,10 @@ do_deploy() {
 
 do_chmod() {
 	pkgdir=${DEPLOY_DIR_IPK}/3rdparty
+	if [ -e $pkgdir ]; then
+		chmod 0755 $pkgdir
+	fi
+	pkgdir=${DEPLOY_DIR_IPK}/${MACHINE}_3rdparty
 	if [ -e $pkgdir ]; then
 		chmod 0755 $pkgdir
 	fi
