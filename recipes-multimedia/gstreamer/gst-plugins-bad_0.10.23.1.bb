@@ -1,4 +1,4 @@
-require recipes-multimedia/gstreamer/gst-plugins.inc
+require gst-plugins.inc
 
 LICENSE = "GPLv2+ & LGPLv2+ & LGPLv2.1+ "
 LIC_FILES_CHKSUM = "file://COPYING;md5=0636e73ff0215e8d672dc4c32c317bb3 \
@@ -9,7 +9,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=0636e73ff0215e8d672dc4c32c317bb3 \
 DEPENDS += "gst-plugins-base libmusicbrainz tremor curl libmms librtmp faad2"
 CONFLICTS = "librsvg"
 
-PR = "r6"
+PR = "r7"
 GIT_PV = ""
 
 SRCREV = "fb0d8700e71c4a6569ba023d16201087aec119fd"
@@ -26,7 +26,7 @@ SRC_URI += " \
         file://0004-mpegdemux-compile-fixes.patch \
         file://0005-hlsdemux-locking-fixes.patch \
         file://0006-hlsdemux-backport.patch \
-		file://0007-Lower-rank-of-faad-to-prevent-using-it-if-not-necess.patch \		
+		file://0007-Lower-rank-of-faad-to-prevent-using-it-if-not-necess.patch \
         file://orc.m4-fix-location-of-orcc-when-cross-compiling.patch \
 "
 

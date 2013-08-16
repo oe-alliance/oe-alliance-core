@@ -26,8 +26,8 @@ python populate_packages_prepend () {
 
 ALLOW_EMPTY = "1"
 
-PACKAGE_ARCH = "${MACHINE_ARCH}"
 PACKAGES += "${PN}-apps ${PN}-meta ${PN}-glib"
+PACKAGE_ARCH = "${MACHINE_ARCH}"
 FILES_${PN}-apps = "${bindir}"
 
 FILES_${PN} = "${datadir}/gstreamer-${LIBV}"
