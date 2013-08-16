@@ -1,4 +1,4 @@
-require recipes-multimedia/gstreamer/gst-plugins.inc
+require gst-plugins.inc
 
 LICENSE = "GPLv2+ & LGPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=0636e73ff0215e8d672dc4c32c317bb3 \
@@ -12,7 +12,7 @@ DEPENDS += "gstreamer"
 
 SRCREV = "bdb33163478fdf95938fbdca7eabad3ea920a277"
 
-PR = "r10"
+PR = "r12"
 GIT_PV = ""
 
 inherit autotools pkgconfig gettext git-project

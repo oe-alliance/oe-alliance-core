@@ -1,4 +1,4 @@
-require recipes-multimedia/gstreamer/gst-plugins.inc
+require gst-plugins.inc
 
 LICENSE = "GPLv2+ & LGPLv2.1+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=a6f89e2100d9b6cdffcea4f398e37343 \
@@ -8,7 +8,7 @@ DEPENDS += "gst-plugins-base libid3tag libmad mpeg2dec liba52 lame libcdio openc
 
 EXTRA_OECONF += "--enable-orc"
 
-PR = "r4"
+PR = "r6"
 GIT_PV = ""
 
 SRCREV = "9afc696e5fa9fb980e02df5637f022796763216f"

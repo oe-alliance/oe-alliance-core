@@ -13,7 +13,7 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "2.1+git${SRCPV}"
 PKGV = "2.1+git${GITPKGV}"
-PR = "r12"
+PR = "r13"
 
 SRC_URI="git://github.com/OpenViX/vix-core.git;protocol=git"
 
@@ -28,7 +28,6 @@ EXTRA_OECONF = "\
 	STAGING_LIBDIR=${STAGING_LIBDIR} \
 	--with-po \
 	--with-libsdl=no \
-	--with-boxtype=${MACHINE} \
 "
 
 PACKAGES =+ "${PN}-src"

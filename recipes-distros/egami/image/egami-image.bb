@@ -26,7 +26,6 @@ IMAGE_INSTALL = " \
 	task-base-smbfs-client \
 	mc \
 	egami-base-files \
-	${@base_contains("MACHINE", "inihdp", "vuplus-opera-browser-util" , "", d)} \
 	"
 	
 ENIGMA2_USB_DRV = "\
