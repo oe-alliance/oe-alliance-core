@@ -26,6 +26,7 @@ python populate_packages_prepend () {
 
 ALLOW_EMPTY = "1"
 
+PACKAGE_ARCH = "${MACHINE_ARCH}"
 PACKAGES += "${PN}-apps ${PN}-meta ${PN}-glib"
 FILES_${PN}-apps = "${bindir}"
 

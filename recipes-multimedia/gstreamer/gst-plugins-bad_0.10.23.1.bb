@@ -9,7 +9,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=0636e73ff0215e8d672dc4c32c317bb3 \
 DEPENDS += "gst-plugins-base libmusicbrainz tremor curl libmms librtmp faad2"
 CONFLICTS = "librsvg"
 
-PR = "r5"
+PR = "r6"
 GIT_PV = ""
 
 SRCREV = "fb0d8700e71c4a6569ba023d16201087aec119fd"
