@@ -158,7 +158,7 @@ inherit gitpkgv autotools pkgconfig
 
 PV = "2.8+git${SRCPV}"
 PKGV = "2.8+git${GITPKGV}"
-PR = "r120"
+PR = "r121"
 
 SRC_URI = "${ENIGMA2_URI}"
 
@@ -201,13 +201,13 @@ PR_enigma2-fonts = "r0"
 PKGV_enigma2-fonts = "${PV_enigma2-fonts}"
 FILES_enigma2-fonts = "${datadir}/fonts"
 
-EXTRA_OECONF = "\
+EXTRA_OECONF = " \
 	BUILD_SYS=${BUILD_SYS} \
 	HOST_SYS=${HOST_SYS} \
 	STAGING_INCDIR=${STAGING_INCDIR} \
 	STAGING_LIBDIR=${STAGING_LIBDIR} \
 	--with-distro=${DISTRO_NAME} \
-	${@base_contains("MACHINEBUILD", "odinm6", "--with-boxtype=${MACHINEBUILD}" , "--with-boxtype=${MACHINE}", d)} \
+	${@base_contains('MACHINEBUILD', 'odinm6', '--with-boxtype=${MACHINEBUILD}' , '--with-boxtype=${MACHINE}', d)} \
 	--with-machinebrand=${MACHINE_BRAND} \
 	--with-machinename=${MACHINE_NAME} \
 	--with-imageversion=${DISTRO_VERSION} \
