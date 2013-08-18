@@ -8,7 +8,7 @@ inherit gitpkgv allarch
 SRCREV = "${AUTOREV}"
 PV = "2.0+git${SRCPV}"
 PKGV = "2.0+git${GITPKGV}"
-PR = "r18"
+PR = "r19"
 
 PACKAGES += "matrixhd-components"
 PROVIDES += "matrixhd-components"
@@ -25,7 +25,6 @@ FILES_matrixhd-components = " \
 	/usr/lib/enigma2/python/Components/Renderer/VVolumeText.py \
 	/usr/lib/enigma2/python/Components/Renderer/XPicon.py \
 	/usr/lib/enigma2/python/Components/Renderer/XPiconChannel.py \
-	/tmp/RunningText.py \
 	"
 FILES_${PN} = "/usr/share/enigma2/MetrixHD"
 
@@ -37,13 +36,5 @@ do_install() {
 	install -d ${D}/usr/
 	cp -rp ${S}/usr/* ${D}/usr/
 	install -d ${D}/tmp
-	cp -p ${S}/usr/lib/enigma2/python/Components/Renderer/RunningText.py ${D}/tmp/RunningText.py
 	chmod -R a+rX ${D}/usr/
-}
-
-pkg_preinst_matrixhd-components() {
-#!/bin/sh
-if [ ! -f /usr/lib/enigma2/python/Components/Renderer/RunningText.pyo ];then
-	cp -p /tmp/RunningText.py /usr/lib/enigma2/python/Components/Renderer/RunningText.py
-fi
 }
