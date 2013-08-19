@@ -10,7 +10,7 @@ SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
 PV = "2.0"
-PR = "r18"
+PR = "r19"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -54,6 +54,7 @@ THIRDPARTY_PLUGINS = " \
 	enigma2-plugin-extensions-hdmitest_0.4_mipsel.ipk \
 	enigma2-plugin-extensions-kicker_2.9rc6_mips32el.ipk \
 	enigma2-plugin-extensions-kino_1.1rc2_mips32el.ipk \
+	enigma2-plugin-systemplugins-lcnscanner_1.0-r4_mips32el.ipk \
 	enigma2-plugin-extensions-livefootball_4.4_mips32el.ipk \
 	enigma2-plugin-extensions-mediainfo_0.6_r04_all.ipk \
 	enigma2-plugin-extensions-mediatomb_0.12.1-r3_mips32el.ipk \
