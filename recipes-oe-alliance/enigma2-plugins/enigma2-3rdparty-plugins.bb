@@ -10,7 +10,7 @@ SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
 PV = "2.0"
-PR = "r41"
+PR = "r42"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -56,7 +56,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-livefootball_4.4_mips32el.ipk \
     enigma2-plugin-extensions-mediainfo_0.6_r04_all.ipk \
     enigma2-plugin-extensions-mediatomb_0.12.1-r3_mips32el.ipk \
-    enigma2-plugin-extensions-msnwetter_0.6_mips32el.ipk \
+    enigma2-plugin-extensions-msnwetter_0.6rc3_mips32el.ipk \
     enigma2-plugin-extensions-mtv_0.1_mips32el.ipk \
     enigma2-plugin-extensions-moviebrowser_2.1rc5_mips32el.ipk \
     enigma2-plugin-extensions-mp3browser_0.5rc1_mips32el.ipk \
@@ -85,7 +85,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-translator_0.5_mips32el.ipk \
     enigma2-plugin-extensions-transmission_2.76-r13884_mips32el.ipk \
     enigma2-plugin-extensions-tsmedia-oe2.0_3.6_all.ipk \
-    enigma2-plugin-extensions-tvspielfilm_5.5rc5_mips32el.ipk \
+    enigma2-plugin-extensions-tvspielfilm_5.6_mips32el.ipk \
     enigma2-plugin-extensions-vcs_1.0-rc5_all.ipk \
     enigma2-plugin-extensions-vuplusforum_0.6rc2_mips32el.ipk \
     enigma2-plugin-extensions-webmedia_10.0_r01_oe2.0_all.ipk \

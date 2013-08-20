@@ -16,7 +16,7 @@ RREPLACES_${PN} = "linux-technomate"
 
 SRC_URI = "http://en2.ath.cx/pub/OpenPLi3/src/linux-${KV}-${SRCDATE}.tar.gz \
         file://nfs-max-rwsize-8k.patch \
-        file://001_fix_standby_error_${MACHINE}.patch \        
+        file://001_fix_standby_error_${MACHINE}.patch \
         file://defconfig \
         "
 
@@ -24,7 +24,13 @@ SRC_URI_append_tmnano = " \
         file://002_fix_partitionmap.patch \
         file://003_fix_not_has_nor.patch \
         file://004_fix_bootarg.patch \
-        "        
+        "
+        
+SRC_URI_append_optimussos1 = " \
+        file://002_fix_partitionmap.patch \
+        file://003_fix_not_has_nor.patch \
+        file://004_fix_bootarg.patch \
+        "
 
 S = "${WORKDIR}/linux-${KV}"
 

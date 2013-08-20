@@ -94,4 +94,5 @@ RRECOMMENDS_${PN} = "\
     wakelan \
     xfsprogs \
     zeroconf \
+    ofgwrite \
     "
