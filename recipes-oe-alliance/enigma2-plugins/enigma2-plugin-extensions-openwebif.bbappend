@@ -1,4 +1,4 @@
-PRINC = "39"
+PRINC = "40"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
