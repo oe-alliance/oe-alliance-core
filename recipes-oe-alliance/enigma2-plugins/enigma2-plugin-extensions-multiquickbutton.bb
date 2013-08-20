@@ -7,15 +7,15 @@ LIC_FILES_CHKSUM = "file://../LICENSE.GPLv2;md5=eb723b61539feef013de476e68b5c50a
 
 DEPENDS = "enigma2"
 
-inherit gitpkgv
+inherit gitpkgv pythonnative
 
 SRCREV = "${AUTOREV}"
 PV = "2.8.4+git${SRCPV}"
 PKGV = "2.8.4+git${GITPKGV}"
-PR = "r1"
+PR = "r2"
 
 SRC_URI = "git://github.com/oe-alliance/e2openplugin-${MODULE}.git;protocol=git \
-		file://LICENSE.GPLv2"
+        file://LICENSE.GPLv2"
 
 S = "${WORKDIR}/git"
 
@@ -28,28 +28,28 @@ FILES_${PN}-po = "/usr/lib/enigma2/python/Plugins/Extensions/MultiQuickButton/lo
 inherit autotools
 
 EXTRA_OECONF = "\
-	--with-libsdl=no --with-boxtype=${MACHINE} --with-po \
-	BUILD_SYS=${BUILD_SYS} \
-	HOST_SYS=${HOST_SYS} \
-	STAGING_INCDIR=${STAGING_INCDIR} \
-	STAGING_LIBDIR=${STAGING_LIBDIR} \
+    --with-libsdl=no --with-boxtype=${MACHINE} --with-po \
+    BUILD_SYS=${BUILD_SYS} \
+    HOST_SYS=${HOST_SYS} \
+    STAGING_INCDIR=${STAGING_INCDIR} \
+    STAGING_LIBDIR=${STAGING_LIBDIR} \
 "
 
 # remove unused .pyc files
 do_install_append() {
-	find ${D}/usr/lib/enigma2/python/Plugins/Extensions/MultiQuickButton/ -name '*.pyc' -exec rm {} \;
+    find ${D}/usr/lib/enigma2/python/Plugins/Extensions/MultiQuickButton/ -name '*.pyc' -exec rm {} \;
 }
 
-pkg_postinst() {
+pkg_postinst_${PN}() {
 #!/bin/sh
 if ! test -d /etc/MultiQuickButton; then
-	mkdir /etc/MultiQuickButton
+    mkdir /etc/MultiQuickButton
 fi
 cd /tmp/mqb
 for buttonfile in *.xml; do
-	if ! test -f /etc/MultiQuickButton/$buttonfile; then
-		cp /tmp/mqb/$buttonfile /etc/MultiQuickButton
-	fi
+    if ! test -f /etc/MultiQuickButton/$buttonfile; then
+        cp /tmp/mqb/$buttonfile /etc/MultiQuickButton
+    fi
 done
 cd /
 rm -rf /tmp/mqb
@@ -61,7 +61,7 @@ echo "Please restart your STB to load Menu Multi QuickButton Plugin ..."
 exit 0
 }
 
-pkg_postrm() {
+pkg_postrm_${PN}() {
 #!/bin/sh
 echo "... Restore flags in /usr/share/enigma2/keymap.xml..."
 sed -ie s!"<key id=\"KEY_TEXT\" mapto=\"startTeletext\" flags=\"b\" />"!"<key id=\"KEY_TEXT\" mapto=\"startTeletext\" flags=\"m\" />"!g "/usr/share/enigma2/keymap.xml"

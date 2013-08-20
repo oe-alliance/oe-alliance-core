@@ -4,9 +4,9 @@ PACKAGE_ARCH = "all"
 require conf/license/license-gplv2.inc
 
 RDEPENDS_${PN} = " \
-	kernel-module-zd1211rw \
-	firmware-zd1211 \
-	"
+    kernel-module-zd1211rw \
+    firmware-zd1211 \
+    "
 
 PV = "1.0"
 PR = "r1"

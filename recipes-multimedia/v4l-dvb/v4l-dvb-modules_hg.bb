@@ -32,8 +32,7 @@ SRC_URI = "hg://linuxtv.org/hg/;module=v4l-dvb;rev=${SRCREV} \
            file://backport-h.patch \
            file://backport-i.patch \
            file://backport-j.patch \
-           file://backport-k.patch \
-"
+           file://backport-k.patch"
 
 SRCREV = "6e0befab696a"
 S = "${WORKDIR}/v4l-dvb"

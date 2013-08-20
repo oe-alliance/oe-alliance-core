@@ -5,25 +5,28 @@ SRCNAME = "process"
 
 require conf/license/license-gplv2.inc
 
-DEPENDS = "python"
+inherit distutils-base
 
 PV = "1.0"
 PKGV = "1.0"
-PR = "r1"
+PR = "r6"
 
-SRC_URI = "file://process.tgz"
+SRC_URI = "file://process.py"
 
-S = "${WORKDIR}/process"
+S = "${WORKDIR}"
 
-EXTRA_OECONF = "\
-	BUILD_SYS=${BUILD_SYS} \
-	HOST_SYS=${HOST_SYS} \
-	STAGING_INCDIR=${STAGING_INCDIR} \
-	STAGING_LIBDIR=${STAGING_LIBDIR} \
-"
+PACKAGES = "${PN} ${PN}-src"
 
-inherit autotools
+FILES_${PN} = "${PYTHON_SITEPACKAGES_DIR}/process.pyo"
+FILES_${PN}-src = "${PYTHON_SITEPACKAGES_DIR}/process.py"
+RDEPENDS_{PN}-src = "${PN}"
 
-PACKAGES =+ "${PN}-src"
-FILES_${PN} = "/usr/lib/python2.7/*.pyo"
-FILES_${PN}-src = "/usr/lib/python2.7/*.py"
+do_compile() {
+    python -O -m compileall ${WORKDIR}
+}
+
+do_install() {
+    install -d ${D}${PYTHON_SITEPACKAGES_DIR}
+    install -m 644 ${S}/process.py ${D}${PYTHON_SITEPACKAGES_DIR}/    
+    install -m 644 ${S}/process.pyo ${D}${PYTHON_SITEPACKAGES_DIR}/    
+}

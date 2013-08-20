@@ -19,11 +19,11 @@ FILES_exfat-fsck = "${sbindir}/exfatfsck"
 FILES_exfat-dump = "${sbindir}/dumpexfat"
 
 do_install() {
-	install -d ${D}/${sbindir}
-	install -m 0755 ${S}/dump/dumpexfat ${D}/${sbindir}/
-	install -m 0755 ${S}/fsck/exfatfsck ${D}/${sbindir}/
-	install -m 0755 ${S}/label/exfatlabel ${D}/${sbindir}/
-	install -m 0755 ${S}/mkfs/mkexfatfs ${D}/${sbindir}/
+    install -d ${D}/${sbindir}
+    install -m 0755 ${S}/dump/dumpexfat ${D}/${sbindir}/
+    install -m 0755 ${S}/fsck/exfatfsck ${D}/${sbindir}/
+    install -m 0755 ${S}/label/exfatlabel ${D}/${sbindir}/
+    install -m 0755 ${S}/mkfs/mkexfatfs ${D}/${sbindir}/
 }
 
 SRC_URI[md5sum] = "a14c4bab6920121c874f448b5bfe4017"

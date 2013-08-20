@@ -14,12 +14,12 @@ EXTRA_OEMAKE = "LINUX_SRC=${STAGING_KERNEL_DIR}"
 S = "${WORKDIR}/RT3070_RT3370_RT5370_RT5372"
 
 do_install() {
-	install -d ${D}/lib/modules/${KERNEL_VERSION}/kernel/drivers/net/wireless
-	install -m 0644 ${S}/os/linux/rt5370sta.ko ${D}${base_libdir}/modules/${KERNEL_VERSION}/kernel/drivers/net/wireless
-	install -d ${D}/etc/Wireless/RT2870STA
-	install -m 0644 ${S}/RT2870STA.dat ${D}/etc/Wireless/RT2870STA
-	install -d ${D}/etc/modutils
-	echo rt5370sta > ${D}/etc/modutils/rt5370
+    install -d ${D}/lib/modules/${KERNEL_VERSION}/kernel/drivers/net/wireless
+    install -m 0644 ${S}/os/linux/rt5370sta.ko ${D}${base_libdir}/modules/${KERNEL_VERSION}/kernel/drivers/net/wireless
+    install -d ${D}/etc/Wireless/RT2870STA
+    install -m 0644 ${S}/RT2870STA.dat ${D}/etc/Wireless/RT2870STA
+    install -d ${D}/etc/modutils
+    echo rt5370sta > ${D}/etc/modutils/rt5370
 }
 
 PACKAGES =+ "${PN}-firmware"

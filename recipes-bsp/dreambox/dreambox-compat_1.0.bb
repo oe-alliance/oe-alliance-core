@@ -18,7 +18,7 @@ RDEPENDS_${PN} = "\
        libungif \
        libssl \
        libpython2 \
-       "	   
+       "       
 
 PR = "r8"
 
@@ -28,7 +28,7 @@ do_install() {
         install -d ${D}${libdir}
 }
 
-pkg_postinst() {
+pkg_postinst_${PN}() {
 #!/bin/sh
 if [ ! -e $D${libdir}/libungif.so.4       ]; then if [ -e $D${libdir}/libgif.so.4         ]; then ln -sf libgif.so.4         $D${libdir}/libungif.so.4       ; fi; fi  
 if [ ! -e $D${libdir}/libungif.so.4       ]; then if [ -e $D${libdir}/libungif.so.4.1.3   ]; then ln -sf libungif.so.4.1.3   $D${libdir}/libungif.so.4       ; fi; fi  

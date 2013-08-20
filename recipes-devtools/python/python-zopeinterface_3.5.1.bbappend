@@ -1,18 +1,21 @@
-PRINC = "2"
+PRINC = "3"
 
-inherit openpli-distutils
-
-do_install() {
-	distutils_do_install_keep_pyo
-}
-
-PACKAGES =+ "${PN}-src"
+PACKAGES =+ " ${PN}-src ${PN}-tests"
 RDEPENDS_{PN}-src = "${PN}"
-FILES_${PN}-src += "${PYTHON_SITEPACKAGES_DIR}/zope/interface/*.py"
-FILES_${PN}-src += "${PYTHON_SITEPACKAGES_DIR}/zope/interface/*/*.py"
+FILES_${PN}-src = " \
+    ${PYTHON_SITEPACKAGES_DIR}/*/*.py \
+    ${PYTHON_SITEPACKAGES_DIR}/*/*/*.py \
+    ${PYTHON_SITEPACKAGES_DIR}/*/*/*/*.py \
+    ${PYTHON_SITEPACKAGES_DIR}/*/*/*/*/*.py \
+    "
 
-# apparently missing in python-zopeinterface_3.5.1.bb:
-PACKAGES =+ "${PN}-tests"
+FILES_${PN}-tests = " \
+  ${PYTHON_SITEPACKAGES_DIR}/*/test \
+  ${PYTHON_SITEPACKAGES_DIR}/*/*/test \
+"
 
 # some txt files which should go into -doc
-FILES_${PN}-doc += "${PYTHON_SITEPACKAGES_DIR}/*-info"
+FILES_${PN}-doc += " \
+    ${PYTHON_SITEPACKAGES_DIR}/*-info \
+    ${PYTHON_SITEPACKAGES_DIR}/*/*-info \
+    "

@@ -12,14 +12,14 @@ PR = "r4"
 
 PACKAGES = "${PN} ${PN}-src"
 
-SRC_URI = "git://code.vuplus.com/git/dumpait.git;protocol=git"
+SRC_URI = "git://code.vuplus.com/git/dumpait.git;protocol=git file://fix-gcc47-compile.patch"
 
 S = "${WORKDIR}/git"
 DESTDIR = "enigma2/python/Plugins/Extensions/HbbTV"
 
 do_install() {
-	install -d ${D}/usr/lib/${DESTDIR}
-	install -m 0755 ${S}/src/dumpait ${D}/usr/lib/${DESTDIR}
+    install -d ${D}/usr/lib/${DESTDIR}
+    install -m 0755 ${S}/src/dumpait ${D}/usr/lib/${DESTDIR}
 }
 
 FILES_${PN} = "${libdir}/${DESTDIR}/dumpait"

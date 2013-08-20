@@ -1,16 +1,16 @@
 HOMEPAGE = "http://alumnit.ca/wiki/index.php?page=WvStreams"
+DESCRIPTION = "WvStreams is a network programming library in C++"
 
 require conf/license/license-gplv2.inc
 
-LICENSE = "GPL"
-DESCRIPTION = "WvStreams is a network programming library in C++"
 DEPENDS = "zlib openssl (>= 0.9.8)"
 
-PR = "r0"
+PR = "r1"
 
 SRC_URI = "http://wvstreams.googlecode.com/files/${PN}-${PV}.tar.gz \
-	file://0001-Fixed-missing-header-includes.patch \
-	"
+    file://0001-Fixed-missing-header-includes.patch \
+    file://0002-fix-gcc-4.7-ftbfs-667418.patch \
+    "
 
 inherit autotools pkgconfig
 

@@ -16,5 +16,5 @@ S = "${WORKDIR}/git"
 FILES_${PN} = "/usr/*"
 
 do_install() {
-	oe_runmake 'D=${D}' install
+    oe_runmake 'D=${D}' install
 }

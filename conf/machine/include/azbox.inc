@@ -1,16 +1,19 @@
+# We know about rtc
+include conf/machine/include/build-extras.inc
+
 MACHINE_BRAND = "AZBOX"
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS = " \
-	azbox-dvb-modules \	
-	"
+    azbox-dvb-modules \
+    "
 
 DVBPROVIDER = "kernel"
 
 MACHINE_EXTRA_RRECOMMENDS = " \
-	gst-plugin-dvbmediasink \			
-	azbox-mrua \
-	azbox-compat \
-	"
+    gst-plugin-dvbmediasink \
+    azbox-mrua \
+    azbox-compat \
+    "
 
 DVBMEDIASINK_CONFIG = "--with-wma --with-wmv --with-pcm --with-dtsdownmix"
 
@@ -32,13 +35,13 @@ include conf/machine/include/autoload-filesystems.inc
 SYSVINIT_ENABLED_GETTYS = ""
 
 EXTRA_IMAGEDEPENDS += " \
-	enigma2-plugin-systemplugins-rtisys \
-	enigma2-plugin-systemplugins-videosettingssetup \
-	module-init-tools-cross \
-	module-init-tools \	
-	"
+    enigma2-plugin-systemplugins-rtisys \
+    enigma2-plugin-systemplugins-videosettingssetup \
+    module-init-tools-cross \
+    module-init-tools \
+    "
 
-MACHINE_EXTRA_RDEPENDS = " \
-	enigma2-plugin-systemplugins-rtisys \
-	enigma2-plugin-systemplugins-videosettingssetup \
-	"
+MACHINE_EXTRA_RDEPENDS_${PN} = " \
+    enigma2-plugin-systemplugins-rtisys \
+    enigma2-plugin-systemplugins-videosettingssetup \
+    "

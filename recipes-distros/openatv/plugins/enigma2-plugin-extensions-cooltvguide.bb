@@ -22,5 +22,5 @@ FILES_${PN} = "/usr/*"
 
 
 do_install() {
-	cp -rp ${S}/usr ${D}/
+    cp -rp ${S}/usr ${D}/
 }

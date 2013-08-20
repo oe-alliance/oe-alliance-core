@@ -8,7 +8,7 @@ inherit gitpkgv allarch
 SRCREV = "${AUTOREV}"
 PV = "2.0+git${SRCPV}"
 PKGV = "2.0+git${GITPKGV}"
-PR = "r18"
+PR = "r21"
 
 PACKAGES += "matrixhd-components"
 PROVIDES += "matrixhd-components"
@@ -17,16 +17,15 @@ SRC_URI="git://github.com/scwheeler/MetrixHD-for_VIX.git;protocol=git"
 
 FILES_${PN}-dbg = "/usr/share/backdrop.mvi /usr/share/bootlogo.mvi"
 FILES_matrixhd-components = " \
-	/usr/lib/enigma2/python/Plugins \
-	/usr/lib/enigma2/python/Components/Converter \
-	/usr/lib/enigma2/python/Components/Renderer/MovieReference.py \
-	/usr/lib/enigma2/python/Components/Renderer/NextEvent.py \
-	/usr/lib/enigma2/python/Components/Renderer/VReference.py \
-	/usr/lib/enigma2/python/Components/Renderer/VVolumeText.py \
-	/usr/lib/enigma2/python/Components/Renderer/XPicon.py \
-	/usr/lib/enigma2/python/Components/Renderer/XPiconChannel.py \
-	/tmp/RunningText.py \
-	"
+    /usr/lib/enigma2/python/Plugins \
+    /usr/lib/enigma2/python/Components/Converter \
+    /usr/lib/enigma2/python/Components/Renderer/MovieReference.py \
+    /usr/lib/enigma2/python/Components/Renderer/NextEvent.py \
+    /usr/lib/enigma2/python/Components/Renderer/VReference.py \
+    /usr/lib/enigma2/python/Components/Renderer/VVolumeText.py \
+    /usr/lib/enigma2/python/Components/Renderer/XPicon.py \
+    /usr/lib/enigma2/python/Components/Renderer/XPiconChannel.py \
+    "
 FILES_${PN} = "/usr/share/enigma2/MetrixHD"
 
 RDEPENDS_${PN} = "matrixhd-components"
@@ -34,16 +33,9 @@ RDEPENDS_${PN} = "matrixhd-components"
 S = "${WORKDIR}/git"
 
 do_install() {
-	install -d ${D}/usr/
-	cp -rp ${S}/usr/* ${D}/usr/
-	install -d ${D}/tmp
-	cp -p ${S}/usr/lib/enigma2/python/Components/Renderer/RunningText.py ${D}/tmp/RunningText.py
-	chmod -R a+rX ${D}/usr/
+    install -d ${D}/usr/share/enigma2/ ${D}/usr/lib
+    cp -rp ${S}/usr/share/enigma2/* ${D}/usr/share/enigma2/
+    cp -rp ${S}/usr/lib/* ${D}/usr/lib/
+    chmod -R a+rX ${D}/usr/
 }
 
-pkg_preinst_matrixhd-components() {
-#!/bin/sh
-if [ ! -f /usr/lib/enigma2/python/Components/Renderer/RunningText.pyo ];then
-	cp -p /tmp/RunningText.py /usr/lib/enigma2/python/Components/Renderer/RunningText.py
-fi
-}

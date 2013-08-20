@@ -1,17 +1,20 @@
+# We know about rtc
+include conf/machine/include/build-extras.inc
+
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS = " \
-	iqon-dvb-modules \
-	"
+    iqon-dvb-modules \
+    "
 
 DVBPROVIDER = "kernel"
 
 MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS = "\
-	kernel-module-cdfs \
-	"
+    kernel-module-cdfs \
+    "
 
 MACHINE_EXTRA_RRECOMMENDS = " \
-	vuplus-shutdown \
-	gst-plugin-dvbmediasink \
-	"
+    vuplus-shutdown \
+    gst-plugin-dvbmediasink \
+    "
 
 include conf/machine/include/autoload-filesystems.inc
 
@@ -38,21 +41,21 @@ MKUBIFS_ARGS = "-m 2048 -e 126976 -c 4096 -F"
 UBINIZE_ARGS = "-m 2048 -p 128KiB"
 
 IMAGE_CMD_ubi_prepend = " \
-	rm -rf ${IMAGE_ROOTFS}/boot/*; \
-	rm -rf ${IMAGE_ROOTFS}/tmp/*; \
-	"
+    rm -rf ${IMAGE_ROOTFS}/boot/*; \
+    rm -rf ${IMAGE_ROOTFS}/tmp/*; \
+    "
 
 IMAGE_CMD_ubi_append = " \
-	mkdir -p ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}; \
-	cp ${DEPLOY_DIR_IMAGE}/splash.bmp ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/splash.bmp; \
-	mv ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.ubi ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/oe_rootfs.bin; \
-	gzip -f -9c ${DEPLOY_DIR_IMAGE}/vmlinux-${MACHINE}.bin > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/oe_kernel.bin; \
-	echo ${DISTRO_NAME}-${DISTRO_VERSION}.${BUILD_VERSION} > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/imageversion; \
-	cd ${DEPLOY_DIR_IMAGE}; \
-	zip ${IMAGE_NAME}_usb.zip ${IMAGEDIR}/*; \
-	rm -f ${DEPLOY_DIR_IMAGE}/*.ubifs; \
-	rm -Rf update; \
-	"
+    mkdir -p ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}; \
+    cp ${DEPLOY_DIR_IMAGE}/splash.bmp ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/splash.bmp; \
+    mv ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.ubi ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/oe_rootfs.bin; \
+    gzip -f -9c ${DEPLOY_DIR_IMAGE}/vmlinux-${MACHINE}.bin > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/oe_kernel.bin; \
+    echo ${DISTRO_NAME}-${DISTRO_VERSION}.${BUILD_VERSION} > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/imageversion; \
+    cd ${DEPLOY_DIR_IMAGE}; \
+    zip ${IMAGE_NAME}_usb.zip ${IMAGEDIR}/*; \
+    rm -f ${DEPLOY_DIR_IMAGE}/*.ubifs; \
+    rm -Rf update; \
+    "
 
 TARGET_FPU = "hard"
 

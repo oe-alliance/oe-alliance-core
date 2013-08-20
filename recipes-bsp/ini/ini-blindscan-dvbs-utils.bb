@@ -2,7 +2,7 @@ DESCRIPTION = "Utils for DVB-S/S2 blindscan"
 SECTION = "base"
 PRIORITY = "optional"
 LICENSE = "CLOSED"
-RDEPENDS = "ncurses"
+RDEPENDS_${PN} = "ncurses"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 INIDVBCBIN = "ini_blindscan"
@@ -18,6 +18,6 @@ PR = "r4"
 S = "${WORKDIR}/"
 
 do_install() {
-	install -d "${D}/${bindir}"
-	install -m 0755 "${S}/ini_blindscan" "${D}/${bindir}"
+    install -d "${D}/${bindir}"
+    install -m 0755 "${S}/ini_blindscan" "${D}/${bindir}"
 }

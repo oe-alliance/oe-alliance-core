@@ -15,3 +15,24 @@ RDEPENDS_${PN} = "python-compression"
 
 SRC_URI[md5sum] = "b3db3d60b0ee83f5f23101d2c3bb99e0"
 SRC_URI[sha256sum] = "ea1d3a8141654781a0df31e6607c4722436fa33eb2e9934492770b3b61be8122"
+
+PACKAGES =+ " ${PN}-src ${PN}-tests"
+RDEPENDS_{PN}-src = "${PN}"
+FILES_${PN}-src = " \
+    ${PYTHON_SITEPACKAGES_DIR}/*/*.py \
+    ${PYTHON_SITEPACKAGES_DIR}/*/*/*.py \
+    ${PYTHON_SITEPACKAGES_DIR}/*/*/*/*.py \
+    ${PYTHON_SITEPACKAGES_DIR}/*/*/*/*/*.py \
+    "
+
+FILES_${PN}-tests = " \
+  ${PYTHON_SITEPACKAGES_DIR}/*/test \
+  ${PYTHON_SITEPACKAGES_DIR}/*/*/test \
+"
+
+# some txt files which should go into -doc
+FILES_${PN}-doc += " \
+    ${PYTHON_SITEPACKAGES_DIR}/*-info \
+    ${PYTHON_SITEPACKAGES_DIR}/*/*-info \
+    "
+

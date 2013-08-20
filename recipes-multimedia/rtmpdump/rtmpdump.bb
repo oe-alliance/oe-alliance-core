@@ -16,11 +16,11 @@ SRC_URI[sha256sum] = "ef38b7a99d82ce6912063d21063aeaf28185341b3df486e24bffce5354
 S = "${WORKDIR}/rtmpdump-2.3"
 
 do_compile() {
-	make CROSS_COMPILE=${TARGET_PREFIX}
+    make CROSS_COMPILE=${TARGET_PREFIX}
 }
 
 
 do_install() {
-	install -d ${D}${bindir}
+    install -d ${D}${bindir}
         install rtmpdump ${D}${bindir}/
 }

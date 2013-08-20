@@ -14,13 +14,11 @@ PR = "r1"
 S = "${WORKDIR}"
 
 do_compile() {
-	ar x "enigma2-plugin-systemplugins-blindscan_2011-04-15_mipsel.ipk" data.tar.gz
-	tar xvfz data.tar.gz usr/bin/avl_xtrend_blindscan
 }
 
 do_install() {
-	install -d "${D}/${bindir}"
-	install -m 0755 "${S}/usr/bin/avl_xtrend_blindscan" "${D}/${bindir}"
+    install -d "${D}/${bindir}"
+    install -m 0755 "${S}/usr/bin/avl_xtrend_blindscan" "${D}/${bindir}"
 }
 
 INHIBIT_PACKAGE_STRIP = "1"

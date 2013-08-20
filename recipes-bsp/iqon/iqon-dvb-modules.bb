@@ -23,15 +23,17 @@ do_compile() {
 }
 
 do_install() {
-	install -d ${D}/lib/modules/${KV}/extra
-	for f in lib/modules/${KV}/extra/*.ko; do
-		install -m 0644 $f ${D}/$f;
-	done
-	install -d ${D}/${sysconfdir}/modules-load.d
-	for i in `ls ${D}/lib/modules/${KV}/extra | grep \\.ko | sed -e 's/.ko//g'`; do
-		echo $i _hwtype=\$hwtypenum >> ${D}/${sysconfdir}/modules-load.d/_${MACHINE}.conf
-	done
+    install -d ${D}/lib/modules/${KV}/extra
+    for f in lib/modules/${KV}/extra/*.ko; do
+        install -m 0644 $f ${D}/$f;
+    done
+    install -d ${D}/${sysconfdir}/modules-load.d
+    for i in `ls ${D}/lib/modules/${KV}/extra | grep \\.ko | sed -e 's/.ko//g'`; do
+        echo $i _hwtype=\$hwtypenum >> ${D}/${sysconfdir}/modules-load.d/_${MACHINE}.conf
+    done
 }
+
+FILES_${PN} += "${sysconfdir}/modules-load.d/_${MACHINE}.conf"
 
 SRC_URI[md5sum] = "99203e2ce54ac287eed0d35e836266bc" 
 SRC_URI[sha256sum] = "72cc0a04f85cca63a3e9d12b8451fd4413a6acd84b8473a9cf9a3bbb2f80357b"

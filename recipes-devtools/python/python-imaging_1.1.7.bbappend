@@ -1,17 +1,11 @@
-PRINC = "2"
-
-inherit openpli-distutils
-
-do_install() {
-	distutils_do_install_keep_pyo
-}
+PRINC = "1"
 
 PACKAGES =+ " ${PN}-src"
 RDEPENDS_{PN}-src = "${PN}"
 FILES_${PN}-src = " \
-	${libdir}/${PYTHON_DIR}/site-packages/*/*.py \
-	${libdir}/${PYTHON_DIR}/site-packages/*/*/*.py \
-	${libdir}/${PYTHON_DIR}/site-packages/*/*/*/*.py \
-	${libdir}/${PYTHON_DIR}/site-packages/*/*/*/*/*.py \
-	"
+    ${libdir}/${PYTHON_DIR}/site-packages/*/*.py \
+    ${libdir}/${PYTHON_DIR}/site-packages/*/*/*.py \
+    ${libdir}/${PYTHON_DIR}/site-packages/*/*/*/*.py \
+    ${libdir}/${PYTHON_DIR}/site-packages/*/*/*/*/*.py \
+    "
 

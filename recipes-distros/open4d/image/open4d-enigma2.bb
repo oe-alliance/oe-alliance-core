@@ -3,28 +3,29 @@ LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3b58 \
                     file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
 
+ALLOW_EMPTY_${PN} = "1"
+
 PV = "1.0"
 PR = "r2"
 
-inherit task
+inherit packagegroup
 
-RCONFLICTS_ = "enigma2-plugin-extensions-permanenttimeshift enigma2-plugin-systemplugins-skinselector"
-RREPLACES = "enigma2-plugin-extensions-permanenttimeshift enigma2-plugin-systemplugins-skinselector"
+RCONFLICTS_${PN} = "enigma2-plugin-extensions-permanenttimeshift enigma2-plugin-systemplugins-skinselector"
+RREPLACES_${PN} = "enigma2-plugin-extensions-permanenttimeshift enigma2-plugin-systemplugins-skinselector"
 
 DEPENDS = "open4d-feeds"
 
 #make sure default skin is installed.
 RDEPENDS_${PN} += "${E2DEFAULTSKIN} "
 
-RRECOMMENDS = "\
-	open4d-version-info \
-	enigma2-plugin-extensions-autotimer \
-	enigma2-plugin-extensions-audiosync \
-	enigma2-plugin-extensions-epgsearch \
-	enigma2-plugin-extensions-imdb \
-	enigma2-plugin-extensions-xmltvimport \
-	enigma2-plugin-systemplugins-crossepg \
-	enigma2-plugin-systemplugins-videoenhancement \	
-	\
-"
+RRECOMMENDS_${PN} = "\
+    open4d-version-info \
+    enigma2-plugin-extensions-autotimer \
+    enigma2-plugin-extensions-audiosync \
+    enigma2-plugin-extensions-epgsearch \
+    enigma2-plugin-extensions-imdb \
+    enigma2-plugin-extensions-xmltvimport \
+    enigma2-plugin-systemplugins-crossepg \
+    enigma2-plugin-systemplugins-videoenhancement \
+    "
 

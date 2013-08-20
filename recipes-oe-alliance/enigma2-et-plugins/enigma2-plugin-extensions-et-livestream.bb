@@ -19,7 +19,7 @@ RDEPENDS_${PN} = "gst-plugins-ugly-asf gst-plugins-bad-mms gst-plugins-good-rtsp
 FILES_${PN} = "/usr/lib/enigma2/python/Plugins/Extensions/EtLiveStream"
 
 do_install_append() {
-	install -d ${D}/usr/lib/enigma2/python/Plugins/Extensions/EtLiveStream
-	install -m 0644 ${S}/__init__.py ${D}/usr/lib/enigma2/python/Plugins/Extensions/EtLiveStream
-	install -m 0644 ${S}/plugin.py ${D}/usr/lib/enigma2/python/Plugins/Extensions/EtLiveStream
+    install -d ${D}/usr/lib/enigma2/python/Plugins/Extensions/EtLiveStream
+    install -m 0644 ${S}/__init__.py ${D}/usr/lib/enigma2/python/Plugins/Extensions/EtLiveStream
+    install -m 0644 ${S}/plugin.py ${D}/usr/lib/enigma2/python/Plugins/Extensions/EtLiveStream
 }

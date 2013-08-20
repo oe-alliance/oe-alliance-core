@@ -10,9 +10,9 @@ DEPENDS = "libvorbis libogg libao zlib libmikmod flac audiofile virtual/libiconv
 PR = "r1"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/musicpd/mpd-${PV}.tar.bz2 \
-		file://mpd.conf \
-		file://mpd.init \
-		"
+        file://mpd.conf \
+        file://mpd.init \
+        "
 
 SRC_URI[md5sum] = "5489dd327fba12c67f01558d2cfa6d57"
 SRC_URI[sha256sum] = "6ec5ad3fdeeb97608e40e041b6a458c61afd023a0fd1eeb464e208fcd36659df"
@@ -26,29 +26,29 @@ INITSCRIPT_NAME = "mpd"
 # versions.
 
 EXTRA_OECONF = "\
-		--enable-ogg \
-		--with-id3tag-libraries=${STAGING_LIBDIR} \
-		--with-id3tag-includes=${STAGING_INCDIR} \
-		--with-mad-libraries=${STAGING_LIBDIR} \
-		--with-mad-includes=${STAGING_INCDIR} \
-		--with-faad-libraries=${STAGING_LIBDIR} \
-		--with-faad-includes=${STAGING_INCDIR} \
-		--enable-curl \
-		--disable-ffmpeg \
-		--disable-jack \
-		--disable-pulse \
-		--enable-mod \
-		--disable-oggflac \
-		--with-lame-includes=${STAGING_INCDIR} \
-		"
+        --enable-ogg \
+        --with-id3tag-libraries=${STAGING_LIBDIR} \
+        --with-id3tag-includes=${STAGING_INCDIR} \
+        --with-mad-libraries=${STAGING_LIBDIR} \
+        --with-mad-includes=${STAGING_INCDIR} \
+        --with-faad-libraries=${STAGING_LIBDIR} \
+        --with-faad-includes=${STAGING_INCDIR} \
+        --enable-curl \
+        --disable-ffmpeg \
+        --disable-jack \
+        --disable-pulse \
+        --enable-mod \
+        --disable-oggflac \
+        --with-lame-includes=${STAGING_INCDIR} \
+        "
 
 do_compile_prepend() {
-	find -name Makefile | xargs sed -i 's~-I/usr/include~-I${STAGING_INCDIR}~g'
+    find -name Makefile | xargs sed -i 's~-I/usr/include~-I${STAGING_INCDIR}~g'
 }
 
 do_install_append() {
-	install -d ${D}/var/lib/mpd/playlists
-	install -d ${D}${sysconfdir}/init.d
-	install -m 755 ${WORKDIR}/mpd.init ${D}${sysconfdir}/init.d/mpd
-	install -m 644 ${WORKDIR}/mpd.conf ${D}${sysconfdir}/mpd.conf
+    install -d ${D}/var/lib/mpd/playlists
+    install -d ${D}${sysconfdir}/init.d
+    install -m 755 ${WORKDIR}/mpd.init ${D}${sysconfdir}/init.d/mpd
+    install -m 644 ${WORKDIR}/mpd.conf ${D}${sysconfdir}/mpd.conf
 }

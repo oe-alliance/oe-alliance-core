@@ -2,8 +2,6 @@ DESCRIPTION = "Configuration files for secret feeds"
 
 require conf/license/license-gplv2.inc
 
-PACKAGE_ARCH = "${MACHINE_ARCH}"
-
 PR = "r0"
 
 do_compile() {

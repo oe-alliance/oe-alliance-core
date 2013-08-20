@@ -50,8 +50,8 @@ do_postpatch_append_dm8000() {
 }
 
 do_install_append() {
-	install -d ${D}/etc/network/if-pre-up.d
-	install -m 0755 ${WORKDIR}/madwifi-smp-affinity ${D}/etc/network/if-pre-up.d
-	install -d ${D}/etc/network/if-post-down.d
-	ln -sf ../if-pre-up.d/madwifi-smp-affinity ${D}/etc/network/if-post-down.d
+    install -d ${D}/etc/network/if-pre-up.d
+    install -m 0755 ${WORKDIR}/madwifi-smp-affinity ${D}/etc/network/if-pre-up.d
+    install -d ${D}/etc/network/if-post-down.d
+    ln -sf ../if-pre-up.d/madwifi-smp-affinity ${D}/etc/network/if-post-down.d
 }

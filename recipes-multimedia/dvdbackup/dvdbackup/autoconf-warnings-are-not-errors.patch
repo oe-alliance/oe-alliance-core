@@ -1,0 +1,13 @@
+Index: dvdbackup-0.4.2/configure.ac
+===================================================================
+--- dvdbackup-0.4.2.orig/configure.ac
++++ dvdbackup-0.4.2/configure.ac
+@@ -13,7 +13,7 @@ AC_CONFIG_SRCDIR([src/main.c])
+ dnl Must come before AM_INIT_AUTOMAKE.
+ AC_CONFIG_AUX_DIR([build-aux])
+ AC_CONFIG_MACRO_DIR([m4])
+-AM_INIT_AUTOMAKE([dist-xz -Wall -Werror])
++AM_INIT_AUTOMAKE([dist-xz -Wall])
+ 
+ AM_GNU_GETTEXT_VERSION([0.17])
+ AM_GNU_GETTEXT([external])

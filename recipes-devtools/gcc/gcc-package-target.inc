@@ -87,51 +87,51 @@ FILES_${PN}-doc = "\
 "
 
 do_install () {
-	oe_runmake 'DESTDIR=${D}' install-host
+    oe_runmake 'DESTDIR=${D}' install-host
 
-	# Cleanup some of the ${libdir}{,exec}/gcc stuff ...
-	rm -r ${D}${libdir}/gcc/${TARGET_SYS}/${BINV}/install-tools
-	rm -r ${D}${libexecdir}/gcc/${TARGET_SYS}/${BINV}/install-tools
-	rm -rf ${D}${libexecdir}/gcc/${TARGET_SYS}/${BINV}/*.la
-	rmdir ${D}${includedir}
+    # Cleanup some of the ${libdir}{,exec}/gcc stuff ...
+    rm -r ${D}${libdir}/gcc/${TARGET_SYS}/${BINV}/install-tools
+    rm -r ${D}${libexecdir}/gcc/${TARGET_SYS}/${BINV}/install-tools
+    rm -rf ${D}${libexecdir}/gcc/${TARGET_SYS}/${BINV}/*.la
+    rmdir ${D}${includedir}
 
-	# Hack around specs file assumptions
-	test -f ${D}${libdir}/gcc/${TARGET_SYS}/${BINV}/specs && sed -i -e '/^*cross_compile:$/ { n; s/1/0/; }' ${D}${libdir}/gcc/${TARGET_SYS}/${BINV}/specs
+    # Hack around specs file assumptions
+    test -f ${D}${libdir}/gcc/${TARGET_SYS}/${BINV}/specs && sed -i -e '/^*cross_compile:$/ { n; s/1/0/; }' ${D}${libdir}/gcc/${TARGET_SYS}/${BINV}/specs
 
-	# Cleanup manpages..
-	rm -rf ${D}${mandir}/man7
+    # Cleanup manpages..
+    rm -rf ${D}${mandir}/man7
 
-	cd ${D}${bindir}
+    cd ${D}${bindir}
 
-	# We care about g++ not c++
-	rm -f *c++
+    # We care about g++ not c++
+    rm -f *c++
 
-	# We don't care about the gcc-<version> ones for this
-	rm -f *gcc-?.?*
+    # We don't care about the gcc-<version> ones for this
+    rm -f *gcc-?.?*
 
-	# We use libiberty from binutils
-	find ${D}${exec_prefix}/lib -name libiberty.a | xargs rm -f
-	find ${D}${exec_prefix}/lib -name libiberty.h | xargs rm -f
+    # We use libiberty from binutils
+    find ${D}${exec_prefix}/lib -name libiberty.a | xargs rm -f
+    find ${D}${exec_prefix}/lib -name libiberty.h | xargs rm -f
 
-	# Not sure why we end up with these but we don't want them...
-	rm -f ${TARGET_PREFIX}${TARGET_PREFIX}*
+    # Not sure why we end up with these but we don't want them...
+    rm -f ${TARGET_PREFIX}${TARGET_PREFIX}*
 
-	# Symlinks so we can use these trivially on the target
-	if [ -e ${TARGET_PREFIX}g77 ]; then
-		ln -sf ${TARGET_PREFIX}g77 g77 || true
-		ln -sf g77 f77 || true
-	fi
-	if [ -e ${TARGET_PREFIX}gfortran ]; then
-		ln -sf ${TARGET_PREFIX}gfortran gfortran || true
-		ln -sf gfortran f95 || true
-	fi
-	ln -sf ${TARGET_PREFIX}g++ g++
-	ln -sf ${TARGET_PREFIX}gcc gcc
-	ln -sf ${TARGET_PREFIX}cpp cpp
-	install -d ${D}${base_libdir}
-	ln -sf ${bindir}/${TARGET_PREFIX}cpp ${D}${base_libdir}/cpp
-	ln -sf g++ c++
-	ln -sf gcc cc
+    # Symlinks so we can use these trivially on the target
+    if [ -e ${TARGET_PREFIX}g77 ]; then
+        ln -sf ${TARGET_PREFIX}g77 g77 || true
+        ln -sf g77 f77 || true
+    fi
+    if [ -e ${TARGET_PREFIX}gfortran ]; then
+        ln -sf ${TARGET_PREFIX}gfortran gfortran || true
+        ln -sf gfortran f95 || true
+    fi
+    ln -sf ${TARGET_PREFIX}g++ g++
+    ln -sf ${TARGET_PREFIX}gcc gcc
+    ln -sf ${TARGET_PREFIX}cpp cpp
+    install -d ${D}${base_libdir}
+    ln -sf ${bindir}/${TARGET_PREFIX}cpp ${D}${base_libdir}/cpp
+    ln -sf g++ c++
+    ln -sf gcc cc
 
-	chown -R root:root ${D}
+    chown -R root:root ${D}
 }

@@ -10,28 +10,28 @@ GLIBC_EXTRA_OECONF = "--with-tls --with-__thread"
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS ?= ""
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "\
-	dreambox-dvb-modules-${MACHINE} \
-	v4l-dvb-module-dvb-core \
-	v4l-dvb-module-stv0299 \
+    dreambox-dvb-modules-${MACHINE} \
+    v4l-dvb-module-dvb-core \
+    v4l-dvb-module-stv0299 \
 "
 
 include conf/machine/include/autoload-usbserial.inc
 
 MACHINE_EXTRA_RRECOMMENDS = " \
-	gst-plugin-dreambox-dvbmediasink \
-	ntfs-3g \
-	kernel-module-hmac \
-	kernel-module-md4 \
-	tpmd \
+    gst-plugin-dreambox-dvbmediasink \
+    ntfs-3g \
+    kernel-module-hmac \
+    kernel-module-md4 \
+    tpmd \
 "
 
 MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS = "\
-	kernel-module-cifs \
-	kernel-module-ntfs \
-	kernel-module-iso9660 \
-	kernel-module-udf \
-	kernel-module-nls-cp850 \
-	"
+    kernel-module-cifs \
+    kernel-module-ntfs \
+    kernel-module-iso9660 \
+    kernel-module-udf \
+    kernel-module-nls-cp850 \
+    "
 module_autoload_cifs = "cifs"
 module_autoload_iso9660 = "iso9660"
 module_autoload_udf = "udf"
@@ -58,9 +58,9 @@ MKUBIFS_ARGS = "-m 2048 -e 129024 -c 1996 -x favor_lzo -X 1"
 UBINIZE_ARGS = "-m 2048 -p 128KiB -s 512"
 
 DREAMBOX_BUILDIMAGE = "buildimage --arch ${MACHINE} ${EXTRA_BUILDCMD} \
-	--erase-block-size ${DREAMBOX_ERASE_BLOCK_SIZE} \
-	--flash-size ${DREAMBOX_FLASH_SIZE} \
-	--sector-size ${DREAMBOX_SECTOR_SIZE}"
+    --erase-block-size ${DREAMBOX_ERASE_BLOCK_SIZE} \
+    --flash-size ${DREAMBOX_FLASH_SIZE} \
+    --sector-size ${DREAMBOX_SECTOR_SIZE}"
 
 IMAGE_FSTYPES ?= "jffs2.nfi"
 

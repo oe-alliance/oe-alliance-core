@@ -9,7 +9,7 @@ EPSM = "enigma2-plugin-skins"
 SRCREV = "${AUTOREV}"
 PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"
-PR = "r2"
+PR = "r3"
 
 PACKAGES = "${EPSM}-neonovum-hd ${EPSM}-mynovum-hd"
 PROVIDES = "${PN} ${EPSM}-neonovum-hd ${EPSM}-mynovum-hd"
@@ -22,7 +22,7 @@ FILES_${EPSM}-mynovum-hd = "/usr/share/enigma2/myNOVUM_HD"
 S = "${WORKDIR}/git"
 
 do_install() {
-	install -d ${D}/usr/share/enigma2
-	cp -rp ${S}/* ${D}/usr/share/enigma2/
-	chmod -R a+rX ${D}/usr/share/enigma2/
+    install -d ${D}/usr/share/enigma2
+    cp -rp ${S}/* ${D}/usr/share/enigma2/
+    chmod -R a+rX ${D}/usr/share/enigma2/
 }

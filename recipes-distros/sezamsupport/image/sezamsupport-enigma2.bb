@@ -3,19 +3,22 @@ LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3b58 \
                     file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
 
+PACKAGE_ARCH = "${MACHINE_ARCH}"
+ALLOW_EMPTY_${PN} = "1"
+
 PV = "1.0"
 PR = "r6"
 
-inherit task
+inherit packagegroup
 
 DEPENDS = "enigma2-pliplugins sezamsupport-feeds"
 
-RRECOMMENDS = "\
-	enigma2-plugin-systemplugins-softwaremanager \
-	enigma2-plugin-systemplugins-fastscan \
-	enigma2-plugin-extensions-audiosync \
-	enigma2-plugin-systemplugins-positionersetup \
-	enigma2-plugin-systemplugins-videoenhancement \	
-	${@base_contains("MACHINE_FEATURES", "blindscan-dvbs", "enigma2-plugin-systemplugins-blindscan" , "", d)} \
-	${@base_contains("MACHINE_FEATURES", "blindscan-dvbc", "virtual/blindscan-dvbc" , "", d)} \
-	"
+RRECOMMENDS_${PN} = "\
+    enigma2-plugin-systemplugins-softwaremanager \
+    enigma2-plugin-systemplugins-fastscan \
+    enigma2-plugin-extensions-audiosync \
+    enigma2-plugin-systemplugins-positionersetup \
+    enigma2-plugin-systemplugins-videoenhancement \
+    ${@base_contains("MACHINE_FEATURES", "blindscan-dvbs", "enigma2-plugin-systemplugins-blindscan" , "", d)} \
+    ${@base_contains("MACHINE_FEATURES", "blindscan-dvbc", "virtual/blindscan-dvbc" , "", d)} \
+    "

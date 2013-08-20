@@ -4,9 +4,9 @@ PACKAGE_ARCH = "all"
 require conf/license/license-gplv2.inc
 
 RDEPENDS_${PN} = " \
-	kernel-module-carl9170 \
-	firmware-carl9170 \
-	"
+    kernel-module-carl9170 \
+    firmware-carl9170 \
+    "
 
 PV = "1.0"
 PR = "r1"

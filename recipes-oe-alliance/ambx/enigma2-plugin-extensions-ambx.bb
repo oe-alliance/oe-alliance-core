@@ -26,10 +26,10 @@ inherit distutils
 FILES_${PN} = "/usr/lib/enigma2"
 
 do_install_append() {
-	# silly hacky me, this could be done by distutils, but i can't figure it out...
-	install -d ${D}/usr/lib/enigma2/python/Plugins/Extensions
-	mv ${D}/usr/lib/python*/site-packages/${PLUGIN} ${D}/usr/lib/enigma2/python/Plugins/Extensions/${PLUGIN}
-	rm -rf ${D}/usr/lib/python*/site-packages
-	install -m 644 ${S}/${PLUGIN}/plugin.png ${D}/usr/lib/enigma2/python/Plugins/Extensions/${PLUGIN}
+    # silly hacky me, this could be done by distutils, but i can't figure it out...
+    install -d ${D}/usr/lib/enigma2/python/Plugins/Extensions
+    mv ${D}/usr/lib/python*/site-packages/${PLUGIN} ${D}/usr/lib/enigma2/python/Plugins/Extensions/${PLUGIN}
+    rm -rf ${D}/usr/lib/python*/site-packages
+    install -m 644 ${S}/${PLUGIN}/plugin.png ${D}/usr/lib/enigma2/python/Plugins/Extensions/${PLUGIN}
 }
 

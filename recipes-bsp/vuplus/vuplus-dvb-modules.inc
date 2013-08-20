@@ -11,7 +11,7 @@ KV_vuduo2 = "3.3.8"
 KVPR_vuduo2 = "-2.0"
 
 PV = "${KV}+${SRCDATE}"
-PR = "r8"
+PR = "r9"
 
 VUPLUS_KERNEL_GCC = "4.4.3"
 DOWNLOADMACHINE ?= "${MACHINE}"
@@ -26,13 +26,17 @@ inherit module
 do_compile() {
 }
 
+FILES_${PN} += "${sysconfdir}/modules-load.d/_vuplus.conf"
+
 do_install() {
-	install -d ${D}/lib/modules/${KV}${KVPR}/extra
-	for f in *.ko; do
-		install -m 0644 ${WORKDIR}/$f ${D}/lib/modules/${KV}${KVPR}/extra/$f;
-	done
-	install -d ${D}/${sysconfdir}/modules-load.d
-	for i in `ls | grep \\.ko | sed -e 's/.ko//g'`; do
-		echo $i >> ${D}/${sysconfdir}/modules-load.d/_${MACHINE}.conf
-	done
+    install -d ${D}/lib/modules/${KV}${KVPR}/extra
+    for f in *.ko; do
+        install -m 0644 ${WORKDIR}/$f ${D}/lib/modules/${KV}${KVPR}/extra/$f;
+    done
+    install -d ${D}/${sysconfdir}/modules-load.d
+    for i in `ls | grep \\.ko | sed -e 's/.ko//g'`; do
+        echo $i >> ${D}/${sysconfdir}/modules-load.d/_${MACHINE}.conf
+    done
 }
+
+FILES_${PN} += "${sysconfdir}/modules-load.d/_${MACHINE}.conf"

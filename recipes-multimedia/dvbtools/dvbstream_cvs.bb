@@ -13,6 +13,6 @@ S = "${WORKDIR}/dvbstream"
 CFLAGS_append = " ${LDFLAGS} -D_GNU_SOURCE"
 
 do_install() {
-	mkdir -p ${D}${bindir}
-	for i in dvbstream dumprtp ts_filter rtpfeed; do install -m 0755 $i ${D}${bindir}/; done
+    mkdir -p ${D}${bindir}
+    for i in dvbstream dumprtp ts_filter rtpfeed; do install -m 0755 $i ${D}${bindir}/; done
 }

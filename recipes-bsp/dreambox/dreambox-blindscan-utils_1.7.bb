@@ -20,7 +20,7 @@ SRC_URI[mips32el.md5sum] = "6a1a681f65e3ba302aaa20e4155140cb"
 SRC_URI[mips32el.sha256sum] = "1664be1afa512bed1ff120693a997c564add49a97bac8e013dc8b90ed4eaced1"
 
 do_install() {
-	cp -r * ${D}
+    cp -r * ${D}
 }
 
 INHIBIT_PACKAGE_STRIP = "1"

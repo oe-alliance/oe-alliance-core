@@ -21,14 +21,13 @@ RDEPENDS_${PN} = "\
 RRECOMMENDS_${PN} = "unrar"
 
 PV = "0.4.9"
-PR = "r2"
+PR = "r1"
 
 inherit update-rc.d
 
 SRC_URI = "http://download.pyload.org/pyload-src-v${PV}.zip \
-		file://pyload.init \
-		file://pyload.tar.gz.defaults"
-
+  file://pyload.init \
+  file://pyload.tar.gz.defaults"
 SRC_URI[md5sum] = "28876150af22999b6f539c8579d3b415"
 SRC_URI[sha256sum] = "f937631d376216bc830d6ffcd5b4ecb1806afd4012a184849da1a333a7ba0016"
 
@@ -40,22 +39,22 @@ INITSCRIPT_NAME = "${PN}"
 INITSCRIPT_PARAMS = "defaults 60 "
 
 do_compile() {
-	python -m compileall ${S}
+    python -m compileall ${S}
 }
 
 do_install() {
-	install -d ${D}/etc/init.d
-	install -d ${D}/usr/pyload
+    install -d ${D}/etc/init.d
+    install -d ${D}/usr/pyload
 
-	cp -r ${S}/icons ${D}/usr/pyload
-	cp -r ${S}/locale ${D}/usr/pyload
-	cp -r ${S}/module ${D}/usr/pyload
-	cp -r ${S}/scripts ${D}/usr/pyload
-	install -m 755 ${S}/pyLoadCli.py ${D}/usr/pyload
-	install -m 755 ${S}/pyLoadCore.py ${D}/usr/pyload
-	install -m 755 ${S}/systemCheck.py ${D}/usr/pyload
-	cp ${WORKDIR}/pyload.tar.gz.defaults ${D}/usr/pyload/pyload-defaults.tar.gz
-	
-	install -m 0755 ${WORKDIR}/pyload.init ${D}/etc/init.d/pyload
+    cp -r ${S}/icons ${D}/usr/pyload
+    cp -r ${S}/locale ${D}/usr/pyload
+    cp -r ${S}/module ${D}/usr/pyload
+    cp -r ${S}/scripts ${D}/usr/pyload
+    install -m 755 ${S}/pyLoadCli.py ${D}/usr/pyload
+    install -m 755 ${S}/pyLoadCore.py ${D}/usr/pyload
+    install -m 755 ${S}/systemCheck.py ${D}/usr/pyload
+    cp ${WORKDIR}/pyload.tar.gz.defaults ${D}/usr/pyload/pyload-defaults.tar.gz
+    
+    install -m 0755 ${WORKDIR}/pyload.init ${D}/etc/init.d/pyload
 }
 

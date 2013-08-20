@@ -15,7 +15,16 @@ S = "${WORKDIR}/gdata-${PV}"
 
 inherit distutils
 
-PACKAGES =+ "${PN}-tests"
+PACKAGES =+ " ${PN}-src ${PN}-tests"
 
 FILES_${PN}-tests = "${libdir}/${PYTHON_DIR}/site-packages/gdata/test*"
 FILES_${PN} += "${datadir}"
+RDEPENDS_{PN}-src = "${PN}"
+FILES_${PN}-src = " \
+    ${libdir}/${PYTHON_DIR}/site-packages/*/*.py \
+    ${libdir}/${PYTHON_DIR}/site-packages/*/*/*.py \
+    ${libdir}/${PYTHON_DIR}/site-packages/*/*/*/*.py \
+    ${libdir}/${PYTHON_DIR}/site-packages/*/*/*/*/*.py \
+    "
+
+

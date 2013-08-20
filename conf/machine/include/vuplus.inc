@@ -1,26 +1,27 @@
+# We know about rtc
+include conf/machine/include/build-extras.inc
+
 MACHINE_BRAND = "Vu+"
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS = " \
-	vuplus-dvb-modules-${MACHINE} \
-	"
+    vuplus-dvb-modules-${MACHINE} \
+    "
 
 DVBPROVIDER = "kernel"
 
 MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS = "\
-	kernel-module-cdfs \
-	"
+    kernel-module-cdfs \
+    "
 
 MACHINE_EXTRA_RRECOMMENDS = " \
-	vuplus-shutdown \
-	gst-plugin-dvbmediasink \
-	"
+    vuplus-shutdown \
+    gst-plugin-dvbmediasink \
+    "
 
 include conf/machine/include/autoload-filesystems.inc
 
 TARGET_ARCH = "mipsel"
 DEFAULTTUNE = "mips32el"
-
-GLIBC_EXTRA_OECONF = "--with-tls"
 
 PREFERRED_PROVIDER_virtual/kernel = "linux-vuplus"
 
@@ -34,15 +35,15 @@ KERNEL_CONSOLE = "ttyS0,115200n8"
 IMAGE_FSTYPES ?= "ubi"
 
 UBI_VOLNAME = "rootfs"
-MKUBIFS_ARGS = "-m 2048 -e 126976 -c 4096 -F"
+MKUBIFS_ARGS = "-m 2048 -e 126976 -c 4096"
 UBINIZE_ARGS = "-m 2048 -p 128KiB"
 
 IMAGEDIR ?= "vuplus/${UPDATE_DIR}"
 
 IMAGE_CMD_ubi_prepend = " \
-	rm -rf ${IMAGE_ROOTFS}/boot/*; \
-	rm -rf ${IMAGE_ROOTFS}/tmp/*; \
-	"
+    rm -rf ${IMAGE_ROOTFS}/boot/*; \
+    rm -rf ${IMAGE_ROOTFS}/tmp/*; \
+    "
 
 TARGET_FPU = "hard"
 

@@ -12,8 +12,8 @@ do_compile() {
 }
 
 do_install () {
-        install -d ${D}${sysconfdir}/opkg
-        install -m 0644 ${S}/${sysconfdir}/opkg/secret-feed.conf ${D}${sysconfdir}/opkg/
+    install -d ${D}${sysconfdir}/opkg
+    install -m 0644 ${S}/${sysconfdir}/opkg/secret-feed.conf ${D}${sysconfdir}/opkg/
 }
 
 CONFFILES_${PN} = '${sysconfdir}/opkg/secret-feed.conf'

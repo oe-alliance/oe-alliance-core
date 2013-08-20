@@ -17,18 +17,18 @@ S = "${WORKDIR}/git/dreamcrc"
 inherit distutils
 
 DEPENDS = "python"
-RDEPENDS = "python-compression python-shell"
+RDEPENDS_${PN} = "python-compression python-shell"
 PACKAGES = "${PN} ${PN}-dbg"
 
 FILES_${PN} = "/usr/lib/enigma2/python/Plugins/Extensions/EPGImport/dreamcrc.so"
 FILES_${PN}-dbg = "/usr/lib/enigma2/python/Plugins/Extensions/EPGImport/.debug /usr/src/debug"
 
 do_install_append() {
-	# silly hacky me, this could be done by distutils, but i can't figure it out...
-	install -d ${D}/usr/lib/enigma2/python/Plugins/Extensions/EPGImport
-	mv ${D}/usr/lib/python*/site-packages/*.so ${D}/usr/lib/enigma2/python/Plugins/Extensions/EPGImport
-	rm -rf ${D}/usr/lib/python*/site-packages
-	rm -rf ${D}/usr/lib/python2.7
+    # silly hacky me, this could be done by distutils, but i can't figure it out...
+    install -d ${D}/usr/lib/enigma2/python/Plugins/Extensions/EPGImport
+    mv ${D}/usr/lib/python*/site-packages/*.so ${D}/usr/lib/enigma2/python/Plugins/Extensions/EPGImport
+    rm -rf ${D}/usr/lib/python*/site-packages
+    rm -rf ${D}/usr/lib/python2.7
 }
 
 # skip this!

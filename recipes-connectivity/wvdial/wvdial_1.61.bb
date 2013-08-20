@@ -18,13 +18,13 @@ SRC_URI_ebox5100 = "http://archiv.mixos-support.com/2.6.18-wr-wvdial-1.61.tar.gz
 SRC_URI_dm800 = "http://archiv.mixos-support.com/2.6.18-wr-wvdial-1.61.tar.gz;name=legacy"
 
 DEPENDS = "wvstreams"
-RDEPENDS = "ppp"
+RDEPENDS_${PN} = "ppp"
 
 FILES_${PN} = "/usr/*"
 FILES_${PN} += "/etc/*"
 
 do_install() {
-	cp -rp ${S}/usr ${D}/
-	cp -rp ${S}/etc ${D}/
+    cp -rp ${S}/usr ${D}/
+    cp -rp ${S}/etc ${D}/
 
 }

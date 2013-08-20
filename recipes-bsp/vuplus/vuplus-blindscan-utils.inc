@@ -1,7 +1,7 @@
 DESCRIPTION = "Utilities for transponder & dvb-s blindscan"
 SECTION = "base"
 PRIORITY = "optional"
-RDEPENDS = "ncurses"
+RDEPENDS_${PN} = "ncurses"
 
 LICENSE = "CLOSED"
 
@@ -24,8 +24,8 @@ FILES_vuplus-blindscan-dvbs-utils-${MACHINE} = "${bindir}/*_blindscan"
 FILES_vuplus-blindscan-dvbc-utils-${MACHINE} = "${bindir}/tda1002x"
 
 do_install() {
-	install -d ${D}/${bindir}/
-	for i in `find ${S} -type f -maxdepth 1`; do
-		install -m 0755 $i ${D}/${bindir}/;
-	done;
+    install -d ${D}/${bindir}/
+    for i in `find ${S} -type f -maxdepth 1`; do
+        install -m 0755 $i ${D}/${bindir}/;
+    done;
 }

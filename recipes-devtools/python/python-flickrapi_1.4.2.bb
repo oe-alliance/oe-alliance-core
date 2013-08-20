@@ -1,11 +1,9 @@
 SUMMARY = "The official Python interface to the Flickr API"
 HOMEPAGE = "http://stuvel.eu/flickrapi"
 SECTION = "devel/python"
-LICENSE = "PSF"
-LIC_FILES_CHKSUM = "file://LICENSE;md5=d54e175a4083eea51ac31acaff818df5"
 PRIORITY = "optional"
-PR = "r3"
-
+LICENSE = "PSF"
+PR = "r1"
 # NOTE: requires python-misc for webbrowser and subprocess as missing dependency of the webbrowser
 RDEPENDS_${PN} = "\
   python-core \
@@ -25,3 +23,24 @@ SRC_URI[sha256sum] = "ac9304f571175b8af4fc2ee17d3e110847b526640665ca53d97bbf9df9
 S = "${WORKDIR}/flickrapi-${PV}"
 
 inherit distutils
+
+PACKAGES =+ " ${PN}-src ${PN}-tests"
+RDEPENDS_{PN}-src = "${PN}"
+FILES_${PN}-src = " \
+    ${PYTHON_SITEPACKAGES_DIR}/*/*.py \
+    ${PYTHON_SITEPACKAGES_DIR}/*/*/*.py \
+    ${PYTHON_SITEPACKAGES_DIR}/*/*/*/*.py \
+    ${PYTHON_SITEPACKAGES_DIR}/*/*/*/*/*.py \
+    "
+
+FILES_${PN}-tests = " \
+  ${PYTHON_SITEPACKAGES_DIR}/*/test \
+  ${PYTHON_SITEPACKAGES_DIR}/*/*/test \
+"
+
+# some txt files which should go into -doc
+FILES_${PN}-doc += " \
+    ${PYTHON_SITEPACKAGES_DIR}/*-info \
+    ${PYTHON_SITEPACKAGES_DIR}/*/*-info \
+    "
+

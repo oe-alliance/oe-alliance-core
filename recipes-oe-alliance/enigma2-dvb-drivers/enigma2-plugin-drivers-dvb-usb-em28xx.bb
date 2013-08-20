@@ -6,10 +6,10 @@ require conf/license/license-gplv2.inc
 DVBPROVIDER ?= "kernel"
 
 RDEPENDS_${PN} = " \
-	${DVBPROVIDER}-module-em28xx-dvb \
-	${DVBPROVIDER}-module-tda10071 \
-	firmware-dvb-fe-tda10071 \
-	"
+    ${DVBPROVIDER}-module-em28xx-dvb \
+    ${DVBPROVIDER}-module-tda10071 \
+    firmware-dvb-fe-tda10071 \
+    "
 
 PV = "1.0"
 PR = "r3"

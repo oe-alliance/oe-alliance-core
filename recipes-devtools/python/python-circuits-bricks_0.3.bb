@@ -15,9 +15,23 @@ inherit distutils
 SRC_URI[md5sum] = "49c5afa93b01f9ffa30404c75a382877"
 SRC_URI[sha256sum] = "0854a14de8cdf919e0451f99697222906f743c5867d7830248bd575a3655d814"
 
+PACKAGES =+ " ${PN}-src ${PN}-tests"
+RDEPENDS_{PN}-src = "${PN}"
+FILES_${PN}-src = " \
+    ${PYTHON_SITEPACKAGES_DIR}/*/*.py \
+    ${PYTHON_SITEPACKAGES_DIR}/*/*/*.py \
+    ${PYTHON_SITEPACKAGES_DIR}/*/*/*/*.py \
+    ${PYTHON_SITEPACKAGES_DIR}/*/*/*/*/*.py \
+    "
+
 FILES_${PN}-tests = " \
-  ${libdir}/${PYTHON_DIR}/site-packages/*/tests \
-  ${libdir}/${PYTHON_DIR}/site-packages/*/*/tests \
+  ${PYTHON_SITEPACKAGES_DIR}/*/test \
+  ${PYTHON_SITEPACKAGES_DIR}/*/*/test \
 "
 
-PACKAGES =+ "${PN}-tests"
+# some txt files which should go into -doc
+FILES_${PN}-doc += " \
+    ${PYTHON_SITEPACKAGES_DIR}/*-info \
+    ${PYTHON_SITEPACKAGES_DIR}/*/*-info \
+    "
+

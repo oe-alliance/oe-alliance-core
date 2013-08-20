@@ -18,12 +18,12 @@ S = "${WORKDIR}/git"
 FILES_${PN} = "${bindir}/*"
 
 do_compile() {
-	make -f Makefile.alsa hairtunes
-	${STRIP} ${S}/hairtunes
+    make -f Makefile.alsa hairtunes
+    ${STRIP} ${S}/hairtunes
 }
 
 do_install() {
-	install -d ${D}/${bindir}
-	install -m 755 ${S}/hairtunes ${D}/${bindir}
+    install -d ${D}/${bindir}
+    install -m 755 ${S}/hairtunes ${D}/${bindir}
 }
 

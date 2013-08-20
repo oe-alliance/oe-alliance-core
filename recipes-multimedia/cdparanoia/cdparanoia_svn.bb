@@ -9,12 +9,12 @@ SRCREV = "17289"
 PV = "10.2+svnr${SRCPV}"
 PR = "r1"
 
-SRC_URI = "svn://svn.xiph.org/trunk;module=cdparanoia;proto=http \
-	 file://fixes10.patch \
-	 file://Makefile.in.patch \
-	 file://interface_Makefile.in.patch \
-	 file://paranoia_Makefile.in.patch \
-	 file://configure.in.patch"
+SRC_URI = "svn://svn.xiph.org/trunk;module=cdparanoia;protocol=http \
+     file://fixes10.patch \
+     file://Makefile.in.patch \
+     file://interface_Makefile.in.patch \
+     file://paranoia_Makefile.in.patch \
+     file://configure.in.patch"
 
 S = "${WORKDIR}/cdparanoia"
 
@@ -36,8 +36,8 @@ FILES_libcdparanoia-dev = "${includedir} ${libdir}/lib*${SOLIBSDEV} ${libdir}/pk
 FILES_libcdparanoia-static = "${libdir}/*.a"
 
 do_install() {
-	oe_runmake BINDIR="${D}${bindir}" MANDIR="${D}${datadir}/man/" \
-		   INCLUDEDIR="${D}${includedir}" LIBDIR="${D}${libdir}" \
-		   PKGCONFIGDIR="${D}${libdir}/pkgconfig" \
-		   install
+    oe_runmake BINDIR="${D}${bindir}" MANDIR="${D}${datadir}/man/" \
+           INCLUDEDIR="${D}${includedir}" LIBDIR="${D}${libdir}" \
+           PKGCONFIGDIR="${D}${libdir}/pkgconfig" \
+           install
 }

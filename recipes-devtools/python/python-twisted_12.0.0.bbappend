@@ -1,15 +1,18 @@
-PRINC = "1"
+PRINC = "3"
 
-inherit setuptools openpli-distutils
-
-do_install() {
-	distutils_do_install_keep_pyo
-}
-
-PACKAGES =+ "${PN}-src"
+PACKAGES =+ " ${PN}-src"
 RDEPENDS_{PN}-src = "${PN}"
 FILES_${PN}-src = " \
-	${libdir}/${PYTHON_DIR}/site-packages/twisted/*.py \
-	${libdir}/${PYTHON_DIR}/site-packages/twisted/*/*.py \
-	${libdir}/${PYTHON_DIR}/site-packages/twisted/*/*/*.py \
-	"
+    ${PYTHON_SITEPACKAGES_DIR}/*/*.py \
+    ${PYTHON_SITEPACKAGES_DIR}/*/*/*.py \
+    ${PYTHON_SITEPACKAGES_DIR}/*/*/*/*.py \
+    ${PYTHON_SITEPACKAGES_DIR}/*/*/*/*/*.py \
+    "
+
+# some txt files which should go into -doc
+FILES_${PN}-doc += " \
+    ${PYTHON_SITEPACKAGES_DIR}/*-info \
+    ${PYTHON_SITEPACKAGES_DIR}/*/*-info \
+    ${PYTHON_SITEPACKAGES_DIR}/twisted/topfiles \
+    "
+

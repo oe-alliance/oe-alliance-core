@@ -7,7 +7,7 @@ HOMEPAGE = "http://www.rarlab.com/"
 PR = "r0"
 
 SRC_URI = "http://www.rarlab.com/rar/unrarsrc-${PV}.tar.gz;name=unrar \
-		file://makefile-nostrip.patch"
+        file://makefile-nostrip.patch"
 SRC_URI[unrar.md5sum] = "203bc1e43935124db9635262cfd00b3f"
 SRC_URI[unrar.sha256sum] = "7f61b0ef2a173f5a16daab53eaa838cc8fd6ec8cc72ce5f5b8cebe8e33c6e403"
 

@@ -36,8 +36,8 @@ RDEPENDS_enigma2-plugin-skins-jules-black-hd-supremacy = "${PN}"
 S = "${WORKDIR}/git"
 
 do_install() {
-	install -d ${D}/usr/share
-	cp -rp ${S}/usr/share/* ${D}/usr/share/
-	chmod -R a+rX ${D}/usr/share/enigma2/
-	chmod 644 ${D}/usr/share/fonts/*.ttf
+    install -d ${D}/usr/share
+    cp -rp ${S}/usr/share/* ${D}/usr/share/
+    chmod -R a+rX ${D}/usr/share/enigma2/
+    chmod 644 ${D}/usr/share/fonts/*.ttf
 }
