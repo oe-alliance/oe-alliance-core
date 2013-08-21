@@ -4,11 +4,9 @@ SECTION = "kernel/modules"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://iwpriv_usage.txt;md5=8876ae2c103446a442658f1cc2a01b76"
 
+PR = "r6"
+
 inherit module
-
-PR = "r4"
-
-MACHINE_KERNEL_PR_append = ".1"
 
 SRC_URI = "http://source.mynonpublic.com/20120911_RT3573_Linux_STA_v2.5.0.0_Rev3_DPO.tar.gz"
 

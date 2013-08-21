@@ -2,7 +2,7 @@ DESCRIPTION = "Ralink 3070"
 SECTION = "kernel/modules"
 LICENSE = "GPLv2"
 
-MACHINE_KERNEL_PR_append = ".2"
+PR = "r4"
 
 inherit module
 

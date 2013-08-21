@@ -4,11 +4,9 @@ SECTION = "kernel/modules"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://iwpriv_usage.txt;md5=8876ae2c103446a442658f1cc2a01b76"
 
+PR = "r3"
+
 inherit module
-
-PR = "r2"
-
-MACHINE_KERNEL_PR_append = ".1"
 
 SRC_URI = "http://source.mynonpublic.com/rt5572_2.6.1.3.tar.gz"
 

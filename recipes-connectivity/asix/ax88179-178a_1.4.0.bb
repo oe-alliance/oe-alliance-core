@@ -3,6 +3,10 @@ HOMEPAGE = "http://www.asix.com.tw/"
 SECTION = "kernel/modules"
 LICENSE = "GPLv2"
 
+PR = "r3"
+
+inherit module
+
 LIC_FILES_CHKSUM = "file://readme;endline=19;md5=f87a675da5e11ab9def922704bdda58b"
 
 inherit module machine_kernel_pr
@@ -32,8 +36,6 @@ SRC_URI_append_dm800sev2 = " \
             "
             
 S = "${WORKDIR}/AX88179_178A_LINUX_DRIVER_v1.4.0_SOURCE"
-
-MACHINE_KERNEL_PR_append = ".0"
 
 EXTRA_OEMAKE = "KSRC=${STAGING_KERNEL_DIR}"
 

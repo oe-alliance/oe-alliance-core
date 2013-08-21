@@ -4,7 +4,7 @@ HOMEPAGE = "http://eng.ralinktech.com.tw/support.php?s=2"
 SECTION = "kernel/modules"
 #LICENSE = "GPLv2"
 
-MACHINE_KERNEL_PR_append = ".1"
+PR = "r3"
 
 inherit module
 

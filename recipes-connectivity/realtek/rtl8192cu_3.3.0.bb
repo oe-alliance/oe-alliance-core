@@ -6,7 +6,9 @@ LIC_FILES_CHKSUM = "file://hal/hal_init.c;beginline=1;endline=19;md5=f8d10a6bd2f
 
 RREPLACES_${PN} = "kernel-module-rtl8192cu"
 
-inherit module machine_kernel_pr
+PR = "r3"
+
+inherit module
 
 SRC_URI = "http://downloads.pli-images.org/misc/rtl8188C_8192C_8192D_usb_linux_v3.3.0_2971.20111128.tar.gz \
     file://additional_productids.patch \
@@ -14,7 +16,7 @@ SRC_URI = "http://downloads.pli-images.org/misc/rtl8188C_8192C_8192D_usb_linux_v
 
 S = "${WORKDIR}/rtl8188C_8192C_8192D_usb_linux_v3.3.0_2971.20111128"
 
-MACHINE_KERNEL_PR_append = ".3"
+inherit module
 
 EXTRA_OEMAKE = "KSRC=${STAGING_KERNEL_DIR}"
 
