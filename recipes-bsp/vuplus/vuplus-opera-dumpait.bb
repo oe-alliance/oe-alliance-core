@@ -8,9 +8,9 @@ inherit autotools pkgconfig gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r4"
+PR = "r5"
 
-PACKAGES = "${PN} ${PN}-src"
+PACKAGES += " ${PN}-src"
 
 SRC_URI = "git://code.vuplus.com/git/dumpait.git;protocol=git file://fix-gcc47-compile.patch"
 
@@ -23,5 +23,5 @@ do_install() {
 }
 
 FILES_${PN} = "${libdir}/${DESTDIR}/dumpait"
+FILES_${PN}-dbg = "${libdir}/${DESTDIR}/.debug"
 FILES_${PN}-src = "/usr/src"
-
