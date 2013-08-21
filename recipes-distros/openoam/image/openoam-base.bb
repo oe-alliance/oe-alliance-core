@@ -9,9 +9,9 @@ PR = "r5"
 inherit task
 
 RDEPENDS = "\
-	oe-alliance-base \
-	openoam-enigma2 \
-	openoam-bootlogo \
-	openssh-sftp-server \
+    oe-alliance-base \
+    openoam-enigma2 \
+    openoam-bootlogo \
+    openssh-sftp-server \
 "
 

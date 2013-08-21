@@ -6,12 +6,12 @@ require conf/license/license-gplv2.inc
 DVBPROVIDER ?= "kernel"
 
 RDEPENDS_${PN} = " \
-	${DVBPROVIDER}-module-smsusb \
-	${DVBPROVIDER}-module-smsdvb \
-	firmware-dvb-siano \
-	firmware-dvb-nova-12mhz-b0 \
-	firmware-isdbt-nova-12mhz-b0 \
-	"
+    ${DVBPROVIDER}-module-smsusb \
+    ${DVBPROVIDER}-module-smsdvb \
+    firmware-dvb-siano \
+    firmware-dvb-nova-12mhz-b0 \
+    firmware-isdbt-nova-12mhz-b0 \
+    "
 
 PV = "1.0"
 PR = "r6"

@@ -16,71 +16,71 @@ CSSTOP  ?= "exec start-stop-daemon -K -R 2 -x /usr/bin/${CSNAME}"
 # Generate a simplistic standard init script
 # (sorry for the sleep 1, but start-stop-daemon -R does not work as advertised)
 do_compile () {
-	if [ ! -f init.${CSNAME} ]
-	then
-		cat > init.${CSNAME} << EOF
+    if [ ! -f init.${CSNAME} ]
+    then
+        cat > init.${CSNAME} << EOF
 #!/bin/sh
 case "\$1" in
 start)
-	${CSSTART}
-	exit
-	;;
+    ${CSSTART}
+    exit
+    ;;
 stop)
-	${CSSTOP}
-	exit
-	;;
+    ${CSSTOP}
+    exit
+    ;;
 restart|reload)
-	\$0 stop
-	sleep 1
-	\$0 start
-	;;
+    \$0 stop
+    sleep 1
+    \$0 start
+    ;;
 version)
-	echo "${PV}"
-	;;
+    echo "${PV}"
+    ;;
 info)
-	echo "${CSNAME} ${PV}"
-	;;
+    echo "${CSNAME} ${PV}"
+    ;;
 *)
-	echo "Usage: \$0 start|stop|restart"
-	exit 1
-	;;
+    echo "Usage: \$0 start|stop|restart"
+    exit 1
+    ;;
 esac
 exit 0
 EOF
 
-	fi
+    fi
 }
 
 # Install routine, should be ok for most cams.
 do_install_append () {
-	install -d ${D}/etc/init.d
-	install -m 755 ${S}/init.${CSNAME} ${D}/etc/init.d/cardserver.${CSNAME}
+    install -d ${D}/etc/init.d
+    install -m 755 ${S}/init.${CSNAME} ${D}/etc/init.d/cardserver.${CSNAME}
 }
 
 # If no cam selected yet, install and start this cam (and don't start it on the build host).
 pkg_postinst_${PN}_append () {
-	if [ ! -e ${CSLINK} ] || [ "$D/etc/init.d/cardserver.None" == `readlink -f $D${CSLINK}` ]
-	then
-		rm -f $D${CSLINK}
-		ln -s ${CSPATH} $D${CSLINK}
-		echo "Switching default cardserver to ${CSNAME}"
-	fi
-	if [ "${CSPATH}" == `readlink -f ${CSLINK}` ]
-	then
-		echo "Cardserver is selected as default, (re)starting ${CSNAME}"
-		${CSPATH} restart
-	fi
+    if [ ! -e ${CSLINK} ] || [ "$D/etc/init.d/cardserver.None" == `readlink -f $D${CSLINK}` ]
+    then
+        rm -f $D${CSLINK}
+        ln -s ${CSPATH} $D${CSLINK}
+        echo "Switching default cardserver to ${CSNAME}"
+    fi
+    if [ "${CSPATH}" == `readlink -f ${CSLINK}` ]
+    then
+        echo "Cardserver is selected as default, (re)starting ${CSNAME}"
+        ${CSPATH} restart
+    fi
 }
 
 # Stop this cam (if running), and move softlink to None if we're the current cam
 pkg_prerm_${PN}_prepend () {
-	${CSPATH} stop
-	OLDLINK=`readlink -f ${CSLINK}`
-	if [ "${OLDLINK}" == "${CSPATH}" ]
-	then
-		echo "${CSNAME} was selected, now selecting None as cardserver"
-		rm -f ${CSLINK}
-		ln -s cardserver.None ${CSLINK}
-	fi
+    ${CSPATH} stop
+    OLDLINK=`readlink -f ${CSLINK}`
+    if [ "${OLDLINK}" == "${CSPATH}" ]
+    then
+        echo "${CSNAME} was selected, now selecting None as cardserver"
+        rm -f ${CSLINK}
+        ln -s cardserver.None ${CSLINK}
+    fi
 }
 

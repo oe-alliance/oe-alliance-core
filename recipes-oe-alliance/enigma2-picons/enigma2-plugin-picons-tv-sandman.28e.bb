@@ -25,10 +25,10 @@ PACKAGES = "${PN}"
 FILES_${PN} = "/picon"
 
 do_install() {
-	install -d ${D}/picon
-	install -m 0644 ${WORKDIR}/picon/*.* ${D}/picon
+    install -d ${D}/picon
+    install -m 0644 ${WORKDIR}/picon/*.* ${D}/picon
 }
 
 do_install_append() {
-	find ${D}/picon/ -name 'picon_default.png' -exec rm {} \;
+    find ${D}/picon/ -name 'picon_default.png' -exec rm {} \;
 }

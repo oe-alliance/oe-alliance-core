@@ -1,22 +1,22 @@
 MACHINE_BRAND = "IXUSS"
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS = " \
-	ixuss-dvb-modules-${MACHINE} \
-	"
+    ixuss-dvb-modules-${MACHINE} \
+    "
 
 DVBPROVIDER = "kernel"
 
 MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS = "\
-	kernel-module-cdfs \
-	kernel-module-ext2 \
-	kernel-module-ext3 \
-	kernel-module-ext4 \
-	"
+    kernel-module-cdfs \
+    kernel-module-ext2 \
+    kernel-module-ext3 \
+    kernel-module-ext4 \
+    "
 
 MACHINE_EXTRA_RRECOMMENDS = " \
-	ixuss-shutdown \
-	gst-plugin-dvbmediasink \
-	"
+    ixuss-shutdown \
+    gst-plugin-dvbmediasink \
+    "
 
 module_autoload_ext2 = "ext2"
 module_autoload_ext3 = "ext3"
@@ -49,22 +49,22 @@ MKUBIFS_ARGS = "-m 2048 -e 126976 -c 4096"
 UBINIZE_ARGS = "-m 2048 -p 128KiB"
 
 IMAGE_CMD_ubi_prepend = " \
-	rm -rf ${IMAGE_ROOTFS}/boot/*; \
-	rm -rf ${IMAGE_ROOTFS}/tmp/*; \
-	"
+    rm -rf ${IMAGE_ROOTFS}/boot/*; \
+    rm -rf ${IMAGE_ROOTFS}/tmp/*; \
+    "
 
 IMAGE_CMD_ubi_append = " \
-	mkdir -p ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}; \
-	cp ${DEPLOY_DIR_IMAGE}/cfe-bootlogo.bmp ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/cfe-bootlogo.bmp; \
-	mv ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.ubi ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/rootfs.bin; \
-	gzip -9c ${DEPLOY_DIR_IMAGE}/vmlinux-${MACHINE}.bin > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/kernel.bin; \
-	echo ${DISTRO_NAME}-${DISTRO_VERSION}.${BUILD_VERSION} > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/imageversion; \
-	echo "rename this file to 'force' to force an update without confirmation" > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/noforce; \
-	cd ${DEPLOY_DIR_IMAGE}; \
-	zip ${IMAGE_NAME}_usb.zip ${IMAGEDIR}/*; \
-	rm -f ${DEPLOY_DIR_IMAGE}/*.ubifs; \
-	rm -rf ${IMAGEDIR}; \
-	"
+    mkdir -p ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}; \
+    cp ${DEPLOY_DIR_IMAGE}/cfe-bootlogo.bmp ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/cfe-bootlogo.bmp; \
+    mv ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.ubi ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/rootfs.bin; \
+    gzip -9c ${DEPLOY_DIR_IMAGE}/vmlinux-${MACHINE}.bin > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/kernel.bin; \
+    echo ${DISTRO_NAME}-${DISTRO_VERSION}.${BUILD_VERSION} > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/imageversion; \
+    echo "rename this file to 'force' to force an update without confirmation" > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/noforce; \
+    cd ${DEPLOY_DIR_IMAGE}; \
+    zip ${IMAGE_NAME}_usb.zip ${IMAGEDIR}/*; \
+    rm -f ${DEPLOY_DIR_IMAGE}/*.ubifs; \
+    rm -rf ${IMAGEDIR}; \
+    "
 
 TARGET_FPU = "hard"
 

@@ -15,9 +15,9 @@ LDFLAGS += "-lfreetype -lpng"
 inherit autotools pkgconfig
 
 do_install() {
-	install -d ${D}${bindir}
-	install -m 0755 displayvfd ${D}${bindir}
-	
+    install -d ${D}${bindir}
+    install -m 0755 displayvfd ${D}${bindir}
+    
 }
 
 FILES_${PN} = "${bindir}"

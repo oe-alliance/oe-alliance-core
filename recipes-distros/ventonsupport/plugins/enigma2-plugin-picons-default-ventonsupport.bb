@@ -23,11 +23,11 @@ FILES_${PN} = "/picon/*"
 S="${WORKDIR}/picon"
 
 do_install() {
-	install -d ${D}/picon
+    install -d ${D}/picon
 
-	for f in *.png
-	do
-		install -m 644 ${f} ${D}/picon/${f}
-	done
+    for f in *.png
+    do
+        install -m 644 ${f} ${D}/picon/${f}
+    done
 }
 

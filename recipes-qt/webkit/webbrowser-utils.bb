@@ -37,6 +37,6 @@ SRC_URI[gbquad.sha256sum] = "4f14411a44feb5befece23dfd06705142b9a96f1a9f11a7aaa9
 S = "${WORKDIR}"
 
 do_install() {
-	install -d ${D}/${bindir};
-	install -m 0755 arora ${D}/${bindir};
+    install -d ${D}/${bindir};
+    install -m 0755 arora ${D}/${bindir};
 }

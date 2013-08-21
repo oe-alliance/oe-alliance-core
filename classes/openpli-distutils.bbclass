@@ -14,7 +14,7 @@ distutils_do_install_keep_pyo() {
             sed -i -e s:${D}::g $i
         done
 
-        if test -e ${D}${bindir} ; then	
+        if test -e ${D}${bindir} ; then    
             for i in ${D}${bindir}/* ; do \
                 sed -i -e s:${STAGING_BINDIR_NATIVE}:${bindir}:g $i
             done

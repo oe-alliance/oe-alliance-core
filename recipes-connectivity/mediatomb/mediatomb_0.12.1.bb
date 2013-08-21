@@ -12,11 +12,11 @@ SRC_URI[sha256sum] = "31163c34a7b9d1c9735181737cb31306f29f1f2a0335fb4f53ecccf8f6
 
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/mediatomb/mediatomb-${PV}.tar.gz \
-		file://youtube_warning.patch \
-		file://libav_0.7_support.patch \
-		file://config.xml \
-		file://init \
-		"
+        file://youtube_warning.patch \
+        file://libav_0.7_support.patch \
+        file://config.xml \
+        file://init \
+        "
 
 S = "${WORKDIR}/mediatomb-${PV}"
 
@@ -29,13 +29,13 @@ inherit autotools pkgconfig update-rc.d
 
 EXTRA_OECONF = "--disable-mysql \
                 --disable-rpl-malloc \
-				--enable-sqlite3 \
+                --enable-sqlite3 \
                 --enable-libjs \
-				--enable-libmagic \
-				--enable-id3lib \
-				--enable-libexif \
-				--enable-inotify \
-				--enable-db-autocreate \
+                --enable-libmagic \
+                --enable-id3lib \
+                --enable-libexif \
+                --enable-inotify \
+                --enable-db-autocreate \
                 --disable-largefile \
                 --with-sqlite3-h=${STAGING_INCDIR} \
                 --with-sqlite3-libs=${STAGING_LIBDIR} \
@@ -49,10 +49,10 @@ EXTRA_OECONF = "--disable-mysql \
                 --with-js-libs=${STAGING_LIBDIR} \
                 --with-id3lib-h=${STAGING_INCDIR} \
                 --with-id3lib-libs=${STAGING_LIBDIR} \
-				--with-ffmpeg-h=${STAGING_INCDIR} \
-				--with-ffmpeg-libs=${STAGING_LIBDIR} \
+                --with-ffmpeg-h=${STAGING_INCDIR} \
+                --with-ffmpeg-libs=${STAGING_LIBDIR} \
                 --with-search=${STAGING_DIR_HOST}${prefix}/local \
-				ac_cv_header_sys_inotify_h=yes"
+                ac_cv_header_sys_inotify_h=yes"
 
 do_install() {
     oe_runmake 'DESTDIR=${D}' install

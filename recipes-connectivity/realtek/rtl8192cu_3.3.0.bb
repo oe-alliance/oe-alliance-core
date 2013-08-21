@@ -9,8 +9,8 @@ RREPLACES_${PN} = "kernel-module-rtl8192cu"
 inherit module machine_kernel_pr
 
 SRC_URI = "http://downloads.pli-images.org/misc/rtl8188C_8192C_8192D_usb_linux_v3.3.0_2971.20111128.tar.gz \
-	file://additional_productids.patch \
-	"
+    file://additional_productids.patch \
+    "
 
 S = "${WORKDIR}/rtl8188C_8192C_8192D_usb_linux_v3.3.0_2971.20111128"
 
@@ -19,8 +19,8 @@ MACHINE_KERNEL_PR_append = ".3"
 EXTRA_OEMAKE = "KSRC=${STAGING_KERNEL_DIR}"
 
 do_install() {
-	install -d ${D}/lib/modules/${KERNEL_VERSION}/kernel/drivers/net/wireless
-	install -m 0644 ${S}/8192cu.ko ${D}${base_libdir}/modules/${KERNEL_VERSION}/kernel/drivers/net/wireless
+    install -d ${D}/lib/modules/${KERNEL_VERSION}/kernel/drivers/net/wireless
+    install -m 0644 ${S}/8192cu.ko ${D}${base_libdir}/modules/${KERNEL_VERSION}/kernel/drivers/net/wireless
 }
 
 SRC_URI[md5sum] = "6d5bd5f94d9d6d6667393839c1861101"

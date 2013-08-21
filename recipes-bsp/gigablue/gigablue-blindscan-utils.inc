@@ -15,9 +15,9 @@ SRC_URI = "http://archiv.openmips.com/gigablue-blindscan-utils-${DOWNLOADMACHINE
 S = "${WORKDIR}/blindscan-utils"
 
 do_install() {
-	install -d "${D}/${bindir}"
-	install -m 0755 "${S}/tda1002x" "${D}/${bindir}"
-	install -m 0755 "${S}/gigablue_blindscan" "${D}/${bindir}"	
+    install -d "${D}/${bindir}"
+    install -m 0755 "${S}/tda1002x" "${D}/${bindir}"
+    install -m 0755 "${S}/gigablue_blindscan" "${D}/${bindir}"    
 }
 
 FILES_gigablue-blindscan-dvbc-utils-${MACHINE} = "${bindir}/tda1002x"

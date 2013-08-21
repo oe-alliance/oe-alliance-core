@@ -21,13 +21,13 @@ SRC_URI_gb800ueplus = " file://gb800ueplus/lcdwaitkey.bin file://gb800ueplus/lcd
 ALLOW_EMPTY_${PN} = "1"
 
 do_deploy() {
-	if [ -e burn.bat ]; then
-		install -m 0644 burn.bat ${DEPLOYDIR}/burn.bat
-	fi
-	if [ -e ${MACHINE}/lcdwaitkey.bin ]; then
-		install -m 0644 ${MACHINE}/lcdwaitkey.bin ${DEPLOYDIR}/lcdwaitkey.bin
-		install -m 0644 ${MACHINE}/lcdwarning.bin ${DEPLOYDIR}/lcdwarning.bin
-	fi
+    if [ -e burn.bat ]; then
+        install -m 0644 burn.bat ${DEPLOYDIR}/burn.bat
+    fi
+    if [ -e ${MACHINE}/lcdwaitkey.bin ]; then
+        install -m 0644 ${MACHINE}/lcdwaitkey.bin ${DEPLOYDIR}/lcdwaitkey.bin
+        install -m 0644 ${MACHINE}/lcdwarning.bin ${DEPLOYDIR}/lcdwarning.bin
+    fi
 }
 
 addtask deploy before do_build after do_install

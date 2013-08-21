@@ -26,11 +26,11 @@ FILES_${PN}-po = "/usr/lib/enigma2/python/Plugins/Extensions/EnhancedMovieCenter
 inherit autotools
 
 EXTRA_OECONF = "\
-	--with-libsdl=no --with-boxtype=${MACHINE} --with-po \
-	BUILD_SYS=${BUILD_SYS} \
-	HOST_SYS=${HOST_SYS} \
-	STAGING_INCDIR=${STAGING_INCDIR} \
-	STAGING_LIBDIR=${STAGING_LIBDIR} \
+    --with-libsdl=no --with-boxtype=${MACHINE} --with-po \
+    BUILD_SYS=${BUILD_SYS} \
+    HOST_SYS=${HOST_SYS} \
+    STAGING_INCDIR=${STAGING_INCDIR} \
+    STAGING_LIBDIR=${STAGING_LIBDIR} \
 "
 
 CONFFILES_${PN} = "${sysconfdir}/enigma2/emc-hide.cfg ${sysconfdir}/enigma2/emc-noscan.cfg ${sysconfdir}/enigma2/emc-permsort.cfg ${sysconfdir}/enigma2/emc-topdir.cfg"

@@ -9,9 +9,9 @@ PV = "1.0.99+cvs${SRCDATE}"
 PR = "r4"
 
 SRC_URI = "cvs://anonymous@minidlna.cvs.sourceforge.net/cvsroot/minidlna;module=minidlna \
-		file://default_sqlite_caches.diff \
-		file://minidlna.conf \
-		file://init"
+        file://default_sqlite_caches.diff \
+        file://minidlna.conf \
+        file://init"
 
 S = "${WORKDIR}/${PN}"
 
@@ -27,8 +27,8 @@ INITSCRIPT_NAME = "minidlna"
 INITSCRIPT_PARAMS = "defaults 20"
 
 do_install_append() {
-	install -d ${D}${sysconfdir}
-	install -m 644 minidlna.conf ${D}${sysconfdir}
-	install -d ${D}${sysconfdir}/init.d/
-	install -m 755 ${WORKDIR}/init ${D}${sysconfdir}/init.d/${PN}
+    install -d ${D}${sysconfdir}
+    install -m 644 minidlna.conf ${D}${sysconfdir}
+    install -d ${D}${sysconfdir}/init.d/
+    install -m 755 ${WORKDIR}/init ${D}${sysconfdir}/init.d/${PN}
 }

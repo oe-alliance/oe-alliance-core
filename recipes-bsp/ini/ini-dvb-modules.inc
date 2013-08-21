@@ -16,10 +16,10 @@ do_compile() {
 }
 
 do_install() {
-	install -d ${D}/lib/modules/${KV}/extra
-	install -d ${D}/${sysconfdir}/modules-load.d
-	for i in dvb; do
-		install -m 0755 ${WORKDIR}/$i.ko ${D}/lib/modules/${KV}/extra
-		echo $i >> ${D}/${sysconfdir}/modules-load.d/_${MACHINE}.conf
-	done
+    install -d ${D}/lib/modules/${KV}/extra
+    install -d ${D}/${sysconfdir}/modules-load.d
+    for i in dvb; do
+        install -m 0755 ${WORKDIR}/$i.ko ${D}/lib/modules/${KV}/extra
+        echo $i >> ${D}/${sysconfdir}/modules-load.d/_${MACHINE}.conf
+    done
 }

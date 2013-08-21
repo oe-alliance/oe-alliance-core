@@ -9,13 +9,13 @@ PR = "r3"
 inherit task
 
 RDEPENDS = "\
-	oe-alliance-base \
-	odinsupport-enigma2 \
-	odinsupport-bootlogo \
-	odinsupport-spinner \
-	odinsupport-feed-config \
-	libcrypto-compat \
-	ntfs-3g \
-	hddtemp \
-	busybox-cron \
+    oe-alliance-base \
+    odinsupport-enigma2 \
+    odinsupport-bootlogo \
+    odinsupport-spinner \
+    odinsupport-feed-config \
+    libcrypto-compat \
+    ntfs-3g \
+    hddtemp \
+    busybox-cron \
 "

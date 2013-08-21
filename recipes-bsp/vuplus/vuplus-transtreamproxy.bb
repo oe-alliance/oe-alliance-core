@@ -8,15 +8,15 @@ PKGV = "1.0+git${GITPKGV}"
 PR = "2"
 
 SRC_URI = "git://schwerkraft.elitedvb.net/streamproxy/streamproxy.git;protocol=git \
-	file://transcoding.patch \
-	"
+    file://transcoding.patch \
+    "
 
 inherit autotools
 
 S = "${WORKDIR}/git"
 
 do_install() {
-	install -d ${D}/usr/bin
-	install -m 0755 ${S}/src/streamproxy ${D}/usr/bin/transtreamproxy
+    install -d ${D}/usr/bin
+    install -m 0755 ${S}/src/streamproxy ${D}/usr/bin/transtreamproxy
 }
 

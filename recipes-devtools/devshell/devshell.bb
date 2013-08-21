@@ -6,7 +6,7 @@ require conf/license/license-gplv2.inc
 inherit autotools pkgconfig
 
 do_configure() {
-	:
+    :
 }
 
 def devshell_emit_env(o, d, all=False, funcwhitelist=None):
@@ -31,39 +31,39 @@ def devshell_emit_env(o, d, all=False, funcwhitelist=None):
                 break
 
 python do_compile() {
-	import os
-	import os.path
+    import os
+    import os.path
 
-	workdir = bb.data.getVar('WORKDIR', d, 1)
-	shellfile = os.path.join(workdir, bb.data.expand("${TARGET_PREFIX}${DISTRO}-${MACHINE}-devshell", d))
+    workdir = bb.data.getVar('WORKDIR', d, 1)
+    shellfile = os.path.join(workdir, bb.data.expand("${TARGET_PREFIX}${DISTRO}-${MACHINE}-devshell", d))
 
-	f = open(shellfile, "w")
+    f = open(shellfile, "w")
 
-	# emit variables and shell functions
+    # emit variables and shell functions
         devshell_emit_env(f, d, False, ["die", "oe", "autotools_do_configure"])
 
-	f.close()
+    f.close()
 }
 
 do_install() {
-	:
+    :
 }
 
 do_deploy() {
-	shellfile="${TARGET_PREFIX}${DISTRO}-${MACHINE}-devshell"
+    shellfile="${TARGET_PREFIX}${DISTRO}-${MACHINE}-devshell"
 
-	cd ${WORKDIR}
+    cd ${WORKDIR}
 
-	cp $shellfile tmpfile
-	echo "#!/bin/bash --rcfile" > $shellfile
-	sed -e "s:${S}:.:g" -e "s:exit 1:true:" tmpfile >> $shellfile
+    cp $shellfile tmpfile
+    echo "#!/bin/bash --rcfile" > $shellfile
+    sed -e "s:${S}:.:g" -e "s:exit 1:true:" tmpfile >> $shellfile
 
-	echo "export PS1='[OE::${TARGET_PREFIX}${DISTRO}-${MACHINE}]:\w\$ '" >> $shellfile
-	echo "alias ./configure=oe_runconf" >> $shellfile
-	echo "alias make=oe_runmake" >> $shellfile
+    echo "export PS1='[OE::${TARGET_PREFIX}${DISTRO}-${MACHINE}]:\w\$ '" >> $shellfile
+    echo "alias ./configure=oe_runconf" >> $shellfile
+    echo "alias make=oe_runmake" >> $shellfile
 
-	mkdir -p ${DEPLOY_DIR}/addons
-	install -m 755 $shellfile ${DEPLOY_DIR}/addons
+    mkdir -p ${DEPLOY_DIR}/addons
+    install -m 755 $shellfile ${DEPLOY_DIR}/addons
 }
 
 addtask deploy after do_install before do_package

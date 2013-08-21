@@ -1,19 +1,19 @@
 MACHINE_BRAND = "Vu+"
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS = " \
-	vuplus-dvb-modules-${MACHINE} \
-	"
+    vuplus-dvb-modules-${MACHINE} \
+    "
 
 DVBPROVIDER = "kernel"
 
 MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS = "\
-	kernel-module-cdfs \
-	"
+    kernel-module-cdfs \
+    "
 
 MACHINE_EXTRA_RRECOMMENDS = " \
-	vuplus-shutdown \
-	gst-plugin-dvbmediasink \
-	"
+    vuplus-shutdown \
+    gst-plugin-dvbmediasink \
+    "
 
 include conf/machine/include/autoload-filesystems.inc
 
@@ -40,9 +40,9 @@ UBINIZE_ARGS = "-m 2048 -p 128KiB"
 IMAGEDIR ?= "vuplus/${UPDATE_DIR}"
 
 IMAGE_CMD_ubi_prepend = " \
-	rm -rf ${IMAGE_ROOTFS}/boot/*; \
-	rm -rf ${IMAGE_ROOTFS}/tmp/*; \
-	"
+    rm -rf ${IMAGE_ROOTFS}/boot/*; \
+    rm -rf ${IMAGE_ROOTFS}/tmp/*; \
+    "
 
 TARGET_FPU = "hard"
 

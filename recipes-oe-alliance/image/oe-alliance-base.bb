@@ -10,25 +10,25 @@ PR = "r4"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 RDEPENDS = "\
-	oe-alliance-enigma2 \
-	${@base_contains("MACHINE_FEATURES", "wol", "vuplus-coldboot vuplus-ethwol", "", d)} \
-	avahi-daemon \
-	dropbear \
-	early-configure \
-	e2fsprogs-mke2fs \
-	e2fsprogs-e2fsck \
-	e2fsprogs-tune2fs \
-	fakelocale \
-	libavahi-client \
-	ntpdate \
-	opkg \
-	sdparm \
-	task-base \
-	task-core-boot \
-	tzdata \
-	util-linux-sfdisk \
-	util-linux-blkid \
-	volatile-media \
-	vsftpd \
-	"
+    oe-alliance-enigma2 \
+    ${@base_contains("MACHINE_FEATURES", "wol", "vuplus-coldboot vuplus-ethwol", "", d)} \
+    avahi-daemon \
+    dropbear \
+    early-configure \
+    e2fsprogs-mke2fs \
+    e2fsprogs-e2fsck \
+    e2fsprogs-tune2fs \
+    fakelocale \
+    libavahi-client \
+    ntpdate \
+    opkg \
+    sdparm \
+    task-base \
+    task-core-boot \
+    tzdata \
+    util-linux-sfdisk \
+    util-linux-blkid \
+    volatile-media \
+    vsftpd \
+    "
 

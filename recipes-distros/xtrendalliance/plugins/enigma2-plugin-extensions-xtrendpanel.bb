@@ -21,6 +21,6 @@ FILES_${PN} = "/usr/*"
 
 
 do_install() {
-	cp -rp ${S}/usr ${D}/
-	chmod -R 777 ${D}/usr/lib/enigma2/python/Plugins/SystemPlugins/XTPanel
+    cp -rp ${S}/usr ${D}/
+    chmod -R 777 ${D}/usr/lib/enigma2/python/Plugins/SystemPlugins/XTPanel
 }

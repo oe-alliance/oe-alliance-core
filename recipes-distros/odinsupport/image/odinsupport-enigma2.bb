@@ -11,20 +11,20 @@ inherit task
 DEPENDS = "enigma2-pliplugins odinsupport-feeds"
 
 RRECOMMENDS = "\
-	enigma2-skindefault \
-	odinsupport-version-info \
-	enigma2-plugin-extensions-epgsearch \
-	enigma2-plugin-extensions-imdb \
-	enigma2-plugin-extensions-infopanel \
-	enigma2-plugin-extensions-bmediacenter \
-	enigma2-plugin-extensions-cutlisteditor \
-	enigma2-plugin-extensions-cooltvguide \
-	enigma2-plugin-extensions-enhancedmoviecenter \
-	enigma2-plugin-extensions-dvdplayer \
-	enigma2-plugin-extensions-autobackup \
-	enigma2-plugin-systemplugins-autoresolution \
-	enigma2-plugin-systemplugins-softwaremanager \
-	enigma2-plugin-systemplugins-hotplug \
-	enigma2-plugin-systemplugins-videotune \
-	${@base_contains("MACHINE_FEATURES", "blindscan-dvbs", "enigma2-plugin-systemplugins-blindscan" , "", d)} \
-	"
+    enigma2-skindefault \
+    odinsupport-version-info \
+    enigma2-plugin-extensions-epgsearch \
+    enigma2-plugin-extensions-imdb \
+    enigma2-plugin-extensions-infopanel \
+    enigma2-plugin-extensions-bmediacenter \
+    enigma2-plugin-extensions-cutlisteditor \
+    enigma2-plugin-extensions-cooltvguide \
+    enigma2-plugin-extensions-enhancedmoviecenter \
+    enigma2-plugin-extensions-dvdplayer \
+    enigma2-plugin-extensions-autobackup \
+    enigma2-plugin-systemplugins-autoresolution \
+    enigma2-plugin-systemplugins-softwaremanager \
+    enigma2-plugin-systemplugins-hotplug \
+    enigma2-plugin-systemplugins-videotune \
+    ${@base_contains("MACHINE_FEATURES", "blindscan-dvbs", "enigma2-plugin-systemplugins-blindscan" , "", d)} \
+    "

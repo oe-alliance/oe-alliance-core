@@ -8,6 +8,6 @@ PR = "r5"
 inherit task
 
 RRECOMMENDS = "\
-	oe-alliance-skins \
-	enigma2-skins \
-	"
+    oe-alliance-skins \
+    enigma2-skins \
+    "

@@ -11,11 +11,11 @@ inherit task
 DEPENDS = "enigma2-pliplugins ventonsupport-feeds"
 
 RRECOMMENDS = "\
-	enigma2-plugin-systemplugins-fastscan \
-	enigma2-plugin-systemplugins-softwaremanager \
-	enigma2-plugin-extensions-audiosync \
-	enigma2-plugin-systemplugins-positionersetup \
-	enigma2-plugin-systemplugins-videoenhancement \	
-	${@base_contains("MACHINE_FEATURES", "blindscan-dvbs", "enigma2-plugin-systemplugins-blindscan" , "", d)} \
-	${@base_contains("MACHINE_FEATURES", "blindscan-dvbc", "virtual/blindscan-dvbc" , "", d)} \
-	"
+    enigma2-plugin-systemplugins-fastscan \
+    enigma2-plugin-systemplugins-softwaremanager \
+    enigma2-plugin-extensions-audiosync \
+    enigma2-plugin-systemplugins-positionersetup \
+    enigma2-plugin-systemplugins-videoenhancement \    
+    ${@base_contains("MACHINE_FEATURES", "blindscan-dvbs", "enigma2-plugin-systemplugins-blindscan" , "", d)} \
+    ${@base_contains("MACHINE_FEATURES", "blindscan-dvbc", "virtual/blindscan-dvbc" , "", d)} \
+    "

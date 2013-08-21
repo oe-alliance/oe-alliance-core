@@ -11,7 +11,7 @@ inherit autotools
 S = "${WORKDIR}/${PN}-${PV}"
 
 do_compile() {
-	oe_runmake
+    oe_runmake
 }
 
 do_install() {

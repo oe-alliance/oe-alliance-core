@@ -23,6 +23,6 @@ RDEPENDS_${PN} = "armymoodbluehd-components"
 S = "${WORKDIR}/git"
 
 do_install() {
-	install -d ${D}/usr/
-	cp -rp ${S}/usr/* ${D}/usr/
+    install -d ${D}/usr/
+    cp -rp ${S}/usr/* ${D}/usr/
 }

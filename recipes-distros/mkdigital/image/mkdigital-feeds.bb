@@ -8,12 +8,12 @@ PR = "r7"
 inherit task
 
 RRECOMMENDS = "\
-	openatv-picons-meta \
-	openatv-3rdparty-plugins \
-	enigma2-skins \
-	enigma2-pliplugins \
-	enigma2-plugin-extensions-project-valerie \
-	enigma2-plugin-extensions-xmltvimport \
-	enigma2-plugin-systemplugins-crossepg \
-	curlftpfs \
-	"
+    openatv-picons-meta \
+    openatv-3rdparty-plugins \
+    enigma2-skins \
+    enigma2-pliplugins \
+    enigma2-plugin-extensions-project-valerie \
+    enigma2-plugin-extensions-xmltvimport \
+    enigma2-plugin-systemplugins-crossepg \
+    curlftpfs \
+    "

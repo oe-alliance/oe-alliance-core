@@ -19,17 +19,17 @@ PKG_kernel-image = "kernel-image"
 RPROVIDES_kernel-base = "kernel-${KERNEL_VERSION}"
 RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
 SRC_URI += "http://azbox-enigma2-project.googlecode.com/files/linux-azbox-${KV}-new-2.tar.bz2;name=azbox-kernel \
-	   file://defconfig \
-	   file://genzbf.c \
-	   file://sigblock.h \
-	   file://zboot.h \
-	   file://emhwlib_registers_tango2.h \
-	   file://sata.patch \
-	   "
+       file://defconfig \
+       file://genzbf.c \
+       file://sigblock.h \
+       file://zboot.h \
+       file://emhwlib_registers_tango2.h \
+       file://sata.patch \
+       "
 
 SRC_URI_append_azboxhd += "http://azbox-enigma2-project.googlecode.com/files/initramfs-${MACHINE}-oe-core-${SRCDATE}.tar.bz2;name=azbox-initrd-${MACHINE} \
-	   file://hdide.patch \
-	   "
+       file://hdide.patch \
+       "
 
 SRC_URI_append_azboxme = "http://azbox-enigma2-project.googlecode.com/files/initramfs-${MACHINE}-oe-core-${SRCDATE}.tar.bz2;name=azbox-initrd-${MACHINE}"
 
@@ -61,23 +61,23 @@ FILES_kernel-image = "/boot/zbimage-linux-xload"
 CFLAGS_prepend = "-I${WORKDIR} "
 
 do_configure_prepend() {
-	oe_machinstall -m 0644 ${WORKDIR}/defconfig ${S}/.config
-	oe_runmake oldconfig
+    oe_machinstall -m 0644 ${WORKDIR}/defconfig ${S}/.config
+    oe_runmake oldconfig
 }
 
 kernel_do_compile() {
-	gcc ${CFLAGS} ${WORKDIR}/genzbf.c -o ${WORKDIR}/genzbf
-	
-	install -m 0755 ${WORKDIR}/genzbf ${S}/arch/mips/boot/
+    gcc ${CFLAGS} ${WORKDIR}/genzbf.c -o ${WORKDIR}/genzbf
+    
+    install -m 0755 ${WORKDIR}/genzbf ${S}/arch/mips/boot/
 
-	unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS MACHINE
-	oe_runmake include/linux/version.h CC="${KERNEL_CC}" LD="${KERNEL_LD}"
-	oe_runmake ${KERNEL_IMAGETYPE} CC="${KERNEL_CC}" LD="${KERNEL_LD}" AR="${AR}" OBJDUMP="${OBJDUMP}" NM="${NM}"
-	oe_runmake modules CC="${KERNEL_CC}" LD="${KERNEL_LD}" AR="${AR}" OBJDUMP="${OBJDUMP}"
+    unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS MACHINE
+    oe_runmake include/linux/version.h CC="${KERNEL_CC}" LD="${KERNEL_LD}"
+    oe_runmake ${KERNEL_IMAGETYPE} CC="${KERNEL_CC}" LD="${KERNEL_LD}" AR="${AR}" OBJDUMP="${OBJDUMP}" NM="${NM}"
+    oe_runmake modules CC="${KERNEL_CC}" LD="${KERNEL_LD}" AR="${AR}" OBJDUMP="${OBJDUMP}"
 }
 
 do_install_append () {
-	install -d ${D}/boot
-	install -m 0644 ${S}/arch/mips/boot/zbimage-linux-xload ${D}/boot/zbimage-linux-xload
+    install -d ${D}/boot
+    install -m 0644 ${S}/arch/mips/boot/zbimage-linux-xload ${D}/boot/zbimage-linux-xload
 
 }

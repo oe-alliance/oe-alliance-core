@@ -41,71 +41,71 @@ SRC_URI[dm7020hd.sha256sum] = "118d7bb57c4b41dd45c7bdd9a056a0745454f42092692fb43
 FILES_${PN} = "/boot /usr/share /etc/init.d"
 
 do_install() {
-	${@base_contains("MACHINE_FEATURES", "dreambox", "install -d ${D}/boot", "", d)}
-	${@base_contains("MACHINE_FEATURES", "dreambox", "install -m 0755 ${S}/dreambox-bootlogo_${BINARY_VERSION}_${MACHINE_ARCH}/bootlogo-${MACHINE_ARCH}.elf.gz ${D}/boot/; install -m 0755 ${S}/dreambox-bootlogo_${BINARY_VERSION}_${MACHINE_ARCH}/bootlogo-${MACHINE_ARCH}.jpg ${D}/boot/", "", d)}
-	install -d ${D}/usr/share
-	install -m 0644 bootlogo.mvi ${D}/usr/share/bootlogo.mvi
-	install -m 0644 backdrop.mvi ${D}/usr/share/backdrop.mvi
-	install -d ${D}/usr/share/enigma2/skin_default
-	install -m 0644 radio.mvi ${D}/usr/share/enigma2/skin_default/radio.mvi
-	install -d ${D}/${sysconfdir}/init.d
-	install -m 0755 ${S}/bootlogo.sh ${D}/${sysconfdir}/init.d/bootlogo
+    ${@base_contains("MACHINE_FEATURES", "dreambox", "install -d ${D}/boot", "", d)}
+    ${@base_contains("MACHINE_FEATURES", "dreambox", "install -m 0755 ${S}/dreambox-bootlogo_${BINARY_VERSION}_${MACHINE_ARCH}/bootlogo-${MACHINE_ARCH}.elf.gz ${D}/boot/; install -m 0755 ${S}/dreambox-bootlogo_${BINARY_VERSION}_${MACHINE_ARCH}/bootlogo-${MACHINE_ARCH}.jpg ${D}/boot/", "", d)}
+    install -d ${D}/usr/share
+    install -m 0644 bootlogo.mvi ${D}/usr/share/bootlogo.mvi
+    install -m 0644 backdrop.mvi ${D}/usr/share/backdrop.mvi
+    install -d ${D}/usr/share/enigma2/skin_default
+    install -m 0644 radio.mvi ${D}/usr/share/enigma2/skin_default/radio.mvi
+    install -d ${D}/${sysconfdir}/init.d
+    install -m 0755 ${S}/bootlogo.sh ${D}/${sysconfdir}/init.d/bootlogo
 }
 
 inherit deploy
 do_deploy() {
-	if [ -e splash.bin ]; then
-		install -m 0644 splash.bin ${DEPLOYDIR}/${BOOTLOGO_FILENAME}
-	fi
-	if [ -e lcdsplash.bin ]; then
-		install -m 0644 lcdsplash.bin ${DEPLOYDIR}/lcdsplash.bin
-	fi
+    if [ -e splash.bin ]; then
+        install -m 0644 splash.bin ${DEPLOYDIR}/${BOOTLOGO_FILENAME}
+    fi
+    if [ -e lcdsplash.bin ]; then
+        install -m 0644 lcdsplash.bin ${DEPLOYDIR}/lcdsplash.bin
+    fi
 }
 
 addtask deploy before do_build after do_install
 
 pkg_preinst() {
-	if grep dm /etc/hostname > /dev/null ; then
-		if [ -z "$D" ]
-		then
-			if mountpoint -q /boot
-			then
-				mount -o remount,rw,compr=none /boot
-			else
-				mount -t jffs2 -o rw,compr=none mtd:'boot partition' /boot
-			fi
-		fi
-	fi
+    if grep dm /etc/hostname > /dev/null ; then
+        if [ -z "$D" ]
+        then
+            if mountpoint -q /boot
+            then
+                mount -o remount,rw,compr=none /boot
+            else
+                mount -t jffs2 -o rw,compr=none mtd:'boot partition' /boot
+            fi
+        fi
+    fi
 }
 
 pkg_postinst() {
-	if grep dm /etc/hostname > /dev/null ; then
-		if [ -z "$D" ]
-		then
-			umount /boot
-		fi
-	fi
+    if grep dm /etc/hostname > /dev/null ; then
+        if [ -z "$D" ]
+        then
+            umount /boot
+        fi
+    fi
 }
 
 pkg_prerm() {
-	if grep dm /etc/hostname > /dev/null ; then
-		if [ -z "$D" ]
-		then
-			if mountpoint -q /boot
-			then
-				mount -o remount,rw,compr=none /boot
-			else
-				mount -t jffs2 -o rw,compr=none mtd:'boot partition' /boot
-			fi
-		fi
-	fi	
+    if grep dm /etc/hostname > /dev/null ; then
+        if [ -z "$D" ]
+        then
+            if mountpoint -q /boot
+            then
+                mount -o remount,rw,compr=none /boot
+            else
+                mount -t jffs2 -o rw,compr=none mtd:'boot partition' /boot
+            fi
+        fi
+    fi    
 }
 
 pkg_postrm() {
-	if grep dm /etc/hostname > /dev/null ; then
-		if [ -z "$D" ]
-		then
-			umount /boot
-		fi
-	fi	
+    if grep dm /etc/hostname > /dev/null ; then
+        if [ -z "$D" ]
+        then
+            umount /boot
+        fi
+    fi    
 }

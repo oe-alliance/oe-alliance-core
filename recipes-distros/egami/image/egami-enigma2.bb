@@ -11,35 +11,35 @@ inherit task
 DEPENDS = "egami-feeds"
 
 RRECOMMENDS = "\
-	${ENIGMA2_PLUGINS} \
-	enigma2-plugin-systemplugins-fastscan \
-	enigma2-plugin-systemplugins-positionersetup \
-	enigma2-plugin-extensions-audiosync \
-	${@base_contains("MACHINE_FEATURES", "blindscan-dvbs", "enigma2-plugin-systemplugins-blindscan" , "", d)} \
-	${@base_contains("MACHINE_FEATURES", "blindscan-dvbc", "virtual/blindscan-dvbc" , "", d)} \
-	"
+    ${ENIGMA2_PLUGINS} \
+    enigma2-plugin-systemplugins-fastscan \
+    enigma2-plugin-systemplugins-positionersetup \
+    enigma2-plugin-extensions-audiosync \
+    ${@base_contains("MACHINE_FEATURES", "blindscan-dvbs", "enigma2-plugin-systemplugins-blindscan" , "", d)} \
+    ${@base_contains("MACHINE_FEATURES", "blindscan-dvbc", "virtual/blindscan-dvbc" , "", d)} \
+    "
 
 ENIGMA2_PLUGINS = "\
         enigma2-plugin-extensions-autotimer \
-	enigma2-plugin-extensions-epgsearch \
-	enigma2-plugin-extensions-imdb \
-	enigma2-plugin-extensions-mediaplayer \
-	enigma2-plugin-extensions-cutlisteditor \
-	enigma2-plugin-extensions-dlnabrowser \
-	enigma2-plugin-extensions-accuweather \
-	enigma2-plugin-extensions-imdb \
-	enigma2-plugin-extensions-inimytube \
-	${@base_contains("MACHINE", "inihdp", "enigma2-plugin-extensions-inihbbtv" , "", d)} \
-	enigma2-plugin-extensions-egamipermanentclock \
-	enigma2-plugin-extensions-egamiboot \
-	enigma2-plugin-extensions-egamifaq \
-	enigma2-plugin-systemplugins-videotune \
-	enigma2-plugin-systemplugins-softwaremanager \
-	enigma2-plugin-systemplugins-hotplug \
-	enigma2-plugin-systemplugins-crossepg \
-	enigma2-plugin-systemplugins-3gmodemmanager \
-	enigma2-plugin-systemplugins-positionersetup \
-	enigma2-plugin-extensions-mediaportal \
-	enigma2-plugin-systemplugins-videoenhancement \
-	enigma2-plugin-skins-egmega32 \
+    enigma2-plugin-extensions-epgsearch \
+    enigma2-plugin-extensions-imdb \
+    enigma2-plugin-extensions-mediaplayer \
+    enigma2-plugin-extensions-cutlisteditor \
+    enigma2-plugin-extensions-dlnabrowser \
+    enigma2-plugin-extensions-accuweather \
+    enigma2-plugin-extensions-imdb \
+    enigma2-plugin-extensions-inimytube \
+    ${@base_contains("MACHINE", "inihdp", "enigma2-plugin-extensions-inihbbtv" , "", d)} \
+    enigma2-plugin-extensions-egamipermanentclock \
+    enigma2-plugin-extensions-egamiboot \
+    enigma2-plugin-extensions-egamifaq \
+    enigma2-plugin-systemplugins-videotune \
+    enigma2-plugin-systemplugins-softwaremanager \
+    enigma2-plugin-systemplugins-hotplug \
+    enigma2-plugin-systemplugins-crossepg \
+    enigma2-plugin-systemplugins-3gmodemmanager \
+    enigma2-plugin-systemplugins-positionersetup \
+    enigma2-plugin-extensions-mediaportal \
+    enigma2-plugin-systemplugins-videoenhancement \
+    enigma2-plugin-skins-egmega32 \
 "

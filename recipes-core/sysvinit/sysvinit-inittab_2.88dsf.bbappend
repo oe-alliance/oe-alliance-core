@@ -13,10 +13,10 @@ S = "${WORKDIR}/sysvinit-${PV}"
 INHIBIT_DEFAULT_DEPS = "1"
 
 do_compile() {
-	:
+    :
 }
 
 do_install() {
-	install -d ${D}${sysconfdir}
-	install -m 0644 ${WORKDIR}/inittab ${D}${sysconfdir}/inittab
+    install -d ${D}${sysconfdir}
+    install -m 0644 ${WORKDIR}/inittab ${D}${sysconfdir}/inittab
 }

@@ -3,7 +3,7 @@ PRINC = "2"
 inherit openpli-distutils
 
 do_install() {
-	distutils_do_install_keep_pyo
+    distutils_do_install_keep_pyo
 }
 
 PACKAGES =+ "${PN}-src"

@@ -9,8 +9,8 @@ PR = "r5"
 inherit task
 
 RDEPENDS = "\
-	oe-alliance-base \
-	openvix-enigma2 \
-	openvix-bootlogo \
+    oe-alliance-base \
+    openvix-enigma2 \
+    openvix-bootlogo \
 "
 

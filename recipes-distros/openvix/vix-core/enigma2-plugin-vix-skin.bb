@@ -67,7 +67,7 @@ RDEPENDS_${EPSM}-vixbmc-metropolis = "vix-vixbmc-hd-common"
 S = "${WORKDIR}/git"
 
 do_install() {
-	install -d ${D}/usr/share/enigma2
-	cp -rp ${S}/* ${D}/usr/share/enigma2/
-	chmod -R a+rX ${D}/usr/share/enigma2/
+    install -d ${D}/usr/share/enigma2
+    cp -rp ${S}/* ${D}/usr/share/enigma2/
+    chmod -R a+rX ${D}/usr/share/enigma2/
 }

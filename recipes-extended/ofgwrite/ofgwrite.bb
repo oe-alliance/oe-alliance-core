@@ -20,6 +20,6 @@ S = "${WORKDIR}/git"
 EXTRA_OEMAKE = "'CC=${CC}' 'RANLIB=${RANLIB}' 'AR=${AR}' 'CFLAGS=${CFLAGS} -I${S}/include -I${S}/ubi-utils/include -I=${includedir}/glib-2.0 -I=/usr/lib/glib-2.0/include -I=${includedir}/c++ -I=${includedir}/c++/mipsel-oe-linux -DWITHOUT_XATTR' 'BUILDDIR=${S}'"
 
 do_install() {
-	install -d ${D}/usr/bin
-	install -m 755 ${S}/ofgwrite ${D}/usr/bin
+    install -d ${D}/usr/bin
+    install -m 755 ${S}/ofgwrite ${D}/usr/bin
 }

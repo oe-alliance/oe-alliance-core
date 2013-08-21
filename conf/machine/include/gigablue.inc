@@ -1,25 +1,25 @@
 MACHINE_BRAND = "GigaBlue"
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS = " \
-	gigablue-dvb-modules-${MACHINE} \
-	"
+    gigablue-dvb-modules-${MACHINE} \
+    "
 
 DVBPROVIDER = "kernel"
 
 MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS = "\
-	kernel-module-cdfs \
-	"
+    kernel-module-cdfs \
+    "
 
 MACHINE_EXTRA_RRECOMMENDS = " \
-	gst-plugin-dvbmediasink \
-	gigablue-cfe \
-	"
+    gst-plugin-dvbmediasink \
+    gigablue-cfe \
+    "
 
 include conf/machine/include/autoload-filesystems.inc
-	
+    
 PREFERRED_PROVIDER_virtual/blindscan-dvbc = "gigablue-blindscan-utils-${MACHINE}"
 PREFERRED_PROVIDER_virtual/blindscan-dvbs = "gigablue-blindscan-utils-${MACHINE}"
-	
+    
 DVBMEDIASINK_CONFIG = "--with-wmv"
 
 TARGET_ARCH = "mipsel"

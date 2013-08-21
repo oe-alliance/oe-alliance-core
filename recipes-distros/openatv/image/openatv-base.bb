@@ -9,16 +9,16 @@ PR = "r9"
 inherit task
 
 RDEPENDS = "\
-	oe-alliance-base \
-	openatv-enigma2 \
-	openatv-bootlogo \
-	openatv-spinner \
-	openatv-feed-config \
-	libcrypto-compat \
-	openssh-sftp-server \
-	ntfs-3g \
-	hddtemp \
-	busybox-cron \
-	python-imaging \
-	ofgwrite \
-	"
+    oe-alliance-base \
+    openatv-enigma2 \
+    openatv-bootlogo \
+    openatv-spinner \
+    openatv-feed-config \
+    libcrypto-compat \
+    openssh-sftp-server \
+    ntfs-3g \
+    hddtemp \
+    busybox-cron \
+    python-imaging \
+    ofgwrite \
+    "

@@ -4,117 +4,117 @@ LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=751419260aa954499f7abaabaa882bbe"
 
 DEPENDS = " \
-	ethtool \
-	freetype \
-	gettext-native \
-	gst-plugins-base gstreamer \
-	hotplug-e2-helper \
-	jpeg \
-	libdreamdvd libdvbsi++ libfribidi libmad libpng libsigc++-1.2 libungif libxml2 libxmlccwrap \
-	openssl \
-	python python-imaging python-twisted python-wifi \
-	swig-native \
-	tuxtxt-enigma2 \
-	"
+    ethtool \
+    freetype \
+    gettext-native \
+    gst-plugins-base gstreamer \
+    hotplug-e2-helper \
+    jpeg \
+    libdreamdvd libdvbsi++ libfribidi libmad libpng libsigc++-1.2 libungif libxml2 libxmlccwrap \
+    openssl \
+    python python-imaging python-twisted python-wifi \
+    swig-native \
+    tuxtxt-enigma2 \
+    "
 
 RDEPENDS_${PN} = " \
-	alsa-conf \
-	enigma2-fonts \
-	ethtool \
-	glibc-gconv-iso8859-15 \
-	hotplug-e2-helper \
-	${PYTHON_RDEPS} \
-	"
+    alsa-conf \
+    enigma2-fonts \
+    ethtool \
+    glibc-gconv-iso8859-15 \
+    hotplug-e2-helper \
+    ${PYTHON_RDEPS} \
+    "
 
 RRECOMMENDS_${PN} = " \
-	glib-networking \
-	gst-plugin-subsink \
-	gst-plugin-libxt \
-	${GST_BASE_RDEPS} \
-	${GST_GOOD_RDEPS} \
-	${GST_BAD_RDEPS} \
-	${GST_UGLY_RDEPS} \
-	"
+    glib-networking \
+    gst-plugin-subsink \
+    gst-plugin-libxt \
+    ${GST_BASE_RDEPS} \
+    ${GST_GOOD_RDEPS} \
+    ${GST_BAD_RDEPS} \
+    ${GST_UGLY_RDEPS} \
+    "
 
 PYTHON_RDEPS = " \
-	python-codecs \
-	python-core \
-	python-crypt \
-	python-fcntl \
-	python-lang \
-	python-netclient \
-	python-netserver \
-	python-pickle \
-	python-re \
-	python-shell \
-	python-threading \
-	python-twisted-core \
-	python-twisted-web \
-	python-utf8-hack \
-	python-xml \
-	python-zlib \
-	python-zopeinterface \
-	python-email \
-	python-mime \
-	python-pyusb \
-	python-subprocess \
-	python-process \
-	python-imaging \
-	"
+    python-codecs \
+    python-core \
+    python-crypt \
+    python-fcntl \
+    python-lang \
+    python-netclient \
+    python-netserver \
+    python-pickle \
+    python-re \
+    python-shell \
+    python-threading \
+    python-twisted-core \
+    python-twisted-web \
+    python-utf8-hack \
+    python-xml \
+    python-zlib \
+    python-zopeinterface \
+    python-email \
+    python-mime \
+    python-pyusb \
+    python-subprocess \
+    python-process \
+    python-imaging \
+    "
 
 GST_BASE_RDEPS = " \
-	gst-plugins-base-alsa \
-	gst-plugins-base-app \
-	gst-plugins-base-audioconvert \
-	gst-plugins-base-audioresample \
-	gst-plugins-base-decodebin \
-	gst-plugins-base-decodebin2 \
-	gst-plugins-base-ogg \
-	gst-plugins-base-playbin \
-	gst-plugins-base-subparse \
-	gst-plugins-base-typefindfunctions \
-	gst-plugins-base-vorbis \
-	"
+    gst-plugins-base-alsa \
+    gst-plugins-base-app \
+    gst-plugins-base-audioconvert \
+    gst-plugins-base-audioresample \
+    gst-plugins-base-decodebin \
+    gst-plugins-base-decodebin2 \
+    gst-plugins-base-ogg \
+    gst-plugins-base-playbin \
+    gst-plugins-base-subparse \
+    gst-plugins-base-typefindfunctions \
+    gst-plugins-base-vorbis \
+    "
 
 GST_GOOD_RDEPS = " \
-	gst-plugins-good-apetag \
-	gst-plugins-good-audioparsers \
-	gst-plugins-good-autodetect \
-	gst-plugins-good-avi \
-	gst-plugins-good-flac \
-	gst-plugins-good-flv \
-	gst-plugins-good-icydemux \
-	gst-plugins-good-id3demux \
-	gst-plugins-good-isomp4 \
-	gst-plugins-good-matroska \
-	gst-plugins-good-rtp \
-	gst-plugins-good-rtpmanager \
-	gst-plugins-good-rtsp \
-	gst-plugins-good-souphttpsrc \
-	gst-plugins-good-udp \
-	gst-plugins-good-wavparse \
-	"
+    gst-plugins-good-apetag \
+    gst-plugins-good-audioparsers \
+    gst-plugins-good-autodetect \
+    gst-plugins-good-avi \
+    gst-plugins-good-flac \
+    gst-plugins-good-flv \
+    gst-plugins-good-icydemux \
+    gst-plugins-good-id3demux \
+    gst-plugins-good-isomp4 \
+    gst-plugins-good-matroska \
+    gst-plugins-good-rtp \
+    gst-plugins-good-rtpmanager \
+    gst-plugins-good-rtsp \
+    gst-plugins-good-souphttpsrc \
+    gst-plugins-good-udp \
+    gst-plugins-good-wavparse \
+    "
 
 GST_BAD_RDEPS = " \
-	gst-plugins-bad-cdxaparse \
-	gst-plugins-bad-mms \
-	gst-plugins-bad-mpegdemux \
-	gst-plugins-bad-rtmp \
-	gst-plugins-bad-vcdsrc \
-	gst-plugins-bad-fragmented \
-	gst-plugins-bad-faad \
-	"
+    gst-plugins-bad-cdxaparse \
+    gst-plugins-bad-mms \
+    gst-plugins-bad-mpegdemux \
+    gst-plugins-bad-rtmp \
+    gst-plugins-bad-vcdsrc \
+    gst-plugins-bad-fragmented \
+    gst-plugins-bad-faad \
+    "
 
 GST_UGLY_RDEPS = " \
-	gst-plugins-ugly-amrnb \
-	gst-plugins-ugly-amrwbdec \
-	gst-plugins-ugly-asf \
-	gst-plugins-ugly-cdio \
-	gst-plugins-ugly-dvdsub \
-	gst-plugins-ugly-mad \
-	gst-plugins-ugly-mpegaudioparse \
-	gst-plugins-ugly-mpegstream \
-	"
+    gst-plugins-ugly-amrnb \
+    gst-plugins-ugly-amrwbdec \
+    gst-plugins-ugly-asf \
+    gst-plugins-ugly-cdio \
+    gst-plugins-ugly-dvdsub \
+    gst-plugins-ugly-mad \
+    gst-plugins-ugly-mpegaudioparse \
+    gst-plugins-ugly-mpegstream \
+    "
 
 # DVD playback is integrated, we need the libraries
 RDEPENDS_${PN} += "libdreamdvd"
@@ -163,29 +163,29 @@ PR = "r121"
 SRC_URI = "${ENIGMA2_URI}"
 
 SRC_URI_append_azboxhd = " \
-			file://azboxe2.patch \
- 			file://lcdchar.patch \
-			"
+            file://azboxe2.patch \
+             file://lcdchar.patch \
+            "
 SRC_URI_append_azboxme = " \
- 			file://azboxe2.patch \
-			"
+             file://azboxe2.patch \
+            "
 
 SRC_URI_append_azboxminime = " \
- 			file://azboxe2.patch \
-			"
+             file://azboxe2.patch \
+            "
 
 SRC_URI_append_vuduo = " \
-			file://duo_VFD.patch \
-			"
+            file://duo_VFD.patch \
+            "
 SRC_URI_append_gb800solo = " \
-			file://gb800-evfd.patch \
-			"
+            file://gb800-evfd.patch \
+            "
 SRC_URI_append_gb800se = " \
-			file://gb800-evfd.patch \
-			"
+            file://gb800-evfd.patch \
+            "
 SRC_URI_append_gb800ue = " \
-			file://gb800-evfd.patch \
-			"
+            file://gb800-evfd.patch \
+            "
 
 S = "${WORKDIR}/git"
 
@@ -202,63 +202,63 @@ PKGV_enigma2-fonts = "${PV_enigma2-fonts}"
 FILES_enigma2-fonts = "${datadir}/fonts"
 
 EXTRA_OECONF = " \
-	BUILD_SYS=${BUILD_SYS} \
-	HOST_SYS=${HOST_SYS} \
-	STAGING_INCDIR=${STAGING_INCDIR} \
-	STAGING_LIBDIR=${STAGING_LIBDIR} \
-	--with-distro=${DISTRO_NAME} \
-	${@base_contains('MACHINEBUILD', 'odinm6', '--with-boxtype=${MACHINEBUILD}' , '--with-boxtype=${MACHINE}', d)} \
-	--with-machinebrand="${MACHINE_BRAND}" \
-	--with-machinename="${MACHINE_NAME}" \
-	--with-imageversion=${DISTRO_VERSION} \
-	--with-imagebuild=${BUILD_VERSION} \
-	--with-driverdate=${DRIVERSDATE} \
-	--with-po --with-libsdl=no \
-	--enable-dependency-tracking \
-	${@base_contains("MACHINE_FEATURES", "textlcd", "--with-textlcd" , "", d)} \
-	${@base_contains("MACHINE_FEATURES", "colorlcd", "--with-colorlcd" , "", d)} \
-	${@base_contains("MACHINE_FEATURES", "colorlcd128", "--with-colorlcd128" , "", d)} \
-	${@base_contains("MACHINE_FEATURES", "colorlcd220", "--with-colorlcd220" , "", d)} \
-	${@base_contains("MACHINE_FEATURES", "bwlcd140", "--with-bwlcd140" , "", d)} \
-	${@base_contains("MACHINE_FEATURES", "bwlcd255", "--with-bwlcd255" , "", d)} \
-	${@base_contains("MACHINE_FEATURES", "fullgraphiclcd", "--with-fullgraphiclcd" , "", d)} \
-	${@base_contains("MACHINE_FEATURES", "gigabluelcd", "--with-gigabluelcd" , "", d)} \
-	${@base_contains("MACHINE_FEATURES", "nolcd", "--with-nolcd" , "", d)} \
-	"
+    BUILD_SYS=${BUILD_SYS} \
+    HOST_SYS=${HOST_SYS} \
+    STAGING_INCDIR=${STAGING_INCDIR} \
+    STAGING_LIBDIR=${STAGING_LIBDIR} \
+    --with-distro=${DISTRO_NAME} \
+    ${@base_contains('MACHINEBUILD', 'odinm6', '--with-boxtype=${MACHINEBUILD}' , '--with-boxtype=${MACHINE}', d)} \
+    --with-machinebrand="${MACHINE_BRAND}" \
+    --with-machinename="${MACHINE_NAME}" \
+    --with-imageversion=${DISTRO_VERSION} \
+    --with-imagebuild=${BUILD_VERSION} \
+    --with-driverdate=${DRIVERSDATE} \
+    --with-po --with-libsdl=no \
+    --enable-dependency-tracking \
+    ${@base_contains("MACHINE_FEATURES", "textlcd", "--with-textlcd" , "", d)} \
+    ${@base_contains("MACHINE_FEATURES", "colorlcd", "--with-colorlcd" , "", d)} \
+    ${@base_contains("MACHINE_FEATURES", "colorlcd128", "--with-colorlcd128" , "", d)} \
+    ${@base_contains("MACHINE_FEATURES", "colorlcd220", "--with-colorlcd220" , "", d)} \
+    ${@base_contains("MACHINE_FEATURES", "bwlcd140", "--with-bwlcd140" , "", d)} \
+    ${@base_contains("MACHINE_FEATURES", "bwlcd255", "--with-bwlcd255" , "", d)} \
+    ${@base_contains("MACHINE_FEATURES", "fullgraphiclcd", "--with-fullgraphiclcd" , "", d)} \
+    ${@base_contains("MACHINE_FEATURES", "gigabluelcd", "--with-gigabluelcd" , "", d)} \
+    ${@base_contains("MACHINE_FEATURES", "nolcd", "--with-nolcd" , "", d)} \
+    "
 
 # Swig generated 200k enigma.py file has no purpose for end users
 FILES_${PN}-dbg += "\
-	/usr/lib/enigma2/python/enigma.py \
-	"
+    /usr/lib/enigma2/python/enigma.py \
+    "
 
 # some plugins contain so's, their stripped symbols should not end up in the enigma2 package
 FILES_${PN}-dbg += "\
-	/usr/lib/enigma2/python/*/.debug \
-	/usr/lib/enigma2/python/*/*/*.debug \
-	/usr/lib/enigma2/python/*/*/*/.debug \
-	/usr/lib/enigma2/python/*/*/*/*/.debug \
-	/usr/lib/enigma2/python/Plugins/*/*/.debug \
-	"
+    /usr/lib/enigma2/python/*/.debug \
+    /usr/lib/enigma2/python/*/*/*.debug \
+    /usr/lib/enigma2/python/*/*/*/.debug \
+    /usr/lib/enigma2/python/*/*/*/*/.debug \
+    /usr/lib/enigma2/python/Plugins/*/*/.debug \
+    "
 
 # Save some space by not installing sources (mytest.py must remain)
 FILES_${PN}-src = "\
-	/usr/lib/enigma2/python/GlobalActions.py \
-	/usr/lib/enigma2/python/Navigation.py \
-	/usr/lib/enigma2/python/NavigationInstance.py \
-	/usr/lib/enigma2/python/RecordTimer.py \
-	/usr/lib/enigma2/python/ServiceReference.py \
-	/usr/lib/enigma2/python/SleepTimer.py \
-	/usr/lib/enigma2/python/e2reactor.py \
-	/usr/lib/enigma2/python/keyids.py \
-	/usr/lib/enigma2/python/keymapparser.py \
-	/usr/lib/enigma2/python/skin.py \
-	/usr/lib/enigma2/python/timer.py \
-	/usr/lib/enigma2/python/upgrade.py \
-	/usr/lib/enigma2/python/PowerTimer.py \
-	/usr/lib/enigma2/python/*/*.py \
-	/usr/lib/enigma2/python/*/*/*.py \
-	/usr/lib/enigma2/python/*/*/*/*.py \
-	"
+    /usr/lib/enigma2/python/GlobalActions.py \
+    /usr/lib/enigma2/python/Navigation.py \
+    /usr/lib/enigma2/python/NavigationInstance.py \
+    /usr/lib/enigma2/python/RecordTimer.py \
+    /usr/lib/enigma2/python/ServiceReference.py \
+    /usr/lib/enigma2/python/SleepTimer.py \
+    /usr/lib/enigma2/python/e2reactor.py \
+    /usr/lib/enigma2/python/keyids.py \
+    /usr/lib/enigma2/python/keymapparser.py \
+    /usr/lib/enigma2/python/skin.py \
+    /usr/lib/enigma2/python/timer.py \
+    /usr/lib/enigma2/python/upgrade.py \
+    /usr/lib/enigma2/python/PowerTimer.py \
+    /usr/lib/enigma2/python/*/*.py \
+    /usr/lib/enigma2/python/*/*/*.py \
+    /usr/lib/enigma2/python/*/*/*/*.py \
+    "
 
 FILES_${PN} += " ${bindir} ${sysconfdir}/e2-git.log"
 
@@ -267,58 +267,58 @@ PACKAGES =+ "${PN}-po"
 FILES_${PN}-po = "${datadir}/enigma2/po/*.po ${datadir}/enigma2/po/*.pot"
 
 do_configure_prepend() {
-	if [ "${MACHINE}" = "vusolo" -o "${MACHINE}" = "vuduo" -o "${MACHINE}" = "vusolo2" -o "${MACHINE}" = "vuduo2" -o "${MACHINE}" = "vuuno" -o "${MACHINE}" = "vuultimo" ]; then
-		DRIVERSDATE=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/vuplus/vuplus-dvb-modules-${MACHINE}.bb | cut -b 12-19`
-	elif [ "${MACHINE}" = "et4x00" -o "${MACHINE}" = "et5x00" -o "${MACHINE}" = "et6x00" -o "${MACHINE}" = "et9x00" ]; then
-		DRIVERSDATE=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/etxx00/et-dvb-modules-${MACHINE}.bb | cut -b 12-19`
-	elif [ "${MACHINE}" = "odinm9" -o "${MACHINE}" = "odinm7" -o "${MACHINE}" = "e3hd" ]; then
-		DRIVERSDATE=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/odin/odin-dvb-modules-${MACHINE}.bb | cut -b 12-19`
-	elif [ "${MACHINE}" = "iqonios100hd" -o "${MACHINE}" = "iqonios200hd" -o "${MACHINE}" = "iqonios300hd" -o "${MACHINE}" = "tmtwin" -o "${MACHINE}" = "tm2t" -o "${MACHINE}" = "tmsingle" -o "${MACHINE}" = "tmnano" -o "${MACHINE}" = "optimussos1" -o "${MACHINE}" = "optimussos2" -o "${MACHINE}" = "mediabox" ]; then
-		DRIVERSDATE=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/iqon/iqon-dvb-modules.bb | cut -b 12-19`
-	elif [ "${MACHINE}" = "gb800solo" -o "${MACHINE}" = "gb800se" -o "${MACHINE}" = "gb800ue" -o "${MACHINE}" = "gbquad" ]; then
-		DRIVERSDATE=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/gigablue/gigablue-dvb-modules-${MACHINE}.bb | cut -b 12-19`
-	elif [ "${MACHINE}" = "inihde" ]; then
-		DRIVERSDATE=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/ini/ini-dvb-modules-inihde.bb | cut -b 12-19`
-	elif [ "${MACHINE}" = "ventonhdx" ]; then
-		DRIVERSDATE=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/ini/ini-dvb-modules-inihdx.bb | cut -b 12-19`
-	elif [ "${MACHINE}" = "xp1000" ]; then
-		DRIVERSDATE=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/xp/xp-dvb-modules-${MACHINE}.bb | cut -b 12-19`
-	elif [ "${MACHINE}" = "ebox5000" -o "${MACHINE}" = "ebox5100" -o "${MACHINE}" = "ebox7358" ]; then
-		DRIVERSDATE=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/ebox/ebox-dvb-modules-${MACHINE}.bb | cut -b 12-19`
-	elif [ "${MACHINE}" = "ixussone" -o "${MACHINE}" = "ixusszero" -o "${MACHINE}" = "ixussduo" ]; then
-		DRIVERSDATE=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/ixuss/ixuss-dvb-modules-${MACHINE}.bb | cut -b 12-19`
-	elif [ "${MACHINE}" = "azboxhd" -o "${MACHINE}" = "azboxme" -o "${MACHINE}" = "azboxminime" ]; then
-		DRIVERSDATE=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/azbox/azbox-dvb-modules.bb | cut -b 12-19`
-	elif [ "${MACHINE}" = "dm8000" ]; then
-		DRIVERSDATE="20130619"
-	elif [ "${MACHINE}" = "dm7020hd" ]; then
-		DRIVERSDATE="20130730"
-	elif [ "${MACHINE}" = "dm800sev2" ]; then
-		DRIVERSDATE="20130725"
-	elif [ "${MACHINE}" = "dm500hd" -o "${MACHINE}" = "dm800se" -o "${MACHINE}" = "dm500hdv2" ]; then
-		DRIVERSDATE="20130607"
-	elif [ "${MACHINE}" = "dm800" ]; then
-		DRIVERSDATE="20130501"
-	else
-		DRIVERSDATE='N/A'
-	fi
+    if [ "${MACHINE}" = "vusolo" -o "${MACHINE}" = "vuduo" -o "${MACHINE}" = "vusolo2" -o "${MACHINE}" = "vuduo2" -o "${MACHINE}" = "vuuno" -o "${MACHINE}" = "vuultimo" ]; then
+        DRIVERSDATE=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/vuplus/vuplus-dvb-modules-${MACHINE}.bb | cut -b 12-19`
+    elif [ "${MACHINE}" = "et4x00" -o "${MACHINE}" = "et5x00" -o "${MACHINE}" = "et6x00" -o "${MACHINE}" = "et9x00" ]; then
+        DRIVERSDATE=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/etxx00/et-dvb-modules-${MACHINE}.bb | cut -b 12-19`
+    elif [ "${MACHINE}" = "odinm9" -o "${MACHINE}" = "odinm7" -o "${MACHINE}" = "e3hd" ]; then
+        DRIVERSDATE=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/odin/odin-dvb-modules-${MACHINE}.bb | cut -b 12-19`
+    elif [ "${MACHINE}" = "iqonios100hd" -o "${MACHINE}" = "iqonios200hd" -o "${MACHINE}" = "iqonios300hd" -o "${MACHINE}" = "tmtwin" -o "${MACHINE}" = "tm2t" -o "${MACHINE}" = "tmsingle" -o "${MACHINE}" = "tmnano" -o "${MACHINE}" = "optimussos1" -o "${MACHINE}" = "optimussos2" -o "${MACHINE}" = "mediabox" ]; then
+        DRIVERSDATE=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/iqon/iqon-dvb-modules.bb | cut -b 12-19`
+    elif [ "${MACHINE}" = "gb800solo" -o "${MACHINE}" = "gb800se" -o "${MACHINE}" = "gb800ue" -o "${MACHINE}" = "gbquad" ]; then
+        DRIVERSDATE=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/gigablue/gigablue-dvb-modules-${MACHINE}.bb | cut -b 12-19`
+    elif [ "${MACHINE}" = "inihde" ]; then
+        DRIVERSDATE=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/ini/ini-dvb-modules-inihde.bb | cut -b 12-19`
+    elif [ "${MACHINE}" = "ventonhdx" ]; then
+        DRIVERSDATE=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/ini/ini-dvb-modules-inihdx.bb | cut -b 12-19`
+    elif [ "${MACHINE}" = "xp1000" ]; then
+        DRIVERSDATE=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/xp/xp-dvb-modules-${MACHINE}.bb | cut -b 12-19`
+    elif [ "${MACHINE}" = "ebox5000" -o "${MACHINE}" = "ebox5100" -o "${MACHINE}" = "ebox7358" ]; then
+        DRIVERSDATE=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/ebox/ebox-dvb-modules-${MACHINE}.bb | cut -b 12-19`
+    elif [ "${MACHINE}" = "ixussone" -o "${MACHINE}" = "ixusszero" -o "${MACHINE}" = "ixussduo" ]; then
+        DRIVERSDATE=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/ixuss/ixuss-dvb-modules-${MACHINE}.bb | cut -b 12-19`
+    elif [ "${MACHINE}" = "azboxhd" -o "${MACHINE}" = "azboxme" -o "${MACHINE}" = "azboxminime" ]; then
+        DRIVERSDATE=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/azbox/azbox-dvb-modules.bb | cut -b 12-19`
+    elif [ "${MACHINE}" = "dm8000" ]; then
+        DRIVERSDATE="20130619"
+    elif [ "${MACHINE}" = "dm7020hd" ]; then
+        DRIVERSDATE="20130730"
+    elif [ "${MACHINE}" = "dm800sev2" ]; then
+        DRIVERSDATE="20130725"
+    elif [ "${MACHINE}" = "dm500hd" -o "${MACHINE}" = "dm800se" -o "${MACHINE}" = "dm500hdv2" ]; then
+        DRIVERSDATE="20130607"
+    elif [ "${MACHINE}" = "dm800" ]; then
+        DRIVERSDATE="20130501"
+    else
+        DRIVERSDATE='N/A'
+    fi
 }
 
 do_install_append() {
-	install -d ${D}/usr/share/keymaps
-	find ${D}/usr/lib/enigma2/python/ -name '*.pyc' -exec rm {} \;
-	ln -s /usr/lib/enigma2/python/Tools/StbHardware.pyo ${D}/usr/lib/enigma2/python/Tools/DreamboxHardware.pyo
-	ln -s /usr/lib/python/Components/PackageInfo.pyo ${D}/usr/lib/enigma2/python/Components/DreamboxInfoHandler.pyo
-	install -d ${D}${sysconfdir}
-	git --git-dir=${S}/.git log --since=10.weeks --pretty=format:"%s" > ${D}${sysconfdir}/e2-git.log
-	git --git-dir=${OE-ALLIANCE_BASE}/meta-oe-alliance/.git log --since=10.weeks --pretty=format:"%s" > ${D}${sysconfdir}/oe-git.log
+    install -d ${D}/usr/share/keymaps
+    find ${D}/usr/lib/enigma2/python/ -name '*.pyc' -exec rm {} \;
+    ln -s /usr/lib/enigma2/python/Tools/StbHardware.pyo ${D}/usr/lib/enigma2/python/Tools/DreamboxHardware.pyo
+    ln -s /usr/lib/python/Components/PackageInfo.pyo ${D}/usr/lib/enigma2/python/Components/DreamboxInfoHandler.pyo
+    install -d ${D}${sysconfdir}
+    git --git-dir=${S}/.git log --since=10.weeks --pretty=format:"%s" > ${D}${sysconfdir}/e2-git.log
+    git --git-dir=${OE-ALLIANCE_BASE}/meta-oe-alliance/.git log --since=10.weeks --pretty=format:"%s" > ${D}${sysconfdir}/oe-git.log
 }
 
 python populate_packages_prepend() {
-	enigma2_plugindir = bb.data.expand('${libdir}/enigma2/python/Plugins', d)
-	do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/[a-zA-Z0-9_]+.*$', 'enigma2-plugin-%s', '%s', recursive=True, match_path=True, prepend=True, extra_depends="enigma2")
-	do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/.*\.py$', 'enigma2-plugin-%s-src', '%s (source files)', recursive=True, match_path=True, prepend=True)
-	do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/.*\.la$', 'enigma2-plugin-%s-dev', '%s (development)', recursive=True, match_path=True, prepend=True)
-	do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/.*\.a$', 'enigma2-plugin-%s-staticdev', '%s (static development)', recursive=True, match_path=True, prepend=True)
-	do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/(.*/)?\.debug/.*$', 'enigma2-plugin-%s-dbg', '%s (debug)', recursive=True, match_path=True, prepend=True)
+    enigma2_plugindir = bb.data.expand('${libdir}/enigma2/python/Plugins', d)
+    do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/[a-zA-Z0-9_]+.*$', 'enigma2-plugin-%s', '%s', recursive=True, match_path=True, prepend=True, extra_depends="enigma2")
+    do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/.*\.py$', 'enigma2-plugin-%s-src', '%s (source files)', recursive=True, match_path=True, prepend=True)
+    do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/.*\.la$', 'enigma2-plugin-%s-dev', '%s (development)', recursive=True, match_path=True, prepend=True)
+    do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/.*\.a$', 'enigma2-plugin-%s-staticdev', '%s (static development)', recursive=True, match_path=True, prepend=True)
+    do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/(.*/)?\.debug/.*$', 'enigma2-plugin-%s-dbg', '%s (debug)', recursive=True, match_path=True, prepend=True)
 }

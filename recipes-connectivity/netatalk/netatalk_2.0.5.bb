@@ -5,12 +5,12 @@ LICENSE = "GPL"
 DEPENDS = "cups db openssl"
 
 SRC_URI = "http://ovh.dl.sourceforge.net/sourceforge/netatalk/netatalk-${PV}.tar.gz;name=src \
-	   file://netatalk-dbd.patch \
-	   file://netatalk.conf \
-	   file://AppleVolumes.default \
-	   file://afpd.conf \
-	   file://afpd.service \
-	   file://init"
+       file://netatalk-dbd.patch \
+       file://netatalk.conf \
+       file://AppleVolumes.default \
+       file://afpd.conf \
+       file://afpd.service \
+       file://init"
 SRC_URI[src.md5sum] = "f35cd7a4ce26c780de380cd2bcae5ce6"
 SRC_URI[src.sha256sum] = "7e02b0d2849ec83459c65d240809ff95ee4a857a3ba38af2cafbbe3717d0c672"
 
@@ -44,9 +44,9 @@ EXTRA_OECONF += "ac_cv_path_KRB5_CONFIG=no \
 LDFLAGS += "-lpthread -L${STAGING_LIBDIR}"
 
 do_install_append() {
-	install -D -m 0755 ${WORKDIR}/init ${D}${sysconfdir}/init.d/atalk
-	install -D -m 0644 ${WORKDIR}/netatalk.conf ${D}${sysconfdir}/netatalk/netatalk.conf
-	install -D -m 0644 ${WORKDIR}/AppleVolumes.default ${D}${sysconfdir}/netatalk/AppleVolumes.default
-	install -D -m 0644 ${WORKDIR}/afpd.conf ${D}${sysconfdir}/netatalk/afpd.conf
-	install -D -m 0644 ${WORKDIR}/afpd.service ${D}${sysconfdir}/avahi/services/afpd.service
+    install -D -m 0755 ${WORKDIR}/init ${D}${sysconfdir}/init.d/atalk
+    install -D -m 0644 ${WORKDIR}/netatalk.conf ${D}${sysconfdir}/netatalk/netatalk.conf
+    install -D -m 0644 ${WORKDIR}/AppleVolumes.default ${D}${sysconfdir}/netatalk/AppleVolumes.default
+    install -D -m 0644 ${WORKDIR}/afpd.conf ${D}${sysconfdir}/netatalk/afpd.conf
+    install -D -m 0644 ${WORKDIR}/afpd.service ${D}${sysconfdir}/avahi/services/afpd.service
 }

@@ -30,10 +30,10 @@ PACKAGES = "${PN}"
 FILES_${PN} = "/lcd_picon"
 
 do_install() {
-	install -d ${D}/lcd_picon
-	install -m 0644 ${WORKDIR}/lcd_picon/*.* ${D}/lcd_picon
+    install -d ${D}/lcd_picon
+    install -m 0644 ${WORKDIR}/lcd_picon/*.* ${D}/lcd_picon
 }
 
 do_install_append() {
-	find ${D}/lcd_picon/ -name 'picon_default.png' -exec rm {} \;
+    find ${D}/lcd_picon/ -name 'picon_default.png' -exec rm {} \;
 }

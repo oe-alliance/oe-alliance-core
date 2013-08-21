@@ -22,12 +22,12 @@ S = "${WORKDIR}/git"
 inherit autotools
 
 EXTRA_OECONF = "\
-	BUILD_SYS=${BUILD_SYS} \
-	HOST_SYS=${HOST_SYS} \
-	STAGING_INCDIR=${STAGING_INCDIR} \
-	STAGING_LIBDIR=${STAGING_LIBDIR} \
-	--with-po \
-	--with-libsdl=no \
+    BUILD_SYS=${BUILD_SYS} \
+    HOST_SYS=${HOST_SYS} \
+    STAGING_INCDIR=${STAGING_INCDIR} \
+    STAGING_LIBDIR=${STAGING_LIBDIR} \
+    --with-po \
+    --with-libsdl=no \
 "
 
 PACKAGES =+ "${PN}-src"
@@ -38,7 +38,7 @@ FILES_${PN}-src = "/usr/lib/enigma2/python/Plugins/SystemPlugins/ViX/*.py"
 FILES_${PN}-po = "/usr/lib/enigma2/python/Plugins/SystemPlugins/ViX/locale/*.po"
 
 do_install_append() {
-	if [ -f ${DEPLOY_DIR_IMAGE}/burn.bat ]; then
-		install -m 755 ${DEPLOY_DIR_IMAGE}/burn.bat ${D}/usr/lib/enigma2/python/Plugins/SystemPlugins/ViX/burn.bat
-	fi
+    if [ -f ${DEPLOY_DIR_IMAGE}/burn.bat ]; then
+        install -m 755 ${DEPLOY_DIR_IMAGE}/burn.bat ${D}/usr/lib/enigma2/python/Plugins/SystemPlugins/ViX/burn.bat
+    fi
 }

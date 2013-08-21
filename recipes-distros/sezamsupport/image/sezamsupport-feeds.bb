@@ -11,11 +11,11 @@ RCONFLICTS_ = "enigma2-plugin-extensions-permanenttimeshift enigma2-plugin-syste
 RREPLACES = "enigma2-plugin-extensions-permanenttimeshift enigma2-plugin-systemplugins-skinselector"
 
 RRECOMMENDS = "\
-	oe-alliance-skins \
-	openatv-picons-meta \
-	enigma2-skins \
-	enigma2-plugin-settings-default-ventonsupport \
-	enigma2-plugin-extensions-project-valerie \
-	enigma2-plugin-extensions-xmltvimport \
-	enigma2-plugin-systemplugins-crossepg \
-	"
+    oe-alliance-skins \
+    openatv-picons-meta \
+    enigma2-skins \
+    enigma2-plugin-settings-default-ventonsupport \
+    enigma2-plugin-extensions-project-valerie \
+    enigma2-plugin-extensions-xmltvimport \
+    enigma2-plugin-systemplugins-crossepg \
+    "

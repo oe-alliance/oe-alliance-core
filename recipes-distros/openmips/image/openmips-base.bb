@@ -9,17 +9,17 @@ PR = "r4"
 inherit task
 
 RDEPENDS = "\
-	oe-alliance-base \
-	openmips-enigma2 \
-	openmips-bootlogo \
-	libcrypto-compat \
-	hddtemp \
-	dosfstools \
-	ntfs-3g \
-	task-base-smbfs-client \
-	task-base-smbfs \
-	task-base-nfs \
-	busybox-cron \
-	python-imaging \
-	ofgwrite \
-	"
+    oe-alliance-base \
+    openmips-enigma2 \
+    openmips-bootlogo \
+    libcrypto-compat \
+    hddtemp \
+    dosfstools \
+    ntfs-3g \
+    task-base-smbfs-client \
+    task-base-smbfs \
+    task-base-nfs \
+    busybox-cron \
+    python-imaging \
+    ofgwrite \
+    "

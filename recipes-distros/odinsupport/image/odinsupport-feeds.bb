@@ -8,11 +8,11 @@ PR = "r4"
 inherit task
 
 RRECOMMENDS = "\
-	oe-alliance-skins \
-	openatv-picons-meta \
-	enigma2-skins \
-	enigma2-pliplugins \
-	enigma2-plugin-extensions-project-valerie \
-	enigma2-plugin-extensions-xmltvimport \
-	enigma2-plugin-systemplugins-crossepg \
-	"
+    oe-alliance-skins \
+    openatv-picons-meta \
+    enigma2-skins \
+    enigma2-pliplugins \
+    enigma2-plugin-extensions-project-valerie \
+    enigma2-plugin-extensions-xmltvimport \
+    enigma2-plugin-systemplugins-crossepg \
+    "

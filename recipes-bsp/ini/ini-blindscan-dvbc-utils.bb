@@ -21,6 +21,6 @@ PR = "r2"
 S = "${WORKDIR}/"
 
 do_install() {
-	install -d "${D}/${bindir}"
-	install -m 0755 "${S}/tda1002x" "${D}/${bindir}"
+    install -d "${D}/${bindir}"
+    install -m 0755 "${S}/tda1002x" "${D}/${bindir}"
 }

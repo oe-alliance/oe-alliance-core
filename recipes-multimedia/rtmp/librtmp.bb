@@ -19,10 +19,10 @@ SRC_URI = "git://git.ffmpeg.org/rtmpdump;protocol=git"
 S = "${WORKDIR}/git/librtmp"
 
 do_compile() {
-	oe_runmake CROSS_COMPILE=${TARGET_PREFIX} CFLAGS="${CFLAGS} -fPIC" LDFLAGS="${LDFLAGS}"
+    oe_runmake CROSS_COMPILE=${TARGET_PREFIX} CFLAGS="${CFLAGS} -fPIC" LDFLAGS="${LDFLAGS}"
 }
 
 do_install() {
-	install -d ${D}${libdir}
-	oe_runmake DESTDIR=${D} install
+    install -d ${D}${libdir}
+    oe_runmake DESTDIR=${D} install
 }

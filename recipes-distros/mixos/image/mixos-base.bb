@@ -9,15 +9,15 @@ PR = "r3"
 inherit task
 
 RDEPENDS = "\
-	oe-alliance-base \
-	mixos-enigma2 \
-	mixos-bootlogo \
-	mixos-feed-config \
-	libcrypto-compat \
-	ntfs-3g \
-	hddtemp \
-	task-base-smbfs-client \
-	task-base-smbfs \
-	task-base-nfs \
-	busybox-cron \
-	"
+    oe-alliance-base \
+    mixos-enigma2 \
+    mixos-bootlogo \
+    mixos-feed-config \
+    libcrypto-compat \
+    ntfs-3g \
+    hddtemp \
+    task-base-smbfs-client \
+    task-base-smbfs \
+    task-base-nfs \
+    busybox-cron \
+    "

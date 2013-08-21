@@ -9,7 +9,7 @@ DEPENDS = "python"
 RDEPENDS_${PN} = "python-shell"
 
 SRC_URI = "http://mutagen.googlecode.com/files/mutagen-${PV}.tar.gz \
-	file://patch.diff \
+    file://patch.diff \
 "
 
 SRC_URI[md5sum] = "0c2cd954e4bacd79fadd45afc4acce4c"

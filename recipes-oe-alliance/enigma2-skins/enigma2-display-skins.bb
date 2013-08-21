@@ -27,27 +27,27 @@ inherit autotools
 S = "${WORKDIR}/git"
 
 EXTRA_OECONF += "\
-	${@base_contains("MACHINE_FEATURES", "textlcd", "--with-textlcd" , "", d)} \
-	${@base_contains("MACHINE_FEATURES", "colorlcd", "--with-colorlcd" , "", d)} \
-	${@base_contains("MACHINE_FEATURES", "colorlcd128", "--with-colorlcd128" , "", d)} \
-	${@base_contains("MACHINE_FEATURES", "colorlcd220", "--with-colorlcd220" , "", d)} \
-	${@base_contains("MACHINE_FEATURES", "bwlcd140", "--with-bwlcd140" , "", d)} \
-	${@base_contains("MACHINE_FEATURES", "bwlcd255", "--with-bwlcd255" , "", d)} \
-	"
+    ${@base_contains("MACHINE_FEATURES", "textlcd", "--with-textlcd" , "", d)} \
+    ${@base_contains("MACHINE_FEATURES", "colorlcd", "--with-colorlcd" , "", d)} \
+    ${@base_contains("MACHINE_FEATURES", "colorlcd128", "--with-colorlcd128" , "", d)} \
+    ${@base_contains("MACHINE_FEATURES", "colorlcd220", "--with-colorlcd220" , "", d)} \
+    ${@base_contains("MACHINE_FEATURES", "bwlcd140", "--with-bwlcd140" , "", d)} \
+    ${@base_contains("MACHINE_FEATURES", "bwlcd255", "--with-bwlcd255" , "", d)} \
+    "
 
 python populate_packages_prepend () {
-	if bb.data.expand('${REL_MINOR}', d) != "4":
-		enigma2_skindir = bb.data.expand('${datadir}/enigma2/display', d)
-		do_split_packages(d, enigma2_skindir, '(.*?)/.*', 'enigma2-plugin-display-%s', 'Enigma2 Display Skin: %s', recursive=True, match_path=True, prepend=True)
+    if bb.data.expand('${REL_MINOR}', d) != "4":
+        enigma2_skindir = bb.data.expand('${datadir}/enigma2/display', d)
+        do_split_packages(d, enigma2_skindir, '(.*?)/.*', 'enigma2-plugin-display-%s', 'Enigma2 Display Skin: %s', recursive=True, match_path=True, prepend=True)
 
-	currentlist = bb.data.getVar('PACKAGES', d, 1)
-	pkgnotwanted = open(bb.data.getVar('S', d, 1) + "/../skinsnotwanted").read()
-# 	logger.warning("NOT WANTED %s ", pkgnotwanted)
+    currentlist = bb.data.getVar('PACKAGES', d, 1)
+    pkgnotwanted = open(bb.data.getVar('S', d, 1) + "/../skinsnotwanted").read()
+#     logger.warning("NOT WANTED %s ", pkgnotwanted)
 
-	newlist = currentlist.split(" ")
-	for line in pkgnotwanted.split("\n"):
-		if line in newlist:
-			newlist.remove(line)
+    newlist = currentlist.split(" ")
+    for line in pkgnotwanted.split("\n"):
+        if line in newlist:
+            newlist.remove(line)
 
-	bb.data.setVar('PACKAGES', ' '.join(newlist), d)
+    bb.data.setVar('PACKAGES', ' '.join(newlist), d)
 }

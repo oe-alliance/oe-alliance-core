@@ -8,9 +8,9 @@ LIC_FILES_CHKSUM = "file://os_dep/linux/os_intfs.c;endline=19;md5=f8d10a6bd2fdfa
 inherit module machine_kernel_pr
 
 SRC_URI = "http://enigma2.world-of-satellite.com/git-extras/rtl8188C_8192C_usb_linux_v3.4.4_4749.20121105.tar.gz \
-	file://additional_productids.patch \
-	file://add-3.8-support.patch \
-	"
+    file://additional_productids.patch \
+    file://add-3.8-support.patch \
+    "
 
 S = "${WORKDIR}/rtl8188C_8192C_usb_linux_v3.4.4_4749.20121105"
 
