@@ -208,8 +208,8 @@ EXTRA_OECONF = " \
     STAGING_LIBDIR=${STAGING_LIBDIR} \
     --with-distro=${DISTRO_NAME} \
     ${@base_contains('MACHINEBUILD', 'odinm6', '--with-boxtype=${MACHINEBUILD}' , '--with-boxtype=${MACHINE}', d)} \
-    --with-machinebrand=${MACHINE_BRAND} \
-    --with-machinename=${MACHINE_NAME} \
+    --with-machinebrand="${MACHINE_BRAND}" \
+    --with-machinename="${MACHINE_NAME}" \
     --with-imageversion=${DISTRO_VERSION} \
     --with-imagebuild=${BUILD_VERSION} \
     --with-driverdate=${DRIVERSDATE} \
