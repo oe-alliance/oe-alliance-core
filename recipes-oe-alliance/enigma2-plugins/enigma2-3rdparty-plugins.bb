@@ -10,7 +10,7 @@ SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
 PV = "2.0"
-PR = "r24"
+PR = "r25"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -76,6 +76,7 @@ THIRDPARTY_PLUGINS = " \
 	enigma2-plugin-extensions-sherlock-vuplus_5.01_mipsel.ipk \
 	enigma2-plugin-extensions-skyrecorder_1.2.4r1_all.ipk \
 	enigma2-plugin-extensions-songs-to_0.1_mips32el.ipk \
+	enigma2-plugin-extensions-spiegelonline_2.3rc1_mips32el.ipk \
 	enigma2-plugin-extensions-sportmax_1.2_mips32el.ipk \
 	enigma2-plugin-extensions-subtitleplayer_3.20_mipsel.ipk \
 	enigma2-plugin-extensions-spinnerselector_2.0r5_mips32el.ipk \
@@ -95,6 +96,7 @@ THIRDPARTY_PLUGINS = " \
 	enigma2-plugin-extensions-webradiofs_11.07_all.ipk \
 	enigma2-plugin-extensions-wikipedia_1.8rc3_mips32el.ipk \
 	enigma2-plugin-extensions-yampmusicplayer_2.1.1-2012-09-23_mipsel.ipk \
+	enigma2-plugin-extensions-zdfnewmediathek_1.3rc4_mips32el.ipk \
 	enigma2-plugin-systemplugins-recordinfobar_1.0-rc15_mipsel.ipk \
 	"
 
