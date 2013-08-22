@@ -4,7 +4,7 @@ SECTION = "devel/python"
 LICENSE = "MIT license"
 LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=d8bf5ff31155bfe951a02be0c29215d3"
 
-PR = "r0"
+PR = "r3"
 
 SRC_URI = "http://pypi.python.org/packages/source/P/PyAMF/PyAMF-${PV}.tar.gz"
 
@@ -15,23 +15,4 @@ S = "${WORKDIR}/PyAMF-${PV}"
 
 inherit distutils
 
-PACKAGES =+ " ${PN}-src ${PN}-tests"
-RDEPENDS_{PN}-src = "${PN}"
-FILES_${PN}-src = " \
-    ${PYTHON_SITEPACKAGES_DIR}/*/*.py \
-    ${PYTHON_SITEPACKAGES_DIR}/*/*/*.py \
-    ${PYTHON_SITEPACKAGES_DIR}/*/*/*/*.py \
-    ${PYTHON_SITEPACKAGES_DIR}/*/*/*/*/*.py \
-    "
-
-FILES_${PN}-tests = " \
-  ${PYTHON_SITEPACKAGES_DIR}/*/test \
-  ${PYTHON_SITEPACKAGES_DIR}/*/*/test \
-"
-
-# some txt files which should go into -doc
-FILES_${PN}-doc += " \
-    ${PYTHON_SITEPACKAGES_DIR}/*-info \
-    ${PYTHON_SITEPACKAGES_DIR}/*/*-info \
-    "
-
+include python-package-split.inc

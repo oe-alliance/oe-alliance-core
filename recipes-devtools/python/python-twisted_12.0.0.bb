@@ -13,7 +13,7 @@ SRC_URI[md5sum] = "cf49a8676c21c50faf1b42b528049471"
 SRC_URI[sha256sum] = "e5561c9714583fd052ea9e0b10331609a719b3878f9d2593e4c57eab0ba0effd"
 
 S = "${WORKDIR}/Twisted-${PV}"
-PR = "r1"
+PR = "r6"
 
 inherit setuptools
 
@@ -221,7 +221,8 @@ RDEPENDS_${PN}-words += "${PN}-core"
 
 FILES_${PN}-flow = " \
 ${libdir}/${PYTHON_DIR}/site-packages/twisted/plugins/twisted_flow.py* \
-${libdir}/${PYTHON_DIR}/site-packages/twisted/flow \"
+${libdir}/${PYTHON_DIR}/site-packages/twisted/flow \
+"
 RDEPENDS_${PN}-flow += "${PN}-core"
 
 FILES_${PN}-pair = " \
@@ -235,3 +236,20 @@ ${libdir}/${PYTHON_DIR}/site-packages/twisted/*/.debug \
 ${libdir}/${PYTHON_DIR}/site-packages/twisted/*/*/.debug \
 "
 RDEPENDS_${PN}-dbg = "${PN}"
+
+
+PACKAGES =+ " ${PN}-src ${PN}-tests"
+RDEPENDS_{PN}-src = "${PN}"
+FILES_${PN}-src = " \
+    ${PYTHON_SITEPACKAGES_DIR}/*.py \
+    ${PYTHON_SITEPACKAGES_DIR}/*/*.py \
+    ${PYTHON_SITEPACKAGES_DIR}/*/*/*.py \
+    ${PYTHON_SITEPACKAGES_DIR}/*/*/*/*.py \
+    ${PYTHON_SITEPACKAGES_DIR}/*/*/*/*/*.py \
+    "
+
+# some txt files which should go into -doc
+FILES_${PN}-doc += " \
+    ${PYTHON_SITEPACKAGES_DIR}/*-info \
+    ${PYTHON_SITEPACKAGES_DIR}/*/*-info \
+    "

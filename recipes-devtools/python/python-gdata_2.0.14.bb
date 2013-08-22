@@ -5,7 +5,7 @@ LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://README.txt;beginline=1;endline=13;md5=7a713fc5eed20ac1904c2efe0b816a33"
 RDEPENDS_${PN} = "python-elementtree"
 RDEPENDS_${PN}-tests = "${PN}"
-PR = "r1"
+PR = "r3"
 
 SRC_URI = "http://gdata-python-client.googlecode.com/files/gdata-${PV}.tar.gz;name=archive"
 SRC_URI[archive.md5sum] = "29cf394b4f75aa4fae8c1b59079f2a02"
@@ -15,16 +15,6 @@ S = "${WORKDIR}/gdata-${PV}"
 
 inherit distutils
 
-PACKAGES =+ " ${PN}-src ${PN}-tests"
-
-FILES_${PN}-tests = "${libdir}/${PYTHON_DIR}/site-packages/gdata/test*"
 FILES_${PN} += "${datadir}"
-RDEPENDS_{PN}-src = "${PN}"
-FILES_${PN}-src = " \
-    ${libdir}/${PYTHON_DIR}/site-packages/*/*.py \
-    ${libdir}/${PYTHON_DIR}/site-packages/*/*/*.py \
-    ${libdir}/${PYTHON_DIR}/site-packages/*/*/*/*.py \
-    ${libdir}/${PYTHON_DIR}/site-packages/*/*/*/*/*.py \
-    "
 
-
+include python-package-split.inc

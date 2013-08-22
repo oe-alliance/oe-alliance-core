@@ -4,7 +4,7 @@ SECTION = "devel/python"
 LICENSE = "BSD"
 LIC_FILES_CHKSUM = "file://COPYING.txt;md5=83e365dc17176bd72ba7d08ca0555efa"
 
-PR = "r2"
+PR = "r3"
 
 SRC_URI = "http://www.crummy.com/software/BeautifulSoup/bs4/download/beautifulsoup4-${PV}.tar.gz"
 
@@ -15,23 +15,4 @@ S = "${WORKDIR}/beautifulsoup4-${PV}"
 
 inherit distutils
 
-PACKAGES =+ " ${PN}-src ${PN}-tests"
-RDEPENDS_{PN}-src = "${PN}"
-FILES_${PN}-src = " \
-    ${PYTHON_SITEPACKAGES_DIR}/*/*.py \
-    ${PYTHON_SITEPACKAGES_DIR}/*/*/*.py \
-    ${PYTHON_SITEPACKAGES_DIR}/*/*/*/*.py \
-    ${PYTHON_SITEPACKAGES_DIR}/*/*/*/*/*.py \
-    "
-
-FILES_${PN}-tests = " \
-  ${PYTHON_SITEPACKAGES_DIR}/*/test \
-  ${PYTHON_SITEPACKAGES_DIR}/*/*/test \
-"
-
-# some txt files which should go into -doc
-FILES_${PN}-doc += " \
-    ${PYTHON_SITEPACKAGES_DIR}/*-info \
-    ${PYTHON_SITEPACKAGES_DIR}/*/*-info \
-    "
-
+include python-package-split.inc

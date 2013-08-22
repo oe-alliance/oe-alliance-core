@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://LICENCE;md5=3f7c147addd67ce1d53239c68a6b7022"
 DEPENDS = "libxml2"
 SRCREV = "f4864b1f63866d738c18c02dcb16d824a049880c"
 PV = "0.6.7"
-PR = "r3"
+PR = "r5"
 
 SRC_URI = "git://github.com/sreichholf/coherence.git;protocol=git"
 
@@ -32,23 +32,5 @@ RDEPENDS_${PN}-bin = "${PN} python-zopeinterface"
 
 FILES_${PN}-bin = "${bindir} ${PYTHON_SITEPACKAGES_DIR}/misc/*.py"
 
-PACKAGES =+ " ${PN}-src ${PN}-tests"
-RDEPENDS_{PN}-src = "${PN}"
-FILES_${PN}-src = " \
-    ${PYTHON_SITEPACKAGES_DIR}/*/*.py \
-    ${PYTHON_SITEPACKAGES_DIR}/*/*/*.py \
-    ${PYTHON_SITEPACKAGES_DIR}/*/*/*/*.py \
-    ${PYTHON_SITEPACKAGES_DIR}/*/*/*/*/*.py \
-    "
-
-FILES_${PN}-tests = " \
-  ${PYTHON_SITEPACKAGES_DIR}/*/test \
-  ${PYTHON_SITEPACKAGES_DIR}/*/*/test \
-"
-
-# some txt files which should go into -doc
-FILES_${PN}-doc += " \
-    ${PYTHON_SITEPACKAGES_DIR}/*-info \
-    ${PYTHON_SITEPACKAGES_DIR}/*/*-info \
-    "
+include python-package-split.inc
 

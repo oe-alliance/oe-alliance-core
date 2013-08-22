@@ -4,7 +4,7 @@ SECTION = "devel/python"
 LICENSE = "BSD"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=badb0fe9d510b2bd9dce482a5435b585"
 
-PR = "r3"
+PR = "r4"
 
 DEPENDS_${PN} = "python-six"
 RDEPENDS_${PN} = "python-six"
@@ -16,25 +16,6 @@ SRC_URI[sha256sum] = "4c44ec3f9ff057b8c7b4c78beca5fdd8710600ea9a1df42f31bfcbae2f
 
 S = "${WORKDIR}/python-dateutil-${PV}"
 
-inherit distutils
+inherit setuptools
 
-PACKAGES =+ " ${PN}-src ${PN}-tests"
-RDEPENDS_{PN}-src = "${PN}"
-FILES_${PN}-src = " \
-    ${PYTHON_SITEPACKAGES_DIR}/*/*.py \
-    ${PYTHON_SITEPACKAGES_DIR}/*/*/*.py \
-    ${PYTHON_SITEPACKAGES_DIR}/*/*/*/*.py \
-    ${PYTHON_SITEPACKAGES_DIR}/*/*/*/*/*.py \
-    "
-
-FILES_${PN}-tests = " \
-  ${PYTHON_SITEPACKAGES_DIR}/*/test \
-  ${PYTHON_SITEPACKAGES_DIR}/*/*/test \
-"
-
-# some txt files which should go into -doc
-FILES_${PN}-doc += " \
-    ${PYTHON_SITEPACKAGES_DIR}/*-info \
-    ${PYTHON_SITEPACKAGES_DIR}/*/*-info \
-    "
-
+include python-package-split.inc

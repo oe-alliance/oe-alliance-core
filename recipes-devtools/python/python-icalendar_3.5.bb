@@ -4,7 +4,7 @@ SECTION = "devel/python"
 LICENSE = "BSD"
 LIC_FILES_CHKSUM = "file://LICENSE.rst;md5=8ff644958c37784425f321ace93fb329"
 
-PR = "r16"
+PR = "r19"
 
 DEPENDS_${PN} = "python-pytz python-dateutil"
 RDEPENDS_${PN} = "python-pytz python-dateutil"
@@ -16,25 +16,6 @@ SRC_URI[sha256sum] = "2fc1094896b9dcdfc87b5c07ec4a4dd3b65b70c1650e91884eff96ccb9
 
 S = "${WORKDIR}/icalendar-${PV}"
 
-inherit distutils
+inherit setuptools
 
-PACKAGES =+ " ${PN}-src ${PN}-tests"
-RDEPENDS_{PN}-src = "${PN}"
-FILES_${PN}-src = " \
-    ${PYTHON_SITEPACKAGES_DIR}/*/*.py \
-    ${PYTHON_SITEPACKAGES_DIR}/*/*/*.py \
-    ${PYTHON_SITEPACKAGES_DIR}/*/*/*/*.py \
-    ${PYTHON_SITEPACKAGES_DIR}/*/*/*/*/*.py \
-    "
-
-FILES_${PN}-tests = " \
-  ${PYTHON_SITEPACKAGES_DIR}/*/test \
-  ${PYTHON_SITEPACKAGES_DIR}/*/*/test \
-"
-
-# some txt files which should go into -doc
-FILES_${PN}-doc += " \
-    ${PYTHON_SITEPACKAGES_DIR}/*-info \
-    ${PYTHON_SITEPACKAGES_DIR}/*/*-info \
-    "
-
+include python-package-split.inc
