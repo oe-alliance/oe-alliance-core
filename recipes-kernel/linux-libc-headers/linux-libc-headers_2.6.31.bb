@@ -1,6 +1,6 @@
 COMPATIBLE_TARGET_SYS ?= "(?!nios2)"
 
-require linux-libc-headers.inc
+require recipes-kernel/linux-libc-headers/linux-libc-headers.inc
 
 PR = "4"
 
