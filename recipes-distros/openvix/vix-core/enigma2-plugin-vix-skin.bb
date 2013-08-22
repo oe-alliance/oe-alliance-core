@@ -11,13 +11,14 @@ EPSM = "enigma2-plugin-skins-vix"
 SRCREV = "${AUTOREV}"
 PV = "2.0+git${SRCPV}"
 PKGV = "2.0+git${GITPKGV}"
-PR = "r18"
+PR = "r19"
 
-PACKAGES = "vix-skin-common ${EPSM}-day-hd ${EPSM}-night-hd ${EPSM}-magic-sd ${EPSM}-magic-hd ${EPSM}-magic-hd-light vix-mhdc ${EPSM}-magic-hd-noire ${EPSM}-magic-hd-night vix-vixbmc-hd-common ${EPSM}-vixbmc-slim-hd ${EPSM}-vixbmc-night-hd ${EPSM}-vixbmc-metropolis"
-PROVIDES = "${PN} vix-skin-common ${EPSM}-day-hd ${EPSM}-night-hd ${EPSM}-magic-sd ${EPSM}-magic-hd ${EPSM}-magic-hd-light vix-mhdc ${EPSM}-magic-hd-noire ${EPSM}-magic-hd-night vix-vixbmc-hd-common ${EPSM}-vixbmc-slim-hd ${EPSM}-vixbmc-night-hd ${EPSM}-vixbmc-metropolis"
+PACKAGES += "vix-skin-common ${EPSM}-day-hd ${EPSM}-night-hd ${EPSM}-magic-sd ${EPSM}-magic-hd ${EPSM}-magic-hd-light vix-mhdc ${EPSM}-magic-hd-noire ${EPSM}-magic-hd-night vix-vixbmc-hd-common ${EPSM}-vixbmc-slim-hd ${EPSM}-vixbmc-night-hd ${EPSM}-vixbmc-metropolis"
+PROVIDES += "vix-skin-common ${EPSM}-day-hd ${EPSM}-night-hd ${EPSM}-magic-sd ${EPSM}-magic-hd ${EPSM}-magic-hd-light vix-mhdc ${EPSM}-magic-hd-noire ${EPSM}-magic-hd-night vix-vixbmc-hd-common ${EPSM}-vixbmc-slim-hd ${EPSM}-vixbmc-night-hd ${EPSM}-vixbmc-metropolis"
 
 SRC_URI="git://github.com/OpenViX/vix-skins.git;protocol=git"
 
+FILES_${PN}-doc = "/usr/share/enigma2/README*"
 FILES_vix-skin-common = "/usr/share/enigma2/ViX-Common"
 FILES_${EPSM}-day-hd = "/usr/share/enigma2/ViX-Day-HD"
 FILES_${EPSM}-night-hd = "/usr/share/enigma2/ViX-Night-HD"

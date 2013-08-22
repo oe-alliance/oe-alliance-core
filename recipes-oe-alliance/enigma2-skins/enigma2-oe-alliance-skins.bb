@@ -9,15 +9,16 @@ EPSM = "enigma2-plugin-skins"
 SRCREV = "${AUTOREV}"
 PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"
-PR = "r3"
+PR = "r4"
 
-PACKAGES = "${EPSM}-neonovum-hd ${EPSM}-mynovum-hd"
-PROVIDES = "${PN} ${EPSM}-neonovum-hd ${EPSM}-mynovum-hd"
+PACKAGES += "${EPSM}-neonovum-hd ${EPSM}-mynovum-hd"
+PROVIDES += "${EPSM}-neonovum-hd ${EPSM}-mynovum-hd"
 
 SRC_URI="git://github.com/oe-alliance/oe-alliance-skins.git;protocol=git"
 
 FILES_${EPSM}-neonovum-hd = "/usr/share/enigma2/NeoNOVUM_HD"
 FILES_${EPSM}-mynovum-hd = "/usr/share/enigma2/myNOVUM_HD"
+FILES_${PN}-doc = "/usr/share/enigma2/README*"
 
 S = "${WORKDIR}/git"
 
