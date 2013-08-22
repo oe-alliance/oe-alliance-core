@@ -4,8 +4,8 @@ PACKAGE_ARCH = "all"
 require conf/license/license-gplv2.inc
 
 RDEPENDS_${PN} = " \
-    rt3070 \
-    firmware-rt3070"
+	rt3070 \
+	firmware-rt3070"
 
 PV = "1.0"
 PR = "r2"

@@ -44,78 +44,78 @@ SRC_URI[dm500hdv2.sha256sum] = "005b9e99566fdee4d76ec1532273dc3e29a14b723d0bf610
 FILES_${PN} = "/boot /usr/share /etc/init.d"
 
 do_install() {
-    ${@base_contains("MACHINE_FEATURES", "dreambox", "install -d ${D}/boot", "", d)}
-    ${@base_contains("MACHINE_FEATURES", "dreambox", "install -m 0755 ${S}/dreambox-bootlogo_${BINARY_VERSION}_${MACHINE_ARCH}/bootlogo-${MACHINE_ARCH}.elf.gz ${D}/boot/; install -m 0755 ${S}/dreambox-bootlogo_${BINARY_VERSION}_${MACHINE_ARCH}/bootlogo-${MACHINE_ARCH}.jpg ${D}/boot/", "", d)}
-    install -d ${D}/usr/share
-    install -m 0644 bootlogo.mvi ${D}/usr/share/bootlogo.mvi
-    ln -sf /usr/share/bootlogo.mvi ${D}/usr/share/backdrop.mvi
-    install -d ${D}/usr/share/enigma2
-    install -m 0644 radio.mvi ${D}/usr/share/enigma2/radio.mvi
-    install -d ${D}/${sysconfdir}/init.d
-    install -m 0755 ${S}/bootlogo.sh ${D}/${sysconfdir}/init.d/bootlogo
+	${@base_contains("MACHINE_FEATURES", "dreambox", "install -d ${D}/boot", "", d)}
+	${@base_contains("MACHINE_FEATURES", "dreambox", "install -m 0755 ${S}/dreambox-bootlogo_${BINARY_VERSION}_${MACHINE_ARCH}/bootlogo-${MACHINE_ARCH}.elf.gz ${D}/boot/; install -m 0755 ${S}/dreambox-bootlogo_${BINARY_VERSION}_${MACHINE_ARCH}/bootlogo-${MACHINE_ARCH}.jpg ${D}/boot/", "", d)}
+	install -d ${D}/usr/share
+	install -m 0644 bootlogo.mvi ${D}/usr/share/bootlogo.mvi
+	ln -sf /usr/share/bootlogo.mvi ${D}/usr/share/backdrop.mvi
+	install -d ${D}/usr/share/enigma2
+	install -m 0644 radio.mvi ${D}/usr/share/enigma2/radio.mvi
+	install -d ${D}/${sysconfdir}/init.d
+	install -m 0755 ${S}/bootlogo.sh ${D}/${sysconfdir}/init.d/bootlogo
 }
 
 
 inherit deploy
 do_deploy() {
-    if [ -e splash.bin ]; then
-        if [ "${MACHINE}" == "iqonios100hd" -o "${MACHINE}" == "iqonios200hd" -o "${MACHINE}" == "iqonios300hd" -o "${MACHINE}" == "tmtwin" -o "${MACHINE}" == "tm2t" -o "${MACHINE}" == "tmsingle" -o "${MACHINE}" == "tmnano"]; then
-            install -m 0644 splash.bmp ${DEPLOYDIR}/${BOOTLOGO_FILENAME}
-        else
-            install -m 0644 splash.bin ${DEPLOYDIR}/${BOOTLOGO_FILENAME}
-        fi
-    fi
-    if [ -e lcdsplash.bin ]; then
-        install -m 0644 lcdsplash.bin ${DEPLOYDIR}/lcdsplash.bin
-    fi
+	if [ -e splash.bin ]; then
+		if [ "${MACHINE}" == "iqonios100hd" -o "${MACHINE}" == "iqonios200hd" -o "${MACHINE}" == "iqonios300hd" -o "${MACHINE}" == "tmtwin" -o "${MACHINE}" == "tm2t" -o "${MACHINE}" == "tmsingle" -o "${MACHINE}" == "tmnano"]; then
+			install -m 0644 splash.bmp ${DEPLOYDIR}/${BOOTLOGO_FILENAME}
+		else
+			install -m 0644 splash.bin ${DEPLOYDIR}/${BOOTLOGO_FILENAME}
+		fi
+	fi
+	if [ -e lcdsplash.bin ]; then
+		install -m 0644 lcdsplash.bin ${DEPLOYDIR}/lcdsplash.bin
+	fi
 }
 
 addtask deploy before do_build after do_install
 
 pkg_preinst() {
-    if grep dm /etc/hostname > /dev/null ; then
-        if [ -z "$D" ]
-        then
-            if mountpoint -q /boot
-            then
-                mount -o remount,rw,compr=none /boot
-            else
-                mount -t jffs2 -o rw,compr=none mtd:'boot partition' /boot
-            fi
-        fi
-    fi
+	if grep dm /etc/hostname > /dev/null ; then
+		if [ -z "$D" ]
+		then
+			if mountpoint -q /boot
+			then
+				mount -o remount,rw,compr=none /boot
+			else
+				mount -t jffs2 -o rw,compr=none mtd:'boot partition' /boot
+			fi
+		fi
+	fi
 }
 
 pkg_postinst() {
-    if grep dm /etc/hostname > /dev/null ; then
-        if [ -z "$D" ]
-        then
-            umount /boot
-        fi
-    fi
+	if grep dm /etc/hostname > /dev/null ; then
+		if [ -z "$D" ]
+		then
+			umount /boot
+		fi
+	fi
 }
 
 pkg_prerm() {
-    if grep dm /etc/hostname > /dev/null ; then
-        if [ -z "$D" ]
-        then
-            if mountpoint -q /boot
-            then
-                mount -o remount,rw,compr=none /boot
-            else
-                mount -t jffs2 -o rw,compr=none mtd:'boot partition' /boot
-            fi
-        fi
-    fi    
+	if grep dm /etc/hostname > /dev/null ; then
+		if [ -z "$D" ]
+		then
+			if mountpoint -q /boot
+			then
+				mount -o remount,rw,compr=none /boot
+			else
+				mount -t jffs2 -o rw,compr=none mtd:'boot partition' /boot
+			fi
+		fi
+	fi	
 }
 
 pkg_postrm() {
-    if grep dm /etc/hostname > /dev/null ; then
-        if [ -z "$D" ]
-        then
-            umount /boot
-        fi
-    fi    
+	if grep dm /etc/hostname > /dev/null ; then
+		if [ -z "$D" ]
+		then
+			umount /boot
+		fi
+	fi	
 }
 
 PACKAGE_ARCH := "${MACHINE_ARCH}"

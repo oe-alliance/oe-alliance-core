@@ -17,14 +17,14 @@ DEPENDS = "open4d-feeds"
 RDEPENDS_${PN} += "${E2DEFAULTSKIN} "
 
 RRECOMMENDS = "\
-    open4d-version-info \
-    enigma2-plugin-extensions-autotimer \
-    enigma2-plugin-extensions-audiosync \
-    enigma2-plugin-extensions-epgsearch \
-    enigma2-plugin-extensions-imdb \
-    enigma2-plugin-extensions-xmltvimport \
-    enigma2-plugin-systemplugins-crossepg \
-    enigma2-plugin-systemplugins-videoenhancement \    
-    \
+	open4d-version-info \
+	enigma2-plugin-extensions-autotimer \
+	enigma2-plugin-extensions-audiosync \
+	enigma2-plugin-extensions-epgsearch \
+	enigma2-plugin-extensions-imdb \
+	enigma2-plugin-extensions-xmltvimport \
+	enigma2-plugin-systemplugins-crossepg \
+	enigma2-plugin-systemplugins-videoenhancement \	
+	\
 "
 

@@ -6,8 +6,8 @@ require conf/license/license-gplv2.inc
 DEPENDS = "cups db openssl"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/project/netatalk/netatalk/${PV}/netatalk-${PV}.tar.gz;name=src \
-        file://afp.conf \
-        file://afpd.service"
+		file://afp.conf \
+		file://afpd.service"
 
 inherit autotools
 
@@ -18,19 +18,19 @@ INSANE_SKIP_${PN} = "dev-so"
 RRECOMMENDS_${PN} = "kernel-module-appletalk"
 
 EXTRA_OECONF += "ac_cv_path_KRB5_CONFIG=no \
-                ac_cv_header_rpcsvc_rquota_h=no \
-                --with-bdb=${STAGING_DIR_TARGET}${prefix_native} \
-                --with-ssl-dir=${STAGING_DIR_TARGET}${prefix_native} \
-                --without-shadow \
-                --enable-static=no \
-                --disable-srvloc \
-                --without-pam \
-                --with-init-style=debian"
+				ac_cv_header_rpcsvc_rquota_h=no \
+				--with-bdb=${STAGING_DIR_TARGET}${prefix_native} \
+				--with-ssl-dir=${STAGING_DIR_TARGET}${prefix_native} \
+				--without-shadow \
+				--enable-static=no \
+				--disable-srvloc \
+				--without-pam \
+				--with-init-style=debian"
 LDFLAGS += "-lpthread -L${STAGING_LIBDIR}"
 
 do_install_append() {
-    install -D -m 0644 ${WORKDIR}/afp.conf ${D}${sysconfdir}/afp.conf
-    install -D -m 0644 ${WORKDIR}/afpd.service ${D}${sysconfdir}/avahi/services/afpd.service
+	install -D -m 0644 ${WORKDIR}/afp.conf ${D}${sysconfdir}/afp.conf
+	install -D -m 0644 ${WORKDIR}/afpd.service ${D}${sysconfdir}/avahi/services/afpd.service
 }
 
 SRC_URI[src.md5sum] = "0d9446247e1eb260bf4205ea075958c0"

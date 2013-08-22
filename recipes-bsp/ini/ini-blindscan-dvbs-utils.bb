@@ -18,6 +18,6 @@ PR = "r4"
 S = "${WORKDIR}/"
 
 do_install() {
-    install -d "${D}/${bindir}"
-    install -m 0755 "${S}/ini_blindscan" "${D}/${bindir}"
+	install -d "${D}/${bindir}"
+	install -m 0755 "${S}/ini_blindscan" "${D}/${bindir}"
 }

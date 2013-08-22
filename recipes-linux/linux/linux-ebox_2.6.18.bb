@@ -14,25 +14,25 @@ SRC_URI[unionfs.sha256sum] = "b2e04936254bbf778c963de862061027c858a2e157bb2e48c7
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
 SRC_URI = "http://archiv.mixos-support.com/${MACHINE}-linux-${KERNEL}.tar.bz2;name=kernel \
-    http://download.filesystems.org/unionfs/unionfs-2.x/unionfs-2.5.11_for_2.6.18.8.diff.gz;name=unionfs \
-    file://defconfig \
-    file://linux-2.6.18-fix-mips-crosscompile.patch \
-    file://linux-2.6.18-fix-proc-cputype.patch \
-    file://stblinux-2.6.18-libata-revert-no-more-needed-change.patch \
-    file://stblinux-2.6.18-libata-hdd-spinup-workaround.patch \
-    file://kbuild-fix-make-incompatibility.patch \
-    file://0001-MIPS-Fix-possible-hang-in-LL-SC-futex-loops.patch \
-    file://0001-Add-support-for-FTDI-FT4232H-based-devices.patch \
-    file://0001-proc-mounts_poll-make-consistent-to-mdstat_poll.patch \
-    file://0001-fixed-broken-usb-with-gcc-4.6.x.patch \
-    file://linux-2.6.18-include-asm.patch \
-    file://linux-2.6.18-include-linux.patch \
-    file://linux-2.6.18-mod_devicetable_h.patch \
-    file://nfs-max-rwsize-8k.patch \
-    file://ebox5x00-flash.patch \
-    file://linux-2.6.18-usb_core_sysfs.patch \
-    file://linux-2.6.18-3g-modems.patch \
-    "
+	http://download.filesystems.org/unionfs/unionfs-2.x/unionfs-2.5.11_for_2.6.18.8.diff.gz;name=unionfs \
+	file://defconfig \
+	file://linux-2.6.18-fix-mips-crosscompile.patch \
+	file://linux-2.6.18-fix-proc-cputype.patch \
+	file://stblinux-2.6.18-libata-revert-no-more-needed-change.patch \
+	file://stblinux-2.6.18-libata-hdd-spinup-workaround.patch \
+	file://kbuild-fix-make-incompatibility.patch \
+	file://0001-MIPS-Fix-possible-hang-in-LL-SC-futex-loops.patch \
+	file://0001-Add-support-for-FTDI-FT4232H-based-devices.patch \
+	file://0001-proc-mounts_poll-make-consistent-to-mdstat_poll.patch \
+	file://0001-fixed-broken-usb-with-gcc-4.6.x.patch \
+	file://linux-2.6.18-include-asm.patch \
+	file://linux-2.6.18-include-linux.patch \
+	file://linux-2.6.18-mod_devicetable_h.patch \
+	file://nfs-max-rwsize-8k.patch \
+	file://ebox5x00-flash.patch \
+	file://linux-2.6.18-usb_core_sysfs.patch \
+	file://linux-2.6.18-3g-modems.patch \
+	"
 
 S = "${WORKDIR}/linux-${PV}"
 
@@ -47,8 +47,8 @@ KERNEL_IMAGEDEST = "/tmp"
 FILES_kernel-image = "${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}*"
 
 do_configure_prepend() {
-    oe_machinstall -m 0644 ${WORKDIR}/defconfig ${S}/.config
-    oe_runmake oldconfig
+	oe_machinstall -m 0644 ${WORKDIR}/defconfig ${S}/.config
+	oe_runmake oldconfig
 }
 
 do_install_append() {
@@ -58,17 +58,17 @@ do_install_append() {
 }
 
 kernel_do_install_append() {
-    ${STRIP} ${D}${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION}
-    gzip -9c ${D}${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION} > ${D}${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz
+	${STRIP} ${D}${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION}
+	gzip -9c ${D}${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION} > ${D}${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz
 }
 
 pkg_postinst_kernel-image () {
-    if [ "x$D" == "x" ]; then
-        if [ -f /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz ] ; then
-            flash_erase /dev/mtd1 0 0
-            nandwrite -p /dev/mtd1 /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz
-        fi
-    fi
-    rm -f /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz
-    true
+	if [ "x$D" == "x" ]; then
+		if [ -f /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz ] ; then
+			flash_erase /dev/mtd1 0 0
+			nandwrite -p /dev/mtd1 /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz
+		fi
+	fi
+	rm -f /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz
+	true
 }

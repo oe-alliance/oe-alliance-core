@@ -8,10 +8,10 @@ PR = "r9"
 inherit task
 
 RRECOMMENDS = "\
-    oe-alliance-skins \
-    enigma2-skins \
-    enigma2-pliplugins \
-    enigma2-plugin-extensions-gb-multiquickbutton \
-    enigma2-plugin-extensions-enhancedmoviecenter \
-    enigma2-plugin-extensions-cooltvguide \
-    "
+	oe-alliance-skins \
+	enigma2-skins \
+	enigma2-pliplugins \
+	enigma2-plugin-extensions-gb-multiquickbutton \
+	enigma2-plugin-extensions-enhancedmoviecenter \
+	enigma2-plugin-extensions-cooltvguide \
+	"

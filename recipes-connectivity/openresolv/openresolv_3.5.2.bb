@@ -50,11 +50,11 @@ FILES_${PN} += "/lib/resolvconf"
 
 pkg_postinst_${PN}() {
 if [ -z "$D" -a -x ${sysconfdir}/init.d/populate-volatile.sh ]; then
-    ${sysconfdir}/init.d/populate-volatile.sh update
+	${sysconfdir}/init.d/populate-volatile.sh update
 fi
 }
 pkg_postrm_${PN}() {
 if [ -z "$D" -a -x ${sysconfdir}/init.d/populate-volatile.sh ]; then
-    ${sysconfdir}/init.d/populate-volatile.sh update
+	${sysconfdir}/init.d/populate-volatile.sh update
 fi
 }

@@ -11,32 +11,32 @@ inherit task
 DEPENDS = "enigma2-pliplugins openatv-feeds"
 
 RRECOMMENDS = "\
-    enigma2-skindefault \
-    openatv-version-info \
-    enigma2-plugin-settings-defaultsat \
-    enigma2-plugin-drivers-usbserial \
-    enigma2-plugin-extensions-infopanel \
-    enigma2-plugin-extensions-autotimer \
-    enigma2-plugin-extensions-epgsearch \
-    enigma2-plugin-extensions-imdb \
-    enigma2-plugin-extensions-cutlisteditor \
-    enigma2-plugin-extensions-bmediacenter \
-    enigma2-plugin-extensions-dvdplayer \
-    enigma2-plugin-extensions-volume-adjust \
-    enigma2-plugin-systemplugins-videotune \
-    ${@base_contains("MACHINE_BRAND", "AZBOX", "", "enigma2-plugin-systemplugins-autoresolution", d)} \
-    ${@base_contains("CHIPSET", "bcm7358", "", "enigma2-plugin-systemplugins-videoenhancement", d)} \    
-    enigma2-plugin-systemplugins-softwaremanager \
-    enigma2-plugin-systemplugins-hotplug \
-    enigma2-plugin-extensions-mediaplayer \
-    ${@base_contains("MACHINE_FEATURES", "smallflash", "", \
-    " \
-    enigma2-plugin-extensions-enhancedmoviecenter \
-    enigma2-plugin-extensions-cooltvguide \
-    ", d)} \
-    ${@base_contains("MACHINE_FEATURES", "dreambox", "enigma2-plugin-extensions-dflash", "", d)} \
-    ${@base_contains("MACHINE_FEATURES", "boxmodel", "boxmodel", "", d)} \    
-    "
+	enigma2-skindefault \
+	openatv-version-info \
+	enigma2-plugin-settings-defaultsat \
+	enigma2-plugin-drivers-usbserial \
+	enigma2-plugin-extensions-infopanel \
+	enigma2-plugin-extensions-autotimer \
+	enigma2-plugin-extensions-epgsearch \
+	enigma2-plugin-extensions-imdb \
+	enigma2-plugin-extensions-cutlisteditor \
+	enigma2-plugin-extensions-bmediacenter \
+	enigma2-plugin-extensions-dvdplayer \
+	enigma2-plugin-extensions-volume-adjust \
+	enigma2-plugin-systemplugins-videotune \
+	${@base_contains("MACHINE_BRAND", "AZBOX", "", "enigma2-plugin-systemplugins-autoresolution", d)} \
+	${@base_contains("CHIPSET", "bcm7358", "", "enigma2-plugin-systemplugins-videoenhancement", d)} \	
+	enigma2-plugin-systemplugins-softwaremanager \
+	enigma2-plugin-systemplugins-hotplug \
+	enigma2-plugin-extensions-mediaplayer \
+	${@base_contains("MACHINE_FEATURES", "smallflash", "", \
+	" \
+	enigma2-plugin-extensions-enhancedmoviecenter \
+	enigma2-plugin-extensions-cooltvguide \
+	", d)} \
+	${@base_contains("MACHINE_FEATURES", "dreambox", "enigma2-plugin-extensions-dflash", "", d)} \
+	${@base_contains("MACHINE_FEATURES", "boxmodel", "boxmodel", "", d)} \	
+	"
 
 RRECOMMENDS_append_et5x00 = " swap-workaround"
 RRECOMMENDS_append_vusolo = " swap-workaround"

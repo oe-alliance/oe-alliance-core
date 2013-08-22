@@ -9,14 +9,14 @@ PR = "r3"
 inherit task
 
 RDEPENDS = "\
-    oe-alliance-base \
-    openpl-enigma2 \
-    openpl-bootlogo \
-    libcrypto-compat \
-    ntfs-3g \
-    hddtemp \
-    task-base-smbfs-client \
-    task-base-smbfs \
-    task-base-nfs \
-    busybox-cron \
-    "
+	oe-alliance-base \
+	openpl-enigma2 \
+	openpl-bootlogo \
+	libcrypto-compat \
+	ntfs-3g \
+	hddtemp \
+	task-base-smbfs-client \
+	task-base-smbfs \
+	task-base-nfs \
+	busybox-cron \
+	"

@@ -9,18 +9,18 @@ PR = "r4"
 inherit task
 
 RDEPENDS = "\
-    oe-alliance-base \
-    xtrendalliance-enigma2 \
-    xtrendalliance-bootlogo \
-    xtrendalliance-feed-config \
-    libcrypto-compat \
-    hddtemp \
-    dosfstools \
-    ntfs-3g \
-    task-base-smbfs-client \
-    task-base-smbfs \
-    task-base-nfs \
-    busybox-cron \
-    unrar \
-    "
+	oe-alliance-base \
+	xtrendalliance-enigma2 \
+	xtrendalliance-bootlogo \
+	xtrendalliance-feed-config \
+	libcrypto-compat \
+	hddtemp \
+	dosfstools \
+	ntfs-3g \
+	task-base-smbfs-client \
+	task-base-smbfs \
+	task-base-nfs \
+	busybox-cron \
+	unrar \
+	"
 

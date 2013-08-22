@@ -11,18 +11,18 @@ inherit task
 DEPENDS = "enigma2"
 
 RRECOMMENDS = "\
-    enigma2-plugin-skins-vix-day-hd \
-    enigma2-plugin-skins-vix-night-hd \
-    enigma2-plugin-skins-pli-hd \
-    enigma2-plugin-skins-vix-magic-sd \
-    enigma2-plugin-skins-vix-magic-hd \
-    enigma2-plugin-skins-vix-magic-hd-noire \
-    enigma2-plugin-skins-vix-magic-hd-night \
-    enigma2-plugin-skins-vix-vixbmc-slim-hd \
-    enigma2-plugin-skins-vix-vixbmc-night-hd \
-    enigma2-plugin-skins-vix-vixbmc-metropolis \
-    enigma2-plugin-skins-matrixhd \
-    enigma2-plugin-skins-mynovum-hd \
-    enigma2-plugin-skins-neonovum-hd \
-    enigma2-plugin-skins-army-moodblue-hd \
-    "
+	enigma2-plugin-skins-vix-day-hd \
+	enigma2-plugin-skins-vix-night-hd \
+	enigma2-plugin-skins-pli-hd \
+	enigma2-plugin-skins-vix-magic-sd \
+	enigma2-plugin-skins-vix-magic-hd \
+	enigma2-plugin-skins-vix-magic-hd-noire \
+	enigma2-plugin-skins-vix-magic-hd-night \
+	enigma2-plugin-skins-vix-vixbmc-slim-hd \
+	enigma2-plugin-skins-vix-vixbmc-night-hd \
+	enigma2-plugin-skins-vix-vixbmc-metropolis \
+	enigma2-plugin-skins-matrixhd \
+	enigma2-plugin-skins-mynovum-hd \
+	enigma2-plugin-skins-neonovum-hd \
+	enigma2-plugin-skins-army-moodblue-hd \
+	"

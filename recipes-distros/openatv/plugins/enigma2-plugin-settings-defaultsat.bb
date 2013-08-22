@@ -21,5 +21,5 @@ FILES_${PN} = "/etc/*"
 
 
 do_install() {
-    cp -rp ${S}/etc ${D}/
+	cp -rp ${S}/etc ${D}/
 }

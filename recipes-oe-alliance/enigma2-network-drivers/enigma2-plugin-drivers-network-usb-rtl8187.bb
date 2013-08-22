@@ -4,8 +4,8 @@ PACKAGE_ARCH = "all"
 require conf/license/license-gplv2.inc
 
 RDEPENDS_${PN} = " \
-    kernel-module-rtl8187 \
-    "
+	kernel-module-rtl8187 \
+	"
 
 PV = "1.0"
 PR = "r1"

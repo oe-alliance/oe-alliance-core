@@ -1,11 +1,11 @@
 PRINC = "4"
 
 SRC_URI_append_dm800 = " file://tc_ematch-header-files.patch \
-                        file://nl80211-header.patch"
+						file://nl80211-header.patch"
 SRC_URI_append_ebox5000 = " file://tc_ematch-header-files.patch \
-                        file://nl80211-header.patch"
+						file://nl80211-header.patch"
 SRC_URI_append_ebox5100 = " file://tc_ematch-header-files.patch \
-                        file://nl80211-header.patch"                        
+						file://nl80211-header.patch"						
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}_${PV}:"
 

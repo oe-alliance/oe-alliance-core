@@ -25,19 +25,19 @@ FILES_${PN}-po = "/usr/lib/enigma2/python/Plugins/Extensions/EtPortal/locale/*/*
 inherit autotools
 
 EXTRA_OECONF = "\
-    --with-libsdl=no --with-boxtype=${MACHINE} --with-po \
-    BUILD_SYS=${BUILD_SYS} \
-    HOST_SYS=${HOST_SYS} \
-    STAGING_INCDIR=${STAGING_INCDIR} \
-    STAGING_LIBDIR=${STAGING_LIBDIR} \
+	--with-libsdl=no --with-boxtype=${MACHINE} --with-po \
+	BUILD_SYS=${BUILD_SYS} \
+	HOST_SYS=${HOST_SYS} \
+	STAGING_INCDIR=${STAGING_INCDIR} \
+	STAGING_LIBDIR=${STAGING_LIBDIR} \
 "
 
 pkg_postinst() {
 #!/bin/sh 
 if  [ -f /usr/lib/enigma2/python/Plugins/Extensions/EtPortal/adultpassword ] ; then
-     echo ""
+ 	echo ""
 else
-     mv -f /tmp/adultpassword /usr/lib/enigma2/python/Plugins/Extensions/EtPortal/adultpassword
+ 	mv -f /tmp/adultpassword /usr/lib/enigma2/python/Plugins/Extensions/EtPortal/adultpassword
 fi
 echo ""
 echo "EtPortal successfully installed!"

@@ -8,13 +8,13 @@ PR = "r1"
 inherit task
 
 RRECOMMENDS = "\
-    oe-alliance-skins \
-    openatv-3rdparty-plugins \
-    enigma2-skins \
-    enigma2-plugin-extensions-project-valerie \
-    enigma2-plugin-extensions-xmltvimport \
-    enigma2-plugin-systemplugins-crossepg \
-    curlftpfs \
-    enigma2-plugin-extensions-enhancedmoviecenter \
-    enigma2-plugin-extensions-cooltvguide \
-    "
+	oe-alliance-skins \
+	openatv-3rdparty-plugins \
+	enigma2-skins \
+	enigma2-plugin-extensions-project-valerie \
+	enigma2-plugin-extensions-xmltvimport \
+	enigma2-plugin-systemplugins-crossepg \
+	curlftpfs \
+	enigma2-plugin-extensions-enhancedmoviecenter \
+	enigma2-plugin-extensions-cooltvguide \
+	"

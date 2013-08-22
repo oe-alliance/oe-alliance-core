@@ -9,16 +9,16 @@ PACKAGES_DYNAMIC = "kernel-*"
 KERNEL_BUILTIN_MODULES = ""
 
 KERNEL_BUILTIN_MODULES_dm8000 = "\
-    kernel-module-aes-generic \
-    kernel-module-crc32c \
-    kernel-module-mac80211 \
-    kernel-module-cfg80211 \
-    kernel-module-ath \
-    kernel-module-ath5k \
-    kernel-module-sr-mod \
-    kernel-module-isofs \
-    kernel-module-udf \
-    "
+	kernel-module-aes-generic \
+	kernel-module-crc32c \
+	kernel-module-mac80211 \
+	kernel-module-cfg80211 \
+	kernel-module-ath \
+	kernel-module-ath5k \
+	kernel-module-sr-mod \
+	kernel-module-isofs \
+	kernel-module-udf \
+	"
 
 # By default, kernel.bbclass modifies package names to allow multiple kernels
 # to be installed in parallel. We revert this change and rprovide the versioned
@@ -43,26 +43,26 @@ do_install_append() {
 FILES_kernel-image += "/${KERNEL_IMAGEDEST}/autoexec*.bat"
 
 pkg_preinst_kernel-image() {
-    if [ -z "$D" ]
-    then
-        if mountpoint -q /${KERNEL_IMAGEDEST}
-        then
-            mount -o remount,rw,compr=none /${KERNEL_IMAGEDEST}
-        else
-            mount -t jffs2 -o rw,compr=none mtd:boot /${KERNEL_IMAGEDEST} || mount -t jffs2 -o rw,compr=none mtd:'boot partition' /${KERNEL_IMAGEDEST}
-        fi
-    fi
+	if [ -z "$D" ]
+	then
+		if mountpoint -q /${KERNEL_IMAGEDEST}
+		then
+			mount -o remount,rw,compr=none /${KERNEL_IMAGEDEST}
+		else
+			mount -t jffs2 -o rw,compr=none mtd:boot /${KERNEL_IMAGEDEST} || mount -t jffs2 -o rw,compr=none mtd:'boot partition' /${KERNEL_IMAGEDEST}
+		fi
+	fi
 }
 pkg_prerm_kernel-image() {
-    if [ -z "$D" ]
-    then
-        if mountpoint -q /${KERNEL_IMAGEDEST}
-        then
-            mount -o remount,rw,compr=none /${KERNEL_IMAGEDEST}
-        else
-            mount -t jffs2 -o rw,compr=none mtd:boot /${KERNEL_IMAGEDEST}
-        fi
-    fi
+	if [ -z "$D" ]
+	then
+		if mountpoint -q /${KERNEL_IMAGEDEST}
+		then
+			mount -o remount,rw,compr=none /${KERNEL_IMAGEDEST}
+		else
+			mount -t jffs2 -o rw,compr=none mtd:boot /${KERNEL_IMAGEDEST}
+		fi
+	fi
 }
 pkg_postinst_kernel-image() {
         if [ -z "$D" ] && mountpoint -q /${KERNEL_IMAGEDEST}; then
@@ -73,10 +73,10 @@ pkg_postinst_kernel-image() {
         fi
 }
 pkg_postrm_kernel-image() {
-    if [ -z "$D" ]
-    then
-        umount /${KERNEL_IMAGEDEST}
-    fi
+	if [ -z "$D" ]
+	then
+		umount /${KERNEL_IMAGEDEST}
+	fi
 }
 
 # Do not use update-alternatives!

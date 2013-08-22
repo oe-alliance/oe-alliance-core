@@ -15,7 +15,7 @@ PKGV = "2.8.4+git${GITPKGV}"
 PR = "r1"
 
 SRC_URI = "git://github.com/oe-alliance/e2openplugin-${MODULE}.git;protocol=git \
-        file://LICENSE.GPLv2"
+		file://LICENSE.GPLv2"
 
 S = "${WORKDIR}/git"
 
@@ -28,28 +28,28 @@ FILES_${PN}-po = "/usr/lib/enigma2/python/Plugins/Extensions/MultiQuickButton/lo
 inherit autotools
 
 EXTRA_OECONF = "\
-    --with-libsdl=no --with-boxtype=${MACHINE} --with-po \
-    BUILD_SYS=${BUILD_SYS} \
-    HOST_SYS=${HOST_SYS} \
-    STAGING_INCDIR=${STAGING_INCDIR} \
-    STAGING_LIBDIR=${STAGING_LIBDIR} \
+	--with-libsdl=no --with-boxtype=${MACHINE} --with-po \
+	BUILD_SYS=${BUILD_SYS} \
+	HOST_SYS=${HOST_SYS} \
+	STAGING_INCDIR=${STAGING_INCDIR} \
+	STAGING_LIBDIR=${STAGING_LIBDIR} \
 "
 
 # remove unused .pyc files
 do_install_append() {
-    find ${D}/usr/lib/enigma2/python/Plugins/Extensions/MultiQuickButton/ -name '*.pyc' -exec rm {} \;
+	find ${D}/usr/lib/enigma2/python/Plugins/Extensions/MultiQuickButton/ -name '*.pyc' -exec rm {} \;
 }
 
 pkg_postinst() {
 #!/bin/sh
 if ! test -d /etc/MultiQuickButton; then
-    mkdir /etc/MultiQuickButton
+	mkdir /etc/MultiQuickButton
 fi
 cd /tmp/mqb
 for buttonfile in *.xml; do
-    if ! test -f /etc/MultiQuickButton/$buttonfile; then
-        cp /tmp/mqb/$buttonfile /etc/MultiQuickButton
-    fi
+	if ! test -f /etc/MultiQuickButton/$buttonfile; then
+		cp /tmp/mqb/$buttonfile /etc/MultiQuickButton
+	fi
 done
 cd /
 rm -rf /tmp/mqb

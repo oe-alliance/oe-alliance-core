@@ -18,5 +18,5 @@ EXTRA_OECONF = "--disable-manpages"
 S = "${WORKDIR}/git"
 
 do_configure_prepend() {
-    gtkdocize --docdir ${S}/libkmod/docs || touch ${S}/libkmod/docs/gtk-doc.make
+	gtkdocize --docdir ${S}/libkmod/docs || touch ${S}/libkmod/docs/gtk-doc.make
 }

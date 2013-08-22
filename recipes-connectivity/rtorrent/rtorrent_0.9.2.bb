@@ -8,7 +8,7 @@ DEPENDS = "cppunit libtorrent curl ncurses gnutls libgpg-error"
 PR = "r0"
 
 SRC_URI = "http://libtorrent.rakshasa.no/downloads/${PN}-${PV}.tar.gz \
-    file://autoconf-cross-fix.patch"
+	file://autoconf-cross-fix.patch"
 
 inherit autotools
 

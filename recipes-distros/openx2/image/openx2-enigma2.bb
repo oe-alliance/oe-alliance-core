@@ -11,19 +11,19 @@ inherit task
 DEPENDS = "openx2-feeds"
 
 RRECOMMENDS = "\
-    enigma2-skindefault \
-    openx2-version-info \
-    enigma2-plugin-drivers-usbserial \
-    enigma2-plugin-extensions-infopanel \
-    enigma2-plugin-extensions-autotimer \
-    enigma2-plugin-extensions-epgsearch \
-    enigma2-plugin-extensions-imdb \
-    enigma2-plugin-extensions-cutlisteditor \
-    enigma2-plugin-extensions-bmediacenter \
-    enigma2-plugin-extensions-dvdplayer \
-    enigma2-plugin-extensions-volume-adjust \
-    enigma2-plugin-systemplugins-videotune \
-    enigma2-plugin-systemplugins-softwaremanager \
-    enigma2-plugin-systemplugins-hotplug \
-    enigma2-plugin-systemplugins-videoenhancement \    
-    "
+	enigma2-skindefault \
+	openx2-version-info \
+	enigma2-plugin-drivers-usbserial \
+	enigma2-plugin-extensions-infopanel \
+	enigma2-plugin-extensions-autotimer \
+	enigma2-plugin-extensions-epgsearch \
+	enigma2-plugin-extensions-imdb \
+	enigma2-plugin-extensions-cutlisteditor \
+	enigma2-plugin-extensions-bmediacenter \
+	enigma2-plugin-extensions-dvdplayer \
+	enigma2-plugin-extensions-volume-adjust \
+	enigma2-plugin-systemplugins-videotune \
+	enigma2-plugin-systemplugins-softwaremanager \
+	enigma2-plugin-systemplugins-hotplug \
+	enigma2-plugin-systemplugins-videoenhancement \	
+	"

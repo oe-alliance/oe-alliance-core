@@ -21,12 +21,12 @@ S = "${WORKDIR}"
 FILES_${PN} = "${bindir}/*"
 
 do_compile() {
-    make -f Makefile eplayer4
-    ${STRIP} ${S}/eplayer4
+	make -f Makefile eplayer4
+	${STRIP} ${S}/eplayer4
 }
 
 do_install() {
-    install -d ${D}/${bindir}
-    install -m 755 ${S}/eplayer4 ${D}/${bindir}
+	install -d ${D}/${bindir}
+	install -m 755 ${S}/eplayer4 ${D}/${bindir}
 }
 

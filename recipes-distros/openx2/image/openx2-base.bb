@@ -9,13 +9,13 @@ PR = "r3"
 inherit task
 
 RDEPENDS = "\
-    oe-alliance-base \
-    openx2-enigma2 \
-    openx2-bootlogo \
-    openx2-spinner \
-    libcrypto-compat \
-    ntfs-3g \
-    hddtemp \
-    busybox-cron \
-    python-imaging \
-    "
+	oe-alliance-base \
+	openx2-enigma2 \
+	openx2-bootlogo \
+	openx2-spinner \
+	libcrypto-compat \
+	ntfs-3g \
+	hddtemp \
+	busybox-cron \
+	python-imaging \
+	"

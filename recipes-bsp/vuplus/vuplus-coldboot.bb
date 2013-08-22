@@ -12,7 +12,7 @@ INITSCRIPT_NAME = "coldboot"
 INITSCRIPT_PARAMS = "start 30 0 ."
 
 do_install() {
-    install -d ${D}/etc/init.d ${D}/usr/bin
-    install -m 0755 ${WORKDIR}/coldboot.sh ${D}/etc/init.d/coldboot
-    install -m 0755 ${WORKDIR}/coldboot ${D}/usr/bin/coldboot
+	install -d ${D}/etc/init.d ${D}/usr/bin
+	install -m 0755 ${WORKDIR}/coldboot.sh ${D}/etc/init.d/coldboot
+	install -m 0755 ${WORKDIR}/coldboot ${D}/usr/bin/coldboot
 }

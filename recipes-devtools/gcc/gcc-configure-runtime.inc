@@ -15,29 +15,29 @@ RUNTIMETARGET = "libssp libstdc++-v3"
 # libgfortran
 
 do_configure () {
-    export CXX="${CXX} -nostdinc++ -nostdlib++"
-    for d in ${RUNTIMETARGET}; do
-        echo "Configuring $d"
-        mkdir -p ${B}/$d/
-        cd ${B}/$d/
-        chmod a+x ${S}/$d/configure
-        ${S}/$d/configure ${CONFIGUREOPTS} ${EXTRA_OECONF}
-    done
+	export CXX="${CXX} -nostdinc++ -nostdlib++"
+	for d in ${RUNTIMETARGET}; do
+		echo "Configuring $d"
+		mkdir -p ${B}/$d/
+		cd ${B}/$d/
+		chmod a+x ${S}/$d/configure
+		${S}/$d/configure ${CONFIGUREOPTS} ${EXTRA_OECONF}
+	done
 }
 
 do_compile () {
-    for d in ${RUNTIMETARGET}; do
-        cd ${B}/$d/
-        oe_runmake
-    done
+	for d in ${RUNTIMETARGET}; do
+		cd ${B}/$d/
+		oe_runmake
+	done
 }
 
 do_install () {
-    for d in ${RUNTIMETARGET}; do
-        cd ${B}/$d/
-        oe_runmake 'DESTDIR=${D}' install
-    done
-    chown -R root:root ${D}
+	for d in ${RUNTIMETARGET}; do
+		cd ${B}/$d/
+		oe_runmake 'DESTDIR=${D}' install
+	done
+	chown -R root:root ${D}
 }
 
 INHIBIT_DEFAULT_DEPS = "1"

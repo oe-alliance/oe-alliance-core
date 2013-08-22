@@ -24,7 +24,7 @@ FILES_${PN} = "/usr/*"
 FILES_${PN} += "/etc/*"
 
 do_install() {
-    cp -rp ${S}/usr ${D}/
-    cp -rp ${S}/etc ${D}/
+	cp -rp ${S}/usr ${D}/
+	cp -rp ${S}/etc ${D}/
 
 }

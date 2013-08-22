@@ -197,61 +197,61 @@ FILES_${QT_BASE_NAME}-qml-plugins          = "${libdir}/${QT_DIR_NAME}/imports/*
 FILES_${QT_BASE_NAME}-qml-plugins-dbg      = "${libdir}/${QT_DIR_NAME}/imports/*/*/*/.debug/* ${libdir}/${QT_DIR_NAME}/imports/*/.debug ${libdir}/${QT_DIR_NAME}/plugins/qmltooling/.debug"
 
 do_configure() {
-    unset QMAKESPEC
-    unset QTDIR
+	unset QMAKESPEC
+	unset QTDIR
 
-    if [ ! -e bin/qmake ]; then
-        ln -sf ${STAGING_BINDIR_NATIVE}/qmake2 bin/qmake
-    fi
+	if [ ! -e bin/qmake ]; then
+		ln -sf ${STAGING_BINDIR_NATIVE}/qmake2 bin/qmake
+	fi
 
-    if [ ! -e mkspecs/${TARGET_OS}-oe-g++ ]; then
-        ln -sf linux-g++ mkspecs/${TARGET_OS}-oe-g++
-    fi
+	if [ ! -e mkspecs/${TARGET_OS}-oe-g++ ]; then
+		ln -sf linux-g++ mkspecs/${TARGET_OS}-oe-g++
+	fi
 
-    if [ -f mkspecs/common/g++-unix.conf ] ; then
-        # mkspecs were refactored for 4.8.0
-        cp -f ${WORKDIR}/g++.conf mkspecs/common/g++-unix.conf
-    else
-        cp -f ${WORKDIR}/g++.conf mkspecs/common/g++.conf
-    fi
-    cp -f ${WORKDIR}/linux.conf mkspecs/common/
+	if [ -f mkspecs/common/g++-unix.conf ] ; then
+		# mkspecs were refactored for 4.8.0
+		cp -f ${WORKDIR}/g++.conf mkspecs/common/g++-unix.conf
+	else
+		cp -f ${WORKDIR}/g++.conf mkspecs/common/g++.conf
+	fi
+	cp -f ${WORKDIR}/linux.conf mkspecs/common/
 
-    echo "[Paths]"                                 > $QT_CONF_PATH
-    echo "Prefix=${prefix}/"                      >> $QT_CONF_PATH
-    echo "Documentation=${docdir}/${QT_DIR_NAME}" >> $QT_CONF_PATH
-    echo "Headers=${includedir}/${QT_DIR_NAME}"   >> $QT_CONF_PATH
-    echo "Libraries=${libdir}"                    >> $QT_CONF_PATH
-    echo "Binaries=${bindir}"                     >> $QT_CONF_PATH
-    echo "Plugins=${libdir}/${QT_DIR_NAME}/plugins" >> $QT_CONF_PATH
-    echo "Imports=${libdir}/${QT_DIR_NAME}/imports" >> $QT_CONF_PATH
-    echo "Data=${datadir}/${QT_DIR_NAME}"         >> $QT_CONF_PATH
-    echo "Translations=${datadir}/${QT_DIR_NAME}/translations" >> $QT_CONF_PATH
-    echo "Settings=${sysconfdir}/${QT_DIR_NAME}"  >> $QT_CONF_PATH
-    echo "Examples=${bindir}/${QT_DIR_NAME}/examples" >> $QT_CONF_PATH
-    echo "Demos=${bindir}/${QT_DIR_NAME}/demos"   >> $QT_CONF_PATH
+	echo "[Paths]"                                 > $QT_CONF_PATH
+	echo "Prefix=${prefix}/"                      >> $QT_CONF_PATH
+	echo "Documentation=${docdir}/${QT_DIR_NAME}" >> $QT_CONF_PATH
+	echo "Headers=${includedir}/${QT_DIR_NAME}"   >> $QT_CONF_PATH
+	echo "Libraries=${libdir}"                    >> $QT_CONF_PATH
+	echo "Binaries=${bindir}"                     >> $QT_CONF_PATH
+	echo "Plugins=${libdir}/${QT_DIR_NAME}/plugins" >> $QT_CONF_PATH
+	echo "Imports=${libdir}/${QT_DIR_NAME}/imports" >> $QT_CONF_PATH
+	echo "Data=${datadir}/${QT_DIR_NAME}"         >> $QT_CONF_PATH
+	echo "Translations=${datadir}/${QT_DIR_NAME}/translations" >> $QT_CONF_PATH
+	echo "Settings=${sysconfdir}/${QT_DIR_NAME}"  >> $QT_CONF_PATH
+	echo "Examples=${bindir}/${QT_DIR_NAME}/examples" >> $QT_CONF_PATH
+	echo "Demos=${bindir}/${QT_DIR_NAME}/demos"   >> $QT_CONF_PATH
 
-    ${EXTRA_QMAKE_MUNGE}|| true
+	${EXTRA_QMAKE_MUNGE}|| true
 
-    (echo o; echo yes) | ./configure -v \
-            -prefix ${prefix}/ \
-            -bindir ${bindir} \
-            -libdir ${libdir} \
-            -datadir ${datadir}/${QT_DIR_NAME} \
-            -sysconfdir ${sysconfdir}/${QT_DIR_NAME} \
-            -docdir ${docdir}/${QT_DIR_NAME} \
-            -headerdir ${includedir}/${QT_DIR_NAME} \
-            -plugindir ${libdir}/${QT_DIR_NAME}/plugins \
-            -importdir ${libdir}/${QT_DIR_NAME}/imports \
-            -translationdir ${datadir}/${QT_DIR_NAME}/translations \
-            -examplesdir ${bindir}/${QT_DIR_NAME}/examples \
-            -demosdir ${bindir}/${QT_DIR_NAME}/demos \
-            -platform ${TARGET_OS}-oe-g++ \
-            -xplatform ${TARGET_OS}-oe-g++ \
-            ${QT_ENDIAN} \
-            -crossarch ${QT_ARCH} \
-            ${QT_CONFIG_FLAGS} -no-fast \
-            -L${STAGING_LIBDIR} -I${STAGING_INCDIR} \
-            -I${STAGING_INCDIR}/freetype2
+	(echo o; echo yes) | ./configure -v \
+			-prefix ${prefix}/ \
+			-bindir ${bindir} \
+			-libdir ${libdir} \
+			-datadir ${datadir}/${QT_DIR_NAME} \
+			-sysconfdir ${sysconfdir}/${QT_DIR_NAME} \
+			-docdir ${docdir}/${QT_DIR_NAME} \
+			-headerdir ${includedir}/${QT_DIR_NAME} \
+			-plugindir ${libdir}/${QT_DIR_NAME}/plugins \
+			-importdir ${libdir}/${QT_DIR_NAME}/imports \
+			-translationdir ${datadir}/${QT_DIR_NAME}/translations \
+			-examplesdir ${bindir}/${QT_DIR_NAME}/examples \
+			-demosdir ${bindir}/${QT_DIR_NAME}/demos \
+			-platform ${TARGET_OS}-oe-g++ \
+			-xplatform ${TARGET_OS}-oe-g++ \
+			${QT_ENDIAN} \
+			-crossarch ${QT_ARCH} \
+			${QT_CONFIG_FLAGS} -no-fast \
+			-L${STAGING_LIBDIR} -I${STAGING_INCDIR} \
+			-I${STAGING_INCDIR}/freetype2
 }
 
 do_compile() {
@@ -329,66 +329,66 @@ python populate_packages_prepend() {
 }
 
 do_install() {
-    oe_runmake install INSTALL_ROOT=${D}
+	oe_runmake install INSTALL_ROOT=${D}
 
-    # Install a proper target version of qmake
-    rm ${D}/${bindir}/qmake
-    install -m 0755 bin/qmake2 ${D}${bindir}/qmake
+	# Install a proper target version of qmake
+	rm ${D}/${bindir}/qmake
+	install -m 0755 bin/qmake2 ${D}${bindir}/qmake
 
-    # fix pkgconfig, libtool and prl files
-    sed -i -e 's#-L${S}/lib/\?##g' \
-            -e 's#-L${STAGING_LIBDIR}/\?##g' \
-            -e 's#STAGING_LIBDIR}#libdir}'#g \
-            -e 's#-L${libdir}/\?##g' \
-            -e s#'$(OE_QMAKE_LIBS_X11)'#"${OE_QMAKE_LIBS_X11}"#g \
-            -e 's#" -Wl,-rpath-link,${S}/lib/\?"##g' \
-            -e 's#" -Wl,-rpath-link,${libdir}/\?"##g' \
-            -e 's#Iin#I${in#g' \
-            -e 's#-L\.\./\.\./WebCore/release\s\+-L\.\./\.\./JavaScriptCore/release\s\+-lwebcore\s\+-ljscore##g' \
-            ${D}${libdir}/*.la ${D}${libdir}/*.prl ${D}${libdir}/pkgconfig/*.pc
+	# fix pkgconfig, libtool and prl files
+	sed -i -e 's#-L${S}/lib/\?##g' \
+			-e 's#-L${STAGING_LIBDIR}/\?##g' \
+			-e 's#STAGING_LIBDIR}#libdir}'#g \
+			-e 's#-L${libdir}/\?##g' \
+			-e s#'$(OE_QMAKE_LIBS_X11)'#"${OE_QMAKE_LIBS_X11}"#g \
+			-e 's#" -Wl,-rpath-link,${S}/lib/\?"##g' \
+			-e 's#" -Wl,-rpath-link,${libdir}/\?"##g' \
+			-e 's#Iin#I${in#g' \
+			-e 's#-L\.\./\.\./WebCore/release\s\+-L\.\./\.\./JavaScriptCore/release\s\+-lwebcore\s\+-ljscore##g' \
+			${D}${libdir}/*.la ${D}${libdir}/*.prl ${D}${libdir}/pkgconfig/*.pc
 
-    sed -i -e s#" -Wl,-rpath-link,${S}/lib"##g \
-            ${D}${datadir}/${QT_DIR_NAME}/mkspecs/common/linux.conf
+	sed -i -e s#" -Wl,-rpath-link,${S}/lib"##g \
+			${D}${datadir}/${QT_DIR_NAME}/mkspecs/common/linux.conf
 
-    # fix pkgconfig files
-    sed -i -e s#"moc_location=.*$"#"moc_location=${bindir}/moc4"# \
-            -e s#"uic_location=.*$"#"uic_location=${bindir}/uic4"# \
-            ${D}${libdir}/pkgconfig/*.pc
-    for name in ${QT_LIB_NAMES}; do
-        sed -i -e /Requires/s#"${name}"#"${name}${QT_LIBINFIX}"#g ${D}${libdir}/pkgconfig/*.pc
-    done
+	# fix pkgconfig files
+	sed -i -e s#"moc_location=.*$"#"moc_location=${bindir}/moc4"# \
+			-e s#"uic_location=.*$"#"uic_location=${bindir}/uic4"# \
+			${D}${libdir}/pkgconfig/*.pc
+	for name in ${QT_LIB_NAMES}; do
+		sed -i -e /Requires/s#"${name}"#"${name}${QT_LIBINFIX}"#g ${D}${libdir}/pkgconfig/*.pc
+	done
 
-    # QT abuses $includedir to point to its headers, which breaks pkgconfig sysroot, so manually fix it up here:
-    for pc in ${D}${libdir}/pkgconfig/*.pc ; do
-        sed -i -e "s:prefix}include/${QT_DIR_NAME}/$(basename $pc .pc):prefix}/include:" \
-                -e 's:IP{:I${:g' $pc
-    done
+	# QT abuses $includedir to point to its headers, which breaks pkgconfig sysroot, so manually fix it up here:
+	for pc in ${D}${libdir}/pkgconfig/*.pc ; do
+		sed -i -e "s:prefix}include/${QT_DIR_NAME}/$(basename $pc .pc):prefix}/include:" \
+				-e 's:IP{:I${:g' $pc
+	done
 
-    install -d ${D}/${libdir}/fonts
-    touch ${D}/${libdir}/fonts/fontdir
+	install -d ${D}/${libdir}/fonts
+	touch ${D}/${libdir}/fonts/fontdir
 
-    #Append an E to the qtdemo file
-    if [ -n "${QT_LIBINFIX}" ] ; then
-        [ -f ${D}${bindir}/qtdemo ] && mv ${D}${bindir}/qtdemo ${D}${bindir}/qtdemo${QT_LIBINFIX}
-    fi
+	#Append an E to the qtdemo file
+	if [ -n "${QT_LIBINFIX}" ] ; then
+		[ -f ${D}${bindir}/qtdemo ] && mv ${D}${bindir}/qtdemo ${D}${bindir}/qtdemo${QT_LIBINFIX}
+	fi
 
-    script="${D}/${datadir}/${QT_DIR_NAME}/environment-setup"
-    touch $script
-    echo 'export QT_DIR_NAME=${QT_DIR_NAME}' >> $script
-    echo 'export QT_LIBINFIX=${QT_LIBINFIX}' >> $script
-    echo 'export OE_QMAKE_AR=ar' >> $script
-    echo 'export OE_QMAKE_CC=gcc' >> $script
-    echo 'export OE_QMAKE_CXX=g++' >> $script
-    echo 'export OE_QMAKE_LINK=g++' >> $script
-    echo 'export OE_QMAKE_LIBDIR_QT=${libdir}' >> $script
-    echo 'export OE_QMAKE_INCDIR_QT=${includedir}/${QT_DIR_NAME}' >> $script
-    echo 'export OE_QMAKE_MOC=${bindir}/moc' >> $script
-    echo 'export OE_QMAKE_UIC=${bindir}/uic' >> $script
-    echo 'export OE_QMAKE_UIC3=${bindir}/uic3' >> $script
-    echo 'export OE_QMAKE_RCC=${bindir}/rcc' >> $script
-    echo 'export OE_QMAKE_QDBUSCPP2XML=${bindir}/qdbuscpp2xml' >> $script
-    echo 'export OE_QMAKE_QDBUSXML2CPP=${bindir}/qdbusxml2cpp' >> $script
-    echo 'export OE_QMAKE_QT_CONFIG=${datadir}/${QT_DIR_NAME}/mkspecs/qconfig.pri' >> $script
-    echo 'export QMAKESPEC=${datadir}/${QT_DIR_NAME}/mkspecs/linux-g++' >> $script
-    chmod 0755 $script
+	script="${D}/${datadir}/${QT_DIR_NAME}/environment-setup"
+	touch $script
+	echo 'export QT_DIR_NAME=${QT_DIR_NAME}' >> $script
+	echo 'export QT_LIBINFIX=${QT_LIBINFIX}' >> $script
+	echo 'export OE_QMAKE_AR=ar' >> $script
+	echo 'export OE_QMAKE_CC=gcc' >> $script
+	echo 'export OE_QMAKE_CXX=g++' >> $script
+	echo 'export OE_QMAKE_LINK=g++' >> $script
+	echo 'export OE_QMAKE_LIBDIR_QT=${libdir}' >> $script
+	echo 'export OE_QMAKE_INCDIR_QT=${includedir}/${QT_DIR_NAME}' >> $script
+	echo 'export OE_QMAKE_MOC=${bindir}/moc' >> $script
+	echo 'export OE_QMAKE_UIC=${bindir}/uic' >> $script
+	echo 'export OE_QMAKE_UIC3=${bindir}/uic3' >> $script
+	echo 'export OE_QMAKE_RCC=${bindir}/rcc' >> $script
+	echo 'export OE_QMAKE_QDBUSCPP2XML=${bindir}/qdbuscpp2xml' >> $script
+	echo 'export OE_QMAKE_QDBUSXML2CPP=${bindir}/qdbusxml2cpp' >> $script
+	echo 'export OE_QMAKE_QT_CONFIG=${datadir}/${QT_DIR_NAME}/mkspecs/qconfig.pri' >> $script
+	echo 'export QMAKESPEC=${datadir}/${QT_DIR_NAME}/mkspecs/linux-g++' >> $script
+	chmod 0755 $script
 }

@@ -15,9 +15,9 @@ SRC_URI = "http://feed.odin-support.com/download/odin-blindscan-utils-${MACHINE}
 S = "${WORKDIR}"
 
 do_install() {
-    install -d "${D}/${bindir}"
-    install -m 0755 "${S}/tda1002x" "${D}/${bindir}"
-    install -m 0755 "${S}/odin_blindscan" "${D}/${bindir}"    
+	install -d "${D}/${bindir}"
+	install -m 0755 "${S}/tda1002x" "${D}/${bindir}"
+	install -m 0755 "${S}/odin_blindscan" "${D}/${bindir}"	
 }
 
 FILES_odin-blindscan-dvbc-utils-${MACHINE} = "${bindir}/tda1002x"

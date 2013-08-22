@@ -10,12 +10,12 @@ PV = "1.0"
 PR = "r1"
 
 SRC_URI="file://wait*.png" 
-        
-S = "${WORKDIR}"        
+		
+S = "${WORKDIR}"		
 
 do_install() {
-    install -d ${D}${datadir}/enigma2/spinner
-    install -m 0644 ${S}/*.png ${D}${datadir}/enigma2/spinner
+	install -d ${D}${datadir}/enigma2/spinner
+	install -m 0644 ${S}/*.png ${D}${datadir}/enigma2/spinner
 }
 
 FILES_${PN} = "${datadir}/enigma2"

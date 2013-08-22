@@ -15,6 +15,6 @@ PR = "r0"
 FILES_${PN} = "${libdir}/gstreamer-0.10/"
 
 do_install_append() {
-    install -d ${D}${libdir}/gstreamer-0.10
-    install -m 0755 ${S}/libgstxt.so ${D}${libdir}/gstreamer-0.10
+	install -d ${D}${libdir}/gstreamer-0.10
+	install -m 0755 ${S}/libgstxt.so ${D}${libdir}/gstreamer-0.10
 }

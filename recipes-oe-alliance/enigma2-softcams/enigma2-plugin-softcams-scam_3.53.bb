@@ -13,12 +13,12 @@ INHIBIT_PACKAGE_STRIP = "1"
 require softcam.inc
 
 do_compile_prepend() {
-    mv ${WORKDIR}/scam\ v${PV}/* ${S}
+	mv ${WORKDIR}/scam\ v${PV}/* ${S}
 }
 
 do_install() {
-    install -d ${D}/usr/bin
-    install -m 0755 ${S}/${CAMNAME}.${TARGET_ARCH} ${D}/usr/bin/${CAMNAME}
+	install -d ${D}/usr/bin
+	install -m 0755 ${S}/${CAMNAME}.${TARGET_ARCH} ${D}/usr/bin/${CAMNAME}
 }
 
 SRC_URI[md5sum] = "89086f28a5b048512b76c8c24af4f77a"

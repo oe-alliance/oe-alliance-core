@@ -17,10 +17,10 @@ SRC_URI = "git://schwerkraft.elitedvb.net/enigma2-skins/enigma2-skins.git;protoc
 
 #include examples of openpli widgets
 SRC_URI_append = " \
-    file://dtvhd.diff \
-    file://brushedaluhd.diff \
-    file://blackbox.diff \
-    "
+	file://dtvhd.diff \
+	file://brushedaluhd.diff \
+	file://blackbox.diff \
+	"
 
 # note that enigma2-skins is just an empty package to satisfy silly dependencies.
 ALLOW_EMPTY_${PN} = "1"
@@ -33,18 +33,18 @@ inherit autotools
 S = "${WORKDIR}/git"
 
 python populate_packages_prepend () {
-    if bb.data.expand('${REL_MINOR}', d) != "4":
-        enigma2_skindir = bb.data.expand('${datadir}/enigma2', d)
-        do_split_packages(d, enigma2_skindir, '(.*?)/.*', 'enigma2-plugin-skins-%s', 'Enigma2 Skin: %s', recursive=True, match_path=True, prepend=True)
+	if bb.data.expand('${REL_MINOR}', d) != "4":
+		enigma2_skindir = bb.data.expand('${datadir}/enigma2', d)
+		do_split_packages(d, enigma2_skindir, '(.*?)/.*', 'enigma2-plugin-skins-%s', 'Enigma2 Skin: %s', recursive=True, match_path=True, prepend=True)
 
-    currentlist = bb.data.getVar('PACKAGES', d, 1)
-    pkgnotwanted = open(bb.data.getVar('S', d, 1) + "/../skinsnotwanted").read()
-#     logger.warning("NOT WANTED %s ", pkgnotwanted)
+	currentlist = bb.data.getVar('PACKAGES', d, 1)
+	pkgnotwanted = open(bb.data.getVar('S', d, 1) + "/../skinsnotwanted").read()
+# 	logger.warning("NOT WANTED %s ", pkgnotwanted)
 
-    newlist = currentlist.split(" ")
-    for line in pkgnotwanted.split("\n"):
-        if line in newlist:
-            newlist.remove(line)
+	newlist = currentlist.split(" ")
+	for line in pkgnotwanted.split("\n"):
+		if line in newlist:
+			newlist.remove(line)
 
-    bb.data.setVar('PACKAGES', ' '.join(newlist), d)
+	bb.data.setVar('PACKAGES', ' '.join(newlist), d)
 }

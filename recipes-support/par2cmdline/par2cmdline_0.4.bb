@@ -9,9 +9,9 @@ DEPENDS = "libsigc++-2.0"
 PR = "r2"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/parchive/${PN}/${PN}-${PV}.tar.gz \
-    file://par2cmdline-0.4-gcc4.patch \
-    file://par2-softlink.patch \
-    "
+	file://par2cmdline-0.4-gcc4.patch \
+	file://par2-softlink.patch \
+	"
 
 inherit autotools pkgconfig
 

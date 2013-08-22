@@ -16,7 +16,7 @@ S = "${WORKDIR}/git"
 inherit autotools
 
 pkg_postinst_${PN} () {
-    rm -f $D/autofs
-    mkdir $D/autofs
-    true
+	rm -f $D/autofs
+	mkdir $D/autofs
+	true
 }

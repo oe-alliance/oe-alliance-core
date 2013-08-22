@@ -25,5 +25,5 @@ do_compile() {
 }
 
 do_install() {
-    ${S}/install.sh "${S}" "${D}"
+	${S}/install.sh "${S}" "${D}"
 }

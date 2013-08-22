@@ -20,7 +20,7 @@ RDEPENDS_${PN} = "font-nmsbd2 font-verdanar"
 S = "${WORKDIR}/git"
 
 do_install() {
-    install -d ${D}/usr/share
-    cp -rp ${S}/usr/share/* ${D}/usr/share/
-    chmod -R a+rX ${D}/usr/share/enigma2/
+	install -d ${D}/usr/share
+	cp -rp ${S}/usr/share/* ${D}/usr/share/
+	chmod -R a+rX ${D}/usr/share/enigma2/
 }

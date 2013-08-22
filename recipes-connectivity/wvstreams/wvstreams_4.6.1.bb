@@ -9,8 +9,8 @@ DEPENDS = "zlib openssl (>= 0.9.8)"
 PR = "r0"
 
 SRC_URI = "http://wvstreams.googlecode.com/files/${PN}-${PV}.tar.gz \
-    file://0001-Fixed-missing-header-includes.patch \
-    "
+	file://0001-Fixed-missing-header-includes.patch \
+	"
 
 inherit autotools pkgconfig
 

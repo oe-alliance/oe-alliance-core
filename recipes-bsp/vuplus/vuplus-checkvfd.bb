@@ -9,8 +9,8 @@ SRC_REV = ""
 SRC_URI = "file://checkvfd "
 
 do_install() {
-    install -d ${D}/usr/lib/enigma2/python/Plugins/SystemPlugins/FirmwareUpgrade
-    install -m 0755 ${WORKDIR}/checkvfd ${D}/usr/lib/enigma2/python/Plugins/SystemPlugins/FirmwareUpgrade
+	install -d ${D}/usr/lib/enigma2/python/Plugins/SystemPlugins/FirmwareUpgrade
+	install -m 0755 ${WORKDIR}/checkvfd ${D}/usr/lib/enigma2/python/Plugins/SystemPlugins/FirmwareUpgrade
 }
 
 PACKAGES = "${PN}"

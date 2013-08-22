@@ -61,10 +61,10 @@ python __anonymous () {
     devicetree = d.getVar('KERNEL_DEVICETREE', True) or ''
     machine = d.getVar('MACHINE', True)
     if devicetree:
-        depends = d.getVar("DEPENDS", True)
-        d.setVar("DEPENDS", "%s dtc-native" % depends)
-        packages = d.getVar("PACKAGES", True)
-        d.setVar("PACKAGES", "%s kernel-devicetree" % packages)
+    	depends = d.getVar("DEPENDS", True)
+    	d.setVar("DEPENDS", "%s dtc-native" % depends)
+    	packages = d.getVar("PACKAGES", True)
+    	d.setVar("PACKAGES", "%s kernel-devicetree" % packages)
     if 'nokia900' in machine or 'om-gta0' in machine or 'eee701' in machine:
         depends = d.getVar("DEPENDS", True)
         d.setVar("DEPENDS", "%s lzma-native" % depends)
@@ -121,9 +121,9 @@ do_configure_prepend() {
             echo "CONFIG_ARM_ERRATA_430973=y" >> ${S}/.config
         fi
 
-    #
-    # endian support
-    #
+	#
+	# endian support
+	#
         if [ "${SITEINFO_ENDIANNESS}" = "be" ]; then
                 echo "CONFIG_CPU_BIG_ENDIAN=y"          >> ${S}/.config
         fi
@@ -138,7 +138,7 @@ do_configure_prepend() {
             -e '/CONFIG_LOGO_LINUX_CLUT224=/d' \
             -e '/CONFIG_LOCALVERSION/d' \
             -e '/CONFIG_LOCALVERSION_AUTO/d' \
-        < '${WORKDIR}/defconfig' >>'${S}/.config'
+	    < '${WORKDIR}/defconfig' >>'${S}/.config'
 
         echo 'CONFIG_LOCALVERSION="${LOCALVERSION}"' >>${S}/.config
         echo '# CONFIG_LOCALVERSION_AUTO is not set' >>${S}/.config
@@ -220,17 +220,17 @@ do_configure_prepend() {
                 echo "CONFIG_ROOT_NFS=y"                 >> ${S}/.config
                 echo "CONFIG_CMDLINE=\"${CMDLINE_NFSROOT_USB}\"" >> ${S}/.config
         fi
-        yes '' | oe_runmake oldconfig
+		yes '' | oe_runmake oldconfig
 }
 
 do_configure_append() {
         if test -e scripts/Makefile.fwinst ; then
-        sed -i -e "s:-m0644:-m 0644:g" scripts/Makefile.fwinst
-    fi
+		sed -i -e "s:-m0644:-m 0644:g" scripts/Makefile.fwinst
+	fi
 }
 
 do_install_append() {
-    oe_runmake headers_install INSTALL_HDR_PATH=${D}${exec_prefix}/src/linux-${KERNEL_VERSION} ARCH=$ARCH
+	oe_runmake headers_install INSTALL_HDR_PATH=${D}${exec_prefix}/src/linux-${KERNEL_VERSION} ARCH=$ARCH
 }
 
 PACKAGES =+ "kernel-headers"
@@ -254,10 +254,10 @@ do_devicetree_image() {
 addtask devicetree_image after do_install before do_package do_deploy
 
 pkg_postinst_kernel-devicetree () {
-    cd /${KERNEL_IMAGEDEST}; update-alternatives --install /${KERNEL_IMAGEDEST}/devicetree devicetree devicetree-${KERNEL_VERSION} ${KERNEL_PRIORITY} || true
+	cd /${KERNEL_IMAGEDEST}; update-alternatives --install /${KERNEL_IMAGEDEST}/devicetree devicetree devicetree-${KERNEL_VERSION} ${KERNEL_PRIORITY} || true
 }
 
 pkg_postrm_kernel-devicetree () {
-    cd /${KERNEL_IMAGEDEST}; update-alternatives --remove devicetree devicetree-${KERNEL_VERSION} || true
+	cd /${KERNEL_IMAGEDEST}; update-alternatives --remove devicetree devicetree-${KERNEL_VERSION} || true
 }
 

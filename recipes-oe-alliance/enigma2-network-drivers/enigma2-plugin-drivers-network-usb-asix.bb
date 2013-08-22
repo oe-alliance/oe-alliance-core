@@ -4,9 +4,9 @@ PACKAGE_ARCH = "all"
 require conf/license/license-gplv2.inc
 
 RDEPENDS_${PN} = " \
-    kernel-module-usbnet \
-    kernel-module-asix \
-    "
+	kernel-module-usbnet \
+	kernel-module-asix \
+	"
 
 PV = "1.0"
 PR = "r1"

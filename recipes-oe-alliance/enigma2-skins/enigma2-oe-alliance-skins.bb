@@ -22,7 +22,7 @@ FILES_${EPSM}-mynovum-hd = "/usr/share/enigma2/myNOVUM_HD"
 S = "${WORKDIR}/git"
 
 do_install() {
-    install -d ${D}/usr/share/enigma2
-    cp -rp ${S}/* ${D}/usr/share/enigma2/
-    chmod -R a+rX ${D}/usr/share/enigma2/
+	install -d ${D}/usr/share/enigma2
+	cp -rp ${S}/* ${D}/usr/share/enigma2/
+	chmod -R a+rX ${D}/usr/share/enigma2/
 }

@@ -21,11 +21,11 @@ FILES_${PN} = "/etc/enigma2/*"
 S="${WORKDIR}/enigma2-plugin-settings-default-ini"
 
 do_install() {
-    install -d ${D}/etc/enigma2
+	install -d ${D}/etc/enigma2
 
-    for f in lamedb bouquets* userbouquet*
-    do
-        install -m 644 ${f} ${D}/etc/enigma2/${f}
-    done
+	for f in lamedb bouquets* userbouquet*
+	do
+		install -m 644 ${f} ${D}/etc/enigma2/${f}
+	done
 }
 

@@ -21,7 +21,7 @@ PKGV = "1.0+git${GITPKGV}"
 PR = "r7"
 
 SRC_URI = "git://git.code.sf.net/p/openpli/enigma2-plugins;protocol=git \
-           file://pythonpaths.patch"
+		   file://pythonpaths.patch"
 
 S = "${WORKDIR}/git"
 
@@ -33,20 +33,20 @@ EXTRA_OECONF = "--with-boxtype=${MACHINE} \
 
 python populate_packages_prepend () {
 
-    enigma2_plugindir = bb.data.expand('${libdir}/enigma2/python/Plugins', d)
+	enigma2_plugindir = bb.data.expand('${libdir}/enigma2/python/Plugins', d)
 
-    do_split_packages(d, enigma2_plugindir, '(.*?/.*?)/.*', 'enigma2-plugin-%s', '%s ', recursive=True, match_path=True, prepend=True, extra_depends = "enigma2")
+	do_split_packages(d, enigma2_plugindir, '(.*?/.*?)/.*', 'enigma2-plugin-%s', '%s ', recursive=True, match_path=True, prepend=True, extra_depends = "enigma2")
 
-    # we have to perform some tricks to get non-standard files in the plugin packages,
-    # unfortunately FILES_append doesn't work
-    def files_append(pn, newfiles):
-        files = bb.data.getVar('FILES_' + pn, d, 1)
-        if files:
-            files += " " + newfiles + " "
-            bb.data.setVar('FILES_' + pn, files, d)
+	# we have to perform some tricks to get non-standard files in the plugin packages,
+	# unfortunately FILES_append doesn't work
+	def files_append(pn, newfiles):
+		files = bb.data.getVar('FILES_' + pn, d, 1)
+		if files:
+			files += " " + newfiles + " "
+			bb.data.setVar('FILES_' + pn, files, d)
 }
 
 do_install_append() {
-    find ${D}/usr/lib/enigma2/python/ -name '*.pyc' -exec rm {} \;
+	find ${D}/usr/lib/enigma2/python/ -name '*.pyc' -exec rm {} \;
 }
 

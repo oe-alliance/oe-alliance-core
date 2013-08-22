@@ -11,17 +11,17 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=59530bdf33659b29e73d4adb9f9f6552 \
                    file://COPYING3;md5=d32239bcb673463ab874e80d47fae504 \
                    file://COPYING3.LIB;md5=6a6a8e020838b23406c81b19c1d46df6 \
                    file://COPYING.LIB;md5=2d5025d4aa3495befef8f17206a5b0a1 \
-           file://COPYING.RUNTIME;md5=fe60d87048567d4fe8c8a0ed2448bcc8"
+		   file://COPYING.RUNTIME;md5=fe60d87048567d4fe8c8a0ed2448bcc8"
 
 SRC_URI = "${GNU_MIRROR}/gcc/gcc-${PV}/gcc-${PV}.tar.bz2 \
-       file://gcc-4.3.1-ARCH_FLAGS_FOR_TARGET.patch \
-       file://100-uclibc-conf.patch \
+	   file://gcc-4.3.1-ARCH_FLAGS_FOR_TARGET.patch \
+	   file://100-uclibc-conf.patch \
            file://gcc-uclibc-locale-ctype_touplow_t.patch \
-       file://cache-amnesia.patch \
-       file://gcc-flags-for-build.patch \
-       file://libstdc++-emit-__cxa_end_cleanup-in-text.patch \
-       file://arm-bswapsi2.patch \
-        \
+	   file://cache-amnesia.patch \
+	   file://gcc-flags-for-build.patch \
+	   file://libstdc++-emit-__cxa_end_cleanup-in-text.patch \
+	   file://arm-bswapsi2.patch \
+		\
            file://fedora/gcc43-c++-builtin-redecl.patch;striplevel=0 \
            file://fedora/gcc43-ia64-libunwind.patch;striplevel=0 \
            file://fedora/gcc43-java-nomulti.patch;striplevel=0 \
@@ -53,21 +53,21 @@ SRC_URI = "${GNU_MIRROR}/gcc/gcc-${PV}/gcc-${PV}.tar.bz2 \
            file://gcc-poison-system-directories.patch \
            file://gcc-poison-dir-extend.patch \
            file://gcc-4.3.3-SYSROOT_CFLAGS_FOR_TARGET.patch \
-       file://64bithack.patch \
-       file://optional_libstdc.patch \
-       file://disable_relax_pic_calls_flag.patch \
-       file://GPLUSPLUS_INCLUDE_DIR_with_sysroot.patch \
-       file://COLLECT_GCC_OPTIONS.patch \
-       file://use-defaults.h-and-t-oe-in-B.patch \
-       file://pr43810.patch \
-       file://pr44290.patch \
-       file://pr44606.patch \
-       file://pr45094.patch \
-       file://pr45052.patch \
-       file://pr45886.patch \
-       file://pr44618.patch \
-      "
-    
+	   file://64bithack.patch \
+	   file://optional_libstdc.patch \
+	   file://disable_relax_pic_calls_flag.patch \
+	   file://GPLUSPLUS_INCLUDE_DIR_with_sysroot.patch \
+	   file://COLLECT_GCC_OPTIONS.patch \
+	   file://use-defaults.h-and-t-oe-in-B.patch \
+	   file://pr43810.patch \
+	   file://pr44290.patch \
+	   file://pr44606.patch \
+	   file://pr45094.patch \
+	   file://pr45052.patch \
+	   file://pr45886.patch \
+	   file://pr44618.patch \
+	  "
+	
 SRC_URI_append_sh3  = " file://sh3-installfix-fixheaders.patch "
 
 # Language Overrides
@@ -75,25 +75,25 @@ FORTRAN = ""
 JAVA = ""
 
 #EXTRA_OECONF_BASE = "  --enable-cheaders=c_std \
-#            --enable-libssp \
-#            --disable-bootstrap \
-#            --disable-libgomp \
-#            --disable-libmudflap"
+#			--enable-libssp \
+#			--disable-bootstrap \
+#			--disable-libgomp \
+#			--disable-libmudflap"
 EXTRA_OECONF_BASE = " --enable-lto \
-            --enable-libssp \
-            --disable-bootstrap \
-            --disable-libgomp \
-            --disable-libmudflap \
-            --enable-cheaders=c_global "
+			--enable-libssp \
+			--disable-bootstrap \
+			--disable-libgomp \
+			--disable-libmudflap \
+			--enable-cheaders=c_global "
 
 EXTRA_OECONF_INITIAL = "--disable-libmudflap \
-            --disable-libgomp \
-            --disable-libssp \
-            --enable-decimal-float=no"
+			--disable-libgomp \
+			--disable-libssp \
+			--enable-decimal-float=no"
 
 EXTRA_OECONF_INTERMEDIATE = "--disable-libmudflap \
-                --disable-libgomp \
-                --disable-libssp"
+				--disable-libgomp \
+				--disable-libssp"
 
 EXTRA_OECONF_append_linux-uclibc = " --disable-decimal-float "
 EXTRA_OECONF_append_linux-uclibceabi = " --disable-decimal-float "

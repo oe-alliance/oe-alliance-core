@@ -9,13 +9,13 @@ PR = "r12"
 inherit task
 
 RDEPENDS = "\
-    oe-alliance-base \
-    openhdf-enigma2 \
-    openhdf-bootlogo \
-    openhdf-spinner \
-    libcrypto-compat \
-    ntfs-3g \
-    hddtemp \
-    busybox-cron \
-    python-gdata \
-    "
+	oe-alliance-base \
+	openhdf-enigma2 \
+	openhdf-bootlogo \
+	openhdf-spinner \
+	libcrypto-compat \
+	ntfs-3g \
+	hddtemp \
+	busybox-cron \
+	python-gdata \
+	"

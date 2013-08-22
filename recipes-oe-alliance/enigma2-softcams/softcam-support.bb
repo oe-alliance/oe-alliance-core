@@ -17,11 +17,11 @@ inherit update-rc.d
 FILES_${PN} = "/etc"
 
 do_install() {
-    install -d ${D}/etc/init.d
-    install -m 755 ${S}/softcam.None ${D}/etc/init.d/softcam.None
-    ln -s softcam.None ${D}/etc/init.d/softcam
+	install -d ${D}/etc/init.d
+	install -m 755 ${S}/softcam.None ${D}/etc/init.d/softcam.None
+	ln -s softcam.None ${D}/etc/init.d/softcam
 }
 
 do_compile_append() {
-    echo "# Placeholder for no cam" > ${S}/softcam.None
+	echo "# Placeholder for no cam" > ${S}/softcam.None
 }

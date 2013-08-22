@@ -63,11 +63,11 @@ SYSTEMLIBS = "${target_base_libdir}/"
 SYSTEMLIBS1 = "${target_libdir}/"
 
 do_configure_prepend () {
-    # teach gcc to find correct target includedir when checking libc ssp support
-    mkdir -p ${B}/gcc
-    echo "NATIVE_SYSTEM_HEADER_DIR = ${SYSTEMHEADERS}" > ${B}/gcc/t-oe
-    cat ${S}/gcc/defaults.h | grep -v "\#endif.*GCC_DEFAULTS_H" > ${B}/gcc/defaults.h.new
-    cat >>${B}/gcc/defaults.h.new <<_EOF
+	# teach gcc to find correct target includedir when checking libc ssp support
+	mkdir -p ${B}/gcc
+	echo "NATIVE_SYSTEM_HEADER_DIR = ${SYSTEMHEADERS}" > ${B}/gcc/t-oe
+	cat ${S}/gcc/defaults.h | grep -v "\#endif.*GCC_DEFAULTS_H" > ${B}/gcc/defaults.h.new
+	cat >>${B}/gcc/defaults.h.new <<_EOF
 #ifndef STANDARD_INCLUDE_DIR
 #define STANDARD_INCLUDE_DIR "${SYSTEMHEADERS}"
 #endif
@@ -80,39 +80,39 @@ do_configure_prepend () {
 #define SYSTEMLIBS_DIR "${SYSTEMLIBS}"
 #endif /* ! GCC_DEFAULTS_H */
 _EOF
-    mv ${B}/gcc/defaults.h.new ${B}/gcc/defaults.h
+	mv ${B}/gcc/defaults.h.new ${B}/gcc/defaults.h
 }
 
 do_configure () {
-    # Setup these vars for cross building only
-    # ... because foo_FOR_TARGET apparently gets misinterpreted inside the
-    # gcc build stuff when the build is producing a cross compiler - i.e.
-    # when the 'current' target is the 'host' system, and the host is not
-    # the target (because the build is actually making a cross compiler!)
-    if [ "${BUILD_SYS}" != "${HOST_SYS}" ]; then
-        export CC_FOR_TARGET="${CC}"
-        export GCC_FOR_TARGET="${CC}"
-        export CXX_FOR_TARGET="${CXX}"
-        export AS_FOR_TARGET="${HOST_PREFIX}as"
-        export LD_FOR_TARGET="${HOST_PREFIX}ld"
-        export NM_FOR_TARGET="${HOST_PREFIX}nm"
-        export AR_FOR_TARGET="${HOST_PREFIX}ar"
-        export GFORTRAN_FOR_TARGET="gfortran"
-        export RANLIB_FOR_TARGET="${HOST_PREFIX}ranlib"
-    fi
-    export CC_FOR_BUILD="${BUILD_CC}"
-    export CXX_FOR_BUILD="${BUILD_CXX}"
-    export CFLAGS_FOR_BUILD="${BUILD_CFLAGS}"
-    export CPPFLAGS_FOR_BUILD="${BUILD_CPPFLAGS}"
-    export CXXFLAGS_FOR_BUILD="${BUILD_CXXFLAGS}"
-    export LDFLAGS_FOR_BUILD="${BUILD_LDFLAGS}"
-    export ARCH_FLAGS_FOR_TARGET="${ARCH_FLAGS_FOR_TARGET}"
-    # We need to set this else there is cross-compilation badness
-    # in the config.log files (which might not get generated until do_compile
-    # hence being missed by the insane do_configure check).
-    export gcc_cv_collect2_libs="none required"
-    (cd ${S} && gnu-configize) || die "failure running gnu-configize"
+	# Setup these vars for cross building only
+	# ... because foo_FOR_TARGET apparently gets misinterpreted inside the
+	# gcc build stuff when the build is producing a cross compiler - i.e.
+	# when the 'current' target is the 'host' system, and the host is not
+	# the target (because the build is actually making a cross compiler!)
+	if [ "${BUILD_SYS}" != "${HOST_SYS}" ]; then
+		export CC_FOR_TARGET="${CC}"
+		export GCC_FOR_TARGET="${CC}"
+		export CXX_FOR_TARGET="${CXX}"
+		export AS_FOR_TARGET="${HOST_PREFIX}as"
+		export LD_FOR_TARGET="${HOST_PREFIX}ld"
+		export NM_FOR_TARGET="${HOST_PREFIX}nm"
+		export AR_FOR_TARGET="${HOST_PREFIX}ar"
+		export GFORTRAN_FOR_TARGET="gfortran"
+		export RANLIB_FOR_TARGET="${HOST_PREFIX}ranlib"
+	fi
+	export CC_FOR_BUILD="${BUILD_CC}"
+	export CXX_FOR_BUILD="${BUILD_CXX}"
+	export CFLAGS_FOR_BUILD="${BUILD_CFLAGS}"
+	export CPPFLAGS_FOR_BUILD="${BUILD_CPPFLAGS}"
+	export CXXFLAGS_FOR_BUILD="${BUILD_CXXFLAGS}"
+	export LDFLAGS_FOR_BUILD="${BUILD_LDFLAGS}"
+	export ARCH_FLAGS_FOR_TARGET="${ARCH_FLAGS_FOR_TARGET}"
+	# We need to set this else there is cross-compilation badness
+	# in the config.log files (which might not get generated until do_compile
+	# hence being missed by the insane do_configure check).
+	export gcc_cv_collect2_libs="none required"
+	(cd ${S} && gnu-configize) || die "failure running gnu-configize"
 
-    oe_runconf
+	oe_runconf
 }
 

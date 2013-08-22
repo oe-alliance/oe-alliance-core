@@ -18,19 +18,19 @@ PR = "r8"
 inherit module
 
 do_compile () {
-    unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS CC LD CPP
-    oe_runmake 'MODPATH="${D}${base_libdir}/modules/${KERNEL_VERSION}/kernel/drivers/boxmodel" ' \
-        'KERNEL_SOURCE="${STAGING_KERNEL_DIR}" ' \
-        'KDIR="${STAGING_KERNEL_DIR}"' \
-        'KERNEL_VERSION="${KERNEL_VERSION}" ' \
-        'CC="${KERNEL_CC}" ' \
-        'LD="${KERNEL_LD}" '
+	unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS CC LD CPP
+	oe_runmake 'MODPATH="${D}${base_libdir}/modules/${KERNEL_VERSION}/kernel/drivers/boxmodel" ' \
+		'KERNEL_SOURCE="${STAGING_KERNEL_DIR}" ' \
+		'KDIR="${STAGING_KERNEL_DIR}"' \
+		'KERNEL_VERSION="${KERNEL_VERSION}" ' \
+		'CC="${KERNEL_CC}" ' \
+		'LD="${KERNEL_LD}" '
 
 }
 
 do_install () {
-    install -d ${D}${base_libdir}/modules/${KERNEL_VERSION}/kernel/drivers/boxmodel
-    install -m 0644 ${S}/boxmodel.ko ${D}${base_libdir}/modules/${KERNEL_VERSION}/kernel/drivers/boxmodel
-    install -d ${D}/${sysconfdir}/modules-load.d
-    echo boxmodel >> ${D}/${sysconfdir}/modules-load.d/zzboxmodel.conf
+	install -d ${D}${base_libdir}/modules/${KERNEL_VERSION}/kernel/drivers/boxmodel
+	install -m 0644 ${S}/boxmodel.ko ${D}${base_libdir}/modules/${KERNEL_VERSION}/kernel/drivers/boxmodel
+	install -d ${D}/${sysconfdir}/modules-load.d
+	echo boxmodel >> ${D}/${sysconfdir}/modules-load.d/zzboxmodel.conf
 }

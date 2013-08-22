@@ -25,22 +25,22 @@ inherit autotools pkgconfig
 EXTRA_OECONF = "--libdir=${base_libdir}"
 
 do_install_append() {
-    install -d ${D}${libdir}
-    if [ ! ${D}${libdir} -ef ${D}${base_libdir} ]; then
-        mv ${D}${base_libdir}/pkgconfig ${D}${libdir}
-    fi
+	install -d ${D}${libdir}
+	if [ ! ${D}${libdir} -ef ${D}${base_libdir} ]; then
+		mv ${D}${base_libdir}/pkgconfig ${D}${libdir}
+	fi
 }
 
 do_install_ebox5100_append() {
-    cp -rp ${S}/lib ${D}/
+	cp -rp ${S}/lib ${D}/
 }
 
 do_install_ebox5000_append() {
-    cp -rp ${S}/lib ${D}/
+	cp -rp ${S}/lib ${D}/
 }
 
 do_install_dm800_append() {
-    cp -rp ${S}/lib ${D}/
+	cp -rp ${S}/lib ${D}/
 }
 
 FILES_${PN} += "${base_libdir}/*.so.*"

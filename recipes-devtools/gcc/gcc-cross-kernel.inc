@@ -4,9 +4,9 @@
 PROVIDES = "virtual/${TARGET_PREFIX}gcc-${PV}"
 
 do_install () {
-    cd gcc
-    oe_runmake 'DESTDIR=${D}' install-common install-headers install-libgcc
-    install -m 0755 xgcc  ${D}${bindir}/${TARGET_PREFIX}gcc-${PV}
+	cd gcc
+	oe_runmake 'DESTDIR=${D}' install-common install-headers install-libgcc
+	install -m 0755 xgcc  ${D}${bindir}/${TARGET_PREFIX}gcc-${PV}
 
     # Insert symlinks into libexec so when tools without a prefix are searched for, the correct ones are
     # found. These need to be relative paths so they work in different locations.

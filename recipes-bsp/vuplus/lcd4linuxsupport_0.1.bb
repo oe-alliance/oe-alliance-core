@@ -14,14 +14,14 @@ PR = "r9"
 PLUGINPATH = "/usr/lib/enigma2/python/Plugins/Extensions/LCD4linuxSupport"
 
 do_install() {
-    install -d  ${D}${PLUGINPATH}
-    install -m 0600 ${S}/plugin.py ${D}${PLUGINPATH}
-    touch ${D}${PLUGINPATH}/__init__.py
+	install -d  ${D}${PLUGINPATH}
+	install -m 0600 ${S}/plugin.py ${D}${PLUGINPATH}
+	touch ${D}${PLUGINPATH}/__init__.py
 }
 
 # Just a quick hack to "compile" the python parts.
 do_install_append() {
-    python -O -m compileall ${D}
+	python -O -m compileall ${D}
 }
 
 PACKAGES =+ "${PN}-src"

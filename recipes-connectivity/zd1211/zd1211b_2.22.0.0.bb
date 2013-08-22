@@ -23,7 +23,7 @@ S = "${WORKDIR}/ZD1211LnxDrv_2_22_0_0"
 do_compile() {
         unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS
         oe_runmake KERN_VER=2.6 KDIR=${STAGING_KERNEL_DIR} KERNEL_SOURCE=${STAGING_KERNEL_DIR} \
-        MODPATH=${D}${base_libdir}/modules/${KERNEL_VERSION} ZD1211REV_B=1
+		MODPATH=${D}${base_libdir}/modules/${KERNEL_VERSION} ZD1211REV_B=1
 }
 
 do_install() {

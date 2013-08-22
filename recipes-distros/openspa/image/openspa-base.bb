@@ -9,15 +9,15 @@ PR = "r2"
 inherit task
 
 RDEPENDS = "\
-    oe-alliance-base \
-    openspa-enigma2 \
-    openspa-bootlogo \
-    openspa-spinner \
-    openspa-feed-config \
-    openssh-sftp-server \
-    libcrypto-compat \
-    ntfs-3g \
-    hddtemp \
-    busybox-cron \
-    python-imaging \
-    "
+	oe-alliance-base \
+	openspa-enigma2 \
+	openspa-bootlogo \
+	openspa-spinner \
+	openspa-feed-config \
+	openssh-sftp-server \
+	libcrypto-compat \
+	ntfs-3g \
+	hddtemp \
+	busybox-cron \
+	python-imaging \
+	"

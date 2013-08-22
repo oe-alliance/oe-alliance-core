@@ -19,25 +19,25 @@ inherit autotools
 PACKAGES = "${PN}"
 
 do_install() {
-            if [ "${DISTRO_TYPE}" = "experimental" ] ; then
-                BUILDTYPE="1"
-            else
-                BUILDTYPE="0"
-            fi
+			if [ "${DISTRO_TYPE}" = "experimental" ] ; then
+				BUILDTYPE="1"
+			else
+				BUILDTYPE="0"
+			fi
 
-            install -d ${D}/etc
-            # generate /etc/image-version
-            echo "box_type=${MACHINE}" > ${D}/etc/image-version
-            echo "build_type=${BUILDTYPE}" >> ${D}/etc/image-version
-            echo "version=${IMAGE_VERSION}" >> ${D}/etc/image-version
-            echo "build=${BUILD_VERSION}" >> ${D}/etc/image-version
-            echo "date=${DATETIME}" >> ${D}/etc/image-version
-            echo "comment=opensif" >> ${D}/etc/image-version
-            echo "target=9" >> ${D}/etc/image-version
-            echo "creator=SIFTeam" >> ${D}/etc/image-version
-            echo "url=${URL}" >> ${D}/etc/image-version
-            echo "catalog=${URL}" >> ${D}/etc/image-version
-            echo "${MACHINE}" > ${D}/etc/model
+			install -d ${D}/etc
+			# generate /etc/image-version
+			echo "box_type=${MACHINE}" > ${D}/etc/image-version
+			echo "build_type=${BUILDTYPE}" >> ${D}/etc/image-version
+			echo "version=${IMAGE_VERSION}" >> ${D}/etc/image-version
+			echo "build=${BUILD_VERSION}" >> ${D}/etc/image-version
+			echo "date=${DATETIME}" >> ${D}/etc/image-version
+			echo "comment=opensif" >> ${D}/etc/image-version
+			echo "target=9" >> ${D}/etc/image-version
+			echo "creator=SIFTeam" >> ${D}/etc/image-version
+			echo "url=${URL}" >> ${D}/etc/image-version
+			echo "catalog=${URL}" >> ${D}/etc/image-version
+			echo "${MACHINE}" > ${D}/etc/model
 }
 
 FILES_${PN} += "/etc"

@@ -15,11 +15,11 @@ INITSCRIPT_PARAMS = "start 45 S ."
 inherit update-rc.d
 
 do_install() {
-    install -d ${D}/etc/init.d
-    install -m 755 ${S}/cardserver.None ${D}/etc/init.d/cardserver.None
-    ln -s cardserver.None ${D}/etc/init.d/cardserver
+	install -d ${D}/etc/init.d
+	install -m 755 ${S}/cardserver.None ${D}/etc/init.d/cardserver.None
+	ln -s cardserver.None ${D}/etc/init.d/cardserver
 }
 
 do_compile_append() {
-    echo "# Placeholder for no cs" > ${S}/cardserver.None
+	echo "# Placeholder for no cs" > ${S}/cardserver.None
 }

@@ -10,8 +10,8 @@ require conf/license/license-gplv2.inc
 SRC_URI = "http://exfat.googlecode.com/files/${PN}-${PV}.tar.gz file://fuse-exfat-sconstruct.patch"
 
 do_install() {
-    install -d ${D}/${sbindir}
-    install -m 0755 ${S}/fuse/mount.exfat-fuse ${D}/${sbindir}/mount.exfat-fuse
+	install -d ${D}/${sbindir}
+	install -m 0755 ${S}/fuse/mount.exfat-fuse ${D}/${sbindir}/mount.exfat-fuse
 }
 
 SRC_URI[md5sum] = "59ff35d4ec8e53a79359edc53a6ab534"

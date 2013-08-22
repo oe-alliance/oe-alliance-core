@@ -19,22 +19,22 @@ S = "${WORKDIR}/RT73/Module/"
 EXTRA_OEMAKE = "KERNDIR=${STAGING_KERNEL_DIR}"
 
 do_compile () {
-    unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS CC LD CPP
-    oe_runmake 'MODPATH={D}${base_libdir}/modules/${KERNEL_VERSION}/kernel/drivers/net' \
-        'KERNEL_SOURCE=${STAGING_KERNEL_DIR}' \
-        'LINUX_SRC=${STAGING_KERNEL_DIR}' \
-        'KDIR=${STAGING_KERNEL_DIR}' \
-        'KERNDIR=${STAGING_KERNEL_DIR}' \
-        'KERNEL_VERSION=${KERNEL_VERSION}' \
-        'CC=${KERNEL_CC}' \
-        'LD=${KERNEL_LD}'
+	unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS CC LD CPP
+	oe_runmake 'MODPATH={D}${base_libdir}/modules/${KERNEL_VERSION}/kernel/drivers/net' \
+		'KERNEL_SOURCE=${STAGING_KERNEL_DIR}' \
+		'LINUX_SRC=${STAGING_KERNEL_DIR}' \
+		'KDIR=${STAGING_KERNEL_DIR}' \
+		'KERNDIR=${STAGING_KERNEL_DIR}' \
+		'KERNEL_VERSION=${KERNEL_VERSION}' \
+		'CC=${KERNEL_CC}' \
+		'LD=${KERNEL_LD}'
 }
 
 do_install() {
-    install -d ${D}${base_libdir}/modules/${KERNEL_VERSION}/kernel/drivers/net/
-    install -m 0644 rt73${KERNEL_OBJECT_SUFFIX} ${D}${base_libdir}/modules/${KERNEL_VERSION}/kernel/drivers/net/
-    install -d ${D}/etc/modutils
-    echo rt73 > ${D}/etc/modutils/rt73
+	install -d ${D}${base_libdir}/modules/${KERNEL_VERSION}/kernel/drivers/net/
+	install -m 0644 rt73${KERNEL_OBJECT_SUFFIX} ${D}${base_libdir}/modules/${KERNEL_VERSION}/kernel/drivers/net/
+	install -d ${D}/etc/modutils
+	echo rt73 > ${D}/etc/modutils/rt73
 }
 
 SRC_URI[md5sum] = "2f3cdfa8add042dae70a58c9a9138c78"

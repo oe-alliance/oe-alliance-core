@@ -14,11 +14,11 @@ PR = "r4"
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
 EXTRA_OECONF = " \
-    BUILD_SYS=${BUILD_SYS} \
-    HOST_SYS=${HOST_SYS} \
-    STAGING_INCDIR=${STAGING_INCDIR} \
-    STAGING_LIBDIR=${STAGING_LIBDIR} \
-    --with-boxtype=${MACHINE} \
+	BUILD_SYS=${BUILD_SYS} \
+	HOST_SYS=${HOST_SYS} \
+	STAGING_INCDIR=${STAGING_INCDIR} \
+	STAGING_LIBDIR=${STAGING_LIBDIR} \
+	--with-boxtype=${MACHINE} \
 "
 
 ALLOW_EMPTY_${PN} = "1"
@@ -34,9 +34,9 @@ do_install() {
 }
 
 do_deploy() {
-    install -d 0644 ${WORKDIR}/deploy-ipks/3rdparty
-#     install -m 0644 enigma2-plugin-extensions-suomipoeka_1.0.1_all.ipk ${WORKDIR}/deploy-ipks/3rdparty
-#     install -m 0644 enigma2-plugin-extensions-enhancedpowersave_2.2.1-20120715_mipsel.ipk ${WORKDIR}/deploy-ipks/3rdparty
+	install -d 0644 ${WORKDIR}/deploy-ipks/3rdparty
+# 	install -m 0644 enigma2-plugin-extensions-suomipoeka_1.0.1_all.ipk ${WORKDIR}/deploy-ipks/3rdparty
+# 	install -m 0644 enigma2-plugin-extensions-enhancedpowersave_2.2.1-20120715_mipsel.ipk ${WORKDIR}/deploy-ipks/3rdparty
 }
 
 addtask deploy before do_build after do_install

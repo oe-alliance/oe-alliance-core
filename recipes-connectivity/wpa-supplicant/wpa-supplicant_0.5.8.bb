@@ -14,12 +14,12 @@ MY_ARCH := "${PACKAGE_ARCH}"
 PACKAGE_ARCH = "${@base_contains('COMBINED_FEATURES', 'madwifi', '${MACHINE_ARCH}', '${MY_ARCH}', d)}"
 
 SRC_URI = "http://hostap.epitest.fi/releases/wpa_supplicant-${PV}.tar.gz \
-    file://defconfig-openssl \
-    file://ifupdown.sh \
-    file://functions.sh \
-    file://driver-zydas.patch \
-    file://driver-ralink.patch \
-    "
+	file://defconfig-openssl \
+	file://ifupdown.sh \
+	file://functions.sh \
+	file://driver-zydas.patch \
+	file://driver-ralink.patch \
+	"
 
 TARGET_CFLAGS_append = " ${@base_contains("COMBINED_FEATURES", "madwifi", "-I${STAGING_INCDIR}/madwifi-ng", "",d)}"
 
@@ -44,35 +44,35 @@ do_configure () {
 }
 
 do_configure_append() {
-    echo "CONFIG_DRIVER_RALINK=y" >> .config
-    echo "CONFIG_DRIVER_ZYDAS=y" >> .config
+	echo "CONFIG_DRIVER_RALINK=y" >> .config
+	echo "CONFIG_DRIVER_ZYDAS=y" >> .config
 }
 
 do_compile () {
-    make
+	make
 }
 
 do_install () {
-    install -d ${D}${sbindir}
-    install -m 755 wpa_supplicant ${D}${sbindir}
-    install -m 755 wpa_passphrase ${D}${sbindir}
-    install -m 755 wpa_cli        ${D}${sbindir}
+	install -d ${D}${sbindir}
+	install -m 755 wpa_supplicant ${D}${sbindir}
+	install -m 755 wpa_passphrase ${D}${sbindir}
+	install -m 755 wpa_cli        ${D}${sbindir}
 
-    install -d ${D}${localstatedir}/run/wpa_supplicant
+	install -d ${D}${localstatedir}/run/wpa_supplicant
 
-    install -d ${D}${docdir}/wpa_supplicant
-    install -m 644 README ${D}${docdir}/wpa_supplicant
+	install -d ${D}${docdir}/wpa_supplicant
+	install -m 644 README ${D}${docdir}/wpa_supplicant
 
-    install -d ${D}${sysconfdir}/network/if-pre-up.d/
-    install -d ${D}${sysconfdir}/network/if-post-down.d/
-    install -d ${D}${sysconfdir}/network/if-down.d/
+	install -d ${D}${sysconfdir}/network/if-pre-up.d/
+	install -d ${D}${sysconfdir}/network/if-post-down.d/
+	install -d ${D}${sysconfdir}/network/if-down.d/
 
-    install -d ${D}${sysconfdir}/wpa_supplicant
-    install -m 755 ${WORKDIR}/ifupdown.sh ${D}${sysconfdir}/wpa_supplicant/
-    install -m 755 ${WORKDIR}/functions.sh ${D}${sysconfdir}/wpa_supplicant
-    
-    ln -s /etc/wpa_supplicant/ifupdown.sh ${D}${sysconfdir}/network/if-pre-up.d/wpasupplicant
-    ln -s /etc/wpa_supplicant/ifupdown.sh ${D}${sysconfdir}/network/if-post-down.d/wpasupplicant
+	install -d ${D}${sysconfdir}/wpa_supplicant
+	install -m 755 ${WORKDIR}/ifupdown.sh ${D}${sysconfdir}/wpa_supplicant/
+	install -m 755 ${WORKDIR}/functions.sh ${D}${sysconfdir}/wpa_supplicant
+	
+	ln -s /etc/wpa_supplicant/ifupdown.sh ${D}${sysconfdir}/network/if-pre-up.d/wpasupplicant
+	ln -s /etc/wpa_supplicant/ifupdown.sh ${D}${sysconfdir}/network/if-post-down.d/wpasupplicant
 }
 
 SRC_URI[md5sum] = "7bb22f2bcdeed54b3fb5407d6d8bc9bb"

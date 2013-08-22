@@ -13,11 +13,11 @@ CFLAGS += "\$(shell xml2-config --cflags)"
 LDFLAGS += "\$(shell xml2-config --libs)"
 
 do_compile() {
-    oe_runmake dvbtune xml2vdr
+	oe_runmake dvbtune xml2vdr
 }
 
 do_install() {
-    mkdir -p ${D}${bindir}
-    install -m 0755 dvbtune ${D}${bindir}/
-    install -m 0755 xml2vdr ${D}${bindir}/
+	mkdir -p ${D}${bindir}
+	install -m 0755 dvbtune ${D}${bindir}/
+	install -m 0755 xml2vdr ${D}${bindir}/
 }

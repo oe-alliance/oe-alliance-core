@@ -1,13 +1,13 @@
 MACHINE_BRAND = "EBox"
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS = "\
-    ebox-dvb-modules-${MACHINE} \
-    ebox-shutdown \
-    "
-    
+	ebox-dvb-modules-${MACHINE} \
+	ebox-shutdown \
+	"
+	
 MACHINE_EXTRA_RRECOMMENDS = " \
-    gst-plugin-dvbmediasink \
-    "
+	gst-plugin-dvbmediasink \
+	"
 
 include conf/machine/include/autoload-filesystems.inc
 

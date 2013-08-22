@@ -6,9 +6,9 @@ require conf/license/license-gplv2.inc
 DVBPROVIDER ?= "kernel"
 
 RDEPENDS_${PN} = " \
-    ${DVBPROVIDER}-module-dvb-usb-af9035 \
-    firmware-dvb-usb-af9035-01 \
-    "
+	${DVBPROVIDER}-module-dvb-usb-af9035 \
+	firmware-dvb-usb-af9035-01 \
+	"
 
 PV = "1.0"
 PR = "r1"

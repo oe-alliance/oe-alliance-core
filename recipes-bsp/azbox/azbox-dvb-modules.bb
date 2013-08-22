@@ -34,8 +34,8 @@ do_install_azboxhd() {
     install -d ${D}/${sysconfdir}/modutils
 
     for f in llad em8xxx 863xi2c az_cx24116 az_mxl201rf az_mxl5007t az_stv6110x az_stv090x az_tda10023 az_zl10353 nimdetect sci 863xdvb; do
-    install -m 0644 ${WORKDIR}/$f.ko ${D}/lib/modules/${KV}/extra/$f.ko
-    echo $f >> ${D}/${sysconfdir}/modutils/_${MACHINE}
+	install -m 0644 ${WORKDIR}/$f.ko ${D}/lib/modules/${KV}/extra/$f.ko
+	echo $f >> ${D}/${sysconfdir}/modutils/_${MACHINE}
     done
 
     install -d ${D}/lib/firmware
@@ -48,8 +48,8 @@ do_install() {
     install -d ${D}/${sysconfdir}/modutils
 
     for f in llad em8xxx 865xi2c avl6211 avl2108 mxl241sf nimdetect sci 865xdvb; do
-    install -m 0644 ${WORKDIR}/$f.ko ${D}/lib/modules/${KV}/extra/$f.ko
-    echo $f >> ${D}/${sysconfdir}/modutils/_${MACHINE}
+	install -m 0644 ${WORKDIR}/$f.ko ${D}/lib/modules/${KV}/extra/$f.ko
+	echo $f >> ${D}/${sysconfdir}/modutils/_${MACHINE}
     done
 
     install -d ${D}/lib/firmware

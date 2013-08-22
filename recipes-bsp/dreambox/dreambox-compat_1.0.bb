@@ -18,7 +18,7 @@ RDEPENDS_${PN} = "\
        libungif \
        libssl \
        libpython2 \
-       "       
+       "	   
 
 PR = "r8"
 

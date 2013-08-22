@@ -14,30 +14,30 @@ EXTRA_OECONF_darwin = "--libdir=${base_libdir} --sbindir=${base_sbindir} --enabl
 EXTRA_OECONF_darwin8 = "--libdir=${base_libdir} --sbindir=${base_sbindir} --enable-bsd-shlibs"
 
 do_configure_prepend () {
-    cp ${WORKDIR}/acinclude.m4 ${S}/
+	cp ${WORKDIR}/acinclude.m4 ${S}/
 }
 
 do_compile_prepend () {
-    find ./ -print | grep -v ./patches | xargs chmod u=rwX
-    ( cd util; ${BUILD_CC} subst.c -o subst )
+	find ./ -print | grep -v ./patches | xargs chmod u=rwX
+	( cd util; ${BUILD_CC} subst.c -o subst )
 }
 
 do_install () {
-    oe_runmake 'DESTDIR=${D}' install
-    oe_runmake 'DESTDIR=${D}' install-libs
-    # We use blkid from util-linux now so remove from here
-    rm -f ${D}${base_libdir}/libblkid*
-    rm -rf ${D}${includedir}/blkid
-    rm -f ${D}${base_libdir}/pkgconfig/blkid.pc
+	oe_runmake 'DESTDIR=${D}' install
+	oe_runmake 'DESTDIR=${D}' install-libs
+	# We use blkid from util-linux now so remove from here
+	rm -f ${D}${base_libdir}/libblkid*
+	rm -rf ${D}${includedir}/blkid
+	rm -f ${D}${base_libdir}/pkgconfig/blkid.pc
 }
 
 do_install_append () {
-    # e2initrd_helper and the pkgconfig files belong in libdir
-    if [ ! ${D}${libdir} -ef ${D}${base_libdir} ]; then
-        install -d ${D}${libdir}
-        mv ${D}${base_libdir}/e2initrd_helper ${D}${libdir}
-        mv ${D}${base_libdir}/pkgconfig ${D}${libdir}
-    fi
+	# e2initrd_helper and the pkgconfig files belong in libdir
+	if [ ! ${D}${libdir} -ef ${D}${base_libdir} ]; then
+		install -d ${D}${libdir}
+		mv ${D}${base_libdir}/e2initrd_helper ${D}${libdir}
+		mv ${D}${base_libdir}/pkgconfig ${D}${libdir}
+	fi
 }
 
 # blkid used to be part of e2fsprogs but is useful outside, add it

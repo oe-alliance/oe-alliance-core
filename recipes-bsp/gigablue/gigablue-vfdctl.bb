@@ -13,10 +13,10 @@ SRC_URI = "file://vfdctl.c"
 
 
 do_compile () {
-    ${CC} ${CFLAGS} ${LDFLAGS} ${WORKDIR}/vfdctl.c -o vfdctl
+	${CC} ${CFLAGS} ${LDFLAGS} ${WORKDIR}/vfdctl.c -o vfdctl
 }
 
 do_install () {
-    install -d ${D}${bindir}
-    install -m 0755 vfdctl ${D}${bindir}/
+	install -d ${D}${bindir}
+	install -m 0755 vfdctl ${D}${bindir}/
 }

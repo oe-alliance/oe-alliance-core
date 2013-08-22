@@ -4,9 +4,9 @@ PACKAGE_ARCH = "all"
 require conf/license/license-gplv2.inc
 
 RDEPENDS_${PN} = " \
-    kernel-module-usbnet \
-    kernel-module-smsc75xx \
-    "
+	kernel-module-usbnet \
+	kernel-module-smsc75xx \
+	"
 
 PV = "1.0"
 PR = "r2"

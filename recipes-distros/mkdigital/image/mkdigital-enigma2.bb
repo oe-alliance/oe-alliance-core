@@ -11,15 +11,15 @@ inherit task
 DEPENDS = "enigma2-pliplugins mkdigital-feeds"
 
 RRECOMMENDS = "\
-    mkdigital-version-info \
-    enigma2-plugin-extensions-graphmultiepg \
-    enigma2-plugin-systemplugins-videotune \
-    enigma2-plugin-settings-defaultsat \
-    enigma2-plugin-extensions-mediaplayer \
-    enigma2-plugin-extensions-dvdplayer \
-    enigma2-plugin-systemplugins-devicemanager \
-    enigma2-plugin-extensions-imdb \
-    enigma2-plugin-systemplugins-fastscan \
-    enigma2-plugin-systemplugins-3gmodemmanager \
-    ${@base_contains("MACHINE_FEATURES", "3dtv", "enigma2-plugin-systemplugins-osd3dsetup" , "", d)} \
-    "
+	mkdigital-version-info \
+	enigma2-plugin-extensions-graphmultiepg \
+	enigma2-plugin-systemplugins-videotune \
+	enigma2-plugin-settings-defaultsat \
+	enigma2-plugin-extensions-mediaplayer \
+	enigma2-plugin-extensions-dvdplayer \
+	enigma2-plugin-systemplugins-devicemanager \
+	enigma2-plugin-extensions-imdb \
+	enigma2-plugin-systemplugins-fastscan \
+	enigma2-plugin-systemplugins-3gmodemmanager \
+	${@base_contains("MACHINE_FEATURES", "3dtv", "enigma2-plugin-systemplugins-osd3dsetup" , "", d)} \
+	"

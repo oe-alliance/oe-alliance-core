@@ -1,5 +1,5 @@
 PRINC = "1"
 
 SRC_URI += " \
-    file://python-daap.patch \
+	file://python-daap.patch \
 "

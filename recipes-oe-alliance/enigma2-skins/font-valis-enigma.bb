@@ -12,6 +12,6 @@ SRC_URI="file://valis_enigma.ttf"
 FILES_${PN} = "/usr/*"
 
 do_install() {
-    install -d ${D}/usr/share/fonts
-    install -m 0644 ${WORKDIR}/valis_enigma.ttf    ${D}/usr/share/fonts/valis_enigma.ttf
+	install -d ${D}/usr/share/fonts
+	install -m 0644 ${WORKDIR}/valis_enigma.ttf	${D}/usr/share/fonts/valis_enigma.ttf
 }

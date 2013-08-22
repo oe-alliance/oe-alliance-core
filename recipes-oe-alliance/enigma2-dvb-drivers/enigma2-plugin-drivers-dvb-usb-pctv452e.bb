@@ -6,8 +6,8 @@ require conf/license/license-gplv2.inc
 DVBPROVIDER ?= "kernel"
 
 RDEPENDS_${PN} = " \
-    ${DVBPROVIDER}-module-dvb-usb-pctv452e \
-    "
+	${DVBPROVIDER}-module-dvb-usb-pctv452e \
+	"
 
 PV = "1.0"
 PR = "r1"

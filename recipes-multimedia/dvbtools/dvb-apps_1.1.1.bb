@@ -67,16 +67,16 @@ FILES_dvb-femon-dbg = "${bindir}/.debug/femon"
 FILES_dvb-zap-data = "${docdir}/dvb-apps/szap"
 
 do_configure() {
-    sed -i -e s:/usr/include:${STAGING_INCDIR}:g util/av7110_loadkeys/generate-keynames.sh 
+	sed -i -e s:/usr/include:${STAGING_INCDIR}:g util/av7110_loadkeys/generate-keynames.sh 
 }
 
 do_install() {
     make DESTDIR=${D} install
-    install -d ${D}/${bindir}
+	install -d ${D}/${bindir}
     install -d ${D}/${docdir}/dvb-apps
     install -d ${D}/${docdir}/dvb-apps/scan
     install -d ${D}/${docdir}/dvb-apps/szap
-    chmod a+rx ${D}/${libdir}/*.so*
+	chmod a+rx ${D}/${libdir}/*.so*
 
     # Install tests
     install -m 0755 ${S}/test/setvoltage      ${D}${bindir}/test_setvoltage
@@ -101,11 +101,11 @@ do_install() {
 }
 
 python populate_packages_prepend () {
-    dvb_libdir = bb.data.expand('${libdir}', d)
-    do_split_packages(d, dvb_libdir, '^lib(.*)\.so$', 'lib%s', 'DVB %s package', extra_depends='', allow_links=True)
-    do_split_packages(d, dvb_libdir, '^lib(.*)\.la$', 'lib%s-dev', 'DVB %s development package', extra_depends='${PN}-dev')
-    do_split_packages(d, dvb_libdir, '^lib(.*)\.a$', 'lib%s-dev', 'DVB %s development package', extra_depends='${PN}-dev')
-    do_split_packages(d, dvb_libdir, '^lib(.*)\.so\.*', 'lib%s', 'DVB %s library', extra_depends='', allow_links=True)
+	dvb_libdir = bb.data.expand('${libdir}', d)
+	do_split_packages(d, dvb_libdir, '^lib(.*)\.so$', 'lib%s', 'DVB %s package', extra_depends='', allow_links=True)
+	do_split_packages(d, dvb_libdir, '^lib(.*)\.la$', 'lib%s-dev', 'DVB %s development package', extra_depends='${PN}-dev')
+	do_split_packages(d, dvb_libdir, '^lib(.*)\.a$', 'lib%s-dev', 'DVB %s development package', extra_depends='${PN}-dev')
+	do_split_packages(d, dvb_libdir, '^lib(.*)\.so\.*', 'lib%s', 'DVB %s library', extra_depends='', allow_links=True)
 }
 
 SRC_URI[md5sum] = "de958cdb8d00e74792dd69f3c945b037"

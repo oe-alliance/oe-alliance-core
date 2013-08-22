@@ -33,16 +33,16 @@ export WINDRES_FOR_TARGET = "${TARGET_PREFIX}windres"
 export ARCH_FLAGS_FOR_TARGET = "--sysroot=${STAGING_DIR_TARGET}"
 
 do_configure () {
-    export CC_FOR_BUILD="${BUILD_CC}"
-    export CXX_FOR_BUILD="${BUILD_CXX}"
-    export CFLAGS_FOR_BUILD="${BUILD_CFLAGS}"
-    export CPPFLAGS_FOR_BUILD="${BUILD_CPPFLAGS}"
-    export CXXFLAGS_FOR_BUILD="${BUILD_CXXFLAGS}"
-    export LDFLAGS_FOR_BUILD="${BUILD_LDFLAGS}"
-    (cd ${S} && gnu-configize) || die "failure running gnu-configize"
-    oe_runconf
+	export CC_FOR_BUILD="${BUILD_CC}"
+	export CXX_FOR_BUILD="${BUILD_CXX}"
+	export CFLAGS_FOR_BUILD="${BUILD_CFLAGS}"
+	export CPPFLAGS_FOR_BUILD="${BUILD_CPPFLAGS}"
+	export CXXFLAGS_FOR_BUILD="${BUILD_CXXFLAGS}"
+	export LDFLAGS_FOR_BUILD="${BUILD_LDFLAGS}"
+	(cd ${S} && gnu-configize) || die "failure running gnu-configize"
+	oe_runconf
 }
 
 do_compile () {
-    oe_runmake all-host all-target-libgcc
+	oe_runmake all-host all-target-libgcc
 }
