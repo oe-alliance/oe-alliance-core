@@ -1,9 +1,9 @@
-SRCDATE = "20130813"
+SRCDATE = "20130823"
 
 KV = "3.1.1"
 
-SRC_URI[md5sum] = "2d10fce34f8c44eccbf451558f8068e4"
-SRC_URI[sha256sum] = "b086e2e102552853f4f0630aa9f56444691c0b6a125ba929e3d43d9bde225b28"
+SRC_URI[md5sum] = "d1991ba5c82330e904e7757da3308dd1"
+SRC_URI[sha256sum] = "8132fd629865942a133cf6d51693cb561b602838d160cb091ea4581a5d528303"
 
 SRC_URI = "http://archiv.openmips.com/gigablue-gb800xx-drivers-${KV}-${SRCDATE}.zip"
 
