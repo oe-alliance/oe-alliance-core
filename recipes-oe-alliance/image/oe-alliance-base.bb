@@ -9,7 +9,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "1.0"
-PR = "r9"
+PR = "r10"
 
 RDEPENDS_${PN} = "\
     oe-alliance-enigma2 \
@@ -20,6 +20,7 @@ RDEPENDS_${PN} = "\
     e2fsprogs-tune2fs \
     fakelocale \
     libavahi-client \
+    modutils-loadscript \
     ntpdate \
     opkg \
     sdparm \
