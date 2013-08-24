@@ -35,7 +35,7 @@ RRECOMMENDS = "\
 	enigma2-plugin-extensions-cooltvguide \
 	", d)} \
 	${@base_contains("MACHINE_FEATURES", "dreambox", "enigma2-plugin-extensions-dflash", "", d)} \
-	${@base_contains("MACHINE_FEATURES", "boxmodel", "boxmodel", "", d)} \	
+	${@base_contains("MACHINE_FEATURES", "boxmodel", "boxmodel", "", d)} \
 	"
 
 RRECOMMENDS_append_et5x00 = " swap-workaround"
