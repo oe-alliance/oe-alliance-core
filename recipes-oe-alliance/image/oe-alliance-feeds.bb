@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3
 inherit task
 
 PV = "1.0"
-PR = "r30"
+PR = "r32"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 DEPENDS = "enigma2-plugin-drivers-usbserial"
@@ -38,6 +38,7 @@ RRECOMMENDS = "\
 	enigma2-plugin-extensions-mediaportal \
 	enigma2-plugin-extensions-iptvlistupdater \
 	enigma2-plugin-extensions-et-portal \
+	enigma2-plugin-codec-audio-apple-lossless-alac \
 	\
 	${@base_contains("MACHINE_FEATURES", "fullgraphiclcd", "lcdpicons-enigma2-meta" , "", d)} \
 	\
@@ -90,6 +91,7 @@ RRECOMMENDS = "\
 	xfsprogs \
 	zeroconf \
 	ofgwrite \
+	gst-ffmpeg 
 	"
 
 RRECOMMENDS_append_vuuno = "enigma2-plugin-extensions-hbbtv"
