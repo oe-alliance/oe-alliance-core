@@ -2,10 +2,10 @@ DESCRIPTION = "libray to show an mpeg2/4 iframe on a linuxtv video device"
 SECTION = "base"
 PRIORITY = "optional"
 LICENSE = "PD"
-LIC_FILES_CHKSUM = "file://showiframe.c;firstline=1;endline=1;md5=bd64286e61b76f76d236a6be21ecdaa9"
+LIC_FILES_CHKSUM = "file://showiframe.c;firstline=1;endline=1;md5=22919e57c6dcf1ff48ac50e784f44880"
 
 PV = "1.0"
-PR = "r0"
+PR = "r1"
 
 SRC_URI = "file://showiframe.c file://showiframe.h"
 
