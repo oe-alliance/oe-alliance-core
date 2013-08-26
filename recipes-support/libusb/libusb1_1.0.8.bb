@@ -6,17 +6,15 @@ SECTION = "libs"
 LICENSE = "LGPLv2.1+"
 require conf/license/license-gplv2.inc
 
-PR = "r5"
+PR = "r6"
 
-SRC_URI = "${SOURCEFORGE_MIRROR}/libusb/libusb-${PV}.tar.bz2;name=default"
-SRC_URI_ebox5100 = "http://archiv.mixos-support.com/2.6.18-wr-libusb-1.0.8-r01.tar.bz2;name=legacy"
-SRC_URI_ebox5000 = "http://archiv.mixos-support.com/2.6.18-wr-libusb-1.0.8-r01.tar.bz2;name=legacy"
-SRC_URI_dm800 = "http://archiv.mixos-support.com/2.6.18-wr-libusb-1.0.8-r01.tar.bz2;name=legacy"
+SRC_URI = "${SOURCEFORGE_MIRROR}/libusb/libusb-${PV}.tar.bz2"
+SRC_URI_append_ebox5100 = " file://libusb-1.0.so.0.0.0"
+SRC_URI_append_ebox5000 = " file://libusb-1.0.so.0.0.0"
+SRC_URI_append_dm800 = " file://libusb-1.0.so.0.0.0"
 
-SRC_URI[default.md5sum] = "37d34e6eaa69a4b645a19ff4ca63ceef"
-SRC_URI[default.sha256sum] = "21d0d3a5710f7f4211c595102c6b9eccb42435a17a4f5bd2c3f4166ab1badba9"
-SRC_URI[legacy.md5sum] = "e40fda381d83217748e73493be6586c4"
-SRC_URI[legacy.sha256sum] = "2c16b044f52dbed3c970c6d90137583d83065d92652610ef733e35b915399ce6"
+SRC_URI[md5sum] = "37d34e6eaa69a4b645a19ff4ca63ceef"
+SRC_URI[sha256sum] = "21d0d3a5710f7f4211c595102c6b9eccb42435a17a4f5bd2c3f4166ab1badba9"
 
 S = "${WORKDIR}/libusb-${PV}"
 
@@ -31,16 +29,16 @@ do_install_append() {
 	fi
 }
 
-do_install_ebox5100_append() {
-	cp -rp ${S}/lib ${D}/
+do_install_append_ebox5100() {
+	cp -rp ${WORKDIR}/libusb-1.0.so.0.0.0 ${D}/lib/
 }
 
-do_install_ebox5000_append() {
-	cp -rp ${S}/lib ${D}/
+do_install_append_ebox5000() {
+	cp -rp ${WORKDIR}/libusb-1.0.so.0.0.0 ${D}/lib/
 }
 
-do_install_dm800_append() {
-	cp -rp ${S}/lib ${D}/
+do_install_append_dm800() {
+	cp -rp ${WORKDIR}/libusb-1.0.so.0.0.0 ${D}/lib/
 }
 
 FILES_${PN} += "${base_libdir}/*.so.*"
