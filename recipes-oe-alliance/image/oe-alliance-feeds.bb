@@ -42,6 +42,7 @@ RRECOMMENDS_${PN} = "\
     enigma2-plugin-extensions-mediaportal \
     enigma2-plugin-extensions-iptvlistupdater \
     enigma2-plugin-extensions-et-portal \
+    enigma2-plugin-codec-audio-apple-lossless-alac \
     \
     ${@base_contains("MACHINE_FEATURES", "fullgraphiclcd", "lcdpicons-enigma2-meta" , "", d)} \
     \

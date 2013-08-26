@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3
 ALLOW_EMPTY_${PN} = "1"
 
 PV = "1.0"
-PR = "r8"
+PR = "r9"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 inherit packagegroup
@@ -38,6 +38,7 @@ RRECOMMENDS_${PN} = "\
     enigma2-plugin-systemplugins-fastscan \
     enigma2-plugin-systemplugins-videoenhancement \
     ${@base_contains("MACHINE_FEATURES", "3dtv", "enigma2-plugin-systemplugins-osd3dsetup" , "", d)} \
+    ${@base_contains("MACHINE_FEATURES", "boxmodel", "boxmodel", "", d)} \
     "
 
 RRECOMMENDS_${PN}_append_ebox5000 = " swap-workaround"

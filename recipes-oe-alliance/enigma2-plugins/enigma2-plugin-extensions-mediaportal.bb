@@ -12,7 +12,7 @@ inherit autotools gitpkgv pythonnative
 SRCREV = "${AUTOREV}"
 PV = "4.7.1+git${SRCPV}"
 PKGV = "4.7.1+git${GITPKGV}"
-PR = "r17"
+PR = "r18"
 
 SRC_URI = "git://github.com/dhwz/MediaPortal.git;protocol=git file://fix_build.patch"
 

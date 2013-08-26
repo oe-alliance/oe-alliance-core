@@ -7,11 +7,11 @@ inherit gitpkgv pythonnative
 
 SRCREV = "${AUTOREV}"
 # SRCREV = "ebdc7c77f88c7fb50c642703786ff7d50bf3bd80"
-PV = "1.03+git${SRCPV}"
-PKGV = "1.03+git${GITPKGV}"
-PR = "r2"
+PV = "1.05+git${SRCPV}"
+PKGV = "1.05+git${GITPKGV}"
+PR = "r0"
 
-SRC_URI = "git://github.com/DonDavici/DreamPlex.git;protocol=git"
+SRC_URI = "git://github.com/oe-alliance/DreamPlex.git;protocol=git"
 
 S = "${WORKDIR}/git"
 

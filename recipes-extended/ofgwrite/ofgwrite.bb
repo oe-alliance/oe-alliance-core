@@ -6,10 +6,10 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=0636e73ff0215e8d672dc4c32c317bb3 \
 
 inherit gitpkgv
 SRCREV = "${AUTOREV}"
-PV = "0.3+git${SRCPV}"
-PKGV = "0.3+git${GITPKGV}"
-VER ="0.3"
-PR = "r0"
+PV = "0.4+git${SRCPV}"
+PKGV = "0.4+git${GITPKGV}"
+VER ="0.4"
+PR = "r1"
 
 SRC_URI="git://github.com/openatv/ofgwrite.git"
 

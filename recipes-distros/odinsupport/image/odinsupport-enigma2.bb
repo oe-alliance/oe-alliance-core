@@ -4,9 +4,10 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3
                     file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
 
 ALLOW_EMPTY_${PN} = "1"
+PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PV = "1.0"
-PR = "r11"
+PR = "r12"
 
 inherit packagegroup
 
@@ -29,4 +30,5 @@ RRECOMMENDS_${PN} = "\
     enigma2-plugin-systemplugins-hotplug \
     enigma2-plugin-systemplugins-videotune \
     ${@base_contains("MACHINE_FEATURES", "blindscan-dvbs", "enigma2-plugin-systemplugins-blindscan" , "", d)} \
+    ${@base_contains("MACHINE_FEATURES", "boxmodel", "boxmodel", "", d)} \
     "

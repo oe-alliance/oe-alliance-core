@@ -13,7 +13,7 @@ inherit gitpkgv pythonnative
 
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r33"
+PR = "r35"
 
 SRC_URI = "${ENIGMA2_PLUGINS_URI} file://pluginnotwanted"
 
@@ -57,6 +57,8 @@ DEPENDS = "enigma2 \
     dvdbackup \
     libcddb \
     nmap \
+    libshowiframe \
+    libav \
     ${@base_contains("MACHINE_FEATURES", "tpm", "" , "enigma2-plugin-extensions-webinterface-old", d)}"
 
 do_install_append() {
