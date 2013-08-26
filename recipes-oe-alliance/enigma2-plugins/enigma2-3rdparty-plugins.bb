@@ -10,7 +10,7 @@ SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
 PV = "2.0"
-PR = "r29"
+PR = "r30"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -49,7 +49,7 @@ THIRDPARTY_PLUGINS = " \
 	enigma2-plugin-extensions-facebook_0.6_mips32el.ipk \
 	enigma2-plugin-extensions-filesearchfs_2.53_all.ipk \
 	enigma2-plugin-extensions-focusonline_0.7rc5_mips32el.ipk \
-	enigma2-plugin-extensions-glasssysutil_5.37_all.ipk
+	enigma2-plugin-extensions-glasssysutil_5.37_all.ipk \
 	enigma2-plugin-extensions-gmailreader-oe2.0_1.3_all.ipk \
 	enigma2-plugin-extensions-googlenewsreader_1.0_mips32el.ipk \
 	enigma2-plugin-extensions-heizoelpreisefs_3.70_all.ipk \
