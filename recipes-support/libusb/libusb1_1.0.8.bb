@@ -2,6 +2,7 @@ DESCRIPTION = "Userspace library to access USB (version 1.0)"
 HOMEPAGE = "http://libusb.sf.net"
 BUGTRACKER = "http://www.libusb.org/report"
 SECTION = "libs"
+PACKAGE_ARCH := "${MACHINE_ARCH}"
 
 LICENSE = "LGPLv2.1+"
 require conf/license/license-gplv2.inc
