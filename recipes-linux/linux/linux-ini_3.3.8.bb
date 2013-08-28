@@ -11,7 +11,7 @@ SRC_URI[sha256sum] = "a249f59bb12dca1a05d828b415fb800390e9ea297fdc55ce91e0a74e26
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-MACHINE_KERNEL_PR_append = ".32"
+MACHINE_KERNEL_PR_append = ".33"
 
 # By default, kernel.bbclass modifies package names to allow multiple kernels
 # to be installed in parallel. We revert this change and rprovide the versioned
@@ -29,6 +29,7 @@ SRC_URI = "http://code-ini.com/software/kernel/linux-${KV}-${SRCDATE}.tar.bz2 \
 	file://bmips-no-array-bounds.patch;patch=1;pnum=1 \
 	file://defconfig \
 	file://nand_base.patch \
+	file://brcm_s3_wol.patch;patch=1;pnum=1 \
 	file://remove_genet1.patch;patch=1;pnum=1 \ 
 	file://dvb-usb-af9035.patch \
 	file://tda18218-7mhz-lopass.patch \
