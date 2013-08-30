@@ -19,5 +19,6 @@ RRECOMMENDS = "\
 	curlftpfs \
 	enigma2-plugin-extensions-enhancedmoviecenter \
 	enigma2-plugin-extensions-cooltvguide \
+	enigma2-plugin-extensions-bmediacenter \	
 	${@base_contains("MACHINE_BRAND", "AZBOX", "enigma2-plugin-extensions-azplay enigma2-plugin-extensions-aziptv", "", d)} \		
 	"
