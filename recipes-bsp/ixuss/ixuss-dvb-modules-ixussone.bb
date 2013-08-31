@@ -1,5 +1,5 @@
 KV = "3.3.0"
-SRCDATE = "20130814"
+SRCDATE = "20130823"
 
 require ixuss-dvb-modules.inc
 
