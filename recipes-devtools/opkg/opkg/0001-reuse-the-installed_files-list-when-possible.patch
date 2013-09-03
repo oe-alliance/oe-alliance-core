@@ -1,0 +1,68 @@
+From 6d451766c5114593b67e1be8c19610f7d377edb5 Mon Sep 17 00:00:00 2001
+From: pieterg <pieterg@users.sourceforge.net>
+Date: Sun, 1 Sep 2013 19:29:56 +0200
+Subject: [PATCH] reuse the installed_files list when possible
+
+rebuilding it for every single file in a package
+adds a lot of overhead, especially when updating
+packages containing large numbers of files
+---
+ libopkg/opkg_install.c |    2 +-
+ libopkg/pkg_hash.c     |   18 ++++++++++++++++++
+ libopkg/pkg_hash.h     |    1 +
+ 3 files changed, 20 insertions(+), 1 deletion(-)
+
+diff --git a/libopkg/opkg_install.c b/libopkg/opkg_install.c
+index 30d9c03..c1c88aa 100644
+--- a/libopkg/opkg_install.c
++++ b/libopkg/opkg_install.c
+@@ -192,7 +192,7 @@ printf("%s\n", __FUNCTION__);
+ 		__func__, new_pkg->name, new_file, owner?owner->name:"<NULL>");
+ 
+ 	  if (!owner || (owner == old_pkg) || obs)
+-	       file_hash_set_file_owner(new_file, new_pkg);
++	       file_hash_set_file_owner_with_old(new_file, new_pkg, old_pkg);
+      }
+ 
+      if (old_pkg) {
+diff --git a/libopkg/pkg_hash.c b/libopkg/pkg_hash.c
+index a99cf6b..96c299e 100644
+--- a/libopkg/pkg_hash.c
++++ b/libopkg/pkg_hash.c
+@@ -733,3 +733,21 @@ file_hash_set_file_owner(const char *file_name, pkg_t *owning_pkg)
+ 		owning_pkg->state_flag |= SF_FILELIST_CHANGED;
+ 	}
+ }
++
++void
++file_hash_set_file_owner_with_old(const char *file_name, pkg_t *owning_pkg, pkg_t *old_owning_pkg)
++{
++	file_name = strip_offline_root(file_name);
++
++	hash_table_insert(&conf->file_hash, file_name, owning_pkg);
++
++	/* mark this package to have its filelist written */
++	owning_pkg->state_flag |= SF_FILELIST_CHANGED;
++
++	if (old_owning_pkg) {
++		pkg_get_installed_files(old_owning_pkg);
++		str_list_remove_elt(old_owning_pkg->installed_files, file_name);
++		/* mark the old package to have its filelist written */
++		old_owning_pkg->state_flag |= SF_FILELIST_CHANGED;
++	}
++}
+diff --git a/libopkg/pkg_hash.h b/libopkg/pkg_hash.h
+index b3cf3d1..36b0ca6 100644
+--- a/libopkg/pkg_hash.h
++++ b/libopkg/pkg_hash.h
+@@ -51,6 +51,7 @@ pkg_t *pkg_hash_fetch_installed_by_name_dest(const char *pkg_name,
+ void file_hash_remove(const char *file_name);
+ pkg_t *file_hash_get_file_owner(const char *file_name);
+ void file_hash_set_file_owner(const char *file_name, pkg_t *pkg);
++void file_hash_set_file_owner_with_old(const char *file_name, pkg_t *owning_pkg, pkg_t *old_owning_pkg);
+ 
+ #endif
+ 
+-- 
+1.7.9.5
+
