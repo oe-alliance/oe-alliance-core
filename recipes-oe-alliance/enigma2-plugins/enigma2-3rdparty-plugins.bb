@@ -10,7 +10,7 @@ SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
 PV = "2.0"
-PR = "r33"
+PR = "r34"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -90,7 +90,7 @@ THIRDPARTY_PLUGINS = " \
 	enigma2-plugin-extensions-tmdbinfo_1.0-20120508-r2_mips32el.ipk \
 	enigma2-plugin-extensions-translator_0.5rc3_mips32el.ipk \
 	enigma2-plugin-extensions-transmission_2.76-r13884_mips32el.ipk \
-	enigma2-plugin-extensions-tsmedia-oe2.0_3.7_all.ipk \
+	enigma2-plugin-extensions-tsmedia-oe2.0_3.9_all.ipk \
 	enigma2-plugin-extensions-tvspielfilm_5.6rc3_mips32el.ipk \
 	enigma2-plugin-extensions-vcs_1.0-rc5_all.ipk \
 	enigma2-plugin-extensions-verkehrsinfo_0.6rc1_mips32el.ipk \
