@@ -4,7 +4,7 @@ SECTION = "kernel"
 KV = "3.5.3"
 
 SRCDATE = "20130829"
-MACHINE_KERNEL_PR_append = ".4"
+MACHINE_KERNEL_PR_append = ".5"
 
 SRC_URI[md5sum] = "08a81f3f3e94a75150131d360b8ea5cc"
 SRC_URI[sha256sum] = "41ed063ea6e86ff94c6e7978013afc6537d387b86b45632bc788c8cded916bdf"
@@ -16,7 +16,7 @@ RREPLACES_${PN} = "linux-technomate"
 
 SRC_URI = "http://en2.ath.cx/release/images/oedrivers/linux-${KV}-${SRCDATE}.tar.gz \
 		file://nfs-max-rwsize-8k.patch \
-		file://001_fix_standby_error_${MACHINE}.patch \		
+		file://001_fix_standby_error_${MACHINE}.patch \
 		file://defconfig \
 		"
 
