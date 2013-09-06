@@ -3,18 +3,18 @@ LICENSE = "GPL"
 SECTION = "kernel"
 KV = "3.5.3"
 
-SRCDATE = "20130611"
-MACHINE_KERNEL_PR_append = ".3"
+SRCDATE = "20130829"
+MACHINE_KERNEL_PR_append = ".4"
 
-SRC_URI[md5sum] = "d093086aaf4108879a96812f62837a0c"
-SRC_URI[sha256sum] = "cd11c19ddb2ea03f03a5bcb70c46137e6689a6450d3b47bde070be68bcb1de9d"
+SRC_URI[md5sum] = "08a81f3f3e94a75150131d360b8ea5cc"
+SRC_URI[sha256sum] = "41ed063ea6e86ff94c6e7978013afc6537d387b86b45632bc788c8cded916bdf"
 
-LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${KV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
+LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${KV}-${SRCDATE}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
 RCONFLICTS_${PN} = "linux-technomate"
 RREPLACES_${PN} = "linux-technomate"
 
-SRC_URI = "http://en2.ath.cx/pub/OpenPLi3/src/linux-${KV}-${SRCDATE}.tar.gz \
+SRC_URI = "http://en2.ath.cx/release/images/oedrivers/linux-${KV}-${SRCDATE}.tar.gz \
 		file://nfs-max-rwsize-8k.patch \
 		file://001_fix_standby_error_${MACHINE}.patch \		
 		file://defconfig \
@@ -32,7 +32,7 @@ SRC_URI_append_optimussos1 = " \
 		file://004_fix_bootarg.patch \
 		"
 
-S = "${WORKDIR}/linux-${KV}"
+S = "${WORKDIR}/linux-${KV}-${SRCDATE}"
 
 inherit kernel
 
