@@ -7,7 +7,7 @@ PACKAGE_ARCH := "${MACHINE_ARCH}"
 LICENSE = "LGPLv2.1+"
 require conf/license/license-gplv2.inc
 
-PR = "r6"
+PR = "r7"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/libusb/libusb-${PV}.tar.bz2"
 SRC_URI_append_ebox5100 = " file://libusb-1.0.so.0.0.0"
