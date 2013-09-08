@@ -1,4 +1,4 @@
-PRINC = "8"
+PRINC = "9"
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 FILESEXTRAPATHS_prepend := "${THISDIR}/${DISTRO_NAME}:"
@@ -11,4 +11,5 @@ do_install_append() {
 	ln -sf media ${D}/mnt
 	rm -rf ${D}/media/*
 	rm -fr ${D}/tmp
+	mddir ${D}/media/net
 }
