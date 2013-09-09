@@ -9,7 +9,7 @@ require conf/license/license-gplv2.inc
 RDEPENDS_${PN} += "showiframe"
 
 PV = "2.0"
-PR = "r33"
+PR = "r35"
 
 S = "${WORKDIR}"
 
@@ -19,9 +19,9 @@ INITSCRIPT_PARAMS = "start 05 S ."
 inherit update-rc.d
 
 SRC_URI = "file://bootlogo.mvi file://radio.mvi file://bootlogo.sh ${@base_contains("MACHINE_FEATURES", "bootsplash", "file://splash.bin file://splash.bmp" , "", d)} "
-SRC_URI_append_gb800ue = "file://lcdsplash.bin"
-SRC_URI_append_gbquad = "file://lcdsplash.bin"
-SRC_URI_append_gb800ueplus = "file://lcdsplash.bin"
+SRC_URI_append_gb800ue = "file://lcdsplash.bin file://lcdwaitkey.bin file://lcdwarning.bin"
+SRC_URI_append_gbquad = "file://lcdsplash.bin file://lcdwaitkey.bin file://lcdwarning.bin"
+SRC_URI_append_gb800ueplus = "file://lcdsplash.bin file://lcdwaitkey.bin file://lcdwarning.bin"
 
 BINARY_VERSION = "1.3"
 
@@ -54,6 +54,24 @@ do_install() {
 	install -m 0644 radio.mvi ${D}/usr/share/enigma2/radio.mvi
 	install -d ${D}/${sysconfdir}/init.d
 	install -m 0755 ${S}/bootlogo.sh ${D}/${sysconfdir}/init.d/bootlogo
+}
+
+do_install_append_gb800ue() {
+	install -d ${D}/usr/share
+	install -m 0644 lcdwaitkey.bin ${D}/usr/share/lcdwaitkey.bin
+	install -m 0644 lcdwarning.bin ${D}/usr/share/lcdwarning.bin
+}
+
+do_install_append_gbquad() {
+	install -d ${D}/usr/share
+	install -m 0644 lcdwaitkey.bin ${D}/usr/share/lcdwaitkey.bin
+	install -m 0644 lcdwarning.bin ${D}/usr/share/lcdwarning.bin	
+}
+
+do_install_append_gb800ueplus() {
+	install -d ${D}/usr/share
+	install -m 0644 lcdwaitkey.bin ${D}/usr/share/lcdwaitkey.bin
+	install -m 0644 lcdwarning.bin ${D}/usr/share/lcdwarning.bin	
 }
 
 
