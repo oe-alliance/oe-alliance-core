@@ -158,20 +158,26 @@ inherit gitpkgv autotools pkgconfig
 
 PV = "2.8+git${SRCPV}"
 PKGV = "2.8+git${GITPKGV}"
-PR = "r122"
+PR = "r123"
 
 SRC_URI = "${ENIGMA2_URI}"
 
 SRC_URI_append_azboxhd = " \
 			file://azboxe2.patch \
  			file://lcdchar.patch \
+			file://e2_pcr.patch \
+			file://add_more_timeout.patch \			
 			"
 SRC_URI_append_azboxme = " \
  			file://azboxe2.patch \
+			file://e2_pcr.patch \
+			file://add_more_timeout.patch \			
 			"
 
 SRC_URI_append_azboxminime = " \
  			file://azboxe2.patch \
+			file://e2_pcr.patch \
+			file://add_more_timeout.patch \			
 			"
 
 SRC_URI_append_vuduo = " \
