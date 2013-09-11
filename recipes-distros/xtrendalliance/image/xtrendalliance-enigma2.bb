@@ -31,7 +31,6 @@ RRECOMMENDS = "\
 	enigma2-plugin-systemplugins-softwaremanager \
 	enigma2-plugin-systemplugins-skinselector \
 	enigma2-plugin-extensions-xmltvimport \
-	enigma2-plugin-extensions-xtrendforum \
 	enigma2-plugin-extensions-iptv-list-updater \
 	enigma2-plugin-skins-technihd \
 	enigma2-plugin-skins-xta \
