@@ -1,7 +1,7 @@
 DESCRIPTION = "opera-hbbtv-browser"
 SECTION = "base"
 PRIORITY = "optional"
-LICENSE = "CLOSED"
+LICENSE = "proprietary"
 
 DEPENDS = "tslib mpfr gmp"
 RDEPENDS_${PN} = "tslib-conf libts-1.0-0 libsysfs2 libgmp10 libmpfr4"
