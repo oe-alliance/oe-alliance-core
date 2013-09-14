@@ -3,14 +3,14 @@ SECTION = "kernel"
 LICENSE = "GPLv2"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-KERNEL_RELEASE = "3.8.3"
+KERNEL_RELEASE = "3.8.7"
 
-SRC_URI[md5sum] = "ed2f8253db96635ccc8d5bad93854d25"
-SRC_URI[sha256sum] = "80abb59df31c536c7e1afdf32a65379ba30e705f853030d64b92626b78d896ae"
+SRC_URI[md5sum] = "36d191a8d4f31f49cc93d78a70f8029b"
+SRC_URI[sha256sum] = "8b9300480513a211344fd34e85a0ff6640e5a6e4fed39dfc52efc09b5efc11e5"
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-MACHINE_KERNEL_PR_append = ".6"
+MACHINE_KERNEL_PR_append = ".1"
 
 # By default, kernel.bbclass modifies package names to allow multiple kernels
 # to be installed in parallel. We revert this change and rprovide the versioned
@@ -20,12 +20,12 @@ PKG_kernel-image = "kernel-image"
 RPROVIDES_kernel-base = "kernel-${KERNEL_VERSION}"
 RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
 
-SRC_URI += "http://archiv.openmips.com/gigablue-ueplus-linux-${PV}-20130521.tgz \
+SRC_URI += "http://archiv.openmips.com/gigablue-linux-${PV}-13092013.tgz \
 	file://defconfig \
-	file://board.patch \
 	file://0001-Revert-default-authentication-needs-to-be-at-least-n.patch \
 	file://0001-Revert-MIPS-mm-Add-compound-tail-page-_mapcount-when.patch \
 	file://0001-Revert-MIPS-Add-fast-get_user_pages.patch \
+	file://0001-Revert-MIPS-Fix-potencial-corruption.patch \
 	file://add-dmx-source-timecode.patch \
 	file://af9015-output-full-range-SNR.patch \
 	file://af9033-output-full-range-SNR.patch \
@@ -33,11 +33,11 @@ SRC_URI += "http://archiv.openmips.com/gigablue-ueplus-linux-${PV}-20130521.tgz 
 	file://as102-scale-MER-to-full-range.patch \
 	file://cinergy_s2_usb_r2.patch \
 	file://cxd2820r-output-full-range-SNR.patch \
-	file://dvb-usb-a867.patch \
 	file://dvb-usb-dib0700-disable-sleep.patch \
 	file://dvb-usb-rtl2832.patch \
 	file://dvb_usb_disable_rc_polling.patch \
 	file://em28xx_add_terratec_h5_rev3.patch \
+	file://fix-proc-cputype.patch \
 	file://iosched-slice_idle-1.patch \
 	file://it913x-switch-off-PID-filter-by-default.patch \
 	file://tda18271-advertise-supported-delsys.patch \
@@ -45,6 +45,8 @@ SRC_URI += "http://archiv.openmips.com/gigablue-ueplus-linux-${PV}-20130521.tgz 
 	file://mxl5007t-add-no_probe-and-no_reset-parameters.patch \
 	file://nfs-max-rwsize-8k.patch \
 	file://0001-rt2800usb-add-support-for-rt55xx.patch \
+	file://rtl28xxu-update-to-the-latest-version-02-06-2013.patch \
+	file://rtl2832-scale-SNR-to-full-range.patch \
 	"
 
 S = "${WORKDIR}/linux-${PV}"
@@ -64,9 +66,19 @@ do_configure_prepend() {
 	oe_runmake oldconfig
 }
 
+# while kernel.bbclass does not support uabi
+kernel_do_compile() {
+	unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS MACHINE
+	oe_runmake ${KERNEL_IMAGETYPE_FOR_MAKE} ${KERNEL_ALT_IMAGETYPE} CC="${KERNEL_CC}" LD="${KERNEL_LD}"
+	if test "${KERNEL_IMAGETYPE_FOR_MAKE}.gz" = "${KERNEL_IMAGETYPE}"; then
+		gzip -9c < "${KERNEL_IMAGETYPE_FOR_MAKE}" > "${KERNEL_OUTPUT}"
+	fi
+}
+
 kernel_do_install_append() {
 	${STRIP} ${D}${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION}
 	gzip -9c ${D}${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION} > ${D}${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz
+	rm ${D}${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION}
 }
 
 pkg_postinst_kernel-image () {
