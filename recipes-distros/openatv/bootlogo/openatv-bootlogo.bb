@@ -9,7 +9,7 @@ require conf/license/license-gplv2.inc
 RDEPENDS_${PN} += "showiframe"
 
 PV = "2.0"
-PR = "r35"
+PR = "r38"
 
 S = "${WORKDIR}"
 
@@ -18,7 +18,7 @@ INITSCRIPT_PARAMS = "start 05 S ."
 
 inherit update-rc.d
 
-SRC_URI = "file://bootlogo.mvi file://radio.mvi file://bootlogo.sh ${@base_contains("MACHINE_FEATURES", "bootsplash", "file://splash.bin file://splash.bmp" , "", d)} "
+SRC_URI = "file://bootlogo.mvi file://radio.mvi file://bootlogo.sh file://splash576.bmp file://splash480.bmp"
 SRC_URI_append_gb800ue = "file://lcdsplash.bin file://lcdwaitkey.bin file://lcdwarning.bin"
 SRC_URI_append_gbquad = "file://lcdsplash.bin file://lcdwaitkey.bin file://lcdwarning.bin"
 SRC_URI_append_gb800ueplus = "file://lcdsplash.bin file://lcdwaitkey.bin file://lcdwarning.bin"
@@ -77,12 +77,10 @@ do_install_append_gb800ueplus() {
 
 inherit deploy
 do_deploy() {
-	if [ -e splash.bin ]; then
-		if [ "${MACHINE}" == "iqonios100hd" -o "${MACHINE}" == "iqonios200hd" -o "${MACHINE}" == "iqonios300hd" -o "${MACHINE}" == "tmtwin" -o "${MACHINE}" == "tm2t" -o "${MACHINE}" == "tmsingle" -o "${MACHINE}" == "tmnano"]; then
-			install -m 0644 splash.bmp ${DEPLOYDIR}/${BOOTLOGO_FILENAME}
-		else
-			install -m 0644 splash.bin ${DEPLOYDIR}/${BOOTLOGO_FILENAME}
-		fi
+	if [ "${MACHINE}" = "iqonios100hd" -o "${MACHINE}" = "iqonios200hd" -o "${MACHINE}" = "iqonios300hd" -o "${MACHINE}" = "tmtwin" -o "${MACHINE}" = "tm2t" -o "${MACHINE}" = "tmsingle" -o "${MACHINE}" = "tmnano" -o "${MACHINE}" = "optimussos1" -o "${MACHINE}" = "optimussos2" -o "${MACHINE}" = "mediabox" ]; then
+		install -m 0644 splash480.bmp ${DEPLOYDIR}/${BOOTLOGO_FILENAME}
+	else
+		install -m 0644 splash576.bmp ${DEPLOYDIR}/${BOOTLOGO_FILENAME}
 	fi
 	if [ -e lcdsplash.bin ]; then
 		install -m 0644 lcdsplash.bin ${DEPLOYDIR}/lcdsplash.bin
