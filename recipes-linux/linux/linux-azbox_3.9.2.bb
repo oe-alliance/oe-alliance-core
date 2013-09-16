@@ -1,10 +1,10 @@
 DESCRIPTION = "Linux kernel for ${MACHINE}"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${KV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
-MACHINE_KERNEL_PR_append = ".4"
+MACHINE_KERNEL_PR_append = ".5"
 
 KV = "3.9.2"
-SRCDATE = "14092013"
+SRCDATE = "16092013"
 
 DEPENDS = "genromfs-native gcc"
 DEPENDS_azboxhd = "genromfs-native azbox-hd-buildimage gcc"
@@ -48,8 +48,8 @@ SRC_URI_append_azboxminime = "http://azbox-enigma2-project.googlecode.com/files/
 
 SRC_URI[azbox-kernel.md5sum] = "661100fdf8a633f53991684b555373ba"
 SRC_URI[azbox-kernel.sha256sum] = "dfcaa8bf10f87ad04fc46994c3b4646eae914a9eb89e76317fdbbd29f54f1076"
-SRC_URI[azbox-initrd-azboxhd.md5sum] = "453ce75b08fab472c5162fe720fef91b"
-SRC_URI[azbox-initrd-azboxhd.sha256sum] = "47954f3890a21024d5ba795333f8ae5e66791398b15d6077fe3ab60ca4ece7e2"
+SRC_URI[azbox-initrd-azboxhd.md5sum] = "7effc9bc7eb0ed2e9232dedf6e0c74cc"
+SRC_URI[azbox-initrd-azboxhd.sha256sum] = "ff7c86cfc89ffedeaea15cd15ec9839ee97d810ac847527bccc7e1f2ab7ee833"
 SRC_URI[azbox-initrd-azboxme.md5sum] = "59f73c9b9fe95183bd39e2a4010a2ac7"
 SRC_URI[azbox-initrd-azboxme.sha256sum] = "b98be68bf2d607e57e1cbc48a4eb78c5759d24e0cf0c22e127263788e83665fd"
 SRC_URI[azbox-initrd-azboxminime.md5sum] = "3b7508985058ac0a5d9d310f669cc5bc"
