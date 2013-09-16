@@ -10,7 +10,7 @@ SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
 PV = "2.0"
-PR = "r36"
+PR = "r37"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -40,7 +40,7 @@ THIRDPARTY_PLUGINS = " \
 	enigma2-plugin-extensions-bluray_1.1rc4_mips32el.ipk \
 	enigma2-plugin-extensions-boblight-enigma2_0.7r7_Beta_mips32el.ipk \
 	enigma2-plugin-extensions-buyukbangpanel_1.3.2_all.ipk \
-	enigma2-plugin-extensions-camofs_7.47_all.ipk \
+	enigma2-plugin-extensions-camofs_7.62_all.ipk \
 	enigma2-plugin-extensions-chefkoch_1.1rc1_mips32el.ipk \
 	enigma2-plugin-extensions-csfd_9_35-20130615_all.ipk \
 	enigma2-plugin-extensions-cubic_streamer_0.7.3_mips32el.ipk \
@@ -75,7 +75,7 @@ THIRDPARTY_PLUGINS = " \
 	enigma2-plugin-extensions-radioonline-oe2.0_1.0_all.ipk \
 	enigma2-plugin-extensions-screensaver_5.6.9_all.ipk \
 	enigma2-plugin-extensions-screengrabber_2.1a_mips32el.ipk \
-	enigma2-plugin-extensions-seriesplugin_0.8.7.3_mips32el.ipk \
+	enigma2-plugin-extensions-seriesplugin_0.8.7.4_mips32el.ipk \
 	enigma2-plugin-extensions-sherlock-vuplus_5.01_mipsel.ipk \
 	enigma2-plugin-extensions-skyrecorder_1.2.4r1_all.ipk \
 	enigma2-plugin-extensions-songs-to_0.1_mips32el.ipk \
@@ -96,7 +96,7 @@ THIRDPARTY_PLUGINS = " \
 	enigma2-plugin-extensions-verkehrsinfo_0.6rc1_mips32el.ipk \
 	enigma2-plugin-extensions-vuplusforum_0.6rc2_mips32el.ipk \
 	enigma2-plugin-extensions-webmedia_10.0_r01_oe2.0_all.ipk \
-	enigma2-plugin-extensions-webradiofs_11.07_all.ipk \
+	enigma2-plugin-extensions-webradiofs_11.11_all.ipk \
 	enigma2-plugin-extensions-wikipedia_1.8rc3_mips32el.ipk \
 	enigma2-plugin-extensions-yampmusicplayer_2.1.1-2012-09-23_mipsel.ipk \
 	enigma2-plugin-extensions-zdfnewmediathek_1.3rc4_mips32el.ipk \
