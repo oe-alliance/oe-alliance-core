@@ -1,27 +1,45 @@
-rtl28xxu: update to the latest version (02-06-2013)
+rtl28xxu and tuners: update to the latest version (09-09-2013)
 
-- add support for r820t tuner
+- add support for r820t tuner (with latest fixes)
+- update fc0012 tuner
+- update e4000 tuner
+- update rtl2830 and rtl2832 drivers
 
 Signed-off-by: Gianluca Gennari <gennarone@gmail.com>
 ---
+ drivers/media/dvb-core/dvb-usb-ids.h       |    1 +
  drivers/media/dvb-frontends/rtl2830.h      |    4 +-
  drivers/media/dvb-frontends/rtl2832.c      |   85 +-
  drivers/media/dvb-frontends/rtl2832.h      |    5 +-
  drivers/media/dvb-frontends/rtl2832_priv.h |   28 +
  drivers/media/tuners/Kconfig               |    7 +
  drivers/media/tuners/Makefile              |    1 +
+ drivers/media/tuners/e4000.c               |   82 +-
+ drivers/media/tuners/e4000.h               |    6 +-
  drivers/media/tuners/fc0012-priv.h         |   13 +-
  drivers/media/tuners/fc0012.c              |  113 +-
  drivers/media/tuners/fc0012.h              |   36 +-
- drivers/media/tuners/r820t.c               | 2351 ++++++++++++++++++++++++++++
+ drivers/media/tuners/r820t.c               | 2349 ++++++++++++++++++++++++++++
  drivers/media/tuners/r820t.h               |   59 +
- drivers/media/usb/dvb-usb-v2/Kconfig       |    1 +
- drivers/media/usb/dvb-usb-v2/rtl28xxu.c    |   66 +-
- drivers/media/usb/dvb-usb-v2/rtl28xxu.h    |    1 +
- 14 files changed, 2691 insertions(+), 79 deletions(-)
+ drivers/media/usb/dvb-usb-v2/Kconfig       |    6 +-
+ drivers/media/usb/dvb-usb-v2/Makefile      |    2 +-
+ drivers/media/usb/dvb-usb-v2/dvb_usb.h     |    2 +-
+ drivers/media/usb/dvb-usb-v2/rtl28xxu.c    |  232 +--
+ drivers/media/usb/dvb-usb-v2/rtl28xxu.h    |    7 +
+ 19 files changed, 2836 insertions(+), 202 deletions(-)
  create mode 100644 drivers/media/tuners/r820t.c
  create mode 100644 drivers/media/tuners/r820t.h
 
+diff --git a/drivers/media/dvb-core/dvb-usb-ids.h b/drivers/media/dvb-core/dvb-usb-ids.h
+index 388c2eb..90b2947 100644
+--- a/drivers/media/dvb-core/dvb-usb-ids.h
++++ b/drivers/media/dvb-core/dvb-usb-ids.h
+@@ -362,4 +362,5 @@
+ #define USB_PID_TECHNISAT_USB2_HDCI_V2			0x0002
+ #define USB_PID_TECHNISAT_AIRSTAR_TELESTICK_2		0x0004
+ #define USB_PID_TECHNISAT_USB2_DVB_S2			0x0500
++#define USB_PID_CPYTO_REDI_PC50A			0xa803
+ #endif
 diff --git a/drivers/media/dvb-frontends/rtl2830.h b/drivers/media/dvb-frontends/rtl2830.h
 index f4349a1..3313847 100644
 --- a/drivers/media/dvb-frontends/rtl2830.h
@@ -286,6 +304,173 @@ index 5e569b1..7ec48f2 100644
  
  ccflags-y += -I$(srctree)/drivers/media/dvb-core
  ccflags-y += -I$(srctree)/drivers/media/dvb-frontends
+diff --git a/drivers/media/tuners/e4000.c b/drivers/media/tuners/e4000.c
+index 1b33ed3..54e2d8a 100644
+--- a/drivers/media/tuners/e4000.c
++++ b/drivers/media/tuners/e4000.c
+@@ -41,8 +41,9 @@ static int e4000_wr_regs(struct e4000_priv *priv, u8 reg, u8 *val, int len)
+ 	if (ret == 1) {
+ 		ret = 0;
+ 	} else {
+-		dev_warn(&priv->i2c->dev, "%s: i2c wr failed=%d reg=%02x " \
+-				"len=%d\n", KBUILD_MODNAME, ret, reg, len);
++		dev_warn(&priv->i2c->dev,
++				"%s: i2c wr failed=%d reg=%02x len=%d\n",
++				KBUILD_MODNAME, ret, reg, len);
+ 		ret = -EREMOTEIO;
+ 	}
+ 	return ret;
+@@ -72,8 +73,9 @@ static int e4000_rd_regs(struct e4000_priv *priv, u8 reg, u8 *val, int len)
+ 		memcpy(val, buf, len);
+ 		ret = 0;
+ 	} else {
+-		dev_warn(&priv->i2c->dev, "%s: i2c rd failed=%d reg=%02x " \
+-				"len=%d\n", KBUILD_MODNAME, ret, reg, len);
++		dev_warn(&priv->i2c->dev,
++				"%s: i2c rd failed=%d reg=%02x len=%d\n",
++				KBUILD_MODNAME, ret, reg, len);
+ 		ret = -EREMOTEIO;
+ 	}
+ 
+@@ -140,14 +142,12 @@ static int e4000_init(struct dvb_frontend *fe)
+ 	if (ret < 0)
+ 		goto err;
+ 
+-	/*
+-	 * TODO: Implement DC offset control correctly.
+-	 * DC offsets has quite much effect for received signal quality in case
+-	 * of direct conversion tuners (Zero-IF). Surely we will now lose few
+-	 * decimals or even decibels from SNR...
+-	 */
+ 	/* DC offset control */
+-	ret = e4000_wr_reg(priv, 0x2d, 0x0c);
++	ret = e4000_wr_reg(priv, 0x2d, 0x1f);
++	if (ret < 0)
++		goto err;
++
++	ret = e4000_wr_regs(priv, 0x70, "\x01\x01", 2);
+ 	if (ret < 0)
+ 		goto err;
+ 
+@@ -203,12 +203,13 @@ static int e4000_set_params(struct dvb_frontend *fe)
+ 	struct e4000_priv *priv = fe->tuner_priv;
+ 	struct dtv_frontend_properties *c = &fe->dtv_property_cache;
+ 	int ret, i, sigma_delta;
+-	unsigned int f_VCO;
+-	u8 buf[5];
++	unsigned int f_vco;
++	u8 buf[5], i_data[4], q_data[4];
+ 
+-	dev_dbg(&priv->i2c->dev, "%s: delivery_system=%d frequency=%d " \
+-			"bandwidth_hz=%d\n", __func__,
+-			c->delivery_system, c->frequency, c->bandwidth_hz);
++	dev_dbg(&priv->i2c->dev,
++			"%s: delivery_system=%d frequency=%d bandwidth_hz=%d\n",
++			__func__, c->delivery_system, c->frequency,
++			c->bandwidth_hz);
+ 
+ 	if (fe->ops.i2c_gate_ctrl)
+ 		fe->ops.i2c_gate_ctrl(fe, 1);
+@@ -228,19 +229,19 @@ static int e4000_set_params(struct dvb_frontend *fe)
+ 		goto err;
+ 
+ 	/*
+-	 * Note: Currently f_VCO overflows when c->frequency is 1 073 741 824 Hz
++	 * Note: Currently f_vco overflows when c->frequency is 1 073 741 824 Hz
+ 	 * or more.
+ 	 */
+-	f_VCO = c->frequency * e4000_pll_lut[i].mul;
+-	sigma_delta = 0x10000UL * (f_VCO % priv->cfg->clock) / priv->cfg->clock;
+-	buf[0] = f_VCO / priv->cfg->clock;
++	f_vco = c->frequency * e4000_pll_lut[i].mul;
++	sigma_delta = div_u64(0x10000ULL * (f_vco % priv->cfg->clock), priv->cfg->clock);
++	buf[0] = f_vco / priv->cfg->clock;
+ 	buf[1] = (sigma_delta >> 0) & 0xff;
+ 	buf[2] = (sigma_delta >> 8) & 0xff;
+ 	buf[3] = 0x00;
+ 	buf[4] = e4000_pll_lut[i].div;
+ 
+-	dev_dbg(&priv->i2c->dev, "%s: f_VCO=%u pll div=%d sigma_delta=%04x\n",
+-			__func__, f_VCO, buf[0], sigma_delta);
++	dev_dbg(&priv->i2c->dev, "%s: f_vco=%u pll div=%d sigma_delta=%04x\n",
++			__func__, f_vco, buf[0], sigma_delta);
+ 
+ 	ret = e4000_wr_regs(priv, 0x09, buf, 5);
+ 	if (ret < 0)
+@@ -292,6 +293,43 @@ static int e4000_set_params(struct dvb_frontend *fe)
+ 	if (ret < 0)
+ 		goto err;
+ 
++	/* DC offset */
++	for (i = 0; i < 4; i++) {
++		if (i == 0)
++			ret = e4000_wr_regs(priv, 0x15, "\x00\x7e\x24", 3);
++		else if (i == 1)
++			ret = e4000_wr_regs(priv, 0x15, "\x00\x7f", 2);
++		else if (i == 2)
++			ret = e4000_wr_regs(priv, 0x15, "\x01", 1);
++		else
++			ret = e4000_wr_regs(priv, 0x16, "\x7e", 1);
++
++		if (ret < 0)
++			goto err;
++
++		ret = e4000_wr_reg(priv, 0x29, 0x01);
++		if (ret < 0)
++			goto err;
++
++		ret = e4000_rd_regs(priv, 0x2a, buf, 3);
++		if (ret < 0)
++			goto err;
++
++		i_data[i] = (((buf[2] >> 0) & 0x3) << 6) | (buf[0] & 0x3f);
++		q_data[i] = (((buf[2] >> 4) & 0x3) << 6) | (buf[1] & 0x3f);
++	}
++
++	swap(q_data[2], q_data[3]);
++	swap(i_data[2], i_data[3]);
++
++	ret = e4000_wr_regs(priv, 0x50, q_data, 4);
++	if (ret < 0)
++		goto err;
++
++	ret = e4000_wr_regs(priv, 0x60, i_data, 4);
++	if (ret < 0)
++		goto err;
++
+ 	/* gain control auto */
+ 	ret = e4000_wr_reg(priv, 0x1a, 0x17);
+ 	if (ret < 0)
+diff --git a/drivers/media/tuners/e4000.h b/drivers/media/tuners/e4000.h
+index 71b1935..25ee7c0 100644
+--- a/drivers/media/tuners/e4000.h
++++ b/drivers/media/tuners/e4000.h
+@@ -21,6 +21,7 @@
+ #ifndef E4000_H
+ #define E4000_H
+ 
++#include <linux/kconfig.h>
+ #include "dvb_frontend.h"
+ 
+ struct e4000_config {
+@@ -36,15 +37,14 @@ struct e4000_config {
+ 	u32 clock;
+ };
+ 
+-#if defined(CONFIG_MEDIA_TUNER_E4000) || \
+-	(defined(CONFIG_MEDIA_TUNER_E4000_MODULE) && defined(MODULE))
++#if IS_ENABLED(CONFIG_MEDIA_TUNER_E4000)
+ extern struct dvb_frontend *e4000_attach(struct dvb_frontend *fe,
+ 		struct i2c_adapter *i2c, const struct e4000_config *cfg);
+ #else
+ static inline struct dvb_frontend *e4000_attach(struct dvb_frontend *fe,
+ 		struct i2c_adapter *i2c, const struct e4000_config *cfg)
+ {
+-	pr_warn("%s: driver disabled by Kconfig\n", __func__);
++	dev_warn(&i2c->dev, "%s: driver disabled by Kconfig\n", __func__);
+ 	return NULL;
+ }
+ #endif
 diff --git a/drivers/media/tuners/fc0012-priv.h b/drivers/media/tuners/fc0012-priv.h
 index 4577c91..1a86ce1 100644
 --- a/drivers/media/tuners/fc0012-priv.h
@@ -594,10 +779,10 @@ index 4dbd5ef..1d08057 100644
  #endif
 diff --git a/drivers/media/tuners/r820t.c b/drivers/media/tuners/r820t.c
 new file mode 100644
-index 0000000..0a5f96b
+index 0000000..cdb33cd
 --- /dev/null
 +++ b/drivers/media/tuners/r820t.c
-@@ -0,0 +1,2351 @@
+@@ -0,0 +1,2349 @@
 +/*
 + * Rafael Micro R820T driver
 + *
@@ -2457,9 +2642,9 @@ index 0000000..0a5f96b
 +	int reg18, reg19, reg1f;
 +
 +	if (priv->cfg->xtal > 24000000)
-+		ring_ref = priv->cfg->xtal / 2;
++		ring_ref = priv->cfg->xtal / 2000;
 +	else
-+		ring_ref = priv->cfg->xtal;
++		ring_ref = priv->cfg->xtal / 1000;
 +
 +	n_ring = 15;
 +	for (n = 0; n < 16; n++) {
@@ -2812,9 +2997,7 @@ index 0000000..0a5f96b
 +			goto err;
 +
 +		/* A higher gain at LNA means a lower signal strength */
-+		*strength = (45 - rc) << 4 | 0xff;
-+		if (*strength == 0xff)
-+			*strength = 0;
++		*strength = (45 - rc) * (0xffff / 45);
 +	} else {
 +		*strength = 0;
 +	}
@@ -3015,19 +3198,59 @@ index 0000000..48af354
 +
 +#endif
 diff --git a/drivers/media/usb/dvb-usb-v2/Kconfig b/drivers/media/usb/dvb-usb-v2/Kconfig
-index 834bfec..0ed91ac 100644
+index 834bfec..ba87eda 100644
 --- a/drivers/media/usb/dvb-usb-v2/Kconfig
 +++ b/drivers/media/usb/dvb-usb-v2/Kconfig
-@@ -144,6 +144,7 @@ config DVB_USB_RTL28XXU
+@@ -1,6 +1,6 @@
+ config DVB_USB_V2
+ 	tristate "Support for various USB DVB devices v2"
+-	depends on DVB_CORE && USB && I2C && RC_CORE
++	depends on DVB_CORE && USB && I2C && (RC_CORE || RC_CORE=n)
+ 	help
+ 	  By enabling this you will be able to choose the various supported
+ 	  USB1.1 and USB2.0 DVB devices.
+@@ -134,7 +134,7 @@ config DVB_USB_MXL111SF
+ 
+ config DVB_USB_RTL28XXU
+ 	tristate "Realtek RTL28xxU DVB USB support"
+-	depends on DVB_USB_V2 && EXPERIMENTAL
++	depends on DVB_USB_V2
+ 	select DVB_RTL2830
+ 	select DVB_RTL2832
+ 	select MEDIA_TUNER_QT1010 if MEDIA_SUBDRV_AUTOSELECT
+@@ -144,6 +144,6 @@ config DVB_USB_RTL28XXU
  	select MEDIA_TUNER_FC0013 if MEDIA_SUBDRV_AUTOSELECT
  	select MEDIA_TUNER_E4000 if MEDIA_SUBDRV_AUTOSELECT
  	select MEDIA_TUNER_FC2580 if MEDIA_SUBDRV_AUTOSELECT
 +	select MEDIA_TUNER_R820T if MEDIA_SUBDRV_AUTOSELECT
  	help
  	  Say Y here to support the Realtek RTL28xxU DVB USB receiver.
+-
+diff --git a/drivers/media/usb/dvb-usb-v2/Makefile b/drivers/media/usb/dvb-usb-v2/Makefile
+index b76f58e..01680a5 100644
+--- a/drivers/media/usb/dvb-usb-v2/Makefile
++++ b/drivers/media/usb/dvb-usb-v2/Makefile
+@@ -46,4 +46,4 @@ obj-$(CONFIG_DVB_USB_RTL28XXU) += dvb-usb-rtl28xxu.o
+ ccflags-y += -I$(srctree)/drivers/media/dvb-core
+ ccflags-y += -I$(srctree)/drivers/media/dvb-frontends
+ ccflags-y += -I$(srctree)/drivers/media/tuners
+-
++ccflags-y += -I$(srctree)/drivers/media/common
+diff --git a/drivers/media/usb/dvb-usb-v2/dvb_usb.h b/drivers/media/usb/dvb-usb-v2/dvb_usb.h
+index 059291b..a0b9659 100644
+--- a/drivers/media/usb/dvb-usb-v2/dvb_usb.h
++++ b/drivers/media/usb/dvb-usb-v2/dvb_usb.h
+@@ -140,7 +140,7 @@ struct dvb_usb_rc {
+ 	int (*change_protocol)(struct rc_dev *dev, u64 *rc_type);
+ 	int (*query) (struct dvb_usb_device *d);
+ 	unsigned int interval;
+-	const enum rc_driver_type driver_type;
++	enum rc_driver_type driver_type;
+ 	bool bulk_mode;
+ };
  
 diff --git a/drivers/media/usb/dvb-usb-v2/rtl28xxu.c b/drivers/media/usb/dvb-usb-v2/rtl28xxu.c
-index a4c302d..22015fe 100644
+index a4c302d..c0cd084 100644
 --- a/drivers/media/usb/dvb-usb-v2/rtl28xxu.c
 +++ b/drivers/media/usb/dvb-usb-v2/rtl28xxu.c
 @@ -33,6 +33,7 @@
@@ -3042,7 +3265,7 @@ index a4c302d..22015fe 100644
  	struct rtl28xxu_req req_mxl5007t = {0xd9c0, CMD_I2C_RD, 1, buf};
  	struct rtl28xxu_req req_e4000 = {0x02c8, CMD_I2C_RD, 1, buf};
  	struct rtl28xxu_req req_tda18272 = {0x00c0, CMD_I2C_RD, 2, buf};
-+	struct rtl28xxu_req req_r820t = {0x0034, CMD_I2C_RD, 5, buf};
++	struct rtl28xxu_req req_r820t = {0x0034, CMD_I2C_RD, 1, buf};
  
  	dev_dbg(&d->udev->dev, "%s:\n", __func__);
  
@@ -3050,9 +3273,9 @@ index a4c302d..22015fe 100644
  		goto found;
  	}
  
-+	/* check R820T by reading tuner stats at I2C addr 0x1a */
++	/* check R820T ID register; reg=00 val=69 */
 +	ret = rtl28xxu_ctrl_msg(d, &req_r820t);
-+	if (ret == 0) {
++	if (ret == 0 && buf[0] == 0x69) {
 +		priv->tuner = TUNER_RTL2832_R820T;
 +		priv->tuner_name = "R820T";
 +		goto found;
@@ -3127,7 +3350,128 @@ index a4c302d..22015fe 100644
  	default:
  		fe = NULL;
  		dev_err(&d->udev->dev, "%s: unknown tuner=%d\n", KBUILD_MODNAME,
-@@ -1120,7 +1159,7 @@ err:
+@@ -1002,67 +1041,34 @@ err:
+ static int rtl2832u_power_ctrl(struct dvb_usb_device *d, int onoff)
+ {
+ 	int ret;
+-	u8 val;
+ 
+ 	dev_dbg(&d->udev->dev, "%s: onoff=%d\n", __func__, onoff);
+ 
+ 	if (onoff) {
+-		/* set output values */
+-		ret = rtl28xx_rd_reg(d, SYS_GPIO_OUT_VAL, &val);
+-		if (ret)
+-			goto err;
+-
+-		val |= 0x08;
+-		val &= 0xef;
+-
+-		ret = rtl28xx_wr_reg(d, SYS_GPIO_OUT_VAL, val);
+-		if (ret)
+-			goto err;
+-
+-		/* demod_ctl_1 */
+-		ret = rtl28xx_rd_reg(d, SYS_DEMOD_CTL1, &val);
++		/* GPIO3=1, GPIO4=0 */
++		ret = rtl28xx_wr_reg_mask(d, SYS_GPIO_OUT_VAL, 0x08, 0x18);
+ 		if (ret)
+ 			goto err;
+ 
+-		val &= 0xef;
+-
+-		ret = rtl28xx_wr_reg(d, SYS_DEMOD_CTL1, val);
++		/* suspend? */
++		ret = rtl28xx_wr_reg_mask(d, SYS_DEMOD_CTL1, 0x00, 0x10);
+ 		if (ret)
+ 			goto err;
+ 
+-		/* demod control */
+-		/* PLL enable */
+-		ret = rtl28xx_rd_reg(d, SYS_DEMOD_CTL, &val);
+-		if (ret)
+-			goto err;
+-
+-		/* bit 7 to 1 */
+-		val |= 0x80;
+-
+-		ret = rtl28xx_wr_reg(d, SYS_DEMOD_CTL, val);
++		/* enable PLL */
++		ret = rtl28xx_wr_reg_mask(d, SYS_DEMOD_CTL, 0x80, 0x80);
+ 		if (ret)
+ 			goto err;
+ 
+-		ret = rtl28xx_rd_reg(d, SYS_DEMOD_CTL, &val);
+-		if (ret)
+-			goto err;
+-
+-		val |= 0x20;
+-
+-		ret = rtl28xx_wr_reg(d, SYS_DEMOD_CTL, val);
++		/* disable reset */
++		ret = rtl28xx_wr_reg_mask(d, SYS_DEMOD_CTL, 0x20, 0x20);
+ 		if (ret)
+ 			goto err;
+ 
+ 		mdelay(5);
+ 
+-		/*enable ADC_Q and ADC_I */
+-		ret = rtl28xx_rd_reg(d, SYS_DEMOD_CTL, &val);
+-		if (ret)
+-			goto err;
+-
+-		val |= 0x48;
+-
+-		ret = rtl28xx_wr_reg(d, SYS_DEMOD_CTL, val);
++		/* enable ADC */
++		ret = rtl28xx_wr_reg_mask(d, SYS_DEMOD_CTL, 0x48, 0x48);
+ 		if (ret)
+ 			goto err;
+ 
+@@ -1075,36 +1081,18 @@ static int rtl2832u_power_ctrl(struct dvb_usb_device *d, int onoff)
+ 		if (ret)
+ 			goto err;
+ 	} else {
+-		/* demod_ctl_1 */
+-		ret = rtl28xx_rd_reg(d, SYS_DEMOD_CTL1, &val);
+-		if (ret)
+-			goto err;
+-
+-		val |= 0x0c;
+-
+-		ret = rtl28xx_wr_reg(d, SYS_DEMOD_CTL1, val);
+-		if (ret)
+-			goto err;
+-
+-		/* set output values */
+-		ret = rtl28xx_rd_reg(d, SYS_GPIO_OUT_VAL, &val);
+-		if (ret)
+-				goto err;
+-
+-		val |= 0x10;
+-
+-		ret = rtl28xx_wr_reg(d, SYS_GPIO_OUT_VAL, val);
++		/* GPIO4=1 */
++		ret = rtl28xx_wr_reg_mask(d, SYS_GPIO_OUT_VAL, 0x10, 0x10);
+ 		if (ret)
+ 			goto err;
+ 
+-		/* demod control */
+-		ret = rtl28xx_rd_reg(d, SYS_DEMOD_CTL, &val);
++		/* disable ADC */
++		ret = rtl28xx_wr_reg_mask(d, SYS_DEMOD_CTL, 0x00, 0x48);
+ 		if (ret)
+ 			goto err;
+ 
+-		val &= 0x37;
+-
+-		ret = rtl28xx_wr_reg(d, SYS_DEMOD_CTL, val);
++		/* disable PLL */
++		ret = rtl28xx_wr_reg_mask(d, SYS_DEMOD_CTL, 0x00, 0x80);
+ 		if (ret)
+ 			goto err;
+ 
+@@ -1120,7 +1108,7 @@ err:
  	return ret;
  }
  
@@ -3136,34 +3480,137 @@ index a4c302d..22015fe 100644
  static int rtl2831u_rc_query(struct dvb_usb_device *d)
  {
  	int ret, i;
-@@ -1203,7 +1242,11 @@ static int rtl2831u_get_rc_config(struct dvb_usb_device *d,
+@@ -1206,35 +1194,44 @@ static int rtl2831u_get_rc_config(struct dvb_usb_device *d,
  
- 	return 0;
- }
-+#else
-+	#define rtl2831u_get_rc_config NULL
-+#endif
- 
-+#if IS_ENABLED(CONFIG_RC_CORE)
  static int rtl2832u_rc_query(struct dvb_usb_device *d)
  {
- 	int ret, i;
-@@ -1275,6 +1318,9 @@ static int rtl2832u_get_rc_config(struct dvb_usb_device *d,
+-	int ret, i;
++	int ret, i, len;
+ 	struct rtl28xxu_priv *priv = d->priv;
++	struct ir_raw_event ev;
+ 	u8 buf[128];
+-	int len;
+-	struct rtl28xxu_reg_val rc_nec_tab[] = {
+-		{ IR_RX_CTRL,             0x20 },
+-		{ IR_RX_BUF_CTRL,         0x80 },
+-		{ IR_RX_IF,               0xff },
+-		{ IR_RX_IE,               0xff },
+-		{ IR_MAX_DURATION0,       0xd0 },
+-		{ IR_MAX_DURATION1,       0x07 },
+-		{ IR_IDLE_LEN0,           0xc0 },
+-		{ IR_IDLE_LEN1,           0x00 },
+-		{ IR_GLITCH_LEN,          0x03 },
+-		{ IR_RX_CLK,              0x09 },
+-		{ IR_RX_CFG,              0x1c },
+-		{ IR_MAX_H_TOL_LEN,       0x1e },
+-		{ IR_MAX_L_TOL_LEN,       0x1e },
+-		{ IR_RX_CTRL,             0x80 },
++	static const struct rtl28xxu_reg_val_mask refresh_tab[] = {
++		{IR_RX_IF,               0x03, 0xff},
++		{IR_RX_BUF_CTRL,         0x80, 0xff},
++		{IR_RX_CTRL,             0x80, 0xff},
+ 	};
+ 
+ 	/* init remote controller */
+ 	if (!priv->rc_active) {
+-		for (i = 0; i < ARRAY_SIZE(rc_nec_tab); i++) {
+-			ret = rtl28xx_wr_reg(d, rc_nec_tab[i].reg,
+-					rc_nec_tab[i].val);
++		static const struct rtl28xxu_reg_val_mask init_tab[] = {
++			{SYS_DEMOD_CTL1,         0x00, 0x04},
++			{SYS_DEMOD_CTL1,         0x00, 0x08},
++			{USB_CTRL,               0x20, 0x20},
++			{SYS_GPIO_DIR,           0x00, 0x08},
++			{SYS_GPIO_OUT_EN,        0x08, 0x08},
++			{SYS_GPIO_OUT_VAL,       0x08, 0x08},
++			{IR_MAX_DURATION0,       0xd0, 0xff},
++			{IR_MAX_DURATION1,       0x07, 0xff},
++			{IR_IDLE_LEN0,           0xc0, 0xff},
++			{IR_IDLE_LEN1,           0x00, 0xff},
++			{IR_GLITCH_LEN,          0x03, 0xff},
++			{IR_RX_CLK,              0x09, 0xff},
++			{IR_RX_CFG,              0x1c, 0xff},
++			{IR_MAX_H_TOL_LEN,       0x1e, 0xff},
++			{IR_MAX_L_TOL_LEN,       0x1e, 0xff},
++			{IR_RX_CTRL,             0x80, 0xff},
++		};
++
++		for (i = 0; i < ARRAY_SIZE(init_tab); i++) {
++			ret = rtl28xx_wr_reg_mask(d, init_tab[i].reg,
++					init_tab[i].val, init_tab[i].mask);
+ 			if (ret)
+ 				goto err;
+ 		}
++
+ 		priv->rc_active = true;
+ 	}
+ 
+@@ -1250,14 +1247,32 @@ static int rtl2832u_rc_query(struct dvb_usb_device *d)
+ 		goto err;
+ 
+ 	len = buf[0];
++
++	/* read raw code from hw */
+ 	ret = rtl2831_rd_regs(d, IR_RX_BUF, buf, len);
++	if (ret)
++		goto err;
+ 
+-	/* TODO: pass raw IR to Kernel IR decoder */
++	/* let hw receive new code */
++	for (i = 0; i < ARRAY_SIZE(refresh_tab); i++) {
++		ret = rtl28xx_wr_reg_mask(d, refresh_tab[i].reg,
++				refresh_tab[i].val, refresh_tab[i].mask);
++		if (ret)
++			goto err;
++	}
+ 
+-	ret = rtl28xx_wr_reg(d, IR_RX_IF, 0x03);
+-	ret = rtl28xx_wr_reg(d, IR_RX_BUF_CTRL, 0x80);
+-	ret = rtl28xx_wr_reg(d, IR_RX_CTRL, 0x80);
++	/* pass data to Kernel IR decoder */
++	init_ir_raw_event(&ev);
+ 
++	for (i = 0; i < len; i++) {
++		ev.pulse = buf[i] >> 7;
++		ev.duration = 50800 * (buf[i] & 0x7f);
++		ir_raw_event_store_with_filter(d->rc_dev, &ev);
++	}
++
++	/* 'flush' ir_raw_event_store_with_filter() */
++	ir_raw_event_set_idle(d->rc_dev, true);
++	ir_raw_event_handle(d->rc_dev);
+ exit:
+ 	return ret;
+ err:
+@@ -1268,13 +1283,20 @@ err:
+ static int rtl2832u_get_rc_config(struct dvb_usb_device *d,
+ 		struct dvb_usb_rc *rc)
+ {
+-	rc->map_name = RC_MAP_EMPTY;
+-	rc->allowed_protos = RC_BIT_NEC;
++	/* load empty to enable rc */
++	if (!rc->map_name)
++		rc->map_name = RC_MAP_EMPTY;
++	rc->allowed_protos = RC_BIT_ALL;
++	rc->driver_type = RC_DRIVER_IR_RAW;
+ 	rc->query = rtl2832u_rc_query;
+ 	rc->interval = 400;
  
  	return 0;
  }
 +#else
-+	#define rtl2832u_get_rc_config NULL
++#define rtl2831u_get_rc_config NULL
++#define rtl2832u_get_rc_config NULL
 +#endif
  
  static const struct dvb_usb_device_properties rtl2831u_props = {
  	.driver_name = KBUILD_MODNAME,
-@@ -1333,13 +1379,13 @@ static const struct usb_device_id rtl28xxu_id_table[] = {
+@@ -1333,13 +1355,13 @@ static const struct usb_device_id rtl28xxu_id_table[] = {
  	{ DVB_USB_DEVICE(USB_VID_REALTEK, 0x2838,
  		&rtl2832u_props, "Realtek RTL2832U reference design", NULL) },
  	{ DVB_USB_DEVICE(USB_VID_TERRATEC, USB_PID_TERRATEC_CINERGY_T_STICK_BLACK_REV1,
 -		&rtl2832u_props, "Terratec Cinergy T Stick Black", NULL) },
-+		&rtl2832u_props, "TerraTec Cinergy T Stick Black", NULL) },
++		&rtl2832u_props, "TerraTec Cinergy T Stick Black", RC_MAP_TERRATEC_SLIM) },
  	{ DVB_USB_DEVICE(USB_VID_GTEK, USB_PID_DELOCK_USB2_DVBT,
  		&rtl2832u_props, "G-Tek Electronics Group Lifeview LV5TDLX DVB-T", NULL) },
  	{ DVB_USB_DEVICE(USB_VID_TERRATEC, USB_PID_NOXON_DAB_STICK,
@@ -3175,7 +3622,7 @@ index a4c302d..22015fe 100644
  	{ DVB_USB_DEVICE(USB_VID_GTEK, USB_PID_TREKSTOR_TERRES_2_0,
  		&rtl2832u_props, "Trekstor DVB-T Stick Terres 2.0", NULL) },
  	{ DVB_USB_DEVICE(USB_VID_DEXATEK, 0x1101,
-@@ -1352,6 +1398,16 @@ static const struct usb_device_id rtl28xxu_id_table[] = {
+@@ -1352,6 +1374,20 @@ static const struct usb_device_id rtl28xxu_id_table[] = {
  		&rtl2832u_props, "Dexatek DK mini DVB-T Dongle", NULL) },
  	{ DVB_USB_DEVICE(USB_VID_TERRATEC, 0x00d7,
  		&rtl2832u_props, "TerraTec Cinergy T Stick+", NULL) },
@@ -3184,16 +3631,20 @@ index a4c302d..22015fe 100644
 +	{ DVB_USB_DEVICE(USB_VID_KWORLD_2, 0xd393,
 +		&rtl2832u_props, "GIGABYTE U7300", NULL) },
 +	{ DVB_USB_DEVICE(USB_VID_DEXATEK, 0x1104,
-+		&rtl2832u_props, "Digivox Micro Hd", NULL) },
++		&rtl2832u_props, "MSI DIGIVOX Micro HD", NULL) },
 +	{ DVB_USB_DEVICE(USB_VID_COMPRO, 0x0620,
 +		&rtl2832u_props, "Compro VideoMate U620F", NULL) },
 +	{ DVB_USB_DEVICE(USB_VID_KWORLD_2, 0xd394,
 +		&rtl2832u_props, "MaxMedia HU394-T", NULL) },
++	{ DVB_USB_DEVICE(USB_VID_LEADTEK, 0x6a03,
++		&rtl2832u_props, "Leadtek WinFast DTV Dongle mini", NULL) },
++	{ DVB_USB_DEVICE(USB_VID_GTEK, USB_PID_CPYTO_REDI_PC50A,
++		&rtl2832u_props, "Crypto ReDi PC 50 A", NULL) },
  	{ }
  };
  MODULE_DEVICE_TABLE(usb, rtl28xxu_id_table);
 diff --git a/drivers/media/usb/dvb-usb-v2/rtl28xxu.h b/drivers/media/usb/dvb-usb-v2/rtl28xxu.h
-index 2f3af2d..533a331 100644
+index 2f3af2d..729b354 100644
 --- a/drivers/media/usb/dvb-usb-v2/rtl28xxu.h
 +++ b/drivers/media/usb/dvb-usb-v2/rtl28xxu.h
 @@ -82,6 +82,7 @@ enum rtl28xxu_tuner {
@@ -3204,6 +3655,19 @@ index 2f3af2d..533a331 100644
  };
  
  struct rtl28xxu_req {
+@@ -96,6 +97,12 @@ struct rtl28xxu_reg_val {
+ 	u8 val;
+ };
+ 
++struct rtl28xxu_reg_val_mask {
++	u16 reg;
++	u8 val;
++	u8 mask;
++};
++
+ /*
+  * memory map
+  *
 -- 
-1.8.3
+1.8.4
 
