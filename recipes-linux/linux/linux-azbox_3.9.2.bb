@@ -5,6 +5,8 @@ MACHINE_KERNEL_PR_append = ".5"
 
 KV = "3.9.2"
 SRCDATE = "16092013"
+SRCDATE_azboxme = "14092013"
+SRCDATE_azboxminime = "14092013"
 
 DEPENDS = "genromfs-native gcc"
 DEPENDS_azboxhd = "genromfs-native azbox-hd-buildimage gcc"
