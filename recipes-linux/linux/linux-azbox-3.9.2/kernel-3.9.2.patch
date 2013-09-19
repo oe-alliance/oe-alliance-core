@@ -19205,8 +19205,8 @@ diff -Naur linux-3.9.2.ref/drivers/ide/Makefile linux-3.9.2/drivers/ide/Makefile
  obj-$(CONFIG_BLK_DEV_IDE_RAPIDE)	+= rapide.o
 diff -Naur linux-3.9.2.ref/drivers/ide/tango2-bmide.c linux-3.9.2/drivers/ide/tango2-bmide.c
 --- linux-3.9.2.ref/drivers/ide/tango2-bmide.c	1970-01-01 01:00:00.000000000 +0100
-+++ linux-3.9.2/drivers/ide/tango2-bmide.c	2013-07-23 19:31:07.000000000 +0200
-@@ -0,0 +1,1199 @@
++++ linux-3.9.2/drivers/ide/tango2-bmide.c	2013-09-19 14:03:40.000000000 +0200
+@@ -0,0 +1,1223 @@
 +
 +/*********************************************************************
 + Copyright (C) 2001-2009
@@ -19439,7 +19439,17 @@ diff -Naur linux-3.9.2.ref/drivers/ide/tango2-bmide.c linux-3.9.2/drivers/ide/ta
 +	ide_hwif_t *hwif = HWIF(drive);
 +	struct ide_cmd *cmd = &hwif->cmd;
 +	struct scatterlist *sg;
-+
++	int mbus_stat = 1;
++	int wait_mbus = 10;
++	
++	
++	while(wait_mbus > 0 && mbus_stat) 
++	{
++		mbus_stat = em86xx_mbus_wait(g_mbus_reg[drive->dn], SBOX_IDEDVD);
++		wait_mbus--;
++	}
++	
++	
 +	if (g_next_sg[drive->dn] == cmd->sg_nents) { /* no more sg */
 +		em86xx_mbus_setup_dma(g_mbus_reg[drive->dn], 0, 0, NULL, NULL, 1);
 +		return;
@@ -19495,6 +19505,8 @@ diff -Naur linux-3.9.2.ref/drivers/ide/tango2-bmide.c linux-3.9.2/drivers/ide/ta
 +	ide_hwif_t *hwif = HWIF(drive);
 +	int iswrite ;
 +	struct scatterlist *sg = hwif->sg_table;
++	int mbus_stat = 1;
++	int wait_mbus = 10;
 +	
 +	iswrite =  (cmd->tf_flags & IDE_TFLAG_WRITE) ? 1 : 0;
 +	
@@ -19579,6 +19591,13 @@ diff -Naur linux-3.9.2.ref/drivers/ide/tango2-bmide.c linux-3.9.2/drivers/ide/ta
 +	 * only if this is not the last sg element,  so we can refeed
 +	 * mbus.
 +	 */
++	 
++	while(wait_mbus > 0 && mbus_stat) 
++	{
++		mbus_stat = em86xx_mbus_wait(g_mbus_reg[drive->dn], SBOX_IDEDVD);
++		wait_mbus--;
++	}
++	
 +	if (em86xx_mbus_setup_dma(g_mbus_reg[drive->dn], sg_dma_address(sg),
 +				sg_dma_len(sg),
 +				(cmd->sg_nents == 1) ? NULL : tango2_mbus_intr,
@@ -19599,7 +19618,8 @@ diff -Naur linux-3.9.2.ref/drivers/ide/tango2-bmide.c linux-3.9.2/drivers/ide/ta
 +{
 +	ide_hwif_t *hwif = HWIF(drive);
 +	u8 dma_stat;
-+	int mbus_stat;
++	int mbus_stat = 1;
++	int wait_mbus = 10;
 +   
 +	
 +	dma_stat = hwif->dma_ops->dma_sff_read_status(hwif);
@@ -19619,7 +19639,11 @@ diff -Naur linux-3.9.2.ref/drivers/ide/tango2-bmide.c linux-3.9.2/drivers/ide/ta
 +	 * arbitration, IDE device thinks the DMA transfer is done,
 +	 * but the data might be held in MBUS FIFO
 +	 */
-+	mbus_stat = em86xx_mbus_wait(g_mbus_reg[drive->dn], SBOX_IDEDVD);
++	while(wait_mbus > 0 && mbus_stat) 
++	{
++		mbus_stat = em86xx_mbus_wait(g_mbus_reg[drive->dn], SBOX_IDEDVD);
++		wait_mbus--;
++	}
 +
 +	/* release mbus */
 +	em86xx_mbus_free_dma(g_mbus_reg[drive->dn], SBOX_IDEDVD);
