@@ -8,10 +8,7 @@ inherit gitpkgv allarch
 SRCREV = "${AUTOREV}"
 PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"
-PR = "r3"
-
-PACKAGES += "armymoodbluehd-components"
-PROVIDES += "armymoodbluehd-components"
+PR = "r4"
 
 SRC_URI="git://github.com/Taykun345/skin-PLi-Army-MoodBlueHD-mod.git;protocol=git"
 
