@@ -10,7 +10,7 @@ SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
 PV = "2.0"
-PR = "r37"
+PR = "r38"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -101,7 +101,6 @@ THIRDPARTY_PLUGINS = " \
 	enigma2-plugin-extensions-yampmusicplayer_2.1.1-2012-09-23_mipsel.ipk \
 	enigma2-plugin-extensions-zdfnewmediathek_1.3rc4_mips32el.ipk \
 	enigma2-plugin-systemplugins-recordinfobar_1.0-rc15_mipsel.ipk \
-	enigma2-plugin-skin-blue-shadow-galaxy-mod-by-mamba65_r01_all.ipk \
 	"
 
 # 	Install any packages t_append =hat are only For this machines feed here, uncomment the line below and change as required
