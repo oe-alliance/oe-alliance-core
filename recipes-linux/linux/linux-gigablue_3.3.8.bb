@@ -3,7 +3,7 @@ LICENSE = "GPL"
 SECTION = "kernel"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 KV = "3.3.8"
-MACHINE_KERNEL_PR_append = ".17"
+MACHINE_KERNEL_PR_append = ".18"
 
 SRC_URI[md5sum] = "dbd9b0dcf632d52b5765a9d7372e0205"
 SRC_URI[sha256sum] = "6922bb05875664d54fa653fb27b4ea91fb28009fc6122d760e601429c43e69af"
@@ -35,6 +35,7 @@ SRC_URI = "http://archiv.openmips.com/linux-gbquad-3.3.8-2.0_20130716.tar.gz \
 	file://dvb_usb_disable_rc_polling.patch \
 	file://fix-dvb-siano-sms-order.patch \
 	file://nfs-max-rwsize-8k.patch \
+	file://linux-3.3.8-dvbsky.patch \
 	"
 
 S = "${WORKDIR}/linux-3.3.8-2.0"
