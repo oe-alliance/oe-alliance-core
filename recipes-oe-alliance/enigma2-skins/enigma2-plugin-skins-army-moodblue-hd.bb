@@ -8,17 +8,14 @@ inherit gitpkgv allarch
 SRCREV = "${AUTOREV}"
 PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"
-PR = "r2"
+PR = "r3"
 
 PACKAGES += "armymoodbluehd-components"
 PROVIDES += "armymoodbluehd-components"
 
 SRC_URI="git://github.com/Taykun345/skin-PLi-Army-MoodBlueHD-mod.git;protocol=git"
 
-FILES_armymoodbluehd-components = "/usr/lib/enigma2/python/Components/Converter"
 FILES_${PN} = "/usr/share/enigma2/Army_MoodBlue_mod"
-
-RDEPENDS_${PN} = "armymoodbluehd-components"
 
 S = "${WORKDIR}/git"
 
