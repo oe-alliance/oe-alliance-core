@@ -10,7 +10,7 @@ SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
 PV = "2.0"
-PR = "r38"
+PR = "r39"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -130,12 +130,12 @@ THIRDPARTY_MACHINE_PLUGINS_et4x00 = " \
 THIRDPARTY_MACHINE_PLUGINS_et5x00 = " \
 	"
 THIRDPARTY_MACHINE_PLUGINS_et6x00 = " \
-	enigma2-plugin-extensions-et-webbrowser_1.6.2-r1_et6x00.ipk \
+	enigma2-plugin-extensions-et-webbrowser_2.0.0-r0_et6x00.ipk \
 	enigma2-plugin-weblinks-basic_1.3-r0_et6x00.ipk \
 	enigma2-plugin-weblinks-games_1.0-r0_et6x00.ipk \
 	"
 THIRDPARTY_MACHINE_PLUGINS_et9x00 = " \
-	enigma2-plugin-extensions-et-webbrowser_1.6.1-r1_et9x00.ipk \
+	enigma2-plugin-extensions-et-webbrowser_2.0.0-r0_et9x00.ipk \
 	enigma2-plugin-weblinks-basic_1.3-r0_et9x00.ipk \
 	enigma2-plugin-weblinks-games_1.0-r0_et9x00.ipk \
 	"
