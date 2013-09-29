@@ -10,8 +10,8 @@ require conf/license/license-gplv2.inc
 inherit autotools gitpkgv
 
 SRCREV = "${AUTOREV}"
-PV = "4.8.0+git${SRCPV}"
-PKGV = "4.8.0+git${GITPKGV}"
+PV = "4.8.1+git${SRCPV}"
+PKGV = "4.8.1+git${GITPKGV}"
 PR = "r0"
 
 SRC_URI = "git://github.com/dhwz/MediaPortal.git;protocol=git file://fix_build.patch"
