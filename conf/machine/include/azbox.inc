@@ -10,6 +10,7 @@ MACHINE_EXTRA_RRECOMMENDS = " \
 	gst-plugin-azbox-dvbmediasink \			
 	azbox-mrua \
 	azbox-compat \
+	kernel-module-cifs \
 	"
 
 DVBMEDIASINK_CONFIG = "--with-wma --with-wmv --with-pcm --with-dtsdownmix"
