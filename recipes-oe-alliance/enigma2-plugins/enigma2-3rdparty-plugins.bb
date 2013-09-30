@@ -10,7 +10,7 @@ SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
 PV = "2.0"
-PR = "r39"
+PR = "r40"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -87,7 +87,7 @@ THIRDPARTY_PLUGINS = " \
 	enigma2-plugin-extensions-sportportal_2013_all.ipk \
 	enigma2-plugin-extensions-systemtools-for-ppanels_0.83_mipsel.ipk \
 	enigma2-plugin-extensions-thetvdb_0.7-20120607-r1_mips32el.ipk \
-	enigma2-plugin-extensions-tmdbinfo_1.0-20120508-r2_mips32el.ipk \
+	enigma2-plugin-extensions-tmdbinfo_1.1-20130929-r0-r1_mips32el.ipk
 	enigma2-plugin-extensions-translator_0.5rc3_mips32el.ipk \
 	enigma2-plugin-extensions-transmission_2.76-r13884_mips32el.ipk \
 	enigma2-plugin-extensions-tsmedia-oe2.0_3.9_all.ipk \
