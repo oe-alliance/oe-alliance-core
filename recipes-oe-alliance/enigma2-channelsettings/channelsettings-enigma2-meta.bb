@@ -4,7 +4,7 @@ require conf/license/license-gplv2.inc
 
 inherit allarch
 
-PR = "r26"
+PR = "r27"
 
 DEPENDS = "\
 	enigma2-plugin-settings-henksat-19e \
@@ -25,6 +25,7 @@ DEPENDS = "\
 	enigma2-plugin-settings-hans-13e-19e-23e-28e-rotating \
 	enigma2-plugin-settings-rytec-13e19e23e28e \
 	enigma2-plugin-settings-rytec-motor \
+	\
 	enigma2-plugin-settings-catseye.23e.19e \
 	enigma2-plugin-settings-catseye.5e.1w \
 	enigma2-plugin-settings-catseye.7w \
@@ -45,7 +46,6 @@ DEPENDS = "\
 	enigma2-plugin-settings-predrag.13e \
 	enigma2-plugin-settings-predrag.19e \
 	enigma2-plugin-settings-predrag.19e.13e \
-	enigma2-plugin-settings-predrag.19e.16e.13e \
 	enigma2-plugin-settings-predrag.19e.16e.13e.08w \
 	enigma2-plugin-settings-predrag.28e.19e.13e \
 	enigma2-plugin-settings-predrag.28e.19e.13e.0.8w \
