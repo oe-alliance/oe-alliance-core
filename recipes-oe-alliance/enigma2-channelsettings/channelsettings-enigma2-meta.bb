@@ -4,7 +4,7 @@ require conf/license/license-gplv2.inc
 
 inherit allarch
 
-PR = "r18"
+PR = "r19"
 
 DEPENDS = "\
 	enigma2-plugin-settings-henksat-19e \
@@ -56,27 +56,6 @@ DEPENDS = "\
 	enigma2-plugin-settings-cst.trial3.db \
 	enigma2-plugin-settings-cst.trial4.db \
 	enigma2-plugin-settings-cst.trial5.db \
-	enigma2-plugin-settings-dona.motor.28e.30w \
-	enigma2-plugin-settings-dona.motor.42e.30w \
-	enigma2-plugin-settings-dona.motor.75e.30w \
-	enigma2-plugin-settings-dona.motor.90e.61w \
-	enigma2-plugin-settings-dona.multifeed.13e \
-	enigma2-plugin-settings-dona.multifeed.19e \
-	enigma2-plugin-settings-dona.multifeed.19e.13e \
-	enigma2-plugin-settings-dona.multifeed.19e.16e.13e \
-	enigma2-plugin-settings-dona.multifeed.19e.16e.13e.1w \
-	enigma2-plugin-settings-dona.multifeed.19e.16e.13e.5e.1w \
-	enigma2-plugin-settings-dona.multifeed.19e.16e.13e.5e.1w.4w.5w \
-	enigma2-plugin-settings-dona.multifeed.23e.19e.13e \
-	enigma2-plugin-settings-dona.multifeed.28e.19e.16e.13e \
-	enigma2-plugin-settings-dona.multifeed.28e.19e.16e.13e.1w \
-	enigma2-plugin-settings-dona.multifeed.28e.19e.16e.13e.5e.1w \
-	enigma2-plugin-settings-dona.multifeed.28e.23e.19e.13e \
-	enigma2-plugin-settings-dona.multifeed.28e.23e.19e.16e.13e.1w \
-	enigma2-plugin-settings-dona.multifeed.28e.23e.19e.16e.13e.9e.7e.5e.1w \
-	enigma2-plugin-settings-dona.multifeed.33e.31e.28e.23e.19e.16e.13e.9e.5e.1w.4w.5w \
-	enigma2-plugin-settings-dona.multifeed.39e.28e.23e.19e.16e.13e.9e.7e.5e.1w.4w.5w.8w.12w.15w \
-	enigma2-plugin-settings-likra.rotor \
 	enigma2-plugin-settings-malimali.9e.13e.19e \
 	enigma2-plugin-settings-malimali.13e \
 	enigma2-plugin-settings-malimali.13e.19e \
@@ -99,31 +78,7 @@ DEPENDS = "\
 	enigma2-plugin-settings-predrag.39e.28e.26e.23e.19e.16e.13e.7.0e.0.8w.4.0w \
 	enigma2-plugin-settings-predrag.42e.19e.13e.7e \
 	enigma2-plugin-settings-predrag.motor.42e.to.30w \
-	enigma2-plugin-settings-rickysnake.13e.19e \
-	enigma2-plugin-settings-rickysnake.13e \
-	enigma2-plugin-settings-rickysnake.19e \
 	enigma2-plugin-settings-sgtflipflop.28e \
-	enigma2-plugin-settings-satvenus.19e.13e \
-	enigma2-plugin-settings-satvenus.19e.16e.13e.1w \
-	enigma2-plugin-settings-satvenus.19e.16e.13e \
-	enigma2-plugin-settings-satvenus.23e.19e.13e \
-	enigma2-plugin-settings-satvenus.23e.19e.16e.13e \
-	enigma2-plugin-settings-satvenus.28e.19e.16e.13e \
-	enigma2-plugin-settings-satvenus.28e.23e.19e.13e \
-	enigma2-plugin-settings-satvenus.28e.23e.19e.16e.13e.9e.7e.5e.1w \
-	enigma2-plugin-settings-satvenus.39e.28e.23e.19e.16e.13e.9e.1w \
-	enigma2-plugin-settings-satvenus.39e.28e.23e.19e.16e.13e.9e.5e.1w.4w.5w \
-	enigma2-plugin-settings-satvenus.39e.28e.23e.19e.16e.13e.9e.7e.5e.1w.4w.5w \
-	enigma2-plugin-settings-satvenus.motor.42e.to.30w \
-	enigma2-plugin-settings-satvenus.motor.75e.to.30w \
-	enigma2-plugin-settings-swallow.19e \
-	enigma2-plugin-settings-swallow.19e.13e \
-	enigma2-plugin-settings-tuncay.19e.13e.astra.hortbird \
-	enigma2-plugin-settings-tuncay.42e.19e.13e.7e \
-	enigma2-plugin-settings-tuncay.astra \
-	enigma2-plugin-settings-tuncay.combo.kabel.sat \
-	enigma2-plugin-settings-tuncay.kabeldeutschland \
-	enigma2-plugin-settings-ureyesonly.28.2e \
 	enigma2-plugin-settings-vhannibal.dual.feeds \
 	enigma2-plugin-settings-vhannibal.dual.feeds.dtt.italia \
 	enigma2-plugin-settings-vhannibal.dual.feeds.dtt.milano \
