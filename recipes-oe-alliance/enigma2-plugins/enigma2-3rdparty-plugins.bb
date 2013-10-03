@@ -10,7 +10,7 @@ SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
 PV = "2.0"
-PR = "r43"
+PR = "r44"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -140,7 +140,7 @@ THIRDPARTY_MACHINE_PLUGINS_et9x00 = " \
 	"
 
 THIRDPARTY_MACHINE_PLUGINS_e3hd = " \
-	enigma2-plugin-extensions-opera_1.01_mips32el.ipk \
+	enigma2-plugin-extensions-hbbtv_2.00_E3HD_mips32el.ipk \
 	"
 
 THIRDPARTY_MACHINE_PLUGINS_dm8000 = " \
