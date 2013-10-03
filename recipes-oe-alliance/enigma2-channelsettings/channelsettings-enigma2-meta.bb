@@ -25,7 +25,6 @@ DEPENDS = "\
 	enigma2-plugin-settings-hans-13e-19e-23e-28e-rotating \
 	enigma2-plugin-settings-rytec-13e19e23e28e \
 	enigma2-plugin-settings-rytec-motor \
-	
 	enigma2-plugin-settings-catseye.23e.19e \
 	enigma2-plugin-settings-catseye.5e.1w \
 	enigma2-plugin-settings-catseye.7w \
