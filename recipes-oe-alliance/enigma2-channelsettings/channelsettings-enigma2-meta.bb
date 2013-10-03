@@ -4,7 +4,7 @@ require conf/license/license-gplv2.inc
 
 inherit allarch
 
-PR = "r24"
+PR = "r25"
 
 DEPENDS = "\
 	enigma2-plugin-settings-henksat-19e \
@@ -35,20 +35,10 @@ DEPENDS = "\
 	enigma2-plugin-settings-cst.8sat2 \
 	enigma2-plugin-settings-cst.dual1.db \
 	enigma2-plugin-settings-cst.dual2.db \
-	enigma2-plugin-settings-cst.dual3.db \
-	enigma2-plugin-settings-cst.dual4.db \
-	enigma2-plugin-settings-cst.five1.db \
-	enigma2-plugin-settings-cst.five2.db \
-	enigma2-plugin-settings-cst.four.db \
-	enigma2-plugin-settings-cst.four2.db \
 	enigma2-plugin-settings-cst.four3.db \
-	enigma2-plugin-settings-cst.four4.db \
 	enigma2-plugin-settings-cst.mono.db \
 	enigma2-plugin-settings-cst.motor.db \
-	enigma2-plugin-settings-cst.trial1.db \
-	enigma2-plugin-settings-cst.trial2.db \
 	enigma2-plugin-settings-cst.trial3.db \
-	enigma2-plugin-settings-cst.trial4.db \
 	enigma2-plugin-settings-cst.trial5.db \
 	enigma2-plugin-settings-malimali.9e.13e.19e \
 	enigma2-plugin-settings-malimali.13e \
