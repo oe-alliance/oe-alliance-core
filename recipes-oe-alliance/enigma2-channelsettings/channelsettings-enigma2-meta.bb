@@ -4,7 +4,7 @@ require conf/license/license-gplv2.inc
 
 inherit allarch
 
-PR = "r25"
+PR = "r26"
 
 DEPENDS = "\
 	enigma2-plugin-settings-henksat-19e \
@@ -31,8 +31,6 @@ DEPENDS = "\
 	enigma2-plugin-settings-catseye.7w \
 	enigma2-plugin-settings-catseye.28e \
 	enigma2-plugin-settings-catseye.75e.to.45w \
-	enigma2-plugin-settings-cst.8sat \
-	enigma2-plugin-settings-cst.8sat2 \
 	enigma2-plugin-settings-cst.dual1.db \
 	enigma2-plugin-settings-cst.dual2.db \
 	enigma2-plugin-settings-cst.four3.db \
