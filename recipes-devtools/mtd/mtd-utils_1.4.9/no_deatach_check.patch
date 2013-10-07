@@ -1,0 +1,86 @@
+diff --git a/ubi-utils/ubiformat.c b/ubi-utils/ubiformat.c
+index a265a9a..7fef0fa 100644
+--- a/ubi-utils/ubiformat.c
++++ b/ubi-utils/ubiformat.c
+@@ -64,6 +64,7 @@ struct args {
+ 	const char *image;
+ 	const char *node;
+ 	int node_fd;
++	unsigned int no_detach_check:1;
+ };
+ 
+ static struct args args =
+@@ -124,6 +125,7 @@ static const struct option long_options[] = {
+ 	{ .name = "ubi-ver",         .has_arg = 1, .flag = NULL, .val = 'x' },
+ 	{ .name = "help",            .has_arg = 0, .flag = NULL, .val = 'h' },
+ 	{ .name = "version",         .has_arg = 0, .flag = NULL, .val = 'V' },
++	{ .name = "no-detach-check", .has_arg = 0, .flag = NULL, .val = 'D' },
+ 	{ NULL, 0, NULL, 0},
+ };
+ 
+@@ -136,7 +138,7 @@ static int parse_opt(int argc, char * const argv[])
+ 		int key, error = 0;
+ 		unsigned long int image_seq;
+ 
+-		key = getopt_long(argc, argv, "nh?Vyqve:x:s:O:f:S:", long_options, NULL);
++		key = getopt_long(argc, argv, "nh?Vyqve:x:s:O:f:S:D", long_options, NULL);
+ 		if (key == -1)
+ 			break;
+ 
+@@ -186,6 +188,10 @@ static int parse_opt(int argc, char * const argv[])
+ 			args.quiet = 1;
+ 			break;
+ 
++		case 'D':
++			args.no_detach_check = 1;
++			break;
++
+ 		case 'x':
+ 			args.ubi_ver = simple_strtoul(optarg, &error);
+ 			if (error || args.ubi_ver < 0)
+@@ -704,7 +710,7 @@ out_free:
+ 	return -1;
+ }
+ 
+-int main(int argc, char * const argv[])
++int ubiformat_main(int argc, char * const argv[])
+ {
+ 	int err, verbose;
+ 	libmtd_t libmtd;
+@@ -801,16 +807,19 @@ int main(int argc, char * const argv[])
+ 	}
+ 
+ 	/* Make sure this MTD device is not attached to UBI */
+-	libubi = libubi_open();
+-	if (libubi) {
+-		int ubi_dev_num;
+-
+-		err = mtd_num2ubi_dev(libubi, mtd.mtd_num, &ubi_dev_num);
+-		libubi_close(libubi);
+-		if (!err) {
+-			errmsg("please, first detach mtd%d (%s) from ubi%d",
+-			       mtd.mtd_num, args.node, ubi_dev_num);
+-			goto out_close;
++	if (!args.no_detach_check == 1)
++	{
++		libubi = libubi_open();
++		if (libubi) {
++			int ubi_dev_num;
++
++			err = mtd_num2ubi_dev(libubi, mtd.mtd_num, &ubi_dev_num);
++			libubi_close(libubi);
++			if (!err) {
++				errmsg("please, first detach mtd%d (%s) from ubi%d",
++					mtd.mtd_num, args.node, ubi_dev_num);
++				goto out_close;
++			}
+ 		}
+ 	}
+ 
+@@ -958,4 +967,4 @@ out_close:
+ out_close_mtd:
+ 	libmtd_close(libmtd);
+ 	return -1;
+-}
++}
+\ No newline at end of file
