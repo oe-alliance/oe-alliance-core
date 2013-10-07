@@ -4,7 +4,7 @@ MAINTAINER = "Andy Blackburn"
 require conf/license/license-gplv2.inc
 
 DEPENDS = "enigma2 mtd-utils python-process libcrypto-compat"
-RDEPENDS = "mtd-utils python-process libcrypto-compat util-linux-blkid python-compression"
+RDEPENDS = "mtd-utils python-process libcrypto-compat util-linux-blkid python-compression zip"
 
 RCONFLICTS_${PN} = "settings-autorestore"
 RREPLACES_${PN} = "settings-autorestore"
@@ -13,7 +13,7 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "2.1+git${SRCPV}"
 PKGV = "2.1+git${GITPKGV}"
-PR = "r14"
+PR = "r15"
 
 SRC_URI="git://github.com/OpenViX/vix-core.git;protocol=git"
 
