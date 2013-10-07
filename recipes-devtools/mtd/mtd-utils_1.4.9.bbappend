@@ -1,4 +1,4 @@
-PRINC = "7"
+PRINC = "8"
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}_${PV}:"
 

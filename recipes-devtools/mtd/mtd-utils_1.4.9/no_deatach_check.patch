@@ -1,5 +1,5 @@
 diff --git a/ubi-utils/ubiformat.c b/ubi-utils/ubiformat.c
-index a265a9a..7fef0fa 100644
+index a265a9a..66be92f 100644
 --- a/ubi-utils/ubiformat.c
 +++ b/ubi-utils/ubiformat.c
 @@ -64,6 +64,7 @@ struct args {
@@ -38,15 +38,6 @@ index a265a9a..7fef0fa 100644
  		case 'x':
  			args.ubi_ver = simple_strtoul(optarg, &error);
  			if (error || args.ubi_ver < 0)
-@@ -704,7 +710,7 @@ out_free:
- 	return -1;
- }
- 
--int main(int argc, char * const argv[])
-+int ubiformat_main(int argc, char * const argv[])
- {
- 	int err, verbose;
- 	libmtd_t libmtd;
 @@ -801,16 +807,19 @@ int main(int argc, char * const argv[])
  	}
  
@@ -77,10 +68,3 @@ index a265a9a..7fef0fa 100644
  		}
  	}
  
-@@ -958,4 +967,4 @@ out_close:
- out_close_mtd:
- 	libmtd_close(libmtd);
- 	return -1;
--}
-+}
-\ No newline at end of file
