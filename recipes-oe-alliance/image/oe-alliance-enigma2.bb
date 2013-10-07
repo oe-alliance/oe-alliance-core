@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3
 inherit task
 
 PV = "1.0"
-PR = "r36"
+PR = "r37"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 DEPENDS = "enigma2 enigma2-plugins enigma2-oe-alliance-plugins oe-alliance-feeds enigma2-3rdparty-plugins ${@base_contains("MACHINE_FEATURES", "wifi", "oe-alliance-wifi", "", d)}"
@@ -25,7 +25,6 @@ RDEPENDS = "\
 RRECOMMENDS = "\
 	enigma2-plugin-systemplugins-autobouquetsmaker \
 	enigma2-plugin-systemplugins-hotplug \
-	enigma2-plugin-extensions-audiosync \
 	enigma2-plugin-extensions-mediascanner \
 	enigma2-plugin-extensions-pictureplayer \
 	enigma2-plugin-extensions-openwebif \
