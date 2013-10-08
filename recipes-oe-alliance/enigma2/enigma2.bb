@@ -158,7 +158,7 @@ inherit gitpkgv autotools pkgconfig
 
 PV = "2.8+git${SRCPV}"
 PKGV = "2.8+git${GITPKGV}"
-PR = "r125"
+PR = "r126"
 
 SRC_URI = "${ENIGMA2_URI}"
 
@@ -293,6 +293,8 @@ do_configure_prepend() {
 		DRIVERSDATE=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/gigablue/gigablue-dvb-modules-${MACHINE}.bb | cut -b 12-19`
 	elif [ "${MACHINE}" = "inihde" ]; then
 		DRIVERSDATE=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/ini/ini-dvb-modules-inihde.bb | cut -b 12-19`
+	elif [ "${MACHINE}" = "inihdp" ]; then
+		DRIVERSDATE=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/ini/ini-dvb-modules-inihdp.bb | cut -b 12-19`
 	elif [ "${MACHINE}" = "ventonhdx" ]; then
 		DRIVERSDATE=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/ini/ini-dvb-modules-inihdx.bb | cut -b 12-19`
 	elif [ "${MACHINE}" = "xp1000" ]; then
@@ -305,12 +307,8 @@ do_configure_prepend() {
 		DRIVERSDATE=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/azbox/azbox-dvb-modules.bb | cut -b 12-19`
 	elif [ "${MACHINE}" = "dm8000" ]; then
 		DRIVERSDATE="20130619"
-	elif [ "${MACHINE}" = "dm7020hd" ]; then
-		DRIVERSDATE="20130730"
-	elif [ "${MACHINE}" = "dm800sev2" ]; then
-		DRIVERSDATE="20130725"
-	elif [ "${MACHINE}" = "dm500hd" -o "${MACHINE}" = "dm800se" -o "${MACHINE}" = "dm500hdv2" ]; then
-		DRIVERSDATE="20130607"
+	elif [ "${MACHINE}" = "dm500hd" -o "${MACHINE}" = "dm800se" -o "${MACHINE}" = "dm500hdv2" -o "${MACHINE}" = "dm7020hd" -o "${MACHINE}" = "dm800sev2"]; then
+		DRIVERSDATE="20130927"
 	elif [ "${MACHINE}" = "dm800" ]; then
 		DRIVERSDATE="20130501"
 	else
