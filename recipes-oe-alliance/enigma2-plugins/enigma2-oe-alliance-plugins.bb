@@ -68,7 +68,7 @@ DESCRIPTION_enigma2-plugin-systemplugins-fpgaupgrade = "Upgrade your system FPGA
 DESCRIPTION_enigma2-plugin-systemplugins-vfdcontrol = "vfd controller"
 RDEPENDS_enigma2-plugin-systemplugins-vfdcontrol = "gigablue-vfdctl"
 DESCRIPTION_enigma2-plugin-extensions-streamtv = "iptv player"
-RDEPENDS_enigma2-plugin-extensions-streamtv = "librtmp0"
+RDEPENDS_enigma2-plugin-extensions-streamtv = "librtmp1"
 DESCRIPTION_enigma2-plugin-systemplugins-tempfancontrol = "Control your internal system fan."
 DESCRIPTION_enigma2-plugin-systemplugins-fancontrol = "Control your internal system fan."
 RDEPENDS_enigma2-plugin-systemplugins-fancontrol_et9x00 = "hddtemp"
@@ -105,7 +105,7 @@ inherit gitpkgv autotools
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r83"
+PR = "r84"
 
 SRC_URI="git://github.com/oe-alliance/oe-alliance-plugins.git;protocol=git"
 

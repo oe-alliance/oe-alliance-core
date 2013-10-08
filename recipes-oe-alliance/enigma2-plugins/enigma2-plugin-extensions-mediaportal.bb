@@ -1,5 +1,5 @@
 DESCRIPTION = "MediaPortal "
-RDEPENDS_${PN} = "python-json python-html gst-plugins-good-flv gst-plugins-bad-rtmp librtmp0 rtmpdump"
+RDEPENDS_${PN} = "python-json python-html gst-plugins-good-flv gst-plugins-bad-rtmp librtmp1 rtmpdump"
 MAINTAINER = "dhwz"
 LICENSE = "proprietary"
 
@@ -12,7 +12,7 @@ inherit autotools gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "4.8.1+git${SRCPV}"
 PKGV = "4.8.1+git${GITPKGV}"
-PR = "r0"
+PR = "r1"
 
 SRC_URI = "git://github.com/dhwz/MediaPortal.git;protocol=git file://fix_build.patch"
 
