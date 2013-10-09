@@ -8,14 +8,13 @@ DEPENDS += "gst-plugins-base libid3tag libmad mpeg2dec liba52 lame libcdio openc
 
 EXTRA_OECONF += "--enable-orc"
 
-PR = "r6"
+SRCREV = "${AUTOREV}"
+PR = "r9"
 GIT_PV = ""
-
-SRCREV = "9afc696e5fa9fb980e02df5637f022796763216f"
 
 inherit autotools pkgconfig gettext git-project
 
-SRC_URI = "git://anongit.freedesktop.org/gstreamer/${PN}"
+SRC_URI = "git://anongit.freedesktop.org/gstreamer/${PN};protocol=git;branch=0.10"
 
 SRC_URI += " \
 	file://orc.m4-fix-location-of-orcc-when-cross-compiling.patch \

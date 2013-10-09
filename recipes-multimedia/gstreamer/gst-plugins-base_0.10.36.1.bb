@@ -10,14 +10,13 @@ DEPENDS += "${@base_contains('DISTRO_FEATURES', 'x11', 'virtual/libx11 libxv', '
 DEPENDS += "alsa-lib freetype liboil libogg libvorbis libtheora avahi util-linux tremor orc orc-native"
 DEPENDS += "gstreamer"
 
-SRCREV = "bdb33163478fdf95938fbdca7eabad3ea920a277"
-
-PR = "r12"
+SRCREV = "${AUTOREV}"
+PR = "r13"
 GIT_PV = ""
 
 inherit autotools pkgconfig gettext git-project
 
-SRC_URI = "git://anongit.freedesktop.org/gstreamer/${PN}"
+SRC_URI = "git://anongit.freedesktop.org/gstreamer/${PN};protocol=git;branch=0.10"
 
 SRC_URI += " \
 	file://orc.m4-fix-location-of-orcc-when-cross-compiling.patch \

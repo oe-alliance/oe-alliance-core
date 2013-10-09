@@ -9,17 +9,16 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=0636e73ff0215e8d672dc4c32c317bb3 \
 DEPENDS += "gst-plugins-base libmusicbrainz tremor curl libmms librtmp faad2"
 CONFLICTS = "librsvg"
 
-PR = "r7"
+SRCREV = "${AUTOREV}"
+PR = "r9"
 GIT_PV = ""
-
-SRCREV = "fb0d8700e71c4a6569ba023d16201087aec119fd"
 
 EXTRA_OECONF += "--disable-examples --disable-experimental --disable-sdl --disable-cdaudio --disable-directfb --enable-faad \
                  --disable-vdpau --disable-apexsink --enable-orc --disable-mpeg2enc --disable-mplex --disable-rsvg --disable-uvch264"
 
 ARM_INSTRUCTION_SET = "arm"
 
-SRC_URI = "git://anongit.freedesktop.org/gstreamer/${PN}"
+SRC_URI = "git://anongit.freedesktop.org/gstreamer/${PN};protocol=git;branch=0.10"
 
 SRC_URI += " \
         file://0003-mpegpsdemux_speedup.diff.patch \

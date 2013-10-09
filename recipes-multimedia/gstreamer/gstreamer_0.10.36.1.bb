@@ -9,10 +9,9 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=55ca817ccb7d5b5b66355690e9abc605 \
                     file://gst/gst.h;beginline=1;endline=21;md5=8e5fe5e87d33a04479fde862e238eaa4"
 DEPENDS = "glib-2.0 libxml2 bison-native flex-native"
 
-PR = "r6"
+SRCREV = "${AUTOREV}"
+PR = "r8"
 GIT_PV = ""
-
-SRCREV = "1bcabb9a23afb25dcd059bd827aa35b8ee7e5043"
 
 RRECOMMENDS_${PN}_qemux86    += "kernel-module-snd-ens1370 kernel-module-snd-rawmidi"
 RRECOMMENDS_${PN}_qemux86-64 += "kernel-module-snd-ens1370 kernel-module-snd-rawmidi"
@@ -26,8 +25,7 @@ GSTREAMER_DEBUG ?= "--disable-debug"
 EXTRA_OECONF = "--disable-docs-build --disable-dependency-tracking --with-check=no --disable-examples --disable-tests --disable-valgrind ${GSTREAMER_DEBUG}"
 
 inherit autotools pkgconfig gettext git-project
-
-SRC_URI = "git://anongit.freedesktop.org/gstreamer/${PN}"
+SRC_URI = "git://anongit.freedesktop.org/gstreamer/${PN};protocol=git;branch=0.10"
 
 SRC_URI += " \
 	file://check_fix.patch \
