@@ -158,7 +158,7 @@ inherit gitpkgv autotools pkgconfig
 
 PV = "2.8+git${SRCPV}"
 PKGV = "2.8+git${GITPKGV}"
-PR = "r126"
+PR = "r127"
 
 SRC_URI = "${ENIGMA2_URI}"
 
@@ -308,7 +308,7 @@ do_configure_prepend() {
 	elif [ "${MACHINE}" = "dm8000" ]; then
 		DRIVERSDATE="20130619"
 	elif [ "${MACHINE}" = "dm500hd" -o "${MACHINE}" = "dm800se" -o "${MACHINE}" = "dm500hdv2" -o "${MACHINE}" = "dm7020hd" -o "${MACHINE}" = "dm800sev2"]; then
-		DRIVERSDATE="20130927"
+		DRIVERSDATE="20131001"
 	elif [ "${MACHINE}" = "dm800" ]; then
 		DRIVERSDATE="20130501"
 	else
