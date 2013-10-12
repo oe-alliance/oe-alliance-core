@@ -12,63 +12,55 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "2.8.4+git${SRCPV}"
 PKGV = "2.8.4+git${GITPKGV}"
-PR = "r1"
+PR = "r2"
 
 SRC_URI = "git://github.com/oe-alliance/e2openplugin-${MODULE}.git;protocol=git \
 		file://LICENSE.GPLv2"
 
 S = "${WORKDIR}/git"
 
-PACKAGES =+ "${PN}-src"
-PACKAGES =+ "${PN}-po"
-FILES_${PN} = "/tmp /etc /usr/lib"
-FILES_${PN}-src = "/usr/lib/enigma2/python/Plugins/Extensions/MultiQuickButton/*.py"
-FILES_${PN}-po = "/usr/lib/enigma2/python/Plugins/Extensions/MultiQuickButton/locale/*.po"
+FILES_${PN} = "/etc /usr"
 
 inherit autotools
 
 EXTRA_OECONF = "\
-	--with-libsdl=no --with-boxtype=${MACHINE} --with-po \
+	--with-libsdl=no --with-boxtype=${MACHINE} \
 	BUILD_SYS=${BUILD_SYS} \
 	HOST_SYS=${HOST_SYS} \
 	STAGING_INCDIR=${STAGING_INCDIR} \
 	STAGING_LIBDIR=${STAGING_LIBDIR} \
+	--without-debug \
 "
 
-# remove unused .pyc files
-do_install_append() {
-	find ${D}/usr/lib/enigma2/python/Plugins/Extensions/MultiQuickButton/ -name '*.pyc' -exec rm {} \;
+do_compile() {
+	python -O -m compileall ${S}
+}
+
+python populate_packages_prepend() {
+	enigma2_plugindir = bb.data.expand('${libdir}/enigma2/python/Plugins', d)
+	do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/[a-zA-Z0-9_]+.*$', 'enigma2-plugin-%s', 'Enigma2 Plugin: %s', recursive=True, match_path=True, prepend=True)
+	do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/.*\.py$', 'enigma2-plugin-%s-src', 'Enigma2 Plugin: %s', recursive=True, match_path=True, prepend=True)
+	do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/(.*/)?\.debug/.*$', 'enigma2-plugin-%s-dbg', 'Enigma2 Plugin: %s', recursive=True, match_path=True, prepend=True)
+	do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/.*\.la$', 'enigma2-plugin-%s-dev', '%s (development)', recursive=True, match_path=True, prepend=True)
+	do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/.*\.a$', 'enigma2-plugin-%s-staticdev', '%s (static development)', recursive=True, match_path=True, prepend=True)
+	do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/.*\/.*\.po$', 'enigma2-plugin-%s-po', '%s (translations)', recursive=True, match_path=True, prepend=True)
 }
 
 pkg_postinst() {
 #!/bin/sh
-if ! test -d /etc/MultiQuickButton; then
-	mkdir /etc/MultiQuickButton
-fi
-cd /tmp/mqb
-for buttonfile in *.xml; do
-	if ! test -f /etc/MultiQuickButton/$buttonfile; then
-		cp /tmp/mqb/$buttonfile /etc/MultiQuickButton
-	fi
-done
-cd /
-rm -rf /tmp/mqb
-
 echo "Backup /usr/share/enigma2/keymap.xml in /usr/share/enigma2/keymap_backup_mqb.xml"
-cp /usr/share/enigma2/keymap.xml /usr/share/enigma2/keymap_backup_mqb.xml
-
-echo "Please restart your STB to load Menu Multi QuickButton Plugin ..."
+cp -f /usr/share/enigma2/keymap.xml /usr/share/enigma2/keymap_backup_mqb.xml
+echo "Please restart your STB to load Multi QuickButton plugin"
 exit 0
 }
 
 pkg_postrm() {
 #!/bin/sh
-echo "... Restore flags in /usr/share/enigma2/keymap.xml..."
+echo "Restore flags in /usr/share/enigma2/keymap.xml"
 sed -ie s!"<key id=\"KEY_TEXT\" mapto=\"startTeletext\" flags=\"b\" />"!"<key id=\"KEY_TEXT\" mapto=\"startTeletext\" flags=\"m\" />"!g "/usr/share/enigma2/keymap.xml"
 sed -ie s!"<key id=\"KEY_HELP\" mapto=\"displayHelp\" flags=\"b\" />"!"<key id=\"KEY_HELP\" mapto=\"displayHelp\" flags=\"m\" />"!g "/usr/share/enigma2/keymap.xml"
-rm -r /usr/lib/enigma2/python/Plugins/Extensions/MultiQuickButton > /dev/null 2>&1
-rm -r /etc/MultiQuickButton > /dev/null 2>&1
-
-echo "Please restart your STB to kick ass Multi Quickbutton Plugin to nirvana..."
+rm -rf /usr/lib/enigma2/python/Plugins/Extensions/MultiQuickButton > /dev/null 2>&1
+rm -rf /etc/MultiQuickButton > /dev/null 2>&1
+echo "Please restart your STB to remove Multi Quickbutton plugin"
 exit 0
 }
