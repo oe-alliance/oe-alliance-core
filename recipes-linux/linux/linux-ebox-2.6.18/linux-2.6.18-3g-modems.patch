@@ -1,5 +1,6 @@
---- linux-2.6.18_old/drivers/usb/serial/option.c	2006-09-20 12:42:06.000000000 +0900
-+++ linux-2.6.18_new/drivers/usb/serial/option.c	2013-08-13 13:54:38.000000000 +0900
+diff -ur linux-2.6.18.old/drivers/usb/serial/option.c linux-2.6.18.new/drivers/usb/serial/option.c
+--- linux-2.6.18.old/drivers/usb/serial/option.c	2006-09-20 12:42:06.000000000 +0900
++++ linux-2.6.18.new/drivers/usb/serial/option.c	2013-10-13 01:36:39.666495039 +0900
 @@ -72,6 +72,7 @@
  #define AUDIOVOX_VENDOR_ID              0x0F3D
  #define NOVATELWIRELESS_VENDOR_ID       0x1410
@@ -12,7 +13,7 @@
  #define NOVATELWIRELESS_PRODUCT_U740    0x1400
  #define ANYDATA_PRODUCT_ID              0x6501
  
-+#define HUAWEI_PRODUCT_1446A            0x1001
++#define HUAWEI_PRODUCT_1446A            0x1003
 +#define HUAWEI_PRODUCT_1446B            0x1406
 +#define HUAWEI_PRODUCT_1446C            0x140B
 +#define HUAWEI_PRODUCT_1446D            0x140C
@@ -21,7 +22,7 @@
 +#define HUAWEI_PRODUCT_1446G            0x1433
 +#define HUAWEI_PRODUCT_1446H            0x1436
 +#define HUAWEI_PRODUCT_1446I            0x1446
-+#define HUAWEI_PRODUCT_1446J			0x14AC
++#define HUAWEI_PRODUCT_1446J            0x14AC
 +#define HUAWEI_PRODUCT_1446K            0x1506
 +
 +#define ZTE_PRODUCT_2000A            	0x0001
