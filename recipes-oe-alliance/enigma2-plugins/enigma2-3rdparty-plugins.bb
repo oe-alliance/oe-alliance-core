@@ -10,7 +10,7 @@ SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
 PV = "2.0"
-PR = "r52"
+PR = "r53"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -77,7 +77,7 @@ THIRDPARTY_PLUGINS = " \
 	enigma2-plugin-extensions-screengrabber_2.1a_mips32el.ipk \
 	enigma2-plugin-extensions-seriesplugin_0.8.7.4_mips32el.ipk \
 	enigma2-plugin-extensions-sherlock-vuplus_5.01_mipsel.ipk \
-	enigma2-plugin-extensions-skyrecorder_1.2.4r1_all.ipk \
+	enigma2-plugin-extensions-skyrecorder_1.4.1_all.ipk \
 	enigma2-plugin-extensions-songs-to_0.1_mips32el.ipk \
 	enigma2-plugin-extensions-spiegelonline_2.4_mips32el.ipk \
 	enigma2-plugin-extensions-sportmax_1.2_mips32el.ipk \
