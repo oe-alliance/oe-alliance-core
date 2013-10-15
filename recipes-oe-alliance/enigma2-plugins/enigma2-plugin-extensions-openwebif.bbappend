@@ -1,4 +1,4 @@
-PRINC = "41"
+PRINC = "42"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
@@ -87,7 +87,7 @@ python do_package_prepend () {
 					if not (name == 'elite.jpg' or name == 'premium+.jpg' or name == 'ultra.jpg'):
 						os.remove(os.path.join(root, name))
 				elif target_box == 'odinm7.jpg':
-					if not (name == 'starsatlx.jpg'):
+					if not (name == 'starsatlx.jpg' or name == 'axodin.jpg'):
 						os.remove(os.path.join(root, name))
 				else:
 					os.remove(os.path.join(root, name))
