@@ -10,7 +10,7 @@ SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
 PV = "2.0"
-PR = "r53"
+PR = "r54"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -53,7 +53,7 @@ THIRDPARTY_PLUGINS = " \
 	enigma2-plugin-extensions-gmailreader-oe2.0_1.3_all.ipk \
 	enigma2-plugin-extensions-googlenewsreader_1.0_mips32el.ipk \
 	enigma2-plugin-extensions-heizoelpreisefs_3.70_all.ipk \
-	enigma2-plugin-extensions-hetweer_2.2a_mips32el.ipk \
+	enigma2-plugin-extensions-hetweer_2.3a_mips32el.ipk \
 	enigma2-plugin-extensions-hdmitest_0.4_mipsel.ipk \
 	enigma2-plugin-extensions-kicker_3.1rc1_mips32el.ipk \
 	enigma2-plugin-extensions-kino_1.1rc5_mips32el.ipk \
