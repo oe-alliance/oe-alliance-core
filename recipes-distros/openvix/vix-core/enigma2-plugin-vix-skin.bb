@@ -9,7 +9,7 @@ EPSM = "enigma2-plugin-skins-vix"
 SRCREV = "${AUTOREV}"
 PV = "2.0+git${SRCPV}"
 PKGV = "2.0+git${GITPKGV}"
-PR = "r16"
+PR = "r17"
 
 PACKAGES = "vix-skin-common ${EPSM}-day-hd ${EPSM}-night-hd ${EPSM}-magic-sd ${EPSM}-magic-hd ${EPSM}-magic-hd-light vix-mhdc ${EPSM}-magic-hd-noire ${EPSM}-magic-hd-night vix-vixbmc-hd-common ${EPSM}-vixbmc-slim-hd ${EPSM}-vixbmc-night-hd ${EPSM}-vixbmc-metropolis"
 PROVIDES = "${PN} vix-skin-common ${EPSM}-day-hd ${EPSM}-night-hd ${EPSM}-magic-sd ${EPSM}-magic-hd ${EPSM}-magic-hd-light vix-mhdc ${EPSM}-magic-hd-noire ${EPSM}-magic-hd-night vix-vixbmc-hd-common ${EPSM}-vixbmc-slim-hd ${EPSM}-vixbmc-night-hd ${EPSM}-vixbmc-metropolis"
@@ -49,6 +49,8 @@ FILES_vix-vixbmc-hd-common = "/usr/share/enigma2/ViXBMC_HD-Common"
 FILES_${EPSM}-vixbmc-slim-hd = "/usr/share/enigma2/ViXBMC_HD-Slim"
 FILES_${EPSM}-vixbmc-night-hd = "/usr/share/enigma2/ViXBMC_HD-Night"
 FILES_${EPSM}-vixbmc-metropolis = "/usr/share/enigma2/ViXBMC_Metropolis"
+
+FILES_${PN}-doc = "/usr/share/enigma2/README*"
 
 RDEPENDS_${EPSM}-day-hd = "vix-skin-common font-roboto-enigma"
 RDEPENDS_${EPSM}-night-hd = "vix-skin-common font-roboto-enigma"
