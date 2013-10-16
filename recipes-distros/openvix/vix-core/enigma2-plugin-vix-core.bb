@@ -13,7 +13,7 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "2.1+git${SRCPV}"
 PKGV = "2.1+git${GITPKGV}"
-PR = "r15"
+PR = "r16"
 
 SRC_URI="git://github.com/OpenViX/vix-core.git;protocol=git"
 
@@ -36,6 +36,7 @@ FILES_${PN} = "/etc /usr/lib"
 FILES_${PN}-dbg = "/usr/lib/enigma2/python/Plugins/SystemPlugins/ViX/.debug/"
 FILES_${PN}-src = "/usr/lib/enigma2/python/Plugins/SystemPlugins/ViX/*.py"
 FILES_${PN}-po = "/usr/lib/enigma2/python/Plugins/SystemPlugins/ViX/locale/*.po"
+FILES+${PN}-doc = "/usr/share/enigma2/README*"
 
 do_install_append() {
 	if [ -f ${DEPLOY_DIR_IMAGE}/burn.bat ]; then
