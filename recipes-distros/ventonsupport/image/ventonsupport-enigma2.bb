@@ -4,18 +4,19 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3
                     file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
 
 PV = "1.0"
-PR = "r11"
+PR = "r12"
 
 inherit task
 
 DEPENDS = "enigma2-pliplugins ventonsupport-feeds"
 
 RRECOMMENDS = "\
+	enigma2-plugin-systemplugins-videomode \
 	enigma2-plugin-systemplugins-fastscan \
 	enigma2-plugin-systemplugins-softwaremanager \
 	enigma2-plugin-extensions-audiosync \
 	enigma2-plugin-systemplugins-positionersetup \
-	enigma2-plugin-systemplugins-videoenhancement \	
+	enigma2-plugin-systemplugins-videoenhancement \
 	${@base_contains("MACHINE_FEATURES", "blindscan-dvbs", "enigma2-plugin-systemplugins-blindscan" , "", d)} \
 	${@base_contains("MACHINE_FEATURES", "blindscan-dvbc", "virtual/blindscan-dvbc" , "", d)} \
 	"

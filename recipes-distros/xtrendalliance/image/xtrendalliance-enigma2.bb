@@ -4,7 +4,7 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3
                     file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
 
 PV = "1.0"
-PR = "r20"
+PR = "r21"
 
 inherit task
 
@@ -24,6 +24,7 @@ RRECOMMENDS = "\
 	enigma2-plugin-extensions-dvdplayer \
 	enigma2-plugin-extensions-et-portal \
 	enigma2-plugin-extensions-backupsuite \
+	enigma2-plugin-systemplugins-videomode \
 	enigma2-plugin-systemplugins-hotplug \
 	enigma2-plugin-systemplugins-autoresolution \
 	enigma2-plugin-systemplugins-osdpositionsetup \
@@ -38,8 +39,6 @@ RRECOMMENDS = "\
 	enigma2-plugin-extensions-iptvlistupdater \
 	${@base_contains("MACHINE_FEATURES", "3dtv", "enigma2-plugin-systemplugins-osd3dsetup" , "", d)} \
 	"
-
-	
 
 RRECOMMENDS_append_et4x00 = " enigma2-plugin-extensions-et-webbrowser"
 RRECOMMENDS_append_et6x00 = " enigma2-plugin-extensions-et-webbrowser"

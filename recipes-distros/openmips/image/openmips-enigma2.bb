@@ -4,7 +4,7 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3
                     file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
 
 PV = "1.0"
-PR = "r16"
+PR = "r17"
 
 inherit task
 
@@ -24,6 +24,7 @@ RRECOMMENDS = "\
 	enigma2-plugin-extensions-dvdplayer \
 	enigma2-plugin-extensions-zaphistorybrowser \
 	enigma2-plugin-extensions-gbaspectratioswitch \
+	enigma2-plugin-systemplugins-videomode \
 	enigma2-plugin-systemplugins-videotune \
 	enigma2-plugin-systemplugins-skinselector \
 	enigma2-plugin-systemplugins-autoresolution \
@@ -32,7 +33,7 @@ RRECOMMENDS = "\
 	enigma2-plugin-systemplugins-swapmanager \
 	enigma2-plugin-systemplugins-fastscan \
 	enigma2-plugin-extensions-autotimer \
-	enigma2-plugin-extensions-epgsearch \	
+	enigma2-plugin-extensions-epgsearch \
 	enigma2-plugin-systemplugins-videoenhancement \
 	enigma2-plugin-drivers-network-usb-smsc75xx \
 	enigma2-plugin-drivers-network-usb-ax88179-178a \

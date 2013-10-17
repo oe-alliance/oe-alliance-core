@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3
 inherit task
 
 PV = "1.0"
-PR = "r38"
+PR = "r39"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 DEPENDS = "enigma2 enigma2-plugins enigma2-oe-alliance-plugins oe-alliance-feeds enigma2-3rdparty-plugins ${@base_contains("MACHINE_FEATURES", "wifi", "oe-alliance-wifi", "", d)}"
@@ -32,7 +32,6 @@ RRECOMMENDS = "\
 	enigma2-plugin-systemplugins-networkwizard \
 	enigma2-plugin-systemplugins-positionersetup \
 	enigma2-plugin-systemplugins-satfinder \
-	enigma2-plugin-systemplugins-videomode \
 	\
 	oe-alliance-drivers \
 	\

@@ -4,7 +4,7 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3
                     file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
 
 PV = "1.0"
-PR = "r5"
+PR = "r6"
 
 inherit task
 
@@ -24,6 +24,7 @@ RRECOMMENDS = "\
 	enigma2-plugin-extensions-dvdplayer \
 	enigma2-plugin-extensions-epgrefresh \
 	enigma2-plugin-extensions-enhancedmoviecenter \
+	enigma2-plugin-systemplugins-videomode \
 	enigma2-plugin-systemplugins-videotune \
 	enigma2-plugin-systemplugins-autoresolution \
 	enigma2-plugin-systemplugins-softwaremanager \
