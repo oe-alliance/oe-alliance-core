@@ -12,7 +12,7 @@ inherit autotools gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "4.9.1+git${SRCPV}"
 PKGV = "4.9.1+git${GITPKGV}"
-PR = "r1"
+PR = "r2"
 
 SRC_URI = "git://github.com/dhwz/MediaPortal.git;protocol=git file://fix_build.patch"
 
@@ -36,7 +36,7 @@ python populate_packages_prepend() {
 	do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/.*\/.*\.po$', 'enigma2-plugin-%s-po', '%s (translations)', recursive=True, match_path=True, prepend=True)
 }
 
-FILES_{PN}_append = "${libdir}/enigma2/python/Components/*"
+FILES_${PN}_append = "${libdir}/enigma2/python/Components/*"
 
 pkg_postinst_${PN} () {
 #!/bin/sh
