@@ -12,10 +12,9 @@ inherit autotools gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "4.9.1+git${SRCPV}"
 PKGV = "4.9.1+git${GITPKGV}"
-PR = "r2"
+PR = "r8"
 
 SRC_URI = "git://github.com/dhwz/MediaPortal.git;protocol=git file://fix_build.patch"
-
 
 S = "${WORKDIR}/git"
 
@@ -26,6 +25,9 @@ EXTRA_OECONF = " \
 	STAGING_LIBDIR=${STAGING_LIBDIR} \
 	"
 
+FILES_${PN}_append += "${libdir}/enigma2/python/Components/Converter/MPServicePosition.pyo"
+FILES_${PN}-src_append += "${libdir}/enigma2/python/Components/Converter/MPServicePosition.py"
+
 python populate_packages_prepend() {
 	enigma2_plugindir = bb.data.expand('${libdir}/enigma2/python/Plugins', d)
 	do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/[a-zA-Z0-9_]+.*$', 'enigma2-plugin-%s', '%s', recursive=True, match_path=True, prepend=True, extra_depends="enigma2")
@@ -35,8 +37,6 @@ python populate_packages_prepend() {
 	do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/(.*/)?\.debug/.*$', 'enigma2-plugin-%s-dbg', '%s (debug)', recursive=True, match_path=True, prepend=True)
 	do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/.*\/.*\.po$', 'enigma2-plugin-%s-po', '%s (translations)', recursive=True, match_path=True, prepend=True)
 }
-
-FILES_${PN}_append = "${libdir}/enigma2/python/Components/*"
 
 pkg_postinst_${PN} () {
 #!/bin/sh
