@@ -158,7 +158,7 @@ inherit gitpkgv autotools pkgconfig
 
 PV = "2.8+git${SRCPV}"
 PKGV = "2.8+git${GITPKGV}"
-PR = "r127"
+PR = "r128"
 
 SRC_URI = "${ENIGMA2_URI}"
 
