@@ -10,7 +10,7 @@ SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
 PV = "2.0"
-PR = "r56"
+PR = "r57"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -45,7 +45,6 @@ THIRDPARTY_PLUGINS = " \
 	enigma2-plugin-extensions-csfd_9_35-20130615_all.ipk \
 	enigma2-plugin-extensions-cubic_streamer_0.7.3_mips32el.ipk \
 	enigma2-plugin-extensions-digitalfernsehen_0.8rc1_mips32el.ipk \
-	enigma2-plugin-extensions-dreamexplorer_7.4-r1_mips32el.ipk \
 	enigma2-plugin-extensions-facebook_0.6_mips32el.ipk \
 	enigma2-plugin-extensions-filesearchfs_2.53_all.ipk \
 	enigma2-plugin-extensions-focusonline_0.8_mips32el.ipk \
