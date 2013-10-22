@@ -10,7 +10,7 @@ SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
 PV = "2.0"
-PR = "r58"
+PR = "r59"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -32,7 +32,6 @@ DEPENDS = "enigma2"
 
 THIRDPARTY_PLUGINS = " \
 	enigma2-plugin-dvb-sundtek.controlcenter_1.0-20110318-r2_mipsel.ipk \
-	enigma2-plugin-extensions-aspectratioswitch_0.8_mips32el.ipk \
 	enigma2-plugin-extensions-airplayer_0.3.9_mips32el.ipk \
 	enigma2-plugin-extensions-atmolightd_0.7-pre22_all.ipk \
 	enigma2-plugin-extensions-autobouquets-e2_201308251700-r1_mips32el.ipk \
