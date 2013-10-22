@@ -23,7 +23,6 @@ RRECOMMENDS = "\
 	enigma2-plugin-extensions-cutlisteditor \
 	enigma2-plugin-extensions-dvdplayer \
 	enigma2-plugin-extensions-et-portal \
-	enigma2-plugin-extensions-backupsuite \
 	enigma2-plugin-systemplugins-videomode \
 	enigma2-plugin-systemplugins-hotplug \
 	enigma2-plugin-systemplugins-autoresolution \
