@@ -4,7 +4,7 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3
                     file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
 
 PV = "1.0"
-PR = "r32"
+PR = "r33"
 
 inherit task
 
@@ -24,7 +24,6 @@ RRECOMMENDS = "\
 	enigma2-plugin-extensions-volume-adjust \
 	enigma2-plugin-extensions-bmediacenter \
 	enigma2-plugin-systemplugins-videotune \
-	${@base_contains("MACHINE_BRAND", "AZBOX", "", "enigma2-plugin-systemplugins-autoresolution", d)} \
 	${@base_contains("CHIPSET", "bcm7358", "", "enigma2-plugin-systemplugins-videoenhancement", d)} \
 	enigma2-plugin-systemplugins-softwaremanager \
 	enigma2-plugin-systemplugins-hotplug \
