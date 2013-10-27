@@ -13,6 +13,7 @@ DEPENDS = "enigma2-pliplugins openhdf-feeds openhdf-3rdparty-plugins"
 RRECOMMENDS = "\
 	openhdf-version-info \
 	enigma2-skindefault \
+	python-compression \
 	enigma2-plugin-skins-nobile \
 	enigma2-plugin-skins-army-mod \
 	enigma2-plugin-drivers-usbserial \
