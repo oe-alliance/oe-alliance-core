@@ -1,4 +1,4 @@
-PRINC = "42"
+PRINC = "43"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
@@ -95,7 +95,7 @@ python do_package_prepend () {
 		for name in files:
 			if target_remote != name and name != 'ow_remote.png':
 				if target_remote == 'ini-3000.png':
-					if not (name == 'ini-1000.png' or name == 'ini-1000de.png' or name == 'ini-3000.png' or name == 'ini-5000.png' or name == 'miraclebox.png' or name == 'ini-7000.png'):
+					if not (name == 'ini-1000.png' or name == 'ini-1000de.png' or name == 'ini-3000.png' or name == 'ini-5000.png' or name == 'ini-7000.png' or name == 'miraclebox.png' or name == 'xpeedlx.png'):
 						os.remove(os.path.join(root, name))
 				elif target_remote == 'premium.png':
 					if not (name == 'elite.png'):

@@ -8,4 +8,4 @@
 #/smb	/etc/auto.smb
 #/net	/etc/auto.net
 /autofs     /etc/auto.hotplug
-/media/net  /etc/auto.network
+/media/autofs  /etc/auto.network
