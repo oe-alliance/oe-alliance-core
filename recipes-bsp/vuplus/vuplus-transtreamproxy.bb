@@ -2,10 +2,10 @@ DESCRIPTION = "streamproxy manages streaming data to a Mobile device using enigm
 LICENSE = "CLOSED"
 
 inherit gitpkgv
-SRCREV = "a17d2decfb21c7fa4d80d38857aeb96c974b2411"
+SRCREV="e6d6277466860e4dd779f566cead24a360a87d43"
 PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"
-PR = "2"
+PR = "3"
 
 SRC_URI = "git://schwerkraft.elitedvb.net/streamproxy/streamproxy.git;protocol=git \
 	file://transcoding.patch \
