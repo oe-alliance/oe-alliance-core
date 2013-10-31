@@ -1,4 +1,4 @@
-PRINC = "24"
+PRINC = "25"
 PRINC_dreambox = "3"
 
 PACKAGES += " \
