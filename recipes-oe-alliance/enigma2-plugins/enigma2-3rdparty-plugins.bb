@@ -10,7 +10,7 @@ SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
 PV = "2.0"
-PR = "r68"
+PR = "r69"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -106,22 +106,22 @@ THIRDPARTY_PLUGINS = " \
 
 # 	Install any packages t_append =hat are only For this machines feed here, uncomment the line below and change as required
 THIRDPARTY_MACHINE_PLUGINS_vuuno = " \
-	enigma2-plugin-extensions-sdg-imagedownloader-v0.5-oe-2.0-vu-all.ipk \
+	enigma2-plugin-extensions-sdg-imagedownloader-v0.6-oe-2.0-vu-all.ipk \
 	"
 THIRDPARTY_MACHINE_PLUGINS_vuultimo = " \
-	enigma2-plugin-extensions-sdg-imagedownloader-v0.5-oe-2.0-vu-all.ipk \
+	enigma2-plugin-extensions-sdg-imagedownloader-v0.6-oe-2.0-vu-all.ipk \
 	"
 THIRDPARTY_MACHINE_PLUGINS_vusolo = " \
-	enigma2-plugin-extensions-sdg-imagedownloader-v0.5-oe-2.0-vu-all.ipk \
+	enigma2-plugin-extensions-sdg-imagedownloader-v0.6-oe-2.0-vu-all.ipk \
 	"
 THIRDPARTY_MACHINE_PLUGINS_vuduo = " \
-	enigma2-plugin-extensions-sdg-imagedownloader-v0.5-oe-2.0-vu-all.ipk \
+	enigma2-plugin-extensions-sdg-imagedownloader-v0.6-oe-2.0-vu-all.ipk \
 	"
 THIRDPARTY_MACHINE_PLUGINS_vusolo2 = " \
-	enigma2-plugin-extensions-sdg-imagedownloader-v0.5-oe-2.0-vu-all.ipk \
+	enigma2-plugin-extensions-sdg-imagedownloader-v0.6-oe-2.0-vu-all.ipk \
 	"
 THIRDPARTY_MACHINE_PLUGINS_vuduo2 = " \
-	enigma2-plugin-extensions-sdg-imagedownloader-v0.5-oe-2.0-vu-all.ipk \
+	enigma2-plugin-extensions-sdg-imagedownloader-v0.6-oe-2.0-vu-all.ipk \
 	"
 THIRDPARTY_MACHINE_PLUGINS_et4x00 = " \
 	enigma2-plugin-extensions-et-webbrowser_1.6.1-r1_et4x00.ipk \
