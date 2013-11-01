@@ -7,12 +7,13 @@ LIC_FILES_CHKSUM = "file://../COPYING;md5=94d55d512a9ba36caa9b7df079bae19f"
 
 MACHINE_KERNEL_PR_append = ".5"
 
-SRC_URI = "http://archiv.openmips.com/rtl871x.tar.gz;name=rtl871x \
-           file://mipsel-compatibility.patch \
+PR = "r1"
+
+SRC_URI = "http://source.mynonpublic.com/rtl871x-01112013.tar.gz \
            file://COPYING"
 
-SRC_URI[rtl871x.md5sum] = "9da979c487f5c61a78111faa16450220"
-SRC_URI[rtl871x.sha256sum] = "5829d290dd60e5fb3de0f3eaa85b48de8b208ce8149b2f7d9b32c8ebc218ec82"
+SRC_URI[md5sum] = "5faf6a314a63e1f3be9b227157bb76a1"
+SRC_URI[sha256sum] = "e0fd28318dc0b2846e869d69a95b0a7a7d2fe182964448e4e1d74bdd12e4418f"
 
 inherit module
 
