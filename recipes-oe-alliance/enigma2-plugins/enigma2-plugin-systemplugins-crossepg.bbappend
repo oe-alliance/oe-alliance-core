@@ -1,4 +1,6 @@
-PRINC = "10"
+PV = "0.7.0+git${SRCPV}"
+PKGV = "0.7.0+git${GITPKGV}"
+PRINC = "0"
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
