@@ -4,7 +4,7 @@ SECTION = "kernel"
 KV = "3.5.3"
 
 SRCDATE = "20130829"
-MACHINE_KERNEL_PR_append = ".6"
+MACHINE_KERNEL_PR_append = ".7"
 
 SRC_URI[md5sum] = "08a81f3f3e94a75150131d360b8ea5cc"
 SRC_URI[sha256sum] = "41ed063ea6e86ff94c6e7978013afc6537d387b86b45632bc788c8cded916bdf"
@@ -55,11 +55,14 @@ kernel_do_install_append() {
 	rm ${D}${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION}
 }
 
+MTD_DEVICE = "mtd6"
+MTD_DEVICE_tmnano = "mtd1"
+
 pkg_postinst_kernel-image () {
 	if [ "x$D" == "x" ]; then
 		if [ -f /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz ] ; then
-			flash_erase /dev/mtd6 0 0
-			nandwrite -p /dev/mtd6 /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz
+			flash_erase /dev/${MTD_DEVICE} 0 0
+			nandwrite -p /dev/${MTD_DEVICE} /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz
 			rm -f /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz
 		fi
 	fi

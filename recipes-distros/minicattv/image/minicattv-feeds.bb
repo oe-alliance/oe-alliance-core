@@ -15,5 +15,4 @@ RRECOMMENDS = "\
 	enigma2-plugin-extensions-xmltvimport \
 	enigma2-plugin-systemplugins-crossepg \
 	enigma2-plugin-extensions-enhancedmoviecenter \
-	enigma2-plugin-extensions-mediaportal \
 	"
