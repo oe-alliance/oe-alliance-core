@@ -10,7 +10,7 @@ SRC_URI[sha256sum] = "8b9300480513a211344fd34e85a0ff6640e5a6e4fed39dfc52efc09b5e
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-MACHINE_KERNEL_PR_append = ".3"
+MACHINE_KERNEL_PR_append = ".4"
 
 # By default, kernel.bbclass modifies package names to allow multiple kernels
 # to be installed in parallel. We revert this change and rprovide the versioned
@@ -47,6 +47,7 @@ SRC_URI += "http://archiv.openmips.com/gigablue-linux-${PV}-13092013.tgz \
 	file://0001-rt2800usb-add-support-for-rt55xx.patch \
 	file://rtl28xxu-update-to-the-latest-version-02-06-2013.patch \
 	file://rtl2832-scale-SNR-to-full-range.patch \
+	file://plus-board.patch \
 	"
 
 S = "${WORKDIR}/linux-${PV}"
