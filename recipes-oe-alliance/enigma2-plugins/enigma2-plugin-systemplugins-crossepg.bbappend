@@ -1,6 +1,6 @@
-PV = "0.7.0+git${SRCPV}"
-PKGV = "0.7.0+git${GITPKGV}"
-PRINC = "0"
+PV = "0.7.01"
+PKGV = "${PV}+git${GITPKGV}"
+PRINC = "1"
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
@@ -13,7 +13,7 @@ CFLAGS_append = " -I${STAGING_INCDIR}/libxml2/ -I${STAGING_INCDIR}/${PYTHON_DIR}
 S = "${WORKDIR}/git"
 
 do_compile() {
-	echo ${PKGV} > ${S}/VERSION
+	echo ${PV} > ${S}/VERSION
 	oe_runmake SWIG="swig"
 }
 
