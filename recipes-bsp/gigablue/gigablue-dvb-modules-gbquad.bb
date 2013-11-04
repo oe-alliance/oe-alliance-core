@@ -1,10 +1,10 @@
-SRCDATE = "20131103"
+SRCDATE = "20131104"
 
 KV = "3.3.8-2.0"
 
 SRC_URI = "http://archiv.openmips.com/gigablue-quad-drivers-${KV}-${SRCDATE}.zip"
-SRC_URI[md5sum] = "41bd012f0c792320b27bc13e43c1bb24"
-SRC_URI[sha256sum] = "7ced9d7569c4a95e1e01af500a9ffd66b6aa26f7c64a0dc07314dc2f5989590e"
+SRC_URI[md5sum] = "2864eb64c406f609174c491c99524d24"
+SRC_URI[sha256sum] = "af00f3581a64d80a830770e6616ffd22fd4e2384214a07b1c9a670bd4bbe0bd8"
 
 require gigablue-dvb-modules.inc
 
