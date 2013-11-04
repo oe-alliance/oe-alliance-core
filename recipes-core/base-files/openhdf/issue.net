@@ -1,1 +1,3 @@
-Welcome to OpenHDF for %h
+Welcome to OpenEmbedded Linux OpenHDF 3.0 %h
+%s %m %r %v
+
