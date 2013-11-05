@@ -1,5 +1,5 @@
 #!/bin/sh
-DAEMON=/usr/bin/minidlna
+DAEMON=/usr/sbin/minidlnad
 NAME=minidlna
 DESC="DLNA Server"
 ARGS=""
