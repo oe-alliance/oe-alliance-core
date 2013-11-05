@@ -85,7 +85,7 @@ DESCRIPTION_enigma2-plugin-extensions-hbbtv = "HbbTV player"
 RDEPENDS_enigma2-plugin-extensions-hbbtv = "vuplus-opera-browser-util enigma2-hbbtv-util vuplus-opera-dumpait"
 DEPENDS_enigma2-plugin-extensions-hbbtv = "vuplus-opera-browser-util vuplus-opera-dumpait"
 DESCRIPTION_enigma2-plugin-systemplugins-transcodingsetup = "Setup transcoding of your VU+"
-RDEPENDS_enigma2-plugin-systemplugins-transcodingsetup = "vuplus-transtreamproxy vuplus-filestreamproxy"
+RDEPENDS_enigma2-plugin-systemplugins-transcodingsetup = "vuplus-transtreamproxy"
 DESCRIPTION_enigma2-plugin-systemplugins-micomupgrade = "micomupgrade"
 RDEPENDS_enigma2-plugin-extensions-ondemand = "python-dnspython python-beautifulsoup python-lxml python-simplejson python-pyamf"
 DESCRIPTION_enigma2-plugin-extensions-ondemand = "Watch on demand TV."
@@ -105,7 +105,7 @@ inherit gitpkgv autotools
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r86"
+PR = "r87"
 
 SRC_URI="git://github.com/oe-alliance/oe-alliance-plugins.git;protocol=git"
 
