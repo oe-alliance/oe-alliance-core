@@ -13,7 +13,7 @@ RPROVIDES_vuplus-blindscan-dvbc-utils += "virtual/blindscan-dvbc"
 
 SRC_URI = "http://archive.vuplus.com/download/utils/vuplus-blindscan-utils-${PV}.tar.bz2"
 
-PV = "3.3"
+PV = "3.4"
 PR = "r0"
 
 S = "${WORKDIR}/blindscan-utils"
@@ -28,5 +28,5 @@ do_install() {
 	done;
 }
 
-SRC_URI[md5sum] = "afbb378078b09369729862331f463c34"
-SRC_URI[sha256sum] = "4efc38f0c897ced6daa93f9de61a41be179048ff10183aa0900df2685061cf31"
+SRC_URI[md5sum] = "1266ec1ad53955144a06bc84a2ce497e"
+SRC_URI[sha256sum] = "6f961e3645fbdb64972bf188b84c94489d784394b02362022d0f1a9fe9752a70"
