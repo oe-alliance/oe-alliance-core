@@ -10,7 +10,7 @@ SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
 PV = "2.0"
-PR = "r69"
+PR = "r70"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -55,7 +55,6 @@ THIRDPARTY_PLUGINS = " \
 	enigma2-plugin-extensions-hdmitest_0.4_mipsel.ipk \
 	enigma2-plugin-extensions-kicker_3.1rc4_mips32el.ipk \
 	enigma2-plugin-extensions-kino_1.1rc5_mips32el.ipk \
-	enigma2-plugin-systemplugins-lcnscanner_1.0-r4_mips32el.ipk \
 	enigma2-plugin-extensions-livefootball_4.4_mips32el.ipk \
 	enigma2-plugin-extensions-mediainfo_0.6_r04_all.ipk \
 	enigma2-plugin-extensions-msnwetter_0.6rc3_mips32el.ipk \
@@ -88,7 +87,7 @@ THIRDPARTY_PLUGINS = " \
 	enigma2-plugin-extensions-tmdbinfo_1.1-20130929-r0-r1_mips32el.ipk \
 	enigma2-plugin-extensions-translator_0.5rc5_mips32el.ipk \
 	enigma2-plugin-extensions-transmission_2.76-r13884_mips32el.ipk \
-	enigma2-plugin-extensions-tsmedia-oe2.0_4.1-r2_all.ipk \
+	enigma2-plugin-extensions-tsmedia-oe2.0_4.3_all.ipk \
 	enigma2-plugin-extensions-tvspielfilm_5.9rc5_mips32el.ipk \
 	enigma2-plugin-extensions-vcs_1.0-rc5_all.ipk \
 	enigma2-plugin-extensions-verkehrsinfo_0.7rc1_mips32el.ipk \
@@ -101,6 +100,7 @@ THIRDPARTY_PLUGINS = " \
 	enigma2-plugin-extensions-xtrendforum_0.1rc2_mips32el.ipk \
 	enigma2-plugin-extensions-yampmusicplayer_2.1.1-2012-09-23_mipsel.ipk \
 	enigma2-plugin-extensions-zdfnewmediathek_1.3rc6_mips32el.ipk \
+	enigma2-plugin-systemplugins-lcnscanner_1.0-r4_mips32el.ipk \
 	enigma2-plugin-systemplugins-recordinfobar_1.0-rc15_mipsel.ipk \
 	"
 
