@@ -8,7 +8,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=8e37f34d0e40d32ea2bc90ee812c9131"
 PACKAGES_DYNAMIC = "enigma2-plugin-(?!oealliance-).*"
 
 PACKAGES += " \
-	enigma2-plugin-extensions-hbbtv \
+	${@base_contains('MACHINE_BRAND', 'Vu+', 'enigma2-plugin-extensions-hbbtv ' , ' ', d)} \
 	enigma2-plugin-extensions-lcd4linux \
 	"
 
@@ -28,7 +28,7 @@ PROVIDES += " \
 	enigma2-plugin-extensions-webbrowser \
 	enigma2-plugin-extensions-ondemand-openuitzendinggemist \
 	enigma2-plugin-extensions-tunerserver \
-	enigma2-plugin-extensions-hbbtv \
+	${@base_contains('MACHINE_BRAND', 'Vu+', 'enigma2-plugin-extensions-hbbtv ' , ' ', d)} \
 	enigma2-plugin-systemplugins-transcodingsetup \
 	enigma2-plugin-systemplugins-micomupgrade \
 	enigma2-plugin-extensions-ondemand \
@@ -105,7 +105,7 @@ inherit gitpkgv autotools
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r87"
+PR = "r89"
 
 SRC_URI="git://github.com/oe-alliance/oe-alliance-plugins.git;protocol=git"
 
