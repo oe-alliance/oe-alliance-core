@@ -9,7 +9,7 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "0.2.+git${SRCPV}"
 PKGV = "0.2.+git${GITPKGV}"
-PR = "r0"
+PR = "r1"
 
 
 SRC_URI="git://github.com/MovieArchiver/enigma2-plugin-extensions-moviearchiver.git"
@@ -80,5 +80,6 @@ echo "   		         svox                             "
 echo "                                                    "
 echo "                                                    "
 echo "        Plugin successfully installed!              "
-echo "                                                    "                                                          "
+echo "                                                    "
+exit 0
 }
