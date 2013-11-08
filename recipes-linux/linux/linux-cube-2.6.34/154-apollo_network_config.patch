@@ -1,0 +1,138 @@
+diff -Naurp linux-2.6.34.old/drivers/net/LIPP_6300ETH/Kconfig linux-2.6.34/drivers/net/LIPP_6300ETH/Kconfig
+--- linux-2.6.34.old/drivers/net/LIPP_6300ETH/Kconfig	2011-03-11 13:33:55.000000000 -0600
++++ linux-2.6.34/drivers/net/LIPP_6300ETH/Kconfig	2011-03-21 16:01:06.000000000 -0500
+@@ -24,12 +24,19 @@ config GMAC1_MODE_RGMII
+         help
+            GMAC1 will be configured as RGMII, otherwise MII
+ 
++config ENABLE_MOCA
++        bool "Enable MoCA driver"
++        depends on USING_APOLLO_SOC_GMAC0 || USING_APOLLO_SOC_GMAC1
++        default y
++        help
++           MoCA driver will be enabled when selected, else not
++
+ choice
+ 	prompt "Choose Entropic PHY version"
+         default EN2512_PHY
+-	depends on USING_APOLLO_SOC_GMAC0 || USING_APOLLO_SOC_GMAC1
++	depends on ENABLE_MOCA
+ 	help
+-		This option allows to select between EN2512 or EN2510 MoCA PHY driver.
++		This option allows to select between EN2512 or EN2510 MoCA PHY driver
+ 
+ config EN2512_PHY
+ 	bool "Entropic MoCA EN2512 PHY"
+diff -Naurp linux-2.6.34.old/drivers/net/LIPP_6300ETH/src/gmac_drv.c linux-2.6.34/drivers/net/LIPP_6300ETH/src/gmac_drv.c
+--- linux-2.6.34.old/drivers/net/LIPP_6300ETH/src/gmac_drv.c	2011-03-11 13:34:16.000000000 -0600
++++ linux-2.6.34/drivers/net/LIPP_6300ETH/src/gmac_drv.c	2011-03-22 09:56:46.000000000 -0500
+@@ -94,6 +94,7 @@ MODULE_LICENSE("GPL");
+ 
+ #define SIZEOF_RX_DESCS(x) ( sizeof( RX_DESCR_t ) * (x) )
+ 
++#ifdef CONFIG_ENABLE_MOCA
+ spinlock_t moca_spinlock;
+ void *moca_data_kernel_content ;
+ extern int Clnk_init_dev(void **ddcp_dgcp, void *ddcp, void *dkcp, unsigned long dev_base );
+@@ -101,6 +102,8 @@ extern void Clnk_exit_dev( void *vdgcp )
+ extern int ioctl_operation_work( void *moca_data_kernel_content, struct ifreq *ifr, unsigned cmd );
+ extern void Clink_update_unitnum_phyaddr( int unitNum, int phy_addr);
+ extern tmbslPhyConfig_t gtmbslMoCAPhyInterface;
++#endif
++
+ /*--------------------------------------------------------------------------*/
+ /* Function prototypes:                                                     */
+ /*--------------------------------------------------------------------------*/
+@@ -616,6 +619,7 @@ static __s32 lipp_6300Eth_probe(struct p
+     /* For woL support */
+     init_waitqueue_head(&priv->waitQ);
+ 
++#ifdef CONFIG_ENABLE_MOCA
+     if (!memcmp(gpPhyInterface[priv->hwUnitNum]->phyName,gtmbslMoCAPhyInterface.phyName, sizeof(gtmbslMoCAPhyInterface.phyName)))
+     {       
+         dk_context_t *dkcp ;
+@@ -640,6 +644,7 @@ static __s32 lipp_6300Eth_probe(struct p
+             }
+         }
+     }
++#endif
+ 
+     GMAC_STAT_PRINT("Ethernet interface %s registered\n",dev->name);
+ 
+@@ -693,6 +698,7 @@ static __s32 lipp_6300Eth_remove(struct 
+     tmhwLIPP6100Eth_Deinit(unitNum);
+ #endif
+ 
++#ifdef CONFIG_ENABLE_MOCA
+     if (!memcmp(gpPhyInterface[unitNum]->phyName,gtmbslMoCAPhyInterface.phyName, sizeof(gtmbslMoCAPhyInterface.phyName)))
+     {
+         dk_context_t *dkcp ;
+@@ -705,6 +711,7 @@ static __s32 lipp_6300Eth_remove(struct 
+ 	    kfree(moca_data_kernel_content);
+         }
+     }
++#endif
+ 
+     netif_carrier_off(dev);
+ 
+@@ -2867,6 +2874,7 @@ static __s32 lipp_6300Eth_do_ioctl(struc
+ 
+ #endif
+ 
++#ifdef CONFIG_ENABLE_MOCA
+         case SIOCGMIIPHY:       // Get PHY address
+         case SIOCHDRCMD:        // Resets the SoC , Control the diplexer switch etc
+         case SIOCGMIIREG:       // PHY read request
+@@ -2879,7 +2887,7 @@ static __s32 lipp_6300Eth_do_ioctl(struc
+         case SIOCLNKDRV :       // mbox cmmds: retrieve unsol messages
+             retVal = ioctl_operation_work( moca_data_kernel_content, ifr, cmd ) ;
+             break ;
+-
++#endif
+         default:
+             GMAC_PRINT_ERR("Unknown IOCTL = %x\n", cmd);
+             retVal = -1;
+diff -Naurp linux-2.6.34.old/drivers/net/LIPP_6300ETH/src/tmbslPhyAccess.c linux-2.6.34/drivers/net/LIPP_6300ETH/src/tmbslPhyAccess.c
+--- linux-2.6.34.old/drivers/net/LIPP_6300ETH/src/tmbslPhyAccess.c	2011-03-11 13:33:55.000000000 -0600
++++ linux-2.6.34/drivers/net/LIPP_6300ETH/src/tmbslPhyAccess.c	2011-03-21 17:20:01.000000000 -0500
+@@ -266,9 +266,12 @@
+ #include "tmbslPhyRTL8211BN.h"
+ #include "tmbslPhyMYSTI110E.h"
+ #include "tmbslPhyIntel972.h"
++
+ #ifdef CONFIG_EN2510_PHY
+ #include "tmbslPhyEN2510.h"
+-#else
++#endif
++
++#ifdef CONFIG_EN2512_PHY
+ #include "tmbslPhyEN2512.h"
+ #endif
+ 
+@@ -327,7 +330,7 @@ tmbslPhyConfig_t gtmbslMYSTIPhyInterface
+         tmbslPhyMYSTI110ESoftReset,
+         tmbslPhyMYSTI110EGetLinkStatus
+ };
+-
++#ifdef CONFIG_ENABLE_MOCA
+ #ifdef CONFIG_EN2510_PHY
+ tmbslPhyConfig_t gtmbslMoCAPhyInterface =
+ {
+@@ -386,6 +389,7 @@ tmbslPhyConfig_t gtmbslMoCAPhyInterface 
+         tmbslPhyEN2512BNGetLinkStatus
+ };
+ #endif
++#endif
+ 
+ tmbslPhyConfig_t gtmbslLXT972APhyInterface =
+ {
+@@ -418,7 +422,9 @@ tmbslPhyConfig_t gtmbslLXT972APhyInterfa
+ phyID_interface_tbl phy_tbl[]={
+ {0x0, &gtmbslMYSTIPhyInterface},
+ {0x001cc912, &gtmbslRTL8211BNPhyInterface},
++#ifdef CONFIG_ENABLE_MOCA
+ {0x0, &gtmbslMoCAPhyInterface},
++#endif
+ {0x00008201, &gtmbslLXT972APhyInterface},
+ {0x001378e2, &gtmbslLXT972APhyInterface}
+ };

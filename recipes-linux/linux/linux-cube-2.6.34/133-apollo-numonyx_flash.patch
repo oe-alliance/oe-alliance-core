@@ -1,0 +1,20 @@
+diff -Naupr linux-2.6.34.orig/drivers/mtd/chips/cfi_cmdset_0001.c linux-2.6.34/drivers/mtd/chips/cfi_cmdset_0001.c
+--- linux-2.6.34.orig/drivers/mtd/chips/cfi_cmdset_0001.c	2010-05-16 16:17:36.000000000 -0500
++++ linux-2.6.34/drivers/mtd/chips/cfi_cmdset_0001.c	2010-12-05 21:30:56.278203980 -0600
+@@ -2063,6 +2063,16 @@ static int __xipram do_xxlock_oneblock(s
+ 	ENABLE_VPP(map);
+ 	xip_disable(map, chip, adr);
+ 
++        /*
++         * According to Numonyx P33 flash errata, we need to
++         * do a write of 0x90 then a read of the address + 2
++         * to make locking work correctly. All this must happen
++         * within 20 microseconds, so interrupts must be
++         * disabled (happens with xip_disable()/xip_enable().
++         */
++	map_write(map, CMD(0x90), adr);
++	map_read(map, adr);
++
+ 	map_write(map, CMD(0x60), adr);
+ 	if (thunk == DO_XXLOCK_ONEBLOCK_LOCK) {
+ 		map_write(map, CMD(0x01), adr);

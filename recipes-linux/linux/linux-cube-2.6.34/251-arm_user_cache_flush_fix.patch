@@ -1,0 +1,27 @@
+diff -Naur linux-2.6.34/arch/arm/include/asm/cacheflush.h linux-2.6.34_new/arch/arm/include/asm/cacheflush.h
+--- linux-2.6.34/arch/arm/include/asm/cacheflush.h	2010-05-17 02:47:36.000000000 +0530
++++ linux-2.6.34_new/arch/arm/include/asm/cacheflush.h	2013-01-29 18:03:28.173004000 +0530
+@@ -336,7 +336,7 @@
+  * Harvard caches are synchronised for the user space address range.
+  * This is used for the ARM private sys_cacheflush system call.
+  */
+-#define flush_cache_user_range(vma,start,end) \
++#define flush_cache_user_range(start,end) \
+ 	__cpuc_coherent_user_range((start) & PAGE_MASK, PAGE_ALIGN(end))
+ 
+ /*
+diff -Naur linux-2.6.34/arch/arm/kernel/traps.c linux-2.6.34_new/arch/arm/kernel/traps.c
+--- linux-2.6.34/arch/arm/kernel/traps.c	2010-05-17 02:47:36.000000000 +0530
++++ linux-2.6.34_new/arch/arm/kernel/traps.c	2013-01-29 18:04:24.523408000 +0530
+@@ -452,8 +452,9 @@
+ 			start = vma->vm_start;
+ 		if (end > vma->vm_end)
+ 			end = vma->vm_end;
+-
+-		flush_cache_user_range(vma, start, end);
++                up_read(&mm->mmap_sem);
++		flush_cache_user_range(start, end);
++                return;
+ 	}
+ 	up_read(&mm->mmap_sem);
+ }

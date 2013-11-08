@@ -1,0 +1,124 @@
+diff -Naupr linux-2.6.34.orig/drivers/net/LIPP_6300ETH/comps/tmbslPhyEN256X/en256x/Common/Inc/clnkiodefs.h linux-2.6.34.new/drivers/net/LIPP_6300ETH/comps/tmbslPhyEN256X/en256x/Common/Inc/clnkiodefs.h
+--- linux-2.6.34.orig/drivers/net/LIPP_6300ETH/comps/tmbslPhyEN256X/en256x/Common/Inc/clnkiodefs.h	2013-01-17 12:35:52.498812000 +0530
++++ linux-2.6.34.new/drivers/net/LIPP_6300ETH/comps/tmbslPhyEN256X/en256x/Common/Inc/clnkiodefs.h	2013-01-17 11:38:34.779068000 +0530
+@@ -43,6 +43,7 @@
+ #define SIOCCLINKDRV	(SIOCDEVPRIVATE+1)  // Control plane commands for the driver
+ #define SIOCGCLINKMEM	(SIOCDEVPRIVATE+2)  // Reads registers/memory in c.LINK address space
+ #define SIOCSCLINKMEM	(SIOCDEVPRIVATE+3)  // Sets registers/memory in c.LINK address space
++#define SIOCTOGEXTCLKEN (SIOCDEVPRIVATE+4)  // MoCA ext clock toggle
+ #define SIOCGCLNKCMD    (SIOCDEVPRIVATE+10) // pass thru c.LINK command that expects a response
+ #define SIOCSCLNKCMD    (SIOCDEVPRIVATE+11) // pass thru c.LINK command that expects no response
+ #define SIOCLNKDRV      (SIOCDEVPRIVATE+12) // a. Initialize Mailbox Queue Handler b. Get Unsolicited Message 
+diff -Naupr linux-2.6.34.orig/drivers/net/LIPP_6300ETH/comps/tmbslPhyEN256X/en256x/Common/Inc/common_dvr.h linux-2.6.34.new/drivers/net/LIPP_6300ETH/comps/tmbslPhyEN256X/en256x/Common/Inc/common_dvr.h
+--- linux-2.6.34.orig/drivers/net/LIPP_6300ETH/comps/tmbslPhyEN256X/en256x/Common/Inc/common_dvr.h	2013-01-17 12:35:52.516807000 +0530
++++ linux-2.6.34.new/drivers/net/LIPP_6300ETH/comps/tmbslPhyEN256X/en256x/Common/Inc/common_dvr.h	2013-01-17 11:38:00.085923000 +0530
+@@ -416,9 +416,9 @@ ClnkDef_TxFifoCfg_t;
+ 
+ #if FEATURE_IQM
+ // Increase the trace buffer size when DEBUG_DUMP_FFT_VALUES enabled in ccpu code (iqm.h)
+-#define CLNK_DEF_TRACE_ENTRIES      /*2505*/ 50
++#define CLNK_DEF_TRACE_ENTRIES      /*2505*/ 40
+ #else
+-#define CLNK_DEF_TRACE_ENTRIES      50
++#define CLNK_DEF_TRACE_ENTRIES      40
+ #endif
+ typedef struct
+ {
+diff -Naupr linux-2.6.34.orig/drivers/net/LIPP_6300ETH/comps/tmbslPhyEN256X/en256x/GPL/Apollo/en256x.c linux-2.6.34.new/drivers/net/LIPP_6300ETH/comps/tmbslPhyEN256X/en256x/GPL/Apollo/en256x.c
+--- linux-2.6.34.orig/drivers/net/LIPP_6300ETH/comps/tmbslPhyEN256X/en256x/GPL/Apollo/en256x.c	2013-01-17 12:35:52.651815000 +0530
++++ linux-2.6.34.new/drivers/net/LIPP_6300ETH/comps/tmbslPhyEN256X/en256x/GPL/Apollo/en256x.c	2013-01-17 12:50:53.024003000 +0530
+@@ -138,6 +138,9 @@
+ #define PHY_READ    (MDIO_START_BITS | MDIO_OP_READ  | MDIO_READ_TURN_AROUND)
+ #define PHY_WRITE   (MDIO_START_BITS | MDIO_OP_WRITE | MDIO_WRITE_TURN_AROUND)
+ 
++#define EN256X_EXT_CLK_EN_GPIO          PIO131
++#define EN256X_EXT_CLK_EN_GPIO_LABEL    "PIO131"
++
+ //
+ // structures and definitions
+ //
+@@ -199,15 +202,25 @@ extern tmErrorCode_t tmbslPhyEN256XWrite
+ 	);
+ static int en256x_unitnum, en256x_phy_addr;
+ 
+-/*
+-*
+-*
+-*
+-*
+-*
+-*
+-*PUBLIC***/
+-int ioctl_operation_work( void *data_kernel_context, struct ifreq *ifr, unsigned cmd )
++
++#ifdef CONFIG_EN256X_GPIO_TOGGLE
++static void en256x_reset_ext_clk_en()
++{
++    if (gpio_request(EN256X_EXT_CLK_EN_GPIO, EN256X_EXT_CLK_EN_GPIO_LABEL)) {
++        printk(KERN_ERR "MoCA en256X EXT_CLK_EN_N %s request failed\n", EN256X_EXT_CLK_EN_GPIO_LABEL);
++    } else {
++        gpio_direction_output(EN256X_EXT_CLK_EN_GPIO, 0);
++        mdelay(1);
++        gpio_set_value(EN256X_EXT_CLK_EN_GPIO, 1);
++        mdelay(1);
++        gpio_free(EN256X_EXT_CLK_EN_GPIO);
++    }
++}
++#endif
++
++
++/* ******* PUBLIC ***/
++ int ioctl_operation_work( void *data_kernel_context, struct ifreq *ifr, unsigned cmd )
+ {
+     unsigned int val1, val2;
+     struct mii_ioctl_data *data = if_mii(ifr);
+@@ -225,22 +238,13 @@ int ioctl_operation_work( void *data_ker
+         case SIOCGMIIPHY:       // Get PHY address
+             data->phy_id = en256x_phy_addr;   //pPlatData->phy_addr_val;
+             break;
+-        case SIOCHDRCMD:        // Resets the SoC , Control the diplexer switch etc
+-            flag = ifr->ifr_ifru.ifru_ivalue;
++        case SIOCTOGEXTCLKEN:
+ #ifdef CONFIG_EN256X_GPIO_TOGGLE
+-            val1 = readl(GPIO_PIN_MUX_REG_3); 
+-            val2 = readl(GPIO_PIN_MUX_REG_4);
+-            val1 |= 0x02000000;
+-            val2 |= 0x08;
+-            writel(val1, GPIO_PIN_MUX_REG_4);
+-            writel(val2, GPIO_PIN_MUX_REG_5);
+-            mdelay(10);
+-            val1 = (val1 & 0xFFFFFFCF);
+-            val2 = (val2 & 0xFFFFFFF7);
+-            writel(val1, GPIO_PIN_MUX_REG_4);
+-            writel(val2, GPIO_PIN_MUX_REG_5);
++            en256x_reset_ext_clk_en();
+ #endif
+-
++            break;
++        case SIOCHDRCMD:        // Resets the SoC , Control the diplexer switch etc
++            flag = ifr->ifr_ifru.ifru_ivalue;
+             if(flag)
+             {
+                 writel(0, 0xE0680364); //We are writing to SGPIO directly too bad
+diff -Naupr linux-2.6.34.orig/drivers/net/LIPP_6300ETH/src/gmac_drv.c linux-2.6.34.new/drivers/net/LIPP_6300ETH/src/gmac_drv.c
+--- linux-2.6.34.orig/drivers/net/LIPP_6300ETH/src/gmac_drv.c	2013-01-17 12:35:53.943641000 +0530
++++ linux-2.6.34.new/drivers/net/LIPP_6300ETH/src/gmac_drv.c	2013-01-17 12:49:53.111924000 +0530
+@@ -2933,6 +2933,7 @@ static __s32 lipp_6300Eth_do_ioctl(struc
+         case SIOCETHTOOL:
+         case SIOCGIFHWADDR:
+         case SIOCMSCMD: 
++	case SIOCTOGEXTCLKEN:
+ #endif
+             retVal = ioctl_operation_work( moca_data_kernel_content, ifr, cmd ) ;
+             break ;
+diff -Naupr linux-2.6.34.orig/include/net/LIPP_6300ETH/gmac_ioctl.h linux-2.6.34.new/include/net/LIPP_6300ETH/gmac_ioctl.h
+--- linux-2.6.34.orig/include/net/LIPP_6300ETH/gmac_ioctl.h	2013-01-17 12:35:53.846737000 +0530
++++ linux-2.6.34.new/include/net/LIPP_6300ETH/gmac_ioctl.h	2013-01-17 11:39:32.279379000 +0530
+@@ -20,6 +20,7 @@
+ #define SIOCCLINKDRV    (SIOCDEVPRIVATE+1)  // Control plane commands for the driver
+ #define SIOCGCLINKMEM   (SIOCDEVPRIVATE+2)  // Reads registers/memory in c.LINK address space
+ #define SIOCSCLINKMEM   (SIOCDEVPRIVATE+3)  // Sets registers/memory in c.LINK address space
++#define SIOCTOGEXTCLKEN (SIOCDEVPRIVATE+4)  // MoCA ext clock toggle
+ #define SIOCGCLNKCMD    (SIOCDEVPRIVATE+10) // pass thru c.LINK command that expects a response
+ #define SIOCSCLNKCMD    (SIOCDEVPRIVATE+11) // pass thru c.LINK command that expects no response
+ #define SIOCLNKDRV      (SIOCDEVPRIVATE+12) // a. Initialize Mailbox Queue Handler b. Get Unsolicited Message

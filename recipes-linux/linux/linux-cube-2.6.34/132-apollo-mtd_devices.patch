@@ -1,0 +1,38 @@
+diff -Naur linux-2.6.34/drivers/mtd/maps/nx_nor.c linux-2.6.34.mine/drivers/mtd/maps/nx_nor.c
+--- linux-2.6.34/drivers/mtd/maps/nx_nor.c	2010-11-30 14:09:31.089452555 -0600
++++ linux-2.6.34.mine/drivers/mtd/maps/nx_nor.c	2010-11-30 13:53:00.769452192 -0600
+@@ -896,9 +896,6 @@
+    } 
+ #endif
+ 
+-   /* Add MTD device */
+-   add_mtd_device(info->mtd);
+-
+    platform_set_drvdata(pdev, info);
+ 
+    return 0;
+diff -Naur linux-2.6.34/drivers/mtd/nand/nx_nand/nx_nand.c linux-2.6.34.mine/drivers/mtd/nand/nx_nand/nx_nand.c
+--- linux-2.6.34/drivers/mtd/nand/nx_nand/nx_nand.c	2010-11-30 14:09:31.165701834 -0600
++++ linux-2.6.34.mine/drivers/mtd/nand/nx_nand/nx_nand.c	2010-11-30 13:53:21.265543987 -0600
+@@ -2308,9 +2308,6 @@
+    mtd->perf_meas = mtd_perf_meas;
+ #endif
+    
+-   /* Add the master device, to allow full updates */
+-   add_mtd_device(mtd);
+-
+    /* Scan for the partitions */
+    nx_nand_scan_partitions(mtd);
+ 
+diff -Naur linux-2.6.34/drivers/mtd/sfc/nx_sfc.c linux-2.6.34.mine/drivers/mtd/sfc/nx_sfc.c
+--- linux-2.6.34/drivers/mtd/sfc/nx_sfc.c	2010-11-30 14:09:35.165701985 -0600
++++ linux-2.6.34.mine/drivers/mtd/sfc/nx_sfc.c	2010-11-30 13:53:52.917604849 -0600
+@@ -1087,7 +1087,7 @@
+       dev_warn(&pdev->dev, "ignoring %d default partitions on %s\n",
+             data->nr_parts, data->name);
+ 
+-   return add_mtd_device(&flash->mtd) == 1 ? -ENODEV : 0;
++   return 0;
+ }
+ 
+ 

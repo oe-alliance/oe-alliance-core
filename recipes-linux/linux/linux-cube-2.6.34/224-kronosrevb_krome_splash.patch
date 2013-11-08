@@ -1,0 +1,100 @@
+diff -Naur linux-2.6.34_ori/arch/arm/mach-krome/splash_logo.c linux-2.6.34/arch/arm/mach-krome/splash_logo.c
+--- linux-2.6.34_ori/arch/arm/mach-krome/splash_logo.c	2012-07-31 17:07:12.020750000 +0530
++++ linux-2.6.34/arch/arm/mach-krome/splash_logo.c	2012-07-31 17:09:53.257549000 +0530
+@@ -28,6 +28,13 @@
+ #define APOLLO_HDMI_TX_BASE (APOLLO_MMIO_BASE_ADDR + 0x179000)
+ #define APOLLO_DENC_BASE    (APOLLO_MMIO_BASE_ADDR + 0x17B000)
+ 
++#define GLOBALREG_MODULE_ID_REG1 0xe06bbffc
++#define GLOBALREG_MODULE_ID_MAJOR_REV_R (0x0f << 12)
++#define GLOBALREG_MODULE_ID_MAJOR_REV_SHIFT 12
++#define GLOBALREG_MODULE_ID_MINOR_REV_R (0x0f << 8)
++#define GLOBALREG_MODULE_ID_MINOR_REV_SHIFT 8
++  
++
+ #define APOLLO_VARI_FORMAT_ARGB 0xfff7efe7
+ #define APOLLO_VARI_FORMAT_ABGR 0xffe7eff7
+ 
+@@ -44,7 +51,6 @@
+    unsigned char pixel_data[3];
+ 
+ 
+-
+    /* HD DENC programming (HD-480p raster) */
+    writel( 0x00000001, (APOLLO_DENC_BASE + 0x120)); /* DENC csc sel  - YCbCr out */
+    writel( 0x80000104, (APOLLO_DENC_BASE + 0x104)); /* DENC raster   -  eactive & 480p */
+@@ -362,6 +368,11 @@
+    writel( 0x02000000, (APOLLO_CPIPE_BASE + 0x56b0)); /* width and height */
+    writel( 0x00000001, (APOLLO_CPIPE_BASE + 0x5400)); /* width and height */
+ 
++   writel( 0x02060502, (APOLLO_CPIPE_BASE + 0x54e0)); /* !hsync, blank to SD DENC */
++   writel( 0x030f0502, (APOLLO_CPIPE_BASE + 0x94e0)); /* !hsync, !vsync, blank, odd/even to HD DENC */
++   writel( 0x030f0502, (APOLLO_CPIPE_BASE + 0x98e0));    /* For CPIPE-HDMI RGB match */
++   
++
+    iounmap(pVRAMhd_base);
+ 
+    return;
+diff -Naur linux-2.6.34_ori/arch/arm/mach-kronos/splash_logo.c linux-2.6.34/arch/arm/mach-kronos/splash_logo.c
+--- linux-2.6.34_ori/arch/arm/mach-kronos/splash_logo.c	2012-07-31 17:07:12.212757000 +0530
++++ linux-2.6.34/arch/arm/mach-kronos/splash_logo.c	2012-07-31 17:02:19.637697000 +0530
+@@ -28,6 +28,10 @@
+ #define APOLLO_HDMI_TX_BASE (APOLLO_MMIO_BASE_ADDR + 0x179000)
+ #define APOLLO_DENC_BASE    (APOLLO_MMIO_BASE_ADDR + 0x17B000)
+ 
++
++#define GLOBALREG_MODULE_ID_REG1 0xe06bbffc
++#define CHIP_REV_MASK  0xf00
++#define CHIP_REV_SHIFT 8
+ #define APOLLO_VARI_FORMAT_ARGB 0xfff7efe7
+ #define APOLLO_VARI_FORMAT_ABGR 0xffe7eff7
+ 
+@@ -43,6 +47,13 @@
+    u32 __iomem * pInc;
+    unsigned char pixel_data[3];
+ 
++   unsigned int glb_modid,ChipRevID;
++
++   /* fix kronos rev B */
++    glb_modid = readl(GLOBALREG_MODULE_ID_REG1);
++ 	ChipRevID = (glb_modid & CHIP_REV_MASK) >> CHIP_REV_SHIFT;
++
++
+ 
+ 
+    /* HD DENC programming (HD-480p raster) */
+@@ -75,8 +86,15 @@
+    writel( 0x00000000, (APOLLO_DENC_BASE + 0x194)); /* Macrovision OFF */
+ 
+    /* DAC0 Programming (Component DACs) */
+-   writel( 0x00111f00, (APOLLO_GBL_REG_BASE + 0x8fc)); /*VDAC0_CTRL0 */
+-   writel( 0x42001712, (APOLLO_GBL_REG_BASE + 0x900)); /*VDAC0_CTRL1 */
++   	if(ChipRevID == 0x1) /* for Kronos rev B only */
++	{
++		writel( 0x00108000, (APOLLO_GBL_REG_BASE + 0x8fc)); /*VDAC0_CTRL0 */
++	  	writel( 0x52001712, (APOLLO_GBL_REG_BASE + 0x900)); /*VDAC0_CTRL1 */
++	} else 
++		{
++	   writel( 0x00111f00, (APOLLO_GBL_REG_BASE + 0x8fc)); /*VDAC0_CTRL0 */
++	   writel( 0x42001712, (APOLLO_GBL_REG_BASE + 0x900)); /*VDAC0_CTRL1 */
++	}
+    writel( 0x00000ff0, (APOLLO_GBL_REG_BASE + 0x904)); /*VDAC0_CTRL2 */
+    writel( 0x3f000071, (APOLLO_GBL_REG_BASE + 0x90c)); /*VDAC0_CTRL4 71-->70-->71 */
+    writel( 0x3f000070, (APOLLO_GBL_REG_BASE + 0x90c)); /*VDAC0_CTRL4 71-->70-->71 */
+@@ -362,6 +380,16 @@
+    writel( 0x02000000, (APOLLO_CPIPE_BASE + 0x56b0)); /* width and height */
+    writel( 0x00000001, (APOLLO_CPIPE_BASE + 0x5400)); /* width and height */
+ 
++/* Color fix for Kronos Rev B */
++	if(ChipRevID >= 0x1)
++	{ 
++		writel( 0x02060502, (APOLLO_CPIPE_BASE + 0x54e0)); /* !hsync, blank to SD DENC */
++	    writel( 0x030f0502, (APOLLO_CPIPE_BASE + 0x94e0)); /* !hsync, !vsync, blank, odd/even to HD DENC */
++	    writel( 0x030f0502, (APOLLO_CPIPE_BASE + 0x98e0)); /* For CPIPE-HDMI RGB match */
++
++	}
++   
++
+    iounmap(pVRAMhd_base);
+ 
+    return;

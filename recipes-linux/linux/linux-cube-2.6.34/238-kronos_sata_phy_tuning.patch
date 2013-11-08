@@ -1,0 +1,195 @@
+diff -Naurp linux-2.6.34_orig/arch/arm/mach-kronos/sata.c linux-2.6.34/arch/arm/mach-kronos/sata.c
+--- linux-2.6.34_orig/arch/arm/mach-kronos/sata.c	2012-12-04 19:02:32.419285000 +0530
++++ linux-2.6.34/arch/arm/mach-kronos/sata.c	2012-12-04 18:36:19.218027000 +0530
+@@ -24,7 +24,10 @@
+ #include <linux/delay.h>
+ 
+ /* Level control register */
+-#define SATA_HOST_RX_CTRL_REG   (MMIO_SATA_BASE + 0x508)
++#define SATA_HOST_RX_CTRL_REG    (MMIO_SATA_BASE + 0x508)
++
++/* MPLL control Register */
++#define SATA_MPLL_CTRL_REG       (MMIO_SATA_BASE + 0x50C)
+ 
+ /* Level control register */
+ #define SATA_HOST_LVL_CTRL_REG   (MMIO_SATA_BASE + 0x510)
+@@ -38,8 +41,8 @@
+ #define SATA_HOST_SR_DOUT_REG    (MMIO_SATA_BASE + 0x518)
+ 
+ /* Global Controller Registers */
+-#define HOST_CAP              0x00       /* Host Capabilities */
+-#define HOST_PORTS_IMPL       0x0C       /* Bitmap of implemented ports */
++#define HOST_CAP                 0x00  /* Host Capabilities */
++#define HOST_PORTS_IMPL          0x0C  /* Bitmap of implemented ports */
+ 
+ /* Host Capability Bits and Bitmaps */
+     /* HOST_CAP_NP (Number of Ports) = bits 0:4
+@@ -141,27 +144,24 @@ static int apollo_sata_phy_adjust(void)
+    int status = 0;
+    unsigned rd_val = 0, wr_val = 0;
+ 
+-   /* Refer SATA2 PHY data book version: Early Adopter Edition March 31, 2009 
+-    * for SATA PHY adjustments. */
+-
+-   /* Apollo_SoC_PRCR 1133: 
+-    * To pass OOB-01 (OOB Signal Level Threshold Level Detect) adjust 
+-    * Loss of Signal Detector level los_lvl[9:5] to 10111b for SATA2x as 
+-    * recommended in PHY databook section 2.3.5.1 Recommended Rx Settings. */
+-   rd_val   = readl(SATA_HOST_LVL_CTRL_REG);
+-   wr_val   = rd_val & ~((0x1F)<<5);
+-   wr_val  |= ((0x17)<<5);
+-   printk(KERN_INFO "SATA: Adjusting los_lvl (rd_val=0x%x, wr_val=0x%x)\n",
++   /* Following are the SATA PHY recommended settings from databook:
++    * DesignWare Cores SATA2 PHY 
++    * For TSMC 40-nm LP (Wirebond/Flip-Chip) April 21, 2010 */
++
++   /* Spread Spectrum enable */
++   rd_val   = readl(SATA_MPLL_CTRL_REG);
++   wr_val   = rd_val | (1<<5);
++   printk("SATA: Enable mpll_ss_en (rd_val=0x%x, wr_val=0x%x)\n",
+       rd_val, wr_val);
+-   writel(wr_val, SATA_HOST_LVL_CTRL_REG);
++   writel(wr_val, SATA_MPLL_CTRL_REG);
+ 
+    /* Apollo_SoC_PRCR 1175: 
+     * Partial/Slumber power modes only if receiver terminations are 
+-    * enabled by setting rx_term_en0/1 to 1b as recommended in 
++    * enabled by setting rx_term_en0 to 1b as recommended in 
+     * PHY databook section 2.3.2.2 Rx Power Controls. */
+    rd_val   = readl(SATA_HOST_RX_CTRL_REG);
+-   wr_val   = rd_val | (1<<1) | (1<<17);
+-   printk(KERN_INFO "SATA: Adjusting rx_term_en0/1 (rd_val=0x%x, wr_val=0x%x)\n",
++   wr_val   = rd_val | (1<<1);
++   printk("SATA: Enable rx_term_en0 (rd_val=0x%x, wr_val=0x%x)\n",
+       rd_val, wr_val);
+    writel(wr_val, SATA_HOST_RX_CTRL_REG);
+ 
+diff -Naurp linux-2.6.34_orig/drivers/ata/sata_apollo.c linux-2.6.34/drivers/ata/sata_apollo.c
+--- linux-2.6.34_orig/drivers/ata/sata_apollo.c	2012-12-04 19:02:33.284292000 +0530
++++ linux-2.6.34/drivers/ata/sata_apollo.c	2012-12-04 18:53:55.916357000 +0530
+@@ -167,19 +167,19 @@ enum {
+ #ifdef SATA_ENTR
+ 	/* Additional vendor-specific global controller registers */
+ 	HOST_BOHC		= 0x28, /* BIOS handoff/control */
+-	HOST_BISTAFR		= 0xa0, /* BIST Activate FIS Register */
++	HOST_BISTAFR	= 0xa0, /* BIST Activate FIS Register */
+ 	HOST_BISTCR		= 0xa4, /* BIST Control Register */
+-	HOST_BISTFCTR		= 0xa8, /* BIST FIS Count Register */
++	HOST_BISTFCTR	= 0xa8, /* BIST FIS Count Register */
+ 	HOST_BISTSR		= 0xac, /* BIST Status Register */
+-	HOST_BISTDECR 		= 0xb0, /* BIST DWORD Error Count Register */
++	HOST_BISTDECR	= 0xb0, /* BIST DWORD Error Count Register */
+ 	HOST_OOBR		= 0xbc, /* OOB Register */
+-	HOST_TIMER1MS		= 0xe0, /* Timer 1-ms Register */
+-	HOST_GPARAM1R		= 0xe8, /* Global Parameter 1 Register */
+-	HOST_GPARAM2R		= 0xec, /* Global Parameter 2 Register */
+-	HOST_PPARAMR		= 0xf0, /* Port Parameter Register */
++	HOST_TIMER1MS	= 0xe0, /* Timer 1-ms Register */
++	HOST_GPARAM1R	= 0xe8, /* Global Parameter 1 Register */
++	HOST_GPARAM2R	= 0xec, /* Global Parameter 2 Register */
++	HOST_PPARAMR	= 0xf0, /* Port Parameter Register */
+ 	HOST_TESTR		= 0xf4, /* Test Register */
+-	HOST_VERSIONR		= 0xf8, /* Version Register */
+-	HOST_IDR		= 0xfc, /* ID Register */
++	HOST_VERSIONR	= 0xf8, /* Version Register */
++	HOST_IDR			= 0xfc, /* ID Register */
+ #endif
+ 
+ 	/* HOST_CTL bits */
+@@ -238,15 +238,15 @@ enum {
+ 
+ #ifdef SATA_ENTR
+ 	/* Additional NXP vendor-specific registers */
+-	NXP_TX_CTRL_REG		= 0x500,
++	NXP_TX_CTRL_REG			= 0x500,
+ 	NXP_PLL_RESET_CTRL_REG	= 0x504,
+-	NXP_RX_CTRL_REG		= 0x508,
+-	NXP_MPLL_CTRL_REG	= 0x50c,
+-	NXP_LVL_CTRL_REG	= 0x510,
+-	NXP_CR_CTRL_REG		= 0x514,
+-	NXP_SR_DOUT_REG		= 0x518,
+-	NXP_TXRX_STATUS_REG	= 0x51c,
+-	NXP_LLC_CTRL_REG	= 0x600,
++	NXP_RX_CTRL_REG			= 0x508,
++	NXP_MPLL_CTRL_REG			= 0x50c,
++	NXP_LVL_CTRL_REG			= 0x510,
++	NXP_CR_CTRL_REG			= 0x514,
++	NXP_SR_DOUT_REG			= 0x518,
++	NXP_TXRX_STATUS_REG		= 0x51c,
++	NXP_LLC_CTRL_REG			= 0x600,
+ 	NXP_SATA_MODULE_ID_REG	= 0xffc,
+ #endif
+ 
+@@ -2212,6 +2212,72 @@ static int ahci_hardreset(struct ata_lin
+ 	rc = sata_link_hardreset(link, timing, deadline, &online,
+ 				 ahci_check_ready);
+ 
++   /* Following are the SATA PHY recommended settings mentioned in:
++    * DesignWare Cores SATA2 PHY databook
++    * For TSMC 40-nm LP (Wirebond/Flip-Chip) April 21, 2010 
++    * and SOC JIRA at
++    * http://jira-soc.entropic-communications.com/browse/SOCK-3806
++    */
++#if defined(SATA_ENTR) && defined(CONFIG_ARCH_KRONOS)
++	{
++		u32 sstatus, spd;
++		int rc;
++
++		/* If SCR can be read, use it to determine the current SPD.
++		 * If not, use cached value in link->sata_spd.
++		 */
++		rc = sata_scr_read(link, SCR_STATUS, &sstatus);
++		if (rc == 0 && online)
++			spd = (sstatus >> 4) & 0xf;
++		else
++			spd = link->sata_spd;
++
++		switch(spd)
++		{
++			case 1:
++				ata_link_printk(link, KERN_INFO,
++					"Setting SATA PHY at 1.5 Gbps\n");
++
++				/* Set recommeded PHY values for SATA 1i,1m */
++
++				/* Default value of TX_CTRL_REG = 0x13A
++				 * Setting as per SOCK-3806 
++				 */
++				writel(0x0000011a, MMIO_SATA_BASE + NXP_TX_CTRL_REG);
++
++				/* Default value of LVL_CTRL_REG = 0x4246
++				 * los_lvl[4:0] = 10000b, tx_lvl[4:0] = 00110b 
++				 */
++				writel(0x00004206, MMIO_SATA_BASE + NXP_LVL_CTRL_REG);
++				break;
++			case 2:
++				ata_link_printk(link, KERN_INFO,
++					"Setting SATA PHY at 3.0 Gbps\n");
++
++				/* Set recommeded PHY values for SATA 2i,2m */
++
++				/* Default value of TX_CTRL_REG = 0x13A
++				 * Setting as per SOCK-3806
++				 */
++				writel(0x0000012a, MMIO_SATA_BASE + NXP_TX_CTRL_REG);
++
++				/* Default value of LVL_CTRL_REG = 0x4246
++				 * los_lvl[4:0] = 10010b, tx_lvl[4:0] = 10001b 
++				 */
++				writel(0x00004251, MMIO_SATA_BASE + NXP_LVL_CTRL_REG);
++				break;
++			case 3:
++				ata_link_printk(link, KERN_INFO,
++					"Setting SATA PHY at 6.0 Gbps\n");
++				break;
++			default:
++				ata_link_printk(link, KERN_INFO,
++					"SATA PHY offline\n");
++				break;
++		}
++	}
++#endif
++
+ 	ahci_start_engine(ap);
+ 
+ 	if (online)

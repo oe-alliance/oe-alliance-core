@@ -1,0 +1,246 @@
+diff -Naur linux-2.6.34/drivers/mtd/sfc/nx_sfc.c linux-2.6.34_sfc32M/drivers/mtd/sfc/nx_sfc.c
+--- linux-2.6.34/drivers/mtd/sfc/nx_sfc.c	2010-10-08 03:09:52.000000000 -0500
++++ linux-2.6.34_sfc32M/drivers/mtd/sfc/nx_sfc.c	2010-10-08 02:10:54.000000000 -0500
+@@ -72,12 +72,6 @@
+ #define	mtd_has_partitions()	(0)
+ #endif
+ #define	mtd_has_partitions()	(1)
+-struct cmd_data {
+-   u8    command[2];
+-   u32 offset;
+-   u32 length;
+-   u8 *buffer;
+-};
+ 
+ extern void nx_sfc_map_copy_to (unsigned long to, const void *from, ssize_t len);
+ extern void nx_sfc_map_copy_from(void *to, unsigned long from, ssize_t len);
+@@ -85,19 +79,6 @@
+ 
+ /****************************************************************************/
+ 
+-struct nx_sfc_mtd {
+-	//struct nx_sfc_device	*sfc;
+-	struct platform_device	*sfc;
+-	struct mutex		lock;
+-	struct mtd_info		mtd;
+-	unsigned		partitioned:1;
+-	u8			erase_opcode;
+-	struct cmd_data cd;
+-   resource_size_t            mmio_start;
+-   resource_size_t            mmio_len;
+-   void __iomem               *mmio_base;
+-};
+-
+ static inline struct nx_sfc_mtd *mtd_to_nx_sfc_mtd(struct mtd_info *mtd)
+ {
+ 	return container_of(mtd, struct nx_sfc_mtd, mtd);
+@@ -117,9 +98,10 @@
+      u8 * prefetch_buf_ptr = (u8*)&prefetch_buf_store;
+      u8 * buf_ptr = flash->cd.buffer;
+      
+-
++     if (flash->cd.offset >=0x1000000)
++	nx_sfc_32b_en(flash);
+    /* Program the protocol delay regsister */
+-      writel(SFC_PROTCOL_DELAY_READ,flash->mmio_base + IPBGCSFLSHNTWK_SFC_SFC_PROTOCOL_DELAY_REG);
++//      writel(SFC_PROTCOL_DELAY_READ,flash->mmio_base + IPBGCSFLSHNTWK_SFC_SFC_PROTOCOL_DELAY_REG);
+    
+    /* Program the CSR Register ------------*/
+       writel(SFC_CSR_READ, flash->mmio_base + IPBGCSFLSHNTWK_SFC_SFC_CSR_REG);
+@@ -155,6 +137,8 @@
+          if (count == flash->cd.length)
+             break;
+       }
++      if(flash->cd.offset >=0x1000000)
++         nx_sfc_32b_dis(flash);
+ 
+       return flash->cd.length;
+ }
+@@ -168,9 +152,10 @@
+      u8 * prefetch_buf_ptr = (u8*)&prefetch_buf_store;
+      u8 * buf_ptr = flash->cd.buffer;
+      
+-
++      if (flash->cd.offset >=0x1000000)
++         nx_sfc_32b_en(flash);
+    /* Program the protocol delay regsister */
+-      writel(SFC_PROTOCL_DELAY_WRITE,flash->mmio_base + IPBGCSFLSHNTWK_SFC_SFC_PROTOCOL_DELAY_REG);
++ //     writel(SFC_PROTOCL_DELAY_WRITE,flash->mmio_base + IPBGCSFLSHNTWK_SFC_SFC_PROTOCOL_DELAY_REG);
+    
+    /* Program the CSR Register ------------*/
+       writel(SFC_CSR_WRITE, flash->mmio_base + IPBGCSFLSHNTWK_SFC_SFC_CSR_REG);
+@@ -199,6 +184,8 @@
+       /* -------Write the CMD to the DEV_CMD Register---------- */
+       writel(SFC_DEV_CMD_WRITE,flash->mmio_base + IPBGCSFLSHNTWK_SFC_SFC_DEVICE_CMD_REG);
+       nx_sfc_wait(flash->mmio_base);
++      if (flash->cd.offset >=0x1000000)
++         nx_sfc_32b_dis(flash);
+       return flash->cd.length;
+ }
+ 
+@@ -208,7 +195,7 @@
+ {
+ 
+    /* Program the protocol delay regsister */
+-      writel(0x10008000,flash->mmio_base + IPBGCSFLSHNTWK_SFC_SFC_PROTOCOL_DELAY_REG);
++   //   writel(0x10008000,flash->mmio_base + IPBGCSFLSHNTWK_SFC_SFC_PROTOCOL_DELAY_REG);
+    
+    /* Program the CSR Register ------------*/
+       writel(0x0000167, flash->mmio_base + IPBGCSFLSHNTWK_SFC_SFC_CSR_REG);
+@@ -233,7 +220,7 @@
+ ssize_t nx_sfc_write(struct nx_sfc_mtd *flash) 
+ {
+    /* Program the protocol delay regsister */
+-      writel(0x10000000, flash->mmio_base + IPBGCSFLSHNTWK_SFC_SFC_PROTOCOL_DELAY_REG);
++    //  writel(0x10000000, flash->mmio_base + IPBGCSFLSHNTWK_SFC_SFC_PROTOCOL_DELAY_REG);
+   
+    /* Program the CSR Register ------------*/
+       writel(0x03C20001, flash->mmio_base + IPBGCSFLSHNTWK_SFC_SFC_CSR_REG);
+@@ -256,8 +243,9 @@
+ 
+ ssize_t nx_sfc_erase(struct nx_sfc_mtd *flash) 
+ {
+-   /* Program the protocol delay regsister */
+-    
++   /* Enter 32bit mode  */
++   if (flash->cd.offset >=0x1000000)
++      nx_sfc_32b_en(flash); 
+    
+    /* Program the CSR Register ------------*/
+    writel(SFC_CSR_ERASE,flash->mmio_base + IPBGCSFLSHNTWK_SFC_SFC_CSR_REG);
+@@ -268,9 +256,53 @@
+    /* Write the CMD to the DEV_CMD Register */
+    writel(SFC_DEV_CMD_ERASE, flash->mmio_base + IPBGCSFLSHNTWK_SFC_SFC_DEVICE_CMD_REG);
+    nx_sfc_wait(flash->mmio_base);
++
++   if (flash->cd.offset >=0x1000000)
++        nx_sfc_32b_dis(flash);
+    return flash->cd.length;
+ }
+ 
++void nx_sfc_32b_en(struct nx_sfc_mtd *flash)
++{
++   u32 status;
++   nx_sfc_write_en(flash->mmio_base);
++   //Program the CSR register, enable prefetch, tx_en, tx_hold_en
++   writel(0x67, flash->mmio_base + IPBGCSFLSHNTWK_SFC_SFC_CSR_REG);
++   // Do SPL CMD- "32b Addr Enable for enabling the 4th Addr Byte" - B7h
++   writel(0xB70D0203, flash->mmio_base + IPBGCSFLSHNTWK_SFC_SFC_DEVICE_CMD_REG);
++   nx_sfc_wait(flash->mmio_base);
++   status = nx_sfc_read_RSCUR(flash->mmio_base);
++ //  printk(KERN_ERR "32bstatus = %d \n", status);
++   writel(SFC_PROTOCOL_DELAY_VAL_32B,flash->mmio_base + IPBGCSFLSHNTWK_SFC_SFC_PROTOCOL_DELAY_REG);
++
++}
++
++void nx_sfc_32b_dis(struct nx_sfc_mtd *flash)
++{
++   u32 status;
++   nx_sfc_write_en(flash->mmio_base);
++   //Program the CSR register, enable prefetch, tx_en, tx_hold_en
++   writel(0x67, flash->mmio_base + IPBGCSFLSHNTWK_SFC_SFC_CSR_REG);
++   // Do SPL CMD- "32b Addr Enable for enabling the 4th Addr Byte" - B7h
++   writel(0xE90D0203, flash->mmio_base + IPBGCSFLSHNTWK_SFC_SFC_DEVICE_CMD_REG);
++   nx_sfc_wait(flash->mmio_base);
++   status = nx_sfc_read_RSCUR(flash->mmio_base);
++//   printk(KERN_ERR "32bstatus-dis = %d \n", status);
++   writel(SFC_PROTOCOL_DELAY_VAL_24B,flash->mmio_base + IPBGCSFLSHNTWK_SFC_SFC_PROTOCOL_DELAY_REG);
++}
++
++u32 nx_sfc_read_RSCUR(void __iomem  * sfc_regs)
++{
++   u32 status;
++   writel(0x7, sfc_regs + IPBGCSFLSHNTWK_SFC_SFC_CSR_REG);
++   writel(0x1, sfc_regs + IPBGCSFLSHNTWK_SFC_SFC_TX_RX_DATA_CNT_REG);
++   writel(0x050D0203, sfc_regs + IPBGCSFLSHNTWK_SFC_SFC_DEVICE_CMD_REG);
++   nx_sfc_wait(sfc_regs);
++   status = readl(sfc_regs + IPBGCSFLSHNTWK_SFC_SFC_SP_CMD_RD_WR0_DATA_REG);
++
++   return status;
++}
++
+ void nx_sfc_write_en(void __iomem  * sfc_regs)
+ {
+     
+@@ -830,6 +862,9 @@
+ 	{ "w25x32", 0xef3016, 0, 64 * 1024, 64, SECT_4K, },
+ 	{ "w25x64", 0xef3017, 0, 64 * 1024, 128, SECT_4K, },
+ 	{ "w25x128",0xef4018, 0, 64 * 1024, 256, },
++
++        /* Macronix 32MB Flash */	
++	{ "MX25L",0xC22019, 0, 64 * 1024, 512, },
+ };
+ 
+ static struct flash_info *__devinit jedec_probe(struct platform_device *spi)
+@@ -847,7 +882,7 @@
+ 	 */
+    	struct nx_sfc_mtd	*flash = dev_get_drvdata(&spi->dev);
+    	tmp = nx_sfc_read_id(flash->mmio_base);
+-	if (tmp < 0) {
++	if (tmp ==0xFFFFFFFF) {
+ 		MTDDEBUG(MTD_DEBUG_LEVEL0, "error %d reading JEDEC ID\n",
+ 			tmp);
+ 		return NULL;
+@@ -1025,7 +1060,7 @@
+ 		write_enable(flash);
+ 		write_sr(flash, 0);
+ 	}
+-
++ //       nx_sfc_32b_en(flash); 
+ 	/* partitions should match sector boundaries; and it may be good to
+ 	 * use readonly partitions for writeprotected sectors (BP2..BP0).
+ 	 */
+diff -Naur linux-2.6.34/drivers/mtd/sfc/nx_sfc.h linux-2.6.34_sfc32M/drivers/mtd/sfc/nx_sfc.h
+--- linux-2.6.34/drivers/mtd/sfc/nx_sfc.h	2010-10-08 03:09:50.000000000 -0500
++++ linux-2.6.34_sfc32M/drivers/mtd/sfc/nx_sfc.h	2010-10-08 02:05:44.000000000 -0500
+@@ -381,8 +381,12 @@
+ 	#define IPBGCSFLSHNTWK_SFC_SFC_PRE_FETCH_BUFF_15_BUFF_15_SHIFT 0
+ 	#define IPBGCSFLSHNTWK_SFC_MODULE_ID_REG  (0xfc)
+ 
+-#define SFC_PROTCOL_DELAY_READ   0x10008000
+-#define SFC_PROTOCL_DELAY_WRITE  0x10038000
++//#define SFC_PROTCOL_DELAY_READ   0x10008000
++//#define SFC_PROTOCL_DELAY_WRITE  0x10038000
++
++#define SFC_PROTOCOL_DELAY_VAL_16B 0x00038000
++#define SFC_PROTOCOL_DELAY_VAL_24B 0x10038000
++#define SFC_PROTOCOL_DELAY_VAL_32B 0x20038000
+ #define SFC_CSR_READ          0x0000027
+ #define SFC_CSR_WRITE         0x00420001
+ #define SFC_CSR_ERASE         0x20001
+@@ -424,12 +428,35 @@
+ 	/* we'll likely add more ... use JEDEC IDs, etc */
+ };
+ 
++struct cmd_data {
++   u8    command[2];
++   u32 offset;
++   u32 length;
++   u8 *buffer;
++};
++
++struct nx_sfc_mtd {
++        struct platform_device  *sfc;
++        struct mutex            lock;
++        struct mtd_info         mtd;
++        unsigned                partitioned:1;
++        u8                      erase_opcode;
++        struct cmd_data cd;
++   resource_size_t            mmio_start;
++   resource_size_t            mmio_len;
++   void __iomem               *mmio_base;
++};
++
+ #if 0
+ struct nx_sfc_device
+ {
+    dmabuf_phy;
+ };
+ #endif
++void nx_sfc_32b_en(struct nx_sfc_mtd *flash);
++void nx_sfc_write_en(void __iomem  * sfc_regs);
++u32 nx_sfc_read_RSCUR(void __iomem  * sfc_regs);
++void nx_sfc_32b_dis(struct nx_sfc_mtd *flash);
+ void nx_sfc_wait(void __iomem * sfc_regs);
+ #endif
+ 

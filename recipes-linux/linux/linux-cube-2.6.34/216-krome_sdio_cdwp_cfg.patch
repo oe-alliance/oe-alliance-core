@@ -1,0 +1,129 @@
+diff -Naurp linux-2.6.34_Org/arch/arm/mach-krome/include/mach/pnx8492.h linux-2.6.34/arch/arm/mach-krome/include/mach/pnx8492.h
+--- linux-2.6.34_Org/arch/arm/mach-krome/include/mach/pnx8492.h	2012-08-14 10:13:36.755819000 +0530
++++ linux-2.6.34/arch/arm/mach-krome/include/mach/pnx8492.h	2012-08-14 10:09:38.217095000 +0530
+@@ -117,6 +117,7 @@
+ #define  ALT_PIN_MUX_REG_1       (MMIO_GLB_BASE + 0x144)
+ #define  ALT_PIN_MUX_REG_2       (MMIO_GLB_BASE + 0x148)
+ #define  ALT_PIN_MUX_REG_2       (MMIO_GLB_BASE + 0x148)
++#define  PAD_CONFIGURATION_0_REG (MMIO_GLB_BASE + 0x430)
+ #define  PAD_CONFIGURATION_5_REG (MMIO_GLB_BASE + 0x44C)
+ 
+ #define  GLBREG_MISC1            (MMIO_GLB_BASE + 0x500)
+diff -Naurp linux-2.6.34_Org/arch/arm/mach-krome/nx_sdiomc_dev.c linux-2.6.34/arch/arm/mach-krome/nx_sdiomc_dev.c
+--- linux-2.6.34_Org/arch/arm/mach-krome/nx_sdiomc_dev.c	2012-08-14 10:13:36.491815000 +0530
++++ linux-2.6.34/arch/arm/mach-krome/nx_sdiomc_dev.c	2012-08-14 10:42:20.425029000 +0530
+@@ -59,34 +59,42 @@ static struct platform_device *apollo_sd
+ static void __init apollo_sdiomc_pin_mux_init(void)
+ {
+    unsigned int val;
+-   /* Setup pin-muxing for SDIO */
+-   val = readl(GPIO_PIN_MUX_REG_0);
+-   val &= ~(0x018);    // uart2tx=gmux_003=0, uart2rx=gmux_004=0
+-   writel(val, GPIO_PIN_MUX_REG_0);
+ 
++   /* Setup pin-muxing for SDIO */
+    val = readl(GPIO_PIN_MUX_REG_1);
+    val &= ~(0x80000000);   // ioa19=gmux_063=0
+    writel(val, GPIO_PIN_MUX_REG_1);
+-   
++
+    val = readl(GPIO_PIN_MUX_REG_2);
+    val &= ~(0x00000003);   // ioa20=gmux_064=0, ioa21=gmux_065=0
+    writel(val, GPIO_PIN_MUX_REG_2);
+-   
++
+    val = readl(GPIO_PIN_MUX_REG_6);
+-   val &= ~(0x02);   // ioa24=gmux_194=0
++   val &= ~(0x04);   // ioa24=gmux_194=0
+    writel(val, GPIO_PIN_MUX_REG_6);
+-   
+-   val = readl(GPIO_SEC_PIN_MUX_REG_0);// don't enable sdled, smux_024=0
+-   val |= 0x18;            // sdcrdetect_00=gmux_003=1, sdcrdwp_00=gmux_004=1
+-   writel(val, GPIO_SEC_PIN_MUX_REG_0);
+- 
++
+    val = readl(GPIO_SEC_PIN_MUX_REG_1);
+    val |= 0x80000000;      // sddata0=smux_063=1
+    writel(val, GPIO_SEC_PIN_MUX_REG_1);
+-  
++
+    val = readl(GPIO_SEC_PIN_MUX_REG_2);
+    val |= 0x0003;         // sddata1=smux_064=1, sddata2=smux_065=1,
+    writel(val, GPIO_SEC_PIN_MUX_REG_2);
++
++   val = readl(PAD_CONFIGURATION_5_REG);
++   val &= ~(3<<23);
++   val |= (2<<23);
++   writel(val, PAD_CONFIGURATION_5_REG);
++
++#ifdef CONFIG_MMC_SDHCI_NX_SDIOMC_CDWP_ON_PIO3N4
++
++   val = readl(GPIO_PIN_MUX_REG_0);
++   val &= ~(0x018);    // uart2tx=gmux_003=0, uart2rx=gmux_004=0
++   writel(val, GPIO_PIN_MUX_REG_0);
++   
++   val = readl(GPIO_SEC_PIN_MUX_REG_0);
++   val |= 0x18;            // sdcrdetect_00=smux_003=1, sdcrdwp_00=smux_004=1
++   writel(val, GPIO_SEC_PIN_MUX_REG_0);
+  
+    val = readl(GPIO_SEC_PIN_MUX_REG_5);
+    val |= 0x400;           // sddata3=smux_170=1
+@@ -96,6 +104,27 @@ static void __init apollo_sdiomc_pin_mux
+    val &= ~(0x08800000);   // alt23=0, alt27_sdcmd=0
+    val |=   0x40000000;    // alt30_sdio=1
+    writel(val, ALT_PIN_MUX_REG_0);
++
++#elif defined CONFIG_MMC_SDHCI_NX_SDIOMC_CDWP_ON_PIO177N178
++
++   val = readl(GPIO_PIN_MUX_REG_5);
++   val &= ~(0x60000);  // sda2=gmux_177=0, scl2=gmux_178=0
++   writel(val, GPIO_PIN_MUX_REG_5);
++
++   val = readl(GPIO_SEC_PIN_MUX_REG_5);
++   val |= 0x60400;  //Sddata3=smux_170=1, sdcrdetect_01=smux_177=1, sdcrdwp_01=smux_178=1
++   writel(val, GPIO_SEC_PIN_MUX_REG_5);
++
++   val = readl(ALT_PIN_MUX_REG_0);
++   val &= ~(0x8002000); //alt13=0, alt27=0,
++   val |= 0x40800000;  // alt23=1, alt30=1
++   writel(val, ALT_PIN_MUX_REG_0);
++
++   val = readl(PAD_CONFIGURATION_0_REG);
++   val |= 0x00140000; // ao_pio178_scl2_sdcrdwp_egp=1, ao_pio177_sda2_sdcrdetect_egp=1
++   writel(val, PAD_CONFIGURATION_0_REG);
++
++#endif
+ }
+ 
+ static int __init apollo_sdiomc_init(void)
+diff -Naurp linux-2.6.34_Org/drivers/mmc/host/Kconfig linux-2.6.34/drivers/mmc/host/Kconfig
+--- linux-2.6.34_Org/drivers/mmc/host/Kconfig	2012-08-14 10:13:36.195876000 +0530
++++ linux-2.6.34/drivers/mmc/host/Kconfig	2012-08-14 10:09:38.188098000 +0530
+@@ -426,6 +426,27 @@ config MMC_SDHCI_NX_SDIOMC
+ 	    Note: This will disable the option to configure a NOR flash device.
+ 
+ choice
++    prompt "Select SDIO CD,WP pins - PIO003,PIO004 or PIO177,PIO178"
++    depends on MMC_SDHCI_NX_SDIOMC && ARCH_KROME
++    default MMC_SDHCI_NX_SDIOMC_CDWP_ON_PIO3N4
++    help
++        Select SDIO CD,WP pins used  - PIO003,PIO004 or PIO177,PIO178.
++
++config MMC_SDHCI_NX_SDIOMC_CDWP_ON_PIO3N4
++    bool "SDIO CD, WP on PIO003,PIO004"
++    help
++        Enable this option when the SDIO Card Detect and Write Protect
++		are connected to PIO003 and PIO004.
++
++config MMC_SDHCI_NX_SDIOMC_CDWP_ON_PIO177N178
++    bool "SDIO CD, WP on PIO177,PIO178"
++    help
++        Enable this option when the SDIO Card Detect and Write Protect
++        are connected to PIO177 and PIO178.
++
++endchoice
++
++choice
+         prompt "Select SDIO slot interface - IO Bus or RGMII"
+         default MMC_SDHCI_NX_SDIOMC_ON_IO_BUS
+         depends on MMC_SDHCI_NX_SDIOMC && ARCH_APOLLO

@@ -1,0 +1,32 @@
+diff -Naurp linux-2.6.34_org/drivers/dma/Kconfig linux-2.6.34/drivers/dma/Kconfig
+--- linux-2.6.34_org/drivers/dma/Kconfig	2011-07-30 17:43:34.000000000 +0800
++++ linux-2.6.34/drivers/dma/Kconfig	2011-07-30 17:46:18.000000000 +0800
+@@ -109,10 +109,10 @@ config MV_XOR
+ 
+ config NX_DMAC_1902
+   bool "NXP DMA Controller IP_1902 support"
+-  depends on ARCH_APOLLO
++  depends on (ARCH_APOLLO || ARCH_KRONOS)
+   select DMA_ENGINE
+   help
+-    This enables the NXP DMA Controller IP_1902 support.
++    This enables the TRIDENT DMA Controller IP_1902 support.
+ 
+ 
+ config NX_DMAC_NR_OF_DESCS
+diff -Naurp linux-2.6.34_org/drivers/mtd/maps/Kconfig linux-2.6.34/drivers/mtd/maps/Kconfig
+--- linux-2.6.34_org/drivers/mtd/maps/Kconfig	2011-07-30 17:43:33.000000000 +0800
++++ linux-2.6.34/drivers/mtd/maps/Kconfig	2011-07-30 17:45:26.000000000 +0800
+@@ -424,10 +424,10 @@ config MTD_H720X
+ 
+ config MTD_APOLLO_NOR
+ 	tristate "APOLLO board mappings"
+-	depends on MTD_CFI && ARCH_APOLLO && MTD_COMPLEX_MAPPINGS
++	depends on MTD_CFI && (ARCH_APOLLO || ARCH_KRONOS) && MTD_COMPLEX_MAPPINGS
+ 	select MTD_PARTITIONS
+ 	help
+-	  This enables access to the NOR flash chips on APOLLO-based
++	  This enables access to the NOR flash chips on TRIDENT STB-based
+ 	  boards defining flash platform devices and flash platform data.
+ 	  If you have such a board, say 'Y'.
+ 

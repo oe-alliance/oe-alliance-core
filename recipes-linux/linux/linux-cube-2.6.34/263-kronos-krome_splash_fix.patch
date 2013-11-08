@@ -1,0 +1,253 @@
+diff -Naurp linux-2.6.34/arch/arm/mach-krome/splash_logo.c linux-2.6.34_splash/arch/arm/mach-krome/splash_logo.c
+--- linux-2.6.34/arch/arm/mach-krome/splash_logo.c	2013-03-26 18:44:42.633686000 +0530
++++ linux-2.6.34_splash/arch/arm/mach-krome/splash_logo.c	2013-03-26 18:41:58.295015000 +0530
+@@ -20,6 +20,7 @@
+ #include <asm/io.h>
+ #include <mach/splash_logo.h>
+ #include <mach/apollo_logo.h>
++#include <mach/pnx8492.h>
+ 
+ #define APOLLO_MMIO_BASE_ADDR (0xE0600000)
+ #define HOST_CGU_BASE		(APOLLO_MMIO_BASE_ADDR + 0x06A000)
+@@ -49,6 +50,7 @@ void __init apollo_splash( void )
+    u32 __iomem * pVRAMhd_base = ioremap_nocache(uVRAMHD_start, (XRES * YRES * 4));
+    u32 __iomem * pInc;
+    unsigned char pixel_data[3];
++   unsigned int greset_val;
+ 
+ 
+    /* HD DENC programming (HD-480p raster) */
+@@ -178,14 +180,14 @@ void __init apollo_splash( void )
+    writel( 0x00000000, (APOLLO_DENC_BASE + 0x120)); /* Bypass DENC CSC */
+ 
+    /* Set up the formatting PLL - programmed thru the HDMI I/F - and the serializer PLL */
+-   writel( 0x00000003, (HOST_CGU_BASE + 0x164));     /* Enable TMDS clock for HDMI */
+-   writel( 0x00000020, (HOST_CGU_BASE + 0x098));     /* PLL_HDMI_CON3_CTL - use MPG0 PLL for Fmt PLL Source */
+-   writel( 0x80000002, (HOST_CGU_BASE + 0x08c));     /* PLL_HDMI_CON0_CTL - use HDMI register I/F rather than direct I/F */
+-   writel( 0x0102040a, (APOLLO_HDMI_TX_BASE + 0x034)); /* FMT_PLL_SETTINGS - 480i, 480p */
+-   writel( 0x00000203, (APOLLO_HDMI_TX_BASE + 0x030)); /* SER_PLL_SETTINGS - 480i, 480p (27 MHz) */
+-   writel( 0x00000100, (APOLLO_HDMI_TX_BASE + 0x038)); /* PHY_CTRL - apply the pll settings */
+-   writel( 0x00000130, (APOLLO_HDMI_TX_BASE + 0x038)); /* PHY_CTRL */
+-   writel( 0x00000100, (APOLLO_HDMI_TX_BASE + 0x038)); /* PHY_CTRL */
++   writel( 0x00000003, (HOST_CGU_BASE + 0x164));         /* Enable TMDS clock for HDMI */
++   writel( 0x00000020, (HOST_CGU_BASE + 0x098));         /* PLL_HDMI_CON3_CTL - use MPG0 PLL for Fmt PLL Source */
++   writel( 0x80000002, (HOST_CGU_BASE + 0x08c));         /* PLL_HDMI_CON0_CTL - use HDMI register I/F rather than direct I/F */
++   writel( 0x0102040a, (APOLLO_HDMI_TX_BASE + 0x034));   /* FMT_PLL_SETTINGS - 480i, 480p */
++   writel( 0x00000203, (APOLLO_HDMI_TX_BASE + 0x030));   /* SER_PLL_SETTINGS - 480i, 480p (27 MHz) */
++   writel( 0x00000100, (APOLLO_HDMI_TX_BASE + 0x038));   /* PHY_CTRL - apply the pll settings */
++   writel( 0x00000130, (APOLLO_HDMI_TX_BASE + 0x038));   /* PHY_CTRL */
++   writel( 0x00000100, (APOLLO_HDMI_TX_BASE + 0x038));   /* PHY_CTRL */
+ 
+    /* HDMI programming */
+    writel( 0x0000003f, (APOLLO_HDMI_TX_BASE + 0x038));
+@@ -226,7 +228,7 @@ void __init apollo_splash( void )
+    /* Clear the buffer to a white background. */
+    for ( i=0; i<(XRES * YRES); i++)
+    {
+-      writel( 0xffffffff, pInc);
++      writel( 0x0, pInc);
+       pInc++;
+    }
+    /* Calculate Address to begin write. */
+@@ -370,50 +372,46 @@ void __init apollo_splash( void )
+ 
+    writel( 0x02060502, (APOLLO_CPIPE_BASE + 0x54e0)); /* !hsync, blank to SD DENC */
+    writel( 0x030f0502, (APOLLO_CPIPE_BASE + 0x94e0)); /* !hsync, !vsync, blank, odd/even to HD DENC */
+-   writel( 0x030f0502, (APOLLO_CPIPE_BASE + 0x98e0));    /* For CPIPE-HDMI RGB match */
+-   
+-/* Settings for Channel 3/4 */
+-#if 1
+-{
+-	        int rdata =0;
+-		writel(0x00000001, (HOST_CGU_BASE + 0x204));  //   #SELECT 50M Clock
+-		writel(0x00000011, (KROME_RFMODE_BASE +0x004));           //  #TASTER_SOFT_RESETS_REG
+-		writel(0x00000000, (KROME_RFMODE_BASE +0x004));  //  #TASTER_SOFT_RESETS_REG
+-		writel(0x00000039, (KROME_RFMODE_BASE +0x3fc));
+-		rdata = readl(0xe077E250);              //  #TASTER_PLL_CONFIG_REG
+-		writel((rdata & 0xffffefff), (KROME_RFMODE_BASE +0x250));
+-		rdata = readl(0xe077E250);             //   #TASTER_PLL_CONFIG_REG
+-		writel((rdata | 0x00000100), (KROME_RFMODE_BASE +0x250));
+-		rdata = readl(0xe077E254);             //   #TASTER_DAC_CONFIG_REG
+-		writel((rdata | 0x00000011), (KROME_RFMODE_BASE +0x254));
+-		rdata = readl(0xe077E250);   //             #TASTER_PLL_CONFIG_REG
+-		while((rdata & 0x01000000) == 0x00000000 ){
+-			rdata = readl(0xe077E250);         //   #TASTER_PLL_CONFIG_REG    
+-		}
+-		writel(0x00000003, (HOST_CGU_BASE + 0x204));    //         #SELECT 225M Clock
+-		/* RF MODE IP SETTINGS*/
+-		{
+-                rdata=0;
+-                writel(0x00000039, (KROME_RFMODE_BASE +0x3fc));  
+-		//#select internal test patern or nornimal work 0xa for test mode
+-		writel(0x00000000, (KROME_RFMODE_BASE +0x3ec));
+-		rdata = readl(0xe077E244);            //    #TASTER_CHANNEL_3/4_SELECT_REG
+-	        writel((rdata&0xFFFFFFFE), (KROME_RFMODE_BASE +0x244));
+-		writel((0x0002d82e), (KROME_RFMODE_BASE +0x214));
+-                writel((0x00005e80), (KROME_RFMODE_BASE +0x218)); //#write RF_MOD_depth,default 0x64e6 
+-                writel((0x0000001b), (KROME_RFMODE_BASE +0x240));   //#  VDAC-gain default 1b   
+-                writel((0x00000f00), (KROME_RFMODE_BASE +0x200));     //       ### (0x1100 Arsen carrier ratio adjust   f0r -13dB @KromeA0   )xf00  -15dBc@ KromeA1 can pass the 920Khz chroma beat
+-			
+-                writel((0x00000000), (KROME_RFMODE_BASE +0x31c));    //#0x00011001 shut RF video RF and audio RF
+-                writel((0x00000001), (KROME_RFMODE_BASE +0x004));    //  #TASTER_SOFT_RESETS_REG
+-	        writel((0x00000000), (KROME_RFMODE_BASE +0x004));       //      #TASTER_SOFT_RESETS_REG
+-					
+-		}
+-
+-    
++   writel( 0x030f0502, (APOLLO_CPIPE_BASE + 0x98e0)); /* For CPIPE-HDMI RGB match */
+ 
+-}
+-#endif 
++   /* Settings for Channel 3/4 */
++   greset_val = readl(RST_GRESET2_REG);
++   if(!(greset_val & 0x4)) 
++   {
++       int rdata =0;
++      writel(0x00000001, (HOST_CGU_BASE + 0x204));          // #SELECT 50M Clock
++      writel(0x00000011, (KROME_RFMODE_BASE +0x004));       // #TASTER_SOFT_RESETS_REG
++      writel(0x00000000, (KROME_RFMODE_BASE +0x004));       // #TASTER_SOFT_RESETS_REG
++      writel(0x00000039, (KROME_RFMODE_BASE +0x3fc));
++      rdata = readl(0xe077E250);                            // #TASTER_PLL_CONFIG_REG
++      writel((rdata & 0xffffefff), (KROME_RFMODE_BASE +0x250));
++      rdata = readl(0xe077E250);                            // #TASTER_PLL_CONFIG_REG
++      writel((rdata | 0x00000100), (KROME_RFMODE_BASE +0x250));
++      rdata = readl(0xe077E254);                            // #TASTER_DAC_CONFIG_REG
++      writel((rdata | 0x00000011), (KROME_RFMODE_BASE +0x254));
++      rdata = readl(0xe077E250);                            // #TASTER_PLL_CONFIG_REG
++      while((rdata & 0x01000000) == 0x00000000 )
++      {
++         rdata = readl(0xe077E250);                         // #TASTER_PLL_CONFIG_REG
++      }
++      writel(0x00000003, (HOST_CGU_BASE + 0x204));          // #SELECT 225M Clock
++      /* RF MODE IP SETTINGS*/
++      {
++         rdata=0;
++         writel(0x00000039, (KROME_RFMODE_BASE +0x3fc));  
++         //#select internal test patern or nornimal work 0xa for test mode
++         writel(0x00000000, (KROME_RFMODE_BASE +0x3ec));
++         rdata = readl(0xe077E244);                         // #TASTER_CHANNEL_3/4_SELECT_REG
++         writel((rdata&0xFFFFFFFE), (KROME_RFMODE_BASE +0x244));
++         writel((0x0002d82e), (KROME_RFMODE_BASE +0x214));
++         writel((0x00005e80), (KROME_RFMODE_BASE +0x218));  // #write RF_MOD_depth,default 0x64e6 
++         writel((0x0000001b), (KROME_RFMODE_BASE +0x240));  // #  VDAC-gain default 1b   
++         writel((0x00000f00), (KROME_RFMODE_BASE +0x200));
++         writel((0x00000000), (KROME_RFMODE_BASE +0x31c));  // #0x00011001 shut RF video RF and audio RF
++         writel((0x00000001), (KROME_RFMODE_BASE +0x004));  // #TASTER_SOFT_RESETS_REG
++         writel((0x00000000), (KROME_RFMODE_BASE +0x004));  // #TASTER_SOFT_RESETS_REG
++      }
++   }
+    writel( 0x00000001, (APOLLO_CPIPE_BASE + 0x4c00)); /* apply settings to layer */
+    writel( 0x00000001, (APOLLO_CPIPE_BASE + 0x8c00)); /* apply settings to layer */
+ 
+diff -Naurp linux-2.6.34/arch/arm/mach-kronos/splash_logo.c linux-2.6.34_splash/arch/arm/mach-kronos/splash_logo.c
+--- linux-2.6.34/arch/arm/mach-kronos/splash_logo.c	2013-03-26 18:44:42.647667000 +0530
++++ linux-2.6.34_splash/arch/arm/mach-kronos/splash_logo.c	2013-03-26 18:42:18.695315000 +0530
+@@ -50,11 +50,8 @@ void __init apollo_splash( void )
+    unsigned int glb_modid,ChipRevID;
+ 
+    /* fix kronos rev B */
+-    glb_modid = readl(GLOBALREG_MODULE_ID_REG1);
+- 	ChipRevID = (glb_modid & CHIP_REV_MASK) >> CHIP_REV_SHIFT;
+-
+-
+-
++   glb_modid = readl(GLOBALREG_MODULE_ID_REG1);
++   ChipRevID = (glb_modid & CHIP_REV_MASK) >> CHIP_REV_SHIFT;
+ 
+    /* HD DENC programming (HD-480p raster) */
+    writel( 0x00000001, (APOLLO_DENC_BASE + 0x120)); /* DENC csc sel  - YCbCr out */
+@@ -67,7 +64,6 @@ void __init apollo_splash( void )
+    writel( 0x00050603, (APOLLO_DENC_BASE + 0x014)); /* DENC  {FED} dac selection - all cvbs for initial validation */
+    writel( 0x00000000, (APOLLO_DENC_BASE + 0x180)); /* DENC Sync Control- don't invert Odd/even signal */
+ 
+-
+    /* DENC programming (SD - 480i) */
+    writel( 0x80000110, (APOLLO_DENC_BASE + 0x304)); /* DENC raster   - enable bits eactive & 480i(NTSC) */
+    writel( 0x000006b4, (APOLLO_DENC_BASE + 0x308)); /* DENC Htotal */
+@@ -86,15 +82,16 @@ void __init apollo_splash( void )
+    writel( 0x00000000, (APOLLO_DENC_BASE + 0x194)); /* Macrovision OFF */
+ 
+    /* DAC0 Programming (Component DACs) */
+-   	if(ChipRevID == 0x1) /* for Kronos rev B only */
+-	{
+-		writel( 0x00108000, (APOLLO_GBL_REG_BASE + 0x8fc)); /*VDAC0_CTRL0 */
+-	  	writel( 0x52001712, (APOLLO_GBL_REG_BASE + 0x900)); /*VDAC0_CTRL1 */
+-	} else 
+-		{
+-	   writel( 0x00111f00, (APOLLO_GBL_REG_BASE + 0x8fc)); /*VDAC0_CTRL0 */
+-	   writel( 0x42001712, (APOLLO_GBL_REG_BASE + 0x900)); /*VDAC0_CTRL1 */
+-	}
++   if(ChipRevID == 0x1) /* for Kronos rev B only */
++   {
++      writel( 0x00108000, (APOLLO_GBL_REG_BASE + 0x8fc)); /*VDAC0_CTRL0 */
++      writel( 0x52001712, (APOLLO_GBL_REG_BASE + 0x900)); /*VDAC0_CTRL1 */
++   } 
++   else 
++   {
++      writel( 0x00111f00, (APOLLO_GBL_REG_BASE + 0x8fc)); /*VDAC0_CTRL0 */
++      writel( 0x42001712, (APOLLO_GBL_REG_BASE + 0x900)); /*VDAC0_CTRL1 */
++   }
+    writel( 0x00000ff0, (APOLLO_GBL_REG_BASE + 0x904)); /*VDAC0_CTRL2 */
+    writel( 0x3f000071, (APOLLO_GBL_REG_BASE + 0x90c)); /*VDAC0_CTRL4 71-->70-->71 */
+    writel( 0x3f000070, (APOLLO_GBL_REG_BASE + 0x90c)); /*VDAC0_CTRL4 71-->70-->71 */
+@@ -145,7 +142,6 @@ void __init apollo_splash( void )
+    writel( 0x00000000, (HOST_CGU_BASE + 0x1b4)); /* VCGEN_G6SEL -- 27MHz, MPG0 PLL */
+    writel( 0x00000003, (HOST_CGU_BASE + 0x160)); /* VCGEN_G6SEL -- 27MHz, MPG0 PLL */
+ 
+-
+    /* CPIPE Sync Timing Generator settings */
+    writel( 0x00000000, (APOLLO_CPIPE_BASE + 0x8000)); /* progressive */
+    writel( 0x00000f33, (APOLLO_CPIPE_BASE + 0x8040)); /* enable STG + f,h,v inputs, invert f,h,v */
+@@ -238,7 +234,7 @@ void __init apollo_splash( void )
+    /* Clear the buffer to a white background. */
+    for ( i=0; i<(XRES * YRES); i++)
+    {
+-      writel( 0xffffffff, pInc);
++      writel( 0x0, pInc);
+       pInc++;
+    }
+    /* Calculate Address to begin write. */
+@@ -284,7 +280,7 @@ void __init apollo_splash( void )
+ 
+    /* GFX VCBM*/
+    writel( 0x00000001, (APOLLO_CPIPE_BASE + 0x8e90)); /* Bypass GFX VCBM */
+-//   writel( 0x00000001, (APOLLO_CPIPE_BASE + 0x8c00)); /* apply settings to layer */
++   //writel( 0x00000001, (APOLLO_CPIPE_BASE + 0x8c00)); /* apply settings to layer */
+ 
+    /* GNSH Settings */
+    writel( 0x00000010, (APOLLO_CPIPE_BASE + 0x94a0)); /* Turn off MSB inversion */
+@@ -359,7 +355,7 @@ void __init apollo_splash( void )
+ 
+    /* GFX VCBM */
+    writel( 0x00000001, (APOLLO_CPIPE_BASE + 0x4e90)); /* Bypass GFX VCBM */
+-//   writel( 0x00000001, (APOLLO_CPIPE_BASE + 0x4c00)); /* apply settings to layer */
++   //writel( 0x00000001, (APOLLO_CPIPE_BASE + 0x4c00)); /* apply settings to layer */
+ 
+    /* GNSH Settings */
+    writel( 0x00000010, (APOLLO_CPIPE_BASE + 0x54a0)); /* Turn off MSB inversion */
+@@ -381,19 +377,16 @@ void __init apollo_splash( void )
+    writel( 0x00000001, (APOLLO_CPIPE_BASE + 0x5400)); /* width and height */
+ 
+ /* Color fix for Kronos Rev B */
+-	if(ChipRevID >= 0x1)
+-	{ 
+-		writel( 0x02060502, (APOLLO_CPIPE_BASE + 0x54e0)); /* !hsync, blank to SD DENC */
+-	    writel( 0x030f0502, (APOLLO_CPIPE_BASE + 0x94e0)); /* !hsync, !vsync, blank, odd/even to HD DENC */
+-	    writel( 0x030f0502, (APOLLO_CPIPE_BASE + 0x98e0)); /* For CPIPE-HDMI RGB match */
+-
+-	}
+-   
++   if(ChipRevID >= 0x1)
++   {
++      writel( 0x02060502, (APOLLO_CPIPE_BASE + 0x54e0)); /* !hsync, blank to SD DENC */
++      writel( 0x030f0502, (APOLLO_CPIPE_BASE + 0x94e0)); /* !hsync, !vsync, blank, odd/even to HD DENC */
++      writel( 0x030f0502, (APOLLO_CPIPE_BASE + 0x98e0)); /* For CPIPE-HDMI RGB match */
++   }
+ 
+    writel( 0x00000001, (APOLLO_CPIPE_BASE + 0x4c00)); /* apply settings to layer */
+    writel( 0x00000001, (APOLLO_CPIPE_BASE + 0x8c00)); /* apply settings to layer */
+ 
+-
+    iounmap(pVRAMhd_base);
+ 
+    return;

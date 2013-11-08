@@ -1,0 +1,132 @@
+diff -Naurp linux-2.6.34/arch/arm/mach-kronos/include/mach/nx_sdiomc_dev.h linux-2.6.34_sdio/arch/arm/mach-kronos/include/mach/nx_sdiomc_dev.h
+--- linux-2.6.34/arch/arm/mach-kronos/include/mach/nx_sdiomc_dev.h	2011-09-30 16:15:34.730063000 +0530
++++ linux-2.6.34_sdio/arch/arm/mach-kronos/include/mach/nx_sdiomc_dev.h	2011-09-30 15:36:23.460321000 +0530
+@@ -41,7 +41,7 @@
+ #define APOLLO_SDIOMC_BASE (APOLLO_SDIOMC_BASE_PHYS)  
+ #define APOLLO_SDIOMC_LEN  (0x1000)
+ 
+-#define APOLLO_INT_SDIOMC  ( 156)  /* Fixme, has to come from irqs.h !! */
++#define APOLLO_INT_SDIOMC  (IRQ_SD_CARD)  /* Fixme, has to come from irqs.h !! */
+ 
+ /*!
+  * This structure is used to store the platform specific SD/SDIO/MMC controller
+diff -Naurp linux-2.6.34/arch/arm/mach-kronos/nx_sdiomc_dev.c linux-2.6.34_sdio/arch/arm/mach-kronos/nx_sdiomc_dev.c
+--- linux-2.6.34/arch/arm/mach-kronos/nx_sdiomc_dev.c	2011-09-30 16:15:34.733051000 +0530
++++ linux-2.6.34_sdio/arch/arm/mach-kronos/nx_sdiomc_dev.c	2011-09-30 15:36:31.449691000 +0530
+@@ -73,15 +73,89 @@ static struct platform_device *apollo_sd
+ static void __init apollo_sdiomc_pin_mux_init(void)
+ {
+    unsigned int val;
++   unsigned long lockstat = 0;
++   unsigned long greset = 0;
+ 
+    /* Determine the pin mux setting based on Kernel Config options */
++   writel(0x000000F8, RST_LOCKCMD_REG);
++   writel(0x0000002B, RST_LOCKCMD_REG);
+    
++   lockstat = readl(RST_LOCKSTAT_REG);
++   lockstat &= ~RST_LOCKSTAT_LOCK;
++   writel(lockstat,RST_LOCKSTAT_REG);
++   greset = readl(RST_GRESET1_REG);
++   greset &= ~(1<<12);
++   writel(greset, RST_GRESET1_REG);
++   writel(0x00000000, RST_LOCKCMD_REG);
++   val = readl(RST_CONFIG_REG);
++   val &= ~(7<<7);
++   val |= 5<<7;
++   writel(val, RST_CONFIG_REG);
+    /* Setup the Alt Reg 0 for SDIO Card Detect */
++#if 0
++   val = readl(0xE06BB100);
++   val &= ~(0x18) ;
++   writel(val, 0xE06BB100);
++   val = readl(0xE06BB120);
++   val |= 0x18 ;
++   writel(val, 0xE06BB120);
++   val = readl(0xE06BB124);
++   val |= 0x80000000 ;
++   writel(val, 0xE06BB124);
++   val = readl(0xE06BB128);
++   val |= 0x03 ;
++   writel(val, 0xE06BB128);
++   val = readl(0xE06BB134);
++   val |= 0x400 ;
++   writel(val, 0xE06BB134);
+    val = readl(0xE06BB140);
+-   val |= 0x48800020 ;
++   val &= ~(0x8800000) ;
++   val |= 0x40000000 ;
+    writel(val, 0xE06BB140);
++#else
++   val = readl(0xE06BB100);
++   val &= ~(0x1000018);    // uart2tx=gmux_003=0, uart2rx=gmux_004=0, pwm2=gmux_024=0
++   writel(val, 0xE06BB100);
+ 
+-  /* TODO : Determine the value for other Mux setting */
++   val = readl(0xE06BB104);
++   val &= ~(0x80000000);   // ioa19=gmux_063=0
++   writel(val, 0xE06BB104);
++   
++   val = readl(0xE06BB108);
++   val &= ~(0x00000003);   // ioa20=gmux_064=0, ioa21=gmux_065=0
++   writel(val, 0xE06BB108);
++   
++   val = readl(0xE06BB114);
++   val &= ~(0x00000c00);   // ioa23=gmux_171=0, ioa22=gmux_170=0
++   writel(val, 0xE06BB114);
++   
++   val = readl(0xE06BB120);// don't enable sdled, smux_024=0
++   val |= 0x18;            // sdcrdetect_00=gmux_003=1, sdcrdwp_00=gmux_004=1
++   writel(val, 0xE06BB120);
++   
++   val = readl(0xE06BB124);
++   val |= 0x80000000;      // sddata0=smux_063=1
++   writel(val, 0xE06BB124);
++   
++   val = readl(0xE06BB128);
++   val |= 0x30003;         // sddata1=smux_064=1, sddata2=smux_065=1, 
++   writel(val, 0xE06BB128);
++   
++   val = readl(0xE06BB134);
++   val &= ~(0x800);        // nand_rb3=smux_171=0
++   val |= 0x400;           // sddata3=smux_170=1
++   writel(val, 0xE06BB134);
++   
++   val = readl(0xE06BB140);
++   val &= ~(0x8800000);    // alt23=0, alt27_sdcmd=0
++   val |= 0x40001020;      // alt12_uart2=1, alt05_sdio=1, alt30_sdio=1
++   writel(val, 0xE06BB140);
++
++   val = readl(0xE06BB144);
++   val |= 0x00040000;      // alt_reg_secdbg_override=1
++   writel(val, 0xE06BB144);
++
++#endif
+ }
+ 
+ static int __init apollo_sdiomc_init(void)
+diff -Naurp linux-2.6.34/drivers/mmc/host/sdhci_nx_sdiomc.c linux-2.6.34_sdio/drivers/mmc/host/sdhci_nx_sdiomc.c
+--- linux-2.6.34/drivers/mmc/host/sdhci_nx_sdiomc.c	2011-09-30 16:15:35.109046000 +0530
++++ linux-2.6.34_sdio/drivers/mmc/host/sdhci_nx_sdiomc.c	2011-09-30 15:40:10.037018000 +0530
+@@ -44,6 +44,7 @@
+ #define NX_SDIOMC_VENDOR_REVISION (0x75)
+ #define NX_SDIOMC_VENDOR_REVISION_1 (0x90)
+ #define NX_SDIOMC_VENDOR_REVISION_2 (0x96)
++#define NX_SDIOMC_VENDOR_REVISION_3 (0x99)
+ 
+ struct nx_sdiomc_slot;
+ struct nx_sdiomc_chip;
+@@ -274,8 +275,12 @@ static int __init nx_sdiomc_probe(struct
+    */
+   rev = readw(ioaddr + SDHCI_HOST_VERSION);
+   rev_no = (( rev & SDHCI_VENDOR_VER_MASK ) >> SDHCI_VENDOR_VER_SHIFT ); 
++  dev_info(&pdev->dev, "SD/SDIO/MMC controller IP_3413 Version is 0x%x \n",
++     rev_no);
+ 
+-  if( ( rev_no  != NX_SDIOMC_VENDOR_REVISION_2 ) && ( rev_no  != NX_SDIOMC_VENDOR_REVISION_1 ) && ( rev_no  != NX_SDIOMC_VENDOR_REVISION ) ) {
++  if( (rev_no  != NX_SDIOMC_VENDOR_REVISION_3) && (rev_no  != NX_SDIOMC_VENDOR_REVISION_2) && (rev_no  != NX_SDIOMC_VENDOR_REVISION_1) && (rev_no  != NX_SDIOMC_VENDOR_REVISION ) ) {
++      dev_info(&pdev->dev, "SD/SDIO/MMC controller IP_3413 0x%x Version not matched\n",
++         rev_no);
+     ret = -ENXIO;
+     goto _unmap;
+   }

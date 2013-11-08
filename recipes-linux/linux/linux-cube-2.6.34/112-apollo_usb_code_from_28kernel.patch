@@ -1,0 +1,668 @@
+diff -Naur linux-2.6.34/drivers/usb/core/hcd.h linux-2.6.34_Modified/drivers/usb/core/hcd.h
+--- linux-2.6.34/drivers/usb/core/hcd.h	2010-10-05 11:21:00.718567000 +0530
++++ linux-2.6.34_Modified/drivers/usb/core/hcd.h	2010-10-05 11:23:23.903929000 +0530
+@@ -110,6 +110,9 @@
+ 	unsigned		uses_new_polling:1;
+ 	unsigned		poll_rh:1;	/* poll for rh status? */
+ 	unsigned		poll_pending:1;	/* status has changed? */
++#ifdef CONFIG_USB_EHSET
++	unsigned		EHSET_in_progress:1;
++#endif
+ 	unsigned		wireless:1;	/* Wireless USB HCD */
+ 	unsigned		authorized_default:1;
+ 	unsigned		has_tt:1;	/* Integrated TT in root hub */
+diff -Naur linux-2.6.34/drivers/usb/core/hub.c linux-2.6.34_Modified/drivers/usb/core/hub.c
+--- linux-2.6.34/drivers/usb/core/hub.c	2010-10-05 11:21:00.724566000 +0530
++++ linux-2.6.34_Modified/drivers/usb/core/hub.c	2010-10-05 11:23:23.908937000 +0530
+@@ -149,6 +149,12 @@
+ 		"try the other device initialization scheme if the "
+ 		"first one fails");
+ 
++#ifdef CONFIG_USB_EHSET
++/* Semaphore used for Hi-Speed Host Electrical tests */
++static DECLARE_MUTEX(ehset_sem);
++#endif /* CONFIG_USB_EHSET */
++
++
+ /* Mutual exclusion for EHCI CF initialization.  This interferes with
+  * port reset on some companion controllers.
+  */
+@@ -174,6 +180,109 @@
+ 		return "12 Mb/s";
+ }
+ 
++#ifdef CONFIG_USB_EHSET
++
++//static void EHSET_tests(struct usb_device *udev)
++
++struct ehset_wq 
++{
++      struct  usb_device	*ehset_udev;
++      struct work_struct	tqueue;  
++
++};
++
++//static struct ehset_wq  EHSET_work;
++static void EHSET_tests( struct usb_device *udev )
++{
++      //  struct  ehset_wq  *wq = (struct  ehset_wq  *)data;
++//      struct usb_device	*udev = (struct usb_device *)data;
++//	struct usb_hcd		*hcd = udev->bus->hcpriv;
++	struct usb_hcd *hcd = bus_to_hcd(udev->bus);
++	int			status;
++	u8			port = udev->portnum;
++
++	dev_info(&udev->dev, "running EHSET Test %x\n",
++			udev->descriptor.idProduct);
++
++	switch (udev->descriptor.idProduct) {
++	case EHSET_TEST_SE0_NAK:
++		status = hcd->driver->hub_control(hcd, SetPortFeature,
++				USB_PORT_FEAT_TEST,
++				(USB_PORT_TEST_SE0_NAK<<8)|port,
++				NULL, 0);
++		if (status)
++			dev_err(&udev->dev, "SetPortFeature Failed\n");
++		/* This test runs until the host is powered off */
++		break;
++	case EHSET_TEST_J:
++		status = hcd->driver->hub_control(hcd, SetPortFeature,
++				USB_PORT_FEAT_TEST,
++				(USB_PORT_TEST_J<<8)|port,
++				NULL, 0);
++		if (status)
++			dev_err(&udev->dev, "SetPortFeature Failed\n");
++		/* This test runs until the host is powered off */
++		break;
++	case EHSET_TEST_K:
++		status = hcd->driver->hub_control(hcd, SetPortFeature,
++				USB_PORT_FEAT_TEST,
++				(USB_PORT_TEST_K<<8)|port,
++				NULL, 0);
++		if (status)
++			dev_err(&udev->dev, "SetPortFeature Failed\n");
++		/* This test runs until the host is powered off */
++		break;
++	case EHSET_TEST_PACKET:
++	status = hcd->driver->hub_control(hcd, SetPortFeature,
++				USB_PORT_FEAT_TEST,
++				(USB_PORT_TEST_PACKET<<8)|port,
++				NULL, 0);
++		if (status)
++			dev_err(&udev->dev, "SetPortFeature Failed\n");
++		down(&ehset_sem);
++		hcd->EHSET_in_progress = 0;
++		up(&ehset_sem);
++		break;
++	/* Note the FORCE ENABLE test is no longer used in the EHSET spec. */
++	case EHSET_TEST_FORCE_ENABLE:
++		status = hcd->driver->hub_control(hcd, SetPortFeature,
++				USB_PORT_FEAT_TEST,
++				(USB_PORT_TEST_FORCE_ENABLE<<8)|port,
++				NULL, 0);
++		if (status)
++			dev_err(&udev->dev, "SetPortFeature Failed\n");
++		down(&ehset_sem);
++		hcd->EHSET_in_progress = 0;
++		up(&ehset_sem);
++		break;
++	case EHSET_HS_HOST_PORT_SUSPEND_RESUME:
++
++#if 1		
++	case EHSET_SINGLE_STEP_GET_DEV_DESC:
++	case EHSET_SINGLE_STEP_SET_FEATURE:
++		status = hcd->driver->hub_control(hcd, SetPortFeature,
++				USB_PORT_FEAT_TEST,
++				((udev->descriptor.idProduct&0xFF)<<8)|
++				port, (char *)udev, 0);
++		if (status)
++			dev_err(&udev->dev, "SetPortFeature Failed\n");
++		down(&ehset_sem);
++		hcd->EHSET_in_progress = 0;
++		up(&ehset_sem);
++#endif		
++		break;
++	default:
++		dev_err(&udev->dev, "EHSET: Unsupported test mode %x\n",
++				udev->descriptor.idProduct);
++		down(&ehset_sem);
++		hcd->EHSET_in_progress = 0;
++		up(&ehset_sem);
++	}
++
++}
++#endif /* CONFIG_USB_EHSET */
++
++
+ /* Note that hdev or one of its children must be locked! */
+ static struct usb_hub *hdev_to_hub(struct usb_device *hdev)
+ {
+@@ -1982,6 +2091,72 @@
+ 	}
+ 
+ 	(void) usb_create_ep_devs(&udev->dev, &udev->ep0, udev);
++	#ifdef CONFIG_USB_EHSET
++	if (udev->speed == USB_SPEED_HIGH &&
++			udev->parent == udev->bus->root_hub &&
++			udev->descriptor.idVendor == 0x1A0A)
++	{
++
++#if 0	
++
++		static struct ehset_wq  *EHSET_work_p;
++
++		EHSET_work.ehset_udev = udev;
++
++		printk(" usb_new_device :udev=%x \n",udev);
++		EHSET_work_p = &EHSET_work;
++		
++		struct usb_hcd *hcd = bus_to_hcd(udev->bus);
++#endif		
++		dev_info(&udev->dev, "Found EHSET Test Device (test=%x)\n",
++				udev->descriptor.idProduct);
++
++	
++#if 0
++
++	EHSET_task = kthread_run(EHSET_tests,udev,"ehset");
++	if (!IS_ERR(EHSET_task))
++		return 0;	
++#endif	
++		 EHSET_tests(udev);
++	     
++#if  0
++		INIT_WORK(&EHSET_work_p->tqueue, EHSET_tests);
++	       schedule_work(&EHSET_work_p->tqueue);
++		
++		if (!EHSET_workqueue) {
++			EHSET_workqueue = create_singlethread_workqueue(
++					"USB EHSET");
++			if (!EHSET_workqueue) {
++				dev_err(&udev->dev, "EHSET: Failed to create "
++					       "a workqueue\n");
++			}
++		}
++
++		if (EHSET_workqueue) {
++			if (down_trylock(&ehset_sem) == 0) {
++				if (!hcd->EHSET_in_progress) {
++					hcd->EHSET_in_progress = 1;
++					up(&ehset_sem);
++					INIT_WORK(&EHSET_work, EHSET_tests);
++					queue_work(EHSET_workqueue,
++							&EHSET_work);
++				} else {
++					up(&ehset_sem);
++					dev_err(&udev->dev, "EHSET: test "
++							"already in progress"
++							"\n");
++				}
++			} else {
++				dev_err(&udev->dev, "EHSET: Failed to get "
++					       "lock\n");
++			}
++		}
++     #endif
++		
++	}
++	else
++#endif /* CONFIG_USB_EHSET */
+ 	return err;
+ 
+ fail:
+diff -Naur linux-2.6.34/drivers/usb/gadget/gadget_chips.h linux-2.6.34_Modified/drivers/usb/gadget/gadget_chips.h
+--- linux-2.6.34/drivers/usb/gadget/gadget_chips.h	2010-10-05 11:21:00.750538000 +0530
++++ linux-2.6.34_Modified/drivers/usb/gadget/gadget_chips.h	2010-10-05 11:23:23.911919000 +0530
+@@ -219,6 +219,9 @@
+ 		return 0x25;
+ 	else if (gadget_is_s3c_hsotg(gadget))
+ 		return 0x26;
++	else if (gadget_is_ip9028(gadget))
++		return 0x27;
++
+ 	return -ENOENT;
+ }
+ 
+diff -Naur linux-2.6.34/drivers/usb/gadget/Kconfig linux-2.6.34_Modified/drivers/usb/gadget/Kconfig
+--- linux-2.6.34/drivers/usb/gadget/Kconfig	2010-10-05 11:21:00.759523000 +0530
++++ linux-2.6.34_Modified/drivers/usb/gadget/Kconfig	2010-10-05 11:23:23.913927000 +0530
+@@ -187,6 +187,7 @@
+ 	default USB_GADGET
+ 	select USB_GADGET_SELECTED
+ 
++
+ config USB_GADGET_OMAP
+ 	boolean "OMAP USB Device Controller"
+ 	depends on ARCH_OMAP
+@@ -269,6 +270,15 @@
+ 	select USB_GADGET_DUALSPEED
+ 
+ 
++config USBCV_TEST
++        boolean "Gadget USBCV Test"
++        depends on USB_GADGET_IP9028 && USB_OTG
++	select USB_GADGET_DUALSPEED		
++        help
++          This enables the USBCV compliance tests to run.
++          Normal device mode doesnot work, if this is enabled.
++          Turn-off this flag for normal functioning.
++
+ config USB_GADGET_R8A66597
+ 	boolean "Renesas R8A66597 USB Peripheral Controller"
+ 	select USB_GADGET_DUALSPEED
+diff -Naur linux-2.6.34/drivers/usb/gadget/storage_common.c linux-2.6.34_Modified/drivers/usb/gadget/storage_common.c
+--- linux-2.6.34/drivers/usb/gadget/storage_common.c	2010-05-17 02:47:36.000000000 +0530
++++ linux-2.6.34_Modified/drivers/usb/gadget/storage_common.c	2010-10-05 11:27:20.066866000 +0530
+@@ -290,7 +290,8 @@
+ #define DELAYED_STATUS	(EP0_BUFSIZE + 999)	/* An impossibly large value */
+ 
+ /* Number of buffers we will use.  2 is enough for double-buffering */
+-#define FSG_NUM_BUFFERS	2
++/* once the kthread schedule mechanism is improved, this number can be reduced so that we donot lose receive data */
++#define FSG_NUM_BUFFERS	20
+ 
+ /* Default size of buffer length. */
+ #define FSG_BUFLEN	((u32)16384)
+diff -Naur linux-2.6.34/drivers/usb/host/ehci.h linux-2.6.34_Modified/drivers/usb/host/ehci.h
+--- linux-2.6.34/drivers/usb/host/ehci.h	2010-05-17 02:47:36.000000000 +0530
++++ linux-2.6.34_Modified/drivers/usb/host/ehci.h	2010-10-05 11:23:23.916918000 +0530
+@@ -712,6 +712,23 @@
+ 
+ #endif
+ 
++
++static struct list_head * qh_urb_transaction (
++		struct ehci_hcd *ehci,
++		struct urb *urb,
++		struct list_head *head,
++		gfp_t flags);
++
++static int submit_async (
++		struct ehci_hcd *ehci,
++		struct urb *urb,
++		struct list_head *qtd_list,
++		gfp_t mem_flags);
++
++static inline void ehci_qtd_free (
++		struct ehci_hcd *ehci,
++		struct ehci_qtd *qtd);
++
+ /*-------------------------------------------------------------------------*/
+ 
+ #ifndef DEBUG
+diff -Naur linux-2.6.34/drivers/usb/host/ehci-hub.c linux-2.6.34_Modified/drivers/usb/host/ehci-hub.c
+--- linux-2.6.34/drivers/usb/host/ehci-hub.c	2010-10-05 11:21:00.763525000 +0530
++++ linux-2.6.34_Modified/drivers/usb/host/ehci-hub.c	2010-10-05 11:23:23.919919000 +0530
+@@ -512,6 +512,230 @@
+ 	return port_status;
+ }
+ 
++#ifdef CONFIG_USB_EHCI_EHSET
++
++
++struct urb		urb;
++
++static int
++single_step_get_device_descriptor( struct usb_hcd *hcd, u8 port)
++{
++    struct usb_bus		*bus = hcd_to_bus(hcd);
++	struct usb_device	*udev;
++	struct ehci_hcd		*ehci = hcd_to_ehci (hcd);
++	struct list_head	qtd_list;
++	struct list_head	setup_list;
++	struct list_head	data_list;
++	struct ehci_qtd		*qtd;
++	
++	struct usb_ctrlrequest	setup_packet;
++	char			data_buffer[USB_DT_DEVICE_SIZE];
++
++	ehci_info (ehci, "Testing single_step_get_device_descriptor\n");
++
++	if (bus == NULL) {
++		ehci_err (ehci, "EHSET: usb_bus pointer is NULL\n");
++		return -EPIPE;
++	}
++
++	udev = bus->root_hub;
++	if (udev == NULL) {
++		ehci_err (ehci, "EHSET: root_hub pointer is NULL\n");
++		return -EPIPE;
++	}
++
++	udev = udev->children[port-1];
++	if (udev == NULL) {
++		ehci_err (ehci, "EHSET: No test device found on port %d\n",
++				port);
++		return -EPIPE;
++	}
++
++	set_current_state(TASK_UNINTERRUPTIBLE);
++	schedule_timeout(msecs_to_jiffies(15000));
++
++	setup_packet.bRequestType = USB_DIR_IN;
++	setup_packet.bRequest = USB_REQ_GET_DESCRIPTOR;
++	setup_packet.wValue = (USB_DT_DEVICE << 8);
++	setup_packet.wIndex = 0;
++	setup_packet.wLength = USB_DT_DEVICE_SIZE;
++
++	INIT_LIST_HEAD (&qtd_list);
++	INIT_LIST_HEAD (&setup_list);
++	INIT_LIST_HEAD (&data_list);
++
++        /*urb.reject = 0; FIXME::Changed for 34 kernel*/
++        atomic_set(&(urb.reject),0);
++	
++	urb.transfer_buffer_length = USB_DT_DEVICE_SIZE; 
++	urb.dev = udev;
++	urb.ep = &udev->ep0;
++	urb.pipe = usb_rcvctrlpipe(udev, 0);
++	urb.hcpriv = udev->ep0.hcpriv;
++	urb.setup_packet = (char *)&setup_packet;
++	urb.transfer_buffer = data_buffer;
++	urb.transfer_flags = URB_HCD_DRIVER_TEST;
++	urb.setup_dma = dma_map_single( hcd->self.controller,
++			urb.setup_packet,
++			sizeof (struct usb_ctrlrequest),
++			DMA_TO_DEVICE);
++	urb.transfer_dma = dma_map_single (
++			hcd->self.controller,
++			urb.transfer_buffer,
++			sizeof (struct usb_ctrlrequest),
++			DMA_TO_DEVICE);
++	if (!urb.setup_dma || !urb.transfer_dma) {
++		ehci_err (ehci, "dma_map_single Failed\n");
++		return -EBUSY;
++	}
++
++	if (!qh_urb_transaction (ehci, &urb, &qtd_list, GFP_ATOMIC)) {
++		ehci_err (ehci, "qh_urb_transaction Failed\n");
++		return -EBUSY;
++	}
++
++	qtd =  container_of (qtd_list.next, struct ehci_qtd, qtd_list);
++	list_del_init (&qtd->qtd_list);
++	list_add (&qtd->qtd_list, &setup_list);
++	qtd =  container_of (qtd_list.next, struct ehci_qtd, qtd_list);
++	list_del_init (&qtd->qtd_list);
++	list_add (&qtd->qtd_list, &data_list);
++	qtd =  container_of (qtd_list.next, struct ehci_qtd, qtd_list);
++	list_del_init (&qtd->qtd_list);
++	ehci_qtd_free (ehci, qtd);
++
++	ehci_info (ehci, "Sending SETUP PHASE\n");
++	printk ("ehci %x urb %x setup_list %x\n", (uint)ehci, (uint)&urb, (uint)&setup_list);
++	if (submit_async (ehci, &urb, &setup_list, GFP_ATOMIC)) {
++		ehci_err (ehci, "Failed to queue up qtds\n");
++		return -EBUSY;
++	}
++
++	//set_current_state(TASK_UNINTERRUPTIBLE);
++	//schedule_timeout(msecs_to_jiffies(15000));
++	urb.status = 0;
++	urb.actual_length = 0;
++
++	ehci_info (ehci, "Sending DATA PHASE\n");
++	if (submit_async (ehci, &urb, &data_list, GFP_ATOMIC))
++	{
++		ehci_err (ehci, "Failed to queue up qtds\n");
++		return -EBUSY;
++	}
++
++	return 0;
++
++}
++
++
++static int
++single_step_set_feature( struct usb_hcd *hcd, u8 port)
++{
++	struct usb_bus		*bus = hcd_to_bus(hcd);
++	struct usb_device	*udev;
++	struct ehci_hcd		*ehci = hcd_to_ehci (hcd);
++	struct list_head	qtd_list;
++	struct list_head	setup_list;
++	struct list_head	data_list;
++	struct ehci_qtd		*qtd;
++//	struct urb		urb;
++	struct usb_ctrlrequest	setup_packet;
++	char			data_buffer[USB_DT_DEVICE_SIZE];
++
++	ehci_info (ehci, "Testing SINGLE_STEP_SET_FEATURE\n");
++
++	if (bus == NULL) {
++		ehci_err (ehci, "EHSET: usb_bus pointer is NULL\n");
++		return -EPIPE;
++	}
++
++	udev = bus->root_hub;
++	if (udev == NULL) {
++		ehci_err (ehci, "EHSET: root_hub pointer is NULL\n");
++		return -EPIPE;
++	}
++
++	udev = udev->children[port-1];
++	if (udev == NULL) {
++		ehci_err (ehci, "EHSET: No test device found on port %d\n",
++				port);
++		return -EPIPE;
++	}
++
++	setup_packet.bRequestType = USB_DIR_IN;
++	setup_packet.bRequest = USB_REQ_GET_DESCRIPTOR;
++	setup_packet.wValue = (USB_DT_DEVICE << 8);
++	setup_packet.wIndex = 0;
++	setup_packet.wLength = USB_DT_DEVICE_SIZE;
++
++        /*urb.reject = 0; FIXME::Changed for 34 kernel*/
++        atomic_set(&(urb.reject),0);
++
++	INIT_LIST_HEAD (&qtd_list);
++	INIT_LIST_HEAD (&setup_list);
++	INIT_LIST_HEAD (&data_list);
++	urb.transfer_buffer_length = USB_DT_DEVICE_SIZE; 
++	urb.dev = udev;
++	urb.ep = &udev->ep0;
++	urb.pipe = usb_rcvctrlpipe(udev, 0);
++	urb.hcpriv = udev->ep0.hcpriv;
++	urb.setup_packet = (char *)&setup_packet;
++	urb.transfer_buffer = data_buffer;
++	urb.transfer_flags = URB_HCD_DRIVER_TEST;
++	urb.setup_dma = dma_map_single( hcd->self.controller,
++			urb.setup_packet,
++			sizeof (struct usb_ctrlrequest),
++			DMA_TO_DEVICE);
++	urb.transfer_dma = dma_map_single (
++			hcd->self.controller,
++			urb.transfer_buffer,
++			sizeof (struct usb_ctrlrequest),
++			DMA_TO_DEVICE);
++	if (!urb.setup_dma || !urb.transfer_dma) {
++		ehci_err (ehci, "dma_map_single Failed\n");
++		return -EBUSY;
++	}
++
++	if (!qh_urb_transaction (ehci, &urb, &qtd_list, GFP_ATOMIC)) {
++		ehci_err (ehci, "qh_urb_transaction Failed\n");
++		return -EBUSY;
++	}
++
++	qtd =  container_of (qtd_list.next, struct ehci_qtd, qtd_list);
++	list_del_init (&qtd->qtd_list);
++	list_add (&qtd->qtd_list, &setup_list);
++	qtd =  container_of (qtd_list.next, struct ehci_qtd, qtd_list);
++	list_del_init (&qtd->qtd_list);
++	list_add (&qtd->qtd_list, &data_list);
++	qtd =  container_of (qtd_list.next, struct ehci_qtd, qtd_list);
++	list_del_init (&qtd->qtd_list);
++	ehci_qtd_free (ehci, qtd);
++
++	ehci_info (ehci, "Sending SETUP PHASE\n");
++	printk ("ehci %x urb %x setup_list %x\n", (uint)ehci, (uint)&urb, (uint)&setup_list);
++	if (submit_async (ehci, &urb, &setup_list, GFP_ATOMIC)) {
++		ehci_err (ehci, "Failed to queue up qtds\n");
++		return -EBUSY;
++	}
++
++	set_current_state(TASK_UNINTERRUPTIBLE);
++	schedule_timeout(msecs_to_jiffies(15000));
++	urb.status = 0;
++	urb.actual_length = 0;
++
++	ehci_info (ehci, "Sending DATA PHASE\n");
++	if (submit_async (ehci, &urb, &data_list, GFP_ATOMIC))
++	{
++		ehci_err (ehci, "Failed to queue up qtds\n");
++		return -EBUSY;
++	}
++
++	return 0;
++}
++
++#endif /* CONFIG_USB_EHCI_EHSET */
++
++
+ /*-------------------------------------------------------------------------*/
+ 
+ 
+@@ -626,6 +850,9 @@
+ ) {
+ 	struct ehci_hcd	*ehci = hcd_to_ehci (hcd);
+ 	int		ports = HCS_N_PORTS (ehci->hcs_params);
++#ifdef CONFIG_USB_EHCI_EHSET
++	unsigned        port_num = wIndex & 0xFF;
++#endif
+ 	u32 __iomem	*status_reg = &ehci->regs->port_status[
+ 				(wIndex & 0xff) - 1];
+ 	u32 __iomem	*hostpc_reg = NULL;
+@@ -987,14 +1214,80 @@
+ 		 * about the EHCI-specific stuff.
+ 		 */
+ 		case USB_PORT_FEAT_TEST:
+-			if (!selector || selector > 5)
+-				goto error;
++			/*ehci_info(ehci, "USB_PORT_FEAT_TEST: running test %x "
++				"on port %d\n", selector, port_num);*/
++			switch (selector) {
++			case USB_PORT_TEST_J:
++			case USB_PORT_TEST_K:
++			case USB_PORT_TEST_SE0_NAK:
++			case USB_PORT_TEST_PACKET:
++			case USB_PORT_TEST_FORCE_ENABLE:
+ 			ehci_quiesce(ehci);
+ 			ehci_halt(ehci);
+ 			temp |= selector << 16;
+ 			ehci_writel(ehci, temp, status_reg);
+ 			break;
++		case (EHSET_HS_HOST_PORT_SUSPEND_RESUME&0xFF):
++			{
++				spin_unlock_irqrestore (&ehci->lock, flags);
++				ehci_info (ehci, "Testing SUSPEND RESUME\n");
++				set_current_state(TASK_UNINTERRUPTIBLE);
++				schedule_timeout(msecs_to_jiffies(15000));
++				ehci_info (ehci, "Suspend Root Hub\n");
++				ehci_bus_suspend (hcd);
++				set_current_state(TASK_UNINTERRUPTIBLE);
++				schedule_timeout(msecs_to_jiffies(15000));
++				ehci_info (ehci, "Resume Root Hub\n");
++				ehci_bus_resume (hcd);
++				spin_lock_irqsave (&ehci->lock, flags);
++				break;
++			}
++
++#ifdef CONFIG_USB_EHCI_EHSET
++			case (EHSET_SINGLE_STEP_GET_DEV_DESC&0xFF):
++			{
++				
++				ehci_info (ehci, "Testing EHSET_SINGLE_STEP_GET_DEV_DESC \n"
++						);
++
++				spin_unlock_irqrestore (&ehci->lock, flags);
++				if (single_step_get_device_descriptor(hcd, port_num)) {
++					spin_lock_irqsave (&ehci->lock, flags);
++					goto error;
++				}
++				spin_lock_irqsave (&ehci->lock, flags);
++
++				break;
++			}
++			case (EHSET_SINGLE_STEP_SET_FEATURE&0xFF):
++			{
+ 
++				ehci_info (ehci, "Testing SINGLE_STEP_SET_"
++						"FEATURE\n");
++
++				spin_unlock_irqrestore (&ehci->lock, flags);
++				if (single_step_set_feature(hcd, port_num)) {
++					spin_lock_irqsave (&ehci->lock, flags);
++					goto error;
++				}
++				spin_lock_irqsave (&ehci->lock, flags);
++				break;
++			}
++
++
++
++			case USB_PORT_TEST_SINGLE_STEP_SET_FEATURE:
++				spin_unlock_irqrestore (&ehci->lock, flags);
++				if (single_step_set_feature(hcd, port_num)) {
++					spin_lock_irqsave (&ehci->lock, flags);
++					goto error;
++				}
++				spin_lock_irqsave (&ehci->lock, flags);
++				break;
++#endif /* CONFIG_USB_EHCI_EHSET */
++		        default:
++			     goto error;
++			}
+ 		default:
+ 			goto error;
+ 		}
+diff -Naur linux-2.6.34/drivers/usb/host/ehci-q.c linux-2.6.34_Modified/drivers/usb/host/ehci-q.c
+--- linux-2.6.34/drivers/usb/host/ehci-q.c	2010-10-05 11:21:00.769516000 +0530
++++ linux-2.6.34_Modified/drivers/usb/host/ehci-q.c	2010-10-05 11:23:23.922917000 +0530
+@@ -289,6 +289,11 @@
+ 		urb->actual_length, urb->transfer_buffer_length);
+ #endif
+ 
++#ifdef CONFIG_USB_EHCI_EHSET
++	if (likely (urb->transfer_flags == URB_HCD_DRIVER_TEST))
++		return;
++#endif
++
+ 	/* complete() can reenter this HCD */
+ 	usb_hcd_unlink_urb_from_ep(ehci_to_hcd(ehci), urb);
+ 	spin_unlock (&ehci->lock);
+diff -Naur linux-2.6.34/drivers/usb/host/Kconfig linux-2.6.34_Modified/drivers/usb/host/Kconfig
+--- linux-2.6.34/drivers/usb/host/Kconfig	2010-10-05 11:21:00.772510000 +0530
++++ linux-2.6.34_Modified/drivers/usb/host/Kconfig	2010-10-05 11:23:23.924917000 +0530
+@@ -58,6 +58,19 @@
+ 
+ 	  To compile this driver as a module, choose M here: the
+ 	  module will be called ehci-hcd.
++config USB_EHCI_EHSET
++	bool "Embedded High-speed Host Electrical Test Support (EXPERIMENTAL)"
++	depends on USB_EHCI_HCD && EXPERIMENTAL
++	---help---
++	  This option is only used if you are developing firmware for
++	  an embedded device with a Hi-speed USB Host or OTG port.
++
++	  If you say Y here, software support for the Embedded High-speed
++	  Host Electrical Tests will be added to the EHCI driver. This is
++	  one of the tests performed during High-speed USB Host certification
++	  testing.
++
++	  If you are at all unsure then say N here.
+ 
+ config USB_EHCI_ROOT_HUB_TT
+ 	bool "Root Hub Transaction Translators"
+diff -Naur linux-2.6.34/include/linux/usb.h linux-2.6.34_Modified/include/linux/usb.h
+--- linux-2.6.34/include/linux/usb.h	2010-05-17 02:47:36.000000000 +0530
++++ linux-2.6.34_Modified/include/linux/usb.h	2010-10-05 11:23:23.928914000 +0530
+@@ -966,6 +966,7 @@
+ #define URB_FREE_BUFFER		0x0100	/* Free transfer buffer with the URB */
+ 
+ #define URB_DIR_IN		0x0200	/* Transfer from device to host */
++#define URB_HCD_DRIVER_TEST	0xFFFF  /* Do NOT hand back or free this URB */
+ #define URB_DIR_OUT		0
+ #define URB_DIR_MASK		URB_DIR_IN
+ 

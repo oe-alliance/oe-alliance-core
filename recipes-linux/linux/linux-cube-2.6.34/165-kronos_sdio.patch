@@ -1,0 +1,194 @@
+diff -Naupr linux-2.6.34.orig/arch/arm/mach-kronos/include/mach/gcs.h linux-2.6.34/arch/arm/mach-kronos/include/mach/gcs.h
+--- linux-2.6.34.orig/arch/arm/mach-kronos/include/mach/gcs.h	2011-05-26 16:18:05.709423000 +0530
++++ linux-2.6.34/arch/arm/mach-kronos/include/mach/gcs.h	2011-05-26 16:20:07.786548000 +0530
+@@ -41,21 +41,10 @@
+ /* GCS Mode Register */
+ #define APOLLO_GCS_MODE_REG              (APOLLO_GCS_CFG_BASE + 0x0)
+ #define APOLLO_GCS_MODE_PCI_ISA_MODE                        (1UL<<0)
+-#define APOLLO_GCS_MODE_SDIO_MUX                            (1UL<<1)
+-#define APOLLO_GCS_MODE_SDIO_FORCE                          (1UL<<2)
+-
+-/* GCS SDIO Chip Select Route */
+-#define APOLLO_GCS_SDIO_CS_ROUTE        (APOLLO_GCS_CFG_BASE + 0x60)
+ 
+ /* GCS Clock Mux Register */
+ #define APOLLO_GCS_CLOCK_MUX            (APOLLO_GCS_CFG_BASE + 0x64)
+ #define APOLLO_GCS_CLOCK_MUX_EN                             (1UL<<0)
+ 
+-/* GCS SDIO Clock Mux Register */
+-#define APOLLO_GCS_SDIO_CLOCK_MUX       (APOLLO_GCS_CFG_BASE + 0x68)
+-#define APOLLO_GCS_SDIO_CLOCK_MUX_EN                        (1UL<<0)
+-
+-#define APOLLO_GCS_SDIO_HPROT           (APOLLO_GCS_CFG_BASE + 0x6c)
+-
+ #endif /* _GCS_H_ */
+ 
+diff -Naupr linux-2.6.34.orig/arch/arm/mach-kronos/include/mach/nx_sdiomc_dev.h linux-2.6.34/arch/arm/mach-kronos/include/mach/nx_sdiomc_dev.h
+--- linux-2.6.34.orig/arch/arm/mach-kronos/include/mach/nx_sdiomc_dev.h	2011-05-26 16:18:05.730428000 +0530
++++ linux-2.6.34/arch/arm/mach-kronos/include/mach/nx_sdiomc_dev.h	2011-05-26 16:20:07.787550000 +0530
+@@ -37,7 +37,7 @@
+ #include <mach/pnx8492.h>
+ #include <mach/irqs.h>
+ 
+-#define APOLLO_SDIOMC_BASE_PHYS  (ARM_A9_HOST_MMIO_BASE + 0x35000)
++#define APOLLO_SDIOMC_BASE_PHYS  (ARM_A9_HOST_MMIO_BASE + 0x6F000)
+ #define APOLLO_SDIOMC_BASE (APOLLO_SDIOMC_BASE_PHYS)  
+ #define APOLLO_SDIOMC_LEN  (0x1000)
+ 
+diff -Naupr linux-2.6.34.orig/arch/arm/mach-kronos/nx_sdiomc_dev.c linux-2.6.34/arch/arm/mach-kronos/nx_sdiomc_dev.c
+--- linux-2.6.34.orig/arch/arm/mach-kronos/nx_sdiomc_dev.c	2011-05-26 16:18:05.788428000 +0530
++++ linux-2.6.34/arch/arm/mach-kronos/nx_sdiomc_dev.c	2011-05-26 16:20:07.789555000 +0530
+@@ -75,61 +75,13 @@ static void __init apollo_sdiomc_pin_mux
+    unsigned int val;
+ 
+    /* Determine the pin mux setting based on Kernel Config options */
++   
++   /* Setup the Alt Reg 0 for SDIO Card Detect */
++   val = readl(0xE06BB140);
++   val |= 0x48800020 ;
++   writel(val, 0xE06BB140);
+ 
+-#ifdef CONFIG_MMC_SDHCI_NX_SDIOMC_ON_IO_BUS
+-   /* Setup the GCS */
+-   val = APOLLO_GCS_MODE_SDIO_FORCE;
+-   writel(val, APOLLO_GCS_MODE_REG);
+-
+-   /* Setup the Alt Reg 0 for SDIO pin mux */
+-   val = readl(0xE06EA140);
+-   val |= 0x00000004;
+-   writel(val, 0xE06EA140);
+-
+-   /* Setup the SDIO CS to external */
+-   val = 0x1;
+-   writel( val, APOLLO_GCS_SDIO_CS_ROUTE);
+-
+-   /* Setup the SDIO clock source */
+-   val = APOLLO_GCS_CLOCK_MUX_EN;
+-   writel( val, APOLLO_GCS_SDIO_CLOCK_MUX);
+-
+-#else
+-   /* Setup the GCS */
+-   val = APOLLO_GCS_MODE_SDIO_MUX;
+-   writel(val, APOLLO_GCS_MODE_REG);
+-
+-   /* Setup the Alt Reg 0 for SDIO pin mux */
+-   val = readl(0xE06EA140);
+-   val |= 0x00000020;
+-   writel(val, 0xE06EA140);
+-
+-   /* Setup the GPIO PIN MUX 5 for SDIO */
+-   /* Clear rgmii1 - txer, txen, txd3, txd2, txd1, txd0, txck, rxer, rxdv*/
+-   val = readl(0xE06EA114);
+-   val &= ~0x00790036;
+-   writel(val, 0xE06EA114);
+-#endif
+-
+-   /* Setup the Alt Reg 1 for SDIO Card Detect */
+-   val = readl(0xE06EA144);
+-#ifdef CONFIG_MMC_SDHCI_NX_SDIOMC_CRDETECT_ON_SGPIO3
+-   val |= 0x08000000;
+-#else
+-   val &= ~0x08000000;
+-#endif
+-#ifdef CONFIG_MMC_SDHCI_NX_SDIOMC_CRLED_ON_SGPIO4
+-   val |= 0x10000000;
+-#else
+-   val &= ~0x10000000;
+-#endif
+-#ifdef CONFIG_MMC_SDHCI_NX_SDIOMC_CRDWP_ON_SGPIO5
+-   val |= 0x20000000;
+-#else
+-   val &= ~0x20000000;
+-#endif
+-   writel(val, 0xE06EA144);
+-
++  /* TODO : Determine the value for other Mux setting */
+ }
+ 
+ static int __init apollo_sdiomc_init(void)
+diff -Naupr linux-2.6.34.orig/drivers/mmc/host/Kconfig linux-2.6.34/drivers/mmc/host/Kconfig
+--- linux-2.6.34.orig/drivers/mmc/host/Kconfig	2011-05-26 16:18:37.941835000 +0530
++++ linux-2.6.34/drivers/mmc/host/Kconfig	2011-05-26 16:21:12.982276000 +0530
+@@ -414,11 +414,11 @@ config SDH_BFIN_MISSING_CMD_PULLUP_WORKA
+ 	  If you say yes here SD-Cards may work on the EZkit.
+ 
+ config MMC_SDHCI_NX_SDIOMC
+-	tristate "SD/SDIO/MMC host controller support on APOLLO boards"
+-	depends on MMC_SDHCI && ARCH_APOLLO
++	tristate "SD/SDIO/MMC host controller support on APOLLO/KRONOS boards"
++	depends on MMC_SDHCI && ( ARCH_APOLLO || ARCH_KRONOS )
+ 	default y
+ 	help
+-	    This selects the NXP SD/SDIO/MMC host controller IP_3413 found in APOLLO
++	    This selects the NXP SD/SDIO/MMC host controller IP_3413 found in APOLLO/KRONOS
+ 	    boards.
+ 	    If you have a controller with this interface, say Y or M here.
+ 	    If unsure, say N.
+@@ -428,7 +428,7 @@ config MMC_SDHCI_NX_SDIOMC
+ choice
+         prompt "Select SDIO slot interface - IO Bus or RGMII"
+         default MMC_SDHCI_NX_SDIOMC_ON_IO_BUS
+-        depends on MMC_SDHCI_NX_SDIOMC
++        depends on MMC_SDHCI_NX_SDIOMC && ARCH_APOLLO
+         help
+                 This option allows to select between IO Bus or RGMII interface for SDIO Slot.
+ 
+@@ -447,7 +447,7 @@ endchoice
+ 
+ choice
+ 	prompt "Select SDIO Card Detect connection - SGPIO3 or PIO181"
+-	depends on MMC_SDHCI_NX_SDIOMC
++	depends on MMC_SDHCI_NX_SDIOMC && ARCH_APOLLO
+ 	default MMC_SDHCI_NX_SDIOMC_CRDETECT_ON_PIO181
+ 	help
+ 	    Select SDIO Card Detect connection - SGPIO3 or PIO181.
+@@ -466,7 +466,7 @@ endchoice
+ 
+ choice
+ 	prompt "Select SDIO Card LED connection - SGPIO4 or PIO161"
+-	depends on MMC_SDHCI_NX_SDIOMC
++	depends on MMC_SDHCI_NX_SDIOMC && ARCH_APOLLO
+ 	default MMC_SDHCI_NX_SDIOMC_CRLED_ON_PIO161
+ 	help
+ 	    Select SDIO Card LED connection - SGPIO4 or PIO161.
+@@ -485,7 +485,7 @@ endchoice
+ 
+ choice
+ 	prompt "Select SDIO Card Write Protect connection - SGPIO5 or PIO182"
+-	depends on MMC_SDHCI_NX_SDIOMC
++	depends on MMC_SDHCI_NX_SDIOMC && ARCH_APOLLO
+ 	default MMC_SDHCI_NX_SDIOMC_CRDWP_ON_PIO182
+ 	help
+ 	    Select SDIO Card Write Protect connection - SGPIO5 or PIO182.
+diff -Naupr linux-2.6.34.orig/drivers/mmc/host/sdhci_nx_sdiomc.c linux-2.6.34/drivers/mmc/host/sdhci_nx_sdiomc.c
+--- linux-2.6.34.orig/drivers/mmc/host/sdhci_nx_sdiomc.c	2011-05-26 16:18:38.055843000 +0530
++++ linux-2.6.34/drivers/mmc/host/sdhci_nx_sdiomc.c	2011-05-26 16:20:07.795548000 +0530
+@@ -42,6 +42,8 @@
+ 
+ #define MAX_SLOTS			8
+ #define NX_SDIOMC_VENDOR_REVISION (0x75)
++#define NX_SDIOMC_VENDOR_REVISION_1 (0x90)
++#define NX_SDIOMC_VENDOR_REVISION_2 (0x96)
+ 
+ struct nx_sdiomc_slot;
+ struct nx_sdiomc_chip;
+@@ -245,7 +247,7 @@ static int __init nx_sdiomc_probe(struct
+   int num_slots;
+   int irq;
+   int i, ret = 0;
+-  u16 rev;
++  u16 rev, rev_no;
+ 
+   if (pdata == NULL) {
+     dev_err(&pdev->dev, "platform data missing\n");
+@@ -271,8 +273,9 @@ static int __init nx_sdiomc_probe(struct
+    * Now detect the IP whether it contains proper vendor id or not
+    */
+   rev = readw(ioaddr + SDHCI_HOST_VERSION);
++  rev_no = (( rev & SDHCI_VENDOR_VER_MASK ) >> SDHCI_VENDOR_VER_SHIFT ); 
+ 
+-  if( ( ( rev & SDHCI_VENDOR_VER_MASK ) >> SDHCI_VENDOR_VER_SHIFT ) != NX_SDIOMC_VENDOR_REVISION ) {
++  if( ( rev_no  != NX_SDIOMC_VENDOR_REVISION_2 ) || ( rev_no  != NX_SDIOMC_VENDOR_REVISION_1 ) || ( rev_no  != NX_SDIOMC_VENDOR_REVISION ) ) {
+     ret = -ENXIO;
+     goto _unmap;
+   }

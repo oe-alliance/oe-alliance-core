@@ -1,0 +1,30 @@
+diff -Naur linux-2.6.34/arch/arm/mach-krome/krome.c linux-2.6.34_mod/arch/arm/mach-krome/krome.c
+--- linux-2.6.34/arch/arm/mach-krome/krome.c	2012-08-21 12:48:26.141652000 +0530
++++ linux-2.6.34_mod/arch/arm/mach-krome/krome.c	2012-08-21 12:45:57.755719000 +0530
+@@ -147,11 +147,11 @@
+ 	unsigned long freq =  APOLLO_PERIPHERALS_FREQ;
+ 
+ 	printk(KERN_INFO "Initializing Cortex A9 Global Timer at Vir:0x%08X = Phy:0x%08X,"
+-					 " using Irq:%i, at Freq:%i\n",
++					 " using Irq:%i, at Freq:%lu MHz\n",
+ 					(unsigned int)vaddr,
+ 					(unsigned int)paddr,
+ 					(unsigned int)irq,
+-					(unsigned int)freq);
++					(freq/1000)/1000);
+ 
+ 	apollo_global_timer_init(vaddr, irq, freq);
+ }
+diff -Naur linux-2.6.34/arch/arm/mach-krome/pll.c linux-2.6.34_mod/arch/arm/mach-krome/pll.c
+--- linux-2.6.34/arch/arm/mach-krome/pll.c	2012-08-21 12:48:26.063746000 +0530
++++ linux-2.6.34_mod/arch/arm/mach-krome/pll.c	2012-08-21 12:46:31.252968000 +0530
+@@ -82,6 +82,9 @@
+        */
+       uFreq = (((CRYSTAL_FREQUENCY)/(uPreDiv * uPostDiv)) * uFeedbackDiv);
+    }
++
++   printk(KERN_INFO "Cortex A9 frequency at %lu MHz\n", (uFreq/1000)/1000);
++
+    return uFreq;
+ }
+ 

@@ -1,0 +1,240 @@
+diff -Naurp linux-2.6.34_Org/arch/arm/mach-krome/include/mach/memory.h linux-2.6.34/arch/arm/mach-krome/include/mach/memory.h
+--- linux-2.6.34_Org/arch/arm/mach-krome/include/mach/memory.h	2012-06-20 14:24:41.774077000 +0530
++++ linux-2.6.34/arch/arm/mach-krome/include/mach/memory.h	2012-06-20 14:44:06.621797000 +0530
+@@ -18,27 +18,6 @@
+ #ifndef __ASM_ARCH_MEMORY_H
+ #define __ASM_ARCH_MEMORY_H
+ 
+-/* PCI Direct Mappings */
+-#define APOLLO_PCI_MEM_BASE_0_LO 0xA0000000
+-#define APOLLO_PCI_MEM_BASE_0_HI 0xBFDFFFFF
+-#define APOLLO_PCI_MEM_BASE_1_LO 0xBFE00000
+-#define APOLLO_PCI_MEM_BASE_1_HI 0xBFFFFFFF
+-
+-#define APOLLO_PCI_MEM_BASE_0    APOLLO_PCI_MEM_BASE_0_LO
+-#define APOLLO_PCI_MEM_BASE_1    APOLLO_PCI_MEM_BASE_1_LO
+-
+-#define APOLLO_PCI_MEM_BASE_0_SIZE  (APOLLO_PCI_MEM_BASE_0_HI - APOLLO_PCI_MEM_BASE_0_LO)
+-#define APOLLO_PCI_MEM_BASE_1_SIZE  (APOLLO_PCI_MEM_BASE_1_HI - APOLLO_PCI_MEM_BASE_1_LO)
+-
+-#if 0
+-/* Sizes of above maps */
+-#define APOLLO_PCIMEM			0x20000000
+-#define APOLLO_PCIMEM_SIZE		0x10000000	/* 256Mb */
+-
+-#define APOLLO_PCIIO			0x30000000
+-#define APOLLO_PCIIO_SIZE		0x00100000
+-#endif
+-
+ /*
+  * Physical DRAM offset.
+  */
+@@ -47,42 +26,31 @@
+ /*
+  * Sparsemem definitions, only valid for high PHYS_OFFSET.
+  *
+- * Most of our boards have 512MB or 256M of RAM. There are 2 banks at 0 and
+- * 0x20000000. The memory exists as 256/128M at 0 and 256/128 at  
+- * 0x20000000.
+- *
+- * The macros below define a section size of 512MB and a non-linear virtual to
++ * The macros below define a section size of 1024MB and a linear virtual to
+  * physical mapping:
+  *
+  * 0x00000000 -> PAGE_OFFSET
+- * 0x20000000 -> PAGE_OFFSET + 0x10000000
+  */
+ #ifdef CONFIG_SPARSEMEM
+ 
+ #define MAX_PHYSMEM_BITS    32 /* The top bit is set for virtual space so
+                                   you need all 32-bits for an address */
+ 
+-#define SECTION_SIZE_BITS   28 /* log2(256M) = 28 */
++#define SECTION_SIZE_BITS   30 /* log2(1024M) = 30 */
+ 
+ #define __phys_to_virt(phys) ({                                 \
+         unsigned long virt = 0;                                 \
+-        if (((phys) >= 0x20000000UL))                           \
+-                virt = (phys) - 0x10000000UL + PAGE_OFFSET;     \
+-        else                                                    \
+-                virt = (phys) + PAGE_OFFSET;                    \
++        virt = (phys) + PAGE_OFFSET;                            \
+         virt;                                                   \
+ })
+ 
+ 
+ #define __virt_to_phys(virt) ({                                 \
+         unsigned long phys = 0;                                 \
+-        if (((virt) >= PAGE_OFFSET + 0x10000000UL))             \
+-                phys = (virt) - PAGE_OFFSET + 0x10000000UL;     \
+-        else if ((virt) >= PAGE_OFFSET)                         \
++        if ((virt) >= PAGE_OFFSET)                              \
+                 phys = (virt) - PAGE_OFFSET;                    \
+         phys;                                                   \
+ })
+ 
+ #endif
+-
+ #endif
+diff -Naurp linux-2.6.34_Org/arch/arm/mach-krome/include/mach/vmalloc.h linux-2.6.34/arch/arm/mach-krome/include/mach/vmalloc.h
+--- linux-2.6.34_Org/arch/arm/mach-krome/include/mach/vmalloc.h	2012-06-20 14:24:41.796072000 +0530
++++ linux-2.6.34/arch/arm/mach-krome/include/mach/vmalloc.h	2012-06-20 14:43:20.141529000 +0530
+@@ -20,18 +20,13 @@
+ #define __ARCH_MACH_VMALLOC_H
+ 
+ #ifdef CONFIG_VMSPLIT_3G
+-#ifdef CONFIG_ARCH_SPARSEMEM_ENABLE
+ #define VMALLOC_OFFSET		(8*1024*1024)
+-/* Hardcoding - real bad. We want the vmalloc space to start from 0xe800 0000 */
+ /* for 3g/1G split as we have MMIO till 0xe7ff ffff */
+-#define VMALLOC_START		((0xe8000000 + VMALLOC_OFFSET) & ~(VMALLOC_OFFSET-1))
+-#define VMALLOC_END		(PAGE_OFFSET + 0x3d000000)
+-#else
+-#error "3G/1G memory split is only supported with Sparsemem, pls fix the kernel config"
+-#endif
+-#else
++#define VMALLOC_START		((0xE8000000UL + VMALLOC_OFFSET) & ~(VMALLOC_OFFSET-1))
++#define VMALLOC_END		    0xFEE00000UL 
++#else  /* CONFIG_VMSPLIT_3G */
+ /* Increasing Vmalloc area till 2MB less MMIO start, earlier value is (PAGE_OFFSET + 0x50000000) */
+-#define VMALLOC_END		0xDFE00000UL
++#define VMALLOC_END			0xDFE00000UL
+ #endif
+ 
+ #endif
+diff -Naurp linux-2.6.34_Org/arch/arm/mach-kronos/include/mach/memory.h linux-2.6.34/arch/arm/mach-kronos/include/mach/memory.h
+--- linux-2.6.34_Org/arch/arm/mach-kronos/include/mach/memory.h	2012-06-20 14:24:41.622079000 +0530
++++ linux-2.6.34/arch/arm/mach-kronos/include/mach/memory.h	2012-06-20 14:33:38.388586000 +0530
+@@ -18,27 +18,6 @@
+ #ifndef __ASM_ARCH_MEMORY_H
+ #define __ASM_ARCH_MEMORY_H
+ 
+-/* PCI Direct Mappings */
+-#define APOLLO_PCI_MEM_BASE_0_LO 0xA0000000
+-#define APOLLO_PCI_MEM_BASE_0_HI 0xBFDFFFFF
+-#define APOLLO_PCI_MEM_BASE_1_LO 0xBFE00000
+-#define APOLLO_PCI_MEM_BASE_1_HI 0xBFFFFFFF
+-
+-#define APOLLO_PCI_MEM_BASE_0    APOLLO_PCI_MEM_BASE_0_LO
+-#define APOLLO_PCI_MEM_BASE_1    APOLLO_PCI_MEM_BASE_1_LO
+-
+-#define APOLLO_PCI_MEM_BASE_0_SIZE  (APOLLO_PCI_MEM_BASE_0_HI - APOLLO_PCI_MEM_BASE_0_LO)
+-#define APOLLO_PCI_MEM_BASE_1_SIZE  (APOLLO_PCI_MEM_BASE_1_HI - APOLLO_PCI_MEM_BASE_1_LO)
+-
+-#if 0
+-/* Sizes of above maps */
+-#define APOLLO_PCIMEM			0x20000000
+-#define APOLLO_PCIMEM_SIZE		0x10000000	/* 256Mb */
+-
+-#define APOLLO_PCIIO			0x30000000
+-#define APOLLO_PCIIO_SIZE		0x00100000
+-#endif
+-
+ /*
+  * Physical DRAM offset.
+  */
+@@ -47,42 +26,31 @@
+ /*
+  * Sparsemem definitions, only valid for high PHYS_OFFSET.
+  *
+- * Most of our boards have 512MB or 256M of RAM. There are 2 banks at 0 and
+- * 0x20000000. The memory exists as 256/128M at 0 and 256/128 at  
+- * 0x20000000.
+- *
+- * The macros below define a section size of 512MB and a non-linear virtual to
++ * The macros below define a section size of 1024MB and a linear virtual to
+  * physical mapping:
+  *
+  * 0x00000000 -> PAGE_OFFSET
+- * 0x20000000 -> PAGE_OFFSET + 0x10000000
+  */
+ #ifdef CONFIG_SPARSEMEM
+ 
+ #define MAX_PHYSMEM_BITS    32 /* The top bit is set for virtual space so
+                                   you need all 32-bits for an address */
+ 
+-#define SECTION_SIZE_BITS   28 /* log2(256M) = 28 */
++#define SECTION_SIZE_BITS   30 /* log2(1024M) = 30 */
+ 
+ #define __phys_to_virt(phys) ({                                 \
+         unsigned long virt = 0;                                 \
+-        if (((phys) >= 0x20000000UL))                           \
+-                virt = (phys) - 0x10000000UL + PAGE_OFFSET;     \
+-        else                                                    \
+-                virt = (phys) + PAGE_OFFSET;                    \
++        virt = (phys) + PAGE_OFFSET;                            \
+         virt;                                                   \
+ })
+ 
+ 
+ #define __virt_to_phys(virt) ({                                 \
+         unsigned long phys = 0;                                 \
+-        if (((virt) >= PAGE_OFFSET + 0x10000000UL))             \
+-                phys = (virt) - PAGE_OFFSET + 0x10000000UL;     \
+-        else if ((virt) >= PAGE_OFFSET)                         \
++        if ((virt) >= PAGE_OFFSET)                              \
+                 phys = (virt) - PAGE_OFFSET;                    \
+         phys;                                                   \
+ })
+ 
+ #endif
+-
+ #endif
+diff -Naurp linux-2.6.34_Org/arch/arm/mach-kronos/include/mach/vmalloc.h linux-2.6.34/arch/arm/mach-kronos/include/mach/vmalloc.h
+--- linux-2.6.34_Org/arch/arm/mach-kronos/include/mach/vmalloc.h	2012-06-20 14:24:41.644076000 +0530
++++ linux-2.6.34/arch/arm/mach-kronos/include/mach/vmalloc.h	2012-06-20 14:45:10.237609000 +0530
+@@ -20,18 +20,13 @@
+ #define __ARCH_MACH_VMALLOC_H
+ 
+ #ifdef CONFIG_VMSPLIT_3G
+-#ifdef CONFIG_ARCH_SPARSEMEM_ENABLE
+ #define VMALLOC_OFFSET		(8*1024*1024)
+-/* Hardcoding - real bad. We want the vmalloc space to start from 0xe800 0000 */
+ /* for 3g/1G split as we have MMIO till 0xe7ff ffff */
+-#define VMALLOC_START		((0xe8000000 + VMALLOC_OFFSET) & ~(VMALLOC_OFFSET-1))
+-#define VMALLOC_END		(PAGE_OFFSET + 0x3d000000)
+-#else
+-#error "3G/1G memory split is only supported with Sparsemem, pls fix the kernel config"
+-#endif
+-#else
++#define VMALLOC_START		((0xE8000000UL + VMALLOC_OFFSET) & ~(VMALLOC_OFFSET-1))
++#define VMALLOC_END		    0xFEE00000UL 
++#else  /* CONFIG_VMSPLIT_3G */
+ /* Increasing Vmalloc area till 2MB less MMIO start, earlier value is (PAGE_OFFSET + 0x50000000) */
+-#define VMALLOC_END		0xDFE00000UL
++#define VMALLOC_END			0xDFE00000UL
+ #endif
+ 
+ #endif
+diff -Naurp linux-2.6.34_Org/arch/arm/mm/mmu.c linux-2.6.34/arch/arm/mm/mmu.c
+--- linux-2.6.34_Org/arch/arm/mm/mmu.c	2012-06-20 14:24:40.182162000 +0530
++++ linux-2.6.34/arch/arm/mm/mmu.c	2012-06-20 15:42:18.342508000 +0530
+@@ -630,8 +630,14 @@ void __init create_mapping(struct map_de
+ 		return;
+ 	}
+ 
++#if (defined(CONFIG_ARCH_APOLLO)||defined(CONFIG_ARCH_KRONOS)||defined(CONFIG_ARCH_KROME))\
++     && defined(CONFIG_VMSPLIT_3G)
++	if ((md->type == MT_DEVICE || md->type == MT_ROM) &&
++	    md->virtual >= PAGE_OFFSET && md->virtual < 0xE0000000) { 
++#else
+ 	if ((md->type == MT_DEVICE || md->type == MT_ROM) &&
+ 	    md->virtual >= PAGE_OFFSET && md->virtual < VMALLOC_END) {
++#endif
+ 		printk(KERN_WARNING "BUG: mapping for 0x%08llx at 0x%08lx "
+ 		       "overlaps vmalloc space\n",
+ 		       __pfn_to_phys((u64)md->pfn), md->virtual);
+@@ -709,7 +715,13 @@ static int __init early_vmalloc(char *ar
+ }
+ early_param("vmalloc", early_vmalloc);
+ 
++#if defined(CONFIG_HIGHMEM) && defined(CONFIG_VMSPLIT_3G) && \
++   (defined(CONFIG_ARCH_APOLLO)||defined(CONFIG_ARCH_KRONOS)||defined(CONFIG_ARCH_KROME))
++/* From 0xE0600000 MMIO region starts, so fixing VMALLOC_MIN 0xE0000000 */
++#define VMALLOC_MIN	(void *)(0xE0000000)
++#else
+ #define VMALLOC_MIN	(void *)(VMALLOC_END - vmalloc_reserve)
++#endif
+ 
+ static void __init sanity_check_meminfo(void)
+ {

@@ -1,0 +1,383 @@
+diff -Naurp linux-2.6.34_orig/drivers/mtd/nand/nx_nand/nx_nand.c linux-2.6.34/drivers/mtd/nand/nx_nand/nx_nand.c
+--- linux-2.6.34_orig/drivers/mtd/nand/nx_nand/nx_nand.c	2012-06-14 15:36:56.314343000 +0530
++++ linux-2.6.34/drivers/mtd/nand/nx_nand/nx_nand.c	2012-06-14 16:11:34.264177000 +0530
+@@ -347,8 +347,8 @@ static inline void nx_nand_dmac_init(str
+             stgt[i].src_brst = nx_dmac_128;
+             stgt[i].dst_brst = nx_dmac_128;
+          }
+-            stgt[i].src_width = nx_dmac_width_32;
+-            stgt[i].dst_width = nx_dmac_width_32;
++         stgt[i].src_width = nx_dmac_width_32;
++         stgt[i].dst_width = nx_dmac_width_32;
+       }
+ 
+       /* Read OOB area */
+@@ -380,11 +380,10 @@ static inline void nx_nand_dmac_init(str
+       }
+       stgt[i].src_width = nx_dmac_width_32;
+       stgt[i].dst_width = nx_dmac_width_32;
+-
+    } 
+    else { 
+       /* Write OOB area */
+-      i=0;  
++      i=0;
+       stgt[i].dst_addr = NX_NAND_AHB_BUF + NX_NAND_BLK_SIZE;     
+       stgt[i].src_addr = nc->dmabuf_phy + (nc->num_blks * nc->blk_size);
+       stgt[i].tfr_size = nc->mtd.oobsize >> 2;    
+@@ -415,7 +414,7 @@ static inline void nx_nand_dmac_init(str
+       stgt[i].dst_width = nx_dmac_width_32;
+ 
+       /* Write Main area */
+-      for(i=1; i< (nc->num_blks+1); i++) {
++      for(i=1; i < (nc->num_blks+1); i++) {
+          stgt[i].src_addr = nc->dmabuf_phy + ( (i-1) * nc->blk_size);
+          stgt[i].dst_addr = NX_NAND_AHB_BUF;
+          stgt[i].tfr_size = nc->blk_size >> 2;
+@@ -1277,6 +1276,180 @@ static int nx_nand_write_oob(struct mtd_
+    return status & NAND_STATUS_FAIL ? -EIO : 0;
+ }
+ 
++#if (defined (CONFIG_ARCH_KRONOS) || defined (CONFIG_ARCH_KROME))
++/**
++ * ESP Layout (Page Size > = 1K) :
++ *    Page Size         = 1 K
++ *    Sub page Size     = 512 Bytes
++ *    Oob Size          = 128 Bytes
++ *    ECC Level         = 32
++ *    Erased Page Thres = 16
++ *
++ * As per ESP layout 1K of uldr image data is physically 
++ * written in 2 pages of NAND flash
++ */
++
++/**
++ * nx_nand_read_uldr - Read requested page of uldr MTD part
++ * @mtd: MTD information structure
++ *
++ * Read requested page of uldr MTD part with ESP layout
++ */
++void nx_nand_read_uldr (struct mtd_info *mtd)
++{
++   struct nx_nand_ctrl *nc = container_of(mtd, struct nx_nand_ctrl, mtd);
++   tmhwEfmc_PageConfig_t page_cfg;
++   tmhwEfmc_DmaConfig_t dma_cfg;
++   nx_dmac_tfr_t req;
++   nx_dmac_stgt_t stgt[(SZ_1K/SZ_512)+1];
++   uint32_t intr=0;
++   uint16_t addr;
++   int status, chanid;
++
++   tmhwEfmc_FlashConfig_t pPrevConfig, pConfig;
++   tmErrorCode_t ret=0;
++   int prev_blk_size;
++   int prev_num_blks;
++   uint32_t prev_oobsize;
++
++   /* Memset FF's in DMA buffer */
++   memset(nc->dmabuf, 0xFF, mtd->writesize + mtd->oobsize);
++
++   /* Save current config */
++   ret = tmhwEfmc_GetFlashConfig(nc->unitid, nc->slotid, &pPrevConfig);
++   pConfig = pPrevConfig;
++   pConfig.pageSize = tmhwEfmc_1024Byte; /* page_size = 1024 Bytes  */
++   pConfig.subpageSize = tmhwEfmc_SubPage512Byte; /* sub_page_size = 512 Bytes */
++   pConfig.oobSize = 128; /* oob_size = 128 B */
++   pConfig.eccLevel = 32; /* ecc_level = 32 */
++   pConfig.erasedPageThres = 16; /* erased_page_threshold = ecc_level/2 */
++   ret = tmhwEfmc_SetFlashConfig(nc->unitid,nc->slotid, &pConfig);
++
++   prev_num_blks = nc->num_blks;
++   nc->num_blks = (SZ_1K/SZ_512);
++   prev_blk_size = nc->blk_size;
++   nc->blk_size = SZ_512;
++   prev_oobsize = nc->mtd.oobsize;
++   nc->mtd.oobsize = 128;
++
++   nc->cur_col = 0;
++
++   /* Start the DMAC */
++   nx_nand_dmac_init(nc, 1, &req, stgt);
++   
++   /* Configure Flow control */
++   dma_cfg.enableM2PDma = tmhwEfmc_Disable;
++   dma_cfg.enableP2MDma = tmhwEfmc_Enable;
++   tmhwEfmc_SetDmaConfig(nc->unitid, &dma_cfg);
++   
++   /* Enable the SEQ READ PAGE DONE interrupt */
++   intr = NX_NAND_INT_SEQ_READ;
++   tmhwEfmc_IntClear(nc->unitid, intr);
++   tmhwEfmc_IntEnable(nc->unitid, intr);
++   
++   /* Page operation */
++   page_cfg.includeOOB = true;
++   page_cfg.operType = tmhwEfmc_PageRead;
++   if(nc->aes) {
++      page_cfg.includeAES = true;
++   }
++   else {
++      page_cfg.includeAES = false;
++   }
++   if(nc->hwecc) {
++      page_cfg.includeECC = true;
++   }
++   else {
++      page_cfg.includeECC = false;
++   }
++   tmhwEfmc_InitPageOp(nc->unitid, &page_cfg);
++   
++   chanid = nx_dmac_tfr(&req);
++   if(chanid < 0) {
++      printk(KERN_ERR "nx_nand: NAND_READ0 DMAC config \r\n"); 
++      goto err;
++   }
++   
++   /* Send address cycles & command */
++   nc->done = false;
++   nx_nand_cmd_addr(nc, 1, NAND_CMD_READ0, 0);
++   
++   addr = nc->cur_col & NX_NAND_SP_ADDR_MASK;
++   nx_nand_cmd_addr(nc, 0, addr, 0);
++   
++   addr = (nc->cur_col >> 8) & NX_NAND_SP_ADDR_MASK;
++   nx_nand_cmd_addr(nc, 0, addr, 0);
++   
++   addr = nc->cur_page & NX_NAND_SP_ADDR_MASK;
++   nx_nand_cmd_addr(nc, 0, addr, 0);
++   
++   addr = (nc->cur_page >> 8) & NX_NAND_SP_ADDR_MASK;
++   nx_nand_cmd_addr(nc, 0, addr, 0);
++   
++   if (nc->chip.chipsize >= (1 << 28)) {
++      addr = (nc->cur_page >> 16) & NX_NAND_SP_ADDR_MASK;
++      nx_nand_cmd_addr(nc, 0, addr, 0); 
++   }
++   
++   nx_nand_cmd_addr(nc, 1, NAND_CMD_READSTART, 1);
++   
++   /* Wait for the completion */ 
++   wait_event(nc->nand_queue, (nc->done != false));
++   
++   /* Complete DMAC transfer */
++   status = nx_dmac_tfr_comp(chanid);
++   if(status) {
++      printk(KERN_ERR "nx_nand: NAND_READ0 DMAC complete\r\n");   
++      goto err;
++   }
++   
++   /* Disable interrupts */
++   tmhwEfmc_IntDisable(nc->unitid, intr);
++   
++   /* Disable Flow control */
++   dma_cfg.enableM2PDma = tmhwEfmc_Disable;
++   dma_cfg.enableP2MDma = tmhwEfmc_Disable;
++   tmhwEfmc_SetDmaConfig(nc->unitid, &dma_cfg);
++
++err:
++   /* Restore previos config */
++   ret = tmhwEfmc_SetFlashConfig(nc->unitid,nc->slotid, &pPrevConfig);
++   nc->num_blks = prev_num_blks;
++   nc->blk_size = prev_blk_size;
++   nc->mtd.oobsize = prev_oobsize;
++
++   return;
++}
++
++/**
++ * nx_nand_check_uldr_rw - Is this uldr MTD part ?
++ * @mtd: MTD information structure
++ *
++ * Return true if page address falls in the uldr part
++ * Otherwise return false
++ */
++static inline bool nx_nand_check_uldr_rw (struct mtd_info *mtd)
++{
++   struct nx_nand_ctrl *nc = container_of(mtd, struct nx_nand_ctrl, mtd);
++   struct mtd_partition *part = nc->partinfo;
++
++   if (part) {
++      struct nand_chip *chip = mtd->priv;
++      uint64_t uldr_start, uldr_end;
++      int page_offset;
++
++      page_offset = (nc->cur_page << chip->page_shift);
++      uldr_start = part->offset;
++      uldr_end = (part->offset + part->size);
++
++      if (((page_offset >= uldr_start) && (page_offset < uldr_end)) &&
++            !strcmp(part->name, "uldr"))
++         return true;
++   }
++   return false;
++}
++#endif
++
+ /**
+  * nx_nand_command - Command function for small page chips
+  * @mtd: MTD information structure
+@@ -1289,18 +1462,18 @@ static int nx_nand_write_oob(struct mtd_
+ static void nx_nand_command(struct mtd_info *mtd, unsigned int cmd,
+    int column, int page_addr)
+ {
+-   tmhwEfmc_PageConfig_t   page_cfg;
++   struct nx_nand_ctrl *nc = container_of(mtd, struct nx_nand_ctrl, mtd);
++   tmhwEfmc_PageConfig_t page_cfg;
+    uint16_t addr;
+    uint32_t intr=0;
+    int i;
+-   struct nx_nand_ctrl *nc = container_of(mtd, struct nx_nand_ctrl, mtd);
+ 
+ #ifdef CONFIG_MTD_NX_NAND_DMAC 
+-   int   chanid;
+-   int   status;
++   nx_dmac_stgt_t stgt[(mtd->writesize/nc->blk_size)+1];
+    tmhwEfmc_DmaConfig_t dma_cfg;
+-   nx_dmac_tfr_t        req;
+-   nx_dmac_stgt_t       stgt[(mtd->writesize/nc->blk_size)+1];
++   nx_dmac_tfr_t req;
++   int chanid;
++   int status;
+ #endif
+ 
+    /* Store the command, colmn & page address */
+@@ -1628,18 +1801,18 @@ static void nx_nand_command(struct mtd_i
+ static void nx_nand_command_lp(struct mtd_info *mtd, unsigned int cmd,
+    int column, int page_addr)
+ {
+-   tmhwEfmc_PageConfig_t   page_cfg;
++   struct nx_nand_ctrl *nc = container_of(mtd, struct nx_nand_ctrl, mtd);
++   tmhwEfmc_PageConfig_t page_cfg;
+    uint16_t addr;
+    uint32_t intr=0;
+    int i;
+-   struct nx_nand_ctrl *nc = container_of(mtd, struct nx_nand_ctrl, mtd);
+ 
+ #ifdef CONFIG_MTD_NX_NAND_DMAC 
+-   int   status; 
+-   int   chanid;
++   nx_dmac_stgt_t stgt[(mtd->writesize/nc->blk_size)+1];
+    tmhwEfmc_DmaConfig_t dma_cfg;
+-   nx_dmac_tfr_t           req;
+-   nx_dmac_stgt_t       stgt[(mtd->writesize/nc->blk_size)+1];
++   nx_dmac_tfr_t req;
++   int status; 
++   int chanid;
+ #endif
+ 
+    /* Store the command, colmn & page address */
+@@ -1745,6 +1918,14 @@ static void nx_nand_command_lp(struct mt
+       case NAND_CMD_READ0:
+          nc->offset = column;
+ #ifdef CONFIG_MTD_NX_NAND_DMAC
++
++#if (defined (CONFIG_ARCH_KRONOS) || defined (CONFIG_ARCH_KROME))
++         if(nx_nand_check_uldr_rw(mtd)) {
++            nx_nand_read_uldr (mtd);
++            break;
++         }
++#endif
++
+          /* Start the DMAC */
+          nx_nand_dmac_init(nc, 1, &req, stgt);
+ 
+@@ -1821,7 +2002,6 @@ static void nx_nand_command_lp(struct mt
+          dma_cfg.enableM2PDma = tmhwEfmc_Disable;
+          dma_cfg.enableP2MDma = tmhwEfmc_Disable;
+          tmhwEfmc_SetDmaConfig(nc->unitid, &dma_cfg);
+-
+ #else
+          nc->blk_index = 0;
+ 
+diff -Naurp linux-2.6.34_orig/drivers/mtd/nand/nx_nand/tmhwEfmc/src/tmhwEfmc.c linux-2.6.34/drivers/mtd/nand/nx_nand/tmhwEfmc/src/tmhwEfmc.c
+--- linux-2.6.34_orig/drivers/mtd/nand/nx_nand/tmhwEfmc/src/tmhwEfmc.c	2012-06-14 15:36:55.548419000 +0530
++++ linux-2.6.34/drivers/mtd/nand/nx_nand/tmhwEfmc/src/tmhwEfmc.c	2012-06-14 16:20:51.946058000 +0530
+@@ -1598,17 +1598,17 @@ tmhwEfmc_GetCapabilities (
+ */
+ tmErrorCode_t
+ tmhwEfmc_GetFlashConfig(
+-    tmUnitSelect_t                  efmcUnitID,
+-    tmhwEfmc_DeviceNumber_t                           deviceNum,
+-    ptmhwEfmc_FlashConfig_t     pFlashConfig
++    tmUnitSelect_t          efmcUnitID,
++    tmhwEfmc_DeviceNumber_t deviceNum,
++    ptmhwEfmc_FlashConfig_t pFlashConfig
+ )
+ {
+-  UInt32              regs  = 0 ;
+-  UInt32                         regVal    = 0 ;
+-  
++  UInt32 regs   = 0 ;
++  UInt32 regVal = 0 ;
++
+   regs =  (UInt32) ( TMHW_EFMC_GET_BASE( efmcUnitID) + TMVH_EFMC_DEV_TYPE0_OFFSET +
+-                                   ( deviceNum * TMVH_EFMC_DEV_TYPE0_DIFF ) );
+-  
++                    ( deviceNum * TMVH_EFMC_DEV_TYPE0_DIFF ) );
++
+   TMVH_GEN_READ( regs, regVal );
+   if( ( regVal & TMVH_EFMC_DEV_TYPE0_CEN_DONT_MSK ) == 0 )
+   {
+@@ -1627,19 +1627,37 @@ tmhwEfmc_GetFlashConfig(
+     pFlashConfig->enableWrProtect = tmhwEfmc_Enable;
+   }
+   pFlashConfig->dataWidth = (tmhwEfmc_DataWidth_t) ( regVal & TMVH_EFMC_DEV_TYPE0_DATA_WIDTH_MSK ) ;
+-  pFlashConfig->pageSize = (tmhwEfmc_PageSize_t) ( regVal & TMVH_EFMC_DEV_TYPE0_PAGE_SIZE_MSK ) ;
+-  
++  pFlashConfig->pageSize = (tmhwEfmc_PageSize_t) 
++    ((regVal & TMVH_EFMC_DEV_TYPE0_PAGE_SIZE_MSK) >>
++                TMVH_EFMC_DEV_TYPE0_PAGE_SIZE_POS);
++
++#if (defined (CONFIG_ARCH_KRONOS) || defined (CONFIG_ARCH_KROME))
++  /* -- Kronos specific definitions starts -- */
++  pFlashConfig->subpageSize = (tmhwEfmc_SubPageSize_t) 
++    ((regVal & TMVH_EFMC_DEV_TYPE0_SUB_PAGE_SIZE_MSK) >> 
++                TMVH_EFMC_DEV_TYPE0_SUB_PAGE_SIZE_POS);
++  pFlashConfig->oobSize = (UInt16) 
++    ((regVal & TMVH_EFMC_DEV_TYPE0_OOB_SIZE_MSK) >> 
++                TMVH_EFMC_DEV_TYPE0_OOB_SIZE_POS);
++  pFlashConfig->eccLevel = (UInt8) 
++    ((regVal & TMVH_EFMC_DEV_TYPE0_ECC_LEVEL_MSK) >>
++                TMVH_EFMC_DEV_TYPE0_ECC_LEVEL_POS);
++  pFlashConfig->erasedPageThres = (UInt8) 
++    ((regVal & TMVH_EFMC_DEV_TYPE0_ERASED_PAGE_THRES_MSK) >>
++                TMVH_EFMC_DEV_TYPE0_ERASED_PAGE_THRES_POS);
++#endif
++
+   /* now read timing 0 parameters and assign appropriately */
+   regs =  (UInt32) ( TMHW_EFMC_GET_BASE( efmcUnitID) + TMVH_EFMC_DEV_TIMING0_OFFSET +
+-                                   ( deviceNum * TMVH_EFMC_DEV_TIMING0_DIFF ) );
++    ( deviceNum * TMVH_EFMC_DEV_TIMING0_DIFF ) );
+   TMVH_GEN_READ( regs, regVal );
+-  
++
+   pFlashConfig->devTiming.tWaitForRdy = (UInt8) ( regVal & TMVH_EFMC_DEV_TIMING0_TRR_MSK );
+   if( 0x00 == pFlashConfig->devTiming.tWaitForRdy )
+   {
+     pFlashConfig->devTiming.tWaitForRdy = (UInt8) (TMVH_EFMC_DEV_TIMING0_MAX_CYCLES) ;
+   }
+-  
++
+   /* please note that, 0x00 meaning 16 cycles, so when masking, if given is 16,then it will turn to be 0x00 which is correct */
+   pFlashConfig->devTiming.tAleHold = (UInt8) ( ( regVal & TMVH_EFMC_DEV_TIMING0_TALH_MSK ) >> TMVH_EFMC_DEV_TIMING0_TALH_POS );
+   if( 0x00 == pFlashConfig->devTiming.tAleHold )
+@@ -1671,16 +1689,16 @@ tmhwEfmc_GetFlashConfig(
+   {
+     pFlashConfig->devTiming.tCenSetup = (UInt8) (TMVH_EFMC_DEV_TIMING0_MAX_CYCLES) ;
+   }
+-  
++
+   /* configure the timing1 register */
+   regs =  (UInt32) ( TMHW_EFMC_GET_BASE( efmcUnitID) + TMVH_EFMC_DEV_TIMING1_OFFSET +
+-                                   ( deviceNum * TMVH_EFMC_DEV_TIMING1_DIFF ) );
+-  
++    ( deviceNum * TMVH_EFMC_DEV_TIMING1_DIFF ) );
++
+   TMVH_GEN_READ( regs, regVal );
+ 
+   pFlashConfig->devTiming.tRdDelay = (tmhwEfmc_RdyDelay_t) ( regVal & TMVH_EFMC_DEV_TIMING1_TDRD_MSK );
+   pFlashConfig->devTiming.tWaitForBusy = (UInt8) ( ( regVal & TMVH_EFMC_DEV_TIMING1_TWB_MSK ) >> TMVH_EFMC_DEV_TIMING1_TWB_POS );
+-  
++
+   if( 0x00 == pFlashConfig->devTiming.tWaitForBusy )
+   {
+     pFlashConfig->devTiming.tWaitForBusy = TMVH_EFMC_DEV_TIMING1_TWB_MAX_CYCLES;

@@ -1,0 +1,33 @@
+diff -Naur linux-2.6.34/drivers/mtd/sfc/nx_sfc.c linux-2.6.34_sfc/drivers/mtd/sfc/nx_sfc.c
+--- linux-2.6.34/drivers/mtd/sfc/nx_sfc.c	2010-09-29 16:31:13.798646000 +0530
++++ linux-2.6.34_sfc/drivers/mtd/sfc/nx_sfc.c	2010-09-29 15:37:52.849972000 +0530
+@@ -498,6 +498,7 @@
+ {
+ 	struct nx_sfc_mtd *flash = mtd_to_nx_sfc_mtd(mtd);
+ 	u32 addr,len;
++	uint32_t rem;
+ 
+ 	DEBUG(MTD_DEBUG_LEVEL2, " %s %s 0x%08x, len %lld\n",
+ 			 __func__, "at",
+@@ -506,10 +507,10 @@
+ 	/* sanity checks */
+ 	if (instr->addr + instr->len > flash->mtd.size)
+ 		return -EINVAL;
+-	if ((instr->addr % mtd->erasesize) != 0
+-			|| (instr->len % mtd->erasesize) != 0) {
++	
++	div_u64_rem(instr->len, mtd->erasesize, &rem);
++   if (rem)
+ 		return -EINVAL;
+-	}
+ 
+ 	addr = instr->addr;
+ 	len = instr->len;
+@@ -545,7 +546,6 @@
+ 
+ 	instr->state = MTD_ERASE_DONE;
+ 	mtd_erase_callback(instr);
+-
+ 	return 0;
+ }
+ 

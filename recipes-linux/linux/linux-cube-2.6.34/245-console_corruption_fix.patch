@@ -1,0 +1,32 @@
+diff -Naur linux-2.6.34_orig/drivers/serial/serial_core.c linux-2.6.34/drivers/serial/serial_core.c
+--- linux-2.6.34_orig/drivers/serial/serial_core.c	2013-01-04 12:07:15.837364000 +0530
++++ linux-2.6.34/drivers/serial/serial_core.c	2013-01-03 19:23:38.237538000 +0530
+@@ -2147,9 +2147,25 @@
+ 	 * Re-enable the console device after suspending.
+ 	 */
+ 	if (uart_console(uport)) {
+-		uart_change_pm(state, 0);
+-		uport->ops->set_termios(uport, &termios, NULL);
+-		console_start(uport->cons);
++
++                /*
++                 * First try to use the console cflag setting.
++                */
++                memset(&termios, 0, sizeof(struct ktermios));
++                termios.c_cflag = uport->cons->cflag;
++
++                /*
++                * If that's unset, use the tty termios setting.
++                */
++                if (port->tty && port->tty->termios && termios.c_cflag == 0)
++                    termios = *(port->tty->termios);
++
++                if (console_suspend_enabled)
++                   uart_change_pm(state, 0);
++                uport->ops->set_termios(uport, &termios, NULL);
++                if (console_suspend_enabled)
++                   console_start(uport->cons);
++
+ 	}
+ 
+ 	if (port->flags & ASYNC_SUSPENDED) {

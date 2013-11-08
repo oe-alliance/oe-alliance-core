@@ -1,0 +1,12 @@
+diff -Naurp linux-2.6.34.org/drivers/mtd/nand/nand_base.c linux-2.6.34/drivers/mtd/nand/nand_base.c
+--- linux-2.6.34.org/drivers/mtd/nand/nand_base.c	2011-05-11 15:16:56.000000000 -0500
++++ linux-2.6.34/drivers/mtd/nand/nand_base.c	2011-05-11 18:34:09.000000000 -0500
+@@ -2892,7 +2892,7 @@ static int nand_flash_detect_onfi(struct
+ 	mtd->writesize = le32_to_cpu(p->byte_per_page);
+ 	mtd->erasesize = le32_to_cpu(p->pages_per_block) * mtd->writesize;
+ 	mtd->oobsize = le16_to_cpu(p->spare_bytes_per_page);
+-	chip->chipsize = (uint64_t)le32_to_cpu(p->blocks_per_lun) * mtd->erasesize;
++	chip->chipsize = (uint64_t)le32_to_cpu(p->blocks_per_lun) * le32_to_cpu(p->lun_count) * mtd->erasesize;
+ 	busw = 0;
+ 	if (le16_to_cpu(p->features) & 1)
+ 		busw = NAND_BUSWIDTH_16;

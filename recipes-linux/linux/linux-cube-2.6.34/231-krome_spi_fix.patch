@@ -1,0 +1,152 @@
+diff -Naurp linux-2.6.34/arch/arm/mach-krome/nx_spi_dev.c linux-2.6.34_spi/arch/arm/mach-krome/nx_spi_dev.c
+--- linux-2.6.34/arch/arm/mach-krome/nx_spi_dev.c	2012-10-04 18:12:18.171309000 +0530
++++ linux-2.6.34_spi/arch/arm/mach-krome/nx_spi_dev.c	2012-10-04 17:17:20.681237000 +0530
+@@ -109,7 +109,7 @@ static struct nx_spi_controller_data nx_
+ 	.rx_int_threshold = 1,
+ 	.dma_tx_burst = 4,
+ 	.dma_rx_burst = 4,
+-	.spi_ip_clk = 50000000,
++	.spi_ip_clk = 100000000,
+ 	.txchan_num = 0,
+ 	.rxchan_num = 1,
+ };
+diff -Naurp linux-2.6.34/arch/arm/mach-kronos/nx_spi_dev.c linux-2.6.34_spi/arch/arm/mach-kronos/nx_spi_dev.c
+--- linux-2.6.34/arch/arm/mach-kronos/nx_spi_dev.c	2012-10-04 18:12:17.477320000 +0530
++++ linux-2.6.34_spi/arch/arm/mach-kronos/nx_spi_dev.c	2012-10-04 18:15:03.437588000 +0530
+@@ -109,7 +109,7 @@ static struct nx_spi_controller_data nx_
+ 	.rx_int_threshold = 1,
+ 	.dma_tx_burst = 4,
+ 	.dma_rx_burst = 4,
+-	.spi_ip_clk = 50000000,
++	.spi_ip_clk = 100000000,
+ 	.txchan_num = 0,
+ 	.rxchan_num = 1,
+ };
+diff -Naurp linux-2.6.34/drivers/spi/nx_spi.c linux-2.6.34_spi/drivers/spi/nx_spi.c
+--- linux-2.6.34/drivers/spi/nx_spi.c	2012-10-04 18:12:18.194309000 +0530
++++ linux-2.6.34_spi/drivers/spi/nx_spi.c	2012-10-04 18:21:29.102497000 +0530
+@@ -436,7 +436,8 @@ static int nxspi_prep_sg(struct scatterl
+ {
+     int nents = 1;
+     int index=0;
+-    struct spi_transfer *xfer = nxspi->current_transfer;
++    unsigned long flags;
++    struct spi_transfer *xfer = NULL; 
+ 
+     if ( nxspi->enhanced_ip )
+         nents = 2;
+@@ -457,6 +458,10 @@ static int nxspi_prep_sg(struct scatterl
+         index++;
+     }
+ 
++    spin_lock_irqsave(&nxspi->lock, flags); 
++
++    xfer = nxspi->current_transfer; 
++
+     /* use scratch buffer in case */
+     if ( xfer->tx_buf == NULL ){
+         xfer->tx_buf = nxspi->buffer;
+@@ -475,6 +480,7 @@ static int nxspi_prep_sg(struct scatterl
+         sg_set_buf(&(*sg_tx)[index], xfer->tx_buf, (xfer->len));
+         sg_set_buf(&(*sg_rx)[index], xfer->rx_buf, (xfer->len));
+     }
++    spin_unlock_irqrestore(&nxspi->lock, flags);
+ 
+     return 0;
+ }
+@@ -715,17 +721,6 @@ static void nxspi_dmasetup(struct nx_spi
+     rxdesc = dmadev->device_prep_slave_sg(nxspi->dmachan_rx, sg_rx,
+                         nents, DMA_FROM_DEVICE,(DMA_PREP_INTERRUPT|DMA_CTRL_ACK));
+ 
+-    txdesc->callback = nxspi_dma_txcallback;
+-    txdesc->callback_param = nxspi;
+-    rxdesc->callback = nxspi_dma_rxcallback;
+-    rxdesc->callback_param = nxspi;
+-
+-    if(sg_tx)
+-        kfree(sg_tx);
+-    if(sg_rx)
+-        kfree(sg_rx);
+-
+-    sg_tx = sg_rx = NULL;
+     
+     /* submit for transfer.
+     First RX and then TX*/
+@@ -740,8 +735,18 @@ static void nxspi_dmasetup(struct nx_spi
+ 	val = dmadev->device_is_tx_complete(nxspi->dmachan_rx, 0, NULL, NULL);
+ 	}while(val != DMA_SUCCESS );
+ 
+-	nxspi_dma_txcallback(nxspi);
+-	nxspi_dma_rxcallback(nxspi);
++    spin_lock_irqsave(&nxspi->lock, flags); 
++
++    nxspi_dma_txcallback(nxspi);
++    nxspi_dma_rxcallback(nxspi);
++
++    spin_unlock_irqrestore(&nxspi->lock, flags); 
++
++    if(sg_tx)
++        kfree(sg_tx);
++    if(sg_rx)
++        kfree(sg_rx);
++    sg_tx = sg_rx = NULL;
+ }
+ 
+ 
+@@ -977,20 +982,23 @@ static void nxspi_process_message(
+ static void nxspi_work(struct work_struct *work)
+ {
+      struct nx_spi *nxspi = container_of(work, struct nx_spi, work);
+-     struct spi_transfer *xfer = nxspi->current_transfer;
++     struct spi_transfer *xfer = NULL; 
+      struct spi_message *msg;
+      struct spi_master *master = platform_get_drvdata(nxspi->pdev);
+      unsigned long flags;
+ 
+-	if(xfer == NULL) {
+-		return;
+-	}
+-     spin_lock_irqsave(&nxspi->lock, flags);
++     spin_lock_irqsave(&nxspi->lock, flags); 
++     xfer = nxspi->current_transfer;
++     if(xfer == NULL) {
++         spin_unlock_irqrestore(&nxspi->lock, flags);
++	 return;
++     }
++
+      msg = list_entry(nxspi->queue.next,struct spi_message,queue);
+-	if(msg == NULL) {
+-        spin_unlock_irqrestore(&nxspi->lock, flags);
+-		return;
+-	}
++     if(msg == NULL) {
++         spin_unlock_irqrestore(&nxspi->lock, flags);
++	 return;
++     }
+ 
+      if(xfer->delay_usecs)
+         udelay(xfer->delay_usecs);
+@@ -1035,16 +1043,20 @@ static void nxspi_work(struct work_struc
+                 }
+         }
+         nxspi_cs_set(nxspi,msg->spi,0);
++
++        list_del(&msg->queue);
++
+         spin_unlock_irqrestore(&nxspi->lock, flags);
+-		msg->complete(msg->context);
++
++	msg->complete(msg->context);
++
+         spin_lock_irqsave(&nxspi->lock, flags);
+ 
+-        list_del(&msg->queue);
+         nxspi->current_transfer = NULL;
+         nxspi->curr_remaining_bytes = 0;
+ 
+         /* Disable the SPI unit */
+-		nxspi_enabledisable(nxspi, 0); //disable SPI unit
++	nxspi_enabledisable(nxspi, 0); //disable SPI unit
+ 
+         /* take next message from the queue*/
+         if (! (list_empty(&nxspi->queue) || (nxspi->closing)) ){

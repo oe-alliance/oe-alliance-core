@@ -1,0 +1,16 @@
+diff -Naurp linux-2.6.34/drivers/mtd/nand/nand_base.c linux-2.6.34_nand_224B_oob/drivers/mtd/nand/nand_base.c
+--- linux-2.6.34/drivers/mtd/nand/nand_base.c	2011-12-14 11:59:55.301937000 +0530
++++ linux-2.6.34_nand_224B_oob/drivers/mtd/nand/nand_base.c	2011-12-14 11:55:26.481704000 +0530
+@@ -3079,6 +3079,12 @@ static struct nand_flash_dev *nand_get_f
+ 		chip->options &= ~NAND_SAMSUNG_LP_OPTIONS;
+ ident_done:
+ 
++#ifdef CONFIG_ARCH_APOLLO
++   /* Fix the maximum OOB size to 128 for Apollo */
++   if (mtd->oobsize > 128)
++      mtd->oobsize = 128;
++#endif
++
+ 	/*
+ 	 * Set chip as a default. Board drivers can override it, if necessary
+ 	 */

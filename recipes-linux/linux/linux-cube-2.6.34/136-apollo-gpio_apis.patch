@@ -1,0 +1,30 @@
+diff -Naurp linux-2.6.34.spi/arch/arm/mach-apollo/include/mach/gpio.h linux-2.6.34/arch/arm/mach-apollo/include/mach/gpio.h
+--- linux-2.6.34.spi/arch/arm/mach-apollo/include/mach/gpio.h	2010-12-09 17:26:21.000000000 -0600
++++ linux-2.6.34/arch/arm/mach-apollo/include/mach/gpio.h	2010-12-13 11:17:22.000000000 -0600
+@@ -76,7 +76,10 @@ struct apollo_gpio_platform_data {
+ 	int irq_base;
+ };
+ 
+-#define gpio_to_irq(gpio) __gpio_to_irq(gpio)
++#define gpio_get_value	__gpio_get_value
++#define gpio_set_value	__gpio_set_value
++#define gpio_cansleep	__gpio_cansleep
++#define gpio_to_irq 	__gpio_to_irq
+ 
+ /**
+  * GPIO <--> PIO mapping in Apollo SoC
+diff -Naurp linux-2.6.34.spi/arch/arm/mach-kronos/include/mach/gpio.h linux-2.6.34/arch/arm/mach-kronos/include/mach/gpio.h
+--- linux-2.6.34.spi/arch/arm/mach-kronos/include/mach/gpio.h	2010-12-09 17:26:23.000000000 -0600
++++ linux-2.6.34/arch/arm/mach-kronos/include/mach/gpio.h	2010-12-13 11:18:03.000000000 -0600
+@@ -76,7 +76,10 @@ struct apollo_gpio_platform_data {
+ 	int irq_base;
+ };
+ 
+-#define gpio_to_irq(gpio) __gpio_to_irq(gpio)
++#define gpio_get_value	__gpio_get_value
++#define gpio_set_value	__gpio_set_value
++#define gpio_cansleep	__gpio_cansleep
++#define gpio_to_irq 	__gpio_to_irq
+ 
+ /**
+  * GPIO <--> PIO mapping in Apollo SoC

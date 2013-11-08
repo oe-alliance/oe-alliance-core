@@ -1,0 +1,370 @@
+diff -Naurp linux-2.6.34_orig/drivers/ata/sata_apollo.c linux-2.6.34/drivers/ata/sata_apollo.c
+--- linux-2.6.34_orig/drivers/ata/sata_apollo.c	2012-12-18 16:21:27.113061000 +0530
++++ linux-2.6.34/drivers/ata/sata_apollo.c	2012-12-18 17:07:18.576036000 +0530
+@@ -46,8 +46,8 @@
+  */
+ 
+ #define SATA_ENTR
+-#ifdef SATA_ENTR
+-#define SATA_ENTR_PERF
++#if defined(CONFIG_ARCH_APOLLO)
++#define SATA_ENTR_HAS_COHERANCY_BUG
+ #endif
+ 
+ #include <linux/kernel.h>
+@@ -1251,6 +1251,10 @@ static void ahci_start_engine(struct ata
+    writel(tmp, port_mmio + PORT_DMACR);
+ #endif
+ 
++#ifndef SATA_ENTR_HAS_COHERANCY_BUG
++	wmb();
++#endif
++
+ 	/* start DMA */
+ 	tmp = readl(port_mmio + PORT_CMD);
+ 	tmp |= PORT_CMD_START;
+@@ -1950,7 +1954,7 @@ static void ahci_fill_cmd_slot(struct ah
+ 			       u32 opts)
+ {
+ 	dma_addr_t cmd_tbl_dma;
+-#ifdef SATA_ENTR_PERF
++#ifdef SATA_ENTR_HAS_COHERANCY_BUG
+ 	static struct ahci_cmd_hdr data;
+ #endif
+ 
+@@ -1960,9 +1964,11 @@ static void ahci_fill_cmd_slot(struct ah
+ 	pp->cmd_slot[tag].status = 0;
+ 	pp->cmd_slot[tag].tbl_addr = cpu_to_le32(cmd_tbl_dma & 0xffffffff);
+ 	pp->cmd_slot[tag].tbl_addr_hi = cpu_to_le32((cmd_tbl_dma >> 16) >> 16);
+-#ifdef SATA_ENTR_PERF
++#ifdef SATA_ENTR_HAS_COHERANCY_BUG
+ 	/* flush */
+ 	data = pp->cmd_slot[tag];
++#else
++	wmb();
+ #endif
+ }
+ 
+@@ -2010,7 +2016,7 @@ static int ahci_kick_engine(struct ata_p
+ 	return rc;
+ }
+ 
+-#ifdef SATA_ENTR_PERF
++#ifdef SATA_ENTR_HAS_COHERANCY_BUG
+ static void ahci_ata_tf_to_fis(const struct ata_taskfile *tf, u8 pmp, int is_cmd, u8 *fis)
+ {
+ 	static u8 data[20];
+@@ -2038,6 +2044,10 @@ static int ahci_exec_polled_cmd(struct a
+ 	ahci_ata_tf_to_fis(tf, pmp, is_cmd, fis);
+ 	ahci_fill_cmd_slot(pp, 0, cmd_fis_len | flags | (pmp << 12));
+ 
++#ifndef SATA_ENTR_HAS_COHERANCY_BUG
++	wmb();
++#endif
++
+ 	/* issue & wait */
+ 	writel(1, port_mmio + PORT_CMD_ISSUE);
+ 
+@@ -2382,7 +2391,7 @@ static unsigned int ahci_fill_sg(struct 
+ 	struct scatterlist *sg;
+ 	struct ahci_sg *ahci_sg = cmd_tbl + AHCI_CMD_TBL_HDR_SZ;
+ 	unsigned int si;
+-#ifdef SATA_ENTR_PERF
++#ifdef SATA_ENTR_HAS_COHERANCY_BUG
+ 	static struct ahci_sg data;
+ #endif
+ 
+@@ -2400,7 +2409,7 @@ static unsigned int ahci_fill_sg(struct 
+ 		ahci_sg[si].flags_size = cpu_to_le32(sg_len - 1);
+ 	}
+ 
+-#ifdef SATA_ENTR_PERF
++#ifdef SATA_ENTR_HAS_COHERANCY_BUG
+ 	/* flush */
+ 	data = ahci_sg[si-1];
+ #endif
+@@ -2439,7 +2448,7 @@ static void ahci_qc_prep(struct ata_queu
+ 	if (is_atapi) {
+ 		memset(cmd_tbl + AHCI_CMD_TBL_CDB, 0, 32);
+ 		memcpy(cmd_tbl + AHCI_CMD_TBL_CDB, qc->cdb, qc->dev->cdb_len);
+-#ifdef SATA_ENTR_PERF
++#ifdef SATA_ENTR_HAS_COHERANCY_BUG
+ 		/* flush */
+ 		memcpy(qc->cdb, cmd_tbl + AHCI_CMD_TBL_CDB, qc->dev->cdb_len);
+ #endif
+@@ -2774,6 +2783,10 @@ static unsigned int ahci_qc_issue(struct
+ 		pp->fbs_last_dev = qc->dev->link->pmp;
+ 	}
+ 
++#ifndef SATA_ENTR_HAS_COHERANCY_BUG
++	wmb();
++#endif
++
+ 	writel(1 << qc->tag, port_mmio + PORT_CMD_ISSUE);
+ 
+ 	ahci_sw_activity(qc->dev->link);
+diff -Naurp linux-2.6.34_orig/drivers/usb/host/ehci.h linux-2.6.34/drivers/usb/host/ehci.h
+--- linux-2.6.34_orig/drivers/usb/host/ehci.h	2012-12-18 16:21:27.063063000 +0530
++++ linux-2.6.34/drivers/usb/host/ehci.h	2012-12-18 17:05:25.503376000 +0530
+@@ -729,13 +729,6 @@ static inline void ehci_qtd_free (
+ 		struct ehci_hcd *ehci,
+ 		struct ehci_qtd *qtd);
+ 
+-/* ehci functions to flush cpu write to hc */
+-static __hc32 flush_write_data;
+-static inline void flush_write(__hc32 *addr)
+-{
+-	flush_write_data = *addr;
+-}
+-
+ /*-------------------------------------------------------------------------*/
+ 
+ #ifndef DEBUG
+diff -Naurp linux-2.6.34_orig/drivers/usb/host/ehci-hcd.c linux-2.6.34/drivers/usb/host/ehci-hcd.c
+--- linux-2.6.34_orig/drivers/usb/host/ehci-hcd.c	2012-12-18 16:21:27.066065000 +0530
++++ linux-2.6.34/drivers/usb/host/ehci-hcd.c	2012-12-18 17:05:24.700438000 +0530
+@@ -577,7 +577,6 @@ static int ehci_init(struct usb_hcd *hcd
+ 	hw->hw_qtd_next = EHCI_LIST_END(ehci);
+ 	ehci->async->qh_state = QH_STATE_LINKED;
+ 	hw->hw_alt_next = QTD_NEXT(ehci, ehci->async->dummy->qtd_dma);
+-	flush_write(&hw->hw_alt_next);
+ 
+ 	/* clear interrupt enables, set irq latency */
+ 	if (log2_irq_thresh < 0 || log2_irq_thresh > 6)
+diff -Naurp linux-2.6.34_orig/drivers/usb/host/ehci-q.c linux-2.6.34/drivers/usb/host/ehci-q.c
+--- linux-2.6.34_orig/drivers/usb/host/ehci-q.c	2012-12-18 16:21:27.069069000 +0530
++++ linux-2.6.34/drivers/usb/host/ehci-q.c	2012-12-18 17:05:28.281178000 +0530
+@@ -71,14 +71,12 @@ qtd_fill(struct ehci_hcd *ehci, struct e
+ 			else
+ 				count = len;
+ 		}
+-		flush_write(&qtd->hw_buf_hi[i-1]);
+ 
+ 		/* short packets may only terminate transfers */
+ 		if (count != len)
+ 			count -= (count % maxpacket);
+ 	}
+ 	qtd->hw_token = cpu_to_hc32(ehci, (count << 16) | token);
+-	flush_write(&qtd->hw_token);
+ 	qtd->length = count;
+ 
+ 	return count;
+@@ -109,7 +107,6 @@ qh_update (struct ehci_hcd *ehci, struct
+ 		epnum = (hc32_to_cpup(ehci, &hw->hw_info1) >> 8) & 0x0f;
+ 		if (unlikely (!usb_gettoggle (qh->dev, epnum, is_out))) {
+ 			hw->hw_token &= ~cpu_to_hc32(ehci, QTD_TOGGLE);
+-			flush_write(&hw->hw_token);
+ 			usb_settoggle (qh->dev, epnum, is_out, 1);
+ 		}
+ 	}
+@@ -117,7 +114,6 @@ qh_update (struct ehci_hcd *ehci, struct
+ 	/* HC must see latest qtd and qh data before we clear ACTIVE+HALT */
+ 	wmb ();
+ 	hw->hw_token &= cpu_to_hc32(ehci, QTD_TOGGLE | QTD_STS_PING);
+-	flush_write(&hw->hw_token);
+ }
+ 
+ /* if it weren't for a common silicon quirk (writing the dummy into the qh
+@@ -411,11 +407,9 @@ qh_completions (struct ehci_hcd *ehci, s
+ 							(EHCI_TUNE_CERR << 10);
+ 					qtd->hw_token = cpu_to_hc32(ehci,
+ 							token);
+-					flush_write(&qtd->hw_token);
+ 					wmb();
+ 					hw->hw_token = cpu_to_hc32(ehci,
+ 							token);
+-					flush_write(&hw->hw_token);
+ 					goto retry_xacterr;
+ 				}
+ 				stopped = 1;
+@@ -475,7 +469,6 @@ qh_completions (struct ehci_hcd *ehci, s
+ 			if ((halt & hw->hw_token) == 0) {
+ halt:
+ 				hw->hw_token |= halt;
+-				flush_write(&hw->hw_token);
+ 				wmb ();
+ 			}
+ 		}
+@@ -522,7 +515,6 @@ halt:
+ 			last = list_entry (qtd->qtd_list.prev,
+ 					struct ehci_qtd, qtd_list);
+ 			last->hw_next = qtd->hw_next;
+-			flush_write(&last->hw_next);
+ 		}
+ 
+ 		/* remove qtd; it's recycled after possible urb completion */
+@@ -664,7 +656,6 @@ qh_urb_transaction (
+ 			goto cleanup;
+ 		qtd->urb = urb;
+ 		qtd_prev->hw_next = QTD_NEXT(ehci, qtd->qtd_dma);
+-		flush_write(&qtd_prev->hw_next);
+ 		list_add_tail (&qtd->qtd_list, head);
+ 
+ 		/* for zero length DATA stages, STATUS is always IN */
+@@ -736,7 +727,6 @@ qh_urb_transaction (
+ 			goto cleanup;
+ 		qtd->urb = urb;
+ 		qtd_prev->hw_next = QTD_NEXT(ehci, qtd->qtd_dma);
+-		flush_write(&qtd_prev->hw_next);
+ 		list_add_tail (&qtd->qtd_list, head);
+ 	}
+ 
+@@ -772,7 +762,6 @@ qh_urb_transaction (
+ 				goto cleanup;
+ 			qtd->urb = urb;
+ 			qtd_prev->hw_next = QTD_NEXT(ehci, qtd->qtd_dma);
+-			flush_write(&qtd_prev->hw_next);
+ 			list_add_tail (&qtd->qtd_list, head);
+ 
+ 			/* never any data in such packets */
+@@ -781,10 +770,8 @@ qh_urb_transaction (
+ 	}
+ 
+ 	/* by default, enable interrupt on urb completion */
+-	if (likely (!(urb->transfer_flags & URB_NO_INTERRUPT))) {
++	if (likely (!(urb->transfer_flags & URB_NO_INTERRUPT)))
+ 		qtd->hw_token |= cpu_to_hc32(ehci, QTD_IOC);
+-		flush_write(&qtd->hw_token);
+-	}
+ 	return head;
+ 
+ cleanup:
+@@ -1018,12 +1005,10 @@ static void qh_link_async (struct ehci_h
+ 	/* splice right after start */
+ 	qh->qh_next = head->qh_next;
+ 	qh->hw->hw_next = head->hw->hw_next;
+-	flush_write(&qh->hw->hw_next);
+ 	wmb ();
+ 
+ 	head->qh_next.qh = qh;
+ 	head->hw->hw_next = dma;
+-	flush_write(&qh->hw->hw_next);
+ 
+ 	qh_get(qh);
+ 	qh->xacterrs = 0;
+@@ -1067,8 +1052,9 @@ static struct ehci_qh *qh_append_tds (
+ 
+ 		/* control qh may need patching ... */
+ 		if (unlikely (epnum == 0)) {
+-				/* usb_reset_device() briefly reverts to address 0 */
+-				if (usb_pipedevice (urb->pipe) == 0)
++
++                        /* usb_reset_device() briefly reverts to address 0 */
++                        if (usb_pipedevice (urb->pipe) == 0)
+ 				qh->hw->hw_info1 &= ~qh_addr_mask;
+ 		}
+ 
+@@ -1087,7 +1073,6 @@ static struct ehci_qh *qh_append_tds (
+ 			 */
+ 			token = qtd->hw_token;
+ 			qtd->hw_token = HALT_BIT(ehci);
+-			flush_write(&qtd->hw_token);
+ 			wmb ();
+ 			dummy = qh->dummy;
+ 
+@@ -1107,12 +1092,10 @@ static struct ehci_qh *qh_append_tds (
+ 			qtd = list_entry (qh->qtd_list.prev,
+ 					struct ehci_qtd, qtd_list);
+ 			qtd->hw_next = QTD_NEXT(ehci, dma);
+-			flush_write(&qtd->hw_next);
+ 
+ 			/* let the hc process these next qtds */
+ 			wmb ();
+ 			dummy->hw_token = token;
+-			flush_write(&dummy->hw_token);
+ 
+ 			urb->hcpriv = qh_get (qh);
+ 		}
+@@ -1260,7 +1243,6 @@ static void start_unlink_async (struct e
+ 		prev = prev->qh_next.qh;
+ 
+ 	prev->hw->hw_next = qh->hw->hw_next;
+-	flush_write(&prev->hw->hw_next);
+ 	prev->qh_next = qh->qh_next;
+ 	wmb ();
+ 
+diff -Naurp linux-2.6.34_orig/drivers/usb/host/ehci-sched.c linux-2.6.34/drivers/usb/host/ehci-sched.c
+--- linux-2.6.34_orig/drivers/usb/host/ehci-sched.c	2012-12-18 16:21:27.073065000 +0530
++++ linux-2.6.34/drivers/usb/host/ehci-sched.c	2010-05-17 02:47:36.000000000 +0530
+@@ -99,7 +99,6 @@ static void periodic_unlink (struct ehci
+ 	*prev_p = *periodic_next_shadow(ehci, &here,
+ 			Q_NEXT_TYPE(ehci, *hw_p));
+ 	*hw_p = *shadow_next_periodic(ehci, &here, Q_NEXT_TYPE(ehci, *hw_p));
+-	flush_write(hw_p);
+ }
+ 
+ /* how many of the uframe's 125 usecs are allocated? */
+@@ -569,14 +568,11 @@ static int qh_link_periodic (struct ehci
+ 		/* link in this qh, unless some earlier pass did that */
+ 		if (qh != here.qh) {
+ 			qh->qh_next = here;
+-			if (here.qh) {
++			if (here.qh)
+ 				qh->hw->hw_next = *hw_p;
+-				flush_write(&qh->hw->hw_next);
+-			}
+ 			wmb ();
+ 			prev->qh = qh;
+ 			*hw_p = QH_NEXT (ehci, qh->qh_dma);
+-			flush_write(hw_p);
+ 		}
+ 	}
+ 	qh->qh_state = QH_STATE_LINKED;
+@@ -664,7 +660,6 @@ static void intr_deschedule (struct ehci
+ 	udelay (wait);
+ 	qh->qh_state = QH_STATE_IDLE;
+ 	hw->hw_next = EHCI_LIST_END(ehci);
+-	flush_write(&hw->hw_next);
+ 	wmb ();
+ 
+ 	qh_completions(ehci, qh);
+@@ -812,7 +807,6 @@ static int qh_schedule(struct ehci_hcd *
+ 
+ 	qh_refresh(ehci, qh);
+ 	hw->hw_next = EHCI_LIST_END(ehci);
+-	flush_write(&hw->hw_next);
+ 	frame = qh->start;
+ 
+ 	/* reuse the previous schedule slots, if we can */
+@@ -1588,12 +1582,10 @@ itd_link (struct ehci_hcd *ehci, unsigne
+ 
+ 	itd->itd_next = here;
+ 	itd->hw_next = *hw_p;
+-	flush_write(&itd->hw_next);
+ 	prev->itd = itd;
+ 	itd->frame = frame;
+ 	wmb ();
+ 	*hw_p = cpu_to_hc32(ehci, itd->itd_dma | Q_TYPE_ITD);
+-	flush_write(hw_p);
+ }
+ 
+ /* fit urb's itds into the selected schedule slot; activate as needed */
+@@ -2002,12 +1994,10 @@ sitd_link (struct ehci_hcd *ehci, unsign
+ 	/* note: sitd ordering could matter (CSPLIT then SSPLIT) */
+ 	sitd->sitd_next = ehci->pshadow [frame];
+ 	sitd->hw_next = ehci->periodic [frame];
+-	flush_write(&sitd->hw_next);
+ 	ehci->pshadow [frame].sitd = sitd;
+ 	sitd->frame = frame;
+ 	wmb ();
+ 	ehci->periodic[frame] = cpu_to_hc32(ehci, sitd->sitd_dma | Q_TYPE_SITD);
+-	flush_write(&ehci->periodic[frame]);
+ }
+ 
+ /* fit urb's sitds into the selected schedule slot; activate as needed */
+@@ -2359,7 +2349,6 @@ restart:
+ 				 */
+ 				*q_p = q.itd->itd_next;
+ 				*hw_p = q.itd->hw_next;
+-				flush_write(hw_p);
+ 				type = Q_NEXT_TYPE(ehci, q.itd->hw_next);
+ 				wmb();
+ 				modified = itd_complete (ehci, q.itd);
+@@ -2393,7 +2382,6 @@ restart:
+ 				 */
+ 				*q_p = q.sitd->sitd_next;
+ 				*hw_p = q.sitd->hw_next;
+-				flush_write(hw_p);
+ 				type = Q_NEXT_TYPE(ehci, q.sitd->hw_next);
+ 				wmb();
+ 				modified = sitd_complete (ehci, q.sitd);

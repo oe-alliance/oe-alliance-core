@@ -1,0 +1,202 @@
+diff -Naurp linux-2.6.34/arch/arm/mach-kore3/gcs.c linux-2.6.34_kore3/arch/arm/mach-kore3/gcs.c
+--- linux-2.6.34/arch/arm/mach-kore3/gcs.c	2013-02-08 20:45:48.693554000 +0530
++++ linux-2.6.34_kore3/arch/arm/mach-kore3/gcs.c	2013-02-08 19:45:55.534942000 +0530
+@@ -19,7 +19,6 @@
+ #include <linux/init.h>
+ #include <linux/platform_device.h>
+ #include <linux/mtd/physmap.h>
+-#include <mach/nor.h>
+ #include <mach/gcs.h>
+ #include <linux/io.h>
+ 
+diff -Naurp linux-2.6.34/drivers/gpio/Kconfig linux-2.6.34_kore3/drivers/gpio/Kconfig
+--- linux-2.6.34/drivers/gpio/Kconfig	2013-02-08 20:45:47.298634000 +0530
++++ linux-2.6.34_kore3/drivers/gpio/Kconfig	2013-02-08 20:29:34.106378000 +0530
+@@ -96,9 +96,9 @@ config GPIO_VR41XX
+ 
+ config GPIO_APOLLO
+ 	tristate "APOLLO GPIO support"
+-	depends on ARCH_APOLLO || ARCH_KRONOS || ARCH_KROME
++	depends on ARCH_APOLLO || ARCH_KRONOS || ARCH_KROME || ARCH_KORE3
+ 	help
+-	  Say Y here if you want to enable GPIO support for  APOLLO, KRONOS and KROME
++	  Say Y here if you want to enable GPIO support for  APOLLO and K*
+ 	  SoCs on STB boards. Some of the GPIOs may be used as interrupts
+ 	  and in that case you must say 'Y' here or else the board might not
+ 	  boot at all. Say 'M' here if you want to compile it as module.
+diff -Naurp linux-2.6.34/drivers/i2c/algos/i2c_phlm/i2c_phlm_cfg.c linux-2.6.34_kore3/drivers/i2c/algos/i2c_phlm/i2c_phlm_cfg.c
+--- linux-2.6.34/drivers/i2c/algos/i2c_phlm/i2c_phlm_cfg.c	2013-02-08 20:45:47.301634000 +0530
++++ linux-2.6.34_kore3/drivers/i2c/algos/i2c_phlm/i2c_phlm_cfg.c	2013-02-08 19:59:24.492634000 +0530
+@@ -32,7 +32,7 @@
+ #if (TMFL_PNX_ID == 8550 )
+     #include <asm/mach-pnx8550/int.h>
+ #elif (TMFL_PNX_ID == 85500)
+-    #if (defined (CONFIG_ARCH_APOLLO) || defined (CONFIG_ARCH_KRONOS) || defined (CONFIG_ARCH_KROME))
++    #if (defined (CONFIG_ARCH_APOLLO) || defined (CONFIG_ARCH_KRONOS) || defined (CONFIG_ARCH_KROME) || defined (CONFIG_ARCH_KORE3))
+         #include <linux/irq.h>
+     #else
+         #include <asm/mach-pnx85500/irq.h>
+@@ -84,7 +84,7 @@ unsigned long i2c_phlm_cfg_intpins[TMHW_
+ #if defined (CONFIG_ARCH_APOLLO)
+     unsigned long i2c_phlm_cfg_intpins[TMHW_I2C_UNIT_MAX] =
+     { 55, 56, 57 ,149};
+-#elif (defined (CONFIG_ARCH_KRONOS) || defined (CONFIG_ARCH_KROME))
++#elif (defined (CONFIG_ARCH_KRONOS) || defined (CONFIG_ARCH_KROME) || defined (CONFIG_ARCH_KORE3))
+     unsigned long i2c_phlm_cfg_intpins[TMHW_I2C_UNIT_MAX] =
+     { 55, 56, 57};
+ #else
+diff -Naurp linux-2.6.34/drivers/i2c/algos/i2c_phlm/Makefile linux-2.6.34_kore3/drivers/i2c/algos/i2c_phlm/Makefile
+--- linux-2.6.34/drivers/i2c/algos/i2c_phlm/Makefile	2013-02-08 20:45:47.303633000 +0530
++++ linux-2.6.34_kore3/drivers/i2c/algos/i2c_phlm/Makefile	2013-02-08 19:57:53.693097000 +0530
+@@ -17,6 +17,7 @@ nx_i2c_flags-$(CONFIG_SOC_PNX85500) := -
+ nx_i2c_flags-$(CONFIG_ARCH_APOLLO) := -DTMFL_PNX_ID=85500 -DMINUS_SPEED_PATCH
+ nx_i2c_flags-$(CONFIG_ARCH_KRONOS) := -DTMFL_PNX_ID=85500 -DMINUS_SPEED_PATCH
+ nx_i2c_flags-$(CONFIG_ARCH_KROME)  := -DTMFL_PNX_ID=85500 -DMINUS_SPEED_PATCH
++nx_i2c_flags-$(CONFIG_ARCH_KORE3)  := -DTMFL_PNX_ID=85500 -DMINUS_SPEED_PATCH
+ 
+ EXTRA_CFLAGS-$(CONFIG_I2C_ALGO3203) := $(HWAPI_FLAGS-y) -DTMFL_CPU_IS_MIPS=1 \
+ 			$(nx_i2c_flags-y) -DTMHWI2C_BSL_INDEPENDANT -DTMFL_OS_IS_HPUNIX=0 \
+diff -Naurp linux-2.6.34/drivers/i2c/algos/i2c_phlm/tmhwI2c/cfg/tmhwI2c_DvpNoBslCfg.c linux-2.6.34_kore3/drivers/i2c/algos/i2c_phlm/tmhwI2c/cfg/tmhwI2c_DvpNoBslCfg.c
+--- linux-2.6.34/drivers/i2c/algos/i2c_phlm/tmhwI2c/cfg/tmhwI2c_DvpNoBslCfg.c	2013-02-08 20:45:47.307632000 +0530
++++ linux-2.6.34_kore3/drivers/i2c/algos/i2c_phlm/tmhwI2c/cfg/tmhwI2c_DvpNoBslCfg.c	2013-02-08 19:53:42.672682000 +0530
+@@ -239,7 +239,7 @@
+ #define TMHW_I2C_DMA { True, True, True, False}
+ #endif
+ 
+-#elif (defined (CONFIG_ARCH_KRONOS) || defined (CONFIG_ARCH_KROME))
++#elif (defined (CONFIG_ARCH_KRONOS) || defined (CONFIG_ARCH_KROME) || defined (CONFIG_ARCH_KORE3))
+ 
+ /* kronos */
+ #undef TMHW_I2C_UNIT_MAX
+@@ -379,7 +379,7 @@ UInt32 tmhwI2c_CfgPhyAddr[TMHW_I2C_CFG_U
+           TMHW_I2C_CFG_REG_START + 0x0C8000, // I2c unit 3
+     };
+ 
+-#elif (defined (CONFIG_ARCH_KRONOS) || defined (CONFIG_ARCH_KROME))
++#elif (defined (CONFIG_ARCH_KRONOS) || defined (CONFIG_ARCH_KROME) ||  defined (CONFIG_ARCH_KORE3))
+ UInt32 tmhwI2c_CfgPhyAddr[TMHW_I2C_CFG_UNIT_COUNT] =
+     {
+           TMHW_I2C_CFG_REG_START + 0x08D000, // I2c unit 0
+diff -Naurp linux-2.6.34/drivers/mtd/nand/nx_nand/Makefile linux-2.6.34_kore3/drivers/mtd/nand/nx_nand/Makefile
+--- linux-2.6.34/drivers/mtd/nand/nx_nand/Makefile	2013-02-08 20:45:47.312631000 +0530
++++ linux-2.6.34_kore3/drivers/mtd/nand/nx_nand/Makefile	2013-02-08 20:11:39.691446000 +0530
+@@ -12,6 +12,7 @@ nx_nand_flags-$(CONFIG_SOC_PNX85500) := 
+ nx_nand_flags-$(CONFIG_ARCH_APOLLO) := -DMIPSEL
+ nx_nand_flags-$(CONFIG_ARCH_KRONOS) := -DMIPSEL
+ nx_nand_flags-$(CONFIG_ARCH_KROME)  := -DMIPSEL
++nx_nand_flags-$(CONFIG_ARCH_KORE3)  := -DMIPSEL
+ 
+ EXTRA_CFLAGS   := $(HWAPI_FLAGS-y)
+ EXTRA_CFLAGS += $(nx_nand_flags-y) -DLINUX_BUILD -DLINUX -DMONTAVISTA_GNU -DTMFL_OS_IS_HPUNIX=0
+diff -Naurp linux-2.6.34/drivers/mtd/nand/nx_nand/nx_nand.c linux-2.6.34_kore3/drivers/mtd/nand/nx_nand/nx_nand.c
+--- linux-2.6.34/drivers/mtd/nand/nx_nand/nx_nand.c	2013-02-08 20:45:48.472553000 +0530
++++ linux-2.6.34_kore3/drivers/mtd/nand/nx_nand/nx_nand.c	2013-02-08 20:04:58.799248000 +0530
+@@ -751,7 +751,7 @@ static int nx_nand_read_page(struct mtd_
+          }
+          mtd->ecc_stats.corrected += stat;
+       }
+-#elif (defined (CONFIG_ARCH_KRONOS) || defined (CONFIG_ARCH_KROME))
++#elif (defined (CONFIG_ARCH_KRONOS) || defined (CONFIG_ARCH_KROME) || defined (CONFIG_ARCH_KORE3))
+       if (nc->page_rw_status_fifo.PageRdStatus[i].uncorrectable) {
+          printk(KERN_INFO "nx_nand: [INFO] step %d:uncorrectable ecc [page = %x] \r\n", i, 
+             nc->cur_page);
+@@ -1310,13 +1310,13 @@ static int nx_nand_write_oob(struct mtd_
+ 
+       status = chip->waitfunc(mtd, chip);
+    }
+-#elif (defined (CONFIG_ARCH_KRONOS) || defined (CONFIG_ARCH_KROME))
++#elif (defined (CONFIG_ARCH_KRONOS) || defined (CONFIG_ARCH_KROME) || defined (CONFIG_ARCH_KORE3))
+    status = chip->waitfunc(mtd, chip);
+ #endif
+    return status & NAND_STATUS_FAIL ? -EIO : 0;
+ }
+ 
+-#if (defined (CONFIG_ARCH_KRONOS) || defined (CONFIG_ARCH_KROME))
++#if (defined (CONFIG_ARCH_KRONOS) || defined (CONFIG_ARCH_KROME) || defined (CONFIG_ARCH_KORE3) )
+ /**
+  * ESP Layout (Page Size > = 1K) :
+  *    Page Size         = 1 K
+@@ -1959,7 +1959,7 @@ static void nx_nand_command_lp(struct mt
+          nc->offset = column;
+ #ifdef CONFIG_MTD_NX_NAND_DMAC
+ 
+-#if (defined (CONFIG_ARCH_KRONOS) || defined (CONFIG_ARCH_KROME))
++#if (defined (CONFIG_ARCH_KRONOS) || defined (CONFIG_ARCH_KROME) || defined (CONFIG_ARCH_KORE3))
+          if(nx_nand_check_uldr_rw(mtd)) {
+             nx_nand_read_uldr (mtd);
+             break;
+@@ -2272,7 +2272,7 @@ static irqreturn_t nx_nand_ctrl_isr(int 
+ 
+       if((int_stat & NX_NAND_INT_SEQ_READ) && 
+          (int_ena & NX_NAND_INT_SEQ_READ)) {
+-#if (defined (CONFIG_ARCH_KRONOS) || defined (CONFIG_ARCH_KROME))
++#if (defined (CONFIG_ARCH_KRONOS) || defined (CONFIG_ARCH_KROME) || defined (CONFIG_ARCH_KORE3) )
+          tmhwEfmc_GetPageRWStatusFifo(nc->unitid, &nc->page_rw_status_fifo);
+ #endif
+          nc->done = true; 
+@@ -2290,7 +2290,7 @@ static irqreturn_t nx_nand_ctrl_isr(int 
+          (int_ena & (1 << (NX_NAND_INT_READY_START + nc->slotid)))) {
+          tmhwEfmc_IntClear(nc->unitid, 
+             (1 << (NX_NAND_INT_READY_START + nc->slotid)));
+-#if (defined (CONFIG_ARCH_KRONOS) || defined (CONFIG_ARCH_KROME))
++#if (defined (CONFIG_ARCH_KRONOS) || defined (CONFIG_ARCH_KROME) || defined (CONFIG_ARCH_KORE3) )
+          tmhwEfmc_GetPageRWStatusFifo(nc->unitid, &nc->page_rw_status_fifo);
+ #endif
+          nc->done = true;
+@@ -2418,7 +2418,7 @@ static int nx_nand_probe(struct platform
+    struct mtd_info         *mtd;
+    tmhwEfmc_Capabilities_t pcaps;
+    tmhwEfmc_FlashConfig_t  pconfig;
+-#if (defined (CONFIG_ARCH_KRONOS) || defined (CONFIG_ARCH_KROME))
++#if (defined (CONFIG_ARCH_KRONOS) || defined (CONFIG_ARCH_KROME) || defined (CONFIG_ARCH_KORE3) )
+    tmhwEfmc_ModeCtrl_t     pModeCtrl;
+    tmhwEfmc_FlashConfig_t  FlashConfig;
+    tmhwEfmc_OobInfo_t      pOobInfo;
+@@ -2496,7 +2496,7 @@ static int nx_nand_probe(struct platform
+ 
+    /* Flash configuration -- REVISIT */
+    ret = tmhwEfmc_GetFlashConfig(nx_nc->unitid, nx_nc->slotid, &pconfig);
+-#if (defined (CONFIG_ARCH_KRONOS) || defined (CONFIG_ARCH_KROME))
++#if (defined (CONFIG_ARCH_KRONOS) || defined (CONFIG_ARCH_KROME) || defined (CONFIG_ARCH_KORE3) )
+    pModeCtrl.rb_n_bypass = TM_FALSE;
+    pModeCtrl.rd_stall = TM_FALSE;
+    ret = tmhwEfmc_SetModeCtrl(nx_nc->unitid, &pModeCtrl);
+@@ -2564,7 +2564,7 @@ static int nx_nand_probe(struct platform
+       nx_nc->dmabuf,
+       nx_nc->dmabuf_phy);
+ 
+-#if (defined (CONFIG_ARCH_KRONOS) || defined (CONFIG_ARCH_KROME))
++#if (defined (CONFIG_ARCH_KRONOS) || defined (CONFIG_ARCH_KROME) || defined (CONFIG_ARCH_KORE3) )
+    memset(&FlashConfig, 0, sizeof(FlashConfig));
+ 
+    FlashConfig.dataWidth = pconfig.dataWidth; /* REVISIT */
+@@ -2692,7 +2692,7 @@ static int nx_nand_probe(struct platform
+    chip->ecc.correct = nx_nand_correct_data;
+    chip->ecc.hwctl = nx_nand_hwctl;
+    chip->ecc.size = nx_nc->blk_size;
+-#if (defined (CONFIG_ARCH_KRONOS) || defined (CONFIG_ARCH_KROME))
++#if (defined (CONFIG_ARCH_KRONOS) || defined (CONFIG_ARCH_KROME) || defined (CONFIG_ARCH_KORE3) )
+    pOobInfo.parity_bytes = (FlashConfig.eccLevel * 14)/8;
+    /* Is number of parity bytes multiple of 4 ? */
+    pOobInfo.parity_bytes = (pOobInfo.parity_bytes%4)?
+@@ -2729,7 +2729,7 @@ static int nx_nand_probe(struct platform
+       case 128:
+          chip->ecc.layout = &nx_nand_oob_128;
+          break;
+-#if (defined (CONFIG_ARCH_KRONOS) || defined (CONFIG_ARCH_KROME))
++#if (defined (CONFIG_ARCH_KRONOS) || defined (CONFIG_ARCH_KROME) || defined (CONFIG_ARCH_KORE3))
+       case 224:
+          chip->ecc.layout = &nx_nand_oob_224;
+          break;
+diff -Naurp linux-2.6.34/drivers/mtd/nand/nx_nand/tmhwEfmc/inc/tmhwEfmc.h linux-2.6.34_kore3/drivers/mtd/nand/nx_nand/tmhwEfmc/inc/tmhwEfmc.h
+--- linux-2.6.34/drivers/mtd/nand/nx_nand/tmhwEfmc/inc/tmhwEfmc.h	2013-02-08 20:45:47.322635000 +0530
++++ linux-2.6.34_kore3/drivers/mtd/nand/nx_nand/tmhwEfmc/inc/tmhwEfmc.h	2013-02-08 20:06:34.004456000 +0530
+@@ -190,7 +190,7 @@ typedef enum tmhwEfmc_DataWidth
+ typedef enum tmhwEfmc_PageSize
+ /*! This enum specifies the page size of the corresponding NAND flash device connected to the EFMC controller */
+ {
+-#if (defined (CONFIG_ARCH_KRONOS) || defined (CONFIG_ARCH_KROME))
++#if (defined (CONFIG_ARCH_KRONOS) || defined (CONFIG_ARCH_KROME)|| defined (CONFIG_ARCH_KORE3))
+ tmhwEfmc_512Byte = 0x0,  /*!< Page size = 512 bytes */
+ tmhwEfmc_1024Byte = 0x1,  /*!< Page size = 1024 bytes */
+ tmhwEfmc_2048Byte = 0x2, /*!< Page size = 2048 bytes */

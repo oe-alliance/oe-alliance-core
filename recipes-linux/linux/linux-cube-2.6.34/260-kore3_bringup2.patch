@@ -1,0 +1,287 @@
+diff -Naurp linux-2.6.34/arch/arm/mach-kore3/include/mach/barriers.h linux-2.6.34_kore3/arch/arm/mach-kore3/include/mach/barriers.h
+--- linux-2.6.34/arch/arm/mach-kore3/include/mach/barriers.h	1970-01-01 05:30:00.000000000 +0530
++++ linux-2.6.34_kore3/arch/arm/mach-kore3/include/mach/barriers.h	2013-02-21 12:36:53.148877000 +0530
+@@ -0,0 +1,27 @@
++/****************************************************************************/
++/*                                                                          */
++/*  Copyright (C) 2012 Entropic Communications Ltd.                         */
++/*                                                                          */
++/*  This program is free software; you can redistribute it and/or modify    */
++/*  it under the terms of the GNU General Public License as published by    */
++/*  the Free Software Foundation, using version 2 of the License.           */
++/*                                                                          */
++/*  This program is distributed in the hope that it will be useful,         */
++/*  but WITHOUT ANY WARRANTY; without even the implied warranty of          */
++/*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the            */
++/*  GNU General Public License for more details.                            */
++/*                                                                          */
++/*  You should have received a copy of the GNU General Public License       */
++/*  along with this program. If not, see <http://www.gnu.org/licenses/>.    */
++/*                                                                          */
++/****************************************************************************/
++#ifndef __MACH_BARRIERS_H
++#define __MACH_BARRIERS_H
++ 
++extern void DoDummyWriteRead(void);
++
++#define rmb()     dmb()
++#define mb()      do { dsb(); outer_sync(); DoDummyWriteRead(); dsb(); } while (0)
++#define wmb()     mb()
++ 
++#endif  /* __MACH_BARRIERS_H */
+diff -Naurp linux-2.6.34/arch/arm/mach-kore3/Kconfig linux-2.6.34_kore3/arch/arm/mach-kore3/Kconfig
+--- linux-2.6.34/arch/arm/mach-kore3/Kconfig	2013-02-21 19:44:54.281722000 +0530
++++ linux-2.6.34_kore3/arch/arm/mach-kore3/Kconfig	2013-02-21 19:36:36.772486000 +0530
+@@ -76,6 +76,7 @@ config GENERIC_KORE3_IP
+ 	select SERIAL_IP3106_CONSOLE
+ 	select ARCH_REQUIRE_GPIOLIB
+ 	select ARM_ERRATA_754322
++	select ARCH_HAS_BARRIERS
+ 
+ config SOC_PNX8492
+ 	bool
+diff -Naurp linux-2.6.34/arch/arm/mach-kore3/kore3.c linux-2.6.34_kore3/arch/arm/mach-kore3/kore3.c
+--- linux-2.6.34/arch/arm/mach-kore3/kore3.c	2013-02-21 19:44:54.283730000 +0530
++++ linux-2.6.34_kore3/arch/arm/mach-kore3/kore3.c	2013-02-21 19:38:30.963129000 +0530
+@@ -377,27 +377,42 @@ unsigned int GetChipID (void)
+     return ChipID;
+ }
+ 
++#ifdef CONFIG_ARCH_HAS_BARRIERS
++unsigned long *pDummyUncachedWrite = NULL;
++unsigned long DummyUncachedRead = 0;
++
++void DoDummyWriteRead(void)
++{
++	if(pDummyUncachedWrite)
++	{
++		*pDummyUncachedWrite = 0;
++		DummyUncachedRead = *pDummyUncachedWrite;
++	}
++}
++EXPORT_SYMBOL(DoDummyWriteRead);
++#endif
++
+ #ifdef CONFIG_CACHE_L2X0
+ static int __init apollo_l2x0_init(void)
+ {
+-   if (machine_is_kore3()) {
+-      /*
+-       * Data and Instruction prefetch,
+-       * 128KB (16KB/way),
+-       * 8-way associativity,
+-       * Exclusive,
+-                 * Zero enable
+-       * Bits:  0011 0010 0000 0010 0001 0000 0000 0001
+-       */
+-      l2x0_init(__io_address(APOLLO_CORTEX_A9_L2CACHE_BASE),
+-           0x32021001, 0xffffffff);
+-
+-      /* Change the ACTRL register to Exlusive, Zero Enable, L1 prefetch, L2 prefetch */
+-                __asm__("mrc p15, 0, r12, c1, c0, 1\n\t"
+-                        "orr r12, r12, #0x8e\n\t"
+-                        "mcr p15, 0, r12, c1, c0, 1"
+-                : : : "r12","cc", "memory");
+-   }
++	if (machine_is_krome()) {
++		/*
++		 * Data and Instruction prefetch,
++		 * 128KB (16KB/way),
++		 * 8-way associativity,
++		 * Exclusive,
++		 * Zero enable
++		 * Bits:	0011 0010 0000 0010 0001 0000 0000 0001
++		 */
++		l2x0_init(__io_address(APOLLO_CORTEX_A9_L2CACHE_BASE),
++			0x32021001, 0xffffffff);
++
++		/* Change the ACTRL register to Exlusive, Zero Enable, L1 prefetch, L2 prefetch */
++		__asm__("mrc p15, 0, r12, c1, c0, 1\n\t"
++				"orr r12, r12, #0x8e\n\t"
++				"mcr p15, 0, r12, c1, c0, 1"
++				: : : "r12","cc", "memory");
++		}
+ 
+ 	return 0;
+ }
+@@ -406,11 +421,25 @@ early_initcall(apollo_l2x0_init);
+ 
+ void __init apollo_init(void)
+ {
++#ifdef CONFIG_ARCH_HAS_BARRIERS
++	dma_addr_t dmaAddr = 0;
++#endif
++
+ #ifdef CONFIG_KORE3_SPLASH
+-   apollo_splash();
++	apollo_splash();
++#endif
++
++#ifdef CONFIG_ARCH_HAS_BARRIERS
++	pDummyUncachedWrite = dma_alloc_coherent(NULL, 4, &dmaAddr, GFP_ATOMIC);
++	if(pDummyUncachedWrite == NULL)
++	{
++		printk (KERN_ERR "Failed to allocate DMA coherent memory for dummy write/read\n");
++		BUG();
++	}
+ #endif
+-   printk (KERN_INFO "Adding platform devices...\n");
+-   platform_add_devices(platform_devs, ARRAY_SIZE(platform_devs));
++
++	printk (KERN_INFO "Adding platform devices...\n");
++	platform_add_devices(platform_devs, ARRAY_SIZE(platform_devs));
+ }
+ 
+ /*
+@@ -460,8 +489,8 @@ static int __init parse_tag_memmap(const
+ 
+ 	for(i=0;i<MAX_MEMMAP_TAGS;i++)
+ 	{
+-        if((tag->u.memmap.pool_def[i].offset < 0) || (tag->u.memmap.pool_def[i].offset > pnx8493_meminfo.bank[tag->u.memmap.pool_def[i].bank].size))
+-            continue;
++		if((tag->u.memmap.pool_def[i].offset < 0) || (tag->u.memmap.pool_def[i].offset > pnx8493_meminfo.bank[tag->u.memmap.pool_def[i].bank].size))
++			continue;
+ 
+ 		switch (tag->u.memmap.pool_def[i].pool_type)
+ 		{
+@@ -542,7 +571,7 @@ static int __init parse_tag_memmap(const
+ 		}
+ 	}
+ 
+-    return 0;
++	return 0;
+ }
+ __tagtable(ATAG_MEMMAP, parse_tag_memmap);
+ 
+diff -Naurp linux-2.6.34/arch/arm/mach-kore3/nx_sdiomc_dev.c linux-2.6.34_kore3/arch/arm/mach-kore3/nx_sdiomc_dev.c
+--- linux-2.6.34/arch/arm/mach-kore3/nx_sdiomc_dev.c	2013-02-21 19:44:54.297726000 +0530
++++ linux-2.6.34_kore3/arch/arm/mach-kore3/nx_sdiomc_dev.c	2013-02-21 19:39:23.095866000 +0530
+@@ -38,7 +38,11 @@ static struct resource apollo_sdiomc_res
+ 
+ u64 apollo_sdiomc_dmamask = ~(u32)0;
+ static struct nx_sdiomc_platform_data apollo_sdiomc_data = {
++#ifdef CONFIG_MMC_SDHCI_NX_DUALSD
++  .num_slots = 2,
++#else
+   .num_slots = 1,
++#endif
+ };
+ 
+ static struct platform_device apollo_sdiomc_device = {
+@@ -124,7 +128,35 @@ static void __init apollo_sdiomc_pin_mux
+    val |= 0x00140000; // ao_pio178_scl2_sdcrdwp_egp=1, ao_pio177_sda2_sdcrdetect_egp=1
+    writel(val, PAD_CONFIGURATION_0_REG);
+ 
++#elif defined CONFIG_MMC_SDHCI_NX_DUALSD
++
++   val = readl(GPIO_PIN_MUX_REG_5);
++   val &= ~(0x60800);  //gmux_171=0, sda2=gmux_177=0, scl2=gmux_178=0
++   writel(val, GPIO_PIN_MUX_REG_5);
++
++   val = readl(GPIO_SEC_PIN_MUX_REG_5);
++   val &= ~(0x20800);  //smux_171 =0,  sdcrdetect_01=smux_177=0
++   val |= 0x40400;  //Sddata3=smux_170=1, sdcrdwp_01=smux_178=1
++   writel(val, GPIO_SEC_PIN_MUX_REG_5);
++
++   val = readl(ALT_PIN_MUX_REG_0);
++   val &= ~(0x8002000); //alt13=0, alt27=0,
++   val |= 0x40800000;  // alt23=1, alt30=1
++   writel(val, ALT_PIN_MUX_REG_0);
++
++   val = readl(PAD_CONFIGURATION_0_REG);
++   val |= 0x00140000; // ao_pio178_scl2_sdcrdwp_egp=1, ao_pio177_sda2_sdcrdetect_egp=1
++   writel(val, PAD_CONFIGURATION_0_REG);
++
+ #endif
++
++#ifdef CONFIG_MMC_SDHCI_NX_SDIOMC_SDDATA4_7
++   val = readl(ALT_PIN_MUX_REG_0);
++   /* enable sddata4-7 of MMC interface */
++   val |= 0x00000020;   // alt05_sdio=1
++   writel(val, ALT_PIN_MUX_REG_0);
++#endif
++
+ }
+ 
+ static int __init apollo_sdiomc_init(void)
+diff -Naurp linux-2.6.34/arch/arm/mach-kore3/splash_logo.c linux-2.6.34_kore3/arch/arm/mach-kore3/splash_logo.c
+--- linux-2.6.34/arch/arm/mach-kore3/splash_logo.c	2013-02-21 19:44:54.317721000 +0530
++++ linux-2.6.34_kore3/arch/arm/mach-kore3/splash_logo.c	2013-02-21 19:40:58.164076000 +0530
+@@ -27,7 +27,7 @@
+ #define APOLLO_CPIPE_BASE   (APOLLO_MMIO_BASE_ADDR + 0x120000)
+ #define APOLLO_HDMI_TX_BASE (APOLLO_MMIO_BASE_ADDR + 0x179000)
+ #define APOLLO_DENC_BASE    (APOLLO_MMIO_BASE_ADDR + 0x17B000)
+-
++#define KROME_RFMODE_BASE   (APOLLO_MMIO_BASE_ADDR + 0x17E000)
+ #define GLOBALREG_MODULE_ID_REG1 0xe06bbffc
+ #define GLOBALREG_MODULE_ID_MAJOR_REV_R (0x0f << 12)
+ #define GLOBALREG_MODULE_ID_MAJOR_REV_SHIFT 12
+@@ -272,7 +272,7 @@ void __init apollo_splash( void )
+ 
+    /* GFX VCBM*/
+    writel( 0x00000001, (APOLLO_CPIPE_BASE + 0x8e90)); /* Bypass GFX VCBM */
+-   writel( 0x00000001, (APOLLO_CPIPE_BASE + 0x8c00)); /* apply settings to layer */
++//   writel( 0x00000001, (APOLLO_CPIPE_BASE + 0x8c00)); /* apply settings to layer */
+ 
+    /* GNSH Settings */
+    writel( 0x00000010, (APOLLO_CPIPE_BASE + 0x94a0)); /* Turn off MSB inversion */
+@@ -347,7 +347,7 @@ void __init apollo_splash( void )
+ 
+    /* GFX VCBM */
+    writel( 0x00000001, (APOLLO_CPIPE_BASE + 0x4e90)); /* Bypass GFX VCBM */
+-   writel( 0x00000001, (APOLLO_CPIPE_BASE + 0x4c00)); /* apply settings to layer */
++//   writel( 0x00000001, (APOLLO_CPIPE_BASE + 0x4c00)); /* apply settings to layer */
+ 
+    /* GNSH Settings */
+    writel( 0x00000010, (APOLLO_CPIPE_BASE + 0x54a0)); /* Turn off MSB inversion */
+@@ -372,6 +372,50 @@ void __init apollo_splash( void )
+    writel( 0x030f0502, (APOLLO_CPIPE_BASE + 0x94e0)); /* !hsync, !vsync, blank, odd/even to HD DENC */
+    writel( 0x030f0502, (APOLLO_CPIPE_BASE + 0x98e0));    /* For CPIPE-HDMI RGB match */
+    
++/* Settings for Channel 3/4 */
++#if 1
++{
++	        int rdata =0;
++		writel(0x00000001, (HOST_CGU_BASE + 0x204));  //   #SELECT 50M Clock
++		writel(0x00000011, (KROME_RFMODE_BASE +0x004));           //  #TASTER_SOFT_RESETS_REG
++		writel(0x00000000, (KROME_RFMODE_BASE +0x004));  //  #TASTER_SOFT_RESETS_REG
++		writel(0x00000039, (KROME_RFMODE_BASE +0x3fc));
++		rdata = readl(0xe077E250);              //  #TASTER_PLL_CONFIG_REG
++		writel((rdata & 0xffffefff), (KROME_RFMODE_BASE +0x250));
++		rdata = readl(0xe077E250);             //   #TASTER_PLL_CONFIG_REG
++		writel((rdata | 0x00000100), (KROME_RFMODE_BASE +0x250));
++		rdata = readl(0xe077E254);             //   #TASTER_DAC_CONFIG_REG
++		writel((rdata | 0x00000011), (KROME_RFMODE_BASE +0x254));
++		rdata = readl(0xe077E250);   //             #TASTER_PLL_CONFIG_REG
++		while((rdata & 0x01000000) == 0x00000000 ){
++			rdata = readl(0xe077E250);         //   #TASTER_PLL_CONFIG_REG    
++		}
++		writel(0x00000003, (HOST_CGU_BASE + 0x204));    //         #SELECT 225M Clock
++		/* RF MODE IP SETTINGS*/
++		{
++                rdata=0;
++                writel(0x00000039, (KROME_RFMODE_BASE +0x3fc));  
++		//#select internal test patern or nornimal work 0xa for test mode
++		writel(0x00000000, (KROME_RFMODE_BASE +0x3ec));
++		rdata = readl(0xe077E244);            //    #TASTER_CHANNEL_3/4_SELECT_REG
++	        writel((rdata&0xFFFFFFFE), (KROME_RFMODE_BASE +0x244));
++		writel((0x0002d82e), (KROME_RFMODE_BASE +0x214));
++                writel((0x00005e80), (KROME_RFMODE_BASE +0x218)); //#write RF_MOD_depth,default 0x64e6 
++                writel((0x0000001b), (KROME_RFMODE_BASE +0x240));   //#  VDAC-gain default 1b   
++                writel((0x00000f00), (KROME_RFMODE_BASE +0x200));     //       ### (0x1100 Arsen carrier ratio adjust   f0r -13dB @KromeA0   )xf00  -15dBc@ KromeA1 can pass the 920Khz chroma beat
++			
++                writel((0x00000000), (KROME_RFMODE_BASE +0x31c));    //#0x00011001 shut RF video RF and audio RF
++                writel((0x00000001), (KROME_RFMODE_BASE +0x004));    //  #TASTER_SOFT_RESETS_REG
++	        writel((0x00000000), (KROME_RFMODE_BASE +0x004));       //      #TASTER_SOFT_RESETS_REG
++					
++		}
++
++    
++
++}
++#endif 
++   writel( 0x00000001, (APOLLO_CPIPE_BASE + 0x4c00)); /* apply settings to layer */
++   writel( 0x00000001, (APOLLO_CPIPE_BASE + 0x8c00)); /* apply settings to layer */
+ 
+    iounmap(pVRAMhd_base);
+ 

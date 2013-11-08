@@ -1,0 +1,19 @@
+diff -Naurp linux-2.6.34_Org/drivers/net/LIPP_6300ETH/src/gmac_drv.c linux-2.6.34/drivers/net/LIPP_6300ETH/src/gmac_drv.c
+--- linux-2.6.34_Org/drivers/net/LIPP_6300ETH/src/gmac_drv.c	2012-03-19 18:37:23.632027000 +0530
++++ linux-2.6.34/drivers/net/LIPP_6300ETH/src/gmac_drv.c	2012-03-19 18:47:14.146231000 +0530
+@@ -3174,13 +3174,11 @@ static void lipp_6300Eth_timer( unsigned
+     
+     mod_timer(priv->phy_timer,priv->phy_timer->expires);
+     spin_unlock(&priv->lock);
+-
+     return;
+ 
+ _err_timer :
+-
+-        GMAC_PRINT_ERR("Link Status Error\n") ;
+-
++    spin_unlock(&priv->lock);
++    GMAC_PRINT_ERR("Link Status Error\n") ;
+     return;
+ 
+ }

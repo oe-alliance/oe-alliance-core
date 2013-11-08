@@ -1,0 +1,201 @@
+diff -uNr linux-2.6.34/arch/arm/mach-apollo/pm.c linux-2.6.34-standby/arch/arm/mach-apollo/pm.c
+--- linux-2.6.34/arch/arm/mach-apollo/pm.c	2010-10-07 17:13:55.000000000 -0500
++++ linux-2.6.34-standby/arch/arm/mach-apollo/pm.c	2010-10-07 17:10:50.000000000 -0500
+@@ -110,6 +110,9 @@
+ 
+ 
+ extern void __iomem *gic_cpu_base_addr;	/* used by entry-macro.S */
++
++static unsigned int cpipe_layer_ctl_reg[8];
++
+ /* Static function prototypes */
+ static void apollo_pm_enable_wakeup_intr(void);
+ static void apollo_pm_disable_wakeup_intr(void);
+@@ -541,57 +544,8 @@
+ /* state change to standby */
+ static void apollo_pm_standby(void)
+ {
+-   unsigned int cpipe_layer_ctl_reg[8];
+-   int i;
+-
+    printk("PM: Apollo entering standby state...\n");
+ 
+-   /* Make sure the CPIPE layers are all blanked. The CPIPE RIF will
+-    * continue to read memory unless the layers are off. This would
+-    * cause random failures when the A9 resumes. The driver needs to
+-    * manage this. This is a safe guard to avoid issues since the
+-    * splash screen sets up the CPIPE outside of the CPIPE driver's
+-    * scope. */
+-   for ( i=0; i<8; i++)
+-   {
+-      if ( i < 4 )
+-      {
+-         cpipe_layer_ctl_reg[i] = readl(ARM_A9_HOST_MMIO_BASE
+-                                        + 0x128400 + (i * 0x400)) & 0x1;
+-         writel(0x0, (ARM_A9_HOST_MMIO_BASE + 0x128400 + (i * 0x400)) );
+-      }
+-      else
+-      {
+-         cpipe_layer_ctl_reg[i] = readl(ARM_A9_HOST_MMIO_BASE
+-                                        + 0x124400 + ((i-4) * 0x400)) & 0x1;
+-         writel(0x0, (ARM_A9_HOST_MMIO_BASE + 0x124400 + ((i-4) * 0x400)) );
+-      }
+-   }
+-
+-  /**
+-    * Step 1: turn off interrupts
+-    */
+-   local_irq_disable();
+-   local_fiq_disable();
+-
+-   /* Make sure ALL the interrupts are off. This is just
+-    * to guarantee the registers are disabled.
+-    */
+-
+-   /* Save any that are still on. */
+-   apollo_pm_gic_dist_save();
+-
+-   /* Disable them */
+-   apollo_pm_gic_dist_disable();
+-
+-   for ( i = 0; i<8; i++)
+-   {
+-      if ( pm_pic_save.dist_pending_set[i] )
+-      {
+-         printk("WARNING: You have a pending irq.\n\t\tindex: %d\n\t\tvalue: %x\n", i, pm_pic_save.dist_pending_set[i]);
+-      }
+-   }
+-
+    /* Enable the IPC interrupt from M3 */
+    __raw_writel(0x2, 0xe0101104);
+ 
+@@ -636,30 +590,12 @@
+       }
+    }
+ 
+-resume:
+-   /* Resumed...restore the context */
+-   apollo_pm_restore_standby_context();
+-
+-   /* Restore any of the PM saved interrupts. */
+-   apollo_pm_gic_dist_restore();
++   resume:
+ 
+-   local_irq_enable();
+-   local_fiq_enable();
++   local_irq_disable();
+ 
+-   /* Restore the CPIPE layer enables */
+-   for ( i=0; i<8; i++)
+-   {
+-      if ( i < 4 )
+-      {
+-         writel( cpipe_layer_ctl_reg[i],
+-                 (ARM_A9_HOST_MMIO_BASE + 0x128400 + (i * 0x400)) );
+-      }
+-      else
+-      {
+-         writel( cpipe_layer_ctl_reg[i],
+-                 (ARM_A9_HOST_MMIO_BASE + 0x124400 + ((i-4) * 0x400)) );
+-      }
+-   }
++    /* Resumed...restore the context */
++   apollo_pm_restore_standby_context();
+ 
+    printk("PM: Apollo resuming from standby state...\n");
+ }
+@@ -690,6 +626,45 @@
+    return 0;
+ }
+ 
++static int apollo_pm_prepare_late(void)
++{
++   int i;
++
++   /* Make sure the CPIPE layers are all blanked. The CPIPE RIF will
++    * continue to read memory unless the layers are off. This would
++    * cause random failures when the A9 resumes. The driver needs to
++    * manage this. This is a safe guard to avoid issues since the
++    * splash screen sets up the CPIPE outside of the CPIPE driver's
++    * scope. */
++   for ( i=0; i<8; i++)
++   {
++      if ( i < 4 )
++      {
++         cpipe_layer_ctl_reg[i] = readl(ARM_A9_HOST_MMIO_BASE
++                                        + 0x128400 + (i * 0x400)) & 0x1;
++         writel(0x0, (ARM_A9_HOST_MMIO_BASE + 0x128400 + (i * 0x400)) );
++      }
++      else
++      {
++         cpipe_layer_ctl_reg[i] = readl(ARM_A9_HOST_MMIO_BASE
++                                        + 0x124400 + ((i-4) * 0x400)) & 0x1;
++         writel(0x0, (ARM_A9_HOST_MMIO_BASE + 0x124400 + ((i-4) * 0x400)) );
++      }
++   }
++
++   /* Make sure ALL the interrupts are off. This is just
++    * to guarantee the registers are disabled.
++    */
++
++   /* Save any that are still on. */
++   apollo_pm_gic_dist_save();
++
++   /* Disable them */
++   apollo_pm_gic_dist_disable();
++
++   return 0;
++}
++
+ /*
+  * apollo_pm_enter - Actually enter a sleep state.
+  * @state:     State we're entering.
+@@ -712,6 +687,31 @@
+    return 0;
+ }
+ 
++static void apollo_pm_wake(void)
++{
++   int i;
++
++   /* Restore any of the PM saved interrupts. */
++   apollo_pm_gic_dist_restore();
++
++   /* Restore the CPIPE layer enables */
++   for ( i=0; i<8; i++)
++   {
++      if ( i < 4 )
++      {
++         writel( cpipe_layer_ctl_reg[i],
++                 (ARM_A9_HOST_MMIO_BASE + 0x128400 + (i * 0x400)) );
++      }
++      else
++      {
++         writel( cpipe_layer_ctl_reg[i],
++                 (ARM_A9_HOST_MMIO_BASE + 0x124400 + ((i-4) * 0x400)) );
++      }
++   }
++
++   return;
++}
++
+ /**
+  * apollo_pm_finish - Finish up suspend sequence.
+  *
+@@ -748,10 +748,12 @@
+ 
+ static struct platform_suspend_ops apollo_pm_ops =
+ {
+-   .prepare    = apollo_pm_prepare,
+-   .enter      = apollo_pm_enter,
+-   .finish     = apollo_pm_finish,
+-   .valid      = apollo_pm_valid
++   .prepare      = apollo_pm_prepare,
++   .prepare_late = apollo_pm_prepare_late,
++   .enter        = apollo_pm_enter,
++   .wake         = apollo_pm_wake,
++   .finish       = apollo_pm_finish,
++   .valid        = apollo_pm_valid
+ };
+ 
+ /* function to register routines to activate standby controller */

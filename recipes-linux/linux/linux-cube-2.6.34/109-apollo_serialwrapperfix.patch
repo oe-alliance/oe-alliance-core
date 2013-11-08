@@ -1,0 +1,157 @@
+diff -Naur linux-2.6.34/drivers/serial/serial_core.c linux-2.6.34_SerialFix/drivers/serial/serial_core.c
+--- linux-2.6.34/drivers/serial/serial_core.c	2010-05-17 02:47:36.000000000 +0530
++++ linux-2.6.34_SerialFix/drivers/serial/serial_core.c	2010-09-24 17:41:38.473760100 +0530
+@@ -914,6 +914,8 @@
+ 	int result = -EIO;
+ 
+ 	mutex_lock(&port->mutex);
++
++	if (file != NULL) {
+ 	if ((!file || !tty_hung_up_p(file)) &&
+ 	    !(tty->flags & (1 << TTY_IO_ERROR))) {
+ 		result = uport->mctrl;
+@@ -922,6 +924,16 @@
+ 		result |= uport->ops->get_mctrl(uport);
+ 		spin_unlock_irq(&uport->lock);
+ 	}
++}
++	else {
++       	if (!(tty->flags & (1 << TTY_IO_ERROR))) {
++		result = uport->mctrl;
++
++		spin_lock_irq(&uport->lock);
++		result |= uport->ops->get_mctrl(uport);
++		spin_unlock_irq(&uport->lock);
++       	}
++	}
+ 	mutex_unlock(&port->mutex);
+ 
+ 	return result;
+@@ -937,11 +949,21 @@
+ 	int ret = -EIO;
+ 
+ 	mutex_lock(&port->mutex);
++	if (file != NULL) {
+ 	if ((!file || !tty_hung_up_p(file)) &&
+ 	    !(tty->flags & (1 << TTY_IO_ERROR))) {
+ 		uart_update_mctrl(uport, set, clear);
+ 		ret = 0;
+ 	}
++	}
++	else {
++       	if (!(tty->flags & (1 << TTY_IO_ERROR))) {
++       		uart_update_mctrl(uport, set, clear);
++       		ret = 0;
++       	}
++		
++	}
++
+ 	mutex_unlock(&port->mutex);
+ 	return ret;
+ }
+@@ -1161,10 +1183,12 @@
+ 
+ 	mutex_lock(&port->mutex);
+ 
++	if (filp != NULL) {
+ 	if (tty_hung_up_p(filp)) {
+ 		ret = -EIO;
+ 		goto out_up;
+ 	}
++	}
+ 
+ 	/*
+ 	 * All these rely on hardware being present and need to be
+@@ -1285,8 +1309,11 @@
+ 
+ 	mutex_lock(&port->mutex);
+ 
++	if (filp != NULL)
++	{
+ 	if (tty_hung_up_p(filp))
+ 		goto done;
++	}
+ 
+ 	if ((tty->count == 1) && (port->count != 1)) {
+ 		/*
+@@ -1503,9 +1530,20 @@
+ 		/*
+ 		 * If we have been hung up, tell userspace/restart open.
+ 		 */
++#if 0 
+ 		if (tty_hung_up_p(filp) || port->tty == NULL)
+ 			break;
++#else
++		if (filp != NULL) {
++			if (tty_hung_up_p(filp) || port->tty == NULL)
++				break;
++		}
++		else {
++			if (port->tty == NULL)
++				break;
++		}
+ 
++#endif
+ 		/*
+ 		 * If the port has been closed, tell userspace/restart open.
+ 		 */
+@@ -1561,9 +1599,19 @@
+ 	if (signal_pending(current))
+ 		return -ERESTARTSYS;
+ 
++#if 0
+ 	if (!port->tty || tty_hung_up_p(filp))
+ 		return -EAGAIN;
+-
++#else
++	if (filp != NULL) {
++		if (!port->tty || tty_hung_up_p(filp))
++			return -EAGAIN;
++	}
++	else {
++		if (port->tty )
++			return -EAGAIN;
++	}
++#endif
+ 	return 0;
+ }
+ 
+@@ -1652,13 +1700,18 @@
+ 	/*
+ 	 * If the port is in the middle of closing, bail out now.
+ 	 */
+-	if (tty_hung_up_p(filp)) {
+-		retval = -EAGAIN;
+-		port->count--;
+-		mutex_unlock(&port->mutex);
+-		goto fail;
++ 
++	if (filp != NULL)
++	{
++	 	
++		if (tty_hung_up_p(filp)) {
++			retval = -EAGAIN;
++			port->count--;
++			mutex_unlock(&port->mutex);
++			goto fail;
++		}
+ 	}
+-
++	 
+ 	/*
+ 	 * Make sure the device is in D0 state.
+ 	 */
+@@ -1673,8 +1726,11 @@
+ 	/*
+ 	 * If we succeeded, wait until the port is ready.
+ 	 */
+-	if (retval == 0)
+-		retval = uart_block_til_ready(filp, state);
++	if (retval == 0) {
++
++		if (filp != NULL)
++			retval = uart_block_til_ready(filp, state);
++		}
+ 	mutex_unlock(&port->mutex);
+ 
+ 	/*

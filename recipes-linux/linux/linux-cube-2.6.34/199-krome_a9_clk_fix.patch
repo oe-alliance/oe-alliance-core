@@ -1,0 +1,25 @@
+diff -Naurp linux-2.6.34/arch/arm/mach-krome/include/mach/pnx8492.h linux-2.6.34_a9_peri_freq/arch/arm/mach-krome/include/mach/pnx8492.h
+--- linux-2.6.34/arch/arm/mach-krome/include/mach/pnx8492.h	2012-01-30 18:40:43.431714000 +0530
++++ linux-2.6.34_a9_peri_freq/arch/arm/mach-krome/include/mach/pnx8492.h	2012-01-30 18:38:45.207265000 +0530
+@@ -30,16 +30,16 @@
+ #include <mach/hardware.h>
+ 
+ #ifdef CONFIG_EXECUTE_ON_EMULATOR
+-#define APOLLO_CORTEX_FREQ			(500 * 1000 * 1000)
+-#define APOLLO_PERIPHERALS_FREQ			(APOLLO_CORTEX_FREQ / 2)
++#define APOLLO_CORTEX_FREQ			(800 * 1000 * 1000)
++#define APOLLO_PERIPHERALS_FREQ  (APOLLO_CORTEX_FREQ / 2)
+ #else
+-#define APOLLO_CORTEX_FREQ			(500 * 1000 * 1000)
+-#define APOLLO_PERIPHERALS_FREQ			(APOLLO_CORTEX_FREQ / 2)
++#define APOLLO_CORTEX_FREQ			(800 * 1000 * 1000)
++#define APOLLO_PERIPHERALS_FREQ	(APOLLO_CORTEX_FREQ / 2)
+ #endif /* CONFIG_EXECUTE_ON_EMULATOR */
+ 
+ #ifdef CONFIG_EXECUTE_ON_EMULATOR
+ //#define UART_CLOCK_RATE		(73000/4)
+-#define UART_CLOCK_RATE		(46293)  //740700/16
++#define UART_CLOCK_RATE       (46293)  //740700/16
+ //#define UART_CLOCK_RATE		(33600)
+ #else
+ #define UART_CLOCK_RATE		(50000000)

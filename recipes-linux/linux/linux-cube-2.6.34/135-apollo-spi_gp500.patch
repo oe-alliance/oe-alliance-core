@@ -1,0 +1,302 @@
+diff -Naurp linux-2.6.34/drivers/spi/nx_spi.c linux-2.6.34.spi/drivers/spi/nx_spi.c
+--- linux-2.6.34/drivers/spi/nx_spi.c	2010-12-09 17:29:07.000000000 -0600
++++ linux-2.6.34.spi/drivers/spi/nx_spi.c	2010-12-07 20:31:09.000000000 -0600
+@@ -196,18 +196,19 @@ static void nxspi_enabledisable(struct n
+     if ( enable )
+     {
+ #ifdef CONFIG_SPI_NX_DMAC_1902
++//        nx_spi_writel(nxspi->regs + NX_SPI_TX_FIFO_FLUSH_OFFSET, 1);
+         nx_spi_writel(nxspi->regs + NX_SPI_DMA_SETTING_OFFSET,3);
+-#endif    
++#endif
+         nx_spi_writel(nxspi->regs + NX_SPI_CONFIG_OFFSET, val | NX_SPI_SPI_ENABLE_MSK); //enable
+     }
+     else
+     {
+ #ifdef CONFIG_SPI_NX_DMAC_1902
+         nx_spi_writel(nxspi->regs + NX_SPI_DMA_SETTING_OFFSET,0);
+-#endif        
++#endif
+         nx_spi_writel(nxspi->regs + NX_SPI_CONFIG_OFFSET, val & ~(NX_SPI_SPI_ENABLE_MSK)); //disable
+     }
+-    
++
+ }
+ 
+ 
+@@ -298,7 +299,7 @@ static void nxspi_pgm_speed(struct nx_sp
+     	val |= (prescaleval << NX_SPI_CLK_DIVISOR2_POS);
+     else
+     	val |= (2 << NX_SPI_CLK_DIVISOR2_POS);
+- 
++
+     if(serialclkrate >= 0 && serialclkrate <=255)
+        val |= serialclkrate;
+     else
+@@ -366,7 +367,7 @@ static void nxspi_hw_setup(struct nx_spi
+         /* 1 transfer set*/
+         nx_spi_writel(nxspi->regs + NX_SPI_NUM_TXFERS_CMD_OFFSET, 1);
+     }
+- 
++
+     /* Enable the Slave*/
+     nxspi_cs_set(nxspi, spi, 1);
+ 
+@@ -455,7 +456,7 @@ static int nxspi_prep_sg(struct scatterl
+         sg_set_buf(&(*sg_rx)[index], &nxspi->control_word, sizeof(nxspi->control_word));
+         index++;
+     }
+-    
++
+     /* use scratch buffer in case */
+     if ( xfer->tx_buf == NULL ){
+         xfer->tx_buf = nxspi->buffer;
+@@ -467,7 +468,7 @@ static int nxspi_prep_sg(struct scatterl
+         xfer->rx_buf = nxspi->buffer;
+         memzero(nxspi->buffer, xfer->len);
+         sg_set_buf(&(*sg_tx)[index], xfer->tx_buf, (xfer->len));
+-        sg_set_buf(&(*sg_rx)[index], xfer->rx_buf, (xfer->len));        
++        sg_set_buf(&(*sg_rx)[index], xfer->rx_buf, (xfer->len));
+     }
+     else
+     {
+@@ -585,19 +586,22 @@ nxspi_dma_rxeventcallback(
+ static void nxspi_dma_txcallback(void *dma_async_param)
+ {
+     struct nx_spi *nxspi = (struct nx_spi *)dma_async_param;
+-    struct spi_message *msg;
+-
+-    msg = list_entry(nxspi->queue.next, struct spi_message, queue );
+-
+-    if (nxspi_xfer_is_last(msg, nxspi->current_transfer)) {
+-        nxspi->action = nx_spi_msg_done;
+-
+-    } else  { 
+-        nxspi->action = nx_spi_next_xfer;
++    //struct spi_message *msg;
++    enum dma_status status;
++    struct dma_device *dmadev = nxspi->dmachan_tx->device;
++
++    /* Check if any error status*/
++    status = dmadev->device_is_tx_complete(nxspi->dmachan_tx, 0, 0,0);
++
++    if (status == DMA_ERROR){
++         /* go to msg done*/
++         nxspi->action = nx_spi_msg_done;
++         /* stop or discard RX  */
++         dmadev->device_terminate_all(nxspi->dmachan_rx);
+         /*schedule the work queue*/
+         queue_work(nx_spi_wq, &nxspi->work);
+     }
+-    return;
++
+ }
+ 
+ /* nxspi_dma_txcallback -  To process transfer callback from DMA for RX
+@@ -610,18 +614,26 @@ static void nxspi_dma_txcallback(void *d
+ static void nxspi_dma_rxcallback(void *dma_async_param)
+ {
+     struct nx_spi *nxspi = (struct nx_spi *)dma_async_param;
++    enum dma_status status;
+     struct spi_message *msg;
++    struct dma_device *dmadev = nxspi->dmachan_tx->device;
+ 
+     msg = list_entry(nxspi->queue.next, struct spi_message, queue );
++    /* Check if any error status*/
++    status = dmadev->device_is_tx_complete(nxspi->dmachan_tx, 0, 0,0);
++    if (status == DMA_ERROR){
++        nxspi->action = nx_spi_msg_done;
++    }
++    else if (status == DMA_SUCCESS){
++        if (nxspi_xfer_is_last(msg, nxspi->current_transfer))
++        nxspi->action = nx_spi_msg_done;
++        else
++        nxspi->action = nx_spi_next_xfer;
+ 
+-    if (nxspi_xfer_is_last(msg, nxspi->current_transfer))
+-    nxspi->action = nx_spi_msg_done;
+-    else
+-    nxspi->action = nx_spi_next_xfer;
+-
++    }
+     /*schedule the work queue*/
+     queue_work(nx_spi_wq, &nxspi->work);
+-    return;
++
+ }
+ 
+ 
+@@ -656,7 +668,7 @@ static void nxspi_dmasetup(struct nx_spi
+     }
+     else if( (xfer->rx_buf) && (xfer->tx_buf == NULL) ){
+     val = rxdma_burst << NX_SPI_RX_DMA_BURST_POS;
+-    val |= NX_SPI_RX_DMA_ENABLE_MSK;
++    val |= (NX_SPI_RX_DMA_ENABLE_MSK);
+     }
+     else{
+     val = (txdma_burst << NX_SPI_TX_DMA_BURST_POS) | (rxdma_burst << NX_SPI_RX_DMA_BURST_POS);
+@@ -690,7 +702,7 @@ static void nxspi_dmasetup(struct nx_spi
+     spin_unlock_irqrestore(&nxspi->lock, flags);
+ 
+     /* Now prepare sg for both TX & RX.
+-        DMA channels for SPI Tx,Rx are already allocated in nx_spi_probe() function 
++        DMA channels for SPI Tx,Rx are already allocated in nx_spi_probe() function
+     */
+     ret = nxspi_prep_sg(&sg_tx, &sg_rx,nxspi);
+     if (ret < 0 ){
+@@ -708,10 +720,28 @@ static void nxspi_dmasetup(struct nx_spi
+     rxdesc->callback = nxspi_dma_rxcallback;
+     rxdesc->callback_param = nxspi;
+ 
++    if(sg_tx)
++        kfree(sg_tx);
++    if(sg_rx)
++        kfree(sg_rx);
++
++    sg_tx = sg_rx = NULL;
++    
+     /* submit for transfer.
+     First RX and then TX*/
+     rxdesc->tx_submit(rxdesc);
+     txdesc->tx_submit(txdesc);
++
++    /* Now wait for DMA transfer callback to be invoked*/
++	do{
++	val = dmadev->device_is_tx_complete(nxspi->dmachan_tx, 0, NULL, NULL);
++	}while(val != DMA_SUCCESS );
++	do{
++	val = dmadev->device_is_tx_complete(nxspi->dmachan_rx, 0, NULL, NULL);
++	}while(val != DMA_SUCCESS );
++
++	nxspi_dma_txcallback(nxspi);
++	nxspi_dma_rxcallback(nxspi);
+ }
+ 
+ 
+@@ -839,7 +869,7 @@ static void nxspi_unqueue_xfer(
+     spin_lock_irqsave(&nxspi->lock, flags);
+ 
+     /* check if this is the first xfer from the message list*/
+-    if(!nxspi->current_transfer)
++    if(!(nxspi->current_transfer))
+         xfer = list_entry(msg->transfers.next,
+                 struct spi_transfer,transfer_list);
+     else
+@@ -847,18 +877,18 @@ static void nxspi_unqueue_xfer(
+                 struct spi_transfer,transfer_list);
+ 
+     nxspi->current_transfer = xfer;
+-    nxspi->curr_remaining_bytes =xfer->len;
++    nxspi->curr_remaining_bytes = xfer->len;
+     nxspi->control_word_done = 0;
+ 
+     /* Setup the config, slavesettings registers now*/
+     /* make sure the SPI unit is disabled before touching the
+     settings. The hwsetup is performed only once for a new message
+     & not for new transfers of the same message */
+-if(nxspi->flag_newmsg == true){
+-    nxspi_enabledisable(nxspi, 0);
+-    nxspi_hw_setup(nxspi);
+-	nxspi->flag_newmsg=false;
+-}
++    if(nxspi->flag_newmsg == true){
++        nxspi_enabledisable(nxspi, 0);
++        nxspi_hw_setup(nxspi);
++    	nxspi->flag_newmsg=false;
++    }
+ 
+ #ifndef CONFIG_SPI_NX_DMAC_1902
+     /* free any previous scratchbuffer*/
+@@ -924,9 +954,9 @@ static void nxspi_process_message(
+ 
+     /* enable the device on the spiunit*/
+     if(nxspi->active_spidev){
+-    if( nxspi->active_spidev != msg->spi){
+-        nxspi_cs_set(nxspi,nxspi->active_spidev,0);
+-    }
++        if( nxspi->active_spidev != msg->spi){
++            nxspi_cs_set(nxspi,nxspi->active_spidev,0);
++        }
+     }
+     nxspi_cs_set(nxspi,msg->spi,1);
+     nxspi->active_spidev = msg->spi;
+@@ -1225,12 +1255,12 @@ static int nx_spi_transfer(struct spi_de
+     spin_lock_irqsave(&nxspi->lock, flags);
+     list_add_tail(&msg->queue, &nxspi->queue);
+     /* Check if currently active transfer. Orelse process message*/
+-    if (!nxspi->current_transfer){
++    if (!(nxspi->current_transfer)){
+         spin_unlock_irqrestore(&nxspi->lock, flags);
+         nxspi_process_message(spi->master,nxspi);
+     }
+ 	else{
+-    spin_unlock_irqrestore(&nxspi->lock, flags);
++        spin_unlock_irqrestore(&nxspi->lock, flags);
+ 	}
+     return 0;
+ }
+@@ -1261,6 +1291,8 @@ static void nx_spi_cleanup(struct spi_de
+     spin_unlock_irqrestore(&nxspi->lock, flags);
+ }
+ 
++#ifdef CONFIG_SPI_NX_DMAC_1902
++
+ #if (LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 33))
+ 
+ static bool filter(struct dma_chan *chan, void *param)
+@@ -1291,6 +1323,7 @@ static bool filter(struct dma_chan *chan
+ 		return false;
+ }
+ #endif
++#endif
+ /*---------------------------------------------------------------------*/
+ /*Platform driver interface functions*/
+ 
+@@ -1377,6 +1410,7 @@ static int __init nx_spi_probe (struct p
+     /* register SPI Controller driver as DMA client
+     with DMA Framework for both TX & RX lines*/
+ 
++#ifdef CONFIG_SPI_NX_DMAC_1902
+ #if (LINUX_VERSION_CODE < KERNEL_VERSION(2, 6, 33))
+     dma_cap_set(DMA_SLAVE,nxspi->client_tx.cap_mask);
+     dma_cap_set(DMA_SLAVE,nxspi->client_rx.cap_mask);
+@@ -1401,7 +1435,7 @@ static int __init nx_spi_probe (struct p
+ 
+ 	dma_cap_zero(mask);
+ 	dma_cap_set(DMA_SLAVE, mask);
+-	
++
+ 	for (;;) {
+ 		// allocate dma channel for tx
+ 		if(nxspi->chantx_alloted == false) {
+@@ -1416,7 +1450,7 @@ static int __init nx_spi_probe (struct p
+ 			if(nxspi->dmachan_rx) {
+ 				nxspi->chanrx_alloted = true;
+ 			}
+-		}	
++		}
+ 		// dma channel for tx and rx are allocated, exit
+ 		if(nxspi->chantx_alloted && nxspi->chanrx_alloted)
+ 			break;
+@@ -1426,6 +1460,7 @@ static int __init nx_spi_probe (struct p
+ 	}
+ #endif
+ #endif
++#endif
+ 
+     spin_lock_init(&nxspi->lock);
+     INIT_LIST_HEAD(&nxspi->queue);
+diff -Naurp linux-2.6.34/drivers/spi/nx_spi_local.h linux-2.6.34.spi/drivers/spi/nx_spi_local.h
+--- linux-2.6.34/drivers/spi/nx_spi_local.h	2010-12-09 17:29:07.000000000 -0600
++++ linux-2.6.34.spi/drivers/spi/nx_spi_local.h	2010-12-09 17:28:03.000000000 -0600
+@@ -379,8 +379,8 @@
+ 
+ /* Register access macros */
+ #define nx_spi_readl(reg) \
+-    __raw_readl(reg)
++    readl(reg)
+ #define nx_spi_writel(reg,value) \
+-    __raw_writel((value), reg)
++    writel((value), reg)
+ 
+ #endif //NX_SPI_LOCAL_H

@@ -1,0 +1,69 @@
+diff -Naurp linux-2.6.34_orig/arch/arm/mach-krome/nx_sdiomc_dev.c linux-2.6.34/arch/arm/mach-krome/nx_sdiomc_dev.c
+--- linux-2.6.34_orig/arch/arm/mach-krome/nx_sdiomc_dev.c	2012-11-23 17:50:48.819758000 +0530
++++ linux-2.6.34/arch/arm/mach-krome/nx_sdiomc_dev.c	2012-11-26 15:25:50.694961000 +0530
+@@ -125,6 +125,14 @@ static void __init apollo_sdiomc_pin_mux
+    writel(val, PAD_CONFIGURATION_0_REG);
+ 
+ #endif
++
++#ifdef CONFIG_MMC_SDHCI_NX_SDIOMC_SDDATA4_7
++   val = readl(ALT_PIN_MUX_REG_0);
++   /* enable sddata4-7 of MMC interface */
++   val |= 0x00000020;   // alt05_sdio=1
++   writel(val, ALT_PIN_MUX_REG_0);
++#endif
++
+ }
+ 
+ static int __init apollo_sdiomc_init(void)
+diff -Naurp linux-2.6.34_orig/arch/arm/mach-kronos/nx_sdiomc_dev.c linux-2.6.34/arch/arm/mach-kronos/nx_sdiomc_dev.c
+--- linux-2.6.34_orig/arch/arm/mach-kronos/nx_sdiomc_dev.c	2012-11-23 17:50:48.747756000 +0530
++++ linux-2.6.34/arch/arm/mach-kronos/nx_sdiomc_dev.c	2012-11-26 15:08:56.422805000 +0530
+@@ -105,6 +105,10 @@ static void __init apollo_sdiomc_pin_mux
+    val = readl(ALT_PIN_MUX_REG_0);
+    val &= ~(0x08802028);   // alt13_dbgi2c=0, alt23=0, alt27_sdcmd=0,alt05_sdio=0, alt03_656=0
+    val |=   0x40001000;    // alt12_uart2=1, alt30_sdio=1
++#ifdef CONFIG_MMC_SDHCI_NX_SDIOMC_SDDATA4_7
++   /* enable sddata4-7 of MMC interface */
++   val |=   0x00000020;    // alt05_sdio=1
++#endif
+    writel(val, ALT_PIN_MUX_REG_0);
+ 
+    val = readl(ALT_PIN_MUX_REG_1);
+diff -Naurp linux-2.6.34_orig/drivers/mmc/host/Kconfig linux-2.6.34/drivers/mmc/host/Kconfig
+--- linux-2.6.34_orig/drivers/mmc/host/Kconfig	2012-11-23 17:50:49.289699000 +0530
++++ linux-2.6.34/drivers/mmc/host/Kconfig	2012-11-26 15:23:47.085954000 +0530
+@@ -555,3 +555,12 @@ config MMC_SDHCI_NX_SDIOMC_25MHZ
+ 	    This selects 25MHz of SD_CLK instead of 50MHz for data transfer with SD/MMC card. For best
+ 	    performance, do not select it.
+ 
++config MMC_SDHCI_NX_SDIOMC_SDDATA4_7
++	bool "Enable SD Data Pins 4-7 of 8-bit MMC interface"
++	depends on MMC_SDHCI_NX_SDIOMC && !MTD_NX_NAND && !MTD_APOLLO_NOR
++	default n
++	help
++	    This config enables SD Data Pins 4-7 of 8-bit MMC interface.
++       
++	    Note: This will disable the option to configure NOR and NAND flash device.
++
+diff -Naurp linux-2.6.34_orig/drivers/mmc/host/sdhci.c linux-2.6.34/drivers/mmc/host/sdhci.c
+--- linux-2.6.34_orig/drivers/mmc/host/sdhci.c	2012-11-23 17:50:49.293731000 +0530
++++ linux-2.6.34/drivers/mmc/host/sdhci.c	2012-11-23 17:35:01.514190000 +0530
+@@ -1163,7 +1163,8 @@ static void sdhci_set_ios(struct mmc_hos
+ 	else
+ 		ctrl &= ~SDHCI_CTRL_4BITBUS;
+ 
+-	if (ios->timing == MMC_TIMING_SD_HS)
++	if ( ios->timing == MMC_TIMING_SD_HS || 
++			ios->timing == MMC_TIMING_MMC_HS )
+ 		ctrl |= SDHCI_CTRL_HISPD;
+ 	else
+ 		ctrl &= ~SDHCI_CTRL_HISPD;
+@@ -1759,6 +1760,7 @@ int sdhci_add_host(struct sdhci_host *ho
+ #if defined(CONFIG_ARCH_KROME)|| defined( CONFIG_ARCH_KRONOS)
+ 	host->max_clk = 50000000;
+ #endif
++
+ 	if (host->max_clk == 0) {
+ 		if (!host->ops->get_max_clock) {
+ 			printk(KERN_ERR

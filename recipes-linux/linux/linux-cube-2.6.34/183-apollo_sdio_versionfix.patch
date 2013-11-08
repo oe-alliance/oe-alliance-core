@@ -1,0 +1,12 @@
+diff -Naur linux-2.6.34/drivers/mmc/host/sdhci_nx_sdiomc.c linux-2.6.34_sdio/drivers/mmc/host/sdhci_nx_sdiomc.c
+--- linux-2.6.34/drivers/mmc/host/sdhci_nx_sdiomc.c	2011-09-28 15:14:51.482642000 +0530
++++ linux-2.6.34_sdio/drivers/mmc/host/sdhci_nx_sdiomc.c	2011-09-28 15:12:34.137778000 +0530
+@@ -275,7 +275,7 @@
+   rev = readw(ioaddr + SDHCI_HOST_VERSION);
+   rev_no = (( rev & SDHCI_VENDOR_VER_MASK ) >> SDHCI_VENDOR_VER_SHIFT ); 
+ 
+-  if( ( rev_no  != NX_SDIOMC_VENDOR_REVISION_2 ) || ( rev_no  != NX_SDIOMC_VENDOR_REVISION_1 ) || ( rev_no  != NX_SDIOMC_VENDOR_REVISION ) ) {
++  if( ( rev_no  != NX_SDIOMC_VENDOR_REVISION_2 ) && ( rev_no  != NX_SDIOMC_VENDOR_REVISION_1 ) && ( rev_no  != NX_SDIOMC_VENDOR_REVISION ) ) {
+     ret = -ENXIO;
+     goto _unmap;
+   }

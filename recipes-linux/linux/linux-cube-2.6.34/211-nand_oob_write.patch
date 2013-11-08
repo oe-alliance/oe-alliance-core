@@ -1,0 +1,193 @@
+diff -Naurp linux-2.6.34_orig/drivers/mtd/nand/nx_nand/nx_nand.c linux-2.6.34/drivers/mtd/nand/nx_nand/nx_nand.c
+--- linux-2.6.34_orig/drivers/mtd/nand/nx_nand/nx_nand.c	2012-04-05 16:36:53.721157000 +0530
++++ linux-2.6.34/drivers/mtd/nand/nx_nand/nx_nand.c	2012-04-11 20:29:39.723102000 +0530
+@@ -49,8 +49,6 @@
+ 
+ #define ATTRIBUTE_UNUSED __attribute__ ((__unused__))
+ 
+-#define  NUM_OOB_OVERLAP_DATA (16 * 3)
+-
+ #ifdef CONFIG_MTD_NX_NAND_HWECC
+ #ifdef CONFIG_ARCH_APOLLO
+ /**
+@@ -893,7 +891,6 @@ static void nx_nand_write_page_raw(struc
+    uint32_t intr=0;
+    uint16_t addr;
+    tmhwEfmc_PageConfig_t page_cfg;
+-
+ #ifdef CONFIG_MTD_NX_NAND_DMAC
+    int chanid, status;
+    tmhwEfmc_DmaConfig_t dma_cfg;
+@@ -1107,9 +1104,7 @@ static void nx_nand_write_page(struct mt
+ #ifdef CONFIG_ARCH_APOLLO
+ static u_char temp_buf[NAND_MAX_PAGESIZE+NAND_MAX_OOBSIZE];
+ #endif
+-#define  OOB_BYTES_PER_BLK  (mtd->oobsize/nc->num_blks)
+ 
+-#ifdef CONFIG_ARCH_APOLLO
+ /**
+  * nx_nand_write_oob - Write OOB data
+  * @mtd: MTD information structure
+@@ -1121,8 +1116,9 @@ static u_char temp_buf[NAND_MAX_PAGESIZE
+ static int nx_nand_write_oob(struct mtd_info *mtd, struct nand_chip *chip,
+    int page)
+ {
+-   struct nx_nand_ctrl *nc = container_of(mtd, struct nx_nand_ctrl, mtd);
+    int status = 0;
++#ifdef CONFIG_ARCH_APOLLO
++   struct nx_nand_ctrl *nc = container_of(mtd, struct nx_nand_ctrl, mtd);
+    int sndcmd = 1;
+    const uint8_t *buf = chip->oob_poi;
+    int length;
+@@ -1220,17 +1216,10 @@ static int nx_nand_write_oob(struct mtd_
+       /* write  confirm command */
+       nx_nand_cmd_addr(nc, 1, NAND_CMD_PAGEPROG, 1);
+    }
+-   else {
+-#if 0
+-      /* Initialise temp_buf */
+-      memset(temp_buf, 0xff, (mtd->writesize + mtd->oobsize));
+-
+-      /* Send SEQIN command */
+-      chip->cmdfunc(mtd, NAND_CMD_SEQIN, 0, page);
++   else 
++   {
++      const u_int32_t OOB_BYTES_PER_BLK = (mtd->oobsize/nc->num_blks);
+ 
+-      /* Call write page raw */
+-      nx_nand_write_page_raw(mtd, chip, temp_buf);
+-#else      
+       /* Use IP_2017 OOB layout - write page */
+       /* Store ECC,AES values & Disable */   
+       ecc_old = nc->hwecc;
+@@ -1239,12 +1228,12 @@ static int nx_nand_write_oob(struct mtd_
+       nc->hwecc = false;
+       nc->aes = false;
+ 
+-      /* Send SEQIN command */
+-      chip->cmdfunc(mtd, NAND_CMD_SEQIN, 0, page);
+-
+       /* Initialise temp_buf */
+       memset(temp_buf, 0xff, (mtd->writesize + mtd->oobsize));
+ 
++      /* Send SEQIN command */
++      chip->cmdfunc(mtd, NAND_CMD_SEQIN, 0, page);
++
+       /* copy OOB */ 
+       temp1 = temp_buf;
+       for(i=0; i < nc->num_blks; i++) {
+@@ -1268,17 +1257,17 @@ static int nx_nand_write_oob(struct mtd_
+       chip->oob_poi = oob_poi_orig;
+       nc->hwecc = ecc_old;
+       nc->aes = aes_old;
+-#endif      
+-   }
+-   
+-   /* Send command to program the OOB data */
+-   chip->cmdfunc(mtd, NAND_CMD_PAGEPROG, -1, -1);
+ 
+-   status = chip->waitfunc(mtd, chip);
++      /* Send command to program the OOB data */
++      chip->cmdfunc(mtd, NAND_CMD_PAGEPROG, -1, -1);
+ 
++      status = chip->waitfunc(mtd, chip);
++   }
++#elif (defined (CONFIG_ARCH_KRONOS) || defined (CONFIG_ARCH_KROME))
++   status = chip->waitfunc(mtd, chip);
++#endif
+    return status & NAND_STATUS_FAIL ? -EIO : 0;
+ }
+-#endif
+ 
+ /**
+  * nx_nand_command - Command function for small page chips
+@@ -1397,7 +1386,6 @@ static void nx_nand_command(struct mtd_i
+ 
+       case NAND_CMD_READ0:
+          nc->offset = 0;
+-
+ #ifdef CONFIG_MTD_NX_NAND_DMAC
+          /* Start the DMAC */
+          nx_nand_dmac_init(nc, 1, &req, stgt);
+@@ -1748,7 +1736,6 @@ static void nx_nand_command_lp(struct mt
+ 
+       case NAND_CMD_READ0:
+          nc->offset = column;
+-
+ #ifdef CONFIG_MTD_NX_NAND_DMAC
+          /* Start the DMAC */
+          nx_nand_dmac_init(nc, 1, &req, stgt);
+@@ -1912,7 +1899,7 @@ static void nx_nand_command_lp(struct mt
+          break;
+ 
+       default:
+-      printk(KERN_ERR "nx_nand: command not supported %d \n", cmd);
++         printk(KERN_ERR "nx_nand: command not supported %d \n", cmd);
+    }
+ }
+ 
+@@ -2466,15 +2453,13 @@ static int nx_nand_probe(struct platform
+    chip->ecc.read_page_raw = nx_nand_read_page_raw;
+    chip->ecc.write_page_raw = nx_nand_write_page_raw;
+    chip->ecc.read_oob = nx_nand_read_oob;
+-#ifdef CONFIG_ARCH_APOLLO
+    chip->ecc.write_oob = nx_nand_write_oob;
+-#endif
+ 
+ #ifdef CONFIG_MTD_NX_NAND_HWECC
+    nx_nc->hwecc = true;
+    chip->ecc.read_page = nx_nand_read_page;
+    chip->ecc.write_page = nx_nand_write_page;
+-   chip->ecc.mode = NAND_ECC_HW_SYNDROME;
++   chip->ecc.mode = NAND_ECC_HW;
+    chip->ecc.calculate = nx_nand_calculate_ecc;
+    chip->ecc.correct = nx_nand_correct_data;
+    chip->ecc.hwctl = nx_nand_hwctl;
+diff -Naurp linux-2.6.34_orig/fs/jffs2/scan.c linux-2.6.34/fs/jffs2/scan.c
+--- linux-2.6.34_orig/fs/jffs2/scan.c	2010-05-17 02:47:36.000000000 +0530
++++ linux-2.6.34/fs/jffs2/scan.c	2012-04-11 21:10:14.791192000 +0530
+@@ -155,17 +155,33 @@ int jffs2_scan_medium(struct jffs2_sb_in
+ 		/* Now decide which list to put it on */
+ 		switch(ret) {
+ 		case BLK_STATE_ALLFF:
+-			/*
+-			 * Empty block.   Since we can't be sure it
+-			 * was entirely erased, we just queue it for erase
+-			 * again.  It will be marked as such when the erase
+-			 * is complete.  Meanwhile we still count it as empty
+-			 * for later checks.
+-			 */
+-			empty_blocks++;
+-			list_add(&jeb->list, &c->erase_pending_list);
+-			c->nr_erasing_blocks++;
+-			break;
++#if   (defined (CONFIG_ARCH_APOLLO) || \
++       defined (CONFIG_ARCH_KRONOS) || \
++       defined (CONFIG_ARCH_KROME))
++         /* Added by Deven Balani:
++          * NAND controller IP_2017 cannot write cleanmarkers 
++          * in the oob area. So treat blocks which don't read 
++          * cleanmarker instead read all FF's in the oob area 
++          * as valid empty block and avoid triggering garbage 
++          * collection for such already erased blocks. This fix 
++          * will improve jffs2 mount time and overall performance 
++          * for IP_2017 case but erase operations will not remain 
++          * power failure safe for JFFS2. */
++         if (!jffs2_cleanmarker_oob(c)) 
++#endif
++         {
++   			/*
++   			 * Empty block.   Since we can't be sure it
++   			 * was entirely erased, we just queue it for erase
++   			 * again.  It will be marked as such when the erase
++   			 * is complete.  Meanwhile we still count it as empty
++   			 * for later checks.
++   			 */
++   			empty_blocks++;
++   			list_add(&jeb->list, &c->erase_pending_list);
++   			c->nr_erasing_blocks++;
++   			break;
++			} /* fall through */
+ 
+ 		case BLK_STATE_CLEANMARKER:
+ 			/* Only a CLEANMARKER node is valid */

@@ -1,0 +1,93 @@
+diff -Naur linux-2.6.34/drivers/usb/gadget/file_storage.c linux-2.6.34_plugfest_fixes/drivers/usb/gadget/file_storage.c
+--- linux-2.6.34/drivers/usb/gadget/file_storage.c	2011-01-06 12:05:39.464684000 +0530
++++ linux-2.6.34_plugfest_fixes/drivers/usb/gadget/file_storage.c	2011-01-06 12:02:16.368123000 +0530
+@@ -1553,8 +1553,8 @@
+ {
+ 	u8	*buf = (u8 *) bh->buf;
+ 
+-	static char vendor_id[] = "Linux   ";
+-	static char product_disk_id[] =  "Trident MSC Dev ";
++	static char vendor_id[] = "Trident SetTopBox ";
++	static char product_disk_id[] =  "Mass Storage Gadget";
+ 	static char product_cdrom_id[] = "File-CD Gadget  ";
+ 
+ 	if (!fsg->curlun) {		// Unsupported LUNs are okay
+diff -Naur linux-2.6.34/drivers/usb/gadget/ip9028_udc.c linux-2.6.34_plugfest_fixes/drivers/usb/gadget/ip9028_udc.c
+--- linux-2.6.34/drivers/usb/gadget/ip9028_udc.c	2011-01-06 12:05:39.475680000 +0530
++++ linux-2.6.34_plugfest_fixes/drivers/usb/gadget/ip9028_udc.c	2011-01-06 12:02:57.101797000 +0530
+@@ -1406,12 +1406,21 @@
+ 	req->req.actual = 0;
+ 	req->req.complete = NULL;
+ 	req->dtd_count = 0;
+-	req->req.dma = dma_map_single(ep->udc->gadget.dev.parent,
+-					req->req.buf,
+-					req->req.length, ep_is_in(ep)
+-						? DMA_TO_DEVICE
+-						: DMA_FROM_DEVICE);
+-	req->mapped = 1;
++	if (req->req.dma == DMA_ADDR_INVALID) {
++		req->req.dma = dma_map_single(ep->udc->gadget.dev.parent, 
++					req->req.buf, 
++					req->req.length, ep_is_in(ep) 
++					? DMA_TO_DEVICE : 
++					DMA_FROM_DEVICE); 
++			req->mapped = 1; 
++	} 
++	else { 
++		dma_sync_single_for_device(ep->udc->gadget.dev.parent, 
++					req->req.dma, 
++					req->req.length, ep_is_in(ep) 
++					? DMA_TO_DEVICE : DMA_FROM_DEVICE); 
++			req->mapped = 0; 
++	} 
+ 
+ 	/* prime the data phase */
+ 	if ((fsl_req_to_dtd(req) == 0))
+diff -Naur linux-2.6.34/drivers/usb/gadget/Kconfig linux-2.6.34_plugfest_fixes/drivers/usb/gadget/Kconfig
+--- linux-2.6.34/drivers/usb/gadget/Kconfig	2011-01-06 12:05:38.586768000 +0530
++++ linux-2.6.34_plugfest_fixes/drivers/usb/gadget/Kconfig	2011-01-06 12:03:17.506177000 +0530
+@@ -259,8 +259,9 @@
+ 	boolean "IP9028 USB device controller"
+ 	depends on USB_EHCI_IP9028
+ 	select USB_GADGET_SELECTED
+-	select USB_OTG
+-
++	select USB_GADGET_DUALSPEED		
++        help
++          This enables the Dualspeed mode for USBCV compliance tests to run.
+ 
+ config USB_IP9028
+ 	tristate
+@@ -270,15 +271,6 @@
+ 	select USB_GADGET_DUALSPEED
+ 
+ 
+-config USBCV_TEST
+-        boolean "Gadget USBCV Test"
+-        depends on USB_GADGET_IP9028 && USB_OTG
+-	select USB_GADGET_DUALSPEED		
+-        help
+-          This enables the USBCV compliance tests to run.
+-          Normal device mode doesnot work, if this is enabled.
+-          Turn-off this flag for normal functioning.
+-
+ config USB_GADGET_R8A66597
+ 	boolean "Renesas R8A66597 USB Peripheral Controller"
+ 	select USB_GADGET_DUALSPEED
+diff -Naur linux-2.6.34/drivers/usb/otg/Kconfig linux-2.6.34_plugfest_fixes/drivers/usb/otg/Kconfig
+--- linux-2.6.34/drivers/usb/otg/Kconfig	2011-01-06 12:05:37.645851000 +0530
++++ linux-2.6.34_plugfest_fixes/drivers/usb/otg/Kconfig	2011-01-06 12:03:33.156881000 +0530
+@@ -63,6 +63,13 @@
+ 
+ config IP9028_OTG
+ 	tristate "IP9028 OTG"
++	depends on USB_GADGET_IP9028
++	select USB_OTG
++	help
++	  Enable this to support the USB OTG transceiver on IP9028
++	  family chips.
++	  This transceiver works with high, full/low, super speed hosts,
++	  plus all OTG protocols support (hnp, srp).
+ 
+ config NOP_USB_XCEIV
+ 	tristate "NOP USB Transceiver Driver"

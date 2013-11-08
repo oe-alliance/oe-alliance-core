@@ -1,0 +1,113 @@
+diff -Naurp linux-2.6.34.org/drivers/net/LIPP_6300ETH/comps/tmbslPhyRTL8211BN/src/tmbslPhyRTL8211BN.c linux-2.6.34/drivers/net/LIPP_6300ETH/comps/tmbslPhyRTL8211BN/src/tmbslPhyRTL8211BN.c
+--- linux-2.6.34.org/drivers/net/LIPP_6300ETH/comps/tmbslPhyRTL8211BN/src/tmbslPhyRTL8211BN.c	2011-02-13 19:38:21.000000000 -0600
++++ linux-2.6.34/drivers/net/LIPP_6300ETH/comps/tmbslPhyRTL8211BN/src/tmbslPhyRTL8211BN.c	2011-02-13 19:39:41.000000000 -0600
+@@ -798,11 +798,16 @@ tmbslPhyRTL8211BNAutoNegotiate (
+     */
+     tmbslPhyRTL8211Read(ethUnitId,tmbslPhyRTL8211Bmcr,&regVal);
+ 
++    /* Don't isolate the PHY if we're negotiating */
++    regVal &= ~TMBSL_PHYRTL8211_BMCR_ISO_PHY;
++
+     /* Clear autonegotiation bit */
+     regVal &= TMBSL_PHYRTL8211_BMCR_AN_CLR;
+ 
+     regVal |= TMBSL_PHYRTL8211_BMCR_AN_EN;
+ 
++    regVal |= TMBSL_PHYRTL8211_BMCR_AN_RESTART;
++
+     tmbslPhyRTL8211Write(ethUnitId,tmbslPhyRTL8211Bmcr,regVal);
+ 
+     /* Wait till the Auto negotiation is complete Or Do we need to set the Timeout */
+diff -Naurp linux-2.6.34.org/drivers/net/LIPP_6300ETH/src/gmac_drv.c linux-2.6.34/drivers/net/LIPP_6300ETH/src/gmac_drv.c
+--- linux-2.6.34.org/drivers/net/LIPP_6300ETH/src/gmac_drv.c	2011-02-13 19:38:27.000000000 -0600
++++ linux-2.6.34/drivers/net/LIPP_6300ETH/src/gmac_drv.c	2011-02-13 19:40:46.000000000 -0600
+@@ -392,9 +392,10 @@ static __s32 lipp_6300Eth_probe(struct p
+     lipp_6300Eth_PRIV_t *    priv ;
+     __s32                      ret_val ;
+     __u32 unitNum = pdev->id;
+-	pgmac_platform_data_t pPlatData=NULL;
+-	tmhwLIPP6100Eth_PhyInfo_t phyInfo;
+-	__u8 *pMacAdr=NULL;
++    pgmac_platform_data_t pPlatData=NULL;
++    tmhwLIPP6100Eth_PhyInfo_t phyInfo;
++    __u8 *pMacAdr=NULL;
++    tmhwLIPP6100Eth_Int_t IntDis;
+ 
+ #if (TMFL_SD_ALL || TMFL_LIPP6100ETHSD_OTHERS)
+     __u32 hwVer;
+@@ -455,6 +456,11 @@ static __s32 lipp_6300Eth_probe(struct p
+     GMAC_STAT_PRINT("%s PHY being used with GMAC%d\n",
+                     gpPhyInterface[unitNum]->phyName,unitNum);
+ 
++    /* Disable unnecessary interrupts */
++    IntDis.dmaIntVal = ERE_ETE_INT_VAL;
++    IntDis.gmacIntVal = GMAC_INT_MASK_VAL;
++    tmhwLIPP6100Eth_IntDisable(unitNum, &IntDis);
++
+     /* Register interrupts, after MAC is reset. PHY is reset in open fun */
+     ret_val = registerInterrupts(pdev);
+ 
+@@ -1205,9 +1211,36 @@ static __s32 setup_phy( struct net_devic
+     auto_neg_mask.protocolSel = tmbslPhyIEEE8023;
+     auto_neg_mask.maskRemoteFault = tmbslPhyEnable;
+ 
+-    /* Disable 1Gig Support */
+-    auto_neg_mask.mask1000BaseTFullDuplexSupport = tmbslPhyEnable;
+-    auto_neg_mask.mask1000BaseTHalfDuplexSupport = tmbslPhyEnable;
++    if(priv->hwUnitNum == 0)
++    {
++        if(GMAC0_MII_SEL == True)
++        {
++            /* Mask 1Gig Support */
++            auto_neg_mask.mask1000BaseTFullDuplexSupport = tmbslPhyEnable;
++            auto_neg_mask.mask1000BaseTHalfDuplexSupport = tmbslPhyEnable;
++        }
++        else
++        {
++            /* Unmask 1Gig Support */
++            auto_neg_mask.mask1000BaseTFullDuplexSupport = tmbslPhyDisable;
++            auto_neg_mask.mask1000BaseTHalfDuplexSupport = tmbslPhyDisable;
++        }
++    }
++    else
++    {
++        if(GMAC1_MII_SEL == True)
++        {
++            /* Mask 1Gig Support */
++            auto_neg_mask.mask1000BaseTFullDuplexSupport = tmbslPhyEnable;
++            auto_neg_mask.mask1000BaseTHalfDuplexSupport = tmbslPhyEnable;
++        }
++        else
++        {
++            /* Unmask 1Gig Support */
++            auto_neg_mask.mask1000BaseTFullDuplexSupport = tmbslPhyDisable;
++            auto_neg_mask.mask1000BaseTHalfDuplexSupport = tmbslPhyDisable;
++        }
++    }
+ 
+     priv->autoneg_adv = ADVERTISED_Autoneg |
+                         ADVERTISED_100baseT_Full | ADVERTISED_100baseT_Half |
+@@ -1413,6 +1446,12 @@ static __s32 setup_mac( struct net_devic
+     else
+         eth_cfg.miiSelect = GMAC1_MII_SEL;
+ 
++    if(eth_cfg.miiSelect == False)
++    {
++        if((priv->u_speed == LX_SPEED_100) || (priv->u_speed == LX_SPEED_10))
++            eth_cfg.miiSelect = True;
++    }
++
+     /* After auto negotiation/PHY configuration, the values were stored in the Private data structure.
+     ** Use those values and configure MAC
+     */
+@@ -1425,6 +1464,10 @@ static __s32 setup_mac( struct net_devic
+     {
+         eth_cfg.speed100Mbps = True;
+     }
++    else
++    {
++        eth_cfg.speed100Mbps = False;
++    }
+ 
+     eth_cfg.station.adrLow =  ( dev->dev_addr[0])     |
+                               (dev->dev_addr[1] << 8) |

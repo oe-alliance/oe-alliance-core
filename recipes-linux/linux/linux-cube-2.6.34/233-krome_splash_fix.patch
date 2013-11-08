@@ -1,0 +1,60 @@
+diff -Naurp linux-2.6.34/arch/arm/mach-krome/splash_logo.c linux-2.6.34_changed/arch/arm/mach-krome/splash_logo.c
+--- linux-2.6.34/arch/arm/mach-krome/splash_logo.c	2012-10-30 15:45:16.195531000 +0530
++++ linux-2.6.34_changed/arch/arm/mach-krome/splash_logo.c	2012-10-30 15:41:05.337558000 +0530
+@@ -27,7 +27,7 @@
+ #define APOLLO_CPIPE_BASE   (APOLLO_MMIO_BASE_ADDR + 0x120000)
+ #define APOLLO_HDMI_TX_BASE (APOLLO_MMIO_BASE_ADDR + 0x179000)
+ #define APOLLO_DENC_BASE    (APOLLO_MMIO_BASE_ADDR + 0x17B000)
+-
++#define KROME_RFMODE_BASE   (APOLLO_MMIO_BASE_ADDR + 0x17E000)
+ #define GLOBALREG_MODULE_ID_REG1 0xe06bbffc
+ #define GLOBALREG_MODULE_ID_MAJOR_REV_R (0x0f << 12)
+ #define GLOBALREG_MODULE_ID_MAJOR_REV_SHIFT 12
+@@ -372,7 +372,47 @@ void __init apollo_splash( void )
+    writel( 0x030f0502, (APOLLO_CPIPE_BASE + 0x94e0)); /* !hsync, !vsync, blank, odd/even to HD DENC */
+    writel( 0x030f0502, (APOLLO_CPIPE_BASE + 0x98e0));    /* For CPIPE-HDMI RGB match */
+    
++/* Settings for Channel 3/4 */
++#if 1
++{
++	        int rdata =0;
++		writel(0x00000001, (HOST_CGU_BASE + 0x204));  //   #SELECT 50M Clock
++		writel(0x00000011, (KROME_RFMODE_BASE +0x004));           //  #TASTER_SOFT_RESETS_REG
++		writel(0x00000000, (KROME_RFMODE_BASE +0x004));  //  #TASTER_SOFT_RESETS_REG
++		writel(0x00000039, (KROME_RFMODE_BASE +0x3fc));
++		rdata = readl(0xe077E250);              //  #TASTER_PLL_CONFIG_REG
++		writel((rdata & 0xffffefff), (KROME_RFMODE_BASE +0x250));
++		rdata = readl(0xe077E250);             //   #TASTER_PLL_CONFIG_REG
++		writel((rdata | 0x00000100), (KROME_RFMODE_BASE +0x250));
++		rdata = readl(0xe077E254);             //   #TASTER_DAC_CONFIG_REG
++		writel((rdata | 0x00000011), (KROME_RFMODE_BASE +0x254));
++		rdata = readl(0xe077E250);   //             #TASTER_PLL_CONFIG_REG
++		while((rdata & 0x01000000) == 0x00000000 ){
++			rdata = readl(0xe077E250);         //   #TASTER_PLL_CONFIG_REG    
++		}
++		writel(0x00000003, (HOST_CGU_BASE + 0x204));    //         #SELECT 225M Clock
++		/* RF MODE IP SETTINGS*/
++		{
++                rdata=0;
++                writel(0x00000039, (KROME_RFMODE_BASE +0x3fc));  
++		//#select internal test patern or nornimal work 0xa for test mode
++		writel(0x00000000, (KROME_RFMODE_BASE +0x3ec));
++		rdata = readl(0xe077E244);            //    #TASTER_CHANNEL_3/4_SELECT_REG
++	        writel((rdata&0xFFFFFFFE), (KROME_RFMODE_BASE +0x244));
++		writel((0x0002d82e), (KROME_RFMODE_BASE +0x214));
++                writel((0x00005e80), (KROME_RFMODE_BASE +0x218)); //#write RF_MOD_depth,default 0x64e6 
++                writel((0x0000001b), (KROME_RFMODE_BASE +0x240));   //#  VDAC-gain default 1b   
++                writel((0x00000f00), (KROME_RFMODE_BASE +0x200));     //       ### (0x1100 Arsen carrier ratio adjust   f0r -13dB @KromeA0   )xf00  -15dBc@ KromeA1 can pass the 920Khz chroma beat
++			
++                writel((0x00000000), (KROME_RFMODE_BASE +0x31c));    //#0x00011001 shut RF video RF and audio RF
++                writel((0x00000001), (KROME_RFMODE_BASE +0x004));    //  #TASTER_SOFT_RESETS_REG
++	        writel((0x00000000), (KROME_RFMODE_BASE +0x004));       //      #TASTER_SOFT_RESETS_REG
++					
++		}
++    
+ 
++}
++#endif 
+    iounmap(pVRAMhd_base);
+ 
+    return;

@@ -1,0 +1,24 @@
+diff -Naur linux-2.6.34/drivers/dma/nx_dmac_1902.c linux-2.6.34_callbackfix/drivers/dma/nx_dmac_1902.c
+--- linux-2.6.34/drivers/dma/nx_dmac_1902.c	2010-09-16 15:25:32.611335000 +0530
++++ linux-2.6.34_callbackfix/drivers/dma/nx_dmac_1902.c	2010-09-16 12:59:50.988858000 +0530
+@@ -619,8 +619,10 @@
+ 
+ void nx_dmac_1902_async_tx_callback(void *dma_async_param) 
+ {
+-    if(!gAsyncCallBackFunct)
+-        gAsyncCallBackFunct(dma_async_param);
++  if(gAsyncCallBackFunct)
++  {
++    gAsyncCallBackFunct(dma_async_param);
++  }
+ }
+ 
+ static dma_cookie_t nx_dmac_1902_tx_submit(struct dma_async_tx_descriptor *tx)
+@@ -786,6 +788,7 @@
+ 
+   first->txd.flags = flags;
+   first->len = len;
++  first->txd.callback_param = NULL;	// to fix the SPI DMAC issue
+   memcpy(&(first->cbd), &(nxc->cbd), sizeof(struct callback_data));
+ 
+   return &first->txd;

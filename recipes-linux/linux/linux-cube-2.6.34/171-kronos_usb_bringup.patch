@@ -1,0 +1,46 @@
+diff -Naurp linux-2.6.34/arch/arm/mach-kronos/include/mach/cm.h linux-2.6.34_usb/arch/arm/mach-kronos/include/mach/cm.h
+--- linux-2.6.34/arch/arm/mach-kronos/include/mach/cm.h	2011-08-01 21:14:15.000000000 +0800
++++ linux-2.6.34_usb/arch/arm/mach-kronos/include/mach/cm.h	2011-08-01 14:40:11.000000000 +0800
+@@ -36,11 +36,6 @@
+ 
+ /* PNX8XXX clock registers */
+ 
+-#define PNX8XXX_DFT_FREQ_CTL    (PNX8XXX_CLOCK_BASE+0xC00)
+-#define PNX8XXX_DFT_DONE_MASK   0x00000002
+-#define PNX8XXX_DFT_RESULT_MASK 0xFFFF0000
+-#define PNX8XXX_DFT_TIMEOUT     1000
+-
+ /* Allocated PLL sources: provided by hardware */
+ #define ARM_PLL_NR_M0		81	/* !! value to be checked !! */
+ #define MIPS_PLL_NR_M0		81
+@@ -57,13 +52,11 @@
+ #define ARM_CLOCK_DEFAULT	525000000	/* !! value to be checked !! */
+ #define MIPS_CLOCK_DEFAULT	525000000
+ 
+-#define PNX8XXX_CLK_USB_30_CTL_0  (PNX8XXX_CLOCK_BASE+0x264)
+-#define PNX8XXX_CLK_USB_30_CTL_1  (PNX8XXX_CLOCK_BASE+0x444)
+-#define PNX8XXX_CLK_USB_30_CTL_2  (PNX8XXX_CLOCK_BASE+0x270)
+-
+-#define PNX8XXX_CLK_USB_AHB_CTL_0  (PNX8XXX_CLOCK_BASE+0x26C)
+-#define PNX8XXX_CLK_USB_AHB_CTL_1  (PNX8XXX_CLOCK_BASE+0x510)
+-#define PNX8XXX_CLK_USB_AHB_CTL_2  (PNX8XXX_CLOCK_BASE+0x274)
++#define PNX8XXX_CLK_USB_30_CTL_0  (PNX8XXX_CLOCK_BASE+0x0D0)
++#define PNX8XXX_CLK_USB_30_CTL_1  (PNX8XXX_CLOCK_BASE+0x0D8)
++
++#define PNX8XXX_CLK_USB_AHB_CTL_0  (PNX8XXX_CLOCK_BASE+0x0D4)
++#define PNX8XXX_CLK_USB_AHB_CTL_1  (PNX8XXX_CLOCK_BASE+0x0DC)
+ 
+ #define SET_CLOCK(clockreg,state)	{		\
+ 	uint32_t i;					\
+diff -Naurp linux-2.6.34/drivers/usb/host/Kconfig linux-2.6.34_usb/drivers/usb/host/Kconfig
+--- linux-2.6.34/drivers/usb/host/Kconfig	2011-08-01 21:14:15.000000000 +0800
++++ linux-2.6.34_usb/drivers/usb/host/Kconfig	2011-08-01 13:46:42.000000000 +0800
+@@ -113,7 +113,7 @@ config USB_EHCI_BIG_ENDIAN_DESC
+ 
+ config USB_EHCI_IP9028
+ 	bool "Support for NXP IP9028 on-chip EHCI USB controller"
+-	depends on USB_EHCI_HCD && (SOC_PNX85500 || SOC_PNX8543 || SOC_PNX8400)
++	depends on USB_EHCI_HCD && (SOC_PNX85500 || SOC_PNX8543 || SOC_PNX8400 || ARCH_KRONOS)
+ 	select USB_EHCI_ROOT_HUB_TT
+ 	
+ config XPS_USB_HCD_XILINX

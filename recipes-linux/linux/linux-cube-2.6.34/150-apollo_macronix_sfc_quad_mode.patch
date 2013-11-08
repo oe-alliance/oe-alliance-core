@@ -1,0 +1,184 @@
+diff -Naur linux-2.6.34/drivers/mtd/sfc/nx_sfc.c linux-2.6.34_new/drivers/mtd/sfc/nx_sfc.c
+--- linux-2.6.34/drivers/mtd/sfc/nx_sfc.c	2011-02-02 15:26:25.659032000 +0530
++++ linux-2.6.34_new/drivers/mtd/sfc/nx_sfc.c	2011-02-02 15:16:45.032010000 +0530
+@@ -112,7 +112,14 @@
+ 	u8 *mem_buf_ptr = (u8*)&buf_store;
+ 
+ 	/* Program the Pin Configuration Register */
+- 	writel( SFC_PIN_CONFIG_QUAD_READ, flash->mmio_base+IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_REG); 
++	if((flash->info.jedec_id == 0xc22019)||(flash->info.jedec_id == 0xc22018))
++	{
++		writel( SFC_PIN_CONFIG_QUAD_READ_MX, flash->mmio_base+IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_REG);
++	}
++ 	else
++	{
++		writel( SFC_PIN_CONFIG_QUAD_READ, flash->mmio_base+IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_REG); 
++	}
+ 
+ 	round_len = flash->cd.length % 4;
+ 	if(round_len)
+@@ -127,15 +134,25 @@
+ 	{
+ 	      nx_sfc_32b_en(flash);
+ 	}
++	else if((flash->info.jedec_id == 0xc22019)||(flash->info.jedec_id == 0xc22018))
++	{
++  		writel( SFC_PROTCOL_DELAY_QUADRD_MX, flash->mmio_base+IPBGCSFLSHNTWK_SFC_SFC_PROTOCOL_DELAY_REG);
++	}
+ 	else
+ 	{	 /* Program the protocol delay regsister */
+ 		writel( SFC_PROTCOL_DELAY_QUADRD, flash->mmio_base+IPBGCSFLSHNTWK_SFC_SFC_PROTOCOL_DELAY_REG); 
+ 	}
+ 	writel( SFC_CSR_QUAD_READ, flash->mmio_base+IPBGCSFLSHNTWK_SFC_SFC_CSR_REG);
+-	/* Program the SPI Clock Configuration Register */
+-       writel(0x0, flash->mmio_base+ IPBGCSFLSHNTWK_SFC_SFC_SCK_CSR_REG); 	
++ 	
+ 	/* Program the Device Command Register with Quad read command */
+-	writel( SFC_DEV_CMD_QUAD_READ, flash->mmio_base+IPBGCSFLSHNTWK_SFC_SFC_DEVICE_CMD_REG);
++	if((flash->info.jedec_id == 0xc22019)||(flash->info.jedec_id == 0xc22018))
++       {
++		writel( SFC_DEV_CMD_QUAD_READ_MX, flash->mmio_base+IPBGCSFLSHNTWK_SFC_SFC_DEVICE_CMD_REG);                
++       }
++       else
++       {
++		writel( SFC_DEV_CMD_QUAD_READ, flash->mmio_base+IPBGCSFLSHNTWK_SFC_SFC_DEVICE_CMD_REG);
++	}
+   
+ 	buf_base = (( unsigned long *)(flash->io_base+flash->cd.offset));
+ 	for (cnt=0;cnt<flash->cd.length/4; cnt++)
+@@ -153,7 +170,6 @@
+ 	}
+ 	/* Set the default settings */
+ 	writel( SFC_PIN_CONFIG_DEFAULT, flash->mmio_base+IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_REG); 
+-       writel(0x01, flash->mmio_base+ IPBGCSFLSHNTWK_SFC_SFC_SCK_CSR_REG); 	
+     	if((flash->cd.offset >= SZ_16M) && (flash->info.jedec_id == 0xc22019))
+     	{
+       		nx_sfc_32b_dis(flash);
+@@ -484,30 +500,46 @@
+    return;
+ }
+ 
+-void nx_sfc_set_quad_bit(void __iomem *sfc_regs)
++void nx_sfc_set_quad_bit(struct nx_sfc_mtd *flash)
+ {
+-	nx_sfc_write_en(sfc_regs);
+-	writel(0x00020005, sfc_regs+IPBGCSFLSHNTWK_SFC_SFC_CSR_REG);
+-	writel(0x10000000, sfc_regs+IPBGCSFLSHNTWK_SFC_SFC_PROTOCOL_DELAY_REG);
+-	writel(0x00002000, sfc_regs+IPBGCSFLSHNTWK_SFC_SFC_TX_RX_DATA_CNT_REG);
+-	writel(0x00000200, sfc_regs+IPBGCSFLSHNTWK_SFC_SFC_SP_CMD_RD_WR0_DATA_REG);
+-	writel(0x00000000, sfc_regs+IPBGCSFLSHNTWK_SFC_SFC_SP_CMD_RD_WR1_DATA_REG);
+-	writel(0x010D0203, sfc_regs+IPBGCSFLSHNTWK_SFC_SFC_DEVICE_CMD_REG);
+-	nx_sfc_wait(sfc_regs);
++	nx_sfc_write_en(flash->mmio_base);
++	writel(0x00020005, flash->mmio_base+IPBGCSFLSHNTWK_SFC_SFC_CSR_REG);
++	writel(0x10000000, flash->mmio_base+IPBGCSFLSHNTWK_SFC_SFC_PROTOCOL_DELAY_REG);
++       if((flash->info.jedec_id == 0xc22019)||(flash->info.jedec_id == 0xc22018))
++       {
++		writel(0x00001000, flash->mmio_base+IPBGCSFLSHNTWK_SFC_SFC_TX_RX_DATA_CNT_REG);
++               writel(0x00000040, flash->mmio_base+IPBGCSFLSHNTWK_SFC_SFC_SP_CMD_RD_WR0_DATA_REG);
++       }
++       else
++       {
++		writel(0x00002000, flash->mmio_base+IPBGCSFLSHNTWK_SFC_SFC_TX_RX_DATA_CNT_REG);
++		writel(0x00000200, flash->mmio_base+IPBGCSFLSHNTWK_SFC_SFC_SP_CMD_RD_WR0_DATA_REG);
++	}
++	writel(0x00000000, flash->mmio_base+IPBGCSFLSHNTWK_SFC_SFC_SP_CMD_RD_WR1_DATA_REG);
++	writel(0x010D0203, flash->mmio_base+IPBGCSFLSHNTWK_SFC_SFC_DEVICE_CMD_REG);
++	nx_sfc_wait(flash->mmio_base);
+ }
+ 
+ 
+-void nx_sfc_reset_quad_bit(void __iomem *sfc_regs)
+-{
+-	nx_sfc_reset(sfc_regs);
+-	nx_sfc_write_en(sfc_regs);
+-	writel(0x00020005, sfc_regs+IPBGCSFLSHNTWK_SFC_SFC_CSR_REG);
+-	writel(0x10000000, sfc_regs+IPBGCSFLSHNTWK_SFC_SFC_PROTOCOL_DELAY_REG);
+-	writel(0x00002000, sfc_regs+IPBGCSFLSHNTWK_SFC_SFC_TX_RX_DATA_CNT_REG);
+-	writel(0x00000000, sfc_regs+IPBGCSFLSHNTWK_SFC_SFC_SP_CMD_RD_WR0_DATA_REG);
+-	writel(0x00000000, sfc_regs+IPBGCSFLSHNTWK_SFC_SFC_SP_CMD_RD_WR1_DATA_REG);
+-	writel(0x010D0203, sfc_regs+IPBGCSFLSHNTWK_SFC_SFC_DEVICE_CMD_REG);
+-	nx_sfc_wait(sfc_regs);
++void nx_sfc_reset_quad_bit(struct nx_sfc_mtd *flash)
++{
++	nx_sfc_reset(flash->mmio_base);
++	nx_sfc_write_en(flash->mmio_base);
++	writel(0x00020005, flash->mmio_base+IPBGCSFLSHNTWK_SFC_SFC_CSR_REG);
++	writel(0x10000000, flash->mmio_base+IPBGCSFLSHNTWK_SFC_SFC_PROTOCOL_DELAY_REG);
++       if((flash->info.jedec_id == 0xc22019)||(flash->info.jedec_id == 0xc22018))
++       {
++                writel(0x00001000, flash->mmio_base+IPBGCSFLSHNTWK_SFC_SFC_TX_RX_DATA_CNT_REG);
++                writel(0x00000000, flash->mmio_base+IPBGCSFLSHNTWK_SFC_SFC_SP_CMD_RD_WR0_DATA_REG);
++       }
++       else
++       {
++		writel(0x00002000, flash->mmio_base+IPBGCSFLSHNTWK_SFC_SFC_TX_RX_DATA_CNT_REG);
++		writel(0x00000000, flash->mmio_base+IPBGCSFLSHNTWK_SFC_SFC_SP_CMD_RD_WR0_DATA_REG);
++	}
++	writel(0x00000000, flash->mmio_base+IPBGCSFLSHNTWK_SFC_SFC_SP_CMD_RD_WR1_DATA_REG);
++	writel(0x010D0203, flash->mmio_base+IPBGCSFLSHNTWK_SFC_SFC_DEVICE_CMD_REG);
++	nx_sfc_wait(flash->mmio_base);
+ }
+ 
+ void nx_sfc_init(void __iomem * sfc_regs)
+@@ -515,9 +547,6 @@
+    writel(0x1,sfc_regs + IPBGCSFLSHNTWK_SFC_SFC_SCK_CSR_REG); 
+    writel(SFC_PROTOCOL_DELAY_VAL_24B, sfc_regs + IPBGCSFLSHNTWK_SFC_SFC_PROTOCOL_DELAY_REG);
+    writel(0x01, APOLLO_GCS_CLOCK_MUX);
+-   #ifdef CONFIG_MTD_NX_SFC_QUAD_MODE
+-   nx_sfc_set_quad_bit(sfc_regs);
+-   #endif
+    return;
+ }
+ 
+@@ -1250,6 +1279,11 @@
+             flash->mtd.eraseregions[i].erasesize / 1024,
+             flash->mtd.eraseregions[i].numblocks);
+ 
++
++   #ifdef CONFIG_MTD_NX_SFC_QUAD_MODE
++   nx_sfc_set_quad_bit( flash);
++   #endif
++
+    /*
+     * Atmel serial flash tend to power up
+     * with the software protection bits set
+diff -Naur linux-2.6.34/drivers/mtd/sfc/nx_sfc.h linux-2.6.34_new/drivers/mtd/sfc/nx_sfc.h
+--- linux-2.6.34/drivers/mtd/sfc/nx_sfc.h	2011-02-02 15:26:25.550038000 +0530
++++ linux-2.6.34_new/drivers/mtd/sfc/nx_sfc.h	2011-02-02 14:27:16.497260000 +0530
+@@ -382,18 +382,20 @@
+    #define IPBGCSFLSHNTWK_SFC_MODULE_ID_REG  (0xfc)
+ 
+ #define SFC_PROTCOL_DELAY_READ      0x10008000
+-#define SFC_PROTCOL_DELAY_QUADRD 	0x10008006
++#define SFC_PROTCOL_DELAY_QUADRD    0x10008006
++#define SFC_PROTCOL_DELAY_QUADRD_MX 0x10008008
+ #define SFC_PROTOCL_DELAY_WRITE     0x10038000
+-#define SFC_PIN_CONFIG_DEFAULT       0xa900001b
+-#define SFC_PIN_CONFIG_QUAD_READ  0xa9001a1b
++#define SFC_PIN_CONFIG_DEFAULT      0xa900001b
++#define SFC_PIN_CONFIG_QUAD_READ    0xa9001a1b
++#define SFC_PIN_CONFIG_QUAD_READ_MX 0xa900021b
+ 
+ #define SFC_PROTOCOL_DELAY_VAL_16B  0x00008000
+ #define SFC_PROTOCOL_DELAY_VAL_24B  0x10008000
+ #define SFC_PROTOCOL_DELAY_VAL_32B  0x20008000
+-#define SFC_PROTOCOL_DELAY_QUADVAL_32B  0x20008006
++#define SFC_PROTOCOL_DELAY_QUADVAL_32B  0x20008008
+ 
+ #define SFC_CSR_READ                0x0000027
+-#define SFC_CSR_QUAD_READ     0x000000e7
++#define SFC_CSR_QUAD_READ           0x000000e7
+ #define SFC_CSR_WRITE               0x00420001
+ #define SFC_CSR_ERASE               0x20001
+ #define SFC_CSR_WREN                0x67
+@@ -401,7 +403,8 @@
+ #define SFC_CSR_READ_STATUS         0x7
+ #define SFC_CSR_WRITE_STATUS        0x20001
+ #define SFC_DEV_CMD_READ            0x03850203 
+-#define SFC_DEV_CMD_QUAD_READ 0x000c02eb
++#define SFC_DEV_CMD_QUAD_READ       0x000c02eb
++#define SFC_DEV_CMD_QUAD_READ_MX    0x000c026b
+ #define SFC_DEV_CMD_WRITE           0x02810203
+ #define SFC_DEV_CMD_ERASE           0xD8810203
+ #define SFC_DEV_CMD_WREN            0x060D0203

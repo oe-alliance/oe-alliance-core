@@ -1,0 +1,362 @@
+diff -Naurp linux-2.6.34_orig/drivers/mtd/nand/nx_nand/nx_nand.c linux-2.6.34/drivers/mtd/nand/nx_nand/nx_nand.c
+--- linux-2.6.34_orig/drivers/mtd/nand/nx_nand/nx_nand.c	2012-03-09 16:18:26.239888000 +0530
++++ linux-2.6.34/drivers/mtd/nand/nx_nand/nx_nand.c	2012-03-09 16:16:16.417335000 +0530
+@@ -60,14 +60,14 @@
+ static struct nand_ecclayout nx_nand_oob_128 = {
+    .eccbytes = 96,
+    .eccpos = {
+-         4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
+-         20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31,
+-         36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47,
+-         52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63,
+-         68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79,
+-         84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95,
++           4,  5,    6,   7,   8,   9,  10,  11,  12,  13,  14,  15,
++          20,  21,  22,  23,  24,  25,  26,  27,  28,  29,  30,  31,
++          36,  37,  38,  39,  40,  41,  42,  43,  44,  45,  46,  47,
++          52,  53,  54,  55,  56,  57,  58,  59,  60,  61,  62,  63,
++          68,  69,  70,  71,  72,  73,  74,  75,  76,  77,  78,  79,
++          84,  85,  86,  87,  88,  89,  90,  91,  92,  93,  94,  95,
+          100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111,
+-         116, 117, 118, 119, 120, 121, 122, 123, 124, 125,126, 127
++         116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127
+       },
+ 
+    .oobfree = {
+@@ -86,7 +86,7 @@ static struct nand_ecclayout nx_nand_oob
+ static struct nand_ecclayout nx_nand_oob_64 = {
+    .eccbytes = 48,
+    .eccpos = {
+-         4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15,
++          4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15,
+          20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31,
+          36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47,
+          52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63
+@@ -111,9 +111,91 @@ static struct nand_ecclayout nx_nand_oob
+       }
+ };
+ #else
+-#if 0
+-static struct nand_ecclayout nx_nand_oob;
+-#endif
++/* For 4K LPF of 224 Bytes oob size */
++static struct nand_ecclayout nx_nand_oob_224 = {
++   .eccbytes = 208,
++   .eccpos = {
++      16, 17, 18, 19, 20, 21, 22, 23,
++      24, 25, 26, 27, 28, 29, 30, 31, 
++      32, 33, 34, 35, 36, 37, 38, 39, 
++      40, 41, 42, 43, 44, 45, 46, 47,
++      48, 49, 50, 51, 52, 53, 54, 55, 
++      56, 57, 58, 59, 60, 61, 62, 63,
++      64, 65, 66, 67, 68, 69, 70, 71,
++      72, 73, 74, 75, 76, 77, 78, 79,
++      80, 81, 82, 83, 84, 85, 86, 87,
++      88, 89, 90, 91, 92, 93, 94, 95,
++      96, 97, 98, 99,100,101,102,103,
++      104,105,106,107,108,109,110,111,
++      /* limited by MTD_MAX_ECCPOS_ENTRIES */
++      /*
++      112,113,114,115,116,117,118,119,
++      120,121,122,123,124,125,126,127,
++      */
++      /* ...so on until 224 */
++   },
++   .oobfree = {
++      {.offset = 0,
++      .length = 16},
++   }
++};
++
++/* For 4K LPF */
++static struct nand_ecclayout nx_nand_oob_128 = {
++   .eccbytes = 112,
++   .eccpos = {
++      16, 17, 18, 19, 20, 21, 22, 23,
++      24, 25, 26, 27, 28, 29, 30, 31, 
++      32, 33, 34, 35, 36, 37, 38, 39, 
++      40, 41, 42, 43, 44, 45, 46, 47,
++      48, 49, 50, 51, 52, 53, 54, 55, 
++      56, 57, 58, 59, 60, 61, 62, 63,
++      64, 65, 66, 67, 68, 69, 70, 71,
++      72, 73, 74, 75, 76, 77, 78, 79,
++      80, 81, 82, 83, 84, 85, 86, 87,
++      88, 89, 90, 91, 92, 93, 94, 95,
++      96, 97, 98, 99,100,101,102,103,
++      104,105,106,107,108,109,110,111,
++      /* limited by MTD_MAX_ECCPOS_ENTRIES */
++      /*
++      112,113,114,115,116,117,118,119,
++      120,121,122,123,124,125,126,127
++      */
++   },
++   .oobfree = {
++      {.offset = 0,
++      .length = 16},
++   }
++};
++
++/* For LPF */
++static struct nand_ecclayout nx_nand_oob_64 = {
++   .eccbytes = 56,
++   .eccpos = {
++       8,  9, 10, 11, 12, 13, 14, 15, 
++      16, 17, 18, 19, 20, 21, 22, 23,
++      24, 25, 26, 27, 28, 29, 30, 31, 
++      32, 33, 34, 35, 36, 37, 38, 39, 
++      40, 41, 42, 43, 44, 45, 46, 47,
++      48, 49, 50, 51, 52, 53, 54, 55, 
++      56, 57, 58, 59, 60, 61, 62, 63
++   },
++   .oobfree = {
++      {.offset = 0,
++      .length = 8},
++   }
++};
++
++/* For SPF */
++static struct nand_ecclayout nx_nand_oob_16 = {
++   .eccbytes = 16,
++   .eccpos = {
++      4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 },
++   .oobfree = {
++      {.offset = 0,
++      .length = 4},
++   }
++};
+ #endif 
+ #endif
+ 
+@@ -389,7 +471,7 @@ static inline void nx_nand_cmd_addr(stru
+       break;
+ 
+       default:
+-         printk(KERN_ERR "nx_nand:Invalid cmd \r\n"); 
++         printk(KERN_ERR "nx_nand: Invalid cmd \r\n"); 
+       return;
+    }
+ 
+@@ -595,7 +677,8 @@ static int nx_nand_read_page(struct mtd_
+          }
+ 
+          if(no_all_ffs) {
+-            printk(KERN_INFO "step %d: ECC failed \r\n", j);
++            printk(KERN_INFO "nx_nand: [INFO] step %d: ECC failed [page = %x] \r\n",
++               i, nc->cur_page);
+             mtd->ecc_stats.failed++;
+          }
+       } 
+@@ -603,27 +686,32 @@ static int nx_nand_read_page(struct mtd_
+          /* Update stats */
+          switch (nc->ecc_status[i]) {
+             case NX_NAND_INT_DEC_1_ERR:
+-               printk(KERN_INFO "step %d:ECC 1 bit corrected \r\n", i); 
++               printk(KERN_INFO "nx_nand: [INFO] step %d:ECC 1 bit corrected [page = %x] \r\n", i, 
++                  nc->cur_page);
+                stat = 1;
+             break;
+ 
+             case NX_NAND_INT_DEC_2_ERR:
+-               printk(KERN_INFO "step %d:ECC 2 bits corrected \r\n", i);   
++               printk(KERN_INFO "nx_nand: [INFO] step %d:ECC 2 bits corrected [page = %x] \r\n", i, 
++                  nc->cur_page);
+                stat = 2;
+             break;
+ 
+             case NX_NAND_INT_DEC_3_ERR:
+-               printk(KERN_INFO "step %d:ECC 3 bits corrected \r\n", i);   
++               printk(KERN_INFO "nx_nand: [INFO] step %d:ECC 3 bits corrected [page = %x] \r\n", i, 
++                  nc->cur_page);
+                stat = 3;
+             break;
+ 
+             case NX_NAND_INT_DEC_4_ERR:
+-               printk(KERN_INFO "step %d:ECC 4 bits corrected \r\n", i);   
++               printk(KERN_INFO "nx_nand: [INFO] step %d:ECC 4 bits corrected [page = %x] \r\n", i, 
++                  nc->cur_page);
+                stat = 4;
+             break;
+ 
+             case NX_NAND_INT_DEC_5_ERR:
+-               printk(KERN_INFO "step %d:ECC 5 bits corrected \r\n", i);   
++               printk(KERN_INFO "nx_nand: [INFO] step %d:ECC 5 bits corrected [page = %x] \r\n", i, 
++                  nc->cur_page);
+                stat = 5;
+             break;
+          }
+@@ -631,14 +719,14 @@ static int nx_nand_read_page(struct mtd_
+       }
+ #elif (defined (CONFIG_ARCH_KRONOS) || defined (CONFIG_ARCH_KROME))
+       if (nc->page_rw_status_fifo.PageRdStatus[i].uncorrectable) {
+-
+-         printk(KERN_ERR "step %d:uncorrectable ecc [cur_page=%x] \r\n", i, nc->cur_page);
++         printk(KERN_INFO "nx_nand: [INFO] step %d:uncorrectable ecc [page = %x] \r\n", i, 
++            nc->cur_page);
+          mtd->ecc_stats.failed++;
+-
+       } 
+       else if (nc->page_rw_status_fifo.PageRdStatus[i].corrected) {
+          stat = nc->page_rw_status_fifo.PageRdStatus[i].num_errors;
+-         printk(KERN_ERR "step %d:ECC %d bits corrected [cur_page=%x] \r\n", i, stat,nc->cur_page );
++         printk(KERN_INFO "nx_nand: [INFO] step %d:ECC %d bits corrected [page = %x] \r\n", i, 
++            stat,nc->cur_page );
+          mtd->ecc_stats.corrected += stat;
+       }
+ #endif
+@@ -743,7 +831,7 @@ static int nx_nand_read_oob(struct mtd_i
+          /* Write data into chip */
+          status  = tmhwEfmc_ReadSingleData(nc->unitid, &data);    
+          buf[i] = (uint8_t) data; 
+-         //printk(KERN_INFO "ReadSingle data 0x%x 0x%x \r\n", buf[i], data);
++         //printk(KERN_INFO "nx_nand: ReadSingle data 0x%x 0x%x \r\n", buf[i], data);
+ 
+          length--;
+          i++;
+@@ -1528,7 +1616,7 @@ static void nx_nand_command(struct mtd_i
+          break;
+ 
+       default:
+-         printk(KERN_ERR "nxnand: command not supported %d \n", cmd);
++         printk(KERN_ERR "nx_nand: command not supported %d \n", cmd);
+    }
+ }
+ 
+@@ -1824,7 +1912,7 @@ static void nx_nand_command_lp(struct mt
+          break;
+ 
+       default:
+-      printk(KERN_ERR "nxnand: command not supported %d \n", cmd);
++      printk(KERN_ERR "nx_nand: command not supported %d \n", cmd);
+    }
+ }
+ 
+@@ -1846,7 +1934,7 @@ static int nx_nand_block_bad(struct mtd_
+    int res = 0;
+    struct nand_chip *chip = mtd->priv;
+ 
+-   printk(KERN_INFO "Bad block check 0x%x \r\n", (int)ofs);
++   printk(KERN_INFO "nx_nand: Bad block check 0x%x \r\n", (int)ofs);
+ 
+    mtd->flags |= MTD_USE_DEV_OOB_LAYOUT;
+ 
+@@ -1858,7 +1946,7 @@ static int nx_nand_block_bad(struct mtd_
+    ops.mode = MTD_OOB_PLACE;
+    ret = mtd->read_oob(mtd, ofs, &ops);
+    if (ret) {
+-      printk(KERN_INFO "READOOB failed 0x%x \r\n", ret);
++      printk(KERN_INFO "nx_nand: READOOB failed 0x%x \r\n", ret);
+       return ret;
+    }
+    mtd->flags &= ~MTD_USE_DEV_OOB_LAYOUT;
+@@ -1869,7 +1957,7 @@ static int nx_nand_block_bad(struct mtd_
+       res = 1;
+    }
+ 
+-   printk(KERN_INFO "Bad block res 0x%x \r\n", res);
++   printk(KERN_INFO "nx_nand: Bad block res 0x%x \r\n", res);
+ 
+    return res;
+ }
+@@ -2292,7 +2380,51 @@ static int nx_nand_probe(struct platform
+          BUG();
+    }
+    FlashConfig.oobSize =  mtd->oobsize;
+-   FlashConfig.eccLevel = 4; /* FIXME */
++   switch (mtd->oobsize) {
++      case 16:
++         /* Using 512B subpage,
++          * 16 bytes oob is divided into 4 bytes user + 12 bytes ecc 
++          * Max. ecc level that fits in 12 bytes =
++          *          (12*8)/14 ~ 6 (rounded)
++          */
++         FlashConfig.eccLevel = 6;
++         break;
++      case 32:
++         /* Using 1K subpage,
++          * 32 bytes oob per subpage = 4 bytes user + 28 bytes ecc 
++          * Max. ecc level that fits in 28 bytes =
++          *              (28*8)/14 = 16 
++          * Thus, 32 bytes oob = 4 bytes user + 28 bytes ecc
++          */
++         FlashConfig.eccLevel = 16;
++         break;
++      case 64:
++         /* Using 1K subpage,
++          * 64 bytes oob spanning two supages = 8 bytes user + 56 bytes ecc 
++          */
++         FlashConfig.eccLevel = 16;
++         break;
++      case 128:
++         /* Using 1K subpage,
++          * 128 bytes oob spanning four supages = 
++          *       16 bytes user + 112 bytes ecc 
++          */
++         FlashConfig.eccLevel = 16;
++         break;
++      case 224:
++         /* Using 1K subpage,
++          * 56 bytes oob per subpage = 4 bytes user + 52 bytes ecc 
++          * Max. ecc level that fits in 52 bytes =
++          *    = (52*8)/14 ~ 28 (since ecc level 30 needs 52.5 
++          *       i.e. 56 rounded to next 4 bytes)
++          * Thus, 224 bytes oob using four 1K supages = 
++          *       16 bytes user + 56 bytes ecc
++          */
++         FlashConfig.eccLevel = 28;
++         break;
++      default:
++         BUG();
++   }
+    FlashConfig.erasedPageThres = FlashConfig.eccLevel/2; /* FIXME */
+    memset(&FlashConfig.devTiming, 0xFF, sizeof(FlashConfig.devTiming));
+    tmhwEfmc_SetFlashConfig(nx_nc->unitid,nx_nc->slotid, &FlashConfig);
+@@ -2348,8 +2480,11 @@ static int nx_nand_probe(struct platform
+    chip->ecc.hwctl = nx_nand_hwctl;
+    chip->ecc.size = nx_nc->blk_size;
+ #if (defined (CONFIG_ARCH_KRONOS) || defined (CONFIG_ARCH_KROME))
+-   /* formula to calculate no. of parity bytes for a given ecc level */
+-   pOobInfo.parity_bytes = 8; /* FIXME */
++   pOobInfo.parity_bytes = (FlashConfig.eccLevel * 14)/8;
++   /* Is number of parity bytes multiple of 4 ? */
++   pOobInfo.parity_bytes = (pOobInfo.parity_bytes%4)?
++      (((pOobInfo.parity_bytes/4)*4)+4):
++      (pOobInfo.parity_bytes);
+    chip->ecc.bytes = pOobInfo.parity_bytes;
+ #else
+    chip->ecc.bytes = 12;
+@@ -2371,7 +2506,6 @@ static int nx_nand_probe(struct platform
+ #endif
+ 
+ #ifdef CONFIG_MTD_NX_NAND_HWECC
+-#ifdef CONFIG_ARCH_APOLLO
+    switch (mtd->oobsize) {
+       case 16:
+          chip->ecc.layout = &nx_nand_oob_16;
+@@ -2382,21 +2516,16 @@ static int nx_nand_probe(struct platform
+       case 128:
+          chip->ecc.layout = &nx_nand_oob_128;
+          break;
++#if (defined (CONFIG_ARCH_KRONOS) || defined (CONFIG_ARCH_KROME))
++      case 224:
++         chip->ecc.layout = &nx_nand_oob_224;
++         break;
++#endif
+       default:
+-         printk(KERN_WARNING "No oob scheme defined for "
++         printk(KERN_WARNING "nx_nand: No oob scheme defined for "
+             "oobsize %d\n", mtd->oobsize);
+          BUG();
+    }
+-#else
+-#if 0   
+-   nx_nand_oob.eccbytes = 64; /*(pOobInfo.parity_bytes)*(nx_nc->num_blks);*/
+-
+-   nx_nand_oob.oobfree[0].offset = 4;
+-   nx_nand_oob.oobfree[0].length = 12; /*(nx_nc->blk_size - (pOobInfo.parity_bytes));*/
+-
+-   chip->ecc.layout = &nx_nand_oob;
+-#endif   
+-#endif
+ #endif
+ 
+    ret = nand_scan_tail(mtd);

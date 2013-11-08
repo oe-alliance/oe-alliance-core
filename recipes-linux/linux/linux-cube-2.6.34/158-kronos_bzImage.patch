@@ -1,0 +1,46 @@
+diff -Naurp linux-2.6.34.new/arch/arm/mach-kronos/include/mach/uncompress.h linux-2.6.34/arch/arm/mach-kronos/include/mach/uncompress.h
+--- linux-2.6.34.new/arch/arm/mach-kronos/include/mach/uncompress.h	1969-12-31 18:00:00.000000000 -0600
++++ linux-2.6.34/arch/arm/mach-kronos/include/mach/uncompress.h	2011-03-28 11:19:25.000000000 -0500
+@@ -0,0 +1,36 @@
++/*
++ * arch/arm/mach-apollo/include/mach/uncompress.h
++ *
++ * This file is licensed under the terms of the GNU General Public
++ * License version 2.  This program is licensed "as is" without any
++ * warranty of any kind, whether express or implied.
++ */
++
++#include <mach/pnx8492.h>
++#include <asm/io.h>
++#include <asm/hardware/ip3106.h>
++
++#define UART_THR (MMIO_UART2_BASE + IP3106_UART_THR_REG)
++#define UART_LSR (MMIO_UART2_BASE + IP3106_UART_LSR_REG)
++
++static void putc(const char c)
++{
++	int status;
++
++	/* Transmit fifo not full? */
++	do {
++		status = __raw_readl(UART_LSR);
++	} while (!(status & IP3106_UART_LSR_THRE_MSK));
++
++	__raw_writel(c,UART_THR);
++}
++
++static void flush(void)
++{
++}
++
++/*
++ * nothing to do
++ */
++#define arch_decomp_setup()
++#define arch_decomp_wdog()
+diff -Naurp linux-2.6.34.new/arch/arm/mach-kronos/Makefile.boot linux-2.6.34/arch/arm/mach-kronos/Makefile.boot
+--- linux-2.6.34.new/arch/arm/mach-kronos/Makefile.boot	1969-12-31 18:00:00.000000000 -0600
++++ linux-2.6.34/arch/arm/mach-kronos/Makefile.boot	2011-03-28 11:18:29.000000000 -0500
+@@ -0,0 +1,2 @@
++   zreladdr-y	:= 0x00008000
++params_phys-y	:= 0x00002000

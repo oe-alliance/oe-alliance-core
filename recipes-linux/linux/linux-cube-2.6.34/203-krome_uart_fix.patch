@@ -1,0 +1,41 @@
+diff -Naurp linux-2.6.34_Org/drivers/serial/ip3106.c linux-2.6.34/drivers/serial/ip3106.c
+--- linux-2.6.34_Org/drivers/serial/ip3106.c	2012-03-12 17:46:29.926236000 +0530
++++ linux-2.6.34/drivers/serial/ip3106.c	2012-03-12 17:51:46.241640000 +0530
+@@ -1925,8 +1925,6 @@ static void ip3106_console_write(struct 
+ 	const char *s, unsigned int count)
+ {
+ 	unsigned int 	status = 0;
+-	unsigned int	lcr = 0;
+-	unsigned int	old_ier = 0;
+ 	struct ip3106_port *uap = NULL;
+ 	int i = 0;
+ 
+@@ -1942,16 +1940,7 @@ static void ip3106_console_write(struct 
+ 	else 
+ 		uap = &ip3106_ports3;
+ 
+-	/* To access Interrupt Enable Register,
+-	 * DLab bit in LCR must be ZERO
+-	 */
+-	lcr = __raw_readl(uap->port.membase + IP3106_UART_LCR_REG);
+-	lcr &= ~IP3106_UART_LCR_DLAB_MSK;
+-	__raw_writel(lcr,uap->port.membase + IP3106_UART_LCR_REG);
+-
+-	/* First save the CR then disable the interrupts */
+-	old_ier = __raw_readl(uap->port.membase + IP3106_UART_IER_REG);
+-	__raw_writel(0,uap->port.membase + IP3106_UART_IER_REG);
++	spin_lock_irq(&uap->port.lock);
+ 
+ 	/* Now write the each character */
+ 	for (i = 0; i < count; i++) {
+@@ -1976,7 +1965,9 @@ static void ip3106_console_write(struct 
+ 	do {
+ 		status = __raw_readl(uap->port.membase + IP3106_UART_LSR_REG);
+ 	} while (!(status & IP3106_UART_LSR_THRE_MSK));
+-	__raw_writel(old_ier, uap->port.membase + IP3106_UART_IER_REG);
++
++	spin_unlock_irq(&uap->port.lock);
++
+ }
+ 
+ static void __init ip3106_console_get_options(struct uart_port *port,

@@ -1,0 +1,36 @@
+diff -Naur linux-2.6.34/arch/arm/mach-apollo/include/mach/pnx8492.h linux-2.6.34_sata_fuse_setting/arch/arm/mach-apollo/include/mach/pnx8492.h
+--- linux-2.6.34/arch/arm/mach-apollo/include/mach/pnx8492.h	2010-09-20 17:10:19.576469000 +0530
++++ linux-2.6.34_sata_fuse_setting/arch/arm/mach-apollo/include/mach/pnx8492.h	2010-09-20 14:58:59.857700000 +0530
+@@ -70,6 +70,10 @@
+ /*
+  * Device port addresses
+  */
++#define MMIO_SEC_FUSE_CTRL       (ARM_A9_HOST_MMIO_BASE + 0x28000)
++#define  FC_MIRROR_STATUS_18     (MMIO_SEC_FUSE_CTRL + 0x148)
++#define     SATA_DISABLED        (1<<13)
++
+ #define MMIO_GCS_BASE            (ARM_A9_HOST_MMIO_BASE + 0x36000)
+ #define MMIO_SATA_BASE           (ARM_A9_HOST_MMIO_BASE + 0x38000)
+ 
+@@ -85,7 +89,6 @@
+ #define  ALT_PIN_MUX_REG_0       (MMIO_GLB_BASE + 0x140)
+ #define  GLBREG_MISC1            (MMIO_GLB_BASE + 0x500)
+ 
+-
+ #ifdef CONFIG_EXECUTE_ON_SIMULATOR
+ #define UART1_PORT0_OFFSET			0xE0000	/* Uart 1 -> Console */
+ #define UART2_PORT0_OFFSET			0xE1000	/* Uart 2 -> Console */
+diff -Naur linux-2.6.34/arch/arm/mach-apollo/sata.c linux-2.6.34_sata_fuse_setting/arch/arm/mach-apollo/sata.c
+--- linux-2.6.34/arch/arm/mach-apollo/sata.c	2010-09-20 17:10:19.664469000 +0530
++++ linux-2.6.34_sata_fuse_setting/arch/arm/mach-apollo/sata.c	2010-09-20 15:00:21.409069000 +0530
+@@ -182,6 +182,10 @@
+    unsigned long greset = 0;
+    int status = 0, mask;
+ 
++   mask = readl(FC_MIRROR_STATUS_18);
++   if ( mask & SATA_DISABLED )
++      return -ENODEV;
++
+    /* Setting up SATA clocks and taking controller out of reset. */
+ 
+    /* Initialise SATA clocks

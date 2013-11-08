@@ -1,0 +1,2989 @@
+diff -Naurp linux-2.6.34.latest/drivers/net/LIPP_6300ETH/comps/tmbslPhyMYSTI110E/src/tmbslPhyMYSTI110E.c linux-2.6.34/drivers/net/LIPP_6300ETH/comps/tmbslPhyMYSTI110E/src/tmbslPhyMYSTI110E.c
+--- linux-2.6.34.latest/drivers/net/LIPP_6300ETH/comps/tmbslPhyMYSTI110E/src/tmbslPhyMYSTI110E.c	2010-11-17 09:24:42.000000000 -0600
++++ linux-2.6.34/drivers/net/LIPP_6300ETH/comps/tmbslPhyMYSTI110E/src/tmbslPhyMYSTI110E.c	2010-11-23 21:47:24.000000000 -0600
+@@ -52,10 +52,18 @@
+ 
+ #define PHY_TIMEOUT                 (100000)
+ 
++//- MODIFIED BY 07/23/10
++#if 0
+ #define ANAR_DEFAULT_VAL (TMBSL_PHYMYSTI110E_ANAR_NP | TMBSL_PHYMYSTI110E_ANAR_ADV_RF | \
+                           TMBSL_PHYMYSTI110E_ANAR_AP | TMBSL_PHYMYSTI110E_ANAR_PAUSE | TMBSL_PHYMYSTI110E_ANAR_100B_TX_FD | \
+                           TMBSL_PHYMYSTI110E_ANAR_100B_TX_HD | TMBSL_PHYMYSTI110E_ANAR_10B_TX_FD | TMBSL_PHYMYSTI110E_ANAR_10B_TX_HD |  \
+                           TMBSL_PHYMYSTI110E_ANAR_SELECTOR_FIELD)
++#endif 
++
++#define ANAR_DEFAULT_VAL (TMBSL_PHYMYSTI110E_ANAR_AP | TMBSL_PHYMYSTI110E_ANAR_PAUSE | TMBSL_PHYMYSTI110E_ANAR_100B_TX_FD | \
++                          TMBSL_PHYMYSTI110E_ANAR_100B_TX_HD | TMBSL_PHYMYSTI110E_ANAR_10B_TX_FD | TMBSL_PHYMYSTI110E_ANAR_10B_TX_HD |  \
++                          TMBSL_PHYMYSTI110E_ANAR_SELECTOR_FIELD)
++//- MODIFIED BY 07/23/10
+ 
+ #define ANDSP_DEBUG 0
+ 
+@@ -250,6 +258,50 @@
+                                 | MYSTIPHY_DSPW_RXGAIN6(5) | MYSTIPHY_DSPW_RXPREPGA6(1) \
+                                 | MYSTIPHY_DSPW_RXGAIN7(7) | MYSTIPHY_DSPW_RXPREPGA7(1) )
+ 
++#define MYSTIPHY_DSPW_DBGCNTL_NRZIOUT_SHIFT           (1)
++#define MYSTIPHY_DSPW_DBGCNTL_NRZIOUT_NO_SIGNAL       (0 << MYSTIPHY_DSPW_DBGCNTL_NRZIOUT_SHIFT)
++#define MYSTIPHY_DSPW_DBGCNTL_NRZIOUT_ENABLE_SIGNAL   (1 << MYSTIPHY_DSPW_DBGCNTL_NRZIOUT_SHIFT)
++#define MYSTIPHY_DSPW_DBGCNTL_TSTPTS_SHIFT            (2)
++#define MYSTIPHY_DSPW_DBGCNTL_TSTPTS_NORMAL           (0 << MYSTIPHY_DSPW_DBGCNTL_TSTPTS_SHIFT)
++#define MYSTIPHY_DSPW_DBGCNTL_TSTPTS_TRISTATE         (1 << MYSTIPHY_DSPW_DBGCNTL_TSTPTS_SHIFT)
++#define MYSTIPHY_DSPW_DBGCNTL_TRIGMODE_SHIFT          (3)
++#define MYSTIPHY_DSPW_DBGCNTL_FREEMEM_SHIFT           (7)
++#define MYSTIPHY_DSPW_DBGCNTL_CLK_OUTM_SHIFT          (9)
++#define MYSTIPHY_DSPW_DBGCNTL_CLK_OUTM_RX_125         (1 << MYSTIPHY_DSPW_DBGCNTL_CLK_OUTM_SHIFT)
++#define MYSTIPHY_DSPW_DBGCNTL_MONITOR_SHIFT           (12)
++#define MYSTIPHY_DSPW_DBGCNTL_MONITOR_GAIN_BBLDTCT    (4 << MYSTIPHY_DSPW_DBGCNTL_MONITOR_SHIFT)
++
++#define MYSTIPHY_DSPW_DBGCNTL_VAL                     (  MYSTIPHY_DSPW_DBGCNTL_MONITOR_GAIN_BBLDTCT \
++                                                       | MYSTIPHY_DSPW_DBGCNTL_CLK_OUTM_RX_125)
++
++
++#define MYSTIPHY_DSPW_ONLVL_ONLEVEL_SHIFT             (0)
++#define MYSTIPHY_DSPW_ONLVL_HTHD_SHIFT                (5)
++#define MYSTIPHY_DSPW_ONLVL_BLTHD_SHIFT               (11)
++#define MYSTIPHY_DSPW_ONLVL_BLTHD_FEC_1_4             (3 << MYSTIPHY_DSPW_ONLVL_BLTHD_SHIFT)
++
++#define MYSTIPHY_DSPW_ONLVL_VAL                       (  3 << MYSTIPHY_DSPW_ONLVL_ONLEVEL_SHIFT \
++                                                       | 0x27 << MYSTIPHY_DSPW_ONLVL_HTHD_SHIFT \
++													   | MYSTIPHY_DSPW_ONLVL_BLTHD_FEC_1_4)
++
++#define MYSTIPHY_DSPW_DCBLW_WINDOW_SHIFT              (0)
++#define MYSTIPHY_DSPW_DCBLW_ENABLE_SHIFT              (2)
++#define MYSTIPHY_DSPW_DCBLW_BYPASS_SHIFT              (3)
++#define MYSTIPHY_DSPW_DCBLW_COEF_SHIFT                (4)
++#define MYSTIPHY_DSPW_DCBLW_POLARITY_SHIFT            (7)
++#define MYSTIPHY_DSPW_DCBLW_FILT_MU_SHIFT             (8)
++#define MYSTIPHY_DSPW_DCBLW_DACPD_SHIFT               (11)
++#define MYSTIPHY_DSPW_DCBLW_AVG_MU_SHIFT              (12)
++#define MYSTIPHY_DSPW_DCBLW_DACPD_SRC_SHIFT           (15)
++
++#define MYSTIPHY_DSPW_DCBLW_VAL                       (  1 << MYSTIPHY_DSPW_DCBLW_ENABLE_SHIFT \
++                                                       | 4 << MYSTIPHY_DSPW_DCBLW_COEF_SHIFT \
++													   | 3 << MYSTIPHY_DSPW_DCBLW_FILT_MU_SHIFT \
++													   | 1 << MYSTIPHY_DSPW_DCBLW_AVG_MU_SHIFT)
++
++#define MYSTIPHY_DSPW_ATHR7_THRES7_SHIFT              (0)
++
++#define MYSTIPHY_DSPW_ATHR7_VAL                       (0x0118 << MYSTIPHY_DSPW_ATHR7_THRES7_SHIFT)
+ 
+ #define MYSTIPHY_SMI_TSTCNTL_READ_SHIFT      (15)
+ #define MYSTIPHY_SMI_TSTCNTL_READ            (1 << MYSTIPHY_SMI_TSTCNTL_READ_SHIFT)
+@@ -377,6 +429,109 @@ tmbslPhyMYSTI110EAnDSPRegWR (
+ 
+ static unsigned int tmbslPhyMYSTI110EAnDSPRegDump[MYSTIPHY_DSPR_MAX_REGS];
+ 
++#define MYSTI_TESTPAIRS  (32)
++#define MYSTI_STARTPAIR  (0)
++#define MYSTI_INVALIDREG (0x0BAD0000)
++#define MYSTI_INVALIDVAL (0x0BAD0000)
++#define MYSTI_MINREGS    (0)
++#define MYSTI_MAXREGS    (32)
++#define MYSTI_MINVAL     (0)
++#define MYSTI_MAXVAL     (65535) 
++typedef struct _mysti_pairs
++{
++   unsigned int reg;
++   unsigned int val;
++} mysti_pairs; 
++static mysti_pairs testpairs[MYSTI_TESTPAIRS] = 
++{ 
++   /*00*/ { MYSTIPHY_DSPW_OFFLVL0123_REG, MYSTIPHY_DSPW_OFFLVL0123_VAL },
++   /*01*/ { MYSTIPHY_DSPW_OFFLVL4567_REG, MYSTIPHY_DSPW_OFFLVL4567_VAL },
++   /*02*/ { MYSTIPHY_DSPW_GAIN1_REG,      MYSTIPHY_DSPW_GAIN1_VAL      },
++   /*03*/ { MYSTIPHY_DSPW_GAIN2_REG,      MYSTIPHY_DSPW_GAIN2_VAL      },
++   /*04*/ { MYSTIPHY_DSPW_A2CFG_REG,      MYSTIPHY_DSPW_A2CFG_VAL      },
++   /*05*/ { MYSTIPHY_DSPW_DBGCNTL_REG,    MYSTIPHY_DSPW_DBGCNTL_VAL    },
++   /*06*/ { MYSTIPHY_DSPW_ONLVL_REG,      MYSTIPHY_DSPW_ONLVL_VAL      },
++   /*07*/ { MYSTIPHY_DSPW_DCBLW_REG,      MYSTIPHY_DSPW_DCBLW_VAL      },
++   /*08*/ { MYSTIPHY_DSPW_ATHR7_REG,      MYSTIPHY_DSPW_ATHR7_VAL      },
++   /*09*/ { MYSTI_INVALIDREG,             MYSTI_INVALIDVAL             },
++   /*10*/ { MYSTI_INVALIDREG,             MYSTI_INVALIDVAL             },
++   /*11*/ { MYSTI_INVALIDREG,             MYSTI_INVALIDVAL             },
++   /*12*/ { MYSTI_INVALIDREG,             MYSTI_INVALIDVAL             },
++   /*13*/ { MYSTI_INVALIDREG,             MYSTI_INVALIDVAL             },
++   /*14*/ { MYSTI_INVALIDREG,             MYSTI_INVALIDVAL             },
++   /*15*/ { MYSTI_INVALIDREG,             MYSTI_INVALIDVAL             },
++   /*16*/ { MYSTI_INVALIDREG,             MYSTI_INVALIDVAL             },
++   /*17*/ { MYSTI_INVALIDREG,             MYSTI_INVALIDVAL             },
++   /*18*/ { MYSTI_INVALIDREG,             MYSTI_INVALIDVAL             },
++   /*19*/ { MYSTI_INVALIDREG,             MYSTI_INVALIDVAL             },
++   /*20*/ { MYSTI_INVALIDREG,             MYSTI_INVALIDVAL             },
++   /*21*/ { MYSTI_INVALIDREG,             MYSTI_INVALIDVAL             },
++   /*22*/ { MYSTI_INVALIDREG,             MYSTI_INVALIDVAL             },
++   /*23*/ { MYSTI_INVALIDREG,             MYSTI_INVALIDVAL             },
++   /*24*/ { MYSTI_INVALIDREG,             MYSTI_INVALIDVAL             },
++   /*25*/ { MYSTI_INVALIDREG,             MYSTI_INVALIDVAL             },
++   /*26*/ { MYSTI_INVALIDREG,             MYSTI_INVALIDVAL             },
++   /*27*/ { MYSTI_INVALIDREG,             MYSTI_INVALIDVAL             },
++   /*28*/ { MYSTI_INVALIDREG,             MYSTI_INVALIDVAL             },
++   /*29*/ { MYSTI_INVALIDREG,             MYSTI_INVALIDVAL             },
++   /*30*/ { MYSTI_INVALIDREG,             MYSTI_INVALIDVAL             },
++   /*31*/ { MYSTI_INVALIDREG,             MYSTI_INVALIDVAL             }
++}; 
++void MystiSetPair(int id, int reg, int val)
++{
++	if( (id >= MYSTI_STARTPAIR) && (id < MYSTI_TESTPAIRS) )
++	{
++		if( (reg >= MYSTI_MINREGS) && (reg < MYSTI_MAXREGS) )
++		{
++			testpairs[id].reg = reg;
++			testpairs[id].val = val;
++		}
++		else
++		{
++			testpairs[id].reg = MYSTI_INVALIDREG;
++			testpairs[id].val = MYSTI_INVALIDVAL;
++		}
++	}
++}
++void MystiGetPair(int id, int *preg, int *pval)
++{
++	*preg = MYSTI_INVALIDREG;
++	*pval = MYSTI_INVALIDVAL;
++
++	if( (id >= MYSTI_STARTPAIR) && (id < MYSTI_TESTPAIRS) )
++	{
++		*preg = testpairs[id].reg;
++		*pval = testpairs[id].val;
++	}
++}
++static tmErrorCode_t MystiInstallSettings( tmUnitSelect_t ethUnitId )
++{
++	int i;
++	for ( i=MYSTI_STARTPAIR; i<MYSTI_TESTPAIRS; i++)
++	{
++		if (  (testpairs[i].reg >= MYSTI_MINREGS)
++		   && (testpairs[i].reg <  MYSTI_MAXREGS)
++		   && (testpairs[i].val >= MYSTI_MINVAL )
++		   && (testpairs[i].val <= MYSTI_MAXVAL ))
++		{
++			tmErrorCode_t ethStatus;
++			ethStatus = tmbslPhyMYSTI110EAnDSPRegWR( 
++				ethUnitId,
++				(UInt16) (testpairs[i].reg),
++				(UInt16) (testpairs[i].val));
++			if(ethStatus != TM_OK)
++			{
++				/* 
++				NOTE - bail on error -- phy might need to
++	                        be reset to get back int order.
++				*/
++				return(ethStatus);
++			}
++		}
++	}
++	return TM_OK;
++}
++
+ /* Exported functions */
+ 
+ //-----------------------------------------------------------------------------
+@@ -1106,6 +1261,36 @@ tmbslPhyMYSTI110ESoftReset (
+         return(TMBSL_ERR_PHY_INIT_FAILED);
+     }
+ 
++#if 0
++// (Old Code Reset the Phy Twice, back to back
++   printk(KERN_ERR "~~~ DEBUG: Resetting the Phy Twice.\n");
++   /* All the registers will be reset */
++   ethStatus = tmbslPhyMYSTI110EWrite(
++      ethUnitId,
++      tmbslPhyMYSTI110EBmcr,
++      TMBSL_PHYMYSTI110E_BMCR_RST_VAL);
++    if(ethStatus != TM_OK)
++    {
++        return ethStatus;
++    }
++
++    /* Check if PHY is back to normal condition */
++    do
++    {
++        ethStatus = tmbslPhyMYSTI110ERead(ethUnitId,tmbslPhyMYSTI110EBmcr,&regval);
++        if(ethStatus != TM_OK)
++        {
++            break;
++        }
++        timeout++;
++    }while( (regval & TMBSL_PHYMYSTI110E_BMCR_RST_VAL) && (timeout < PHY_TIMEOUT) );
++
++    if( (timeout == PHY_TIMEOUT) && (regval & TMBSL_PHYMYSTI110E_BMCR_RST_VAL) )
++    {
++        return(TMBSL_ERR_PHY_INIT_FAILED);
++    }
++#endif
++
+    /* Unlocking Access to the Mysticom's EPHY Analog and DSP Register Set */
+    ethStatus = tmbslPhyMYSTI110EUnlockAnDSPRegs(ethUnitId);
+    if(ethStatus != TM_OK)
+@@ -1120,6 +1305,9 @@ tmbslPhyMYSTI110ESoftReset (
+       return (ethStatus);
+    }
+    
++   ethStatus = MystiInstallSettings( ethUnitId );
++
++#if 0
+    /* Modify the Deassertion ENERGY_DETECT threshold settings OFFLVL0123 */
+    ethStatus = tmbslPhyMYSTI110EAnDSPRegWR(
+       ethUnitId,
+@@ -1139,7 +1327,12 @@ tmbslPhyMYSTI110ESoftReset (
+    {
+       return (ethStatus);
+    }
+-   
++
++   printk(KERN_ERR "EPHY AnDSP EFRAMCHK: GAIN1=%04xh GAIN2=%04xh A2CFG=%04xh\n",
++      MYSTIPHY_DSPW_GAIN1_VAL,
++      MYSTIPHY_DSPW_GAIN2_VAL, 
++      MYSTIPHY_DSPW_A2CFG_VAL);
++
+    /* Modify the GAIN1 to correct issues in the Baseline Wander Test */
+    ethStatus = tmbslPhyMYSTI110EAnDSPRegWR(
+       ethUnitId,
+@@ -1150,7 +1343,6 @@ tmbslPhyMYSTI110ESoftReset (
+       return (ethStatus);
+    }
+    
+-   
+    /* Modify the GAIN2 to correct issues in the Baseline Wander Test */
+    ethStatus = tmbslPhyMYSTI110EAnDSPRegWR(
+       ethUnitId,
+@@ -1160,7 +1352,7 @@ tmbslPhyMYSTI110ESoftReset (
+    {
+       return (ethStatus);
+    }
+-   
++
+    /* Modify the A2CFG (Analog receiver configuration) to correct issues 
+    in the Baseline Wander Test */
+    ethStatus = tmbslPhyMYSTI110EAnDSPRegWR(
+@@ -1171,6 +1363,14 @@ tmbslPhyMYSTI110ESoftReset (
+    {
+       return (ethStatus);
+    }
++#endif
++
++   /* Display contents of the Mysticom EPHY Analog and DSP Register Set */
++   ethStatus = tmbslPhyMYSTI110EDumpAnDSPRegs(ethUnitId);
++   if(ethStatus != TM_OK)
++   {
++      return (ethStatus);
++   }
+ 
+    /* All AnDSP changes are done. Lock down AnDSP Register Access */	
+    ethStatus = tmbslPhyMYSTI110ELockDnAnDSPRegs(ethUnitId);
+@@ -1178,7 +1378,7 @@ tmbslPhyMYSTI110ESoftReset (
+    {
+       return (ethStatus);
+    }
+-   
++
+    return ethStatus;
+ 
+ }
+@@ -1311,7 +1511,6 @@ tmbslPhyMYSTI110EWrite (
+ 	)
+ 
+ {
+-
+     UInt32 pEthRegs;
+     volatile UInt32 *pAdrReg;
+     volatile  UInt32 *pDataReg;
+@@ -1378,32 +1577,56 @@ tmbslPhyMYSTI110EWrite (
+ //
+ static tmErrorCode_t
+ tmbslPhyMYSTI110EUnlockAnDSPRegs (
+-	tmUnitSelect_t  						ethUnitId
++	tmUnitSelect_t 	ethUnitId
+ 	)
+ {
+-	tmErrorCode_t       		ethStatus = TM_OK;
++	tmErrorCode_t 	ethStatus = TM_OK;
+ 
+-   // Set TSTMODE	
++	// Ensure that if the unlock procedure is to be done that we
++	// are in a known good TSTMODE state.  Safest state is from
++	// the locked mode.
++
++	ethStatus = tmbslPhyMYSTI110ELockDnAnDSPRegs(ethUnitId);
++	if(ethStatus != TM_OK)
++	{
++		return (ethStatus);
++	}
++
++	// To enable TSTMODE: 1-SET 2-CLEAR 3-SET 4-PROFIT
++
++	// STEP 1-SET
+ 	ethStatus = tmbslPhyMYSTI110EWrite(
+-	   ethUnitId,
+-	   tmbslPhyMYSTI110ETstCntl,
+-	   MYSTIPHY_SMI_TSTCNTL_TSTMODE_SET);
+-   if(ethStatus != TM_OK)
+-   {
+-      return (ethStatus);
+-   }
+-	// Clear TSTMODE
++		ethUnitId,
++		tmbslPhyMYSTI110ETstCntl,
++		MYSTIPHY_SMI_TSTCNTL_TSTMODE_SET);
++	if(ethStatus != TM_OK)
++	{
++		return (ethStatus);
++	}
++	// STEP 2-CLEAR
+ 	ethStatus = tmbslPhyMYSTI110EWrite(
+-	   ethUnitId,
+-	   tmbslPhyMYSTI110ETstCntl,
+-	   MYSTIPHY_SMI_TSTCNTL_TSTMODE_CLEAR);
+-   if(ethStatus != TM_OK)
+-   {
+-      return (ethStatus);
+-   }
+-   #if (ANDSP_DEBUG == 1)
++		ethUnitId,
++		tmbslPhyMYSTI110ETstCntl,
++		MYSTIPHY_SMI_TSTCNTL_TSTMODE_CLEAR);
++	if(ethStatus != TM_OK)
++	{
++		return (ethStatus);
++	}
++	// STEP 3-SET
++	ethStatus = tmbslPhyMYSTI110EWrite(
++		ethUnitId,
++		tmbslPhyMYSTI110ETstCntl,
++		MYSTIPHY_SMI_TSTCNTL_TSTMODE_SET);
++	if(ethStatus != TM_OK)
++	{
++		return (ethStatus);
++	}
++
++	#if (ANDSP_DEBUG == 1)
+ 	printk(KERN_ERR"EPHY AnDSP UNLOCKED\n");
+ 	#endif
++
++	// STEP 4-PROFIT
+ 	return (TM_OK);
+ }
+ 
+@@ -1426,7 +1649,7 @@ tmbslPhyMYSTI110EDumpAnDSPRegs (
+ 	)
+ {
+ 	tmErrorCode_t       		ethStatus = TM_OK;
+-   UInt16 regval=0, anDSPRegAddr, anDSPRegVal;		//- ADDED BY MF
++   UInt16 regval=0, anDSPRegAddr, anDSPRegVal1, anDSPRegVal2;
+ 	
+ 	for (anDSPRegAddr = 0; anDSPRegAddr < MYSTIPHY_DSPR_MAX_REGS; anDSPRegAddr++)
+ 	{
+@@ -1448,31 +1671,41 @@ tmbslPhyMYSTI110EDumpAnDSPRegs (
+ 		ethStatus = tmbslPhyMYSTI110ERead(
+ 		   ethUnitId,
+ 		   tmbslPhyMYSTI110ETstRead1,
+-		   &anDSPRegVal);
++		   &anDSPRegVal1);
+ 		if(ethStatus != TM_OK)
+ 		{
+ 			return (ethStatus);
+ 		}
+-		tmbslPhyMYSTI110EAnDSPRegDump[anDSPRegAddr] = anDSPRegVal;
++		//- 0x16 = TSTREAD2
++		ethStatus = tmbslPhyMYSTI110ERead(
++		   ethUnitId,
++		   tmbslPhyMYSTI110ETstRead2,
++		   &anDSPRegVal2);
++		if(ethStatus != TM_OK)
++		{
++			return (ethStatus);
++		}
++		tmbslPhyMYSTI110EAnDSPRegDump[anDSPRegAddr] = 
++                   ((((int)(anDSPRegVal2)) << 16) | anDSPRegVal1);
+ 	}
+ #if (ANDSP_DEBUG == 1)
+-	printk(KERN_ERR"EPHY AnDSP READ Registers Dump:\n");
+-	printk(KERN_ERR"EPHY AnDSP 00--07: 0x%04x 0x%04x 0x%04x 0x%04x 0x%04x 0x%04x 0x%04x 0x%04x\n",
++	//printk(KERN_ERR"EPHY AnDSP READ Registers Dump:\n");
++	printk(KERN_ERR"EPHY AnDSP 00--07: %06x %06x %06x %06x %06x %06x %06x %06x\n",
+       tmbslPhyMYSTI110EAnDSPRegDump[0], tmbslPhyMYSTI110EAnDSPRegDump[1], 
+       tmbslPhyMYSTI110EAnDSPRegDump[2], tmbslPhyMYSTI110EAnDSPRegDump[3],
+       tmbslPhyMYSTI110EAnDSPRegDump[4], tmbslPhyMYSTI110EAnDSPRegDump[5], 
+       tmbslPhyMYSTI110EAnDSPRegDump[6], tmbslPhyMYSTI110EAnDSPRegDump[7]);
+-	printk(KERN_ERR"EPHY AnDSP 08--0F: 0x%04x 0x%04x 0x%04x 0x%04x 0x%04x 0x%04x 0x%04x 0x%04x\n",
++	printk(KERN_ERR"EPHY AnDSP 08--0F: %06x %06x %06x %06x %06x %06x %06x %06x\n",
+       tmbslPhyMYSTI110EAnDSPRegDump[0x8], tmbslPhyMYSTI110EAnDSPRegDump[0x9], 
+       tmbslPhyMYSTI110EAnDSPRegDump[0xA], tmbslPhyMYSTI110EAnDSPRegDump[0xB],
+       tmbslPhyMYSTI110EAnDSPRegDump[0xC], tmbslPhyMYSTI110EAnDSPRegDump[0xD], 
+       tmbslPhyMYSTI110EAnDSPRegDump[0xE], tmbslPhyMYSTI110EAnDSPRegDump[0xF]);
+-	printk(KERN_ERR"EPHY AnDSP 10--17: 0x%04x 0x%04x 0x%04x 0x%04x 0x%04x 0x%04x 0x%04x 0x%04x\n",
++	printk(KERN_ERR"EPHY AnDSP 10--17: %06x %06x %06x %06x %06x %06x %06x %06x\n",
+       tmbslPhyMYSTI110EAnDSPRegDump[0x10], tmbslPhyMYSTI110EAnDSPRegDump[0x11], 
+       tmbslPhyMYSTI110EAnDSPRegDump[0x12], tmbslPhyMYSTI110EAnDSPRegDump[0x13],
+       tmbslPhyMYSTI110EAnDSPRegDump[0x14], tmbslPhyMYSTI110EAnDSPRegDump[0x15], 
+       tmbslPhyMYSTI110EAnDSPRegDump[0x16], tmbslPhyMYSTI110EAnDSPRegDump[0x17]);
+-	printk(KERN_ERR"EPHY AnDSP 18--1B: 0x%04x 0x%04x 0x%04x 0x%04x\n",
++	printk(KERN_ERR"EPHY AnDSP 18--1B: %06x %06x %06x %06x\n",
+       tmbslPhyMYSTI110EAnDSPRegDump[0x18], tmbslPhyMYSTI110EAnDSPRegDump[0x19], 
+       tmbslPhyMYSTI110EAnDSPRegDump[0x1A], tmbslPhyMYSTI110EAnDSPRegDump[0x1B]);
+ #endif
+@@ -1487,7 +1720,6 @@ tmbslPhyMYSTI110EDumpAnDSPRegs (
+ //
+ // RETURN: tmErrorCode_t
+ //
+-// NOTES: ADDED BY MF
+ //-----------------------------------------------------------------------------
+ //
+ static tmErrorCode_t
+@@ -1523,8 +1755,10 @@ tmbslPhyMYSTI110EAnDSPRegWR (
+    {
+       return (ethStatus);
+    }
+-   #if (ANDSP_DEBUG == 1)
+-	printk(KERN_ERR"EPHY AnDSP WRITE REG %02d = 0x%04x\n", inRegAddr, inDataVal);
++	#if (ANDSP_DEBUG == 1)
++	printk(KERN_ERR"EPHY AnDSP WRITE REG %02Xh (%02d) = %04xh\n", 
++		inRegAddr, inRegAddr,
++		inDataVal);
+ 	#endif
+ 
+ 	return (TM_OK);
+@@ -1548,21 +1782,26 @@ tmbslPhyMYSTI110ELockDnAnDSPRegs (
+ 	)
+ {
+ 	tmErrorCode_t       		ethStatus = TM_OK;
++	int i;
+  	
+  	#if (ANDSP_DEBUG == 1)				
+ 	printk(KERN_ERR"EPHY AnDSP LOCKED\n");
+ 	#endif
+-	
+-	//- Setting TSTMODE=0 Locks down
+-	ethStatus = tmbslPhyMYSTI110EWrite(
+-	   ethUnitId,
+-	   tmbslPhyMYSTI110ETstCntl,
+-	   MYSTIPHY_SMI_TSTCNTL_TSTMODE_CLEAR);
+-   if(ethStatus != TM_OK)
+-   {
+-      return (ethStatus);
+-   }	
+ 
++	// Setting TSTMODE=0 Twice Locks down access to DSP Regs
++	// Two writes ensure any intermediate TSTMODE state is
++	// reset into the locked state. 
++	for(i=0; i<2; i++)
++	{
++		ethStatus = tmbslPhyMYSTI110EWrite(
++			ethUnitId,
++			tmbslPhyMYSTI110ETstCntl,
++			MYSTIPHY_SMI_TSTCNTL_TSTMODE_CLEAR);
++		if(ethStatus != TM_OK)
++		{
++			return (ethStatus);
++		}
++	}
+ 	return (TM_OK);
+ }
+ 
+diff -Naurp linux-2.6.34.latest/drivers/net/LIPP_6300ETH/comps/tmhwLIPP6100Eth/src/tmhwLIPP6100Eth.c linux-2.6.34/drivers/net/LIPP_6300ETH/comps/tmhwLIPP6100Eth/src/tmhwLIPP6100Eth.c
+--- linux-2.6.34.latest/drivers/net/LIPP_6300ETH/comps/tmhwLIPP6100Eth/src/tmhwLIPP6100Eth.c	2010-11-17 09:24:42.000000000 -0600
++++ linux-2.6.34/drivers/net/LIPP_6300ETH/comps/tmhwLIPP6100Eth/src/tmhwLIPP6100Eth.c	2010-11-23 19:37:54.000000000 -0600
+@@ -2199,10 +2199,10 @@ tmhwLIPP6100Eth_MMCCountersRead(
+     {
+         case TMHW_LIPP6100ETH_TX_OCTET_CNT_GB:
+ 
+-                MMC_RST_ON_RD_SAVE(pRegs,regVal);
++                //MMC_RST_ON_RD_SAVE(pRegs,regVal);
+                 TMVH_GEN_READ(pRegs+TMVH_LIPP6100ETH_MMC_TXOCTET_CNT_GB_REG_OFFSET,\
+                     pMmcReg->mmcRegVal);
+-                MMC_RST_ON_RD_RESTORE(pRegs,regVal);
++                //MMC_RST_ON_RD_RESTORE(pRegs,regVal);
+                 break;
+             
+         case TMHW_LIPP6100ETH_TX_FRAME_CNT_GB :
+@@ -2319,10 +2319,10 @@ tmhwLIPP6100Eth_MMCCountersRead(
+             
+         case TMHW_LIPP6100ETH_TX_OCTET_CNT_G:        
+ 
+-                MMC_RST_ON_RD_SAVE(pRegs,regVal);
++                //MMC_RST_ON_RD_SAVE(pRegs,regVal);
+                 TMVH_GEN_READ(pRegs+TMVH_LIPP6100ETH_MMC_TX_OCTET_CNT_G_REG_OFFSET,\
+                     pMmcReg->mmcRegVal);
+-                MMC_RST_ON_RD_RESTORE(pRegs,regVal);                    
++                //MMC_RST_ON_RD_RESTORE(pRegs,regVal);                    
+                 
+                 break;                
+             
+@@ -2359,19 +2359,19 @@ tmhwLIPP6100Eth_MMCCountersRead(
+             
+         case TMHW_LIPP6100ETH_RX_OCTET_CNT_GB:
+ 
+-            MMC_RST_ON_RD_SAVE(pRegs,regVal);
++            //MMC_RST_ON_RD_SAVE(pRegs,regVal);
+             TMVH_GEN_READ(pRegs+TMVH_LIPP6100ETH_MMC_RXOCTET_CNT_GB_REG_OFFSET,\
+                 pMmcReg->mmcRegVal);
+-            MMC_RST_ON_RD_RESTORE(pRegs,regVal);  
++            //MMC_RST_ON_RD_RESTORE(pRegs,regVal);  
+ 
+             break;                            
+             
+         case TMHW_LIPP6100ETH_RX_OCTET_CNT_G:
+ 
+-            MMC_RST_ON_RD_SAVE(pRegs,regVal);
++            //MMC_RST_ON_RD_SAVE(pRegs,regVal);
+             TMVH_GEN_READ(pRegs+TMVH_LIPP6100ETH_MMC_RXOCTET_CNT_G_REG_OFFSET,\
+                 pMmcReg->mmcRegVal);
+-            MMC_RST_ON_RD_RESTORE(pRegs,regVal);  
++            //MMC_RST_ON_RD_RESTORE(pRegs,regVal);  
+ 
+             break;                            
+ 
+@@ -2657,126 +2657,126 @@ tmhwLIPP6100Eth_MMCCountersRead(
+ 
+         case TMHW_LIPP6100ETH_RX_IPV4_OCTETS_G:
+ 
+-            MMC_RST_ON_RD_SAVE(pRegs,regVal);
++            //MMC_RST_ON_RD_SAVE(pRegs,regVal);
+             TMVH_GEN_READ(pRegs+TMVH_LIPP6100ETH_MMC_RXIPV4_GD_OCTETS_REG_OFFSET,\
+                 pMmcReg->mmcRegVal);               
+-            MMC_RST_ON_RD_RESTORE(pRegs,regVal);                
++            //MMC_RST_ON_RD_RESTORE(pRegs,regVal);                
+             break;            
+ 
+         case TMHW_LIPP6100ETH_RX_IPV4_HDR_ERR_OCTETS:
+ 
+-            MMC_RST_ON_RD_SAVE(pRegs,regVal);
++            //MMC_RST_ON_RD_SAVE(pRegs,regVal);
+             TMVH_GEN_READ(pRegs+TMVH_LIPP6100ETH_MMC_RXIPV4_HDRERR_OCTETS_REG_OFFSET,\
+                 pMmcReg->mmcRegVal);
+-            MMC_RST_ON_RD_RESTORE(pRegs,regVal);                
++            //MMC_RST_ON_RD_RESTORE(pRegs,regVal);                
+             
+             break;            
+ 
+         case TMHW_LIPP6100ETH_RX_IPV4_NOPPAY_OCTETS:
+ 
+-            MMC_RST_ON_RD_SAVE(pRegs,regVal);
++            //MMC_RST_ON_RD_SAVE(pRegs,regVal);
+             TMVH_GEN_READ(pRegs+TMVH_LIPP6100ETH_MMC_RXIPV4_NOPAY_OCTETS_REG_OFFSET,\
+                 pMmcReg->mmcRegVal);
+-            MMC_RST_ON_RD_RESTORE(pRegs,regVal);                
++            //MMC_RST_ON_RD_RESTORE(pRegs,regVal);                
+ 
+             break;            
+ 
+         case TMHW_LIPP6100ETH_RX_IPV4_FRAG_OCTETS:
+ 
+-            MMC_RST_ON_RD_SAVE(pRegs,regVal);
++            //MMC_RST_ON_RD_SAVE(pRegs,regVal);
+             TMVH_GEN_READ(pRegs+TMVH_LIPP6100ETH_MMC_RXIPV4_FRAG_OCTETS_REG_OFFSET,\
+                 pMmcReg->mmcRegVal);
+-            MMC_RST_ON_RD_RESTORE(pRegs,regVal);                
++            //MMC_RST_ON_RD_RESTORE(pRegs,regVal);                
+             
+             break;            
+ 
+         case TMHW_LIPP6100ETH_RX_IPV4_UDPCSUMDSL_OCTETS:
+ 
+-            MMC_RST_ON_RD_SAVE(pRegs,regVal);
++            //MMC_RST_ON_RD_SAVE(pRegs,regVal);
+             TMVH_GEN_READ(pRegs+TMVH_LIPP6100ETH_MMC_RXIPV4_UDSBL_OCTECTS_REG_OFFSET,\
+                 pMmcReg->mmcRegVal);
+-            MMC_RST_ON_RD_RESTORE(pRegs,regVal);                
++            //MMC_RST_ON_RD_RESTORE(pRegs,regVal);                
+             
+             break;            
+ 
+         case TMHW_LIPP6100ETH_RX_IPV6_OCTETS_G:
+ 
+-            MMC_RST_ON_RD_SAVE(pRegs,regVal);
++            //MMC_RST_ON_RD_SAVE(pRegs,regVal);
+             TMVH_GEN_READ(pRegs+TMVH_LIPP6100ETH_MMC_RXIPV6_GD_OCTETS_REG_OFFSET,\
+                 pMmcReg->mmcRegVal);
+-            MMC_RST_ON_RD_RESTORE(pRegs,regVal);     
++            //MMC_RST_ON_RD_RESTORE(pRegs,regVal);     
+             
+             break;            
+ 
+         case TMHW_LIPP6100ETH_RX_IPV6_HDR_ERR_OCTETS:
+ 
+-            MMC_RST_ON_RD_SAVE(pRegs,regVal);
++            //MMC_RST_ON_RD_SAVE(pRegs,regVal);
+             TMVH_GEN_READ(pRegs+TMVH_LIPP6100ETH_MMC_RXIPV6_HDRERR_OCTETS_REG_OFFSET,\
+                 pMmcReg->mmcRegVal);
+-            MMC_RST_ON_RD_RESTORE(pRegs,regVal);                
++            //MMC_RST_ON_RD_RESTORE(pRegs,regVal);                
+             
+             break;            
+ 
+         case TMHW_LIPP6100ETH_RX_IPV6_NOPAY_OCTETS:
+ 
+-            MMC_RST_ON_RD_SAVE(pRegs,regVal);
++            //MMC_RST_ON_RD_SAVE(pRegs,regVal);
+             TMVH_GEN_READ(pRegs+TMVH_LIPP6100ETH_MMC_RXIPV6_NOPAY_OCTETS_REG_OFFSET,\
+                 pMmcReg->mmcRegVal);
+-            MMC_RST_ON_RD_RESTORE(pRegs,regVal);                
++            //MMC_RST_ON_RD_RESTORE(pRegs,regVal);                
+ 
+             
+             break;            
+ 
+         case TMHW_LIPP6100ETH_RX_UDP_OCTETS_G:
+ 
+-            MMC_RST_ON_RD_SAVE(pRegs,regVal);
++            //MMC_RST_ON_RD_SAVE(pRegs,regVal);
+             TMVH_GEN_READ(pRegs+TMVH_LIPP6100ETH_MMC_RXUDP_GD_OCTETS_REG_OFFSET,\
+                 pMmcReg->mmcRegVal);
+-            MMC_RST_ON_RD_RESTORE(pRegs,regVal);                
++            //MMC_RST_ON_RD_RESTORE(pRegs,regVal);                
+             
+             break;            
+ 
+         case TMHW_LIPP6100ETH_RX_UDP_ERR_OCTETS:
+ 
+-            MMC_RST_ON_RD_SAVE(pRegs,regVal);
++            //MMC_RST_ON_RD_SAVE(pRegs,regVal);
+             TMVH_GEN_READ(pRegs+TMVH_LIPP6100ETH_MMC_RXUDP_ERR_OCTETS_REG_OFFSET,\
+                 pMmcReg->mmcRegVal);
+-            MMC_RST_ON_RD_RESTORE(pRegs,regVal);                
++            //MMC_RST_ON_RD_RESTORE(pRegs,regVal);                
+             
+             break;            
+ 
+         case TMHW_LIPP6100ETH_RX_TCP_OCTETS_G:
+ 
+-            MMC_RST_ON_RD_SAVE(pRegs,regVal);
++            //MMC_RST_ON_RD_SAVE(pRegs,regVal);
+             TMVH_GEN_READ(pRegs+TMVH_LIPP6100ETH_MMC_TCP_GD_OCTETS_REG_OFFSET,\
+                 pMmcReg->mmcRegVal);
+-            MMC_RST_ON_RD_RESTORE(pRegs,regVal);                
++            //MMC_RST_ON_RD_RESTORE(pRegs,regVal);                
+             
+             break;            
+ 
+         case TMHW_LIPP6100ETH_RX_TCP_ERR_OCTETS:
+-            MMC_RST_ON_RD_SAVE(pRegs,regVal);
++            //MMC_RST_ON_RD_SAVE(pRegs,regVal);
+             TMVH_GEN_READ(pRegs+TMVH_LIPP6100ETH_MMC_TCP_ERR_OCTETS_REG_OFFSET,\
+                 pMmcReg->mmcRegVal);
+-            MMC_RST_ON_RD_RESTORE(pRegs,regVal);                
++            //MMC_RST_ON_RD_RESTORE(pRegs,regVal);                
+             
+             break;            
+ 
+         case TMHW_LIPP6100ETH_RX_ICMP_OCTETS_G:
+ 
+-            MMC_RST_ON_RD_SAVE(pRegs,regVal);
++            //MMC_RST_ON_RD_SAVE(pRegs,regVal);
+             TMVH_GEN_READ(pRegs+TMVH_LIPP6100ETH_MMC_ICMP_GD_OCTETS_REG_OFFSET,\
+                 pMmcReg->mmcRegVal);
+-            MMC_RST_ON_RD_RESTORE(pRegs,regVal);                
++            //MMC_RST_ON_RD_RESTORE(pRegs,regVal);                
+             
+             break;            
+ 
+         case TMHW_LIPP6100ETH_RX_ICMP_ERR_OCTETS:
+ 
+-            MMC_RST_ON_RD_SAVE(pRegs,regVal);
++            //MMC_RST_ON_RD_SAVE(pRegs,regVal);
+             TMVH_GEN_READ(pRegs+TMVH_LIPP6100ETH_MMC_ICMP_ERR_OCTETS_REG_OFFSET,\
+                 pMmcReg->mmcRegVal);
+-            MMC_RST_ON_RD_RESTORE(pRegs,regVal);                
++            //MMC_RST_ON_RD_RESTORE(pRegs,regVal);                
+ 
+             break;            
+ 
+diff -Naurp linux-2.6.34.latest/drivers/net/LIPP_6300ETH/src/gmac_drv.c linux-2.6.34/drivers/net/LIPP_6300ETH/src/gmac_drv.c
+--- linux-2.6.34.latest/drivers/net/LIPP_6300ETH/src/gmac_drv.c	2010-11-17 09:24:43.000000000 -0600
++++ linux-2.6.34/drivers/net/LIPP_6300ETH/src/gmac_drv.c	2010-11-23 19:36:26.000000000 -0600
+@@ -239,11 +239,12 @@ static const struct net_device_ops lipp_
+ 	.ndo_stop		= lipp_6300Eth_stop,
+ 	.ndo_start_xmit		= lipp_6300Eth_hard_start_xmit,
+ 	.ndo_tx_timeout         = lipp_6300Eth_tx_timeout_isr,
+-//	.ndo_change_mtu		= lipp_6300Eth_change_mtu,
++	.ndo_change_mtu		= eth_change_mtu,
+ 	.ndo_set_multicast_list	= lipp_6300Eth_multicast_list,
+-//	.ndo_set_mac_address	= lipp_6300Eth_set_mac_address,
++	.ndo_set_mac_address    = eth_mac_addr,
+ 	.ndo_do_ioctl		= lipp_6300Eth_do_ioctl,
+ 	.ndo_get_stats		= lipp_6300Eth_get_stats,
++	.ndo_validate_addr      = eth_validate_addr,
+ #ifdef LIPP_6300ETH_VLAN_TAG
+ 	.ndo_vlan_rx_register = lipp_6300eth_vlan_rx_register,
+ #endif	
+@@ -576,7 +577,7 @@ static __s32 lipp_6300Eth_probe(struct p
+ #ifdef CONFIG_LIPP_6300ETH_CSUMOFFLOAD
+     /* Can checksum TCP/UDP packets over IPv4 & IPv6 */
+     //dev->features |= NETIF_F_ALL_CSUM | NETIF_F_SG ;
+-    dev->features |= NETIF_F_HIGHDMA | NETIF_F_HW_CSUM | NETIF_F_FRAGLIST;
++    dev->features |= NETIF_F_HIGHDMA | NETIF_F_IP_CSUM | NETIF_F_IPV6_CSUM | NETIF_F_FRAGLIST;
+ #endif /* CONFIG_LIPP_6300ETH_CSUMOFFLOAD */
+ 
+ #ifdef ENABLE_ETH_TOOL
+@@ -739,13 +740,13 @@ static __s32 alloc_dma_descriptors( stru
+     priv->p_vtx = dma_alloc_coherent( NULL,
+     					SIZEOF_TX_DESCS( HW_DESCR_QUEUE_LEN_TX) + DMA_DESC_ALIGNMENT,
+     					&priv->p_tx, /* Physical address for transmission */
+-    					GFP_KERNEL ) ;
++    					GFP_ATOMIC ) ;
+ 
+     /* Virtual Adr for reception */
+     priv->p_vrx = dma_alloc_coherent( NULL,
+     					SIZEOF_RX_DESCS( HW_DESCR_QUEUE_LEN_RX) + DMA_DESC_ALIGNMENT,
+     					&priv->p_rx, /* Physical address for reception */
+-    					GFP_KERNEL ) ;
++    					GFP_ATOMIC ) ;
+ 
+     if( ( NULL ==  priv->p_vtx ) || ( NULL ==  priv->p_vrx ) )
+     {
+@@ -996,6 +997,7 @@ static __s32 setup_dma_descriptors( lipp
+             dev_kfree_skb( priv->p_vtx_skb_list[ i ] ) ;
+             priv->p_vtx_skb_list[ i ] = NULL ;
+             priv->stats.tx_dropped ++ ;
++            priv->counters.ullTxDroppedOnLinkDown++;
+         }
+ 
+         /* Clear the transmit status */
+@@ -2164,6 +2166,7 @@ static __s32 lipp_6300Eth_hard_start_xmi
+ 
+         /* Drop the packet, keep the index constant */
+         priv->stats.tx_dropped++ ;
++        priv->counters.ullTxDroppedOnHardStart++;
+         return NETDEV_TX_BUSY;
+     }
+ 
+@@ -2531,51 +2534,66 @@ static __s32 lipp_6300Eth_do_ioctl(struc
+ 
+                 if(gmacRegs.rwPhyRegs == 0)
+                 {
+-
+                     pReg = (__u32*) (gmacRegs.regOffset+regBase);
+ 
+                     if(gmacRegs.rwFlag == 0)
+                     {
+-                       /* GMAC Register Read operation */
+-                       gmacRegs.regValue = *pReg;
+-
++                        /* GMAC Register Read operation */
++                        gmacRegs.regValue = *pReg;
+                     }
+                     else
+                     {
+                         /* GMAC Register Write operation */
+                         *pReg = gmacRegs.regValue;
+                     }
+-
+-
+                 }
+                 else
+                 {
+-                    /* Get the Address register */
+-                    pAdrReg = (__u32*)(regBase+0x10) ;
+-                    pDataReg = (__u32*)(regBase+0x14) ;
+-
+-                    if(gmacRegs.rwFlag == 0)
++                    if(   (gmacRegs.rwPhyRegs >= 1000) 
++                       && (gmacRegs.rwPhyRegs <  1100) )
+                     {
+-                        /* PHY read operation */
+-                        spin_lock_irqsave(&priv->lock,flags);
+-                        *pAdrReg = PHY_RW_MASK(gmacRegs.regOffset,0,
+-							priv->phy_addr_val,priv->clk_csr_val);
+-                         while(*pAdrReg & 0x1);
+-                         gmacRegs.regValue = *pDataReg;
+-                         spin_unlock_irqrestore(&priv->lock,flags);
+-
++                        if( gmacRegs.rwFlag == 0 )
++                        {
++                            MystiGetPair(
++                                (gmacRegs.rwPhyRegs-1000), 
++                                &gmacRegs.regOffset,
++                                &gmacRegs.regValue);
++                        }
++                        else
++                        {
++                            MystiSetPair(
++                                (gmacRegs.rwPhyRegs-1000),
++                                gmacRegs.regOffset,
++                                gmacRegs.regValue);
++                        }
+                     }
+                     else
+                     {
+-                        /* PHY write operation */
+-                        spin_lock_irqsave(&priv->lock,flags);
+-                        *pDataReg = gmacRegs.regValue;
+-                        *pAdrReg = PHY_RW_MASK(gmacRegs.regOffset,1,
++                        /* Get the Address register */
++                        pAdrReg = (__u32*)(regBase+0x10) ;
++                        pDataReg = (__u32*)(regBase+0x14) ;
++
++                        if(gmacRegs.rwFlag == 0)
++                        {
++                            /* PHY read operation */
++                            spin_lock_irqsave(&priv->lock,flags);
++                            *pAdrReg = PHY_RW_MASK(gmacRegs.regOffset,0,
++                                                   priv->phy_addr_val,priv->clk_csr_val);
++                            while(*pAdrReg & 0x1);
++                            gmacRegs.regValue = *pDataReg;
++                            spin_unlock_irqrestore(&priv->lock,flags);
++                        }
++                        else
++                        {
++                            /* PHY write operation */
++                            spin_lock_irqsave(&priv->lock,flags);
++                            *pDataReg = gmacRegs.regValue;
++                            *pAdrReg = PHY_RW_MASK(gmacRegs.regOffset,1,
+ 							priv->phy_addr_val,priv->clk_csr_val);
+-                        while(*pAdrReg & 0x1);
+-                        spin_unlock_irqrestore(&priv->lock,flags);
++                            while(*pAdrReg & 0x1);
++                            spin_unlock_irqrestore(&priv->lock,flags);
++                        }
+                     }
+-
+                 }
+ 
+                 if(gmacRegs.rwFlag == 0)
+@@ -2744,6 +2762,66 @@ static __s32 lipp_6300Eth_do_ioctl(struc
+ 
+             break;
+ 
++        case ETH_DRV_RMON_READ64:
++             {
++                rmonRegs64Rd_t mmcInfo64;
++
++                memset(&mmcInfo64,0,sizeof(rmonRegsRd_t));
++
++                if(copy_from_user(&mmcInfo64,ifr->ifr_data,sizeof(rmonRegs64Rd_t)))
++                {
++                    GMAC_PRINT_ERR("Copy from user failed");
++                    retVal = -1;
++                    goto _ioctl_exit;
++                }
++                switch(mmcInfo64.counterid)
++                {
++                   case   0: mmcInfo64.value = priv->counters.ullRxPackets; break;
++                   case   1: mmcInfo64.value = priv->counters.ullRxMulticast; break;
++                   case   2: mmcInfo64.value = priv->counters.ullRxVlanFrame; break;
++                   case   3: mmcInfo64.value = priv->counters.ullTxPackets; break;
++                   case 100: mmcInfo64.value = priv->counters.ullTxError; break;
++                   case 101: mmcInfo64.value = priv->counters.ullTxUnderflowError; break;
++                   case 102: mmcInfo64.value = priv->counters.ullTxExcessiveDeferralError; break;
++                   case 103: mmcInfo64.value = priv->counters.ullTxExcessiveCollisionsError; break;
++                   case 104: mmcInfo64.value = priv->counters.ullTxLateCollisionError; break;
++                   case 105: mmcInfo64.value = priv->counters.ullTxNoCarrierError; break;
++                   case 106: mmcInfo64.value = priv->counters.ullTxLossOfCarrierError; break;
++                   case 107: mmcInfo64.value = priv->counters.ullTxIpPayloadError; break;
++                   case 108: mmcInfo64.value = priv->counters.ullTxFrameFlushError; break;
++                   case 109: mmcInfo64.value = priv->counters.ullTxJabberTimeoutError; break;
++                   case 110: mmcInfo64.value = priv->counters.ullTxIpHeaderError; break;
++                   case 111: mmcInfo64.value = priv->counters.ullTxCollisionError; break;
++                   case 150: mmcInfo64.value = priv->counters.ullRxIpPayloadError; break;
++                   case 151: mmcInfo64.value = priv->counters.ullRxIpHeaderError; break;
++                   case 152: mmcInfo64.value = priv->counters.ullRxIPChecksumError; break;
++                   case 153: mmcInfo64.value = priv->counters.ullRxDescriptorError; break;
++                   case 154: mmcInfo64.value = priv->counters.ullRxMTLOverflowError; break;
++                   case 155: mmcInfo64.value = priv->counters.ullRxTimeStamped; break;
++                   case 156: mmcInfo64.value = priv->counters.ullRxLateCollisionError; break;
++                   case 157: mmcInfo64.value = priv->counters.ullRxWdogTruncatedPktError; break;
++                   case 158: mmcInfo64.value = priv->counters.ullRxGmiiRxError; break;
++                   case 159: mmcInfo64.value = priv->counters.ullRxCrcError; break;
++                   case 160: mmcInfo64.value = priv->counters.ullRxDribbleError; break;
++                   case 161: mmcInfo64.value = priv->counters.ullRxBadIeeeLengthError; break;
++                   case 162: mmcInfo64.value = priv->counters.ullRxFailedSAFilter; break;
++                   case 163: mmcInfo64.value = priv->counters.ullRxFailedDAFilter; break;
++                   case 200: mmcInfo64.value = priv->counters.ullTxDroppedOnLinkDown; break;
++                   case 201: mmcInfo64.value = priv->counters.ullTxDroppedOnHardStart; break;
++                   case 202: mmcInfo64.value = priv->counters.ullRxDroppedPacketFragment; break;
++                   case 203: mmcInfo64.value = priv->counters.ullRxMulticastDropped; break;
++                   case 204: mmcInfo64.value = priv->counters.ullRxTotalDropped; break;
++                   default:  mmcInfo64.value = 0LL; mmcInfo64.reserved = 0xFFFFFFFF; break;
++                }
++                if(copy_to_user(ifr->ifr_data,&mmcInfo64,sizeof(rmonRegs64Rd_t)))
++                {
++                   GMAC_PRINT_ERR("Copy to user failed");
++                   retVal = -1;
++                   goto _ioctl_exit;
++                }
++                break;
++             }
++
+ #endif
+ 
+         case SIOCGMIIPHY:       // Get PHY address
+@@ -3043,6 +3121,7 @@ static __s32 handle_receive_packets( str
+     struct sk_buff * skb = NULL;
+     __s32 frameSize=0;
+     __s32 ret_val =0;
++    __s32 bFoundErrors = 0;
+     lipp_6300Eth_PRIV_t*priv = NETDEV_PRIV(dev);
+ #ifdef CONFIG_ETH_LIPP_6300ETH_NAPI
+     __s32 npackets = 0 ;
+@@ -3089,87 +3168,151 @@ static __s32 handle_receive_packets( str
+                 goto _return_from_napi;
+             }            
+ #endif
+-            /* If the error summary bit is set, check for overflow and CRC errors */
+-            if(priv->p_vrx_descr[priv->rx_consume_index].RDES0 &
+-                RXDESC_RDES0_ERR_SUM_VAL)
++            /* If the error summary bit is set, check for errors */
++            if((priv->p_vrx_descr[priv->rx_consume_index].RDES0 & RXDESC_RDES0_ERR_SUM_VAL) &&
++               (priv->p_vrx_descr[priv->rx_consume_index].RDES0 & RXDESC_RDES0_LAST_DESC_VAL))
+             {
++
++                /* Check if Extended Status Available */
+                 if(priv->p_vrx_descr[priv->rx_consume_index].RDES0 & RXDESC_RDES0_EXTDSTAT_DAMATCH)
+                 {
+-                    /* If IP checksum & TCP/UDP checksum is successful */
+-                    if((priv->p_vrx_descr[priv->rx_consume_index].RDES4 & TCPIP_CSUM_ERRCHK) == 0)
++                    /* If IP Payload checksum failed */
++                    if(priv->p_vrx_descr[priv->rx_consume_index].RDES4 & RXDESC_RDES4_IPPAYLD_ERR)
++                    {
++                        //GMAC_PRINT_ERR("ERR RX IP Payload: Index %d\n",priv->rx_consume_index);
++                        priv->stats.rx_crc_errors++ ;
++                        priv->counters.ullRxIpPayloadError++ ;
++                        bFoundErrors++;
++                    }
++
++                    /* If IP HDR checksum failed */
++                    if(priv->p_vrx_descr[priv->rx_consume_index].RDES4 & RXDESC_RDES4_IPHDR_ERR)
+                     {
+-                        GMAC_PRINT_ERR("IP CSUM Error: Index %d\n",priv->rx_consume_index);
++                        //GMAC_PRINT_ERR("ERR RX IP Header: Index %d\n",priv->rx_consume_index);
+                         priv->stats.rx_crc_errors++ ;
++                        priv->counters.ullRxIpHeaderError++ ;
++                        bFoundErrors++;
+                     }
+                 }
+                 
+-                if(priv->p_vrx_descr[priv->rx_consume_index].RDES0 &
+-                    RXDESC_RDES0_OVERFLOW_ERR_VAL)
++                /* Check if the frame is truncated */
++                if(priv->p_vrx_descr[priv->rx_consume_index].RDES0 & RXDESC_RDES0_DESC_ERR_VAL)
++                {
++                    //GMAC_PRINT_ERR("ERR RX Descriptor: Index %d\n",priv->rx_consume_index);
++                    priv->stats.rx_frame_errors++ ;
++                    priv->counters.ullRxDescriptorError++ ;
++                    bFoundErrors++;
++                }
++
++                /* Check if the received frame was damaged due to buffer overflow in MTL. */
++                if(priv->p_vrx_descr[priv->rx_consume_index].RDES0 & RXDESC_RDES0_OVERFLOW_ERR_VAL)
+                 {
+-                    GMAC_PRINT_ERR("OverFlow Error: Index %d\n",priv->rx_consume_index);
+-                    priv->stats.rx_over_errors++ ;
++                    //GMAC_PRINT_ERR("ERR RX Overflow: Index %d\n",priv->rx_consume_index);
++                    priv->stats.rx_frame_errors++ ;
++                    priv->counters.ullRxMTLOverflowError++ ;
++                    bFoundErrors++;
+                 }
+-                if(priv->p_vrx_descr[priv->rx_consume_index].RDES0 &
+-                    RXDESC_RDES0_CRC_ERR_VAL)
++
++                /* Check if a late collision has occurred while receiving the frame in Half-Duplex mode */
++		        if(priv->p_vrx_descr[priv->rx_consume_index].RDES0 & RXDESC_RDES0_LATE_COL_VAL)
+                 {
+-                    GMAC_PRINT_ERR("CRC Error\n");
++                    //GMAC_PRINT_ERR("ERR RX Late Collision: Index %d\n", priv->rx_consume_index);
++                    priv->stats.rx_frame_errors++ ;
++                    priv->counters.ullRxLateCollisionError++ ;
++                    bFoundErrors++;
++                }
++
++                /* Check if Receive Watchdog Timer has expired while receiving the current frame */
++                if(priv->p_vrx_descr[priv->rx_consume_index].RDES0 & RXDESC_RDES0_WDOG_VAL)
++                {
++                    //GMAC_PRINT_ERR("ERR RX Watchdog Truncated: Index %d\n", priv->rx_consume_index);
++                    priv->stats.rx_frame_errors++ ;
++                    priv->counters.ullRxWdogTruncatedPktError++ ;
++                    bFoundErrors++;
++                }
++
++                /* Check if gmii_rxer_i signal is asserted */
++                if(priv->p_vrx_descr[priv->rx_consume_index].RDES0 & RXDESC_RDES0_RX_ERR_VAL)
++                {
++                    //GMAC_PRINT_ERR("ERR RX GMII RXERR: Index %d\n", priv->rx_consume_index);
++                    priv->stats.rx_frame_errors++ ;
++                    priv->counters.ullRxGmiiRxError++ ;
++                    bFoundErrors++;
++                }
++
++                /* Check if CRC Error occurred on the received frame */
++                if(priv->p_vrx_descr[priv->rx_consume_index].RDES0 & RXDESC_RDES0_CRC_ERR_VAL)
++                {
++                    //GMAC_PRINT_ERR("ERR RX CRC: Index %d\n", priv->rx_consume_index);
+                     priv->stats.rx_crc_errors++ ;
++                    priv->counters.ullRxCrcError++ ;
++                    bFoundErrors++;
+                 }
+-                //else
+-                //    GMAC_PRINT_ERR("handle_receive_packets err = 0x%08x\n", priv->p_vrx_descr[priv->rx_consume_index].RDES4);
+ 
+-                goto _err_drop_packet ;
++            }
+ 
++            /* Check the Time Stamp Bit -- note that this bit may be or'ed
++             * into summary status  */
++            if(priv->p_vrx_descr[priv->rx_consume_index].RDES0 & RXDESC_RDES0_TS_IPC_GIANT_VAL)
++            {
++                //This is not an error -- IP configured as:
++                //    ATS=1   (advanced timestamp feature is present)
++                //    IPC2=1  (IPC checksum offload type 2 present)
++                //
++                //priv->stats.rx_crc_errors++ ;
++                priv->counters.ullRxTimeStamped++ ;
+             }
+ 
+-            /* If length Error bit is set */
+-            if(priv->p_vrx_descr[priv->rx_consume_index].RDES0 &
+-                RXDESC_RDES0_LEN_ERR_VAL )
++
++	    /* Check if the received frame has a non-integer multiple of bytes */
++            if(priv->p_vrx_descr[priv->rx_consume_index].RDES0 & RXDESC_RDES0_DRIBBLE_VAL)
+             {
++                //GMAC_PRINT_ERR("ERR RX Dribble: Index %d\n", priv->rx_consume_index);
+                 priv->stats.rx_length_errors++ ;
+-                GMAC_PRINT_ERR("Handle_receive_packets: Length Errors\n");
+-                goto _err_drop_packet ;
++                priv->counters.ullRxDribbleError++ ;
++                bFoundErrors++;
+             }
+ 
+-            if(priv->p_vrx_descr[priv->rx_consume_index].RDES0 &
+-                RXDESC_RDES0_DRIBBLE_VAL)
++            /* Check if the actual length of the frame received and that the Length/Type field does not match*/
++            if((priv->p_vrx_descr[priv->rx_consume_index].RDES0 & RXDESC_RDES0_LEN_ERR_VAL) &&
++               (!(priv->p_vrx_descr[priv->rx_consume_index].RDES0 & RXDESC_RDES0_FRM_TYP_VAL)))
+             {
+-                priv->stats.rx_frame_errors++ ;
+-                GMAC_PRINT_ERR("Handle_receive_packets: Dribble Error\n");
+-                goto _err_drop_packet ;
++                //GMAC_PRINT_ERR("ERR RX: Bad IEEE Length: Index %d\n", priv->rx_consume_index);
++                priv->stats.rx_length_errors++ ;
++                priv->counters.ullRxBadIeeeLengthError++ ;
++                bFoundErrors++;
+             }
+ 
+-            if(priv->p_vrx_descr[priv->rx_consume_index].RDES0 &
+-                RXDESC_RDES0_SRC_ADR_FAIL_VAL)
++	        /* Check if the SA field of frame failed the SA Filter in the GMAC Core */
++            if(priv->p_vrx_descr[priv->rx_consume_index].RDES0 & RXDESC_RDES0_SRC_ADR_FAIL_VAL)
+             {
++                //GMAC_PRINT_ERR("ERR RX: SAF: Index %d\n", priv->rx_consume_index);
+                 priv->stats.rx_frame_errors++ ;
+-                GMAC_PRINT_ERR("Handle_receive_packets: SAF Error\n");
+-                goto _err_drop_packet ;
++                priv->counters.ullRxFailedSAFilter++ ;
++                bFoundErrors++;
+             }
+ 
+-            if(priv->p_vrx_descr[priv->rx_consume_index].RDES0 &
+-                RXDESC_RDES0_DST_ADR_FAIL_VAL)
++	        /* Check if frame failed in the DA Filter in the GMAC Core */
++            if(priv->p_vrx_descr[priv->rx_consume_index].RDES0 & RXDESC_RDES0_DST_ADR_FAIL_VAL)
+             {
++                //GMAC_PRINT_ERR("ERR RX DAF: Index %d\n", priv->rx_consume_index);
+                 priv->stats.rx_frame_errors++ ;
+-                GMAC_PRINT_ERR("Handle_receive_packets: DAF Error\n");
+-                goto _err_drop_packet ;
++                priv->counters.ullRxFailedDAFilter++ ;
++                bFoundErrors++;
+             }
+ 
+ #ifdef LIPP_6300ETH_VLAN_TAG
+-            if(priv->p_vrx_descr[priv->rx_consume_index].RDES0 &
+-                RXDESC_RDES0_VLAN_TAG_VAL)
++            if(priv->p_vrx_descr[priv->rx_consume_index].RDES0 & RXDESC_RDES0_VLAN_TAG_VAL)
+             {
+-                GMAC_PRINT_DBG("Handle_receive_packets: VLAN TAG detected at %s\n", dev->name);
++               priv->counters.ullRxVlanFrame++ ;
+             }            
+ #endif
+ 
+             /* If first and last bit are set for the frame, it is a valid frame.
+             ** Otherwise, discard the frame
+             */
+-            if((priv->p_vrx_descr[priv->rx_consume_index].RDES0 &
+-                RXDESC_RDES0_FIRST_DESC_VAL) &&
+-                (priv->p_vrx_descr[priv->rx_consume_index].RDES0 &
+-                RXDESC_RDES0_LAST_DESC_VAL))
++            if((priv->p_vrx_descr[priv->rx_consume_index].RDES0 & RXDESC_RDES0_FIRST_DESC_VAL) &&
++                (priv->p_vrx_descr[priv->rx_consume_index].RDES0 & RXDESC_RDES0_LAST_DESC_VAL))
+             {
+ 
+                 /* Get the pointer to SKB */
+@@ -3198,9 +3341,10 @@ static __s32 handle_receive_packets( str
+                     }
+                     else
+                     {
+-                        GMAC_PRINT_ERR("csum failed:Dropped pkt\n");
++                        //GMAC_PRINT_ERR("RX ERR Cksum failed\n");
+                         /* Drop the frame, as it failed checksum test */
+-                        goto _err_drop_packet ;
++                        priv->counters.ullRxIPChecksumError++ ;
++                        bFoundErrors++;
+ 
+                     }
+ 
+@@ -3215,7 +3359,12 @@ static __s32 handle_receive_packets( str
+             else
+             {
+                 GMAC_PRINT_INT("handle_receive_packets: Dropped Pkt..EOF not set\n");
+-                priv->stats.rx_errors++ ;
++                priv->counters.ullRxDroppedPacketFragment++;
++                bFoundErrors++;
++            }
++
++            if(bFoundErrors)
++            {
+                 goto _err_drop_packet ;
+             }
+ 
+@@ -3243,6 +3392,7 @@ static __s32 handle_receive_packets( str
+                 if( priv->u_all_multi == 0)
+                 {
+                     priv->stats.multicast++ ;
++                    priv->counters.ullRxMulticast++;
+ 
+                     if( priv->u_mc_filter_type == LX_FILTER_TYPE_SW )
+                     {
+@@ -3254,6 +3404,7 @@ static __s32 handle_receive_packets( str
+                         else
+                         {
+                             /* Invalid multicast packet, just drop it */
++                            priv->counters.ullRxMulticastDropped++;
+                             priv->stats.rx_dropped++ ;
+                             goto _clear_rx_status;
+                         }
+@@ -3271,12 +3422,14 @@ static __s32 handle_receive_packets( str
+             (*pBudget)--;
+             dev->last_rx = jiffies;
+             priv->stats.rx_packets++ ;
++            priv->counters.ullRxPackets++;
+             priv->stats.rx_bytes += frameSize;
+ #else
+             /* submit the packet to kernel */
+             ret_val = netif_rx(skb);
+             dev->last_rx = jiffies;
+             priv->stats.rx_packets++ ;
++            priv->counters.ullRxPackets++;
+             priv->stats.rx_bytes += frameSize;
+ #endif  /* #ifdef CONFIG_ETH_LIPP_6300ETH_NAPI */
+ 
+@@ -3310,6 +3463,7 @@ static __s32 handle_receive_packets( str
+     _err_drop_packet :
+ 
+             priv->stats.rx_errors++ ;
++            priv->counters.ullRxTotalDropped++;
+ 
+     _clear_rx_status :
+             priv->p_vrx_descr[priv->rx_consume_index].RDES0 = RXDESC_RDES0_OWN_VAL;
+@@ -3514,17 +3668,69 @@ static void handle_tx_packets( struct ne
+         */
+         if( ptx_descr->TDES0 & TXDESC_TDES0_ES_VAL)
+         {
+-            GMAC_PRINT_INT("handle_tx_packets:Tx Error\n");
++            //GMAC_PRINT_INT("handle_tx_packets:Tx Error\n");
+             priv->stats.tx_errors++;
++            priv->counters.ullTxError++;
++
++            if( ptx_descr->TDES0 & TXDESC_TDES0_UNDERFLOW_VAL)
++            {
++                //GMAC_PRINT_INT("handle_tx_packets:Underflow Error\n");
++                priv->counters.ullTxUnderflowError++;
++            }
++
++            if( ptx_descr->TDES0 & TXDESC_TDES0_EXDEF_VAL)
++            {
++                //GMAC_PRINT_INT("handle_tx_packets:Excessive Deferral Error\n");
++                priv->counters.ullTxExcessiveDeferralError++;
++            }
++
++            if( ptx_descr->TDES0 & TXDESC_TDES0_EXCOL_VAL)
++            {
++                //GMAC_PRINT_INT("handle_tx_packets:Excessive Collision Error\n");
++                priv->counters.ullTxExcessiveCollisionsError++;
++            }
++
++            if( (ptx_descr->TDES0 & TXDESC_TDES0_LATECOL_VAL) &&
++                (!(ptx_descr->TDES0 & TXDESC_TDES0_UNDERFLOW_VAL)) )
++            {
++                //GMAC_PRINT_INT("handle_tx_packets:Late Collision Error\n");
++                priv->counters.ullTxLateCollisionError++;
++            }
++
++            if( ptx_descr->TDES0 & TXDESC_TDES0_NOCAR_VAL)
++            {
++                //GMAC_PRINT_INT("handle_tx_packets:No Carrier Error\n");
++                priv->counters.ullTxNoCarrierError++;
++            }
++
++            if( ptx_descr->TDES0 & TXDESC_TDES0_LOSSOFCAR_VAL)
++            {
++                //GMAC_PRINT_INT("handle_tx_packets:Loss of Carrier Error\n");
++                priv->counters.ullTxLossOfCarrierError++;
++            }
+ 
+             if( ptx_descr->TDES0 & TXDESC_TDES0_IPPAYLD_VAL)
+             {
+-                GMAC_PRINT_INT("handle_tx_packets:IP Payload Error\n");
++                //GMAC_PRINT_INT("handle_tx_packets:IP Payload Error\n");
++                priv->counters.ullTxIpPayloadError++;
++            }
++
++            if( ptx_descr->TDES0 & TXDESC_TDES0_FRMFLUSH_VAL)
++            {
++                //GMAC_PRINT_INT("handle_tx_packets:Frame Flush Error\n");
++                priv->counters.ullTxFrameFlushError++;
++            }
++
++            if( ptx_descr->TDES0 & TXDESC_TDES0_JABTIMEOUT_VAL)
++            {
++                //GMAC_PRINT_INT("handle_tx_packets:Jabber Timeout Error\n");
++                priv->counters.ullTxJabberTimeoutError++;
+             }
+ 
+             if( ptx_descr->TDES0 & TXDESC_TDES0_IHE_VAL)
+             {
+-                GMAC_PRINT_INT("handle_tx_packets:IP Header Error\n");
++                //GMAC_PRINT_INT("handle_tx_packets:IP Header Error\n");
++                priv->counters.ullTxIpHeaderError++;
+             }
+ 
+         }
+@@ -3532,11 +3738,16 @@ static void handle_tx_packets( struct ne
+         {           
+             /* packet is transmitted. Update the counter and free the skb */
+             priv->stats.tx_packets++;
++            priv->counters.ullTxPackets++;
+             priv->stats.tx_bytes += ptx_descr->TDES1 & TXDESC_TDES1_TX_BUF1_SIZE_MSK ;
+         }
+ 
+-        priv->stats.collisions += ((ptx_descr->TDES0 & TXDESC_TDES0_COLCNT_MSK) >>
+-                                              TXDESC_TDES0_COLCNT_POS) ;
++        {
++           __u32 colcnt = ((ptx_descr->TDES0 & TXDESC_TDES0_COLCNT_MSK) >>
++                                       TXDESC_TDES0_COLCNT_POS) ;
++           priv->stats.collisions += colcnt;
++           priv->counters.ullTxCollisionError += colcnt;
++        }
+ 
+         if(ptx_descr->TDES2 != 0)
+         {
+diff -Naurp linux-2.6.34.latest/drivers/net/LIPP_6300ETH/src/gmac_drv.h linux-2.6.34/drivers/net/LIPP_6300ETH/src/gmac_drv.h
+--- linux-2.6.34.latest/drivers/net/LIPP_6300ETH/src/gmac_drv.h	2010-11-17 09:24:42.000000000 -0600
++++ linux-2.6.34/drivers/net/LIPP_6300ETH/src/gmac_drv.h	2010-11-23 19:30:45.000000000 -0600
+@@ -576,6 +576,56 @@ typedef struct lipp_6300Eth_Napi
+     struct net_device* pDev; /* Pointer to network device */
+ } lipp_6300Eth_Napi_t,*plipp_6300Eth_Napi_t;
+ 
++typedef struct lipp6300Eth_Counters
++{
++   /* good counters */
++   /*   0 */ __u64 ullRxPackets;
++   /*   1 */ __u64 ullRxMulticast;
++   /*   2 */ __u64 ullRxVlanFrame;
++   /*   3 */ __u64 ullTxPackets;
++
++   /* bad rx counters */
++   /* 150 */ __u64 ullRxIpPayloadError;
++   /* 151 */ __u64 ullRxIpHeaderError;
++   /* 152 */ __u64 ullRxIPChecksumError;
++   /* 153 */ __u64 ullRxDescriptorError;
++   /* 154 */ __u64 ullRxMTLOverflowError;
++   /* 155 */ __u64 ullRxTimeStamped;
++   /* 156 */ __u64 ullRxLateCollisionError;
++   /* 157 */ __u64 ullRxWdogTruncatedPktError;
++   /* 158 */ __u64 ullRxGmiiRxError;
++   /* 159 */ __u64 ullRxCrcError;
++   /* 160 */ __u64 ullRxDribbleError;
++   /* 161 */ __u64 ullRxBadIeeeLengthError;
++   /* 162 */ __u64 ullRxFailedSAFilter;
++   /* 163 */ __u64 ullRxFailedDAFilter;
++
++   /* bad tx counters */
++   /* 100 */ __u64 ullTxError;
++   /* 101 */ __u64 ullTxUnderflowError;
++   /* 102 */ __u64 ullTxExcessiveDeferralError;
++   /* 103 */ __u64 ullTxExcessiveCollisionsError;
++   /* 104 */ __u64 ullTxLateCollisionError;
++   /* 105 */ __u64 ullTxNoCarrierError;
++   /* 106 */ __u64 ullTxLossOfCarrierError;
++   /* 107 */ __u64 ullTxIpPayloadError;
++   /* 108 */ __u64 ullTxFrameFlushError;
++   /* 109 */ __u64 ullTxJabberTimeoutError;
++   /* 110 */ __u64 ullTxIpHeaderError;
++   /* 111 */ __u64 ullTxCollisionError;
++
++   /* dropped counters by software reasons */
++   /* 200 */ __u64 ullTxDroppedOnLinkDown;
++   /* 201 */ __u64 ullTxDroppedOnHardStart;
++   /* 202 */ __u64 ullRxDroppedPacketFragment;
++   /* 203 */ __u64 ullRxMulticastDropped;
++   /* 204 */ __u64 ullRxTotalDropped;
++
++} lipp_6300Eth_Counters_t, *plipp_6300Eth_Counters_t;
++
++extern void MystiSetPair(int id, int reg, int val);
++extern void MystiGetPair(int id, int *preg, int *pval);
++
+ /*
+  * GMAC private structure
+  */
+@@ -641,6 +691,8 @@ typedef struct lipp_6300Eth_PRIV
+ 
+     __u32 shutdown;
+ 
++    lipp_6300Eth_Counters_t counters;
++
+ } lipp_6300Eth_PRIV_t ;
+ 
+ //
+diff -Naurp linux-2.6.34.latest/drivers/net/LIPP_6300ETH/src/mmc_stats.h linux-2.6.34/drivers/net/LIPP_6300ETH/src/mmc_stats.h
+--- linux-2.6.34.latest/drivers/net/LIPP_6300ETH/src/mmc_stats.h	1969-12-31 18:00:00.000000000 -0600
++++ linux-2.6.34/drivers/net/LIPP_6300ETH/src/mmc_stats.h	2010-08-08 22:35:16.000000000 -0500
+@@ -0,0 +1,140 @@
++/*
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program; if not, write to the Free Software
++ * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
++ *
++ * Copyright (c) 2006-2007, LIPP Alliance
++ *
++ * All Rights Reserved.
++ *
++ *---------------------------------------------------------------------------
++ * %filename:           mmc_stats.h  %
++ * %pid_version:       1.2              %
++ *---------------------------------------------------------------------------
++ * DESCRIPTION:  Header file for Linux Driver for LIPP_6100ETH ethernet subsystem
++ *
++ * DOCUMENT REF:
++ *
++ * NOTES:        None
++ *
++ *-----------------------------------------------------------------------------
++ *
++*/
++
++#ifndef _MMC_STATS_H_
++#define _MMC_STATS_H_
++
++#ifndef __ASSEMBLY__
++#include <linux/types.h>
++#endif
++
++typedef struct lipp_6300Eth_RmonCnt
++{
++    /* Legend: <type><class><tx/rx><name>
++               type:
++                     F - frame counter
++                     B - byte counter
++               class:
++                     GG - bytes or frames from good packets only
++                     BB - bytes or frames from bad/aborted packets only
++                     GB - bytes or frames from both good and bad packets
++                     GA - bytes or frames from packets after indicated error
++               txrx:
++                     TX - Transmit interface
++                     RX - Receive interface
++               name:
++                     textual name for this counter
++    */
++                                       /* ADDR bb name */
++    __u64 uB_GB_TX;                    /* 0114 00 txoctetcount_gb */
++    __u64 uB_GG_TX;                    /* 0164 20 txoctetcount_g  */
++    __u64 uF_GB_TX;                    /* 0118 01 txframecount_gb */
++    __u64 uF_GG_TX;                    /* 0168 21 txframecount_g  */
++    __u64 uF_GB_TX_Broadcast;          /* 0144 12 txbroadcastframes_gb */
++    __u64 uF_GG_TX_Broadcast;          /* 011C 02 txbroadcastframes_g  */
++    __u64 uF_GB_TX_Multicast;          /* 0140 11 txmulticastframes_gb */
++    __u64 uF_GG_TX_Multicast;          /* 0120 03 txmulticastframes_g  */
++    __u64 uB_GB_TX_0to64;              /* 0124 04 tx64octets_gb        */
++    __u64 uB_GB_TX_65to127;            /* 0128 05 tx65to127octets_gb   */
++    __u64 uB_GB_TX_128to255;           /* 012C 06 tx128to255octets_gb  */
++    __u64 uB_GB_TX_256to511;           /* 0130 07 tx256to511octets_gb  */
++    __u64 uB_GB_TX_512to1023;          /* 0134 08 tx512to1023octets_gb */
++    __u64 uB_GB_TX_1024toMax;          /* 0138 09 tx1024tomaxoctets_gb */
++    __u64 uF_GB_TX_Unicast;            /* 013C 10 txunicastframes_gb  */
++    __u64 uF_GG_TX_Vlan;               /* 0174 24 txvlanframes_g */
++    __u64 uF_GG_TX_Pause;              /* 0170 23 txpauseframes  */
++    __u64 uF_BB_TX_Underflow;          /* 0148 13 txunderflowerror */
++    __u64 uF_BB_TX_LateCollision;      /* 0158 17 txlatecol        */
++    __u64 uF_BB_TX_ExcessiveCollision; /* 015C 18 txexesscol       */
++    __u64 uF_BB_TX_ExcessiveDeferral;  /* 016C 22 txexcessdef      */
++    __u64 uF_BB_TX_CarrierSense;       /* 0160 19 txcarriererror   */
++    __u64 uF_GA_TX_SingleCollision;    /* 014C 14 txsinglecol_g  */
++    __u64 uF_GA_TX_MultiCollision;     /* 0150 15 txmulticol_g   */
++    __u64 uF_GA_TX_Deferred;           /* 0154 16 txdeferred     */
++                                       /* ADDR bb name */
++    __u64 uB_GB_RX;                    /* 0184 01 rxoctetcount_gb */
++    __u64 uB_GG_RX;                    /* 0188 02 rxoctetcount_g  */
++    __u64 uF_GB_RX;                    /* 0180 00 rxframecount_gb */
++    __u64 uF_GG_RX_Broadcast;          /* 018C 03 rxbroadcastframes_g */
++    __u64 uF_GG_RX_Multicast;          /* 0190 04 rxmulticastframes_g */
++    __u64 uF_GG_RX_Unicast;            /* 01C4 17 rxunicastframes_g   */
++    __u64 uB_GB_RX_0to64;              /* 01AC 11 rx64octets_gb        */
++    __u64 uB_GB_RX_65to127;            /* 01B0 12 rx65to127octets_gb   */
++    __u64 uB_GB_RX_128to255;           /* 01B4 13 rx128to255octets_gb  */
++    __u64 uB_GB_RX_256to511;           /* 01B8 14 rx256to511octets_gb  */
++    __u64 uB_GB_RX_512to1023;          /* 01BC 15 rx512to1023octets_gb */
++    __u64 uB_GB_RX_1024toMax;          /* 01C0 16 rx1024tomaxoctets_gb */
++    __u64 uF_GB_RX_Vlan;               /* 01D8 22 rxvlanframes_gb */
++    __u64 uF_GG_RX_Pause;              /* 01D0 20 rxpauseframes   */
++    __u64 uF_GG_RX_Undersize;          /* 01A4 09 rxundersize_g    */
++    __u64 uF_GG_RX_Oversize;           /* 01A8 10 rxoversize_g     */
++    __u64 uF_BB_RX_Crc;                /* 0194 05 rxcrcerror       */
++    __u64 uF_BB_RX_Alignment;          /* 0198 06 rxalignmenterror */
++    __u64 uF_BB_RX_Runt;               /* 019C 07 rxrunterror      */
++    __u64 uF_BB_RX_Jabber;             /* 01A0 08 rxjabbererror    */
++    __u64 uF_BB_RX_Length;             /* 01C8 18 rxlengtherror    */
++    __u64 uF_BB_RX_Outofrange;         /* 01CC 19 rxoutofrangetype */
++    __u64 uF_BB_RX_Fifooverflow;       /* 01D4 21 rxfifooverflow   */
++    __u64 uF_BB_RX_Watchdog;           /* 01DC 23 rxwatchdogerror  */
++                                       /* ADDR bb name */
++    __u64 uF_GG_RX_IP4;                /* 0210 00 rxipv4_gd_frms */
++    __u64 uB_GG_RX_IP4;                /* 0250 16 rxipv4_gd_octets */
++    __u64 uF_BB_RX_IP4_Header;         /* 0214 01 rxipv4_hderr_frms */
++    __u64 uB_BB_RX_IP4_Header;         /* 0254 17 rxipv4_hderr_octets */
++    __u64 uF_GG_RX_IP4_Nopayload;      /* 0218 02 rxipv4_nopay_frms */
++    __u64 uB_GG_RX_IP4_Nopayload;      /* 0258 18 rxipv4_nopay_octets */
++    __u64 uF_GG_RX_IP4_Fragments;      /* 021C 03 rxipv4_frag_frms */
++    __u64 uB_GG_RX_IP4_Fragments;      /* 025C 19 rxipv4_frag_octets */
++    __u64 uF_GG_RX_IP4_Noudpcksum;     /* 0220 04 rxipv4_udsbl_frms */
++    __u64 uB_GG_RX_IP4_Noudpcksum;     /* 0260 20 rxipv4_udsbl_octets */
++    __u64 uF_GG_RX_IP6;                /* 0224 05 rxipv6_gd_frms */
++    __u64 uB_GG_RX_IP6;                /* 0264 21 rxipv6_gd_octets */
++    __u64 uF_BB_RX_IP6_Header;         /* 0228 06 rxipv6_hdrerr_frms */
++    __u64 uB_BB_RX_IP6_Header;         /* 0268 22 rxipv6_hdrerr_octets */
++    __u64 uF_GG_RX_IP6_Nopayload;      /* 022C 07 rxipv6_nopay_frms */
++    __u64 uB_GG_RX_IP6_Nopayload;      /* 026C 23 rxipv6_nopay_octets */
++    __u64 uF_GG_RX_UDP;                /* 0230 08 rxudp_gd_frms */
++    __u64 uB_GG_RX_UDP;                /* 0270 24 rxudp_gd_octets */
++    __u64 uF_BB_RX_UDP_Checksum;       /* 0234 09 rxudp_err_frms */
++    __u64 uB_BB_RX_UDP_Checksum;       /* 0274 25 rxudp_err_octets */
++    __u64 uF_GG_RX_TCP;                /* 0238 10 rxtcp_gd_frms */
++    __u64 uB_GG_RX_TCP;                /* 0278 26 rxtcp_gd_octets */
++    __u64 uF_BB_RX_TCP_Checksum;       /* 023C 11 rxtcp_err_frms */
++    __u64 uB_BB_RX_TCP_Checksum;       /* 027C 27 rxtcp_err_octets */
++    __u64 uF_GG_RX_ICMP;               /* 0240 12 rxicmp_gd_frms */
++    __u64 uB_GG_RX_ICMP;               /* 0280 28 rxicmp_gd_octets */
++    __u64 uF_BB_RX_ICMP_Checksum;      /* 0244 13 rxicmp_err_frms */
++    __u64 uB_BB_RX_ICMP_Checksum;      /* 0284 29 rxicmp_err_octets */
++} lipp_6300Eth_RmonCnt_t, *plipp_6300Eth_RmonCnt_t;
++
++#endif /* _MMC_STATS_H_ */
+diff -Naurp linux-2.6.34.latest/drivers/net/LIPP_6300ETH/src/tst/gmacop/gmacdsp.c linux-2.6.34/drivers/net/LIPP_6300ETH/src/tst/gmacop/gmacdsp.c
+--- linux-2.6.34.latest/drivers/net/LIPP_6300ETH/src/tst/gmacop/gmacdsp.c	1969-12-31 18:00:00.000000000 -0600
++++ linux-2.6.34/drivers/net/LIPP_6300ETH/src/tst/gmacop/gmacdsp.c	2010-11-23 21:49:44.000000000 -0600
+@@ -0,0 +1,344 @@
++/*
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program; if not, write to the Free Software
++ * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
++ *
++ * Copyright (c) 2010 Trident Microsystems, Inc.
++ *
++ * All Rights Reserved.
++ *
++ *---------------------------------------------------------------------------
++ * %filename:    gmacdsp.c %
++ * %pid_version: 1.0  %
++ *---------------------------------------------------------------------------  
++ * DESCRIPTION: debug access to gmac phy of LIPP_6300ETH driver
++ * NOTES:       None
++ *-----------------------------------------------------------------------------
++ */
++
++#include <stdio.h> /* perror/printf functions */
++#include <stdlib.h> /* exit calls */ 
++#include <unistd.h> /* close */
++#include <getopt.h>
++#include <libgen.h>
++#include <errno.h>
++#include <string.h> /* strncpy */
++#include <linux/types.h>
++#include <sys/socket.h> /* For sockets */ 
++#include <netinet/in.h> /* sockaddr_in */
++#include <arpa/inet.h>
++#include <linux/if.h>  /* def of ifr */
++#include <sys/ioctl.h> /* ioctl call */
++#include <linux/errno.h>
++
++#include <gmac_ioctl.h>
++
++#define ANSI_GREY "\x1B[1;30m"
++#define ANSI_RESET "\x1B[0m"
++
++#define GMACDSP_ERR_PREFIX   ANSI_GREY "GMACDSP: "
++#define GMACDSP_MSG_PREFIX   "\n" ANSI_RESET "GMACDSP: "
++#define GMACDSP_ERR_RESET    fprintf(stderr, ANSI_RESET)
++
++#define GMAC_REGS_RWFLAG_READ (False)
++#define GMAC_REGS_RWFLAG_WRITE (True)
++#define GMAC_REGS_RWPHYREGS_REGS (False)
++#define GMAC_REGS_RWPHYREGS_PHY (True)
++
++#define GMAC_TEST_CNTL_REG             (20)
++#define GMAC_TEST_CNTL_TESTMODE_SET    (1 << 10)
++#define GMAC_TEST_CNTL_TESTMODE_CLR    (0 << 10)
++#define GMAC_TEST_CNTL_READ_SET        (1 << 15)
++#define GMAC_TEST_CNTL_WRITE_SET       (1 << 14)
++#define GMAC_TEST_CNTL_WRITE_ADDR_MASK (0x1F)
++#define GMAC_TEST_CNTL_READ_ADDR_MASK  (0x1F)
++#define GMAC_TEST_CNTL_READ_ADDR_SHIFT (5)
++#define GMAC_TEST_READ1_REG            (21)
++#define GMAC_TEST_READ2_REG            (22)
++#define GMAC_TEST_WRITE_REG            (23)
++
++
++void usage( char *szName )
++{
++   fprintf(stderr, "usage: %s [options]\n", szName);
++   fprintf(stderr, "\t -e --eth     - ethernet interface (usually eth0 or eth1)\n");
++   fprintf(stderr, "\t              - default is eth0.\n");
++   fprintf(stderr, "\t -R --read    - read DSP register\n");
++   fprintf(stderr, "\t              - default is to read\n");
++   fprintf(stderr, "\t -W --write X - write DSP register\n");
++   fprintf(stderr, "\t -r --reg X   - DSP register to access\n");
++   fprintf(stderr, "\t              - default is register 0\n");
++   fprintf(stderr, "\t -v --verbose - verbose output\n");
++   fprintf(stderr, "\t -h --help    - displays this usage\n");
++   fprintf(stderr, "\n\n");
++   exit(-1);
++}
++
++char gmacdsp_options_short[] = "e:RW:r:vh";
++struct option gmacdsp_options_long[] =
++{
++   { "eth",     required_argument, NULL, 'e' },
++   { "read",    no_argument,       NULL, 'R' },
++   { "write",   required_argument, NULL, 'W' },
++   { "reg",     required_argument, NULL, 'r' },
++   { "verbose", no_argument,       NULL, 'v' },
++   { "help",    no_argument,       NULL, 'h' },
++   { NULL,      0,                 NULL, 0   }
++};
++
++__u32 gmacdsp_read_phy_reg(int sfd, struct ifreq *pifr, __u32 reg)
++{
++   int ret = 0;
++   gmacRegs_t gmacregs;
++   void *backup = pifr->ifr_data;
++   pifr->ifr_data = &gmacregs;
++
++   gmacregs.regOffset = reg;
++   gmacregs.regValue  = 0;
++   gmacregs.rwFlag    = GMAC_REGS_RWFLAG_READ;
++   gmacregs.rwPhyRegs = GMAC_REGS_RWPHYREGS_PHY;
++
++   ret = ioctl(sfd, ETH_GMAC_DEBUG, pifr);
++   if(ret < 0)
++   {
++      perror(GMACDSP_ERR_PREFIX "ioctl ETH_GMAC_DEBUG");
++      GMACDSP_ERR_RESET;
++   }
++
++   pifr->ifr_data = backup;
++   return gmacregs.regValue;
++}
++
++__u32 gmacdsp_write_phy_reg(int sfd, struct ifreq *pifr, __u32 reg, __u32 val)
++{
++   int ret = 0;
++   gmacRegs_t gmacregs;
++   void *backup = pifr->ifr_data;
++   pifr->ifr_data = &gmacregs;
++
++   gmacregs.regOffset = reg;
++   gmacregs.regValue  = val;
++   gmacregs.rwFlag    = GMAC_REGS_RWFLAG_WRITE;
++   gmacregs.rwPhyRegs = GMAC_REGS_RWPHYREGS_PHY;
++
++   ret = ioctl(sfd, ETH_GMAC_DEBUG, pifr);
++   if(ret < 0)
++   {
++      perror(GMACDSP_ERR_PREFIX "ioctl ETH_GMAC_DEBUG");
++      GMACDSP_ERR_RESET;
++   }
++
++   pifr->ifr_data = backup;
++   return gmacdsp_read_phy_reg(sfd, pifr, reg);
++}
++
++void gmacdsp_lock_dsp(int sfd, struct ifreq *pifr)
++{
++   /* from any state, two sucessive TSTMODE=0 */
++   /* guarantees the state is set to unlocked */
++   gmacdsp_write_phy_reg(sfd, pifr,
++      GMAC_TEST_CNTL_REG,
++      GMAC_TEST_CNTL_TESTMODE_CLR);
++   gmacdsp_write_phy_reg(sfd, pifr,
++      GMAC_TEST_CNTL_REG,
++      GMAC_TEST_CNTL_TESTMODE_CLR);
++}
++
++void gmacdsp_unlock_dsp(int sfd, struct ifreq *pifr)
++{
++   /* to ensure a proper "unlock"         */
++   /* lock it (zero it twice)             */
++   /* then start the unlock state machine */
++   /* STATE:   ???LLlluuU                 */
++   /* TSTMODE: 0 0 1 0 1                  */
++
++   /* unknown state -- clear to known locked state */
++   gmacdsp_lock_dsp(sfd, pifr);
++
++   /* locked state -- prime with a 1 0 1 */
++   gmacdsp_write_phy_reg(sfd, pifr, 
++      GMAC_TEST_CNTL_REG, 
++      GMAC_TEST_CNTL_TESTMODE_SET); /* TSTMODE=1 */
++   gmacdsp_write_phy_reg(sfd, pifr,
++      GMAC_TEST_CNTL_REG,
++      GMAC_TEST_CNTL_TESTMODE_CLR); /* TSTMODE=0 */
++   gmacdsp_write_phy_reg(sfd, pifr, 
++      GMAC_TEST_CNTL_REG, 
++      GMAC_TEST_CNTL_TESTMODE_SET); /* TSTMODE=1 */
++
++   /* unlocked state */
++}
++
++void gmacdsp_write_dsp_reg(int sfd, struct ifreq *pifr, __u32 reg, __u32 val)
++{
++   __u32 lreg = reg & GMAC_TEST_CNTL_WRITE_ADDR_MASK;
++   lreg |= GMAC_TEST_CNTL_WRITE_SET;
++   lreg |= GMAC_TEST_CNTL_TESTMODE_SET;
++
++   gmacdsp_write_phy_reg(sfd, pifr,
++      GMAC_TEST_WRITE_REG,
++      val);
++
++   gmacdsp_write_phy_reg(sfd, pifr,
++      GMAC_TEST_CNTL_REG,
++      lreg);
++}
++
++__u32 gmacdsp_read_dsp_reg(int sfd, struct ifreq *pifr, __u32 reg)
++{
++   __u32 lower;
++   __u32 upper;
++   __u32 lreg = reg & GMAC_TEST_CNTL_READ_ADDR_MASK;
++   lreg <<= GMAC_TEST_CNTL_READ_ADDR_SHIFT;
++   lreg |= GMAC_TEST_CNTL_READ_SET;
++   lreg |= GMAC_TEST_CNTL_TESTMODE_SET;
++
++   gmacdsp_write_phy_reg(sfd, pifr,
++      GMAC_TEST_CNTL_REG,
++      lreg);
++
++   lower = gmacdsp_read_phy_reg(sfd, pifr,
++      GMAC_TEST_READ1_REG);
++   upper = gmacdsp_read_phy_reg(sfd, pifr,
++      GMAC_TEST_READ2_REG);
++
++   return ( ((upper & 0xFFFF) << 16) | (lower & 0xFFFF));
++}
++
++int main(int argc, char *argv[])
++{
++   int sockfd;
++
++   char ifName[20] = "eth0";
++   struct ifreq ifr;
++
++   bool isRead = True;
++   bool verbose = False;
++   __u32 dspreg = 0;
++   __u32 dspval = 0;
++
++   strncpy(ifr.ifr_name,  ifName, sizeof(ifr.ifr_name));
++
++   while(1)
++   {
++      int option_index = 0;
++      int c = getopt_long( 
++         argc, argv, 
++         gmacdsp_options_short, 
++         gmacdsp_options_long, 
++         &option_index);
++      if(c < 0)
++      {
++         break;
++      }
++      switch(c)
++      {
++      case 'e':
++         snprintf(ifr.ifr_name,  sizeof(ifr.ifr_name), "eth%ld", strtol(optarg, NULL, 0));
++         break;
++      case 'R':
++         isRead = True;
++         break;
++      case 'W':
++         dspval = strtol(optarg, NULL, 0);
++         isRead = False;
++         break;
++      case 'r':
++         dspreg = strtol(optarg, NULL, 0);
++         break;
++      case 'v':
++         verbose = True;
++         break;
++      case 'h':
++         /* fall through -- show usage */
++      default:
++         usage(basename(argv[0]));
++         break;
++      }
++   }
++
++   if(verbose == True)
++   {
++      printf(GMACDSP_MSG_PREFIX "IF Name: '%s'", ifr.ifr_name);
++   }
++
++   if ((sockfd = socket(PF_INET, SOCK_DGRAM, 0)) == -1)
++   {
++      perror(GMACDSP_ERR_PREFIX "socket");
++      GMACDSP_ERR_RESET;
++      exit(-1);
++   }
++
++   if(verbose == True)
++   {
++      printf(GMACDSP_MSG_PREFIX "GMAC %s PHY DSP REG %d (0x%02x) ",
++         (isRead == True) ? "READ" : "WRITE",
++         dspreg,
++         dspreg);
++      if(isRead == False)
++      {
++         printf(" to %d (0x%04x)",
++            dspval,
++            dspval);
++      }
++   }
++
++   if(verbose == True)
++   {
++      printf(GMACDSP_MSG_PREFIX "unlock");
++   }
++   gmacdsp_unlock_dsp(sockfd, &ifr);
++
++   if(isRead == True)
++   {
++      __u32 retval = gmacdsp_read_dsp_reg(sockfd, &ifr, dspreg);
++
++      if(verbose == True)
++      {
++         printf(GMACDSP_MSG_PREFIX "read dsp");
++      }
++      printf(GMACDSP_MSG_PREFIX "DSP REG %d (0x%02x): %d (0x%04x)",
++         dspreg, dspreg,
++         retval, retval);
++   }
++   else
++   {
++      __u32 retval;
++
++      if(verbose == True)
++      {
++         printf(GMACDSP_MSG_PREFIX "write dsp");
++      }
++      gmacdsp_write_dsp_reg(sockfd, &ifr, dspreg, dspval);
++      if(verbose == True)
++      {
++         printf(GMACDSP_MSG_PREFIX "read dsp");
++      }
++      retval = gmacdsp_read_dsp_reg(sockfd, &ifr, dspreg);
++
++      printf(GMACDSP_MSG_PREFIX "DSP REG %d (0x%02x) after write: %d (0x%04x)",
++         dspreg, dspreg,
++         retval, retval);
++   }
++ 
++   if(verbose == True)
++   {
++      printf(GMACDSP_MSG_PREFIX "lock");
++   }
++   gmacdsp_lock_dsp(sockfd, &ifr);
++
++   printf(ANSI_RESET "\n");
++   close(sockfd);
++   return 0;
++}
++
+diff -Naurp linux-2.6.34.latest/drivers/net/LIPP_6300ETH/src/tst/gmacop/gmac_mmccodes.h linux-2.6.34/drivers/net/LIPP_6300ETH/src/tst/gmacop/gmac_mmccodes.h
+--- linux-2.6.34.latest/drivers/net/LIPP_6300ETH/src/tst/gmacop/gmac_mmccodes.h	1969-12-31 18:00:00.000000000 -0600
++++ linux-2.6.34/drivers/net/LIPP_6300ETH/src/tst/gmacop/gmac_mmccodes.h	2010-11-23 21:49:44.000000000 -0600
+@@ -0,0 +1,95 @@
++
++static char *gmac_mmc_names[128] =
++{
++   "TX_OCTET_CNT_GB",      // 0
++   "TX_FRAME_CNT_GB",      // 1
++   "TX_BRDCST_CNT_G",      // 2
++   "TX_MULTCST_CNT_G",     // 3
++   "TX_64_CNT_GB",         // 4
++   "TX_65TO127_CNT_GB",    // 5
++   "TX_128TO255_CNT_GB",   // 6
++   "TX_256TO511_CNT_GB",   // 7
++   "TX_512TO1023_CNT_GB",  // 8
++   "TX_1024TOMAX_CNT_GB",  // 9
++   "TX_UNICAST_CNT_GB",    // 10 
++   "TX_MULTCST_CNT_GB",    // 11
++   "TX_BRDCST_CNT_GB",     // 12
++   "TX_UNDERFLOW_ERR_CNT", // 13
++   "TX_SINGLE_COL_CNT_G",  // 14
++   "TX_MULTICOL_COL_G",    // 15
++   "TX_DEFERRED_CNT",      // 16
++   "TX_LATECOL_CNT",       // 17
++   "TX_EXCESSCOL_CNT",     // 18
++   "TX_CARRIER_ERR_CNT",   // 19
++   "TX_OCTET_CNT_G",       // 20
++   "TX_FRAME_CNT_G",       // 21
++   "TX_EXCESSDEF_CNT",     // 22
++   "TX_PAUSE_FRAMES_CNT",  // 23
++   "TX_VLAN_FRAMES_CNT_G", // 24
++   "<badctr>", "<badctr>", "<badctr>", "<badctr>", "<badctr>", // 25 26 27 28 29
++   "<badctr>", "<badctr>", "<badctr>", "<badctr>", "<badctr>", // 30 31 32 33 34
++   "<badctr>", "<badctr>", "<badctr>", "<badctr>", "<badctr>", // 35 36 37 38 39
++   "<badctr>", "<badctr>", "<badctr>", "<badctr>", "<badctr>", // 40 41 42 43 44
++   "<badctr>", "<badctr>", "<badctr>", "<badctr>", "<badctr>", // 45 46 47 48 49
++
++   "RX_FRM_CNT_GB",        // (0x32U) 50
++   "RX_OCTET_CNT_GB",      // (0x33U) 51
++   "RX_OCTET_CNT_G",       // (0x34U) 52
++   "RX_BRDCSTF_CNT_G",     // (0x35U) 53
++   "RX_MULTCSTF_CNT_G",    // (0x36U) 54
++   "RX_CRC_ERR_CNT",       // (0x37U) 55
++   "RX_ALIGNMT_ERR_CNT",   // (0x38U) 56
++   "RX_RUNT_ERR_CNT",      // (0x39U) 57
++   "RX_JABBER_ERR_CNT",    // (0x3AU) 58
++   "RX_UNDERSIZE_CNT_G",   // (0x3BU) 59
++   "RX_OVERSIZE_CNT_G",    // (0x3CU) 60
++   "RX_64_CNT_GB",         // (0x3DU) 61
++   "RX_65TO127_CNT_GB",    // (0x3EU) 62
++   "RX_128TO255_CNT_GB",   // (0x3FU) 63
++   "RX_256TO511_CNT_GB",   // (0x40U) 64
++   "RX_512TO1023_CNT_GB",  // (0x41U) 65
++   "RX_1024TOMAX_CNT_GB",  // (0x42U) 66
++   "RX_UNICAST_CNT_G",     // (0x43U) 67
++   "RX_LEN_ERR_CNT",       // (0x44U) 68
++   "RX_OUTOFRANGE_CNT",    // (0x45U) 69
++   "RX_PAUSE_CNT",         // (0x46U) 70
++   "RX_FIFO_OVERFLOW_CNT", // (0x47U) 71
++   "RX_VLAN_FRAMES_CNT_GB",// (0x48U) 72
++   "RX_WATCHDOG_ERR_CNT",  // (0x49U) 73
++   "<badctr>", "<badctr>",                                     // 74 75
++   "<badctr>", "<badctr>", "<badctr>", "<badctr>",             // 76 77 78 79
++   "<badctr>", "<badctr>", "<badctr>", "<badctr>", "<badctr>", // 80 81 82 83 84
++   "<badctr>", "<badctr>", "<badctr>", "<badctr>", "<badctr>", // 85 86 87 88 89
++
++   "RX_IPV4_FRMCNT_G",          // (0x5AU) 90
++   "RX_IPV4_HDR_ERR_FRMCNT",    // (0x5BU) 91
++   "RX_IPV4_NOPPAY_FRMCNT",     // (0x5CU) 92
++   "RX_IPV4_FRAG_FRMCNT",       // (0x5DU) 93
++   "RX_IPV4_UDPCSUMDSL_FRMCNT", // (0x5EU) 94
++   "RX_IPV6_FRMCNT_G",          // (0x5FU) 95
++   "RX_IPV6_HDR_ERR_FRMCNT",    // (0x60U) 96
++   "RX_IPV6_NOPAY_FRMCNT",      // (0x61U) 97
++   "RX_UDP_FRMCNT_G",           // (0x62U) 98
++   "RX_UDP_ERR_FRMCNT",         // (0x63U) 99 
++   "RX_TCP_FRMCNT_G",           // (0x64U) 100
++   "RX_TCP_ERR_FRMCNT",         // (0x65U) 101
++   "RX_ICMP_FRMCNT_G",          // (0x66U) 102
++   "RX_ICMP_ERR_FRMCNT",        // (0x67U) 103
++   "RX_IPV4_OCTETS_G",          // (0x68U) 104
++   "RX_IPV4_HDR_ERR_OCTETS",    // (0x69U) 105
++   "RX_IPV4_NOPPAY_OCTETS",     // (0x6AU) 106
++   "RX_IPV4_FRAG_OCTETS",       // (0x6BU) 107
++   "RX_IPV4_UDPCSUMDSL_OCTETS", // (0x6CU) 108
++   "RX_IPV6_OCTETS_G",          // (0x6DU) 109
++   "RX_IPV6_HDR_ERR_OCTETS",    // (0x6EU) 110
++   "RX_IPV6_NOPAY_OCTETS",      // (0x6FU) 111
++   "RX_UDP_OCTETS_G",           // (0x70U) 112
++   "RX_UDP_ERR_OCTETS",         // (0x71U) 113 
++   "RX_TCP_OCTETS_G",           // (0x72U) 114
++   "RX_TCP_ERR_OCTETS",         // (0x73U) 115
++   "RX_ICMP_OCTETS_G",          // (0x74U) 116
++   "RX_ICMP_ERR_OCTETS",        // (0x75U) 117
++   "<badctr>", "<badctr>",                                     // 118 119
++   "<badctr>", "<badctr>", "<badctr>", "<badctr>", "<badctr>", // 120 121 122 123 124
++   "<badctr>", "<badctr>", "<badctr>"                          // 125 126 127
++};
+diff -Naurp linux-2.6.34.latest/drivers/net/LIPP_6300ETH/src/tst/gmacop/gmacrmon.c linux-2.6.34/drivers/net/LIPP_6300ETH/src/tst/gmacop/gmacrmon.c
+--- linux-2.6.34.latest/drivers/net/LIPP_6300ETH/src/tst/gmacop/gmacrmon.c	1969-12-31 18:00:00.000000000 -0600
++++ linux-2.6.34/drivers/net/LIPP_6300ETH/src/tst/gmacop/gmacrmon.c	2010-11-23 21:49:44.000000000 -0600
+@@ -0,0 +1,329 @@
++/*
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program; if not, write to the Free Software
++ * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
++ *
++ * Copyright (c) 2010 Trident Microsystems, Inc.
++ *
++ * All Rights Reserved.
++ *
++ *---------------------------------------------------------------------------
++ * %filename:    gmacrw.c %
++ * %pid_version: 1.0  %
++ *---------------------------------------------------------------------------  
++ * DESCRIPTION: debug access to gmac of LIPP_6300ETH driver
++ * NOTES:       None
++ *-----------------------------------------------------------------------------
++ */
++
++#include <stdio.h> /* perror/printf functions */
++#include <stdlib.h> /* exit calls */ 
++#include <unistd.h> /* close */
++#include <getopt.h>
++#include <libgen.h>
++#include <errno.h>
++#include <string.h> /* strncpy */
++#include <linux/types.h>
++#include <sys/socket.h> /* For sockets */ 
++#include <netinet/in.h> /* sockaddr_in */
++#include <arpa/inet.h>
++#include <linux/if.h>  /* def of ifr */
++#include <sys/ioctl.h> /* ioctl call */
++#include <linux/errno.h>
++
++#include <gmac_ioctl.h>
++
++#define ANSI_GREY "\x1B[1;30m"
++#define ANSI_RESET "\x1B[0m"
++
++#define GMACRMON_ERR_PREFIX   ANSI_GREY "GMACRMON: "
++#define GMACRMON_MSG_PREFIX   "\n" ANSI_RESET "GMACRMON: "
++#define GMACRMON_ERR_RESET    fprintf(stderr, ANSI_RESET)
++
++#define GMAC_REGS_RWFLAG_READ (False)
++#define GMAC_REGS_RWFLAG_WRITE (True)
++#define GMAC_REGS_RWPHYREGS_REGS (False)
++#define GMAC_REGS_RWPHYREGS_PHY (True)
++
++#define GMAC_MMC_CONTROL_REG             (0x0100)
++#define GMAC_MMC_CONTROL_RESET_COUNTERS  (1 << 0)
++#define GMAC_MMC_CONTROL_STOP_ROLLOVER   (1 << 1)
++#define GMAC_MMC_CONTROL_RESET_ON_READ   (1 << 2)
++#define GMAC_MMC_CONTROL_FREEZE_COUNTERS (1 << 3)
++
++#include "gmac_mmccodes.h"
++
++void usage( char *szName )
++{
++   fprintf(stderr, "usage: %s [options]\n", szName);
++   fprintf(stderr, "\t -e --eth     - ethernet interface (usually eth0 or eth1)\n");
++   fprintf(stderr, "\t              - default is eth0.\n");
++   fprintf(stderr, "\t -r --reset   - reset RMON counters\n");
++   fprintf(stderr, "\t -f --freeze  - freeze the RMON counters\n");
++   fprintf(stderr, "\t              - default is free running\n");
++   fprintf(stderr, "\t -R --ror     - enable reset on read\n");
++   fprintf(stderr, "\t              - default is to manually reset\n");
++   fprintf(stderr, "\t -l --roll    - enable counter rollover\n");
++   fprintf(stderr, "\t              - default is to disable rollover\n");
++   fprintf(stderr, "\t -v --verbose - verbose output\n");
++   fprintf(stderr, "\t -h --help    - displays this usage\n");
++   fprintf(stderr, "\n\n");
++   exit(-1);
++}
++
++char gmacrw_options_short[] = "e:rf:R:l:vh";
++struct option gmacrw_options_long[] =
++{
++   { "eth",     required_argument, NULL, 'e' },
++   { "reset",   no_argument,       NULL, 'r' },
++   { "freeze",  required_argument, NULL, 'f' },
++   { "ror",     required_argument, NULL, 'R' },
++   { "roll",    required_argument, NULL, 'l' },
++   { "verbose", no_argument,       NULL, 'v' },
++   { "help",    no_argument,       NULL, 'h' },
++   { NULL,      0,                 NULL, 0   }
++};
++
++__u32 gmacrw_read_mac_reg(int sfd, struct ifreq *pifr, __u32 reg)
++{
++   int ret = 0;
++   gmacRegs_t gmacregs;
++   void *backup = pifr->ifr_data;
++   pifr->ifr_data = &gmacregs;
++
++   gmacregs.regOffset = reg;
++   gmacregs.regValue  = 0;
++   gmacregs.rwFlag    = GMAC_REGS_RWFLAG_READ;
++   gmacregs.rwPhyRegs = GMAC_REGS_RWPHYREGS_REGS;
++
++   ret = ioctl(sfd, ETH_GMAC_DEBUG, pifr);
++   if(ret < 0)
++   {
++      perror(GMACRMON_ERR_PREFIX "ioctl ETH_GMAC_DEBUG");
++      GMACRMON_ERR_RESET;
++   }
++
++   pifr->ifr_data = backup;
++   return gmacregs.regValue;
++}
++
++int main(int argc, char *argv[])
++{
++   int sockfd, ret, i;
++
++   char ifName[20] = "eth0";
++   __u32 currmonctrl = 0;
++   struct ifreq ifr;
++   rmonCtrl_t rmonctrl, newrmonctrl;
++   bool gotr = False;
++   bool gotf = False;
++   bool gotR = False;
++   bool gotl = False;
++   bool gotctrl = False;
++   bool verbose = False;
++
++   strncpy(ifr.ifr_name,  ifName, sizeof(ifr.ifr_name));
++   ifr.ifr_data  = &rmonctrl;
++
++   rmonctrl.rollOverDisable = False;
++   rmonctrl.resetOnRdEn     = False;
++   rmonctrl.freezeCntrs     = False;
++   rmonctrl.resetCounters   = False;
++
++   newrmonctrl = rmonctrl;
++
++   while(1)
++   {
++      int option_index = 0;
++      long asalong = 0;
++      int c = getopt_long( 
++         argc, argv, 
++         gmacrw_options_short, 
++         gmacrw_options_long, 
++         &option_index);
++      if(c < 0)
++      {
++         break;
++      }
++      switch(c)
++      {
++      case 'e':
++         snprintf(ifr.ifr_name,  sizeof(ifr.ifr_name), "eth%ld", strtol(optarg, NULL, 0));
++         break;
++      case 'r':
++         newrmonctrl.resetCounters = True;
++         gotctrl = True;
++         gotr = True;
++         break;
++      case 'f':
++         asalong = strtol(optarg, NULL, 0);
++         newrmonctrl.freezeCntrs = ((asalong == 0) ? False : True );
++         gotctrl = True;
++         gotf = True;
++         break;
++      case 'R':
++         asalong = strtol(optarg, NULL, 0);
++         newrmonctrl.resetOnRdEn = ((asalong == 0) ? False : True );
++         gotctrl = True;
++         gotR = True;
++         break;
++      case 'l':
++         asalong = strtol(optarg, NULL, 0);
++         newrmonctrl.rollOverDisable = ((asalong == 0) ? False : True );
++         gotctrl = True;
++         gotl = True;
++         break;
++      case 'v':
++         verbose = True;
++         break;
++      case 'h':
++         /* fall through -- show usage */
++      default:
++         usage(basename(argv[0]));
++         break;
++      }
++   }
++
++   if(verbose == True)
++   {
++      printf(GMACRMON_MSG_PREFIX "IF Name: '%s'", ifr.ifr_name);
++   }
++
++   if ((sockfd = socket(PF_INET, SOCK_DGRAM, 0)) == -1)
++   {
++      perror(GMACRMON_ERR_PREFIX "socket");
++      GMACRMON_ERR_RESET;
++      exit(-1);
++   }
++
++   currmonctrl = gmacrw_read_mac_reg(sockfd, &ifr, GMAC_MMC_CONTROL_REG);
++   if(verbose == True)
++   {
++      printf(GMACRMON_MSG_PREFIX "MMCCTRL: 0x%08x", currmonctrl);
++   }
++   
++   if(currmonctrl & GMAC_MMC_CONTROL_RESET_COUNTERS)
++   {
++      rmonctrl.resetCounters = True;
++   }
++   if(currmonctrl & GMAC_MMC_CONTROL_STOP_ROLLOVER)
++   {
++      rmonctrl.rollOverDisable = True;
++   }
++   if(currmonctrl & GMAC_MMC_CONTROL_RESET_ON_READ)
++   {
++      rmonctrl.resetOnRdEn = True;
++   }
++   if(currmonctrl & GMAC_MMC_CONTROL_FREEZE_COUNTERS)
++   {
++      rmonctrl.freezeCntrs = True;
++   }
++   if(verbose == True)
++   {
++      if(gotctrl == True)
++      {
++         printf(GMACRMON_MSG_PREFIX "GMAC OP RMON CONFIG:");
++         printf(GMACRMON_MSG_PREFIX "rollOverDisable=%s ",
++            (rmonctrl.rollOverDisable == True) ? "True" : "False");
++         if(gotl == True)
++         {
++            printf(" setting to %s",
++               (newrmonctrl.rollOverDisable == True) ? "True" : "False");
++         }
++         printf(GMACRMON_MSG_PREFIX "    resetOnRdEn=%s ",
++            (rmonctrl.resetOnRdEn     == True) ? "True" : "False");
++         if(gotR == True)
++         {
++            printf(" setting to %s",
++               (newrmonctrl.resetOnRdEn == True) ? "True" : "False");
++         }
++         printf(GMACRMON_MSG_PREFIX "    freezeCntrs=%s ",
++            (rmonctrl.freezeCntrs     == True) ? "True" : "False");
++         if(gotf == True)
++         {
++            printf(" setting to %s",
++               (newrmonctrl.freezeCntrs == True) ? "True" : "False");
++         }
++         printf(GMACRMON_MSG_PREFIX "  resetCounters=%s ",
++            (rmonctrl.resetCounters   == True) ? "True" : "False");
++         if(gotr == True)
++         {
++            printf(" setting to %s",
++               (newrmonctrl.resetCounters == True) ? "True" : "False");
++         }
++         printf("\n");
++      }
++   }
++
++   if(gotctrl == True)
++   {
++      if(gotl == True)
++      {
++         rmonctrl.rollOverDisable = newrmonctrl.rollOverDisable;
++      }
++      if(gotR == True)
++      {
++         rmonctrl.resetOnRdEn = newrmonctrl.resetOnRdEn;
++      }
++      if(gotf == True)
++      {
++         rmonctrl.freezeCntrs = newrmonctrl.freezeCntrs;
++      }
++      if(gotr == True)
++      {
++         rmonctrl.resetCounters = newrmonctrl.resetCounters;
++      }
++      ret = ioctl(sockfd, ETH_DRV_RMON_CONFIG, &ifr);
++      if (ret < 0)
++      {
++         perror(GMACRMON_ERR_PREFIX "ioctl ETH_DRV_RMON_CONFIG");
++         GMACRMON_ERR_RESET;
++         close(sockfd);
++         return(-1);
++      }
++   }
++
++   for(i=optind; i<argc; i++)
++   {
++      rmonRegsRd_t rmonregs;
++
++      rmonregs.regToRd   = strtoul(argv[i], NULL, 0);
++      rmonregs.mmcRegVal = 0;
++      ifr.ifr_data       = &rmonregs;
++
++      if((rmonregs.regToRd >= 0) && (rmonregs.regToRd <= 127))
++      {
++         ret = ioctl(sockfd, ETH_DRV_RMON_READ, &ifr);
++         if(ret < 0)
++         {
++            perror(GMACRMON_ERR_PREFIX "ioctl ETH_DRV_RMON_READ");
++            GMACRMON_ERR_RESET;
++         }
++         printf(GMACRMON_MSG_PREFIX "%25s (%03d): %10d (0x%08x)", 
++            gmac_mmc_names[rmonregs.regToRd],
++            rmonregs.regToRd,
++            rmonregs.mmcRegVal,
++            rmonregs.mmcRegVal);
++      }
++      else
++      {
++         fprintf(stderr, GMACRMON_ERR_PREFIX "[error] %d is a bad counter number\n",
++            rmonregs.regToRd);
++         GMACRMON_ERR_RESET;
++      }
++   }
++   printf(ANSI_RESET "\n");
++   close(sockfd);
++   return 0;
++}
++
+diff -Naurp linux-2.6.34.latest/drivers/net/LIPP_6300ETH/src/tst/gmacop/gmacrw.c linux-2.6.34/drivers/net/LIPP_6300ETH/src/tst/gmacop/gmacrw.c
+--- linux-2.6.34.latest/drivers/net/LIPP_6300ETH/src/tst/gmacop/gmacrw.c	1969-12-31 18:00:00.000000000 -0600
++++ linux-2.6.34/drivers/net/LIPP_6300ETH/src/tst/gmacop/gmacrw.c	2010-11-23 21:49:44.000000000 -0600
+@@ -0,0 +1,227 @@
++/*
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program; if not, write to the Free Software
++ * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
++ *
++ * Copyright (c) 2010 Trident Microsystems, Inc.
++ *
++ * All Rights Reserved.
++ *
++ *---------------------------------------------------------------------------
++ * %filename:    gmacrw.c %
++ * %pid_version: 1.0  %
++ *---------------------------------------------------------------------------  
++ * DESCRIPTION: debug access to gmac of LIPP_6300ETH driver
++ * NOTES:       None
++ *-----------------------------------------------------------------------------
++ */
++
++#include <stdio.h> /* perror/printf functions */
++#include <stdlib.h> /* exit calls */ 
++#include <unistd.h> /* close */
++#include <getopt.h>
++#include <libgen.h>
++#include <errno.h>
++#include <string.h> /* strncpy */
++#include <linux/types.h>
++#include <sys/socket.h> /* For sockets */ 
++#include <netinet/in.h> /* sockaddr_in */
++#include <arpa/inet.h>
++#include <linux/if.h>  /* def of ifr */
++#include <sys/ioctl.h> /* ioctl call */
++#include <linux/errno.h>
++
++#include <gmac_ioctl.h>
++
++#define GMAC_REGS_RWFLAG_READ (False)
++#define GMAC_REGS_RWFLAG_WRITE (True)
++#define GMAC_REGS_RWPHYREGS_REGS (False)
++#define GMAC_REGS_RWPHYREGS_PHY (True)
++
++void usage( char *szName )
++{
++   fprintf(stderr, "usage: %s [options]\n", szName);
++   fprintf(stderr, "\n"
++"\t -e --eth X      - ethernet interface number [0,1] usually eth0 or eth1)\n"
++"\t                 - default is 0 (eth0).\n"
++"\t -r --reg REG    - register number to read or write\n"
++"\t                   MAC registers must be 32bit aligned\n"
++"\t -R --read       - performs a read operation\n"
++"\t                 - default is read\n"
++"\t -W --write VAL  - performs a write operation\n"
++"\t -p --phy        - performs a PHY register operation\n"
++"\t -m --mac        - performs a MAC register operation\n"
++"\t                   default is a mac register\n"
++"\t -P --autophy ID - sets one of 32 Autoset AnDSP operations that\n"
++"\t                   will be automatically when the link goes up\n"
++"\t                   Each ID consists of a REG VAL pair.\n"
++"\n"
++"\n"
++   );
++   exit(-1);
++}
++
++char gmacrw_options_short[] = "e:r:RW:pP:mhv";
++struct option gmacrw_options_long[] =
++{
++   { "eth",     required_argument, NULL, 'e' },
++   { "reg",     required_argument, NULL, 'r' },
++   { "read",    no_argument,       NULL, 'R' },
++   { "write",   required_argument, NULL, 'W' },
++   { "phy",     no_argument,       NULL, 'p' },
++   { "autophy", required_argument, NULL, 'P' },
++   { "mac",     no_argument,       NULL, 'm' },
++   { "help",    no_argument,       NULL, 'h' },
++   { "verbose", no_argument,       NULL, 'v' },
++   { NULL,      0,                 NULL, 0   }
++};
++
++int main(int argc, char *argv[])
++{
++   int sockfd, ret;
++
++   char ifName[20] = "eth0";
++   struct ifreq ifr;
++   gmacRegs_t gmacregs;
++   bool verbose = False;
++
++   strncpy(ifr.ifr_name, ifName, sizeof(ifr.ifr_name));
++   ifr.ifr_data = &gmacregs;
++
++   gmacregs.regOffset = 0;
++   gmacregs.regValue  = 0;
++   gmacregs.rwFlag    = GMAC_REGS_RWFLAG_READ;
++   gmacregs.rwPhyRegs = GMAC_REGS_RWPHYREGS_REGS;
++
++   while(1)
++   {
++      int option_index = 0;
++      int c = getopt_long( 
++         argc, argv, 
++         gmacrw_options_short, 
++         gmacrw_options_long, 
++         &option_index);
++      if(c < 0)
++      {
++         break;
++      }
++      switch(c)
++      {
++      case 'e':
++         snprintf(ifr.ifr_name, sizeof(ifr.ifr_name), "eth%ld", strtol(optarg, NULL, 0));
++         break;
++      case 'r':
++         gmacregs.regOffset = strtoul(optarg, NULL, 0);
++         break;
++      case 'R':
++         gmacregs.rwFlag = GMAC_REGS_RWFLAG_READ;
++         break;
++      case 'W':
++         gmacregs.rwFlag = GMAC_REGS_RWFLAG_WRITE;
++         gmacregs.regValue = strtoul(optarg, NULL, 0);
++         break;
++      case 'p':
++         gmacregs.rwPhyRegs = GMAC_REGS_RWPHYREGS_PHY;
++         break;
++      case 'P':
++         gmacregs.rwPhyRegs = strtol(optarg, NULL, 0);
++         break;
++      case 'm':
++         gmacregs.rwPhyRegs = GMAC_REGS_RWPHYREGS_REGS;
++         break;
++      case 'v':
++         verbose = True;
++         break;
++      case 'h':
++         /* fall through -- show usage */
++      default:
++         usage(basename(argv[0]));
++         break;
++      }
++   }
++   if(verbose == True)
++   {
++      printf("IF Name: '%s'\n", ifr.ifr_name);
++      printf("GMAC OP: %s %s REG ",
++         (gmacregs.rwFlag == GMAC_REGS_RWFLAG_READ) ? "READ" : "WRITE",
++         (gmacregs.rwPhyRegs == GMAC_REGS_RWPHYREGS_PHY) ?
++             "PHY" :
++             (gmacregs.rwPhyRegs == GMAC_REGS_RWPHYREGS_REGS) ?
++                "MAC" :
++                "AUTODSP");
++
++      if(gmacregs.rwPhyRegs == GMAC_REGS_RWPHYREGS_PHY)
++      {
++         printf("0x%02x (%d)", gmacregs.regOffset, gmacregs.regOffset);
++      }
++      else
++      {
++         printf("0x%04x (%d)", gmacregs.regOffset, gmacregs.regOffset>>2);
++      }
++      if(gmacregs.rwFlag == GMAC_REGS_RWFLAG_WRITE)
++      {
++         printf(" to 0x%04x (%d)\n", gmacregs.regValue, gmacregs.regValue);
++      }
++      else
++      {
++         printf("\n");
++      }
++   }
++   
++   if ((sockfd = socket(PF_INET, SOCK_DGRAM, 0)) == -1)
++   {
++      perror("socket");
++      exit(-1);
++   }
++
++   ret = ioctl(sockfd, ETH_GMAC_DEBUG, &ifr);
++   if (ret < 0)
++   {
++      perror("\nioctl ETH_GMAC_DEBUG");
++      return(-1);
++   }
++   if(gmacregs.rwPhyRegs == GMAC_REGS_RWPHYREGS_PHY)
++   {
++      printf("%s %s PHY REG 0x%02x (%d) = 0x%04x (%d)\n",
++         ifr.ifr_name,
++         (gmacregs.rwFlag==GMAC_REGS_RWFLAG_READ) ? "READ" : "WRITE",
++         gmacregs.regOffset,
++         gmacregs.regOffset,
++         gmacregs.regValue,
++         gmacregs.regValue);
++   }
++   else if(gmacregs.rwPhyRegs == GMAC_REGS_RWPHYREGS_REGS)
++   {
++      printf("%s %s MAC REG 0x%04x (%d) = 0x%08x (%d)\n",
++         ifr.ifr_name,
++         (gmacregs.rwFlag==GMAC_REGS_RWFLAG_READ) ? "READ" : "WRITE",
++         gmacregs.regOffset,
++         gmacregs.regOffset>>2,
++         gmacregs.regValue,
++         gmacregs.regValue);
++   }
++   else
++   {
++      printf("%s %s AUTODSP REG 0x%04x (%d) = 0x%08x (%d)\n",
++         ifr.ifr_name,
++         (gmacregs.rwFlag==GMAC_REGS_RWFLAG_READ) ? "READ" : "WRITE",
++         gmacregs.regOffset,
++         gmacregs.regOffset,
++         gmacregs.regValue,
++         gmacregs.regValue);
++   }
++
++   close(sockfd);
++   return 0;
++}
++
+diff -Naurp linux-2.6.34.latest/drivers/net/LIPP_6300ETH/src/tst/gmacop/makefile linux-2.6.34/drivers/net/LIPP_6300ETH/src/tst/gmacop/makefile
+--- linux-2.6.34.latest/drivers/net/LIPP_6300ETH/src/tst/gmacop/makefile	1969-12-31 18:00:00.000000000 -0600
++++ linux-2.6.34/drivers/net/LIPP_6300ETH/src/tst/gmacop/makefile	2010-11-23 21:53:04.000000000 -0600
+@@ -0,0 +1,12 @@
++
++CC=$(CROSS_COMPILE)gcc --sysroot=$(_TMSYSROOT)
++
++export HDR_PATH = ../../../../../../include/net/LIPP_6300ETH/
++
++CFLAGS = -I$(HDR_PATH) -I.  -Wall
++
++all: gmacrw gmacrmon gmacdsp
++
++clean:
++	rm -f gmacrw gmacrmon gmacdsp
++
+diff -Naurp linux-2.6.34.latest/drivers/net/LIPP_6300ETH/src/tst/gmacop/rmonfunc.c linux-2.6.34/drivers/net/LIPP_6300ETH/src/tst/gmacop/rmonfunc.c
+--- linux-2.6.34.latest/drivers/net/LIPP_6300ETH/src/tst/gmacop/rmonfunc.c	1969-12-31 18:00:00.000000000 -0600
++++ linux-2.6.34/drivers/net/LIPP_6300ETH/src/tst/gmacop/rmonfunc.c	2010-11-23 21:49:44.000000000 -0600
+@@ -0,0 +1,423 @@
++/*
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program; if not, write to the Free Software
++ * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
++ *
++ * Copyright (c) 2006-2007, LIPP Alliance
++ *
++ * All Rights Reserved.
++ *
++ *---------------------------------------------------------------------------
++ * %filename:          ioctlsTest.c %
++ * %pid_version:           1.0         %
++ *---------------------------------------------------------------------------  
++ * DESCRIPTION:      debug access to gmac of LIPP_6300ETH driver
++ *
++ * DOCUMENT REF: 
++ *
++ * NOTES:        None
++ *
++ *-----------------------------------------------------------------------------
++ *
++ */
++
++#include <stdio.h> /* perror/printf functions */
++#include <stdlib.h> /* exit calls */ 
++#include <unistd.h> /* close */
++#include <getopt.h>
++#include <errno.h>
++#include <string.h> /* strncpy */
++#include <linux/types.h>
++#include <sys/socket.h> /* For sockets */ 
++#include <netinet/in.h> /* sockaddr_in */
++#include <arpa/inet.h>
++
++#include <linux/if.h>  /* def of ifr */
++#include <sys/ioctl.h> /* ioctl call */
++#include <linux/errno.h>
++
++#include <gmac_ioctl.h>
++
++#define GMAC_REGS_RWFLAG_READ (False)
++#define GMAC_REGS_RWFLAG_WRITE (True)
++#define GMAC_REGS_RWPHYREGS_REGS (False)
++#define GMAC_REGS_RWPHYREGS_PHY (True)
++
++__u32 read_phy_addr(char *ifName, __u32 reg);
++__u32 write_phy_addr(char *szInterfaceName, __u32 reg, __u32 val);
++
++void rmon_enable(void);
++void rmon_disable(void);
++
++void usage( void )
++{
++   fprintf(stderr, "usage: gmacop [options]");
++   fprintf(stderr, "\t -e --eth   - ethernet interface (usually eth0 or eth1)\n");
++   fpritnf(stderr, "\t            - default is eth0.\n");
++   fpritnf(stderr, "\t -r --reg   - register number to read or write\n");
++   fpritnf(stderr, "\t -R --read  - performs a read operation\n");
++   fprintf(stderr, "\t            - default is read\n");
++   fprintf(stderr, "\t -W --write - performs a write operation\n");
++   fprintf(stderr, "\t -p --phy   - performs a PHY register operation\n");
++   fprintf(stderr, "\t              default is a mac register\n");
++   fprintf(stderr, "\t -m --mac   - performs a PHY register operation\n");
++   fprintf(stderr, "\n\n");
++   exit(-1);
++}
++
++struct option gmacop_options[] =
++{
++   { "eth",   required_argument, NULL, 'e' },
++   { "reg",   required_argument, NULL, 'r' },
++   { "read",  no_argument,       NULL, 'R' },
++   { "write", no_argument,       NULL, 'W' },
++   { "phy",   no_argument,       NULL, 'p' },
++   { "mac",   no_argument,       NULL, 'm' },
++   { NULL,    0,                 NULL, 0   }
++};
++
++int main(int argc, char *argv[])
++{
++   int sockfd, ret;
++
++   char ifName[20] = "eth0";
++   struct ifreq ifr;
++   gmacRegs_t gmacregs;
++
++   strncpy(ifr.ifr_name, ifName, sizeof(ifr.ifr_name));
++   ifr.ifr_data = &gmacregs;
++
++   gmacregs.regOffset = 0;
++   gmacregs.regValue  = 0;
++   gmacregs.rwFlag    = GMAC_REGS_RWFLAG_READ;
++   gmacregs.rwPhyRegs = GMAC_REGS_RWPHYREGS_REGS;
++
++   while(1)
++   {
++      int option_index = 0;
++      c = getopt_long(argc, argv, "e:r:RWpm0:", gmacop_options, &option_index);
++      if(c < 0)
++      {
++         break;
++      }
++      switch(c)
++      {
++      case 'e':
++         snprintf(ifr.ifr_name, sizeof(ifr.ifr_name), "eth%d", strtod(optarg, NULL));
++         break;
++      case 'r':
++         gmacregs.regOffset = strtoul(optarg, NULL, 0);
++         break;
++      case 'R':
++         gmacregs.rwFlag = GMAC_REGS_RWFLAG_READ;
++         break;
++      case 'W':
++         gmacregs.rwFlag = GMAC_REGS_RWFLAG_WRITE;
++         break;
++      case 'p':
++         gmacregs.rwPhyRegs = GMAC_REGS_RWPHYREGS_PHY;
++         break;
++      case 'm':
++         gmacregs.rwPhyRegs = GMAC_REGS_RWPHYREGS_REGS;
++         break;
++      default:
++         usage();
++         break;
++      }
++   }
++
++   if ((sockfd = socket(PF_INET, SOCK_DGRAM, 0)) == -1)
++   {
++      perror("socket");
++      exit(-1);
++   }
++
++   if(uRwPhyRegs==GMAC_REGS_RWPHYREGS_REGS)
++   {
++      printf("\tnot ready yet\n");
++   }
++   else
++   {
++      ret = ioctl(sockfd, ETH_GMAC_DEBUG, &ifr);
++      if (ret < 0)
++      {
++         perror("\nioctl ETH_GMAC_DEBUG");
++         return(-1);
++      }
++      printf("%s %s PHYREG 0x%02x (%d) = 0x%04x (%d)\n",
++         ifr.ifr_name,
++         (gmacregs.rwFlag==GMAC_REGS_RWFLAG_READ) ? "READ" : "WRITE",
++         gmacregs.regOffset,
++         gmacregs.regOffset,
++         gmacregs.regValue,
++         gmacregs.regValue);
++   }
++
++   close(sockfd);
++   return 0;
++}
++
++
++
++void rmonIoctl(void)
++{
++
++    rmonRegsRd_t rmonReg;
++    rmonCtrl_t rmonCtrl;
++    
++    struct ifreq ifr;    
++    
++    __u8*ifname = "eth0";
++    
++    __s32 sockfd,ret;
++    
++    if ((sockfd = socket(PF_INET,SOCK_DGRAM, 0)) == -1) 
++    {
++        perror("socket");
++        exit(1);
++    }
++
++    strncpy(ifr.ifr_name,ifname,sizeof(ifr.ifr_name));
++    
++    ifr.ifr_data = &rmonCtrl; 
++
++    rmonCtrl.rollOverDisable = True;
++    rmonCtrl.resetOnRdEn = False;
++    rmonCtrl.freezeCntrs = False;
++    rmonCtrl.resetCounters = False;
++    
++    ret = ioctl(sockfd,ETH_DRV_RMON_CONFIG,&ifr);  
++
++    if (ret == -1) 
++    {
++        printf("\nIoctl Error: errno :%d\n",errno);
++        return;
++    }
++
++    ifr.ifr_data = &rmonReg; 
++    
++    //etherStatsDropEvents Counter,     
++    rmonReg.regToRd = RX_OCTET_CNT_GB;
++
++    ret = ioctl(sockfd,ETH_DRV_RMON_READ,&ifr);  
++
++    if (ret == -1) 
++    {
++        printf("\nIoctl Error: errno :%d\n",errno);
++        return;
++    }
++
++    printf("\nRX_OCTET_CNT_GB:%08x \n",rmonReg.mmcRegVal);
++
++    rmonReg.regToRd = RX_FRM_CNT_GB;
++
++    ret = ioctl(sockfd,ETH_DRV_RMON_READ,&ifr);  
++
++    if (ret == -1) 
++    {
++        printf("\nIoctl Error: errno :%d\n",errno);
++        return;
++    }
++
++    printf("\nRX_FRM_CNT_GB:%08x \n",rmonReg.mmcRegVal);
++
++    rmonReg.regToRd = RX_BRDCSTF_CNT_G;
++
++    ret = ioctl(sockfd,ETH_DRV_RMON_READ,&ifr);  
++
++    if (ret == -1) 
++    {
++        printf("\nIoctl Error: errno :%d\n",errno);
++        return;
++    }
++
++    printf("\nRX_BRDCSTF_CNT_G:%08x \n",rmonReg.mmcRegVal);
++
++    rmonReg.regToRd = RX_MULTCSTF_CNT_G;
++
++    ret = ioctl(sockfd,ETH_DRV_RMON_READ,&ifr);  
++
++    if (ret == -1) 
++    {
++        printf("\nIoctl Error: errno :%d\n",errno);
++        return;
++    }
++
++    printf("\nRX_MULTCSTF_CNT_G:%08x \n",rmonReg.mmcRegVal);
++
++
++    rmonReg.regToRd = RX_CRC_ERR_CNT;
++
++    ret = ioctl(sockfd,ETH_DRV_RMON_READ,&ifr);  
++
++    if (ret == -1) 
++    {
++        printf("\nIoctl Error: errno :%d\n",errno);
++        return;
++    }
++
++    printf("\nRX_CRC_ERR_CNT:%08x \n",rmonReg.mmcRegVal);
++
++    rmonReg.regToRd = RX_ALIGNMT_ERR_CNT;
++
++    ret = ioctl(sockfd,ETH_DRV_RMON_READ,&ifr);  
++
++    if (ret == -1) 
++    {
++        printf("\nIoctl Error: errno :%d\n",errno);
++        return;
++    }
++
++    printf("\nRX_ALIGNMT_ERR_CNT:%08x \n",rmonReg.mmcRegVal);
++
++
++    rmonReg.regToRd = RX_UNDERSIZE_CNT_G;
++
++    ret = ioctl(sockfd,ETH_DRV_RMON_READ,&ifr);  
++
++    if (ret == -1) 
++    {
++    printf("\nIoctl Error: errno :%d\n",errno);
++    return;
++    }
++
++    printf("\nRX_UNDERSIZE_CNT_G:%08x \n",rmonReg.mmcRegVal);
++
++
++    rmonReg.regToRd = RX_OVERSIZE_CNT_G;
++
++    ret = ioctl(sockfd,ETH_DRV_RMON_READ,&ifr);  
++
++    if (ret == -1) 
++    {
++    printf("\nIoctl Error: errno :%d\n",errno);
++    return;
++    }
++
++    printf("\nRX_OVERSIZE_CNT_G:%08x \n",rmonReg.mmcRegVal);
++    
++
++    rmonReg.regToRd = RX_RUNT_ERR_CNT;
++
++    ret = ioctl(sockfd,ETH_DRV_RMON_READ,&ifr);  
++
++    if (ret == -1) 
++    {
++    printf("\nIoctl Error: errno :%d\n",errno);
++    return;
++    }
++
++    printf("\nRX_RUNT_ERR_CNT:%08x \n",rmonReg.mmcRegVal);
++    
++
++    rmonReg.regToRd = RX_JABBER_ERR_CNT;
++
++    ret = ioctl(sockfd,ETH_DRV_RMON_READ,&ifr);  
++
++    if (ret == -1) 
++    {
++    printf("\nIoctl Error: errno :%d\n",errno);
++    return;
++    }
++
++    printf("\nRX_JABBER_ERR_CNT:%08x \n",rmonReg.mmcRegVal);
++    
++
++//etherStatsCollisions ?? TX_EXCESSCOL_CNT TX_LATECOL_CNT TX_MULTICOL_COL_G
++
++
++    rmonReg.regToRd = RX_64_CNT_GB;
++
++    ret = ioctl(sockfd,ETH_DRV_RMON_READ,&ifr);  
++
++    if (ret == -1) 
++    {
++    printf("\nIoctl Error: errno :%d\n",errno);
++    return;
++    }
++
++    printf("\nRX_64_CNT_GB:%08x \n",rmonReg.mmcRegVal);
++
++
++    rmonReg.regToRd = RX_65TO127_CNT_GB;
++
++    ret = ioctl(sockfd,ETH_DRV_RMON_READ,&ifr);  
++
++    if (ret == -1) 
++    {
++    printf("\nIoctl Error: errno :%d\n",errno);
++    return;
++    }
++
++    printf("\nRX_65TO127_CNT_GB:%08x \n",rmonReg.mmcRegVal);
++    
++
++    rmonReg.regToRd = RX_128TO255_CNT_GB;
++
++    ret = ioctl(sockfd,ETH_DRV_RMON_READ,&ifr);  
++
++    if (ret == -1) 
++    {
++    printf("\nIoctl Error: errno :%d\n",errno);
++    return;
++    }
++
++    printf("\nRX_128TO255_CNT_GB:%08x \n",rmonReg.mmcRegVal);
++    
++
++    rmonReg.regToRd = RX_256TO511_CNT_GB;
++
++    ret = ioctl(sockfd,ETH_DRV_RMON_READ,&ifr);  
++
++    if (ret == -1) 
++    {
++    printf("\nIoctl Error: errno :%d\n",errno);
++    return;
++    }
++
++    printf("\nRX_256TO511_CNT_GB:%08x \n",rmonReg.mmcRegVal);
++    
++
++    rmonReg.regToRd = RX_512TO1023_CNT_GB;
++
++    ret = ioctl(sockfd,ETH_DRV_RMON_READ,&ifr);  
++
++    if (ret == -1) 
++    {
++    printf("\nIoctl Error: errno :%d\n",errno);
++    return;
++    }
++
++    printf("\nRX_512TO1023_CNT_GB:%08x \n",rmonReg.mmcRegVal);
++
++
++    rmonReg.regToRd = RX_1024TOMAX_CNT_GB;
++
++    ret = ioctl(sockfd,ETH_DRV_RMON_READ,&ifr);  
++
++    if (ret == -1) 
++    {
++    printf("\nIoctl Error: errno :%d\n",errno);
++    return;
++    }
++
++    printf("\nRX_1024TOMAX_CNT_GB:%08x \n",rmonReg.mmcRegVal);
++    
++
++
++
++}
++
++
++
++
+diff -Naurp linux-2.6.34.latest/include/net/LIPP_6300ETH/gmac_ioctl.h linux-2.6.34/include/net/LIPP_6300ETH/gmac_ioctl.h
+--- linux-2.6.34.latest/include/net/LIPP_6300ETH/gmac_ioctl.h	2010-11-17 09:24:42.000000000 -0600
++++ linux-2.6.34/include/net/LIPP_6300ETH/gmac_ioctl.h	2010-11-23 20:04:54.000000000 -0600
+@@ -38,6 +38,8 @@
+ 
+ #define ETH_DRV_RMON_READ (SIOCDEVPRIVATE+9)
+ 
++#define ETH_DRV_RMON_READ64 (SIOCDEVPRIVATE+14)
++
+ /*----------------------------------------------------------------------------
+ ** Macros for MMC statistics counters 
+ **---------------------------------------------------------------------------*/
+@@ -459,6 +461,13 @@ typedef struct rmonRegsRd
+     __u32                        regToRd;   /* Register to be read */
+ }rmonRegsRd_t, *prmonRegsRd_t;
+ 
++typedef struct rmonRegs64Rd
++{
++    __u32 counterid;
++    __u32 reserved;
++    __u64 value;
++} rmonRegs64Rd_t, *prmonRegs64Rd_t;
++
+ /*----------------------------------------------------------------------------
+ ** WoL specific structures
+ **---------------------------------------------------------------------------*/
+diff -Naurp linux-2.6.34.spi/drivers/net/LIPP_6300ETH/comps/tmbslPhyMYSTI110E/src/tmbslPhyMYSTI110E.c linux-2.6.34/drivers/net/LIPP_6300ETH/comps/tmbslPhyMYSTI110E/src/tmbslPhyMYSTI110E.c
+--- linux-2.6.34.spi/drivers/net/LIPP_6300ETH/comps/tmbslPhyMYSTI110E/src/tmbslPhyMYSTI110E.c	2010-12-09 17:26:26.000000000 -0600
++++ linux-2.6.34/drivers/net/LIPP_6300ETH/comps/tmbslPhyMYSTI110E/src/tmbslPhyMYSTI110E.c	2010-12-15 16:54:57.000000000 -0600
+@@ -252,10 +252,10 @@
+                                 | MYSTIPHY_DSPW_RXGAIN2(6) | MYSTIPHY_DSPW_RXPREPGA2(0) \
+                                 | MYSTIPHY_DSPW_RXGAIN3(0) | MYSTIPHY_DSPW_RXPREPGA3(1) )
+ 
+-/* GAIN2 = 0xFDAA */
++/* GAIN2 = 0xFEAA */
+ #define MYSTIPHY_DSPW_GAIN2_VAL ( MYSTIPHY_DSPW_RXGAIN4(2) | MYSTIPHY_DSPW_RXPREPGA4(1) \
+                                 | MYSTIPHY_DSPW_RXGAIN5(2) | MYSTIPHY_DSPW_RXPREPGA5(1) \
+-                                | MYSTIPHY_DSPW_RXGAIN6(5) | MYSTIPHY_DSPW_RXPREPGA6(1) \
++                                | MYSTIPHY_DSPW_RXGAIN6(6) | MYSTIPHY_DSPW_RXPREPGA6(1) \
+                                 | MYSTIPHY_DSPW_RXGAIN7(7) | MYSTIPHY_DSPW_RXPREPGA7(1) )
+ 
+ #define MYSTIPHY_DSPW_DBGCNTL_NRZIOUT_SHIFT           (1)
+@@ -449,7 +449,7 @@ static mysti_pairs testpairs[MYSTI_TESTP
+    /*02*/ { MYSTIPHY_DSPW_GAIN1_REG,      MYSTIPHY_DSPW_GAIN1_VAL      },
+    /*03*/ { MYSTIPHY_DSPW_GAIN2_REG,      MYSTIPHY_DSPW_GAIN2_VAL      },
+    /*04*/ { MYSTIPHY_DSPW_A2CFG_REG,      MYSTIPHY_DSPW_A2CFG_VAL      },
+-   /*05*/ { MYSTIPHY_DSPW_DBGCNTL_REG,    MYSTIPHY_DSPW_DBGCNTL_VAL    },
++   /*05*/ { MYSTI_INVALIDREG,             MYSTI_INVALIDVAL             },
+    /*06*/ { MYSTIPHY_DSPW_ONLVL_REG,      MYSTIPHY_DSPW_ONLVL_VAL      },
+    /*07*/ { MYSTIPHY_DSPW_DCBLW_REG,      MYSTIPHY_DSPW_DCBLW_VAL      },
+    /*08*/ { MYSTIPHY_DSPW_ATHR7_REG,      MYSTIPHY_DSPW_ATHR7_VAL      },

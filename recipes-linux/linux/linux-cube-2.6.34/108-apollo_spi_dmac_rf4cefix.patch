@@ -1,0 +1,537 @@
+diff -Naur linux-2.6.34/arch/arm/mach-apollo/nx_spi_dev.c linux-2.6.34_MODIFIED/arch/arm/mach-apollo/nx_spi_dev.c
+--- linux-2.6.34/arch/arm/mach-apollo/nx_spi_dev.c	2010-09-24 10:55:50.426654000 +0530
++++ linux-2.6.34_MODIFIED/arch/arm/mach-apollo/nx_spi_dev.c	2010-09-23 12:52:59.639622000 +0530
+@@ -25,6 +25,7 @@
+ #include <linux/platform_device.h>
+ #include <linux/init.h>
+ #include <mach/nx_spi_dev.h>
++#include <linux/version.h>
+ 
+ #ifdef CONFIG_SPI_NX_DMAC_1902
+ #include <linux/nx_dmac_1902.h>
+@@ -37,9 +38,13 @@
+ 
+ static struct  nx_dmac_1902_slave nx_spi_dmac_slv_plfdata[] = {
+  { /* TX peripheral */
+-       .slave = {
++	#if (LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 33))
++       .dma_dev = &(dmac_1902_uart_spi_device.dev),
++      #else
++           .slave = {
+                 .dma_dev = &dmac_1902_uart_spi_device.dev,
+                 },
++	#endif
+        .src_per_num = 0, //Memory
+        .dst_per_num = 1, //TX request peripheral num
+        .src_burst = nx_dmac_1902_burst_1,
+@@ -53,9 +58,13 @@
+        .dst_width = DMA_SLAVE_WIDTH_8BIT,
+   },
+   {/* RX peripheral */
+-       .slave = {
++	#if (LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 33))
++       .dma_dev = &(dmac_1902_uart_spi_device.dev),
++	#else
++           .slave = {
+                 .dma_dev = &dmac_1902_uart_spi_device.dev,
+                 },
++	#endif
+        .src_per_num = 0,//RX request peripheral num
+        .dst_per_num = 0, //Memory
+        .src_burst = nx_dmac_1902_burst_1,
+diff -Naur linux-2.6.34/drivers/dma/nx_dmac_1902.c linux-2.6.34_MODIFIED/drivers/dma/nx_dmac_1902.c
+--- linux-2.6.34/drivers/dma/nx_dmac_1902.c	2010-09-24 10:55:51.979493000 +0530
++++ linux-2.6.34_MODIFIED/drivers/dma/nx_dmac_1902.c	2010-09-24 10:05:04.136166000 +0530
+@@ -642,8 +642,8 @@
+   if (list_empty(&nxc->active_list)) {
+     dev_vdbg(chan2dev(tx->chan), "tx_submit: chan: %d started %u\n",
+         nxc->chan_num, desc->txd.cookie);
+-    nx_dmac_1902_start_xfer(nxc, desc);    
+     list_add_tail(&desc->desc_node, &nxc->active_list);
++    nx_dmac_1902_start_xfer(nxc, desc);		// start transfer after add to list
+   } else {
+     dev_vdbg(chan2dev(tx->chan), "tx_submit: chan: %d queued %u\n",
+         nxc->chan_num, desc->txd.cookie);
+@@ -996,13 +996,12 @@
+   dev_vdbg(&chan->dev, "  slave_sg: dst_width:   %d\n", nxs->dst_width);
+ #endif
+ 
+-#if 0
++  // map the dma sg page
+   sg_len = dma_map_sg(chan2parent(chan), sgl, sg_len, direction);
+   if(sg_len == 0) {
+     dev_err(chan2dev(chan), "  slave_sg: dma_map_sg is failed\n");
+     return NULL;
+   }
+-#endif
+ 
+   control = 0;
+   control |= NX_DMAC_1902_CHAN_CNTRL_HPROT(NX_DMAC_1902_HPROT_PRIVILEGE_MODE | NX_DMAC_1902_HPROT_CACHEABLE);
+diff -Naur linux-2.6.34/drivers/dma/nx_dmac_1902_private.h linux-2.6.34_MODIFIED/drivers/dma/nx_dmac_1902_private.h
+--- linux-2.6.34/drivers/dma/nx_dmac_1902_private.h	2010-09-24 10:55:50.577656000 +0530
++++ linux-2.6.34_MODIFIED/drivers/dma/nx_dmac_1902_private.h	2010-09-24 10:05:52.980261000 +0530
+@@ -89,8 +89,8 @@
+ 
+ #define NX_DMAC_1902_UNMASK_INT             (0x0000C000UL)
+ #define NX_DMAC_1902_CHAN_CONFIG_FLOWCNTRL(x) ((x) << 11)
+-#define NX_DMAC_1902_CHAN_CONFIG_SRC_PER(x) ((x) << 6)
+-#define NX_DMAC_1902_CHAN_CONFIG_DST_PER(x) ((x) << 1)
++#define NX_DMAC_1902_CHAN_CONFIG_DST_PER(x) ((x) << 6)	// destination
++#define NX_DMAC_1902_CHAN_CONFIG_SRC_PER(x) ((x) << 1)	// source
+ 
+ #define NX_DMAC_1902_DMAC_CHAN_ENABLE       (0x00000001)
+ #define NX_DMAC_1902_DMAC_CHAN_DISABLE      (0x00000000)
+diff -Naur linux-2.6.34/drivers/spi/nx_spi.c linux-2.6.34_MODIFIED/drivers/spi/nx_spi.c
+--- linux-2.6.34/drivers/spi/nx_spi.c	2010-09-24 10:55:51.621574000 +0530
++++ linux-2.6.34_MODIFIED/drivers/spi/nx_spi.c	2010-09-24 10:49:57.119249000 +0530
+@@ -50,10 +50,13 @@
+ #include <linux/io.h>
+ 
+ #include <asm/io.h>
+-
++#include <linux/version.h>
+ #include <mach/nx_spi_dev.h>
+ #include "nx_spi_local.h"
+ 
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 33))
++#define memzero(s, n)     memset ((s), 0, (n))
++#endif
+ 
+ /*This enumeration is for describing the action
+ that will be taken by the work queue handler*/
+@@ -120,8 +123,13 @@
+     wait_queue_head_t waitq;
+     struct dma_chan  *dmachan_tx;
+     struct dma_chan  *dmachan_rx;
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(2, 6, 33))
+     struct dma_client client_tx;
+     struct dma_client client_rx;
++#else
++    struct nx_dmac_1902_slave* client_tx;
++    struct nx_dmac_1902_slave* client_rx;
++#endif
+ 	__u8 chantx_alloted;
+ 	__u8 chanrx_alloted;
+ #endif
+@@ -484,6 +492,7 @@
+         return DMA_SLAVE_WIDTH_32BIT;
+ }
+ 
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(2, 6, 33))
+ /* nxspi_dma_txeventcallback -  To process event callback from DMA for TX
+  * @client : pointer to dma_client
+  * @chan : pointer to dma_chan
+@@ -564,6 +573,7 @@
+     wake_up(&(nxspi->waitq));
+     return status;
+ }
++#endif
+ 
+ /* nxspi_dma_txcallback -  To process transfer callback from DMA for TX
+  * @dma_async_param : pointer to nx_spi
+@@ -575,19 +585,19 @@
+ static void nxspi_dma_txcallback(void *dma_async_param)
+ {
+     struct nx_spi *nxspi = (struct nx_spi *)dma_async_param;
+-    enum dma_status status;
+-    struct dma_device *dmadev = nxspi->dmachan_tx->device;
++    struct spi_message *msg;
+ 
+-    /* Check if any error status*/
+-    status = dma_async_is_tx_complete(nxspi->dmachan_tx, 0, 0,0);
+-    if (status == DMA_ERROR){
+-     /* go to msg done*/
+-     nxspi->action = nx_spi_msg_done;
+-     /* stop or discard RX  */
+-     dmadev->device_terminate_all(nxspi->dmachan_rx);
+-    /*schedule the work queue*/
+-    queue_work(nx_spi_wq, &nxspi->work);
++    msg = list_entry(nxspi->queue.next, struct spi_message, queue );
++
++    if (nxspi_xfer_is_last(msg, nxspi->current_transfer)) {
++        nxspi->action = nx_spi_msg_done;
++
++    } else  { 
++        nxspi->action = nx_spi_next_xfer;
++        /*schedule the work queue*/
++        queue_work(nx_spi_wq, &nxspi->work);
+     }
++    return;
+ }
+ 
+ /* nxspi_dma_txcallback -  To process transfer callback from DMA for RX
+@@ -600,24 +610,18 @@
+ static void nxspi_dma_rxcallback(void *dma_async_param)
+ {
+     struct nx_spi *nxspi = (struct nx_spi *)dma_async_param;
+-    enum dma_status status;
+     struct spi_message *msg;
+ 
+     msg = list_entry(nxspi->queue.next, struct spi_message, queue );
+-    /* Check if any error status*/
+-    status = dma_async_is_tx_complete(nxspi->dmachan_tx, 0, 0,0);
+-    if (status == DMA_ERROR){
+-        nxspi->action = nx_spi_msg_done;
+-    }
+-    else if (status == DMA_SUCCESS){
+-        if (nxspi_xfer_is_last(msg, nxspi->current_transfer))
+-        nxspi->action = nx_spi_msg_done;
+-        else
+-        nxspi->action = nx_spi_next_xfer;
+ 
+-    }
++    if (nxspi_xfer_is_last(msg, nxspi->current_transfer))
++    nxspi->action = nx_spi_msg_done;
++    else
++    nxspi->action = nx_spi_next_xfer;
++
+     /*schedule the work queue*/
+     queue_work(nx_spi_wq, &nxspi->work);
++    return;
+ }
+ 
+ 
+@@ -662,49 +666,32 @@
+     /* Interface with DMA framework to setup DMA transfer*/
+     regs = platform_get_resource ( nxspi->pdev, IORESOURCE_MEM, 0);
+ 
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(2, 6, 33))
+     nxspi->client_tx.slave->tx_reg =  (u32)(NX_SPI_FIFO_DATA_OFFSET);//FIFO_DATA offset
+     nxspi->client_rx.slave->rx_reg =  (u32)(NX_SPI_FIFO_DATA_OFFSET);//FIFO_DATA offset
++#else
++    nxspi->client_tx->tx_reg =  (u32)(NX_SPI_FIFO_DATA_OFFSET);//FIFO_DATA offset
++    nxspi->client_rx->rx_reg =  (u32)(NX_SPI_FIFO_DATA_OFFSET);//FIFO_DATA offset
++#endif
+     val = nx_spi_readl(nxspi->regs + NX_SPI_HARDWARE_INFO_OFFSET);
+ 
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(2, 6, 33))
+     nxspi->client_tx.slave->reg_width =
+             nxspi_getwidth((val & NX_SPI_TX_FIFO_WIDTH_MSK) >> NX_SPI_TX_FIFO_WIDTH_POS);
+     nxspi->client_rx.slave->reg_width =
+             nxspi_getwidth((val & NX_SPI_RX_FIFO_WIDTH_MSK) >> NX_SPI_RX_FIFO_WIDTH_POS);
++#else
++    nxspi->client_tx->reg_width =
++            nxspi_getwidth((val & NX_SPI_TX_FIFO_WIDTH_MSK) >> NX_SPI_TX_FIFO_WIDTH_POS);
++    nxspi->client_rx->reg_width =
++            nxspi_getwidth((val & NX_SPI_RX_FIFO_WIDTH_MSK) >> NX_SPI_RX_FIFO_WIDTH_POS);
++#endif
+ 
+     spin_unlock_irqrestore(&nxspi->lock, flags);
+ 
+-    if(!nxspi->chantx_alloted)
+-    {
+-        dma_async_client_chan_request(&nxspi->client_tx);
+-        /* wait with timeout of 500ms*/
+-        wait_event_timeout(nxspi->waitq,
+-            (nxspi->chantx_alloted == true),
+-            (500*HZ)/1000);
+-
+-        if ( nxspi->chantx_alloted != true ){
+-           dbg_print("SPI transfer timeout on DMA %d\n\n\n",nxspi->pdev->id);
+-        /* handle error*/
+-        return;
+-        }
+-    }
+-
+-    if(!nxspi->chanrx_alloted)
+-    {
+-        dma_async_client_chan_request(&nxspi->client_rx);
+-
+-        /* wait with timeout of 500ms*/
+-        wait_event_timeout(nxspi->waitq,
+-            (nxspi->chanrx_alloted == true),
+-            (500*HZ)/1000);
+-
+-        if ( nxspi->chantx_alloted != true ){
+-           dbg_print("SPI transfer timeout on DMA %d\n\n\n",nxspi->pdev->id);
+-            /* handle error*/
+-            return;
+-        }
+-    }
+-    
+-    /* Now prepare sg for both TX & RX*/
++    /* Now prepare sg for both TX & RX.
++        DMA channels for SPI Tx,Rx are already allocated in nx_spi_probe() function 
++    */
+     ret = nxspi_prep_sg(&sg_tx, &sg_rx,nxspi);
+     if (ret < 0 ){
+         dev_err(&nxspi->active_spidev->dev, "Mem Alloc error\n");
+@@ -725,17 +712,6 @@
+     First RX and then TX*/
+     rxdesc->tx_submit(rxdesc);
+     txdesc->tx_submit(txdesc);
+-
+-    /* Now wait for DMA transfer callback to be invoked*/
+-	do{
+-	val = dma_async_is_tx_complete(nxspi->dmachan_tx, 0, NULL, NULL);
+-	}while(val != DMA_SUCCESS );
+-	do{
+-	val = dma_async_is_tx_complete(nxspi->dmachan_rx, 0, NULL, NULL);
+-	}while(val != DMA_SUCCESS );
+-
+-	nxspi_dma_txcallback(nxspi);
+-	nxspi_dma_rxcallback(nxspi);
+ }
+ 
+ 
+@@ -976,8 +952,14 @@
+      struct spi_master *master = platform_get_drvdata(nxspi->pdev);
+      unsigned long flags;
+ 
++	if(xfer == NULL) {
++		return;
++	}
+      spin_lock_irqsave(&nxspi->lock, flags);
+      msg = list_entry(nxspi->queue.next,struct spi_message,queue);
++	if(msg == NULL) {
++		return;
++	}
+ 
+      if(xfer->delay_usecs)
+         udelay(xfer->delay_usecs);
+@@ -1231,8 +1213,11 @@
+         provided*/
+     }
+ 
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(2, 6, 33))
+     dev_dbg(&spi->dev, "new message submitted for %s\n",
+                  spi->dev.bus_id);
++#else
++#endif
+ 
+     msg->status = -EINPROGRESS;
+     msg->actual_length = 0;
+@@ -1276,6 +1261,36 @@
+     spin_unlock_irqrestore(&nxspi->lock, flags);
+ }
+ 
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 33))
++
++static bool filter(struct dma_chan *chan, void *param)
++{
++	struct nx_spi* nxspi = (struct nx_spi*)param;
++
++	if( chan->device->dev != nxspi->client_tx->dma_dev) {
++		return false;
++	}
++
++	if( chan->chan_id == nxspi->ctrldata->txchan_num) {
++		nxspi->dmachan_tx = chan;
++		chan->private =  nxspi->client_tx;
++		nxspi->chantx_alloted = 1;
++
++		return true;
++	}
++
++	if( chan->chan_id == nxspi->ctrldata->rxchan_num) {
++		nxspi->dmachan_rx = chan;
++		chan->private =  nxspi->client_rx;
++		nxspi->chanrx_alloted = 1;
++
++		return true;
++	}
++
++	else
++		return false;
++}
++#endif
+ /*---------------------------------------------------------------------*/
+ /*Platform driver interface functions*/
+ 
+@@ -1299,6 +1314,9 @@
+     struct nx_spi_platform_data *plfdata;
+ #ifdef CONFIG_SPI_NX_DMAC_1902
+     struct nx_dmac_1902_slave *slave_rx, *slave_tx;
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 33))
++    dma_cap_mask_t mask;
++#endif
+ #endif
+ 
+     /* Save the platform data pointer addresses
+@@ -1336,6 +1354,9 @@
+     master->setup = nx_spi_setup;
+     master->transfer = nx_spi_transfer;
+     master->cleanup = nx_spi_cleanup;
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 33))
++	master->mode_bits = SPI_3WIRE;
++#endif
+     platform_set_drvdata(pdev,master);
+ 
+     nxspi = spi_master_get_devdata(master);
+@@ -1356,6 +1377,7 @@
+     /* register SPI Controller driver as DMA client
+     with DMA Framework for both TX & RX lines*/
+ 
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(2, 6, 33))
+     dma_cap_set(DMA_SLAVE,nxspi->client_tx.cap_mask);
+     dma_cap_set(DMA_SLAVE,nxspi->client_rx.cap_mask);
+     nxspi->client_tx.event_callback = nxspi_dma_txeventcallback;
+@@ -1372,7 +1394,37 @@
+ 
+     /* Register for RX peripheral line of SPI to DMAC*/
+     dma_async_client_register(&nxspi->client_rx);
++#else
++       nxspi->client_tx = slave_tx;
+ 
++       nxspi->client_rx= slave_rx;
++
++	dma_cap_zero(mask);
++	dma_cap_set(DMA_SLAVE, mask);
++	
++	for (;;) {
++		// allocate dma channel for tx
++		if(nxspi->chantx_alloted == false) {
++			dma_request_channel(mask, filter, nxspi);
++			if(nxspi->dmachan_tx) {
++				nxspi->chantx_alloted = true;
++			}
++		}
++		// allocate dma channel for rx
++		if(nxspi->chanrx_alloted == false) {
++			dma_request_channel(mask, filter, nxspi);
++			if(nxspi->dmachan_rx) {
++				nxspi->chanrx_alloted = true;
++			}
++		}	
++		// dma channel for tx and rx are allocated, exit
++		if(nxspi->chantx_alloted && nxspi->chanrx_alloted)
++			break;
++	}
++	if(!(nxspi->chantx_alloted==true) || !(nxspi->chanrx_alloted==true)) {
++		goto err_free;	/* DMA tx, rx channels not allocated */
++	}
++#endif
+ #endif
+ 
+     spin_lock_init(&nxspi->lock);
+@@ -1403,9 +1455,9 @@
+     if(status < 0)
+         goto err_freeirq;
+ 
+-
+     /* before exit from function free the unwanted pointers
+     as their contents are saved with nxspi*/
++    printk("nx_spi probe is successful.\n");
+     return 0;
+ 
+ /* Error handling portion of nx_spi_probe function*/
+@@ -1417,8 +1469,10 @@
+     release_mem_region(regs->start, (regs->end - regs->start) + 1);
+ err_freedma:
+ #ifdef CONFIG_SPI_NX_DMAC_1902
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(2, 6, 33))
+     dma_async_client_unregister(&nxspi->client_tx);
+     dma_async_client_unregister(&nxspi->client_rx);
++#endif
+     dma_free_coherent(&pdev->dev,PAGE_SIZE, nxspi->buffer,
+             nxspi->dma_buffer);
+ #endif
+@@ -1460,8 +1514,10 @@
+             nxspi->dma_buffer);
+     dma_sync_wait(nxspi->dmachan_tx,0);
+     dma_sync_wait(nxspi->dmachan_rx,0);
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(2, 6, 33))
+     dma_async_client_unregister(&nxspi->client_tx);
+     dma_async_client_unregister(&nxspi->client_rx);
++#endif
+ 	nxspi->chantx_alloted = false;
+ 	nxspi->chanrx_alloted = false;
+ 
+diff -Naur linux-2.6.34/drivers/spi/spi.c linux-2.6.34_MODIFIED/drivers/spi/spi.c
+--- linux-2.6.34/drivers/spi/spi.c	2010-05-17 02:47:36.000000000 +0530
++++ linux-2.6.34_MODIFIED/drivers/spi/spi.c	2010-09-24 10:39:26.685276000 +0530
+@@ -26,6 +26,18 @@
+ #include <linux/slab.h>
+ #include <linux/mod_devicetable.h>
+ #include <linux/spi/spi.h>
++#include <mach/nx_spi_dev.h>
++/*Mapping of chip_select no to the associated spi_device object*/
++#define SPI_NUM_CHIPSELECTS  6  /*FIXME::THIS SHOULD COME FROM KERNEL CONFIG FILE*/
++typedef struct _spi_devmap
++{
++    u8 chip_select;
++    struct spi_device *spidev;
++} SPI_DEVMAP;
++
++SPI_DEVMAP gSPIDevMap[NXP_SPI_NUM_CHIPSELECTS];
++unsigned int gSpiDevMapIndex = 0;
++
+ 
+ 
+ /* SPI bustype and spi_master class are registered after board init code
+@@ -408,8 +420,15 @@
+ static void scan_boardinfo(struct spi_master *master)
+ {
+ 	struct boardinfo	*bi;
++        struct spi_device	*spidev;
++        int i = 0;
+ 
+ 	mutex_lock(&board_lock);
++        for (i=0;i<SPI_NUM_CHIPSELECTS;i++)
++        {
++            gSPIDevMap[gSpiDevMapIndex].spidev = NULL;
++        }
++
+ 	list_for_each_entry(bi, &board_list, list) {
+ 		struct spi_board_info	*chip = bi->board_info;
+ 		unsigned		n;
+@@ -420,12 +439,42 @@
+ 			/* NOTE: this relies on spi_new_device to
+ 			 * issue diagnostics when given bogus inputs
+ 			 */
+-			(void) spi_new_device(master, chip);
++			spidev = spi_new_device(master, chip);
++                        if (NULL != spidev)
++                        {
++                            if (gSpiDevMapIndex < SPI_NUM_CHIPSELECTS) 
++                            {
++                                gSPIDevMap[gSpiDevMapIndex].spidev = spidev;  
++                                gSPIDevMap[gSpiDevMapIndex].chip_select = spidev->chip_select;
++                                gSpiDevMapIndex++;
++                            }
++                            else
++                            {
++                                printk("ERROR:: No space to store the spi mapping for chip_select %d\n",spidev->chip_select);
++                            }
++                        }
+ 		}
+ 	}
+ 	mutex_unlock(&board_lock);
+ }
+ 
++struct spi_device* spi_get_device(u8 chip_select)
++{
++    struct spi_device* spidev = NULL;
++    int i = 0;
++    for (i=0;i<SPI_NUM_CHIPSELECTS;i++)
++    {
++        if (gSPIDevMap[gSpiDevMapIndex].chip_select == chip_select)
++        {
++            spidev =  (gSPIDevMap[gSpiDevMapIndex].spidev);
++            break;
++        }
++    }
++
++    return spidev; 
++}
++EXPORT_SYMBOL_GPL(spi_get_device);
++
+ /*-------------------------------------------------------------------------*/
+ 
+ static void spi_master_release(struct device *dev)
+@@ -710,8 +759,14 @@
+ 		unsigned flags = master->flags;
+ 
+ 		list_for_each_entry(xfer, &message->transfers, transfer_list) {
+-			if (xfer->rx_buf && xfer->tx_buf)
++			/* the below check is part of kernel code, to not allow Tx and Rx 
++                           as part of same transfer. But, in our design, the SPI devices 
++                           perform Tx,Rx as part of same transfer. Hence this condition removed. */
++
++			/*if (xfer->rx_buf && xfer->tx_buf) {
+ 				return -EINVAL;
++			}
++			*/
+ 			if ((flags & SPI_MASTER_NO_TX) && xfer->tx_buf)
+ 				return -EINVAL;
+ 			if ((flags & SPI_MASTER_NO_RX) && xfer->rx_buf)

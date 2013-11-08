@@ -1,0 +1,101 @@
+diff -Naurp linux-2.6.34_org/arch/arm/mach-kronos/sfc.c linux-2.6.34/arch/arm/mach-kronos/sfc.c
+--- linux-2.6.34_org/arch/arm/mach-kronos/sfc.c	2011-08-09 21:20:41.000000000 +0800
++++ linux-2.6.34/arch/arm/mach-kronos/sfc.c	2011-08-10 13:42:38.000000000 +0800
+@@ -9,14 +9,20 @@
+ #include <linux/mtd/physmap.h>
+ #include <mach/sfc.h>
+ #include <linux/io.h>
++#include <mach/gcs_dmac.h>
+ 
+ static struct resource apollo_sfc_resources[] = {
+ 
+    {
+-		.start		= APOLLO_SFC_CFG_BASE,
+-		.end		= (APOLLO_SFC_CFG_BASE + APOLLO_SFC_CFG_LEN - 1),
+-		.flags		= IORESOURCE_MEM,
+-	},
++      .start   = APOLLO_SFC_CFG_BASE,
++      .end     = (APOLLO_SFC_CFG_BASE + APOLLO_SFC_CFG_LEN - 1),
++      .flags   = IORESOURCE_MEM,
++   },
++   {
++      .start   = APOLLO_GCS_DMAC_BASE,
++      .end     = (APOLLO_GCS_DMAC_BASE + APOLLO_GCS_DMAC_LEN - 1),
++      .flags   = IORESOURCE_MEM,
++   },
+ };
+ 
+ static uint64_t apollo_sfc_dma_mask = ~(uint32_t)0;
+diff -Naurp linux-2.6.34_org/drivers/mtd/sfc/nx_sfc.c linux-2.6.34/drivers/mtd/sfc/nx_sfc.c
+--- linux-2.6.34_org/drivers/mtd/sfc/nx_sfc.c	2011-08-09 21:20:51.000000000 +0800
++++ linux-2.6.34/drivers/mtd/sfc/nx_sfc.c	2011-08-10 14:52:39.000000000 +0800
+@@ -440,16 +440,15 @@ void nx_sfc_write_en(void __iomem  * sfc
+    nx_sfc_wait(sfc_regs);
+ }
+ 
+-u32 nx_sfc_read_id(void __iomem * sfc_regs)
++void  nx_sfc_read_id(void __iomem * sfc_regs, u32 *id )
+ {
+-   u32 id;
+    writel(SFC_CSR_READ_ID, sfc_regs + IPBGCSFLSHNTWK_SFC_SFC_CSR_REG); 
+-   writel(0x4, sfc_regs + IPBGCSFLSHNTWK_SFC_SFC_TX_RX_DATA_CNT_REG);
++   writel(0x8, sfc_regs + IPBGCSFLSHNTWK_SFC_SFC_TX_RX_DATA_CNT_REG);
+    writel(SFC_DEV_CMD_ID, sfc_regs + IPBGCSFLSHNTWK_SFC_SFC_DEVICE_CMD_REG);
+    nx_sfc_wait(sfc_regs);
+-   id = readl(sfc_regs + IPBGCSFLSHNTWK_SFC_SFC_SP_CMD_RD_WR0_DATA_REG);
++   *id = readl(sfc_regs + IPBGCSFLSHNTWK_SFC_SFC_SP_CMD_RD_WR0_DATA_REG);
++   *(id+1) = readl(sfc_regs + IPBGCSFLSHNTWK_SFC_SFC_SP_CMD_RD_WR1_DATA_REG);
+ 
+-   return id;
+ }
+ 
+ u32 nx_sfc_read_sr(void __iomem * sfc_regs)
+@@ -1090,7 +1089,8 @@ static struct flash_info __devinitdata s
+ 
+ static struct flash_info *__devinit jedec_probe(struct platform_device *spi)
+ {
+-   int               tmp;
++    int         cnt;
++    u32         tmp[2];
+    u8                *id;
+    u32               jedec;
+    u16               ext_jedec;
+@@ -1101,26 +1101,28 @@ static struct flash_info *__devinit jede
+    * we use here.  Supporting some chips might require using it.
+    */
+    struct nx_sfc_mtd *flash = dev_get_drvdata(&spi->dev);
+-   tmp = nx_sfc_read_id(flash->mmio_base);
++   nx_sfc_read_id(flash->mmio_base, tmp);
+ 
+-   if (tmp ==0xFFFFFFFF) {
++   if (tmp[0] == 0xFFFFFFFF) {
+       MTDDEBUG(MTD_DEBUG_LEVEL0, "error %d reading JEDEC ID\n",
+-         tmp);
++                tmp[0]);
+       return NULL;
+    }
+-      id = (u8 *) &tmp;
++   id = (u8 *) &tmp;
+    jedec = id[0];
+    jedec = jedec << 8;
+    jedec |= id[1];
+    jedec = jedec << 8;
+    jedec |= id[2];
+ 
+-   ext_jedec = 0;
+-   printk(KERN_ERR "JEDEC ID = 0x%x \n", jedec);
+-
+-   for (tmp = 0, info = serial_flash_data;
+-         tmp < ARRAY_SIZE(serial_flash_data);
+-         tmp++, info++) {
++   ext_jedec = id[3];
++   ext_jedec = ext_jedec << 8;
++   ext_jedec |= id[4];
++   printk(KERN_ERR "JEDEC ID = 0x%x , Extended Device ID = 0x%x \n", jedec, ext_jedec);
++
++   for (cnt = 0, info = serial_flash_data; 
++            cnt < ARRAY_SIZE(serial_flash_data);
++            cnt++, info++) {
+       if (info->jedec_id == jedec) {
+          if (info->ext_id != 0 && info->ext_id != ext_jedec)
+             continue;

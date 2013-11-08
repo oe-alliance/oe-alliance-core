@@ -1,0 +1,327 @@
+diff -Naurp linux-2.6.34_orig/arch/arm/kernel/head.S linux-2.6.34/arch/arm/kernel/head.S
+--- linux-2.6.34_orig/arch/arm/kernel/head.S	2012-12-12 19:11:40.241104000 +0530
++++ linux-2.6.34/arch/arm/kernel/head.S	2012-12-12 19:05:41.631414000 +0530
+@@ -22,6 +22,8 @@
+ #include <asm/thread_info.h>
+ #include <asm/system.h>
+ 
++#include <mach/pnx8492.h>
++
+ #if (PHYS_OFFSET & 0x001fffff)
+ #error "PHYS_OFFSET must be at an even 2MiB boundary!"
+ #endif
+@@ -81,63 +83,127 @@
+ ENTRY(stext)
+ #if defined(CONFIG_ARCH_KRONOS) && defined(CONFIG_EXECUTE_WITHOUT_UBOOT)
+ 	nop						@ HACK IFO KRONOS EMU
+-	mov	r1, #0xFA			@ MACH_TYPE_KRONOS = 3066(10)
+-	add	r1, #0xB00			@		   		   = 0xBFA(16)
+-	mov	r2, #0x00			@ ATAG LIST SETUP  = 0x2000
+-	add	r2, #0x2000			@                  = 0x2000
++	mov	r1, #0xFA			@ MACH_TYPE_KRONOS 	= 3066(10)
++	add	r1, #0xB00			@					= 0xBFA(16)
++	mov	r2, #0x00			@ ATAG LIST SETUP  	= 0x2000
++	add	r2, #0x2000			@                  	= 0x2000
+ 	nop						@ END OF HACK, NORMALY DONE IN UBOOT
+ #elif defined(CONFIG_ARCH_KROME) && defined(CONFIG_EXECUTE_WITHOUT_UBOOT) 
+-	nop             		@ HACK IFO KROME EMU
+-   	mov r1, #0xD5         	@ MACH_TYPE_KROME = 3797(10)
+-   	add r1, #0xE00        	@        		  = 0xED5(16)
+-  	mov r2, #0x00         	@ ATAG LIST SETUP = 0x2000
+-   	add r2, #0x2000       	@                 = 0x2000
+-   	nop               		@ END OF HACK, NORMALY DONE IN UBOOT
++	nop						@ HACK IFO KROME EMU
++	mov r1, #0xD5			@ MACH_TYPE_KROME 	= 3797(10)
++	add r1, #0xE00			@					= 0xED5(16)
++	mov r2, #0x00			@ ATAG LIST SETUP 	= 0x2000
++	add r2, #0x2000			@					= 0x2000
++	nop						@ END OF HACK, NORMALY DONE IN UBOOT
+ #elif defined(CONFIG_ARCH_KORE3) && defined(CONFIG_EXECUTE_WITHOUT_UBOOT)
+-    nop                     @ HACK IFO KORE3 EMU
+-    mov r1, #0x16           @ MACH_TYPE_KORE3 = 4374(10)
+-    add r1, #0x1100         @                 = 0x1116(16)
+-    mov r2, #0x00           @ ATAG LIST SETUP = 0x2000
+-    add r2, #0x2000         @                 = 0x2000
+-    nop                     @ END OF HACK, NORMALY DONE IN UBOOT
+-#endif
+-
+-#ifdef CONFIG_KROME_MC_EN
+-	LDR 	r4, =0xE068C04C
+-	LDR    	r5, =0xDECADEAD
+-	STR    	r5, [r4]
+-#endif
+-
+-	setmode	PSR_F_BIT | PSR_I_BIT | SVC_MODE, r9 @ ensure svc mode
+-						@ and irqs disabled
+-	mrc	p15, 0, r9, c0, c0		@ get processor id
+-	bl	__lookup_processor_type		@ r5=procinfo r9=cpuid
+-	movs	r10, r5				@ invalid processor (r5=0)?
+-	beq	__error_p			@ yes, error 'p'
+-	bl	__lookup_machine_type		@ r5=machinfo
+-	movs	r8, r5				@ invalid machine (r5=0)?
+-	beq	__error_a			@ yes, error 'a'
+-	
+-#if defined(CONFIG_ARCH_KROME) && defined(CONFIG_SMP)
+-	mrc  p15, 0, r6, c0, c0, 5 		@ read cpuid
+-	and  r6, r6, #0x3				@ mask cpuid[1:0]
+-	cmp  r6, #0x0
+-	beq  mp_primary
++	nop 					@ HACK IFO KORE3 EMU
++	mov r1, #0x16			@ MACH_TYPE_KORE3	= 4374(10)
++	add r1, #0x1100 		@					= 0x1116(16)
++	mov r2, #0x00			@ ATAG LIST SETUP	= 0x2000
++	add r2, #0x2000 		@					= 0x2000
++	nop 					@ END OF HACK, NORMALY DONE IN UBOOT
++#endif
++
++	setmode	PSR_F_BIT | PSR_I_BIT | SVC_MODE, r9	@ ensure svc mode
++													@ and irqs disabled
++	mrc		p15, 0, r9, c0, c0						@ get processor id
++	bl		__lookup_processor_type					@ r5=procinfo r9=cpuid
++	movs	r10, r5									@ invalid processor (r5=0)?
++	beq		__error_p								@ yes, error 'p'
++	bl		__lookup_machine_type					@ r5=machinfo
++	movs	r8, r5									@ invalid machine (r5=0)?
++	beq		__error_a								@ yes, error 'a'
++
++#if defined(CONFIG_SMP) && defined(CONFIG_KROME_MC_EN)
++	mrc	p15, 0, r6, c0, c0, 5 	@ read cpuid
++	and	r6, r6, #0x3			@ mask cpuid[1:0]
++	cmp	r6, #0x0
++	beq	mp_primary
++
++	/* 
++	 * Synchronize booting of primary and secondary cpu's 
++	 * through scratch pad reg 20
++	 */
+ 
+ 	/*
+-	 * For secondary Cpu's wait until the pen is released 
+-	 * Write 0 to scratch pad reg20
+-	 */
+-	ldr r6, =0xE068C050		@ scratch pad reg20
+-	mov r7, #0x0
+-	str r7, [r6]
++	 * write 0 to scratch pad reg20 and
++	 * spin secondary cpu's here until the pen is released 
++	 */
++	ldr	r6, =(SCRATCH_REG_CPU_PEN)
++	mov	r7, #0x0
++	str	r7, [r6]
+ mp_sec_holding_pen:
+-	ldr r7, [r6]
+-	ldr r5, =0xDECADEAF
+-	cmp r7, r5
+-	bne mp_sec_holding_pen
+-	b krome_secondary_startup
++	ldr	r6, =(SCRATCH_REG_CPU_PEN)
++	ldr	r7, [r6]
++	ldr	r5, =SECONDARY_CPU_HOLDING_PEN
++	cmp	r7, r5
++	bne	mp_sec_holding_pen
++	b	krome_secondary_startup		@ unconditional jump
++
++	/* IMPORTANT!!! THIS CODE BLOCK MUST REMAIN UNREACHABLE */
++
++	/* This is a reset vector for booting secondary cpu's
++	 * from kernel start on reset */
++#define __RESET_HANDLER_OFFSET	0x200
++#define __RESET_HANDLER_SIZE	0x20 /* Fixed at 8*4=32 bytes */
++__reset_vector:
++	ldr pc, =__RESET_HANDLER_OFFSET
+ 
++	/* IMPORTANT!!! THIS CODE BLOCK MUST REMAIN UNREACHABLE */
++
++mp_primary:
++
++	/* copy reset handler at __RESET_HANDLER_OFFSET */
++	adr		r3, __reset_handler				@ r3 <- current position of code
++	mov		r5, #__RESET_HANDLER_SIZE 		@ r5 <- size to copy
++	add		r5, r3, r5						@ r5 <- source end address
++	mov		r4, #__RESET_HANDLER_OFFSET		@ reset handler addr
++next:
++	ldmia	r3!, {r6 - r9} 					@ copy from source address [r3]
++	stmia	r4!, {r6 - r9} 					@ copy to target address [r4]
++	cmp		r3, r5							@ until source end address [r5]
++	bne		next							@ loop until equal */
++
++	/* load reset vector at address 0x00 */
++	mov	r6, #0x00
++	adr	r7, __reset_vector
++	ldr	r7, [r7]
++	str	r7, [r6]
++
++	/* clear host_vinithi[1] */
++	ldr r3, =HOST_CTL_REG
++	ldr r4, [r3]
++	ldr r5, =HOST_VINITHI_CPU1
++	bic r4, r4, r5
++	str r4, [r3]
++
++	/* take secondary cpu's out of reset*/
++	ldr	r3, =RST_LOCKCMD_REG
++	ldr	r4, =0xf8
++	str	r4, [r3]
++	ldr	r4, =0x2b
++	str	r4, [r3]
++	ldr	r3, =RST_LOCKSTAT_REG
++	mov	r4, #1
++	str	r4, [r3]
++	ldr	r3, =RST_GRESET1_REG
++	ldr	r4, [r3]
++	ldr	r5, =RST_GRESET1_A9_CORE1
++	bic	r4, r4, r5
++	str	 r4, [r3]
++
++	/* 
++	 * spin primary cpu here until secondary cpu's are out of reset
++	 */
++	ldr	r6, =(SCRATCH_REG_CPU_PEN)
++	ldr	r7, =PRIMARY_CPU_HOLDING_PEN
++	str	r7, [r6]
++mp_primary_holding_pen:
++	ldr	r7, [r6]
++	ldr	r5, =0x0
++	cmp	r7, r5
++	bne	mp_primary_holding_pen
++#else
+ mp_primary:
+ #endif
+ 	bl	__vet_atags
+@@ -158,6 +224,19 @@ mp_primary:
+  THUMB(	mov	pc, r12				)
+ ENDPROC(stext)
+ 
++#if defined(CONFIG_SMP) && defined(CONFIG_KROME_MC_EN)
++ENTRY(__reset_handler)
++	nop
++	mov	r0, #0
++	mov r1, #0xD5			@ MACH_TYPE_KROME 	= 3797(10)
++	add r1, #0xE00			@					= 0xED5(16)
++	mov r2, #0x2000			@ ATAG LIST SETUP 	= 0x2000
++	ldr pc, =TEXT_OFFSET
++	nop
++	nop
++ENDPROC(__reset_handler)
++#endif
++
+ #if defined(CONFIG_SMP)
+ ENTRY(secondary_startup)
+ 	/*
+@@ -257,7 +336,6 @@ __turn_mmu_on:
+ 	mov	pc, r3
+ ENDPROC(__turn_mmu_on)
+ 
+-
+ /*
+  * Setup the initial page tables.  We only setup the barest
+  * amount which are required to get the kernel running, which
+diff -Naurp linux-2.6.34_orig/arch/arm/mach-krome/headsmp.S linux-2.6.34/arch/arm/mach-krome/headsmp.S
+--- linux-2.6.34_orig/arch/arm/mach-krome/headsmp.S	2012-12-12 19:11:39.050207000 +0530
++++ linux-2.6.34/arch/arm/mach-krome/headsmp.S	2012-12-12 19:07:57.262586000 +0530
+@@ -19,6 +19,8 @@
+ #include <linux/linkage.h>
+ #include <linux/init.h>
+ 
++#include <mach/pnx8492.h>
++
+ 	__INIT
+ 
+ /*
+@@ -27,8 +29,8 @@
+  * ready for them to initialise.
+  */
+ ENTRY(krome_secondary_startup)
+-	ldr   r0, =0xE068C050
+-	mov   r6, #2
++	ldr	r0, =(SCRATCH_REG_CPU_PEN)
++	mov	r6, #2
+ 	str	r6, [r0]
+ 	dmb
+ 	mov   r6, #4	@ Primary core keeps waiting till 
+@@ -53,3 +55,4 @@ pen:	ldr	r7, [r6]
+ 
+ 1:	.long	.
+ 	.long	pen_release
++
+diff -Naurp linux-2.6.34_orig/arch/arm/mach-krome/include/mach/pnx8492.h linux-2.6.34/arch/arm/mach-krome/include/mach/pnx8492.h
+--- linux-2.6.34_orig/arch/arm/mach-krome/include/mach/pnx8492.h	2012-12-12 19:11:39.593161000 +0530
++++ linux-2.6.34/arch/arm/mach-krome/include/mach/pnx8492.h	2012-12-12 19:07:27.887522000 +0530
+@@ -82,6 +82,7 @@
+ #define   RST_GRESET0_IIC2       (1<<15)
+ #define   RST_GRESET0_IIC3       (1<<16)
+ #define  RST_GRESET1_REG         (MMIO_RGU_BASE + 0x10)
++#define   RST_GRESET1_A9_CORE1   (1<<22)
+ #define   RST_GRESET1_IIC0       (1<<14)
+ #define  RST_GRESET2_REG         (MMIO_RGU_BASE + 0x14)
+ #define   RST_GRESET2_IIC4       (1<<20)
+@@ -117,12 +118,22 @@
+ #define  ALT_PIN_MUX_REG_1       (MMIO_GLB_BASE + 0x144)
+ #define  ALT_PIN_MUX_REG_2       (MMIO_GLB_BASE + 0x148)
+ #define  ALT_PIN_MUX_REG_2       (MMIO_GLB_BASE + 0x148)
++#define  HOST_CTL_REG            (MMIO_GLB_BASE + 0x308)
++#define   HOST_VINITHI_CPU1      (1<<9)
+ #define  PAD_CONFIGURATION_0_REG (MMIO_GLB_BASE + 0x430)
+ #define  PAD_CONFIGURATION_5_REG (MMIO_GLB_BASE + 0x44C)
+-
+ #define  GLBREG_MISC1            (MMIO_GLB_BASE + 0x500)
+ #define  GLOBALREG_MODULE_ID_REG (MMIO_GLB_BASE + 0xffc)
+ 
++#define SCRATCH_REG_OFFSET       (0x8C000)
++#define SCRATCH_REG_BASE         (ARM_A9_HOST_MMIO_BASE + SCRATCH_REG_OFFSET)
++/* 32bit writable and readable register. They are not 
++ * supposed to be reset, so that their values survive 
++ * a reset and allow passing of info through a reset.*/
++#define SCRATCH_REG(n)           (SCRATCH_REG_BASE + ((n)*4))
++#define  SCRATCH_REG_CPU_PEN           (SCRATCH_REG(20))
++#define   PRIMARY_CPU_HOLDING_PEN      (0xCAFEBABE)
++#define   SECONDARY_CPU_HOLDING_PEN    (0xCAFED00D)
+ 
+ #ifdef CONFIG_EXECUTE_ON_SIMULATOR
+ #define UART1_PORT0_OFFSET			0xE0000	/* Uart 1 -> Console */
+diff -Naurp linux-2.6.34_orig/arch/arm/mach-krome/platsmp.c linux-2.6.34/arch/arm/mach-krome/platsmp.c
+--- linux-2.6.34_orig/arch/arm/mach-krome/platsmp.c	2012-12-12 19:11:39.162211000 +0530
++++ linux-2.6.34/arch/arm/mach-krome/platsmp.c	2012-12-12 19:08:20.288080000 +0530
+@@ -142,21 +142,22 @@ int __cpuinit boot_secondary(unsigned in
+ 
+ static void __init wakeup_secondary(void)
+ {
+-    unsigned long val = 0;
++	 unsigned long val = 0;
+ 
+ 	/* nobody is to be released from the pen yet */
+ 	pen_release = -1;
+ 
+-    /*
++	/*
+ 	 * Secondary cores will be waiting on the scratch pad reg20
+-	 * value to be 0xDECADEAF 
++	 * value to be SECONDARY_CPU_HOLDING_PEN 
+ 	 */
+-    val = readl((unsigned long *)(0xE068C050));
+-    writel(0xDECADEAF, (unsigned long *)(0xE068C050));
++	val = readl(SCRATCH_REG_CPU_PEN);
++	writel(SECONDARY_CPU_HOLDING_PEN, (SCRATCH_REG_CPU_PEN));
+ 
+ 	mb();
+ 	while(val<=2)
+-    	val = readl((unsigned long *)(0xE068C050));
++		val = readl(SCRATCH_REG_CPU_PEN);
++
+ 	printk("woken up secondary core \n");
+ }
+ 
+diff -Naurp linux-2.6.34_orig/arch/arm/mm/mmu.c linux-2.6.34/arch/arm/mm/mmu.c
+--- linux-2.6.34_orig/arch/arm/mm/mmu.c	2012-12-12 19:11:40.424093000 +0530
++++ linux-2.6.34/arch/arm/mm/mmu.c	2012-12-12 19:09:11.115772000 +0530
+@@ -898,8 +898,8 @@ void __init reserve_node_zero(pg_data_t 
+ 	{
+ 		/* Reserving the 0th 4k page as per Cortex-A9 Errata */
+ 		ret = reserve_bootmem_node(pgdat, 0, 0x1000, BOOTMEM_DEFAULT);
+-                        if(ret)
+-                                printk("Reserving the oth 4k page failed = %d\n", ret);
++		if(ret)
++			printk("Reserving the 0th 4k page failed = %d\n", ret);
+ 
+ 		if((uARM926_start >= 0) && (uARM926_size > 0))
+ 		{

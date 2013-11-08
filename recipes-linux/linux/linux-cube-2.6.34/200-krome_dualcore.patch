@@ -1,0 +1,61 @@
+diff -Naurp linux-2.6.34_org/arch/arm/kernel/head.S linux-2.6.34/arch/arm/kernel/head.S
+--- linux-2.6.34_org/arch/arm/kernel/head.S	2012-02-09 17:24:52.497097000 +0530
++++ linux-2.6.34/arch/arm/kernel/head.S	2012-02-10 11:27:19.730495000 +0530
+@@ -88,13 +88,19 @@ ENTRY(stext)
+ 	nop						@ END OF HACK, NORMALY DONE IN UBOOT
+ #elif defined(CONFIG_ARCH_KROME) && defined(CONFIG_EXECUTE_WITHOUT_UBOOT) 
+ 	nop             		@ HACK IFO KROME EMU
+-   	mov r1, #0xAC         	@ MACH_TYPE_KROME = 3500(10)
+-   	add r1, #0xD00        	@        		  = 0xDAC(16)
++   	mov r1, #0xD5         	@ MACH_TYPE_KROME = 3797(10)
++   	add r1, #0xE00        	@        		  = 0xED5(16)
+   	mov r2, #0x00         	@ ATAG LIST SETUP = 0x2000
+    	add r2, #0x2000       	@                 = 0x2000
+    	nop               		@ END OF HACK, NORMALY DONE IN UBOOT
+ #endif
+ 
++#ifdef CONFIG_KROME_MC_EN
++	LDR 	r4, =0xE068C04C
++	LDR    	r5, =0xDECADEAD
++	STR    	r5, [r4]
++#endif
++
+ 	setmode	PSR_F_BIT | PSR_I_BIT | SVC_MODE, r9 @ ensure svc mode
+ 						@ and irqs disabled
+ 	mrc	p15, 0, r9, c0, c0		@ get processor id
+diff -Naurp linux-2.6.34_org/arch/arm/mach-krome/Kconfig linux-2.6.34/arch/arm/mach-krome/Kconfig
+--- linux-2.6.34_org/arch/arm/mach-krome/Kconfig	2012-02-09 17:24:59.894521000 +0530
++++ linux-2.6.34/arch/arm/mach-krome/Kconfig	2012-02-09 17:40:24.940602000 +0530
+@@ -57,6 +57,10 @@ config KROME_SPLASH
+      help
+         Enable the boot splash screen.
+ 
++config KROME_MC_EN
++	bool "Krome Multicore Enable"
++	help
++		Select this option for multicore configuration.
+ endmenu
+ 
+ 
+diff -Naurp linux-2.6.34_org/arch/arm/mach-krome/platsmp.c linux-2.6.34/arch/arm/mach-krome/platsmp.c
+--- linux-2.6.34_org/arch/arm/mach-krome/platsmp.c	2012-02-09 17:24:59.913518000 +0530
++++ linux-2.6.34/arch/arm/mach-krome/platsmp.c	2012-02-09 17:40:24.942595000 +0530
+@@ -59,7 +59,7 @@ static void __iomem *scu_base_addr(void)
+ static inline unsigned int get_core_count(void)
+ {
+ 
+-#if 0  //TODO::Enable this for dual core
++#ifdef CONFIG_KROME_MC_EN
+ 	void __iomem *scu_base = scu_base_addr();
+ 	if (scu_base)
+ 		return scu_get_core_count(scu_base);
+diff -Naurp linux-2.6.34_org/arch/arm/tools/mach-types linux-2.6.34/arch/arm/tools/mach-types
+--- linux-2.6.34_org/arch/arm/tools/mach-types	2012-02-09 17:24:59.512518000 +0530
++++ linux-2.6.34/arch/arm/tools/mach-types	2012-02-10 11:25:45.715115000 +0530
+@@ -3051,5 +3051,5 @@ rdstor			MACH_RDSTOR		RDSTOR			3063
+ usdloader		MACH_USDLOADER		USDLOADER		3064
+ tsoploader		MACH_TSOPLOADER		TSOPLOADER		3065
+ kronos			MACH_KRONOS		KRONOS			3066
+-krome				MACH_KROME		KROME				3500
++krome			MACH_KROME		KROME			3797
+ # TODO: Change the KROME MACH ID accordingly after request

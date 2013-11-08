@@ -1,0 +1,203 @@
+diff -Naurp linux-2.6.34/arch/arm/kernel/smp_twd.c linux-2.6.34.new/arch/arm/kernel/smp_twd.c
+--- linux-2.6.34/arch/arm/kernel/smp_twd.c	2010-05-16 16:17:36.000000000 -0500
++++ linux-2.6.34.new/arch/arm/kernel/smp_twd.c	2010-11-08 15:32:56.000000000 -0600
+@@ -81,8 +81,11 @@ int twd_timer_ack(void)
+ 
+ static void __cpuinit twd_calibrate_rate(void)
+ {
+-	unsigned long load, count;
++	unsigned long load;
+ 	u64 waitjiffies;
++#ifndef CONFIG_EXECUTE_ON_EMULATOR
++	unsigned long count;
++#endif
+ 
+ 	/*
+ 	 * If this is the first time round, we need to work out how fast
+@@ -94,16 +97,20 @@ static void __cpuinit twd_calibrate_rate
+ 		/* Wait for a tick to start */
+ 		waitjiffies = get_jiffies_64() + 1;
+ 
++#ifdef CONFIG_EXECUTE_ON_EMULATOR
++		/* Assume Clk rate of 250MHz */
++		twd_timer_rate = 2500000 * HZ;
++#else
+ 		while (get_jiffies_64() < waitjiffies)
+ 			udelay(10);
+ 
+ 		/* OK, now the tick has started, let's get the timer going */
+ 		waitjiffies += 5;
+ 
+-				 /* enable, no interrupt or reload */
++		/* enable, no interrupt or reload */
+ 		__raw_writel(0x1, twd_base + TWD_TIMER_CONTROL);
+ 
+-				 /* maximum value */
++		/* maximum value */
+ 		__raw_writel(0xFFFFFFFFU, twd_base + TWD_TIMER_COUNTER);
+ 
+ 		while (get_jiffies_64() < waitjiffies)
+@@ -112,7 +119,7 @@ static void __cpuinit twd_calibrate_rate
+ 		count = __raw_readl(twd_base + TWD_TIMER_COUNTER);
+ 
+ 		twd_timer_rate = (0xFFFFFFFFU - count) * (HZ / 5);
+-
++#endif
+ 		printk("%lu.%02luMHz.\n", twd_timer_rate / 1000000,
+ 			(twd_timer_rate / 100000) % 100);
+ 	}
+diff -Naurp linux-2.6.34/arch/arm/mach-kronos/include/mach/pnx8492.h linux-2.6.34.new/arch/arm/mach-kronos/include/mach/pnx8492.h
+--- linux-2.6.34/arch/arm/mach-kronos/include/mach/pnx8492.h	2010-11-19 16:50:14.000000000 -0600
++++ linux-2.6.34.new/arch/arm/mach-kronos/include/mach/pnx8492.h	2010-11-18 09:25:12.000000000 -0600
+@@ -39,7 +39,8 @@
+ 
+ #ifdef CONFIG_EXECUTE_ON_EMULATOR
+ //#define UART_CLOCK_RATE		(73000/4)
+-#define UART_CLOCK_RATE		(50000000)
++#define UART_CLOCK_RATE		(46293)  //740700/16
++//#define UART_CLOCK_RATE		(33600)
+ #else
+ #define UART_CLOCK_RATE		(50000000)
+ #endif
+@@ -71,18 +72,18 @@
+ /*
+  * Device port addresses
+  */
+-#define MMIO_GCS_BASE            (ARM_A9_HOST_MMIO_BASE + 0x36000)
++#define MMIO_GCS_BASE            (ARM_A9_HOST_MMIO_BASE + 0x30000)
+ #define MMIO_SATA_BASE           (ARM_A9_HOST_MMIO_BASE + 0x38000)
+ 
+-#define MMIO_RGU_BASE            (ARM_A9_HOST_MMIO_BASE + 0xE6000)
++#define MMIO_RGU_BASE            (ARM_A9_HOST_MMIO_BASE + 0xaf000)
+ #define  RST_CONFIG_REG          (MMIO_RGU_BASE + 0x30)
+ #define   PCI_HOST_MODE_ENABLED  (((readl(RST_CONFIG_REG)&(1<<23)) &&   \
+                                    !(readl(RST_CONFIG_REG)&(1<<16)))?   \
+                                   true:false)
+ 
+-#define MMIO_CLOCK_BASE          (ARM_A9_HOST_MMIO_BASE + 0xE7000)
++#define MMIO_CLOCK_BASE          (ARM_A9_HOST_MMIO_BASE + 0x6a000)
+ 
+-#define MMIO_GLB_BASE            (ARM_A9_HOST_MMIO_BASE + 0xEA000)
++#define MMIO_GLB_BASE            (ARM_A9_HOST_MMIO_BASE + 0xbb000)
+ #define  ALT_PIN_MUX_REG_0       (MMIO_GLB_BASE + 0x140)
+ #define  GLBREG_MISC1            (MMIO_GLB_BASE + 0x500)
+ 
+@@ -93,10 +94,10 @@
+ #define UART3_PORT0_OFFSET			0xE2000	/* Uart 3 -> Console */
+ #define UART4_PORT0_OFFSET			0xE3000	/* Uart 4 -> Console */
+ #else
+-#define UART1_PORT0_OFFSET			0xE1000
+-#define UART2_PORT0_OFFSET			0xE2000
+-#define UART3_PORT0_OFFSET			0xE3000
+-#define UART4_PORT0_OFFSET			0xE4000
++#define UART1_PORT0_OFFSET			0xb2000
++#define UART2_PORT0_OFFSET			0xb2000
++#define UART3_PORT0_OFFSET			0xb3000
++#define UART4_PORT0_OFFSET			0xb4000
+ #endif
+ 
+ #define USB_PORT0_OFFSET			0x6C000
+@@ -175,7 +176,7 @@
+  */
+ 
+ #define APOLLO_SYS_BASE				(0x80000000) /* This is wrong as we do not know what sys-base expects */
+-#define APOLLO_RESET_BASE			(ARM_A9_HOST_MMIO_BASE + 0xE6000)
++#define APOLLO_RESET_BASE			(ARM_A9_HOST_MMIO_BASE + 0xaf000)
+ #define APOLLO_RESET_LOCKCMD_OFFSET		0x28
+ #define APOLLO_RESET_LOCKSTAT_OFFSET		0x2c
+ #define APOLLO_RESET_SOFTRESET_OFFSET		0x08
+@@ -185,7 +186,7 @@
+ #define APOLLO_RESET_SOFTRESET			(APOLLO_RESET_BASE + APOLLO_RESET_SOFTRESET_OFFSET)
+ 
+ /* RTC */
+-#define APOLLO_RTC_BASE				(ARM_A9_HOST_MMIO_BASE + 0xbc000)
++#define APOLLO_RTC_BASE				(ARM_A9_HOST_MMIO_BASE + 0x8b000)
+ 
+ /*
+  * Tile-specific addresses
+diff -Naurp linux-2.6.34/drivers/serial/ip3106.c linux-2.6.34.new/drivers/serial/ip3106.c
+--- linux-2.6.34/drivers/serial/ip3106.c	2010-11-19 16:50:17.000000000 -0600
++++ linux-2.6.34.new/drivers/serial/ip3106.c	2010-11-17 11:22:55.000000000 -0600
+@@ -52,7 +52,7 @@
+ #define UART_PORT_SIZE		(4096)
+ 
+ #ifdef CONFIG_EXECUTE_ON_EMULATOR
+-#define BASE_BAUD		(115200)
++#define BASE_BAUD		(9600)
+ #else
+ #define BASE_BAUD		(115200)
+ #endif
+@@ -829,16 +829,21 @@ static int ip3106_startup(struct uart_po
+ 	 * after setting the Baud Rate, RESET the DLAB Bit again to Zero.
+ 	 */
+ 	divisor = ((port->uartclk) + (8 * baud)) / (baud * 16);
+-    if (divisor == 0)
+-    {
+-        /* The baud rate is higher than the UART clock using
+-         * the divider latch.  Setup the over-sampling register.
+-         */
+-        divisor = 1;
+-        osr = (((port->uartclk / baud) - 1) << 4);
+-        osr |= (((port->uartclk % baud) / (baud / 8)) << 1);
+-        UART_SET_OSR(port, osr);
+-    }
++        if (divisor == 0)
++        {
++            /* The baud rate is higher than the UART clock using
++            * the divider latch.  Setup the over-sampling register.
++            */
++            divisor = 1;
++        }
++
++	if(divisor <= 1)
++	{
++           osr = (((port->uartclk / baud) - 1) << 4);
++           osr |= (((port->uartclk % baud) / (baud / 8)) << 1);
++           UART_SET_OSR(port, osr);
++        }
++
+ 	dll = (__u8) divisor;
+ 	dlm = (__u8) (divisor >> 8);
+ 	UART_SET_DLL(port, dll);
+@@ -938,16 +943,20 @@ static void ip3106_set_termios(struct ua
+ 	/* Ask the core to calculate the divisor for us. */
+ 	baud = uart_get_baud_rate(port, termios, old, 0, port->uartclk);
+ 	quot = uart_get_divisor(port, baud);
+-    if (quot == 0)
+-    {
+-        /* The baud rate is set faster than the UART clock using
+-         * the divider latch.  Setup the over-sampling register.
+-         */
+-        quot = 1;
+-        osr = (((port->uartclk / baud) - 1) << 4);
+-        osr |= (((port->uartclk % baud) / (baud / 8)) << 1);
++        if (quot == 0)
++        {
++            /* The baud rate is set faster than the UART clock using
++             * the divider latch.  Setup the over-sampling register.
++             */
++            quot = 1;
++        }
++
++        if (quot <= 1)
++        {
++            osr = (((port->uartclk / baud) - 1) << 4);
++            osr |= (((port->uartclk % baud) / (baud / 8)) << 1);
+ 	    UART_SET_OSR(port, osr);
+-    }
++        }
+ 
+ 	switch (termios->c_cflag & CSIZE) {
+ 		case CS5:
+diff -Naurp linux-2.6.34.spi/arch/arm/mm/mmu.c linux-2.6.34/arch/arm/mm/mmu.c
+--- linux-2.6.34.spi/arch/arm/mm/mmu.c	2010-12-09 17:26:21.000000000 -0600
++++ linux-2.6.34/arch/arm/mm/mmu.c	2011-01-04 10:51:24.000000000 -0600
+@@ -881,7 +881,7 @@ void __init reserve_node_zero(pg_data_t 
+ 	reserve_bootmem_node(pgdat, __pa(swapper_pg_dir),
+ 			     PTRS_PER_PGD * sizeof(pgd_t), BOOTMEM_DEFAULT);
+ 
+-	if (machine_is_apollo())
++	if (machine_is_apollo() || machine_is_kronos())
+ 	{
+ 		/* Reserving the 0th 4k page as per Cortex-A9 Errata */
+ 		ret = reserve_bootmem_node(pgdat, 0, 0x1000, BOOTMEM_DEFAULT);

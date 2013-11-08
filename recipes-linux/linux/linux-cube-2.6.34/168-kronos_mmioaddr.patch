@@ -1,0 +1,73 @@
+diff -Naur linux-2.6.34/arch/arm/mach-kronos/include/mach/gmac_eth_drv.h linux-2.6.34_mmio/arch/arm/mach-kronos/include/mach/gmac_eth_drv.h
+--- linux-2.6.34/arch/arm/mach-kronos/include/mach/gmac_eth_drv.h	2011-07-18 20:51:01.274588000 +0530
++++ linux-2.6.34_mmio/arch/arm/mach-kronos/include/mach/gmac_eth_drv.h	2011-07-18 19:11:36.010349000 +0530
+@@ -41,7 +41,7 @@
+ }gmac_platform_data_t,*pgmac_platform_data_t;
+ 
+ /* Internal/External PHY */
+-#define GMAC0_BASE	(ARM_A9_HOST_MMIO_BASE + 0x7c000U)
++#define GMAC0_BASE	(ARM_A9_HOST_MMIO_BASE + 0xA4000U)
+ #define IRQ_GMAC0		IRQ_ETHR_MAC_0
+ #define IRQ_GMAC0_POWER		IRQ_ETHR_PWR_0
+ #define GMAC0_CLK_CSR_VAL (0x1U)
+@@ -54,7 +54,7 @@
+ #endif
+ 
+ /* External PHY  */
+-#define GMAC1_BASE	(ARM_A9_HOST_MMIO_BASE + 0xb8000U)
++#define GMAC1_BASE	(ARM_A9_HOST_MMIO_BASE + 0x7C000U)
+ #define IRQ_GMAC1		IRQ_ETHR_MAC_1
+ #define IRQ_GMAC1_POWER		IRQ_ETHR_PWR_1
+ #define GMAC1_CLK_CSR_VAL (0x1U)
+diff -Naur linux-2.6.34/arch/arm/mach-kronos/include/mach/gpio.h linux-2.6.34_mmio/arch/arm/mach-kronos/include/mach/gpio.h
+--- linux-2.6.34/arch/arm/mach-kronos/include/mach/gpio.h	2011-07-18 20:51:02.229515000 +0530
++++ linux-2.6.34_mmio/arch/arm/mach-kronos/include/mach/gpio.h	2011-07-18 18:54:10.029995000 +0530
+@@ -46,11 +46,7 @@
+  **/
+ #define GPIO0_IRQ       IRQ_GPIO_L
+ #define GPIO0_MAX_NR    74
+-#if 0 /*TODO::AVALON*/
+-#define GPIO0_BASE      (ARM_A9_HOST_MMIO_BASE + 0x069000)
+-#else
+-#define GPIO0_BASE      (ARM_A9_HOST_MMIO_BASE + 0x0D5000)
+-#endif
++#define GPIO0_BASE      (ARM_A9_HOST_MMIO_BASE + 0x0AB000)
+ #define GPIO0_IRQ_BASE  IRQ_MAX_NBR
+ #define GPIO0_START_PIN 0
+ 
+@@ -59,11 +55,7 @@
+  **/
+ #define GPIO1_IRQ IRQ_GPIO_R
+ #define GPIO1_MAX_NR    58
+-#if 0 /*TODO::AVALON*/
+-#define GPIO1_BASE      (ARM_A9_HOST_MMIO_BASE + 0x0D5000)
+-#else
+ #define GPIO1_BASE      (ARM_A9_HOST_MMIO_BASE + 0x069000)
+-#endif
+ #define GPIO1_IRQ_BASE  (GPIO0_IRQ_BASE + GPIO0_MAX_NR)
+ #define GPIO1_START_PIN GPIO0_MAX_NR
+ 
+diff -Naur linux-2.6.34/arch/arm/mach-kronos/include/mach/nx_dmac_1902_dev.h linux-2.6.34_mmio/arch/arm/mach-kronos/include/mach/nx_dmac_1902_dev.h
+--- linux-2.6.34/arch/arm/mach-kronos/include/mach/nx_dmac_1902_dev.h	2011-07-18 20:51:01.295586000 +0530
++++ linux-2.6.34_mmio/arch/arm/mach-kronos/include/mach/nx_dmac_1902_dev.h	2011-07-18 19:26:49.969393000 +0530
+@@ -43,7 +43,7 @@
+ 
+ #define APOLLO_INT_DMAC_1902_ACP        ( IRQ_ACP_DMA_1902 )
+ 
+-#define APOLLO_DMAC_1902_UART_SPI_BASE_PHYS  (ARM_A9_HOST_MMIO_BASE + 0xE5000)
++#define APOLLO_DMAC_1902_UART_SPI_BASE_PHYS  (ARM_A9_HOST_MMIO_BASE + 0xAE000)
+ #define APOLLO_DMAC_1902_UART_SPI_BASE       (APOLLO_DMAC_1902_UART_SPI_BASE_PHYS)  
+ #define APOLLO_DMAC_1902_UART_SPI_LEN        (0x1000)
+ 
+diff -Naur linux-2.6.34/arch/arm/mach-kronos/include/mach/nx_spi_dev.h linux-2.6.34_mmio/arch/arm/mach-kronos/include/mach/nx_spi_dev.h
+--- linux-2.6.34/arch/arm/mach-kronos/include/mach/nx_spi_dev.h	2011-07-18 20:51:01.308588000 +0530
++++ linux-2.6.34_mmio/arch/arm/mach-kronos/include/mach/nx_spi_dev.h	2011-07-18 19:25:19.678685000 +0530
+@@ -34,7 +34,7 @@
+ #include <mach/irqs.h>
+ 
+ /*FIXME:: Move this NX_SPI_BASE_SPI0 to mach/pnx8492.h*/
+-#define NX_SPI_BASE_SPI0	(ARM_A9_HOST_MMIO_BASE + 0xE0000)
++#define NX_SPI_BASE_SPI0	(ARM_A9_HOST_MMIO_BASE + 0xB0000)
+ #define IRQ_SPI0		IRQ_SPI_COMB
+ 
+ #define NXP_SPI_NUM_CHIPSELECTS	6

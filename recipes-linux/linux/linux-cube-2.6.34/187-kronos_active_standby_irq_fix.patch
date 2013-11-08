@@ -1,0 +1,28 @@
+--- linux-2.6.34/arch/arm/mach-kronos/pm.c	2011-10-19 18:43:54.311489000 +0530
++++ linux-2.6.34-standby/arch/arm/mach-kronos/pm.c	2011-10-19 18:41:31.241066000 +0530
+@@ -545,6 +545,7 @@
+ {
+    unsigned int cpipe_layer_ctl_reg[8];
+    int i;
++	unsigned long flags;  
+ 
+    printk("PM: Apollo entering standby state...\n");
+ 
+@@ -573,6 +574,7 @@
+   /**
+     * Step 1: turn off interrupts
+     */
++   local_irq_save(flags);
+    local_irq_disable();
+    local_fiq_disable();
+ 
+@@ -645,7 +647,8 @@
+    /* Restore any of the PM saved interrupts. */
+    apollo_pm_gic_dist_restore();
+ 
+-   local_irq_enable();
++//   local_irq_enable();
++   local_irq_restore(flags);
+    local_fiq_enable();
+ 
+    /* Restore the CPIPE layer enables */

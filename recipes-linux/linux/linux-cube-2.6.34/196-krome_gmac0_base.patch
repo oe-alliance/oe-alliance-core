@@ -1,0 +1,12 @@
+diff -Naurp linux-2.6.34_org/arch/arm/mach-krome/include/mach/gmac_eth_drv.h linux-2.6.34/arch/arm/mach-krome/include/mach/gmac_eth_drv.h
+--- linux-2.6.34_org/arch/arm/mach-krome/include/mach/gmac_eth_drv.h	2012-01-12 17:42:53.000000000 +0800
++++ linux-2.6.34/arch/arm/mach-krome/include/mach/gmac_eth_drv.h	2012-01-12 17:49:28.000000000 +0800
+@@ -41,7 +41,7 @@ typedef struct gmac_platform_data
+ }gmac_platform_data_t,*pgmac_platform_data_t;
+ 
+ /* Internal/External PHY */
+-#define GMAC0_BASE	(ARM_A9_HOST_MMIO_BASE + 0x7C000U)
++#define GMAC0_BASE	(ARM_A9_HOST_MMIO_BASE + 0x2C000U)
+ #define IRQ_GMAC0		IRQ_ETHR_MAC_0
+ #define IRQ_GMAC0_POWER		IRQ_ETHR_PWR_0
+ #define GMAC0_CLK_CSR_VAL (0x1U)

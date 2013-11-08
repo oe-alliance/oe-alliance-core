@@ -1,0 +1,525 @@
+diff -Naurp linux-2.6.34_orig/arch/arm/mach-krome/include/mach/pnx8492.h linux-2.6.34/arch/arm/mach-krome/include/mach/pnx8492.h
+--- linux-2.6.34_orig/arch/arm/mach-krome/include/mach/pnx8492.h	2012-04-17 18:31:43.418226000 +0530
++++ linux-2.6.34/arch/arm/mach-krome/include/mach/pnx8492.h	2012-04-17 19:54:14.664515000 +0530
+@@ -23,11 +23,11 @@
+ #include <mach/hardware.h>
+ 
+ #ifdef CONFIG_EXECUTE_ON_EMULATOR
+-#define APOLLO_CORTEX_FREQ			(800 * 1000 * 1000)
+-#define APOLLO_PERIPHERALS_FREQ  (APOLLO_CORTEX_FREQ / 2)
++#define APOLLO_CORTEX_FREQ             (800 * 1000 * 1000)
++#define APOLLO_PERIPHERALS_FREQ        (APOLLO_CORTEX_FREQ / 2)
+ #else
+-#define APOLLO_CORTEX_FREQ			(800 * 1000 * 1000)
+-#define APOLLO_PERIPHERALS_FREQ	(APOLLO_CORTEX_FREQ / 2)
++#define APOLLO_CORTEX_FREQ             (get_arm_freq())
++#define APOLLO_PERIPHERALS_FREQ        (APOLLO_CORTEX_FREQ / 2)
+ #endif /* CONFIG_EXECUTE_ON_EMULATOR */
+ 
+ #ifdef CONFIG_EXECUTE_ON_EMULATOR
+diff -Naurp linux-2.6.34_orig/arch/arm/mach-krome/krome.c linux-2.6.34/arch/arm/mach-krome/krome.c
+--- linux-2.6.34_orig/arch/arm/mach-krome/krome.c	2012-04-17 18:31:43.433223000 +0530
++++ linux-2.6.34/arch/arm/mach-krome/krome.c	2012-04-17 19:54:14.666515000 +0530
+@@ -141,6 +141,8 @@ static void apollo_timer_init(void)
+ 	unsigned long vaddr = IO_ADDRESS(APOLLO_CORTEX_A9_GLOB_TIMER_BASE);
+ 	unsigned long paddr = APOLLO_CORTEX_A9_GLOB_TIMER_BASE;
+ 	unsigned long irq =   IRQ_A9_GLOB_TIMER;
++
++	extern unsigned long get_arm_freq(void);
+ 	unsigned long freq =  APOLLO_PERIPHERALS_FREQ;
+ 
+ 	printk(KERN_INFO "Initializing Cortex A9 Global Timer at Vir:0x%08X = Phy:0x%08X,"
+diff -Naurp linux-2.6.34_orig/arch/arm/mach-krome/Makefile linux-2.6.34/arch/arm/mach-krome/Makefile
+--- linux-2.6.34_orig/arch/arm/mach-krome/Makefile	2012-04-17 18:31:42.334307000 +0530
++++ linux-2.6.34/arch/arm/mach-krome/Makefile	2012-04-17 19:54:14.667520000 +0530
+@@ -26,7 +26,7 @@
+ #
+ # Object file lists for the linux kernel.
+ #
+-obj-y					:= krome.o globaltimer.o
++obj-y					:= krome.o globaltimer.o pll.o
+ obj-$(CONFIG_KROME_SPLASH)             += splash_logo.o
+ obj-$(CONFIG_SMP)			+= platsmp.o headsmp.o localtimer.o
+ obj-$(CONFIG_PCI)			+= pci.o
+diff -Naurp linux-2.6.34_orig/arch/arm/mach-krome/pll.c linux-2.6.34/arch/arm/mach-krome/pll.c
+--- linux-2.6.34_orig/arch/arm/mach-krome/pll.c	1970-01-01 05:30:00.000000000 +0530
++++ linux-2.6.34/arch/arm/mach-krome/pll.c	2012-04-17 20:09:30.861399000 +0530
+@@ -0,0 +1,89 @@
++/****************************************************************************/
++/*                                                                          */
++/*  Copyright (C) 2012 Trident Microsystems (Far East) Ltd.                 */
++/*                                                                          */
++/*  This program is free software; you can redistribute it and/or modify    */
++/*  it under the terms of the GNU General Public License as published by    */
++/*  the Free Software Foundation, using version 2 of the License.           */
++/*                                                                          */
++/*  This program is distributed in the hope that it will be useful,         */
++/*  but WITHOUT ANY WARRANTY; without even the implied warranty of          */
++/*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the            */
++/*  GNU General Public License for more details.                            */
++/*                                                                          */
++/*  You should have received a copy of the GNU General Public License       */
++/*  along with this program. If not, see <http://www.gnu.org/licenses/>.    */
++/*                                                                          */
++/****************************************************************************/
++
++#include <linux/module.h>
++#include <linux/init.h>
++#include <linux/io.h>
++#include <asm/mach-types.h>
++
++#include <mach/pnx8492.h>
++
++/* This file is derived from SCD clock driver code */
++
++/*
++ * ARM PLL
++ */
++#define MEGA_HERTZ                                    (1000U*1000U)
++#define CRYSTAL_FREQUENCY                             (50*MEGA_HERTZ)
++
++#define HM_CGU_OFFSET                                 (0x6B000)
++#define HM_CGU_BASE                                   (ARM_A9_HOST_MMIO_BASE + HM_CGU_OFFSET)
++
++#define CGU_PLL_ARM_CON1_CTL_REG                      (HM_CGU_BASE + 0x0c)
++
++#define CGU_PLL_ARM_POST_DIV_SEL_SHIFT                (10)
++#define CGU_PLL_ARM_POST_DIV_SEL_MASK                 (0x3 << 10)
++#define CGU_PLL_ARM_POST_DIV_VAL_FROM_BITVAL(x)       (0x2 << x)
++#define CGU_PLL_ARM_POST_DIV_VAL_2                    (0x0 << 10)
++#define CGU_PLL_ARM_PRE_DIV_SEL_SHIFT                 (12)
++#define CGU_PLL_ARM_PRE_DIV_SEL_MASK                  (0x3 << 12)
++#define CGU_PLL_ARM_PRE_DIV_VAL_FROM_BITVAL(x)        (0x2 + x)
++#define CGU_PLL_ARM_PRE_DIV_VAL_5                     (0x3 << 12)
++#define CGU_PLL_ARM_FEEDBACK_DIV_SEL_SHIFT            (14)
++#define CGU_PLL_ARM_FEEDBACK_DIV_SEL_MASK             (0x7f << 14)
++#define CGU_PLL_ARM_FEEDBACK_DIV_VAL_FROM_BITVAL(x)   (326 - (x*2))
++#define CGU_PLL_ARM_FEEDBACK_VAL_MAX                  (326)
++#define CGU_PLL_ARM_FEEDBACK_VAL_MIN                  (72)
++   
++#define CGU_PLL_ARM_STA_CTL_REG                       (HM_CGU_BASE + 0x14)
++#define CGU_PLL_STA_LOCK_MASK                         (0x01 << 0)
++#define CGU_PLL_STA_LOCK                              (0x01)
++
++unsigned long get_arm_freq(void)
++{
++   unsigned long  uPostDiv       = 0;
++   unsigned long  uPreDiv        = 0;
++   unsigned long  uFeedbackDiv   = 0;
++   unsigned long  uFreq          = 0;
++
++   if((readl(CGU_PLL_ARM_STA_CTL_REG) & CGU_PLL_STA_LOCK_MASK) == CGU_PLL_STA_LOCK)
++   {
++      uPostDiv = (readl(CGU_PLL_ARM_CON1_CTL_REG) & 
++                        CGU_PLL_ARM_POST_DIV_SEL_MASK) >> 
++                        CGU_PLL_ARM_POST_DIV_SEL_SHIFT;
++      uPreDiv =  (readl(CGU_PLL_ARM_CON1_CTL_REG) & 
++                        CGU_PLL_ARM_PRE_DIV_SEL_MASK) >> 
++                        CGU_PLL_ARM_PRE_DIV_SEL_SHIFT;
++      uFeedbackDiv = (readl(CGU_PLL_ARM_CON1_CTL_REG) & 
++                        CGU_PLL_ARM_FEEDBACK_DIV_SEL_MASK) >> 
++                        CGU_PLL_ARM_FEEDBACK_DIV_SEL_SHIFT;
++      uPostDiv     = CGU_PLL_ARM_POST_DIV_VAL_FROM_BITVAL(uPostDiv);
++      uPreDiv      = CGU_PLL_ARM_PRE_DIV_VAL_FROM_BITVAL(uPreDiv);
++      uFeedbackDiv = CGU_PLL_ARM_FEEDBACK_DIV_VAL_FROM_BITVAL(uFeedbackDiv);
++      /*
++       * The formular for ARM PLL frequency is
++       * Fout = (Feedback Div*Fin)/(PreDiv * PostDiv);
++       *  Fin = CRYSTAL_FREQUENCY
++       */
++      uFreq = (((CRYSTAL_FREQUENCY)/(uPreDiv * uPostDiv)) * uFeedbackDiv);
++   }
++   return uFreq;
++}
++
++EXPORT_SYMBOL_GPL(get_arm_freq);
++
+diff -Naurp linux-2.6.34_orig/arch/arm/mach-kronos/include/mach/pnx8492.h linux-2.6.34/arch/arm/mach-kronos/include/mach/pnx8492.h
+--- linux-2.6.34_orig/arch/arm/mach-kronos/include/mach/pnx8492.h	2012-04-17 18:31:43.541183000 +0530
++++ linux-2.6.34/arch/arm/mach-kronos/include/mach/pnx8492.h	2012-04-17 19:54:14.671517000 +0530
+@@ -23,11 +23,11 @@
+ #include <mach/hardware.h>
+ 
+ #ifdef CONFIG_EXECUTE_ON_EMULATOR
+-#define APOLLO_CORTEX_FREQ			(500 * 1000 * 1000)
+-#define APOLLO_PERIPHERALS_FREQ			(APOLLO_CORTEX_FREQ / 2)
++#define APOLLO_CORTEX_FREQ             (500 * 1000 * 1000)
++#define APOLLO_PERIPHERALS_FREQ        (APOLLO_CORTEX_FREQ / 2)
+ #else
+-#define APOLLO_CORTEX_FREQ			(500 * 1000 * 1000)
+-#define APOLLO_PERIPHERALS_FREQ			(APOLLO_CORTEX_FREQ / 2)
++#define APOLLO_CORTEX_FREQ             (get_arm_freq())
++#define APOLLO_PERIPHERALS_FREQ        (APOLLO_CORTEX_FREQ / 2)
+ #endif /* CONFIG_EXECUTE_ON_EMULATOR */
+ 
+ #ifdef CONFIG_EXECUTE_ON_EMULATOR
+diff -Naurp linux-2.6.34_orig/arch/arm/mach-kronos/kronos.c linux-2.6.34/arch/arm/mach-kronos/kronos.c
+--- linux-2.6.34_orig/arch/arm/mach-kronos/kronos.c	2012-04-17 18:31:43.575145000 +0530
++++ linux-2.6.34/arch/arm/mach-kronos/kronos.c	2012-04-17 19:54:14.673516000 +0530
+@@ -141,6 +141,8 @@ static void apollo_timer_init(void)
+ 	unsigned long vaddr = IO_ADDRESS(APOLLO_CORTEX_A9_GLOB_TIMER_BASE);
+ 	unsigned long paddr = APOLLO_CORTEX_A9_GLOB_TIMER_BASE;
+ 	unsigned long irq =   IRQ_A9_GLOB_TIMER;
++
++	extern unsigned long get_arm_freq(void);
+ 	unsigned long freq =  APOLLO_PERIPHERALS_FREQ;
+ 
+ 	printk(KERN_INFO "Initializing Cortex A9 Global Timer at Vir:0x%08X = Phy:0x%08X,"
+diff -Naurp linux-2.6.34_orig/arch/arm/mach-kronos/Makefile linux-2.6.34/arch/arm/mach-kronos/Makefile
+--- linux-2.6.34_orig/arch/arm/mach-kronos/Makefile	2012-04-17 18:31:42.077309000 +0530
++++ linux-2.6.34/arch/arm/mach-kronos/Makefile	2012-04-17 19:54:14.675515000 +0530
+@@ -26,7 +26,7 @@
+ #
+ # Object file lists for the linux kernel.
+ #
+-obj-y					:= kronos.o globaltimer.o
++obj-y					:= kronos.o globaltimer.o pll.o
+ obj-$(CONFIG_KRONOS_SPLASH)             += splash_logo.o
+ obj-$(CONFIG_SMP)			+= platsmp.o headsmp.o localtimer.o
+ obj-$(CONFIG_PCI)			+= pci.o
+diff -Naurp linux-2.6.34_orig/arch/arm/mach-kronos/pll.c linux-2.6.34/arch/arm/mach-kronos/pll.c
+--- linux-2.6.34_orig/arch/arm/mach-kronos/pll.c	1970-01-01 05:30:00.000000000 +0530
++++ linux-2.6.34/arch/arm/mach-kronos/pll.c	2012-04-17 19:54:14.677516000 +0530
+@@ -0,0 +1,342 @@
++/****************************************************************************/
++/*                                                                          */
++/*  Copyright (C) 2012 Trident Microsystems (Far East) Ltd.                 */
++/*                                                                          */
++/*  This program is free software; you can redistribute it and/or modify    */
++/*  it under the terms of the GNU General Public License as published by    */
++/*  the Free Software Foundation, using version 2 of the License.           */
++/*                                                                          */
++/*  This program is distributed in the hope that it will be useful,         */
++/*  but WITHOUT ANY WARRANTY; without even the implied warranty of          */
++/*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the            */
++/*  GNU General Public License for more details.                            */
++/*                                                                          */
++/*  You should have received a copy of the GNU General Public License       */
++/*  along with this program. If not, see <http://www.gnu.org/licenses/>.    */
++/*                                                                          */
++/****************************************************************************/
++
++#include <linux/module.h>
++#include <linux/init.h>
++#include <linux/io.h>
++#include <asm/mach-types.h>
++
++#include <mach/pnx8492.h>
++
++/* This file is derived from SCD clock driver code */
++
++/*
++ * ARM PLL
++ */
++#define MEGA_HERTZ                     (1000UL*1000UL)
++#define CRYSTAL_FREQUENCY              (50*MEGA_HERTZ)
++ 
++#define HM_CGU_OFFSET                  (0x6B000)
++#define HM_CGU_BASE                    (ARM_A9_HOST_MMIO_BASE + HM_CGU_OFFSET)
++ 
++#define CGU_PLL_ARM_CON1_CTL_REG       (HM_CGU_BASE + 0x0c)
++ 
++#define CGU_PLL_ARM_CON2_CTL_REG       (HM_CGU_BASE + 0x10)
++/* PLL DIRECTO */
++#define    CGU_PLL_CTL_DIRECTO_MASK    (0x01 << 3)
++#define    CGU_PLL_CTL_DIRECTO_SHIFT   3
++/* PLL DIRECTI */
++#define    CGU_PLL_CTL_DIRECTI_MASK    (0x01 << 4)
++#define    CGU_PLL_CTL_DIRECTI_SHIFT   4
++ 
++#define CGU_PLL_ARM_STA_CTL_REG        (HM_CGU_BASE + 0x14)
++#define CGU_PLL_STA_LOCK_MASK          (0x01 << 0)
++#define CGU_PLL_STA_LOCK               (0x01)
++ 
++/* NDEC */
++/* for Core integer PLLs, NDEC is bit 16:25 */
++#define    CGU_PLL_CORE_INT_NDEC_MASK  (0x03ff << 16)
++#define    CGU_PLL_CORE_INT_NDEC_SHIFT 16
++ 
++/* PDEC */
++/* for Core PLLs, PDEC is bit 9:15 */
++#define    CGU_PLL_CORE_PDEC_MASK      (0x07f << 9)
++#define    CGU_PLL_CORE_PDEC_SHIFT     9
++ 
++/* MDEC */
++/* for Core PLLs, MDEC is bit 0:16 */
++#define    CGU_PLL_CORE_MDEC_MASK      (0x1ffff << 0)
++#define    CGU_PLL_CORE_MDEC_SHIFT     0
++ 
++#define MDIVIDER  0
++#define NDIVIDER  1
++#define PDIVIDER  2
++ 
++/* Round frequency to nearest x Hz(such as 10, 100) */
++#define ROUND_FREQ(freq, base )              \
++       freq += (base>>1);                    \
++       freq /= base;                         \
++       freq *= base;                         \
++ 
++/* derived from standby clock driver code */
++static bool Mdiv2Mdec(unsigned int div, unsigned int* dec)
++{
++    bool result=true;
++    unsigned int i;
++
++    if (div == 1)
++    {
++        *dec=0x18003; //0b11000000000000011
++    }
++    else if (div == 2)
++    {
++        *dec=0x10003; //0b10000000000000011
++    }
++    else if ((div > 2) && (div <= 32769))
++    {
++        //starting from Mdiv=3,Mdec=0x00001, inverse lfsr algo
++        //15,14 = 0,1 -> msb,0
++        *dec=0x00001;
++        for (i=3; i<div; i++)
++        {
++           if( (((*dec>>14)&1)^((*dec>>0)&1)) != 0)
++            *dec=*dec<<1 | 1;
++        else
++            *dec=*dec<<1;
++        }
++        *dec&=0x07FFF;
++    }
++    else
++        result=false;
++
++    return result;
++}
++
++static bool Ndiv2Ndec(unsigned int div, unsigned int* dec)
++{
++    bool result=true;
++    unsigned int i;
++
++    if (div == 1)
++    {
++        *dec=0x302; //0b1100000010
++    }
++    else if (div == 2)
++    {
++        *dec=0x202; //0b1000000010
++    }
++    else if ((div > 2) && (div <= 257))
++    {
++        //starting from div=3,dec=0x001, inverse lfsr algo
++        //8,6,5,4 = 0,2,3,4 -> msb,1,2,3
++        *dec=0x001;
++        for (i=3; i<div; i++)
++        {
++            if( (((*dec>>7)&1)^((*dec>>1)&1)^((*dec>>2)&1)^((*dec>>3)&1)) != 0)
++                *dec=*dec<<1 | 1;
++            else
++                *dec=*dec<<1;
++        }
++        *dec&=0x0FF;
++    }
++    else
++        result=false;
++
++    return result;
++}
++
++static bool Pdiv2Pdec(unsigned int div, unsigned int* dec)
++{
++    bool result=true;
++    unsigned int i;
++
++    if (div == 1)
++    {
++        *dec=0x62; //0b1100010
++    }
++    else if (div == 2)
++    {
++        *dec=0x42; //0b1000010
++    }
++    else if ((div > 2) && (div <= 33))
++    {
++        //starting from div=3,dec=0x001, inverse lfsr algo
++        //5,3 = 0,2 -> msb,1
++        *dec=0x001;
++        for (i=3; i<div; i++)
++        {
++            if( (((*dec>>4)&1)^((*dec>>1)&1)) != 0)
++                *dec=*dec<<1 | 1;
++            else
++                *dec=*dec<<1;
++        }
++        *dec&=0x01F;
++    }
++    else
++        result=false;
++
++    return result;
++}
++
++/* div -> dec*/
++static bool internal_pll_get_dec( unsigned long uDiv, 
++                                  unsigned long *puDev, 
++                                  unsigned long uDivType )
++{
++   bool bRet = true;
++
++   switch( uDivType )
++   {
++      case MDIVIDER:
++         bRet = Mdiv2Mdec( uDiv, (unsigned int*)puDev );
++         break;
++      case NDIVIDER:
++         bRet = Ndiv2Ndec( uDiv, (unsigned int*)puDev );
++         break;
++      case PDIVIDER:
++         bRet = Pdiv2Pdec( uDiv, (unsigned int*)puDev );
++         break;
++      default:
++         break;
++   }
++
++   return bRet;
++}
++
++/* dec -> div */
++static bool internal_pll_get_div( unsigned long uDec, 
++                                  unsigned long *puDiv, 
++                                  unsigned long uDivType )
++{
++   bool           bRet = false;
++   unsigned long  uDecTemp, uDivLoop;
++   unsigned long  uMaxDiv;
++
++   switch( uDivType )
++   {
++      case MDIVIDER:       uMaxDiv = 32769;       break;
++      case NDIVIDER:       uMaxDiv = 257;         break;
++      case PDIVIDER:       uMaxDiv = 33;          break;
++      default:             return bRet;
++   }
++
++   for( uDivLoop = 1; uDivLoop <= uMaxDiv; uDivLoop++ )
++   {
++      bRet = internal_pll_get_dec(uDivLoop, &uDecTemp, uDivType );
++      if( !bRet )
++      {
++         /* error */
++         return bRet;
++      }
++      if( uDecTemp == uDec )
++      {
++         *puDiv = uDivLoop;
++         bRet = true;
++         break;
++      }
++   }
++
++   return bRet;
++}
++
++static void internal_pll_get_dividers( unsigned long *puBypassMul,
++                                       unsigned long *puNdiv,
++                                       unsigned long *puPdiv,
++                                       unsigned long *puMdiv)
++{
++   unsigned long  uValue;
++   unsigned long  uMul, uNdiv, uPdiv, uNdec, uMdiv, uMdec=0, uPdec;
++   unsigned long  uMask;
++   bool           bBypassN, bBypassP;
++
++   /* 
++    * The formula for fractional frequency is Fin = CRYSTAL_FREQUENCY
++    * Fout = M*Fin/NP; 
++    * if pre-divider is bypassed(directi is set), then N = 1;
++    * if post-divider is bypassed(directo is set), then P = 1/2;
++    * Mode        directi(N)     directo(P)         formular
++    * 1a             1              1               M*Fin/NP = M*Fin/(1*1/2)=2*M*Fin
++    * 1b             1              0               M*Fin/NP = M*Fin/(1*P)=M*Fin/P
++    * 1c             0              1               M*Fin/NP = M*Fin/(N*1/2)=2*M*Fin/N
++    * 1d             0              0               M*Fin/NP = M*Fin/(N*P)=M*Fin/NP
++    */
++
++   /* set multipler to be 1 */
++   uMul = 1;
++   uValue = readl(CGU_PLL_ARM_CON2_CTL_REG) & (CGU_PLL_CTL_DIRECTI_MASK|CGU_PLL_CTL_DIRECTO_MASK);
++   bBypassN = ((uValue & CGU_PLL_CTL_DIRECTI_MASK)==0)?false:true;
++   bBypassP = ((uValue & CGU_PLL_CTL_DIRECTO_MASK)==0)?false:true;
++
++   /* N Divider */
++   if( bBypassN )
++   {
++      uNdiv = 1;
++   }
++   else
++   {
++      /* get the N( pre-divider) */
++      /* PLL in CORE: register index 1 has the Ndec */
++      uMask = CGU_PLL_CORE_INT_NDEC_MASK;
++
++      uNdec = (readl(CGU_PLL_ARM_CON2_CTL_REG) & uMask) >> CGU_PLL_CORE_INT_NDEC_SHIFT;
++
++      internal_pll_get_div( uNdec, &uNdiv, NDIVIDER );
++   }
++
++   /* P Divider */
++   if( bBypassP )
++   {
++      uMul = 2;
++      uPdiv = 1;
++   }
++   else
++   {
++      /* get the P(post-divider) */
++      uMask = CGU_PLL_CORE_PDEC_MASK;
++
++      uPdec = (readl(CGU_PLL_ARM_CON2_CTL_REG) & uMask) >> CGU_PLL_CORE_PDEC_SHIFT;
++      internal_pll_get_div( uPdec, &uPdiv, PDIVIDER);
++   }
++
++   /* M Divider */
++   /* PLL in CORE: register index 0 has the Mdec */
++   uMask = CGU_PLL_CORE_MDEC_MASK;
++
++   uMdec = readl(CGU_PLL_ARM_CON1_CTL_REG) & uMask;
++
++   /* get mdiv from mdev if frac divider is not used */
++   internal_pll_get_div( uMdec, &uMdiv, MDIVIDER );
++
++   /* return */
++   *puBypassMul = uMul;
++   *puNdiv      = uNdiv;
++   *puPdiv      = uPdiv;
++   *puMdiv      = uMdiv;
++}
++
++unsigned long get_arm_freq(void)
++{
++   unsigned long  uMul, uNdiv, uPdiv, uMdiv;
++   unsigned long  ulFreq;
++
++   internal_pll_get_dividers(&uMul, &uNdiv, &uPdiv, &uMdiv);
++
++   ulFreq =  uMdiv;
++
++   /* Step 1: Multiply by the bypass multipler */
++   ulFreq *=  uMul;
++
++   /* Step 2: Multiply by the input crystal frequency */
++   ulFreq *=  CRYSTAL_FREQUENCY;
++
++   /* Step 3: Divide by the pre-divider */
++   ulFreq /=  uNdiv;
++
++   /* Step 4: Divide by the post-divider */
++   ulFreq /=  uPdiv;
++
++   /* Round ullFreq to nearest 100 Hz */
++   ROUND_FREQ(ulFreq, 100);
++
++   /* there is always external /2 for arm clock */
++   ulFreq = ulFreq >> 1;
++
++   return ulFreq;
++}
++
++EXPORT_SYMBOL_GPL(get_arm_freq);

@@ -1,0 +1,328 @@
+diff -Naur linux-2.6.34/arch/arm/mach-krome/include/mach/nx_sdiomc_dev.h linux-2.6.34_mod/arch/arm/mach-krome/include/mach/nx_sdiomc_dev.h
+--- linux-2.6.34/arch/arm/mach-krome/include/mach/nx_sdiomc_dev.h	2012-01-12 13:42:40.000000000 +0800
++++ linux-2.6.34_mod/arch/arm/mach-krome/include/mach/nx_sdiomc_dev.h	2012-01-12 13:21:45.000000000 +0800
+@@ -41,7 +41,7 @@
+ #define APOLLO_SDIOMC_BASE (APOLLO_SDIOMC_BASE_PHYS)  
+ #define APOLLO_SDIOMC_LEN  (0x1000)
+ 
+-#define APOLLO_INT_SDIOMC  ( 156)  /* Fixme, has to come from irqs.h !! */
++#define APOLLO_INT_SDIOMC  (IRQ_SD_CARD)  /* Fixme, has to come from irqs.h !! */
+ 
+ /*!
+  * This structure is used to store the platform specific SD/SDIO/MMC controller
+diff -Naur linux-2.6.34/arch/arm/mach-krome/include/mach/pnx8492.h linux-2.6.34_mod/arch/arm/mach-krome/include/mach/pnx8492.h
+--- linux-2.6.34/arch/arm/mach-krome/include/mach/pnx8492.h	2012-01-12 13:42:40.000000000 +0800
++++ linux-2.6.34_mod/arch/arm/mach-krome/include/mach/pnx8492.h	2012-01-12 13:21:29.000000000 +0800
+@@ -70,6 +70,14 @@
+ #define HOST_ARM_MMIO_APERTURE			0x1FFFFF
+ 
+ /*
++ * DCS Network Controller
++ */
++#define DCS_AO_REGS_BASE      (ARM_A9_HOST_MMIO_BASE + 0x0AD000)
++#define DCS_HOST_REGS_BASE    (ARM_A9_HOST_MMIO_BASE + 0x039000)
++#define DCS_AVDSP_REGS_BASE   (ARM_A9_HOST_MMIO_BASE + 0x103000)
++#define DCS_FMVD_REGS_BASE    (ARM_A9_HOST_MMIO_BASE + 0x1FF000)
++
++/*
+  * Device port addresses
+  */
+ #define MMIO_GCS_BASE            (ARM_A9_HOST_MMIO_BASE + 0x30000)
+diff -Naur linux-2.6.34/arch/arm/mach-krome/krome.c linux-2.6.34_mod/arch/arm/mach-krome/krome.c
+--- linux-2.6.34/arch/arm/mach-krome/krome.c	2012-01-12 13:42:40.000000000 +0800
++++ linux-2.6.34_mod/arch/arm/mach-krome/krome.c	2012-01-12 13:21:03.000000000 +0800
+@@ -56,7 +56,7 @@
+ 
+ #include <mach/nor.h>
+ 
+-#ifdef CONFIG_APOLLO_SPLASH
++#ifdef CONFIG_KROME_SPLASH
+ #include <mach/splash_logo.h>
+ #endif
+ 
+@@ -427,7 +427,7 @@
+ 
+ void __init apollo_init(void)
+ {
+-#ifdef CONFIG_APOLLO_SPLASH
++#ifdef CONFIG_KROME_SPLASH
+    apollo_splash();
+ #endif
+    printk (KERN_INFO "Adding platform devices...\n");
+diff -Naur linux-2.6.34/arch/arm/mach-krome/nx_sdiomc_dev.c linux-2.6.34_mod/arch/arm/mach-krome/nx_sdiomc_dev.c
+--- linux-2.6.34/arch/arm/mach-krome/nx_sdiomc_dev.c	2012-01-12 13:42:40.000000000 +0800
++++ linux-2.6.34_mod/arch/arm/mach-krome/nx_sdiomc_dev.c	2012-01-12 13:22:37.000000000 +0800
+@@ -74,14 +74,56 @@
+ {
+    unsigned int val;
+ 
+-   /* Determine the pin mux setting based on Kernel Config options */
++   /* SOCK-2852: Setting the bits[24:23] in PAD_CONFIGURATION_5 of GLOBAL_REG 
++    * from 2b'00 to 2b'10, to increase the driver strength. */
++   val = readl(PAD_CONFIGURATION_5_REG);
++   val &= ~(3<<23);
++   val |= (2<<23);
++   writel(val, PAD_CONFIGURATION_5_REG);
++
++   /* Setup pin-muxing for SDIO */
++   val = readl(GPIO_PIN_MUX_REG_0);
++   val &= ~(0x1000018);    // uart2tx=gmux_003=0, uart2rx=gmux_004=0, pwm2=gmux_024=0
++   writel(val, GPIO_PIN_MUX_REG_0);
++
++   val = readl(GPIO_PIN_MUX_REG_1);
++   val &= ~(0x80000000);   // ioa19=gmux_063=0
++   writel(val, GPIO_PIN_MUX_REG_1);
++   
++   val = readl(GPIO_PIN_MUX_REG_2);
++   val &= ~(0x00000403);   // ioa20=gmux_064=0, ioa21=gmux_065=0, gmux_074=sdled=0
++   writel(val, GPIO_PIN_MUX_REG_2);
++   
++   val = readl(GPIO_PIN_MUX_REG_5);
++   val &= ~(0x00060c00);   // ioa23=gmux_171=0, ioa22=gmux_170=0, gmux_178=scl2=0, gmux_177=sda2=0
++   writel(val, GPIO_PIN_MUX_REG_5);
++   
++   val = readl(GPIO_SEC_PIN_MUX_REG_0);// don't enable sdled, smux_024=0
++   val |= 0x18;            // sdcrdetect_00=gmux_003=1, sdcrdwp_00=gmux_004=1
++   writel(val, GPIO_SEC_PIN_MUX_REG_0);
++   
++   val = readl(GPIO_SEC_PIN_MUX_REG_1);
++   val |= 0x80000000;      // sddata0=smux_063=1
++   writel(val, GPIO_SEC_PIN_MUX_REG_1);
++   
++   val = readl(GPIO_SEC_PIN_MUX_REG_2);
++   val &= ~(0x400);        // smux_074=hs6err=0, 
++   val |= 0x30003;         // sddata1=smux_064=1, sddata2=smux_065=1,
++   writel(val, GPIO_SEC_PIN_MUX_REG_2);
++   
++   val = readl(GPIO_SEC_PIN_MUX_REG_5);
++   val &= ~(0x60800);      // nand_rb3=smux_171=0, smux_178=sdcrdwp=0, smux_177=sdcrdetect=0
++   val |= 0x400;           // sddata3=smux_170=1
++   writel(val, GPIO_SEC_PIN_MUX_REG_5);
+    
+-   /* Setup the Alt Reg 0 for SDIO Card Detect */
+-   val = readl(0xE06BB140);
+-   val |= 0x48800020 ;
+-   writel(val, 0xE06BB140);
++   val = readl(ALT_PIN_MUX_REG_0);
++   val &= ~(0x08802008);   // alt13_dbgi2c=0, alt23=0, alt27_sdcmd=0, alt03_656=0
++   val |=   0x40001020;    // alt12_uart2=1, alt05_sdio=1, alt30_sdio=1
++   writel(val, ALT_PIN_MUX_REG_0);
+ 
+-  /* TODO : Determine the value for other Mux setting */
++   val = readl(ALT_PIN_MUX_REG_1);
++   val |= 0x00040000;      // alt_reg_secdbg_override=1
++   writel(val, ALT_PIN_MUX_REG_1);
+ }
+ 
+ static int __init apollo_sdiomc_init(void)
+diff -Naur linux-2.6.34/arch/arm/mach-krome/nx_spi_dev.c linux-2.6.34_mod/arch/arm/mach-krome/nx_spi_dev.c
+--- linux-2.6.34/arch/arm/mach-krome/nx_spi_dev.c	2012-01-12 13:42:40.000000000 +0800
++++ linux-2.6.34_mod/arch/arm/mach-krome/nx_spi_dev.c	2012-01-12 13:23:04.000000000 +0800
+@@ -25,6 +25,7 @@
+ #include <linux/platform_device.h>
+ #include <linux/init.h>
+ #include <mach/nx_spi_dev.h>
++#include <linux/version.h>
+ 
+ #ifdef CONFIG_SPI_NX_DMAC_1902
+ #include <linux/nx_dmac_1902.h>
+@@ -37,9 +38,13 @@
+ 
+ static struct  nx_dmac_1902_slave nx_spi_dmac_slv_plfdata[] = {
+  { /* TX peripheral */
++	#if (LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 33))
++       .dma_dev = &(dmac_1902_uart_spi_device.dev),
++      #else
+        .slave = {
+                 .dma_dev = &dmac_1902_uart_spi_device.dev,
+                 },
++	#endif
+        .src_per_num = 0, //Memory
+        .dst_per_num = 1, //TX request peripheral num
+        .src_burst = nx_dmac_1902_burst_1,
+@@ -53,9 +58,13 @@
+        .dst_width = DMA_SLAVE_WIDTH_8BIT,
+   },
+   {/* RX peripheral */
++	#if (LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 33))
++       .dma_dev = &(dmac_1902_uart_spi_device.dev),
++	#else
+        .slave = {
+                 .dma_dev = &dmac_1902_uart_spi_device.dev,
+                 },
++	#endif
+        .src_per_num = 0,//RX request peripheral num
+        .dst_per_num = 0, //Memory
+        .src_burst = nx_dmac_1902_burst_1,
+diff -Naur linux-2.6.34/arch/arm/mach-krome/splash_logo.c linux-2.6.34_mod/arch/arm/mach-krome/splash_logo.c
+--- linux-2.6.34/arch/arm/mach-krome/splash_logo.c	2012-01-12 13:42:40.000000000 +0800
++++ linux-2.6.34_mod/arch/arm/mach-krome/splash_logo.c	2012-01-12 13:24:26.000000000 +0800
+@@ -18,8 +18,8 @@
+ #include <mach/apollo_logo.h>
+ 
+ #define APOLLO_MMIO_BASE_ADDR (0xE0600000)
+-#define APOLLO_CGU_BASE     (APOLLO_MMIO_BASE_ADDR + 0x0E7000)
+-#define APOLLO_GBL_REG_BASE (APOLLO_MMIO_BASE_ADDR + 0x0EA000)
++#define HOST_CGU_BASE		(APOLLO_MMIO_BASE_ADDR + 0x06A000)
++#define APOLLO_GBL_REG_BASE (APOLLO_MMIO_BASE_ADDR + 0x0BB000)
+ #define APOLLO_CPIPE_BASE   (APOLLO_MMIO_BASE_ADDR + 0x120000)
+ #define APOLLO_HDMI_TX_BASE (APOLLO_MMIO_BASE_ADDR + 0x179000)
+ #define APOLLO_DENC_BASE    (APOLLO_MMIO_BASE_ADDR + 0x17B000)
+@@ -39,19 +39,22 @@
+    u32 __iomem * pInc;
+    unsigned char pixel_data[3];
+ 
++
++
+    /* HD DENC programming (HD-480p raster) */
+    writel( 0x00000001, (APOLLO_DENC_BASE + 0x120)); /* DENC csc sel  - YCbCr out */
+-   writel( 0x00000104, (APOLLO_DENC_BASE + 0x104)); /* DENC raster   -  eactive & 480p */
++   writel( 0x80000104, (APOLLO_DENC_BASE + 0x104)); /* DENC raster   -  eactive & 480p */
+    writel( 0x0000035a, (APOLLO_DENC_BASE + 0x108)); /* DENC Htotal */
+    writel( 0x02d0007a, (APOLLO_DENC_BASE + 0x10c)); /* DENC HActive */
+    writel( 0x01e00024, (APOLLO_DENC_BASE + 0x110)); /* DENC Vertical timing */
+    writel( 0x0000003f, (APOLLO_DENC_BASE + 0x00c)); /* DENC enable dacs - enable all the 6 DACs */
+-   writel( 0x00000201, (APOLLO_DENC_BASE + 0x010)); /* DENC  {CBA} dac selection - {rpr, bpb, gy} */
++   writel( 0x00020001, (APOLLO_DENC_BASE + 0x010)); /* DENC  {CBA} dac selection - {rpr, bpb, gy} */
+    writel( 0x00050603, (APOLLO_DENC_BASE + 0x014)); /* DENC  {FED} dac selection - all cvbs for initial validation */
+    writel( 0x00000000, (APOLLO_DENC_BASE + 0x180)); /* DENC Sync Control- don't invert Odd/even signal */
+ 
++
+    /* DENC programming (SD - 480i) */
+-   writel( 0x00000110, (APOLLO_DENC_BASE + 0x304)); /* DENC raster   - enable bits eactive & 480i(NTSC) */
++   writel( 0x80000110, (APOLLO_DENC_BASE + 0x304)); /* DENC raster   - enable bits eactive & 480i(NTSC) */
+    writel( 0x000006b4, (APOLLO_DENC_BASE + 0x308)); /* DENC Htotal */
+    writel( 0x05a00104, (APOLLO_DENC_BASE + 0x30c)); /* DENC HActive (orig - 0x0590010c) */
+    writel( 0x00f00013, (APOLLO_DENC_BASE + 0x310)); /* DENC Vertical timing */
+@@ -68,10 +71,9 @@
+    writel( 0x00000000, (APOLLO_DENC_BASE + 0x194)); /* Macrovision OFF */
+ 
+    /* DAC0 Programming (Component DACs) */
+-   writel( 0x0011c00e, (APOLLO_GBL_REG_BASE + 0x8fc)); /*VDAC0_CTRL0 */
+-   writel( 0x52201712, (APOLLO_GBL_REG_BASE + 0x900)); /*VDAC0_CTRL1 */
++   writel( 0x00111f00, (APOLLO_GBL_REG_BASE + 0x8fc)); /*VDAC0_CTRL0 */
++   writel( 0x42001712, (APOLLO_GBL_REG_BASE + 0x900)); /*VDAC0_CTRL1 */
+    writel( 0x00000ff0, (APOLLO_GBL_REG_BASE + 0x904)); /*VDAC0_CTRL2 */
+-   writel( 0x00000124, (APOLLO_GBL_REG_BASE + 0x908)); /*VDAC0_CTRL3 source from MPEG0 PLL */
+    writel( 0x3f000071, (APOLLO_GBL_REG_BASE + 0x90c)); /*VDAC0_CTRL4 71-->70-->71 */
+    writel( 0x3f000070, (APOLLO_GBL_REG_BASE + 0x90c)); /*VDAC0_CTRL4 71-->70-->71 */
+    writel( 0x3f000071, (APOLLO_GBL_REG_BASE + 0x90c)); /*VDAC0_CTRL4 71-->70-->71 */
+@@ -83,7 +85,7 @@
+    writel( 0x0011c00e, (APOLLO_GBL_REG_BASE + 0x920)); /*VDAC1_CTRL0 */
+    writel( 0x52201712, (APOLLO_GBL_REG_BASE + 0x924)); /*VDAC1_CTRL1 */
+    writel( 0x00000ff0, (APOLLO_GBL_REG_BASE + 0x928)); /*VDAC1_CTRL2 */
+-   writel( 0x00000124, (APOLLO_GBL_REG_BASE + 0x92c)); /*VDAC1_CTRL3 source from MPEG0 PLL */
++   writel( 0x00000000, (APOLLO_GBL_REG_BASE + 0x92c)); /*VDAC1_CTRL3 source from MPEG0 PLL */
+    writel( 0x3f000071, (APOLLO_GBL_REG_BASE + 0x930)); /*VDAC1_CTRL4 71-->70-->71 */
+    writel( 0x3f000070, (APOLLO_GBL_REG_BASE + 0x930)); /*VDAC1_CTRL4 71-->70-->71 */
+    writel( 0x3f000071, (APOLLO_GBL_REG_BASE + 0x930)); /*VDAC1_CTRL4 71-->70-->71 */
+@@ -91,21 +93,36 @@
+    writel( 0x00000000, (APOLLO_GBL_REG_BASE + 0x938)); /*VDAC1_DTO_INCR0 */
+    writel( 0x00000000, (APOLLO_GBL_REG_BASE + 0x93c)); /*VDAC1_DTO_INCR1 */
+ 
+-   /******  Set up the DAC and CPIPE clocks */
+-   writel( 0x00000002, (APOLLO_CGU_BASE + 0x658)); /* vdac0_sel -- 74.25MHz mpg0 pll */
+-   writel( 0x00000002, (APOLLO_CGU_BASE + 0x65c)); /* vdac1_sel -- 74.25MHz */
+-   writel( 0x00000002, (APOLLO_CGU_BASE + 0x660)); /* vdac2_sel -- 74.25MHz */
+-
+-/* vdacs 3,4 and 5 are always Mpeg0 PLL, 74.25 MHz */
+-   writel( 0x00000002, (APOLLO_CGU_BASE + 0x664)); /* vdac3_sel -- 74.25MHz mpg0 pll */
+-   writel( 0x00000002, (APOLLO_CGU_BASE + 0x668)); /* vdac4_sel -- 74.25MHz */
+-   writel( 0x00000002, (APOLLO_CGU_BASE + 0x66c)); /* vdac5_sel -- 74.25MHz */
+-   writel( 0x00000005, (APOLLO_CGU_BASE + 0x640)); /* VCGEN_G1SEL -- 27MHz, MPG0 PLL */
+-   writel( 0x00000004, (APOLLO_CGU_BASE + 0x644)); /* VCGEN_G2SEL -- 54MHz, MPG0 PLL */
+-   writel( 0x00000006, (APOLLO_CGU_BASE + 0x648)); /* VCGEN_G3SEL -- 27MHz, MPG0 PLL */
+-   writel( 0x00000005, (APOLLO_CGU_BASE + 0x64c)); /* VCGEN_G4SEL -- 13.5MHz, MPG0 PLL */
+-   writel( 0x00000006, (APOLLO_CGU_BASE + 0x650)); /* VCGEN_G5SEL -- 27MHz, MPG0 PLL */
+-   writel( 0x00000000, (APOLLO_CGU_BASE + 0x654)); /* VCGEN_G6SEL -- 27MHz, MPG0 PLL */
++   /*  Set up the DAC and CPIPE clocks */
++   writel( 0x0024f881, (HOST_CGU_BASE + 0x02c)); /* vdac0_sel -- 74.25MHz mpg0 pll */
++   writel( 0x00000001, (HOST_CGU_BASE + 0x038)); /* vdac1_sel -- 74.25MHz */
++   writel( 0x000058e2, (HOST_CGU_BASE + 0x030)); /* vdac1_sel -- 74.25MHz */
++   writel( 0x76cccccd, (HOST_CGU_BASE + 0x03c)); /* vdac2_sel -- 74.25MHz */
++   /* vdacs 3,4 and 5 are always Mpeg0 PLL, 74.25 MHz */   
++   writel( 0x00000000, (HOST_CGU_BASE + 0x038)); /* vdac4_sel -- 74.25MHz */
++   writel( 0x00000000, (HOST_CGU_BASE + 0x040)); /* vdac5_sel -- 74.25MHz */
++   writel( 0x0024f88a, (HOST_CGU_BASE + 0x02c)); /* VCGEN_G1SEL -- 27MHz, MPG0 PLL */
++
++   writel( 0x0024f881, (HOST_CGU_BASE + 0x044)); /* VCGEN_G2SEL -- 54MHz, MPG0 PLL */
++   writel( 0x00000001, (HOST_CGU_BASE + 0x050)); /* VCGEN_G3SEL -- 27MHz, MPG0 PLL */
++   writel( 0x000058e2, (HOST_CGU_BASE + 0x048)); /* VCGEN_G4SEL -- 13.5MHz, MPG0 PLL */
++   writel( 0x76ae6ae7, (HOST_CGU_BASE + 0x054)); /* VCGEN_G5SEL -- 27MHz, MPG0 PLL */
++   writel( 0x00000000, (HOST_CGU_BASE + 0x058)); /* VCGEN_G6SEL -- 27MHz, MPG0 PLL */
++   writel( 0x00000000, (HOST_CGU_BASE + 0x050)); /* VCGEN_G4SEL -- 13.5MHz, MPG0 PLL */
++   writel( 0x0024f888, (HOST_CGU_BASE + 0x044)); /* VCGEN_G5SEL -- 27MHz, MPG0 PLL */
++   writel( 0x0024f88a, (HOST_CGU_BASE + 0x044)); /* VCGEN_G6SEL -- 27MHz, MPG0 PLL */
++   writel( 0x00000005, (HOST_CGU_BASE + 0x190)); /* VCGEN_G2SEL -- 54MHz, MPG0 PLL */
++   writel( 0x00000002, (HOST_CGU_BASE + 0x194)); /* VCGEN_G3SEL -- 27MHz, MPG0 PLL */
++   writel( 0x00000006, (HOST_CGU_BASE + 0x198)); /* VCGEN_G4SEL -- 13.5MHz, MPG0 PLL */
++   writel( 0x00000005, (HOST_CGU_BASE + 0x19c)); /* VCGEN_G5SEL -- 27MHz, MPG0 PLL */
++   writel( 0x00000006, (HOST_CGU_BASE + 0x1a0)); /* VCGEN_G6SEL -- 27MHz, MPG0 PLL */
++   writel( 0x00000000, (HOST_CGU_BASE + 0x1a4)); /* VCGEN_G4SEL -- 13.5MHz, MPG0 PLL */
++   writel( 0x00000000, (HOST_CGU_BASE + 0x1a8)); /* VCGEN_G5SEL -- 27MHz, MPG0 PLL */
++   writel( 0x00000000, (HOST_CGU_BASE + 0x1ac)); /* VCGEN_G6SEL -- 27MHz, MPG0 PLL */
++   writel( 0x00000000, (HOST_CGU_BASE + 0x1b0)); /* VCGEN_G5SEL -- 27MHz, MPG0 PLL */
++   writel( 0x00000000, (HOST_CGU_BASE + 0x1b4)); /* VCGEN_G6SEL -- 27MHz, MPG0 PLL */
++   writel( 0x00000003, (HOST_CGU_BASE + 0x160)); /* VCGEN_G6SEL -- 27MHz, MPG0 PLL */
++
+ 
+    /* CPIPE Sync Timing Generator settings */
+    writel( 0x00000000, (APOLLO_CPIPE_BASE + 0x8000)); /* progressive */
+@@ -151,9 +168,9 @@
+    writel( 0x00000000, (APOLLO_DENC_BASE + 0x120)); /* Bypass DENC CSC */
+ 
+    /* Set up the formatting PLL - programmed thru the HDMI I/F - and the serializer PLL */
+-   writel( 0x00000003, (APOLLO_CGU_BASE + 0x2fc));     /* Enable TMDS clock for HDMI */
+-   writel( 0x00000020, (APOLLO_CGU_BASE + 0x11c));     /* PLL_HDMI_CON3_CTL - use MPG0 PLL for Fmt PLL Source */
+-   writel( 0x80000002, (APOLLO_CGU_BASE + 0x110));     /* PLL_HDMI_CON0_CTL - use HDMI register I/F rather than direct I/F */
++   writel( 0x00000003, (HOST_CGU_BASE + 0x164));     /* Enable TMDS clock for HDMI */
++   writel( 0x00000020, (HOST_CGU_BASE + 0x098));     /* PLL_HDMI_CON3_CTL - use MPG0 PLL for Fmt PLL Source */
++   writel( 0x80000002, (HOST_CGU_BASE + 0x08c));     /* PLL_HDMI_CON0_CTL - use HDMI register I/F rather than direct I/F */
+    writel( 0x0102040a, (APOLLO_HDMI_TX_BASE + 0x034)); /* FMT_PLL_SETTINGS - 480i, 480p */
+    writel( 0x00000203, (APOLLO_HDMI_TX_BASE + 0x030)); /* SER_PLL_SETTINGS - 480i, 480p (27 MHz) */
+    writel( 0x00000100, (APOLLO_HDMI_TX_BASE + 0x038)); /* PHY_CTRL - apply the pll settings */
+@@ -194,20 +211,6 @@
+    writel( 0x00000004, (APOLLO_HDMI_TX_BASE + 0x0e8));
+    writel( 0x91c1c240, (APOLLO_HDMI_TX_BASE + 0x0ec));
+ 
+-   /*----------------------- Calibrate VDAC's ----------------------*/
+-   writel( 0x0009c00e, (APOLLO_GBL_REG_BASE + 0x8fc)); /*reset VDAC0 */
+-   writel( 0x0009c00e, (APOLLO_GBL_REG_BASE + 0x920)); /*reset VDAC1 */
+-   writel( 0x0019f60e, (APOLLO_GBL_REG_BASE + 0x8fc)); /*VDAC0_CTRL0 30 MHz power */
+-   writel( 0x0019f60e, (APOLLO_GBL_REG_BASE + 0x920)); /*VDAC1_CTRL0 30 MHz power */
+-   writel( 0x52201750, (APOLLO_GBL_REG_BASE + 0x900)); /*VDAC0_CTRL1 */
+-   writel( 0x52201750, (APOLLO_GBL_REG_BASE + 0x924)); /*VDAC1_CTRL1 */
+-   writel( 0x52201752, (APOLLO_GBL_REG_BASE + 0x900)); /*VDAC0_CTRL1 */
+-   writel( 0x52201752, (APOLLO_GBL_REG_BASE + 0x924)); /*VDAC1_CTRL1 */
+-   writel( 0x3f000070, (APOLLO_GBL_REG_BASE + 0x90c)); /*VDAC0_CTRL4 70-->71 */
+-   writel( 0x3f000071, (APOLLO_GBL_REG_BASE + 0x90c));
+-   writel( 0x3f000070, (APOLLO_GBL_REG_BASE + 0x930)); /*VDAC1_CTRL4 70-->71 */
+-   writel( 0x3f000071, (APOLLO_GBL_REG_BASE + 0x930));
+-
+    /*** Put the splash screen in memory ***/
+    pInc = pVRAMhd_base;
+    /* Clear the buffer to a white background. */
+diff -Naur linux-2.6.34/drivers/dcs_net/Kconfig linux-2.6.34_mod/drivers/dcs_net/Kconfig
+--- linux-2.6.34/drivers/dcs_net/Kconfig	2012-01-12 13:42:40.000000000 +0800
++++ linux-2.6.34_mod/drivers/dcs_net/Kconfig	2012-01-12 13:08:59.000000000 +0800
+@@ -7,7 +7,7 @@
+ 
+ config DCS_NETWORK_SUPPORT
+   tristate "Enable support for DCS bus network controller"
+-  depends on ARCH_APOLLO || ARCH_KRONOS
++  depends on ARCH_APOLLO || ARCH_KRONOS || ARCH_KROME
+   help
+     The DCS bus network controller should be enabled if the driver/kernel 
+     wants to configure the timeout value and access rights for all the targets.
+diff -Naur linux-2.6.34/drivers/dma/Kconfig linux-2.6.34_mod/drivers/dma/Kconfig
+--- linux-2.6.34/drivers/dma/Kconfig	2012-01-12 13:42:40.000000000 +0800
++++ linux-2.6.34_mod/drivers/dma/Kconfig	2012-01-12 13:07:10.000000000 +0800
+@@ -109,7 +109,7 @@
+ 
+ config NX_DMAC_1902
+   bool "NXP DMA Controller IP_1902 support"
+-  depends on (ARCH_APOLLO || ARCH_KRONOS)
++   depends on (ARCH_APOLLO || ARCH_KRONOS || ARCH_KROME)
+   select DMA_ENGINE
+   help
+     This enables the TRIDENT DMA Controller IP_1902 support.

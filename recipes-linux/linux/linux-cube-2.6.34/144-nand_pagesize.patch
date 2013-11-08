@@ -1,0 +1,41 @@
+diff -Naupbr linux-2.6.34.orig/arch/arm/mach-apollo/nand.c linux-2.6.34/arch/arm/mach-apollo/nand.c
+--- linux-2.6.34.orig/arch/arm/mach-apollo/nand.c	2011-01-05 12:10:53.322470026 -0600
++++ linux-2.6.34/arch/arm/mach-apollo/nand.c	2011-01-05 16:10:36.965971701 -0600
+@@ -37,29 +37,25 @@ static struct platform_device apollo_ip2
+ 
+ static int __init apollo_nand_init(void)
+ {
+-#if 1
+-	/**
+-	 * FIXME: This configuration must come from bootloader
+-	 **/
+ 	void * __iomem base = ioremap(apollo_ip2017_resources[0].start,
+ 			APOLLO_IP2017_LEN);
+ 	if (base == NULL) {
+ 		printk(KERN_ERR "NAND_DEVICE: out of memory?!\n");
+ 		return -ENOMEM;
+ 	}
+-	writel(0x014, base + 0x04C);
+-#ifdef CONFIG_EXECUTE_ON_EMULATOR
+-	writel(0x02644448, base + 0x050); /* Set timings */
+-	writel(0x00108444, base + 0x054);
+-#endif
+ 
+-   if (PCI_HOST_MODE_ENABLED)
++        /*
++         * Don't change this. According to Nitin, Devin derived
++         * it and different values cause erratic behaviour.
++         */
++        if (PCI_HOST_MODE_ENABLED) {
+       writel(0x3FE, base + 0x010);
+-   else
++        } else {
+       writel(0x3F, base + 0x010);
++        }
+ 
+ 	iounmap(base);
+-#endif /* FIXME: Remove it once the bootloader is updated */
++
+ 	return platform_device_register (&apollo_ip2017_device);
+ }
+ arch_initcall(apollo_nand_init);

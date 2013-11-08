@@ -1,0 +1,194 @@
+diff -Naur linux-2.6.34/drivers/usb/gadget/config.c linux-2.6.34_no_otg_usbcv_fix/drivers/usb/gadget/config.c
+--- linux-2.6.34/drivers/usb/gadget/config.c	2011-01-19 11:36:45.365333000 +0530
++++ linux-2.6.34_no_otg_usbcv_fix/drivers/usb/gadget/config.c	2011-01-19 10:44:39.306575000 +0530
+@@ -114,7 +114,9 @@
+ 	cp->bDescriptorType = USB_DT_CONFIG;
+ 	cp->wTotalLength = cpu_to_le16(len);
+ 	cp->bmAttributes |= USB_CONFIG_ATT_ONE;
++
+ /* Other speed config doesn't have proper speed value set it properly for full speed , this can be done at udc driver too*/
++#ifdef CONFIG_IP9028_OTG 
+ 	if(speed == USB_SPEED_FULL)
+ 	{
+ 		*( (u8*)buf + 25) = 0x40;
+@@ -122,6 +124,15 @@
+ 		*( (u8*)buf + 32) = 0x40;
+ 		*( (u8*)buf + 33) = 0x00;
+ 	}
++#else
++	if(speed == USB_SPEED_FULL)
++	{
++		*( (u8*)buf + 22) = 0x40;
++		*( (u8*)buf + 23) = 0x00;
++		*( (u8*)buf + 29) = 0x40;
++		*( (u8*)buf + 30) = 0x00;
++	}
++#endif
+ 	return len;
+ }
+ 
+diff -Naur linux-2.6.34/drivers/usb/gadget/ip9028_udc.c linux-2.6.34_no_otg_usbcv_fix/drivers/usb/gadget/ip9028_udc.c
+--- linux-2.6.34/drivers/usb/gadget/ip9028_udc.c	2011-01-19 11:36:46.770170000 +0530
++++ linux-2.6.34_no_otg_usbcv_fix/drivers/usb/gadget/ip9028_udc.c	2011-01-19 11:52:55.392849000 +0530
+@@ -62,6 +62,10 @@
+ 
+ unsigned int g_gadget_registered = 0;
+ 
++#ifndef CONFIG_IP9028_OTG
++unsigned int g_portpower_on = 0;
++#endif
++
+ /* it is initialized in probe()  */
+ struct fsl_udc *udc_controller = NULL;
+ 
+@@ -176,6 +180,38 @@
+ 	Internal Hardware related function
+  ------------------------------------------------------------------*/
+ 
++#ifndef CONFIG_IP9028_OTG 
++
++#define IP9028_PRTSC_PP         (1 << 12)
++#define IP9028_PRTSC_PP_OFF_MASK 0xFFFFEFFF
++
++void dr_set_portpower(unsigned int pp_on)
++{
++    unsigned int ppsc;	
++
++    ppsc = fsl_readl(&dr_regs->portsc1);
++
++    if (pp_on)
++    {
++        /*Enable Port Power*/
++        ppsc = ppsc | IP9028_PRTSC_PP;
++    }
++    else
++    {
++        /*Disable Port Power*/
++        ppsc = ppsc & IP9028_PRTSC_PP_OFF_MASK;
++    }
++
++    fsl_writel(ppsc, &dr_regs->portsc1);
++}
++
++void dr_otg_disable(void)
++{
++    fsl_writel(0, &dr_regs->otgsc);
++}
++#endif
++
++
+ static int dr_controller_setup(struct fsl_udc *udc)
+ {
+ 	unsigned int tmp = 0, ctrl = 0;
+@@ -211,6 +247,11 @@
+ 	/* Clear the setup status */
+ 	fsl_writel(0, &dr_regs->usbsts);
+ 
++#ifndef CONFIG_IP9028_OTG 
++        dr_otg_disable(); /*Disable all otg interrupts*/
++        dr_set_portpower(g_portpower_on); /*value 0 , so port power off*/
++#endif
++
+ 	tmp = udc->ep_qh_dma;
+ 	tmp &= USB_EP_LIST_ADDRESS_MASK;
+ 	fsl_writel(tmp, &dr_regs->endpointlistaddr);
+@@ -2017,6 +2058,7 @@
+ 	
+ }
+ 
++
+ /*
+  * USB device controller interrupt handler
+  */
+@@ -2027,9 +2069,10 @@
+ 	irqreturn_t status = IRQ_NONE;
+ 	unsigned long flags;
+ 
++#ifdef CONFIG_IP9028_OTG 
+ 	if(Is_Otg_Intr(udc))
+ 		return IRQ_NONE;
+-
++#endif
+ 
+ 	/* Disable ISR for OTG host mode */
+ 	if (udc->stopped)
+@@ -2777,11 +2820,58 @@
+ }
+ 
+ 
++#ifndef CONFIG_IP9028_OTG 
++
++int proc_usb_gadget_portpower_toggle(char *buffer,char **buffer_location,off_t offset,
++                             int buffer_length, int *eof, void *data)
++{
++    if (0 == g_portpower_on)
++    {
++        g_portpower_on = 1;
++        printk("Port Power On\n");
++    }
++    else
++    {
++        g_portpower_on = 0;
++        printk("Port Power Off\n");
++    }
++
++    dr_set_portpower(g_portpower_on);
++
++    return 0;
++}
++
++void fsl_udc_create_proc_entry(void)
++{
++    static struct proc_dir_entry *gadget_proc_file ;
++    static struct proc_dir_entry *gadget_proc_dir;
++
++    gadget_proc_dir = proc_mkdir("gadget",  NULL);
++    if (gadget_proc_dir == NULL)
++    {
++         printk(KERN_ALERT "Error: Could not initialize /proc/%s\n","gadget");
++         return;
++    }
++
++    gadget_proc_file = create_proc_entry("port_power", 0644, gadget_proc_dir);
++    if (gadget_proc_file == NULL)
++    {
++         printk(KERN_ALERT "Error: Could not initialize /proc/gadget/%s\n","port_power");
++         return;
++    }
++
++    gadget_proc_file->read_proc = proc_usb_gadget_portpower_toggle;
++    gadget_proc_file->mode = S_IFREG | S_IRUGO;
++    gadget_proc_file->uid = 0;
++    gadget_proc_file->gid = 0;
++    gadget_proc_file->size = 100;
++}
++
++
+ /* Driver probe function : CALLED BY KERNEL (WHEN DEVICE MODE IS SELECTED WITHOUT OTG OPTION)
+  * all intialization operations implemented here except enabling usb_intr reg
+  * board setup should have been done in the platform code
+  */
+-#ifndef CONFIG_IP9028_OTG 
+ int __init fsl_udc_probe(struct platform_device * pdev)
+ {
+ 	void __iomem *regs = NULL;
+@@ -2800,6 +2890,8 @@
+ 		return -ENOMEM;
+ 	}
+ 
++        fsl_udc_create_proc_entry();
++
+ 	retval = fsl_otg_udc_probe(&pdev->dev, regs, pdev->resource[1].start);
+ 	return retval;
+ 
+@@ -2808,10 +2900,8 @@
+ 	iounmap(regs);
+ 	return retval;
+ }
+-#endif
+ 
+ 
+-#ifndef CONFIG_IP9028_OTG /*If No OTG support, only standalome device mode support*/ 
+ /*-----------------------------------------------------------------
+  * Modify Power management attributes
+  * Used by OTG statemachine to disable gadget temporarily

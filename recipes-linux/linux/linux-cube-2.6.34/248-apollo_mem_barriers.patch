@@ -1,0 +1,440 @@
+diff -Naurp linux-2.6.34_orig/arch/arm/mach-apollo/include/mach/barriers.h linux-2.6.34/arch/arm/mach-apollo/include/mach/barriers.h
+--- linux-2.6.34_orig/arch/arm/mach-apollo/include/mach/barriers.h	2013-01-23 13:17:59.095074000 +0530
++++ linux-2.6.34/arch/arm/mach-apollo/include/mach/barriers.h	2013-01-22 20:03:31.930336000 +0530
+@@ -17,9 +17,11 @@
+ /****************************************************************************/
+ #ifndef __MACH_BARRIERS_H
+ #define __MACH_BARRIERS_H
+- 
++
++extern void DoDummyWriteRead(void);
++
+ #define rmb()     dmb()
+-#define mb()      do { dsb(); outer_sync(); } while (0)
++#define mb()      do { dsb(); outer_sync(); DoDummyWriteRead(); dsb(); } while (0)
+ #define wmb()     mb()
+  
+ #endif  /* __MACH_BARRIERS_H */
+diff -Naurp linux-2.6.34_orig/arch/arm/mach-apollo/pnx8492.c linux-2.6.34/arch/arm/mach-apollo/pnx8492.c
+--- linux-2.6.34_orig/arch/arm/mach-apollo/pnx8492.c	2013-01-23 13:17:56.350316000 +0530
++++ linux-2.6.34/arch/arm/mach-apollo/pnx8492.c	2013-01-23 15:11:27.607737000 +0530
+@@ -577,17 +577,17 @@ static int __init apollo_l2x0_init(void)
+ 		 * 128KB (16KB/way), 
+ 		 * 8-way associativity, 
+ 		 * Exclusive, 
+-                 * Zero enable 
++		 * Zero enable 
+ 		 * Bits:  0011 0010 0000 0010 0001 0000 0000 0001
+ 		 */
+ 		l2x0_init(__io_address(APOLLO_CORTEX_A9_L2CACHE_BASE),
+-			  0x32021001, 0xffffffff);
++			0x32021001, 0xffffffff);
+ 
+ 		/* Change the ACTRL register to Exlusive, Zero Enable, L1 prefetch, L2 prefetch */
+-                __asm__("mrc p15, 0, r12, c1, c0, 1\n\t"
+-                        "orr r12, r12, #0x8e\n\t"
+-                        "mcr p15, 0, r12, c1, c0, 1"
+-                : : : "r12","cc", "memory");
++		__asm__("mrc p15, 0, r12, c1, c0, 1\n\t"
++				"orr r12, r12, #0x8e\n\t"
++				"mcr p15, 0, r12, c1, c0, 1"
++				: : : "r12","cc", "memory");
+ 	}
+ 	return 0;
+ }
+@@ -608,7 +608,7 @@ static void cnxt_get_chip_rev_id(void)
+     /* If the Fuse is not programmed assume Shiner M1 */
+     if(*pFuse == 0)
+     {
+-	ChipID=CHIPID_SHINER_S;
++		ChipID=CHIPID_SHINER_S;
+     }
+     else
+     {
+@@ -637,13 +637,52 @@ unsigned int GetChipID (void)
+     return ChipID;
+ }
+ 
++#ifdef CONFIG_ARCH_HAS_BARRIERS
++u32 __initdata uDummy0_start, uDummy0_size;
++u32 __initdata uDummy1_start, uDummy1_size;
++
++unsigned long *pDummy0UncachedWrite = NULL;
++unsigned long Dummy0UncachedRead = 0;
++unsigned long *pDummy1UncachedWrite = NULL;
++unsigned long Dummy1UncachedRead = 0;
++
++void DoDummyWriteRead(void)
++{
++	if(pDummy0UncachedWrite)
++	{
++		*pDummy0UncachedWrite = 0;
++		Dummy0UncachedRead = *pDummy0UncachedWrite;
++	}
++	if(pDummy1UncachedWrite)
++	{
++		*pDummy1UncachedWrite = 0;
++		Dummy1UncachedRead = *pDummy1UncachedWrite;
++	}
++}
++EXPORT_SYMBOL(DoDummyWriteRead);
++#endif
++
+ void __init apollo_init(void)
+ {
+ #ifdef CONFIG_APOLLO_SPLASH
+-   apollo_splash();
++	apollo_splash();
+ #endif
+-   printk (KERN_INFO "Adding platform devices...\n");
+-   platform_add_devices(platform_devs, ARRAY_SIZE(platform_devs));
++
++#ifdef CONFIG_ARCH_HAS_BARRIERS
++	pDummy0UncachedWrite = ioremap_nocache(uDummy0_start, uDummy0_size);
++	if (pDummy0UncachedWrite == NULL) {
++		printk (KERN_ERR "Failed to ioremap_nocache Dummy0\n");
++		BUG();
++	}
++	pDummy1UncachedWrite = ioremap_nocache(uDummy1_start, uDummy1_size);
++	if (pDummy1UncachedWrite == NULL) {
++		printk (KERN_ERR "Failed to ioremap_nocache Dummy1\n");
++		BUG();
++	}
++#endif
++
++	printk (KERN_INFO "Adding platform devices...\n");
++	platform_add_devices(platform_devs, ARRAY_SIZE(platform_devs));
+ }
+ 
+ /*
+@@ -693,9 +732,9 @@ static int __init parse_tag_memmap(const
+ 
+ 	for(i=0;i<MAX_MEMMAP_TAGS;i++)
+ 	{
+-        if((tag->u.memmap.pool_def[i].offset <= 0) || (tag->u.memmap.pool_def[i].offset > pnx8493_meminfo.bank[tag->u.memmap.pool_def[i].bank].size)
++		if((tag->u.memmap.pool_def[i].offset <= 0) || (tag->u.memmap.pool_def[i].offset > pnx8493_meminfo.bank[tag->u.memmap.pool_def[i].bank].size)
+ 						   || (tag->u.memmap.pool_def[i].size > pnx8493_meminfo.bank[tag->u.memmap.pool_def[i].bank].size))
+-            continue;
++			continue;
+ 
+ 		switch (tag->u.memmap.pool_def[i].pool_type)
+ 		{
+@@ -770,13 +809,24 @@ static int __init parse_tag_memmap(const
+ 			break;
+ 
+ 			default:
+-                printk(KERN_WARNING "Unknown pool type in ATAG List!!\n");
++				printk(KERN_WARNING "Unknown pool type in ATAG List!!\n");
+ 				break;
+ 
+ 		}
+ 	}
++#ifdef CONFIG_ARCH_HAS_BARRIERS
++	uDummy0_start = pnx8493_meminfo.bank[0].start + 
++					(pnx8493_meminfo.bank[0].size - PAGE_SIZE);
++	uDummy0_size = PAGE_SIZE;
++	if (pnx8493_meminfo.nr_banks > 1)
++	{
++		uDummy1_start = pnx8493_meminfo.bank[1].start + 
++						(pnx8493_meminfo.bank[1].size - PAGE_SIZE);
++		uDummy1_size = PAGE_SIZE;
++	}
++#endif
+ 
+-    return 0;
++	return 0;
+ }
+ __tagtable(ATAG_MEMMAP, parse_tag_memmap);
+ 
+diff -Naurp linux-2.6.34_orig/arch/arm/mach-krome/krome.c linux-2.6.34/arch/arm/mach-krome/krome.c
+--- linux-2.6.34_orig/arch/arm/mach-krome/krome.c	2013-01-23 13:17:59.103074000 +0530
++++ linux-2.6.34/arch/arm/mach-krome/krome.c	2013-01-22 20:02:35.994866000 +0530
+@@ -385,9 +385,9 @@ unsigned long DummyUncachedRead = 0;
+ 
+ void DoDummyWriteRead(void)
+ {
+-   if(pDummyUncachedWrite)
++	if(pDummyUncachedWrite)
+ 	{
+-	   *pDummyUncachedWrite = 0;
++		*pDummyUncachedWrite = 0;
+ 		DummyUncachedRead = *pDummyUncachedWrite;
+ 	}
+ }
+@@ -397,24 +397,24 @@ EXPORT_SYMBOL(DoDummyWriteRead);
+ #ifdef CONFIG_CACHE_L2X0
+ static int __init apollo_l2x0_init(void)
+ {
+-   if (machine_is_krome()) {
+-      /*
+-       * Data and Instruction prefetch,
+-       * 128KB (16KB/way),
+-       * 8-way associativity,
+-       * Exclusive,
+-                 * Zero enable
+-       * Bits:  0011 0010 0000 0010 0001 0000 0000 0001
+-       */
+-      l2x0_init(__io_address(APOLLO_CORTEX_A9_L2CACHE_BASE),
+-           0x32021001, 0xffffffff);
+-
+-      /* Change the ACTRL register to Exlusive, Zero Enable, L1 prefetch, L2 prefetch */
+-                __asm__("mrc p15, 0, r12, c1, c0, 1\n\t"
+-                        "orr r12, r12, #0x8e\n\t"
+-                        "mcr p15, 0, r12, c1, c0, 1"
+-                : : : "r12","cc", "memory");
+-   }
++	if (machine_is_krome()) {
++		/*
++		 * Data and Instruction prefetch,
++		 * 128KB (16KB/way),
++		 * 8-way associativity,
++		 * Exclusive,
++		 * Zero enable
++		 * Bits:	0011 0010 0000 0010 0001 0000 0000 0001
++		 */
++		l2x0_init(__io_address(APOLLO_CORTEX_A9_L2CACHE_BASE),
++			0x32021001, 0xffffffff);
++
++		/* Change the ACTRL register to Exlusive, Zero Enable, L1 prefetch, L2 prefetch */
++		__asm__("mrc p15, 0, r12, c1, c0, 1\n\t"
++				"orr r12, r12, #0x8e\n\t"
++				"mcr p15, 0, r12, c1, c0, 1"
++				: : : "r12","cc", "memory");
++		}
+ 
+ 	return 0;
+ }
+@@ -428,19 +428,20 @@ void __init apollo_init(void)
+ #endif
+ 
+ #ifdef CONFIG_KROME_SPLASH
+-   apollo_splash();
++	apollo_splash();
+ #endif
+ 
+ #ifdef CONFIG_ARCH_HAS_BARRIERS
+ 	pDummyUncachedWrite = dma_alloc_coherent(NULL, 4, &dmaAddr, GFP_ATOMIC);
+ 	if(pDummyUncachedWrite == NULL)
+ 	{
+-      printk (KERN_ERR "Failed to allocate DMA coherent memory for dummy write/read\n");
++		printk (KERN_ERR "Failed to allocate DMA coherent memory for dummy write/read\n");
++		BUG();
+ 	}
+ #endif
+ 
+-   printk (KERN_INFO "Adding platform devices...\n");
+-   platform_add_devices(platform_devs, ARRAY_SIZE(platform_devs));
++	printk (KERN_INFO "Adding platform devices...\n");
++	platform_add_devices(platform_devs, ARRAY_SIZE(platform_devs));
+ }
+ 
+ /*
+@@ -490,8 +491,8 @@ static int __init parse_tag_memmap(const
+ 
+ 	for(i=0;i<MAX_MEMMAP_TAGS;i++)
+ 	{
+-        if((tag->u.memmap.pool_def[i].offset < 0) || (tag->u.memmap.pool_def[i].offset > pnx8493_meminfo.bank[tag->u.memmap.pool_def[i].bank].size))
+-            continue;
++		if((tag->u.memmap.pool_def[i].offset < 0) || (tag->u.memmap.pool_def[i].offset > pnx8493_meminfo.bank[tag->u.memmap.pool_def[i].bank].size))
++			continue;
+ 
+ 		switch (tag->u.memmap.pool_def[i].pool_type)
+ 		{
+@@ -572,7 +573,7 @@ static int __init parse_tag_memmap(const
+ 		}
+ 	}
+ 
+-    return 0;
++	return 0;
+ }
+ __tagtable(ATAG_MEMMAP, parse_tag_memmap);
+ 
+diff -Naurp linux-2.6.34_orig/arch/arm/mach-kronos/kronos.c linux-2.6.34/arch/arm/mach-kronos/kronos.c
+--- linux-2.6.34_orig/arch/arm/mach-kronos/kronos.c	2013-01-23 13:17:59.110070000 +0530
++++ linux-2.6.34/arch/arm/mach-kronos/kronos.c	2013-01-22 20:02:24.412834000 +0530
+@@ -385,9 +385,9 @@ unsigned long DummyUncachedRead = 0;
+ 
+ void DoDummyWriteRead(void)
+ {
+-   if(pDummyUncachedWrite)
++	if(pDummyUncachedWrite)
+ 	{
+-	   *pDummyUncachedWrite = 0;
++		*pDummyUncachedWrite = 0;
+ 		DummyUncachedRead = *pDummyUncachedWrite;
+ 	}
+ }
+@@ -397,37 +397,36 @@ EXPORT_SYMBOL(DoDummyWriteRead);
+ #ifdef CONFIG_CACHE_L2X0
+ static int __init apollo_l2x0_init(void)
+ {
+-   if (machine_is_kronos()) {
+-      /*
+-       * Data and Instruction prefetch disable for Kronos A0,
+-       * 128KB (16KB/way),
+-       * 8-way associativity,
+-       * Exclusive,
+-       * Zero enable
+-       */
+-      if ( GetChipRev() == CHIP_REV_A){
+-         printk(KERN_INFO "Initalizing PL310 with I/D prefetch disable\n");
+-         l2x0_init(__io_address(APOLLO_CORTEX_A9_L2CACHE_BASE),
+-              0x02021001, 0xffffffff);
+-         /* Change ACTRL register to Exlusive, Zero Enable, L1 prefetch */
+-                __asm__("mrc p15, 0, r12, c1, c0, 1\n\t"
+-                        "orr r12, r12, #0x8c\n\t"
+-                        "mcr p15, 0, r12, c1, c0, 1"
+-                : : : "r12","cc", "memory");
+-      }
+-      else {
+-         l2x0_init(__io_address(APOLLO_CORTEX_A9_L2CACHE_BASE),
+-              0x32021001, 0xffffffff);
+-         /* Change ACTRL register to Exlusive, Zero Enable, L1 prefetch, L2 prefetch */
+-                __asm__("mrc p15, 0, r12, c1, c0, 1\n\t"
+-                        "orr r12, r12, #0x8e\n\t"
+-                        "mcr p15, 0, r12, c1, c0, 1"
+-                : : : "r12","cc", "memory");
+-      }
+-
+-   }
++	if (machine_is_kronos()) {
++		/*
++		 * Data and Instruction prefetch disable for Kronos A0,
++		 * 128KB (16KB/way),
++		 * 8-way associativity,
++		 * Exclusive,
++		 * Zero enable
++		 */
++		if ( GetChipRev() == CHIP_REV_A) {
++			printk(KERN_INFO "Initalizing PL310 with I/D prefetch disable\n");
++			l2x0_init(__io_address(APOLLO_CORTEX_A9_L2CACHE_BASE),
++				0x02021001, 0xffffffff);
++			/* Change ACTRL register to Exlusive, Zero Enable, L1 prefetch */
++			__asm__("mrc p15, 0, r12, c1, c0, 1\n\t"
++					"orr r12, r12, #0x8c\n\t"
++					"mcr p15, 0, r12, c1, c0, 1"
++					: : : "r12","cc", "memory");
++		}
++		else {
++			l2x0_init(__io_address(APOLLO_CORTEX_A9_L2CACHE_BASE),
++				0x32021001, 0xffffffff);
++			/* Change ACTRL register to Exlusive, Zero Enable, L1 prefetch, L2 prefetch */
++			__asm__("mrc p15, 0, r12, c1, c0, 1\n\t"
++					"orr r12, r12, #0x8e\n\t"
++					"mcr p15, 0, r12, c1, c0, 1"
++					: : : "r12","cc", "memory");
++		}
++	}
+ 
+-   return 0;
++	return 0;
+ }
+ early_initcall(apollo_l2x0_init);
+ #endif
+@@ -439,19 +438,20 @@ void __init apollo_init(void)
+ #endif
+ 
+ #ifdef CONFIG_KRONOS_SPLASH 
+-   apollo_splash();
++	apollo_splash();
+ #endif
+ 
+ #ifdef CONFIG_ARCH_HAS_BARRIERS
+ 	pDummyUncachedWrite = dma_alloc_coherent(NULL, 4, &dmaAddr, GFP_ATOMIC);
+ 	if(pDummyUncachedWrite == NULL)
+ 	{
+-      printk (KERN_ERR "Failed to allocate DMA coherent memory for dummy write/read\n");
++		printk (KERN_ERR "Failed to allocate DMA coherent memory for dummy write/read\n");
++		BUG();
+ 	}
+ #endif
+ 
+-   printk (KERN_INFO "Adding platform devices...\n");
+-   platform_add_devices(platform_devs, ARRAY_SIZE(platform_devs));
++	printk (KERN_INFO "Adding platform devices...\n");
++	platform_add_devices(platform_devs, ARRAY_SIZE(platform_devs));
+ }
+ 
+ /*
+diff -Naurp linux-2.6.34_orig/arch/arm/mm/mmu.c linux-2.6.34/arch/arm/mm/mmu.c
+--- linux-2.6.34_orig/arch/arm/mm/mmu.c	2013-01-23 13:17:59.006071000 +0530
++++ linux-2.6.34/arch/arm/mm/mmu.c	2013-01-23 15:05:57.831384000 +0530
+@@ -633,11 +633,12 @@ void __init create_mapping(struct map_de
+ #if (defined(CONFIG_ARCH_APOLLO)||defined(CONFIG_ARCH_KRONOS)||defined(CONFIG_ARCH_KROME)\
+      ||defined(CONFIG_ARCH_KORE3))&& defined(CONFIG_VMSPLIT_3G)
+ 	if ((md->type == MT_DEVICE || md->type == MT_ROM) &&
+-	    md->virtual >= PAGE_OFFSET && md->virtual < 0xE0000000) { 
++	    md->virtual >= PAGE_OFFSET && md->virtual < 0xE0000000)
+ #else
+ 	if ((md->type == MT_DEVICE || md->type == MT_ROM) &&
+-	    md->virtual >= PAGE_OFFSET && md->virtual < VMALLOC_END) {
++	    md->virtual >= PAGE_OFFSET && md->virtual < VMALLOC_END)
+ #endif
++	{
+ 		printk(KERN_WARNING "BUG: mapping for 0x%08llx at 0x%08lx "
+ 		       "overlaps vmalloc space\n",
+ 		       __pfn_to_phys((u64)md->pfn), md->virtual);
+@@ -866,6 +867,10 @@ extern u32 uKALCSSCON_start, uKALCSSCON_
+ extern u32 uA9_ARM926_start, uA9_ARM926_size;
+ extern u32 uARM926_TM_start, uARM926_TM_size;
+ extern u32 uMBVP_stdi_start, uMBVP_stdi_size;
++#ifdef CONFIG_ARCH_HAS_BARRIERS
++extern u32 uDummy0_start, uDummy0_size;
++extern u32 uDummy1_start, uDummy1_size;
++#endif
+ 
+ /*
+  * Reserve the various regions of node 0
+@@ -873,7 +878,7 @@ extern u32 uMBVP_stdi_start, uMBVP_stdi_
+ void __init reserve_node_zero(pg_data_t *pgdat)
+ {
+ 	unsigned long res_size = 0;
+-    int ret;
++	int ret;
+ 
+ 	/*
+ 	 * Register the kernel text and data with bootmem.
+@@ -892,7 +897,7 @@ void __init reserve_node_zero(pg_data_t 
+ 	 * and can only be in node 0.
+ 	 */
+ 	reserve_bootmem_node(pgdat, __pa(swapper_pg_dir),
+-			     PTRS_PER_PGD * sizeof(pgd_t), BOOTMEM_DEFAULT);
++				 PTRS_PER_PGD * sizeof(pgd_t), BOOTMEM_DEFAULT);
+ 
+ 	if (machine_is_apollo() || machine_is_kronos() || machine_is_krome() || machine_is_kore3())
+ 	{
+@@ -998,7 +1003,24 @@ void __init reserve_node_zero(pg_data_t 
+ 			if(ret)
+ 				printk("MBVP_stdi ret = %d\n", ret);
+ 		}
+-	}   
++	}
++#ifdef CONFIG_ARCH_HAS_BARRIERS
++	if (machine_is_apollo())
++	{
++		if((uDummy0_start >= 0) && (uDummy0_size > 0))
++		{
++			ret = reserve_bootmem_node(pgdat, uDummy0_start, uDummy0_size, BOOTMEM_DEFAULT);
++			if(ret)
++				printk("Dummy0 ret = %d\n", ret);
++		}
++		if((uDummy1_start >= 0) && (uDummy1_size > 0))
++		{
++			ret = reserve_bootmem_node(pgdat, uDummy1_start, uDummy1_size, BOOTMEM_DEFAULT);
++			if(ret)
++				printk("Dummy1 ret = %d\n", ret);
++		}
++	}
++#endif
+ 
+ 	/*
+ 	 * Hmm... This should go elsewhere, but we really really need to
+@@ -1010,7 +1032,7 @@ void __init reserve_node_zero(pg_data_t 
+ 		res_size = __pa(swapper_pg_dir) - PHYS_OFFSET;
+ 
+ 	/*
+-	 * These should likewise go elsewhere.  They pre-reserve the
++	 * These should likewise go elsewhere.	They pre-reserve the
+ 	 * screen memory region at the start of main system memory.
+ 	 */
+ 	if (machine_is_edb7211())

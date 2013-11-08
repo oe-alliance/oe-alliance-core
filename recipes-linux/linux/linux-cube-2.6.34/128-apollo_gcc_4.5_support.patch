@@ -1,0 +1,100 @@
+diff -Naurp linux-2.6.34.latest/arch/arm/Makefile linux-2.6.34/arch/arm/Makefile
+--- linux-2.6.34.latest/arch/arm/Makefile	2010-11-17 09:24:43.000000000 -0600
++++ linux-2.6.34/arch/arm/Makefile	2010-11-22 23:11:46.000000000 -0600
+@@ -104,8 +105,13 @@ AFLAGS_THUMB2	:=$(CFLAGS_THUMB2) -Wa$(co
+ endif
+ 
+ # Need -Uarm for gcc < 3.x
++ifeq ($(findstring x4.5.,x$(shell $(CC) -v 2>&1 | tail -n 1 | awk -F ' ' '{print $$3}')),x4.5.)
++KBUILD_CFLAGS	+=$(CFLAGS_ABI) $(CFLAGS_THUMB2) $(arch-y) $(tune-y) $(call cc-option,-mshort-load-bytes,$(call cc-option,-malignment-traps,)) -mhard-float -Uarm
++KBUILD_AFLAGS	+=$(CFLAGS_ABI) $(AFLAGS_THUMB2) $(arch-y) $(tune-y) -include asm/unified.h -mhard-float
++else
+ KBUILD_CFLAGS	+=$(CFLAGS_ABI) $(CFLAGS_THUMB2) $(arch-y) $(tune-y) $(call cc-option,-mshort-load-bytes,$(call cc-option,-malignment-traps,)) -msoft-float -Uarm
+ KBUILD_AFLAGS	+=$(CFLAGS_ABI) $(AFLAGS_THUMB2) $(arch-y) $(tune-y) -include asm/unified.h -msoft-float
++endif
+ 
+ CHECKFLAGS	+= -D__arm__
+ 
+diff -Naurp linux-2.6.34.latest/fs/xfs/linux-2.6/xfs_super.c linux-2.6.34/fs/xfs/linux-2.6/xfs_super.c
+--- linux-2.6.34.latest/fs/xfs/linux-2.6/xfs_super.c	2010-05-16 16:17:36.000000000 -0500
++++ linux-2.6.34/fs/xfs/linux-2.6/xfs_super.c	2010-11-22 22:47:01.000000000 -0600
+@@ -1234,7 +1234,7 @@ xfs_fs_sync_fs(
+ 	 * Try to asynchronously kick off quota syncing at least.
+ 	 */
+ 	if (!wait) {
+-		xfs_qm_sync(mp, SYNC_TRYLOCK);
++		(void)xfs_qm_sync(mp, SYNC_TRYLOCK);
+ 		return 0;
+ 	}
+ 
+diff -Naurp linux-2.6.34.latest/fs/xfs/linux-2.6/xfs_sync.c linux-2.6.34/fs/xfs/linux-2.6/xfs_sync.c
+--- linux-2.6.34.latest/fs/xfs/linux-2.6/xfs_sync.c	2010-05-16 16:17:36.000000000 -0500
++++ linux-2.6.34/fs/xfs/linux-2.6/xfs_sync.c	2010-11-22 22:47:24.000000000 -0600
+@@ -445,11 +445,11 @@ xfs_quiesce_data(
+ 
+ 	/* push non-blocking */
+ 	xfs_sync_data(mp, 0);
+-	xfs_qm_sync(mp, SYNC_TRYLOCK);
++	(void)xfs_qm_sync(mp, SYNC_TRYLOCK);
+ 
+ 	/* push and block till complete */
+ 	xfs_sync_data(mp, SYNC_WAIT);
+-	xfs_qm_sync(mp, SYNC_WAIT);
++	(void)xfs_qm_sync(mp, SYNC_WAIT);
+ 
+ 	/* write superblock and hoover up shutdown errors */
+ 	error = xfs_sync_fsdata(mp, SYNC_WAIT);
+diff -Naurp linux-2.6.34.latest/fs/xfs/xfs_iomap.c linux-2.6.34/fs/xfs/xfs_iomap.c
+--- linux-2.6.34.latest/fs/xfs/xfs_iomap.c	2010-05-16 16:17:36.000000000 -0500
++++ linux-2.6.34/fs/xfs/xfs_iomap.c	2010-11-22 22:45:42.000000000 -0600
+@@ -425,7 +425,7 @@ xfs_iomap_write_direct(
+ 
+ error0:	/* Cancel bmap, unlock inode, unreserve quota blocks, cancel trans */
+ 	xfs_bmap_cancel(&free_list);
+-	xfs_trans_unreserve_quota_nblks(tp, ip, qblocks, 0, quota_flag);
++	(void)xfs_trans_unreserve_quota_nblks(tp, ip, qblocks, 0, quota_flag);
+ 
+ error1:	/* Just cancel transaction */
+ 	xfs_trans_cancel(tp, XFS_TRANS_RELEASE_LOG_RES | XFS_TRANS_ABORT);
+diff -Naurp linux-2.6.34.latest/fs/xfs/xfs_mount.c linux-2.6.34/fs/xfs/xfs_mount.c
+--- linux-2.6.34.latest/fs/xfs/xfs_mount.c	2010-05-16 16:17:36.000000000 -0500
++++ linux-2.6.34/fs/xfs/xfs_mount.c	2010-11-22 22:46:09.000000000 -0600
+@@ -1458,7 +1458,7 @@ xfs_unmountfs(
+ 	__uint64_t		resblks;
+ 	int			error;
+ 
+-	xfs_qm_unmount_quotas(mp);
++	(void)xfs_qm_unmount_quotas(mp);
+ 	xfs_rtunmount_inodes(mp);
+ 	IRELE(mp->m_rootip);
+ 
+diff -Naurp linux-2.6.34.latest/fs/xfs/xfs_vnodeops.c linux-2.6.34/fs/xfs/xfs_vnodeops.c
+--- linux-2.6.34.latest/fs/xfs/xfs_vnodeops.c	2010-05-16 16:17:36.000000000 -0500
++++ linux-2.6.34/fs/xfs/xfs_vnodeops.c	2010-11-22 22:46:32.000000000 -0600
+@@ -2543,7 +2543,7 @@ dmapi_enospc_check:
+ 
+ error0:	/* Cancel bmap, unlock inode, unreserve quota blocks, cancel trans */
+ 	xfs_bmap_cancel(&free_list);
+-	xfs_trans_unreserve_quota_nblks(tp, ip, qblocks, 0, quota_flag);
++	(void)xfs_trans_unreserve_quota_nblks(tp, ip, qblocks, 0, quota_flag);
+ 
+ error1:	/* Just cancel transaction */
+ 	xfs_trans_cancel(tp, XFS_TRANS_RELEASE_LOG_RES | XFS_TRANS_ABORT);
+diff -Naurp linux-2.6.34.latest/Makefile linux-2.6.34/Makefile
+--- linux-2.6.34.latest/Makefile	2010-05-16 16:17:36.000000000 -0500
++++ linux-2.6.34/Makefile	2010-11-22 23:08:52.000000000 -0600
+@@ -582,6 +583,14 @@ KBUILD_CFLAGS	+= $(call cc-option,-fno-d
+ # conserve stack if available
+ KBUILD_CFLAGS   += $(call cc-option,-fconserve-stack)
+ 
++ifeq ($(findstring x4.5.,x$(shell $(CC) -v 2>&1 | tail -n 1 | awk -F ' ' '{print $$3}')),x4.5.)
++# Remove uninitialized warning for GCC-4.5.x
++KBUILD_CFLAGS   += $(call cc-option,-Wno-uninitialized)
++
++# Remove C enum-compare warning for GCC-4.5.x
++KBUILD_CFLAGS   += $(call cc-option,-Wno-enum-compare)
++endif
++
+ # Add user supplied CPPFLAGS, AFLAGS and CFLAGS as the last assignments
+ # But warn user when we do so
+ warn-assign = \

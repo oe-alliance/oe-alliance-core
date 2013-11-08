@@ -1,0 +1,513 @@
+diff -Naurp linux-2.6.34_Org/arch/arm/mach-krome/include/mach/gpio.h linux-2.6.34/arch/arm/mach-krome/include/mach/gpio.h
+--- linux-2.6.34_Org/arch/arm/mach-krome/include/mach/gpio.h	2012-03-28 12:31:50.217041000 +0530
++++ linux-2.6.34/arch/arm/mach-krome/include/mach/gpio.h	2012-03-28 14:51:29.737979000 +0530
+@@ -24,37 +24,27 @@
+ /* #include <mach/irqs.h> TODO: irqs.h file includes gpio.h file */
+ #include <asm-generic/gpio.h>
+ 
+-#if 1
+-/**
+- * FIXME: 
+- * Interrupt numbers in irqs.h is still invaild and
+- * so we go on with our own declaration.
+- **/
+-#define IRQ_GPIO_L 32 /* Left GPIO */
+-#define IRQ_GPIO_R 102 /* Right GPIO */
+-#endif
+-
+-/**
++/*
+  * GPIO-0: Left GPIO configuration
+- **/
+-#define GPIO0_IRQ       IRQ_GPIO_L
+-#define GPIO0_MAX_NR    74
++ */
++#define GPIO0_IRQ       IRQ_GPIO_LEFT
++#define GPIO0_MAX_NR    77
+ #define GPIO0_BASE      (ARM_A9_HOST_MMIO_BASE + 0x0AB000)
+ #define GPIO0_IRQ_BASE  IRQ_MAX_NBR
+ #define GPIO0_START_PIN 0
+ 
+-/**
++/*
+  * GPIO-1: Right GPIO configuration
+- **/
+-#define GPIO1_IRQ IRQ_GPIO_R
+-#define GPIO1_MAX_NR    20 
++ */
++#define GPIO1_IRQ 		IRQ_GPIO_RIGHT
++#define GPIO1_MAX_NR    43 
+ #define GPIO1_BASE      (ARM_A9_HOST_MMIO_BASE + 0x069000)
+ #define GPIO1_IRQ_BASE  (GPIO0_IRQ_BASE + GPIO0_MAX_NR)
+ #define GPIO1_START_PIN GPIO0_MAX_NR
+ 
+-/**
++/*
+  * Platform data structure
+- **/
++ */
+ struct apollo_gpio_platform_data {
+ 	int first_pin;
+ 	int nr_gpio;
+@@ -66,9 +56,9 @@ struct apollo_gpio_platform_data {
+ #define gpio_cansleep	__gpio_cansleep
+ #define gpio_to_irq 	__gpio_to_irq
+ 
+-/**
+- * GPIO <--> PIO mapping in Kronos SoC
+- **/
++/*
++ * GPIO <--> PIO mapping in KROME SoC
++ */
+ #define PIO003      (GPIO0_START_PIN + 0)
+ #define PIO004      (GPIO0_START_PIN + 1)
+ #define PIO008      (GPIO0_START_PIN + 2)
+@@ -86,86 +76,112 @@ struct apollo_gpio_platform_data {
+ #define PIO027      (GPIO0_START_PIN + 14)
+ #define PIO040      (GPIO0_START_PIN + 15)
+ #define PIO041      (GPIO0_START_PIN + 16)
+-#define PIO042      (GPIO0_START_PIN + 17)
+-#define PIO043      (GPIO0_START_PIN + 18)
+-#define PIO053      (GPIO0_START_PIN + 19)
+-#define PIO054      (GPIO0_START_PIN + 20)
+-#define PIO055      (GPIO0_START_PIN + 21)
+-#define PIO056      (GPIO0_START_PIN + 22)
+-#define PIO057      (GPIO0_START_PIN + 23)
+-#define PIO068      (GPIO0_START_PIN + 24)
+-#define PIO069      (GPIO0_START_PIN + 25)
+-#define PIO071      (GPIO0_START_PIN + 26)
+-#define PIO072      (GPIO0_START_PIN + 27)
+-#define PIO073      (GPIO0_START_PIN + 28)
+-#define PIO074      (GPIO0_START_PIN + 29)
+-#define PIO075      (GPIO0_START_PIN + 30)
+-#define PIO082      (GPIO0_START_PIN + 31)
+-#define PIO083      (GPIO0_START_PIN + 32)
+-#define PIO084      (GPIO0_START_PIN + 33)
+-#define PIO085      (GPIO0_START_PIN + 34)
+-#define PIO086      (GPIO0_START_PIN + 35)
+-#define PIO087      (GPIO0_START_PIN + 36)
+-#define PIO088      (GPIO0_START_PIN + 37)
+-#define PIO089      (GPIO0_START_PIN + 38)
+-#define PIO090      (GPIO0_START_PIN + 39)
+-#define PIO091      (GPIO0_START_PIN + 40)
+-#define PIO092      (GPIO0_START_PIN + 41)
+-#define PIO093      (GPIO0_START_PIN + 42)
+-#define PIO103      (GPIO0_START_PIN + 43)
+-#define PIO118      (GPIO0_START_PIN + 44)
+-#define PIO119      (GPIO0_START_PIN + 45)
+-#define PIO120      (GPIO0_START_PIN + 46)
+-#define PIO121      (GPIO0_START_PIN + 47)
+-#define PIO122      (GPIO0_START_PIN + 48)
+-#define PIO128      (GPIO0_START_PIN + 49)
+-#define PIO129      (GPIO0_START_PIN + 50)
+-#define PIO130      (GPIO0_START_PIN + 51)
+-#define PIO146      (GPIO0_START_PIN + 52)
+-#define PIO162      (GPIO0_START_PIN + 53)
+-#define PIO164      (GPIO0_START_PIN + 54)
+-#define PIO165      (GPIO0_START_PIN + 55)
+-#define PIO169      (GPIO0_START_PIN + 56)
+-#define PIO172      (GPIO0_START_PIN + 57)
+-#define PIO173      (GPIO0_START_PIN + 58)
+-#define PIO174      (GPIO0_START_PIN + 59)
+-#define PIO175      (GPIO0_START_PIN + 60)
+-#define PIO176      (GPIO0_START_PIN + 61)
+-#define PIO177      (GPIO0_START_PIN + 62)
+-#define PIO178      (GPIO0_START_PIN + 63)
+-#define PIO179      (GPIO0_START_PIN + 64)
+-#define PIO180      (GPIO0_START_PIN + 65)
+-#define PIO182      (GPIO0_START_PIN + 66)
+-#define PIO183      (GPIO0_START_PIN + 67)
+-#define PIO184      (GPIO0_START_PIN + 68)
+-#define PIO185      (GPIO0_START_PIN + 69)
+-#define PIO186      (GPIO0_START_PIN + 70)
+-#define PIO187      (GPIO0_START_PIN + 71)
+-#define PIO188      (GPIO0_START_PIN + 72)
+-#define PIO189      (GPIO0_START_PIN + 73)
++#define PIO053      (GPIO0_START_PIN + 17)
++#define PIO054      (GPIO0_START_PIN + 18)
++#define PIO055      (GPIO0_START_PIN + 19)
++#define PIO056      (GPIO0_START_PIN + 20)
++#define PIO057      (GPIO0_START_PIN + 21)
++#define PIO068      (GPIO0_START_PIN + 22)
++#define PIO069      (GPIO0_START_PIN + 23)
++#define PIO071      (GPIO0_START_PIN + 24)
++#define PIO072      (GPIO0_START_PIN + 25)
++#define PIO073      (GPIO0_START_PIN + 26)
++#define PIO074      (GPIO0_START_PIN + 27)
++#define PIO075      (GPIO0_START_PIN + 28)
++#define PIO082      (GPIO0_START_PIN + 29)
++#define PIO083      (GPIO0_START_PIN + 30)
++#define PIO084      (GPIO0_START_PIN + 31)
++#define PIO085      (GPIO0_START_PIN + 32)
++#define PIO086      (GPIO0_START_PIN + 33)
++#define PIO087      (GPIO0_START_PIN + 34)
++#define PIO088      (GPIO0_START_PIN + 35)
++#define PIO089      (GPIO0_START_PIN + 36)
++#define PIO090      (GPIO0_START_PIN + 37)
++#define PIO091      (GPIO0_START_PIN + 38)
++#define PIO092      (GPIO0_START_PIN + 39)
++#define PIO093      (GPIO0_START_PIN + 40)
++#define PIO103      (GPIO0_START_PIN + 41)
++#define PIO118      (GPIO0_START_PIN + 42)
++#define PIO119      (GPIO0_START_PIN + 43)
++#define PIO120      (GPIO0_START_PIN + 44)
++#define PIO121      (GPIO0_START_PIN + 45)
++#define PIO122      (GPIO0_START_PIN + 46)
++#define PIO128      (GPIO0_START_PIN + 47)
++#define PIO129      (GPIO0_START_PIN + 48)
++#define PIO130      (GPIO0_START_PIN + 49)
++#define PIO131		(GPIO0_START_PIN + 50)
++#define PIO146      (GPIO0_START_PIN + 51)
++#define PIO147      (GPIO0_START_PIN + 52)
++#define PIO148     	(GPIO0_START_PIN + 53)
++#define PIO149      (GPIO0_START_PIN + 54)
++#define PIO150 		(GPIO0_START_PIN + 55)
++#define PIO162      (GPIO0_START_PIN + 56)
++#define PIO164      (GPIO0_START_PIN + 57)
++#define PIO165      (GPIO0_START_PIN + 58)
++#define PIO169      (GPIO0_START_PIN + 59)
++#define PIO172      (GPIO0_START_PIN + 60)
++#define PIO173      (GPIO0_START_PIN + 61)
++#define PIO174      (GPIO0_START_PIN + 62)
++#define PIO175      (GPIO0_START_PIN + 63)
++#define PIO176      (GPIO0_START_PIN + 64)
++#define PIO177      (GPIO0_START_PIN + 65)
++#define PIO178      (GPIO0_START_PIN + 66)
++#define PIO179      (GPIO0_START_PIN + 67)
++#define PIO180      (GPIO0_START_PIN + 68)
++#define PIO182      (GPIO0_START_PIN + 69)
++#define PIO183      (GPIO0_START_PIN + 70)
++#define PIO184      (GPIO0_START_PIN + 71)
++#define PIO185      (GPIO0_START_PIN + 72)
++#define PIO186      (GPIO0_START_PIN + 73)
++#define PIO187      (GPIO0_START_PIN + 74)
++#define PIO188      (GPIO0_START_PIN + 75)
++#define PIO189      (GPIO0_START_PIN + 76)
+ 
+-/**
++/*
+  * PIOs in GPIO right
+- **/
++ */
+ #define PIO005      (GPIO1_START_PIN + 0)
+ #define PIO006      (GPIO1_START_PIN + 1)
+ #define PIO007      (GPIO1_START_PIN + 2)
+ #define PIO039      (GPIO1_START_PIN + 3)
+ #define PIO044      (GPIO1_START_PIN + 4)
+ #define PIO045      (GPIO1_START_PIN + 5)
+-#define PIO062      (GPIO1_START_PIN + 6)
+-#define PIO063      (GPIO1_START_PIN + 7)
+-#define PIO064      (GPIO1_START_PIN + 8)
+-#define PIO065      (GPIO1_START_PIN + 9)
+-#define PIO070      (GPIO1_START_PIN + 10)
+-#define PIO077      (GPIO1_START_PIN + 11)
+-#define PIO170      (GPIO1_START_PIN + 12)
+-#define PIO171      (GPIO1_START_PIN + 13)
+-#define PIO193      (GPIO1_START_PIN + 14)
+-#define PIO194      (GPIO1_START_PIN + 15)
+-#define PIO195      (GPIO1_START_PIN + 16)
+-#define PIO196      (GPIO1_START_PIN + 17)
+-#define PIO197      (GPIO1_START_PIN + 18)
+-#define PIO198      (GPIO1_START_PIN + 19)
++#define PIO058      (GPIO1_START_PIN + 6)
++#define PIO059      (GPIO1_START_PIN + 7)
++#define PIO060      (GPIO1_START_PIN + 8)
++#define PIO061      (GPIO1_START_PIN + 9)
++#define PIO062      (GPIO1_START_PIN + 10)
++#define PIO063      (GPIO1_START_PIN + 11)
++#define PIO064      (GPIO1_START_PIN + 12)
++#define PIO065      (GPIO1_START_PIN + 13)
++#define PIO070      (GPIO1_START_PIN + 14)
++#define PIO077      (GPIO1_START_PIN + 15)
++#define PIO170      (GPIO1_START_PIN + 16)
++#define PIO171      (GPIO1_START_PIN + 17)
++#define PIO193      (GPIO1_START_PIN + 18)
++#define PIO194      (GPIO1_START_PIN + 19)
++#define PIO195      (GPIO1_START_PIN + 20)
++#define PIO196      (GPIO1_START_PIN + 21)
++#define PIO023      (GPIO1_START_PIN + 22)
++#define PIO109      (GPIO1_START_PIN + 23)
++#define PIO110      (GPIO1_START_PIN + 24)
++#define PIO111      (GPIO1_START_PIN + 25)
++#define PIO112      (GPIO1_START_PIN + 26)
++#define PIO113      (GPIO1_START_PIN + 27)
++#define PIO114      (GPIO1_START_PIN + 28)
++#define PIO115      (GPIO1_START_PIN + 29)
++#define PIO116      (GPIO1_START_PIN + 30)
++#define PIO117      (GPIO1_START_PIN + 31)
++#define PIO151      (GPIO1_START_PIN + 32)
++#define PIO152      (GPIO1_START_PIN + 33)
++#define PIO153      (GPIO1_START_PIN + 34)
++#define PIO154      (GPIO1_START_PIN + 35)
++#define PIO155      (GPIO1_START_PIN + 36)
++#define PIO156      (GPIO1_START_PIN + 37)
++#define PIO157      (GPIO1_START_PIN + 38)
++#define PIO158      (GPIO1_START_PIN + 39)
++#define PIO159      (GPIO1_START_PIN + 40)
++#define PIO197      (GPIO1_START_PIN + 41)
++#define PIO198      (GPIO1_START_PIN + 42)
+ 
+ #endif /* __ARCH_MACH_APOLLO_GPIO_H */
+diff -Naurp linux-2.6.34_Org/drivers/gpio/apollo_gpio.c linux-2.6.34/drivers/gpio/apollo_gpio.c
+--- linux-2.6.34_Org/drivers/gpio/apollo_gpio.c	2012-03-28 12:32:13.291178000 +0530
++++ linux-2.6.34/drivers/gpio/apollo_gpio.c	2012-03-28 15:01:18.885280000 +0530
+@@ -15,10 +15,11 @@ static int apollo_gpio_int_set_type(unsi
+ {
+ 	struct apollo_gpio_chip *ach = get_irq_chip_data(irq);
+ 	uint32_t val = 0;
++	unsigned long flags;
+ 
+ 	if ( !(trigger & (IRQ_TYPE_EDGE_FALLING | IRQ_TYPE_EDGE_RISING | IRQ_TYPE_LEVEL_HIGH))) 
+ 		return -EINVAL;
+-
++	spin_lock_irqsave(&ach->irq_lock, flags);
+ 	if (trigger & IRQ_TYPE_EDGE_RISING) 
+ 		val |= 0x2;
+ 	if (trigger & IRQ_TYPE_EDGE_FALLING)
+@@ -31,31 +32,34 @@ static int apollo_gpio_int_set_type(unsi
+         }
+ 
+ 	gpset_type(ach->base, irq - ach->irq_base, val);
+-
++	spin_unlock_irqrestore(&ach->irq_lock, flags);
+ 	return 0;
+ }
+ 
+ static void apollo_gpio_int_mask(unsigned int irq)
+ {
++	unsigned long flags;
+ 	struct apollo_gpio_chip *ach = get_irq_chip_data(irq);
++	spin_lock_irqsave(&ach->irq_lock, flags);
+ 	gpset_int_enable(ach->base, irq - ach->irq_base, 0);
++	spin_unlock_irqrestore(&ach->irq_lock, flags);
+ }
+ 
+ static void apollo_gpio_int_unmask(unsigned int irq)
+ {
++	unsigned long flags;
+ 	struct apollo_gpio_chip *ach = get_irq_chip_data(irq);
++	spin_lock_irqsave(&ach->irq_lock, flags);
+ 	gpset_int_enable(ach->base, irq - ach->irq_base, 1);
++	spin_unlock_irqrestore(&ach->irq_lock, flags);
+ }
++
+ static void apollo_gpio_int_ack(unsigned int irq)
+ {
+ 	struct apollo_gpio_chip *ach = get_irq_chip_data(irq);
+ 	gpclear_int(ach->base, irq - ach->irq_base);
+ }
+ 
+-
+-
+-
+-
+ static int apget_pending_irq(struct apollo_gpio_chip *ach)
+ {
+ 	unsigned long flags;
+@@ -136,13 +140,14 @@ static int apollo_gpio_int_init(struct a
+ 	return ret;
+ }
+ 
+-
+-
+ void gpio_set_mode(unsigned int piono, unsigned int pinmode)
+ {
+ 	unsigned int irq = gpio_to_irq(piono); 	/*unsigned int irq = GPIO0_IRQ_BASE + piono;*/
+-	struct apollo_gpio_chip *ach = get_irq_chip_data(irq);
++	struct apollo_gpio_chip *ach = get_irq_chip_data(irq);	
++	unsigned long flags;
++    spin_lock_irqsave(&ach->lock, flags);
+ 	gpset_mode(ach->base, irq - ach->irq_base, pinmode);
++	spin_unlock_irqrestore(&ach->lock, flags);
+ }
+ EXPORT_SYMBOL(gpio_set_mode);
+ 
+@@ -157,9 +162,9 @@ EXPORT_SYMBOL(gpio_get_mode);
+ #if 1 //remove only for test
+ void apollo_gpio_set_interrupt(unsigned int piono)
+ {
+-	     unsigned int irq = gpio_to_irq(piono); 	/*unsigned int irq = GPIO0_IRQ_BASE + piono;*/
+-            struct apollo_gpio_chip *ach = get_irq_chip_data(irq);
+-            gpset_int_enable(ach->base, irq - ach->irq_base, 1);
++	unsigned int irq = gpio_to_irq(piono); 	/*unsigned int irq = GPIO0_IRQ_BASE + piono;*/
++    struct apollo_gpio_chip *ach = get_irq_chip_data(irq);
++    gpset_int_enable(ach->base, irq - ach->irq_base, 1);
+ }
+ EXPORT_SYMBOL(apollo_gpio_set_interrupt);
+ #endif
+@@ -169,10 +174,12 @@ int gpio_interrupt_set_type(unsigned pio
+ 	unsigned int irq = gpio_to_irq(piono); 	/*unsigned int irq = GPIO0_IRQ_BASE + piono;*/
+ 	struct apollo_gpio_chip *ach = get_irq_chip_data(irq);
+ 	uint32_t val = 0;
++	unsigned long flags;
+ 
+ 	if ( !(trigger & (IRQ_TYPE_EDGE_FALLING | IRQ_TYPE_EDGE_RISING | IRQ_TYPE_LEVEL_HIGH)))
+ 		return -EINVAL;
+ 
++    spin_lock_irqsave(&ach->irq_lock, flags);
+ 	if (trigger & IRQ_TYPE_EDGE_RISING)
+ 		val |= 0x2;
+ 	if (trigger & IRQ_TYPE_EDGE_FALLING)
+@@ -186,6 +193,7 @@ int gpio_interrupt_set_type(unsigned pio
+ 	}
+ 
+ 	gpset_type(ach->base, irq - ach->irq_base, val);
++	spin_unlock_irqrestore(&ach->irq_lock, flags);
+ 
+ 	return 0;
+ }
+@@ -206,42 +214,42 @@ EXPORT_SYMBOL(gpio_interrupt_get_type);
+ void gpio_interrupt_clear(unsigned int piono)
+ {
+ 	unsigned int irq = gpio_to_irq(piono); 	
+-        apollo_gpio_int_ack(irq);
++    apollo_gpio_int_ack(irq);
+ }
+ EXPORT_SYMBOL(gpio_interrupt_clear);
+ 
+ 
+ int gpio_is_interrupt_enabled(unsigned int piono)
+ {
+-        int isirqenabled = 0;
++    int isirqenabled = 0;
+ 	unsigned int irq = gpio_to_irq(piono); 	
+ 	struct apollo_gpio_chip *ach = get_irq_chip_data(irq);
+ 
+ 	isirqenabled = gpget_int_enable(ach->base, irq - ach->irq_base);
+ 
+-        return isirqenabled;
++    return isirqenabled;
+ }
+ EXPORT_SYMBOL(gpio_is_interrupt_enabled);
+ 
+ int gpio_is_interrupt_pending(unsigned int piono)
+ {
+-        int isirqpending = 0;
+-        unsigned long val=0;
+-        unsigned int pioregindex = 0;
+-        unsigned int piobitno = 0;
++	int isirqpending = 0;
++    unsigned long val=0;
++    unsigned int pioregindex = 0;
++    unsigned int piobitno = 0;
+ 	unsigned int irq = gpio_to_irq(piono); 	
+ 	   
+ 	struct apollo_gpio_chip *ach = get_irq_chip_data(irq);
+ 	
+-        pioregindex = (irq - ach->irq_base) >> 4;
+-        piobitno = (irq - ach->irq_base) & 0xF; 
+-        val = gpget_masked_int_status(ach->base,pioregindex);
+-        if ( (1 << piobitno) & val)
+-        {
+-            isirqpending = 1;
+-        }
++    pioregindex = (irq - ach->irq_base) >> 4;
++    piobitno = (irq - ach->irq_base) & 0xF; 
++    val = gpget_masked_int_status(ach->base,pioregindex);
++    if ( (1 << piobitno) & val)
++    {
++    	isirqpending = 1;
++    }
+ 	
+-        return isirqpending;
++    return isirqpending;
+ }
+ EXPORT_SYMBOL(gpio_is_interrupt_pending);
+ 
+@@ -252,37 +260,47 @@ EXPORT_SYMBOL(gpio_is_interrupt_pending)
+ static int apollo_gpio_direction_in(struct gpio_chip *chip,
+ 						unsigned offset)
+ {
++	unsigned long flags;
+ 	struct apollo_gpio_chip *ach = to_ach(chip);
+ 
+ 	BUG_ON(offset >= chip->ngpio);
+ 
++	spin_lock_irqsave(&ach->lock, flags);
+ 	/* Set mode to GPIO */
+ 	gpset_mode(ach->base, offset, GPIO_MODE_IO);
+ 	gpset_dir(ach->base, offset, GPIO_DIR_IN);
++	spin_unlock_irqrestore(&ach->lock, flags);
+ 	return 0;
+ }
+ 
+ static int apollo_gpio_direction_out (struct gpio_chip *chip,
+ 						unsigned offset, int value)
+ {
++	unsigned long flags;
+ 	struct apollo_gpio_chip *ach = to_ach(chip);
+ 
+ 	BUG_ON(offset >= chip->ngpio);
++
++	spin_lock_irqsave(&ach->lock, flags);
+ 	/* Set mode to GPIO */
+ 	gpset_dir(ach->base, offset, 
+ 			(value & 1) ? GPIO_DIR_OUT_HI : GPIO_DIR_OUT_LO);
+ 	gpset_mode(ach->base, offset, GPIO_MODE_IO);
++	spin_unlock_irqrestore(&ach->lock, flags);
+ 	return 0;
+ }
+ 
+ static void apollo_gpio_set(struct gpio_chip *chip,
+ 						unsigned offset, int value)
+ {
++	unsigned long flags;
+ 	struct apollo_gpio_chip *ach = to_ach(chip);
+ 
+ 	BUG_ON(offset >= chip->ngpio);
++	spin_lock_irqsave(&ach->lock, flags);
+ 	gpset_dir(ach->base, offset, 
+ 			(value & 1) ? GPIO_DIR_OUT_HI : GPIO_DIR_OUT_LO);
++	spin_unlock_irqrestore(&ach->lock, flags);
+ }
+ 
+ static int apollo_gpio_get(struct gpio_chip *chip,
+@@ -390,6 +408,9 @@ static int __devinit gpio_apollo_probe(s
+ 		return -ENODEV;
+ 	}
+ 
++	 spin_lock_init(&ach->lock);
++	 spin_lock_init(&ach->irq_lock);
++
+ 	/* Disable and clear all interrupts at this point */
+ 	for (i = 0; i < (pdata->nr_gpio >> 4) + ((pdata->nr_gpio & 0x0F) != 0); i ++) {
+ 		writel(0, ach->base + GPIO_CTRL_REG + (i * 4));
+@@ -428,7 +449,7 @@ static int __devexit gpio_apollo_remove(
+ static struct platform_driver gpio_apollo_driver = {
+ 	.driver.name	= "gpio_apollo",
+ 	.driver.owner	= THIS_MODULE,
+-	.probe		= gpio_apollo_probe,
++	.probe		    = gpio_apollo_probe,
+ 	/*.remove		= __devexit_p(gpio_apollo_remove),*/
+ };
+ 
+diff -Naurp linux-2.6.34_Org/drivers/gpio/apollo_gpio.h linux-2.6.34/drivers/gpio/apollo_gpio.h
+--- linux-2.6.34_Org/drivers/gpio/apollo_gpio.h	2012-03-28 12:32:13.300177000 +0530
++++ linux-2.6.34/drivers/gpio/apollo_gpio.h	2012-03-28 14:54:08.520110000 +0530
+@@ -10,6 +10,7 @@ struct apollo_gpio_chip
+ 	int irq;
+ 	struct mutex mutex;
+ 	spinlock_t lock;
++	spinlock_t irq_lock;
+ 	uint32_t usage;
+ 	void __iomem * base;
+ 	unsigned int no_irq:1;
+@@ -28,8 +29,7 @@ struct apollo_gpio_chip
+ #define GPIO_POWER_DOWN      0xFF4
+ #define GPIO_MODULE_REG      0xFFC
+ 
+-#define GPIO_MODULE_ID       41108 /* FIXME: to be done */
+-
++#define GPIO_MODULE_ID       0xA0943000
+ 
+ #define GPIO_MODE_PRIMARY    0x01UL
+ #define GPIO_MODE_IO         0x02UL
+@@ -174,7 +174,7 @@ static inline void gpclear_int(void __io
+ 
+ static inline int apgpio_check_moduleid(void __iomem * base)
+ {
+-	return (readl(base + GPIO_MODULE_REG) >> 16) == GPIO_MODULE_ID;
++	return (readl(base + GPIO_MODULE_REG)) == GPIO_MODULE_ID;
+ }
+ 
+ /* genirq interfaces are not available to modules */

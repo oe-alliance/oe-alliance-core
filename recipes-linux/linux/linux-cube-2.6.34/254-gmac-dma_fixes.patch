@@ -1,0 +1,78 @@
+diff -Naur linux-2.6.34/drivers/net/LIPP_6300ETH/src/gmac_drv.c linux-2.6.34_new/drivers/net/LIPP_6300ETH/src/gmac_drv.c
+--- linux-2.6.34/drivers/net/LIPP_6300ETH/src/gmac_drv.c	2013-02-08 15:13:18.233620000 +0530
++++ linux-2.6.34_new/drivers/net/LIPP_6300ETH/src/gmac_drv.c	2013-02-08 15:23:28.415912100 +0530
+@@ -1017,6 +1017,13 @@
+         /* Free all the Tx SKB buffers */
+         if( priv->p_vtx_skb_list[ i ] != NULL )
+         {
++//RATHD++
++if( priv->p_vtx_descr[i].TDES2 != 0)
++            {
++                /* Buffer 1 address pointer */
++                dma_unmap_single( NULL,priv->p_vtx_descr[i].TDES2,priv->p_vtx_skb_list[i]->len,DMA_TO_DEVICE ) ;
++            }
++//RATHD--
+             dev_kfree_skb( priv->p_vtx_skb_list[ i ] ) ;
+             priv->p_vtx_skb_list[ i ] = NULL ;
+             priv->stats.tx_dropped ++ ;
+@@ -2049,12 +2056,14 @@
+     netif_stop_queue(dev);
+     netif_carrier_off(dev);
+ 
+-    (void)down_lipp_6300Eth(dev);
++//RATHD     (void)down_lipp_6300Eth(dev);
+ 
+ #ifdef CONFIG_ETH_LIPP_6300ETH_NAPI
+     napi_disable(&priv->napiInfo.napi);
+ #endif
+ 
++    (void)down_lipp_6300Eth(dev);
++
+     /* disable the Rx/Tx and disable the interrupts */
+     IntDis.dmaIntVal = DMA_MASK_ALL_INTS;
+     IntDis.gmacIntVal = GMAC_INT_MASK_VAL;
+@@ -3269,7 +3278,7 @@
+             }
+ 
+ #ifdef CONFIG_ETH_LIPP_6300ETH_NAPI
+-            if(*pBudget <=0)
++            if( npackets >= *pBudget )
+             {   /* Met the quota, return */
+                 goto _return_from_napi;
+             }            
+@@ -3535,7 +3544,7 @@
+             /* Submit the packet to the kernel */
+             ret_val = netif_receive_skb(skb);
+             npackets++;
+-            (*pBudget)--;
++//            (*pBudget)--;
+             dev->last_rx = jiffies;
+             priv->stats.rx_packets++ ;
+             priv->counters.ullRxPackets++;
+@@ -3777,7 +3786,7 @@
+  *NOTES:	None
+  */
+ /*--------------------------------------------------------------------------*/
+-#define TX_PKTS_TO_PROCESS_THRESHOLD  60 /* About 75 % of the queue, to avoid cont on/off in case of overload */
++#define TX_PKTS_TO_PROCESS_THRESHOLD  250 /* About 75 % of the queue, to avoid cont on/off in case of overload */
+ static void handle_tx_packets( struct net_device * dev)
+ {
+ 
+@@ -3805,7 +3814,7 @@
+                 */
+ 
+         /* If OWN bit is set OR no packets were submitted for transmission, break */
+-        if((priv->p_vtx_descr[priv->tx_consume_index].TDES0 & TXDESC_TDES0_OWN_VAL)
++        if((priv->p_vtx_descr[priv->tx_consume_index].TDES0 & TXDESC_TDES0_OWN_VAL) || (priv->tx_submit_count == 0)
+ #ifdef CONFIG_ETH_LIPP_6300ETH_NAPI
+             )
+ #else            
+@@ -3814,7 +3823,7 @@
+         {
+             break;
+         }
+-        if ((priv->tx_submit_count > TX_PKTS_TO_PROCESS_THRESHOLD) && netif_queue_stopped(dev)) {
++        if ((priv->tx_submit_count < TX_PKTS_TO_PROCESS_THRESHOLD) && netif_queue_stopped(dev)) {
+               netif_wake_queue(dev);
+         }
+ 

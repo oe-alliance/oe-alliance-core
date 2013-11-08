@@ -1,0 +1,74 @@
+diff -Naur linux-2.6.34/drivers/usb/gadget/epautoconf.c linux-2.6.34_FSHS_OK/drivers/usb/gadget/epautoconf.c
+--- linux-2.6.34/drivers/usb/gadget/epautoconf.c	2010-12-21 15:40:18.090267000 +0530
++++ linux-2.6.34_FSHS_OK/drivers/usb/gadget/epautoconf.c	2010-12-21 14:41:18.851983000 +0530
+@@ -180,13 +180,16 @@
+ 		int size = ep->maxpacket;
+ 
+ 		/* min() doesn't work on bitfields with gcc-3.5 */
+-#if 0 // USB_UDC_CHECK
+-		if (size > 64)
++
++		/* Support all speeds */
++		printk("Support all speeds.\n");
++		if ( (gadget->speed == USB_SPEED_LOW) ||  (gadget->speed == USB_SPEED_FULL) )
+ 			size = 64;
+-#else
+-		if (size > 512)
++		else if (gadget->speed == USB_SPEED_HIGH)
+ 			size = 512;
+-#endif
++		else
++			size = 512;	// USB_SPEED_UNKNOWN, USB_SPEED_WIRELESS, USB_SPEED_SUPER
++		printk("Max packet size = %d\n", size);
+ 		desc->wMaxPacketSize = cpu_to_le16(size);
+ 	}
+ 	return 1;
+diff -Naur linux-2.6.34/drivers/usb/gadget/file_storage.c linux-2.6.34_FSHS_OK/drivers/usb/gadget/file_storage.c
+--- linux-2.6.34/drivers/usb/gadget/file_storage.c	2010-12-21 15:40:18.097262000 +0530
++++ linux-2.6.34_FSHS_OK/drivers/usb/gadget/file_storage.c	2010-12-21 15:37:49.899259000 +0530
+@@ -1554,7 +1554,7 @@
+ 	u8	*buf = (u8 *) bh->buf;
+ 
+ 	static char vendor_id[] = "Linux   ";
+-	static char product_disk_id[] = "File-Stor Gadget";
++	static char product_disk_id[] = "Trident MSC Devi";
+ 	static char product_cdrom_id[] = "File-CD Gadget  ";
+ 
+ 	if (!fsg->curlun) {		// Unsupported LUNs are okay
+diff -Naur linux-2.6.34/drivers/usb/gadget/ip9028_udc.c linux-2.6.34_FSHS_OK/drivers/usb/gadget/ip9028_udc.c
+--- linux-2.6.34/drivers/usb/gadget/ip9028_udc.c	2010-12-21 15:40:19.657186000 +0530
++++ linux-2.6.34_FSHS_OK/drivers/usb/gadget/ip9028_udc.c	2010-12-21 14:43:34.287053000 +0530
+@@ -609,8 +609,33 @@
+ 	if (!udc->driver || (udc->gadget.speed == USB_SPEED_UNKNOWN))
+ 		return -ESHUTDOWN;
+ 
++	#if 0
+ 	max = le16_to_cpu(desc->wMaxPacketSize);
++	#else
+ 
++	/* Support all speeds, Dynamically */
++	switch(udc->gadget.speed) {
++		case USB_SPEED_LOW:
++		case USB_SPEED_FULL:
++			max = le16_to_cpu(64);
++			printk("ep_enable: MaxPacketSize set to 64\n");
++			break;
++
++		case USB_SPEED_UNKNOWN:
++		case USB_SPEED_HIGH:
++		case USB_SPEED_WIRELESS:
++		case USB_SPEED_SUPER:
++			max = le16_to_cpu(512);
++			printk("ep_enable: MaxPacketSize set to 512\n");
++			break;
++
++		default:
++			max = le16_to_cpu(512);
++			printk("ep_enable: MaxPacketSize set to 64\n");
++			break;
++		}		
++	#endif
++	
+ 	/* Disable automatic zlp generation.  Driver is reponsible to indicate
+ 	 * explicitly through req->req.zero.  This is needed to enable multi-td
+ 	 * request. */

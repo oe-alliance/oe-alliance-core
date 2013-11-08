@@ -1,0 +1,3956 @@
+diff -Naur linux-2.6.34/drivers/usb/core/hcd.h linux-2.6.34_otgfix/drivers/usb/core/hcd.h
+--- linux-2.6.34/drivers/usb/core/hcd.h	2010-11-15 18:51:36.877316000 +0530
++++ linux-2.6.34_otgfix/drivers/usb/core/hcd.h	2010-11-15 20:02:52.344091000 +0530
+@@ -89,9 +89,9 @@
+ 	 * OTG controllers and transceivers need software interaction;
+ 	 * other external transceivers should be software-transparent
+ 	 */
++	unsigned int stopped;
+ 	struct otg_transceiver	*transceiver;
+-	/* void (*start_hnp)(struct ehci_hcd *ehci,struct usb_hcd		*hcd); */
+-	void (*start_hnp)(struct usb_hcd		*hcd);
++       void (*bdisconnect)(struct usb_hcd		*hcd);
+      #endif
+ 	/*
+ 	 * hardware info/state
+diff -Naur linux-2.6.34/drivers/usb/core/hub.c linux-2.6.34_otgfix/drivers/usb/core/hub.c
+--- linux-2.6.34/drivers/usb/core/hub.c	2010-11-15 18:51:36.881320000 +0530
++++ linux-2.6.34_otgfix/drivers/usb/core/hub.c	2010-11-15 20:02:52.348095000 +0530
+@@ -32,15 +32,6 @@
+ #include "hub.h"
+ 
+ 
+-#ifdef CONFIG_IP9028_OTG
+-#include <linux/proc_fs.h>
+-struct task_struct  *hnp_thread;
+-static struct semaphore	hnp_sema;	
+-unsigned int  Init_HNP =0,hnp_initiator=0;
+-int just_once =0;
+-
+-#endif
+-
+ /* if we are in debug mode, always announce new devices */
+ #ifdef DEBUG
+ #ifndef CONFIG_USB_ANNOUNCE_NEW_DEVICES
+@@ -168,6 +159,10 @@
+ 
+ static int usb_reset_and_verify_device(struct usb_device *udev);
+ 
++#ifdef CONFIG_IP9028_OTG	
++extern void ip9028_otg_set_udev(struct usb_device * otgudev);
++#endif
++
+ static inline char *portspeed(int portstatus)
+ {
+ 	if (portstatus & (1 << USB_PORT_FEAT_HIGHSPEED))
+@@ -1668,6 +1663,7 @@
+  *
+  * This call is synchronous, and may not be used in an interrupt context.
+  */
++
+ void usb_disconnect(struct usb_device **pdev)
+ {
+ 	struct usb_device	*udev = *pdev;
+@@ -1756,129 +1752,6 @@
+ #endif
+ 
+ 
+-#ifdef CONFIG_IP9028_OTG
+-
+-     
+-
+-	static int hnp_main_thread(void * _udev)
+-	{
+-        	struct usb_device *udev  = _udev;
+-		int err = 0;
+-		struct usb_bus			*bus = udev->bus;
+-
+-		for (;;) 
+-		{
+-			printk("hnp_main_thread: Before down_interruptible on hnp_sema\n");
+-			while  (down_interruptible(&hnp_sema));			
+-			
+-			/* Intiate HNP */
+-			
+-
+-			if (udev->bus->b_hnp_enable || udev->bus->is_b_host) {
+-
+-
+-			if(Init_HNP)
+-			{
+-				err = usb_control_msg(udev,
+-					usb_sndctrlpipe(udev, 0),
+-					USB_REQ_SET_FEATURE, 0,
+-					bus->b_hnp_enable
+-						? USB_DEVICE_B_HNP_ENABLE
+-						: USB_DEVICE_A_ALT_HNP_SUPPORT,
+-					0, NULL, 0, USB_CTRL_SET_TIMEOUT);
+-				if (err < 0) {
+-					/* OTG MESSAGE: report errors here,
+-					 * customize to match your product.
+-					 */
+-					dev_info(&udev->dev,
+-						"can't set HNP mode; %d\n",
+-						err);
+-					 bus->b_hnp_enable = 0; 
+-				}
+-
+-				 Init_HNP =0;
+-
+-			}
+-
+-		/*	printk(" Call the HNP  Port Suspend ****=%x \n",udev);	*/
+-			err = usb_port_suspend(udev,PMSG_SUSPEND);
+-			if (err < 0)
+-				dev_dbg(&udev->dev, "HNP fail, %d\n", err);
+-		}
+-	
+-
+-		}
+-	
+-
+-	return 0;
+-
+-}
+-
+-
+-
+-
+-	int proc_usb_otg_start_hnp(char *buffer,char **buffer_location,off_t offset,
+-                             int buffer_length, int *eof, void *data)
+-	{
+-
+-		printk(KERN_INFO "proc_usb_otg_start_hnp \n");
+-		Init_HNP = 1;
+-		hnp_initiator =1;
+-		up(&hnp_sema);
+-
+-	 	return 0;
+-
+-	}
+-
+-	int proc_usb_otg_start_hnp_1(char *buffer,char **buffer_location,off_t offset,
+-                             int buffer_length, int *eof, void *data)
+-	{
+-
+-	 	return 0;
+-
+-	}
+-	
+-	void usb_otg_hnp_create_proc_entry(void)
+-	{
+-	    static struct proc_dir_entry *gadget_proc_file /* ,proc_root */;
+-
+-	    gadget_proc_file = create_proc_entry("usb_otg_start_hnp", 0644, NULL);
+-	    if (gadget_proc_file == NULL) {
+-	            /*  remove_proc_entry("usb_otg_start_hnp", &gadget_proc_file); */
+-	             printk(KERN_ALERT "Error: Could not initialize /proc/%s\n","usb_otg_start_srp");
+-	             return;
+-	    }
+-	    gadget_proc_file->read_proc = proc_usb_otg_start_hnp;
+-	    /* gadget_proc_file->owner = THIS_MODULE; */
+-	    gadget_proc_file->mode = S_IFREG | S_IRUGO;
+-	    gadget_proc_file->uid = 0;
+-	    gadget_proc_file->gid = 0;
+-	    gadget_proc_file->size = 100;
+-
+-	    gadget_proc_file = create_proc_entry("usb_otg_start_hnp_1", 0644, NULL);
+-	    if (gadget_proc_file == NULL) {
+-	   /*          remove_proc_entry("usb_otg_start_hnp_1", &gadget_proc_file); */
+-	             printk(KERN_ALERT "Error: Could not initialize /proc/%s\n","usb_otg_start_hnp_1");
+-	             return;
+-	    }
+-	    gadget_proc_file->read_proc = proc_usb_otg_start_hnp_1;
+-	 /*   gadget_proc_file->owner = THIS_MODULE; */
+-	    gadget_proc_file->mode = S_IFREG | S_IRUGO;
+-	    gadget_proc_file->uid = 0;
+-	    gadget_proc_file->gid = 0;
+-	    gadget_proc_file->size = 100;
+-
+-
+-
+-	}
+-
+-	EXPORT_SYMBOL(proc_usb_otg_start_hnp);
+-	EXPORT_SYMBOL(proc_usb_otg_start_hnp_1);
+-	EXPORT_SYMBOL(usb_otg_hnp_create_proc_entry);
+-
+-
+-#endif
+-
+ 
+ /**
+  * usb_enumerate_device_otg - FIXME (usbcore-internal)
+@@ -1888,101 +1761,83 @@
+  */
+ static int usb_enumerate_device_otg(struct usb_device *udev)
+ {
+-	int err = 0;
+-
+-#ifdef	CONFIG_USB_OTG
+-	/*
+-	 * OTG-aware devices on OTG-capable root hubs may be able to use SRP,
+-	 * to wake us after we've powered off VBUS; and HNP, switching roles
+-	 * "host" to "peripheral".  The OTG descriptor helps figure this out.
+-	 */
+-	if (!udev->bus->is_b_host
+-			&& udev->config
+-			&& udev->parent == udev->bus->root_hub) {
+-		struct usb_otg_descriptor	*desc = NULL;
+-		struct usb_bus			*bus = udev->bus;
+-
+-		/* descriptor may appear anywhere in config */
+-		if (__usb_get_extra_descriptor (udev->rawdescriptors[0],
+-					le16_to_cpu(udev->config[0].desc.wTotalLength),
+-					USB_DT_OTG, (void **) &desc) == 0) {
+-			if (desc->bmAttributes & USB_OTG_HNP) {
+-				unsigned		port1 = udev->portnum;
+-
+-				dev_info(&udev->dev,
+-					"Dual-Role OTG device on %sHNP port\n",
+-					(port1 == bus->otg_port)
+-						? "" : "non-");
+-
+-				/* enable HNP before suspend, it's simpler */
+-				if (port1 == bus->otg_port)
+-					{
+-#ifdef CONFIG_IP9028_OTG
+-
+-
+-					if(!just_once)
+-					{
+-						usb_otg_hnp_create_proc_entry();
+-	
+-						hnp_thread = kthread_create(hnp_main_thread, udev, "hnp_thread");	
+-						if (IS_ERR(hnp_thread))
+-						{	
+-							printk("Unable to start the hnp_main_thread\n");		
+-							return PTR_ERR(hnp_thread);	
+-						}
+-
+-						wake_up_process(hnp_thread);
+-						init_MUTEX_LOCKED(&(hnp_sema));
++    int err = 0;
+ 
+-						just_once=1;
+-					}
+-
+-#endif
+-					bus->b_hnp_enable = 1;
+-
+-					}
+-#ifdef CONFIG_IP9028_OTG
+-		if(Init_HNP)
+-			{
+-				err = usb_control_msg(udev,
+-					usb_sndctrlpipe(udev, 0),
+-					USB_REQ_SET_FEATURE, 0,
+-					bus->b_hnp_enable
+-						? USB_DEVICE_B_HNP_ENABLE
+-						: USB_DEVICE_A_ALT_HNP_SUPPORT,
+-					0, NULL, 0, USB_CTRL_SET_TIMEOUT);
+-				if (err < 0) {
+-					/* OTG MESSAGE: report errors here,
+-					 * customize to match your product.
+-					 */
+-					dev_info(&udev->dev,
+-						"can't set HNP mode: %d\n",
+-						err);
+-					bus->b_hnp_enable = 0;
+-				}
+-				
+-			}
+-#endif	
+-			}
+-		}
+-	}
+-
+-	if (!is_targeted(udev)) {
+-
+-		/* Maybe it can talk to us, though we can't talk to it.
+-		 * (Includes HNP test device.)
+-		 */
+-		if (udev->bus->b_hnp_enable || udev->bus->is_b_host) {
+-			err = usb_port_suspend(udev, PMSG_SUSPEND);
+-			if (err < 0)
+-				dev_dbg(&udev->dev, "HNP fail, %d\n", err);
+-		}
+-		err = -ENOTSUPP;
+-		goto fail;
+-	}
++#ifdef  CONFIG_USB_OTG
++    /*
++     * OTG-aware devices on OTG-capable root hubs may be able to use SRP,
++     * to wake us after we've powered off VBUS; and HNP, switching roles
++     * "host" to "peripheral".  The OTG descriptor helps figure this out.
++     */
++    /*FIXME::See if we can remove this and handle the hnp condition of a-periphereal to host in device controller code only*/
++    if (/*FIXME !udev->bus->is_b_host  
++            && */udev->config
++            && udev->parent == udev->bus->root_hub) {
++        struct usb_otg_descriptor   *desc = NULL;
++        struct usb_bus          *bus = udev->bus;
++
++        /* descriptor may appear anywhere in config */
++        if (__usb_get_extra_descriptor (udev->rawdescriptors[0],
++                    le16_to_cpu(udev->config[0].desc.wTotalLength),
++                    USB_DT_OTG, (void **) &desc) == 0) {
++            if (desc->bmAttributes & USB_OTG_HNP) {
++                unsigned        port1 = udev->portnum;
++
++                dev_info(&udev->dev,
++                    "Dual-Role OTG device on %sHNP port\n",
++                    (port1 == bus->otg_port)
++                        ? "" : "non-");
++
++                /* enable HNP before suspend, it's simpler */
++                if (port1 == bus->otg_port)
++                {
++                    bus->b_hnp_enable = 1; 
++					
++#ifdef CONFIG_IP9028_OTG	
++                    ip9028_otg_set_udev(udev); /*This is used to send the hnp det feature message to teh device in otg file*/
++#else 
++/*FIXME:: This block has been commented to fix the issue when a disconnect generated suspend also switching the device side to 
++                host thinking that HNP has been initiated. While implementing the polling mechanism to detect hnp mentioned by the 
++                recent usb otg spec keep this as it is*/
++
++                    err = usb_control_msg(udev,
++                        usb_sndctrlpipe(udev, 0),
++                        USB_REQ_SET_FEATURE, 0,
++                        bus->b_hnp_enable
++                            ? USB_DEVICE_B_HNP_ENABLE
++                            : USB_DEVICE_A_ALT_HNP_SUPPORT,
++                        0, NULL, 0, USB_CTRL_SET_TIMEOUT);
++                    if (err < 0) {
++                        /* OTG MESSAGE: report errors here,
++                         * customize to match your product.
++                         */
++                        dev_info(&udev->dev,
++                            "can't set HNP mode: %d\n",
++                            err);
++                        bus->b_hnp_enable = 0;
++                    }  
++#endif					
++                }
++            }
++        }
++    }
++
++    if (!is_targeted(udev)) {
++
++        /* Maybe it can talk to us, though we can't talk to it.
++         * (Includes HNP test device.)
++         */
++        if (udev->bus->b_hnp_enable || udev->bus->is_b_host) {
++            err = usb_port_suspend(udev, PMSG_SUSPEND);
++            if (err < 0)
++                dev_dbg(&udev->dev, "HNP fail, %d\n", err);
++        }
++        err = -ENOTSUPP;
++        goto fail;
++    }
+ fail:
+ #endif
+-	return err;
++    return err;
+ }
+ 
+ 
+@@ -3375,6 +3230,19 @@
+ 	 */
+ 	if (!(portstatus & USB_PORT_STAT_CONNECTION) ||
+ 			test_bit(port1, hub->removed_bits)) {
++#ifdef CONFIG_USB_OTG
++              printk(KERN_DEBUG "Calling bdisconnect:;Checking for otg\n");
++		if (0 != hcd->self.otg_port) /*Is OTG enabled*/
++              {
++                  if (hcd->bdisconnect)
++                  {
++                      printk(KERN_DEBUG "Calling hcd->bdisconnect\n");
++
++                      /*Notofy the OTG protocol part that b-device disconnect has happend*/
++                      hcd->bdisconnect(hcd);			  
++                  }
++              }
++#endif
+ 
+ 		/* maybe switch power back on (e.g. root hub was reset) */
+ 		if ((wHubCharacteristics & HUB_CHAR_LPSM) < 2
+@@ -3622,6 +3490,8 @@
+ 
+ 		/* deal with port status changes */
+ 		for (i = 1; i <= hub->descriptor->bNbrPorts; i++) {
++			printk(KERN_DEBUG "hub_events::portstatus change %d\n",i);
++			
+ 			if (test_bit(i, hub->busy_bits))
+ 				continue;
+ 			connect_change = test_bit(i, hub->change_bits);
+diff -Naur linux-2.6.34/drivers/usb/gadget/ip9028_udc.c linux-2.6.34_otgfix/drivers/usb/gadget/ip9028_udc.c
+--- linux-2.6.34/drivers/usb/gadget/ip9028_udc.c	2010-11-15 18:51:36.259404000 +0530
++++ linux-2.6.34_otgfix/drivers/usb/gadget/ip9028_udc.c	2010-11-15 20:13:39.152764000 +0530
+@@ -48,24 +48,23 @@
+ #include <mach/usbudc.h>
+ #include "fsl_usb2_udc.h"
+ 
+-#define	DRIVER_DESC	"NXP IP9028 High-Speed USB SOC Device Controller driver == Avalon USB_UDC_CHECK"
++#define	DRIVER_DESC	"NXP IP9028 High-Speed USB SOC Device Controller driver"
+ #define	DRIVER_AUTHOR	"Li Yang/Jiang Bo"
+ #define	DRIVER_VERSION	"Apr 20, 2007"
+ 
+ #define	DMA_ADDR_INVALID	(~(dma_addr_t)0)
+ 
+-static const char driver_name[] = "ip9028_udc_udc";	// USB_UDC_CHECK: same as in gadget_chips.h #define gadget_is_ip9028
++static const char driver_name[] = "ip9028_udc_udc";
+ static const char driver_desc[] = DRIVER_DESC;
+ 
+ static struct usb_dr_device *dr_regs;
+ static struct usb_sys_interface *usb_sys_regs;
+ 
+ 
+-extern unsigned int  Is_A_host ;
+-
++unsigned int g_gadget_registered = 0;
+ 
+ /* it is initialized in probe()  */
+-static struct fsl_udc *udc_controller = NULL;
++struct fsl_udc *udc_controller = NULL;
+ 
+ static const struct usb_endpoint_descriptor
+ fsl_ep0_desc = {
+@@ -277,15 +276,13 @@
+ static int reset_queues(struct fsl_udc *udc);
+ static void ep0_setup(struct fsl_udc *udc);
+ 
+-void dr_controller_run_otg_1(struct fsl_udc *udc)
++void dr_controller_otg_set_peripheral(unsigned int a_peripheral)
+ {
++       struct fsl_udc *udc = udc_controller;
+ 	u32 temp, ctrl = 0;
+ 	unsigned long timeout;
+ #define FSL_UDC_RESET_TIMEOUT 1000
+ 	
+-	/* Clear stopped bit */
+-	udc->stopped = 0;
+-
+ 	/* Reset the OTG core  */
+ 	temp = fsl_readl(&dr_regs->usbcmd);
+ 	temp |= USB_CMD_CTRL_RESET;
+@@ -307,7 +304,12 @@
+ 	fsl_writel(temp, &dr_regs->usbmode);
+ 
+ 	temp = fsl_readl(&dr_regs->usbmode);
+-	printk(KERN_DEBUG" dr_controller_run_otg_1 mode  = %x \n",temp);
++	printk(KERN_DEBUG" dr_controller_otg_set_peripheral mode  = %x \n",temp);
++
++	if (a_peripheral)
++	{
++           udc->gadget.is_a_peripheral = 1; 
++	}
+ 
+ 	/* Disable Setup Lockout */
+ 	temp |= USB_MODE_SETUP_LOCK_OFF;
+@@ -345,31 +347,89 @@
+ 	| USB_INTR_PTC_DETECT_EN | USB_INTR_RESET_EN
+ 	| USB_INTR_DEVICE_SUSPEND | USB_INTR_SYS_ERR_EN;
+ 	fsl_writel(temp, &dr_regs->usbintr);
++
++	/* Clear stopped bit */
++	udc->stopped = 0;
+ 	
+ 	/* Set controller to Run */
+ 	temp = fsl_readl(&dr_regs->usbcmd);
+ 	temp |= USB_CMD_RUN_STOP;
+ 	fsl_writel(temp, &dr_regs->usbcmd);
++	
++	printk(KERN_DEBUG "dr_controller_otg_set_peripheral::gadget.is_a_peripheral = %d\n",a_peripheral);
+ 
+ 	return;
+ }
+ 		
+-void dr_controller_run_otg(struct fsl_udc *udc)
+-{
+-	dr_controller_run_otg_1(udc);
+-}
+ 
+-void dr_controller_run_otg_wr(void)
++void dr_controller_otg_setmode(unsigned int controller_mode)
+ {
+-	dr_controller_run_otg(udc_controller);
++	u32 temp= 0;
++	unsigned long timeout = 0;
++
++	/* set controller to Stop */
++	temp = fsl_readl(&dr_regs->usbcmd);
++	temp &= ~USB_CMD_RUN_STOP;
++	fsl_writel(temp, &dr_regs->usbcmd);
++
++	/* Set stopped bit for isr */
++	udc_controller->stopped = 1;
++
++#define FSL_UDC_RESET_TIMEOUT 1000
++	
++	/* Reset the OTG core  */
++	temp = fsl_readl(&dr_regs->usbcmd);
++	temp |= USB_CMD_CTRL_RESET;
++	fsl_writel(temp, &dr_regs->usbcmd);
++
++	/* Wait for reset to complete */
++	timeout = jiffies + FSL_UDC_RESET_TIMEOUT;
++	while (fsl_readl(&dr_regs->usbcmd) & USB_CMD_CTRL_RESET) {
++		if (time_after(jiffies, timeout)) {
++			ERR("udc reset timeout!\n");
++			return ;
++		}
++		cpu_relax();
++	}
++
++	/* Set the controller as idle mode */
++	temp = fsl_readl(&dr_regs->usbmode);
++	temp |= controller_mode;
++	fsl_writel(temp, &dr_regs->usbmode);
++
++	temp = fsl_readl(&dr_regs->usbmode);
++	printk(KERN_DEBUG " dr_controller_otg_setmode mode  = %x \n",temp);
+ }
+ 
+-void dr_controller_run_otg_wr_1(void)
++void dr_controller_otg_stop(void)
+ {
+-	dr_controller_run_otg_1(udc_controller);
++	unsigned int tmp;
++
++	/* disable all INTR */
++	fsl_writel(0, &dr_regs->usbintr);
++
++	/* Set stopped bit for isr */
++	udc_controller->stopped = 1;
++
++	udc_controller->remote_wakeup = 0;	
++	udc_controller->gadget.b_hnp_enable = 0;
++	udc_controller->gadget.a_hnp_support = 0;
++	udc_controller->gadget.a_alt_hnp_support = 0;
++       udc_controller->gadget.is_a_peripheral = 0;
++       printk(KERN_DEBUG "dr_controller_otg_stop\n");
++
++	/* disable IO output */
++/*	usb_sys_regs->control = 0; */
++
++	/* set controller to Stop */
++	tmp = fsl_readl(&dr_regs->usbcmd);
++	tmp &= ~USB_CMD_RUN_STOP;
++	fsl_writel(tmp, &dr_regs->usbcmd);
++
++	return;
+ }
+ 
+-static void dr_controller_stop(struct fsl_udc *udc)
++void dr_controller_stop(struct fsl_udc *udc) /*FIXME::Replace this function by dr_controller_otg_stop*/
+ {
+ 	unsigned int tmp;
+ 
+@@ -379,6 +439,7 @@
+ 	/* Set stopped bit for isr */
+ 	udc->stopped = 1;
+ 
++
+ 	/* disable IO output */
+ /*	usb_sys_regs->control = 0; */
+ 
+@@ -387,6 +448,8 @@
+ 	tmp &= ~USB_CMD_RUN_STOP;
+ 	fsl_writel(tmp, &dr_regs->usbcmd);
+ 
++       printk(KERN_DEBUG "dr_controller_stop\n");
++
+ 	return;
+ }
+ 
+@@ -1712,8 +1775,6 @@
+ 
+ #ifdef CONFIG_IP9028_OTG	
+ extern struct work_struct	*wq_host_probe_g;
+-extern unsigned int hnp_initiator;
+-extern unsigned int Is_HNP_Event;
+ 
+ static void dr_controller_b_host(struct fsl_udc *udc)
+ {
+@@ -1724,6 +1785,9 @@
+ 	tmp &= ~USB_CMD_RUN_STOP;
+ 	fsl_writel(tmp, &dr_regs->usbcmd);
+ 
++	/* Set stopped bit for isr */	
++	udc->stopped = 1;
++
+ 	tmp = fsl_readl(&dr_regs->usbcmd);
+ 	tmp |= USB_CMD_CTRL_RESET;
+ 	fsl_writel(tmp, &dr_regs->usbcmd);
+@@ -1741,10 +1805,6 @@
+ 	tmp |= OTGSC_CTRL_OTG_HAAR;
+ 	fsl_writel(tmp, &dr_regs->otgsc);
+ 
+-	/* Set stopped bit for isr */	
+-	udc->stopped = 1;
+-
+-	Is_HNP_Event =1 ;
+ 	
+ 	schedule_work(wq_host_probe_g);
+ 
+@@ -1755,49 +1815,32 @@
+ /* Process suspend interrupt */
+ static void suspend_irq(struct fsl_udc *udc)
+ {
+-	unsigned int tmp;
+-
+-	udc->resume_state = udc->usb_state;
+-	udc->usb_state = USB_STATE_SUSPENDED;
++    unsigned int tmp;
+ 
+-#ifdef CONFIG_IP9028_OTG	
+-
+-	tmp = fsl_readl(&dr_regs->otgsc);
+-	printk(KERN_DEBUG "suspend_irq udc->gadget.b_hnp_enable =%d otgsc =%x \n",udc->gadget.b_hnp_enable,tmp);
+-
+-	if(udc->gadget.b_hnp_enable == 1)
+-	{
+-
+-		udc->gadget.b_hnp_enable = 0; /* HNP is handled */
+-
+-		if( hnp_initiator)
+-		{
+-		 	hnp_initiator=0;
+-			printk(KERN_DEBUG "suspend_irq DO NOTHING AS IT IS HNP INTIATOR \n");
+-			/* DO NOTHING */
+-		}else
+-		{
+-			//Ready the b-device for  Host role
+-			printk(KERN_DEBUG "suspend_irq  b_host role udc->gadget.b_hnp_enable = %d \n",udc->gadget.b_hnp_enable);
+-			//usb_gadget_unregister_driver(udc->driver);
+-			dr_controller_b_host(udc_controller);
+-
+-		}
+-		
+-	}	
++    udc->resume_state = udc->usb_state;
++    udc->usb_state = USB_STATE_SUSPENDED;
+ 
+-	if(hnp_initiator)
+-	{
+-		hnp_initiator=0;
+-		udc->gadget.b_hnp_enable = 0; /* HNP is handled */
+-	}
++    /* report suspend to the driver, serial.c does not support this */
++    if (udc->driver->suspend)
++        udc->driver->suspend(&udc->gadget);
++
++#ifdef CONFIG_IP9028_OTG    
++    tmp = fsl_readl(&dr_regs->otgsc);
++    printk(KERN_DEBUG "suspend_irq udc->gadget.b_hnp_enable =%d otgsc =%x \n",udc->gadget.b_hnp_enable,tmp);
+ 	
+-#endif	
+-
+-
+-	/* report suspend to the driver, serial.c does not support this */
+-	if (udc->driver->suspend)
+-		udc->driver->suspend(&udc->gadget);
++    if(udc->gadget.b_hnp_enable == 1)
++    {
++        /*FIXME:: This is wrong interpretation /implementation of b_hnp_enable. This means OTG device feature flag, 
++              indicating that the A-Host enabled HNP support.*/
++        /*udc->gadget.b_hnp_enable = 0; // HNP is handled */
++        udc->gadget.is_a_peripheral = 0;
++	   
++        //Ready the b-device for  Host role
++        printk(KERN_DEBUG "suspend_irq  b_host role udc->gadget.b_hnp_enable = %d \n",udc->gadget.b_hnp_enable);
++        dr_controller_otg_stop(); /*FIXME::This and dr_controller_b_host have common stuff , clean and make a single function*/
++        dr_controller_b_host(udc_controller);        
++    }       
++#endif  
+ }
+ 
+ static void bus_resume(struct fsl_udc *udc)
+@@ -1846,6 +1889,8 @@
+ 	udc->gadget.b_hnp_enable = 0;
+ 	udc->gadget.a_hnp_support = 0;
+ 	udc->gadget.a_alt_hnp_support = 0;
++       //udc->gadget.is_a_peripheral = 0;
++       printk(KERN_DEBUG"reset_irq\n");
+ 
+ 	/* Clear all the setup token semaphores */
+ 	temp = fsl_readl(&dr_regs->endptsetupstat);
+@@ -1899,7 +1944,6 @@
+ #define IP9028_OTGSC_INT_1mIS    0x00200000
+ #define IP9028_OTGSC_INT_DPIS    0x00400000
+ 
+-extern unsigned int Is_B_Device;
+ 
+ /* return value 0 indicates non OTG interrupt, 1 indicates it an OTG interrupt */
+ 
+@@ -1919,29 +1963,21 @@
+ 
+ 	if( (tmp & IP9028_OTGSC_INT_ASVIS)  ==  IP9028_OTGSC_INT_ASVIS )
+ 	{
+-		flag=1;
+-		
++		flag=1;		
+ 	}
+ 
+ 	if( (tmp & IP9028_OTGSC_INT_BSVIS)  ==  IP9028_OTGSC_INT_BSVIS )
+ 	{
+-		flag=1;
+-		
++		flag=1;		
+ 	}
+ 	if( (tmp & IP9028_OTGSC_INT_BSEIS)  ==  IP9028_OTGSC_INT_BSEIS )
+ 	{
+ 		flag=1;
+-
+ 	}
+ 	
+ 	if( (tmp & IP9028_OTGSC_INT_DPIS)  ==  IP9028_OTGSC_INT_DPIS )
+-		flag=1;
+-
+-	if(flag)
+ 	{
+-	   Is_B_Device = 0;	
+-	   printk(KERN_DEBUG"  Is_Otg_Intr  is OTG INTERRUPT  Is_B_Device =%d tmp=%x   \n",Is_B_Device,tmp);
+-	  
++		flag=1;
+ 	}
+ 
+ 	return flag;
+@@ -1961,14 +1997,11 @@
+ 	if(Is_Otg_Intr(udc))
+ 		return IRQ_NONE;
+ 
+-	if(Is_A_host)
+-	{
+-		udc->stopped = 1;
+-	}
+ 
+ 	/* Disable ISR for OTG host mode */
+ 	if (udc->stopped)
+ 		return IRQ_NONE;
++	
+ 	spin_lock_irqsave(&udc->lock, flags);
+ 	irq_src = fsl_readl(&dr_regs->usbsts) & fsl_readl(&dr_regs->usbintr);
+ 	/* Clear notification bits */
+@@ -2070,12 +2103,10 @@
+ 		goto out;
+ 	}
+ 
+-	/* Enable DR IRQ reg and Set usbcmd reg  Run bit */
+-	if(!Is_A_host)
+-	{
+-		printk("usb_gadget_register_driver: Run the udc controller only if it is B_device or A_device \n");
+-		dr_controller_run(udc_controller);
+-	}
++       g_gadget_registered = 1;
++#ifndef CONFIG_IP9028_OTG
++	dr_controller_run(udc_controller);
++#endif		
+ 
+ 	udc_controller->usb_state = USB_STATE_ATTACHED;
+ 	udc_controller->ep0_state = WAIT_FOR_SETUP;
+@@ -2133,6 +2164,9 @@
+ 
+ 	printk(KERN_WARNING "unregistered gadget driver '%s'\n",
+ 	       driver->driver.name);
++
++       g_gadget_registered = 0;
++	
+ 	return 0;
+ }
+ EXPORT_SYMBOL(usb_gadget_unregister_driver);
+@@ -2508,7 +2542,11 @@
+  * all intialization operations implemented here except enabling usb_intr reg
+  * board setup should have been done in the platform code
+  */
++#ifdef CONFIG_IP9028_OTG 
++int fsl_otg_udc_probe(struct device *dev /*struct platform_device * pdev*/, void *regs, int irq)
++#else
+ int __init fsl_otg_udc_probe(struct device *dev /*struct platform_device * pdev*/, void *regs, int irq)
++#endif
+ {
+ 	int ret = -ENODEV;
+ 	unsigned int i;
+@@ -2635,34 +2673,6 @@
+ }
+ 
+ 
+-/* Driver removal function
+- * Free resources and finish pending transactions
+- */
+-int __exit fsl_otg_udc_remove(void)
+-{
+-	DECLARE_COMPLETION(done);
+-
+-	if (!udc_controller)
+-		return -ENODEV;
+-	udc_controller->done = &done;
+-
+-	/* DR has been stopped in usb_gadget_unregister_driver() */
+-	remove_proc_file();
+-
+-	/* Free allocated memory */
+-	kfree(udc_controller->status_req->req.buf);
+-	kfree(udc_controller->status_req);
+-	kfree(udc_controller->eps);
+-
+-	dma_pool_destroy(udc_controller->td_pool);
+-	free_irq(udc_controller->irq, udc_controller);
+-
+-	device_unregister(&udc_controller->gadget.dev);
+-	/* free udc --wait for the release() finished */
+-	wait_for_completion(&done);
+-
+-	return 0;
+-}
+ 
+ /*-----------------------------------------------------------------
+  * Modify Power management attributes
+@@ -2670,7 +2680,10 @@
+  -----------------------------------------------------------------*/
+ int fsl_udc_otg_suspend(void)
+ {
++	printk(KERN_DEBUG "fsl_udc_otg_suspend\n");
++
+ 	dr_controller_stop(udc_controller);
++	
+ 	return 0;
+ }
+ 
+@@ -2680,6 +2693,8 @@
+  *-----------------------------------------------------------------*/
+ int fsl_udc_otg_resume(void)
+ {
++	printk(KERN_DEBUG "fsl_udc_otg_resume\n");
++
+ 	/* Enable DR irq reg and set controller Run */
+ 	if (udc_controller->stopped) {
+ 		dr_controller_setup(udc_controller);
+@@ -2694,7 +2709,11 @@
+ /* Driver removal function
+  * Free resources and finish pending transactions
+  */
++#ifdef CONFIG_IP9028_OTG 
++int fsl_udc_remove(struct platform_device *pdev)
++#else
+ static int __exit fsl_udc_remove(struct platform_device *pdev)
++#endif
+ {
+ 	struct resource *res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 
+@@ -2724,21 +2743,19 @@
+ 	return 0;
+ }
+ 
+-#ifdef CONFIG_IP9028_OTG
+-extern   int  ip9028_otg_usb_probe(struct platform_device *pdev);
+-#endif
+ 
+ /* Driver probe function : CALLED BY KERNEL (WHEN DEVICE MODE IS SELECTED WITHOUT OTG OPTION)
+  * all intialization operations implemented here except enabling usb_intr reg
+  * board setup should have been done in the platform code
+  */
++#ifndef CONFIG_IP9028_OTG 
+ int __init fsl_udc_probe(struct platform_device * pdev)
+ {
+ 	void __iomem *regs = NULL;
+ 	int retval;
+ 
+ 	if (!request_mem_region(pdev->resource[0].start, pdev->resource[0].end - 
+-	    pdev->resource[0].start + 1, "ip9028_usb_udc")) {		// "ip9028_otg"
++	    pdev->resource[0].start + 1, "ip9028_usb_udc")) { /*FIXME Change this driver_name*/
+ 		printk (KERN_ALERT "request_mem_region failed\n");
+ 		return -EBUSY;
+ 	}
+@@ -2750,26 +2767,26 @@
+ 		return -ENOMEM;
+ 	}
+ 
+-#ifdef CONFIG_IP9028_OTG
+-	ip9028_otg_usb_probe(pdev);
+-#endif
+-
+ 	retval = fsl_otg_udc_probe(&pdev->dev, regs, pdev->resource[1].start);
+ 	return retval;
+ 
+-// gadget_remove:
+ 	fsl_udc_remove(pdev);
+-// iounmap:
++
+ 	iounmap(regs);
+ 	return retval;
+ }
++#endif
++
+ 
++#ifndef CONFIG_IP9028_OTG /*If No OTG support, only standalome device mode support*/ 
+ /*-----------------------------------------------------------------
+  * Modify Power management attributes
+  * Used by OTG statemachine to disable gadget temporarily
+  -----------------------------------------------------------------*/
+ static int fsl_udc_suspend(struct platform_device *pdev, pm_message_t state)
+ {
++	printk(KERN_DEBUG "fsl_udc_suspend\n");
++
+ 	dr_controller_stop(udc_controller);
+ 	return 0;
+ }
+@@ -2811,18 +2828,32 @@
+ static int __init udc_init(void)
+ {
+ 	int i;
+-	
+ 	i = platform_driver_register(&ip9028_udc_driver);	
+ 	return i;
+ }
+ 
+-module_init(udc_init);
+ 
+ static void __exit udc_exit(void)
+ {
+ 	platform_driver_unregister(&ip9028_udc_driver);
+ }
+ 
++#else
++
++static int udc_init(void)
++{
++	return 0;
++}
++
++static void  udc_exit(void)
++{
++
++}
++
++#endif
++
++
++module_init(udc_init);
+ module_exit(udc_exit);
+ 
+ MODULE_DESCRIPTION(DRIVER_DESC);
+diff -Naur linux-2.6.34/drivers/usb/host/ehci-hub.c linux-2.6.34_otgfix/drivers/usb/host/ehci-hub.c
+--- linux-2.6.34/drivers/usb/host/ehci-hub.c	2010-11-15 18:51:36.895316000 +0530
++++ linux-2.6.34_otgfix/drivers/usb/host/ehci-hub.c	2010-11-15 20:02:52.354094000 +0530
+@@ -1135,17 +1135,6 @@
+ 		temp &= ~PORT_RWC_BITS;
+ 		switch (wValue) {
+ 		case USB_PORT_FEAT_SUSPEND:
+-
+-#ifdef	CONFIG_USB_OTG
+-			if (hcd->self.otg_port == (wIndex + 1)
+-					&& hcd->self.b_hnp_enable)
+-			{
+-
+-				/* printk("ehci-hub:  hcd=%x \n",hcd);  */
+-				hcd->start_hnp(/*ehci,*/hcd);
+-			}
+-			else
+-#endif
+ 			if (ehci->no_selective_suspend)
+ 				break;
+ 			if ((temp & PORT_PE) == 0
+diff -Naur linux-2.6.34/drivers/usb/otg/ip9028-otg.c linux-2.6.34_otgfix/drivers/usb/otg/ip9028-otg.c
+--- linux-2.6.34/drivers/usb/otg/ip9028-otg.c	2010-11-15 18:51:36.279407000 +0530
++++ linux-2.6.34_otgfix/drivers/usb/otg/ip9028-otg.c	2010-11-15 20:02:52.358097000 +0530
+@@ -19,7 +19,6 @@
+  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+  */
+ 
+-/*#define DEBUG_ON_TV550  */
+ 
+ #include <linux/module.h>
+ #include <linux/init.h>
+@@ -39,41 +38,56 @@
+ #include <linux/proc_fs.h>
+ #include <linux/kthread.h>
+ 
++#include <../core/usb.h> 
++#include <linux/fsl_devices.h>
++#include "../gadget/fsl_usb2_udc.h" 
++
++
++
+ #define  OTG_PROC_IF  1
+-#define OTG_SRP_THREAD 1
+-#define OTG_A_HOST_POWER_OFF_THREAD 1
+ #define IDLE_DETECTNESS_TIMER 1
+-#define IDLE_DETECTNESS_TIMER_VAL 1
+-#define USB_OTG_HNP_EN  1
+-#define USB_OTG_HNP_A_DEVICE 1
+-#define USB_OTG_HNP_B_HOST 1
++#define IDLE_DETECTNESS_TIMER_VAL 3
+ 
++#define OTG_HABA_TIMEOUT 500 //FIXME::put proper value from spec
+ 
+-
+-/************   GLOBAL Variable START **************************/
++static const char driver_name[] = "ip9028_udc_udc";
+ 
+ struct task_struct  *srp_thread,*pwr_off_thread;
+-static struct semaphore	srp_sema ,pwr_off_sema;
+-//jun24 volatile int id_is_b=0; /* ID is b-device */
+-unsigned int Is_A_host =0; /* OTG device has taken  A -Host role */
+-volatile int  b_connect =0;
+-int IsPowerOff =0,IsDeviceConnected=0,Ismnt=0;
+-volatile  unsigned int Is_B_Device=0;
++
+ struct work_struct	 *wq_host_probe_g;
+-volatile unsigned int Is_HNP_Event = 0;
+ 
+ #ifdef IDLE_DETECTNESS_TIMER
+-
+ struct timer_list A_device_idle_timer;
+-
+ #endif
+ 
++static struct otg_transceiver *xceiv;
++unsigned int  g_portdisconnect = 0;
++unsigned int g_otg_print = 0; /*If 1 otg debug message will be displayed*/
+ 
+-/************   GLOBAL Variable END **************************/
++/*1: When user asked for srp to start through the proc interface this will be
++   0:  at start and after srp request initiated*/
++unsigned int g_user_srp_request=0;
++unsigned int g_hnp_invoked = 0; 
++unsigned int g_host_removal_started = 0; 
+ 
++struct usb_device * g_otgudev = NULL;
++struct ip9028_otg_usb *ip9028_otg_bak = NULL;
+ 
+ 
+-static struct otg_transceiver *xceiv;
++extern unsigned int g_gadget_registered;
++
++
++/* internal define on top of container_of */
++#define xceiv_to_ip9028_otg(x)		container_of((x), struct ip9028_otg_usb, otg);
++
++
++extern int fsl_udc_remove(struct platform_device *pdev); 
++extern void dr_controller_otg_setmode(unsigned int controller_mode);
++
++extern void dr_controller_otg_stop(void);
++extern void dr_controller_otg_set_peripheral(unsigned int a_peripheral);
++
++/*FIXME:: otg_get_transceiver etc are already present in otg.c so why we have implement it here again, check and remove*/
+ 
+ /**
+  * otg_get_transceiver - find the (single) OTG transceiver
+@@ -124,669 +138,1708 @@
+ }
+ EXPORT_SYMBOL(otg_set_transceiver);
+ 
+-
+-
+-#ifdef IDLE_DETECTNESS_TIMER
+-static void a_device_idle_timer_fn(unsigned long data)
++int is_otg_print_enabled(void)
+ {
++    return g_otg_print;
++}
+ 
+-	struct ip9028_otg_usb *ip9028_otg=  (struct ip9028_otg_usb *) data;
+-		
+-	unsigned int tmp,flag=0;
+-
+-		
+-	tmp = readl (ip9028_otg->regs + IP9028_USBCMD);
+-
+-
+-	if( (tmp &  0x10) == (0x10) )
+-	{
+-		printk(" PSE is set \n");
+-		flag=1;
+-	}
+-	if( (tmp &  0x20) == (0x20) )
+-	{
+-		printk(KERN_DEBUG" ASE  is set  ******USB BUS IS BUSY**** \n");
+-		flag=1;
+-
+-	}else
+-	{
+-		IsPowerOff=1;
+-		printk(KERN_DEBUG" **************USB BUS is IDLE **************\n");
+-
+-
+-		tmp = readl (ip9028_otg->regs + IP9028_USBMOD);
+-		if( (tmp & IP9028_USBMODE_MASK) == IP9028_USBMODE_DEVICE)
+-		{
+-			printk(KERN_DEBUG" **************USB BUS is IDLE  BUT IN DEVICE MODE **************\n");
+-			mod_timer(&A_device_idle_timer, jiffies + (IDLE_DETECTNESS_TIMER_VAL * 100 * HZ));
+-			return;
+-		}
+-
+-		
+-
+-		if(Ismnt)
+-		{
+-
+-			printk(KERN_DEBUG" **************USB BUS is IDLE  BUT MOUNTED **************\n");
+-			mod_timer(&A_device_idle_timer, jiffies + (IDLE_DETECTNESS_TIMER_VAL * 100 * HZ));
+-			return;
+-
+-		}
+-		
+-		tmp = readl (ip9028_otg->regs + IP9028_PRTSC);
+-		
+-		if (( tmp  & IP9028_PRTSC_CCS_MASK) == (IP9028_PRTSC_CCS_MASK) )
+-		{
+-			printk(KERN_DEBUG"DEVICE connected turn off the VBUS \n");
+-			tmp = readl (ip9028_otg->regs + IP9028_PRTSC);
+-			tmp = tmp & IP9028_PRTSC_PP_OFF_MASK;
+-			writel (tmp, ip9028_otg->regs + IP9028_PRTSC);
+-		
+-		}else{
+-
+-			printk(KERN_DEBUG" BUS IS IDLE  but no device is connected \n");
+-		}
+-		
+-		
+-		
+-
+-
+-	}
+-
+-	mod_timer(&A_device_idle_timer, jiffies + (IDLE_DETECTNESS_TIMER_VAL * 100 * HZ));
+-
+-
+-
+-
+-	
++void ip9028_otg_set_udev(struct usb_device * otgudev)
++{
++    g_otgudev = otgudev;
+ }
+ 
++void ip9028_otg_enable_portpower(struct ip9028_otg_usb* ip9028_otg)
++{
++    unsigned int ppsc;   
+ 
+-#endif
++    ppsc = readl (ip9028_otg->regs + IP9028_PRTSC);
++    ppsc = ppsc | IP9028_PRTSC_PP;
++    writel (ppsc, ip9028_otg->regs + IP9028_PRTSC);
++}
+ 
++void ip9028_otg_disable_portpower(struct ip9028_otg_usb* ip9028_otg)
++{
++    unsigned int ppsc;	
+ 
+-/* internal define on top of container_of */
+-#define xceiv_to_ip9028_otg(x)		container_of((x), struct ip9028_otg_usb, otg);
++    /*Disable Port Power*/
++    ppsc = readl (ip9028_otg->regs + IP9028_PRTSC);
++    ppsc = ppsc & IP9028_PRTSC_PP_OFF_MASK;
++    writel (ppsc, ip9028_otg->regs + IP9028_PRTSC);
++}
+ 
++int ip9028_otg_is_portpower_enabled(struct ip9028_otg_usb* ip9028_otg)
++{
++    unsigned int ppsc;  
++    unsigned int ppenabled = 0;
++   
++    ppsc = readl (ip9028_otg->regs + IP9028_PRTSC);
++    if (ppsc & IP9028_PRTSC_PP)
++    {
++        ppenabled = 1;
++    }
+ 
+-#ifdef  USB_OTG_HNP_EN
++    return ppenabled;
++}
+ 
+-void  start_hw_assit_hnp(struct ip9028_otg_usb	*ip9028_otg);
+ 
+ 
+-/* Call from usb host stack for HNP initiation */
+ 
+-void  start_hw_assit_hnp(struct ip9028_otg_usb	*ip9028_otg)
++void ip9028_otg_port_bdisconnect(struct usb_hcd    *hcd)
+ {
+-	uint32_t otgsc;
+-
+-	printk(" start_hw_assit_hnp \n");
+-	
+-	otgsc = readl (ip9028_otg->regs + IP9028_OTGSC);
+-	otgsc  |= IP9028_OTGSC_HABA;
+-	writel (otgsc, ip9028_otg->regs + IP9028_OTGSC);
+-
++    printk(KERN_DEBUG "ip9028_otg_port_bdisconnect\n");
++    g_portdisconnect = 1;
+ }
+ 
+-extern void dr_controller_run_otg_wr(void);
+-extern void dr_controller_run_otg_wr_1(void);
+ 
+-static int ip9028_otg_start_hnp(struct otg_transceiver *x)
++#ifdef IDLE_DETECTNESS_TIMER
++static void a_device_idle_timer_fn(unsigned long data)
+ {
+-	struct ip9028_otg_usb *ip9028_otg;
+-	uint32_t tmp ,delay=100000;
+-
+-	printk("  ip9028_otg_start_hnp 1\n");
+-
+-	if (!x)
+-		return -ENODEV;
+-
+-	ip9028_otg = xceiv_to_ip9028_otg(x);
+-
++    struct ip9028_otg_usb *ip9028_otg=  (struct ip9028_otg_usb *) data;
++    unsigned int tmp,flag=0;
+ 
+-	tmp = readl (ip9028_otg->regs + IP9028_PRTSC);
+-	tmp = tmp | IP9028_PRTSC_SUSP;
+-	writel (tmp, ip9028_otg->regs + IP9028_PRTSC);
++    tmp = readl (ip9028_otg->regs + IP9028_USBCMD);
+ 
+-	tmp = readl (ip9028_otg->regs + IP9028_PRTSC);
+-	printk("  ip9028_otg_start_hnp tmp=%x 2\n",tmp);
+-
+-	
++    if( (tmp &  0x10) == (0x10) )
++    {
++        printk(KERN_DEBUG " PSE is set \n");
++        flag=1;
++    }
++    if( (tmp &  0x20) == (0x20) )
++    {
++        printk(KERN_DEBUG " ASE  is set  ******USB BUS IS BUSY**** \n");
++        flag=1;
++    }
++    else
++    {
++        printk(KERN_DEBUG " **************USB BUS is IDLE **************\n");
++
++        tmp = readl (ip9028_otg->regs + IP9028_USBMOD);
++        if( (tmp & IP9028_USBMODE_MASK) == IP9028_USBMODE_DEVICE)
++        {
++            if (is_otg_print_enabled())
++            {
++                printk(" **************USB BUS is IDLE  BUT IN DEVICE MODE **************\n"); 
++            }
++            
++            mod_timer(&A_device_idle_timer, jiffies + (IDLE_DETECTNESS_TIMER_VAL * 100 * HZ));
++            return;
++        }
++        
++        tmp = readl (ip9028_otg->regs + IP9028_PRTSC);
++        
++        if (( tmp  & IP9028_PRTSC_CCS_MASK) == (IP9028_PRTSC_CCS_MASK) )
++        {
++            if (ip9028_otg_is_portpower_enabled(ip9028_otg))
++            {
++                if (is_otg_print_enabled())
++                {
++                    printk("DEVICE connected turn off the VBUS \n");
++                }
++                
++                ip9028_otg_disable_portpower(ip9028_otg);
++            }
++        }
++        else
++        {
++            printk(KERN_DEBUG " BUS IS IDLE  but no device is connected \n");
++        }
++    }
+ 
++    mod_timer(&A_device_idle_timer, jiffies + (IDLE_DETECTNESS_TIMER_VAL * 100 * HZ));  
++}
++#endif
+ 
+-	Is_A_host = 0; //
+-		
+-	start_hw_assit_hnp(ip9028_otg);
+ 
+-	for(;delay > 0 ;delay--);
+ 
+-	printk( "ip9028_otg_start_hnp: roothub graceful disconnect\n");
++/* Call from usb host stack for HNP initiation */
+ 
+-	ip9028_otg->hcd->rh_registered = 0;
++void  start_hw_assit_hnp(struct ip9028_otg_usb	*ip9028_otg)
++{
++    uint32_t otgsc;
++    uint32_t mode;
++    unsigned long timeout;
++
++    printk(KERN_DEBUG " start_hw_assit_hnp \n");
++    
++    otgsc = readl (ip9028_otg->regs + IP9028_OTGSC);
++    otgsc  |= IP9028_OTGSC_HABA;
++    writel (otgsc, ip9028_otg->regs + IP9028_OTGSC);
++
++    timeout = jiffies + OTG_HABA_TIMEOUT;
++    while (1)
++    {
++        mode = readl (ip9028_otg->regs + IP9028_USBMOD);
++        if( (mode & IP9028_USBMODE_MASK) == IP9028_USBMODE_DEVICE)
++        {
++            printk(KERN_DEBUG "start_hw_assit_hnp::Mode changed to device: coming out of loop \n");
++            break;
++        }
++ 
++        if (time_after(jiffies, timeout)) 
++        {
++            printk(KERN_DEBUG "start_hw_assit_hnp::HABA  timeout!\n");
++            break ;
++        }
+ 
++        cpu_relax();
++    }
++}
+ 
+-	
+-	
+-	dr_controller_run_otg_wr();
+ 
+ 
+-	return 0;
+-}
+ 
+-static void start_hnp(struct usb_hcd		*hcd)
++static int ip9028_otg_start_hnp(struct otg_transceiver *x)
+ {
+-	printk(" ip9028_otgc. : start_hnp \n");
+-	otg_start_hnp(hcd->transceiver);
++    unsigned int tmp = 0;
++    int err = 0;
++    struct ip9028_otg_usb* ip9028_otg = NULL;
++    
++    if (!x)
++        return -ENODEV;
++
++    ip9028_otg = xceiv_to_ip9028_otg(x);
++
++    if ((OTG_STATE_A_HOST == ip9028_otg->otg.state) || (OTG_STATE_B_HOST == ip9028_otg->otg.state))
++    {
++        g_hnp_invoked = 1;
++
++        if (OTG_STATE_A_HOST == ip9028_otg->otg.state)
++        {
++            if (is_otg_print_enabled())
++            {
++                printk("ip9028_otg_start_hnp::OTG_STATE_A_HOST-->OTG_STATE_A_SUSPEND\n");
++            }
++            
++            ip9028_otg->otg.state = OTG_STATE_A_SUSPEND;
++        }
++        else if (OTG_STATE_B_HOST == ip9028_otg->otg.state)
++        {
++            if (is_otg_print_enabled())
++            {
++                printk("ip9028_otg_start_hnp::OTG_STATE_B_HOST-->OTG_STATE_B_SUSPEND\n");
++            }
++            
++            ip9028_otg->otg.state = OTG_STATE_B_SUSPEND;
++        }
+ 
+-}
+ 
++        err = usb_control_msg(g_otgudev, 
++            usb_sndctrlpipe(g_otgudev, 0),
++            USB_REQ_SET_FEATURE, 0,
++            g_otgudev->bus->b_hnp_enable
++                ? USB_DEVICE_B_HNP_ENABLE
++                : USB_DEVICE_A_ALT_HNP_SUPPORT,
++            0, NULL, 0, USB_CTRL_SET_TIMEOUT);
++        if (err < 0) 
++        {
++            /* OTG MESSAGE: report errors here,
++             * customize to match your product.
++             */
++            dev_info(&g_otgudev->dev, "can't set HNP mode: %d\n",err);
++            g_otgudev->bus->b_hnp_enable = 0;
++        }  
++
++        tmp = readl (ip9028_otg->regs + IP9028_PRTSC);
++        tmp = tmp | IP9028_PRTSC_SUSP;
++        writel (tmp, ip9028_otg->regs + IP9028_PRTSC);
++    }
++    else
++    {
++        printk("HNP cann't be invoked:: Current State is not Host\n");
++    }
++    
++    return 0;
++}
+ 
+-#endif
+ 
+ 
+ extern int ip9028_otg_register_peripheral(struct platform_device *peripheral_driver)
+-{
+-	
+-
+-	return 0;
++{	
++    return 0;
+ }
+ 
+ static int ip9028_otg_set_suspend(struct otg_transceiver *x, int suspend)
+ {
+-
+-	return 0;
++    return 0;
+ }
+ 
+ static int ip9028_otg_set_peripheral(struct otg_transceiver *x,
+ 		struct usb_gadget *gadget)
+ {
+-	struct ip9028_otg_usb *ip9028_otg;
++    struct ip9028_otg_usb *ip9028_otg;
+ 
+-	if (!x)
+-		return -ENODEV;
++    if (!x)
++        return -ENODEV;
+ 
+-	ip9028_otg = xceiv_to_ip9028_otg(x);
+-	ip9028_otg->otg.gadget = gadget;
+-	if (!gadget)
+-		ip9028_otg->otg.state = OTG_STATE_UNDEFINED;
++    ip9028_otg = xceiv_to_ip9028_otg(x);
++    ip9028_otg->otg.gadget = gadget;
++    if (!gadget)
++        ip9028_otg->otg.state = OTG_STATE_UNDEFINED;
+ 
+-	if (ip9028_otg->otg.state == OTG_STATE_B_PERIPHERAL)
+-		usb_gadget_vbus_connect(ip9028_otg->otg.gadget);
++    if (ip9028_otg->otg.state == OTG_STATE_B_PERIPHERAL)
++        usb_gadget_vbus_connect(ip9028_otg->otg.gadget);
+ 
+-	return 0;
++    return 0;
+ }
+ 
+ static int ip9028_otg_set_host(struct otg_transceiver *x, struct usb_bus *host)
+ {
+-	struct ip9028_otg_usb *ip9028_otg;
++    struct ip9028_otg_usb *ip9028_otg;
+ 
+-	if (!x)
+-		return -ENODEV;
++    if (!x)
++        return -ENODEV;
+ 
+-	ip9028_otg = xceiv_to_ip9028_otg(x);
+-	ip9028_otg->otg.host = host;
+-	if (!host)
+-		ip9028_otg->otg.state = OTG_STATE_UNDEFINED;
++    ip9028_otg = xceiv_to_ip9028_otg(x);
++    ip9028_otg->otg.host = host;
++    if (!host)
++        ip9028_otg->otg.state = OTG_STATE_UNDEFINED;
+ 
+-	return 0;
++    return 0;
+ }
+ 
+ void ip9028_otg_wq_host_probe(struct work_struct *work)
+ {
+-	struct ip9028_otg_usb *ip9028_otg = container_of((work), struct ip9028_otg_usb,
+-							 wq_host_probe);
+-
+-	uint32_t usbmode;
+-
+-	printk (KERN_ALERT "ip9028_otg_wq_host_probe: starting host mode...\n");
++    struct ip9028_otg_usb *ip9028_otg = container_of((work), struct ip9028_otg_usb,
++                             wq_host_probe);
+ 
+-	if (ip9028_otg->otg.gadget)
+-		usb_gadget_vbus_disconnect(ip9028_otg->otg.gadget);
+ 
+-	if(ip9028_otg->hcd)
+-	{
+-		printk(KERN_DEBUG" ip9028_otg_wq_host_probe: HCD is already created ,remove old and create new \n");
+-
+-		usb_remove_hcd(ip9028_otg->hcd);
+-		usb_put_hcd(ip9028_otg->hcd);
++    if (is_otg_print_enabled())
++    {
++        printk ("ip9028_otg_wq_host_probe: starting host mode...\n");
++    }
++    
++    if (ip9028_otg->otg.gadget)
++    {
++        usb_gadget_vbus_disconnect(ip9028_otg->otg.gadget);
++    }
+ 
+-		ip9028_otg->hcd = NULL;
++    if(ip9028_otg->hcd)
++    {
++        printk(KERN_DEBUG " ip9028_otg_wq_host_probe: HCD is already created ,remove old and create new \n");
+ 
+-	
+-	}
+-	
+-	 ip9028_otg->hcd = usb_create_hcd(&ehci_ip9028_hc_driver/*&ehci_ip9028_otg_hc_driver*/,
+-					 &ip9028_otg->usb_host,"ip9028_udc_udc"/* "ip9028_host"*/);
+-	if (ip9028_otg->hcd) {
+-		ip9028_otg->hcd->rsrc_start = ip9028_otg->pdev->resource[0].start;
+-		ip9028_otg->hcd->rsrc_len = ip9028_otg->pdev->resource[0].end - 
+-					    ip9028_otg->pdev->resource[0].start + 1;
+-		ip9028_otg->hcd->regs = ip9028_otg->regs;
+-
+-		usbmode = readl (ip9028_otg->regs + IP9028_USBMODE);
+-		usbmode = (usbmode & ~IP9028_USBMODE_MASK) | IP9028_USBMODE_HOST;
+-		writel (usbmode, ip9028_otg->regs + IP9028_USBMODE);
+-
+-		ip9028_otg->hcd->self.otg_port = 1;
+-		
+-		if (usb_add_hcd(ip9028_otg->hcd, ip9028_otg->pdev->resource[1].start, 
+-				IRQF_SHARED | IRQF_DISABLED)) {
+-			printk (KERN_ALERT "ip9028_otg_wq_host_probe: could not add hcd! irq=%d \n",ip9028_otg->pdev->resource[0].start);
+-		}
+-	} else {
+-		printk (KERN_ALERT "ip9028_otg_wq_host_probe: could not create hcd!\n");
+-	}
++        usb_remove_hcd(ip9028_otg->hcd);
++        usb_put_hcd(ip9028_otg->hcd);
+ 
+-#ifdef USB_OTG_HNP_A_DEVICE
++        ip9028_otg->hcd = NULL; 
++    }
++    
++    ip9028_otg->hcd = usb_create_hcd(&ehci_ip9028_hc_driver,
++                     &ip9028_otg->usb_host,driver_name);
++
++
++    if (ip9028_otg->hcd) 
++    {
++        ip9028_otg->hcd->rsrc_start = ip9028_otg->pdev->resource[0].start;
++        ip9028_otg->hcd->rsrc_len = ip9028_otg->pdev->resource[0].end - 
++                        ip9028_otg->pdev->resource[0].start + 1;
++        ip9028_otg->hcd->regs = ip9028_otg->regs;
++
++        ip9028_otg->hcd->self.otg_port = 1;
++                
++        if (usb_add_hcd(ip9028_otg->hcd, ip9028_otg->pdev->resource[1].start, IRQF_SHARED | IRQF_DISABLED)) 
++        {
++            printk ("ip9028_otg_wq_host_probe: could not add hcd! irq=%d \n",ip9028_otg->pdev->resource[0].start);
++        }
++    } 
++    else 
++    {
++        printk ("ip9028_otg_wq_host_probe: could not create hcd!\n");
++    }
+ 
+ 
+-	Is_A_host=1;
++    ip9028_otg->hcd->transceiver = otg_get_transceiver();
+ 
+-#endif
++    if(ip9028_otg->hcd->transceiver)
++    {        
++        int status = otg_set_host(ip9028_otg->hcd->transceiver, &ip9028_otg->hcd->self);
++        
++        if (status) 
++        {
++            if (ip9028_otg->hcd->transceiver)
++            {
++                    put_device(ip9028_otg->hcd->transceiver->dev);
++            }                
++        }
+ 
+-#ifdef USB_OTG_HNP_EN
+-	ip9028_otg->hcd->transceiver = otg_get_transceiver();
++        ip9028_otg->hcd->bdisconnect =  ip9028_otg_port_bdisconnect;
++    }
+ 
+-	if(ip9028_otg->hcd->transceiver)
+-	{
+-		
+-		int	status = otg_set_host(ip9028_otg->hcd->transceiver,
+-						&ip9028_otg->hcd->self);
+-		
+-			if (status) {
+-				if (ip9028_otg->hcd->transceiver)
+-					put_device(ip9028_otg->hcd->transceiver->dev);
+-				
+-			
+-		}
+-		ip9028_otg->hcd->start_hnp = start_hnp;
+-		
++    if (OTG_STATE_A_HOST== ip9028_otg->otg.state)
++    {
++        if (is_otg_print_enabled())
++        {
++            printk("ip9028_otg_wq_host_probe::OTG_STATE_A_HOST-->is_b_host=0\n");
++        }
++        
++        ip9028_otg->hcd->self.is_b_host = 0;
++    }
++    else if (OTG_STATE_B_HOST== ip9028_otg->otg.state) /*This situation should not come*/
++    {
++        if (is_otg_print_enabled())
++        {
++            printk("ip9028_otg_wq_host_probe::OTG_STATE_B_HOST-->is_b_host=1\n");
++        }
++        
++        ip9028_otg->hcd->self.is_b_host = 1;
++    }
+ 
++    if (OTG_STATE_B_PERIPHERAL == ip9028_otg->otg.state)
++    {
++        if (is_otg_print_enabled())
++        {
++            printk("ip9028_otg_wq_host_probe::OTG_STATE_B_PERIPHERAL-->OTG_STATE_B_HOST\n");
++        }
++        
++        ip9028_otg->hcd->self.is_b_host = 1;
++        ip9028_otg->otg.state = OTG_STATE_B_HOST;
++    }
+ 
+-	}
++    if (OTG_STATE_A_PERIPHERAL == ip9028_otg->otg.state)
++    {
++        if (is_otg_print_enabled())
++        {
++            printk("ip9028_otg_wq_host_probe::OTG_STATE_A_PERIPHERAL-->OTG_STATE_A_HOST\n");
++        }
++        
++        ip9028_otg->hcd->self.is_b_host = 0;
++        ip9028_otg->otg.state = OTG_STATE_A_HOST;
++    }   
+ 
+-#endif	
+ 
+ #ifdef  IDLE_DETECTNESS_TIMER
+-	init_timer(&A_device_idle_timer);
+-	A_device_idle_timer.expires = jiffies + (IDLE_DETECTNESS_TIMER_VAL * 100 * HZ);
+-	A_device_idle_timer.function =a_device_idle_timer_fn;
+-	A_device_idle_timer.data = (unsigned long)ip9028_otg;
+-
+-	add_timer(&A_device_idle_timer);
+-	printk(" A_host_idle_detectness_timer added ****END \n");
+-#endif	
+-
+-
+-	
++    init_timer(&A_device_idle_timer);
++    A_device_idle_timer.expires = jiffies + (IDLE_DETECTNESS_TIMER_VAL * 100 * HZ);
++    A_device_idle_timer.function =a_device_idle_timer_fn;
++    A_device_idle_timer.data = (unsigned long)ip9028_otg;
++
++    add_timer(&A_device_idle_timer);
++#endif  
++
++    if (is_otg_print_enabled())
++    {
++        printk("ip9028_otg_wq_host_probe::End\n");
++    }
+ }
+ 
+ void ip9028_otg_wq_host_remove(struct work_struct *work)
+ {
+-	struct ip9028_otg_usb *ip9028_otg = container_of((work), struct ip9028_otg_usb,
+-							 wq_host_remove);
++    struct ip9028_otg_usb *ip9028_otg = container_of((work), struct ip9028_otg_usb, wq_host_remove);
+ 
+-	if(ip9028_otg->hcd)
+-	{
+-		usb_remove_hcd(ip9028_otg->hcd);
+-		usb_put_hcd(ip9028_otg->hcd);
+-	}
++    /*FIXME:: start_hw_assit_hnp(ip9028_otg); We should do a HABA, and hcd disable instead of remove as a proper solution*/ 
+ 
+-	
+-		
+-	ip9028_otg->hcd = NULL;
+-
+-	
+-
+-	if (ip9028_otg->otg.gadget)
+-		usb_gadget_vbus_connect(ip9028_otg->otg.gadget);
+-}
++    if(ip9028_otg->hcd)
++    {
++        if (is_otg_print_enabled())
++        {
++            printk("ip9028_otg_wq_host_remove:: Remove HCD\n");
++        }
++        
++#ifdef IDLE_DETECTNESS_TIMER        
++        del_timer_sync(&A_device_idle_timer); 
++#endif
+ 
++        usb_remove_hcd(ip9028_otg->hcd);
++        usb_put_hcd(ip9028_otg->hcd);
++    }
++            
++    ip9028_otg->hcd = NULL;
+ 
++    g_hnp_invoked = 0;
++    if (ip9028_otg->otg.state == OTG_STATE_A_SUSPEND)
++    {
++        ip9028_otg->otg.state = OTG_STATE_A_PERIPHERAL; 
++        dr_controller_otg_set_peripheral(1); 
++    }
++    else if (ip9028_otg->otg.state == OTG_STATE_B_SUSPEND)
++    {
++        ip9028_otg->otg.state = OTG_STATE_B_PERIPHERAL; 
++        dr_controller_otg_set_peripheral(0); 
++    }
++     
++    if (ip9028_otg->otg.gadget)
++    {
++        printk("Calling usb_gadget_vbus_connect\n");
++        usb_gadget_vbus_connect(ip9028_otg->otg.gadget);
++    }
+ 
++    g_host_removal_started = 0;
+ 
++    if (is_otg_print_enabled())
++    {   
++        printk("ip9028_otg_wq_host_remove::END\n"); 
++    }
++}
+ 
+-	
+ 
+ 
+ 
+-/* original */
+-static irqreturn_t ip9028_otg_usb_irq(int irq, void *_otg)
++	
++void checkotgsc_interrupt_status(void)
+ {
+-        struct ip9028_otg_usb *ip9028_otg = _otg;
+-        uint32_t otgsc,otgsc1, tmp, retval;
+-	static uint32_t timeout = 0;
+-
+-	otgsc = readl (ip9028_otg->regs + IP9028_OTGSC);
++    struct ip9028_otg_usb *ip9028_otg = ip9028_otg_bak;
++    uint32_t otgsc;
+ 
+-	
++    if (is_otg_print_enabled())
++    {      
++        otgsc = readl (ip9028_otg->regs + IP9028_OTGSC);
++
++        if (otgsc & IP9028_OTGSC_IDIS) 
++     {
++            printk(" checkotgsc_interrupt_status ->  IP9028_OTGSC_IDIS set otgsc = 0x%x \n",otgsc);
++        }
++
++        if(otgsc &  IP9028_OTGSC_ASVIS)
++        {
++            printk(" checkotgsc_interrupt_status ->  IP9028_OTGSC_ASVIS   otgsc = 0x%x \n",otgsc);
++        }   
++
++        if(otgsc &  IP9028_OTGSC_AVVIS)
++        {
++            printk(" checkotgsc_interrupt_status ->  IP9028_OTGSC_AVVIS   otgsc = 0x%x \n",otgsc);
++        }   
++                    
++        if(otgsc  & IP9028_OTGSC_BSVIS)
++        {
++            printk(" checkotgsc_interrupt_status ->  IP9028_OTGSC_BSVIS otgsc=%x   \n",otgsc);
++        }
++
++        if(otgsc  & IP9028_OTGSC_BSEIS)
++        {
++            printk(" checkotgsc_interrupt_status ->   IP9028_OTGSC_BSEIS otgsc=%x   \n",otgsc);
++        }
++
++        if (otgsc & IP9028_OTGSC_1msS) 
++        {
++            printk("  checkotgsc_interrupt_status ->  IP9028_OTGSC_1msS otgsc=0x%x\n",otgsc);
++        }
++    }
++}
+ 
+-	if(Is_B_Device)
+-		return IRQ_NONE;
+ 
+ 
+-	
+-	if(otgsc  &  IP9028_OTGSC_DPIS)
+-	{
+-		
+-		printk(KERN_DEBUG"ip9028_otg_usb_irq : SRP is detected   \n");
+-		tmp = ( otgsc  &  0xFF00FFFF) | IP9028_OTGSC_DPIS ;
+-		writel (tmp,ip9028_otg->regs + IP9028_OTGSC);
+-		
+-
+-		if(IsPowerOff)
+-		{
+-			printk(KERN_DEBUG"Is this   Poweroff event ?  DO Nothing \n");
+-			IsPowerOff =0;
+-			return IRQ_HANDLED;
+-		}
+-		else
+-		{
+-			
++static irqreturn_t ip9028_otg_usb_irq(int irq, void *_otg)
++{
++    struct ip9028_otg_usb *ip9028_otg = _otg;
++        
++    uint32_t otgsc, tmp;
++    unsigned int a_session_end = 0; 
++    static uint32_t timeout = 0;
++    static unsigned int b_sess_valid = 0;
++    static unsigned int a_wait_vrise_timer = 100; /*Time is 100ms, since we are counting on the 1ms otg timer so 100/1=100 count */
++    static unsigned int a_wait_bcon_timer = 1000; /*Time is 1 sec=1000ms*/
++    static unsigned int a_wait_srp_fail_timer = 5000; /*Time is 5 sec=5000ms*/
++    /*a_srp_detect
++         1: if the A-deice detects SRP (Data pulsing or Vbus pulsing)
++         0: During initial power up of the A-device or whenever the A-device transitions to the VFALL state*/
++    static unsigned int a_srp_detect = 0;
++
++    static unsigned int b_srp_initiated = 0;
++
++    ip9028_otg_bak = _otg;
++       
++    otgsc = readl (ip9028_otg->regs + IP9028_OTGSC);
++
++       
++    switch (ip9028_otg->otg.state) 
++    {
++        case OTG_STATE_UNDEFINED:
++            if (otgsc & IP9028_OTGSC_ID) 
++            {
++                /* Close previous session if any */
++                if( (otgsc & IP9028_OTGSC_BSEIS) == (IP9028_OTGSC_BSEIS)) 
++                {
++                    if (is_otg_print_enabled())
++                    {
++                        printk(" OTG_STATE_UNDEFINED::Cleared IP9028_OTGSC_BSEIS \n");
++                    }
++                    
++                    writel (otgsc | IP9028_OTGSC_BSEIS , ip9028_otg->regs + IP9028_OTGSC);
++                }
++
++#ifdef CONFIG_IP9028_OTG_B_DETECTION            
++                ip9028_otg->otg.state = OTG_STATE_B_IDLE;
++                
++                if (is_otg_print_enabled())
++                {
++                    printk(" OTG_STATE_UNDEFINED -> OTG_STATE_B_IDLE otgsc = 0x%x \n",otgsc);
++                }
++#else
++                /*This is added as in our IP B-connect detection is not happening so we have to rely on BSV*/
++
++                if (g_user_srp_request)
++                {                                   
++                    /*FIXME::As per spec before strating SRP in addition to BSE we have to also ensure that bus has been in SE0 state for
++                                  at least Tb_SE0_SRP minute i.e 2 minute*/
++                    if (otgsc &  IP9028_OTGSC_BSE)
++                    {
++                        dr_controller_otg_setmode(USB_MODE_CTRL_MODE_DEVICE); 
++
++                        ip9028_otg->otg.state = OTG_STATE_B_SRP_INIT;
++                        if (is_otg_print_enabled())
++                        {
++                            printk(" OTG_STATE_UNDEFINED -> OTG_STATE_B_SRP_INIT otgsc = 0x%x \n",otgsc);
++                        }
++                    }
++                    else
++                    {
++                         printk("SRP cann't be started now b_sess_end not true, try later\n");
++                    }
++
++                    /*Mark the user srp request as false so that one request triggers one action only*/
++                    g_user_srp_request = 0;
++                }
++                
++                if (otgsc & IP9028_OTGSC_1msS) 
++                {
++                    writel ((otgsc & 0xFF00FFFF) | IP9028_OTGSC_1msS, ip9028_otg->regs + IP9028_OTGSC);
++
++                    if (b_srp_initiated)
++                    {
++                        if (timeout) 
++                        {
++                            timeout--;
++                        } 
++                        else 
++                        {
++                            printk("SRP response didn't come from host:: Timeout\n");
++
++                            b_srp_initiated = 0;                            
++                        }               
++                    }
++                }
++
++                if(otgsc &  IP9028_OTGSC_BSVIS) 
++                {                    
++                    writel (((otgsc & 0xFF00FFFF)  | IP9028_OTGSC_BSVIS), ip9028_otg->regs + IP9028_OTGSC);
++                    if (is_otg_print_enabled())
++                    {
++                        printk("OTG_STATE_UNDEFINED  cleared IP9028_OTGSC_BSVIS   otgsc = 0x%x \n",otgsc);
++                    }
++                }
++
++                if (otgsc &  IP9028_OTGSC_BSV) /* This is kept outside the BSVIS to take care of preattched cable in which BSV is not generated*/
++                {
++                    b_srp_initiated = 0; 
++                    b_sess_valid = 1;
++                }                   
++                
++                if ((1 == b_sess_valid) && (1 == g_gadget_registered))
++                {
++                    /*FIXME:: Is this required here as dr_controller_otg_set_peripheral doing this already I think this can be removed*/
++                    dr_controller_otg_setmode(USB_MODE_CTRL_MODE_DEVICE); 
++
++                    dr_controller_otg_set_peripheral(0);
++                        
++                    ip9028_otg->otg.state = OTG_STATE_B_PERIPHERAL; /*FIXME:: CHECK if it ever can be OTG_STATE_B_WAIT_ACON based on some condition*/
++                    if (is_otg_print_enabled())
++                    {
++                        printk("OTG_STATE_UNDEFINED --> OTG_STATE_B_PERIPHERAL  otgsc = 0x%x \n",otgsc);            
++                    }
++                }
++#endif
++            } 
++            else 
++            {
++                if (is_otg_print_enabled())
++                {
++                    printk(" OTG_STATE_UNDEFINED -> OTG_STATE_A_IDLE \n");
++                }
++                
++                dr_controller_otg_setmode(USB_MODE_CTRL_MODE_HOST);
++                ip9028_otg->otg.state = OTG_STATE_A_IDLE;
++
++#ifdef CONFIG_IP9028_OTG_PP_ON_A_DETECT                
++                /* enable port power */
++                ip9028_otg_enable_portpower(ip9028_otg);
++#endif              
++                if (otgsc & IP9028_OTGSC_1msS) 
++                {
++                    writel ((otgsc & 0xFF00FFFF) | IP9028_OTGSC_1msS, ip9028_otg->regs + IP9028_OTGSC);
++                }
++            }
++        
++            if (otgsc & IP9028_OTGSC_IDIS) 
++            {
++                if (is_otg_print_enabled())
++                {
++                    printk(" OTG_STATE_UNDEFINED ->  cleared IP9028_OTGSC_IDIS otgsc = 0x%x \n",otgsc);
++                }
++                
++                writel ((otgsc & 0xFF00FFFF) | IP9028_OTGSC_IDIS, ip9028_otg->regs + IP9028_OTGSC);
++            }
++
++
++            if(otgsc &  IP9028_OTGSC_ASVIS)
++            {
++                writel (((otgsc & 0xFF00FFFF) | IP9028_OTGSC_ASVIS), ip9028_otg->regs + IP9028_OTGSC);
++
++                if (is_otg_print_enabled())
++                {
++                    printk("  OTG_STATE_UNDEFINED  cleared IP9028_OTGSC_ASVIS   otgsc = 0x%x \n",otgsc);
++                }
++            }   
++                               
++            break;
++        
++        case OTG_STATE_A_IDLE:
++            /* Close previous session if any */
++            if( (otgsc & IP9028_OTGSC_BSEIS) == (IP9028_OTGSC_BSEIS)) 
++            {
++                if (is_otg_print_enabled())
++                {
++                    printk(" OTG_STATE_A_IDLE::Cleared IP9028_OTGSC_BSEIS otgsc = %x \n",otgsc);
++                }
++                
++                writel (otgsc | IP9028_OTGSC_BSEIS , ip9028_otg->regs + IP9028_OTGSC);
++            }
++
++            if (otgsc & IP9028_OTGSC_ID)
++            {
++                ip9028_otg->otg.state = OTG_STATE_UNDEFINED;
++                if (is_otg_print_enabled())
++                {
++                    printk("  OTG_STATE_A_IDLE -> OTG_STATE_UNDEFINED otgsc = %x \n",otgsc);
++                }
++            }
++
++            if (otgsc & IP9028_OTGSC_IDIS) 
++            {
++                if (is_otg_print_enabled())
++                {
++                    printk(" OTG_STATE_A_IDLE ->  cleared IP9028_OTGSC_IDIS otgsc = 0x%x \n",otgsc);
++                }
++                
++                writel ((otgsc & 0xFF00FFFF) | IP9028_OTGSC_IDIS, ip9028_otg->regs + IP9028_OTGSC);
++            }
++
++            if(otgsc  &  IP9028_OTGSC_DPIS)
++            {       
++                if (otgsc  &  IP9028_OTGSC_DPS)
++                {
++                    a_srp_detect = 1;
++                    if (is_otg_print_enabled())
++                    {
++                        printk("OTG_STATE_A_IDLE:DP set\n");
++                    }
++                }
++                else
++                {
++                    if (is_otg_print_enabled())
++                    {
++                        printk("OTG_STATE_A_IDLE:DP Cleared\n");
++                    }
++                }
++
++                if (is_otg_print_enabled())
++                {
++                    printk("OTG_STATE_A_IDLE : SRP:DataPulsing detected   \n");
++                }
++                
++                tmp = ( otgsc  &  0xFF00FFFF) | IP9028_OTGSC_DPIS ;
++                writel (tmp,ip9028_otg->regs + IP9028_OTGSC);
++            }
++
++            if(otgsc  &  IP9028_OTGSC_ASVIS)
++            {       
++                tmp = ( otgsc  &  0xFF00FFFF) | IP9028_OTGSC_ASVIS ;
++                writel (tmp,ip9028_otg->regs + IP9028_OTGSC);
++
++                if(otgsc  &  IP9028_OTGSC_ASV)
++                {
++                    if (is_otg_print_enabled())
++                    {
++                        printk("OTG_STATE_A_IDLE : SRP:VBusPulsing detected   \n");
++                    }
++                    
++                    a_srp_detect = 1;
++                }
++            }
++            
++            if (a_srp_detect)           
++            {
++                a_srp_detect = 0;
++
++                if (is_otg_print_enabled())
++                {
++                    printk("OTG_STATE_A_IDLE:: Enable port power  \n");
++                }
++                
++                ip9028_otg_enable_portpower(ip9028_otg);
++
++                ip9028_otg->otg.state = OTG_STATE_A_WAIT_VRISE;
++
++                /*Enable the time interrupt*/
++                timeout = a_wait_vrise_timer;
++                /*writel ((otgsc & 0xFF00FFFF) | IP9028_OTGSC_1msE , ip9028_otg->regs + IP9028_OTGSC);*/
++
++                if (is_otg_print_enabled())
++                {
++                    printk("  OTG_STATE_A_IDLE -> OTG_STATE_A_WAIT_VRISE otgsc = %x \n",otgsc);
++                }
++            }
++
++            if (otgsc & IP9028_OTGSC_1msS) 
++            {
++                writel ((otgsc & 0xFF00FFFF) | IP9028_OTGSC_1msS, ip9028_otg->regs + IP9028_OTGSC);
++            }
++
++            break;
++
++        case OTG_STATE_B_IDLE:
++#ifdef CONFIG_IP9028_OTG_B_DETECTION            
++            if (g_user_srp_request)
++            {                                   
++                /*FIXME::As per spec before strating SRP in addition to BSE we have to also ensure that bus has been in SE0 state for
++                                  at least Tb_SE0_SRP minute i.e 2 minute*/
++                if (otgsc &  IP9028_OTGSC_BSE)
++                {
++                    ip9028_otg->otg.state = OTG_STATE_B_SRP_INIT;
++                    if (is_otg_print_enabled())
++                    {                   
++                        printk(" OTG_STATE_B_IDLE -> OTG_STATE_B_SRP_INIT otgsc = 0x%x \n",otgsc);
++                    }
++                }
++                else
++                {
++                    printk("SRP cann't be started now b_sess_end not true, try later\n");
++                }
++
++                /*Mark the user srp request as false so that one request triggers one action only*/
++                g_user_srp_request = 0;
++            }
++                
++            if (otgsc & IP9028_OTGSC_1msS) 
++            {
++                writel ((otgsc & 0xFF00FFFF) | IP9028_OTGSC_1msS, ip9028_otg->regs + IP9028_OTGSC);
++                if (is_otg_print_enabled())
++                {
++                    printk(" OTG_STATE_B_IDLE ->  cleared IP9028_OTGSC_1msS otgsc=0x%x\n",otgsc);
++                }
++
++                if (b_srp_initiated)
++                {
++                    if (timeout) 
++                    {
++                        timeout--;
++                    } 
++                    else 
++                    {
++                        printk("SRP response didn't come from host:: Timeout\n");
++
++                        b_srp_initiated = 0;    
++                    }               
++                }
++            }
++
++            if(otgsc &  IP9028_OTGSC_BSVIS) 
++            {                    
++                writel (((otgsc & 0xFF00FFFF)  | IP9028_OTGSC_BSVIS), ip9028_otg->regs + IP9028_OTGSC);
++                if (is_otg_print_enabled())
++                {
++                    printk("OTG_STATE_UNDEFINED  cleared IP9028_OTGSC_BSVIS   otgsc = 0x%x \n",otgsc);
++                }
++
++                if (otgsc &  IP9028_OTGSC_BSV) 
++                {
++                    b_sess_valid = 1;
++                }                   
++            }
++            
++            if ((1 == b_sess_valid) && (1 == g_gadget_registered))
++            {
++                if (is_otg_print_enabled())
++                {
++                    printk("Device mode set as b_sess_valid=1\n");
++                }
++                
++                dr_controller_otg_set_peripheral(0);
++                    
++                ip9028_otg->otg.state = OTG_STATE_B_PERIPHERAL; /*FIXME::Check if it ever can be OTG_STATE_B_WAIT_ACON based on some condition*/
++                if (is_otg_print_enabled())
++                {
++                    printk("OTG_STATE_UNDEFINED --> OTG_STATE_B_PERIPHERAL  otgsc = 0x%x \n",otgsc);            
++                }
++            }
++#else
++            printk("Control should not come here as this state is not implemented becuase USB IP doesnot support B-Detect\n");
++#endif              
++            break;
++
++        case OTG_STATE_A_WAIT_VRISE:            
++            if (otgsc & IP9028_OTGSC_IDIS) 
++            {
++                if (is_otg_print_enabled())
++                {
++                    printk(" OTG_STATE_A_WAIT_VRISE->  cleared IP9028_OTGSC_IDIS otgsc = 0x%x \n",otgsc);
++                }
++                
++                writel ((otgsc & 0xFF00FFFF) | IP9028_OTGSC_IDIS, ip9028_otg->regs + IP9028_OTGSC);
++         
++                if (otgsc & IP9028_OTGSC_ID) 
++                {
++                    if (is_otg_print_enabled())
++                    {
++                        printk(" OTG_STATE_A_WAIT_VRISE ->  IP9028_OTGSC_ID=1 otgsc = 0x%x \n",otgsc);  
++                    }
++                    
++                    ip9028_otg->otg.state = OTG_STATE_UNDEFINED; /*CHECK:: May be state should be OTG_STATE_A_WAIT_VFALL*/
++
++                    ip9028_otg_disable_portpower(ip9028_otg);   
++                }
++             
++                return IRQ_HANDLED;
++            }
++
++            if(otgsc  &  IP9028_OTGSC_AVVIS)
++            {
++                if (is_otg_print_enabled())
++                {
++                    printk(" OTG_STATE_A_WAIT_VRISE->  cleared IP9028_OTGSC_AVVIS otgsc = 0x%x \n",otgsc);
++                }
++                
++                tmp = ( otgsc  &  0xFF00FFFF) | IP9028_OTGSC_AVVIS ;
++                writel (tmp,ip9028_otg->regs + IP9028_OTGSC);               
++
++                if(otgsc  &  IP9028_OTGSC_AVV)
++                {
++                    ip9028_otg->otg.state = OTG_STATE_A_WAIT_BCON;
++
++                    timeout = a_wait_bcon_timer;
++
++                    if (is_otg_print_enabled())
++                    {
++                        printk("  OTG_STATE_A_WAIT_VRISE -> OTG_STATE_A_WAIT_BCON otgsc = %x \n",otgsc);
++                    }
++                }               
++            }
++
++            if(otgsc  &  IP9028_OTGSC_ASVIS)
++            {       
++                if (is_otg_print_enabled())
++                {
++                    printk(" OTG_STATE_A_WAIT_VRISE->  cleared IP9028_OTGSC_ASVIS otgsc = 0x%x \n",otgsc);
++                }
++                
++                tmp = ( otgsc  &  0xFF00FFFF) | IP9028_OTGSC_ASVIS ;
++                writel (tmp,ip9028_otg->regs + IP9028_OTGSC);
++            }
++
++            if(otgsc  &  IP9028_OTGSC_BSVIS)
++            {       
++                if (is_otg_print_enabled())
++                {
++                    printk(" OTG_STATE_A_WAIT_VRISE->  cleared IP9028_OTGSC_BSVIS otgsc = 0x%x \n",otgsc);
++                }
++                
++                tmp = ( otgsc  &  0xFF00FFFF) | IP9028_OTGSC_BSVIS ;
++                writel (tmp,ip9028_otg->regs + IP9028_OTGSC);
++            }
++
++            if (otgsc & IP9028_OTGSC_1msS) 
++            {
++                if (timeout) 
++                {
++                    timeout--;
++                } 
++                else 
++                {
++                    ip9028_otg->otg.state = OTG_STATE_A_WAIT_VFALL;
++                }
++                
++                writel ((otgsc & 0xFF00FFFF) | IP9028_OTGSC_1msS, ip9028_otg->regs + IP9028_OTGSC);
++            }
++
++            break;
++
++        case OTG_STATE_A_WAIT_VFALL:
++            if(otgsc  &  IP9028_OTGSC_ASVIS)
++            {       
++                if(0 == (otgsc  &  IP9028_OTGSC_ASV))
++                {
++                    if (is_otg_print_enabled())
++                    {
++                        printk("OTG_STATE_A_WAIT_VFALL : Below ASV detected\n");
++                    }
++                    
++                    tmp = ( otgsc  &  0xFF00FFFF) | IP9028_OTGSC_ASVIS ;
++                    writel (tmp,ip9028_otg->regs + IP9028_OTGSC);
++                    //a_srp_detect = 0;
++
++                    ip9028_otg->otg.state = OTG_STATE_UNDEFINED; 
++                }
++            }
++
++            if (otgsc & IP9028_OTGSC_1msS) 
++            {
++                writel ((otgsc & 0xFF00FFFF) | IP9028_OTGSC_1msS, ip9028_otg->regs + IP9028_OTGSC);
++                if (is_otg_print_enabled())
++                {
++                    printk(" OTG_STATE_A_WAIT_VFALL ->  cleared IP9028_OTGSC_1msS otgsc=0x%x\n",otgsc);
++                }
++            }
++ 
++            break;
++
++        case OTG_STATE_A_WAIT_BCON:
++            if (otgsc & IP9028_OTGSC_IDIS) 
++            {
++                if (otgsc & IP9028_OTGSC_ID) 
++                {
++                    if (is_otg_print_enabled())
++                    {
++                        printk(" OTG_STATE_A_WAIT_BCON->  IP9028_OTGSC_ID=1 otgsc = 0x%x \n",otgsc);  
++                    }
++                    ip9028_otg->otg.state = OTG_STATE_A_WAIT_VFALL; 
++                }
++             
++                if (is_otg_print_enabled())
++                {
++                    printk(" OTG_STATE_A_WAIT_BCON->  cleared IP9028_OTGSC_IDIS otgsc = 0x%x \n",otgsc);
++                }
++                
++                writel ((otgsc & 0xFF00FFFF) | IP9028_OTGSC_IDIS, ip9028_otg->regs + IP9028_OTGSC);
++
++                return IRQ_HANDLED;
++            }
++
++
++            if (otgsc & IP9028_OTGSC_1msS)
++            {
++                /*FIXME::CHECK:: How to detect b_conn state. after that check for that and a_wait_bcon_timer timeout 
++                                                         and wq_host_probe should be under b_conn state detect condition*/
++                if (timeout) 
++                {
++                    timeout--;
++                } 
++                else 
++                {
++                    /*FIXME::Wait for TA_BCON_LDB (100 msec) if state remains same enter to HOST state whwre schedule the work queue*/
++                   ip9028_otg->otg.state = OTG_STATE_A_HOST;
++            
++                   schedule_work(&ip9028_otg->wq_host_probe);  
++                   /*May be we should wait for wq_host_proble to complete after which we should transition to host state*/
++                }
++
++                writel ((otgsc & 0xFF00FFFF) | IP9028_OTGSC_1msS, ip9028_otg->regs + IP9028_OTGSC);
++            }
++
++
++            break;
++
++        case OTG_STATE_A_HOST:
++            /*FIXME::CHECK::Why DP interrupt coming now though it is detected and cleared earlier,*/
++            if(otgsc  &  IP9028_OTGSC_DPIS)
++            {
++                if (otgsc  &  IP9028_OTGSC_DPS)
++                {
++                    if (is_otg_print_enabled())
++                    {
++                        printk("OTG_STATE_A_HOST:DP set\n");
++                    }
++                }
++                else
++                {
++                    if (is_otg_print_enabled())
++                    {
++                        printk("OTG_STATE_A_HOST:DP Cleared\n");
++                    }
++                }
++
++                a_srp_detect = 0;
++                
++                tmp = ( otgsc  &  0xFF00FFFF) | IP9028_OTGSC_DPIS ;
++                writel (tmp,ip9028_otg->regs + IP9028_OTGSC);
++            }
++
++            if (otgsc & IP9028_OTGSC_IDIS) 
++            {
++                if (otgsc & IP9028_OTGSC_ID) 
++                {
++                    a_session_end = 1;
++                }
++                
++                if (is_otg_print_enabled())
++                {
++                    printk(" OTG_STATE_A_HOST->  cleared IP9028_OTGSC_IDIS otgsc = 0x%x \n",otgsc);
++                }
++                
++                writel ((otgsc & 0xFF00FFFF) | IP9028_OTGSC_IDIS, ip9028_otg->regs + IP9028_OTGSC);
++            }
++
++/*FIXME::TODO:: Find out how to detect b_conn=0 i.e. B side disconnects
++            if (0 == b_conn)
++            {
++                a_session_end = 1;
++            }
++*/       
++            
++            if (a_session_end)
++            {
++                if (is_otg_print_enabled())
++                {
++                    printk(" OTG_STATE_A_HOST ->  IP9028_OTGSC_ID=1 otgsc = 0x%x \n",otgsc);  
++                }
++                
++                a_session_end = 0;
++                g_portdisconnect = 0; 
++                g_host_removal_started = 1; 
++          
++                schedule_work(&ip9028_otg->wq_host_remove);
++                /*ip9028_otg->otg.state = OTG_STATE_UNDEFINED; */
++                /*FIXME:: Once we have mechanism to detect b_conn then state should be OTG_STATE_A_WAIT_BCON which 
++                                             then change to VFALL on a_wanit-bonn timeout and then to undefined on b_conn=0
++                ip9028_otg->otg.state = OTG_STATE_A_WAIT_BCON;*/
++            }
++            
++            if (otgsc & IP9028_OTGSC_1msS) 
++            {
++                writel ((otgsc & 0xFF00FFFF) | IP9028_OTGSC_1msS, ip9028_otg->regs + IP9028_OTGSC);
++            }
++
++            if (g_portdisconnect) 
++            {
++                g_portdisconnect = 0;
++                if (is_otg_print_enabled())
++                {
++                    printk(" OTG_STATE_A_HOST ->  OTG_STATE_A_IDLE:: Port disconnect\n");  
++                }
++                if (!g_host_removal_started)
++                {
++                    g_host_removal_started = 1;
++                    schedule_work(&ip9028_otg->wq_host_remove);
++                    ip9028_otg->otg.state = OTG_STATE_A_IDLE; /*Added for idle deetction which do port power off after idle timeout occurs*/
++                }
++            }
++            
++            if(otgsc &  IP9028_OTGSC_ASVIS)
++            {
++                if (0 == (otgsc &  IP9028_OTGSC_ASV))
++                {
++                    if (is_otg_print_enabled())
++                    {
++                        printk(" OTG_STATE_A_HOST ->  OTG_STATE_UNDEFINED:: ASV=0 otgsc = 0x%x \n",otgsc);  
++                    }
++                    
++                    if (!g_host_removal_started)
++                    {
++                        g_host_removal_started = 1;
++                        schedule_work(&ip9028_otg->wq_host_remove);
++                        ip9028_otg->otg.state = OTG_STATE_A_IDLE; /*Added for idle deetction which do port power off after idle timeout occurs*/
++                    }
++                    else
++                    {
++                        if (OTG_STATE_A_HOST == ip9028_otg->otg.state)
++                       {
++                           ip9028_otg->otg.state = OTG_STATE_UNDEFINED;
++                       }
++                    }
++                }
++
++                writel (((otgsc & 0xFF00FFFF) | IP9028_OTGSC_ASVIS), ip9028_otg->regs + IP9028_OTGSC);
++                if (is_otg_print_enabled())
++                {
++                    printk("OTG_STATE_A_HOST- cleared IP9028_OTGSC_ASVIS  otgsc=0x%x\n",otgsc);
++                }
++            }
+ 			
+-			printk("Enable port power  \n");
+-			tmp = readl (ip9028_otg->regs + IP9028_PRTSC);
+-			tmp = tmp | IP9028_PRTSC_PP;
+-			writel (tmp, ip9028_otg->regs + IP9028_PRTSC);
++            if(otgsc &  IP9028_OTGSC_AVVIS)
++            {
++                writel (((otgsc & 0xFF00FFFF) | IP9028_OTGSC_AVVIS), ip9028_otg->regs + IP9028_OTGSC);
++                if (is_otg_print_enabled())
++                {
++                    printk("  OTG_STATE_A_HOST-  cleared IP9028_OTGSC_AVVIS  otgsc=0x%x\n",otgsc);
++                }
++            }
+ 			
+-		}
+-		
+-		
+-
+-
+-		
+-	}	
+-		
+-
++            if(otgsc &  IP9028_OTGSC_BSEIS)
++            {
++                writel (((otgsc & 0xFF00FFFF) | IP9028_OTGSC_BSEIS), ip9028_otg->regs + IP9028_OTGSC);
++                if (is_otg_print_enabled())
++                {
++                    printk("OTG_STATE_A_HOST- cleared IP9028_OTGSC_BSEIS  otgsc=0x%x\n",otgsc);
++                }
++            }
++
++            if(otgsc &  IP9028_OTGSC_BSVIS)
++            {
++                writel (((otgsc & 0xFF00FFFF) | IP9028_OTGSC_BSVIS), ip9028_otg->regs + IP9028_OTGSC);
++                if (is_otg_print_enabled())
++                {
++                    printk("OTG_STATE_A_HOST- cleared IP9028_OTGSC_BSVIS  otgsc=0x%x\n",otgsc);
++                }
++            }
++
++            break;
++
++        case OTG_STATE_B_PERIPHERAL:
++            if(otgsc &  IP9028_OTGSC_BSVIS) /*If this does not work use the BSE*/
++            {
++                if (0 == (otgsc &  IP9028_OTGSC_BSV)) 
++                {
++                    dr_controller_otg_stop();
++                    dr_controller_otg_setmode(USB_MODE_CTRL_MODE_IDLE); 
++                    
++                    b_sess_valid = 0;
++              
++                    ip9028_otg->otg.state = OTG_STATE_UNDEFINED; 
++             
++                    if (is_otg_print_enabled())
++                    {
++                        printk(" OTG_STATE_B_PERIPHERAL -> OTG_STATE_UNDEFINED BSV=0 otgsc = 0x%x \n",otgsc);
++                    }
++                }
++                            
++                writel (((otgsc & 0xFF00FFFF)  | IP9028_OTGSC_BSVIS), ip9028_otg->regs + IP9028_OTGSC);
++                if (is_otg_print_enabled())
++                {
++                    printk("OTG_STATE_B_PERIPHERAL  cleared IP9028_OTGSC_BSVIS  otgsc=0x%x\n",otgsc);
++                }
++            }
++
++            if(otgsc &  IP9028_OTGSC_ASVIS)
++            {
++                writel (((otgsc & 0xFF00FFFF) | IP9028_OTGSC_ASVIS), ip9028_otg->regs + IP9028_OTGSC);
++                if (is_otg_print_enabled())
++                {
++                    printk("OTG_STATE_B_PERIPHERAL cleared IP9028_OTGSC_ASVIS  otgsc=0x%x\n",otgsc);
++                }
++            }   
++
++            if (otgsc & IP9028_OTGSC_IDIS) 
++            {
++                writel ((otgsc & 0xFF00FFFF) | IP9028_OTGSC_IDIS, ip9028_otg->regs + IP9028_OTGSC);
++                if (is_otg_print_enabled())
++                {
++                    printk(" OTG_STATE_B_PERIPHERAL ->  cleared IP9028_OTGSC_IDIS otgsc=0x%x\n",otgsc);
++                }
++                
++#ifdef CONFIG_IP9028_OTG_B_DETECTION            
++                if (0 == (otgsc & IP9028_OTGSC_ID))
++                {
++                    dr_controller_otg_stop();
++                    dr_controller_otg_setmode(USB_MODE_CTRL_MODE_IDLE);
++
++                    ip9028_otg_disable_portpower(ip9028_otg);
++                    
++                    b_sess_valid = 0;
++              
++                    ip9028_otg->otg.state = OTG_STATE_UNDEFINED; 
++                }
++#endif          
++            }
++
++            if (otgsc & IP9028_OTGSC_1msS) 
++            {
++                writel ((otgsc & 0xFF00FFFF) | IP9028_OTGSC_1msS, ip9028_otg->regs + IP9028_OTGSC);
++            }
++
++            break;
++    
++    case OTG_STATE_B_SRP_INIT:
++         /*Initiate SRP by Data pulsing*/
++         tmp = readl (ip9028_otg->regs + IP9028_OTGSC);
++         tmp  |= (IP9028_OTGSC_OT |IP9028_OTGSC_DP |IP9028_OTGSC_HADP); 
++         writel (tmp, ip9028_otg->regs + IP9028_OTGSC);
+ 
+-	if( b_connect)
+-	{
+-		printk(" ip9028_otg_usb_irq b_connect \n"); //
+-		return IRQ_NONE;
+-	}	
+-
+-
+-
+-	switch (ip9028_otg->otg.state) {
+-	case OTG_STATE_UNDEFINED:
+-		printk(KERN_DEBUG" OTG_STATE_UNDEFINED \n");
+-		writel ((otgsc & 0xFFFFFFFF) | IP9028_OTGSC_IDIE |IP9028_OTGSC_IDPU,
+-	   		ip9028_otg->regs + IP9028_OTGSC);
+-		if (otgsc & IP9028_OTGSC_ID) {
+-			
+-			ip9028_otg->otg.state = OTG_STATE_B_IDLE;
+-			Is_B_Device = 1;
++         /*FIXME::Check if we can implement Vbus pulsing also*/
++            
++         /*Mark that SRP started and start counting for the srp fail timer, host tshould respond in this time for success*/
++        b_srp_initiated = 1;
++        timeout = a_wait_srp_fail_timer;            
++         
++#ifdef CONFIG_IP9028_OTG_B_DETECTION            
++        ip9028_otg->otg.state = OTG_STATE_B_IDLE;
++        if (is_otg_print_enabled())
++        {
++            printk(" OTG_STATE_B_SRP_INIT -> OTG_STATE_B_IDLE otgsc = 0x%x \n",otgsc);
++        }
++#else
++        ip9028_otg->otg.state = OTG_STATE_UNDEFINED; 
++        if (is_otg_print_enabled())
++        {
++            printk(" OTG_STATE_B_SRP_INIT -> OTG_STATE_UNDEFINED otgsc = 0x%x \n",otgsc);
++        }
++#endif
+ 
+-			/* Close previous session if any */
++        if (otgsc & IP9028_OTGSC_1msS) 
++        {
++            writel ((otgsc & 0xFF00FFFF) | IP9028_OTGSC_1msS, ip9028_otg->regs + IP9028_OTGSC);
++            if (is_otg_print_enabled())
++            {
++                printk(" OTG_STATE_B_SRP_INIT ->  cleared IP9028_OTGSC_1msS otgsc=0x%x\n",otgsc);
++            }
++        }
+ 
+-			if( (otgsc & IP9028_OTGSC_INT_BSEIS) == (IP9028_OTGSC_INT_BSEIS))
+-			{
++        break;
++            
++        case OTG_STATE_A_PERIPHERAL:
++            /*FIXME::Check if this is coming::Why DP interrupt coming now though it is detected and cleared earlier,*/
++            if(otgsc  &  IP9028_OTGSC_DPIS)
++            {
++                if (otgsc  &  IP9028_OTGSC_DPS)
++                {
++                    if (is_otg_print_enabled())
++                    {
++                        printk("OTG_STATE_A_PERIPHERAL:DP set\n");
++                    }
++                }
++                else
++                {
++                    if (is_otg_print_enabled())
++                    {
++                        printk("OTG_STATE_A_PERIPHERAL:DP Cleared\n");
++                    }
++                }
++                
++                tmp = ( otgsc  &  0xFF00FFFF) | IP9028_OTGSC_DPIS ;
++                writel (tmp,ip9028_otg->regs + IP9028_OTGSC);
++            }
++            
++            if (otgsc & IP9028_OTGSC_IDIS) /*CHECK:: If at this stage A-pullout generating ID interrupt or not*/
++            {
++                if (otgsc & IP9028_OTGSC_ID) 
++                {
++                    a_session_end = 1;
++                }
++                
++                if (is_otg_print_enabled())
++                {
++                    printk(" OTG_STATE_A_PERIPHERAL->  cleared IP9028_OTGSC_IDIS otgsc = 0x%x \n",otgsc);
++                }
++                
++                writel ((otgsc & 0xFF00FFFF) | IP9028_OTGSC_IDIS, ip9028_otg->regs + IP9028_OTGSC);
++            }
++
++
++            if (a_session_end)
++            {
++                if (is_otg_print_enabled())
++                {
++                    printk(" OTG_STATE_A_PERIPHERAL ->  IP9028_OTGSC_ID=1 otgsc = 0x%x \n",otgsc);  
++                }
++                
++                a_session_end = 0;
++                
++                dr_controller_otg_stop();
++                dr_controller_otg_setmode(USB_MODE_CTRL_MODE_IDLE);
+ 
+-			 	printk(" Cleared IP9028_OTGSC_INT_BSEIS \n");
+-				writel ((otgsc & 0xFFFFFFFF) | IP9028_OTGSC_INT_BSEIS , 
+-		   		ip9028_otg->regs + IP9028_OTGSC);
+-			}
+-			
+-			
+-			printk(" OTG_STATE_UNDEFINED -> OTG_STATE_B_IDLE Is_B_Device=%d  \n",Is_B_Device);
+-		} else {
+-			writel ((otgsc & 0xFFFFFFFF) | IP9028_OTGSC_IDIE |
+-				IP9028_OTGSC_ASVIE | IP9028_OTGSC_BSVIE, 
+-		   		ip9028_otg->regs + IP9028_OTGSC);
+-			printk(" OTG_STATE_UNDEFINED -> OTG_STATE_A_IDLE \n");
+-			ip9028_otg->otg.state = OTG_STATE_A_IDLE;
+-
+-			writel ((otgsc & 0xFFFFFFFF) | IP9028_OTGSC_IDIE |IP9028_OTGSC_AVVIE |IP9028_OTGSC_BSVIE
+-				, ip9028_otg->regs + IP9028_OTGSC);
+-				
+-			/* enable port power */
+-			tmp = readl (ip9028_otg->regs + IP9028_PRTSC);
+-			tmp = tmp | IP9028_PRTSC_PP;
+-			writel (tmp, ip9028_otg->regs + IP9028_PRTSC);
+-			timeout = 10;
+-			
+-		}
+-		if (otgsc & IP9028_OTGSC_IDIS) {
+-			writel ((otgsc & 0xFF00FFFF) | IP9028_OTGSC_IDIS,
+-			   	ip9028_otg->regs + IP9028_OTGSC);
+-			return IRQ_HANDLED;
+-		}
+-		break;
+-	case OTG_STATE_A_IDLE:
+-
+-		printk(KERN_DEBUG"  OTG_STATE_A_IDLE IN otgsc=%x  \n",otgsc);
+-		if (otgsc & IP9028_OTGSC_ID) {
+-			ip9028_otg->otg.state = OTG_STATE_B_IDLE;
+-			if (otgsc & IP9028_OTGSC_IDIS) {
+-				writel ((otgsc & 0xFF00FFFF) | IP9028_OTGSC_IDIS,
+-				   	ip9028_otg->regs + IP9028_OTGSC);
+-				return IRQ_HANDLED;
+-			}
+-			break;
+-		}else
+-			{
+-
+-			if (otgsc & IP9028_OTGSC_IDIS) {
+-				writel ((otgsc & 0xFFFFFFFF) | IP9028_OTGSC_IDIS,
+-				   	ip9028_otg->regs + IP9028_OTGSC);
+-				
+-			}
+-			schedule_work(&ip9028_otg->wq_host_probe); 
+-			printk(KERN_DEBUG"  OTG_STATE_A_IDLE  otgsc=%x \n",otgsc);
+-
+-
+-			}
+-
+-		
+-		if (otgsc & ((IP9028_OTGSC_ASV) | (IP9028_OTGSC_BSV))) {
+-			retval = IRQ_NONE;
+-			if (otgsc & IP9028_OTGSC_ASVIS) {
+-				writel ((otgsc & 0xFF00FFFF) | IP9028_OTGSC_ASVIS,
+-				   	ip9028_otg->regs + IP9028_OTGSC);
+-				retval = IRQ_HANDLED;
+-			}
+-			if (otgsc & IP9028_OTGSC_BSVIS) {
+-				writel ((otgsc & 0xFF00FFFF) | IP9028_OTGSC_BSVIS,
+-				   	ip9028_otg->regs + IP9028_OTGSC);
+-				retval = IRQ_HANDLED;
+-			}
+-			/* enable port power */
+-			tmp = readl (ip9028_otg->regs + IP9028_PRTSC);
+-			tmp = tmp | IP9028_PRTSC_PP;
+-			writel (tmp, ip9028_otg->regs + IP9028_PRTSC);
+-			writel ((otgsc & 0x0000FFFF) | IP9028_OTGSC_IDIE | IP9028_OTGSC_1msE |
+-				IP9028_OTGSC_AVVIE, ip9028_otg->regs + IP9028_OTGSC);
+-			timeout = 10;
+-			ip9028_otg->otg.state = OTG_STATE_A_WAIT_VRISE;
+-			printk("  OTG_STATE_A_IDLE -> OTG_STATE_A_WAIT_VRISE otgsc = %x \n",otgsc);
+-			return retval;
+-		}
+-		break;
+-	case OTG_STATE_B_IDLE:
+-
+-		printk(KERN_DEBUG"  OTG_STATE_B_IDLE otgsc = %x  IN \n",otgsc);
+-
+-
+-		if ((otgsc & IP9028_OTGSC_ID) == ( IP9028_OTGSC_ID)) {
+-
+-			printk(KERN_DEBUG" B-plug is plugged , OTG has to  take as Device role \n");
+-
+-			schedule_work(&ip9028_otg->wq_host_remove);
+-
+-			dr_controller_run_otg_wr_1();
+-
+-			Is_B_Device = 1;
+-			Is_A_host  = 0;
+-
+-		}
+-
+-		if( (otgsc &  IP9028_OTGSC_INT_ASVIS) == IP9028_OTGSC_INT_ASVIS )
+-		{
+-			if( (otgsc &  IP9028_OTGSC_INT_BSVIS) == IP9028_OTGSC_INT_BSVIS )	
+-				{
+-					writel ((otgsc   | IP9028_OTGSC_INT_BSVIS), ip9028_otg->regs + IP9028_OTGSC);
+-					printk(KERN_DEBUG"  OTG_STATE_B_IDLE  cleared IP9028_OTGSC_INT_BSVIS  \n");
+-				}
+-
+-				writel ((otgsc   | IP9028_OTGSC_INT_ASVIS), ip9028_otg->regs + IP9028_OTGSC);
+-				printk(KERN_DEBUG"  OTG_STATE_B_IDLE  cleared IP9028_OTGSC_INT_ASVIS  \n");
+-				return IRQ_HANDLED;
+-			
+-		}	
+-		
++                ip9028_otg_disable_portpower(ip9028_otg);               
++            }
++            
+ 
+-		if( (otgsc  & IP9028_OTGSC_INT_BSEIS)  ==  IP9028_OTGSC_INT_BSEIS )
+-		{
+-			writel ((otgsc   | IP9028_OTGSC_INT_BSEIS), ip9028_otg->regs + IP9028_OTGSC);
+-			printk(KERN_DEBUG " *** END OF B-SESSION  OTG_STATE_B_IDLE cleared the BSEIS otgsc=%x   \n",otgsc);
+-			return IRQ_HANDLED;
+-		}
+-
+-
+-		
+-				
+-		if (!(otgsc & IP9028_OTGSC_ID)) {
+-
+-			printk(KERN_DEBUG "  OTG_STATE_B_IDLE ->  OTG_STATE_A_IDLE \n");
+-			ip9028_otg->otg.state = OTG_STATE_A_IDLE;
+-
+-						
+-			if (otgsc & IP9028_OTGSC_IDIS) {
+-				writel ((otgsc & 0xFF00FFFF) | IP9028_OTGSC_IDIS,
+-				   	ip9028_otg->regs + IP9028_OTGSC);
+-				 /* return IRQ_HANDLED; */
+-			}
+-
+-			/* enable port power */
+-			tmp = readl (ip9028_otg->regs + IP9028_PRTSC);
+-			tmp = tmp | IP9028_PRTSC_PP;
+-			writel (tmp, ip9028_otg->regs + IP9028_PRTSC);
+-			writel ((otgsc & 0x0000FFFF) | IP9028_OTGSC_IDIE | IP9028_OTGSC_1msE |
+-				IP9028_OTGSC_AVVIE, ip9028_otg->regs + IP9028_OTGSC);
++            if(otgsc &  IP9028_OTGSC_ASVIS)
++            {
++                writel (((otgsc & 0xFF00FFFF) | IP9028_OTGSC_ASVIS), ip9028_otg->regs + IP9028_OTGSC);
++                if (is_otg_print_enabled())
++                {
++                    printk("OTG_STATE_A_PERIPHERAL- cleared IP9028_OTGSC_ASVIS  otgsc=0x%x\n",otgsc);
++                }
++            }
++            
++            if(otgsc &  IP9028_OTGSC_AVVIS)
++            {
++                writel (((otgsc & 0xFF00FFFF) | IP9028_OTGSC_AVVIS), ip9028_otg->regs + IP9028_OTGSC);
++                if (is_otg_print_enabled())
++                {
++                    printk("  OTG_STATE_A_PERIPHERAL-  cleared IP9028_OTGSC_AVVIS  otgsc=0x%x\n",otgsc);
++                }
++            }
++            if(otgsc &  IP9028_OTGSC_BSEIS)
++            {
++                dr_controller_otg_stop();
++
++                dr_controller_otg_setmode(USB_MODE_CTRL_MODE_IDLE);
++                
++                ip9028_otg->otg.state = OTG_STATE_UNDEFINED; 
++
++                writel (((otgsc & 0xFF00FFFF) | IP9028_OTGSC_BSEIS), ip9028_otg->regs + IP9028_OTGSC);
++                if (is_otg_print_enabled())
++                {
++                    printk("OTG_STATE_A_PERIPHERAL- cleared IP9028_OTGSC_BSEIS  otgsc=0x%x\n",otgsc);
++
++                    printk(" OTG_STATE_A_PERIPHERAL -> OTG_STATE_UNDEFINED\n");
++                }
++            }
++
++            if(otgsc &  IP9028_OTGSC_BSVIS)
++            {
++                writel (((otgsc & 0xFF00FFFF) | IP9028_OTGSC_BSVIS), ip9028_otg->regs + IP9028_OTGSC);
++                if (is_otg_print_enabled())
++                {
++                    printk("OTG_STATE_A_PERIPHERAL- cleared IP9028_OTGSC_BSVIS  otgsc=0x%x\n",otgsc);
++                }
++            }
++            
++            if (otgsc & IP9028_OTGSC_1msS) 
++            {
++                writel ((otgsc & 0xFF00FFFF) | IP9028_OTGSC_1msS, ip9028_otg->regs + IP9028_OTGSC);
++            }
++
++            break;
++
++        case OTG_STATE_B_HOST:
++            if (otgsc & IP9028_OTGSC_IDIS) 
++            {
++                if (otgsc & IP9028_OTGSC_ID) 
++                {
++                    a_session_end = 1;
++                }
++                
++                if (is_otg_print_enabled())
++                {
++                    printk(" OTG_STATE_B_HOST->  cleared IP9028_OTGSC_IDIS otgsc = 0x%x \n",otgsc);
++                }
++                
++                writel ((otgsc & 0xFF00FFFF) | IP9028_OTGSC_IDIS, ip9028_otg->regs + IP9028_OTGSC);
++            }
++
++/*FIXME::TODO:: Find out how to detect b_conn=0 i.e. B side disconnects
++            if (0 == b_conn)
++            {
++                a_session_end = 1;
++            }
++*/       
++            
++            if (a_session_end)
++            {
++                if (is_otg_print_enabled())
++                {
++                    printk(" OTG_STATE_B_HOST ->  IP9028_OTGSC_ID=1 otgsc = 0x%x \n",otgsc);  
++                }
++                
++                a_session_end = 0;
++                g_portdisconnect = 0; 
++                g_host_removal_started = 1; 
++                
++                schedule_work(&ip9028_otg->wq_host_remove);
++
++                b_sess_valid = 0; 
++
++                ip9028_otg->otg.state = OTG_STATE_UNDEFINED; 
++                /*FIXME:: Once we have mechanism to detect b_conn then state should be OTG_STATE_A_WAIT_BCON which 
++                                             then change to VFALL on a_wanit-bonn timeout and then to undefined on b_conn=0
++                ip9028_otg->otg.state = OTG_STATE_A_WAIT_BCON;*/
++
++                if (is_otg_print_enabled())
++                {
++                    printk(" OTG_STATE_B_HOST -> OTG_STATE_UNDEFINED \n");
++                }
++            }
++            
++            if (g_portdisconnect) 
++            {
++                    g_portdisconnect = 0;
++                    if (is_otg_print_enabled())
++                    {
++                        printk(" OTG_STATE_B_HOST ->  OTG_STATE_UNDEFINED:: Port disconnect\n");  
++                    }
++                    
++                    if (!g_host_removal_started) 
++                    {
++                        g_host_removal_started = 1;
++                        schedule_work(&ip9028_otg->wq_host_remove);
++                    }
++            }
++
++
++            if(otgsc &  IP9028_OTGSC_ASVIS) 
++            {
++                if (0 == (otgsc &  IP9028_OTGSC_ASV))
++                {
++                    if (!g_host_removal_started) 
++                    {
++                        g_host_removal_started = 1;
++                        schedule_work(&ip9028_otg->wq_host_remove);
++                    }
++
++                    if (is_otg_print_enabled())
++                    {
++                        printk(" OTG_STATE_B_HOST ->  OTG_STATE_UNDEFINED:: ASV=0 otgsc = 0x%x \n",otgsc);  
++                    }
++                }
++
++                writel (((otgsc & 0xFF00FFFF) | IP9028_OTGSC_ASVIS), ip9028_otg->regs + IP9028_OTGSC);
++                if (is_otg_print_enabled())
++                {
++                    printk("OTG_STATE_B_HOST- cleared IP9028_OTGSC_ASVIS  otgsc=0x%x\n",otgsc);
++                }
++            }
+ 			
+-			return IRQ_HANDLED;
++            if(otgsc &  IP9028_OTGSC_AVVIS)
++            {
++                writel (((otgsc & 0xFF00FFFF) | IP9028_OTGSC_AVVIS), ip9028_otg->regs + IP9028_OTGSC);
++                if (is_otg_print_enabled())
++                {
++                    printk("  OTG_STATE_B_HOST-  cleared IP9028_OTGSC_AVVIS  otgsc=0x%x\n",otgsc);
++                }
++            }
+ 			
+-		}
+-		break;
+-	case OTG_STATE_A_WAIT_VRISE:
+-		printk(KERN_DEBUG"  OTG_STATE_A_WAIT_VRISE \n"); 
+-		if (otgsc & IP9028_OTGSC_IDIS) {
+-			writel ((otgsc & 0xFF00FFFF) | IP9028_OTGSC_IDIS,
+-			   	ip9028_otg->regs + IP9028_OTGSC);
+-			if (otgsc & IP9028_OTGSC_ID) {
+-				timeout = 10;
+-				writel ((otgsc & 0x0000FFFF) | IP9028_OTGSC_1msE, 
+-					ip9028_otg->regs + IP9028_OTGSC);
+-				ip9028_otg->otg.state = OTG_STATE_A_WAIT_VFALL;
+-			} else {
+-				printk (KERN_ALERT "IP9028 OTG: unexpected transition " \
+-					"of ID pin in OTG_STATE_A_WAIT_VRISE\n");
+-			}
+-			return IRQ_HANDLED;
+-		}
+-		if (otgsc & IP9028_OTGSC_AVVIS) {
+-			writel ((otgsc & 0x0000FFFF) | IP9028_OTGSC_AVVIS,
+-			   	ip9028_otg->regs + IP9028_OTGSC);
+-			if (otgsc & IP9028_OTGSC_AVV) {
+-				writel ((otgsc & 0x0000FFFF) | IP9028_OTGSC_IDIE | IP9028_OTGSC_1msE,
+-				   	ip9028_otg->regs + IP9028_OTGSC);
+-				ip9028_otg->otg.state = OTG_STATE_A_WAIT_BCON;
+-				printk("  OTG_STATE_A_WAIT_VRISE -> OTG_STATE_A_WAIT_BCON \n");
+-			} else {
+-				printk (KERN_ALERT "IP9028 OTG: unexpected transition " \
+-					"of Vbus_valid signal in OTG_STATE_A_WAIT_VRISE\n");
+-			}
+-			return IRQ_HANDLED;
+-		}
+-		if (otgsc & IP9028_OTGSC_1msS) {
+-			writel ((otgsc & 0xFF00FFFF) | IP9028_OTGSC_1msS,
+-			   	ip9028_otg->regs + IP9028_OTGSC);
+-			if (timeout) {
+-				timeout--;
+-			} else {
+-				timeout = 10;
+-				writel ((otgsc & 0x0000FFFF) | IP9028_OTGSC_1msE,
+-			   		ip9028_otg->regs + IP9028_OTGSC);
+-				ip9028_otg->otg.state = OTG_STATE_A_WAIT_VFALL;
+-			}
+-			return IRQ_HANDLED;
+-		}
+-		break;
+-	case OTG_STATE_A_WAIT_VFALL:
+-
+-		printk(KERN_DEBUG"  OTG_STATE_A_WAIT_VFALL \n"); 
+-		if (otgsc & IP9028_OTGSC_1msS) {
+-			writel ((otgsc & 0xFF00FFFF) | IP9028_OTGSC_1msS,
+-			   	ip9028_otg->regs + IP9028_OTGSC);
+-			if (timeout) {
+-				timeout--;
+-			} else {
+-				writel ((otgsc & 0xFF00FFFF) | IP9028_OTGSC_IDIE,
+-			   		ip9028_otg->regs + IP9028_OTGSC);
+-				if (otgsc & IP9028_OTGSC_ID) {
+-					ip9028_otg->otg.state = OTG_STATE_A_IDLE;
+-				} else {
+-					ip9028_otg->otg.state = OTG_STATE_B_IDLE;
+-				}
+-			}
+-			return IRQ_HANDLED;
+-		}
+-		break;
+-	case OTG_STATE_A_WAIT_BCON:
+-
+-
+-		printk(KERN_DEBUG"  OTG_STATE_A_WAIT_BCON \n"); 
++            if(otgsc &  IP9028_OTGSC_BSEIS)
++            {
++                if (otgsc &  IP9028_OTGSC_BSE)
++                {
++                    b_sess_valid = 0; 
++                    dr_controller_otg_setmode(USB_MODE_CTRL_MODE_IDLE); /*FIXME::CHECK:: If we need this or can be removed?*/
++                    ip9028_otg->otg.state = OTG_STATE_UNDEFINED; 
++                    if (is_otg_print_enabled())
++                    {
++                        printk(" OTG_STATE_B_HOST ->  OTG_STATE_UNDEFINED:: BSE=1 otgsc = 0x%x \n",otgsc);  
++                    }
++                }
++
++                writel (((otgsc & 0xFF00FFFF) | IP9028_OTGSC_BSEIS), ip9028_otg->regs + IP9028_OTGSC);
++                if (is_otg_print_enabled())
++                {
++                    printk("OTG_STATE_B_HOST- cleared IP9028_OTGSC_BSEIS  otgsc=0x%x\n",otgsc);
++                }
++            }
++
++            if(otgsc &  IP9028_OTGSC_BSVIS)
++            {
++                writel (((otgsc & 0xFF00FFFF) | IP9028_OTGSC_BSVIS), ip9028_otg->regs + IP9028_OTGSC);
++                if (is_otg_print_enabled())
++                {
++                    printk("OTG_STATE_B_HOST- cleared IP9028_OTGSC_BSVIS  otgsc=0x%x\n",otgsc);
++                }
++            }
++
++            if (otgsc & IP9028_OTGSC_1msS) 
++            {
++                writel ((otgsc & 0xFF00FFFF) | IP9028_OTGSC_1msS, ip9028_otg->regs + IP9028_OTGSC);
++            }
+ 
++            break;
++            
++        case OTG_STATE_A_SUSPEND:
++            /*FIXME::CHECK::Why DP interrupt coming now though it is detected and cleared earlier,*/
++            if(otgsc  &  IP9028_OTGSC_DPIS)
++            {
++                if (otgsc  &  IP9028_OTGSC_DPS)
++                {
++                    if (is_otg_print_enabled())
++                    {
++                        printk("OTG_STATE_A_SUSPEND:DP set\n");
++                    }
++                }
++                else
++                {
++                    if (is_otg_print_enabled())
++                    {
++                        printk("OTG_STATE_A_SUSPEND:DP Cleared\n");
++                    }
++                }
++
++                a_srp_detect = 0;
++                
++                tmp = ( otgsc  &  0xFF00FFFF) | IP9028_OTGSC_DPIS ;
++                writel (tmp,ip9028_otg->regs + IP9028_OTGSC);
++            }
++
++            if (otgsc & IP9028_OTGSC_IDIS) 
++            {
++                if (otgsc & IP9028_OTGSC_ID) 
++                {
++                    a_session_end = 1;
++                }
++                
++                if (is_otg_print_enabled())
++                {
++                    printk(" OTG_STATE_A_SUSPEND->  cleared IP9028_OTGSC_IDIS otgsc = 0x%x \n",otgsc);
++                }
++                writel ((otgsc & 0xFF00FFFF) | IP9028_OTGSC_IDIS, ip9028_otg->regs + IP9028_OTGSC);
++            }
++
++/*FIXME::TODO:: Find out how to detect b_conn=0 i.e. B side disconnects
++            if (0 == b_conn)
++            {
++                a_session_end = 1;
++            }
++*/       
++            
++            if (a_session_end)
++            {
++                if (is_otg_print_enabled())
++                {
++                    printk(" OTG_STATE_A_SUSPEND ->  IP9028_OTGSC_ID=1 otgsc = 0x%x \n",otgsc);  
++                }
++                
++                a_session_end = 0;
++                schedule_work(&ip9028_otg->wq_host_remove);
++                ip9028_otg->otg.state = OTG_STATE_UNDEFINED; 
++                /*FIXME:: Once we have mechanism to detect b_conn then state should be OTG_STATE_A_WAIT_BCON which 
++                                             then change to VFALL on a_wanit-bonn timeout and then to undefined on b_conn=0
++                ip9028_otg->otg.state = OTG_STATE_A_WAIT_BCON;*/
++            }
++            
++            if (g_portdisconnect) 
++            {                    
++                g_portdisconnect = 0;
++                    
++                if (is_otg_print_enabled())
++                {
++                    printk(" OTG_STATE_A_SUSPEND ->  OTG_STATE_A_PERIPHERAL:: Port disconnect\n");  
++                }
++                    
++                schedule_work(&ip9028_otg->wq_host_remove);
++            }
++
++            if (otgsc & IP9028_OTGSC_1msS) 
++            {
++                writel ((otgsc & 0xFF00FFFF) | IP9028_OTGSC_1msS, ip9028_otg->regs + IP9028_OTGSC);
++            }
++            
++            if(otgsc &  IP9028_OTGSC_ASVIS)
++            {
++                if (0 == (otgsc &  IP9028_OTGSC_ASV))
++                {
++                    if (is_otg_print_enabled())
++                    {
++                        printk(" OTG_STATE_A_SUSPEND ->  OTG_STATE_UNDEFINED:: ASV=0 otgsc = 0x%x \n",otgsc);  
++                    }
++                    
++                    schedule_work(&ip9028_otg->wq_host_remove);
++                    ip9028_otg->otg.state = OTG_STATE_A_IDLE; 
++                }
++
++                writel (((otgsc & 0xFF00FFFF) | IP9028_OTGSC_ASVIS), ip9028_otg->regs + IP9028_OTGSC);
++                if (is_otg_print_enabled())
++                {
++                    printk("OTG_STATE_A_SUSPEND- cleared IP9028_OTGSC_ASVIS  otgsc=0x%x\n",otgsc);
++                }
++            }
+ 			
+-		if (otgsc & IP9028_OTGSC_1msS) {
+-			writel ((otgsc & 0x0000FFFF) | IP9028_OTGSC_1msS | IP9028_OTGSC_IDIE,
+-			   	ip9028_otg->regs + IP9028_OTGSC);
+-			ip9028_otg->otg.state = OTG_STATE_A_HOST;
+-
+-			schedule_work(&ip9028_otg->wq_host_probe);  
+-
+-		
+-		    otgsc1= readl (ip9028_otg->regs + IP9028_OTGSC);
+-		    writel (otgsc1 | IP9028_OTGSC_DPIE |IP9028_OTGSC_DPIS/*  | IP9028_OTGSC_IDIE  | IP9028_OTGSC_IDPU | IP9028_OTGSC_ASVIE | IP9028_OTGSC_BSVIE*/,
+-			ip9028_otg->regs + IP9028_OTGSC);
++            if(otgsc &  IP9028_OTGSC_AVVIS)
++            {
++                writel (((otgsc & 0xFF00FFFF) | IP9028_OTGSC_AVVIS), ip9028_otg->regs + IP9028_OTGSC);
++                if (is_otg_print_enabled())
++                {
++                    printk("  OTG_STATE_A_SUSPEND-  cleared IP9028_OTGSC_AVVIS  otgsc=0x%x\n",otgsc);
++                }
++            }
++            if(otgsc &  IP9028_OTGSC_BSEIS)
++            {
++                writel (((otgsc & 0xFF00FFFF) | IP9028_OTGSC_BSEIS), ip9028_otg->regs + IP9028_OTGSC);
++                if (is_otg_print_enabled())
++                {
++                    printk("OTG_STATE_A_SUSPEND- cleared IP9028_OTGSC_BSEIS  otgsc=0x%x\n",otgsc);
++                }
++            }
++
++            if(otgsc &  IP9028_OTGSC_BSVIS)
++            {
++                writel (((otgsc & 0xFF00FFFF) | IP9028_OTGSC_BSVIS), ip9028_otg->regs + IP9028_OTGSC);
++                if (is_otg_print_enabled())
++                {
++                    printk("OTG_STATE_A_SUSPEND- cleared IP9028_OTGSC_BSVIS  otgsc=0x%x\n",otgsc);
++                }
++            }
++
++            break;
++
++        case OTG_STATE_B_SUSPEND:
++#ifdef CONFIG_IP9028_OTG_B_DETECTION            
++            if (otgsc & IP9028_OTGSC_IDIS) 
++            {
++                /*if (otgsc & IP9028_OTGSC_ID) */
++                {
++                    schedule_work(&ip9028_otg->wq_host_remove);
++                    ip9028_otg->otg.state = OTG_STATE_UNDEFINED; 
++                    printk(" OTG_STATE_B_SUSPEND -> OTG_STATE_UNDEFINED \n");
++                }
++                
++                if (is_otg_print_enabled())
++                {
++                    printk(" OTG_STATE_B_SUSPEND->  cleared IP9028_OTGSC_IDIS otgsc = 0x%x \n",otgsc);
++                }
++                
++                writel ((otgsc & 0xFF00FFFF) | IP9028_OTGSC_IDIS, ip9028_otg->regs + IP9028_OTGSC);
++            }            
++#endif            
++
++            if(otgsc &  IP9028_OTGSC_ASVIS) 
++            {
++                if (0 == (otgsc &  IP9028_OTGSC_ASV))
++                {
++                    schedule_work(&ip9028_otg->wq_host_remove);
++                    ip9028_otg->otg.state = OTG_STATE_UNDEFINED; 
++                    if (is_otg_print_enabled())
++                    {
++                        printk(" OTG_STATE_B_SUSPEND ->  OTG_STATE_UNDEFINED:: ASV=0 otgsc = 0x%x \n",otgsc);  
++                    }
++                }
++
++                writel (((otgsc & 0xFF00FFFF) | IP9028_OTGSC_ASVIS), ip9028_otg->regs + IP9028_OTGSC);
++                if (is_otg_print_enabled())
++                {
++                    printk("OTG_STATE_B_SUSPEND- cleared IP9028_OTGSC_ASVIS  otgsc=0x%x\n",otgsc);
++                }
++            }
+ 			
+-			return IRQ_HANDLED;
+-		}
+-		/* intentional break-through */
+-	case OTG_STATE_A_HOST:
+-
+-		printk(KERN_DEBUG"  OTG_STATE_A_HOST \n"); 
+-
+-		
+-		if (otgsc & IP9028_OTGSC_IDIS) {
+-			writel ((otgsc & 0xFF00FFFF) | IP9028_OTGSC_IDIS,
+-			   	ip9028_otg->regs + IP9028_OTGSC);
+-			if (otgsc & IP9028_OTGSC_ID) {
+-				timeout = 10;
+-				writel ((otgsc & 0xFF00FFFF) /* | IP9028_OTGSC_1msE */| IP9028_OTGSC_IDIE |IP9028_OTGSC_ASVIE | IP9028_OTGSC_BSVIE| IP9028_OTGSC_BSEIE, 
+-					ip9028_otg->regs + IP9028_OTGSC);
+-				schedule_work(&ip9028_otg->wq_host_remove);
+-				ip9028_otg->otg.state = OTG_STATE_A_WAIT_VFALL;
+-			} else {
+-				printk (KERN_ALERT "IP9028 OTG: unexpected transition " \
+-					"of ID pin in OTG_STATE_A_WAIT_BCON\n");
+-			}
+-			return IRQ_HANDLED;
+-		}
++            if(otgsc &  IP9028_OTGSC_AVVIS)
++            {
++                writel (((otgsc & 0xFF00FFFF) | IP9028_OTGSC_AVVIS), ip9028_otg->regs + IP9028_OTGSC);
++                if (is_otg_print_enabled())
++                {
++                    printk("  OTG_STATE_B_SUSPEND-  cleared IP9028_OTGSC_AVVIS  otgsc=0x%x\n",otgsc);
++                }
++            }
+ 			
+-		break;
+-	case OTG_STATE_B_SRP_INIT:
+-	case OTG_STATE_B_PERIPHERAL:
+-	case OTG_STATE_B_WAIT_ACON:
+-	case OTG_STATE_B_HOST:
+-	case OTG_STATE_A_SUSPEND:
+-	case OTG_STATE_A_PERIPHERAL:
+-	case OTG_STATE_A_VBUS_ERR:
+-		break;
+-	}
+-	
+-	return IRQ_NONE;
+-	
++            if(otgsc &  IP9028_OTGSC_BSEIS)
++            {
++                writel (((otgsc & 0xFF00FFFF) | IP9028_OTGSC_BSEIS), ip9028_otg->regs + IP9028_OTGSC);
++                if (is_otg_print_enabled())
++                {
++                    printk("OTG_STATE_B_SUSPEND- cleared IP9028_OTGSC_BSEIS  otgsc=0x%x\n",otgsc);
++                }
++            }
++
++            if(otgsc &  IP9028_OTGSC_BSVIS)
++            {
++                writel (((otgsc & 0xFF00FFFF) | IP9028_OTGSC_BSVIS), ip9028_otg->regs + IP9028_OTGSC);
++                if (is_otg_print_enabled())
++                {
++                    printk("OTG_STATE_B_SUSPEND- cleared IP9028_OTGSC_BSVIS  otgsc=0x%x\n",otgsc);
++                }
++            }
++
++            if (otgsc & IP9028_OTGSC_1msS) 
++            {
++                writel ((otgsc & 0xFF00FFFF) | IP9028_OTGSC_1msS, ip9028_otg->regs + IP9028_OTGSC);
++            }
++
++            if (g_portdisconnect) 
++            {
++                    g_portdisconnect = 0;
++                    if (is_otg_print_enabled())
++                    {
++                        printk(" OTG_STATE_B_SUSPEND ->  Unregistering HCD:: Port disconnect\n");  
++                    }
++                    schedule_work(&ip9028_otg->wq_host_remove);
++            }
++            
++           break;
++           
++        case OTG_STATE_B_WAIT_ACON:
++        case OTG_STATE_A_VBUS_ERR:
++        default:
++            if (otgsc & IP9028_OTGSC_1msS) 
++            {
++                writel ((otgsc & 0xFF00FFFF) | IP9028_OTGSC_1msS, ip9028_otg->regs + IP9028_OTGSC);
++                if (is_otg_print_enabled())
++                {
++                    printk(" DEFAULT CASE ->  cleared IP9028_OTGSC_1msS otgsc=0x%x\n",otgsc);
++                }
++            }
++            
++            if (is_otg_print_enabled())
++            {
++                printk("REST CASE ----------------------------->otgsc=0x%x\n",otgsc);
++            }
++            
++            break;
++    }
++    
++    return IRQ_HANDLED;    
+ }
+ 
+ 
+@@ -796,110 +1849,18 @@
+ static uint64_t ehci_dmamask = 0x1fffffff;
+ 
+ static int __exit ip9028_otg_usb_remove(struct platform_device *pdev);
+-/*static */int __devinit ip9028_otg_usb_probe(struct platform_device *pdev);
++int __devinit ip9028_otg_usb_probe(struct platform_device *pdev);
+ 
+ static struct platform_driver ip9028_otg_usb_driver = {
+ 	.probe		= ip9028_otg_usb_probe,
+ 	.remove		= __exit_p(ip9028_otg_usb_remove),
+ 	.driver		= {
+-		//.name	= "ip9028_otg",		// USB_UDC_CHECK: same as in pnx8492.c struct usb0_device.name
+-		.name	= "ip9028_udc_udc /*ip9028_otg_usb*/",	// USB_UDC_CHECK: same as in pnx8492.c struct usb0_device.name
+-		.owner	= THIS_MODULE,
+-		.bus	= &platform_bus_type,
++	.name	= driver_name,
++	.owner	= THIS_MODULE,
++	.bus	= &platform_bus_type,
+ 	},
+ };
+ 
+-#ifdef OTG_A_HOST_POWER_OFF_THREAD
+-
+-
+-static int pwr_off_main_thread(void *_pwr_off_otg)
+-{
+-
+-        struct ip9028_otg_usb *ip9028_otg = _pwr_off_otg;
+-	 unsigned int tmp;
+-
+-
+-	
+-		for (;;) 
+-		{
+-			printk("pwr_off_main_thread: Before down_interruptible on pwr_off_sema\n");
+-			while  (down_interruptible(&pwr_off_sema));			
+-			
+-
+-			printk("  **Power off the A-host **\n");
+-
+-			IsPowerOff=1;
+-
+-
+-			tmp = readl (ip9028_otg->regs + IP9028_PRTSC);
+-			tmp = tmp & IP9028_PRTSC_PP_OFF_MASK;
+-			writel (tmp, ip9028_otg->regs + IP9028_PRTSC);
+-
+-		
+-
+-		}
+-
+-	
+-
+-	
+-	
+-
+-	return 0;
+-
+-}
+-
+-
+-
+-#endif
+-
+-
+-#ifdef OTG_SRP_THREAD
+-
+-static int srp_main_thread(void *_srp_otg)
+-{
+-
+-        struct ip9028_otg_usb *ip9028_otg = _srp_otg;
+-	 unsigned int tmp;
+-
+-
+-	
+-		for (;;) 
+-		{
+-			printk("srp_main_thread: Before down_interruptible on srp_sema\n");
+-			while  (down_interruptible(&srp_sema));			
+-			
+-			/* Intiate SRP */
+-			printk(" Intiated SRP ****\n");
+-
+-
+-			tmp = readl (ip9028_otg->regs + IP9028_PRTSC);
+-			tmp = tmp & IP9028_PRTSC_PP_OFF_MASK;
+-			writel (tmp, ip9028_otg->regs + IP9028_PRTSC);
+-
+-
+-			tmp = readl (ip9028_otg->regs + IP9028_OTGSC);
+-			tmp  |= (IP9028_OTGSC_OT |IP9028_OTGSC_DP |IP9028_OTGSC_HADP);
+-			writel (tmp, ip9028_otg->regs + IP9028_OTGSC);
+-			
+-			
+-
+-			printk("  SRP Intialization  done \n");
+-		
+-			
+-
+-		}
+-
+-	
+-
+-	
+-	
+-
+-	return 0;
+-
+-}
+-
+-
+-#endif
+ 
+ 
+ #ifdef OTG_PROC_IF
+@@ -907,260 +1868,256 @@
+ int proc_usb_otg_start_srp(char *buffer,char **buffer_location,off_t offset,
+                              int buffer_length, int *eof, void *data)
+ {
++    /*FIXME::This should be CS protected*/
++    if (OTG_STATE_UNDEFINED == ip9028_otg_bak->otg.state)
++    {
++        if (0 == g_user_srp_request)
++        {
++            g_user_srp_request = 1;
++        }
++        else
++        {
++            printk("Previous SRP request is still in progress\n");
++        }
++    }
++    else
++    {
++        printk("Cann't start SRP::State is not OTG_STATE_UNDEFINED\n");
++    }
++    
++    return 0;   
++}
+ 
+-		printk(KERN_INFO "proc_usb_otg_start_srp \n");
+-		up(&srp_sema);
+ 
+-		return 0;
+-		
+-}
+ 
+-int proc_usb_otg_host_poweroff(char *buffer,char **buffer_location,off_t offset,
++int proc_usb_otg_start_hnp(char *buffer,char **buffer_location,off_t offset,
+                              int buffer_length, int *eof, void *data)
+ {
++    otg_start_hnp(&(ip9028_otg_bak->otg));  
+ 
+-		printk(KERN_INFO "proc_usb_otg_host_poweroff\n");
++    return 0;        
++}
+ 
+-		up(&pwr_off_sema);
+ 
+-		return 0;
+-		
+-}
+ 
+-int proc_usb_otg_host_mnt_set_unset(char *buffer,char **buffer_location,off_t offset,
++int proc_usb_otg_enable_print(char *buffer,char **buffer_location,off_t offset,
+                              int buffer_length, int *eof, void *data)
+ {
+-
+-		printk(KERN_INFO "proc_usb_otg_host_mnt_set_unset\n");
+-
+-		if(Ismnt)
+-		{
+-			printk(" USB DRIVE is mounted currently ,unset the mount status \n");
+-			Ismnt=0;
+-		}
+-		else
+-		{
+-			printk(" USB DRIVE is unmounted currently ,set the mount status \n");
+-			Ismnt=1;
+-		}
+-
+-		
+-
+-		return 0;
+-		
++    if (0 == g_otg_print)   
++    {
++        printk("OTG debug message enabled\n");
++        g_otg_print = 1;
++    }
++    else
++    {
++        printk("OTG debug message disabled\n");
++        g_otg_print = 0;
++    }
++    
++    return 0;        
+ }
+ 
+ 
+-
+ void usb_otg_create_proc_entry(void)
+ {
+     static struct proc_dir_entry *gadget_proc_file ;
++    static struct proc_dir_entry *otg_proc_dir;
+ 
++    otg_proc_dir = proc_mkdir("otg",  NULL);
++    if (otg_proc_dir == NULL) 
++    {           
++         printk(KERN_ALERT "Error: Could not initialize /proc/%s\n","otg");
++         return;
++    }
+ 
+-    gadget_proc_file = create_proc_entry("usb_otg_start_srp", 0644, NULL);
+-    if (gadget_proc_file == NULL) {
+-           
+-             printk(KERN_ALERT "Error: Could not initialize /proc/%s\n","usb_otg_start_srp");
+-             return;
++    gadget_proc_file = create_proc_entry("srp", 0644, otg_proc_dir);
++    if (gadget_proc_file == NULL) 
++    {           
++         printk(KERN_ALERT "Error: Could not initialize /proc/otg/%s\n","srp");
++         return;
+     }
++    
+     gadget_proc_file->read_proc = proc_usb_otg_start_srp;
+-    /* gadget_proc_file->owner = THIS_MODULE; */
+     gadget_proc_file->mode = S_IFREG | S_IRUGO;
+     gadget_proc_file->uid = 0;
+     gadget_proc_file->gid = 0;
+     gadget_proc_file->size = 100;
+ 
+-    gadget_proc_file = create_proc_entry("usb_otg_host_poweroff", 0644, NULL);
+-    if (gadget_proc_file == NULL) {
+-            
+-             printk(KERN_ALERT "Error: Could not initialize /proc/%s\n","usb_otg_host_poweroff");
+-             return;
++   gadget_proc_file = create_proc_entry("hnp", 0644, otg_proc_dir);
++    if (gadget_proc_file == NULL) 
++    {            
++        printk(KERN_ALERT "Error: Could not initialize /proc/otg/%s\n","hnp");
++        return;
+     }
+-    gadget_proc_file->read_proc = proc_usb_otg_host_poweroff;
+-    /* gadget_proc_file->owner = THIS_MODULE; */
++    
++    gadget_proc_file->read_proc = proc_usb_otg_start_hnp;
+     gadget_proc_file->mode = S_IFREG | S_IRUGO;
+     gadget_proc_file->uid = 0;
+     gadget_proc_file->gid = 0;
+     gadget_proc_file->size = 100;
+ 
+-   gadget_proc_file = create_proc_entry("usb_otg_host_mnt_set_unset", 0644, NULL);
+-    if (gadget_proc_file == NULL) {
+-            
+-             printk(KERN_ALERT "Error: Could not initialize /proc/%s\n","usb_otg_host_mnt_set_unset");
+-             return;
++
++   gadget_proc_file = create_proc_entry("enable_print", 0644, otg_proc_dir);
++    if (gadget_proc_file == NULL) 
++    {            
++        printk(KERN_ALERT "Error: Could not initialize /proc/otg/%s\n","enable_print");
++        return;
+     }
+-    gadget_proc_file->read_proc = proc_usb_otg_host_mnt_set_unset;
+-    /* gadget_proc_file->owner = THIS_MODULE; */
++    
++    gadget_proc_file->read_proc = proc_usb_otg_enable_print;
+     gadget_proc_file->mode = S_IFREG | S_IRUGO;
+     gadget_proc_file->uid = 0;
+     gadget_proc_file->gid = 0;
+     gadget_proc_file->size = 100;
+-
+-
++    
+ }
+ 
++void usb_otg_remove_proc_entry(void)
++{
++    /*FIXME::Implement*/    
++}
+ 
+ #endif
+ 
+ 
+ 
+- int __devinit ip9028_otg_usb_probe(struct platform_device *pdev)
++int __devinit ip9028_otg_usb_probe(struct platform_device *pdev)
+ {
+-	struct ip9028_otg_usb	*ip9028_otg;
+-	int			status, retval,err;
+-	uint32_t otgsc;
+-	
+-
+-
+-	printk(KERN_DEBUG"    ip9028_otg_usb_probe \n");
++    struct ip9028_otg_usb   *ip9028_otg;
++    int         status, retval,err;
++    uint32_t otgsc;
++
++    printk(KERN_DEBUG"    ip9028_otg_usb_probe \n");
++
++    ip9028_otg = kzalloc(sizeof *ip9028_otg, GFP_KERNEL);
++    if (!ip9028_otg)
++        return -ENOMEM;
++
++    if (!request_mem_region(pdev->resource[0].start, pdev->resource[0].end - pdev->resource[0].start + 1, driver_name)) 
++    { 
++        printk (KERN_ALERT "request_mem_region failed\n");
++        return -EBUSY;
++    }
+ 
+-	ip9028_otg = kzalloc(sizeof *ip9028_otg, GFP_KERNEL);
+-	if (!ip9028_otg)
+-		return -ENOMEM;
+-
+-	ip9028_otg->regs = ioremap(pdev->resource[0].start, pdev->resource[0].end -
+-				   pdev->resource[0].start + 1);
+-	if (!ip9028_otg->regs) {
+-		printk (KERN_ALERT "ip9028_otg: ioremap failed\n");
+-		kfree (ip9028_otg);
+-		return -ENOMEM;
+-	}
++    ip9028_otg->regs = ioremap(pdev->resource[0].start, pdev->resource[0].end -pdev->resource[0].start + 1);
++    
++    if (!ip9028_otg->regs) 
++    {
++        printk (KERN_ALERT "ip9028_otg: ioremap failed\n");
++        kfree (ip9028_otg);
++        return -ENOMEM;
++    }
+ 
+-	ip9028_otg->dev			= &pdev->dev;
+-	
+-	ip9028_otg->irq			= pdev->resource[1].start;
+-	ip9028_otg->otg.dev		= ip9028_otg->dev;
+-	ip9028_otg->otg.label		= "ip9028_otg";
+-	ip9028_otg->otg.set_host	= ip9028_otg_set_host;
+-	ip9028_otg->otg.set_peripheral	= ip9028_otg_set_peripheral;
+-	ip9028_otg->otg.set_suspend	= ip9028_otg_set_suspend;
+-	ip9028_otg->otg.start_hnp =  ip9028_otg_start_hnp;
+-	ip9028_otg->usb_host.dma_mask	= &ehci_dmamask;
+-	ip9028_otg->usb_host.coherent_dma_mask = 0xffffffff;
+-	ip9028_otg->usb_peripheral.dma_mask = &ehci_dmamask;
+-	ip9028_otg->usb_peripheral.coherent_dma_mask = 0x1fffffff;
++    ip9028_otg->dev         = &pdev->dev;
++    
++    ip9028_otg->irq         = pdev->resource[1].start;
++    ip9028_otg->otg.dev     = ip9028_otg->dev;
++    ip9028_otg->otg.label       = "ip9028_otg";
++    ip9028_otg->otg.set_host    = ip9028_otg_set_host;
++    ip9028_otg->otg.set_peripheral  = ip9028_otg_set_peripheral;
++    ip9028_otg->otg.set_suspend = ip9028_otg_set_suspend;
++    ip9028_otg->otg.start_hnp =  ip9028_otg_start_hnp;
++    
++    ip9028_otg->usb_host.dma_mask   = &ehci_dmamask;
++    ip9028_otg->usb_host.coherent_dma_mask = 0xffffffff;
++    ip9028_otg->usb_peripheral.dma_mask = &ehci_dmamask;
++    ip9028_otg->usb_peripheral.coherent_dma_mask = 0x1fffffff;
+ 
+-	INIT_WORK(&ip9028_otg->wq_host_probe, ip9028_otg_wq_host_probe);
+-	INIT_WORK(&ip9028_otg->wq_host_remove, ip9028_otg_wq_host_remove);
++    INIT_WORK(&ip9028_otg->wq_host_probe, ip9028_otg_wq_host_probe);
++    INIT_WORK(&ip9028_otg->wq_host_remove, ip9028_otg_wq_host_remove);
+ 
+-	wq_host_probe_g = &ip9028_otg->wq_host_probe;
++    wq_host_probe_g = &ip9028_otg->wq_host_probe;
++            
++    /* init spinlock for workqueue */
++    spin_lock_init(&ip9028_otg->lock);
+ 
+-	
+-	
+-	
++    err =  otg_set_transceiver(&ip9028_otg->otg);
++    if (err) {
++        dev_err(&pdev->dev, "can't register transceiver, err: %d\n",
++            err);       
++    }
+ 
+-	/* init spinlock for workqueue */
+-	spin_lock_init(&ip9028_otg->lock);
++    platform_set_drvdata(pdev, ip9028_otg);
+ 
+-	err =  otg_set_transceiver(&ip9028_otg->otg);
+-	if (err) {
+-		dev_err(&pdev->dev, "can't register transceiver, err: %d\n",
+-			err);
+-		
+-	}
+-
+-	platform_set_drvdata(pdev, ip9028_otg);
+-
+-	ip9028_otg->irq_enabled = true;
+-	ip9028_otg->pdev = pdev;
+-
+-	dev_set_name(&ip9028_otg->usb_host, "ip9028_host");
+-	dev_set_name(&ip9028_otg->usb_peripheral, "ip9028_peripheral");
+-	ip9028_otg->usb_host.parent = &pdev->dev;
+-	ip9028_otg->usb_host.driver = &ip9028_otg_usb_driver.driver;
+-	ip9028_otg->usb_peripheral.parent = &pdev->dev;
+-	ip9028_otg->usb_peripheral.driver = &ip9028_otg_usb_driver.driver;
+-
+-	retval = device_register (&ip9028_otg->usb_host);
+-	retval = device_register (&ip9028_otg->usb_peripheral);
+-
+-
+-		
+-	status = request_irq(ip9028_otg->irq, ip9028_otg_usb_irq,
+-			IRQF_SHARED /* | IRQF_DISABLED */,
+-			/* "ip9028_otg_usb"*/"ip9028_udc_udc", ip9028_otg);
+-	if (status < 0) {
+-		dev_dbg(&pdev->dev, "can't get IRQ %d, err %d\n",
+-			ip9028_otg->irq, status);
+-		kfree(ip9028_otg);
+-		return status;
+-	}
++    ip9028_otg->irq_enabled = true;
++    ip9028_otg->pdev = pdev;
+ 
+-	
+-	ip9028_otg->otg.state = OTG_STATE_UNDEFINED; 
+-	
++    dev_set_name(&ip9028_otg->usb_host, "ip9028_host");
++    dev_set_name(&ip9028_otg->usb_peripheral, "ip9028_peripheral"); /*Check in udc for this call name is diff*/
++    ip9028_otg->usb_host.parent = &pdev->dev;
++    ip9028_otg->usb_host.driver = &ip9028_otg_usb_driver.driver;
++    ip9028_otg->usb_peripheral.parent = &pdev->dev;
++    ip9028_otg->usb_peripheral.driver = &ip9028_otg_usb_driver.driver;
++
++    retval = device_register (&ip9028_otg->usb_host);
++    retval = device_register (&ip9028_otg->usb_peripheral);
++        
++    status = request_irq(ip9028_otg->irq, ip9028_otg_usb_irq, IRQF_SHARED /* | IRQF_DISABLED */, driver_name, ip9028_otg);
++    if (status < 0) 
++    {
++        dev_dbg(&pdev->dev, "can't get IRQ %d, err %d\n",
++            ip9028_otg->irq, status);
++        kfree(ip9028_otg);
++        return status;
++    }
+ 
+-	otgsc = readl (ip9028_otg->regs + IP9028_OTGSC);  
+-	writel ((otgsc & 0xFFFFFFFF) | IP9028_OTGSC_IDIE |IP9028_OTGSC_IDPU|IP9028_OTGSC_ASVIE  |IP9028_OTGSC_BSVIE | IP9028_OTGSC_AVVIE  | IP9028_OTGSC_BSEIE,
+-	   		ip9028_otg->regs + IP9028_OTGSC); 
+-	
+ #ifdef OTG_PROC_IF
+-	usb_otg_create_proc_entry();
++    usb_otg_create_proc_entry();
+ #endif
+ 
+-#ifdef OTG_SRP_THREAD
++    ip9028_otg->hcd = NULL;
+ 
+-	srp_thread = kthread_create(srp_main_thread, ip9028_otg, "srp_thread");	
+-	if (IS_ERR(srp_thread))
+-	{	
+-		printk("Unable to start the srp_main_thread\n");		
+-		return PTR_ERR(srp_thread);	
+-	}
++    retval = fsl_otg_udc_probe(&pdev->dev, ip9028_otg->regs, pdev->resource[1].start); 
+ 
+-	wake_up_process(srp_thread);
+-	init_MUTEX_LOCKED(&(srp_sema));
+-	
++    dr_controller_otg_setmode(USB_MODE_CTRL_MODE_IDLE); /*FIXME::CHECK:: If we need this or can be removed?*/
+ 
+-#endif
+-
+-#ifdef OTG_A_HOST_POWER_OFF_THREAD
+-
+-	pwr_off_thread = kthread_create(pwr_off_main_thread, ip9028_otg, "A_host_pwr_off_thread");	
+-	if (IS_ERR(pwr_off_thread))
+-	{	
+-		printk("Unable to start the A_host_pwr_off_thread\n");		
+-		return PTR_ERR(pwr_off_thread);	
+-	}
+-
+-	wake_up_process(pwr_off_thread);
+-	init_MUTEX_LOCKED(&(pwr_off_sema));
+-	
++       /*Disable Port Power*/
++    ip9028_otg_disable_portpower(ip9028_otg);
+ 
+-#endif
+-
+-	ip9028_otg->hcd = NULL;
+-	
+-	printk (KERN_INFO "Initialized IP9028 OTG USB module\n");
+-	return 0;
++    ip9028_otg->otg.state = OTG_STATE_UNDEFINED; 
++    otgsc = readl (ip9028_otg->regs + IP9028_OTGSC);  
++    writel (otgsc | IP9028_OTGSC_1msE | IP9028_OTGSC_IDIE |IP9028_OTGSC_IDPU|
++                                IP9028_OTGSC_ASVIE  |IP9028_OTGSC_BSVIE | 
++                                    IP9028_OTGSC_AVVIE  | IP9028_OTGSC_BSEIE | IP9028_OTGSC_DPIE, /*CHECK::If IP9028_OTGSC_DPIE required here or to be set n UNDEFINED state transition*/
++            ip9028_otg->regs + IP9028_OTGSC); 
++
++       
++    printk (KERN_INFO "Initialized IP9028 OTG USB module\n");
++    
++    return 0;
+ }
+ 
+ static int __exit ip9028_otg_usb_remove(struct platform_device *pdev)
+ {
+-	struct ip9028_otg_usb *ip9028_otg = platform_get_drvdata(pdev);
++    struct ip9028_otg_usb *ip9028_otg = platform_get_drvdata(pdev);
++       
++    free_irq(ip9028_otg->irq, ip9028_otg);
+ 
+-	free_irq(ip9028_otg->irq, ip9028_otg);
++    fsl_udc_remove(pdev); 
+ 
+-	fsl_otg_udc_remove();
++    kfree(ip9028_otg);
+ 
+-	kfree(ip9028_otg);
++#ifdef OTG_PROC_IF
++    usb_otg_remove_proc_entry();
++#endif
+ 
+-	return 0;
++    return 0;
+ }
+ 
+ static int __init ip9028_otg_usb_init(void)
+ {
+-	printk("otg_init ===>>> ip9028_otg_usb_init \n" );
+-	return platform_driver_register(&ip9028_otg_usb_driver);
++    return platform_driver_register(&ip9028_otg_usb_driver);
+ }
+-module_init(ip9028_otg_usb_init);	// USB_UDC_CHECK
++module_init(ip9028_otg_usb_init);	
+ 
+ 
+ static void __exit ip9028_otg_usb_exit(void)
+ {
+-	platform_driver_unregister(&ip9028_otg_usb_driver);
++    platform_driver_unregister(&ip9028_otg_usb_driver);
+ }
+ module_exit(ip9028_otg_usb_exit);
+ 
++
+ MODULE_ALIAS("platform:ip9028_otg_usb");
+ MODULE_AUTHOR("NXP Semiconductors");
+ MODULE_DESCRIPTION("IP9028 USB OTG transceiver driver");
+diff -Naur linux-2.6.34/include/linux/usb/ip9028-otg.h linux-2.6.34_otgfix/include/linux/usb/ip9028-otg.h
+--- linux-2.6.34/include/linux/usb/ip9028-otg.h	2010-11-15 18:51:36.284409000 +0530
++++ linux-2.6.34_otgfix/include/linux/usb/ip9028-otg.h	2010-11-15 20:02:52.360091000 +0530
+@@ -22,17 +22,18 @@
+ #include <../drivers/usb/core/hcd.h>
+ #include <mach/usbudc.h>
+ 
+-extern const struct hc_driver ehci_ip9028_hc_driver  /* ehci_ip9028_otg_hc_driver */;
++extern const struct hc_driver ehci_ip9028_hc_driver;
++
+ int fsl_udc_otg_resume(void);
+ #ifdef FSL_PORT
+-extern int fsl_udc_otg_suspend(void);	// Use FSL PORT...
+-//extern int __init fsl_otg_udc_probe(struct platform_device *pdev /*struct device *dev*/, void *regs, int irq);	// Use FSL PORT...
+-extern int __init fsl_otg_udc_probe(struct device *dev, void *regs, int irq);	// Use FSL PORT...
++extern int fsl_udc_otg_suspend(void);
++extern int __init fsl_otg_udc_probe(struct device *dev, void *regs, int irq);	
+ #else
+-extern int cnxt_udc_suspend(void);		// Use NOCONA PORT...
+-extern int __init cnxt_udc_probe(struct platform_device *pdev);	// Use NOCONA PORT...
++extern int cnxt_udc_suspend(void);		
++extern int __init cnxt_udc_probe(struct platform_device *pdev);	
+ extern struct platform_device udc_device0;
+ #endif
++
+ int __exit fsl_otg_udc_remove(void);
+ 
+ #define IP9028_PRTSC		0x184
+@@ -45,10 +46,6 @@
+ #define IP9028_PRTSC_CCS	(1 << 0)
+ #define IP9028_OTGSC		0x1A4
+ 
+-
+-
+-/* Added  missing register sets  START*/
+-
+ #define IP9028_OTGSC_VD	(1 <<  0)
+ #define IP9028_OTGSC_VC	(1 <<  1)
+ #define IP9028_OTGSC_HARA	(1 <<  2)
+@@ -58,25 +55,22 @@
+ #define IP9028_OTGSC_HADP	(1 <<  6)
+ #define IP9028_OTGSC_HABA	(1 <<  7)
+ 
+-/* Added  missing register sets  END*/
+-
+-
+-
+ #define IP9028_OTGSC_ID		(1 <<  8)
++#define IP9028_OTGSC_AVV	(1 <<  9)
+ #define IP9028_OTGSC_ASV	(1 << 10)
+ #define IP9028_OTGSC_BSV	(1 << 11)
+-#define IP9028_OTGSC_IDIS	(1 << 16)
+-#define IP9028_OTGSC_AVV	(1 << 17)
++#define IP9028_OTGSC_BSE	(1 << 12)
++#define IP9028_OTGSC_1msT	(1 << 13)
++#define IP9028_OTGSC_DPS	(1 << 14)
++
+ #define IP9028_OTGSC_IDIS	(1 << 16)
+ #define IP9028_OTGSC_AVVIS	(1 << 17)
+ #define IP9028_OTGSC_ASVIS	(1 << 18)
+ #define IP9028_OTGSC_BSVIS	(1 << 19)
+ #define IP9028_OTGSC_BSEIS	(1 << 20)
+ #define IP9028_OTGSC_1msS	(1 << 21)
++#define IP9028_OTGSC_DPIS	(1 << 22)
+ 
+-/* Added  missing register sets */
+-
+-#define IP9028_OTGSC_DPIS	(1 << 22) 
+ #define IP9028_OTGSC_IDIE	(1 << 24)
+ #define IP9028_OTGSC_AVVIE	(1 << 25)
+ #define IP9028_OTGSC_ASVIE	(1 << 26)
+@@ -84,6 +78,7 @@
+ #define IP9028_OTGSC_BSEIE	(1 << 28)
+ #define IP9028_OTGSC_1msE	(1 << 29)
+ #define IP9028_OTGSC_DPIE	(1 << 30)
++
+ #define IP9028_USBMODE		0x1A8
+ #define IP9028_USBMODE_IDLE	0x0
+ #define IP9028_USBMODE_DEVICE	0x2
+@@ -94,11 +89,8 @@
+ #define IP9028_OTGSC_INT_STS_MASK (0x005F0000)
+ #define IP9028_USBMODE_IDLE_MASK 0xFFFFFFFC
+ #define IP9028_PRTSC_PP_OFF_MASK 0xFFFFEFFF
+-#define IP9028_PRTSC_CCS_MASK 0x00000001
+-#define IP9028_OTGSC_INT_BSEIS 0x00100000
+-#define IP9028_OTGSC_INT_ASVIS   0x00040000
+-#define IP9028_OTGSC_INT_BSVIS   0x00080000
+ 
++#define IP9028_PRTSC_CCS_MASK 0x00000001
+ 
+ 
+ struct ip9028_otg_usb {
+diff -Naur linux-2.6.34/include/linux/usb/otg.h linux-2.6.34_otgfix/include/linux/usb/otg.h
+--- linux-2.6.34/include/linux/usb/otg.h	2010-05-17 02:47:36.000000000 +0530
++++ linux-2.6.34_otgfix/include/linux/usb/otg.h	2010-11-15 20:02:52.361096000 +0530
+@@ -23,6 +23,8 @@
+ 	/* extra dual-role default-b states */
+ 	OTG_STATE_B_WAIT_ACON,
+ 	OTG_STATE_B_HOST,
++	OTG_STATE_B_SUSPEND, //RATHD22::FIXME New state, should not be required. do actual implementation as per spec
++	
+ 
+ 	/* dual-role default-a */
+ 	OTG_STATE_A_IDLE,

@@ -1,0 +1,28 @@
+diff -Naupr linux-2.6.34.orig/drivers/serial/ip3106.c linux-2.6.34/drivers/serial/ip3106.c
+--- linux-2.6.34.orig/drivers/serial/ip3106.c	2011-02-01 21:53:09.037999662 -0600
++++ linux-2.6.34/drivers/serial/ip3106.c	2011-02-01 21:59:19.822181453 -0600
+@@ -345,7 +345,14 @@ static void ip3106_rx_chars(struct uart_
+ 	/* Read the status of the Rx FIFO */
+ 	status = UART_GET_LSR(port);
+ 	/* Read till the FIFO is empty or max_count is 0 */
+-	while ( ((status & IP3106_UART_LSR_DR_MSK) != 0) && max_count--) {
++        /*
++         * Note: For some reason that isn't clear, we sometimes get an
++         * interrupt where IIR claims there's data in the RX FIFO,
++         * but the FIFO has no data. To work around that, this
++         * is a do-while loop instead of a while loop. That way
++         * it always reads a char, even if the FIFO is empty.
++         */
++	do {
+ 		/* Read the character from Rx FIFO */
+ 		ch = UART_GET_RBR(port);
+ 		flag = TTY_NORMAL;
+@@ -392,7 +399,7 @@ static void ip3106_rx_chars(struct uart_
+ 
+ ignore_char:
+ 		status = UART_GET_LSR(port);
+-	}
++	} while ( ((status & IP3106_UART_LSR_DR_MSK) != 0) && max_count--);
+ 	tty_flip_buffer_push(tty);
+ 	
+ 	if (modem_notify) 

@@ -1,0 +1,150 @@
+diff -Naurp linux-2.6.34_orig/arch/arm/mach-kronos/include/mach/pnx8492.h linux-2.6.34/arch/arm/mach-kronos/include/mach/pnx8492.h
+--- linux-2.6.34_orig/arch/arm/mach-kronos/include/mach/pnx8492.h	2011-10-03 14:25:23.895572000 +0530
++++ linux-2.6.34/arch/arm/mach-kronos/include/mach/pnx8492.h	2011-10-03 16:53:02.533135000 +0530
+@@ -97,7 +97,25 @@
+ #define MMIO_CLOCK_BASE          (ARM_A9_HOST_MMIO_BASE + 0x6a000)
+ 
+ #define MMIO_GLB_BASE            (ARM_A9_HOST_MMIO_BASE + 0xbb000)
++
++#define  GPIO_PIN_MUX_REG_0      (MMIO_GLB_BASE + 0x100)
++#define  GPIO_PIN_MUX_REG_1      (MMIO_GLB_BASE + 0x104)
++#define  GPIO_PIN_MUX_REG_2      (MMIO_GLB_BASE + 0x108)
++#define  GPIO_PIN_MUX_REG_3      (MMIO_GLB_BASE + 0x10C)
++#define  GPIO_PIN_MUX_REG_4      (MMIO_GLB_BASE + 0x110)
++#define  GPIO_PIN_MUX_REG_5      (MMIO_GLB_BASE + 0x114)
++#define  GPIO_PIN_MUX_REG_6      (MMIO_GLB_BASE + 0x118)
++#define  GPIO_SEC_PIN_MUX_REG_0  (MMIO_GLB_BASE + 0x120)
++#define  GPIO_SEC_PIN_MUX_REG_1  (MMIO_GLB_BASE + 0x124)
++#define  GPIO_SEC_PIN_MUX_REG_2  (MMIO_GLB_BASE + 0x128)
++#define  GPIO_SEC_PIN_MUX_REG_3  (MMIO_GLB_BASE + 0x12C)
++#define  GPIO_SEC_PIN_MUX_REG_4  (MMIO_GLB_BASE + 0x130)
++#define  GPIO_SEC_PIN_MUX_REG_5  (MMIO_GLB_BASE + 0x134)
++#define  GPIO_SEC_PIN_MUX_REG_6  (MMIO_GLB_BASE + 0x138)
+ #define  ALT_PIN_MUX_REG_0       (MMIO_GLB_BASE + 0x140)
++#define  ALT_PIN_MUX_REG_1       (MMIO_GLB_BASE + 0x144)
++#define  ALT_PIN_MUX_REG_2       (MMIO_GLB_BASE + 0x148)
++
+ #define  GLBREG_MISC1            (MMIO_GLB_BASE + 0x500)
+ 
+ 
+diff -Naurp linux-2.6.34_orig/arch/arm/mach-kronos/nx_sdiomc_dev.c linux-2.6.34/arch/arm/mach-kronos/nx_sdiomc_dev.c
+--- linux-2.6.34_orig/arch/arm/mach-kronos/nx_sdiomc_dev.c	2011-10-03 14:25:24.644499000 +0530
++++ linux-2.6.34/arch/arm/mach-kronos/nx_sdiomc_dev.c	2011-10-03 17:06:59.795417000 +0530
+@@ -73,89 +73,50 @@ static struct platform_device *apollo_sd
+ static void __init apollo_sdiomc_pin_mux_init(void)
+ {
+    unsigned int val;
+-   unsigned long lockstat = 0;
+-   unsigned long greset = 0;
+ 
+-   /* Determine the pin mux setting based on Kernel Config options */
+-   writel(0x000000F8, RST_LOCKCMD_REG);
+-   writel(0x0000002B, RST_LOCKCMD_REG);
+-   
+-   lockstat = readl(RST_LOCKSTAT_REG);
+-   lockstat &= ~RST_LOCKSTAT_LOCK;
+-   writel(lockstat,RST_LOCKSTAT_REG);
+-   greset = readl(RST_GRESET1_REG);
+-   greset &= ~(1<<12);
+-   writel(greset, RST_GRESET1_REG);
+-   writel(0x00000000, RST_LOCKCMD_REG);
+-   val = readl(RST_CONFIG_REG);
+-   val &= ~(7<<7);
+-   val |= 5<<7;
+-   writel(val, RST_CONFIG_REG);
+-   /* Setup the Alt Reg 0 for SDIO Card Detect */
+-#if 0
+-   val = readl(0xE06BB100);
+-   val &= ~(0x18) ;
+-   writel(val, 0xE06BB100);
+-   val = readl(0xE06BB120);
+-   val |= 0x18 ;
+-   writel(val, 0xE06BB120);
+-   val = readl(0xE06BB124);
+-   val |= 0x80000000 ;
+-   writel(val, 0xE06BB124);
+-   val = readl(0xE06BB128);
+-   val |= 0x03 ;
+-   writel(val, 0xE06BB128);
+-   val = readl(0xE06BB134);
+-   val |= 0x400 ;
+-   writel(val, 0xE06BB134);
+-   val = readl(0xE06BB140);
+-   val &= ~(0x8800000) ;
+-   val |= 0x40000000 ;
+-   writel(val, 0xE06BB140);
+-#else
+-   val = readl(0xE06BB100);
++   /* Setup pin-muxing for SDIO */
++   val = readl(GPIO_PIN_MUX_REG_0);
+    val &= ~(0x1000018);    // uart2tx=gmux_003=0, uart2rx=gmux_004=0, pwm2=gmux_024=0
+-   writel(val, 0xE06BB100);
++   writel(val, GPIO_PIN_MUX_REG_0);
+ 
+-   val = readl(0xE06BB104);
++   val = readl(GPIO_PIN_MUX_REG_1);
+    val &= ~(0x80000000);   // ioa19=gmux_063=0
+-   writel(val, 0xE06BB104);
++   writel(val, GPIO_PIN_MUX_REG_1);
+    
+-   val = readl(0xE06BB108);
+-   val &= ~(0x00000003);   // ioa20=gmux_064=0, ioa21=gmux_065=0
+-   writel(val, 0xE06BB108);
++   val = readl(GPIO_PIN_MUX_REG_2);
++   val &= ~(0x00000403);   // ioa20=gmux_064=0, ioa21=gmux_065=0, gmux_074=sdled=0
++   writel(val, GPIO_PIN_MUX_REG_2);
+    
+-   val = readl(0xE06BB114);
+-   val &= ~(0x00000c00);   // ioa23=gmux_171=0, ioa22=gmux_170=0
+-   writel(val, 0xE06BB114);
++   val = readl(GPIO_PIN_MUX_REG_5);
++   val &= ~(0x00060c00);   // ioa23=gmux_171=0, ioa22=gmux_170=0, gmux_178=scl2=0, gmux_177=sda2=0
++   writel(val, GPIO_PIN_MUX_REG_5);
+    
+-   val = readl(0xE06BB120);// don't enable sdled, smux_024=0
++   val = readl(GPIO_SEC_PIN_MUX_REG_0);// don't enable sdled, smux_024=0
+    val |= 0x18;            // sdcrdetect_00=gmux_003=1, sdcrdwp_00=gmux_004=1
+-   writel(val, 0xE06BB120);
++   writel(val, GPIO_SEC_PIN_MUX_REG_0);
+    
+-   val = readl(0xE06BB124);
++   val = readl(GPIO_SEC_PIN_MUX_REG_1);
+    val |= 0x80000000;      // sddata0=smux_063=1
+-   writel(val, 0xE06BB124);
++   writel(val, GPIO_SEC_PIN_MUX_REG_1);
+    
+-   val = readl(0xE06BB128);
+-   val |= 0x30003;         // sddata1=smux_064=1, sddata2=smux_065=1, 
+-   writel(val, 0xE06BB128);
++   val = readl(GPIO_SEC_PIN_MUX_REG_2);
++   val &= ~(0x400);        // smux_074=hs6err=0, 
++   val |= 0x30003;         // sddata1=smux_064=1, sddata2=smux_065=1,
++   writel(val, GPIO_SEC_PIN_MUX_REG_2);
+    
+-   val = readl(0xE06BB134);
+-   val &= ~(0x800);        // nand_rb3=smux_171=0
++   val = readl(GPIO_SEC_PIN_MUX_REG_5);
++   val &= ~(0x60800);      // nand_rb3=smux_171=0, smux_178=sdcrdwp=0, smux_177=sdcrdetect=0
+    val |= 0x400;           // sddata3=smux_170=1
+-   writel(val, 0xE06BB134);
++   writel(val, GPIO_SEC_PIN_MUX_REG_5);
+    
+-   val = readl(0xE06BB140);
+-   val &= ~(0x8800000);    // alt23=0, alt27_sdcmd=0
+-   val |= 0x40001020;      // alt12_uart2=1, alt05_sdio=1, alt30_sdio=1
+-   writel(val, 0xE06BB140);
++   val = readl(ALT_PIN_MUX_REG_0);
++   val &= ~(0x08802008);   // alt13_dbgi2c=0, alt23=0, alt27_sdcmd=0, alt03_656=0
++   val |=   0x40001020;    // alt12_uart2=1, alt05_sdio=1, alt30_sdio=1
++   writel(val, ALT_PIN_MUX_REG_0);
+ 
+-   val = readl(0xE06BB144);
++   val = readl(ALT_PIN_MUX_REG_1);
+    val |= 0x00040000;      // alt_reg_secdbg_override=1
+-   writel(val, 0xE06BB144);
+-
+-#endif
++   writel(val, ALT_PIN_MUX_REG_1);
+ }
+ 
+ static int __init apollo_sdiomc_init(void)

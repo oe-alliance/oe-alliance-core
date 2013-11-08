@@ -1,0 +1,121 @@
+diff -Naurp linux-2.6.34.bak/arch/arm/mach-apollo/include/mach/gcs.h linux-2.6.34/arch/arm/mach-apollo/include/mach/gcs.h
+--- linux-2.6.34.bak/arch/arm/mach-apollo/include/mach/gcs.h	2011-03-17 13:53:00.000000000 -0500
++++ linux-2.6.34/arch/arm/mach-apollo/include/mach/gcs.h	2011-03-23 21:00:25.000000000 -0500
+@@ -31,7 +31,6 @@
+ #ifndef _GCS_H_
+ #define _GCS_H_
+ 
+-/* #include <mach/platform.h> */
+ #include <mach/irqs.h>
+ 
+ #define APOLLO_GCS_CFG_BASE_PHYS         (ARM_A9_HOST_MMIO_BASE + 0x36000)
+@@ -40,22 +39,24 @@
+ 
+ /* GCS Mode Register */
+ #define APOLLO_GCS_MODE_REG              (APOLLO_GCS_CFG_BASE + 0x0)
+-#define APOLLO_GCS_MODE_PCI_ISA_MODE                        (1UL<<0)
+-#define APOLLO_GCS_MODE_SDIO_MUX                            (1UL<<1)
+-#define APOLLO_GCS_MODE_SDIO_FORCE                          (1UL<<2)
++#define APOLLO_GCS_MODE_PCI_ISA_MODE     (1UL<<0)
++#define APOLLO_GCS_MODE_SDIO_RGMII       (1UL<<1)
++#define APOLLO_GCS_MODE_SDIO_IO          (1UL<<2)
+ 
+ /* GCS SDIO Chip Select Route */
+ #define APOLLO_GCS_SDIO_CS_ROUTE        (APOLLO_GCS_CFG_BASE + 0x60)
+ 
+ /* GCS Clock Mux Register */
+ #define APOLLO_GCS_CLOCK_MUX            (APOLLO_GCS_CFG_BASE + 0x64)
+-#define APOLLO_GCS_CLOCK_MUX_EN                             (1UL<<0)
++#define APOLLO_GCS_CLOCK_MUX_EN         (1UL<<0)
+ 
+ /* GCS SDIO Clock Mux Register */
+ #define APOLLO_GCS_SDIO_CLOCK_MUX       (APOLLO_GCS_CFG_BASE + 0x68)
+-#define APOLLO_GCS_SDIO_CLOCK_MUX_EN                        (1UL<<0)
++#define APOLLO_GCS_SDIO_CLOCK_MUX_EN    (1UL<<0)
+ 
+ #define APOLLO_GCS_SDIO_HPROT           (APOLLO_GCS_CFG_BASE + 0x6c)
++#define APOLLO_GCS_SDIO_CACHEABLE       (1UL<<3) 
++#define APOLLO_GCS_SDIO_BUFFERABLE      (1UL<<2)
+ 
+ #endif /* _GCS_H_ */
+ 
+diff -Naurp linux-2.6.34.bak/arch/arm/mach-apollo/include/mach/nx_sdiomc_dev.h linux-2.6.34/arch/arm/mach-apollo/include/mach/nx_sdiomc_dev.h
+--- linux-2.6.34.bak/arch/arm/mach-apollo/include/mach/nx_sdiomc_dev.h	2011-03-17 13:53:00.000000000 -0500
++++ linux-2.6.34/arch/arm/mach-apollo/include/mach/nx_sdiomc_dev.h	2011-03-23 20:58:35.000000000 -0500
+@@ -33,7 +33,6 @@
+ #ifndef __ARCH_MACH_NX_SDIOMC_DEV_H_
+ #define __ARCH_MACH_NX_SDIOMC_DEV_H_
+ 
+-
+ #include <mach/pnx8492.h>
+ #include <mach/irqs.h>
+ 
+@@ -41,7 +40,7 @@
+ #define APOLLO_SDIOMC_BASE (APOLLO_SDIOMC_BASE_PHYS)  
+ #define APOLLO_SDIOMC_LEN  (0x1000)
+ 
+-#define APOLLO_INT_SDIOMC  ( 156)  /* Fixme, has to come from irqs.h !! */
++#define APOLLO_INT_SDIOMC  IRQ_SD_CARD
+ 
+ /*!
+  * This structure is used to store the platform specific SD/SDIO/MMC controller
+diff -Naurp linux-2.6.34.bak/arch/arm/mach-apollo/nx_sdiomc_dev.c linux-2.6.34/arch/arm/mach-apollo/nx_sdiomc_dev.c
+--- linux-2.6.34.bak/arch/arm/mach-apollo/nx_sdiomc_dev.c	2011-03-17 13:53:01.000000000 -0500
++++ linux-2.6.34/arch/arm/mach-apollo/nx_sdiomc_dev.c	2011-03-23 21:03:00.000000000 -0500
+@@ -77,8 +77,10 @@ static void __init apollo_sdiomc_pin_mux
+    /* Determine the pin mux setting based on Kernel Config options */
+ 
+ #ifdef CONFIG_MMC_SDHCI_NX_SDIOMC_ON_IO_BUS
+-   /* Setup the GCS */
+-   val = APOLLO_GCS_MODE_SDIO_FORCE;
++   /* Setup the GCS for SDIO on IO Bus */
++   val = readl(APOLLO_GCS_MODE_REG);
++   val &= 1; /* Preserve GCS mode bit */
++   val |= APOLLO_GCS_MODE_SDIO_IO;
+    writel(val, APOLLO_GCS_MODE_REG);
+ 
+    /* Setup the Alt Reg 0 for SDIO pin mux */
+@@ -95,8 +97,10 @@ static void __init apollo_sdiomc_pin_mux
+    writel( val, APOLLO_GCS_SDIO_CLOCK_MUX);
+ 
+ #else
+-   /* Setup the GCS */
+-   val = APOLLO_GCS_MODE_SDIO_MUX;
++   /* Setup the GCS for SDIO on RGMII1 */
++   val = readl(APOLLO_GCS_MODE_REG);
++   val &= 1; /* Preserve GCS mode bit */
++   val |= APOLLO_GCS_MODE_SDIO_RGMII;
+    writel(val, APOLLO_GCS_MODE_REG);
+ 
+    /* Setup the Alt Reg 0 for SDIO pin mux */
+@@ -111,6 +115,9 @@ static void __init apollo_sdiomc_pin_mux
+    writel(val, 0xE06EA114);
+ #endif
+ 
++   /* Enable HPROT bufferable and Cacheable bits */
++   writel(APOLLO_GCS_SDIO_CACHEABLE | APOLLO_GCS_SDIO_BUFFERABLE, APOLLO_GCS_SDIO_HPROT);
++
+    /* Setup the Alt Reg 1 for SDIO Card Detect */
+    val = readl(0xE06EA144);
+ #ifdef CONFIG_MMC_SDHCI_NX_SDIOMC_CRDETECT_ON_SGPIO3
+--- linux-2.6.34.bak/arch/arm/mach-apollo/gcs.c	2011-03-17 13:53:00.000000000 -0500
++++ linux-2.6.34/arch/arm/mach-apollo/gcs.c	2011-03-24 10:41:00.000000000 -0500
+@@ -47,6 +47,7 @@ static struct platform_device *apollo_gc
+ static int __init apollo_gcs_init(void)
+ {
+     void __iomem *gcs_base=NULL;
++    unsigned int val;
+     
+     /**
+      * FIXME: This configuration must come from bootloader
+@@ -60,7 +61,9 @@ static int __init apollo_gcs_init(void)
+ 
+    if (PCI_HOST_MODE_ENABLED)
+    {
+-      writel(0x1, gcs_base + 0x0);   /* GCS PCI mode  */
++      val = readl(gcs_base + 0x0);
++      val |= 0x1;
++      writel(val, gcs_base + 0x0);   /* GCS PCI mode  */
+       writel(0x0, gcs_base + 0x4);   /* PCI host mode */
+       
+       writel(0x2, gcs_base + 0x8);

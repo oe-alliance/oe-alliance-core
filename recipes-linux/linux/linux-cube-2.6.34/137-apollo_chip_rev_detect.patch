@@ -1,0 +1,55 @@
+diff -Naurp linux-2.6.34.spi/arch/arm/mach-apollo/include/mach/pnx8492.h linux-2.6.34/arch/arm/mach-apollo/include/mach/pnx8492.h
+--- linux-2.6.34.spi/arch/arm/mach-apollo/include/mach/pnx8492.h	2010-12-09 17:26:25.000000000 -0600
++++ linux-2.6.34/arch/arm/mach-apollo/include/mach/pnx8492.h	2010-12-14 16:28:20.000000000 -0600
+@@ -202,6 +202,7 @@
+ #define CHIPID_HELIOS    0x4
+ 
+ #define CHIP_REV_M0 0x1
++#define CHIP_REV_M1 0x2
+ 
+ /*
+  * these spaces are mapped using the following base registers:
+diff -Naurp linux-2.6.34.spi/arch/arm/mach-apollo/pnx8492.c linux-2.6.34/arch/arm/mach-apollo/pnx8492.c
+--- linux-2.6.34.spi/arch/arm/mach-apollo/pnx8492.c	2010-12-09 17:26:25.000000000 -0600
++++ linux-2.6.34/arch/arm/mach-apollo/pnx8492.c	2010-12-15 12:23:55.000000000 -0600
+@@ -444,7 +444,7 @@ early_initcall(apollo_l2x0_init);
+ /* This function is used to get the chipid and chipRevId */
+ static void cnxt_get_chip_rev_id(void)
+ {
+-    volatile unsigned long *pFuse;
++    volatile unsigned long *pFuse, MinorRev;
+ 
+     /* Init the iotable as the mapping is still not there */
+     iotable_init(apollo_io_desc, 1);
+@@ -452,21 +452,25 @@ static void cnxt_get_chip_rev_id(void)
+     /* Read the OTP register for Package ID and Rev ID */
+     pFuse = (unsigned long *)(ARM_A9_HOST_MMIO_BASE + SP_GP_03_OFFSET);
+ 
+-    /* If the Fuse is not programmed assume Shiner M0 */
++    /* If the Fuse is not programmed assume Shiner M1 */
+     if(*pFuse == 0)
+     {
+ 	ChipID=CHIPID_SHINER_S;
+-	ChipRevID=CHIP_REV_M0;
+     }
+     else
+     {
+        /* ChipID is bit 28 to 31 */
+        ChipID=(*pFuse&0xF0000000)>>CHIP_ID_SHIFT;
+-
+-       /* Chip Rev is bit 20 to 23 */
+-       ChipRevID=(*pFuse&0x00F00000)>>CHIP_REV_SHIFT;
+     }
+-    
++
++    /* Read Global Register Module ID for Chip Revision */
++    MinorRev = (((readl(MMIO_GLB_BASE + 0xFFC))&0xF00)>>8);
++
++    if(MinorRev == 0)
++	ChipRevID = CHIP_REV_M0;
++    else
++	ChipRevID = CHIP_REV_M1;
++
+     printk("ChipID=0x%lx ChipRevID=0x%lx\n",ChipID,ChipRevID);
+ }
+ 

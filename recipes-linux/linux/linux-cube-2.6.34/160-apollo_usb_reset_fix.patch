@@ -1,0 +1,100 @@
+diff -Naurp linux-2.6.34/arch/arm/include/asm/hardware/ip9028.h linux-2.6.34_usb/arch/arm/include/asm/hardware/ip9028.h
+--- linux-2.6.34/arch/arm/include/asm/hardware/ip9028.h	2011-04-29 12:52:46.740735000 +0530
++++ linux-2.6.34_usb/arch/arm/include/asm/hardware/ip9028.h	2011-04-29 11:54:10.237776000 +0530
+@@ -24,12 +24,17 @@
+  *  Register offsets from base address
+ *  -------------------------------------------------------------------------*/
+ 
+-#define PNX8XXX_USB_IP9028_EHCI_OFFSET		0x100
+-#define PNX8XXX_USB_IP9028_USB_MODE_OFFSET	0x1A8
+-#define PNX8XXX_USB_IP9028_USB_MODE_HOST	0x00000003
++#define PNX8XXX_USB_IP9028_EHCI_OFFSET             0x100
++#define PNX8XXX_USB_IP9028_USB_MODE_OFFSET         0x1A8
++#define PNX8XXX_USB_IP9028_USB_MODE_HOST           0x00000003
+ 
+-#define PNX8XXX_USB_IP9028_USB_SBUSCFG_VAL	0x6
+-#define PNX8XXX_USB_IP9028_USB_SBUSCFG_OFFSET	0x90
++#define PNX8XXX_USB_IP9028_USB_SBUSCFG_VAL         0x7
++#define PNX8XXX_USB_IP9028_USB_SBUSCFG_OFFSET      0x90
++
++#define PNX8XXX_USB_IP9028_USB_PHYCTRL_OFFSET      0x024
++#define PNX8XXX_USB_IP9028_USB_PHYCTRL_MASK        0xFFC0FFFF
++#define PNX8XXX_USB_IP9028_USB_PHYCTRL_HOST_MODE   0x110000
++#define PNX8XXX_USB_IP9028_USB_PHYCTRL_DEVICE_MODE 0x330000
+ 
+ /* defines PNX8XXX_USB_IP9028_... -> IP9028_... */
+ #ifdef ABOVE_HAS_TO_BE_MIGRATE_TO_THIS_IN_EHCI_IP9028_C
+diff -Naurp linux-2.6.34/drivers/usb/gadget/ip9028_udc.c linux-2.6.34_usb/drivers/usb/gadget/ip9028_udc.c
+--- linux-2.6.34/drivers/usb/gadget/ip9028_udc.c	2011-04-29 12:52:47.773656000 +0530
++++ linux-2.6.34_usb/drivers/usb/gadget/ip9028_udc.c	2011-04-29 12:50:47.886378000 +0530
+@@ -1913,6 +1913,8 @@ static void suspend_irq(struct fsl_udc *
+         dr_controller_otg_stop(); /*FIXME::This and dr_controller_b_host have common stuff , clean and make a single function*/
+         dr_controller_b_host(udc_controller);        
+     }       
++#else
++    tmp=0;
+ #endif  
+ }
+ 
+@@ -2874,7 +2876,7 @@ void fsl_udc_create_proc_entry(void)
+ int __init fsl_udc_probe(struct platform_device * pdev)
+ {
+ 	void __iomem *regs = NULL;
+-	int retval;
++	int retval, val;
+ 
+ 	if (!request_mem_region(pdev->resource[0].start, pdev->resource[0].end - 
+ 	    pdev->resource[0].start + 1, "ip9028_usb_udc")) { /*FIXME Change this driver_name*/
+@@ -2889,12 +2891,22 @@ int __init fsl_udc_probe(struct platform
+ 		return -ENOMEM;
+ 	}
+ 
+-        fsl_udc_create_proc_entry();
++   fsl_udc_create_proc_entry();
+ 
+ 	retval = fsl_otg_udc_probe(&pdev->dev, regs, pdev->resource[1].start);
+-	return retval;
+ 
+-	fsl_udc_remove(pdev);
++   /* Adjusting HS driver amplitude and HS driver slope control 
++    * for better high speed eye diagram as recommended by 
++    * Shanghai Validation Engineer - Tony (Xinzhan) Zhu */
++   val = readl(regs + PNX8XXX_USB_IP9028_USB_PHYCTRL_OFFSET);
++   val &= PNX8XXX_USB_IP9028_USB_PHYCTRL_MASK;
++   val |= PNX8XXX_USB_IP9028_USB_PHYCTRL_DEVICE_MODE;
++   writel(val,(regs + PNX8XXX_USB_IP9028_USB_PHYCTRL_OFFSET));
++
++   if (retval == 0)
++      return retval;
++	
++   fsl_udc_remove(pdev);
+ 
+ 	iounmap(regs);
+ 	return retval;
+diff -Naurp linux-2.6.34/drivers/usb/host/ehci-ip9028.c linux-2.6.34_usb/drivers/usb/host/ehci-ip9028.c
+--- linux-2.6.34/drivers/usb/host/ehci-ip9028.c	2011-04-29 12:52:47.687657000 +0530
++++ linux-2.6.34_usb/drivers/usb/host/ehci-ip9028.c	2011-04-29 11:54:10.242784000 +0530
+@@ -41,7 +41,7 @@ extern int usb_disabled(void);
+ int usb_ehci_ip9028_probe(const struct hc_driver *driver,
+ 			  struct usb_hcd **hcd_out, struct platform_device *dev)
+ {
+-	int retval;
++	int retval, val;
+ 	struct usb_hcd *hcd;
+ 
+ 	if (dev->resource[1].flags != IORESOURCE_IRQ) {
+@@ -77,6 +77,14 @@ int usb_ehci_ip9028_probe(const struct h
+ 	retval = usb_add_hcd(hcd, dev->resource[1].start,
+ 		IRQF_SHARED | IRQF_DISABLED);
+ 
++   /* Adjusting HS driver amplitude and HS driver slope control 
++    * for better high speed eye diagram as recommended by 
++    * Shanghai Validation Engineer - Tony (Xinzhan) Zhu */
++   val = readl(hcd->regs + PNX8XXX_USB_IP9028_USB_PHYCTRL_OFFSET);
++   val &= PNX8XXX_USB_IP9028_USB_PHYCTRL_MASK;
++   val |= PNX8XXX_USB_IP9028_USB_PHYCTRL_HOST_MODE;
++   writel(val,(hcd->regs + PNX8XXX_USB_IP9028_USB_PHYCTRL_OFFSET));
++
+ 	if (retval == 0)
+ 		return retval;
+ 
