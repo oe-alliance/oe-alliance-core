@@ -8,7 +8,7 @@ PR = "r1"
 
 inherit packagegroup
 
-RDEPENDS = "\
+RDEPENDS_${PN} = "\
     oe-alliance-base \
     octagon-enigma2 \
     octagon-bootlogo \
@@ -16,9 +16,9 @@ RDEPENDS = "\
     openssh-sftp-server \
     ntfs-3g \
     hddtemp \
-    task-base-smbfs-client \
-    task-base-smbfs \
-    task-base-nfs \
+    packagegroup-smbfs-client \
+    packagegroup-smbfs \
+    packagegroup-nfs \
     busybox-cron \
     python-imaging \
     ofgwrite \

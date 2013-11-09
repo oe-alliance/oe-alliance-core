@@ -8,7 +8,7 @@ PR = "r4"
 
 inherit packagegroup
 
-RDEPENDS = "\
+RDEPENDS_${PN} = "\
     oe-alliance-base \
     minicattv-enigma2 \
     minicattv-bootlogo \
@@ -16,8 +16,8 @@ RDEPENDS = "\
     libcrypto-compat \
     ntfs-3g \
     hddtemp \
-    task-base-smbfs-client \
-    task-base-smbfs \
-    task-base-nfs \
+    packagegroup-smbfs-client \
+    packagegroup-smbfs \
+    packagegroup-nfs \
     busybox-cron \
     "

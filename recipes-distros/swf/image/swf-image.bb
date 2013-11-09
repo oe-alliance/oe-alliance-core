@@ -27,8 +27,8 @@ IMAGE_INSTALL = " \
     python-gdata \
     ushare \
     ofgwrite \
-    task-base-smbfs \
-    task-base-smbfs-client \
+    packagegroup-smbfs \
+    packagegroup-smbfs-client \
     mc \
     swf-base \
     "

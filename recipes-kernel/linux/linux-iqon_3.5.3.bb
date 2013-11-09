@@ -14,7 +14,7 @@ LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${KV}/COPYING;md5=d7810fab7487fb0aad
 RCONFLICTS_${PN} = "linux-technomate"
 RREPLACES_${PN} = "linux-technomate"
 
-SRC_URI = "en2.ath.cx/release/images/oedrivers/linux-${KV}-${SRCDATE}.tar.gz \
+SRC_URI = "http://en2.ath.cx/release/images/oedrivers/linux-${KV}-${SRCDATE}.tar.gz \
         file://nfs-max-rwsize-8k.patch \
         file://001_fix_standby_error_${MACHINE}.patch \
         file://defconfig \

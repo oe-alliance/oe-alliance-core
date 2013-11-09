@@ -19,9 +19,9 @@ RDEPENDS_${PN} = "\
     hddtemp \
     dosfstools \
     ntfs-3g \
-    task-base-smbfs-client \
-    task-base-smbfs \
-    task-base-nfs \
+    packagegroup-smbfs-client \
+    packagegroup-smbfs \
+    packagegroup-nfs \
     busybox-cron \
     unrar \
     ofgwrite \
