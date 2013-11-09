@@ -14,4 +14,5 @@ do_compile_append_odinm9() {
 
 do_compile_append_cube() {
 	echo "arch mips32el $priority" >> $archconf
+	echo "arch mipsel $priority" >> $archconf
 }
