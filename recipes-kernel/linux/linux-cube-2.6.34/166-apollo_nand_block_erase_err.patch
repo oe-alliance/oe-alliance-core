@@ -1,0 +1,23 @@
+diff -Naurp linux-2.6.34/drivers/mtd/nand/nand_base.c linux-2.6.34_nand/drivers/mtd/nand/nand_base.c
+--- linux-2.6.34/drivers/mtd/nand/nand_base.c	2011-06-23 19:19:10.919868000 +0530
++++ linux-2.6.34_nand/drivers/mtd/nand/nand_base.c	2011-06-23 19:24:30.892034000 +0530
+@@ -2608,11 +2608,17 @@ int nand_erase_nand(struct mtd_info *mtd
+ 
+ 		/* See if block erase succeeded */
+ 		if (status & NAND_STATUS_FAIL) {
+-			MTDDEBUG(MTD_DEBUG_LEVEL0, "%s: Failed erase, "
+-					"page 0x%08x\n", __func__, page);
+ 			instr->state = MTD_ERASE_FAILED;
+ 			instr->fail_addr =
+ 				((loff_t)page << chip->page_shift);
++         #if 0
++			MTDDEBUG(MTD_DEBUG_LEVEL0, "%s: Failed erase, "
++					"page 0x%08x\n", __func__, page);
++         #else
++			printk(KERN_ERR "\n%s: Failed erase, "
++					"offset 0x%08llx\n", __func__, 
++					instr->fail_addr);
++         #endif
+ 			goto erase_exit;
+ 		}
+ 

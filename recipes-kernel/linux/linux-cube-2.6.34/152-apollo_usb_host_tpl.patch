@@ -1,0 +1,253 @@
+diff -Naurp linux-2.6.34_orig/drivers/usb/core/devices.c linux-2.6.34/drivers/usb/core/devices.c
+--- linux-2.6.34_orig/drivers/usb/core/devices.c	2010-05-17 02:47:36.000000000 +0530
++++ linux-2.6.34/drivers/usb/core/devices.c	2011-03-11 14:06:16.849131000 +0530
+@@ -138,7 +138,11 @@ struct class_info {
+ 	char *class_name;
+ };
+ 
++#ifdef  CONFIG_USB_APOLLO_TPL
++const struct class_info clas_info[] =
++#else
+ static const struct class_info clas_info[] =
++#endif
+ {					/* max. 5 chars. per name string */
+ 	{USB_CLASS_PER_INTERFACE,	">ifc"},
+ 	{USB_CLASS_AUDIO,		"audio"},
+@@ -168,7 +172,11 @@ void usbfs_conn_disc_event(void)
+ 	wake_up(&device_event.wait);
+ }
+ 
++#ifdef  CONFIG_USB_APOLLO_TPL
++const char *class_decode(const int class)
++#else
+ static const char *class_decode(const int class)
++#endif
+ {
+ 	int ix;
+ 
+diff -Naurp linux-2.6.34_orig/drivers/usb/core/driver.c linux-2.6.34/drivers/usb/core/driver.c
+--- linux-2.6.34_orig/drivers/usb/core/driver.c	2010-05-17 02:47:36.000000000 +0530
++++ linux-2.6.34/drivers/usb/core/driver.c	2011-03-11 14:06:16.859131000 +0530
+@@ -534,6 +534,11 @@ int usb_match_device(struct usb_device *
+ 	return 1;
+ }
+ 
++#ifdef  CONFIG_USB_APOLLO_TPL
++extern struct usb_device_id tpl_table [];
++extern int check_tpl (struct usb_device *dev, struct usb_host_interface *intf);
++#endif
++
+ /* returns 0 if no match, 1 if match */
+ int usb_match_one_id(struct usb_interface *interface,
+ 		     const struct usb_device_id *id)
+@@ -573,7 +578,15 @@ int usb_match_one_id(struct usb_interfac
+ 	    (id->bInterfaceProtocol != intf->desc.bInterfaceProtocol))
+ 		return 0;
+ 
+-	return 1;
++#ifdef  CONFIG_USB_APOLLO_TPL
++    if(check_tpl(dev, intf))
++        return 1;
++    else 
++        return 0;
++#else
++    return 1;
++#endif
++
+ }
+ EXPORT_SYMBOL_GPL(usb_match_one_id);
+ 
+diff -Naurp linux-2.6.34_orig/drivers/usb/core/hub.c linux-2.6.34/drivers/usb/core/hub.c
+--- linux-2.6.34_orig/drivers/usb/core/hub.c	2011-03-11 14:12:30.729885000 +0530
++++ linux-2.6.34/drivers/usb/core/hub.c	2011-03-11 14:06:16.881129000 +0530
+@@ -1752,6 +1752,137 @@ static inline void announce_device(struc
+ #endif
+ 
+ 
++#ifdef  CONFIG_USB_APOLLO_TPL
++
++extern const char *class_decode(const int class);
++
++static int usb_match_one_interface(const struct usb_interface_descriptor *desc, 
++                                   const struct usb_device_id *id)
++{
++    if ((id->match_flags & USB_DEVICE_ID_MATCH_INT_CLASS) &&
++        (id->bInterfaceClass != desc->bInterfaceClass))
++        return 0;
++    if ((id->match_flags & USB_DEVICE_ID_MATCH_INT_SUBCLASS) &&
++        (id->bInterfaceSubClass != desc->bInterfaceSubClass))
++        return 0;
++    if ((id->match_flags & USB_DEVICE_ID_MATCH_INT_PROTOCOL) &&
++        (id->bInterfaceProtocol != desc->bInterfaceProtocol))
++        return 0;
++
++    return 1;
++}
++
++static int usb_match_interface(const struct usb_interface_descriptor *desc, 
++                               const struct usb_device_id *id)
++{
++    for (; id->match_flags; id++) {
++        if (!(id->match_flags & USB_DEVICE_ID_MATCH_INT_INFO))
++            continue;
++        if (!usb_match_one_interface(desc, id))
++            continue;
++        return 1;
++    }
++    return 0;
++}
++
++const struct usb_device_id tpl_table [] = {
++    { USB_DEVICE_INFO(USB_CLASS_HUB, 0, 0), },
++    { USB_DEVICE_INFO(USB_CLASS_HUB, 0, 1), },
++    { USB_DEVICE_INFO(USB_CLASS_HUB, 0, 2), },
++
++    { USB_INTERFACE_INFO(USB_CLASS_HID, 0, 0), },
++    { USB_INTERFACE_INFO(USB_CLASS_HID, 1, 1), },
++    { USB_INTERFACE_INFO(USB_CLASS_HID, 1, 2), },
++
++    { USB_INTERFACE_INFO(USB_CLASS_MASS_STORAGE, 0x06 , 0x50), },
++    { }	/* Terminating entry */
++};
++
++/* uncomment to enable TPL debug */
++/* #define DEBUG_TPL */
++
++int check_tpl (struct usb_device *dev, struct usb_host_interface *intf)
++{
++    const struct usb_device_id *id;
++    u8 class = dev->descriptor.bDeviceClass;
++
++    #ifdef DEBUG_TPL
++    dev_err(&dev->dev, "TPL: c%x sc%x p%x\n",
++        dev->descriptor.bDeviceClass,
++        dev->descriptor.bDeviceSubClass,
++        dev->descriptor.bDeviceProtocol);
++    #endif
++
++    if(dev->descriptor.idVendor == 0x1A0A)
++        return 1;
++
++    for (id = tpl_table; id->match_flags; id++) {
++        if (!usb_match_device(dev, id))
++            continue;
++        if (id->match_flags & USB_DEVICE_ID_MATCH_INT_INFO)
++            continue;
++        return 1;
++    }
++
++    /* add other match criteria here ... */
++    if (intf == NULL) {
++        if ((dev->descriptor.bDeviceClass == 0) &&
++            (dev->descriptor.bDeviceSubClass == 0) &&
++            (dev->descriptor.bDeviceProtocol == 0)) {
++            int i, j , k;
++            for (i = 0; i < dev->descriptor.bNumConfigurations; i++) {
++
++                const struct usb_host_config *config;
++                config = dev->config + i;
++
++                for (j = 0; j < config->desc.bNumInterfaces; j++) {
++
++                    struct usb_interface_cache *intfc;
++                    struct usb_interface *interface;
++
++                    intfc = config->intf_cache[j];
++                    interface = config->interface[j];
++
++                    for (k = 0; k < intfc->num_altsetting; k++) {
++
++                        const struct usb_interface_descriptor *desc;
++                        desc = &intfc->altsetting[k].desc;
++                        #ifdef DEBUG_TPL
++                        dev_err(&dev->dev, "TPL: ic%x isc%x ip%x\n",
++                            desc->bInterfaceClass,
++                            desc->bInterfaceSubClass,
++                            desc->bInterfaceProtocol);
++                        #endif
++                        class = desc->bInterfaceClass;
++                        if(usb_match_interface(desc, tpl_table))
++                            return 1;
++                    }
++                }
++            }
++        }
++    } else {
++        const struct usb_interface_descriptor *desc;
++        desc = &intf->desc;
++        #ifdef DEBUG_TPL
++        dev_err(&dev->dev, "TPL: ic%x isc%x ip%x\n",
++            desc->bInterfaceClass,
++            desc->bInterfaceSubClass,
++            desc->bInterfaceProtocol);
++        #endif
++        class = desc->bInterfaceClass;
++        if(usb_match_interface(desc, tpl_table))
++            return 1;
++    }
++
++    /* OTG MESSAGE: report errors here, customize to match your product */
++    dev_err(&dev->dev, "class %s (v%04x p%04x) is not supported\n",
++        class_decode(class),
++        le16_to_cpu(dev->descriptor.idVendor),
++        le16_to_cpu(dev->descriptor.idProduct));
++
++    return 0;
++}
++#endif
+ 
+ /**
+  * usb_enumerate_device_otg - FIXME (usbcore-internal)
+@@ -1837,6 +1968,10 @@ static int usb_enumerate_device_otg(stru
+     }
+ fail:
+ #endif
++#ifdef  CONFIG_USB_APOLLO_TPL
++    if (!check_tpl(udev, NULL))
++        err = -ENOTSUPP;
++#endif
+     return err;
+ }
+ 
+@@ -1947,7 +2082,7 @@ int usb_new_device(struct usb_device *ud
+ 
+ 	(void) usb_create_ep_devs(&udev->dev, &udev->ep0, udev);
+ 	#ifdef CONFIG_USB_EHSET
+-	if (udev->speed == USB_SPEED_HIGH &&
++	if (/* udev->speed == USB_SPEED_HIGH && */
+ 			udev->parent == udev->bus->root_hub &&
+ 			udev->descriptor.idVendor == 0x1A0A)
+ 	{
+@@ -2007,7 +2142,7 @@ int usb_new_device(struct usb_device *ud
+ 					       "lock\n");
+ 			}
+ 		}
+-     #endif
++#endif
+ 		
+ 	}
+ 	else
+diff -Naurp linux-2.6.34_orig/drivers/usb/core/Kconfig linux-2.6.34/drivers/usb/core/Kconfig
+--- linux-2.6.34_orig/drivers/usb/core/Kconfig	2011-03-11 14:12:30.146919000 +0530
++++ linux-2.6.34/drivers/usb/core/Kconfig	2011-03-11 14:06:16.883129000 +0530
+@@ -146,6 +146,20 @@ config USB_OTG_WHITELIST
+ 	  normal Linux-USB hosts do (other than the warning), and is
+ 	  convenient for many stages of product development.
+ 
++config USB_APOLLO_TPL
++	bool "Rely on Host Targeted Peripherals List of Apollo"
++	depends on USB
++	help
++     If you say Y here, then host Target Peripheral List will be used as product
++     whitelist, so USB peripherals not listed there will be rejected during
++     enumeration.  This behavior is required by the USB specification for all
++     devices not on your product's "Targeted Peripherals List".  "Embedded
++     Hosts" are likewise allowed to support only a limited number of
++     peripherals.
++
++     [11-Mar-2011] Added support for HUB, HID and MSC class devices. Other
++     class devices are not yet supported in TPL.
++
+ config USB_OTG_BLACKLIST_HUB
+ 	bool "Disable external hubs"
+ 	depends on USB_OTG || EMBEDDED

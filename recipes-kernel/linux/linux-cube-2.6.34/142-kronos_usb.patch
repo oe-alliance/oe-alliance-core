@@ -1,0 +1,232 @@
+diff -Naur linux-2.6.34/arch/arm/mach-kronos/include/mach/pnx8492.h linux-2.6.34_usb/arch/arm/mach-kronos/include/mach/pnx8492.h
+--- linux-2.6.34/arch/arm/mach-kronos/include/mach/pnx8492.h	2010-12-22 17:10:34.177127000 +0530
++++ linux-2.6.34_usb/arch/arm/mach-kronos/include/mach/pnx8492.h	2010-12-22 16:31:38.683170000 +0530
+@@ -115,7 +115,6 @@
+ 
+ #define USB_PORT0_OFFSET			0x6C000
+ #define USB_PORT1_OFFSET			0x6D000
+-#define USB_PORT2_OFFSET			0x6E000
+ 
+ #define GPIO_PORT0_OFFSET			0x69000
+ 
+@@ -129,7 +128,6 @@
+ 
+ #define MMIO_USB_PORT0				(ARM_A9_HOST_MMIO_BASE + USB_PORT0_OFFSET)
+ #define MMIO_USB_PORT1				(ARM_A9_HOST_MMIO_BASE + USB_PORT1_OFFSET)
+-#define MMIO_USB_PORT2				(ARM_A9_HOST_MMIO_BASE + USB_PORT2_OFFSET)
+ 
+ #define MMIO_GPIO_PORT0				(ARM_A9_HOST_MMIO_BASE + GPIO_PORT0_OFFSET)
+ 
+@@ -143,7 +141,6 @@
+ 
+ #define IP9028_USB_PORT_0			MMIO_USB_PORT0
+ #define IP9028_USB_PORT_1			MMIO_USB_PORT1
+-#define IP9028_USB_PORT_2			MMIO_USB_PORT2
+ 
+ #define IPXXXX_GPIO_PORT_0			MMIO_GPIO_PORT0
+ 
+diff -Naur linux-2.6.34/arch/arm/mach-kronos/include/mach/usbudc.h linux-2.6.34_usb/arch/arm/mach-kronos/include/mach/usbudc.h
+--- linux-2.6.34/arch/arm/mach-kronos/include/mach/usbudc.h	2010-12-22 17:10:32.735278000 +0530
++++ linux-2.6.34_usb/arch/arm/mach-kronos/include/mach/usbudc.h	1970-01-01 05:30:00.000000000 +0530
+@@ -1,40 +0,0 @@
+-/*
+- * Copyright 2010 Trident Microsystems (Far East) Ltd. 
+- * All prior copyright rights in this work and the accompanying software 
+- * products transferred to Trident Microsystems (Far East) Ltd. by written 
+- * agreement.  All rights reserved.
+- */
+-/*
+- * Copyright 2006, 2007 (C) NXP BV, All Rights Reserved
+- * Author: OKC <okc.helpdesk@nxp.com>
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2 of the License, or
+- * (at your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program; if not, write to the Free Software
+- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+- */
+-
+-#ifndef __ASM_ARCH_USBUDC_H
+-#define __ASM_ARCH_USBUDC_H
+-
+-// USB_UDC_CHECK: the USB UDC driver is ported from two code bases. (a) FSL code (b) NOCONA code
+-// enable below macro for FSL port, disable below macro for NOCONA port.
+-// additionally, update the drivers/usb/gadget/Makefile accodingly.
+-
+-#ifndef CONFIG_USBCV_TEST	// NO USBCV test, perform USB UDC Normal operation.
+-#define	FSL_PORT			// use USB UDC driver ported from FSL codebase
+-//#define	NOCONA_PORT		// use USB UDC driver ported from NOCONA codebase
+-#else
+-#define	CI_PORT			// Perform USBCV tests, use USB UDC driver ported from CI13xxx_udc codebase
+-#endif
+-
+-#endif /* __ASM_ARCH_IRQS_H */
+diff -Naur linux-2.6.34/arch/arm/mach-kronos/kronos.c linux-2.6.34_usb/arch/arm/mach-kronos/kronos.c
+--- linux-2.6.34/arch/arm/mach-kronos/kronos.c	2010-12-22 17:10:32.747276000 +0530
++++ linux-2.6.34_usb/arch/arm/mach-kronos/kronos.c	2010-12-22 16:29:33.202492000 +0530
+@@ -55,7 +55,6 @@
+ #include <mach/irqs.h>
+ 
+ #include <mach/nor.h>
+-#include <mach/usbudc.h>
+ 
+ #ifdef CONFIG_APOLLO_SPLASH
+ #include <mach/splash_logo.h>
+@@ -277,21 +276,16 @@
+ 
+ #ifdef CONFIG_USB
+ 
+-/* USB_UDC_CHECK:
+-  * We have 3 USB resources in Avalon: USB0, USB1, USB2
++/*
++  * We have 2 USB resources in kronos: USB0, USB1
+   * USB0: 0xE066C000: it is USB2.0 OTG (host-device role switch)
+   * USB1: 0xE066D000: it is USB2.0 ALWAYS HOST
+-  * USB2: 0xE066E000: it is USB1.1 ALWAYS HOST (doesnot exist on avalon)
+-  *
+   */
+ static u64 ehci_dmamask = ~(u32)0;      /* The dmamask must be set for EHCI to work */
+ 
+-/****** USB0: 0xE066C000: USB OTG ******/
+-#ifndef NOCONA_PORT// ENABLE THIS, WHEN USING FSL PORT or CI PORT... DISABLE FOR NOCONA PORT...
+-//USB_UDC_CHECK use Nevis cnxt_udc0 driver for NOCONA PORT...
+ static struct resource usb0_resources[] = {
+         [0] = {
+-                .start  = IP9028_USB_PORT_0,            // 0xe066c000: USB OTG
++                .start  = IP9028_USB_PORT_0, 
+                 .end            = IP9028_USB_PORT_0 + 0xfff,
+                 .flags  = IORESOURCE_MEM,
+         },
+@@ -304,15 +298,9 @@
+ 
+ static struct platform_device usb0_device = {
+ #ifdef CONFIG_USB_GADGET_IP9028
+-	#ifdef FSL_PORT
+-            .name          = "ip9028_udc_udc",		/* device mode, MUST to have 14-character name */
+-            //.name          = "ip9028_otg_usb",	/*  OTG dev. drv. */
+-	#endif
+-	#ifdef CI_PORT
+-            .name          = "ci13xxx_udc_udc",		/* OTG dev. drv. */
+-	#endif
++            .name          = "ip9028_udc_udc", /* device mode, MUST to have 14-character name */
+ #else
+-            .name          = "usb-ip9028",    /* Host only dev. drv. */
++            .name          = "usb-ip9028",     /* Host only dev. drv. */
+ #endif
+                 .id                     = 0,
+                 .dev                    = {
+@@ -322,12 +310,10 @@
+         .num_resources  = ARRAY_SIZE(usb0_resources),
+         .resource       = usb0_resources,
+ };
+-#endif
+ 
+-/****** USB1: 0xE066D000: USB2.0 ALWAYS HOST ******/
+ static struct resource usb1_resources[] = {
+         [0] = {
+-                .start  = IP9028_USB_PORT_1,            // 0xe066d000: USB2.0 Always Host
++                .start  = IP9028_USB_PORT_1,
+                 .end            = IP9028_USB_PORT_1 + 0xfff,
+                 .flags  = IORESOURCE_MEM,
+         },
+@@ -339,7 +325,7 @@
+ };
+ 
+ static struct platform_device usb1_device = {
+-                .name                   = "usb-ip9028",                 /* Host only dev. drv. */
++                .name                   = "usb-ip9028",
+                 .id                     = 1,
+                 .dev                    = {
+                 .dma_mask               = &ehci_dmamask,
+@@ -349,30 +335,6 @@
+         .resource       = usb1_resources,
+ };
+ 
+-/****** USB2: 0xE066E000: USB1.1 ALWAYS HOST ******/
+-static struct resource usb2_resources[] = {
+-        [0] = {
+-                .start  = IP9028_USB_PORT_2,            // 0xe066e000: USB1.1 Always Host
+-                .end            = IP9028_USB_PORT_2 + 0xfff,
+-                .flags  = IORESOURCE_MEM,
+-        },
+-        [1] = {
+-                .start  = IRQ_USB_2,
+-                .end            = IRQ_USB_2,
+-                .flags  = IORESOURCE_IRQ,
+-        },
+-};
+-
+-static struct platform_device usb2_device = {
+-                .name                   = "usb-ip9028",	// "ohci_hcd",                   /* Host only dev. drv. */
+-                .id                     = 2,		// 0,
+-                .dev                    = {
+-                .dma_mask               = &ehci_dmamask,
+-                .coherent_dma_mask      = 0xffffffff,
+-        },
+-        .num_resources  = ARRAY_SIZE(usb2_resources),
+-        .resource       = usb2_resources,
+-};
+ #endif /* CONFIG_USB */
+ 
+ /* *************************************************************** */
+@@ -391,11 +353,8 @@
+ 	&uart3_device,
+ #endif
+ #ifdef CONFIG_USB
+-	#ifndef NOCONA_PORT
+-	&usb0_device,	// ENABLE THIS, WHEN USING FSL PORT... DISABLE FOR NOCONA PORT...
+-	#endif
++	&usb0_device,
+ 	&usb1_device,
+-	&usb2_device,
+ #endif
+ };
+ 
+diff -Naur linux-2.6.34/drivers/usb/host/ehci-ip9028.c linux-2.6.34_usb/drivers/usb/host/ehci-ip9028.c
+--- linux-2.6.34/drivers/usb/host/ehci-ip9028.c	2010-12-22 17:10:33.657194000 +0530
++++ linux-2.6.34_usb/drivers/usb/host/ehci-ip9028.c	2010-12-22 16:58:48.387301000 +0530
+@@ -223,9 +223,11 @@
+ 	   case IP9028_USB_PORT_1:
+ 			usb_ahb_clockreg = (unsigned long)PNX8XXX_CLK_USB_AHB_CTL_1;
+ 			break;
++#if defined(CONFIG_ARCH_APOLLO)
+ 	   case IP9028_USB_PORT_2:
+ 			usb_ahb_clockreg = (unsigned long)PNX8XXX_CLK_USB_AHB_CTL_2;
+ 			break;
++#endif
+ 		default:
+ 			return;
+ 	}
+@@ -256,9 +258,11 @@
+ 	   case IP9028_USB_PORT_1:
+ 			usb_ahb_clockreg = (unsigned long)PNX8XXX_CLK_USB_AHB_CTL_1;
+ 			break;
++#if defined(CONFIG_ARCH_APOLLO)
+ 	   case IP9028_USB_PORT_2:
+ 			usb_ahb_clockreg = (unsigned long)PNX8XXX_CLK_USB_AHB_CTL_2;
+ 			break;
++#endif
+ 		default:
+ 			return -1;
+ 	}
+@@ -285,9 +289,11 @@
+ 	   case IP9028_USB_PORT_1:
+ 			usb_ahb_clockreg = (unsigned long)PNX8XXX_CLK_USB_AHB_CTL_1;
+ 			break;
++#if defined(CONFIG_ARCH_APOLLO)
+ 	   case IP9028_USB_PORT_2:
+ 			usb_ahb_clockreg = (unsigned long)PNX8XXX_CLK_USB_AHB_CTL_2;
+ 			break;
++#endif
+ 		default:
+ 			return -1;
+ 	}
+ 

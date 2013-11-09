@@ -1,0 +1,41 @@
+it913x: switch off PID filter by default
+
+PID filter can cause troubles, as reported by a few users, so switch it off
+by default as we do not need it anyway.
+
+From: Gianluca Gennari <gennarone@gmail.com>
+---
+ drivers/media/usb/dvb-usb-v2/it913x.c |   10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/drivers/media/usb/dvb-usb-v2/it913x.c b/drivers/media/usb/dvb-usb-v2/it913x.c
+index 4720428..c8dc9c3 100644
+--- a/drivers/media/usb/dvb-usb-v2/it913x.c
++++ b/drivers/media/usb/dvb-usb-v2/it913x.c
+@@ -43,6 +43,10 @@ static int dvb_usb_it913x_debug;
+ module_param_named(debug, dvb_usb_it913x_debug, int, 0644);
+ MODULE_PARM_DESC(debug, "set debugging level (1=info (or-able)).");
+ 
++static int disable_pid_filter = 1;
++module_param_named(pid, disable_pid_filter, int, 0644);
++MODULE_PARM_DESC(pid, "set 0=on default 1=off");
++
+ static int dvb_usb_it913x_firmware;
+ module_param_named(firmware, dvb_usb_it913x_firmware, int, 0644);
+ MODULE_PARM_DESC(firmware, "set firmware 0=auto"\
+@@ -399,6 +403,12 @@ static int it913x_get_stream_config(struct dvb_frontend *fe, u8 *ts_type,
+ 		struct usb_data_stream_properties *stream)
+ {
+ 	struct dvb_usb_adapter *adap = fe_to_adap(fe);
++
++	if (disable_pid_filter == 1) {
++		/* module param: disable pid filtering */
++		adap->pid_filtering = 0;
++	}
++
+ 	if (adap->pid_filtering)
+ 		stream->u.bulk.buffersize = TS_BUFFER_SIZE_PID;
+ 	else
+-- 
+1.7.9.5
+

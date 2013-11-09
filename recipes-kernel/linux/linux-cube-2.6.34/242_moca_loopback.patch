@@ -1,0 +1,232 @@
+diff -Naurp linux-2.6.34.orig/drivers/net/LIPP_6300ETH/src/gmac_drv.c linux-2.6.34/drivers/net/LIPP_6300ETH/src/gmac_drv.c
+--- linux-2.6.34.orig/drivers/net/LIPP_6300ETH/src/gmac_drv.c	2012-12-12 18:23:14.880076000 +0530
++++ linux-2.6.34/drivers/net/LIPP_6300ETH/src/gmac_drv.c	2012-12-12 18:38:04.731989000 +0530
+@@ -202,6 +202,9 @@ static __s32 disable_tx_flow_control( st
+ /* Manipulate ARP & UDP data to run the UDP client/server application  in loopback mode */
+ static void man_arp_udp_data(struct sk_buff * skb,__u32 len );
+ #endif /* __LIPP_6300ETH_DEBUG__ */
++#ifdef CONFIG_ENABLE_MOCA
++static unsigned int man_moca_cert_arp_udp_data(struct sk_buff * skb, __u32 framelen , struct net_device *dev);
++#endif
+ 
+ #ifdef CONFIG_PM
+ /* Power Management functions */
+@@ -2101,6 +2104,17 @@ static __s32 lipp_6300Eth_hard_start_xmi
+                 man_arp_udp_data(skb,skb->len);
+             }
+     #endif
++#ifdef CONFIG_ENABLE_MOCA
++    if(priv->enable_moca_cert_loopback == 1U)
++    {
++       if(man_moca_cert_arp_udp_data(skb,skb->len,dev))
++	{
++		;// the packet should be dropped here and not transmitted
++		;// skip code related to transmitting packet
++	}
++    }
++#endif
++
+ 
+     /* Check if the own bit is cleared for the current transmit index.
+         ** Transmit index loops back after reaching the max descriptor length
+@@ -2680,12 +2694,24 @@ static __s32 lipp_6300Eth_do_ioctl(struc
+ 
+                 if( (drvConfig.enableMacLoopback > 1U) ||
+                     (drvConfig.enablePhyLoopback > 1U) ||
++#ifdef CONFIG_ENABLE_MOCA
++                    (drvConfig.enableMocaCertLoopBack > 1U) ||
++#endif
+                     (drvConfig.enableAutoNeg > 1U) ||
+                     (drvConfig.enableFullduplex > 1U ) ||
+                     ( (drvConfig.speed != LX_SPEED_10) &&
+-                      (drvConfig.speed != LX_SPEED_100)) ||
++                     (drvConfig.speed != LX_SPEED_100) && 
++                     (drvConfig.speed != LX_SPEED_1000)) ||
+                     ((drvConfig.enableMacLoopback == 1U) &&
+-                     (drvConfig.enablePhyLoopback == 1U)))
++                     (drvConfig.enablePhyLoopback == 1U)) ||
++                     ((drvConfig.enableMacLoopback == 1U) 
++#ifndef CONFIG_ENABLE_MOCA
++                     ) )
++#else
++                      && (drvConfig.enableMocaCertLoopBack == 1U)) ||
++                     ((drvConfig.enableMocaCertLoopBack == 1U) &&
++                      (drvConfig.enablePhyLoopback == 1U)))
++#endif
+                 {
+                     GMAC_PRINT_ERR("Invalid configuration, check the settings");
+                     retVal = -1;
+@@ -2707,7 +2733,14 @@ static __s32 lipp_6300Eth_do_ioctl(struc
+                 }
+                 else
+                 {
+-
++#ifdef CONFIG_ENABLE_MOCA
++                    /* Enable MOCA cert TC.04 Loopback*/
++                     if(drvConfig.enableMocaCertLoopBack == 1U) {
++                       priv->enable_moca_cert_loopback = 1U;
++                     } else {
++                       priv->enable_moca_cert_loopback = 0U;
++                     }
++#endif
+                     /* Disable loopback flags in the driver */
+                     priv->enable_phy_loopback = 0U;
+                     priv->enable_mac_loopback = 0U;
+@@ -2739,12 +2772,11 @@ static __s32 lipp_6300Eth_do_ioctl(struc
+                 }
+ 
+                 /* Speed setting */
+-                if(drvConfig.speed== LX_SPEED_10)
+-                {
++                if(drvConfig.speed== LX_SPEED_10) {
+                     priv->u_speed= LX_SPEED_10;
+-                }
+-                else
+-                {
++                 } else if(drvConfig.speed== LX_SPEED_1000) {
++                       priv->u_speed= LX_SPEED_1000;
++                } else {
+                     priv->u_speed= LX_SPEED_100;
+                 }
+ 
+@@ -3448,7 +3480,13 @@ static __s32 handle_receive_packets( str
+ 
+             skb->len = frameSize;
+             skb->dev = dev ;
++#ifdef CONFIG_ENABLE_MOCA
++            if(priv->enable_moca_cert_loopback == 0U) {
++#else 
++	    {
++#endif
+             skb->protocol = eth_type_trans(skb,dev) ;
++ 	    }
+ 
+             if(skb->pkt_type == PACKET_MULTICAST)
+             {
+@@ -3478,6 +3516,10 @@ static __s32 handle_receive_packets( str
+ 
+             }
+ 
++#ifdef CONFIG_ENABLE_MOCA
++            if(priv->enable_moca_cert_loopback == 0) {
++#endif
++
+ #ifdef CONFIG_ETH_LIPP_6300ETH_NAPI
+             /* Submit the packet to the kernel */
+             ret_val = netif_receive_skb(skb);
+@@ -3495,6 +3537,19 @@ static __s32 handle_receive_packets( str
+             priv->counters.ullRxPackets++;
+             priv->stats.rx_bytes += frameSize;
+ #endif  /* #ifdef CONFIG_ETH_LIPP_6300ETH_NAPI */
++#ifdef CONFIG_ENABLE_MOCA
++            } else {
++                        /* loop it back */
++                          lipp_6300Eth_hard_start_xmit(skb,dev);
++                        npackets++;
++                        (*pBudget)--;
++                        dev->last_rx = jiffies;
++                        priv->stats.rx_packets++ ;
++                        priv->counters.ullRxPackets++;
++                        priv->stats.rx_bytes += frameSize;
++ 
++            }
++#endif
+ 
+             /*
+             * Now packet is submitted, just allocate a new SKB with maximum frame size and update
+@@ -3581,7 +3636,7 @@ _err_handle_receive_packets :
+ }
+ 
+ 
+-#ifdef __LIPP_6300ETH_DEBUG__
++//#ifdef __LIPP_6300ETH_DEBUG__
+ /* Manipulate ARP & UDP data to run the UDP client/server application */
+ static void man_arp_udp_data(struct sk_buff * skb, __u32 framelen )
+ {
+@@ -3652,8 +3707,52 @@ static void man_arp_udp_data(struct sk_b
+     }
+ 
+ }
++#ifdef CONFIG_ENABLE_MOCA
++/*
++ * Perform MAC address rewrites as needed.
++ *
++ * Return 0 if packet should be transmitted
++ * Return 1 if packet should be dropped
++*/
++static unsigned int man_moca_cert_arp_udp_data(struct sk_buff * skb, __u32 framelen,struct net_device * dev)
++{
++    __u8 *data = skb->data;
++    __u8 tgtmac[6];
++
++       if(data[0] & 0x01) /* check for multicast/broadcast */
++       {
++		if((data[0] == 0x01) && (data[1] == 0x00) && (data[2] == 0x5e) && (data[3] == 0x11) && (data[4] == 0x22) )
++		{
++			data[5] ^= 0x1;
++               		memcpy(data+6,dev->dev_addr,6);
++       		}
++#if 0
++		else if((data[0] == 0xFF) && (data[1] == 0xFF) && (data[2] == 0xFF) && (data[3] == 0xFF) && (data[4] == 0xFF) && (data[5] == 0xFF))
++		{
++		
++               		memcpy(data,dev->dev_addr,6);
++               		//memcpy(data+6,dev->dev_addr,6);
++		}
++#endif
++		else
++		{
++			return 1;
++		}
++       }
++       else
++       {
++               /* Swap the MAC addresses as well */
++               memcpy(tgtmac,data,6);
++               memcpy(data,data+6,6);
++               memcpy(data+6,tgtmac,6);
++       }
++
++	return 0;
++}
++#endif
++ 
+ 
+-#endif /* __LIPP_6300ETH_LOOPBACK__ */
++//#endif /* __LIPP_6300ETH_LOOPBACK__ */
+ 
+ 
+ /*--------------------------------------------------------------------------*/
+diff -Naurp linux-2.6.34.orig/drivers/net/LIPP_6300ETH/src/gmac_drv.h linux-2.6.34/drivers/net/LIPP_6300ETH/src/gmac_drv.h
+--- linux-2.6.34.orig/drivers/net/LIPP_6300ETH/src/gmac_drv.h	2012-12-12 18:23:14.863072000 +0530
++++ linux-2.6.34/drivers/net/LIPP_6300ETH/src/gmac_drv.h	2012-12-12 18:38:12.789466000 +0530
+@@ -670,10 +670,13 @@ typedef struct lipp_6300Eth_PRIV
+     lipp_6300Eth_Napi_t napiInfo;
+     __u32 autoneg_adv; /* Current fields advertized during autonegotiation */
+ 
+-    #ifdef __LIPP_6300ETH_DEBUG__
++//    #ifdef __LIPP_6300ETH_DEBUG__
+     __u32 enable_mac_loopback;
+     __u32 enable_phy_loopback;
+-    #endif
++#ifdef CONFIG_ENABLE_MOCA
++    __u32 enable_moca_cert_loopback;
++#endif
++//    #endif
+ 
+     __u32 enable_jumbo;
+     #ifdef  CONTROL_INTR_FREQ
+diff -Naurp linux-2.6.34.orig/include/net/LIPP_6300ETH/gmac_ioctl.h linux-2.6.34/include/net/LIPP_6300ETH/gmac_ioctl.h
+--- linux-2.6.34.orig/include/net/LIPP_6300ETH/gmac_ioctl.h	2012-12-12 18:23:14.708070000 +0530
++++ linux-2.6.34/include/net/LIPP_6300ETH/gmac_ioctl.h	2012-12-12 18:40:19.315275000 +0530
+@@ -510,7 +510,9 @@ typedef struct gmacDrvConfig
+ 	__u32 enableAutoNeg;
+ 	__u32 enableMacLoopback;
+ 	__u32 enablePhyLoopback;
+-
++#ifdef CONFIG_ENABLE_MOCA
++        __u32 enableMocaCertLoopBack;
++#endif
+ }gmacDrvConfig_t, *pgmacDrvConfig_t;
+ 
+ 

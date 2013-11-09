@@ -1,0 +1,121 @@
+diff -Naurp linux-2.6.34_Org/arch/arm/mach-krome/include/mach/pnx8492.h linux-2.6.34/arch/arm/mach-krome/include/mach/pnx8492.h
+--- linux-2.6.34_Org/arch/arm/mach-krome/include/mach/pnx8492.h	2012-01-19 14:46:37.000000000 +0800
++++ linux-2.6.34/arch/arm/mach-krome/include/mach/pnx8492.h	2012-01-19 14:48:32.000000000 +0800
+@@ -105,7 +105,27 @@
+ #define MMIO_CLOCK_BASE          (ARM_A9_HOST_MMIO_BASE + 0x6a000)
+ 
+ #define MMIO_GLB_BASE            (ARM_A9_HOST_MMIO_BASE + 0xbb000)
++
++#define  GPIO_PIN_MUX_REG_0      (MMIO_GLB_BASE + 0x100)
++#define  GPIO_PIN_MUX_REG_1      (MMIO_GLB_BASE + 0x104)
++#define  GPIO_PIN_MUX_REG_2      (MMIO_GLB_BASE + 0x108)
++#define  GPIO_PIN_MUX_REG_3      (MMIO_GLB_BASE + 0x10C)
++#define  GPIO_PIN_MUX_REG_4      (MMIO_GLB_BASE + 0x110)
++#define  GPIO_PIN_MUX_REG_5      (MMIO_GLB_BASE + 0x114)
++#define  GPIO_PIN_MUX_REG_6      (MMIO_GLB_BASE + 0x118)
++#define  GPIO_SEC_PIN_MUX_REG_0  (MMIO_GLB_BASE + 0x120)
++#define  GPIO_SEC_PIN_MUX_REG_1  (MMIO_GLB_BASE + 0x124)
++#define  GPIO_SEC_PIN_MUX_REG_2  (MMIO_GLB_BASE + 0x128)
++#define  GPIO_SEC_PIN_MUX_REG_3  (MMIO_GLB_BASE + 0x12C)
++#define  GPIO_SEC_PIN_MUX_REG_4  (MMIO_GLB_BASE + 0x130)
++#define  GPIO_SEC_PIN_MUX_REG_5  (MMIO_GLB_BASE + 0x134)
++#define  GPIO_SEC_PIN_MUX_REG_6  (MMIO_GLB_BASE + 0x138)
+ #define  ALT_PIN_MUX_REG_0       (MMIO_GLB_BASE + 0x140)
++#define  ALT_PIN_MUX_REG_1       (MMIO_GLB_BASE + 0x144)
++#define  ALT_PIN_MUX_REG_2       (MMIO_GLB_BASE + 0x148)
++#define  ALT_PIN_MUX_REG_2       (MMIO_GLB_BASE + 0x148)
++#define  PAD_CONFIGURATION_5_REG (MMIO_GLB_BASE + 0x44C)
++
+ #define  GLBREG_MISC1            (MMIO_GLB_BASE + 0x500)
+ 
+ 
+diff -Naurp linux-2.6.34_Org/arch/arm/mach-krome/nx_sdiomc_dev.c linux-2.6.34/arch/arm/mach-krome/nx_sdiomc_dev.c
+--- linux-2.6.34_Org/arch/arm/mach-krome/nx_sdiomc_dev.c	2012-01-19 14:46:37.000000000 +0800
++++ linux-2.6.34/arch/arm/mach-krome/nx_sdiomc_dev.c	2012-01-19 14:49:08.000000000 +0800
+@@ -73,17 +73,9 @@ static struct platform_device *apollo_sd
+ static void __init apollo_sdiomc_pin_mux_init(void)
+ {
+    unsigned int val;
+-
+-   /* SOCK-2852: Setting the bits[24:23] in PAD_CONFIGURATION_5 of GLOBAL_REG 
+-    * from 2b'00 to 2b'10, to increase the driver strength. */
+-   val = readl(PAD_CONFIGURATION_5_REG);
+-   val &= ~(3<<23);
+-   val |= (2<<23);
+-   writel(val, PAD_CONFIGURATION_5_REG);
+-
+    /* Setup pin-muxing for SDIO */
+    val = readl(GPIO_PIN_MUX_REG_0);
+-   val &= ~(0x1000018);    // uart2tx=gmux_003=0, uart2rx=gmux_004=0, pwm2=gmux_024=0
++   val &= ~(0x018);    // uart2tx=gmux_003=0, uart2rx=gmux_004=0
+    writel(val, GPIO_PIN_MUX_REG_0);
+ 
+    val = readl(GPIO_PIN_MUX_REG_1);
+@@ -91,39 +83,33 @@ static void __init apollo_sdiomc_pin_mux
+    writel(val, GPIO_PIN_MUX_REG_1);
+    
+    val = readl(GPIO_PIN_MUX_REG_2);
+-   val &= ~(0x00000403);   // ioa20=gmux_064=0, ioa21=gmux_065=0, gmux_074=sdled=0
++   val &= ~(0x00000003);   // ioa20=gmux_064=0, ioa21=gmux_065=0
+    writel(val, GPIO_PIN_MUX_REG_2);
+    
+-   val = readl(GPIO_PIN_MUX_REG_5);
+-   val &= ~(0x00060c00);   // ioa23=gmux_171=0, ioa22=gmux_170=0, gmux_178=scl2=0, gmux_177=sda2=0
+-   writel(val, GPIO_PIN_MUX_REG_5);
++   val = readl(GPIO_PIN_MUX_REG_6);
++   val &= ~(0x02);   // ioa24=gmux_194=0
++   writel(val, GPIO_PIN_MUX_REG_6);
+    
+    val = readl(GPIO_SEC_PIN_MUX_REG_0);// don't enable sdled, smux_024=0
+    val |= 0x18;            // sdcrdetect_00=gmux_003=1, sdcrdwp_00=gmux_004=1
+    writel(val, GPIO_SEC_PIN_MUX_REG_0);
+-   
++ 
+    val = readl(GPIO_SEC_PIN_MUX_REG_1);
+    val |= 0x80000000;      // sddata0=smux_063=1
+    writel(val, GPIO_SEC_PIN_MUX_REG_1);
+-   
++  
+    val = readl(GPIO_SEC_PIN_MUX_REG_2);
+-   val &= ~(0x400);        // smux_074=hs6err=0, 
+-   val |= 0x30003;         // sddata1=smux_064=1, sddata2=smux_065=1,
++   val |= 0x0003;         // sddata1=smux_064=1, sddata2=smux_065=1,
+    writel(val, GPIO_SEC_PIN_MUX_REG_2);
+-   
++ 
+    val = readl(GPIO_SEC_PIN_MUX_REG_5);
+-   val &= ~(0x60800);      // nand_rb3=smux_171=0, smux_178=sdcrdwp=0, smux_177=sdcrdetect=0
+    val |= 0x400;           // sddata3=smux_170=1
+    writel(val, GPIO_SEC_PIN_MUX_REG_5);
+    
+    val = readl(ALT_PIN_MUX_REG_0);
+-   val &= ~(0x08802008);   // alt13_dbgi2c=0, alt23=0, alt27_sdcmd=0, alt03_656=0
+-   val |=   0x40001020;    // alt12_uart2=1, alt05_sdio=1, alt30_sdio=1
++   val &= ~(0x08800000);   // alt23=0, alt27_sdcmd=0
++   val |=   0x40000000;    // alt30_sdio=1
+    writel(val, ALT_PIN_MUX_REG_0);
+-
+-   val = readl(ALT_PIN_MUX_REG_1);
+-   val |= 0x00040000;      // alt_reg_secdbg_override=1
+-   writel(val, ALT_PIN_MUX_REG_1);
+ }
+ 
+ static int __init apollo_sdiomc_init(void)
+diff -Naurp linux-2.6.34_Org/drivers/mmc/host/Kconfig linux-2.6.34/drivers/mmc/host/Kconfig
+--- linux-2.6.34_Org/drivers/mmc/host/Kconfig	2012-01-19 14:46:36.000000000 +0800
++++ linux-2.6.34/drivers/mmc/host/Kconfig	2012-01-19 14:49:39.000000000 +0800
+@@ -550,11 +550,11 @@ config MMC_USHC
+ 	  support MMC or SD memory cards.
+ 
+ config MMC_SDHCI_NX_SDIOMC
+-	tristate "SD/SDIO/MMC host controller support on APOLLO/KRONOS boards"
+-	depends on MMC_SDHCI && ( ARCH_APOLLO || ARCH_KRONOS )
++	tristate "SD/SDIO/MMC host controller support on APOLLO/KRONOS/KROME boards"
++	depends on MMC_SDHCI && ( ARCH_APOLLO || ARCH_KRONOS || ARCH_KROME )
+ 	default y
+ 	help
+-	    This selects the NXP SD/SDIO/MMC host controller IP_3413 found in APOLLO/KRONOS
++	    This selects the NXP SD/SDIO/MMC host controller IP_3413 found in APOLLO/KRONOS/KROME
+ 	    boards.
+ 	    If you have a controller with this interface, say Y or M here.
+ 	    If unsure, say N.

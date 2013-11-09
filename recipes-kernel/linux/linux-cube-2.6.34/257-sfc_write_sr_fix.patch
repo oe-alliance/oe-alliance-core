@@ -1,0 +1,87 @@
+diff -Naurp linux-2.6.34_Org/drivers/mtd/sfc/nx_sfc.c linux-2.6.34/drivers/mtd/sfc/nx_sfc.c
+--- linux-2.6.34_Org/drivers/mtd/sfc/nx_sfc.c	2013-02-18 16:21:44.323119000 +0530
++++ linux-2.6.34/drivers/mtd/sfc/nx_sfc.c	2013-02-18 18:51:34.052031000 +0530
+@@ -492,14 +492,22 @@ u32 nx_sfc_status2_read(void __iomem *sf
+ 
+ #endif
+ 
+-void nx_sfc_write_sr(void __iomem * sfc_regs)
++void nx_sfc_write_sr(struct nx_sfc_mtd * flash)
+ {
++   void __iomem * sfc_regs = flash->mmio_base;
++
++   /* Wait for Write In Progress bit to clear (from possible previous operation) */
++   /* Added since we can't rely on caller to have called wait_till_ready() before calling this function */
++   while (nx_sfc_read_sr(sfc_regs) & SR_WIP) ;   
+ 
+    writel(SFC_CSR_WRITE_STATUS,sfc_regs + IPBGCSFLSHNTWK_SFC_SFC_CSR_REG); 
+-   writel(0x1,sfc_regs + IPBGCSFLSHNTWK_SFC_SFC_TX_RX_DATA_CNT_REG);
++   writel((0x1 << 12),sfc_regs + IPBGCSFLSHNTWK_SFC_SFC_TX_RX_DATA_CNT_REG);
++   writel(flash->cd.command[1], sfc_regs + IPBGCSFLSHNTWK_SFC_SFC_SP_CMD_RD_WR0_DATA_REG);
+    writel(SFC_DEV_CMD_WRITE_STATUS,sfc_regs + IPBGCSFLSHNTWK_SFC_SFC_DEVICE_CMD_REG);
+    nx_sfc_wait(sfc_regs);
+-  
++
++   /* Wait for Write In Progress bit to clear for SR register write (expect 5 to 40 msec) */
++   while (nx_sfc_read_sr(sfc_regs) & SR_WIP) ;  
+    return;
+ }
+ 
+@@ -612,19 +620,6 @@ static int read_sr(struct nx_sfc_mtd *fl
+ }
+ 
+ /*
+- * Write status register 1 byte
+- * Returns negative if error occurred.
+- */
+-static int write_sr(struct nx_sfc_mtd *flash, u8 val)
+-{
+-   flash->cd.command[0] = OPCODE_WRSR;
+-   flash->cd.command[1] = val;
+-
+-   nx_sfc_write_sr(flash->mmio_base);
+-   return 0;
+-}
+-
+-/*
+  * Set write enable latch with Write Enable command.
+  * Returns negative if error occurred.
+  */
+@@ -682,6 +677,25 @@ int wait_till_ready_wr(struct nx_sfc_mtd
+ 
+    return 1;
+ }
++
++/*
++ * Write status register 1 byte
++ * Returns negative if error occurred.
++ */
++static int write_sr(struct nx_sfc_mtd *flash, u8 val)
++{
++   /* Wait until finished previous write command (if any) */
++   if (wait_till_ready(flash))
++      return 1;
++
++   flash->cd.command[0] = OPCODE_WRSR;
++   flash->cd.command[1] = val;
++
++   nx_sfc_write_sr(flash);
++   return 0;
++
++}
++
+ /*
+  * Erase the whole flash memory
+  *
+diff -Naurp linux-2.6.34_Org/drivers/mtd/sfc/nx_sfc.h linux-2.6.34/drivers/mtd/sfc/nx_sfc.h
+--- linux-2.6.34_Org/drivers/mtd/sfc/nx_sfc.h	2013-02-18 16:21:44.325109000 +0530
++++ linux-2.6.34/drivers/mtd/sfc/nx_sfc.h	2013-02-18 18:44:18.134706000 +0530
+@@ -414,7 +414,7 @@
+ #define SFC_DEV_CMD_WREN            0x060D0203
+ #define SFC_DEV_CMD_ID              0x9F0D0203
+ #define SFC_DEV_CMD_READ_STATUS     0x050D0203
+-#define SFC_DEV_CMD_WRITE_STATUS    0x070D0203
++#define SFC_DEV_CMD_WRITE_STATUS    0x010D0203 
+ 
+ struct mtd_partition;
+ 

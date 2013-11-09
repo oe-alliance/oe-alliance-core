@@ -1,0 +1,80 @@
+diff -Naurp linux-2.6.34_orig/drivers/net/LIPP_6300ETH/src/gmac_drv.c linux-2.6.34/drivers/net/LIPP_6300ETH/src/gmac_drv.c
+--- linux-2.6.34_orig/drivers/net/LIPP_6300ETH/src/gmac_drv.c	2012-11-02 16:50:11.384847000 +0530
++++ linux-2.6.34/drivers/net/LIPP_6300ETH/src/gmac_drv.c	2012-11-02 16:56:30.762596000 +0530
+@@ -2997,11 +2997,11 @@ static void lipp_6300Eth_work_reset_link
+ 
+     GMAC_PRINT_DBG("lipp_6300Eth_work_reset_link: Start\n");
+ 
+-    spin_lock_irqsave(&priv->lock,flags);
+ 
+     /* Bring down the interface */
+     down_lipp_6300Eth(dev);
+ 
++    spin_lock_irqsave(&priv->lock,flags);
+     /* Bring back the interface again */
+     gpPhyInterface[priv->hwUnitNum]->softResetFunc(priv->hwUnitNum);
+     phyInfo.clkCsrVal = priv->clk_csr_val;
+@@ -4241,6 +4241,9 @@ static __s32 lipp_6300Eth_ethtool_set_se
+     priv->u_mode = cmd->duplex ;
+     priv->u_autoneg = cmd->autoneg ;
+ 
++    /* unlock the spinlock */
++    spin_unlock( &priv->lock ) ;
++
+     /* process parameters */
+     if( !netif_running( dev ) )
+     {
+@@ -4272,8 +4275,6 @@ static __s32 lipp_6300Eth_ethtool_set_se
+ 
+     __success_ethtool_set_settings :
+ 
+-    /* unlock the spinlock */
+-    spin_unlock( &priv->lock ) ;
+ 
+     return 0 ;
+ 
+@@ -4284,9 +4285,6 @@ static __s32 lipp_6300Eth_ethtool_set_se
+     netif_carrier_on(dev);
+     netif_start_queue( dev );
+ 
+-    /* unlock the spinlock */
+-    spin_unlock( &priv->lock ) ;
+-
+     return -ENXIO ;
+ 
+ }
+@@ -4399,11 +4397,12 @@ static __s32 lipp_6300Eth_ethtool_set_pa
+         priv->u_flow_control = LX_FLOW_CONTROL_ENABLED ;
+     }
+ 
++   /* unlock the spinlock */
++   spin_unlock( &priv->lock ) ;
++
+     if (!netif_running(dev))
+     {
+         /* new settings will be used when device starts netxt time */
+-        /* unlock the spinlock */
+-        spin_unlock( &priv->lock ) ;
+         return 0;
+     }
+ 
+@@ -4423,9 +4422,6 @@ static __s32 lipp_6300Eth_ethtool_set_pa
+     netif_carrier_on(dev);
+     netif_start_queue( dev ) ;
+ 
+-    /* unlock the spinlock */
+-    spin_unlock( &priv->lock ) ;
+-
+     return 0 ;
+ 
+     _err_set_pauseparam:
+@@ -4435,9 +4431,6 @@ static __s32 lipp_6300Eth_ethtool_set_pa
+     netif_carrier_on(dev);
+     netif_start_queue( dev );
+ 
+-    /* unlock the spinlock */
+-    spin_unlock( &priv->lock ) ;
+-
+     return -ENXIO ;
+ 
+ }

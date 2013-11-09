@@ -1,0 +1,324 @@
+diff -Naurp linux-2.6.34_Org/arch/arm/mach-krome/include/mach/pnx8492.h linux-2.6.34/arch/arm/mach-krome/include/mach/pnx8492.h
+--- linux-2.6.34_Org/arch/arm/mach-krome/include/mach/pnx8492.h	2012-06-21 15:31:53.655426000 +0530
++++ linux-2.6.34/arch/arm/mach-krome/include/mach/pnx8492.h	2012-06-21 17:40:18.338099000 +0530
+@@ -121,6 +121,7 @@
+ #define  PAD_CONFIGURATION_5_REG (MMIO_GLB_BASE + 0x44C)
+ 
+ #define  GLBREG_MISC1            (MMIO_GLB_BASE + 0x500)
++#define  GLOBALREG_MODULE_ID_REG (MMIO_GLB_BASE + 0xffc)
+ 
+ 
+ #ifdef CONFIG_EXECUTE_ON_SIMULATOR
+@@ -226,12 +227,10 @@
+ #define PNX8XXX_CLOCK_BASE			MMIO_CLOCK_BASE	/* clock module */ 
+ 
+ /* ChipID and Revision ID defines */
+-#define CHIPID_APOLLO    0x1
+-#define CHIPID_SHINER_S  0x2
+-#define CHIPID_SHINER_IP 0x3
+-#define CHIPID_HELIOS    0x4
++#define CHIPID_KROME     0x2
+ 
+-#define CHIP_REV_M0 0x1
++#define CHIP_REV_A       0x0
++#define CHIP_REV_B       0x1
+ 
+ /*
+  * these spaces are mapped using the following base registers:
+diff -Naurp linux-2.6.34_Org/arch/arm/mach-krome/krome.c linux-2.6.34/arch/arm/mach-krome/krome.c
+--- linux-2.6.34_Org/arch/arm/mach-krome/krome.c	2012-06-21 15:31:53.691430000 +0530
++++ linux-2.6.34/arch/arm/mach-krome/krome.c	2012-06-21 17:55:44.566168000 +0530
+@@ -54,9 +54,10 @@
+ #endif
+ 
+ #define ATAGLIST_MAX_WORDS 192
+-#define SP_GP_03_OFFSET 0x281dc
+-#define CHIP_ID_SHIFT 28
+-#define CHIP_REV_SHIFT 20
++#define CHIP_ID_MASK   0xf000
++#define CHIP_ID_SHIFT  12
++#define CHIP_REV_MASK  0xf00
++#define CHIP_REV_SHIFT 8
+ 
+ void __iomem *gic_cpu_base_addr;	/* used by entry-macro.S */
+ unsigned long uKernelAtaglist[ATAGLIST_MAX_WORDS];
+@@ -353,6 +354,31 @@ static struct platform_device *platform_
+ #endif
+ };
+ 
++/* This function is to get the SoC major and minor Rev. Id's */
++static void cnxt_get_chip_rev_id(void)
++{
++    unsigned long glb_modid;
++
++    /* Init the iotable as the mapping is still not there */
++    iotable_init(apollo_io_desc, 1);
++
++    glb_modid  = readl(GLOBALREG_MODULE_ID_REG);
++    ChipID     = (glb_modid & CHIP_ID_MASK) >> CHIP_ID_SHIFT;
++    ChipRevID  = (glb_modid & CHIP_REV_MASK) >> CHIP_REV_SHIFT;
++
++    printk("ChipID=0x%lx ChipRevID=0x%lx\n", ChipID, ChipRevID);
++}
++
++unsigned int GetChipRev (void)
++{
++    return ChipRevID;
++}
++
++unsigned int GetChipID (void)
++{
++    return ChipID;
++}
++
+ #ifdef CONFIG_CACHE_L2X0
+ static int __init apollo_l2x0_init(void)
+ {
+@@ -380,46 +406,6 @@ static int __init apollo_l2x0_init(void)
+ early_initcall(apollo_l2x0_init);
+ #endif
+ 
+-#if 0
+-/* This function is used to get the chipid and chipRevId */
+-static void cnxt_get_chip_rev_id(void)
+-{
+-    volatile unsigned long *pFuse;
+-
+-    /* Init the iotable as the mapping is still not there */
+-    iotable_init(apollo_io_desc, 1);
+-
+-    /* Read the OTP register for Package ID and Rev ID */
+-    pFuse = (unsigned long *)(ARM_A9_HOST_MMIO_BASE + SP_GP_03_OFFSET);
+-
+-    /* If the Fuse is not programmed assume Shiner M0 */
+-    if(*pFuse == 0)
+-    {
+-	ChipID=CHIPID_SHINER_S;
+-	ChipRevID=CHIP_REV_M0;
+-    }
+-    else
+-    {
+-       /* ChipID is bit 28 to 31 */
+-       ChipID=(*pFuse&0xF0000000)>>CHIP_ID_SHIFT;
+-
+-       /* Chip Rev is bit 20 to 23 */
+-       ChipRevID=(*pFuse&0x00F00000)>>CHIP_REV_SHIFT;
+-    }
+-
+-    printk("ChipID=0x%lx ChipRevID=0x%lx\n",ChipID,ChipRevID);
+-}
+-#endif
+-unsigned int GetChipRev (void)
+-{
+-    return ChipRevID;
+-}
+-
+-unsigned int GetChipID (void)
+-{
+-    return ChipID;
+-}
+-
+ void __init apollo_init(void)
+ {
+ #ifdef CONFIG_KROME_SPLASH
+@@ -451,9 +437,7 @@ void __init apollo_fixup( struct machine
+            pnx8493_meminfo.nr_banks++;
+        }
+ 
+-#if 0
+    cnxt_get_chip_rev_id();
+-#endif
+    return;
+ }
+ 
+diff -Naurp linux-2.6.34_Org/arch/arm/mach-kronos/include/mach/pnx8492.h linux-2.6.34/arch/arm/mach-kronos/include/mach/pnx8492.h
+--- linux-2.6.34_Org/arch/arm/mach-kronos/include/mach/pnx8492.h	2012-06-21 15:31:53.385428000 +0530
++++ linux-2.6.34/arch/arm/mach-kronos/include/mach/pnx8492.h	2012-06-21 17:26:09.456873000 +0530
+@@ -120,6 +120,7 @@
+ #define  PAD_CONFIGURATION_5_REG (MMIO_GLB_BASE + 0x44C)
+ 
+ #define  GLBREG_MISC1            (MMIO_GLB_BASE + 0x500)
++#define  GLOBALREG_MODULE_ID_REG (MMIO_GLB_BASE + 0xffc)
+ 
+ 
+ #ifdef CONFIG_EXECUTE_ON_SIMULATOR
+@@ -225,12 +226,10 @@
+ #define PNX8XXX_CLOCK_BASE			MMIO_CLOCK_BASE	/* clock module */ 
+ 
+ /* ChipID and Revision ID defines */
+-#define CHIPID_APOLLO    0x1
+-#define CHIPID_SHINER_S  0x2
+-#define CHIPID_SHINER_IP 0x3
+-#define CHIPID_HELIOS    0x4
++#define CHIPID_KRONOS    0x1
+ 
+-#define CHIP_REV_M0 0x1
++#define CHIP_REV_A       0x0
++#define CHIP_REV_B       0x1
+ 
+ /*
+  * these spaces are mapped using the following base registers:
+diff -Naurp linux-2.6.34_Org/arch/arm/mach-kronos/kronos.c linux-2.6.34/arch/arm/mach-kronos/kronos.c
+--- linux-2.6.34_Org/arch/arm/mach-kronos/kronos.c	2012-06-21 15:31:53.442426000 +0530
++++ linux-2.6.34/arch/arm/mach-kronos/kronos.c	2012-06-21 17:54:58.838822000 +0530
+@@ -54,9 +54,10 @@
+ #endif
+ 
+ #define ATAGLIST_MAX_WORDS 192
+-#define SP_GP_03_OFFSET 0x281dc
+-#define CHIP_ID_SHIFT 28
+-#define CHIP_REV_SHIFT 20
++#define CHIP_ID_MASK   0xf000
++#define CHIP_ID_SHIFT  12
++#define CHIP_REV_MASK  0xf00
++#define CHIP_REV_SHIFT 8
+ 
+ void __iomem *gic_cpu_base_addr;	/* used by entry-macro.S */
+ unsigned long uKernelAtaglist[ATAGLIST_MAX_WORDS];
+@@ -353,93 +354,69 @@ static struct platform_device *platform_
+ #endif
+ };
+ 
++/* This function is to get the SoC major and minor Rev. Id's */
++static void cnxt_get_chip_rev_id(void)
++{
++    unsigned long glb_modid;
++
++    /* Init the iotable as the mapping is still not there */
++    iotable_init(apollo_io_desc, 1);
++
++    glb_modid  = readl(GLOBALREG_MODULE_ID_REG);
++    ChipID     = (glb_modid & CHIP_ID_MASK) >> CHIP_ID_SHIFT;
++    ChipRevID  = (glb_modid & CHIP_REV_MASK) >> CHIP_REV_SHIFT;
++
++    printk("ChipID=0x%lx ChipRevID=0x%lx\n", ChipID, ChipRevID);
++}
++
++unsigned int GetChipRev (void)
++{
++    return ChipRevID;
++}
++
++unsigned int GetChipID (void)
++{
++    return ChipID;
++}
++
+ #ifdef CONFIG_CACHE_L2X0
+ static int __init apollo_l2x0_init(void)
+ {
+-	if (machine_is_apollo()) {
+-		/*
+-		 * Data and Instruction prefetch,
+-		 * 128KB (16KB/way),
+-		 * 8-way associativity,
+-		 * Exclusive,
+-                 * Zero enable
+-		 * Bits:  0011 0010 0000 0010 0001 0000 0000 0001
+-		 */
+-		l2x0_init(__io_address(APOLLO_CORTEX_A9_L2CACHE_BASE),
+-			  0x32021001, 0xffffffff);
+-
+-		/* Change the ACTRL register to Exlusive, Zero Enable, L1 prefetch, L2 prefetch */
+-                __asm__("mrc p15, 0, r12, c1, c0, 1\n\t"
+-                        "orr r12, r12, #0x8e\n\t"
+-                        "mcr p15, 0, r12, c1, c0, 1"
+-                : : : "r12","cc", "memory");
+-	}
+-    else if (machine_is_kronos()) {
++   if (machine_is_kronos()) {
+       /*
+        * Data and Instruction prefetch disable for Kronos A0,
+        * 128KB (16KB/way),
+        * 8-way associativity,
+        * Exclusive,
+        * Zero enable
+-       * Bits:  0000 0010 0000 0010 0001 0000 0000 0001
+        */
+-      /* TODO:: Based on the chip rev. ID I/D prefetch to be enabled/disabled */
+-      printk(KERN_INFO "Initalizing PL310 with I/D prefetch disable\n");
+-      l2x0_init(__io_address(APOLLO_CORTEX_A9_L2CACHE_BASE),
+-           0x02021001, 0xffffffff);
+-
+-      /* Change the ACTRL register to Exlusive, Zero Enable, L1 prefetch, L2 prefetch */
++      if ( GetChipRev() == CHIP_REV_A){
++         printk(KERN_INFO "Initalizing PL310 with I/D prefetch disable\n");
++         l2x0_init(__io_address(APOLLO_CORTEX_A9_L2CACHE_BASE),
++              0x02021001, 0xffffffff);
++         /* Change ACTRL register to Exlusive, Zero Enable, L1 prefetch */
+                 __asm__("mrc p15, 0, r12, c1, c0, 1\n\t"
+                         "orr r12, r12, #0x8c\n\t"
+                         "mcr p15, 0, r12, c1, c0, 1"
+                 : : : "r12","cc", "memory");
++      }
++      else {
++         l2x0_init(__io_address(APOLLO_CORTEX_A9_L2CACHE_BASE),
++              0x32021001, 0xffffffff);
++         /* Change ACTRL register to Exlusive, Zero Enable, L1 prefetch, L2 prefetch */
++                __asm__("mrc p15, 0, r12, c1, c0, 1\n\t"
++                        "orr r12, r12, #0x8e\n\t"
++                        "mcr p15, 0, r12, c1, c0, 1"
++                : : : "r12","cc", "memory");
++      }
++
+    }
+ 
+-	return 0;
++   return 0;
+ }
+ early_initcall(apollo_l2x0_init);
+ #endif
+ 
+-#if 0
+-/* This function is used to get the chipid and chipRevId */
+-static void cnxt_get_chip_rev_id(void)
+-{
+-    volatile unsigned long *pFuse;
+-
+-    /* Init the iotable as the mapping is still not there */
+-    iotable_init(apollo_io_desc, 1);
+-
+-    /* Read the OTP register for Package ID and Rev ID */
+-    pFuse = (unsigned long *)(ARM_A9_HOST_MMIO_BASE + SP_GP_03_OFFSET);
+-
+-    /* If the Fuse is not programmed assume Shiner M0 */
+-    if(*pFuse == 0)
+-    {
+-	ChipID=CHIPID_SHINER_S;
+-	ChipRevID=CHIP_REV_M0;
+-    }
+-    else
+-    {
+-       /* ChipID is bit 28 to 31 */
+-       ChipID=(*pFuse&0xF0000000)>>CHIP_ID_SHIFT;
+-
+-       /* Chip Rev is bit 20 to 23 */
+-       ChipRevID=(*pFuse&0x00F00000)>>CHIP_REV_SHIFT;
+-    }
+-
+-    printk("ChipID=0x%lx ChipRevID=0x%lx\n",ChipID,ChipRevID);
+-}
+-#endif
+-unsigned int GetChipRev (void)
+-{
+-    return ChipRevID;
+-}
+-
+-unsigned int GetChipID (void)
+-{
+-    return ChipID;
+-}
+-
+ void __init apollo_init(void)
+ {
+ #ifdef CONFIG_KRONOS_SPLASH 
+@@ -471,9 +448,7 @@ void __init apollo_fixup( struct machine
+            pnx8493_meminfo.nr_banks++;
+        }
+ 
+-#if 0
+    cnxt_get_chip_rev_id();
+-#endif
+    return;
+ }
+ 

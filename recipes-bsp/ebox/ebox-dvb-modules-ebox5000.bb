@@ -3,7 +3,7 @@ SECTION = "base"
 PRIORITY = "required"
 LICENSE = "CLOSED"
 
-SRCDATE = "20130402"
+SRCDATE = "20130830"
 KV = "2.6.18-7.4-ebox5000"
 PV = "${KV}+${SRCDATE}"
 PR = "r2"
@@ -33,5 +33,5 @@ do_install() {
 
 FILES_${PN} += "${sysconfdir}/modules-load.d/_${MACHINE}.conf"
 
-SRC_URI[md5sum] = "208ebe97011b2f82be8bd3fa06ca9f71"
-SRC_URI[sha256sum] = "c45081f9ee210dbf642ab8f21df3d65503164f116961303536f7d08676300dfd"
+SRC_URI[md5sum] = "bb63feb2fca99c56aef02a7abef20049"
+SRC_URI[sha256sum] = "37efa199975cca0efcfab4baadbfb74a468e09564b8342af6c07081687d03624"

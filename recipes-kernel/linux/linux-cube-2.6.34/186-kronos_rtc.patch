@@ -1,0 +1,16 @@
+diff -Naur linux-2.6.34/drivers/rtc/Kconfig linux-2.6.34_rtc/drivers/rtc/Kconfig
+--- linux-2.6.34/drivers/rtc/Kconfig	2011-10-18 12:15:02.703706000 +0530
++++ linux-2.6.34_rtc/drivers/rtc/Kconfig	2011-10-18 12:16:52.700797000 +0530
+@@ -412,10 +412,10 @@
+ 
+ config RTC_DRV_APOLLO
+ 	tristate "Apollo RTC"
+-	depends on ARCH_APOLLO
++	depends on ARCH_APOLLO || ARCH_KRONOS || ARCH_KROME
+ 	help
+ 	  If you say Y here you will get support for the RTC found on
+-	  Apollo systems.
++	  Apollo/Kronos/Krome systems.
+ 
+ # this 'CMOS' RTC driver is arch dependent because <asm-generic/rtc.h>
+ # requires <asm/mc146818rtc.h> defining CMOS_READ/CMOS_WRITE, and a

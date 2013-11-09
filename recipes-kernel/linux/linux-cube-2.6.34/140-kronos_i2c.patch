@@ -1,0 +1,131 @@
+diff -Naur linux-2.6.34/arch/arm/mach-kronos/include/mach/pnx8492.h linux-2.6.34_i2c/arch/arm/mach-kronos/include/mach/pnx8492.h
+--- linux-2.6.34/arch/arm/mach-kronos/include/mach/pnx8492.h	2010-12-20 18:07:54.127545000 +0530
++++ linux-2.6.34_i2c/arch/arm/mach-kronos/include/mach/pnx8492.h	2010-12-15 16:17:27.939534000 +0530
+@@ -76,6 +76,19 @@
+ #define MMIO_SATA_BASE           (ARM_A9_HOST_MMIO_BASE + 0x38000)
+ 
+ #define MMIO_RGU_BASE            (ARM_A9_HOST_MMIO_BASE + 0xaf000)
++#define  RST_GRESET0_REG         (MMIO_RGU_BASE + 0x0C)
++#define   RST_GRESET0_IIC1       (1<<14)
++#define   RST_GRESET0_IIC2       (1<<15)
++#define   RST_GRESET0_IIC3       (1<<16)
++#define  RST_GRESET1_REG         (MMIO_RGU_BASE + 0x10)
++#define   RST_GRESET1_IIC0       (1<<14)
++#define  RST_GRESET2_REG         (MMIO_RGU_BASE + 0x14)
++#define   RST_GRESET2_IIC4       (1<<20)
++#define  RST_LOCKCMD_REG         (MMIO_RGU_BASE + 0x28)
++#define  RST_LOCKSTAT_REG        (MMIO_RGU_BASE + 0x2C)
++#define   RST_LOCKSTAT_LOCK      (1 << 1)     /* 0 to unlock */
++
++
+ #define  RST_CONFIG_REG          (MMIO_RGU_BASE + 0x30)
+ #define   PCI_HOST_MODE_ENABLED  (((readl(RST_CONFIG_REG)&(1<<23)) &&   \
+                                    !(readl(RST_CONFIG_REG)&(1<<16)))?   \
+diff -Naur linux-2.6.34/drivers/i2c/algos/i2c_phlm/i2c_phlm_cfg.c linux-2.6.34_i2c/drivers/i2c/algos/i2c_phlm/i2c_phlm_cfg.c
+--- linux-2.6.34/drivers/i2c/algos/i2c_phlm/i2c_phlm_cfg.c	2010-12-20 18:07:52.154710000 +0530
++++ linux-2.6.34_i2c/drivers/i2c/algos/i2c_phlm/i2c_phlm_cfg.c	2010-12-15 15:19:43.212548000 +0530
+@@ -32,7 +32,7 @@
+ #if (TMFL_PNX_ID == 8550 )
+     #include <asm/mach-pnx8550/int.h>
+ #elif (TMFL_PNX_ID == 85500)
+-    #if defined (CONFIG_ARCH_APOLLO)
++    #if (defined (CONFIG_ARCH_APOLLO) || defined (CONFIG_ARCH_KRONOS))
+         #include <linux/irq.h>
+     #else
+         #include <asm/mach-pnx85500/irq.h>
+@@ -84,6 +84,9 @@
+ #if defined CONFIG_ARCH_APOLLO
+     unsigned long i2c_phlm_cfg_intpins[TMHW_I2C_UNIT_MAX] =
+     { 55, 56, 57 ,149};
++#elif defined CONFIG_ARCH_KRONOS
++    unsigned long i2c_phlm_cfg_intpins[TMHW_I2C_UNIT_MAX] =
++    { 55, 56, 57};
+ #else
+     /* Interrupt lines on the board pnx85500 for i2c units 1,2,3,4...*/
+     unsigned long i2c_phlm_cfg_intpins[TMHW_I2C_UNIT_MAX] =
+diff -Naur linux-2.6.34/drivers/i2c/algos/i2c_phlm/Makefile linux-2.6.34_i2c/drivers/i2c/algos/i2c_phlm/Makefile
+--- linux-2.6.34/drivers/i2c/algos/i2c_phlm/Makefile	2010-12-20 18:07:52.161712000 +0530
++++ linux-2.6.34_i2c/drivers/i2c/algos/i2c_phlm/Makefile	2010-12-15 15:22:12.592481000 +0530
+@@ -15,6 +15,7 @@
+ nx_i2c_flags-$(CONFIG_SOC_PNX8543) := -DTMFL_PNX_ID=8543 -DMINUS_SPEED_PATCH
+ nx_i2c_flags-$(CONFIG_SOC_PNX85500) := -DTMFL_PNX_ID=85500 -DMINUS_SPEED_PATCH
+ nx_i2c_flags-$(CONFIG_ARCH_APOLLO) := -DTMFL_PNX_ID=85500 -DMINUS_SPEED_PATCH
++nx_i2c_flags-$(CONFIG_ARCH_KRONOS) := -DTMFL_PNX_ID=85500 -DMINUS_SPEED_PATCH
+ 
+ EXTRA_CFLAGS-$(CONFIG_I2C_ALGO3203) := $(HWAPI_FLAGS-y) -DTMFL_CPU_IS_MIPS=1 \
+ 			$(nx_i2c_flags-y) -DTMHWI2C_BSL_INDEPENDANT -DTMFL_OS_IS_HPUNIX=0 \
+diff -Naur linux-2.6.34/drivers/i2c/algos/i2c_phlm/tmhwI2c/cfg/tmhwI2c_DvpNoBslCfg.c linux-2.6.34_i2c/drivers/i2c/algos/i2c_phlm/tmhwI2c/cfg/tmhwI2c_DvpNoBslCfg.c
+--- linux-2.6.34/drivers/i2c/algos/i2c_phlm/tmhwI2c/cfg/tmhwI2c_DvpNoBslCfg.c	2010-12-20 18:07:52.164710000 +0530
++++ linux-2.6.34_i2c/drivers/i2c/algos/i2c_phlm/tmhwI2c/cfg/tmhwI2c_DvpNoBslCfg.c	2010-12-15 15:30:45.641248000 +0530
+@@ -239,6 +239,32 @@
+ #define TMHW_I2C_DMA { True, True, True, False}
+ #endif
+ 
++#elif defined CONFIG_ARCH_KRONOS
++
++/* kronos */
++#undef TMHW_I2C_UNIT_MAX
++#define TMHW_I2C_UNIT_MAX 3
++
++#ifndef TMHW_I2C_PCFKHZ
++#define TMHW_I2C_PCFKHZ {24000, 24000, 24000}
++#endif
++#ifndef TMHW_I2C_HS
++#define TMHW_I2C_HS {False, False, False}
++#endif
++#ifndef TMHW_I2C_HSMCODE
++#define TMHW_I2C_HSMCODE {0x08,0x09, 0x0A} 
++#endif
++#ifndef TMHW_I2C_MAXFSSPEEDKHZ
++#define TMHW_I2C_MAXFSSPEEDKHZ {TMHW_I2C_MAX_FS_SPEED, TMHW_I2C_MAX_FS_SPEED, TMHW_I2C_MAX_FS_SPEED}
++#endif
++
++#ifndef TMHW_I2C_MAXHSSPEEDKHZ
++#define TMHW_I2C_MAXHSSPEEDKHZ {TMHW_I2C_MAX_HS_SPEED, TMHW_I2C_MAX_HS_SPEED, TMHW_I2C_MAX_HS_SPEED}
++#endif
++#ifndef TMHW_I2C_DMA
++#define TMHW_I2C_DMA { True, True, True}
++#endif
++
+ #else
+ 
+ /* PNX85500 */
+@@ -265,7 +291,7 @@
+ #define TMHW_I2C_DMA { True, True, True, True}
+ #endif
+ 
+-#endif /* CONFIG_ARCH_APOLLO */
++#endif 
+ 
+ #elif (TMFL_PNX_ID == 8493)
+ 
+@@ -353,6 +379,14 @@
+           TMHW_I2C_CFG_REG_START + 0x0C8000, // I2c unit 3
+     };
+ 
++#elif defined CONFIG_ARCH_KRONOS
++UInt32 tmhwI2c_CfgPhyAddr[TMHW_I2C_CFG_UNIT_COUNT] =
++    {
++          TMHW_I2C_CFG_REG_START + 0x08D000, // I2c unit 0
++          TMHW_I2C_CFG_REG_START + 0x08E000, // I2c unit 1
++          TMHW_I2C_CFG_REG_START + 0x08F000, // I2c unit 2
++    };
++
+ #else
+ /* The rigister offset addresses in PNX */
+ UInt32 tmhwI2c_CfgPhyAddr[TMHW_I2C_CFG_UNIT_COUNT] =
+diff -Naur linux-2.6.34/drivers/i2c/algos/i2c_phlm/tmhwI2c/inc/tmhwI2c_Cfg.h linux-2.6.34_i2c/drivers/i2c/algos/i2c_phlm/tmhwI2c/inc/tmhwI2c_Cfg.h
+--- linux-2.6.34/drivers/i2c/algos/i2c_phlm/tmhwI2c/inc/tmhwI2c_Cfg.h	2010-12-20 18:07:52.170707000 +0530
++++ linux-2.6.34_i2c/drivers/i2c/algos/i2c_phlm/tmhwI2c/inc/tmhwI2c_Cfg.h	2010-12-15 15:36:45.458176000 +0530
+@@ -68,6 +68,11 @@
+ #if defined CONFIG_ARCH_APOLLO
+ #define TMHW_I2C_CFG_UNIT_COUNT         4           /* Number of I2C hardware unit */
+ #define TMHW_I2C_CFG_REG_START          0xE0600000  /* I2C base register offset in system */
++
++#elif defined CONFIG_ARCH_KRONOS
++#define TMHW_I2C_CFG_UNIT_COUNT         3           /* Number of I2C hardware unit */
++#define TMHW_I2C_CFG_REG_START          0xE0600000  /* I2C base register offset in system */
++
+ #else
+ 
+ #define TMHW_I2C_CFG_UNIT_COUNT         4           /* Number of I2C hardware unit */

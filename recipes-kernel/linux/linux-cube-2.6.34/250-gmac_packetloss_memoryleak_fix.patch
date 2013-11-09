@@ -1,0 +1,155 @@
+diff -Naurp linux-2.6.34/drivers/net/LIPP_6300ETH/src/gmac_drv.c linux-2.6.34_gmac/drivers/net/LIPP_6300ETH/src/gmac_drv.c
+--- linux-2.6.34/drivers/net/LIPP_6300ETH/src/gmac_drv.c	2013-01-24 18:50:20.544402000 +0530
++++ linux-2.6.34_gmac/drivers/net/LIPP_6300ETH/src/gmac_drv.c	2013-01-24 18:14:57.191243000 +0530
+@@ -1977,7 +1977,7 @@ static __s32 lipp_6300Eth_open(struct ne
+         napi_enable(&priv->napiInfo.napi);
+ #endif
+ 
+-    //netif_carrier_on(dev);
++    netif_carrier_on(dev);
+     netif_start_queue( dev);
+ 
+     GMAC_PRINT_DBG("lipp_6300Eth_open: up_lipp_6300Eth Done\n");
+@@ -2093,7 +2093,7 @@ static __s32 lipp_6300Eth_hard_start_xmi
+     __u32 EthStatus;
+     tmhwLIPP6100Eth_Int_t IntEn;
+ 
+-//    dev->trans_start = jiffies;
++    dev->trans_start = jiffies;
+ 
+     GMAC_PRINT_INT("lipp_6300Eth_hard_start_xmit:%s\n", dev->name);
+ 
+@@ -3778,10 +3778,10 @@ static void handle_tx_packets( struct ne
+     TX_DESCR_t *		ptx_descr ;
+     struct sk_buff *	skb ;
+ #ifndef CONFIG_ETH_LIPP_6300ETH_NAPI
+-    unsigned long flags;
+     __u32 max_tx_pkts =0;
+     tmhwLIPP6100Eth_Int_t IntEn;
+ #endif
++    unsigned long flags;
+     
+ #ifndef CONFIG_ETH_LIPP_6300ETH_NAPI
+     /* Interrupts to be disabled for transmit operation */
+@@ -3798,8 +3798,7 @@ static void handle_tx_packets( struct ne
+                 */
+ 
+         /* If OWN bit is set OR no packets were submitted for transmission, break */
+-        if((priv->p_vtx_descr[priv->tx_consume_index].TDES0 & TXDESC_TDES0_OWN_VAL) ||
+-            (priv->tx_submit_count == 0)
++        if((priv->p_vtx_descr[priv->tx_consume_index].TDES0 & TXDESC_TDES0_OWN_VAL)
+ #ifdef CONFIG_ETH_LIPP_6300ETH_NAPI
+             )
+ #else            
+@@ -3812,21 +3811,18 @@ static void handle_tx_packets( struct ne
+               netif_wake_queue(dev);
+         }
+ 
++        spin_lock_irqsave(&priv->lock,flags);
+         /* Decrement number of packets transmitted */
+         if(priv->tx_submit_count > 0)
+         {
+-#ifndef CONFIG_ETH_LIPP_6300ETH_NAPI        
+-            spin_lock_irqsave(&priv->lock,flags);
+-#endif
+             priv->tx_submit_count--;
+-#ifndef CONFIG_ETH_LIPP_6300ETH_NAPI
+-            spin_unlock_irqrestore(&priv->lock,flags);
+-#endif
+         }
+         else
+         {
++            spin_unlock_irqrestore(&priv->lock,flags);
+             break;
+         }
++        spin_unlock_irqrestore(&priv->lock,flags);
+ 
+         ptx_descr = &(priv->p_vtx_descr[ priv->tx_consume_index]);
+ 
+@@ -3919,16 +3915,20 @@ static void handle_tx_packets( struct ne
+            priv->counters.ullTxCollisionError += colcnt;
+         }
+ 
+-        if(ptx_descr->TDES2 != 0)
+-        {
+-            /* Buffer 1 address pointer */
+-            dma_unmap_single( NULL,ptx_descr->TDES2,skb->len,DMA_TO_DEVICE ) ;
+-        }
+-
+         if(skb != NULL)
+         {
++            if(ptx_descr->TDES2 != 0)
++            {
++                /* Buffer 1 address pointer */
++                dma_unmap_single( NULL,ptx_descr->TDES2,skb->len,DMA_TO_DEVICE ) ;
++            }
++
+             dev_kfree_skb_any(skb);
+         }
++        else
++        {
++            printk("handle_tx_packets: skb NULL\n");
++        }
+ 
+         priv->p_vtx_skb_list[priv->tx_consume_index] = NULL ;
+ 
+diff -Naurp linux-2.6.34/drivers/net/LIPP_6300ETH/src/gmac_drv.h linux-2.6.34_gmac/drivers/net/LIPP_6300ETH/src/gmac_drv.h
+--- linux-2.6.34/drivers/net/LIPP_6300ETH/src/gmac_drv.h	2013-01-24 18:50:20.474400000 +0530
++++ linux-2.6.34_gmac/drivers/net/LIPP_6300ETH/src/gmac_drv.h	2013-01-24 18:14:57.193249000 +0530
+@@ -222,16 +222,16 @@
+ #define ENABLE_ETH_TOOL
+ 
+ /* Number of descriptors for transmit side */
+-#define HW_DESCR_QUEUE_LEN_TX  (100)
++#define HW_DESCR_QUEUE_LEN_TX  (300)
+ 
+ /* Number of descriptors for receive side */
+-#define HW_DESCR_QUEUE_LEN_RX  (100)
++#define HW_DESCR_QUEUE_LEN_RX  (300)
+ 
+ /* At a time, the txmt isr processes these many tx desc */
+-#define MAX_TX_PKTS_TO_PROCESS (100)
++#define MAX_TX_PKTS_TO_PROCESS (300)
+ 
+ /* At a time, the receive isr processes these many rx desc */
+-#define MAX_RX_PKTS_TO_PROCESS (100)
++#define MAX_RX_PKTS_TO_PROCESS (300)
+ 
+ /* NAPI driver for reception */
+ #define CONFIG_ETH_LIPP_6300ETH_NAPI
+diff -Naurp linux-2.6.34/net/ipv4/icmp.c linux-2.6.34_gmac/net/ipv4/icmp.c
+--- linux-2.6.34/net/ipv4/icmp.c	2010-05-17 02:47:36.000000000 +0530
++++ linux-2.6.34_gmac/net/ipv4/icmp.c	2013-01-24 18:48:45.214140000 +0530
+@@ -208,15 +208,32 @@ static struct sock *icmp_sk(struct net *
+ static inline struct sock *icmp_xmit_lock(struct net *net)
+ {
+ 	struct sock *sk;
++	unsigned int retrycnt = 10;
+ 
+ 	local_bh_disable();
+ 
+ 	sk = icmp_sk(net);
+ 
++/*
++In spin_trylock implementation sometime the memory tagged by ldrex is found to be cleared as a 
++result of which strex getting failed. However it has been found that no other entity have written
++to that memory. Its getting automatically cleared sometime. Below is the response from ARM.
++"Because of ARM (Cortex-A9 version less than r4p0) Speculative execution, there is a possibility of 
++failure in LDREX/STREX sequence (  even though there is no DSB in between LDREX/STREX). 
++When trying LDREX/STREX sequence in a loop, first iteration can fail (any other iteration as well), 
++and subsequent iterations may succeed.".
++
++For this reason retry is introduced
++*/
++
++retrylock:
+ 	if (unlikely(!spin_trylock(&sk->sk_lock.slock))) {
+ 		/* This can happen if the output path signals a
+ 		 * dst_link_failure() for an outgoing ICMP packet.
+ 		 */
++		retrycnt--;
++		if(retrycnt)
++			goto retrylock;
+ 		local_bh_enable();
+ 		return NULL;
+ 	}

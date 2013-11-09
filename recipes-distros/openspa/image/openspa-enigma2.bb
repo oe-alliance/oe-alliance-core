@@ -7,7 +7,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 ALLOW_EMPTY_${PN} = "1"
 
 PV = "1.0"
-PR = "r10"
+PR = "r11"
 
 inherit packagegroup
 
@@ -24,6 +24,7 @@ RRECOMMENDS_${PN} = " \
     enigma2-plugin-extensions-imdb \
     enigma2-plugin-extensions-cutlisteditor \
     enigma2-plugin-extensions-tvweb \
+    enigma2-plugin-systemplugins-videomode \
     enigma2-plugin-systemplugins-videotune \
     enigma2-plugin-systemplugins-autoresolution \
     enigma2-plugin-systemplugins-softwaremanager \

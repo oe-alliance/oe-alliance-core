@@ -1,0 +1,159 @@
+diff -Naurp linux-2.6.34/drivers/mtd/nand/nand_ids.c linux-2.6.34.new/drivers/mtd/nand/nand_ids.c
+--- linux-2.6.34/drivers/mtd/nand/nand_ids.c	2010-05-16 16:17:36.000000000 -0500
++++ linux-2.6.34.new/drivers/mtd/nand/nand_ids.c	2011-01-12 21:43:33.000000000 -0600
+@@ -75,15 +75,21 @@ struct nand_flash_dev nand_flash_ids[] =
+ 
+ 	/*512 Megabit */
+ 	{"NAND 64MiB 1,8V 8-bit",	0xA2, 0,  64, 0, LP_OPTIONS},
++	{"NAND 64MiB 1,8V 8-bit",	0xA0, 0,  64, 0, LP_OPTIONS},
+ 	{"NAND 64MiB 3,3V 8-bit",	0xF2, 0,  64, 0, LP_OPTIONS},
++	{"NAND 64MiB 3,3V 8-bit",	0xD0, 0,  64, 0, LP_OPTIONS},
+ 	{"NAND 64MiB 1,8V 16-bit",	0xB2, 0,  64, 0, LP_OPTIONS16},
++	{"NAND 64MiB 1,8V 16-bit",	0xB0, 0,  64, 0, LP_OPTIONS16},
+ 	{"NAND 64MiB 3,3V 16-bit",	0xC2, 0,  64, 0, LP_OPTIONS16},
++	{"NAND 64MiB 3,3V 16-bit",	0xC0, 0,  64, 0, LP_OPTIONS16},
+ 
+ 	/* 1 Gigabit */
+ 	{"NAND 128MiB 1,8V 8-bit",	0xA1, 0, 128, 0, LP_OPTIONS},
+ 	{"NAND 128MiB 3,3V 8-bit",	0xF1, 0, 128, 0, LP_OPTIONS},
++	{"NAND 128MiB 3,3V 8-bit",	0xD1, 0, 128, 0, LP_OPTIONS},
+ 	{"NAND 128MiB 1,8V 16-bit",	0xB1, 0, 128, 0, LP_OPTIONS16},
+ 	{"NAND 128MiB 3,3V 16-bit",	0xC1, 0, 128, 0, LP_OPTIONS16},
++	{"NAND 128MiB 1,8V 16-bit",     0xAD, 0, 128, 0, LP_OPTIONS16},
+ 
+ 	/* 2 Gigabit */
+ 	{"NAND 256MiB 1,8V 8-bit",	0xAA, 0, 256, 0, LP_OPTIONS},
+@@ -109,6 +115,36 @@ struct nand_flash_dev nand_flash_ids[] =
+ 	{"NAND 2GiB 1,8V 16-bit",	0xB5, 0, 2048, 0, LP_OPTIONS16},
+ 	{"NAND 2GiB 3,3V 16-bit",	0xC5, 0, 2048, 0, LP_OPTIONS16},
+ 
++	/* 32 Gigabit */
++	{"NAND 4GiB 1,8V 8-bit",	0xA7, 0, 4096, 0, LP_OPTIONS},
++	{"NAND 4GiB 3,3V 8-bit",	0xD7, 0, 4096, 0, LP_OPTIONS},
++	{"NAND 4GiB 1,8V 16-bit",	0xB7, 0, 4096, 0, LP_OPTIONS16},
++	{"NAND 4GiB 3,3V 16-bit",	0xC7, 0, 4096, 0, LP_OPTIONS16},
++
++	/* 64 Gigabit */
++	{"NAND 8GiB 1,8V 8-bit",	0xAE, 0, 8192, 0, LP_OPTIONS},
++	{"NAND 8GiB 3,3V 8-bit",	0xDE, 0, 8192, 0, LP_OPTIONS},
++	{"NAND 8GiB 1,8V 16-bit",	0xBE, 0, 8192, 0, LP_OPTIONS16},
++	{"NAND 8GiB 3,3V 16-bit",	0xCE, 0, 8192, 0, LP_OPTIONS16},
++
++	/* 128 Gigabit */
++	{"NAND 16GiB 1,8V 8-bit",	0x1A, 0, 16384, 0, LP_OPTIONS},
++	{"NAND 16GiB 3,3V 8-bit",	0x3A, 0, 16384, 0, LP_OPTIONS},
++	{"NAND 16GiB 1,8V 16-bit",	0x2A, 0, 16384, 0, LP_OPTIONS16},
++	{"NAND 16GiB 3,3V 16-bit",	0x4A, 0, 16384, 0, LP_OPTIONS16},
++
++	/* 256 Gigabit */
++	{"NAND 32GiB 1,8V 8-bit",	0x1C, 0, 32768, 0, LP_OPTIONS},
++	{"NAND 32GiB 3,3V 8-bit",	0x3C, 0, 32768, 0, LP_OPTIONS},
++	{"NAND 32GiB 1,8V 16-bit",	0x2C, 0, 32768, 0, LP_OPTIONS16},
++	{"NAND 32GiB 3,3V 16-bit",	0x4C, 0, 32768, 0, LP_OPTIONS16},
++
++	/* 512 Gigabit */
++	{"NAND 64GiB 1,8V 8-bit",	0x1E, 0, 65536, 0, LP_OPTIONS},
++	{"NAND 64GiB 3,3V 8-bit",	0x3E, 0, 65536, 0, LP_OPTIONS},
++	{"NAND 64GiB 1,8V 16-bit",	0x2E, 0, 65536, 0, LP_OPTIONS16},
++	{"NAND 64GiB 3,3V 16-bit",	0x4E, 0, 65536, 0, LP_OPTIONS16},
++
+ 	/*
+ 	 * Renesas AND 1 Gigabit. Those chips do not support extended id and
+ 	 * have a strange page/block layout !  The chosen minimum erasesize is
+diff -Naurp linux-2.6.34/drivers/mtd/sfc/nx_sfc.c linux-2.6.34.new/drivers/mtd/sfc/nx_sfc.c
+--- linux-2.6.34/drivers/mtd/sfc/nx_sfc.c	2011-01-12 22:25:37.000000000 -0600
++++ linux-2.6.34.new/drivers/mtd/sfc/nx_sfc.c	2011-01-12 22:29:25.000000000 -0600
+@@ -965,6 +965,15 @@ static struct flash_info __devinitdata s
+    { "at26df161a", 0x1f4601, 0, 64 * 1024, 32, SECT_4K, },
+    { "at26df321",  0x1f4701, 0, 64 * 1024, 64, SECT_4K, },
+ 
++   /* EON -- en25pxx */
++   { "en25p32", 0x1c2016, 0, 64 * 1024,  64,  },
++   { "en25p64", 0x1c2017, 0, 64 * 1024, 128,  },
++
++   /* Intel/Numonyx -- xxxs33b */
++   { "160s33b",  0x898911, 0, 64 * 1024,  32, },
++   { "320s33b",  0x898912, 0, 64 * 1024,  64, },
++   { "640s33b",  0x898913, 0, 64 * 1024, 128, },
++
+    /* Spansion -- single (large) sector size only, at least
+     * for the chips listed here (without boot sectors).
+     */
+@@ -973,44 +982,64 @@ static struct flash_info __devinitdata s
+    { "s25sl016a", 0x010214, 0, 64 * 1024, 32, },
+    { "s25sl032a", 0x010215, 0, 64 * 1024, 64, },
+    { "s25sl064a", 0x010216, 0, 64 * 1024, 128, },
+-        { "s25sl12800", 0x012018, 0x0300, 256 * 1024, 64, },
++   { "s25sl12800", 0x012018, 0x0300, 256 * 1024, 64, },
+    { "s25sl12801", 0x012018, 0x0301, 64 * 1024, 256, },
++   { "s25fl129p0", 0x012018, 0x4d00, 256 * 1024,  64, },
++   { "s25fl129p1", 0x012018, 0x4d01,  64 * 1024, 256, },
++   { "s25fl016k",  0xef4015,      0,  64 * 1024,  32, SECT_4K, },
++   { "s25fl064k",  0xef4017,      0,  64 * 1024, 128, SECT_4K, },
+ 
+    /* SST -- large erase sizes are "overlays", "sectors" are 4K */
+    { "sst25vf040b", 0xbf258d, 0, 64 * 1024, 8, SECT_4K, },
+    { "sst25vf080b", 0xbf258e, 0, 64 * 1024, 16, SECT_4K, },
+    { "sst25vf016b", 0xbf2541, 0, 64 * 1024, 32, SECT_4K, },
+    { "sst25vf032b", 0xbf254a, 0, 64 * 1024, 64, SECT_4K, },
++   { "sst25wf512",  0xbf2501, 0, 64 * 1024,  1, SECT_4K, },
++   { "sst25wf010",  0xbf2502, 0, 64 * 1024,  2, SECT_4K, },
++   { "sst25wf020",  0xbf2503, 0, 64 * 1024,  4, SECT_4K, },
++   { "sst25wf040",  0xbf2504, 0, 64 * 1024,  8, SECT_4K, },
+ 
+    /* ST Microelectronics -- newer production may have feature updates */
+    { "m25p05",  0x202010,  0, 32 * 1024, 2, },
+    { "m25p10",  0x202011,  0, 32 * 1024, 4, },
+    { "m25p20",  0x202012,  0, 64 * 1024, 4, },
+    { "m25p40",  0x202013,  0, 64 * 1024, 8, },
+-   { "m25p80",         0,  0, 64 * 1024, 16, },
++   { "m25p80",  0x202014,  0, 64 * 1024, 16, },
+    { "m25p16",  0x202015,  0, 64 * 1024, 32, },
+    { "m25p32",  0x202016,  0, 64 * 1024, 64, },
+    { "m25p64",  0x202017,  0, 64 * 1024, 128, },
+    { "m25p128", 0x202018, 0, 256 * 1024, 64, },
+ 
++   { "m45pe10", 0x204011,  0, 64 * 1024,  2, },
+    { "m45pe80", 0x204014,  0, 64 * 1024, 16, },
+    { "m45pe16", 0x204015,  0, 64 * 1024, 32, },
+ 
+    { "m25pe80", 0x208014,  0, 64 * 1024, 16, },
+    { "m25pe16", 0x208015,  0, 64 * 1024, 32, SECT_4K, },
+ 
+-	/* Winbond -- w25x "blocks" are 64K, "sectors" are 4KiB */
+-	{ "w25x10", 0xef3011, 0, 64 * 1024, 2, SECT_4K, },
+-	{ "w25x20", 0xef3012, 0, 64 * 1024, 4, SECT_4K, },
+-	{ "w25x40", 0xef3013, 0, 64 * 1024, 8, SECT_4K, },
+-	{ "w25x80", 0xef3014, 0, 64 * 1024, 16, SECT_4K, },
+-	{ "w25x16", 0xef3015, 0, 64 * 1024, 32, SECT_4K, },
+-	{ "w25x32", 0xef3016, 0, 64 * 1024, 64, SECT_4K, },
+-	{ "w25x64", 0xef3017, 0, 64 * 1024, 128, SECT_4K, },
+-	{ "w25x128",0xef4018, 0, 64 * 1024, 256, },
++   /* Winbond -- w25x "blocks" are 64K, "sectors" are 4KiB */
++   { "w25x10", 0xef3011, 0, 64 * 1024, 2, SECT_4K, },
++   { "w25x20", 0xef3012, 0, 64 * 1024, 4, SECT_4K, },
++   { "w25x40", 0xef3013, 0, 64 * 1024, 8, SECT_4K, },
++   { "w25x80", 0xef3014, 0, 64 * 1024, 16, SECT_4K, },
++   { "w25x16", 0xef3015, 0, 64 * 1024, 32, SECT_4K, },
++   { "w25x32", 0xef3016, 0, 64 * 1024, 64, SECT_4K, },
++   { "w25q32", 0xef4016, 0, 64 * 1024, 64, SECT_4K, },
++   { "w25x64", 0xef3017, 0, 64 * 1024, 128, SECT_4K, },
++   { "w25q64", 0xef4017, 0, 64 * 1024, 128, SECT_4K, },
++   { "w25q128",0xef4018, 0, 64 * 1024, 256, },
++
++   /* Macronix */
++   { "mx25l4005a",  0xc22013, 0, 64 * 1024, 8, SECT_4K, },
++   { "mx25l8005",   0xc22014, 0, 64 * 1024, 16, },
++   { "mx25l1605d",  0xc22015, 0, 64 * 1024, 32, },
++   { "mx25l3205d",  0xc22016, 0, 64 * 1024, 64, },
++   { "mx25l6405d",  0xc22017, 0, 64 * 1024, 128, },
++   { "mx25l12805d", 0xc22018, 0, 64 * 1024, 256, },
++   { "mx25l12855e", 0xc22618, 0, 64 * 1024, 256, },
++   { "mx25l25635e", 0xc22019, 0, 64 * 1024, 512, },
++   { "mx25l25655e", 0xc22619, 0, 64 * 1024, 512, },
+ 
+-        /* Macronix 32MB Flash */	
+-	{ "MX25L",0xc22019, 0, 64 * 1024, 512, },
+ };
+ 
+ static struct flash_info *__devinit jedec_probe(struct platform_device *spi)

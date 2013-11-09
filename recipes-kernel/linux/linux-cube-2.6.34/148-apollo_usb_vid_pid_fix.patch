@@ -1,0 +1,48 @@
+diff -Naur linux-2.6.34/drivers/usb/gadget/file_storage.c linux-2.6.34_usb_vid/drivers/usb/gadget/file_storage.c
+--- linux-2.6.34/drivers/usb/gadget/file_storage.c	2011-01-24 11:37:05.656048000 +0530
++++ linux-2.6.34_usb_vid/drivers/usb/gadget/file_storage.c	2011-01-20 18:01:39.092709000 +0530
+@@ -103,8 +103,8 @@
+  *	protocol=YYY		Default SCSI, protocol name (RBC, 8020 or
+  *					ATAPI, QIC, UFI, 8070, or SCSI;
+  *					also 1 - 6)
+- *	vendor=0xVVVV		Default 0x0525 (NetChip), USB Vendor ID
+- *	product=0xPPPP		Default 0xa4a5 (FSG), USB Product ID
++ *	vendor=0xVVVV		Default 0x6000 (TRIDENT), USB Vendor ID
++ *	product=0xPPPP		Default 0x0103 (FSG), USB Product ID
+  *	release=0xRRRR		Override the USB release number (bcdDevice)
+  *	buflen=N		Default N=16384, buffer size used (will be
+  *					rounded down to a multiple of
+diff -Naur linux-2.6.34/drivers/usb/gadget/ip9028_udc.c linux-2.6.34_usb_vid/drivers/usb/gadget/ip9028_udc.c
+--- linux-2.6.34/drivers/usb/gadget/ip9028_udc.c	2011-01-24 11:37:05.684048000 +0530
++++ linux-2.6.34_usb_vid/drivers/usb/gadget/ip9028_udc.c	2011-01-24 11:05:16.184589000 +0530
+@@ -63,7 +63,7 @@
+ unsigned int g_gadget_registered = 0;
+ 
+ #ifndef CONFIG_IP9028_OTG
+-unsigned int g_portpower_on = 0;
++unsigned int g_portpower_on = 1;
+ #endif
+ 
+ /* it is initialized in probe()  */
+@@ -249,7 +249,6 @@
+ 
+ #ifndef CONFIG_IP9028_OTG 
+         dr_otg_disable(); /*Disable all otg interrupts*/
+-        dr_set_portpower(g_portpower_on); /*value 0 , so port power off*/
+ #endif
+ 
+ 	tmp = udc->ep_qh_dma;
+diff -Naur linux-2.6.34/drivers/usb/gadget/storage_common.c linux-2.6.34_usb_vid/drivers/usb/gadget/storage_common.c
+--- linux-2.6.34/drivers/usb/gadget/storage_common.c	2011-01-24 11:37:04.685121000 +0530
++++ linux-2.6.34_usb_vid/drivers/usb/gadget/storage_common.c	2011-01-24 11:33:53.681594000 +0530
+@@ -61,8 +61,8 @@
+  *
+  * DO NOT REUSE THESE IDs with any other driver!!  Ever!!
+  * Instead:  allocate your own, using normal USB-IF procedures. */
+-#define FSG_VENDOR_ID	0x0525	/* NetChip */
+-#define FSG_PRODUCT_ID	0xa4a5	/* Linux-USB File-backed Storage Gadget */
++#define FSG_VENDOR_ID	0x6000	/* Trident */
++#define FSG_PRODUCT_ID	0x0103	/* Linux-USB File-backed Storage Gadget */
+ 
+ 
+ /*-------------------------------------------------------------------------*/

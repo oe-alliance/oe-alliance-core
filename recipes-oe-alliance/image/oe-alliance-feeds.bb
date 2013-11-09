@@ -9,13 +9,12 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "1.0"
-PR = "r34"
+PR = "r37"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 DEPENDS = "enigma2-plugin-drivers-usbserial"
 RECOMMENDS = "enigma2-plugin-extensions-et-livestream"
 
-# FAILS_TO_BUILD     enigma2-plugin-extensions-tuxterm
 
 RRECOMMENDS_${PN} = "\
     bootlogos-enigma2-meta \
@@ -32,6 +31,7 @@ RRECOMMENDS_${PN} = "\
     enigma2-plugin-drivers-usbserial \
     enigma2-plugin-extensions-ambx \
     enigma2-plugin-extensions-tuxcom \
+    enigma2-plugin-extensions-tuxterm \
     enigma2-plugin-extensions-webinterface-old \
     enigma2-plugin-security-firewall \
     enigma2-plugin-skins-pli-hd \
@@ -39,10 +39,10 @@ RRECOMMENDS_${PN} = "\
     enigma2-plugin-extensions-et-livestream \
     enigma2-plugin-extensions-mediatomb \
     enigma2-plugin-extensions-dreamplex \
-    enigma2-plugin-extensions-mediaportal \
     enigma2-plugin-extensions-iptvlistupdater \
     enigma2-plugin-extensions-et-portal \
     enigma2-plugin-codec-audio-apple-lossless-alac \
+    enigma2-plugin-extensions-moviearchiver \	
     \
     ${@base_contains("MACHINE_FEATURES", "fullgraphiclcd", "lcdpicons-enigma2-meta" , "", d)} \
     \
@@ -73,7 +73,6 @@ RRECOMMENDS_${PN} = "\
     net-snmp \
     ntfs-3g \
     ntp \
-    ofgwrite \
     openresolv \
     openssh \
     openvpn \
@@ -86,6 +85,7 @@ RRECOMMENDS_${PN} = "\
     sabnzbd \
     samba \
     smartmontools \
+    smbnetfs \	
     sshpass \
     strace \
     tcpdump \
@@ -96,4 +96,13 @@ RRECOMMENDS_${PN} = "\
     xfsprogs \
     zeroconf \
     ofgwrite \
+    gst-ffmpeg \
+    idle3-tools \	
     "
+
+RRECOMMENDS_${PN}_append_vuuno = "enigma2-plugin-extensions-hbbtv"
+RRECOMMENDS_${PN}_append_vuultimo = "enigma2-plugin-extensions-hbbtv"
+RRECOMMENDS_${PN}_append_vusolo = "enigma2-plugin-extensions-hbbtv"
+RRECOMMENDS_${PN}_append_vusolo2 = "enigma2-plugin-extensions-hbbtv"
+RRECOMMENDS_${PN}_append_vuduo = "enigma2-plugin-extensions-hbbtv"
+RRECOMMENDS_${PN}_append_vuduo2 = "enigma2-plugin-extensions-hbbtv"

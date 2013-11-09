@@ -1,0 +1,2777 @@
+diff -Naupr linux-2.6.34/arch/arm/mach-apollo/include/mach/gmac_eth_drv.h linux-2.6.34.new/arch/arm/mach-apollo/include/mach/gmac_eth_drv.h
+--- linux-2.6.34/arch/arm/mach-apollo/include/mach/gmac_eth_drv.h	2011-09-02 15:19:16.138580000 +0530
++++ linux-2.6.34.new/arch/arm/mach-apollo/include/mach/gmac_eth_drv.h	2011-09-02 15:16:12.127479000 +0530
+@@ -61,7 +61,11 @@ typedef struct gmac_platform_data
+ #define GMAC1_CTRL_GLOBAL_REG (ARM_A9_HOST_MMIO_BASE + 0xea304U)
+ 
+ #ifdef CONFIG_GMAC1_MODE_RGMII
++#ifdef CONFIG_TOMCAT_PHY
++#define GMAC1_MAX_SPEED (100U)
++#else
+ #define GMAC1_MAX_SPEED (1000U)
++#endif
+ #else
+ #define GMAC1_MAX_SPEED (100U)
+ #endif
+diff -Naupr linux-2.6.34/drivers/net/LIPP_6300ETH/comps/tmbslPhyTomcat/inc/tmbslPhyTomcat.h linux-2.6.34.new/drivers/net/LIPP_6300ETH/comps/tmbslPhyTomcat/inc/tmbslPhyTomcat.h
+--- linux-2.6.34/drivers/net/LIPP_6300ETH/comps/tmbslPhyTomcat/inc/tmbslPhyTomcat.h	1970-01-01 05:30:00.000000000 +0530
++++ linux-2.6.34.new/drivers/net/LIPP_6300ETH/comps/tmbslPhyTomcat/inc/tmbslPhyTomcat.h	2011-09-02 15:16:12.150486000 +0530
+@@ -0,0 +1,701 @@
++/*
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program; if not, write to the Free Software
++ * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
++ *
++ * Copyright (c) 2006-2007, LIPP Alliance
++ * All Rights Reserved.
++ *
++ *---------------------------------------------------------------------------
++ * %filename:     tmbslPhyTomcat.h %
++ * %pid_version:              1.0 %
++ *---------------------------------------------------------------------------
++ * DESCRIPTION: Macros and function prototypes for TOMCAT PHY
++ *
++ * DOCUMENT REF: Datasheet Entropic Tomcat
++ *               Integrated 10/100/1000 Gigabit MoCA Transceiver
++ *               Rev. 1.0, April 3, 2008
++ *
++ * NOTES:        None
++ *
++ *-----------------------------------------------------------------------------
++ *
++*/
++
++#ifndef tmbslPhyTOMCAT_H_
++#define tmbslPhyTOMCAT_H
++
++#if        defined(__cplusplus)
++extern "C"
++{
++#endif  // defined(__cplusplus)
++
++
++#include "tmNxTypes.h"
++#include "tmbslPhy.h"
++
++/* Macros */
++
++/* MAC Macros */
++#define TMHW_LIPP6100ETH_ADR_REG_OFFSET  (0x010)
++#define TMHW_LIPP6100ETH_DATA_REG_OFFSET (0x014)
++
++#define TMHW_LIPP6100ETH_ADR_PHY_REG_CLR (0xFFFFF83F)
++#define TMHW_LIPP6100ETH_ADR_PHY_REG_POS (6)
++#define TMHW_LIPP6100ETH_ADR_PHY_WR_VAL  (0x2)
++#define TMHW_LIPP6100ETH_ADR_PHY_RD_CLR  (0xFFFFFFFD)
++#define TMHW_LIPP6100ETH_ADR_PHY_EN_VAL  (0x1)
++
++/*PHY Macros */
++/*************** Basic Mode control register ************/
++#define TMBSL_PHYTOMCAT_BMCR_RST_VAL (0x8000)
++
++/* Enable loopback */
++#define TMBSL_PHYTOMCAT_BMCR_LPBK_VAL (0x4000)
++#define TMBSL_PHYTOMCAT_BMCR_LPBK_CLR (0xBFFF)
++
++/* Set Speed to 1Gbps */
++#define TMBSL_PHYTOMCAT_BMCR_SPEED_1G (0x40)
++
++/* Set Speed to 100Mbps */
++#define TMBSL_PHYTOMCAT_BMCR_SPEED_100 (0x2000)
++
++/* Set Speed */
++#define TMBSL_PHYTOMCAT_BMCR_SPEED_10 (0)
++
++/* Speed mask */
++#define TMBSL_PHYTOMCAT_BMCR_SPEED_MSK (0x2040)
++
++/* Enable autonegotiation */
++#define TMBSL_PHYTOMCAT_BMCR_AN_EN (0x1000)
++#define TMBSL_PHYTOMCAT_BMCR_AN_CLR (0xFFFFEFFF)
++
++/* Set power down mode */
++#define TMBSL_PHYTOMCAT_BMCR_PWRDN_EN (0x800)
++
++/* Disable  power down mode */
++#define TMBSL_PHYTOMCAT_BMCR_PWRDN_CLR (0xF7FF)
++
++/* Isolate PHY enable */
++#define TMBSL_PHYTOMCAT_BMCR_ISO_PHY (0x400)
++
++/* Auto negotiation restart */
++#define TMBSL_PHYTOMCAT_BMCR_AN_RESTART (0x200)
++
++/* Collision Test enable */
++#define TMBSL_PHYTOMCAT_BMCR_COLTEST (0x80)
++
++/* Full duplex enable */
++#define TMBSL_PHYTOMCAT_BMCR_FD_EN (0x100)
++
++/****** Basic Mode status Register bits ******/
++
++/* Autonegotiation complete value */
++#define TMBSL_PHYTOMCAT_BMSR_T4100BASE (0x8000)
++
++#define TMBSL_PHYTOMCAT_BMSR_X100BASEFD (0x4000)
++
++#define TMBSL_PHYTOMCAT_BMSR_X100BASEHD (0x2000)
++
++#define TMBSL_PHYTOMCAT_BMSR_10MBPSFD (0x1000)
++
++#define TMBSL_PHYTOMCAT_BMSR_10MBPSHD (0x800)
++
++#define TMBSL_PHYTOMCAT_BMSR_T2100BASEFD (0x400)
++
++#define TMBSL_PHYTOMCAT_BMSR_T2100BASEHD (0x200)
++
++/* Preamble suppression capability */
++#define TMBSL_PHYTOMCAT_BMSR_PREAMBLE_SUP (0x40)
++
++#define TMBSL_PHYTOMCAT_BMSR_AN_VAL (0x20)
++
++/* Remote fault value */
++#define TMBSL_PHYTOMCAT_BMSR_RF_VAL (0x10)
++
++/* PHY is able to perform auto negotiation */
++#define TMBSL_PHYTOMCAT_BMSR_AN_ABLE (0x8)
++
++#define TMBSL_PHYTOMCAT_BMSR_LINK_STAT (0x4)
++
++/* Jabber detected */
++#define TMBSL_PHYTOMCAT_BMSR_JAB_VAL (0x2)
++
++/****** Auto Negotiation Advertisement Register bits ******/
++
++/* Advertise Next page desired */
++#define TMBSL_PHYTOMCAT_ANAR_NP (0x8000)
++
++/* Advertise remote fault */
++#define TMBSL_PHYTOMCAT_ANAR_ADV_RF (0x2000)
++
++/* Advertise asymmetric pause */
++#define TMBSL_PHYTOMCAT_ANAR_AP (0x800)
++
++/* Advertise pause frame support */
++#define TMBSL_PHYTOMCAT_ANAR_PAUSE (0x400)
++
++/* Advertise 100Base-TX full duplex support */
++#define TMBSL_PHYTOMCAT_ANAR_100B_TX_FD (0x100)
++
++/* Advertise 100Base-TX half duplex support */
++#define TMBSL_PHYTOMCAT_ANAR_100B_TX_HD (0x80)
++
++/* Advertise 10Base-TX full duplex support */
++#define TMBSL_PHYTOMCAT_ANAR_10B_TX_FD (0x40)
++
++/* Advertise 10Base-TX half duplex support */
++#define TMBSL_PHYTOMCAT_ANAR_10B_TX_HD (0x20)
++
++
++/****** 1KTCR : 1000 Base-T Master-Slave Control Register ******/
++
++/* Maser/Slave config enable */
++#define TMBSL_PHYTOMCAT_1KTCR_MS_CONFIG (0x1000)
++
++/* Set PHY as master */
++#define TMBSL_PHYTOMCAT_1KTCR_MASTER_EN (0x800)
++
++/* Advertise device as Multiport */
++#define TMBSL_PHYTOMCAT_1KTCR_MULTIPORT_EN (0x400)
++
++/* 1000 Base-T Full duplex capable */
++#define TMBSL_PHYTOMCAT_1KTCR_1000BT_FD (0x200)
++
++/* 1000 Base-T Half duplex capable */
++#define TMBSL_PHYTOMCAT_1KTCR_1000BT_HD (0x100)
++
++/********1KSTSR 1000 BASE-T Master-Slave Status Register *****/
++#define TMBSL_PHYTOMCAT_1KSTSR_MAN_FAULT (0x8000)
++#define TMBSL_PHYTOMCAT_1KSTSR_MASTER (0x4000)
++#define TMBSL_PHYTOMCAT_1KSTSR_LOCAL_RX_STAT (0x2000)
++#define TMBSL_PHYTOMCAT_1KSTSR_REMOTE_RX_STAT (0x1000)
++#define TMBSL_PHYTOMCAT_1KSTSR_PART_FD_CAP (0x800)
++#define TMBSL_PHYTOMCAT_1KSTSR_PART_HD_CAP (0x400)
++
++/********** EXTENDED STATUS REGISTER ******************/
++#define TMBSL_PHYTOMCAT_1KSCR_1000BASEX_FD (0x8000)
++#define TMBSL_PHYTOMCAT_1KSCR_1000BASEX_HD (0x4000)
++#define TMBSL_PHYTOMCAT_1KSCR_1000BASET_FD (0x2000)
++#define TMBSL_PHYTOMCAT_1KSCR_1000BASET_HD (0x1000)
++
++/**************** VENDOR SPECIFIC REGISTERS **************/
++/****** PHY Specific Control register ******/
++#define TMBSL_PHYTOMCAT_PHYCR_CRS          (0x800)
++#define TMBSL_PHYTOMCAT_PHYCR_FORCE_LNK    (0x400)
++#define TMBSL_PHYTOMCAT_PHYCR_DIS_CLK125   (0x10)
++#define TMBSL_PHYTOMCAT_PHYCR_DIS_JABBER   (0x1)
++
++/* Bit 6:5 MDI Crossover Mode
++ *   00: Manual MDI Crossover configuration
++ *   01: Manual MDI configuration
++ *   10: Default value
++ * Note: Before setting register, address 0xE bit 10 needs to be set to 1.
++ *       After setting register, a PHY reset is required.
++ */
++#define TMBSL_PHYTOMCAT_PHYCR_MDI_XOVR_MODE_MSK (0x60)
++#define TMBSL_PHYTOMCAT_PHYCR_MAN_MDI_XOVR      (0x0)
++#define TMBSL_PHYTOMCAT_PHYCR_MAN_MDI           (0x1)
++#define TMBSL_PHYTOMCAT_PHYCR_MDI               (0x2)
++
++/****** PHY Specific Status Register ******/
++/* Bit 15:14 Speed
++ *   00: 10 Mbps
++ *   01: 100 Mbps
++ *   10: 1000 Mbps
++ *   11: Reserved
++ */
++#define TMBSL_PHYTOMCAT_PHYSTAT_SPEED_MSK       (0xC000)
++#define TMBSL_PHYTOMCAT_PHYSTAT_SPEED_10        (0x0)
++#define TMBSL_PHYTOMCAT_PHYSTAT_SPEED_100       (0x1)
++#define TMBSL_PHYTOMCAT_PHYSTAT_SPEED_1000      (0x2)
++
++#define TMBSL_PHYTOMCAT_PHYSTAT_DUPLEX          (0x2000)
++#define TMBSL_PHYTOMCAT_PHYSTAT_PAGE_RX         (0x1000)
++#define TMBSL_PHYTOMCAT_PHYSTAT_SPD_DUP_RES     (0x800)
++#define TMBSL_PHYTOMCAT_PHYSTAT_LINK_RT         (0x400)
++#define TMBSL_PHYTOMCAT_PHYSTAT_MDI_XOVR_STAT   (0x40)
++#define TMBSL_PHYTOMCAT_PHYSTAT_JABBER_RT       (0x1)
++
++/****** Interrupt Enable Register ******/
++#define TMBSL_PHYTOMCAT_IER_AN_ERR              (0x8000)
++#define TMBSL_PHYTOMCAT_IER_SPEED_CHG           (0x4000)
++#define TMBSL_PHYTOMCAT_IER_DUPLEX_CHG          (0x2000)
++#define TMBSL_PHYTOMCAT_IER_PG_RX               (0x1000)
++#define TMBSL_PHYTOMCAT_IER_AN_COMP             (0x800)
++#define TMBSL_PHYTOMCAT_IER_LNK_STAT_CHG        (0x400)
++#define TMBSL_PHYTOMCAT_IER_SYMBOL_ERR          (0x200)
++#define TMBSL_PHYTOMCAT_IER_FALSE_CARRIER       (0x100)
++#define TMBSL_PHYTOMCAT_IER_MDI_XOVR_CHG        (0x40)
++#define TMBSL_PHYTOMCAT_IER_POLARITY_CHG        (0x2)
++#define TMBSL_PHYTOMCAT_IER_JABBER              (0x1)
++
++/****** Interrupt Status Register ******/
++#define TMBSL_PHYTOMCAT_ISR_AN_ERR              (0x8000)
++#define TMBSL_PHYTOMCAT_ISR_SPEED_CHG           (0x4000)
++#define TMBSL_PHYTOMCAT_ISR_DUPLEX_CHG          (0x2000)
++#define TMBSL_PHYTOMCAT_ISR_PG_RX               (0x1000)
++#define TMBSL_PHYTOMCAT_ISR_AN_COMP             (0x800)
++#define TMBSL_PHYTOMCAT_ISR_LNK_STAT_CHG        (0x400)
++#define TMBSL_PHYTOMCAT_ISR_SYMBOL_ERR          (0x200)
++#define TMBSL_PHYTOMCAT_ISR_FALSE_CARRIER       (0x100)
++#define TMBSL_PHYTOMCAT_ISR_MDI_XOVR_CHG        (0x40)
++#define TMBSL_PHYTOMCAT_ISR_POLARITY_CHG        (0x2)
++#define TMBSL_PHYTOMCAT_ISR_JABBER              (0x1)
++
++/****** LED Control Register ******/
++#define TMBSL_PHYTOMCAT_LEDCR_DISABLE_LED        (0x8000)
++#define TMBSL_PHYTOMCAT_LEDCR_LINK_CTL           (0x8)
++#define TMBSL_PHYTOMCAT_LEDCR_RX_CTL             (0x2)
++#define TMBSL_PHYTOMCAT_LEDCR_TX_CTL             (0x1)
++
++//Structure Declarations
++//-----------------------------------------------------------------------------
++//	Typedefinition
++//-----------------------------------------------------------------------------
++typedef enum
++{
++    /* Basic mode control */
++    tmbslPhyTomcatBmcr			= 0x0,
++    /* Basic mode status */
++    tmbslPhyTomcatBmsr			= 0x1,
++
++    /* 0x2-1E are reserved */
++
++    /*Extended status register */
++    tmbslPhyTomcatkscr		= 0xF,
++
++    /**** Vendor Specific Registers *****/
++    /* 0x10-19 are reserved */
++
++} tmbslPhyTomcatReg_t;
++
++typedef struct  _tmbslPhyTomcatContext_t
++{
++    UInt32	pRegs;         // Array ETHERNET Module regs
++} tmbslPhyTomcatContext_t, *ptmbslPhyTomcatContext_t;
++
++//-----------------------------------------------------------------------------
++// Exported functions:
++//-----------------------------------------------------------------------------
++//
++
++//-----------------------------------------------------------------------------
++// FUNCTION:    tmbslPhyGetSWVersion:
++//
++// DESCRIPTION: This function returns the PHY device interface software version
++//		information
++//
++// RETURN:      TM_OK
++//
++// NOTES:       This API can be called anytime i.e. before initializing the PHY
++//		or in PowerOff state.
++//-----------------------------------------------------------------------------
++
++tmErrorCode_t
++tmbslPhyTomcatGetSWVersion (
++    ptmSWVersion_t	pPhyVersion
++    );
++
++
++//-----------------------------------------------------------------------------
++// FUNCTION:    tmbslPhyGetCapabilities:
++//
++// DESCRIPTION: This function returns the PHY capabilities for the specified PHY
++//		unit. The function is callable at any time to return the unit's
++//		capabilities (PHY unit initialization is not necessary).
++//		Capabilities may be different among multiple PHY units.For completeness,
++//		a PHY BSL user should call this function for each PHY unit to
++//		determine its individual capabilities.
++//
++// RETURN:      TM_OK
++//
++// NOTES:       This API can be called anytime i.e. before initializing the PHY
++//		or in PowerOff state.
++//-----------------------------------------------------------------------------
++//
++
++tmErrorCode_t
++tmbslPhyTomcatGetCapabilities (
++    tmUnitSelect_t		phyUnitId,
++    ptmbslPhyCapabilities_t	pPhyCaps
++    );
++
++
++//-----------------------------------------------------------------------------
++// FUNCTION:    tmbslPhyInit:
++//
++// DESCRIPTION: This function initializes the PHY device. It should be called
++//		before any access to the device is made.
++//
++// RETURN:      TM_OK
++//		TM_BSLPHY_ERR_BAD_UNIT_NUM
++//
++// NOTES:       This function initializes the PHY device with the following
++//		default initial configuration.
++//		1. Enable the auto negotiation. In auto-negotiation mode the
++//		highest possible performance mode is selected automatically
++//		which the Link Partner also supports. (In auto negotiation mode
++//		speed and duplex mode will be selected by means of auto negotiation.
++//		Writing to speed and duplex mode does not have meaning in auto
++//		negotiation mode.)
++//		2. The device abilities are programmed to Auto negotiation advertise
++//		register. None of the device abilities are masked. If the PHY
++//		device does not support Auto-negotiation mode, then this function
++//		will set the PHY to basic capabilities of the device.The function
++//		tmbslPhyGetBasicModeControl can be called after tmbsPhyInit to
++//		know what are the default configurations the tmbslPhyInit function
++//		has set to
++//-----------------------------------------------------------------------------
++//
++
++tmErrorCode_t
++tmbslPhyTomcatInit(
++    tmUnitSelect_t	phyUnitId
++    );
++
++
++
++//-----------------------------------------------------------------------------
++// FUNCTION:    tmbslPhyDeinit:
++//
++// DESCRIPTION: This function de-initializes the PHY device. Once the device is
++//		deinitilized device will no more be available to access
++//
++// RETURN:      TM_OK
++//		TM_BSLPHY_ERR_BAD_UNIT_NUM
++//
++// NOTES:
++//-----------------------------------------------------------------------------
++//
++tmErrorCode_t
++tmbslPhyTomcatDeinit(
++    tmUnitSelect_t	phyUnitId
++    );
++
++
++//-----------------------------------------------------------------------------
++// FUNCTION:    tmbslPhySetPowerState:
++//
++// DESCRIPTION: This function will set the Power State of the PHY device to specified
++//		power state
++//
++// RETURN:      TM_OK
++//		TM_BSLPHY_ERR_BAD_UNIT_NUM
++//
++// NOTES:
++//-----------------------------------------------------------------------------
++//
++
++tmErrorCode_t
++tmbslPhyTomcatSetPowerState(
++    tmUnitSelect_t	phyUnitId ,
++    tmPowerState_t	phyPowerState
++    );
++
++
++//-----------------------------------------------------------------------------
++// FUNCTION:    tmbslPhyGetPowerState:
++//
++// DESCRIPTION: This function will get the preset power state of the PHY device
++//
++// RETURN:      TM_OK
++//		TM_BSLPHY_ERR_BAD_UNIT_NUM
++//
++// NOTES:
++//-----------------------------------------------------------------------------
++//
++
++tmErrorCode_t
++tmbslPhyTomcatGetPowerState(
++    tmUnitSelect_t	phyUnitId,
++    ptmPowerState_t	phyPowerState
++    );
++
++
++//-----------------------------------------------------------------------------
++// FUNCTION:    tmbslPhyGetBasicModeControl:
++//
++// DESCRIPTION: This function will get the basic configuration of the PHY device.
++//
++// RETURN:      TM_OK
++//		TM_BSLPHY_ERR_BAD_UNIT_NUM
++//
++// NOTES:       PHY device is initialized using the function tmbslPhyInit.
++//		tmbslPhyInit Enable the Auto negotiation mode and will configure
++//		the PHY device for the maximum performance mode available. After
++//		the device is initialized this function can be called to know the
++//		present settings of the PHY device. If application wants to change
++//		the settings it can call tmbslPhySetBasicModeControl to change
++//		the configuration after knowing the capabilities of the PHY device
++//		and Link Partner. #define for the Basic Mode Control
++//-----------------------------------------------------------------------------
++//
++
++tmErrorCode_t
++tmbslPhyTomcatGetBasicModeControl (
++    tmUnitSelect_t			phyUnitId,
++    ptmbslPhyBasicModeControl_t      	pPhyBasicModeControl
++    );
++
++//-----------------------------------------------------------------------------
++// FUNCTION:    tmbslPhySetBasicModeControl:
++//
++// DESCRIPTION: This function will configure the PHY device for the Basic Mode.
++//
++// RETURN:      TM_OK
++//		TM_BSLPHY_ERR_BAD_UNIT_NUM
++//
++// NOTES:
++//-----------------------------------------------------------------------------
++//
++
++
++tmErrorCode_t
++tmbslPhyTomcatSetBasicModeControl (
++    tmUnitSelect_t			phyUnitId,
++    ptmbslPhyBasicModeControl_t      	pPhyBasicModeControl
++    );
++
++//-----------------------------------------------------------------------------
++// FUNCTION:    tmbslPhyGetBasicModeStatus:
++//
++// DESCRIPTION: This function will get the Basic Mode Status of the PHY device
++//		such as the speed, duplex mode
++//
++// RETURN:      TM_OK
++//		TM_BSLPHY_ERR_BAD_UNIT_NUM
++//
++// NOTES:
++//-----------------------------------------------------------------------------
++//
++
++tmErrorCode_t
++tmbslPhyTomcatGetBasicModeStatus (
++    tmUnitSelect_t			phyUnitId,
++    ptmbslPhyBasicModeStatus_t    	pPhyBasicModeStatus
++    );
++
++//-----------------------------------------------------------------------------
++// FUNCTION:    tmbslPhyAutoNegotiate:
++//
++// DESCRIPTION: This function will enable the Auto negotiation of the PHY device
++//		with Link Partner. Best possible performance configuration is
++//		selected automatically during this process
++//
++// RETURN:      TM_OK
++//		TM_BSLPHY_ERR_BAD_UNIT_NUM
++//
++// NOTES:
++//-----------------------------------------------------------------------------
++//
++
++tmErrorCode_t
++tmbslPhyTomcatAutoNegotiate (
++    tmUnitSelect_t			phyUnitId,
++    ptmbslPhyAutoNegotitationMask_t    	pAutoNegotiationMask
++    );
++
++//-----------------------------------------------------------------------------
++// FUNCTION:    tmbslPhyGetIdentifier:
++//
++// DESCRIPTION: This function gets the PHY device Identifier
++//
++// RETURN:      TM_OK
++//		TM_BSLPHY_ERR_BAD_UNIT_NUM
++//
++// NOTES:
++//-----------------------------------------------------------------------------
++//
++
++tmErrorCode_t
++tmbslPhyTomcatGetIdentifier (
++    tmUnitSelect_t		phyUnitId,
++    ptmbslPhyIdentifier_t     	pPhyIdentifier
++    );
++
++
++//-----------------------------------------------------------------------------
++// FUNCTION:    tmbslPhyGetLinkPartnerCapabilities:
++//
++// DESCRIPTION: This function will get the Link Partner Capabilities.
++//
++// RETURN:      TM_OK
++//		TM_BSLPHY_ERR_BAD_UNIT_NUM
++//
++// NOTES:
++//-----------------------------------------------------------------------------
++//
++
++tmErrorCode_t
++tmbslPhyTomcatGetLinkPartnerCapabilities (
++    tmUnitSelect_t                         phyUnitId,
++    ptmbslPhyLinkPartnerCapabilities_t     pPhyLinkPartnerCapabilities
++    );
++
++
++//-----------------------------------------------------------------------------
++// FUNCTION:    tmbslPhyGetCounters:
++//
++// DESCRIPTION: This function will get the present counter values of the PHY counters
++//
++// RETURN:      TM_OK
++//		TM_BSLPHY_ERR_BAD_UNIT_NUM
++//
++// NOTES:
++//-----------------------------------------------------------------------------
++//
++
++tmErrorCode_t
++tmbslPhyTomcatGetCounters (
++    tmUnitSelect_t		phyUnitId,
++    ptmbslPhyCounters_t		pPhyCounters
++    );
++
++//-----------------------------------------------------------------------------
++// FUNCTION:    tmbslPhyPcsConfig:
++//
++// DESCRIPTION: This function will configure the Physical layer configurations.
++//
++// RETURN:      TM_OK
++//		TM_BSLPHY_ERR_BAD_UNIT_NUM
++//
++// NOTES:
++//-----------------------------------------------------------------------------
++//
++
++tmErrorCode_t
++tmbslPhyTomcatPcsConfig (
++    tmUnitSelect_t		phyUnitId,
++    ptmbslPhyPcsConfig_t    	pPhyPcsConfig
++    );
++
++//-----------------------------------------------------------------------------
++// FUNCTION:    tmbslPhyPcsGetConfig:
++//
++// DESCRIPTION: This function will get the present PCS configuration
++//
++// RETURN:      TM_OK
++//		TM_BSLPHY_ERR_BAD_UNIT_NUM
++//
++// NOTES:
++//-----------------------------------------------------------------------------
++//
++
++tmErrorCode_t
++tmbslPhyTomcatPcsGetConfig (
++    tmUnitSelect_t		phyUnitId,
++    ptmbslPhyPcsConfig_t    	pPhyPcsConfig
++    );
++
++//-----------------------------------------------------------------------------
++// FUNCTION:    tmbslPhyBist:
++//
++// DESCRIPTION: This function will do the Built In Self Test and the result
++//		will be indicated in the pBistState
++//
++// RETURN:      TM_OK
++//		TM_BSLPHY_ERR_BAD_UNIT_NUM
++//
++// NOTES:
++//-----------------------------------------------------------------------------
++//
++
++tmErrorCode_t
++tmbslPhyTomcatBist (
++    tmUnitSelect_t		phyUnitId,
++    tmbslPhyPseudoRandomSeq_t  	phyPsedoRandomSeq ,
++    pUInt8			pBistState
++	);
++
++//-----------------------------------------------------------------------------
++// FUNCTION:    tmbslPhyConfigBypass:
++//
++// DESCRIPTION: This function will bypass the functional blocks within 100Base-Tx transmitter
++//
++// RETURN:      TM_OK
++//		TM_BSLPHY_ERR_BAD_UNIT_NUM
++//
++// NOTES:
++//-----------------------------------------------------------------------------
++//
++
++tmErrorCode_t
++tmbslPhyTomcatConfigBypass (
++    tmUnitSelect_t	phyUnitId,
++    ptmbslPhyBypass_t  	pPhyBypass
++	);
++
++//-----------------------------------------------------------------------------
++// FUNCTION:    tmbslPhyConfigBypass:
++//
++// DESCRIPTION: Function will enable or disable the PHY device in the Loopback mode.
++//
++// RETURN:      TM_OK
++//		TM_BSLPHY_ERR_BAD_UNIT_NUM
++//
++// NOTES:
++//-----------------------------------------------------------------------------
++//
++
++tmErrorCode_t
++tmbslPhyTomcatLoopBack (
++    tmUnitSelect_t		phyUnitId,
++    tmbslPhyEnableDisable_t	loopbackMode
++	);
++
++
++//-----------------------------------------------------------------------------
++// FUNCTION:    tmbslPhySoftReset:
++//
++// DESCRIPTION: Function will do the soft reset of the PHY device
++
++// RETURN:      TM_OK
++//		TM_BSLPHY_ERR_BAD_UNIT_NUM
++//
++// NOTES:
++//-----------------------------------------------------------------------------
++//
++
++tmErrorCode_t
++tmbslPhyTomcatSoftReset (
++    tmUnitSelect_t	phyUnitId
++	);
++
++//-----------------------------------------------------------------------------
++// FUNCTION:    tmbslPhyGetLinkStatus:
++//
++// DESCRIPTION: Function will get the link status
++
++// RETURN:      TM_OK
++//		TM_BSLPHY_ERR_BAD_UNIT_NUM
++//
++// NOTES:
++//-----------------------------------------------------------------------------
++//
++
++tmErrorCode_t
++tmbslPhyTomcatGetLinkStatus (
++    tmUnitSelect_t		phyUnitId,
++    ptmbslPhyEnableDisable_t	pLinkStatus
++	);
++
++
++extern int tmbslPhyTomcatRead ( tmUnitSelect_t ethUnitId, tmbslPhyTomcatReg_t reg, pUInt16	pVal);
++extern int tmbslPhyTomcatWrite ( tmUnitSelect_t ethUnitId, tmbslPhyTomcatReg_t reg, UInt16	val);
++
++#if        defined(__cplusplus)
++}
++#endif  // defined(__cplusplus)
++
++#endif
+diff -Naupr linux-2.6.34/drivers/net/LIPP_6300ETH/comps/tmbslPhyTomcat/makefile linux-2.6.34.new/drivers/net/LIPP_6300ETH/comps/tmbslPhyTomcat/makefile
+--- linux-2.6.34/drivers/net/LIPP_6300ETH/comps/tmbslPhyTomcat/makefile	1970-01-01 05:30:00.000000000 +0530
++++ linux-2.6.34.new/drivers/net/LIPP_6300ETH/comps/tmbslPhyTomcat/makefile	2011-09-02 15:16:12.153484000 +0530
+@@ -0,0 +1,49 @@
++DIR_LOCAL = comps/tmbslPhyTomCat
++
++#***********************************************************************
++# Do not change the following include
++#***********************************************************************
++include $(_TMROOT)/sde/environment.mk
++
++#-----------------------------------------------------------------------
++# Source environment variables
++#-----------------------------------------------------------------------
++CXX_SOURCES =
++
++C_SOURCES = src/tmbslPhyTomcat.c
++ 
++#-----------------------------------------------------------------------
++# Which modules does this target requires (includes & libs)
++#-----------------------------------------------------------------------
++REQUIRES = tmbslPhy
++
++LIBS = 
++
++#-----------------------------------------------------------------------
++# Directory where the 3rdparty includes are stored
++#-----------------------------------------------------------------------
++DIR_INCLUDE = 
++
++#-----------------------------------------------------------------------
++# local CFLAGS
++#-----------------------------------------------------------------------
++LOCAL_CFLAGS =
++
++#-----------------------------------------------------------------------
++# local CPPFLAGS
++#-----------------------------------------------------------------------
++LOCAL_CXXFLAGS = 
++
++EXPORTS = 
++
++#***********************************************************************
++# Do not change this
++#***********************************************************************
++all: configuration lib
++
++#***********************************************************************
++# Do not change the following include
++#***********************************************************************
++ifneq ($(DIR_CONFIG),_)
++include $(DIR_SDE)/$(DIR_CONFIG)/makelib.mk
++endif
+diff -Naupr linux-2.6.34/drivers/net/LIPP_6300ETH/comps/tmbslPhyTomcat/src/tmbslPhyTomcat.c linux-2.6.34.new/drivers/net/LIPP_6300ETH/comps/tmbslPhyTomcat/src/tmbslPhyTomcat.c
+--- linux-2.6.34/drivers/net/LIPP_6300ETH/comps/tmbslPhyTomcat/src/tmbslPhyTomcat.c	1970-01-01 05:30:00.000000000 +0530
++++ linux-2.6.34.new/drivers/net/LIPP_6300ETH/comps/tmbslPhyTomcat/src/tmbslPhyTomcat.c	2011-09-02 15:16:12.157482000 +0530
+@@ -0,0 +1,833 @@
++/*
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program; if not, write to the Free Software
++ * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
++ *
++ * Copyright (c) 2006-2007, LIPP Alliance
++ * All Rights Reserved.
++ *
++ *---------------------------------------------------------------------------
++ * %filename:     tmbslPhyEN2510.h %
++ * %pid_version:              1.0 %
++ *---------------------------------------------------------------------------
++ * DESCRIPTION: Macros and function prototypes for EN2510 PHY
++ *
++ * DOCUMENT REF: Datasheet Entropic EN2510
++ *               Integrated 10/100/1000 Gigabit MoCA Transceiver
++ *               Rev. 1.0, April 3, 2008
++ *
++ * NOTES:        None
++ *-----------------------------------------------------------------------------
++ *
++*/
++#include <linux/module.h>
++#include <linux/kernel.h>
++#include <linux/init.h>
++
++#include <linux/if.h>
++#include <tmNxTypes.h>
++#include <tmNxCompId.h>
++/*  Project include files */
++#include "tmbslPhy.h"
++
++#include "tmbslPhyTomcat.h"
++#include "tmhwLIPP6100Eth_Cfg.h"
++
++#include "linux/spinlock.h"
++
++/* Defines */
++
++#define PHY_TIMEOUT				(100000)
++
++#define ANAR_DEFAULT_VAL			(0xADE1)
++#define KTCR1_DEFAULT_VAL			(0x300)
++
++/* Global Data */
++ /* Initialize with base address of GMAC. This will be used to access MAC Address & MAC data register */
++
++static tmbslPhyTomcatContext_t gEthContext;
++
++/******* Move to tomcat.c *************/
++/* Make this static */
++int  tomcat_unitnum ;
++int  tomcat_phy_addr;
++
++/* Enable if module support is needed */
++// EXPORT_SYMBOL(tomcat_unitnum);
++// EXPORT_SYMBOL(tomcat_phy_addr);
++/******************************************/
++
++
++extern spinlock_t moca_spinlock;
++
++/* Static functions definition */
++
++/* Exported functions */
++/**** TODO *************** */
++/* Originally defined in tmbslPhyEN2512/en2512/Common/Src/ctx_setup.c */
++int tomcat_init_dev(void **ddcp_dgcp, void *ddcp, void *dkcp, unsigned long dev_base )
++{
++	return TM_OK;
++
++}
++void tomcat_exit_dev( void *vdgcp )
++{
++      return;
++  
++}
++int ioctl_operation_work( void *moca_data_kernel_content, struct ifreq *ifr, unsigned cmd )
++{
++	return 0;
++}
++/**********************************/
++/* ********* TO MOVE : tomcat.c ******************/
++void tomcat_update_unitnum_phyaddr( int unitNum, int phy_addr)
++{
++    tomcat_unitnum = unitNum;
++    tomcat_phy_addr = phy_addr;
++}
++/****************************************/
++
++
++//-----------------------------------------------------------------------------
++// FUNCTION:    tmbslPhyEN2510BNGetSWVersion:
++//
++// DESCRIPTION: This function returns the PHY device interface software version
++//		information
++//
++// RETURN:      TM_OK
++//
++// NOTES:       This API can be called anytime i.e. before initializing the PHY
++//		or in PowerOff state.
++//-----------------------------------------------------------------------------
++
++tmErrorCode_t
++tmbslPhyTomcatGetSWVersion (
++	ptmSWVersion_t	pPhyVersion
++	)
++{
++        pPhyVersion->compatibilityNr = TMBSL_PHY_COMPATIBILITY_NR;
++        pPhyVersion->majorVersionNr = TMBSL_PHY_MAJOR_VERSION_NR;
++        pPhyVersion->minorVersionNr = TMBSL_PHY_MINOR_VERSION_NR;
++
++	return TM_OK;
++}
++
++
++//-----------------------------------------------------------------------------
++// FUNCTION:    tmbslPhyTomcatGetCapabilities:
++//
++// DESCRIPTION: This function returns the PHY capabilities for the specified PHY
++//		unit. The function is callable at any time to return the unit's
++//		capabilities (PHY unit initialization is not necessary).
++//		Capabilities may be different among multiple PHY units.For completeness,
++//		a PHY BSL user should call this function for each PHY unit to
++//		determine its individual capabilities.
++//
++// RETURN:      TM_OK
++//
++// NOTES:       This API can be called anytime i.e. before initializing the PHY.
++//
++//-----------------------------------------------------------------------------
++
++
++tmErrorCode_t
++tmbslPhyTomcatGetCapabilities (
++    tmUnitSelect_t		ethUnitId,
++    ptmbslPhyCapabilities_t  	pPhyCaps
++    )
++
++{
++    UInt16 bmsr;
++
++    /*  Read the PHY capabilites from the BMSR register */
++    tmbslPhyTomcatRead(ethUnitId, tmbslPhyTomcatBmsr, &bmsr);
++
++    /*  Read the extended status register - I don't know if you exist */
++//    tmbslPhyTomcatRead(ethUnitId, tmbslPhyTomcatkscr, &extStat);
++
++    pPhyCaps->T4Support100Base = False;
++
++    pPhyCaps->Tx_FullDuplexSupport100Base = True;
++
++    pPhyCaps->Tx_HalfDuplexSupport100Base = False;
++
++    pPhyCaps->Tx_FullDuplexSupport10Base = False;
++
++    pPhyCaps->Tx_HalfDuplexSupport10Base = False;
++    pPhyCaps->X1000BaseFDSupport = False;
++    pPhyCaps->X1000BaseHDSupport = False;
++    pPhyCaps->T1000BaseFDSupport = False;
++    pPhyCaps->T1000BaseHDSupport = False;
++#if 0
++    pPhyCaps->preAmbleSuppresionCapability =
++        (((bmsr &TMBSL_PHYTOMCAT_BMSR_PREAMBLE_SUP) > 0) ? True : False);
++
++    pPhyCaps->autoNegotiationAbility = False;
++
++
++    pPhyCaps->X1000BaseFDSupport =
++                (((extStat &TMBSL_PHYTOMCAT_1KSCR_1000BASEX_FD) > 0) ? True : False);
++
++    pPhyCaps->X1000BaseHDSupport =
++                (((extStat &TMBSL_PHYTOMCAT_1KSCR_1000BASEX_HD) > 0) ? True : False);
++
++    pPhyCaps->T1000BaseFDSupport =
++                (((extStat &TMBSL_PHYTOMCAT_1KSCR_1000BASET_FD) > 0) ? True : False);
++
++    pPhyCaps->T1000BaseHDSupport =
++                (((extStat &TMBSL_PHYTOMCAT_1KSCR_1000BASET_HD) > 0) ? True : False);
++#endif
++
++    pPhyCaps->ledStatusSupport = True ;
++    /* Other capabilites set to False */
++    pPhyCaps->nextPageIndication = False;
++
++    pPhyCaps->force100MbpsTxOff = False;
++
++    pPhyCaps->bypassSymbolAlignment =False;
++
++    pPhyCaps->badSSDDetectionConfig = False;
++
++    return TM_OK;
++    return TM_OK;
++}
++
++//-----------------------------------------------------------------------------
++// FUNCTION:    tmbslPhyTomcatInit:
++//
++// DESCRIPTION: This function initializes the PHY device. It should be called
++//		before any access to the device is made.
++//
++// RETURN:      TM_OK
++//
++// NOTES:       This function initializes the PHY device with the following
++//		default initial configuration.No Autonegotiation is done in the
++//		initialization function
++//-----------------------------------------------------------------------------
++
++
++tmErrorCode_t
++tmbslPhyTomcatInit(
++    tmUnitSelect_t	ethUnitId
++    )
++{
++   volatile UInt32  *gmac1_ctl;
++   UInt32  regval;
++   //   lower the delay element 0x00003E1d -> 0x00391d or 0x00003a
++   gEthContext.pRegs = gtmhwLIPP6100Eth_Base[ethUnitId].baseAddress;
++   gmac1_ctl = (UInt32*)(0xE06EA304);
++   regval = ((*gmac1_ctl) & 0xfffff0ff) | (0x00000900); 
++   *gmac1_ctl = regval;
++   return TM_OK;
++}
++
++//-----------------------------------------------------------------------------
++// FUNCTION:    tmbslPhyTomcatDeinit:
++//
++// DESCRIPTION: This function de-initializes the PHY device. Once the device is
++//		deinitilized device will no more be available to access
++//
++// RETURN:      TM_OK
++//
++// NOTES:
++//-----------------------------------------------------------------------------
++//
++
++tmErrorCode_t
++tmbslPhyTomcatDeinit(
++    tmUnitSelect_t	ethUnitId
++    )
++
++{
++    tmErrorCode_t	ethStatus = TM_OK;
++
++    if(ethStatus != TM_OK)
++    {
++        return ethStatus;
++    }
++    else
++    {
++        return TM_OK;
++    }
++}
++
++
++//-----------------------------------------------------------------------------
++// FUNCTION:    tmbslPhyTomcatSetPowerState:
++//
++// DESCRIPTION: This function will set the Power State of the PHY device to specified
++//		power state
++//
++// RETURN:      TM_OK
++//
++// NOTES:
++//-----------------------------------------------------------------------------
++
++tmErrorCode_t
++tmbslPhyTomcatSetPowerState(
++    tmUnitSelect_t	ethUnitId ,
++    tmPowerState_t	phyPowerState
++    )
++
++{
++    return TMBSL_ERR_PHY_NOT_SUPPORTED;    
++}
++
++//-----------------------------------------------------------------------------
++// FUNCTION:    tmbslPhyTomcatGetPowerState:
++//
++// DESCRIPTION: This function will get the preset power state of the PHY device
++//
++// RETURN:      TM_OK
++//
++// NOTES:
++//-----------------------------------------------------------------------------
++
++tmErrorCode_t
++tmbslPhyTomcatGetPowerState(
++    tmUnitSelect_t	ethUnitId ,
++    ptmPowerState_t	phyPowerState
++    )
++
++{
++    return TMBSL_ERR_PHY_NOT_SUPPORTED;
++}
++
++
++//-----------------------------------------------------------------------------
++// FUNCTION:    tmbslPhyTomcatGetBasicModeControl:
++//
++// DESCRIPTION: This function will get the basic configuration of the PHY device.
++//
++// RETURN:      TM_OK
++//
++// NOTES:       See #define for the Basic Mode Control
++//-----------------------------------------------------------------------------
++
++tmErrorCode_t
++tmbslPhyTomcatGetBasicModeControl (
++    tmUnitSelect_t			ethUnitId,
++    ptmbslPhyBasicModeControl_t		pPhyBasicModeControl
++    )
++{
++    tmErrorCode_t	ethStatus = TM_OK;
++    UInt16		bmcr;
++
++    /* Read the present settings of the BMCR register */
++    ethStatus = tmbslPhyTomcatRead(ethUnitId,tmbslPhyTomcatBmcr,&bmcr);
++
++    if(ethStatus != TM_OK)
++    {
++        return ethStatus;
++    }
++
++    pPhyBasicModeControl->enableCollisionTest = False;
++    pPhyBasicModeControl->speed = tmbslPhySpeed100Mbps;
++
++    pPhyBasicModeControl->duplexMode = 1;
++//                (((bmcr & TMBSL_PHYTOMCAT_BMCR_FD_EN ) > 0) ? tmbslPhyFullDuplex : tmbslPhyHalfDuplex);
++
++/*
++    switch(bmcr & TMBSL_PHYTOMCAT_BMCR_SPEED_MSK)
++    {
++        case TMBSL_PHYTOMCAT_BMCR_SPEED_1G:
++            pPhyBasicModeControl->speed = tmbslPhySpeed1Gbps;
++            break;
++
++        case TMBSL_PHYTOMCAT_BMCR_SPEED_100:
++            pPhyBasicModeControl->speed = tmbslPhySpeed100Mbps;
++            break;
++
++        case TMBSL_PHYTOMCAT_BMCR_SPEED_10:
++            pPhyBasicModeControl->speed = tmbslPhySpeed10Mbps;
++            break;
++
++        default:
++            pPhyBasicModeControl->speed = tmbslPhySpeed100Mbps;
++            break;
++    }
++*/
++
++    return TM_OK;
++
++}
++
++//-----------------------------------------------------------------------------
++// FUNCTION:    tmbslPhyTomcatSetBasicModeControl:
++//
++// DESCRIPTION: This function will configure the PHY device for the Basic Mode.
++//
++// RETURN:      TM_OK
++//
++// NOTES:
++//-----------------------------------------------------------------------------
++
++tmErrorCode_t
++tmbslPhyTomcatSetBasicModeControl (
++    tmUnitSelect_t			ethUnitId,
++    ptmbslPhyBasicModeControl_t		pPhyBasicModeControl
++    )
++{
++    tmErrorCode_t	ethStatus = TM_OK;
++    return ethStatus;
++}
++
++
++//-----------------------------------------------------------------------------
++// FUNCTION:    tmbslPhyTomcatGetBasicModeStatus:
++//
++// DESCRIPTION: This function will get the Basic Mode Status of the PHY device
++//		such as the speed, duplex mode and other statuses
++//
++// RETURN:      TM_OK
++//
++// NOTES:
++//-----------------------------------------------------------------------------
++
++tmErrorCode_t
++tmbslPhyTomcatGetBasicModeStatus (
++    tmUnitSelect_t		ethUnitId,
++    ptmbslPhyBasicModeStatus_t	pPhyBasicModeStatus
++    )
++
++{
++    tmErrorCode_t	ethStatus = TM_OK;
++    UInt16		bmsr,bmcr;
++
++    /* Read the PHY status from the BMSR register */
++    ethStatus = tmbslPhyTomcatRead(ethUnitId, tmbslPhyTomcatBmsr, &bmsr);
++
++    if(ethStatus != TM_OK)
++    {
++        return ethStatus ;
++    }
++
++    /* Read the PHY control register from the BMCR register */
++    ethStatus = tmbslPhyTomcatRead(ethUnitId, tmbslPhyTomcatBmcr, &bmcr);
++
++    if(ethStatus != TM_OK)
++    {
++        return ethStatus ;
++    }
++
++    pPhyBasicModeStatus->jabberDetect = False;
++
++    pPhyBasicModeStatus->remoteFaultDetected = False;
++
++    pPhyBasicModeStatus->autoNegotiationComplete = False;
++
++    pPhyBasicModeStatus->loopBackEnabled = False;
++// (((bmcr & TMBSL_PHYTOMCAT_BMCR_LPBK_VAL) > 0) ? True : False);
++
++    /* Not an auto negotiation. So read the values from BMCR */
++    pPhyBasicModeStatus->duplexMode = tmbslPhyFullDuplex;
++
++    pPhyBasicModeStatus->speed = tmbslPhySpeed100Mbps;
++
++#if 0
++    switch(bmcr & TMBSL_PHYTOMCAT_BMCR_SPEED_MSK)
++    {
++        case TMBSL_PHYTOMCAT_BMCR_SPEED_1G:
++            pPhyBasicModeStatus->speed = tmbslPhySpeed1Gbps;
++            break;
++
++        case TMBSL_PHYTOMCAT_BMCR_SPEED_100:
++            pPhyBasicModeStatus->speed = tmbslPhySpeed100Mbps;
++            break;
++
++        case TMBSL_PHYTOMCAT_BMCR_SPEED_10:
++            pPhyBasicModeStatus->speed = tmbslPhySpeed10Mbps;
++            break;
++
++        default:
++            pPhyBasicModeStatus->speed = tmbslPhySpeed100Mbps;
++            break;
++    }
++#endif
++
++    return TM_OK;
++}
++
++
++//-----------------------------------------------------------------------------
++// FUNCTION:    tmbslPhyTomcatAutoNegotiate:
++//
++// DESCRIPTION: This function will enable the Auto negotiation of the PHY device
++//		with Link Partner. Best possible performance configuration is
++//		selected automatically during this process
++//
++// RETURN:      TM_OK
++//
++// NOTES:
++//-----------------------------------------------------------------------------
++
++tmErrorCode_t
++tmbslPhyTomcatAutoNegotiate (
++    tmUnitSelect_t			ethUnitId,
++    ptmbslPhyAutoNegotitationMask_t	pAutoNegotiationMask
++    )
++{
++    return TMBSL_ERR_PHY_NOT_SUPPORTED;
++}
++
++//-----------------------------------------------------------------------------
++// FUNCTION:    tmbslPhyTomcatLoopBack:
++//
++// DESCRIPTION: Function will enable or disable the PHY device in the Loopback
++//		mode.
++//
++// RETURN:      TM_OK
++// NOTES:
++//-----------------------------------------------------------------------------
++
++
++tmErrorCode_t
++tmbslPhyTomcatLoopBack (
++    tmUnitSelect_t		ethUnitId,
++    tmbslPhyEnableDisable_t	loopbackMode
++    )
++{
++#if 0
++    tmErrorCode_t	ethStatus = TM_OK;
++    UInt16		bmcr;
++
++    /* Read the existing settings of the BMCR register */
++    ethStatus = tmbslPhyTomcatRead(ethUnitId,tmbslPhyTomcatBmcr,&bmcr);
++
++    if(ethStatus != TM_OK)
++    {
++        return ethStatus ;
++    }
++
++    if(tmbslPhyEnable == loopbackMode)
++    {
++        bmcr |= TMBSL_PHYTOMCAT_BMCR_LPBK_VAL;
++    }
++    else if(tmbslPhyDisable == loopbackMode)
++    {
++        bmcr &= TMBSL_PHYTOMCAT_BMCR_LPBK_CLR;
++    }
++    else
++    {
++        ethStatus = TMBSL_ERR_PHY_NOT_SUPPORTED;
++    }
++
++    /* Write the Loopback setting to the BMCR register */
++    ethStatus = tmbslPhyTomcatWrite(ethUnitId,tmbslPhyTomcatBmcr,bmcr);
++
++    return ethStatus;
++#endif
++    return TMBSL_ERR_PHY_NOT_SUPPORTED;
++}
++
++
++//-----------------------------------------------------------------------------
++// FUNCTION:    tmbslPhyTomcatSoftReset:
++//
++// DESCRIPTION: Function will do the soft reset of the PHY device
++
++// RETURN:      TM_OK
++//
++// NOTES:
++//-----------------------------------------------------------------------------
++//
++
++tmErrorCode_t
++tmbslPhyTomcatSoftReset (
++    tmUnitSelect_t	ethUnitId
++	)
++
++{
++    return TMBSL_ERR_PHY_NOT_SUPPORTED;
++}
++
++//-----------------------------------------------------------------------------
++// FUNCTION:    tmbslPhyTomcatGetLinkStatus:
++//
++// DESCRIPTION: Function will get the link status
++
++// RETURN:      TM_OK
++//
++// NOTES:
++//-----------------------------------------------------------------------------
++
++tmErrorCode_t
++tmbslPhyTomcatGetLinkStatus (
++    tmUnitSelect_t		ethUnitId,
++    ptmbslPhyEnableDisable_t	pLinkStatus
++    )
++{
++//    tmErrorCode_t	ethStatus = TM_OK;
++
++    *pLinkStatus = tmbslPhyEnable ;
++    return(TM_OK);
++}
++
++//-----------------------------------------------------------------------------
++//	Local static functions
++//-----------------------------------------------------------------------------
++
++//-----------------------------------------------------------------------------
++// FUNCTION:    tmbslPhyTomcatRead:
++//
++// DESCRIPTION: Function will read from the Specified PHY register
++//-----------------------------------------------------------------------------
++//tmErrorCode_t
++int
++tmbslPhyTomcatRead ( tmUnitSelect_t ethUnitId, tmbslPhyTomcatReg_t reg, pUInt16	pVal)
++{
++    UInt32		timeout = 0;
++    UInt32 		pEthRegs;
++    volatile UInt32	*pAdrReg;
++    volatile UInt32	*pDataReg;
++    UInt32		regValue;
++
++    /* get Ethernet Module Reg Pointer  */
++    pEthRegs = gtmhwLIPP6100Eth_Base[ethUnitId].baseAddress; //gEthContext.pRegs; i cannot do this
++
++    /* Get the Address register */
++    pAdrReg = (UInt32*)(pEthRegs+TMHW_LIPP6100ETH_ADR_REG_OFFSET) ;
++    pDataReg = (UInt32*)(pEthRegs+TMHW_LIPP6100ETH_DATA_REG_OFFSET) ;
++
++//    spin_lock( &moca_spinlock ) ;
++    regValue = *pAdrReg;
++
++    /* Clear the earlier register value in Address register and write the new value */
++    regValue &= TMHW_LIPP6100ETH_ADR_PHY_REG_CLR;
++    regValue |= reg << TMHW_LIPP6100ETH_ADR_PHY_REG_POS;
++
++    /* Clear the bit GMII write for read operation */
++    regValue &= TMHW_LIPP6100ETH_ADR_PHY_RD_CLR;
++
++    regValue |= TMHW_LIPP6100ETH_ADR_PHY_EN_VAL;
++
++    *pAdrReg = regValue;
++
++    /* Wait till the read operation is complete */
++    do {
++        timeout++;
++    } while ( ((*pAdrReg & TMHW_LIPP6100ETH_ADR_PHY_EN_VAL) == tmbslPhyEnable) &&
++                   (timeout < PHY_TIMEOUT) );
++
++    if( (timeout == PHY_TIMEOUT) &&
++        ((*pAdrReg & TMHW_LIPP6100ETH_ADR_PHY_EN_VAL) == tmbslPhyEnable) ) {
++//            spin_unlock( &moca_spinlock ) ;
++            return(TMBSL_ERR_PHY_READ_FAILED);
++    }
++
++    /* Read the data from the data register */
++    *pVal = (UInt16) *pDataReg;
++    
++    /* Unlock the spinlock */
++//    spin_unlock( &moca_spinlock ) ;
++
++    return TM_OK;
++}
++
++//-----------------------------------------------------------------------------
++// FUNCTION:    tmbslPhyTomcatWrite:
++//
++// DESCRIPTION: Function will Write to the Specified PHY register
++//-----------------------------------------------------------------------------
++//tmErrorCode_t
++int
++tmbslPhyTomcatWrite ( tmUnitSelect_t ethUnitId, tmbslPhyTomcatReg_t reg, UInt16	val)
++{
++    UInt32		pEthRegs;
++    volatile UInt32	*pAdrReg;
++    volatile UInt32	*pDataReg;
++    UInt32		regValue;
++    UInt32		timeout = 0;
++
++    /* Get the Ethernet Module Reg pointer */
++    pEthRegs = gtmhwLIPP6100Eth_Base[ethUnitId].baseAddress; //gEthContext.pRegs;
++
++    /* Get the Address register */
++    pAdrReg = (UInt32*)(pEthRegs+TMHW_LIPP6100ETH_ADR_REG_OFFSET) ;
++    pDataReg = (UInt32*)(pEthRegs+TMHW_LIPP6100ETH_DATA_REG_OFFSET) ;
++
++//    spin_lock( &moca_spinlock ) ;
++
++    /* Write the data into data register  */
++    *pDataReg = 0;
++    *pDataReg = val;
++
++    /* Program the Register address */
++    regValue = *pAdrReg;
++
++    /* Clear the earlier register value in Address register */
++    regValue &= TMHW_LIPP6100ETH_ADR_PHY_REG_CLR;
++    regValue |= reg << TMHW_LIPP6100ETH_ADR_PHY_REG_POS;
++
++    /* Set Write operation bit and enable write */
++    regValue |= TMHW_LIPP6100ETH_ADR_PHY_WR_VAL | TMHW_LIPP6100ETH_ADR_PHY_EN_VAL ;
++
++    /* Write the value back to Address register */
++    *pAdrReg = regValue;
++
++    /* wait till the write operation is complete */
++    do {
++        timeout++;
++    } while (((*pAdrReg & TMHW_LIPP6100ETH_ADR_PHY_EN_VAL) == tmbslPhyEnable) &&
++            (timeout < PHY_TIMEOUT));
++
++    if ((timeout == PHY_TIMEOUT) &&
++        ((*pAdrReg & TMHW_LIPP6100ETH_ADR_PHY_EN_VAL) == tmbslPhyEnable) ) {        
++//        spin_unlock( &moca_spinlock ) ;
++        return(TMBSL_ERR_PHY_WRITE_FAILED);
++    }
++//    spin_unlock( &moca_spinlock ) ;
++    return TM_OK;
++}
++/* Needed if module support is needed */
++// EXPORT_SYMBOL(tmbslPhyTomcatRead); 
++// EXPORT_SYMBOL(tmbslPhyTomcatWrite); 
++
++
++//-----------------------------------------------------------------------------
++// FUNCTION:    tmbslPhyTomcatGetIdentifier:
++//
++// DESCRIPTION: This function will get the Phy Identifiers
++//
++// RETURN:      TMBSL_ERR_PHY_NOT_SUPPORTED
++//
++// NOTES:
++//-----------------------------------------------------------------------------
++
++tmErrorCode_t
++tmbslPhyTomcatGetIdentifier(
++    tmUnitSelect_t		phyUnitId,
++    ptmbslPhyIdentifier_t     	pPhyIdentifier
++    )
++{
++    return (TMBSL_ERR_PHY_NOT_SUPPORTED);
++}
++
++
++//-----------------------------------------------------------------------------
++// FUNCTION:    tmbslPhyTomcatGetLinkPartnerCapabilities:
++//
++// DESCRIPTION: This function will get the Link Partner Capabilities.
++//
++// RETURN:      TMBSL_ERR_PHY_NOT_SUPPORTED
++//
++// NOTES:
++//-----------------------------------------------------------------------------
++
++tmErrorCode_t
++tmbslPhyTomcatGetLinkPartnerCapabilities (
++    tmUnitSelect_t			ethUnitId,
++    ptmbslPhyLinkPartnerCapabilities_t	pPhyLinkPartnerCapabilities
++    )
++{
++    return (TMBSL_ERR_PHY_NOT_SUPPORTED);
++}
++
++//-----------------------------------------------------------------------------
++// FUNCTION:    tmbslPhyGetCounters:
++//
++// DESCRIPTION: This function will get the Phy counters
++//
++// RETURN:      TMBSL_ERR_PHY_NOT_SUPPORTED
++//
++// NOTES:
++//-----------------------------------------------------------------------------
++
++tmErrorCode_t
++tmbslPhyTomcatGetCounters(
++    tmUnitSelect_t		phyUnitId,
++    ptmbslPhyCounters_t     	pPhyCounters
++    )
++{
++    return(TMBSL_ERR_PHY_NOT_SUPPORTED);
++}
++
++//-----------------------------------------------------------------------------
++// FUNCTION:    tmbslPhyPcsSetConfig:
++//
++// DESCRIPTION: This function will set the pcs configuration
++//
++// RETURN:      TMBSL_ERR_PHY_NOT_SUPPORTED
++//
++// NOTES:
++//-----------------------------------------------------------------------------
++
++tmErrorCode_t
++tmbslPhyEN2510PcsSetConfig(
++    tmUnitSelect_t		phyUnitId,
++    ptmbslPhyPcsConfig_t	pPhyPcsConfig
++    )
++{
++    return (TMBSL_ERR_PHY_NOT_SUPPORTED);
++}
++
++//-----------------------------------------------------------------------------
++// FUNCTION:    tmbslPhyPcsGetConfig:
++//
++// DESCRIPTION:
++//
++// RETURN:      TMBSL_ERR_PHY_NOT_SUPPORTED
++//
++// NOTES:
++//-----------------------------------------------------------------------------
++
++tmErrorCode_t
++tmbslPhyEN2510PcsGetConfig (
++    tmUnitSelect_t		phyUnitId,
++    ptmbslPhyPcsConfig_t    	pPhyPcsConfig
++    )
++{
++    return (TMBSL_ERR_PHY_NOT_SUPPORTED);
++}
++
++//-----------------------------------------------------------------------------
++// FUNCTION:    tmbslPhyBist:
++//
++// DESCRIPTION:
++//
++// RETURN:      TMBSL_ERR_PHY_NOT_SUPPORTED
++//
++// NOTES:
++//-----------------------------------------------------------------------------
++
++ tmErrorCode_t
++tmbslEN2510PhyBist(
++    tmUnitSelect_t		phyUnitId,
++    tmbslPhyPseudoRandomSeq_t	phyPsedoRandomSeq ,
++    pUInt8                     	pBistState
++)
++{
++    return (TMBSL_ERR_PHY_NOT_SUPPORTED);
++}
++
++
++//-----------------------------------------------------------------------------
++// FUNCTION:    tmbslPhyConfigBypass:
++//
++// DESCRIPTION:
++//
++// RETURN:      TMBSL_ERR_PHY_NOT_SUPPORTED
++//
++// NOTES:
++//-----------------------------------------------------------------------------
++
++tmErrorCode_t
++tmbslEN2510PhyConfigBypass(
++    tmUnitSelect_t	phyUnitId,
++    ptmbslPhyBypass_t	pPhyBypass
++)
++{
++    return (TMBSL_ERR_PHY_NOT_SUPPORTED);
++}
++
+diff -Naupr linux-2.6.34/drivers/net/LIPP_6300ETH/comps/tmbslPhyTomcat/tomcat/inc/deleteme.h linux-2.6.34.new/drivers/net/LIPP_6300ETH/comps/tmbslPhyTomcat/tomcat/inc/deleteme.h
+--- linux-2.6.34/drivers/net/LIPP_6300ETH/comps/tmbslPhyTomcat/tomcat/inc/deleteme.h	1970-01-01 05:30:00.000000000 +0530
++++ linux-2.6.34.new/drivers/net/LIPP_6300ETH/comps/tmbslPhyTomcat/tomcat/inc/deleteme.h	2011-09-02 15:16:12.161480000 +0530
+@@ -0,0 +1,40 @@
++
++/* ***************************** */
++/*  TO be deleted */ 
++/* **************************** */
++typedef unsigned long tmErrorCode_t;
++typedef int tmUnitSelect_t, *ptmUnitSelect_t;
++typedef unsigned short  *pUInt16;           /* 16-bit unsigned integer ptr */
++typedef unsigned short  UInt16;     /* 16-bit unsigned integer */
++
++#define TM_OK                     0U         /* Global success return status   */
++#define TM_ERR_INIT_FAILED              0x014U /* Initialization failed        */
++#define TM_ERR_BAD_UNIT_NUMBER          0x005U /* Invalid device unit number   */
++#define TM_ERR_NOT_SUPPORTED            0x013U /* Function is not supported    */
++#define TM_ERR_TIMEOUT                  0x01FU /* Timeout error                */
++#define TM_ERR_HW_RESET_FAILED          0x04BU /* Hardware reset failed        */
++#define TM_ERR_READ                     0x017U /* Read error                   */
++#define TM_ERR_WRITE                    0x018U /* Write error                  */
++typedef enum
++{
++    /* Basic mode control */
++    tmbslPhyTomcatBmcr                  = 0x0,
++    /* Basic mode status */
++    tmbslPhyTomcatBmsr                  = 0x1,
++
++    /* 0x2-1E are reserved */
++
++    /*Extended status register */
++    tmbslPhyTomcatkscr          = 0xF,
++
++    /**** Vendor Specific Registers *****/
++    /* 0x10-19 are reserved */
++
++} tmbslPhyTomcatReg_t;
++
++extern int tomcat_unitnum;
++extern int tomcat_phy_addr;
++extern tmErrorCode_t tmbslPhyTomcatRead ( tmUnitSelect_t ethUnitId, tmbslPhyTomcatReg_t reg, pUInt16 pVal);
++extern tmErrorCode_t tmbslPhyTomcatWrite ( tmUnitSelect_t ethUnitId, tmbslPhyTomcatReg_t reg, UInt16 val);
++/*  ****** End of to be deleted ************ */
++
+diff -Naupr linux-2.6.34/drivers/net/LIPP_6300ETH/comps/tmbslPhyTomcat/tomcat/inc/lx3_cpu.h linux-2.6.34.new/drivers/net/LIPP_6300ETH/comps/tmbslPhyTomcat/tomcat/inc/lx3_cpu.h
+--- linux-2.6.34/drivers/net/LIPP_6300ETH/comps/tmbslPhyTomcat/tomcat/inc/lx3_cpu.h	1970-01-01 05:30:00.000000000 +0530
++++ linux-2.6.34.new/drivers/net/LIPP_6300ETH/comps/tmbslPhyTomcat/tomcat/inc/lx3_cpu.h	2011-09-02 15:16:12.164484000 +0530
+@@ -0,0 +1,241 @@
++//////////////////////////////////////////////////////////////////////////////
++// Copyright 2010, Cisco Systems, Inc.
++// All Rights Reserved. 
++// 
++// This is UNPUBLISHED PROPRIETARY SOURCE CODE of Cisco Systems, Inc; 
++// the contents of this file may not be disclosed to third parties, copied or 
++// duplicated in any form, in whole or in part, without the prior written 
++// permission of Cisco Systems, Inc.
++// 
++// RESTRICTED RIGHTS LEGEND: 
++// Use, duplication or disclosure by the Government is subject to restrictions 
++// as set forth in subdivision (c)(1)(ii) of the Rights in Technical Data 
++// and Computer Software clause at DFARS 252.227-7013, and/or in similar or 
++// successor clauses in the FAR, DOD or NASA FAR Supplement. Unpublished - 
++// rights reserved under the Copyright Laws of the United States. 
++// 
++//////////////////////////////////////////////////////////////////////////////
++#ifndef _CPU_H_
++#define _CPU_H_
++
++//#include <moca_types.h>
++
++#ifndef MOCA_CPU_REGS
++#define CPU_BASE                0x60098000
++#else
++#define CPU_BASE                MOCA_CPU_REGS
++#endif // MOCA_CPU_BASE
++
++#define CPU_REGS_BASE           (CPU_BASE)
++#define CPU_CTRL_MB_BASE        (CPU_BASE | 0x400)
++#define CPU_STAT_MB_BASE        (CPU_BASE | 0x800)
++
++// Host/Xp70 Mailbox Interface
++#define HOST_MB_IT              (CPU_REGS_BASE | 0x0000)
++#define LX3_MB_IT               (CPU_REGS_BASE | 0x0004)
++# define MB_WR_PTR_INT_ENAB         (1<<0)
++# define MB_RD_PTR_INT_ENAB         (1<<1)
++# define MB_WR_PTR_INT              (1<<2)
++# define MB_RD_PTR_INT              (1<<3)
++#define CTRL_WR_PTR             (CPU_REGS_BASE | 0x0008)
++#define CTRL_RD_PTR             (CPU_REGS_BASE | 0x000c)
++#define STAT_WR_PTR             (CPU_REGS_BASE | 0x0010)
++#define STAT_RD_PTR             (CPU_REGS_BASE | 0x0014)
++#define CTRL_LEVEL              (CPU_REGS_BASE | 0x0018)
++#define STAT_LEVEL              (CPU_REGS_BASE | 0x001c)
++#define CTRL_ACK_LEVEL          (CPU_REGS_BASE | 0x0020)
++#define STAT_ACK_LEVEL          (CPU_REGS_BASE | 0x0024)
++#define CTRL_MB_SIZE                32   // Number of Words in CTRL Mailbox
++#define STAT_MB_SIZE                32   // Number of Words in STAT Mailbox
++#define CTRL_MB(x)              (CPU_CTRL_MB_BASE + ((x) << 2))
++#define STAT_MB(x)              (CPU_STAT_MB_BASE + ((x) << 2))
++
++#define INT_MASK0               (CPU_REGS_BASE | 0x0030)
++#define INT_MASK1               (CPU_REGS_BASE | 0x0034)
++#define INT_MASK2               (CPU_REGS_BASE | 0x0038)
++#define INT_MASK3               (CPU_REGS_BASE | 0x003c)
++#define INT_MASK(x)             (CPU_REGS_BASE | 0x0030 | (((x)&3) << 2))
++#define INT_STATUS0             (CPU_REGS_BASE | 0x0040)
++#define INT_STATUS1             (CPU_REGS_BASE | 0x0044)
++#define INT_STATUS2             (CPU_REGS_BASE | 0x0048)
++#define INT_STATUS3             (CPU_REGS_BASE | 0x004c)
++#define INT_STATUS(x)           (CPU_REGS_BASE | 0x0040 | (((x)&3) << 2))
++# define    TIMER_INT(x)            (1 << (x))
++# define    CTRL_MB_INT             (1 << 12)
++# define    STAT_MB_INT             (1 << 13)
++# define    DMA_SRC_INT(x)          (1 << (14+((x)&0x3)))
++# define    DMA_TFR_INT(x)          (1 << (14+((x)&0x3)))
++# define    DMA_DST_INT(x)          (1 << (18+((x)&0x3)))
++# define    DMA_EOP_INT(x)          (1 << (18+((x)&0x3)))
++# define    DMA_STOP_INT(x)         (1 << (22+((x)&0x3)))
++# define    DMA_CAPT_INT            (1 << 22)
++# define    MOCA_STAT_INT           (1 << 26)
++# define    GMAC_STAT_INT           (1 << 27)
++# define    MOCA_ERROR_INT          (1 << 28)
++# define    GMAC_ERROR_INT          (1 << 29)
++# define    SERDES_INT              (1 << 30)
++// Hardware interrupt/event number
++# define    TIMER_INT_NUM(x)        (x)
++# define    DMA_TFR_INT_NUM(x)      (14+((x)&0x03))
++# define    DMA_DST_INT_NUM(x)      (18+((x)&0x03))
++# define    DMA_EOP_INT_NUM(x)      (18+((x)&0x03))
++# define    MOCA_STAT_INT_NUM       26
++# define    GMAC_STAT_INT_NUM       (27)
++# define    DMA_CAPT_INT_NUM        (22)
++
++
++// Hardware Events from Software perspective (Leading Zero Count used to locate
++// Event so Software event is 31 - (HW Location)
++# define    gEvt_MOCA_STAT         (31 - MOCA_STAT_INT_NUM)    // 5
++# define    gEvt_CTRL_MB           (31 - 12)
++# define    gEvt_STAT_MB           (31 - 13)
++# define    gEvt_WQ0               (31 - DMA_DST_INT_NUM(0))   // 13
++# define    gEvt_RQ0               (31 - DMA_DST_INT_NUM(1))   // 12
++# define    gEvt_WQ1               (31 - DMA_DST_INT_NUM(2))   // 11
++# define    gEvt_RQ1               (31 - DMA_DST_INT_NUM(3))   // 10
++# define    gEvt_Tfr(x)            (31 - DMA_TFR_INT_NUM(x))
++# define    gEvt_CAPT              (31 - DMA_CAPT_INT_NUM)
++# define    gHW_WQ0_ALL            DMA_DST_INT(0)              // (1 << 18) (1<<gHW_WQ0)
++# define    gHW_RQ0_ALL            DMA_DST_INT(1)              // (1 << 19) (1<<gHW_RQ0)
++# define    kEvt_GmacTx            (31 - DMA_DST_INT_NUM(2))   // 11
++# define    kEvt_HwGmacTx          DMA_DST_INT_NUM(2)           // 20
++# define    kEvt_GmacTxHwMask      DMA_DST_INT(2)              // (1 << 20)
++# define    kEvt_GmacRx            (gEvt_RQ1)    // 10
++# define    kEvt_GmacRx1           kEvt_GmacRx                 // NA, define as kEvt+GmacRx
++
++#define MOCA_TESTBUS            (CPU_REGS_BASE | 0x0054)
++# define MOCA_GMAC_DBG_SEL          (1 << 4) // Select GMAC Debug Bus
++# define MOCA_MAC_DBG_SEL           (0 << 4) // Select MAC Debug Bus
++# define MOCA_GMAC_TB_SEL           (1 << 0) // Select GMAC Testbus
++# define MOCA_MAC_TB_SEL            (0 << 0) // Select MAC Testbus
++# define MOCA_PHY_TB_SEL            (1 << 1) // Select PHY Testbus
++# define MOCA_DMA_DBG_SEL(x)        (((x) << 4) | 0x40)
++
++#define MOCA_LED_CONFIG         (CPU_REGS_BASE | 0x0058)
++#define MOCA_STATUS_LED         (CPU_REGS_BASE | 0x005C)
++
++#define GMAC_RX_INFO_FIFO       (CPU_REGS_BASE | 0x0060)
++#define RX_EVEN_LENGTH(x)           ((x) & 0x7ff)
++#define RX_EVEN_CHANNEL(x)          (((x) >> 11) & 0x7)
++#define RX_GOOD(x)                  (((x) >> 14) & 0x1)
++#define RX_INFO_CC(x)               (((x) >> 15) & 0x1)
++#define RX_ODD_LENGTH(x)            (((x) >> 16) & 0x7ff)
++#define RX_ODD_CHANNEL(x)           (((x) >> 27) & 0x7)
++#define RX_STATS_EMPTY              (((x) >> 30) & 0x1)
++#define RX_INFO_EMPTY               (((x) >> 31) & 0x1)
++#define GMAC_RX_INFO            (CPU_REGS_BASE | 0x0064)
++#define GMAC_RX_STATS_FIFO      (CPU_REGS_BASE | 0x0068)
++
++#define SW_INT_MASK0            (CPU_REGS_BASE | 0x0080)
++#define SW_INT_MASK1            (CPU_REGS_BASE | 0x0084)
++#define SW_INT_MASK2            (CPU_REGS_BASE | 0x0088)
++#define SW_INT_MASK3            (CPU_REGS_BASE | 0x008c)
++#define SW_INT_MASK(x)          (CPU_REGS_BASE | 0x0080 | (((x)&3) << 2))
++#define SW_INT_STATUS0          (CPU_REGS_BASE | 0x0090)
++#define SW_INT_STATUS1          (CPU_REGS_BASE | 0x0094)
++#define SW_INT_STATUS2          (CPU_REGS_BASE | 0x0098)
++#define SW_INT_STATUS3          (CPU_REGS_BASE | 0x009c)
++#define SW_INT_STATUS(x)        (CPU_REGS_BASE | 0x0090 | (((x)&3) << 2))
++#define SW_INT_SET0             (CPU_REGS_BASE | 0x00a0)
++#define SW_INT_SET1             (CPU_REGS_BASE | 0x00a4)
++#define SW_INT_SET2             (CPU_REGS_BASE | 0x00a8)
++#define SW_INT_SET3             (CPU_REGS_BASE | 0x00ac)
++#define SW_INT_SET(x)           (CPU_REGS_BASE | 0x00a0 | (((x)&3) << 2))
++
++#define MUTEX_WAIT0             (CPU_REGS_BASE | 0x00b0)
++#define MUTEX_WAIT1             (CPU_REGS_BASE | 0x00b4)
++#define MUTEX_WAIT2             (CPU_REGS_BASE | 0x00b8)
++#define MUTEX_WAIT3             (CPU_REGS_BASE | 0x00bc)
++#define MUTEX_WAIT(x)           (CPU_REGS_BASE | 0x00b0 | (((x)&3) << 2))
++#define MUTEX_OWN0              (CPU_REGS_BASE | 0x00c0)
++#define MUTEX_OWN1              (CPU_REGS_BASE | 0x00c4)
++#define MUTEX_OWN2              (CPU_REGS_BASE | 0x00c8)
++#define MUTEX_OWN3              (CPU_REGS_BASE | 0x00cc)
++#define MUTEX_OWN(x)            (CPU_REGS_BASE | 0x00c0 | (((x)&3) << 2))
++#define MUTEX_STATUS            (CPU_REGS_BASE | 0x00d0)
++
++// MoCA RX Stats Fifo Interface Registers
++#define MOCA_RX_STAT_FIFO       (CPU_REGS_BASE | 0x00f0)
++#define MOCA_RX_STATUS0         (CPU_REGS_BASE | 0x00f4)
++# define MOCA_RS_ERR(x)              (((x) & 0x00ff0000) >> 16)
++# define MOCA_RX_LENGTH(x)           (((x) & 0x0000ffff))
++# define MOCA_PHY_ERR(x)             (((x) & 0x0f000000) >> 24)
++# define MOCA_MAC_ERR(x)             (((x) & 0xf0000000) >> 28)
++# define MOCA_PHY_PKT_ERR            (1 << 24)
++# define MOCA_PHY_FIFO_OVFL          (1 << 25)
++# define MOCA_PHY_CANCEL             (1 << 26)
++# define MOCA_HEADER_CRC_ERR         (1 << 28)
++# define MOCA_PAYLOAD_CRC_ERR        (1 << 29)
++# define MOCA_PACKET_ERR             (1 << 30)
++# define MOCA_TIMEOUT_ERR            (1 << 31)
++# define MOCA_RX_ERROR(x)            (((x) & 0xff000000) >> 16) // Count on CRC (Only check CRC and phy error bits)
++#define MOCA_RX_STATUS1         (CPU_REGS_BASE | 0x00f8)
++#define MOCA_CORR_BYTES(x)          (((x) & 0x00000fff))
++#define MOCA_PHY_FLAGS(x )          (((x) & 0x0000f000) >> 12)
++#define MOCA_CORR_BLKS(x)           (((x) & 0x00ff0000) >> 16)
++#define MOCA_UNCORR_BLKS(x)         (((x) & 0xff000000) >> 24)
++#define MOCA_RX_STATUS2         (CPU_REGS_BASE | 0x00fc)
++#define MOCA_CFO_FFT(x)             (((x) & 0x0000ffff))
++#define MOCA_RX_BANK(x)             (((x) & 0x00010000) >> 16)
++#define MOCA_STATS_EMPTY(x)         ( (x) & 0x00020000)
++
++#define ATU_SRC_BASE0           (CPU_REGS_BASE | 0x0100)
++#define ATU_SRC_DST0            (CPU_REGS_BASE | 0x0104)
++#define ATU_ADDR_MASK0          (CPU_REGS_BASE | 0x0108)
++#define ATU_SRC_BASE1           (CPU_REGS_BASE | 0x010c)
++#define ATU_SRC_DST1            (CPU_REGS_BASE | 0x0110)
++#define ATU_ADDR_MASK1          (CPU_REGS_BASE | 0x0114)
++
++#define CAPTURE_RUN_STOP        (CPU_REGS_BASE | 0x0140)
++#define CAPTURE_ARMED_BUSY      (CPU_REGS_BASE | 0x0144)
++#define CAPTURE_SELECT          (CPU_REGS_BASE | 0x0148)
++#define CAPTURE_ADDRESS         (CPU_REGS_BASE | 0x014C)
++#define CAPTURE_SIZE            (CPU_REGS_BASE | 0x0150)
++#define CAPTURE_BSIZE           (CPU_REGS_BASE | 0x0154)
++#define CAPTURE_LAST_ADDR       (CPU_REGS_BASE | 0x0158)
++#define CAPTURE_OFFSET(x)       (CPU_REGS_BASE | (0x0160 + ((x)<<2)))
++#define CAPTURE_WORDS(x)        (CPU_REGS_BASE | (0x0170 + ((x)<<2)))
++ 
++#define SRC_LEVEL(x)            (CPU_REGS_BASE | 0x0180 + (((x)&3) << 2))
++#define DST_LEVEL(x)            (CPU_REGS_BASE | 0x0190 + (((x)&3) << 2))
++#define STOP_LEVEL(x)           (CPU_REGS_BASE | 0x01a0 + (((x)&3) << 2))
++
++#define PHYTX_SRC_LEVEL         (CPU_REGS_BASE | 0x0180)
++#define PHYRX_SRC_LEVEL         (CPU_REGS_BASE | 0x0184)
++#define GMACTX_SRC_LEVEL        (CPU_REGS_BASE | 0x0188)
++#define GMACRX_SRC_LEVEL        (CPU_REGS_BASE | 0x018c)
++#define PHYTX_DST_LEVEL         (CPU_REGS_BASE | 0x0190)
++#define PHYRX_DST_LEVEL         (CPU_REGS_BASE | 0x0194)
++#define GMACTX_DST_LEVEL        (CPU_REGS_BASE | 0x0198)
++#define GMACRX_DST_LEVEL        (CPU_REGS_BASE | 0x019c)
++#define PHYTX_STOP_LEVEL        (CPU_REGS_BASE | 0x01a0)
++#define PHYRX_STOP_LEVEL        (CPU_REGS_BASE | 0x01a4)
++#define GMACTX_STOP_LEVEL       (CPU_REGS_BASE | 0x01a8)
++#define GMACRX_STOP_LEVEL       (CPU_REGS_BASE | 0x01ac)
++
++#define PERF_CNTR_CFG           (CPU_REGS_BASE | 0x01c0)
++# define PERF_CNTR_START(x)     (1 << ((x)*4))        
++# define PERF_CNTR_STOP(x)      (2 << ((x)*4))        
++# define PERF_CNTR_CLEAR(x)     (4 << ((x)*4))        
++# define PERF_CNTR_ACTIVE(x)    (8 << ((x)*4))        
++ 
++#define PERF_CNTR0              (CPU_REGS_BASE | 0x01c4)
++#define PERF_CNTR1              (CPU_REGS_BASE | 0x01c8)
++#define PERF_CNTR2              (CPU_REGS_BASE | 0x01cc)
++#define PERF_CNTR3              (CPU_REGS_BASE | 0x01d0)
++#define PERF_CNTR4              (CPU_REGS_BASE | 0x01d4)
++
++#define DMA_CONFIG              (CPU_REGS_BASE | 0x01f8)
++#define LX3_CFG_STATUS          (CPU_REGS_BASE | 0x01fc)
++
++#define MUTEX0(x)               (CPU_REGS_BASE | 0x0200 | (((x)&0x1f) << 4))
++#define MUTEX1(x)               (CPU_REGS_BASE | 0x0280 | (((x)&0x1f) << 4))
++#define MUTEX2(x)               (CPU_REGS_BASE | 0x0300 | (((x)&0x1f) << 4))
++#define MUTEX3(x)               (CPU_REGS_BASE | 0x0380 | (((x)&0x1f) << 4))
++#define MUTEX(x,y)              (CPU_REGS_BASE | (0x0200 + (((x)&0x3) << 7)) | (((y)&0x1f) << 4))
++
++#define kLx3_PhyQueue               0
++#define kLx3_GmiiQueue              1
++
++#endif  // _CPU_H_
++
+diff -Naupr linux-2.6.34/drivers/net/LIPP_6300ETH/comps/tmbslPhyTomcat/tomcat/inc/tomcat_mdio.h linux-2.6.34.new/drivers/net/LIPP_6300ETH/comps/tmbslPhyTomcat/tomcat/inc/tomcat_mdio.h
+--- linux-2.6.34/drivers/net/LIPP_6300ETH/comps/tmbslPhyTomcat/tomcat/inc/tomcat_mdio.h	1970-01-01 05:30:00.000000000 +0530
++++ linux-2.6.34.new/drivers/net/LIPP_6300ETH/comps/tmbslPhyTomcat/tomcat/inc/tomcat_mdio.h	2011-09-02 15:16:12.167479000 +0530
+@@ -0,0 +1,57 @@
++#ifndef  _TOMCAT_MDIO_H_
++#define _TOMCAT_MDIO_H_
++
++#define _BV(n) (1<<n)
++
++#define CONTROL_REG  20  
++#define CONTROL_REG_U  28  
++
++#define STATUS_REG 23
++#define STATUS_REG_U 31 
++
++#define AHB_ERROR  _BV(2) 
++#define AHB_WRITE  _BV(1)
++#define AHB_READ   _BV(0) 
++
++#define AHB_SIZE_8  0x00
++#define AHB_SIZE_16  0x08
++#define AHB_SIZE_32  0x10 
++
++#define AHB_OP_NOP  0x00
++#define AHB_OP_WRR  0x01
++#define AHB_OP_WRA  0x02
++#define AHB_OP_RDR  0x03
++#define AHB_OP_RDA  0x04
++
++#define AHB_ADDR_L		16
++#define AHB_ADDR_H		17
++#define AHB_ADDR_L_U		24
++#define AHB_ADDR_H_U		25
++
++#define AHB_DATA_WR_L		18
++#define AHB_DATA_WR_H		19
++#define AHB_DATA_WR_L_U		26 
++#define AHB_DATA_WR_H_U		27
++
++#define AHB_DATA_RD_L		21 
++#define AHB_DATA_RD_H		22 
++#define AHB_DATA_RD_L_U		29 
++#define AHB_DATA_RD_H_U		30 
++
++unsigned short tomcat_read_mdio_data(int reg_addr);
++void tomcat_write_mdio_data(int reg_addr,unsigned short val);
++int tomcat_lx3_mdio_write_memory(int reg_addr, unsigned int val);
++unsigned int tomcat_lx3_mdio_read_memory(u32 reg_addr);
++void turbo_read_open(u32 addr);
++u32 turbo_read(void);
++void turbo_write_open(u32 addr);
++void turbo_write(u32 data);
++
++int tomcat_write( u32 addr, u32 data);
++int tomcat_read( u32 addr, u32 *data);
++int tomcat_write_burst( u32 addr, u32 *data, unsigned int size, int inc );
++int tomcat_read_burst( u32 addr, u32 *data, unsigned int size, int inc);
++
++int display_tomcat_mem(u32 addr, int size, char * desc);
++
++#endif // _TOMCAT_MDIO_H_
+diff -Naupr linux-2.6.34/drivers/net/LIPP_6300ETH/comps/tmbslPhyTomcat/tomcat/inc/tomcat_nl.h linux-2.6.34.new/drivers/net/LIPP_6300ETH/comps/tmbslPhyTomcat/tomcat/inc/tomcat_nl.h
+--- linux-2.6.34/drivers/net/LIPP_6300ETH/comps/tmbslPhyTomcat/tomcat/inc/tomcat_nl.h	1970-01-01 05:30:00.000000000 +0530
++++ linux-2.6.34.new/drivers/net/LIPP_6300ETH/comps/tmbslPhyTomcat/tomcat/inc/tomcat_nl.h	2011-09-02 15:16:12.169489000 +0530
+@@ -0,0 +1,37 @@
++
++#ifndef _TOMCAT_NL_H_
++#define _TOMCAT_NL_H_
++
++//#define NETLINK_USER 31
++
++#define NLK_ACK  1
++#define NLK_ERR  2
++
++#define NLK_FILE_BOOT 3
++#define NLK_FILE_FIRMCODE 4
++#define NLK_FILE_FIRMDATA 5
++#define NLK_FILE_END 6
++#define NLK_READ 7
++#define NLK_WRITE 8
++#define NLK_BULK_READ 9
++#define NLK_BULK_WRITE 10
++#define NLK_RESET 11
++#define NLK_PHY_READ 12
++#define NLK_PHY_WRITE 13
++#define NLK_SETUP 14
++
++#define LX3_CAPTURE_RAM     0x600C0000
++#define LX3_CAPTURE_RAM_END     0x600E0000
++#define LX3_PROGRAM_MEMORY  0x50000000
++#define LX3_PROGRAM_MEMORY_END  0x50030000
++#define LX3_DATA_MEMORY     0x50040000
++#define LX3_DATA_MEMORY_END     0x50070000
++
++struct mdio_data{
++  unsigned int count;
++  unsigned int addr;
++  unsigned int data;
++}  ;
++void tomcat_nl_recv_msg(struct sk_buff *skb);
++
++#endif // _TOMCAT_NL_H_
+diff -Naupr linux-2.6.34/drivers/net/LIPP_6300ETH/comps/tmbslPhyTomcat/tomcat/src/tomcat.c linux-2.6.34.new/drivers/net/LIPP_6300ETH/comps/tmbslPhyTomcat/tomcat/src/tomcat.c
+--- linux-2.6.34/drivers/net/LIPP_6300ETH/comps/tmbslPhyTomcat/tomcat/src/tomcat.c	1970-01-01 05:30:00.000000000 +0530
++++ linux-2.6.34.new/drivers/net/LIPP_6300ETH/comps/tmbslPhyTomcat/tomcat/src/tomcat.c	2011-09-02 15:16:12.184483000 +0530
+@@ -0,0 +1,344 @@
++#include <linux/module.h>
++#include <net/sock.h>
++#include <linux/netlink.h>
++#include <linux/skbuff.h>
++
++#include <tmbslPhyTomcat.h>
++#include <lx3_cpu.h>
++#include <tomcat_mdio.h>
++#include <tomcat_nl.h>
++
++extern struct sock *nl_sk; 
++
++static int nl_pid;
++
++static struct sk_buff * nl_alloc_mem(u32 len, u16 type , void **data) 
++{
++    struct sk_buff *skb_out;
++    struct nlmsghdr *nlh;
++
++    skb_out = nlmsg_new(len,0);
++    if (!skb_out) {
++       printk(KERN_ERR"Failed to allocate new skb\n");
++       return NULL;
++    }
++     nlh = nlmsg_put(skb_out, 0,0, NLMSG_DONE, len,0);
++     nlh->nlmsg_type = type;
++     NETLINK_CB(skb_out).dst_group = 0;
++     if ( len != 0) {
++       *data = nlmsg_data(nlh); 
++     }
++   return skb_out;
++}
++
++static void nl_send_message(struct sk_buff *skb_out, pid_t nl_pid) 
++{
++  int res;
++  res = nlmsg_unicast(nl_sk,skb_out, nl_pid);
++   if (res < 0)
++      printk(KERN_INFO"Error while sending back to user\n");
++  return;
++}
++
++static void nl_ack(pid_t nl_pid)
++{
++    struct sk_buff *skb_out;
++    skb_out = nl_alloc_mem(0, NLK_ACK, NULL);
++    nl_send_message(skb_out, nl_pid);
++}
++static void write_p_data( struct nlmsghdr *nlh) 
++{
++   struct mdio_data *mdio = (struct mdio_data *)nlmsg_data(nlh);
++//   struct mdio_data *read;
++//   pid_t pid = nlh->nlmsg_pid ;
++//   struct sk_buff *skb_out;
++
++   tomcat_write_mdio_data((mdio->addr& 0xff), (mdio->data& 0xffff));
++   nl_ack(nl_pid);
++}
++
++static void read_p_data( struct nlmsghdr *nlh) 
++{
++   struct sk_buff *skb_out;
++   struct mdio_data *read;
++   struct mdio_data *mdio = (struct mdio_data *)nlmsg_data(nlh);
++   pid_t pid = nlh->nlmsg_pid;
++
++   skb_out = nl_alloc_mem(sizeof(struct mdio_data), NLK_READ,(void **) &read);
++   read->addr = mdio->addr;
++   read->data = tomcat_read_mdio_data(read->addr&0xff);
++   nl_send_message(skb_out, pid);
++}
++
++
++static void write_s_data( struct nlmsghdr *nlh) 
++{
++   struct mdio_data *mdio = (struct mdio_data *)nlmsg_data(nlh);
++//   pid_t pid = nlh->nlmsg_pid ;
++
++   tomcat_write(mdio->addr, mdio->data);
++   nl_ack(nl_pid);
++}
++
++static void read_s_data( struct nlmsghdr *nlh) 
++{
++   struct sk_buff *skb_out;
++   struct mdio_data *read;
++   struct mdio_data *mdio = (struct mdio_data *)nlmsg_data(nlh);
++   pid_t pid = nlh->nlmsg_pid;
++
++   skb_out = nl_alloc_mem(sizeof(struct mdio_data), NLK_READ,(void **) &read);
++   read->addr = mdio->addr;
++   tomcat_read(read->addr, &(read->data));
++   nl_send_message(skb_out, pid);
++}
++
++/*********** To Check ******************/
++static void write_m_data( struct nlmsghdr *nlh) 
++{
++//   struct sk_buff *skb_out;
++   struct mdio_data *read;
++
++   unsigned int count; 
++   struct mdio_data *mdio = (struct mdio_data *)nlmsg_data(nlh);
++//   pid_t pid = nlh->nlmsg_pid ;
++
++   count = read->count;
++   tomcat_write_burst(mdio->addr, &mdio->data, count, 4  );
++   nl_ack(nl_pid);
++}
++
++/****** TO Check ******************/
++static void read_m_data( struct nlmsghdr *nlh) 
++{
++   struct sk_buff *skb_out;
++   struct mdio_data *read;
++   struct mdio_data *mdio = (struct mdio_data *)nlmsg_data(nlh);
++   pid_t pid = nlh->nlmsg_pid;
++   
++   unsigned int count;
++
++   count = mdio->count + 4 - (mdio->count %4); 
++
++   skb_out = nl_alloc_mem(sizeof(struct mdio_data)+ count*4, NLK_READ,(void **) &read);
++   read->addr = mdio->addr;
++   tomcat_read_burst(read->addr, &(read->data), count, 4);
++   printk("Count : %d : addr : 0x%x : data : 0x%x  0x%x 0x%x\n", count, read->addr,  *(&read->data), *((&read->data)+1) , *((&read->data)+4) );
++   nl_send_message(skb_out, pid);
++}
++
++static int chrtonib(char val)
++{
++   if ((val >= 0x30) && (val <= 0x39)) return (val-0x30);
++   if ((val >= 0x41) && (val <= 0x46)) return (val-0x41+10);
++   if ((val >= 0x61) && (val <= 0x66)) return (val-0x61+10);
++   return 0;
++}
++
++
++static int get_address_data(char *input, u32 *val, u32 *addr)
++{
++ int i;
++ if ( (*(input) != 0x3a) || (*(input +1) != 0x30) || (*(input+2) != 0x34)) {
++//    printk(KERN_INFO"Address reading ignored : 0x%x 0x%x 0x%x 0x%x\n", *(input), *(input+1),*(input+2), *(input+3));
++  return 0;
++ }
++  
++ *val=0; *addr=0;
++ for (i=0; i<8; i++)
++   *val=(*val<<4) | chrtonib(*(input+i+9));
++ for (i=0;i<4;i++)
++  *addr = (*addr<<4) | chrtonib(*(input+i+3));
++//  printk(KERN_INFO"Address reading  : 0x%x 0x%x \n", *addr, *val);
++ return 1; 
++}
++
++static void tomcat_load_file( struct nlmsghdr *nlh) 
++{
++ static u32 base_addr;
++ static u32 end_addr;
++ static int file_f = 1;
++ u32 data;
++ u32 address;
++ char *f_dat = (char *)nlmsg_data(nlh);
++ int i;
++// u32 clr_i;
++
++  if ((file_f == 1)) {
++      file_f = 0;
++      switch(nlh->nlmsg_type)
++      {
++          case NLK_FILE_BOOT:
++	      base_addr = LX3_CAPTURE_RAM;
++              end_addr = LX3_CAPTURE_RAM_END;
++              if (tomcat_write(LX3_CFG_STATUS,0x15)) {
++                  printk(KERN_INFO" Bootcode LX3 write =0x15 failed\n");
++                  return;
++              }
++              break;
++          case NLK_FILE_FIRMCODE:
++	      base_addr = LX3_PROGRAM_MEMORY;
++	      end_addr = LX3_PROGRAM_MEMORY_END;
++              if (tomcat_write(LX3_CFG_STATUS,0x0d)) {
++                  printk(KERN_INFO" Bootcode LX3 write =0x0d failed\n");
++                  return;
++              }
++              break;
++          case NLK_FILE_FIRMDATA:
++	      base_addr = LX3_DATA_MEMORY;
++	      end_addr = LX3_DATA_MEMORY_END;
++              break;
++          default:
++              break;
++      }
++      /* Cleanup mem before writing */
++      /*
++      for (i=base_addr; i<= end_addr; i+=4) {
++         tomcat_write(i,0); 
++      }
++      */
++  }
++  for(i=0; i < nlh->nlmsg_len; i+=20) {
++//    unsigned short tmpdata;
++    if (get_address_data( (f_dat +i), &data, &address))
++    {
++         address=base_addr+4*address;
++         if (address <= end_addr) { 
++          if (tomcat_write(address,data)) {
++              // printk(KERN_INFO"Bootcode LX3 write at address: 0x%x, with value : 0x%x failed\n",address, data );
++               continue;
++          }
++         } else {
++             // printk(KERN_INFO" IGNORED : LX3 write at address: 0x%x, with value : 0x%x \n",address, data );
++              continue;
++       }
++     } 
++  }
++  if ((file_f == 0) && (nlh->nlmsg_type == NLK_FILE_END)) {
++     file_f =1;
++       
++       if (( base_addr == LX3_CAPTURE_RAM)) {
++        if (tomcat_write(LX3_CFG_STATUS,0x00)) {
++         // printk(KERN_INFO"Bootcode LX3 write =0x0 failed\n");
++         return;
++       }
++     } else if ( base_addr == LX3_DATA_MEMORY) {
++        if (tomcat_write(LX3_CFG_STATUS,0x08)) {
++         // printk(KERN_INFO"Bootcode LX3 write =0x0 failed\n");
++         return;
++       }
++     }
++     nl_ack(nlh->nlmsg_pid);
++   }
++}
++
++void decode_user_pkts( struct nlmsghdr *nlh)
++{
++    switch( nlh->nlmsg_type)
++    {
++
++        case NLK_FILE_BOOT:
++        case NLK_FILE_FIRMCODE:
++        case NLK_FILE_FIRMDATA:
++        case NLK_FILE_END:
++           tomcat_load_file(nlh);
++           break;
++        case NLK_READ:
++            read_s_data(nlh);
++            break;
++        case NLK_WRITE:
++            write_s_data(nlh);
++            break;
++         case NLK_PHY_READ:
++            read_p_data(nlh);
++            break;
++         case NLK_PHY_WRITE:
++            write_p_data(nlh);
++            break;
++         case NLK_BULK_READ:
++            read_m_data(nlh);
++            break;
++         case NLK_BULK_WRITE:
++            write_m_data(nlh);
++            break;
++         case NLK_ACK:
++               nl_ack(nlh->nlmsg_pid);
++               break;
++         case NLK_RESET:
++                writel(0x00008000, 0xe06d503c); //We are writing to GPIO directly too bad
++                printk(KERN_INFO "MoCA SoC in-reset\n");
++                writel(0x80008000, 0xe06d503c); //We are writing to GPIO directly too too bad
++                printk(KERN_INFO "MoCA SoC out of reset\n");
++                nl_ack(nlh->nlmsg_pid);
++            break;
++         case NLK_SETUP:
++            {
++                 u32 i;
++                 u32 data;
++#if 0
++                 writel(0xe06b8000, (1<<16) | (1<<15) | (1<<14) | (1<<11) |  (1<<7) | (1<<3) | (1<<2));
++                 tomcat_write(0x60090008,(0<<2) | (0<<3) | (1<<2) | (1<<3)); //GMAC_MAC_TXCNTRL0 &= ~(TX_FCS_CTRL | TX_IN_BAND_FCS);
++                // slow down tx
++                 tomcat_write(0x60090110,(1518<<16) | (0<<8) | (3<<0)); //GMAC_STREAM_CNTRL = (RX_WAIT(0) | TX_WAIT(3) | TX_LEVEL(1518));
++              // reset
++              tomcat_write(0x60090010,1); //    GMAC_MAC_TXCNTRL2   = TX_RESET;
++              tomcat_write(0x60090028,1); //    GMAC_MAC_RXCNTRL2   = RX_RESET;
++              tomcat_write(0x60090010,0);  //GMAC_MAC_TXCNTRL2   = 0;
++              tomcat_write(0x60090028,0);  //GMAC_MAC_RXCNTRL2   = 0;
++#endif
++              for (i=0x50000000; i< 0x50030000; i+=4) {
++                  tomcat_read(i,&data);
++                  printk(KERN_INFO"Address :0x%x Data: 0x%x\n",i,data);
++              }
++              
++//              for (i=0x50001f00;i<0x50002020;i+=4) tomcat_write(i,0);
++               nl_ack(nlh->nlmsg_pid);
++           }
++            break;
++/*
++           {
++           unsigned int val;
++           tomcat_write(LX3_CAPTURE_RAM, 0x12345678);
++           tomcat_read(LX3_CAPTURE_RAM, &val);
++           printk(KERN_INFO"Value at 0x%x :0x%x\n", LX3_CAPTURE_RAM, val);
++           }
++*/
++            
++         default :
++            return;   
++    }
++}
++
++void tomcat_nl_recv_msg(struct sk_buff *skb)
++{
++  struct nlmsghdr *nlh;
++
++  nlh = (struct nlmsghdr*)skb->data;
++  nl_pid = nlh->nlmsg_pid;
++
++  decode_user_pkts(nlh);
++} 
++
++#if 0
++/* In case you are doing a module */
++static int __init hello_init(void)
++{
++  printk("Entering:%s\n",__FUNCTION__);
++  nl_sk=netlink_kernel_create(&init_net, NETLINK_USER, 0, tomcat_nl_recv_msg, NULL, THIS_MODULE);
++  if (!nl_sk) {
++     printk(KERN_ALERT"Error creating NL socket.\n");
++     return -10;
++  }
++  return 0;
++}
++static void __exit hello_exit(void) 
++{
++  printk(KERN_INFO"Exiting: %s\n",__FUNCTION__);
++  netlink_kernel_release(nl_sk);
++}
++
++module_init(hello_init);
++module_exit(hello_exit);
++
++MODULE_LICENSE("GPL");
++#endif
+diff -Naupr linux-2.6.34/drivers/net/LIPP_6300ETH/comps/tmbslPhyTomcat/tomcat/src/tomcat_mdio.c linux-2.6.34.new/drivers/net/LIPP_6300ETH/comps/tmbslPhyTomcat/tomcat/src/tomcat_mdio.c
+--- linux-2.6.34/drivers/net/LIPP_6300ETH/comps/tmbslPhyTomcat/tomcat/src/tomcat_mdio.c	1970-01-01 05:30:00.000000000 +0530
++++ linux-2.6.34.new/drivers/net/LIPP_6300ETH/comps/tmbslPhyTomcat/tomcat/src/tomcat_mdio.c	2011-09-02 15:16:12.189481000 +0530
+@@ -0,0 +1,194 @@
++#include <linux/module.h>
++
++#include <tmbslPhyTomcat.h>
++#include <tomcat_mdio.h>
++
++extern int  tomcat_unitnum ;
++extern int  tomcat_phy_addr;
++
++
++unsigned short tomcat_read_mdio_data(int reg_addr)
++{
++    unsigned short data;
++    tmbslPhyTomcatRead(tomcat_unitnum, reg_addr, &data);
++    return(data);
++}
++
++void tomcat_write_mdio_data(int reg_addr,unsigned short val)
++{
++    tmbslPhyTomcatWrite(tomcat_unitnum, reg_addr, val);
++}
++
++int tomcat_lx3_mdio_write_memory(int reg_addr, unsigned int val)
++{
++    int timeout = 200000;
++    unsigned short res;
++
++    tomcat_write_mdio_data(CONTROL_REG,(AHB_SIZE_32| AHB_OP_WRR) );
++    tomcat_write_mdio_data(AHB_ADDR_L,reg_addr & 0xffff);
++    tomcat_write_mdio_data(AHB_ADDR_H,((reg_addr >> 16) & 0xffff));
++    tomcat_write_mdio_data(AHB_DATA_WR_L,(val & 0xffff));
++    tomcat_write_mdio_data(AHB_DATA_WR_H_U,((val >> 16) & 0xffff));
++    while(1) {
++      if  ((res = tomcat_read_mdio_data(STATUS_REG)) == AHB_WRITE ) 
++          break;
++     if (--timeout > 0) {
++         printk(KERN_INFO"Timeout val=0x%x for phyreg: 0x%x while writing: 0x%x\n", res, reg_addr, val);
++         return 1;
++      } 
++    }
++    return 0;
++}
++
++unsigned int tomcat_lx3_mdio_read_memory(u32 reg_addr)
++{
++    int timeout = 200000;
++    unsigned short res;
++    u16 val1 = 0,val2 = 0;
++    u32 val =0;
++
++    tomcat_write_mdio_data(CONTROL_REG,(AHB_SIZE_32 | AHB_OP_RDR));
++    tomcat_write_mdio_data(AHB_ADDR_L,reg_addr & 0xffff);
++    tomcat_write_mdio_data(AHB_ADDR_H_U,((reg_addr >> 16) & 0xffff));
++    while(1) {
++      if  ((res = tomcat_read_mdio_data(STATUS_REG)) == AHB_READ ) 
++          break;
++     if (--timeout > 0) {
++         printk(KERN_INFO"Timeout val=0x%x for phyreg: 0x%x while reading\n", res, reg_addr);
++      } 
++    }
++    val1 = tomcat_read_mdio_data(AHB_DATA_RD_L); 
++    val2 = tomcat_read_mdio_data(AHB_DATA_RD_H); 
++    val =( ( val1 &  0xffff) |((val2 & 0xffff )<<16));
++    return val;
++}
++
++void turbo_read_open(u32 addr)
++{
++    tomcat_write_mdio_data(CONTROL_REG,(AHB_SIZE_32 | AHB_OP_RDA));
++    tomcat_write_mdio_data(AHB_ADDR_L,addr & 0xffff);
++    tomcat_write_mdio_data(AHB_ADDR_H_U,((addr >> 16) & 0xffff));
++}
++u32 turbo_read(void)
++{
++    int timeout = 200000;
++    int res;
++    u32 val; 
++    u32 val1,val2;
++
++    while(1) {
++      if  ((res = tomcat_read_mdio_data(STATUS_REG)) == AHB_READ ) 
++          break;
++     if (--timeout > 0) {
++         printk(KERN_INFO"Timeout val=0x%x for phyreg reading \n", res);
++      } 
++    }
++    val1 = tomcat_read_mdio_data(AHB_DATA_RD_L); 
++    val2 = tomcat_read_mdio_data(AHB_DATA_RD_H_U); 
++    val =( ( val1 &  0xffff) |((val2 & 0xffff )<<16));
++    return val;
++
++}
++
++void turbo_write_open(u32 addr)
++{
++    tomcat_write_mdio_data(CONTROL_REG,(AHB_SIZE_32| AHB_OP_WRA) );
++    tomcat_write_mdio_data(AHB_ADDR_L,addr & 0xffff);
++    tomcat_write_mdio_data(AHB_ADDR_H,((addr >> 16) & 0xffff));
++}
++
++void turbo_write(u32 data)
++{
++    int timeout = 200000;
++    int res;
++    tomcat_write_mdio_data(AHB_DATA_WR_L,(data & 0xffff));
++    tomcat_write_mdio_data(AHB_DATA_WR_H_U,((data >> 16) & 0xffff));
++    while(1) {
++      if  ((res = tomcat_read_mdio_data(STATUS_REG)) == AHB_WRITE ) 
++          break;
++     if (--timeout > 0) {
++         printk(KERN_INFO"Timeout val=0x%x for phyreg while writing: 0x%x\n", res, data);
++         return;
++      } 
++    }
++    return;
++}
++
++
++int tomcat_write( u32 addr, u32 data)
++{
++    tomcat_lx3_mdio_write_memory( addr, data );
++    return(0);
++}
++
++int tomcat_read( u32 addr, u32 *data)
++{
++    int      ret;
++    ret = tomcat_lx3_mdio_read_memory( addr );
++    *data = ret;
++    return(0);
++}
++
++int tomcat_write_burst( u32 addr, u32 *data, unsigned int size, int inc )
++{
++    unsigned int    i;
++    unsigned int *wdata = data;
++    turbo_write_open(addr);
++    for(i = 0; i < size; i += sizeof(*wdata)) {
++        turbo_write(*wdata);
++        wdata++;
++    }
++    return(0);
++}
++
++int tomcat_read_burst( u32 addr, u32 *data, unsigned int size, int inc)
++{
++    unsigned int    i;
++    u32 *rdata = data;
++    turbo_read_open(addr);
++    for(i = 0; i < size; i += sizeof(*rdata)) {
++        *rdata = turbo_read();
++//         printk("#### Data: 0x%x 0x%x\n",rdata, *rdata);
++        rdata++;
++    }
++    return(0);
++}
++
++
++
++int display_tomcat_mem(u32 addr, int size, char * desc)
++{
++   int i;
++   int val[4];
++   for( i=0 ; i <size; i+=20) {
++       tomcat_read(addr+i, &val[0]);
++       tomcat_read(addr+i+4, &val[1]);
++       tomcat_read(addr+i+8, &val[2]);
++       tomcat_read(addr+i+16, &val[3]);
++      printk(KERN_INFO"%s 0x%x:  0x%x 0x%x 0x%x 0x%x\n",desc, addr+i*4, val[0],val[1],val[2],val[3]); 
++   }
++   return 0;
++}
++
++/*
++static void chk_data(void)
++{ 
++  u32 my_data,chk_data = 0xf210f101;
++
++  uint16_t  phybmcr , phybmsr, id0=0, id1=0;
++
++   phybmcr = tomcat_read_mdio_data(0);
++   phybmsr = tomcat_read_mdio_data(1);
++   id0 = tomcat_read_mdio_data(2);
++   id1 = tomcat_read_mdio_data(3);
++  
++   printk(KERN_ERR"Bmcr: 0x%x, Bmsr: 0x%x, id0: 0x%x, id1: 0x%x", phybmcr, phybmsr, id0, id1);
++   if (tomcat_write(LX3_CFG_STATUS,0x15)) 
++      printk(KERN_INFO"Bootcode LX3 write =0x15 failed\n");
++
++   display_tomcat_mem(LX3_CAPTURE_RAM, 10, "BOOT");
++   display_tomcat_mem(LX3_PROGRAM_MEMORY, 78, "PROGRAM");
++   display_tomcat_mem(LX3_DATA_MEMORY, 78, "DATA");
++}
++*/
++
+diff -Naupr linux-2.6.34/drivers/net/LIPP_6300ETH/comps/tmhwLIPP6100Eth/src/tmhwLIPP6100Eth.c linux-2.6.34.new/drivers/net/LIPP_6300ETH/comps/tmhwLIPP6100Eth/src/tmhwLIPP6100Eth.c
+--- linux-2.6.34/drivers/net/LIPP_6300ETH/comps/tmhwLIPP6100Eth/src/tmhwLIPP6100Eth.c	2011-09-02 15:19:18.556438000 +0530
++++ linux-2.6.34.new/drivers/net/LIPP_6300ETH/comps/tmhwLIPP6100Eth/src/tmhwLIPP6100Eth.c	2011-09-02 15:16:12.211489000 +0530
+@@ -215,6 +215,7 @@ static UInt32 gmac_read_phy_reg(UInt32 g
+ 
+ tmErrorCode_t tmhwLIPP6100Eth_get_phyInfo(tmUnitSelect_t  ethUnitId, UInt32* phyID, UInt32* phyAddr)
+ {
++    static int counter = 1;
+     UInt32 pEthRegs, phy_found=0, ret_val;
+     UInt16 i, phyBmsr, ID0Reg=0, ID1Reg=0;
+ 
+@@ -223,7 +224,7 @@ tmErrorCode_t tmhwLIPP6100Eth_get_phyInf
+     *phyID = 0xFFFF;
+ 
+     /* Auto Detect for first available PHY */
+-    for(i=0; i < 32; i++)
++    for(i=0; i < 32 ; i++)
+     {
+         /* Read the PHY BMSR register */
+         ret_val = gmac_read_phy_reg(pEthRegs, i, PHY_BMSR, &phyBmsr);
+@@ -259,13 +260,17 @@ tmErrorCode_t tmhwLIPP6100Eth_get_phyInf
+             }
+ 
+             *phyID = (ID0Reg <<16) | ID1Reg;
+-
+             /* PHY found marker */
++#ifdef CONFIG_TOMCAT_PHY
++            /* This sucks!!, but reverse match creates a problem for GMAC0 */
++            if ((counter == 2 ) && ( *phyID != 0xc4000293 ))
++		continue;
++#endif
+             phy_found = 1;
+             break;
+         }
+     }
+-
++    counter++;
+     /* We are OK if PHY is found */
+     if(phy_found)
+         return TM_OK;
+diff -Naupr linux-2.6.34/drivers/net/LIPP_6300ETH/Kconfig linux-2.6.34.new/drivers/net/LIPP_6300ETH/Kconfig
+--- linux-2.6.34/drivers/net/LIPP_6300ETH/Kconfig	2011-09-02 15:19:18.935336000 +0530
++++ linux-2.6.34.new/drivers/net/LIPP_6300ETH/Kconfig	2011-09-02 15:16:12.219482000 +0530
+@@ -32,12 +32,18 @@ config ENABLE_MOCA
+            MoCA driver will be enabled when selected, else not
+ 
+ choice
+-	prompt "Choose Entropic PHY version"
++	prompt "Choose MoCa PHY version"
+         default EN2512_PHY
+ 	depends on ENABLE_MOCA
+ 	help
+ 		This option allows to select between EN2512 or EN2510 MoCA PHY driver
+ 
++
++config TOMCAT_PHY
++	bool "TomCat MoCA PHY"
++	help
++		Select TomCat MoCA PHY driver
++
+ config EN2512_PHY
+ 	bool "Entropic MoCA EN2512 PHY"
+ 	help
+diff -Naupr linux-2.6.34/drivers/net/LIPP_6300ETH/Makefile linux-2.6.34.new/drivers/net/LIPP_6300ETH/Makefile
+--- linux-2.6.34/drivers/net/LIPP_6300ETH/Makefile	2011-09-02 15:19:17.371494000 +0530
++++ linux-2.6.34.new/drivers/net/LIPP_6300ETH/Makefile	2011-09-02 15:16:12.221478000 +0530
+@@ -18,6 +18,11 @@ PHY_OBJS-y +=  	comps/tmbslPhyMYSTI110E/
+ 		comps/tmbslPhyRTL8211BN/src/tmbslPhyRTL8211BN.o \
+ 		comps/tmbslPhyIntel972/src/tmbslPhyIntel972.o
+ 
++PHY_OBJS-$(CONFIG_TOMCAT_PHY) += comps/tmbslPhyTomcat/src/tmbslPhyTomcat.o \
++				 comps/tmbslPhyTomcat/tomcat/src/tomcat.o \
++				 comps/tmbslPhyTomcat/tomcat/src/tomcat_mdio.o
++
++
+ PHY_OBJS-$(CONFIG_EN2510_PHY) += comps/tmbslPhyEN2510/src/tmbslPhyEN2510.o \
+ 				 comps/tmbslPhyEN2510/en2510/Apollo/Src/Clnk_ctl_apollo.o \
+ 				 comps/tmbslPhyEN2510/en2510/Apollo/Src/ClnkBus_iface_apollo.o \
+@@ -89,6 +94,10 @@ EXTRA_PHY_FLAGS-$(CONFIG_EN2512_PHY) += 
+ 					-Idrivers/net/LIPP_6300ETH/comps/tmbslPhyEN2512/en2512/GPL/Apollo \
+ 					-DAPOLLO_DRVR_SUPPORT
+ 
++EXTRA_PHY_FLAGS-$(CONFIG_TOMCAT_PHY) += -Idrivers/net/LIPP_6300ETH/comps/tmbslPhyTomcat/inc \
++					-Idrivers/net/LIPP_6300ETH/comps/tmbslPhyTomcat/tomcat/inc \
++					-DAPOLLO_DRVR_SUPPORT
++
+ EXTRA_PHY_FLAGS-y += -Idrivers/net/LIPP_6300ETH/comps/tmbslPhyMYSTI110E/inc \
+ 		     -Idrivers/net/LIPP_6300ETH/comps/tmbslPhyRTL8211BN/inc \
+ 		     -Idrivers/net/LIPP_6300ETH/comps/tmbslPhyIntel972/inc
+diff -Naupr linux-2.6.34/drivers/net/LIPP_6300ETH/src/gmac_drv.c linux-2.6.34.new/drivers/net/LIPP_6300ETH/src/gmac_drv.c
+--- linux-2.6.34/drivers/net/LIPP_6300ETH/src/gmac_drv.c	2011-09-02 15:19:18.939337000 +0530
++++ linux-2.6.34.new/drivers/net/LIPP_6300ETH/src/gmac_drv.c	2011-09-02 15:16:12.226478000 +0530
+@@ -97,10 +97,20 @@ MODULE_LICENSE("GPL");
+ #ifdef CONFIG_ENABLE_MOCA
+ spinlock_t moca_spinlock;
+ void *moca_data_kernel_content ;
++#ifdef CONFIG_TOMCAT_PHY
++#define NETLINK_USER 31
++struct sock *nl_sk = NULL;
++extern void tomcat_nl_recv_msg(struct sk_buff *skb);
++extern int tomcat_init_dev(void **ddcp_dgcp, void *ddcp, void *dkcp, unsigned long dev_base );
++extern void tomcat_exit_dev( void *vdgcp );
++extern int ioctl_operation_work( void *moca_data_kernel_content, struct ifreq *ifr, unsigned cmd );
++extern void tomcat_update_unitnum_phyaddr( int unitNum, int phy_addr);
++#else
+ extern int Clnk_init_dev(void **ddcp_dgcp, void *ddcp, void *dkcp, unsigned long dev_base );
+ extern void Clnk_exit_dev( void *vdgcp );
+ extern int ioctl_operation_work( void *moca_data_kernel_content, struct ifreq *ifr, unsigned cmd );
+ extern void Clink_update_unitnum_phyaddr( int unitNum, int phy_addr);
++#endif
+ extern tmbslPhyConfig_t gtmbslMoCAPhyInterface;
+ #endif
+ 
+@@ -633,10 +643,19 @@ static __s32 lipp_6300Eth_probe(struct p
+             dkcp->name = DRV_NAME ;    // like net_device
+ 
+             spin_lock_init(&moca_spinlock);
++#ifdef CONFIG_TOMCAT_PHY
++            tomcat_update_unitnum_phyaddr(priv->hwUnitNum, priv->phy_addr_val);
++#else
+             Clink_update_unitnum_phyaddr(priv->hwUnitNum, priv->phy_addr_val);
++#endif
+ 	    if(dkcp && ddcp)
+             {
++#ifdef CONFIG_TOMCAT_PHY
++               ret_val = tomcat_init_dev( &(ddcp->p_dg_ctx), ddcp, dkcp, (unsigned long)NULL );
++	        nl_sk=netlink_kernel_create(&init_net, NETLINK_USER, 0, tomcat_nl_recv_msg, NULL, THIS_MODULE);
++#else
+                ret_val = Clnk_init_dev( &(ddcp->p_dg_ctx), ddcp, dkcp, (unsigned long)NULL );
++#endif
+                if ( ret_val )
+                {
+                    GMAC_PRINT_ERR("EMAC Clnk_init_dev err=%d.\n", ret_val);
+@@ -707,7 +726,12 @@ static __s32 lipp_6300Eth_remove(struct 
+         if( moca_data_kernel_content ) {
+             dkcp = (dk_context_t *)moca_data_kernel_content ;
+             ddcp = (dd_context_t *)(((char *)moca_data_kernel_content)+sizeof(dk_context_t)) ;
++#ifdef CONFIG_TOMCAT_PHY
++	    netlink_kernel_release(nl_sk);
++            tomcat_exit_dev( &ddcp->p_dg_ctx );
++#else
+             Clnk_exit_dev( &ddcp->p_dg_ctx );
++#endif
+ 	    kfree(moca_data_kernel_content);
+         }
+     }
+diff -Naupr linux-2.6.34/drivers/net/LIPP_6300ETH/src/gmac_drv.h linux-2.6.34.new/drivers/net/LIPP_6300ETH/src/gmac_drv.h
+--- linux-2.6.34/drivers/net/LIPP_6300ETH/src/gmac_drv.h	2011-09-02 15:19:18.566404000 +0530
++++ linux-2.6.34.new/drivers/net/LIPP_6300ETH/src/gmac_drv.h	2011-09-02 15:16:12.228480000 +0530
+@@ -239,7 +239,7 @@
+ /* Global flag to be set to enable checksum offload */
+ #define CONFIG_LIPP_6300ETH_CSUMOFFLOAD
+ 
+-#define ETH_ENABLE_JUMBO_FRAME (0)
++#define ETH_ENABLE_JUMBO_FRAME (1)
+ 
+ /* Maximum jumbo frame size in bytes */
+ #define LIPP_6300ETH_JUMBO_MTU (2000)
+diff -Naupr linux-2.6.34/drivers/net/LIPP_6300ETH/src/tmbslPhyAccess.c linux-2.6.34.new/drivers/net/LIPP_6300ETH/src/tmbslPhyAccess.c
+--- linux-2.6.34/drivers/net/LIPP_6300ETH/src/tmbslPhyAccess.c	2011-09-02 15:19:19.206334000 +0530
++++ linux-2.6.34.new/drivers/net/LIPP_6300ETH/src/tmbslPhyAccess.c	2011-09-02 15:15:49.845261000 +0530
+@@ -267,6 +267,10 @@
+ #include "tmbslPhyMYSTI110E.h"
+ #include "tmbslPhyIntel972.h"
+ 
++#ifdef CONFIG_TOMCAT_PHY
++#include "tmbslPhyTomcat.h"
++#endif
++
+ #ifdef CONFIG_EN2510_PHY
+ #include "tmbslPhyEN2510.h"
+ #endif
+@@ -359,6 +363,36 @@ tmbslPhyConfig_t gtmbslMYSTIPhyInterface
+         tmbslPhyMYSTI110EGetLinkStatus
+ };
+ #ifdef CONFIG_ENABLE_MOCA
++#ifdef CONFIG_TOMCAT_PHY
++tmbslPhyConfig_t gtmbslMoCAPhyInterface =
++{
++       "TOMCAT",
++        0xc4000293,
++        LAN_CLK_SEL,
++        LAN_CLK_SPEED_SEL,
++        tmbslPhyTomcatGetSWVersion,
++        tmbslPhyTomcatGetCapabilities,
++        tmbslPhyTomcatInit,
++        tmbslPhyTomcatDeinit,
++        tmbslPhyTomcatSetPowerState,
++        tmbslPhyTomcatGetPowerState,
++        tmbslPhyTomcatGetBasicModeControl,
++        tmbslPhyTomcatSetBasicModeControl,
++        tmbslPhyTomcatGetBasicModeStatus,
++        tmbslPhyTomcatAutoNegotiate,
++        Null,
++        Null,
++        Null,
++        Null,
++        Null,
++        Null,
++        Null,
++        tmbslPhyTomcatLoopBack,
++        tmbslPhyTomcatSoftReset,
++        tmbslPhyTomcatGetLinkStatus
++        
++};
++#else
+ #ifdef CONFIG_EN2510_PHY
+ tmbslPhyConfig_t gtmbslMoCAPhyInterface =
+ {
+@@ -418,6 +452,7 @@ tmbslPhyConfig_t gtmbslMoCAPhyInterface 
+ };
+ #endif
+ #endif
++#endif
+ 
+ tmbslPhyConfig_t gtmbslLXT972APhyInterface =
+ {
+@@ -453,8 +488,12 @@ phyID_interface_tbl phy_tbl[]={
+ {0x001cc912, &gtmbslRTL8211BNPhyInterface},
+ {0x001cc915, &gtmbslRTL8211EGPhyInterface},
+ #ifdef CONFIG_ENABLE_MOCA
++#ifdef CONFIG_TOMCAT_PHY
++{0xc4000293, &gtmbslMoCAPhyInterface},
++#else
+ {0x0,        &gtmbslMoCAPhyInterface},
+ #endif
++#endif
+ {0x00008201, &gtmbslLXT972APhyInterface},
+ {0x001378e2, &gtmbslLXT972APhyInterface}
+ };

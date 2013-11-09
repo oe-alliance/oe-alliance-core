@@ -1,0 +1,46 @@
+diff -Naur linux-2.6.34/arch/arm/mach-krome/include/mach/vmalloc.h linux-2.6.34_mod/arch/arm/mach-krome/include/mach/vmalloc.h
+--- linux-2.6.34/arch/arm/mach-krome/include/mach/vmalloc.h	2012-07-06 11:24:14.727196000 +0530
++++ linux-2.6.34_mod/arch/arm/mach-krome/include/mach/vmalloc.h	2012-07-05 19:51:42.565429000 +0530
+@@ -20,13 +20,13 @@
+ #define __ARCH_MACH_VMALLOC_H
+ 
+ #ifdef CONFIG_VMSPLIT_3G
+-#define VMALLOC_OFFSET		(8*1024*1024)
+-/* for 3g/1G split as we have MMIO till 0xe7ff ffff */
+-#define VMALLOC_START		((0xE8000000UL + VMALLOC_OFFSET) & ~(VMALLOC_OFFSET-1))
+-#define VMALLOC_END		    0xFEE00000UL 
++#define VMALLOC_OFFSET  (8*1024*1024)
++/* 3G/1G split have MMIO till 0xE7FFFFFF */
++#define VMALLOC_START   0xE0800000UL    /* must be aligned to a 8MB boundary */
++#define VMALLOC_END     0xFFA00000UL    /* must be aligned to a 2MB boundary */
+ #else  /* CONFIG_VMSPLIT_3G */
+-/* Increasing Vmalloc area till 2MB less MMIO start, earlier value is (PAGE_OFFSET + 0x50000000) */
+-#define VMALLOC_END			0xDFE00000UL
++/* Increasing vmalloc area till 2MB less MMIO start */
++#define VMALLOC_END     0xDFE00000UL    /* must be aligned to a 2MB boundary */
+ #endif
+ 
+ #endif
+diff -Naur linux-2.6.34/arch/arm/mach-kronos/include/mach/vmalloc.h linux-2.6.34_mod/arch/arm/mach-kronos/include/mach/vmalloc.h
+--- linux-2.6.34/arch/arm/mach-kronos/include/mach/vmalloc.h	2012-07-06 11:24:14.734190000 +0530
++++ linux-2.6.34_mod/arch/arm/mach-kronos/include/mach/vmalloc.h	2012-07-05 19:51:28.955543000 +0530
+@@ -20,13 +20,13 @@
+ #define __ARCH_MACH_VMALLOC_H
+ 
+ #ifdef CONFIG_VMSPLIT_3G
+-#define VMALLOC_OFFSET		(8*1024*1024)
+-/* for 3g/1G split as we have MMIO till 0xe7ff ffff */
+-#define VMALLOC_START		((0xE8000000UL + VMALLOC_OFFSET) & ~(VMALLOC_OFFSET-1))
+-#define VMALLOC_END		    0xFEE00000UL 
++#define VMALLOC_OFFSET  (8*1024*1024)
++/* 3G/1G split have MMIO till 0xE7FFFFFF */
++#define VMALLOC_START   0xE0800000UL    /* must be aligned to a 8MB boundary */
++#define VMALLOC_END     0xFFA00000UL    /* must be aligned to a 2MB boundary */
+ #else  /* CONFIG_VMSPLIT_3G */
+-/* Increasing Vmalloc area till 2MB less MMIO start, earlier value is (PAGE_OFFSET + 0x50000000) */
+-#define VMALLOC_END			0xDFE00000UL
++/* Increasing vmalloc area till 2MB less MMIO start */
++#define VMALLOC_END     0xDFE00000UL    /* must be aligned to a 2MB boundary */
+ #endif
+ 
+ #endif

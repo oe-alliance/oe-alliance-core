@@ -1,0 +1,36 @@
+--- linux-2.6.34.orig/drivers/net/LIPP_6300ETH/src/gmac_drv.c	2011-11-24 16:42:06.773352000 +0530
++++ linux-2.6.34/drivers/net/LIPP_6300ETH/src/gmac_drv.c	2011-11-24 16:37:40.582889000 +0530
+@@ -2132,6 +2132,15 @@ static __s32 lipp_6300Eth_hard_start_xmi
+         ** For transmit descriptor, only end of ring is set in setup_descriptors()
+         */
+ 
++     if (priv->tx_submit_count >= MAX_TX_PKTS_TO_PROCESS) {
++        GMAC_PRINT_DBG("lipp_6300Eth_hard_start_xmit: Pkt Dropped");
++        if (!netif_queue_stopped(dev)) {
++            netif_stop_queue(dev);
++        }
++        priv->stats.tx_dropped++ ;
++        priv->counters.ullTxDroppedOnHardStart++;
++        return NETDEV_TX_BUSY;
++    }
+     if(0 == (priv->p_vtx_descr[priv->tx_produce_index].TDES0 & TXDESC_TDES0_OWN_VAL))
+     {
+ 
+@@ -3679,6 +3688,7 @@ static void man_arp_udp_data(struct sk_b
+  *NOTES:	None
+  */
+ /*--------------------------------------------------------------------------*/
++#define TX_PKTS_TO_PROCESS_THRESHOLD  60 /* About 75 % of the queue, to avoid cont on/off in case of overload */
+ static void handle_tx_packets( struct net_device * dev)
+ {
+ 
+@@ -3716,6 +3726,9 @@ static void handle_tx_packets( struct ne
+         {
+             break;
+         }
++        if ((priv->tx_submit_count > TX_PKTS_TO_PROCESS_THRESHOLD) && netif_queue_stopped(dev)) {
++              netif_wake_queue(dev);
++        }
+ 
+         /* Decrement number of packets transmitted */
+         if(priv->tx_submit_count > 0)

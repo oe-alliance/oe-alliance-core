@@ -1,0 +1,33 @@
+diff -Naur a/lib/dvb/decoder.cpp b/lib/dvb/decoder.cpp
+--- a/lib/dvb/decoder.cpp	2013-07-31 16:49:42.000000000 +0200
++++ b/lib/dvb/decoder.cpp	2013-09-17 19:01:19.000000000 +0200
+@@ -190,6 +190,9 @@
+ 	{
+ 		m_sn = eSocketNotifier::create(eApp, m_fd, eSocketNotifier::Priority);
+ 		CONNECT(m_sn->activated, eDVBVideo::video_event);
++		if (ioctl(m_fd, VIDEO_SELECT_SOURCE, VIDEO_SOURCE_DEMUX) < 0)
++			eDebug("VIDEO_SELECT_SOURCE DEMUX failed (%m)");
++		
+ 	}
+ 	eDebug("Video Device: %s", filename);
+ 	sprintf(filename, "/dev/dvb/adapter%d/demux%d", demux->adapter, demux->demux);
+@@ -1050,7 +1053,7 @@
+ 				else
+ 					streamtype = VIDEO_STREAMTYPE_MPEG2;
+ 
+-				if (ioctl(m_video_clip_fd, VIDEO_SELECT_SOURCE, VIDEO_SOURCE_MEMORY) < 0)
++				if (ioctl(m_video_clip_fd, VIDEO_SELECT_SOURCE, 2) < 0)
+ 					eDebug("VIDEO_SELECT_SOURCE MEMORY failed (%m)");
+ 				if (ioctl(m_video_clip_fd, VIDEO_SET_STREAMTYPE, streamtype) < 0)
+ 					eDebug("VIDEO_SET_STREAMTYPE failed(%m)");
+@@ -1093,9 +1096,7 @@
+ 	if (m_video_clip_fd >= 0)
+ 	{
+ 		if (ioctl(m_video_clip_fd, VIDEO_STOP, 0) < 0)
+-			eDebug("VIDEO_STOP failed (%m)");
+-		if (ioctl(m_video_clip_fd, VIDEO_SELECT_SOURCE, VIDEO_SOURCE_DEMUX) < 0)
+-				eDebug("VIDEO_SELECT_SOURCE DEMUX failed (%m)");
++			eDebug("VIDEO_STOP failed (%m)");		
+ 		close(m_video_clip_fd);
+ 		m_video_clip_fd = -1;
+ 	}

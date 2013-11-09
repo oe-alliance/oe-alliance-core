@@ -4,11 +4,11 @@ require conf/license/license-gplv2.inc
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-PR = "r0"
+PR = "r1"
 
 do_compile() {
     mkdir -p ${S}/${sysconfdir}/opkg
-    echo "src/gz secret-feeds http://secret.mynonpublic.com" > ${S}/${sysconfdir}/opkg/secret-feed.conf
+    echo "src/gz secret-feeds http://secret.mynonpublic.com/${TARGET_ARCH}" > ${S}/${sysconfdir}/opkg/secret-feed.conf
 }
 
 do_install () {

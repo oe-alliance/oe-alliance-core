@@ -20,13 +20,15 @@ MACHINE_EXTRA_RRECOMMENDS = " \
 
 include conf/machine/include/autoload-filesystems.inc
 
+DVBMEDIASINK_CONFIG = "--with-pcm --with-eac3"
+
 TARGET_ARCH = "mipsel"
 DEFAULTTUNE = "mips32el"
 
 PREFERRED_PROVIDER_virtual/kernel = "linux-vuplus"
 
-PREFERRED_PROVIDER_virtual/blindscan-dvbc = "vuplus-blindscan-utils-${MACHINE}"
-PREFERRED_PROVIDER_virtual/blindscan-dvbs = "vuplus-blindscan-utils-${MACHINE}"
+PREFERRED_PROVIDER_virtual/blindscan-dvbc = "vuplus-blindscan-utils"
+PREFERRED_PROVIDER_virtual/blindscan-dvbs = "vuplus-blindscan-utils"
 
 KERNEL_IMAGETYPE = "vmlinux"
 KERNEL_OUTPUT = "${KERNEL_IMAGETYPE}"

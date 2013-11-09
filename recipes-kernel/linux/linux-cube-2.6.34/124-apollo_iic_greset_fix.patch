@@ -1,0 +1,110 @@
+diff -Naur linux-2.6.34/arch/arm/mach-apollo/include/mach/pnx8492.h linux-2.6.34_iic/arch/arm/mach-apollo/include/mach/pnx8492.h
+--- linux-2.6.34/arch/arm/mach-apollo/include/mach/pnx8492.h	2010-11-12 19:02:57.260852000 +0530
++++ linux-2.6.34_iic/arch/arm/mach-apollo/include/mach/pnx8492.h	2010-11-12 18:44:39.945707000 +0530
+@@ -64,6 +64,17 @@
+ #define MMIO_SATA_BASE           (ARM_A9_HOST_MMIO_BASE + 0x38000)
+ 
+ #define MMIO_RGU_BASE            (ARM_A9_HOST_MMIO_BASE + 0xE6000)
++#define  RST_GRESET0_REG         (MMIO_RGU_BASE + 0x0C)
++#define   RST_GRESET0_IIC1       (1<<14)
++#define   RST_GRESET0_IIC2       (1<<15)
++#define   RST_GRESET0_IIC3       (1<<16)
++#define  RST_GRESET1_REG         (MMIO_RGU_BASE + 0x10)
++#define   RST_GRESET1_IIC0       (1<<14)
++#define  RST_GRESET2_REG         (MMIO_RGU_BASE + 0x14)
++#define   RST_GRESET2_IIC4       (1<<20)
++#define  RST_LOCKCMD_REG         (MMIO_RGU_BASE + 0x28)
++#define  RST_LOCKSTAT_REG        (MMIO_RGU_BASE + 0x2C)
++#define   RST_LOCKSTAT_LOCK      (1 << 1)     /* 0 to unlock */
+ #define  RST_CONFIG_REG          (MMIO_RGU_BASE + 0x30)
+ #define   PCI_HOST_MODE_ENABLED  (((readl(RST_CONFIG_REG)&(1<<23)) &&   \
+                                    !(readl(RST_CONFIG_REG)&(1<<16)))?   \
+diff -Naur linux-2.6.34/drivers/i2c/algos/i2c_phlm/tmhwI2c/src/tmhwI2c.c linux-2.6.34_iic/drivers/i2c/algos/i2c_phlm/tmhwI2c/src/tmhwI2c.c
+--- linux-2.6.34/drivers/i2c/algos/i2c_phlm/tmhwI2c/src/tmhwI2c.c	2010-11-12 19:02:53.804176000 +0530
++++ linux-2.6.34_iic/drivers/i2c/algos/i2c_phlm/tmhwI2c/src/tmhwI2c.c	2010-11-12 18:58:45.579258000 +0530
+@@ -48,6 +48,7 @@
+ #include <HwAPI/tmNxTypes.h>
+ #include <HwAPI/tmNxModId.h>
+ #include <HwAPI/tmFlags.h>
++#include <mach/pnx8492.h>
+ 
+ #endif
+ 
+@@ -66,6 +67,7 @@
+ #include <tmhwI2c.h>
+ #include <tmhwI2c_LocalCfg.h>
+ 
++#include <linux/delay.h>
+ 
+ #ifdef LINUX_BUILD
+ 
+@@ -3901,17 +3903,60 @@
+     )
+ {
+     /* Do a hard reset of the i2c unit */
+-    volatile unsigned char *pResetUnitBase;
+-    unsigned int reset_read;
+-    unsigned int reset_i2c_unit[] = {RESET_I2C_UNIT0,RESET_I2C_UNIT1};
++    unsigned long lockstat = 0;
++    unsigned long greset = 0;
+ 
+-    pResetUnitBase= (volatile unsigned char*)ioremap((TMHW_I2C_CFG_REG_START+RESET_UNIT_BASE), 4096);
+-
+-    /* Read the reset_active register*/
+-    reset_read = (0x01 << reset_i2c_unit[i2cUnit]);
++    /* Unlock the RGU Lock Status register */
++    writel(0x000000F8, RST_LOCKCMD_REG);
++    writel(0x0000002B, RST_LOCKCMD_REG);
++
++    /* Unlock the Global Reset registers */
++    lockstat = readl(RST_LOCKSTAT_REG);
++    lockstat &= ~RST_LOCKSTAT_LOCK;
++    writel(lockstat, RST_LOCKSTAT_REG);
++
++    /* Issue reset */
++    switch(i2cUnit)
++    {
++        case 0:
++            greset = readl(RST_GRESET0_REG);
++            greset |= RST_GRESET0_IIC1; /* issue reset */
++            writel(greset, RST_GRESET0_REG);
++            msleep(1); /* revisit this 1 ms delay with hw teams. */
++            greset &= ~RST_GRESET0_IIC1; /* clear reset */
++            writel(greset, RST_GRESET0_REG);
++            break;
++        case 1:
++            greset = readl(RST_GRESET0_REG);
++            greset |= RST_GRESET0_IIC2;
++            writel(greset, RST_GRESET0_REG);
++            msleep(1);
++            greset &= ~RST_GRESET0_IIC2;
++            writel(greset, RST_GRESET0_REG);
++            break;
++        case 2:
++            greset = readl(RST_GRESET0_REG);
++            greset |= RST_GRESET0_IIC3;
++            writel(greset, RST_GRESET0_REG);
++            msleep(1);
++            greset &= ~RST_GRESET0_IIC3;
++            writel(greset, RST_GRESET0_REG);
++            break;
++        case 3:
++            greset = readl(RST_GRESET2_REG);
++            greset |= RST_GRESET2_IIC4;
++            writel(greset, RST_GRESET2_REG);
++            msleep(1);
++            greset &= ~RST_GRESET2_IIC4;
++            writel(greset, RST_GRESET2_REG);
++            break;
++        default:
++            printk(KERN_ERR "Invalid I2C unit %d\n", i2cUnit);
++            break;
++    }
+ 
+-    /* Write into the reset control register*/
+-    *((unsigned int*)(pResetUnitBase + RESET_CONTROL_REG)) = reset_read;
++    /* Lock the RGU Lock Status register */
++    writel(0x00000000, RST_LOCKCMD_REG);
+ }
+ #endif
+ 

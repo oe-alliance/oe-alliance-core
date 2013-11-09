@@ -8,7 +8,7 @@ PR = "r3"
 
 RDEPENDS_${PN}_odinm9 += "odin-fpupdate-${MACHINE}"
 
-SRC_URI = "http://feed.odin-support.com/download/${MACHINE}-drivers-${KV}-${SRCDATE}.tar.gz"
+SRC_URI = "http://source.mynonpublic.com/download/${MACHINE}-drivers-${KV}-${SRCDATE}.tar.gz"
 
 S = "${WORKDIR}"
 

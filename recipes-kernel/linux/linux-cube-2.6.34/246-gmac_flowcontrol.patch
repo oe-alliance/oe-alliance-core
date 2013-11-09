@@ -1,0 +1,122 @@
+diff -Naur linux-2.6.34/drivers/net/LIPP_6300ETH/src/gmac_drv.c linux-2.6.34_gmac/drivers/net/LIPP_6300ETH/src/gmac_drv.c
+--- linux-2.6.34/drivers/net/LIPP_6300ETH/src/gmac_drv.c	2013-01-09 13:45:54.596613000 +0530
++++ linux-2.6.34_gmac/drivers/net/LIPP_6300ETH/src/gmac_drv.c	2013-01-09 13:37:39.631612000 +0530
+@@ -1520,6 +1520,7 @@
+         if( priv->u_rx_tx_fc & LX_RX_FLOW_CONTROL )
+         {
+             flowCtrl.rxFlowCtrlEn = True;
++            flowCtrl.unicastPsDetect =True;
+ 
+             /* For FIFO size greater than 4K */
+             if(1 == ENABLE_HW_FLOW_CONTROL)
+@@ -1530,12 +1531,11 @@
+             }
+ 
+         }
+-
+-        /* Flow control settings */
+-        tmhwLIPP6100Eth_FlowCtrlSetConfig(priv->hwUnitNum,&flowCtrl);
+-
+     }
+ 
++    /* Flow control settings */
++    tmhwLIPP6100Eth_FlowCtrlSetConfig(priv->hwUnitNum,&flowCtrl);
++
+     /* DMA transmits packets in store and forward mode */
+     dmaCfg.storeNforwardEn = ETH_STORE_FWD_ENABLE;
+ 
+@@ -2137,14 +2137,13 @@
+         priv->p_vtx_descr[priv->tx_produce_index].TDES2 =
+                             dma_map_single( NULL, skb->data, skb->len, DMA_TO_DEVICE );
+ 
++        spin_lock(&priv->lock);
+         /* Store the buffers transmitted, so that it can be freed once the
+                 ** transmit process is complete
+                 */
+         priv->p_vtx_skb_list[priv->tx_produce_index] = skb;
+ 
+-        spin_lock(&priv->lock);
+         priv->tx_submit_count++;
+-        spin_unlock(&priv->lock) ;
+ 
+         /* Clear the length field */
+         priv->p_vtx_descr[priv->tx_produce_index].TDES1 &= TXDESC_TDES1_TX_BUF1_SIZE_CLR;
+@@ -2186,6 +2185,8 @@
+         /* Set the own bit value as the last statement. Otherwise, there could be a race condition */
+         priv->p_vtx_descr[priv->tx_produce_index].TDES0 |= TXDESC_TDES0_OWN_VAL;
+ 
++        spin_unlock(&priv->lock) ;
++
+ #ifndef CONFIG_ETH_LIPP_6300ETH_NAPI
+         /* Interrupts to be enabled for transmit operation */
+         IntEn.dmaIntVal = TX_INTR_VAL;
+@@ -2219,6 +2220,7 @@
+             priv->dma_enabled = 1;
+         }
+ 
++        spin_lock(&priv->lock) ;
+        /* Get the next produce index to set to */
+         if( priv->tx_produce_index >= ( HW_DESCR_QUEUE_LEN_TX - 1 ))
+         {
+@@ -2228,6 +2230,7 @@
+         {
+             priv->tx_produce_index++;
+         }
++        spin_unlock(&priv->lock) ;
+ 
+     }
+     else
+@@ -3990,13 +3993,16 @@
+ /*--------------------------------------------------------------------------*/
+ static __s32 check_n_enable_tx_flow_control( struct net_device *dev )
+ {
++    unsigned long flags;
+     lipp_6300Eth_PRIV_t *priv = NETDEV_PRIV( dev );
+     __u32 probeIdx = 0;
+ 
++    spin_lock_irqsave(&priv->lock,flags);
+     /* Check if flow control is enabled */
+     if( ( priv->u_flow_control == 0 ) ||
+         ((priv->u_rx_tx_fc & LX_TX_FLOW_CONTROL) == 0) )
+     {
++        spin_unlock_irqrestore(&priv->lock,flags);
+         return 0 ;
+     }
+ 
+@@ -4017,9 +4023,12 @@
+ 
+     if( 0 == (priv->p_vrx_descr[probeIdx].RDES0 & RXDESC_RDES0_OWN_VAL))
+     {
++        spin_unlock_irqrestore(&priv->lock,flags);
+         /* Enable flow control */
+         tmhwLIPP6100Eth_FlowCtrlEnableDisable(priv->hwUnitNum, tmhwLIPP6100Eth_Enable);
++        return 0;
+     }
++    spin_unlock_irqrestore(&priv->lock,flags);
+ 
+     return 0 ;
+ 
+@@ -4483,18 +4492,17 @@
+ 
+     priv->u_autoneg = pauseparam->autoneg ;
+ 
+-    if( priv->u_autoneg == LX_AUTONEG_ENABLE )
+-    {
+-        priv->u_flow_control = LX_FLOW_CONTROL_ENABLED ;
+-    }
+-
+-    priv->u_rx_tx_fc |= ( pauseparam->tx_pause ) ? LX_TX_FLOW_CONTROL : 0 ;
++    priv->u_rx_tx_fc = ( pauseparam->tx_pause ) ? LX_TX_FLOW_CONTROL : 0 ; 
+     priv->u_rx_tx_fc |= ( pauseparam->rx_pause ) ? LX_RX_FLOW_CONTROL : 0 ;
+ 
+     if( priv->u_rx_tx_fc )
+     {
+         priv->u_flow_control = LX_FLOW_CONTROL_ENABLED ;
+     }
++    else
++    {
++        priv->u_flow_control = LX_FLOW_CONTROL_DISABLED ; 
++    }
+ 
+    /* unlock the spinlock */
+    spin_unlock( &priv->lock ) ;

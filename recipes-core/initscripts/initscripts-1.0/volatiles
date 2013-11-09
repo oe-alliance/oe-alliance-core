@@ -34,5 +34,6 @@ l root root 1777 /var/tmp /var/volatile/tmp
 d root root 0755 /var/lock/subsys none
 f root root 0664 /var/log/wtmp none
 f root root 0664 /var/run/utmp none
+f root root 0664 /var/log/lastlog none
 
 

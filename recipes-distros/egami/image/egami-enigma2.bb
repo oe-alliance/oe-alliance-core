@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3
 ALLOW_EMPTY_${PN} = "1"
 
 PV = "1.0"
-PR = "r29"
+PR = "r30"
 
 inherit packagegroup
 
@@ -22,6 +22,7 @@ RRECOMMENDS_${PN} = "\
     "
 
 ENIGMA2_PLUGINS = "\
+    enigma2-plugin-systemplugins-videomode \
     enigma2-plugin-extensions-autotimer \
     enigma2-plugin-extensions-epgsearch \
     enigma2-plugin-extensions-imdb \

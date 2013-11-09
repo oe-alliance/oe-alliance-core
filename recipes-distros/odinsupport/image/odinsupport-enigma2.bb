@@ -7,7 +7,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PV = "1.0"
-PR = "r12"
+PR = "r13"
 
 inherit packagegroup
 
@@ -25,6 +25,7 @@ RRECOMMENDS_${PN} = "\
     enigma2-plugin-extensions-enhancedmoviecenter \
     enigma2-plugin-extensions-dvdplayer \
     enigma2-plugin-extensions-autobackup \
+    enigma2-plugin-systemplugins-videomode \
     enigma2-plugin-systemplugins-autoresolution \
     enigma2-plugin-systemplugins-softwaremanager \
     enigma2-plugin-systemplugins-hotplug \

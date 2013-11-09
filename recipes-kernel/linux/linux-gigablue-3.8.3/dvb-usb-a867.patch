@@ -7,104 +7,106 @@ versions together with old kernels;
 modified frontend driver to work directly with the DVBv5
 data structure, as required in new kernel/v4l versions;
 
+this driver supports all kernels up to 3.4
+
 From: Gianluca Gennari <gennarone@gmail.com>
 ---
- drivers/media/usb/dvb-usb/Kconfig                  |    7 +
- drivers/media/usb/dvb-usb/Makefile                 |    6 +
- drivers/media/usb/dvb-usb/a867_Afa_AF9007.c        |   50 +
- drivers/media/usb/dvb-usb/a867_Afa_AF9007.h        |   39 +
- drivers/media/usb/dvb-usb/a867_Afa_AF9007_Script.h |   93 +
- drivers/media/usb/dvb-usb/a867_Common.h            |  259 +
- drivers/media/usb/dvb-usb/a867_Maxlinear_MXL5007.c |  203 +
- drivers/media/usb/dvb-usb/a867_Maxlinear_MXL5007.h |   60 +
- .../usb/dvb-usb/a867_Maxlinear_MXL5007_Script.h    |   64 +
- drivers/media/usb/dvb-usb/a867_af903x-core.c       |  253 +
- drivers/media/usb/dvb-usb/a867_af903x-devices.c    |  278 +
- drivers/media/usb/dvb-usb/a867_af903x-drv.c        | 1238 ++
- drivers/media/usb/dvb-usb/a867_af903x-fe.c         |  936 ++
- drivers/media/usb/dvb-usb/a867_af903x-ioctl.h      |   29 +
- drivers/media/usb/dvb-usb/a867_af903x-tuner.c      |  122 +
- drivers/media/usb/dvb-usb/a867_af903x.h            |  311 +
- drivers/media/usb/dvb-usb/a867_aver_version.h      |    1 +
- drivers/media/usb/dvb-usb/a867_cmd.c               | 1005 ++
- drivers/media/usb/dvb-usb/a867_cmd.h               |  246 +
- drivers/media/usb/dvb-usb/a867_compat.h            |  503 +
- drivers/media/usb/dvb-usb/a867_debug.h             |    4 +
- drivers/media/usb/dvb-usb/a867_demodulator.c       |  540 +
- drivers/media/usb/dvb-usb/a867_demodulator.h       | 1495 +++
- drivers/media/usb/dvb-usb/a867_demodulatorextend.c |  607 +
- drivers/media/usb/dvb-usb/a867_demodulatorextend.h | 1326 ++
- drivers/media/usb/dvb-usb/a867_error.h             |  141 +
- drivers/media/usb/dvb-usb/a867_firmware.h          |10867 ++++++++++++++++
- drivers/media/usb/dvb-usb/a867_inttype.h           |   41 +
- drivers/media/usb/dvb-usb/a867_iocontrol.h         |  738 ++
- drivers/media/usb/dvb-usb/a867_mxl5007t.c          |  698 +
- drivers/media/usb/dvb-usb/a867_mxl5007t.h          |  135 +
- drivers/media/usb/dvb-usb/a867_ofdm.h              |   18 +
- drivers/media/usb/dvb-usb/a867_register.h          |13519 ++++++++++++++++++++
- drivers/media/usb/dvb-usb/a867_standard.c          | 4668 +++++++
- drivers/media/usb/dvb-usb/a867_standard.h          | 1142 ++
- drivers/media/usb/dvb-usb/a867_type.h              |  968 ++
- drivers/media/usb/dvb-usb/a867_usb-urb.c           |  247 +
- drivers/media/usb/dvb-usb/a867_usb2impl.c          |  171 +
- drivers/media/usb/dvb-usb/a867_usb2impl.h          |   38 +
- drivers/media/usb/dvb-usb/a867_user.c              |  236 +
- drivers/media/usb/dvb-usb/a867_user.h              |  155 +
- drivers/media/usb/dvb-usb/a867_userdef.h           |   25 +
- drivers/media/usb/dvb-usb/a867_variable.h          |  260 +
- drivers/media/usb/dvb-usb/a867_version.h           |    3 +
- 44 files changed, 43745 insertions(+)
- create mode 100644 drivers/media/usb/dvb-usb/a867_Afa_AF9007.c
- create mode 100644 drivers/media/usb/dvb-usb/a867_Afa_AF9007.h
- create mode 100644 drivers/media/usb/dvb-usb/a867_Afa_AF9007_Script.h
- create mode 100644 drivers/media/usb/dvb-usb/a867_Common.h
- create mode 100644 drivers/media/usb/dvb-usb/a867_Maxlinear_MXL5007.c
- create mode 100644 drivers/media/usb/dvb-usb/a867_Maxlinear_MXL5007.h
- create mode 100644 drivers/media/usb/dvb-usb/a867_Maxlinear_MXL5007_Script.h
- create mode 100644 drivers/media/usb/dvb-usb/a867_af903x-core.c
- create mode 100644 drivers/media/usb/dvb-usb/a867_af903x-devices.c
- create mode 100644 drivers/media/usb/dvb-usb/a867_af903x-drv.c
- create mode 100644 drivers/media/usb/dvb-usb/a867_af903x-fe.c
- create mode 100644 drivers/media/usb/dvb-usb/a867_af903x-ioctl.h
- create mode 100644 drivers/media/usb/dvb-usb/a867_af903x-tuner.c
- create mode 100644 drivers/media/usb/dvb-usb/a867_af903x.h
- create mode 100644 drivers/media/usb/dvb-usb/a867_aver_version.h
- create mode 100644 drivers/media/usb/dvb-usb/a867_cmd.c
- create mode 100644 drivers/media/usb/dvb-usb/a867_cmd.h
- create mode 100644 drivers/media/usb/dvb-usb/a867_compat.h
- create mode 100644 drivers/media/usb/dvb-usb/a867_debug.h
- create mode 100644 drivers/media/usb/dvb-usb/a867_demodulator.c
- create mode 100644 drivers/media/usb/dvb-usb/a867_demodulator.h
- create mode 100644 drivers/media/usb/dvb-usb/a867_demodulatorextend.c
- create mode 100644 drivers/media/usb/dvb-usb/a867_demodulatorextend.h
- create mode 100644 drivers/media/usb/dvb-usb/a867_error.h
- create mode 100644 drivers/media/usb/dvb-usb/a867_firmware.h
- create mode 100644 drivers/media/usb/dvb-usb/a867_inttype.h
- create mode 100644 drivers/media/usb/dvb-usb/a867_iocontrol.h
- create mode 100644 drivers/media/usb/dvb-usb/a867_mxl5007t.c
- create mode 100644 drivers/media/usb/dvb-usb/a867_mxl5007t.h
- create mode 100644 drivers/media/usb/dvb-usb/a867_ofdm.h
- create mode 100644 drivers/media/usb/dvb-usb/a867_register.h
- create mode 100644 drivers/media/usb/dvb-usb/a867_standard.c
- create mode 100644 drivers/media/usb/dvb-usb/a867_standard.h
- create mode 100644 drivers/media/usb/dvb-usb/a867_type.h
- create mode 100644 drivers/media/usb/dvb-usb/a867_usb-urb.c
- create mode 100644 drivers/media/usb/dvb-usb/a867_usb2impl.c
- create mode 100644 drivers/media/usb/dvb-usb/a867_usb2impl.h
- create mode 100644 drivers/media/usb/dvb-usb/a867_user.c
- create mode 100644 drivers/media/usb/dvb-usb/a867_user.h
- create mode 100644 drivers/media/usb/dvb-usb/a867_userdef.h
- create mode 100644 drivers/media/usb/dvb-usb/a867_variable.h
- create mode 100644 drivers/media/usb/dvb-usb/a867_version.h
+ drivers/media/dvb/dvb-usb/Kconfig                  |    8 +
+ drivers/media/dvb/dvb-usb/Makefile                 |    6 +
+ drivers/media/dvb/dvb-usb/a867_Afa_AF9007.c        |   50 +
+ drivers/media/dvb/dvb-usb/a867_Afa_AF9007.h        |   39 +
+ drivers/media/dvb/dvb-usb/a867_Afa_AF9007_Script.h |   93 +
+ drivers/media/dvb/dvb-usb/a867_Common.h            |  259 +
+ drivers/media/dvb/dvb-usb/a867_Maxlinear_MXL5007.c |  203 +
+ drivers/media/dvb/dvb-usb/a867_Maxlinear_MXL5007.h |   60 +
+ .../dvb/dvb-usb/a867_Maxlinear_MXL5007_Script.h    |   64 +
+ drivers/media/dvb/dvb-usb/a867_af903x-core.c       |  253 +
+ drivers/media/dvb/dvb-usb/a867_af903x-devices.c    |  278 +
+ drivers/media/dvb/dvb-usb/a867_af903x-drv.c        | 1238 ++
+ drivers/media/dvb/dvb-usb/a867_af903x-fe.c         |  936 ++
+ drivers/media/dvb/dvb-usb/a867_af903x-ioctl.h      |   29 +
+ drivers/media/dvb/dvb-usb/a867_af903x-tuner.c      |  122 +
+ drivers/media/dvb/dvb-usb/a867_af903x.h            |  311 +
+ drivers/media/dvb/dvb-usb/a867_aver_version.h      |    1 +
+ drivers/media/dvb/dvb-usb/a867_cmd.c               | 1005 ++
+ drivers/media/dvb/dvb-usb/a867_cmd.h               |  246 +
+ drivers/media/dvb/dvb-usb/a867_compat.h            |  503 +
+ drivers/media/dvb/dvb-usb/a867_debug.h             |    4 +
+ drivers/media/dvb/dvb-usb/a867_demodulator.c       |  540 +
+ drivers/media/dvb/dvb-usb/a867_demodulator.h       | 1495 +++
+ drivers/media/dvb/dvb-usb/a867_demodulatorextend.c |  607 +
+ drivers/media/dvb/dvb-usb/a867_demodulatorextend.h | 1326 ++
+ drivers/media/dvb/dvb-usb/a867_error.h             |  141 +
+ drivers/media/dvb/dvb-usb/a867_firmware.h          |10867 ++++++++++++++++
+ drivers/media/dvb/dvb-usb/a867_inttype.h           |   41 +
+ drivers/media/dvb/dvb-usb/a867_iocontrol.h         |  738 ++
+ drivers/media/dvb/dvb-usb/a867_mxl5007t.c          |  698 +
+ drivers/media/dvb/dvb-usb/a867_mxl5007t.h          |  135 +
+ drivers/media/dvb/dvb-usb/a867_ofdm.h              |   18 +
+ drivers/media/dvb/dvb-usb/a867_register.h          |13519 ++++++++++++++++++++
+ drivers/media/dvb/dvb-usb/a867_standard.c          | 4668 +++++++
+ drivers/media/dvb/dvb-usb/a867_standard.h          | 1142 ++
+ drivers/media/dvb/dvb-usb/a867_type.h              |  968 ++
+ drivers/media/dvb/dvb-usb/a867_usb-urb.c           |  247 +
+ drivers/media/dvb/dvb-usb/a867_usb2impl.c          |  171 +
+ drivers/media/dvb/dvb-usb/a867_usb2impl.h          |   38 +
+ drivers/media/dvb/dvb-usb/a867_user.c              |  236 +
+ drivers/media/dvb/dvb-usb/a867_user.h              |  155 +
+ drivers/media/dvb/dvb-usb/a867_userdef.h           |   25 +
+ drivers/media/dvb/dvb-usb/a867_variable.h          |  260 +
+ drivers/media/dvb/dvb-usb/a867_version.h           |    3 +
+ 44 files changed, 43746 insertions(+), 0 deletions(-)
+ create mode 100644 drivers/media/dvb/dvb-usb/a867_Afa_AF9007.c
+ create mode 100644 drivers/media/dvb/dvb-usb/a867_Afa_AF9007.h
+ create mode 100644 drivers/media/dvb/dvb-usb/a867_Afa_AF9007_Script.h
+ create mode 100644 drivers/media/dvb/dvb-usb/a867_Common.h
+ create mode 100644 drivers/media/dvb/dvb-usb/a867_Maxlinear_MXL5007.c
+ create mode 100644 drivers/media/dvb/dvb-usb/a867_Maxlinear_MXL5007.h
+ create mode 100644 drivers/media/dvb/dvb-usb/a867_Maxlinear_MXL5007_Script.h
+ create mode 100644 drivers/media/dvb/dvb-usb/a867_af903x-core.c
+ create mode 100644 drivers/media/dvb/dvb-usb/a867_af903x-devices.c
+ create mode 100644 drivers/media/dvb/dvb-usb/a867_af903x-drv.c
+ create mode 100644 drivers/media/dvb/dvb-usb/a867_af903x-fe.c
+ create mode 100644 drivers/media/dvb/dvb-usb/a867_af903x-ioctl.h
+ create mode 100644 drivers/media/dvb/dvb-usb/a867_af903x-tuner.c
+ create mode 100644 drivers/media/dvb/dvb-usb/a867_af903x.h
+ create mode 100644 drivers/media/dvb/dvb-usb/a867_aver_version.h
+ create mode 100644 drivers/media/dvb/dvb-usb/a867_cmd.c
+ create mode 100644 drivers/media/dvb/dvb-usb/a867_cmd.h
+ create mode 100644 drivers/media/dvb/dvb-usb/a867_compat.h
+ create mode 100644 drivers/media/dvb/dvb-usb/a867_debug.h
+ create mode 100644 drivers/media/dvb/dvb-usb/a867_demodulator.c
+ create mode 100644 drivers/media/dvb/dvb-usb/a867_demodulator.h
+ create mode 100644 drivers/media/dvb/dvb-usb/a867_demodulatorextend.c
+ create mode 100644 drivers/media/dvb/dvb-usb/a867_demodulatorextend.h
+ create mode 100644 drivers/media/dvb/dvb-usb/a867_error.h
+ create mode 100644 drivers/media/dvb/dvb-usb/a867_firmware.h
+ create mode 100644 drivers/media/dvb/dvb-usb/a867_inttype.h
+ create mode 100644 drivers/media/dvb/dvb-usb/a867_iocontrol.h
+ create mode 100644 drivers/media/dvb/dvb-usb/a867_mxl5007t.c
+ create mode 100644 drivers/media/dvb/dvb-usb/a867_mxl5007t.h
+ create mode 100644 drivers/media/dvb/dvb-usb/a867_ofdm.h
+ create mode 100644 drivers/media/dvb/dvb-usb/a867_register.h
+ create mode 100644 drivers/media/dvb/dvb-usb/a867_standard.c
+ create mode 100644 drivers/media/dvb/dvb-usb/a867_standard.h
+ create mode 100644 drivers/media/dvb/dvb-usb/a867_type.h
+ create mode 100644 drivers/media/dvb/dvb-usb/a867_usb-urb.c
+ create mode 100644 drivers/media/dvb/dvb-usb/a867_usb2impl.c
+ create mode 100644 drivers/media/dvb/dvb-usb/a867_usb2impl.h
+ create mode 100644 drivers/media/dvb/dvb-usb/a867_user.c
+ create mode 100644 drivers/media/dvb/dvb-usb/a867_user.h
+ create mode 100644 drivers/media/dvb/dvb-usb/a867_userdef.h
+ create mode 100644 drivers/media/dvb/dvb-usb/a867_variable.h
+ create mode 100644 drivers/media/dvb/dvb-usb/a867_version.h
 
-diff --git a/drivers/media/usb/dvb-usb/Kconfig b/drivers/media/usb/dvb-usb/Kconfig
-index fa0b293..caf84b0 100644
---- a/drivers/media/usb/dvb-usb/Kconfig
-+++ b/drivers/media/usb/dvb-usb/Kconfig
-@@ -311,3 +311,10 @@ config DVB_USB_TECHNISAT_USB2
- 	select DVB_STV6110x if MEDIA_SUBDRV_AUTOSELECT
+diff --git a/drivers/media/dvb/dvb-usb/Kconfig b/drivers/media/dvb/dvb-usb/Kconfig
+index d2014c0..787ffab 100644
+--- a/drivers/media/dvb/dvb-usb/Kconfig
++++ b/drivers/media/dvb/dvb-usb/Kconfig
+@@ -415,3 +415,11 @@ config DVB_USB_MXL111SF
+ 	select VIDEO_TVEEPROM
  	help
- 	  Say Y here to support the Technisat USB2 DVB-S/S2 device
+ 	  Say Y here to support the MxL111SF USB2.0 DTV receiver.
 +
 +config DVB_USB_A867
 +	tristate "Avermedia A867 DVB support"
@@ -112,28 +114,29 @@ index fa0b293..caf84b0 100644
 +	default m
 +	help
 +	  Say Y here to support the Avermedia A867 device
-diff --git a/drivers/media/usb/dvb-usb/Makefile b/drivers/media/usb/dvb-usb/Makefile
-index acdd1ef..fbc6c9b 100644
---- a/drivers/media/usb/dvb-usb/Makefile
-+++ b/drivers/media/usb/dvb-usb/Makefile
-@@ -76,6 +76,12 @@ obj-$(CONFIG_DVB_USB_AZ6027) += dvb-usb-az6027.o
- dvb-usb-technisat-usb2-objs := technisat-usb2.o
- obj-$(CONFIG_DVB_USB_TECHNISAT_USB2) += dvb-usb-technisat-usb2.o
++
+diff --git a/drivers/media/dvb/dvb-usb/Makefile b/drivers/media/dvb/dvb-usb/Makefile
+index f8b1013..4745905 100644
+--- a/drivers/media/dvb/dvb-usb/Makefile
++++ b/drivers/media/dvb/dvb-usb/Makefile
+@@ -109,6 +109,12 @@ obj-$(CONFIG_DVB_USB_MXL111SF) += mxl111sf-tuner.o
+ dvb-usb-af9035-objs = af9035.o
+ obj-$(CONFIG_DVB_USB_AF9035) += dvb-usb-af9035.o
  
 +dvb-usb-a867-objs := a867_af903x-core.o a867_af903x-devices.o a867_af903x-drv.o \
-+		     a867_af903x-fe.o a867_af903x-tuner.o a867_cmd.o a867_standard.o \
-+		     a867_demodulator.o a867_demodulatorextend.o a867_usb2impl.o \
-+		     a867_user.o a867_mxl5007t.o a867_Maxlinear_MXL5007.o a867_Afa_AF9007.o
++			a867_af903x-fe.o a867_af903x-tuner.o a867_cmd.o a867_standard.o \
++			a867_demodulator.o a867_demodulatorextend.o a867_usb2impl.o \
++			a867_user.o a867_mxl5007t.o a867_Maxlinear_MXL5007.o a867_Afa_AF9007.o
 +obj-$(CONFIG_DVB_USB_A867) += dvb-usb-a867.o
 +
- ccflags-y += -I$(srctree)/drivers/media/dvb-core
- ccflags-y += -I$(srctree)/drivers/media/dvb-frontends/
+ ccflags-y += -Idrivers/media/dvb/dvb-core/ -Idrivers/media/dvb/frontends/
  # due to tuner-xc3028
-diff --git a/drivers/media/usb/dvb-usb/a867_Afa_AF9007.c b/drivers/media/usb/dvb-usb/a867_Afa_AF9007.c
+ ccflags-y += -Idrivers/media/common/tuners
+diff --git a/drivers/media/dvb/dvb-usb/a867_Afa_AF9007.c b/drivers/media/dvb/dvb-usb/a867_Afa_AF9007.c
 new file mode 100644
 index 0000000..0d65cf9
 --- /dev/null
-+++ b/drivers/media/usb/dvb-usb/a867_Afa_AF9007.c
++++ b/drivers/media/dvb/dvb-usb/a867_Afa_AF9007.c
 @@ -0,0 +1,50 @@
 +/*
 + * @(#)Afatech_AF9007_EXT.cpp
@@ -185,11 +188,11 @@ index 0000000..0d65cf9
 +    True,                           /** spectrum inverse */
 +    0xFF                            /** tuner id */
 +};
-diff --git a/drivers/media/usb/dvb-usb/a867_Afa_AF9007.h b/drivers/media/usb/dvb-usb/a867_Afa_AF9007.h
+diff --git a/drivers/media/dvb/dvb-usb/a867_Afa_AF9007.h b/drivers/media/dvb/dvb-usb/a867_Afa_AF9007.h
 new file mode 100644
 index 0000000..7f41742
 --- /dev/null
-+++ b/drivers/media/usb/dvb-usb/a867_Afa_AF9007.h
++++ b/drivers/media/dvb/dvb-usb/a867_Afa_AF9007.h
 @@ -0,0 +1,39 @@
 +/**
 + * @(#)Afatech_AF9007_EXT.h
@@ -230,11 +233,11 @@ index 0000000..7f41742
 +);
 +#endif
 +
-diff --git a/drivers/media/usb/dvb-usb/a867_Afa_AF9007_Script.h b/drivers/media/usb/dvb-usb/a867_Afa_AF9007_Script.h
+diff --git a/drivers/media/dvb/dvb-usb/a867_Afa_AF9007_Script.h b/drivers/media/dvb/dvb-usb/a867_Afa_AF9007_Script.h
 new file mode 100644
 index 0000000..7da168b
 --- /dev/null
-+++ b/drivers/media/usb/dvb-usb/a867_Afa_AF9007_Script.h
++++ b/drivers/media/dvb/dvb-usb/a867_Afa_AF9007_Script.h
 @@ -0,0 +1,93 @@
 +/** script version */
 +
@@ -329,11 +332,11 @@ index 0000000..7da168b
 + {0x006d, 0x08},
 +};
 +
-diff --git a/drivers/media/usb/dvb-usb/a867_Common.h b/drivers/media/usb/dvb-usb/a867_Common.h
+diff --git a/drivers/media/dvb/dvb-usb/a867_Common.h b/drivers/media/dvb/dvb-usb/a867_Common.h
 new file mode 100644
 index 0000000..d6e6fe2
 --- /dev/null
-+++ b/drivers/media/usb/dvb-usb/a867_Common.h
++++ b/drivers/media/dvb/dvb-usb/a867_Common.h
 @@ -0,0 +1,259 @@
 +#pragma once
 +
@@ -594,11 +597,11 @@ index 0000000..d6e6fe2
 +#endif
 +
 +} MXL5005_ControlName ;
-diff --git a/drivers/media/usb/dvb-usb/a867_Maxlinear_MXL5007.c b/drivers/media/usb/dvb-usb/a867_Maxlinear_MXL5007.c
+diff --git a/drivers/media/dvb/dvb-usb/a867_Maxlinear_MXL5007.c b/drivers/media/dvb/dvb-usb/a867_Maxlinear_MXL5007.c
 new file mode 100644
 index 0000000..1bc1d33
 --- /dev/null
-+++ b/drivers/media/usb/dvb-usb/a867_Maxlinear_MXL5007.c
++++ b/drivers/media/dvb/dvb-usb/a867_Maxlinear_MXL5007.c
 @@ -0,0 +1,203 @@
 +/**
 + * Maxlinear_MXL5007.cpp
@@ -803,11 +806,11 @@ index 0000000..1bc1d33
 +
 +
 +
-diff --git a/drivers/media/usb/dvb-usb/a867_Maxlinear_MXL5007.h b/drivers/media/usb/dvb-usb/a867_Maxlinear_MXL5007.h
+diff --git a/drivers/media/dvb/dvb-usb/a867_Maxlinear_MXL5007.h b/drivers/media/dvb/dvb-usb/a867_Maxlinear_MXL5007.h
 new file mode 100644
 index 0000000..46f6fb5
 --- /dev/null
-+++ b/drivers/media/usb/dvb-usb/a867_Maxlinear_MXL5007.h
++++ b/drivers/media/dvb/dvb-usb/a867_Maxlinear_MXL5007.h
 @@ -0,0 +1,60 @@
 +/**
 + * Maxlinear_MXL5007.h
@@ -869,11 +872,11 @@ index 0000000..46f6fb5
 +
 +#endif //__Maxlinear_MXL5007_H__
 +
-diff --git a/drivers/media/usb/dvb-usb/a867_Maxlinear_MXL5007_Script.h b/drivers/media/usb/dvb-usb/a867_Maxlinear_MXL5007_Script.h
+diff --git a/drivers/media/dvb/dvb-usb/a867_Maxlinear_MXL5007_Script.h b/drivers/media/dvb/dvb-usb/a867_Maxlinear_MXL5007_Script.h
 new file mode 100644
 index 0000000..c5daff6
 --- /dev/null
-+++ b/drivers/media/usb/dvb-usb/a867_Maxlinear_MXL5007_Script.h
++++ b/drivers/media/dvb/dvb-usb/a867_Maxlinear_MXL5007_Script.h
 @@ -0,0 +1,64 @@
 +/** script version */
 +
@@ -939,11 +942,11 @@ index 0000000..c5daff6
 + {0xF1E6, 0x00},
 + {0xF163, 0x02},
 +};
-diff --git a/drivers/media/usb/dvb-usb/a867_af903x-core.c b/drivers/media/usb/dvb-usb/a867_af903x-core.c
+diff --git a/drivers/media/dvb/dvb-usb/a867_af903x-core.c b/drivers/media/dvb/dvb-usb/a867_af903x-core.c
 new file mode 100644
 index 0000000..8d784b1
 --- /dev/null
-+++ b/drivers/media/usb/dvb-usb/a867_af903x-core.c
++++ b/drivers/media/dvb/dvb-usb/a867_af903x-core.c
 @@ -0,0 +1,253 @@
 +#include "a867_af903x.h"
 +#include "a867_aver_version.h"
@@ -1198,11 +1201,11 @@ index 0000000..8d784b1
 +MODULE_DESCRIPTION("AVerMedia A867");
 +MODULE_VERSION(DRIVER_VER);
 +MODULE_LICENSE("GPL");
-diff --git a/drivers/media/usb/dvb-usb/a867_af903x-devices.c b/drivers/media/usb/dvb-usb/a867_af903x-devices.c
+diff --git a/drivers/media/dvb/dvb-usb/a867_af903x-devices.c b/drivers/media/dvb/dvb-usb/a867_af903x-devices.c
 new file mode 100644
 index 0000000..76fc41b
 --- /dev/null
-+++ b/drivers/media/usb/dvb-usb/a867_af903x-devices.c
++++ b/drivers/media/dvb/dvb-usb/a867_af903x-devices.c
 @@ -0,0 +1,278 @@
 +#include "a867_af903x.h"
 +
@@ -1482,11 +1485,11 @@ index 0000000..76fc41b
 +};
 +
 +int af903x_device_count = ARRAY_SIZE(af903x_properties);
-diff --git a/drivers/media/usb/dvb-usb/a867_af903x-drv.c b/drivers/media/usb/dvb-usb/a867_af903x-drv.c
+diff --git a/drivers/media/dvb/dvb-usb/a867_af903x-drv.c b/drivers/media/dvb/dvb-usb/a867_af903x-drv.c
 new file mode 100644
 index 0000000..3a030a8
 --- /dev/null
-+++ b/drivers/media/usb/dvb-usb/a867_af903x-drv.c
++++ b/drivers/media/dvb/dvb-usb/a867_af903x-drv.c
 @@ -0,0 +1,1238 @@
 +#include "a867_af903x.h"
 +//#include "a867_firmware.h"
@@ -2726,17 +2729,16 @@ index 0000000..3a030a8
 +	return (error);
 +}
 +//EXPORT_SYMBOL(Device_init);
-diff --git a/drivers/media/usb/dvb-usb/a867_af903x-fe.c b/drivers/media/usb/dvb-usb/a867_af903x-fe.c
+diff --git a/drivers/media/dvb/dvb-usb/a867_af903x-fe.c b/drivers/media/dvb/dvb-usb/a867_af903x-fe.c
 new file mode 100644
-index 0000000..0b70662
+index 0000000..4f405f0
 --- /dev/null
-+++ b/drivers/media/usb/dvb-usb/a867_af903x-fe.c
++++ b/drivers/media/dvb/dvb-usb/a867_af903x-fe.c
 @@ -0,0 +1,936 @@
 +#include <linux/sched.h>
 +#include <linux/list.h>
 +#include <linux/module.h>
 +#include <linux/version.h>
-+#include <linux/kthread.h>
 +
 +#include "a867_af903x.h"
 +#include "dvb_frontend.h"
@@ -2761,7 +2763,7 @@ index 0000000..0b70662
 +#endif
 +	uint32_t current_frequency;
 +
-+	struct task_struct   *kthread;
++	struct completion thread_exit;
 +	int thread_should_stop;
 +	atomic_t thread_created;
 +
@@ -3548,6 +3550,7 @@ index 0000000..0b70662
 +{
 +	struct dvb_frontend *demod = data;
 +	struct af903xm_state *state = demod? demod->demodulator_priv:NULL;
++	const char *thread_name = "A867_monitor_thread";
 +	unsigned long loopcount = 0;
 +	Bool bLock = True;
 +
@@ -3562,8 +3565,9 @@ index 0000000..0b70662
 +#if LINUX_VERSION_CODE < KERNEL_VERSION(2,5,61)
 +	daemonize();
 +	sigfillset(&current->blocked);
-+	sprintf(current->comm, "%s", "A867_monitor_thread");
++	sprintf(current->comm, "%s", thread_name);
 +#else
++	daemonize("%s", thread_name);
 +	allow_signal(SIGTERM);
 +#endif
 +	siginitsetinv(&current->blocked, sigmask(SIGKILL)|sigmask(SIGINT)|\
@@ -3632,7 +3636,7 @@ index 0000000..0b70662
 +	state->current_frequency = 0;
 +
 +	deb_data("- Exit %s Function -\n",__FUNCTION__);
-+	return 0;
++	complete_and_exit(&state->thread_exit, 0);
 +}
 +
 +void af903x_start_monitor_thread(struct dvb_frontend *demod)
@@ -3644,7 +3648,8 @@ index 0000000..0b70662
 +	// if st->thread_created is already 1, then skip thread creation
 +	if( atomic_add_unless(&st->thread_created, 1, 1) ) {
 +		st->thread_should_stop = 0;
-+		st->kthread = kthread_run(af903x_monitor_thread_func, st, "A867_monitor_thread");
++		init_completion(&st->thread_exit); 
++		kernel_thread(af903x_monitor_thread_func, st, 0);
 +	}
 +#endif //USE_MONITOR_TH
 +
@@ -3660,19 +3665,17 @@ index 0000000..0b70662
 +	// if st->thread_created is alread 0, then skip thread destruction
 +	if( atomic_add_unless(&st->thread_created, -1, 0) ) {
 +		st->thread_should_stop = 1;
-+		if (st->kthread) {
-+			kthread_stop(st->kthread);
-+		}
++		wait_for_completion(&st->thread_exit);
 +	}
 +#endif //USE_MONITOR_TH
 +	deb_data("- Exit %s Function -\n",__FUNCTION__);
 +}
 +
-diff --git a/drivers/media/usb/dvb-usb/a867_af903x-ioctl.h b/drivers/media/usb/dvb-usb/a867_af903x-ioctl.h
+diff --git a/drivers/media/dvb/dvb-usb/a867_af903x-ioctl.h b/drivers/media/dvb/dvb-usb/a867_af903x-ioctl.h
 new file mode 100644
 index 0000000..14b6df9
 --- /dev/null
-+++ b/drivers/media/usb/dvb-usb/a867_af903x-ioctl.h
++++ b/drivers/media/dvb/dvb-usb/a867_af903x-ioctl.h
 @@ -0,0 +1,29 @@
 +#ifndef _AF903X_IOCTL_H_
 +#define _AF903X_IOCTL_H_
@@ -3703,11 +3706,11 @@ index 0000000..14b6df9
 +
 +#define AFA_IOC_MAXNR 14
 +#endif /* _AF903X-IOCTL_H_ */
-diff --git a/drivers/media/usb/dvb-usb/a867_af903x-tuner.c b/drivers/media/usb/dvb-usb/a867_af903x-tuner.c
+diff --git a/drivers/media/dvb/dvb-usb/a867_af903x-tuner.c b/drivers/media/dvb/dvb-usb/a867_af903x-tuner.c
 new file mode 100644
 index 0000000..6ad5768
 --- /dev/null
-+++ b/drivers/media/usb/dvb-usb/a867_af903x-tuner.c
++++ b/drivers/media/dvb/dvb-usb/a867_af903x-tuner.c
 @@ -0,0 +1,122 @@
 +#include <linux/module.h>
 +#include <linux/moduleparam.h>
@@ -3831,11 +3834,11 @@ index 0000000..6ad5768
 +	return fe;
 +}
 +
-diff --git a/drivers/media/usb/dvb-usb/a867_af903x.h b/drivers/media/usb/dvb-usb/a867_af903x.h
+diff --git a/drivers/media/dvb/dvb-usb/a867_af903x.h b/drivers/media/dvb/dvb-usb/a867_af903x.h
 new file mode 100644
 index 0000000..03f7ea9
 --- /dev/null
-+++ b/drivers/media/usb/dvb-usb/a867_af903x.h
++++ b/drivers/media/dvb/dvb-usb/a867_af903x.h
 @@ -0,0 +1,311 @@
 + 
 +#ifndef _AF903X_H_
@@ -4148,18 +4151,18 @@ index 0000000..03f7ea9
 +
 +#endif
 +
-diff --git a/drivers/media/usb/dvb-usb/a867_aver_version.h b/drivers/media/usb/dvb-usb/a867_aver_version.h
+diff --git a/drivers/media/dvb/dvb-usb/a867_aver_version.h b/drivers/media/dvb/dvb-usb/a867_aver_version.h
 new file mode 100644
-index 0000000..c3213169
+index 0000000..c321316
 --- /dev/null
-+++ b/drivers/media/usb/dvb-usb/a867_aver_version.h
++++ b/drivers/media/dvb/dvb-usb/a867_aver_version.h
 @@ -0,0 +1 @@
 +#define DRIVER_VER "1.0.27"
-diff --git a/drivers/media/usb/dvb-usb/a867_cmd.c b/drivers/media/usb/dvb-usb/a867_cmd.c
+diff --git a/drivers/media/dvb/dvb-usb/a867_cmd.c b/drivers/media/dvb/dvb-usb/a867_cmd.c
 new file mode 100644
 index 0000000..3f6007e
 --- /dev/null
-+++ b/drivers/media/usb/dvb-usb/a867_cmd.c
++++ b/drivers/media/dvb/dvb-usb/a867_cmd.c
 @@ -0,0 +1,1005 @@
 +#include "a867_cmd.h"
 +
@@ -5166,11 +5169,11 @@ index 0000000..3f6007e
 +    Cmd_sendCommand,
 +    Cmd_receiveData
 +};
-diff --git a/drivers/media/usb/dvb-usb/a867_cmd.h b/drivers/media/usb/dvb-usb/a867_cmd.h
+diff --git a/drivers/media/dvb/dvb-usb/a867_cmd.h b/drivers/media/dvb/dvb-usb/a867_cmd.h
 new file mode 100644
 index 0000000..d7cb1f6
 --- /dev/null
-+++ b/drivers/media/usb/dvb-usb/a867_cmd.h
++++ b/drivers/media/dvb/dvb-usb/a867_cmd.h
 @@ -0,0 +1,246 @@
 +#ifndef __CMD_H__
 +#define __CMD_H__
@@ -5418,11 +5421,11 @@ index 0000000..d7cb1f6
 +extern CmdDescription Cmd_busDescription;
 +#endif
 +
-diff --git a/drivers/media/usb/dvb-usb/a867_compat.h b/drivers/media/usb/dvb-usb/a867_compat.h
+diff --git a/drivers/media/dvb/dvb-usb/a867_compat.h b/drivers/media/dvb/dvb-usb/a867_compat.h
 new file mode 100644
 index 0000000..d043287
 --- /dev/null
-+++ b/drivers/media/usb/dvb-usb/a867_compat.h
++++ b/drivers/media/dvb/dvb-usb/a867_compat.h
 @@ -0,0 +1,503 @@
 +/*
 + * $Id: compat.h,v 1.1.1.1 2008/07/09 07:30:49 stylon Exp $
@@ -5927,21 +5930,21 @@ index 0000000..d043287
 + * c-basic-offset: 8
 + * End:
 + */
-diff --git a/drivers/media/usb/dvb-usb/a867_debug.h b/drivers/media/usb/dvb-usb/a867_debug.h
+diff --git a/drivers/media/dvb/dvb-usb/a867_debug.h b/drivers/media/dvb/dvb-usb/a867_debug.h
 new file mode 100644
 index 0000000..08552fa
 --- /dev/null
-+++ b/drivers/media/usb/dvb-usb/a867_debug.h
++++ b/drivers/media/dvb/dvb-usb/a867_debug.h
 @@ -0,0 +1,4 @@
 +
 +// turn on/off debug for all modules
 +//#define	CONFIG_DVB_USB_DEBUG	0	
 +
-diff --git a/drivers/media/usb/dvb-usb/a867_demodulator.c b/drivers/media/usb/dvb-usb/a867_demodulator.c
+diff --git a/drivers/media/dvb/dvb-usb/a867_demodulator.c b/drivers/media/dvb/dvb-usb/a867_demodulator.c
 new file mode 100644
 index 0000000..9192004
 --- /dev/null
-+++ b/drivers/media/usb/dvb-usb/a867_demodulator.c
++++ b/drivers/media/dvb/dvb-usb/a867_demodulator.c
 @@ -0,0 +1,540 @@
 +#include "a867_demodulator.h"
 +
@@ -6483,11 +6486,11 @@ index 0000000..9192004
 +) {
 +    return (Standard_getBurstSize (demodulator, burstSize));
 +}
-diff --git a/drivers/media/usb/dvb-usb/a867_demodulator.h b/drivers/media/usb/dvb-usb/a867_demodulator.h
+diff --git a/drivers/media/dvb/dvb-usb/a867_demodulator.h b/drivers/media/dvb/dvb-usb/a867_demodulator.h
 new file mode 100644
 index 0000000..323cb2b
 --- /dev/null
-+++ b/drivers/media/usb/dvb-usb/a867_demodulator.h
++++ b/drivers/media/dvb/dvb-usb/a867_demodulator.h
 @@ -0,0 +1,1495 @@
 +#ifndef __GANYMEDE_H__
 +#define __GANYMEDE_H__
@@ -7984,11 +7987,11 @@ index 0000000..323cb2b
 +    IN  BurstSize*      burstSize
 +);
 +#endif
-diff --git a/drivers/media/usb/dvb-usb/a867_demodulatorextend.c b/drivers/media/usb/dvb-usb/a867_demodulatorextend.c
+diff --git a/drivers/media/dvb/dvb-usb/a867_demodulatorextend.c b/drivers/media/dvb/dvb-usb/a867_demodulatorextend.c
 new file mode 100644
 index 0000000..594a303
 --- /dev/null
-+++ b/drivers/media/usb/dvb-usb/a867_demodulatorextend.c
++++ b/drivers/media/dvb/dvb-usb/a867_demodulatorextend.c
 @@ -0,0 +1,607 @@
 +#include "a867_demodulatorextend.h"
 +/*
@@ -8597,11 +8600,11 @@ index 0000000..594a303
 +
 +    return (Error_NO_ERROR);
 +}
-diff --git a/drivers/media/usb/dvb-usb/a867_demodulatorextend.h b/drivers/media/usb/dvb-usb/a867_demodulatorextend.h
+diff --git a/drivers/media/dvb/dvb-usb/a867_demodulatorextend.h b/drivers/media/dvb/dvb-usb/a867_demodulatorextend.h
 new file mode 100644
 index 0000000..20d508f
 --- /dev/null
-+++ b/drivers/media/usb/dvb-usb/a867_demodulatorextend.h
++++ b/drivers/media/dvb/dvb-usb/a867_demodulatorextend.h
 @@ -0,0 +1,1326 @@
 +#ifndef __DEMODULATOREXTEND_H__
 +#define __DEMODULATOREXTEND_H__
@@ -9929,11 +9932,11 @@ index 0000000..20d508f
 +	IN  Byte			control
 +);
 +#endif
-diff --git a/drivers/media/usb/dvb-usb/a867_error.h b/drivers/media/usb/dvb-usb/a867_error.h
+diff --git a/drivers/media/dvb/dvb-usb/a867_error.h b/drivers/media/dvb/dvb-usb/a867_error.h
 new file mode 100644
 index 0000000..234c03a
 --- /dev/null
-+++ b/drivers/media/usb/dvb-usb/a867_error.h
++++ b/drivers/media/dvb/dvb-usb/a867_error.h
 @@ -0,0 +1,141 @@
 +#ifndef __ERROR_H__
 +#define __ERROR_H__
@@ -10076,11 +10079,11 @@ index 0000000..234c03a
 +
 +#endif
 +
-diff --git a/drivers/media/usb/dvb-usb/a867_firmware.h b/drivers/media/usb/dvb-usb/a867_firmware.h
+diff --git a/drivers/media/dvb/dvb-usb/a867_firmware.h b/drivers/media/dvb/dvb-usb/a867_firmware.h
 new file mode 100644
 index 0000000..1562dfa
 --- /dev/null
-+++ b/drivers/media/usb/dvb-usb/a867_firmware.h
++++ b/drivers/media/dvb/dvb-usb/a867_firmware.h
 @@ -0,0 +1,10867 @@
 +// This file is automatically generated. Do not edit.
 +
@@ -20949,11 +20952,11 @@ index 0000000..1562dfa
 +
 +// Warning: version numbers are manually altered.
 +
-diff --git a/drivers/media/usb/dvb-usb/a867_inttype.h b/drivers/media/usb/dvb-usb/a867_inttype.h
+diff --git a/drivers/media/dvb/dvb-usb/a867_inttype.h b/drivers/media/dvb/dvb-usb/a867_inttype.h
 new file mode 100644
 index 0000000..303ae70
 --- /dev/null
-+++ b/drivers/media/usb/dvb-usb/a867_inttype.h
++++ b/drivers/media/dvb/dvb-usb/a867_inttype.h
 @@ -0,0 +1,41 @@
 +#ifndef __INTTYPE_H__
 +#define __INTTYPE_H__
@@ -20996,11 +20999,11 @@ index 0000000..303ae70
 +
 +#endif
 +
-diff --git a/drivers/media/usb/dvb-usb/a867_iocontrol.h b/drivers/media/usb/dvb-usb/a867_iocontrol.h
+diff --git a/drivers/media/dvb/dvb-usb/a867_iocontrol.h b/drivers/media/dvb/dvb-usb/a867_iocontrol.h
 new file mode 100644
 index 0000000..a38a1e5
 --- /dev/null
-+++ b/drivers/media/usb/dvb-usb/a867_iocontrol.h
++++ b/drivers/media/dvb/dvb-usb/a867_iocontrol.h
 @@ -0,0 +1,738 @@
 +/**
 + *
@@ -21740,11 +21743,11 @@ index 0000000..a38a1e5
 +
 +
 +#endif
-diff --git a/drivers/media/usb/dvb-usb/a867_mxl5007t.c b/drivers/media/usb/dvb-usb/a867_mxl5007t.c
+diff --git a/drivers/media/dvb/dvb-usb/a867_mxl5007t.c b/drivers/media/dvb/dvb-usb/a867_mxl5007t.c
 new file mode 100644
 index 0000000..29b397a
 --- /dev/null
-+++ b/drivers/media/usb/dvb-usb/a867_mxl5007t.c
++++ b/drivers/media/dvb/dvb-usb/a867_mxl5007t.c
 @@ -0,0 +1,698 @@
 +/*
 + *  mxl5007t.c - driver for the MaxLinear MxL5007T silicon tuner
@@ -22444,11 +22447,11 @@ index 0000000..29b397a
 + * c-basic-offset: 8
 + * End:
 + */
-diff --git a/drivers/media/usb/dvb-usb/a867_mxl5007t.h b/drivers/media/usb/dvb-usb/a867_mxl5007t.h
+diff --git a/drivers/media/dvb/dvb-usb/a867_mxl5007t.h b/drivers/media/dvb/dvb-usb/a867_mxl5007t.h
 new file mode 100644
 index 0000000..fae1059
 --- /dev/null
-+++ b/drivers/media/usb/dvb-usb/a867_mxl5007t.h
++++ b/drivers/media/dvb/dvb-usb/a867_mxl5007t.h
 @@ -0,0 +1,135 @@
 +/*
 + *  mxl5007t.h - driver for the MaxLinear MxL5007T silicon tuner
@@ -22585,11 +22588,11 @@ index 0000000..fae1059
 + * End:
 + */
 +
-diff --git a/drivers/media/usb/dvb-usb/a867_ofdm.h b/drivers/media/usb/dvb-usb/a867_ofdm.h
+diff --git a/drivers/media/dvb/dvb-usb/a867_ofdm.h b/drivers/media/dvb/dvb-usb/a867_ofdm.h
 new file mode 100644
 index 0000000..30df3f2
 --- /dev/null
-+++ b/drivers/media/usb/dvb-usb/a867_ofdm.h
++++ b/drivers/media/dvb/dvb-usb/a867_ofdm.h
 @@ -0,0 +1,18 @@
 +
 +#define DVB_LL_VERSION1 10
@@ -22609,11 +22612,11 @@ index 0000000..30df3f2
 +
 +#define DVB_OFDM_VERSION4 251
 +
-diff --git a/drivers/media/usb/dvb-usb/a867_register.h b/drivers/media/usb/dvb-usb/a867_register.h
+diff --git a/drivers/media/dvb/dvb-usb/a867_register.h b/drivers/media/dvb/dvb-usb/a867_register.h
 new file mode 100644
 index 0000000..76e4795
 --- /dev/null
-+++ b/drivers/media/usb/dvb-usb/a867_register.h
++++ b/drivers/media/dvb/dvb-usb/a867_register.h
 @@ -0,0 +1,13519 @@
 +#ifndef _TD_BIU_REG_H_
 +#define _TD_BIU_REG_H_
@@ -36134,11 +36137,11 @@ index 0000000..76e4795
 +#define reg_p_dmb_sw_reset_pos 0
 +#define reg_p_dmb_sw_reset_len 1
 +#define reg_p_dmb_sw_reset_lsb 0
-diff --git a/drivers/media/usb/dvb-usb/a867_standard.c b/drivers/media/usb/dvb-usb/a867_standard.c
+diff --git a/drivers/media/dvb/dvb-usb/a867_standard.c b/drivers/media/dvb/dvb-usb/a867_standard.c
 new file mode 100644
 index 0000000..8b4f4b3
 --- /dev/null
-+++ b/drivers/media/usb/dvb-usb/a867_standard.c
++++ b/drivers/media/dvb/dvb-usb/a867_standard.c
 @@ -0,0 +1,4668 @@
 +#include "a867_standard.h"
 +//#include <math.h>
@@ -40808,11 +40811,11 @@ index 0000000..8b4f4b3
 +    }
 +    return (error);
 +}
-diff --git a/drivers/media/usb/dvb-usb/a867_standard.h b/drivers/media/usb/dvb-usb/a867_standard.h
+diff --git a/drivers/media/dvb/dvb-usb/a867_standard.h b/drivers/media/dvb/dvb-usb/a867_standard.h
 new file mode 100644
 index 0000000..6001dbf
 --- /dev/null
-+++ b/drivers/media/usb/dvb-usb/a867_standard.h
++++ b/drivers/media/dvb/dvb-usb/a867_standard.h
 @@ -0,0 +1,1142 @@
 +#ifndef __STANDARD_H__
 +#define __STANDARD_H__
@@ -41956,11 +41959,11 @@ index 0000000..6001dbf
 +);
 +#endif
 +
-diff --git a/drivers/media/usb/dvb-usb/a867_type.h b/drivers/media/usb/dvb-usb/a867_type.h
+diff --git a/drivers/media/dvb/dvb-usb/a867_type.h b/drivers/media/dvb/dvb-usb/a867_type.h
 new file mode 100644
 index 0000000..d57d36e
 --- /dev/null
-+++ b/drivers/media/usb/dvb-usb/a867_type.h
++++ b/drivers/media/dvb/dvb-usb/a867_type.h
 @@ -0,0 +1,968 @@
 +#ifndef __TYPE_H__
 +#define __TYPE_H__
@@ -42930,11 +42933,11 @@ index 0000000..d57d36e
 +#define HIGHBYTE(w)     ((Byte)((w >> 8) & 0xff))
 +
 +#endif
-diff --git a/drivers/media/usb/dvb-usb/a867_usb-urb.c b/drivers/media/usb/dvb-usb/a867_usb-urb.c
+diff --git a/drivers/media/dvb/dvb-usb/a867_usb-urb.c b/drivers/media/dvb/dvb-usb/a867_usb-urb.c
 new file mode 100644
 index 0000000..5caec20
 --- /dev/null
-+++ b/drivers/media/usb/dvb-usb/a867_usb-urb.c
++++ b/drivers/media/dvb/dvb-usb/a867_usb-urb.c
 @@ -0,0 +1,247 @@
 +/* usb-urb.c is part of the DVB USB library.
 + *
@@ -43183,11 +43186,11 @@ index 0000000..5caec20
 +	usb_free_stream_buffers(stream);
 +	return 0;
 +}
-diff --git a/drivers/media/usb/dvb-usb/a867_usb2impl.c b/drivers/media/usb/dvb-usb/a867_usb2impl.c
+diff --git a/drivers/media/dvb/dvb-usb/a867_usb2impl.c b/drivers/media/dvb/dvb-usb/a867_usb2impl.c
 new file mode 100644
 index 0000000..23b0629
 --- /dev/null
-+++ b/drivers/media/usb/dvb-usb/a867_usb2impl.c
++++ b/drivers/media/dvb/dvb-usb/a867_usb2impl.c
 @@ -0,0 +1,171 @@
 +#include <linux/version.h>
 +#if LINUX_VERSION_CODE < KERNEL_VERSION(2, 6, 33)  
@@ -43360,11 +43363,11 @@ index 0000000..23b0629
 +	return (Error_NO_ERROR);
 +}
 +#endif
-diff --git a/drivers/media/usb/dvb-usb/a867_usb2impl.h b/drivers/media/usb/dvb-usb/a867_usb2impl.h
+diff --git a/drivers/media/dvb/dvb-usb/a867_usb2impl.h b/drivers/media/dvb/dvb-usb/a867_usb2impl.h
 new file mode 100644
 index 0000000..34b8fe1
 --- /dev/null
-+++ b/drivers/media/usb/dvb-usb/a867_usb2impl.h
++++ b/drivers/media/dvb/dvb-usb/a867_usb2impl.h
 @@ -0,0 +1,38 @@
 +#ifndef __USB2IMPL_H__
 +#define __USB2IMPL_H__
@@ -43404,11 +43407,11 @@ index 0000000..34b8fe1
 +
 +#endif
 +
-diff --git a/drivers/media/usb/dvb-usb/a867_user.c b/drivers/media/usb/dvb-usb/a867_user.c
+diff --git a/drivers/media/dvb/dvb-usb/a867_user.c b/drivers/media/dvb/dvb-usb/a867_user.c
 new file mode 100644
 index 0000000..7e75f05
 --- /dev/null
-+++ b/drivers/media/usb/dvb-usb/a867_user.c
++++ b/drivers/media/dvb/dvb-usb/a867_user.c
 @@ -0,0 +1,236 @@
 +#include "a867_user.h"
 +#include "a867_af903x.h"
@@ -43646,11 +43649,11 @@ index 0000000..7e75f05
 +) {
 +    return (Error_NO_ERROR);
 +}
-diff --git a/drivers/media/usb/dvb-usb/a867_user.h b/drivers/media/usb/dvb-usb/a867_user.h
+diff --git a/drivers/media/dvb/dvb-usb/a867_user.h b/drivers/media/dvb/dvb-usb/a867_user.h
 new file mode 100644
 index 0000000..464f521
 --- /dev/null
-+++ b/drivers/media/usb/dvb-usb/a867_user.h
++++ b/drivers/media/dvb/dvb-usb/a867_user.h
 @@ -0,0 +1,155 @@
 +#ifndef __USER_H__
 +#define __USER_H__
@@ -43807,11 +43810,11 @@ index 0000000..464f521
 +    OUT Byte*           buffer
 +);
 +#endif
-diff --git a/drivers/media/usb/dvb-usb/a867_userdef.h b/drivers/media/usb/dvb-usb/a867_userdef.h
+diff --git a/drivers/media/dvb/dvb-usb/a867_userdef.h b/drivers/media/dvb/dvb-usb/a867_userdef.h
 new file mode 100644
 index 0000000..c4be11d
 --- /dev/null
-+++ b/drivers/media/usb/dvb-usb/a867_userdef.h
++++ b/drivers/media/dvb/dvb-usb/a867_userdef.h
 @@ -0,0 +1,25 @@
 +#ifndef _USERDEF_H_
 +#define _USERDEF_H_
@@ -43838,11 +43841,11 @@ index 0000000..c4be11d
 +#define INOUT
 +
 +#endif // _USERDEF_H_
-diff --git a/drivers/media/usb/dvb-usb/a867_variable.h b/drivers/media/usb/dvb-usb/a867_variable.h
+diff --git a/drivers/media/dvb/dvb-usb/a867_variable.h b/drivers/media/dvb/dvb-usb/a867_variable.h
 new file mode 100644
 index 0000000..53d6fbc
 --- /dev/null
-+++ b/drivers/media/usb/dvb-usb/a867_variable.h
++++ b/drivers/media/dvb/dvb-usb/a867_variable.h
 @@ -0,0 +1,260 @@
 +#ifndef __VARIABLE_H__
 +#define __VARIABLE_H__
@@ -44104,15 +44107,15 @@ index 0000000..53d6fbc
 +
 +//BASE Address 0xFFFF
 +#endif
-diff --git a/drivers/media/usb/dvb-usb/a867_version.h b/drivers/media/usb/dvb-usb/a867_version.h
+diff --git a/drivers/media/dvb/dvb-usb/a867_version.h b/drivers/media/dvb/dvb-usb/a867_version.h
 new file mode 100644
 index 0000000..c3d3ddd
 --- /dev/null
-+++ b/drivers/media/usb/dvb-usb/a867_version.h
++++ b/drivers/media/dvb/dvb-usb/a867_version.h
 @@ -0,0 +1,3 @@
 +#define Version_NUMBER		0x0200
 +#define Version_DATE		0x20080314
 +#define Version_BUILD		0x01
 -- 
-1.7.9.5
+1.7.0.4
 

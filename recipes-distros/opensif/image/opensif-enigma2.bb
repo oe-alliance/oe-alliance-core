@@ -7,7 +7,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PV = "1.0"
-PR = "r13"
+PR = "r14"
 
 INITSCRIPT_NAME = "swap"
 INITSCRIPT_PARAMS = "start 60 S ."
@@ -28,6 +28,7 @@ RRECOMMENDS_${PN} = "\
     python-compression \
     python-terminal \
     python-textutils \
+    enigma2-plugin-systemplugins-videomode \
     enigma2-plugin-extensions-autotimer \
     enigma2-plugin-extensions-audiosync \
     enigma2-plugin-extensions-epgsearch \

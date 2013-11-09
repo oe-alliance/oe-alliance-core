@@ -1,0 +1,147 @@
+diff -Naurp linux-2.6.34.new/arch/arm/kernel/entry-common.S linux-2.6.34/arch/arm/kernel/entry-common.S
+--- linux-2.6.34.new/arch/arm/kernel/entry-common.S	2010-11-09 00:31:04.000000000 -0600
++++ linux-2.6.34/arch/arm/kernel/entry-common.S	2010-11-15 19:43:00.000000000 -0600
+@@ -48,6 +48,8 @@ work_pending:
+ 	beq	no_work_pending
+ 	mov	r0, sp				@ 'regs'
+ 	mov	r2, why				@ 'syscall'
++	tst	r1, #_TIF_SIGPENDING		@ delivering a signal?
++	movne	why, #0				@ prevent further restarts
+ 	bl	do_notify_resume
+ 	b	ret_slow_syscall		@ Check work again
+ 
+diff -Naurp linux-2.6.34.new/arch/arm/kernel/setup.c linux-2.6.34/arch/arm/kernel/setup.c
+--- linux-2.6.34.new/arch/arm/kernel/setup.c	2010-10-06 09:42:16.000000000 -0500
++++ linux-2.6.34/arch/arm/kernel/setup.c	2010-11-15 19:47:23.000000000 -0600
+@@ -220,7 +220,7 @@ int cpu_architecture(void)
+ 		asm("mrc	p15, 0, %0, c0, c1, 4"
+ 		    : "=r" (mmfr0));
+ 		if ((mmfr0 & 0x0000000f) >= 0x00000003 ||
+-		    (mmfr0 & 0x000000f0) == 0x00000030)
++		    (mmfr0 & 0x000000f0) >= 0x00000030)
+ 			cpu_arch = CPU_ARCH_ARMv7;
+ 		else if ((mmfr0 & 0x0000000f) == 0x00000002 ||
+ 			 (mmfr0 & 0x000000f0) == 0x00000020)
+diff -Naurp linux-2.6.34.new/arch/arm/Makefile linux-2.6.34/arch/arm/Makefile
+--- linux-2.6.34.new/arch/arm/Makefile	2010-11-10 21:24:49.000000000 -0600
++++ linux-2.6.34/arch/arm/Makefile	2010-11-15 19:54:25.000000000 -0600
+@@ -21,6 +21,9 @@ GZFLAGS		:=-9
+ # Explicitly specifiy 32-bit ARM ISA since toolchain default can be -mthumb:
+ KBUILD_CFLAGS	+=$(call cc-option,-marm,)
+ 
++# Never generate .eh_frame
++KBUILD_CFLAGS  += $(call cc-option,-fno-dwarf2-cfi-asm)
++
+ # Do not use arch/arm/defconfig - it's always outdated.
+ # Select a platform tht is kept up-to-date
+ KBUILD_DEFCONFIG := versatile_defconfig
+diff -Naurp linux-2.6.34.new/arch/arm/mm/alignment.c linux-2.6.34/arch/arm/mm/alignment.c
+--- linux-2.6.34.new/arch/arm/mm/alignment.c	2010-10-06 09:42:16.000000000 -0500
++++ linux-2.6.34/arch/arm/mm/alignment.c	2010-11-12 07:46:09.000000000 -0600
+@@ -885,8 +885,23 @@ do_alignment(unsigned long addr, unsigne
+ 
+ 	if (ai_usermode & UM_SIGNAL)
+ 		force_sig(SIGBUS, current);
+-	else
+-		set_cr(cr_no_alignment);
++	else {
++		/*
++		 * We're about to disable the alignment trap and return to
++		 * user space.  But if an interrupt occurs before actually
++		 * reaching user space, then the IRQ vector entry code will
++		 * notice that we were still in kernel space and therefore
++		 * the alignment trap won't be re-enabled in that case as it
++		 * is presumed to be always on from kernel space.
++		 * Let's prevent that race by disabling interrupts here (they
++		 * are disabled on the way back to user space anyway in
++		 * entry-common.S) and disable the alignment trap only if
++		 * there is no work pending for this thread.
++		 */
++		raw_local_irq_disable();
++		if (!(current_thread_info()->flags & _TIF_WORK_MASK))
++			set_cr(cr_no_alignment);
++	}
+ 
+ 	return 0;
+ }
+diff -Naurp linux-2.6.34.new/arch/arm/mm/dma-mapping.c linux-2.6.34/arch/arm/mm/dma-mapping.c
+--- linux-2.6.34.new/arch/arm/mm/dma-mapping.c	2010-10-06 09:42:16.000000000 -0500
++++ linux-2.6.34/arch/arm/mm/dma-mapping.c	2010-11-15 19:48:39.000000000 -0600
+@@ -216,6 +216,8 @@ __dma_alloc_remap(struct page *page, siz
+ 			}
+ 		} while (size -= PAGE_SIZE);
+ 
++		dsb();
++
+ 		return (void *)c->vm_start;
+ 	}
+ 	return NULL;
+diff -Naurp linux-2.6.34.new/kernel/futex.c linux-2.6.34/kernel/futex.c
+--- linux-2.6.34.new/kernel/futex.c	2010-05-16 16:17:36.000000000 -0500
++++ linux-2.6.34/kernel/futex.c	2010-11-12 23:45:01.000000000 -0600
+@@ -429,20 +429,11 @@ static void free_pi_state(struct futex_p
+ static struct task_struct * futex_find_get_task(pid_t pid)
+ {
+ 	struct task_struct *p;
+-	const struct cred *cred = current_cred(), *pcred;
+ 
+ 	rcu_read_lock();
+ 	p = find_task_by_vpid(pid);
+-	if (!p) {
+-		p = ERR_PTR(-ESRCH);
+-	} else {
+-		pcred = __task_cred(p);
+-		if (cred->euid != pcred->euid &&
+-		    cred->euid != pcred->uid)
+-			p = ERR_PTR(-ESRCH);
+-		else
+-			get_task_struct(p);
+-	}
++	if (p)
++		get_task_struct(p);
+ 
+ 	rcu_read_unlock();
+ 
+@@ -564,8 +555,8 @@ lookup_pi_state(u32 uval, struct futex_h
+ 	if (!pid)
+ 		return -ESRCH;
+ 	p = futex_find_get_task(pid);
+-	if (IS_ERR(p))
+-		return PTR_ERR(p);
++	if (!p)
++		return -ESRCH;
+ 
+ 	/*
+ 	 * We need to look at the task state flags to figure out,
+@@ -1369,6 +1360,7 @@ out:
+ 
+ /* The key must be already stored in q->key. */
+ static inline struct futex_hash_bucket *queue_lock(struct futex_q *q)
++	__acquires(&hb->lock)
+ {
+ 	struct futex_hash_bucket *hb;
+ 
+@@ -1382,6 +1374,7 @@ static inline struct futex_hash_bucket *
+ 
+ static inline void
+ queue_unlock(struct futex_q *q, struct futex_hash_bucket *hb)
++	__releases(&hb->lock)
+ {
+ 	spin_unlock(&hb->lock);
+ 	drop_futex_key_refs(&q->key);
+@@ -1400,6 +1393,7 @@ queue_unlock(struct futex_q *q, struct f
+  * an example).
+  */
+ static inline void queue_me(struct futex_q *q, struct futex_hash_bucket *hb)
++	__releases(&hb->lock)
+ {
+ 	int prio;
+ 
+@@ -1480,6 +1474,7 @@ retry:
+  * and dropped here.
+  */
+ static void unqueue_me_pi(struct futex_q *q)
++	__releases(q->lock_ptr)
+ {
+ 	WARN_ON(plist_node_empty(&q->list));
+ 	plist_del(&q->list, &q->list.plist);

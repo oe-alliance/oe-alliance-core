@@ -5,10 +5,10 @@ From: Gianluca Gennari <gennarone@gmail.com>
 ---
  drivers/staging/media/as102/as102_drv.c |    4 ++++
  drivers/staging/media/as102/as102_fe.c  |   16 ++++++++++++++++
- 2 files changed, 20 insertions(+)
+ 2 files changed, 20 insertions(+), 0 deletions(-)
 
 diff --git a/drivers/staging/media/as102/as102_drv.c b/drivers/staging/media/as102/as102_drv.c
-index ac92eaf..a87107f 100644
+index aae0505..564e558 100644
 --- a/drivers/staging/media/as102/as102_drv.c
 +++ b/drivers/staging/media/as102/as102_drv.c
 @@ -56,6 +56,10 @@ int elna_enable = 1;
@@ -23,10 +23,10 @@ index ac92eaf..a87107f 100644
  
  static void as102_stop_stream(struct as102_dev_t *dev)
 diff --git a/drivers/staging/media/as102/as102_fe.c b/drivers/staging/media/as102/as102_fe.c
-index d188818..a4c5d89 100644
+index 043c520..99e26c5 100644
 --- a/drivers/staging/media/as102/as102_fe.c
 +++ b/drivers/staging/media/as102/as102_fe.c
-@@ -20,6 +20,9 @@
+@@ -22,6 +22,9 @@
  #include "as102_drv.h"
  #include "as10x_types.h"
  #include "as10x_cmd.h"
@@ -36,7 +36,7 @@ index d188818..a4c5d89 100644
  
  static void as10x_fe_copy_tps_parameters(struct dtv_frontend_properties *dst,
  					 struct as10x_tps *src);
-@@ -182,6 +185,7 @@ out:
+@@ -184,6 +187,7 @@ out:
  static int as102_fe_read_snr(struct dvb_frontend *fe, u16 *snr)
  {
  	struct as102_dev_t *dev;
@@ -44,7 +44,7 @@ index d188818..a4c5d89 100644
  
  	ENTER();
  
-@@ -191,6 +195,18 @@ static int as102_fe_read_snr(struct dvb_frontend *fe, u16 *snr)
+@@ -193,6 +197,18 @@ static int as102_fe_read_snr(struct dvb_frontend *fe, u16 *snr)
  
  	*snr = dev->demod_stats.mer;
  
@@ -64,5 +64,5 @@ index d188818..a4c5d89 100644
  	return 0;
  }
 -- 
-1.7.9.5
+1.7.0.4
 

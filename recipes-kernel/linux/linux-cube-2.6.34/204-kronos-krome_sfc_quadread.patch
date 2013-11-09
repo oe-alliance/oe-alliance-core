@@ -1,0 +1,24 @@
+diff -Naurp linux-2.6.34_Org/arch/arm/mach-krome/include/mach/pnx8492.h linux-2.6.34/arch/arm/mach-krome/include/mach/pnx8492.h
+--- linux-2.6.34_Org/arch/arm/mach-krome/include/mach/pnx8492.h	2012-03-13 18:07:52.231688000 +0530
++++ linux-2.6.34/arch/arm/mach-krome/include/mach/pnx8492.h	2012-03-13 19:02:25.433169000 +0530
+@@ -80,7 +80,7 @@
+ /*
+  * Device port addresses
+  */
+-#define MMIO_GCS_BASE            (ARM_A9_HOST_MMIO_BASE + 0x30000)
++#define MMIO_GCS_BASE            (ARM_A9_HOST_MMIO_BASE + 0x36000)
+ #define MMIO_SATA_BASE           (ARM_A9_HOST_MMIO_BASE + 0x38000)
+ 
+ #define MMIO_RGU_BASE            (ARM_A9_HOST_MMIO_BASE + 0xaf000)
+diff -Naurp linux-2.6.34_Org/arch/arm/mach-kronos/include/mach/pnx8492.h linux-2.6.34/arch/arm/mach-kronos/include/mach/pnx8492.h
+--- linux-2.6.34_Org/arch/arm/mach-kronos/include/mach/pnx8492.h	2012-03-13 18:07:52.095695000 +0530
++++ linux-2.6.34/arch/arm/mach-kronos/include/mach/pnx8492.h	2012-03-13 19:02:44.516633000 +0530
+@@ -80,7 +80,7 @@
+ /*
+  * Device port addresses
+  */
+-#define MMIO_GCS_BASE            (ARM_A9_HOST_MMIO_BASE + 0x30000)
++#define MMIO_GCS_BASE            (ARM_A9_HOST_MMIO_BASE + 0x36000)
+ #define MMIO_SATA_BASE           (ARM_A9_HOST_MMIO_BASE + 0x38000)
+ 
+ #define MMIO_RGU_BASE            (ARM_A9_HOST_MMIO_BASE + 0xaf000)

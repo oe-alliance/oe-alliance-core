@@ -9,7 +9,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "1.0"
-PR = "r35"
+PR = "r41"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 DEPENDS = "enigma2 enigma2-plugins enigma2-oe-alliance-plugins oe-alliance-feeds enigma2-3rdparty-plugins ${@base_contains("MACHINE_FEATURES", "wifi", "oe-alliance-wifi", "", d)}"
@@ -22,20 +22,21 @@ RDEPENDS_${PN} = "\
     tuxbox-common \
     mtd-utils \
     kernel-params \
+    parted \
     "
 
 RRECOMMENDS_${PN} = "\
     enigma2-plugin-systemplugins-autobouquetsmaker \
     enigma2-plugin-systemplugins-hotplug \
     enigma2-plugin-extensions-audiosync \
-    enigma2-plugin-extensions-mediascanner \
     enigma2-plugin-extensions-pictureplayer \
     enigma2-plugin-extensions-openwebif \
     enigma2-plugin-systemplugins-networkbrowser \
     enigma2-plugin-systemplugins-networkwizard \
     enigma2-plugin-systemplugins-positionersetup \
     enigma2-plugin-systemplugins-satfinder \
-    enigma2-plugin-systemplugins-videomode \
+    \
+    oe-alliance-drivers \
     \
     ${@base_contains("MACHINE_FEATURES", "blindscan-dvbs", "enigma2-plugin-systemplugins-blindscan" , "", d)} \
     ${@base_contains("MACHINE_FEATURES", "hdmicec", "enigma2-plugin-systemplugins-hdmicec" , "", d)} \

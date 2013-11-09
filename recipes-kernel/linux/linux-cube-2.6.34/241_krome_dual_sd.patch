@@ -1,0 +1,1049 @@
+diff -Naurp linux-2.6.34_Org/arch/arm/mach-krome/nx_sdiomc_dev.c linux-2.6.34/arch/arm/mach-krome/nx_sdiomc_dev.c
+--- linux-2.6.34_Org/arch/arm/mach-krome/nx_sdiomc_dev.c	2012-12-13 16:20:11.290183000 +0530
++++ linux-2.6.34/arch/arm/mach-krome/nx_sdiomc_dev.c	2012-12-13 13:40:26.601771000 +0530
+@@ -38,7 +38,11 @@ static struct resource apollo_sdiomc_res
+ 
+ u64 apollo_sdiomc_dmamask = ~(u32)0;
+ static struct nx_sdiomc_platform_data apollo_sdiomc_data = {
++#ifdef CONFIG_MMC_SDHCI_NX_DUALSD
++  .num_slots = 2,
++#else
+   .num_slots = 1,
++#endif
+ };
+ 
+ static struct platform_device apollo_sdiomc_device = {
+@@ -124,6 +128,26 @@ static void __init apollo_sdiomc_pin_mux
+    val |= 0x00140000; // ao_pio178_scl2_sdcrdwp_egp=1, ao_pio177_sda2_sdcrdetect_egp=1
+    writel(val, PAD_CONFIGURATION_0_REG);
+ 
++#elif defined CONFIG_MMC_SDHCI_NX_DUALSD
++
++   val = readl(GPIO_PIN_MUX_REG_5);
++   val &= ~(0x60800);  //gmux_171=0, sda2=gmux_177=0, scl2=gmux_178=0
++   writel(val, GPIO_PIN_MUX_REG_5);
++
++   val = readl(GPIO_SEC_PIN_MUX_REG_5);
++   val &= ~(0x20800);  //smux_171 =0,  sdcrdetect_01=smux_177=0
++   val |= 0x40400;  //Sddata3=smux_170=1, sdcrdwp_01=smux_178=1
++   writel(val, GPIO_SEC_PIN_MUX_REG_5);
++
++   val = readl(ALT_PIN_MUX_REG_0);
++   val &= ~(0x8002000); //alt13=0, alt27=0,
++   val |= 0x40800000;  // alt23=1, alt30=1
++   writel(val, ALT_PIN_MUX_REG_0);
++
++   val = readl(PAD_CONFIGURATION_0_REG);
++   val |= 0x00140000; // ao_pio178_scl2_sdcrdwp_egp=1, ao_pio177_sda2_sdcrdetect_egp=1
++   writel(val, PAD_CONFIGURATION_0_REG);
++
+ #endif
+ 
+ #ifdef CONFIG_MMC_SDHCI_NX_SDIOMC_SDDATA4_7
+diff -Naurp linux-2.6.34_Org/drivers/mmc/card/block.c linux-2.6.34/drivers/mmc/card/block.c
+--- linux-2.6.34_Org/drivers/mmc/card/block.c	2012-12-13 16:20:11.098222000 +0530
++++ linux-2.6.34/drivers/mmc/card/block.c	2012-12-13 13:40:26.603768000 +0530
+@@ -41,6 +41,7 @@
+ #include <asm/uaccess.h>
+ 
+ #include "queue.h"
++#include "block.h"
+ 
+ MODULE_ALIAS("mmc:block");
+ 
+@@ -56,18 +57,6 @@ static DECLARE_BITMAP(dev_use, MMC_NUM_M
+ static int try_fallback = 0;
+ #endif 
+ 
+-/*
+- * There is one mmc_blk_data per slot.
+- */
+-struct mmc_blk_data {
+-	spinlock_t	lock;
+-	struct gendisk	*disk;
+-	struct mmc_queue queue;
+-
+-	unsigned int	usage;
+-	unsigned int	read_only;
+-};
+-
+ static DEFINE_MUTEX(open_lock);
+ 
+ static struct mmc_blk_data *mmc_blk_get(struct gendisk *disk)
+diff -Naurp linux-2.6.34_Org/drivers/mmc/card/block.h linux-2.6.34/drivers/mmc/card/block.h
+--- linux-2.6.34_Org/drivers/mmc/card/block.h	1970-01-01 05:30:00.000000000 +0530
++++ linux-2.6.34/drivers/mmc/card/block.h	2012-12-13 13:40:26.614754000 +0530
+@@ -0,0 +1,16 @@
++#ifndef MMC_BLOCK_H
++#define MMC_BLOCK_H
++
++/*
++ * There is one mmc_blk_data per slot.
++ */
++struct mmc_blk_data {
++    spinlock_t  lock;
++    struct gendisk  *disk;
++    struct mmc_queue queue;
++
++    unsigned int    usage;
++    unsigned int    read_only;
++};
++
++#endif
+diff -Naurp linux-2.6.34_Org/drivers/mmc/card/queue.c linux-2.6.34/drivers/mmc/card/queue.c
+--- linux-2.6.34_Org/drivers/mmc/card/queue.c	2010-05-17 02:47:36.000000000 +0530
++++ linux-2.6.34/drivers/mmc/card/queue.c	2012-12-13 13:40:26.615768000 +0530
+@@ -19,6 +19,7 @@
+ #include <linux/mmc/card.h>
+ #include <linux/mmc/host.h>
+ #include "queue.h"
++#include "block.h"
+ 
+ #define MMC_QUEUE_BOUNCESZ	65536
+ 
+@@ -46,7 +47,10 @@ static int mmc_queue_thread(void *d)
+ {
+ 	struct mmc_queue *mq = d;
+ 	struct request_queue *q = mq->queue;
+-
++#ifdef CONFIG_MMC_SDHCI_NX_DUALSD
++	struct mmc_blk_data *md = mq->data;
++    struct mmc_card *card = md->queue.card;
++#endif
+ 	current->flags |= PF_MEMALLOC;
+ 
+ 	down(&mq->thread_sem);
+@@ -66,6 +70,9 @@ static int mmc_queue_thread(void *d)
+ 				break;
+ 			}
+ 			up(&mq->thread_sem);
++#ifdef CONFIG_MMC_SDHCI_NX_DUALSD
++			wake_wq_oth_host(card->host, 1);
++#endif
+ 			schedule();
+ 			down(&mq->thread_sem);
+ 			continue;
+diff -Naurp linux-2.6.34_Org/drivers/mmc/core/core.c linux-2.6.34/drivers/mmc/core/core.c
+--- linux-2.6.34_Org/drivers/mmc/core/core.c	2012-12-13 16:20:11.110227000 +0530
++++ linux-2.6.34/drivers/mmc/core/core.c	2012-12-13 17:38:16.334719000 +0530
+@@ -36,11 +36,21 @@
+ #include "mmc_ops.h"
+ #include "sd_ops.h"
+ #include "sdio_ops.h"
++#include "../host/sdhci.h"
+ 
+ static struct workqueue_struct *workqueue;
+ #ifdef CONFIG_MMC_SD_FALLBACK
+ int sd_falback;
+ #endif
++#ifdef CONFIG_MMC_SDHCI_NX_DUALSD
++#define S1_RATIO	(( CONFIG_MMC_SDHCI_DUALSD_SCHED * CONFIG_MMC_SDHCI_DUALSD_RATIO)/100)
++#define S2_RATIO	(( CONFIG_MMC_SDHCI_DUALSD_SCHED * (100-CONFIG_MMC_SDHCI_DUALSD_RATIO))/100)
++
++static unsigned int req_cnt1, req_cnt2;
++static unsigned int req1_pend, req2_pend;
++unsigned int act_host;  /* Active host number */
++extern spinlock_t      mh_lock;
++#endif
+ 
+ /*
+  * Enabling software CRCs on the data blocks can be a significant (30%)
+@@ -457,6 +467,56 @@ int mmc_host_disable(struct mmc_host *ho
+ }
+ EXPORT_SYMBOL(mmc_host_disable);
+ 
++
++#ifdef CONFIG_MMC_SDHCI_NX_DUALSD	
++void  wake_wq_oth_host(struct mmc_host *mmc, bool check)
++{
++	struct sdhci_host *host = mmc_priv(mmc);
++	struct mmc_host *oth_mmc = host->oth_host->mmc;
++
++	if((!check) || (req1_pend && host->vsltn == 2) || (req2_pend && host->vsltn == 1))
++		wake_up(&oth_mmc->wq);
++
++}
++EXPORT_SYMBOL(wake_wq_oth_host);
++
++void mmc_claim_host_pre(struct mmc_host *host) 
++{
++	unsigned long flags;
++
++	spin_lock_irqsave(&mh_lock, flags);
++    if(host->vsltn == 1) {
++        req_cnt1++;
++        req1_pend =1;
++    } else if(host->vsltn == 2) {
++        req_cnt2++;
++        req2_pend =1;
++    }
++	spin_unlock_irqrestore(&mh_lock, flags);
++}
++
++void mmc_claim_host_post(struct mmc_host *host)
++{
++    unsigned long flags;
++
++	spin_lock_irqsave(&mh_lock, flags);
++    if (act_host == 1)
++        req1_pend =0;
++    else if(act_host == 2)
++        req2_pend =0;
++
++    if(req_cnt1 > S1_RATIO ) {
++        req_cnt1 =0;
++    }
++    if (req_cnt2 > S2_RATIO) {
++        req_cnt2=0;
++    }
++	spin_unlock_irqrestore(&mh_lock, flags);
++}
++
++static unsigned int old_host;
++#endif
++
+ /**
+  *	__mmc_claim_host - exclusively claim a host
+  *	@host: mmc host to claim
+@@ -472,6 +532,10 @@ int __mmc_claim_host(struct mmc_host *ho
+ 	DECLARE_WAITQUEUE(wait, current);
+ 	unsigned long flags;
+ 	int stop;
++#ifdef CONFIG_MMC_SDHCI_NX_DUALSD	
++    unsigned int val;
++	struct sdhci_host *sdhost = mmc_priv(host);
++#endif
+ 
+ 	might_sleep();
+ 
+@@ -480,8 +544,29 @@ int __mmc_claim_host(struct mmc_host *ho
+ 	while (1) {
+ 		set_current_state(TASK_UNINTERRUPTIBLE);
+ 		stop = abort ? atomic_read(abort) : 0;
++#ifdef CONFIG_MMC_SDHCI_NX_DUALSD	
++		spin_lock(&mh_lock);
++		if ((req_cnt1 > S1_RATIO) && req2_pend ) {
++			if ((stop || !host->claimed || host->claimer == current) && (host->vsltn==2 && act_host==0))
++				break;
++			else if(host->vsltn==1) {
++				wake_wq_oth_host(host, 0);			
++			}
++		} else if ((req_cnt2 > S2_RATIO) && req1_pend ) {
++            if ((stop || !host->claimed || host->claimer == current) && (host->vsltn==1 && act_host==0))
++                break;
++			else if(host->vsltn==2) {
++				wake_wq_oth_host(host, 0);
++			}
++		}else {
++			if ((stop || !host->claimed || host->claimer == current) && (act_host == 0))
++				break;
++		}
++		spin_unlock(&mh_lock);	
++#else
+ 		if (stop || !host->claimed || host->claimer == current)
+ 			break;
++#endif
+ 		spin_unlock_irqrestore(&host->lock, flags);
+ 		schedule();
+ 		spin_lock_irqsave(&host->lock, flags);
+@@ -491,12 +576,75 @@ int __mmc_claim_host(struct mmc_host *ho
+ 		host->claimed = 1;
+ 		host->claimer = current;
+ 		host->claim_cnt += 1;
++#ifdef CONFIG_MMC_SDHCI_NX_DUALSD
++		act_host = host->vsltn;
++#endif
+ 	} else
+ 		wake_up(&host->wq);
++#ifdef CONFIG_MMC_SDHCI_NX_DUALSD
++	spin_unlock(&mh_lock);
++#endif
+ 	spin_unlock_irqrestore(&host->lock, flags);
+ 	remove_wait_queue(&host->wq, &wait);
+ 	if (!stop)
+ 		mmc_host_enable(host);
++
++#ifdef CONFIG_MMC_SDHCI_NX_DUALSD
++	spin_lock_irqsave(&mh_lock, flags);
++    if ( host->vsltn == 1) {
++        val = readl(ALT_PIN_MUX_REG_0);
++        val &= ~(0x8000000); // alt27=0
++        writel(val, ALT_PIN_MUX_REG_0);
++
++		if((old_host != act_host) && (sdhost->oth_host)) {
++		  if(host->card && sdhost->oth_host->mmc->card) {
++			/* NS Host2 --> HS Host1 */
++			if((host->card->state & MMC_STATE_HIGHSPEED) && !(sdhost->oth_host->mmc->card->state & MMC_STATE_HIGHSPEED)) {
++				mmc_card_set_highspeed(host->card);
++				spin_unlock_irqrestore(&mh_lock, flags);
++				mmc_set_timing(host, MMC_TIMING_SD_HS);
++				mmc_set_clock(host, 50000000);
++				spin_lock_irqsave(&mh_lock, flags);
++			}
++			/* HS Host2 --> NS Host1 */
++			else if(!(host->card->state & MMC_STATE_HIGHSPEED) && (sdhost->oth_host->mmc->card->state & MMC_STATE_HIGHSPEED)) {
++				mmc_card_set_normalspeed(host->card);
++				spin_unlock_irqrestore(&mh_lock, flags);
++			    mmc_set_timing(host, MMC_TIMING_LEGACY);
++				mmc_set_clock(host, 25000000);
++				spin_lock_irqsave(&mh_lock, flags);
++			}
++		  }
++		}
++    }else if ( host->vsltn == 2) {
++        val = readl(ALT_PIN_MUX_REG_0);
++        val |= 0x8000000;  //  alt27=1
++        writel(val, ALT_PIN_MUX_REG_0);
++
++        if((old_host != act_host) && (sdhost->oth_host)) {
++		  if(host->card && sdhost->oth_host->mmc->card) {
++			/* NS Host1 --> HS Host2 */
++            if((host->card->state & MMC_STATE_HIGHSPEED) && !(sdhost->oth_host->mmc->card->state & MMC_STATE_HIGHSPEED)) {
++				mmc_card_set_highspeed(host->card);
++				spin_unlock_irqrestore(&mh_lock, flags);
++                mmc_set_timing(host, MMC_TIMING_SD_HS);
++                mmc_set_clock(host, 50000000);
++				spin_lock_irqsave(&mh_lock, flags);
++            }
++			/* HS Host1 --> NS Host2 */
++            else if(!(host->card->state & MMC_STATE_HIGHSPEED) && (sdhost->oth_host->mmc->card->state & MMC_STATE_HIGHSPEED)) {
++				mmc_card_set_normalspeed(host->card);
++				spin_unlock_irqrestore(&mh_lock, flags);
++                mmc_set_timing(host, MMC_TIMING_LEGACY);
++                mmc_set_clock(host, 25000000);
++				spin_lock_irqsave(&mh_lock, flags);
++            }
++       	  }
++	    }
++	}
++	old_host = act_host;
++	spin_unlock_irqrestore(&mh_lock, flags);
++#endif
+ 	return stop;
+ }
+ 
+@@ -536,6 +684,11 @@ static void mmc_do_release_host(struct m
+ 	} else {
+ 		host->claimed = 0;
+ 		host->claimer = NULL;
++#ifdef CONFIG_MMC_SDHCI_NX_DUALSD
++        spin_lock(&mh_lock);
++		act_host = 0;
++		spin_unlock(&mh_lock);
++#endif
+ 		spin_unlock_irqrestore(&host->lock, flags);
+ 		wake_up(&host->wq);
+ 	}
+@@ -1023,8 +1176,10 @@ void mmc_detach_bus(struct mmc_host *hos
+ 	host->bus_dead = 1;
+ 
+ 	spin_unlock_irqrestore(&host->lock, flags);
+-
++	
++#ifndef CONFIG_MMC_SDHCI_NX_DUALSD
+ 	mmc_power_off(host);
++#endif
+ 
+ 	mmc_bus_put(host);
+ }
+@@ -1148,7 +1303,7 @@ out:
+ void mmc_start_host(struct mmc_host *host)
+ {
+ 	mmc_power_off(host);
+-	mmc_detect_change(host, 0);
++	mmc_detect_change(host, msecs_to_jiffies(200));
+ }
+ 
+ void mmc_stop_host(struct mmc_host *host)
+diff -Naurp linux-2.6.34_Org/drivers/mmc/core/sd.c linux-2.6.34/drivers/mmc/core/sd.c
+--- linux-2.6.34_Org/drivers/mmc/core/sd.c	2012-12-13 16:20:11.114228000 +0530
++++ linux-2.6.34/drivers/mmc/core/sd.c	2012-12-13 13:40:26.620761000 +0530
+@@ -629,6 +629,9 @@ static void mmc_sd_detect(struct mmc_hos
+ 		mmc_claim_host(host);
+ 		mmc_detach_bus(host);
+ 		mmc_release_host(host);
++#ifdef CONFIG_MMC_SDHCI_NX_DUALSD
++	    wake_wq_oth_host(host, 1);
++#endif
+ 	}
+ }
+ 
+diff -Naurp linux-2.6.34_Org/drivers/mmc/host/Kconfig linux-2.6.34/drivers/mmc/host/Kconfig
+--- linux-2.6.34_Org/drivers/mmc/host/Kconfig	2012-12-13 16:20:11.295163000 +0530
++++ linux-2.6.34/drivers/mmc/host/Kconfig	2012-12-13 17:32:25.972467000 +0530
+@@ -425,9 +425,40 @@ config MMC_SDHCI_NX_SDIOMC
+ 	    
+ 	    Note: This will disable the option to configure a NOR flash device.
+ 
++config MMC_SDHCI_NX_DUALSD
++    tristate "Support 2 SD Slots on single interface"
++    depends on MMC_SDHCI_NX_SDIOMC && ARCH_KROME 
++    default N
++    help
++        This key Enables  support for 2 SD Slots on a single SD/MMC interface.
++
++config MMC_SDHCI_DUALSD_RATIO
++    int "Ratio of Bandwidth for Host1 (Host1:Host2)"
++    depends on MMC_SDHCI_NX_DUALSD 
++	range 10 90
++    default "50"
++    help
++        Ratio of Bandwidth for Host1 (Host1:Host2 = Host1:(10-Host1) in the range 10:90 to 90:10).
++
++config MMC_SDHCI_DUALSD_SCHED
++    int "Majic number for dual-SD scheduling"
++    depends on MMC_SDHCI_NX_DUALSD
++    range 10 300
++    default "50"
++    help
++		Majic number for dual-SD scheduling, enter the value in the range 10 to 300, 
++		"higher the value, higher the latency and higher the throughput".
++
++config MMC_SDHCI_DUALSD_S2_PWRCNTRL
++    bool "Power Control Switch (not)present for Slot2 "
++    depends on MMC_SDHCI_NX_DUALSD
++    default y 
++    help
++        Select this if Power Control Switch is present for Slot2.
++
+ choice
+     prompt "Select SDIO CD,WP pins - PIO003,PIO004 or PIO177,PIO178"
+-    depends on MMC_SDHCI_NX_SDIOMC && ARCH_KROME
++    depends on MMC_SDHCI_NX_SDIOMC && ARCH_KROME && (!MMC_SDHCI_NX_DUALSD)
+     default MMC_SDHCI_NX_SDIOMC_CDWP_ON_PIO3N4
+     help
+         Select SDIO CD,WP pins used  - PIO003,PIO004 or PIO177,PIO178.
+diff -Naurp linux-2.6.34_Org/drivers/mmc/host/sdhci.c linux-2.6.34/drivers/mmc/host/sdhci.c
+--- linux-2.6.34_Org/drivers/mmc/host/sdhci.c	2012-12-13 16:20:11.297178000 +0530
++++ linux-2.6.34/drivers/mmc/host/sdhci.c	2012-12-13 13:40:26.625762000 +0530
+@@ -19,6 +19,7 @@
+ #include <linux/dma-mapping.h>
+ #include <linux/slab.h>
+ #include <linux/scatterlist.h>
++#include <linux/irq.h>
+ 
+ #include <linux/leds.h>
+ 
+@@ -43,7 +44,12 @@ static void sdhci_finish_data(struct sdh
+ 
+ static void sdhci_send_command(struct sdhci_host *, struct mmc_command *);
+ static void sdhci_finish_command(struct sdhci_host *);
++#ifdef CONFIG_MMC_SDHCI_NX_DUALSD
++static int sdhci_get_cd(struct mmc_host *);
+ 
++spinlock_t      mh_lock;
++extern unsigned int act_host;
++#endif
+ static void sdhci_dumpregs(struct sdhci_host *host)
+ {
+ 	printk(KERN_DEBUG DRIVER_NAME ": ============== REGISTER DUMP ==============\n");
+@@ -141,10 +147,14 @@ static void sdhci_reset(struct sdhci_hos
+ {
+ 	unsigned long timeout;
+ 	u32 uninitialized_var(ier);
+-
++#ifdef CONFIG_MMC_SDHCI_NX_DUALSD
++	if (host->quirks & SDHCI_QUIRK_NO_CARD_NO_RESET) {
++		if (!sdhci_get_cd(host->mmc))
++#else
+ 	if (host->quirks & SDHCI_QUIRK_NO_CARD_NO_RESET) {
+ 		if (!(sdhci_readl(host, SDHCI_PRESENT_STATE) &
+ 			SDHCI_CARD_PRESENT))
++#endif
+ 			return;
+ 	}
+ 
+@@ -1114,8 +1124,12 @@ static void sdhci_request(struct mmc_hos
+ 	if (host->quirks & SDHCI_QUIRK_BROKEN_CARD_DETECTION)
+ 		present = true;
+ 	else
++#ifdef CONFIG_MMC_SDHCI_NX_DUALSD
++		present = sdhci_get_cd(mmc);
++#else
+ 		present = sdhci_readl(host, SDHCI_PRESENT_STATE) &
+ 				SDHCI_CARD_PRESENT;
++#endif
+ 
+ 	if (!present || host->flags & SDHCI_DEVICE_DEAD) {
+ 		host->mrq->cmd->error = -ENOMEDIUM;
+@@ -1187,25 +1201,47 @@ out:
+ static int sdhci_get_ro(struct mmc_host *mmc)
+ {
+ 	struct sdhci_host *host;
+-	unsigned long flags;
+ 	int present;
+ 
+ 	host = mmc_priv(mmc);
+-
+-	spin_lock_irqsave(&host->lock, flags);
+-
++#ifdef CONFIG_MMC_SDHCI_NX_DUALSD
++    present = (gpio_get_value(host->wp_pin));
++    return present;
++#else
+ 	if (host->flags & SDHCI_DEVICE_DEAD)
+ 		present = 0;
+ 	else
+ 		present = sdhci_readl(host, SDHCI_PRESENT_STATE);
+ 
+-	spin_unlock_irqrestore(&host->lock, flags);
+-
+ 	if (host->quirks & SDHCI_QUIRK_INVERTED_WRITE_PROTECT)
+ 		return !!(present & SDHCI_WRITE_PROTECT);
+ 	return !(present & SDHCI_WRITE_PROTECT);
++#endif
+ }
++#ifdef CONFIG_MMC_SDHCI_NX_DUALSD
++static int sdhci_get_cd(struct mmc_host *mmc)
++{
++    struct sdhci_host *host;
++	int present = 0;
++
++	host = mmc_priv(mmc);
+ 
++	if (host->flags & SDHCI_DEVICE_DEAD)
++    {   
++		present = 0;
++    }
++    else if (host->quirks & SDHCI_QUIRK_BROKEN_CARD_DETECTION)
++    {
++        present = 1;
++    }
++	else
++    {  
++		present = !(gpio_get_value(host->cd_pin));
++    }
++
++    return present;
++}
++#endif
+ static void sdhci_enable_sdio_irq(struct mmc_host *mmc, int enable)
+ {
+ 	struct sdhci_host *host;
+@@ -1232,6 +1268,9 @@ static const struct mmc_host_ops sdhci_o
+ 	.request	= sdhci_request,
+ 	.set_ios	= sdhci_set_ios,
+ 	.get_ro		= sdhci_get_ro,
++#ifdef CONFIG_MMC_SDHCI_NX_DUALSD
++	.get_cd		= sdhci_get_cd,
++#endif
+ 	.enable_sdio_irq = sdhci_enable_sdio_irq,
+ };
+ 
+@@ -1249,8 +1288,11 @@ static void sdhci_tasklet_card(unsigned 
+ 	host = (struct sdhci_host*)param;
+ 
+ 	spin_lock_irqsave(&host->lock, flags);
+-
++#ifdef CONFIG_MMC_SDHCI_NX_DUALSD
++	if (!sdhci_get_cd(host->mmc)) {
++#else
+ 	if (!(sdhci_readl(host, SDHCI_PRESENT_STATE) & SDHCI_CARD_PRESENT)) {
++#endif
+ 		if (host->mrq) {
+ 			printk(KERN_ERR "%s: Card removed during transfer!\n",
+ 				mmc_hostname(host->mmc));
+@@ -1504,13 +1546,47 @@ static void sdhci_data_irq(struct sdhci_
+ 	}
+ }
+ 
++#ifdef CONFIG_MMC_SDHCI_NX_DUALSD
++struct sdhci_host * get_active_host(struct sdhci_host *host) 
++{
++	spin_lock(&host->lock);
++	spin_lock(&mh_lock);
++	if(act_host == host->vsltn || !act_host) {
++		spin_unlock(&mh_lock);	
++		spin_unlock(&host->lock);	
++		return host;
++	}
++	else { 
++		spin_unlock(&mh_lock);	
++		spin_unlock(&host->lock);	
++		return host->oth_host;
++	}
++}
++
++static irqreturn_t sdhci_cd_irq(int irq, void *dev_id)
++{
++	struct sdhci_host* host = dev_id;
++
++	spin_lock(&host->lock);
++	tasklet_schedule(&host->card_tasklet);
++	spin_unlock(&host->lock);	
++
++	return IRQ_HANDLED;
++}
++#endif
++
+ static irqreturn_t sdhci_irq(int irq, void *dev_id)
+ {
+ 	irqreturn_t result;
+-	struct sdhci_host* host = dev_id;
+ 	u32 intmask;
+ 	int cardint = 0;
+-
++#ifdef CONFIG_MMC_SDHCI_NX_DUALSD
++	struct sdhci_host* host_o = dev_id;
++	struct sdhci_host* host; 
++	host = get_active_host(host_o);
++#else
++	struct sdhci_host* host = dev_id;
++#endif
+ 	spin_lock(&host->lock);
+ 
+ 	intmask = sdhci_readl(host, SDHCI_INT_STATUS);
+@@ -1661,17 +1737,26 @@ struct sdhci_host *sdhci_alloc_host(stru
+ 
+ EXPORT_SYMBOL_GPL(sdhci_alloc_host);
+ 
++#ifdef CONFIG_MMC_SDHCI_NX_DUALSD
++extern int gpio_interrupt_set_type(unsigned piono, unsigned trigger);
++#endif
+ int sdhci_add_host(struct sdhci_host *host)
+ {
+ 	struct mmc_host *mmc;
+ 	unsigned int caps;
+ 	int ret;
++#ifdef CONFIG_MMC_SDHCI_NX_DUALSD
++	unsigned int irq;
++#endif
+ 
+ 	WARN_ON(host == NULL);
+ 	if (host == NULL)
+ 		return -EINVAL;
+ 
+ 	mmc = host->mmc;
++#ifdef CONFIG_MMC_SDHCI_NX_DUALSD
++	mmc->vsltn = host->vsltn;
++#endif
+ 
+ 	if (debug_quirks)
+ 		host->quirks = debug_quirks;
+@@ -1826,6 +1911,10 @@ int sdhci_add_host(struct sdhci_host *ho
+ 	}
+ 
+ 	spin_lock_init(&host->lock);
++#ifdef CONFIG_MMC_SDHCI_NX_DUALSD
++	if(host->vsltn ==1) //spin lock init required only once.
++		spin_lock_init(&mh_lock);
++#endif
+ 
+ 	/*
+ 	 * Maximum number of segments. Depends on if the hardware
+@@ -1895,6 +1984,19 @@ int sdhci_add_host(struct sdhci_host *ho
+ 
+ 	ret = request_irq(host->irq, sdhci_irq, IRQF_SHARED,
+ 		mmc_hostname(mmc), host);
++#ifdef CONFIG_MMC_SDHCI_NX_DUALSD
++	if(host->vsltn == 1 && !ret) {
++		irq = gpio_to_irq(host->cd_pin);
++		/* Request interrupts for both Card insertion and removal */
++		gpio_interrupt_set_type(host->cd_pin, IRQ_TYPE_EDGE_BOTH );
++		ret = request_irq(irq, sdhci_cd_irq, IRQF_DISABLED, "PIO058", host);
++	} else if(host->vsltn == 2 && !ret) {
++        irq = gpio_to_irq(host->cd_pin);
++        /* Request interrupts for both Card insertion and removal */
++        gpio_interrupt_set_type(host->cd_pin, IRQ_TYPE_EDGE_BOTH );
++        ret = request_irq(irq, sdhci_cd_irq, IRQF_DISABLED, "PIO177", host);
++    }
++#endif
+ 	if (ret)
+ 		goto untasklet;
+ 
+@@ -1947,6 +2049,9 @@ EXPORT_SYMBOL_GPL(sdhci_add_host);
+ void sdhci_remove_host(struct sdhci_host *host, int dead)
+ {
+ 	unsigned long flags;
++#ifdef CONFIG_MMC_SDHCI_NX_DUALSD
++	unsigned int irq;
++#endif
+ 
+ 	if (dead) {
+ 		spin_lock_irqsave(&host->lock, flags);
+@@ -1976,6 +2081,10 @@ void sdhci_remove_host(struct sdhci_host
+ 		sdhci_reset(host, SDHCI_RESET_ALL);
+ 
+ 	free_irq(host->irq, host);
++#ifdef CONFIG_MMC_SDHCI_NX_DUALSD
++	irq = gpio_to_irq(host->cd_pin);
++	free_irq(irq, host);
++#endif
+ 
+ 	del_timer_sync(&host->timer);
+ 
+diff -Naurp linux-2.6.34_Org/drivers/mmc/host/sdhci.h linux-2.6.34/drivers/mmc/host/sdhci.h
+--- linux-2.6.34_Org/drivers/mmc/host/sdhci.h	2010-05-17 02:47:36.000000000 +0530
++++ linux-2.6.34/drivers/mmc/host/sdhci.h	2012-12-13 13:40:26.627776000 +0530
+@@ -287,7 +287,12 @@ struct sdhci_host {
+ 	struct tasklet_struct	finish_tasklet;
+ 
+ 	struct timer_list	timer;		/* Timer for timeouts */
+-
++#ifdef CONFIG_MMC_SDHCI_NX_DUALSD
++	struct sdhci_host   *oth_host;  /* Pointer to the other host */
++	unsigned int		wp_pin;		/* PIO number for Write protect */
++	unsigned int		cd_pin;		/* PIO number for Card detect */
++	unsigned int		vsltn;		/* Virtual slot number */
++#endif
+ 	unsigned long		private[0] ____cacheline_aligned;
+ };
+ 
+diff -Naurp linux-2.6.34_Org/drivers/mmc/host/sdhci_nx_sdiomc.c linux-2.6.34/drivers/mmc/host/sdhci_nx_sdiomc.c
+--- linux-2.6.34_Org/drivers/mmc/host/sdhci_nx_sdiomc.c	2012-12-13 16:20:09.753306000 +0530
++++ linux-2.6.34/drivers/mmc/host/sdhci_nx_sdiomc.c	2012-12-13 13:40:26.630761000 +0530
+@@ -36,6 +36,7 @@
+ #include <linux/mmc/card.h>
+ #include <asm/io.h>
+ #include <mach/nx_sdiomc_dev.h>
++#include <linux/gpio.h>
+ 
+ #include "sdhci.h"
+ 
+@@ -46,6 +47,18 @@
+ #define NX_SDIOMC_VENDOR_REVISION_2 (0x96)
+ #define NX_SDIOMC_VENDOR_REVISION_3 (0x99)
+ 
++#ifdef CONFIG_MMC_SDHCI_NX_DUALSD
++
++#define DUALSD_S1_CD	PIO058
++#define DUALSD_S1_WP 	PIO059
++#define DUALSD_S2_CD    PIO177
++#define DUALSD_S2_WP    PIO178
++#define DUALSD_S2_LINE  PIO195
++#ifdef CONFIG_MMC_SDHCI_DUALSD_S2_PWRCNTRL
++#define DUALSD_S2_PWR	PIO070
++#endif
++#endif
++
+ struct nx_sdiomc_slot;
+ struct nx_sdiomc_chip;
+ /*!
+@@ -85,6 +98,9 @@ static struct sdhci_ops nx_sdiomc_ops = 
+   .enable_dma	= NULL,
+ };
+ 
++#ifdef CONFIG_MMC_SDHCI_NX_DUALSD
++static struct sdhci_host *oth_host1, *oth_host2;
++#endif
+ 
+ /*!\fn struct nx_sdiomc_slot * nx_sdiomc_probe_slot( struct platform_device 
+  * *pdev, struct nx_sdiomc_chip *chip, void __iomem *ioaddr, int irq, 
+@@ -153,7 +169,18 @@ struct nx_sdiomc_slot * nx_sdiomc_probe_
+   host->irq = irq;
+   host->ioaddr = ioaddr;
+   host->flags = (SDHCI_USE_ADMA);
+-
++#ifdef CONFIG_MMC_SDHCI_NX_DUALSD
++  if(slot_num == 0) {
++    host->wp_pin = DUALSD_S1_WP; 
++    host->cd_pin = DUALSD_S1_CD;
++    oth_host1 = host;
++  }else {
++    host->wp_pin = DUALSD_S2_WP;
++    host->cd_pin = DUALSD_S2_CD;
++    oth_host2 = host;
++  }
++  host->vsltn = slot_num+1; 
++#endif
+   ret = sdhci_add_host(host);
+   if (ret)
+     goto _free_host;
+@@ -305,6 +332,22 @@ static int __init nx_sdiomc_probe(struct
+   chip->quirks |= SDHCI_QUIRK_FORCE_1_BIT_DATA;
+ #endif
+ 
++#ifdef CONFIG_MMC_SDHCI_NX_DUALSD
++  chip->quirks |=  SDHCI_QUIRK_NO_CARD_NO_RESET;
++
++  /* SD Slot1 interface */
++  gpio_direction_input(DUALSD_S1_CD);
++  gpio_direction_input(DUALSD_S1_WP);
++
++  /* SD Slot2 interface */
++  gpio_direction_input(DUALSD_S2_CD);
++  gpio_direction_input(DUALSD_S2_WP);
++  gpio_direction_output(DUALSD_S2_LINE, 0);
++#ifdef CONFIG_MMC_SDHCI_DUALSD_S2_PWRCNTRL
++  gpio_direction_output(DUALSD_S2_PWR, 1);
++#endif
++#endif
++
+   platform_set_drvdata(pdev, chip);
+ 
+   for (i = 0;i < num_slots;i++) {
+@@ -315,9 +358,15 @@ static int __init nx_sdiomc_probe(struct
+       ret = PTR_ERR(slot);
+       goto _free_mem;
+     }
++#ifndef CONFIG_MMC_SDHCI_NX_DUALSD
+     ioaddr += 0x100;
++#endif
+     chip->slots[i] = slot;
+   }
++#ifdef CONFIG_MMC_SDHCI_NX_DUALSD
++  oth_host1->oth_host = oth_host2;
++  oth_host2->oth_host = oth_host1;
++#endif
+ 
+   return 0;
+ 
+@@ -516,7 +565,63 @@ struct platform_driver nx_sdiomc_driver 
+  */
+ int __init nx_sdiomc_init(void)
+ {
+-  return platform_driver_register(&nx_sdiomc_driver);
++#ifdef CONFIG_MMC_SDHCI_NX_DUALSD
++    int  error;
++    error = gpio_request(DUALSD_S1_CD, "nx_sdiomc");
++    if (error < 0) {
++        printk(KERN_ERR "gpio_request of  SD_CD pin returned %d\n", error);
++        goto sd_error_1;
++    }
++
++    error = gpio_request(DUALSD_S1_WP, "nx_sdiomc");
++    if (error < 0) {
++        printk(KERN_ERR "gpio_request of SD_WP pin returned %d\n", error);
++        goto sd_error_2;
++    }
++	
++    error = gpio_request(DUALSD_S2_CD, "nx_sdiomc");
++    if (error < 0) {
++        printk(KERN_ERR "gpio_request of front SD_CD pin returned %d\n", error);
++        goto sd_error_3;
++    }
++
++    error = gpio_request(DUALSD_S2_WP, "nx_sdiomc");
++    if (error < 0) {
++        printk(KERN_ERR "gpio_request of front SD_WP pin returned %d\n", error);
++        goto sd_error_4;
++    }
++	
++    error = gpio_request(DUALSD_S2_LINE, "nx_sdiomc");
++    if (error < 0) {
++        printk(KERN_ERR "gpio_request of SD_LINE pin returned %d\n", error);
++        goto sd_error_5;
++    }
++#ifdef CONFIG_MMC_SDHCI_DUALSD_S2_PWRCNTRL
++    error = gpio_request(DUALSD_S2_PWR, "nx_sdiomc");
++    if (error < 0) {
++        printk(KERN_ERR "gpio_request of SD_PWR pin returned %d\n", error);
++        goto sd_error_6;
++    }
++#endif
++#endif
++  	return platform_driver_register(&nx_sdiomc_driver);
++
++#ifdef CONFIG_MMC_SDHCI_NX_DUALSD
++#ifdef CONFIG_MMC_SDHCI_DUALSD_S2_PWRCNTRL
++sd_error_6:
++    gpio_free(DUALSD_S2_LINE);
++#endif
++sd_error_5:
++    gpio_free(DUALSD_S2_WP);
++sd_error_4:
++    gpio_free(DUALSD_S2_CD);
++sd_error_3:
++    gpio_free(DUALSD_S1_WP);
++sd_error_2:
++    gpio_free(DUALSD_S1_CD);
++sd_error_1:
++    return error;
++#endif
+ }
+ 
+ /*!\fn  void __exit nx_sdiomc_exit(void);
+@@ -531,6 +636,16 @@ int __init nx_sdiomc_init(void)
+  */
+ void __exit nx_sdiomc_exit(void)
+ {
++#ifdef CONFIG_MMC_SDHCI_NX_DUALSD
++  gpio_free(DUALSD_S1_CD);
++  gpio_free(DUALSD_S1_WP);
++  gpio_free(DUALSD_S2_CD);
++  gpio_free(DUALSD_S2_WP);
++  gpio_free(DUALSD_S2_LINE);
++#ifdef CONFIG_MMC_SDHCI_DUALSD_S2_PWRCNTRL
++  gpio_free(DUALSD_S2_PWR);
++#endif
++#endif
+   platform_driver_unregister(&nx_sdiomc_driver);
+ }
+ 
+diff -Naurp linux-2.6.34_Org/drivers/net/LIPP_6300ETH/src/tmbslPhyAccess.c linux-2.6.34/drivers/net/LIPP_6300ETH/src/tmbslPhyAccess.c
+--- linux-2.6.34_Org/drivers/net/LIPP_6300ETH/src/tmbslPhyAccess.c	2012-12-13 16:20:11.082227000 +0530
++++ linux-2.6.34/drivers/net/LIPP_6300ETH/src/tmbslPhyAccess.c	2012-12-13 15:10:35.046769000 +0530
+@@ -489,6 +489,7 @@ phyID_interface_tbl phy_tbl[]={
+ #ifdef CONFIG_ENABLE_MOCA
+ #ifdef CONFIG_EN256X_PHY
+ {0x02434664, &gtmbslMoCAPhyInterface},
++{0x0243466c, &gtmbslMoCAPhyInterface},
+ #else
+ {0x0,        &gtmbslMoCAPhyInterface},
+ #endif
+diff -Naurp linux-2.6.34_Org/drivers/serial/ip3106.c linux-2.6.34/drivers/serial/ip3106.c
+--- linux-2.6.34_Org/drivers/serial/ip3106.c	2012-12-13 16:20:11.483159000 +0530
++++ linux-2.6.34/drivers/serial/ip3106.c	2012-12-13 13:40:26.633759000 +0530
+@@ -495,6 +495,7 @@ void work_fn_tx(struct work_struct *work
+ 	struct uart_port *port = &s->port;
+ 	struct circ_buf *xmit = &port->state->xmit;
+ 	struct scatterlist *sg = &s->sg_tx;
++	unsigned long flags;
+ 
+ 	/*
+ 	 * DMA is idle now.
+@@ -503,13 +504,13 @@ void work_fn_tx(struct work_struct *work
+ 	 * transmit till the end, and then the rest. Take the port lock to get a
+ 	 * consistent xmit buffer state.
+ 	 */
+-	spin_lock_irq(&port->lock);
++	spin_lock_irqsave(&port->lock, flags);
+ 
+ 	sg->offset = xmit->tail & (UART_XMIT_SIZE - 1);
+ 	sg->length = min((int)CIRC_CNT(xmit->head, xmit->tail, UART_XMIT_SIZE),	
+                          CIRC_CNT_TO_END(xmit->head, xmit->tail, UART_XMIT_SIZE));
+ 	sg->dma_length = sg->length;
+-	spin_unlock_irq(&port->lock);
++	spin_unlock_irqrestore(&port->lock, flags);
+ 
+ 	BUG_ON(!sg->length);
+ 
+@@ -521,11 +522,11 @@ void work_fn_tx(struct work_struct *work
+ 		return;
+ 	}
+ 
+-	spin_lock_irq(&port->lock);
++	spin_lock_irqsave(&port->lock, flags);
+ 	s->desc_tx = desc;
+ 	desc->callback = ip3106_dma_tx_complete;
+ 	desc->callback_param = s;
+-	spin_unlock_irq(&port->lock);
++	spin_unlock_irqrestore(&port->lock, flags);
+ 	s->cookie_tx = desc->tx_submit(desc);
+ 	if (s->cookie_tx < 0) 
+ 	{
+@@ -1038,7 +1039,7 @@ static irqreturn_t ip3106_int(int irq, v
+   	if (1 == uap->dma_enabled) 
+ 	{
+ 		struct tty_struct *tty = port->state->port.tty;
+-		spin_lock_irq(&uap->port.lock);
++		spin_lock(&uap->port.lock);
+ 		status = UART_GET_IIR(port);
+ 		if (!(status & IP3106_UART_IIR_PENDING_MSK)) 
+ 		{
+@@ -1112,12 +1113,12 @@ ignore_char:		
+ 			status = UART_GET_IIR(port);
+ 			handled = 1;
+ 		}
+-		spin_unlock_irq(&uap->port.lock);
++		spin_unlock(&uap->port.lock);
+ 	}
+   	else
+ #endif
+   	{
+-		spin_lock_irq(&uap->port.lock);
++		spin_lock(&uap->port.lock);
+ 		status = UART_GET_IIR(port);
+ 		if (!(status & IP3106_UART_IIR_PENDING_MSK)) {
+ 			irq_status = (status & IP3106_UART_IIR_INT_MASK) >> 1;
+@@ -1167,7 +1168,7 @@ ignore_char:		
+ 			status = UART_GET_IIR(port);
+ 			handled = 1;
+ 		}
+-		spin_unlock_irq(&uap->port.lock);
++		spin_unlock(&uap->port.lock);
+ 	}
+   
+ 	return IRQ_RETVAL(handled);
+@@ -1183,7 +1184,7 @@ static irqreturn_t ip3106_modem_int(int 
+ 	unsigned int	 mcr = 0;
+ 	int              handled = 0;
+ 
+-	spin_lock_irq(&uap->port.lock);
++	spin_lock(&uap->port.lock);
+ 	status = UART_GET_IIR(port);
+ 	if (!(status & IP3106_UART_IIR_PENDING_MSK)) {
+ 		irq_status = (status & IP3106_UART_IIR_INT_MASK) >> 1;
+@@ -1231,7 +1232,7 @@ static irqreturn_t ip3106_modem_int(int 
+ 		status = UART_GET_IIR(port);
+ 		handled = 1;
+ 	}
+-	spin_unlock_irq(&uap->port.lock);
++	spin_unlock(&uap->port.lock);
+ 
+ 	return IRQ_RETVAL(handled);
+ }
+@@ -1927,6 +1928,7 @@ static void ip3106_console_write(struct 
+ 	unsigned int 	status = 0;
+ 	struct ip3106_port *uap = NULL;
+ 	int i = 0;
++	unsigned long flags;
+ 
+ #ifdef CONFIG_IP3106_UART0
+ 	if(co->index == 0)
+@@ -1940,7 +1942,7 @@ static void ip3106_console_write(struct 
+ 	else 
+ 		uap = &ip3106_ports3;
+ 
+-	spin_lock_irq(&uap->port.lock);
++	spin_lock_irqsave(&uap->port.lock, flags);
+ 
+ 	/* Now write the each character */
+ 	for (i = 0; i < count; i++) {
+@@ -1966,7 +1968,7 @@ static void ip3106_console_write(struct 
+ 		status = __raw_readl(uap->port.membase + IP3106_UART_LSR_REG);
+ 	} while (!(status & IP3106_UART_LSR_THRE_MSK));
+ 
+-	spin_unlock_irq(&uap->port.lock);
++	spin_unlock_irqrestore(&uap->port.lock, flags);
+ 
+ }
+ 
+diff -Naurp linux-2.6.34_Org/include/linux/mmc/core.h linux-2.6.34/include/linux/mmc/core.h
+--- linux-2.6.34_Org/include/linux/mmc/core.h	2012-12-13 16:20:11.123233000 +0530
++++ linux-2.6.34/include/linux/mmc/core.h	2012-12-13 13:40:26.635760000 +0530
+@@ -138,6 +138,11 @@ extern void mmc_set_data_timeout(struct 
+ extern unsigned int mmc_align_data_size(struct mmc_card *, unsigned int);
+ 
+ extern int __mmc_claim_host(struct mmc_host *host, atomic_t *abort);
++#ifdef CONFIG_MMC_SDHCI_NX_DUALSD
++extern void  wake_wq_oth_host(struct mmc_host *mmc, bool check);
++extern void mmc_claim_host_pre(struct mmc_host *host);
++extern void mmc_claim_host_post(struct mmc_host *host);
++#endif
+ extern void mmc_release_host(struct mmc_host *host);
+ extern int mmc_try_claim_host(struct mmc_host *host);
+ 
+@@ -147,11 +152,21 @@ extern int mmc_try_claim_host(struct mmc
+  *
+  *	Claim a host for a set of operations.
+  */
++#ifdef CONFIG_MMC_SDHCI_NX_DUALSD
+ static inline void mmc_claim_host(struct mmc_host *host)
+ {
++	mmc_claim_host_pre(host);
+ 	__mmc_claim_host(host, NULL);
++	mmc_claim_host_post(host);
++}
++#else
++static inline void mmc_claim_host(struct mmc_host *host)
++{
++    __mmc_claim_host(host, NULL);
+ }
+ 
++#endif
++
+ extern u32 mmc_vddrange_to_ocrmask(int vdd_min, int vdd_max);
+ 
+ #ifdef CONFIG_MMC_SD_FALLBACK
+diff -Naurp linux-2.6.34_Org/include/linux/mmc/host.h linux-2.6.34/include/linux/mmc/host.h
+--- linux-2.6.34_Org/include/linux/mmc/host.h	2010-05-17 02:47:36.000000000 +0530
++++ linux-2.6.34/include/linux/mmc/host.h	2012-12-13 13:40:26.637757000 +0530
+@@ -207,6 +207,7 @@ struct mmc_host {
+ #endif
+ 
+ 	struct dentry		*debugfs_root;
++	unsigned int        vsltn;      /* Virtual slot number */
+ 
+ 	unsigned long		private[0] ____cacheline_aligned;
+ };

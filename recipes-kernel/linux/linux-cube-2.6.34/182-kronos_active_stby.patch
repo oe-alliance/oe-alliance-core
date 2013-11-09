@@ -1,0 +1,16 @@
+diff -Naur linux-2.6.34/arch/arm/mach-kronos/pm.c linux-2.6.34_active/arch/arm/mach-kronos/pm.c
+--- linux-2.6.34/arch/arm/mach-kronos/pm.c	2011-09-26 19:05:23.723981000 +0530
++++ linux-2.6.34_active/arch/arm/mach-kronos/pm.c	2011-09-26 18:19:14.942924000 +0530
+@@ -78,9 +78,9 @@
+ /* Addresses of IPC registers to control interrupts from other processors to
+  * Cortex-A9.
+  */
+-#define INTR_CLR_ENABLE_IPC0  0xE06EAF00
+-#define INTR_SET_ENABLE_IPC0  0xE06EAF04
+-#define INTR_ENABLE_IPC0      0xE06EAF0C
++#define INTR_CLR_ENABLE_IPC0  0xE06BBF00
++#define INTR_SET_ENABLE_IPC0  0xE06BBF04
++#define INTR_ENABLE_IPC0      0xE06BBF0C
+ 
+ /* The following represent the bits representing each of the processors which
+  * can interrupt Cortex-A9 through IPC

@@ -7,7 +7,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PV = "1.0"
-PR = "r46"
+PR = "r48"
 
 inherit packagegroup
 
@@ -16,6 +16,7 @@ DEPENDS = "enigma2-pliplugins openhdf-feeds openhdf-3rdparty-plugins"
 RRECOMMENDS_${PN} = "\
     openhdf-version-info \
     enigma2-skindefault \
+    python-compression \
     enigma2-plugin-skins-nobile \
     enigma2-plugin-skins-army-mod \
     enigma2-plugin-drivers-usbserial \

@@ -1,0 +1,549 @@
+diff -Naurp linux-2.6.34/arch/arm/mach-kronos/Makefile linux-2.6.34_sata/arch/arm/mach-kronos/Makefile
+--- linux-2.6.34/arch/arm/mach-kronos/Makefile	2011-09-13 12:38:03.303662000 +0530
++++ linux-2.6.34_sata/arch/arm/mach-kronos/Makefile	2011-09-12 19:14:39.601431000 +0530
+@@ -40,4 +40,5 @@ obj-$(CONFIG_GPIO_APOLLO)		+= gpio.o
+ obj-$(CONFIG_MTD_NX_NAND)               += nand.o gcs_dmac.o gcs.o
+ obj-$(CONFIG_MTD_APOLLO_NOR)            += nor.o gcs_dmac.o gcs.o
+ obj-$(CONFIG_MTD_NX_SFC)                += sfc.o gcs_dmac.o gcs.o
++obj-$(CONFIG_SATA_APOLLO) 		+= sata.o
+ obj-$(CONFIG_RTC_DRV_APOLLO)		+= rtc.o
+diff -Naurp linux-2.6.34/arch/arm/mach-kronos/sata.c linux-2.6.34_sata/arch/arm/mach-kronos/sata.c
+--- linux-2.6.34/arch/arm/mach-kronos/sata.c	1970-01-01 05:30:00.000000000 +0530
++++ linux-2.6.34_sata/arch/arm/mach-kronos/sata.c	2011-09-12 20:05:45.774239000 +0530
+@@ -0,0 +1,236 @@
++/*
++ * Copyright 2010 Trident Microsystems (Far East) Ltd. 
++ * All prior copyright rights in this work and the accompanying software 
++ * products transferred to Trident Microsystems (Far East) Ltd. by written 
++ * agreement.  All rights reserved.
++ */
++/*
++ * Copyright 2009 (C) NXP BV, All Rights Reserved
++ * Author: OKC <okc.helpdesk@nxp.com>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program; if not, write to the Free Software
++ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
++ */
++
++#include <linux/platform_device.h>
++#include <linux/init.h>
++#include <linux/dma-mapping.h>
++#include <mach/pnx8492.h>
++#include <mach/irqs.h>
++#include <linux/delay.h>
++
++/* Level control register */
++#define SATA_HOST_RX_CTRL_REG   (MMIO_SATA_BASE + 0x508)
++
++/* Level control register */
++#define SATA_HOST_LVL_CTRL_REG   (MMIO_SATA_BASE + 0x510)
++
++/* LLC control register */
++#define SATA_HOST_LLC_CTRL_REG   (MMIO_SATA_BASE + 0x600)
++
++/* SATA host CR Port Control Register */
++#define SATA_HOST_CR_CTRL_REG    (MMIO_SATA_BASE + 0x514)
++/* SATA host CR Port Output Register */
++#define SATA_HOST_SR_DOUT_REG    (MMIO_SATA_BASE + 0x518)
++
++/* Global Controller Registers */
++#define HOST_CAP              0x00       /* Host Capabilities */
++#define HOST_PORTS_IMPL       0x0C       /* Bitmap of implemented ports */
++
++/* Host Capability Bits and Bitmaps */
++    /* HOST_CAP_NP (Number of Ports) = bits 0:4
++     *   0x00 : 1 Port
++     *   0x01 : 2 Ports
++     *   0x02 : 3 Ports
++     *   ...etc
++     * Reset Value = AHSATA_NUM_PORTS-1
++     * For Apollo, AHSATA_NUM_PORTS = 2
++     */
++#define HOST_CAP_NP(np)       ((np) << 0)    /* Number of Ports */
++#define HOST_CAP_SXS          (1 << 5)       /* Supports External SATA */
++#define HOST_CAP_EMS          (1 << 6)       /* Enclosure Management support */
++#define HOST_CAP_CCCS         (1 << 7)       /* Command Completion Coelescing Support */
++    /* HOST_CAP_NCS (Number of Command Slots) = bits 8:12
++     *   Supports 32 commands slots per Port
++     * Reset Value = 0x1F
++     */
++#define HOST_CAP_NCS(ncs)     ((ncs) << 8)   /* Number of Command Slots */
++#define HOST_CAP_PSC          (1 << 13)      /* Partial State Capable */
++#define HOST_CAP_SSC          (1 << 14)      /* Slumber State capable */
++#define HOST_CAP_PMD          (1 << 15)      /* PIO Multiple DRQ Block */
++#define HOST_CAP_PMP          (1 << 17)      /* Port Multiplier support */
++#define HOST_CAP_SAM          (1 << 18)      /* Supports AHCI Mode Only */
++#define HOST_CAP_SNZO         (1 << 19)      /* Supports Non-Zero DMA Offets */
++    /* HOST_CAP_ISS (Interface Speed Support) = bits 20:23
++     *   Supports SATA Interface speeds
++     *   1.5 Gb/s = 1
++     *   3.0 Gb/s = 2
++     *   6.0 Gb/s = 3
++     * Reset Value = 2
++     */
++#define HOST_CAP_ISS(iss)     ((iss) << 20)  /* Interface Speed Support */
++#define HOST_CAP_CLO          (1 << 24)      /* Command List Override support */
++#define HOST_CAP_SAL          (1 << 25)      /* Supports Activity LED */
++#define HOST_CAP_ALPM         (1 << 26)      /* Aggressive Link PM support */
++#define HOST_CAP_SSS          (1 << 27)      /* Supports Staggered Spin-up */
++#define HOST_CAP_SMPS         (1 << 28)      /* Supports Mechanical Presense Switch */
++#define HOST_CAP_SNTF         (1 << 29)      /* SNotification register */
++#define HOST_CAP_NCQ          (1 << 30)      /* Native Command Queueing */
++#define HOST_CAP_64           (1 << 31)      /* PCI DAC (64-bit DMA) support */
++
++/* Port Registers */
++#define PORT0_CMD             0x118          /* Port 0 Command Register */
++#define PORT1_CMD             0x198          /* Port 1 Command Register */
++
++/* Port Command Bits and Bitmaps */
++#define PORT_CMD_ESP          (1 << 21)      /* External SATA Port */
++
++/* SATA Clocks */
++#define CLK_SATA_HCLK_CTL     0x308
++#define CLK_SATA_ASIC0_CTL    0x30C
++#define CLK_SATA_ASIC1_CTL    0x310
++#define CLK_SATA_RBC0_CTL     0x314
++#define CLK_SATA_RBC1_CTL     0x318
++#define CLK_SATA_RXOOB_CTL    0x31C
++#define CLK_SATA_PMALIVE_CTL  0x320
++
++/* RGU Registers */
++#define RGU_GRESET1           0x10
++#define RGU_LOCKCMD           0x28
++#define RGU_LOCKSTAT          0x2C
++
++/* RGU LOCKSTAT Bits */
++#define RGU_LOCKSTAT_GRESET   (1 << 1)     /* Global Reset Register lock - 0 to unlock */
++
++/* RGU GRESET1 Bits */
++#define RGU_GRESET1_SATA      (1 << 8)     /* SATA Reset - Active Low */
++
++static u64 sata_dmamask = DMA_BIT_MASK(32);
++
++static struct resource sata_resources[] = {
++	{
++		.start	= MMIO_SATA_BASE,
++		.end	= MMIO_SATA_BASE + SZ_4K - 1,
++		.flags	= IORESOURCE_MEM,
++	},
++	{
++		.start	= IRQ_SATA,
++		.end	= IRQ_SATA,
++		.flags	= IORESOURCE_IRQ,
++	},
++};
++
++static struct platform_device sata_device = {
++	.name	= "sata-apollo",
++	.id	= 0,
++	.dev	= {
++		.platform_data		= NULL,
++		.dma_mask		= &sata_dmamask,
++		.coherent_dma_mask	= DMA_BIT_MASK(32),
++	},
++	.num_resources	= ARRAY_SIZE(sata_resources),
++	.resource	= sata_resources,
++};
++
++static int apollo_sata_phy_adjust(void)
++{
++   int status = 0;
++   unsigned rd_val = 0, wr_val = 0;
++
++   /* Refer SATA2 PHY data book version: Early Adopter Edition March 31, 2009 
++    * for SATA PHY adjustments. */
++
++   /* Apollo_SoC_PRCR 1133: 
++    * To pass OOB-01 (OOB Signal Level Threshold Level Detect) adjust 
++    * Loss of Signal Detector level los_lvl[9:5] to 10111b for SATA2x as 
++    * recommended in PHY databook section 2.3.5.1 Recommended Rx Settings. */
++   rd_val   = readl(SATA_HOST_LVL_CTRL_REG);
++   wr_val   = rd_val & ~((0x1F)<<5);
++   wr_val  |= ((0x17)<<5);
++   printk(KERN_INFO "SATA: Adjusting los_lvl (rd_val=0x%x, wr_val=0x%x)\n",
++      rd_val, wr_val);
++   writel(wr_val, SATA_HOST_LVL_CTRL_REG);
++
++   /* Apollo_SoC_PRCR 1175: 
++    * Partial/Slumber power modes only if receiver terminations are 
++    * enabled by setting rx_term_en0/1 to 1b as recommended in 
++    * PHY databook section 2.3.2.2 Rx Power Controls. */
++   rd_val   = readl(SATA_HOST_RX_CTRL_REG);
++   wr_val   = rd_val | (1<<1) | (1<<17);
++   printk(KERN_INFO "SATA: Adjusting rx_term_en0/1 (rd_val=0x%x, wr_val=0x%x)\n",
++      rd_val, wr_val);
++   writel(wr_val, SATA_HOST_RX_CTRL_REG);
++
++   return status;
++}
++
++static int __init apollo_sata_init(void)
++{
++   unsigned long capabilities = 0;
++   unsigned long lockstat = 0;
++   unsigned long greset = 0;
++   int status = 0, mask;
++
++   /* Unlock the RGU Lock Status register */
++   writel(0x000000F8,(MMIO_RGU_BASE + RGU_LOCKCMD));
++   writel(0x0000002B,(MMIO_RGU_BASE + RGU_LOCKCMD));
++
++   /* Unlock the Global Reset registers */
++   lockstat = readl(MMIO_RGU_BASE + RGU_LOCKSTAT);
++   lockstat &= ~RGU_LOCKSTAT_GRESET;
++   writel(lockstat,(MMIO_RGU_BASE + RGU_LOCKSTAT));
++
++   /* Bring SATA out of reset */
++   greset = readl(MMIO_RGU_BASE + RGU_GRESET1);
++   greset &= ~RGU_GRESET1_SATA;
++   writel(greset,(MMIO_RGU_BASE + RGU_GRESET1));
++
++   /* Lock the RGU Lock Status register */
++   writel(0x00000000,(MMIO_RGU_BASE + RGU_LOCKCMD));
++
++   /* Adjust SATA PHY */
++   status = apollo_sata_phy_adjust();
++   if (status)
++      return status;
++
++   /* Enhance performance of SATA interface by changing 
++    * the AHB transactions to be bufferable and cacheable. */
++   mask  = readl(SATA_HOST_LLC_CTRL_REG);
++   mask |= 0x40;
++   writel(mask, SATA_HOST_LLC_CTRL_REG);
++
++   /* Initialize SATA capabilities. Reset of system sets this register to 0x0. */
++   capabilities  = ( HOST_CAP_NCQ | HOST_CAP_SNTF | HOST_CAP_ALPM | 
++                     HOST_CAP_SAL | HOST_CAP_CLO  | HOST_CAP_SAM  | 
++                     HOST_CAP_PMP | HOST_CAP_PMD  | HOST_CAP_SSC  | 
++                     HOST_CAP_PSC | HOST_CAP_CCCS | HOST_CAP_SSS  |
++                     HOST_CAP_SXS | HOST_CAP_ISS(0x2) | HOST_CAP_NCS(0x1F) | 
++                     HOST_CAP_NP(0x1));
++   writel(capabilities, (MMIO_SATA_BASE + HOST_CAP));
++
++   /* PI = use 1st port (emulator does not have a PHY on 2nd port) */
++   writel(0x00000001,(MMIO_SATA_BASE + HOST_PORTS_IMPL));
++
++   /* SATA Port 1
++    * no HPCP (18), CPD (20), or ESP (21)
++    */
++   writel(0x00000000,(MMIO_SATA_BASE + PORT0_CMD));
++
++   return platform_device_register(&sata_device);
++}
++
++arch_initcall(apollo_sata_init);
++
++MODULE_LICENSE("GPL");
++
+diff -Naurp linux-2.6.34/drivers/ata/Kconfig linux-2.6.34_sata/drivers/ata/Kconfig
+--- linux-2.6.34/drivers/ata/Kconfig	2011-09-13 12:38:01.547821000 +0530
++++ linux-2.6.34_sata/drivers/ata/Kconfig	2011-09-12 19:19:15.912065000 +0530
+@@ -64,10 +64,10 @@ config SATA_AHCI
+ 	  This option enables support for AHCI Serial ATA.
+ 
+ config SATA_APOLLO
+-	tristate "NXP Apollo AHCI SATA support"
+-	depends on ARCH_APOLLO
++	tristate "Trident AHCI SATA support"
++	depends on (ARCH_APOLLO || ARCH_KRONOS)
+ 	help
+-	  This option enables support for NXP Apollo AHCI Serial ATA.
++	  This option enables support for Trident AHCI Serial ATA.
+ 
+ 	  If unsure, say N.
+ 
+@@ -76,7 +76,7 @@ config SATA_APOLLO_BIST
+ 	default n
+ 	depends on SATA_APOLLO
+ 	help
+-	  This option enables BIST support for NXP Apollo AHCI Serial ATA.
++	  This option enables BIST support for Trident AHCI Serial ATA.
+ 
+ 	  If unsure, say N.
+ 
+diff -Naurp linux-2.6.34/drivers/ata/sata_apollo.c linux-2.6.34_sata/drivers/ata/sata_apollo.c
+--- linux-2.6.34/drivers/ata/sata_apollo.c	2011-09-13 12:38:01.558829000 +0530
++++ linux-2.6.34_sata/drivers/ata/sata_apollo.c	2011-09-12 19:34:32.383875000 +0530
+@@ -45,9 +45,11 @@
+  *
+  */
+ 
++#define SATA_TRID
++
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+-#ifdef CONFIG_ARCH_APOLLO
++#ifdef SATA_TRID
+ #include <linux/platform_device.h>
+ #include <linux/dma-mapping.h>
+ #else
+@@ -70,7 +72,7 @@
+ #include <linux/hdreg.h>
+ #endif
+ 
+-#ifdef CONFIG_ARCH_APOLLO
++#ifdef SATA_TRID
+ #define DRV_NAME	"sata-apollo"
+ #else
+ #define DRV_NAME	"ahci"
+@@ -107,7 +109,7 @@ static ssize_t ahci_transmit_led_message
+ 					ssize_t size);
+ 
+ enum {
+-#ifndef CONFIG_ARCH_APOLLO
++#ifndef SATA_TRID
+ 	AHCI_PCI_BAR		= 5,
+ #endif /* !Apollo */
+ 	AHCI_MAX_PORTS		= 32,
+@@ -159,7 +161,7 @@ enum {
+ 	HOST_EM_CTL		= 0x20, /* Enclosure Management Control */
+ 	HOST_CAP2		= 0x24, /* host capabilities, extended */
+ 
+-#ifdef CONFIG_ARCH_APOLLO
++#ifdef SATA_TRID
+ 	/* Additional vendor-specific global controller registers */
+ 	HOST_BOHC		= 0x28, /* BIOS handoff/control */
+ 	HOST_BISTAFR		= 0xa0, /* BIST Activate FIS Register */
+@@ -224,14 +226,14 @@ enum {
+ 	PORT_SCR_NTF		= 0x3c, /* SATA phy register: SNotification */
+ 	PORT_FBS		    = 0x40, /* FIS-based Switching */
+ 
+-#ifdef CONFIG_ARCH_APOLLO
++#ifdef SATA_TRID
+ 	/* Additional vendor-specific port registers */
+ 	PORT_DMACR		= 0x70,	/* DMA Control Register */
+ 	PORT_PHYCR		= 0x78, /* PHY Control Register */
+ 	PORT_PHYSR		= 0x7c, /* PHY Status Register */
+ #endif
+ 
+-#ifdef CONFIG_ARCH_APOLLO
++#ifdef SATA_TRID
+ 	/* Additional NXP vendor-specific registers */
+ 	NXP_TX_CTRL_REG		= 0x500,
+ 	NXP_PLL_RESET_CTRL_REG	= 0x504,
+@@ -429,7 +431,7 @@ struct ahci_host_priv {
+ 	u32			saved_cap2;	/* saved initial cap2 */
+ 	u32			saved_port_map;	/* saved initial port_map */
+ 	u32 			em_loc; /* enclosure management location */
+-#ifdef CONFIG_ARCH_APOLLO
++#ifdef SATA_TRID
+ 	void __iomem		*mmio;
+ #endif /* Apollo */
+ };
+@@ -456,7 +458,7 @@ struct ahci_port_priv {
+ 
+ static int ahci_scr_read(struct ata_link *link, unsigned int sc_reg, u32 *val);
+ static int ahci_scr_write(struct ata_link *link, unsigned int sc_reg, u32 val);
+-#ifdef CONFIG_ARCH_APOLLO
++#ifdef SATA_TRID
+ static int ahci_apollo_probe(struct platform_device *pdev);
+ static int ahci_apollo_remove(struct platform_device *pdev);
+ #else /* PCI */
+@@ -482,7 +484,7 @@ static int ahci_hardreset(struct ata_lin
+ 			  unsigned long deadline);
+ static int ahci_vt8251_hardreset(struct ata_link *link, unsigned int *class,
+ 				 unsigned long deadline);
+-#ifndef CONFIG_ARCH_APOLLO
++#ifndef SATA_TRID
+ static int ahci_p5wdh_hardreset(struct ata_link *link, unsigned int *class,
+ 				unsigned long deadline);
+ #endif
+@@ -495,7 +497,7 @@ static void ahci_fill_cmd_slot(struct ah
+ 			       u32 opts);
+ #ifdef CONFIG_PM
+ static int ahci_port_suspend(struct ata_port *ap, pm_message_t mesg);
+-#ifdef CONFIG_ARCH_APOLLO
++#ifdef SATA_TRID
+ static int ahci_apollo_suspend(struct platform_device *pdev, pm_message_t mesg);
+ static int ahci_apollo_resume(struct platform_device *pdev);
+ #else /* PCI */
+@@ -597,7 +599,7 @@ static struct ata_port_operations ahci_v
+ 	.hardreset		= ahci_vt8251_hardreset,
+ };
+ 
+-#ifndef CONFIG_ARCH_APOLLO
++#ifndef SATA_TRID
+ static struct ata_port_operations ahci_p5wdh_ops = {
+ 	.inherits		= &ahci_ops,
+ 	.hardreset		= ahci_p5wdh_hardreset,
+@@ -712,7 +714,7 @@ static const struct ata_port_info ahci_p
+ 	},
+ };
+ 
+-#ifndef CONFIG_ARCH_APOLLO
++#ifndef SATA_TRID
+ static const struct pci_device_id ahci_pci_tbl[] = {
+ 	/* Intel */
+ 	{ PCI_VDEVICE(INTEL, 0x2652), board_ahci }, /* ICH6 */
+@@ -891,7 +893,7 @@ static const struct pci_device_id ahci_p
+ };
+ #endif /* !Apollo */
+ 
+-#ifdef CONFIG_ARCH_APOLLO
++#ifdef SATA_TRID
+ static struct platform_driver ahci_apollo_driver = {
+ 	.driver	= {
+ 		.name		= DRV_NAME,
+@@ -940,7 +942,7 @@ static inline int ahci_nr_ports(u32 cap)
+ 
+ static inline void __iomem *ahci_base(struct ata_host *host)
+ {
+-#ifdef CONFIG_ARCH_APOLLO
++#ifdef SATA_TRID
+ 	return ((struct ahci_host_priv *)host->private_data)->mmio;
+ #else
+ 	return host->iomap[AHCI_PCI_BAR];
+@@ -1010,7 +1012,7 @@ static ssize_t ahci_show_host_version(st
+ {
+ 	struct Scsi_Host *shost = class_to_shost(dev);
+ 	struct ata_port *ap = ata_shost_to_port(shost);
+-#ifdef CONFIG_ARCH_APOLLO
++#ifdef SATA_TRID
+ 	struct ahci_host_priv *hpriv = ap->host->private_data;
+     void __iomem *mmio = hpriv->mmio;
+ #else
+@@ -1047,7 +1049,7 @@ static ssize_t ahci_show_port_cmd(struct
+ static void ahci_save_initial_config(struct device *dev,
+ 				     struct ahci_host_priv *hpriv)
+ {
+-#ifdef CONFIG_ARCH_APOLLO
++#ifdef SATA_TRID
+ 	void __iomem *mmio = hpriv->mmio;
+ #else
+ 	struct pci_dev *pdev = to_pci_dev(dev);
+@@ -1105,7 +1107,7 @@ static void ahci_save_initial_config(str
+ 		cap &= ~HOST_CAP_SNTF;
+ 	}
+ 
+-#ifndef CONFIG_ARCH_APOLLO
++#ifndef SATA_TRID
+ 	if (pdev->vendor == PCI_VENDOR_ID_JMICRON && pdev->device == 0x2361 &&
+ 	    port_map != 1) {
+ 		dev_printk(KERN_INFO, dev,
+@@ -1542,7 +1544,7 @@ static int ahci_deinit_port(struct ata_p
+ 
+ static int ahci_reset_controller(struct ata_host *host)
+ {
+-#ifndef CONFIG_ARCH_APOLLO
++#ifndef SATA_TRID
+ 	struct pci_dev *pdev = to_pci_dev(host->dev);
+ 	struct ahci_host_priv *hpriv = host->private_data;
+ #endif
+@@ -1588,7 +1590,7 @@ static int ahci_reset_controller(struct 
+ 		dev_printk(KERN_INFO, host->dev,
+ 			   "skipping global host reset\n");
+ 
+-#ifndef CONFIG_ARCH_APOLLO
++#ifndef SATA_TRID
+ 	if (pdev->vendor == PCI_VENDOR_ID_INTEL) {
+ 		u16 tmp16;
+ 
+@@ -1835,7 +1837,7 @@ static void ahci_port_init(struct device
+ 			   int port_no, void __iomem *mmio,
+ 			   void __iomem *port_mmio)
+ {
+-#ifndef CONFIG_ARCH_APOLLO
++#ifndef SATA_TRID
+ 	struct pci_dev *pdev = to_pci_dev(dev);
+ #endif
+ 	const char *emsg = NULL;
+@@ -1864,7 +1866,7 @@ static void ahci_port_init(struct device
+ 
+ static void ahci_init_controller(struct ata_host *host)
+ {
+-#ifndef CONFIG_ARCH_APOLLO
++#ifndef SATA_TRID
+ 	struct ahci_host_priv *hpriv = host->private_data;
+ 	struct pci_dev *pdev = to_pci_dev(host->dev);
+ 	int mv;
+@@ -1874,7 +1876,7 @@ static void ahci_init_controller(struct 
+ 	void __iomem *port_mmio;
+ 	u32 tmp;
+ 
+-#ifndef CONFIG_ARCH_APOLLO
++#ifndef SATA_TRID
+ 	if (hpriv->flags & AHCI_HFLAG_MV_PATA) {
+ 		if (pdev->device == 0x6121)
+ 			mv = 2;
+@@ -2214,7 +2216,7 @@ static int ahci_vt8251_hardreset(struct 
+ 	return online ? -EAGAIN : rc;
+ }
+ 
+-#ifndef CONFIG_ARCH_APOLLO
++#ifndef SATA_TRID
+ static int ahci_p5wdh_hardreset(struct ata_link *link, unsigned int *class,
+ 				unsigned long deadline)
+ {
+@@ -2856,7 +2858,7 @@ static int ahci_port_suspend(struct ata_
+ 	return rc;
+ }
+ 
+-#ifdef CONFIG_ARCH_APOLLO
++#ifdef SATA_TRID
+ static int ahci_apollo_suspend(struct platform_device *pdev, pm_message_t mesg)
+ {
+ 	struct device *dev = &pdev->dev;
+@@ -3041,7 +3043,7 @@ static int ahci_configure_dma_masks(stru
+ {
+ 	int rc;
+ 
+-#ifdef CONFIG_ARCH_APOLLO
++#ifdef SATA_TRID
+ 
+ 	rc = dma_set_mask(dev, DMA_BIT_MASK(32));
+ 	if (rc) {
+@@ -3085,13 +3087,13 @@ static int ahci_configure_dma_masks(stru
+ static void ahci_print_info(struct ata_host *host)
+ {
+ 	struct ahci_host_priv *hpriv = host->private_data;
+-#ifndef CONFIG_ARCH_APOLLO
++#ifndef SATA_TRID
+ 	struct pci_dev *pdev = to_pci_dev(host->dev);
+ #endif
+ 	void __iomem *mmio = ahci_base(host);
+ 	u32 vers, cap, cap2, impl, speed;
+ 	const char *speed_s;
+-#ifndef CONFIG_ARCH_APOLLO
++#ifndef SATA_TRID
+ 	u16 cc;
+ #endif
+ 	const char *scc_s;
+@@ -3111,7 +3113,7 @@ static void ahci_print_info(struct ata_h
+ 	else
+ 		speed_s = "?";
+ 
+-#ifdef CONFIG_ARCH_APOLLO
++#ifdef SATA_TRID
+ 	scc_s = "SATA";
+ #else
+ 	pci_read_config_word(pdev, 0x0a, &cc);
+@@ -3171,7 +3173,7 @@ static void ahci_print_info(struct ata_h
+ 		);
+ }
+ 
+-#ifdef CONFIG_ARCH_APOLLO
++#ifdef SATA_TRID
+ 
+ #ifdef CONFIG_SATA_APOLLO_BIST
+ static int ahci_ata_scsi_ioctl(
+@@ -3979,7 +3981,7 @@ static void __exit ahci_exit(void)
+ MODULE_AUTHOR("Jeff Garzik/Nitin Garg");
+ MODULE_DESCRIPTION("Trident Apollo AHCI SATA low-level driver");
+ MODULE_LICENSE("GPL");
+-#ifndef CONFIG_ARCH_APOLLO
++#ifndef SATA_TRID
+ MODULE_DEVICE_TABLE(pci, ahci_pci_tbl);
+ #endif
+ MODULE_VERSION(DRV_VERSION);

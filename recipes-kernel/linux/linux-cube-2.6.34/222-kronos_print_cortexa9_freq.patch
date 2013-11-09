@@ -1,0 +1,73 @@
+diff -Naur linux-2.6.34_orig/arch/arm/mach-kronos/kronos.c linux-2.6.34/arch/arm/mach-kronos/kronos.c
+--- linux-2.6.34_orig/arch/arm/mach-kronos/kronos.c	2012-07-18 17:04:26.873325000 +0530
++++ linux-2.6.34/arch/arm/mach-kronos/kronos.c	2012-07-18 17:01:03.179806000 +0530
+@@ -143,15 +143,15 @@
+ 	unsigned long paddr = APOLLO_CORTEX_A9_GLOB_TIMER_BASE;
+ 	unsigned long irq =   IRQ_A9_GLOB_TIMER;
+ 
+-	extern unsigned long get_arm_freq(void);
+-	unsigned long freq =  APOLLO_PERIPHERALS_FREQ;
++	extern unsigned long long get_arm_freq(void);
++	unsigned long long freq =  APOLLO_PERIPHERALS_FREQ;
+ 
+ 	printk(KERN_INFO "Initializing Cortex A9 Global Timer at Vir:0x%08X = Phy:0x%08X,"
+-					 " using Irq:%i, at Freq:%i\n",
++					 " using Irq:%i, at Freq:%llu MHz\n",
+ 					(unsigned int)vaddr,
+ 					(unsigned int)paddr,
+ 					(unsigned int)irq,
+-					(unsigned int)freq);
++					(freq/1000)/1000);
+ 
+ 	apollo_global_timer_init(vaddr, irq, freq);
+ }
+diff -Naur linux-2.6.34_orig/arch/arm/mach-kronos/pll.c linux-2.6.34/arch/arm/mach-kronos/pll.c
+--- linux-2.6.34_orig/arch/arm/mach-kronos/pll.c	2012-07-18 17:04:26.802325000 +0530
++++ linux-2.6.34/arch/arm/mach-kronos/pll.c	2012-07-18 17:01:30.164662000 +0530
+@@ -309,34 +309,36 @@
+    *puMdiv      = uMdiv;
+ }
+ 
+-unsigned long get_arm_freq(void)
++unsigned long long get_arm_freq(void)
+ {
+    unsigned long  uMul, uNdiv, uPdiv, uMdiv;
+-   unsigned long  ulFreq;
++   unsigned long long ullFreq;
+ 
+    internal_pll_get_dividers(&uMul, &uNdiv, &uPdiv, &uMdiv);
+ 
+-   ulFreq =  uMdiv;
++   ullFreq =  uMdiv;
+ 
+    /* Step 1: Multiply by the bypass multipler */
+-   ulFreq *=  uMul;
++   ullFreq *=  uMul;
+ 
+    /* Step 2: Multiply by the input crystal frequency */
+-   ulFreq *=  CRYSTAL_FREQUENCY;
++   ullFreq *=  CRYSTAL_FREQUENCY;
+ 
+    /* Step 3: Divide by the pre-divider */
+-   ulFreq /=  uNdiv;
++   ullFreq /=  uNdiv;
+ 
+    /* Step 4: Divide by the post-divider */
+-   ulFreq /=  uPdiv;
++   ullFreq /=  uPdiv;
+ 
+    /* Round ullFreq to nearest 100 Hz */
+-   ROUND_FREQ(ulFreq, 100);
++   ROUND_FREQ(ullFreq, 100);
+ 
+    /* there is always external /2 for arm clock */
+-   ulFreq = ulFreq >> 1;
++   ullFreq = ullFreq >> 1;
+ 
+-   return ulFreq;
++   printk(KERN_INFO "Cortex A9 frequency at %llu MHz\n", (ullFreq/1000)/1000);
++
++   return ullFreq;
+ }
+ 
+ EXPORT_SYMBOL_GPL(get_arm_freq);

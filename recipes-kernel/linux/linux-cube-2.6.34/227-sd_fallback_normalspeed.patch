@@ -1,0 +1,353 @@
+diff -Naurp linux-2.6.34_Org/drivers/mmc/card/block.c linux-2.6.34/drivers/mmc/card/block.c
+--- linux-2.6.34_Org/drivers/mmc/card/block.c	2012-08-22 16:25:17.530886000 +0530
++++ linux-2.6.34/drivers/mmc/card/block.c	2012-08-23 12:12:18.368169000 +0530
+@@ -52,6 +52,10 @@ MODULE_ALIAS("mmc:block");
+ 
+ static DECLARE_BITMAP(dev_use, MMC_NUM_MINORS);
+ 
++#ifdef CONFIG_MMC_SD_FALLBACK
++static int try_fallback = 0;
++#endif 
++
+ /*
+  * There is one mmc_blk_data per slot.
+  */
+@@ -344,6 +348,7 @@ static int mmc_blk_issue_rq(struct mmc_q
+ 		 * programming mode even when things go wrong.
+ 		 */
+ 		if (brq.cmd.error || brq.data.error || brq.stop.error) {
++#ifndef CONFIG_MMC_SD_FALLBACK
+ 			if (brq.data.blocks > 1 && rq_data_dir(req) == READ) {
+ 				/* Redo read one sector at a time */
+ 				printk(KERN_WARNING "%s: retrying using single "
+@@ -351,6 +356,7 @@ static int mmc_blk_issue_rq(struct mmc_q
+ 				disable_multi = 1;
+ 				continue;
+ 			}
++#endif
+ 			status = get_card_status(card, req);
+ 		}
+ 
+@@ -400,15 +406,30 @@ static int mmc_blk_issue_rq(struct mmc_q
+ 			} while (!(cmd.resp[0] & R1_READY_FOR_DATA) ||
+ 				(R1_CURRENT_STATE(cmd.resp[0]) == 7));
+ 
+-#if 0
+-			if (cmd.resp[0] & ~0x00000900)
+-				printk(KERN_ERR "%s: status = %08x\n",
+-				       req->rq_disk->disk_name, cmd.resp[0]);
+-			if (mmc_decode_status(cmd.resp))
+-				goto cmd_err;
+-#endif
+ 		}
+ 
++#ifdef CONFIG_MMC_SD_FALLBACK
++		if (brq.cmd.error || brq.stop.error || brq.data.error) {
++			if (brq.cmd.error && (brq.cmd.error != -ENOMEDIUM ) && try_fallback ==0 ) {
++				printk(KERN_ERR "%s:.. falling back to normal speed \n", 
++					   req->rq_disk->disk_name);
++            	spin_lock_irq(&md->lock);
++            	try_fallback=1;
++            	spin_unlock_irq(&md->lock);
++            	mmc_reinit_fallback(card->host);
++				continue;
++			} else if ((brq.data.error || brq.stop.error)&& try_fallback ==0) {
++				printk(KERN_ERR "%s:... falling back to normal speed \n", 
++				       req->rq_disk->disk_name);
++	            spin_lock_irq(&md->lock);
++    	        try_fallback=1;
++        	    spin_unlock_irq(&md->lock);
++				mmc_sd_fallback(card->host);
++				continue;
++			} else  
++				goto cmd_err;
++		}
++#else
+ 		if (brq.cmd.error || brq.stop.error || brq.data.error) {
+ 			if (rq_data_dir(req) == READ) {
+ 				/*
+@@ -423,7 +444,7 @@ static int mmc_blk_issue_rq(struct mmc_q
+ 			}
+ 			goto cmd_err;
+ 		}
+-
++#endif
+ 		/*
+ 		 * A block was successfully transferred.
+ 		 */
+@@ -433,7 +454,11 @@ static int mmc_blk_issue_rq(struct mmc_q
+ 	} while (ret);
+ 
+ 	mmc_release_host(card->host);
+-
++#ifdef CONFIG_MMC_SD_FALLBACK
++	spin_lock_irq(&md->lock);
++    try_fallback=0;
++    spin_unlock_irq(&md->lock);
++#endif
+ 	return 1;
+ 
+  cmd_err:
+diff -Naurp linux-2.6.34_Org/drivers/mmc/core/core.c linux-2.6.34/drivers/mmc/core/core.c
+--- linux-2.6.34_Org/drivers/mmc/core/core.c	2012-08-22 16:25:17.555865000 +0530
++++ linux-2.6.34/drivers/mmc/core/core.c	2012-08-23 15:22:27.548419000 +0530
+@@ -38,6 +38,9 @@
+ #include "sdio_ops.h"
+ 
+ static struct workqueue_struct *workqueue;
++#ifdef CONFIG_MMC_SD_FALLBACK
++int sd_falback;
++#endif
+ 
+ /*
+  * Enabling software CRCs on the data blocks can be a significant (30%)
+@@ -1057,6 +1060,9 @@ void mmc_rescan(struct work_struct *work
+ 		container_of(work, struct mmc_host, detect.work);
+ 	u32 ocr;
+ 	int err;
++#ifdef CONFIG_MMC_SD_FALLBACK
++	unsigned long flags;
++#endif
+ 
+ 	mmc_bus_get(host);
+ 
+@@ -1109,8 +1115,15 @@ void mmc_rescan(struct work_struct *work
+ 	 */
+ 	err = mmc_send_app_op_cond(host, 0, &ocr);
+ 	if (!err) {
+-		if (mmc_attach_sd(host, ocr))
++		if (mmc_attach_sd(host, ocr)) {
++#ifdef CONFIG_MMC_SD_FALLBACK
++            spin_lock_irqsave(&host->lock, flags);
++            sd_falback =1;
++            spin_unlock_irqrestore(&host->lock, flags);
++            mmc_schedule_delayed_work(&host->detect, 1);
++#endif
+ 			mmc_power_off(host);
++		}
+ 		goto out;
+ 	}
+ 
+@@ -1335,6 +1348,20 @@ EXPORT_SYMBOL(mmc_resume_host);
+ 
+ #endif
+ 
++#ifdef CONFIG_MMC_SD_FALLBACK
++int mmc_reinit_fallback(struct mmc_host *host)
++{
++	unsigned long flags;
++	spin_lock_irqsave(&host->lock, flags);
++	sd_falback =1;
++	spin_unlock_irqrestore(&host->lock, flags);
++
++	mmc_detect_change(host, msecs_to_jiffies(200));
++
++	return 0;	
++}
++#endif
++
+ static int __init mmc_init(void)
+ {
+ 	int ret;
+diff -Naurp linux-2.6.34_Org/drivers/mmc/core/core.h linux-2.6.34/drivers/mmc/core/core.h
+--- linux-2.6.34_Org/drivers/mmc/core/core.h	2012-08-22 16:25:17.556871000 +0530
++++ linux-2.6.34/drivers/mmc/core/core.h	2012-08-23 10:41:11.531967000 +0530
+@@ -14,6 +14,9 @@
+ #include <linux/delay.h>
+ 
+ #define MMC_CMD_RETRIES        3
++#ifdef CONFIG_MMC_SD_FALLBACK
++extern int sd_falback;
++#endif
+ 
+ struct mmc_bus_ops {
+ 	int (*awake)(struct mmc_host *);
+diff -Naurp linux-2.6.34_Org/drivers/mmc/core/sd.c linux-2.6.34/drivers/mmc/core/sd.c
+--- linux-2.6.34_Org/drivers/mmc/core/sd.c	2012-08-22 16:25:17.569867000 +0530
++++ linux-2.6.34/drivers/mmc/core/sd.c	2012-08-23 12:11:58.869692000 +0530
+@@ -235,6 +235,36 @@ out:
+ 	return err;
+ }
+ 
++#ifdef CONFIG_MMC_SD_FALLBACK
++/*
++ * Switch to normal speed mode.
++ * ugly function, ignoring all the errors.
++ */
++static int mmc_switch_ns(struct mmc_card *card)
++{
++	u8 *status;
++
++	status = kmalloc(64, GFP_KERNEL);
++	if (!status) {
++		printk(KERN_ERR "%s: could not allocate a buffer for "
++			"switch capabilities.\n", mmc_hostname(card->host));
++		return -ENOMEM;
++	}
++
++	mmc_sd_switch(card, 1, 0, 0, status);
++
++	if ((status[16] & 0xF) != 0) {
++		pr_debug(KERN_WARNING "%s: Problem switching card "
++			"into normal-speed mode!\n",
++			mmc_hostname(card->host));
++	}
++	mmc_card_set_normalspeed(card);
++	mmc_set_timing(card->host, MMC_TIMING_LEGACY);
++	kfree(status);
++	return 0;
++}
++#endif
++
+ /*
+  * Test if the card supports high-speed mode and, if so, switch to it.
+  */
+@@ -324,6 +354,19 @@ static struct device_type sd_type = {
+ 	.groups = sd_attr_groups,
+ };
+ 
++#ifdef CONFIG_MMC_SD_FALLBACK
++int mmc_sd_fallback(struct mmc_host *host)
++{
++	BUG_ON(!host);
++	BUG_ON(!host->card);
++	
++    mmc_switch_ns(host->card);
++	mmc_set_clock(host, 25000000);
++	printk(KERN_WARNING "%s: Switched the clock to 25MHz \n", mmc_hostname(host));
++	return 0;
++}
++#endif
++
+ /*
+  * Handle the detection and initialisation of a card.
+  *
+@@ -337,6 +380,9 @@ static int mmc_sd_init_card(struct mmc_h
+ 	int err;
+ 	u32 cid[4];
+ 	unsigned int max_dtr;
++#ifdef CONFIG_MMC_SD_FALLBACK	
++	unsigned long flags;
++#endif
+ 
+ 	BUG_ON(!host);
+ 	WARN_ON(!host->claimed);
+@@ -465,11 +511,16 @@ static int mmc_sd_init_card(struct mmc_h
+ 	 * Attempt to change to high-speed (if supported)
+ 	 */
+ #ifdef CONFIG_MMC_SDHCI_NX_SDIOMC_NS_MODE
+-  printk(KERN_ERR "%s: Staying in Normal-Speed mode\n", mmc_hostname(card->host));
++	printk(KERN_ERR "%s: Staying in Normal-Speed mode\n", mmc_hostname(card->host));
+ #else
+-	err = mmc_switch_hs(card);
++#ifdef CONFIG_MMC_SD_FALLBACK
++	if (sd_falback)
++		printk(KERN_ERR "%s: Staying in Normal-Speed mode\n", mmc_hostname(card->host));
++	else
++#endif
++		err = mmc_switch_hs(card);
+ #endif
+-  if (err)
++  	if (err)
+ 		goto free_card;
+ 
+ 	/*
+@@ -485,9 +536,17 @@ static int mmc_sd_init_card(struct mmc_h
+ 	}
+ 
+ #ifdef CONFIG_MMC_SDHCI_NX_SDIOMC_25MHZ
+-  if(max_dtr > 25000000) {
+-    max_dtr = 25000000;
+-  }
++  	if(max_dtr > 25000000) {
++    	max_dtr = 25000000;
++  	}
++#endif
++#ifdef CONFIG_MMC_SD_FALLBACK
++	if (sd_falback) {
++		max_dtr = 25000000;
++    	spin_lock_irqsave(&host->lock, flags);
++    	sd_falback =0;
++    	spin_unlock_irqrestore(&host->lock, flags);
++	}
+ #endif
+ 	mmc_set_clock(host, max_dtr);
+ 
+@@ -527,7 +586,6 @@ free_card:
+ 	if (!oldcard)
+ 		mmc_remove_card(card);
+ err:
+-
+ 	return err;
+ }
+ 
+@@ -561,8 +619,11 @@ static void mmc_sd_detect(struct mmc_hos
+ 	err = mmc_send_status(host->card, NULL);
+ 
+ 	mmc_release_host(host);
+-
++#ifdef CONFIG_MMC_SD_FALLBACK
++	if (err  || sd_falback==1 ) {
++#else
+ 	if (err) {
++#endif
+ 		mmc_sd_remove(host);
+ 
+ 		mmc_claim_host(host);
+diff -Naurp linux-2.6.34_Org/drivers/mmc/host/Kconfig linux-2.6.34/drivers/mmc/host/Kconfig
+--- linux-2.6.34_Org/drivers/mmc/host/Kconfig	2012-08-22 16:25:17.612884000 +0530
++++ linux-2.6.34/drivers/mmc/host/Kconfig	2012-08-23 10:15:54.048941000 +0530
+@@ -532,6 +532,13 @@ config MMC_SDHCI_NX_SDIOMC_SD1_BIT_ALWAY
+ 	    or SD4-bit mode will be chosen depending upon the card capability. For best performance,
+ 	    do not select it.
+ 
++config MMC_SD_FALLBACK
++	bool "Fallback to Normal speed mode"
++    depends on MMC_SDHCI_NX_SDIOMC
++    default n
++	help
++		Enable this to fallback to Normal speed mode incase of errors in High speed mode
++
+ config MMC_SDHCI_NX_SDIOMC_NS_MODE
+ 	bool "Normal-Speed mode for data transfer (only for debugging purpose)"
+ 	depends on MMC_SDHCI_NX_SDIOMC
+diff -Naurp linux-2.6.34_Org/drivers/mmc/host/sdhci.c linux-2.6.34/drivers/mmc/host/sdhci.c
+--- linux-2.6.34_Org/drivers/mmc/host/sdhci.c	2012-08-22 16:25:17.700862000 +0530
++++ linux-2.6.34/drivers/mmc/host/sdhci.c	2012-08-23 10:15:54.052938000 +0530
+@@ -1753,6 +1753,12 @@ int sdhci_add_host(struct sdhci_host *ho
+ 	host->max_clk =
+ 		(caps & SDHCI_CLOCK_BASE_MASK) >> SDHCI_CLOCK_BASE_SHIFT;
+ 	host->max_clk *= 1000000;
++
++/* IP supports different clock speed but the max clock  from
++   CGU is 50MHz, so fixing it to 50MHz */ 
++#if defined(CONFIG_ARCH_KROME)|| defined( CONFIG_ARCH_KRONOS)
++	host->max_clk = 50000000;
++#endif
+ 	if (host->max_clk == 0) {
+ 		if (!host->ops->get_max_clock) {
+ 			printk(KERN_ERR
+diff -Naurp linux-2.6.34_Org/include/linux/mmc/card.h linux-2.6.34/include/linux/mmc/card.h
+--- linux-2.6.34_Org/include/linux/mmc/card.h	2012-08-22 16:25:54.539894000 +0530
++++ linux-2.6.34/include/linux/mmc/card.h	2012-08-23 10:48:47.185534000 +0530
+@@ -134,6 +134,7 @@ struct mmc_card {
+ #define mmc_card_set_present(c)	((c)->state |= MMC_STATE_PRESENT)
+ #define mmc_card_set_readonly(c) ((c)->state |= MMC_STATE_READONLY)
+ #define mmc_card_set_highspeed(c) ((c)->state |= MMC_STATE_HIGHSPEED)
++#define mmc_card_set_normalspeed(c) ((c)->state &= ~MMC_STATE_HIGHSPEED)
+ #define mmc_card_set_blockaddr(c) ((c)->state |= MMC_STATE_BLOCKADDR)
+ 
+ static inline int mmc_card_lenient_fn0(const struct mmc_card *c)
+diff -Naurp linux-2.6.34_Org/include/linux/mmc/core.h linux-2.6.34/include/linux/mmc/core.h
+--- linux-2.6.34_Org/include/linux/mmc/core.h	2012-08-22 16:25:54.542911000 +0530
++++ linux-2.6.34/include/linux/mmc/core.h	2012-08-23 10:41:27.143688000 +0530
+@@ -154,4 +154,9 @@ static inline void mmc_claim_host(struct
+ 
+ extern u32 mmc_vddrange_to_ocrmask(int vdd_min, int vdd_max);
+ 
++#ifdef CONFIG_MMC_SD_FALLBACK
++extern int mmc_reinit_fallback(struct mmc_host *host);
++extern int mmc_sd_fallback(struct mmc_host *host);
++#endif
++
+ #endif

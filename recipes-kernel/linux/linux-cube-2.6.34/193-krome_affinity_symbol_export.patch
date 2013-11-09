@@ -1,0 +1,23 @@
+diff -Naur linux-2.6.34.orig/kernel/irq/manage.c linux-2.6.34/kernel/irq/manage.c
+--- linux-2.6.34.orig/kernel/irq/manage.c	2011-12-15 17:30:31.908661000 +0530
++++ linux-2.6.34/kernel/irq/manage.c	2011-12-15 17:28:29.974052000 +0530
+@@ -138,6 +138,7 @@
+ 	return 0;
+ }
+ 
++EXPORT_SYMBOL_GPL(irq_set_affinity);
+ #ifndef CONFIG_AUTO_IRQ_AFFINITY
+ /*
+  * Generic version of the affinity autoselector.
+diff -Naur linux-2.6.34.orig/kernel/sched.c linux-2.6.34/kernel/sched.c
+--- linux-2.6.34.orig/kernel/sched.c	2011-12-15 17:30:28.619905000 +0530
++++ linux-2.6.34/kernel/sched.c	2011-12-15 17:28:20.249866000 +0530
+@@ -4844,6 +4844,8 @@
+ 	return retval;
+ }
+ 
++EXPORT_SYMBOL_GPL(sched_setaffinity);
++
+ static int get_user_cpu_mask(unsigned long __user *user_mask_ptr, unsigned len,
+ 			     struct cpumask *new_mask)
+ {

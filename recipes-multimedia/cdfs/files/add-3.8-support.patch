@@ -9,3 +9,40 @@
    daemonize("k"FSNAME"d");
  
    /* Allow SIGTERM to quit properly when removing module */
+diff -upr a/root.c b/root.c
+--- a/root.c	2009-12-21 15:38:31.000000000 +0200
++++ b/root.c	2013-02-21 06:15:20.000000000 +0200
+@@ -25,7 +25,10 @@
+ #include "cdfs.h"
+ 
+ #include <linux/module.h>
+ #include <linux/sched.h>
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(3, 8, 0)
++#include <linux/kthread.h>
++#endif
+ 
+ 
+ /*++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*
+@@ -643,14 +644,22 @@ static int __init cdfs_init(void) {
+   cdfs_proc_cd=NULL;
+ 
+   // start kernel thread
++#if LINUX_VERSION_CODE < KERNEL_VERSION(3, 8, 0)
+   if ((kcdfsd_pid = kernel_thread(kcdfsd_thread, NULL, CLONE_FS | CLONE_FILES | CLONE_SIGHAND)) >0 ) {
+     return 0;
+   } else {
+     printk(FSNAME" kernel_thread failed.\n");
++#else
++  kcdfsd_pid = kthread_run(kcdfsd_thread, NULL, "kcdfsd_thread");
++  if (IS_ERR(kcdfsd_pid)) {
++    printk(FSNAME" kthread_run failed.\n");
++#endif
+     if (cdfs_proc_entry) remove_proc_entry(FSNAME, NULL);
+     unregister_filesystem(&cdfs_fs_type);
+     return -1;
+   }
++
++  return 0;
+ }
+ 
+ /******************************************************************/

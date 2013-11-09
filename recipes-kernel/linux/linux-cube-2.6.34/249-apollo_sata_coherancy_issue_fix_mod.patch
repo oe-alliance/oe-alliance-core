@@ -1,0 +1,147 @@
+diff -Naurp linux-2.6.34_orig/drivers/ata/sata_apollo.c linux-2.6.34/drivers/ata/sata_apollo.c
+--- linux-2.6.34_orig/drivers/ata/sata_apollo.c	2013-01-23 17:54:21.079160000 +0530
++++ linux-2.6.34/drivers/ata/sata_apollo.c	2013-01-23 18:08:37.382914000 +0530
+@@ -46,9 +46,6 @@
+  */
+ 
+ #define SATA_ENTR
+-#if defined(CONFIG_ARCH_APOLLO)
+-#define SATA_ENTR_HAS_COHERANCY_BUG
+-#endif
+ 
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+@@ -1251,9 +1248,7 @@ static void ahci_start_engine(struct ata
+    writel(tmp, port_mmio + PORT_DMACR);
+ #endif
+ 
+-#ifndef SATA_ENTR_HAS_COHERANCY_BUG
+ 	wmb();
+-#endif
+ 
+ 	/* start DMA */
+ 	tmp = readl(port_mmio + PORT_CMD);
+@@ -1954,9 +1949,6 @@ static void ahci_fill_cmd_slot(struct ah
+ 			       u32 opts)
+ {
+ 	dma_addr_t cmd_tbl_dma;
+-#ifdef SATA_ENTR_HAS_COHERANCY_BUG
+-	static struct ahci_cmd_hdr data;
+-#endif
+ 
+ 	cmd_tbl_dma = pp->cmd_tbl_dma + tag * AHCI_CMD_TBL_SZ;
+ 
+@@ -1964,12 +1956,7 @@ static void ahci_fill_cmd_slot(struct ah
+ 	pp->cmd_slot[tag].status = 0;
+ 	pp->cmd_slot[tag].tbl_addr = cpu_to_le32(cmd_tbl_dma & 0xffffffff);
+ 	pp->cmd_slot[tag].tbl_addr_hi = cpu_to_le32((cmd_tbl_dma >> 16) >> 16);
+-#ifdef SATA_ENTR_HAS_COHERANCY_BUG
+-	/* flush */
+-	data = pp->cmd_slot[tag];
+-#else
+ 	wmb();
+-#endif
+ }
+ 
+ static int ahci_kick_engine(struct ata_port *ap)
+@@ -2016,20 +2003,6 @@ static int ahci_kick_engine(struct ata_p
+ 	return rc;
+ }
+ 
+-#ifdef SATA_ENTR_HAS_COHERANCY_BUG
+-static void ahci_ata_tf_to_fis(const struct ata_taskfile *tf, u8 pmp, int is_cmd, u8 *fis)
+-{
+-	static u8 data[20];
+-
+-	ata_tf_to_fis(tf, pmp, is_cmd, fis);
+-
+-	/* flush */
+-	memcpy(data, fis, sizeof(data));
+-}
+-#else
+-#define ahci_ata_tf_to_fis	ata_tf_to_fis
+-#endif
+-
+ static int ahci_exec_polled_cmd(struct ata_port *ap, int pmp,
+ 				struct ata_taskfile *tf, int is_cmd, u16 flags,
+ 				unsigned long timeout_msec)
+@@ -2041,12 +2014,10 @@ static int ahci_exec_polled_cmd(struct a
+ 	u32 tmp;
+ 
+ 	/* prep the command */
+-	ahci_ata_tf_to_fis(tf, pmp, is_cmd, fis);
++	ata_tf_to_fis(tf, pmp, is_cmd, fis);
+ 	ahci_fill_cmd_slot(pp, 0, cmd_fis_len | flags | (pmp << 12));
+ 
+-#ifndef SATA_ENTR_HAS_COHERANCY_BUG
+ 	wmb();
+-#endif
+ 
+ 	/* issue & wait */
+ 	writel(1, port_mmio + PORT_CMD_ISSUE);
+@@ -2217,7 +2188,7 @@ static int ahci_hardreset(struct ata_lin
+ 	/* clear D2H reception area to properly wait for D2H FIS */
+ 	ata_tf_init(link->device, &tf);
+ 	tf.command = 0x80;
+-	ahci_ata_tf_to_fis(&tf, 0, 0, d2h_fis);
++	ata_tf_to_fis(&tf, 0, 0, d2h_fis);
+ 
+ 	rc = sata_link_hardreset(link, timing, deadline, &online,
+ 				 ahci_check_ready);
+@@ -2337,7 +2308,7 @@ static int ahci_p5wdh_hardreset(struct a
+ 	/* clear D2H reception area to properly wait for D2H FIS */
+ 	ata_tf_init(link->device, &tf);
+ 	tf.command = 0x80;
+-	ahci_ata_tf_to_fis(&tf, 0, 0, d2h_fis);
++	ata_tf_to_fis(&tf, 0, 0, d2h_fis);
+ 
+ 	rc = sata_link_hardreset(link, sata_ehc_deb_timing(&link->eh_context),
+ 				 deadline, &online, NULL);
+@@ -2392,9 +2363,6 @@ static unsigned int ahci_fill_sg(struct 
+ 	struct scatterlist *sg;
+ 	struct ahci_sg *ahci_sg = cmd_tbl + AHCI_CMD_TBL_HDR_SZ;
+ 	unsigned int si;
+-#ifdef SATA_ENTR_HAS_COHERANCY_BUG
+-	static struct ahci_sg data;
+-#endif
+ 
+ 	VPRINTK("ENTER\n");
+ 
+@@ -2410,11 +2378,6 @@ static unsigned int ahci_fill_sg(struct 
+ 		ahci_sg[si].flags_size = cpu_to_le32(sg_len - 1);
+ 	}
+ 
+-#ifdef SATA_ENTR_HAS_COHERANCY_BUG
+-	/* flush */
+-	data = ahci_sg[si-1];
+-#endif
+-
+ 	return si;
+ }
+ 
+@@ -2445,14 +2408,10 @@ static void ahci_qc_prep(struct ata_queu
+ 	 */
+ 	cmd_tbl = pp->cmd_tbl + qc->tag * AHCI_CMD_TBL_SZ;
+ 
+-	ahci_ata_tf_to_fis(&qc->tf, qc->dev->link->pmp, 1, cmd_tbl);
++	ata_tf_to_fis(&qc->tf, qc->dev->link->pmp, 1, cmd_tbl);
+ 	if (is_atapi) {
+ 		memset(cmd_tbl + AHCI_CMD_TBL_CDB, 0, 32);
+ 		memcpy(cmd_tbl + AHCI_CMD_TBL_CDB, qc->cdb, qc->dev->cdb_len);
+-#ifdef SATA_ENTR_HAS_COHERANCY_BUG
+-		/* flush */
+-		memcpy(qc->cdb, cmd_tbl + AHCI_CMD_TBL_CDB, qc->dev->cdb_len);
+-#endif
+ 	}
+ 
+ 	n_elem = 0;
+@@ -2784,9 +2743,7 @@ static unsigned int ahci_qc_issue(struct
+ 		pp->fbs_last_dev = qc->dev->link->pmp;
+ 	}
+ 
+-#ifndef SATA_ENTR_HAS_COHERANCY_BUG
+ 	wmb();
+-#endif
+ 
+ 	writel(1 << qc->tag, port_mmio + PORT_CMD_ISSUE);
+ 

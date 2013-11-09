@@ -7,20 +7,18 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=0636e73ff0215e8d672dc4c32c317bb3 \
                     file://gst/tta/crc32.h;beginline=12;endline=29;md5=71a904d99ce7ae0c1cf129891b98145c"
 
 DEPENDS += "gst-plugins-base libmusicbrainz tremor curl libmms librtmp faad2"
+CONFLICTS = "librsvg"
 
-PR = "r3"
+SRCREV = "${AUTOREV}"
+PR = "r9"
 GIT_PV = ""
-
-SRCREV = "fb0d8700e71c4a6569ba023d16201087aec119fd"
-
-inherit autotools pkgconfig gettext git-project
 
 EXTRA_OECONF += "--disable-examples --disable-experimental --disable-sdl --disable-cdaudio --disable-directfb --enable-faad \
                  --disable-vdpau --disable-apexsink --enable-orc --disable-mpeg2enc --disable-mplex --disable-rsvg --disable-uvch264"
 
 ARM_INSTRUCTION_SET = "arm"
 
-SRC_URI = "git://anongit.freedesktop.org/gstreamer/${PN}"
+SRC_URI = "git://anongit.freedesktop.org/gstreamer/${PN};protocol=git;branch=0.10"
 
 SRC_URI += " \
         file://0003-mpegpsdemux_speedup.diff.patch \
@@ -28,9 +26,10 @@ SRC_URI += " \
         file://0005-hlsdemux-locking-fixes.patch \
         file://0006-hlsdemux-backport.patch \
         file://0007-Lower-rank-of-faad-to-prevent-using-it-if-not-necess.patch \
-        file://orc.m4-fix-location-of-orcc-when-cross-compiling.patch \ 
+        file://orc.m4-fix-location-of-orcc-when-cross-compiling.patch \
 "
 
+inherit autotools pkgconfig gettext git-project
 do_common_update() {
     cd ${S}
     # Make sure we have common
@@ -69,3 +68,5 @@ do_configure_prepend() {
     # manually provide remove-potcdate.sin, while our intltoolize does not install it
     cp ${STAGING_DATADIR_NATIVE}/gettext/po/remove-potcdate.sin ${S}/po/
 }
+
+require mips-only.inc

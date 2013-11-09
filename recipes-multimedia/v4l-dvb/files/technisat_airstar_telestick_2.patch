@@ -1,0 +1,40 @@
+diff -ruN b//linux/drivers/media/dvb/dvb-usb/dib0700_devices.c a//linux/drivers/media/dvb/dvb-usb/dib0700_devices.c
+--- b//linux/drivers/media/dvb/dvb-usb/dib0700_devices.c	2010-09-03 05:28:05.000000000 +0200
++++ a//linux/drivers/media/dvb/dvb-usb/dib0700_devices.c	2011-03-23 21:59:23.904478995 +0100
+@@ -2091,6 +2091,7 @@
+ 	{ USB_DEVICE(USB_VID_PINNACLE,	USB_PID_PINNACLE_PCTV282E) },
+ 	{ USB_DEVICE(USB_VID_DIBCOM,    USB_PID_DIBCOM_STK8096GP) },
+ 	{ USB_DEVICE(USB_VID_ELGATO,    USB_PID_ELGATO_EYETV_DIVERSITY) },
++	{ USB_DEVICE(USB_VID_TECHNISAT, USB_PID_TECHNISAT_AIRSTAR_TELESTICK_2) },
+ 	{ 0 }		/* Terminating entry */
+ };
+ MODULE_DEVICE_TABLE(usb, dib0700_usb_id_table);
+@@ -2606,7 +2607,7 @@
+ 			},
+ 		},
+ 
+-		.num_device_descs = 2,
++		.num_device_descs = 3,
+ 		.devices = {
+ 			{   "DiBcom STK7770P reference design",
+ 				{ &dib0700_usb_id_table[59], NULL },
+@@ -2618,6 +2619,10 @@
+ 					&dib0700_usb_id_table[60], NULL},
+ 				{ NULL },
+ 			},
++			{   "TechniSat AirStar TeleStick 2",
++				{ &dib0700_usb_id_table[69], NULL },
++				{ NULL },
++			},
+ 		},
+ 		.rc_interval      = DEFAULT_RC_INTERVAL,
+ 		.rc_key_map       = ir_codes_dib0700_table,
+diff -ruN b//linux/drivers/media/dvb/dvb-usb/dvb-usb-ids.h a//linux/drivers/media/dvb/dvb-usb/dvb-usb-ids.h
+--- b//linux/drivers/media/dvb/dvb-usb/dvb-usb-ids.h	2011-03-23 21:42:00.000000000 +0100
++++ a//linux/drivers/media/dvb/dvb-usb/dvb-usb-ids.h	2011-03-23 22:00:30.436478993 +0100
+@@ -313,4 +313,5 @@
+ #define USB_PID_TERRATEC_DVBS2CI_V2			0x10ac
+ #define USB_PID_TECHNISAT_USB2_HDCI_V1			0x0001
+ #define USB_PID_TECHNISAT_USB2_HDCI_V2			0x0002
++#define USB_PID_TECHNISAT_AIRSTAR_TELESTICK_2		0x0004
+ #endif

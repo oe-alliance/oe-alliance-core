@@ -1,0 +1,107 @@
+diff -Naurp linux-2.6.34_orig/drivers/mtd/nand/nand_base.c linux-2.6.34/drivers/mtd/nand/nand_base.c
+--- linux-2.6.34_orig/drivers/mtd/nand/nand_base.c	2011-03-18 14:42:25.603910000 +0530
++++ linux-2.6.34/drivers/mtd/nand/nand_base.c	2011-03-18 14:26:01.178486000 +0530
+@@ -2776,7 +2776,9 @@ static struct nand_flash_dev *nand_get_f
+ 	/* Check if chip is a not a samsung device. Do not clear the
+ 	 * options for chips which are not having an extended id.
+ 	 */
+-	if ((*maf_id != NAND_MFR_SAMSUNG) && (*maf_id != NAND_MFR_STMICRO) && (*maf_id != NAND_MFR_HYNIX) && (!type->pagesize))
++	if ((*maf_id != NAND_MFR_SAMSUNG) && (*maf_id != NAND_MFR_STMICRO) && 
++    	(*maf_id != NAND_MFR_HYNIX) && (*maf_id != NAND_MFR_TOSHIBA) && 
++    	(!type->pagesize))
+ 		chip->options &= ~NAND_SAMSUNG_LP_OPTIONS;
+ 
+ 	/* Check for AND chips with 4 page planes */
+diff -Naurp linux-2.6.34_orig/drivers/mtd/nand/nx_nand/nx_nand.c linux-2.6.34/drivers/mtd/nand/nx_nand/nx_nand.c
+--- linux-2.6.34_orig/drivers/mtd/nand/nx_nand/nx_nand.c	2011-03-18 14:42:26.903756000 +0530
++++ linux-2.6.34/drivers/mtd/nand/nx_nand/nx_nand.c	2011-03-18 14:47:20.798013000 +0530
+@@ -57,6 +57,40 @@
+ /**
+ *  OOB structure
+ */
++/* For 4K LPF */
++static struct nand_ecclayout nx_nand_oob_128 = {
++    .eccbytes = 96,
++    .eccpos = {
++        4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
++        20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31,
++        36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47,
++        52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63,
++        68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79,
++        84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95,
++        100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111,
++        116, 117, 118, 119, 120, 121, 122, 123, 124, 125,126, 127
++    },
++
++    .oobfree = {
++        {.offset = 2,
++         .length = 2},
++        {.offset = 16,
++         .length = 4},
++        {.offset = 32,
++         .length = 4},
++        {.offset = 48,
++         .length = 4},
++        {.offset = 64,
++         .length = 4},
++        {.offset = 80,
++         .length = 4},
++        {.offset = 96,
++         .length = 4},
++        {.offset = 112,
++         .length = 4},
++    }
++};
++
+ /* For LPF */
+ static struct nand_ecclayout nx_nand_oob_64 = {
+    .eccbytes = 48,
+@@ -851,7 +885,7 @@ static void nx_nand_write_page_raw(struc
+    int chanid, status;
+    tmhwEfmc_DmaConfig_t dma_cfg;
+    nx_dmac_tfr_t           req;
+-   nx_dmac_stgt_t       stgt[5];
++   nx_dmac_stgt_t       stgt[(mtd->writesize/NX_NAND_BLK_SIZE)+1];
+ #endif
+ 
+ #ifdef CONFIG_MTD_PERF_MEAS
+@@ -1266,7 +1300,7 @@ static void nx_nand_command(struct mtd_i
+    int   chanid;
+    tmhwEfmc_DmaConfig_t dma_cfg;
+    nx_dmac_tfr_t           req;
+-   nx_dmac_stgt_t       stgt[5];
++   nx_dmac_stgt_t       stgt[(mtd->writesize/NX_NAND_BLK_SIZE)+1];
+ #endif
+ 
+    /* Store the command, colmn & page address */
+@@ -1587,7 +1621,7 @@ static void nx_nand_command_lp(struct mt
+    int   chanid;
+    tmhwEfmc_DmaConfig_t dma_cfg;
+    nx_dmac_tfr_t           req;
+-   nx_dmac_stgt_t       stgt[5];
++   nx_dmac_stgt_t       stgt[(mtd->writesize/NX_NAND_BLK_SIZE)+1];
+ #endif
+ 
+    /* Store the command, colmn & page address */
+@@ -2289,6 +2323,9 @@ static int nx_nand_probe(struct platform
+       case 64:
+          chip->ecc.layout = &nx_nand_oob_64;
+          break;
++     case 128:
++        chip->ecc.layout = &nx_nand_oob_128;
++        break;
+       default:
+          printk(KERN_WARNING "No oob scheme defined for "
+                 "oobsize %d\n", mtd->oobsize);
+diff -Naurp linux-2.6.34_orig/include/mtd/mtd-abi.h linux-2.6.34/include/mtd/mtd-abi.h
+--- linux-2.6.34_orig/include/mtd/mtd-abi.h	2011-03-18 14:42:24.701923000 +0530
++++ linux-2.6.34/include/mtd/mtd-abi.h	2011-03-17 15:25:26.533891000 +0530
+@@ -136,7 +136,7 @@ struct nand_oobfree {
+  */
+ struct nand_ecclayout {
+ 	__u32 eccbytes;
+-	__u32 eccpos[64];
++	__u32 eccpos[96];
+ 	__u32 oobavail;
+ 	struct nand_oobfree oobfree[MTD_MAX_OOBFREE_ENTRIES];
+ };

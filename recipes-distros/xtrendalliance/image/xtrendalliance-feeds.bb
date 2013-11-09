@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3
 ALLOW_EMPTY_${PN} = "1"
 
 PV = "1.0"
-PR = "r2"
+PR = "r3"
 
 inherit packagegroup
 
@@ -14,5 +14,6 @@ RRECOMMENDS_${PN} = "\
     enigma2-skins \
     enigma2-pliplugins \
     enigma2-plugin-extensions-cooltvguide \
+    cdfs \
     enigma2-plugin-extensions-enhancedmoviecenter \
     "

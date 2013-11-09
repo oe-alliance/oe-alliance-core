@@ -1,0 +1,41 @@
+diff -Naur linux-2.6.34/arch/arm/mach-krome/pm.c linux-2.6.34_krome_active_standby/arch/arm/mach-krome/pm.c
+--- linux-2.6.34/arch/arm/mach-krome/pm.c	2012-01-18 17:43:26.000000000 +0800
++++ linux-2.6.34_krome_active_standby/arch/arm/mach-krome/pm.c	2012-01-18 17:05:33.000000000 +0800
+@@ -78,9 +78,9 @@
+ /* Addresses of IPC registers to control interrupts from other processors to
+  * Cortex-A9.
+  */
+-#define INTR_CLR_ENABLE_IPC0  0xE06EAF00
+-#define INTR_SET_ENABLE_IPC0  0xE06EAF04
+-#define INTR_ENABLE_IPC0      0xE06EAF0C
++#define INTR_CLR_ENABLE_IPC0  0xE06BBF00
++#define INTR_SET_ENABLE_IPC0  0xE06BBF04
++#define INTR_ENABLE_IPC0      0xE06BBF0C
+ 
+ /* The following represent the bits representing each of the processors which
+  * can interrupt Cortex-A9 through IPC
+@@ -545,6 +545,7 @@
+ {
+    unsigned int cpipe_layer_ctl_reg[8];
+    int i;
++	unsigned long flags;  
+ 
+    printk("PM: Apollo entering standby state...\n");
+ 
+@@ -573,6 +574,7 @@
+   /**
+     * Step 1: turn off interrupts
+     */
++   local_irq_save(flags);
+    local_irq_disable();
+    local_fiq_disable();
+ 
+@@ -645,7 +647,7 @@
+    /* Restore any of the PM saved interrupts. */
+    apollo_pm_gic_dist_restore();
+ 
+-   local_irq_enable();
++   local_irq_restore(flags);
+    local_fiq_enable();
+ 
+    /* Restore the CPIPE layer enables */

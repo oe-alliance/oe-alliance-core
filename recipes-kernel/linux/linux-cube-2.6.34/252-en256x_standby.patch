@@ -1,0 +1,264 @@
+diff -Naupr linux-2.6.34.orig/drivers/net/LIPP_6300ETH/comps/tmbslPhyEN256X/en256x/Common/Inc/driverversion.h linux-2.6.34/drivers/net/LIPP_6300ETH/comps/tmbslPhyEN256X/en256x/Common/Inc/driverversion.h
+--- linux-2.6.34.orig/drivers/net/LIPP_6300ETH/comps/tmbslPhyEN256X/en256x/Common/Inc/driverversion.h	2013-01-30 14:01:58.334159000 +0530
++++ linux-2.6.34/drivers/net/LIPP_6300ETH/comps/tmbslPhyEN256X/en256x/Common/Inc/driverversion.h	2013-01-30 14:04:57.214745000 +0530
+@@ -1 +1 @@
+-#define DRV_VERSION "0.90.17.73"
++#define DRV_VERSION "1.10.00.71"
+diff -Naupr linux-2.6.34.orig/drivers/net/LIPP_6300ETH/comps/tmbslPhyEN256X/en256x/GPL/Apollo/en256x.c linux-2.6.34/drivers/net/LIPP_6300ETH/comps/tmbslPhyEN256X/en256x/GPL/Apollo/en256x.c
+--- linux-2.6.34.orig/drivers/net/LIPP_6300ETH/comps/tmbslPhyEN256X/en256x/GPL/Apollo/en256x.c	2013-01-30 14:01:58.413161000 +0530
++++ linux-2.6.34/drivers/net/LIPP_6300ETH/comps/tmbslPhyEN256X/en256x/GPL/Apollo/en256x.c	2013-01-30 14:04:57.223742000 +0530
+@@ -65,6 +65,7 @@
+ #include "linux/mii.h"
+ #include "mach/gmac_eth_drv.h"
+ #include "data_context_apollo.h"
++#include "common_dvr.h"
+ 
+ // definitions
+ 
+@@ -188,6 +189,10 @@ void Turbo_open(unsigned long addr);
+ void Turbo_write(unsigned long data);
+ unsigned int Turbo_read(void);
+ void Turbo_close(void);
++void Clink_SetMocaStandby(Bool standbyValue);
++void Clink_SetMocaExtClk(Bool clkValue);
++void Clink_SetMocaReset(Bool resetValue);
++
+ extern tmErrorCode_t tmbslPhyEN256XRead (
+ 	tmUnitSelect_t		ethUnitId,
+ 	tmbslPhyEN256XReg_t	reg,
+@@ -222,7 +227,6 @@ static void en256x_reset_ext_clk_en()
+ /* ******* PUBLIC ***/
+  int ioctl_operation_work( void *data_kernel_context, struct ifreq *ifr, unsigned cmd )
+ {
+-    unsigned int val1, val2;
+     struct mii_ioctl_data *data = if_mii(ifr);
+     int flag,status = 0;
+     void *arg = NULL;
+@@ -247,13 +251,11 @@ static void en256x_reset_ext_clk_en()
+             flag = ifr->ifr_ifru.ifru_ivalue;
+             if(flag)
+             {
+-                writel(0, 0xE0680364); //We are writing to SGPIO directly too bad
+-                printk(KERN_INFO "MoCA en256X SoC in-reset\n");
++                Clink_SetMocaStandby (True);
+             }
+             else
+             {
+-                writel(3, 0xE0680364); //We are writing to SGPIO directly too too bad
+-                printk(KERN_INFO "MoCA en256X SoC out of reset\n");
++                printk(KERN_INFO "%s: Ignore...\n", __FUNCTION__);
+             }
+             break;
+         case SIOCGMIIREG:       // PHY read request
+@@ -263,6 +265,20 @@ static void en256x_reset_ext_clk_en()
+             ClinkWriteMDIOData(data->reg_num,data->val_in);
+             break;
+         case SIOCCLINKDRV :     // Control plane commands for the driver
++            {
++                IfrDataStruct kifr;
++                if (copy_from_user((void *)&kifr, (void *)arg, sizeof(IfrDataStruct)) == 0)
++                {
++                    if ((SYS_INT32)kifr.param1 == CLNK_CTL_NET_CARRIER_OFF)
++                    {
++                        Clink_SetMocaStandby (False);
++                    }
++                }
++                else
++                {
++                    printk(KERN_ALERT "%s: Error reading data from user...\n", __FUNCTION__);
++                }
++            }
+             status = clnkioc_driver_cmd( dkcp, arg ) ;
+             break ; 
+         case SIOCGCLINKMEM :    // Reads registers/memory in c.LINK address space
+@@ -475,6 +491,155 @@ void Turbo_close(void)
+     ClinkWriteMDIOData(ADDRESS_MODE, 0);
+ }
+ 
++/*
++* Used to control EXT_CLK_EN used during standby.
++*
++*
++*
++*
++*
++*LOCAL***/
++
++void Clink_SetMocaExtClk(Bool clkValue)
++{
++    // Temporary defines for GPIO registers
++    #define REG_GPIO_MODE_CTRL3 0xE06AB00C
++    #define REG_GPIO_DATA_REG3  0xE06AB044
++
++    unsigned int data;
++
++    // The MUX registers (GPIO_PIN_MUX_REG_4, GPIO_SEC_PIN_MUX_REG_4)
++    // are already configured in HW config
++
++    // Configuring of GPIO mode control
++    data = readl(REG_GPIO_MODE_CTRL3);   // GPIO_MODE_CTRL3
++    data &= 0xFFFFFFCF;
++    data |= 0x20;
++    writel(data, REG_GPIO_MODE_CTRL3);
++    mdelay(10);
++
++    data = readl(REG_GPIO_DATA_REG3);   // GPIO_DATA_REG3
++    data &= 0xFFFBFFFB;
++    data |= 0x00040000;
++    if (True == clkValue)
++    {
++        writel(data, REG_GPIO_DATA_REG3);
++    }
++    else
++    {
++        data |= 0x0000004;
++        writel(data, REG_GPIO_DATA_REG3);
++    }
++}
++
++/*
++* Used to control MUX registers during standby.
++*
++*
++*
++*
++*
++*LOCAL***/
++void Clink_SetMuxForReset(void)
++{
++    // This code will be removed and MUX setting will be done in HW config
++    #define REG_GPIO_PIN_MUX_REG_3      0xE06BB10C
++    #define REG_GPIO_SEC_PIN_MUX_REG_3  0xE06BB12C
++    //#define REG_ALT_PIN_MUX_REG_0     0xE06BB140  // already part of change in hwconfig
++
++    static Bool once = False;
++    unsigned int data;
++
++    if (once == False)
++    {
++        data = readl(REG_GPIO_PIN_MUX_REG_3);
++        data &= 0xFDFFFFFF;
++        writel(data, REG_GPIO_PIN_MUX_REG_3);
++
++        data = readl(REG_GPIO_SEC_PIN_MUX_REG_3);
++        data &= 0xFDFFFFFF;
++        writel(data, REG_GPIO_SEC_PIN_MUX_REG_3);
++        once = True;
++    }
++}
++
++/*
++* Used to control RESET_N used during standby.
++*
++*
++*
++*
++*
++*LOCAL***/
++void Clink_SetMocaReset(Bool resetValue)
++{
++    // Temporary defines for GPIO registers
++    #define REG_GPIO_MODE_CTRL2 0xE06AB008
++    #define REG_GPIO_DATA_REG2  0xE06AB040
++
++    unsigned int data;
++
++    Clink_SetMuxForReset();
++    // The MUX registers are already configured in HW config
++
++    // Configuring of GPIO mode control
++    data = readl(REG_GPIO_MODE_CTRL2);   // GPIO_MODE_CTRL2
++    data &= 0xF3FFFFFF;
++    data |= 0x08000000;
++    writel(data, REG_GPIO_MODE_CTRL2);
++    mdelay(10);
++
++    data = readl(REG_GPIO_DATA_REG2);   // GPIO_DATA_REG2
++    data &= 0xDFFFDFFF;
++    data |= 0x20000000;
++    if (True == resetValue)
++    {
++        writel(data, REG_GPIO_DATA_REG2);
++    }
++    else
++    {
++        data |= 0x00002000;
++        writel(data, REG_GPIO_DATA_REG2);
++    }
++}
++/*
++* Used to set the MoCA standby mode.
++*
++*
++*
++*
++*
++*LOCAL***/
++void Clink_SetMocaStandby(Bool standbyValue)
++{
++    // By default Moca is not in standby.
++    static Bool isMocaStandby = False;
++
++    if (True == standbyValue)
++    {
++        if (False == isMocaStandby)
++        {
++            printk(KERN_INFO "%s: MoCA en256X SoC in standby...\n", __FUNCTION__);
++            Clink_SetMocaReset(True);
++            mdelay(1);
++            Clink_SetMocaExtClk(True);
++            isMocaStandby = True;
++        }
++    }
++    else
++    {
++        if (True == isMocaStandby)
++        {
++            printk(KERN_INFO "%s: MoCA en256X SoC out of standby...\n", __FUNCTION__);
++            Clink_SetMocaExtClk(False);
++            mdelay(1);
++            Clink_SetMocaReset(False);
++            isMocaStandby = False;
++        }
++    }
++}
++
++
+ /*****************************************************
+ 
+         End of utility functions
+diff -Naupr linux-2.6.34.orig/drivers/net/LIPP_6300ETH/src/gmac_drv.c linux-2.6.34/drivers/net/LIPP_6300ETH/src/gmac_drv.c
+--- linux-2.6.34.orig/drivers/net/LIPP_6300ETH/src/gmac_drv.c	2013-01-30 14:01:58.526165000 +0530
++++ linux-2.6.34/drivers/net/LIPP_6300ETH/src/gmac_drv.c	2013-01-30 14:07:13.148736000 +0530
+@@ -102,6 +102,9 @@ extern void Clnk_exit_dev( void *vdgcp )
+ extern int ioctl_operation_work( void *moca_data_kernel_content, struct ifreq *ifr, unsigned cmd );
+ extern void Clink_update_unitnum_phyaddr( int unitNum, int phy_addr);
+ extern tmbslPhyConfig_t gtmbslMoCAPhyInterface;
++#ifdef CONFIG_EN256X_PHY
++extern void Clink_SetMocaReset(Bool resetValue);
++#endif
+ #endif
+ 
+ /*--------------------------------------------------------------------------*/
+@@ -354,6 +357,10 @@ __setup("6300mac1=",lipp_6300Eth_init_ma
+ static __s32 __init lipp_6300Eth_init_module( void )
+ {
+ 
++    printk (KERN_INFO "lipp_6300Eth_init_module: Call Clink_SetMocaReset...\n");
++#ifdef CONFIG_EN256X_PHY
++    Clink_SetMocaReset (False);
++#endif
+     return platform_driver_register(&lipp_6300eth_driver);
+ 
+ }
+@@ -3049,9 +3056,9 @@ static void lipp_6300Eth_work_reset_link
+     */
+     priv->u_autoneg = ETH_AUTO_NEGOTIATION;
+     priv->u_mode = ETH_LINK_MODE;
++    spin_unlock_irqrestore(&priv->lock,flags);
+     ret_val = up_lipp_6300Eth(dev);
+ 
+-    spin_unlock_irqrestore(&priv->lock,flags);
+ 
+     if(ret_val < 0 )
+     {

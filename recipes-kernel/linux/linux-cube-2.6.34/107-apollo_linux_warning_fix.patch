@@ -1,0 +1,87 @@
+diff -Naurp linux-2.6.34/arch/arm/include/asm/elf.h linux-2.6.34.new/arch/arm/include/asm/elf.h
+--- linux-2.6.34/arch/arm/include/asm/elf.h	2010-09-21 21:46:31.000000000 -0500
++++ linux-2.6.34.new/arch/arm/include/asm/elf.h	2010-09-21 20:49:44.000000000 -0500
+@@ -123,6 +123,7 @@ int dump_task_regs(struct task_struct *t
+ extern void elf_set_personality(const struct elf32_hdr *);
+ #define SET_PERSONALITY(ex)	elf_set_personality(&(ex))
+ 
++struct mm_struct;
+ extern unsigned long arch_randomize_brk(struct mm_struct *mm);
+ #define arch_randomize_brk arch_randomize_brk
+ 
+diff -Naurp linux-2.6.34/arch/arm/kernel/return_address.c linux-2.6.34.new/arch/arm/kernel/return_address.c
+--- linux-2.6.34/arch/arm/kernel/return_address.c	2010-05-16 16:17:36.000000000 -0500
++++ linux-2.6.34.new/arch/arm/kernel/return_address.c	2010-09-21 21:24:48.000000000 -0500
+@@ -58,7 +58,7 @@ void *return_address(unsigned int level)
+ #else /* if defined(CONFIG_FRAME_POINTER) && !defined(CONFIG_ARM_UNWIND) */
+ 
+ #if defined(CONFIG_ARM_UNWIND)
+-#warning "TODO: return_address should use unwind tables"
++//#warning "TODO: return_address should use unwind tables"
+ #endif
+ 
+ void *return_address(unsigned int level)
+diff -Naurp linux-2.6.34/fs/udf/balloc.c linux-2.6.34.new/fs/udf/balloc.c
+--- linux-2.6.34/fs/udf/balloc.c	2010-05-16 16:17:36.000000000 -0500
++++ linux-2.6.34.new/fs/udf/balloc.c	2010-09-21 21:35:04.000000000 -0500
+@@ -270,7 +270,7 @@ repeat:
+ 			goto got_block;
+ 
+ 		end_goal = (bit + 63) & ~63;
+-		bit = udf_find_next_one_bit(bh->b_data, end_goal, bit);
++		bit = udf_find_next_one_bit((const long unsigned int *)(bh->b_data), end_goal, bit);
+ 		if (bit < end_goal)
+ 			goto got_block;
+ 
+@@ -282,7 +282,7 @@ repeat:
+ 			goto search_back;
+ 		}
+ 
+-		newbit = udf_find_next_one_bit(bh->b_data,
++		newbit = udf_find_next_one_bit((const long unsigned int *)(bh->b_data),
+ 					       sb->s_blocksize << 3, bit);
+ 		if (newbit < sb->s_blocksize << 3) {
+ 			bit = newbit;
+@@ -308,7 +308,7 @@ repeat:
+ 				break;
+ 			}
+ 		} else {
+-			bit = udf_find_next_one_bit((char *)bh->b_data,
++			bit = udf_find_next_one_bit((const long unsigned int *)bh->b_data,
+ 						    sb->s_blocksize << 3,
+ 						    group_start << 3);
+ 			if (bit < sb->s_blocksize << 3)
+@@ -322,7 +322,7 @@ repeat:
+ 	if (bit < sb->s_blocksize << 3)
+ 		goto search_back;
+ 	else
+-		bit = udf_find_next_one_bit(bh->b_data, sb->s_blocksize << 3,
++		bit = udf_find_next_one_bit((const long unsigned int *)bh->b_data, sb->s_blocksize << 3,
+ 					    group_start << 3);
+ 	if (bit >= sb->s_blocksize << 3) {
+ 		mutex_unlock(&sbi->s_alloc_mutex);
+diff -Naurp linux-2.6.34/fs/unionfs/super.c linux-2.6.34.new/fs/unionfs/super.c
+--- linux-2.6.34/fs/unionfs/super.c	2010-09-21 21:46:32.000000000 -0500
++++ linux-2.6.34.new/fs/unionfs/super.c	2010-09-21 20:55:20.000000000 -0500
+@@ -938,7 +938,8 @@ void unionfs_destroy_inode_cache(void)
+  *
+  * No need to grab sb info's rwsem.
+  */
+-static int unionfs_write_inode(struct inode *inode, int sync)
++static int unionfs_write_inode(struct inode *inode,
++			       struct writeback_control *wbc)
+ {
+ 	struct list_head *pos, *n;
+ 	struct unionfs_dir_state *rdstate;
+diff -Naurp linux-2.6.34/include/linux/mmzone.h linux-2.6.34.new/include/linux/mmzone.h
+--- linux-2.6.34/include/linux/mmzone.h	2010-05-16 16:17:36.000000000 -0500
++++ linux-2.6.34.new/include/linux/mmzone.h	2010-09-21 21:48:24.000000000 -0500
+@@ -972,7 +972,7 @@ struct mem_section {
+ #endif
+ 
+ #define SECTION_NR_TO_ROOT(sec)	((sec) / SECTIONS_PER_ROOT)
+-#define NR_SECTION_ROOTS	(NR_MEM_SECTIONS / SECTIONS_PER_ROOT)
++#define NR_SECTION_ROOTS	DIV_ROUND_UP(NR_MEM_SECTIONS, SECTIONS_PER_ROOT)
+ #define SECTION_ROOT_MASK	(SECTIONS_PER_ROOT - 1)
+ 
+ #ifdef CONFIG_SPARSEMEM_EXTREME

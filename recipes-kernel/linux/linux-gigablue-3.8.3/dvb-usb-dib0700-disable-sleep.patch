@@ -8,14 +8,10 @@ As a workaround, do not put the device to sleep
 
 Perhaps the dib8000/9000 need the same workaround
 
----
- drivers/media/usb/dvb-usb/dib0700_devices.c |    1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/media/usb/dvb-usb/dib0700_devices.c b/drivers/media/usb/dvb-usb/dib0700_devices.c
-index 1179842..2a3093e 100644
---- a/drivers/media/usb/dvb-usb/dib0700_devices.c
-+++ b/drivers/media/usb/dvb-usb/dib0700_devices.c
+diff --git a/drivers/media/dvb/dvb-usb/dib0700_devices.c b/drivers/media/dvb/dvb-usb/dib0700_devices.c
+index f9e966a..7eff710 100644
+--- a/drivers/media/dvb/dvb-usb/dib0700_devices.c
++++ b/drivers/media/dvb/dvb-usb/dib0700_devices.c
 @@ -774,6 +774,7 @@ static int dib7070_tuner_reset(struct dvb_frontend *fe, int onoff)
  static int dib7070_tuner_sleep(struct dvb_frontend *fe, int onoff)
  {
@@ -24,5 +20,3 @@ index 1179842..2a3093e 100644
  	return dib7000p_set_gpio(fe, 9, 0, onoff);
  }
  
--- 
-1.7.9.5

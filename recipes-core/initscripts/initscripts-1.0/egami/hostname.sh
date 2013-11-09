@@ -11,7 +11,7 @@
 if test -f /etc/hostname
 then
 	if [ "$(cat /proc/stb/info/boxtype)" == 'ini-9000ru' ]; then
-		echo "hdx-9000" > /etc/hostname
+		echo "hdx-marvel" > /etc/hostname
 	fi
 	if [ "$(cat /proc/stb/info/boxtype)" == 'ini-5000ru' ]; then
 		echo "hdx-5000" > /etc/hostname
@@ -28,6 +28,9 @@ then
 	if [ "$(cat /proc/stb/info/boxtype)" == 'ini-1000de' ]; then
 		echo "xpeedlx" > /etc/hostname
 	fi
+	if [ "$(cat /proc/stb/info/boxtype)" == 'ini-9000de' ]; then
+		echo "xpeedlx3" > /etc/hostname
+	fi	
 	if [ "$(cat /proc/stb/info/boxtype)" == 'ini-7012' ]; then
 		echo "unibox-hd3" > /etc/hostname
 	fi

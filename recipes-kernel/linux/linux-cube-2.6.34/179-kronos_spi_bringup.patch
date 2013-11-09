@@ -1,0 +1,51 @@
+diff -Naur linux-2.6.34/arch/arm/mach-kronos/nx_spi_dev.c linux-2.6.34_spi/arch/arm/mach-kronos/nx_spi_dev.c
+--- linux-2.6.34/arch/arm/mach-kronos/nx_spi_dev.c	2011-09-14 19:30:59.905029000 +0530
++++ linux-2.6.34_spi/arch/arm/mach-kronos/nx_spi_dev.c	2011-09-14 17:05:00.051578000 +0530
+@@ -25,6 +25,7 @@
+ #include <linux/platform_device.h>
+ #include <linux/init.h>
+ #include <mach/nx_spi_dev.h>
++#include <linux/version.h>
+ 
+ #ifdef CONFIG_SPI_NX_DMAC_1902
+ #include <linux/nx_dmac_1902.h>
+@@ -37,9 +38,13 @@
+ 
+ static struct  nx_dmac_1902_slave nx_spi_dmac_slv_plfdata[] = {
+  { /* TX peripheral */
++	#if (LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 33))
++       .dma_dev = &(dmac_1902_uart_spi_device.dev),
++      #else
+        .slave = {
+                 .dma_dev = &dmac_1902_uart_spi_device.dev,
+                 },
++	#endif
+        .src_per_num = 0, //Memory
+        .dst_per_num = 1, //TX request peripheral num
+        .src_burst = nx_dmac_1902_burst_1,
+@@ -53,9 +58,13 @@
+        .dst_width = DMA_SLAVE_WIDTH_8BIT,
+   },
+   {/* RX peripheral */
++	#if (LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 33))
++       .dma_dev = &(dmac_1902_uart_spi_device.dev),
++	#else
+        .slave = {
+                 .dma_dev = &dmac_1902_uart_spi_device.dev,
+                 },
++	#endif
+        .src_per_num = 0,//RX request peripheral num
+        .dst_per_num = 0, //Memory
+        .src_burst = nx_dmac_1902_burst_1,
+diff -Naur linux-2.6.34/drivers/spi/Kconfig linux-2.6.34_spi/drivers/spi/Kconfig
+--- linux-2.6.34/drivers/spi/Kconfig	2011-09-14 19:30:59.352011000 +0530
++++ linux-2.6.34_spi/drivers/spi/Kconfig	2011-09-14 16:59:41.704335000 +0530
+@@ -56,7 +56,7 @@
+ config SPI_NX
+ 	select SPI_DEV
+ 	tristate "NXP SPI Controller for IP_3409"
+-	depends on (ARCH_APOLLO)
++	depends on (ARCH_APOLLO || ARCH_KRONOS)
+ 	help
+ 	 This selects a driver for the NXP SPI Controller, present on
+ 	 Apollo (ARM) chips.

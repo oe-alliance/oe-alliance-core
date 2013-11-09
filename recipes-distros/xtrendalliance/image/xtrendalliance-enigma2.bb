@@ -7,7 +7,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 ALLOW_EMPTY_${PN} = "1"
 
 PV = "1.0"
-PR = "r20"
+PR = "r23"
 
 inherit packagegroup
 
@@ -26,7 +26,7 @@ RRECOMMENDS_${PN} = "\
     enigma2-plugin-extensions-cutlisteditor \
     enigma2-plugin-extensions-dvdplayer \
     enigma2-plugin-extensions-et-portal \
-    enigma2-plugin-extensions-backupsuite \
+    enigma2-plugin-extensions-videomode \
     enigma2-plugin-systemplugins-hotplug \
     enigma2-plugin-systemplugins-autoresolution \
     enigma2-plugin-systemplugins-osdpositionsetup \
@@ -34,7 +34,6 @@ RRECOMMENDS_${PN} = "\
     enigma2-plugin-systemplugins-softwaremanager \
     enigma2-plugin-systemplugins-skinselector \
     enigma2-plugin-extensions-xmltvimport \
-    enigma2-plugin-extensions-xtrendforum \
     enigma2-plugin-extensions-iptv-list-updater \
     enigma2-plugin-skins-technihd \
     enigma2-plugin-skins-xta \

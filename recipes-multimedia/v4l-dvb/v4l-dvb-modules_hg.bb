@@ -2,7 +2,7 @@ DEPENDS += "module-init-tools"
 RDEPENDS_${PN} += "module-init-tools-depmod"
 SRCDATE = "20100904"
 PV = "0.0+hg${SRCDATE}"
-PR = "${INC_PR}.1"
+PR = "${INC_PR}.2"
 
 SRC_URI = "hg://linuxtv.org/hg/;module=v4l-dvb;rev=${SRCREV} \
            file://defconfig \
@@ -32,7 +32,22 @@ SRC_URI = "hg://linuxtv.org/hg/;module=v4l-dvb;rev=${SRCREV} \
            file://backport-h.patch \
            file://backport-i.patch \
            file://backport-j.patch \
-           file://backport-k.patch"
+           file://backport-k.patch \
+           file://technisat_airstar_telestick_2.patch \
+           file://v4l-dvb-as102.patch \
+           file://v4l-dvb-a867.patch \
+           file://v4l-dvb-tua9001.patch \
+           file://v4l-dvb-af9033.patch \
+           file://v4l-dvb-af9035.patch \
+           file://v4l-dvb-tda18218.patch \
+           file://v4l-dvb-af9013_fix_for_tda18218_tuner.patch \
+           file://v4l-dvb-af9015_fix_for_tda18218_tuner.patch \
+           file://v4l-dvb-af9013_add_firmware5.1.patch \
+           file://v4l-dvb-af9015_fix_for_A815M.patch \
+           file://v4l-dvb-em28xx_fix.patch \
+           file://v4l-dvb-af9015_add_a850red.patch \
+           file://v4l-dvb-smsdvb_fix_frontend.patch \
+"
 
 SRCREV = "6e0befab696a"
 S = "${WORKDIR}/v4l-dvb"

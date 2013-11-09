@@ -5,14 +5,18 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=a6f89e2100d9b6cdffcea4f398e37343 \
                     file://common/coverage/coverage-report.pl;beginline=2;endline=17;md5=622921ffad8cb18ab906c56052788a3f \
                     file://gst/replaygain/rganalysis.c;beginline=1;endline=23;md5=b60ebefd5b2f5a8e0cab6bfee391a5fe"
 
-DEPENDS += "gst-plugins-base cdparanoia cairo jpeg libpng zlib libid3tag flac speex libsoup-2.4"
+DEPENDS += "cdparanoia cairo jpeg libpng zlib libid3tag flac speex libsoup-2.4"
+DEPENDS += "gst-plugins-base"
 
-PR = "r6"
+SRCREV = "${AUTOREV}"
+PR = "r14"
 GIT_PV = ""
 
-SRCREV = "7768342230450559509e3e593b2ea33e81ea0ca4"
+EXTRA_OECONF = "--enable-orc --disable-esd --disable-aalib --disable-shout2 --disable-libcaca --disable-hal"
 
-SRC_URI = "git://anongit.freedesktop.org/gstreamer/${PN}"
+inherit autotools pkgconfig gettext git-project
+
+SRC_URI = "git://anongit.freedesktop.org/gstreamer/${PN};protocol=git;branch=0.10"
 
 SRC_URI += " \
         file://orc.m4-fix-location-of-orcc-when-cross-compiling.patch \
@@ -21,13 +25,9 @@ SRC_URI += " \
         file://0003-qtdemux-don-t-assert-if-upstream-size-is-not-availab.patch \
         file://0004-MatroskaDemux-Set-profile-field-in-cap-for-aac-audio.patch \
         file://0005-FlvDemux-Set-profile-field-in-cap-for-aac-audio.patch \
+        file://0006-Matroska-Demux-Handle-TrueHD-audio-codec-id.patch \
         ${@base_contains('MACHINE_FEATURES', 'legacykernel', 'file://v4l-compile-fix-old-kernel.patch', '', d)} \
 "
-
-inherit autotools pkgconfig gettext git-project
-
-EXTRA_OECONF += "--disable-aalib --disable-esd --disable-shout2 --disable-libcaca --disable-hal --without-check \
-                --enable-orc"
 
 do_common_update() {
     cd ${S}
@@ -68,4 +68,5 @@ do_configure_prepend() {
     cp ${STAGING_DATADIR_NATIVE}/gettext/po/remove-potcdate.sin ${S}/po/
 }
 
+require mips-only.inc
 PACKAGE_ARCH = "${MACHINE_ARCH}"

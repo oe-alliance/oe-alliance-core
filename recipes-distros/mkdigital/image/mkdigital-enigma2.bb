@@ -7,7 +7,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PV = "1.0"
-PR = "r8"
+PR = "r9"
 
 inherit packagegroup
 
@@ -15,6 +15,7 @@ DEPENDS = "enigma2-pliplugins mkdigital-feeds"
 
 RRECOMMENDS_${PN} = "\
     mkdigital-version-info \
+    enigma2-plugin-systemplugins-videomode \
     enigma2-plugin-extensions-graphmultiepg \
     enigma2-plugin-systemplugins-videotune \
     enigma2-plugin-settings-defaultsat \

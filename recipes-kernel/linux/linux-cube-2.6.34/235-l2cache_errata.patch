@@ -1,0 +1,136 @@
+diff -Naurp linux-2.6.34_orig/arch/arm/include/asm/outercache.h linux-2.6.34/arch/arm/include/asm/outercache.h
+--- linux-2.6.34_orig/arch/arm/include/asm/outercache.h	2010-05-17 02:47:36.000000000 +0530
++++ linux-2.6.34/arch/arm/include/asm/outercache.h	2012-11-02 19:59:53.847307000 +0530
+@@ -28,6 +28,7 @@ struct outer_cache_fns {
+ #ifdef CONFIG_OUTER_CACHE_SYNC
+ 	void (*sync)(void);
+ #endif
++	void (*set_debug)(unsigned long);
+ };
+ 
+ #ifdef CONFIG_OUTER_CACHE
+diff -Naurp linux-2.6.34_orig/arch/arm/Kconfig linux-2.6.34/arch/arm/Kconfig
+--- linux-2.6.34_orig/arch/arm/Kconfig	2012-11-19 13:00:36.877074000 +0530
++++ linux-2.6.34/arch/arm/Kconfig	2012-11-02 12:10:19.713228000 +0530
+@@ -1064,7 +1064,7 @@ config ARM_ERRATA_716044
+ 	  Instruction and Data uTLBs.
+ 
+ config PL310_ERRATA_588369
+-	bool "Clean & Invalidate maintenance operations do not invalidate clean lines"
++	bool "PL310 errata: Clean & Invalidate maintenance operations do not invalidate clean lines"
+ 	depends on CACHE_L2X0 && ARCH_OMAP4
+ 	help
+ 	   The PL310 L2 cache controller implements three types of Clean &
+@@ -1090,7 +1090,7 @@ config ARM_ERRATA_720789
+ 	  entries regardless of the ASID.
+ 
+ config PL310_ERRATA_727915
+-	bool "Background Clean & Invalidate by Way operation can cause data corruption"
++	bool "PL310 errata: Background Clean & Invalidate by Way operation can cause data corruption"
+ 	depends on CACHE_L2X0
+ 	help
+ 	  PL310 implements the Clean & Invalidate by Way L2 cache maintenance
+@@ -1114,7 +1114,7 @@ config ARM_ERRATA_743622
+ 	  processor.
+ 
+ config ARM_ERRATA_753970
+-	bool "ARM errata: cache sync operation may be faulty"
++	bool "PL310 errata: cache sync operation may be faulty"
+ 	depends on CACHE_PL310
+ 	help
+ 	  This option enables the workaround for the 753970 PL310 (r3p0) erratum.
+@@ -1150,6 +1150,18 @@ config ARM_ERRATA_754327
+ 	  This workaround defines cpu_relax() as smp_mb(), preventing correctly
+ 	  written polling loops from denying visibility of updates to memory.
+ 
++config PL310_ERRATA_769419
++	bool "PL310 errata: no automatic Store Buffer drain"
++	depends on CACHE_L2X0
++	help
++	  On revisions of the PL310 prior to r3p2, the Store Buffer does
++	  not automatically drain. This can cause normal, non-cacheable
++	  writes to be retained when the memory system is idle, leading
++	  to suboptimal I/O performance for drivers using coherent DMA.
++	  This option adds a write barrier to the cpu_idle loop so that,
++	  on systems with an outer cache, the store buffer is drained
++	  explicitly.
++
+ endmenu
+ 
+ source "arch/arm/common/Kconfig"
+diff -Naurp linux-2.6.34_orig/arch/arm/kernel/process.c linux-2.6.34/arch/arm/kernel/process.c
+--- linux-2.6.34_orig/arch/arm/kernel/process.c	2012-11-19 13:00:31.790404000 +0530
++++ linux-2.6.34/arch/arm/kernel/process.c	2012-11-02 12:08:04.154929000 +0530
+@@ -157,6 +157,9 @@ void cpu_idle(void)
+ #endif
+ 
+ 			local_irq_disable();
++#ifdef CONFIG_PL310_ERRATA_769419
++			wmb();
++#endif
+ 			if (hlt_counter) {
+ 				local_irq_enable();
+ 				cpu_relax();
+diff -Naurp linux-2.6.34_orig/arch/arm/mm/cache-l2x0.c linux-2.6.34/arch/arm/mm/cache-l2x0.c
+--- linux-2.6.34_orig/arch/arm/mm/cache-l2x0.c	2012-11-19 13:00:36.427141000 +0530
++++ linux-2.6.34/arch/arm/mm/cache-l2x0.c	2012-11-02 20:00:54.353461000 +0530
+@@ -29,6 +29,7 @@ static void __iomem *l2x0_base;
+ static DEFINE_SPINLOCK(l2x0_lock);
+ static uint32_t l2x0_way_mask;	/* Bitmask of active ways */
+ static uint32_t l2x0_size;
++static unsigned long sync_reg_offset = L2X0_CACHE_SYNC;
+ bool l2x0_disabled=0;
+ 
+ static inline void cache_wait_way(void __iomem *reg, unsigned long mask)
+@@ -51,12 +52,7 @@ static inline void cache_sync(void)
+ {
+ 	void __iomem *base = l2x0_base;
+ 
+-#ifdef CONFIG_ARM_ERRATA_753970
+-	/* write to an unmmapped register */
+-	writel_relaxed(0, base + L2X0_DUMMY_REG);
+-#else
+-	writel_relaxed(0, base + L2X0_CACHE_SYNC);
+-#endif
++	writel_relaxed(0, base + sync_reg_offset);
+ 	cache_wait(base + L2X0_CACHE_SYNC, 1);
+ }
+ 
+@@ -75,10 +71,13 @@ static inline void l2x0_inv_line(unsigne
+ }
+ 
+ #if defined(CONFIG_PL310_ERRATA_588369) || defined(CONFIG_PL310_ERRATA_727915)
++static inline void debug_writel(unsigned long val)
++{
++	if (outer_cache.set_debug)
++		outer_cache.set_debug(val);
++}
+ 
+-#define debug_writel(val)	l2x0_set_debug(val)
+-
+-static void l2x0_set_debug(unsigned long val)
++static void pl310_set_debug(unsigned long val)
+ {
+ 	writel_relaxed(val, l2x0_base + L2X0_DEBUG_CTRL);
+ }
+@@ -88,7 +87,7 @@ static inline void debug_writel(unsigned
+ {
+ }
+ 
+-#define l2x0_set_debug	NULL
++#define pl310_set_debug	NULL
+ #endif
+ 
+ #ifdef CONFIG_PL310_ERRATA_588369
+@@ -286,6 +285,11 @@ void __init l2x0_init(void __iomem *base
+ 		else
+ 			ways = 8;
+ 		type = "L310";
++#ifdef CONFIG_PL310_ERRATA_753970
++		/* Unmapped register. */
++		sync_reg_offset = L2X0_DUMMY_REG;
++#endif
++		outer_cache.set_debug = pl310_set_debug;
+ 		break;
+ 	case L2X0_CACHE_ID_PART_L210:
+ 		ways = (aux >> 13) & 0xf;

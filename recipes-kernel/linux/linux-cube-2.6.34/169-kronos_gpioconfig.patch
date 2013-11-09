@@ -1,0 +1,35 @@
+diff -Naurp linux-2.6.34_org/arch/arm/mach-kronos/kronos.c linux-2.6.34/arch/arm/mach-kronos/kronos.c
+--- linux-2.6.34_org/arch/arm/mach-kronos/kronos.c	2011-07-25 20:15:47.000000000 +0800
++++ linux-2.6.34/arch/arm/mach-kronos/kronos.c	2011-07-25 20:04:25.000000000 +0800
+@@ -384,6 +384,7 @@ static int __init apollo_l2x0_init(void)
+ early_initcall(apollo_l2x0_init);
+ #endif
+ 
++#if 0
+ /* This function is used to get the chipid and chipRevId */
+ static void cnxt_get_chip_rev_id(void)
+ {
+@@ -412,7 +413,7 @@ static void cnxt_get_chip_rev_id(void)
+ 
+     printk("ChipID=0x%lx ChipRevID=0x%lx\n",ChipID,ChipRevID);
+ }
+-
++#endif
+ unsigned int GetChipRev (void)
+ {
+     return ChipRevID;
+diff -Naurp linux-2.6.34_org/drivers/gpio/Kconfig linux-2.6.34/drivers/gpio/Kconfig
+--- linux-2.6.34_org/drivers/gpio/Kconfig	2011-07-25 20:15:46.000000000 +0800
++++ linux-2.6.34/drivers/gpio/Kconfig	2011-07-25 20:25:00.000000000 +0800
+@@ -96,9 +96,9 @@ config GPIO_VR41XX
+ 
+ config GPIO_APOLLO
+ 	tristate "APOLLO GPIO support"
+-	depends on ARCH_APOLLO
++	depends on ARCH_APOLLO || ARCH_KRONOS
+ 	help
+-	  Say Y here if you want to enable GPIO support for APOLLO
++	  Say Y here if you want to enable GPIO support for APOLLO or KRONOS
+ 	  SoC on STB boards. Some of the GPIOs may be used as interrupts
+ 	  and in that case you must say 'Y' here or else the board might not
+ 	  boot at all. Say 'M' here if you want to compile it as module.

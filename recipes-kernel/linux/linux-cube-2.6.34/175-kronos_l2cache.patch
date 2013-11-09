@@ -1,0 +1,31 @@
+diff -Naurp linux-2.6.34_org/arch/arm/mach-kronos/kronos.c linux-2.6.34/arch/arm/mach-kronos/kronos.c
+--- linux-2.6.34_org/arch/arm/mach-kronos/kronos.c	2011-08-26 19:58:38.846184000 +0530
++++ linux-2.6.34/arch/arm/mach-kronos/kronos.c	2011-08-26 19:54:53.275490000 +0530
+@@ -379,6 +379,27 @@ static int __init apollo_l2x0_init(void)
+                         "mcr p15, 0, r12, c1, c0, 1"
+                 : : : "r12","cc", "memory");
+ 	}
++    else if (machine_is_kronos()) {
++      /*
++       * Data and Instruction prefetch disable for Kronos A0,
++       * 128KB (16KB/way),
++       * 8-way associativity,
++       * Exclusive,
++       * Zero enable
++       * Bits:  0000 0010 0000 0010 0001 0000 0000 0001
++       */
++      /* TODO:: Based on the chip rev. ID I/D prefetch to be enabled/disabled */
++      printk(KERN_INFO "Initalizing PL310 with I/D prefetch disable\n");
++      l2x0_init(__io_address(APOLLO_CORTEX_A9_L2CACHE_BASE),
++           0x02021001, 0xffffffff);
++
++      /* Change the ACTRL register to Exlusive, Zero Enable, L1 prefetch, L2 prefetch */
++                __asm__("mrc p15, 0, r12, c1, c0, 1\n\t"
++                        "orr r12, r12, #0x8c\n\t"
++                        "mcr p15, 0, r12, c1, c0, 1"
++                : : : "r12","cc", "memory");
++   }
++
+ 	return 0;
+ }
+ early_initcall(apollo_l2x0_init);

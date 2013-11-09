@@ -1,0 +1,283 @@
+diff -Naurp linux-2.6.34_Org/drivers/mtd/sfc/nx_sfc.c linux-2.6.34/drivers/mtd/sfc/nx_sfc.c
+--- linux-2.6.34_Org/drivers/mtd/sfc/nx_sfc.c	2013-03-25 12:02:57.923974000 +0530
++++ linux-2.6.34/drivers/mtd/sfc/nx_sfc.c	2013-03-25 14:47:48.041311000 +0530
+@@ -68,11 +68,16 @@
+ #define	MAX_READY_WAIT_CHIP_ERASE_JIFFIES	(400 * HZ)	/* MX25L25635E specs 400s max chip erase */
+ 
+ #define  MACRONIX_ID_MIN   0xc22016
+-#define  MACRONIX_ID_MAX   0xc22019
++#define  MACRONIX_ID_MAX   0xc22619
++
+ 
+ #define  MICRON_ID_MIN     0x20ba17
+ #define  MICRON_ID_MAX     0x20ba17
+ 
++#define  MAN_ID_MACRONIX   0xc2
++#define  MAN_ID_SPANSION   0x01
++#define  MAN_ID_MICRON     0x20
++
+ #define  CMD_SIZE    4
+ 
+ #ifdef CONFIG_MTD_NX_SFC_QUAD_MODE
+@@ -150,6 +155,15 @@ ssize_t nx_sfc_read_quad(struct nx_sfc_m
+       prtdelay =  SFC_PROTCOL_DELAY_QUADRD;
+       cmd = SFC_DEV_CMD_QUAD_READ;
+    }
++
++   if (flash->cd.offset >= SZ_16M)
++   {
++      nx_sfc_32b_en(flash, 1);
++   }
++   else
++   {   /* Program the protocol delay regsister */
++      writel( prtdelay, flash->mmio_base+IPBGCSFLSHNTWK_SFC_SFC_PROTOCOL_DELAY_REG);
++   }
+    /* Program the Pin Configuration Register */
+    writel( pinconfig, flash->mmio_base+IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_REG);
+    round_len = flash->cd.length % 4;
+@@ -163,14 +177,6 @@ ssize_t nx_sfc_read_quad(struct nx_sfc_m
+       writel(flash->cd.length,flash->mmio_base + IPBGCSFLSHNTWK_SFC_SFC_TX_RX_DATA_CNT_REG);
+    }
+ 
+-   if ((flash->cd.offset >= SZ_16M) && (flash->info.jedec_id == MACRONIX_ID_MAX))
+-   {
+-      nx_sfc_32b_en(flash, 1);
+-   }
+-   else
+-   {   /* Program the protocol delay regsister */
+-      writel( prtdelay, flash->mmio_base+IPBGCSFLSHNTWK_SFC_SFC_PROTOCOL_DELAY_REG);
+-   }
+    writel( SFC_CSR_QUAD_READ, flash->mmio_base+IPBGCSFLSHNTWK_SFC_SFC_CSR_REG);
+    
+    /* Program the Device Command Register with Quad read command */
+@@ -196,7 +202,7 @@ ssize_t nx_sfc_read_quad(struct nx_sfc_m
+ 
+    /* Set the default settings back */
+    writel( SFC_PIN_CONFIG_DEFAULT, flash->mmio_base+IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_REG);
+-   if((flash->cd.offset >= SZ_16M) && (flash->info.jedec_id == MACRONIX_ID_MAX))
++   if(flash->cd.offset >= SZ_16M)
+    {
+       nx_sfc_32b_dis(flash);
+    }
+@@ -217,7 +223,7 @@ ssize_t nx_sfc_prefetch_read(struct nx_s
+    u8 *prefetch_buf_ptr = (u8*)&prefetch_buf_store;
+    u8 *buf_ptr = flash->cd.buffer;
+ 
+-    if ((flash->cd.offset >= SZ_16M) && (flash->info.jedec_id == MACRONIX_ID_MAX))
++    if (flash->cd.offset >= SZ_16M)
+    {
+         nx_sfc_32b_en(flash, 1);
+    }
+@@ -264,7 +270,7 @@ ssize_t nx_sfc_prefetch_read(struct nx_s
+       memcpy(buf_ptr, prefetch_buf_ptr, flash->cd.length % 4);
+    }
+ 
+-    if((flash->cd.offset >= SZ_16M) && (flash->info.jedec_id == MACRONIX_ID_MAX))
++    if(flash->cd.offset >= SZ_16M)
+       nx_sfc_32b_dis(flash);
+ 
+    return flash->cd.length;
+@@ -278,7 +284,7 @@ ssize_t nx_sfc_prefetch_write(struct nx_
+    u8 *prefetch_buf_ptr = (u8*)&prefetch_buf_store;
+    u8 *buf_ptr = flash->cd.buffer;
+ 
+-    if ((flash->cd.offset >= SZ_16M) && (flash->info.jedec_id == MACRONIX_ID_MAX))
++    if (flash->cd.offset >= SZ_16M)
+    {
+         nx_sfc_32b_en(flash, 0); 
+    }
+@@ -317,7 +323,7 @@ ssize_t nx_sfc_prefetch_write(struct nx_
+    writel(SFC_DEV_CMD_WRITE,flash->mmio_base + IPBGCSFLSHNTWK_SFC_SFC_DEVICE_CMD_REG);
+    nx_sfc_wait(flash->mmio_base);
+ 
+-   if ((flash->cd.offset >= SZ_16M) && (flash->info.jedec_id == MACRONIX_ID_MAX))
++   if (flash->cd.offset >= SZ_16M)
+       nx_sfc_32b_dis(flash);
+ 
+    return flash->cd.length;
+@@ -375,7 +381,7 @@ ssize_t nx_sfc_write(struct nx_sfc_mtd *
+ ssize_t nx_sfc_erase(struct nx_sfc_mtd *flash) 
+ {
+    /* Program the protocol delay regsister */
+-    if ((flash->cd.offset >= SZ_16M) && (flash->info.jedec_id == MACRONIX_ID_MAX))
++    if (flash->cd.offset >= SZ_16M)
+         nx_sfc_32b_en(flash, 0);
+    
+    /* Program the CSR Register */
+@@ -388,7 +394,7 @@ ssize_t nx_sfc_erase(struct nx_sfc_mtd *
+    writel(SFC_DEV_CMD_ERASE, flash->mmio_base + IPBGCSFLSHNTWK_SFC_SFC_DEVICE_CMD_REG);
+    nx_sfc_wait(flash->mmio_base);
+ 
+-    if ((flash->cd.offset >= SZ_16M) && (flash->info.jedec_id == MACRONIX_ID_MAX))
++    if (flash->cd.offset >= SZ_16M)
+         nx_sfc_32b_dis(flash);
+ 
+    return flash->cd.length;
+@@ -396,36 +402,77 @@ ssize_t nx_sfc_erase(struct nx_sfc_mtd *
+ 
+ void nx_sfc_32b_en(struct nx_sfc_mtd *flash, bool isread)
+ {
+-   u32 status;
+-   nx_sfc_write_en(flash->mmio_base);
+-   //Program the CSR register, enable prefetch, tx_en, tx_hold_en
+-   writel(0x67, flash->mmio_base + IPBGCSFLSHNTWK_SFC_SFC_CSR_REG);
+-   // Do SPL CMD- "32b Addr Enable for enabling the 4th Addr Byte" - B7h
+-   writel(0xB70D0203, flash->mmio_base + IPBGCSFLSHNTWK_SFC_SFC_DEVICE_CMD_REG);
++   if(isread) {
++      write_enable(flash);
++      wait_till_ready_wr(flash);
++   }
++   if((flash->info.jedec_id >> 16 == MAN_ID_MACRONIX) ||
++      (flash->info.jedec_id >> 16 == MAN_ID_MICRON)) {
++      writel(SFC_PIN_CONFIG_DEFAULT, flash->mmio_base + IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_REG);
++      writel(SFC_CSR_WRITE_32B_EN, flash->mmio_base+ IPBGCSFLSHNTWK_SFC_SFC_CSR_REG);
++      writel(SFC_PROTOCOL_DELAY_32B_EN, flash->mmio_base+ IPBGCSFLSHNTWK_SFC_SFC_PROTOCOL_DELAY_REG);
++      writel(SFC_DEV_CMD_32B_EN_MX, flash->mmio_base+ IPBGCSFLSHNTWK_SFC_SFC_DEVICE_CMD_REG);
++
++   } else if(flash->info.jedec_id >> 16 == MAN_ID_SPANSION){
++      writel(SFC_PIN_CONFIG_DEFAULT, flash->mmio_base + IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_REG);
++      writel(SFC_CSR_WRITE_BNK_SPA, flash->mmio_base+IPBGCSFLSHNTWK_SFC_SFC_CSR_REG);
++      writel(SFC_PROTOCOL_DELAY_32B_EN, flash->mmio_base+IPBGCSFLSHNTWK_SFC_SFC_PROTOCOL_DELAY_REG);
++      writel((0x1 << 12), flash->mmio_base+IPBGCSFLSHNTWK_SFC_SFC_TX_RX_DATA_CNT_REG);
++      writel(0x80, flash->mmio_base+IPBGCSFLSHNTWK_SFC_SFC_SP_CMD_RD_WR0_DATA_REG);
++      writel(SFC_DEV_CMD_WR_BNK_SPA, flash->mmio_base+IPBGCSFLSHNTWK_SFC_SFC_DEVICE_CMD_REG);
++   }
++
+    nx_sfc_wait(flash->mmio_base);
+-   status = nx_sfc_read_RSCUR(flash->mmio_base);
+-#ifdef CONFIG_MTD_NX_SFC_QUAD_MODE
++   wait_till_ready(flash);
++
+    if(isread)
+    {
+-      writel(SFC_PROTOCOL_DELAY_QUADVAL_32B,flash->mmio_base + IPBGCSFLSHNTWK_SFC_SFC_PROTOCOL_DELAY_REG);
++#ifdef CONFIG_MTD_NX_SFC_QUAD_MODE
++      if(flash->info.jedec_id >> 16 == MAN_ID_MACRONIX) {
++         writel(SFC_PROTOCOL_DELAY_QUADVAL_32B_MX,
++				flash->mmio_base + IPBGCSFLSHNTWK_SFC_SFC_PROTOCOL_DELAY_REG);
++      } else if(flash->info.jedec_id >> 16 == MAN_ID_MICRON){
++         writel(SFC_PROTOCOL_DELAY_QUADVAL_32B_MN,
++				flash->mmio_base + IPBGCSFLSHNTWK_SFC_SFC_PROTOCOL_DELAY_REG);
++	  }else {
++         writel(SFC_PROTOCOL_DELAY_QUADVAL_32B,
++				flash->mmio_base + IPBGCSFLSHNTWK_SFC_SFC_PROTOCOL_DELAY_REG);
++      }
++#else
++      writel(SFC_PROTOCOL_DELAY_VAL_32B,flash->mmio_base + IPBGCSFLSHNTWK_SFC_SFC_PROTOCOL_DELAY_REG);
++#endif
+    }
+    else
+-#endif
+    {
++      write_enable(flash);
++      wait_till_ready_wr(flash);
+       writel(SFC_PROTOCOL_DELAY_VAL_32B,flash->mmio_base + IPBGCSFLSHNTWK_SFC_SFC_PROTOCOL_DELAY_REG);
+    }
+ }
+ 
+ void nx_sfc_32b_dis(struct nx_sfc_mtd *flash)
+ {
+-   u32 status;
+-   nx_sfc_write_en(flash->mmio_base);
+-   //Program the CSR register, enable prefetch, tx_en, tx_hold_en
+-   writel(0x67, flash->mmio_base + IPBGCSFLSHNTWK_SFC_SFC_CSR_REG);
+-   // Do SPL CMD- "32b Addr Enable for enabling the 4th Addr Byte" - B7h
+-   writel(0xE90D0203, flash->mmio_base + IPBGCSFLSHNTWK_SFC_SFC_DEVICE_CMD_REG);
++   wait_till_ready(flash);
++   write_enable(flash);
++   wait_till_ready_wr(flash);
++
++   if((flash->info.jedec_id >> 16 == MAN_ID_MACRONIX) ||
++      (flash->info.jedec_id >> 16 == MAN_ID_MICRON)) {
++      writel(SFC_PIN_CONFIG_DEFAULT, flash->mmio_base + IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_REG);
++      writel(SFC_CSR_WRITE_32B_EN, flash->mmio_base+ IPBGCSFLSHNTWK_SFC_SFC_CSR_REG);
++      writel(SFC_PROTOCOL_DELAY_32B_DIS, flash->mmio_base+ IPBGCSFLSHNTWK_SFC_SFC_PROTOCOL_DELAY_REG);
++      writel(SFC_DEV_CMD_32B_DIS_MX, flash->mmio_base+ IPBGCSFLSHNTWK_SFC_SFC_DEVICE_CMD_REG);
++
++   } else if(flash->info.jedec_id >> 16 == MAN_ID_SPANSION){
++      writel(SFC_PIN_CONFIG_DEFAULT, flash->mmio_base + IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_REG);
++      writel(SFC_CSR_WRITE_BNK_SPA, flash->mmio_base+IPBGCSFLSHNTWK_SFC_SFC_CSR_REG);
++      writel(SFC_PROTOCOL_DELAY_32B_DIS, flash->mmio_base+IPBGCSFLSHNTWK_SFC_SFC_PROTOCOL_DELAY_REG);
++      writel((0x1 << 12), flash->mmio_base+IPBGCSFLSHNTWK_SFC_SFC_TX_RX_DATA_CNT_REG);
++      writel(0x00, flash->mmio_base+IPBGCSFLSHNTWK_SFC_SFC_SP_CMD_RD_WR0_DATA_REG);
++      writel(SFC_DEV_CMD_WR_BNK_SPA, flash->mmio_base+IPBGCSFLSHNTWK_SFC_SFC_DEVICE_CMD_REG);
++   }
++
+    nx_sfc_wait(flash->mmio_base);
+-   status = nx_sfc_read_RSCUR(flash->mmio_base);
+    writel(SFC_PROTOCOL_DELAY_VAL_24B,flash->mmio_base + IPBGCSFLSHNTWK_SFC_SFC_PROTOCOL_DELAY_REG);
+ }
+ 
+@@ -434,7 +481,7 @@ u32 nx_sfc_read_RSCUR(void __iomem  * sf
+    u32 status;
+    writel(0x7, sfc_regs + IPBGCSFLSHNTWK_SFC_SFC_CSR_REG);
+    writel(0x1, sfc_regs + IPBGCSFLSHNTWK_SFC_SFC_TX_RX_DATA_CNT_REG);
+-   writel(0x050D0203, sfc_regs + IPBGCSFLSHNTWK_SFC_SFC_DEVICE_CMD_REG);
++   writel(0x2B0D0203, sfc_regs + IPBGCSFLSHNTWK_SFC_SFC_DEVICE_CMD_REG);
+    nx_sfc_wait(sfc_regs);
+    status = readl(sfc_regs + IPBGCSFLSHNTWK_SFC_SFC_SP_CMD_RD_WR0_DATA_REG);
+ 
+@@ -740,6 +787,7 @@ static int erase_sector(struct nx_sfc_mt
+ 
+    /* Send write enable, then erase commands. */
+    write_enable(flash);
++   wait_till_ready_wr(flash);
+ 
+    /* Set up command buffer. */
+    flash->cd.command[0] = flash->erase_opcode;
+@@ -1058,7 +1106,8 @@ static struct flash_info __devinitdata s
+    { "s25sl12800", 0x012018, 0x0300, 256 * 1024, 64, },
+    { "s25sl12801", 0x012018, 0x0301, 64 * 1024, 256, },
+    { "s25fl129p0", 0x012018, 0x4d00, 256 * 1024,  64, },
+-   { "s25fl129p1", 0x012018, 0x4d01,  64 * 1024, 256, },
++   { "s25fl129p1", 0x012018, 0x4d01, 64 * 1024, 256, },
++   { "s25fl256s1", 0x010219, 0x4d01, 64  * 1024, 512, },
+    { "s25fl016k",  0xef4015,      0,  64 * 1024,  32, SECT_4K, },
+    { "s25fl064k",  0xef4017,      0,  64 * 1024, 128, SECT_4K, },
+ 
+diff -Naurp linux-2.6.34_Org/drivers/mtd/sfc/nx_sfc.h linux-2.6.34/drivers/mtd/sfc/nx_sfc.h
+--- linux-2.6.34_Org/drivers/mtd/sfc/nx_sfc.h	2013-03-25 12:02:57.935975000 +0530
++++ linux-2.6.34/drivers/mtd/sfc/nx_sfc.h	2013-03-25 14:45:57.300321000 +0530
+@@ -396,7 +396,11 @@
+ #define SFC_PROTOCOL_DELAY_VAL_16B  0x00008000
+ #define SFC_PROTOCOL_DELAY_VAL_24B  0x10008000
+ #define SFC_PROTOCOL_DELAY_VAL_32B  0x20008000
+-#define SFC_PROTOCOL_DELAY_QUADVAL_32B  0x20008008
++#define SFC_PROTOCOL_DELAY_QUADVAL_32B_MX 0x20038008
++#define SFC_PROTOCOL_DELAY_QUADVAL_32B_MN 0x2003800A
++#define SFC_PROTOCOL_DELAY_QUADVAL_32B    0x20038006
++#define SFC_PROTOCOL_DELAY_32B_EN   0x10000000
++#define SFC_PROTOCOL_DELAY_32B_DIS  0x20000000
+ 
+ #define SFC_CSR_READ                0x0000027
+ #define SFC_CSR_QUAD_READ           0x000000e7
+@@ -405,6 +409,8 @@
+ #define SFC_CSR_WREN                0x67
+ #define SFC_CSR_READ_ID             0x27
+ #define SFC_CSR_READ_STATUS         0x7
++#define SFC_CSR_WRITE_32B_EN        0x1
++#define SFC_CSR_WRITE_BNK_SPA       0x20001
+ #define SFC_CSR_WRITE_STATUS        0x20001
+ #define SFC_DEV_CMD_READ            0x03850203 
+ #define SFC_DEV_CMD_QUAD_READ       0x000c02eb
+@@ -416,6 +422,10 @@
+ #define SFC_DEV_CMD_READ_STATUS     0x050D0203
+ #define SFC_DEV_CMD_WRITE_STATUS    0x010D0203 
+ 
++#define SFC_DEV_CMD_32B_EN_MX       0xB7010000
++#define SFC_DEV_CMD_32B_DIS_MX      0xE9010000
++#define SFC_DEV_CMD_WR_BNK_SPA      0x170D0203
++
+ struct mtd_partition;
+ 
+ /**
+@@ -497,6 +507,9 @@ void nx_sfc_write_en(void __iomem  * sfc
+ u32 nx_sfc_read_RSCUR(void __iomem  * sfc_regs);
+ void nx_sfc_32b_dis(struct nx_sfc_mtd *flash);
+ void nx_sfc_wait(void __iomem * sfc_regs);
++int write_enable(struct nx_sfc_mtd *flash);
++int wait_till_ready(struct nx_sfc_mtd *flash);
++int wait_till_ready_wr(struct nx_sfc_mtd *flash);
+ #endif
+ 
+ 

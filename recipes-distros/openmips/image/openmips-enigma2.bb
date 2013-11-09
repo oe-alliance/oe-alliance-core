@@ -7,7 +7,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PV = "1.0"
-PR = "r15"
+PR = "r17"
 
 inherit packagegroup
 
@@ -24,6 +24,7 @@ RRECOMMENDS_${PN} = "\
     enigma2-plugin-extensions-dvdplayer \
     enigma2-plugin-extensions-zaphistorybrowser \
     enigma2-plugin-extensions-gbaspectratioswitch \
+    enigma2-plugin-systemplugins-videomode \
     enigma2-plugin-systemplugins-videotune \
     enigma2-plugin-systemplugins-skinselector \
     enigma2-plugin-systemplugins-autoresolution \
@@ -40,7 +41,6 @@ RRECOMMENDS_${PN} = "\
     enigma2-plugin-drivers-network-usb-rt3573 \
     enigma2-plugin-drivers-network-usb-rt5572 \
     ${@base_contains("MACHINE_FEATURES", "3dtv", "enigma2-plugin-systemplugins-osd3dsetup" , "", d)} \
-    ${@base_contains("MACHINE_FEATURES", "boxmodel", "boxmodel", "", d)} \	
     "
 
 RRECOMMENDS_${PN}_append_gbquad = " webbrowser-utils enigma2-plugin-extensions-webbrowser"

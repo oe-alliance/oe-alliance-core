@@ -7,15 +7,16 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=0636e73ff0215e8d672dc4c32c317bb3 \
                     file://gst/ffmpegcolorspace/utils.c;beginline=1;endline=20;md5=9c83a200b8e597b26ca29df20fc6ecd0"
 
 DEPENDS += "${@base_contains('DISTRO_FEATURES', 'x11', 'virtual/libx11 libxv', '', d)}"
-DEPENDS += "alsa-lib freetype liboil libogg libvorbis libtheora avahi util-linux tremor cdparanoia orc orc-native"
+DEPENDS += "alsa-lib freetype liboil libogg libvorbis libtheora avahi util-linux tremor orc orc-native"
 DEPENDS += "gstreamer"
 
-PR = "r2"
+SRCREV = "${AUTOREV}"
+PR = "r13"
 GIT_PV = ""
 
-SRCREV = "bdb33163478fdf95938fbdca7eabad3ea920a277"
+inherit autotools pkgconfig gettext git-project
 
-SRC_URI = "git://anongit.freedesktop.org/gstreamer/${PN}"
+SRC_URI = "git://anongit.freedesktop.org/gstreamer/${PN};protocol=git;branch=0.10"
 
 SRC_URI += " \
         file://orc.m4-fix-location-of-orcc-when-cross-compiling.patch \
@@ -24,10 +25,6 @@ SRC_URI += " \
         file://configure.ac-fix-subparse-plugin.patch \
         ${@base_contains('MACHINE_BRAND', 'Dreambox', '', 'file://revert-0dfdd9186e143daa568521c4e55c9923e5cbc466.patch', d)} \
 "
-
-inherit autotools pkgconfig gettext git-project
-
-EXTRA_OECONF += "--disable-freetypetest --disable-pango --disable-gnome_vfs --enable-orc"
 
 do_common_update() {
     cd ${S}
@@ -68,5 +65,6 @@ do_configure_prepend() {
     cp ${STAGING_DATADIR_NATIVE}/gettext/po/remove-potcdate.sin ${S}/po/
 }
 
+require mips-only.inc
 FILES_${PN} += "${datadir}/${BPN}"
 PACKAGE_ARCH = "${MACHINE_ARCH}"

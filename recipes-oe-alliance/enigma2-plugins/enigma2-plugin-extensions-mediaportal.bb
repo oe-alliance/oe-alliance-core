@@ -1,5 +1,5 @@
 DESCRIPTION = "MediaPortal "
-RDEPENDS_${PN} = "python-json python-html gst-plugins-good-flv gst-plugins-bad-rtmp librtmp0 rtmpdump"
+RDEPENDS_${PN} = "python-compression python-json python-html gst-plugins-good-flv gst-plugins-bad-rtmp librtmp1 rtmpdump"
 MAINTAINER = "dhwz"
 LICENSE = "proprietary"
 
@@ -10,12 +10,11 @@ require conf/license/license-gplv2.inc
 inherit autotools gitpkgv pythonnative
 
 SRCREV = "${AUTOREV}"
-PV = "4.7.1+git${SRCPV}"
-PKGV = "4.7.1+git${GITPKGV}"
-PR = "r18"
+PV = "4.9.2+git${SRCPV}"
+PKGV = "4.9.2+git${GITPKGV}"
+PR = "r0"
 
 SRC_URI = "git://github.com/dhwz/MediaPortal.git;protocol=git file://fix_build.patch"
-
 
 S = "${WORKDIR}/git"
 
@@ -25,6 +24,9 @@ EXTRA_OECONF = " \
     STAGING_INCDIR=${STAGING_INCDIR} \
     STAGING_LIBDIR=${STAGING_LIBDIR} \
     "
+
+FILES_${PN}_append += "${libdir}/enigma2/python/Components/Converter/MPServicePosition.pyo"
+FILES_${PN}-src_append += "${libdir}/enigma2/python/Components/Converter/MPServicePosition.py"
 
 python populate_packages_prepend() {
     enigma2_plugindir = bb.data.expand('${libdir}/enigma2/python/Plugins', d)

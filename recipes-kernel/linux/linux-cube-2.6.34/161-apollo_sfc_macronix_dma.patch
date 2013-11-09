@@ -1,0 +1,884 @@
+diff -Naurp linux-2.6.34_orig/arch/arm/mach-apollo/sfc.c linux-2.6.34/arch/arm/mach-apollo/sfc.c
+--- linux-2.6.34_orig/arch/arm/mach-apollo/sfc.c	2011-05-04 18:31:52.322875000 +0530
++++ linux-2.6.34/arch/arm/mach-apollo/sfc.c	2011-05-05 19:21:13.566654000 +0530
+@@ -9,14 +9,20 @@
+ #include <linux/mtd/physmap.h>
+ #include <mach/sfc.h>
+ #include <linux/io.h>
++#include <mach/gcs_dmac.h>
+ 
+ static struct resource apollo_sfc_resources[] = {
+ 
+    {
+-		.start		= APOLLO_SFC_CFG_BASE,
+-		.end		= (APOLLO_SFC_CFG_BASE + APOLLO_SFC_CFG_LEN - 1),
+-		.flags		= IORESOURCE_MEM,
+-	},
++      .start   = APOLLO_SFC_CFG_BASE,
++      .end     = (APOLLO_SFC_CFG_BASE + APOLLO_SFC_CFG_LEN - 1),
++      .flags   = IORESOURCE_MEM,
++   },
++   {
++      .start   = APOLLO_GCS_DMAC_BASE,
++      .end     = (APOLLO_GCS_DMAC_BASE + APOLLO_GCS_DMAC_LEN - 1),
++      .flags   = IORESOURCE_MEM,
++   },
+ };
+ 
+ static uint64_t apollo_sfc_dma_mask = ~(uint32_t)0;
+diff -Naurp linux-2.6.34_orig/drivers/gcs_dmac/gcs_dmac.c linux-2.6.34/drivers/gcs_dmac/gcs_dmac.c
+--- linux-2.6.34_orig/drivers/gcs_dmac/gcs_dmac.c	2011-05-04 18:32:42.946688000 +0530
++++ linux-2.6.34/drivers/gcs_dmac/gcs_dmac.c	2011-05-05 19:21:13.567658000 +0530
+@@ -51,8 +51,8 @@
+ 
+ #define ATTRIBUTE_UNUSED __attribute__ ((__unused__))
+ 
+-volatile bool nor_dma_done = false;
+-volatile bool nor_dma_error = false;
++volatile bool nor_dma_done = false, sfc_dma_done = false;
++volatile bool nor_dma_error = false, sfc_dma_error = false;
+ 
+ /* DMAC device structure */
+ static struct nx_dmac_t	*nx_dmac=NULL;
+@@ -415,6 +415,10 @@ static irqreturn_t nx_dmac_isr(int irq_n
+ 				{
+ 					nor_dma_done = true;
+ 				}
++				else if(chanid==NX_DMAC_SFC_DMA_CHANNEL_ID)
++				{
++					sfc_dma_done = true;
++				}
+ 				else
+ 				{
+ 					wake_up(&chan->chan_queue);
+@@ -431,6 +435,11 @@ static irqreturn_t nx_dmac_isr(int irq_n
+ 					nor_dma_error = true;
+ 					nor_dma_done = true;
+ 				}
++				else if(chanid==NX_DMAC_SFC_DMA_CHANNEL_ID)
++				{
++					sfc_dma_error = true;
++					sfc_dma_done = true;
++				}
+ 				else
+ 				{
+ 					wake_up(&chan->chan_queue);
+diff -Naurp linux-2.6.34_orig/drivers/mtd/sfc/Kconfig linux-2.6.34/drivers/mtd/sfc/Kconfig
+--- linux-2.6.34_orig/drivers/mtd/sfc/Kconfig	2011-05-04 18:32:26.213082000 +0530
++++ linux-2.6.34/drivers/mtd/sfc/Kconfig	2011-05-05 19:21:13.569660000 +0530
+@@ -20,7 +20,7 @@ config MTD_NX_SFC_DMAC_EN
+ 	depends on MTD_NX_SFC
+ 	help
+ 	  This is enables the A9 to access SFC through the AHB Master Interface.
+-		GCS DMA driver is used to xfer the data to/from the SFC apperture in the GCS.
++		 SFC DMA driver is used to xfer the data to/from the SFC apperture in the GCS.
+ 
+ config MTD_NX_SFC_QUAD_MODE
+         bool "QUAD Mode support"
+diff -Naurp linux-2.6.34_orig/drivers/mtd/sfc/Makefile linux-2.6.34/drivers/mtd/sfc/Makefile
+--- linux-2.6.34_orig/drivers/mtd/sfc/Makefile	2011-05-04 18:32:26.214085000 +0530
++++ linux-2.6.34/drivers/mtd/sfc/Makefile	2011-05-05 19:21:13.572656000 +0530
+@@ -3,5 +3,5 @@
+ #
+ 
+ #obj-$(CONFIG_MTD_DATAFLASH)	+= mtd_dataflash.o
+-#obj-y	+= sfc_dmac.o
++obj-$(CONFIG_MTD_NX_SFC_DMAC_EN) += sfc_dmac.o
+ obj-$(CONFIG_MTD_NX_SFC)	+= nx_sfc.o
+diff -Naurp linux-2.6.34_orig/drivers/mtd/sfc/nx_sfc.c linux-2.6.34/drivers/mtd/sfc/nx_sfc.c
+--- linux-2.6.34_orig/drivers/mtd/sfc/nx_sfc.c	2011-05-04 18:32:26.217083000 +0530
++++ linux-2.6.34/drivers/mtd/sfc/nx_sfc.c	2011-05-05 19:44:59.632677000 +0530
+@@ -33,8 +33,9 @@
+ #include "nx_sfc.h"
+ 
+ #define FLASH_PAGESIZE        256
+-#define SFC_PREFETCH_BUFSIZE   64
+-#define SFC_DCSN_BASE_REG (MMIO_GCS_BASE +0x14)
++#define SFC_PREFETCH_BUFSIZE  64
++#define FLASH_READ_SIZE       4092
++
+ #define SFC_DCSN_SIZE  0x8000000
+ 
+ /* Flash opcodes. */
+@@ -66,6 +67,8 @@
+ #define	MAX_READY_WAIT_JIFFIES	(10 * HZ) 
+ #define	MAX_READY_WAIT_CHIP_ERASE_JIFFIES	(400 * HZ)	/* MX25L25635E specs 400s max chip erase */
+ 
++#define  MACRONIX_ID_MIN   0xc22016
++#define  MACRONIX_ID_MAX   0xc22019
+ 
+ #define  CMD_SIZE    4
+ 
+@@ -84,11 +87,13 @@
+ #endif
+ #define  mtd_has_partitions() (1)
+ 
++#ifdef CONFIG_MTD_NX_SFC_DMAC_EN
+ extern void nx_sfc_map_copy_to (unsigned long to, const void *from, ssize_t 
+ len);
+ extern void nx_sfc_map_copy_from(void *to, unsigned long from, ssize_t len);
+-extern int nx_sfc_dma_init(void);
+-
++extern int nx_sfc_dma_init(struct platform_device *pdev);
++extern void nx_sfc_dma_exit(struct platform_device *pdev);
++#endif
+ /****************************************************************************/
+ 
+ static inline struct nx_sfc_mtd *mtd_to_nx_sfc_mtd(struct mtd_info *mtd)
+@@ -106,80 +111,91 @@ static inline struct nx_sfc_mtd *mtd_to_
+ #ifdef CONFIG_MTD_NX_SFC_QUAD_MODE
+ ssize_t nx_sfc_read_quad(struct nx_sfc_mtd *flash)
+ {
+-	u32 cnt, round_len =0; 
+-	unsigned long *buf_base, buf_store;
+-	u8 *buf_ptr =flash->cd.buffer;
+-	u8 *mem_buf_ptr = (u8*)&buf_store;
+-
+-	/* Program the Pin Configuration Register */
+-	if((flash->info.jedec_id == 0xc22019)||(flash->info.jedec_id == 0xc22018))
+-	{
+-		writel( SFC_PIN_CONFIG_QUAD_READ_MX, flash->mmio_base+IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_REG);
+-	}
+- 	else
+-	{
+-		writel( SFC_PIN_CONFIG_QUAD_READ, flash->mmio_base+IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_REG); 
+-	}
+-
+-	round_len = flash->cd.length % 4;
+-	if(round_len)
+-	{
+-	      round_len = flash->cd.length + (4 - round_len);
+-	      writel(round_len,flash->mmio_base + IPBGCSFLSHNTWK_SFC_SFC_TX_RX_DATA_CNT_REG);
+-	}
+-	else
+-		writel(flash->cd.length,flash->mmio_base + IPBGCSFLSHNTWK_SFC_SFC_TX_RX_DATA_CNT_REG);
+-
+-	if ((flash->cd.offset >= SZ_16M) && (flash->info.jedec_id == 0xc22019))
+-	{
+-	      nx_sfc_32b_en(flash);
+-	}
+-	else if((flash->info.jedec_id == 0xc22019)||(flash->info.jedec_id == 0xc22018))
+-	{
+-  		writel( SFC_PROTCOL_DELAY_QUADRD_MX, flash->mmio_base+IPBGCSFLSHNTWK_SFC_SFC_PROTOCOL_DELAY_REG);
+-	}
+-	else
+-	{	 /* Program the protocol delay regsister */
+-		writel( SFC_PROTCOL_DELAY_QUADRD, flash->mmio_base+IPBGCSFLSHNTWK_SFC_SFC_PROTOCOL_DELAY_REG); 
+-	}
+-	writel( SFC_CSR_QUAD_READ, flash->mmio_base+IPBGCSFLSHNTWK_SFC_SFC_CSR_REG);
+- 	
+-	/* Program the Device Command Register with Quad read command */
+-	if((flash->info.jedec_id == 0xc22019)||(flash->info.jedec_id == 0xc22018))
+-       {
+-		writel( SFC_DEV_CMD_QUAD_READ_MX, flash->mmio_base+IPBGCSFLSHNTWK_SFC_SFC_DEVICE_CMD_REG);                
+-       }
+-       else
+-       {
+-		writel( SFC_DEV_CMD_QUAD_READ, flash->mmio_base+IPBGCSFLSHNTWK_SFC_SFC_DEVICE_CMD_REG);
+-	}
+-  
+-	buf_base = (( unsigned long *)(flash->io_base+flash->cd.offset));
+-	for (cnt=0;cnt<flash->cd.length/4; cnt++)
+-	{
+-		buf_store=readl(buf_base);
+-		memcpy(buf_ptr, mem_buf_ptr, 4);
+-		buf_base++;
+-		buf_ptr +=0x04;
+-	}
+-
+-	if(flash->cd.length%4)
+-	{
+-		buf_store = readl(buf_base);
+-		memcpy(buf_ptr, mem_buf_ptr, flash->cd.length%4);
+-	}
+-	/* Set the default settings */
+-	writel( SFC_PIN_CONFIG_DEFAULT, flash->mmio_base+IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_REG); 
+-    	if((flash->cd.offset >= SZ_16M) && (flash->info.jedec_id == 0xc22019))
+-    	{
+-      		nx_sfc_32b_dis(flash);
+-    	}
+-	else
+-	{
+- 		writel( SFC_PROTOCOL_DELAY_VAL_24B, flash->mmio_base+IPBGCSFLSHNTWK_SFC_SFC_PROTOCOL_DELAY_REG);		
+-	}   	   
+-	return flash->cd.length;
++   u32 round_len =0;
++   unsigned long pinconfig, prtdelay,cmd;
++#ifdef CONFIG_MTD_NX_SFC_DMAC_EN
++   unsigned long dma_from, dma_sfc_base;
++#else
++   u32 cnt;
++   unsigned long *buf_base, buf_store;
++   u8 *buf_ptr =flash->cd.buffer;
++   u8 *mem_buf_ptr = (u8*)&buf_store;
++#endif
+ 
++#ifdef CONFIG_MTD_NX_SFC_DMAC_EN
++   dma_sfc_base =  readl(NX_DMA_SFC_BASE_ADDR_REG);
++   dma_from =  dma_sfc_base +flash->cd.offset;
++#else
++   buf_base = (( unsigned long *)(flash->io_base+flash->cd.offset));
++#endif
++
++   if((flash->info.jedec_id >= MACRONIX_ID_MIN)&&(flash->info.jedec_id <= MACRONIX_ID_MAX))
++   {
++      pinconfig = SFC_PIN_CONFIG_QUAD_READ_MX;
++      prtdelay =  SFC_PROTCOL_DELAY_QUADRD_MX;
++      cmd = SFC_DEV_CMD_QUAD_READ_MX;
++   }
++   else
++   {
++      pinconfig = SFC_PIN_CONFIG_QUAD_READ;
++      prtdelay =  SFC_PROTCOL_DELAY_QUADRD;
++      cmd = SFC_DEV_CMD_QUAD_READ;
++   }
++   /* Program the Pin Configuration Register */
++   writel( pinconfig, flash->mmio_base+IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_REG);
++   round_len = flash->cd.length % 4;
++   if(round_len)
++   {
++      round_len = flash->cd.length + (4 - round_len);
++      writel(round_len,flash->mmio_base + IPBGCSFLSHNTWK_SFC_SFC_TX_RX_DATA_CNT_REG);
++   }
++   else
++   {
++      writel(flash->cd.length,flash->mmio_base + IPBGCSFLSHNTWK_SFC_SFC_TX_RX_DATA_CNT_REG);
++   }
++
++   if ((flash->cd.offset >= SZ_16M) && (flash->info.jedec_id == MACRONIX_ID_MAX))
++   {
++      nx_sfc_32b_en(flash, 1);
++   }
++   else
++   {   /* Program the protocol delay regsister */
++      writel( prtdelay, flash->mmio_base+IPBGCSFLSHNTWK_SFC_SFC_PROTOCOL_DELAY_REG);
++   }
++   writel( SFC_CSR_QUAD_READ, flash->mmio_base+IPBGCSFLSHNTWK_SFC_SFC_CSR_REG);
++   
++   /* Program the Device Command Register with Quad read command */
++   writel(cmd, flash->mmio_base+IPBGCSFLSHNTWK_SFC_SFC_DEVICE_CMD_REG);
++
++#ifdef CONFIG_MTD_NX_SFC_DMAC_EN
++   nx_sfc_map_copy_from(flash->cd.buffer, dma_from, flash->cd.length);
++#else 
++   for (cnt=0;cnt<flash->cd.length/4; cnt++)
++   {
++      buf_store=readl(buf_base);
++      memcpy(buf_ptr, mem_buf_ptr, 4);
++      buf_base++;
++      buf_ptr +=0x04;
++   }
++
++   if(flash->cd.length%4)
++   {
++      buf_store = readl(buf_base);
++      memcpy(buf_ptr, mem_buf_ptr, flash->cd.length%4);
++   }
++#endif
++
++   /* Set the default settings back */
++   writel( SFC_PIN_CONFIG_DEFAULT, flash->mmio_base+IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_REG);
++   if((flash->cd.offset >= SZ_16M) && (flash->info.jedec_id == MACRONIX_ID_MAX))
++   {
++      nx_sfc_32b_dis(flash);
++   }
++   else
++   {
++      writel( SFC_PROTOCOL_DELAY_VAL_24B, flash->mmio_base+IPBGCSFLSHNTWK_SFC_SFC_PROTOCOL_DELAY_REG);
++   }
++   return flash->cd.length;
+ }
+ #endif
+ 
+@@ -192,9 +208,9 @@ ssize_t nx_sfc_prefetch_read(struct nx_s
+    u8 *prefetch_buf_ptr = (u8*)&prefetch_buf_store;
+    u8 *buf_ptr = flash->cd.buffer;
+ 
+-   if ((flash->cd.offset >= SZ_16M) && (flash->info.jedec_id == 0xc22019))
++    if ((flash->cd.offset >= SZ_16M) && (flash->info.jedec_id == MACRONIX_ID_MAX))
+    {
+-      nx_sfc_32b_en(flash);
++        nx_sfc_32b_en(flash, 1);
+    }
+    else
+    {
+@@ -239,7 +255,7 @@ ssize_t nx_sfc_prefetch_read(struct nx_s
+       memcpy(buf_ptr, prefetch_buf_ptr, flash->cd.length % 4);
+    }
+ 
+-   if((flash->cd.offset >= SZ_16M) && (flash->info.jedec_id == 0xc22019))
++    if((flash->cd.offset >= SZ_16M) && (flash->info.jedec_id == MACRONIX_ID_MAX))
+       nx_sfc_32b_dis(flash);
+ 
+    return flash->cd.length;
+@@ -253,9 +269,9 @@ ssize_t nx_sfc_prefetch_write(struct nx_
+    u8 *prefetch_buf_ptr = (u8*)&prefetch_buf_store;
+    u8 *buf_ptr = flash->cd.buffer;
+ 
+-   if ((flash->cd.offset >= SZ_16M) && (flash->info.jedec_id == 0xc22019))
++    if ((flash->cd.offset >= SZ_16M) && (flash->info.jedec_id == MACRONIX_ID_MAX))
+    {
+-      nx_sfc_32b_en(flash);
++        nx_sfc_32b_en(flash, 0); 
+    }
+    else
+    {
+@@ -292,7 +308,7 @@ ssize_t nx_sfc_prefetch_write(struct nx_
+    writel(SFC_DEV_CMD_WRITE,flash->mmio_base + IPBGCSFLSHNTWK_SFC_SFC_DEVICE_CMD_REG);
+    nx_sfc_wait(flash->mmio_base);
+ 
+-   if ((flash->cd.offset >= SZ_16M) && (flash->info.jedec_id == 0xc22019))
++   if ((flash->cd.offset >= SZ_16M) && (flash->info.jedec_id == MACRONIX_ID_MAX))
+       nx_sfc_32b_dis(flash);
+ 
+    return flash->cd.length;
+@@ -350,8 +366,8 @@ ssize_t nx_sfc_write(struct nx_sfc_mtd *
+ ssize_t nx_sfc_erase(struct nx_sfc_mtd *flash) 
+ {
+    /* Program the protocol delay regsister */
+-   if ((flash->cd.offset >= SZ_16M) && (flash->info.jedec_id == 0xc22019))
+-      nx_sfc_32b_en(flash); 
++    if ((flash->cd.offset >= SZ_16M) && (flash->info.jedec_id == MACRONIX_ID_MAX))
++        nx_sfc_32b_en(flash, 0);
+    
+    /* Program the CSR Register */
+    writel(SFC_CSR_ERASE,flash->mmio_base + IPBGCSFLSHNTWK_SFC_SFC_CSR_REG);
+@@ -363,13 +379,13 @@ ssize_t nx_sfc_erase(struct nx_sfc_mtd *
+    writel(SFC_DEV_CMD_ERASE, flash->mmio_base + IPBGCSFLSHNTWK_SFC_SFC_DEVICE_CMD_REG);
+    nx_sfc_wait(flash->mmio_base);
+ 
+-   if ((flash->cd.offset >= SZ_16M) && (flash->info.jedec_id == 0xc22019))
++    if ((flash->cd.offset >= SZ_16M) && (flash->info.jedec_id == MACRONIX_ID_MAX))
+         nx_sfc_32b_dis(flash);
+ 
+    return flash->cd.length;
+ }
+ 
+-void nx_sfc_32b_en(struct nx_sfc_mtd *flash)
++void nx_sfc_32b_en(struct nx_sfc_mtd *flash, bool isread)
+ {
+    u32 status;
+    nx_sfc_write_en(flash->mmio_base);
+@@ -379,11 +395,16 @@ void nx_sfc_32b_en(struct nx_sfc_mtd *fl
+    writel(0xB70D0203, flash->mmio_base + IPBGCSFLSHNTWK_SFC_SFC_DEVICE_CMD_REG);
+    nx_sfc_wait(flash->mmio_base);
+    status = nx_sfc_read_RSCUR(flash->mmio_base);
+-   #ifdef CONFIG_MTD_NX_SFC_QUAD_MODE
+-   writel(SFC_PROTOCOL_DELAY_QUADVAL_32B,flash->mmio_base + IPBGCSFLSHNTWK_SFC_SFC_PROTOCOL_DELAY_REG);
+-   #else
+-   writel(SFC_PROTOCOL_DELAY_VAL_32B,flash->mmio_base + IPBGCSFLSHNTWK_SFC_SFC_PROTOCOL_DELAY_REG);
+-   #endif
++#ifdef CONFIG_MTD_NX_SFC_QUAD_MODE
++   if(isread)
++   {
++      writel(SFC_PROTOCOL_DELAY_QUADVAL_32B,flash->mmio_base + IPBGCSFLSHNTWK_SFC_SFC_PROTOCOL_DELAY_REG);
++   }
++   else
++#endif
++   {
++      writel(SFC_PROTOCOL_DELAY_VAL_32B,flash->mmio_base + IPBGCSFLSHNTWK_SFC_SFC_PROTOCOL_DELAY_REG);
++   }
+ }
+ 
+ void nx_sfc_32b_dis(struct nx_sfc_mtd *flash)
+@@ -449,16 +470,16 @@ u32 nx_sfc_read_sr(void __iomem * sfc_re
+ 
+ #if 0  
+ u32 nx_sfc_status2_read(void __iomem *sfc_regs)
+-{	
+-	u32 status=0;
+-	writel( 0xa900001b, sfc_regs+IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_REG); 
+-	writel( 0x10008000, sfc_regs+IPBGCSFLSHNTWK_SFC_SFC_PROTOCOL_DELAY_REG); 
+-	writel(0x00000007, sfc_regs+IPBGCSFLSHNTWK_SFC_SFC_CSR_REG);
+-	writel(0x01, sfc_regs+IPBGCSFLSHNTWK_SFC_SFC_TX_RX_DATA_CNT_REG);
+-	writel(0x350D0203, sfc_regs+IPBGCSFLSHNTWK_SFC_SFC_DEVICE_CMD_REG);
+-	nx_sfc_wait(sfc_regs);
+-	status= readl(sfc_regs+IPBGCSFLSHNTWK_SFC_SFC_SP_CMD_RD_WR0_DATA_REG);
+-	return status;		
++{  
++   u32 status=0;
++   writel( 0xa900001b, sfc_regs+IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_REG); 
++   writel( 0x10008000, sfc_regs+IPBGCSFLSHNTWK_SFC_SFC_PROTOCOL_DELAY_REG); 
++   writel(0x00000007, sfc_regs+IPBGCSFLSHNTWK_SFC_SFC_CSR_REG);
++   writel(0x01, sfc_regs+IPBGCSFLSHNTWK_SFC_SFC_TX_RX_DATA_CNT_REG);
++   writel(0x350D0203, sfc_regs+IPBGCSFLSHNTWK_SFC_SFC_DEVICE_CMD_REG);
++   nx_sfc_wait(sfc_regs);
++   status= readl(sfc_regs+IPBGCSFLSHNTWK_SFC_SFC_SP_CMD_RD_WR0_DATA_REG);
++   return status;    
+ }
+ 
+ #endif
+@@ -492,8 +513,9 @@ void nx_sfc_reset(void __iomem * sfc_reg
+ {
+    u32 tmp=100;	
+    writel(0x80000000,sfc_regs + IPBGCSFLSHNTWK_SFC_SFC_CSR_REG); 
+-   do{
+-   	tmp=tmp-1;	
++   do
++   {
++      tmp=tmp-1;
+    }
+    while(tmp>0);
+    writel(0x00000000,sfc_regs + IPBGCSFLSHNTWK_SFC_SFC_CSR_REG); 
+@@ -502,44 +524,44 @@ void nx_sfc_reset(void __iomem * sfc_reg
+ 
+ void nx_sfc_set_quad_bit(struct nx_sfc_mtd *flash)
+ {
+-	nx_sfc_write_en(flash->mmio_base);
+-	writel(0x00020005, flash->mmio_base+IPBGCSFLSHNTWK_SFC_SFC_CSR_REG);
+-	writel(0x10000000, flash->mmio_base+IPBGCSFLSHNTWK_SFC_SFC_PROTOCOL_DELAY_REG);
+-       if((flash->info.jedec_id == 0xc22019)||(flash->info.jedec_id == 0xc22018))
+-       {
+-		writel(0x00001000, flash->mmio_base+IPBGCSFLSHNTWK_SFC_SFC_TX_RX_DATA_CNT_REG);
+-               writel(0x00000040, flash->mmio_base+IPBGCSFLSHNTWK_SFC_SFC_SP_CMD_RD_WR0_DATA_REG);
+-       }
+-       else
+-       {
+-		writel(0x00002000, flash->mmio_base+IPBGCSFLSHNTWK_SFC_SFC_TX_RX_DATA_CNT_REG);
+-		writel(0x00000200, flash->mmio_base+IPBGCSFLSHNTWK_SFC_SFC_SP_CMD_RD_WR0_DATA_REG);
+-	}
+-	writel(0x00000000, flash->mmio_base+IPBGCSFLSHNTWK_SFC_SFC_SP_CMD_RD_WR1_DATA_REG);
+-	writel(0x010D0203, flash->mmio_base+IPBGCSFLSHNTWK_SFC_SFC_DEVICE_CMD_REG);
+-	nx_sfc_wait(flash->mmio_base);
++   nx_sfc_write_en(flash->mmio_base);
++   writel(0x00020005, flash->mmio_base+IPBGCSFLSHNTWK_SFC_SFC_CSR_REG);
++   writel(0x10000000, flash->mmio_base+IPBGCSFLSHNTWK_SFC_SFC_PROTOCOL_DELAY_REG);
++   if((flash->info.jedec_id >= MACRONIX_ID_MIN)&&(flash->info.jedec_id <= MACRONIX_ID_MAX))
++   {
++      writel(0x00001000, flash->mmio_base+IPBGCSFLSHNTWK_SFC_SFC_TX_RX_DATA_CNT_REG);
++      writel(0x00000040, flash->mmio_base+IPBGCSFLSHNTWK_SFC_SFC_SP_CMD_RD_WR0_DATA_REG);
++   }
++   else
++   {
++      writel(0x00002000, flash->mmio_base+IPBGCSFLSHNTWK_SFC_SFC_TX_RX_DATA_CNT_REG);
++      writel(0x00000200, flash->mmio_base+IPBGCSFLSHNTWK_SFC_SFC_SP_CMD_RD_WR0_DATA_REG);
++   }
++   writel(0x00000000, flash->mmio_base+IPBGCSFLSHNTWK_SFC_SFC_SP_CMD_RD_WR1_DATA_REG);
++   writel(0x010D0203, flash->mmio_base+IPBGCSFLSHNTWK_SFC_SFC_DEVICE_CMD_REG);
++   nx_sfc_wait(flash->mmio_base);
+ }
+ 
+ 
+ void nx_sfc_reset_quad_bit(struct nx_sfc_mtd *flash)
+ {
+-	nx_sfc_reset(flash->mmio_base);
+-	nx_sfc_write_en(flash->mmio_base);
+-	writel(0x00020005, flash->mmio_base+IPBGCSFLSHNTWK_SFC_SFC_CSR_REG);
+-	writel(0x10000000, flash->mmio_base+IPBGCSFLSHNTWK_SFC_SFC_PROTOCOL_DELAY_REG);
+-       if((flash->info.jedec_id == 0xc22019)||(flash->info.jedec_id == 0xc22018))
+-       {
+-                writel(0x00001000, flash->mmio_base+IPBGCSFLSHNTWK_SFC_SFC_TX_RX_DATA_CNT_REG);
+-                writel(0x00000000, flash->mmio_base+IPBGCSFLSHNTWK_SFC_SFC_SP_CMD_RD_WR0_DATA_REG);
+-       }
+-       else
+-       {
+-		writel(0x00002000, flash->mmio_base+IPBGCSFLSHNTWK_SFC_SFC_TX_RX_DATA_CNT_REG);
+-		writel(0x00000000, flash->mmio_base+IPBGCSFLSHNTWK_SFC_SFC_SP_CMD_RD_WR0_DATA_REG);
+-	}
+-	writel(0x00000000, flash->mmio_base+IPBGCSFLSHNTWK_SFC_SFC_SP_CMD_RD_WR1_DATA_REG);
+-	writel(0x010D0203, flash->mmio_base+IPBGCSFLSHNTWK_SFC_SFC_DEVICE_CMD_REG);
+-	nx_sfc_wait(flash->mmio_base);
++   nx_sfc_reset(flash->mmio_base);
++   nx_sfc_write_en(flash->mmio_base);
++   writel(0x00020005, flash->mmio_base+IPBGCSFLSHNTWK_SFC_SFC_CSR_REG);
++   writel(0x10000000, flash->mmio_base+IPBGCSFLSHNTWK_SFC_SFC_PROTOCOL_DELAY_REG);
++   if((flash->info.jedec_id >= MACRONIX_ID_MIN)&&(flash->info.jedec_id <= MACRONIX_ID_MAX))
++   {
++      writel(0x00001000, flash->mmio_base+IPBGCSFLSHNTWK_SFC_SFC_TX_RX_DATA_CNT_REG);
++      writel(0x00000000, flash->mmio_base+IPBGCSFLSHNTWK_SFC_SFC_SP_CMD_RD_WR0_DATA_REG);
++   }
++   else
++   {
++      writel(0x00002000, flash->mmio_base+IPBGCSFLSHNTWK_SFC_SFC_TX_RX_DATA_CNT_REG);
++      writel(0x00000000, flash->mmio_base+IPBGCSFLSHNTWK_SFC_SFC_SP_CMD_RD_WR0_DATA_REG);
++   }
++   writel(0x00000000, flash->mmio_base+IPBGCSFLSHNTWK_SFC_SFC_SP_CMD_RD_WR1_DATA_REG);
++   writel(0x010D0203, flash->mmio_base+IPBGCSFLSHNTWK_SFC_SFC_DEVICE_CMD_REG);
++   nx_sfc_wait(flash->mmio_base);
+ }
+ 
+ void nx_sfc_init(void __iomem * sfc_regs)
+@@ -611,7 +633,7 @@ int wait_till_ready(struct nx_sfc_mtd *f
+    int sr;
+ 
+    if(flash->cd.command[0] == OPCODE_CHIP_ERASE)
+-	  deadline = jiffies + MAX_READY_WAIT_CHIP_ERASE_JIFFIES;
++     deadline = jiffies + MAX_READY_WAIT_CHIP_ERASE_JIFFIES;
+    else
+       deadline = jiffies + MAX_READY_WAIT_JIFFIES;
+ 
+@@ -633,7 +655,7 @@ int wait_till_ready_wr(struct nx_sfc_mtd
+    int sr;
+ 
+    if(flash->cd.command[0] == OPCODE_CHIP_ERASE)
+-	  deadline = jiffies + MAX_READY_WAIT_CHIP_ERASE_JIFFIES;
++     deadline = jiffies + MAX_READY_WAIT_CHIP_ERASE_JIFFIES;
+    else
+       deadline = jiffies + MAX_READY_WAIT_JIFFIES;
+ 
+@@ -779,24 +801,19 @@ inline void sfc_sync(struct nx_sfc_mtd *
+    {
+       write_enable(flash);
+       wait_till_ready_wr(flash);
+-      #ifdef SFC_DMAC_ENABLE
++#ifdef SFC_DMAC_ENABLE
+       if (page_size == FLASH_PAGESIZE)
+          nx_sfc_write(flash);
+-      #endif
++#endif
+       nx_sfc_prefetch_write(flash);
+    }
+    else
+    {
+-      #ifdef CONFIG_MTD_NX_SFC_QUAD_MODE
++#ifdef CONFIG_MTD_NX_SFC_QUAD_MODE
+       nx_sfc_read_quad(flash);
+-      #else
+-      #ifdef SFC_DMAC_ENABLE
+-      if (page_size == FLASH_PAGESIZE)
+-      		nx_sfc_read(flash);
+-      else
+-      #endif
+-      		nx_sfc_prefetch_read(flash);
+-      #endif
++#else
++      nx_sfc_prefetch_read(flash);
++#endif
+    }
+ }
+ 
+@@ -853,8 +870,8 @@ static int nx_sfc_mtd_read(struct mtd_in
+    {
+       page_size = len - i;
+ 
+-      if (page_size > FLASH_PAGESIZE)
+-         page_size = FLASH_PAGESIZE;
++      if (page_size > FLASH_READ_SIZE)
++         page_size = FLASH_READ_SIZE;
+ 
+       sfc_sync(flash, from, buf, page_size, pgoffset, 0);
+    }
+@@ -1161,26 +1178,28 @@ static int __devinit nx_sfc_probe(struct
+ 
+ #ifdef CONFIG_MTD_NX_SFC_QUAD_MODE
+    sfc_dcsn_base = readl(SFC_DCSN_BASE_REG);
+-   if (!request_mem_region(sfc_dcsn_base, SFC_DCSN_SIZE, pdev->name)) {
+-         dev_err(&pdev->dev, "request_mem_region for io failure\n");
+-         return -EBUSY;
++   if (!request_mem_region(sfc_dcsn_base, SFC_DCSN_SIZE, pdev->name))
++   {
++      dev_err(&pdev->dev, "request_mem_region for io failure\n");
++      return -EBUSY;
+    }
+ 
+    io_regs = ioremap(sfc_dcsn_base, SFC_DCSN_SIZE );
+-   if(!io_regs) {
+-         dev_err(&pdev->dev, "ioremap for io failure\n");
+-         err = -ENOMEM;
+-         return err;
++   if(!io_regs)
++   {
++      dev_err(&pdev->dev, "ioremap for io failure\n");
++      err = -ENOMEM;
++      return err;
+    }
+ 
+  #endif
+    
+    nx_sfc_init(mmio_regs);
+-   #ifdef SFC_DMAC_ENABLE
+-   err = nx_sfc_dma_init();
++#ifdef CONFIG_MTD_NX_SFC_DMAC_EN
++   err = nx_sfc_dma_init(pdev);
+    if (err)
+    return err;
+-   #endif
++#endif
+ 
+    flash = kzalloc(sizeof *flash, GFP_KERNEL);
+    if (!flash)
+@@ -1204,7 +1223,7 @@ static int __devinit nx_sfc_probe(struct
+    flash->mmio_len      = mmio_len;
+    flash->mmio_base     = mmio_regs;
+ #ifdef CONFIG_MTD_NX_SFC_QUAD_MODE
+-   flash->io_base		= io_regs;
++   flash->io_base    = io_regs;
+ #endif
+ 
+    /* Platform data helps sort out which chip type we have, as
+@@ -1346,6 +1365,9 @@ static int __devexit nx_sfc_remove(struc
+       status = del_mtd_device(&flash->mtd);
+    if (status == 0)
+       kfree(flash);
++#ifdef CONFIG_MTD_NX_SFC_DMAC_EN
++   nx_sfc_dma_exit(spi);
++#endif
+    return 0;
+ }
+ 
+diff -Naurp linux-2.6.34_orig/drivers/mtd/sfc/nx_sfc.h linux-2.6.34/drivers/mtd/sfc/nx_sfc.h
+--- linux-2.6.34_orig/drivers/mtd/sfc/nx_sfc.h	2011-05-04 18:32:26.219080000 +0530
++++ linux-2.6.34/drivers/mtd/sfc/nx_sfc.h	2011-05-05 19:21:13.578653000 +0530
+@@ -1,6 +1,9 @@
+ #ifndef NX_SFC_FLASH_H
+ #define NX_SFC_FLASH_H
+ 
++   #define SFC_DCSN_BASE_REG        (MMIO_GCS_BASE + 0x14)
++   #define NX_DMA_SFC_BASE_ADDR_REG (MMIO_GCS_BASE + 0x40)
++
+    #define IPBGCSFLSHNTWK_BASE 0x0
+    #define IPBGCSFLSHNTWK_SFC_SFC_VERSION_ID_REG  (0x00)
+    #define IPBGCSFLSHNTWK_SFC_SFC_VERSION_ID_VERSION_R (0x07fffffff << 0)
+@@ -488,7 +491,7 @@ struct nx_sfc_device
+    dmabuf_phy;
+ };
+ #endif
+-void nx_sfc_32b_en(struct nx_sfc_mtd *flash);
++void nx_sfc_32b_en(struct nx_sfc_mtd *flash, bool isread);
+ void nx_sfc_write_en(void __iomem  * sfc_regs);
+ u32 nx_sfc_read_RSCUR(void __iomem  * sfc_regs);
+ void nx_sfc_32b_dis(struct nx_sfc_mtd *flash);
+diff -Naurp linux-2.6.34_orig/drivers/mtd/sfc/sfc_dmac.c linux-2.6.34/drivers/mtd/sfc/sfc_dmac.c
+--- linux-2.6.34_orig/drivers/mtd/sfc/sfc_dmac.c	2011-05-04 18:32:26.220084000 +0530
++++ linux-2.6.34/drivers/mtd/sfc/sfc_dmac.c	2011-05-05 19:21:13.580657000 +0530
+@@ -52,48 +52,49 @@
+ 
+ #define MAX_NX_DMAC_1902_CHANNELS            (8)
+ 
+-void __iomem *dma_base;
++static void __iomem *dma_base;
+ 
+-extern volatile bool nor_dma_done;
++extern volatile bool sfc_dma_done, sfc_dma_error;
+ 
+-int nx_sfc_dma_init(void)
++static unsigned int phys_bounce_read_buffer;
++static void  *virt_bounce_read_buffer;
++
++int nx_sfc_dma_init(struct platform_device *pdev)
+ {
+    struct resource *res_reg;
+-   struct platform_device *pdev;
+-   extern struct platform_device dmac_1902_gcs_device;
+-
+-   pdev = &dmac_1902_gcs_device;
+-
+-   res_reg = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-   if (res_reg == NULL)
+-     return -ENXIO;
+-   
+-   dma_base = devm_ioremap( &pdev->dev, res_reg->start, (res_reg->end - res_reg->start + 1 ));
+-   if( !dma_base )
+-     return -ENXIO;
++   res_reg = platform_get_resource(pdev, IORESOURCE_MEM, 1);
++   if (res_reg == NULL) 
++   {
++      printk(KERN_ERR "SFC DMAC get resource failed \n");
++      return -ENXIO;
++   }
++   dma_base = (void *)res_reg->start;
++   virt_bounce_read_buffer = dmam_alloc_coherent(&pdev->dev, SZ_4K, &phys_bounce_read_buffer, GFP_DMA | GFP_KERNEL);
++   if(!virt_bounce_read_buffer) 
++   {
++      printk(KERN_ERR "nx_sfc: DMA read buf alloc fail\r\n");
++      return -ENOMEM;
++   }
+ 
+-   /* disable the DMA controller */
+-   //writel( NX_DMAC_1902_DMAC_DISABLE, dma_base+NX_DMAC_1902_REG_DMAC_CONFIG);
+ 
+    /* disable the DMA channel */
+    writel(NX_DMAC_1902_DMAC_CHAN_DISABLE, 
+-      dma_base+NX_DMAC_1902_REG_CHAN_BASE(NX_DMAC_NOR_DMA_CHANNEL_ID)+
++      dma_base+NX_DMAC_1902_REG_CHAN_BASE(NX_DMAC_SFC_DMA_CHANNEL_ID)+
+       NX_DMAC_1902_REG_CHAN_CONFIG);
+ 
+    /* clear the error interrupt status */
+-   writel((1<<NX_DMAC_NOR_DMA_CHANNEL_ID), 
+-      dma_base+NX_DMAC_1902_REG_INT_ERR_CLEAR);
++   writel((1<<NX_DMAC_SFC_DMA_CHANNEL_ID), dma_base+NX_DMAC_1902_REG_INT_ERR_CLEAR);
+ 
+    /* clear the tc interrupt status */
+-   writel((1<<NX_DMAC_NOR_DMA_CHANNEL_ID), 
+-      dma_base+NX_DMAC_1902_REG_INT_TC_CLEAR);
+-
+-   /* enable the DMA controller */
+-   //writel( NX_DMAC_1902_DMAC_ENABLE, dma_base+NX_DMAC_1902_REG_DMAC_CONFIG);
+-
++   writel((1<<NX_DMAC_SFC_DMA_CHANNEL_ID), dma_base+NX_DMAC_1902_REG_INT_TC_CLEAR);
+    return 0;
+ }
+ 
++void nx_sfc_dma_exit(struct platform_device *pdev)
++{
++   dmam_free_coherent(&pdev->dev, SZ_4K, virt_bounce_read_buffer, phys_bounce_read_buffer);
++}
++
+ void nx_sfc_dma_start(
+    u32 src_addr, 
+    u32 dst_addr, 
+@@ -103,9 +104,19 @@ void nx_sfc_dma_start(
+    u32 control = 0;
+    u32 config  = 0;
+ 
+-   nor_dma_done = false;
++   sfc_dma_done = false;
++   sfc_dma_error = false;
+ 
+-#if 0
++   if (src_addr%4)
++   {
++      printk(KERN_INFO "nx_sfc_dma_start :: src_addr not aligned\n");
++      return;
++   }
++   if (dst_addr%4)
++   {
++      printk(KERN_INFO "nx_sfc_dma_start :: dst_addr not aligned\n");
++      return;
++   }
+    control |= NX_DMAC_1902_INT_ENABLE;
+    control |= NX_DMAC_1902_CHAN_CNTRL_DST_INCR(1);
+    control |= NX_DMAC_1902_CHAN_CNTRL_SRC_INCR(1);
+@@ -113,8 +124,6 @@ void nx_sfc_dma_start(
+    {
+       control |= NX_DMAC_1902_CHAN_CNTRL_DST_AHB(nx_dmac_1902_ahb_master_2);
+       control |= NX_DMAC_1902_CHAN_CNTRL_SRC_AHB(nx_dmac_1902_ahb_master_1);
+-      //control |= NX_DMAC_1902_CHAN_CNTRL_DST_WIDTH(map->bankwidth>>1);
+-      //control |= NX_DMAC_1902_CHAN_CNTRL_SRC_WIDTH(map->bankwidth>>1);
+       control |= NX_DMAC_1902_CHAN_CNTRL_DST_WIDTH(0x2);
+       control |= NX_DMAC_1902_CHAN_CNTRL_SRC_WIDTH(0x2);
+    }
+@@ -127,37 +136,25 @@ void nx_sfc_dma_start(
+    }
+    control |= NX_DMAC_1902_CHAN_CNTRL_DST_BURST(nx_dmac_1902_burst_256);
+    control |= NX_DMAC_1902_CHAN_CNTRL_SRC_BURST(nx_dmac_1902_burst_256);
+-   control |= ((xfer_count)/4); //32 byte xfer width
+-#endif   
+-   
+-   if(iswrite)
+-      control = 0x8E4AD040;
+-   else
+-      control = 0x8d4b6040;
++   control |= ((xfer_count)/4); //32 bit xfer width
+ 
+-   //config = NX_DMAC_1902_UNMASK_INT;
+-   config = 0xC001;
++   config = NX_DMAC_1902_UNMASK_INT;
+ 
+    writel(src_addr, 
+-      dma_base+NX_DMAC_1902_REG_CHAN_BASE(NX_DMAC_NOR_DMA_CHANNEL_ID) +
++      dma_base+NX_DMAC_1902_REG_CHAN_BASE(NX_DMAC_SFC_DMA_CHANNEL_ID) +
+       NX_DMAC_1902_REG_CHAN_SRC_ADDR);
+    writel(dst_addr, 
+-      dma_base+NX_DMAC_1902_REG_CHAN_BASE(NX_DMAC_NOR_DMA_CHANNEL_ID) +
++      dma_base+NX_DMAC_1902_REG_CHAN_BASE(NX_DMAC_SFC_DMA_CHANNEL_ID) +
+       NX_DMAC_1902_REG_CHAN_DST_ADDR);
+    writel(0, 
+-      dma_base+NX_DMAC_1902_REG_CHAN_BASE(NX_DMAC_NOR_DMA_CHANNEL_ID) +
++      dma_base+NX_DMAC_1902_REG_CHAN_BASE(NX_DMAC_SFC_DMA_CHANNEL_ID) +
+       NX_DMAC_1902_REG_CHAN_LLI_ADDR);
+    writel(control, 
+-      dma_base+NX_DMAC_1902_REG_CHAN_BASE(NX_DMAC_NOR_DMA_CHANNEL_ID) +
++      dma_base+NX_DMAC_1902_REG_CHAN_BASE(NX_DMAC_SFC_DMA_CHANNEL_ID) +
+       NX_DMAC_1902_REG_CHAN_CONTROL);
+-   #if 0
+-   writel((config | NX_DMAC_1902_DMAC_CHAN_ENABLE), 
+-      dma_base+NX_DMAC_1902_REG_CHAN_BASE(NX_DMAC_NOR_DMA_CHANNEL_ID) +
+-      NX_DMAC_1902_REG_CHAN_CONFIG);
+-   #endif
+    
+-      writel(config , 
+-      dma_base+NX_DMAC_1902_REG_CHAN_BASE(NX_DMAC_NOR_DMA_CHANNEL_ID) +
++   writel(config | NX_DMAC_1902_DMAC_CHAN_ENABLE, 
++      dma_base+NX_DMAC_1902_REG_CHAN_BASE(NX_DMAC_SFC_DMA_CHANNEL_ID) +
+       NX_DMAC_1902_REG_CHAN_CONFIG);
+ }
+ 
+@@ -165,39 +162,45 @@ int nx_sfc_dma_completion_wait(void)
+ {
+    unsigned long dma_wait_timeout = jiffies + msecs_to_jiffies(10000);
+ 
+-   do 
++   do
+    {
+       if (time_after_eq(jiffies, dma_wait_timeout)) 
+       {
+          printk(KERN_ERR "nx_sfc_dma_completion_wait: timeout!\n");
+          return -EIO;
+       }
+-   } while (nor_dma_done == false);
++   } while (sfc_dma_done == false);
+ 
+    /* disable the DMA channel */
+    writel(NX_DMAC_1902_DMAC_CHAN_DISABLE, 
+-      dma_base+NX_DMAC_1902_REG_CHAN_BASE(NX_DMAC_NOR_DMA_CHANNEL_ID)+
++      dma_base+NX_DMAC_1902_REG_CHAN_BASE(NX_DMAC_SFC_DMA_CHANNEL_ID)+
+       NX_DMAC_1902_REG_CHAN_CONFIG);
+ 
++   /* See if there is any error from GCS DMA */
++   if(sfc_dma_error)
++   {
++       printk(KERN_ERR "nx_nor_dma_completion_wait: Error in NOR DMA!\n");
++       return -EIO;
++   }
+    return 0;
+ }
+ 
+ void nx_sfc_map_copy_from(void *to, unsigned long from, ssize_t len)
+ {
+-   dma_addr_t dma_dst;
+    int status;
+-  
+-   dma_dst = dma_map_single(NULL, to, len, DMA_FROM_DEVICE);
+-
+-   nx_sfc_dma_start(from, dma_dst, len, 0);
+-
++   unsigned long xfer_count= len;
++   if(xfer_count%4)
++   {
++      xfer_count = xfer_count + (4-(xfer_count%4));
++   }
++   nx_sfc_dma_start(from, phys_bounce_read_buffer, xfer_count, 0);
+    status = nx_sfc_dma_completion_wait();
+    if (status)
+    {
+       printk(KERN_ERR "nx_sfc_map_copy_from: nx_sfc_dma_completion_wait failed.\n");
+       return;
+    }
+-   
++   memcpy(to, virt_bounce_read_buffer, len);
+    return;
+ }
+ 
+@@ -207,20 +210,14 @@ void nx_sfc_map_copy_to (unsigned long t
+    dma_addr_t dma_src;
+    int status;
+    u32 src = (u32)from;
+-
+-   
+    dma_src = dma_map_single(NULL, (void *)src, len, DMA_TO_DEVICE);
+-
+    nx_sfc_dma_start(dma_src, to, len, 1);
+-
+    status = nx_sfc_dma_completion_wait();
+    if (status)
+    {
+       printk(KERN_ERR "nx_sfc_map_copy_to: nx_sfc_dma_completion_wait failed.\n");
+       return;
+    }
+-
+-
+    return;
+ }
+ 
+diff -Naurp linux-2.6.34_orig/include/linux/nx_dmac.h linux-2.6.34/include/linux/nx_dmac.h
+--- linux-2.6.34_orig/include/linux/nx_dmac.h	2011-05-04 18:32:51.778948000 +0530
++++ linux-2.6.34/include/linux/nx_dmac.h	2011-05-05 19:21:13.590658000 +0530
+@@ -194,6 +194,7 @@ struct nx_dmac_t {
+ 
+ /* NAND+NOR DMA support -> used by nx_dmac.c and nx_nor.c */
+ #define NX_DMAC_NOR_DMA_CHANNEL_ID  (7)
++#define NX_DMAC_SFC_DMA_CHANNEL_ID  (6)
+ 
+ #endif /* __KERNEL__ */
+ 

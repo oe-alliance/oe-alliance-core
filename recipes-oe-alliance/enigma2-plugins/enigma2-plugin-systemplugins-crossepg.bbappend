@@ -1,4 +1,7 @@
-PRINC = "9"
+SRCREV = "${AUTOREV}"
+PV = "0.7.02"
+PKGV = "${PV}+git${GITPKGV}"
+PRINC = "2"
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
@@ -6,7 +9,18 @@ SRC_URI = "git://github.com/oe-alliance/e2openplugin-${MODULE}.git;protocol=git"
 
 # Dunno why, but it sometime fails to build in parallel
 PARALLEL_MAKE = ""
+CFLAGS_append = " -I${STAGING_INCDIR}/libxml2/ -I${STAGING_INCDIR}/${PYTHON_DIR}/"
 
+S = "${WORKDIR}/git"
+
+do_compile() {
+    echo ${PV} > ${S}/VERSION
+    oe_runmake SWIG="swig"
+}
+
+do_install() {
+    oe_runmake 'D=${D}' install
+}
 PACKAGE_STRIP = "no"
 
 pkg_postrm_${PN}() {

@@ -1,0 +1,14 @@
+diff -Naurp linux-2.6.34/arch/arm/mach-kronos/nx_sdiomc_dev.c linux-2.6.34_mod/arch/arm/mach-kronos/nx_sdiomc_dev.c
+--- linux-2.6.34/arch/arm/mach-kronos/nx_sdiomc_dev.c	2012-04-09 19:16:16.832663000 +0530
++++ linux-2.6.34_mod/arch/arm/mach-kronos/nx_sdiomc_dev.c	2012-04-09 19:14:20.493818000 +0530
+@@ -103,8 +103,8 @@ static void __init apollo_sdiomc_pin_mux
+    writel(val, GPIO_SEC_PIN_MUX_REG_5);
+    
+    val = readl(ALT_PIN_MUX_REG_0);
+-   val &= ~(0x08802008);   // alt13_dbgi2c=0, alt23=0, alt27_sdcmd=0, alt03_656=0
+-   val |=   0x40001020;    // alt12_uart2=1, alt05_sdio=1, alt30_sdio=1
++   val &= ~(0x08802028);   // alt13_dbgi2c=0, alt23=0, alt27_sdcmd=0,alt05_sdio=0, alt03_656=0
++   val |=   0x40001000;    // alt12_uart2=1, alt30_sdio=1
+    writel(val, ALT_PIN_MUX_REG_0);
+ 
+    val = readl(ALT_PIN_MUX_REG_1);

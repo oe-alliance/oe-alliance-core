@@ -877,6 +877,7 @@ CONFIG_MTD_BLOCK2MTD=y
 # CONFIG_MTD_NAND is not set
 # CONFIG_MTD_ONENAND is not set
 
+
 #
 # LPDDR flash memory drivers
 #

@@ -7,11 +7,11 @@ inherit gitpkgv pythonnative
 
 SRCREV = "${AUTOREV}"
 # SRCREV = "ebdc7c77f88c7fb50c642703786ff7d50bf3bd80"
-PV = "1.05+git${SRCPV}"
-PKGV = "1.05+git${GITPKGV}"
-PR = "r0"
+PV = "1.08+git${SRCPV}"
+PKGV = "1.08+git${GITPKGV}"
+PR = "r2"
 
-SRC_URI = "git://github.com/oe-alliance/DreamPlex.git;protocol=git"
+SRC_URI = "git://github.com/DonDavici/DreamPlex.git;protocol=git;branch=andyblac"
 
 S = "${WORKDIR}/git"
 
@@ -19,7 +19,7 @@ RDEPENDS_${PN} = "gst-plugins-bad-fragmented curl"
 
 PLUGIN = "DreamPlex"
 
-FILES_${PN} += "/usr/lib/enigma2/python/Plugins/Extensions/${PLUGIN}/skin"
+FILES_${PN} += "/usr/lib/enigma2/python/Plugins/Extensions/${PLUGIN}/skins"
 
 do_install() {
     mkdir -p ${D}/usr/lib/enigma2/python/Plugins/Extensions/${PLUGIN}

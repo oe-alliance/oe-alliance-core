@@ -1,0 +1,272 @@
+diff -Naur linux-2.6.34/arch/arm/mach-apollo/include/mach/usbudc.h linux-2.6.34_usb/arch/arm/mach-apollo/include/mach/usbudc.h
+--- linux-2.6.34/arch/arm/mach-apollo/include/mach/usbudc.h	2010-12-23 15:32:05.841435000 +0530
++++ linux-2.6.34_usb/arch/arm/mach-apollo/include/mach/usbudc.h	1970-01-01 05:30:00.000000000 +0530
+@@ -1,40 +0,0 @@
+-/*
+- * Copyright 2010 Trident Microsystems (Far East) Ltd. 
+- * All prior copyright rights in this work and the accompanying software 
+- * products transferred to Trident Microsystems (Far East) Ltd. by written 
+- * agreement.  All rights reserved.
+- */
+-/*
+- * Copyright 2006, 2007 (C) NXP BV, All Rights Reserved
+- * Author: OKC <okc.helpdesk@nxp.com>
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2 of the License, or
+- * (at your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program; if not, write to the Free Software
+- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+- */
+-
+-#ifndef __ASM_ARCH_USBUDC_H
+-#define __ASM_ARCH_USBUDC_H
+-
+-// USB_UDC_CHECK: the USB UDC driver is ported from two code bases. (a) FSL code (b) NOCONA code
+-// enable below macro for FSL port, disable below macro for NOCONA port.
+-// additionally, update the drivers/usb/gadget/Makefile accodingly.
+-
+-#ifndef CONFIG_USBCV_TEST	// NO USBCV test, perform USB UDC Normal operation.
+-#define	FSL_PORT			// use USB UDC driver ported from FSL codebase
+-//#define	NOCONA_PORT		// use USB UDC driver ported from NOCONA codebase
+-#else
+-#define	CI_PORT			// Perform USBCV tests, use USB UDC driver ported from CI13xxx_udc codebase
+-#endif
+-
+-#endif /* __ASM_ARCH_IRQS_H */
+diff -Naur linux-2.6.34/arch/arm/mach-apollo/pnx8492.c linux-2.6.34_usb/arch/arm/mach-apollo/pnx8492.c
+--- linux-2.6.34/arch/arm/mach-apollo/pnx8492.c	2010-12-23 15:32:08.020233000 +0530
++++ linux-2.6.34_usb/arch/arm/mach-apollo/pnx8492.c	2010-12-22 17:15:01.836486000 +0530
+@@ -56,7 +56,6 @@
+ #include <mach/irqs.h>
+ 
+ #include <mach/nor.h>
+-#include <mach/usbudc.h>
+ 
+ #ifdef CONFIG_APOLLO_SPLASH
+ #include <mach/splash_logo.h>
+@@ -294,11 +293,9 @@
+ static u64 ehci_dmamask = ~(u32)0;      /* The dmamask must be set for EHCI to work */
+ 
+ /****** USB0: 0xE066C000: USB OTG ******/
+-#ifndef NOCONA_PORT// ENABLE THIS, WHEN USING FSL PORT or CI PORT... DISABLE FOR NOCONA PORT...
+-//USB_UDC_CHECK use Nevis cnxt_udc0 driver for NOCONA PORT...
+ static struct resource usb0_resources[] = {
+         [0] = {
+-                .start  = IP9028_USB_PORT_0,            // 0xe066c000: USB OTG
++                .start  = IP9028_USB_PORT_0,
+                 .end            = IP9028_USB_PORT_0 + 0xfff,
+                 .flags  = IORESOURCE_MEM,
+         },
+@@ -311,15 +308,9 @@
+ 
+ static struct platform_device usb0_device = {
+ #ifdef CONFIG_USB_GADGET_IP9028
+-	#ifdef FSL_PORT
+-            .name          = "ip9028_udc_udc",		/* device mode, MUST to have 14-character name */
+-            //.name          = "ip9028_otg_usb",	/*  OTG dev. drv. */
+-	#endif
+-	#ifdef CI_PORT
+-            .name          = "ci13xxx_udc_udc",		/* OTG dev. drv. */
+-	#endif
++            .name          = "ip9028_udc_udc", /* device mode, MUST to have 14-character name */
+ #else
+-            .name          = "usb-ip9028",    /* Host only dev. drv. */
++            .name          = "usb-ip9028",     /* Host only dev. drv. */
+ #endif
+                 .id                     = 0,
+                 .dev                    = {
+@@ -329,12 +320,11 @@
+         .num_resources  = ARRAY_SIZE(usb0_resources),
+         .resource       = usb0_resources,
+ };
+-#endif
+ 
+ /****** USB1: 0xE066D000: USB2.0 ALWAYS HOST ******/
+ static struct resource usb1_resources[] = {
+         [0] = {
+-                .start  = IP9028_USB_PORT_1,            // 0xe066d000: USB2.0 Always Host
++                .start  = IP9028_USB_PORT_1,  
+                 .end            = IP9028_USB_PORT_1 + 0xfff,
+                 .flags  = IORESOURCE_MEM,
+         },
+@@ -346,7 +336,7 @@
+ };
+ 
+ static struct platform_device usb1_device = {
+-                .name                   = "usb-ip9028",                 /* Host only dev. drv. */
++                .name                   = "usb-ip9028",
+                 .id                     = 1,
+                 .dev                    = {
+                 .dma_mask               = &ehci_dmamask,
+@@ -359,7 +349,7 @@
+ /****** USB2: 0xE066E000: USB1.1 ALWAYS HOST ******/
+ static struct resource usb2_resources[] = {
+         [0] = {
+-                .start  = IP9028_USB_PORT_2,            // 0xe066e000: USB1.1 Always Host
++                .start  = IP9028_USB_PORT_2,
+                 .end            = IP9028_USB_PORT_2 + 0xfff,
+                 .flags  = IORESOURCE_MEM,
+         },
+@@ -371,8 +361,8 @@
+ };
+ 
+ static struct platform_device usb2_device = {
+-                .name                   = "usb-ip9028",	// "ohci_hcd",                   /* Host only dev. drv. */
+-                .id                     = 2,		// 0,
++                .name                   = "usb-ip9028",
++                .id                     = 2,
+                 .dev                    = {
+                 .dma_mask               = &ehci_dmamask,
+                 .coherent_dma_mask      = 0xffffffff,
+@@ -404,9 +394,7 @@
+ 	&uart2_device,
+ 	&uart3_device,
+ #ifdef CONFIG_USB
+-	#ifndef NOCONA_PORT
+-	&usb0_device,	// ENABLE THIS, WHEN USING FSL PORT... DISABLE FOR NOCONA PORT...
+-	#endif
++	&usb0_device,
+ 	&usb1_device,
+ 	&usb2_device,
+ #endif
+diff -Naur linux-2.6.34/drivers/usb/gadget/epautoconf.c linux-2.6.34_usb/drivers/usb/gadget/epautoconf.c
+--- linux-2.6.34/drivers/usb/gadget/epautoconf.c	2010-12-23 15:32:08.034235000 +0530
++++ linux-2.6.34_usb/drivers/usb/gadget/epautoconf.c	2010-12-23 14:29:47.084431000 +0530
+@@ -182,14 +182,13 @@
+ 		/* min() doesn't work on bitfields with gcc-3.5 */
+ 
+ 		/* Support all speeds */
+-		printk("Support all speeds.\n");
+ 		if ( (gadget->speed == USB_SPEED_LOW) ||  (gadget->speed == USB_SPEED_FULL) )
+ 			size = 64;
+ 		else if (gadget->speed == USB_SPEED_HIGH)
+ 			size = 512;
+ 		else
+ 			size = 512;	// USB_SPEED_UNKNOWN, USB_SPEED_WIRELESS, USB_SPEED_SUPER
+-		printk("Max packet size = %d\n", size);
++		printk(KERN_DEBUG "Max packet size = %d\n", size);
+ 		desc->wMaxPacketSize = cpu_to_le16(size);
+ 	}
+ 	return 1;
+@@ -292,7 +291,6 @@
+ 			return ep;
+ #endif
+ 	}else {						
+-		printk("==== usb_ep_autoconfig.... \n");
+ 		ep = find_ep (gadget, "ep1-bulk");
+ 		if (ep && ep_matches (gadget, ep, desc))
+ 			return ep;
+diff -Naur linux-2.6.34/drivers/usb/gadget/file_storage.c linux-2.6.34_usb/drivers/usb/gadget/file_storage.c
+--- linux-2.6.34/drivers/usb/gadget/file_storage.c	2010-12-23 15:32:08.038214000 +0530
++++ linux-2.6.34_usb/drivers/usb/gadget/file_storage.c	2010-12-23 14:28:48.193215000 +0530
+@@ -1554,7 +1554,7 @@
+ 	u8	*buf = (u8 *) bh->buf;
+ 
+ 	static char vendor_id[] = "Linux   ";
+-	static char product_disk_id[] = "Trident MSC Devi";
++	static char product_disk_id[] =  "Trident MSC Dev ";
+ 	static char product_cdrom_id[] = "File-CD Gadget  ";
+ 
+ 	if (!fsg->curlun) {		// Unsupported LUNs are okay
+diff -Naur linux-2.6.34/drivers/usb/gadget/gadget_chips.h linux-2.6.34_usb/drivers/usb/gadget/gadget_chips.h
+--- linux-2.6.34/drivers/usb/gadget/gadget_chips.h	2010-12-23 15:32:07.610268000 +0530
++++ linux-2.6.34_usb/drivers/usb/gadget/gadget_chips.h	2010-12-22 17:18:40.850749000 +0530
+@@ -12,7 +12,6 @@
+  * yet pushed in the 2.6 mainline tree.
+  */
+ 
+-#include <mach/usbudc.h>
+ #ifndef __GADGET_CHIPS_H
+ #define __GADGET_CHIPS_H
+ 
+@@ -123,18 +122,7 @@
+ 
+ 
+ #ifdef CONFIG_USB_GADGET_IP9028
+-
+-	#ifdef FSL_PORT
+-	//#define gadget_is_ip9028(g)	!strcmp("ip9028_otg_usb", (g)->name)		// Use FSL PORT..., Device mode
+-	#define gadget_is_ip9028(g)	!strcmp("ip9028_udc_udc", (g)->name)		// Use FSL PORT..., OTG mode
+-	#endif
+-	#ifdef NOCONA_PORT
+-	#define gadget_is_ip9028(g)	!strcmp("ci13xxx_udc_udc", (g)->name)		// Use CI PORT... Must to have 14-char name
+-	#endif
+-	#ifdef CI_PORT
+-	#define gadget_is_ip9028(g)	!strcmp("ci13xxx_udc", (g)->name)
+-	#endif
+-	
++#define gadget_is_ip9028(g)	!strcmp("ip9028_udc_udc", (g)->name)
+ #else
+ #define gadget_is_ip9028(g)	0
+ #endif
+diff -Naur linux-2.6.34/drivers/usb/gadget/ip9028_udc.c linux-2.6.34_usb/drivers/usb/gadget/ip9028_udc.c
+--- linux-2.6.34/drivers/usb/gadget/ip9028_udc.c	2010-12-23 15:32:08.041209000 +0530
++++ linux-2.6.34_usb/drivers/usb/gadget/ip9028_udc.c	2010-12-23 14:28:23.996161000 +0530
+@@ -45,10 +45,9 @@
+ #include <asm/unaligned.h>
+ #include <asm/dma.h>
+ 
+-#include <mach/usbudc.h>
+ #include "fsl_usb2_udc.h"
+ 
+-#define	DRIVER_DESC	"NXP IP9028 High-Speed USB SOC Device Controller driver"
++#define	DRIVER_DESC	"TRIDENT IP9028 High-Speed USB SOC Device Controller driver"
+ #define	DRIVER_AUTHOR	"Li Yang/Jiang Bo"
+ #define	DRIVER_VERSION	"Apr 20, 2007"
+ 
+@@ -618,7 +617,7 @@
+ 		case USB_SPEED_LOW:
+ 		case USB_SPEED_FULL:
+ 			max = le16_to_cpu(64);
+-			printk("ep_enable: MaxPacketSize set to 64\n");
++			printk(KERN_DEBUG "ep_enable, Full speed detected, MaxPacketSize set to 64\n");
+ 			break;
+ 
+ 		case USB_SPEED_UNKNOWN:
+@@ -626,12 +625,12 @@
+ 		case USB_SPEED_WIRELESS:
+ 		case USB_SPEED_SUPER:
+ 			max = le16_to_cpu(512);
+-			printk("ep_enable: MaxPacketSize set to 512\n");
++			printk(KERN_DEBUG "ep_enable: MaxPacketSize set to 512\n");
+ 			break;
+ 
+ 		default:
+ 			max = le16_to_cpu(512);
+-			printk("ep_enable: MaxPacketSize set to 64\n");
++			printk(KERN_DEBUG "ep_enable, default case, MaxPacketSize set to 64\n");
+ 			break;
+ 		}		
+ 	#endif
+diff -Naur linux-2.6.34/include/linux/usb/ip9028-otg.h linux-2.6.34_usb/include/linux/usb/ip9028-otg.h
+--- linux-2.6.34/include/linux/usb/ip9028-otg.h	2010-12-23 15:32:07.758276000 +0530
++++ linux-2.6.34_usb/include/linux/usb/ip9028-otg.h	2010-12-22 17:19:58.050516000 +0530
+@@ -20,19 +20,12 @@
+ #define __LINUX_USB_IP9028_OTG_H
+ 
+ #include <../drivers/usb/core/hcd.h>
+-#include <mach/usbudc.h>
+ 
+ extern const struct hc_driver ehci_ip9028_hc_driver;
+ 
+ int fsl_udc_otg_resume(void);
+-#ifdef FSL_PORT
+ extern int fsl_udc_otg_suspend(void);
+ extern int __init fsl_otg_udc_probe(struct device *dev, void *regs, int irq);	
+-#else
+-extern int cnxt_udc_suspend(void);		
+-extern int __init cnxt_udc_probe(struct platform_device *pdev);	
+-extern struct platform_device udc_device0;
+-#endif
+ 
+ int __exit fsl_otg_udc_remove(void);
+ 

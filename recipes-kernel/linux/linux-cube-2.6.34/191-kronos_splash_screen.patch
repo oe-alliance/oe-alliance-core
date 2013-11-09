@@ -1,0 +1,169 @@
+diff -Naurp linux-2.6.34/arch/arm/mach-kronos/kronos.c linux-2.6.34_splash/arch/arm/mach-kronos/kronos.c
+--- linux-2.6.34/arch/arm/mach-kronos/kronos.c	2011-12-13 17:10:15.808573000 +0530
++++ linux-2.6.34_splash/arch/arm/mach-kronos/kronos.c	2011-12-13 17:08:30.765065000 +0530
+@@ -56,7 +56,7 @@
+ 
+ #include <mach/nor.h>
+ 
+-#ifdef CONFIG_APOLLO_SPLASH
++#ifdef CONFIG_KRONOS_SPLASH
+ #include <mach/splash_logo.h>
+ #endif
+ 
+@@ -447,7 +447,7 @@ unsigned int GetChipID (void)
+ 
+ void __init apollo_init(void)
+ {
+-#ifdef CONFIG_APOLLO_SPLASH
++#ifdef CONFIG_KRONOS_SPLASH 
+    apollo_splash();
+ #endif
+    printk (KERN_INFO "Adding platform devices...\n");
+diff -Naurp linux-2.6.34/arch/arm/mach-kronos/splash_logo.c linux-2.6.34_splash/arch/arm/mach-kronos/splash_logo.c
+--- linux-2.6.34/arch/arm/mach-kronos/splash_logo.c	2011-12-13 17:10:14.752706000 +0530
++++ linux-2.6.34_splash/arch/arm/mach-kronos/splash_logo.c	2011-12-13 17:07:43.309959000 +0530
+@@ -18,8 +18,8 @@
+ #include <mach/apollo_logo.h>
+ 
+ #define APOLLO_MMIO_BASE_ADDR (0xE0600000)
+-#define APOLLO_CGU_BASE     (APOLLO_MMIO_BASE_ADDR + 0x0E7000)
+-#define APOLLO_GBL_REG_BASE (APOLLO_MMIO_BASE_ADDR + 0x0EA000)
++#define HOST_CGU_BASE		(APOLLO_MMIO_BASE_ADDR + 0x06A000)
++#define APOLLO_GBL_REG_BASE (APOLLO_MMIO_BASE_ADDR + 0x0BB000)
+ #define APOLLO_CPIPE_BASE   (APOLLO_MMIO_BASE_ADDR + 0x120000)
+ #define APOLLO_HDMI_TX_BASE (APOLLO_MMIO_BASE_ADDR + 0x179000)
+ #define APOLLO_DENC_BASE    (APOLLO_MMIO_BASE_ADDR + 0x17B000)
+@@ -39,19 +39,22 @@ void __init apollo_splash( void )
+    u32 __iomem * pInc;
+    unsigned char pixel_data[3];
+ 
++
++
+    /* HD DENC programming (HD-480p raster) */
+    writel( 0x00000001, (APOLLO_DENC_BASE + 0x120)); /* DENC csc sel  - YCbCr out */
+-   writel( 0x00000104, (APOLLO_DENC_BASE + 0x104)); /* DENC raster   -  eactive & 480p */
++   writel( 0x80000104, (APOLLO_DENC_BASE + 0x104)); /* DENC raster   -  eactive & 480p */
+    writel( 0x0000035a, (APOLLO_DENC_BASE + 0x108)); /* DENC Htotal */
+    writel( 0x02d0007a, (APOLLO_DENC_BASE + 0x10c)); /* DENC HActive */
+    writel( 0x01e00024, (APOLLO_DENC_BASE + 0x110)); /* DENC Vertical timing */
+    writel( 0x0000003f, (APOLLO_DENC_BASE + 0x00c)); /* DENC enable dacs - enable all the 6 DACs */
+-   writel( 0x00000201, (APOLLO_DENC_BASE + 0x010)); /* DENC  {CBA} dac selection - {rpr, bpb, gy} */
++   writel( 0x00020001, (APOLLO_DENC_BASE + 0x010)); /* DENC  {CBA} dac selection - {rpr, bpb, gy} */
+    writel( 0x00050603, (APOLLO_DENC_BASE + 0x014)); /* DENC  {FED} dac selection - all cvbs for initial validation */
+    writel( 0x00000000, (APOLLO_DENC_BASE + 0x180)); /* DENC Sync Control- don't invert Odd/even signal */
+ 
++
+    /* DENC programming (SD - 480i) */
+-   writel( 0x00000110, (APOLLO_DENC_BASE + 0x304)); /* DENC raster   - enable bits eactive & 480i(NTSC) */
++   writel( 0x80000110, (APOLLO_DENC_BASE + 0x304)); /* DENC raster   - enable bits eactive & 480i(NTSC) */
+    writel( 0x000006b4, (APOLLO_DENC_BASE + 0x308)); /* DENC Htotal */
+    writel( 0x05a00104, (APOLLO_DENC_BASE + 0x30c)); /* DENC HActive (orig - 0x0590010c) */
+    writel( 0x00f00013, (APOLLO_DENC_BASE + 0x310)); /* DENC Vertical timing */
+@@ -68,10 +71,9 @@ void __init apollo_splash( void )
+    writel( 0x00000000, (APOLLO_DENC_BASE + 0x194)); /* Macrovision OFF */
+ 
+    /* DAC0 Programming (Component DACs) */
+-   writel( 0x0011c00e, (APOLLO_GBL_REG_BASE + 0x8fc)); /*VDAC0_CTRL0 */
+-   writel( 0x52201712, (APOLLO_GBL_REG_BASE + 0x900)); /*VDAC0_CTRL1 */
++   writel( 0x00111f00, (APOLLO_GBL_REG_BASE + 0x8fc)); /*VDAC0_CTRL0 */
++   writel( 0x42001712, (APOLLO_GBL_REG_BASE + 0x900)); /*VDAC0_CTRL1 */
+    writel( 0x00000ff0, (APOLLO_GBL_REG_BASE + 0x904)); /*VDAC0_CTRL2 */
+-   writel( 0x00000124, (APOLLO_GBL_REG_BASE + 0x908)); /*VDAC0_CTRL3 source from MPEG0 PLL */
+    writel( 0x3f000071, (APOLLO_GBL_REG_BASE + 0x90c)); /*VDAC0_CTRL4 71-->70-->71 */
+    writel( 0x3f000070, (APOLLO_GBL_REG_BASE + 0x90c)); /*VDAC0_CTRL4 71-->70-->71 */
+    writel( 0x3f000071, (APOLLO_GBL_REG_BASE + 0x90c)); /*VDAC0_CTRL4 71-->70-->71 */
+@@ -83,7 +85,7 @@ void __init apollo_splash( void )
+    writel( 0x0011c00e, (APOLLO_GBL_REG_BASE + 0x920)); /*VDAC1_CTRL0 */
+    writel( 0x52201712, (APOLLO_GBL_REG_BASE + 0x924)); /*VDAC1_CTRL1 */
+    writel( 0x00000ff0, (APOLLO_GBL_REG_BASE + 0x928)); /*VDAC1_CTRL2 */
+-   writel( 0x00000124, (APOLLO_GBL_REG_BASE + 0x92c)); /*VDAC1_CTRL3 source from MPEG0 PLL */
++   writel( 0x00000000, (APOLLO_GBL_REG_BASE + 0x92c)); /*VDAC1_CTRL3 source from MPEG0 PLL */
+    writel( 0x3f000071, (APOLLO_GBL_REG_BASE + 0x930)); /*VDAC1_CTRL4 71-->70-->71 */
+    writel( 0x3f000070, (APOLLO_GBL_REG_BASE + 0x930)); /*VDAC1_CTRL4 71-->70-->71 */
+    writel( 0x3f000071, (APOLLO_GBL_REG_BASE + 0x930)); /*VDAC1_CTRL4 71-->70-->71 */
+@@ -91,21 +93,36 @@ void __init apollo_splash( void )
+    writel( 0x00000000, (APOLLO_GBL_REG_BASE + 0x938)); /*VDAC1_DTO_INCR0 */
+    writel( 0x00000000, (APOLLO_GBL_REG_BASE + 0x93c)); /*VDAC1_DTO_INCR1 */
+ 
+-   /******  Set up the DAC and CPIPE clocks */
+-   writel( 0x00000002, (APOLLO_CGU_BASE + 0x658)); /* vdac0_sel -- 74.25MHz mpg0 pll */
+-   writel( 0x00000002, (APOLLO_CGU_BASE + 0x65c)); /* vdac1_sel -- 74.25MHz */
+-   writel( 0x00000002, (APOLLO_CGU_BASE + 0x660)); /* vdac2_sel -- 74.25MHz */
+-
+-/* vdacs 3,4 and 5 are always Mpeg0 PLL, 74.25 MHz */
+-   writel( 0x00000002, (APOLLO_CGU_BASE + 0x664)); /* vdac3_sel -- 74.25MHz mpg0 pll */
+-   writel( 0x00000002, (APOLLO_CGU_BASE + 0x668)); /* vdac4_sel -- 74.25MHz */
+-   writel( 0x00000002, (APOLLO_CGU_BASE + 0x66c)); /* vdac5_sel -- 74.25MHz */
+-   writel( 0x00000005, (APOLLO_CGU_BASE + 0x640)); /* VCGEN_G1SEL -- 27MHz, MPG0 PLL */
+-   writel( 0x00000004, (APOLLO_CGU_BASE + 0x644)); /* VCGEN_G2SEL -- 54MHz, MPG0 PLL */
+-   writel( 0x00000006, (APOLLO_CGU_BASE + 0x648)); /* VCGEN_G3SEL -- 27MHz, MPG0 PLL */
+-   writel( 0x00000005, (APOLLO_CGU_BASE + 0x64c)); /* VCGEN_G4SEL -- 13.5MHz, MPG0 PLL */
+-   writel( 0x00000006, (APOLLO_CGU_BASE + 0x650)); /* VCGEN_G5SEL -- 27MHz, MPG0 PLL */
+-   writel( 0x00000000, (APOLLO_CGU_BASE + 0x654)); /* VCGEN_G6SEL -- 27MHz, MPG0 PLL */
++   /*  Set up the DAC and CPIPE clocks */
++   writel( 0x0024f881, (HOST_CGU_BASE + 0x02c)); /* vdac0_sel -- 74.25MHz mpg0 pll */
++   writel( 0x00000001, (HOST_CGU_BASE + 0x038)); /* vdac1_sel -- 74.25MHz */
++   writel( 0x000058e2, (HOST_CGU_BASE + 0x030)); /* vdac1_sel -- 74.25MHz */
++   writel( 0x76cccccd, (HOST_CGU_BASE + 0x03c)); /* vdac2_sel -- 74.25MHz */
++   /* vdacs 3,4 and 5 are always Mpeg0 PLL, 74.25 MHz */   
++   writel( 0x00000000, (HOST_CGU_BASE + 0x038)); /* vdac4_sel -- 74.25MHz */
++   writel( 0x00000000, (HOST_CGU_BASE + 0x040)); /* vdac5_sel -- 74.25MHz */
++   writel( 0x0024f88a, (HOST_CGU_BASE + 0x02c)); /* VCGEN_G1SEL -- 27MHz, MPG0 PLL */
++
++   writel( 0x0024f881, (HOST_CGU_BASE + 0x044)); /* VCGEN_G2SEL -- 54MHz, MPG0 PLL */
++   writel( 0x00000001, (HOST_CGU_BASE + 0x050)); /* VCGEN_G3SEL -- 27MHz, MPG0 PLL */
++   writel( 0x000058e2, (HOST_CGU_BASE + 0x048)); /* VCGEN_G4SEL -- 13.5MHz, MPG0 PLL */
++   writel( 0x76ae6ae7, (HOST_CGU_BASE + 0x054)); /* VCGEN_G5SEL -- 27MHz, MPG0 PLL */
++   writel( 0x00000000, (HOST_CGU_BASE + 0x058)); /* VCGEN_G6SEL -- 27MHz, MPG0 PLL */
++   writel( 0x00000000, (HOST_CGU_BASE + 0x050)); /* VCGEN_G4SEL -- 13.5MHz, MPG0 PLL */
++   writel( 0x0024f888, (HOST_CGU_BASE + 0x044)); /* VCGEN_G5SEL -- 27MHz, MPG0 PLL */
++   writel( 0x0024f88a, (HOST_CGU_BASE + 0x044)); /* VCGEN_G6SEL -- 27MHz, MPG0 PLL */
++   writel( 0x00000005, (HOST_CGU_BASE + 0x190)); /* VCGEN_G2SEL -- 54MHz, MPG0 PLL */
++   writel( 0x00000002, (HOST_CGU_BASE + 0x194)); /* VCGEN_G3SEL -- 27MHz, MPG0 PLL */
++   writel( 0x00000006, (HOST_CGU_BASE + 0x198)); /* VCGEN_G4SEL -- 13.5MHz, MPG0 PLL */
++   writel( 0x00000005, (HOST_CGU_BASE + 0x19c)); /* VCGEN_G5SEL -- 27MHz, MPG0 PLL */
++   writel( 0x00000006, (HOST_CGU_BASE + 0x1a0)); /* VCGEN_G6SEL -- 27MHz, MPG0 PLL */
++   writel( 0x00000000, (HOST_CGU_BASE + 0x1a4)); /* VCGEN_G4SEL -- 13.5MHz, MPG0 PLL */
++   writel( 0x00000000, (HOST_CGU_BASE + 0x1a8)); /* VCGEN_G5SEL -- 27MHz, MPG0 PLL */
++   writel( 0x00000000, (HOST_CGU_BASE + 0x1ac)); /* VCGEN_G6SEL -- 27MHz, MPG0 PLL */
++   writel( 0x00000000, (HOST_CGU_BASE + 0x1b0)); /* VCGEN_G5SEL -- 27MHz, MPG0 PLL */
++   writel( 0x00000000, (HOST_CGU_BASE + 0x1b4)); /* VCGEN_G6SEL -- 27MHz, MPG0 PLL */
++   writel( 0x00000003, (HOST_CGU_BASE + 0x160)); /* VCGEN_G6SEL -- 27MHz, MPG0 PLL */
++
+ 
+    /* CPIPE Sync Timing Generator settings */
+    writel( 0x00000000, (APOLLO_CPIPE_BASE + 0x8000)); /* progressive */
+@@ -151,9 +168,9 @@ void __init apollo_splash( void )
+    writel( 0x00000000, (APOLLO_DENC_BASE + 0x120)); /* Bypass DENC CSC */
+ 
+    /* Set up the formatting PLL - programmed thru the HDMI I/F - and the serializer PLL */
+-   writel( 0x00000003, (APOLLO_CGU_BASE + 0x2fc));     /* Enable TMDS clock for HDMI */
+-   writel( 0x00000020, (APOLLO_CGU_BASE + 0x11c));     /* PLL_HDMI_CON3_CTL - use MPG0 PLL for Fmt PLL Source */
+-   writel( 0x80000002, (APOLLO_CGU_BASE + 0x110));     /* PLL_HDMI_CON0_CTL - use HDMI register I/F rather than direct I/F */
++   writel( 0x00000003, (HOST_CGU_BASE + 0x164));     /* Enable TMDS clock for HDMI */
++   writel( 0x00000020, (HOST_CGU_BASE + 0x098));     /* PLL_HDMI_CON3_CTL - use MPG0 PLL for Fmt PLL Source */
++   writel( 0x80000002, (HOST_CGU_BASE + 0x08c));     /* PLL_HDMI_CON0_CTL - use HDMI register I/F rather than direct I/F */
+    writel( 0x0102040a, (APOLLO_HDMI_TX_BASE + 0x034)); /* FMT_PLL_SETTINGS - 480i, 480p */
+    writel( 0x00000203, (APOLLO_HDMI_TX_BASE + 0x030)); /* SER_PLL_SETTINGS - 480i, 480p (27 MHz) */
+    writel( 0x00000100, (APOLLO_HDMI_TX_BASE + 0x038)); /* PHY_CTRL - apply the pll settings */
+@@ -194,20 +211,6 @@ void __init apollo_splash( void )
+    writel( 0x00000004, (APOLLO_HDMI_TX_BASE + 0x0e8));
+    writel( 0x91c1c240, (APOLLO_HDMI_TX_BASE + 0x0ec));
+ 
+-   /*----------------------- Calibrate VDAC's ----------------------*/
+-   writel( 0x0009c00e, (APOLLO_GBL_REG_BASE + 0x8fc)); /*reset VDAC0 */
+-   writel( 0x0009c00e, (APOLLO_GBL_REG_BASE + 0x920)); /*reset VDAC1 */
+-   writel( 0x0019f60e, (APOLLO_GBL_REG_BASE + 0x8fc)); /*VDAC0_CTRL0 30 MHz power */
+-   writel( 0x0019f60e, (APOLLO_GBL_REG_BASE + 0x920)); /*VDAC1_CTRL0 30 MHz power */
+-   writel( 0x52201750, (APOLLO_GBL_REG_BASE + 0x900)); /*VDAC0_CTRL1 */
+-   writel( 0x52201750, (APOLLO_GBL_REG_BASE + 0x924)); /*VDAC1_CTRL1 */
+-   writel( 0x52201752, (APOLLO_GBL_REG_BASE + 0x900)); /*VDAC0_CTRL1 */
+-   writel( 0x52201752, (APOLLO_GBL_REG_BASE + 0x924)); /*VDAC1_CTRL1 */
+-   writel( 0x3f000070, (APOLLO_GBL_REG_BASE + 0x90c)); /*VDAC0_CTRL4 70-->71 */
+-   writel( 0x3f000071, (APOLLO_GBL_REG_BASE + 0x90c));
+-   writel( 0x3f000070, (APOLLO_GBL_REG_BASE + 0x930)); /*VDAC1_CTRL4 70-->71 */
+-   writel( 0x3f000071, (APOLLO_GBL_REG_BASE + 0x930));
+-
+    /*** Put the splash screen in memory ***/
+    pInc = pVRAMhd_base;
+    /* Clear the buffer to a white background. */

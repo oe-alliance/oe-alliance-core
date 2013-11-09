@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3
 ALLOW_EMPTY_${PN} = "1"
 
 PV = "1.0"
-PR = "r4"
+PR = "r5"
 
 inherit packagegroup
 
@@ -24,5 +24,6 @@ RDEPENDS_${PN} = "\
     task-base-nfs \
     busybox-cron \
     unrar \
+    ofgwrite \
     "
 

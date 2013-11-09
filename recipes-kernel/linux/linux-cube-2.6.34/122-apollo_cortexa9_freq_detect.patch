@@ -1,0 +1,60 @@
+diff -Naurp linux-2.6.34.oldie/arch/arm/mach-apollo/include/mach/pnx8492.h linux-2.6.34/arch/arm/mach-apollo/include/mach/pnx8492.h
+--- linux-2.6.34.oldie/arch/arm/mach-apollo/include/mach/pnx8492.h	2010-11-11 12:36:03.000000000 -0600
++++ linux-2.6.34/arch/arm/mach-apollo/include/mach/pnx8492.h	2010-11-11 20:11:42.000000000 -0600
+@@ -29,20 +29,6 @@
+ #include <asm/sizes.h>
+ #include <mach/hardware.h>
+ 
+-
+-#ifdef CONFIG_EXECUTE_ON_SIMULATOR
+-#define APOLLO_CORTEX_FREQ			(100 * 1000 * 1000)
+-#define APOLLO_PERIPHERALS_FREQ			(1.84 * APOLLO_CORTEX_FREQ)
+-#else
+-#ifdef CONFIG_EXECUTE_ON_EMULATOR
+-#define APOLLO_CORTEX_FREQ			(500 * 1000 * 1000)
+-#define APOLLO_PERIPHERALS_FREQ			(APOLLO_CORTEX_FREQ / 2)
+-#else
+-#define APOLLO_CORTEX_FREQ			(500 * 1000 * 1000)
+-#define APOLLO_PERIPHERALS_FREQ			(APOLLO_CORTEX_FREQ / 2)
+-#endif /* CONFIG_EXECUTE_ON_EMULATOR */
+-#endif /* CONFIG_EXECUTE_ON_SIMULATOR */
+-
+ #define MAX_TIMER				2
+ #define MAX_PERIOD				699050
+ #define TICKS_PER_uSEC				1
+@@ -151,6 +137,10 @@
+ #define APOLLO_CLK_GMAC1_RMII       		(MMIO_CLOCK_BASE + 0x03E0)
+ #define APOLLO_CLK_GMAC1_TXCLK_OUT  		(MMIO_CLOCK_BASE + 0x03E4)
+ 
++/* CORTEX-A9 CLK and PLL_ARM regs*/
++#define PLL_ARM_CON1_CTL_REG  			(MMIO_CLOCK_BASE + 0x0060)
++#define CLK_CORTEXA9_CTL_REG  			(MMIO_CLOCK_BASE + 0x0258)
++
+ /* GPIO registers */
+ #define GPIO_0_15_MODE_CTL0			*(volatile unsigned long *)(IPXXXX_GPIO_PORT_0 + 0x000)
+ 
+diff -Naurp linux-2.6.34.oldie/arch/arm/mach-apollo/pnx8492.c linux-2.6.34/arch/arm/mach-apollo/pnx8492.c
+--- linux-2.6.34.oldie/arch/arm/mach-apollo/pnx8492.c	2010-11-11 12:36:05.000000000 -0600
++++ linux-2.6.34/arch/arm/mach-apollo/pnx8492.c	2010-11-11 20:14:09.000000000 -0600
+@@ -150,8 +150,20 @@ static void apollo_timer_init(void)
+ 	unsigned long vaddr = IO_ADDRESS(APOLLO_CORTEX_A9_GLOB_TIMER_BASE);
+ 	unsigned long paddr = APOLLO_CORTEX_A9_GLOB_TIMER_BASE;
+ 	unsigned long irq =   IRQ_A9_GLOB_TIMER;
+-	unsigned long freq =  APOLLO_PERIPHERALS_FREQ;
++	unsigned long freq;
++	unsigned long pll_arm_con1;
+ 
++	pll_arm_con1 = readl(PLL_ARM_CON1_CTL_REG);
++
++	if((pll_arm_con1 == 0x030c00ff) || (pll_arm_con1 == 0x030c7ffa))
++		freq = (500000000/2);
++	else if((pll_arm_con1 == 0x030a003f) || (pll_arm_con1 == 0x030a3fff))
++		freq = (400000000/2);
++	else if((pll_arm_con1 == 0x040E03FF) || (pll_arm_con1 == 0x040e7faa))
++		freq = (600000000/2);
++	else
++		freq = (500000000/2);
++ 
+ 	printk(KERN_INFO "Initializing Cortex A9 Global Timer at Vir:0x%08X = Phy:0x%08X,"
+ 					 " using Irq:%i, at Freq:%i\n",
+ 					(unsigned int)vaddr,

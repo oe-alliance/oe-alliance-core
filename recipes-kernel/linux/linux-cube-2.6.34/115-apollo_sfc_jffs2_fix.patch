@@ -1,0 +1,2525 @@
+diff -Naur linux-2.6.34/drivers/mtd/sfc/nx_sfc.c linux-2.6.34_sfc_jffs2/drivers/mtd/sfc/nx_sfc.c
+--- linux-2.6.34/drivers/mtd/sfc/nx_sfc.c	2010-10-13 11:01:31.337865000 +0530
++++ linux-2.6.34_sfc_jffs2/drivers/mtd/sfc/nx_sfc.c	2010-10-13 10:57:56.202277000 +0530
+@@ -30,50 +30,52 @@
+ #include <linux/mtd/partitions.h>
+ #include "nx_sfc.h"
+ 
+-#define FLASH_PAGESIZE		256
++#define FLASH_PAGESIZE        256
++#define SFC_PREFETCH_BUFSIZE   64
+ 
+ /* Flash opcodes. */
+-#define	OPCODE_WREN		0x06	/* Write enable */
+-#define	OPCODE_RDSR		0x05	/* Read status register */
+-#define	OPCODE_WRSR		0x01	/* Write status register 1 byte */
+-#define	OPCODE_NORM_READ	0x03	/* Read data bytes (low frequency) */
+-#define	OPCODE_FAST_READ	0x0b	/* Read data bytes (high frequency) */
+-#define	OPCODE_PP		0x02	/* Page program (up to 256 bytes) */
+-#define	OPCODE_BE_4K		0x20	/* Erase 4KiB block */
+-#define	OPCODE_BE_32K		0x52	/* Erase 32KiB block */
+-#define	OPCODE_CHIP_ERASE	0xc7	/* Erase whole flash chip */
+-#define	OPCODE_SE		0xd8	/* Sector erase (usually 64KiB) */
+-#define	OPCODE_RDID		0x9f	/* Read JEDEC ID */
++#define  OPCODE_WREN       0x06  /* Write enable */
++#define  OPCODE_RDSR       0x05  /* Read status register */
++#define  OPCODE_WRSR       0x01  /* Write status register 1 byte */
++#define  OPCODE_NORM_READ  0x03  /* Read data bytes (low frequency) */
++#define  OPCODE_FAST_READ  0x0b  /* Read data bytes (high frequency) */
++#define  OPCODE_PP         0x02  /* Page program (up to 256 bytes) */
++#define  OPCODE_BE_4K      0x20  /* Erase 4KiB block */
++#define  OPCODE_BE_32K     0x52  /* Erase 32KiB block */
++#define  OPCODE_CHIP_ERASE 0xc7  /* Erase whole flash chip */
++#define  OPCODE_SE         0xd8  /* Sector erase (usually 64KiB) */
++#define  OPCODE_RDID       0x9f  /* Read JEDEC ID */
+ 
+ /* Status Register bits. */
+-#define	SR_WIP			1	/* Write in progress */
+-#define	SR_WEL			2	/* Write enable latch */
++#define  SR_WIP         1  /* Write in progress */
++#define  SR_WEL         2  /* Write enable latch */
+ /* meaning of other SR_* bits may differ between vendors */
+-#define	SR_BP0			4	/* Block protect 0 */
+-#define	SR_BP1			8	/* Block protect 1 */
+-#define	SR_BP2			0x10	/* Block protect 2 */
+-#define	SR_SRWD			0x80	/* SR write protect */
++#define  SR_BP0         4  /* Block protect 0 */
++#define  SR_BP1         8  /* Block protect 1 */
++#define  SR_BP2         0x10  /* Block protect 2 */
++#define  SR_SRWD        0x80  /* SR write protect */
+ 
+ /* Define max times to check status register before we give up. */
+-#define	MAX_READY_WAIT_COUNT	100000
+-#define	CMD_SIZE		4
++#define  MAX_READY_WAIT_COUNT 100000
++#define  CMD_SIZE    4
+ 
+ #ifdef CONFIG_M25PXX_USE_FAST_READ
+-#define OPCODE_READ 	OPCODE_FAST_READ
++#define OPCODE_READ  OPCODE_FAST_READ
+ #define FAST_READ_DUMMY_BYTE 1
+ #else
+-#define OPCODE_READ 	OPCODE_NORM_READ
++#define OPCODE_READ  OPCODE_NORM_READ
+ #define FAST_READ_DUMMY_BYTE 0
+ #endif
+ 
+ #ifdef CONFIG_MTD_PARTITIONS
+-#define	mtd_has_partitions()	(1)
++#define  mtd_has_partitions() (1)
+ #else
+-#define	mtd_has_partitions()	(0)
++#define  mtd_has_partitions() (0)
+ #endif
+-#define	mtd_has_partitions()	(1)
++#define  mtd_has_partitions() (1)
+ 
+-extern void nx_sfc_map_copy_to (unsigned long to, const void *from, ssize_t len);
++extern void nx_sfc_map_copy_to (unsigned long to, const void *from, ssize_t 
++len);
+ extern void nx_sfc_map_copy_from(void *to, unsigned long from, ssize_t len);
+ extern int nx_sfc_dma_init(void);
+ 
+@@ -81,7 +83,7 @@
+ 
+ static inline struct nx_sfc_mtd *mtd_to_nx_sfc_mtd(struct mtd_info *mtd)
+ {
+-	return container_of(mtd, struct nx_sfc_mtd, mtd);
++   return container_of(mtd, struct nx_sfc_mtd, mtd);
+ }
+ 
+ /****************************************************************************/
+@@ -90,152 +92,163 @@
+ 
+ ssize_t nx_sfc_prefetch_read(struct nx_sfc_mtd *flash) 
+ {
++   volatile unsigned long *prefetch_buf_base;
++   volatile unsigned long prefetch_buf_store;
++   u32 i =0;
++   u32 round_len =0;
++   u8 *prefetch_buf_ptr = (u8*)&prefetch_buf_store;
++   u8 *buf_ptr = flash->cd.buffer;
+ 
+-     volatile unsigned long * prefetch_buf_base;
+-     volatile unsigned long prefetch_buf_store;
+-     u32 count = 0, i =0;
+-     u32 cpy_count = 4, round_len =0;
+-     u8 * prefetch_buf_ptr = (u8*)&prefetch_buf_store;
+-     u8 * buf_ptr = flash->cd.buffer;
+-     
+-     if (flash->cd.offset >=0x1000000)
+-	nx_sfc_32b_en(flash);
+-   /* Program the protocol delay regsister */
+-//      writel(SFC_PROTCOL_DELAY_READ,flash->mmio_base + IPBGCSFLSHNTWK_SFC_SFC_PROTOCOL_DELAY_REG);
+-   
+-   /* Program the CSR Register ------------*/
+-      writel(SFC_CSR_READ, flash->mmio_base + IPBGCSFLSHNTWK_SFC_SFC_CSR_REG);
++   if ((flash->cd.offset >= SZ_16M) && (flash->info.jedec_id == 0xc22019))
++   {
++      nx_sfc_32b_en(flash);
++   }
++   else
++   {
++      /* Program the protocol delay regsister */
++      writel(SFC_PROTOCOL_DELAY_VAL_24B,
++         flash->mmio_base + IPBGCSFLSHNTWK_SFC_SFC_PROTOCOL_DELAY_REG);
++   }
+ 
+-   /* Program the SPL CMD ADDR Register ------------*/
+-      writel(flash->cd.offset, flash->mmio_base +0x7C);
++   /* Program the CSR Register */
++   writel(SFC_CSR_READ, flash->mmio_base + IPBGCSFLSHNTWK_SFC_SFC_CSR_REG);
++
++   /* Program the SPL CMD ADDR Register */
++   writel(flash->cd.offset, flash->mmio_base +0x7C);
++
++   /* Program the DATA COUNT Register in multiples of 4 bytes */
++   round_len = flash->cd.length % 4;
++   if(round_len)
++   {
++      round_len = flash->cd.length + (4 - round_len);
++      writel(round_len,flash->mmio_base + IPBGCSFLSHNTWK_SFC_SFC_TX_RX_DATA_CNT_REG);
++   }
++   else
++      writel(flash->cd.length,flash->mmio_base + IPBGCSFLSHNTWK_SFC_SFC_TX_RX_DATA_CNT_REG);
++      //writel(0x40,flash->mmio_base + IPBGCSFLSHNTWK_SFC_SFC_TX_RX_DATA_CNT_REG);
+ 
+-   /* Program the DATA COUNT Register in multiples of 4 bytes------------*/
+-      round_len = flash->cd.length % 4;
+-      if(round_len){
+-	      round_len = flash->cd.length + (4 - round_len);
+-	      writel(round_len,flash->mmio_base + IPBGCSFLSHNTWK_SFC_SFC_TX_RX_DATA_CNT_REG);
+-      }
+-      else
+-	      writel(flash->cd.length,flash->mmio_base + IPBGCSFLSHNTWK_SFC_SFC_TX_RX_DATA_CNT_REG);
+-     // writel(0x40,flash->mmio_base + IPBGCSFLSHNTWK_SFC_SFC_TX_RX_DATA_CNT_REG);
+-   
+    /* Write the CMD to the DEV_CMD Register */
+-      writel(SFC_DEV_CMD_READ,flash->mmio_base + IPBGCSFLSHNTWK_SFC_SFC_DEVICE_CMD_REG);
+-      nx_sfc_wait(flash->mmio_base);
++   writel(SFC_DEV_CMD_READ,flash->mmio_base + IPBGCSFLSHNTWK_SFC_SFC_DEVICE_CMD_REG);
++   nx_sfc_wait(flash->mmio_base);
+ 
+-   /* Copy the data from the Prefetch Buffers------------------*/
++   /* Copy the data from the Prefetch Buffers */
++   prefetch_buf_base = ((volatile unsigned long *)(flash->mmio_base + IPBGCSFLSHNTWK_SFC_SFC_PRE_FETCH_BUFF_0_REG));
++   for (i = 0; i < flash->cd.length/4; i++) 
++   {
++      prefetch_buf_store = readl(prefetch_buf_base);
++      prefetch_buf_base++;
++      memcpy(buf_ptr, prefetch_buf_ptr, 4);
++      buf_ptr += 4;
++   }
++   if (flash->cd.length % 4)
++   {
++      prefetch_buf_store = readl(prefetch_buf_base);
++      memcpy(buf_ptr, prefetch_buf_ptr, flash->cd.length % 4);
++   }
+ 
+-      prefetch_buf_base = ((volatile unsigned long *)(0xe063203c));
+-      for (i = 0; i < 16; i ++){
+-         prefetch_buf_store = readl(prefetch_buf_base);
+-         prefetch_buf_base ++;
+-         if (flash->cd.length < 4 )
+-            cpy_count = flash->cd.length % 4;
+-         memcpy(buf_ptr, prefetch_buf_ptr, cpy_count);
+-         count += cpy_count;
+-         buf_ptr += cpy_count;
+-         if (count == flash->cd.length)
+-            break;
+-      }
+-      if(flash->cd.offset >=0x1000000)
+-         nx_sfc_32b_dis(flash);
++   if((flash->cd.offset >= SZ_16M) && (flash->info.jedec_id == 0xc22019))
++      nx_sfc_32b_dis(flash);
+ 
+-      return flash->cd.length;
++   return flash->cd.length;
+ }
+ 
+ ssize_t nx_sfc_prefetch_write(struct nx_sfc_mtd *flash) 
+ {
+-     volatile unsigned long * prefetch_buf_base;
+-     volatile unsigned long prefetch_buf_store;
+-     u32 count = 0, i =0;
+-     u32 cpy_count = 4;
+-     u8 * prefetch_buf_ptr = (u8*)&prefetch_buf_store;
+-     u8 * buf_ptr = flash->cd.buffer;
+-     
+-      if (flash->cd.offset >=0x1000000)
+-         nx_sfc_32b_en(flash);
+-   /* Program the protocol delay regsister */
+- //     writel(SFC_PROTOCL_DELAY_WRITE,flash->mmio_base + IPBGCSFLSHNTWK_SFC_SFC_PROTOCOL_DELAY_REG);
+-   
+-   /* Program the CSR Register ------------*/
+-      writel(SFC_CSR_WRITE, flash->mmio_base + IPBGCSFLSHNTWK_SFC_SFC_CSR_REG);
++   volatile unsigned long *prefetch_buf_base;
++   volatile unsigned long prefetch_buf_store;
++   u32 i =0;
++   u8 *prefetch_buf_ptr = (u8*)&prefetch_buf_store;
++   u8 *buf_ptr = flash->cd.buffer;
+ 
+-   /* Program the SPL CMD ADDR Register ------------*/
+-      writel(flash->cd.offset, flash->mmio_base +0x7C);
++   if ((flash->cd.offset >= SZ_16M) && (flash->info.jedec_id == 0xc22019))
++   {
++      nx_sfc_32b_en(flash);
++   }
++   else
++   {
++      /* Program the protocol delay regsister */
++      writel(SFC_PROTOCOL_DELAY_VAL_24B,
++         flash->mmio_base + IPBGCSFLSHNTWK_SFC_SFC_PROTOCOL_DELAY_REG);
++   }
+ 
+-   /* Program the DATA COUNT Register ------------*/
+-      writel(flash->cd.length << 12, flash->mmio_base + IPBGCSFLSHNTWK_SFC_SFC_TX_RX_DATA_CNT_REG);
+-   
+-   /* ----------Setup the Prefetch Buffers------------------*/
++   /* Program the CSR Register */
++   writel(SFC_CSR_WRITE, flash->mmio_base + IPBGCSFLSHNTWK_SFC_SFC_CSR_REG);
+ 
+-      prefetch_buf_base = ((volatile unsigned long *)(0xe063203c));
+-      for (i = 0; i < 16; i ++){
++   /* Program the SPL CMD ADDR Register */
++   writel(flash->cd.offset, flash->mmio_base +0x7C);
+ 
+-         if (flash->cd.length < 4 )
+-            cpy_count = flash->cd.length % 4;
+-         memcpy(prefetch_buf_ptr, buf_ptr, cpy_count);
+-         writel(prefetch_buf_store, prefetch_buf_base);
+-         prefetch_buf_base ++;
+-         count += cpy_count;
+-         buf_ptr += cpy_count;
+-         if (count == flash->cd.length)
+-            break;
+-      }
+-      /* -------Write the CMD to the DEV_CMD Register---------- */
+-      writel(SFC_DEV_CMD_WRITE,flash->mmio_base + IPBGCSFLSHNTWK_SFC_SFC_DEVICE_CMD_REG);
+-      nx_sfc_wait(flash->mmio_base);
+-      if (flash->cd.offset >=0x1000000)
+-         nx_sfc_32b_dis(flash);
+-      return flash->cd.length;
++   /* Program the DATA COUNT Register */
++   writel(flash->cd.length << 12, flash->mmio_base + IPBGCSFLSHNTWK_SFC_SFC_TX_RX_DATA_CNT_REG);
++
++   /* Setup the Prefetch Buffers */
++   prefetch_buf_base = ((volatile unsigned long *)(flash->mmio_base + IPBGCSFLSHNTWK_SFC_SFC_PRE_FETCH_BUFF_0_REG));
++   for (i = 0; i < flash->cd.length/4; i++) 
++   {
++      memcpy(prefetch_buf_ptr, buf_ptr, 4);
++      writel(prefetch_buf_store, prefetch_buf_base);
++      prefetch_buf_base++;
++      buf_ptr += 4;
++   }
++   if (flash->cd.length % 4)
++   {
++      memcpy(prefetch_buf_ptr, buf_ptr, flash->cd.length % 4);
++      writel(prefetch_buf_store, prefetch_buf_base);
++   }
++
++   /* -------Write the CMD to the DEV_CMD Register---------- */
++   writel(SFC_DEV_CMD_WRITE,flash->mmio_base + IPBGCSFLSHNTWK_SFC_SFC_DEVICE_CMD_REG);
++   nx_sfc_wait(flash->mmio_base);
++
++   if ((flash->cd.offset >= SZ_16M) && (flash->info.jedec_id == 0xc22019))
++      nx_sfc_32b_dis(flash);
++
++   return flash->cd.length;
+ }
+ 
+ #ifdef SFC_DMAC_ENABLE
+-
+ ssize_t nx_sfc_read(struct nx_sfc_mtd *flash) 
+ {
+ 
+    /* Program the protocol delay regsister */
+-   //   writel(0x10008000,flash->mmio_base + IPBGCSFLSHNTWK_SFC_SFC_PROTOCOL_DELAY_REG);
++   writel(0x10008000,flash->mmio_base + IPBGCSFLSHNTWK_SFC_SFC_PROTOCOL_DELAY_REG);
+    
+    /* Program the CSR Register ------------*/
+-      writel(0x0000167, flash->mmio_base + IPBGCSFLSHNTWK_SFC_SFC_CSR_REG);
++   writel(0x0000167, flash->mmio_base + IPBGCSFLSHNTWK_SFC_SFC_CSR_REG);
+ 
+    /* Program the DATA COUNT Register ------------*/
+-      writel(flash->cd.length,flash->mmio_base + IPBGCSFLSHNTWK_SFC_SFC_TX_RX_DATA_CNT_REG);
++   writel(flash->cd.length,flash->mmio_base + IPBGCSFLSHNTWK_SFC_SFC_TX_RX_DATA_CNT_REG);
+    
+    /* Write the CMD to the DEV_CMD Register */
+-      writel(0x00000203,flash->mmio_base + IPBGCSFLSHNTWK_SFC_SFC_DEVICE_CMD_REG);
+-      nx_sfc_wait(flash->mmio_base);
++   writel(0x00000203,flash->mmio_base + IPBGCSFLSHNTWK_SFC_SFC_DEVICE_CMD_REG);
++   nx_sfc_wait(flash->mmio_base);
+ 
+    /* Map the data buffer to a DMA bounce buffer */
+ 
+    /* Setup the DMA Xfer ------------------*/
+-      nx_sfc_map_copy_from(flash->cd.buffer, flash->cd.offset, flash->cd.length);
++   nx_sfc_map_copy_from(flash->cd.buffer, flash->cd.offset, flash->cd.length);
+ 
+    /* Kick Start the DMA xfer and wait for the completion event */
+-
+-   
+ }
+ 
+ ssize_t nx_sfc_write(struct nx_sfc_mtd *flash) 
+ {
+    /* Program the protocol delay regsister */
+-    //  writel(0x10000000, flash->mmio_base + IPBGCSFLSHNTWK_SFC_SFC_PROTOCOL_DELAY_REG);
++   writel(0x10000000, flash->mmio_base + IPBGCSFLSHNTWK_SFC_SFC_PROTOCOL_DELAY_REG);
+   
+    /* Program the CSR Register ------------*/
+-      writel(0x03C20001, flash->mmio_base + IPBGCSFLSHNTWK_SFC_SFC_CSR_REG);
++   writel(0x03C20001, flash->mmio_base + IPBGCSFLSHNTWK_SFC_SFC_CSR_REG);
+   
+    /* Program the DATA COUNT Register ------------*/
+-      writel(flash->cd.length << 12 ,flash->mmio_base + IPBGCSFLSHNTWK_SFC_SFC_TX_RX_DATA_CNT_REG);
++   writel(flash->cd.length << 12 ,flash->mmio_base + IPBGCSFLSHNTWK_SFC_SFC_TX_RX_DATA_CNT_REG);
+   
+    /* Write the CMD to the DEV_CMD Register */
+-      writel(0x00840203 ,flash->mmio_base + IPBGCSFLSHNTWK_SFC_SFC_DEVICE_CMD_REG);
+-      nx_sfc_wait(flash->mmio_base);
++   writel(0x00840203 ,flash->mmio_base + IPBGCSFLSHNTWK_SFC_SFC_DEVICE_CMD_REG);
++   nx_sfc_wait(flash->mmio_base);
+   
+    /* Map the data buffer to a DMA bounce buffer */
+   
+    /* Setup the DMA Xfer ------------------*/
+-      nx_sfc_map_copy_to(flash->cd.offset, flash->cd.buffer, flash->cd.length);
++   nx_sfc_map_copy_to(flash->cd.offset, flash->cd.buffer, flash->cd.length);
+   
+    /* Kick Start the DMA xfer and wait for the completion event */
+ }
+@@ -243,22 +256,23 @@
+ 
+ ssize_t nx_sfc_erase(struct nx_sfc_mtd *flash) 
+ {
+-   /* Enter 32bit mode  */
+-   if (flash->cd.offset >=0x1000000)
++   /* Program the protocol delay regsister */
++   if ((flash->cd.offset >= SZ_16M) && (flash->info.jedec_id == 0xc22019))
+       nx_sfc_32b_en(flash); 
+    
+-   /* Program the CSR Register ------------*/
++   /* Program the CSR Register */
+    writel(SFC_CSR_ERASE,flash->mmio_base + IPBGCSFLSHNTWK_SFC_SFC_CSR_REG);
+ 
+-   /* Program the SPL CMD ADDR Register ------------*/
++   /* Program the SPL CMD ADDR Register */
+    writel(flash->cd.offset, flash->mmio_base +0x7C);
+    
+    /* Write the CMD to the DEV_CMD Register */
+    writel(SFC_DEV_CMD_ERASE, flash->mmio_base + IPBGCSFLSHNTWK_SFC_SFC_DEVICE_CMD_REG);
+    nx_sfc_wait(flash->mmio_base);
+ 
+-   if (flash->cd.offset >=0x1000000)
++   if ((flash->cd.offset >= SZ_16M) && (flash->info.jedec_id == 0xc22019))
+         nx_sfc_32b_dis(flash);
++
+    return flash->cd.length;
+ }
+ 
+@@ -272,9 +286,7 @@
+    writel(0xB70D0203, flash->mmio_base + IPBGCSFLSHNTWK_SFC_SFC_DEVICE_CMD_REG);
+    nx_sfc_wait(flash->mmio_base);
+    status = nx_sfc_read_RSCUR(flash->mmio_base);
+- //  printk(KERN_ERR "32bstatus = %d \n", status);
+    writel(SFC_PROTOCOL_DELAY_VAL_32B,flash->mmio_base + IPBGCSFLSHNTWK_SFC_SFC_PROTOCOL_DELAY_REG);
+-
+ }
+ 
+ void nx_sfc_32b_dis(struct nx_sfc_mtd *flash)
+@@ -287,7 +299,6 @@
+    writel(0xE90D0203, flash->mmio_base + IPBGCSFLSHNTWK_SFC_SFC_DEVICE_CMD_REG);
+    nx_sfc_wait(flash->mmio_base);
+    status = nx_sfc_read_RSCUR(flash->mmio_base);
+-//   printk(KERN_ERR "32bstatus-dis = %d \n", status);
+    writel(SFC_PROTOCOL_DELAY_VAL_24B,flash->mmio_base + IPBGCSFLSHNTWK_SFC_SFC_PROTOCOL_DELAY_REG);
+ }
+ 
+@@ -302,10 +313,8 @@
+ 
+    return status;
+ }
+-
+ void nx_sfc_write_en(void __iomem  * sfc_regs)
+ {
+-    
+    //Program the CSR register, enable prefetch, tx_en, tx_hold_en
+    writel(SFC_CSR_WREN, sfc_regs + IPBGCSFLSHNTWK_SFC_SFC_CSR_REG);
+    // Do SPL CMD- "Write Enable" - 06h
+@@ -379,18 +388,18 @@
+  
+ static int read_sr(struct nx_sfc_mtd *flash)
+ {
+-	ssize_t retval;
+-	//u8 code = OPCODE_RDSR;
+-	
++   ssize_t retval;
++   //u8 code = OPCODE_RDSR;
++   
+    retval = nx_sfc_read_sr(flash->mmio_base);
+ 
+-	if (retval < 0) {
+-		dev_err(&flash->sfc->dev, "error %d reading SR\n",
+-				(int) retval);
+-		return retval;
+-	}
++   if (retval < 0) {
++      dev_err(&flash->sfc->dev, "error %d reading SR\n",
++            (int) retval);
++      return retval;
++   }
+   
+-	return retval;
++   return retval;
+ }
+ 
+ /*
+@@ -399,8 +408,8 @@
+  */
+ static int write_sr(struct nx_sfc_mtd *flash, u8 val)
+ {
+-	flash->cd.command[0] = OPCODE_WRSR;
+-	flash->cd.command[1] = val;
++   flash->cd.command[0] = OPCODE_WRSR;
++   flash->cd.command[1] = val;
+ 
+    nx_sfc_write_sr(flash->mmio_base);
+    return 0;
+@@ -412,9 +421,9 @@
+  */
+ int write_enable(struct nx_sfc_mtd *flash)
+ {
+-	//u8	code = OPCODE_WREN;
++   //u8  code = OPCODE_WREN;
+ 
+-	nx_sfc_write_en(flash->mmio_base);
++   nx_sfc_write_en(flash->mmio_base);
+    return 0;
+ }
+ 
+@@ -425,42 +434,42 @@
+  */
+ int wait_till_ready(struct nx_sfc_mtd *flash)
+ {
+-	int count;
+-	int sr;
++   int count;
++   int sr;
+ 
+-	/* one chip guarantees max 5 msec wait here after page writes,
+-	 * but potentially three seconds (!) after page erase.
+-	 */
+-	for (count = 0; count < MAX_READY_WAIT_COUNT; count++) {
+-		if ((sr = read_sr(flash)) < 0)
+-			break;
+-		else if (!(sr & SR_WIP))
+-			return 0;
++   /* one chip guarantees max 5 msec wait here after page writes,
++    * but potentially three seconds (!) after page erase.
++    */
++   for (count = 0; count < MAX_READY_WAIT_COUNT; count++) {
++      if ((sr = read_sr(flash)) < 0)
++         break;
++      else if (!(sr & SR_WIP))
++         return 0;
+ 
+-		/* REVISIT sometimes sleeping would be best */
+-	}
++      /* REVISIT sometimes sleeping would be best */
++   }
+ 
+-	return 1;
++   return 1;
+ }
+ 
+ int wait_till_ready_wr(struct nx_sfc_mtd *flash)
+ {
+-	int count;
+-	int sr;
++   int count;
++   int sr;
+ 
+-	/* one chip guarantees max 5 msec wait here after page writes,
+-	 * but potentially three seconds (!) after page erase.
+-	 */
+-	for (count = 0; count < MAX_READY_WAIT_COUNT; count++) {
+-		if ((sr = read_sr(flash)) < 0)
+-			break;
+-		else if ((sr & SR_WEL))
+-			return 0;
++   /* one chip guarantees max 5 msec wait here after page writes,
++    * but potentially three seconds (!) after page erase.
++    */
++   for (count = 0; count < MAX_READY_WAIT_COUNT; count++) {
++      if ((sr = read_sr(flash)) < 0)
++         break;
++      else if ((sr & SR_WEL))
++         return 0;
+ 
+-		/* REVISIT sometimes sleeping would be best */
+-	}
++      /* REVISIT sometimes sleeping would be best */
++   }
+ 
+-	return 1;
++   return 1;
+ }
+ /*
+  * Erase the whole flash memory
+@@ -469,23 +478,23 @@
+  */
+ static int erase_chip(struct nx_sfc_mtd *flash)
+ {
+-	MTDDEBUG(MTD_DEBUG_LEVEL3, " %s %lldKiB\n",
+-			 __func__,
+-			flash->mtd.size / 1024);
++   MTDDEBUG(MTD_DEBUG_LEVEL3, " %s %lldKiB\n",
++          __func__,
++         flash->mtd.size / 1024);
+ 
+-	/* Wait until finished previous write command. */
+-	if (wait_till_ready(flash))
+-		return 1;
++   /* Wait until finished previous write command. */
++   if (wait_till_ready(flash))
++      return 1;
+ 
+-	/* Send write enable, then erase commands. */
+-	write_enable(flash);
++   /* Send write enable, then erase commands. */
++   write_enable(flash);
+ 
+-	/* Set up command buffer. */
+-	flash->cd.command[0] = OPCODE_CHIP_ERASE;
++   /* Set up command buffer. */
++   flash->cd.command[0] = OPCODE_CHIP_ERASE;
+ 
+-	nx_sfc_erase(flash);
++   nx_sfc_erase(flash);
+ 
+-	return 0;
++   return 0;
+ }
+ 
+ /*
+@@ -496,24 +505,24 @@
+  */
+ static int erase_sector(struct nx_sfc_mtd *flash, u32 offset)
+ {
+-	MTDDEBUG(MTD_DEBUG_LEVEL3, " %s %dKiB at 0x%08x\n",
+-			 __func__,
+-			flash->mtd.erasesize / 1024, offset);
+-
+-	/* Wait until finished previous write command. */
+-	if (wait_till_ready(flash))
+-		return 1;
+-
+-	/* Send write enable, then erase commands. */
+-	write_enable(flash);
++   MTDDEBUG(MTD_DEBUG_LEVEL3, " %s %dKiB at 0x%08x\n",
++          __func__,
++         flash->mtd.erasesize / 1024, offset);
++
++   /* Wait until finished previous write command. */
++   if (wait_till_ready(flash))
++      return 1;
++
++   /* Send write enable, then erase commands. */
++   write_enable(flash);
++
++   /* Set up command buffer. */
++   flash->cd.command[0] = flash->erase_opcode;
++   flash->cd.offset = offset;
+ 
+-	/* Set up command buffer. */
+-	flash->cd.command[0] = flash->erase_opcode;
+-	flash->cd.offset = offset;
++   nx_sfc_erase(flash);
+ 
+-	nx_sfc_erase(flash);
+-
+-	return 0;
++   return 0;
+ }
+ 
+ /****************************************************************************/
+@@ -528,57 +537,87 @@
+  */
+ static int nx_sfc_mtd_erase(struct mtd_info *mtd, struct erase_info *instr)
+ {
+-	struct nx_sfc_mtd *flash = mtd_to_nx_sfc_mtd(mtd);
+-	u32 addr,len;
+-	uint32_t rem;
+-
+-	MTDDEBUG(MTD_DEBUG_LEVEL2, " %s %s 0x%08x, len %lld\n",
+-			 __func__, "at",
+-			(u32)instr->addr, instr->len);
+-
+-	/* sanity checks */
+-	if (instr->addr + instr->len > flash->mtd.size)
+-		return -EINVAL;
+-	
+-	div_u64_rem(instr->len, mtd->erasesize, &rem);
++   struct nx_sfc_mtd *flash = mtd_to_nx_sfc_mtd(mtd);
++   u32 addr,len;
++   uint32_t rem;
++
++   MTDDEBUG(MTD_DEBUG_LEVEL2, " %s %s 0x%08x, len %lld\n",
++          __func__, "at",
++         (u32)instr->addr, instr->len);
++
++   /* sanity checks */
++   if (instr->addr + instr->len > flash->mtd.size)
++      return -EINVAL;
++   div_u64_rem(instr->len, mtd->erasesize, &rem);
+    if (rem)
+-		return -EINVAL;
++      return -EINVAL;
+ 
+-	addr = instr->addr;
+-	len = instr->len;
++   addr = instr->addr;
++   len = instr->len;
+ 
+-	mutex_lock(&flash->lock);
++   mutex_lock(&flash->lock);
+ 
+-	/* whole-chip erase? */
+-	if (len == flash->mtd.size && erase_chip(flash)) {
+-		instr->state = MTD_ERASE_FAILED;
+-		mutex_unlock(&flash->lock);
+-		return -EIO;
+-
+-	/* REVISIT in some cases we could speed up erasing large regions
+-	 * by using OPCODE_SE instead of OPCODE_BE_4K.  We may have set up
+-	 * to use "small sector erase", but that's not always optimal.
+-	 */
+-
+-	/* "sector"-at-a-time erase */
+-	} else {
+-		while (len) {
+-			if (erase_sector(flash, addr)) {
+-				instr->state = MTD_ERASE_FAILED;
+-				mutex_unlock(&flash->lock);
+-				return -EIO;
+-			}
+-
+-			addr += mtd->erasesize;
+-			len -= mtd->erasesize;
+-		}
+-	}
+-
+-	mutex_unlock(&flash->lock);
+-
+-	instr->state = MTD_ERASE_DONE;
+-	mtd_erase_callback(instr);
+-	return 0;
++   /* whole-chip erase? */
++   if (len == flash->mtd.size && erase_chip(flash)) {
++      instr->state = MTD_ERASE_FAILED;
++      mutex_unlock(&flash->lock);
++      return -EIO;
++
++   /* REVISIT in some cases we could speed up erasing large regions
++    * by using OPCODE_SE instead of OPCODE_BE_4K.  We may have set up
++    * to use "small sector erase", but that's not always optimal.
++    */
++
++   /* "sector"-at-a-time erase */
++   } else {
++      while (len) {
++         if (erase_sector(flash, addr)) {
++            instr->state = MTD_ERASE_FAILED;
++            mutex_unlock(&flash->lock);
++            return -EIO;
++         }
++
++         addr += mtd->erasesize;
++         len -= mtd->erasesize;
++      }
++   }
++
++   mutex_unlock(&flash->lock);
++
++   instr->state = MTD_ERASE_DONE;
++   mtd_erase_callback(instr);
++   return 0;
++}
++
++
++inline void sfc_sync(struct nx_sfc_mtd *flash, loff_t offset, const u_char *buf, 
++   u32 page_size, u32 pgoffset, bool bwrite)
++{
++   flash->cd.offset = offset + pgoffset;
++   flash->cd.length = page_size;
++   flash->cd.buffer = (u_char*)(buf + pgoffset);
++   
++   wait_till_ready(flash);
++
++   if(bwrite)
++   {
++      write_enable(flash);
++      wait_till_ready_wr(flash);
++      #ifdef SFC_DMAC_ENABLE
++      if (page_size == FLASH_PAGESIZE)
++         nx_sfc_write(flash);
++      #endif
++      nx_sfc_prefetch_write(flash);
++   }
++   else
++   {
++      #ifdef SFC_DMAC_ENABLE
++      if (page_size == FLASH_PAGESIZE)
++         nx_sfc_read(flash);
++      else
++      #endif
++      nx_sfc_prefetch_read(flash);
++   }
+ }
+ 
+ /*
+@@ -586,99 +625,63 @@
+  * may be any size provided it is within the physical boundaries.
+  */
+ static int nx_sfc_mtd_read(struct mtd_info *mtd, loff_t from, size_t len,
+-	size_t *retlen, u_char *buf)
++   size_t *retlen, u_char *buf)
+ {
+-	struct nx_sfc_mtd *flash = mtd_to_nx_sfc_mtd(mtd);
+-   u32 page_offset, page_size, first_page, i;
+-   
+-	MTDDEBUG(MTD_DEBUG_LEVEL2, " %s %s 0x%08x, len %zd\n",
+-			 __func__, "from",
+-			(u32)from, len);
++   struct nx_sfc_mtd *flash = mtd_to_nx_sfc_mtd(mtd);
++   u32 pgoffset, page_size, i;
+    
+-	/* sanity checks */
+-	if (!len)
+-		return 0;
+-
+-	if (from + len > flash->mtd.size)
+-		return -EINVAL;
+-
+-
+-	/* NOTE:
+-	 * OPCODE_FAST_READ (if available) is faster.
+-	 * Should add 1 byte DUMMY_BYTE.
+-	 */
+-	/* Byte count starts at zero. */
+-	if (retlen)
+-		*retlen = 0;
+-	mutex_lock(&flash->lock);
+-
+-	/* Wait till previous write/erase is done. */
+-	if (wait_till_ready(flash)) {
+-		/* REVISIT status return?? */
+-		mutex_unlock(&flash->lock);
+-		return 1;
+-	}
+-
+-	/* FIXME switch to OPCODE_FAST_READ.  It's required for higher
+-	 * clocks; and at this writing, every chip this driver handles
+-	 * supports that opcode.
+-	 */
+-
+-	/* Set up the write data buffer. */
+-	flash->cd.command[0] = OPCODE_READ;
+-   page_offset = from % FLASH_PAGESIZE;
++   MTDDEBUG(MTD_DEBUG_LEVEL2, " %s %s 0x%08x, len %zd\n",
++          __func__, "from",
++         (u32)from, len);
+    
+-	/* the size of data remaining on the first page */
+-   if(page_offset)
+-	   page_size = FLASH_PAGESIZE - page_offset;
+- 
+-   if (page_offset)
+-      first_page = page_size;
+-   else
+-      first_page = 0;
+-	//*retlen = actual_length - CMD_SIZE;
++   /* sanity checks */
++   if (!len)
++      return 0;
++
++   if (from + len > flash->mtd.size)
++      return -EINVAL;
+ 
+-	/* write everything in PAGESIZE chunks */
+-	for (i = 0; i < len; i += page_size) {
+-		page_size = len - i;
+-      if (first_page){
+-         if (first_page >len ){
+-             first_page = len;
+-         }
+-         if (first_page >= 64){
+-             page_size = 64;
+-             first_page -= 64;
+-         }
+-         else{
+-            page_size = first_page;
+-            first_page -= page_size;
+-         }
+-      }
+-	//	else if (page_size > FLASH_PAGESIZE)
+-	//		page_size = FLASH_PAGESIZE;
+-      else {
+-         if (page_size > 64)
+-         page_size = 64;
+-      }
+-      flash->cd.offset = from + i;
+-      flash->cd.length = page_size;
+-      flash->cd.buffer = buf + i;
+ 
+-		wait_till_ready(flash);
+-      #ifdef SFC_DMAC_ENABLE
+-      if (page_size == FLASH_PAGESIZE)
+-			nx_sfc_read(flash);
+-      else
+-      #endif            
+-      nx_sfc_prefetch_read(flash);
++   /* NOTE:
++    * OPCODE_FAST_READ (if available) is faster.
++    * Should add 1 byte DUMMY_BYTE.
++    */
++   /* Byte count starts at zero. */
++   if (retlen)
++      *retlen = 0;
++   mutex_lock(&flash->lock);
+ 
+-	}
++   /* Wait till previous write/erase is done. */
++   if (wait_till_ready(flash)) {
++      /* REVISIT status return?? */
++      mutex_unlock(&flash->lock);
++      return 1;
++   }
++
++   /* FIXME switch to OPCODE_FAST_READ.  It's required for higher
++    * clocks; and at this writing, every chip this driver handles
++    * supports that opcode.
++    */
++
++   /* Set up the write data buffer. */
++   flash->cd.command[0] = OPCODE_READ;
++
++   /* write everything in PAGESIZE chunks */
++   for (i = 0, pgoffset = 0; i < len; i += page_size, pgoffset += page_size) 
++   {
++      page_size = len - i;
++
++      if (page_size > SFC_PREFETCH_BUFSIZE)
++         page_size = SFC_PREFETCH_BUFSIZE;
++
++      sfc_sync(flash, from, buf, page_size, pgoffset, 0);
++   }
+ 
+    if (retlen)
+-		*retlen = len;
+-	mutex_unlock(&flash->lock);
++      *retlen = len;
++   mutex_unlock(&flash->lock);
+ 
+-	return 0;
++   return 0;
+ }
+ 
+ /*
+@@ -687,171 +690,149 @@
+  * it is within the physical boundaries.
+  */
+ static int nx_sfc_mtd_write(struct mtd_info *mtd, loff_t to, size_t len,
+-	size_t *retlen, const u_char *buf)
++   size_t *retlen, const u_char *buf)
+ {
+-	struct nx_sfc_mtd *flash = mtd_to_nx_sfc_mtd(mtd);
+-	u32 page_offset = 0, page_size = 0, first_page = 0;
++   struct nx_sfc_mtd *flash = mtd_to_nx_sfc_mtd(mtd);
++   u32 page_offset = 0, page_size = 0, first_page = 0, pgoffset = 0;
+    u32 i;
+    
+-	MTDDEBUG(MTD_DEBUG_LEVEL2, " %s %s 0x%08x, len %zd\n",
+-			 __func__, "to",
+-			(u32)to, len);
++   MTDDEBUG(MTD_DEBUG_LEVEL2, " %s %s 0x%08x, len %zd\n",
++          __func__, "to",
++         (u32)to, len);
+ 
+-	if (retlen)
+-		*retlen = 0;
++   if (retlen)
++      *retlen = 0;
+ 
+-	/* sanity checks */
+-	if (!len)
+-		return(0);
++   /* sanity checks */
++   if (!len)
++      return(0);
+ 
+-	if (to + len > flash->mtd.size)
+-		return -EINVAL;
++   if (to + len > flash->mtd.size)
++      return -EINVAL;
+ 
+-	mutex_lock(&flash->lock);
++   mutex_lock(&flash->lock);
+ 
+-	/* Wait until finished previous write command. */
+-	if (wait_till_ready(flash)) {
+-		mutex_unlock(&flash->lock);
+-		return 1;
+-	}
++   /* Wait until finished previous write command. */
++   if (wait_till_ready(flash)) {
++      mutex_unlock(&flash->lock);
++      return 1;
++   }
+ 
+-	/* Set up the opcode in the write buffer. */
+-	flash->cd.command[0] = OPCODE_PP;
++   /* Set up the opcode in the write buffer. */
++   flash->cd.command[0] = OPCODE_PP;
+ 
+-	/* what page do we start with? */
+-	page_offset = to % FLASH_PAGESIZE;
++   /* what page do we start with? */
++   page_offset = to % FLASH_PAGESIZE;
+ 
+-	/* do all the bytes fit onto one page? */
+-       
+-	/* the size of data remaining on the first page */
++   /* the size of data remaining on the first page */
+    if(page_offset)
+-	   first_page = FLASH_PAGESIZE - page_offset;
++      first_page = FLASH_PAGESIZE - page_offset;
+ 
+-	/* write everything in PAGESIZE chunks */
+-	for (i = 0; i < len; i += page_size) {
+-		
+-      page_size = len - i;
+-      if (first_page){
+-         if (first_page >len ){
+-             first_page = len;
+-         }
+-         if (first_page >= 64){
+-             page_size = 64;
+-             first_page -= 64;
+-         }
+-         else{
+-            page_size = first_page;
+-            first_page -= page_size;
+-         }
++   page_offset = to & (FLASH_PAGESIZE - 1);
++
++   /* do all the bytes fit onto one page? */
++   if ((page_offset + len) <= FLASH_PAGESIZE) 
++   {
++      for ( i=0, pgoffset = 0; i < len; i += page_size, pgoffset += page_size) 
++      {
++         page_size = len-i;
++
++         if (page_size > SFC_PREFETCH_BUFSIZE) 
++            page_size = SFC_PREFETCH_BUFSIZE;
++
++         sfc_sync(flash, to, buf, page_size, pgoffset, 1);
+       }
+-      else {
+-         		//	if (page_size > FLASH_PAGESIZE)
+-         		//		page_size = FLASH_PAGESIZE;
+-         if (page_size > 64)
+-            page_size = 64;
++   } 
++   else 
++   {
++      /* the size of data remaining on the first page */
++      first_page = FLASH_PAGESIZE - page_offset;
++      
++      for (i=0, pgoffset = 0;i < first_page;i += page_size, pgoffset += page_size) 
++      {
++         page_size = first_page - i;
++
++         if (page_size > SFC_PREFETCH_BUFSIZE) 
++            page_size = SFC_PREFETCH_BUFSIZE;
++
++         sfc_sync(flash, to, buf, page_size, pgoffset, 1);
+       }
+-      flash->cd.offset = to + i;
+-      flash->cd.length= page_size;
+-      flash->cd.buffer= (u8*)buf + i;
+ 
++      /* write everything in flash->page_size chunks */
++      for (;i < len; i += page_size, pgoffset += page_size)
++      {
++         page_size = len - i;
+ 
+-		wait_till_ready(flash);
+-      write_enable(flash);
+-      wait_till_ready_wr(flash);
+-      #ifdef SFC_DMAC_ENABLE
+-      if (page_size == FLASH_PAGESIZE)
+-			nx_sfc_write(flash);
+-      else
+-      #endif            
+-      nx_sfc_prefetch_write(flash);
+-	}
++         if (page_size > FLASH_PAGESIZE)
++            page_size = FLASH_PAGESIZE;
++
++         if (page_size > SFC_PREFETCH_BUFSIZE) 
++            page_size = SFC_PREFETCH_BUFSIZE;
++
++         sfc_sync(flash, to, buf, page_size, pgoffset, 1);
++      }
++   }
+   
+    if (retlen)
+       *retlen = len;
+-	mutex_unlock(&flash->lock);
++   mutex_unlock(&flash->lock);
+ 
+-	return 0;
++   return 0;
+ }
+ 
+-
+ /****************************************************************************/
+ 
+-/*
+- * SPI device driver setup and teardown
+- */
+-
+-struct flash_info {
+-	char		*name;
+-
+-	/* JEDEC id zero means "no ID" (most older chips); otherwise it has
+-	 * a high byte of zero plus three data bytes: the manufacturer id,
+-	 * then a two byte device id.
+-	 */
+-	u32		jedec_id;
+-	u16             ext_id;
+-
+-	/* The size listed here is what works with OPCODE_SE, which isn't
+-	 * necessarily called a "sector" by the vendor.
+-	 */
+-	unsigned	sector_size;
+-	u16		n_sectors;
+-
+-	u16		flags;
+-   #define	SECT_4K		0x01		/* OPCODE_BE_4K works uniformly */
+-};
+-
+-
+ /* NOTE: double check command sets and memory organization when you add
+  * more flash chips.  This current list focusses on newer chips, which
+  * have been converging on command sets which including JEDEC ID.
+  */
+ static struct flash_info __devinitdata serial_flash_data [] = {
+ 
+-	/* Atmel -- some are (confusingly) marketed as "DataFlash" */
+-	{ "at25fs010",  0x1f6601, 0, 32 * 1024, 4, SECT_4K, },
+-	{ "at25fs040",  0x1f6604, 0, 64 * 1024, 8, SECT_4K, },
+-
+-	{ "at25df041a", 0x1f4401, 0, 64 * 1024, 8, SECT_4K, },
+-	{ "at25df641",  0x1f4800, 0, 64 * 1024, 128, SECT_4K, },
+-
+-	{ "at26f004",   0x1f0400, 0, 64 * 1024, 8, SECT_4K, },
+-	{ "at26df081a", 0x1f4501, 0, 64 * 1024, 16, SECT_4K, },
+-	{ "at26df161a", 0x1f4601, 0, 64 * 1024, 32, SECT_4K, },
+-	{ "at26df321",  0x1f4701, 0, 64 * 1024, 64, SECT_4K, },
+-
+-	/* Spansion -- single (large) sector size only, at least
+-	 * for the chips listed here (without boot sectors).
+-	 */
+-	{ "s25sl004a", 0x010212, 0, 64 * 1024, 8, },
+-	{ "s25sl008a", 0x010213, 0, 64 * 1024, 16, },
+-	{ "s25sl016a", 0x010214, 0, 64 * 1024, 32, },
+-	{ "s25sl032a", 0x010215, 0, 64 * 1024, 64, },
+-	{ "s25sl064a", 0x010216, 0, 64 * 1024, 128, },
++   /* Atmel -- some are (confusingly) marketed as "DataFlash" */
++   { "at25fs010",  0x1f6601, 0, 32 * 1024, 4, SECT_4K, },
++   { "at25fs040",  0x1f6604, 0, 64 * 1024, 8, SECT_4K, },
++
++   { "at25df041a", 0x1f4401, 0, 64 * 1024, 8, SECT_4K, },
++   { "at25df641",  0x1f4800, 0, 64 * 1024, 128, SECT_4K, },
++
++   { "at26f004",   0x1f0400, 0, 64 * 1024, 8, SECT_4K, },
++   { "at26df081a", 0x1f4501, 0, 64 * 1024, 16, SECT_4K, },
++   { "at26df161a", 0x1f4601, 0, 64 * 1024, 32, SECT_4K, },
++   { "at26df321",  0x1f4701, 0, 64 * 1024, 64, SECT_4K, },
++
++   /* Spansion -- single (large) sector size only, at least
++    * for the chips listed here (without boot sectors).
++    */
++   { "s25sl004a", 0x010212, 0, 64 * 1024, 8, },
++   { "s25sl008a", 0x010213, 0, 64 * 1024, 16, },
++   { "s25sl016a", 0x010214, 0, 64 * 1024, 32, },
++   { "s25sl032a", 0x010215, 0, 64 * 1024, 64, },
++   { "s25sl064a", 0x010216, 0, 64 * 1024, 128, },
+         { "s25sl12800", 0x012018, 0x0300, 256 * 1024, 64, },
+-	{ "s25sl12801", 0x012018, 0x0301, 64 * 1024, 256, },
++   { "s25sl12801", 0x012018, 0x0301, 64 * 1024, 256, },
+ 
+-	/* SST -- large erase sizes are "overlays", "sectors" are 4K */
+-	{ "sst25vf040b", 0xbf258d, 0, 64 * 1024, 8, SECT_4K, },
+-	{ "sst25vf080b", 0xbf258e, 0, 64 * 1024, 16, SECT_4K, },
+-	{ "sst25vf016b", 0xbf2541, 0, 64 * 1024, 32, SECT_4K, },
+-	{ "sst25vf032b", 0xbf254a, 0, 64 * 1024, 64, SECT_4K, },
+-
+-	/* ST Microelectronics -- newer production may have feature updates */
+-	{ "m25p05",  0x202010,  0, 32 * 1024, 2, },
+-	{ "m25p10",  0x202011,  0, 32 * 1024, 4, },
+-	{ "m25p20",  0x202012,  0, 64 * 1024, 4, },
+-	{ "m25p40",  0x202013,  0, 64 * 1024, 8, },
+-	{ "m25p80",         0,  0, 64 * 1024, 16, },
+-	{ "m25p16",  0x202015,  0, 64 * 1024, 32, },
+-	{ "m25p32",  0x202016,  0, 64 * 1024, 64, },
+-	{ "m25p64",  0x202017,  0, 64 * 1024, 128, },
+-	{ "m25p128", 0x202018, 0, 256 * 1024, 64, },
++   /* SST -- large erase sizes are "overlays", "sectors" are 4K */
++   { "sst25vf040b", 0xbf258d, 0, 64 * 1024, 8, SECT_4K, },
++   { "sst25vf080b", 0xbf258e, 0, 64 * 1024, 16, SECT_4K, },
++   { "sst25vf016b", 0xbf2541, 0, 64 * 1024, 32, SECT_4K, },
++   { "sst25vf032b", 0xbf254a, 0, 64 * 1024, 64, SECT_4K, },
++
++   /* ST Microelectronics -- newer production may have feature updates */
++   { "m25p05",  0x202010,  0, 32 * 1024, 2, },
++   { "m25p10",  0x202011,  0, 32 * 1024, 4, },
++   { "m25p20",  0x202012,  0, 64 * 1024, 4, },
++   { "m25p40",  0x202013,  0, 64 * 1024, 8, },
++   { "m25p80",         0,  0, 64 * 1024, 16, },
++   { "m25p16",  0x202015,  0, 64 * 1024, 32, },
++   { "m25p32",  0x202016,  0, 64 * 1024, 64, },
++   { "m25p64",  0x202017,  0, 64 * 1024, 128, },
++   { "m25p128", 0x202018, 0, 256 * 1024, 64, },
+ 
+-	{ "m45pe80", 0x204014,  0, 64 * 1024, 16, },
+-	{ "m45pe16", 0x204015,  0, 64 * 1024, 32, },
++   { "m45pe80", 0x204014,  0, 64 * 1024, 16, },
++   { "m45pe16", 0x204015,  0, 64 * 1024, 32, },
+ 
+-	{ "m25pe80", 0x208014,  0, 64 * 1024, 16, },
+-	{ "m25pe16", 0x208015,  0, 64 * 1024, 32, SECT_4K, },
++   { "m25pe80", 0x208014,  0, 64 * 1024, 16, },
++   { "m25pe16", 0x208015,  0, 64 * 1024, 32, SECT_4K, },
+ 
+ 	/* Winbond -- w25x "blocks" are 64K, "sectors" are 4KiB */
+ 	{ "w25x10", 0xef3011, 0, 64 * 1024, 2, SECT_4K, },
+@@ -864,50 +845,50 @@
+ 	{ "w25x128",0xef4018, 0, 64 * 1024, 256, },
+ 
+         /* Macronix 32MB Flash */	
+-	{ "MX25L",0xC22019, 0, 64 * 1024, 512, },
++	{ "MX25L",0xc22019, 0, 64 * 1024, 512, },
+ };
+ 
+ static struct flash_info *__devinit jedec_probe(struct platform_device *spi)
+ {
+-	int			tmp;
+-//	u8			code = OPCODE_RDID;
+-	u8			*id;
+-	u32			jedec;
+-	u16                     ext_jedec;
+-	struct flash_info	*info;
+-
+-	/* JEDEC also defines an optional "extended device information"
+-	 * string for after vendor-specific data, after the three bytes
+-	 * we use here.  Supporting some chips might require using it.
+-	 */
+-   	struct nx_sfc_mtd	*flash = dev_get_drvdata(&spi->dev);
+-   	tmp = nx_sfc_read_id(flash->mmio_base);
+-	if (tmp ==0xFFFFFFFF) {
+-		MTDDEBUG(MTD_DEBUG_LEVEL0, "error %d reading JEDEC ID\n",
+-			tmp);
+-		return NULL;
+-	}
+-   	id = (u8 *) &tmp;
+- 	jedec = id[0];
+-	jedec = jedec << 8;
+-	jedec |= id[1];
+-	jedec = jedec << 8;
+-	jedec |= id[2];
+-
+-   	ext_jedec = 0;
+-   	printk(KERN_ERR "JEDC ID = 0x%x \n", jedec);
+-
+-	for (tmp = 0, info = serial_flash_data;
+-			tmp < ARRAY_SIZE(serial_flash_data);
+-			tmp++, info++) {
+-		if (info->jedec_id == jedec) {
+-			if (info->ext_id != 0 && info->ext_id != ext_jedec)
+-				continue;
+-			return info;
+-		}
+-	}
+-	dev_err(&spi->dev, "unrecognized JEDEC id %06x\n", jedec);
+-	return NULL;
++   int               tmp;
++   u8                *id;
++   u32               jedec;
++   u16               ext_jedec;
++   struct flash_info *info;
++
++   /* JEDEC also defines an optional "extended device information"
++   * string for after vendor-specific data, after the three bytes
++   * we use here.  Supporting some chips might require using it.
++   */
++   struct nx_sfc_mtd *flash = dev_get_drvdata(&spi->dev);
++   tmp = nx_sfc_read_id(flash->mmio_base);
++
++   if (tmp ==0xFFFFFFFF) {
++      MTDDEBUG(MTD_DEBUG_LEVEL0, "error %d reading JEDEC ID\n",
++         tmp);
++      return NULL;
++   }
++      id = (u8 *) &tmp;
++   jedec = id[0];
++   jedec = jedec << 8;
++   jedec |= id[1];
++   jedec = jedec << 8;
++   jedec |= id[2];
++
++   ext_jedec = 0;
++   printk(KERN_ERR "JEDEC ID = 0x%x \n", jedec);
++
++   for (tmp = 0, info = serial_flash_data;
++         tmp < ARRAY_SIZE(serial_flash_data);
++         tmp++, info++) {
++      if (info->jedec_id == jedec) {
++         if (info->ext_id != 0 && info->ext_id != ext_jedec)
++            continue;
++         return info;
++      }
++   }
++   dev_err(&spi->dev, "unrecognized JEDEC id %06x\n", jedec);
++   return NULL;
+ }
+ 
+ 
+@@ -918,203 +899,203 @@
+  */
+ static int __devinit nx_sfc_probe(struct platform_device *pdev)
+ {
+-	struct nx_sfc_info	*data;
+-	struct nx_sfc_mtd	*flash;
+-	struct flash_info	*info;
+-	unsigned		i;
+-   	int err;
+-
+-   	struct resource *res;
+- 	//  unsigned long size;
+-   	void __iomem *mmio_regs = NULL;
+-   	resource_size_t mmio_start, mmio_len;
+-
+-   	/* Get MMIO registers resource */
+-   	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-   	if (!res) {
+-      		dev_err(&pdev->dev, "No MMIO resource found\n");
+-      		return -ENXIO;
+-   	}
+-
+-   	mmio_start = res->start;
+-   	mmio_len   = res->end - res->start + 1;
+-
+-  	if (!request_mem_region(mmio_start, mmio_len, pdev->name)) {
+-      		dev_err(&pdev->dev, "request_mem_region failure\n");
+-      		return -EBUSY;
+-   	}
+-
+-   	mmio_regs = ioremap(mmio_start, mmio_len);
+-   	if(!mmio_regs) {
+-      		dev_err(&pdev->dev, "ioremap failure\n");
+-      		err = -ENOMEM;
+-      		return err;
+-   	}
+-      	nx_sfc_init(mmio_regs);
+-      	#ifdef SFC_DMAC_ENABLE
+-      	err = nx_sfc_dma_init();
+-      	if (err)
+-        	return err;
+-      	#endif
+-
+-   	flash = kzalloc(sizeof *flash, GFP_KERNEL);
+-	if (!flash)
+-		return -ENOMEM;
++   struct nx_sfc_info   *data;
++   struct nx_sfc_mtd *flash;
++   struct flash_info *info;
++   unsigned    i;
++   int err;
++ 
++   struct resource *res;
++//  unsigned long size;
++   void __iomem *mmio_regs = NULL;
++   resource_size_t mmio_start, mmio_len;
++
++   /* Get MMIO registers resource */
++   res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++   if (!res) {
++         dev_err(&pdev->dev, "No MMIO resource found\n");
++         return -ENXIO;
++   }
++
++   mmio_start = res->start;
++   mmio_len   = res->end - res->start + 1;
++
++   if (!request_mem_region(mmio_start, mmio_len, pdev->name)) {
++         dev_err(&pdev->dev, "request_mem_region failure\n");
++         return -EBUSY;
++   }
++
++   mmio_regs = ioremap(mmio_start, mmio_len);
++   if(!mmio_regs) {
++         dev_err(&pdev->dev, "ioremap failure\n");
++         err = -ENOMEM;
++         return err;
++   }
++   nx_sfc_init(mmio_regs);
++   #ifdef SFC_DMAC_ENABLE
++   err = nx_sfc_dma_init();
++   if (err)
++   return err;
++   #endif
++
++   flash = kzalloc(sizeof *flash, GFP_KERNEL);
++   if (!flash)
++      return -ENOMEM;
+ 
+-	mutex_init(&flash->lock);
+-	dev_set_drvdata(&pdev->dev, flash);
++   mutex_init(&flash->lock);
++   dev_set_drvdata(&pdev->dev, flash);
+    
+-   	flash->sfc = pdev;
+-   	flash->mtd.name = pdev->name;
+-	flash->mtd.type = MTD_NORFLASH;
+-	flash->mtd.writesize = 1;
+-	flash->mtd.flags = MTD_CAP_NORFLASH;
+-	flash->mtd.erase = nx_sfc_mtd_erase;
+-	flash->mtd.read = nx_sfc_mtd_read;
+-	flash->mtd.write = nx_sfc_mtd_write;
+-  	flash->mtd.block_read = nx_sfc_mtd_read;
+-	flash->mtd.block_write = nx_sfc_mtd_write;
++   flash->sfc = pdev;
++   flash->mtd.name = pdev->name;
++   flash->mtd.type = MTD_NORFLASH;
++   flash->mtd.writesize = 1;
++   flash->mtd.flags = MTD_CAP_NORFLASH;
++   flash->mtd.erase = nx_sfc_mtd_erase;
++   flash->mtd.read = nx_sfc_mtd_read;
++   flash->mtd.write = nx_sfc_mtd_write;
++   flash->mtd.block_read = nx_sfc_mtd_read;
++   flash->mtd.block_write = nx_sfc_mtd_write;
+  
+-   	flash->mmio_start    = mmio_start;
+-   	flash->mmio_len      = mmio_len;
+-   	flash->mmio_base     = mmio_regs;
+-
+-
+-	/* Platform data helps sort out which chip type we have, as
+-	 * well as how this board partitions it.  If we don't have
+-	 * a chip ID, try the JEDEC id commands; they'll work for most
+-	 * newer chips, even if we don't recognize the particular chip.
+-	 */
+-	data = pdev->dev.platform_data;
+-	if (data && data->type) {
+-		for (i = 0, info = serial_flash_data;
+-				i < ARRAY_SIZE(serial_flash_data);
+-				i++, info++) {
+-			if (strcmp(data->type, info->name) == 0)
+-				break;
+-		}
+-
+-		/* unrecognized chip? */
+-		if (i == ARRAY_SIZE(serial_flash_data)) {
+-			MTDDEBUG(MTD_DEBUG_LEVEL0, ": unrecognized id %s\n",
+-					 data->type);
+-			info = NULL;
+-
+-		/* recognized; is that chip really what's there? */
+-		} else if (info->jedec_id) {
+-			struct flash_info	*chip = jedec_probe(pdev);
+-
+-			if (!chip || chip != info) {
+-				dev_warn(&pdev->dev, "found %s, expected %s\n",
+-						chip ? chip->name : "UNKNOWN",
+-						info->name);
+-				info = NULL;
+-			}
+-		}
+-	} else
+-	      info = jedec_probe(pdev);
++   flash->mmio_start    = mmio_start;
++   flash->mmio_len      = mmio_len;
++   flash->mmio_base     = mmio_regs;
++
++
++   /* Platform data helps sort out which chip type we have, as
++    * well as how this board partitions it.  If we don't have
++    * a chip ID, try the JEDEC id commands; they'll work for most
++    * newer chips, even if we don't recognize the particular chip.
++    */
++   data = pdev->dev.platform_data;
++   if (data && data->type) {
++      for (i = 0, info = serial_flash_data;
++            i < ARRAY_SIZE(serial_flash_data);
++            i++, info++) {
++         if (strcmp(data->type, info->name) == 0)
++            break;
++      }
++
++      /* unrecognized chip? */
++      if (i == ARRAY_SIZE(serial_flash_data)) {
++         MTDDEBUG(MTD_DEBUG_LEVEL0, ": unrecognized id %s\n",
++                data->type);
++         info = NULL;
++
++      /* recognized; is that chip really what's there? */
++      } else if (info->jedec_id) {
++         struct flash_info *chip = jedec_probe(pdev);
++
++         if (!chip || chip != info) {
++            dev_warn(&pdev->dev, "found %s, expected %s\n",
++                  chip ? chip->name : "UNKNOWN",
++                  info->name);
++            info = NULL;
++         }
++      }
++   } else
++         info = jedec_probe(pdev);
+       
+ 
+-	if (!info)
+-		return -ENODEV;
+-   
+-   	flash->mtd.size = info->sector_size * info->n_sectors;
+-   	/* prefer "small sector" erase if possible */
+-	if (info->flags & SECT_4K) {
+-		flash->erase_opcode = OPCODE_BE_4K;
+-		flash->mtd.erasesize = 4096;
+-	} else {
+-		flash->erase_opcode = OPCODE_SE;
+-		flash->mtd.erasesize = info->sector_size;
+-	}
+-
+-	dev_info(&pdev->dev, "%s (%lld Kbytes)\n", info->name,
+-			flash->mtd.size / 1024);
+-
+-	MTDDEBUG(MTD_DEBUG_LEVEL2,
+-		"mtd .name = %s, .size = 0x%.8llx (%lluMiB) "
+-			".erasesize = 0x%.8x (%uKiB) .numeraseregions = %d\n",
+-		flash->mtd.name,
+-		flash->mtd.size, flash->mtd.size / (1024*1024),
+-		flash->mtd.erasesize, flash->mtd.erasesize / 1024,
+-		flash->mtd.numeraseregions);
+-
+-	if (flash->mtd.numeraseregions)
+-		for (i = 0; i < flash->mtd.numeraseregions; i++)
+-			MTDDEBUG(MTD_DEBUG_LEVEL2,
+-				"mtd.eraseregions[%d] = { .offset = 0x%.8llx, "
+-				".erasesize = 0x%.8x (%uKiB), "
+-				".numblocks = %d }\n",
+-				i, flash->mtd.eraseregions[i].offset,
+-				flash->mtd.eraseregions[i].erasesize,
+-				flash->mtd.eraseregions[i].erasesize / 1024,
+-				flash->mtd.eraseregions[i].numblocks);
+-
+-
+-	/*
+-	 * Atmel serial flash tend to power up
+-	 * with the software protection bits set
+-	 */
+-
+-	if (info->jedec_id >> 16 == 0x1f) {
+-		write_enable(flash);
+-		write_sr(flash, 0);
+-	}
+- //       nx_sfc_32b_en(flash); 
+-	/* partitions should match sector boundaries; and it may be good to
+-	 * use readonly partitions for writeprotected sectors (BP2..BP0).
+-	 */
+-	if (mtd_has_partitions()) 
+-      	{
+-		struct mtd_partition	*parts = NULL;
+-		int			nr_parts = 0;
++   if (!info)
++      return -ENODEV;
++
++   flash->info = *info;
++
++   flash->mtd.size = info->sector_size * info->n_sectors;
++   /* prefer "small sector" erase if possible */
++   if (info->flags & SECT_4K) {
++      flash->erase_opcode = OPCODE_BE_4K;
++      flash->mtd.erasesize = 4096;
++   } else {
++      flash->erase_opcode = OPCODE_SE;
++      flash->mtd.erasesize = info->sector_size;
++   }
++
++   dev_info(&pdev->dev, "%s (%lld Kbytes)\n", info->name,
++         (long long)flash->mtd.size >> 10);
++
++   MTDDEBUG(MTD_DEBUG_LEVEL2,
++      "mtd .name = %s, .size = 0x%llx (%lldMiB) "
++         ".erasesize = 0x%.8x (%uKiB) .numeraseregions = %d\n",
++      flash->mtd.name,
++      (long long)flash->mtd.size, (long long)(flash->mtd.size >> 20),
++      flash->mtd.erasesize, flash->mtd.erasesize / 1024,
++      flash->mtd.numeraseregions);
++
++   if (flash->mtd.numeraseregions)
++      for (i = 0; i < flash->mtd.numeraseregions; i++)
++         MTDDEBUG(MTD_DEBUG_LEVEL2,
++            "mtd.eraseregions[%d] = { .offset = 0x%llx, "
++            ".erasesize = 0x%.8x (%uKiB), "
++            ".numblocks = %d }\n",
++            i, (long long)flash->mtd.eraseregions[i].offset,
++            flash->mtd.eraseregions[i].erasesize,
++            flash->mtd.eraseregions[i].erasesize / 1024,
++            flash->mtd.eraseregions[i].numblocks);
++
++   /*
++    * Atmel serial flash tend to power up
++    * with the software protection bits set
++    */
++   if (info->jedec_id >> 16 == 0x1f) {
++      write_enable(flash);
++      write_sr(flash, 0);
++   }
++
++   /* partitions should match sector boundaries; and it may be good to
++    * use readonly partitions for writeprotected sectors (BP2..BP0).
++    */
++   if (mtd_has_partitions()) 
++         {
++      struct mtd_partition *parts = NULL;
++      int         nr_parts = 0;
+ 
+ #ifdef CONFIG_MTD_CMDLINE_PARTS
+-		static const char *part_probes[] = { "cmdlinepart", NULL, };
++      static const char *part_probes[] = { "cmdlinepart", NULL, };
+ 
+-		nr_parts = parse_mtd_partitions(&flash->mtd,
+-				part_probes, &parts, 0);
++      nr_parts = parse_mtd_partitions(&flash->mtd,
++            part_probes, &parts, 0);
+ #endif
+ 
+-		if (nr_parts <= 0 && data && data->parts) {
+-			parts = data->parts;
+-			nr_parts = data->nr_parts;
+-		}
+-
+-		if (nr_parts > 0) {
+-			for (i = 0; i < nr_parts; i++) {
+-				MTDDEBUG(MTD_DEBUG_LEVEL2, "partitions[%d] = "
+-					"{.name = %s, .offset = 0x%.8llx, "
+-						".size = 0x%.8llx (%lluKiB) }\n",
+-					i, parts[i].name,
+-					parts[i].offset,
+-					parts[i].size,
+-					parts[i].size / 1024);
+-			}
+-			flash->partitioned = 1;
+-			return add_mtd_partitions(&flash->mtd, parts, nr_parts);
+-		}
+-	} else if (data->nr_parts)
+-		dev_warn(&pdev->dev, "ignoring %d default partitions on %s\n",
+-				data->nr_parts, data->name);
++      if (nr_parts <= 0 && data && data->parts) {
++         parts = data->parts;
++         nr_parts = data->nr_parts;
++      }
+ 
+-	return add_mtd_device(&flash->mtd) == 1 ? -ENODEV : 0;
++      if (nr_parts > 0) {
++         for (i = 0; i < nr_parts; i++) {
++            MTDDEBUG(MTD_DEBUG_LEVEL2, "partitions[%d] = "
++               "{.name = %s, .offset = 0x%llx, "
++                  ".size = 0x%llx (%lldKiB) }\n",
++               i, parts[i].name,
++               (long long)parts[i].offset,
++               (long long)parts[i].size,
++               (long long)(parts[i].size >> 10));
++         }
++         flash->partitioned = 1;
++         return add_mtd_partitions(&flash->mtd, parts, nr_parts);
++      }
++   } else if (data->nr_parts)
++      dev_warn(&pdev->dev, "ignoring %d default partitions on %s\n",
++            data->nr_parts, data->name);
++
++   return add_mtd_device(&flash->mtd) == 1 ? -ENODEV : 0;
+ }
+ 
+ 
+ static int __devexit nx_sfc_remove(struct platform_device *spi)
+ {
+-	struct nx_sfc_mtd	*flash = dev_get_drvdata(&spi->dev);
+-	int		status;
++   struct nx_sfc_mtd *flash = dev_get_drvdata(&spi->dev);
++   int      status;
+ 
+-	/* Clean up MTD stuff. */
+-	if (mtd_has_partitions() && flash->partitioned)
+-		status = del_mtd_partitions(&flash->mtd);
+-	else
+-		status = del_mtd_device(&flash->mtd);
+-	if (status == 0)
+-		kfree(flash);
+-	return 0;
++   /* Clean up MTD stuff. */
++   if (mtd_has_partitions() && flash->partitioned)
++      status = del_mtd_partitions(&flash->mtd);
++   else
++      status = del_mtd_device(&flash->mtd);
++   if (status == 0)
++      kfree(flash);
++   return 0;
+ }
+ 
+ static struct platform_driver nx_sfc_driver = {
+diff -Naur linux-2.6.34/drivers/mtd/sfc/nx_sfc.h linux-2.6.34_sfc_jffs2/drivers/mtd/sfc/nx_sfc.h
+--- linux-2.6.34/drivers/mtd/sfc/nx_sfc.h	2010-10-13 11:01:31.341863000 +0530
++++ linux-2.6.34_sfc_jffs2/drivers/mtd/sfc/nx_sfc.h	2010-10-12 19:43:32.890677000 +0530
+@@ -3,404 +3,405 @@
+ 
+    #define IPBGCSFLSHNTWK_BASE 0x0
+    #define IPBGCSFLSHNTWK_SFC_SFC_VERSION_ID_REG  (0x00)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_VERSION_ID_VERSION_R (0x07fffffff << 0)
++   #define IPBGCSFLSHNTWK_SFC_SFC_VERSION_ID_VERSION_R (0x07fffffff << 0)
+ 
+-	#define IPBGCSFLSHNTWK_SFC_SFC_CSR_REG  (0x04)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_CSR_SPI_RST_RW (0x01 << 31)
++   #define IPBGCSFLSHNTWK_SFC_SFC_CSR_REG  (0x04)
++   #define IPBGCSFLSHNTWK_SFC_SFC_CSR_SPI_RST_RW (0x01 << 31)
+ 
+-	#define IPBGCSFLSHNTWK_SFC_SFC_CSR_DMA_REQ_INT_MASK_RW (0x01 << 30)
++   #define IPBGCSFLSHNTWK_SFC_SFC_CSR_DMA_REQ_INT_MASK_RW (0x01 << 30)
+ 
+-	#define IPBGCSFLSHNTWK_SFC_SFC_CSR_DMA_REQ_EN_RW (0x01 << 29)
++   #define IPBGCSFLSHNTWK_SFC_SFC_CSR_DMA_REQ_EN_RW (0x01 << 29)
+ 
+-	#define IPBGCSFLSHNTWK_SFC_SFC_CSR_ACC_ERR_CLR_RW (0x01 << 28)
+-
+-	#define IPBGCSFLSHNTWK_SFC_SFC_CSR_TMR_INT_MASK_RW (0x01 << 27)
+-
+-	#define IPBGCSFLSHNTWK_SFC_SFC_CSR_TMR_INT_EN_RW (0x01 << 26)
+-
+-	#define IPBGCSFLSHNTWK_SFC_SFC_CSR_TX_INT_MASK_RW (0x01 << 25)
+-
+-	#define IPBGCSFLSHNTWK_SFC_SFC_CSR_TX_INT_EN_RW (0x01 << 24)
+-
+-	#define IPBGCSFLSHNTWK_SFC_SFC_CSR_TX_HOLD_EN_RW (0x01 << 23)
+-
+-	#define IPBGCSFLSHNTWK_SFC_SFC_CSR_PRE_FETCH_TX_EN_RW (0x01 << 22)
+-
+-	#define IPBGCSFLSHNTWK_SFC_SFC_CSR_TX_START_BITS_RW (0x01 << 20)
+-
+-	#define IPBGCSFLSHNTWK_SFC_SFC_CSR_TX_TRANS_EDGE_RW (0x01 << 18)
+-
+-	#define IPBGCSFLSHNTWK_SFC_SFC_CSR_TX_EN_RW (0x01 << 17)
+-
+-	#define IPBGCSFLSHNTWK_SFC_SFC_CSR_LOOP_BACK_RW (0x01 << 16)
+-
+-	#define IPBGCSFLSHNTWK_SFC_SFC_CSR_DMA_THRD_RW (0x0f << 11)
+-
+-	#define IPBGCSFLSHNTWK_SFC_SFC_CSR_RX_INT_MASK_RW (0x01 << 10)
+-
+-	#define IPBGCSFLSHNTWK_SFC_SFC_CSR_RX_INT_EN_RW (0x01 << 9)
+-
+-	#define IPBGCSFLSHNTWK_SFC_SFC_CSR_RX_HOLD_EN_RW (0x01 << 8)
+-
+-	#define IPBGCSFLSHNTWK_SFC_SFC_CSR_PRE_FETCH_RX_EN_RW (0x01 << 6)
+-
+-	#define IPBGCSFLSHNTWK_SFC_SFC_CSR_RX_DATA_WIDTH_RW (0x01 << 4)
+-
+-	#define IPBGCSFLSHNTWK_SFC_SFC_CSR_RX_CAP_EDGE_RW (0x01 << 2)
+-
+-	#define IPBGCSFLSHNTWK_SFC_SFC_CSR_RX_EN_RW (0x01 << 1)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_CSR_RX_EN_SHIFT 1
+-	#define IPBGCSFLSHNTWK_SFC_SFC_CSR_RX_EN_VAL0 0x00
+-	#define IPBGCSFLSHNTWK_SFC_SFC_CSR_RX_EN_VAL1 0x01
+-	#define IPBGCSFLSHNTWK_SFC_SFC_CSR_SPI_EN_RW (0x01 << 0)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_CSR_SPI_EN_SHIFT 0
+-	#define IPBGCSFLSHNTWK_SFC_SFC_CSR_SPI_EN_VAL0 0x00
+-	#define IPBGCSFLSHNTWK_SFC_SFC_CSR_SPI_EN_VAL1 0x01
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_REG  (0x08)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_SFT_SCK_RW (0x01 << 31)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_SFT_SCK_SHIFT 31
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_SFT_SCK_VAL0 0x00
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_SFT_SCK_VAL1 0x01
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_SFT_WP_RW (0x01 << 30)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_SFT_WP_SHIFT 30
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_SFT_WP_VAL0 0x00
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_SFT_WP_VAL1 0x01
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_SFT_HOLD_RW (0x01 << 29)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_SFT_HOLD_SHIFT 29
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_SFT_HOLD_VAL0 0x00
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_SFT_HOLD_VAL1 0x01
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_SFT_CS_RW (0x01 << 28)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_SFT_CS_SHIFT 28
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_SFT_CS_VAL0 0x00
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_SFT_CS_VAL1 0x01
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_SFT_SI_RW (0x01 << 27)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_SFT_SI_SHIFT 27
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_SFT_SI_VAL0 0x00
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_SFT_SI_VAL1 0x01
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_SFT_SO_RW (0x01 << 24)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_SFT_SO_SHIFT 24
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_SFT_SO_VAL0 0x00
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_SFT_SO_VAL1 0x01
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_SFT_EN_SCK_RW (0x01 << 23)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_SFT_EN_SCK_SHIFT 23
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_SFT_EN_SCK_VAL0 0x00
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_SFT_EN_SCK_VAL1 0x01
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_SFT_EN_WP_RW (0x01 << 22)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_SFT_EN_WP_SHIFT 22
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_SFT_EN_WP_VAL0 0x00
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_SFT_EN_WP_VAL1 0x01
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_SFT_EN_HOLD_RW (0x01 << 21)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_SFT_EN_HOLD_SHIFT 21
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_SFT_EN_HOLD_VAL0 0x00
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_SFT_EN_HOLD_VAL1 0x01
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_SFT_EN_CS_RW (0x01 << 20)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_SFT_EN_CS_SHIFT 20
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_SFT_EN_CS_VAL0 0x00
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_SFT_EN_CS_VAL1 0x01
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_SFT_EN_SI_RW (0x01 << 19)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_SFT_EN_SI_SHIFT 19
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_SFT_EN_SI_VAL0 0x00
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_SFT_EN_SI_VAL1 0x01
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_SFT_EN_SO_RW (0x01 << 18)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_SFT_EN_SO_SHIFT 18
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_SFT_EN_SO_VAL0 0x00
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_SFT_EN_SO_VAL1 0x01
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_ADDR_TX_MULTI_RW (0x01 << 12)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_ADDR_TX_MULTI_SHIFT 12
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_ADDR_TX_MULTI_VAL0 0x00
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_ADDR_TX_MULTI_VAL1 0x01
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_TX_MULTI_RW (0x01 << 10)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_TX_MULTI_SHIFT 10
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_TX_MULTI_VAL0 0x00
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_TX_MULTI_VAL1 0x01
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_RX_MULTI_RW (0x01 << 8)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_RX_MULTI_SHIFT 8
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_RX_MULTI_VAL0 0x00
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_RX_MULTI_VAL1 0x01
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_SI_PIN_MUX_RW (0x01 << 6)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_SI_PIN_MUX_SHIFT 6
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_SI_PIN_MUX_VAL0 0x00
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_SI_PIN_MUX_VAL1 0x01
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_SO_PIN_MUX_RW (0x01 << 4)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_SO_PIN_MUX_SHIFT 4
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_SO_PIN_MUX_VAL0 0x00
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_SO_PIN_MUX_VAL1 0x01
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_WP_PIN_MUX_RW (0x01 << 2)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_WP_PIN_MUX_SHIFT 2
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_WP_PIN_MUX_VAL0 0x00
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_WP_PIN_MUX_VAL1 0x01
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_HOLD_PIN_MUX_RW (0x03 << 0)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_HOLD_PIN_MUX_SHIFT 0
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_HOLD_PIN_MUX_VAL0 0x00
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_HOLD_PIN_MUX_VAL1 0x01
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_HOLD_PIN_MUX_VAL2 0x02
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_HOLD_PIN_MUX_VAL3 0x03
+-	#define IPBGCSFLSHNTWK_SFC_SFC_SCK_CSR_REG  (0x0c)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_SCK_CSR_CLK_ON_RW (0x01 << 17)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_SCK_CSR_CLK_ON_SHIFT 17
+-	#define IPBGCSFLSHNTWK_SFC_SFC_SCK_CSR_CLK_ON_VAL0 0x00
+-	#define IPBGCSFLSHNTWK_SFC_SFC_SCK_CSR_CLK_ON_VAL1 0x01
+-	#define IPBGCSFLSHNTWK_SFC_SFC_SCK_CSR_SCK_IDL_RW (0x01 << 16)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_SCK_CSR_SCK_IDL_SHIFT 16
+-	#define IPBGCSFLSHNTWK_SFC_SFC_SCK_CSR_SCK_IDL_VAL0 0x00
+-	#define IPBGCSFLSHNTWK_SFC_SFC_SCK_CSR_SCK_IDL_VAL1 0x01
+-	#define IPBGCSFLSHNTWK_SFC_SFC_SCK_CSR_CLOCK_DIV_RW (0x0ffff << 0)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_SCK_CSR_CLOCK_DIV_SHIFT 0
+-	#define IPBGCSFLSHNTWK_SFC_SFC_TM_WP_CS_REG  (0x10)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_TM_WP_CS_THWP_RW (0x07f << 24)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_TM_WP_CS_THWP_SHIFT 24
+-	#define IPBGCSFLSHNTWK_SFC_SFC_TM_WP_CS_TSWP_RW (0x07f << 16)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_TM_WP_CS_TSWP_SHIFT 16
+-	#define IPBGCSFLSHNTWK_SFC_SFC_TM_WP_CS_THCS_RW (0x07f << 8)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_TM_WP_CS_THCS_SHIFT 8
+-	#define IPBGCSFLSHNTWK_SFC_SFC_TM_WP_CS_TSCS_RW (0x0ff << 0)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_TM_WP_CS_TSCS_SHIFT 0
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PROTOCOL_DELAY_REG  (0x14)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PROTOCOL_DELAY_ADDR_BIT_RW (0x01 << 28)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PROTOCOL_DELAY_ADDR_BIT_SHIFT 28
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PROTOCOL_DELAY_ADDR_BIT_VAL0 0x00
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PROTOCOL_DELAY_ADDR_BIT_VAL1 0x01
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PROTOCOL_DELAY_FRAME_DELAY_RW (0x03 << 15)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PROTOCOL_DELAY_FRAME_DELAY_SHIFT 15
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PROTOCOL_DELAY_FRAME_DELAY_VAL0 0x00
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PROTOCOL_DELAY_FRAME_DELAY_VAL1 0x01
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PROTOCOL_DELAY_FRAME_DELAY_VAL2 0x02
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PROTOCOL_DELAY_FRAME_DELAY_VAL3 0x03
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PROTOCOL_DELAY_IO_ADDR_TURN_RW (0x01f << 6)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PROTOCOL_DELAY_IO_ADDR_TURN_SHIFT 6
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PROTOCOL_DELAY_IO_DATA_TURN_RW (0x03f << 0)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PROTOCOL_DELAY_IO_DATA_TURN_SHIFT 0
+-	#define IPBGCSFLSHNTWK_SFC_SFC_DEVICE_CMD_REG  (0x18)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_DEVICE_CMD_SP_CMD_RW (0x07f << 24)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_DEVICE_CMD_SP_CMD_SHIFT 24
+-	#define IPBGCSFLSHNTWK_SFC_SFC_DEVICE_CMD_SP_ADD_REQ_RW (0x01 << 23)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_DEVICE_CMD_SP_ADD_REQ_SHIFT 23
+-	#define IPBGCSFLSHNTWK_SFC_SFC_DEVICE_CMD_SP_ADD_REQ_VAL0 0x00
+-	#define IPBGCSFLSHNTWK_SFC_SFC_DEVICE_CMD_SP_ADD_REQ_VAL1 0x01
+-	#define IPBGCSFLSHNTWK_SFC_SFC_DEVICE_CMD_SP_CMD_DATA_DST_RW (0x01 << 19)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_DEVICE_CMD_SP_CMD_DATA_DST_SHIFT 19
+-	#define IPBGCSFLSHNTWK_SFC_SFC_DEVICE_CMD_SP_CMD_DATA_DST_VAL0 0x00
+-	#define IPBGCSFLSHNTWK_SFC_SFC_DEVICE_CMD_SP_CMD_DATA_DST_VAL1 0x01
+-	#define IPBGCSFLSHNTWK_SFC_SFC_DEVICE_CMD_SP_CMD_DATA_SCR_RW (0x01 << 18)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_DEVICE_CMD_SP_CMD_DATA_SCR_SHIFT 18
+-	#define IPBGCSFLSHNTWK_SFC_SFC_DEVICE_CMD_SP_CMD_DATA_SCR_VAL0 0x00
+-	#define IPBGCSFLSHNTWK_SFC_SFC_DEVICE_CMD_SP_CMD_DATA_SCR_VAL1 0x01
+-	#define IPBGCSFLSHNTWK_SFC_SFC_DEVICE_CMD_SP_RW_CTRL_CMD_RW (0x01 << 17)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_DEVICE_CMD_SP_RW_CTRL_CMD_SHIFT 17
+-	#define IPBGCSFLSHNTWK_SFC_SFC_DEVICE_CMD_SP_RW_CTRL_CMD_VAL0 0x00
+-	#define IPBGCSFLSHNTWK_SFC_SFC_DEVICE_CMD_SP_RW_CTRL_CMD_VAL1 0x01
+-	#define IPBGCSFLSHNTWK_SFC_SFC_DEVICE_CMD_SP_RW_CTRL_CMD_EN_RW (0x01 << 16)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_DEVICE_CMD_SP_RW_CTRL_CMD_EN_SHIFT 16
+-	#define IPBGCSFLSHNTWK_SFC_SFC_DEVICE_CMD_SP_RW_CTRL_CMD_EN_VAL0 0x00
+-	#define IPBGCSFLSHNTWK_SFC_SFC_DEVICE_CMD_SP_RW_CTRL_CMD_EN_VAL1 0x01
+-	#define IPBGCSFLSHNTWK_SFC_SFC_DEVICE_CMD_WR_CMD_MEM_RW (0x07f << 8)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_DEVICE_CMD_WR_CMD_MEM_SHIFT 8
+-	#define IPBGCSFLSHNTWK_SFC_SFC_DEVICE_CMD_RD_CMD_MEM_RW (0x0ff << 0)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_DEVICE_CMD_RD_CMD_MEM_SHIFT 0
+-	#define IPBGCSFLSHNTWK_SFC_SFC_SP_CMD_RD_WR0_DATA_REG  (0x1c)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_SP_CMD_RD_WR0_DATA_RD_WR_DATA0_RW (0x07fffffff << 0)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_SP_CMD_RD_WR0_DATA_RD_WR_DATA0_SHIFT 0
+-	#define IPBGCSFLSHNTWK_SFC_SFC_SP_CMD_RD_WR1_DATA_REG  (0x20)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_SP_CMD_RD_WR1_DATA_RD_WR_DATA1_RW (0x07fffffff << 0)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_SP_CMD_RD_WR1_DATA_RD_WR_DATA1_SHIFT 0
+-	#define IPBGCSFLSHNTWK_SFC_SFC_CMD_TMR_REG  (0x24)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_CMD_TMR_TMR_EN_RW (0x01 << 31)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_CMD_TMR_TMR_EN_SHIFT 31
+-	#define IPBGCSFLSHNTWK_SFC_SFC_CMD_TMR_TMR_EN_VAL0 0x00
+-	#define IPBGCSFLSHNTWK_SFC_SFC_CMD_TMR_TMR_EN_VAL1 0x01
+-	#define IPBGCSFLSHNTWK_SFC_SFC_CMD_TMR_START_SP_RW (0x01 << 30)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_CMD_TMR_START_SP_SHIFT 30
+-	#define IPBGCSFLSHNTWK_SFC_SFC_CMD_TMR_START_SP_VAL0 0x00
+-	#define IPBGCSFLSHNTWK_SFC_SFC_CMD_TMR_START_SP_VAL1 0x01
+-	#define IPBGCSFLSHNTWK_SFC_SFC_CMD_TMR_ACC_ERR_EN_RW (0x01 << 29)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_CMD_TMR_ACC_ERR_EN_SHIFT 29
+-	#define IPBGCSFLSHNTWK_SFC_SFC_CMD_TMR_ACC_ERR_EN_VAL0 0x00
+-	#define IPBGCSFLSHNTWK_SFC_SFC_CMD_TMR_ACC_ERR_EN_VAL1 0x01
+-	#define IPBGCSFLSHNTWK_SFC_SFC_CMD_TMR_TMR_VAL_RW (0x01fffffff << 0)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_CMD_TMR_TMR_VAL_SHIFT 0
+-	#define IPBGCSFLSHNTWK_SFC_SFC_TX_RX_DATA_CNT_REG  (0x28)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_TX_RX_DATA_CNT_TX_COUNT_R (0x07ff << 12)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_TX_RX_DATA_CNT_TX_COUNT_SHIFT 12
+-	#define IPBGCSFLSHNTWK_SFC_SFC_TX_RX_DATA_CNT_RX_COUNT_R (0x0fff << 0)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_TX_RX_DATA_CNT_RX_COUNT_SHIFT 0
+-	#define IPBGCSFLSHNTWK_SFC_SFC_STATUS_REG_REG  (0x2c)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_STATUS_BOOT_STRAP_RW (0x0f << 27)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_STATUS_BOOT_STRAP_SHIFT 27
+-	#define IPBGCSFLSHNTWK_SFC_SFC_STATUS_BOOT_STRAP_VAL0 0x00
+-	#define IPBGCSFLSHNTWK_SFC_SFC_STATUS_BOOT_STRAP_VAL1 0x01
+-	#define IPBGCSFLSHNTWK_SFC_SFC_STATUS_BOOT_STRAP_VAL2 0x02
+-	#define IPBGCSFLSHNTWK_SFC_SFC_STATUS_BOOT_STRAP_VAL3 0x03
+-	#define IPBGCSFLSHNTWK_SFC_SFC_STATUS_BOOT_STRAP_VAL4 0x04
+-	#define IPBGCSFLSHNTWK_SFC_SFC_STATUS_BOOT_STRAP_VAL5 0x05
+-	#define IPBGCSFLSHNTWK_SFC_SFC_STATUS_BOOT_STRAP_VAL6 0x06
+-	#define IPBGCSFLSHNTWK_SFC_SFC_STATUS_BOOT_STRAP_VAL7 0x07
+-	#define IPBGCSFLSHNTWK_SFC_SFC_STATUS_BOOT_STRAP_VAL8 0x08
+-	#define IPBGCSFLSHNTWK_SFC_SFC_STATUS_BOOT_STRAP_VAL9 0x09
+-	#define IPBGCSFLSHNTWK_SFC_SFC_STATUS_BOOT_STRAP_VAL10 0x0a
+-	#define IPBGCSFLSHNTWK_SFC_SFC_STATUS_BOOT_STRAP_VAL11 0x0b
+-	#define IPBGCSFLSHNTWK_SFC_SFC_STATUS_BOOT_STRAP_VAL12 0x0c
+-	#define IPBGCSFLSHNTWK_SFC_SFC_STATUS_BOOT_STRAP_VAL13 0x0d
+-	#define IPBGCSFLSHNTWK_SFC_SFC_STATUS_BOOT_STRAP_VAL14 0x0e
+-	#define IPBGCSFLSHNTWK_SFC_SFC_STATUS_BOOT_STRAP_VAL15 0x0f
+-	#define IPBGCSFLSHNTWK_SFC_SFC_STATUS_CUR_CS_RW (0x01 << 26)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_STATUS_CUR_CS_SHIFT 26
+-	#define IPBGCSFLSHNTWK_SFC_SFC_STATUS_CUR_CS_VAL0 0x00
+-	#define IPBGCSFLSHNTWK_SFC_SFC_STATUS_CUR_CS_VAL1 0x01
+-	#define IPBGCSFLSHNTWK_SFC_SFC_STATUS_CUR_SCK_RW (0x01 << 25)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_STATUS_CUR_SCK_SHIFT 25
+-	#define IPBGCSFLSHNTWK_SFC_SFC_STATUS_CUR_SCK_VAL0 0x00
+-	#define IPBGCSFLSHNTWK_SFC_SFC_STATUS_CUR_SCK_VAL1 0x01
+-	#define IPBGCSFLSHNTWK_SFC_SFC_STATUS_CUR_SI_RW (0x01 << 24)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_STATUS_CUR_SI_SHIFT 24
+-	#define IPBGCSFLSHNTWK_SFC_SFC_STATUS_CUR_SI_VAL0 0x00
+-	#define IPBGCSFLSHNTWK_SFC_SFC_STATUS_CUR_SI_VAL1 0x01
+-	#define IPBGCSFLSHNTWK_SFC_SFC_STATUS_CUR_WP_RW (0x01 << 23)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_STATUS_CUR_WP_SHIFT 23
+-	#define IPBGCSFLSHNTWK_SFC_SFC_STATUS_CUR_WP_VAL0 0x00
+-	#define IPBGCSFLSHNTWK_SFC_SFC_STATUS_CUR_WP_VAL1 0x01
+-	#define IPBGCSFLSHNTWK_SFC_SFC_STATUS_CUR_HOLD_RW (0x01 << 22)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_STATUS_CUR_HOLD_SHIFT 22
+-	#define IPBGCSFLSHNTWK_SFC_SFC_STATUS_CUR_HOLD_VAL0 0x00
+-	#define IPBGCSFLSHNTWK_SFC_SFC_STATUS_CUR_HOLD_VAL1 0x01
+-	#define IPBGCSFLSHNTWK_SFC_SFC_STATUS_CUR_SO_RW (0x01 << 21)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_STATUS_CUR_SO_SHIFT 21
+-	#define IPBGCSFLSHNTWK_SFC_SFC_STATUS_CUR_SO_VAL0 0x00
+-	#define IPBGCSFLSHNTWK_SFC_SFC_STATUS_CUR_SO_VAL1 0x01
+-	#define IPBGCSFLSHNTWK_SFC_SFC_STATUS_SP_CMD_DONE_RW (0x01 << 20)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_STATUS_SP_CMD_DONE_SHIFT 20
+-	#define IPBGCSFLSHNTWK_SFC_SFC_STATUS_SP_CMD_DONE_VAL0 0x00
+-	#define IPBGCSFLSHNTWK_SFC_SFC_STATUS_SP_CMD_DONE_VAL1 0x01
+-	#define IPBGCSFLSHNTWK_SFC_SFC_STATUS_ACC_ERR_RW (0x01 << 19)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_STATUS_ACC_ERR_SHIFT 19
+-	#define IPBGCSFLSHNTWK_SFC_SFC_STATUS_ACC_ERR_VAL0 0x00
+-	#define IPBGCSFLSHNTWK_SFC_SFC_STATUS_ACC_ERR_VAL1 0x01
+-	#define IPBGCSFLSHNTWK_SFC_SFC_STATUS_TMR_INT_RW (0x01 << 18)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_STATUS_TMR_INT_SHIFT 18
+-	#define IPBGCSFLSHNTWK_SFC_SFC_STATUS_TMR_INT_VAL0 0x00
+-	#define IPBGCSFLSHNTWK_SFC_SFC_STATUS_TMR_INT_VAL1 0x01
+-	#define IPBGCSFLSHNTWK_SFC_SFC_STATUS_TX_INT_RW (0x01 << 17)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_STATUS_TX_INT_SHIFT 17
+-	#define IPBGCSFLSHNTWK_SFC_SFC_STATUS_TX_INT_VAL0 0x00
+-	#define IPBGCSFLSHNTWK_SFC_SFC_STATUS_TX_INT_VAL1 0x01
+-	#define IPBGCSFLSHNTWK_SFC_SFC_STATUS_RX_INT_RW (0x01 << 16)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_STATUS_RX_INT_SHIFT 16
+-	#define IPBGCSFLSHNTWK_SFC_SFC_STATUS_RX_INT_VAL0 0x00
+-	#define IPBGCSFLSHNTWK_SFC_SFC_STATUS_RX_INT_VAL1 0x01
+-	#define IPBGCSFLSHNTWK_SFC_SFC_STATUS_DMA_REQ_RW (0x01 << 15)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_STATUS_DMA_REQ_SHIFT 15
+-	#define IPBGCSFLSHNTWK_SFC_SFC_STATUS_DMA_REQ_VAL0 0x00
+-	#define IPBGCSFLSHNTWK_SFC_SFC_STATUS_DMA_REQ_VAL1 0x01
+-	#define IPBGCSFLSHNTWK_SFC_SFC_STATUS_VALID_BUFF_ENTRY_RW (0x0f << 10)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_STATUS_VALID_BUFF_ENTRY_SHIFT 10
+-	#define IPBGCSFLSHNTWK_SFC_SFC_STATUS_VALID_BUFF_ENTRY_VAL0 0x00
+-	#define IPBGCSFLSHNTWK_SFC_SFC_STATUS_VALID_BUFF_ENTRY_VAL1 0x01
+-	#define IPBGCSFLSHNTWK_SFC_SFC_STATUS_VALID_BUFF_ENTRY_VAL2 0x02
+-	#define IPBGCSFLSHNTWK_SFC_SFC_STATUS_VALID_BUFF_ENTRY_VAL3 0x03
+-	#define IPBGCSFLSHNTWK_SFC_SFC_STATUS_VALID_BUFF_ENTRY_VAL4 0x04
+-	#define IPBGCSFLSHNTWK_SFC_SFC_STATUS_VALID_BUFF_ENTRY_VAL5 0x05
+-	#define IPBGCSFLSHNTWK_SFC_SFC_STATUS_VALID_BUFF_ENTRY_VAL6 0x06
+-	#define IPBGCSFLSHNTWK_SFC_SFC_STATUS_VALID_BUFF_ENTRY_VAL7 0x07
+-	#define IPBGCSFLSHNTWK_SFC_SFC_STATUS_VALID_BUFF_ENTRY_VAL8 0x08
+-	#define IPBGCSFLSHNTWK_SFC_SFC_STATUS_VALID_BUFF_ENTRY_VAL9 0x09
+-	#define IPBGCSFLSHNTWK_SFC_SFC_STATUS_VALID_BUFF_ENTRY_VAL10 0x0a
+-	#define IPBGCSFLSHNTWK_SFC_SFC_STATUS_VALID_BUFF_ENTRY_VAL11 0x0b
+-	#define IPBGCSFLSHNTWK_SFC_SFC_STATUS_VALID_BUFF_ENTRY_VAL12 0x0c
+-	#define IPBGCSFLSHNTWK_SFC_SFC_STATUS_VALID_BUFF_ENTRY_VAL13 0x0d
+-	#define IPBGCSFLSHNTWK_SFC_SFC_STATUS_VALID_BUFF_ENTRY_VAL14 0x0e
+-	#define IPBGCSFLSHNTWK_SFC_SFC_STATUS_VALID_BUFF_ENTRY_VAL15 0x0f
+-	#define IPBGCSFLSHNTWK_SFC_SFC_STATUS_DEBUG_SIGNALS_RW (0x03f << 3)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_STATUS_DEBUG_SIGNALS_SHIFT 3
+-	#define IPBGCSFLSHNTWK_SFC_SFC_STATUS_RD_CURR_DONE_RW (0x01 << 2)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_STATUS_RD_CURR_DONE_SHIFT 2
+-	#define IPBGCSFLSHNTWK_SFC_SFC_STATUS_RD_CURR_DONE_VAL0 0x00
+-	#define IPBGCSFLSHNTWK_SFC_SFC_STATUS_RD_CURR_DONE_VAL1 0x01
+-	#define IPBGCSFLSHNTWK_SFC_SFC_STATUS_WR_CURR_DONE_RW (0x01 << 1)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_STATUS_WR_CURR_DONE_SHIFT 1
+-	#define IPBGCSFLSHNTWK_SFC_SFC_STATUS_WR_CURR_DONE_VAL0 0x00
+-	#define IPBGCSFLSHNTWK_SFC_SFC_STATUS_WR_CURR_DONE_VAL1 0x01
+-	#define IPBGCSFLSHNTWK_SFC_SFC_STATUS_XFER_DONE_RW (0x01 << 0)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_STATUS_XFER_DONE_SHIFT 0
+-	#define IPBGCSFLSHNTWK_SFC_SFC_STATUS_XFER_DONE_VAL0 0x00
+-	#define IPBGCSFLSHNTWK_SFC_SFC_STATUS_XFER_DONE_VAL1 0x01
+-	#define IPBGCSFLSHNTWK_SFC_SFC_CURR_HSX_ADDRESS_REG  (0x30)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_CURR_HSX_ADDRESS_HSX_ADDR_RW (0x07fffffff << 0)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_CURR_HSX_ADDRESS_HSX_ADDR_SHIFT 0
+-	#define IPBGCSFLSHNTWK_SFC_SFC_CURR_READ_DATA_REG  (0x34)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_CURR_READ_DATA_HSX_RD_DATA_RW (0x07fffffff << 0)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_CURR_READ_DATA_HSX_RD_DATA_SHIFT 0
+-	#define IPBGCSFLSHNTWK_SFC_SFC_CURR_WRITE_DATA_REG  (0x38)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_CURR_WRITE_DATA_HSX_RD_DATA_RW (0x07fffffff << 0)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_CURR_WRITE_DATA_HSX_RD_DATA_SHIFT 0
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PRE_FETCH_BUFF_0_REG  (0x3c)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PRE_FETCH_BUFF_0_BUFF_0_RW (0x07fffffff << 0)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PRE_FETCH_BUFF_0_BUFF_0_SHIFT 0
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PRE_FETCH_BUFF_1_REG  (0x40)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PRE_FETCH_BUFF_1_BUFF_1_RW (0x07fffffff << 0)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PRE_FETCH_BUFF_1_BUFF_1_SHIFT 0
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PRE_FETCH_BUFF_2_REG  (0x44)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PRE_FETCH_BUFF_2_BUFF_2_RW (0x07fffffff << 0)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PRE_FETCH_BUFF_2_BUFF_2_SHIFT 0
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PRE_FETCH_BUFF_3_REG  (0x48)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PRE_FETCH_BUFF_3_BUFF_3_RW (0x07fffffff << 0)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PRE_FETCH_BUFF_3_BUFF_3_SHIFT 0
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PRE_FETCH_BUFF_4_REG  (0x4c)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PRE_FETCH_BUFF_4_BUFF_4_RW (0x07fffffff << 0)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PRE_FETCH_BUFF_4_BUFF_4_SHIFT 0
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PRE_FETCH_BUFF_5_REG  (0x50)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PRE_FETCH_BUFF_5_BUFF_5_RW (0x07fffffff << 0)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PRE_FETCH_BUFF_5_BUFF_5_SHIFT 0
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PRE_FETCH_BUFF_6_REG  (0x54)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PRE_FETCH_BUFF_6_BUFF_6_RW (0x07fffffff << 0)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PRE_FETCH_BUFF_6_BUFF_6_SHIFT 0
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PRE_FETCH_BUFF_7_REG  (0x58)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PRE_FETCH_BUFF_7_BUFF_7_RW (0x07fffffff << 0)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PRE_FETCH_BUFF_7_BUFF_7_SHIFT 0
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PRE_FETCH_BUFF_8_REG  (0x5c)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PRE_FETCH_BUFF_8_BUFF_8_RW (0x07fffffff << 0)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PRE_FETCH_BUFF_8_BUFF_8_SHIFT 0
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PRE_FETCH_BUFF_9_REG  (0x60)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PRE_FETCH_BUFF_9_BUFF_9_RW (0x07fffffff << 0)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PRE_FETCH_BUFF_9_BUFF_9_SHIFT 0
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PRE_FETCH_BUFF_10_REG  (0x64)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PRE_FETCH_BUFF_10_BUFF_10_RW (0x07fffffff << 0)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PRE_FETCH_BUFF_10_BUFF_10_SHIFT 0
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PRE_FETCH_BUFF_11_REG  (0x68)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PRE_FETCH_BUFF_11_BUFF_11_RW (0x07fffffff << 0)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PRE_FETCH_BUFF_11_BUFF_11_SHIFT 0
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PRE_FETCH_BUFF_12_REG  (0x6c)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PRE_FETCH_BUFF_12_BUFF_12_RW (0x07fffffff << 0)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PRE_FETCH_BUFF_12_BUFF_12_SHIFT 0
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PRE_FETCH_BUFF_13_REG  (0x70)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PRE_FETCH_BUFF_13_BUFF_13_RW (0x07fffffff << 0)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PRE_FETCH_BUFF_13_BUFF_13_SHIFT 0
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PRE_FETCH_BUFF_14_REG  (0x74)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PRE_FETCH_BUFF_14_BUFF_14_RW (0x07fffffff << 0)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PRE_FETCH_BUFF_14_BUFF_14_SHIFT 0
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PRE_FETCH_BUFF_15_REG  (0x78)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PRE_FETCH_BUFF_15_BUFF_15_RW (0x07fffffff << 0)
+-	#define IPBGCSFLSHNTWK_SFC_SFC_PRE_FETCH_BUFF_15_BUFF_15_SHIFT 0
+-	#define IPBGCSFLSHNTWK_SFC_MODULE_ID_REG  (0xfc)
+-
+-//#define SFC_PROTCOL_DELAY_READ   0x10008000
+-//#define SFC_PROTOCL_DELAY_WRITE  0x10038000
+-
+-#define SFC_PROTOCOL_DELAY_VAL_16B 0x00038000
+-#define SFC_PROTOCOL_DELAY_VAL_24B 0x10038000
+-#define SFC_PROTOCOL_DELAY_VAL_32B 0x20038000
+-#define SFC_CSR_READ          0x0000027
+-#define SFC_CSR_WRITE         0x00420001
+-#define SFC_CSR_ERASE         0x20001
+-#define SFC_CSR_WREN          0x67
+-#define SFC_CSR_READ_ID       0x27
+-#define SFC_CSR_READ_STATUS   0x7
+-#define SFC_CSR_WRITE_STATUS  0x20001
+-#define SFC_DEV_CMD_READ      0x03850203 
+-#define SFC_DEV_CMD_WRITE     0x02810203
+-#define SFC_DEV_CMD_ERASE     0xD8810203
+-#define SFC_DEV_CMD_WREN      0x060D0203
+-#define SFC_DEV_CMD_ID        0x9F0D0203
+-#define SFC_DEV_CMD_READ_STATUS    0x050D0203
++   #define IPBGCSFLSHNTWK_SFC_SFC_CSR_ACC_ERR_CLR_RW (0x01 << 28)
++
++   #define IPBGCSFLSHNTWK_SFC_SFC_CSR_TMR_INT_MASK_RW (0x01 << 27)
++
++   #define IPBGCSFLSHNTWK_SFC_SFC_CSR_TMR_INT_EN_RW (0x01 << 26)
++
++   #define IPBGCSFLSHNTWK_SFC_SFC_CSR_TX_INT_MASK_RW (0x01 << 25)
++
++   #define IPBGCSFLSHNTWK_SFC_SFC_CSR_TX_INT_EN_RW (0x01 << 24)
++
++   #define IPBGCSFLSHNTWK_SFC_SFC_CSR_TX_HOLD_EN_RW (0x01 << 23)
++
++   #define IPBGCSFLSHNTWK_SFC_SFC_CSR_PRE_FETCH_TX_EN_RW (0x01 << 22)
++
++   #define IPBGCSFLSHNTWK_SFC_SFC_CSR_TX_START_BITS_RW (0x01 << 20)
++
++   #define IPBGCSFLSHNTWK_SFC_SFC_CSR_TX_TRANS_EDGE_RW (0x01 << 18)
++
++   #define IPBGCSFLSHNTWK_SFC_SFC_CSR_TX_EN_RW (0x01 << 17)
++
++   #define IPBGCSFLSHNTWK_SFC_SFC_CSR_LOOP_BACK_RW (0x01 << 16)
++
++   #define IPBGCSFLSHNTWK_SFC_SFC_CSR_DMA_THRD_RW (0x0f << 11)
++
++   #define IPBGCSFLSHNTWK_SFC_SFC_CSR_RX_INT_MASK_RW (0x01 << 10)
++
++   #define IPBGCSFLSHNTWK_SFC_SFC_CSR_RX_INT_EN_RW (0x01 << 9)
++
++   #define IPBGCSFLSHNTWK_SFC_SFC_CSR_RX_HOLD_EN_RW (0x01 << 8)
++
++   #define IPBGCSFLSHNTWK_SFC_SFC_CSR_PRE_FETCH_RX_EN_RW (0x01 << 6)
++
++   #define IPBGCSFLSHNTWK_SFC_SFC_CSR_RX_DATA_WIDTH_RW (0x01 << 4)
++
++   #define IPBGCSFLSHNTWK_SFC_SFC_CSR_RX_CAP_EDGE_RW (0x01 << 2)
++
++   #define IPBGCSFLSHNTWK_SFC_SFC_CSR_RX_EN_RW (0x01 << 1)
++   #define IPBGCSFLSHNTWK_SFC_SFC_CSR_RX_EN_SHIFT 1
++   #define IPBGCSFLSHNTWK_SFC_SFC_CSR_RX_EN_VAL0 0x00
++   #define IPBGCSFLSHNTWK_SFC_SFC_CSR_RX_EN_VAL1 0x01
++   #define IPBGCSFLSHNTWK_SFC_SFC_CSR_SPI_EN_RW (0x01 << 0)
++   #define IPBGCSFLSHNTWK_SFC_SFC_CSR_SPI_EN_SHIFT 0
++   #define IPBGCSFLSHNTWK_SFC_SFC_CSR_SPI_EN_VAL0 0x00
++   #define IPBGCSFLSHNTWK_SFC_SFC_CSR_SPI_EN_VAL1 0x01
++   #define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_REG  (0x08)
++   #define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_SFT_SCK_RW (0x01 << 31)
++   #define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_SFT_SCK_SHIFT 31
++   #define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_SFT_SCK_VAL0 0x00
++   #define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_SFT_SCK_VAL1 0x01
++   #define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_SFT_WP_RW (0x01 << 30)
++   #define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_SFT_WP_SHIFT 30
++   #define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_SFT_WP_VAL0 0x00
++   #define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_SFT_WP_VAL1 0x01
++   #define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_SFT_HOLD_RW (0x01 << 29)
++   #define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_SFT_HOLD_SHIFT 29
++   #define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_SFT_HOLD_VAL0 0x00
++   #define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_SFT_HOLD_VAL1 0x01
++   #define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_SFT_CS_RW (0x01 << 28)
++   #define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_SFT_CS_SHIFT 28
++   #define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_SFT_CS_VAL0 0x00
++   #define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_SFT_CS_VAL1 0x01
++   #define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_SFT_SI_RW (0x01 << 27)
++   #define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_SFT_SI_SHIFT 27
++   #define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_SFT_SI_VAL0 0x00
++   #define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_SFT_SI_VAL1 0x01
++   #define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_SFT_SO_RW (0x01 << 24)
++   #define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_SFT_SO_SHIFT 24
++   #define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_SFT_SO_VAL0 0x00
++   #define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_SFT_SO_VAL1 0x01
++   #define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_SFT_EN_SCK_RW (0x01 << 23)
++   #define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_SFT_EN_SCK_SHIFT 23
++   #define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_SFT_EN_SCK_VAL0 0x00
++   #define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_SFT_EN_SCK_VAL1 0x01
++   #define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_SFT_EN_WP_RW (0x01 << 22)
++   #define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_SFT_EN_WP_SHIFT 22
++   #define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_SFT_EN_WP_VAL0 0x00
++   #define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_SFT_EN_WP_VAL1 0x01
++   #define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_SFT_EN_HOLD_RW (0x01 << 21)
++   #define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_SFT_EN_HOLD_SHIFT 21
++   #define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_SFT_EN_HOLD_VAL0 0x00
++   #define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_SFT_EN_HOLD_VAL1 0x01
++   #define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_SFT_EN_CS_RW (0x01 << 20)
++   #define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_SFT_EN_CS_SHIFT 20
++   #define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_SFT_EN_CS_VAL0 0x00
++   #define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_SFT_EN_CS_VAL1 0x01
++   #define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_SFT_EN_SI_RW (0x01 << 19)
++   #define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_SFT_EN_SI_SHIFT 19
++   #define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_SFT_EN_SI_VAL0 0x00
++   #define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_SFT_EN_SI_VAL1 0x01
++   #define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_SFT_EN_SO_RW (0x01 << 18)
++   #define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_SFT_EN_SO_SHIFT 18
++   #define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_SFT_EN_SO_VAL0 0x00
++   #define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_SFT_EN_SO_VAL1 0x01
++   #define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_ADDR_TX_MULTI_RW (0x01 << 12)
++   #define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_ADDR_TX_MULTI_SHIFT 12
++   #define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_ADDR_TX_MULTI_VAL0 0x00
++   #define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_ADDR_TX_MULTI_VAL1 0x01
++   #define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_TX_MULTI_RW (0x01 << 10)
++   #define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_TX_MULTI_SHIFT 10
++   #define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_TX_MULTI_VAL0 0x00
++   #define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_TX_MULTI_VAL1 0x01
++   #define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_RX_MULTI_RW (0x01 << 8)
++   #define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_RX_MULTI_SHIFT 8
++   #define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_RX_MULTI_VAL0 0x00
++   #define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_RX_MULTI_VAL1 0x01
++   #define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_SI_PIN_MUX_RW (0x01 << 6)
++   #define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_SI_PIN_MUX_SHIFT 6
++   #define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_SI_PIN_MUX_VAL0 0x00
++   #define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_SI_PIN_MUX_VAL1 0x01
++   #define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_SO_PIN_MUX_RW (0x01 << 4)
++   #define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_SO_PIN_MUX_SHIFT 4
++   #define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_SO_PIN_MUX_VAL0 0x00
++   #define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_SO_PIN_MUX_VAL1 0x01
++   #define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_WP_PIN_MUX_RW (0x01 << 2)
++   #define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_WP_PIN_MUX_SHIFT 2
++   #define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_WP_PIN_MUX_VAL0 0x00
++   #define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_WP_PIN_MUX_VAL1 0x01
++   #define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_HOLD_PIN_MUX_RW (0x03 << 0)
++   #define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_HOLD_PIN_MUX_SHIFT 0
++   #define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_HOLD_PIN_MUX_VAL0 0x00
++   #define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_HOLD_PIN_MUX_VAL1 0x01
++   #define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_HOLD_PIN_MUX_VAL2 0x02
++   #define IPBGCSFLSHNTWK_SFC_SFC_PIN_CONFIG_HOLD_PIN_MUX_VAL3 0x03
++   #define IPBGCSFLSHNTWK_SFC_SFC_SCK_CSR_REG  (0x0c)
++   #define IPBGCSFLSHNTWK_SFC_SFC_SCK_CSR_CLK_ON_RW (0x01 << 17)
++   #define IPBGCSFLSHNTWK_SFC_SFC_SCK_CSR_CLK_ON_SHIFT 17
++   #define IPBGCSFLSHNTWK_SFC_SFC_SCK_CSR_CLK_ON_VAL0 0x00
++   #define IPBGCSFLSHNTWK_SFC_SFC_SCK_CSR_CLK_ON_VAL1 0x01
++   #define IPBGCSFLSHNTWK_SFC_SFC_SCK_CSR_SCK_IDL_RW (0x01 << 16)
++   #define IPBGCSFLSHNTWK_SFC_SFC_SCK_CSR_SCK_IDL_SHIFT 16
++   #define IPBGCSFLSHNTWK_SFC_SFC_SCK_CSR_SCK_IDL_VAL0 0x00
++   #define IPBGCSFLSHNTWK_SFC_SFC_SCK_CSR_SCK_IDL_VAL1 0x01
++   #define IPBGCSFLSHNTWK_SFC_SFC_SCK_CSR_CLOCK_DIV_RW (0x0ffff << 0)
++   #define IPBGCSFLSHNTWK_SFC_SFC_SCK_CSR_CLOCK_DIV_SHIFT 0
++   #define IPBGCSFLSHNTWK_SFC_SFC_TM_WP_CS_REG  (0x10)
++   #define IPBGCSFLSHNTWK_SFC_SFC_TM_WP_CS_THWP_RW (0x07f << 24)
++   #define IPBGCSFLSHNTWK_SFC_SFC_TM_WP_CS_THWP_SHIFT 24
++   #define IPBGCSFLSHNTWK_SFC_SFC_TM_WP_CS_TSWP_RW (0x07f << 16)
++   #define IPBGCSFLSHNTWK_SFC_SFC_TM_WP_CS_TSWP_SHIFT 16
++   #define IPBGCSFLSHNTWK_SFC_SFC_TM_WP_CS_THCS_RW (0x07f << 8)
++   #define IPBGCSFLSHNTWK_SFC_SFC_TM_WP_CS_THCS_SHIFT 8
++   #define IPBGCSFLSHNTWK_SFC_SFC_TM_WP_CS_TSCS_RW (0x0ff << 0)
++   #define IPBGCSFLSHNTWK_SFC_SFC_TM_WP_CS_TSCS_SHIFT 0
++   #define IPBGCSFLSHNTWK_SFC_SFC_PROTOCOL_DELAY_REG  (0x14)
++   #define IPBGCSFLSHNTWK_SFC_SFC_PROTOCOL_DELAY_ADDR_BIT_RW (0x01 << 28)
++   #define IPBGCSFLSHNTWK_SFC_SFC_PROTOCOL_DELAY_ADDR_BIT_SHIFT 28
++   #define IPBGCSFLSHNTWK_SFC_SFC_PROTOCOL_DELAY_ADDR_BIT_VAL0 0x00
++   #define IPBGCSFLSHNTWK_SFC_SFC_PROTOCOL_DELAY_ADDR_BIT_VAL1 0x01
++   #define IPBGCSFLSHNTWK_SFC_SFC_PROTOCOL_DELAY_FRAME_DELAY_RW (0x03 << 15)
++   #define IPBGCSFLSHNTWK_SFC_SFC_PROTOCOL_DELAY_FRAME_DELAY_SHIFT 15
++   #define IPBGCSFLSHNTWK_SFC_SFC_PROTOCOL_DELAY_FRAME_DELAY_VAL0 0x00
++   #define IPBGCSFLSHNTWK_SFC_SFC_PROTOCOL_DELAY_FRAME_DELAY_VAL1 0x01
++   #define IPBGCSFLSHNTWK_SFC_SFC_PROTOCOL_DELAY_FRAME_DELAY_VAL2 0x02
++   #define IPBGCSFLSHNTWK_SFC_SFC_PROTOCOL_DELAY_FRAME_DELAY_VAL3 0x03
++   #define IPBGCSFLSHNTWK_SFC_SFC_PROTOCOL_DELAY_IO_ADDR_TURN_RW (0x01f << 6)
++   #define IPBGCSFLSHNTWK_SFC_SFC_PROTOCOL_DELAY_IO_ADDR_TURN_SHIFT 6
++   #define IPBGCSFLSHNTWK_SFC_SFC_PROTOCOL_DELAY_IO_DATA_TURN_RW (0x03f << 0)
++   #define IPBGCSFLSHNTWK_SFC_SFC_PROTOCOL_DELAY_IO_DATA_TURN_SHIFT 0
++   #define IPBGCSFLSHNTWK_SFC_SFC_DEVICE_CMD_REG  (0x18)
++   #define IPBGCSFLSHNTWK_SFC_SFC_DEVICE_CMD_SP_CMD_RW (0x07f << 24)
++   #define IPBGCSFLSHNTWK_SFC_SFC_DEVICE_CMD_SP_CMD_SHIFT 24
++   #define IPBGCSFLSHNTWK_SFC_SFC_DEVICE_CMD_SP_ADD_REQ_RW (0x01 << 23)
++   #define IPBGCSFLSHNTWK_SFC_SFC_DEVICE_CMD_SP_ADD_REQ_SHIFT 23
++   #define IPBGCSFLSHNTWK_SFC_SFC_DEVICE_CMD_SP_ADD_REQ_VAL0 0x00
++   #define IPBGCSFLSHNTWK_SFC_SFC_DEVICE_CMD_SP_ADD_REQ_VAL1 0x01
++   #define IPBGCSFLSHNTWK_SFC_SFC_DEVICE_CMD_SP_CMD_DATA_DST_RW (0x01 << 19)
++   #define IPBGCSFLSHNTWK_SFC_SFC_DEVICE_CMD_SP_CMD_DATA_DST_SHIFT 19
++   #define IPBGCSFLSHNTWK_SFC_SFC_DEVICE_CMD_SP_CMD_DATA_DST_VAL0 0x00
++   #define IPBGCSFLSHNTWK_SFC_SFC_DEVICE_CMD_SP_CMD_DATA_DST_VAL1 0x01
++   #define IPBGCSFLSHNTWK_SFC_SFC_DEVICE_CMD_SP_CMD_DATA_SCR_RW (0x01 << 18)
++   #define IPBGCSFLSHNTWK_SFC_SFC_DEVICE_CMD_SP_CMD_DATA_SCR_SHIFT 18
++   #define IPBGCSFLSHNTWK_SFC_SFC_DEVICE_CMD_SP_CMD_DATA_SCR_VAL0 0x00
++   #define IPBGCSFLSHNTWK_SFC_SFC_DEVICE_CMD_SP_CMD_DATA_SCR_VAL1 0x01
++   #define IPBGCSFLSHNTWK_SFC_SFC_DEVICE_CMD_SP_RW_CTRL_CMD_RW (0x01 << 17)
++   #define IPBGCSFLSHNTWK_SFC_SFC_DEVICE_CMD_SP_RW_CTRL_CMD_SHIFT 17
++   #define IPBGCSFLSHNTWK_SFC_SFC_DEVICE_CMD_SP_RW_CTRL_CMD_VAL0 0x00
++   #define IPBGCSFLSHNTWK_SFC_SFC_DEVICE_CMD_SP_RW_CTRL_CMD_VAL1 0x01
++   #define IPBGCSFLSHNTWK_SFC_SFC_DEVICE_CMD_SP_RW_CTRL_CMD_EN_RW (0x01 << 16)
++   #define IPBGCSFLSHNTWK_SFC_SFC_DEVICE_CMD_SP_RW_CTRL_CMD_EN_SHIFT 16
++   #define IPBGCSFLSHNTWK_SFC_SFC_DEVICE_CMD_SP_RW_CTRL_CMD_EN_VAL0 0x00
++   #define IPBGCSFLSHNTWK_SFC_SFC_DEVICE_CMD_SP_RW_CTRL_CMD_EN_VAL1 0x01
++   #define IPBGCSFLSHNTWK_SFC_SFC_DEVICE_CMD_WR_CMD_MEM_RW (0x07f << 8)
++   #define IPBGCSFLSHNTWK_SFC_SFC_DEVICE_CMD_WR_CMD_MEM_SHIFT 8
++   #define IPBGCSFLSHNTWK_SFC_SFC_DEVICE_CMD_RD_CMD_MEM_RW (0x0ff << 0)
++   #define IPBGCSFLSHNTWK_SFC_SFC_DEVICE_CMD_RD_CMD_MEM_SHIFT 0
++   #define IPBGCSFLSHNTWK_SFC_SFC_SP_CMD_RD_WR0_DATA_REG  (0x1c)
++   #define IPBGCSFLSHNTWK_SFC_SFC_SP_CMD_RD_WR0_DATA_RD_WR_DATA0_RW (0x07fffffff << 0)
++   #define IPBGCSFLSHNTWK_SFC_SFC_SP_CMD_RD_WR0_DATA_RD_WR_DATA0_SHIFT 0
++   #define IPBGCSFLSHNTWK_SFC_SFC_SP_CMD_RD_WR1_DATA_REG  (0x20)
++   #define IPBGCSFLSHNTWK_SFC_SFC_SP_CMD_RD_WR1_DATA_RD_WR_DATA1_RW (0x07fffffff << 0)
++   #define IPBGCSFLSHNTWK_SFC_SFC_SP_CMD_RD_WR1_DATA_RD_WR_DATA1_SHIFT 0
++   #define IPBGCSFLSHNTWK_SFC_SFC_CMD_TMR_REG  (0x24)
++   #define IPBGCSFLSHNTWK_SFC_SFC_CMD_TMR_TMR_EN_RW (0x01 << 31)
++   #define IPBGCSFLSHNTWK_SFC_SFC_CMD_TMR_TMR_EN_SHIFT 31
++   #define IPBGCSFLSHNTWK_SFC_SFC_CMD_TMR_TMR_EN_VAL0 0x00
++   #define IPBGCSFLSHNTWK_SFC_SFC_CMD_TMR_TMR_EN_VAL1 0x01
++   #define IPBGCSFLSHNTWK_SFC_SFC_CMD_TMR_START_SP_RW (0x01 << 30)
++   #define IPBGCSFLSHNTWK_SFC_SFC_CMD_TMR_START_SP_SHIFT 30
++   #define IPBGCSFLSHNTWK_SFC_SFC_CMD_TMR_START_SP_VAL0 0x00
++   #define IPBGCSFLSHNTWK_SFC_SFC_CMD_TMR_START_SP_VAL1 0x01
++   #define IPBGCSFLSHNTWK_SFC_SFC_CMD_TMR_ACC_ERR_EN_RW (0x01 << 29)
++   #define IPBGCSFLSHNTWK_SFC_SFC_CMD_TMR_ACC_ERR_EN_SHIFT 29
++   #define IPBGCSFLSHNTWK_SFC_SFC_CMD_TMR_ACC_ERR_EN_VAL0 0x00
++   #define IPBGCSFLSHNTWK_SFC_SFC_CMD_TMR_ACC_ERR_EN_VAL1 0x01
++   #define IPBGCSFLSHNTWK_SFC_SFC_CMD_TMR_TMR_VAL_RW (0x01fffffff << 0)
++   #define IPBGCSFLSHNTWK_SFC_SFC_CMD_TMR_TMR_VAL_SHIFT 0
++   #define IPBGCSFLSHNTWK_SFC_SFC_TX_RX_DATA_CNT_REG  (0x28)
++   #define IPBGCSFLSHNTWK_SFC_SFC_TX_RX_DATA_CNT_TX_COUNT_R (0x07ff << 12)
++   #define IPBGCSFLSHNTWK_SFC_SFC_TX_RX_DATA_CNT_TX_COUNT_SHIFT 12
++   #define IPBGCSFLSHNTWK_SFC_SFC_TX_RX_DATA_CNT_RX_COUNT_R (0x0fff << 0)
++   #define IPBGCSFLSHNTWK_SFC_SFC_TX_RX_DATA_CNT_RX_COUNT_SHIFT 0
++   #define IPBGCSFLSHNTWK_SFC_SFC_STATUS_REG_REG  (0x2c)
++   #define IPBGCSFLSHNTWK_SFC_SFC_STATUS_BOOT_STRAP_RW (0x0f << 27)
++   #define IPBGCSFLSHNTWK_SFC_SFC_STATUS_BOOT_STRAP_SHIFT 27
++   #define IPBGCSFLSHNTWK_SFC_SFC_STATUS_BOOT_STRAP_VAL0 0x00
++   #define IPBGCSFLSHNTWK_SFC_SFC_STATUS_BOOT_STRAP_VAL1 0x01
++   #define IPBGCSFLSHNTWK_SFC_SFC_STATUS_BOOT_STRAP_VAL2 0x02
++   #define IPBGCSFLSHNTWK_SFC_SFC_STATUS_BOOT_STRAP_VAL3 0x03
++   #define IPBGCSFLSHNTWK_SFC_SFC_STATUS_BOOT_STRAP_VAL4 0x04
++   #define IPBGCSFLSHNTWK_SFC_SFC_STATUS_BOOT_STRAP_VAL5 0x05
++   #define IPBGCSFLSHNTWK_SFC_SFC_STATUS_BOOT_STRAP_VAL6 0x06
++   #define IPBGCSFLSHNTWK_SFC_SFC_STATUS_BOOT_STRAP_VAL7 0x07
++   #define IPBGCSFLSHNTWK_SFC_SFC_STATUS_BOOT_STRAP_VAL8 0x08
++   #define IPBGCSFLSHNTWK_SFC_SFC_STATUS_BOOT_STRAP_VAL9 0x09
++   #define IPBGCSFLSHNTWK_SFC_SFC_STATUS_BOOT_STRAP_VAL10 0x0a
++   #define IPBGCSFLSHNTWK_SFC_SFC_STATUS_BOOT_STRAP_VAL11 0x0b
++   #define IPBGCSFLSHNTWK_SFC_SFC_STATUS_BOOT_STRAP_VAL12 0x0c
++   #define IPBGCSFLSHNTWK_SFC_SFC_STATUS_BOOT_STRAP_VAL13 0x0d
++   #define IPBGCSFLSHNTWK_SFC_SFC_STATUS_BOOT_STRAP_VAL14 0x0e
++   #define IPBGCSFLSHNTWK_SFC_SFC_STATUS_BOOT_STRAP_VAL15 0x0f
++   #define IPBGCSFLSHNTWK_SFC_SFC_STATUS_CUR_CS_RW (0x01 << 26)
++   #define IPBGCSFLSHNTWK_SFC_SFC_STATUS_CUR_CS_SHIFT 26
++   #define IPBGCSFLSHNTWK_SFC_SFC_STATUS_CUR_CS_VAL0 0x00
++   #define IPBGCSFLSHNTWK_SFC_SFC_STATUS_CUR_CS_VAL1 0x01
++   #define IPBGCSFLSHNTWK_SFC_SFC_STATUS_CUR_SCK_RW (0x01 << 25)
++   #define IPBGCSFLSHNTWK_SFC_SFC_STATUS_CUR_SCK_SHIFT 25
++   #define IPBGCSFLSHNTWK_SFC_SFC_STATUS_CUR_SCK_VAL0 0x00
++   #define IPBGCSFLSHNTWK_SFC_SFC_STATUS_CUR_SCK_VAL1 0x01
++   #define IPBGCSFLSHNTWK_SFC_SFC_STATUS_CUR_SI_RW (0x01 << 24)
++   #define IPBGCSFLSHNTWK_SFC_SFC_STATUS_CUR_SI_SHIFT 24
++   #define IPBGCSFLSHNTWK_SFC_SFC_STATUS_CUR_SI_VAL0 0x00
++   #define IPBGCSFLSHNTWK_SFC_SFC_STATUS_CUR_SI_VAL1 0x01
++   #define IPBGCSFLSHNTWK_SFC_SFC_STATUS_CUR_WP_RW (0x01 << 23)
++   #define IPBGCSFLSHNTWK_SFC_SFC_STATUS_CUR_WP_SHIFT 23
++   #define IPBGCSFLSHNTWK_SFC_SFC_STATUS_CUR_WP_VAL0 0x00
++   #define IPBGCSFLSHNTWK_SFC_SFC_STATUS_CUR_WP_VAL1 0x01
++   #define IPBGCSFLSHNTWK_SFC_SFC_STATUS_CUR_HOLD_RW (0x01 << 22)
++   #define IPBGCSFLSHNTWK_SFC_SFC_STATUS_CUR_HOLD_SHIFT 22
++   #define IPBGCSFLSHNTWK_SFC_SFC_STATUS_CUR_HOLD_VAL0 0x00
++   #define IPBGCSFLSHNTWK_SFC_SFC_STATUS_CUR_HOLD_VAL1 0x01
++   #define IPBGCSFLSHNTWK_SFC_SFC_STATUS_CUR_SO_RW (0x01 << 21)
++   #define IPBGCSFLSHNTWK_SFC_SFC_STATUS_CUR_SO_SHIFT 21
++   #define IPBGCSFLSHNTWK_SFC_SFC_STATUS_CUR_SO_VAL0 0x00
++   #define IPBGCSFLSHNTWK_SFC_SFC_STATUS_CUR_SO_VAL1 0x01
++   #define IPBGCSFLSHNTWK_SFC_SFC_STATUS_SP_CMD_DONE_RW (0x01 << 20)
++   #define IPBGCSFLSHNTWK_SFC_SFC_STATUS_SP_CMD_DONE_SHIFT 20
++   #define IPBGCSFLSHNTWK_SFC_SFC_STATUS_SP_CMD_DONE_VAL0 0x00
++   #define IPBGCSFLSHNTWK_SFC_SFC_STATUS_SP_CMD_DONE_VAL1 0x01
++   #define IPBGCSFLSHNTWK_SFC_SFC_STATUS_ACC_ERR_RW (0x01 << 19)
++   #define IPBGCSFLSHNTWK_SFC_SFC_STATUS_ACC_ERR_SHIFT 19
++   #define IPBGCSFLSHNTWK_SFC_SFC_STATUS_ACC_ERR_VAL0 0x00
++   #define IPBGCSFLSHNTWK_SFC_SFC_STATUS_ACC_ERR_VAL1 0x01
++   #define IPBGCSFLSHNTWK_SFC_SFC_STATUS_TMR_INT_RW (0x01 << 18)
++   #define IPBGCSFLSHNTWK_SFC_SFC_STATUS_TMR_INT_SHIFT 18
++   #define IPBGCSFLSHNTWK_SFC_SFC_STATUS_TMR_INT_VAL0 0x00
++   #define IPBGCSFLSHNTWK_SFC_SFC_STATUS_TMR_INT_VAL1 0x01
++   #define IPBGCSFLSHNTWK_SFC_SFC_STATUS_TX_INT_RW (0x01 << 17)
++   #define IPBGCSFLSHNTWK_SFC_SFC_STATUS_TX_INT_SHIFT 17
++   #define IPBGCSFLSHNTWK_SFC_SFC_STATUS_TX_INT_VAL0 0x00
++   #define IPBGCSFLSHNTWK_SFC_SFC_STATUS_TX_INT_VAL1 0x01
++   #define IPBGCSFLSHNTWK_SFC_SFC_STATUS_RX_INT_RW (0x01 << 16)
++   #define IPBGCSFLSHNTWK_SFC_SFC_STATUS_RX_INT_SHIFT 16
++   #define IPBGCSFLSHNTWK_SFC_SFC_STATUS_RX_INT_VAL0 0x00
++   #define IPBGCSFLSHNTWK_SFC_SFC_STATUS_RX_INT_VAL1 0x01
++   #define IPBGCSFLSHNTWK_SFC_SFC_STATUS_DMA_REQ_RW (0x01 << 15)
++   #define IPBGCSFLSHNTWK_SFC_SFC_STATUS_DMA_REQ_SHIFT 15
++   #define IPBGCSFLSHNTWK_SFC_SFC_STATUS_DMA_REQ_VAL0 0x00
++   #define IPBGCSFLSHNTWK_SFC_SFC_STATUS_DMA_REQ_VAL1 0x01
++   #define IPBGCSFLSHNTWK_SFC_SFC_STATUS_VALID_BUFF_ENTRY_RW (0x0f << 10)
++   #define IPBGCSFLSHNTWK_SFC_SFC_STATUS_VALID_BUFF_ENTRY_SHIFT 10
++   #define IPBGCSFLSHNTWK_SFC_SFC_STATUS_VALID_BUFF_ENTRY_VAL0 0x00
++   #define IPBGCSFLSHNTWK_SFC_SFC_STATUS_VALID_BUFF_ENTRY_VAL1 0x01
++   #define IPBGCSFLSHNTWK_SFC_SFC_STATUS_VALID_BUFF_ENTRY_VAL2 0x02
++   #define IPBGCSFLSHNTWK_SFC_SFC_STATUS_VALID_BUFF_ENTRY_VAL3 0x03
++   #define IPBGCSFLSHNTWK_SFC_SFC_STATUS_VALID_BUFF_ENTRY_VAL4 0x04
++   #define IPBGCSFLSHNTWK_SFC_SFC_STATUS_VALID_BUFF_ENTRY_VAL5 0x05
++   #define IPBGCSFLSHNTWK_SFC_SFC_STATUS_VALID_BUFF_ENTRY_VAL6 0x06
++   #define IPBGCSFLSHNTWK_SFC_SFC_STATUS_VALID_BUFF_ENTRY_VAL7 0x07
++   #define IPBGCSFLSHNTWK_SFC_SFC_STATUS_VALID_BUFF_ENTRY_VAL8 0x08
++   #define IPBGCSFLSHNTWK_SFC_SFC_STATUS_VALID_BUFF_ENTRY_VAL9 0x09
++   #define IPBGCSFLSHNTWK_SFC_SFC_STATUS_VALID_BUFF_ENTRY_VAL10 0x0a
++   #define IPBGCSFLSHNTWK_SFC_SFC_STATUS_VALID_BUFF_ENTRY_VAL11 0x0b
++   #define IPBGCSFLSHNTWK_SFC_SFC_STATUS_VALID_BUFF_ENTRY_VAL12 0x0c
++   #define IPBGCSFLSHNTWK_SFC_SFC_STATUS_VALID_BUFF_ENTRY_VAL13 0x0d
++   #define IPBGCSFLSHNTWK_SFC_SFC_STATUS_VALID_BUFF_ENTRY_VAL14 0x0e
++   #define IPBGCSFLSHNTWK_SFC_SFC_STATUS_VALID_BUFF_ENTRY_VAL15 0x0f
++   #define IPBGCSFLSHNTWK_SFC_SFC_STATUS_DEBUG_SIGNALS_RW (0x03f << 3)
++   #define IPBGCSFLSHNTWK_SFC_SFC_STATUS_DEBUG_SIGNALS_SHIFT 3
++   #define IPBGCSFLSHNTWK_SFC_SFC_STATUS_RD_CURR_DONE_RW (0x01 << 2)
++   #define IPBGCSFLSHNTWK_SFC_SFC_STATUS_RD_CURR_DONE_SHIFT 2
++   #define IPBGCSFLSHNTWK_SFC_SFC_STATUS_RD_CURR_DONE_VAL0 0x00
++   #define IPBGCSFLSHNTWK_SFC_SFC_STATUS_RD_CURR_DONE_VAL1 0x01
++   #define IPBGCSFLSHNTWK_SFC_SFC_STATUS_WR_CURR_DONE_RW (0x01 << 1)
++   #define IPBGCSFLSHNTWK_SFC_SFC_STATUS_WR_CURR_DONE_SHIFT 1
++   #define IPBGCSFLSHNTWK_SFC_SFC_STATUS_WR_CURR_DONE_VAL0 0x00
++   #define IPBGCSFLSHNTWK_SFC_SFC_STATUS_WR_CURR_DONE_VAL1 0x01
++   #define IPBGCSFLSHNTWK_SFC_SFC_STATUS_XFER_DONE_RW (0x01 << 0)
++   #define IPBGCSFLSHNTWK_SFC_SFC_STATUS_XFER_DONE_SHIFT 0
++   #define IPBGCSFLSHNTWK_SFC_SFC_STATUS_XFER_DONE_VAL0 0x00
++   #define IPBGCSFLSHNTWK_SFC_SFC_STATUS_XFER_DONE_VAL1 0x01
++   #define IPBGCSFLSHNTWK_SFC_SFC_CURR_HSX_ADDRESS_REG  (0x30)
++   #define IPBGCSFLSHNTWK_SFC_SFC_CURR_HSX_ADDRESS_HSX_ADDR_RW (0x07fffffff << 0)
++   #define IPBGCSFLSHNTWK_SFC_SFC_CURR_HSX_ADDRESS_HSX_ADDR_SHIFT 0
++   #define IPBGCSFLSHNTWK_SFC_SFC_CURR_READ_DATA_REG  (0x34)
++   #define IPBGCSFLSHNTWK_SFC_SFC_CURR_READ_DATA_HSX_RD_DATA_RW (0x07fffffff << 0)
++   #define IPBGCSFLSHNTWK_SFC_SFC_CURR_READ_DATA_HSX_RD_DATA_SHIFT 0
++   #define IPBGCSFLSHNTWK_SFC_SFC_CURR_WRITE_DATA_REG  (0x38)
++   #define IPBGCSFLSHNTWK_SFC_SFC_CURR_WRITE_DATA_HSX_RD_DATA_RW (0x07fffffff << 0)
++   #define IPBGCSFLSHNTWK_SFC_SFC_CURR_WRITE_DATA_HSX_RD_DATA_SHIFT 0
++   #define IPBGCSFLSHNTWK_SFC_SFC_PRE_FETCH_BUFF_0_REG  (0x3c)
++   #define IPBGCSFLSHNTWK_SFC_SFC_PRE_FETCH_BUFF_0_BUFF_0_RW (0x07fffffff << 0)
++   #define IPBGCSFLSHNTWK_SFC_SFC_PRE_FETCH_BUFF_0_BUFF_0_SHIFT 0
++   #define IPBGCSFLSHNTWK_SFC_SFC_PRE_FETCH_BUFF_1_REG  (0x40)
++   #define IPBGCSFLSHNTWK_SFC_SFC_PRE_FETCH_BUFF_1_BUFF_1_RW (0x07fffffff << 0)
++   #define IPBGCSFLSHNTWK_SFC_SFC_PRE_FETCH_BUFF_1_BUFF_1_SHIFT 0
++   #define IPBGCSFLSHNTWK_SFC_SFC_PRE_FETCH_BUFF_2_REG  (0x44)
++   #define IPBGCSFLSHNTWK_SFC_SFC_PRE_FETCH_BUFF_2_BUFF_2_RW (0x07fffffff << 0)
++   #define IPBGCSFLSHNTWK_SFC_SFC_PRE_FETCH_BUFF_2_BUFF_2_SHIFT 0
++   #define IPBGCSFLSHNTWK_SFC_SFC_PRE_FETCH_BUFF_3_REG  (0x48)
++   #define IPBGCSFLSHNTWK_SFC_SFC_PRE_FETCH_BUFF_3_BUFF_3_RW (0x07fffffff << 0)
++   #define IPBGCSFLSHNTWK_SFC_SFC_PRE_FETCH_BUFF_3_BUFF_3_SHIFT 0
++   #define IPBGCSFLSHNTWK_SFC_SFC_PRE_FETCH_BUFF_4_REG  (0x4c)
++   #define IPBGCSFLSHNTWK_SFC_SFC_PRE_FETCH_BUFF_4_BUFF_4_RW (0x07fffffff << 0)
++   #define IPBGCSFLSHNTWK_SFC_SFC_PRE_FETCH_BUFF_4_BUFF_4_SHIFT 0
++   #define IPBGCSFLSHNTWK_SFC_SFC_PRE_FETCH_BUFF_5_REG  (0x50)
++   #define IPBGCSFLSHNTWK_SFC_SFC_PRE_FETCH_BUFF_5_BUFF_5_RW (0x07fffffff << 0)
++   #define IPBGCSFLSHNTWK_SFC_SFC_PRE_FETCH_BUFF_5_BUFF_5_SHIFT 0
++   #define IPBGCSFLSHNTWK_SFC_SFC_PRE_FETCH_BUFF_6_REG  (0x54)
++   #define IPBGCSFLSHNTWK_SFC_SFC_PRE_FETCH_BUFF_6_BUFF_6_RW (0x07fffffff << 0)
++   #define IPBGCSFLSHNTWK_SFC_SFC_PRE_FETCH_BUFF_6_BUFF_6_SHIFT 0
++   #define IPBGCSFLSHNTWK_SFC_SFC_PRE_FETCH_BUFF_7_REG  (0x58)
++   #define IPBGCSFLSHNTWK_SFC_SFC_PRE_FETCH_BUFF_7_BUFF_7_RW (0x07fffffff << 0)
++   #define IPBGCSFLSHNTWK_SFC_SFC_PRE_FETCH_BUFF_7_BUFF_7_SHIFT 0
++   #define IPBGCSFLSHNTWK_SFC_SFC_PRE_FETCH_BUFF_8_REG  (0x5c)
++   #define IPBGCSFLSHNTWK_SFC_SFC_PRE_FETCH_BUFF_8_BUFF_8_RW (0x07fffffff << 0)
++   #define IPBGCSFLSHNTWK_SFC_SFC_PRE_FETCH_BUFF_8_BUFF_8_SHIFT 0
++   #define IPBGCSFLSHNTWK_SFC_SFC_PRE_FETCH_BUFF_9_REG  (0x60)
++   #define IPBGCSFLSHNTWK_SFC_SFC_PRE_FETCH_BUFF_9_BUFF_9_RW (0x07fffffff << 0)
++   #define IPBGCSFLSHNTWK_SFC_SFC_PRE_FETCH_BUFF_9_BUFF_9_SHIFT 0
++   #define IPBGCSFLSHNTWK_SFC_SFC_PRE_FETCH_BUFF_10_REG  (0x64)
++   #define IPBGCSFLSHNTWK_SFC_SFC_PRE_FETCH_BUFF_10_BUFF_10_RW (0x07fffffff << 0)
++   #define IPBGCSFLSHNTWK_SFC_SFC_PRE_FETCH_BUFF_10_BUFF_10_SHIFT 0
++   #define IPBGCSFLSHNTWK_SFC_SFC_PRE_FETCH_BUFF_11_REG  (0x68)
++   #define IPBGCSFLSHNTWK_SFC_SFC_PRE_FETCH_BUFF_11_BUFF_11_RW (0x07fffffff << 0)
++   #define IPBGCSFLSHNTWK_SFC_SFC_PRE_FETCH_BUFF_11_BUFF_11_SHIFT 0
++   #define IPBGCSFLSHNTWK_SFC_SFC_PRE_FETCH_BUFF_12_REG  (0x6c)
++   #define IPBGCSFLSHNTWK_SFC_SFC_PRE_FETCH_BUFF_12_BUFF_12_RW (0x07fffffff << 0)
++   #define IPBGCSFLSHNTWK_SFC_SFC_PRE_FETCH_BUFF_12_BUFF_12_SHIFT 0
++   #define IPBGCSFLSHNTWK_SFC_SFC_PRE_FETCH_BUFF_13_REG  (0x70)
++   #define IPBGCSFLSHNTWK_SFC_SFC_PRE_FETCH_BUFF_13_BUFF_13_RW (0x07fffffff << 0)
++   #define IPBGCSFLSHNTWK_SFC_SFC_PRE_FETCH_BUFF_13_BUFF_13_SHIFT 0
++   #define IPBGCSFLSHNTWK_SFC_SFC_PRE_FETCH_BUFF_14_REG  (0x74)
++   #define IPBGCSFLSHNTWK_SFC_SFC_PRE_FETCH_BUFF_14_BUFF_14_RW (0x07fffffff << 0)
++   #define IPBGCSFLSHNTWK_SFC_SFC_PRE_FETCH_BUFF_14_BUFF_14_SHIFT 0
++   #define IPBGCSFLSHNTWK_SFC_SFC_PRE_FETCH_BUFF_15_REG  (0x78)
++   #define IPBGCSFLSHNTWK_SFC_SFC_PRE_FETCH_BUFF_15_BUFF_15_RW (0x07fffffff << 0)
++   #define IPBGCSFLSHNTWK_SFC_SFC_PRE_FETCH_BUFF_15_BUFF_15_SHIFT 0
++   #define IPBGCSFLSHNTWK_SFC_MODULE_ID_REG  (0xfc)
++
++#define SFC_PROTCOL_DELAY_READ      0x10008000
++#define SFC_PROTOCL_DELAY_WRITE     0x10038000
++
++#define SFC_PROTOCOL_DELAY_VAL_16B  0x00008000
++#define SFC_PROTOCOL_DELAY_VAL_24B  0x10008000
++#define SFC_PROTOCOL_DELAY_VAL_32B  0x20008000
++#define SFC_CSR_READ                0x0000027
++#define SFC_CSR_WRITE               0x00420001
++#define SFC_CSR_ERASE               0x20001
++#define SFC_CSR_WREN                0x67
++#define SFC_CSR_READ_ID             0x27
++#define SFC_CSR_READ_STATUS         0x7
++#define SFC_CSR_WRITE_STATUS        0x20001
++#define SFC_DEV_CMD_READ            0x03850203 
++#define SFC_DEV_CMD_WRITE           0x02810203
++#define SFC_DEV_CMD_ERASE           0xD8810203
++#define SFC_DEV_CMD_WREN            0x060D0203
++#define SFC_DEV_CMD_ID              0x9F0D0203
++#define SFC_DEV_CMD_READ_STATUS     0x050D0203
+ #define SFC_DEV_CMD_WRITE_STATUS    0x070D0203
++
+ struct mtd_partition;
+ 
+ /**
+@@ -409,7 +410,7 @@
+  * @parts: optional array of mtd_partitions for static partitioning
+  * @nr_parts: number of mtd_partitions for static partitoning
+  * @type: optional flash device type (e.g. m25p80 vs m25p64), for use
+- *	with chips that can't be queried for JEDEC or other IDs
++ * with chips that can't be queried for JEDEC or other IDs
+  *
+  * Board init code (in arch/.../mach-xxx/board-yyy.c files) can
+  * provide information about SPI flash parts (such as DataFlash) to
+@@ -419,32 +420,53 @@
+  * rarely powers of two; and partitions should be sector-aligned.
+  */
+ struct nx_sfc_info{
+-	char		*name;
+-	struct mtd_partition *parts;
+-	unsigned int	nr_parts;
++   char                 *name;
++   struct mtd_partition *parts;
++   unsigned int         nr_parts;
+ 
+-	char		*type;
++   char                 *type;
+ 
+-	/* we'll likely add more ... use JEDEC IDs, etc */
++   /* we'll likely add more ... use JEDEC IDs, etc */
+ };
+ 
+ struct cmd_data {
+-   u8    command[2];
++   u8  command[2];
+    u32 offset;
+    u32 length;
+    u8 *buffer;
+ };
+ 
++struct flash_info {
++   char     *name;
++
++   /* JEDEC id zero means "no ID" (most older chips); otherwise it has
++    * a high byte of zero plus three data bytes: the manufacturer id,
++    * then a two byte device id.
++    */
++   u32      jedec_id;
++   u16      ext_id;
++
++   /* The size listed here is what works with OPCODE_SE, which isn't
++    * necessarily called a "sector" by the vendor.
++    */
++   unsigned sector_size;
++   u16      n_sectors;
++
++   u16      flags;
++   #define  SECT_4K     0x01     /* OPCODE_BE_4K works uniformly */
++};
++
+ struct nx_sfc_mtd {
+-        struct platform_device  *sfc;
+-        struct mutex            lock;
+-        struct mtd_info         mtd;
+-        unsigned                partitioned:1;
+-        u8                      erase_opcode;
+-        struct cmd_data cd;
+-   resource_size_t            mmio_start;
+-   resource_size_t            mmio_len;
+-   void __iomem               *mmio_base;
++   struct platform_device  *sfc;
++   struct mutex            lock;
++   struct mtd_info         mtd;
++   struct flash_info       info;
++   unsigned                partitioned:1;
++   u8                      erase_opcode;
++   struct cmd_data         cd;
++   resource_size_t         mmio_start;
++   resource_size_t         mmio_len;
++   void __iomem            *mmio_base;
+ };
+ 
+ #if 0

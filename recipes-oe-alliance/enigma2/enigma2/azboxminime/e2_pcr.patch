@@ -1,0 +1,15 @@
+diff -Naur a/lib/service/servicedvb.cpp b/lib/service/servicedvb.cpp
+--- a/lib/service/servicedvb.cpp	2013-07-31 16:13:49.000000000 +0430
++++ b/lib/service/servicedvb.cpp	2013-07-31 16:32:43.740337936 +0430
+@@ -2742,10 +2742,7 @@
+ 
+ 		selectAudioStream();
+ 
+-		if (!(m_is_pvr || m_is_stream || m_timeshift_active))
+-			m_decoder->setSyncPCR(pcrpid);
+-		else
+-			m_decoder->setSyncPCR(-1);
++		m_decoder->setSyncPCR(pcrpid);
+ 
+ 		if (m_is_primary)
+ 		{

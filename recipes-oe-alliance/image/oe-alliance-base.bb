@@ -9,12 +9,14 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "1.0"
-PR = "r10"
+PR = "r11"
 
 RDEPENDS_${PN} = "\
     oe-alliance-enigma2 \
+    ${@base_contains("MACHINE_FEATURES", "wol", "vuplus-coldboot vuplus-ethwol", "", d)} \
     avahi-daemon \
     dropbear \
+    early-configure \
     e2fsprogs-mke2fs \
     e2fsprogs-e2fsck \
     e2fsprogs-tune2fs \

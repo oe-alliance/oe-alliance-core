@@ -1,0 +1,60 @@
+rtl2832: scale SNR to full 16 bit range (0-0xffff)
+
+Signed-off-by: Gianluca Gennari <gennarone@gmail.com>
+---
+ drivers/media/dvb-frontends/rtl2832.c | 25 ++++++++++++++++++++++++-
+ 1 file changed, 24 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/media/dvb-frontends/rtl2832.c b/drivers/media/dvb-frontends/rtl2832.c
+index facb848..8fb2bee 100644
+--- a/drivers/media/dvb-frontends/rtl2832.c
++++ b/drivers/media/dvb-frontends/rtl2832.c
+@@ -22,6 +22,10 @@
+ #include "dvb_math.h"
+ #include <linux/bitops.h>
+ 
++int rtl2832_snrdb;
++module_param_named(snrdb, rtl2832_snrdb, int, 0644);
++MODULE_PARM_DESC(snrdb, "Turn on/off SNR output in 0.1 dB (default:off).");
++
+ int rtl2832_debug;
+ module_param_named(debug, rtl2832_debug, int, 0644);
+ MODULE_PARM_DESC(debug, "Turn on/off frontend debugging (default:off).");
+@@ -822,7 +826,7 @@ static int rtl2832_read_snr(struct dvb_frontend *fe, u16 *snr)
+ 	struct rtl2832_priv *priv = fe->demodulator_priv;
+ 	int ret, hierarchy, constellation;
+ 	u8 buf[2], tmp;
+-	u16 tmp16;
++	u16 tmp16, max_snr;
+ #define CONSTELLATION_NUM 3
+ #define HIERARCHY_NUM 4
+ 	static const u32 snr_constant[CONSTELLATION_NUM][HIERARCHY_NUM] = {
+@@ -857,6 +861,25 @@ static int rtl2832_read_snr(struct dvb_frontend *fe, u16 *snr)
+ 	else
+ 		*snr = 0;
+ 
++	if (rtl2832_snrdb)
++		goto db_out;
++
++	/* scale SNR to full range */
++	switch (constellation) {
++	case 0: /* QPSK */
++		max_snr = 230;
++		break;
++	case 1: /* QAM_16 */
++		max_snr = 260;
++		break;
++	case 2: /* QAM_64 */
++	default:
++		max_snr = 290;
++		break;
++	}
++
++	*snr = (*snr >= max_snr) ? 0xffff : (0xffff / max_snr) * *snr;
++db_out:
+ 	return 0;
+ err:
+ 	dev_dbg(&priv->i2c->dev, "%s: failed=%d\n", __func__, ret);
+-- 
+1.8.3
+

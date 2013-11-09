@@ -1,0 +1,47 @@
+From: James Jones <jajones@nvidia.com>
+Date: Tue, 23 Nov 2010 23:21:37 +0000 (+0100)
+Subject: ARM: 6482/2: Fix find_next_zero_bit and related assembly
+X-Git-Tag: v2.6.37-rc4~31^2
+X-Git-Url: http://git.kernel.org/?p=linux%2Fkernel%2Fgit%2Fnext%2Flinux-next.git;a=commitdiff_plain;h=0e91ec0c06d2cd15071a6021c94840a50e6671aa
+
+ARM: 6482/2: Fix find_next_zero_bit and related assembly
+
+The find_next_bit, find_first_bit, find_next_zero_bit
+and find_first_zero_bit functions were not properly
+clamping to the maxbit argument at the bit level. They
+were instead only checking maxbit at the byte level.
+To fix this, add a compare and a conditional move
+instruction to the end of the common bit-within-the-
+byte code used by all the functions and be sure not to
+clobber the maxbit argument before it is used.
+
+Cc: <stable@kernel.org>
+Reviewed-by: Nicolas Pitre <nicolas.pitre@linaro.org>
+Tested-by: Stephen Warren <swarren@nvidia.com>
+Signed-off-by: James Jones <jajones@nvidia.com>
+Signed-off-by: Russell King <rmk+kernel@arm.linux.org.uk>
+---
+
+diff --git a/arch/arm/lib/findbit.S b/arch/arm/lib/findbit.S
+index 1e4cbd4e..64f6bc1 100644
+--- a/arch/arm/lib/findbit.S
++++ b/arch/arm/lib/findbit.S
+@@ -174,8 +174,8 @@ ENDPROC(_find_next_bit_be)
+  */
+ .L_found:
+ #if __LINUX_ARM_ARCH__ >= 5
+-		rsb	r1, r3, #0
+-		and	r3, r3, r1
++		rsb	r0, r3, #0
++		and	r3, r3, r0
+ 		clz	r3, r3
+ 		rsb	r3, r3, #31
+ 		add	r0, r2, r3
+@@ -190,5 +190,7 @@ ENDPROC(_find_next_bit_be)
+ 		addeq	r2, r2, #1
+ 		mov	r0, r2
+ #endif
++		cmp	r1, r0			@ Clamp to maxbit
++		movlo	r0, r1
+ 		mov	pc, lr
+ 

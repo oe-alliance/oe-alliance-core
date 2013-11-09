@@ -1,0 +1,75 @@
+diff -Naurp linux-2.6.34_Org/drivers/net/LIPP_6300ETH/comps/tmhwLIPP6100Eth/inc/tmhwLIPP6100Eth.h linux-2.6.34/drivers/net/LIPP_6300ETH/comps/tmhwLIPP6100Eth/inc/tmhwLIPP6100Eth.h
+--- linux-2.6.34_Org/drivers/net/LIPP_6300ETH/comps/tmhwLIPP6100Eth/inc/tmhwLIPP6100Eth.h	2012-07-12 15:23:30.010915000 +0530
++++ linux-2.6.34/drivers/net/LIPP_6300ETH/comps/tmhwLIPP6100Eth/inc/tmhwLIPP6100Eth.h	2012-07-12 17:35:12.941089000 +0530
+@@ -2631,6 +2631,18 @@ tmhwLIPP6100Eth_SetConfig(
+     );
+ 
+ /*!
++* \fn tmErrorCode_t tmhwLIPP6100Eth_readPhyStatus(tmUnitSelect_t ethUnitId);
++* This function reads the SGMII/RGMII/SMII Status Register
++* \param[in] ethUnitId: GMAC unit number
++* \return TM_OK - successful
++*/
++
++tmErrorCode_t
++tmhwLIPP6100Eth_readPhyStatus (
++    tmUnitSelect_t   ethUnitId
++    );
++
++/*!
+ * \fn tmErrorCode_t tmhwLIPP6100Eth_IntGetStatus (tmUnitSelect_t ethUnitId,ptmhwLIPP6100Eth_Int_t pIntStat);
+ * This function gets DMA interrupt status
+ * \param[in] ethUnitId: GMAC unit number
+diff -Naurp linux-2.6.34_Org/drivers/net/LIPP_6300ETH/comps/tmhwLIPP6100Eth/src/tmhwLIPP6100Eth.c linux-2.6.34/drivers/net/LIPP_6300ETH/comps/tmhwLIPP6100Eth/src/tmhwLIPP6100Eth.c
+--- linux-2.6.34_Org/drivers/net/LIPP_6300ETH/comps/tmhwLIPP6100Eth/src/tmhwLIPP6100Eth.c	2012-07-12 15:23:30.014913000 +0530
++++ linux-2.6.34/drivers/net/LIPP_6300ETH/comps/tmhwLIPP6100Eth/src/tmhwLIPP6100Eth.c	2012-07-12 17:20:15.163748000 +0530
+@@ -827,6 +827,33 @@ tmhwLIPP6100Eth_GetConfig(
+ #endif
+ 
+ /*-----------------------------------------------------------------------------
++** FUNCTION    : tmhwLIPP6100Eth_readPhyStatus
++**
++** DESCRIPTION: The function reads the SGMII/RGMII/SMII Status Register to 
++**              clear the bits set in Interrupt Status Register.
++**
++** RETURN       :  TM_OK
++** NOTES        :
++**-----------------------------------------------------------------------------
++*/
++
++tmErrorCode_t
++tmhwLIPP6100Eth_readPhyStatus (
++    tmUnitSelect_t   ethUnitId
++    )
++{
++    UInt32 pEthRegs, status;
++
++    pEthRegs = GET_BASE(ethUnitId);
++
++    /* Read the SGMII/RGMII/SMII Status Register */
++    TMVH_GEN_READ(pEthRegs+TMVH_LIPP6100ETH_SGMII_RGMII_STAT_REG_OFFSET, status);
++
++    return (TM_OK);
++
++}
++
++/*-----------------------------------------------------------------------------
+ ** FUNCTION    : tmhwLIPP6100Eth_IntGetStatus
+ **
+ ** DESCRIPTION: The function returns the DMA interrupt status register value
+diff -Naurp linux-2.6.34_Org/drivers/net/LIPP_6300ETH/src/gmac_drv.c linux-2.6.34/drivers/net/LIPP_6300ETH/src/gmac_drv.c
+--- linux-2.6.34_Org/drivers/net/LIPP_6300ETH/src/gmac_drv.c	2012-07-12 15:23:30.087918000 +0530
++++ linux-2.6.34/drivers/net/LIPP_6300ETH/src/gmac_drv.c	2012-07-12 17:30:10.834551000 +0530
+@@ -3997,6 +3997,12 @@ irqreturn_t lipp_6300Eth_isr( __s32 irq,
+         tmhwLIPP6100Eth_IntClear(priv->hwUnitNum,intr_status);
+         if((INT_STATUS_CHECK & intr_status) == 0)
+         {
++			/* If the RGMII/SMII Interrupt Status bit of the gmac interrupt status 
++			   set, it is to be cleared  */
++			if(IntDis.gmacIntVal & 0x01) 
++			{
++				tmhwLIPP6100Eth_readPhyStatus(priv->hwUnitNum);			
++			}
+             return IRQ_NONE;
+         }
+ 

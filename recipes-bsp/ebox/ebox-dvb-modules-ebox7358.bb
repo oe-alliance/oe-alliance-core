@@ -3,7 +3,7 @@ SECTION = "base"
 PRIORITY = "required"
 LICENSE = "CLOSED"
 
-SRCDATE = "20130628"
+SRCDATE = "20130830"
 KV = "3.6.11"
 PV = "${KV}+${SRCDATE}"
 PR = "r0"
@@ -33,5 +33,5 @@ do_install() {
 
 FILES_${PN} += "${sysconfdir}/modules-load.d/_${MACHINE}.conf"
 
-SRC_URI[md5sum] = "adfec2749e3f497fa100318273fd9767"
-SRC_URI[sha256sum] = "b1f26b708f94ff824d2780f6921587de7ce7b1280a882e3f7e463c9afa8f9a02"
+SRC_URI[md5sum] = "49fcbe5339afe48034becd1aa3511f53"
+SRC_URI[sha256sum] = "70c14d29ec9dbb198d3ec72c7f0e0bdafb21c8fc8306bccba163d38dd86fa00e"

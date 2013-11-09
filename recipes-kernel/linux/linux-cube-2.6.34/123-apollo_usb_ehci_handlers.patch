@@ -1,0 +1,19 @@
+diff -Naurp linux-2.6.34.new/drivers/usb/host/ehci-ip9028.c linux-2.6.34/drivers/usb/host/ehci-ip9028.c
+--- linux-2.6.34.new/drivers/usb/host/ehci-ip9028.c	2010-10-06 09:42:18.000000000 -0500
++++ linux-2.6.34/drivers/usb/host/ehci-ip9028.c	2010-11-11 22:40:48.000000000 -0600
+@@ -331,6 +331,7 @@ int ehci_9208_bus_resume(struct usb_hcd 
+ 	.urb_enqueue      = ehci_urb_enqueue,
+ 	.urb_dequeue      = ehci_urb_dequeue,
+ 	.endpoint_disable = ehci_endpoint_disable,
++	.endpoint_reset   = ehci_endpoint_reset,
+ 
+ 	/*
+ 	 * scheduling support
+@@ -344,6 +345,7 @@ int ehci_9208_bus_resume(struct usb_hcd 
+ 	.hub_control      = ehci_hub_control,
+ 	.relinquish_port  = ehci_relinquish_port,
+ 	.port_handed_over = ehci_port_handed_over,
++	.clear_tt_buffer_complete = ehci_clear_tt_buffer_complete,
+ #ifdef CONFIG_PM
+ 	.bus_suspend      = ehci_9208_bus_suspend,
+ 	.bus_resume       = ehci_9208_bus_resume,

@@ -1,4 +1,4 @@
-PRINC = "41"
+PRINC = "43"
 
 inherit pythonnative
 
@@ -71,6 +71,7 @@ python do_package_prepend () {
         ('azboxhd', 'premium.jpg', 'premium.png'),
         ('azboxminime', 'minime.jpg', 'me.png'),
         ('e3hd', 'e3hd.jpg', 'e3hd.png'),
+        ('cube', 'cube.jpg', 'cube.png'),
     ]
     import os
     top = '${D}${PLUGINPATH}/public/images/'
@@ -89,7 +90,7 @@ python do_package_prepend () {
                     if not (name == 'elite.jpg' or name == 'premium+.jpg' or name == 'ultra.jpg'):
                         os.remove(os.path.join(root, name))
                 elif target_box == 'odinm7.jpg':
-                    if not (name == 'starsatlx.jpg'):
+                    if not (name == 'starsatlx.jpg' or name == 'axodin.jpg'):
                         os.remove(os.path.join(root, name))
                 else:
                     os.remove(os.path.join(root, name))
@@ -97,7 +98,7 @@ python do_package_prepend () {
         for name in files:
             if target_remote != name and name != 'ow_remote.png':
                 if target_remote == 'ini-3000.png':
-                    if not (name == 'ini-1000.png' or name == 'ini-1000de.png' or name == 'ini-3000.png' or name == 'ini-5000.png' or name == 'miraclebox.png' or name == 'ini-7000.png'):
+                    if not (name == 'ini-1000.png' or name == 'ini-1000de.png' or name == 'ini-3000.png' or name == 'ini-5000.png' or name == 'ini-7000.png' or name == 'miraclebox.png' or name == 'xpeedlx.png'):
                         os.remove(os.path.join(root, name))
                 elif target_remote == 'premium.png':
                     if not (name == 'elite.png'):

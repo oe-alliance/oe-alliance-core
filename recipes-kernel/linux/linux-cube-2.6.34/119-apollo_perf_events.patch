@@ -1,0 +1,96 @@
+diff -Naurp linux-2.6.34.org/arch/arm/mach-apollo/pnx8492.c linux-2.6.34/arch/arm/mach-apollo/pnx8492.c
+--- linux-2.6.34.org/arch/arm/mach-apollo/pnx8492.c	2010-11-09 15:47:54.000000000 -0600
++++ linux-2.6.34/arch/arm/mach-apollo/pnx8492.c	2010-11-09 17:22:56.000000000 -0600
+@@ -41,6 +41,7 @@
+ #include <asm/hardware/arm_timer.h>
+ #include <asm/hardware/gic.h>
+ #include <asm/hardware/cache-l2x0.h>
++#include <asm/pmu.h>
+ 
+ #include <asm/mach-types.h>
+ #include <asm/mach/arch.h>
+@@ -370,6 +371,20 @@ static struct platform_device usb2_devic
+ #endif /* CONFIG_USB */
+ 
+ /* *************************************************************** */
++#ifdef CONFIG_CPU_HAS_PMU
++static struct resource pmu_resource = {
++        .start          = IRQ_PMU,
++        .end            = IRQ_PMU,
++        .flags          = IORESOURCE_IRQ,
++};
++
++static struct platform_device pmu_device = {
++        .name                   = "arm-pmu",
++        .id                     = ARM_PMU_DEVICE_CPU,
++        .num_resources          = 1,
++        .resource               = &pmu_resource,
++};
++#endif
+ 
+ static struct platform_device *platform_devs[] __initdata = {
+ 	&uart0_device,
+@@ -383,6 +398,9 @@ static struct platform_device *platform_
+ 	&usb1_device,
+ 	&usb2_device,
+ #endif
++#ifdef CONFIG_CPU_HAS_PMU
++	&pmu_device,
++#endif
+ };
+ 
+ #ifdef CONFIG_CACHE_L2X0
+diff -Naurp linux-2.6.34.org/tools/perf/builtin-lock.c linux-2.6.34/tools/perf/builtin-lock.c
+--- linux-2.6.34.org/tools/perf/builtin-lock.c	2010-05-16 16:17:36.000000000 -0500
++++ linux-2.6.34/tools/perf/builtin-lock.c	2010-11-09 13:32:12.000000000 -0600
+@@ -23,6 +23,8 @@
+ #include <linux/list.h>
+ #include <linux/hash.h>
+ 
++#define ULLONG_MAX   ULONG_LONG_MAX
++
+ /* based on kernel/lockdep.c */
+ #define LOCKHASH_BITS		12
+ #define LOCKHASH_SIZE		(1UL << LOCKHASH_BITS)
+diff -Naurp linux-2.6.34.org/tools/perf/Makefile linux-2.6.34/tools/perf/Makefile
+--- linux-2.6.34.org/tools/perf/Makefile	2010-05-16 16:17:36.000000000 -0500
++++ linux-2.6.34/tools/perf/Makefile	2010-11-09 13:31:54.000000000 -0600
+@@ -492,17 +492,17 @@ ifeq ($(uname_S),Darwin)
+ 	PTHREAD_LIBS =
+ endif
+ 
+-ifeq ($(shell sh -c "(echo '\#include <libelf.h>'; echo 'int main(void) { Elf * elf = elf_begin(0, ELF_C_READ, 0); return (long)elf; }') | $(CC) -x c - $(ALL_CFLAGS) -o $(BITBUCKET) $(ALL_LDFLAGS) $(EXTLIBS) "$(QUIET_STDERR)" && echo y"), y)
+-ifneq ($(shell sh -c "(echo '\#include <gnu/libc-version.h>'; echo 'int main(void) { const char * version = gnu_get_libc_version(); return (long)version; }') | $(CC) -x c - $(ALL_CFLAGS) -o $(BITBUCKET) $(ALL_LDFLAGS) $(EXTLIBS) "$(QUIET_STDERR)" && echo y"), y)
+-	msg := $(error No gnu/libc-version.h found, please install glibc-dev[el]/glibc-static);
+-endif
++#ifeq ($(shell sh -c "(echo '\#include <libelf.h>'; echo 'int main(void) { Elf * elf = elf_begin(0, ELF_C_READ, 0); return (long)elf; }') | $(CC) -x c - $(ALL_CFLAGS) -o $(BITBUCKET) $(ALL_LDFLAGS) $(EXTLIBS) "$(QUIET_STDERR)" && echo y"), y)
++#ifneq ($(shell sh -c "(echo '\#include <gnu/libc-version.h>'; echo 'int main(void) { const char * version = gnu_get_libc_version(); return (long)version; }') | $(CC) -x c - $(ALL_CFLAGS) -o $(BITBUCKET) $(ALL_LDFLAGS) $(EXTLIBS) "$(QUIET_STDERR)" && echo y"), y)
++#	msg := $(error No gnu/libc-version.h found, please install glibc-dev[el]/glibc-static);
++#endif
+ 
+-	ifneq ($(shell sh -c "(echo '\#include <libelf.h>'; echo 'int main(void) { Elf * elf = elf_begin(0, ELF_C_READ_MMAP, 0); return (long)elf; }') | $(CC) -x c - $(ALL_CFLAGS) -o $(BITBUCKET) $(ALL_LDFLAGS) $(EXTLIBS) "$(QUIET_STDERR)" && echo y"), y)
++#	ifneq ($(shell sh -c "(echo '\#include <libelf.h>'; echo 'int main(void) { Elf * elf = elf_begin(0, ELF_C_READ_MMAP, 0); return (long)elf; }') | $(CC) -x c - $(ALL_CFLAGS) -o $(BITBUCKET) $(ALL_LDFLAGS) $(EXTLIBS) "$(QUIET_STDERR)" && echo y"), y)
+ 		BASIC_CFLAGS += -DLIBELF_NO_MMAP
+-	endif
+-else
+-	msg := $(error No libelf.h/libelf found, please install libelf-dev/elfutils-libelf-devel and glibc-dev[el]);
+-endif
++#	endif
++#else
++#	msg := $(error No libelf.h/libelf found, please install libelf-dev/elfutils-libelf-devel and glibc-dev[el]);
++#endif
+ 
+ ifneq ($(shell sh -c "(echo '\#include <dwarf.h>'; echo '\#include <libdw.h>'; echo 'int main(void) { Dwarf *dbg; dbg = dwarf_begin(0, DWARF_C_READ); return (long)dbg; }') | $(CC) -x c - $(ALL_CFLAGS) -I/usr/include/elfutils -ldw -lelf -o $(BITBUCKET) $(ALL_LDFLAGS) $(EXTLIBS) "$(QUIET_STDERR)" && echo y"), y)
+ 	msg := $(warning No libdw.h found or old libdw.h found, disables dwarf support. Please install elfutils-devel/elfutils-dev);
+diff -Naurp linux-2.6.34.org/tools/perf/util/symbol.c linux-2.6.34/tools/perf/util/symbol.c
+--- linux-2.6.34.org/tools/perf/util/symbol.c	2010-05-16 16:17:36.000000000 -0500
++++ linux-2.6.34/tools/perf/util/symbol.c	2010-11-09 13:32:18.000000000 -0600
+@@ -30,6 +30,8 @@ enum dso_origin {
+ 	DSO__ORIG_NOT_FOUND,
+ };
+ 
++typedef Elf64_Nhdr GElf_Nhdr;
++
+ static void dsos__add(struct list_head *head, struct dso *dso);
+ static struct map *map__new2(u64 start, struct dso *dso, enum map_type type);
+ static int dso__load_kernel_sym(struct dso *self, struct map *map,

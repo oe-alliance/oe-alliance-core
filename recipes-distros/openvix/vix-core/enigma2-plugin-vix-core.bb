@@ -4,7 +4,7 @@ MAINTAINER = "Andy Blackburn"
 require conf/license/license-gplv2.inc
 
 DEPENDS = "enigma2 mtd-utils python-process libcrypto-compat"
-RDEPENDS_${PN} = "mtd-utils python-process util-linux-blkid libcrypto-compat"
+RDEPENDS_${PN} = "mtd-utils python-process libcrypto-compat util-linux-blkid python-compression zip procps"
 
 RCONFLICTS_${PN} = "settings-autorestore"
 RREPLACES_${PN} = "settings-autorestore"
@@ -13,7 +13,7 @@ inherit gitpkgv autotools pythonnative
 SRCREV = "${AUTOREV}"
 PV = "2.1+git${SRCPV}"
 PKGV = "2.1+git${GITPKGV}"
-PR = "r15"
+PR = "r18"
 
 SRC_URI="git://github.com/OpenViX/vix-core.git;protocol=git"
 
@@ -34,6 +34,7 @@ FILES_${PN} = "/etc /usr/lib"
 FILES_${PN}-dbg = "/usr/lib/enigma2/python/Plugins/SystemPlugins/ViX/.debug/"
 FILES_${PN}-src = "/usr/lib/enigma2/python/Plugins/SystemPlugins/ViX/*.py"
 FILES_${PN}-po = "/usr/lib/enigma2/python/Plugins/SystemPlugins/ViX/locale/*.po"
+FILES_${PN}-doc = "/usr/share/enigma2/README*"
 
 do_install_append() {
     if [ -f ${DEPLOY_DIR_IMAGE}/burn.bat ]; then

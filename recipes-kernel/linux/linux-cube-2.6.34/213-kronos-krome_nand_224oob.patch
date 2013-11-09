@@ -1,0 +1,40 @@
+diff -Naurp linux-2.6.34_Org/drivers/mtd/nand/nand_ids.c linux-2.6.34/drivers/mtd/nand/nand_ids.c
+--- linux-2.6.34_Org/drivers/mtd/nand/nand_ids.c	2012-04-24 12:45:59.075135000 +0530
++++ linux-2.6.34/drivers/mtd/nand/nand_ids.c	2012-04-24 14:55:37.268872000 +0530
+@@ -106,6 +106,7 @@ struct nand_flash_dev nand_flash_ids[] =
+ 	/* 8 Gigabit */
+ 	{"NAND 1GiB 1,8V 8-bit",	0xA3, 0, 1024, 0, LP_OPTIONS},
+ 	{"NAND 1GiB 3,3V 8-bit",	0xD3, 0, 1024, 0, LP_OPTIONS},
++	{"NAND 1GiB 3,3V 8-bit",    0x38, 0, 1024, 0, LP_OPTIONS},
+ 	{"NAND 1GiB 1,8V 16-bit",	0xB3, 0, 1024, 0, LP_OPTIONS16},
+ 	{"NAND 1GiB 3,3V 16-bit",	0xC3, 0, 1024, 0, LP_OPTIONS16},
+ 
+diff -Naurp linux-2.6.34_Org/drivers/mtd/nand/nx_nand/nx_nand.c linux-2.6.34/drivers/mtd/nand/nx_nand/nx_nand.c
+--- linux-2.6.34_Org/drivers/mtd/nand/nx_nand/nx_nand.c	2012-04-24 12:46:00.706981000 +0530
++++ linux-2.6.34/drivers/mtd/nand/nx_nand/nx_nand.c	2012-04-23 18:58:58.328522000 +0530
+@@ -362,7 +362,11 @@ static inline void nx_nand_dmac_init(str
+       stgt[i].dst_per = 0;
+       stgt[i].src_inc = true;
+       stgt[i].dst_inc = true;
+-      if(nc->mtd.oobsize == 128) {
++      if(nc->mtd.oobsize == 224) {
++         stgt[i].src_brst = nx_dmac_64;
++         stgt[i].dst_brst = nx_dmac_64;
++      }
++      else if(nc->mtd.oobsize == 128) {
+          stgt[i].src_brst = nx_dmac_32;
+          stgt[i].dst_brst = nx_dmac_32;
+       }
+@@ -391,7 +395,11 @@ static inline void nx_nand_dmac_init(str
+       stgt[i].dst_per = 0;
+       stgt[i].src_inc = true;
+       stgt[i].dst_inc = true;
+-      if(nc->mtd.oobsize == 128) {
++      if(nc->mtd.oobsize == 224) {
++         stgt[i].src_brst = nx_dmac_64;
++         stgt[i].dst_brst = nx_dmac_64;
++      }
++      else if(nc->mtd.oobsize == 128) {
+          stgt[i].src_brst = nx_dmac_32;
+          stgt[i].dst_brst = nx_dmac_32;
+       }

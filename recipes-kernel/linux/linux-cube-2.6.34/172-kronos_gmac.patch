@@ -1,0 +1,121 @@
+diff -Naurp linux-2.6.34_org/arch/arm/mach-kronos/include/mach/gmac_eth_drv.h linux-2.6.34/arch/arm/mach-kronos/include/mach/gmac_eth_drv.h
+--- linux-2.6.34_org/arch/arm/mach-kronos/include/mach/gmac_eth_drv.h	2011-08-07 18:14:23.000000000 +0800
++++ linux-2.6.34/arch/arm/mach-kronos/include/mach/gmac_eth_drv.h	2011-08-07 19:27:17.000000000 +0800
+@@ -41,11 +41,11 @@ typedef struct gmac_platform_data
+ }gmac_platform_data_t,*pgmac_platform_data_t;
+ 
+ /* Internal/External PHY */
+-#define GMAC0_BASE	(ARM_A9_HOST_MMIO_BASE + 0xA4000U)
++#define GMAC0_BASE	(ARM_A9_HOST_MMIO_BASE + 0x7C000U)
+ #define IRQ_GMAC0		IRQ_ETHR_MAC_0
+ #define IRQ_GMAC0_POWER		IRQ_ETHR_PWR_0
+ #define GMAC0_CLK_CSR_VAL (0x1U)
+-#define GMAC0_CTRL_GLOBAL_REG (ARM_A9_HOST_MMIO_BASE + 0xea300U)
++#define GMAC0_CTRL_GLOBAL_REG (ARM_A9_HOST_MMIO_BASE + 0xBB300U)
+ 
+ #ifdef CONFIG_GMAC0_MODE_RGMII
+ #define GMAC0_MAX_SPEED (1000U)
+@@ -54,11 +54,11 @@ typedef struct gmac_platform_data
+ #endif
+ 
+ /* External PHY  */
+-#define GMAC1_BASE	(ARM_A9_HOST_MMIO_BASE + 0x7C000U)
++#define GMAC1_BASE	(ARM_A9_HOST_MMIO_BASE + 0xA4000U)
+ #define IRQ_GMAC1		IRQ_ETHR_MAC_1
+ #define IRQ_GMAC1_POWER		IRQ_ETHR_PWR_1
+ #define GMAC1_CLK_CSR_VAL (0x1U)
+-#define GMAC1_CTRL_GLOBAL_REG (ARM_A9_HOST_MMIO_BASE + 0xea304U)
++#define GMAC1_CTRL_GLOBAL_REG (ARM_A9_HOST_MMIO_BASE + 0xBB304U)
+ 
+ #ifdef CONFIG_GMAC1_MODE_RGMII
+ #define GMAC1_MAX_SPEED (1000U)
+diff -Naurp linux-2.6.34_org/drivers/net/LIPP_6300ETH/comps/tmbslPhyMYSTI110E/src/tmbslPhyMYSTI110E.c linux-2.6.34/drivers/net/LIPP_6300ETH/comps/tmbslPhyMYSTI110E/src/tmbslPhyMYSTI110E.c
+--- linux-2.6.34_org/drivers/net/LIPP_6300ETH/comps/tmbslPhyMYSTI110E/src/tmbslPhyMYSTI110E.c	2011-08-07 18:14:27.000000000 +0800
++++ linux-2.6.34/drivers/net/LIPP_6300ETH/comps/tmbslPhyMYSTI110E/src/tmbslPhyMYSTI110E.c	2011-08-07 19:25:42.000000000 +0800
+@@ -71,6 +71,8 @@
+ #define MYSTIPHY_APOLLO_M0_ID2 (0)
+ #define MYSTIPHY_APOLLO_M1_ID1 (0x0293)
+ #define MYSTIPHY_APOLLO_M1_ID2 (0xC411)
++#define MYSTIPHY_KRONOS_A0_ID1 (0x0293)
++#define MYSTIPHY_KRONOS_A0_ID2 (0xC412)
+ 
+ #define MYSTIPHY_DSPW_DCBLW_REG      (0x00)
+ #define MYSTIPHY_DSPW_DBGCNTL_REG    (0x01)
+@@ -692,6 +694,10 @@ tmbslPhyMYSTI110EInit(
+     {
+         // IDs are valid. Do Nothing
+     }
++	else if ((id1 == MYSTIPHY_KRONOS_A0_ID1) && (id2 == MYSTIPHY_KRONOS_A0_ID2))
++	{
++        // IDs are valid for Kronos. Do Nothing
++	}
+     else
+     {
+         /* TODO: Add ID check for M1 */
+diff -Naurp linux-2.6.34_org/drivers/net/LIPP_6300ETH/comps/tmbslPhyRTL8211BN/src/tmbslPhyRTL8211BN.c linux-2.6.34/drivers/net/LIPP_6300ETH/comps/tmbslPhyRTL8211BN/src/tmbslPhyRTL8211BN.c
+--- linux-2.6.34_org/drivers/net/LIPP_6300ETH/comps/tmbslPhyRTL8211BN/src/tmbslPhyRTL8211BN.c	2011-08-07 18:14:27.000000000 +0800
++++ linux-2.6.34/drivers/net/LIPP_6300ETH/comps/tmbslPhyRTL8211BN/src/tmbslPhyRTL8211BN.c	2011-08-07 19:25:42.000000000 +0800
+@@ -317,6 +317,10 @@ tmbslPhyRTL8211BNInit(
+     {
+         /* IDs are valid. Do Nothing */
+     }
++	else if( (id1 == 0x1c) && (id2 == 0xC915) )
++    {
++        /* IDs are valid for Kronos. Do Nothing */
++    }
+     else
+     {
+         return(TMBSL_ERR_PHY_NOT_SUPPORTED);
+diff -Naurp linux-2.6.34_org/drivers/net/LIPP_6300ETH/src/tmbslPhyAccess.c linux-2.6.34/drivers/net/LIPP_6300ETH/src/tmbslPhyAccess.c
+--- linux-2.6.34_org/drivers/net/LIPP_6300ETH/src/tmbslPhyAccess.c	2011-08-07 18:14:27.000000000 +0800
++++ linux-2.6.34/drivers/net/LIPP_6300ETH/src/tmbslPhyAccess.c	2011-08-07 19:25:42.000000000 +0800
+@@ -303,6 +303,34 @@ tmbslPhyConfig_t gtmbslRTL8211BNPhyInter
+         tmbslPhyRTL8211BNGetLinkStatus
+ };
+ 
++tmbslPhyConfig_t gtmbslRTL8211EGPhyInterface =
++{
++       "RTL-8211EG",
++        0x001cc915,
++        LAN_CLK_SEL,
++        LAN_CLK_SPEED_SEL,
++        tmbslPhyRTL8211BNGetSWVersion,
++        tmbslPhyRTL8211BNGetCapabilities,
++        tmbslPhyRTL8211BNInit,
++        tmbslPhyRTL8211BNDeinit,
++        tmbslPhyRTL8211BNSetPowerState,
++        tmbslPhyRTL8211BNGetPowerState,
++        tmbslPhyRTL8211BNGetBasicModeControl,
++        tmbslPhyRTL8211BNSetBasicModeControl,
++        tmbslPhyRTL8211BNGetBasicModeStatus,
++        tmbslPhyRTL8211BNAutoNegotiate,
++        Null,
++        Null,
++        Null,
++        Null,
++        Null,
++        Null,
++        Null,
++        tmbslPhyRTL8211BNLoopBack,
++        tmbslPhyRTL8211BNSoftReset,
++        tmbslPhyRTL8211BNGetLinkStatus
++};
++
+ tmbslPhyConfig_t gtmbslMYSTIPhyInterface =
+ {       
+         "Internal",
+@@ -420,10 +448,12 @@ tmbslPhyConfig_t gtmbslLXT972APhyInterfa
+ };
+ 
+ phyID_interface_tbl phy_tbl[]={
+-{0x0, &gtmbslMYSTIPhyInterface},
++{0x0,        &gtmbslMYSTIPhyInterface},
++{0x0293c412, &gtmbslMYSTIPhyInterface},
+ {0x001cc912, &gtmbslRTL8211BNPhyInterface},
++{0x001cc915, &gtmbslRTL8211EGPhyInterface},
+ #ifdef CONFIG_ENABLE_MOCA
+-{0x0, &gtmbslMoCAPhyInterface},
++{0x0,        &gtmbslMoCAPhyInterface},
+ #endif
+ {0x00008201, &gtmbslLXT972APhyInterface},
+ {0x001378e2, &gtmbslLXT972APhyInterface}

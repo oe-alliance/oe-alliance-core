@@ -1,0 +1,220 @@
+diff -Naurp orig/linux-2.6.34/arch/arm/mach-apollo/include/mach/barriers.h linux-2.6.34/arch/arm/mach-apollo/include/mach/barriers.h
+--- orig/linux-2.6.34/arch/arm/mach-apollo/include/mach/barriers.h	1970-01-01 05:30:00.000000000 +0530
++++ linux-2.6.34/arch/arm/mach-apollo/include/mach/barriers.h	2012-12-14 19:04:06.442831000 +0530
+@@ -0,0 +1,25 @@
++/****************************************************************************/
++/*                                                                          */
++/*  Copyright (C) 2012 Entropic Communications Ltd.                         */
++/*                                                                          */
++/*  This program is free software; you can redistribute it and/or modify    */
++/*  it under the terms of the GNU General Public License as published by    */
++/*  the Free Software Foundation, using version 2 of the License.           */
++/*                                                                          */
++/*  This program is distributed in the hope that it will be useful,         */
++/*  but WITHOUT ANY WARRANTY; without even the implied warranty of          */
++/*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the            */
++/*  GNU General Public License for more details.                            */
++/*                                                                          */
++/*  You should have received a copy of the GNU General Public License       */
++/*  along with this program. If not, see <http://www.gnu.org/licenses/>.    */
++/*                                                                          */
++/****************************************************************************/
++#ifndef __MACH_BARRIERS_H
++#define __MACH_BARRIERS_H
++ 
++#define rmb()     dmb()
++#define mb()      do { dsb(); outer_sync(); } while (0)
++#define wmb()     mb()
++ 
++#endif  /* __MACH_BARRIERS_H */
+diff -Naurp orig/linux-2.6.34/arch/arm/mach-apollo/Kconfig linux-2.6.34/arch/arm/mach-apollo/Kconfig
+--- orig/linux-2.6.34/arch/arm/mach-apollo/Kconfig	2012-12-14 15:03:36.641564000 +0530
++++ linux-2.6.34/arch/arm/mach-apollo/Kconfig	2012-12-14 19:03:37.516743000 +0530
+@@ -100,6 +100,7 @@ config GENERIC_APOLLO_IP
+ 	select ARM_ERRATA_716044
+ 	select PL310_ERRATA_727915
+ 	select ARM_ERRATA_754327
++	select ARCH_HAS_BARRIERS
+ 
+ config SOC_PNX8492
+ 	bool
+diff -Naurp orig/linux-2.6.34/arch/arm/mach-krome/include/mach/barriers.h linux-2.6.34/arch/arm/mach-krome/include/mach/barriers.h
+--- orig/linux-2.6.34/arch/arm/mach-krome/include/mach/barriers.h	1970-01-01 05:30:00.000000000 +0530
++++ linux-2.6.34/arch/arm/mach-krome/include/mach/barriers.h	2012-12-14 17:54:06.036867000 +0530
+@@ -0,0 +1,27 @@
++/****************************************************************************/
++/*                                                                          */
++/*  Copyright (C) 2012 Entropic Communications Ltd.                         */
++/*                                                                          */
++/*  This program is free software; you can redistribute it and/or modify    */
++/*  it under the terms of the GNU General Public License as published by    */
++/*  the Free Software Foundation, using version 2 of the License.           */
++/*                                                                          */
++/*  This program is distributed in the hope that it will be useful,         */
++/*  but WITHOUT ANY WARRANTY; without even the implied warranty of          */
++/*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the            */
++/*  GNU General Public License for more details.                            */
++/*                                                                          */
++/*  You should have received a copy of the GNU General Public License       */
++/*  along with this program. If not, see <http://www.gnu.org/licenses/>.    */
++/*                                                                          */
++/****************************************************************************/
++#ifndef __MACH_BARRIERS_H
++#define __MACH_BARRIERS_H
++ 
++extern void DoDummyWriteRead(void);
++
++#define rmb()     dmb()
++#define mb()      do { dsb(); outer_sync(); DoDummyWriteRead(); dsb(); } while (0)
++#define wmb()     mb()
++ 
++#endif  /* __MACH_BARRIERS_H */
+diff -Naurp orig/linux-2.6.34/arch/arm/mach-krome/Kconfig linux-2.6.34/arch/arm/mach-krome/Kconfig
+--- orig/linux-2.6.34/arch/arm/mach-krome/Kconfig	2012-12-14 15:03:37.301534000 +0530
++++ linux-2.6.34/arch/arm/mach-krome/Kconfig	2012-12-14 15:05:27.947223000 +0530
+@@ -80,6 +80,7 @@ config GENERIC_KROME_IP
+ 	select SERIAL_IP3106_CONSOLE
+ 	select ARCH_REQUIRE_GPIOLIB
+ 	select ARM_ERRATA_754322
++	select ARCH_HAS_BARRIERS
+ 
+ config SOC_PNX8492
+ 	bool
+diff -Naurp orig/linux-2.6.34/arch/arm/mach-krome/krome.c linux-2.6.34/arch/arm/mach-krome/krome.c
+--- orig/linux-2.6.34/arch/arm/mach-krome/krome.c	2012-12-14 15:03:38.745404000 +0530
++++ linux-2.6.34/arch/arm/mach-krome/krome.c	2012-12-14 15:07:24.093553000 +0530
+@@ -379,6 +379,21 @@ unsigned int GetChipID (void)
+     return ChipID;
+ }
+ 
++#ifdef CONFIG_ARCH_HAS_BARRIERS
++unsigned long *pDummyUncachedWrite = NULL;
++unsigned long DummyUncachedRead = 0;
++
++void DoDummyWriteRead(void)
++{
++   if(pDummyUncachedWrite)
++	{
++	   *pDummyUncachedWrite = 0;
++		DummyUncachedRead = *pDummyUncachedWrite;
++	}
++}
++EXPORT_SYMBOL(DoDummyWriteRead);
++#endif
++
+ #ifdef CONFIG_CACHE_L2X0
+ static int __init apollo_l2x0_init(void)
+ {
+@@ -408,9 +423,22 @@ early_initcall(apollo_l2x0_init);
+ 
+ void __init apollo_init(void)
+ {
++#ifdef CONFIG_ARCH_HAS_BARRIERS
++	dma_addr_t dmaAddr = 0;
++#endif
++
+ #ifdef CONFIG_KROME_SPLASH
+    apollo_splash();
+ #endif
++
++#ifdef CONFIG_ARCH_HAS_BARRIERS
++	pDummyUncachedWrite = dma_alloc_coherent(NULL, 4, &dmaAddr, GFP_ATOMIC);
++	if(pDummyUncachedWrite == NULL)
++	{
++      printk (KERN_ERR "Failed to allocate DMA coherent memory for dummy write/read\n");
++	}
++#endif
++
+    printk (KERN_INFO "Adding platform devices...\n");
+    platform_add_devices(platform_devs, ARRAY_SIZE(platform_devs));
+ }
+diff -Naurp orig/linux-2.6.34/arch/arm/mach-kronos/include/mach/barriers.h linux-2.6.34/arch/arm/mach-kronos/include/mach/barriers.h
+--- orig/linux-2.6.34/arch/arm/mach-kronos/include/mach/barriers.h	1970-01-01 05:30:00.000000000 +0530
++++ linux-2.6.34/arch/arm/mach-kronos/include/mach/barriers.h	2012-12-14 17:54:26.619477000 +0530
+@@ -0,0 +1,27 @@
++/****************************************************************************/
++/*                                                                          */
++/*  Copyright (C) 2012 Entropic Communications Ltd.                         */
++/*                                                                          */
++/*  This program is free software; you can redistribute it and/or modify    */
++/*  it under the terms of the GNU General Public License as published by    */
++/*  the Free Software Foundation, using version 2 of the License.           */
++/*                                                                          */
++/*  This program is distributed in the hope that it will be useful,         */
++/*  but WITHOUT ANY WARRANTY; without even the implied warranty of          */
++/*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the            */
++/*  GNU General Public License for more details.                            */
++/*                                                                          */
++/*  You should have received a copy of the GNU General Public License       */
++/*  along with this program. If not, see <http://www.gnu.org/licenses/>.    */
++/*                                                                          */
++/****************************************************************************/
++#ifndef __MACH_BARRIERS_H
++#define __MACH_BARRIERS_H
++ 
++extern void DoDummyWriteRead(void);
++
++#define rmb()     dmb()
++#define mb()      do { dsb(); outer_sync(); DoDummyWriteRead(); dsb(); } while (0)
++#define wmb()     mb()
++ 
++#endif  /* __MACH_BARRIERS_H */
+diff -Naurp orig/linux-2.6.34/arch/arm/mach-kronos/Kconfig linux-2.6.34/arch/arm/mach-kronos/Kconfig
+--- orig/linux-2.6.34/arch/arm/mach-kronos/Kconfig	2012-12-14 15:03:36.643562000 +0530
++++ linux-2.6.34/arch/arm/mach-kronos/Kconfig	2012-12-14 15:05:14.441150000 +0530
+@@ -77,6 +77,7 @@ config GENERIC_KRONOS_IP
+ 	select ARCH_REQUIRE_GPIOLIB
+ 	select ARM_ERRATA_743622
+ 	select ARM_ERRATA_754322
++	select ARCH_HAS_BARRIERS
+ 
+ config SOC_PNX8492
+ 	bool
+diff -Naurp orig/linux-2.6.34/arch/arm/mach-kronos/kronos.c linux-2.6.34/arch/arm/mach-kronos/kronos.c
+--- orig/linux-2.6.34/arch/arm/mach-kronos/kronos.c	2012-12-14 15:03:38.747404000 +0530
++++ linux-2.6.34/arch/arm/mach-kronos/kronos.c	2012-12-14 15:08:35.102870000 +0530
+@@ -379,6 +379,21 @@ unsigned int GetChipID (void)
+     return ChipID;
+ }
+ 
++#ifdef CONFIG_ARCH_HAS_BARRIERS
++unsigned long *pDummyUncachedWrite = NULL;
++unsigned long DummyUncachedRead = 0;
++
++void DoDummyWriteRead(void)
++{
++   if(pDummyUncachedWrite)
++	{
++	   *pDummyUncachedWrite = 0;
++		DummyUncachedRead = *pDummyUncachedWrite;
++	}
++}
++EXPORT_SYMBOL(DoDummyWriteRead);
++#endif
++
+ #ifdef CONFIG_CACHE_L2X0
+ static int __init apollo_l2x0_init(void)
+ {
+@@ -419,9 +434,22 @@ early_initcall(apollo_l2x0_init);
+ 
+ void __init apollo_init(void)
+ {
++#ifdef CONFIG_ARCH_HAS_BARRIERS
++	dma_addr_t dmaAddr = 0;
++#endif
++
+ #ifdef CONFIG_KRONOS_SPLASH 
+    apollo_splash();
+ #endif
++
++#ifdef CONFIG_ARCH_HAS_BARRIERS
++	pDummyUncachedWrite = dma_alloc_coherent(NULL, 4, &dmaAddr, GFP_ATOMIC);
++	if(pDummyUncachedWrite == NULL)
++	{
++      printk (KERN_ERR "Failed to allocate DMA coherent memory for dummy write/read\n");
++	}
++#endif
++
+    printk (KERN_INFO "Adding platform devices...\n");
+    platform_add_devices(platform_devs, ARRAY_SIZE(platform_devs));
+ }

@@ -1,0 +1,561 @@
+diff -Naurp linux-2.6.34.org/arch/arm/include/asm/assembler.h linux-2.6.34/arch/arm/include/asm/assembler.h
+--- linux-2.6.34.org/arch/arm/include/asm/assembler.h	2010-05-16 16:17:36.000000000 -0500
++++ linux-2.6.34/arch/arm/include/asm/assembler.h	2010-11-25 14:11:14.000000000 -0600
+@@ -215,7 +215,7 @@
+ 	@ Slightly optimised to avoid incrementing the pointer twice
+ 	usraccoff \instr, \reg, \ptr, \inc, 0, \cond, \abort
+ 	.if	\rept == 2
+-	usraccoff \instr, \reg, \ptr, \inc, 4, \cond, \abort
++	usraccoff \instr, \reg, \ptr, \inc, \inc, \cond, \abort
+ 	.endif
+ 
+ 	add\cond \ptr, #\rept * \inc
+diff -Naurp linux-2.6.34.org/arch/arm/include/asm/atomic.h linux-2.6.34/arch/arm/include/asm/atomic.h
+--- linux-2.6.34.org/arch/arm/include/asm/atomic.h	2010-11-25 14:27:00.000000000 -0600
++++ linux-2.6.34/arch/arm/include/asm/atomic.h	2010-11-25 17:01:33.000000000 -0600
+@@ -40,12 +40,12 @@ static inline void atomic_add(int i, ato
+ 	int result;
+ 
+ 	__asm__ __volatile__("@ atomic_add\n"
+-"1:	ldrex	%0, [%2]\n"
+-"	add	%0, %0, %3\n"
+-"	strex	%1, %0, [%2]\n"
++"1:	ldrex	%0, [%3]\n"
++"	add	%0, %0, %4\n"
++"	strex	%1, %0, [%3]\n"
+ "	teq	%1, #0\n"
+ "	bne	1b"
+-	: "=&r" (result), "=&r" (tmp)
++	: "=&r" (result), "=&r" (tmp), "+Qo" (v->counter)
+ 	: "r" (&v->counter), "Ir" (i)
+ 	: "cc");
+ }
+@@ -58,12 +58,12 @@ static inline int atomic_add_return(int 
+ 	smp_mb();
+ 
+ 	__asm__ __volatile__("@ atomic_add_return\n"
+-"1:	ldrex	%0, [%2]\n"
+-"	add	%0, %0, %3\n"
+-"	strex	%1, %0, [%2]\n"
++"1:	ldrex	%0, [%3]\n"
++"	add	%0, %0, %4\n"
++"	strex	%1, %0, [%3]\n"
+ "	teq	%1, #0\n"
+ "	bne	1b"
+-	: "=&r" (result), "=&r" (tmp)
++	: "=&r" (result), "=&r" (tmp), "+Qo" (v->counter)
+ 	: "r" (&v->counter), "Ir" (i)
+ 	: "cc");
+ 
+@@ -78,12 +78,12 @@ static inline void atomic_sub(int i, ato
+ 	int result;
+ 
+ 	__asm__ __volatile__("@ atomic_sub\n"
+-"1:	ldrex	%0, [%2]\n"
+-"	sub	%0, %0, %3\n"
+-"	strex	%1, %0, [%2]\n"
++"1:	ldrex	%0, [%3]\n"
++"	sub	%0, %0, %4\n"
++"	strex	%1, %0, [%3]\n"
+ "	teq	%1, #0\n"
+ "	bne	1b"
+-	: "=&r" (result), "=&r" (tmp)
++	: "=&r" (result), "=&r" (tmp), "+Qo" (v->counter)
+ 	: "r" (&v->counter), "Ir" (i)
+ 	: "cc");
+ }
+@@ -96,12 +96,12 @@ static inline int atomic_sub_return(int 
+ 	smp_mb();
+ 
+ 	__asm__ __volatile__("@ atomic_sub_return\n"
+-"1:	ldrex	%0, [%2]\n"
+-"	sub	%0, %0, %3\n"
+-"	strex	%1, %0, [%2]\n"
++"1:	ldrex	%0, [%3]\n"
++"	sub	%0, %0, %4\n"
++"	strex	%1, %0, [%3]\n"
+ "	teq	%1, #0\n"
+ "	bne	1b"
+-	: "=&r" (result), "=&r" (tmp)
++	: "=&r" (result), "=&r" (tmp), "+Qo" (v->counter)
+ 	: "r" (&v->counter), "Ir" (i)
+ 	: "cc");
+ 
+@@ -118,11 +118,11 @@ static inline int atomic_cmpxchg(atomic_
+ 
+ 	do {
+ 		__asm__ __volatile__("@ atomic_cmpxchg\n"
+-		"ldrex	%1, [%2]\n"
++		"ldrex	%1, [%3]\n"
+ 		"mov	%0, #0\n"
+-		"teq	%1, %3\n"
+-		"strexeq %0, %4, [%2]\n"
+-		    : "=&r" (res), "=&r" (oldval)
++		"teq	%1, %4\n"
++		"strexeq %0, %5, [%3]\n"
++		    : "=&r" (res), "=&r" (oldval), "+Qo" (ptr->counter)
+ 		    : "r" (&ptr->counter), "Ir" (old), "r" (new)
+ 		    : "cc");
+ 	} while (res);
+@@ -137,12 +137,12 @@ static inline void atomic_clear_mask(uns
+ 	unsigned long tmp, tmp2;
+ 
+ 	__asm__ __volatile__("@ atomic_clear_mask\n"
+-"1:	ldrex	%0, [%2]\n"
+-"	bic	%0, %0, %3\n"
+-"	strex	%1, %0, [%2]\n"
++"1:	ldrex	%0, [%3]\n"
++"	bic	%0, %0, %4\n"
++"	strex	%1, %0, [%3]\n"
+ "	teq	%1, #0\n"
+ "	bne	1b"
+-	: "=&r" (tmp), "=&r" (tmp2)
++	: "=&r" (tmp), "=&r" (tmp2), "+Qo" (*addr)
+ 	: "r" (addr), "Ir" (mask)
+ 	: "cc");
+ }
+@@ -249,7 +249,7 @@ static inline u64 atomic64_read(atomic64
+ 	__asm__ __volatile__("@ atomic64_read\n"
+ "	ldrexd	%0, %H0, [%1]"
+ 	: "=&r" (result)
+-	: "r" (&v->counter)
++	: "r" (&v->counter), "Qo" (v->counter)
+ 	);
+ 
+ 	return result;
+@@ -260,11 +260,11 @@ static inline void atomic64_set(atomic64
+ 	u64 tmp;
+ 
+ 	__asm__ __volatile__("@ atomic64_set\n"
+-"1:	ldrexd	%0, %H0, [%1]\n"
+-"	strexd	%0, %2, %H2, [%1]\n"
++"1:	ldrexd	%0, %H0, [%2]\n"
++"	strexd	%0, %3, %H3, [%2]\n"
+ "	teq	%0, #0\n"
+ "	bne	1b"
+-	: "=&r" (tmp)
++	: "=&r" (tmp), "=Qo" (v->counter)
+ 	: "r" (&v->counter), "r" (i)
+ 	: "cc");
+ }
+@@ -275,13 +275,13 @@ static inline void atomic64_add(u64 i, a
+ 	unsigned long tmp;
+ 
+ 	__asm__ __volatile__("@ atomic64_add\n"
+-"1:	ldrexd	%0, %H0, [%2]\n"
+-"	adds	%0, %0, %3\n"
+-"	adc	%H0, %H0, %H3\n"
+-"	strexd	%1, %0, %H0, [%2]\n"
++"1:	ldrexd	%0, %H0, [%3]\n"
++"	adds	%0, %0, %4\n"
++"	adc	%H0, %H0, %H4\n"
++"	strexd	%1, %0, %H0, [%3]\n"
+ "	teq	%1, #0\n"
+ "	bne	1b"
+-	: "=&r" (result), "=&r" (tmp)
++	: "=&r" (result), "=&r" (tmp), "+Qo" (v->counter)
+ 	: "r" (&v->counter), "r" (i)
+ 	: "cc");
+ }
+@@ -294,13 +294,13 @@ static inline u64 atomic64_add_return(u6
+ 	smp_mb();
+ 
+ 	__asm__ __volatile__("@ atomic64_add_return\n"
+-"1:	ldrexd	%0, %H0, [%2]\n"
+-"	adds	%0, %0, %3\n"
+-"	adc	%H0, %H0, %H3\n"
+-"	strexd	%1, %0, %H0, [%2]\n"
++"1:	ldrexd	%0, %H0, [%3]\n"
++"	adds	%0, %0, %4\n"
++"	adc	%H0, %H0, %H4\n"
++"	strexd	%1, %0, %H0, [%3]\n"
+ "	teq	%1, #0\n"
+ "	bne	1b"
+-	: "=&r" (result), "=&r" (tmp)
++	: "=&r" (result), "=&r" (tmp), "+Qo" (v->counter)
+ 	: "r" (&v->counter), "r" (i)
+ 	: "cc");
+ 
+@@ -315,13 +315,13 @@ static inline void atomic64_sub(u64 i, a
+ 	unsigned long tmp;
+ 
+ 	__asm__ __volatile__("@ atomic64_sub\n"
+-"1:	ldrexd	%0, %H0, [%2]\n"
+-"	subs	%0, %0, %3\n"
+-"	sbc	%H0, %H0, %H3\n"
+-"	strexd	%1, %0, %H0, [%2]\n"
++"1:	ldrexd	%0, %H0, [%3]\n"
++"	subs	%0, %0, %4\n"
++"	sbc	%H0, %H0, %H4\n"
++"	strexd	%1, %0, %H0, [%3]\n"
+ "	teq	%1, #0\n"
+ "	bne	1b"
+-	: "=&r" (result), "=&r" (tmp)
++	: "=&r" (result), "=&r" (tmp), "+Qo" (v->counter)
+ 	: "r" (&v->counter), "r" (i)
+ 	: "cc");
+ }
+@@ -334,13 +334,13 @@ static inline u64 atomic64_sub_return(u6
+ 	smp_mb();
+ 
+ 	__asm__ __volatile__("@ atomic64_sub_return\n"
+-"1:	ldrexd	%0, %H0, [%2]\n"
+-"	subs	%0, %0, %3\n"
+-"	sbc	%H0, %H0, %H3\n"
+-"	strexd	%1, %0, %H0, [%2]\n"
++"1:	ldrexd	%0, %H0, [%3]\n"
++"	subs	%0, %0, %4\n"
++"	sbc	%H0, %H0, %H4\n"
++"	strexd	%1, %0, %H0, [%3]\n"
+ "	teq	%1, #0\n"
+ "	bne	1b"
+-	: "=&r" (result), "=&r" (tmp)
++	: "=&r" (result), "=&r" (tmp), "+Qo" (v->counter)
+ 	: "r" (&v->counter), "r" (i)
+ 	: "cc");
+ 
+@@ -358,12 +358,12 @@ static inline u64 atomic64_cmpxchg(atomi
+ 
+ 	do {
+ 		__asm__ __volatile__("@ atomic64_cmpxchg\n"
+-		"ldrexd		%1, %H1, [%2]\n"
++		"ldrexd		%1, %H1, [%3]\n"
+ 		"mov		%0, #0\n"
+-		"teq		%1, %3\n"
+-		"teqeq		%H1, %H3\n"
+-		"strexdeq	%0, %4, %H4, [%2]"
+-		: "=&r" (res), "=&r" (oldval)
++		"teq		%1, %4\n"
++		"teqeq		%H1, %H4\n"
++		"strexdeq	%0, %5, %H5, [%3]"
++		: "=&r" (res), "=&r" (oldval), "+Qo" (ptr->counter)
+ 		: "r" (&ptr->counter), "r" (old), "r" (new)
+ 		: "cc");
+ 	} while (res);
+@@ -381,11 +381,11 @@ static inline u64 atomic64_xchg(atomic64
+ 	smp_mb();
+ 
+ 	__asm__ __volatile__("@ atomic64_xchg\n"
+-"1:	ldrexd	%0, %H0, [%2]\n"
+-"	strexd	%1, %3, %H3, [%2]\n"
++"1:	ldrexd	%0, %H0, [%3]\n"
++"	strexd	%1, %4, %H4, [%3]\n"
+ "	teq	%1, #0\n"
+ "	bne	1b"
+-	: "=&r" (result), "=&r" (tmp)
++	: "=&r" (result), "=&r" (tmp), "+Qo" (ptr->counter)
+ 	: "r" (&ptr->counter), "r" (new)
+ 	: "cc");
+ 
+@@ -402,16 +402,16 @@ static inline u64 atomic64_dec_if_positi
+ 	smp_mb();
+ 
+ 	__asm__ __volatile__("@ atomic64_dec_if_positive\n"
+-"1:	ldrexd	%0, %H0, [%2]\n"
++"1:	ldrexd	%0, %H0, [%3]\n"
+ "	subs	%0, %0, #1\n"
+ "	sbc	%H0, %H0, #0\n"
+ "	teq	%H0, #0\n"
+ "	bmi	2f\n"
+-"	strexd	%1, %0, %H0, [%2]\n"
++"	strexd	%1, %0, %H0, [%3]\n"
+ "	teq	%1, #0\n"
+ "	bne	1b\n"
+ "2:"
+-	: "=&r" (result), "=&r" (tmp)
++	: "=&r" (result), "=&r" (tmp), "+Qo" (v->counter)
+ 	: "r" (&v->counter)
+ 	: "cc");
+ 
+@@ -429,18 +429,18 @@ static inline int atomic64_add_unless(at
+ 	smp_mb();
+ 
+ 	__asm__ __volatile__("@ atomic64_add_unless\n"
+-"1:	ldrexd	%0, %H0, [%3]\n"
+-"	teq	%0, %4\n"
+-"	teqeq	%H0, %H4\n"
++"1:	ldrexd	%0, %H0, [%4]\n"
++"	teq	%0, %5\n"
++"	teqeq	%H0, %H5\n"
+ "	moveq	%1, #0\n"
+ "	beq	2f\n"
+-"	adds	%0, %0, %5\n"
+-"	adc	%H0, %H0, %H5\n"
+-"	strexd	%2, %0, %H0, [%3]\n"
++"	adds	%0, %0, %6\n"
++"	adc	%H0, %H0, %H6\n"
++"	strexd	%2, %0, %H0, [%4]\n"
+ "	teq	%2, #0\n"
+ "	bne	1b\n"
+ "2:"
+-	: "=&r" (val), "=&r" (ret), "=&r" (tmp)
++	: "=&r" (val), "+r" (ret), "=&r" (tmp), "+Qo" (v->counter)
+ 	: "r" (&v->counter), "r" (u), "r" (a)
+ 	: "cc");
+ 
+diff -Naurp linux-2.6.34.org/arch/arm/mach-apollo/sleep.S linux-2.6.34/arch/arm/mach-apollo/sleep.S
+--- linux-2.6.34.org/arch/arm/mach-apollo/sleep.S	2010-11-25 14:27:00.000000000 -0600
++++ linux-2.6.34/arch/arm/mach-apollo/sleep.S	2010-11-23 23:40:06.000000000 -0600
+@@ -114,7 +114,7 @@ restore:
+         /* 3 - Both L1 and L2 lost */
+ 	/*FIXME: Read and tell if we restored from OFF. Ashwin. r2 will carry 3 indicating OFF*/
+ 
+-        setmode PSR_F_BIT | PSR_I_BIT | SVC_MODE
++        /*setmode PSR_F_BIT | PSR_I_BIT | SVC_MODE*/
+  
+ 	mov     r2, #0x3
+ 	and     r2, r2, #0x3
+@@ -734,9 +734,9 @@ loop2:
+ 	/* create working copy of max way size*/
+ loop3:
+ 	/* factor way and cache number into r11 */
+-	orr     r11, r10, r9, lsl r5
++	/*orr     r11, r10, r9, lsl r5*/
+ 	/* factor index number into r11 */
+-	orr     r11, r11, r7, lsl r2
++	/*orr     r11, r11, r7, lsl r2*/
+ 	/*clean & invalidate by set/way */
+         /* Ranjith -- Modified the below line */
+ 	/* mcr     p15, 0, r11, c7, c10, 2 */
+diff -Naurp linux-2.6.34.org/include/linux/fb.h linux-2.6.34/include/linux/fb.h
+--- linux-2.6.34.org/include/linux/fb.h	2010-05-16 16:17:36.000000000 -0500
++++ linux-2.6.34/include/linux/fb.h	2010-11-25 17:57:10.000000000 -0600
+@@ -787,8 +787,6 @@ struct fb_tile_ops {
+ #define FBINFO_MISC_USEREVENT          0x10000 /* event request
+ 						  from userspace */
+ #define FBINFO_MISC_TILEBLITTING       0x20000 /* use tile blitting */
+-#define FBINFO_MISC_FIRMWARE           0x40000 /* a replaceable firmware
+-						  inited framebuffer */
+ 
+ /* A driver may set this flag to indicate that it does want a set_par to be
+  * called every time when fbcon_switch is executed. The advantage is that with
+@@ -802,6 +800,8 @@ struct fb_tile_ops {
+  */
+ #define FBINFO_MISC_ALWAYS_SETPAR   0x40000
+ 
++/* where the fb is a firmware driver, and can be replaced with a proper one */
++#define FBINFO_MISC_FIRMWARE        0x80000
+ /*
+  * Host and GPU endianness differ.
+  */
+diff -Naurp linux-2.6.34.org/include/linux/fs.h linux-2.6.34/include/linux/fs.h
+--- linux-2.6.34.org/include/linux/fs.h	2010-11-25 14:27:01.000000000 -0600
++++ linux-2.6.34/include/linux/fs.h	2010-11-25 18:06:11.000000000 -0600
+@@ -145,11 +145,11 @@ struct inodes_stat_t {
+  *
+  */
+ #define RW_MASK		1
+-#define RWA_MASK	2
++#define RWA_MASK		16
+ #define READ 0
+ #define WRITE 1
+-#define READA 2		/* read-ahead  - don't block if no resources */
+-#define SWRITE 3	/* for ll_rw_block() - wait for buffer lock */
++#define READA			16 /* readahead - don't block if no resources */
++#define SWRITE			17 /* for ll_rw_block(), wait for buffer lock */
+ #define READ_SYNC	(READ | (1 << BIO_RW_SYNCIO) | (1 << BIO_RW_UNPLUG))
+ #define READ_META	(READ | (1 << BIO_RW_META))
+ #define WRITE_SYNC_PLUG	(WRITE | (1 << BIO_RW_SYNCIO) | (1 << BIO_RW_NOIDLE))
+diff -Naurp linux-2.6.34.org/include/linux/interrupt.h linux-2.6.34/include/linux/interrupt.h
+--- linux-2.6.34.org/include/linux/interrupt.h	2010-05-16 16:17:36.000000000 -0500
++++ linux-2.6.34/include/linux/interrupt.h	2010-11-25 18:09:34.000000000 -0600
+@@ -52,16 +52,21 @@
+  * IRQF_ONESHOT - Interrupt is not reenabled after the hardirq handler finished.
+  *                Used by threaded interrupts which need to keep the
+  *                irq line disabled until the threaded handler has been run.
++ * IRQF_NO_SUSPEND - Do not disable this IRQ during suspend
++ *
+  */
+ #define IRQF_DISABLED		0x00000020
+ #define IRQF_SAMPLE_RANDOM	0x00000040
+ #define IRQF_SHARED		0x00000080
+ #define IRQF_PROBE_SHARED	0x00000100
+-#define IRQF_TIMER		0x00000200
++#define __IRQF_TIMER		0x00000200
+ #define IRQF_PERCPU		0x00000400
+ #define IRQF_NOBALANCING	0x00000800
+ #define IRQF_IRQPOLL		0x00001000
+ #define IRQF_ONESHOT		0x00002000
++#define IRQF_NO_SUSPEND		0x00004000
++
++#define IRQF_TIMER		(__IRQF_TIMER | IRQF_NO_SUSPEND)
+ 
+ /*
+  * Bits used by threaded handlers:
+diff -Naurp linux-2.6.34.org/include/linux/slub_def.h linux-2.6.34/include/linux/slub_def.h
+--- linux-2.6.34.org/include/linux/slub_def.h	2010-05-16 16:17:36.000000000 -0500
++++ linux-2.6.34/include/linux/slub_def.h	2010-11-25 18:24:43.000000000 -0600
+@@ -75,12 +75,6 @@ struct kmem_cache {
+ 	int offset;		/* Free pointer offset. */
+ 	struct kmem_cache_order_objects oo;
+ 
+-	/*
+-	 * Avoid an extra cache line for UP, SMP and for the node local to
+-	 * struct kmem_cache.
+-	 */
+-	struct kmem_cache_node local_node;
+-
+ 	/* Allocation and freeing of slabs */
+ 	struct kmem_cache_order_objects max;
+ 	struct kmem_cache_order_objects min;
+@@ -102,6 +96,9 @@ struct kmem_cache {
+ 	 */
+ 	int remote_node_defrag_ratio;
+ 	struct kmem_cache_node *node[MAX_NUMNODES];
++#else
++	/* Avoid an extra cache line for UP */
++	struct kmem_cache_node local_node;
+ #endif
+ };
+ 
+@@ -132,7 +129,7 @@ struct kmem_cache {
+ #ifdef CONFIG_ZONE_DMA
+ #define SLUB_DMA __GFP_DMA
+ /* Reserve extra caches for potential DMA use */
+-#define KMALLOC_CACHES (2 * SLUB_PAGE_SHIFT - 6)
++#define KMALLOC_CACHES (2 * SLUB_PAGE_SHIFT)
+ #else
+ /* Disable DMA functionality */
+ #define SLUB_DMA (__force gfp_t)0
+diff -Naurp linux-2.6.34.org/kernel/irq/manage.c linux-2.6.34/kernel/irq/manage.c
+--- linux-2.6.34.org/kernel/irq/manage.c	2010-05-16 16:17:36.000000000 -0500
++++ linux-2.6.34/kernel/irq/manage.c	2010-11-25 18:12:37.000000000 -0600
+@@ -200,7 +200,7 @@ static inline int setup_affinity(unsigne
+ void __disable_irq(struct irq_desc *desc, unsigned int irq, bool suspend)
+ {
+ 	if (suspend) {
+-		if (!desc->action || (desc->action->flags & IRQF_TIMER))
++		if (!desc->action || (desc->action->flags & IRQF_NO_SUSPEND))
+ 			return;
+ 		desc->status |= IRQ_SUSPENDED;
+ 	}
+@@ -440,6 +440,9 @@ int __irq_set_trigger(struct irq_desc *d
+ 		/* note that IRQF_TRIGGER_MASK == IRQ_TYPE_SENSE_MASK */
+ 		desc->status &= ~(IRQ_LEVEL | IRQ_TYPE_SENSE_MASK);
+ 		desc->status |= flags;
++
++		if (chip != desc->chip)
++			irq_chip_set_defaults(desc->chip);
+ 	}
+ 
+ 	return ret;
+diff -Naurp linux-2.6.34.org/kernel/posix-timers.c linux-2.6.34/kernel/posix-timers.c
+--- linux-2.6.34.org/kernel/posix-timers.c	2010-05-16 16:17:36.000000000 -0500
++++ linux-2.6.34/kernel/posix-timers.c	2010-11-25 15:51:02.000000000 -0600
+@@ -559,19 +559,7 @@ SYSCALL_DEFINE3(timer_create, const cloc
+ 	new_timer->it_id = (timer_t) new_timer_id;
+ 	new_timer->it_clock = which_clock;
+ 	new_timer->it_overrun = -1;
+-	error = CLOCK_DISPATCH(which_clock, timer_create, (new_timer));
+-	if (error)
+-		goto out;
+ 
+-	/*
+-	 * return the timer_id now.  The next step is hard to
+-	 * back out if there is an error.
+-	 */
+-	if (copy_to_user(created_timer_id,
+-			 &new_timer_id, sizeof (new_timer_id))) {
+-		error = -EFAULT;
+-		goto out;
+-	}
+ 	if (timer_event_spec) {
+ 		if (copy_from_user(&event, timer_event_spec, sizeof (event))) {
+ 			error = -EFAULT;
+@@ -597,6 +585,16 @@ SYSCALL_DEFINE3(timer_create, const cloc
+ 	new_timer->sigq->info.si_tid   = new_timer->it_id;
+ 	new_timer->sigq->info.si_code  = SI_TIMER;
+ 
++	if (copy_to_user(created_timer_id,
++			 &new_timer_id, sizeof (new_timer_id))) {
++		error = -EFAULT;
++		goto out;
++	}
++
++	error = CLOCK_DISPATCH(which_clock, timer_create, (new_timer));
++	if (error)
++		goto out;
++
+ 	spin_lock_irq(&current->sighand->siglock);
+ 	new_timer->it_signal = current->signal;
+ 	list_add(&new_timer->list, &current->signal->posix_timers);
+diff -Naurp linux-2.6.34.org/kernel/signal.c linux-2.6.34/kernel/signal.c
+--- linux-2.6.34.org/kernel/signal.c	2010-11-25 14:27:00.000000000 -0600
++++ linux-2.6.34/kernel/signal.c	2010-11-25 16:05:23.000000000 -0600
+@@ -642,7 +642,7 @@ static inline bool si_fromuser(const str
+ static int check_kill_permission(int sig, struct siginfo *info,
+ 				 struct task_struct *t)
+ {
+-	const struct cred *cred = current_cred(), *tcred;
++	const struct cred *cred, *tcred;
+ 	struct pid *sid;
+ 	int error;
+ 
+@@ -656,8 +656,10 @@ static int check_kill_permission(int sig
+ 	if (error)
+ 		return error;
+ 
++	cred = current_cred();
+ 	tcred = __task_cred(t);
+-	if ((cred->euid ^ tcred->suid) &&
++	if (!same_thread_group(current, t) &&
++	    (cred->euid ^ tcred->suid) &&
+ 	    (cred->euid ^ tcred->uid) &&
+ 	    (cred->uid  ^ tcred->suid) &&
+ 	    (cred->uid  ^ tcred->uid) &&
+diff -Naurp linux-2.6.34.org/mm/slub.c linux-2.6.34/mm/slub.c
+--- linux-2.6.34.org/mm/slub.c	2010-05-16 16:17:36.000000000 -0500
++++ linux-2.6.34/mm/slub.c	2010-11-25 18:23:32.000000000 -0600
+@@ -2141,7 +2141,7 @@ static void free_kmem_cache_nodes(struct
+ 
+ 	for_each_node_state(node, N_NORMAL_MEMORY) {
+ 		struct kmem_cache_node *n = s->node[node];
+-		if (n && n != &s->local_node)
++		if (n)
+ 			kmem_cache_free(kmalloc_caches, n);
+ 		s->node[node] = NULL;
+ 	}
+@@ -2150,33 +2150,22 @@ static void free_kmem_cache_nodes(struct
+ static int init_kmem_cache_nodes(struct kmem_cache *s, gfp_t gfpflags)
+ {
+ 	int node;
+-	int local_node;
+-
+-	if (slab_state >= UP && (s < kmalloc_caches ||
+-			s >= kmalloc_caches + KMALLOC_CACHES))
+-		local_node = page_to_nid(virt_to_page(s));
+-	else
+-		local_node = 0;
+ 
+ 	for_each_node_state(node, N_NORMAL_MEMORY) {
+ 		struct kmem_cache_node *n;
+ 
+-		if (local_node == node)
+-			n = &s->local_node;
+-		else {
+-			if (slab_state == DOWN) {
+-				early_kmem_cache_node_alloc(gfpflags, node);
+-				continue;
+-			}
+-			n = kmem_cache_alloc_node(kmalloc_caches,
+-							gfpflags, node);
+-
+-			if (!n) {
+-				free_kmem_cache_nodes(s);
+-				return 0;
+-			}
++		if (slab_state == DOWN) {
++			early_kmem_cache_node_alloc(gfpflags, node);
++			continue;
++		}
++		n = kmem_cache_alloc_node(kmalloc_caches,
++						gfpflags, node);
+ 
++		if (!n) {
++			free_kmem_cache_nodes(s);
++			return 0;
+ 		}
++
+ 		s->node[node] = n;
+ 		init_kmem_cache_node(n, s);
+ 	}

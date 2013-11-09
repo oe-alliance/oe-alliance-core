@@ -1,26 +1,24 @@
 require gst-plugins.inc
 
 LICENSE = "GPLv2+ & LGPLv2.1+"
-LICENSE_FLAGS = "commercial"
 LIC_FILES_CHKSUM = "file://COPYING;md5=a6f89e2100d9b6cdffcea4f398e37343 \
                     file://common/coverage/coverage-report.pl;beginline=2;endline=17;md5=622921ffad8cb18ab906c56052788a3f"
 
 DEPENDS += "gst-plugins-base libid3tag libmad mpeg2dec liba52 lame libcdio opencore-amr"
 
-PR = "r2"
+EXTRA_OECONF += "--enable-orc"
+
+SRCREV = "${AUTOREV}"
+PR = "r9"
 GIT_PV = ""
 
-SRCREV = "9afc696e5fa9fb980e02df5637f022796763216f"
+inherit autotools pkgconfig gettext git-project
 
-SRC_URI = "git://anongit.freedesktop.org/gstreamer/${PN}"
+SRC_URI = "git://anongit.freedesktop.org/gstreamer/${PN};protocol=git;branch=0.10"
 
 SRC_URI += " \
         file://orc.m4-fix-location-of-orcc-when-cross-compiling.patch \
 "
-
-inherit autotools pkgconfig gettext git-project
-
-EXTRA_OECONF += "--enable-orc"
 
 do_common_update() {
     cd ${S}
@@ -60,3 +58,5 @@ do_configure_prepend() {
     # manually provide remove-potcdate.sin, while our intltoolize does not install it
     cp ${STAGING_DATADIR_NATIVE}/gettext/po/remove-potcdate.sin ${S}/po/
 }
+
+require mips-only.inc

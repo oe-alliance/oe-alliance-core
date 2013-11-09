@@ -1,0 +1,158 @@
+diff -Naurp linux-2.6.34_Org/drivers/i2c/algos/i2c_phlm/i2c_phlm.c linux-2.6.34/drivers/i2c/algos/i2c_phlm/i2c_phlm.c
+--- linux-2.6.34_Org/drivers/i2c/algos/i2c_phlm/i2c_phlm.c	2012-03-30 19:43:07.312391000 +0530
++++ linux-2.6.34/drivers/i2c/algos/i2c_phlm/i2c_phlm.c	2012-03-30 19:47:32.836842000 +0530
+@@ -88,6 +88,7 @@ extern void I2c_Error_Trigger( void );
+ 
+ typedef struct
+ {
++	spinlock_t      lock;
+     __u64 int_pin;                       /* interrupt line for I2c unit*/
+     __u32 unit_num;                    /* i2c unit number */
+     wait_queue_head_t i2c_wait_master; /* for synchronous master */
+@@ -602,7 +603,7 @@ static int i2c_algo_transfer(struct i2c_
+       direction = tmhwI2cTransmit;
+ 
+     /* !!DISABLE PREEMPTION */
+-    local_irq_save(flags);
++	spin_lock_irqsave(&busobject->lock, flags);
+ 
+     busobject->i2c_mst_messages = msgs;
+ 
+@@ -620,7 +621,7 @@ static int i2c_algo_transfer(struct i2c_
+                   direction );
+     }
+ 
+-    local_irq_restore(flags);
++	spin_unlock_irqrestore(&busobject->lock, flags);
+     /* Pre-emption enabled */
+ 
+     /* Suspend current task till the event flag is set */
+@@ -674,12 +675,11 @@ static int  i2c_slave_get_slv_info(i2c_p
+         {
+            /* Reset the slave unit*/
+            dbg_print("Slave transfer timeout on unit %d\n\n\n",busobject->unit_num);
+-           local_irq_save(flags);
++           spin_lock_irqsave(&busobject->lock, flags);
+ 
+            i2c_softReset(busobject->unit_num);
+ 
+-           local_irq_restore(flags);
+-
++		   spin_unlock_irqrestore(&busobject->lock, flags);
+            return -ESLAVE_TIMEOUT;
+         }
+     }
+@@ -869,7 +869,7 @@ int  i2c_slave_enable(struct i2c_adapter
+ 
+         slvmsg->slave_addr = userdata->slave_addr;
+ 
+-        local_irq_save(flags);
++		spin_lock_irqsave(&busobject->lock, flags);
+ 
+         busobject->slave_enabled = True;
+         busobject->slvdone = False;
+@@ -887,8 +887,7 @@ int  i2c_slave_enable(struct i2c_adapter
+             tmhwI2cSetSlaveAddr(busobject->unit_num, slvmsg->slave_addr);
+             tmhwI2cStartSlave(busobject->unit_num);
+         }
+-
+-        local_irq_restore(flags);
++		spin_unlock_irqrestore(&busobject->lock, flags);
+ 
+     }
+     else{/*just renable the interrupt and
+@@ -897,12 +896,11 @@ int  i2c_slave_enable(struct i2c_adapter
+ 
+     if ( busobject->set_slave_disable == True ){
+ 
+-        local_irq_save(flags);
+-
++		spin_lock_irqsave(&busobject->lock, flags);
+         busobject->bus_busy = False;
+ 
+         i2c_slave_disable(adapter);
+-        local_irq_restore(flags);
++		spin_unlock_irqrestore(&busobject->lock, flags);
+         return 0;
+ 
+     }
+@@ -918,8 +916,7 @@ int  i2c_slave_enable(struct i2c_adapter
+          }
+     }
+ 
+-    local_irq_save(flags);
+-
++	spin_lock_irqsave(&busobject->lock, flags);
+     busobject->slave_enabled = True;
+     busobject->slvdone = False;
+     busobject->slvstarted = False;
+@@ -931,8 +928,7 @@ int  i2c_slave_enable(struct i2c_adapter
+ 
+     /* Restart the slave or master on this unit */
+     i2c_slave_mst_control(busobject->unit_num, busobject);
+-
+-    local_irq_restore(flags);
++	spin_unlock_irqrestore(&busobject->lock, flags);
+ 
+     }
+ 
+@@ -961,7 +957,7 @@ int i2c_slave_disable(struct i2c_adapter
+ 
+      /* Make it preempt safe and check if the bus is not busy
+      before stopping the slave */
+-     local_irq_save(flags);
++	 spin_lock_irqsave(&busobject->lock, flags);
+ 
+      if ( busobject->bus_busy == False ){
+       /* reset the slave */
+@@ -980,8 +976,8 @@ int i2c_slave_disable(struct i2c_adapter
+           wake_up(&(busobject->i2c_wait_slave));
+        }
+      }
+-     local_irq_restore(flags);
+-     return 0;
++     spin_unlock_irqrestore(&busobject->lock, flags);
++	 return 0;
+ }
+ 
+ /*
+@@ -1000,10 +996,10 @@ static void i2c_slave_cleanup(i2c_phlm_b
+ 
+     busobject->slave_enabled = False;
+ 
+-    local_irq_save(flags);
++	spin_lock_irqsave(&busobject->lock, flags);
+         tmhwI2cIntEnable(busobject->unit_num);
+         tmhwI2cStopSlave(busobject->unit_num);
+-    local_irq_restore(flags);
++	spin_unlock_irqrestore(&busobject->lock, flags);
+ 
+     slvmsg->rx_tx_bytecount = 0;
+     slvmsg->tx_data_length = slvmsg->rx_data_length = 0;
+@@ -1058,6 +1054,8 @@ static int i2c_bus_init(int device)
+ 
+     busobject->mst_timeout = (I2C_PHCFG_TIMEOUT*HZ)/1000;
+     busobject->slv_timeout = (I2C_PHCFG_SLV_TIMEOUT*HZ)/1000;
++		
++	spin_lock_init(&busobject->lock);
+ 
+      /* The remaining elements of the struct are initialized when i2c write,read
+      functions are called */
+@@ -1372,7 +1370,7 @@ static int i2c_hotboot(struct notifier_b
+         unsigned long flags;
+         int status=0;
+ 
+-        local_irq_save(flags);
++        spin_lock_irqsave(&busobject->lock, flags);
+ 
+             if ( busobject->master_start == False )
+             {
+@@ -1395,7 +1393,7 @@ static int i2c_hotboot(struct notifier_b
+         /* Reset the unit . Does not reset the setup values - timeout & speed*/
+         i2c_softReset(busobject->unit_num);
+ 
+-        local_irq_restore(flags);
++        spin_unlock_irqrestore(&busobject->lock, flags);
+ 
+         return status;
+     }

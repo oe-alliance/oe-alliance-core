@@ -1,0 +1,397 @@
+diff -Naurp linux-2.6.34.org/arch/arm/include/asm/hardware/cache-l2x0.h linux-2.6.34/arch/arm/include/asm/hardware/cache-l2x0.h
+--- linux-2.6.34.org/arch/arm/include/asm/hardware/cache-l2x0.h	2011-05-11 15:16:39.000000000 -0500
++++ linux-2.6.34/arch/arm/include/asm/hardware/cache-l2x0.h	2011-04-28 12:34:48.000000000 -0500
+@@ -21,9 +21,6 @@
+ #define __ASM_ARM_HARDWARE_L2X0_H
+ 
+ #define L2X0_CACHE_ID			0x000
+-#define   L2X0_CACHE_ID_PART_MASK	(0xf << 6)
+-#define   L2X0_CACHE_ID_PART_L210	(1 << 6)
+-#define   L2X0_CACHE_ID_PART_L310	(3 << 6)
+ #define L2X0_CACHE_TYPE			0x004
+ #define L2X0_CTRL			0x100
+ #define L2X0_AUX_CTRL			0x104
+@@ -39,6 +36,7 @@
+ #define L2X0_RAW_INTR_STAT		0x21C
+ #define L2X0_INTR_CLEAR			0x220
+ #define L2X0_CACHE_SYNC			0x730
++#define L2X0_DUMMY_REG			0x740
+ #define L2X0_INV_LINE_PA		0x770
+ #define L2X0_INV_WAY			0x77C
+ #define L2X0_CLEAN_LINE_PA		0x7B0
+@@ -55,6 +53,26 @@
+ #define L2X0_LINE_DATA			0xF10
+ #define L2X0_LINE_TAG			0xF30
+ #define L2X0_DEBUG_CTRL			0xF40
++#define L2X0_PREFETCH_CTRL		0xF60
++#define L2X0_POWER_CTRL			0xF80
++#define   L2X0_DYNAMIC_CLK_GATING_EN	(1 << 1)
++#define   L2X0_STNDBY_MODE_EN		(1 << 0)
++
++/* Registers shifts and masks */
++#define L2X0_CACHE_ID_PART_MASK		(0xf << 6)
++#define L2X0_CACHE_ID_PART_L210		(1 << 6)
++#define L2X0_CACHE_ID_PART_L310		(3 << 6)
++
++#define L2X0_AUX_CTRL_MASK			0xc0000fff
++#define L2X0_AUX_CTRL_ASSOCIATIVITY_SHIFT	16
++#define L2X0_AUX_CTRL_WAY_SIZE_SHIFT		17
++#define L2X0_AUX_CTRL_WAY_SIZE_MASK		(0x3 << 17)
++#define L2X0_AUX_CTRL_SHARE_OVERRIDE_SHIFT	22
++#define L2X0_AUX_CTRL_NS_LOCKDOWN_SHIFT		26
++#define L2X0_AUX_CTRL_NS_INT_CTRL_SHIFT		27
++#define L2X0_AUX_CTRL_DATA_PREFETCH_SHIFT	28
++#define L2X0_AUX_CTRL_INSTR_PREFETCH_SHIFT	29
++#define L2X0_AUX_CTRL_EARLY_BRESP_SHIFT		30
+ 
+ #ifndef __ASSEMBLY__
+ extern void __init l2x0_init(void __iomem *base, __u32 aux_val, __u32 aux_mask);
+diff -Naurp linux-2.6.34.org/arch/arm/include/asm/processor.h linux-2.6.34/arch/arm/include/asm/processor.h
+--- linux-2.6.34.org/arch/arm/include/asm/processor.h	2011-05-11 15:16:37.000000000 -0500
++++ linux-2.6.34/arch/arm/include/asm/processor.h	2011-04-28 12:30:44.000000000 -0500
+@@ -91,7 +91,7 @@ extern void release_thread(struct task_s
+ 
+ unsigned long get_wchan(struct task_struct *p);
+ 
+-#if __LINUX_ARM_ARCH__ == 6
++#if __LINUX_ARM_ARCH__ == 6 || defined(CONFIG_ARM_ERRATA_754327)
+ #define cpu_relax()			smp_mb()
+ #else
+ #define cpu_relax()			barrier()
+diff -Naurp linux-2.6.34.org/arch/arm/Kconfig linux-2.6.34/arch/arm/Kconfig
+--- linux-2.6.34.org/arch/arm/Kconfig	2011-05-11 15:16:49.000000000 -0500
++++ linux-2.6.34/arch/arm/Kconfig	2011-05-11 16:21:14.000000000 -0500
+@@ -1077,6 +1077,68 @@ config ARM_ERRATA_720789
+ 	  invalidated are not, resulting in an incoherency in the system page
+ 	  tables. The workaround changes the TLB flushing routines to invalidate
+ 	  entries regardless of the ASID.
++
++config PL310_ERRATA_727915
++	bool "Background Clean & Invalidate by Way operation can cause data corruption"
++	depends on CACHE_L2X0
++	help
++	  PL310 implements the Clean & Invalidate by Way L2 cache maintenance
++	  operation (offset 0x7FC). This operation runs in background so that
++	  PL310 can handle normal accesses while it is in progress. Under very
++	  rare circumstances, due to this erratum, write data can be lost when
++	  PL310 treats a cacheable write transaction during a Clean &
++	  Invalidate by Way operation.
++
++config ARM_ERRATA_743622
++	bool "ARM errata: Faulty hazard checking in the Store Buffer may lead to data corruption"
++	depends on CPU_V7
++	help
++	  This option enables the workaround for the 743622 Cortex-A9
++	  (r2p0..r2p2) erratum. Under very rare conditions, a faulty
++	  optimisation in the Cortex-A9 Store Buffer may lead to data
++	  corruption. This workaround sets a specific bit in the diagnostic
++	  register of the Cortex-A9 which disables the Store Buffer
++	  optimisation, preventing the defect from occurring. This has no
++	  visible impact on the overall performance or power consumption of the
++	  processor.
++
++config ARM_ERRATA_753970
++	bool "ARM errata: cache sync operation may be faulty"
++	depends on CACHE_PL310
++	help
++	  This option enables the workaround for the 753970 PL310 (r3p0) erratum.
++
++	  Under some condition the effect of cache sync operation on
++	  the store buffer still remains when the operation completes.
++	  This means that the store buffer is always asked to drain and
++	  this prevents it from merging any further writes. The workaround
++	  is to replace the normal offset of cache sync operation (0x730)
++	  by another offset targeting an unmapped PL310 register 0x740.
++	  This has the same effect as the cache sync operation: store buffer
++	  drain and waiting for all buffers empty.
++
++config ARM_ERRATA_754322
++	bool "ARM errata: possible faulty MMU translations following an ASID switch"
++	depends on CPU_V7
++	help
++	  This option enables the workaround for the 754322 Cortex-A9 (r2p*,
++	  r3p*) erratum. A speculative memory access may cause a page table walk
++	  which starts prior to an ASID switch but completes afterwards. This
++	  can populate the micro-TLB with a stale entry which may be hit with
++	  the new ASID. This workaround places two dsb instructions in the mm
++	  switching code so that no page table walks can cross the ASID switch.
++
++config ARM_ERRATA_754327
++	bool "ARM errata: no automatic Store Buffer drain"
++	depends on CPU_V7 && SMP
++	help
++	  This option enables the workaround for the 754327 Cortex-A9 (prior to
++	  r2p0) erratum. The Store Buffer does not have any automatic draining
++	  mechanism and therefore a livelock may occur if an external agent
++	  continuously polls a memory location waiting to observe an update.
++	  This workaround defines cpu_relax() as smp_mb(), preventing correctly
++	  written polling loops from denying visibility of updates to memory.
++
+ endmenu
+ 
+ source "arch/arm/common/Kconfig"
+diff -Naurp linux-2.6.34.org/arch/arm/kernel/smp_twd.c linux-2.6.34/arch/arm/kernel/smp_twd.c
+--- linux-2.6.34.org/arch/arm/kernel/smp_twd.c	2011-05-11 15:16:51.000000000 -0500
++++ linux-2.6.34/arch/arm/kernel/smp_twd.c	2011-05-11 16:01:55.000000000 -0500
+@@ -36,6 +36,7 @@ static void twd_set_mode(enum clock_even
+ 		/* timer load already set up */
+ 		ctrl = TWD_TIMER_CONTROL_ENABLE | TWD_TIMER_CONTROL_IT_ENABLE
+ 			| TWD_TIMER_CONTROL_PERIODIC;
++		__raw_writel(twd_timer_rate / HZ, twd_base + TWD_TIMER_LOAD);
+ 		break;
+ 	case CLOCK_EVT_MODE_ONESHOT:
+ 		/* period set, and timer enabled in 'next_event' hook */
+@@ -81,7 +82,6 @@ int twd_timer_ack(void)
+ 
+ static void __cpuinit twd_calibrate_rate(void)
+ {
+-	unsigned long load;
+ 	u64 waitjiffies;
+ #ifndef CONFIG_EXECUTE_ON_EMULATOR
+ 	unsigned long count;
+@@ -121,12 +121,8 @@ static void __cpuinit twd_calibrate_rate
+ 		twd_timer_rate = (0xFFFFFFFFU - count) * (HZ / 5);
+ #endif
+ 		printk("%lu.%02luMHz.\n", twd_timer_rate / 1000000,
+-			(twd_timer_rate / 100000) % 100);
++			(twd_timer_rate / 1000000) % 100);
+ 	}
+-
+-	load = twd_timer_rate / HZ;
+-
+-	__raw_writel(load, twd_base + TWD_TIMER_LOAD);
+ }
+ 
+ /*
+diff -Naurp linux-2.6.34.org/arch/arm/mach-apollo/Kconfig linux-2.6.34/arch/arm/mach-apollo/Kconfig
+--- linux-2.6.34.org/arch/arm/mach-apollo/Kconfig	2011-05-11 15:16:47.000000000 -0500
++++ linux-2.6.34/arch/arm/mach-apollo/Kconfig	2011-05-11 16:19:20.000000000 -0500
+@@ -96,6 +96,10 @@ config GENERIC_APOLLO_IP
+ 	select IP3106
+ 	select SERIAL_IP3106_CONSOLE
+ 	select ARCH_REQUIRE_GPIOLIB
++	select ARM_ERRATA_742230
++	select ARM_ERRATA_716044
++	select PL310_ERRATA_727915
++	select ARM_ERRATA_754327
+ 
+ config SOC_PNX8492
+ 	bool
+diff -Naurp linux-2.6.34.org/arch/arm/mach-kronos/Kconfig linux-2.6.34/arch/arm/mach-kronos/Kconfig
+--- linux-2.6.34.org/arch/arm/mach-kronos/Kconfig	2011-05-11 15:16:47.000000000 -0500
++++ linux-2.6.34/arch/arm/mach-kronos/Kconfig	2011-05-11 16:19:27.000000000 -0500
+@@ -75,6 +75,8 @@ config GENERIC_KRONOS_IP
+ 	select IP3106
+ 	select SERIAL_IP3106_CONSOLE
+ 	select ARCH_REQUIRE_GPIOLIB
++	select ARM_ERRATA_743622
++	select ARM_ERRATA_754322
+ 
+ config SOC_PNX8492
+ 	bool
+diff -Naurp linux-2.6.34.org/arch/arm/mm/cache-l2x0.c linux-2.6.34/arch/arm/mm/cache-l2x0.c
+--- linux-2.6.34.org/arch/arm/mm/cache-l2x0.c	2011-05-11 15:16:40.000000000 -0500
++++ linux-2.6.34/arch/arm/mm/cache-l2x0.c	2011-05-11 16:50:51.000000000 -0500
+@@ -28,6 +28,7 @@
+ static void __iomem *l2x0_base;
+ static DEFINE_SPINLOCK(l2x0_lock);
+ static uint32_t l2x0_way_mask;	/* Bitmask of active ways */
++static uint32_t l2x0_size;
+ bool l2x0_disabled=0;
+ 
+ static inline void cache_wait_way(void __iomem *reg, unsigned long mask)
+@@ -49,7 +50,13 @@ static inline void cache_wait(void __iom
+ static inline void cache_sync(void)
+ {
+ 	void __iomem *base = l2x0_base;
++
++#ifdef CONFIG_ARM_ERRATA_753970
++	/* write to an unmmapped register */
++	writel_relaxed(0, base + L2X0_DUMMY_REG);
++#else
+ 	writel_relaxed(0, base + L2X0_CACHE_SYNC);
++#endif
+ 	cache_wait(base + L2X0_CACHE_SYNC, 1);
+ }
+ 
+@@ -67,18 +74,24 @@ static inline void l2x0_inv_line(unsigne
+ 	writel_relaxed(addr, base + L2X0_INV_LINE_PA);
+ }
+ 
+-#ifdef CONFIG_PL310_ERRATA_588369
+-static void debug_writel(unsigned long val)
+-{
+-	extern void omap_smc1(u32 fn, u32 arg);
++#if defined(CONFIG_PL310_ERRATA_588369) || defined(CONFIG_PL310_ERRATA_727915)
+ 
+-	/*
+-	 * Texas Instrument secure monitor api to modify the
+-	 * PL310 Debug Control Register.
+-	 */
+-	omap_smc1(0x100, val);
++#define debug_writel(val)	l2x0_set_debug(val)
++
++static void l2x0_set_debug(unsigned long val)
++{
++	writel_relaxed(val, l2x0_base + L2X0_DEBUG_CTRL);
+ }
++#else
++/* Optimised out for non-errata case */
++static inline void debug_writel(unsigned long val)
++{
++}
++
++#define l2x0_set_debug	NULL
++#endif
+ 
++#ifdef CONFIG_PL310_ERRATA_588369
+ static inline void l2x0_flush_line(unsigned long addr)
+ {
+ 	void __iomem *base = l2x0_base;
+@@ -91,11 +104,6 @@ static inline void l2x0_flush_line(unsig
+ }
+ #else
+ 
+-/* Optimised out for non-errata case */
+-static inline void debug_writel(unsigned long val)
+-{
+-}
+-
+ static inline void l2x0_flush_line(unsigned long addr)
+ {
+ 	void __iomem *base = l2x0_base;
+@@ -113,12 +121,40 @@ static void l2x0_cache_sync(void)
+ 	spin_unlock_irqrestore(&l2x0_lock, flags);
+ }
+ 
+-static inline void l2x0_inv_all(void)
++static void l2x0_flush_all(void)
++{
++	unsigned long flags;
++
++	/* clean all ways */
++	spin_lock_irqsave(&l2x0_lock, flags);
++	debug_writel(0x03);
++	writel_relaxed(l2x0_way_mask, l2x0_base + L2X0_CLEAN_INV_WAY);
++	cache_wait_way(l2x0_base + L2X0_CLEAN_INV_WAY, l2x0_way_mask);
++	cache_sync();
++	debug_writel(0x00);
++	spin_unlock_irqrestore(&l2x0_lock, flags);
++}
++
++static void l2x0_clean_all(void)
++{
++	unsigned long flags;
++
++	/* clean all ways */
++	spin_lock_irqsave(&l2x0_lock, flags);
++	writel_relaxed(l2x0_way_mask, l2x0_base + L2X0_CLEAN_WAY);
++	cache_wait_way(l2x0_base + L2X0_CLEAN_WAY, l2x0_way_mask);
++	cache_sync();
++	spin_unlock_irqrestore(&l2x0_lock, flags);
++}
++
++static void l2x0_inv_all(void)
+ {
+ 	unsigned long flags;
+ 
+ 	/* invalidate all ways */
+ 	spin_lock_irqsave(&l2x0_lock, flags);
++	/* Invalidating when L2 is enabled is a nono */
++	BUG_ON(readl(l2x0_base + L2X0_CTRL) & 1);
+ 	writel_relaxed(l2x0_way_mask, l2x0_base + L2X0_INV_WAY);
+ 	cache_wait_way(l2x0_base + L2X0_INV_WAY, l2x0_way_mask);
+ 	cache_sync();
+@@ -169,6 +205,11 @@ static void l2x0_clean_range(unsigned lo
+ 	void __iomem *base = l2x0_base;
+ 	unsigned long flags;
+ 
++	if ((end - start) >= l2x0_size) {
++		l2x0_clean_all();
++		return;
++	}
++
+ 	spin_lock_irqsave(&l2x0_lock, flags);
+ 	start &= ~(CACHE_LINE_SIZE - 1);
+ 	while (start < end) {
+@@ -194,6 +235,11 @@ static void l2x0_flush_range(unsigned lo
+ 	void __iomem *base = l2x0_base;
+ 	unsigned long flags;
+ 
++	if ((end - start) >= l2x0_size) {
++		l2x0_flush_all();
++		return;
++	}
++
+ 	spin_lock_irqsave(&l2x0_lock, flags);
+ 	start &= ~(CACHE_LINE_SIZE - 1);
+ 	while (start < end) {
+@@ -220,6 +266,7 @@ void __init l2x0_init(void __iomem *base
+ {
+ 	__u32 aux;
+ 	__u32 cache_id;
++	__u32 way_size = 0;
+ 	int ways;
+ 	const char *type;
+ 
+@@ -257,7 +304,14 @@ void __init l2x0_init(void __iomem *base
+ 		printk(KERN_INFO "%s cache controller disabled\n", type);
+ 		return;
+ 	}
+-	
++
++	/*
++	 * L2 cache Size =  Way size * Number of ways
++	 */
++	way_size = (aux & L2X0_AUX_CTRL_WAY_SIZE_MASK) >> 17;
++	way_size = 1 << (way_size + 3);
++	l2x0_size = ways * way_size * SZ_1K;
++
+ 	/*
+ 	 * Check if l2x0 controller is already enabled.
+ 	 * If you are booting from non-secure mode
+@@ -270,8 +324,13 @@ void __init l2x0_init(void __iomem *base
+ 
+ 		l2x0_inv_all();
+ 
++#ifdef CONFIG_MACH_APOLLO
+ 		/* Setup Address filtering for MCU0 region 0-512M */
+ 		writel_relaxed(0x20000000, l2x0_base + L2X0_ADDR_FILTERING_END);
++#else
++		/* Setup Address filtering for MCU region on Kronos */
++		writel_relaxed(0x80000000, l2x0_base + L2X0_ADDR_FILTERING_END);
++#endif
+ 		/* Enable Address Filtering */
+ 		writel_relaxed(0x1, l2x0_base + L2X0_ADDR_FILTERING_START);
+ 
+@@ -285,8 +344,8 @@ void __init l2x0_init(void __iomem *base
+ 	outer_cache.sync = l2x0_cache_sync;
+ 
+ 	printk(KERN_INFO "%s cache controller enabled\n", type);
+-	printk(KERN_INFO "l2x0: %d ways, CACHE_ID 0x%08x, AUX_CTRL 0x%08x\n",
+-			 ways, cache_id, aux);
++	printk(KERN_INFO "l2x0: %d ways, CACHE_ID 0x%08x, AUX_CTRL 0x%08x, Cache size: %d B\n",
++			ways, cache_id, aux, l2x0_size);
+ }
+ 
+ static int __init l2x0_disable(char *unused)
+diff -Naurp linux-2.6.34.org/arch/arm/mm/proc-v7.S linux-2.6.34/arch/arm/mm/proc-v7.S
+--- linux-2.6.34.org/arch/arm/mm/proc-v7.S	2011-05-11 15:16:49.000000000 -0500
++++ linux-2.6.34/arch/arm/mm/proc-v7.S	2011-05-11 16:21:29.000000000 -0500
+@@ -112,10 +112,16 @@ ENTRY(cpu_v7_switch_mm)
+ #ifdef CONFIG_ARM_ERRATA_430973
+ 	mcr	p15, 0, r2, c7, c5, 6		@ flush BTAC/BTB
+ #endif
++#ifdef CONFIG_ARM_ERRATA_754322
++	dsb
++#endif
+ 	mcr	p15, 0, r2, c13, c0, 1		@ set reserved context ID
+ 	isb
+ 1:	mcr	p15, 0, r0, c2, c0, 0		@ set TTB 0
+ 	isb
++#ifdef CONFIG_ARM_ERRATA_754322
++	dsb
++#endif
+ 	mcr	p15, 0, r1, c13, c0, 1		@ set context ID
+ 	isb
+ #endif

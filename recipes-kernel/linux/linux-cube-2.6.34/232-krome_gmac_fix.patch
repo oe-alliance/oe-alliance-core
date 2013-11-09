@@ -1,0 +1,252 @@
+diff -Naupr linux-2.6.34_orig/drivers/net/LIPP_6300ETH/src/gmac_drv.c linux-2.6.34/drivers/net/LIPP_6300ETH/src/gmac_drv.c
+--- linux-2.6.34_orig/drivers/net/LIPP_6300ETH/src/gmac_drv.c	2012-10-17 12:46:26.082018000 +0530
++++ linux-2.6.34/drivers/net/LIPP_6300ETH/src/gmac_drv.c	2012-10-19 20:25:21.018727000 +0530
+@@ -982,7 +982,7 @@ static __s32 setup_dma_descriptors( lipp
+ 
+     GMAC_PRINT_DBG("down_lipp_6300Eth called for %s\n", dev->name);
+ 
+-    local_irq_save( flags );
++    spin_lock_irqsave(&priv->lock,flags );
+ 
+     IntDis.dmaIntVal = DMA_MASK_ALL_INTS;
+     IntDis.gmacIntVal = GMAC_INT_MASK_VAL;
+@@ -990,7 +990,7 @@ static __s32 setup_dma_descriptors( lipp
+     /* Disable all the interrupts */
+     tmhwLIPP6100Eth_IntDisable( priv->hwUnitNum,&IntDis);
+ 
+-    local_irq_restore( flags ) ;
++    spin_unlock_irqrestore(&priv->lock, flags ) ;
+ 
+     txfr.dirFlag = tmhwLIPP6100Eth_Dir_TxRx;
+     txfr.enFlag = tmhwLIPP6100Eth_Disable;
+@@ -1087,11 +1087,11 @@ static __s32 up_lipp_6300Eth( struct net
+         goto _err_up_lipp_6300Eth ;
+     }
+ 
+-    local_irq_save( flags ) ;
++    spin_lock_irqsave(&priv->lock,flags );
+ 
+     if( tmhwLIPP6100Eth_IntClear( priv->hwUnitNum, DMA_CLR_ALL_INTS )  != TM_OK )
+     {
+-        local_irq_restore( flags ) ;
++        spin_unlock_irqrestore(&priv->lock, flags ) ;
+         goto _err_up_lipp_6300Eth ;
+     }
+ 
+@@ -1100,7 +1100,7 @@ static __s32 up_lipp_6300Eth( struct net
+ 
+     if(tmhwLIPP6100Eth_IntEnable(priv->hwUnitNum,&IntEn) != TM_OK )
+     {
+-        local_irq_restore( flags ) ;
++        spin_unlock_irqrestore(&priv->lock, flags ) ;
+         goto _err_up_lipp_6300Eth ;
+     }
+ 
+@@ -1109,7 +1109,7 @@ static __s32 up_lipp_6300Eth( struct net
+     IntEn.gmacIntVal = GMAC_INT_MASK_VAL;
+     tmhwLIPP6100Eth_IntDisable(priv->hwUnitNum,&IntEn);
+ 
+-    local_irq_restore( flags ) ;
++    spin_unlock_irqrestore(&priv->lock, flags ) ;
+ 
+     Txfer.dirFlag = tmhwLIPP6100Eth_Dir_Rx;
+     Txfer.enFlag = tmhwLIPP6100Eth_Enable;
+@@ -1119,7 +1119,7 @@ static __s32 up_lipp_6300Eth( struct net
+ 
+     if(ret_val != TM_OK)
+     {
+-        local_irq_restore( flags ) ;
++        spin_unlock_irqrestore(&priv->lock, flags ) ;
+         goto _err_up_lipp_6300Eth ;
+     }
+ 
+@@ -2089,9 +2089,8 @@ static __s32 lipp_6300Eth_hard_start_xmi
+     tmhwLIPP6100Eth_EnTxfr_t txfer;
+     __u32 EthStatus;
+     tmhwLIPP6100Eth_Int_t IntEn;
+-    unsigned long flags;
+ 
+-    dev->trans_start = jiffies;
++//    dev->trans_start = jiffies;
+ 
+     GMAC_PRINT_INT("lipp_6300Eth_hard_start_xmit:%s\n", dev->name);
+ 
+@@ -2129,9 +2128,9 @@ static __s32 lipp_6300Eth_hard_start_xmi
+                 */
+         priv->p_vtx_skb_list[priv->tx_produce_index] = skb;
+ 
+-        local_irq_save(flags);
++        spin_lock(&priv->lock);
+         priv->tx_submit_count++;
+-        local_irq_restore(flags);
++        spin_unlock(&priv->lock) ;
+ 
+         /* Clear the length field */
+         priv->p_vtx_descr[priv->tx_produce_index].TDES1 &= TXDESC_TDES1_TX_BUF1_SIZE_CLR;
+@@ -3097,18 +3096,19 @@ static void lipp_6300Eth_timer( unsigned
+     }
+     #endif/* __LIPP_6300ETH_DEBUG__ */
+     
+-    spin_lock(&priv->lock);
+-
+     /*This function checks whether the carrier is present for the phy or not and depending
+     * upon the status of carrier, it informs kernel about the link
+     */
+ 
++    spin_lock(&priv->lock);
+     if(gpPhyInterface[priv->hwUnitNum]->getLinkStatusFunc(priv->hwUnitNum,
+                                                           &curr_link_status)
+                                                           != TM_OK )
+     {
++        spin_unlock(&priv->lock);
+         goto _err_timer;
+     }
++    spin_unlock(&priv->lock);
+ 
+     if(tmbslPhyEnable == curr_link_status)
+     {
+@@ -3150,19 +3150,18 @@ static void lipp_6300Eth_timer( unsigned
+         }
+      }
+ 
++    spin_lock(&priv->lock);
+     priv->phy_timer = &lipp_6300Eth_timer_struct[priv->hwUnitNum];
+     
+     priv->phy_timer->expires = round_jiffies(jiffies + TIMEOUT_VALUE);
++    spin_unlock(&priv->lock);
+     
+     mod_timer(priv->phy_timer,priv->phy_timer->expires);
+-    spin_unlock(&priv->lock);
+     return;
+ 
+ _err_timer :
+-    spin_unlock(&priv->lock);
+     GMAC_PRINT_ERR("Link Status Error\n") ;
+     return;
+-
+ }
+ 
+ /*--------------------------------------------------------------------------*/
+@@ -4125,6 +4124,7 @@ static __s32 lipp_6300Eth_napi(struct na
+     intr_status = IntDis.dmaIntVal;
+     tmhwLIPP6100Eth_IntClear(unitNum,intr_status);
+ 
++    handle_tx_packets(dev);
+     ret_val = handle_receive_packets(dev,&budget);
+ 
+     #ifdef LIPP_6300ETH_LRO_SUPPORT
+@@ -4134,7 +4134,6 @@ static __s32 lipp_6300Eth_napi(struct na
+     }
+     #endif /* LIPP_6300ETH_LRO_SUPPORT */
+ 
+-    handle_tx_packets(dev);
+ 
+     if(ret_val < budget)
+     {   
+@@ -4146,10 +4145,10 @@ static __s32 lipp_6300Eth_napi(struct na
+         #ifdef LIPP_6300ETH_LRO_SUPPORT
+         lro_flush_all(&priv->lro_mgr);
+         #endif
+-        tmhwLIPP6100Eth_IntGetStatus( unitNum, &IntDis);
+ 
+-        spin_lock_irqsave(&priv->lock, flags);
+         napi_complete(pNapi);
++        spin_lock_irqsave(&priv->lock, flags);
++        tmhwLIPP6100Eth_IntGetStatus( unitNum, &IntDis);
+ 
+         /* Enable  interrupts, for next schedule */
+         IntDis.dmaIntVal = TX_INTR_VAL | RX_INTR_VAL;
+@@ -4476,8 +4475,6 @@ static int lipp_6300Eth_suspend(struct p
+ 	if (!dev || !netif_running(dev))
+     	return 0;
+     
+-    spin_lock(&priv->lock);
+-
+ 	if (state.event == PM_EVENT_SUSPEND)
+ 	{
+ 		netif_device_detach(dev);
+@@ -4491,10 +4488,12 @@ static int lipp_6300Eth_suspend(struct p
+ 		/* Power down PHY here. PHY is not accessible, if GMAC is disabled
+ 		** in next step
+ 		*/
++                spin_lock(&priv->lock);
+ 		gpPhyInterface[priv->hwUnitNum]->setPowerStateFunc(priv->hwUnitNum,tmPowerOff);
+ 
+ 		/*Below operation also disables GMAC & DMA */
+ 		tmhwLIPP6100Eth_SetPowerState(priv->hwUnitNum,tmPowerOff);
++                spin_unlock(&priv->lock);
+ 
+ 		/* Free all the tx & rx buffers,DMA descriptors, deletes the PHY timer,
+ 		** disables GMAC, GMAC DMA
+@@ -4508,10 +4507,7 @@ static int lipp_6300Eth_suspend(struct p
+ 		lipp_6300Eth_stop(dev);
+ 	}
+ 
+-	spin_unlock(&priv->lock);
+-
+ 	return 0;
+-
+ }
+ 
+ static int lipp_6300Eth_resume(struct platform_device *pdev)
+@@ -4525,8 +4521,6 @@ static int lipp_6300Eth_resume(struct pl
+ 	if (!netif_running(dev))
+ 		return 0;
+ 
+-	spin_lock(&priv->lock);
+-
+     if(priv->shutdown)
+     {
+         lipp_6300Eth_open(dev);
+@@ -4535,6 +4529,7 @@ static int lipp_6300Eth_resume(struct pl
+ 
+     netif_device_attach(dev);
+ 
++	spin_lock(&priv->lock);
+ 	phyInfo.clkCsrVal = priv->clk_csr_val;
+ 	phyInfo.phyAddr = priv->phy_addr_val;
+ 
+@@ -4542,6 +4537,7 @@ static int lipp_6300Eth_resume(struct pl
+ 	** PHY is also reset in setup_phy, to come out of powerdown mode
+ 	*/
+ 	tmhwLIPP6100Eth_Init(priv->hwUnitNum,&phyInfo, priv->hwUnitNum? GMAC1_MII_SEL:GMAC0_MII_SEL);
++	spin_unlock(&priv->lock);
+ 
+ 	/* Allocates DMA descriptors, receive buffers, adds the PHY timer,
+ 	** enables GMAC, GMAC DMA
+@@ -4558,11 +4554,9 @@ static int lipp_6300Eth_resume(struct pl
+ 	netif_start_queue( dev );
+ 
+ out_resume:
+-	spin_unlock(&priv->lock);
+ 	return 0;
+ 
+ _err_lipp_6300Eth_resume:
+-	spin_unlock(&priv->lock);
+ 	return 1;
+ }
+ #endif  /* CONFIG_PM */
+diff -Naupr linux-2.6.34_orig/drivers/net/LIPP_6300ETH/src/gmac_drv.h linux-2.6.34/drivers/net/LIPP_6300ETH/src/gmac_drv.h
+--- linux-2.6.34_orig/drivers/net/LIPP_6300ETH/src/gmac_drv.h	2012-10-17 12:46:26.084009000 +0530
++++ linux-2.6.34/drivers/net/LIPP_6300ETH/src/gmac_drv.h	2012-10-17 12:48:06.960561000 +0530
+@@ -222,16 +222,16 @@
+ #define ENABLE_ETH_TOOL
+ 
+ /* Number of descriptors for transmit side */
+-#define HW_DESCR_QUEUE_LEN_TX  (80)
++#define HW_DESCR_QUEUE_LEN_TX  (100)
+ 
+ /* Number of descriptors for receive side */
+-#define HW_DESCR_QUEUE_LEN_RX  (80)
++#define HW_DESCR_QUEUE_LEN_RX  (100)
+ 
+ /* At a time, the txmt isr processes these many tx desc */
+-#define MAX_TX_PKTS_TO_PROCESS (80)
++#define MAX_TX_PKTS_TO_PROCESS (100)
+ 
+ /* At a time, the receive isr processes these many rx desc */
+-#define MAX_RX_PKTS_TO_PROCESS (80)
++#define MAX_RX_PKTS_TO_PROCESS (100)
+ 
+ /* NAPI driver for reception */
+ #define CONFIG_ETH_LIPP_6300ETH_NAPI

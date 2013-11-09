@@ -1,0 +1,29 @@
+diff -Naurp linux-2.6.34/arch/arm/mach-kronos/include/mach/pnx8492.h linux-2.6.34_sdio/arch/arm/mach-kronos/include/mach/pnx8492.h
+--- linux-2.6.34/arch/arm/mach-kronos/include/mach/pnx8492.h	2011-10-21 21:06:45.561058000 +0530
++++ linux-2.6.34_sdio/arch/arm/mach-kronos/include/mach/pnx8492.h	2011-10-21 21:14:44.935262000 +0530
+@@ -115,6 +115,8 @@
+ #define  ALT_PIN_MUX_REG_0       (MMIO_GLB_BASE + 0x140)
+ #define  ALT_PIN_MUX_REG_1       (MMIO_GLB_BASE + 0x144)
+ #define  ALT_PIN_MUX_REG_2       (MMIO_GLB_BASE + 0x148)
++#define  ALT_PIN_MUX_REG_2       (MMIO_GLB_BASE + 0x148)
++#define  PAD_CONFIGURATION_5_REG (MMIO_GLB_BASE + 0x44C)
+ 
+ #define  GLBREG_MISC1            (MMIO_GLB_BASE + 0x500)
+ 
+diff -Naurp linux-2.6.34/arch/arm/mach-kronos/nx_sdiomc_dev.c linux-2.6.34_sdio/arch/arm/mach-kronos/nx_sdiomc_dev.c
+--- linux-2.6.34/arch/arm/mach-kronos/nx_sdiomc_dev.c	2011-10-21 21:06:45.563058000 +0530
++++ linux-2.6.34_sdio/arch/arm/mach-kronos/nx_sdiomc_dev.c	2011-10-21 21:15:29.381693000 +0530
+@@ -74,6 +74,13 @@ static void __init apollo_sdiomc_pin_mux
+ {
+    unsigned int val;
+ 
++   /* SOCK-2852: Setting the bits[24:23] in PAD_CONFIGURATION_5 of GLOBAL_REG 
++    * from 2b'00 to 2b'10, to increase the driver strength. */
++   val = readl(PAD_CONFIGURATION_5_REG);
++   val &= ~(3<<23);
++   val |= (2<<23);
++   writel(val, PAD_CONFIGURATION_5_REG);
++
+    /* Setup pin-muxing for SDIO */
+    val = readl(GPIO_PIN_MUX_REG_0);
+    val &= ~(0x1000018);    // uart2tx=gmux_003=0, uart2rx=gmux_004=0, pwm2=gmux_024=0

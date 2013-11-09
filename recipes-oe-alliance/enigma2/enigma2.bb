@@ -158,34 +158,44 @@ inherit gitpkgv autotools pkgconfig pythonnative
 
 PV = "2.8+git${SRCPV}"
 PKGV = "2.8+git${GITPKGV}"
-PR = "r121"
+PR = "r129"
 
 SRC_URI = "${ENIGMA2_URI}"
 
 SRC_URI_append_azboxhd = " \
-            file://azboxe2.patch \
-             file://lcdchar.patch \
-            "
+    file://azboxe2.patch \
+    file://lcdchar.patch \
+    file://e2_pcr.patch \
+    file://add_more_timeout.patch \
+    file://pic_show.patch \
+    "
 SRC_URI_append_azboxme = " \
-             file://azboxe2.patch \
-            "
-
+    file://azboxe2.patch \
+    file://e2_pcr.patch \
+    file://add_more_timeout.patch \
+    file://pic_show.patch \
+    "
 SRC_URI_append_azboxminime = " \
-             file://azboxe2.patch \
-            "
-
+    file://azboxe2.patch \
+    file://e2_pcr.patch \
+    file://add_more_timeout.patch \
+    file://pic_show.patch \
+    "
 SRC_URI_append_vuduo = " \
-            file://duo_VFD.patch \
-            "
+    file://duo_VFD.patch \
+    "
 SRC_URI_append_gb800solo = " \
-            file://gb800-evfd.patch \
-            "
+    file://gb800-evfd.patch \
+    "
 SRC_URI_append_gb800se = " \
-            file://gb800-evfd.patch \
-            "
+    file://gb800-evfd.patch \
+    "
+SRC_URI_append_gb800seplus = " \
+    file://gb800-evfd.patch \
+    "			
 SRC_URI_append_gb800ue = " \
-            file://gb800-evfd.patch \
-            "
+    file://gb800-evfd.patch \
+    "	
 
 S = "${WORKDIR}/git"
 
@@ -275,14 +285,18 @@ do_configure_prepend() {
         DRIVERSDATE=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/odin/odin-dvb-modules-${MACHINE}.bb | cut -b 12-19`
     elif [ "${MACHINE}" = "iqonios100hd" -o "${MACHINE}" = "iqonios200hd" -o "${MACHINE}" = "iqonios300hd" -o "${MACHINE}" = "tmtwin" -o "${MACHINE}" = "tm2t" -o "${MACHINE}" = "tmsingle" -o "${MACHINE}" = "tmnano" -o "${MACHINE}" = "optimussos1" -o "${MACHINE}" = "optimussos2" -o "${MACHINE}" = "mediabox" ]; then
         DRIVERSDATE=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/iqon/iqon-dvb-modules.bb | cut -b 12-19`
-    elif [ "${MACHINE}" = "gb800solo" -o "${MACHINE}" = "gb800se" -o "${MACHINE}" = "gb800ue" -o "${MACHINE}" = "gbquad" ]; then
+    elif [ "${MACHINE}" = "gb800solo" -o "${MACHINE}" = "gb800se" -o "${MACHINE}" = "gb800ue" -o "${MACHINE}" = "gbquad" -o "${MACHINE}" = "gb800seplus" -o "${MACHINE}" = "gb800ueplus" ]; then
         DRIVERSDATE=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/gigablue/gigablue-dvb-modules-${MACHINE}.bb | cut -b 12-19`
     elif [ "${MACHINE}" = "inihde" ]; then
         DRIVERSDATE=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/ini/ini-dvb-modules-inihde.bb | cut -b 12-19`
+   elif [ "${MACHINE}" = "inihdp" ]; then
+        DRIVERSDATE=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/ini/ini-dvb-modules-inihdp.bb | cut -b 12-19`
     elif [ "${MACHINE}" = "ventonhdx" ]; then
         DRIVERSDATE=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/ini/ini-dvb-modules-inihdx.bb | cut -b 12-19`
     elif [ "${MACHINE}" = "xp1000" ]; then
         DRIVERSDATE=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/xp/xp-dvb-modules-${MACHINE}.bb | cut -b 12-19`
+   elif [ "${MACHINE}" = "cube" ]; then
+        DRIVERSDATE=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/cube/e2bmc-dvb-modules-${MACHINE}.bb | cut -b 12-19`
     elif [ "${MACHINE}" = "ebox5000" -o "${MACHINE}" = "ebox5100" -o "${MACHINE}" = "ebox7358" ]; then
         DRIVERSDATE=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/ebox/ebox-dvb-modules-${MACHINE}.bb | cut -b 12-19`
     elif [ "${MACHINE}" = "ixussone" -o "${MACHINE}" = "ixusszero" -o "${MACHINE}" = "ixussduo" ]; then
@@ -291,12 +305,8 @@ do_configure_prepend() {
         DRIVERSDATE=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/azbox/azbox-dvb-modules.bb | cut -b 12-19`
     elif [ "${MACHINE}" = "dm8000" ]; then
         DRIVERSDATE="20130619"
-    elif [ "${MACHINE}" = "dm7020hd" ]; then
-        DRIVERSDATE="20130730"
-    elif [ "${MACHINE}" = "dm800sev2" ]; then
-        DRIVERSDATE="20130725"
-    elif [ "${MACHINE}" = "dm500hd" -o "${MACHINE}" = "dm800se" -o "${MACHINE}" = "dm500hdv2" ]; then
-        DRIVERSDATE="20130607"
+    elif [ "${MACHINE}" = "dm500hd" -o "${MACHINE}" = "dm800se" -o "${MACHINE}" = "dm500hdv2" -o "${MACHINE}" = "dm7020hd" -o "${MACHINE}" = "dm800sev2" ]; then
+        DRIVERSDATE="20131001"
     elif [ "${MACHINE}" = "dm800" ]; then
         DRIVERSDATE="20130501"
     else

@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3
 ALLOW_EMPTY_${PN} = "1"
 
 PV = "1.0"
-PR = "r9"
+PR = "r10"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 inherit packagegroup
@@ -26,6 +26,7 @@ RRECOMMENDS_${PN} = "\
     enigma2-plugin-extensions-cutlisteditor \
     enigma2-plugin-extensions-mediaplayer \
     enigma2-plugin-extensions-dvdplayer \
+    enigma2-plugin-systemplugins-videomode \
     enigma2-plugin-systemplugins-videotune \
     enigma2-plugin-systemplugins-autoresolution \
     enigma2-plugin-systemplugins-softwaremanager \

@@ -1,0 +1,11 @@
+diff -Naupr linux-2.6.34.orig/drivers/net/LIPP_6300ETH/src/gmac_drv.c linux-2.6.34/drivers/net/LIPP_6300ETH/src/gmac_drv.c
+--- linux-2.6.34.orig/drivers/net/LIPP_6300ETH/src/gmac_drv.c	2013-02-19 11:36:40.389693000 +0530
++++ linux-2.6.34/drivers/net/LIPP_6300ETH/src/gmac_drv.c	2013-02-19 11:40:11.796376000 +0530
+@@ -2127,6 +2127,7 @@ static __s32 lipp_6300Eth_hard_start_xmi
+ 	{
+ 		;// the packet should be dropped here and not transmitted
+ 		;// skip code related to transmitting packet
++	        return NETDEV_TX_OK;
+ 	}
+     }
+ #endif

@@ -1,0 +1,2540 @@
+diff -Naurp linux-2.6.34.org/arch/arm/mach-apollo/pnx8492.c linux-2.6.34/arch/arm/mach-apollo/pnx8492.c
+--- linux-2.6.34.org/arch/arm/mach-apollo/pnx8492.c	2010-09-29 20:25:59.000000000 -0500
++++ linux-2.6.34/arch/arm/mach-apollo/pnx8492.c	2010-09-29 20:28:48.000000000 -0500
+@@ -506,7 +506,8 @@ static int __init parse_tag_memmap(const
+ 
+ 	for(i=0;i<MAX_MEMMAP_TAGS;i++)
+ 	{
+-        if((tag->u.memmap.pool_def[i].offset <= 0) || (tag->u.memmap.pool_def[i].offset > pnx8493_meminfo.bank[tag->u.memmap.pool_def[i].bank].size))
++        if((tag->u.memmap.pool_def[i].offset <= 0) || (tag->u.memmap.pool_def[i].offset > pnx8493_meminfo.bank[tag->u.memmap.pool_def[i].bank].size)
++						   || (tag->u.memmap.pool_def[i].size > pnx8493_meminfo.bank[tag->u.memmap.pool_def[i].bank].size))
+             continue;
+ 
+ 		switch (tag->u.memmap.pool_def[i].pool_type)
+diff -Naurp linux-2.6.34.org/drivers/mtd/chips/cfi_cmdset_0002.c linux-2.6.34/drivers/mtd/chips/cfi_cmdset_0002.c
+--- linux-2.6.34.org/drivers/mtd/chips/cfi_cmdset_0002.c	2010-05-16 16:17:36.000000000 -0500
++++ linux-2.6.34/drivers/mtd/chips/cfi_cmdset_0002.c	2010-09-29 20:27:20.000000000 -0500
+@@ -148,7 +148,7 @@ static void fixup_amd_bootblock(struct m
+ 	if (((major << 8) | minor) < 0x3131) {
+ 		/* CFI version 1.0 => don't trust bootloc */
+ 
+-		DEBUG(MTD_DEBUG_LEVEL1,
++		MTDDEBUG(MTD_DEBUG_LEVEL1,
+ 			"%s: JEDEC Vendor ID is 0x%02X Device ID is 0x%02X\n",
+ 			map->name, cfi->mfr, cfi->id);
+ 
+@@ -169,7 +169,7 @@ static void fixup_amd_bootblock(struct m
+ 			 * the 8-bit device ID.
+ 			 */
+ 			(cfi->mfr == MANUFACTURER_MACRONIX)) {
+-			DEBUG(MTD_DEBUG_LEVEL1,
++			MTDDEBUG(MTD_DEBUG_LEVEL1,
+ 				"%s: Macronix MX29LV400C with bottom boot block"
+ 				" detected\n", map->name);
+ 			extp->TopBottom = 2;	/* bottom boot */
+@@ -181,7 +181,7 @@ static void fixup_amd_bootblock(struct m
+ 			extp->TopBottom = 2;	/* bottom boot */
+ 		}
+ 
+-		DEBUG(MTD_DEBUG_LEVEL1,
++		MTDDEBUG(MTD_DEBUG_LEVEL1,
+ 			"%s: AMD CFI PRI V%c.%c has no boot block field;"
+ 			" deduced %s from Device ID\n", map->name, major, minor,
+ 			extp->TopBottom == 2 ? "bottom" : "top");
+@@ -194,7 +194,7 @@ static void fixup_use_write_buffers(stru
+ 	struct map_info *map = mtd->priv;
+ 	struct cfi_private *cfi = map->fldrv_priv;
+ 	if (cfi->cfiq->BufWriteTimeoutTyp) {
+-		DEBUG(MTD_DEBUG_LEVEL1, "Using buffer write method\n" );
++		MTDDEBUG(MTD_DEBUG_LEVEL1, "Using buffer write method\n" );
+ 		mtd->write = cfi_amdstd_write_buffers;
+ 	}
+ }
+@@ -1068,7 +1068,7 @@ static int __xipram do_write_oneword(str
+ 		return ret;
+ 	}
+ 
+-	DEBUG( MTD_DEBUG_LEVEL3, "MTD %s(): WRITE 0x%.8lx(0x%.8lx)\n",
++	MTDDEBUG( MTD_DEBUG_LEVEL3, "MTD %s(): WRITE 0x%.8lx(0x%.8lx)\n",
+ 	       __func__, adr, datum.x[0] );
+ 
+ 	/*
+@@ -1079,7 +1079,7 @@ static int __xipram do_write_oneword(str
+ 	 */
+ 	oldd = map_read(map, adr);
+ 	if (map_word_equal(map, oldd, datum)) {
+-		DEBUG( MTD_DEBUG_LEVEL3, "MTD %s(): NOP\n",
++		MTDDEBUG( MTD_DEBUG_LEVEL3, "MTD %s(): NOP\n",
+ 		       __func__);
+ 		goto op_done;
+ 	}
+@@ -1319,7 +1319,7 @@ static int __xipram do_write_buffer(stru
+ 
+ 	datum = map_word_load(map, buf);
+ 
+-	DEBUG( MTD_DEBUG_LEVEL3, "MTD %s(): WRITE 0x%.8lx(0x%.8lx)\n",
++	MTDDEBUG( MTD_DEBUG_LEVEL3, "MTD %s(): WRITE 0x%.8lx(0x%.8lx)\n",
+ 	       __func__, adr, datum.x[0] );
+ 
+ 	XIP_INVAL_CACHED_RANGE(map, adr, len);
+@@ -1507,7 +1507,7 @@ static int __xipram do_erase_chip(struct
+ 		return ret;
+ 	}
+ 
+-	DEBUG( MTD_DEBUG_LEVEL3, "MTD %s(): ERASE 0x%.8lx\n",
++	MTDDEBUG( MTD_DEBUG_LEVEL3, "MTD %s(): ERASE 0x%.8lx\n",
+ 	       __func__, chip->start );
+ 
+ 	XIP_INVAL_CACHED_RANGE(map, adr, map->size);
+@@ -1595,7 +1595,7 @@ static int __xipram do_erase_oneblock(st
+ 		return ret;
+ 	}
+ 
+-	DEBUG( MTD_DEBUG_LEVEL3, "MTD %s(): ERASE 0x%.8lx\n",
++	MTDDEBUG( MTD_DEBUG_LEVEL3, "MTD %s(): ERASE 0x%.8lx\n",
+ 	       __func__, adr );
+ 
+ 	XIP_INVAL_CACHED_RANGE(map, adr, len);
+@@ -1721,7 +1721,7 @@ static int do_atmel_lock(struct map_info
+ 		goto out_unlock;
+ 	chip->state = FL_LOCKING;
+ 
+-	DEBUG(MTD_DEBUG_LEVEL3, "MTD %s(): LOCK 0x%08lx len %d\n",
++	MTDDEBUG(MTD_DEBUG_LEVEL3, "MTD %s(): LOCK 0x%08lx len %d\n",
+ 	      __func__, adr, len);
+ 
+ 	cfi_send_gen_cmd(0xAA, cfi->addr_unlock1, chip->start, map, cfi,
+@@ -1757,7 +1757,7 @@ static int do_atmel_unlock(struct map_in
+ 		goto out_unlock;
+ 	chip->state = FL_UNLOCKING;
+ 
+-	DEBUG(MTD_DEBUG_LEVEL3, "MTD %s(): LOCK 0x%08lx len %d\n",
++	MTDDEBUG(MTD_DEBUG_LEVEL3, "MTD %s(): LOCK 0x%08lx len %d\n",
+ 	      __func__, adr, len);
+ 
+ 	cfi_send_gen_cmd(0xAA, cfi->addr_unlock1, chip->start, map, cfi,
+diff -Naurp linux-2.6.34.org/drivers/mtd/chips/fwh_lock.h linux-2.6.34/drivers/mtd/chips/fwh_lock.h
+--- linux-2.6.34.org/drivers/mtd/chips/fwh_lock.h	2010-05-16 16:17:36.000000000 -0500
++++ linux-2.6.34/drivers/mtd/chips/fwh_lock.h	2010-09-29 20:27:20.000000000 -0500
+@@ -34,7 +34,7 @@ static int fwh_xxlock_oneblock(struct ma
+ 
+ 	/* Refuse the operation if the we cannot look behind the chip */
+ 	if (chip->start < 0x400000) {
+-		DEBUG( MTD_DEBUG_LEVEL3,
++		MTDDEBUG( MTD_DEBUG_LEVEL3,
+ 			"MTD %s(): chip->start: %lx wanted >= 0x400000\n",
+ 			__func__, chip->start );
+ 		return -EIO;
+diff -Naurp linux-2.6.34.org/drivers/mtd/chips/jedec_probe.c linux-2.6.34/drivers/mtd/chips/jedec_probe.c
+--- linux-2.6.34.org/drivers/mtd/chips/jedec_probe.c	2010-05-16 16:17:36.000000000 -0500
++++ linux-2.6.34/drivers/mtd/chips/jedec_probe.c	2010-09-29 20:27:20.000000000 -0500
+@@ -1905,7 +1905,7 @@ static void jedec_reset(u32 base, struct
+ 	 * as they will ignore the writes and dont care what address
+ 	 * the F0 is written to */
+ 	if (cfi->addr_unlock1) {
+-		DEBUG( MTD_DEBUG_LEVEL3,
++		MTDDEBUG( MTD_DEBUG_LEVEL3,
+ 		       "reset unlock called %x %x \n",
+ 		       cfi->addr_unlock1,cfi->addr_unlock2);
+ 		cfi_send_gen_cmd(0xaa, cfi->addr_unlock1, base, map, cfi, cfi->device_type, NULL);
+@@ -1929,7 +1929,7 @@ static int cfi_jedec_setup(struct cfi_pr
+ 	uint8_t uaddr;
+ 
+ 	if (! (jedec_table[index].devtypes & p_cfi->device_type)) {
+-		DEBUG(MTD_DEBUG_LEVEL1, "Rejecting potential %s with incompatible %d-bit device type\n",
++		MTDDEBUG(MTD_DEBUG_LEVEL1, "Rejecting potential %s with incompatible %d-bit device type\n",
+ 		      jedec_table[index].name, 4 * (1<<p_cfi->device_type));
+ 		return 0;
+ 	}
+@@ -2008,7 +2008,7 @@ static inline int jedec_match( uint32_t 
+ 		 * there aren't.
+ 		 */
+ 		if (finfo->dev_id > 0xff) {
+-			DEBUG( MTD_DEBUG_LEVEL3, "%s(): ID is not 8bit\n",
++			MTDDEBUG( MTD_DEBUG_LEVEL3, "%s(): ID is not 8bit\n",
+ 			       __func__);
+ 			goto match_done;
+ 		}
+@@ -2032,11 +2032,11 @@ static inline int jedec_match( uint32_t 
+ 	}
+ 
+ 	/* the part size must fit in the memory window */
+-	DEBUG( MTD_DEBUG_LEVEL3,
++	MTDDEBUG( MTD_DEBUG_LEVEL3,
+ 	       "MTD %s(): Check fit 0x%.8x + 0x%.8x = 0x%.8x\n",
+ 	       __func__, base, 1 << finfo->dev_size, base + (1 << finfo->dev_size) );
+ 	if ( base + cfi_interleave(cfi) * ( 1 << finfo->dev_size ) > map->size ) {
+-		DEBUG( MTD_DEBUG_LEVEL3,
++		MTDDEBUG( MTD_DEBUG_LEVEL3,
+ 		       "MTD %s(): 0x%.4x 0x%.4x %dKiB doesn't fit\n",
+ 		       __func__, finfo->mfr_id, finfo->dev_id,
+ 		       1 << finfo->dev_size );
+@@ -2048,12 +2048,12 @@ static inline int jedec_match( uint32_t 
+ 
+ 	uaddr = finfo->uaddr;
+ 
+-	DEBUG( MTD_DEBUG_LEVEL3, "MTD %s(): check unlock addrs 0x%.4x 0x%.4x\n",
++	MTDDEBUG( MTD_DEBUG_LEVEL3, "MTD %s(): check unlock addrs 0x%.4x 0x%.4x\n",
+ 	       __func__, cfi->addr_unlock1, cfi->addr_unlock2 );
+ 	if ( MTD_UADDR_UNNECESSARY != uaddr && MTD_UADDR_DONT_CARE != uaddr
+ 	     && ( unlock_addrs[uaddr].addr1 / cfi->device_type != cfi->addr_unlock1 ||
+ 		  unlock_addrs[uaddr].addr2 / cfi->device_type != cfi->addr_unlock2 ) ) {
+-		DEBUG( MTD_DEBUG_LEVEL3,
++		MTDDEBUG( MTD_DEBUG_LEVEL3,
+ 			"MTD %s(): 0x%.4x 0x%.4x did not match\n",
+ 			__func__,
+ 			unlock_addrs[uaddr].addr1,
+@@ -2070,14 +2070,14 @@ static inline int jedec_match( uint32_t 
+ 	 * FIXME - write a driver that takes all of the chip info as
+ 	 * module parameters, doesn't probe but forces a load.
+ 	 */
+-	DEBUG( MTD_DEBUG_LEVEL3,
++	MTDDEBUG( MTD_DEBUG_LEVEL3,
+ 	       "MTD %s(): check ID's disappear when not in ID mode\n",
+ 	       __func__ );
+ 	jedec_reset( base, map, cfi );
+ 	mfr = jedec_read_mfr( map, base, cfi );
+ 	id = jedec_read_id( map, base, cfi );
+ 	if ( mfr == cfi->mfr && id == cfi->id ) {
+-		DEBUG( MTD_DEBUG_LEVEL3,
++		MTDDEBUG( MTD_DEBUG_LEVEL3,
+ 		       "MTD %s(): ID 0x%.2x:0x%.2x did not change after reset:\n"
+ 		       "You might need to manually specify JEDEC parameters.\n",
+ 			__func__, cfi->mfr, cfi->id );
+@@ -2091,7 +2091,7 @@ static inline int jedec_match( uint32_t 
+ 	 * Put the device back in ID mode - only need to do this if we
+ 	 * were truly frobbing a real device.
+ 	 */
+-	DEBUG( MTD_DEBUG_LEVEL3, "MTD %s(): return to ID mode\n", __func__ );
++	MTDDEBUG( MTD_DEBUG_LEVEL3, "MTD %s(): return to ID mode\n", __func__ );
+ 	if (cfi->addr_unlock1) {
+ 		cfi_send_gen_cmd(0xaa, cfi->addr_unlock1, base, map, cfi, cfi->device_type, NULL);
+ 		cfi_send_gen_cmd(0x55, cfi->addr_unlock2, base, map, cfi, cfi->device_type, NULL);
+@@ -2154,12 +2154,12 @@ static int jedec_probe_chip(struct map_i
+ 
+ 		cfi->mfr = jedec_read_mfr(map, base, cfi);
+ 		cfi->id = jedec_read_id(map, base, cfi);
+-		DEBUG(MTD_DEBUG_LEVEL3,
++		MTDDEBUG(MTD_DEBUG_LEVEL3,
+ 		      "Search for id:(%02x %02x) interleave(%d) type(%d)\n",
+ 			cfi->mfr, cfi->id, cfi_interleave(cfi), cfi->device_type);
+ 		for (i = 0; i < ARRAY_SIZE(jedec_table); i++) {
+ 			if ( jedec_match( base, map, cfi, &jedec_table[i] ) ) {
+-				DEBUG( MTD_DEBUG_LEVEL3,
++				MTDDEBUG( MTD_DEBUG_LEVEL3,
+ 				       "MTD %s(): matched device 0x%x,0x%x unlock_addrs: 0x%.4x 0x%.4x\n",
+ 				       __func__, cfi->mfr, cfi->id,
+ 				       cfi->addr_unlock1, cfi->addr_unlock2 );
+diff -Naurp linux-2.6.34.org/drivers/mtd/devices/doc2000.c linux-2.6.34/drivers/mtd/devices/doc2000.c
+--- linux-2.6.34.org/drivers/mtd/devices/doc2000.c	2010-05-16 16:17:36.000000000 -0500
++++ linux-2.6.34/drivers/mtd/devices/doc2000.c	2010-09-29 20:27:20.000000000 -0500
+@@ -82,7 +82,7 @@ static int _DoC_WaitReady(struct DiskOnC
+ 	void __iomem *docptr = doc->virtadr;
+ 	unsigned long timeo = jiffies + (HZ * 10);
+ 
+-	DEBUG(MTD_DEBUG_LEVEL3,
++	MTDDEBUG(MTD_DEBUG_LEVEL3,
+ 	      "_DoC_WaitReady called for out-of-line wait\n");
+ 
+ 	/* Out-of-line routine to wait for chip response */
+@@ -92,7 +92,7 @@ static int _DoC_WaitReady(struct DiskOnC
+ 		DoC_Delay(doc, 2);
+ 
+ 		if (time_after(jiffies, timeo)) {
+-			DEBUG(MTD_DEBUG_LEVEL2, "_DoC_WaitReady timed out.\n");
++			MTDDEBUG(MTD_DEBUG_LEVEL2, "_DoC_WaitReady timed out.\n");
+ 			return -EIO;
+ 		}
+ 		udelay(1);
+@@ -323,7 +323,7 @@ static int DoC_IdentChip(struct DiskOnCh
+ 
+ 	/* Reset the chip */
+ 	if (DoC_Command(doc, NAND_CMD_RESET, CDSN_CTRL_WP)) {
+-		DEBUG(MTD_DEBUG_LEVEL2,
++		MTDDEBUG(MTD_DEBUG_LEVEL2,
+ 		      "DoC_Command (reset) for %d,%d returned true\n",
+ 		      floor, chip);
+ 		return 0;
+@@ -332,7 +332,7 @@ static int DoC_IdentChip(struct DiskOnCh
+ 
+ 	/* Read the NAND chip ID: 1. Send ReadID command */
+ 	if (DoC_Command(doc, NAND_CMD_READID, CDSN_CTRL_WP)) {
+-		DEBUG(MTD_DEBUG_LEVEL2,
++		MTDDEBUG(MTD_DEBUG_LEVEL2,
+ 		      "DoC_Command (ReadID) for %d,%d returned true\n",
+ 		      floor, chip);
+ 		return 0;
+diff -Naurp linux-2.6.34.org/drivers/mtd/devices/doc2001.c linux-2.6.34/drivers/mtd/devices/doc2001.c
+--- linux-2.6.34.org/drivers/mtd/devices/doc2001.c	2010-05-16 16:17:36.000000000 -0500
++++ linux-2.6.34/drivers/mtd/devices/doc2001.c	2010-09-29 20:27:20.000000000 -0500
+@@ -55,7 +55,7 @@ static int _DoC_WaitReady(void __iomem *
+ {
+ 	unsigned short c = 0xffff;
+ 
+-	DEBUG(MTD_DEBUG_LEVEL3,
++	MTDDEBUG(MTD_DEBUG_LEVEL3,
+ 	      "_DoC_WaitReady called for out-of-line wait\n");
+ 
+ 	/* Out-of-line routine to wait for chip response */
+@@ -63,7 +63,7 @@ static int _DoC_WaitReady(void __iomem *
+ 		;
+ 
+ 	if (c == 0)
+-		DEBUG(MTD_DEBUG_LEVEL2, "_DoC_WaitReady timed out.\n");
++		MTDDEBUG(MTD_DEBUG_LEVEL2, "_DoC_WaitReady timed out.\n");
+ 
+ 	return (c == 0);
+ }
+diff -Naurp linux-2.6.34.org/drivers/mtd/devices/doc2001plus.c linux-2.6.34/drivers/mtd/devices/doc2001plus.c
+--- linux-2.6.34.org/drivers/mtd/devices/doc2001plus.c	2010-05-16 16:17:36.000000000 -0500
++++ linux-2.6.34/drivers/mtd/devices/doc2001plus.c	2010-09-29 20:27:20.000000000 -0500
+@@ -61,7 +61,7 @@ static int _DoC_WaitReady(void __iomem *
+ {
+ 	unsigned int c = 0xffff;
+ 
+-	DEBUG(MTD_DEBUG_LEVEL3,
++	MTDDEBUG(MTD_DEBUG_LEVEL3,
+ 	      "_DoC_WaitReady called for out-of-line wait\n");
+ 
+ 	/* Out-of-line routine to wait for chip response */
+@@ -69,7 +69,7 @@ static int _DoC_WaitReady(void __iomem *
+ 		;
+ 
+ 	if (c == 0)
+-		DEBUG(MTD_DEBUG_LEVEL2, "_DoC_WaitReady timed out.\n");
++		MTDDEBUG(MTD_DEBUG_LEVEL2, "_DoC_WaitReady timed out.\n");
+ 
+ 	return (c == 0);
+ }
+diff -Naurp linux-2.6.34.org/drivers/mtd/devices/m25p80.c linux-2.6.34/drivers/mtd/devices/m25p80.c
+--- linux-2.6.34.org/drivers/mtd/devices/m25p80.c	2010-05-16 16:17:36.000000000 -0500
++++ linux-2.6.34/drivers/mtd/devices/m25p80.c	2010-09-29 20:27:20.000000000 -0500
+@@ -180,7 +180,7 @@ static int wait_till_ready(struct m25p *
+  */
+ static int erase_chip(struct m25p *flash)
+ {
+-	DEBUG(MTD_DEBUG_LEVEL3, "%s: %s %lldKiB\n",
++	MTDDEBUG(MTD_DEBUG_LEVEL3, "%s: %s %lldKiB\n",
+ 	      dev_name(&flash->spi->dev), __func__,
+ 	      (long long)(flash->mtd.size >> 10));
+ 
+@@ -220,7 +220,7 @@ static int m25p_cmdsz(struct m25p *flash
+  */
+ static int erase_sector(struct m25p *flash, u32 offset)
+ {
+-	DEBUG(MTD_DEBUG_LEVEL3, "%s: %s %dKiB at 0x%08x\n",
++	MTDDEBUG(MTD_DEBUG_LEVEL3, "%s: %s %dKiB at 0x%08x\n",
+ 			dev_name(&flash->spi->dev), __func__,
+ 			flash->mtd.erasesize / 1024, offset);
+ 
+@@ -256,7 +256,7 @@ static int m25p80_erase(struct mtd_info 
+ 	u32 addr,len;
+ 	uint32_t rem;
+ 
+-	DEBUG(MTD_DEBUG_LEVEL2, "%s: %s %s 0x%llx, len %lld\n",
++	MTDDEBUG(MTD_DEBUG_LEVEL2, "%s: %s %s 0x%llx, len %lld\n",
+ 	      dev_name(&flash->spi->dev), __func__, "at",
+ 	      (long long)instr->addr, (long long)instr->len);
+ 
+@@ -318,7 +318,7 @@ static int m25p80_read(struct mtd_info *
+ 	struct spi_transfer t[2];
+ 	struct spi_message m;
+ 
+-	DEBUG(MTD_DEBUG_LEVEL2, "%s: %s %s 0x%08x, len %zd\n",
++	MTDDEBUG(MTD_DEBUG_LEVEL2, "%s: %s %s 0x%08x, len %zd\n",
+ 			dev_name(&flash->spi->dev), __func__, "from",
+ 			(u32)from, len);
+ 
+@@ -388,7 +388,7 @@ static int m25p80_write(struct mtd_info 
+ 	struct spi_transfer t[2];
+ 	struct spi_message m;
+ 
+-	DEBUG(MTD_DEBUG_LEVEL2, "%s: %s %s 0x%08x, len %zd\n",
++	MTDDEBUG(MTD_DEBUG_LEVEL2, "%s: %s %s 0x%08x, len %zd\n",
+ 			dev_name(&flash->spi->dev), __func__, "to",
+ 			(u32)to, len);
+ 
+@@ -721,7 +721,7 @@ static const struct spi_device_id *__dev
+ 	 */
+ 	tmp = spi_write_then_read(spi, &code, 1, id, 5);
+ 	if (tmp < 0) {
+-		DEBUG(MTD_DEBUG_LEVEL0, "%s: error %d reading JEDEC ID\n",
++		MTDDEBUG(MTD_DEBUG_LEVEL0, "%s: error %d reading JEDEC ID\n",
+ 			dev_name(&spi->dev), tmp);
+ 		return NULL;
+ 	}
+@@ -873,7 +873,7 @@ static int __devinit m25p_probe(struct s
+ 	dev_info(&spi->dev, "%s (%lld Kbytes)\n", id->name,
+ 			(long long)flash->mtd.size >> 10);
+ 
+-	DEBUG(MTD_DEBUG_LEVEL2,
++	MTDDEBUG(MTD_DEBUG_LEVEL2,
+ 		"mtd .name = %s, .size = 0x%llx (%lldMiB) "
+ 			".erasesize = 0x%.8x (%uKiB) .numeraseregions = %d\n",
+ 		flash->mtd.name,
+@@ -883,7 +883,7 @@ static int __devinit m25p_probe(struct s
+ 
+ 	if (flash->mtd.numeraseregions)
+ 		for (i = 0; i < flash->mtd.numeraseregions; i++)
+-			DEBUG(MTD_DEBUG_LEVEL2,
++			MTDDEBUG(MTD_DEBUG_LEVEL2,
+ 				"mtd.eraseregions[%d] = { .offset = 0x%llx, "
+ 				".erasesize = 0x%.8x (%uKiB), "
+ 				".numblocks = %d }\n",
+@@ -915,7 +915,7 @@ static int __devinit m25p_probe(struct s
+ 
+ 		if (nr_parts > 0) {
+ 			for (i = 0; i < nr_parts; i++) {
+-				DEBUG(MTD_DEBUG_LEVEL2, "partitions[%d] = "
++				MTDDEBUG(MTD_DEBUG_LEVEL2, "partitions[%d] = "
+ 					"{.name = %s, .offset = 0x%llx, "
+ 						".size = 0x%llx (%lldKiB) }\n",
+ 					i, parts[i].name,
+diff -Naurp linux-2.6.34.org/drivers/mtd/devices/mtd_dataflash.c linux-2.6.34/drivers/mtd/devices/mtd_dataflash.c
+--- linux-2.6.34.org/drivers/mtd/devices/mtd_dataflash.c	2010-05-16 16:17:36.000000000 -0500
++++ linux-2.6.34/drivers/mtd/devices/mtd_dataflash.c	2010-09-29 20:27:20.000000000 -0500
+@@ -122,7 +122,7 @@ static int dataflash_waitready(struct sp
+ 	for (;;) {
+ 		status = dataflash_status(spi);
+ 		if (status < 0) {
+-			DEBUG(MTD_DEBUG_LEVEL1, "%s: status %d?\n",
++			MTDDEBUG(MTD_DEBUG_LEVEL1, "%s: status %d?\n",
+ 					dev_name(&spi->dev), status);
+ 			status = 0;
+ 		}
+@@ -149,7 +149,7 @@ static int dataflash_erase(struct mtd_in
+ 	uint8_t			*command;
+ 	uint32_t		rem;
+ 
+-	DEBUG(MTD_DEBUG_LEVEL2, "%s: erase addr=0x%llx len 0x%llx\n",
++	MTDDEBUG(MTD_DEBUG_LEVEL2, "%s: erase addr=0x%llx len 0x%llx\n",
+ 	      dev_name(&spi->dev), (long long)instr->addr,
+ 	      (long long)instr->len);
+ 
+@@ -187,7 +187,7 @@ static int dataflash_erase(struct mtd_in
+ 		command[2] = (uint8_t)(pageaddr >> 8);
+ 		command[3] = 0;
+ 
+-		DEBUG(MTD_DEBUG_LEVEL3, "ERASE %s: (%x) %x %x %x [%i]\n",
++		MTDDEBUG(MTD_DEBUG_LEVEL3, "ERASE %s: (%x) %x %x %x [%i]\n",
+ 			do_block ? "block" : "page",
+ 			command[0], command[1], command[2], command[3],
+ 			pageaddr);
+@@ -238,7 +238,7 @@ static int dataflash_read(struct mtd_inf
+ 	uint8_t			*command;
+ 	int			status;
+ 
+-	DEBUG(MTD_DEBUG_LEVEL2, "%s: read 0x%x..0x%x\n",
++	MTDDEBUG(MTD_DEBUG_LEVEL2, "%s: read 0x%x..0x%x\n",
+ 		dev_name(&priv->spi->dev), (unsigned)from, (unsigned)(from + len));
+ 
+ 	*retlen = 0;
+@@ -255,7 +255,7 @@ static int dataflash_read(struct mtd_inf
+ 
+ 	command = priv->command;
+ 
+-	DEBUG(MTD_DEBUG_LEVEL3, "READ: (%x) %x %x %x\n",
++	MTDDEBUG(MTD_DEBUG_LEVEL3, "READ: (%x) %x %x %x\n",
+ 		command[0], command[1], command[2], command[3]);
+ 
+ 	spi_message_init(&msg);
+@@ -287,7 +287,7 @@ static int dataflash_read(struct mtd_inf
+ 		*retlen = msg.actual_length - 8;
+ 		status = 0;
+ 	} else
+-		DEBUG(MTD_DEBUG_LEVEL1, "%s: read %x..%x --> %d\n",
++		MTDDEBUG(MTD_DEBUG_LEVEL1, "%s: read %x..%x --> %d\n",
+ 			dev_name(&priv->spi->dev),
+ 			(unsigned)from, (unsigned)(from + len),
+ 			status);
+@@ -314,7 +314,7 @@ static int dataflash_write(struct mtd_in
+ 	int			status = -EINVAL;
+ 	uint8_t			*command;
+ 
+-	DEBUG(MTD_DEBUG_LEVEL2, "%s: write 0x%x..0x%x\n",
++	MTDDEBUG(MTD_DEBUG_LEVEL2, "%s: write 0x%x..0x%x\n",
+ 		dev_name(&spi->dev), (unsigned)to, (unsigned)(to + len));
+ 
+ 	*retlen = 0;
+@@ -340,7 +340,7 @@ static int dataflash_write(struct mtd_in
+ 
+ 	mutex_lock(&priv->lock);
+ 	while (remaining > 0) {
+-		DEBUG(MTD_DEBUG_LEVEL3, "write @ %i:%i len=%i\n",
++		MTDDEBUG(MTD_DEBUG_LEVEL3, "write @ %i:%i len=%i\n",
+ 			pageaddr, offset, writelen);
+ 
+ 		/* REVISIT:
+@@ -368,12 +368,12 @@ static int dataflash_write(struct mtd_in
+ 			command[2] = (addr & 0x0000FF00) >> 8;
+ 			command[3] = 0;
+ 
+-			DEBUG(MTD_DEBUG_LEVEL3, "TRANSFER: (%x) %x %x %x\n",
++			MTDDEBUG(MTD_DEBUG_LEVEL3, "TRANSFER: (%x) %x %x %x\n",
+ 				command[0], command[1], command[2], command[3]);
+ 
+ 			status = spi_sync(spi, &msg);
+ 			if (status < 0)
+-				DEBUG(MTD_DEBUG_LEVEL1, "%s: xfer %u -> %d \n",
++				MTDDEBUG(MTD_DEBUG_LEVEL1, "%s: xfer %u -> %d \n",
+ 					dev_name(&spi->dev), addr, status);
+ 
+ 			(void) dataflash_waitready(priv->spi);
+@@ -386,7 +386,7 @@ static int dataflash_write(struct mtd_in
+ 		command[2] = (addr & 0x0000FF00) >> 8;
+ 		command[3] = (addr & 0x000000FF);
+ 
+-		DEBUG(MTD_DEBUG_LEVEL3, "PROGRAM: (%x) %x %x %x\n",
++		MTDDEBUG(MTD_DEBUG_LEVEL3, "PROGRAM: (%x) %x %x %x\n",
+ 			command[0], command[1], command[2], command[3]);
+ 
+ 		x[1].tx_buf = writebuf;
+@@ -395,7 +395,7 @@ static int dataflash_write(struct mtd_in
+ 		status = spi_sync(spi, &msg);
+ 		spi_transfer_del(x + 1);
+ 		if (status < 0)
+-			DEBUG(MTD_DEBUG_LEVEL1, "%s: pgm %u/%u -> %d \n",
++			MTDDEBUG(MTD_DEBUG_LEVEL1, "%s: pgm %u/%u -> %d \n",
+ 				dev_name(&spi->dev), addr, writelen, status);
+ 
+ 		(void) dataflash_waitready(priv->spi);
+@@ -410,12 +410,12 @@ static int dataflash_write(struct mtd_in
+ 		command[2] = (addr & 0x0000FF00) >> 8;
+ 		command[3] = 0;
+ 
+-		DEBUG(MTD_DEBUG_LEVEL3, "COMPARE: (%x) %x %x %x\n",
++		MTDDEBUG(MTD_DEBUG_LEVEL3, "COMPARE: (%x) %x %x %x\n",
+ 			command[0], command[1], command[2], command[3]);
+ 
+ 		status = spi_sync(spi, &msg);
+ 		if (status < 0)
+-			DEBUG(MTD_DEBUG_LEVEL1, "%s: compare %u -> %d \n",
++			MTDDEBUG(MTD_DEBUG_LEVEL1, "%s: compare %u -> %d \n",
+ 				dev_name(&spi->dev), addr, status);
+ 
+ 		status = dataflash_waitready(priv->spi);
+@@ -793,7 +793,7 @@ static struct flash_info *__devinit jede
+ 	 */
+ 	tmp = spi_write_then_read(spi, &code, 1, id, 3);
+ 	if (tmp < 0) {
+-		DEBUG(MTD_DEBUG_LEVEL0, "%s: error %d reading JEDEC ID\n",
++		MTDDEBUG(MTD_DEBUG_LEVEL0, "%s: error %d reading JEDEC ID\n",
+ 			dev_name(&spi->dev), tmp);
+ 		return ERR_PTR(tmp);
+ 	}
+@@ -810,7 +810,7 @@ static struct flash_info *__devinit jede
+ 			tmp < ARRAY_SIZE(dataflash_data);
+ 			tmp++, info++) {
+ 		if (info->jedec_id == jedec) {
+-			DEBUG(MTD_DEBUG_LEVEL1, "%s: OTP, sector protect%s\n",
++			MTDDEBUG(MTD_DEBUG_LEVEL1, "%s: OTP, sector protect%s\n",
+ 				dev_name(&spi->dev),
+ 				(info->flags & SUP_POW2PS)
+ 					? ", binary pagesize" : ""
+@@ -818,7 +818,7 @@ static struct flash_info *__devinit jede
+ 			if (info->flags & SUP_POW2PS) {
+ 				status = dataflash_status(spi);
+ 				if (status < 0) {
+-					DEBUG(MTD_DEBUG_LEVEL1,
++					MTDDEBUG(MTD_DEBUG_LEVEL1,
+ 						"%s: status error %d\n",
+ 						dev_name(&spi->dev), status);
+ 					return ERR_PTR(status);
+@@ -884,7 +884,7 @@ static int __devinit dataflash_probe(str
+ 	 */
+ 	status = dataflash_status(spi);
+ 	if (status <= 0 || status == 0xff) {
+-		DEBUG(MTD_DEBUG_LEVEL1, "%s: status error %d\n",
++		MTDDEBUG(MTD_DEBUG_LEVEL1, "%s: status error %d\n",
+ 				dev_name(&spi->dev), status);
+ 		if (status == 0 || status == 0xff)
+ 			status = -ENODEV;
+@@ -920,13 +920,13 @@ static int __devinit dataflash_probe(str
+ 		break;
+ 	/* obsolete AT45DB1282 not (yet?) supported */
+ 	default:
+-		DEBUG(MTD_DEBUG_LEVEL1, "%s: unsupported device (%x)\n",
++		MTDDEBUG(MTD_DEBUG_LEVEL1, "%s: unsupported device (%x)\n",
+ 				dev_name(&spi->dev), status & 0x3c);
+ 		status = -ENODEV;
+ 	}
+ 
+ 	if (status < 0)
+-		DEBUG(MTD_DEBUG_LEVEL1, "%s: add_dataflash --> %d\n",
++		MTDDEBUG(MTD_DEBUG_LEVEL1, "%s: add_dataflash --> %d\n",
+ 				dev_name(&spi->dev), status);
+ 
+ 	return status;
+@@ -937,7 +937,7 @@ static int __devexit dataflash_remove(st
+ 	struct dataflash	*flash = dev_get_drvdata(&spi->dev);
+ 	int			status;
+ 
+-	DEBUG(MTD_DEBUG_LEVEL1, "%s: remove\n", dev_name(&spi->dev));
++	MTDDEBUG(MTD_DEBUG_LEVEL1, "%s: remove\n", dev_name(&spi->dev));
+ 
+ 	if (mtd_has_partitions() && flash->partitioned)
+ 		status = del_mtd_partitions(&flash->mtd);
+diff -Naurp linux-2.6.34.org/drivers/mtd/devices/sst25l.c linux-2.6.34/drivers/mtd/devices/sst25l.c
+--- linux-2.6.34.org/drivers/mtd/devices/sst25l.c	2010-05-16 16:17:36.000000000 -0500
++++ linux-2.6.34/drivers/mtd/devices/sst25l.c	2010-09-29 20:27:20.000000000 -0500
+@@ -403,7 +403,7 @@ static int __init sst25l_probe(struct sp
+ 	dev_info(&spi->dev, "%s (%lld KiB)\n", flash_info->name,
+ 		 (long long)flash->mtd.size >> 10);
+ 
+-	DEBUG(MTD_DEBUG_LEVEL2,
++	MTDDEBUG(MTD_DEBUG_LEVEL2,
+ 	      "mtd .name = %s, .size = 0x%llx (%lldMiB) "
+ 	      ".erasesize = 0x%.8x (%uKiB) .numeraseregions = %d\n",
+ 	      flash->mtd.name,
+@@ -413,7 +413,7 @@ static int __init sst25l_probe(struct sp
+ 
+ 	if (flash->mtd.numeraseregions)
+ 		for (i = 0; i < flash->mtd.numeraseregions; i++)
+-			DEBUG(MTD_DEBUG_LEVEL2,
++			MTDDEBUG(MTD_DEBUG_LEVEL2,
+ 			      "mtd.eraseregions[%d] = { .offset = 0x%llx, "
+ 			      ".erasesize = 0x%.8x (%uKiB), "
+ 			      ".numblocks = %d }\n",
+@@ -442,7 +442,7 @@ static int __init sst25l_probe(struct sp
+ 
+ 		if (nr_parts > 0) {
+ 			for (i = 0; i < nr_parts; i++) {
+-				DEBUG(MTD_DEBUG_LEVEL2, "partitions[%d] = "
++				MTDDEBUG(MTD_DEBUG_LEVEL2, "partitions[%d] = "
+ 				      "{.name = %s, .offset = 0x%llx, "
+ 				      ".size = 0x%llx (%lldKiB) }\n",
+ 				      i, parts[i].name,
+diff -Naurp linux-2.6.34.org/drivers/mtd/ftl.c linux-2.6.34/drivers/mtd/ftl.c
+--- linux-2.6.34.org/drivers/mtd/ftl.c	2010-05-16 16:17:36.000000000 -0500
++++ linux-2.6.34/drivers/mtd/ftl.c	2010-09-29 20:27:20.000000000 -0500
+@@ -339,7 +339,7 @@ static int erase_xfer(partition_t *part,
+     struct erase_info *erase;
+ 
+     xfer = &part->XferInfo[xfernum];
+-    DEBUG(1, "ftl_cs: erasing xfer unit at 0x%x\n", xfer->Offset);
++    MTDDEBUG(1, "ftl_cs: erasing xfer unit at 0x%x\n", xfer->Offset);
+     xfer->state = XFER_ERASING;
+ 
+     /* Is there a free erase slot? Always in MTD. */
+@@ -415,7 +415,7 @@ static int prepare_xfer(partition_t *par
+     xfer = &part->XferInfo[i];
+     xfer->state = XFER_FAILED;
+ 
+-    DEBUG(1, "ftl_cs: preparing xfer unit at 0x%x\n", xfer->Offset);
++    MTDDEBUG(1, "ftl_cs: preparing xfer unit at 0x%x\n", xfer->Offset);
+ 
+     /* Write the transfer unit header */
+     header = part->header;
+@@ -476,7 +476,7 @@ static int copy_erase_unit(partition_t *
+ 
+     eun = &part->EUNInfo[srcunit];
+     xfer = &part->XferInfo[xferunit];
+-    DEBUG(2, "ftl_cs: copying block 0x%x to 0x%x\n",
++    MTDDEBUG(2, "ftl_cs: copying block 0x%x to 0x%x\n",
+ 	  eun->Offset, xfer->Offset);
+ 
+ 
+@@ -609,8 +609,8 @@ static int reclaim_block(partition_t *pa
+     uint32_t best;
+     int queued, ret;
+ 
+-    DEBUG(0, "ftl_cs: reclaiming space...\n");
+-    DEBUG(3, "NumTransferUnits == %x\n", part->header.NumTransferUnits);
++    MTDDEBUG(0, "ftl_cs: reclaiming space...\n");
++    MTDDEBUG(3, "NumTransferUnits == %x\n", part->header.NumTransferUnits);
+     /* Pick the least erased transfer unit */
+     best = 0xffffffff; xfer = 0xffff;
+     do {
+@@ -618,22 +618,22 @@ static int reclaim_block(partition_t *pa
+ 	for (i = 0; i < part->header.NumTransferUnits; i++) {
+ 	    int n=0;
+ 	    if (part->XferInfo[i].state == XFER_UNKNOWN) {
+-		DEBUG(3,"XferInfo[%d].state == XFER_UNKNOWN\n",i);
++		MTDDEBUG(3,"XferInfo[%d].state == XFER_UNKNOWN\n",i);
+ 		n=1;
+ 		erase_xfer(part, i);
+ 	    }
+ 	    if (part->XferInfo[i].state == XFER_ERASING) {
+-		DEBUG(3,"XferInfo[%d].state == XFER_ERASING\n",i);
++		MTDDEBUG(3,"XferInfo[%d].state == XFER_ERASING\n",i);
+ 		n=1;
+ 		queued = 1;
+ 	    }
+ 	    else if (part->XferInfo[i].state == XFER_ERASED) {
+-		DEBUG(3,"XferInfo[%d].state == XFER_ERASED\n",i);
++		MTDDEBUG(3,"XferInfo[%d].state == XFER_ERASED\n",i);
+ 		n=1;
+ 		prepare_xfer(part, i);
+ 	    }
+ 	    if (part->XferInfo[i].state == XFER_PREPARED) {
+-		DEBUG(3,"XferInfo[%d].state == XFER_PREPARED\n",i);
++		MTDDEBUG(3,"XferInfo[%d].state == XFER_PREPARED\n",i);
+ 		n=1;
+ 		if (part->XferInfo[i].EraseCount <= best) {
+ 		    best = part->XferInfo[i].EraseCount;
+@@ -641,12 +641,12 @@ static int reclaim_block(partition_t *pa
+ 		}
+ 	    }
+ 		if (!n)
+-		    DEBUG(3,"XferInfo[%d].state == %x\n",i, part->XferInfo[i].state);
++		    MTDDEBUG(3,"XferInfo[%d].state == %x\n",i, part->XferInfo[i].state);
+ 
+ 	}
+ 	if (xfer == 0xffff) {
+ 	    if (queued) {
+-		DEBUG(1, "ftl_cs: waiting for transfer "
++		MTDDEBUG(1, "ftl_cs: waiting for transfer "
+ 		      "unit to be prepared...\n");
+ 		if (part->mbd.mtd->sync)
+ 			part->mbd.mtd->sync(part->mbd.mtd);
+@@ -656,7 +656,7 @@ static int reclaim_block(partition_t *pa
+ 		    printk(KERN_NOTICE "ftl_cs: reclaim failed: no "
+ 			   "suitable transfer units!\n");
+ 		else
+-		    DEBUG(1, "ftl_cs: reclaim failed: no "
++		    MTDDEBUG(1, "ftl_cs: reclaim failed: no "
+ 			  "suitable transfer units!\n");
+ 
+ 		return -EIO;
+@@ -666,7 +666,7 @@ static int reclaim_block(partition_t *pa
+ 
+     eun = 0;
+     if ((jiffies % shuffle_freq) == 0) {
+-	DEBUG(1, "ftl_cs: recycling freshest block...\n");
++	MTDDEBUG(1, "ftl_cs: recycling freshest block...\n");
+ 	best = 0xffffffff;
+ 	for (i = 0; i < part->DataUnits; i++)
+ 	    if (part->EUNInfo[i].EraseCount <= best) {
+@@ -686,7 +686,7 @@ static int reclaim_block(partition_t *pa
+ 		printk(KERN_NOTICE "ftl_cs: reclaim failed: "
+ 		       "no free blocks!\n");
+ 	    else
+-		DEBUG(1,"ftl_cs: reclaim failed: "
++		MTDDEBUG(1,"ftl_cs: reclaim failed: "
+ 		       "no free blocks!\n");
+ 
+ 	    return -EIO;
+@@ -771,7 +771,7 @@ static uint32_t find_free(partition_t *p
+ 	printk(KERN_NOTICE "ftl_cs: bad free list!\n");
+ 	return 0;
+     }
+-    DEBUG(2, "ftl_cs: found free block at %d in %d\n", blk, eun);
++    MTDDEBUG(2, "ftl_cs: found free block at %d in %d\n", blk, eun);
+     return blk;
+ 
+ } /* find_free */
+@@ -791,7 +791,7 @@ static int ftl_read(partition_t *part, c
+     int ret;
+     size_t offset, retlen;
+ 
+-    DEBUG(2, "ftl_cs: ftl_read(0x%p, 0x%lx, %ld)\n",
++    MTDDEBUG(2, "ftl_cs: ftl_read(0x%p, 0x%lx, %ld)\n",
+ 	  part, sector, nblocks);
+     if (!(part->state & FTL_FORMATTED)) {
+ 	printk(KERN_NOTICE "ftl_cs: bad partition\n");
+@@ -840,7 +840,7 @@ static int set_bam_entry(partition_t *pa
+     int ret;
+     size_t retlen, offset;
+ 
+-    DEBUG(2, "ftl_cs: set_bam_entry(0x%p, 0x%x, 0x%x)\n",
++    MTDDEBUG(2, "ftl_cs: set_bam_entry(0x%p, 0x%x, 0x%x)\n",
+ 	  part, log_addr, virt_addr);
+     bsize = 1 << part->header.EraseUnitSize;
+     eun = log_addr / bsize;
+@@ -905,7 +905,7 @@ static int ftl_write(partition_t *part, 
+     int ret;
+     size_t retlen, offset;
+ 
+-    DEBUG(2, "ftl_cs: ftl_write(0x%p, %ld, %ld)\n",
++    MTDDEBUG(2, "ftl_cs: ftl_write(0x%p, %ld, %ld)\n",
+ 	  part, sector, nblocks);
+     if (!(part->state & FTL_FORMATTED)) {
+ 	printk(KERN_NOTICE "ftl_cs: bad partition\n");
+@@ -1011,7 +1011,7 @@ static int ftl_discardsect(struct mtd_bl
+ 	partition_t *part = (void *)dev;
+ 	uint32_t bsize = 1 << part->header.EraseUnitSize;
+ 
+-	DEBUG(1, "FTL erase sector %ld for %d sectors\n",
++	MTDDEBUG(1, "FTL erase sector %ld for %d sectors\n",
+ 	      sector, nr_sects);
+ 
+ 	while (nr_sects) {
+diff -Naurp linux-2.6.34.org/drivers/mtd/inftlcore.c linux-2.6.34/drivers/mtd/inftlcore.c
+--- linux-2.6.34.org/drivers/mtd/inftlcore.c	2010-05-16 16:17:36.000000000 -0500
++++ linux-2.6.34/drivers/mtd/inftlcore.c	2010-09-29 20:27:20.000000000 -0500
+@@ -63,7 +63,7 @@ static void inftl_add_mtd(struct mtd_blk
+ 		return;
+ 	}
+ 
+-	DEBUG(MTD_DEBUG_LEVEL3, "INFTL: add_mtd for %s\n", mtd->name);
++	MTDDEBUG(MTD_DEBUG_LEVEL3, "INFTL: add_mtd for %s\n", mtd->name);
+ 
+ 	inftl = kzalloc(sizeof(*inftl), GFP_KERNEL);
+ 
+@@ -133,7 +133,7 @@ static void inftl_remove_dev(struct mtd_
+ {
+ 	struct INFTLrecord *inftl = (void *)dev;
+ 
+-	DEBUG(MTD_DEBUG_LEVEL3, "INFTL: remove_dev (i=%d)\n", dev->devnum);
++	MTDDEBUG(MTD_DEBUG_LEVEL3, "INFTL: remove_dev (i=%d)\n", dev->devnum);
+ 
+ 	del_mtd_blktrans_dev(dev);
+ 
+@@ -216,7 +216,7 @@ static u16 INFTL_findfreeblock(struct IN
+ 	u16 pot = inftl->LastFreeEUN;
+ 	int silly = inftl->nb_blocks;
+ 
+-	DEBUG(MTD_DEBUG_LEVEL3, "INFTL: INFTL_findfreeblock(inftl=%p,"
++	MTDDEBUG(MTD_DEBUG_LEVEL3, "INFTL: INFTL_findfreeblock(inftl=%p,"
+ 		"desperate=%d)\n", inftl, desperate);
+ 
+ 	/*
+@@ -224,7 +224,7 @@ static u16 INFTL_findfreeblock(struct IN
+ 	 * blocks completely.
+ 	 */
+ 	if (!desperate && inftl->numfreeEUNs < 2) {
+-		DEBUG(MTD_DEBUG_LEVEL1, "INFTL: there are too few free "
++		MTDDEBUG(MTD_DEBUG_LEVEL1, "INFTL: there are too few free "
+ 			"EUNs (%d)\n", inftl->numfreeEUNs);
+ 		return BLOCK_NIL;
+ 	}
+@@ -260,7 +260,7 @@ static u16 INFTL_foldchain(struct INFTLr
+ 	struct inftl_oob oob;
+ 	size_t retlen;
+ 
+-	DEBUG(MTD_DEBUG_LEVEL3, "INFTL: INFTL_foldchain(inftl=%p,thisVUC=%d,"
++	MTDDEBUG(MTD_DEBUG_LEVEL3, "INFTL: INFTL_foldchain(inftl=%p,thisVUC=%d,"
+ 		"pending=%d)\n", inftl, thisVUC, pendingblock);
+ 
+ 	memset(BlockMap, 0xff, sizeof(BlockMap));
+@@ -324,7 +324,7 @@ static u16 INFTL_foldchain(struct INFTLr
+ 	 * Chain, and the Erase Unit into which we are supposed to be copying.
+ 	 * Go for it.
+ 	 */
+-	DEBUG(MTD_DEBUG_LEVEL1, "INFTL: folding chain %d into unit %d\n",
++	MTDDEBUG(MTD_DEBUG_LEVEL1, "INFTL: folding chain %d into unit %d\n",
+ 		thisVUC, targetEUN);
+ 
+ 	for (block = 0; block < inftl->EraseSize/SECTORSIZE ; block++) {
+@@ -356,7 +356,7 @@ static u16 INFTL_foldchain(struct INFTLr
+ 					(block * SECTORSIZE), SECTORSIZE,
+ 					&retlen, movebuf);
+ 			if (ret != -EIO)
+-				DEBUG(MTD_DEBUG_LEVEL1, "INFTL: error went "
++				MTDDEBUG(MTD_DEBUG_LEVEL1, "INFTL: error went "
+ 				      "away on retry?\n");
+ 		}
+ 		memset(&oob, 0xff, sizeof(struct inftl_oob));
+@@ -373,7 +373,7 @@ static u16 INFTL_foldchain(struct INFTLr
+ 	 * is important, by doing oldest first if we crash/reboot then it
+ 	 * it is relatively simple to clean up the mess).
+ 	 */
+-	DEBUG(MTD_DEBUG_LEVEL1, "INFTL: want to erase virtual chain %d\n",
++	MTDDEBUG(MTD_DEBUG_LEVEL1, "INFTL: want to erase virtual chain %d\n",
+ 		thisVUC);
+ 
+ 	for (;;) {
+@@ -422,7 +422,7 @@ static u16 INFTL_makefreeblock(struct IN
+ 	u16 ChainLength = 0, thislen;
+ 	u16 chain, EUN;
+ 
+-	DEBUG(MTD_DEBUG_LEVEL3, "INFTL: INFTL_makefreeblock(inftl=%p,"
++	MTDDEBUG(MTD_DEBUG_LEVEL3, "INFTL: INFTL_makefreeblock(inftl=%p,"
+ 		"pending=%d)\n", inftl, pendingblock);
+ 
+ 	for (chain = 0; chain < inftl->nb_blocks; chain++) {
+@@ -485,7 +485,7 @@ static inline u16 INFTL_findwriteunit(st
+ 	size_t retlen;
+ 	int silly, silly2 = 3;
+ 
+-	DEBUG(MTD_DEBUG_LEVEL3, "INFTL: INFTL_findwriteunit(inftl=%p,"
++	MTDDEBUG(MTD_DEBUG_LEVEL3, "INFTL: INFTL_findwriteunit(inftl=%p,"
+ 		"block=%d)\n", inftl, block);
+ 
+ 	do {
+@@ -502,7 +502,7 @@ static inline u16 INFTL_findwriteunit(st
+ 				       blockofs, 8, &retlen, (char *)&bci);
+ 
+ 			status = bci.Status | bci.Status1;
+-			DEBUG(MTD_DEBUG_LEVEL3, "INFTL: status of block %d in "
++			MTDDEBUG(MTD_DEBUG_LEVEL3, "INFTL: status of block %d in "
+ 				"EUN %d is %x\n", block , writeEUN, status);
+ 
+ 			switch(status) {
+@@ -556,7 +556,7 @@ hitused:
+ 			 * Hopefully we free something, lets try again.
+ 			 * This time we are desperate...
+ 			 */
+-			DEBUG(MTD_DEBUG_LEVEL1, "INFTL: using desperate==1 "
++			MTDDEBUG(MTD_DEBUG_LEVEL1, "INFTL: using desperate==1 "
+ 				"to find free EUN to accommodate write to "
+ 				"VUC %d\n", thisVUC);
+ 			writeEUN = INFTL_findfreeblock(inftl, 1);
+@@ -648,7 +648,7 @@ static void INFTL_trydeletechain(struct 
+ 	struct inftl_bci bci;
+ 	size_t retlen;
+ 
+-	DEBUG(MTD_DEBUG_LEVEL3, "INFTL: INFTL_trydeletechain(inftl=%p,"
++	MTDDEBUG(MTD_DEBUG_LEVEL3, "INFTL: INFTL_trydeletechain(inftl=%p,"
+ 		"thisVUC=%d)\n", inftl, thisVUC);
+ 
+ 	memset(BlockUsed, 0, sizeof(BlockUsed));
+@@ -712,7 +712,7 @@ static void INFTL_trydeletechain(struct 
+ 	 * For each block in the chain free it and make it available
+ 	 * for future use. Erase from the oldest unit first.
+ 	 */
+-	DEBUG(MTD_DEBUG_LEVEL1, "INFTL: deleting empty VUC %d\n", thisVUC);
++	MTDDEBUG(MTD_DEBUG_LEVEL1, "INFTL: deleting empty VUC %d\n", thisVUC);
+ 
+ 	for (;;) {
+ 		u16 *prevEUN = &inftl->VUtable[thisVUC];
+@@ -720,7 +720,7 @@ static void INFTL_trydeletechain(struct 
+ 
+ 		/* If the chain is all gone already, we're done */
+ 		if (thisEUN == BLOCK_NIL) {
+-			DEBUG(MTD_DEBUG_LEVEL2, "INFTL: Empty VUC %d for deletion was already absent\n", thisEUN);
++			MTDDEBUG(MTD_DEBUG_LEVEL2, "INFTL: Empty VUC %d for deletion was already absent\n", thisEUN);
+ 			return;
+ 		}
+ 
+@@ -732,7 +732,7 @@ static void INFTL_trydeletechain(struct 
+ 			thisEUN = *prevEUN;
+ 		}
+ 
+-		DEBUG(MTD_DEBUG_LEVEL3, "Deleting EUN %d from VUC %d\n",
++		MTDDEBUG(MTD_DEBUG_LEVEL3, "Deleting EUN %d from VUC %d\n",
+ 		      thisEUN, thisVUC);
+ 
+ 		if (INFTL_formatblock(inftl, thisEUN) < 0) {
+@@ -768,7 +768,7 @@ static int INFTL_deleteblock(struct INFT
+ 	size_t retlen;
+ 	struct inftl_bci bci;
+ 
+-	DEBUG(MTD_DEBUG_LEVEL3, "INFTL: INFTL_deleteblock(inftl=%p,"
++	MTDDEBUG(MTD_DEBUG_LEVEL3, "INFTL: INFTL_deleteblock(inftl=%p,"
+ 		"block=%d)\n", inftl, block);
+ 
+ 	while (thisEUN < inftl->nb_blocks) {
+@@ -827,7 +827,7 @@ static int inftl_writeblock(struct mtd_b
+ 	struct inftl_oob oob;
+ 	char *p, *pend;
+ 
+-	DEBUG(MTD_DEBUG_LEVEL3, "INFTL: inftl_writeblock(inftl=%p,block=%ld,"
++	MTDDEBUG(MTD_DEBUG_LEVEL3, "INFTL: inftl_writeblock(inftl=%p,block=%ld,"
+ 		"buffer=%p)\n", inftl, block, buffer);
+ 
+ 	/* Is block all zero? */
+@@ -877,7 +877,7 @@ static int inftl_readblock(struct mtd_bl
+ 	struct inftl_bci bci;
+ 	size_t retlen;
+ 
+-	DEBUG(MTD_DEBUG_LEVEL3, "INFTL: inftl_readblock(inftl=%p,block=%ld,"
++	MTDDEBUG(MTD_DEBUG_LEVEL3, "INFTL: inftl_readblock(inftl=%p,block=%ld,"
+ 		"buffer=%p)\n", inftl, block, buffer);
+ 
+ 	while (thisEUN < inftl->nb_blocks) {
+diff -Naurp linux-2.6.34.org/drivers/mtd/inftlmount.c linux-2.6.34/drivers/mtd/inftlmount.c
+--- linux-2.6.34.org/drivers/mtd/inftlmount.c	2010-05-16 16:17:36.000000000 -0500
++++ linux-2.6.34/drivers/mtd/inftlmount.c	2010-09-29 20:27:20.000000000 -0500
+@@ -54,7 +54,7 @@ static int find_boot_record(struct INFTL
+ 	struct INFTLPartition *ip;
+ 	size_t retlen;
+ 
+-	DEBUG(MTD_DEBUG_LEVEL3, "INFTL: find_boot_record(inftl=%p)\n", inftl);
++	MTDDEBUG(MTD_DEBUG_LEVEL3, "INFTL: find_boot_record(inftl=%p)\n", inftl);
+ 
+         /*
+ 	 * Assume logical EraseSize == physical erasesize for starting the
+@@ -385,7 +385,7 @@ int INFTL_formatblock(struct INFTLrecord
+ 	struct mtd_info *mtd = inftl->mbd.mtd;
+ 	int physblock;
+ 
+-	DEBUG(MTD_DEBUG_LEVEL3, "INFTL: INFTL_formatblock(inftl=%p,"
++	MTDDEBUG(MTD_DEBUG_LEVEL3, "INFTL: INFTL_formatblock(inftl=%p,"
+ 		"block=%d)\n", inftl, block);
+ 
+ 	memset(instr, 0, sizeof(struct erase_info));
+@@ -555,7 +555,7 @@ int INFTL_mount(struct INFTLrecord *s)
+ 	int i;
+ 	u8 *ANACtable, ANAC;
+ 
+-	DEBUG(MTD_DEBUG_LEVEL3, "INFTL: INFTL_mount(inftl=%p)\n", s);
++	MTDDEBUG(MTD_DEBUG_LEVEL3, "INFTL: INFTL_mount(inftl=%p)\n", s);
+ 
+ 	/* Search for INFTL MediaHeader and Spare INFTL Media Header */
+ 	if (find_boot_record(s) < 0) {
+@@ -585,7 +585,7 @@ int INFTL_mount(struct INFTLrecord *s)
+ 	 * NOTEXPLORED state. Then at the end we will try to format it and
+ 	 * mark it as free.
+ 	 */
+-	DEBUG(MTD_DEBUG_LEVEL3, "INFTL: pass 1, explore each unit\n");
++	MTDDEBUG(MTD_DEBUG_LEVEL3, "INFTL: pass 1, explore each unit\n");
+ 	for (first_block = s->firstEUN; first_block <= s->lastEUN; first_block++) {
+ 		if (s->PUtable[first_block] != BLOCK_NOTEXPLORED)
+ 			continue;
+@@ -727,7 +727,7 @@ int INFTL_mount(struct INFTLrecord *s)
+ 	 * possible because we don't update the previous pointers when
+ 	 * we fold chains. No big deal, just fix them up in PUtable.
+ 	 */
+-	DEBUG(MTD_DEBUG_LEVEL3, "INFTL: pass 2, validate virtual chains\n");
++	MTDDEBUG(MTD_DEBUG_LEVEL3, "INFTL: pass 2, validate virtual chains\n");
+ 	for (logical_block = 0; logical_block < s->numvunits; logical_block++) {
+ 		block = s->VUtable[logical_block];
+ 		last_block = BLOCK_NIL;
+@@ -785,7 +785,7 @@ int INFTL_mount(struct INFTLrecord *s)
+ 	s->numfreeEUNs = 0;
+ 	s->LastFreeEUN = BLOCK_NIL;
+ 
+-	DEBUG(MTD_DEBUG_LEVEL3, "INFTL: pass 3, format unused blocks\n");
++	MTDDEBUG(MTD_DEBUG_LEVEL3, "INFTL: pass 3, format unused blocks\n");
+ 	for (block = s->firstEUN; block <= s->lastEUN; block++) {
+ 		if (s->PUtable[block] == BLOCK_NOTEXPLORED) {
+ 			printk("INFTL: unreferenced block %d, formatting it\n",
+diff -Naurp linux-2.6.34.org/drivers/mtd/maps/pcmciamtd.c linux-2.6.34/drivers/mtd/maps/pcmciamtd.c
+--- linux-2.6.34.org/drivers/mtd/maps/pcmciamtd.c	2010-05-16 16:17:36.000000000 -0500
++++ linux-2.6.34/drivers/mtd/maps/pcmciamtd.c	2010-09-29 20:27:20.000000000 -0500
+@@ -29,14 +29,14 @@ static int debug = CONFIG_MTD_DEBUG_VERB
+ module_param(debug, int, 0);
+ MODULE_PARM_DESC(debug, "Set Debug Level 0=quiet, 5=noisy");
+ #undef DEBUG
+-#define DEBUG(n, format, arg...) \
++#define MTDDEBUG(n, format, arg...) \
+ 	if (n <= debug) {	 \
+ 		printk(KERN_DEBUG __FILE__ ":%s(): " format "\n", __func__ , ## arg); \
+ 	}
+ 
+ #else
+ #undef DEBUG
+-#define DEBUG(n, arg...)
++#define MTDDEBUG(n, arg...)
+ static const int debug = 0;
+ #endif
+ 
+@@ -109,13 +109,13 @@ static caddr_t remap_window(struct map_i
+ 	int ret;
+ 
+ 	if (!pcmcia_dev_present(dev->p_dev)) {
+-		DEBUG(1, "device removed");
++		MTDDEBUG(1, "device removed");
+ 		return 0;
+ 	}
+ 
+ 	mrq.CardOffset = to & ~(dev->win_size-1);
+ 	if(mrq.CardOffset != dev->offset) {
+-		DEBUG(2, "Remapping window from 0x%8.8x to 0x%8.8x",
++		MTDDEBUG(2, "Remapping window from 0x%8.8x to 0x%8.8x",
+ 		      dev->offset, mrq.CardOffset);
+ 		mrq.Page = 0;
+ 		ret = pcmcia_map_mem_page(dev->p_dev, win, &mrq);
+@@ -137,7 +137,7 @@ static map_word pcmcia_read8_remap(struc
+ 		return d;
+ 
+ 	d.x[0] = readb(addr);
+-	DEBUG(3, "ofs = 0x%08lx (%p) data = 0x%02x", ofs, addr, d.x[0]);
++	MTDDEBUG(3, "ofs = 0x%08lx (%p) data = 0x%02x", ofs, addr, d.x[0]);
+ 	return d;
+ }
+ 
+@@ -152,7 +152,7 @@ static map_word pcmcia_read16_remap(stru
+ 		return d;
+ 
+ 	d.x[0] = readw(addr);
+-	DEBUG(3, "ofs = 0x%08lx (%p) data = 0x%04x", ofs, addr, d.x[0]);
++	MTDDEBUG(3, "ofs = 0x%08lx (%p) data = 0x%04x", ofs, addr, d.x[0]);
+ 	return d;
+ }
+ 
+@@ -162,7 +162,7 @@ static void pcmcia_copy_from_remap(struc
+ 	struct pcmciamtd_dev *dev = (struct pcmciamtd_dev *)map->map_priv_1;
+ 	unsigned long win_size = dev->win_size;
+ 
+-	DEBUG(3, "to = %p from = %lu len = %u", to, from, len);
++	MTDDEBUG(3, "to = %p from = %lu len = %u", to, from, len);
+ 	while(len) {
+ 		int toread = win_size - (from & (win_size-1));
+ 		caddr_t addr;
+@@ -174,7 +174,7 @@ static void pcmcia_copy_from_remap(struc
+ 		if(!addr)
+ 			return;
+ 
+-		DEBUG(4, "memcpy from %p to %p len = %d", addr, to, toread);
++		MTDDEBUG(4, "memcpy from %p to %p len = %d", addr, to, toread);
+ 		memcpy_fromio(to, addr, toread);
+ 		len -= toread;
+ 		to += toread;
+@@ -190,7 +190,7 @@ static void pcmcia_write8_remap(struct m
+ 	if(!addr)
+ 		return;
+ 
+-	DEBUG(3, "adr = 0x%08lx (%p)  data = 0x%02x", adr, addr, d.x[0]);
++	MTDDEBUG(3, "adr = 0x%08lx (%p)  data = 0x%02x", adr, addr, d.x[0]);
+ 	writeb(d.x[0], addr);
+ }
+ 
+@@ -201,7 +201,7 @@ static void pcmcia_write16_remap(struct 
+ 	if(!addr)
+ 		return;
+ 
+-	DEBUG(3, "adr = 0x%08lx (%p)  data = 0x%04x", adr, addr, d.x[0]);
++	MTDDEBUG(3, "adr = 0x%08lx (%p)  data = 0x%04x", adr, addr, d.x[0]);
+ 	writew(d.x[0], addr);
+ }
+ 
+@@ -211,7 +211,7 @@ static void pcmcia_copy_to_remap(struct 
+ 	struct pcmciamtd_dev *dev = (struct pcmciamtd_dev *)map->map_priv_1;
+ 	unsigned long win_size = dev->win_size;
+ 
+-	DEBUG(3, "to = %lu from = %p len = %u", to, from, len);
++	MTDDEBUG(3, "to = %lu from = %p len = %u", to, from, len);
+ 	while(len) {
+ 		int towrite = win_size - (to & (win_size-1));
+ 		caddr_t addr;
+@@ -223,7 +223,7 @@ static void pcmcia_copy_to_remap(struct 
+ 		if(!addr)
+ 			return;
+ 
+-		DEBUG(4, "memcpy from %p to %p len = %d", from, addr, towrite);
++		MTDDEBUG(4, "memcpy from %p to %p len = %d", from, addr, towrite);
+ 		memcpy_toio(addr, from, towrite);
+ 		len -= towrite;
+ 		to += towrite;
+@@ -245,7 +245,7 @@ static map_word pcmcia_read8(struct map_
+ 		return d;
+ 
+ 	d.x[0] = readb(win_base + ofs);
+-	DEBUG(3, "ofs = 0x%08lx (%p) data = 0x%02x", ofs, win_base + ofs, d.x[0]);
++	MTDDEBUG(3, "ofs = 0x%08lx (%p) data = 0x%02x", ofs, win_base + ofs, d.x[0]);
+ 	return d;
+ }
+ 
+@@ -259,7 +259,7 @@ static map_word pcmcia_read16(struct map
+ 		return d;
+ 
+ 	d.x[0] = readw(win_base + ofs);
+-	DEBUG(3, "ofs = 0x%08lx (%p) data = 0x%04x", ofs, win_base + ofs, d.x[0]);
++	MTDDEBUG(3, "ofs = 0x%08lx (%p) data = 0x%04x", ofs, win_base + ofs, d.x[0]);
+ 	return d;
+ }
+ 
+@@ -271,7 +271,7 @@ static void pcmcia_copy_from(struct map_
+ 	if(DEV_REMOVED(map))
+ 		return;
+ 
+-	DEBUG(3, "to = %p from = %lu len = %u", to, from, len);
++	MTDDEBUG(3, "to = %p from = %lu len = %u", to, from, len);
+ 	memcpy_fromio(to, win_base + from, len);
+ }
+ 
+@@ -283,7 +283,7 @@ static void pcmcia_write8(struct map_inf
+ 	if(DEV_REMOVED(map))
+ 		return;
+ 
+-	DEBUG(3, "adr = 0x%08lx (%p)  data = 0x%02x", adr, win_base + adr, d);
++	MTDDEBUG(3, "adr = 0x%08lx (%p)  data = 0x%02x", adr, win_base + adr, d);
+ 	writeb(d, win_base + adr);
+ }
+ 
+@@ -295,7 +295,7 @@ static void pcmcia_write16(struct map_in
+ 	if(DEV_REMOVED(map))
+ 		return;
+ 
+-	DEBUG(3, "adr = 0x%08lx (%p)  data = 0x%04x", adr, win_base + adr, d);
++	MTDDEBUG(3, "adr = 0x%08lx (%p)  data = 0x%04x", adr, win_base + adr, d);
+ 	writew(d, win_base + adr);
+ }
+ 
+@@ -307,7 +307,7 @@ static void pcmcia_copy_to(struct map_in
+ 	if(DEV_REMOVED(map))
+ 		return;
+ 
+-	DEBUG(3, "to = %lu from = %p len = %u", to, from, len);
++	MTDDEBUG(3, "to = %lu from = %p len = %u", to, from, len);
+ 	memcpy_toio(win_base + to, from, len);
+ }
+ 
+@@ -323,7 +323,7 @@ static void pcmciamtd_set_vpp(struct map
+ 	mod.Vcc = 0;
+ 	mod.Vpp1 = mod.Vpp2 = on ? dev->vpp : 0;
+ 
+-	DEBUG(2, "dev = %p on = %d vpp = %d\n", dev, on, dev->vpp);
++	MTDDEBUG(2, "dev = %p on = %d vpp = %d\n", dev, on, dev->vpp);
+ 	ret = pcmcia_modify_configuration(link, &mod);
+ }
+ 
+@@ -337,7 +337,7 @@ static void pcmciamtd_release(struct pcm
+ {
+ 	struct pcmciamtd_dev *dev = link->priv;
+ 
+-	DEBUG(3, "link = 0x%p", link);
++	MTDDEBUG(3, "link = 0x%p", link);
+ 
+ 	if (link->win) {
+ 		if(dev->win_base) {
+@@ -360,7 +360,7 @@ static int pcmciamtd_cistpl_format(struc
+ 	if (!pcmcia_parse_tuple(tuple, &parse)) {
+ 		cistpl_format_t *t = &parse.format;
+ 		(void)t; /* Shut up, gcc */
+-		DEBUG(2, "Format type: %u, Error Detection: %u, offset = %u, length =%u",
++		MTDDEBUG(2, "Format type: %u, Error Detection: %u, offset = %u, length =%u",
+ 			t->type, t->edc, t->offset, t->length);
+ 	}
+ 	return -ENOSPC;
+@@ -376,7 +376,7 @@ static int pcmciamtd_cistpl_jedec(struct
+ 	if (!pcmcia_parse_tuple(tuple, &parse)) {
+ 		cistpl_jedec_t *t = &parse.jedec;
+ 		for (i = 0; i < t->nid; i++)
+-			DEBUG(2, "JEDEC: 0x%02x 0x%02x", t->id[i].mfr, t->id[i].info);
++			MTDDEBUG(2, "JEDEC: 0x%02x 0x%02x", t->id[i].mfr, t->id[i].info);
+ 	}
+ 	return -ENOSPC;
+ }
+@@ -394,14 +394,14 @@ static int pcmciamtd_cistpl_device(struc
+ 	if (pcmcia_parse_tuple(tuple, &parse))
+ 		return -EINVAL;
+ 
+-	DEBUG(2, "Common memory:");
++	MTDDEBUG(2, "Common memory:");
+ 	dev->pcmcia_map.size = t->dev[0].size;
+ 	/* from here on: DEBUG only */
+ 	for (i = 0; i < t->ndev; i++) {
+-		DEBUG(2, "Region %d, type = %u", i, t->dev[i].type);
+-		DEBUG(2, "Region %d, wp = %u", i, t->dev[i].wp);
+-		DEBUG(2, "Region %d, speed = %u ns", i, t->dev[i].speed);
+-		DEBUG(2, "Region %d, size = %u bytes", i, t->dev[i].size);
++		MTDDEBUG(2, "Region %d, type = %u", i, t->dev[i].type);
++		MTDDEBUG(2, "Region %d, wp = %u", i, t->dev[i].wp);
++		MTDDEBUG(2, "Region %d, speed = %u ns", i, t->dev[i].speed);
++		MTDDEBUG(2, "Region %d, size = %u bytes", i, t->dev[i].size);
+ 	}
+ 	return 0;
+ }
+@@ -421,12 +421,12 @@ static int pcmciamtd_cistpl_geo(struct p
+ 	dev->pcmcia_map.bankwidth = t->geo[0].buswidth;
+ 	/* from here on: DEBUG only */
+ 	for (i = 0; i < t->ngeo; i++) {
+-		DEBUG(2, "region: %d bankwidth = %u", i, t->geo[i].buswidth);
+-		DEBUG(2, "region: %d erase_block = %u", i, t->geo[i].erase_block);
+-		DEBUG(2, "region: %d read_block = %u", i, t->geo[i].read_block);
+-		DEBUG(2, "region: %d write_block = %u", i, t->geo[i].write_block);
+-		DEBUG(2, "region: %d partition = %u", i, t->geo[i].partition);
+-		DEBUG(2, "region: %d interleave = %u", i, t->geo[i].interleave);
++		MTDDEBUG(2, "region: %d bankwidth = %u", i, t->geo[i].buswidth);
++		MTDDEBUG(2, "region: %d erase_block = %u", i, t->geo[i].erase_block);
++		MTDDEBUG(2, "region: %d read_block = %u", i, t->geo[i].read_block);
++		MTDDEBUG(2, "region: %d write_block = %u", i, t->geo[i].write_block);
++		MTDDEBUG(2, "region: %d partition = %u", i, t->geo[i].partition);
++		MTDDEBUG(2, "region: %d interleave = %u", i, t->geo[i].interleave);
+ 	}
+ 	return 0;
+ }
+@@ -444,7 +444,7 @@ static void card_settings(struct pcmciam
+ 			if (p_dev->prod_id[i])
+ 				strcat(dev->mtd_name, p_dev->prod_id[i]);
+ 		}
+-		DEBUG(2, "Found name: %s", dev->mtd_name);
++		MTDDEBUG(2, "Found name: %s", dev->mtd_name);
+ 	}
+ 
+ #ifdef CONFIG_MTD_DEBUG
+@@ -462,12 +462,12 @@ static void card_settings(struct pcmciam
+ 
+ 	if(force_size) {
+ 		dev->pcmcia_map.size = force_size << 20;
+-		DEBUG(2, "size forced to %dM", force_size);
++		MTDDEBUG(2, "size forced to %dM", force_size);
+ 	}
+ 
+ 	if(bankwidth) {
+ 		dev->pcmcia_map.bankwidth = bankwidth;
+-		DEBUG(2, "bankwidth forced to %d", bankwidth);
++		MTDDEBUG(2, "bankwidth forced to %d", bankwidth);
+ 	}
+ 
+ 	dev->pcmcia_map.name = dev->mtd_name;
+@@ -476,7 +476,7 @@ static void card_settings(struct pcmciam
+ 		*new_name = 1;
+ 	}
+ 
+-	DEBUG(1, "Device: Size: %lu Width:%d Name: %s",
++	MTDDEBUG(1, "Device: Size: %lu Width:%d Name: %s",
+ 	      dev->pcmcia_map.size, dev->pcmcia_map.bankwidth << 3, dev->mtd_name);
+ }
+ 
+@@ -497,7 +497,7 @@ static int pcmciamtd_config(struct pcmci
+ 	static char *probes[] = { "jedec_probe", "cfi_probe" };
+ 	int new_name = 0;
+ 
+-	DEBUG(3, "link=0x%p", link);
++	MTDDEBUG(3, "link=0x%p", link);
+ 
+ 	card_settings(dev, link, &new_name);
+ 
+@@ -528,37 +528,37 @@ static int pcmciamtd_config(struct pcmci
+ 
+ 	do {
+ 		int ret;
+-		DEBUG(2, "requesting window with size = %dKiB memspeed = %d",
++		MTDDEBUG(2, "requesting window with size = %dKiB memspeed = %d",
+ 		      req.Size >> 10, req.AccessSpeed);
+ 		ret = pcmcia_request_window(link, &req, &link->win);
+-		DEBUG(2, "ret = %d dev->win_size = %d", ret, dev->win_size);
++		MTDDEBUG(2, "ret = %d dev->win_size = %d", ret, dev->win_size);
+ 		if(ret) {
+ 			req.Size >>= 1;
+ 		} else {
+-			DEBUG(2, "Got window of size %dKiB", req.Size >> 10);
++			MTDDEBUG(2, "Got window of size %dKiB", req.Size >> 10);
+ 			dev->win_size = req.Size;
+ 			break;
+ 		}
+ 	} while(req.Size >= 0x1000);
+ 
+-	DEBUG(2, "dev->win_size = %d", dev->win_size);
++	MTDDEBUG(2, "dev->win_size = %d", dev->win_size);
+ 
+ 	if(!dev->win_size) {
+ 		err("Cant allocate memory window");
+ 		pcmciamtd_release(link);
+ 		return -ENODEV;
+ 	}
+-	DEBUG(1, "Allocated a window of %dKiB", dev->win_size >> 10);
++	MTDDEBUG(1, "Allocated a window of %dKiB", dev->win_size >> 10);
+ 
+ 	/* Get write protect status */
+-	DEBUG(2, "window handle = 0x%8.8lx", (unsigned long)link->win);
++	MTDDEBUG(2, "window handle = 0x%8.8lx", (unsigned long)link->win);
+ 	dev->win_base = ioremap(req.Base, req.Size);
+ 	if(!dev->win_base) {
+ 		err("ioremap(%lu, %u) failed", req.Base, req.Size);
+ 		pcmciamtd_release(link);
+ 		return -ENODEV;
+ 	}
+-	DEBUG(1, "mapped window dev = %p req.base = 0x%lx base = %p size = 0x%x",
++	MTDDEBUG(1, "mapped window dev = %p req.base = 0x%lx base = %p size = 0x%x",
+ 	      dev, req.Base, dev->win_base, req.Size);
+ 
+ 	dev->offset = 0;
+@@ -575,7 +575,7 @@ static int pcmciamtd_config(struct pcmci
+ 
+ 	link->conf.IntType = INT_MEMORY;
+ 	link->conf.ConfigIndex = 0;
+-	DEBUG(2, "Setting Configuration");
++	MTDDEBUG(2, "Setting Configuration");
+ 	ret = pcmcia_request_configuration(link, &link->conf);
+ 	if (ret != 0) {
+ 		if (dev->win_base) {
+@@ -591,17 +591,17 @@ static int pcmciamtd_config(struct pcmci
+ 		mtd = do_map_probe("map_rom", &dev->pcmcia_map);
+ 	} else {
+ 		for(i = 0; i < ARRAY_SIZE(probes); i++) {
+-			DEBUG(1, "Trying %s", probes[i]);
++			MTDDEBUG(1, "Trying %s", probes[i]);
+ 			mtd = do_map_probe(probes[i], &dev->pcmcia_map);
+ 			if(mtd)
+ 				break;
+ 
+-			DEBUG(1, "FAILED: %s", probes[i]);
++			MTDDEBUG(1, "FAILED: %s", probes[i]);
+ 		}
+ 	}
+ 
+ 	if(!mtd) {
+-		DEBUG(1, "Cant find an MTD");
++		MTDDEBUG(1, "Cant find an MTD");
+ 		pcmciamtd_release(link);
+ 		return -ENODEV;
+ 	}
+@@ -627,7 +627,7 @@ static int pcmciamtd_config(struct pcmci
+ 	/* If the memory found is fits completely into the mapped PCMCIA window,
+ 	   use the faster non-remapping read/write functions */
+ 	if(mtd->size <= dev->win_size) {
+-		DEBUG(1, "Using non remapping memory functions");
++		MTDDEBUG(1, "Using non remapping memory functions");
+ 		dev->pcmcia_map.map_priv_2 = (unsigned long)dev->win_base;
+ 		if (dev->pcmcia_map.bankwidth == 1) {
+ 			dev->pcmcia_map.read = pcmcia_read8;
+@@ -661,7 +661,7 @@ static int pcmciamtd_config(struct pcmci
+ 
+ static int pcmciamtd_suspend(struct pcmcia_device *dev)
+ {
+-	DEBUG(2, "EVENT_PM_RESUME");
++	MTDDEBUG(2, "EVENT_PM_RESUME");
+ 
+ 	/* get_lock(link); */
+ 
+@@ -670,7 +670,7 @@ static int pcmciamtd_suspend(struct pcmc
+ 
+ static int pcmciamtd_resume(struct pcmcia_device *dev)
+ {
+-	DEBUG(2, "EVENT_PM_SUSPEND");
++	MTDDEBUG(2, "EVENT_PM_SUSPEND");
+ 
+ 	/* free_lock(link); */
+ 
+@@ -688,7 +688,7 @@ static void pcmciamtd_detach(struct pcmc
+ {
+ 	struct pcmciamtd_dev *dev = link->priv;
+ 
+-	DEBUG(3, "link=0x%p", link);
++	MTDDEBUG(3, "link=0x%p", link);
+ 
+ 	if(dev->mtd_info) {
+ 		del_mtd_device(dev->mtd_info);
+@@ -712,7 +712,7 @@ static int pcmciamtd_probe(struct pcmcia
+ 	/* Create new memory card device */
+ 	dev = kzalloc(sizeof(*dev), GFP_KERNEL);
+ 	if (!dev) return -ENOMEM;
+-	DEBUG(1, "dev=0x%p", dev);
++	MTDDEBUG(1, "dev=0x%p", dev);
+ 
+ 	dev->p_dev = link;
+ 	link->priv = dev;
+@@ -785,7 +785,7 @@ static int __init init_pcmciamtd(void)
+ 
+ static void __exit exit_pcmciamtd(void)
+ {
+-	DEBUG(1, DRIVER_DESC " unloading");
++	MTDDEBUG(1, DRIVER_DESC " unloading");
+ 	pcmcia_unregister_driver(&pcmciamtd_driver);
+ }
+ 
+diff -Naurp linux-2.6.34.org/drivers/mtd/mtdblock.c linux-2.6.34/drivers/mtd/mtdblock.c
+--- linux-2.6.34.org/drivers/mtd/mtdblock.c	2010-05-16 16:17:36.000000000 -0500
++++ linux-2.6.34/drivers/mtd/mtdblock.c	2010-09-29 20:27:20.000000000 -0500
+@@ -104,7 +104,7 @@ static int write_cached_data (struct mtd
+ 	if (mtdblk->cache_state != STATE_DIRTY)
+ 		return 0;
+ 
+-	DEBUG(MTD_DEBUG_LEVEL2, "mtdblock: writing cached data for \"%s\" "
++	MTDDEBUG(MTD_DEBUG_LEVEL2, "mtdblock: writing cached data for \"%s\" "
+ 			"at 0x%lx, size 0x%x\n", mtd->name,
+ 			mtdblk->cache_offset, mtdblk->cache_size);
+ 
+@@ -133,7 +133,7 @@ static int do_cached_write (struct mtdbl
+ 	size_t retlen;
+ 	int ret;
+ 
+-	DEBUG(MTD_DEBUG_LEVEL2, "mtdblock: write on \"%s\" at 0x%lx, size 0x%x\n",
++	MTDDEBUG(MTD_DEBUG_LEVEL2, "mtdblock: write on \"%s\" at 0x%lx, size 0x%x\n",
+ 		mtd->name, pos, len);
+ 
+ 	if (!sect_size)
+@@ -203,7 +203,7 @@ static int do_cached_read (struct mtdblk
+ 	size_t retlen;
+ 	int ret;
+ 
+-	DEBUG(MTD_DEBUG_LEVEL2, "mtdblock: read on \"%s\" at 0x%lx, size 0x%x\n",
++	MTDDEBUG(MTD_DEBUG_LEVEL2, "mtdblock: read on \"%s\" at 0x%lx, size 0x%x\n",
+ 			mtd->name, pos, len);
+ 
+ 	if (!sect_size)
+@@ -270,7 +270,7 @@ static int mtdblock_open(struct mtd_blkt
+ 	struct mtd_info *mtd = mbd->mtd;
+ 	int dev = mbd->devnum;
+ 
+-	DEBUG(MTD_DEBUG_LEVEL1,"mtdblock_open\n");
++	MTDDEBUG(MTD_DEBUG_LEVEL1,"mtdblock_open\n");
+ 
+ 	mutex_lock(&mtdblks_lock);
+ 	if (mtdblks[dev]) {
+@@ -299,7 +299,7 @@ static int mtdblock_open(struct mtd_blkt
+ 	mtdblks[dev] = mtdblk;
+ 	mutex_unlock(&mtdblks_lock);
+ 
+-	DEBUG(MTD_DEBUG_LEVEL1, "ok\n");
++	MTDDEBUG(MTD_DEBUG_LEVEL1, "ok\n");
+ 
+ 	return 0;
+ }
+@@ -309,7 +309,7 @@ static int mtdblock_release(struct mtd_b
+ 	int dev = mbd->devnum;
+ 	struct mtdblk_dev *mtdblk = mtdblks[dev];
+ 
+-   	DEBUG(MTD_DEBUG_LEVEL1, "mtdblock_release\n");
++   	MTDDEBUG(MTD_DEBUG_LEVEL1, "mtdblock_release\n");
+ 
+ 	mutex_lock(&mtdblks_lock);
+ 
+@@ -328,7 +328,7 @@ static int mtdblock_release(struct mtd_b
+ 
+ 	mutex_unlock(&mtdblks_lock);
+ 
+-	DEBUG(MTD_DEBUG_LEVEL1, "ok\n");
++	MTDDEBUG(MTD_DEBUG_LEVEL1, "ok\n");
+ 
+ 	return 0;
+ }
+diff -Naurp linux-2.6.34.org/drivers/mtd/mtdchar.c linux-2.6.34/drivers/mtd/mtdchar.c
+--- linux-2.6.34.org/drivers/mtd/mtdchar.c	2010-05-16 16:17:36.000000000 -0500
++++ linux-2.6.34/drivers/mtd/mtdchar.c	2010-09-29 20:27:20.000000000 -0500
+@@ -65,7 +65,7 @@ static int mtd_open(struct inode *inode,
+ 	struct mtd_info *mtd;
+ 	struct mtd_file_info *mfi;
+ 
+-	DEBUG(MTD_DEBUG_LEVEL0, "MTD_open\n");
++	MTDDEBUG(MTD_DEBUG_LEVEL0, "MTD_open\n");
+ 
+ 	if (devnum >= MAX_MTD_DEVICES)
+ 		return -ENODEV;
+@@ -119,7 +119,7 @@ static int mtd_close(struct inode *inode
+ 	struct mtd_file_info *mfi = file->private_data;
+ 	struct mtd_info *mtd = mfi->mtd;
+ 
+-	DEBUG(MTD_DEBUG_LEVEL0, "MTD_close\n");
++	MTDDEBUG(MTD_DEBUG_LEVEL0, "MTD_close\n");
+ 
+ 	/* Only sync if opened RW */
+ 	if ((file->f_mode & FMODE_WRITE) && mtd->sync)
+@@ -147,7 +147,7 @@ static ssize_t mtd_read(struct file *fil
+ 	int len;
+ 	char *kbuf;
+ 
+-	DEBUG(MTD_DEBUG_LEVEL0,"MTD_read\n");
++	MTDDEBUG(MTD_DEBUG_LEVEL0,"MTD_read\n");
+ 
+ 	if (*ppos + count > mtd->size)
+ 		count = mtd->size - *ppos;
+@@ -240,7 +240,7 @@ static ssize_t mtd_write(struct file *fi
+ 	int ret=0;
+ 	int len;
+ 
+-	DEBUG(MTD_DEBUG_LEVEL0,"MTD_write\n");
++	MTDDEBUG(MTD_DEBUG_LEVEL0,"MTD_write\n");
+ 
+ 	if (*ppos == mtd->size)
+ 		return -ENOSPC;
+@@ -460,7 +460,7 @@ static int mtd_ioctl(struct inode *inode
+ 	u_long size;
+ 	struct mtd_info_user info;
+ 
+-	DEBUG(MTD_DEBUG_LEVEL0, "MTD_ioctl\n");
++	MTDDEBUG(MTD_DEBUG_LEVEL0, "MTD_ioctl\n");
+ 
+ 	size = (cmd & IOCSIZE_MASK) >> IOCSIZE_SHIFT;
+ 	if (cmd & IOC_IN) {
+diff -Naurp linux-2.6.34.org/drivers/mtd/mtdcore.c linux-2.6.34/drivers/mtd/mtdcore.c
+--- linux-2.6.34.org/drivers/mtd/mtdcore.c	2010-05-16 16:17:36.000000000 -0500
++++ linux-2.6.34/drivers/mtd/mtdcore.c	2010-09-29 20:27:20.000000000 -0500
+@@ -339,7 +339,7 @@ int add_mtd_device(struct mtd_info *mtd)
+ 						MTD_DEVT(i) + 1,
+ 						NULL, "mtd%dro", i);
+ 
+-			DEBUG(0, "mtd: Giving out device %d to %s\n",i, mtd->name);
++			MTDDEBUG(0, "mtd: Giving out device %d to %s\n",i, mtd->name);
+ 			/* No need to get a refcount on the module containing
+ 			   the notifier, since we hold the mtd_table_mutex */
+ 			list_for_each_entry(not, &mtd_notifiers, list)
+diff -Naurp linux-2.6.34.org/drivers/mtd/mtdsuper.c linux-2.6.34/drivers/mtd/mtdsuper.c
+--- linux-2.6.34.org/drivers/mtd/mtdsuper.c	2010-05-16 16:17:36.000000000 -0500
++++ linux-2.6.34/drivers/mtd/mtdsuper.c	2010-09-29 20:27:20.000000000 -0500
+@@ -24,12 +24,12 @@ static int get_sb_mtd_compare(struct sup
+ 	struct mtd_info *mtd = _mtd;
+ 
+ 	if (sb->s_mtd == mtd) {
+-		DEBUG(2, "MTDSB: Match on device %d (\"%s\")\n",
++		MTDDEBUG(2, "MTDSB: Match on device %d (\"%s\")\n",
+ 		      mtd->index, mtd->name);
+ 		return 1;
+ 	}
+ 
+-	DEBUG(2, "MTDSB: No match, device %d (\"%s\"), device %d (\"%s\")\n",
++	MTDDEBUG(2, "MTDSB: No match, device %d (\"%s\"), device %d (\"%s\")\n",
+ 	      sb->s_mtd->index, sb->s_mtd->name, mtd->index, mtd->name);
+ 	return 0;
+ }
+@@ -69,7 +69,7 @@ static int get_sb_mtd_aux(struct file_sy
+ 		goto already_mounted;
+ 
+ 	/* fresh new superblock */
+-	DEBUG(1, "MTDSB: New superblock for device %d (\"%s\")\n",
++	MTDDEBUG(1, "MTDSB: New superblock for device %d (\"%s\")\n",
+ 	      mtd->index, mtd->name);
+ 
+ 	sb->s_flags = flags;
+@@ -88,7 +88,7 @@ static int get_sb_mtd_aux(struct file_sy
+ 
+ 	/* new mountpoint for an already mounted superblock */
+ already_mounted:
+-	DEBUG(1, "MTDSB: Device %d (\"%s\") is already mounted\n",
++	MTDDEBUG(1, "MTDSB: Device %d (\"%s\") is already mounted\n",
+ 	      mtd->index, mtd->name);
+ 	simple_set_mnt(mnt, sb);
+ 	ret = 0;
+@@ -113,7 +113,7 @@ static int get_sb_mtd_nr(struct file_sys
+ 
+ 	mtd = get_mtd_device(NULL, mtdnr);
+ 	if (IS_ERR(mtd)) {
+-		DEBUG(0, "MTDSB: Device #%u doesn't appear to exist\n", mtdnr);
++		MTDDEBUG(0, "MTDSB: Device #%u doesn't appear to exist\n", mtdnr);
+ 		return PTR_ERR(mtd);
+ 	}
+ 
+@@ -138,7 +138,7 @@ int get_sb_mtd(struct file_system_type *
+ 	if (!dev_name)
+ 		return -EINVAL;
+ 
+-	DEBUG(2, "MTDSB: dev_name \"%s\"\n", dev_name);
++	MTDDEBUG(2, "MTDSB: dev_name \"%s\"\n", dev_name);
+ 
+ 	/* the preferred way of mounting in future; especially when
+ 	 * CONFIG_BLOCK=n - we specify the underlying MTD device by number or
+@@ -149,7 +149,7 @@ int get_sb_mtd(struct file_system_type *
+ 			struct mtd_info *mtd;
+ 
+ 			/* mount by MTD device name */
+-			DEBUG(1, "MTDSB: mtd:%%s, name \"%s\"\n",
++			MTDDEBUG(1, "MTDSB: mtd:%%s, name \"%s\"\n",
+ 			      dev_name + 4);
+ 
+ 			for (mtdnr = 0; mtdnr < MAX_MTD_DEVICES; mtdnr++) {
+@@ -176,7 +176,7 @@ int get_sb_mtd(struct file_system_type *
+ 			mtdnr = simple_strtoul(dev_name + 3, &endptr, 0);
+ 			if (!*endptr) {
+ 				/* It was a valid number */
+-				DEBUG(1, "MTDSB: mtd%%d, mtdnr %d\n",
++				MTDDEBUG(1, "MTDSB: mtd%%d, mtdnr %d\n",
+ 				      mtdnr);
+ 				return get_sb_mtd_nr(fs_type, flags,
+ 						     dev_name, data,
+@@ -192,10 +192,10 @@ int get_sb_mtd(struct file_system_type *
+ 	bdev = lookup_bdev(dev_name);
+ 	if (IS_ERR(bdev)) {
+ 		ret = PTR_ERR(bdev);
+-		DEBUG(1, "MTDSB: lookup_bdev() returned %d\n", ret);
++		MTDDEBUG(1, "MTDSB: lookup_bdev() returned %d\n", ret);
+ 		return ret;
+ 	}
+-	DEBUG(1, "MTDSB: lookup_bdev() returned 0\n");
++	MTDDEBUG(1, "MTDSB: lookup_bdev() returned 0\n");
+ 
+ 	ret = -EINVAL;
+ 
+diff -Naurp linux-2.6.34.org/drivers/mtd/nand/mxc_nand.c linux-2.6.34/drivers/mtd/nand/mxc_nand.c
+--- linux-2.6.34.org/drivers/mtd/nand/mxc_nand.c	2010-05-16 16:17:36.000000000 -0500
++++ linux-2.6.34/drivers/mtd/nand/mxc_nand.c	2010-09-29 20:27:20.000000000 -0500
+@@ -212,7 +212,7 @@ static void wait_op_done(struct mxc_nand
+ 			udelay(1);
+ 		}
+ 		if (max_retries < 0)
+-			DEBUG(MTD_DEBUG_LEVEL0, "%s: INT not set\n",
++			MTDDEBUG(MTD_DEBUG_LEVEL0, "%s: INT not set\n",
+ 			      __func__);
+ 	}
+ }
+@@ -221,7 +221,7 @@ static void wait_op_done(struct mxc_nand
+  * waits for completion. */
+ static void send_cmd(struct mxc_nand_host *host, uint16_t cmd, int useirq)
+ {
+-	DEBUG(MTD_DEBUG_LEVEL3, "send_cmd(host, 0x%x, %d)\n", cmd, useirq);
++	MTDDEBUG(MTD_DEBUG_LEVEL3, "send_cmd(host, 0x%x, %d)\n", cmd, useirq);
+ 
+ 	writew(cmd, host->regs + NFC_FLASH_CMD);
+ 	writew(NFC_CMD, host->regs + NFC_CONFIG2);
+@@ -235,7 +235,7 @@ static void send_cmd(struct mxc_nand_hos
+  * a NAND command. */
+ static void send_addr(struct mxc_nand_host *host, uint16_t addr, int islast)
+ {
+-	DEBUG(MTD_DEBUG_LEVEL3, "send_addr(host, 0x%x %d)\n", addr, islast);
++	MTDDEBUG(MTD_DEBUG_LEVEL3, "send_addr(host, 0x%x %d)\n", addr, islast);
+ 
+ 	writew(addr, host->regs + NFC_FLASH_ADDR);
+ 	writew(NFC_ADDR, host->regs + NFC_CONFIG2);
+@@ -352,7 +352,7 @@ static int mxc_nand_correct_data(struct 
+ 	uint16_t ecc_status = readw(host->regs + NFC_ECC_STATUS_RESULT);
+ 
+ 	if (((ecc_status & 0x3) == 2) || ((ecc_status >> 2) == 2)) {
+-		DEBUG(MTD_DEBUG_LEVEL0,
++		MTDDEBUG(MTD_DEBUG_LEVEL0,
+ 		      "MXC_NAND: HWECC uncorrectable 2-bit ECC error\n");
+ 		return -1;
+ 	}
+@@ -550,7 +550,7 @@ static void mxc_nand_command(struct mtd_
+ 	struct nand_chip *nand_chip = mtd->priv;
+ 	struct mxc_nand_host *host = nand_chip->priv;
+ 
+-	DEBUG(MTD_DEBUG_LEVEL3,
++	MTDDEBUG(MTD_DEBUG_LEVEL3,
+ 	      "mxc_nand_command (cmd = 0x%x, col = 0x%x, page = 0x%x)\n",
+ 	      command, column, page_addr);
+ 
+@@ -885,7 +885,7 @@ static int mxcnd_suspend(struct platform
+ 	struct mxc_nand_host *host = nand_chip->priv;
+ 	int ret = 0;
+ 
+-	DEBUG(MTD_DEBUG_LEVEL0, "MXC_ND : NAND suspend\n");
++	MTDDEBUG(MTD_DEBUG_LEVEL0, "MXC_ND : NAND suspend\n");
+ 	if (mtd) {
+ 		ret = mtd->suspend(mtd);
+ 		/* Disable the NFC clock */
+@@ -902,7 +902,7 @@ static int mxcnd_resume(struct platform_
+ 	struct mxc_nand_host *host = nand_chip->priv;
+ 	int ret = 0;
+ 
+-	DEBUG(MTD_DEBUG_LEVEL0, "MXC_ND : NAND resume\n");
++	MTDDEBUG(MTD_DEBUG_LEVEL0, "MXC_ND : NAND resume\n");
+ 
+ 	if (mtd) {
+ 		/* Enable the NFC clock */
+diff -Naurp linux-2.6.34.org/drivers/mtd/nand/nand_base.c linux-2.6.34/drivers/mtd/nand/nand_base.c
+--- linux-2.6.34.org/drivers/mtd/nand/nand_base.c	2010-09-29 20:25:58.000000000 -0500
++++ linux-2.6.34/drivers/mtd/nand/nand_base.c	2010-09-29 20:27:20.000000000 -0500
+@@ -1546,7 +1546,7 @@ static int nand_do_read_oob(struct mtd_i
+ 	int len;
+ 	uint8_t *buf = ops->oobbuf;
+ 
+-	DEBUG(MTD_DEBUG_LEVEL3, "%s: from = 0x%08Lx, len = %i\n",
++	MTDDEBUG(MTD_DEBUG_LEVEL3, "%s: from = 0x%08Lx, len = %i\n",
+ 			__func__, (unsigned long long)from, readlen);
+ 
+ 	if (ops->mode == MTD_OOB_AUTO)
+@@ -1555,7 +1555,7 @@ static int nand_do_read_oob(struct mtd_i
+ 		len = mtd->oobsize;
+ 
+ 	if (unlikely(ops->ooboffs >= len)) {
+-		DEBUG(MTD_DEBUG_LEVEL0, "%s: Attempt to start read "
++		MTDDEBUG(MTD_DEBUG_LEVEL0, "%s: Attempt to start read "
+ 					"outside oob\n", __func__);
+ 		return -EINVAL;
+ 	}
+@@ -1564,7 +1564,7 @@ static int nand_do_read_oob(struct mtd_i
+ 	if (unlikely(from >= mtd->size ||
+ 		     ops->ooboffs + readlen > ((mtd->size >> chip->page_shift) -
+ 					(from >> chip->page_shift)) * len)) {
+-		DEBUG(MTD_DEBUG_LEVEL0, "%s: Attempt read beyond end "
++		MTDDEBUG(MTD_DEBUG_LEVEL0, "%s: Attempt read beyond end "
+ 					"of device\n", __func__);
+ 		return -EINVAL;
+ 	}
+@@ -1639,7 +1639,7 @@ static int nand_read_oob(struct mtd_info
+ 
+ 	/* Do not allow reads past end of device */
+ 	if (ops->datbuf && (from + ops->len) > mtd->size) {
+-		DEBUG(MTD_DEBUG_LEVEL0, "%s: Attempt read "
++		MTDDEBUG(MTD_DEBUG_LEVEL0, "%s: Attempt read "
+ 				"beyond end of device\n", __func__);
+ 		return -EINVAL;
+ 	}
+@@ -2116,7 +2116,7 @@ static int nand_do_write_oob(struct mtd_
+ 	int chipnr, page, status, len;
+ 	struct nand_chip *chip = mtd->priv;
+ 
+-	DEBUG(MTD_DEBUG_LEVEL3, "%s: to = 0x%08x, len = %i\n",
++	MTDDEBUG(MTD_DEBUG_LEVEL3, "%s: to = 0x%08x, len = %i\n",
+ 			 __func__, (unsigned int)to, (int)ops->ooblen);
+ 
+ 	if (ops->mode == MTD_OOB_AUTO)
+@@ -2126,13 +2126,13 @@ static int nand_do_write_oob(struct mtd_
+ 
+ 	/* Do not allow write past end of page */
+ 	if ((ops->ooboffs + ops->ooblen) > len) {
+-		DEBUG(MTD_DEBUG_LEVEL0, "%s: Attempt to write "
++		MTDDEBUG(MTD_DEBUG_LEVEL0, "%s: Attempt to write "
+ 				"past end of page\n", __func__);
+ 		return -EINVAL;
+ 	}
+ 
+ 	if (unlikely(ops->ooboffs >= len)) {
+-		DEBUG(MTD_DEBUG_LEVEL0, "%s: Attempt to start "
++		MTDDEBUG(MTD_DEBUG_LEVEL0, "%s: Attempt to start "
+ 				"write outside oob\n", __func__);
+ 		return -EINVAL;
+ 	}
+@@ -2142,7 +2142,7 @@ static int nand_do_write_oob(struct mtd_
+ 		     ops->ooboffs + ops->ooblen >
+ 			((mtd->size >> chip->page_shift) -
+ 			 (to >> chip->page_shift)) * len)) {
+-		DEBUG(MTD_DEBUG_LEVEL0, "%s: Attempt write beyond "
++		MTDDEBUG(MTD_DEBUG_LEVEL0, "%s: Attempt write beyond "
+ 				"end of device\n", __func__);
+ 		return -EINVAL;
+ 	}
+@@ -2198,7 +2198,7 @@ static int nand_write_oob(struct mtd_inf
+ 
+ 	/* Do not allow writes past end of device */
+ 	if (ops->datbuf && (to + ops->len) > mtd->size) {
+-		DEBUG(MTD_DEBUG_LEVEL0, "%s: Attempt write beyond "
++		MTDDEBUG(MTD_DEBUG_LEVEL0, "%s: Attempt write beyond "
+ 				"end of device\n", __func__);
+ 		return -EINVAL;
+ 	}
+@@ -2289,26 +2289,26 @@ int nand_erase_nand(struct mtd_info *mtd
+ 	unsigned int bbt_masked_page = 0xffffffff;
+ 	loff_t len;
+ 
+-	DEBUG(MTD_DEBUG_LEVEL3, "%s: start = 0x%012llx, len = %llu\n",
++	MTDDEBUG(MTD_DEBUG_LEVEL3, "%s: start = 0x%012llx, len = %llu\n",
+ 				__func__, (unsigned long long)instr->addr,
+ 				(unsigned long long)instr->len);
+ 
+ 	/* Start address must align on block boundary */
+ 	if (instr->addr & ((1 << chip->phys_erase_shift) - 1)) {
+-		DEBUG(MTD_DEBUG_LEVEL0, "%s: Unaligned address\n", __func__);
++		MTDDEBUG(MTD_DEBUG_LEVEL0, "%s: Unaligned address\n", __func__);
+ 		return -EINVAL;
+ 	}
+ 
+ 	/* Length must align on block boundary */
+ 	if (instr->len & ((1 << chip->phys_erase_shift) - 1)) {
+-		DEBUG(MTD_DEBUG_LEVEL0, "%s: Length not block aligned\n",
++		MTDDEBUG(MTD_DEBUG_LEVEL0, "%s: Length not block aligned\n",
+ 					__func__);
+ 		return -EINVAL;
+ 	}
+ 
+ 	/* Do not allow erase past end of device */
+ 	if ((instr->len + instr->addr) > mtd->size) {
+-		DEBUG(MTD_DEBUG_LEVEL0, "%s: Erase past end of device\n",
++		MTDDEBUG(MTD_DEBUG_LEVEL0, "%s: Erase past end of device\n",
+ 					__func__);
+ 		return -EINVAL;
+ 	}
+@@ -2330,7 +2330,7 @@ int nand_erase_nand(struct mtd_info *mtd
+ 
+ 	/* Check, if it is write protected */
+ 	if (nand_check_wp(mtd)) {
+-		DEBUG(MTD_DEBUG_LEVEL0, "%s: Device is write protected!!!\n",
++		MTDDEBUG(MTD_DEBUG_LEVEL0, "%s: Device is write protected!!!\n",
+ 					__func__);
+ 		instr->state = MTD_ERASE_FAILED;
+ 		goto erase_exit;
+@@ -2384,7 +2384,7 @@ int nand_erase_nand(struct mtd_info *mtd
+ 
+ 		/* See if block erase succeeded */
+ 		if (status & NAND_STATUS_FAIL) {
+-			DEBUG(MTD_DEBUG_LEVEL0, "%s: Failed erase, "
++			MTDDEBUG(MTD_DEBUG_LEVEL0, "%s: Failed erase, "
+ 					"page 0x%08x\n", __func__, page);
+ 			instr->state = MTD_ERASE_FAILED;
+ 			instr->fail_addr =
+@@ -2445,7 +2445,7 @@ int nand_erase_nand(struct mtd_info *mtd
+ 		if (!rewrite_bbt[chipnr])
+ 			continue;
+ 		/* update the BBT for chip */
+-		DEBUG(MTD_DEBUG_LEVEL0, "%s: nand_update_bbt "
++		MTDDEBUG(MTD_DEBUG_LEVEL0, "%s: nand_update_bbt "
+ 			"(%d:0x%0llx 0x%0x)\n", __func__, chipnr,
+ 			rewrite_bbt[chipnr], chip->bbt_td->pages[chipnr]);
+ 		nand_update_bbt(mtd, rewrite_bbt[chipnr]);
+@@ -2465,7 +2465,7 @@ static void nand_sync(struct mtd_info *m
+ {
+ 	struct nand_chip *chip = mtd->priv;
+ 
+-	DEBUG(MTD_DEBUG_LEVEL3, "%s: called\n", __func__);
++	MTDDEBUG(MTD_DEBUG_LEVEL3, "%s: called\n", __func__);
+ 
+ 	/* Grab the lock and see if the device is available */
+ 	nand_get_device(chip, mtd, FL_SYNCING);
+diff -Naurp linux-2.6.34.org/drivers/mtd/nand/nand_bbt.c linux-2.6.34/drivers/mtd/nand/nand_bbt.c
+--- linux-2.6.34.org/drivers/mtd/nand/nand_bbt.c	2010-09-29 20:25:58.000000000 -0500
++++ linux-2.6.34/drivers/mtd/nand/nand_bbt.c	2010-09-29 20:27:20.000000000 -0500
+@@ -1205,7 +1205,7 @@ int nand_isbad_bbt(struct mtd_info *mtd,
+ 	block = (int)(offs >> (this->bbt_erase_shift - 1));
+ 	res = (this->bbt[block >> 3] >> (block & 0x06)) & 0x03;
+ 
+-	DEBUG(MTD_DEBUG_LEVEL2, "nand_isbad_bbt(): bbt info for offs 0x%08x: (block %d) 0x%02x\n",
++	MTDDEBUG(MTD_DEBUG_LEVEL2, "nand_isbad_bbt(): bbt info for offs 0x%08x: (block %d) 0x%02x\n",
+ 	      (unsigned int)offs, block >> 1, res);
+ 
+ 	switch ((int)res) {
+diff -Naurp linux-2.6.34.org/drivers/mtd/nand/omap2.c linux-2.6.34/drivers/mtd/nand/omap2.c
+--- linux-2.6.34.org/drivers/mtd/nand/omap2.c	2010-05-16 16:17:36.000000000 -0500
++++ linux-2.6.34/drivers/mtd/nand/omap2.c	2010-09-29 20:27:20.000000000 -0500
+@@ -657,12 +657,12 @@ static int omap_compare_ecc(u8 *ecc_data
+ 
+ 	case 1:
+ 		/* Uncorrectable error */
+-		DEBUG(MTD_DEBUG_LEVEL0, "ECC UNCORRECTED_ERROR 1\n");
++		MTDDEBUG(MTD_DEBUG_LEVEL0, "ECC UNCORRECTED_ERROR 1\n");
+ 		return -1;
+ 
+ 	case 11:
+ 		/* UN-Correctable error */
+-		DEBUG(MTD_DEBUG_LEVEL0, "ECC UNCORRECTED_ERROR B\n");
++		MTDDEBUG(MTD_DEBUG_LEVEL0, "ECC UNCORRECTED_ERROR B\n");
+ 		return -1;
+ 
+ 	case 12:
+@@ -679,7 +679,7 @@ static int omap_compare_ecc(u8 *ecc_data
+ 
+ 		find_bit = (ecc_bit[5] << 2) + (ecc_bit[3] << 1) + ecc_bit[1];
+ 
+-		DEBUG(MTD_DEBUG_LEVEL0, "Correcting single bit ECC error at "
++		MTDDEBUG(MTD_DEBUG_LEVEL0, "Correcting single bit ECC error at "
+ 				"offset: %d, bit: %d\n", find_byte, find_bit);
+ 
+ 		page_data[find_byte] ^= (1 << find_bit);
+@@ -692,7 +692,7 @@ static int omap_compare_ecc(u8 *ecc_data
+ 			    ecc_data2[2] == 0)
+ 				return 0;
+ 		}
+-		DEBUG(MTD_DEBUG_LEVEL0, "UNCORRECTED_ERROR default\n");
++		MTDDEBUG(MTD_DEBUG_LEVEL0, "UNCORRECTED_ERROR default\n");
+ 		return -1;
+ 	}
+ }
+@@ -797,7 +797,7 @@ static void omap_enable_hwecc(struct mtd
+ 		val = (dev_width << 7) | (info->gpmc_cs << 1) | (0x1);
+ 		break;
+ 	default:
+-		DEBUG(MTD_DEBUG_LEVEL0, "Error: Unrecognized Mode[%d]!\n",
++		MTDDEBUG(MTD_DEBUG_LEVEL0, "Error: Unrecognized Mode[%d]!\n",
+ 					mode);
+ 		break;
+ 	}
+diff -Naurp linux-2.6.34.org/drivers/mtd/nand/rtc_from4.c linux-2.6.34/drivers/mtd/nand/rtc_from4.c
+--- linux-2.6.34.org/drivers/mtd/nand/rtc_from4.c	2010-05-16 16:17:36.000000000 -0500
++++ linux-2.6.34/drivers/mtd/nand/rtc_from4.c	2010-09-29 20:27:20.000000000 -0500
+@@ -381,7 +381,7 @@ static int rtc_from4_correct_data(struct
+ 	/* Let the library code do its magic. */
+ 	res = decode_rs8(rs_decoder, (uint8_t *) buf, par, 512, syn, 0, NULL, 0xff, NULL);
+ 	if (res > 0) {
+-		DEBUG(MTD_DEBUG_LEVEL0, "rtc_from4_correct_data: " "ECC corrected %d errors on read\n", res);
++		MTDDEBUG(MTD_DEBUG_LEVEL0, "rtc_from4_correct_data: " "ECC corrected %d errors on read\n", res);
+ 	}
+ 	return res;
+ }
+diff -Naurp linux-2.6.34.org/drivers/mtd/nftlcore.c linux-2.6.34/drivers/mtd/nftlcore.c
+--- linux-2.6.34.org/drivers/mtd/nftlcore.c	2010-05-16 16:17:36.000000000 -0500
++++ linux-2.6.34/drivers/mtd/nftlcore.c	2010-09-29 20:27:20.000000000 -0500
+@@ -52,7 +52,7 @@ static void nftl_add_mtd(struct mtd_blkt
+ 		return;
+ 	}
+ 
+-	DEBUG(MTD_DEBUG_LEVEL1, "NFTL: add_mtd for %s\n", mtd->name);
++	MTDDEBUG(MTD_DEBUG_LEVEL1, "NFTL: add_mtd for %s\n", mtd->name);
+ 
+ 	nftl = kzalloc(sizeof(struct NFTLrecord), GFP_KERNEL);
+ 
+@@ -121,7 +121,7 @@ static void nftl_remove_dev(struct mtd_b
+ {
+ 	struct NFTLrecord *nftl = (void *)dev;
+ 
+-	DEBUG(MTD_DEBUG_LEVEL1, "NFTL: remove_dev (i=%d)\n", dev->devnum);
++	MTDDEBUG(MTD_DEBUG_LEVEL1, "NFTL: remove_dev (i=%d)\n", dev->devnum);
+ 
+ 	del_mtd_blktrans_dev(dev);
+ 	kfree(nftl->ReplUnitTable);
+@@ -210,7 +210,7 @@ static u16 NFTL_findfreeblock(struct NFT
+ 
+ 	/* Normally, we force a fold to happen before we run out of free blocks completely */
+ 	if (!desperate && nftl->numfreeEUNs < 2) {
+-		DEBUG(MTD_DEBUG_LEVEL1, "NFTL_findfreeblock: there are too few free EUNs\n");
++		MTDDEBUG(MTD_DEBUG_LEVEL1, "NFTL_findfreeblock: there are too few free EUNs\n");
+ 		return BLOCK_NIL;
+ 	}
+ 
+@@ -281,7 +281,7 @@ static u16 NFTL_foldchain (struct NFTLre
+ 			if (block == 2) {
+ 				foldmark = oob.u.c.FoldMark | oob.u.c.FoldMark1;
+ 				if (foldmark == FOLD_MARK_IN_PROGRESS) {
+-					DEBUG(MTD_DEBUG_LEVEL1,
++					MTDDEBUG(MTD_DEBUG_LEVEL1,
+ 					      "Write Inhibited on EUN %d\n", thisEUN);
+ 					inplace = 0;
+ 				} else {
+@@ -347,7 +347,7 @@ static u16 NFTL_foldchain (struct NFTLre
+ 			if (BlockLastState[block] != SECTOR_FREE &&
+ 			    BlockMap[block] != BLOCK_NIL &&
+ 			    BlockMap[block] != targetEUN) {
+-				DEBUG(MTD_DEBUG_LEVEL1, "Setting inplace to 0. VUC %d, "
++				MTDDEBUG(MTD_DEBUG_LEVEL1, "Setting inplace to 0. VUC %d, "
+ 				      "block %d was %x lastEUN, "
+ 				      "and is in EUN %d (%s) %d\n",
+ 				      thisVUC, block, BlockLastState[block],
+@@ -363,14 +363,14 @@ static u16 NFTL_foldchain (struct NFTLre
+ 		    pendingblock < ((thisVUC + 1)* (nftl->EraseSize / 512)) &&
+ 		    BlockLastState[pendingblock - (thisVUC * (nftl->EraseSize / 512))] !=
+ 		    SECTOR_FREE) {
+-			DEBUG(MTD_DEBUG_LEVEL1, "Pending write not free in EUN %d. "
++			MTDDEBUG(MTD_DEBUG_LEVEL1, "Pending write not free in EUN %d. "
+ 			      "Folding out of place.\n", targetEUN);
+ 			inplace = 0;
+ 		}
+ 	}
+ 
+ 	if (!inplace) {
+-		DEBUG(MTD_DEBUG_LEVEL1, "Cannot fold Virtual Unit Chain %d in place. "
++		MTDDEBUG(MTD_DEBUG_LEVEL1, "Cannot fold Virtual Unit Chain %d in place. "
+ 		      "Trying out-of-place\n", thisVUC);
+ 		/* We need to find a targetEUN to fold into. */
+ 		targetEUN = NFTL_findfreeblock(nftl, 1);
+@@ -400,7 +400,7 @@ static u16 NFTL_foldchain (struct NFTLre
+ 	   and the Erase Unit into which we are supposed to be copying.
+ 	   Go for it.
+ 	*/
+-	DEBUG(MTD_DEBUG_LEVEL1,"Folding chain %d into unit %d\n", thisVUC, targetEUN);
++	MTDDEBUG(MTD_DEBUG_LEVEL1,"Folding chain %d into unit %d\n", thisVUC, targetEUN);
+ 	for (block = 0; block < nftl->EraseSize / 512 ; block++) {
+ 		unsigned char movebuf[512];
+ 		int ret;
+@@ -447,7 +447,7 @@ static u16 NFTL_foldchain (struct NFTLre
+ 	   has duplicate chains, we need to free one of the chains because it's not necessary any more.
+ 	*/
+ 	thisEUN = nftl->EUNtable[thisVUC];
+-	DEBUG(MTD_DEBUG_LEVEL1,"Want to erase\n");
++	MTDDEBUG(MTD_DEBUG_LEVEL1,"Want to erase\n");
+ 
+ 	/* For each block in the old chain (except the targetEUN of course),
+ 	   free it and make it available for future use */
+@@ -560,7 +560,7 @@ static inline u16 NFTL_findwriteunit(str
+ 				      (writeEUN * nftl->EraseSize) + blockofs,
+ 				      8, &retlen, (char *)&bci);
+ 
+-			DEBUG(MTD_DEBUG_LEVEL2, "Status of block %d in EUN %d is %x\n",
++			MTDDEBUG(MTD_DEBUG_LEVEL2, "Status of block %d in EUN %d is %x\n",
+ 			      block , writeEUN, le16_to_cpu(bci.Status));
+ 
+ 			status = bci.Status | bci.Status1;
+@@ -613,7 +613,7 @@ static inline u16 NFTL_findwriteunit(str
+ 				   but they are reserved for when we're
+ 				   desperate. Well, now we're desperate.
+ 				*/
+-				DEBUG(MTD_DEBUG_LEVEL1, "Using desperate==1 to find free EUN to accommodate write to VUC %d\n", thisVUC);
++				MTDDEBUG(MTD_DEBUG_LEVEL1, "Using desperate==1 to find free EUN to accommodate write to VUC %d\n", thisVUC);
+ 				writeEUN = NFTL_findfreeblock(nftl, 1);
+ 			}
+ 			if (writeEUN == BLOCK_NIL) {
+diff -Naurp linux-2.6.34.org/drivers/mtd/onenand/onenand_base.c linux-2.6.34/drivers/mtd/onenand/onenand_base.c
+--- linux-2.6.34.org/drivers/mtd/onenand/onenand_base.c	2010-05-16 16:17:36.000000000 -0500
++++ linux-2.6.34/drivers/mtd/onenand/onenand_base.c	2010-09-29 20:27:20.000000000 -0500
+@@ -1086,7 +1086,7 @@ static int onenand_mlc_read_ops_nolock(s
+ 	int ret = 0;
+ 	int writesize = this->writesize;
+ 
+-	DEBUG(MTD_DEBUG_LEVEL3, "%s: from = 0x%08x, len = %i\n",
++	MTDDEBUG(MTD_DEBUG_LEVEL3, "%s: from = 0x%08x, len = %i\n",
+ 	      __func__, (unsigned int) from, (int) len);
+ 
+ 	if (ops->mode == MTD_OOB_AUTO)
+@@ -1188,7 +1188,7 @@ static int onenand_read_ops_nolock(struc
+ 	int ret = 0, boundary = 0;
+ 	int writesize = this->writesize;
+ 
+-	DEBUG(MTD_DEBUG_LEVEL3, "%s: from = 0x%08x, len = %i\n",
++	MTDDEBUG(MTD_DEBUG_LEVEL3, "%s: from = 0x%08x, len = %i\n",
+ 			__func__, (unsigned int) from, (int) len);
+ 
+ 	if (ops->mode == MTD_OOB_AUTO)
+@@ -1319,7 +1319,7 @@ static int onenand_read_oob_nolock(struc
+ 
+ 	from += ops->ooboffs;
+ 
+-	DEBUG(MTD_DEBUG_LEVEL3, "%s: from = 0x%08x, len = %i\n",
++	MTDDEBUG(MTD_DEBUG_LEVEL3, "%s: from = 0x%08x, len = %i\n",
+ 		__func__, (unsigned int) from, (int) len);
+ 
+ 	/* Initialize return length value */
+@@ -1536,7 +1536,7 @@ int onenand_bbt_read_oob(struct mtd_info
+ 	size_t len = ops->ooblen;
+ 	u_char *buf = ops->oobbuf;
+ 
+-	DEBUG(MTD_DEBUG_LEVEL3, "%s: from = 0x%08x, len = %zi\n",
++	MTDDEBUG(MTD_DEBUG_LEVEL3, "%s: from = 0x%08x, len = %zi\n",
+ 		__func__, (unsigned int) from, len);
+ 
+ 	/* Initialize return value */
+@@ -1712,7 +1712,7 @@ static int onenand_panic_write(struct mt
+ 	/* Wait for any existing operation to clear */
+ 	onenand_panic_wait(mtd);
+ 
+-	DEBUG(MTD_DEBUG_LEVEL3, "%s: to = 0x%08x, len = %i\n",
++	MTDDEBUG(MTD_DEBUG_LEVEL3, "%s: to = 0x%08x, len = %i\n",
+ 		__func__, (unsigned int) to, (int) len);
+ 
+ 	/* Initialize retlen, in case of early exit */
+@@ -1845,7 +1845,7 @@ static int onenand_write_ops_nolock(stru
+ 	u_char *oobbuf;
+ 	int ret = 0;
+ 
+-	DEBUG(MTD_DEBUG_LEVEL3, "%s: to = 0x%08x, len = %i\n",
++	MTDDEBUG(MTD_DEBUG_LEVEL3, "%s: to = 0x%08x, len = %i\n",
+ 		__func__, (unsigned int) to, (int) len);
+ 
+ 	/* Initialize retlen, in case of early exit */
+@@ -2028,7 +2028,7 @@ static int onenand_write_oob_nolock(stru
+ 
+ 	to += ops->ooboffs;
+ 
+-	DEBUG(MTD_DEBUG_LEVEL3, "%s: to = 0x%08x, len = %i\n",
++	MTDDEBUG(MTD_DEBUG_LEVEL3, "%s: to = 0x%08x, len = %i\n",
+ 		__func__, (unsigned int) to, (int) len);
+ 
+ 	/* Initialize retlen, in case of early exit */
+@@ -2439,7 +2439,7 @@ static int onenand_erase(struct mtd_info
+ 	struct mtd_erase_region_info *region = NULL;
+ 	loff_t region_offset = 0;
+ 
+-	DEBUG(MTD_DEBUG_LEVEL3, "%s: start=0x%012llx, len=%llu\n", __func__,
++	MTDDEBUG(MTD_DEBUG_LEVEL3, "%s: start=0x%012llx, len=%llu\n", __func__,
+ 	      (unsigned long long) instr->addr, (unsigned long long) instr->len);
+ 
+ 	/* Do not allow erase past end of device */
+@@ -2507,7 +2507,7 @@ static int onenand_erase(struct mtd_info
+  */
+ static void onenand_sync(struct mtd_info *mtd)
+ {
+-	DEBUG(MTD_DEBUG_LEVEL3, "%s: called\n", __func__);
++	MTDDEBUG(MTD_DEBUG_LEVEL3, "%s: called\n", __func__);
+ 
+ 	/* Grab the lock and see if the device is available */
+ 	onenand_get_device(mtd, FL_SYNCING);
+diff -Naurp linux-2.6.34.org/drivers/mtd/onenand/onenand_bbt.c linux-2.6.34/drivers/mtd/onenand/onenand_bbt.c
+--- linux-2.6.34.org/drivers/mtd/onenand/onenand_bbt.c	2010-05-16 16:17:36.000000000 -0500
++++ linux-2.6.34/drivers/mtd/onenand/onenand_bbt.c	2010-09-29 20:27:20.000000000 -0500
+@@ -152,7 +152,7 @@ static int onenand_isbad_bbt(struct mtd_
+ 	block = (int) (onenand_block(this, offs) << 1);
+ 	res = (bbm->bbt[block >> 3] >> (block & 0x06)) & 0x03;
+ 
+-	DEBUG(MTD_DEBUG_LEVEL2, "onenand_isbad_bbt: bbt info for offs 0x%08x: (block %d) 0x%02x\n",
++	MTDDEBUG(MTD_DEBUG_LEVEL2, "onenand_isbad_bbt: bbt info for offs 0x%08x: (block %d) 0x%02x\n",
+ 		(unsigned int) offs, block >> 1, res);
+ 
+ 	switch ((int) res) {
+diff -Naurp linux-2.6.34.org/drivers/mtd/sfc/nx_sfc.c linux-2.6.34/drivers/mtd/sfc/nx_sfc.c
+--- linux-2.6.34.org/drivers/mtd/sfc/nx_sfc.c	2010-09-29 20:25:59.000000000 -0500
++++ linux-2.6.34/drivers/mtd/sfc/nx_sfc.c	2010-09-29 20:27:20.000000000 -0500
+@@ -437,7 +437,7 @@ int wait_till_ready_wr(struct nx_sfc_mtd
+  */
+ static int erase_chip(struct nx_sfc_mtd *flash)
+ {
+-	DEBUG(MTD_DEBUG_LEVEL3, " %s %lldKiB\n",
++	MTDDEBUG(MTD_DEBUG_LEVEL3, " %s %lldKiB\n",
+ 			 __func__,
+ 			flash->mtd.size / 1024);
+ 
+@@ -464,7 +464,7 @@ static int erase_chip(struct nx_sfc_mtd 
+  */
+ static int erase_sector(struct nx_sfc_mtd *flash, u32 offset)
+ {
+-	DEBUG(MTD_DEBUG_LEVEL3, " %s %dKiB at 0x%08x\n",
++	MTDDEBUG(MTD_DEBUG_LEVEL3, " %s %dKiB at 0x%08x\n",
+ 			 __func__,
+ 			flash->mtd.erasesize / 1024, offset);
+ 
+@@ -500,7 +500,7 @@ static int nx_sfc_mtd_erase(struct mtd_i
+ 	u32 addr,len;
+ 	uint32_t rem;
+ 
+-	DEBUG(MTD_DEBUG_LEVEL2, " %s %s 0x%08x, len %lld\n",
++	MTDDEBUG(MTD_DEBUG_LEVEL2, " %s %s 0x%08x, len %lld\n",
+ 			 __func__, "at",
+ 			(u32)instr->addr, instr->len);
+ 
+@@ -559,7 +559,7 @@ static int nx_sfc_mtd_read(struct mtd_in
+ 	struct nx_sfc_mtd *flash = mtd_to_nx_sfc_mtd(mtd);
+    u32 page_offset, page_size, first_page, i;
+    
+-	DEBUG(MTD_DEBUG_LEVEL2, " %s %s 0x%08x, len %zd\n",
++	MTDDEBUG(MTD_DEBUG_LEVEL2, " %s %s 0x%08x, len %zd\n",
+ 			 __func__, "from",
+ 			(u32)from, len);
+    
+@@ -661,7 +661,7 @@ static int nx_sfc_mtd_write(struct mtd_i
+ 	u32 page_offset = 0, page_size = 0, first_page = 0;
+    u32 i;
+    
+-	DEBUG(MTD_DEBUG_LEVEL2, " %s %s 0x%08x, len %zd\n",
++	MTDDEBUG(MTD_DEBUG_LEVEL2, " %s %s 0x%08x, len %zd\n",
+ 			 __func__, "to",
+ 			(u32)to, len);
+ 
+@@ -848,7 +848,7 @@ static struct flash_info *__devinit jede
+    	struct nx_sfc_mtd	*flash = dev_get_drvdata(&spi->dev);
+    	tmp = nx_sfc_read_id(flash->mmio_base);
+ 	if (tmp < 0) {
+-		DEBUG(MTD_DEBUG_LEVEL0, "error %d reading JEDEC ID\n",
++		MTDDEBUG(MTD_DEBUG_LEVEL0, "error %d reading JEDEC ID\n",
+ 			tmp);
+ 		return NULL;
+ 	}
+@@ -961,7 +961,7 @@ static int __devinit nx_sfc_probe(struct
+ 
+ 		/* unrecognized chip? */
+ 		if (i == ARRAY_SIZE(serial_flash_data)) {
+-			DEBUG(MTD_DEBUG_LEVEL0, ": unrecognized id %s\n",
++			MTDDEBUG(MTD_DEBUG_LEVEL0, ": unrecognized id %s\n",
+ 					 data->type);
+ 			info = NULL;
+ 
+@@ -996,7 +996,7 @@ static int __devinit nx_sfc_probe(struct
+ 	dev_info(&pdev->dev, "%s (%lld Kbytes)\n", info->name,
+ 			flash->mtd.size / 1024);
+ 
+-	DEBUG(MTD_DEBUG_LEVEL2,
++	MTDDEBUG(MTD_DEBUG_LEVEL2,
+ 		"mtd .name = %s, .size = 0x%.8llx (%lluMiB) "
+ 			".erasesize = 0x%.8x (%uKiB) .numeraseregions = %d\n",
+ 		flash->mtd.name,
+@@ -1006,7 +1006,7 @@ static int __devinit nx_sfc_probe(struct
+ 
+ 	if (flash->mtd.numeraseregions)
+ 		for (i = 0; i < flash->mtd.numeraseregions; i++)
+-			DEBUG(MTD_DEBUG_LEVEL2,
++			MTDDEBUG(MTD_DEBUG_LEVEL2,
+ 				"mtd.eraseregions[%d] = { .offset = 0x%.8llx, "
+ 				".erasesize = 0x%.8x (%uKiB), "
+ 				".numblocks = %d }\n",
+@@ -1048,7 +1048,7 @@ static int __devinit nx_sfc_probe(struct
+ 
+ 		if (nr_parts > 0) {
+ 			for (i = 0; i < nr_parts; i++) {
+-				DEBUG(MTD_DEBUG_LEVEL2, "partitions[%d] = "
++				MTDDEBUG(MTD_DEBUG_LEVEL2, "partitions[%d] = "
+ 					"{.name = %s, .offset = 0x%.8llx, "
+ 						".size = 0x%.8llx (%lluKiB) }\n",
+ 					i, parts[i].name,
+diff -Naurp linux-2.6.34.org/drivers/mtd/ssfdc.c linux-2.6.34/drivers/mtd/ssfdc.c
+--- linux-2.6.34.org/drivers/mtd/ssfdc.c	2010-05-16 16:17:36.000000000 -0500
++++ linux-2.6.34/drivers/mtd/ssfdc.c	2010-09-29 20:27:20.000000000 -0500
+@@ -135,7 +135,7 @@ static int get_valid_cis_sector(struct m
+ 				/* Found */
+ 				cis_sector = (int)(offset >> SECTOR_SHIFT);
+ 			} else {
+-				DEBUG(MTD_DEBUG_LEVEL1,
++				MTDDEBUG(MTD_DEBUG_LEVEL1,
+ 					"SSFDC_RO: CIS/IDI sector not found"
+ 					" on %s (mtd%d)\n", mtd->name,
+ 					mtd->index);
+@@ -221,7 +221,7 @@ static int get_logical_address(uint8_t *
+ 			block_address >>= 1;
+ 
+ 			if (get_parity(block_address, 10) != parity) {
+-				DEBUG(MTD_DEBUG_LEVEL0,
++				MTDDEBUG(MTD_DEBUG_LEVEL0,
+ 					"SSFDC_RO: logical address field%d"
+ 					"parity error(0x%04X)\n", j+1,
+ 					block_address);
+@@ -235,7 +235,7 @@ static int get_logical_address(uint8_t *
+ 	if (!ok)
+ 		block_address = -2;
+ 
+-	DEBUG(MTD_DEBUG_LEVEL3, "SSFDC_RO: get_logical_address() %d\n",
++	MTDDEBUG(MTD_DEBUG_LEVEL3, "SSFDC_RO: get_logical_address() %d\n",
+ 		block_address);
+ 
+ 	return block_address;
+@@ -249,7 +249,7 @@ static int build_logical_block_map(struc
+ 	int ret, block_address, phys_block;
+ 	struct mtd_info *mtd = ssfdc->mbd.mtd;
+ 
+-	DEBUG(MTD_DEBUG_LEVEL1, "SSFDC_RO: build_block_map() nblks=%d (%luK)\n",
++	MTDDEBUG(MTD_DEBUG_LEVEL1, "SSFDC_RO: build_block_map() nblks=%d (%luK)\n",
+ 	      ssfdc->map_len,
+ 	      (unsigned long)ssfdc->map_len * ssfdc->erase_size / 1024);
+ 
+@@ -262,7 +262,7 @@ static int build_logical_block_map(struc
+ 
+ 		ret = read_raw_oob(mtd, offset, oob_buf);
+ 		if (ret < 0) {
+-			DEBUG(MTD_DEBUG_LEVEL0,
++			MTDDEBUG(MTD_DEBUG_LEVEL0,
+ 				"SSFDC_RO: mtd read_oob() failed at %lu\n",
+ 				offset);
+ 			return -1;
+@@ -279,7 +279,7 @@ static int build_logical_block_map(struc
+ 			ssfdc->logic_block_map[block_address] =
+ 				(unsigned short)phys_block;
+ 
+-			DEBUG(MTD_DEBUG_LEVEL2,
++			MTDDEBUG(MTD_DEBUG_LEVEL2,
+ 				"SSFDC_RO: build_block_map() phys_block=%d,"
+ 				"logic_block_addr=%d, zone=%d\n",
+ 				phys_block, block_address, zone_index);
+@@ -319,7 +319,7 @@ static void ssfdcr_add_mtd(struct mtd_bl
+ 	ssfdc->erase_size = mtd->erasesize;
+ 	ssfdc->map_len = (u32)mtd->size / mtd->erasesize;
+ 
+-	DEBUG(MTD_DEBUG_LEVEL1,
++	MTDDEBUG(MTD_DEBUG_LEVEL1,
+ 		"SSFDC_RO: cis_block=%d,erase_size=%d,map_len=%d,n_zones=%d\n",
+ 		ssfdc->cis_block, ssfdc->erase_size, ssfdc->map_len,
+ 		DIV_ROUND_UP(ssfdc->map_len, MAX_PHYS_BLK_PER_ZONE));
+@@ -331,7 +331,7 @@ static void ssfdcr_add_mtd(struct mtd_bl
+ 	ssfdc->cylinders = (unsigned short)(((u32)mtd->size >> SECTOR_SHIFT) /
+ 			((long)ssfdc->sectors * (long)ssfdc->heads));
+ 
+-	DEBUG(MTD_DEBUG_LEVEL1, "SSFDC_RO: using C:%d H:%d S:%d == %ld sects\n",
++	MTDDEBUG(MTD_DEBUG_LEVEL1, "SSFDC_RO: using C:%d H:%d S:%d == %ld sects\n",
+ 		ssfdc->cylinders, ssfdc->heads , ssfdc->sectors,
+ 		(long)ssfdc->cylinders * (long)ssfdc->heads *
+ 		(long)ssfdc->sectors);
+@@ -371,7 +371,7 @@ static void ssfdcr_remove_dev(struct mtd
+ {
+ 	struct ssfdcr_record *ssfdc = (struct ssfdcr_record *)dev;
+ 
+-	DEBUG(MTD_DEBUG_LEVEL1, "SSFDC_RO: remove_dev (i=%d)\n", dev->devnum);
++	MTDDEBUG(MTD_DEBUG_LEVEL1, "SSFDC_RO: remove_dev (i=%d)\n", dev->devnum);
+ 
+ 	del_mtd_blktrans_dev(dev);
+ 	kfree(ssfdc->logic_block_map);
+@@ -388,7 +388,7 @@ static int ssfdcr_readsect(struct mtd_bl
+ 	offset = (int)(logic_sect_no % sectors_per_block);
+ 	block_address = (int)(logic_sect_no / sectors_per_block);
+ 
+-	DEBUG(MTD_DEBUG_LEVEL3,
++	MTDDEBUG(MTD_DEBUG_LEVEL3,
+ 		"SSFDC_RO: ssfdcr_readsect(%lu) sec_per_blk=%d, ofst=%d,"
+ 		" block_addr=%d\n", logic_sect_no, sectors_per_block, offset,
+ 		block_address);
+@@ -398,7 +398,7 @@ static int ssfdcr_readsect(struct mtd_bl
+ 
+ 	block_address = ssfdc->logic_block_map[block_address];
+ 
+-	DEBUG(MTD_DEBUG_LEVEL3,
++	MTDDEBUG(MTD_DEBUG_LEVEL3,
+ 		"SSFDC_RO: ssfdcr_readsect() phys_block_addr=%d\n",
+ 		block_address);
+ 
+@@ -408,7 +408,7 @@ static int ssfdcr_readsect(struct mtd_bl
+ 		sect_no = (unsigned long)block_address * sectors_per_block +
+ 				offset;
+ 
+-		DEBUG(MTD_DEBUG_LEVEL3,
++		MTDDEBUG(MTD_DEBUG_LEVEL3,
+ 			"SSFDC_RO: ssfdcr_readsect() phys_sect_no=%lu\n",
+ 			sect_no);
+ 
+@@ -425,7 +425,7 @@ static int ssfdcr_getgeo(struct mtd_blkt
+ {
+ 	struct ssfdcr_record *ssfdc = (struct ssfdcr_record *)dev;
+ 
+-	DEBUG(MTD_DEBUG_LEVEL1, "SSFDC_RO: ssfdcr_getgeo() C=%d, H=%d, S=%d\n",
++	MTDDEBUG(MTD_DEBUG_LEVEL1, "SSFDC_RO: ssfdcr_getgeo() C=%d, H=%d, S=%d\n",
+ 			ssfdc->cylinders, ssfdc->heads, ssfdc->sectors);
+ 
+ 	geo->heads = ssfdc->heads;
+diff -Naurp linux-2.6.34.org/drivers/net/LIPP_6300ETH/src/gmac_drv.c linux-2.6.34/drivers/net/LIPP_6300ETH/src/gmac_drv.c
+--- linux-2.6.34.org/drivers/net/LIPP_6300ETH/src/gmac_drv.c	2010-09-29 20:25:58.000000000 -0500
++++ linux-2.6.34/drivers/net/LIPP_6300ETH/src/gmac_drv.c	2010-09-29 20:27:20.000000000 -0500
+@@ -1922,7 +1922,7 @@ static __s32 lipp_6300Eth_open(struct ne
+         napi_enable(&priv->napiInfo.napi);
+ #endif
+ 
+-    netif_carrier_on(dev);
++    //netif_carrier_on(dev);
+     netif_start_queue( dev);
+ 
+     GMAC_PRINT_DBG("lipp_6300Eth_open: up_lipp_6300Eth Done\n");
+diff -Naurp linux-2.6.34.org/include/linux/mtd/mtd.h linux-2.6.34/include/linux/mtd/mtd.h
+--- linux-2.6.34.org/include/linux/mtd/mtd.h	2010-09-29 20:25:58.000000000 -0500
++++ linux-2.6.34/include/linux/mtd/mtd.h	2010-09-29 20:27:20.000000000 -0500
+@@ -344,13 +344,13 @@ static inline void mtd_erase_callback(st
+ #define MTD_DEBUG_LEVEL3	(3)	/* Noisy   */
+ 
+ #ifdef CONFIG_MTD_DEBUG
+-#define DEBUG(n, args...)				\
++#define MTDDEBUG(n, args...)				\
+ 	do {						\
+ 		if (n <= CONFIG_MTD_DEBUG_VERBOSE)	\
+ 			printk(KERN_INFO args);		\
+ 	} while(0)
+ #else /* CONFIG_MTD_DEBUG */
+-#define DEBUG(n, args...)				\
++#define MTDDEBUG(n, args...)				\
+ 	do {						\
+ 		if (0)					\
+ 			printk(KERN_INFO args);		\
+diff -Naurp linux-2.6.34.org/lib/atomic64.c linux-2.6.34/lib/atomic64.c
+--- linux-2.6.34.org/lib/atomic64.c	2010-05-16 16:17:36.000000000 -0500
++++ linux-2.6.34/lib/atomic64.c	2010-09-29 20:27:20.000000000 -0500
+@@ -162,12 +162,12 @@ int atomic64_add_unless(atomic64_t *v, l
+ {
+ 	unsigned long flags;
+ 	spinlock_t *lock = lock_addr(v);
+-	int ret = 1;
++	int ret = 0;
+ 
+ 	spin_lock_irqsave(lock, flags);
+ 	if (v->counter != u) {
+ 		v->counter += a;
+-		ret = 0;
++		ret = 1;
+ 	}
+ 	spin_unlock_irqrestore(lock, flags);
+ 	return ret;
+diff -Naurp linux-2.6.34.org/lib/crc32.c linux-2.6.34/lib/crc32.c
+--- linux-2.6.34.org/lib/crc32.c	2010-05-16 16:17:36.000000000 -0500
++++ linux-2.6.34/lib/crc32.c	2010-09-29 20:27:20.000000000 -0500
+@@ -48,12 +48,20 @@ MODULE_LICENSE("GPL");
+ #if CRC_LE_BITS == 8 || CRC_BE_BITS == 8
+ 
+ static inline u32
+-crc32_body(u32 crc, unsigned char const *buf, size_t len, const u32 *tab)
++crc32_body(u32 crc, unsigned char const *buf, size_t len, const u32 (*tab)[256])
+ {
+ # ifdef __LITTLE_ENDIAN
+-#  define DO_CRC(x) crc = tab[(crc ^ (x)) & 255 ] ^ (crc >> 8)
++#  define DO_CRC(x) crc = tab[0][(crc ^ (x)) & 255] ^ (crc >> 8)
++#  define DO_CRC4 crc = tab[3][(crc) & 255] ^ \
++		tab[2][(crc >> 8) & 255] ^ \
++		tab[1][(crc >> 16) & 255] ^ \
++		tab[0][(crc >> 24) & 255]
+ # else
+-#  define DO_CRC(x) crc = tab[((crc >> 24) ^ (x)) & 255] ^ (crc << 8)
++#  define DO_CRC(x) crc = tab[0][((crc >> 24) ^ (x)) & 255] ^ (crc << 8)
++#  define DO_CRC4 crc = tab[0][(crc) & 255] ^ \
++		tab[1][(crc >> 8) & 255] ^ \
++		tab[2][(crc >> 16) & 255] ^ \
++		tab[3][(crc >> 24) & 255]
+ # endif
+ 	const u32 *b;
+ 	size_t    rem_len;
+@@ -70,10 +78,7 @@ crc32_body(u32 crc, unsigned char const 
+ 	b = (const u32 *)buf;
+ 	for (--b; len; --len) {
+ 		crc ^= *++b; /* use pre increment for speed */
+-		DO_CRC(0);
+-		DO_CRC(0);
+-		DO_CRC(0);
+-		DO_CRC(0);
++		DO_CRC4;
+ 	}
+ 	len = rem_len;
+ 	/* And the last few bytes */
+@@ -85,6 +90,7 @@ crc32_body(u32 crc, unsigned char const 
+ 	}
+ 	return crc;
+ #undef DO_CRC
++#undef DO_CRC4
+ }
+ #endif
+ /**
+@@ -117,7 +123,7 @@ u32 __pure crc32_le(u32 crc, unsigned ch
+ u32 __pure crc32_le(u32 crc, unsigned char const *p, size_t len)
+ {
+ # if CRC_LE_BITS == 8
+-	const u32      *tab = crc32table_le;
++	const u32      (*tab)[] = crc32table_le;
+ 
+ 	crc = __cpu_to_le32(crc);
+ 	crc = crc32_body(crc, p, len, tab);
+@@ -174,7 +180,7 @@ u32 __pure crc32_be(u32 crc, unsigned ch
+ u32 __pure crc32_be(u32 crc, unsigned char const *p, size_t len)
+ {
+ # if CRC_BE_BITS == 8
+-	const u32      *tab = crc32table_be;
++	const u32      (*tab)[] = crc32table_be;
+ 
+ 	crc = __cpu_to_be32(crc);
+ 	crc = crc32_body(crc, p, len, tab);
+diff -Naurp linux-2.6.34.org/lib/decompress_bunzip2.c linux-2.6.34/lib/decompress_bunzip2.c
+--- linux-2.6.34.org/lib/decompress_bunzip2.c	2010-05-16 16:17:36.000000000 -0500
++++ linux-2.6.34/lib/decompress_bunzip2.c	2010-09-29 20:27:20.000000000 -0500
+@@ -158,14 +158,16 @@ static int INIT get_next_block(struct bu
+ 	int *base = NULL;
+ 	int *limit = NULL;
+ 	int dbufCount, nextSym, dbufSize, groupCount, selector,
+-		i, j, k, t, runPos, symCount, symTotal, nSelectors,
+-		byteCount[256];
+-	unsigned char uc, symToByte[256], mtfSymbol[256], *selectors;
++		i, j, k, t, runPos, symCount, symTotal, nSelectors, *byteCount;
++	unsigned char uc, *symToByte, *mtfSymbol, *selectors;
+ 	unsigned int *dbuf, origPtr;
+ 
+ 	dbuf = bd->dbuf;
+ 	dbufSize = bd->dbufSize;
+ 	selectors = bd->selectors;
++	byteCount = bd->byteCount;
++	symToByte = bd->symToByte;
++	mtfSymbol = bd->mtfSymbol;
+ 
+ 	/* Read in header signature and CRC, then validate signature.
+ 	   (last block signature means CRC is for whole file, return now) */
+diff -Naurp linux-2.6.34.org/lib/gen_crc32table.c linux-2.6.34/lib/gen_crc32table.c
+--- linux-2.6.34.org/lib/gen_crc32table.c	2010-05-16 16:17:36.000000000 -0500
++++ linux-2.6.34/lib/gen_crc32table.c	2010-09-29 20:27:20.000000000 -0500
+@@ -7,8 +7,8 @@
+ #define LE_TABLE_SIZE (1 << CRC_LE_BITS)
+ #define BE_TABLE_SIZE (1 << CRC_BE_BITS)
+ 
+-static uint32_t crc32table_le[LE_TABLE_SIZE];
+-static uint32_t crc32table_be[BE_TABLE_SIZE];
++static uint32_t crc32table_le[4][LE_TABLE_SIZE];
++static uint32_t crc32table_be[4][BE_TABLE_SIZE];
+ 
+ /**
+  * crc32init_le() - allocate and initialize LE table data
+@@ -22,12 +22,19 @@ static void crc32init_le(void)
+ 	unsigned i, j;
+ 	uint32_t crc = 1;
+ 
+-	crc32table_le[0] = 0;
++	crc32table_le[0][0] = 0;
+ 
+ 	for (i = 1 << (CRC_LE_BITS - 1); i; i >>= 1) {
+ 		crc = (crc >> 1) ^ ((crc & 1) ? CRCPOLY_LE : 0);
+ 		for (j = 0; j < LE_TABLE_SIZE; j += 2 * i)
+-			crc32table_le[i + j] = crc ^ crc32table_le[j];
++			crc32table_le[0][i + j] = crc ^ crc32table_le[0][j];
++	}
++	for (i = 0; i < LE_TABLE_SIZE; i++) {
++		crc = crc32table_le[0][i];
++		for (j = 1; j < 4; j++) {
++			crc = crc32table_le[0][crc & 0xff] ^ (crc >> 8);
++			crc32table_le[j][i] = crc;
++		}
+ 	}
+ }
+ 
+@@ -39,25 +46,35 @@ static void crc32init_be(void)
+ 	unsigned i, j;
+ 	uint32_t crc = 0x80000000;
+ 
+-	crc32table_be[0] = 0;
++	crc32table_be[0][0] = 0;
+ 
+ 	for (i = 1; i < BE_TABLE_SIZE; i <<= 1) {
+ 		crc = (crc << 1) ^ ((crc & 0x80000000) ? CRCPOLY_BE : 0);
+ 		for (j = 0; j < i; j++)
+-			crc32table_be[i + j] = crc ^ crc32table_be[j];
++			crc32table_be[0][i + j] = crc ^ crc32table_be[0][j];
++	}
++	for (i = 0; i < BE_TABLE_SIZE; i++) {
++		crc = crc32table_be[0][i];
++		for (j = 1; j < 4; j++) {
++			crc = crc32table_be[0][(crc >> 24) & 0xff] ^ (crc << 8);
++			crc32table_be[j][i] = crc;
++		}
+ 	}
+ }
+ 
+-static void output_table(uint32_t table[], int len, char *trans)
++static void output_table(uint32_t table[4][256], int len, char *trans)
+ {
+-	int i;
++	int i, j;
+ 
+-	for (i = 0; i < len - 1; i++) {
+-		if (i % ENTRIES_PER_LINE == 0)
+-			printf("\n");
+-		printf("%s(0x%8.8xL), ", trans, table[i]);
++	for (j = 0 ; j < 4; j++) {
++		printf("{");
++		for (i = 0; i < len - 1; i++) {
++			if (i % ENTRIES_PER_LINE == 0)
++				printf("\n");
++			printf("%s(0x%8.8xL), ", trans, table[j][i]);
++		}
++		printf("%s(0x%8.8xL)},\n", trans, table[j][len - 1]);
+ 	}
+-	printf("%s(0x%8.8xL)\n", trans, table[len - 1]);
+ }
+ 
+ int main(int argc, char** argv)
+@@ -66,14 +83,14 @@ int main(int argc, char** argv)
+ 
+ 	if (CRC_LE_BITS > 1) {
+ 		crc32init_le();
+-		printf("static const u32 crc32table_le[] = {");
++		printf("static const u32 crc32table_le[4][256] = {");
+ 		output_table(crc32table_le, LE_TABLE_SIZE, "tole");
+ 		printf("};\n");
+ 	}
+ 
+ 	if (CRC_BE_BITS > 1) {
+ 		crc32init_be();
+-		printf("static const u32 crc32table_be[] = {");
++		printf("static const u32 crc32table_be[4][256] = {");
+ 		output_table(crc32table_be, BE_TABLE_SIZE, "tobe");
+ 		printf("};\n");
+ 	}

@@ -10,7 +10,7 @@ SRC_URI[sha256sum] = "afc3e654b779f4b994a0d455d6ad12f46ff0dbec2fe222a4f55925744b
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-MACHINE_KERNEL_PR_append = ".6"
+MACHINE_KERNEL_PR_append = ".8"
 
 # By default, kernel.bbclass modifies package names to allow multiple kernels
 # to be installed in parallel. We revert this change and rprovide the versioned
@@ -47,6 +47,8 @@ SRC_URI += "http://www.et-view.com/download/linux-${PV}.tar.gz \
     file://0001-rt2800usb-add-support-for-rt55xx.patch \
     file://rtl28xxu-update-to-the-latest-version-02-06-2013.patch \
     file://rtl2832-scale-SNR-to-full-range.patch \
+    file://em28xx-dvb-enable-LNA-by-default-for-PCTV290e.patch \
+    file://zl10353-output-full-range-SNR.patch \
     "
 
 S = "${WORKDIR}/linux-${PV}"

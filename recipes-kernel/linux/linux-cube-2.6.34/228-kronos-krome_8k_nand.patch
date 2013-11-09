@@ -1,0 +1,150 @@
+diff -Naur linux-2.6.34/drivers/mtd/nand/nx_nand/nx_nand.c linux-2.6.34_nand/drivers/mtd/nand/nx_nand/nx_nand.c
+--- linux-2.6.34/drivers/mtd/nand/nx_nand/nx_nand.c	2012-08-31 16:55:12.364738000 +0530
++++ linux-2.6.34_nand/drivers/mtd/nand/nx_nand/nx_nand.c	2012-08-31 12:09:44.848785000 +0530
+@@ -109,6 +109,27 @@
+       }
+ };
+ #else
++static struct nand_ecclayout nx_nand_oob_448 = {
++   .eccbytes = 416,
++   .eccpos = {
++      32, 33, 34, 35, 36, 37, 38, 39,
++      40, 41, 42, 43, 44, 45, 46, 47,
++      48, 49, 50, 51, 52, 53, 54, 55,
++      56, 57, 58, 59, 60, 61, 62, 63,
++      64, 65, 66, 67, 68, 69, 70, 71,
++      72, 73, 74, 75, 76, 77, 78, 79,
++      80, 81, 82, 83, 84, 85, 86, 87,
++      88, 89, 90, 91, 92, 93, 94, 95,
++      96, 97, 98, 99,100,101,102, 103,
++      104,105,106,107,108,109,110,111,
++      112,113,114,115,116,117,118,119,
++      120,121,122,123,124,125,126,127,
++   },
++   .oobfree = {
++      {.offset = 0,
++      .length = 32},
++   }
++};
+ /* For 4K LPF of 224 Bytes oob size */
+ static struct nand_ecclayout nx_nand_oob_224 = {
+    .eccbytes = 208,
+@@ -362,7 +383,11 @@
+       stgt[i].dst_per = 0;
+       stgt[i].src_inc = true;
+       stgt[i].dst_inc = true;
+-      if(nc->mtd.oobsize == 224) {
++      if(nc->mtd.oobsize == 448) {
++         stgt[i].src_brst = nx_dmac_128;
++         stgt[i].dst_brst = nx_dmac_128;
++      }
++      else if(nc->mtd.oobsize == 224) {
+          stgt[i].src_brst = nx_dmac_64;
+          stgt[i].dst_brst = nx_dmac_64;
+       }
+@@ -394,7 +419,11 @@
+       stgt[i].dst_per = 0;
+       stgt[i].src_inc = true;
+       stgt[i].dst_inc = true;
+-      if(nc->mtd.oobsize == 224) {
++      if(nc->mtd.oobsize == 448) {
++         stgt[i].src_brst = nx_dmac_128;
++         stgt[i].dst_brst = nx_dmac_128;
++      }
++      else if(nc->mtd.oobsize == 224) {
+          stgt[i].src_brst = nx_dmac_64;
+          stgt[i].dst_brst = nx_dmac_64;
+       }
+@@ -728,11 +757,20 @@
+             nc->cur_page);
+          mtd->ecc_stats.failed++;
+       } 
++      /* High density MLC NAND flashes generate too many correctable 
++       * ecc errors, on detecting these errors filessystem aggressively 
++       * marks ecc correctable physical erase blocks as bad blocks.
++       * We devise a heuristic here by defining a correctable ecc error
++       * threshold equal to half of set ecc_level and logging errors only
++       *  when threshold is hit.
++       */
+       else if (nc->page_rw_status_fifo.PageRdStatus[i].corrected) {
+          stat = nc->page_rw_status_fifo.PageRdStatus[i].num_errors;
+-         printk(KERN_INFO "nx_nand: [INFO] step %d:ECC %d bits corrected [page = %x] \r\n", i, 
+-            stat,nc->cur_page );
+-         mtd->ecc_stats.corrected += stat;
++         if (stat > (nc->flash_config.eccLevel >> 1)) {
++            printk(KERN_INFO "nx_nand: [INFO] step %d:ECC %d bits corrected [page = %x] \r\n", i, 
++               stat,nc->cur_page );
++            mtd->ecc_stats.corrected += stat;
++         }
+       }
+ #endif
+    }
+@@ -1109,7 +1147,9 @@
+ #endif
+ 
+ #ifdef CONFIG_ARCH_APOLLO
+-static u_char temp_buf[NAND_MAX_PAGESIZE+NAND_MAX_OOBSIZE];
++#define _NAND_MAX_PAGESIZE 4096
++#define _NAND_MAX_OOBSIZE  128
++static u_char temp_buf[_NAND_MAX_PAGESIZE+_NAND_MAX_OOBSIZE];
+ #endif
+ 
+ /**
+@@ -2587,13 +2627,12 @@
+          FlashConfig.eccLevel = 16;
+          break;
+       case 224:
++      case 448:
+          /* Using 1K subpage,
+           * 56 bytes oob per subpage = 4 bytes user + 52 bytes ecc 
+           * Max. ecc level that fits in 52 bytes =
+           *    = (52*8)/14 ~ 28 (since ecc level 30 needs 52.5 
+           *       i.e. 56 rounded to next 4 bytes)
+-          * Thus, 224 bytes oob using four 1K supages = 
+-          *       16 bytes user + 56 bytes ecc
+           */
+          FlashConfig.eccLevel = 28;
+          break;
+@@ -2603,6 +2642,7 @@
+    FlashConfig.erasedPageThres = FlashConfig.eccLevel/2; /* FIXME */
+    memset(&FlashConfig.devTiming, 0xFF, sizeof(FlashConfig.devTiming));
+    tmhwEfmc_SetFlashConfig(nx_nc->unitid,nx_nc->slotid, &FlashConfig);
++   nx_nc->flash_config = FlashConfig;
+ 
+    nx_nc->blk_size = (SZ_512 << FlashConfig.subpageSize);
+ #endif
+@@ -2693,6 +2733,9 @@
+       case 224:
+          chip->ecc.layout = &nx_nand_oob_224;
+          break;
++      case 448:
++         chip->ecc.layout = &nx_nand_oob_448;
++         break;
+ #endif
+       default:
+          printk(KERN_WARNING "nx_nand: No oob scheme defined for "
+diff -Naur linux-2.6.34/drivers/mtd/nand/nx_nand/nx_nand.h linux-2.6.34_nand/drivers/mtd/nand/nx_nand/nx_nand.h
+--- linux-2.6.34/drivers/mtd/nand/nx_nand/nx_nand.h	2012-08-31 16:55:11.494819000 +0530
++++ linux-2.6.34_nand/drivers/mtd/nand/nx_nand/nx_nand.h	2012-08-30 18:43:25.950204000 +0530
+@@ -79,6 +79,7 @@
+    int                  offset;        /* Offset in inetrnal driver buffer */
+    bool                 cedontcare;    /* CE dont care support             */
+    tmhwEfmc_PageRWStatusFifo_t page_rw_status_fifo;
++   tmhwEfmc_FlashConfig_t flash_config;
+ };
+ 
+ /* Max Data buffer size */
+diff -Naur linux-2.6.34/include/linux/mtd/nand.h linux-2.6.34_nand/include/linux/mtd/nand.h
+--- linux-2.6.34/include/linux/mtd/nand.h	2012-08-31 16:55:10.510889000 +0530
++++ linux-2.6.34_nand/include/linux/mtd/nand.h	2012-08-30 20:18:35.147129000 +0530
+@@ -49,8 +49,8 @@
+  * is supported now. If you add a chip with bigger oobsize/page
+  * adjust this accordingly.
+  */
+-#define NAND_MAX_OOBSIZE	128
+-#define NAND_MAX_PAGESIZE	4096
++#define NAND_MAX_OOBSIZE	576
++#define NAND_MAX_PAGESIZE	8192
+ 
+ /*
+  * Constants for hardware specific CLE/ALE/NCE function
