@@ -14,7 +14,7 @@ PKGV = "2.4+git${GITPKGV}"
 PV = "2.4+git${SRCPV}"
 PR = "r4"
 
-SRC_URI = "git://github.com/openatv/rtmpdump.git;protocol=git"
+SRC_URI = "https://github.com/oe-alliance/rtmpdump.git;protocol=git"
 
 S = "${WORKDIR}/git/librtmp"
 
