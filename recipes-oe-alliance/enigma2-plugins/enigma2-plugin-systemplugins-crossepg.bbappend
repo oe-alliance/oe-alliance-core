@@ -1,7 +1,7 @@
 SRCREV = "${AUTOREV}"
-PV = "0.7.02"
+PV = "0.7.03"
 PKGV = "${PV}+git${GITPKGV}"
-PRINC = "2"
+PRINC = "4"
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
