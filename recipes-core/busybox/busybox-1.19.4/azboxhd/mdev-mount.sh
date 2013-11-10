@@ -109,7 +109,9 @@ case "$ACTION" in
 				MOUNTPOINT="/media/$MDEV"
 				mkdir -p $MOUNTPOINT
 			fi
-			mount -t auto /dev/$MDEV $MOUNTPOINT
+			if ! mount -t auto /dev/$MDEV "${MOUNTPOINT}" ; then
+				rmdir "${MOUNTPOINT}"
+			fi
 		fi
 		;;
 	remove)
