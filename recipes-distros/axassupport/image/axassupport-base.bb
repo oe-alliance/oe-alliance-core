@@ -18,8 +18,8 @@ RDEPENDS_${PN} = "\
     libcrypto-compat \
     ntfs-3g \
     hddtemp \
-    task-base-smbfs-client \
-    task-base-smbfs \
-    task-base-nfs \
+    packagegroup-smbfs-client \
+    packagegroup-base-smbfs \
+    packagegroup-base-nfs \
     busybox-cron \
     "

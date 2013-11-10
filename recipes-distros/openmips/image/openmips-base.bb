@@ -19,8 +19,8 @@ RDEPENDS_${PN} = "\
     dosfstools \
     ntfs-3g \
     packagegroup-smbfs-client \
-    packagegroup-smbfs \
-    packagegroup-nfs \
+    packagegroup-base-smbfs \
+    packagegroup-base-nfs \
     busybox-cron \
     python-imaging \
     ofgwrite \

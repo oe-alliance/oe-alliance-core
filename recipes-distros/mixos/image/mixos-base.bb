@@ -19,7 +19,7 @@ RDEPENDS_${PN} = "\
     ntfs-3g \
     hddtemp \
     packagegroup-smbfs-client \
-    packagegroup-smbfs \
-    packagegroup-nfs \
+    packagegroup-base-smbfs \
+    packagegroup-base-nfs \
     busybox-cron \
     "

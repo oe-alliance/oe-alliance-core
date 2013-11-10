@@ -22,8 +22,8 @@ IMAGE_INSTALL = " \
     busybox-cron \
     python-gdata \
     minidlna \
-    task-base-smbfs \
-    task-base-smbfs-client \
+    packagegroup-base-smbfs \
+    packagegroup-smbfs-client \
     mc \
     egami-base-files \
     "

@@ -1,7 +1,7 @@
 DESCRIPTION = "Utilities for transponder & dvb-s blindscan"
 SECTION = "base"
 PRIORITY = "optional"
-RDEPENDS = "ncurses"
+RDEPENDS_${PN} = "ncurses"
 
 LICENSE = "CLOSED"
 
