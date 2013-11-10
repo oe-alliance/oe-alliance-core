@@ -10,9 +10,16 @@ LIC_FILES_CHKSUM="file://COPYING;md5=0636e73ff0215e8d672dc4c32c317bb3 \
                   file://proc/COPYING;md5=6e29c688d912da12b66b73e32b03d812"
 DEPENDS = "ncurses"
 
-FILES_${PN} += "${base_libdir}/libproc-*.so"
-
 SRC_URI = "http://procps.sourceforge.net/procps-${PV}.tar.gz \
            file://install.patch"
 
-inherit autotools
+inherit autotools update-alternatives
+
+FILES_${PN} += "${libdir}/*-${PV}.so ${base_libdir}/*-${PV}.so"
+FILES_SOLIBSDEV = ""
+
+ALTERNATIVE_${PN} = "top uptime free pkill pmap kill sysctl ps pgrep pwdx watch"
+ALTERNATIVE_LINK_NAME[kill] = "${base_bindir}/kill"
+ALTERNATIVE_LINK_NAME[sysctl] = "${base_sbindir}/sysctl"
+ALTERNATIVE_LINK_NAME[ps] = "${base_bindir}/ps"
+ALTERNATIVE_PRIORITY = "110"
