@@ -9,7 +9,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "1.0"
-PR = "r37"
+PR = "r38"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 DEPENDS = "enigma2-plugin-drivers-usbserial"
@@ -31,7 +31,6 @@ RRECOMMENDS_${PN} = "\
     enigma2-plugin-drivers-usbserial \
     enigma2-plugin-extensions-ambx \
     enigma2-plugin-extensions-tuxcom \
-    enigma2-plugin-extensions-tuxterm \
     enigma2-plugin-extensions-webinterface-old \
     enigma2-plugin-security-firewall \
     enigma2-plugin-skins-pli-hd \
