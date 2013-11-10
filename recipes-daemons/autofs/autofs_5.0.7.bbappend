@@ -1,4 +1,4 @@
-PRINC = "2"
+PRINC = "3"
 
 EXTRA_OECONF += "--with-confdir=/etc/default"
 
@@ -14,9 +14,12 @@ do_configure_prepend () {
 
 # Remove and change configuration files
 do_install_append() {
-	echo "/media/net /etc/auto.net --ghost" > ${D}/etc/auto.master
-	echo "# automounter configuration" > ${D}/etc/auto.net
-	chmod 0644 ${D}/etc/auto.net
-	rm -f ${D}/etc/auto.smb ${D}/etc/auto.misc ${D}/etc/autofs_ldap_auth.conf
-	sed -i 's/^TIMEOUT=300/TIMEOUT=30/' ${D}/etc/default/autofs
+    echo "/autofs     /etc/auto.hotplug" > ${D}/etc/auto.master
+    echo "/media/autofs  /etc/auto.network" > ${D}/etc/auto.master
+    echo "# automounter configuration" > ${D}/etc/auto.network
+    chmod 0644 ${D}/etc/auto.network
+    echo "* -fstype=auto,rw,sync :/dev/&" > ${D}/etc/auto.hotplug
+    chmod 0644 ${D}/etc/auto.hotplug	
+    rm -f ${D}/etc/auto.smb ${D}/etc/auto.misc ${D}/etc/autofs_ldap_auth.conf
+    sed -i 's/^TIMEOUT=300/TIMEOUT=30/' ${D}/etc/default/autofs
 }
