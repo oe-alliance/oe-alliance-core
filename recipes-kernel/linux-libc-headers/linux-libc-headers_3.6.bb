@@ -2,5 +2,5 @@ require recipes-kernel/linux-libc-headers/linux-libc-headers.inc
 
 PR = "4"
 
-SRC_URI[md5sum] = "fad4c270fe68fcc8d15258c868bc2733"
-SRC_URI[sha256sum] = "df8c6071cbdd6a709aebb8a272dca60791edb379103597670609ef90e148d8bb"
+SRC_URI[md5sum] = "575c735175532201f1bbd6ec99712b55"
+SRC_URI[sha256sum] = "88ae0a20fd39ecae79db0ce8f9397922fae33c8b06a54ed2c883c861126c9771"
