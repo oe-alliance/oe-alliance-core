@@ -9,7 +9,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "1.0"
-PR = "r41"
+PR = "r42"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 DEPENDS = "enigma2 enigma2-plugins enigma2-oe-alliance-plugins oe-alliance-feeds enigma2-3rdparty-plugins ${@base_contains("MACHINE_FEATURES", "wifi", "oe-alliance-wifi", "", d)}"
@@ -21,6 +21,7 @@ RDEPENDS_${PN} = "\
     tuxbox-links \
     tuxbox-common \
     mtd-utils \
+    mtd-utils-ubifs \
     kernel-params \
     parted \
     "
@@ -28,7 +29,7 @@ RDEPENDS_${PN} = "\
 RRECOMMENDS_${PN} = "\
     enigma2-plugin-systemplugins-autobouquetsmaker \
     enigma2-plugin-systemplugins-hotplug \
-    enigma2-plugin-extensions-audiosync \
+    enigma2-plugin-extensions-mediascanner \
     enigma2-plugin-extensions-pictureplayer \
     enigma2-plugin-extensions-openwebif \
     enigma2-plugin-systemplugins-networkbrowser \

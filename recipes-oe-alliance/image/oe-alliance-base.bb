@@ -10,6 +10,7 @@ PACKAGES = "${PN}"
 
 PV = "1.0"
 PR = "r11"
+PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 RDEPENDS_${PN} = "\
     oe-alliance-enigma2 \
