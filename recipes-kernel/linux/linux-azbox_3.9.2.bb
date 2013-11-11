@@ -1,7 +1,7 @@
 DESCRIPTION = "Linux kernel for ${MACHINE}"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${KV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
-MACHINE_KERNEL_PR_append = ".7"
+MACHINE_KERNEL_PR_append = ".8"
 
 KV = "3.9.2"
 SRCDATE = "16092013"
@@ -24,6 +24,7 @@ SRC_URI += "${KERNELORG_MIRROR}/linux/kernel/v3.x/linux-${KV}.tar.bz2;name=azbox
     file://zboot.h \
     file://emhwlib_registers_tango2.h \
     file://kernel-3.9.2.patch \
+	file://mips-refactor-clearpage-and-copypage.patch \
     file://add-dmx-source-timecode.patch \
     file://af9015-output-full-range-SNR.patch \
     file://af9033-output-full-range-SNR.patch \

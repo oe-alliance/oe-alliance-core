@@ -1,4 +1,4 @@
-MACHINE_KERNEL_PR_append = ".${INC_PR}.51"
+MACHINE_KERNEL_PR_append = ".${INC_PR}.52"
 
 PATCHREV = "4e0356d04e89df800361b9252f990716f5523c6e"
 PATCHLEVEL = "51"
@@ -11,6 +11,7 @@ SRC_URI = " \
             file://clear_sublevel.patch \
             file://fadvise_dontneed_change.patch \
             file://fix-proc-cputype.patch \
+			file://mips-refactor-clearpage-and-copypage.patch \
             file://rtl8712-backport-b.patch \
             file://rtl8712-backport-c.patch \
             file://rtl8712-backport-d.patch \
