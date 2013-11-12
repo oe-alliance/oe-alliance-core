@@ -10,7 +10,7 @@ SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
 PV = "2.0"
-PR = "r70"
+PR = "r71"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -147,30 +147,6 @@ THIRDPARTY_MACHINE_PLUGINS_e3hd = " \
 THIRDPARTY_MACHINE_PLUGINS_odinm7 = " \
 	enigma2-plugin-extensions-hbbtv_2.12_ODIN_mips32el.ipk \
 	"	
-THIRDPARTY_MACHINE_PLUGINS_dm8000 = " \
-	enigma2-plugin-extensions-dflash_9.4.2-r02_all.ipk \
-	"
-THIRDPARTY_MACHINE_PLUGINS_dm7020hd = " \
-	enigma2-plugin-extensions-dflash_9.4.2-r02_all.ipk \
-	"
-THIRDPARTY_MACHINE_PLUGINS_dm500hd = " \
-	enigma2-plugin-extensions-dflash_9.4.2-r02_all.ipk \
-	"
-THIRDPARTY_MACHINE_PLUGINS_dm800se = " \
-	enigma2-plugin-extensions-dflash_9.4.2-r02_all.ipk \
-	"
-THIRDPARTY_MACHINE_PLUGINS_dm7020hdv2 = " \
-	enigma2-plugin-extensions-dflash_9.4.2-r02_all.ipk \
-	"
-THIRDPARTY_MACHINE_PLUGINS_dm500hdv2 = " \
-	enigma2-plugin-extensions-dflash_9.4.2-r02_all.ipk \
-	"
-THIRDPARTY_MACHINE_PLUGINS_dm800sev2 = " \
-	enigma2-plugin-extensions-dflash_9.4.2-r02_all.ipk \
-	"
-THIRDPARTY_MACHINE_PLUGINS_dm800 = " \
-	enigma2-plugin-extensions-dflash_9.4.2-r02_all.ipk \
-	"
 
 do_install() {
 }
