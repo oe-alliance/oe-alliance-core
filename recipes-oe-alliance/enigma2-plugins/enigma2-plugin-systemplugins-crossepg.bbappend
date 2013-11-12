@@ -1,7 +1,7 @@
 SRCREV = "${AUTOREV}"
-PV = "0.7.03"
+PV = "0.7.04"
 PKGV = "${PV}+git${GITPKGV}"
-PRINC = "4"
+PRINC = "0"
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
@@ -10,6 +10,8 @@ SRC_URI = "git://github.com/oe-alliance/e2openplugin-${MODULE}.git;protocol=git"
 # Dunno why, but it sometime fails to build in parallel
 PARALLEL_MAKE = ""
 CFLAGS_append = " -I${STAGING_INCDIR}/libxml2/ -I${STAGING_INCDIR}/${PYTHON_DIR}/"
+CFLAGS_append = " ${@base_contains('MACHINE_BRAND', 'XTrend', ' -DNO_DVB_POLL' , '', d)}"
+CFLAGS_append = " ${@base_contains('MACHINE_BRAND', 'Venton', ' -DNO_DVB_POLL' , '', d)}"
 
 S = "${WORKDIR}/git"
 
