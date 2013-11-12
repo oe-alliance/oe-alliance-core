@@ -2,7 +2,6 @@ DESCRIPTION = "BoxModel proc Helper"
 MAINTAINER = "Dr. Ideal"
 SECTION = "kernel/modules"
 LICENSE = "GPLv2"
-RDEPENDS_${PN} = "kernel (${KERNEL_VERSION})"
 DEPENDS = "virtual/kernel"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
@@ -13,9 +12,9 @@ SRC_URI = "file://boxmodel.c file://Makefile"
 
 S = "${WORKDIR}"
 PV = "1.0"
-PR = "r8"
+PR = "r9"
 
-inherit module
+inherit module machine_kernel_pr
 
 do_compile () {
     unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS CC LD CPP
@@ -34,3 +33,5 @@ do_install () {
     install -d ${D}/${sysconfdir}/modules-load.d
     echo boxmodel >> ${D}/${sysconfdir}/modules-load.d/zzboxmodel.conf
 }
+
+FILES_${PN} += "${sysconfdir}/modules-load.d/zzboxmodel.conf"
