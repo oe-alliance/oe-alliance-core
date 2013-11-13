@@ -10,7 +10,7 @@ SRC_URI[sha256sum] = "5ad462c4a9b8433685eef816090cb9fbc83a88126ea1fc5c0495ad79bf
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-MACHINE_KERNEL_PR_append = ".11"
+MACHINE_KERNEL_PR_append = ".12"
 
 # By default, kernel.bbclass modifies package names to allow multiple kernels
 # to be installed in parallel. We revert this change and rprovide the versioned
@@ -26,7 +26,7 @@ SRC_URI += "http://118.37.185.125/download/stblinux/stblinux-3.3.0-20130404.tgz 
     file://0001-Revert-MIPS-Add-fast-get_user_pages.patch \
     file://disable_early_fb.patch \
     file://iosched-slice_idle-1.patch \
-    file://mips-refactor-clearpage-and-copypage.patch \
+    file://mips-refactor-clearpage-and-copypage_311.patch \
     file://add-dmx-source-timecode.patch \
     file://rtl8712-release-firmware-fix.patch \
     file://dvb-usb-af9035.patch \
