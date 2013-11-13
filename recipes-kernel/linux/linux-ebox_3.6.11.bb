@@ -4,7 +4,7 @@ SECTION = "kernel"
 KV = "3.6.11"
 
 SRCDATE = "0623"
-MACHINE_KERNEL_PR_append = ".9"
+MACHINE_KERNEL_PR_append = ".10"
 
 SRC_URI[md5sum] = "7e8e796b179efbb681c4aa579d7bb203"
 SRC_URI[sha256sum] = "acdccd09069191bea6a6cef3c6bc40c7f824c394625a060e340df2b63270a7a9"
@@ -17,7 +17,6 @@ SRC_URI = "http://archiv.mixos-support.com/${MACHINE}-linux-${KV}_${SRCDATE}.tar
     file://0001-Revert-MIPS-mm-Add-compound-tail-page-_mapcount-when.patch \
     file://0001-Revert-MIPS-Add-fast-get_user_pages.patch \
     file://add-dmx-source-timecode.patch \
-	file://mips-refactor-clearpage-and-copypage.patch \
     file://af9015-output-full-range-SNR.patch \
     file://af9033-output-full-range-SNR.patch \
     file://as102-adjust-signal-strength-report.patch \
