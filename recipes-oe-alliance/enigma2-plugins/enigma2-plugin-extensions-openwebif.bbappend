@@ -1,4 +1,4 @@
-PRINC = "45"
+PRINC = "46"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
@@ -33,10 +33,10 @@ python do_package_prepend () {
 		('et9x00', 'et9x00.jpg', 'et_rc7_normal.png'),
 		('odinm7', 'odinm7.jpg', 'odinm7.png'),
 		('odinm9', 'odinm9.jpg', 'odinm9.png'),
-		('tmtwin', 'tmtwin.jpg', 'tm_twin.png'),
-		('tm2t', 'tm2t.jpg', 'tm_2t.png'),
-		('tmsingle', 'tmsingle.jpg', 'tm_single.png'),
-		('tmnano', 'tmnano.jpg', 'tm_nano.png'),
+		('tmtwin', 'tmtwin.jpg', 'tm.png'),
+		('tm2t', 'tm2t.jpg', 'tm.png'),
+		('tmsingle', 'tmsingle.jpg', 'tm.png'),
+		('tmnano', 'tmnano.jpg', 'tm.png'),
 		('vuduo', 'duo.jpg', 'vu_normal.png'),
 		('vuduo2', 'duo2.jpg', 'vu_normal.png'),
 		('vusolo', 'solo.jpg', 'vu_normal.png'),
