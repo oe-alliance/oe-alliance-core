@@ -32,7 +32,7 @@ SRC_URI_append_optimussos1 = " \
         file://004_fix_bootarg.patch \
         "
 
-S = "${WORKDIR}/linux-${KV}"
+S = "${WORKDIR}/linux-${KV}-${SRCDATE}"
 
 inherit kernel
 
