@@ -9,7 +9,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "1.0"
-PR = "r38"
+PR = "r39"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 DEPENDS = "enigma2-plugin-drivers-usbserial"
@@ -96,7 +96,8 @@ RRECOMMENDS_${PN} = "\
     zeroconf \
     ofgwrite \
     gst-ffmpeg \
-    idle3-tools \	
+    idle3-tools \
+    rtmpdump \
     "
 
 RRECOMMENDS_${PN}_append_vuuno = "enigma2-plugin-extensions-hbbtv"
