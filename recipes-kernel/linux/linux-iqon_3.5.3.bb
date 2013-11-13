@@ -9,7 +9,7 @@ MACHINE_KERNEL_PR_append = ".7"
 SRC_URI[md5sum] = "08a81f3f3e94a75150131d360b8ea5cc"
 SRC_URI[sha256sum] = "41ed063ea6e86ff94c6e7978013afc6537d387b86b45632bc788c8cded916bdf"
 
-LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${KV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
+LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${KV}-${SRCDATE}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
 RCONFLICTS_${PN} = "linux-technomate"
 RREPLACES_${PN} = "linux-technomate"
