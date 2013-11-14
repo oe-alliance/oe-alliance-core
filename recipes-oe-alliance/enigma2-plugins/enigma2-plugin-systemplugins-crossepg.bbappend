@@ -2,7 +2,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 SRCREV = "${AUTOREV}"
 PV = "0.7.04"
 PKGV = "${PV}+git${GITPKGV}"
-PRINC = "4"
+PRINC = "5"
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
@@ -12,7 +12,7 @@ SRC_URI = "git://github.com/oe-alliance/e2openplugin-${MODULE}.git;protocol=git"
 PARALLEL_MAKE = ""
 CFLAGS_append = " -I${STAGING_INCDIR}/libxml2/ -I${STAGING_INCDIR}/${PYTHON_DIR}/"
 CFLAGS_append = " ${@base_contains('MACHINE_BRAND', 'XTrend', ' -DNO_DVB_POLL' , '', d)}"
-CFLAGS_append = " ${@base_contains('MACHINE_BRAND', 'INI', ' -DNO_DVB_POLL' , '', d)}"
+CFLAGS_append = " ${@base_contains('MACHINE_BRAND', 'MaxDigital', ' -DNO_DVB_POLL' , '', d)}"
 
 S = "${WORKDIR}/git"
 
