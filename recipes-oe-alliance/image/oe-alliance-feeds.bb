@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3
 inherit task
 
 PV = "1.0"
-PR = "r38"
+PR = "r39"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 DEPENDS = "enigma2-plugin-drivers-usbserial"
@@ -28,7 +28,6 @@ RRECOMMENDS = "\
 	enigma2-plugin-extensions-ambx \
 	enigma2-plugin-extensions-tuxcom \
 	enigma2-plugin-extensions-tuxterm \
-	enigma2-plugin-extensions-webinterface-old \
 	enigma2-plugin-security-firewall \
 	enigma2-plugin-skins-pli-hd \
 	enigma2-plugin-extensions-openairplay \
