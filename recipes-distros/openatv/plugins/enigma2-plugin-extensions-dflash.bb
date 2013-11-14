@@ -26,7 +26,7 @@ do_install() {
     chmod -R 777 ${D}/usr/lib/enigma2/python/Plugins/Extensions/dFlash
 }
 
-pkg_postinst() {
+pkg_postinst_${PN}() {
 #!/bin/sh
 rm usr/lib/enigma2/python/Plugins/Extensions/WebInterface/WebChilds/External/dFlash* > /dev/null 2>&1
 rm usr/lib/enigma2/python/Plugins/Extensions/WebInterface/WebChilds/External/dflash* > /dev/null 2>&1
@@ -37,7 +37,7 @@ fi
 exit 0
 }
 
-pkg_postrm() {
+pkg_postrm_${PN}() {
 #!/bin/sh
 rm /usr/lib/enigma2/python/Plugins/Extensions/WebInterface/web-data/img/dflash.png > /dev/null 2>&1
 rm /usr/lib/enigma2/python/Plugins/Extensions/WebInterface/web-data/img/ring.png > /dev/null 2>&1
