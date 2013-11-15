@@ -1,6 +1,6 @@
 require recipes-kernel/linux-libc-headers/linux-libc-headers.inc
 
-PR = "r2"
+PR = "r3"
 
 SRC_URI += " \
         file://mips-add-missing-headers.patch \
@@ -13,6 +13,7 @@ SRC_URI += " \
         file://linux-2.6.18-include-linux.patch \
         file://linux-2.6.18-include-linux-add-missing-headers.patch \
         file://linux-2.6.18-dm-ioctl_h.patch \
+        file://linux-2.6.18-rfkill.patch \
 "
 SRC_URI[md5sum] = "296a6d150d260144639c3664d127d174"
 SRC_URI[sha256sum] = "c95280ff6c5d2a17788f7cc582d23ae8a9a7ba3f202ec6e4238eaadfce7c163d"
