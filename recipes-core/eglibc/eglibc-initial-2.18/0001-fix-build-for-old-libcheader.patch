@@ -1,0 +1,12 @@
+diff -Nur a/configure b/configure
+--- libc/sysdeps/unix/sysv/linux/configure	2013-11-15 21:00:52.197435355 +0100
++++ libc/sysdeps/unix/sysv/linux/configure	2013-11-15 21:02:05.985436648 +0100
+@@ -155,7 +155,7 @@
+ _ACEOF
+ if (eval "$ac_cpp conftest.$ac_ext") 2>&5 |
+   $EGREP "eat flaming death" >/dev/null 2>&1; then :
+-  libc_cv_linux2619='TOO OLD!'
++  libc_cv_linux2619='2.6.19 or later'
+ else
+   libc_cv_linux2619='2.6.19 or later'
+ fi
