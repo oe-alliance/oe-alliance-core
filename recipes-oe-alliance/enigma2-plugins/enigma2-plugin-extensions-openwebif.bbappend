@@ -1,4 +1,4 @@
-PRINC = "43"
+PRINC = "46"
 
 inherit pythonnative
 
@@ -35,10 +35,10 @@ python do_package_prepend () {
         ('et9x00', 'et9x00.jpg', 'et_rc7_normal.png'),
         ('odinm7', 'odinm7.jpg', 'odinm7.png'),
         ('odinm9', 'odinm9.jpg', 'odinm9.png'),
-        ('tmtwin', 'tmtwin.jpg', 'tm_twin.png'),
-        ('tm2t', 'tm2t.jpg', 'tm_2t.png'),
-        ('tmsingle', 'tmsingle.jpg', 'tm_single.png'),
-        ('tmnano', 'tmnano.jpg', 'tm_nano.png'),
+        ('tmtwin', 'tmtwin.jpg', 'tm.png'),
+        ('tm2t', 'tm2t.jpg', 'tm.png'),
+        ('tmsingle', 'tmsingle.jpg', 'tm.png'),
+        ('tmnano', 'tmnano.jpg', 'tm.png'),
         ('vuduo', 'duo.jpg', 'vu_normal.png'),
         ('vuduo2', 'duo2.jpg', 'vu_normal.png'),
         ('vusolo', 'solo.jpg', 'vu_normal.png'),
@@ -84,13 +84,13 @@ python do_package_prepend () {
         for name in files:
             if target_box != name and name != 'unknown.jpg':
                 if target_box == 'ini-3000.jpg':
-                    if not (name == 'ini-1000.jpg' or name == 'xpeedlx1.jpg' or name == 'xpeedlx2.jpg' or name == 'ini-1000sv.jpg' or name == 'ini-3000.jpg' or name == 'ini-5000.jpg' or name == 'ini-5000sv.jpg' or name == 'ini-7000.jpg'):
+                    if name not in ('ini-1000.jpg', 'xpeedlx1.jpg', 'xpeedlx2.jpg' , 'ini-1000sv.jpg', 'ini-3000.jpg', 'ini-5000.jpg', 'ini-5000sv.jpg', 'ini-7000.jpg', 'sezam-1000.jpg', 'sezam-5000.jpg', 'sezam-9000.jpg'):
                         os.remove(os.path.join(root, name))
                 elif target_box == 'premium.jpg':
-                    if not (name == 'elite.jpg' or name == 'premium+.jpg' or name == 'ultra.jpg'):
+                    if name not in ('elite.jpg', 'premium+.jpg', 'ultra.jpg'):
                         os.remove(os.path.join(root, name))
                 elif target_box == 'odinm7.jpg':
-                    if not (name == 'starsatlx.jpg' or name == 'axodin.jpg'):
+                    if name not in ('starsatlx.jpg', 'axodin.jpg'):
                         os.remove(os.path.join(root, name))
                 else:
                     os.remove(os.path.join(root, name))
@@ -98,13 +98,13 @@ python do_package_prepend () {
         for name in files:
             if target_remote != name and name != 'ow_remote.png':
                 if target_remote == 'ini-3000.png':
-                    if not (name == 'ini-1000.png' or name == 'ini-1000de.png' or name == 'ini-3000.png' or name == 'ini-5000.png' or name == 'ini-7000.png' or name == 'miraclebox.png' or name == 'xpeedlx.png'):
+                    if name not in ('ini-1000.png', 'ini-1000de.png', 'ini-3000.png', 'ini-5000.png', 'ini-7000.png', 'miraclebox.png', 'xpeedlx.png'):
                         os.remove(os.path.join(root, name))
                 elif target_remote == 'premium.png':
-                    if not (name == 'elite.png'):
+                    if name != 'elite.png':
                         os.remove(os.path.join(root, name))
                 elif target_remote == 'odinm7.png':
-                    if not (name == 'starsatlx.png'):
+                    if name != 'starsatlx.png':
                         os.remove(os.path.join(root, name))
                 else:
                     os.remove(os.path.join(root, name))

@@ -4,13 +4,13 @@ MAINTAINER = "oe-alliance team"
 LICENSE = "Proprietary"
 LIC_FILES_CHKSUM = "file://COPYING;md5=8e37f34d0e40d32ea2bc90ee812c9131"
 
-inherit gitpkgv autotools
+inherit gitpkgv autotools deploy
 
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
 PV = "2.0"
-PR = "r71"
+PR = "r72"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -150,23 +150,26 @@ do_install() {
 }
 
 do_deploy() {
-    install -d 0755 ${DEPLOY_DIR_IPK}/3rdparty
-    install -d 0755 ${DEPLOY_DIR_IPK}/${MACHINE}_3rdparty
+    install -d 0755 ${WORKDIR}/deploy-ipks/3rdparty
+    install -d 0755 ${WORKDIR}/deploy-ipks/${MACHINE}_3rdparty
     for i in ${THIRDPARTY_PLUGINS}; do
         if [ -f $i ]; then
-            install -m 0644 $i ${DEPLOY_DIR_IPK}/3rdparty;
+            install -m 0644 $i ${WORKDIR}/deploy-ipks/3rdparty;
         fi
     done;
     for i in ${THIRDPARTY_MACHINE_PLUGINS}; do
         if [ -f $i ]; then
-            install -m 0644 $i ${DEPLOY_DIR_IPK}/${MACHINE}_3rdparty;
+            install -m 0644 $i ${WORKDIR}/deploy-ipks/${MACHINE}_3rdparty;
         fi
     done;
     for i in ${THIRDPARTY_EXTRA_PLUGINS}; do
         if [ -f $i ]; then
-            install -m 0644 $i ${DEPLOY_DIR_IPK}/3rdparty;
+            install -m 0644 $i ${WORKDIR}/deploy-ipks/3rdparty;
         fi
     done;
+}
+
+do_chmod() {
     pkgdir=${DEPLOY_DIR_IPK}/3rdparty
     if [ -e $pkgdir ]; then
         chmod 0755 $pkgdir
@@ -177,4 +180,5 @@ do_deploy() {
     fi
 }
 
-addtask do_deploy before do_package_write after do_package_write_ipk
+addtask deploy before do_build after do_install
+addtask chmod before do_build after do_package_write_ipk

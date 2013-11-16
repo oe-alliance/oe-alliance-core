@@ -15,7 +15,6 @@ IMAGE_INSTALL = " \
     egami-enigma2 \
     egami-bootlogo \
     egami-version-info \
-    ${@base_contains("MACHINE", "inihdp", "${ENIGMA2_USB_DRV}" , "", d)} \
     libcrypto-compat \
     ntfs-3g \
     hddtemp \
@@ -25,27 +24,27 @@ IMAGE_INSTALL = " \
     packagegroup-base-smbfs \
     packagegroup-smbfs-client \
     mc \
-    egami-base-files \
+    dvbsnoop \
+    ${ENIGMA2_DVB_USB_DRV} \ 
     "
-    
-ENIGMA2_USB_DRV = "\
-    enigma2-plugin-drivers-dvb-usb-af9035 \
+	
+ENIGMA2_DVB_USB_DRV = "\
     enigma2-plugin-drivers-dvb-usb-dib0700 \
     enigma2-plugin-drivers-dvb-usb-af9015 \
+    ${@base_contains("MACHINE", "ventonhdx", "enigma2-plugin-drivers-dvb-usb-siano" , "", d)} \
+    ${@base_contains("MACHINE", "ventonhdx", "enigma2-plugin-drivers-dvb-usb-as102" , "", d)} \
+    enigma2-plugin-drivers-dvb-usb-em28xx \
     enigma2-plugin-drivers-dvb-usb-dw2102 \
-    enigma2-plugin-drivers-dvb-usb-dtt200u \
-    enigma2-plugin-drivers-usbserial \
-    enigma2-plugin-drivers-dvb-usb-dib0700 \
-    enigma2-plugin-drivers-dvb-usb-af9015 \
-    enigma2-plugin-drivers-dvb-usb-em28xx  \
     enigma2-plugin-drivers-dvb-usb-it913x \
     enigma2-plugin-drivers-dvb-usb-pctv452e \
+    enigma2-plugin-drivers-dvb-usb-dtt200u \
+    enigma2-plugin-drivers-dvb-usb-af9035 \
     enigma2-plugin-drivers-dvb-usb-a867 \
+    enigma2-plugin-drivers-usbserial \
 "
+	
 export IMAGE_BASENAME = "egami-image"
 IMAGE_LINGUAS = ""
-
-inherit image
 
 rootfs_postprocess() {
             curdir=$PWD

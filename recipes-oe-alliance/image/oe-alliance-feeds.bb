@@ -31,7 +31,6 @@ RRECOMMENDS_${PN} = "\
     enigma2-plugin-drivers-usbserial \
     enigma2-plugin-extensions-ambx \
     enigma2-plugin-extensions-tuxcom \
-    enigma2-plugin-extensions-webinterface-old \
     enigma2-plugin-security-firewall \
     enigma2-plugin-skins-pli-hd \
     enigma2-plugin-extensions-openairplay \

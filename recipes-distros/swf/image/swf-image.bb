@@ -6,6 +6,8 @@ MAINTAINER = "SWF"
 
 require conf/license/license-gplv2.inc
 
+DEPENDS = "enigma2-pliplugins swf-feeds swf-3rdparty-plugins"
+
 PV = "${IMAGE_VERSION}"
 PR = "r${DATETIME}"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
@@ -115,7 +117,7 @@ generate_nfo() {
     DATE=`date +%Y-%m-%d' '%H':'%M`
     echo "Date: ${DATE}" >> ${NFO}
     echo "Issuer: mcron" >> ${NFO}
-    echo "Link: ${DISTRO_FEED_URI}" >> ${NFO}
+    echo "Link: http://sat-world-forum.com/ronny/images/${MACHINE}/online/${IMAGE_NAME}_usb.zip" >> ${NFO}
     if [ "${DESC}" != "" ]; then
        echo "Description: ${DESC}" >> ${NFO}
        echo "${DESC}" >> ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.desc
