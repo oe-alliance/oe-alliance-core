@@ -14,7 +14,7 @@ SRCGET_azboxhd = "22102013"
 
 
 PV = "${KV}+${SRCDATE}"
-PR = "r6"
+PR = "r7"
 
 SRC_URI = "http://azbox-enigma2-project.googlecode.com/files/${MACHINE}-dvb-modules-${KV}-oe-core-${SRCGET}.tar.gz;name=azbox-dvb-modules-${MACHINE}"
 SRC_URI_azboxhd = "http://source.mynonpublic.com/${MACHINE}-dvb-modules-${KV}-oe-core-${SRCGET}.tar.gz;name=azbox-dvb-modules-${MACHINE}"
@@ -28,7 +28,7 @@ SRC_URI[azbox-dvb-modules-azboxminime.sha256sum] = "7ac3c8ac567ffe627850fda0c671
 
 S = "${WORKDIR}"
 
-PACKAGE_STRIP = "no"
+INHIBIT_PACKAGE_STRIP = "1"
 
 inherit module
 
@@ -37,32 +37,26 @@ do_compile() {
 
 do_install_azboxhd() {
     install -d ${D}/lib/modules/${KV}/extra
-    install -d ${D}/${sysconfdir}/modutils
-
-    for f in llad em8xxx 863xi2c az_cx24116 az_mxl201rf az_mxl5007t az_stv6110x az_stv090x az_tda10023 az_zl10353 nimdetect sci 863xdvb; do
-    install -m 0644 ${WORKDIR}/$f.ko ${D}/lib/modules/${KV}/extra/$f.ko
-    echo $f >> ${D}/${sysconfdir}/modutils/_${MACHINE}
+    install -d ${D}/${sysconfdir}/modules-load.d
+    for i in llad em8xxx 863xi2c az_cx24116 az_mxl201rf az_mxl5007t az_stv6110x az_stv090x az_tda10023 az_zl10353 nimdetect sci 863xdvb; do
+        install -m 0755 ${WORKDIR}/$i.ko ${D}/lib/modules/${KV}/extra
+        echo $i >> ${D}/${sysconfdir}/modules-load.d/_${MACHINE}.conf
     done
-
     install -d ${D}/lib/firmware
     install -m 0644 ${WORKDIR}/dvb-fe-cx24116.fw ${D}/lib/firmware/dvb-fe-cx24116.fw
-
 }
 
 do_install() {
     install -d ${D}/lib/modules/${KV}/extra
-    install -d ${D}/${sysconfdir}/modutils
-
-    for f in llad em8xxx 865xi2c avl6211 avl2108 mxl241sf nimdetect sci 865xdvb; do
-    install -m 0644 ${WORKDIR}/$f.ko ${D}/lib/modules/${KV}/extra/$f.ko
-    echo $f >> ${D}/${sysconfdir}/modutils/_${MACHINE}
+    install -d ${D}/${sysconfdir}/modules-load.d
+    for i in llad em8xxx 865xi2c avl6211 avl2108 mxl241sf nimdetect sci 865xdvb; do
+        install -m 0755 ${WORKDIR}/$i.ko ${D}/lib/modules/${KV}/extra
+        echo $i >> ${D}/${sysconfdir}/modules-load.d/_${MACHINE}.conf
     done
-
     install -d ${D}/lib/firmware
     install -m 0644 ${WORKDIR}/dvb-fe-avl2108.fw ${D}/lib/firmware/dvb-fe-avl2108.fw
     install -m 0644 ${WORKDIR}/dvb-fe-avl2108-blind.fw ${D}/lib/firmware/dvb-fe-avl2108-blind.fw
     install -m 0644 ${WORKDIR}/dvb-fe-avl6211.fw ${D}/lib/firmware/dvb-fe-avl6211.fw
-
 }
 
-FILES_${PN} = "/"
+FILES_${PN} += "${sysconfdir}/modules-load.d/_${MACHINE}.conf /lib/firmware/*"

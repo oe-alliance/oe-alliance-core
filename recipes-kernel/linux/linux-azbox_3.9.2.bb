@@ -1,7 +1,7 @@
 DESCRIPTION = "Linux kernel for ${MACHINE}"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${KV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
-MACHINE_KERNEL_PR_append = ".9"
+MACHINE_KERNEL_PR_append = ".10"
 
 KV = "3.9.2"
 SRCDATE = "16092013"
@@ -83,10 +83,13 @@ kernel_do_compile() {
     unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS MACHINE
     oe_runmake ${KERNEL_IMAGETYPE} CC="${KERNEL_CC}" LD="${KERNEL_LD}" AR="${AR}" OBJDUMP="${OBJDUMP}" NM="${NM}"
     oe_runmake modules CC="${KERNEL_CC}" LD="${KERNEL_LD}" AR="${AR}" OBJDUMP="${OBJDUMP}"
+    rm -rf ${S}/arch/mips/boot/genzbf	
 }
 
 do_install_append () {
     install -d ${D}/boot
     install -m 0644 ${S}/arch/mips/boot/zbimage-linux-xload ${D}/boot/zbimage-linux-xload
+}
 
+do_package_qa() {
 }
