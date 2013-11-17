@@ -1,4 +1,4 @@
-PRINC = "3"
+PRINC = "4"
 
 EXTRA_OECONF += "--with-confdir=/etc/default"
 
@@ -21,5 +21,6 @@ do_install_append() {
     echo "* -fstype=auto,rw,sync :/dev/&" > ${D}/etc/auto.hotplug
     chmod 0644 ${D}/etc/auto.hotplug	
     rm -f ${D}/etc/auto.smb ${D}/etc/auto.misc ${D}/etc/autofs_ldap_auth.conf
+	install -d ${D}/etc/default/autofs
     sed -i 's/^TIMEOUT=300/TIMEOUT=30/' ${D}/etc/default/autofs
 }
