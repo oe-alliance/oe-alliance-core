@@ -49,6 +49,7 @@ python do_package_prepend () {
         ('gb800solo', 'gb800solo.jpg', 'gigablue_black.png'),
         ('gb800ue', 'gb800ue.jpg', 'gigablue_black.png'),
         ('gbquad', 'gbquad.jpg', 'gigablue_black.png'),
+        ('gbquadplus', 'gbquad.jpg', 'gigablue_black.png'),
         ('gb800seplus', 'gb800seplus.jpg', 'gigablue_new.png'),
         ('gb800ueplus', 'gb800ueplus.jpg', 'gigablue_new.png'),
         ('ventonhdx', 'ini-3000.jpg', 'ini-3000.png'),
