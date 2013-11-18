@@ -10,7 +10,7 @@ SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
 PV = "2.0"
-PR = "r73"
+PR = "r74"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -41,7 +41,7 @@ THIRDPARTY_PLUGINS = " \
 	enigma2-plugin-extensions-buyukbangpanel_1.3.2_all.ipk \
 	enigma2-plugin-extensions-camofs_7.66_all.ipk \
 	enigma2-plugin-extensions-chefkoch_1.2rc1_mips32el.ipk \
-	enigma2-plugin-extensions-csfd_9_35-20130615_all.ipk \
+	enigma2-plugin-extensions-csfd_9_40-20131117_all.ipk \
 	enigma2-plugin-extensions-cubic_streamer_0.7.3_mips32el.ipk \
 	enigma2-plugin-extensions-digitalfernsehen_0.8rc1_mips32el.ipk \
 	enigma2-plugin-extensions-facebook_0.6_mips32el.ipk \
@@ -142,7 +142,7 @@ THIRDPARTY_MACHINE_PLUGINS_et9x00 = " \
 	"
 
 THIRDPARTY_MACHINE_PLUGINS_e3hd = " \
-	enigma2-plugin-extensions-hbbtv_2.12_E3HD_mips32el.ipk \
+	enigma2-plugin-extensions-hbbtv_2.13_E3HD_mips32el.ipk \
 	"
 THIRDPARTY_MACHINE_PLUGINS_odinm7 = " \
 	enigma2-plugin-extensions-hbbtv_2.12_ODIN_mips32el.ipk \
