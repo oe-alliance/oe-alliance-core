@@ -10,7 +10,7 @@ SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
 PV = "2.0"
-PR = "r70"
+PR = "r74"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -41,7 +41,7 @@ THIRDPARTY_PLUGINS = " \
 	enigma2-plugin-extensions-buyukbangpanel_1.3.2_all.ipk \
 	enigma2-plugin-extensions-camofs_7.66_all.ipk \
 	enigma2-plugin-extensions-chefkoch_1.2rc1_mips32el.ipk \
-	enigma2-plugin-extensions-csfd_9_35-20130615_all.ipk \
+	enigma2-plugin-extensions-csfd_9_40-20131117_all.ipk \
 	enigma2-plugin-extensions-cubic_streamer_0.7.3_mips32el.ipk \
 	enigma2-plugin-extensions-digitalfernsehen_0.8rc1_mips32el.ipk \
 	enigma2-plugin-extensions-facebook_0.6_mips32el.ipk \
@@ -87,7 +87,7 @@ THIRDPARTY_PLUGINS = " \
 	enigma2-plugin-extensions-tmdbinfo_1.1-20130929-r0-r1_mips32el.ipk \
 	enigma2-plugin-extensions-translator_0.5rc5_mips32el.ipk \
 	enigma2-plugin-extensions-transmission_2.76-r13884_mips32el.ipk \
-	enigma2-plugin-extensions-tsmedia-oe2.0_4.3_all.ipk \
+	enigma2-plugin-extensions-tsmedia-oe2.0_4.5_all.ipk \
 	enigma2-plugin-extensions-tvspielfilm_5.9rc5_mips32el.ipk \
 	enigma2-plugin-extensions-vcs_1.0-rc5_all.ipk \
 	enigma2-plugin-extensions-verkehrsinfo_0.7rc1_mips32el.ipk \
@@ -142,34 +142,13 @@ THIRDPARTY_MACHINE_PLUGINS_et9x00 = " \
 	"
 
 THIRDPARTY_MACHINE_PLUGINS_e3hd = " \
-	enigma2-plugin-extensions-hbbtv_2.12_E3HD_mips32el.ipk \
+	enigma2-plugin-extensions-hbbtv_2.13_E3HD_mips32el.ipk \
 	"
 THIRDPARTY_MACHINE_PLUGINS_odinm7 = " \
 	enigma2-plugin-extensions-hbbtv_2.12_ODIN_mips32el.ipk \
-	"	
-THIRDPARTY_MACHINE_PLUGINS_dm8000 = " \
-	enigma2-plugin-extensions-dflash_9.4.2-r02_all.ipk \
 	"
-THIRDPARTY_MACHINE_PLUGINS_dm7020hd = " \
-	enigma2-plugin-extensions-dflash_9.4.2-r02_all.ipk \
-	"
-THIRDPARTY_MACHINE_PLUGINS_dm500hd = " \
-	enigma2-plugin-extensions-dflash_9.4.2-r02_all.ipk \
-	"
-THIRDPARTY_MACHINE_PLUGINS_dm800se = " \
-	enigma2-plugin-extensions-dflash_9.4.2-r02_all.ipk \
-	"
-THIRDPARTY_MACHINE_PLUGINS_dm7020hdv2 = " \
-	enigma2-plugin-extensions-dflash_9.4.2-r02_all.ipk \
-	"
-THIRDPARTY_MACHINE_PLUGINS_dm500hdv2 = " \
-	enigma2-plugin-extensions-dflash_9.4.2-r02_all.ipk \
-	"
-THIRDPARTY_MACHINE_PLUGINS_dm800sev2 = " \
-	enigma2-plugin-extensions-dflash_9.4.2-r02_all.ipk \
-	"
-THIRDPARTY_MACHINE_PLUGINS_dm800 = " \
-	enigma2-plugin-extensions-dflash_9.4.2-r02_all.ipk \
+THIRDPARTY_MACHINE_PLUGINS_odinm9 = " \
+	enigma2-plugin-extensions-hbbtv_2.12_ODIN_mips32el.ipk \
 	"
 
 do_install() {

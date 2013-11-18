@@ -22,6 +22,7 @@ SRC_URI = "file://bootlogo.mvi file://radio.mvi file://bootlogo.sh file://splash
 SRC_URI_append_gb800ue = "file://lcdsplash.bin file://lcdwaitkey.bin file://lcdwarning.bin"
 SRC_URI_append_gbquad = "file://lcdsplash.bin file://lcdwaitkey.bin file://lcdwarning.bin"
 SRC_URI_append_gb800ueplus = "file://lcdsplash.bin file://lcdwaitkey.bin file://lcdwarning.bin"
+SRC_URI_append_gbquadplus = "file://lcdsplash400.bin file://lcdwaitkey400.bin file://lcdwarning400.bin"
 
 BINARY_VERSION = "1.3"
 
@@ -74,6 +75,12 @@ do_install_append_gb800ueplus() {
 	install -m 0644 lcdwarning.bin ${D}/usr/share/lcdwarning.bin	
 }
 
+do_install_append_gbquadplus() {
+	install -d ${D}/usr/share
+	install -m 0644 lcdwaitkey400.bin ${D}/usr/share/lcdwaitkey.bin
+	install -m 0644 lcdwarning400.bin ${D}/usr/share/lcdwarning.bin	
+}
+
 
 inherit deploy
 do_deploy() {
@@ -85,6 +92,9 @@ do_deploy() {
 	if [ -e lcdsplash.bin ]; then
 		install -m 0644 lcdsplash.bin ${DEPLOYDIR}/lcdsplash.bin
 	fi
+	if [ -e lcdsplash400.bin ]; then
+		install -m 0644 lcdsplash400.bin ${DEPLOYDIR}/lcdsplash.bin
+	fi	
 }
 
 addtask deploy before do_build after do_install
