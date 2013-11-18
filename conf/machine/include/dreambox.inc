@@ -39,6 +39,7 @@ PREFERRED_PROVIDER_virtual/blindscan-dvbs = "dreambox-blindscan-utils"
 PREFERRED_PROVIDER_virtual/blindscan-dvbc = "dreambox-blindscan-utils"
 
 PREFERRED_VERSION_linux-dreambox = "3.2"
+PREFERRED_VERSION_linux-libc-headers = "3.2"
 
 KERNEL_IMAGETYPE = "vmlinux"
 KERNEL_OUTPUT = "${KERNEL_IMAGETYPE}"
