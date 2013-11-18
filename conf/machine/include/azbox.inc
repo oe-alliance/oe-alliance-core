@@ -36,8 +36,7 @@ SYSVINIT_ENABLED_GETTYS = ""
 EXTRA_IMAGEDEPENDS += " \
     enigma2-plugin-systemplugins-rtisys \
     enigma2-plugin-systemplugins-videosettingssetup \
-    module-init-tools-cross \
-    module-init-tools \
+    kmod \
     "
 
 MACHINE_EXTRA_RDEPENDS_${PN} = " \
