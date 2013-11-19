@@ -28,6 +28,10 @@ do_setlibtool_cube (){
 	sed -i "s#LIBTOOL=libtool#LIBTOOL=\${STAGING_BINDIR_CROSS}\/arm-oe-linux-gnueabi-libtool#" ${S}/Makefile.am
 }
 
+do_setlibtool_su980 (){
+        sed -i "s#LIBTOOL=libtool#LIBTOOL=\${STAGING_BINDIR_CROSS}\/arm-oe-linux-gnueabi-libtool#" ${S}/Makefile.am
+}
+
 INITSCRIPT_PARAMS_vuplus = "stop 10 0 6 ."
 inherit autotools update-rc.d
 
