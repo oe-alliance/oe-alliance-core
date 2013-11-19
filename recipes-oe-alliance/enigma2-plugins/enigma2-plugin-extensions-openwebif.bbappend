@@ -1,4 +1,4 @@
-PRINC = "46"
+PRINC = "47"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
@@ -54,6 +54,7 @@ python do_package_prepend () {
 		('inihde', 'ini-3000.jpg', 'ini-3000.png'),
 		('inihdp', 'ini-3000.jpg', 'ini-3000.png'),
 		('xp1000', 'xp1000.jpg', 'xp_rc14_normal.png'),
+		('xp1000s', 'xp1000.jpg', 'xp_rc14_normal.png'),
 		('ebox5000', 'ebox5000.jpg', 'ebox5000.png'),
 		('ebox5100', 'ebox5100.jpg', 'ebox5000.png'),
 		('ebox7358', 'ebox7358.jpg', 'ebox5000.png'),
