@@ -6,17 +6,20 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3
 ALLOW_EMPTY_${PN} = "1"
 
 PV = "1.0"
-PR = "r4"
+PR = "r7"
 
 inherit packagegroup
 
 
 RRECOMMENDS_${PN} = "\
     oe-alliance-skins \
+    enigma2-display-skins \
     openatv-picons-meta \
-    enigma2-skins \
-    enigma2-plugin-settings-default-ventonsupport \
+    enigma2-pliplugins \
+    enigma2-plugin-extensions-project-valerie \
     enigma2-plugin-extensions-project-valerie \
     enigma2-plugin-extensions-xmltvimport \
     enigma2-plugin-systemplugins-crossepg \
+    enigma2-plugin-extensions-enhancedmoviecenter \
+    ${@base_contains("MACHINE_BRAND", "AZBOX", "enigma2-plugin-extensions-azplay enigma2-plugin-extensions-aziptv", "", d)} \	
     "
