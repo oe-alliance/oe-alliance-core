@@ -1,8 +1,8 @@
 KV = "3.6.0"
-SRCDATE = "20131119"
+SRCDATE = "20131120"
 
-SRC_URI[md5sum] = "e86b8902b78fd81cb9327ec6cae9e8d7"
-SRC_URI[sha256sum] = "3f55321196ee8ef5604f60c4ec1306183e7f7653a8f822e6b729f0b81eaf954d"
+SRC_URI[md5sum] = "4fb49a7197ef573f68cbf95de3be37bd"
+SRC_URI[sha256sum] = "8efcaebafc61c24dd5f56a343185db8ec5e7c65cf98b474f189a3caa12459890"
 
 SRC_URI = "http://code-ini.com/software/drivers/ini-x000-drivers-${KV}-${SRCDATE}.zip"
 
