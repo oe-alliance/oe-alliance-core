@@ -31,6 +31,8 @@ BOXTYPE_azboxminime = "azbox"
 BOXTYPE_gb800se   = "gigablue"
 BOXTYPE_gb800ue   = "gigablue"
 BOXTYPE_gb800solo = "gigablue"
+BOXTYPE_gb800seplus = "gigablue"
+BOXTYPE_gb800ueplus = "gigablue"
 BOXTYPE_gbquad    = "gigablue"
 
 BOXTYPE_dm8000    = "dreambox"
@@ -40,14 +42,21 @@ BOXTYPE_dm800se   = "dreambox"
 BOXTYPE_dm800     = "dreambox"
 
 BOXTYPE_maram9    = "odin"
+BOXTYPE_odinm6    = "odin"
 BOXTYPE_odinm7    = "odin"
 BOXTYPE_odinm9    = "odin"
 
 BOXTYPE_ventonhde = "venton"
 BOXTYPE_ventonhdx = "venton"
+BOXTYPE_inihde = "venton"
+BOXTYPE_inihdp = "venton"
 
 BOXTYPE_xp1000    = "xp1000"
+
 BOXTYPE_ebox5000  = "ebox5000"
+BOXTYPE_ebox5100  = "mixos"
+BOXTYPE_ebox7358  = "mixos"
+
 BOXTYPE_e3hd = "e3hd"
 
 BOXTYPE_ixusszero  = "ixuss"
@@ -55,6 +64,9 @@ BOXTYPE_ixussone  = "ixuss"
 
 BOXTYPE_iqonios100hd  = "iqonios"
 BOXTYPE_iqonios300hd  = "iqonios"
+BOXTYPE_mediabox = "iqonios"
+BOXTYPE_optimussos1 = "iqonios"
+BOXTYPE_optimussos2 = "iqonios"
 
 BOXMODEL = "${MACHINE}"
 
@@ -80,6 +92,7 @@ DEPENDS = "\
 	libpng \
 	libungif \
 	openssl \
+	graphlcd-base \
 	\
 	${NHD2ARCHDEPENDS} \
 	"
@@ -194,7 +207,11 @@ EXTRA_OECONF = "\
 	--enable-upnp \
 	--enable-ci \
 	--enable-gstreamer \
+	--enable-graphlcd \
+	--enable-netzkino \
 	--with-boxtype=${BOXTYPE} --with-boxmodel=${BOXMODEL} \
+	${@base_contains("MACHINE_FEATURES", "gigablue", "--enable-4digits" , "", d)} \
+	${@base_contains("MACHINE_FEATURES", "odin", "--enable-4digits" , "", d)} \
 	${@base_contains("MACHINE_FEATURES", "dreambox", "--enable-lcd" , "", d)} \
 	${@base_contains("MACHINE_FEATURES", "colorlcd220", "--enable-lcd" , "", d)} \
 	${@base_contains("MACHINE_FEATURES", "bwlcd140", "--enable-lcd" , "", d)} \
