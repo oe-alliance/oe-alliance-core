@@ -19,7 +19,7 @@ IMAGE_INSTALL = " \
     swf-spinner \
     swf-version-info \
     enigma2-plugin-settings-default-swf \
-    enigma2-plugin-extensions-bmediacenter \
+    enigma2-plugin-extensions-bmediacenter-swf \
     ${ENIGMA2_PLUGINS} \
     ${ENIGMA2_INI_PLUGINS} \
     ${@base_contains("MACHINE", "ventonhdx", "${ENIGMA2_USB_DRV}" , "", d)} \
