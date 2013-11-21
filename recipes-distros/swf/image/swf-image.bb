@@ -19,7 +19,7 @@ IMAGE_INSTALL = " \
 	swf-spinner \
 	swf-version-info \
 	enigma2-plugin-settings-default-swf \
-	enigma2-plugin-extensions-bmediacenter \
+	enigma2-plugin-extensions-bmediacenter-swf \
 	${ENIGMA2_PLUGINS} \
 	${ENIGMA2_INI_PLUGINS} \
 	${@base_contains("MACHINE", "ventonhdx", "${ENIGMA2_USB_DRV}" , "", d)} \
@@ -73,8 +73,8 @@ ENIGMA2_USB_DRV = "\
 	enigma2-plugin-drivers-dvb-usb-em28xx  \
 	enigma2-plugin-drivers-dvb-usb-it913x \
 	enigma2-plugin-drivers-dvb-usb-pctv452e \
-    	enigma2-plugin-drivers-network-usb-rt3573 \
-    	enigma2-plugin-drivers-network-usb-rt5572 \
+    enigma2-plugin-drivers-network-usb-rt3573 \
+    enigma2-plugin-drivers-network-usb-rt5572 \
 	enigma2-plugin-drivers-network-usb-ath9k-htc \
 	enigma2-plugin-drivers-network-usb-rt3070 \
 	enigma2-plugin-drivers-network-usb-carl9170 \

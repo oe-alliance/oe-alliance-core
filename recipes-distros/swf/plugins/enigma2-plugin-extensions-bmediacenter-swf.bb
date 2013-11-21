@@ -1,4 +1,4 @@
-DESCRIPTION = "enigma2-plugin-extensions-bmediacenter"
+DESCRIPTION = "enigma2-plugin-extensions-bmediacenter-swf"
 MAINTAINER = "swf"
 SECTION = "base"
 PRIORITY = "required"
