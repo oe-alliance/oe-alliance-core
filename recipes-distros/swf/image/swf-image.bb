@@ -19,6 +19,7 @@ IMAGE_INSTALL = " \
 	swf-spinner \
 	swf-version-info \
 	enigma2-plugin-settings-default-swf \
+	enigma2-plugin-extensions-bmediacenter \
 	${ENIGMA2_PLUGINS} \
 	${ENIGMA2_INI_PLUGINS} \
 	${@base_contains("MACHINE", "ventonhdx", "${ENIGMA2_USB_DRV}" , "", d)} \
@@ -31,6 +32,7 @@ IMAGE_INSTALL = " \
 	ofgwrite \
 	task-base-smbfs \
 	task-base-smbfs-client \
+	neutrino \
 	mc \
 	swf-base \
 	"
@@ -39,10 +41,8 @@ ENIGMA2_PLUGINS = "\
 	enigma2-plugin-extensions-epgsearch \
 	enigma2-plugin-extensions-imdb \
 	enigma2-plugin-extensions-cutlisteditor \
-	enigma2-plugin-extensions-bmediacenter \
 	enigma2-plugin-extensions-dvdplayer \
 	enigma2-plugin-extensions-cooltvguide \
-	enigma2-plugin-extensions-neutrino \
 	enigma2-plugin-extensions-mediaportal \
 	${@base_contains("MACHINE", "ventonhdx", "enigma2-plugin-extensions-foreca" , "", d)} \
 	enigma2-plugin-extensions-dlnabrowser \
