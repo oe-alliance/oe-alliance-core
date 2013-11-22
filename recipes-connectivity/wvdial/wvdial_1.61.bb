@@ -21,6 +21,7 @@ SRC_URI_ebox5000 = "http://archiv.mixos-support.com/2.6.18-wr-wvdial-1.61.tar.gz
 SRC_URI_ebox5100 = "http://archiv.mixos-support.com/2.6.18-wr-wvdial-1.61.tar.gz;name=legacy"
 SRC_URI_dm800 = "http://archiv.mixos-support.com/2.6.18-wr-wvdial-1.61.tar.gz;name=legacy"
 SRC_URI_cube = "http://source.mynonpublic.com/wvdial-1.61-arm.tar.gz;name=armv7a"
+SRC_URI_su980 = "http://source.mynonpublic.com/wvdial-1.61-arm.tar.gz;name=armv7a"
 
 DEPENDS = "wvstreams"
 RDEPENDS = "ppp"
