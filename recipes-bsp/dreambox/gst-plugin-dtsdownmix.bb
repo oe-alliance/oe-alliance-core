@@ -6,12 +6,13 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=7fbc338309ac38fefcd64b04bb903e34"
 
 DEPENDS = "gstreamer gst-plugins-base libdca"
 
-SRC_URI = "git://github.com/athoik/${PN};protocol=git;branch=master;tag=HEAD"
+SRC_URI = "git://github.com/athoik/${PN}.git"
 
 S = "${WORKDIR}/git"
 
 inherit gitpkgv
 
+SRCREV = "${AUTOREV}"
 PV = "0.10.0+git${SRCPV}"
 PKGV = "0.10.0+git${GITPKGV}"
 PR = "r0"
