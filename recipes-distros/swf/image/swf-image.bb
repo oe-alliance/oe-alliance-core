@@ -30,6 +30,7 @@ IMAGE_INSTALL = " \
 	python-gdata \
 	ushare \
 	ofgwrite \
+	libshowiframe \
 	task-base-smbfs \
 	task-base-smbfs-client \
 	neutrino \
@@ -73,8 +74,8 @@ ENIGMA2_USB_DRV = "\
 	enigma2-plugin-drivers-dvb-usb-em28xx  \
 	enigma2-plugin-drivers-dvb-usb-it913x \
 	enigma2-plugin-drivers-dvb-usb-pctv452e \
-    enigma2-plugin-drivers-network-usb-rt3573 \
-    enigma2-plugin-drivers-network-usb-rt5572 \
+    	enigma2-plugin-drivers-network-usb-rt3573 \
+    	enigma2-plugin-drivers-network-usb-rt5572 \
 	enigma2-plugin-drivers-network-usb-ath9k-htc \
 	enigma2-plugin-drivers-network-usb-rt3070 \
 	enigma2-plugin-drivers-network-usb-carl9170 \
