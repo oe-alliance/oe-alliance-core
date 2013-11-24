@@ -1,21 +1,24 @@
 DESCRIPTION = "Linux kernel for ${MACHINE}"
+SECTION = "kernel"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${KV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 MACHINE_KERNEL_PR_append = ".10"
+PR = "r2"
 
 KV = "3.9.2"
 SRCDATE = "16092013"
 SRCDATE_azboxme = "14092013"
 SRCDATE_azboxminime = "14092013"
 
-DEPENDS = "genromfs-native gcc"
-DEPENDS_azboxhd = "genromfs-native azbox-hd-buildimage gcc"
-DEPENDS_azboxminime = "genromfs-native azbox-minime-packer gcc"
+DEPENDS = "genromfs-native"
+DEPENDS_azboxhd = "genromfs-native azbox-hd-buildimage"
+DEPENDS_azboxminime = "genromfs-native azbox-minime-packer"
 
 PKG_kernel-base = "kernel-base"
 PKG_kernel-image = "kernel-image"
 RPROVIDES_kernel-base = "kernel-${KERNEL_VERSION}"
 RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
+ALLOW_EMPTY_kernel-dev = "1"
 
 SRC_URI += "${KERNELORG_MIRROR}/linux/kernel/v3.x/linux-${KV}.tar.bz2;name=azbox-kernel \
     file://defconfig \
@@ -89,7 +92,18 @@ kernel_do_compile() {
 do_install_append () {
     install -d ${D}/boot
     install -m 0644 ${S}/arch/mips/boot/zbimage-linux-xload ${D}/boot/zbimage-linux-xload
+    rm -rf ${D}/boot/System.map*
+    rm -rf ${D}/boot/Module.symvers*
+    rm -rf ${D}/boot/config*
 }
 
 do_package_qa() {
+}
+
+do_packagedata_append() {
+    if [ -e ${WORKDIR}/pkgdata/shlibs/kernel-dev.list ]; then
+        rm -rf ${WORKDIR}/packages-split/kernel-dev/usr
+        rm -rf ${WORKDIR}/pkgdata/shlibs/kernel-dev.list
+        rm -rf ${WORKDIR}/pkgdata/shlibs/kernel-dev.ver
+    fi
 }
