@@ -11,7 +11,7 @@ SRC_URI[sha256sum] = "a6efd12838d34fc965bb7a329c7d251372ecde3f73d145343d7a93ff02
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-MACHINE_KERNEL_PR_append = ".10"
+MACHINE_KERNEL_PR_append = ".11"
 
 # By default, kernel.bbclass modifies package names to allow multiple kernels
 # to be installed in parallel. We revert this change and rprovide the versioned
@@ -23,6 +23,10 @@ RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
 
 SRC_URI += "http://whitebox.host.sk/bcm/kernel/linux-${KV}-${SRCDATE}.tar.gz \
 	file://defconfig \
+	file://add-dmx-source-timecode.patch \
+	file://as102-adjust-signal-strength-report.patch \
+	file://tda18271-advertise-supported-delsys.patch \
+	file://nfs-max-rwsize-8k.patch \
 	"
 	
 S = "${WORKDIR}/linux-${PV}"
