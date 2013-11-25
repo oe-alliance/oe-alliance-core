@@ -30,6 +30,7 @@ IMAGE_INSTALL = " \
     python-gdata \
     ushare \
     ofgwrite \
+    libshowiframe \
     packagegroup-base-smbfs \
     packagegroup-smbfs-client \
     neutrino \
