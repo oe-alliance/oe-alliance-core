@@ -51,7 +51,7 @@ IMAGE_CMD_ubi_append = " \
 	echo ${DISTRO_NAME}-${IMAGE_VERSION}-${MACHINE}-${DATE}_usb > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/imageversion; \
 	echo "rename this file to 'force' to force an update without confirmation" > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/noforce; \
 	cd ${DEPLOY_DIR_IMAGE}; \
-	zip ${IMAGE_NAME}-${DATE}_usb.zip ${IMAGEDIR}/*; \
+	zip ${IMAGE_NAME}_usb.zip ${IMAGEDIR}/*; \
 	rm -f ${DEPLOY_DIR_IMAGE}/*.ubifs; \
 	rm -rf ${IMAGEDIR}; \
 	"
