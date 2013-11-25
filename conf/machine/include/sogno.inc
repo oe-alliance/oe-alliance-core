@@ -53,7 +53,7 @@ IMAGE_CMD_ubi_append = " \
 	cd ${DEPLOY_DIR_IMAGE}; \
 	zip ${IMAGE_NAME}_usb.zip ${IMAGEDIR}/*; \
 	rm -f ${DEPLOY_DIR_IMAGE}/*.ubifs; \
-	rm -rf ${IMAGEDIR}; \
+        rm -Rf sogno; \
 	"
 	
 MACHINE_FEATURES += "3dtv alsa hdmicec switchoff wifi 3dtvpli bootsplash"
