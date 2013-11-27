@@ -1,8 +1,8 @@
-DESCRIPTION = "xtatwo bootlogo"
+DESCRIPTION = "openxta bootlogo"
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "proprietary"
-MAINTAINER = "xtatwo"
+MAINTAINER = "openxta"
 
 require conf/license/license-gplv2.inc
 

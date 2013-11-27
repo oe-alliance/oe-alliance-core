@@ -11,13 +11,13 @@ inherit task
 #RCONFLICTS_ = "enigma2-plugin-extensions-permanenttimeshift enigma2-plugin-systemplugins-skinselector"
 #RREPLACES = "enigma2-plugin-extensions-permanenttimeshift enigma2-plugin-systemplugins-skinselector"
 
-DEPENDS = "enigma2-pliplugins xtatwo-feeds"
+DEPENDS = "enigma2-pliplugins openxta-feeds"
 
 RRECOMMENDS = "\
-	xtatwo-version-info \
+	openxta-version-info \
 	enigma2-plugin-drivers-usbserial \
 	enigma2-plugin-pli-softcamsetup \
-	enigma2-plugin-extensions-xtatwopanel \
+	enigma2-plugin-extensions-openxtapanel \
 	enigma2-plugin-extensions-graphmultiepg \
 	enigma2-plugin-extensions-mediaplayer \
 	enigma2-plugin-extensions-cutlisteditor \

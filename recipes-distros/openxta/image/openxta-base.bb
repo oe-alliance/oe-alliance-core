@@ -10,9 +10,9 @@ inherit task
 
 RDEPENDS = "\
 	oe-alliance-base \
-	xtatwo-enigma2 \
-	xtatwo-bootlogo \
-	xtatwo-feed-config \
+	openxta-enigma2 \
+	openxta-bootlogo \
+	openxta-feed-config \
 	libcrypto-compat \
 	hddtemp \
 	dosfstools \

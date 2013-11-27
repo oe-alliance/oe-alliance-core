@@ -1,8 +1,8 @@
-DESCRIPTION = "XTAv2 version info"
+DESCRIPTION = "openxta version info"
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "proprietary"
-MAINTAINER = "XTAv2"
+MAINTAINER = "openxta"
 
 require conf/license/license-gplv2.inc
 
@@ -32,9 +32,9 @@ do_install() {
 			echo "version=${IMAGE_VERSION}" >> ${D}/etc/image-version
 			echo "build=${BUILD_VERSION}" >> ${D}/etc/image-version
 			echo "date=${DATETIME}" >> ${D}/etc/image-version
-			echo "comment=XTAv2" >> ${D}/etc/image-version
+			echo "comment=openxta" >> ${D}/etc/image-version
 			echo "target=9" >> ${D}/etc/image-version
-			echo "creator=XTAv2" >> ${D}/etc/image-version
+			echo "creator=openxta" >> ${D}/etc/image-version
 			echo "url=${URL}" >> ${D}/etc/image-version
 			echo "catalog=${URL}" >> ${D}/etc/image-version
 			echo "${MACHINE}" > ${D}/etc/model
