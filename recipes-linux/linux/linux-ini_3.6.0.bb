@@ -71,6 +71,7 @@ kernel_do_install_append() {
 }
 
 MTD_DEVICE_ventonhdx = "mtd1"
+MTD_DEVICE_mbtwin = "mtd1"
 MTD_DEVICE_inihde = "mtd2"
 
 pkg_postinst_kernel-image () {

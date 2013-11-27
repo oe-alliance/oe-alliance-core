@@ -3,7 +3,7 @@ DESCRIPTION = "neutrinoHD2 binary, freshly compiled"
 include conf/license/license-gplv2.inc
 
 PV = "svn${SRCPV}"
-PR = "r64"
+PR = "r65"
 
 BOXTYPE = "UNKNOWN"
 
@@ -50,6 +50,7 @@ BOXTYPE_ventonhde = "venton"
 BOXTYPE_ventonhdx = "venton"
 BOXTYPE_inihde = "venton"
 BOXTYPE_inihdp = "venton"
+BOXTYPE_mbtwin = "venton"
 
 BOXTYPE_xp1000    = "xp1000"
 

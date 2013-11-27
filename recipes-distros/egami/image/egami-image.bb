@@ -33,6 +33,8 @@ ENIGMA2_DVB_USB_DRV = "\
 	enigma2-plugin-drivers-dvb-usb-af9015 \
 	${@base_contains("MACHINE", "ventonhdx", "enigma2-plugin-drivers-dvb-usb-siano" , "", d)} \
 	${@base_contains("MACHINE", "ventonhdx", "enigma2-plugin-drivers-dvb-usb-as102" , "", d)} \
+	${@base_contains("MACHINE", "mbtwin", "enigma2-plugin-drivers-dvb-usb-siano" , "", d)} \
+	${@base_contains("MACHINE", "mbtwin", "enigma2-plugin-drivers-dvb-usb-as102" , "", d)} \
 	enigma2-plugin-drivers-dvb-usb-em28xx \
 	enigma2-plugin-drivers-dvb-usb-dw2102 \
 	enigma2-plugin-drivers-dvb-usb-it913x \

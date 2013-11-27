@@ -4,7 +4,7 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3
                     file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
 
 PV = "1.0"
-PR = "r50"
+PR = "r51"
 
 inherit task
 
@@ -32,4 +32,5 @@ RRECOMMENDS = "\
 	enigma2-plugin-extensions-accuweather \
 	enigma2-plugin-extensions-mediaportal \
 	${@base_contains("MACHINE", "ventonhdx", "enigma2-plugin-extensions-egamiboot" , "", d)} \
+	${@base_contains("MACHINE", "mbtwin", "enigma2-plugin-extensions-egamiboot" , "", d)} \
 "
