@@ -1,5 +1,5 @@
-DESCRIPTION = "Enigma2 Skin Xtrend-Alliance"
-MAINTAINER = "Xtrend-Alliance"
+DESCRIPTION = "Enigma2 Skin OpenXTA"
+MAINTAINER = "OpenXTA"
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "proprietary"

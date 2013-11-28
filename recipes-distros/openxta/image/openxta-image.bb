@@ -1,8 +1,8 @@
-DESCRIPTION = "XTAv2 Image"
+DESCRIPTION = "openxtaImage"
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "proprietary"
-MAINTAINER = "XTAv2 team"
+MAINTAINER = "openxta team"
 
 require conf/license/license-gplv2.inc
 
@@ -10,9 +10,9 @@ PV = "${IMAGE_VERSION}"
 PR = "r${DATETIME}"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-IMAGE_INSTALL = "xtatwo-base"
+IMAGE_INSTALL = "openxta-base"
 
-export IMAGE_BASENAME = "xtatwo-image"
+export IMAGE_BASENAME = "openxta-image"
 IMAGE_LINGUAS = ""
 
 IMAGE_FEATURES += "package-management"
@@ -40,7 +40,7 @@ generate_nfo() {
     echo "Machine: ${MACHINE}" >> ${NFO}
     DATE=`date +%Y-%m-%d' '%H':'%M`
     echo "Date: ${DATE}" >> ${NFO}
-    echo "Issuer: xtatwo" >> ${NFO}
+    echo "Issuer: openxta" >> ${NFO}
     echo "Link: ${DISTRO_FEED_URI}" >> ${NFO}
     if [ "${DESC}" != "" ]; then
             echo "Description: ${DESC}" >> ${NFO}

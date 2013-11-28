@@ -7,7 +7,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PV = "1.0"
-PR = "r14"
+PR = "r15"
 
 INITSCRIPT_NAME = "swap"
 INITSCRIPT_PARAMS = "start 60 S ."
@@ -44,6 +44,8 @@ RRECOMMENDS_${PN} = "\
     ${@base_contains("MACHINE_FEATURES", "3dtv", "enigma2-plugin-systemplugins-osd3dsetup" , "", d)} \
     ${@base_contains("MACHINE", "ventonhdx", "enigma2-plugin-systemplugins-inifansetup" , "", d)} \
     ${@base_contains("MACHINE", "ventonhdx", "enigma2-plugin-systemplugins-inivfd" , "", d)} \
+    ${@base_contains("MACHINE", "mbtwin", "enigma2-plugin-systemplugins-inifansetup" , "", d)} \
+    ${@base_contains("MACHINE", "mbtwin", "enigma2-plugin-systemplugins-inivfd" , "", d)} \
     "
 
 SRC_URI = "file://swap file://panel.conf"

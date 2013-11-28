@@ -1,5 +1,5 @@
-DESCRIPTION = "XTAv2 Panel"
-MAINTAINER = "XTAv2-Team"
+DESCRIPTION = "OpenXTA Panel"
+MAINTAINER = "OpenXTA-Team"
 SECTION = "base"
 LICENSE = "proprietary"
 
