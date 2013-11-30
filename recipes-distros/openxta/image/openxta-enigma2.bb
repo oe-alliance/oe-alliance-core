@@ -26,16 +26,12 @@ RRECOMMENDS = "\
 	enigma2-plugin-systemplugins-videomode \
 	enigma2-plugin-systemplugins-hotplug \
 	enigma2-plugin-systemplugins-autoresolution \
-	enigma2-plugin-systemplugins-osdpositionsetup \
 	enigma2-plugin-systemplugins-videotune \
 	enigma2-plugin-systemplugins-softwaremanager \
 	enigma2-plugin-systemplugins-skinselector \
-	enigma2-plugin-extensions-xmltvimport \
-	enigma2-plugin-extensions-iptv-list-updater \
 	enigma2-plugin-skins-technihd \
 	enigma2-plugin-skins-xta \
 	enigma2-plugin-systemplugins-videoenhancement \
-	enigma2-plugin-extensions-iptvlistupdater \
 	${@base_contains("MACHINE_FEATURES", "3dtv", "enigma2-plugin-systemplugins-osd3dsetup" , "", d)} \
 	"
 
