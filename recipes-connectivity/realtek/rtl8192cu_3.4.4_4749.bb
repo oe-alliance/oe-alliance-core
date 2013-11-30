@@ -5,18 +5,17 @@ LICENSE = "GPLv2"
 
 LIC_FILES_CHKSUM = "file://os_dep/linux/os_intfs.c;endline=19;md5=f8d10a6bd2fdfa240c0634a7c660c57f"
 
-PR = "r3"
+PR = "r4"
 
 inherit module
 
 SRC_URI = "http://enigma2.world-of-satellite.com/git-extras/rtl8188C_8192C_usb_linux_v3.4.4_4749.20121105.tar.gz \
     file://additional_productids.patch \
     file://add-3.8-support.patch \
+    file://rt8192cu_procfs.patch \
     "
 
 S = "${WORKDIR}/rtl8188C_8192C_usb_linux_v3.4.4_4749.20121105"
-
-inherit module
 
 EXTRA_OEMAKE = "KSRC=${STAGING_KERNEL_DIR}"
 

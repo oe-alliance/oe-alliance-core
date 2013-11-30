@@ -10,7 +10,6 @@ require conf/license/license-gplv2.inc
 PR = "r7"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/libusb/libusb-${PV}.tar.bz2"
-SRC_URI_append_ebox5100 = " file://libusb-1.0.so.0.0.0"
 SRC_URI_append_ebox5000 = " file://libusb-1.0.so.0.0.0"
 SRC_URI_append_dm800 = " file://libusb-1.0.so.0.0.0"
 
@@ -28,10 +27,6 @@ do_install_append() {
     if [ ! ${D}${libdir} -ef ${D}${base_libdir} ]; then
         mv ${D}${base_libdir}/pkgconfig ${D}${libdir}
     fi
-}
-
-do_install_append_ebox5100() {
-    cp -rp ${WORKDIR}/libusb-1.0.so.0.0.0 ${D}/lib/
 }
 
 do_install_append_ebox5000() {

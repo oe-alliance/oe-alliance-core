@@ -10,15 +10,17 @@ PR = "r2"
 
 MACHINE_KERNEL_PR_append = ".1"
 
-SRC_URI = "http://source.mynonpublic.com/rtl8812AU_8821AU_linux_v4.2.2_7502.20130826_addl_IDs_added.tar.bz2"
+SRC_URI = "http://source.mynonpublic.com/rtl8812AU_8821AU_linux_v4.2.2_7502.20130826_addl_IDs_added.tar.bz2 \
+    file://rt8812au-procfs.patch \
+    "
 
 EXTRA_OEMAKE = "LINUX_SRC=${STAGING_KERNEL_DIR}"
 
 S = "${WORKDIR}/rtl8812AU_8821AU_linux_v4.2.2_7502.20130517/"
 
 do_install() {
-	install -d ${D}/lib/modules/${KERNEL_VERSION}/kernel/drivers/net/wireless
-	install -m 0644 ${S}/8812au.ko ${D}${base_libdir}/modules/${KERNEL_VERSION}/kernel/drivers/net/wireless
+    install -d ${D}/lib/modules/${KERNEL_VERSION}/kernel/drivers/net/wireless
+    install -m 0644 ${S}/8812au.ko ${D}${base_libdir}/modules/${KERNEL_VERSION}/kernel/drivers/net/wireless
 
 }
 

@@ -1,0 +1,14 @@
+--- a/os_dep/linux/os_intfs.c	2013-11-29 23:50:36.984957426 +0100
++++ b/os_dep/linux/os_intfs.c	2013-11-30 09:03:02.597239090 +0100
+@@ -51,6 +51,11 @@
+ #include <rtw_br_ext.h>
+ #endif //CONFIG_BR_EXT
+ 
++#if LINUX_VERSION_CODE > KERNEL_VERSION(3,10,1) 
++#undef CONFIG_PROC_DEBUG
++#endif
++
++
+ MODULE_LICENSE("GPL");
+ MODULE_DESCRIPTION("Realtek Wireless Lan Driver");
+ MODULE_AUTHOR("Realtek Semiconductor Corp.");
