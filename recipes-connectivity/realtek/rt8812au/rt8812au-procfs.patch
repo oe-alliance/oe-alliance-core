@@ -1,0 +1,12 @@
+--- a/os_dep/linux/os_intfs.c	2013-05-17 05:33:38.000000000 +0200
++++ b/os_dep/linux/os_intfs.c	2013-11-30 09:28:12.585251920 +0100
+@@ -27,6 +27,9 @@
+ 
+ #endif
+ 
++#if LINUX_VERSION_CODE > KERNEL_VERSION(3,10,1) 
++#undef CONFIG_PROC_DEBUG
++#endif
+ 
+ MODULE_LICENSE("GPL");
+ MODULE_DESCRIPTION("Realtek Wireless Lan Driver");

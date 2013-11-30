@@ -1,0 +1,15 @@
+--- a/root.c.org	2013-11-29 23:55:09.664959744 +0100
++++ b/root.c	2013-11-30 10:15:01.141275784 +0100
+@@ -659,8 +659,12 @@
+   if (err < 0) return err;
+ 
+   // register /proc entry
++#if LINUX_VERSION_CODE > KERNEL_VERSION(3,10,1)
++    cdfs_proc_entry = proc_create_data(FSNAME, 0, NULL, &proc_cdfs_operations, NULL );
++#else 
+   if ((cdfs_proc_entry = create_proc_entry(FSNAME, 0, NULL )))
+     cdfs_proc_entry->proc_fops = &proc_cdfs_operations;
++#endif
+   cdfs_proc_cd=NULL;
+ 
+   // start kernel thread

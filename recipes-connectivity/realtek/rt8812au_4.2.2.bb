@@ -10,7 +10,9 @@ PR = "r2"
 
 MACHINE_KERNEL_PR_append = ".1"
 
-SRC_URI = "http://source.mynonpublic.com/rtl8812AU_8821AU_linux_v4.2.2_7502.20130826_addl_IDs_added.tar.bz2"
+SRC_URI = "http://source.mynonpublic.com/rtl8812AU_8821AU_linux_v4.2.2_7502.20130826_addl_IDs_added.tar.bz2 \
+	file://rt8812au-procfs.patch \
+	"
 
 EXTRA_OEMAKE = "LINUX_SRC=${STAGING_KERNEL_DIR}"
 

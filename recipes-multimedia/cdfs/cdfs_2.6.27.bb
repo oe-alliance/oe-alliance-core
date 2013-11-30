@@ -14,6 +14,7 @@ SRC_URI = " \
         file://compile-fix-linux-3.2.patch \
         file://add-3.4-support.patch \
         file://add-3.8-support.patch \
+        file://cdfs-procfs.patch \
 "
 SRC_URI[md5sum] = "ac64c014a90e3c488394832ea29605b3"
 SRC_URI[sha256sum] = "d034f6c6d9578fe2addfaeceaa101584a4a1fc9f27d825c340baebd345d8d724"

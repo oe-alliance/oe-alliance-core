@@ -10,6 +10,7 @@ inherit module machine_kernel_pr
 SRC_URI = "http://enigma2.world-of-satellite.com/git-extras/rtl8188C_8192C_usb_linux_v3.4.4_4749.20121105.tar.gz \
 	file://additional_productids.patch \
 	file://add-3.8-support.patch \
+	file://rt8192cu_procfs.patch \
 	"
 
 S = "${WORKDIR}/rtl8188C_8192C_usb_linux_v3.4.4_4749.20121105"
