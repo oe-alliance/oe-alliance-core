@@ -23,6 +23,7 @@ BOXTYPE_tm2t      = "technomate"
 BOXTYPE_tmsingle  = "technomate"
 BOXTYPE_tmtwin    = "technomate"
 BOXTYPE_tmnano    = "technomate"
+BOXTYPE_tmnano2t    = "technomate"
 
 BOXTYPE_azboxhd   = "azbox"
 BOXTYPE_azboxme   = "azbox"
