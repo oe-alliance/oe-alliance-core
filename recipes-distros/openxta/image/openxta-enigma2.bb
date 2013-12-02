@@ -7,7 +7,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 ALLOW_EMPTY_${PN} = "1"
 
 PV = "1.0"
-PR = "r25"
+PR = "r26"
 
 inherit packagegroup
 
@@ -20,21 +20,25 @@ RRECOMMENDS_${PN} = "\
     openxta-version-info \
     enigma2-plugin-drivers-usbserial \
     enigma2-plugin-pli-softcamsetup \
-    enigma2-plugin-extensions-openxtapanel \
     enigma2-plugin-extensions-graphmultiepg \
     enigma2-plugin-extensions-mediaplayer \
     enigma2-plugin-extensions-cutlisteditor \
+    enigma2-plugin-extensions-infopanel \
     enigma2-plugin-extensions-dvdplayer \
     enigma2-plugin-extensions-et-portal \
     enigma2-plugin-systemplugins-videomode \
     enigma2-plugin-systemplugins-hotplug \
     enigma2-plugin-systemplugins-autoresolution \
+    enigma2-plugin-systemplugins-osdpositionsetup \
     enigma2-plugin-systemplugins-videotune \
     enigma2-plugin-systemplugins-softwaremanager \
     enigma2-plugin-systemplugins-skinselector \
+    enigma2-plugin-extensions-xmltvimport \
+    enigma2-plugin-extensions-iptv-list-updater \
     enigma2-plugin-skins-technihd \
     enigma2-plugin-skins-xta \
     enigma2-plugin-systemplugins-videoenhancement \
+    enigma2-plugin-extensions-iptvlistupdater \
     ${@base_contains("MACHINE_FEATURES", "3dtv", "enigma2-plugin-systemplugins-osd3dsetup" , "", d)} \
     "
 

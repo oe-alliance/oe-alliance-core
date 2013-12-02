@@ -39,6 +39,7 @@ python do_package_prepend () {
         ('tm2t', 'tm2t.jpg', 'tm.png'),
         ('tmsingle', 'tmsingle.jpg', 'tm.png'),
         ('tmnano', 'tmnano.jpg', 'tm.png'),
+        ('tmnano2t', 'tmnano2t.jpg', 'tm.png'),
         ('vuduo', 'duo.jpg', 'vu_normal.png'),
         ('vuduo2', 'duo2.jpg', 'vu_normal.png'),
         ('vusolo', 'solo.jpg', 'vu_normal.png'),
