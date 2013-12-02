@@ -2,6 +2,7 @@ DESCRIPTION = "Linux kernel for ${MACHINE}"
 LICENSE = "GPL"
 SECTION = "kernel"
 KV = "3.10.10"
+PR = "r1"
 
 SRCDATE = "1202"
 MACHINE_KERNEL_PR_append = ".1"
