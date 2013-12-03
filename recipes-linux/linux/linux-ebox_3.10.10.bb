@@ -2,10 +2,10 @@ DESCRIPTION = "Linux kernel for ${MACHINE}"
 LICENSE = "GPL"
 SECTION = "kernel"
 KV = "3.10.10"
-PR = "r1"
+PR = "r2"
 
 SRCDATE = "1202"
-MACHINE_KERNEL_PR_append = ".1"
+MACHINE_KERNEL_PR_append = ".2"
 
 SRC_URI[md5sum] = "fe4d54b9302b8fd4276897f6ec785f07"
 SRC_URI[sha256sum] = "95fafbd9740ce2ee737fc10f34bc78e3b93cef27b8299722c5350c242eff947b"
