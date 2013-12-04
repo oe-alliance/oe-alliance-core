@@ -1,4 +1,4 @@
-PRINC = "3"
+PRINC = "1"
 
 SRC_URI += " \
     file://receive_timeout.patch \

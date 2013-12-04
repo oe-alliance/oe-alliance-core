@@ -1,3 +1,5 @@
+PRINC = "1"
+
 # Cross compiler badness causes BUILD params to be passed to the mipsel compiler
 # I assume the recipe has a bloody good reason to do that, so just remove the
 # march=native directive from it so that the builds don't fail.
