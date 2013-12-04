@@ -4,16 +4,18 @@ SECTION = "kernel"
 KV = "3.10.10"
 PR = "r2"
 
-SRCDATE = "1202"
+SRCDATE_ebox5000 = "1204"
+SRCDATE_ebox5100 = "1202"
 MACHINE_KERNEL_PR_append = ".2"
 
-SRC_URI[md5sum] = "fe4d54b9302b8fd4276897f6ec785f07"
-SRC_URI[sha256sum] = "95fafbd9740ce2ee737fc10f34bc78e3b93cef27b8299722c5350c242eff947b"
+SRC_URI[ebox5100.md5sum] = "fe4d54b9302b8fd4276897f6ec785f07"
+SRC_URI[ebox5100.sha256sum] = "95fafbd9740ce2ee737fc10f34bc78e3b93cef27b8299722c5350c242eff947b"
+SRC_URI[ebox5000.md5sum] = "cde0b664ec0843e5f033b68d47436575"
+SRC_URI[ebox5000.sha256sum] = "542bd81c81987ff3561ecbd97fbbbb1567d46940d7a78635383304852aeddceb"
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${KV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-
-SRC_URI = "http://archiv.mixos-support.com/${MACHINE}-linux-${KV}_${SRCDATE}.tar.bz2 \
+SRC_URI = "http://archiv.mixos-support.com/${MACHINE}-linux-${KV}_${SRCDATE}.tar.bz2;name=${MACHINE} \
 	file://defconfig \
 	"
 

@@ -8,15 +8,7 @@ SRC_URI += " \
 	file://init \
 "
 
-SRC_URI_append_ebox5000= " \
-	file://udev-builtin-input_id.patch \
-"
-
 SRC_URI_append_dm800= " \
-	file://udev-builtin-input_id.patch \
-"
-
-SRC_URI_append_ebox5100= " \
 	file://udev-builtin-input_id.patch \
 "
 
