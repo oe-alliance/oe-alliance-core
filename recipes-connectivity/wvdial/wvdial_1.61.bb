@@ -17,7 +17,6 @@ SRC_URI[armv7a.md5sum] = "f809b7e0a0c4cd5599acceb97f2861b1"
 SRC_URI[armv7a.sha256sum] = "8f334e97c0b3c9ff00a7d470a2a1eda6d025820d7c0d3d1359d9a0b202529402"
 
 SRC_URI = "http://code-ini.com/software/tools/wvdial-1.61.tar.gz;name=default"
-SRC_URI_ebox5000 = "http://archiv.mixos-support.com/2.6.18-wr-wvdial-1.61.tar.gz;name=legacy"
 SRC_URI_dm800 = "http://archiv.mixos-support.com/2.6.18-wr-wvdial-1.61.tar.gz;name=legacy"
 SRC_URI_cube = "http://source.mynonpublic.com/wvdial-1.61-arm.tar.gz;name=armv7a"
 
