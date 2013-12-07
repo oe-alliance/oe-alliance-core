@@ -7,12 +7,9 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 ALLOW_EMPTY_${PN} = "1"
 
 PV = "1.0"
-PR = "r23"
+PR = "r24"
 
 inherit packagegroup
-
-#RCONFLICTS_${PN} = "enigma2-plugin-extensions-permanenttimeshift enigma2-plugin-systemplugins-skinselector"
-#RREPLACES_${PN} = "enigma2-plugin-extensions-permanenttimeshift enigma2-plugin-systemplugins-skinselector"
 
 DEPENDS = "enigma2-pliplugins xtrendalliance-feeds"
 
@@ -34,7 +31,6 @@ RRECOMMENDS_${PN} = "\
     enigma2-plugin-systemplugins-softwaremanager \
     enigma2-plugin-systemplugins-skinselector \
     enigma2-plugin-extensions-xmltvimport \
-    enigma2-plugin-extensions-iptv-list-updater \
     enigma2-plugin-skins-technihd \
     enigma2-plugin-skins-xta \
     enigma2-plugin-systemplugins-videoenhancement \
@@ -42,6 +38,6 @@ RRECOMMENDS_${PN} = "\
     ${@base_contains("MACHINE_FEATURES", "3dtv", "enigma2-plugin-systemplugins-osd3dsetup" , "", d)} \
     "
 
-RRECOMMENDS_${PN}_append_et4x00 = " enigma2-plugin-extensions-et-webbrowser"
-RRECOMMENDS_${PN}_append_et6x00 = " enigma2-plugin-extensions-et-webbrowser"
-RRECOMMENDS_${PN}_append_et9x00 = " enigma2-plugin-extensions-et-webbrowser"
+#RRECOMMENDS_${PN}_append_et4x00 = " enigma2-plugin-extensions-et-webbrowser"
+#RRECOMMENDS_${PN}_append_et6x00 = " enigma2-plugin-extensions-et-webbrowser"
+#RRECOMMENDS_${PN}_append_et9x00 = " enigma2-plugin-extensions-et-webbrowser"
