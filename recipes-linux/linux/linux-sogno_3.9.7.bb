@@ -2,16 +2,16 @@ DESCRIPTION = "Linux kernel for ${MACHINE}"
 SECTION = "kernel"
 LICENSE = "GPLv2"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
-PR = "r1"
+PR = "r2"
 
 KV = "3.9.7"
-SRCDATE = "20131126"
+SRCDATE = "20131129"
 
-SRC_URI[md5sum] = "f0210ef666ccaac0f8218c39111c841a"
-SRC_URI[sha256sum] = "4562034109655e981b1e97556531df3b94f3083cf36927c52b1a4a1bf3fe0bab"
+SRC_URI[md5sum] = "5de235d4e0dc11df81e3856d71c908ec"
+SRC_URI[sha256sum] = "f5f9f7f19a51fb00d1078d4572f3ce1b6e2c4484c4a57d2f049de8dea48fff65"
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-MACHINE_KERNEL_PR_append = ".14"
+MACHINE_KERNEL_PR_append = ".15"
 
 # By default, kernel.bbclass modifies package names to allow multiple kernels
 # to be installed in parallel. We revert this change and rprovide the versioned
@@ -23,9 +23,6 @@ RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
 
 SRC_URI += "http://whitebox.host.sk/bcm/kernel/linux-${KV}-${SRCDATE}.tar.gz \
 	file://defconfig \
-	file://add-dmx-source-timecode.patch \
-	file://as102-adjust-signal-strength-report.patch \
-	file://tda18271-advertise-supported-delsys.patch \
 	file://nfs-max-rwsize-8k.patch \
 	"
 	
