@@ -217,7 +217,7 @@ EXTRA_OECONF = " \
     STAGING_INCDIR=${STAGING_INCDIR} \
     STAGING_LIBDIR=${STAGING_LIBDIR} \
     --with-distro=${DISTRO_NAME} \
-    ${@base_contains('MACHINEBUILD', 'odinm6', '--with-boxtype=${MACHINEBUILD}' , '--with-boxtype=${MACHINE}', d)} \
+    --with-boxtype=${MACHINE} \
     --with-machinebrand="${MACHINE_BRAND}" \
     --with-machinename="${MACHINE_NAME}" \
     --with-imageversion=${DISTRO_VERSION} \

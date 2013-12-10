@@ -1,4 +1,4 @@
-PRINC = "6"
+PRINC = "7"
 
 SRC_URI += " \
     file://01samba-kill \

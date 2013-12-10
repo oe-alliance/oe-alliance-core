@@ -49,3 +49,8 @@ DREAMBOX_BUILDIMAGE = "buildimage --arch ${MACHINE} ${EXTRA_BUILDCMD} \
     --erase-block-size ${DREAMBOX_ERASE_BLOCK_SIZE} \
     --flash-size ${DREAMBOX_FLASH_SIZE} \
     --sector-size ${DREAMBOX_SECTOR_SIZE}"
+	
+DREAMBOX_BUILDIMAGEV2 = "buildimage --arch ${MACHINE} ${EXTRA_BUILDCMD} \
+    --erase-block-size ${DREAMBOX_ERASE_BLOCK_SIZEV2} \
+    --flash-size ${DREAMBOX_FLASH_SIZE} \
+    --sector-size ${DREAMBOX_SECTOR_SIZEV2}"
