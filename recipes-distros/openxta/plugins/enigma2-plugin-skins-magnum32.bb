@@ -14,7 +14,7 @@ PKGV = "1.0+git${GITPKGV}"
 VER ="1.0"
 PR = "r2"
 
-SRC_URI="git://github.com/XTAv2/magnum.git"
+SRC_URI="git://github.com/XTAv2/magnum32.git"
 
 S = "${WORKDIR}/git"
 
