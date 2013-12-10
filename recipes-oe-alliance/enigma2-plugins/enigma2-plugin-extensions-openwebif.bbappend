@@ -1,22 +1,10 @@
-PRINC = "47"
+PRINC = "48"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 SRC_URI = "git://github.com/oe-alliance/e2openplugin-${MODULE}.git;protocol=git"
 
 S="${WORKDIR}/git"
-
-# Just a quick hack to "compile" it
-do_compile() {
-	cheetah-compile -R --nobackup ${S}/plugin
-	python -O -m compileall ${S}
-}
-
-PLUGINPATH = "/usr/lib/enigma2/python/Plugins/Extensions/${MODULE}"
-do_install() {
-	install -d ${D}${PLUGINPATH}
-	cp -rp ${S}/plugin/* ${D}${PLUGINPATH}
-}
 
 python do_package_prepend () {
 	boxtypes = [
