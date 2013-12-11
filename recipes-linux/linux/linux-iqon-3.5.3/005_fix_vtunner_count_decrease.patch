@@ -1,0 +1,11 @@
+--- linux-3.5.3/drivers/media/dvb/dvb-core/dvbdev.c	2013-11-29 15:33:07.661765006 +0900
++++ linux-3.5.3.new/drivers/media/dvb/dvb-core/dvbdev.c	2013-11-29 15:33:06.385764995 +0900
+@@ -331,6 +331,8 @@
+ {
+ 	if (!dvbdev)
+ 		return;
++	if(dvbdev->type==DVB_DEVICE_FRONTEND)
++		tunercnt--;
+ 
+ 	down_write(&minor_rwsem);
+ 	dvb_minors[dvbdev->minor] = NULL;

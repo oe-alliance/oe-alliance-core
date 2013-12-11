@@ -3,20 +3,22 @@ LICENSE = "GPL"
 SECTION = "kernel"
 KV = "3.5.3"
 
-SRCDATE = "20130829"
-MACHINE_KERNEL_PR_append = ".7"
+SRCDATE = "20131210"
+MACHINE_KERNEL_PR_append = ".1"
 
-SRC_URI[md5sum] = "08a81f3f3e94a75150131d360b8ea5cc"
-SRC_URI[sha256sum] = "41ed063ea6e86ff94c6e7978013afc6537d387b86b45632bc788c8cded916bdf"
+SRC_URI[md5sum] = "196c304f09aebc08c14c9be55426a3e8"
+SRC_URI[sha256sum] = "e189b052fbca34e616d669d0125d6d49cf4c3ce0ea3fcf690187a27ad6fec5a4"
 
-LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${KV}-${SRCDATE}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
+LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${KV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
 RCONFLICTS_${PN} = "linux-technomate"
 RREPLACES_${PN} = "linux-technomate"
 
-SRC_URI = "http://en2.ath.cx/release/images/oedrivers/linux-${KV}-${SRCDATE}.tar.gz \
+SRC_URI = "http://en2.ath.cx/release/images/oedrivers/linux-${KV}-tm-${SRCDATE}.tar.gz \
 		file://nfs-max-rwsize-8k.patch \
-		file://001_fix_standby_error_${MACHINE}.patch \
+		file://001_fix_standby_error.patch \
+		file://dvb-usb-a867.patch \
+		file://dvb-usb-rtl2832.patch \
 		file://defconfig \
 		"
 
@@ -25,14 +27,20 @@ SRC_URI_append_tmnano = " \
 		file://003_fix_not_has_nor.patch \
 		file://004_fix_bootarg.patch \
 		"
-		
+
+SRC_URI_append_tmnano2t = " \
+		file://002_fix_partitionmap.patch \
+		file://003_fix_not_has_nor.patch \
+		file://004_fix_bootarg.patch \
+		"
+
 SRC_URI_append_optimussos1 = " \
 		file://002_fix_partitionmap.patch \
 		file://003_fix_not_has_nor.patch \
 		file://004_fix_bootarg.patch \
 		"
 
-S = "${WORKDIR}/linux-${KV}-${SRCDATE}"
+S = "${WORKDIR}/linux-${KV}"
 
 inherit kernel
 
