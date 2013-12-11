@@ -4,17 +4,15 @@ require conf/license/license-gplv2.inc
 LICENSE = "GPL"
 
 PV="20120930"
-PR = "r2"
+PR = "r3"
 
 SRC_URI[md5sum] = "09191733fe39d65213dad68f8f385eac"
 SRC_URI[sha256sum] = "0d82f8692d11b3f6614ac875b4096725692b79b9f4fe500fbe8497b601202694"
 
 SRC_URI +=" http://code-ini.com/software/tools/usb-modeswitch-data-${PV}.tar.gz \
 	    file://usb-modeswitch-data_20120215.patch \
+		file://usb-modeswitch-data-20120930.patch \
 	    "
-
-SRC_URI_append_dm800 ="file://usb-modeswitch-data-20120930.patch"	
-
 
 S = "${WORKDIR}/usb-modeswitch-data-${PV}"
 
