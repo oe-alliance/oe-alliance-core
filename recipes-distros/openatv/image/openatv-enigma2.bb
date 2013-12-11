@@ -7,7 +7,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PV = "1.0"
-PR = "r33"
+PR = "r34"
 
 inherit packagegroup
 
@@ -23,7 +23,6 @@ RRECOMMENDS_${PN} = " \
     enigma2-plugin-extensions-epgsearch \
     enigma2-plugin-extensions-imdb \
     enigma2-plugin-extensions-cutlisteditor \
-    enigma2-plugin-extensions-bmediacenter \
     enigma2-plugin-extensions-dvdplayer \
     enigma2-plugin-extensions-volume-adjust \
     enigma2-plugin-systemplugins-videotune \
@@ -31,11 +30,7 @@ RRECOMMENDS_${PN} = " \
     enigma2-plugin-systemplugins-softwaremanager \
     enigma2-plugin-systemplugins-hotplug \
     enigma2-plugin-extensions-mediaplayer \
-    ${@base_contains("MACHINE_FEATURES", "smallflash", "", \
-    " \
     enigma2-plugin-extensions-enhancedmoviecenter \
-    enigma2-plugin-extensions-cooltvguide \
-    ", d)} \
     ${@base_contains("MACHINE_FEATURES", "dreambox", "enigma2-plugin-extensions-dflash", "", d)} \
     ${@base_contains("MACHINE_FEATURES", "boxmodel", "boxmodel", "", d)} \
     "
