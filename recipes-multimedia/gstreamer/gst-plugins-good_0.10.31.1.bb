@@ -9,7 +9,7 @@ DEPENDS += "cdparanoia cairo jpeg libpng zlib libid3tag flac speex libsoup-2.4"
 DEPENDS += "gst-plugins-base"
 
 SRCREV = "${AUTOREV}"
-PR = "r14"
+PR = "r15"
 GIT_PV = ""
 
 EXTRA_OECONF = "--enable-orc --disable-esd --disable-aalib --disable-shout2 --disable-libcaca --disable-hal"
@@ -26,6 +26,7 @@ SRC_URI += " \
 	file://0004-MatroskaDemux-Set-profile-field-in-cap-for-aac-audio.patch \
 	file://0005-FlvDemux-Set-profile-field-in-cap-for-aac-audio.patch \
 	file://0006-Matroska-Demux-Handle-TrueHD-audio-codec-id.patch \
+	file://rtsp-check-all-protocols.patch \
 	${@base_contains('MACHINE_FEATURES', 'legacykernel', 'file://v4l-compile-fix-old-kernel.patch', '', d)} \
 "
 
