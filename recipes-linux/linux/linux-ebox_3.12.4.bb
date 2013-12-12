@@ -4,7 +4,7 @@ SECTION = "kernel"
 KV = "3.12.4"
 PR = "r0"
 
-SRCDATE_ebox5000 = "1211"
+SRCDATE = "1211"
 MACHINE_KERNEL_PR_append = ".0"
 
 SRC_URI[ebox5100.md5sum] = "2c6957a0f3662910e53df8eb31705e01"
