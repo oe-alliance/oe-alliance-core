@@ -2,16 +2,16 @@ DESCRIPTION = "Linux kernel for ${MACHINE}"
 SECTION = "kernel"
 LICENSE = "GPLv2"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
-PR = "r3"
+PR = "r4"
 
 KV = "3.9.7"
-SRCDATE = "20131210"
+SRCDATE = "20131212"
 
-SRC_URI[md5sum] = "45fc843531191dbba80d8d55db04b926"
-SRC_URI[sha256sum] = "a2d9f6c67209ceabd544d74d247e76281360edb83e001ccb311b98ebab8ed227"
+SRC_URI[md5sum] = "a2edbb5517aa19d60f706509a6cd0313"
+SRC_URI[sha256sum] = "215c488e61792a97ec37852ff38deac901f2f73c15f24bd5383d9785472eca86"
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-MACHINE_KERNEL_PR_append = ".16"
+MACHINE_KERNEL_PR_append = ".17"
 
 # By default, kernel.bbclass modifies package names to allow multiple kernels
 # to be installed in parallel. We revert this change and rprovide the versioned
