@@ -14,7 +14,7 @@ inherit gitpkgv
 
 PV = "0.10.0+git${SRCPV}"
 PKGV = "0.10.0+git${GITPKGV}"
-PR = "r16"
+PR = "r17"
 
 inherit autotools pkgconfig
 
