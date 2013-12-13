@@ -1,0 +1,49 @@
+--- a/root.c	2013-12-12 18:30:06.850914039 +0100
++++ b/root.c	2013-12-12 18:31:42.994916235 +0100
+@@ -450,7 +450,7 @@
+ }
+ 
+ /************************************************************************/
+-
++#if LINUX_VERSION_CODE < KERNEL_VERSION(3,11,1)
+ static int cdfs_readdir(struct file *filp, void *dirent, filldir_t filldir) {
+   struct inode *inode = filp->f_dentry->d_inode;
+   int i;
+@@ -465,7 +465,23 @@
+   }
+   return 1;
+ }
+-
++#else
++static int cdfs_iterate(struct file *filp, struct dir_context *ctx)
++{
++	struct inode *inode = filp->f_dentry->d_inode;
++	int i;
++	cd * this_cd = cdfs_info(inode->i_sb);
++	
++	PRINT("cdfs_readdir ino=%ld f_pos=%u\n", inode->i_ino, (int)filp->f_pos);
++	
++	for(i=filp->f_pos; i<T2I(this_cd->tracks); i++) {
++	  if (dir_emit(ctx, this_cd->track[i].name, strlen(this_cd->track[i].name), i, DT_UNKNOWN) < 0) 
++		return 0;
++	  filp->f_pos++;
++	}
++	return 1;
++}
++#endif
+ /************************************************************************/
+ 
+ #ifdef OLD_KERNEL
+@@ -506,7 +522,11 @@
+ 
+ static struct file_operations cdfs_dir_operations = {
+   .read     = generic_read_dir,
+-  .readdir  = cdfs_readdir,
++#if LINUX_VERSION_CODE < KERNEL_VERSION(3,11,1)
++	.readdir  = cdfs_readdir,
++#else
++	.iterate  = cdfs_iterate,
++#endif
+ };
+ 
+ static struct inode_operations cdfs_inode_operations = {

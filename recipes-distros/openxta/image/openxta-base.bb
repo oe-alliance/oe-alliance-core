@@ -12,7 +12,6 @@ RDEPENDS_${PN} = "\
 	oe-alliance-base \
 	openxta-enigma2 \
 	openxta-bootlogo \
-	openxta-feed-config \
 	libcrypto-compat \
 	hddtemp \
 	dosfstools \

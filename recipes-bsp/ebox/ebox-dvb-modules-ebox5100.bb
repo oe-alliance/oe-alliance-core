@@ -3,10 +3,10 @@ SECTION = "base"
 PRIORITY = "required"
 LICENSE = "CLOSED"
 
-SRCDATE = "20131122"
-KV = "3.10.10"
+SRCDATE = "20131212"
+KV = "3.12.4"
 PV = "${KV}+${SRCDATE}"
-PR = "r0"
+PR = "r1"
 
 SRC_URI = "http://archiv.mixos-support.com/ebox-dvb-modules-${MACHINE}-${KV}-${SRCDATE}.zip"
 
@@ -33,5 +33,5 @@ do_install() {
 
 FILES_${PN} += "${sysconfdir}/modules-load.d/_${MACHINE}.conf"
 
-SRC_URI[md5sum] = "f9c6ff656875267667f45c8998454423"
-SRC_URI[sha256sum] = "ca6c6c54c3c6c2d5ea98bed3b26a7e921c7e0730f59a67053185a53718e34d6b"
+SRC_URI[md5sum] = "5d01db85a001549ef6dd82a866c8b8a3"
+SRC_URI[sha256sum] = "94be39442d221301245ab61bb5c10a14eb4598ea03902e93e9e7cee85a7d9a1c"

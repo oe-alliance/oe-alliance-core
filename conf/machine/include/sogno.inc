@@ -26,7 +26,7 @@ GLIBC_EXTRA_OECONF = "--with-tls --with-__thread"
 PREFERRED_PROVIDER_virtual/kernel = "linux-sogno"
 
 PREFERRED_VERSION_linux-sogno = "3.9.7"
-PREFERRED_VERSION_linux-libc-headers = "3.8"
+PREFERRED_VERSION_linux-libc-headers = "3.9.7"
 
 KERNEL_IMAGETYPE = "vmlinux"
 KERNEL_OUTPUT = "${KERNEL_IMAGETYPE}"

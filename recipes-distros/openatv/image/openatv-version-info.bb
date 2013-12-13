@@ -69,7 +69,12 @@ do_install() {
     echo "url=${URL}" >> ${D}/etc/image-version
     echo "catalog=${URL}" >> ${D}/etc/image-version
     echo "${MACHINE}" > ${D}/etc/model
+    echo "[image]" > ${D}/etc/systemdescription.cfg
+    echo "name=openATV" > ${D}/etc/systemdescription.cfg
+    echo "version=3.0" > ${D}/etc/systemdescription.cfg	
+    echo "[openembedded]" > ${D}/etc/systemdescription.cfg
+    echo "version=2.0" > ${D}/etc/systemdescription.cfg	
 }
 
-FILES_${PN} += "/etc/model /etc/image-version /etc/oe-git.log /etc/e2-git.log"
+FILES_${PN} += "/etc/model /etc/image-version /etc/oe-git.log /etc/e2-git.log  /etc/systemdescription.cfg"
 

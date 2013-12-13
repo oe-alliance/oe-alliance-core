@@ -13,7 +13,7 @@ inherit gitpkgv pythonnative
 
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r43"
+PR = "r44"
 
 SRC_URI = "${ENIGMA2_PLUGINS_URI} file://pluginnotwanted"
 
