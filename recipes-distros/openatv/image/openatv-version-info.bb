@@ -71,7 +71,7 @@ do_install() {
     echo "${MACHINE}" > ${D}/etc/model
     echo "[image]" > ${D}/etc/systemdescription.cfg
     echo "name=openATV" > ${D}/etc/systemdescription.cfg
-    echo "version=3.0" > ${D}/etc/systemdescription.cfg	
+    echo "version=4.0" > ${D}/etc/systemdescription.cfg	
     echo "[openembedded]" > ${D}/etc/systemdescription.cfg
     echo "version=2.0" > ${D}/etc/systemdescription.cfg	
 }
