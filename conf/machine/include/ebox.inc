@@ -1,4 +1,4 @@
-MACHINE_BRAND = "EBox"
+MACHINE_BRAND = "Mixos"
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS = "\
 	ebox-dvb-modules-${MACHINE} \
