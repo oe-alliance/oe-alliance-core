@@ -17,7 +17,7 @@ MACHINE_EXTRA_RRECOMMENDS = " \
 
 include conf/machine/include/autoload-filesystems.inc
 
-DVBMEDIASINK_CONFIG = "--with-pcm --with-eac3"
+DVBMEDIASINK_CONFIG = "--with-wmv --with-pcm --with-eac3"
 
 TARGET_ARCH = "mipsel"
 DEFAULTTUNE = "mips32el"
