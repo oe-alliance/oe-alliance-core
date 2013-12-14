@@ -55,8 +55,9 @@ BOXTYPE_mbtwin = "venton"
 
 BOXTYPE_xp1000    = "xp1000"
 
-BOXTYPE_ebox5000  = "ebox5000"
+BOXTYPE_ebox5000  = "mixos"
 BOXTYPE_ebox5100  = "mixos"
+BOXTYPE_eboxlumi  = "mixos"
 BOXTYPE_ebox7358  = "mixos"
 
 BOXTYPE_e3hd = "e3hd"

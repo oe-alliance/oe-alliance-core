@@ -10,7 +10,7 @@ RPROVIDES_odin-blindscan-dvbc-utils-${MACHINE} += "virtual/blindscan-dvbc"
 RPROVIDES_odin-blindscan-dvbs-utils-${MACHINE} += "virtual/blindscan-dvbs"
 
 DOWNLOADMACHINE ?= "${MACHINE}"
-SRC_URI = "http://source.mynonpublic.com/download/odin-blindscan-utils-${MACHINE}-${PV}.tar.gz"
+SRC_URI = "http://source.mynonpublic.com/download/odin-blindscan-utils-${MACHINE}-${PV}-${SRC}.tar.gz"
 
 S = "${WORKDIR}"
 

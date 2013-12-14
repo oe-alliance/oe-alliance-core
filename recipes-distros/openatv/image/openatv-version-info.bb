@@ -44,10 +44,10 @@ do_install() {
         DRIVERS=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/ini/ini-dvb-modules-${MACHINE}.bb | cut -b 12-19`
     elif [ "${MACHINE}" = "xp1000" ]; then
         DRIVERS=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/xp/xp-dvb-modules-${MACHINE}.bb | cut -b 12-19`
-    elif [ "${MACHINE}" = "ebox5000" -o "${MACHINE}" = "ebox5100" -o "${MACHINE}" = "ebox7358"]; then
+    elif [ "${MACHINE}" = "ebox5000" -o "${MACHINE}" = "ebox5100" -o "${MACHINE}" = "ebox7358" -o "${MACHINE}" = "eboxlumi"]; then
         DRIVERS=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/ebox/ebox-dvb-modules-${MACHINE}.bb | cut -b 12-19`
     elif [ "${MACHINE}" = "ixussone" -o "${MACHINE}" = "ixusszero" -o "${MACHINE}" = "ixussduo" ]; then
-        DRIVERS=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/ixuss/ixuss-dvb-modules-${MACHINE}.bb | cut -b 12-19`    
+        DRIVERS=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/ixuss/ixuss-dvb-modules-${MACHINE}.bb | cut -b 12-19`
     elif [ "${MACHINE}" = "azboxhd" -o "${MACHINE}" = "azboxme" -o "${MACHINE}" = "azboxminime" ]; then
         DRIVERSDATE=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/azbox/azbox-dvb-modules.bb | cut -b 12-19`
     elif [ "${MACHINE}" = "dm8000" ]; then
@@ -57,7 +57,7 @@ do_install() {
     elif [ "${MACHINE}" = "dm500hd" -o "${MACHINE}" = "dm800se" -o "${MACHINE}" = "dm500hdv2" -o "${MACHINE}" = "dm800sev2" ]; then
         DRIVERSDATE="20130607"
     elif [ "${MACHINE}" = "dm800" ]; then
-        DRIVERSDATE="20130501"    
+        DRIVERSDATE="20130501"
     else
         DRIVERS='N/A'
     fi
@@ -69,12 +69,12 @@ do_install() {
     echo "url=${URL}" >> ${D}/etc/image-version
     echo "catalog=${URL}" >> ${D}/etc/image-version
     echo "${MACHINE}" > ${D}/etc/model
-    echo "[image]" > ${D}/etc/systemdescription.cfg
-    echo "name=openATV" > ${D}/etc/systemdescription.cfg
-    echo "version=4.0" > ${D}/etc/systemdescription.cfg	
-    echo "[openembedded]" > ${D}/etc/systemdescription.cfg
-    echo "version=2.0" > ${D}/etc/systemdescription.cfg	
+    echo "[image]" >> ${D}/etc/systemdescription.cfg
+    echo "name=openATV" >> ${D}/etc/systemdescription.cfg
+    echo "version=4.0" >> ${D}/etc/systemdescription.cfg	
+    echo "[openembedded]" >> ${D}/etc/systemdescription.cfg
+    echo "version=2.0" >> ${D}/etc/systemdescription.cfg
 }
 
-FILES_${PN} += "/etc/model /etc/image-version /etc/oe-git.log /etc/e2-git.log  /etc/systemdescription.cfg"
+FILES_${PN} += "/etc/model /etc/image-version /etc/oe-git.log /etc/e2-git.log /etc/systemdescription.cfg"
 

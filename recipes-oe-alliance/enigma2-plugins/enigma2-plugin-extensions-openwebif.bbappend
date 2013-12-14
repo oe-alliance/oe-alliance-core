@@ -1,4 +1,4 @@
-PRINC = "48"
+PRINC = "49"
 
 inherit pythonnative
 
@@ -48,6 +48,7 @@ python do_package_prepend () {
         ('xp1000s', 'xp1000.jpg', 'xp_rc14_normal.png'),
         ('ebox5000', 'ebox5000.jpg', 'ebox5000.png'),
         ('ebox5100', 'ebox5100.jpg', 'ebox5000.png'),
+        ('eboxlumi', 'eboxlumi.jpg', 'ebox5000.png'),
         ('ebox7358', 'ebox7358.jpg', 'ebox5000.png'),
         ('ixussone', 'ixussone.jpg', 'ixussone.png'),
         ('ixusszero', 'ixusszero.jpg', 'ixusszero.png'),
