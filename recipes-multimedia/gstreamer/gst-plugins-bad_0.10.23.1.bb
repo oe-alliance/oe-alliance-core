@@ -10,7 +10,7 @@ DEPENDS += "gst-plugins-base libmusicbrainz tremor curl libmms librtmp faad2"
 CONFLICTS = "librsvg"
 
 SRCREV = "${AUTOREV}"
-PR = "r10"
+PR = "r11"
 GIT_PV = ""
 
 EXTRA_OECONF += "--disable-examples --disable-experimental --disable-sdl --disable-cdaudio --disable-directfb --enable-faad \

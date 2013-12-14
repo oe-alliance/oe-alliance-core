@@ -11,7 +11,7 @@ DEPENDS += "alsa-lib freetype liboil libogg libvorbis libtheora avahi util-linux
 DEPENDS += "gstreamer"
 
 SRCREV = "${AUTOREV}"
-PR = "r14"
+PR = "r15"
 GIT_PV = ""
 
 inherit autotools pkgconfig gettext git-project
