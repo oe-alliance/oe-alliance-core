@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3
 ALLOW_EMPTY_${PN} = "1"
 
 PV = "1.0"
-PR = "r3"
+PR = "r4"
 
 inherit packagegroup
 
@@ -15,7 +15,6 @@ RDEPENDS_${PN} = "\
     odinsupport-enigma2 \
     odinsupport-bootlogo \
     odinsupport-spinner \
-    odinsupport-feed-config \
     libcrypto-compat \
     ntfs-3g \
     hddtemp \
