@@ -1,4 +1,4 @@
-require linux-libc-headers.inc
+require recipes-kernel/linux-libc-headers/linux-libc-headers.inc
 
 PR = "2"
 
