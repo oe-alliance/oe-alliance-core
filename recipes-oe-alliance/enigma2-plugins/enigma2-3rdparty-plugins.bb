@@ -10,7 +10,7 @@ SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
 PV = "2.0"
-PR = "r78"
+PR = "r79"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -35,7 +35,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-autobouquets-e2_201310201900-r2_mips32el.ipk \
     enigma2-plugin-extensions-bildonline_2.9rc13_mips32el.ipk \
     enigma2-plugin-extensions-bluray_1.2_mips32el.ipk \
-    enigma2-plugin-extensions-boblight-enigma2_0.7r7_Beta_mips32el.ipk \
+    enigma2-plugin-extensions-boblight-enigma2_0.8r1_mips32el.ipk \
     enigma2-plugin-extensions-buyukbangpanel_1.3.2_all.ipk \
     enigma2-plugin-extensions-camofs_7.66_all.ipk \
     enigma2-plugin-extensions-chefkoch_1.2rc1_mips32el.ipk \
