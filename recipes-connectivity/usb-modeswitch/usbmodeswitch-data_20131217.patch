@@ -1,0 +1,13 @@
+--- a/usb_modeswitch.d/12d1:1506	1970-01-01 01:00:00.000000000 +0100
++++ b/usb_modeswitch.d/12d1:1506	2013-12-17 10:41:01.592193885 +0100
+@@ -0,0 +1,9 @@
++# Huawei, newer modems
++
++TargetVendor=  0x12d1
++DefaultProduct= 0x1506
++TargetVendor= 0x12d1
++
++MessageContent="55534243123456780000000000000011062000000100000000000000000000"
++NeedResponse=0
++
+
