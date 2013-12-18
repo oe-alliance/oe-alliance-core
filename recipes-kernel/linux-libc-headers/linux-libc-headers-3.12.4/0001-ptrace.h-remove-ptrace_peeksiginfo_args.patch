@@ -1,0 +1,15 @@
+--- a/include/uapi/linux/ptrace.h	2013-12-18 17:05:50.717001422 +0100
++++ a/include/uapi/linux/ptrace.h	2013-12-18 17:06:24.877001469 +0100
+@@ -55,12 +55,6 @@
+ 
+ #define PTRACE_PEEKSIGINFO	0x4209
+ 
+-struct ptrace_peeksiginfo_args {
+-	__u64 off;	/* from which siginfo to start */
+-	__u32 flags;
+-	__s32 nr;	/* how may siginfos to take */
+-};
+-
+ #define PTRACE_GETSIGMASK	0x420a
+ #define PTRACE_SETSIGMASK	0x420b
+ 
