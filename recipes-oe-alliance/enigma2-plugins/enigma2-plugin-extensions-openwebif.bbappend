@@ -56,6 +56,7 @@ python do_package_prepend () {
         ('iqonios100hd', 'ios100hd.jpg', 'iqon.png'),
         ('iqonios200hd', 'ios200hd.jpg', 'iqon.png'),
         ('iqonios300hd', 'ios300hd.jpg', 'iqon.png'),
+        ('force1', 'ios200hd.jpg', 'iqon.png'),		
         ('mbtwin', 'ini-3000.jpg', 'ini-3000.png'),
         ('mediabox', 'ios100hd.jpg', 'iqon.png'),
         ('optimussos1', 'optimussos1.jpg', 'optimuss.png'),
