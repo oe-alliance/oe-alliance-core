@@ -13,6 +13,9 @@ MACHINE_EXTRA_RRECOMMENDS = " \
     gst-plugin-dvbmediasink \
 	"
 
+# We know about rtc
+include conf/machine/include/build-extras.inc	
+	
 include conf/machine/include/autoload-filesystems.inc
 
 TARGET_ARCH = "mipsel"
