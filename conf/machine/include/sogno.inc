@@ -1,3 +1,6 @@
+# We know about rtc
+include conf/machine/include/build-extras.inc
+
 MACHINE_BRAND = "Sogno"
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS = "\
