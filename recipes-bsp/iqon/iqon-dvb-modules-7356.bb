@@ -6,7 +6,10 @@ LICENSE = "CLOSED"
 SRCDATE = "20131217"
 KV = "3.9.7"
 PV = "${KV}+${SRCDATE}"
-PR = "r0"
+PR = "r1"
+
+SRC_URI[md5sum] = "fba9359f23fe227073606c9c2c4a51ae"
+SRC_URI[sha256sum] = "59113ece17f57eb48dbe0b9d7d7cd2dba4e08635f96ae569c511ebab3da4e32f"
 
 SRC_URI = "http://en2.ath.cx/release/images/oedrivers/bcmlinuxdvb_7356-${KV}-${SRCDATE}.tar.gz"
 
@@ -30,5 +33,4 @@ do_install() {
     done
 }
 
-SRC_URI[md5sum] = "fba9359f23fe227073606c9c2c4a51ae"
-SRC_URI[sha256sum] = "59113ece17f57eb48dbe0b9d7d7cd2dba4e08635f96ae569c511ebab3da4e32f"
+FILES_${PN} += "${sysconfdir}/modules-load.d/_${MACHINE}.conf"
