@@ -4,7 +4,7 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3
                     file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
 
 PV = "1.0"
-PR = "r10"
+PR = "r11"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 inherit packagegroup
@@ -37,5 +37,5 @@ RRECOMMENDS_${PN} = "\
     ${@base_contains("MACHINE_FEATURES", "boxmodel", "boxmodel", "", d)} \
     ${@base_contains("MACHINE_BRAND", "GigaBlue", "enigma2-plugin-drivers-network-usb-smsc75xx enigma2-plugin-drivers-network-usb-ax88179-178a enigma2-plugin-drivers-network-usb-asix", "", d)} \
     "
-RRECOMMENDS_append_vusolo2 = " enigma2-plugin-extensions-hbbtv"
-RRECOMMENDS_append_vuduo2 = " enigma2-plugin-extensions-hbbtv"
+RRECOMMENDS_${PN}_append_vusolo2 = " enigma2-plugin-extensions-hbbtv"
+RRECOMMENDS_${PN}_append_vuduo2 = " enigma2-plugin-extensions-hbbtv"
