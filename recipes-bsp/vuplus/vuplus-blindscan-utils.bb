@@ -5,7 +5,7 @@ RDEPENDS_${PN} = "ncurses"
 
 LICENSE = "CLOSED"
 
-PACKAGES = "vuplus-blindscan-dvbs-utils vuplus-blindscan-dvbc-utils"
+PACKAGES += "vuplus-blindscan-dvbs-utils vuplus-blindscan-dvbc-utils"
 
 PROVIDES += "virtual/blindscan-dvbs virtual/blindscan-dvbc"
 RPROVIDES_vuplus-blindscan-dvbs-utils += "virtual/blindscan-dvbs"
@@ -14,12 +14,13 @@ RPROVIDES_vuplus-blindscan-dvbc-utils += "virtual/blindscan-dvbc"
 SRC_URI = "http://archive.vuplus.com/download/utils/vuplus-blindscan-utils-${PV}.tar.bz2"
 
 PV = "3.4"
-PR = "r0"
+PR = "r1"
 
 S = "${WORKDIR}/blindscan-utils"
 
 FILES_vuplus-blindscan-dvbs-utils = "${bindir}/*_blindscan"
-FILES_vuplus-blindscan-dvbc-utils = "${bindir}/tda1002x ${bindir}/ssh108"
+FILES_vuplus-blindscan-dvbc-utils = "${bindir}/tda1002x ${bindir}/ssh108*"
+FILES_${PN}-dbg += "${bindir}/.debug"
 
 do_install() {
 	install -d ${D}/${bindir}/
