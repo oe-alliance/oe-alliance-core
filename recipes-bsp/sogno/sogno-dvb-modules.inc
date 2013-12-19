@@ -4,7 +4,7 @@ PRIORITY = "required"
 LICENSE = "CLOSED"
 
 PV = "${KV}+${SRCDATE}"
-PR = "r3"
+PR = "r4"
 
 S = "${WORKDIR}"
 
@@ -23,3 +23,5 @@ do_install() {
         echo $i >> ${D}/${sysconfdir}/modules-load.d/_${MACHINE}.conf
     done
 }
+
+FILES_${PN} += "${sysconfdir}/modules-load.d/_${MACHINE}.conf"
