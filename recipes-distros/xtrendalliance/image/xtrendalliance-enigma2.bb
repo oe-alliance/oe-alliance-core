@@ -17,13 +17,14 @@ RRECOMMENDS_${PN} = "\
     xtrendalliance-version-info \
     enigma2-plugin-drivers-usbserial \
     enigma2-plugin-pli-softcamsetup \
+    xtrendalliance-feed-config \
     enigma2-plugin-extensions-xtrendpanel \
     enigma2-plugin-extensions-graphmultiepg \
     enigma2-plugin-extensions-mediaplayer \
     enigma2-plugin-extensions-cutlisteditor \
     enigma2-plugin-extensions-dvdplayer \
     enigma2-plugin-extensions-et-portal \
-    enigma2-plugin-extensions-videomode \
+    enigma2-plugin-systemplugins-videomode \
     enigma2-plugin-systemplugins-hotplug \
     enigma2-plugin-systemplugins-autoresolution \
     enigma2-plugin-systemplugins-osdpositionsetup \
