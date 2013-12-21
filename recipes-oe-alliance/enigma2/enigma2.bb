@@ -158,7 +158,7 @@ inherit gitpkgv autotools pkgconfig
 
 PV = "2.8+git${SRCPV}"
 PKGV = "2.8+git${GITPKGV}"
-PR = "r130"
+PR = "r131"
 
 SRC_URI = "${ENIGMA2_URI}"
 
@@ -198,6 +198,10 @@ SRC_URI_append_gb800seplus = " \
 			"			
 
 SRC_URI_append_gb800ue = " \
+			file://gb800-evfd.patch \
+			"
+			
+SRC_URI_append_gbquadplus = " \
 			file://gb800-evfd.patch \
 			"
 
