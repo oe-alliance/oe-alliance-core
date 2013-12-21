@@ -29,6 +29,7 @@ PROVIDES += " \
 	enigma2-plugin-extensions-ondemand-openuitzendinggemist \
 	enigma2-plugin-extensions-tunerserver \
 	${@base_contains('MACHINE_BRAND', 'Vu+', 'enigma2-plugin-extensions-hbbtv ' , ' ', d)} \
+	${@base_contains('MACHINE_BRAND', 'Vu+', 'enigma2-plugin-systemplugins-audioeffect ' , ' ', d)} \
 	enigma2-plugin-systemplugins-transcodingsetup \
 	enigma2-plugin-systemplugins-micomupgrade \
 	enigma2-plugin-extensions-ondemand \
@@ -53,6 +54,7 @@ DEPENDS = "enigma2 \
 	usbutils \
 	"
 
+DESCRIPTION_enigma2-plugin-systemplugins-audioeffect = "Audio Effect setup"
 DESCRIPTION_enigma2-plugin-systemplugins-autobouquetsmaker = "Automatically build and update bouquets from the satellite stream."
 RREPLACES_enigma2-plugin-systemplugins-autobouquetsmaker = "enigma2-plugin-extensions-autobouquets"
 RCONFLICTS_enigma2-plugin-systemplugins-autobouquetsmaker = "enigma2-plugin-extensions-autobouquets"
@@ -105,7 +107,7 @@ inherit gitpkgv autotools
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r90"
+PR = "r91"
 
 SRC_URI="git://github.com/oe-alliance/oe-alliance-plugins.git;protocol=git"
 
