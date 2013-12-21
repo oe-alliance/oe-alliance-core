@@ -10,7 +10,7 @@ SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
 PV = "2.0"
-PR = "r79"
+PR = "r80"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -98,6 +98,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-xtrendforum_0.1rc2_mips32el.ipk \
     enigma2-plugin-extensions-yampmusicplayer_2.1.1-2012-09-23_mipsel.ipk \
     enigma2-plugin-extensions-zdfnewmediathek_1.3rc6_mips32el.ipk \
+    enigma2-plugin-systemplugins-bouquetsprotection_0.2-rc1_all.ipk \
     enigma2-plugin-systemplugins-lcnscanner_1.0-r4_mips32el.ipk \
     enigma2-plugin-systemplugins-recordinfobar_1.0-rc15_mipsel.ipk \
     "
