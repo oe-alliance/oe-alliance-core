@@ -32,7 +32,7 @@ IMAGE_INSTALL = " \
     ushare \
     ofgwrite \
     libshowiframe \
-    packagegroup-base-smbfs \
+    packagegroup-smbfs \
     packagegroup-smbfs-client \
     neutrino \
     mc \

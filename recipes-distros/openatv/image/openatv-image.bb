@@ -14,8 +14,8 @@ IMAGE_INSTALL = "openatv-base \
     ${@base_contains("MACHINE_FEATURES", "smallflash", "", \
     " \
     packagegroup-smbfs-client \
-    packagegroup-base-smbfs \
-    packagegroup-base-nfs \
+    packagegroup-smbfs \
+    packagegroup-nfs \
     ", d)} \
     "
 

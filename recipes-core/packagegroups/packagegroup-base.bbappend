@@ -1,12 +1,12 @@
-PRINC = "4"
+PRINC = "5"
 
 PACKAGES += " \
             ${@base_contains("DISTRO_FEATURES", "appletalk", "packagegroup-appletalk", "", d)} \
             ${@base_contains("DISTRO_FEATURES", "smbfs", "packagegroup-smbfs-client", "", d)} \
             "
 
-RDEPENDS_packagegroup-base := "${@oe_filter_out('packagegroup-base-nfs', '${RDEPENDS_packagegroup-base}', d)}"
-RDEPENDS_packagegroup-base := "${@oe_filter_out('packagegroup-base-smbfs', '${RDEPENDS_packagegroup-base}', d)}"
+RDEPENDS_packagegroup-base := "${@oe_filter_out('packagegroup-nfs', '${RDEPENDS_packagegroup-base}', d)}"
+RDEPENDS_packagegroup-base := "${@oe_filter_out('packagegroup-smbfs', '${RDEPENDS_packagegroup-base}', d)}"
 
 RDEPENDS_packagegroup-smbfs += "\
     cifs \

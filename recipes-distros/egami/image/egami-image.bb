@@ -21,7 +21,7 @@ IMAGE_INSTALL = " \
     busybox-cron \
     python-gdata \
     minidlna \
-    packagegroup-base-smbfs \
+    packagegroup-smbfs \
     packagegroup-smbfs-client \
     mc \
     dvbsnoop \
