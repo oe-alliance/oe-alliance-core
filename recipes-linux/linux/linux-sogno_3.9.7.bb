@@ -2,16 +2,16 @@ DESCRIPTION = "Linux kernel for ${MACHINE}"
 SECTION = "kernel"
 LICENSE = "GPLv2"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
-PR = "r6"
+PR = "r7"
 
 KV = "3.9.7"
-SRCDATE = "20131212"
+SRCDATE = "20131218"
 
-SRC_URI[md5sum] = "a2edbb5517aa19d60f706509a6cd0313"
-SRC_URI[sha256sum] = "215c488e61792a97ec37852ff38deac901f2f73c15f24bd5383d9785472eca86"
+SRC_URI[md5sum] = "858d781649b9698159cae3f43ddc568e"
+SRC_URI[sha256sum] = "cffec4145848132b8ceecba0ed5f987ea10da84608917ce3c5d6ea8f5b87aae7"
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-MACHINE_KERNEL_PR_append = ".19"
+MACHINE_KERNEL_PR_append = ".20"
 
 # By default, kernel.bbclass modifies package names to allow multiple kernels
 # to be installed in parallel. We revert this change and rprovide the versioned
@@ -49,7 +49,7 @@ kernel_do_install_append() {
 	rm ${D}${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION}
 }
 
-MTD_DEVICE_sogno8800hd = "mtd2"
+MTD_DEVICE_sogno8800hd = "mtd7"
 
 pkg_postinst_kernel-image () {
 	if [ "x$D" == "x" ]; then
