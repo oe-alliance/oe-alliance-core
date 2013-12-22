@@ -1,0 +1,78 @@
+diff --git a/ubi-utils/ubiformat.c b/ubi-utils/ubiformat.c
+index a265a9a..51259a3 100644
+--- a/ubi-utils/ubiformat.c
++++ b/ubi-utils/ubiformat.c
+@@ -64,6 +64,7 @@ struct args {
+ 	const char *image;
+ 	const char *node;
+ 	int node_fd;
++	unsigned int no_detach_check:1;
+ };
+ 
+ static struct args args =
+@@ -93,6 +94,7 @@ static const char optionsstr[] =
+ "                             (default is 1)\n"
+ "-Q, --image-seq=<num>        32-bit UBI image sequence number to use\n"
+ "                             (by default a random number is picked)\n"
++"-D, --no-detach-check        skip detach check\n"
+ "-y, --yes                    assume the answer is \"yes\" for all question\n"
+ "                             this program would otherwise ask\n"
+ "-q, --quiet                  suppress progress percentage information\n"
+@@ -124,6 +126,7 @@ static const struct option long_options[] = {
+ 	{ .name = "ubi-ver",         .has_arg = 1, .flag = NULL, .val = 'x' },
+ 	{ .name = "help",            .has_arg = 0, .flag = NULL, .val = 'h' },
+ 	{ .name = "version",         .has_arg = 0, .flag = NULL, .val = 'V' },
++	{ .name = "no-detach-check", .has_arg = 0, .flag = NULL, .val = 'D' },
+ 	{ NULL, 0, NULL, 0},
+ };
+ 
+@@ -136,7 +139,7 @@ static int parse_opt(int argc, char * const argv[])
+ 		int key, error = 0;
+ 		unsigned long int image_seq;
+ 
+-		key = getopt_long(argc, argv, "nh?Vyqve:x:s:O:f:S:", long_options, NULL);
++		key = getopt_long(argc, argv, "nh?Vyqve:x:s:O:f:S:D", long_options, NULL);
+ 		if (key == -1)
+ 			break;
+ 
+@@ -186,6 +189,10 @@ static int parse_opt(int argc, char * const argv[])
+ 			args.quiet = 1;
+ 			break;
+ 
++		case 'D':
++			args.no_detach_check = 1;
++			break;
++
+ 		case 'x':
+ 			args.ubi_ver = simple_strtoul(optarg, &error);
+ 			if (error || args.ubi_ver < 0)
+@@ -801,16 +808,19 @@ int main(int argc, char * const argv[])
+ 	}
+ 
+ 	/* Make sure this MTD device is not attached to UBI */
+-	libubi = libubi_open();
+-	if (libubi) {
+-		int ubi_dev_num;
+-
+-		err = mtd_num2ubi_dev(libubi, mtd.mtd_num, &ubi_dev_num);
+-		libubi_close(libubi);
+-		if (!err) {
+-			errmsg("please, first detach mtd%d (%s) from ubi%d",
+-			       mtd.mtd_num, args.node, ubi_dev_num);
+-			goto out_close;
++	if (!args.no_detach_check == 1)
++	{
++		libubi = libubi_open();
++		if (libubi) {
++			int ubi_dev_num;
++
++			err = mtd_num2ubi_dev(libubi, mtd.mtd_num, &ubi_dev_num);
++			libubi_close(libubi);
++			if (!err) {
++				errmsg("please, first detach mtd%d (%s) from ubi%d",
++					mtd.mtd_num, args.node, ubi_dev_num);
++				goto out_close;
++			}
+ 		}
+ 	}
+ 
