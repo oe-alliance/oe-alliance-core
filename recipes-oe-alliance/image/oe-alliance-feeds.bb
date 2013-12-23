@@ -40,7 +40,7 @@ RRECOMMENDS_${PN} = "\
     enigma2-plugin-extensions-iptvlistupdater \
     enigma2-plugin-extensions-et-portal \
     enigma2-plugin-codec-audio-apple-lossless-alac \
-    enigma2-plugin-extensions-moviearchiver \	
+    enigma2-plugin-extensions-moviearchiver \
     \
     ${@base_contains("MACHINE_FEATURES", "fullgraphiclcd", "lcdpicons-enigma2-meta" , "", d)} \
     \
@@ -83,7 +83,7 @@ RRECOMMENDS_${PN} = "\
     sabnzbd \
     samba \
     smartmontools \
-    smbnetfs \	
+    smbnetfs \
     sshpass \
     strace \
     tcpdump \
