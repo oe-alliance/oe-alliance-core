@@ -9,11 +9,11 @@ PROVIDES = "${PN} \
     enigma2-plugin-extensions-fancontrol2 \
     "
 
-inherit gitpkgv pythonnative
+inherit autotools gitpkgv pythonnative
 
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r44"
+PR = "r51"
 
 SRC_URI = "${ENIGMA2_PLUGINS_URI} file://pluginnotwanted"
 
@@ -26,7 +26,7 @@ EXTRA_OECONF = " \
     --with-po \
     --with-boxtype=${MACHINE} \
     ${@base_contains('MACHINE_FEATURES', 'tpm', '--with-tpm' , '', d)} \
-    ${@base_contains('DISTRO_FEATURES', "pli", '--with-pli' , '', d)} \
+    ${@base_contains('DISTRO_FEATURES', 'pli', '--with-pli' , '', d)} \
 "
 
 RREPLACES_enigma2-plugin-skincomponents-eventlist = "enigma2-plugin-components-eventlist"
@@ -49,8 +49,6 @@ FILES_enigma2-plugin-skincomponents-weathercomponent-src += " ${libdir}/enigma2/
 PACKAGES += "${PN}-meta enigma2-plugin-skincomponents-channelselectionshorttitle-src enigma2-plugin-skincomponents-eventlist-src enigma2-plugin-skincomponents-eventposition-src enigma2-plugin-skincomponents-weathercomponent-src"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-inherit autotools
-
 S = "${WORKDIR}/git"
 
 DEPENDS = "enigma2 \
@@ -65,18 +63,11 @@ DEPENDS = "enigma2 \
     nmap \
     libshowiframe \
     libav \
-    ${@base_contains("MACHINE_FEATURES", "tpm", "" , "enigma2-plugin-extensions-webinterface-old", d)}"
+    "
 
-do_install_append() {
-    # remove unused .pyc files
-    find ${D}/usr/lib/enigma2/python/ -name '*.pyc' -exec rm {} \;
-    # remove leftover webinterface garbage
-    ${@base_contains('MACHINE_FEATURES', 'tpm','','rm -rf ${D}/usr/lib/enigma2/python/Plugins/Extensions/WebInterface',d)}
-}
-
-addtask do_remove_unwanted_packages before do_package after do_install
-
-python do_remove_unwanted_packages () {
+python populate_packages_prepend() {
+    import logging
+    logger = logging.getLogger("BitBake.RunQueue")
     mydir = bb.data.getVar('D', d, 1) + "/../git/"
 
     def deletenotwanted(mydir, d, package):
@@ -91,23 +82,20 @@ python do_remove_unwanted_packages () {
             if line.startswith('installdir'):
                 installloc = bb.data.getVar('D', d, 1) + line[13:].replace('$(libdir)',bb.data.getVar('libdir', d,1))
                 try:
+                    # logger.warning("REMOVING %s ", installloc)
                     shutil.rmtree(installloc)
                 except:
                     pass
 
-    import logging
-#    logger = logging.getLogger("BitBake.RunQueue")
     currentlist = bb.data.getVar('PACKAGES', d, 1)
-#    logger.warning("PACKAGES %s ", currentlist)
+    # logger.warning("PACKAGES %s ", currentlist)
     pkgnotwanted = open(bb.data.getVar('S', d, 1) + "/../pluginnotwanted").read()
-#    logger.warning("NOT WANTED %s ", pkgnotwanted)
+    # logger.warning("NOT WANTED %s ", pkgnotwanted)
 
     newlist = currentlist.split(" ")
     for package in pkgnotwanted.split("\n"):
         deletenotwanted(mydir, d, package.split('-'))
-}
 
-python populate_packages_prepend() {
     enigma2_plugindir = bb.data.expand('${libdir}/enigma2/python/Plugins', d)
     do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/[a-zA-Z0-9_]+.*$', 'enigma2-plugin-%s', '%s', recursive=True, match_path=True, prepend=True)
     do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/.*\.py$', 'enigma2-plugin-%s-src', '%s (source files)', recursive=True, match_path=True, prepend=True)
