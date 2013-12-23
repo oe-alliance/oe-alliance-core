@@ -13,7 +13,7 @@ inherit autotools gitpkgv pythonnative
 
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r51"
+PR = "r54"
 
 SRC_URI = "${ENIGMA2_PLUGINS_URI} file://pluginnotwanted"
 
@@ -65,7 +65,7 @@ DEPENDS = "enigma2 \
     libav \
     "
 
-python populate_packages_prepend() {
+python do_package_prepend() {
     import logging
     logger = logging.getLogger("BitBake.RunQueue")
     mydir = bb.data.getVar('D', d, 1) + "/../git/"
@@ -95,7 +95,9 @@ python populate_packages_prepend() {
     newlist = currentlist.split(" ")
     for package in pkgnotwanted.split("\n"):
         deletenotwanted(mydir, d, package.split('-'))
+}
 
+python populate_packages_prepend() {
     enigma2_plugindir = bb.data.expand('${libdir}/enigma2/python/Plugins', d)
     do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/[a-zA-Z0-9_]+.*$', 'enigma2-plugin-%s', '%s', recursive=True, match_path=True, prepend=True)
     do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/.*\.py$', 'enigma2-plugin-%s-src', '%s (source files)', recursive=True, match_path=True, prepend=True)
