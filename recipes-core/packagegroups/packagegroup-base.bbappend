@@ -1,4 +1,4 @@
-PRINC = "6"
+PRINC = "7"
 
 PACKAGES += " \
             ${@base_contains("DISTRO_FEATURES", "appletalk", "packagegroup-base-appletalk", "", d)} \
@@ -25,5 +25,6 @@ RDEPENDS_packagegroup-base-appletalk = "\
 RDEPENDS_packagegroup-base-nfs += "\
     nfs-utils \
     nfs-utils-client \
+    portmap \
     portmap-utils"
 
