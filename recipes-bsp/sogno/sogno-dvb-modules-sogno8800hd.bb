@@ -1,10 +1,10 @@
 KV = "3.9.7"
-SRCDATE = "20131219"
+SRCDATE = "20131224"
 
 RDEPENDS_${PN} += "sogno-mac-check"
 
-SRC_URI[md5sum] = "f53e4bbf6b91760af710e76880342ec0"
-SRC_URI[sha256sum] = "70990ba790036332515f6196502a1fe1cec2ec06aab0ebd34c66d75b5a786912"
+SRC_URI[md5sum] = "416519c12dd56cf7254ac347ff58ea17"
+SRC_URI[sha256sum] = "b307d2b2f51293a8401e6ea7140767cad0a01ec136a947a2e3cf4469d759ac64"
 
 SRC_URI = "http://whitebox.host.sk/bcm/driver/sogno8800hd-drivers-${KV}-${SRCDATE}.zip"
 
