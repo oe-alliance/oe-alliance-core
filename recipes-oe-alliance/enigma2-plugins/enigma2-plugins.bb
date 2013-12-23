@@ -13,9 +13,9 @@ inherit autotools gitpkgv pythonnative
 
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r54"
+PR = "r55"
 
-SRC_URI = "${ENIGMA2_PLUGINS_URI} file://pluginnotwanted"
+SRC_URI = "${ENIGMA2_PLUGINS_URI} file://pluginnotwanted.patch"
 
 EXTRA_OECONF = " \
     BUILD_SYS=${BUILD_SYS} \
@@ -64,38 +64,6 @@ DEPENDS = "enigma2 \
     libshowiframe \
     libav \
     "
-
-python do_package_prepend() {
-    import logging
-    logger = logging.getLogger("BitBake.RunQueue")
-    mydir = bb.data.getVar('D', d, 1) + "/../git/"
-
-    def deletenotwanted(mydir, d, package):
-        packagename = package[-1]
-        import shutil
-        try:
-            src = open(mydir + packagename + "/src/Makefile.am").read()
-        except IOError:
-            return
-
-        for line in src.split("\n"):
-            if line.startswith('installdir'):
-                installloc = bb.data.getVar('D', d, 1) + line[13:].replace('$(libdir)',bb.data.getVar('libdir', d,1))
-                try:
-                    # logger.warning("REMOVING %s ", installloc)
-                    shutil.rmtree(installloc)
-                except:
-                    pass
-
-    currentlist = bb.data.getVar('PACKAGES', d, 1)
-    # logger.warning("PACKAGES %s ", currentlist)
-    pkgnotwanted = open(bb.data.getVar('S', d, 1) + "/../pluginnotwanted").read()
-    # logger.warning("NOT WANTED %s ", pkgnotwanted)
-
-    newlist = currentlist.split(" ")
-    for package in pkgnotwanted.split("\n"):
-        deletenotwanted(mydir, d, package.split('-'))
-}
 
 python populate_packages_prepend() {
     enigma2_plugindir = bb.data.expand('${libdir}/enigma2/python/Plugins', d)
