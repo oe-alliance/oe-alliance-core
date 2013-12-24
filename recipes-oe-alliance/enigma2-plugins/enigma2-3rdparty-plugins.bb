@@ -10,7 +10,7 @@ SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
 PV = "2.0"
-PR = "r80"
+PR = "r81"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -57,6 +57,7 @@ THIRDPARTY_PLUGINS = " \
 	enigma2-plugin-extensions-kino_1.1rc5_mips32el.ipk \
 	enigma2-plugin-extensions-livefootball_4.4_mips32el.ipk \
 	enigma2-plugin-extensions-mediainfo_0.6_r04_all.ipk \
+	enigma2-plugin-extensions-mediaportal_5.0.6-Vix_all.ipk \
 	enigma2-plugin-extensions-msnwetter_0.6rc3_mips32el.ipk \
 	enigma2-plugin-extensions-mtv_0.1_mips32el.ipk \
 	enigma2-plugin-extensions-muzutv_1.1rc4_mips32el.ipk \
