@@ -2,10 +2,10 @@ DESCRIPTION = "Linux kernel for ${MACHINE}"
 LICENSE = "GPL"
 SECTION = "kernel"
 KV = "3.12.4"
-PR = "r0"
+PR = "r1"
 
 SRCDATE = "1211"
-MACHINE_KERNEL_PR_append = ".0"
+MACHINE_KERNEL_PR_append = ".1"
 
 SRC_URI[ebox5100.md5sum] = "2c6957a0f3662910e53df8eb31705e01"
 SRC_URI[ebox5100.sha256sum] = "2ba88a551a5c3a7095a2000e03841895d7b3892116d379d1009a8de9f5820f89"
