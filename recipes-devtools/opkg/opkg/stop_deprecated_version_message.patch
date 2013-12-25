@@ -1,0 +1,17 @@
+--- a/libopkg/pkg_depends.c	2013-12-25 22:22:46.674257809 +0100
++++ b/libopkg/pkg_depends.c	2013-12-25 22:24:54.946258897 +0100
+@@ -839,12 +839,12 @@
+ 	/* should these be here to support deprecated designations; dpkg does */
+ 	else if(!strncmp(*str, "<", 1)){
+ 		*str += 1;
+-		opkg_msg(NOTICE, "Deprecated version constraint '<' was used with the same meaning as '<='. Use '<<' for EARLIER constraint.\n");
++		/*opkg_msg(NOTICE, "Deprecated version constraint '<' was used with the same meaning as '<='. Use '<<' for EARLIER constraint.\n");*/
+ 		return EARLIER_EQUAL;
+ 	}
+ 	else if(!strncmp(*str, ">", 1)){
+ 		*str += 1;
+-		opkg_msg(NOTICE, "Deprecated version constraint '>' was used with the same meaning as '>='. Use '>>' for LATER constraint.\n");
++		/*opkg_msg(NOTICE, "Deprecated version constraint '>' was used with the same meaning as '>='. Use '>>' for LATER constraint.\n");*/
+ 		return LATER_EQUAL;
+ 	}
+ 	else {
