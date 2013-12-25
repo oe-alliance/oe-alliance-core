@@ -11,9 +11,9 @@ SRCDATE = "16092013"
 SRCDATE_azboxme = "14092013"
 SRCDATE_azboxminime = "14092013"
 
-DEPENDS = "genromfs-native"
-DEPENDS_azboxhd = "genromfs-native azbox-hd-buildimage"
-DEPENDS_azboxminime = "genromfs-native azbox-minime-packer"
+DEPENDS = "genromfs-native gcc"
+DEPENDS_azboxhd = "genromfs-native azbox-hd-buildimage gcc"
+DEPENDS_azboxminime = "genromfs-native azbox-minime-packer gcc"
 
 PKG_kernel-base = "kernel-base"
 PKG_kernel-image = "kernel-image"
