@@ -1,0 +1,28 @@
+diff --git a/src/gstdvbaudiosink.c b/src/gstdvbaudiosink.c
+index 15f020f..9b18544 100644
+--- a/src/gstdvbaudiosink.c
++++ b/src/gstdvbaudiosink.c
+@@ -201,8 +201,7 @@ GST_STATIC_PAD_TEMPLATE (
+ 		"audio/x-private1-ac3; "
+ 		"audio/x-dts; "
+ 		"audio/x-private1-dts; "
+-		"audio/x-private1-lpcm; "
+-		"audio/x-wma")
++		"audio/x-private1-lpcm")
+ );
+ 
+ static GstStaticPadTemplate sink_factory_broadcom =
+@@ -306,12 +305,7 @@ gst_dvbaudiosink_get_caps (GstBaseSink *basesink)
+ //	gchar *strcaps;
+ 	GstCaps *caps;
+ 
+-	if (hwtype == DM8000 && hwtemplate == &sink_factory_broadcom_dts) {
+-		caps = gst_caps_copy(&hwtemplate->static_caps.caps);
+-		gst_caps_remove_structure(caps, 11); // remove WMA!!
+-	}
+-	else
+-		caps = gst_static_caps_get(&hwtemplate->static_caps);
++	caps = gst_static_caps_get(&hwtemplate->static_caps);
+ 
+ //	strcaps = gst_caps_to_string(caps);
+ //	GST_INFO_OBJECT (self, "dynamic caps for model %d '%s'", hwtype, gst_caps_to_string(caps));

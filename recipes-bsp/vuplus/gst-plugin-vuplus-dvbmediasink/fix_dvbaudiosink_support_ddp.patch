@@ -1,0 +1,54 @@
+diff --git a/src/gstdvbaudiosink.c b/src/gstdvbaudiosink.c
+index 15f020f..63978a4 100644
+--- a/src/gstdvbaudiosink.c
++++ b/src/gstdvbaudiosink.c
+@@ -198,7 +198,9 @@ GST_STATIC_PAD_TEMPLATE (
+ 		X_RAW_INT(32,32)
+ 		"audio/mpeg; "
+ 		"audio/x-ac3; "
++		"audio/x-eac3; "
+ 		"audio/x-private1-ac3; "
++		"audio/x-private1-eac3; "
+ 		"audio/x-dts; "
+ 		"audio/x-private1-dts; "
+ 		"audio/x-private1-lpcm; "
+@@ -345,6 +347,7 @@ gst_dvbaudiosink_acceptcaps (GstPad * pad, GstCaps * caps)
+ 
+ 		if (!strcmp(type, "audio/mpeg") ||
+ 		    !strcmp(type, "audio/x-ac3") ||
++		    !strcmp(type, "audio/x-eac3") ||
+ //		    !strcmp(type, "audio/x-private1-ac3") ||
+ //		    !strcmp(type, "audio/x-private1-lpcm") ||
+ //		    !strcmp(type, "audio/x-wma") ||
+@@ -844,6 +847,10 @@ gst_dvbaudiosink_set_caps (GstBaseSink * basesink, GstCaps * caps)
+ 		GST_INFO_OBJECT (self, "MIMETYPE %s",type);
+ 		bypass = 0;
+ 	}
++	else if (!strcmp(type, "audio/x-eac3")) {
++		GST_INFO_OBJECT (self, "MIMETYPE %s",type);
++		bypass = 0x22;
++	}
+ 	else if (!strcmp(type, "audio/x-private1-dts")) {
+ 		GST_INFO_OBJECT (self, "MIMETYPE %s (DVD Audio - 2 byte skipping)",type);
+ 		bypass = 2;
+@@ -854,6 +861,11 @@ gst_dvbaudiosink_set_caps (GstBaseSink * basesink, GstCaps * caps)
+ 		bypass = 0;
+ 		self->skip = 2;
+ 	}
++	else if (!strcmp(type, "audio/x-private1-eac3")) {
++		GST_INFO_OBJECT (self, "MIMETYPE %s (DVD Audio - 2 byte skipping)",type);
++		bypass = 0x22;
++		self->skip = 2;
++	}
+ 	else if (!strcmp(type, "audio/x-private1-lpcm")) {
+ 		GST_INFO_OBJECT (self, "MIMETYPE %s (DVD Audio)",type);
+ 		bypass = 6;
+@@ -1248,7 +1260,7 @@ gst_dvbaudiosink_render (GstBaseSink * sink, GstBuffer * buffer)
+ 			self->timestamp = timestamp;
+ 		else
+ 			timestamp = self->timestamp;
+-		if (self->bypass < 0xd)
++		if (self->bypass < 0xd || self->bypass == 0x22)
+ 			self->timestamp += duration;
+ 	}
+ 	else
