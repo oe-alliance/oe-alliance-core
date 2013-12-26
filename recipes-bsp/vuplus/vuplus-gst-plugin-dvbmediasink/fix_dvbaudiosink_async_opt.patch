@@ -1,0 +1,13 @@
+diff --git a/src/gstdvbaudiosink.c b/src/gstdvbaudiosink.c
+index 9a71412..b99f2fc 100644
+--- a/src/gstdvbaudiosink.c
++++ b/src/gstdvbaudiosink.c
+@@ -394,7 +394,7 @@ gst_dvbaudiosink_init (GstDVBAudioSink *klass, GstDVBAudioSinkClass * gclass)
+ 	klass->dump_filename = NULL;
+ 
+ 	gst_base_sink_set_sync (GST_BASE_SINK(klass), FALSE);
+-	gst_base_sink_set_async_enabled (GST_BASE_SINK(klass), TRUE);
++	gst_base_sink_set_async_enabled (GST_BASE_SINK(klass), FALSE);
+ 
+ 	gst_pad_set_acceptcaps_function (GST_BASE_SINK (klass)->sinkpad,
+ 		GST_DEBUG_FUNCPTR (gst_dvbaudiosink_acceptcaps));

@@ -12,12 +12,10 @@ MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS = "\
 
 MACHINE_EXTRA_RRECOMMENDS = " \
 	vuplus-shutdown \
-	gst-plugin-dvbmediasink \
+	vuplus-gst-plugin-dvbmediasink \
 	"
 
 include conf/machine/include/autoload-filesystems.inc
-
-DVBMEDIASINK_CONFIG = "--with-wmv --with-wma --with-pcm --with-eac3"
 
 TARGET_ARCH = "mipsel"
 DEFAULTTUNE = "mips32el"
