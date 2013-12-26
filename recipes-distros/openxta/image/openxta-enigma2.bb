@@ -23,9 +23,10 @@ RRECOMMENDS_${PN} = "\
     enigma2-plugin-extensions-graphmultiepg \
     enigma2-plugin-extensions-mediaplayer \
     enigma2-plugin-extensions-cutlisteditor \
-    enigma2-plugin-extensions-extraspanel  \
+    enigma2-plugin-extensions-extraspanel \
     enigma2-plugin-extensions-dvdplayer \
     enigma2-plugin-extensions-et-portal \
+    enigma2-plugin-extensions-openxtareader \
     enigma2-plugin-systemplugins-videomode \
     enigma2-plugin-systemplugins-hotplug \
     enigma2-plugin-systemplugins-autoresolution \
@@ -35,7 +36,6 @@ RRECOMMENDS_${PN} = "\
     enigma2-plugin-skins-technihd \
     enigma2-plugin-skins-xta2 \
     enigma2-plugin-skins-magnum32 \
-    enigma2-plugin-systemplugins-videoenhancement \
     ${@base_contains("MACHINE_FEATURES", "3dtv", "enigma2-plugin-systemplugins-osd3dsetup" , "", d)} \
     "
 
