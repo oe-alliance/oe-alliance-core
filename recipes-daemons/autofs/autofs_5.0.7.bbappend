@@ -1,6 +1,8 @@
-PRINC = "6"
+PRINC = "7"
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
+
+SRC_URI += " file://volatiles.99_autofs"
 
 EXTRA_OECONF += "--with-confdir=/etc/default"
 
