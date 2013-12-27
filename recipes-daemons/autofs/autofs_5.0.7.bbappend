@@ -1,4 +1,6 @@
-PRINC = "5"
+PRINC = "6"
+
+FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
 EXTRA_OECONF += "--with-confdir=/etc/default"
 
@@ -15,13 +17,12 @@ do_configure_prepend () {
 # Remove and change configuration files
 do_install_append() {
     install -d ${D}/etc
-    echo "/autofs     /etc/auto.hotplug" > ${D}/etc/auto.master
-    echo "/media/autofs  /etc/auto.network" > ${D}/etc/auto.master
+    echo "/media/autofs  /etc/auto.network" >> ${D}/etc/auto.master
     echo "# automounter configuration" > ${D}/etc/auto.network
     chmod 0644 ${D}/etc/auto.network
-    echo "* -fstype=auto,rw,sync :/dev/&" > ${D}/etc/auto.hotplug
-    chmod 0644 ${D}/etc/auto.hotplug	
     rm -f ${D}/etc/auto.smb ${D}/etc/auto.misc ${D}/etc/autofs_ldap_auth.conf
     install -d ${D}/etc/default
     sed -i 's/^TIMEOUT=300/TIMEOUT=30/' ${D}/etc/default/autofs
+    install -d ${D}${sysconfdir}/default/volatiles
+    install -m 644 ${WORKDIR}/volatiles.99_autofs ${D}${sysconfdir}/default/volatiles/99_autofs
 }

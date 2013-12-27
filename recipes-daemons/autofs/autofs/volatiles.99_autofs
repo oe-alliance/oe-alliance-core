@@ -1,0 +1,3 @@
+# <type> <owner> <group> <mode> <path> <linksource>
+d root root 0700 /var/run/autofs none
+d root root 0755 /media/autofs none
