@@ -4,7 +4,7 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3
                     file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
 
 PV = "1.0"
-PR = "r28"
+PR = "r29"
 
 inherit task
 
@@ -36,6 +36,6 @@ RRECOMMENDS = "\
 	${@base_contains("MACHINE_FEATURES", "3dtv", "enigma2-plugin-systemplugins-osd3dsetup" , "", d)} \
 	"
 
-RRECOMMENDS_append_et4x00 = " enigma2-plugin-extensions-et-webbrowser"
-RRECOMMENDS_append_et6x00 = " enigma2-plugin-extensions-et-webbrowser"
-RRECOMMENDS_append_et9x00 = " enigma2-plugin-extensions-et-webbrowser"
+#RRECOMMENDS_append_et4x00 = " enigma2-plugin-extensions-et-webbrowser"
+#RRECOMMENDS_append_et6x00 = " enigma2-plugin-extensions-et-webbrowser"
+#RRECOMMENDS_append_et9x00 = " enigma2-plugin-extensions-et-webbrowser"
