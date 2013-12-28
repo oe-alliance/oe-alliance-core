@@ -10,7 +10,7 @@ SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
 PV = "2.0"
-PR = "r82"
+PR = "r83"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -94,7 +94,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-webmedia_10.0_r02_oe2.0_all.ipk \
     enigma2-plugin-extensions-webradiofs_11.25_all.ipk \
     enigma2-plugin-extensions-wikipedia_1.9rc1_mips32el.ipk \
-    enigma2-plugin-extensions-xbmcaddons_4.0_r0_all.ipk \
+    enigma2-plugin-extensions-xbmcaddons_5.0_r0_all.ipk \
     enigma2-plugin-extensions-xbmcwetter_1.0rc4_mips32el.ipk \
     enigma2-plugin-extensions-xtrendforum_0.1rc2_mips32el.ipk \
     enigma2-plugin-extensions-yampmusicplayer_2.1.1-2012-09-23_mipsel.ipk \
