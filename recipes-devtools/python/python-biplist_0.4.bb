@@ -1,4 +1,4 @@
-DESCRIPTION = "Binary Property List (plist) files provide a faster and smaller\
+SUMMARY = "Binary Property List (plist) files provide a faster and smaller\
            serialization format for property lists on OS X. This is a\
            library for generating binary plists which can be read by OS X,\
            iOS, or other clients."

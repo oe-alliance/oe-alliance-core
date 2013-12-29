@@ -1,4 +1,4 @@
-DESCRIPTION = "Create Azbox MiniME webinterface update image"
+SUMMARY = "Create Azbox MiniME webinterface update image"
 SECTION = "console/utils"
 LICENSE = "CLOSED"
 

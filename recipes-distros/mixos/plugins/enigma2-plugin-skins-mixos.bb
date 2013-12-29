@@ -1,4 +1,4 @@
-DESCRIPTION = "Enigma2 Skin MixOS HD"
+SUMMARY = "Enigma2 Skin MixOS HD"
 MAINTAINER = "vali"
 SECTION = "base"
 PRIORITY = "required"

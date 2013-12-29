@@ -1,4 +1,4 @@
-DESCRIPTION = "Henksat Wavefrontier"
+SUMMARY = "Henksat Wavefrontier"
 
 SETTINGS_FILENAME = "e2_henksat_wavefrontier"
 

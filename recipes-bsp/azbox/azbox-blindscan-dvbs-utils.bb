@@ -1,4 +1,4 @@
-DESCRIPTION = "Tool for DVB-S/S2 blindscan"
+SUMMARY = "Tool for DVB-S/S2 blindscan"
 SECTION = "base"
 PRIORITY = "optional"
 LICENSE = "CLOSED"

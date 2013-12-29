@@ -1,4 +1,4 @@
-DESCRIPTION = "A cross platform audio library"
+SUMMARY = "A cross platform audio library"
 LICENSE = "GPL"
 HOMEPAGE = "http://www.xiph.org/ao/"
 SECTION = "libs/multimedia"

@@ -1,4 +1,4 @@
-DESCRIPTION = "openxtaImage"
+SUMMARY = "openxtaImage"
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "proprietary"

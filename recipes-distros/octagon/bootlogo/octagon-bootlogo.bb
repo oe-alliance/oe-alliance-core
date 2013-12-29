@@ -1,4 +1,4 @@
-DESCRIPTION = "octagon bootlogo"
+SUMMARY = "octagon bootlogo"
 SECTION = "base"
 PRIORITY = "required"
 MAINTAINER = "octagon"

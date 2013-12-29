@@ -1,4 +1,4 @@
-DESCRIPTION = "Skin Vanity by MMark"
+SUMMARY = "Skin Vanity by MMark"
 MAINTAINER = "SIFTeam"
 
 require conf/license/license-gplv2.inc

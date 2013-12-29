@@ -1,4 +1,4 @@
-DESCRIPTION = "enigma2 picons"
+SUMMARY = "enigma2 picons"
 
 require conf/license/license-gplv2.inc
 

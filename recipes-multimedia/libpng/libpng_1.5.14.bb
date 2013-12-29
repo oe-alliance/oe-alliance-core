@@ -1,4 +1,4 @@
-DESCRIPTION = "PNG Library"
+SUMMARY = "PNG Library"
 HOMEPAGE = "http://www.libpng.org/"
 LICENSE = "libpng"
 SECTION = "libs"

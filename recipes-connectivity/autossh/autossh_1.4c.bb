@@ -1,4 +1,4 @@
-DESCRIPTION = "autossh"
+SUMMARY = "autossh"
 LICENSE = "GPLv2+"
 PR = "r0"
 

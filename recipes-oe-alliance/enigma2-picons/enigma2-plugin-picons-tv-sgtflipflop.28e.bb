@@ -1,4 +1,4 @@
-DESCRIPTION = "sgtflipflop 28e"
+SUMMARY = "sgtflipflop 28e"
 SECTION = "base"
 PRIORITY = "required"
 MAINTAINER = "silverfox0786"

@@ -1,5 +1,5 @@
 SUMMARY = "An abstraction layer for touchscreen panel events."
-DESCRIPTION = "Tslib is an abstraction layer for touchscreen panel \
+SUMMARY = "Tslib is an abstraction layer for touchscreen panel \
 events, as well as a filter stack for the manipulation of those events. \
 Tslib is generally used on embedded devices to provide a common user \
 space interface to touchscreen functionality."

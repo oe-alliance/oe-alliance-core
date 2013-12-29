@@ -1,4 +1,4 @@
-DESCRIPTION = "openSPA Image"
+SUMMARY = "openSPA Image"
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "proprietary"

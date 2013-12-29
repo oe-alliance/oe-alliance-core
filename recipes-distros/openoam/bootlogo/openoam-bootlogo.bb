@@ -1,4 +1,4 @@
-DESCRIPTION = "openOAM bootlogo"
+SUMMARY = "openOAM bootlogo"
 SECTION = "base"
 PRIORITY = "required"
 MAINTAINER = "openOAM"

@@ -1,4 +1,4 @@
-DESCRIPTION = "Skin Red Heat HD. Daconi and mmark"
+SUMMARY = "Skin Red Heat HD. Daconi and mmark"
 MAINTAINER = "SIFTeam"
 
 require conf/license/license-gplv2.inc

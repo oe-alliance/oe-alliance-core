@@ -1,4 +1,4 @@
-DESCRIPTION = "WiFi devices for Realtek 802.11a/bg chipsets."
+SUMMARY = "WiFi devices for Realtek 802.11a/bg chipsets."
 PACKAGE_ARCH = "all"
 
 require conf/license/license-gplv2.inc

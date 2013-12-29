@@ -1,4 +1,4 @@
-DESCRIPTION = "Extensions to the standard Python datetime module."
+SUMMARY = "Extensions to the standard Python datetime module."
 HOMEPAGE = "http://pypi.python.org/pypi/python-dateutil"
 SECTION = "devel/python"
 LICENSE = "BSD"

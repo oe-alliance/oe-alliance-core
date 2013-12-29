@@ -1,4 +1,4 @@
-DESCRIPTION = "oe-alliance skins for Enigma2"
+SUMMARY = "oe-alliance skins for Enigma2"
 MAINTAINER = "oe-alliance"
 
 require conf/license/license-gplv2.inc

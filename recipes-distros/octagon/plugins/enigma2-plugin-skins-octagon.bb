@@ -1,4 +1,4 @@
-DESCRIPTION = "Enigma2 Skin octagon HD"
+SUMMARY = "Enigma2 Skin octagon HD"
 MAINTAINER = "openPli"
 SECTION = "base"
 PRIORITY = "required"

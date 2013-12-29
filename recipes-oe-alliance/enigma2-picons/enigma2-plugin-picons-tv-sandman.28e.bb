@@ -1,4 +1,4 @@
-DESCRIPTION = "sandman 28e"
+SUMMARY = "sandman 28e"
 SECTION = "base"
 PRIORITY = "required"
 MAINTAINER = "silverfox0786"

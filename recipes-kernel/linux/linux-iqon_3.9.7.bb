@@ -1,4 +1,4 @@
-DESCRIPTION = "Linux kernel for ${MACHINE}"
+SUMMARY = "Linux kernel for ${MACHINE}"
 LICENSE = "GPL"
 SECTION = "kernel"
 KV = "3.9.7"

@@ -1,4 +1,4 @@
-DESCRIPTION = "rtmpdump Real-Time Messaging Protocol"
+SUMMARY = "rtmpdump Real-Time Messaging Protocol"
 
 require conf/license/license-gplv2.inc
 

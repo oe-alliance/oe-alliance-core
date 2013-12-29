@@ -1,4 +1,4 @@
-DESCRIPTION = "openx2-spinner"
+SUMMARY = "openx2-spinner"
 MAINTAINER = "X2 team"
 SECTION = "base"
 LICENSE = "proprietary"

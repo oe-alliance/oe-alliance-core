@@ -1,4 +1,4 @@
-DESCRIPTION = "opera-hbbtv-browser"
+SUMMARY = "opera-hbbtv-browser"
 SECTION = "base"
 PRIORITY = "optional"
 LICENSE = "CLOSED"

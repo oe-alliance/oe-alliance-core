@@ -1,4 +1,4 @@
-DESCRIPTION = "Vhannibal Motor E2 Settings File"
+SUMMARY = "Vhannibal Motor E2 Settings File"
 
 SETTINGS_FILENAME = "vhannibal.motor"
 

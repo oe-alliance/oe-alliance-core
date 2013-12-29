@@ -1,5 +1,5 @@
 NAME = "DOMExtender"
-DESCRIPTION = "Script extended DOM for AZBoxHD"
+SUMMARY = "Script extended DOM for AZBoxHD"
 SECTION = "base"
 PRIORITY = "required"
 MAINTAINER = "OpenSPA"

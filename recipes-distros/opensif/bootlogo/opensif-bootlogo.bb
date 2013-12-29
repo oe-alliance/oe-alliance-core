@@ -1,4 +1,4 @@
-DESCRIPTION = "SIFTeam bootlogo"
+SUMMARY = "SIFTeam bootlogo"
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "proprietary"

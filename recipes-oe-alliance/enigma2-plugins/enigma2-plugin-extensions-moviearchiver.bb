@@ -1,4 +1,4 @@
-DESCRIPTION = "Archive or Backup your Movielist automatically. MovieArchiver by svox"
+SUMMARY = "Archive or Backup your Movielist automatically. MovieArchiver by svox"
 MAINTAINER = "svox"
 SECTION = "extra"
 PRIORITY = "optional"

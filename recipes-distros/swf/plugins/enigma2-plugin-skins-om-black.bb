@@ -1,4 +1,4 @@
-DESCRIPTION = "Enigma2 Skin VentonHD-Skin"
+SUMMARY = "Enigma2 Skin VentonHD-Skin"
 MAINTAINER = "venton-support"
 SECTION = "base"
 PRIORITY = "required"

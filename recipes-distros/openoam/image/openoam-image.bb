@@ -1,4 +1,4 @@
-DESCRIPTION = "OpenOAM Image"
+SUMMARY = "OpenOAM Image"
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "proprietary"

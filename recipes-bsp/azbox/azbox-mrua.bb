@@ -1,4 +1,4 @@
-DESCRIPTION = "Hardware user space LIBs for ${MACHINE}"
+SUMMARY = "Hardware user space LIBs for ${MACHINE}"
 SECTION = "libs"
 PRIORITY = "required"
 LICENSE = "CLOSED"

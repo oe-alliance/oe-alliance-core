@@ -1,4 +1,4 @@
-DESCRIPTION = "USB DVB driver for EM28xx chipset"
+SUMMARY = "USB DVB driver for EM28xx chipset"
 PACKAGE_ARCH = "all"
 
 require conf/license/license-gplv2.inc

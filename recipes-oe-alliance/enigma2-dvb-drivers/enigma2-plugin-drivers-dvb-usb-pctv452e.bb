@@ -1,4 +1,4 @@
-DESCRIPTION = "USB DVB driver for pctv452e chipsets"
+SUMMARY = "USB DVB driver for pctv452e chipsets"
 PACKAGE_ARCH = "all"
 
 require conf/license/license-gplv2.inc

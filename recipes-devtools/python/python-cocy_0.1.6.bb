@@ -1,4 +1,4 @@
-DESCRIPTION = "Components for UPnP."
+SUMMARY = "Components for UPnP."
 HOMEPAGE = "http://github.com/mnlipp/CoCy"
 SECTION = "devel/python"
 LICENSE = "BSD"

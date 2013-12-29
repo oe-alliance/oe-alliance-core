@@ -1,4 +1,4 @@
-DESCRIPTION = "odinsupport-spinner"
+SUMMARY = "odinsupport-spinner"
 MAINTAINER = "odin Support"
 SECTION = "base"
 LICENSE = "proprietary"

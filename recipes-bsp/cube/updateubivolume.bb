@@ -1,4 +1,4 @@
-DESCRIPTION = "update static ubi volume"
+SUMMARY = "update static ubi volume"
 SECTION = "console/utils"
 
 LICENSE = "GPLv3"

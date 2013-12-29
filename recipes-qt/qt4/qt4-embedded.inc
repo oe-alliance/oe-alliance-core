@@ -1,4 +1,4 @@
-DESCRIPTION = "Qt is a versatile cross-platform application framework -- this is the embedded version."
+SUMMARY = "Qt is a versatile cross-platform application framework -- this is the embedded version."
 SECTION = "libs"
 HOMEPAGE = "http://qt.nokia.com"
 DEPENDS += "directfb tslib"

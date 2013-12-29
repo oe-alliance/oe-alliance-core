@@ -1,5 +1,5 @@
 SUMMARY = "System and process monitoring utilities"
-DESCRIPTION = "Procps contains a set of system utilities that provide system information about processes using \
+SUMMARY = "Procps contains a set of system utilities that provide system information about processes using \
 the /proc filesystem. The package \ includes the programs ps, top, vmstat, w, kill, and skill."
 HOMEPAGE = "http://procps.sf.net"
 SECTION = "base"

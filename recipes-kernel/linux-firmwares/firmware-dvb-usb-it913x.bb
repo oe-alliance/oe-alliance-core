@@ -1,6 +1,6 @@
 require linux-firmware.inc
 
-DESCRIPTION = "Firmware for dvb-usb-it913x"
+SUMMARY = "Firmware for dvb-usb-it913x"
 
 SRCREV = "4eb21647ad89816cdc0ad90edcb486fa09ef9a31"
 

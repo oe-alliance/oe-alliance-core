@@ -1,4 +1,4 @@
-DESCRIPTION = "Skin Horizon by MMark"
+SUMMARY = "Skin Horizon by MMark"
 MAINTAINER = "SIFTeam"
 
 require conf/license/license-gplv2.inc

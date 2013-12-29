@@ -1,4 +1,4 @@
-DESCRIPTION = "The icalendar package is a parser/generator of iCalendar files for use with Python."
+SUMMARY = "The icalendar package is a parser/generator of iCalendar files for use with Python."
 HOMEPAGE = "http://icalendar.readthedocs.org"
 SECTION = "devel/python"
 LICENSE = "BSD"

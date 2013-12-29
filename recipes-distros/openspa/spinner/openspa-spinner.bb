@@ -1,4 +1,4 @@
-DESCRIPTION = "openspa-spinner"
+SUMMARY = "openspa-spinner"
 MAINTAINER = "OpenSPA Team"
 SECTION = "base"
 LICENSE = "proprietary"

@@ -1,4 +1,4 @@
-DESCRIPTION = "GigaBlue GB800XX CFE AddOn"
+SUMMARY = "GigaBlue GB800XX CFE AddOn"
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "proprietary"

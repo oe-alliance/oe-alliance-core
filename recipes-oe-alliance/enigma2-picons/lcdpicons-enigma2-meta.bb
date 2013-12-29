@@ -1,4 +1,4 @@
-DESCRIPTION = "meta package for enigma2 lcdpicon sets"
+SUMMARY = "meta package for enigma2 lcdpicon sets"
 PACKAGE_ARCH = "all"
 ALLOW_EMPTY_${PN} = "1"
 

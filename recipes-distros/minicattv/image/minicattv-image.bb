@@ -1,4 +1,4 @@
-DESCRIPTION = "minicattv Image"
+SUMMARY = "minicattv Image"
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "proprietary"

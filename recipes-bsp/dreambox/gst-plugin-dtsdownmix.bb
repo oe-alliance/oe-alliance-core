@@ -1,4 +1,4 @@
-DESCRIPTION = "gstreamer dtsdownmix plugin"
+SUMMARY = "gstreamer dtsdownmix plugin"
 SECTION = "multimedia"
 PRIORITY = "optional"
 LICENSE = "GPLv2"

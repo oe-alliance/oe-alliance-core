@@ -1,4 +1,4 @@
-DESCRIPTION = "LCN scanner for DVB-T services"
+SUMMARY = "LCN scanner for DVB-T services"
 DEPENDS = "enigma2 python"
 
 require conf/license/license-gplv2.inc

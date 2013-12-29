@@ -1,4 +1,4 @@
-DESCRIPTION = "USB DVB driver for Afatech 9015 chipset"
+SUMMARY = "USB DVB driver for Afatech 9015 chipset"
 PACKAGE_ARCH = "all"
 
 require conf/license/license-gplv2.inc

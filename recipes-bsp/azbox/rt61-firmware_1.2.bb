@@ -1,4 +1,4 @@
-DESCRIPTION = "Firmware for rt61 based USB wifi adaptors"
+SUMMARY = "Firmware for rt61 based USB wifi adaptors"
 LICENSE = "CLOSED"
 PROVIDES = "rt61-firmware"
 

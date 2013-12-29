@@ -1,4 +1,4 @@
-DESCRIPTION = "minicattv bootlogo"
+SUMMARY = "minicattv bootlogo"
 SECTION = "base"
 PRIORITY = "required"
 MAINTAINER = "minicattv Support"

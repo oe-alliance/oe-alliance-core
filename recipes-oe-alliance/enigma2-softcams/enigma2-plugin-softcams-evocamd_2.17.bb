@@ -1,5 +1,5 @@
 CAMNAME = "evocamd"
-DESCRIPTION = "evocamd ${PV} softcam"
+SUMMARY = "evocamd ${PV} softcam"
 
 PR = "r1"
 

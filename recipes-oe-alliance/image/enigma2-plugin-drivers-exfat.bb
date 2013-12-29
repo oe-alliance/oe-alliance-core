@@ -1,4 +1,4 @@
-DESCRIPTION = "Add support for exfat filesystem"
+SUMMARY = "Add support for exfat filesystem"
 
 require conf/license/license-gplv2.inc
 

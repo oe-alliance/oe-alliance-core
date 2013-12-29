@@ -1,4 +1,4 @@
-DESCRIPTION = "Xtrend-Alliance version info"
+SUMMARY = "Xtrend-Alliance version info"
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "proprietary"

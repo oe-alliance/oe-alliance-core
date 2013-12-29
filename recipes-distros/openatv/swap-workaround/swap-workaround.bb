@@ -1,4 +1,4 @@
-DESCRIPTION = "swap workaround for box with low memory"
+SUMMARY = "swap workaround for box with low memory"
 MAINTAINER = "ATV Team"
 SECTION = "base"
 LICENSE = "proprietary"

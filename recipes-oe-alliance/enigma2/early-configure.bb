@@ -1,6 +1,6 @@
 PV = "20101009"
 PR = "r0"
-DESCRIPTION = "Run some scripts earlier than others"
+SUMMARY = "Run some scripts earlier than others"
 PACKAGES = "${PN}"
 
 require conf/license/license-gplv2.inc

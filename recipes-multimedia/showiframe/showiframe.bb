@@ -1,4 +1,4 @@
-DESCRIPTION = "utility to show an mpeg2/4 iframe on a linuxtv video device"
+SUMMARY = "utility to show an mpeg2/4 iframe on a linuxtv video device"
 SECTION = "base"
 PRIORITY = "optional"
 LICENSE = "PD"

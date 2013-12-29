@@ -1,6 +1,6 @@
 require linux-firmware.inc
 
-DESCRIPTION = "Firmware for ZD1211"
+SUMMARY = "Firmware for ZD1211"
 
 SRCREV = "bf9f8648fdf1d1d63db471554781f897d219bd62"
 

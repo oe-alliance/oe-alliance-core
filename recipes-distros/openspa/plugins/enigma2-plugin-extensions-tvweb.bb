@@ -1,5 +1,5 @@
 NAME = "TVweb"
-DESCRIPTION = "View films online from your STB"
+SUMMARY = "View films online from your STB"
 SECTION = "extra"
 PRIORITY = "optional"
 RDEPENDS_${PN} = "wget rtmpdump"

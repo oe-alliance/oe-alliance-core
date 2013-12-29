@@ -1,4 +1,4 @@
-DESCRIPTION = "Vhannibal E2 Settings File Quad Nordic"
+SUMMARY = "Vhannibal E2 Settings File Quad Nordic"
 
 SETTINGS_FILENAME = "vhannibal.quad.nordic"
 

@@ -1,4 +1,4 @@
-DESCRIPTION = "ViX HD skins for Enigma2"
+SUMMARY = "ViX HD skins for Enigma2"
 MAINTAINER = "Andy Blackburn"
 
 require conf/license/license-gplv2.inc

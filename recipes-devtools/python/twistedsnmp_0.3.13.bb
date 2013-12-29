@@ -1,4 +1,4 @@
-DESCRIPTION = "twisted SNMP framework"
+SUMMARY = "twisted SNMP framework"
 SECTION = "devel/python"
 PRIORITY = "optional"
 RDEPENDS_${PN} = "python-pysnmp-se"

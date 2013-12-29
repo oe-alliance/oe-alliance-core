@@ -1,4 +1,4 @@
-DESCRIPTION = "Rytec settings ${SATNAMES}"
+SUMMARY = "Rytec settings ${SATNAMES}"
 MAINTAINER ?= "Mike Looijmans"
 LICENSE = "CLOSED"
 

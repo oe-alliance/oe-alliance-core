@@ -1,4 +1,4 @@
-DESCRIPTION = "Driver for Ralink rt73 USB 802.11g WiFi sticks"
+SUMMARY = "Driver for Ralink rt73 USB 802.11g WiFi sticks"
 HOMEPAGE = "http://www.ralinktech.com.tw"
 SECTION = "kernel/modules"
 LICENSE = "GPL"

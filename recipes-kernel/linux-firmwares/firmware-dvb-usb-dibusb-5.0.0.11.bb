@@ -1,6 +1,6 @@
 require linux-firmware.inc
 
-DESCRIPTION = "Firmware for dvb-usb-dibusb-5.0.0.11"
+SUMMARY = "Firmware for dvb-usb-dibusb-5.0.0.11"
 
 SRCREV = "13f0b6bda7b567d29c747196aa65ad82b18651ca"
 

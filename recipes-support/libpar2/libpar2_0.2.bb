@@ -1,4 +1,4 @@
-DESCRIPTION = "A tool to apply the data-recovery capability concepts of RAID-like systems \
+SUMMARY = "A tool to apply the data-recovery capability concepts of RAID-like systems \
 to the posting & recovery of multi-part archives on Usenet."
 SECTION = "libs"
 LICENSE = "GPL"

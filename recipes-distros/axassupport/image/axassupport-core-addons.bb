@@ -1,4 +1,4 @@
-DESCRIPTION = "core addons for Enigma2"
+SUMMARY = "core addons for Enigma2"
 MAINTAINER = "AXAS Support"
 
 LICENSE = "Proprietary"

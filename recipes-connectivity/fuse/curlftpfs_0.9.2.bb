@@ -1,4 +1,4 @@
-DESCRIPTION = "This is a filesystem client based on the FTP File Transfer Protocol using FUSE."
+SUMMARY = "This is a filesystem client based on the FTP File Transfer Protocol using FUSE."
 AUTHOR = "Robson Braga Araujo - <brag@users.sf.net>"
 HOMEPAGE = "http://curlftpfs.sourceforge.net/"
 SECTION = "console/network"

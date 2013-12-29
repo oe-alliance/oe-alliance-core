@@ -1,4 +1,4 @@
-DESCRIPTION = "torrent library"
+SUMMARY = "torrent library"
 LIC_FILES_CHKSUM = "file://COPYING;md5=393a5ca445f6965873eca0259a17f833"
 HOMEPAGE = "http://libtorrent.rakshasa.no/"
 MAINTAINER = "Jari Sundell <sundell.software@gmail.com>"

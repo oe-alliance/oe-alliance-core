@@ -1,4 +1,4 @@
-DESCRIPTION = "Enigma2 Skin om-black"
+SUMMARY = "Enigma2 Skin om-black"
 MAINTAINER = "openmips"
 SECTION = "base"
 PRIORITY = "required"

@@ -1,4 +1,4 @@
-DESCRIPTION = "Utilities for transponder & dvb-s blindscan"
+SUMMARY = "Utilities for transponder & dvb-s blindscan"
 SECTION = "base"
 PRIORITY = "optional"
 RDEPENDS_${PN} = "ncurses"

@@ -1,4 +1,4 @@
-DESCRIPTION = "openatv meta package for enigma2 picon sets"
+SUMMARY = "openatv meta package for enigma2 picon sets"
 SECTION = "base"
 LICENSE = "proprietary"
 PACKAGE_ARCH = "all"

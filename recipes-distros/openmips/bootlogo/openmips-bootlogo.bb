@@ -1,4 +1,4 @@
-DESCRIPTION = "openMips bootlogo"
+SUMMARY = "openMips bootlogo"
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "proprietary"

@@ -1,4 +1,4 @@
-DESCRIPTION = "Skins for Enigma2"
+SUMMARY = "Skins for Enigma2"
 MAINTAINER = "schwerkraft"
 PACKAGES = "${PN}-meta ${PN}"
 PACKAGES_DYNAMIC = "enigma2-plugin-skins-*"

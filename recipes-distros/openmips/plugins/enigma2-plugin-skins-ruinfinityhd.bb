@@ -1,4 +1,4 @@
-DESCRIPTION = "Enigma2 Skin ru_infinity HD"
+SUMMARY = "Enigma2 Skin ru_infinity HD"
 MAINTAINER = "openmips"
 SECTION = "base"
 PRIORITY = "required"

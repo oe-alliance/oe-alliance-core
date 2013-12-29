@@ -1,4 +1,4 @@
-DESCRIPTION = "Vhannibal E2 Settings File For HotBird"
+SUMMARY = "Vhannibal E2 Settings File For HotBird"
 
 SETTINGS_FILENAME = "vhannibal.hotbird"
 

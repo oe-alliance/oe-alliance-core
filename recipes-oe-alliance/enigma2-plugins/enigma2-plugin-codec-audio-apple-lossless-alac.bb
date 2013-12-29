@@ -1,4 +1,4 @@
-DESCRIPTION = "Apple Lossless Audio Codec (ALAC)"
+SUMMARY = "Apple Lossless Audio Codec (ALAC)"
 PACKAGE_ARCH = "all"
 
 require conf/license/license-gplv2.inc

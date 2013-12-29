@@ -1,4 +1,4 @@
-DESCRIPTION = "Enigma2 Web Manager Package"
+SUMMARY = "Enigma2 Web Manager Package"
 MAINTAINER = "SystemPlugins & Extensions"
 SECTION = "base"
 PRIORITY = "required"

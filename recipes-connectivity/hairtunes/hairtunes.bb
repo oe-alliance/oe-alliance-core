@@ -1,4 +1,4 @@
-DESCRIPTION = "AirTunes protocol server"
+SUMMARY = "AirTunes protocol server"
 DEPENDS = "openssl"
 LICENSE = "proprietary"
 

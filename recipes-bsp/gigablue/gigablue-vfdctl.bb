@@ -1,4 +1,4 @@
-DESCRIPTION = "vfdctl is a little utility to control the display"
+SUMMARY = "vfdctl is a little utility to control the display"
 MAINTAINER = "OpenATV Team"
 SECTION = "base"
 LICENSE = "proprietary"

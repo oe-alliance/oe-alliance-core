@@ -1,4 +1,4 @@
-DESCRIPTION = "odin-support Image"
+SUMMARY = "odin-support Image"
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "proprietary"

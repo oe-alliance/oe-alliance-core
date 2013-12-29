@@ -1,4 +1,4 @@
-DESCRIPTION = "frontpanel update"
+SUMMARY = "frontpanel update"
 SECTION = "base"
 PRIORITY = "optional"
 LICENSE = "CLOSED"

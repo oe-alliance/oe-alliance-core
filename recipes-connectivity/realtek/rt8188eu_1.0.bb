@@ -1,4 +1,4 @@
-DESCRIPTION = "Ralink 8188EU v1.0"
+SUMMARY = "Ralink 8188EU v1.0"
 HOMEPAGE = "http://www.realtek.com.tw"
 SECTION = "kernel/modules"
 LICENSE = "GPLv2"

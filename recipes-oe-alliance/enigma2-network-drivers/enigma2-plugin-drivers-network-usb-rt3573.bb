@@ -1,4 +1,4 @@
-DESCRIPTION = "rt3573 802.11a/b/g/n 2.4/5 GHz USB Single Chip"
+SUMMARY = "rt3573 802.11a/b/g/n 2.4/5 GHz USB Single Chip"
 PACKAGE_ARCH = "all"
 
 require conf/license/license-gplv2.inc

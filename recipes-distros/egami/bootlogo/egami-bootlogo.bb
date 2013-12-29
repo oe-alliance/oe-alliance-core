@@ -1,4 +1,4 @@
-DESCRIPTION = "EGAMI bootlogo"
+SUMMARY = "EGAMI bootlogo"
 SECTION = "base"
 PRIORITY = "required"
 MAINTAINER = "EGAMI"

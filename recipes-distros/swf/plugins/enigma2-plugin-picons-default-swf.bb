@@ -1,4 +1,4 @@
-DESCRIPTION = "SWF picons 13 19"
+SUMMARY = "SWF picons 13 19"
 MAINTAINER ?= "SWF"
 LICENSE = "GPL"
 DEPENDS = "pngcrush-native"

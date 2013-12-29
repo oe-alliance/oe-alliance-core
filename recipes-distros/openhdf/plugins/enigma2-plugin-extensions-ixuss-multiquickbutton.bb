@@ -1,4 +1,4 @@
-DESCRIPTION = "Multiquick Button 4 Ixussone"
+SUMMARY = "Multiquick Button 4 Ixussone"
 MAINTAINER = "SystemPlugins"
 SECTION = "base"
 PRIORITY = "required"

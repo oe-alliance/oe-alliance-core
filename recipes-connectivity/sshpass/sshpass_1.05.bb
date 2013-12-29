@@ -1,4 +1,4 @@
-DESCRIPTION = "sshpass"
+SUMMARY = "sshpass"
 LICENSE = "GPLv2+"
 PR = "r0"
 

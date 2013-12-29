@@ -1,4 +1,4 @@
-DESCRIPTION = "Plex Client for Enigma2 by Don Davici"
+SUMMARY = "Plex Client for Enigma2 by Don Davici"
 MAINTAINER = "Don Davici"
 
 require conf/license/license-gplv2.inc

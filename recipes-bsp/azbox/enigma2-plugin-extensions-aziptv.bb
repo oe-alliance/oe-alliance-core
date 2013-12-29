@@ -1,4 +1,4 @@
-DESCRIPTION = "Azbox IPTV plugin"
+SUMMARY = "Azbox IPTV plugin"
 RDEPENDS_${PN} = "enigma2"
 DEPENDS = "python-native"
 PACKAGE_ARCH = "${MACHINE_ARCH}"

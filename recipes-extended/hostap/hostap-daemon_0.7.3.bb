@@ -1,4 +1,4 @@
-DESCRIPTION = "User space daemon for extended IEEE 802.11 management"
+SUMMARY = "User space daemon for extended IEEE 802.11 management"
 
 require hostap-daemon-0.7.inc
 

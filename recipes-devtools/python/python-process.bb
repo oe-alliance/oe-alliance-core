@@ -1,4 +1,4 @@
-DESCRIPTION = "Python process list module"
+SUMMARY = "Python process list module"
 SECTION = "devel/python"
 PRIORITY = "optional"
 SRCNAME = "process"

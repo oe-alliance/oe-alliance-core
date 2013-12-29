@@ -1,4 +1,4 @@
-DESCRIPTION = "WiFi devices for for Atheros AR9001 and AR9002 devices."
+SUMMARY = "WiFi devices for for Atheros AR9001 and AR9002 devices."
 PACKAGE_ARCH = "all"
 
 require conf/license/license-gplv2.inc

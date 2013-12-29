@@ -1,4 +1,4 @@
-DESCRIPTION = "font-valis-enigma"
+SUMMARY = "font-valis-enigma"
 MAINTAINER = "valis"
 require conf/license/license-gplv2.inc
 PACKAGE_ARCH = "all"

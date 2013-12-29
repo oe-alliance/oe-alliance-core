@@ -1,4 +1,4 @@
-DESCRIPTION = "SIFTeam version info"
+SUMMARY = "SIFTeam version info"
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "proprietary"

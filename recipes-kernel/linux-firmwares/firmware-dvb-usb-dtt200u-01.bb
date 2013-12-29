@@ -1,6 +1,6 @@
 require linux-firmware.inc
 
-DESCRIPTION = "Firmware for dvb-usb-dtt200u-01.fw"
+SUMMARY = "Firmware for dvb-usb-dtt200u-01.fw"
 
 SRCREV = "3aa7bab757fdb0e38c484e73d73c6d34a770c1ba"
 

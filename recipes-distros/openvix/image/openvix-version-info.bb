@@ -1,4 +1,4 @@
-DESCRIPTION = "ViX version info"
+SUMMARY = "ViX version info"
 SECTION = "base"
 PRIORITY = "required"
 MAINTAINER = "ViX team"

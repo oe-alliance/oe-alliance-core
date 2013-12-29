@@ -1,4 +1,4 @@
-DESCRIPTION = "sifteam stb emu libraries and tools"
+SUMMARY = "sifteam stb emu libraries and tools"
 HOMEPAGE = "http://forum.sifteam.eu/"
 SECTION = "sifteam"
 DEPENDS = "sockets curl python (=2.6) swig-native libpcre libxml2 opkg"

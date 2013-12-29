@@ -1,4 +1,4 @@
-DESCRIPTION = "A library for accessing a CDDB server"
+SUMMARY = "A library for accessing a CDDB server"
 HOMEPAGE = "http://libcddb.sourceforge.net"
 SECTION = "libs"
 PRIORITY = "optional"

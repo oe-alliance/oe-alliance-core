@@ -1,5 +1,5 @@
 CAMNAME = "scam"
-DESCRIPTION = "${CAMNAME} ${PV} softcam"
+SUMMARY = "${CAMNAME} ${PV} softcam"
 RDEPENDS_${PN} = "libcrypto-compat"
 
 PR = "r2"

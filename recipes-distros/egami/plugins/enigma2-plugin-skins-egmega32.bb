@@ -1,4 +1,4 @@
-DESCRIPTION = "Enigma2 Skin EGAMI-Skin"
+SUMMARY = "Enigma2 Skin EGAMI-Skin"
 MAINTAINER = "EGAMI"
 SECTION = "base"
 PRIORITY = "required"

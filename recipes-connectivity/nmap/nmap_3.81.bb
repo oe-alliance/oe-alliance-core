@@ -1,4 +1,4 @@
-DESCRIPTION = "Nmap is a command line portscanner."
+SUMMARY = "Nmap is a command line portscanner."
 HOMEPAGE = "http://www.insecure.org/nmap/"
 SECTION = "console/network"
 

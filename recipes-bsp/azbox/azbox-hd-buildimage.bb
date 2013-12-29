@@ -1,4 +1,4 @@
-DESCRIPTION = "create Azboxhd patch.e2 images"
+SUMMARY = "create Azboxhd patch.e2 images"
 SECTION = "console/utils"
 LICENSE = "CLOSED"
 

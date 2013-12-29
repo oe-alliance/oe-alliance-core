@@ -1,5 +1,5 @@
 MODULE = "Nobile-Mod"
-DESCRIPTION = "HDFreaks.cc Nobile Mod"
+SUMMARY = "HDFreaks.cc Nobile Mod"
 MAINTAINER = "HDFreaks"
 SECTION = "base"
 PRIORITY = "required"

@@ -1,4 +1,4 @@
-DESCRIPTION = "Enigma2 Skin GB MOD Vali HD flex"
+SUMMARY = "Enigma2 Skin GB MOD Vali HD flex"
 MAINTAINER = "openmips"
 SECTION = "base"
 PRIORITY = "required"

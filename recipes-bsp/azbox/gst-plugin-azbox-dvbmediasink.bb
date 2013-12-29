@@ -1,4 +1,4 @@
-DESCRIPTION = "gstreamer dvbmediasink plugin"
+SUMMARY = "gstreamer dvbmediasink plugin"
 SECTION = "multimedia"
 PRIORITY = "optional"
 require conf/license/license-gplv2.inc

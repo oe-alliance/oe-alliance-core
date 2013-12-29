@@ -3,7 +3,7 @@ require softcam.inc
 inherit gitpkgv
 inherit cmake
 
-DESCRIPTION = "OScam ${PV} Open Source Softcam"
+SUMMARY = "OScam ${PV} Open Source Softcam"
 LICENSE = "GPLv3"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 

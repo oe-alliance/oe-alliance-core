@@ -1,4 +1,4 @@
-DESCRIPTION = "Stateful programmatic web browsing, after Andy Lester's Perl module WWW::Mechanize."
+SUMMARY = "Stateful programmatic web browsing, after Andy Lester's Perl module WWW::Mechanize."
 HOMEPAGE = "http://wwwsearch.sourceforge.net/mechanize/"
 SECTION = "devel/python"
 LICENSE = "BSD"

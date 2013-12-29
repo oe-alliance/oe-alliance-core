@@ -1,4 +1,4 @@
-DESCRIPTION = "libray to show an mpeg2/4 iframe on a linuxtv video device"
+SUMMARY = "libray to show an mpeg2/4 iframe on a linuxtv video device"
 SECTION = "base"
 PRIORITY = "optional"
 LICENSE = "PD"

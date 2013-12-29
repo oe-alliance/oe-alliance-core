@@ -1,4 +1,4 @@
-DESCRIPTION = "openViX bootlogo"
+SUMMARY = "openViX bootlogo"
 SECTION = "base"
 PRIORITY = "required"
 MAINTAINER = "openViX"

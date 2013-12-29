@@ -1,4 +1,4 @@
-DESCRIPTION = "InfoBarTunerState Extentions"
+SUMMARY = "InfoBarTunerState Extentions"
 MAINTAINER = "Betonme"
 SECTION = "extra"
 PRIORITY = "optional"

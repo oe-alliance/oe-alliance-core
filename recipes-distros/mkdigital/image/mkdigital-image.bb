@@ -1,4 +1,4 @@
-DESCRIPTION = "MK-Digital Image"
+SUMMARY = "MK-Digital Image"
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "proprietary"

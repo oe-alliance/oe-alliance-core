@@ -1,5 +1,5 @@
 MODULE = "Army-Mod"
-DESCRIPTION = "HDFreaks.cc Army-Mod"
+SUMMARY = "HDFreaks.cc Army-Mod"
 MAINTAINER = "HDFreaks"
 SECTION = "base"
 PRIORITY = "required"

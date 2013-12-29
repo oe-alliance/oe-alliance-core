@@ -1,5 +1,5 @@
 HOMEPAGE = "http://alumnit.ca/wiki/index.php?page=WvStreams"
-DESCRIPTION = "WvStreams is a network programming library in C++"
+SUMMARY = "WvStreams is a network programming library in C++"
 
 require conf/license/license-gplv2.inc
 

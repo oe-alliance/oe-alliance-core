@@ -1,4 +1,4 @@
-DESCRIPTION = "Gigablue 19E"
+SUMMARY = "Gigablue 19E"
 
 SETTINGS_FILENAME = "gigablue_19e"
 

@@ -1,4 +1,4 @@
-DESCRIPTION = "PyAMF provides Action Message Format (AMF) support for Python that is compatible with the Adobe Flash Player"
+SUMMARY = "PyAMF provides Action Message Format (AMF) support for Python that is compatible with the Adobe Flash Player"
 HOMEPAGE = "http://www.pyamf.org/"
 SECTION = "devel/python"
 LICENSE = "MIT license"

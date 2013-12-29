@@ -1,4 +1,4 @@
-DESCRIPTION = "Enigma2 Skin BlackModern HD"
+SUMMARY = "Enigma2 Skin BlackModern HD"
 MAINTAINER = "openSPA"
 SECTION = "base"
 PRIORITY = "required"

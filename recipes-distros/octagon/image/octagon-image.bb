@@ -1,4 +1,4 @@
-DESCRIPTION = "octagon Image"
+SUMMARY = "octagon Image"
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "proprietary"

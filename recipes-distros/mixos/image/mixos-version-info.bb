@@ -1,4 +1,4 @@
-DESCRIPTION = "MixOS version info"
+SUMMARY = "MixOS version info"
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "proprietary"

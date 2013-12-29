@@ -1,7 +1,7 @@
 PV = "20111105"
 PR = "r2"
 SRC_URI = "file://*"
-DESCRIPTION = "Autorecover settings and install packages at first boot from /media/*/backup"
+SUMMARY = "Autorecover settings and install packages at first boot from /media/*/backup"
 PACKAGES = "${PN}"
 MAINTAINER = "MiLo"
 

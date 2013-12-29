@@ -1,4 +1,4 @@
-DESCRIPTION = "Linux kernel for ${MACHINE}"
+SUMMARY = "Linux kernel for ${MACHINE}"
 LICENSE = "GPL"
 SECTION = "kernel"
 PACKAGE_ARCH = "${MACHINE_ARCH}"

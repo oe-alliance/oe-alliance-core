@@ -1,4 +1,4 @@
-DESCRIPTION = "Driver for Ralink USB devices RT2571W, RT2573 & RT2671"
+SUMMARY = "Driver for Ralink USB devices RT2571W, RT2573 & RT2671"
 PACKAGE_ARCH = "all"
 
 require conf/license/license-gplv2.inc

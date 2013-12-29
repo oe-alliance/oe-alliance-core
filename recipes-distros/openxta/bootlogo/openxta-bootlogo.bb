@@ -1,4 +1,4 @@
-DESCRIPTION = "openxta bootlogo"
+SUMMARY = "openxta bootlogo"
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "proprietary"

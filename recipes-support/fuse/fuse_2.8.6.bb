@@ -1,4 +1,4 @@
-DESCRIPTION = "With FUSE it is possible to implement a fully functional filesystem in a userspace program"
+SUMMARY = "With FUSE it is possible to implement a fully functional filesystem in a userspace program"
 HOMEPAGE = "http://fuse.sf.net"
 SECTION = "libs"
 LICENSE = "GPLv2&LGPLv2"

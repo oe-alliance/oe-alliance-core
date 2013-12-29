@@ -1,4 +1,4 @@
-DESCRIPTION = "dnspython is a DNS toolkit for Python."
+SUMMARY = "dnspython is a DNS toolkit for Python."
 HOMEPAGE = "http://www.dnspython.org/"
 SECTION = "devel/python"
 LICENSE = "BSD"

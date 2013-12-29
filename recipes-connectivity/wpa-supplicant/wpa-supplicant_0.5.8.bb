@@ -1,4 +1,4 @@
-DESCRIPTION = "A Client for Wi-Fi Protected Access (WPA)."
+SUMMARY = "A Client for Wi-Fi Protected Access (WPA)."
 SECTION = "network"
 LICENSE = "GPLv2 | BSD"
 LIC_FILES_CHKSUM = "file://COPYING;md5=c54ce9345727175ff66d17b67ff51f58 \

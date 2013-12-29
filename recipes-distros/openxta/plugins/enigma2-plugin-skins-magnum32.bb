@@ -1,4 +1,4 @@
-DESCRIPTION = "Enigma2 Skin magnum"
+SUMMARY = "Enigma2 Skin magnum"
 MAINTAINER = "OpenXTA"
 SECTION = "base"
 PRIORITY = "required"

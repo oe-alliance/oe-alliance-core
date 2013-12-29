@@ -1,4 +1,4 @@
-DESCRIPTION = "Music Player Daemon (mpd)"
+SUMMARY = "Music Player Daemon (mpd)"
 HOMEPAGE = "http://www.musicpd.org"
 SECTION = "console/multimedia"
 LICENSE = "GPLv2"

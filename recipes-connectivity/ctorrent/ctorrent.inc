@@ -1,4 +1,4 @@
-DESCRIPTION = "CTorrent is a  console BitTorrent client \
+SUMMARY = "CTorrent is a  console BitTorrent client \
   with a focus on being lightweight and quick."
 HOMEPAGE = "http://www.rahul.net/dholmes/ctorrent/"
 SECTION = "network"

@@ -1,4 +1,4 @@
-DESCRIPTION = "OpenHDF Image"
+SUMMARY = "OpenHDF Image"
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "proprietary"

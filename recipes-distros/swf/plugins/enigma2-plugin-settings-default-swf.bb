@@ -1,4 +1,4 @@
-DESCRIPTION = "swf default SAT Settings "
+SUMMARY = "swf default SAT Settings "
 MAINTAINER = "SWF"
 SECTION = "base"
 LICENSE = "proprietary"

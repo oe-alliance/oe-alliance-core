@@ -1,4 +1,4 @@
-DESCRIPTION = "Firmware for CARL9170"
+SUMMARY = "Firmware for CARL9170"
 LICENCE = "closed"
 
 require linux-firmware.inc

@@ -1,4 +1,4 @@
-DESCRIPTION = "picons-openatv-black28E"
+SUMMARY = "picons-openatv-black28E"
 MAINTAINER = "ATV Team"
 SECTION = "base"
 LICENSE = "proprietary"

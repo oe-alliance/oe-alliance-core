@@ -1,6 +1,6 @@
 require linux-firmware.inc
 
-DESCRIPTION = "Firmware for drxd-a2-1.1"
+SUMMARY = "Firmware for drxd-a2-1.1"
 
 SRCREV = "46c66487a85cd05a4acbd5eb4828f72783d1be4c"
 

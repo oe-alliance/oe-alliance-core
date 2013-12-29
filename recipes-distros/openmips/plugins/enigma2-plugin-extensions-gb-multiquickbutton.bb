@@ -1,5 +1,5 @@
 MODULE = "Gigablue MultiQuickButton"
-DESCRIPTION = "Multi Quickbutton editor/wizard/code interpreter for keyboard and RC" 
+SUMMARY = "Multi Quickbutton editor/wizard/code interpreter for keyboard and RC" 
 SECTION = "extra"
 PRIORITY = "optional"
 LICENSE = "GPLv2"

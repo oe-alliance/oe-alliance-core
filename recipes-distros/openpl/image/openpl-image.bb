@@ -1,4 +1,4 @@
-DESCRIPTION = "openPL Image"
+SUMMARY = "openPL Image"
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "proprietary"

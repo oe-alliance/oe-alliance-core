@@ -1,4 +1,4 @@
-DESCRIPTION = "openPL version info"
+SUMMARY = "openPL version info"
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "proprietary"

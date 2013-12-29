@@ -1,4 +1,4 @@
-DESCRIPTION = "arora webbrowser binary"
+SUMMARY = "arora webbrowser binary"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 PV = "0.10.1"
 PR = "r5"

@@ -1,4 +1,4 @@
-DESCRIPTION = "Ralink 3573 v2.5.0.0"
+SUMMARY = "Ralink 3573 v2.5.0.0"
 HOMEPAGE = "http://www.realtek.com.tw"
 SECTION = "kernel/modules"
 LICENSE = "GPLv2"

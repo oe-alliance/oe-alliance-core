@@ -1,4 +1,4 @@
-DESCRIPTION = "circuits is a Lightweight Event driven and Asynchronous Application Framework for the Python Programming Language with a strong Component Architecture."
+SUMMARY = "circuits is a Lightweight Event driven and Asynchronous Application Framework for the Python Programming Language with a strong Component Architecture."
 HOMEPAGE = "http://bitbucket.org/prologic/circuits"
 SECTION = "devel/python"
 LICENSE = "BSD"

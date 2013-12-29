@@ -1,4 +1,4 @@
-DESCRIPTION = "yEnc module for Python"
+SUMMARY = "yEnc module for Python"
 SECTION = "devel/python"
 DEPENDS = "python"
 PRIORITY = "optional"

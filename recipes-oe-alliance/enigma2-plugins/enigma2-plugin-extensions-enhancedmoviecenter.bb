@@ -1,4 +1,4 @@
-DESCRIPTION = "Filemanager MoviePlayer Extentions"
+SUMMARY = "Filemanager MoviePlayer Extentions"
 MAINTAINER = "Coolman, Betonme & Swiss-MAD"
 SECTION = "extra"
 PRIORITY = "optional"

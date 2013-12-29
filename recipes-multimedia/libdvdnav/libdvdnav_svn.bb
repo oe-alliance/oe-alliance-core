@@ -21,7 +21,7 @@ inherit autotools lib_package binconfig pkgconfig
 FILES_${PN} = "${libdir}/${PN}${SOLIB}"
 
 python populate_packages_prepend() {
-    description = bb.data.expand('${DESCRIPTION}', d)
+    SUMMARY = bb.data.expand('${DESCRIPTION}', d)
     libdir = bb.data.expand('${libdir}', d)
     do_split_packages(d, libdir, '^lib(.*)\.so\..*', 'lib%s', description + ' (%s)', extra_depends='', allow_links=True)
 }

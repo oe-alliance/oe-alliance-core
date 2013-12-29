@@ -1,4 +1,4 @@
-DESCRIPTION = "PLi HD skin"
+SUMMARY = "PLi HD skin"
 MAINTAINER = "littlesat"
 LICENSE = "Proprietary"
 LIC_FILES_CHKSUM = "file://usr/share/enigma2/PLi-HD/skin.xml;beginline=3;endline=8;md5=1d560d35b9194281a488eb3a32d9c8bf"

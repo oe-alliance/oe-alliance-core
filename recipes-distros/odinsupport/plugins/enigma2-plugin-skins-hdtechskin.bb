@@ -1,4 +1,4 @@
-DESCRIPTION = "Enigma2 Skin HD-Tech-Skin"
+SUMMARY = "Enigma2 Skin HD-Tech-Skin"
 MAINTAINER = "odin-support"
 SECTION = "base"
 PRIORITY = "required"

@@ -1,4 +1,4 @@
-DESCRIPTION = "Runs a shell in an environment as emitted by BitBake to execute tasks"
+SUMMARY = "Runs a shell in an environment as emitted by BitBake to execute tasks"
 PR = "r3"
 
 require conf/license/license-gplv2.inc

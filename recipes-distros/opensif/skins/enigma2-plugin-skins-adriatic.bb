@@ -1,4 +1,4 @@
-DESCRIPTION = "Skin Adriatic HD. Daconi"
+SUMMARY = "Skin Adriatic HD. Daconi"
 MAINTAINER = "SIFTeam"
 
 require conf/license/license-gplv2.inc

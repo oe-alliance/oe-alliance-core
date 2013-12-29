@@ -1,4 +1,4 @@
-DESCRIPTION = "Azbox AZplayer app plugin"
+SUMMARY = "Azbox AZplayer app plugin"
 RDEPENDS_${PN} = "enigma2 curl fuse libupnp"
 DEPENDS = "python-native"
 PACKAGE_ARCH = "${MACHINE_ARCH}"

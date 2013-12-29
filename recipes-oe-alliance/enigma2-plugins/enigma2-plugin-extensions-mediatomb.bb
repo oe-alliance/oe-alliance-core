@@ -1,4 +1,4 @@
-DESCRIPTION = "UPnP media server"
+SUMMARY = "UPnP media server"
 RDEPENDS_${PN} = "mediatomb expat libav sqlite3 libexif js zlib file id3lib"
 LICENSE = "proprietary"
 

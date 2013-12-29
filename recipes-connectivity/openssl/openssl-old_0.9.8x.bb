@@ -1,5 +1,5 @@
 SUMMARY = "Obsolete version of Secure Socket Layer"
-DESCRIPTION = "Secure Socket Layer (SSL) binary and related cryptographic tools."
+SUMMARY = "Secure Socket Layer (SSL) binary and related cryptographic tools."
 HOMEPAGE = "http://www.openssl.org/"
 BUGTRACKER = "http://www.openssl.org/news/vulnerabilities.html"
 SECTION = "libs/network"

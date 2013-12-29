@@ -1,4 +1,4 @@
-DESCRIPTION = "Hoeba settings Ziggo/Casema West"
+SUMMARY = "Hoeba settings Ziggo/Casema West"
 MAINTAINER ?= "Mike Looijmans"
 
 require conf/license/license-gplv2.inc

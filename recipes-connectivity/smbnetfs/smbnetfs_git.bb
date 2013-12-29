@@ -1,4 +1,4 @@
-DESCRIPTION = "smbnetfs"
+SUMMARY = "smbnetfs"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=eb723b61539feef013de476e68b5c50a"
 HOMEPAGE ="http://sourceforge.net/projects/smbnetfs"

@@ -1,4 +1,4 @@
-DESCRIPTION = "Ralink 2870/3070/8070/3370/3572/5370/5372/5572 v2.6.1.3"
+SUMMARY = "Ralink 2870/3070/8070/3370/3572/5370/5372/5572 v2.6.1.3"
 HOMEPAGE = "http://www.realtek.com.tw"
 SECTION = "kernel/modules"
 LICENSE = "GPLv2"

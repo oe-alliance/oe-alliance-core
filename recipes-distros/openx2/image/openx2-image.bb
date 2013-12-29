@@ -1,4 +1,4 @@
-DESCRIPTION = "openX2 Image"
+SUMMARY = "openX2 Image"
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "proprietary"

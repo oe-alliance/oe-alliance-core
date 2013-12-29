@@ -1,4 +1,4 @@
-DESCRIPTION = "idle3-tools"
+SUMMARY = "idle3-tools"
 MAINTAINER = "idle3-tools"
 LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=8f0e2cd40e05189ec81232da84bd6e1a"

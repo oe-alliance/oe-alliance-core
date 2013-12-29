@@ -1,4 +1,4 @@
-DESCRIPTION = "Enigma2 Skin openPL"
+SUMMARY = "Enigma2 Skin openPL"
 MAINTAINER = "vali"
 SECTION = "base"
 PRIORITY = "required"

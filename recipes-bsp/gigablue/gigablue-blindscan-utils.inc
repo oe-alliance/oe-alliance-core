@@ -1,4 +1,4 @@
-DESCRIPTION = "Utils for blindscan"
+SUMMARY = "Utils for blindscan"
 SECTION = "base"
 PRIORITY = "optional"
 LICENSE = "CLOSED"

@@ -1,4 +1,4 @@
-DESCRIPTION = "Ralink 3070"
+SUMMARY = "Ralink 3070"
 SECTION = "kernel/modules"
 LICENSE = "GPLv2"
 

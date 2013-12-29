@@ -1,4 +1,4 @@
-DESCRIPTION = "Gigablue kabeldeutschland"
+SUMMARY = "Gigablue kabeldeutschland"
 
 SETTINGS_FILENAME = "gigablue_kabeldeutschland"
 

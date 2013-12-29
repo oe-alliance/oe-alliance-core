@@ -1,4 +1,4 @@
-DESCRIPTION = "MixOS Image"
+SUMMARY = "MixOS Image"
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "proprietary"

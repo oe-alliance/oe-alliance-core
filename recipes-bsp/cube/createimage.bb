@@ -1,4 +1,4 @@
-DESCRIPTION = "create image file"
+SUMMARY = "create image file"
 SECTION = "console/utils"
 
 PN = "createimage-${MACHINE}"

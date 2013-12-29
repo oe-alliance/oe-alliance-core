@@ -1,6 +1,6 @@
 require linux-firmware.inc
 
-DESCRIPTION = "Firmware for dvb-usb-it9135"
+SUMMARY = "Firmware for dvb-usb-it9135"
 
 SRCREV = "13f0b6bda7b567d29c747196aa65ad82b18651ca"
 

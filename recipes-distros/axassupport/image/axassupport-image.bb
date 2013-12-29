@@ -1,4 +1,4 @@
-DESCRIPTION = "AXAS Image"
+SUMMARY = "AXAS Image"
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "proprietary"

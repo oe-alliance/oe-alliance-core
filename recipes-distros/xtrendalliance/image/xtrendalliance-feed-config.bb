@@ -1,4 +1,4 @@
-DESCRIPTION = "Configuration files for secret feeds"
+SUMMARY = "Configuration files for secret feeds"
 
 require conf/license/license-gplv2.inc
 

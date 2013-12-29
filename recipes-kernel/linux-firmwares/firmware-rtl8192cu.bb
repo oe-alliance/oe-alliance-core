@@ -1,6 +1,6 @@
 require linux-firmware.inc
 
-DESCRIPTION = "Firmware for RTL8192CU"
+SUMMARY = "Firmware for RTL8192CU"
 
 SRCREV = "bf9f8648fdf1d1d63db471554781f897d219bd62"
 

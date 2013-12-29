@@ -1,4 +1,4 @@
-DESCRIPTION = "Inittab for sysvinit"
+SUMMARY = "Inittab for sysvinit"
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 

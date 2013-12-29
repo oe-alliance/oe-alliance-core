@@ -1,5 +1,5 @@
 CAMNAME = "rqcamd"
-DESCRIPTION = "${CAMNAME} ${PV} softcam"
+SUMMARY = "${CAMNAME} ${PV} softcam"
 
 PR = "r0"
 

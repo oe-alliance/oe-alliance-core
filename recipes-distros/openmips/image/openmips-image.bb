@@ -1,4 +1,4 @@
-DESCRIPTION = "OpenMips Image"
+SUMMARY = "OpenMips Image"
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "proprietary"

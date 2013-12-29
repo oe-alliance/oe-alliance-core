@@ -1,4 +1,4 @@
-DESCRIPTION = "openx2 bootlogo"
+SUMMARY = "openx2 bootlogo"
 SECTION = "base"
 PRIORITY = "required"
 MAINTAINER = "openX2"

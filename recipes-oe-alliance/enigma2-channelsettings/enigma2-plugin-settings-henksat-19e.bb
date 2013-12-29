@@ -1,4 +1,4 @@
-DESCRIPTION = "Henksat 19E"
+SUMMARY = "Henksat 19E"
 
 SETTINGS_FILENAME = "e2_henksat_astra_1"
 

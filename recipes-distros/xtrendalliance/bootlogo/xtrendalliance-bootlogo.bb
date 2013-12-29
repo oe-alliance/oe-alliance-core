@@ -1,4 +1,4 @@
-DESCRIPTION = "Xtrend-Alliance bootlogo"
+SUMMARY = "Xtrend-Alliance bootlogo"
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "proprietary"

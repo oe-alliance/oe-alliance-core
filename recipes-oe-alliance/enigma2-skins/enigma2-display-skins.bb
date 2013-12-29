@@ -1,4 +1,4 @@
-DESCRIPTION = "Display Skins for Enigma2"
+SUMMARY = "Display Skins for Enigma2"
 MAINTAINER = "oe-aliance"
 PACKAGES = "${PN}-meta ${PN}"
 PACKAGES_DYNAMIC = "enigma2-plugin-display-*"

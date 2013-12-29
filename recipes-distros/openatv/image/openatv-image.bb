@@ -1,4 +1,4 @@
-DESCRIPTION = "OpenATV Image"
+SUMMARY = "OpenATV Image"
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "proprietary"

@@ -1,6 +1,6 @@
 require linux-firmware.inc
 
-DESCRIPTION = "Firmware for ds3000 dvb frontend"
+SUMMARY = "Firmware for ds3000 dvb frontend"
 
 SRCREV = "2c7a7f802cdf515e6e7b814111aea56669fac4b2"
 

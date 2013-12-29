@@ -1,4 +1,4 @@
-DESCRIPTION = "tool to switch multidevice usb modes"
+SUMMARY = "tool to switch multidevice usb modes"
 require conf/license/license-gplv2.inc
 
 LICENSE = "GPL"

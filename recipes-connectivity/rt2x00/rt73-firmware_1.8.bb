@@ -1,4 +1,4 @@
-DESCRIPTION = "Firmware for rt73 based USB wifi adaptors"
+SUMMARY = "Firmware for rt73 based USB wifi adaptors"
 LICENSE = "unknown"
 
 PR = "r1"

@@ -1,4 +1,4 @@
-DESCRIPTION = "librtmp Real-Time Messaging Protocol API"
+SUMMARY = "librtmp Real-Time Messaging Protocol API"
 LICENSE = "LGPLv2"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=e344c8fa836c3a41c4cbd79d7bd3a379"

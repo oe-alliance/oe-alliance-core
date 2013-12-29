@@ -1,4 +1,4 @@
-DESCRIPTION = "Driver for Realtek 871x series USB 802.11b/g/n WiFi stick"
+SUMMARY = "Driver for Realtek 871x series USB 802.11b/g/n WiFi stick"
 HOMEPAGE = "http://www.realtek.com.tw"
 SECTION = "kernel/modules"
 LICENSE = "GPL"

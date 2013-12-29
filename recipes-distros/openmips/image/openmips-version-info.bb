@@ -1,4 +1,4 @@
-DESCRIPTION = "OpenMips version info"
+SUMMARY = "OpenMips version info"
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "proprietary"

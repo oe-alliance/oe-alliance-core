@@ -1,4 +1,4 @@
-DESCRIPTION = "openSPA bootlogo"
+SUMMARY = "openSPA bootlogo"
 SECTION = "base"
 PRIORITY = "required"
 MAINTAINER = "OpenSPA Team"

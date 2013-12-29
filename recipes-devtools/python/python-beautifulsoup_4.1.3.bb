@@ -1,4 +1,4 @@
-DESCRIPTION = "Beautiful Soup is a Python library designed for quick turnaround projects like screen-scraping."
+SUMMARY = "Beautiful Soup is a Python library designed for quick turnaround projects like screen-scraping."
 HOMEPAGE = "http://www.crummy.com/software/BeautifulSoup/"
 SECTION = "devel/python"
 LICENSE = "BSD"

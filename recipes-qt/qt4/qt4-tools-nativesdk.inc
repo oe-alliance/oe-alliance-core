@@ -1,4 +1,4 @@
-DESCRIPTION = "SDK tools for Qt/[X11|Mac|Embedded] version 4.x"
+SUMMARY = "SDK tools for Qt/[X11|Mac|Embedded] version 4.x"
 DEPENDS = "zlib-nativesdk dbus-nativesdk libx11-nativesdk qt4-native"
 SECTION = "libs"
 HOMEPAGE = "http://qt.nokia.com"

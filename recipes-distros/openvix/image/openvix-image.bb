@@ -1,4 +1,4 @@
-DESCRIPTION = "OpenViX Image"
+SUMMARY = "OpenViX Image"
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "proprietary"

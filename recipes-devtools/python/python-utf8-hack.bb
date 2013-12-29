@@ -1,4 +1,4 @@
-DESCRIPTION = "Sets Python's default encoding to UTF8"
+SUMMARY = "Sets Python's default encoding to UTF8"
 SECTION = "devel/python"
 DEPENDS = "python"
 PRIORITY = "optional"

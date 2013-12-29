@@ -1,4 +1,4 @@
-DESCRIPTION = "openatv-spinner"
+SUMMARY = "openatv-spinner"
 MAINTAINER = "ATV Team"
 SECTION = "base"
 LICENSE = "proprietary"

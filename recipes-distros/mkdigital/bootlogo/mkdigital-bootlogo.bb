@@ -1,4 +1,4 @@
-DESCRIPTION = "MK-Digital bootlogo"
+SUMMARY = "MK-Digital bootlogo"
 SECTION = "base"
 PRIORITY = "required"
 MAINTAINER = "MK-Digital"

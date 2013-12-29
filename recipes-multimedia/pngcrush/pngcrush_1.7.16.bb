@@ -1,4 +1,4 @@
-DESCRIPTION = "Tool to optimize PNG images"
+SUMMARY = "Tool to optimize PNG images"
 LICENSE = "Proprietary"
 SECTION = "console/graphics"
 HOMEPAGE = "http://pmt.sourceforge.net/pngcrush"

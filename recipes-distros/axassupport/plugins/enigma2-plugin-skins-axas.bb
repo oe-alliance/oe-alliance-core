@@ -1,4 +1,4 @@
-DESCRIPTION = "Enigma2 Skin AXAS HD"
+SUMMARY = "Enigma2 Skin AXAS HD"
 MAINTAINER = "vali"
 SECTION = "base"
 PRIORITY = "required"

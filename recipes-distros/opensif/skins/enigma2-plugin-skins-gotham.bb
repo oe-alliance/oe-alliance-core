@@ -1,4 +1,4 @@
-DESCRIPTION = "Skin Gotham by MMark"
+SUMMARY = "Skin Gotham by MMark"
 MAINTAINER = "SIFTeam"
 
 require conf/license/license-gplv2.inc

@@ -1,4 +1,4 @@
-DESCRIPTION = "CST Motor E2 Settings File"
+SUMMARY = "CST Motor E2 Settings File"
 
 SETTINGS_FILENAME = "cst.motor.db"
 

@@ -1,6 +1,6 @@
 LICENSE = "CLOSED"
 
-DESCRIPTION = "Firmware for ds3xxx dvb frontend"
+SUMMARY = "Firmware for ds3xxx dvb frontend"
 PACKAGE_ARCH = "all"
 
 SRC_URI = "file://fw-ds3xxx.tar.gz"

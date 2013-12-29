@@ -1,4 +1,4 @@
-DESCRIPTION = "gstreamer libxtrend plugin"
+SUMMARY = "gstreamer libxtrend plugin"
 LICENSE = "CLOSED"
 SECTION = "multimedia"
 PRIORITY = "optional"

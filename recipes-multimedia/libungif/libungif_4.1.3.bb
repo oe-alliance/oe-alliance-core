@@ -1,4 +1,4 @@
-DESCRIPTION = "shared library for GIF images"
+SUMMARY = "shared library for GIF images"
 SECTION = "libs"
 LICENSE = "MIT"
 PR = "r3"

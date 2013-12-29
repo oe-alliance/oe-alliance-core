@@ -1,4 +1,4 @@
-DESCRIPTION = "SWF Image"
+SUMMARY = "SWF Image"
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "proprietary"

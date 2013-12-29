@@ -1,4 +1,4 @@
-DESCRIPTION = "Enigma2 Skin DMConcinnity HD"
+SUMMARY = "Enigma2 Skin DMConcinnity HD"
 MAINTAINER = "kerni"
 SECTION = "base"
 PRIORITY = "required"

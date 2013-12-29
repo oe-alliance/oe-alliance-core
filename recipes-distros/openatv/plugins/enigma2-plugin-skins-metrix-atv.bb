@@ -1,4 +1,4 @@
-DESCRIPTION = "Enigma2 Skin Metrix HD"
+SUMMARY = "Enigma2 Skin Metrix HD"
 MAINTAINER = "http://open-store.net "
 SECTION = "base"
 PRIORITY = "required"

@@ -1,4 +1,4 @@
-DESCRIPTION = "meta file for USB Network drivers"
+SUMMARY = "meta file for USB Network drivers"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 require conf/license/license-gplv2.inc

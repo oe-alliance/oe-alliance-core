@@ -1,4 +1,4 @@
-DESCRIPTION = "USB DVB driver for Siano chipset"
+SUMMARY = "USB DVB driver for Siano chipset"
 PACKAGE_ARCH = "all"
 
 require conf/license/license-gplv2.inc

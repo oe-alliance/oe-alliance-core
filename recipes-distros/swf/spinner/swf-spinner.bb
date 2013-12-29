@@ -1,4 +1,4 @@
-DESCRIPTION = "swf-spinner"
+SUMMARY = "swf-spinner"
 MAINTAINER = "swf"
 SECTION = "base"
 LICENSE = "proprietary"

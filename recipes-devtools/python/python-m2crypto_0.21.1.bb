@@ -1,4 +1,4 @@
-DESCRIPTION = "A Python crypto and SSL toolkit"
+SUMMARY = "A Python crypto and SSL toolkit"
 SECTION = "devel/python"
 HOMEPAGE = "http://chandlerproject.org/bin/view/Projects/MeTooCrypto"
 PRIORITY = "optional"

@@ -1,4 +1,4 @@
-DESCRIPTION = "torrent client"
+SUMMARY = "torrent client"
 LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f"
 HOMEPAGE = "http://libtorrent.rakshasa.no/"
 MAINTAINER = "Jari Sundell <sundell.software@gmail.com>"

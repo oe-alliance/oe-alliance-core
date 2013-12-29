@@ -1,6 +1,6 @@
 require linux-firmware.inc
 
-DESCRIPTION = "Firmware for xc3028L-v36"
+SUMMARY = "Firmware for xc3028L-v36"
 
 SRCREV = "13f0b6bda7b567d29c747196aa65ad82b18651ca"
 

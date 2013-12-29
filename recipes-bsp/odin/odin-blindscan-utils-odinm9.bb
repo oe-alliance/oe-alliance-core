@@ -1,4 +1,4 @@
-DESCRIPTION = "Utils for DVB-S blindscan"
+SUMMARY = "Utils for DVB-S blindscan"
 SECTION = "base"
 PRIORITY = "optional"
 LICENSE = "CLOSED"

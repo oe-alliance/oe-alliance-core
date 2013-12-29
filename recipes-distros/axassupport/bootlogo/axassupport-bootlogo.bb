@@ -1,4 +1,4 @@
-DESCRIPTION = "AXAS bootlogo"
+SUMMARY = "AXAS bootlogo"
 SECTION = "base"
 PRIORITY = "required"
 MAINTAINER = "AXAS Support"

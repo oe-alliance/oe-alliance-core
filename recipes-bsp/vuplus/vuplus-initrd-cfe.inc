@@ -1,4 +1,4 @@
-DESCRIPTION = "2nd bootloader support"
+SUMMARY = "2nd bootloader support"
 SECTION = "base"
 PRIORITY = "required"
 MAINTAINER = "vuplus"

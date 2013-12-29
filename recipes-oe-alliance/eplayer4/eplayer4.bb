@@ -1,4 +1,4 @@
-DESCRIPTION = "eplayer4 a simple gst videoplayer"
+SUMMARY = "eplayer4 a simple gst videoplayer"
 MAINTAINER = "Duckbox Team"
 SECTION = "multimedia"
 PRIORITY = "optional"

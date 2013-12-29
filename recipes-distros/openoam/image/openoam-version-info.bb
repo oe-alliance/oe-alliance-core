@@ -1,4 +1,4 @@
-DESCRIPTION = "OpenOAM version info"
+SUMMARY = "OpenOAM version info"
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "proprietary"

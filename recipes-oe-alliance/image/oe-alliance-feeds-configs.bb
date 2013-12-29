@@ -1,4 +1,4 @@
-DESCRIPTION = "Configuration files for online package repositories aka feeds"
+SUMMARY = "Configuration files for online package repositories aka feeds"
 
 require conf/license/license-gplv2.inc
 

@@ -1,4 +1,4 @@
-DESCRIPTION = "General purpose components extending the circuits framework."
+SUMMARY = "General purpose components extending the circuits framework."
 HOMEPAGE = "https://pypi.python.org/pypi/circuits-brickss"
 SECTION = "devel/python"
 LICENSE = "BSD"

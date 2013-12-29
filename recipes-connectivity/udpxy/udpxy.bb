@@ -1,4 +1,4 @@
-DESCRIPTION = "udpxy"
+SUMMARY = "udpxy"
 MAINTAINER = "Pavel V. Cherenkov"
 SECTION = "multimedia"
 PRIORITY = "optional"

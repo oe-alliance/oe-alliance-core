@@ -1,4 +1,4 @@
-DESCRIPTION = "openATV default SAT Settings 13/19/23/28"
+SUMMARY = "openATV default SAT Settings 13/19/23/28"
 MAINTAINER = "ATV Team"
 SECTION = "base"
 LICENSE = "proprietary"

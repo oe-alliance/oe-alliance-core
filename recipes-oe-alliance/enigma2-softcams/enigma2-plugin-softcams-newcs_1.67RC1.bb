@@ -1,4 +1,4 @@
-DESCRIPTION = "newcs ${PV} cardserver"
+SUMMARY = "newcs ${PV} cardserver"
 
 PR = "r4"
 

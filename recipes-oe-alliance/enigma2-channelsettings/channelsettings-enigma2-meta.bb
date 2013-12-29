@@ -1,4 +1,4 @@
-DESCRIPTION = "meta file for settings"
+SUMMARY = "meta file for settings"
 
 require conf/license/license-gplv2.inc
 

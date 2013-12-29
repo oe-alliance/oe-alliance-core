@@ -1,4 +1,4 @@
-DESCRIPTION = "Enigma2 Skin openX2"
+SUMMARY = "Enigma2 Skin openX2"
 MAINTAINER = "kerni"
 SECTION = "base"
 PRIORITY = "required"

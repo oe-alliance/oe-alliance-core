@@ -1,4 +1,4 @@
-DESCRIPTION = "Single-Chip IEEE 802.11b/g/n 2T2R WLAN Controller with USB 2.0 Interface"
+SUMMARY = "Single-Chip IEEE 802.11b/g/n 2T2R WLAN Controller with USB 2.0 Interface"
 PACKAGE_ARCH = "all"
 
 require conf/license/license-gplv2.inc

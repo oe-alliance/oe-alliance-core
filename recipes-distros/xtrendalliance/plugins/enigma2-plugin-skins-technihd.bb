@@ -1,4 +1,4 @@
-DESCRIPTION = "Enigma2 Skin TechniHD"
+SUMMARY = "Enigma2 Skin TechniHD"
 MAINTAINER = "Xtrend-Alliance"
 SECTION = "base"
 PRIORITY = "required"

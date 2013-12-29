@@ -1,5 +1,5 @@
 MODULE = "MultiQuickButton"
-DESCRIPTION = "Multi Quickbutton editor/wizard/code interpreter for keyboard and RC ViX Version"
+SUMMARY = "Multi Quickbutton editor/wizard/code interpreter for keyboard and RC ViX Version"
 SECTION = "extra"
 PRIORITY = "optional"
 LICENSE = "GPLv2"

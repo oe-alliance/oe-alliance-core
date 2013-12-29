@@ -1,4 +1,4 @@
-DESCRIPTION = "3rd Party plugins for Enigma2"
+SUMMARY = "3rd Party plugins for Enigma2"
 MAINTAINER = "swf"
 
 LICENSE = "Proprietary"

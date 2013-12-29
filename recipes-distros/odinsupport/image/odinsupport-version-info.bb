@@ -1,4 +1,4 @@
-DESCRIPTION = "odin-support version info"
+SUMMARY = "odin-support version info"
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "proprietary"

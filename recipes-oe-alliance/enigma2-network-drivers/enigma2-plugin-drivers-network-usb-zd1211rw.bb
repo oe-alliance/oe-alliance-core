@@ -1,4 +1,4 @@
-DESCRIPTION = "Driver for ZyDAS ZD1211, ZyDAS ZD1211B, Atheros AR5007UG"
+SUMMARY = "Driver for ZyDAS ZD1211, ZyDAS ZD1211B, Atheros AR5007UG"
 PACKAGE_ARCH = "all"
 
 require conf/license/license-gplv2.inc

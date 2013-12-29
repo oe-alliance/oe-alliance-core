@@ -1,4 +1,4 @@
-DESCRIPTION = "openhdf-spinner"
+SUMMARY = "openhdf-spinner"
 MAINTAINER = "HDFreaks"
 SECTION = "base"
 LICENSE = "proprietary"

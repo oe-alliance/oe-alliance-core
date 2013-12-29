@@ -1,6 +1,6 @@
 require linux-firmware.inc
 
-DESCRIPTION = "Firmware for Marvell 8688 sdio wifi/bt chipset"
+SUMMARY = "Firmware for Marvell 8688 sdio wifi/bt chipset"
 
 SRCREV = "09a550b63d05ae12892efaea05417955eaf9e21f"
 

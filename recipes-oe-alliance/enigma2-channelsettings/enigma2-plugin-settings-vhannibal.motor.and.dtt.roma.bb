@@ -1,4 +1,4 @@
-DESCRIPTION = "Vhannibal E2 Settings File For Motor & DTT Roma"
+SUMMARY = "Vhannibal E2 Settings File For Motor & DTT Roma"
 
 SETTINGS_FILENAME = "vhannibal.motor.and.dtt.roma"
 

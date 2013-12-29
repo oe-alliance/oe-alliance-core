@@ -1,4 +1,4 @@
-DESCRIPTION = "WiFi devices for Ralink RT2500USB/RT2571 devices."
+SUMMARY = "WiFi devices for Ralink RT2500USB/RT2571 devices."
 PACKAGE_ARCH = "all"
 
 require conf/license/license-gplv2.inc

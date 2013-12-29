@@ -1,4 +1,4 @@
-DESCRIPTION = "XTAv2 version info"
+SUMMARY = "XTAv2 version info"
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "proprietary"

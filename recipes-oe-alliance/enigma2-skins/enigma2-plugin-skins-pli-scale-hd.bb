@@ -1,5 +1,5 @@
 SUMMARY = "PLi-Scale-HD skin, scalable clean maximum screen utilisation"
-DESCRIPTION = "Screen based on resizable templates."
+SUMMARY = "Screen based on resizable templates."
 MAINTAINER = "Stephen R. van den Berg AKA BuGless <srb@cuci.nl>"
 LICENSE = "GPLv2+"
 

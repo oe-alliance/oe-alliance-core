@@ -1,4 +1,4 @@
-DESCRIPTION = "neutrinoHD2 binary, freshly compiled"
+SUMMARY = "neutrinoHD2 binary, freshly compiled"
 #LICENSE = "GPLv3"
 include conf/license/license-gplv2.inc
 

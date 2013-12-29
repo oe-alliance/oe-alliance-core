@@ -1,4 +1,4 @@
-DESCRIPTION = "Allow writes to NTFS file systems"
+SUMMARY = "Allow writes to NTFS file systems"
 
 require conf/license/license-gplv2.inc
 

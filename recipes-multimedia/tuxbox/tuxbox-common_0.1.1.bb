@@ -1,4 +1,4 @@
-DESCRIPTION = "Tuxbox common files"
+SUMMARY = "Tuxbox common files"
 LICENSE = "CLOSED"
 MAINTAINER = "OE-Alliance team"
 

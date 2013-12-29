@@ -1,4 +1,4 @@
-DESCRIPTION = "minicattv version info"
+SUMMARY = "minicattv version info"
 SECTION = "base"
 PRIORITY = "required"
 MAINTAINER = "minicattv"

@@ -1,4 +1,4 @@
-DESCRIPTION = "neutrinoHD2"
+SUMMARY = "neutrinoHD2"
 MAINTAINER = "mohousch based on open-nhd2-r64.12 from scp"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://AUTHORS;md5=03e8a220d5624784d6f4b1f4e5ded717"

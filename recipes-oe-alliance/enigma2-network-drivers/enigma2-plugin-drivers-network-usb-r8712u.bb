@@ -1,4 +1,4 @@
-DESCRIPTION = "Driver for Ralink USB devices R8712U"
+SUMMARY = "Driver for Ralink USB devices R8712U"
 PACKAGE_ARCH = "all"
 
 require conf/license/license-gplv2.inc

@@ -1,4 +1,4 @@
-DESCRIPTION = "swf bootlogo"
+SUMMARY = "swf bootlogo"
 SECTION = "base"
 PRIORITY = "required"
 MAINTAINER = "swf"

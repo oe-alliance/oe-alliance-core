@@ -1,4 +1,4 @@
-DESCRIPTION = "mgcamd ${PV} softcam"
+SUMMARY = "mgcamd ${PV} softcam"
 CAMNAME = "mgcamd"
 
 RDEPENDS_${PN} = "libcrypto-compat"

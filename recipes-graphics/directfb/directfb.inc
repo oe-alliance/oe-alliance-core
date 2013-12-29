@@ -1,5 +1,5 @@
 SUMMARY = "Graphics abstraction library for the Linux Framebuffer Device"
-DESCRIPTION = "DirectFB is a thin library that provides developers \
+SUMMARY = "DirectFB is a thin library that provides developers \
 with hardware graphics acceleration, input device handling and \
 abstraction, an integrated windowing system with support for \
 translucent windows and multiple display layers on top of the \

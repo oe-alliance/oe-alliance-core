@@ -1,4 +1,4 @@
-DESCRIPTION = "EGAMI version info"
+SUMMARY = "EGAMI version info"
 SECTION = "base"
 PRIORITY = "required"
 MAINTAINER = "EGAMI Support team"

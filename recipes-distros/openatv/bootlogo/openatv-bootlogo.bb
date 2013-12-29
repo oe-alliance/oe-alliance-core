@@ -1,4 +1,4 @@
-DESCRIPTION = "openATV bootlogo"
+SUMMARY = "openATV bootlogo"
 SECTION = "base"
 PRIORITY = "required"
 MAINTAINER = "ATV Team"

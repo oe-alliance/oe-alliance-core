@@ -1,4 +1,4 @@
-DESCRIPTION = "Tool to rip DVDs from the command line"
+SUMMARY = "Tool to rip DVDs from the command line"
 SECTION = "console/multimedia"
 PRIORITY = "optional"
 LICENSE = "GPLv3+"

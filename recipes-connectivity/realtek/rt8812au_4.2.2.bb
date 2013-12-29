@@ -1,4 +1,4 @@
-DESCRIPTION = "Ralink 8812AU/8821AU v4.2.2"
+SUMMARY = "Ralink 8812AU/8821AU v4.2.2"
 HOMEPAGE = "http://www.realtek.com.tw"
 SECTION = "kernel/modules"
 LICENSE = "GPLv2"

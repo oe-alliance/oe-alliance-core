@@ -1,4 +1,4 @@
-DESCRIPTION = "SIFTeam Image"
+SUMMARY = "SIFTeam Image"
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "proprietary"

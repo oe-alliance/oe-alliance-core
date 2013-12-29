@@ -1,4 +1,4 @@
-DESCRIPTION = "Vix Core"
+SUMMARY = "Vix Core"
 MAINTAINER = "Andy Blackburn"
 
 require conf/license/license-gplv2.inc

@@ -1,4 +1,4 @@
-DESCRIPTION = "World timezone definitions, modern and historical."
+SUMMARY = "World timezone definitions, modern and historical."
 HOMEPAGE = "https://pypi.python.org/pypi/pytz"
 SECTION = "devel/python"
 LICENSE = "BSD"

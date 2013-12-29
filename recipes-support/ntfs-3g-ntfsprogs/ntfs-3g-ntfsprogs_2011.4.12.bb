@@ -1,4 +1,4 @@
-DESCRIPTION = "The NTFS-3G driver is an open source, freely available NTFS driver for Linux with read and write support."
+SUMMARY = "The NTFS-3G driver is an open source, freely available NTFS driver for Linux with read and write support."
 HOMEPAGE = "http://www.ntfs-3g.org/"
 DEPENDS = "fuse libgcrypt"
 PROVIDES = "ntfsprogs ntfs-3g"

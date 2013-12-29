@@ -1,4 +1,4 @@
-DESCRIPTION = "swf-base-files"
+SUMMARY = "swf-base-files"
 MAINTAINER = "swf"
 SECTION = "base"
 PRIORITY = "required"

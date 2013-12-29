@@ -1,4 +1,4 @@
-DESCRIPTION = "Xtrend-Alliance Image"
+SUMMARY = "Xtrend-Alliance Image"
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "proprietary"

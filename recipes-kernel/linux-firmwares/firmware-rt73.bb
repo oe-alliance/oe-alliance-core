@@ -1,6 +1,6 @@
 require linux-firmware.inc
 
-DESCRIPTION = "Firmware for RT73"
+SUMMARY = "Firmware for RT73"
 
 SRCREV = "bf9f8648fdf1d1d63db471554781f897d219bd62"
 

@@ -1,4 +1,4 @@
-DESCRIPTION = "Create nifty light effects with an amBX kit"
+SUMMARY = "Create nifty light effects with an amBX kit"
 MAINTAINER = "MiLo @ pli-images.org"
 
 require conf/license/license-gplv2.inc

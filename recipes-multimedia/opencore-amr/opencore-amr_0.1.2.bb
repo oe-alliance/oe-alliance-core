@@ -1,4 +1,4 @@
-DESCRIPTION = "OpenCORE AMR decoder library"
+SUMMARY = "OpenCORE AMR decoder library"
 SECTION = "libs"
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://COPYING;md5=dd2c2486aca02190153cf399e508c7e7"

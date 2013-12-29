@@ -1,4 +1,4 @@
-DESCRIPTION = "Sandman 28E vfd picons, edited by Ev0"
+SUMMARY = "Sandman 28E vfd picons, edited by Ev0"
 SECTION = "base"
 PRIORITY = "required"
 MAINTAINER = "Ev0/Sandman"

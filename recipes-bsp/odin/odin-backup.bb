@@ -1,4 +1,4 @@
-DESCRIPTION = "odin backup"
+SUMMARY = "odin backup"
 SECTION = "base"
 PRIORITY = "optional"
 LICENSE = "GPL"

@@ -1,4 +1,4 @@
-DESCRIPTION = "OpenXTA Panel"
+SUMMARY = "OpenXTA Panel"
 MAINTAINER = "OpenXTA-Team"
 SECTION = "base"
 LICENSE = "proprietary"

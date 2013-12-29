@@ -1,4 +1,4 @@
-DESCRIPTION = "meta file for bootlogos"
+SUMMARY = "meta file for bootlogos"
 
 require conf/license/license-gplv2.inc
 

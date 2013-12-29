@@ -1,4 +1,4 @@
-DESCRIPTION = "Display progress bar while booting"
+SUMMARY = "Display progress bar while booting"
 SECTION = "base"
 PRIORITY = "optional"
 DEPENDS = ""

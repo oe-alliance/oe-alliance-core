@@ -1,4 +1,4 @@
-DESCRIPTION = "Imports xmltv files into the EPG cache of enigma2"
+SUMMARY = "Imports xmltv files into the EPG cache of enigma2"
 MAINTAINER = "oe-alliance"
 
 LICENSE = "GPLv2"

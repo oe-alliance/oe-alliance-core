@@ -1,4 +1,4 @@
-DESCRIPTION = "Xtrend-Alliance Panel"
+SUMMARY = "Xtrend-Alliance Panel"
 MAINTAINER = "Xtrend-Team"
 SECTION = "base"
 LICENSE = "proprietary"

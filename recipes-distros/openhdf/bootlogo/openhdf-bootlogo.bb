@@ -1,4 +1,4 @@
-DESCRIPTION = "OpenHDF bootlogo"
+SUMMARY = "OpenHDF bootlogo"
 SECTION = "base"
 PRIORITY = "required"
 MAINTAINER = "OpenHDF Team"

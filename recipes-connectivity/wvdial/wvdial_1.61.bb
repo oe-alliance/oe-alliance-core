@@ -1,5 +1,5 @@
 HOMEPAGE = "http://www.alumnit.ca/wiki/?WvDial"
-DESCRIPTION = "WvDial is a program that makes it easy to connect your Linux workstation to the Internet."
+SUMMARY = "WvDial is a program that makes it easy to connect your Linux workstation to the Internet."
 
 require conf/license/license-gplv2.inc
 

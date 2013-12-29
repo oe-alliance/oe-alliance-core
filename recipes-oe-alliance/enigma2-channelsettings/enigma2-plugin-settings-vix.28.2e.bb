@@ -1,4 +1,4 @@
-DESCRIPTION = "ViX E2 Settings File For 28.2 East"
+SUMMARY = "ViX E2 Settings File For 28.2 East"
 
 SETTINGS_FILENAME = "vix.28.2e"
 

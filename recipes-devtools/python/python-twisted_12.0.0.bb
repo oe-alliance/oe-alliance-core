@@ -1,4 +1,4 @@
-DESCRIPTION = "Twisted is an event-driven networking framework written in Python and licensed under the LGPL. \
+SUMMARY = "Twisted is an event-driven networking framework written in Python and licensed under the LGPL. \
 Twisted supports TCP, UDP, SSL/TLS, multicast, Unix sockets, a large number of protocols                   \
 (including HTTP, NNTP, IMAP, SSH, IRC, FTP, and others), and much more."
 HOMEPAGE = "http://www.twistedmatrix.com"

@@ -1,4 +1,4 @@
-DESCRIPTION = "enigma2-plugin-extensions-et-portal"
+SUMMARY = "enigma2-plugin-extensions-et-portal"
 MAINTAINER = "original by bla666 and inofficial mod by mogli123 and icewaere and pcd and koivo"
 SECTION = "extra"
 PRIORITY = "optional"

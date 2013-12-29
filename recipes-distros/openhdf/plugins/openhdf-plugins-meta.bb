@@ -1,4 +1,4 @@
-DESCRIPTION = "openhdf meta package for enigma2 picon sets"
+SUMMARY = "openhdf meta package for enigma2 picon sets"
 SECTION = "base"
 LICENSE = "proprietary"
 PACKAGE_ARCH = "all"

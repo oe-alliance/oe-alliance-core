@@ -1,4 +1,4 @@
-DESCRIPTION = "Tuxbox Commander"
+SUMMARY = "Tuxbox Commander"
 MAINTAINER = "Sven Karschewski <seddi@i-have-a-dreambox.com>"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://tuxcom.c;beginline=8;endline=22;md5=8cfd78763de33face1d26b11904e84d5"

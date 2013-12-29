@@ -1,4 +1,4 @@
-DESCRIPTION = "Start, stop and select cardservers."
+SUMMARY = "Start, stop and select cardservers."
 MAINTAINER = "PLi team"
 
 require conf/license/license-gplv2.inc

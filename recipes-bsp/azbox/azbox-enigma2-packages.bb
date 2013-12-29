@@ -1,4 +1,4 @@
-DESCRIPTION = "Azbox Specific plugin"
+SUMMARY = "Azbox Specific plugin"
 RDEPENDS_${PN} = "enigma2"
 DEPENDS = "python-native"
 PACKAGE_ARCH = "${MACHINE_ARCH}"

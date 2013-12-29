@@ -1,4 +1,4 @@
-DESCRIPTION = "Configuration files for 3rd-party feeds"
+SUMMARY = "Configuration files for 3rd-party feeds"
 PR = "r0"
 
 require conf/license/license-gplv2.inc

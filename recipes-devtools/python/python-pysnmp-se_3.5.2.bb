@@ -1,4 +1,4 @@
-DESCRIPTION = "A Pure Python SNMP Package"
+SUMMARY = "A Pure Python SNMP Package"
 SECTION = "devel/python"
 PRIORITY = "optional"
 RDEPENDS_${PN} = "python-core"

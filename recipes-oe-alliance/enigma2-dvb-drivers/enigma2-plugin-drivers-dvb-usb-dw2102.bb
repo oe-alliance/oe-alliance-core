@@ -1,4 +1,4 @@
-DESCRIPTION = "USB DVB driver for DW210x/DW310x chipset"
+SUMMARY = "USB DVB driver for DW210x/DW310x chipset"
 PACKAGE_ARCH = "all"
 
 require conf/license/license-gplv2.inc

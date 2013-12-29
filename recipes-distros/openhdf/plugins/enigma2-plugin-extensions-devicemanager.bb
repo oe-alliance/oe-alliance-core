@@ -1,4 +1,4 @@
-DESCRIPTION = "Enigma2 Device Manager"
+SUMMARY = "Enigma2 Device Manager"
 MAINTAINER = "SystemPlugins"
 SECTION = "base"
 PRIORITY = "required"

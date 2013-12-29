@@ -1,4 +1,4 @@
-DESCRIPTION = "Rossi2000 28E vfd picons"
+SUMMARY = "Rossi2000 28E vfd picons"
 SECTION = "base"
 PRIORITY = "required"
 MAINTAINER = "Rossi2000"

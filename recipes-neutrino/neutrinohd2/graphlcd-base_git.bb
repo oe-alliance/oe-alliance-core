@@ -1,4 +1,4 @@
-DESCRIPTION = "GraphLCD is a project to support graphical LC displays connected to the PC."
+SUMMARY = "GraphLCD is a project to support graphical LC displays connected to the PC."
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://graphlcd.conf;md5=56e412a181c090acd15e5153ae40f869"
 

@@ -1,4 +1,4 @@
-DESCRIPTION = "BoxModel proc Helper"
+SUMMARY = "BoxModel proc Helper"
 MAINTAINER = "Dr. Ideal"
 SECTION = "kernel/modules"
 LICENSE = "GPLv2"

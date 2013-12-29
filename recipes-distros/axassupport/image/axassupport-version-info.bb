@@ -1,4 +1,4 @@
-DESCRIPTION = "AXAS version info"
+SUMMARY = "AXAS version info"
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "proprietary"

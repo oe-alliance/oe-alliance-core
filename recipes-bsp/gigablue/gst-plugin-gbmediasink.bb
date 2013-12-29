@@ -1,4 +1,4 @@
-DESCRIPTION = "gstreamer dvbmediasink plugin"
+SUMMARY = "gstreamer dvbmediasink plugin"
 SECTION = "multimedia"
 PRIORITY = "optional"
 DEPENDS = "gstreamer gst-plugins-base libdca"

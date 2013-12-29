@@ -1,4 +1,4 @@
-DESCRIPTION = "OpenHDF version info"
+SUMMARY = "OpenHDF version info"
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "proprietary"

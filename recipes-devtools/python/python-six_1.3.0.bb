@@ -1,4 +1,4 @@
-DESCRIPTION = "Python 2 and 3 compatibility utilities."
+SUMMARY = "Python 2 and 3 compatibility utilities."
 HOMEPAGE = "http://pypi.python.org/pypi/six/1.3.0"
 SECTION = "devel/python"
 LICENSE = "BSD"

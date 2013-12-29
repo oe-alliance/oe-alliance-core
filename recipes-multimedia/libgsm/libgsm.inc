@@ -1,4 +1,4 @@
-DESCRIPTION = "GSM Audio Library"
+SUMMARY = "GSM Audio Library"
 SECTION = "libs"
 PRIORITY = "optional"
 LICENSE = "libgsm"

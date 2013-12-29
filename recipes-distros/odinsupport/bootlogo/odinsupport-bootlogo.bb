@@ -1,4 +1,4 @@
-DESCRIPTION = "odin-support bootlogo"
+SUMMARY = "odin-support bootlogo"
 SECTION = "base"
 PRIORITY = "required"
 MAINTAINER = "odin-support Team"

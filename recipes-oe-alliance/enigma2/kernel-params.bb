@@ -1,6 +1,6 @@
 PV = "20110114"
 PR = "r0"
-DESCRIPTION = "Tune kernel parameters in /etc/sysconf"
+SUMMARY = "Tune kernel parameters in /etc/sysconf"
 
 require conf/license/license-gplv2.inc
 

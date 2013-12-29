@@ -1,4 +1,4 @@
-DESCRIPTION = "WiFi devices based on Ralink 802.11n USB chipsets."
+SUMMARY = "WiFi devices based on Ralink 802.11n USB chipsets."
 PACKAGE_ARCH = "all"
 
 require conf/license/license-gplv2.inc

@@ -1,4 +1,4 @@
-DESCRIPTION = "WiFi devices for Realtek 8812AU/8821AU chipsets."
+SUMMARY = "WiFi devices for Realtek 8812AU/8821AU chipsets."
 PACKAGE_ARCH = "all"
 
 require conf/license/license-gplv2.inc

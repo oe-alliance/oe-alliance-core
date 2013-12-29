@@ -1,4 +1,4 @@
-DESCRIPTION = "MK-Digital version info"
+SUMMARY = "MK-Digital version info"
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "proprietary"

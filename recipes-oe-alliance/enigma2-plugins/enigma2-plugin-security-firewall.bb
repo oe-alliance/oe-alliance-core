@@ -1,4 +1,4 @@
-DESCRIPTION = "Firewall"
+SUMMARY = "Firewall"
 
 require conf/license/license-gplv2.inc
 

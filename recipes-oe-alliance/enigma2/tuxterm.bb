@@ -1,4 +1,4 @@
-DESCRIPTION = "TuxTerm"
+SUMMARY = "TuxTerm"
 MAINTAINER = "Sven Karschewski <seddi@i-have-a-dreambox.com>"
 DEPENDS = "freetype"
 

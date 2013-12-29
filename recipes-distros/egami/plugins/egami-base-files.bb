@@ -1,4 +1,4 @@
-DESCRIPTION = "EGAMI base files"
+SUMMARY = "EGAMI base files"
 LICENSE = "GPL2"
 
 require conf/license/license-gplv2.inc

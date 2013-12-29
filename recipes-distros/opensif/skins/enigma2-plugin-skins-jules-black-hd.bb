@@ -1,4 +1,4 @@
-DESCRIPTION = "Skin Jules Black HD. Daconi"
+SUMMARY = "Skin Jules Black HD. Daconi"
 MAINTAINER = "SIFTeam"
 
 require conf/license/license-gplv2.inc

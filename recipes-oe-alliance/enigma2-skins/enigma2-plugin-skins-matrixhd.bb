@@ -1,4 +1,4 @@
-DESCRIPTION = "MatrixHD skins for Enigma2"
+SUMMARY = "MatrixHD skins for Enigma2"
 MAINTAINER = "Steve Wheeler"
 
 require conf/license/license-gplv2.inc

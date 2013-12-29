@@ -1,4 +1,4 @@
-DESCRIPTION = "CoolTVGuide MultiEPG"
+SUMMARY = "CoolTVGuide MultiEPG"
 MAINTAINER = "Coolman <coolman@uni.de>"
 SECTION = "base"
 LICENSE = "proprietary"

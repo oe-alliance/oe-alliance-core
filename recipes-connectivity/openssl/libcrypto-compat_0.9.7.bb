@@ -1,4 +1,4 @@
-DESCRIPTION = "Compatibility for packages that link to libcrypto or libssl 0.9.7"
+SUMMARY = "Compatibility for packages that link to libcrypto or libssl 0.9.7"
 
 require conf/license/license-gplv2.inc
 

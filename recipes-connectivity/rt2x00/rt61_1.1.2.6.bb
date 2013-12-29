@@ -1,4 +1,4 @@
-DESCRIPTION = "Driver for Ralink RT2501PCI/mPCI/CB (RT61:RT2561/RT2561S/RT2661)"
+SUMMARY = "Driver for Ralink RT2501PCI/mPCI/CB (RT61:RT2561/RT2561S/RT2661)"
 HOMEPAGE = "http://www.realtek.com.tw"
 SECTION = "kernel/modules"
 LICENSE = "GPL"

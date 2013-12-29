@@ -1,4 +1,4 @@
-DESCRIPTION = "CCcam ${PV} softcam"
+SUMMARY = "CCcam ${PV} softcam"
 
 PR = "r0"
 

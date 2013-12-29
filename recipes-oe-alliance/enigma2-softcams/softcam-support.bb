@@ -1,4 +1,4 @@
-DESCRIPTION = "Start, stop and select softcams."
+SUMMARY = "Start, stop and select softcams."
 MAINTAINER = "PLi team"
 
 require conf/license/license-gplv2.inc

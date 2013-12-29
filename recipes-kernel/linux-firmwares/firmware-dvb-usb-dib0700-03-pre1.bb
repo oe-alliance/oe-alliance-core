@@ -1,6 +1,6 @@
 require linux-firmware.inc
 
-DESCRIPTION = "Firmware for dvb-usb-dib0700-03-pre1"
+SUMMARY = "Firmware for dvb-usb-dib0700-03-pre1"
 
 SRCREV = "13f0b6bda7b567d29c747196aa65ad82b18651ca"
 

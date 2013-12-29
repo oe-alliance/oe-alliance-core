@@ -1,4 +1,4 @@
-DESCRIPTION = "USB DVB driver for it913x chipsets"
+SUMMARY = "USB DVB driver for it913x chipsets"
 PACKAGE_ARCH = "all"
 
 require conf/license/license-gplv2.inc

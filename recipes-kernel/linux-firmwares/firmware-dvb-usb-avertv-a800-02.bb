@@ -1,6 +1,6 @@
 require linux-firmware.inc
 
-DESCRIPTION = "Firmware for dvb-usb-az6027-03"
+SUMMARY = "Firmware for dvb-usb-az6027-03"
 
 SRCREV = "46c66487a85cd05a4acbd5eb4828f72783d1be4c"
 

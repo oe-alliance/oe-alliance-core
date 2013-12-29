@@ -1,4 +1,4 @@
-DESCRIPTION = "EGAMI Image"
+SUMMARY = "EGAMI Image"
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "proprietary"

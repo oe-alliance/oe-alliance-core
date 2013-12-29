@@ -1,4 +1,4 @@
-DESCRIPTION = "driver for Realtek USB wireless devices"
+SUMMARY = "driver for Realtek USB wireless devices"
 SECTION = "kernel/modules"
 LICENSE = "GPLv2"
 

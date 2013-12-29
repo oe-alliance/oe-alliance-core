@@ -1,5 +1,5 @@
 SUMMARY = "Ext2 Filesystem Utilities"
-DESCRIPTION = "The Ext2 Filesystem Utilities (e2fsprogs) contain all of the standard utilities for creating, \
+SUMMARY = "The Ext2 Filesystem Utilities (e2fsprogs) contain all of the standard utilities for creating, \
 fixing, configuring , and debugging ext2 filesystems."
 HOMEPAGE = "http://e2fsprogs.sourceforge.net/"
 

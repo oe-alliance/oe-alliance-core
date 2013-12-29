@@ -1,4 +1,4 @@
-DESCRIPTION = "ASIX AX8817X based USB 2.0 Ethernet Devices"
+SUMMARY = "ASIX AX8817X based USB 2.0 Ethernet Devices"
 PACKAGE_ARCH = "all"
 
 require conf/license/license-gplv2.inc

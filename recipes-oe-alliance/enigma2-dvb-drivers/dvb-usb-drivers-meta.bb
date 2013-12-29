@@ -1,4 +1,4 @@
-DESCRIPTION = "meta file for USB DVB drivers"
+SUMMARY = "meta file for USB DVB drivers"
 PACKAGE_ARCH = "all"
 
 require conf/license/license-gplv2.inc

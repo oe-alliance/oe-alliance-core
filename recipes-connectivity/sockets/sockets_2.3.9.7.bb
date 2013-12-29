@@ -1,4 +1,4 @@
-DESCRIPTION = "This is a GPL licensed C++ class library wrapping \
+SUMMARY = "This is a GPL licensed C++ class library wrapping \
 the berkeley sockets C API, and therefore works on most \
 unixes and also win32. The library is in use in a number \
 of real world applications, both commercial and open source."

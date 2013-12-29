@@ -1,4 +1,4 @@
-DESCRIPTION = "ET LiveStream Importer"
+SUMMARY = "ET LiveStream Importer"
 LICENSE = "GPLv2"
 SECTION = "base"
 PRIORITY = "optional"

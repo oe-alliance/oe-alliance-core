@@ -1,4 +1,4 @@
-DESCRIPTION = "WiFi devices for Atheros AR9170 devices."
+SUMMARY = "WiFi devices for Atheros AR9170 devices."
 PACKAGE_ARCH = "all"
 
 require conf/license/license-gplv2.inc

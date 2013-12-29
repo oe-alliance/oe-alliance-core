@@ -1,4 +1,4 @@
-DESCRIPTION = "direct Flashing and Backup for Enigma2"
+SUMMARY = "direct Flashing and Backup for Enigma2"
 MAINTAINER = "gutemine <gutemine@unknown.com>"
 SECTION = "base"
 PRIORITY = "required"

@@ -1,5 +1,5 @@
 MODULE = "HDF-Toolbox"
-DESCRIPTION = "HDFreaks.cc Toolbox"
+SUMMARY = "HDFreaks.cc Toolbox"
 MAINTAINER = "HDFreaks"
 SECTION = "base"
 PRIORITY = "required"

@@ -1,4 +1,4 @@
-DESCRIPTION = "Dreambox box-specific configuration files"
+SUMMARY = "Dreambox box-specific configuration files"
 SECTION = "base"
 PRIORITY = "required"
 MAINTAINER = "PLi team"

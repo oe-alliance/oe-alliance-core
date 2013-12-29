@@ -1,4 +1,4 @@
-DESCRIPTION = "octagon version info"
+SUMMARY = "octagon version info"
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "proprietary"

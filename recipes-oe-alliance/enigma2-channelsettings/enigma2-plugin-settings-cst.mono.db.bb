@@ -1,4 +1,4 @@
-DESCRIPTION = "CST Mono E2 Settings File"
+SUMMARY = "CST Mono E2 Settings File"
 
 SETTINGS_FILENAME = "cst.mono.db"
 

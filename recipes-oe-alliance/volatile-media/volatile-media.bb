@@ -1,4 +1,4 @@
-DESCRIPTION = "Mounts and populates a tmpfs over /media"
+SUMMARY = "Mounts and populates a tmpfs over /media"
 MAINTAINER = "PLi team"
 
 require conf/license/license-gplv2.inc

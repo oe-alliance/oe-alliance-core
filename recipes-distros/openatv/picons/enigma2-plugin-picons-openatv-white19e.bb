@@ -1,4 +1,4 @@
-DESCRIPTION = "plugin-picons-openatv-white19E"
+SUMMARY = "plugin-picons-openatv-white19E"
 MAINTAINER = "ATV Team"
 SECTION = "base"
 LICENSE = "proprietary"

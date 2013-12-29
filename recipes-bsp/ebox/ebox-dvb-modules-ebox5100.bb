@@ -1,4 +1,4 @@
-DESCRIPTION = "Hardware drivers for ${MACHINE}"
+SUMMARY = "Hardware drivers for ${MACHINE}"
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "CLOSED"

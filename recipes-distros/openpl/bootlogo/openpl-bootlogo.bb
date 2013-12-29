@@ -1,4 +1,4 @@
-DESCRIPTION = "MixOS bootlogo"
+SUMMARY = "MixOS bootlogo"
 SECTION = "base"
 PRIORITY = "required"
 MAINTAINER = "MixOS Support"

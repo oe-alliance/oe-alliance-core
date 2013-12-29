@@ -1,4 +1,4 @@
-DESCRIPTION = "Rytec's sources and channels for the XMLTV importer"
+SUMMARY = "Rytec's sources and channels for the XMLTV importer"
 MAINTAINER = "oe-allaince"
 PACKAGE_ARCH = "all"
 LICENSE = "WTFPL"

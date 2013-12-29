@@ -1,6 +1,6 @@
 require qt4.inc
 
-DESCRIPTION = "Qt is a versatile cross-platform application framework -- this is the X11 version."
+SUMMARY = "Qt is a versatile cross-platform application framework -- this is the X11 version."
 HOMEPAGE = "http://qt.nokia.com"
 SECTION = "x11/libs"
 DEPENDS += "virtual/libgl virtual/libx11 fontconfig libxft libxext libxrender libxrandr libxcursor"

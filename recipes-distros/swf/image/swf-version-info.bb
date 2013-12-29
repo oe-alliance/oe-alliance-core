@@ -1,4 +1,4 @@
-DESCRIPTION = "SWF version info"
+SUMMARY = "SWF version info"
 SECTION = "base"
 PRIORITY = "required"
 MAINTAINER = "SWF"

@@ -1,6 +1,6 @@
 require linux-firmware.inc
 
-DESCRIPTION = "Firmware for as102_data2_st"
+SUMMARY = "Firmware for as102_data2_st"
 
 SRCREV = "61a66a03697b3cdc04e244688fa716aa13b3bf12"
 

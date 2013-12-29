@@ -1,4 +1,4 @@
-DESCRIPTION = "Enigma2 Skin minicattv"
+SUMMARY = "Enigma2 Skin minicattv"
 MAINTAINER = "pli-hd"
 SECTION = "base"
 PRIORITY = "required"

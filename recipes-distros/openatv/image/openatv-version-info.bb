@@ -1,4 +1,4 @@
-DESCRIPTION = "OpenATV version info"
+SUMMARY = "OpenATV version info"
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "proprietary"
