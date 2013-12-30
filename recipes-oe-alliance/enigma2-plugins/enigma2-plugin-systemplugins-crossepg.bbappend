@@ -2,7 +2,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 SRCREV = "${AUTOREV}"
 PV = "0.7.04"
 PKGV = "${PV}+git${GITPKGV}"
-PRINC = "5"
+PRINC = "6"
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
