@@ -9,7 +9,7 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "4.2.+git${SRCPV}"
 PKGV = "4.2.+git${GITPKGV}"
-PR = "r2"
+PR = "r5"
 
 SRC_URI = "git://github.com/microe/libdvdnav.git \
            file://0001-dvdnavmini.pc-link-against-libdvdnavmini.patch"
@@ -18,10 +18,6 @@ S = "${WORKDIR}/git"
 
 inherit autotools lib_package binconfig pkgconfig
 
-FILES_${PN} = "${libdir}/${PN}${SOLIB}"
-
-python populate_packages_prepend() {
-    SUMMARY = bb.data.expand('${DESCRIPTION}', d)
-    libdir = bb.data.expand('${libdir}', d)
-    do_split_packages(d, libdir, '^lib(.*)\.so\..*', 'lib%s', description + ' (%s)', extra_depends='', allow_links=True)
-}
+PACKAGES += " libdvdnavmini"
+FILES_${PN} = "${libdir}/libdvdnav.*"
+FILES_libdvdnavmini = "${libdir}/libdvdnavmini.*"
