@@ -35,8 +35,6 @@ KERNEL_IMAGETYPE = "vmlinux"
 KERNEL_OUTPUT = "${KERNEL_IMAGETYPE}"
 KERNEL_CONSOLE = "ttyS0,115200n8"
 
-IMAGE_FSTYPES ?= "${ODINM7-OEM}"
-
 UBI_VOLNAME = "rootfs"
 MKUBIFS_ARGS = "-m 2048 -e 126976 -c 4096"
 UBINIZE_ARGS = "-m 2048 -p 128KiB"
@@ -44,8 +42,10 @@ UBINIZE_ARGS = "-m 2048 -p 128KiB"
 IMAGE_CMD_m7 = " \
     rm -rf ${IMAGE_ROOTFS}/boot/*; \
     rm -rf ${IMAGE_ROOTFS}/tmp/*; \
-	rm -rf ${IMAGE_ROOTFS}/etc/.machine; \
-	rm -rf ${IMAGE_ROOTFS}/etc/.brand; \
+    rm -rf ${IMAGE_ROOTFS}/etc/.machine; \
+    rm -rf ${IMAGE_ROOTFS}/etc/.brand; \
+    rm -rf ${IMAGE_ROOTFS}/etc/hostname; \
+    echo ${MACHINE} > ${IMAGE_ROOTFS}/etc/hostname; \
     echo \[ubifs\] > ubinize.cfg; \
     echo mode=ubi >> ubinize.cfg; \
     echo image=${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.ubifs >> ubinize.cfg; \
@@ -71,6 +71,8 @@ IMAGE_CMD_evo = " \
     rm -rf ${IMAGE_ROOTFS}/tmp/*; \
     rm -rf ${IMAGE_ROOTFS}/etc/.machine; \
     rm -rf ${IMAGE_ROOTFS}/etc/.brand; \
+    rm -rf ${IMAGE_ROOTFS}/etc/hostname; \
+    echo EVO > ${IMAGE_ROOTFS}/etc/hostname; \
     echo EVO > ${IMAGE_ROOTFS}/etc/.machine; \
     echo Optibox > ${IMAGE_ROOTFS}/etc/.brand; \
     echo \[ubifs\] > ubinize.cfg; \
@@ -98,6 +100,8 @@ IMAGE_CMD_genius = " \
     rm -rf ${IMAGE_ROOTFS}/tmp/*; \
     rm -rf ${IMAGE_ROOTFS}/etc/.machine; \
     rm -rf ${IMAGE_ROOTFS}/etc/.brand; \
+    rm -rf ${IMAGE_ROOTFS}/etc/hostname; \
+    echo Genius > ${IMAGE_ROOTFS}/etc/hostname; \
     echo Genius > ${IMAGE_ROOTFS}/etc/.machine; \
     echo Galaxy Innovations > ${IMAGE_ROOTFS}/etc/.brand; \
     echo \[ubifs\] > ubinize.cfg; \
@@ -125,6 +129,8 @@ IMAGE_CMD_starsatlx = " \
     rm -rf ${IMAGE_ROOTFS}/tmp/*; \
     rm -rf ${IMAGE_ROOTFS}/etc/.machine; \
     rm -rf ${IMAGE_ROOTFS}/etc/.brand; \
+    rm -rf ${IMAGE_ROOTFS}/etc/hostname; \
+    echo LX > ${IMAGE_ROOTFS}/etc/hostname; \
     echo LX > ${IMAGE_ROOTFS}/etc/.machine; \
     echo Telesat > ${IMAGE_ROOTFS}/etc/.brand; \
     echo \[ubifs\] > ubinize.cfg; \
@@ -152,6 +158,8 @@ IMAGE_CMD_ax-odin = " \
     rm -rf ${IMAGE_ROOTFS}/tmp/*; \
     rm -rf ${IMAGE_ROOTFS}/etc/.machine; \
     rm -rf ${IMAGE_ROOTFS}/etc/.brand; \
+    rm -rf ${IMAGE_ROOTFS}/etc/hostname; \
+    echo ax-odin > ${IMAGE_ROOTFS}/etc/hostname; \
     echo ax-odin > ${IMAGE_ROOTFS}/etc/.machine; \
     echo Opticum > ${IMAGE_ROOTFS}/etc/.brand; \
     echo \[ubifs\] > ubinize.cfg; \
@@ -179,6 +187,8 @@ IMAGE_CMD_classm = " \
     rm -rf ${IMAGE_ROOTFS}/tmp/*; \
     rm -rf ${IMAGE_ROOTFS}/etc/.machine; \
     rm -rf ${IMAGE_ROOTFS}/etc/.brand; \
+    rm -rf ${IMAGE_ROOTFS}/etc/hostname; \
+    echo Classm > ${IMAGE_ROOTFS}/etc/hostname; \
     echo Classm > ${IMAGE_ROOTFS}/etc/.machine; \
     echo Axas > ${IMAGE_ROOTFS}/etc/.brand; \
     echo \[ubifs\] > ubinize.cfg; \
