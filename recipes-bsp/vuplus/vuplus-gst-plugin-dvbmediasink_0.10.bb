@@ -6,18 +6,17 @@ LIC_FILES_CHKSUM = "file://src/gstdvbaudiosink.c;beginline=1;endline=45;md5=023e
 DEPENDS = "gstreamer gst-plugins-base"
 RDEPENDS_${PN} = "gst-ffmpeg"
 
-BRANCH="master"
-SRCREV = "${AUTOREV}"
-PR = "r18"
+inherit autotools schwerkraft-git
 
-inherit autotools git-project
-SRC_URI = "git://schwerkraft.elitedvb.net/dvbmediasink/dvbmediasink.git;protocol=git;branch=${BRANCH};tag=91738211ef106ae7d14c1ccc5c4dd26c0f2dbf58"
+PR = "r19"
+
+SRCREV = "6d79a5f2b31602925f2687bb82ba6a55f8013096"
+SCHWERKRAFT_PROJECT = "dvbmediasink"
 
 SRC_URI += " \
-	file://fix_dvbaudiosink_async_opt.patch \
-	file://fix_dvbvideosink_dm8000_padtemplate.patch \
-	file://fix_dvbaudiosink_support_ddp.patch \
-	file://fix_dvbaudiosink_remove_wma.patch \
+	file://getdecodertime.patch \
+	file://0002-Set-only-by-hardware-supported-audio-mpeg-4-profile.patch \
+	file://vuplus_wma_eac3_padtemplate.patch \
 "
 
 FILES_${PN} = "${libdir}/gstreamer-0.10/*.so"
