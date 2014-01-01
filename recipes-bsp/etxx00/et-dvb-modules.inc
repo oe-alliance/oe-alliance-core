@@ -4,7 +4,7 @@ PRIORITY = "required"
 LICENSE = "CLOSED"
 
 PV = "${KV}+${SRCDATE}"
-PR = "r9"
+PR = "r10"
 
 RDEPENDS_${PN}_et5x00 += "et-fpupdate-${MACHINE}"
 RDEPENDS_${PN}_et6x00 += "et-fpupdate-${MACHINE}"
@@ -25,12 +25,10 @@ do_compile() {
 do_install() {
     install -d ${D}/lib/modules/${KV}/extra
     install -d ${D}/${sysconfdir}/modules-load.d
-    for i in tpm modloader modloader2; do
+    for i in tpm modloader modloader2 dvb; do
         install -m 0755 ${WORKDIR}/$i.ko ${D}/lib/modules/${KV}/extra
         echo $i >> ${D}/${sysconfdir}/modules-load.d/_${MACHINE}.conf
     done
-    install -m 0755 ${WORKDIR}/dvb.ko ${D}/lib/modules/${KV}/extra
-    echo dvb lnb_power_off_in_standby=1 >> ${D}/${sysconfdir}/modules-load.d/_${MACHINE}.conf
 }
 
 FILES_${PN} += "${sysconfdir}/modules-load.d/_${MACHINE}.conf"
