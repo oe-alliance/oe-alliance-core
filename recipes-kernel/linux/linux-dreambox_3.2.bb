@@ -1,7 +1,7 @@
 MACHINE_KERNEL_PR_append = ".${INC_PR}.53"
 
 PATCHREV = "4e0356d04e89df800361b9252f990716f5523c6e"
-PATCHLEVEL = "52"
+PATCHLEVEL = "51"
 
 SRC_URI = " \
             ${KERNELORG_MIRROR}/linux/kernel/v3.x/linux-3.2.tar.bz2;name=kernel \
@@ -43,8 +43,8 @@ SRC_URI_append_dm500hdv2 = " file://0001-add-support-for-DM800SEv2-and-DM500HDv2
 
 SRC_URI[kernel.md5sum] = "7ceb61f87c097fc17509844b71268935"
 SRC_URI[kernel.sha256sum] = "c881fc2b53cf0da7ca4538aa44623a7de043a41f76fd5d0f51a31f6ed699d463"
-SRC_URI[kernel-patch.md5sum] = "12ff4fd955b5e4f5fb9b864c007cc619"
-SRC_URI[kernel-patch.sha256sum] = "b6771424d856d56e47c878efbdf30efaae659d4b61be5f5df8fe2bda880289db"
+SRC_URI[kernel-patch.md5sum] = "325de4129bf84f0ccea6f65a79f1811a"
+SRC_URI[kernel-patch.sha256sum] = "ce35a81143c4c58e4f97063d165f7f49d81c02c73a224152ee7b13f2af031f27"
 SRC_URI[dmm-patch.md5sum] = "d17d65e9978343d540e0b60767a82286"
 SRC_URI[dmm-patch.sha256sum] = "576356545de7f587d164d1cee2cb17b6c1ce3efbe2e01ff785c13ec2d544d220"
 SRC_URI[unionfs.md5sum] = "06e7c9f6cafd49b72184be851116c511"
