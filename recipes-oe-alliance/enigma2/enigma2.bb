@@ -314,12 +314,8 @@ do_configure_prepend() {
 		DRIVERSDATE=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/azbox/azbox-dvb-modules.bb | cut -b 12-19`
 	elif [ "${MACHINE}" = "sogno8800hd" ]; then
 		DRIVERSDATE=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/sogno/sogno-dvb-modules-${MACHINE}.bb | cut -b 12-19`
-	elif [ "${MACHINE}" = "dm8000" ]; then
-		DRIVERSDATE="20130619"
-	elif [ "${MACHINE}" = "dm500hd" -o "${MACHINE}" = "dm800se" -o "${MACHINE}" = "dm500hdv2" -o "${MACHINE}" = "dm7020hd" -o "${MACHINE}" = "dm800sev2" ]; then
-		DRIVERSDATE="20131001"
-	elif [ "${MACHINE}" = "dm800" ]; then
-		DRIVERSDATE="20130501"
+	elif [ "${MACHINE}" = "dm500hd" -o "${MACHINE}" = "dm800se" -o "${MACHINE}" = "dm500hdv2" -o "${MACHINE}" = "dm7020hd" -o "${MACHINE}" = "dm800sev2" -0 "${MACHINE}" = "dm800" -o "${MACHINE}" = "dm8000"]; then
+		DRIVERSDATE="20131228"
 	else
 		DRIVERSDATE='N/A'
 	fi
