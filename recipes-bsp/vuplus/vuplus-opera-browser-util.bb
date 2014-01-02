@@ -9,7 +9,7 @@ RDEPENDS_${PN} = "tslib-conf libts-1.0-0 libsysfs2 libgmp10 libmpfr4"
 PACKAGES =+ "${PN}-src enigma2-hbbtv-util enigma2-hbbtv-util-src"
 PROVIDES =+ "enigma2-hbbtv-util"
 
-SRC_DATE = "20131224_0"
+SRC_DATE = "20131231_0"
 SRC_URI = ""
 
 PR = "r24_${SRC_DATE}"
@@ -66,6 +66,3 @@ do_package_qa() {
 FILES_${PN} = "/usr/lib /usr/local /usr/share /usr/bin /etc "
 FILES_enigma2-hbbtv-util = "/usr/lib/enigma2/python/Plugins/Extensions/HbbTV/*.pyo /usr/lib/enigma2/python/Plugins/Extensions/HbbTV/*.so"
 FILES_enigma2-hbbtv-util-src = "/usr/lib/enigma2/python/Plugins/Extensions/HbbTV/*.py"
-
-SRC_URI[md5sum] = "2e16afc3db22f80cf99de3bfb891fa06"
-SRC_URI[sha256sum] = "41bbf4cda0b19ca7c79cb06ec4ab8cafee62fd9944d17e71978d4c9e6d72d264"
