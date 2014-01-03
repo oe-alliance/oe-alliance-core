@@ -1,4 +1,4 @@
-PRINC = "7"
+PRINC = "8"
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
@@ -18,13 +18,13 @@ do_configure_prepend () {
 
 # Remove and change configuration files
 do_install_append() {
-    install -d ${D}/etc
-    echo "/media/autofs  /etc/auto.network" >> ${D}/etc/auto.master
+    echo "/media/autofs  /etc/auto.network  --ghost" >> ${D}/etc/auto.master
     echo "# automounter configuration" > ${D}/etc/auto.network
     chmod 0644 ${D}/etc/auto.network
     rm -f ${D}/etc/auto.smb ${D}/etc/auto.misc ${D}/etc/autofs_ldap_auth.conf
-    install -d ${D}/etc/default
-    sed -i 's/^TIMEOUT=300/TIMEOUT=30/' ${D}/etc/default/autofs
+    sed -i 's/^TIMEOUT=300/TIMEOUT=5/' ${D}/etc/default/autofs
+    sed -i 's/count -lt 15/count -lt 60/' /etc/init.d/autofs
+    sed -i 's/sleep 20/sleep 1/' /etc/init.d/autofs
     install -d ${D}${sysconfdir}/default/volatiles
     install -m 644 ${WORKDIR}/volatiles.99_autofs ${D}${sysconfdir}/default/volatiles/99_autofs
 }
