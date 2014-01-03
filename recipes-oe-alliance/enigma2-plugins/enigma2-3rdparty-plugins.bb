@@ -10,7 +10,7 @@ SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
 PV = "2.0"
-PR = "r84"
+PR = "r85"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -142,7 +142,6 @@ THIRDPARTY_MACHINE_PLUGINS_et9x00 = " \
 	enigma2-plugin-weblinks-basic_1.3-r0_et9x00.ipk \
 	enigma2-plugin-weblinks-games_1.0-r0_et9x00.ipk \
 	"
-
 THIRDPARTY_MACHINE_PLUGINS_e3hd = " \
 	enigma2-plugin-extensions-hbbtv_3.1_E3HD_mips32el.ipk \
 	"
@@ -152,7 +151,24 @@ THIRDPARTY_MACHINE_PLUGINS_odinm7 = " \
 THIRDPARTY_MACHINE_PLUGINS_odinm9 = " \
 	enigma2-plugin-extensions-hbbtv_2.12_ODIN_mips32el.ipk \
 	"
-
+THIRDPARTY_MACHINE_PLUGINS_gb800se = " \
+	eenigma2-plugin-extensions-gigablue-mac-changer_0.1_all.ipk \
+	"
+THIRDPARTY_MACHINE_PLUGINS_gb800seplus = " \
+	eenigma2-plugin-extensions-gigablue-mac-changer_0.1_all.ipk \
+	"
+THIRDPARTY_MACHINE_PLUGINS_gb800solo = " \
+	eenigma2-plugin-extensions-gigablue-mac-changer_0.1_all.ipk \
+	"
+THIRDPARTY_MACHINE_PLUGINS_gb800ue = " \
+	eenigma2-plugin-extensions-gigablue-mac-changer_0.1_all.ipk \
+	"
+THIRDPARTY_MACHINE_PLUGINS_gb800ueplus = " \
+	eenigma2-plugin-extensions-gigablue-mac-changer_0.1_all.ipk \
+	"
+THIRDPARTY_MACHINE_PLUGINS_gbquad = " \
+	eenigma2-plugin-extensions-gigablue-mac-changer_0.1_all.ipk \
+	"
 do_install() {
 }
 
