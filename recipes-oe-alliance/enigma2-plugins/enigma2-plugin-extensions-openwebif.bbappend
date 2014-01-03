@@ -1,4 +1,4 @@
-PRINC = "49"
+PRINC = "50"
 
 inherit pythonnative
 
@@ -66,7 +66,7 @@ python do_package_prepend () {
         ('azboxminime', 'minime.jpg', 'me.png'),
         ('e3hd', 'e3hd.jpg', 'e3hd.png'),
         ('cube', 'cube.jpg', 'cube.png'),
-        ('sogno8800hd', 'sogno8800hd.jpg', 'sogno8800hd.png'),
+        ('sogno8800hd', 'sogno8800hd.jpg', 'sogno.png'),
     ]
     import os
     top = '${D}${PLUGINPATH}/public/images/'
