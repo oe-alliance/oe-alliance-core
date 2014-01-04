@@ -9,7 +9,7 @@ DEPENDS += "cdparanoia cairo jpeg libpng zlib libid3tag flac speex libsoup-2.4"
 DEPENDS += "gst-plugins-base"
 
 SRCREV = "${AUTOREV}"
-PR = "r18"
+PR = "r20"
 GIT_PV = ""
 
 EXTRA_OECONF = "--enable-orc --disable-esd --disable-aalib --disable-shout2 --disable-libcaca --disable-hal"
@@ -19,16 +19,16 @@ inherit autotools pkgconfig gettext git-project
 SRC_URI = "git://anongit.freedesktop.org/gstreamer/${PN};protocol=git;branch=0.10"
 
 SRC_URI += " \
-        file://orc.m4-fix-location-of-orcc-when-cross-compiling.patch \
-        file://0001-accept-substream-syncwords-DTS-HD.patch \
-        file://0002-gstflvdemux-max-width-height.patch \
-        file://0003-qtdemux-don-t-assert-if-upstream-size-is-not-availab.patch \
-        file://0004-MatroskaDemux-Set-profile-field-in-cap-for-aac-audio.patch \
-        file://0005-FlvDemux-Set-profile-field-in-cap-for-aac-audio.patch \
-        file://0006-Matroska-Demux-Handle-TrueHD-audio-codec-id.patch \
-        file://rtsp-check-all-protocols.patch \
-        ${@base_contains('MACHINE_FEATURES', 'legacykernel', 'file://v4l-compile-fix-old-kernel.patch', '', d)} \
-        file://add-support-3.12.patch \
+    file://orc.m4-fix-location-of-orcc-when-cross-compiling.patch \
+    file://0001-accept-substream-syncwords-DTS-HD.patch \
+    file://0002-gstflvdemux-max-width-height.patch \
+    file://0003-qtdemux-don-t-assert-if-upstream-size-is-not-availab.patch \
+    file://0004-MatroskaDemux-Set-profile-field-in-cap-for-aac-audio.patch \
+    file://0005-FlvDemux-Set-profile-field-in-cap-for-aac-audio.patch \
+    file://0006-Matroska-Demux-Handle-TrueHD-audio-codec-id.patch \
+    file://rtsp-check-all-protocols.patch \
+    ${@base_contains('MACHINE_FEATURES', 'legacykernel', 'file://v4l-compile-fix-old-kernel.patch', '', d)} \
+    file://add-support-3.12.patch \
 "
 
 do_common_update() {
