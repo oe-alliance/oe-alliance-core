@@ -10,7 +10,7 @@ SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
 PV = "2.0"
-PR = "r86"
+PR = "r87"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -150,22 +150,6 @@ THIRDPARTY_MACHINE_PLUGINS_odinm7 = " \
 	"
 THIRDPARTY_MACHINE_PLUGINS_odinm9 = " \
 	enigma2-plugin-extensions-hbbtv_2.12_ODIN_mips32el.ipk \
-	"
-THIRDPARTY_MACHINE_PLUGINS_gb800se = " \
-	enigma2-plugin-extensions-gigablue-mac-changer_0.1_all.ipk \
-	"
-THIRDPARTY_MACHINE_PLUGINS_gb800seplus = " \
-	"
-THIRDPARTY_MACHINE_PLUGINS_gb800solo = " \
-	enigma2-plugin-extensions-gigablue-mac-changer_0.1_all.ipk \
-	"
-THIRDPARTY_MACHINE_PLUGINS_gb800ue = " \
-	enigma2-plugin-extensions-gigablue-mac-changer_0.1_all.ipk \
-	"
-THIRDPARTY_MACHINE_PLUGINS_gb800ueplus = " \
-	"
-THIRDPARTY_MACHINE_PLUGINS_gbquad = " \
-	enigma2-plugin-extensions-gigablue-mac-changer_0.1_all.ipk \
 	"
 do_install() {
 }
