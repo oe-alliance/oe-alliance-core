@@ -1,4 +1,4 @@
-PRINC = "9"
+PRINC = "10"
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
@@ -18,7 +18,7 @@ do_configure_prepend () {
 
 # Remove and change configuration files
 do_install_append() {
-    echo "/media/autofs  /etc/auto.network  --ghost" >> ${D}/etc/auto.master
+    echo "/media/autofs  /etc/auto.network  --ghost" > ${D}/etc/auto.master
     echo "# automounter configuration" > ${D}/etc/auto.network
     chmod 0644 ${D}/etc/auto.network
     rm -f ${D}/etc/auto.smb ${D}/etc/auto.misc ${D}/etc/autofs_ldap_auth.conf
