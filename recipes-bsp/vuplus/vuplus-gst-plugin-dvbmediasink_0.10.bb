@@ -8,15 +8,15 @@ RDEPENDS_${PN} = "gst-ffmpeg"
 
 inherit autotools schwerkraft-git
 
-PR = "r19"
+PR = "r20"
 
 SRCREV = "6d79a5f2b31602925f2687bb82ba6a55f8013096"
 SCHWERKRAFT_PROJECT = "dvbmediasink"
 
 SRC_URI += " \
-	file://getdecodertime.patch \
-	file://0002-Set-only-by-hardware-supported-audio-mpeg-4-profile.patch \
-	file://vuplus_wma_eac3_padtemplate.patch \
+    file://getdecodertime.patch \
+    file://0002-Set-only-by-hardware-supported-audio-mpeg-4-profile.patch \
+    file://vuplus_wma_eac3_padtemplate.patch \
 "
 
 FILES_${PN} = "${libdir}/gstreamer-0.10/*.so"

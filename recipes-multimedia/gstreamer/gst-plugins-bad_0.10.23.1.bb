@@ -10,7 +10,7 @@ DEPENDS += "gst-plugins-base libmusicbrainz tremor curl libmms librtmp faad2"
 CONFLICTS = "librsvg"
 
 SRCREV = "${AUTOREV}"
-PR = "r11"
+PR = "r12"
 GIT_PV = ""
 
 EXTRA_OECONF += "--disable-examples --disable-experimental --disable-sdl --disable-cdaudio --disable-directfb --enable-faad \
@@ -27,6 +27,7 @@ SRC_URI += " \
         file://0006-hlsdemux-backport.patch \
         file://0007-Lower-rank-of-faad-to-prevent-using-it-if-not-necess.patch \
         file://orc.m4-fix-location-of-orcc-when-cross-compiling.patch \
+        file://Lower-rank-of-faad-to-prevent-using-it-if-not-necess.patch \
 "
 
 inherit autotools pkgconfig gettext git-project
