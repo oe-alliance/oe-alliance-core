@@ -2,7 +2,7 @@ DEPENDS += "module-init-tools"
 RDEPENDS_${PN} += "module-init-tools-depmod"
 SRCDATE = "20100904"
 PV = "0.0+hg${SRCDATE}"
-PR = "${INC_PR}.2"
+PR = "${INC_PR}.3"
 
 SRC_URI = "hg://linuxtv.org/hg/;module=v4l-dvb;rev=${SRCREV} \
            file://defconfig \
@@ -47,6 +47,7 @@ SRC_URI = "hg://linuxtv.org/hg/;module=v4l-dvb;rev=${SRCREV} \
            file://v4l-dvb-em28xx_fix.patch \
            file://v4l-dvb-af9015_add_a850red.patch \
            file://v4l-dvb-smsdvb_fix_frontend.patch \
+           file://v4l-dvb-smsdvb_always_load.patch \
 "
 
 SRCREV = "6e0befab696a"
