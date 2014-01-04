@@ -8,12 +8,16 @@ DVBPROVIDER ?= "kernel"
 RDEPENDS_${PN} = " \
     ${DVBPROVIDER}-module-smsusb \
     ${DVBPROVIDER}-module-smsdvb \
+    ${@base_contains("MACHINE_FEATURES", "legacykernel", \
+    " \
+    ${DVBPROVIDER}-module-smsmdtv \
+    " , "", d)} \
     firmware-dvb-siano \
     firmware-dvb-nova-12mhz-b0 \
     firmware-isdbt-nova-12mhz-b0 \
     "
 
 PV = "1.0"
-PR = "r6"
+PR = "r7"
 
 ALLOW_EMPTY_${PN} = "1"
