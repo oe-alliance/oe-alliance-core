@@ -10,7 +10,7 @@ SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
 PV = "2.0"
-PR = "r84"
+PR = "r85"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -77,7 +77,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-songs-to_0.1_mips32el.ipk \
     enigma2-plugin-extensions-spiegelonline_2.4rc2_mips32el.ipk \
     enigma2-plugin-extensions-sportmax_1.2_mips32el.ipk \
-    enigma2-plugin-extensions-subtitleplayer_3.20_mipsel.ipk \
+    enigma2-plugin-extensions-subtitleplayer_3.28_mips32el.ipk \
     enigma2-plugin-extensions-spinnerselector_2.0r5_mips32el.ipk \
     enigma2-plugin-extensions-sport1ticker_0.4_all.ipk \
     enigma2-plugin-extensions-sportportal_2013_all.ipk \
