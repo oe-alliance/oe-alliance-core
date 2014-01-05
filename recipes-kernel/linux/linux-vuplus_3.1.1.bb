@@ -3,7 +3,8 @@ LICENSE = "GPL"
 SECTION = "kernel"
 KV = "3.1.1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
-PR = "r1"
+
+inherit machine_kernel_pr
 
 SRCREV = "r2"
 MACHINE_KERNEL_PR_append = ".0"
