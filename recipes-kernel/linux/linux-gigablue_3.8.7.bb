@@ -3,6 +3,8 @@ SECTION = "kernel"
 LICENSE = "GPLv2"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
+inherit machine_kernel_pr
+
 KERNEL_RELEASE = "3.8.7"
 
 SRC_URI[md5sum] = "36d191a8d4f31f49cc93d78a70f8029b"
@@ -10,7 +12,7 @@ SRC_URI[sha256sum] = "8b9300480513a211344fd34e85a0ff6640e5a6e4fed39dfc52efc09b5e
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-MACHINE_KERNEL_PR_append = ".6"
+MACHINE_KERNEL_PR_append = ".0"
 
 # By default, kernel.bbclass modifies package names to allow multiple kernels
 # to be installed in parallel. We revert this change and rprovide the versioned

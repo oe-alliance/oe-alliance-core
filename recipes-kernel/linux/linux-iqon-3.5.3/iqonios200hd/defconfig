@@ -2516,8 +2516,9 @@ CONFIG_R8712U=m
 # CONFIG_USB_ENESTORAGE is not set
 # CONFIG_BCM_WIMAX is not set
 # CONFIG_FT1000 is not set
-CONFIG_XVMALLOC=y
 CONFIG_ZRAM=y
+# CONFIG_ZRAM_DEBUG is not set
+CONFIG_ZSMALLOC=y
 
 #
 # Speakup console speech

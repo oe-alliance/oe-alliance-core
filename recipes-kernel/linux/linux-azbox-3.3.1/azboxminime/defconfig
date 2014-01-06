@@ -2196,6 +2196,7 @@ CONFIG_R8712U=m
 # CONFIG_IIO is not set
 CONFIG_XVMALLOC=y
 CONFIG_ZRAM=y
+# CONFIG_ZRAM_DEBUG is not set
 # CONFIG_FB_SM7XX is not set
 # CONFIG_CRYSTALHD is not set
 # CONFIG_FB_XGI is not set

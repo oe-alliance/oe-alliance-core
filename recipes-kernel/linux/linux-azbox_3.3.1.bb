@@ -1,7 +1,10 @@
 SUMMARY = "Linux kernel for ${MACHINE}"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${KV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
-MACHINE_KERNEL_PR_append = ".15"
+
+inherit machine_kernel_pr
+
+MACHINE_KERNEL_PR_append = ".0"
 
 DEPENDS = "genromfs-native gcc"
 DEPENDS_azboxhd = "genromfs-native azbox-hd-buildimage gcc "

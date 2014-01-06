@@ -2,11 +2,13 @@ SUMMARY = "Linux kernel for ${MACHINE}"
 SECTION = "kernel"
 LICENSE = "GPLv2"
 
+inherit machine_kernel_pr
+
 KERNEL_RELEASE := "${PV}"
 PV = "${KERNEL_RELEASE}"
 PKGV = "${KERNEL_RELEASE}"
 
-MACHINE_KERNEL_PR_append = ".3"
+MACHINE_KERNEL_PR_append = ".0"
 
 LIC_FILES_CHKSUM = "file://${S}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 

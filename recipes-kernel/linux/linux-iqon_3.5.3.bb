@@ -3,8 +3,10 @@ LICENSE = "GPL"
 SECTION = "kernel"
 KV = "3.5.3"
 
+inherit machine_kernel_pr
+
 SRCDATE = "20131210"
-MACHINE_KERNEL_PR_append = ".9"
+MACHINE_KERNEL_PR_append = ".0"
 
 SRC_URI[md5sum] = "196c304f09aebc08c14c9be55426a3e8"
 SRC_URI[sha256sum] = "e189b052fbca34e616d669d0125d6d49cf4c3ce0ea3fcf690187a27ad6fec5a4"

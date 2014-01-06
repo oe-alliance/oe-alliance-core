@@ -2274,6 +2274,9 @@ CONFIG_RTS5139=m
 # CONFIG_BCM_WIMAX is not set
 CONFIG_FT1000=y
 # CONFIG_FT1000_USB is not set
+CONFIG_ZRAM=y
+CONFIG_ZSMALLOC=y
+# CONFIG_ZRAM_DEBUG is not set
 
 #
 # Speakup console speech

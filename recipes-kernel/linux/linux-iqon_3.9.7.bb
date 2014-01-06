@@ -2,10 +2,11 @@ SUMMARY = "Linux kernel for ${MACHINE}"
 LICENSE = "GPL"
 SECTION = "kernel"
 KV = "3.9.7"
-PR = "r0"
+
+inherit machine_kernel_pr
 
 SRCDATE = "2013-1211"
-MACHINE_KERNEL_PR_append = ".6"
+MACHINE_KERNEL_PR_append = ".0"
 
 SRC_URI[md5sum] = "42f18f5ee5e683e6345598a6f4a71531"
 SRC_URI[sha256sum] = "549422fad208dff49771d9ef19c404bb30177f2023c601adb3d220c81201e19a"
