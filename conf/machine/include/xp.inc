@@ -25,8 +25,8 @@ GLIBC_EXTRA_OECONF = "--with-tls --with-__thread"
 
 PREFERRED_PROVIDER_virtual/kernel = "linux-xp"
 
-PREFERRED_VERSION_linux-xp = "3.9.1"
-PREFERRED_VERSION_linux-libc-headers = "3.8"
+PREFERRED_VERSION_linux-xp = "3.12.1"
+PREFERRED_VERSION_linux-libc-headers = "3.12.1"
 
 KERNEL_IMAGETYPE = "vmlinux"
 KERNEL_OUTPUT = "${KERNEL_IMAGETYPE}"
@@ -58,7 +58,7 @@ IMAGE_CMD_ubi_append = " \
 	rm -Rf ${IMAGEDIR}; \
 	"
 
-MACHINE_FEATURES += "alsa wifi 3dtv switchoff hdmicec bootsplash"
+MACHINE_FEATURES += "alsa wifi extrakernelwifi 3dtv switchoff hdmicec bootsplash"
 
 BOOTLOGO_FILENAME = "splash.bin"
 
