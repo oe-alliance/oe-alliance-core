@@ -3,8 +3,8 @@ MAINTAINER = "PLi team"
 
 require conf/license/license-gplv2.inc
 
-PV = "1.0"
-PR = "r2"
+PV = "2.0"
+PR = "r0"
 
 SRC_URI = "file://volatile-media.sh"
 

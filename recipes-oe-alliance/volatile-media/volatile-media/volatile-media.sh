@@ -14,3 +14,8 @@ grep -v "^#" /etc/fstab | grep "\s/media/" | while read LINE
 do
 	create_point $LINE
 done
+
+if [ ! -e /dev/fuse ]
+then
+	modprobe fuse
+fi
