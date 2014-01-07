@@ -21,7 +21,9 @@ mount -o remount,ro /
 
 umount -f -a -r > /dev/null 2>&1
 
-hdparm -Y /dev/sd?
-sleep 5
+if [ "$RUNLEVEL" = "0" ]; then
+  hdparm -Y /dev/sd?
+  sleep 5
+fi
 
-: exit 0
+exit 0

@@ -2,6 +2,7 @@ SUMMARY = "Linux kernel for ${MACHINE}"
 SECTION = "kernel"
 LICENSE = "GPLv2"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
+PR = "r11"
 
 inherit machine_kernel_pr
 
@@ -12,7 +13,7 @@ SRC_URI[md5sum] = "734b5d7323782917ea8673e963a5cb5b"
 SRC_URI[sha256sum] = "7fc5701ed9a27c1540384393b2e10f3aa24bf5a6faf0dfcd9b57bbd72afbc764"
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-MACHINE_KERNEL_PR_append = ".0"
+MACHINE_KERNEL_PR_append = ".23"
 
 # By default, kernel.bbclass modifies package names to allow multiple kernels
 # to be installed in parallel. We revert this change and rprovide the versioned
@@ -22,7 +23,7 @@ PKG_kernel-image = "kernel-image"
 RPROVIDES_kernel-base = "kernel-${KERNEL_VERSION}"
 RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
 
-SRC_URI += "http://whitebox.host.sk/bcm/kernel/linux-${KV}-${SRCDATE}.tar.gz \
+SRC_URI += "http://pluginvalley.kr/bcm/kernel/linux-${KV}-${SRCDATE}.tar.gz \
     file://defconfig \
     file://nfs-max-rwsize-8k.patch \
     "

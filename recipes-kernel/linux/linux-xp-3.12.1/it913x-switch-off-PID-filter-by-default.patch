@@ -23,7 +23,7 @@ index 4720428..c8dc9c3 100644
  static int dvb_usb_it913x_firmware;
  module_param_named(firmware, dvb_usb_it913x_firmware, int, 0644);
  MODULE_PARM_DESC(firmware, "set firmware 0=auto"\
-@@ -399,6 +403,12 @@ static int it913x_get_stream_config(struct dvb_frontend *fe, u8 *ts_type,
+@@ -419,6 +423,12 @@ static int it913x_get_stream_config(struct dvb_frontend *fe, u8 *ts_type,
  		struct usb_data_stream_properties *stream)
  {
  	struct dvb_usb_adapter *adap = fe_to_adap(fe);

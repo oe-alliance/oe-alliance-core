@@ -70,10 +70,10 @@ index 37b0942..f47bb27 100644
  
  #if IS_ENABLED(CONFIG_MEDIA_TUNER_MXL5007T)
 diff --git a/drivers/media/usb/dvb-usb-v2/af9035.c b/drivers/media/usb/dvb-usb-v2/af9035.c
-index f11cc42..d366d34 100644
+index 1ea17dc..12e913f 100644
 --- a/drivers/media/usb/dvb-usb-v2/af9035.c
 +++ b/drivers/media/usb/dvb-usb-v2/af9035.c
-@@ -886,6 +886,8 @@ static struct mxl5007t_config af9035_mxl5007t_config[] = {
+@@ -969,6 +969,8 @@ static struct mxl5007t_config af9035_mxl5007t_config[] = {
  		.loop_thru_enable = 0,
  		.clk_out_enable = 0,
  		.clk_out_amp = MxL_CLKOUT_AMP_0_94V,
@@ -82,7 +82,7 @@ index f11cc42..d366d34 100644
  	}, {
  		.xtal_freq_hz = MxL_XTAL_24_MHZ,
  		.if_freq_hz = MxL_IF_4_57_MHZ,
-@@ -893,6 +895,8 @@ static struct mxl5007t_config af9035_mxl5007t_config[] = {
+@@ -976,6 +978,8 @@ static struct mxl5007t_config af9035_mxl5007t_config[] = {
  		.loop_thru_enable = 1,
  		.clk_out_enable = 1,
  		.clk_out_amp = MxL_CLKOUT_AMP_0_94V,

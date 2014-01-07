@@ -1,17 +1,18 @@
-SUMMARY = "Linux kernel for ${MACHINE}"
+DESCRIPTION = "Linux kernel for ${MACHINE}"
 SECTION = "kernel"
 LICENSE = "GPLv2"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
-KERNEL_RELEASE = "3.9.1"
 
-inherit machine_kernel_pr
+COMPATIBLE_MACHINE = "xp1000"
 
-SRC_URI[md5sum] = "b88c284d605b87cb4301e1d9e1bb0c1b"
-SRC_URI[sha256sum] = "7444eb9b195a968f77c2c425c9ed06ff1c39ceb737d76d97e0f8e50b2537fb62"
+KERNEL_RELEASE = "3.12.1"
+
+SRC_URI[md5sum] = "1215bc770098839ee4da5f13b460c4b6"
+SRC_URI[sha256sum] = "ad746f01788f3da639f9eadb6473cd2aec9f3b4c27f631e0a752a525cca16491"
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-MACHINE_KERNEL_PR_append = ".0"
+MACHINE_KERNEL_PR_append = ".5"
 
 # By default, kernel.bbclass modifies package names to allow multiple kernels
 # to be installed in parallel. We revert this change and rprovide the versioned
@@ -23,16 +24,12 @@ RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
 
 SRC_URI += "http://www.xp-support.tv/support/linux/linux-${PV}-xp.tar.gz \
     file://defconfig \
-    file://0001-Revert-default-authentication-needs-to-be-at-least-n.patch \
-    file://0001-Revert-MIPS-mm-Add-compound-tail-page-_mapcount-when.patch \
-    file://0001-Revert-MIPS-Add-fast-get_user_pages.patch \
-    file://0001-Revert-MIPS-Fix-potencial-corruption.patch \
     file://add-dmx-source-timecode.patch \
+    file://add-rt2800usb-wifi-devices.patch \
     file://af9015-output-full-range-SNR.patch \
     file://af9033-output-full-range-SNR.patch \
     file://as102-adjust-signal-strength-report.patch \
     file://as102-scale-MER-to-full-range.patch \
-    file://cinergy_s2_usb_r2.patch \
     file://cxd2820r-output-full-range-SNR.patch \
     file://dvb-usb-dib0700-disable-sleep.patch \
     file://dvb_usb_disable_rc_polling.patch \
@@ -40,10 +37,8 @@ SRC_URI += "http://www.xp-support.tv/support/linux/linux-${PV}-xp.tar.gz \
     file://iosched-slice_idle-1.patch \
     file://it913x-switch-off-PID-filter-by-default.patch \
     file://tda18271-advertise-supported-delsys.patch \
-    file://fix-dvb-siano-sms-order.patch \
-    file://mxl5007t-add-no_probe-and-no_reset-parameters.patch \
     file://nfs-max-rwsize-8k.patch \
-    file://0001-rt2800usb-add-support-for-rt55xx.patch \
+    file://mxl5007t-add-no_probe-and-no_reset-parameters.patch \
     "
 
 S = "${WORKDIR}/linux-${PV}"
