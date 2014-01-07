@@ -6,5 +6,11 @@ inherit distutils
 DISTUTILS_INSTALL_ARGS = "\
     --root=${D} \
     --install-data=${datadir} \
-    --install-lib=/usr/lib/enigma2/python/Plugins \
+    --install-lib=${libdir}/enigma2/python/Plugins \
     "
+
+# Remove "egg-info" files. If datadir or site-packages dir is empty, remove it.
+distutils_do_install_append() {
+	rm -f ${D}${libdir}/enigma2/python/Plugins/*.egg-info
+	rmdir -p --ignore-fail-on-non-empty ${D}${datadir} ${D}/${PYTHON_SITEPACKAGES_DIR} || true
+}
