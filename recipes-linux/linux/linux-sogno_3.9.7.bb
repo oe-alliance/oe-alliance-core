@@ -2,7 +2,7 @@ DESCRIPTION = "Linux kernel for ${MACHINE}"
 SECTION = "kernel"
 LICENSE = "GPLv2"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
-PR = "r8"
+PR = "r9"
 
 KV = "3.9.7"
 SRCDATE = "20131224"
@@ -21,7 +21,7 @@ PKG_kernel-image = "kernel-image"
 RPROVIDES_kernel-base = "kernel-${KERNEL_VERSION}"
 RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
 
-SRC_URI += "http://whitebox.host.sk/bcm/kernel/linux-${KV}-${SRCDATE}.tar.gz \
+SRC_URI += "http://pluginvalley.kr/bcm/kernel/linux-${KV}-${SRCDATE}.tar.gz \
 	file://defconfig \
 	file://nfs-max-rwsize-8k.patch \
 	"
