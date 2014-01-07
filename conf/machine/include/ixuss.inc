@@ -48,7 +48,7 @@ KERNEL_CONSOLE = "ttyS0,115200n8"
 IMAGE_FSTYPES ?= "ubi"
 
 UBI_VOLNAME = "rootfs"
-MKUBIFS_ARGS = "-m 2048 -e 126976 -c 4096"
+MKUBIFS_ARGS = "-m 2048 -e 126976 -c 4096 -F"
 UBINIZE_ARGS = "-m 2048 -p 128KiB"
 
 IMAGE_CMD_ubi_prepend = " \
