@@ -37,6 +37,10 @@ SRC_URI = "http://archiv.openmips.com/linux-gbquad-3.3.8-2.0_20130716.tar.gz \
 	file://nfs-max-rwsize-8k.patch \
 	file://linux-3.3.8-dvbsky.patch \
 	"
+	
+SRC_URI_append_gbquadplus = " \	
+	file://brcm_s3_wol.patch \
+	"
 
 S = "${WORKDIR}/linux-3.3.8-2.0"
 
