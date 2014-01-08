@@ -8,6 +8,8 @@ SRC_URI += " \
         file://0001-implement-TIF_RESTORE_SIGMASK-support-and-enable-the.patch \
         file://powerpc-fix-build-with-make-3.82.patch \
         file://dvbapi-5.3.patch \
+		file://ppp.patch  \
+		file://types.patch  \
 "
 
 SRC_URI[md5sum] = "84c077a37684e4cbfa67b18154390d8a"
