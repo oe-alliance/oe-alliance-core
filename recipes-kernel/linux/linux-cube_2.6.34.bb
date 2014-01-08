@@ -210,7 +210,6 @@ do_configure_prepend() {
 
 kernel_do_install_append() {
     cp include/generated/asm-offsets.h $kerneldir/include/generated/asm-offsets.h
-    cp include/generated/bounds.h $kerneldir/include/generated/bounds.h
     install -d ${D}${KERNEL_IMAGEDEST}
     install -m 0755 ${KERNEL_OUTPUT} ${D}${KERNEL_IMAGEDEST}
 }
