@@ -29,7 +29,7 @@ RDEPENDS_${PN} = " \
 RRECOMMENDS_${PN} = " \
     glib-networking \
     gst-plugin-subsink \
-    gst-plugin-libxt \
+    ${@base_contains("TARGET_ARCH", "mipsel", "gst-plugin-libxt" , "", d)} \
     ${GST_BASE_RDEPS} \
     ${GST_GOOD_RDEPS} \
     ${GST_BAD_RDEPS} \
@@ -158,7 +158,7 @@ inherit gitpkgv autotools pkgconfig pythonnative
 
 PV = "2.8+git${SRCPV}"
 PKGV = "2.8+git${GITPKGV}"
-PR = "r131"
+PR = "r132"
 
 SRC_URI = "${ENIGMA2_URI}"
 
