@@ -34,7 +34,7 @@ TUNE_FEATURES = "cortexa9 vfp"
 include conf/machine/include/tune-cortexa9.inc
 TUNE_CCARGS += "-mfpu=vfpv3-d16"
 
-IMAGE_FSTYPES ?= "imgzip256 imgzip1024"
+IMAGE_FSTYPES ?= "imgzip256"
 
 # magic value to avoid flashing an image which was intended to run on different hardware
 CREATEIMAGE_MAGIC = "0x00109500"
