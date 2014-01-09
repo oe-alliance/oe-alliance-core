@@ -7,11 +7,11 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=0636e73ff0215e8d672dc4c32c317bb3 \
                     file://gst/ffmpegcolorspace/utils.c;beginline=1;endline=20;md5=9c83a200b8e597b26ca29df20fc6ecd0"
 
 DEPENDS += "${@base_contains('DISTRO_FEATURES', 'x11', 'virtual/libx11 libxv', '', d)}"
-DEPENDS += "alsa-lib freetype liboil libogg libvorbis libtheora avahi util-linux tremor orc orc-native"
+DEPENDS += "alsa-lib freetype liboil libogg libvorbis libtheora avahi util-linux tremor orc orc-native pango"
 DEPENDS += "gstreamer"
 
 SRCREV = "${AUTOREV}"
-PR = "r15"
+PR = "r16"
 GIT_PV = ""
 
 inherit autotools pkgconfig gettext git-project

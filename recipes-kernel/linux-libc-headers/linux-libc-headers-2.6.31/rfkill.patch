@@ -1,0 +1,10 @@
+--- a/include/linux/rfkill.h	2014-01-09 21:51:30.073254900 +0100
++++ b/include/linux/rfkill.h	2014-01-09 21:51:22.221254823 +0100
+@@ -86,6 +86,7 @@
+ #define RFKILL_IOC_MAGIC	'R'
+ #define RFKILL_IOC_NOINPUT	1
+ #define RFKILL_IOCTL_NOINPUT	_IO(RFKILL_IOC_MAGIC, RFKILL_IOC_NOINPUT)
++#define RFKILL_EVENT_SIZE_V1	8
+ 
+ /* and that's all userspace gets */
+ #ifdef __KERNEL__
