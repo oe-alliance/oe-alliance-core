@@ -4,7 +4,7 @@ PRIORITY = "required"
 LICENSE = "CLOSED"
 
 PV = "${KV}+${SRCDATE}"
-PR = "r6"
+PR = "r7"
 
 S = "${WORKDIR}"
 
