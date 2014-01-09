@@ -29,6 +29,9 @@ do_configure_prepend() {
   done
 }
 
+do_configure_cube_prepend() {
+}
+
 SRC_URI[md5sum] = "f93d8462ff7646397a9f77a2fe602d17"
 SRC_URI[sha256sum] = "25b94498505c2d800ee465db0cc1aff097b1615adc3ac042a1c85ceca264fc0a"
 
