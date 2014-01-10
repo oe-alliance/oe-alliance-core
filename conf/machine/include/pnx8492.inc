@@ -1,7 +1,7 @@
 MACHINE_BRAND = "E2BMC"
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS = "\
-	e2bmc-dvb-drivers-${MACHINE} \
+	e2bmc-dvb-modules-${MACHINE} \
 	"
 	
 DVBPROVIDER = "kernel"
