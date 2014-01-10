@@ -4,7 +4,7 @@ PRIORITY = "required"
 LICENSE = "CLOSED"
 
 PV = "${KV}+${SRCDATE}"
-PR = "r0"
+PR = "r1"
 
 DRIVERMACHINE ?= "${MACHINE}"
 
@@ -32,4 +32,4 @@ do_install() {
     done
 }
 
-FILES_${PN} += "/lib/firmware"
+FILES_${PN} += "/lib/firmware ${sysconfdir}/modules-load.d/_${DRIVERMACHINE}.conf"
