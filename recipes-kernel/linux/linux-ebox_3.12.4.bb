@@ -1,12 +1,12 @@
-SUMMARY = "Linux kernel for ${MACHINE}"
+DESCRIPTION = "Linux kernel for ${MACHINE}"
 LICENSE = "GPL"
 SECTION = "kernel"
 KV = "3.12.4"
-
-inherit machine_kernel_pr
+PR = "r1"
 
 SRCDATE = "1211"
-MACHINE_KERNEL_PR_append = ".0"
+SRCDATE_ebox7358 = "1227"
+MACHINE_KERNEL_PR_append = ".1"
 
 SRC_URI[ebox5100.md5sum] = "2c6957a0f3662910e53df8eb31705e01"
 SRC_URI[ebox5100.sha256sum] = "2ba88a551a5c3a7095a2000e03841895d7b3892116d379d1009a8de9f5820f89"
@@ -14,6 +14,8 @@ SRC_URI[eboxlumi.md5sum] = "2c6957a0f3662910e53df8eb31705e01"
 SRC_URI[eboxlumi.sha256sum] = "2ba88a551a5c3a7095a2000e03841895d7b3892116d379d1009a8de9f5820f89"
 SRC_URI[ebox5000.md5sum] = "bafb17f5e8dd1c4935d2ec213b2d62e1"
 SRC_URI[ebox5000.sha256sum] = "36b844b07e5f38b3b597bc55bd182438f9fd3b3c52d234914f6aabf031e31be9"
+SRC_URI[ebox7358.md5sum] = "d7a5d669baa035aa351b3a27a00165e7"
+SRC_URI[ebox7358.sha256sum] = "37fe31cf521a97ededd542af3d10ef2431a17ecd9c336ff48a395405517b94af"
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${KV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
