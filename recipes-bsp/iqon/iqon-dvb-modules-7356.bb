@@ -3,13 +3,13 @@ SECTION = "base"
 PRIORITY = "required"
 LICENSE = "CLOSED"
 
-SRCDATE = "20131217"
+SRCDATE = "20140108"
 KV = "3.9.7"
 PV = "${KV}+${SRCDATE}"
 PR = "r1"
 
-SRC_URI[md5sum] = "fba9359f23fe227073606c9c2c4a51ae"
-SRC_URI[sha256sum] = "59113ece17f57eb48dbe0b9d7d7cd2dba4e08635f96ae569c511ebab3da4e32f"
+SRC_URI[md5sum] = "c0152ad22a97d1b780f56d743b08c1d6"
+SRC_URI[sha256sum] = "e1c47f25d22a393040c1ec9d079f1e5fe1ec06e975ef958bf64d1655317208a7"
 
 SRC_URI = "http://en2.ath.cx/release/images/oedrivers/bcmlinuxdvb_7356-${KV}-${SRCDATE}.tar.gz"
 

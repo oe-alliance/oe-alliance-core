@@ -2,14 +2,15 @@ SUMMARY = "Linux kernel for ${MACHINE}"
 LICENSE = "GPL"
 SECTION = "kernel"
 KV = "3.9.7"
+PR = "r1"
 
 inherit machine_kernel_pr
 
-SRCDATE = "2013-1211"
-MACHINE_KERNEL_PR_append = ".0"
+SRCDATE = "2014-0108"
+MACHINE_KERNEL_PR_append = ".1"
 
-SRC_URI[md5sum] = "42f18f5ee5e683e6345598a6f4a71531"
-SRC_URI[sha256sum] = "549422fad208dff49771d9ef19c404bb30177f2023c601adb3d220c81201e19a"
+SRC_URI[md5sum] = "94664d887748e81c70cb9ec175c447c3"
+SRC_URI[sha256sum] = "afac921159dc05525d766f2d267f0a685e4010a07e10010dbaa7f868186362f3"
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${KV}-r1/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
