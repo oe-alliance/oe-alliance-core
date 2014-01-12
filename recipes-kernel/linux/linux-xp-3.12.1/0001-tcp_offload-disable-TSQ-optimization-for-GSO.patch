@@ -1,59 +1,28 @@
-From 98e09386c0ef4dfd48af7ba60ff908f0d525cdee Mon Sep 17 00:00:00 2001
-From: Eric Dumazet <edumazet@google.com>
-Date: Wed, 13 Nov 2013 14:32:54 +0000
-Subject: tcp: tsq: restore minimal amount of queueing
+From 378c3845424fafcce3df96a3091d7a44a98e6107 Mon Sep 17 00:00:00 2001
+From: pieterg <pieterg@users.sourceforge.net>
+Date: Sat, 11 Jan 2014 14:37:21 +0100
+Subject: [PATCH] tcp_offload: disable TSQ optimization for GSO
 
-After commit c9eeec26e32e ("tcp: TSQ can use a dynamic limit"), several
-users reported throughput regressions, notably on mvneta and wifi
-adapters.
+Which turns out to have a negative performance effect on the bcmgenet driver
 
-802.11 AMPDU requires a fair amount of queueing to be effective.
-
-This patch partially reverts the change done in tcp_write_xmit()
-so that the minimal amount is sysctl_tcp_limit_output_bytes.
-
-It also remove the use of this sysctl while building skb stored
-in write queue, as TSO autosizing does the right thing anyway.
-
-Users with well behaving NICS and correct qdisc (like sch_fq),
-can then lower the default sysctl_tcp_limit_output_bytes value from
-128KB to 8KB.
-
-This new usage of sysctl_tcp_limit_output_bytes permits each driver
-authors to check how their driver performs when/if the value is set
-to a minimum of 4KB.
-
-Normally, line rate for a single TCP flow should be possible,
-but some drivers rely on timers to perform TX completion and
-too long TX completion delays prevent reaching full throughput.
-
-Fixes: c9eeec26e32e ("tcp: TSQ can use a dynamic limit")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: Sujith Manoharan <sujith@msujith.org>
-Reported-by: Arnaud Ebalard <arno@natisbad.org>
-Tested-by: Sujith Manoharan <sujith@msujith.org>
-Cc: Felix Fietkau <nbd@openwrt.org>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+This effectively reverts d6a4a10411764cf1c3a5dad4f06c5ebe5194488b
 ---
-(limited to 'net/ipv4/tcp_output.c')
+ net/ipv4/tcp_offload.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
-index 6728546..c5231d9 100644
---- a/net/ipv4/tcp_output.c
-+++ b/net/ipv4/tcp_output.c
-@@ -1875,8 +1875,12 @@ static bool tcp_write_xmit(struct sock *sk, unsigned int mss_now, int nonagle,
- 		 *  - better RTT estimation and ACK scheduling
- 		 *  - faster recovery
- 		 *  - high rates
-+		 * Alas, some drivers / subsystems require a fair amount
-+		 * of queued bytes to ensure line rate.
-+		 * One example is wifi aggregation (802.11 AMPDU)
- 		 */
--		limit = max(skb->truesize, sk->sk_pacing_rate >> 10);
-+		limit = max_t(unsigned int, sysctl_tcp_limit_output_bytes,
-+			      sk->sk_pacing_rate >> 10);
+diff --git a/net/ipv4/tcp_offload.c b/net/ipv4/tcp_offload.c
+index 533c58a..75c9cb2 100644
+--- a/net/ipv4/tcp_offload.c
++++ b/net/ipv4/tcp_offload.c
+@@ -69,7 +69,7 @@ struct sk_buff *tcp_tso_segment(struct sk_buff *skb,
+ 		goto out;
+ 	}
  
- 		if (atomic_read(&sk->sk_wmem_alloc) > limit) {
- 			set_bit(TSQ_THROTTLED, &tp->tsq_flags);
---
-cgit v0.9.2
+-	copy_destructor = gso_skb->destructor == tcp_wfree;
++	copy_destructor = false;
+ 	ooo_okay = gso_skb->ooo_okay;
+ 	/* All segments but the first should have ooo_okay cleared */
+ 	skb->ooo_okay = 0;
+-- 
+1.7.9.5
+

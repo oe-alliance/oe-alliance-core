@@ -2,7 +2,7 @@ DESCRIPTION = "Linux kernel for ${MACHINE}"
 SECTION = "kernel"
 LICENSE = "GPLv2"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
-PR = "r1"
+PR = "r2"
 
 COMPATIBLE_MACHINE = "xp1000"
 
@@ -13,7 +13,7 @@ SRC_URI[sha256sum] = "ad746f01788f3da639f9eadb6473cd2aec9f3b4c27f631e0a752a525cc
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-MACHINE_KERNEL_PR_append = ".6"
+MACHINE_KERNEL_PR_append = ".7"
 
 # By default, kernel.bbclass modifies package names to allow multiple kernels
 # to be installed in parallel. We revert this change and rprovide the versioned
