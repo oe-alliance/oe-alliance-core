@@ -12,7 +12,7 @@ SRC_URI[sha256sum] = "ad746f01788f3da639f9eadb6473cd2aec9f3b4c27f631e0a752a525cc
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-MACHINE_KERNEL_PR_append = ".7"
+MACHINE_KERNEL_PR_append = ".8"
 
 # By default, kernel.bbclass modifies package names to allow multiple kernels
 # to be installed in parallel. We revert this change and rprovide the versioned
@@ -40,6 +40,7 @@ SRC_URI += "http://www.xp-support.tv/support/linux/linux-${PV}-xp.tar.gz \
 	file://nfs-max-rwsize-8k.patch \
 	file://mxl5007t-add-no_probe-and-no_reset-parameters.patch \
 	file://0001-tcp_offload-disable-TSQ-optimization-for-GSO.patch \
+	file://0001-restore-minimal-amount-of-queueing.patch \
 	"
 
 S = "${WORKDIR}/linux-${PV}"
