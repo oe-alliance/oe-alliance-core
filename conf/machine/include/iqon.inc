@@ -1,10 +1,6 @@
 # We know about rtc
 include conf/machine/include/build-extras.inc
 
-MACHINE_ESSENTIAL_EXTRA_RDEPENDS = " \
-    iqon-dvb-modules \
-    "
-
 DVBPROVIDER = "kernel"
 
 MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS = "\
