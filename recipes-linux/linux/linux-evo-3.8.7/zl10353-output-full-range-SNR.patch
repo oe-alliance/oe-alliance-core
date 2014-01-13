@@ -1,0 +1,67 @@
+zl10353: fix SNR report with Enigma2/Kaffeine
+
+SNR is scaled in the full 0-65536 range; the snrdb
+module parameter of the zl10353 demodulator enables the
+SNR output in 0.1 dB units as before.
+
+From: Gianluca Gennari <gennarone@gmail.com>
+---
+ drivers/media/dvb-frontends/zl10353.c | 28 +++++++++++++++++++++++++++-
+ 1 file changed, 27 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/media/dvb-frontends/zl10353.c b/drivers/media/dvb-frontends/zl10353.c
+index 82946cd..5d75dc0 100644
+--- a/drivers/media/dvb-frontends/zl10353.c
++++ b/drivers/media/dvb-frontends/zl10353.c
+@@ -31,6 +31,10 @@
+ #include "zl10353_priv.h"
+ #include "zl10353.h"
+ 
++int zl10353_snrdb;
++module_param_named(snrdb, zl10353_snrdb, int, 0644);
++MODULE_PARM_DESC(snrdb, "Turn on/off SNR output in dBx10 (default:off).");
++
+ struct zl10353_state {
+ 	struct i2c_adapter *i2c;
+ 	struct dvb_frontend frontend;
+@@ -519,7 +523,8 @@ static int zl10353_read_signal_strength(struct dvb_frontend *fe, u16 *strength)
+ static int zl10353_read_snr(struct dvb_frontend *fe, u16 *snr)
+ {
+ 	struct zl10353_state *state = fe->demodulator_priv;
+-	u8 _snr;
++	u8 _snr, tps;
++	u16 max_snr;
+ 
+ 	if (debug_regs)
+ 		zl10353_dump_regs(fe);
+@@ -527,6 +532,27 @@ static int zl10353_read_snr(struct dvb_frontend *fe, u16 *snr)
+ 	_snr = zl10353_read_register(state, SNR);
+ 	*snr = 10 * _snr / 8;
+ 
++	if (zl10353_snrdb)
++		goto db_out;
++
++	tps = zl10353_read_register(state, TPS_RECEIVED_1);
++
++	switch ((tps >> 5) & 3) {
++	case 0:  /* QPSK */
++		max_snr = 230;
++		break;
++	case 1:  /* QAM_16 */
++		max_snr = 260;
++		break;
++	case 2:  /* QAM_64 */
++	default: /* QAM_AUTO */
++		max_snr = 290;
++		break;
++	}
++
++	*snr = (*snr >= max_snr) ? 0xffff : (0xffff / max_snr) * *snr;
++
++db_out:
+ 	return 0;
+ }
+ 
+-- 
+1.8.4
+

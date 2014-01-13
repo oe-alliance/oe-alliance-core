@@ -64,6 +64,7 @@ python do_package_prepend () {
 		('e3hd', 'e3hd.jpg', 'e3hd.png'),
 		('cube', 'cube.jpg', 'cube.png'),
 		('sogno8800hd', 'sogno8800hd.jpg', 'sogno.png'),
+		('enfinity', 'enfinity.jpg', 'evo_small.png'),		
 	]
 	import os
 	top = '${D}${PLUGINPATH}/public/images/'
