@@ -4,14 +4,14 @@ LICENSE = "GPLv2"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 KERNEL_RELEASE = "3.8.7"
-SRCDATE = "20140111"
+SRCDATE = "20140113"
 
-SRC_URI[md5sum] = "fb0ff0242c92d2b83bc9fc09d52ba118"
-SRC_URI[sha256sum] = "be6ae0d8f2d74633619abe7bfcdd16188d06194785ebbcd459ce2d9d8d2bc5f0"
+SRC_URI[md5sum] = "1e37be365791a6c894e3de1d70fd9f2a"
+SRC_URI[sha256sum] = "cdea7a5a9819341596b8b1677d8720e72f5a1d453548810e8c3dc28cd5233a54"
 
-LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
+LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}-base/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-MACHINE_KERNEL_PR_append = ".0"
+MACHINE_KERNEL_PR_append = ".1"
 
 # By default, kernel.bbclass modifies package names to allow multiple kernels
 # to be installed in parallel. We revert this change and rprovide the versioned
@@ -52,7 +52,7 @@ SRC_URI += "http://source.mynonpublic.com/evo/${MACHINE}-linux-${PV}-base-${SRCD
 	file://zl10353-output-full-range-SNR.patch \
 	"
 
-S = "${WORKDIR}/linux-${PV}"
+S = "${WORKDIR}/linux-${PV}-base"
 
 inherit kernel
 
