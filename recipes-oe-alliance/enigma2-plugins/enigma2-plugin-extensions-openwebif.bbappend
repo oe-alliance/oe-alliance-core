@@ -25,7 +25,7 @@ python do_package_prepend () {
 		('tm2t', 'tm2t.jpg', 'tm.png'),
 		('tmsingle', 'tmsingle.jpg', 'tm.png'),
 		('tmnano', 'tmnano.jpg', 'tm.png'),
-		('tmnano2t', 'tmnano2t.jpg', 'tm.png'),		
+		('tmnano2t', 'tmnano2t.jpg', 'tm.png'),
 		('vuduo', 'duo.jpg', 'vu_normal.png'),
 		('vuduo2', 'duo2.jpg', 'vu_normal.png'),
 		('vusolo', 'solo.jpg', 'vu_normal.png'),
@@ -46,7 +46,7 @@ python do_package_prepend () {
 		('xp1000s', 'xp1000.jpg', 'xp_rc14_normal.png'),
 		('ebox5000', 'ebox5000.jpg', 'ebox5000.png'),
 		('ebox5100', 'ebox5100.jpg', 'ebox5000.png'),
-		('eboxlumi', 'eboxlumi.jpg', 'ebox5000.png'),		
+		('eboxlumi', 'eboxlumi.jpg', 'ebox5000.png'),
 		('ebox7358', 'ebox7358.jpg', 'ebox5000.png'),
 		('ixussone', 'ixussone.jpg', 'ixussone.png'),
 		('ixusszero', 'ixusszero.jpg', 'ixusszero.png'),
@@ -54,6 +54,7 @@ python do_package_prepend () {
 		('iqonios100hd', 'ios100hd.jpg', 'iqon.png'),
 		('iqonios200hd', 'ios200hd.jpg', 'iqon.png'),
 		('iqonios300hd', 'ios300hd.jpg', 'iqon.png'),
+		('force1', 'ios200hd.jpg', 'iqon.png'),
 		('mbtwin', 'ini-3000.jpg', 'ini-3000.png'),
 		('mediabox', 'ios100hd.jpg', 'iqon.png'),
 		('optimussos1', 'optimussos1.jpg', 'optimuss.png'),
@@ -64,7 +65,7 @@ python do_package_prepend () {
 		('e3hd', 'e3hd.jpg', 'e3hd.png'),
 		('cube', 'cube.jpg', 'cube.png'),
 		('sogno8800hd', 'sogno8800hd.jpg', 'sogno.png'),
-		('enfinity', 'enfinity.jpg', 'evo_small.png'),		
+		('enfinity', 'enfinity.jpg', 'evo_small.png'),
 	]
 	import os
 	top = '${D}${PLUGINPATH}/public/images/'
