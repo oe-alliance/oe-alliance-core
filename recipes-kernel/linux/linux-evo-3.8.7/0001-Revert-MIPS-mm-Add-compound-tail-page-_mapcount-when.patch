@@ -1,0 +1,27 @@
+From fcd1155354da4ac9c14471ca81ee9e2a53b73d76 Mon Sep 17 00:00:00 2001
+From: slashdev <slashdev@gmx.com>
+Date: Fri, 12 Oct 2012 14:26:03 +0200
+Subject: [PATCH] Revert "MIPS: mm: Add compound tail page _mapcount when
+ mapped"
+
+This reverts commit af89fa3986b9d034a286544ab1ed95096496a2f9.
+---
+ arch/mips/mm/gup.c |    2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/arch/mips/mm/gup.c b/arch/mips/mm/gup.c
+index dcfd573..33aadbc 100644
+--- a/arch/mips/mm/gup.c
++++ b/arch/mips/mm/gup.c
+@@ -152,8 +152,6 @@ static int gup_huge_pud(pud_t pud, unsigned long addr, unsigned long end,
+ 	do {
+ 		VM_BUG_ON(compound_head(page) != head);
+ 		pages[*nr] = page;
+-		if (PageTail(page))
+-			get_huge_page_tail(page);
+ 		(*nr)++;
+ 		page++;
+ 		refs++;
+-- 
+1.7.9.5
+

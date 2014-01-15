@@ -1,0 +1,7 @@
+KV = "3.8.7"
+SRCDATE = "20140111"
+
+require evo-dvb-modules.inc
+
+SRC_URI[md5sum] = "6e109042d95187be671c02803716af8e"
+SRC_URI[sha256sum] = "2787c8c32f8e79834689e4043bff2cc9dd274639cd914375933fe51976e23f38"

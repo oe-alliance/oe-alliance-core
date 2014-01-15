@@ -1,0 +1,25 @@
+em28xx-dvb: enable LNA by default for PCTV290e
+
+This improves reception of weak channels.
+
+From: Gianluca Gennari <gennarone@gmail.com>
+---
+ drivers/media/usb/em28xx/em28xx-dvb.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/media/usb/em28xx/em28xx-dvb.c b/drivers/media/usb/em28xx/em28xx-dvb.c
+index 63f2e70..50745a9 100644
+--- a/drivers/media/usb/em28xx/em28xx-dvb.c
++++ b/drivers/media/usb/em28xx/em28xx-dvb.c
+@@ -1073,7 +1073,7 @@ static int em28xx_dvb_init(struct em28xx *dev)
+ #ifdef CONFIG_GPIOLIB
+ 			/* enable LNA for DVB-T, DVB-T2 and DVB-C */
+ 			result = gpio_request_one(dvb->lna_gpio,
+-					GPIOF_OUT_INIT_LOW, NULL);
++					GPIOF_OUT_INIT_HIGH, NULL);
+ 			if (result)
+ 				em28xx_errdev("gpio request failed %d\n",
+ 						result);
+-- 
+1.8.4
+
