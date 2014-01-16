@@ -5,7 +5,7 @@ KV = "3.9.7"
 PR = "r1"
 
 SRCDATE = "2014-0108"
-MACHINE_KERNEL_PR_append = ".1"
+MACHINE_KERNEL_PR_append = ".2"
 
 SRC_URI[md5sum] = "94664d887748e81c70cb9ec175c447c3"
 SRC_URI[sha256sum] = "afac921159dc05525d766f2d267f0a685e4010a07e10010dbaa7f868186362f3"
@@ -27,7 +27,7 @@ KERNEL_OUTPUT = "vmlinux"
 KERNEL_IMAGETYPE = "vmlinux"
 KERNEL_IMAGEDEST = "/tmp"
 
-FILES_kernel-image = "${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}*"
+FILES_kernel-image = "${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz"
 
 do_configure_prepend() {
     oe_machinstall -m 0644 ${WORKDIR}/defconfig ${S}/.config
