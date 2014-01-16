@@ -8,8 +8,8 @@ require conf/license/license-gplv2.inc
 
 RDEPENDS_${PN} += "showiframe"
 
-PV = "3.0"
-PR = "r21"
+PV = "3.1"
+PR = "r0"
 
 S = "${WORKDIR}"
 
@@ -22,6 +22,7 @@ SRC_URI = "file://bootlogo.mvi file://backdrop.mvi file://radio.mvi file://bootl
 SRC_URI_append_gb800ue = "file://lcdsplash.bin"
 SRC_URI_append_gbquad = "file://lcdsplash.bin"
 SRC_URI_append_gb800ueplus = "file://lcdsplash.bin"
+SRC_URI_append_vuduo2 = "file://lcdbootlogo.png file://bootlogo.py"
 
 BINARY_VERSION = "1.3"
 
@@ -49,7 +50,12 @@ do_install() {
     install -d ${D}/usr/share/enigma2/skin_default
     install -m 0644 radio.mvi ${D}/usr/share/enigma2/skin_default/radio.mvi
     install -d ${D}/${sysconfdir}/init.d
-    install -m 0755 ${S}/bootlogo.sh ${D}/${sysconfdir}/init.d/bootlogo
+    install -m 0755 bootlogo.sh ${D}/${sysconfdir}/init.d/bootlogo
+}
+
+do_install_append_vuduo2() {
+    install -m 0644 lcdbootlogo.png ${D}/usr/share/lcdbootlogo.png
+    install -m 0644 bootlogo.py ${D}/${sysconfdir}/init.d/bootlogo.py
 }
 
 inherit deploy
