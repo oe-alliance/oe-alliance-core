@@ -3,7 +3,7 @@ LICENSE = "GPL"
 SECTION = "kernel"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 KV = "3.3.8"
-MACHINE_KERNEL_PR_append = ".19"
+MACHINE_KERNEL_PR_append = ".20"
 
 SRC_URI[md5sum] = "dbd9b0dcf632d52b5765a9d7372e0205"
 SRC_URI[sha256sum] = "6922bb05875664d54fa653fb27b4ea91fb28009fc6122d760e601429c43e69af"
@@ -52,7 +52,7 @@ KERNEL_OUTPUT = "vmlinux"
 KERNEL_IMAGETYPE = "vmlinux"
 KERNEL_IMAGEDEST = "/tmp"
 
-FILES_kernel-image = "${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}*"
+FILES_kernel-image = "${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz"
 
 do_configure_prepend() {
 	oe_machinstall -m 0644 ${WORKDIR}/defconfig ${S}/.config
