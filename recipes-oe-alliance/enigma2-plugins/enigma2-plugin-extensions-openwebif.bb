@@ -1,4 +1,16 @@
-PRINC = "50"
+MODULE = "OpenWebif"
+DESCRIPTION = "Control your receiver with a browser"
+LICENSE = "GPLv2"
+LIC_FILES_CHKSUM = "file://README;firstline=10;lastline=12;md5=9c14f792d0aeb54e15490a28c89087f7"
+
+DEPENDS = "python-cheetah-native"
+RDEPENDS_${PN} = "python-cheetah python-json python-unixadmin python-misc python-pyopenssl python-shell aio-grab"
+
+inherit gitpkgv
+SRCREV = "${AUTOREV}"
+PV = "0.1+git${SRCPV}"
+PKGV = "0.1+git${GITPKGV}"
+PR = "r1"
 
 inherit pythonnative
 
@@ -7,6 +19,18 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 SRC_URI = "git://github.com/oe-alliance/e2openplugin-${MODULE}.git;protocol=git"
 
 S="${WORKDIR}/git"
+
+# Just a quick hack to "compile" it
+do_compile() {
+	cheetah-compile -R --nobackup ${S}/plugin
+	python -O -m compileall ${S}
+}
+
+PLUGINPATH = "/usr/lib/enigma2/python/Plugins/Extensions/${MODULE}"
+do_install_append() {
+	install -d ${D}${PLUGINPATH}
+	cp -rp ${S}/plugin/* ${D}${PLUGINPATH}
+}
 
 python do_package_prepend () {
     boxtypes = [
@@ -72,7 +96,7 @@ python do_package_prepend () {
     import os
     top = '${D}${PLUGINPATH}/public/images/'
     for x in boxtypes:
-        if x[0] == '${MACHINE}':
+        if x[0] == '${MACHINEBUILD}':
             target_box = x[1]
             target_remote = x[2]
             break
