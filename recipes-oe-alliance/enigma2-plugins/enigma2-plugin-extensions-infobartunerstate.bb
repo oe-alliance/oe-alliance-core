@@ -2,7 +2,6 @@ SUMMARY = "InfoBarTunerState Extentions"
 MAINTAINER = "Betonme"
 SECTION = "extra"
 PRIORITY = "optional"
-DEPENDS = "enigma2"
 
 require conf/license/license-gplv2.inc
 
@@ -10,7 +9,7 @@ inherit gitpkgv pythonnative
 SRCREV = "${AUTOREV}"
 PV = "1.1.+git${SRCPV}"
 PKGV = "1.1.+git${GITPKGV}"
-PR = "r1"
+PR = "r2"
 
 SRC_URI="git://github.com/betonme/e2openplugin-InfoBarTunerState.git"
 

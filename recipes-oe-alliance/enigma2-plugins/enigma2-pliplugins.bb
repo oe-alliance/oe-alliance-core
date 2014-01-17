@@ -9,16 +9,16 @@ PACKAGES_DYNAMIC = "enigma2-plugin-pli-.*"
 # add custom PROVIDES for plugins which do not match PACKAGES_DYNAMIC
 PROVIDES += "enigma2-plugin-extensions-openuitzendinggemist enigma2-plugin-extensions-ushare"
 
-DEPENDS = "enigma2 nfs-utils ushare"
+DEPENDS = "nfs-utils ushare"
 
 DESCRIPTION_enigma2-plugin-extensions-ushare = "UPnP media server"
 RDEPENDS_enigma2-plugin-extensions-ushare = "ushare"
 
 inherit gitpkgv
 
-PV = "1.0+git${SRCPV}"
-PKGV = "1.0+git${GITPKGV}"
-PR = "r10"
+PV = "2.0+git${SRCPV}"
+PKGV = "2.0+git${GITPKGV}"
+PR = "r0"
 
 SRC_URI = "git://github.com/oe-alliance/openpli-plugins.git;protocol=git \
            file://pythonpaths.patch"

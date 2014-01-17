@@ -1,6 +1,7 @@
 # We know about rtc
 include conf/machine/include/build-extras.inc
 
+MACHINE_OEM = "azbox"
 MACHINE_BRAND = "AZBOX"
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS = " \

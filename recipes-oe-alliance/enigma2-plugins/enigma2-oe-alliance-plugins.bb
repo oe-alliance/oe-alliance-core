@@ -39,7 +39,7 @@ PROVIDES += " \
     enigma2-plugin-extensions-remotechannelstreamconverter \
     "
 
-DEPENDS = "enigma2 \
+DEPENDS = "\
     ${@base_contains("MACHINE_FEATURES", "blindscan-dvbc", "virtual/blindscan-dvbc" , "", d)} \
     ${@base_contains("MACHINE_FEATURES", "blindscan-dvbs", "virtual/blindscan-dvbs" , "", d)} \
     python-dnspython python-beautifulsoup python-lxml python-simplejson python-pyamf python-icalendar python-pyusb \
@@ -106,9 +106,9 @@ RREPLACES_enigma2-plugin-extensions-remotechannelstreamconverter = "enigma2-plug
 inherit gitpkgv autotools pythonnative
 
 SRCREV = "${AUTOREV}"
-PV = "git${SRCPV}"
-PKGV = "git${GITPKGV}"
-PR = "r97"
+PV = "2.0+git${SRCPV}"
+PKGV = "2.0+git${GITPKGV}"
+PR = "r0"
 
 SRC_URI="git://github.com/oe-alliance/oe-alliance-plugins.git;protocol=git"
 
@@ -118,7 +118,7 @@ EXTRA_OECONF = " \
     STAGING_INCDIR=${STAGING_INCDIR} \
     STAGING_LIBDIR=${STAGING_LIBDIR} \
     --with-po \
-    ${@base_contains('MACHINEBUILD', 'odinm6', '--with-boxtype=${MACHINEBUILD}' , '--with-boxtype=${MACHINE}', d)} \
+    --with-boxtype=${MACHINE} \
     "
 
 ALLOW_EMPTY_${PN} = "1"

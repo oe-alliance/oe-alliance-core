@@ -1,6 +1,7 @@
 # We know about rtc
 include conf/machine/include/build-extras.inc
 
+MACHINE_OEM = "odin"
 MACHINE_BRAND = "Odin"
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS = "\

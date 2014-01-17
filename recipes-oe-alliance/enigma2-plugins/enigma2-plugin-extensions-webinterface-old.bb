@@ -3,7 +3,7 @@ SUMMARY = "Old webinterface (avoid license issues)"
 LICENSE = "Proprietary"
 LIC_FILES_CHKSUM = "file://COPYING;md5=8e37f34d0e40d32ea2bc90ee812c9131"
 
-DEPENDS = "enigma2 python-pyopenssl python-twisted"
+DEPENDS = "python-pyopenssl python-twisted"
 RDEPENDS_${PN} = "python-twisted-web python-pyopenssl python-crypt python-unixadmin aio-grab"
 PACKAGES = "${PN}-src ${PN}"
 RPROVIDES_${PN} = "enigma2-plugin-extensions-webinterface"
@@ -14,7 +14,7 @@ inherit gitpkgv pythonnative
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r0"
+PR = "r1"
 
 # REMOTE GIT
 SRC_URI="git://git.code.sf.net/p/openpli/plugins-enigma2;protocol=git;branch=old \

@@ -7,10 +7,9 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=8e37f34d0e40d32ea2bc90ee812c9131"
 inherit gitpkgv autotools deploy
 
 SRCREV = "${AUTOREV}"
-PV = "git${SRCPV}"
-PKGV = "git${GITPKGV}"
-PV = "2.0"
-PR = "r87"
+PV = "2.0+gitr${SRCPV}"
+PKGV = "2.0+gitr${GITPKGV}"
+PR = "r0"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -26,8 +25,6 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 S = "${WORKDIR}/git"
 
-DEPENDS = "enigma2"
-
 THIRDPARTY_PLUGINS = " \
     enigma2-plugin-dvb-sundtek.controlcenter_1.0-20110318-r2_mipsel.ipk \
     enigma2-plugin-extensions-airplayer_0.3.9_mips32el.ipk \
@@ -42,7 +39,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-csfd_9_40-20131117_all.ipk \
     enigma2-plugin-extensions-cubic_streamer_0.7.3_mips32el.ipk \
     enigma2-plugin-extensions-digitalfernsehen_0.8rc1_mips32el.ipk \
-    enigma2-plugin-extensions-facebook_0.6_mips32el.ipk \	
+    enigma2-plugin-extensions-facebook_0.6_mips32el.ipk \
     enigma2-plugin-extensions-filesearchfs_2.53_all.ipk \
     enigma2-plugin-extensions-focusonline_0.8rc2_mips32el.ipk \
     enigma2-plugin-extensions-glasssysutil_5.37_all.ipk \

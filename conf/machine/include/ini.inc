@@ -1,6 +1,7 @@
 # We know about rtc
 include conf/machine/include/build-extras.inc
 
+MACHINE_OEM = "ini"
 MACHINE_BRAND = "INI"
 
 DVBPROVIDER = "kernel"

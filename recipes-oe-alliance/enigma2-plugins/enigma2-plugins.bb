@@ -11,9 +11,9 @@ PROVIDES = "${PN} \
 
 inherit autotools gitpkgv pythonnative
 
-PV = "git${SRCPV}"
-PKGV = "git${GITPKGV}"
-PR = "r55"
+PV = "2.0+git${SRCPV}"
+PKGV = "2.0+git${GITPKGV}"
+PR = "r0"
 
 SRC_URI = "${ENIGMA2_PLUGINS_URI} file://pluginnotwanted.patch"
 

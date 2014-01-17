@@ -1,6 +1,7 @@
 # We know about rtc
 include conf/machine/include/build-extras.inc
 
+MACHINE_OEM = "evo"
 MACHINE_BRAND = "EVO"
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS = "\

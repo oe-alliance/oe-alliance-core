@@ -1,6 +1,7 @@
 # We know about rtc
 include conf/machine/include/build-extras.inc
 
+MACHINE_OEM = "mixos"
 MACHINE_BRAND = "Mixos"
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS = "\
