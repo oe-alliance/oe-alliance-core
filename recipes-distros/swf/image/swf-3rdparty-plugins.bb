@@ -18,7 +18,7 @@ EXTRA_OECONF = " \
 	HOST_SYS=${HOST_SYS} \
 	STAGING_INCDIR=${STAGING_INCDIR} \
 	STAGING_LIBDIR=${STAGING_LIBDIR} \
-	--with-boxtype=${MACHINE} \
+	--with-boxtype=${MACHINEBUILD} \
 "
 
 ALLOW_EMPTY_${PN} = "1"
