@@ -4,9 +4,9 @@ include conf/machine/include/build-extras.inc
 MACHINE_OEM = "dags"
 
 MACHINE_NAME = "\
-${@base_contains('MACHINEBUILD', 'tmt2', '2T-OE' , '', d)}\
+${@base_contains('MACHINEBUILD', 'tm2t', '2T-OE' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmnano', 'Nano-OE' , '', d)}\
-${@base_contains('MACHINEBUILD', 'tmnanot2', 'Nano 2T' , '', d)}\
+${@base_contains('MACHINEBUILD', 'tmnano2t', 'Nano 2T' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmsingle', 'Single' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmtwin', 'Twin-OE' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'iqonios100hd', 'IOS 100HD' , '', d)}\
@@ -24,9 +24,9 @@ ${@base_contains('MACHINEBUILD', 'mediabox', 'MediaBox HD LX' , '', d)}\
 
 
 MACHINE_BRAND = "\
-${@base_contains('MACHINEBUILD', 'tmt2', 'Technomate' , '', d)}\
+${@base_contains('MACHINEBUILD', 'tm2t', 'Technomate' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmnano', 'Technomate' , '', d)}\
-${@base_contains('MACHINEBUILD', 'tmnanot2', 'Technomate' , '', d)}\
+${@base_contains('MACHINEBUILD', 'tmnano2t', 'Technomate' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmsingle', 'Technomate' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmtwin', 'Technomate' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'iqonios100hd', 'iQON' , '', d)}\
@@ -43,9 +43,9 @@ ${@base_contains('MACHINEBUILD', 'mediabox', 'Jepssen' , '', d)}\
 "
 
 IMAGEDIR ?= "\
-${@base_contains('MACHINEBUILD', 'tmt2', 'update/tm2toe/cfe' , '', d)}\
+${@base_contains('MACHINEBUILD', 'tm2t', 'update/tm2toe/cfe' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmnano', 'update/tmnanooe/cfe' , '', d)}\
-${@base_contains('MACHINEBUILD', 'tmnanot2', 'update/tmnano2t/cfe' , '', d)}\
+${@base_contains('MACHINEBUILD', 'tmnano2t', 'update/tmnano2t/cfe' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmsingle', 'update/tmsingle/cfe' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmtwin', 'update/tmtwinoe/cfe' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'iqonios100hd', 'update/ios100/cfe' , '', d)}\
