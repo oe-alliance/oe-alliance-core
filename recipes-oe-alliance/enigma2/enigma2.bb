@@ -295,6 +295,8 @@ do_configure_prepend() {
         DRIVERSDATE=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/iqon/iqon-dvb-modules.bb | cut -b 12-19`
     elif [ "${MACHINE}" = "iqonios200hd" -o "${MACHINE}" = "optimussos2" ]; then
         DRIVERSDATE=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/iqon/iqon-dvb-modules-ci.bb | cut -b 12-19`
+    elif [ "${MACHINE}" = "force1" ]; then
+        DRIVERSDATE=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/iqon/iqon-dvb-modules-7356.bb | cut -b 12-19`
     elif [ "${MACHINE}" = "gb800solo" -o "${MACHINE}" = "gb800se" -o "${MACHINE}" = "gb800ue" -o "${MACHINE}" = "gbquad" -o "${MACHINE}" = "gbquadplus" -o "${MACHINE}" = "gb800seplus" -o "${MACHINE}" = "gb800ueplus" ]; then
         DRIVERSDATE=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/gigablue/gigablue-dvb-modules-${MACHINE}.bb | cut -b 12-19`
     elif [ "${MACHINE}" = "inihde" ]; then

@@ -1,4 +1,9 @@
-# thoug not actually a bootlogo task, set the correct videomode before showing the bootlogo
-cat /etc/videomode > /proc/stb/video/videomode
+# avoid the console messages clobbering our logo
+[ -f /sys/class/vtconsole/vtcon1/bind ] && echo 0 > /sys/class/vtconsole/vtcon1/bind
+# and set the correct videomode before showing the bootlogo
+[ -f /etc/videomode ] && cat /etc/videomode > /proc/stb/video/videomode
 
-[ -e /etc/dropbear/dropbear_rsa_host_key ] &&  /usr/bin/showiframe /usr/share/bootlogo.mvi || /usr/bin/showiframe /usr/share/bootlogo_wait.mvi
+BOOTLOGO=/usr/share/bootlogo.mvi
+[ -f /etc/enigma2/bootlogo.mvi ] && BOOTLOGO=/etc/enigma2/bootlogo.mvi
+/usr/bin/showiframe ${BOOTLOGO}
+[ -f /etc/init.d/bootlogo.py ] && /usr/bin/python /etc/init.d/bootlogo.py
