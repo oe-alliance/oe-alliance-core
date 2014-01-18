@@ -47,11 +47,11 @@ do_configure_prepend() {
         DRIVERSDATE=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/dags/dags-dvb-modules-7356.bb | cut -b 12-19`
     elif [ "${MACHINE_OEM}" = "gigablue" ]; then
         DRIVERSDATE=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/gigablue/gigablue-dvb-modules-${MACHINE}.bb | cut -b 12-19`
-    elif [ "${MACHINE}" = "odinm9" ]; then
+    elif [ "${MACHINE_OEM}" = "odinm9" ]; then
         DRIVERSDATE=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/odin/odin-dvb-modules-odinm9.bb | cut -b 12-19`
-    elif [ "${MACHINE}" = "odinm7" ]; then
+    elif [ "${MACHINE_OEM}" = "odinm7" ]; then
         DRIVERSDATE=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/odin/odin-dvb-modules-odinm7.bb | cut -b 12-19`
-    elif [ "${MACHINE}" = "e3hd" ]; then
+    elif [ "${MACHINE_OEM}" = "e3hd" ]; then
         DRIVERSDATE=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/odin/odin-dvb-modules-e3hd.bb | cut -b 12-19`		
     elif [ "${MACHINE}" = "inihde" ]; then
         DRIVERSDATE=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/ini/ini-dvb-modules-inihde.bb | cut -b 12-19`
