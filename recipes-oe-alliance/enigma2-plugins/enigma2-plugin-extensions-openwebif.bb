@@ -99,7 +99,9 @@ python do_package_prepend () {
         ('azboxme', 'me.jpg', 'me.png'),
         ('azboxhd', 'premium.jpg', 'premium.png'),
         ('azboxminime', 'minime.jpg', 'me.png'),
-        ('cube', 'cube.jpg', 'cube.png'),
+        ('dcube', 'cube.jpg', 'cube.png'),
+        ('mkcube', 'cube.jpg', 'cube.png'),
+        ('ultima', 'cube.jpg', 'cube.png'),
         ('sogno8800hd', 'sogno8800hd.jpg', 'sogno.png'),
         ('enfinity', 'enfinity.jpg', 'evo_small.png'),
     ]
