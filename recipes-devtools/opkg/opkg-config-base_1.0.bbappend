@@ -1,5 +1,5 @@
-PRINC = "6"
-PACKAGE_ARCH = "${MACHINE_ARCH}"
+PRINC = "7"
+PACKAGE_ARCH = "${MACHINEBUILD}"
 
 do_compile_append_mipsel() {
     echo "arch ${TARGET_ARCH} $priority" >> $archconf
