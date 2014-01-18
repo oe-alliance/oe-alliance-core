@@ -9,8 +9,8 @@ ${@base_contains('MACHINEBUILD', 'genius', 'genius' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'evo', 'EVO' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'geniuse3hd', 'Genius E3HD' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'evoe3hd', 'E3HD' , '', d)}\
-${@base_contains('MACHINEBUILD', 'e3hd', 'E3HD' , '', d)}\
-${@base_contains('MACHINEBUILD', 'odinm9', 'M9' , '', d)}\
+${@base_contains('MACHINEBUILD', 'axase3', 'E3HD' , '', d)}\
+${@base_contains('MACHINEBUILD', 'maram9', 'M9' , '', d)}\
 "
 
 MACHINE_BRAND = "\
@@ -21,8 +21,8 @@ ${@base_contains('MACHINEBUILD', 'genius', 'Galaxy Innovations' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'evo', 'Optibox' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'geniuse3hd', 'Galaxy Innovations' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'evoe3hd', 'Optibox' , '', d)}\
-${@base_contains('MACHINEBUILD', 'e3hd', 'Axas' , '', d)}\
-${@base_contains('MACHINEBUILD', 'odinm9', 'ODIN' , '', d)}\
+${@base_contains('MACHINEBUILD', 'axase3', 'Axas' , '', d)}\
+${@base_contains('MACHINEBUILD', 'maram9', 'ODIN' , '', d)}\
 "
 
 IMAGEDIR ?= "\
@@ -33,8 +33,8 @@ ${@base_contains('MACHINEBUILD', 'genius', 'en2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'evo', 'en2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'geniuse3hd', 'e3hd' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'evoe3hd', 'e3hd' , '', d)}\
-${@base_contains('MACHINEBUILD', 'e3hd', 'e3hd' , '', d)}\
-${@base_contains('MACHINEBUILD', 'odinm9', 'odinm9' , '', d)}\
+${@base_contains('MACHINEBUILD', 'axase3', 'e3hd' , '', d)}\
+${@base_contains('MACHINEBUILD', 'maram9', 'odinm9' , '', d)}\
 "
 
 DVBPROVIDER = "kernel"
@@ -98,5 +98,8 @@ MACHINE_FEATURES += "3dtv alsa hdmicec switchoff wifi bootsplash boxmodel"
 BOOTLOGO_FILENAME = "splash.bin"
 
 require conf/machine/include/tune-mips32.inc
+
+# add support for extra feeds
+PACKAGE_ARCHS += " ${MACHINEBUILD}"
 
 
