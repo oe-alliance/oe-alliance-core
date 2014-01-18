@@ -9,10 +9,9 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "1.0"
-PR = "r15"
-PACKAGE_ARCH = "${MACHINE_ARCH}"
+PR = "r16"
 
-DEPENDS = "oe-alliance-branding"
+PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 RDEPENDS_${PN} = "\
     oe-alliance-enigma2 \
