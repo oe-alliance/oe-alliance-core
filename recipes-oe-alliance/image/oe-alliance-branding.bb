@@ -78,7 +78,7 @@ do_configure_prepend() {
     fi
 }
 
-FILES_${PN} = "/usr/lib/enigma2/python/*.so"
+FILES_${PN} += "/usr/lib/enigma2/python/*.so"
 FILES_${PN}-dev += "/usr/lib/enigma2/python/*.la"
 FILES_${PN}-staticdev += "/usr/lib/enigma2/python/*.a"
 FILES_${PN}-dbg += "/usr/lib/enigma2/python/.debug"
