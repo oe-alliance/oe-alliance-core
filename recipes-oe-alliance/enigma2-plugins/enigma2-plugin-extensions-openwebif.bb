@@ -45,13 +45,29 @@ python do_package_prepend () {
         ('et5x00', 'et5x00.jpg', 'et_rc5_normal.png'),
         ('et6x00', 'et5x00.jpg', 'et_rc5_normal.png'),
         ('et9x00', 'et9x00.jpg', 'et_rc7_normal.png'),
-        ('odinm7', 'odinm7.jpg', 'odinm7.png'),
+        ('e3hd', 'e3hd.jpg', 'e3hd.png'),
+        ('geniuse3hd', 'geniuse3hd.jpg', 'geniuse3hd.png'),
+        ('evoe3hd', 'evoe3hd.jpg', 'evoe3hd.png'),
+        ('evo', 'evo.jpg', 'evo.png'),
+        ('genius', 'genius.jpg', 'genius.png'),
+        ('starsatlx', 'starsatlx.jpg', 'starsatlx.png'),
+        ('axodin', 'axodin.jpg', 'axodin.png'),
+        ('classm', 'classm.jpg', 'classm.png'),
         ('odinm9', 'odinm9.jpg', 'odinm9.png'),
         ('tmtwin', 'tmtwin.jpg', 'tm.png'),
         ('tm2t', 'tm2t.jpg', 'tm.png'),
         ('tmsingle', 'tmsingle.jpg', 'tm.png'),
         ('tmnano', 'tmnano.jpg', 'tm.png'),
         ('tmnano2t', 'tmnano2t.jpg', 'tm.png'),
+        ('iqonios100hd', 'ios100hd.jpg', 'iqon.png'),
+        ('iqonios200hd', 'ios200hd.jpg', 'iqon.png'),
+        ('iqonios300hd', 'ios300hd.jpg', 'iqon.png'),
+        ('optimussos1', 'optimussos1.jpg', 'optimuss.png'),
+        ('optimussos2', 'optimussos2.jpg', 'optimuss.png'),
+        ('mediabox', 'ios100hd.jpg', 'iqon.png'),		
+        ('force1', 'ios200hd.jpg', 'iqon.png'),
+        ('optimussos1plus', 'ios200hd.jpg', 'iqon.png'),
+        ('optimussos2plus', 'ios200hd.jpg', 'iqon.png'),			
         ('vuduo', 'duo.jpg', 'vu_normal.png'),
         ('vuduo2', 'duo2.jpg', 'vu_normal.png'),
         ('vusolo', 'solo.jpg', 'vu_normal.png'),
@@ -68,6 +84,7 @@ python do_package_prepend () {
         ('ventonhdx', 'ini-3000.jpg', 'ini-3000.png'),
         ('inihde', 'ini-3000.jpg', 'ini-3000.png'),
         ('inihdp', 'ini-3000.jpg', 'ini-3000.png'),
+        ('mbtwin', 'ini-3000.jpg', 'ini-3000.png'),		
         ('xp1000', 'xp1000.jpg', 'xp_rc14_normal.png'),
         ('xp1000s', 'xp1000.jpg', 'xp_rc14_normal.png'),
         ('ebox5000', 'ebox5000.jpg', 'ebox5000.png'),
@@ -77,18 +94,9 @@ python do_package_prepend () {
         ('ixussone', 'ixussone.jpg', 'ixussone.png'),
         ('ixusszero', 'ixusszero.jpg', 'ixusszero.png'),
         ('ixussduo', 'ixussone.jpg', 'ixussone.png'),
-        ('iqonios100hd', 'ios100hd.jpg', 'iqon.png'),
-        ('iqonios200hd', 'ios200hd.jpg', 'iqon.png'),
-        ('iqonios300hd', 'ios300hd.jpg', 'iqon.png'),
-        ('force1', 'ios200hd.jpg', 'iqon.png'),		
-        ('mbtwin', 'ini-3000.jpg', 'ini-3000.png'),
-        ('mediabox', 'ios100hd.jpg', 'iqon.png'),
-        ('optimussos1', 'optimussos1.jpg', 'optimuss.png'),
-        ('optimussos2', 'optimussos2.jpg', 'optimuss.png'),
         ('azboxme', 'me.jpg', 'me.png'),
         ('azboxhd', 'premium.jpg', 'premium.png'),
         ('azboxminime', 'minime.jpg', 'me.png'),
-        ('e3hd', 'e3hd.jpg', 'e3hd.png'),
         ('cube', 'cube.jpg', 'cube.png'),
         ('sogno8800hd', 'sogno8800hd.jpg', 'sogno.png'),
         ('enfinity', 'enfinity.jpg', 'evo_small.png'),
@@ -109,9 +117,6 @@ python do_package_prepend () {
                 elif target_box == 'premium.jpg':
                     if name not in ('elite.jpg', 'premium+.jpg', 'ultra.jpg'):
                         os.remove(os.path.join(root, name))
-                elif target_box == 'odinm7.jpg':
-                    if name not in ('starsatlx.jpg', 'axodin.jpg'):
-                        os.remove(os.path.join(root, name))
                 else:
                     os.remove(os.path.join(root, name))
     for root, dirs, files in os.walk(top + 'remotes', topdown=False):
@@ -122,9 +127,6 @@ python do_package_prepend () {
                         os.remove(os.path.join(root, name))
                 elif target_remote == 'premium.png':
                     if name != 'elite.png':
-                        os.remove(os.path.join(root, name))
-                elif target_remote == 'odinm7.png':
-                    if name != 'starsatlx.png':
                         os.remove(os.path.join(root, name))
                 else:
                     os.remove(os.path.join(root, name))
