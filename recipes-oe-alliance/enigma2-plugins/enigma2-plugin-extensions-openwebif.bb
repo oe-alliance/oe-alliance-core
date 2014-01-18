@@ -10,7 +10,7 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "0.1+git${SRCPV}"
 PKGV = "0.1+git${GITPKGV}"
-PR = "r2"
+PR = "r3"
 
 inherit pythonnative
 
@@ -64,10 +64,10 @@ python do_package_prepend () {
         ('iqonios300hd', 'ios300hd.jpg', 'iqon.png'),
         ('optimussos1', 'optimussos1.jpg', 'optimuss.png'),
         ('optimussos2', 'optimussos2.jpg', 'optimuss.png'),
-        ('mediabox', 'ios100hd.jpg', 'iqon.png'),		
+        ('mediabox', 'ios100hd.jpg', 'iqon.png'),
         ('force1', 'ios200hd.jpg', 'iqon.png'),
         ('optimussos1plus', 'ios200hd.jpg', 'iqon.png'),
-        ('optimussos2plus', 'ios200hd.jpg', 'iqon.png'),			
+        ('optimussos2plus', 'ios200hd.jpg', 'iqon.png'),
         ('vuduo', 'duo.jpg', 'vu_normal.png'),
         ('vuduo2', 'duo2.jpg', 'vu_normal.png'),
         ('vusolo', 'solo.jpg', 'vu_normal.png'),
@@ -81,17 +81,13 @@ python do_package_prepend () {
         ('gbquadplus', 'gbquad.jpg', 'gigablue_black.png'),
         ('gb800seplus', 'gb800seplus.jpg', 'gigablue_new.png'),
         ('gb800ueplus', 'gb800ueplus.jpg', 'gigablue_new.png'),
-        ('ventonhdx', 'ini-3000.jpg', 'ini-3000.png'),
-        ('inihde', 'ini-3000.jpg', 'ini-3000.png'),
-        ('inihdp', 'ini-3000.jpg', 'ini-3000.png'),
-        ('mbtwin', 'ini-3000.jpg', 'ini-3000.png'),		
         ('xp1000mk', 'xp1000.jpg', 'xp_rc14_normal.png'),
         ('xp1000max', 'xp1000.jpg', 'xp_rc14_normal.png'),
         ('sf8', 'xp1000.jpg', 'xp_rc14_normal.png'),
         ('mixosf5', 'ebox5000.jpg', 'ebox5000.png'),
-		('gi9196m', 'ebox5000.jpg', 'ebox5000.png'),
+	('gi9196m', 'ebox5000.jpg', 'ebox5000.png'),
         ('mixosf5mini', 'ebox5100.jpg', 'ebox5000.png'),
-        ('gi9196lite', 'ebox5100.jpg', 'ebox5000.png'),		
+        ('gi9196lite', 'ebox5100.jpg', 'ebox5000.png'),
         ('mixoslumi', 'eboxlumi.jpg', 'ebox5000.png'),
         ('mixosf7', 'ebox7358.jpg', 'ebox5000.png'),
         ('ixussone', 'ixussone.jpg', 'ixussone.png'),
@@ -105,6 +101,14 @@ python do_package_prepend () {
         ('ultima', 'cube.jpg', 'cube.png'),
         ('sogno8800hd', 'sogno8800hd.jpg', 'sogno.png'),
         ('enfinity', 'enfinity.jpg', 'evo_small.png'),
+        ('ventonhdx', 'ini-3000.jpg', 'ini-3000.png'),
+        ('sezamhdx', 'ini-3000.jpg', 'ini-3000.png'),
+        ('sezamhde', 'ini-3000.jpg', 'ini-3000.png'),
+        ('sezamhdp', 'ini-3000.jpg', 'ini-3000.png'),
+        ('xpeedlx', 'ini-3000.jpg', 'ini-3000.png'),
+        ('xpeedlx3', 'ini-3000.jpg', 'ini-3000.png'),
+        ('mbmini', 'ini-3000.jpg', 'ini-3000.png'),
+        ('mbtwin', 'ini-3000.jpg', 'ini-3000.png'),
     ]
     import os
     top = '${D}${PLUGINPATH}/public/images/'
