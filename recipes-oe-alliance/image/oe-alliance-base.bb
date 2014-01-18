@@ -6,8 +6,11 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3
 inherit task
 
 PV = "1.0"
-PR = "r7"
+PR = "r8"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
+
+
+DEPENDS = "oe-alliance-branding"
 
 RDEPENDS = "\
 	oe-alliance-enigma2 \
