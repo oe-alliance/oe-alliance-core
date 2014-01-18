@@ -10,11 +10,11 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "0.1+git${SRCPV}"
 PKGV = "0.1+git${GITPKGV}"
-PR = "r1"
+PR = "r2"
 
 inherit pythonnative
 
-PACKAGE_ARCH = "${MACHINE_ARCH}"
+PACKAGE_ARCH = "${MACHINEBUILD}"
 
 SRC_URI = "git://github.com/oe-alliance/e2openplugin-${MODULE}.git;protocol=git"
 
