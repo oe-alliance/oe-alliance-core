@@ -6,7 +6,7 @@ PR = "r1"
 
 SRCDATE = "1211"
 SRCDATE_ebox7358 = "1227"
-MACHINE_KERNEL_PR_append = ".1"
+MACHINE_KERNEL_PR_append = ".2"
 
 SRC_URI[ebox5100.md5sum] = "2c6957a0f3662910e53df8eb31705e01"
 SRC_URI[ebox5100.sha256sum] = "2ba88a551a5c3a7095a2000e03841895d7b3892116d379d1009a8de9f5820f89"
@@ -33,7 +33,7 @@ KERNEL_OUTPUT = "vmlinux"
 KERNEL_IMAGETYPE = "vmlinux"
 KERNEL_IMAGEDEST = "/tmp"
 
-FILES_kernel-image = "${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}*"
+FILES_kernel-image = "${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz"
 
 do_configure_prepend() {
     oe_machinstall -m 0644 ${WORKDIR}/defconfig ${S}/.config
