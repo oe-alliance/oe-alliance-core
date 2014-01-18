@@ -1,8 +1,12 @@
-PRINC = "10"
+PRINC = "11"
+
+PACKAGE_ARCH = "${MACHINEBUILD}"
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 FILESEXTRAPATHS_prepend := "${THISDIR}/${DISTRO_NAME}:"
 FILESEXTRAPATHS_prepend_azboxhd := "${THISDIR}/${MACHINE}:"
+
+hostname = ${MACHINEBUILD}
 
 do_install_append() {
     rm -rf ${D}/mnt
