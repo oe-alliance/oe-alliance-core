@@ -2,20 +2,20 @@
 include conf/machine/include/build-extras.inc
 
 MACHINE_NAME = "\
-${@base_contains('MACHINEBUILD', 'mk1000', 'XP1000' , '', d)}\
-${@base_contains('MACHINEBUILD', 'max1000', 'XP1000' , '', d)}\
+${@base_contains('MACHINEBUILD', 'xp1000mk', 'XP1000' , '', d)}\
+${@base_contains('MACHINEBUILD', 'xp1000max', 'XP1000' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'sf8', 'SF8' , '', d)}\
 "
 
 MACHINE_BRAND = "\
-${@base_contains('MACHINEBUILD', 'mk1000', 'MK-Digital' , '', d)}\
-${@base_contains('MACHINEBUILD', 'max1000', 'MAXDIGITAL' , '', d)}\
+${@base_contains('MACHINEBUILD', 'xp1000mk', 'MK-Digital' , '', d)}\
+${@base_contains('MACHINEBUILD', 'xp1000max', 'MAXDIGITAL' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'sf8', 'Octagon' , '', d)}\
 "
 
 IMAGEDIR ?= "\
-${@base_contains('MACHINEBUILD', 'mk1000', 'xp1000' , '', d)}\
-${@base_contains('MACHINEBUILD', 'max1000', 'xp1000' , '', d)}\
+${@base_contains('MACHINEBUILD', 'xp1000mk', 'xp1000' , '', d)}\
+${@base_contains('MACHINEBUILD', 'xp1000max', 'xp1000' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'sf8', 'xp1000' , '', d)}\
 "
 
