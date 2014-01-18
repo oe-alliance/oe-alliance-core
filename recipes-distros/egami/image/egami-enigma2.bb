@@ -31,5 +31,5 @@ RRECOMMENDS_${PN} = "\
     enigma2-plugin-skins-egmega32 \
     enigma2-plugin-extensions-accuweather \
     enigma2-plugin-extensions-mediaportal \
-    ${@base_contains("MACHINE", "ventonhdx", "enigma2-plugin-extensions-egamiboot" , "", d)} \
+    ${@base_contains("MACHINE_OEM", "inihdx", "enigma2-plugin-extensions-egamiboot" , "", d)} \
 "

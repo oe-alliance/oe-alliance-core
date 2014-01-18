@@ -36,6 +36,10 @@ ${@base_contains('MACHINEBUILD', 'mbtwin', 'miraclebox/twin' , '', d)}\
 
 DVBPROVIDER = "kernel"
 
+MACHINE_ESSENTIAL_EXTRA_RDEPENDS = "\
+	ini-dvb-modules-${MACHINE_OEM} \
+	"
+
 MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS = "\
     kernel-module-cdfs \
     "
@@ -67,10 +71,11 @@ IMAGE_CMD_ubi_prepend = " \
     rm -rf ${IMAGE_ROOTFS}/tmp/*; \
     "
 
-TARGET_FPU = "hard"
-
-MACHINE_FEATURES += "3dtv alsa hdmicec switchoff wifi bootsplash dvb-c blindscan-dvbc blindscan-dvbs"
+MACHINE_FEATURES += "3dtv alsa hdmicec switchoff wifi bootsplash dvb-c blindscan-dvbc blindscan-dvbs ci"
 
 BOOTLOGO_FILENAME = "splash.bin"
 
 require conf/machine/include/tune-mips32.inc
+
+# add support for extra feeds
+PACKAGE_ARCHS += " ${MACHINEBUILD}"

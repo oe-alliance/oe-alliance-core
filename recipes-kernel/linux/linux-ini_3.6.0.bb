@@ -72,7 +72,7 @@ kernel_do_install_append() {
     rm ${D}${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION}
 }
 
-MTD_DEVICE_ventonhdx = "mtd1"
+MTD_DEVICE_inihdx = "mtd1"
 MTD_DEVICE_mbtwin = "mtd1"
 MTD_DEVICE_inihde = "mtd2"
 
