@@ -59,8 +59,8 @@ do_configure_prepend() {
         DRIVERSDATE=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/ini/ini-dvb-modules-inihdp.bb | cut -b 12-19`
     elif [ "${MACHINE}" = "ventonhdx" -o "${MACHINE}" = "mbtwin" ]; then
         DRIVERSDATE=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/ini/ini-dvb-modules-inihdx.bb | cut -b 12-19`
-    elif [ "${MACHINE}" = "xp1000" ]; then
-        DRIVERSDATE=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/xp/xp-dvb-modules-${MACHINE}.bb | cut -b 12-19`
+    elif [ "${MACHINE_OEM}" = "xp1000" ]; then
+        DRIVERSDATE=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/xp/xp-dvb-modules-xp1000.bb | cut -b 12-19`
     elif [ "${MACHINE_OEM}" = "cube" ]; then
         DRIVERSDATE=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/cube/e2bmc-dvb-modules-cube.bb | cut -b 12-19`
     elif [ "${MACHINE_OEM}" = "ebox5000" ]; then

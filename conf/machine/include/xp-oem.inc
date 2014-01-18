@@ -1,11 +1,26 @@
 # We know about rtc
 include conf/machine/include/build-extras.inc
 
-MACHINE_OEM = "maxdigital"
-MACHINE_BRAND = "MaxDigital"
+MACHINE_NAME = "\
+${@base_contains('MACHINEBUILD', 'mk1000', 'XP1000' , '', d)}\
+${@base_contains('MACHINEBUILD', 'max1000', 'XP1000' , '', d)}\
+${@base_contains('MACHINEBUILD', 'sf8', 'SF8' , '', d)}\
+"
+
+MACHINE_BRAND = "\
+${@base_contains('MACHINEBUILD', 'mk1000', 'MK-Digital' , '', d)}\
+${@base_contains('MACHINEBUILD', 'max1000', 'MAXDIGITAL' , '', d)}\
+${@base_contains('MACHINEBUILD', 'sf8', 'Octagon' , '', d)}\
+"
+
+IMAGEDIR ?= "\
+${@base_contains('MACHINEBUILD', 'mk1000', 'xp1000' , '', d)}\
+${@base_contains('MACHINEBUILD', 'max1000', 'xp1000' , '', d)}\
+${@base_contains('MACHINEBUILD', 'sf8', 'xp1000' , '', d)}\
+"
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS = "\
-    xp-dvb-modules-${MACHINE} \
+    xp-dvb-modules-${MACHINE_OEM} \
     "
 
 DVBPROVIDER = "kernel"
@@ -26,7 +41,6 @@ TARGET_ARCH = "mipsel"
 DEFAULTTUNE = "mips32el"
 
 PREFERRED_PROVIDER_virtual/kernel = "linux-xp"
-
 PREFERRED_VERSION_linux-xp = "3.12.1"
 PREFERRED_VERSION_linux-libc-headers = "3.12.1"
 
@@ -39,8 +53,6 @@ IMAGE_FSTYPES ?= "ubi"
 UBI_VOLNAME = "rootfs"
 MKUBIFS_ARGS = "-m 2048 -e 126976 -c 4096"
 UBINIZE_ARGS = "-m 2048 -p 128KiB"
-
-IMAGEDIR ?= "${MACHINE}"
 
 IMAGE_CMD_ubi_prepend = " \
     rm -rf ${IMAGE_ROOTFS}/boot/*; \
@@ -74,3 +86,5 @@ MACHINE_EXTRA_RDEPENDS_${PN} = " \
     enigma2-plugin-systemplugins-remotecontrolcode \
     "
 
+# add support for extra feeds
+PACKAGE_ARCHS += " ${MACHINEBUILD}"
