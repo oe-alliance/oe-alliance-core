@@ -1,4 +1,4 @@
 #! /bin/sh 
 
 echo "gb800ueplus" > /proc/stb/info/gbmodel
-echo "gb800ueplus"
+
