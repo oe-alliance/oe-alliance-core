@@ -1,5 +1,6 @@
 #! /bin/sh 
 
 echo "gb800seplus" > /proc/stb/info/gbmodel
+echo "gb800seplus"
 
 touch /dev/dbox/lcd0

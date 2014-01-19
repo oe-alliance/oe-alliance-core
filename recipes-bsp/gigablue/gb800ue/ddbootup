@@ -1,6 +1,7 @@
 #! /bin/sh 
 
 echo "gb800ue" > /proc/stb/info/gbmodel
+echo "gb800ue"
 
 mkdir -p /dev/dvb /dev/pts /dev/dbox /dev/misc /dev/dvb/adapter0 /dev/loop /dev/i2c /dev/input /dev/sound /dev/fb /dev/vc /dev/mtdblock /dev/mtd /dev/tts
 

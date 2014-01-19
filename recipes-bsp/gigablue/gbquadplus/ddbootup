@@ -1,4 +1,4 @@
 #! /bin/sh 
 
 echo "gbquadplus" > /proc/stb/info/gbmodel
- 
+echo "gbquadplus"

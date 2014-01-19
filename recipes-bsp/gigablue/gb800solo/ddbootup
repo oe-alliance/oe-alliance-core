@@ -1,6 +1,7 @@
 #! /bin/sh 
 
 echo "gb800solo" > /proc/stb/info/gbmodel
+echo "gb800solo"
 
 mkdir -p /dev/loop /dev/sound /dev/vc /dev/tts
 
