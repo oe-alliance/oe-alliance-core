@@ -4,7 +4,7 @@ PRIORITY = "required"
 LICENSE = "CLOSED"
 
 PV = "${KV}+${SRCDATE}"
-PR = "r10"
+PR = "r12"
 
 SRC_URI_append = " file://ddbootup"
 
@@ -21,7 +21,7 @@ do_install() {
     install -d ${D}${sysconfdir}/init.d
     install -d ${D}${sysconfdir}/rcS.d
     install -m 0755 ${WORKDIR}/ddbootup ${D}${sysconfdir}/init.d
-    ln -sf ../init.d/ddbootup ${D}${sysconfdir}/rcS.d/S06ddbootup
+    ln -sf ../init.d/ddbootup ${D}${sysconfdir}/rcS.d/S39ddbootup
     install -d ${D}/lib/modules/${KV}/extra
     for f in *.ko; do
         install -m 0644 ${WORKDIR}/$f ${D}/lib/modules/${KV}/extra/$f;
