@@ -11,7 +11,7 @@ inherit gitpkgv autotools pythonnative
 SRCREV = "${AUTOREV}"
 PV = "0.3+git${SRCPV}"
 PKGV = "0.3+git${GITPKGV}"
-PR = "r7"
+PR = "r8"
 
 SRC_URI="git://github.com/oe-alliance/branding-module.git;protocol=git"
 
@@ -93,7 +93,7 @@ do_install_append() {
     ln -s ${D}/usr/share/enigma2/rc_models ${D}/usr/lib/enigma2/python/Plugins/Extensions/OpenWebif/public/static/remotes
 }
 
-FILES_${PN} = "/usr/lib/enigma2/python/*.so /usr/share /usr/lib/enigma2/python/Components"
+FILES_${PN} = "/usr/lib/enigma2/python/*.so /usr/share /usr/lib/enigma2/python/Components /usr/lib/enigma2/python/Plugins"
 FILES_${PN}-dev += "/usr/lib/enigma2/python/*.la"
 FILES_${PN}-staticdev += "/usr/lib/enigma2/python/*.a"
 FILES_${PN}-dbg += "/usr/lib/enigma2/python/.debug"
