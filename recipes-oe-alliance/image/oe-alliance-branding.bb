@@ -11,7 +11,7 @@ inherit gitpkgv autotools pythonnative
 SRCREV = "${AUTOREV}"
 PV = "0.3+git${SRCPV}"
 PKGV = "0.3+git${GITPKGV}"
-PR = "r4"
+PR = "r5"
 
 SRC_URI="git://github.com/oe-alliance/branding-module.git;protocol=git"
 
@@ -87,10 +87,9 @@ do_configure_prepend() {
 do_install_append() {
     install -d ${D}/usr/share/enigma2
     install -d ${D}/usr/lib/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes
-    install -m 0644 ${S}/BoxBranding/boxes/${MACHINEBUILD}.jpg ${D}/usr/share/enigma2
-    cp -rp  ${S}/BoxBranding/remotes/* ${D}/usr/share/enigma2/rc_models
-    ln {D}/usr/share/enigma2/${MACHINEBUILD}.jpg {D}/usr/lib/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes/${MACHINEBUILD}.jpg
-    ln -s {D}/usr/share/enigma2/rc_models {D}/usr/lib/enigma2/python/Plugins/Extensions/OpenWebif/public/static/remotes
+    install -m 0644 ${S}/BoxBranding/boxes/${MACHINEBUILD}.jpg ${D}/usr/share/enigma2/${MACHINEBUILD}.jpg
+    ln ${D}/usr/share/enigma2/${MACHINEBUILD}.jpg {D}/usr/lib/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes/${MACHINEBUILD}.jpg
+    ln -s ${D}/usr/share/enigma2/rc_models {D}/usr/lib/enigma2/python/Plugins/Extensions/OpenWebif/public/static/remotes
 }
 
 FILES_${PN} = "/usr/lib/enigma2/python/*.so /usr/share /usr/lib/enigma2/python/Components"
