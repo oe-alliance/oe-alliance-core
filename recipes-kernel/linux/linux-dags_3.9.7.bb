@@ -7,7 +7,7 @@ PR = "r1"
 inherit machine_kernel_pr
 
 SRCDATE = "20140114"
-MACHINE_KERNEL_PR_append = ".0"
+MACHINE_KERNEL_PR_append = ".1"
 
 SRC_URI[md5sum] = "d7fcfa74821b2d932ab54637ee5fbe5a"
 SRC_URI[sha256sum] = "9d0b7e9a0e36a9eed15ef0aff926a6f3cb6bf34a57f8eac2b64f800507170199"
