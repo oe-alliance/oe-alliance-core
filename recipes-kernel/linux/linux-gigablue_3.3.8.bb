@@ -7,7 +7,7 @@ PR = "r1"
 
 inherit machine_kernel_pr
 
-MACHINE_KERNEL_PR_append = ".0"
+MACHINE_KERNEL_PR_append = ".1"
 
 SRC_URI[md5sum] = "dbd9b0dcf632d52b5765a9d7372e0205"
 SRC_URI[sha256sum] = "6922bb05875664d54fa653fb27b4ea91fb28009fc6122d760e601429c43e69af"
@@ -43,9 +43,7 @@ SRC_URI = "http://archiv.openmips.com/linux-gbquad-3.3.8-2.0_20130716.tar.gz \
     file://linux-3.3.8-dvbsky.patch \
     "
 	
-SRC_URI_append_gbquadplus = " \	
-    file://brcm_s3_wol.patch \
-    "	
+SRC_URI_append_gbquadplus = " file://brcm_s3_wol.patch"
 
 S = "${WORKDIR}/linux-3.3.8-2.0"
 
