@@ -13,7 +13,7 @@ PACKAGES += " ${PN}-src"
 SRCREV = "${AUTOREV}"
 PV = "0.3+git${SRCPV}"
 PKGV = "0.3+git${GITPKGV}"
-PR = "r10"
+PR = "r12"
 
 SRC_URI="git://github.com/oe-alliance/branding-module.git;protocol=git"
 
@@ -55,11 +55,11 @@ do_configure_prepend() {
         DRIVERSDATE=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/odin/odin-dvb-modules-odinm7.bb | cut -b 12-19`
     elif [ "${MACHINE_OEM}" = "e3hd" ]; then
         DRIVERSDATE=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/odin/odin-dvb-modules-e3hd.bb | cut -b 12-19`		
-    elif [ "${MACHINE}" = "inihde" ]; then
+    elif [ "${MACHINE_OEM}" = "inihde" ]; then
         DRIVERSDATE=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/ini/ini-dvb-modules-inihde.bb | cut -b 12-19`
-    elif [ "${MACHINE}" = "inihdp" ]; then
+    elif [ "${MACHINE_OEM}" = "inihdp" ]; then
         DRIVERSDATE=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/ini/ini-dvb-modules-inihdp.bb | cut -b 12-19`
-    elif [ "${MACHINE}" = "inihdx" ]; then
+    elif [ "${MACHINE_OEM}" = "inihdx" ]; then
         DRIVERSDATE=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/ini/ini-dvb-modules-inihdx.bb | cut -b 12-19`
     elif [ "${MACHINE_OEM}" = "xp1000" ]; then
         DRIVERSDATE=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/xp/xp-dvb-modules-xp1000.bb | cut -b 12-19`
@@ -91,25 +91,13 @@ do_install_append() {
     install -d ${D}/usr/lib/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes
     install -d ${D}/usr/lib/enigma2/python/Plugins/Extensions/OpenWebif/public/static
     install -m 0644 ${S}/BoxBranding/boxes/${MACHINEBUILD}.jpg ${D}/usr/share/enigma2/${MACHINEBUILD}.jpg
-    ln ${D}/usr/share/enigma2/${MACHINEBUILD}.jpg ${D}/usr/lib/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes/${MACHINEBUILD}.jpg
+    ln -sf /usr/share/enigma2/${MACHINEBUILD}.jpg ${D}/usr/lib/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes/${MACHINEBUILD}.jpg
+    ln -sf /usr/share/enigma2/rc_models ${D}/usr/lib/enigma2/python/Plugins/Extensions/OpenWebif/public/static/remotes
 }
 
-pkg_postinst_${PN}() {
-if [ -L /usr/lib/enigma2/python/Plugins/Extensions/OpenWebif/public/static/remotes ] ; then
-    rm -f /usr/lib/enigma2/python/Plugins/Extensions/OpenWebif/public/static/remotes
-fi
-ln -s /usr/share/enigma2/rc_models /usr/lib/enigma2/python/Plugins/Extensions/OpenWebif/public/static/remotes
-}
-
-pkg_postrm_${PN} () {
-if [ -L /usr/lib/enigma2/python/Plugins/Extensions/OpenWebif/public/static/remotes ] ; then
-    rm -f /usr/lib/enigma2/python/Plugins/Extensions/OpenWebif/public/static/remotes
-fi
-}
-
-FILES_${PN}-src = "/usr/lib/enigma2/python/Components/*.py"
-FILES_${PN} = "/usr/lib/enigma2/python/*.so /usr/share /usr/lib/enigma2/python/Components/*.pyo /usr/lib/enigma2/python/Plugins"
-FILES_${PN}-dev += "/usr/lib/enigma2/python/*.la"
-FILES_${PN}-staticdev += "/usr/lib/enigma2/python/*.a"
-FILES_${PN}-dbg += "/usr/lib/enigma2/python/.debug"
+FILES_${PN}-src = "${libdir}/enigma2/python/Components/*.py"
+FILES_${PN} = "${libdir}/enigma2/python/*.so /usr/share ${libdir}/enigma2/python/Components/*.pyo ${libdir}/enigma2/python/Plugins"
+FILES_${PN}-dev += "${libdir}/enigma2/python/*.la"
+FILES_${PN}-staticdev += "${libdir}/enigma2/python/*.a"
+FILES_${PN}-dbg += "${libdir}/enigma2/python/.debug"
 
