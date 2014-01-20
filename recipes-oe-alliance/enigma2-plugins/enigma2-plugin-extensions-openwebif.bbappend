@@ -1,4 +1,4 @@
-PRINC = "50"
+PRINC = "51"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
@@ -37,8 +37,8 @@ python do_package_prepend () {
 		('gb800ue', 'gb800ue.jpg', 'gigablue_black.png'),
 		('gbquad', 'gbquad.jpg', 'gigablue_black.png'),
 		('gbquadplus', 'gbquad.jpg', 'gigablue_black.png'),
-		('gb800seplus', 'gb800seplus.jpg', 'gigablue_new.png'),
-		('gb800ueplus', 'gb800ueplus.jpg', 'gigablue_new.png'),
+		('gb800seplus', 'gb800seplus.jpg', 'gigablue_black.png'),
+		('gb800ueplus', 'gb800ueplus.jpg', 'gigablue_black.png'),
 		('ventonhdx', 'ini-3000.jpg', 'ini-3000.png'),
 		('inihde', 'ini-3000.jpg', 'ini-3000.png'),
 		('inihdp', 'ini-3000.jpg', 'ini-3000.png'),
