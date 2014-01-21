@@ -6,11 +6,13 @@ DEPENDS = "python"
 
 require conf/license/license-gplv2.inc
 
+PACKAGES += " ${PN}-src"
+
 inherit gitpkgv autotools
 
 SRCREV = "${AUTOREV}"
-PV = "0.2+git${SRCPV}"
-PKGV = "0.2+git${GITPKGV}"
+PV = "0.3+git${SRCPV}"
+PKGV = "0.3+git${GITPKGV}"
 PR = "r${DATETIME}"
 
 SRC_URI="git://github.com/oe-alliance/branding-module.git;protocol=git"
@@ -78,6 +80,9 @@ do_configure_prepend() {
     fi
 }
 
+
+FILES_${PN}-src = "${libdir}/enigma2/python/Components/*.py"
+FILES_${PN}_openatv = "${libdir}/enigma2/python/*.so /usr/share ${libdir}/enigma2/python/Components/*.pyo ${libdir}/enigma2/python/Plugins"
 FILES_${PN} += "/usr/lib/enigma2/python/*.so"
 FILES_${PN}-dev += "/usr/lib/enigma2/python/*.la"
 FILES_${PN}-staticdev += "/usr/lib/enigma2/python/*.a"
