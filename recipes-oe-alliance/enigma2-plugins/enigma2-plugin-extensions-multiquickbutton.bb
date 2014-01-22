@@ -12,7 +12,7 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "2.8.4+git${SRCPV}"
 PKGV = "2.8.4+git${GITPKGV}"
-PR = "r2"
+PR = "r3"
 
 SRC_URI = "git://github.com/oe-alliance/e2openplugin-${MODULE}.git;protocol=git \
 		file://LICENSE.GPLv2"
@@ -32,7 +32,6 @@ EXTRA_OECONF = "\
 	HOST_SYS=${HOST_SYS} \
 	STAGING_INCDIR=${STAGING_INCDIR} \
 	STAGING_LIBDIR=${STAGING_LIBDIR} \
-	--with-boxtype=${MACHINE} \
 "
 
 # remove unused .pyc files
