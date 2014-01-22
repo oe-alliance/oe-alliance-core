@@ -12,7 +12,7 @@ inherit gitpkgv pythonnative
 SRCREV = "${AUTOREV}"
 PV = "2.8.4+git${SRCPV}"
 PKGV = "2.8.4+git${GITPKGV}"
-PR = "r5"
+PR = "r6"
 
 SRC_URI = "git://github.com/oe-alliance/e2openplugin-${MODULE}.git;protocol=git \
         file://LICENSE.GPLv2"
@@ -32,7 +32,6 @@ EXTRA_OECONF = "\
     HOST_SYS=${HOST_SYS} \
     STAGING_INCDIR=${STAGING_INCDIR} \
     STAGING_LIBDIR=${STAGING_LIBDIR} \
-    --with-boxtype=${MACHINE} \
 "
 
 pkg_postinst_${PN}() {
