@@ -3,27 +3,30 @@ LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=4d92cd373abda3937c2bc47fbc49d690 \
                     file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
 
+ALLOW_EMPTY_${PN} = "1"
+PACKAGE_ARCH = "${MACHINE_ARCH}"
+
 PV = "1.0"
-PR = "r50"
+PR = "r34"
 
 inherit packagegroup
 
 DEPENDS = "enigma2-pliplugins egami-feeds"
 
-RRECOMMENDS_${PN} = "\
+RRECOMMENDS_${PN} = " \
+    egami-version-info \
     enigma2-plugin-extensions-autotimer \
     enigma2-plugin-extensions-epgsearch \
     enigma2-plugin-extensions-imdb \
     enigma2-plugin-extensions-mediaplayer \
     enigma2-plugin-extensions-cutlisteditor \
     enigma2-plugin-extensions-imdb \
-    enigma2-plugin-extensions-inimytube \
+    enigma2-plugin-extensions-inimytube \    
     \
+    enigma2-plugin-systemplugins-crossepg \    
     enigma2-plugin-systemplugins-fastscan \
     enigma2-plugin-systemplugins-3gmodemmanager \
     enigma2-plugin-systemplugins-softwaremanager \
-    enigma2-plugin-systemplugins-hotplug \
-    enigma2-plugin-systemplugins-crossepg \
     \
     egami-base-files \
     enigma2-plugin-extensions-egamipermanentclock \
@@ -32,4 +35,4 @@ RRECOMMENDS_${PN} = "\
     enigma2-plugin-extensions-accuweather \
     enigma2-plugin-extensions-mediaportal \
     ${@base_contains("MACHINE_OEM", "inihdx", "enigma2-plugin-extensions-egamiboot" , "", d)} \
-"
+    "
