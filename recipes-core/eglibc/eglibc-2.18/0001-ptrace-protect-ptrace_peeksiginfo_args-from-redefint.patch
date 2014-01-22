@@ -1,0 +1,21 @@
+diff --git a/sysdeps/unix/sysv/linux/sys/ptrace.h b/sysdeps/unix/sysv/linux/sys/ptrace.h
+index 2b78565..7800d9a 100644
+--- a/sysdeps/unix/sysv/linux/sys/ptrace.h
++++ b/sysdeps/unix/sysv/linux/sys/ptrace.h
+@@ -187,6 +187,7 @@ enum __ptrace_eventcodes
+   PTRAVE_EVENT_SECCOMP  = 7
+ };
+ 
++#ifndef PTRACE_PEEKSIGINFO
+ /* Arguments for PTRACE_PEEKSIGINFO.  */
+ struct ptrace_peeksiginfo_args
+ {
+@@ -194,6 +195,7 @@ struct ptrace_peeksiginfo_args
+   __uint32_t flags;	/* Flags for peeksiginfo.  */
+   __int32_t nr;		/* How many siginfos to take.  */
+ };
++#endif
+ 
+ enum __ptrace_peeksiginfo_flags
+ {
+
