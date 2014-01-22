@@ -5,14 +5,14 @@ PRIORITY = "optional"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://../LICENSE.GPLv2;md5=eb723b61539feef013de476e68b5c50a"
 
-DEPEND = "libcrypto"
+DEPEND = "python"
 
 inherit gitpkgv pythonnative
 
 SRCREV = "${AUTOREV}"
 PV = "2.8.4+git${SRCPV}"
 PKGV = "2.8.4+git${GITPKGV}"
-PR = "r6"
+PR = "r7"
 
 SRC_URI = "git://github.com/oe-alliance/e2openplugin-${MODULE}.git;protocol=git \
         file://LICENSE.GPLv2"
