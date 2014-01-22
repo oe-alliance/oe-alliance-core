@@ -107,7 +107,7 @@ inherit gitpkgv autotools
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r91"
+PR = "r92"
 
 SRC_URI="git://github.com/oe-alliance/oe-alliance-plugins.git;protocol=git"
 
@@ -116,7 +116,6 @@ EXTRA_OECONF = " \
 	HOST_SYS=${HOST_SYS} \
 	STAGING_INCDIR=${STAGING_INCDIR} \
 	STAGING_LIBDIR=${STAGING_LIBDIR} \
-	--with-po \
 	${@base_contains('MACHINEBUILD', 'odinm6', '--with-boxtype=${MACHINEBUILD}' , '--with-boxtype=${MACHINE}', d)} \
 	"
 
