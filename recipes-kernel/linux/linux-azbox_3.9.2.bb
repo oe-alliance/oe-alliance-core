@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${KV}/COPYING;md5=d7810fab7487fb0aad
 inherit machine_kernel_pr
 
 MACHINE_KERNEL_PR_append = ".1"
-PR = "r3"
+PR = "r4"
 
 KV = "3.9.2"
 SRC = "2012"
