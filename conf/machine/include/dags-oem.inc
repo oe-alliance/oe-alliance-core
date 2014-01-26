@@ -1,8 +1,6 @@
 # We know about rtc
 include conf/machine/include/build-extras.inc
 
-MACHINE_OEM = "dags"
-
 MACHINE_NAME = "\
 ${@base_contains('MACHINEBUILD', 'tm2t', '2T-OE' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmnano', 'Nano-OE' , '', d)}\
