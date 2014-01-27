@@ -1,3 +1,5 @@
+MACHINE_OEM = "dags"
+
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS = " \
     iqon-dvb-modules-7356 \
 	"

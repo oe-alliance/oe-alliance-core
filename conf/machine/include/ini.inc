@@ -1,3 +1,4 @@
+MACHINE_OEM = "ini"
 MACHINE_BRAND = "INI"
 
 DVBPROVIDER = "kernel"
