@@ -10,7 +10,7 @@ SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
 PV = "2.0"
-PR = "r91"
+PR = "r92"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -39,9 +39,9 @@ THIRDPARTY_PLUGINS = " \
 	enigma2-plugin-extensions-bluray_1.2_mips32el.ipk \
 	enigma2-plugin-extensions-boblight-enigma2_0.8r4_mips32el.ipk \
 	enigma2-plugin-extensions-buyukbangpanel_1.3.2_all.ipk \
-	enigma2-plugin-extensions-camofs_7.66_all.ipk \
+	enigma2-plugin-extensions-camofs_7.87_all.ipk \
 	enigma2-plugin-extensions-chefkoch_1.2rc1_mips32el.ipk \
-	enigma2-plugin-extensions-csfd_9_45-20140125_all.ipk  \
+	enigma2-plugin-extensions-csfd_9_45-20140125_all.ipk \
 	enigma2-plugin-extensions-cubic_streamer_0.7.3_mips32el.ipk \
 	enigma2-plugin-extensions-digitalfernsehen_0.8rc1_mips32el.ipk \
 	enigma2-plugin-extensions-facebook_0.6_mips32el.ipk \
@@ -66,9 +66,9 @@ THIRDPARTY_PLUGINS = " \
 	enigma2-plugin-extensions-navibar_1.1.1_all.ipk \
 	enigma2-plugin-extensions-newtube_0.1a-r0_all.ipk \
 	enigma2-plugin-extensions-opkg-tools_1.3_mipsel.ipk \
-	enigma2-plugin-extensions-planerfs_4.84_all.ipk \
+	enigma2-plugin-extensions-planerfs_5.24_all.ipk \
 	enigma2-plugin-extensions-pluginspanel_1.0_r01_all.ipk \
-	enigma2-plugin-extensions-picturecenterfs_3.71_all.ipk \
+	enigma2-plugin-extensions-picturecenterfs_3.76_all.ipk \
 	enigma2-plugin-extensions-radiode_0.1_mips32el.ipk \
 	enigma2-plugin-extensions-radioonline-oe2.0_1.0_all.ipk \
 	enigma2-plugin-extensions-screensaver_5.6.9_all.ipk \
@@ -94,7 +94,7 @@ THIRDPARTY_PLUGINS = " \
 	enigma2-plugin-extensions-verkehrsinfo_0.7rc1_mips32el.ipk \
 	enigma2-plugin-extensions-vuplusforum_0.7rc3_mips32el.ipk \
 	enigma2-plugin-extensions-webmedia_10.0_r02_oe2.0_all.ipk \
-	enigma2-plugin-extensions-webradiofs_11.25_all.ipk \
+	enigma2-plugin-extensions-webradiofs_11.44_all.ipk \
 	enigma2-plugin-extensions-wikipedia_1.9rc1_mips32el.ipk \
 	enigma2-plugin-extensions-xbmcaddons_5.0_r0_all.ipk \
 	enigma2-plugin-extensions-xbmcwetter_1.0rc4_mips32el.ipk \
