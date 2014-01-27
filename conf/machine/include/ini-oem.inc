@@ -3,9 +3,9 @@ include conf/machine/include/build-extras.inc
 
 MACHINE_NAME = "\
 ${@base_contains('MACHINEBUILD', 'ventonhdx', 'HD-x' , '', d)}\
-${@base_contains('MACHINEBUILD', 'sezamhdx', '1000-HD' , '', d)}\
-${@base_contains('MACHINEBUILD', 'sezamhde', '5000-HD' , '', d)}\
-${@base_contains('MACHINEBUILD', 'sezamhdp', 'Marvel' , '', d)}\
+${@base_contains('MACHINEBUILD', 'sezam1000hd', '1000-HD' , '', d)}\
+${@base_contains('MACHINEBUILD', 'sezam5000hd', '5000-HD' , '', d)}\
+${@base_contains('MACHINEBUILD', 'marvel', 'Marvel' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'xpeedlx', 'LX-x' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'xpeedlx3', 'LX-3' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbmini', 'Premium Mini' , '', d)}\
@@ -14,9 +14,9 @@ ${@base_contains('MACHINEBUILD', 'mbtwin', 'Premium Twin' , '', d)}\
 
 MACHINE_BRAND = "\
 ${@base_contains('MACHINEBUILD', 'ventonhdx', 'UNiBOX' , '', d)}\
-${@base_contains('MACHINEBUILD', 'sezamhde', 'Sezam' , '', d)}\
-${@base_contains('MACHINEBUILD', 'sezamhdx', 'Sezam' , '', d)}\
-${@base_contains('MACHINEBUILD', 'sezamhdp', 'Sezam' , '', d)}\
+${@base_contains('MACHINEBUILD', 'sezam1000hd', 'Sezam' , '', d)}\
+${@base_contains('MACHINEBUILD', 'sezam5000hd', 'Sezam' , '', d)}\
+${@base_contains('MACHINEBUILD', 'marvel', 'Sezam' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'xpeedlx', 'GI' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'xpeedlx3', 'GI' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbmini', 'Miraclebox' , '', d)}\
@@ -25,9 +25,9 @@ ${@base_contains('MACHINEBUILD', 'mbtwin', 'Miraclebox' , '', d)}\
 
 IMAGEDIR ?= "\
 ${@base_contains('MACHINEBUILD', 'ventonhdx', 'venton-hdx' , '', d)}\
-${@base_contains('MACHINEBUILD', 'sezamhde', 'hde' , '', d)}\
-${@base_contains('MACHINEBUILD', 'sezamhdx', 'hdx' , '', d)}\
-${@base_contains('MACHINEBUILD', 'sezamhdp', 'hdp' , '', d)}\
+${@base_contains('MACHINEBUILD', 'sezam1000hd', 'hde' , '', d)}\
+${@base_contains('MACHINEBUILD', 'sezam5000hd', 'hdx' , '', d)}\
+${@base_contains('MACHINEBUILD', 'marvel', 'hdp' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'xpeedlx', 'xpeedlx' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'xpeedlx3', 'xpeedlx3' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbmini', 'miraclebox/mini' , '', d)}\

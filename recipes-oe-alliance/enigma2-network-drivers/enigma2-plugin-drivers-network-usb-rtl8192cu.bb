@@ -3,12 +3,12 @@ PACKAGE_ARCH = "all"
 
 require conf/license/license-gplv2.inc
 
-RDEPENDS_${PN} = " \
+RRECOMMENDS_${PN} = " \
     ${@base_contains("MACHINE_FEATURES", "extrakernelwifi", "kernel-module-rtl8192cu", "rtl8192cu", d)} \
     firmware-rtl8192cu \
     "
 
 PV = "1.0"
-PR = "r2"
+PR = "r3"
 
 ALLOW_EMPTY_${PN} = "1"
