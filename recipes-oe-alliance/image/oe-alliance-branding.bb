@@ -11,8 +11,8 @@ PACKAGES += " ${PN}-src"
 inherit gitpkgv autotools
 
 SRCREV = "${AUTOREV}"
-PV = "0.3+git${SRCPV}"
-PKGV = "0.3+git${GITPKGV}"
+PV = "1.6+git${SRCPV}"
+PKGV = "1.6+git${GITPKGV}"
 PR = "r${DATETIME}"
 
 SRC_URI="git://github.com/oe-alliance/branding-module.git;protocol=git"
@@ -24,6 +24,7 @@ EXTRA_OECONF = " \
     HOST_SYS=${HOST_SYS} \
     STAGING_INCDIR=${STAGING_INCDIR} \
     STAGING_LIBDIR=${STAGING_LIBDIR} \
+    --with-oever=${OE_VER} \
     --with-distro=${DISTRO_NAME} \
     --with-boxtype=${MACHINE} \
     --with-machineoem="${MACHINE_OEM}" \
