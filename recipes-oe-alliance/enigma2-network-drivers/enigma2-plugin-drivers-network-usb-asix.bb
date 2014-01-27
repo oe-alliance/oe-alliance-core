@@ -3,12 +3,12 @@ PACKAGE_ARCH = "all"
 
 require conf/license/license-gplv2.inc
 
-RDEPENDS_${PN} = " \
+RRECOMMENDS_${PN} = " \
     kernel-module-usbnet \
     kernel-module-asix \
     "
 
 PV = "1.0"
-PR = "r1"
+PR = "r2"
 
 ALLOW_EMPTY_${PN} = "1"
