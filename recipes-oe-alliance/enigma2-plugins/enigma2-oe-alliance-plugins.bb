@@ -42,6 +42,7 @@ PROVIDES += " \
 DEPENDS = "\
     ${@base_contains("MACHINE_FEATURES", "blindscan-dvbc", "virtual/blindscan-dvbc" , "", d)} \
     ${@base_contains("MACHINE_FEATURES", "blindscan-dvbs", "virtual/blindscan-dvbs" , "", d)} \
+    ${@base_contains("MACHINE_FEATURES", "transcoding", "virtual/transtreamproxy" , "", d)} \
     python-dnspython python-beautifulsoup python-lxml python-simplejson python-pyamf python-icalendar python-pyusb \
     djmount \
     librtmp \
@@ -88,7 +89,7 @@ DESCRIPTION_enigma2-plugin-extensions-hbbtv = "HbbTV player"
 RDEPENDS_enigma2-plugin-extensions-hbbtv = "vuplus-opera-browser-util"
 DEPENDS_enigma2-plugin-extensions-hbbtv = "vuplus-opera-browser-util"
 DESCRIPTION_enigma2-plugin-systemplugins-transcodingsetup = "Setup transcoding of your VU+"
-RDEPENDS_enigma2-plugin-systemplugins-transcodingsetup = "vuplus-transtreamproxy"
+RDEPENDS_enigma2-plugin-systemplugins-transcodingsetup = "virtual/transtreamproxy"
 DESCRIPTION_enigma2-plugin-systemplugins-micomupgrade = "micomupgrade"
 RDEPENDS_enigma2-plugin-extensions-ondemand = "python-dnspython python-beautifulsoup python-lxml python-simplejson python-pyamf"
 DESCRIPTION_enigma2-plugin-extensions-ondemand = "Watch on demand TV."
@@ -108,7 +109,7 @@ inherit gitpkgv autotools pythonnative
 SRCREV = "${AUTOREV}"
 PV = "2.0+git${SRCPV}"
 PKGV = "2.0+git${GITPKGV}"
-PR = "r1"
+PR = "r2"
 
 SRC_URI="git://github.com/oe-alliance/oe-alliance-plugins.git;protocol=git"
 

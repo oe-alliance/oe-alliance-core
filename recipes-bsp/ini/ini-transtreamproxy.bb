@@ -7,12 +7,12 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"
-PR = "r7"
+PR = "r2"
 
 PROVIDES += "virtual/transtreamproxy"
 RPROVIDES_{PN} += "virtual/transtreamproxy"
 
-SRC_URI = "git://code.vuplus.com/git/filestreamproxy.git;protocol=git;branch=transtreamproxy"
+SRC_URI = "git://code-ini.com/ini-transtreamproxy;protocol=git"
 
 inherit autotools
 

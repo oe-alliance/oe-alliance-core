@@ -31,6 +31,8 @@ PREFERRED_PROVIDER_virtual/kernel = "linux-vuplus"
 PREFERRED_PROVIDER_virtual/blindscan-dvbc = "vuplus-blindscan-utils"
 PREFERRED_PROVIDER_virtual/blindscan-dvbs = "vuplus-blindscan-utils"
 
+PREFERRED_PROVIDER_virtual/transtreamproxy = "vuplus-transtreamproxy"
+
 KERNEL_IMAGETYPE = "vmlinux"
 KERNEL_OUTPUT = "${KERNEL_IMAGETYPE}"
 KERNEL_CONSOLE = "ttyS0,115200n8"
