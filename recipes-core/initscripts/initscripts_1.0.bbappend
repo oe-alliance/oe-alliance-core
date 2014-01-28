@@ -1,6 +1,8 @@
-PRINC = "15"
+PRINC = "16"
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/${P}:"
+
+RDEPENDS_${PN}_append = " sdparm"
 
 do_install_append() {
     # umountnfs should run before network stops (which is at K40)
