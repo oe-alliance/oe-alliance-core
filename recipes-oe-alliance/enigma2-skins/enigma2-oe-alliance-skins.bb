@@ -9,12 +9,13 @@ EPSM = "enigma2-plugin-skins"
 SRCREV = "${AUTOREV}"
 PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"
-PR = "r5"
+PR = "r6"
 
-PACKAGES = "${EPSM}-neonovum-hd ${EPSM}-mynovum-hd novum-hd-renderer ${EPSM}-novum-hd-renderer-src"
-PROVIDES = "${PN} ${EPSM}-neonovum-hd ${EPSM}-mynovum-hd novum-hd-renderer ${EPSM}-novum-hd-renderer-src"
+PACKAGES = "${EPSM}-neonovum-hd ${EPSM}-mynovum-hd ${EPSM}-nou-hd novum-hd-renderer ${EPSM}-novum-hd-renderer-src"
+PROVIDES = "${PN} ${EPSM}-neonovum-hd ${EPSM}-mynovum-hd ${EPSM}-nou-hd novum-hd-renderer ${EPSM}-novum-hd-renderer-src"
 RDEPENDS_${EPSM}-neonovum-hd = "novum-hd-renderer"
 RDEPENDS_${EPSM}-mynovum-hd = "novum-hd-renderer"
+RDEPENDS_${EPSM}-nou-hd = "novum-hd-renderer"
 
 SRC_URI="git://github.com/oe-alliance/oe-alliance-skins.git;protocol=git"
 
@@ -22,6 +23,7 @@ FILES_novum-hd-renderer = "/usr/lib/enigma2/python/Components/Renderer/*.pyo"
 FILES_${EPSM}-novum-hd-renderer-src = "/usr/lib/enigma2/python/Components/Renderer/*.py"
 FILES_${EPSM}-neonovum-hd = "/usr/share/enigma2/NeoNOVUM_HD"
 FILES_${EPSM}-mynovum-hd = "/usr/share/enigma2/myNOVUM_HD"
+FILES_${EPSM}-nou-hd = "/usr/share/enigma2/Nou_HD"
 
 S = "${WORKDIR}/git"
 
