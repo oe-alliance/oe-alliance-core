@@ -1,5 +1,5 @@
 SUMMARY = "Linux kernel for ${MACHINE}"
-LICENSE = "GPL"
+LICENSE = "GPLv2"
 SECTION = "kernel"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 KV = "3.1.1"

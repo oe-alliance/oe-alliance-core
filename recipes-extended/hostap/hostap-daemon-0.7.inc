@@ -1,7 +1,7 @@
 HOMEPAGE = "http://hostap.epitest.fi"
 SECTION = "kernel/userland"
 PRIORITY = "optional"
-LICENSE = "GPL"
+LICENSE = "BSD"
 DEPENDS = "libnl openssl"
 LIC_FILES_CHKSUM = "file://README;md5=803e892c4ab1b94914327061ce68446f"
 

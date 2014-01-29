@@ -1,5 +1,5 @@
 DESCRIPTION = "Linux kernel for ${MACHINE}"
-LICENSE = "GPL"
+LICENSE = "GPLv2"
 SECTION = "kernel"
 KV = "3.12.4"
 PR = "r1"

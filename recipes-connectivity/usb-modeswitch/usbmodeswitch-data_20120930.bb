@@ -1,7 +1,7 @@
 SUMMARY = "tool to switch multidevice usb modes"
 require conf/license/license-gplv2.inc
 
-LICENSE = "GPL"
+LICENSE = "GPLv3"
 
 PV="20120930"
 PR = "r3"

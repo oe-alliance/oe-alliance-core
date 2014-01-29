@@ -1,6 +1,6 @@
 SUMMARY = "SWF picons 13 19"
 MAINTAINER ?= "SWF"
-LICENSE = "GPL"
+LICENSE = "GPLv2"
 DEPENDS = "pngcrush-native"
 
 require conf/license/license-gplv2.inc

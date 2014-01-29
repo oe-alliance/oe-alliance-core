@@ -5,7 +5,7 @@ require conf/license/license-gplv2.inc
 
 PR = "r3"
 
-LICENSE = "GPL"
+LICENSE = "LGPLv2"
 
 SRC_URI[md5sum] = "acd3b2050c9b65fff2aecda6576ee7bc"
 SRC_URI[sha256sum] = "4fffab9652c760199c074533d1d3929bea55ab4233b11e735b0f1856d1ceec57"

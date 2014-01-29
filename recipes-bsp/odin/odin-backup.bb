@@ -1,7 +1,7 @@
 SUMMARY = "odin backup"
 SECTION = "base"
 PRIORITY = "optional"
-LICENSE = "GPL"
+LICENSE = "GPLv2"
 
 require conf/license/license-gplv2.inc
 

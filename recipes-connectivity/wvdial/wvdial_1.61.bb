@@ -7,7 +7,7 @@ PACKAGE_ARCH := "${MACHINE_ARCH}"
 
 PR = "r6"
 
-LICENSE = "GPL"
+LICENSE = "LGPLv2"
 
 SRC_URI[default.md5sum] = "8c8580213f1ec5075d59b927ff4491cb"
 SRC_URI[default.sha256sum] = "f65a3ee4f6cdc2785a146f99db8a8b9ecfdf07385c95dca59a90efcba342f5ab"

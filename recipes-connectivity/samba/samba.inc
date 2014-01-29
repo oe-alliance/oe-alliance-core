@@ -1,5 +1,5 @@
 SECTION = "console/network"
-LICENSE = "GPL"
+LICENSE = "GPLv3"
 DEPENDS = "readline virtual/libiconv talloc"
 
 SRC_URI = "http://samba.org/samba/ftp/stable/samba-${PV}.tar.gz \

@@ -1,5 +1,5 @@
 SUMMARY = "A cross platform audio library"
-LICENSE = "GPL"
+LICENSE = "GPLv2"
 HOMEPAGE = "http://www.xiph.org/ao/"
 SECTION = "libs/multimedia"
 DEPENDS = "alsa-lib"

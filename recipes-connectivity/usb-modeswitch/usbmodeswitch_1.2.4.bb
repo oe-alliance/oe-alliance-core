@@ -1,7 +1,7 @@
 SUMMARY = "tool to switch multidevice usb modes"
 require conf/license/license-gplv2.inc
 
-LICENSE = "GPL"
+LICENSE = "GPLv3"
 DEPENDS = "libusb"
 
 SRC_URI[md5sum] = "dbd4ce7966d7b4a5a0604a8280f7164d"
