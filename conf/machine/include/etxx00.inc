@@ -28,9 +28,6 @@ DEFAULTTUNE = "mips32el"
 PREFERRED_PROVIDER_virtual/kernel = "linux-etxx00"
 PREFERRED_PROVIDER_virtual/blindscan-dvbs = "et-blindscan-dvbs-utils"
 
-PREFERRED_VERSION_linux-etxx00 = "3.8.7"
-PREFERRED_VERSION_linux-libc-headers = "3.8"
-
 KERNEL_IMAGETYPE = "vmlinux"
 KERNEL_OUTPUT = "${KERNEL_IMAGETYPE}"
 KERNEL_CONSOLE = "ttyS0,115200n8"

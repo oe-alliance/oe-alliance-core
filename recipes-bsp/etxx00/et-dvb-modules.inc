@@ -10,8 +10,12 @@ RDEPENDS_${PN}_et5x00 += "et-fpupdate-${MACHINE}"
 RDEPENDS_${PN}_et6x00 += "et-fpupdate-${MACHINE}"
 RDEPENDS_${PN}_et9x00 += "et-fpupdate-${MACHINE}"
 
+DOWNLOADURL = "http://source.mynonpublic.com/download/drivers"
+DOWNLOADURL_et8000 = "http://et-view.net/img_up/shop_pds/bh190/design/drivers"
+DOWNLOADURL_et10000 = "http://et-view.net/img_up/shop_pds/bh190/design/drivers"
+
 #SRC_URI = "http://www.et-view.com/download/drivers/${MACHINE}-drivers-${KV}-${SRCDATE}.zip"
-SRC_URI = "http://source.mynonpublic.com/download/drivers/${MACHINE}-drivers-${KV}-${SRCDATE}.zip"
+SRC_URI = "${DOWNLOADURL}/${MACHINE}-drivers-${KV}-${SRCDATE}.zip"
 
 S = "${WORKDIR}"
 
