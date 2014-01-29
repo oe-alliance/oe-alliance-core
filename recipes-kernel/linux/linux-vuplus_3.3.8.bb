@@ -7,7 +7,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 inherit machine_kernel_pr
 
 SRCREV = ""
-MACHINE_KERNEL_PR_append = ".1"
+MACHINE_KERNEL_PR_append = ".2"
 
 SRC_URI[md5sum] = "bfd424a21d3daeb3a100bf8e7443d302"
 SRC_URI[sha256sum] = "f8a482de06251761d792ff7ea7fcb73eca4139e5cb80c3b38e39d1c4ef3a35c9"
@@ -46,6 +46,7 @@ SRC_URI += "file://dvb-usb-af9035.patch \
     file://it913x-backports-from-kernel-3.5.patch \
     file://it913x-switch-off-PID-filter-by-default.patch \
     file://it913x-fix-bulk-read-write-retry-loop.patch \
+    file://it913x-enable-endpoint-3-on-devices-with-HID-interface.patch \
     file://dvb-usb-dib0700-disable-sleep.patch \
     file://dvb_usb_disable_rc_polling.patch \
     file://fix-dvb-siano-sms-order.patch \
