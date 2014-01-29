@@ -13,7 +13,7 @@ SRC_URI[sha256sum] = "5d94250af0afac4fdf8ddb7b9bf3dd0a0df9d2e1256935348703117f20
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-MACHINE_KERNEL_PR_append = ".1"
+MACHINE_KERNEL_PR_append = ".2"
 
 # By default, kernel.bbclass modifies package names to allow multiple kernels
 # to be installed in parallel. We revert this change and rprovide the versioned
@@ -51,6 +51,7 @@ SRC_URI = "http://code-ini.com/software/kernel/linux-${KV}-${SRCDATE}.tar.bz2 \
     file://it913x-backports-from-kernel-3.5.patch \
     file://it913x-switch-off-PID-filter-by-default.patch \
     file://it913x-fix-bulk-read-write-retry-loop.patch \
+    file://it913x-enable-endpoint-3-on-devices-with-HID-interface.patch \
     file://dvb-usb-dib0700-disable-sleep.patch \
     file://dvb_usb_disable_rc_polling.patch \
     file://fix-dvb-siano-sms-order.patch \
