@@ -13,7 +13,7 @@ PACKAGES += " ${PN}-src"
 SRCREV = "${AUTOREV}"
 PV = "1.6+git${SRCPV}"
 PKGV = "1.6+git${GITPKGV}"
-PR = "r0"
+PR = "r1"
 
 SRC_URI="git://github.com/oe-alliance/branding-module.git;protocol=git"
 
@@ -24,15 +24,15 @@ EXTRA_OECONF = " \
     HOST_SYS=${HOST_SYS} \
     STAGING_INCDIR=${STAGING_INCDIR} \
     STAGING_LIBDIR=${STAGING_LIBDIR} \
-    --with-oever=${OE_VER} \
-    --with-distro=${DISTRO_NAME} \
-    --with-boxtype=${MACHINEBUILD} \
+    --with-oever="${OE_VER}" \
+    --with-distro="${DISTRO_NAME}" \
+    --with-boxtype="${MACHINEBUILD}" \
     --with-machineoem="${MACHINE_OEM}" \
     --with-machinebrand="${MACHINE_BRAND}" \
     --with-machinename="${MACHINE_NAME}" \
-    --with-imageversion=${DISTRO_VERSION} \
-    --with-imagebuild=${BUILD_VERSION} \
-    --with-driverdate=${DRIVERSDATE} \
+    --with-imageversion="${DISTRO_VERSION}" \
+    --with-imagebuild="${BUILD_VERSION}" \
+    --with-driverdate="${DRIVERSDATE}" \
     "
 
 do_configure_prepend() {
