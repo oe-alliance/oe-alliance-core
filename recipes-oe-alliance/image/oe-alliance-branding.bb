@@ -92,7 +92,7 @@ do_install_append() {
     install -d ${D}/usr/lib/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes
     install -d ${D}/usr/lib/enigma2/python/Plugins/Extensions/OpenWebif/public/static
     if [ ${MACHINEBUILD} = "ventonhdx" ]; then
-        for f in ${S}/BoxBranding/boxes/ini*; do
+        for f in ${S}/BoxBranding/boxes/unibox*; do
             filename=$(basename "$f")
             extension="${filename##*.}"
             filename="${filename%.*}"
