@@ -13,7 +13,7 @@ PACKAGES += " ${PN}-src"
 SRCREV = "${AUTOREV}"
 PV = "1.6+git${SRCPV}"
 PKGV = "1.6+git${GITPKGV}"
-PR = "r1"
+PR = "r2"
 
 SRC_URI="git://github.com/oe-alliance/branding-module.git;protocol=git"
 
@@ -92,7 +92,7 @@ do_install_append() {
     install -d ${D}/usr/lib/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes
     install -d ${D}/usr/lib/enigma2/python/Plugins/Extensions/OpenWebif/public/static
     if [ ${MACHINEBUILD} = "ventonhdx" ]; then
-	install -m 0644 ${S}/BoxBranding/boxes/uniboxhd1.jpg ${D}/usr/share/enigma2/uniboxhd1.jpg
+        install -m 0644 ${S}/BoxBranding/boxes/uniboxhd1.jpg ${D}/usr/share/enigma2/uniboxhd1.jpg
         ln -sf /usr/share/enigma2/uniboxhd1.jpg ${D}/usr/lib/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes/uniboxhd1.jpg
         install -m 0644 ${S}/BoxBranding/boxes/uniboxhd2.jpg ${D}/usr/share/enigma2/uniboxhd2.jpg
         ln -sf /usr/share/enigma2/uniboxhd2.jpg ${D}/usr/lib/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes/uniboxhd2.jpg
