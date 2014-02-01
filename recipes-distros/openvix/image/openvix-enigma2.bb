@@ -7,7 +7,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "1.0"
-PR = "r17"
+PR = "r18"
 
 inherit packagegroup
 
@@ -18,9 +18,9 @@ DEPENDS = "openvix-feeds"
 
 RDEPENDS_${PN} = "\
     enigma2-skindefault \
-    enigma2-spinner \
-    openvix-version-info \
     enigma2-plugin-vix-core \
+    openvix-spinner \
+    openvix-version-info \
     "
 
 RRECOMMENDS_${PN} = "\
