@@ -9,10 +9,10 @@ require conf/license/license-gplv2.inc
 
 inherit gitpkgv
 SRCREV = "${AUTOREV}"
-PV = "1.0+git${SRCPV}"
-PKGV = "1.0+git${GITPKGV}"
+PV = "git${SRCPV}"
+PKGV = "git${GITPKGV}"
 VER ="2.0"
-PR = "r2"
+PR = "r3"
 
 SRC_URI="git://github.com/XTAv2/TechniHD.git"
 
