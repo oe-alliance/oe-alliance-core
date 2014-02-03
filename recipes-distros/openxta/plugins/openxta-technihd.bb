@@ -7,8 +7,8 @@ LICENSE = "proprietary"
 PROVIDES += "enigma2-plugin-skins-technihd"
 RPROVIDES_${PN} += "enigma2-plugin-skins-technihd"
 
-RREPLACES_${PN} += "enigma2-plugin-skins-tehnihd enigma2-plugin-skins-technihd-v2.0"
-RCONFLICTS_${PN} += "enigma2-plugin-skins-tehnihd enigma2-plugin-skins-technihd-v2.0"
+RREPLACES_${PN} += "enigma2-plugin-skins-technihd enigma2-plugin-skins-technihd-v2.0"
+RCONFLICTS_${PN} += "enigma2-plugin-skins-technihd enigma2-plugin-skins-technihd-v2.0"
 
 require conf/license/license-gplv2.inc
 
@@ -16,7 +16,7 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "2.0+git${SRCPV}"
 PKGV = "2.0+git${GITPKGV}"
-PR = "r4"
+PR = "r5"
 
 SRC_URI="git://github.com/XTAv2/TechniHD.git"
 
