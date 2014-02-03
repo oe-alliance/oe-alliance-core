@@ -2,13 +2,14 @@ SUMMARY = "Linux kernel for ${MACHINE}"
 SECTION = "kernel"
 LICENSE = "GPLv2"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
+PR = "r1"
 
 inherit machine_kernel_pr
 
-KERNEL_RELEASE = "3.13.0"
+KERNEL_RELEASE = "3.13.1"
 
-SRC_URI[md5sum] = "f0b3f97f7285478ecbe83e08d077beda"
-SRC_URI[sha256sum] = "556a2923a2ae056c72ee61053e85ba26dca7be4677cc85ba41249084f14cdd29"
+SRC_URI[md5sum] = "547c323bf83ab898f774ed3002ab31d5"
+SRC_URI[sha256sum] = "c2f127cd034afc2b0fef9d6d50bad9c489fc87f1fd82b2330adedadeefcd1331"
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
@@ -20,8 +21,21 @@ PKG_kernel-image = "kernel-image"
 RPROVIDES_kernel-base = "kernel-${KERNEL_VERSION}"
 RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
 
-SRC_URI += "http://et-view.net/img_up/shop_pds/bh190/design/drivers/linux-${PV}.tar.gz \
+SRC_URI += "http://xtrendet.com/linux-${PV}.tar.gz \
     file://defconfig \
+    file://add-dmx-source-timecode.patch \
+    file://af9015-output-full-range-SNR.patch \
+    file://af9033-output-full-range-SNR.patch \
+    file://as102-adjust-signal-strength-report.patch \
+    file://as102-scale-MER-to-full-range.patch \
+    file://cxd2820r-output-full-range-SNR.patch \
+    file://dvb-usb-dib0700-disable-sleep.patch \
+    file://dvb_usb_disable_rc_polling.patch \
+    file://fix-proc-cputype.patch \
+    file://iosched-slice_idle-1.patch \
+    file://it913x-switch-off-PID-filter-by-default.patch \
+    file://tda18271-advertise-supported-delsys.patch \
+    file://mxl5007t-add-no_probe-and-no_reset-parameters.patch \
     "
 
 S = "${WORKDIR}/linux-${PV}"
