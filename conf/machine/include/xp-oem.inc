@@ -9,7 +9,7 @@ ${@base_contains('MACHINEBUILD', 'sf8', 'SF8' , '', d)}\
 
 MACHINE_BRAND = "\
 ${@base_contains('MACHINEBUILD', 'xp1000mk', 'MK-Digital' , '', d)}\
-${@base_contains('MACHINEBUILD', 'xp1000max', 'MAXDIGITAL' , '', d)}\
+${@base_contains('MACHINEBUILD', 'xp1000max', 'MaxDigital' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'sf8', 'Octagon' , '', d)}\
 "
 
