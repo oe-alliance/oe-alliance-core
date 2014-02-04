@@ -7,7 +7,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "1.0"
-PR = "r1"
+PR = "r2"
 
 inherit packagegroup
 
@@ -25,12 +25,11 @@ RDEPENDS_${PN} = "\
 RRECOMMENDS_${PN} = "\
     enigma2-plugin-extensions-autotimer \
     enigma2-plugin-extensions-epgsearch \
-	enigma2-plugin-pli-softcamsetup \
-	enigma2-plugin-systemplugins-softwaremanager \
-	enigma2-plugin-extensions-zaphistorybrowser \
-	enigma2-plugin-extensions-gbaspectratioswitch \
-	enigma2-plugin-drivers-network-usb-rt3573 \
-	enigma2-plugin-drivers-network-usb-rt5572 \
-    
+    enigma2-plugin-pli-softcamsetup \
+    enigma2-plugin-systemplugins-softwaremanager \
+    enigma2-plugin-extensions-zaphistorybrowser \
+    enigma2-plugin-extensions-gbaspectratioswitch \
+    enigma2-plugin-drivers-network-usb-rt3573 \
+    enigma2-plugin-drivers-network-usb-rt5572 \
     "
 
