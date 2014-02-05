@@ -34,28 +34,6 @@ ${@base_contains('MACHINEBUILD', 'mbmini', 'miraclebox/mini' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbtwin', 'miraclebox/twin' , '', d)}\
 "
 
-MTD_ROOTFS = "\
-${@base_contains('MACHINE_OEM', 'inihde', 'mtd2' , '', d)}\
-${@base_contains('MACHINE_OEM', 'inihdx', 'mtd2' , '', d)}\
-${@base_contains('MACHINE_OEM', 'inihdp', 'mtd0' , '', d)}\
-"
-
-MTD_KERNEL = "\
-${@base_contains('MACHINE_OEM', 'inihde', 'mtd2' , '', d)}\
-${@base_contains('MACHINE_OEM', 'inihdx', 'mtd1' , '', d)}\
-${@base_contains('MACHINE_OEM', 'inihdp', 'mtd2' , '', d)}\
-"
-
-MKUBIFS_ARGS = "\
-${@base_contains('MACHINE_OEM', 'inihde', '-m 2048 -e 126976 -c 4096' , '', d)}\
-${@base_contains('MACHINE_OEM', 'inihdx', '-m 2048 -e 126976 -c 4096' , '', d)}\
-${@base_contains('MACHINE_OEM', 'inihdp', '-m 4096 -e 1040384 -c 1984' , '', d)}\
-
-UBINIZE_ARGS = "\
-${@base_contains('MACHINE_OEM', 'inihde', '-m 2048 -p 128KiB' , '', d)}\
-${@base_contains('MACHINE_OEM', 'inihdx', '-m 2048 -p 128KiB' , '', d)}\
-${@base_contains('MACHINE_OEM', 'inihdp', '-m 4096 -p 1024KiB' , '', d)}\
-
 KERNEL_FILE = "kernel.bin"
 ROOTFS_FILE = "rootfs.bin"
 
