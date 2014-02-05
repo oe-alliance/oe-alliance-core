@@ -23,6 +23,7 @@ RDEPENDS_${PN} = "\
     "
 
 RRECOMMENDS_${PN} = "\
+    enigma2-plugin-skins-ru_infinity_hd-ov \
     enigma2-plugin-extensions-autotimer \
     enigma2-plugin-extensions-epgsearch \
     enigma2-plugin-pli-softcamsetup \
