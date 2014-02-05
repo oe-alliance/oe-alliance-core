@@ -11,9 +11,9 @@ inherit gitpkgv autotools pythonnative
 PACKAGES += " ${PN}-src"
 
 SRCREV = "${AUTOREV}"
-PV = "1.6+git${SRCPV}"
-PKGV = "1.6+git${GITPKGV}"
-PR = "r3"
+PV = "2.2+git${SRCPV}"
+PKGV = "2.2+git${GITPKGV}"
+PR = "r0"
 
 SRC_URI="git://github.com/oe-alliance/branding-module.git;protocol=git"
 
@@ -33,8 +33,11 @@ EXTRA_OECONF = " \
     --with-imageversion="${DISTRO_VERSION}" \
     --with-imagebuild="${BUILD_VERSION}" \
     --with-imagedir="${IMAGEDIR}" \
+    --with-imagefs="${IMAGE_FSTYPES}" \
     --with-mtdrootfs="${MTD_ROOTFS}" \
     --with-mtdkernel="${MTD_KERNEL}" \
+    --with-rootfile="${ROOT_FILE}" \
+    --with-kernelfile="${KERNEL_FILE}" \
     --with-mkubifs="${MKUBIFS_ARGS}" \
     --with-ubinize="${UBINIZE_ARGS}" \
     --with-driverdate="${DRIVERSDATE}" \
