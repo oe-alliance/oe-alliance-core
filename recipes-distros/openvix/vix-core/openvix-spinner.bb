@@ -5,8 +5,11 @@ require conf/license/license-gplv2.inc
 
 inherit allarch
 
+RREPLACES_${PN} += "enigma2-spinner"
+RCONFLICTS_${PN} += "enigma2-spinner"
+
 PV = "1.0"
-PR = "r0"
+PR = "r1"
 
 SRC_URI = "file://spinner.tgz"
 
