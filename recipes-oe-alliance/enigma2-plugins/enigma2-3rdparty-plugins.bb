@@ -9,7 +9,7 @@ inherit gitpkgv autotools deploy
 SRCREV = "${AUTOREV}"
 PV = "2.0+gitr${SRCPV}"
 PKGV = "2.0+gitr${GITPKGV}"
-PR = "r1"
+PR = "r2"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -32,14 +32,14 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-autobouquets-e2_201310201900-r2_mips32el.ipk \
     enigma2-plugin-extensions-bildonline_2.9rc13_mips32el.ipk \
     enigma2-plugin-extensions-bluray_1.2_mips32el.ipk \
-    enigma2-plugin-extensions-boblight-enigma2_0.8r4_mips32el.ipk \
+    enigma2-plugin-extensions-boblight-enigma2_0.8r5_mips32el.ipk \
     enigma2-plugin-extensions-buyukbangpanel_1.3.2_all.ipk \
     enigma2-plugin-extensions-camofs_7.87_all.ipk \
     enigma2-plugin-extensions-chefkoch_1.2rc1_mips32el.ipk \
     enigma2-plugin-extensions-csfd_9_45-20140125_all.ipk \
     enigma2-plugin-extensions-cubic_streamer_0.7.3_mips32el.ipk \
     enigma2-plugin-extensions-digitalfernsehen_0.8rc1_mips32el.ipk \
-    enigma2-plugin-extensions-facebook_0.6_mips32el.ipk \
+    enigma2-plugin-extensions-facebook_1.0rc3_mips32el.ipk \
     enigma2-plugin-extensions-filesearchfs_2.53_all.ipk \
     enigma2-plugin-extensions-focusonline_0.8rc2_mips32el.ipk \
     enigma2-plugin-extensions-glasssysutil_5.37_all.ipk \
