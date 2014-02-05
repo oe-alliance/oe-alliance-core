@@ -61,6 +61,47 @@ ${@base_contains('MACHINEBUILD', 'optimussos2', 'update/optimussos2/cfe' , '', d
 ${@base_contains('MACHINEBUILD', 'mediabox', 'update/mediabox/cfe' , '', d)}\
 "
 
+MTD_KERNEL = "\
+${@base_contains('MACHINEBUILD', 'tm2t', 'mtd6' , '', d)}\
+${@base_contains('MACHINEBUILD', 'tmnano', 'mtd1' , '', d)}\
+${@base_contains('MACHINEBUILD', 'tmnano2t', 'mtd1' , '', d)}\
+${@base_contains('MACHINEBUILD', 'tmsingle', 'mtd6' , '', d)}\
+${@base_contains('MACHINEBUILD', 'tmtwin', 'mtd6' , '', d)}\
+${@base_contains('MACHINEBUILD', 'iqonios100hd', 'mtd6' , '', d)}\
+${@base_contains('MACHINEBUILD', 'iqonios200hd', 'mtd6' , '', d)}\
+${@base_contains('MACHINEBUILD', 'roxxs200hd', 'mtd6' , '', d)}\
+${@base_contains('MACHINEBUILD', 'mediaart200hd', 'mtd6' , '', d)}\
+${@base_contains('MACHINEBUILD', 'iqonios300hd', 'mtd6' , '', d)}\
+${@base_contains('MACHINEBUILD', 'force1', 'mtd6' , '', d)}\
+${@base_contains('MACHINEBUILD', 'optimussos1plus', 'mtd6' , '', d)}\
+${@base_contains('MACHINEBUILD', 'optimussos2plus', 'mtd6' , '', d)}\
+${@base_contains('MACHINEBUILD', 'optimussos1', 'mtd6' , '', d)}\
+${@base_contains('MACHINEBUILD', 'optimussos2', 'mtd6' , '', d)}\
+${@base_contains('MACHINEBUILD', 'mediabox', 'mtd6' , '', d)}\
+"
+
+MTD_ROOTFS = "\
+${@base_contains('MACHINEBUILD', 'tm2t', 'mtd4' , '', d)}\
+${@base_contains('MACHINEBUILD', 'tmnano', 'mtd0' , '', d)}\
+${@base_contains('MACHINEBUILD', 'tmnano2t', 'mtd0' , '', d)}\
+${@base_contains('MACHINEBUILD', 'tmsingle', 'mtd4' , '', d)}\
+${@base_contains('MACHINEBUILD', 'tmtwin', 'mtd4' , '', d)}\
+${@base_contains('MACHINEBUILD', 'iqonios100hd', 'mtd4' , '', d)}\
+${@base_contains('MACHINEBUILD', 'iqonios200hd', 'mtd4' , '', d)}\
+${@base_contains('MACHINEBUILD', 'roxxs200hd', 'mtd4' , '', d)}\
+${@base_contains('MACHINEBUILD', 'mediaart200hd', 'mtd4' , '', d)}\
+${@base_contains('MACHINEBUILD', 'iqonios300hd', 'mtd4' , '', d)}\
+${@base_contains('MACHINEBUILD', 'force1', 'mtd4' , '', d)}\
+${@base_contains('MACHINEBUILD', 'optimussos1plus', 'mtd4' , '', d)}\
+${@base_contains('MACHINEBUILD', 'optimussos2plus', 'mtd4' , '', d)}\
+${@base_contains('MACHINEBUILD', 'optimussos1', 'mtd4' , '', d)}\
+${@base_contains('MACHINEBUILD', 'optimussos2', 'mtd4' , '', d)}\
+${@base_contains('MACHINEBUILD', 'mediabox', 'mtd4' , '', d)}\
+"
+
+KERNEL_FILE = "oe_kernel.bin"
+ROOTFS_FILE = "oe_rootfs.bin"
+
 DVBPROVIDER = "kernel"
 
 MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS = "\
@@ -102,8 +143,8 @@ IMAGE_CMD_ubi_prepend = " \
 IMAGE_CMD_ubi_append = " \
     mkdir -p ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}; \
     cp ${DEPLOY_DIR_IMAGE}/splash.bmp ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/splash.bmp; \
-    mv ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.ubi ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/oe_rootfs.bin; \
-    gzip -f -9c ${DEPLOY_DIR_IMAGE}/vmlinux-${MACHINE}.bin > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/oe_kernel.bin; \
+    mv ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.ubi ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/${ROOTFS_FILE}; \
+    gzip -f -9c ${DEPLOY_DIR_IMAGE}/vmlinux-${MACHINE}.bin > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/${KERNEL_FILE}; \
     echo ${DISTRO_NAME}-${DISTRO_VERSION}.${BUILD_VERSION} > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/imageversion; \
     cd ${DEPLOY_DIR_IMAGE}; \
     zip ${IMAGE_NAME}_usb.zip ${IMAGEDIR}/*; \

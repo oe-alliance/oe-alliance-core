@@ -4,6 +4,11 @@ include conf/machine/include/build-extras.inc
 MACHINE_OEM = "gigablue"
 MACHINE_BRAND = "GigaBlue"
 
+MTD_ROOTFS = "mtd0"
+MTD_KERNEL = "mtd2"
+KERNEL_FILE = "kernel.bin"
+ROOTFS_FILE = "rootfs.bin"
+
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS = " \
     gigablue-dvb-modules-${MACHINE} \
     "
