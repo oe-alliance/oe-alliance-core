@@ -1,6 +1,8 @@
 # We know about rtc
 include conf/machine/include/build-extras.inc
 
+BRAND_OEM = "odin"
+
 MACHINE_NAME = "\
 ${@base_contains('MACHINEBUILD', 'classm', 'CLASS M' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'axodin', 'AX ODIN' , '', d)}\
@@ -45,7 +47,7 @@ ROOTFS_FILE = "rootfs.bin"
 DVBPROVIDER = "kernel"
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS = "\
-    odin-dvb-modules-${MACHINE_OEM} \
+    odin-dvb-modules-${MACHINE} \
     "
 
 MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS = "\
@@ -64,8 +66,8 @@ TARGET_ARCH = "mipsel"
 DEFAULTTUNE = "mips32el"
 
 PREFERRED_PROVIDER_virtual/kernel = "linux-odin"
-PREFERRED_PROVIDER_virtual/blindscan-dvbc = "odin-blindscan-utils-${MACHINE_OEM}"
-PREFERRED_PROVIDER_virtual/blindscan-dvbs = "odin-blindscan-utils-${MACHINE_OEM}"
+PREFERRED_PROVIDER_virtual/blindscan-dvbc = "odin-blindscan-utils-${MACHINE}"
+PREFERRED_PROVIDER_virtual/blindscan-dvbs = "odin-blindscan-utils-${MACHINE}"
 
 PREFERRED_VERSION_linux-odin = "3.6.0"
 PREFERRED_VERSION_linux-libc-headers = "3.6"

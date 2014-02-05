@@ -27,7 +27,7 @@ EXTRA_OECONF = " \
     --with-oever="${OE_VER}" \
     --with-distro="${DISTRO_NAME}" \
     --with-boxtype="${MACHINEBUILD}" \
-    --with-machineoem="${MACHINE_OEM}" \
+    --with-brandoem="${BRAND_OEM}" \
     --with-machinebrand="${MACHINE_BRAND}" \
     --with-machinename="${MACHINE_NAME}" \
     --with-imageversion="${DISTRO_VERSION}" \
@@ -44,51 +44,37 @@ EXTRA_OECONF = " \
     "
 
 do_configure_prepend() {
-    if [ "${MACHINE_OEM}" = "vuplus" ]; then
+    if [ "${BRAND_OEM}" = "vuplus" ]; then
         DRIVERSDATE=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/vuplus/vuplus-dvb-modules-${MACHINE}.bb | cut -b 12-19`
-    elif [ "${MACHINE_OEM}" = "xtrend" ]; then
+    elif [ "${BRAND_OEM}" = "xtrend" ]; then
         DRIVERSDATE=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/etxx00/et-dvb-modules-${MACHINE}.bb | cut -b 12-19`
-    elif [ "${MACHINE_OEM}" = "evo" ]; then
+    elif [ "${BRAND_OEM}" = "evo" ]; then
         DRIVERSDATE=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/evo/evo-dvb-modules-${MACHINE}.bb | cut -b 12-19`
-    elif [ "${MACHINE_OEM}" = "dags1" ]; then
+    elif [ "${MACHINE}" = "dags1" ]; then
         DRIVERSDATE=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/dags/dags-dvb-modules-7335.bb | cut -b 12-19`
-    elif [ "${MACHINE_OEM}" = "dags2" ]; then
+    elif [ "${MACHINE}" = "dags2" ]; then
         DRIVERSDATE=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/dags/dags-dvb-modules-7335-ci.bb | cut -b 12-19`
-    elif [ "${MACHINE_OEM}" = "dags3" ]; then
+    elif [ "${MACHINE}" = "dags3" ]; then
         DRIVERSDATE=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/dags/dags-dvb-modules-7356.bb | cut -b 12-19`
-    elif [ "${MACHINE_OEM}" = "gigablue" ]; then
+    elif [ "${BRAND_OEM}" = "gigablue" ]; then
         DRIVERSDATE=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/gigablue/gigablue-dvb-modules-${MACHINE}.bb | cut -b 12-19`
-    elif [ "${MACHINE_OEM}" = "odinm9" ]; then
-        DRIVERSDATE=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/odin/odin-dvb-modules-odinm9.bb | cut -b 12-19`
-    elif [ "${MACHINE_OEM}" = "odinm7" ]; then
-        DRIVERSDATE=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/odin/odin-dvb-modules-odinm7.bb | cut -b 12-19`
-    elif [ "${MACHINE_OEM}" = "e3hd" ]; then
-        DRIVERSDATE=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/odin/odin-dvb-modules-e3hd.bb | cut -b 12-19`		
-    elif [ "${MACHINE_OEM}" = "inihde" ]; then
-        DRIVERSDATE=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/ini/ini-dvb-modules-inihde.bb | cut -b 12-19`
-    elif [ "${MACHINE_OEM}" = "inihdp" ]; then
-        DRIVERSDATE=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/ini/ini-dvb-modules-inihdp.bb | cut -b 12-19`
-    elif [ "${MACHINE_OEM}" = "inihdx" ]; then
-        DRIVERSDATE=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/ini/ini-dvb-modules-inihdx.bb | cut -b 12-19`
-    elif [ "${MACHINE_OEM}" = "xp1000" ]; then
-        DRIVERSDATE=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/xp/xp-dvb-modules-xp1000.bb | cut -b 12-19`
-    elif [ "${MACHINE_OEM}" = "cube" ]; then
+    elif [ "${BRAND_OEM}" = "odin" ]; then
+        DRIVERSDATE=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/odin/odin-dvb-modules-${MACHINE}.bb | cut -b 12-19`
+    elif [ "${BRAND_OEM}" = "ini" ]; then
+        DRIVERSDATE=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/ini/ini-dvb-modules-${MACHINE}.bb | cut -b 12-19`
+    elif [ "${BRAND_OEM}" = "xp" ]; then
+        DRIVERSDATE=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/xp/xp-dvb-modules-${MACHINE}.bb | cut -b 12-19`
+    elif [ "${BRAND_OEM}" = "cube" ]; then
         DRIVERSDATE=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/cube/e2bmc-dvb-modules-cube.bb | cut -b 12-19`
-    elif [ "${MACHINE_OEM}" = "ebox5000" ]; then
-        DRIVERSDATE=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/ebox/ebox-dvb-modules-ebox5000.bb | cut -b 12-19`
-    elif [ "${MACHINE_OEM}" = "ebox5100" ]; then
-        DRIVERSDATE=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/ebox/ebox-dvb-modules-ebox5100.bb | cut -b 12-19`
-    elif [ "${MACHINE_OEM}" = "ebox7358" ]; then
-        DRIVERSDATE=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/ebox/ebox-dvb-modules-ebox7358.bb | cut -b 12-19`
-    elif [ "${MACHINE_OEM}" = "eboxlumi" ]; then
-        DRIVERSDATE=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/ebox/ebox-dvb-modules-eboxlumi.bb | cut -b 12-19`		
-    elif [ "${MACHINE}" = "ixussone" -o "${MACHINE}" = "ixusszero" -o "${MACHINE}" = "ixussduo" ]; then
+    elif [ "${BRAND_OEM}" = "ebox" ]; then
+        DRIVERSDATE=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/ebox/ebox-dvb-modules-${MACHINE}.bb | cut -b 12-19`
+    elif [ "${BRAND_OEM}" = "ixuss" ]; then
         DRIVERSDATE=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/ixuss/ixuss-dvb-modules-${MACHINE}.bb | cut -b 12-19`
-    elif [ "${MACHINE}" = "azboxhd" -o "${MACHINE}" = "azboxme" -o "${MACHINE}" = "azboxminime" ]; then
+    elif [ "${BRAND_OEM}" = "azbox" ]; then
         DRIVERSDATE=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/azbox/azbox-dvb-modules.bb | cut -b 12-19`
-    elif [ "${MACHINE}" = "sogno8800hd" ]; then
+    elif [ "${BRAND_OEM}" = "sogno" ]; then
         DRIVERSDATE=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/sogno/sogno-dvb-modules-${MACHINE}.bb | cut -b 12-19`
-    elif [ "${MACHINE}" = "dm500hd" -o "${MACHINE}" = "dm800se" -o "${MACHINE}" = "dm500hdv2" -o "${MACHINE}" = "dm7020hd" -o "${MACHINE}" = "dm800sev2" -0 "${MACHINE}" = "dm800" -o "${MACHINE}" = "dm8000"]; then
+    elif [ "${BRAND_OEM}" = "dreambox" ]; then
         DRIVERSDATE="20131228"
     else
         DRIVERSDATE='N/A'
@@ -106,7 +92,7 @@ do_install_append() {
         ln -sf /usr/share/enigma2/uniboxhd2.jpg ${D}/usr/lib/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes/uniboxhd2.jpg
         install -m 0644 ${S}/BoxBranding/boxes/uniboxhd3.jpg ${D}/usr/share/enigma2/uniboxhd3.jpg
         ln -sf /usr/share/enigma2/uniboxhd3.jpg ${D}/usr/lib/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes/uniboxhd3.jpg
-    elif [ ${MACHINEBUILD} = "et6x00" ]; then
+    elif [ ${MACHINE} = "et6x00" ]; then
         for f in ${S}/BoxBranding/boxes/et6*; do
             filename=$(basename "$f")
             extension="${filename##*.}"

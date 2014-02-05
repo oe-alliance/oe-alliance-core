@@ -1,7 +1,7 @@
 # We know about rtc
 include conf/machine/include/build-extras.inc
 
-MACHINE_OEM = "xtrend"
+BRAND_OEM = "xtrend"
 MACHINE_BRAND = "XTrend"
 
 MTD_ROOTFS = "mtd1"

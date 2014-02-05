@@ -1,7 +1,7 @@
 # We know about rtc
 include conf/machine/include/build-extras.inc
 
-MACHINE_OEM = "gigablue"
+BRAND_OEM = "gigablue"
 MACHINE_BRAND = "GigaBlue"
 
 MTD_ROOTFS = "mtd0"

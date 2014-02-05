@@ -42,8 +42,8 @@ RRECOMMENDS_${PN} = "\
     enigma2-plugin-systemplugins-videoenhancement \
     \
     ${@base_contains("MACHINE_FEATURES", "3dtv", "enigma2-plugin-systemplugins-osd3dsetup" , "", d)} \
-    ${@base_contains("MACHINE_OEM", "inihdx", "enigma2-plugin-systemplugins-inifansetup" , "", d)} \
-    ${@base_contains("MACHINE_OEM", "inihdx", "enigma2-plugin-systemplugins-inivfd" , "", d)} \
+    ${@base_contains("MACHINE", "inihdx", "enigma2-plugin-systemplugins-inifansetup" , "", d)} \
+    ${@base_contains("MACHINE", "inihdx", "enigma2-plugin-systemplugins-inivfd" , "", d)} \
     "
 
 SRC_URI = "file://swap file://panel.conf"

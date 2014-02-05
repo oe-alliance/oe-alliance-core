@@ -1,7 +1,7 @@
 # We know about rtc
 include conf/machine/include/build-extras.inc
 
-MACHINE_OEM = "vuplus"
+BRAND_OEM = "vuplus"
 MACHINE_BRAND = "Vu+"
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS = " \

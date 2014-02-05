@@ -1,6 +1,8 @@
 # We know about rtc
 include conf/machine/include/build-extras.inc
 
+MACHINE_BRAND = "ebox"
+
 MACHINE_NAME = "\
 ${@base_contains('MACHINEBUILD', 'mixosf5', 'F5' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mixosf5mini', 'F5 mini' , '', d)}\
@@ -29,7 +31,7 @@ ${@base_contains('MACHINEBUILD', 'gi9196lite', 'ebox/7403' , '', d)}\
 "
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS = "\
-    ebox-dvb-modules-${MACHINE_OEM} \
+    ebox-dvb-modules-${MACHINE} \
     ebox-shutdown \
     "
     

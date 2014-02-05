@@ -22,7 +22,7 @@ IMAGE_INSTALL = " \
     enigma2-plugin-extensions-bmediacenter-swf \
     ${ENIGMA2_PLUGINS} \
     ${ENIGMA2_INI_PLUGINS} \
-    ${@base_contains("MACHINE_OEM", "inihdx", "${ENIGMA2_USB_DRV}" , "", d)} \
+    ${@base_contains("MACHINE", "inihdx", "${ENIGMA2_USB_DRV}" , "", d)} \
     libcrypto-compat \
     ntfs-3g \
     hddtemp \

@@ -1,6 +1,8 @@
 # We know about rtc
 include conf/machine/include/build-extras.inc
 
+BRAND_OEM = "xp"
+
 MACHINE_NAME = "\
 ${@base_contains('MACHINEBUILD', 'xp1000mk', 'XP1000' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'xp1000max', 'XP1000' , '', d)}\
@@ -20,7 +22,7 @@ ${@base_contains('MACHINEBUILD', 'sf8', 'xp1000' , '', d)}\
 "
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS = "\
-    xp-dvb-modules-${MACHINE_OEM} \
+    xp-dvb-modules-${MACHINE} \
     "
 
 DVBPROVIDER = "kernel"

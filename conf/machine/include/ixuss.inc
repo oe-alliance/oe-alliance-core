@@ -1,7 +1,7 @@
 # We know about rtc
 include conf/machine/include/build-extras.inc
 
-MACHINE_OEM = "ixuss"
+BRAND_OEM = "ixuss"
 MACHINE_BRAND = "IXUSS"
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS = " \

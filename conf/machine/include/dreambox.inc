@@ -2,7 +2,7 @@
 # We know about rtc
 include conf/machine/include/build-extras.inc
 
-MACHINE_OEM = "dreambox"
+BRAND_OEM = "dreambox"
 MACHINE_BRAND = "Dreambox"
 
 EXTRA_IMAGEDEPENDS += "dreambox-secondstage-${MACHINE}"

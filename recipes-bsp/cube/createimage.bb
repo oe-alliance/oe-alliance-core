@@ -2,7 +2,7 @@ SUMMARY = "create image file"
 SECTION = "console/utils"
 PACKAGE_ARCH = "${MACHINEBUILD}"
 
-PN = "createimage-${MACHINE_OEM}"
+PN = "createimage-${MACHINE}"
 PV = "1.0"
 PR = "r3"
 
@@ -16,10 +16,10 @@ inherit native
 S = "${WORKDIR}"
 
 do_compile() {
-    ${CC} -DMAGIC=${CREATEIMAGE_MAGIC} -o createimage_${MACHINE_OEM} createimage.c
+    ${CC} -DMAGIC=${CREATEIMAGE_MAGIC} -o createimage_${MACHINE} createimage.c
 }
 
 do_install() {
     install -d ${D}/${bindir}/
-    install -m 0755 ${S}/createimage_${MACHINE_OEM} ${D}/${bindir}/
+    install -m 0755 ${S}/createimage_${MACHINE} ${D}/${bindir}/
 }

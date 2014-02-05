@@ -1,6 +1,8 @@
 # We know about rtc
 include conf/machine/include/build-extras.inc
 
+BRAND_OEM = "cube"
+
 MACHINE_NAME = "\
 ${@base_contains('MACHINEBUILD', 'dcube', 'R2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'ultima', 'Ultima' , '', d)}\
@@ -20,7 +22,7 @@ ${@base_contains('MACHINEBUILD', 'mkcube', 'flash-image-256' , '', d)}\
 "
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS = "\
-    e2bmc-dvb-modules-${MACHINE_OEM} \
+    e2bmc-dvb-modules-${MACHINE} \
     "
 
 DVBPROVIDER = "kernel"
@@ -44,12 +46,12 @@ UBI_VOLNAME = "rootfs"
 # image name in the zipfile, can be overridden by an image
 ZIPFILE_IMAGE_NAME ?= "firmware.img"
 
-EXTRA_IMAGEDEPENDS += "createimage-${MACHINE_OEM}"
+EXTRA_IMAGEDEPENDS += "createimage-${MACHINE}"
 
 IMAGE_CMD_imgzip256 = " \
     mkfs.ubifs -r ${IMAGE_ROOTFS} -o ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs_256.ubifs -m 2048 -e 126976 -c 4096; \
     mkdir -p ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}; \
-    createimage_${MACHINE_OEM} 126976 ${MULTIBOOT_IMAGE_NAME} kernel ${DEPLOY_DIR_IMAGE}/zImage-${MACHINE_OEM}.bin 0 0 rootfs ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs_256.ubifs ${ROOTFS_SIZE} 1 > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/${ZIPFILE_IMAGE_NAME}; \
+    createimage_${MACHINE} 126976 ${MULTIBOOT_IMAGE_NAME} kernel ${DEPLOY_DIR_IMAGE}/zImage-${MACHINE}.bin 0 0 rootfs ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs_256.ubifs ${ROOTFS_SIZE} 1 > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/${ZIPFILE_IMAGE_NAME}; \
     cd ${DEPLOY_DIR_IMAGE}; \
     zip ${IMAGE_NAME}-256MB.zip ${IMAGEDIR}/*; \
     rm -Rf ${IMAGEDIR}; \
@@ -58,7 +60,7 @@ IMAGE_CMD_imgzip256 = " \
 IMAGE_CMD_imgzip1024 = " \
     mkfs.ubifs -r ${IMAGE_ROOTFS} -o ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs_1024.ubifs -m 4096 -e 253952 -c 4096; \
     mkdir -p ${DEPLOY_DIR_IMAGE}/flash-image-1024; \
-    createimage_${MACHINE_OEM} 253952 ${MULTIBOOT_IMAGE_NAME} kernel ${DEPLOY_DIR_IMAGE}/zImage-${MACHINE_OEM}.bin 0 0 rootfs ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs_1024.ubifs ${ROOTFS_SIZE} 1 > ${DEPLOY_DIR_IMAGE}/flash-image-1024/${ZIPFILE_IMAGE_NAME}; \
+    createimage_${MACHINE} 253952 ${MULTIBOOT_IMAGE_NAME} kernel ${DEPLOY_DIR_IMAGE}/zImage-${MACHINE}.bin 0 0 rootfs ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs_1024.ubifs ${ROOTFS_SIZE} 1 > ${DEPLOY_DIR_IMAGE}/flash-image-1024/${ZIPFILE_IMAGE_NAME}; \
     cd ${DEPLOY_DIR_IMAGE}; \
     zip ${IMAGE_NAME}-1024MB.zip flash-image-1024/*; \
     rm -Rf flash-image-1024; \

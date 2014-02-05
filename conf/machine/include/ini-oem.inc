@@ -1,6 +1,8 @@
 # We know about rtc
 include conf/machine/include/build-extras.inc
 
+BRAND_OEM = "ini"
+
 MACHINE_NAME = "\
 ${@base_contains('MACHINEBUILD', 'ventonhdx', 'HD-x' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'sezam1000hd', '1000-HD' , '', d)}\
@@ -40,7 +42,7 @@ ROOTFS_FILE = "rootfs.bin"
 DVBPROVIDER = "kernel"
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS = "\
-	ini-dvb-modules-${MACHINE_OEM} \
+	ini-dvb-modules-${MACHINE} \
 	"
 
 MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS = "\
