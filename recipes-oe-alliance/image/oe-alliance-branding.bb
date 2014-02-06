@@ -85,6 +85,7 @@ do_configure_prepend() {
 FILES_${PN}-src = "${libdir}/enigma2/python/Components/*.py"
 FILES_${PN}_openatv = "${libdir}/enigma2/python/*.so /usr/share ${libdir}/enigma2/python/Components/*.pyo ${libdir}/enigma2/python/Plugins"
 FILES_${PN}_openxta = "${libdir}/enigma2/python/*.so /usr/share ${libdir}/enigma2/python/Components/*.pyo ${libdir}/enigma2/python/Plugins"
+FILES_${PN}_swf = "${libdir}/enigma2/python/*.so /usr/share ${libdir}/enigma2/python/Components/*.pyo ${libdir}/enigma2/python/Plugins"
 FILES_${PN} += "/usr/lib/enigma2/python/*.so"
 FILES_${PN}-dev += "/usr/lib/enigma2/python/*.la"
 FILES_${PN}-staticdev += "/usr/lib/enigma2/python/*.a"
