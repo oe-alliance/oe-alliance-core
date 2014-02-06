@@ -22,7 +22,7 @@ PKG_kernel-base = "kernel-base"
 PKG_kernel-image = "kernel-image"
 RPROVIDES_kernel-base = "kernel-${KERNEL_VERSION}"
 RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
-SRC_URI += "http://azbox-enigma2-project.googlecode.com/files/linux-azbox-${KV}-new-2.tar.bz2;name=azbox-kernel \
+SRC_URI += "http://source.mynonpublic.com/linux-azbox-${KV}-new-2.tar.bz2;name=azbox-kernel \
        file://mips-refactor-clearpage-and-copypage_311.patch \
        file://defconfig \
        file://genzbf.c \
