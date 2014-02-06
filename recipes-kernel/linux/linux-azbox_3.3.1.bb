@@ -1,7 +1,7 @@
 SUMMARY = "Linux kernel for ${MACHINE}"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${KV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
-PR = "r1"
+PR = "r2"
 inherit machine_kernel_pr
 
 MACHINE_KERNEL_PR_append = ".1"
@@ -23,7 +23,7 @@ PKG_kernel-image = "kernel-image"
 RPROVIDES_kernel-base = "kernel-${KERNEL_VERSION}"
 RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
 SRC_URI += "http://source.mynonpublic.com/linux-azbox-${KV}-new-2.tar.bz2;name=azbox-kernel \
-       file://mips-refactor-clearpage-and-copypage_311.patch \
+       file://mips-refactor-clearpage-and-copypage.patch \
        file://defconfig \
        file://genzbf.c \
        file://sigblock.h \
