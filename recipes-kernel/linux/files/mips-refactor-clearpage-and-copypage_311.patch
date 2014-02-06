@@ -22,15 +22,6 @@ diff --git a/arch/mips/kernel/mips_ksyms.c b/arch/mips/kernel/mips_ksyms.c
 index 57ba13e..3fc1691 100644
 --- a/arch/mips/kernel/mips_ksyms.c
 +++ b/arch/mips/kernel/mips_ksyms.c
-@@ -5,7 +5,7 @@
-  * License.  See the file "COPYING" in the main directory of this archive
-  * for more details.
-  *
-- * Copyright (C) 1996, 97, 98, 99, 2000, 01, 03, 04, 05 by Ralf Baechle
-+ * Copyright (C) 1996, 97, 98, 99, 2000, 01, 03, 04, 05, 12 by Ralf Baechle
-  * Copyright (C) 1999, 2000, 01 Silicon Graphics, Inc.
-  */
- #include <linux/interrupt.h>
 @@ -35,6 +35,12 @@ EXPORT_SYMBOL(memmove);
  EXPORT_SYMBOL(kernel_thread);
  
