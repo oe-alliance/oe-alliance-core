@@ -1,7 +1,7 @@
 SUMMARY = "Linux kernel for ${MACHINE}"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${KV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
-PR = "r2"
+PR = "r3"
 inherit machine_kernel_pr
 
 MACHINE_KERNEL_PR_append = ".1"
@@ -80,8 +80,10 @@ kernel_do_compile() {
 	rm -rf ${S}/arch/mips/boot/genzbf
 }
 
+do_package_qa() {
+}
+
 do_install_append () {
     install -d ${D}/boot
     install -m 0644 ${S}/arch/mips/boot/zbimage-linux-xload ${D}/boot/zbimage-linux-xload
-
 }
