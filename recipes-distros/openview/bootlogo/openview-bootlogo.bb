@@ -22,7 +22,7 @@ SRC_URI = "file://bootlogo.mvi file://backdrop.mvi file://radio.mvi file://bootl
 SRC_URI_append_gb800ue = "file://lcdsplash.bin"
 SRC_URI_append_gbquad = "file://lcdsplash.bin"
 SRC_URI_append_gb800ueplus = "file://lcdsplash.bin"
-SRC_URI_append_gbquadplus = "file://lcdsplash400.bin file://lcdwaitkey400.bin file://lcdwarning400.bin"
+SRC_URI_append_gbquadplus = "file://lcdsplash400.bin"
 SRC_URI_append_vuduo2 = "file://lcdbootlogo.png file://bootlogo.py"
 
 BINARY_VERSION = "1.3"
