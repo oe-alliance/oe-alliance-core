@@ -13,7 +13,7 @@ PACKAGES += " ${PN}-src"
 SRCREV = "${AUTOREV}"
 PV = "2.2+git${SRCPV}"
 PKGV = "2.2+git${GITPKGV}"
-PR = "r0"
+PR = "r1"
 
 SRC_URI="git://github.com/oe-alliance/branding-module.git;protocol=git"
 
@@ -37,7 +37,7 @@ EXTRA_OECONF = " \
     --with-imagefs="${IMAGE_FSTYPES}" \
     --with-mtdrootfs="${MTD_ROOTFS}" \
     --with-mtdkernel="${MTD_KERNEL}" \
-    --with-rootfile="${ROOT_FILE}" \
+    --with-rootfile="${ROOTFS_FILE}" \
     --with-kernelfile="${KERNEL_FILE}" \
     --with-mkubifs="${MKUBIFS_ARGS}" \
     --with-ubinize="${UBINIZE_ARGS}" \
