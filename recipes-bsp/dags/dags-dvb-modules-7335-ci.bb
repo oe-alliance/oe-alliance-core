@@ -3,15 +3,15 @@ SECTION = "base"
 PRIORITY = "required"
 LICENSE = "CLOSED"
 
-SRCDATE = "20140114"
+SRCDATE = "20140207"
 KV = "3.9.7"
 PV = "${KV}+${SRCDATE}"
 PR = "r0"
 
 SRC_URI = "http://en2.ath.cx/release/images/oedrivers/bcmlinuxdvb_7335-${KV}-iso200-${SRCDATE}.tar.gz"
 
-SRC_URI[md5sum] = "dd7c6e1249381e17073fb54e7665161e"
-SRC_URI[sha256sum] = "ad17118f60230bb6854820cabf7bf6fabd316b7396e7ba26b1ab425bcb6f390c"
+SRC_URI[md5sum] = "0b27ba2d04bdae1225b0123644e0116d"
+SRC_URI[sha256sum] = "1205983af10b31f8ec3d50f3deed22514bcb646a3afd514408cfd2c19c4843d7"
 
 S = "${WORKDIR}"
 

@@ -2,19 +2,18 @@ SUMMARY = "Linux kernel for ${MACHINE}"
 LICENSE = "GPLv2"
 SECTION = "kernel"
 KV = "3.9.7"
-PR = "r1"
 
 inherit machine_kernel_pr
 
-SRCDATE = "20140114"
-MACHINE_KERNEL_PR_append = ".1"
+SRCDATE = "20140207"
+MACHINE_KERNEL_PR_append = ".2"
 
-SRC_URI[md5sum] = "d7fcfa74821b2d932ab54637ee5fbe5a"
-SRC_URI[sha256sum] = "9d0b7e9a0e36a9eed15ef0aff926a6f3cb6bf34a57f8eac2b64f800507170199"
+SRC_URI[md5sum] = "e6ca0bf7aaffb46dc8d711a059ddfacd"
+SRC_URI[sha256sum] = "233f2299a48ed660633441a59470d8d09ab38233fbc9af6d33310bd3464a355f"
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${KV}-r1/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-SRC_URI = "http://en2.ath.cx/release/images/oedrivers/linux-3.9.7-r1-20140114.tar.gz \
+SRC_URI = "http://en2.ath.cx/release/images/oedrivers/linux-3.9.7-r1-${SRCDATE}.tar.gz \
     file://defconfig \
     "
 
