@@ -13,7 +13,7 @@ SRC_URI[sha256sum] = "233f2299a48ed660633441a59470d8d09ab38233fbc9af6d33310bd346
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${KV}-r1/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-SRC_URI = "http://en2.ath.cx/release/images/oedrivers/linux-3.9.7-r1-${SRCDATE}.tar.gz \
+SRC_URI = "http://openembedded.homelinux.com/release/images/oedrivers/linux-3.9.7-r1-${SRCDATE}.tar.gz \
     file://defconfig \
     "
 

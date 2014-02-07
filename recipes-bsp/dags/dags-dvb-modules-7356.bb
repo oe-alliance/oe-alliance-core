@@ -11,7 +11,7 @@ PR = "r1"
 SRC_URI[md5sum] = "a45cea0cc3025bdc053717d49ac6d8dc"
 SRC_URI[sha256sum] = "7a88f8b00ff71e2b6836f24bb8d6552b99d4c27ddcd237ff20a4072f9fe73eb8"
 
-SRC_URI = "http://en2.ath.cx/release/images/oedrivers/bcmlinuxdvb_7356-${KV}-${SRCDATE}.tar.gz"
+SRC_URI = "http://openembedded.homelinux.com/release/images/oedrivers/bcmlinuxdvb_7356-${KV}-${SRCDATE}.tar.gz"
 
 S = "${WORKDIR}"
 

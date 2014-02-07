@@ -8,7 +8,7 @@ KV = "3.9.7"
 PV = "${KV}+${SRCDATE}"
 PR = "r0"
 
-SRC_URI = "http://en2.ath.cx/release/images/oedrivers/bcmlinuxdvb_7335-${KV}-iso200-${SRCDATE}.tar.gz"
+SRC_URI = "http://openembedded.homelinux.com/release/images/oedrivers/bcmlinuxdvb_7335-${KV}-iso200-${SRCDATE}.tar.gz"
 
 SRC_URI[md5sum] = "0b27ba2d04bdae1225b0123644e0116d"
 SRC_URI[sha256sum] = "1205983af10b31f8ec3d50f3deed22514bcb646a3afd514408cfd2c19c4843d7"
