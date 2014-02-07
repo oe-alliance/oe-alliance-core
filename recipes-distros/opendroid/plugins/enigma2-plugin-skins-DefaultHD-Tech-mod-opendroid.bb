@@ -1,4 +1,4 @@
-DESCRIPTION = "Enigma2 Skin opd"
+DESCRIPTION = "Enigma2 Skin DefaultHD-Tech-mod-opendroid"
 MAINTAINER = "Opendroid"
 SECTION = "base"
 PRIORITY = "required"
@@ -14,7 +14,7 @@ PKGV = "1.0+git${GITPKGV}"
 VER ="1.0"
 PR = "r2"
 
-SRC_URI="git://github.com/opendroid-Team/skin-opd.git"
+SRC_URI="git://github.com/opendroid-Team/DefaultHD-Tech-mod-opendroid.git"
 
 S = "${WORKDIR}/git"
 

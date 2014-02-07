@@ -4,7 +4,7 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3
                     file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
 
 PV = "1.0"
-PR = "r35"
+PR = "r34"
 
 inherit task
 
@@ -14,7 +14,7 @@ inherit task
 DEPENDS = "enigma2-pliplugins opendroid-feeds"
 
 RRECOMMENDS = "\
-	opendroid-version-info \
+	openxta-version-info \
 	enigma2-plugin-drivers-usbserial \
 	enigma2-plugin-pli-softcamsetup \
 	enigma2-plugin-extensions-graphmultiepg \
@@ -23,6 +23,7 @@ RRECOMMENDS = "\
 	enigma2-plugin-extensions-extraspanel \
 	enigma2-plugin-extensions-dvdplayer \
 	enigma2-plugin-extensions-et-portal \
+	enigma2-plugin-extensions-openxtareader \
 	enigma2-plugin-systemplugins-videomode \
 	enigma2-plugin-systemplugins-autoresolution \
 	enigma2-plugin-systemplugins-osdpositionsetup \
@@ -30,7 +31,7 @@ RRECOMMENDS = "\
 	enigma2-plugin-systemplugins-softwaremanager \
 	enigma2-plugin-systemplugins-skinselector \
 	enigma2-plugin-skins-technihd \
-	enigma2-plugin-skins-magmum32 \
+	enigma2-plugin-skins-DefaultHD-Tech-mod-opendroid \
 	${@base_contains("MACHINE_FEATURES", "3dtv", "enigma2-plugin-systemplugins-osd3dsetup" , "", d)} \
 	"
 
