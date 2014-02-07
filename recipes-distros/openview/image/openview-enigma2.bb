@@ -31,6 +31,7 @@ RRECOMMENDS_${PN} = "\
     enigma2-plugin-extensions-zaphistorybrowser \
     enigma2-plugin-extensions-gbaspectratioswitch \
     enigma2-plugin-drivers-network-usb-rt3573 \
+    enigma2-plugin-extensions-infopanel \
     enigma2-plugin-drivers-network-usb-rt5572 \
     "
 
