@@ -7,7 +7,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "1.0"
-PR = "r7"
+PR = "r8"
 
 inherit packagegroup
 
@@ -15,5 +15,6 @@ RDEPENDS_${PN} = "\
     oe-alliance-base \
     openvix-enigma2 \
     openvix-bootlogo \
+    openvix-spinner \
     "
 

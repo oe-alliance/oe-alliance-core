@@ -19,11 +19,6 @@ inherit autotools
 PACKAGES = "${PN}"
 
 do_install() {
-    if [ "${DISTRO_TYPE}" = "experimental" ] ; then
-        BUILDTYPE="1"
-    else
-        BUILDTYPE="0"
-    fi
     # generate /etc/image-version
     install -d ${D}/etc
     echo "box_type=${MACHINEBUILD}" > ${D}/etc/image-version
