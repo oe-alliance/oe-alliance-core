@@ -1,7 +1,7 @@
 SUMMARY = "Linux kernel for ${MACHINE}"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${KV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
-PR = "r3"
+PR = "r4"
 inherit machine_kernel_pr
 
 MACHINE_KERNEL_PR_append = ".1"
@@ -86,4 +86,15 @@ do_package_qa() {
 do_install_append () {
     install -d ${D}/boot
     install -m 0644 ${S}/arch/mips/boot/zbimage-linux-xload ${D}/boot/zbimage-linux-xload
+    rm -rf ${D}/boot/System.map*
+    rm -rf ${D}/boot/Module.symvers*
+    rm -rf ${D}/boot/config*
+}
+
+do_packagedata_append() {
+    if [ -e ${WORKDIR}/pkgdata/shlibs/kernel-dev.list ]; then
+        rm -rf ${WORKDIR}/packages-split/kernel-dev/usr
+        rm -rf ${WORKDIR}/pkgdata/shlibs/kernel-dev.list
+        rm -rf ${WORKDIR}/pkgdata/shlibs/kernel-dev.ver
+    fi
 }
