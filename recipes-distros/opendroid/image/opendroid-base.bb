@@ -12,7 +12,6 @@ RDEPENDS = "\
 	oe-alliance-base \
 	opendroid-enigma2 \
 	opendroid-bootlogo \
-        opendroid-spinner \
 	libcrypto-compat \
 	hddtemp \
 	dosfstools \
