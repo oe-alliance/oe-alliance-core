@@ -9,7 +9,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "1.0"
-PR = "r43"
+PR = "r44"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 DEPENDS = "enigma2-plugin-drivers-usbserial"
@@ -96,6 +96,7 @@ RRECOMMENDS_${PN} = "\
     ofgwrite \
     gst-ffmpeg \
     idle3-tools \
+    pngquant \
     "
 
 RRECOMMENDS_${PN}_append_vuuno = "enigma2-plugin-extensions-hbbtv"
