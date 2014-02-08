@@ -28,6 +28,7 @@ EXTRA_OECONF = " \
     --with-distro=${DISTRO_NAME} \
     --with-boxtype=${MACHINE} \
     --with-machineoem="${MACHINE_OEM}" \
+    --with-brandoem="${BRAND_OEM}" \
     --with-machinebrand="${MACHINE_BRAND}" \
     --with-machinename="${MACHINE_NAME}" \
     --with-imageversion=${DISTRO_VERSION} \
