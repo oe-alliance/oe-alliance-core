@@ -22,10 +22,10 @@ RRECOMMENDS_${PN} = "\
     enigma2-plugin-systemplugins-crossepg \
     curlftpfs \
     cdfs \
-	openssl-old \
+    openssl-old \
     enigma2-plugin-extensions-enhancedmoviecenter \
     enigma2-plugin-extensions-cooltvguide \
     enigma2-plugin-extensions-bmediacenter \
-	enigma2-plugin-skins-dmcconcinnityhd \
+    enigma2-plugin-skins-dmcconcinnityhd \
     ${@base_contains("MACHINE_BRAND", "AZBOX", "enigma2-plugin-extensions-azplay enigma2-plugin-extensions-aziptv", "", d)} \
     "
