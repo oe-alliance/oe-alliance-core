@@ -7,7 +7,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "1.0"
-PR = "r1"
+PR = "r2"
 
 inherit packagegroup
 
@@ -15,5 +15,6 @@ RDEPENDS_${PN} = "\
     oe-alliance-base \
     openview-enigma2 \
     openview-bootlogo \
+    openview-spinner \
     "
 

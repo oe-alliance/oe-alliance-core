@@ -10,7 +10,7 @@ PV = "${IMAGE_VERSION}"
 PR = "${BUILD_VERSION}"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-URL = "http://xxx"
+URL = "http://openview-support.com"
 
 S = "${WORKDIR}"
 
@@ -31,11 +31,12 @@ do_install() {
     echo "version=${IMAGE_VERSION}" >> ${D}/etc/image-version
     echo "build=${BUILD_VERSION}" >> ${D}/etc/image-version
     echo "date=${DATETIME}" >> ${D}/etc/image-version
-    echo "comment=ViX" >> ${D}/etc/image-version
+    echo "comment=openView" >> ${D}/etc/image-version
     echo "target=9" >> ${D}/etc/image-version
-    echo "creator=openViX" >> ${D}/etc/image-version
+    echo "creator=openView" >> ${D}/etc/image-version
     echo "url=${URL}" >> ${D}/etc/image-version
     echo "catalog=${URL}" >> ${D}/etc/image-version
+    echo "${MACHINE}" > ${D}/etc/model
 }
 
 FILES_${PN} = "/etc/image-version"
