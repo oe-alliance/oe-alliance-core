@@ -39,5 +39,5 @@ do_install() {
     echo "${MACHINE}" > ${D}/etc/model
 }
 
-FILES_${PN} = "/etc/image-version"
+FILES_${PN} = "/etc/model /etc/image-version"
 
