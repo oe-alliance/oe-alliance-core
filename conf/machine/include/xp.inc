@@ -1,3 +1,4 @@
+BRAND_OEM = "xp"
 MACHINE_OEM = "xp1000"
 MACHINE_BRAND = "MaxDigital"
 

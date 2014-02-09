@@ -1,5 +1,6 @@
 # dreambox.inc
 
+BRAND_OEM = "dreambox"
 MACHINE_BRAND = "Dreambox"
 
 EXTRA_IMAGEDEPENDS += "dreambox-secondstage-${MACHINE}"

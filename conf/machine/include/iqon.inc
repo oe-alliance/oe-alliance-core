@@ -1,3 +1,4 @@
+BRAND_OEM = "dags"
 MACHINE_OEM = "dags"
 
 DVBPROVIDER = "kernel"
