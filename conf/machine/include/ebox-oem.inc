@@ -1,7 +1,7 @@
 # We know about rtc
 include conf/machine/include/build-extras.inc
 
-MACHINE_BRAND = "ebox"
+MACHINE_OEM = "ebox"
 
 MACHINE_NAME = "\
 ${@base_contains('MACHINEBUILD', 'mixosf5', 'F5' , '', d)}\
