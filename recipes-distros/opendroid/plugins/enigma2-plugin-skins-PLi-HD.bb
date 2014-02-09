@@ -1,4 +1,4 @@
-DESCRIPTION = "Enigma2 Skin-opd"
+DESCRIPTION = "Enigma2 Skin-PLi-HD"
 MAINTAINER = "Opendroid"
 SECTION = "base"
 PRIORITY = "required"
