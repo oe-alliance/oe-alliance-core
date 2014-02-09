@@ -11,7 +11,7 @@ PKGV = "1.x+git${GITPKGV}"
 VER ="1.x"
 PR = "r1"
 
-SRC_URI="git://github.com/openatv/ofgwrite.git"
+SRC_URI="git://github.com/oe-alliance/ofgwrite.git"
 
 inherit autotools pkgconfig
 
