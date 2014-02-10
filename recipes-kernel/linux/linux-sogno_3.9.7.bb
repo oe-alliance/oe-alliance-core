@@ -2,15 +2,15 @@ SUMMARY = "Linux kernel for ${MACHINE}"
 SECTION = "kernel"
 LICENSE = "GPLv2"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
-PR = "r11"
+PR = "r12"
 
 inherit machine_kernel_pr
 
 KV = "3.9.7"
-SRCDATE = "20140202"
+SRCDATE = "20140207"
 
-SRC_URI[md5sum] = "84a924c9986b5f44906ff43c4748241e"
-SRC_URI[sha256sum] = "2dd5be7723de0be7a4b22ae9c18688c1741cb3edb7bfb15a452b531fcdc8491f"
+SRC_URI[md5sum] = "1e37aa8ad8ebc2290a8dc1457fd02f55"
+SRC_URI[sha256sum] = "5b5eb5dfe7d61bc65bc5875d03c78305d1656985651056b521f532a3e3d12fc9"
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
 MACHINE_KERNEL_PR_append = ".25"
