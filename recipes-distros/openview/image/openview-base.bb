@@ -7,7 +7,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "1.0"
-PR = "r2"
+PR = "r3"
 
 inherit packagegroup
 
@@ -16,5 +16,12 @@ RDEPENDS_${PN} = "\
     openview-enigma2 \
     openview-bootlogo \
     openview-spinner \
+    libcrypto-compat \
+    openssh-sftp-server \
+    ntfs-3g \
+    hddtemp \
+    busybox-cron \
+    python-imaging \
+    ofgwrite \
+    bash \
     "
-
