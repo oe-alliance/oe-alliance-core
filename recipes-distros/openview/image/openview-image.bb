@@ -11,13 +11,6 @@ PR = "r${DATETIME}"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 IMAGE_INSTALL = "openview-base"
-    ${@base_contains("MACHINE_FEATURES", "smallflash", "", \
-    " \
-    packagegroup-base-smbfs-client \
-    packagegroup-base-smbfs \
-    packagegroup-base-nfs \
-    ", d)} \
-    "
 
 export IMAGE_BASENAME = "openview-image"
 IMAGE_LINGUAS = ""
