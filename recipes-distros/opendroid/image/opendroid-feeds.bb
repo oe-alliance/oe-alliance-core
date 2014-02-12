@@ -8,7 +8,7 @@ PR = "r3"
 inherit task
 
 RRECOMMENDS = "\
-opendroid-3rdparty-plugins \
+        opendroid-3rdparty-plugins \
 	oe-alliance-skins \
 	openatv-picons-meta \
 	enigma2-pliplugins \
