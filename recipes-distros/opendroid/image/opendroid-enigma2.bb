@@ -11,7 +11,7 @@ inherit task
 #RCONFLICTS_ = "enigma2-plugin-extensions-permanenttimeshift enigma2-plugin-systemplugins-skinselector"
 #RREPLACES = "enigma2-plugin-extensions-permanenttimeshift enigma2-plugin-systemplugins-skinselector"
 
-DEPENDS = "enigma2-pliplugins opendroid-feeds"
+DEPENDS = "enigma2-pliplugins opendroid-feeds opendroid-3rdparty-plugins"
 
 RRECOMMENDS = "\
 	opendroid-version-info \
