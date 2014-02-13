@@ -8,7 +8,7 @@ PR = "r5"
 
 inherit task
 
-DEPENDS = "enigma2-pliplugins openpl-feeds"
+DEPENDS = "enigma2-pliplugins opendroid-feeds"
 
 RRECOMMENDS = "\
 	openpl-version-info \
