@@ -7,7 +7,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PV = "1.0"
-PR = "r17"
+PR = "r18"
 
 inherit packagegroup
 
@@ -16,8 +16,6 @@ DEPENDS = "enigma2-pliplugins openmips-feeds"
 RRECOMMENDS_${PN} = "\
     openmips-version-info \
     enigma2-plugin-drivers-usbserial \
-    enigma2-plugin-extensions-ppanel \
-    enigma2-plugin-pli-softcamsetup \
     enigma2-plugin-extensions-graphmultiepg \
     enigma2-plugin-extensions-mediaplayer \
     enigma2-plugin-extensions-cutlisteditor \
