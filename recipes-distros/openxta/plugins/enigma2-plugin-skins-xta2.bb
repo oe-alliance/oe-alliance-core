@@ -20,6 +20,10 @@ S = "${WORKDIR}/git"
 
 FILES_${PN} = "/usr/*"
 
+CONFFILES_${PN} = " \
+	/usr/lib/enigma2/python/Plugins/Extensions/iSkin/Weather/Config/Location_id \
+	/usr/lib/enigma2/python/Plugins/Extensions/iSkin/Weather/Config/Region_id "
+
 do_install() {
 	cp -rp ${S}/usr ${D}/
 }
