@@ -2,7 +2,7 @@ DESCRIPTION="Sogno mac checker - flasher"
 LICENSE = "Gpl2"
 LICENSE = "CLOSED"
 
-PR = "r4"
+PR = "r5"
 PV = "0.1"
 
 SRC_URI="file://sogno_mac_check \
