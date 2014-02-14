@@ -7,10 +7,10 @@ PR = "r12"
 inherit machine_kernel_pr
 
 KV = "3.9.7"
-SRCDATE = "20140207"
+SRCDATE = "20140214"
 
-SRC_URI[md5sum] = "1e37aa8ad8ebc2290a8dc1457fd02f55"
-SRC_URI[sha256sum] = "5b5eb5dfe7d61bc65bc5875d03c78305d1656985651056b521f532a3e3d12fc9"
+SRC_URI[md5sum] = "eed9ca06e64a862777657f41c2ca004e"
+SRC_URI[sha256sum] = "0729529b8c33ff0a0659e3422d4e6394b10d98d7f93b2b2f310ebe0290c894f0"
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
 MACHINE_KERNEL_PR_append = ".25"
