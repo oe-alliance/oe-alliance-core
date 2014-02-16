@@ -27,7 +27,6 @@ RRECOMMENDS_${PN} = "\
     enigma2-plugin-drivers-usbserial \
     enigma2-plugin-extensions-autotimer \
     enigma2-plugin-extensions-epgsearch \
-    enigma2-plugin-pli-softcamsetup \
     enigma2-plugin-systemplugins-softwaremanager \
     enigma2-plugin-extensions-zaphistorybrowser \
     enigma2-plugin-extensions-gbaspectratioswitch \
