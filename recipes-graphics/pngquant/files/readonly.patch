@@ -1,14 +1,5 @@
 --- a/rwpng.c	2014-02-09 00:13:20.539665942 +0100
 +++ b/rwpng.c	2014-02-09 00:14:03.487665305 +0100
-@@ -82,7 +82,7 @@
- }
- 
- struct rwpng_write_data {
--    unsigned char *const buffer;
-+    unsigned char *buffer;
-     png_size_t bytes_written;
-     png_size_t bytes_left;
- };
 @@ -318,10 +318,8 @@
  
      struct rwpng_write_data write_data;
