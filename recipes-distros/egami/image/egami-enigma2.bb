@@ -7,11 +7,11 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PV = "1.0"
-PR = "r35"
+PR = "r36"
 
 inherit packagegroup
 
-DEPENDS = "enigma2-pliplugins egami-feeds"
+DEPENDS = "egami-feeds"
 
 RRECOMMENDS_${PN} = " \
     egami-version-info \
@@ -23,9 +23,7 @@ RRECOMMENDS_${PN} = " \
     enigma2-plugin-extensions-imdb \
     enigma2-plugin-extensions-inimytube \    
     \
-    enigma2-plugin-systemplugins-crossepg \    
-    enigma2-plugin-systemplugins-fastscan \
-    enigma2-plugin-systemplugins-3gmodemmanager \
+    enigma2-plugin-systemplugins-crossepg \
     enigma2-plugin-systemplugins-softwaremanager \
     \
     egami-base-files \
@@ -33,5 +31,12 @@ RRECOMMENDS_${PN} = " \
     enigma2-plugin-extensions-egamifaq \
     enigma2-plugin-skins-egmega32 \
     enigma2-plugin-extensions-accuweather \
-    ${@base_contains("MACHINE", "inihdx", "enigma2-plugin-extensions-egamiboot" , "", d)} \
+    \
+    ${@base_contains("MACHINEBUILD", "sezam1000hd", "enigma2-plugin-systemplugins-fastscan" , "", d)} \
+    ${@base_contains("MACHINEBUILD", "sezam5000hd", "enigma2-plugin-systemplugins-fastscan" , "", d)} \
+    ${@base_contains("MACHINEBUILD", "sezammarvel", "enigma2-plugin-systemplugins-fastscan" , "", d)} \
+    \
+    ${@base_contains("MACHINEBUILD", "sezam1000hd", "enigma2-plugin-systemplugins-3gmodemmanager" , "", d)} \
+    ${@base_contains("MACHINEBUILD", "sezam5000hd", "enigma2-plugin-systemplugins-3gmodemmanager" , "", d)} \
+    ${@base_contains("MACHINEBUILD", "sezammarvel", "enigma2-plugin-systemplugins-3gmodemmanager" , "", d)} \    
     "

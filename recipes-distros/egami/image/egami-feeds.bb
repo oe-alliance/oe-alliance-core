@@ -7,22 +7,22 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PV = "1.0"
-PR = "r14"
+PR = "r15"
 
 inherit packagegroup
 
 RRECOMMENDS_${PN} = "\
+    curlftpfs \
+    cdfs \
     oe-alliance-skins \
     enigma2-display-skins \
     openatv-picons-meta \
     enigma2-skins \
-    enigma2-pliplugins \
     enigma2-plugin-extensions-project-valerie \
     enigma2-plugin-extensions-xmltvimport \
-    enigma2-plugin-systemplugins-crossepg \
-    curlftpfs \
-    cdfs \
     enigma2-plugin-extensions-enhancedmoviecenter \
     enigma2-plugin-extensions-cooltvguide \
     enigma2-plugin-extensions-bmediacenter \
+    \
+    enigma2-plugin-systemplugins-crossepg \    
     "
