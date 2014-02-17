@@ -29,12 +29,12 @@ ${@base_contains('MACHINEBUILD', 'tmnano', 'Technomate' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmnano2t', 'Technomate' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmsingle', 'Technomate' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmtwin', 'Technomate' , '', d)}\
-${@base_contains('MACHINEBUILD', 'iqonios100hd', 'iQON' , '', d)}\
-${@base_contains('MACHINEBUILD', 'iqonios200hd', 'iQON' , '', d)}\
+${@base_contains('MACHINEBUILD', 'iqonios100hd', 'Iqon' , '', d)}\
+${@base_contains('MACHINEBUILD', 'iqonios200hd', 'Iqon' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'roxxs200hd', 'Roxxs' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mediaart200hd', 'MediaArt' , '', d)}\
-${@base_contains('MACHINEBUILD', 'iqonios300hd', 'iQON' , '', d)}\
-${@base_contains('MACHINEBUILD', 'force1', 'iQON' , '', d)}\
+${@base_contains('MACHINEBUILD', 'iqonios300hd', 'Iqon' , '', d)}\
+${@base_contains('MACHINEBUILD', 'force1', 'Iqon' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'optimussos1plus', 'Edision' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'optimussos2plus', 'Edision' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'optimussos1', 'Edision' , '', d)}\
