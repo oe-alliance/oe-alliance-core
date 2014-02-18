@@ -5,11 +5,11 @@ KV = "3.9.7"
 
 inherit machine_kernel_pr
 
-SRCDATE = "20140211"
+SRCDATE = "20140212"
 MACHINE_KERNEL_PR_append = ".3"
 
-SRC_URI[md5sum] = "8b79fd38328b6ad4f94b4e93b5690d22"
-SRC_URI[sha256sum] = "7c5076588aa3ee66dbb0a54fd197043ab59ca6819d2e6ace569a62067e0c6fff"
+SRC_URI[md5sum] = "feabc32129ce739b1deed5f5e2a101b4"
+SRC_URI[sha256sum] = "24bb7ef221fb02fa7a92c4ed6dbc78fd2dac49395763214da7198ddee99346a9"
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${KV}-r1/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
