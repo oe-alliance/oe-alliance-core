@@ -8,11 +8,11 @@ inherit autotools pkgconfig gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r5"
+PR = "r6"
 
 PACKAGES += " ${PN}-src"
 
-SRC_URI = "git://code.vuplus.com/git/dumpait.git;protocol=git file://fix-gcc47-compile.patch"
+SRC_URI = "git://code.vuplus.com/git/dumpait.git;protocol=git"
 
 S = "${WORKDIR}/git"
 DESTDIR = "enigma2/python/Plugins/Extensions/HbbTV"
