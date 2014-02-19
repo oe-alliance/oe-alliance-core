@@ -49,7 +49,7 @@ kernel_do_install_append() {
 MTD_DEVICE_ebox5000 = "mtd1"
 MTD_DEVICE_ebox5100 = "mtd1"
 MTD_DEVICE_eboxluni = "mtd1"
-MTD_DEVICE_ebox7358 = "mtd2"
+MTD_DEVICE_ebox7358 = "mtd7"
 
 pkg_postinst_kernel-image () {
     if [ "x$D" == "x" ]; then
