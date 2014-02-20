@@ -6,9 +6,8 @@ LIC_FILES_CHKSUM = "file://COPYING.txt;md5=a7939d3efc8493ae7054e3d2c4644b28"
 
 include python-package-split.inc
 
-PR = "r3"
+PR = "r4"
 
-DEPENDS_${PN} = "python-core python-robotparser"
 RDEPENDS_${PN} = "python-core python-robotparser"
 
 SRC_URI = "http://pypi.python.org/packages/source/m/mechanize/mechanize-${PV}.tar.gz"
@@ -23,4 +22,3 @@ inherit setuptools
 FILES_${PN}-src_append = " \
     ${libdir}/${PYTHON_DIR}/site-packages/mechanize-0.2.5-py2.7.egg-info/* \
     "
-
