@@ -1,4 +1,4 @@
-PRINC = "2"
+PRINC = "3"
 
 inherit python-dir
 
@@ -26,6 +26,7 @@ FILES_${PN}-tests += " \
 FILES_${PN}-doc += " \
     ${PYTHON_SITEPACKAGES_DIR}/*-info \
     ${PYTHON_SITEPACKAGES_DIR}/*/*-info \
+    ${PYTHON_SITEPACKAGES_DIR}/*-nspkg.pth \
     "
 
 FILES_${PN}-dbg += " \

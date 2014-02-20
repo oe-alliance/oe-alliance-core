@@ -1,3 +1,3 @@
-PRINC = "2"
+PRINC = "1"
 
 include python-package-split.inc
