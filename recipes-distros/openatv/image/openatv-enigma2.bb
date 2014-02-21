@@ -7,7 +7,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PV = "1.0"
-PR = "r34"
+PR = "r35"
 
 inherit packagegroup
 
@@ -16,7 +16,7 @@ DEPENDS = "enigma2-pliplugins openatv-feeds"
 RRECOMMENDS_${PN} = " \
     enigma2-skindefault \
     openatv-version-info \
-    enigma2-plugin-settings-defaultsat \
+    ${@base_contains("MACHINE_FEATURES", "dvbc-only", "", "enigma2-plugin-settings-defaultsat", d)} \	
     enigma2-plugin-drivers-usbserial \
     enigma2-plugin-extensions-infopanel \
     enigma2-plugin-extensions-autotimer \
