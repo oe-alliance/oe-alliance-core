@@ -1,4 +1,5 @@
 MACHINE_OEM = "gigablue"
+BRAND_OEM = "gigablue"
 MACHINE_BRAND = "GigaBlue"
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS = " \

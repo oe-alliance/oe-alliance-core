@@ -1,5 +1,6 @@
 MACHINE_OEM = "xtrend"
-MACHINE_BRAND = "XTrend"
+BRAND_OEM = "xtrend"
+MACHINE_BRAND = "xtrend"
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS = "\
 	et-dvb-modules-${MACHINE} \
