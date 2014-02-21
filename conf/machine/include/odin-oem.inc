@@ -6,7 +6,7 @@ BRAND_OEM = "odin"
 MACHINE_NAME = "\
 ${@base_contains('MACHINEBUILD', 'classm', 'CLASS M' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'axodin', 'AX ODIN' , '', d)}\
-${@base_contains('MACHINEBUILD', 'axodinc', 'AX ODIN' , '', d)}\
+${@base_contains('MACHINEBUILD', 'axodinc', 'AX ODIN-C' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'starsatlx', 'LX' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'genius', 'genius' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'evo', 'EVO' , '', d)}\
