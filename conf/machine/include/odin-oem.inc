@@ -6,6 +6,7 @@ BRAND_OEM = "odin"
 MACHINE_NAME = "\
 ${@base_contains('MACHINEBUILD', 'classm', 'CLASS M' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'axodin', 'AX ODIN' , '', d)}\
+${@base_contains('MACHINEBUILD', 'axodinc', 'AX ODIN' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'starsatlx', 'LX' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'genius', 'genius' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'evo', 'EVO' , '', d)}\
@@ -18,6 +19,7 @@ ${@base_contains('MACHINEBUILD', 'maram9', 'M9' , '', d)}\
 MACHINE_BRAND = "\
 ${@base_contains('MACHINEBUILD', 'classm', 'Axas' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'axodin', 'Opticum' , '', d)}\
+${@base_contains('MACHINEBUILD', 'axodinc', 'Opticum' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'starsatlx', 'Starsat' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'genius', 'Galaxy Innovations' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'evo', 'Optibox' , '', d)}\
@@ -30,6 +32,7 @@ ${@base_contains('MACHINEBUILD', 'maram9', 'ODIN' , '', d)}\
 IMAGEDIR ?= "\
 ${@base_contains('MACHINEBUILD', 'classm', 'en2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'axodin', 'en2' , '', d)}\
+${@base_contains('MACHINEBUILD', 'axodinc', 'en2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'starsatlx', 'en2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'genius', 'en2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'evo', 'en2' , '', d)}\
