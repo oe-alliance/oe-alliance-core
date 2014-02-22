@@ -13,7 +13,7 @@ inherit autotools gitpkgv pythonnative
 
 PV = "2.0+git${SRCPV}"
 PKGV = "2.0+git${GITPKGV}"
-PR = "r1"
+PR = "r2"
 
 SRC_URI = "${ENIGMA2_PLUGINS_URI} file://pluginnotwanted.patch"
 
