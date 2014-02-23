@@ -4,11 +4,11 @@ PRIORITY = "required"
 LICENSE = "CLOSED"
 
 PV = "${KV}+${SRCDATE}"
-PR = "r1"
+PR = "r2"
 
 DRIVERMACHINE ?= "${MACHINE}"
 
-SRC_URI = "http://source.mynonpublic.com/${DRIVERMACHINE}-drivers-${KV}-${SRCDATE}.zip"
+SRC_URI = "http://source.mynonpublic.com/cube/${DRIVERMACHINE}-drivers-${KV}-${SRCDATE}.zip"
 
 S = "${WORKDIR}"
 
