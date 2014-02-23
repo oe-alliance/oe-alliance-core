@@ -7,7 +7,7 @@ MAINTAINER = "octagon"
 require conf/license/license-gplv2.inc
 
 PV = "${IMAGE_VERSION}"
-PR = "r0-${DATETIME}-${DISTRO_TYPE}"
+PR = "${BUILD_VERSION}"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 URL = "http://www.octagon-forum.com"
