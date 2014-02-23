@@ -20,7 +20,6 @@ RDEPENDS_${EPSM}-mynovum-hd-weather = "novum-hd-renderer novum-hd-common enigma2
 RDEPENDS_${EPSM}-nou-hd = "novum-hd-renderer novum-hd-common"
 RDEPENDS_${EPSM}-nou-hd-weather = "novum-hd-renderer novum-hd-common enigma2-plugin-extensions-weatherplugin enigma2-plugin-systemplugins-weathercomponent"
 
-WeatherPlugin
 SRC_URI = "git://github.com/oe-alliance/oe-alliance-skins.git;protocol=git"
 
 FILES_novum-hd-renderer = "/usr/lib/enigma2/python/Components/Renderer/*.pyo"
