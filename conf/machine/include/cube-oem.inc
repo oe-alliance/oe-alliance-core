@@ -46,7 +46,9 @@ UBI_VOLNAME = "rootfs"
 # image name in the zipfile, can be overridden by an image
 ZIPFILE_IMAGE_NAME ?= "firmware.img"
 
-EXTRA_IMAGEDEPENDS += "createimage-${MACHINE}"
+EXTRA_IMAGEDEPENDS += "createimage-${MACHINE} \
+    mtd-utils-native \
+    "
 
 IMAGE_CMD_imgzip256 = " \
     mkfs.ubifs -r ${IMAGE_ROOTFS} -o ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs_256.ubifs -m 2048 -e 126976 -c 4096; \
