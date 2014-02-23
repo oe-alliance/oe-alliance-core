@@ -32,8 +32,6 @@ FILES_${EPSM}-mynovum-hd-weather = "/usr/share/enigma2/myNOVUM_HD_Weather"
 FILES_${EPSM}-nou-hd = "/usr/share/enigma2/Nou_HD"
 FILES_${EPSM}-nou-hd-weather = "/usr/share/enigma2/Nou_HD_Weather"
 
-WeatherPlugin
-
 S = "${WORKDIR}/git"
 
 do_compile_append() {
