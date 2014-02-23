@@ -1,6 +1,7 @@
 # We know about rtc
 include conf/machine/include/build-extras.inc
 
+BRAND_OEM = "ebox"
 MACHINE_OEM = "ebox"
 
 MACHINE_NAME = "\
