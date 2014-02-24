@@ -4,7 +4,7 @@ require conf/license/license-gplv2.inc
 
 inherit allarch
 
-PR = "r33"
+PR = "r34"
 
 DEPENDS = "\
     ${@base_contains("MACHINE_FEATURES", "dvbc-only", "", " \
@@ -89,6 +89,7 @@ DEPENDS = "\
     enigma2-plugin-settings-gigablue-19e-13e-5e-75e \
     enigma2-plugin-settings-gigablue-19e-16e-13e \
     enigma2-plugin-settings-gigablue-42e-19e-13e-7e \
+    enigma2-plugin-settings-gigablue-hepsidijital \	
 	", d)} \
     enigma2-plugin-settings-gigablue-wilhelmtel \
     enigma2-plugin-settings-gigablue-unity-media \
