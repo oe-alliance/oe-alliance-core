@@ -4,7 +4,7 @@ require conf/license/license-gplv2.inc
 
 inherit allarch
 
-PR = "r32"
+PR = "r33"
 
 DEPENDS = "\
 	enigma2-plugin-settings-henksat-19e \
@@ -92,4 +92,5 @@ DEPENDS = "\
 	enigma2-plugin-settings-gigablue-42e-19e-13e-7e \
 	enigma2-plugin-settings-gigablue-kabel-bw \
 	enigma2-plugin-settings-gigablue-kabeldeutschland \
+	enigma2-plugin-settings-gigablue-hepsidijital \
 	"
