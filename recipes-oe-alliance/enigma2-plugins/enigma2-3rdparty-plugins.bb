@@ -9,7 +9,7 @@ inherit gitpkgv autotools deploy
 SRCREV = "${AUTOREV}"
 PV = "2.0+gitr${SRCPV}"
 PKGV = "2.0+gitr${GITPKGV}"
-PR = "r5"
+PR = "r6"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -51,7 +51,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-kicker_3.1rc4_mips32el.ipk \
     enigma2-plugin-extensions-kino_1.1rc5_mips32el.ipk \
     enigma2-plugin-extensions-livefootball_4.4_mips32el.ipk \
-    enigma2-plugin-extensions-mediainfo_0.6_r04_all.ipk \
+    enigma2-plugin-extensions-mediainfo_0.7-r1_r04_all.ipk \
     enigma2-plugin-extensions-mediaportal_5.0.6a_all.ipk \
     enigma2-plugin-extensions-msnwetter_0.6rc3_mips32el.ipk \
     enigma2-plugin-extensions-mtv_0.1_mips32el.ipk \
