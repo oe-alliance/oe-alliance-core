@@ -7,7 +7,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PV = "1.0"
-PR = "r18"
+PR = "r19"
 
 inherit packagegroup
 
@@ -41,5 +41,3 @@ RRECOMMENDS_${PN} = "\
     ${@base_contains("MACHINE_FEATURES", "3dtv", "enigma2-plugin-systemplugins-osd3dsetup" , "", d)} \
     "
 
-RRECOMMENDS_${PN}_append_gbquad = " webbrowser-utils enigma2-plugin-extensions-webbrowser"
-RRECOMMENDS_${PN}_append_vusolo2 = " enigma2-plugin-extensions-hbbtv"    
