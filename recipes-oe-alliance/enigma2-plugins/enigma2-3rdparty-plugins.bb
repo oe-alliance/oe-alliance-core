@@ -30,6 +30,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-airplayer_0.3.9_mips32el.ipk \
     enigma2-plugin-extensions-atmolightd_0.7-pre22_all.ipk \
     enigma2-plugin-extensions-autobouquets-e2_201310201900-r2_mips32el.ipk \
+    enigma2-plugin-extensions-backupsuite_12.0_mips32el.ipk \
     enigma2-plugin-extensions-bildonline_2.9rc13_mips32el.ipk \
     enigma2-plugin-extensions-bluray_1.2_mips32el.ipk \
     enigma2-plugin-extensions-boblight-enigma2_0.8r5_mips32el.ipk \
@@ -51,7 +52,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-kicker_3.1rc4_mips32el.ipk \
     enigma2-plugin-extensions-kino_1.1rc5_mips32el.ipk \
     enigma2-plugin-extensions-livefootball_4.4_mips32el.ipk \
-    enigma2-plugin-extensions-mediainfo_0.7-r1_r04_all.ipk \
+    enigma2-plugin-extensions-mediainfo_0.6_r04_all.ipk \
     enigma2-plugin-extensions-mediaportal_5.1.2-r1_all.ipk \
     enigma2-plugin-extensions-msnwetter_0.6rc3_mips32el.ipk \
     enigma2-plugin-extensions-mtv_0.1_mips32el.ipk \
@@ -68,7 +69,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-radioonline-oe2.0_1.0_all.ipk \
     enigma2-plugin-extensions-screensaver_5.6.9_all.ipk \
     enigma2-plugin-extensions-screengrabber_2.1a_mips32el.ipk \
-    enigma2-plugin-extensions-seriesplugin_0.9.1.2_mips32el.ipk \
+    enigma2-plugin-extensions-seriesplugin_0.9_mips32el.ipk \
     enigma2-plugin-extensions-sherlock-vuplus_5.01_mipsel.ipk \
     enigma2-plugin-extensions-skyrecorder_1.5.1_all.ipk \
     enigma2-plugin-extensions-songs-to_0.1_mips32el.ipk \
