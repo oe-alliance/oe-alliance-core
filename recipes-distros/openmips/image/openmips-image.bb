@@ -7,7 +7,7 @@ MAINTAINER = "openmips team"
 require conf/license/license-gplv2.inc
 
 PV = "${IMAGE_VERSION}"
-PR = "r6${DATETIME}"
+PR = "r5${DATETIME}"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 IMAGE_INSTALL = "openmips-base"
@@ -27,7 +27,6 @@ rootfs_postprocess() {
 			# because we're so used to it
 			ln -s opkg usr/bin/ipkg || true
 			ln -s opkg-cl usr/bin/ipkg-cl || true
-			ln -s usr/lib/enigma2/spinner usr/lib/enigma2/skin_default/spinner || true
 
 			cd $curdir
 }
