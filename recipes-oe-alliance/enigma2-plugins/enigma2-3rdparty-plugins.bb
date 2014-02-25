@@ -147,6 +147,21 @@ THIRDPARTY_MACHINE_PLUGINS_odinm7 = " \
 do_install() {
 }
 
+python populate_packages_prepend () {
+    p = ""
+    plugins = bb.data.getVar('THIRDPARTY_PLUGINS', d, 1)
+    if bb.data.getVar('THIRDPARTY_MACHINE_PLUGINS', d, 1) is not None:
+        plugins += bb.data.getVar('THIRDPARTY_MACHINE_PLUGINS', d, 1)
+    if bb.data.getVar('THIRDPARTY_EXTRA_PLUGINS', d, 1) is not None:
+        plugins += bb.data.getVar('THIRDPARTY_EXTRA_PLUGINS', d, 1)
+
+    if plugins is not None:
+        for package in plugins.split():
+            p += package.split('_')[0] + " "
+
+    bb.data.setVar('PACKAGES', p, d)
+}
+
 do_deploy() {
     install -d 0755 ${DEPLOY_DIR_IPK}/3rdparty
     install -d 0755 ${DEPLOY_DIR_IPK}/${MACHINE}_3rdparty
