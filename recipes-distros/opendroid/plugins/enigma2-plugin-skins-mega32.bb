@@ -12,13 +12,14 @@ SRCREV = "${AUTOREV}"
 PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"
 VER ="1.0"
-PR = "r4"
+PR = "r5"
 
 SRC_URI="git://github.com/opendroid-Team/mega32.git"
 
 S = "${WORKDIR}/git"
 
 FILES_${PN} = "/usr/*"
+
 
 do_install() {
 	cp -rp ${S}/usr ${D}/
