@@ -7,7 +7,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PV = "1.0"
-PR = "r49"
+PR = "r50"
 
 inherit packagegroup
 
@@ -31,7 +31,6 @@ RRECOMMENDS_${PN} = "\
     enigma2-plugin-extensions-virtualzap.mod \
     enigma2-plugin-extensions-volume-adjust \
     enigma2-plugin-pli-softcamsetup \
-    enigma2-plugin-systemplugins-autoresolution \
     enigma2-plugin-systemplugins-devicemanager \
     enigma2-plugin-systemplugins-videotune \
     enigma2-plugin-systemplugins-softwaremanager \
