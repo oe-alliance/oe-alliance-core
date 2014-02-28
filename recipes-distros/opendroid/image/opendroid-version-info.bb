@@ -10,7 +10,7 @@ PV = "${IMAGE_VERSION}"
 PR = "${BUILD_VERSION}"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-URL = "http://www.droidsat.org"
+URL = "http://www.ixuss.info/"
 
 S = "${WORKDIR}"
 
@@ -24,13 +24,18 @@ do_install() {
 			else
 				BUILDTYPE="0"
 			fi
-
-			install -d ${D}/etc
 			# generate /etc/image-version
+			install -d ${D}/etc
 			echo "box_type=${MACHINE}" > ${D}/etc/image-version
 			echo "build_type=${BUILDTYPE}" >> ${D}/etc/image-version
 			echo "version=${IMAGE_VERSION}" >> ${D}/etc/image-version
 			echo "build=${BUILD_VERSION}" >> ${D}/etc/image-version
+			if [ "${MACHINE}" = "ixussone" -o "${MACHINE}" = "ixusszero" -o "${MACHINE}" = "ixussduo" ]; then
+				DRIVERS=`grep "SRCDATE = " ${OE-ALLIANCE_BASE}/meta-oe-alliance/recipes-bsp/ixuss/ixuss-opendroid-dvb-modules-${MACHINE}.bb | cut -b 12-19`	
+			else
+				DRIVERS='N/A'
+			fi
+			echo "drivers=${DRIVERS}" >> ${D}/etc/image-version
 			echo "date=${DATETIME}" >> ${D}/etc/image-version
 			echo "comment=opendroid" >> ${D}/etc/image-version
 			echo "target=9" >> ${D}/etc/image-version
@@ -40,5 +45,5 @@ do_install() {
 			echo "${MACHINE}" > ${D}/etc/model
 }
 
-FILES_${PN} += "/etc"
+FILES_${PN} += "/etc/model /etc/image-version /etc/oe-git.log /etc/e2-git.log"
 
