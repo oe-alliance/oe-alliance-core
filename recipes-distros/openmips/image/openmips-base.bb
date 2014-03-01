@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=4d92cd373abda3937c2bc47fbc49d
 ALLOW_EMPTY_${PN} = "1"
 
 PV = "1.0"
-PR = "r6"
+PR = "r7"
 
 inherit packagegroup
 
@@ -14,6 +14,7 @@ RDEPENDS_${PN} = "\
     oe-alliance-base \
     openmips-enigma2 \
     openmips-bootlogo \
+    openmips-spinner \
     libcrypto-compat \
     hddtemp \
     dosfstools \
