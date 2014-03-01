@@ -7,7 +7,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PV = "1.0"
-PR = "r19"
+PR = "r20"
 
 inherit packagegroup
 
@@ -32,6 +32,7 @@ RRECOMMENDS_${PN} = "\
     enigma2-plugin-systemplugins-fastscan \
     enigma2-plugin-extensions-autotimer \
     enigma2-plugin-extensions-epgsearch \
+    enigma2-plugin-systemplugins-positionersetup \
     enigma2-plugin-systemplugins-videoenhancement \
     enigma2-plugin-drivers-network-usb-smsc75xx \
     enigma2-plugin-drivers-network-usb-ax88179-178a \
