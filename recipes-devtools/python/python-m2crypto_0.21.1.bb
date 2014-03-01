@@ -24,9 +24,8 @@ export STAGING_INCDIR
 export STAGING_LIBDIR
 
 do_configure_prepend() {
-  for i in SWIG/_{ec,evp}.i; do
-    sed -i -e "s/opensslconf\./opensslconf-32\./" "$i"
-  done
+    sed -i -e "s/opensslconf\./opensslconf-32\./" SWIG/_ec.i
+    sed -i -e "s/opensslconf\./opensslconf-32\./" SWIG/_evp.i
 }
 
 do_configure_cube_prepend() {
