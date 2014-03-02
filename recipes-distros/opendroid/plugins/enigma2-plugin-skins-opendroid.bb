@@ -1,11 +1,9 @@
 DESCRIPTION = "Enigma2 Skin opendroid"
-MAINTAINER = "pli-hd"
+MAINTAINER = "opendroid"
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "proprietary"
 PACKAGE_ARCH = "all"
-
-RDEPENDS_${PN} = "font-valis-hd"
 
 require conf/license/license-gplv2.inc
 
@@ -14,7 +12,7 @@ SRCREV = "${AUTOREV}"
 PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"
 VER ="1.0"
-PR = "r1"
+PR = "r0"
 
 SRC_URI="git://github.com/opendroid-Team/PLi-HD.git"
 
