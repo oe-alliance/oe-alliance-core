@@ -2,7 +2,7 @@ DESCRIPTION = "opendroid Image"
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "proprietary"
-MAINTAINER = "opendroid team"
+MAINTAINER = "opendroid"
 
 require conf/license/license-gplv2.inc
 
@@ -10,8 +10,7 @@ PV = "${IMAGE_VERSION}"
 PR = "r${DATETIME}"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-IMAGE_INSTALL = "opendroid-base \
-	"
+IMAGE_INSTALL = "opendroid-base"
 
 export IMAGE_BASENAME = "opendroid-image"
 IMAGE_LINGUAS = ""
@@ -19,7 +18,6 @@ IMAGE_LINGUAS = ""
 IMAGE_FEATURES += "package-management"
 
 inherit image
-
 
 rootfs_postprocess() {
 			curdir=$PWD
@@ -55,4 +53,3 @@ generate_nfo() {
 do_rootfs_append() {
 			generate_nfo
 }
-
