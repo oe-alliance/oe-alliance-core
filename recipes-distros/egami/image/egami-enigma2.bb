@@ -7,7 +7,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PV = "1.0"
-PR = "r36"
+PR = "r37"
 
 inherit packagegroup
 
@@ -15,28 +15,36 @@ DEPENDS = "egami-feeds"
 
 RRECOMMENDS_${PN} = " \
     egami-version-info \
+    egami-base-files \
+    \
+    enigma2-plugin-skins-egmega32 \
+    \
     enigma2-plugin-extensions-autotimer \
     enigma2-plugin-extensions-epgsearch \
     enigma2-plugin-extensions-imdb \
     enigma2-plugin-extensions-mediaplayer \
     enigma2-plugin-extensions-cutlisteditor \
-    enigma2-plugin-extensions-imdb \
     enigma2-plugin-extensions-inimytube \    
     \
     enigma2-plugin-systemplugins-crossepg \
     enigma2-plugin-systemplugins-softwaremanager \
     \
-    egami-base-files \
     enigma2-plugin-extensions-egamipermanentclock \
-    enigma2-plugin-extensions-egamifaq \
-    enigma2-plugin-skins-egmega32 \
-    enigma2-plugin-extensions-accuweather \
     \
-    ${@base_contains("MACHINEBUILD", "sezam1000hd", "enigma2-plugin-systemplugins-fastscan" , "", d)} \
-    ${@base_contains("MACHINEBUILD", "sezam5000hd", "enigma2-plugin-systemplugins-fastscan" , "", d)} \
-    ${@base_contains("MACHINEBUILD", "sezammarvel", "enigma2-plugin-systemplugins-fastscan" , "", d)} \
-    \
-    ${@base_contains("MACHINEBUILD", "sezam1000hd", "enigma2-plugin-systemplugins-3gmodemmanager" , "", d)} \
-    ${@base_contains("MACHINEBUILD", "sezam5000hd", "enigma2-plugin-systemplugins-3gmodemmanager" , "", d)} \
-    ${@base_contains("MACHINEBUILD", "sezammarvel", "enigma2-plugin-systemplugins-3gmodemmanager" , "", d)} \    
+    ${@base_contains("MACHINE_BRAND", "UNiBOX", "${BASE_PLUGINS}" , "", d)} \
+    ${@base_contains("MACHINE_BRAND", "GI", "${BASE_PLUGINS}" , "", d)} \
+    ${@base_contains("MACHINE_BRAND", "Miraclebox", "${BASE_PLUGINS}" , "", d)} \
+    ${@base_contains("MACHINE_BRAND", "Atemio", "${BASE_PLUGINS}" , "", d)} \
+    ${@base_contains("MACHINE_BRAND", "Sezam", "${SEZAM_PLUGINS}" , "", d)} \
     "
+    
+BASE_PLUGINS = "\
+    enigma2-plugin-extensions-egamifaq \
+    enigma2-plugin-extensions-accuweather \
+    enigma2-plugin-extensions-mediaportal \    
+"
+
+SEZAM_PLUGINS = "\
+    enigma2-plugin-systemplugins-3gmodemmanager \
+    enigma2-plugin-systemplugins-fastscan \
+"
