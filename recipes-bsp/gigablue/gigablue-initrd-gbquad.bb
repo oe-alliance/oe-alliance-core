@@ -11,5 +11,5 @@ do_deploy() {
 
 addtask deploy before do_build after do_install
 
-SRC_URI[md5sum] = "43f5e0e3328a80d415ff21128660b0c1"
-SRC_URI[sha256sum] = "b1d2fc15a1daa31d849c6e037faa2451c9cb2b9bae9568588b7cc0411da71243"
+SRC_URI[md5sum] = "9b3abc17904625d23d4fe0deb3946cf4"
+SRC_URI[sha256sum] = "5563545d47f69e5c3d9d69fb1fc6bc9411a4dba2c821be5e04ff696e2439311f"
