@@ -7,9 +7,9 @@ PACKAGE_ARCH := "${MACHINE_ARCH}"
 
 require conf/license/license-gplv2.inc
 
-PR = "r0"
+PR = "r1"
 ALLOW_EMPTY_${PN} = "1"
 
-SRC_URI = "http://archiv.openmips.com/initrd-${MACHINE}-${SRCDATE}.zip"
+SRC_URI = "http://archiv.openmips.com/initrd-${MACHINE}-${SRCDATE}.tgz"
 
 S = "${WORKDIR}"
