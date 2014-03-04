@@ -2,13 +2,13 @@ SUMMARY = "Linux kernel for ${MACHINE}"
 SECTION = "kernel"
 LICENSE = "GPLv2"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
-PR = "r1"
+PR = "r2"
 
 KERNEL_RELEASE = "3.8.7"
-SRCDATE = "20140126"
+SRCDATE = "20140223"
 
-SRC_URI[md5sum] = "ecc7c8bfed029b3eff89b2bf77972c86"
-SRC_URI[sha256sum] = "f6efb226fec27587d3b875944eb6fb9991292e665774a48bcbd4a4611b41cffc"
+SRC_URI[md5sum] = "4863c9332f9b78e142ae25151ebda01c"
+SRC_URI[sha256sum] = "303094e16b6b558a9cb67dd7a060c368cc3eab1448a363fc72f797677b73cb7c"
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}-base/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
@@ -22,7 +22,7 @@ PKG_kernel-image = "kernel-image"
 RPROVIDES_kernel-base = "kernel-${KERNEL_VERSION}"
 RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
 
-SRC_URI += "http://source.mynonpublic.com/evo/${MACHINE}-linux-${PV}-base-${SRCDATE}.tgz \
+SRC_URI += "http://source.entwopia.com/evo/${MACHINE}-linux-${PV}-base-${SRCDATE}.tgz \
     file://defconfig \
     file://0001-Revert-default-authentication-needs-to-be-at-least-n.patch \
     file://0001-Revert-MIPS-mm-Add-compound-tail-page-_mapcount-when.patch \

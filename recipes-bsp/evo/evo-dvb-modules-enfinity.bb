@@ -1,7 +1,7 @@
 KV = "3.8.7"
-SRCDATE = "20140126"
+SRCDATE = "20140223"
 
 require evo-dvb-modules.inc
 
-SRC_URI[md5sum] = "6c0ccf7311372d3386ffdbf21dce6116"
-SRC_URI[sha256sum] = "dd5f152d45b6ae3e296ca437fdee59c18593136b87d5abe916f7ee6799feaf7a"
+SRC_URI[md5sum] = "dba8daf2a62e1d17a0737dbbd7b85e87"
+SRC_URI[sha256sum] = "3d0c59d607fda6a1d43f993e82d2225511ede4449e3f46442c1e831820bc555f"
