@@ -31,6 +31,24 @@ ${@base_contains('MACHINEBUILD', 'gi9196m', 'ebox/7403' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'gi9196lite', 'ebox/7403' , '', d)}\
 "
 
+MTD_KERNEL = "\
+${@base_contains('MACHINEBUILD', 'mixosf5', 'mtd1' , '', d)}\
+${@base_contains('MACHINEBUILD', 'mixosf5mini', 'mtd1' , '', d)}\
+${@base_contains('MACHINEBUILD', 'mixosf7', 'mtd7' , '', d)}\
+${@base_contains('MACHINEBUILD', 'mixoslumi', 'mtd1' , '', d)}\
+${@base_contains('MACHINEBUILD', 'gi9196m', 'mtd1' , '', d)}\
+${@base_contains('MACHINEBUILD', 'gi9196lite', 'mtd1' , '', d)}\
+"
+
+MTD_ROOTFS = "\
+${@base_contains('MACHINEBUILD', 'mixosf5', 'mtd2' , '', d)}\
+${@base_contains('MACHINEBUILD', 'mixosf5mini', 'mtd2' , '', d)}\
+${@base_contains('MACHINEBUILD', 'mixosf7', 'mtd6' , '', d)}\
+${@base_contains('MACHINEBUILD', 'mixoslumi', 'mtd2' , '', d)}\
+${@base_contains('MACHINEBUILD', 'gi9196m', 'mtd2' , '', d)}\
+${@base_contains('MACHINEBUILD', 'gi9196lite', 'mtd2' , '', d)}\
+"
+
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS = "\
     ebox-dvb-modules-${MACHINE} \
     ebox-shutdown \

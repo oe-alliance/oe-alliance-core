@@ -39,6 +39,30 @@ ${@base_contains('MACHINEBUILD', 'mbtwin', 'miraclebox/twin' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'atemio5x00', 'atemio/5x00' , '', d)}\
 "
 
+MTD_KERNEL = "\
+${@base_contains('MACHINEBUILD', 'ventonhdx', 'mtd1' , '', d)}\
+${@base_contains('MACHINEBUILD', 'sezam1000hd', 'mtd2' , '', d)}\
+${@base_contains('MACHINEBUILD', 'sezam5000hd', 'mtd1' , '', d)}\
+${@base_contains('MACHINEBUILD', 'sezammarvel', 'mtd2' , '', d)}\
+${@base_contains('MACHINEBUILD', 'xpeedlx', 'mtd2' , '', d)}\
+${@base_contains('MACHINEBUILD', 'xpeedlx3', 'mtd2' , '', d)}\
+${@base_contains('MACHINEBUILD', 'mbmini', 'mtd2' , '', d)}\
+${@base_contains('MACHINEBUILD', 'mbtwin', 'mtd1' , '', d)}\
+${@base_contains('MACHINEBUILD', 'atemio5x00', 'mtd2' , '', d)}\
+"
+
+MTD_ROOTFS = "\
+${@base_contains('MACHINEBUILD', 'ventonhdx', 'mtd2' , '', d)}\
+${@base_contains('MACHINEBUILD', 'sezam1000hd', 'mtd3' , '', d)}\
+${@base_contains('MACHINEBUILD', 'sezam5000hd', 'mtd2' , '', d)}\
+${@base_contains('MACHINEBUILD', 'sezammarvel', 'mtd3' , '', d)}\
+${@base_contains('MACHINEBUILD', 'xpeedlx', 'mtd3' , '', d)}\
+${@base_contains('MACHINEBUILD', 'xpeedlx3', 'mtd3' , '', d)}\
+${@base_contains('MACHINEBUILD', 'mbmini', 'mtd3' , '', d)}\
+${@base_contains('MACHINEBUILD', 'mbtwin', 'mtd2' , '', d)}\
+${@base_contains('MACHINEBUILD', 'atemio5x00', 'mtd3' , '', d)}\
+"
+
 KERNEL_FILE = "kernel.bin"
 ROOTFS_FILE = "rootfs.bin"
 

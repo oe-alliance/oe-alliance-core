@@ -42,8 +42,32 @@ ${@base_contains('MACHINEBUILD', 'axase3', 'e3hd' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'maram9', 'odinm9' , '', d)}\
 "
 
-MTD_ROOTFS = "mtd3"
-MTD_KERNEL = "mtd2"
+MTD_KERNEL = "\
+${@base_contains('MACHINEBUILD', 'classm', 'mtd3' , '', d)}\
+${@base_contains('MACHINEBUILD', 'axodin', 'mtd3' , '', d)}\
+${@base_contains('MACHINEBUILD', 'axodinc', 'mtd3' , '', d)}\
+${@base_contains('MACHINEBUILD', 'starsatlx', 'mtd3' , '', d)}\
+${@base_contains('MACHINEBUILD', 'genius', 'mtd3' , '', d)}\
+${@base_contains('MACHINEBUILD', 'evo', 'mtd3' , '', d)}\
+${@base_contains('MACHINEBUILD', 'geniuse3hd', 'mtd1' , '', d)}\
+${@base_contains('MACHINEBUILD', 'evoe3hd', 'mtd1' , '', d)}\
+${@base_contains('MACHINEBUILD', 'axase3', 'mtd1' , '', d)}\
+${@base_contains('MACHINEBUILD', 'maram9', 'mtd2' , '', d)}\
+"
+
+MTD_ROOTFS = "\
+${@base_contains('MACHINEBUILD', 'classm', 'mtd4' , '', d)}\
+${@base_contains('MACHINEBUILD', 'axodin', 'mtd4' , '', d)}\
+${@base_contains('MACHINEBUILD', 'axodinc', 'mtd4' , '', d)}\
+${@base_contains('MACHINEBUILD', 'starsatlx', 'mtd4' , '', d)}\
+${@base_contains('MACHINEBUILD', 'genius', 'mtd4' , '', d)}\
+${@base_contains('MACHINEBUILD', 'evo', 'mtd4' , '', d)}\
+${@base_contains('MACHINEBUILD', 'geniuse3hd', 'mtd2' , '', d)}\
+${@base_contains('MACHINEBUILD', 'evoe3hd', 'mtd2' , '', d)}\
+${@base_contains('MACHINEBUILD', 'axase3', 'mtd2' , '', d)}\
+${@base_contains('MACHINEBUILD', 'maram9', 'mtd3' , '', d)}\
+"
+
 KERNEL_FILE = "kernel.bin"
 ROOTFS_FILE = "rootfs.bin"
 
