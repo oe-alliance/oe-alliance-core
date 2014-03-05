@@ -5,17 +5,19 @@ LIC_FILES_CHKSUM = "file://src/gstdvbaudiosink.c;beginline=1;endline=45;md5=023e
                     file://src/gstdvbvideosink.c;beginline=1;endline=44;md5=b597d3f0a4e3b49db42d2b5140bd7004"
 DEPENDS = "gstreamer gst-plugins-base"
 RDEPENDS_${PN} = "gst-ffmpeg"
-BRANCH="master"
-PR = "r20"
+
+PR = "r26"
 
 inherit autotools git-project
-SRCREV = "91738211ef106ae7d14c1ccc5c4dd26c0f2dbf58"
+
+BRANCH="master"
+SRCREV = "9cd3627a42178b74e3aec24413f4b0e0be76de59"
 SRC_URI = "git://schwerkraft.elitedvb.net/dvbmediasink/dvbmediasink.git;protocol=git;branch=${BRANCH} \
-		file://0001-dvbaudiosink-enable-async.patch;apply=yes \
-		file://0002-dvbaudiosink-emulate-bcm7405-caps.patch;apply=yes \
-		file://0003-dvbaudiosink-support-ac3plus.patch;apply=yes \
-		file://0004-dvbaudiosink-remove_wma.patch;apply=yes \
-		file://0005-dvbaudiosink-remove-mp4a-non-lc.patch;apply=yes \
+		file://0001-dvbaudiosink-enable-async.patch \
+		file://0002-dvbaudiosink-emulate-bcm7405-caps.patch \
+		file://0003-dvbaudiosink-support-ac3plus.patch \
+		file://0004-dvbaudiosink-remove_wma.patch \
+		file://0005-dvbaudiosink-remove-mp4a-non-lc.patch \
 "
 
 FILES_${PN} = "${libdir}/gstreamer-0.10/*.so"
