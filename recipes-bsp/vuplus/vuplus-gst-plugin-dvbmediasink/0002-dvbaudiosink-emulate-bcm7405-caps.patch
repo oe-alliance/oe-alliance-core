@@ -1,0 +1,15 @@
+diff --git a/src/gstdvbvideosink.c b/src/gstdvbvideosink.c
+index b8b8476..2dfd15a 100644
+--- a/src/gstdvbvideosink.c
++++ b/src/gstdvbvideosink.c
+@@ -324,8 +324,8 @@ gst_dvbvideosink_base_init (gpointer klass)
+ 				GST_INFO ("model is DM7020HD... set bcm7405 caps");
+ 			} else if ( !strncasecmp(string, "DM8000", 6) ) {
+ 				hwtype = DM8000;
+-				hwtemplate = &sink_factory_bcm7400;
+-				GST_INFO ("model is DM8000... set bcm7400 caps");
++				hwtemplate = &sink_factory_bcm7405;
++				GST_INFO ("model is DM8000... set bcm7405 caps");
+ 			} else if ( !strncasecmp(string, "DM800", 5) ) {
+ 				hwtype = DM800;
+ 				hwtemplate = &sink_factory_bcm7401;
