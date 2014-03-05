@@ -12,7 +12,7 @@ SRCREV = "${AUTOREV}"
 PV = "2.1+git${SRCPV}"
 PKGV = "2.1+git${GITPKGV}"
 VER ="2.1"
-PR = "r2"
+PR = "r3"
 
 SRC_URI="git://github.com/openatv/MetrixHD.git"
 
@@ -26,14 +26,6 @@ do_install() {
 
 pkg_preinst_${PN}() {
 #!/bin/sh
-echo "Checking for MyMetrixLiteColors"
-if [ -d /usr/lib/enigma2/python/Plugins/Extensions/MyMetrixLiteColors ]; then
-    rm -rf /usr/lib/enigma2/python/Plugins/Extensions/MyMetrixLiteColors 2>/dev/null
-    echo "MyMetrixLiteColors was found and removed"
-else
-    echo "MyMetrixLiteColors was not found"
-fi
-echo "Proceeding..."
 echo "Checking for skin.MySkin.xml in the skinfolder"
 if [ -f /usr/share/enigma2/MetrixHD/skin.MySkin.xml ]; then
     rm -f /usr/share/enigma2/MetrixHD/skin.MySkin.xml
