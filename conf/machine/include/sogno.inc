@@ -3,6 +3,10 @@ include conf/machine/include/build-extras.inc
 
 BRAND_OEM = "sogno"
 MACHINE_BRAND = "Sogno"
+MTD_ROOTFS = "mtd7"
+MTD_KERNEL = "mtd8"
+KERNEL_FILE = "kernel.bin"
+ROOTFS_FILE = "rootfs.bin"
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS = "\
     sogno-dvb-modules-sogno8800hd \

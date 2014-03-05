@@ -3,6 +3,10 @@ include conf/machine/include/build-extras.inc
 
 BRAND_OEM = "ixuss"
 MACHINE_BRAND = "IXUSS"
+MTD_ROOTFS = "mtd2"
+MTD_KERNEL = "mtd1"
+KERNEL_FILE = "kernel.bin"
+ROOTFS_FILE = "rootfs.bin"
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS = " \
     ixuss-dvb-modules-${MACHINE} \

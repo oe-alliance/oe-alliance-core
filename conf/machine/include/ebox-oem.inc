@@ -3,6 +3,8 @@ include conf/machine/include/build-extras.inc
 
 BRAND_OEM = "ebox"
 MACHINE_OEM = "ebox"
+KERNEL_FILE = "kernel_cfe_auto.bin"
+ROOTFS_FILE = "root_cfe_auto.bin"
 
 MACHINE_NAME = "\
 ${@base_contains('MACHINEBUILD', 'mixosf5', 'F5' , '', d)}\
