@@ -31,7 +31,6 @@ SRC_URI = " \
         file://linux-2.6.18-include-linux.patch \
         file://linux-2.6.18-mod_devicetable_h.patch \
         file://linux-2.6.18-3g-modems.patch \
-        file://mips-refactor-clearpage-and-copypage_311.patch \
 "
 SRC_URI[kernel.md5sum] = "296a6d150d260144639c3664d127d174"
 SRC_URI[kernel.sha256sum] = "c95280ff6c5d2a17788f7cc582d23ae8a9a7ba3f202ec6e4238eaadfce7c163d"
