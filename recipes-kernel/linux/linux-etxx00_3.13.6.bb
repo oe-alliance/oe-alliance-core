@@ -6,10 +6,10 @@ PR = "r1"
 
 inherit machine_kernel_pr
 
-KERNEL_RELEASE = "3.13.1"
+KERNEL_RELEASE = "3.13.6"
 
-SRC_URI[md5sum] = "547c323bf83ab898f774ed3002ab31d5"
-SRC_URI[sha256sum] = "c2f127cd034afc2b0fef9d6d50bad9c489fc87f1fd82b2330adedadeefcd1331"
+SRC_URI[md5sum] = "f58166531f3e5644e348d57d9ec71898"
+SRC_URI[sha256sum] = "023ea807f49295d11c27b4f3f9c057362fb956338158c736fd90d90380926894"
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
