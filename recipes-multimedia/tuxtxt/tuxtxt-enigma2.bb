@@ -12,7 +12,11 @@ S = "${WORKDIR}/git/tuxtxt"
 
 PV = "2.0+git${SRCPV}"
 PKGV = "2.0+git${GITPKGV}"
-PR = "r4"
+PR = "r5"
+
+do_configure_prepend_openatv () {
+	sed 's/UseTTF 0/UseTTF 1/g' -i ${S}/data/tuxtxt2.conf
+}
 
 PACKAGES = "${PN}-src ${PN}-dbg ${PN}-dev ${PN}"
 FILES_${PN}-src = "/usr/src /usr/lib/enigma2/python/Plugins/Extensions/Tuxtxt/*.py"
