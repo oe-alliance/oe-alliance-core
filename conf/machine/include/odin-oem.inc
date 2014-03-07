@@ -13,6 +13,7 @@ ${@base_contains('MACHINEBUILD', 'evo', 'EVO' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'geniuse3hd', 'Genius E3HD' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'evoe3hd', 'E3HD' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'axase3', 'E3HD' , '', d)}\
+${@base_contains('MACHINEBUILD', 'axase3c', 'E3HD' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'maram9', 'M9' , '', d)}\
 "
 
@@ -26,6 +27,7 @@ ${@base_contains('MACHINEBUILD', 'evo', 'Optibox' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'geniuse3hd', 'Galaxy Innovations' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'evoe3hd', 'Optibox' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'axase3', 'Axas' , '', d)}\
+${@base_contains('MACHINEBUILD', 'axase3c', 'Axas' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'maram9', 'ODIN' , '', d)}\
 "
 
@@ -39,6 +41,7 @@ ${@base_contains('MACHINEBUILD', 'evo', 'en2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'geniuse3hd', 'e3hd' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'evoe3hd', 'e3hd' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'axase3', 'e3hd' , '', d)}\
+${@base_contains('MACHINEBUILD', 'axase3c', 'e3hd' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'maram9', 'odinm9' , '', d)}\
 "
 
@@ -52,6 +55,7 @@ ${@base_contains('MACHINEBUILD', 'evo', 'mtd3' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'geniuse3hd', 'mtd1' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'evoe3hd', 'mtd1' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'axase3', 'mtd1' , '', d)}\
+${@base_contains('MACHINEBUILD', 'axase3c', 'mtd1' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'maram9', 'mtd2' , '', d)}\
 "
 
@@ -65,6 +69,7 @@ ${@base_contains('MACHINEBUILD', 'evo', 'mtd4' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'geniuse3hd', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'evoe3hd', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'axase3', 'mtd2' , '', d)}\
+${@base_contains('MACHINEBUILD', 'axase3c', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'maram9', 'mtd3' , '', d)}\
 "
 
@@ -129,6 +134,7 @@ IMAGE_CMD_ubi_append = " \
 
 MACHINE_FEATURES += "3dtv alsa hdmicec switchoff wifi bootsplash boxmodel blindscan-dvbs blindscan-dvbc \
     ${@base_contains('MACHINEBUILD', 'axodinc', 'dvbc-only' , '', d)} \
+    ${@base_contains('MACHINEBUILD', 'axase3c', 'dvbc-only' , '', d)} \	
     "
 
 BOOTLOGO_FILENAME = "splash.bin"
