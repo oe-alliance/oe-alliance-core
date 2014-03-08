@@ -4,7 +4,7 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3
                     file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
 
 PV = "1.0"
-PR = "r4"
+PR = "r5"
 
 inherit task
 
@@ -16,6 +16,7 @@ RRECOMMENDS = "\
 	enigma2-plugin-extensions-ppanel \
 	enigma2-plugin-pli-softcamsetup \
 	enigma2-plugin-extensions-imdb \
+	enigma2-plugin-systemplugins-crossepg \
 	enigma2-plugin-extensions-autotimer \
 	enigma2-plugin-extensions-epgsearch \
 	enigma2-plugin-extensions-graphmultiepg \
