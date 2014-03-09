@@ -9,7 +9,7 @@ EPSM = "enigma2-plugin-skins"
 SRCREV = "${AUTOREV}"
 PV = "2.0+git${SRCPV}"
 PKGV = "2.0+git${GITPKGV}"
-PR = "r1"
+PR = "r2"
 
 PACKAGES = "${EPSM}-neonovum-hd ${EPSM}-mynovum-hd ${EPSM}-nou-hd ${EPSM}-neonovum-hd-weather ${EPSM}-mynovum-hd-weather ${EPSM}-nou-hd-weather novum-hd-common novum-hd-renderer novum-hd-renderer-src"
 PROVIDES = "${PN} ${EPSM}-neonovum-hd ${EPSM}-mynovum-hd ${EPSM}-nou-hd ${EPSM}-neonovum-hd-weather ${EPSM}-mynovum-hd-weather ${EPSM}-nou-hd-weather novum-hd-common novum-hd-renderer novum-hd-renderer-src"
@@ -23,7 +23,7 @@ RDEPENDS_${EPSM}-nou-hd-weather = "novum-hd-renderer novum-hd-common enigma2-plu
 SRC_URI = "git://github.com/oe-alliance/oe-alliance-skins.git;protocol=git"
 
 FILES_novum-hd-renderer = "/usr/lib/enigma2/python/Components/Renderer/*.pyo"
-FILES-novum-hd-renderer-src = "/usr/lib/enigma2/python/Components/Renderer/*.py"
+FILES_novum-hd-renderer-src = "/usr/lib/enigma2/python/Components/Renderer/*.py"
 FILES_novum-hd-common = "/usr/share/enigma2/NOVUM_HD_Common"
 FILES_${EPSM}-neonovum-hd = "/usr/share/enigma2/NeoNOVUM_HD"
 FILES_${EPSM}-neonovum-hd-weather = "/usr/share/enigma2/NeoNOVUM_HD_Weather"
