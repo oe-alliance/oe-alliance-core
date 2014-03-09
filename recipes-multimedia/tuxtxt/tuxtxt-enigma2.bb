@@ -12,10 +12,12 @@ S = "${WORKDIR}/git/tuxtxt"
 
 PV = "2.0+git${SRCPV}"
 PKGV = "2.0+git${GITPKGV}"
-PR = "r5"
+PR = "r6"
 
 do_configure_prepend_openatv () {
 	sed 's/UseTTF 0/UseTTF 1/g' -i ${S}/data/tuxtxt2.conf
+	sed 's/TTFWidthFactor16 28/TTFWidthFactor16 26/g' -i ${S}/data/tuxtxt2.conf
+	sed 's/TTFHeightFactor16 16/TTFHeightFactor16 14/g' -i ${S}/data/tuxtxt2.conf
 }
 
 PACKAGES = "${PN}-src ${PN}-dbg ${PN}-dev ${PN}"
