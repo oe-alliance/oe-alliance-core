@@ -1,0 +1,181 @@
+diff -Nur linux-2.6.18/arch/mips/kernel/mips_ksyms.c linux-2.6.18_dev0/arch/mips/kernel/mips_ksyms.c
+--- linux-2.6.18/arch/mips/kernel/mips_ksyms.c	2014-03-10 00:22:34.362011306 +0100
++++ linux-2.6.18_dev0/arch/mips/kernel/mips_ksyms.c	2014-03-10 00:25:38.408020486 +0100
+@@ -34,6 +34,12 @@
+ EXPORT_SYMBOL(kernel_thread);
+ 
+ /*
++ * Functions that operate on entire pages. Mostly used by memory management.
++ */
++EXPORT_SYMBOL(clear_page);
++EXPORT_SYMBOL(copy_page);
++
++/*
+  * Userspace access stuff.
+  */
+ EXPORT_SYMBOL(__copy_user);
+diff -Nur linux-2.6.18/arch/mips/mm/Makefile linux-2.6.18_dev0/arch/mips/mm/Makefile
+--- linux-2.6.18/arch/mips/mm/Makefile	2014-03-10 00:22:34.368011307 +0100
++++ linux-2.6.18_dev0/arch/mips/mm/Makefile	2014-03-10 00:25:38.408020486 +0100
+@@ -2,7 +2,7 @@
+ # Makefile for the Linux/MIPS-specific parts of the memory manager.
+ #
+ 
+-obj-y				+= cache.o extable.o fault.o init.o pgtable.o \
++obj-y				+= cache.o extable.o fault.o init.o pgtable.o page-funcs.o \
+ 				   tlbex.o tlbex-fault.o
+ 
+ obj-$(CONFIG_32BIT)		+= ioremap.o pgtable-32.o
+diff -Nur linux-2.6.18/arch/mips/mm/page-funcs.S linux-2.6.18_dev0/arch/mips/mm/page-funcs.S
+--- linux-2.6.18/arch/mips/mm/page-funcs.S	1970-01-01 01:00:00.000000000 +0100
++++ linux-2.6.18_dev0/arch/mips/mm/page-funcs.S	2014-03-10 00:25:38.408020486 +0100
+@@ -0,0 +1,50 @@
++/*
++ * This file is subject to the terms and conditions of the GNU General Public
++ * License. See the file "COPYING" in the main directory of this archive
++ * for more details.
++ *
++ * Micro-assembler generated clear_page/copy_page functions.
++ *
++ * Copyright (C) 2012 MIPS Technologies, Inc.
++ * Copyright (C) 2012 Ralf Baechle <ralf@linux-mips.org>
++ */
++#include <asm/asm.h>
++#include <asm/regdef.h>
++
++#ifdef CONFIG_SIBYTE_DMA_PAGEOPS
++#define cpu_clear_page_function_name clear_page_cpu
++#define cpu_copy_page_function_name copy_page_cpu
++#else
++#define cpu_clear_page_function_name clear_page
++#define cpu_copy_page_function_name copy_page
++#endif
++
++/*
++ * Maximum sizes:
++ *
++ * R4000 128 bytes S-cache: 0x058 bytes
++ * R4600 v1.7: 0x05c bytes
++ * R4600 v2.0: 0x060 bytes
++ * With prefetching, 16 word strides 0x120 bytes
++ */
++EXPORT(__clear_page_start)
++LEAF(cpu_clear_page_function_name)
++1: j 1b /* Dummy, will be replaced. */
++ .space 288
++END(cpu_clear_page_function_name)
++EXPORT(__clear_page_end)
++
++/*
++ * Maximum sizes:
++ *
++ * R4000 128 bytes S-cache: 0x11c bytes
++ * R4600 v1.7: 0x080 bytes
++ * R4600 v2.0: 0x07c bytes
++ * With prefetching, 16 word strides 0x540 bytes
++ */
++EXPORT(__copy_page_start)
++LEAF(cpu_copy_page_function_name)
++1: j 1b /* Dummy, will be replaced. */
++ .space 1344
++END(cpu_copy_page_function_name)
++EXPORT(__copy_page_end)
+diff -Nur linux-2.6.18/arch/mips/mm/pg-r4k.c linux-2.6.18_dev0/arch/mips/mm/pg-r4k.c
+--- linux-2.6.18/arch/mips/mm/pg-r4k.c	2014-03-10 00:22:34.370011307 +0100
++++ linux-2.6.18_dev0/arch/mips/mm/pg-r4k.c	2014-03-10 00:27:12.958025201 +0100
+@@ -31,39 +31,6 @@
+ 
+ 
+ /*
+- * Maximum sizes:
+- *
+- * R4000 128 bytes S-cache:		0x58 bytes
+- * R4600 v1.7:				0x5c bytes
+- * R4600 v2.0:				0x60 bytes
+- * With prefetching, 16 byte strides	0xa0 bytes
+- */
+-
+-static unsigned int clear_page_array[0x130 / 4];
+-
+-void clear_page(void * page) __attribute__((alias("clear_page_array")));
+-
+-EXPORT_SYMBOL(clear_page);
+-
+-/*
+- * Maximum sizes:
+- *
+- * R4000 128 bytes S-cache:		0x11c bytes
+- * R4600 v1.7:				0x080 bytes
+- * R4600 v2.0:				0x07c bytes
+- * With prefetching, 16 byte strides	0x0b8 bytes
+- */
+-#ifdef CONFIG_MIPS_CPU_SCACHE
+-static unsigned int copy_page_array[0x248 / 4];
+-#else
+-static unsigned int copy_page_array[0x148 / 4];
+-#endif
+-
+-void copy_page(void *to, void *from) __attribute__((alias("copy_page_array")));
+-
+-EXPORT_SYMBOL(copy_page);
+-
+-/*
+  * This is suboptimal for 32-bit kernels; we assume that R10000 is only used
+  * with 64-bit kernels.  The prefetch offsets have been experimentally tuned
+  * an Origin 200.
+@@ -347,12 +314,17 @@
+ 	flush_delay_slot_or_nop();
+ }
+ 
++extern u32 __clear_page_start;
++extern u32 __clear_page_end;
++extern u32 __copy_page_start;
++extern u32 __copy_page_end;
++
+ void __init build_clear_page(void)
+ {
+ 	unsigned int loop_start;
+ 	unsigned long off;
+ 
+-	epc = (unsigned int *) &clear_page_array;
++	epc = &__clear_page_start;
+ 	instruction_pending = 0;
+ 	store_offset = 0;
+ 
+@@ -437,7 +409,7 @@
+ 
+ 	build_jr_ra();
+ 
+-	BUG_ON(epc > clear_page_array + ARRAY_SIZE(clear_page_array));
++	BUG_ON(epc > &__clear_page_end);
+ }
+ 
+ void __init build_copy_page(void)
+@@ -445,7 +417,7 @@
+ 	unsigned int loop_start;
+ 	unsigned long off;
+ 
+-	epc = (unsigned int *) &copy_page_array;
++	epc = &__copy_page_start;
+ 	store_offset = load_offset = 0;
+ 	instruction_pending = 0;
+ 
+@@ -518,5 +490,5 @@
+ 
+ 	build_jr_ra();
+ 
+-	BUG_ON(epc > copy_page_array + ARRAY_SIZE(copy_page_array));
++	BUG_ON(epc > &__copy_page_end);
+ }
+diff -Nur linux-2.6.18/arch/mips/mm/pg-sb1.c linux-2.6.18_dev0/arch/mips/mm/pg-sb1.c
+--- linux-2.6.18/arch/mips/mm/pg-sb1.c	2006-09-20 05:42:06.000000000 +0200
++++ linux-2.6.18_dev0/arch/mips/mm/pg-sb1.c	2014-03-10 00:25:38.408020486 +0100
+@@ -196,6 +196,8 @@
+ 
+ 
+ #ifdef CONFIG_SIBYTE_DMA_PAGEOPS
++extern void clear_page_cpu(void *page);
++extern void copy_page_cpu(void *to, void *from);
+ 
+ /*
+  * Pad descriptors to cacheline, since each is exclusively owned by a

@@ -11,8 +11,8 @@ MACHINE_ESSENTIAL_EXTRA_RDEPENDS ?= ""
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "\
     dreambox-dvb-modules-${MACHINE} \
-    v4l-dvb-module-dvb-core \
-    v4l-dvb-module-stv0299 \
+    ${@base_conditional('MACHINE', 'dm800', 'kernel-module-dvb-core', 'v4l-dvb-module-dvb-core', d)} \
+    ${@base_conditional('MACHINE', 'dm800', 'kernel-module-stv0299', 'v4l-dvb-module-stv0299', d)} \
 "
 
 include conf/machine/include/autoload-usbserial.inc

@@ -1,6 +1,7 @@
 inherit machine_kernel_pr
+PR = "r2"
 
-MACHINE_KERNEL_PR_append = ".1"
+MACHINE_KERNEL_PR_append = ".2"
 
 PATCHREV = "ac6cc9511a5f70eaa584c63fc5c3de33cae1d0e7"
 
@@ -31,6 +32,7 @@ SRC_URI = " \
         file://linux-2.6.18-include-linux.patch \
         file://linux-2.6.18-mod_devicetable_h.patch \
         file://linux-2.6.18-3g-modems.patch \
+        file://mips_refactor_page_dev0.patch \
 "
 SRC_URI[kernel.md5sum] = "296a6d150d260144639c3664d127d174"
 SRC_URI[kernel.sha256sum] = "c95280ff6c5d2a17788f7cc582d23ae8a9a7ba3f202ec6e4238eaadfce7c163d"
@@ -45,6 +47,8 @@ require linux-dreambox.inc
 
 do_install_append() {
         cp include/asm/asm-offsets.h $kerneldir/include/asm/asm-offsets.h
-        cp scripts/basic/fixdep $kerneldir/scripts/basic/fixdep
-        cp scripts/mod/modpost $kerneldir/scripts/mod/modpost
+}
+
+do_package_qa() {
+	exit 0
 }
