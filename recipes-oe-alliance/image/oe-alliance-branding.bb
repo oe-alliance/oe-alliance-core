@@ -26,11 +26,11 @@ EXTRA_OECONF = " \
     STAGING_LIBDIR=${STAGING_LIBDIR} \
     --with-oever=${OE_VER} \
     --with-distro=${DISTRO_NAME} \
-    --with-boxtype=${MACHINE} \
+    ${@base_contains('MACHINEBUILD', 'odinm6', '--with-boxtype=${MACHINEBUILD}' , '--with-boxtype=${MACHINE}', d)} \
     --with-machineoem="${MACHINE_OEM}" \
     --with-brandoem="${BRAND_OEM}" \
-    --with-machinebrand="${MACHINE_BRAND}" \
-    --with-machinename="${MACHINE_NAME}" \
+    ${@base_contains('MACHINEBUILD', 'odinm6', '--with-machinebrand="TELESTAR"' , '--with-machinebrand="${MACHINE_BRAND}"', d)} \
+    ${@base_contains('MACHINEBUILD', 'odinm6', '--with-machinename="STARSAT-LX"' , '--with-machinename="${MACHINE_NAME}"', d)} \
     --with-imageversion=${DISTRO_VERSION} \
     --with-imagebuild=${BUILD_VERSION} \
     --with-driverdate=${DRIVERSDATE} \
