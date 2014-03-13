@@ -23,7 +23,6 @@ RDEPENDS_${PN} = "\
     "
 
 RRECOMMENDS_${PN} = "\
-    enigma2-plugin-skins-ru_infinity_hd-ov \
     enigma2-plugin-drivers-usbserial \
     enigma2-plugin-extensions-infopanel \
     enigma2-plugin-extensions-autotimer \
