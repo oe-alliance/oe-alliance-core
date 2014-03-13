@@ -1,10 +1,10 @@
 KV = "3.9.7"
-SRCDATE = "20140310"
+SRCDATE = "20140311"
 
 RDEPENDS_${PN} += "sogno-mac-check"
 
-SRC_URI[md5sum] = "24bdd71bb2c0e708c66dbb58173decde"
-SRC_URI[sha256sum] = "e1950e44323c6bf12ef3fd9e3b784ffe5242f0171fb5734c4fa8e870d067977f"
+SRC_URI[md5sum] = "eaed36006234e985f8ca6f4d424270ef"
+SRC_URI[sha256sum] = "0b9e0abbdf616ce13d4f465f473b31e9d4cdd36f1fa13b493a5a3f533505ba2d"
 
 SRC_URI = "http://pluginvalley.kr/bcm/driver/sogno8800hd-drivers-${KV}-${SRCDATE}.zip"
 
