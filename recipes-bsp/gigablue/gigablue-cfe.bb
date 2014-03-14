@@ -8,7 +8,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 require conf/license/license-gplv2.inc
 inherit deploy
 
-PR = "r27"
+PR = "r28"
 
 S = "${WORKDIR}"
 
