@@ -8,19 +8,11 @@ LIC_FILES_CHKSUM = "file://README;startline=1;endline=6;md5=d41d8cd98f00b204e980
 
 inherit gitpkgv
 
-PV = "experimental-git${SRCPV}"
-PKGV = "experimental-git${GITPKGV}"
-PR = "r4"
-BRANCH = "3.2"
+PV = "git${SRCPV}"
+PKGV = "git${GITPKGV}"
+PR = "r5"
 
-SRC_URI = "git://schwerkraft.elitedvb.net/enigma2-skins/enigma2-skins.git;protocol=git;branch=${BRANCH}  file://skinsnotwanted"
-
-#include examples of openpli widgets
-SRC_URI_append = " \
-	file://dtvhd.diff \
-	file://brushedaluhd.diff \
-	file://blackbox.diff \
-	"
+SRC_URI = "git://github.com/OpenE2/enigma2-skins.git;protocol=git  file://skinsnotwanted"
 
 # note that enigma2-skins is just an empty package to satisfy silly dependencies.
 ALLOW_EMPTY_${PN} = "1"
