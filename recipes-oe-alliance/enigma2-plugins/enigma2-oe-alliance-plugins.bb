@@ -37,6 +37,7 @@ PROVIDES += " \
     enigma2-plugin-extensions-fempa \
     enigma2-plugin-extensions-lcd4linux \
     enigma2-plugin-extensions-remotechannelstreamconverter \
+    enigma2-plugin-systemplugins-wirelessaccesspoint \
     "
 
 DEPENDS = "\
@@ -103,13 +104,16 @@ FILES_enigma2-plugin-extensions-lcd4linux-src_append = "${libdir}/enigma2/python
 DESCRIPTION_enigma2-plugin-extensions-remotechannelstreamconverter = "Fetch channels from remote bouquets and make them available locally"
 RDEPENDS_enigma2-plugin-extensions-remotechannelstreamconverter = "python-shell"
 RREPLACES_enigma2-plugin-extensions-remotechannelstreamconverter = "enigma2-plugin-extensions-remotestreamconvert"
+DESCRIPTION_enigma2-plugin-systemplugins-wirelessaccesspoint = "Using a Wireless module as AP."
+RDEPENDS_enigma2-plugin-systemplugins-wirelessaccesspoint = "hostap-daemon bridge-utils"
+
 
 inherit gitpkgv autotools pythonnative
 
 SRCREV = "${AUTOREV}"
 PV = "2.0+git${SRCPV}"
 PKGV = "2.0+git${GITPKGV}"
-PR = "r5"
+PR = "r6"
 
 SRC_URI="git://github.com/oe-alliance/oe-alliance-plugins.git;protocol=git"
 
