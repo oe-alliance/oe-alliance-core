@@ -9,7 +9,7 @@ inherit gitpkgv autotools deploy
 SRCREV = "${AUTOREV}"
 PV = "2.0+gitr${SRCPV}"
 PKGV = "2.0+gitr${GITPKGV}"
-PR = "r15"
+PR = "r16"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -33,23 +33,18 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-bildonline_2.9rc13_mips32el.ipk \
     enigma2-plugin-extensions-bluray_1.2_mips32el.ipk \
     enigma2-plugin-extensions-boblight-enigma2_0.8r6_mips32el.ipk \
-    enigma2-plugin-extensions-buyukbangpanel_1.3.2_all.ipk \
     enigma2-plugin-extensions-camofs_7.90_all.ipk \
     enigma2-plugin-extensions-chefkoch_1.2rc1_mips32el.ipk \
     enigma2-plugin-extensions-csfd_9_45-20140125_all.ipk \
-    enigma2-plugin-extensions-cubic_streamer_0.7.3_mips32el.ipk \
     enigma2-plugin-extensions-digitalfernsehen_0.8rc1_mips32el.ipk \
     enigma2-plugin-extensions-facebook_1.0rc3_mips32el.ipk \
     enigma2-plugin-extensions-filesearchfs_2.53_all.ipk \
     enigma2-plugin-extensions-focusonline_0.8rc2_mips32el.ipk \
-    enigma2-plugin-extensions-glasssysutil_5.37_all.ipk \
     enigma2-plugin-extensions-gmailreader-oe2.0_1.3_all.ipk \
     enigma2-plugin-extensions-googlenewsreader_1.0_mips32el.ipk \
-    enigma2-plugin-extensions-heizoelpreisefs_3.70_all.ipk \
     enigma2-plugin-extensions-hetweer_2.4_mips32el.ipk \
     enigma2-plugin-extensions-hdmitest_0.4_mipsel.ipk \
     enigma2-plugin-extensions-kicker_3.1rc4_mips32el.ipk \
-    enigma2-plugin-extensions-kino_1.1rc5_mips32el.ipk \
     enigma2-plugin-extensions-livefootball_4.4_mips32el.ipk \
     enigma2-plugin-extensions-mediainfo_0.6_r04_all.ipk \
     enigma2-plugin-extensions-mediaportal_5.1.3_all.ipk \
@@ -59,7 +54,6 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-moviebrowser_2.8rc12_mips32el.ipk \
     enigma2-plugin-extensions-mp3browser_1.2_mips32el.ipk \
     enigma2-plugin-extensions-navibar_1.1.1_all.ipk \
-    enigma2-plugin-extensions-newtube_0.1a-r0_all.ipk \
     enigma2-plugin-extensions-opkg-tools_1.3_mipsel.ipk \
     enigma2-plugin-extensions-planerfs_5.26_all.ipk \
     enigma2-plugin-extensions-pluginspanel_1.0_r01_all.ipk \
