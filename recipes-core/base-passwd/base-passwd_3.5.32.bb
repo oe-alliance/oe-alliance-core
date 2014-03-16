@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=eb723b61539feef013de476e68b5c50a"
 
 DEPENDS = "docbook-utils-native linuxdoc-tools-native"
 
-SRC_URI = "${DEBIAN_MIRROR}/main/b/base-passwd/base-passwd_${PV}.tar.gz \
+SRC_URI = "${DEBIAN_MIRROR}/main/b/base-passwd/base-passwd_${PV}.tar.xz \
            file://add_shutdown.patch \
            file://nobash.patch \
            file://input.patch \
