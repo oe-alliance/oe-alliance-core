@@ -40,7 +40,7 @@ RRECOMMENDS_${PN} = "\
     ${@base_contains("MACHINE_FEATURES", "smallflash", "", \
     " \
     enigma2-plugin-extensions-enhancedmoviecenter \
-	enigma2-plugin-extensions-audiosync \
+    enigma2-plugin-extensions-audiosync \
     enigma2-plugin-extensions-cooltvguide \
     ", d)} \
     "
