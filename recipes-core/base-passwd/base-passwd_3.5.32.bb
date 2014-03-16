@@ -13,8 +13,8 @@ SRC_URI = "${DEBIAN_MIRROR}/main/b/base-passwd/base-passwd_${PV}.tar.xz \
            file://disable-docs.patch \
           "
 
-SRC_URI[md5sum] = "6beccac48083fe8ae5048acd062e5421"
-SRC_URI[sha256sum] = "f0b66388b2c8e49c15692439d2bee63bcdd4bbbf7a782c7f64accc55986b6a36"
+SRC_URI[md5sum] = "fd7e591ef4f9d3175b7e4bea41f1598e"
+SRC_URI[sha256sum] = "e26be9c437d7c3540f20d4ff56e3111f45e4a40ab0ef57b2b47209b1799fc2bf"
 
 inherit autotools
 
