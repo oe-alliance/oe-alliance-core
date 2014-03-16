@@ -4,13 +4,14 @@ LICENSE = "LGPLv2.1"
 LIC_FILES_CHKSUM = "file://LICENSE.TXT;md5=4fbd65380cdd255951079008b364516c"
 
 DEPENDS += "libxml2 zlib python swig-native liburl"
+RDEPENDS += "curl"
 
 inherit gitpkgv
 
 SRCREV = "${AUTOREV}"
 PV = "0.7.1+gitr${SRCPV}"
 PKGV = "0.7.1++gitr${GITPKGV}"
-PR = "r0"
+PR = "r1"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
