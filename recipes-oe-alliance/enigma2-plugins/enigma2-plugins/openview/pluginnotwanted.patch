@@ -1,5 +1,5 @@
 diff --git a/Makefile.am b/Makefile.am
-index 0e7ea08..486cf7b 100644
+index d0f54e5..e535329 100644
 --- a/Makefile.am
 +++ b/Makefile.am
 @@ -2,29 +2,18 @@ ACLOCAL_AMFLAGS = -I m4
@@ -31,8 +31,8 @@ index 0e7ea08..486cf7b 100644
 -	eibox \
  	emailclient \
  	emission \
- 	epgrefresh \
-@@ -37,74 +26,52 @@ SUBDIRS = \
+ 	eparted \
+@@ -38,74 +27,52 @@ SUBDIRS = \
  	fstabeditor \
  	ftpbrowser \
  	googlemaps \
