@@ -1,5 +1,5 @@
 diff --git a/Makefile.am b/Makefile.am
-index a8fb2d1..6d741ce 100644
+index 0e7ea08..486cf7b 100644
 --- a/Makefile.am
 +++ b/Makefile.am
 @@ -2,29 +2,18 @@ ACLOCAL_AMFLAGS = -I m4
@@ -30,9 +30,9 @@ index a8fb2d1..6d741ce 100644
 -	ecasa \
 -	eibox \
  	emailclient \
+ 	emission \
  	epgrefresh \
- 	eurotictv \
-@@ -36,73 +25,51 @@ SUBDIRS = \
+@@ -37,74 +26,52 @@ SUBDIRS = \
  	fstabeditor \
  	ftpbrowser \
  	googlemaps \
@@ -66,6 +66,7 @@ index a8fb2d1..6d741ce 100644
  	pushservice \
 -	quickbutton \
  	reconstructapsc \
+ 	reftopiconname \
  	remotetimer \
  	rsdownloader \
 -	setpasswd \
