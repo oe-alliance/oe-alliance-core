@@ -1,8 +1,8 @@
 KV = "3.3.8-2.0"
-SRCDATE = "20131219"
+SRCDATE = "20140318"
 
-SRC_URI[md5sum] = "a62a4e8e35285d51b6d153703d6ab9ec"
-SRC_URI[sha256sum] = "831c0bf8827ef0e484ac766f281551213e52937aa92d08e2ff87ca50c55f719d"
+SRC_URI[md5sum] = "8223467bccb9eb67aa9307940af964b1"
+SRC_URI[sha256sum] = "1a57e9a2062ea8da11ffa390257f037a60af916d8684e72dbd08f02fddb98957"
 
 SRC_URI = "http://code-ini.com/software/drivers/ini-hdp-drivers-3.3.8-${SRCDATE}.zip"
 

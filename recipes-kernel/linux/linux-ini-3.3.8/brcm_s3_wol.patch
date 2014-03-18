@@ -28,7 +28,7 @@ index faf58ab..52e31ed
  		umac->mpd_ctrl |= MPD_PW_EN;
  	}
  
-+	if (pDevCtrl->phyType == BRCM_PHY_TYPE_EXT_RGMII)
++	if ( (pDevCtrl->phyType == BRCM_PHY_TYPE_EXT_RGMII) || (pDevCtrl->phyType == BRCM_PHY_TYPE_EXT_RGMII_NO_ID) )
 +	{
 +		if(wol->wolopts & WAKE_MAGIC)
 +		{
