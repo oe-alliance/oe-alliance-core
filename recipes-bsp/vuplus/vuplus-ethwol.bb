@@ -1,4 +1,4 @@
-DESCIPTION = "S3 set eth0 wol"
+SUMMARY = "S3 set eth0 wol"
 MAINTAINER = "vuplus team"
 LICENSE = "CLOSED"
 

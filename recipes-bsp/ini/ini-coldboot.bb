@@ -1,5 +1,5 @@
-DESCIPTION = "S3 cold boot"
-MAINTAINER = "vuplus team"
+SUMMARY = "S3 cold boot"
+MAINTAINER = "ini Team"
 LICENSE = "CLOSED"
 
 PV = "1.0"

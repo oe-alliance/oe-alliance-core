@@ -1,4 +1,4 @@
-DESCIPTION = "S3 cold boot"
+SUMMARY = "S3 cold boot"
 MAINTAINER = "vuplus team"
 LICENSE = "CLOSED"
 

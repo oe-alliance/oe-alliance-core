@@ -1,4 +1,4 @@
-DESCIPTION = "check vfd firmware"
+SUMMARY = "check vfd firmware"
 MAINTAINER = "vuplus team"
 LICENSE = "CLOSED"
 
