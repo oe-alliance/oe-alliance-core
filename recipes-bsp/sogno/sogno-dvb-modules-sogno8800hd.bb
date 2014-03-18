@@ -1,11 +1,11 @@
 KV = "3.9.7"
-SRCDATE = "20140311"
+SRCDATE = "20140319"
 
 RDEPENDS_${PN} += "sogno-mac-check"
 
-SRC_URI[md5sum] = "eaed36006234e985f8ca6f4d424270ef"
-SRC_URI[sha256sum] = "0b9e0abbdf616ce13d4f465f473b31e9d4cdd36f1fa13b493a5a3f533505ba2d"
+SRC_URI[md5sum] = "e749be589ec9819323286b94a4f0bc77"
+SRC_URI[sha256sum] = "1ec8ef7baac87bcffdd4c75bb617a64376aee7114e3358fa0e0b5f34eb246ff2"
 
-SRC_URI = "http://pluginvalley.kr/bcm/driver/sogno8800hd-drivers-${KV}-${SRCDATE}.zip"
+SRC_URI = "http://pluginvalley.kr/bcm/driver/linuxdvb_7405-${KV}-${SRCDATE}.tar.gz"
 
 require sogno-dvb-modules.inc
