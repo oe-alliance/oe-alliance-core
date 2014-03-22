@@ -9,7 +9,7 @@ inherit gitpkgv autotools deploy
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r20"
+PR = "r21"
 
 SRC_URI="git://github.com/openhdf/3rdparty-plugins.git;protocol=git"
 
@@ -93,7 +93,7 @@ do_deploy() {
     rm ${DEPLOY_DIR_IPK}/3rdparty/enigma2-plugin-extensions-hbbtv_*
     rm ${DEPLOY_DIR_IPK}/3rdparty/enigma2-plugin-extensions-multiquickbutton*.ipk
     rm ${DEPLOY_DIR_IPK}/3rdparty/enigma2-plugin-extensions-backupsuite*.ipk
-    install -m 0644 enigma2-plugin-extensions-et-portal*.ipk ${DEPLOY_DIR_IPK}/3rdparty
+    install -m 0644 enigma2-plugin-extensions-et-portal_inofficial-3.3.1_all.ipk ${DEPLOY_DIR_IPK}/3rdparty
     for i in ${THIRDPARTY_MACHINE_PLUGINS}; do
         if [ -f $i ]; then
             install -m 0644 $i ${DEPLOY_DIR_IPK}/${MACHINE}_3rdparty;
