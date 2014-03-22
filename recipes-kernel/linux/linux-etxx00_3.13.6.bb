@@ -2,7 +2,7 @@ SUMMARY = "Linux kernel for ${MACHINE}"
 SECTION = "kernel"
 LICENSE = "GPLv2"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
-PR = "r1"
+PR = "r2"
 
 inherit machine_kernel_pr
 
@@ -36,6 +36,7 @@ SRC_URI += "http://xtrendet.com/linux-${PV}.tar.gz \
     file://it913x-switch-off-PID-filter-by-default.patch \
     file://tda18271-advertise-supported-delsys.patch \
     file://mxl5007t-add-no_probe-and-no_reset-parameters.patch \
+    file://kernel-3.13.6-dvbsky.patch \
     "
 
 S = "${WORKDIR}/linux-${PV}"
