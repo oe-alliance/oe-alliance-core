@@ -7,7 +7,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PV = "1.0"
-PR = "r16"
+PR = "r17"
 
 inherit packagegroup
 
@@ -27,5 +27,6 @@ RRECOMMENDS_${PN} = "\
     enigma2-plugin-extensions-cooltvguide \
     enigma2-plugin-extensions-bmediacenter \
     enigma2-plugin-skins-dmcconcinnityhd \
+    enigma2-plugin-settings-defaultsat \
     ${@base_contains("MACHINE_BRAND", "AZBOX", "enigma2-plugin-extensions-azplay enigma2-plugin-extensions-aziptv", "", d)} \
     "

@@ -11,6 +11,7 @@ PR = "r${DATETIME}"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 IMAGE_INSTALL = "openatv-base \
+    ${@base_contains("MACHINE_FEATURES", "dvbc-only", "", "enigma2-plugin-settings-defaultsat", d)} \
     ${@base_contains("MACHINE_FEATURES", "smallflash", "", \
     " \
     packagegroup-base-smbfs-client \
