@@ -13,7 +13,7 @@ inherit autotools gitpkgv pythonnative
 
 PV = "2.0+git${SRCPV}"
 PKGV = "2.0+git${GITPKGV}"
-PR = "r2"
+PR = "r3"
 
 SRC_URI = "${ENIGMA2_PLUGINS_URI} file://pluginnotwanted.patch"
 
@@ -116,4 +116,10 @@ python populate_packages_prepend() {
     mydir = bb.data.getVar('D', d, 1) + "/../git/"
     for package in bb.data.getVar('PACKAGES', d, 1).split():
         getControlLines(mydir, d, package.split('-'))
+}
+
+pkg_preinst_enigma2-plugin-systemplugins-WebInterface() {
+#!/bin/sh
+rm -rf /usr/lib/enigma2/python/Plugins/Extensions/WebInterface
+exit 0
 }
