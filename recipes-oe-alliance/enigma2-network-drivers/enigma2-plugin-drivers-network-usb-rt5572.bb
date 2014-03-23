@@ -4,7 +4,7 @@ PACKAGE_ARCH = "all"
 require conf/license/license-gplv2.inc
 
 RRECOMMENDS_${PN} = " \
-    rt5572 \
+    ${@base_contains("MACHINE_FEATURES", "kernelrt2800", "", "rt5572", d)} \
     "
 
 PV = "1.0"

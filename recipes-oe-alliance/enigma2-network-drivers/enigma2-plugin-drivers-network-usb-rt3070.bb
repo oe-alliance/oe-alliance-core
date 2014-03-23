@@ -4,7 +4,7 @@ PACKAGE_ARCH = "all"
 require conf/license/license-gplv2.inc
 
 RRECOMMENDS_${PN} = " \
-    rt3070 \
+    ${@base_contains("MACHINE_FEATURES", "kernelrt2800", "", "rt3070", d)} \
     firmware-rt3070"
 
 PV = "1.0"
