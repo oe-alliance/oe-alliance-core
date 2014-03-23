@@ -14,22 +14,20 @@ DEPENDS = "nfs-utils ushare"
 DESCRIPTION_enigma2-plugin-extensions-ushare = "UPnP media server"
 RDEPENDS_enigma2-plugin-extensions-ushare = "ushare"
 
-inherit gitpkgv pythonnative
+inherit gitpkgv
 
 PV = "2.0+git${SRCPV}"
 PKGV = "2.0+git${GITPKGV}"
-PR = "r1"
+PR = "r2"
 
-SRC_URI = "git://github.com/oe-alliance/openpli-plugins.git;protocol=git \
-           file://pythonpaths.patch"
+SRC_URI = "git://github.com/oe-alliance/openpli-plugins.git;protocol=git"
 
 S = "${WORKDIR}/git"
 
 inherit autotools
 
 EXTRA_OECONF = "--with-boxtype=${MACHINE} \
-    STAGING_INCDIR=${STAGING_INCDIR} \
-    STAGING_LIBDIR=${STAGING_LIBDIR}"
+    LIBDIR=${libdir}"
 
 python populate_packages_prepend () {
 
