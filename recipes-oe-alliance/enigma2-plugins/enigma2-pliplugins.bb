@@ -14,11 +14,11 @@ DEPENDS = "nfs-utils ushare"
 DESCRIPTION_enigma2-plugin-extensions-ushare = "UPnP media server"
 RDEPENDS_enigma2-plugin-extensions-ushare = "ushare"
 
-inherit gitpkgv
+inherit gitpkgv pythonnative
 
 PV = "2.0+git${SRCPV}"
 PKGV = "2.0+git${GITPKGV}"
-PR = "r0"
+PR = "r1"
 
 SRC_URI = "git://github.com/oe-alliance/openpli-plugins.git;protocol=git \
            file://pythonpaths.patch"
