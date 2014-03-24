@@ -10,7 +10,7 @@ PV = "${IMAGE_VERSION}"
 PR = "${BUILD_VERSION}"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-URL = "http://http://www.odin-support.com"
+URL = "http://www.odin-support.com"
 
 S = "${WORKDIR}"
 

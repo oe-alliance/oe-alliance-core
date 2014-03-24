@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=4d92cd373abda3937c2bc47fbc49d
 ALLOW_EMPTY_${PN} = "1"
 
 PV = "1.0"
-PR = "r4"
+PR = "r5"
 
 inherit packagegroup
 
@@ -14,8 +14,7 @@ RRECOMMENDS_${PN} = "\
     oe-alliance-skins \
     openatv-picons-meta \
     enigma2-skins \
-    enigma2-pliplugins \
-    enigma2-plugin-extensions-project-valerie \
-    enigma2-plugin-extensions-xmltvimport \
+    enigma2-plugin-extensions-enhancedmoviecenter \
+    enigma2-plugin-extensions-cooltvguide \
     enigma2-plugin-systemplugins-crossepg \
     "
