@@ -1,0 +1,18 @@
+diff --git a/root.c b/root.c
+index fed2fd9..57eb949 100644
+--- a/root.c
++++ b/root.c
+@@ -543,8 +543,13 @@ static void cdfs_read_inode(struct inode *i) {
+ 
+   PRINT("read inode %ld\n", i->i_ino);
+   
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(3,14,0)
++  i->i_uid.val    = this_cd->uid;
++  i->i_gid.val    = this_cd->gid;
++#else
+   i->i_uid        = this_cd->uid;
+   i->i_gid        = this_cd->gid;
++#endif
+ #if LINUX_VERSION_CODE >= KERNEL_VERSION(3,2,0)
+   set_nlink(i, 1);
+ #else

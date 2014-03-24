@@ -16,6 +16,7 @@ SRC_URI = " \
         file://add-3.8-support.patch \
         file://cdfs-procfs.patch \
         file://add-3.12-support.patch \
+        file://fix-kuid-kgid-error-3.14.patch \
 "
 SRC_URI[md5sum] = "ac64c014a90e3c488394832ea29605b3"
 SRC_URI[sha256sum] = "d034f6c6d9578fe2addfaeceaa101584a4a1fc9f27d825c340baebd345d8d724"
