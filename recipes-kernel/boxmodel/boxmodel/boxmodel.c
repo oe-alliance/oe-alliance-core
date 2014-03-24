@@ -45,8 +45,7 @@ static int __init init_vumodel(void)
 
 static void __exit cleanup_vumodel(void)
 {
-        if (proc_vumodel)
-                remove_proc_entry( "vumodel", NULL);
+        remove_proc_entry( "stb/info/vumodel", NULL);
 }
 #else
 static int proc_vumodel_show(struct seq_file *seq, void *v)
@@ -79,8 +78,7 @@ static int __init init_vumodel(void)
 
 static void __exit cleanup_vumodel(void)
 {
-        if (proc_vumodel)
-                remove_proc_entry( "vumodel", proc_vumodel);
+        remove_proc_entry( "stb/info/vumodel", NULL);
 }
 #endif
 module_init(init_vumodel);

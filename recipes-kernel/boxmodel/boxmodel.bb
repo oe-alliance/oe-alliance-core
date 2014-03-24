@@ -12,7 +12,7 @@ SRC_URI = "file://boxmodel.c file://Makefile"
 
 S = "${WORKDIR}"
 PV = "1.0"
-PR = "r9"
+PR = "r10"
 
 inherit module machine_kernel_pr
 
