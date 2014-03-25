@@ -1,15 +1,30 @@
 # We know about rtc
 include conf/machine/include/build-extras.inc
 
-BRAND_OEM = "sogno"
-MACHINE_BRAND = "Sogno"
+BRAND_OEM = "crenova"
+
+MACHINE_NAME = "\
+${@base_contains('MACHINEBUILD', 'sogno8800hd', '8800HD' , '', d)}\
+${@base_contains('MACHINEBUILD', 'uniboxhde', 'HDECO' , '', d)}\
+"
+
+MACHINE_BRAND = "\
+${@base_contains('MACHINEBUILD', 'sogno8800hd', 'Sogno' , '', d)}\
+${@base_contains('MACHINEBUILD', 'uniboxhde', 'UNiBOX' , '', d)}\
+"
+
+IMAGEDIR ?= "\
+${@base_contains('MACHINEBUILD', 'sogno8800hd', 'sogno/8800hd' , '', d)}\
+${@base_contains('MACHINEBUILD', 'uniboxhde', 'unibox/hde' , '', d)}\
+"
+
 MTD_ROOTFS = "mtd7"
 MTD_KERNEL = "mtd8"
 KERNEL_FILE = "kernel.bin"
 ROOTFS_FILE = "rootfs.bin"
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS = "\
-    sogno-dvb-modules-sogno8800hd \
+    crenova-dvb-modules-${MACHINE} \
     "
 
 DVBPROVIDER = "kernel"
@@ -31,9 +46,8 @@ DEFAULTTUNE = "mips32el"
 
 GLIBC_EXTRA_OECONF = "--with-tls --with-__thread"
 
-PREFERRED_PROVIDER_virtual/kernel = "linux-sogno"
-
-PREFERRED_VERSION_linux-sogno = "3.9.7"
+PREFERRED_PROVIDER_virtual/kernel = "linux-crenova"
+PREFERRED_VERSION_linux-crenova = "3.9.7"
 PREFERRED_VERSION_linux-libc-headers = "3.9.7"
 
 KERNEL_IMAGETYPE = "vmlinux"
@@ -61,7 +75,7 @@ IMAGE_CMD_ubi_append = " \
     cd ${DEPLOY_DIR_IMAGE}; \
     zip ${IMAGE_NAME}_usb.zip ${IMAGEDIR}/*; \
     rm -f ${DEPLOY_DIR_IMAGE}/*.ubifs; \
-    rm -rf sogno; \
+    rm -Rf ${IMAGEDIR}; \
     "
 	
 MACHINE_FEATURES += "3dtv alsa hdmicec switchoff wifi 3dtvpli bootsplash"
@@ -70,3 +84,5 @@ BOOTLOGO_FILENAME = "splash.bin"
 
 require conf/machine/include/tune-mips32.inc
 
+# add support for extra feeds
+PACKAGE_ARCHS += " ${MACHINEBUILD}"

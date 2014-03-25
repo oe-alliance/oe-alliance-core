@@ -52,6 +52,7 @@ kernel_do_install_append() {
 }
 
 MTD_DEVICE_sogno8800hd = "mtd8"
+MTD_DEVICE_uniboxhde = "mtd8"
 
 pkg_postinst_kernel-image () {
     if [ "x$D" == "x" ]; then

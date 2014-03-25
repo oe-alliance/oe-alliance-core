@@ -1,12 +1,12 @@
-DESCRIPTION="Sogno mac checker - flasher"
+DESCRIPTION="cn7405 mac checker - flasher"
 LICENSE = "Gpl2"
 LICENSE = "CLOSED"
 
 PR = "r5"
 PV = "0.1"
 
-SRC_URI="file://sogno_mac_check \
-	file://sogno-mac-check.sh \
+SRC_URI="file://cn7405_mac_check \
+	file://cn7405-mac-check.sh \
 "
 
 inherit autotools pkgconfig update-rc.d
@@ -17,7 +17,7 @@ INITSCRIPT_PARAMS = "defaults"
 
 do_install() {
 	install -d ${D}/usr/bin
-	install -m 0755 ${WORKDIR}/sogno_mac_check ${D}/usr/bin/sogno_mac_check
+	install -m 0755 ${WORKDIR}/cn7405_mac_check ${D}/usr/bin/cn7405_mac_check
 	install -d ${D}/etc/init.d
 	install -m 0755 ${WORKDIR}/${PN}.sh ${D}/etc/init.d/${PN}
 }
