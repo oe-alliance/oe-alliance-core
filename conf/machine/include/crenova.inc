@@ -23,10 +23,6 @@ MTD_KERNEL = "mtd8"
 KERNEL_FILE = "kernel.bin"
 ROOTFS_FILE = "rootfs.bin"
 
-MACHINE_ESSENTIAL_EXTRA_RDEPENDS = "\
-    crenova-dvb-modules-${MACHINE} \
-    "
-
 DVBPROVIDER = "kernel"
 
 MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS = "\

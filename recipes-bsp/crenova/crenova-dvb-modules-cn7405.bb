@@ -1,10 +1,10 @@
 KV = "3.9.7"
-SRCDATE = "20140326"
+SRCDATE = "20140325"
 
 RDEPENDS_${PN} += "cn7405-mac-check"
 
-SRC_URI[md5sum] = "8ef1f3c69844463b626ced78a3b658c3"
-SRC_URI[sha256sum] = "944aa83133e6f63b5d0f3629da85ca63826bf1821e466a594555f0d856c9909b"
+SRC_URI[md5sum] = "f481b29508bd435b0572007adf1b64bc"
+SRC_URI[sha256sum] = "1522371c05389d49ce3e2af51f707ad5fb5faa3b8de8817e4c26b5116820fe1d"
 
 SRC_URI = "http://pluginvalley.kr/bcm/driver/linuxdvb_7405-${KV}-${SRCDATE}.tar.gz"
 
