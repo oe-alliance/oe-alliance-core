@@ -9,7 +9,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "1.0"
-PR = "r15"
+PR = "r16"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 RDEPENDS_${PN} = "\
@@ -25,6 +25,7 @@ RDEPENDS_${PN} = "\
     e2fsprogs-tune2fs \
     fakelocale \
     libavahi-client \
+    libcrypto-compat-0.9.7 \
     modutils-loadscript \
     ntpdate \
     opkg \

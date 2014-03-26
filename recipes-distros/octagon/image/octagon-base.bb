@@ -4,7 +4,7 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=4d92cd373abda3937c2bc47fbc49d
                     file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
 
 PV = "1.0"
-PR = "r3"
+PR = "r4"
 
 inherit packagegroup
 
@@ -12,7 +12,6 @@ RDEPENDS_${PN} = "\
     oe-alliance-base \
     octagon-enigma2 \
     octagon-bootlogo \
-    libcrypto-compat \
     openssh-sftp-server \
     ntfs-3g \
     hddtemp \

@@ -15,7 +15,6 @@ RDEPENDS_${PN} = "\
     openmips-enigma2 \
     openmips-bootlogo \
     openmips-spinner \
-    libcrypto-compat \
     hddtemp \
     dosfstools \
     ntfs-3g \
