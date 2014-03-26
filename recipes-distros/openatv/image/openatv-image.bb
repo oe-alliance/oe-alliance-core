@@ -12,6 +12,12 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 IMAGE_INSTALL = "openatv-base \
     ${@base_contains("MACHINE_FEATURES", "dvbc-only", "", "enigma2-plugin-settings-defaultsat", d)} \
+    ${@base_contains("MACHINE_FEATURES", "singlecore", "", \
+    " \
+    task-base-smbfs-client \
+    task-base-smbfs \
+    task-base-nfs \
+    ", d)} \
     "
 
 export IMAGE_BASENAME = "openatv-image"

@@ -98,7 +98,7 @@ IMAGE_CMD_ubi_append = " \
     rm -Rf ${IMAGEDIR}; \
     "
 
-MACHINE_FEATURES += "alsa wifi dvbapi5 usbhost switchoff wifi 3dtv hdmicec boxmodel"
+MACHINE_FEATURES += "alsa wifi dvbapi5 usbhost switchoff wifi 3dtv hdmicec boxmodel singlecore"
 
 require conf/machine/include/tune-mips32.inc
 
