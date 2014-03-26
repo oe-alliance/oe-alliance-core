@@ -7,7 +7,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "1.0"
-PR = "r9"
+PR = "r10"
 
 inherit packagegroup
 
@@ -16,6 +16,6 @@ RDEPENDS_${PN} = "\
     openvix-enigma2 \
     openvix-bootlogo \
     openvix-spinner \
-    libcrypto-0.9.8-compat \
+    libcrypto-compat-0.9.8 \
     "
 
