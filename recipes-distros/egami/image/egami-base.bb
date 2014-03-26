@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=4d92cd373abda3937c2bc47fbc49d
 ALLOW_EMPTY_${PN} = "1"
 
 PV = "1.0"
-PR = "r13"
+PR = "r14"
 
 inherit packagegroup
 
@@ -14,7 +14,6 @@ RDEPENDS_${PN} = "\
     oe-alliance-base \
     egami-enigma2 \
     egami-bootlogo \
-    libcrypto-compat \
     openssh-sftp-server \
     ntfs-3g \
     hddtemp \
@@ -27,7 +26,7 @@ RDEPENDS_${PN} = "\
     minidlna djmount \
     mc \
     dvbsnoop \
-    enigma2-plugin-drivers-usbserial \    
+    enigma2-plugin-drivers-usbserial \
     "
 ENIGMA2_DVB_USB_DRV = "\
     enigma2-plugin-drivers-dvb-usb-dib0700 \

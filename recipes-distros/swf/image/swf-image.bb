@@ -23,7 +23,6 @@ IMAGE_INSTALL = " \
     ${ENIGMA2_PLUGINS} \
     ${ENIGMA2_INI_PLUGINS} \
     ${@base_contains("MACHINE", "inihdx", "${ENIGMA2_USB_DRV}" , "", d)} \
-    libcrypto-compat \
     ntfs-3g \
     hddtemp \
     busybox-cron \

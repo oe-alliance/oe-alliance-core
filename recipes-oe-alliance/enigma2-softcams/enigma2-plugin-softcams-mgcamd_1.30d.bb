@@ -1,7 +1,7 @@
 SUMMARY = "mgcamd ${PV} softcam"
 CAMNAME = "mgcamd"
 
-RDEPENDS_${PN} = "libcrypto-compat"
+RDEPENDS_${PN} = "libcrypto-compat-0.9.7"
 
 PR = "r5"
 
