@@ -9,7 +9,7 @@ inherit gitpkgv autotools deploy
 SRCREV = "${AUTOREV}"
 PV = "2.0+gitr${SRCPV}"
 PKGV = "2.0+gitr${GITPKGV}"
-PR = "r17"
+PR = "r18"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -154,6 +154,8 @@ python populate_packages_prepend () {
 }
 
 do_deploy() {
+    rm -rf ${DEPLOY_DIR_IPK}/3rdparty
+    rm -rf ${DEPLOY_DIR_IPK}/${MACHINE}_3rdparty
     install -d 0755 ${DEPLOY_DIR_IPK}/3rdparty
     install -d 0755 ${DEPLOY_DIR_IPK}/${MACHINE}_3rdparty
     for i in ${THIRDPARTY_PLUGINS}; do
