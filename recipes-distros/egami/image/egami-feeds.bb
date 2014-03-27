@@ -18,6 +18,7 @@ RRECOMMENDS_${PN} = "\
     enigma2-display-skins \
     openatv-picons-meta \
     enigma2-skins \
+    enigma2-plugin-skins-egarmymood \
     enigma2-plugin-extensions-project-valerie \
     enigma2-plugin-extensions-xmltvimport \
     enigma2-plugin-extensions-enhancedmoviecenter \

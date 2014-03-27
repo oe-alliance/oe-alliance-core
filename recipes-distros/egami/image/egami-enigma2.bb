@@ -7,17 +7,16 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PV = "1.0"
-PR = "r37"
+PR = "r38"
 
 inherit packagegroup
 
 DEPENDS = "egami-feeds"
 
-RRECOMMENDS_${PN} = " \
+RDEPENDS_${PN} = "\
+    enigma2-skindefault \
     egami-version-info \
     egami-base-files \
-    \
-    enigma2-plugin-skins-egmega32 \
     \
     enigma2-plugin-extensions-autotimer \
     enigma2-plugin-extensions-epgsearch \
