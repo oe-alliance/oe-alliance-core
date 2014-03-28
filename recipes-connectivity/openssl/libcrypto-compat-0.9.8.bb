@@ -5,7 +5,10 @@ require conf/license/license-gplv2.inc
 PACKAGE_ARCH = "all"
 RDEPENDS_${PN} = "libcrypto libssl"
 PV = "1.0"
-PR = "r0"
+PR = "r1"
+
+RREPLACES_${PN} = "libcrypto0.9.8 libssl0.9.8"
+RCONFLICTS_${PN} = "libcrypto0.9.8 libssl0.9.8"
 
 do_install () {
     install -d ${D}/lib ${D}/usr/lib
