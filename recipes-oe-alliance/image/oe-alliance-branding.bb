@@ -31,6 +31,7 @@ EXTRA_OECONF = " \
     --with-machinebrand="${MACHINE_BRAND}" \
     --with-machinename="${MACHINE_NAME}" \
     --with-machinebuild="${MACHINEBUILD}" \
+    --with-machinemake="${MACHINE}" \
     --with-imageversion="${DISTRO_VERSION}" \
     --with-imagebuild="${BUILD_VERSION}" \
     --with-imagedir="${IMAGEDIR}" \
