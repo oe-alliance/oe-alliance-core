@@ -72,9 +72,9 @@ ${@base_contains('MACHINEBUILD', 'iqonios200hd', 'mtd6' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'roxxs200hd', 'mtd6' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mediaart200hd', 'mtd6' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'iqonios300hd', 'mtd6' , '', d)}\
-${@base_contains('MACHINEBUILD', 'force1', 'mtd6' , '', d)}\
-${@base_contains('MACHINEBUILD', 'optimussos1plus', 'mtd6' , '', d)}\
-${@base_contains('MACHINEBUILD', 'optimussos2plus', 'mtd6' , '', d)}\
+${@base_contains('MACHINEBUILD', 'force1', 'mtd2' , '', d)}\
+${@base_contains('MACHINEBUILD', 'optimussos1plus', 'mtd2' , '', d)}\
+${@base_contains('MACHINEBUILD', 'optimussos2plus', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'optimussos1', 'mtd6' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'optimussos2', 'mtd6' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mediabox', 'mtd6' , '', d)}\
@@ -91,9 +91,9 @@ ${@base_contains('MACHINEBUILD', 'iqonios200hd', 'mtd4' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'roxxs200hd', 'mtd4' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mediaart200hd', 'mtd4' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'iqonios300hd', 'mtd4' , '', d)}\
-${@base_contains('MACHINEBUILD', 'force1', 'mtd4' , '', d)}\
-${@base_contains('MACHINEBUILD', 'optimussos1plus', 'mtd4' , '', d)}\
-${@base_contains('MACHINEBUILD', 'optimussos2plus', 'mtd4' , '', d)}\
+${@base_contains('MACHINEBUILD', 'force1', 'mtd0' , '', d)}\
+${@base_contains('MACHINEBUILD', 'optimussos1plus', 'mtd0' , '', d)}\
+${@base_contains('MACHINEBUILD', 'optimussos2plus', 'mtd0' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'optimussos1', 'mtd4' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'optimussos2', 'mtd4' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mediabox', 'mtd4' , '', d)}\
