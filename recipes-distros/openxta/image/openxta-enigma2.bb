@@ -19,6 +19,7 @@ DEPENDS = "enigma2-pliplugins openxta-feeds"
 RRECOMMENDS_${PN} = "\
     openxta-version-info \
     enigma2-plugin-pli-softcamsetup \
+    enigma2-plugin-extensions-autotimer \
     enigma2-plugin-extensions-graphmultiepg \
     enigma2-plugin-extensions-cutlisteditor \
     enigma2-plugin-extensions-extraspanel \
