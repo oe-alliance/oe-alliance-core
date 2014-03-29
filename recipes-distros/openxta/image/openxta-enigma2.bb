@@ -7,7 +7,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 ALLOW_EMPTY_${PN} = "1"
 
 PV = "1.0"
-PR = "r35"
+PR = "r36"
 
 inherit packagegroup
 
@@ -18,13 +18,10 @@ DEPENDS = "enigma2-pliplugins openxta-feeds"
 
 RRECOMMENDS_${PN} = "\
     openxta-version-info \
-    enigma2-plugin-drivers-usbserial \
     enigma2-plugin-pli-softcamsetup \
     enigma2-plugin-extensions-graphmultiepg \
-    enigma2-plugin-extensions-mediaplayer \
     enigma2-plugin-extensions-cutlisteditor \
     enigma2-plugin-extensions-extraspanel \
-    enigma2-plugin-extensions-dvdplayer \
     enigma2-plugin-extensions-et-portal \
     enigma2-plugin-extensions-openxtareader \
     enigma2-plugin-extensions-xbmcaddons \
