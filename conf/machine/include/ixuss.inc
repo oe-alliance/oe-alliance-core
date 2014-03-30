@@ -76,7 +76,7 @@ IMAGE_CMD_ubi_append = " \
 
 TARGET_FPU = "hard"
 
-MACHINE_FEATURES += "3dtv alsa hdmicec switchoff textlcd wifi bootsplash"
+MACHINE_FEATURES += "3dtv alsa hdmicec switchoff textlcd wifi bootsplash boxmodel"
 
 BOOTLOGO_FILENAME = "cfe-bootlogo.bmp"
 
