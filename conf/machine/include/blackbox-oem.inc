@@ -1,7 +1,7 @@
 # We know about rtc
 include conf/machine/include/build-extras.inc
 
-BRAND_OEM = "cn"
+BRAND_OEM = "blackbox"
 
 MACHINE_NAME = "\
 ${@base_contains('MACHINEBUILD', 'sogno8800hd', '8800HD' , '', d)}\
@@ -42,8 +42,8 @@ DEFAULTTUNE = "mips32el"
 
 GLIBC_EXTRA_OECONF = "--with-tls --with-__thread"
 
-PREFERRED_PROVIDER_virtual/kernel = "linux-cn"
-PREFERRED_VERSION_linux-cn = "3.9.7"
+PREFERRED_PROVIDER_virtual/kernel = "linux-blackbox"
+PREFERRED_VERSION_linux-blackbox = "3.9.7"
 PREFERRED_VERSION_linux-libc-headers = "3.9.7"
 
 KERNEL_IMAGETYPE = "vmlinux"
