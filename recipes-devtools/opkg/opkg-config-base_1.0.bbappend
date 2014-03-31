@@ -1,4 +1,4 @@
-PRINC = "8"
+PRINC = "9"
 PACKAGE_ARCH = "${MACHINEBUILD}"
 
 do_compile_append_mipsel() {
