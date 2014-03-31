@@ -9,7 +9,7 @@ inherit gitpkgv autotools deploy
 SRCREV = "${AUTOREV}"
 PV = "2.0+gitr${SRCPV}"
 PKGV = "2.0+gitr${GITPKGV}"
-PR = "r18"
+PR = "r19"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -33,7 +33,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-bildonline_2.9rc13_mips32el.ipk \
     enigma2-plugin-extensions-bluray_1.2_mips32el.ipk \
     enigma2-plugin-extensions-boblight-enigma2_0.8r6_mips32el.ipk \
-    enigma2-plugin-extensions-camofs_7.90_all.ipk \
+    enigma2-plugin-extensions-camofs_7.91_all.ipk \
     enigma2-plugin-extensions-chefkoch_1.2rc1_mips32el.ipk \
     enigma2-plugin-extensions-csfd_9_45-20140125_all.ipk \
     enigma2-plugin-extensions-digitalfernsehen_0.8rc1_mips32el.ipk \
@@ -57,7 +57,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-opkg-tools_1.3_mipsel.ipk \
     enigma2-plugin-extensions-planerfs_5.26_all.ipk \
     enigma2-plugin-extensions-pluginspanel_1.0_r01_all.ipk \
-    enigma2-plugin-extensions-picturecenterfs_3.93_all.ipk \
+    enigma2-plugin-extensions-picturecenterfs_4.11_all.ipk \
     enigma2-plugin-extensions-radiode_0.1_mips32el.ipk \
     enigma2-plugin-extensions-radioonline-oe2.0_1.0_all.ipk \
     enigma2-plugin-extensions-screensaver_5.6.9_all.ipk \
@@ -83,7 +83,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-verkehrsinfo_0.7rc1_mips32el.ipk \
     enigma2-plugin-extensions-vuplusforum_0.7rc3_mips32el.ipk \
     enigma2-plugin-extensions-webmedia_10.0_r02_oe2.0_all.ipk \
-    enigma2-plugin-extensions-webradiofs_11.64_all.ipk \
+    enigma2-plugin-extensions-webradiofs_11.72_all.ipk \
     enigma2-plugin-extensions-wikipedia_1.9rc1_mips32el.ipk \
     enigma2-plugin-extensions-xbmcaddons_5.1_r0_all.ipk \
     enigma2-plugin-extensions-xbmcwetter_1.0rc4_mips32el.ipk \
