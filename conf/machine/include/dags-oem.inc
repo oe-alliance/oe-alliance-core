@@ -75,7 +75,7 @@ ${@base_contains('MACHINEBUILD', 'iqonios300hd', 'mtd6' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'force1', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'optimussos1plus', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'optimussos2plus', 'mtd2' , '', d)}\
-${@base_contains('MACHINEBUILD', 'optimussos1', 'mtd6' , '', d)}\
+${@base_contains('MACHINEBUILD', 'optimussos1', 'mtd1' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'optimussos2', 'mtd6' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mediabox', 'mtd6' , '', d)}\
 "
