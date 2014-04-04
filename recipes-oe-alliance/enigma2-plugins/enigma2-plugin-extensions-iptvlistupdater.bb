@@ -10,9 +10,10 @@ inherit gitpkgv autotools pythonnative
 SRCREV = "${AUTOREV}"
 PV = "1.50.+git${SRCPV}"
 PKGV = "1.50.+git${GITPKGV}"
-PR = "r16"
+PR = "r17"
 
 RREPLACES_enigma2-plugin-extensions-iptvlistupdater = "enigma2-plugin-extensions-iptv-list-updater"
 RCONFLICTS_enigma2-plugin-extensions-iptvlistupdater = "enigma2-plugin-extensions-iptv-list-updater"
 
-SRC_U
+SRC_URI="git://github.com/Nobody28/IPTV-List-Updater.git;protocol=git"
+
