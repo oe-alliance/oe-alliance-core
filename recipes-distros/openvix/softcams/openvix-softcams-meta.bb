@@ -2,7 +2,7 @@ SUMMARY = "meta file for enigma2 softcam packages"
 
 require conf/license/license-gplv2.inc
 
-PROVIDES = "softcams"
+PROVIDES = "openvix-softcams"
 
 DEPENDS = "\
     openvix-softcams-cccam \
@@ -10,6 +10,11 @@ DEPENDS = "\
     openvix-softcams-cccam221 \
     openvix-softcams-oscam \
     openvix-softcams-oscam-pcscd \
+    openvix-softcams-evocamd \
+    openvix-softcams-mgcamd \
+    openvix-softcams-newcs \
+    openvix-softcams-rqcamd \
+    openvix-softcams-scam \
     "
 
-PR = "r2"
+PR = "r3"
