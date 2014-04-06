@@ -9,9 +9,10 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "1.0"
-PR = "r12"
+PR = "r13"
 
 RRECOMMENDS_${PN} = "\
     oe-alliance-skins \
     enigma2-display-skins \
+	openvix-softcams-meta \
     "
