@@ -6,13 +6,14 @@ SUMMARY = "tuxbox tuxtxt for enigma2"
 
 inherit gitpkgv
 
-SRC_URI = "git://git.code.sf.net/p/openpli/tuxtxt;protocol=git"
+SRC_URI = "git://git.code.sf.net/p/openpli/tuxtxt;protocol=git \
+           file://0001-Workaround-for-Gigablue-Quad-receivers.patch"
 
 S = "${WORKDIR}/git/tuxtxt"
 
 PV = "2.0+git${SRCPV}"
 PKGV = "2.0+git${GITPKGV}"
-PR = "r7"
+PR = "r8"
 
 do_configure_prepend_openatv () {
 	sed 's/UseTTF 0/UseTTF 1/g' -i ${S}/data/tuxtxt2.conf

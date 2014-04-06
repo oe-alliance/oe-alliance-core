@@ -1,0 +1,31 @@
+From 1fb47e822af123ffdc15e38ae4a63d235d69a829 Mon Sep 17 00:00:00 2001
+From: betacentauri <betacentauri@arcor.de>
+Date: Sun, 6 Apr 2014 11:25:59 +0200
+Subject: [PATCH] Workaround for Gigablue Quad receivers
+
+GB Quad receivers don't show immediately teletext after start. They show
+a disturbed header column. Only after reception of page 100 or manual change
+of page it is shown properly.
+---
+ tuxtxt.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/tuxtxt.c b/tuxtxt.c
+index 92ef7a2..1d45a29 100644
+--- a/tuxtxt.c
++++ b/tuxtxt.c
+@@ -276,7 +276,10 @@ int tuxtxt_run_ui(int pid, int demux)
+ #endif
+ 		return;
+ 	}
+-	
++
++	/* Workaround for Gigablue Quad (Plus) */
++	usleep(100000);
++
+ 	/* main loop */
+ 	do {
+ 		if (GetRCCode() == 1)
+-- 
+1.8.4.GIT
+
