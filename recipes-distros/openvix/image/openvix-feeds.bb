@@ -14,5 +14,5 @@ PR = "r13"
 RRECOMMENDS_${PN} = "\
     oe-alliance-skins \
     enigma2-display-skins \
-	openvix-softcams-meta \
+    openvix-softcams-meta \
     "
