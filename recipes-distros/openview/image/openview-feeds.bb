@@ -9,11 +9,12 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "1.0"
-PR = "r2"
+PR = "r3"
 
 RRECOMMENDS_${PN} = "\
     oe-alliance-skins \
     enigma2-display-skins \
+    enigma2-skins \
     enigma2-pliplugins \
     enigma2-plugin-systemplugins-crossepg \
     curlftpfs \

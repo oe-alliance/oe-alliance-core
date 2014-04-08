@@ -10,7 +10,15 @@ PV = "${IMAGE_VERSION}"
 PR = "r${DATETIME}"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-IMAGE_INSTALL = "openview-base"
+IMAGE_INSTALL = "openview-base \
+    ${@base_contains("MACHINE_FEATURES", "dvbc-only", "", "enigma2-plugin-settings-defaultsat", d)} \
+    ${@base_contains("MACHINE_FEATURES", "singlecore", "", \
+    " \
+    task-base-smbfs-client \
+    task-base-smbfs \
+    task-base-nfs \
+    ", d)} \
+    "
 
 export IMAGE_BASENAME = "openview-image"
 IMAGE_LINGUAS = ""
@@ -19,32 +27,37 @@ IMAGE_FEATURES += "package-management"
 
 inherit image
 
-do_package_remove_unused_ipk () {
-    set -x
+rootfs_postprocess() {
+    curdir=$PWD
+    cd ${IMAGE_ROOTFS}
 
-    ipkgarchs="${ALL_MULTILIB_PACKAGE_ARCHS} ${SDK_PACKAGE_ARCHS}"
-    unused="*-dbg_* *-dev_* *-staticdev_* *-doc_* *-demos_* *-examples_* *-sourcecode_* *-locale-* *-localedata-*"
+    # because we're so used to it
+    ln -s opkg usr/bin/ipkg || true
+    ln -s opkg-cl usr/bin/ipkg-cl || true
 
-    if [ ! -z "${DEPLOY_KEEP_PACKAGES}" ]; then
-        return
-    fi
-
-    packagedirs="${DEPLOY_DIR_IPK}"
-    for arch in $ipkgarchs; do
-        packagedirs="$packagedirs ${DEPLOY_DIR_IPK}/$arch"
-    done
-
-    multilib_archs="${MULTILIB_ARCHS}"
-    for arch in $multilib_archs; do
-        packagedirs="$packagedirs ${DEPLOY_DIR_IPK}/$arch"
-    done
-
-    for pkgdir in $packagedirs; do
-        if [ -e $pkgdir/ ]; then
-            for i in ${unused}; do
-                rm -f $pkgdir/$i;
-            done;
-        fi
-    done
+    cd $curdir
 }
-# addtask package_remove_unused_ipk before do_rootfs
+
+ROOTFS_POSTPROCESS_COMMAND += "rootfs_postprocess; "
+
+export NFO = '${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.nfo'
+
+generate_nfo() {
+    VER=`grep Version: "${IMAGE_ROOTFS}/usr/lib/ipkg/info/enigma2.control" | cut -b 10-26`
+    echo "Enigma2: ${VER}" > ${NFO}
+    echo "Machine: ${MACHINE}" >> ${NFO}
+    DATE=`date +%Y-%m-%d' '%H':'%M`
+    echo "Date: ${DATE}" >> ${NFO}
+    echo "Issuer: openView" >> ${NFO}
+    echo "Link: ${DISTRO_FEED_URI}" >> ${NFO}
+    if [ "${DESC}" != "" ]; then
+            echo "Description: ${DESC}" >> ${NFO}
+            echo "${DESC}" >> ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.desc
+    fi
+    MD5SUM=`md5sum ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.nfi | cut -b 1-32`
+    echo "MD5: ${MD5SUM}" >> ${NFO}
+}
+
+do_rootfs_append() {
+    generate_nfo
+}
