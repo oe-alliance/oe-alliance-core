@@ -7,28 +7,30 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "1.0"
-PR = "r6"
+PR = "r7"
 
 inherit packagegroup
 
 DEPENDS = "enigma2-pliplugins openview-feeds"
 
-RDEPENDS_${PN} = "\
-    openview-spinner \
-    openview-version-info \
-    "
-
 RRECOMMENDS_${PN} = "\
-    enigma2-skindefault \
     openview-version-info \
     enigma2-plugin-drivers-usbserial \
     ${@base_contains("MACHINE_FEATURES", "boxmodel", "boxmodel", "", d)} \
     enigma2-plugin-extensions-autotimer \
+    enigma2-plugin-extensions-dvdplayer \
     enigma2-plugin-extensions-epgsearch \
+    enigma2-plugin-extensions-mediaplayer \
     enigma2-plugin-extensions-volume-adjust \
     enigma2-plugin-extensions-zaphistorybrowser \
+    enigma2-plugin-systemplugins-fastscan \
+    ${@base_contains("MACHINE_FEATURES", "3dtv", "enigma2-plugin-systemplugins-osd3dsetup" , "", d)} \
+    enigma2-plugin-systemplugins-osdpositionsetup \
+    enigma2-plugin-systemplugins-positionersetup \
     enigma2-plugin-systemplugins-softwaremanager \
+    enigma2-plugin-systemplugins-skinselector \
     ${@base_contains("MACHINE_FEATURES", "videoenhancement", "", "enigma2-plugin-systemplugins-videoenhancement", d)} \
+    enigma2-plugin-systemplugins-videomode \
     enigma2-plugin-systemplugins-videotune \
     enigma2-plugin-pli-softcamsetup \
     "
