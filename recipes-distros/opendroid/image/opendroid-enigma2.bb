@@ -1,7 +1,13 @@
+SUMMARY = "Merge machine and distro options to create a enigma2 machine task/package"
+LICENSE = "MIT"
+LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=4d92cd373abda3937c2bc47fbc49d690 \
+                    file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
+
+PACKAGE_ARCH = "${MACHINE_ARCH}"
 ALLOW_EMPTY_${PN} = "1"
 
 PV = "1.0"
-PR = "r36"
+PR = "r37"
 
 inherit packagegroup
 
@@ -17,7 +23,6 @@ RRECOMMENDS_${PN} = "\
     enigma2-plugin-extensions-graphmultiepg \
     enigma2-plugin-extensions-cutlisteditor \
     enigma2-plugin-extensions-extraspanel \
-	enigma2-plugin-extensions-addonopendroid
     enigma2-plugin-extensions-et-portal \
     enigma2-plugin-extensions-xbmcaddons \
     enigma2-plugin-systemplugins-videomode \
