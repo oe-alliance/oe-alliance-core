@@ -1,8 +1,8 @@
-SUMMARY = "opendroidImage"
+SUMMARY = "opendroid Image"
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "proprietary"
-MAINTAINER = "opendroid team"
+MAINTAINER = "opendroid"
 
 require conf/license/license-gplv2.inc
 
@@ -53,4 +53,3 @@ generate_nfo() {
 do_rootfs_append() {
     generate_nfo
 }
-
