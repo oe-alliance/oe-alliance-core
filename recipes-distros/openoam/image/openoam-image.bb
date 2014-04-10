@@ -66,13 +66,13 @@ generate_nfo() {
     echo "Issuer: Team OAM" >> ${NFO}
     echo "Link: ${DISTRO_FEED_URI}" >> ${NFO}
     if [ "${DESC}" != "" ]; then
-            echo "Description: ${DESC}" >> ${NFO}
-            echo "${DESC}" >> ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.desc
+        echo "Description: ${DESC}" >> ${NFO}
+        echo "${DESC}" >> ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.desc
     fi
     MD5SUM=`md5sum ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.nfi | cut -b 1-32`
     echo "MD5: ${MD5SUM}" >> ${NFO}
 }
 
 do_rootfs_append() {
-            generate_nfo
+    generate_nfo
 }
