@@ -3,7 +3,7 @@ LICENSE = "CLOSED"
 SECTION = "base"
 PRIORITY = "required"
 MAINTAINER = "OpenPli team"
-PR = "r7"
+PR = "r8"
 
 SRC_URI = "file://lctimelocales.tar.gz file://locale.alias file://SYS_LC_MESSAGES"
 
