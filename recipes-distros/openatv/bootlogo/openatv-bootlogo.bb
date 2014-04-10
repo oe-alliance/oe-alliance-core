@@ -9,7 +9,7 @@ require conf/license/license-gplv2.inc
 RDEPENDS_${PN} += "showiframe"
 
 PV = "4.0"
-PR = "r2"
+PR = "r3"
 
 S = "${WORKDIR}"
 
@@ -24,6 +24,9 @@ SRC_URI_append_gbquad = "file://lcdsplash.bin file://lcdwaitkey.bin file://lcdwa
 SRC_URI_append_gb800ueplus = "file://lcdsplash.bin file://lcdwaitkey.bin file://lcdwarning.bin"
 SRC_URI_append_gbquadplus = "file://lcdsplash400.bin file://lcdwaitkey400.bin file://lcdwarning400.bin"
 SRC_URI_append_vuduo2 = "file://lcdbootlogo.png file://bootlogo.py"
+SRC_URI_append_force1 = "file://splash1_os2.bmp file://splash2.bmp file://splash3.bmp"
+SRC_URI_append_optimussos1plus = "file://splash1_os1.bmp file://splash2.bmp file://splash3.bmp"
+SRC_URI_append_optimussos2plus = "file://splash1_os2.bmp file://splash2.bmp file://splash3.bmp"
 
 BINARY_VERSION = "1.3"
 
@@ -98,7 +101,19 @@ do_deploy() {
     fi
     if [ -e lcdsplash400.bin ]; then
         install -m 0644 lcdsplash400.bin ${DEPLOYDIR}/lcdsplash.bin
-    fi	
+    fi
+    if [ -e splash1_os1.bmp ]; then
+        install -m 0644 splash1_os1.bmp ${DEPLOYDIR}/splash1.bmp
+    fi
+    if [ -e splash1_os2.bmp ]; then
+        install -m 0644 splash1_os2.bmp ${DEPLOYDIR}/splash1.bmp
+    fi
+    if [ -e splash2.bmp ]; then
+        install -m 0644 splash2.bmp ${DEPLOYDIR}/splash2.bmp
+    fi
+    if [ -e splash3.bmp ]; then
+        install -m 0644 splash3.bmp ${DEPLOYDIR}/splash3.bmp
+    fi
 }
 
 addtask deploy before do_build after do_install
