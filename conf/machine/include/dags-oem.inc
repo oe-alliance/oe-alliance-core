@@ -99,6 +99,12 @@ ${@base_contains('MACHINEBUILD', 'optimussos2', 'mtd4' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mediabox', 'mtd4' , '', d)}\
 "
 
+SPLASH1_BMP = "\
+${@base_contains('MACHINEBUILD', 'force1', 'splash1_os2.bmp' , '', d)}\
+${@base_contains('MACHINEBUILD', 'optimussos1plus', splash1_os1.bmp' , '', d)}\
+${@base_contains('MACHINEBUILD', 'optimussos2plus', 'splash1_os2.bmp' , '', d)}\
+"
+
 KERNEL_FILE = "oe_kernel.bin"
 ROOTFS_FILE = "oe_rootfs.bin"
 
@@ -143,7 +149,7 @@ IMAGE_CMD_ubi_prepend = " \
 IMAGE_CMD_ubi_append = " \
     mkdir -p ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}; \
     cp ${DEPLOY_DIR_IMAGE}/splash.bmp ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/splash.bmp; \
-    ${@base_contains("MACHINE", "dags3", "cp ${DEPLOY_DIR_IMAGE}/splash1.bmp ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/splash1.bmp;" , "", d)} \
+    ${@base_contains("MACHINE", "dags3", "cp ${DEPLOY_DIR_IMAGE}/${SPLASH1_BMP} ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/splash1.bmp;" , "", d)} \
     ${@base_contains("MACHINE", "dags3", "cp ${DEPLOY_DIR_IMAGE}/splash2.bmp ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/splash2.bmp;" , "", d)} \
     ${@base_contains("MACHINE", "dags3", "cp ${DEPLOY_DIR_IMAGE}/splash3.bmp ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/splash3.bmp;" , "", d)} \
     mv ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.ubi ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/${ROOTFS_FILE}; \
