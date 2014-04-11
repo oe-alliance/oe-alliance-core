@@ -1,4 +1,4 @@
-SUMMARY = "opendroidImage"
+SUMMARY = "Opendroid Image"
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "proprietary"
@@ -10,7 +10,15 @@ PV = "${IMAGE_VERSION}"
 PR = "r${DATETIME}"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-IMAGE_INSTALL = "opendroid-base"
+IMAGE_INSTALL = "opendroid-base \
+    ${@base_contains("MACHINE_FEATURES", "dvbc-only", "", "enigma2-plugin-settings-defaultsat", d)} \
+    ${@base_contains("MACHINE_FEATURES", "singlecore", "", \
+    " \
+    task-base-smbfs-client \
+    task-base-smbfs \
+    task-base-nfs \
+    ", d)} \
+    "
 
 export IMAGE_BASENAME = "opendroid-image"
 IMAGE_LINGUAS = ""
@@ -18,6 +26,7 @@ IMAGE_LINGUAS = ""
 IMAGE_FEATURES += "package-management"
 
 inherit image
+
 
 rootfs_postprocess() {
     curdir=$PWD
