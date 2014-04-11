@@ -101,7 +101,7 @@ ${@base_contains('MACHINEBUILD', 'mediabox', 'mtd4' , '', d)}\
 
 SPLASH1_BMP = "\
 ${@base_contains('MACHINEBUILD', 'force1', 'splash1_os2.bmp' , '', d)}\
-${@base_contains('MACHINEBUILD', 'optimussos1plus', splash1_os1.bmp' , '', d)}\
+${@base_contains('MACHINEBUILD', 'optimussos1plus', 'splash1_os1.bmp' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'optimussos2plus', 'splash1_os2.bmp' , '', d)}\
 "
 
