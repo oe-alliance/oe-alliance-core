@@ -1,5 +1,3 @@
-PRINC = "8"
-
 FILESEXTRAPATHS_prepend := "${THISDIR}/${P}:"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"

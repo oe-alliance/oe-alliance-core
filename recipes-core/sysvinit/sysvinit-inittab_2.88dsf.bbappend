@@ -4,8 +4,6 @@ FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
 require conf/license/license-gplv2.inc
 
-PRINC = "9"
-
 SRC_URI = "file://inittab"
 
 S = "${WORKDIR}/sysvinit-${PV}"

@@ -1,5 +1,3 @@
-PRINC = "4"
-
 inherit python-dir
 
 PACKAGES =+ " ${PN}-src ${PN}-tests"

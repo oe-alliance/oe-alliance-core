@@ -1,5 +1,3 @@
-PRINC = "11"
-
 PACKAGE_ARCH = "${MACHINEBUILD}"
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"

@@ -1,5 +1,3 @@
-PRINC = "7"
-
 SRC_URI += " \
     file://01samba-kill \
     file://01samba-start \

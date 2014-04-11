@@ -1,5 +1,3 @@
-PRINC = "3"
-
 RPROVIDES_${PN} += "python-pickle-native python-pprint-native"
 
 MY_EXTRA_PATH := "${THISDIR}"

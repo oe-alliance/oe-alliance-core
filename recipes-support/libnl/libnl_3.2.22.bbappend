@@ -1,4 +1,3 @@
-PRINC = "5"
 PACKAGE_ARCH := "${MACHINE_ARCH}"
 
 SRC_URI_append_dm800 = " file://tc_ematch-header-files.patch \

@@ -1,5 +1,3 @@
-PRINC = "1"
-
 RSUGGESTS_${PN} = ""
 
 PROVIDES =+ " libavcodec53 libavformat53"

@@ -1,7 +1,5 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
-PRINC = "5"
-
 SRC_URI += " \
             file://04-default-is-optimized.patch \
             file://99-ignore-optimization-flag.patch \

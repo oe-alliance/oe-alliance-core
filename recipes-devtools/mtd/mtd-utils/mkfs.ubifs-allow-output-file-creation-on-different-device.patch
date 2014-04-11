@@ -1,0 +1,36 @@
+diff --git a/mkfs.ubifs/mkfs.ubifs.c b/mkfs.ubifs/mkfs.ubifs.c
+index 200c8a5..37a3734 100644
+--- a/mkfs.ubifs/mkfs.ubifs.c
++++ b/mkfs.ubifs/mkfs.ubifs.c
+@@ -332,6 +332,22 @@ static long long add_space_overhead(long long size)
+         return size / divisor;
+ }
+ 
++/*
++ * same_device - determine if a file is on the same blockdevice as a directory.
++ * @dir_name: directory path name
++ * @file_name: file path name
++ */
++static int same_device(const char *dir_name, const char *file_name)
++{
++	struct stat stat1, stat2;
++
++	if (stat(dir_name, &stat1) == -1)
++		return -1;
++	if (stat(file_name, &stat2) == -1)
++		return -1;
++	return stat1.st_dev == stat2.st_dev;
++}
++
+ static int validate_options(void)
+ {
+ 	int tmp;
+@@ -342,7 +358,7 @@ static int validate_options(void)
+ 		tmp = is_contained(output, root);
+ 		if (tmp < 0)
+ 			return err_msg("failed to perform output file root check");
+-		else if (tmp)
++		else if (tmp && same_device(root, output))
+ 			return err_msg("output file cannot be in the UBIFS root "
+ 			               "directory");
+ 	}

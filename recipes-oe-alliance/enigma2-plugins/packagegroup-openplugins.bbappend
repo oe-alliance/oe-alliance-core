@@ -1,5 +1,3 @@
-PRINC = "9"
-
 DEPENDS = " \
     enigma2-plugin-extensions-addstreamurl \
     enigma2-plugin-extensions-antilogo \
