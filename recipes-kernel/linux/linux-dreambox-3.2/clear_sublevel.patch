@@ -5,8 +5,8 @@ Index: linux-3.2/Makefile
 @@ -1,6 +1,6 @@
  VERSION = 3
  PATCHLEVEL = 2
--SUBLEVEL = 54
-+#SUBLEVEL = 54
+-SUBLEVEL = 56
++#SUBLEVEL = 56
  EXTRAVERSION =
  NAME = Saber-toothed Squirrel
  
