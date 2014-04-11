@@ -3,7 +3,7 @@ LICENSE = "CLOSED"
 
 RDEPENDS_${PN} = "libcrypto-compat-0.9.7"
 
-PR = "r2"
+PR = "r3"
 
 PACKAGES = "enigma2-plugin-softcams-mgcamd"
 
@@ -21,7 +21,7 @@ do_install() {
     install -m 0755 ${S}/mgcamd.mipsel ${D}/usr/softcams/mgcamd
 }
 
-SRC_URI[md5sum] = "e8aae7d4f54ec01316c527ae8fcbd71e"
-SRC_URI[sha256sum] = "54872f453801f5fa102940b9cc8234461f82cc3817eeafbc19ad2089a4ca7291"
+SRC_URI[md5sum] = "9625bffdefdf227973b31f56705d22a7"
+SRC_URI[sha256sum] = "8a54987be9a295935418450fe6d05bd01846cc69de4267c11af2902340bb66f5"
 
 FILES_enigma2-plugin-softcams-mgcamd = "/usr"
