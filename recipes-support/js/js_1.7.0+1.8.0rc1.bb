@@ -21,12 +21,13 @@ S = "${WORKDIR}/js/src"
 
 # use local autoconf script to generate a usable jsautocfg.h
 # don't bother with automake
-inherit autotools
+inherit autotools-brokensep
 
-do_configure_prepend() {
+do_extraunpack() {
 	cp -f ${WORKDIR}/configure.ac ${S}
 	cp -f ${WORKDIR}/jsautocfg.h ${S}
 }
+addtask extraunpack before do_configure after do_unpack
 
 EXTRA_OEMAKE = "'CC=${CC}' 'LD=${LD}' 'XCFLAGS=${CFLAGS}' 'XLDFLAGS=${LDFLAGS} -Wl,-soname=libjs' \
                 'BUILD_CC=${BUILD_CC}' 'BUILD_CFLAGS=${BUILD_CFLAGS}' 'BUILD_LDFLAGS=${BUILD_LDFLAGS}'"
