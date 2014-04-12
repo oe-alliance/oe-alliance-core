@@ -14,7 +14,7 @@ PKGV = "3.0+git${GITPKGV}"
 VER ="3.0"
 PR = "r0"
 
-SRC_URI="git://github.com/opendroid-Team/PLi-HD.git"
+SRC_URI="git://github.com/opendroid-Team/MetrixHD.git"
 
 S = "${WORKDIR}/git"
 
