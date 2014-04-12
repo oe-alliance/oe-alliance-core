@@ -9,7 +9,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "1.0"
-PR = "r46"
+PR = "r47"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 DEPENDS = "enigma2-plugin-drivers-usbserial"
@@ -35,6 +35,7 @@ RRECOMMENDS_${PN} = "\
     enigma2-plugin-skins-pli-hd \
     enigma2-plugin-extensions-openairplay \
     ${@base_contains("TARGET_ARCH", "mipsel", "enigma2-plugin-extensions-et-livestream" , "", d)} \
+    enigma2-plugin-extensions-mediatomb \
     enigma2-plugin-extensions-dreamplex \
     enigma2-plugin-extensions-iptvlistupdater \
     enigma2-plugin-extensions-et-portal \
