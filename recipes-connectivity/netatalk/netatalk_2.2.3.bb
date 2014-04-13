@@ -1,5 +1,5 @@
 SECTION = "net"
-PR = "2"
+PR = "3"
 
 require conf/license/license-gplv2.inc
 
@@ -31,7 +31,7 @@ FILES_${PN}-pap +=    "/usr/bin/pap \
                     /usr/bin/papstatus"
 FILES_${PN}-timelord += "/usr/sbin/timelord"
 FILES_${PN}-dbg += "${sysconfdir}/netatalk/uams/.debug"
-FILES_${PN}-staticdev += "/usr/lib/libatalk.a"
+FILES_${PN}-staticdev += "${libdir}/.a"
 
 # FILES_${PN} += "${sysconfdir}/netatalk/uams/uams_clrtxt.so \
 #                 ${sysconfdir}/netatalk/uams/uams_dhx2.so \
