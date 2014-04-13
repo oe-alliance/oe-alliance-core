@@ -9,7 +9,7 @@ require conf/license/license-gplv2.inc
 RDEPENDS_${PN} += "showiframe openvix-bootlogo-zeus"
 
 PV = "4.0"
-PR = "r0"
+PR = "r1"
 
 S = "${WORKDIR}"
 
@@ -18,7 +18,7 @@ INITSCRIPT_PARAMS = "start 06 S ."
 
 inherit update-rc.d
 
-SRC_URI = "${@base_contains("MACHINE_FEATURES", "bootsplash", "file://splash.bin" , "", d)}"
+SRC_URI = "file://bootlogo.sh ${@base_contains("MACHINE_FEATURES", "bootsplash", "file://splash.bin" , "", d)}"
 SRC_URI_append_gb800ue = "file://lcdsplash.bin"
 SRC_URI_append_gbquad = "file://lcdsplash.bin"
 SRC_URI_append_gb800ueplus = "file://lcdsplash.bin"
