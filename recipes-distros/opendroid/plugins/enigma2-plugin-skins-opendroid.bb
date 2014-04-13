@@ -1,4 +1,4 @@
-SUMMARY = "Enigma2 Skin mega32"
+SUMMARY = "Enigma2 Skin opendroid"
 MAINTAINER = "opendroid"
 SECTION = "base"
 PRIORITY = "required"
@@ -9,12 +9,12 @@ require conf/license/license-gplv2.inc
 
 inherit gitpkgv
 SRCREV = "${AUTOREV}"
-PV = "2.1+git${SRCPV}"
-PKGV = "2.1+git${GITPKGV}"
-VER ="2.1"
-PR = "r5"
+PV = "1.0+git${SRCPV}"
+PKGV = "1.0+git${GITPKGV}"
+VER ="1.0"
+PR = "r0"
 
-SRC_URI="git://github.com/opendroid-Team/mega32.git"
+SRC_URI="git://github.com/opendroid-Team/MetrixHD.git"
 
 S = "${WORKDIR}/git"
 
