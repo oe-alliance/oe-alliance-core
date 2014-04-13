@@ -2,17 +2,19 @@ MAINTAINER = "Narcis Ilisei"
 LICENSE = "GPLv3"
 LIC_FILES_CHKSUM = "file://COPYING;md5=3c34afdc3adf82d2448f12715a255122"
 
-SRCDATE = "20100519"
-PV = "v.02.18.24+cvs${SRCDATE}"
-PR = "r5"
+PV = "v.02.24.38"
+PR = "r2"
 
-SRC_URI = "cvs://anonymous@inadyn-mt.cvs.sourceforge.net/cvsroot/inadyn-mt;module=${PN};tag=unicows;date=${SRCDATE} \
+SRC_URI = "${SOURCEFORGE_MIRROR}/${PN}/${PN}/${PN}.${PV}/${PN}.${PV}.tar.gz \
     file://inadyn-mt.sh \
     file://inadyn.conf \
     file://remove_host_include_paths.patch \
     "
 
-S = "${WORKDIR}/${PN}"
+SRC_URI[md5sum] = "e868ab86df2eb20a1d98c11e8564e52c"
+SRC_URI[sha256sum] = "3a1028218e395cfda981fd912d2c097d3433037e62ca0594ea0f3bdf2b7bf0a4"
+
+S = "${WORKDIR}/${PN}.${PV}"
 
 inherit autotools update-rc.d
 
