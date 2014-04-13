@@ -1,4 +1,4 @@
-SRCDATE = "20140116"
+SRCDATE = "20140410"
 
 require gigablue-initrd.inc
 
@@ -11,5 +11,5 @@ do_deploy() {
 
 addtask deploy before do_build after do_install
 
-SRC_URI[md5sum] = "9b3abc17904625d23d4fe0deb3946cf4"
-SRC_URI[sha256sum] = "5563545d47f69e5c3d9d69fb1fc6bc9411a4dba2c821be5e04ff696e2439311f"
+SRC_URI[md5sum] = "d2f40f660866a975530b74c7e0a1d61f"
+SRC_URI[sha256sum] = "b88a0273ef62586fd0c35ed4721564a37ed633be3531ea626464db087f18e14d"
