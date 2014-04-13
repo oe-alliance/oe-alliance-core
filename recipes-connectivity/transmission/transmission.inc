@@ -3,7 +3,7 @@ SECTION = "network"
 HOMEPAGE = "www.transmissionbt.com/"
 DEPENDS = "gtk+ gnutls openssl gettext libtool intltool-native curl glib-2.0-native libevent"
 LICENSE = "GPLv2"
-INC_PR = "r1"
+INC_PR = "r2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=7ee657ac1dce0e7353033fc06c8087d2"
 
 SRC_URI = "http://mirrors.m0k.org/transmission/files/transmission-${PV}.tar.bz2;name=archive \
@@ -26,7 +26,7 @@ do_install_append() {
 PACKAGES += "${PN}-gui ${PN}-client"
 
 FILES_${PN} = "${bindir}/transmission-daemon ${datadir}/transmission ${sysconfdir} ${localstatedir}/lib/${PN}-daemon"
-FILES_${PN}-client = "${bindir}/transmission-cli ${bindir}/transmission-remote ${bindir}//transmission-edit ${bindir}//transmission-show ${bindir}//transmission-create"
+FILES_${PN}-client = "${bindir}/transmission-cli ${bindir}/transmission-remote ${bindir}/transmission-edit ${bindir}/transmission-show ${bindir}/transmission-create"
 FILES_${PN}-gui += "${bindir}/transmission ${datadir}/icons ${datadir}/applications ${datadir}/pixmaps"
 CONFFILES_${PN} = "${sysconfdir}/default/transmission-daemon"
 
