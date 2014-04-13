@@ -13,7 +13,7 @@ inherit gitpkgv autotools pythonnative
 SRCREV = "${AUTOREV}"
 PV = "3.0+git${SRCPV}"
 PKGV = "3.0+git${GITPKGV}"
-PR = "r1"
+PR = "r2"
 
 SRC_URI="git://github.com/OpenViX/vix-core.git;protocol=git"
 
@@ -30,6 +30,7 @@ EXTRA_OECONF = "\
 
 PACKAGES =+ "${PN}-src"
 PACKAGES =+ "${PN}-po"
+CONFFILES_${PN} += "${sysconfdir}/exports"
 FILES_${PN} = "/etc /usr/lib"
 FILES_${PN}-dbg = "/usr/lib/enigma2/python/Plugins/SystemPlugins/ViX/.debug/"
 FILES_${PN}-src = "/usr/lib/enigma2/python/Plugins/SystemPlugins/ViX/*.py"
