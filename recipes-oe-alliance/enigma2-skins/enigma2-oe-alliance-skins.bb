@@ -9,10 +9,10 @@ EPSM = "enigma2-plugin-skins"
 SRCREV = "${AUTOREV}"
 PV = "2.0+git${SRCPV}"
 PKGV = "2.0+git${GITPKGV}"
-PR = "r3"
+PR = "r4"
 
-PACKAGES = "${EPSM}-neonovum-hd ${EPSM}-mynovum-hd ${EPSM}-nou-hd ${EPSM}-neonovum-hd-weather ${EPSM}-mynovum-hd-weather ${EPSM}-nou-hd-weather novum-hd-common novum-hd-renderer novum-hd-renderer-src"
-PROVIDES = "${PN} ${EPSM}-neonovum-hd ${EPSM}-mynovum-hd ${EPSM}-nou-hd ${EPSM}-neonovum-hd-weather ${EPSM}-mynovum-hd-weather ${EPSM}-nou-hd-weather novum-hd-common novum-hd-renderer novum-hd-renderer-src"
+PACKAGES = "${EPSM}-blue-hd ${EPSM}-neonovum-hd ${EPSM}-mynovum-hd ${EPSM}-nou-hd ${EPSM}-neonovum-hd-weather ${EPSM}-mynovum-hd-weather ${EPSM}-nou-hd-weather novum-hd-common novum-hd-renderer novum-hd-renderer-src"
+PROVIDES = "${PN} ${EPSM}-blue-hd ${EPSM}-neonovum-hd ${EPSM}-mynovum-hd ${EPSM}-nou-hd ${EPSM}-neonovum-hd-weather ${EPSM}-mynovum-hd-weather ${EPSM}-nou-hd-weather novum-hd-common novum-hd-renderer novum-hd-renderer-src"
 RDEPENDS_${EPSM}-neonovum-hd = "novum-hd-renderer novum-hd-common"
 RDEPENDS_${EPSM}-neonovum-hd-weather = "novum-hd-renderer novum-hd-common enigma2-plugin-extensions-weatherplugin enigma2-plugin-systemplugins-weathercomponenthandler enigma2-plugin-skincomponents-weathercomponent"
 RDEPENDS_${EPSM}-mynovum-hd = "novum-hd-renderer novum-hd-common"
@@ -21,6 +21,8 @@ RDEPENDS_${EPSM}-nou-hd = "novum-hd-renderer novum-hd-common"
 RDEPENDS_${EPSM}-nou-hd-weather = "novum-hd-renderer novum-hd-common enigma2-plugin-extensions-weatherplugin enigma2-plugin-systemplugins-weathercomponenthandler enigma2-plugin-skincomponents-weathercomponent"
 
 SRC_URI = "git://github.com/oe-alliance/oe-alliance-skins.git;protocol=git"
+
+FILES_${EPSM}-blue-hd = "/usr/share/enigma2/Blue-HD"
 
 FILES_novum-hd-renderer = "/usr/lib/enigma2/python/Components/Renderer/*.pyo"
 FILES_novum-hd-renderer-src = "/usr/lib/enigma2/python/Components/Renderer/*.py"
@@ -44,5 +46,6 @@ do_install() {
     chmod -R a+rX ${D}/usr/lib/enigma2/python/Components/Renderer
     install -d ${D}/usr/share/enigma2
     mv ${S}/Nou/skin/* ${D}/usr/share/enigma2/
+    mv ${S}/Rossi/Blue-HD ${D}/usr/share/enigma2/
     chmod -R a+rX ${D}/usr/share/enigma2/
 }
