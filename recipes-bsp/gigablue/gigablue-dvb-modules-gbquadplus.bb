@@ -1,9 +1,9 @@
-SRCDATE = "20140120"
+SRCDATE = "20140412"
 
 KV = "3.3.8-2.0"
 
-SRC_URI[md5sum] = "1038c2e44b9e71f136d3f61d203a6b4c"
-SRC_URI[sha256sum] = "2167677c19ef2032ae650ad7d231d445f6c94842db925798eed8b0ede78e9097"
+SRC_URI[md5sum] = "edb717344663fbc42cd47d8e988b111d"
+SRC_URI[sha256sum] = "41a3a5e2ed8f54225fa00d83e8c7a6d786e8984fed431a9b99a8ffcb2dd121fe"
 
 SRC_URI = "http://archiv.openmips.com/gigablue-drivers-${KV}-gbquadplus-${SRCDATE}.zip"
 
