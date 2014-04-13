@@ -45,8 +45,8 @@ SRC_URI_append_dm500hdv2 = " file://0001-add-support-for-DM800SEv2-and-DM500HDv2
 
 SRC_URI[kernel.md5sum] = "7ceb61f87c097fc17509844b71268935"
 SRC_URI[kernel.sha256sum] = "c881fc2b53cf0da7ca4538aa44623a7de043a41f76fd5d0f51a31f6ed699d463"
-SRC_URI[kernel-patch.md5sum] = "ee23c416a00767a843250cccd8174c90"
-SRC_URI[kernel-patch.sha256sum] = "154638a2b357d66fb9fdfced9ca0a74757cb03809e735f50f04aaf61ba460521"
+SRC_URI[kernel-patch.md5sum] = "6f21ff6870a76aa17a1cdfd9d2597e30"
+SRC_URI[kernel-patch.sha256sum] = "0d5c9d494ac3db2c3c3c9f6e18223f8576e0fc87b1d3b9d819a7bc94f86a1f52"
 SRC_URI[dmm-patch.md5sum] = "d17d65e9978343d540e0b60767a82286"
 SRC_URI[dmm-patch.sha256sum] = "576356545de7f587d164d1cee2cb17b6c1ce3efbe2e01ff785c13ec2d544d220"
 SRC_URI[unionfs.md5sum] = "06e7c9f6cafd49b72184be851116c511"
