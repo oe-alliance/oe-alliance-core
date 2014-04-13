@@ -9,7 +9,7 @@ EPSM = "enigma2-plugin-skins"
 SRCREV = "${AUTOREV}"
 PV = "2.0+git${SRCPV}"
 PKGV = "2.0+git${GITPKGV}"
-PR = "r2"
+PR = "r3"
 
 PACKAGES = "${EPSM}-neonovum-hd ${EPSM}-mynovum-hd ${EPSM}-nou-hd ${EPSM}-neonovum-hd-weather ${EPSM}-mynovum-hd-weather ${EPSM}-nou-hd-weather novum-hd-common novum-hd-renderer novum-hd-renderer-src"
 PROVIDES = "${PN} ${EPSM}-neonovum-hd ${EPSM}-mynovum-hd ${EPSM}-nou-hd ${EPSM}-neonovum-hd-weather ${EPSM}-mynovum-hd-weather ${EPSM}-nou-hd-weather novum-hd-common novum-hd-renderer novum-hd-renderer-src"
@@ -40,12 +40,9 @@ do_compile_append() {
 
 do_install() {
     install -d ${D}/usr/lib/enigma2/python/Components/Renderer
-    mv ${S}/NOVUM_HD_Renderer/* ${D}/usr/lib/enigma2/python/Components/Renderer
+    mv ${S}/Nou/renderer/* ${D}/usr/lib/enigma2/python/Components/Renderer
     chmod -R a+rX ${D}/usr/lib/enigma2/python/Components/Renderer
     install -d ${D}/usr/share/enigma2
-    mv ${S}/NOVUM_HD_Common ${D}/usr/share/enigma2/
-    mv ${S}/myNOVUM_HD* ${D}/usr/share/enigma2/
-    mv ${S}/NeoNOVUM_HD* ${D}/usr/share/enigma2/
-    mv ${S}/Nou_HD* ${D}/usr/share/enigma2/
+    mv ${S}/Nou/skin/* ${D}/usr/share/enigma2/
     chmod -R a+rX ${D}/usr/share/enigma2/
 }
