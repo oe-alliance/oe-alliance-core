@@ -4,7 +4,7 @@ LICENSE = "CLOSED"
 PV = "1.0"
 PR = "r1"
 
-SRC_URI = "http://enigma2.world-of-satellite.com/bootlogos/openvix-zeus.zip"
+SRC_URI = "http://enigma2.world-of-satellite.com/bootlogos/openvix-helios.zip"
 
 S = "${WORKDIR}"
 
