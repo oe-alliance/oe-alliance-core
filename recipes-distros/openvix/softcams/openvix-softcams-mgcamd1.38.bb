@@ -3,7 +3,7 @@ LICENSE = "CLOSED"
 
 RDEPENDS_${PN} = "libcrypto-compat-0.9.7"
 
-PR = "r0"
+PR = "r1"
 
 RREPLACES_${PN} += "enigma2-plugin-softcams-mgcamd"
 RCONFLICTS_${PN} += "enigma2-plugin-softcams-mgcamd"
@@ -13,9 +13,9 @@ PACKAGES = "enigma2-plugin-softcams-mgcamd138"
 PROVIDES += "openvix-softcams-mgcamd138"
 RPROVIDES_enigma2-plugin-softcams-mgcamd138 += "openvix-softcams-mgcamd138"
 
-SRC_URI = "http://enigma2.world-of-satellite.com/git-extras/mgcamd-${PV}.zip"
+SRC_URI = "http://enigma2.world-of-satellite.com/git-extras/mgcamd-138.zip"
 
-S = "${WORKDIR}//mgcamd-${PV}"
+S = "${WORKDIR}//mgcamd-138"
 
 INHIBIT_PACKAGE_STRIP = "1"
 
