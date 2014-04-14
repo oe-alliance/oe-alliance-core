@@ -1,4 +1,4 @@
-SUMMARY = "Enigma2 Skin opendroid"
+DESCRIPTION = "enigma2-plugin-extensions-addonopendroid"
 MAINTAINER = "opendroid"
 SECTION = "base"
 PRIORITY = "required"
@@ -9,17 +9,17 @@ require conf/license/license-gplv2.inc
 
 inherit gitpkgv
 SRCREV = "${AUTOREV}"
-PV = "1.0+git${SRCPV}"
-PKGV = "1.0+git${GITPKGV}"
-VER ="1.0"
+PV = "3.0+git${SRCPV}"
+PKGV = "3.0+git${GITPKGV}"
+VER ="3.0"
 PR = "r1"
 
-SRC_URI="git://github.com/opendroid-Team/mega32.git"
+SRC_URI="git://github.com/opendroid-Team/enigma2-plugin-extensions-addonopendroid.git"
 
 S = "${WORKDIR}/git"
 
 FILES_${PN} = "/usr/*"
 
 do_install() {
-    cp -rp ${S}/usr ${D}/
+	cp -rp ${S}/usr ${D}/
 }
