@@ -16,7 +16,7 @@ do_install() {
     install -m 0644 radio.mvi ${D}/usr/share/enigma2/skin_default/radio.mvi
 }
 
-SRC_URI[md5sum] = "25bb4a9526350cfaa28cfa9fe288eebe"
-SRC_URI[sha256sum] = "30b68be08383209f831aa035df8acb0da2500e36f9c8d2ef786d049a7dadacd3"
+SRC_URI[md5sum] = "8cf095009dd1dbd84aecf19082782713"
+SRC_URI[sha256sum] = "5b8d6a615a1a364b49c33d37ed0f1f406ff8dcb19c6d6c12c2cbdc54b7abe85b"
 
 FILES_${PN} = "/usr/share"
