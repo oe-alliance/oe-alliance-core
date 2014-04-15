@@ -2,17 +2,17 @@ SUMMARY = "openViX bootlogo Zeus"
 LICENSE = "CLOSED"
 
 PV = "1.0"
-PR = "r1"
+PR = "r2"
 
 SRC_URI = "http://enigma2.world-of-satellite.com/bootlogos/openvix-zeus.zip"
 
 S = "${WORKDIR}"
 
 do_install() {
-    install -d ${D}/etc/engima2
-    install -m 0644 bootlogo.mvi ${D}/etc/engima2/bootlogo.mvi
-    install -m 0644 backdrop.mvi ${D}/etc/engima2/backdrop.mvi
-    install -m 0644 radio.mvi ${D}/etc/engima2/radio.mvi
+    install -d ${D}/etc/enigma2
+    install -m 0644 bootlogo.mvi ${D}/etc/enigma2/bootlogo.mvi
+    install -m 0644 backdrop.mvi ${D}/etc/enigma2/backdrop.mvi
+    install -m 0644 radio.mvi ${D}/etc/enigma2/radio.mvi
 }
 
 SRC_URI[md5sum] = "25bb4a9526350cfaa28cfa9fe288eebe"
