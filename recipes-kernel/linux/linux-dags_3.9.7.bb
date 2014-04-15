@@ -5,15 +5,15 @@ KV = "3.9.7"
 
 inherit machine_kernel_pr
 
-SRCDATE = "20140301"
-MACHINE_KERNEL_PR_append = ".3"
+SRCDATE = "20140404"
+MACHINE_KERNEL_PR_append = ".4"
 
-SRC_URI[md5sum] = "f304e2a448c5a81ded541e3c0c8889a1"
-SRC_URI[sha256sum] = "21f299c6927c6e2fd17039c8206f84bded4c62a38f85d1390dc5faa63fd3b35b"
+SRC_URI[md5sum] = "74d909a2081479136fa453b743325138"
+SRC_URI[sha256sum] = "de0aaf466ecf8b47653a859f66ff59da49e7a16aa26c9987d0c089255675de04"
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${KV}-r1/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-SRC_URI = "http://openembedded.homelinux.com/release/images/oedrivers/linux-3.9.7-r1-${SRCDATE}.tar.gz \
+SRC_URI = "http://en3.homeftp.net/pub/src/linux-${KV}-r1-${SRCDATE}.tar.gz \
     file://defconfig \
     "
 
