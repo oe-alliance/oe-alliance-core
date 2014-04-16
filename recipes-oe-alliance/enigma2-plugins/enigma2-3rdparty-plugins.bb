@@ -9,7 +9,7 @@ inherit gitpkgv autotools deploy
 SRCREV = "${AUTOREV}"
 PV = "2.0+gitr${SRCPV}"
 PKGV = "2.0+gitr${GITPKGV}"
-PR = "r20"
+PR = "r21"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -30,12 +30,12 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-atmolightd_0.7-pre22_all.ipk \
     enigma2-plugin-extensions-autobouquets-e2_201310201900-r2_mips32el.ipk \
     enigma2-plugin-extensions-bildonline_2.9rc13_mips32el.ipk \
-    enigma2-plugin-extensions-bluray_1.2_mips32el.ipk \
+    enigma2-plugin-extensions-bluray_1.4rc1_mips32el.ipk \
     enigma2-plugin-extensions-boblight-enigma2_0.8r6_mips32el.ipk \
-    enigma2-plugin-extensions-camofs_7.91_all.ipk \
+    enigma2-plugin-extensions-camofs_8.41_all.ipk \
     enigma2-plugin-extensions-chefkoch_1.2rc1_mips32el.ipk \
     enigma2-plugin-extensions-csfd_9_45-20140125_all.ipk \
-    enigma2-plugin-extensions-digitalfernsehen_0.8rc1_mips32el.ipk \
+    enigma2-plugin-extensions-digitalfernsehen_0.9rc3_mips32el.ipk \
     enigma2-plugin-extensions-facebook_1.0rc3_mips32el.ipk \
     enigma2-plugin-extensions-filesearchfs_2.53_all.ipk \
     enigma2-plugin-extensions-focusonline_0.8rc2_mips32el.ipk \
@@ -50,13 +50,13 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-msnwetter_0.6rc3_mips32el.ipk \
     enigma2-plugin-extensions-mtv_0.1_mips32el.ipk \
     enigma2-plugin-extensions-muzutv_1.1rc4_mips32el.ipk \
-    enigma2-plugin-extensions-moviebrowser_2.8rc12_mips32el.ipk \
-    enigma2-plugin-extensions-mp3browser_1.2_mips32el.ipk \
+    enigma2-plugin-extensions-moviebrowser_3.4rc5_mips32el.ipk \
+    enigma2-plugin-extensions-mp3browser_1.8rc4_mips32el.ipk \
     enigma2-plugin-extensions-navibar_1.1.1_all.ipk \
     enigma2-plugin-extensions-opkg-tools_1.3_mipsel.ipk \
-    enigma2-plugin-extensions-planerfs_5.26_all.ipk \
+    enigma2-plugin-extensions-planerfs_5.27_all.ipk \
     enigma2-plugin-extensions-pluginspanel_1.0_r01_all.ipk \
-    enigma2-plugin-extensions-picturecenterfs_4.11_all.ipk \
+    enigma2-plugin-extensions-picturecenterfs_4.14_all.ipk \
     enigma2-plugin-extensions-radiode_0.1_mips32el.ipk \
     enigma2-plugin-extensions-radioonline-oe2.0_1.0_all.ipk \
     enigma2-plugin-extensions-screensaver_5.6.9_all.ipk \
@@ -77,13 +77,13 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-translator_0.5rc5_mips32el.ipk \
     enigma2-plugin-extensions-transmission_2.76-r13884_mips32el.ipk \
     enigma2-plugin-extensions-tsmedia-oe2.0_4.6_all.ipk \
-    enigma2-plugin-extensions-tvspielfilm_5.9rc5_mips32el.ipk \
+    enigma2-plugin-extensions-tvspielfilm_6.2rc13_mips32el.ipk \
     enigma2-plugin-extensions-vcs_1.0-rc5_all.ipk \
     enigma2-plugin-extensions-verkehrsinfo_0.7rc1_mips32el.ipk \
     enigma2-plugin-extensions-vuplusforum_0.7rc3_mips32el.ipk \
     enigma2-plugin-extensions-webmedia_10.0_r02_oe2.0_all.ipk \
-    enigma2-plugin-extensions-webradiofs_11.72_all.ipk \
-    enigma2-plugin-extensions-wikipedia_1.9rc1_mips32el.ipk \
+    enigma2-plugin-extensions-webradiofs_11.73_all.ipk \
+    enigma2-plugin-extensions-wikipedia_2.1rc4_mips32el.ipk \
     enigma2-plugin-extensions-xbmcaddons_5.1_r0_all.ipk \
     enigma2-plugin-extensions-xbmcwetter_1.0rc4_mips32el.ipk \
     enigma2-plugin-extensions-xtrendforum_0.1rc2_mips32el.ipk \
