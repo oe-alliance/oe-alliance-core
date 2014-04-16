@@ -9,7 +9,7 @@ inherit gitpkgv autotools deploy
 SRCREV = "${AUTOREV}"
 PV = "2.0+gitr${SRCPV}"
 PKGV = "2.0+gitr${GITPKGV}"
-PR = "r21"
+PR = "r22"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -74,7 +74,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-systemtools-for-ppanels_0.83_mipsel.ipk \
     enigma2-plugin-extensions-thetvdb_0.7-20120607-r1_mips32el.ipk \
     enigma2-plugin-extensions-tmdbinfo_1.1-20130929-r0-r1_mips32el.ipk \
-    enigma2-plugin-extensions-translator_0.5rc5_mips32el.ipk \
+    enigma2-plugin-extensions-translator_0.8rc6_mips32el.ipk \
     enigma2-plugin-extensions-transmission_2.76-r13884_mips32el.ipk \
     enigma2-plugin-extensions-tsmedia-oe2.0_4.6_all.ipk \
     enigma2-plugin-extensions-tvspielfilm_6.2rc13_mips32el.ipk \
