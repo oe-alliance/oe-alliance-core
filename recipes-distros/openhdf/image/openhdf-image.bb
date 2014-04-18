@@ -48,7 +48,7 @@ ROOTFS_POSTPROCESS_COMMAND += "rootfs_postprocess; "
 
 export NFO = '${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.nfo'
 
-generate_nfo() {
+do_generate_nfo() {
     VER=`grep Version: "${IMAGE_ROOTFS}/usr/lib/ipkg/info/enigma2.control" | cut -b 10-26`
     echo "Enigma2: ${VER}" > ${NFO}
     echo "Machine: ${MACHINE}" >> ${NFO}
@@ -64,7 +64,5 @@ generate_nfo() {
     echo "MD5: ${MD5SUM}" >> ${NFO}
 }
 
-do_rootfs_append() {
-    generate_nfo
-}
+addtask generate_nfo before do_rootfs
 
