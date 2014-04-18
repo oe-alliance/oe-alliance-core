@@ -1,4 +1,4 @@
-PRINC = "9"
+PRINC = "10"
 PACKAGE_ARCH = "${MACHINEBUILD}"
 
 do_compile_append_mipsel() {
@@ -15,4 +15,8 @@ do_compile_append_odinm9() {
 do_compile_append_cube() {
 	echo "arch mips32el $priority" >> $archconf
 	echo "arch mipsel $priority" >> $archconf
+}
+
+do_compile_append_dm800() {
+	echo "arch mips32el $priority" >> $archconf
 }
