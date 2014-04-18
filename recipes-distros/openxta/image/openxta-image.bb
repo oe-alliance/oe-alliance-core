@@ -50,4 +50,4 @@ do_generate_nfo() {
     echo "MD5: ${MD5SUM}" >> ${NFO}
 }
 
-addtask generate_nfo before do_rootfs
+addtask generate_nfo after do_rootfs
