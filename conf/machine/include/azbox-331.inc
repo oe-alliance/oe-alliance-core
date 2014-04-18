@@ -23,6 +23,7 @@ MACHINE_FEATURES += " kernel26 alsa usbhost wifi nl80211 3dtv switchoff lpcm tex
 
 PREFERRED_VERSION_linux-azbox = "3.3.1"
 PREFERRED_VERSION_linux-libc-headers = "3.3"
+PREFERRED_VERSION_nfs-utils ?= "1.2.8"
 
 GLIBC_EXTRA_OECONF = "--with-tls --with-__thread"
 

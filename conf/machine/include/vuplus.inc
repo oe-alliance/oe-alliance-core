@@ -26,11 +26,11 @@ DVBMEDIASINK_CONFIG = "--with-wmv --with-wma --with-pcm --with-eac3"
 TARGET_ARCH = "mipsel"
 DEFAULTTUNE = "mips32el"
 
-PREFERRED_PROVIDER_virtual/kernel = "linux-vuplus"
+PREFERRED_VERSION_nfs-utils ?= "1.2.8"
 
+PREFERRED_PROVIDER_virtual/kernel = "linux-vuplus"
 PREFERRED_PROVIDER_virtual/blindscan-dvbc = "vuplus-blindscan-utils"
 PREFERRED_PROVIDER_virtual/blindscan-dvbs = "vuplus-blindscan-utils"
-
 PREFERRED_PROVIDER_virtual/transtreamproxy = "vuplus-transtreamproxy"
 
 KERNEL_IMAGETYPE = "vmlinux"

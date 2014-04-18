@@ -45,6 +45,7 @@ PREFERRED_PROVIDER_virtual/kernel = "linux-ixuss"
 
 PREFERRED_VERSION_linux-ixuss = "3.3.0"
 PREFERRED_VERSION_linux-libc-headers = "3.3"
+PREFERRED_VERSION_nfs-utils ?= "1.2.8"
 
 KERNEL_IMAGETYPE = "vmlinux"
 KERNEL_OUTPUT = "${KERNEL_IMAGETYPE}"
