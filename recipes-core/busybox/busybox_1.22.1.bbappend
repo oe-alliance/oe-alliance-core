@@ -14,6 +14,7 @@ SRC_URI_IGNORED += " \
             "
 
 SRC_URI += " \
+            file://0007-busybox-1.22.1-iplink.patch \
             file://mount_single_uuid.patch \
             file://mdev-mount.sh \
             file://inetd \
