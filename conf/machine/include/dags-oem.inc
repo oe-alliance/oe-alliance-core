@@ -161,7 +161,6 @@ IMAGE_CMD_ubi_append = " \
     rm -Rf update; \
     "
 
-TARGET_FPU = "hard"
 
 MACHINE_FEATURES += "3dtv alsa hdmicec switchoff wifi bootsplash textlcd fan ci"
 

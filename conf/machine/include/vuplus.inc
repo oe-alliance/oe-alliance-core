@@ -50,8 +50,6 @@ IMAGE_CMD_ubi_prepend = " \
     rm -rf ${IMAGE_ROOTFS}/tmp/*; \
     "
 
-TARGET_FPU = "hard"
-
 MACHINE_FEATURES += "3dtv alsa hdmicec switchoff wifi bootsplash"
 
 BOOTLOGO_FILENAME = "splash_cfe_auto.bin"
