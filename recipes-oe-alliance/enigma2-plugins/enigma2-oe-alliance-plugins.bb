@@ -30,7 +30,7 @@ PROVIDES += " \
     enigma2-plugin-extensions-ondemand-openuitzendinggemist \
     enigma2-plugin-extensions-tunerserver \
     ${@base_contains('MACHINE_BRAND', 'Vu+', 'enigma2-plugin-extensions-hbbtv ' , ' ', d)} \
-    enigma2-plugin-systemplugins-audioeffect \
+    ${@base_contains("MACHINE_FEATURES", "audioeffect", "enigma2-plugin-systemplugins-audioeffect" , "", d)} \
     enigma2-plugin-systemplugins-transcodingsetup \
     enigma2-plugin-systemplugins-micomupgrade \
     enigma2-plugin-extensions-ondemand \
@@ -113,7 +113,7 @@ inherit gitpkgv autotools pythonnative
 SRCREV = "${AUTOREV}"
 PV = "2.0+git${SRCPV}"
 PKGV = "2.0+git${GITPKGV}"
-PR = "r7"
+PR = "r8"
 
 SRC_URI="git://github.com/oe-alliance/oe-alliance-plugins.git;protocol=git"
 
