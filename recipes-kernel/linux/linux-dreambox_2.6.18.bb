@@ -45,6 +45,10 @@ S = "${WORKDIR}/linux-${PV}"
 
 require linux-dreambox.inc
 
+do_install_prepend() {
+        mkdir -p ${S}/tools
+}
+
 do_install_append() {
         cp include/asm/asm-offsets.h $kerneldir/include/asm/asm-offsets.h
 }
