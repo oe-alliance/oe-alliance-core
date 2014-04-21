@@ -7,7 +7,7 @@
 -		std::string message = text;
 -		message = replace_all(message, "\n", " ");
 -		::write(lcdfd, message.c_str(), message.size());
-+		char *text2 = malloc (64);
++		char *text2 = (char*)malloc (64);
 +		int n = 0;
 +		int fd = open("/proc/stb/info/model", O_RDONLY);
 +		char tmp[255];

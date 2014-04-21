@@ -156,7 +156,7 @@ inherit gitpkgv autotools pkgconfig pythonnative
 
 PV = "3.0+git${SRCPV}"
 PKGV = "3.0+git${GITPKGV}"
-PR = "r3"
+PR = "r4"
 
 SRC_URI = "${ENIGMA2_URI}"
 
