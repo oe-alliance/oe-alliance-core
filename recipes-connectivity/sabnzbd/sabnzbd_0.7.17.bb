@@ -2,7 +2,7 @@ MAINTAINER = "team@sabnzbd.org"
 LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYRIGHT.txt;md5=183ca88c5404ea8f9e484ad8d271aab3"
 
-PR = "r1"
+PR = "r2"
 
 DEPENDS = "python"
 RDEPENDS_${PN} = "\
@@ -38,7 +38,7 @@ INITSCRIPT_NAME = "sabnzbd"
 INITSCRIPT_PARAMS = "defaults"
 
 do_compile() {
-    python -m compileall .
+    python -O -m compileall .
 }
 
 do_install() {
