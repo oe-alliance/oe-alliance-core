@@ -10,10 +10,10 @@ ${@base_contains('MACHINEBUILD', 'sezam5000hd', '5000-HD' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'sezammarvel', 'Marvel' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'xpeedlx', 'LX-x' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'xpeedlx3', 'LX-3' , '', d)}\
-${@base_contains('MACHINEBUILD', 'atemionemesis', 'Nemesis' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbmini', 'Premium Mini' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbtwin', 'Premium Twin' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'atemio5x00', '5x00-HD' , '', d)}\
+${@base_contains('MACHINEBUILD', 'atemionemesis', 'Nemesis' , '', d)}\
 "
 
 MACHINE_BRAND = "\
@@ -23,10 +23,10 @@ ${@base_contains('MACHINEBUILD', 'sezam5000hd', 'Sezam' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'sezammarvel', 'Sezam' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'xpeedlx', 'GI' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'xpeedlx3', 'GI' , '', d)}\
-${@base_contains('MACHINEBUILD', 'atemionemesis', 'Atemio' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbmini', 'Miraclebox' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbtwin', 'Miraclebox' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'atemio5x00', 'Atemio' , '', d)}\
+${@base_contains('MACHINEBUILD', 'atemionemesis', 'Atemio' , '', d)}\
 "
 
 IMAGEDIR ?= "\
@@ -36,10 +36,10 @@ ${@base_contains('MACHINEBUILD', 'sezam5000hd', 'hdx' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'sezammarvel', 'hdp' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'xpeedlx', 'xpeedlx' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'xpeedlx3', 'xpeedlx3' , '', d)}\
-${@base_contains('MACHINEBUILD', 'atemionemesis', 'atemio/nemesis' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbmini', 'miraclebox/mini' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbtwin', 'miraclebox/twin' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'atemio5x00', 'atemio/5x00' , '', d)}\
+${@base_contains('MACHINEBUILD', 'atemionemesis', 'atemio/8x00' , '', d)}\
 "
 
 MTD_KERNEL = "\
@@ -49,10 +49,10 @@ ${@base_contains('MACHINEBUILD', 'sezam5000hd', 'mtd1' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'sezammarvel', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'xpeedlx', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'xpeedlx3', 'mtd2' , '', d)}\
-${@base_contains('MACHINEBUILD', 'atemionemesis', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbmini', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbtwin', 'mtd1' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'atemio5x00', 'mtd2' , '', d)}\
+${@base_contains('MACHINEBUILD', 'atemionemesis', 'mtd2' , '', d)}\
 "
 
 MTD_ROOTFS = "\
@@ -62,10 +62,10 @@ ${@base_contains('MACHINEBUILD', 'sezam5000hd', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'sezammarvel', 'mtd3' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'xpeedlx', 'mtd3' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'xpeedlx3', 'mtd3' , '', d)}\
-${@base_contains('MACHINEBUILD', 'atemionemesis', 'mtd3' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbmini', 'mtd3' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbtwin', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'atemio5x00', 'mtd3' , '', d)}\
+${@base_contains('MACHINEBUILD', 'atemionemesis', 'mtd3' , '', d)}\
 "
 
 KERNEL_FILE = "kernel.bin"
