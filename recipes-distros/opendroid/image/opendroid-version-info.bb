@@ -33,7 +33,7 @@ do_install() {
     echo "date=${DATETIME}" >> ${D}/etc/image-version
     echo "comment=opendroid" >> ${D}/etc/image-version
     echo "target=9" >> ${D}/etc/image-version
-    echo "creator=opendroid" >> ${D}/etc/image-version
+    echo "creator=Opendroid" >> ${D}/etc/image-version
     echo "url=${URL}" >> ${D}/etc/image-version
     echo "catalog=${URL}" >> ${D}/etc/image-version
     echo "${MACHINE}" > ${D}/etc/model
