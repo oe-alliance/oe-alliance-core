@@ -2,7 +2,7 @@ SUMMARY = "Opendroid Image"
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "proprietary"
-MAINTAINER = "Opendroid"
+MAINTAINER = "Opendroid Team"
 
 require conf/license/license-gplv2.inc
 
@@ -48,13 +48,13 @@ ROOTFS_POSTPROCESS_COMMAND += "rootfs_postprocess; "
 
 export NFO = '${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.nfo'
 
-generate_nfo() {
+do_generate_nfo() {
     VER=`grep Version: "${IMAGE_ROOTFS}/usr/lib/ipkg/info/enigma2.control" | cut -b 10-26`
     echo "Enigma2: ${VER}" > ${NFO}
     echo "Machine: ${MACHINE}" >> ${NFO}
     DATE=`date +%Y-%m-%d' '%H':'%M`
     echo "Date: ${DATE}" >> ${NFO}
-    echo "Issuer: Opendroid" >> ${NFO}
+    echo "Issuer: opendroid" >> ${NFO}
     echo "Link: ${DISTRO_FEED_URI}" >> ${NFO}
     if [ "${DESC}" != "" ]; then
         echo "Description: ${DESC}" >> ${NFO}
@@ -65,3 +65,4 @@ generate_nfo() {
 }
 
 addtask generate_nfo after do_rootfs
+
