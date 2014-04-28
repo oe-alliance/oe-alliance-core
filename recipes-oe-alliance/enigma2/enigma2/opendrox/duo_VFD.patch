@@ -1,0 +1,12 @@
+diff -Nru orig/data/skin_text.xml wizards/data/skin_text.xml
+--- /data/displaytext/skin_display.xml	2011-01-21 00:04:15.000000000 +0000
++++ /data/displaytext/skin_display.xml	2011-01-22 12:32:03.461437304 +0000
+@@ -81,7 +81,7 @@
+ <!-- standby -->
+ 	<screen name="StandbySummary" position="0,0" size="132,64">
+ 		<widget source="global.CurrentTime" render="Label" position="0,0" size="120,64" font="Regular;48" halign="center" valign="center">
+-			<convert type="ClockToText">Format:%d/%m %H:%M</convert>
++			<convert type="ClockToText">Full</convert>
+ 		</widget>
+ 		<widget source="session.RecordState" render="FixedLabel" position="6,4" zPosition="1" size="120,64" text=" ">
+ 			<convert type="ConfigEntryTest">config.usage.blinking_display_clock_during_recording,True,CheckSourceBoolean</convert>
