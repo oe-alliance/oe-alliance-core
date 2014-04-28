@@ -1,15 +1,30 @@
 # We know about rtc
 include conf/machine/include/build-extras.inc
 
-BRAND_OEM = "evo"
-MACHINE_BRAND = "EVO"
+BRAND_OEM = "entwopia"
+
+MACHINE_NAME = "\
+${@base_contains('MACHINEBUILD', 'enfinity', 'ENfinity' , '', d)}\
+${@base_contains('MACHINEBUILD', 'visionnet', 'Marvel 1' , '', d)}\
+"
+
+MACHINE_BRAND = "\
+${@base_contains('MACHINEBUILD', 'enfinity', 'EVO' , '', d)}\
+${@base_contains('MACHINEBUILD', 'visionnet', 'VisionNet' , '', d)}\
+"
+
+IMAGEDIR ?= "\
+${@base_contains('MACHINEBUILD', 'enfinity', 'enfinity' , '', d)}\
+${@base_contains('MACHINEBUILD', 'visionnet', 'visionnet' , '', d)}\
+"
+
 MTD_ROOTFS = "mtd2"
 MTD_KERNEL = "mtd1"
 KERNEL_FILE = "kernel.bin"
 ROOTFS_FILE = "rootfs.bin"
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS = "\
-    evo-dvb-modules-${MACHINE} \
+    entwopia-dvb-modules-${MACHINE} \
     "
 
 DVBPROVIDER = "kernel"
@@ -31,9 +46,9 @@ DEFAULTTUNE = "mips32el"
 
 GLIBC_EXTRA_OECONF = "--with-tls --with-__thread"
 
-PREFERRED_PROVIDER_virtual/kernel = "linux-evo"
+PREFERRED_PROVIDER_virtual/kernel = "linux-entwopia"
 
-PREFERRED_VERSION_linux-etxx00 = "3.8.7"
+PREFERRED_VERSION_linux-entwopia = "3.8.7"
 PREFERRED_VERSION_linux-libc-headers = "3.8"
 
 KERNEL_IMAGETYPE = "vmlinux"
@@ -45,8 +60,6 @@ IMAGE_FSTYPES ?= "ubi"
 UBI_VOLNAME = "rootfs"
 MKUBIFS_ARGS = "-m 2048 -e 126976 -c 4096"
 UBINIZE_ARGS = "-m 2048 -p 128KiB"
-
-IMAGEDIR ?= "${MACHINE}"
 
 IMAGE_CMD_ubi_prepend = " \
     rm -rf ${IMAGE_ROOTFS}/boot/*; \
@@ -72,3 +85,6 @@ MACHINE_FEATURES += "3dtv alsa hdmicec switchoff wifi bootsplash"
 BOOTLOGO_FILENAME = "splash.bin"
 
 require conf/machine/include/tune-mips32.inc
+
+# add support for extra feeds
+PACKAGE_ARCHS += " ${MACHINEBUILD}"

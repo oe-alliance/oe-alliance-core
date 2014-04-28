@@ -22,7 +22,7 @@ PKG_kernel-image = "kernel-image"
 RPROVIDES_kernel-base = "kernel-${KERNEL_VERSION}"
 RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
 
-SRC_URI += "http://source.entwopia.com/evo/${MACHINE}-linux-${PV}-base-${SRCDATE}.tgz \
+SRC_URI += "http://source.entwopia.com/ew7358/${MACHINE}-linux-${PV}-base-${SRCDATE}.tgz \
     file://defconfig \
     file://0001-Revert-default-authentication-needs-to-be-at-least-n.patch \
     file://0001-Revert-MIPS-mm-Add-compound-tail-page-_mapcount-when.patch \
