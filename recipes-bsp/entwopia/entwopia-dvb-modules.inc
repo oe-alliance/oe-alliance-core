@@ -6,7 +6,7 @@ LICENSE = "CLOSED"
 PV = "${KV}+${SRCDATE}"
 PR = "r1"
 
-SRC_URI = "http://source.entwopia.com/evo/${MACHINE}-drivers-${KV}-${SRCDATE}.zip"
+SRC_URI = "http://source.entwopia.com/ew7358/${MACHINE}-drivers-${KV}-${SRCDATE}.zip"
 
 S = "${WORKDIR}"
 
