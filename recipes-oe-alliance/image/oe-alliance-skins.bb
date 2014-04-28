@@ -7,7 +7,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "1.0"
-PR = "r10"
+PR = "r11"
 
 inherit packagegroup
 
@@ -16,7 +16,6 @@ DEPENDS = "enigma2"
 RDEPENDS_${PN} = "\
     enigma2-plugin-skins-vix-day-hd \
     enigma2-plugin-skins-vix-night-hd \
-    enigma2-plugin-skins-pli-hd \
     enigma2-plugin-skins-vix-magic-sd \
     enigma2-plugin-skins-vix-magic-hd \
     enigma2-plugin-skins-vix-magic-hd-noire \
@@ -24,6 +23,7 @@ RDEPENDS_${PN} = "\
     enigma2-plugin-skins-vix-vixbmc-slim-hd \
     enigma2-plugin-skins-vix-vixbmc-night-hd \
     enigma2-plugin-skins-vix-vixbmc-metropolis \
+    enigma2-plugin-skins-pli-full-hd-night \
     enigma2-plugin-skins-matrixhd \
     enigma2-plugin-skins-mynovum-hd \
     enigma2-plugin-skins-neonovum-hd \
