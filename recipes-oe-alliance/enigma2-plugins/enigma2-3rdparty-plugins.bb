@@ -9,7 +9,7 @@ inherit gitpkgv autotools deploy
 SRCREV = "${AUTOREV}"
 PV = "2.0+gitr${SRCPV}"
 PKGV = "2.0+gitr${GITPKGV}"
-PR = "r23"
+PR = "r24"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -53,7 +53,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-moviebrowser_3.4rc5_mips32el.ipk \
     enigma2-plugin-extensions-mp3browser_1.8rc4_mips32el.ipk \
     enigma2-plugin-extensions-navibar_1.1.1_all.ipk \
-    newxtrend-hbbtv_1.3_mips32el.ipk \
+    enigma2-plugin-extensions-newxtrend-hbbtv_1.3_mips32el.ipk \
     enigma2-plugin-extensions-opkg-tools_1.3_mipsel.ipk \
     enigma2-plugin-extensions-planerfs_5.27_all.ipk \
     enigma2-plugin-extensions-pluginspanel_1.0_r01_all.ipk \
