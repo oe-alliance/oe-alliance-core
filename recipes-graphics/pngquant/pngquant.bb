@@ -4,7 +4,7 @@ LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYRIGHT;md5=ac8a52bd839aac2f67712c967b3ff86a"
 
 inherit gitpkgv
-SRCREV = "${AUTOREV}"
+SRCREV = "ee7bef8644ad1bac3fce2c04afef13f1ec19166b"
 PV = "2.+git${SRCPV}"
 PKGV = "2.+git${GITPKGV}"
 PR = "r4"
