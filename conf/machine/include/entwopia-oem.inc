@@ -15,7 +15,7 @@ ${@base_contains('MACHINEBUILD', 'visionnet', 'VisionNet' , '', d)}\
 
 IMAGEDIR ?= "\
 ${@base_contains('MACHINEBUILD', 'enfinity', 'enfinity' , '', d)}\
-${@base_contains('MACHINEBUILD', 'visionnet', 'visionnet' , '', d)}\
+${@base_contains('MACHINEBUILD', 'visionnet', 'marvel1' , '', d)}\
 "
 
 MTD_ROOTFS = "mtd2"
