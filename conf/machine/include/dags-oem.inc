@@ -4,16 +4,16 @@ include conf/machine/include/build-extras.inc
 BRAND_OEM = "dags"
 
 MACHINE_NAME = "\
-${@base_contains('MACHINEBUILD', 'tm2t', '2T-OE' , '', d)}\
-${@base_contains('MACHINEBUILD', 'tmnano', 'Nano-OE' , '', d)}\
-${@base_contains('MACHINEBUILD', 'tmnano2t', 'Nano 2T' , '', d)}\
-${@base_contains('MACHINEBUILD', 'tmsingle', 'Single' , '', d)}\
-${@base_contains('MACHINEBUILD', 'tmtwin', 'Twin-OE' , '', d)}\
-${@base_contains('MACHINEBUILD', 'iqonios100hd', 'IOS 100HD' , '', d)}\
-${@base_contains('MACHINEBUILD', 'iqonios200hd', 'IOS 200HD' , '', d)}\
+${@base_contains('MACHINEBUILD', 'tm2t', 'TM-2T-OE' , '', d)}\
+${@base_contains('MACHINEBUILD', 'tmnano', 'TM-NANO-OE' , '', d)}\
+${@base_contains('MACHINEBUILD', 'tmnano2t', 'TM-NANO-2T' , '', d)}\
+${@base_contains('MACHINEBUILD', 'tmsingle', 'TM-Single' , '', d)}\
+${@base_contains('MACHINEBUILD', 'tmtwin', 'TM-Twin-OE' , '', d)}\
+${@base_contains('MACHINEBUILD', 'iqonios100hd', 'IOS-100HD' , '', d)}\
+${@base_contains('MACHINEBUILD', 'iqonios200hd', 'IOS-200HD' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'roxxs200hd', 'Roxxs 200HD' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mediaart200hd', 'MediaArt 200HD' , '', d)}\
-${@base_contains('MACHINEBUILD', 'iqonios300hd', 'IOS 300HD' , '', d)}\
+${@base_contains('MACHINEBUILD', 'iqonios300hd', 'IOS-300HD' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'force1', 'Force 1' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'optimussos1plus', 'Optimuss OS1 Plus' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'optimussos2plus', 'Optimuss OS2 Plus' , '', d)}\

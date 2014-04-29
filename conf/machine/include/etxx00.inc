@@ -2,7 +2,7 @@
 include conf/machine/include/build-extras.inc
 
 BRAND_OEM = "xtrend"
-MACHINE_BRAND = "XTrend"
+MACHINE_BRAND = "Xtrend"
 
 MTD_KERNEL = "mtd1"
 MTD_ROOTFS = "mtd2"
