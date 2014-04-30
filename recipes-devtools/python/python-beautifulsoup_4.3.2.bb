@@ -4,12 +4,12 @@ SECTION = "devel/python"
 LICENSE = "BSD"
 LIC_FILES_CHKSUM = "file://COPYING.txt;md5=83e365dc17176bd72ba7d08ca0555efa"
 
-PR = "r3"
+PR = "r0"
 
-SRC_URI = "http://www.crummy.com/software/BeautifulSoup/bs4/download/4.1/beautifulsoup4-${PV}.tar.gz"
+SRC_URI = "http://www.crummy.com/software/BeautifulSoup/bs4/download/4.3/beautifulsoup4-${PV}.tar.gz"
 
-SRC_URI[md5sum] = "5aece3c0b8a080658155958111fa2fa9"
-SRC_URI[sha256sum] = "f1e9b7b48e93efc044c79fa0ac5805094ab6f42f8946ec4abf840753e0dea91f"
+SRC_URI[md5sum] = "b8d157a204d56512a4cc196e53e7d8ee"
+SRC_URI[sha256sum] = "a2b29bd048ca2fe54a046b29770964738872a9747003a371344a93eedf7ad58e"
 
 S = "${WORKDIR}/beautifulsoup4-${PV}"
 

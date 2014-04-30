@@ -5,17 +5,17 @@ BRAND_OEM = "entwopia"
 
 MACHINE_NAME = "\
 ${@base_contains('MACHINEBUILD', 'enfinity', 'ENfinity' , '', d)}\
-${@base_contains('MACHINEBUILD', 'visionnet', 'Marvel 1' , '', d)}\
+${@base_contains('MACHINEBUILD', 'marvel1', 'Marvel 1' , '', d)}\
 "
 
 MACHINE_BRAND = "\
 ${@base_contains('MACHINEBUILD', 'enfinity', 'EVO' , '', d)}\
-${@base_contains('MACHINEBUILD', 'visionnet', 'VisionNet' , '', d)}\
+${@base_contains('MACHINEBUILD', 'marvel1', 'VisionNet' , '', d)}\
 "
 
 IMAGEDIR ?= "\
 ${@base_contains('MACHINEBUILD', 'enfinity', 'enfinity' , '', d)}\
-${@base_contains('MACHINEBUILD', 'visionnet', 'visionnet' , '', d)}\
+${@base_contains('MACHINEBUILD', 'marvel1', 'marvel1' , '', d)}\
 "
 
 MTD_ROOTFS = "mtd2"
