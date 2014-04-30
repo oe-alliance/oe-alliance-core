@@ -4,9 +4,9 @@ PRIORITY = "required"
 LICENSE = "CLOSED"
 
 PV = "${KV}+${SRCDATE}"
-PR = "r11"
+PR = "r12"
 
-SRC_URI = "http://source.mynonpublic.com/ixuss-${DOWNLOADMACHINE}-drivers-${SRCDATE}.tgz"
+SRC_URI = "http://source.mynonpublic.com/ixuss-${DOWNLOADMACHINE}-drivers-${SRCDATE}.zip"
 
 S = "${WORKDIR}"
 
