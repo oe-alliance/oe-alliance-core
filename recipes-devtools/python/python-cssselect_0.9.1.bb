@@ -4,7 +4,7 @@ SECTION = "devel/python"
 LICENSE = "BSD"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=952026b3fd2f625f2a3c0aa21da2493d"
 
-PR = "r0"
+PR = "r1"
 
 SRC_URI = "https://pypi.python.org/packages/source/c/cssselect/cssselect-${PV}.tar.gz"
 
@@ -13,6 +13,6 @@ SRC_URI[sha256sum] = "0535a7e27014874b27ae3a4d33e8749e345bdfa62766195208b7996bf1
 
 S = "${WORKDIR}/cssselect-${PV}"
 
-inherit distutils
+inherit setuptools
 
 include python-package-split.inc
