@@ -2,7 +2,7 @@ SUMMARY = "cssselect parses CSS3 Selectors and translates them to XPath 1.0"
 HOMEPAGE = "https://pypi.python.org/pypi/cssselect"
 SECTION = "devel/python"
 LICENSE = "BSD"
-LIC_FILES_CHKSUM = "file://LICENSE;md5=952026B3FD2F625F2A3C0AA21DA2493D"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=952026b3fd2f625f2a3c0aa21da2493d"
 
 PR = "r0"
 
