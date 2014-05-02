@@ -12,9 +12,9 @@ SRCREV = "${AUTOREV}"
 PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"
 VER ="1.0"
-PR = "r3"
+PR = "r4"
 
-SRC_URI="git://github.com/opendroid-Team/Skin-Default1.git"
+SRC_URI="git://github.com/opendroid-Team/Skin-Default2.git"
 
 S = "${WORKDIR}/git"
 
