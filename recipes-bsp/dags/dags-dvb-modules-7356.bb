@@ -3,13 +3,13 @@ SECTION = "base"
 PRIORITY = "required"
 LICENSE = "CLOSED"
 
-SRCDATE = "20140415"
+SRCDATE = "20140424"
 KV = "3.9.7"
 PV = "${KV}+${SRCDATE}"
 PR = "r1"
 
-SRC_URI[md5sum] = "dd3329437a10925937b31e6568d9edad"
-SRC_URI[sha256sum] = "7a4151902b6c6276afc392199ee338c812bd8ad88f1082943c458faf13269696"
+SRC_URI[md5sum] = "ece42f42b30c8c3cbebd393c58893fc1"
+SRC_URI[sha256sum] = "ec59752ef71e8068a29f2d72fce79d3f28ed5defbdeddb2ba6bbc0ac56faea73"
 
 SRC_URI = "http://en3.homeftp.net/release/images/iqon/7356/bcmlinuxdvb_7356-${KV}-${SRCDATE}.tar.gz"
 
