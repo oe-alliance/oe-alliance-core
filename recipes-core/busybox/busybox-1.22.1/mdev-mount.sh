@@ -41,6 +41,9 @@ case "$ACTION" in
 				exit 0
 			fi
 		fi
+		if [ "${DEVBASE}" == "mmc" ] ; then
+			DEVBASE="mmcblk0"
+		fi
 		# first allow fstab to determine the mountpoint
 		if ! mount /dev/$MDEV > /dev/null 2>&1 ; then
 			# no fstab entry, use automatic mountpoint
@@ -52,6 +55,7 @@ case "$ACTION" in
 				DEVICETYPE="hdd"
 			else
 				MODEL=`cat /sys/block/$DEVBASE/device/model`
+				MODEL1=`cat /sys/block/$DEVBASE/device/type`
 				if [ "$MODEL" == "USB CF Reader   " ]; then
 					DEVICETYPE="cf"
 				elif [ "$MODEL" == "Compact Flash   " ]; then
@@ -69,6 +73,8 @@ case "$ACTION" in
 				elif [ "$MODEL" == "USB SM Reader   " ]; then
 					DEVICETYPE="mmc1"
 				elif [ "$MODEL" == "MS/MS-Pro       " ]; then
+					DEVICETYPE="mmc1"
+				elif [ "$MODEL1" == "SD" ]; then
 					DEVICETYPE="mmc1"
 				else
 					if grep -q "/media/hdd" /proc/mounts ; then
