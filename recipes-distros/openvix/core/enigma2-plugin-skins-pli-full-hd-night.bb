@@ -15,7 +15,7 @@ SRC_URI = "git://github.com/OpenViX/skin-PLi-Full-HD-Night.git;protocol=git"
 
 FILES_${PN} = "/usr/share/enigma2/"
 
-RDEPENDS_${PN} = "font-valis-enigma"
+RDEPENDS_${PN} = "font-valis-hd"
 
 S = "${WORKDIR}/git"
 
