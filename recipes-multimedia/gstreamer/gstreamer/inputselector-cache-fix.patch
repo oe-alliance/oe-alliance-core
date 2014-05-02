@@ -1,0 +1,13 @@
+diff --git a/plugins/elements/gstinputselector.c b/plugins/elements/gstinputselector.c
+index 114a458..5c47b83 100644
+--- a/plugins/elements/gstinputselector.c
++++ b/plugins/elements/gstinputselector.c
+@@ -965,7 +965,7 @@ gst_input_selector_cleanup_old_cached_buffers (GstInputSelector * sel,
+           "checking if buffer %p running time=%" GST_TIME_FORMAT
+           " >= stream time=%" GST_TIME_FORMAT, buffer,
+           GST_TIME_ARGS (running_time), GST_TIME_ARGS (cur_running_time));
+-      if (running_time >= cur_running_time) {
++      if ( GST_CLOCK_TIME_IS_VALID(running_time) && (running_time >= cur_running_time) ) {
+         break;
+       }
+ 
