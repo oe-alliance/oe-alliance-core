@@ -1,7 +1,7 @@
-SUMMARY = "Opendroid-Team"
+SUMMARY = "Opendrox-Team"
 SECTION = "base"
 PRIORITY = "required"
-MAINTAINER = "Opendroid-Team"
+MAINTAINER = "Opendrox-Team"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 require conf/license/license-gplv2.inc
