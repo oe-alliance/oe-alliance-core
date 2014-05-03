@@ -7,7 +7,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "1.0"
-PR = "r1"
+PR = "r2"
 
 inherit packagegroup
 
@@ -37,7 +37,6 @@ RDEPENDS_${PN} = "\
     e2fsprogs-tune2fs \
     fakelocale \
     libavahi-client \
-    libcrypto-compat-0.9.7 \
     modutils-loadscript \
     ntpdate \
     opkg \
