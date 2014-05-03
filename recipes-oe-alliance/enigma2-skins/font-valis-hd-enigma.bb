@@ -4,8 +4,10 @@ require conf/license/license-gplv2.inc
 PACKAGE_ARCH = "all"
 
 PV = "2010.05.14"
-PR = "r1"
+PR = "r2"
 
+PACKAGES += "font-valis-hd"
+PROVIDES += "font-valis-hd"
 
 SRC_URI="file://hd.ttf file://hdi.ttf"
 
