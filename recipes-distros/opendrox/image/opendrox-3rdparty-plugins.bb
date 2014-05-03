@@ -1,5 +1,5 @@
 SUMMARY = "3rd Party plugins for Enigma2"
-MAINTAINER = "Opendroid"
+MAINTAINER = "Opendrox"
 
 LICENSE = "Proprietary"
 LIC_FILES_CHKSUM = "file://COPYING;md5=8e37f34d0e40d32ea2bc90ee812c9131"
@@ -9,7 +9,7 @@ inherit gitpkgv autotools deploy
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r1"
+PR = "r2"
 
 SRC_URI="git://github.com/opendroid-Team/3rdparty-plugins.git;protocol=git"
 

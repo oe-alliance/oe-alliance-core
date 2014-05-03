@@ -10,7 +10,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=55ca817ccb7d5b5b66355690e9abc605 \
 DEPENDS = "glib-2.0 libxml2 bison-native flex-native"
 
 SRCREV = "${AUTOREV}"
-PR = "r10"
+PR = "r11"
 GIT_PV = ""
 
 RRECOMMENDS_${PN}_qemux86    += "kernel-module-snd-ens1370 kernel-module-snd-rawmidi"
@@ -28,9 +28,10 @@ inherit autotools pkgconfig gettext git-project
 SRC_URI = "git://anongit.freedesktop.org/gstreamer/${PN};protocol=git;branch=0.10"
 
 SRC_URI += " \
-	file://check_fix.patch \
-	file://gst-inspect-check-error.patch \
-	file://multiqueue-sparsestreams.patch \
+    file://check_fix.patch \
+    file://gst-inspect-check-error.patch \
+    file://multiqueue-sparsestreams.patch \
+    file://inputselector-cache-fix.patch \
 "
 
 do_common_update() {
