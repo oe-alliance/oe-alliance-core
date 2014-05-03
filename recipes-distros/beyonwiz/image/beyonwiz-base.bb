@@ -19,7 +19,6 @@ RDEPENDS_${PN} = "\
     minidlna djmount fuse-utils \
     task-base-smbfs \
     task-base-smbfs-client \
-    libcrypto-compat \
     ntfs-3g \
     hddtemp \
     rsync \
@@ -37,6 +36,7 @@ RDEPENDS_${PN} = "\
     e2fsprogs-tune2fs \
     fakelocale \
     libavahi-client \
+    libcrypto-compat-0.9.7 \
     modutils-loadscript \
     ntpdate \
     opkg \
