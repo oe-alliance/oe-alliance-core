@@ -116,6 +116,19 @@ IMAGE_CMD_ubi_prepend = " \
     rm -rf ${IMAGE_ROOTFS}/tmp/*; \
     "
 
+IMAGE_CMD_ubi_append = " \
+    mkdir -p ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}; \
+    ${@base_contains("MACHINE_FEATURES", "bootsplash", "cp ${DEPLOY_DIR_IMAGE}/${BOOTLOGO_FILENAME} ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/${BOOTLOGO_FILENAME};" , "", d)} \
+    mv ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.ubi ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/${ROOTFS_FILE}; \
+    gzip -f -9c ${DEPLOY_DIR_IMAGE}/vmlinux-${MACHINE}.bin > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/${KERNEL_FILE}; \
+    echo ${DISTRO_NAME}-${IMAGE_VERSION}-${MACHINE}-${DATE}_usb > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/imageversion; \
+    echo "rename this file to 'force' to force an update without confirmation" > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/noforce; \
+    cd ${DEPLOY_DIR_IMAGE}; \
+    zip ${IMAGE_NAME}_usb.zip ${IMAGEDIR}/*; \
+    rm -f ${DEPLOY_DIR_IMAGE}/*.ubifs; \
+    rm -rf ${IMAGEDIR}; \
+    "
+
 MACHINE_FEATURES += "3dtv alsa hdmicec switchoff wifi bootsplash dvb-c blindscan-dvbc blindscan-dvbs ci"
 
 BOOTLOGO_FILENAME = "splash.bin"
