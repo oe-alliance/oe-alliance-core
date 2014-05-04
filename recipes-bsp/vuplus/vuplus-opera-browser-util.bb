@@ -9,10 +9,10 @@ RDEPENDS_${PN} = "tslib-conf libts-1.0-0 libsysfs2 libgmp10 libmpfr4 enigma2-hbb
 PACKAGES =+ "${PN}-src enigma2-hbbtv-util enigma2-hbbtv-util-src"
 PROVIDES =+ "enigma2-hbbtv-util"
 
-SRC_DATE = "20140430_0"
+SRC_DATE = "20140207_0"
 SRC_URI = ""
 
-PR = "r27_${SRC_DATE}"
+PR = "r28_${SRC_DATE}"
 
 S = "${WORKDIR}/opera-hbbtv"
 
