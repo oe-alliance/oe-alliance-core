@@ -7,7 +7,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "1.0"
-PR = "r1"
+PR = "r4"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 inherit packagegroup
@@ -42,9 +42,9 @@ RDEPENDS_${PN} = "\
 	enigma2-plugin-extensions-inishoutcast streamripper \
 	enigma2-plugin-extensions-inizaphistorybrowser \
 	enigma2-plugin-extensions-iniwebcamviewer \ 
-	enigma2-plugin-extensions-gmailreader python-email python-subprocess \
+	enigma2-plugin-extensions-iniairplayer \
+	enigma2-plugin-extensions-inigmailreader python-email python-subprocess \
 	enigma2-plugin-extensions-accuweather \ 
-	enigma2-plugin-extensions-airplayer \ 
 	enigma2-plugin-extensions-mediaplayer \
 	enigma2-plugin-extensions-epgsearch \
 	enigma2-plugin-extensions-imdb \
