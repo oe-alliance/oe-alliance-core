@@ -11,7 +11,7 @@ PR = "r2"
 SRC_URI[md5sum] = "0b4774d9e3df496d496fbaaf68fa875a"
 SRC_URI[sha256sum] = "86e631f296f3f37ed8eed68812a1422136734f109b86bb5d6e06db7f675eee8b"
 
-SRC_URI = "http://en3.homeftp.net/release/images/oedrivers//bcmlinuxdvb_7356-${KV}-${SRCDATE}.tar.gz"
+SRC_URI = "http://en3.homeftp.net/release/images/oedrivers/bcmlinuxdvb_7356-${KV}-${SRCDATE}.tar.gz"
 
 S = "${WORKDIR}"
 
