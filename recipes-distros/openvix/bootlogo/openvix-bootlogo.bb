@@ -9,7 +9,7 @@ require conf/license/license-gplv2.inc
 RDEPENDS_${PN} += "showiframe openvix-bootlogo-helios"
 
 PV = "4.1"
-PR = "r0"
+PR = "r${DATETIME}"
 
 S = "${WORKDIR}"
 
@@ -43,9 +43,10 @@ do_install_append_vuduo2() {
 
 inherit deploy
 do_deploy() {
-    if [ "${MACHINEBUILD:0:2}" = "tm" ]; then
+    TEST=${MACHINEBUILD}
+    if [[ ${TEST:0:2} == "tm" ]]; then
         install -m 0644 tm-splash.bmp ${DEPLOYDIR}/${BOOTLOGO_FILENAME}
-    elif [ "${MACHINEBUILD:0:2}" = "iq" ]; then
+    elif [[ ${TEST:0:2} == "iq" ]]; then
         install -m 0644 iqon-splash.bmp ${DEPLOYDIR}/${BOOTLOGO_FILENAME}
     elif [ -e splash.bin ]; then
         install -m 0644 splash.bin ${DEPLOYDIR}/${BOOTLOGO_FILENAME}
