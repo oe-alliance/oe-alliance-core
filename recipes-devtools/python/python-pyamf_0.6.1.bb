@@ -1,7 +1,7 @@
 SUMMARY = "PyAMF provides Action Message Format (AMF) support for Python that is compatible with the Adobe Flash Player"
 HOMEPAGE = "http://www.pyamf.org/"
 SECTION = "devel/python"
-LICENSE = "MIT license"
+LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=d8bf5ff31155bfe951a02be0c29215d3"
 
 PR = "r3"
