@@ -12,7 +12,7 @@ PROVIDES =+ "enigma2-hbbtv-util"
 SRC_DATE = "20140430_0"
 SRC_URI = ""
 
-PR = "r29_${SRC_DATE}"
+PR = "r30_${SRC_DATE}"
 
 S = "${WORKDIR}/opera-hbbtv"
 
@@ -43,6 +43,8 @@ do_install() {
 
     install -d ${D}/usr/local/hbb-browser
     mv ${S}/opera/* ${D}/usr/local/hbb-browser/
+    # workaround for broken startup script and segfault in libfaketime.so
+    sed -i -e '1,2d' -e 's/libfaketime.so //g' ${D}/usr/local/hbb-browser/launcher
 
     install -d ${D}/etc
     mv ${S}/dfb/etc/* ${D}/etc/
