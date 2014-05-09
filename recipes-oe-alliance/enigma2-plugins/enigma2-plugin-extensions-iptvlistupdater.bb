@@ -8,9 +8,9 @@ require conf/license/license-gplv2.inc
 
 inherit gitpkgv autotools pythonnative
 SRCREV = "${AUTOREV}"
-PV = "1.60.+git${SRCPV}"
-PKGV = "1.60.+git${GITPKGV}"
-PR = "r23"
+PV = "1.61.+git${SRCPV}"
+PKGV = "1.61.+git${GITPKGV}"
+PR = "r24"
 
 RREPLACES_enigma2-plugin-extensions-iptvlistupdater = "enigma2-plugin-extensions-iptv-list-updater"
 RCONFLICTS_enigma2-plugin-extensions-iptvlistupdater = "enigma2-plugin-extensions-iptv-list-updater"
