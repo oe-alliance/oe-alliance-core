@@ -2,7 +2,7 @@ FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
 SRC_URI += " file://volatiles.99_autofs file://auto.network file://autofs.default"
 
-EXTRA_OECONF += "--with-confdir=/etc/default"
+EXTRA_OECONF += "--with-confdir=/etc/default --with-mapdir=/etc"
 
 # Remove bash scripting from init script (meaning, remove "function"
 # from each shell function)
