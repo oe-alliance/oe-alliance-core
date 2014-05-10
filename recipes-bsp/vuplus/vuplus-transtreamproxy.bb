@@ -7,7 +7,7 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"
-PR = "r8"
+PR = "r10"
 
 PROVIDES += "virtual/transtreamproxy"
 RPROVIDES_${PN} += "virtual/transtreamproxy"
@@ -20,5 +20,5 @@ S = "${WORKDIR}/git"
 
 do_install() {
     install -d ${D}/usr/bin
-    install -m 0755 ${S}/src/transtreamproxy ${D}/usr/bin/transtreamproxy
+    install -m 0755 ${WORKDIR}/build/src/transtreamproxy ${D}/usr/bin/transtreamproxy
 }
