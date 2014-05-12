@@ -8,8 +8,8 @@ require conf/license/license-gplv2.inc
 
 RDEPENDS_${PN} += "showiframe openvix-bootlogo-helios"
 
-PV = "4.2"
-PR = "r${DATETIME}"
+PV = "4.4"
+PR = "r0"
 
 S = "${WORKDIR}"
 
