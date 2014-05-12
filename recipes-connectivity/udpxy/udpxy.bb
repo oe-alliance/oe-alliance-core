@@ -10,9 +10,9 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "0.23+git${SRCPV}"
 PKGV = "0.23+git${GITPKGV}"
-PR = "r0"
+PR = "r1"
 
-inherit autotools pkgconfig
+inherit autotools-brokensep pkgconfig
 
 SRC_URI = "git://github.com/pcherenkov/udpxy.git"
 

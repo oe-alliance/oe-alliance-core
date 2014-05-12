@@ -11,9 +11,9 @@ SRC_URI = "http://ushare.geexbox.org/releases/ushare-${PV}.tar.bz2 \
 
 S = "${WORKDIR}/ushare-${PV}"
 
-PR = "r2"
+PR = "r3"
 
-inherit autotools update-rc.d
+inherit autotools-brokensep update-rc.d
 
 # the configure script is hand-crafted, it rejects some of the usual
 # configure arguments

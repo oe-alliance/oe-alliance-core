@@ -8,9 +8,11 @@ SRC_URI = "http://ftp.mozilla.org/pub/mozilla.org/js/${PN}-${PV}.tar.bz2 \
 SRC_URI[md5sum] = "5db79c10e049a2dc117a6e6a3bc78a8e"
 SRC_URI[sha256sum] = "e62f3f331ddd90df1e238c09d61a505c516fe9fd8c5c95336611d191d18437d8"
 
+PR = "r1"
+
 S = "${WORKDIR}/${PN}-${PV}/js/src"
 
-inherit autotools pkgconfig perlnative
+inherit autotools-brokensep pkgconfig perlnative
 
 DEPENDS += "nspr"
 

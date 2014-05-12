@@ -5,9 +5,9 @@ SECTION = "console/network"
 require conf/license/license-gplv2.inc
 
 DEPENDS = "libpcap libcap libpcre"
-PR = "r3"
+PR = "r4"
 
-inherit autotools
+inherit autotools-brokensep
 
 SRC_URI = "http://download.insecure.org/nmap/dist-old/nmap-${PV}.tar.bz2 \
        file://autofoo.patch \

@@ -12,7 +12,7 @@ inherit gitpkgv pythonnative
 SRCREV = "${AUTOREV}"
 PV = "2.8.4+git${SRCPV}"
 PKGV = "2.8.4+git${GITPKGV}"
-PR = "r8"
+PR = "r9"
 
 SRC_URI = "git://github.com/oe-alliance/e2openplugin-${MODULE}.git;protocol=git \
         file://LICENSE.GPLv2"
@@ -25,7 +25,7 @@ FILES_${PN} = "/tmp /etc /usr/lib"
 FILES_${PN}-src = "/usr/lib/enigma2/python/Plugins/Extensions/MultiQuickButton/*.py"
 FILES_${PN}-po = "/usr/lib/enigma2/python/Plugins/Extensions/MultiQuickButton/locale/*.po"
 
-inherit autotools
+inherit autotools-brokensep
 
 EXTRA_OECONF = "\
     BUILD_SYS=${BUILD_SYS} \

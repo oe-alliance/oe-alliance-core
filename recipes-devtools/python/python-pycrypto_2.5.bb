@@ -3,7 +3,7 @@ SECTION = "devel/python"
 LICENSE = "PD & Python-2.0"
 LIC_FILES_CHKSUM = "file://COPYRIGHT;md5=35f354d199e8cb7667b059a23578e63d"
 DEPENDS = "gmp"
-PR = "r2"
+PR = "r3"
 
 SRC_URI = "http://ftp.dlitz.net/pub/dlitz/crypto/pycrypto/pycrypto-${PV}.tar.gz \
            file://no-usr-include.patch"
@@ -12,7 +12,7 @@ SRC_URI[sha256sum] = "e950a78184e2a7defccf5d45e0c29c1e9edeb29984433f0d110a21e963
 
 S = "${WORKDIR}/pycrypto-${PV}"
 
-inherit autotools distutils
+inherit autotools-brokensep distutils
 
 BBCLASSEXTEND = "native"
 

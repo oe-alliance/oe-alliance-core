@@ -7,7 +7,7 @@ inherit gitpkgv
 SRCREV = "ee7bef8644ad1bac3fce2c04afef13f1ec19166b"
 PV = "2.+git${SRCPV}"
 PKGV = "2.+git${GITPKGV}"
-PR = "r5"
+PR = "r6"
 
 SRC_URI = "git://github.com/pornel/pngquant.git \
            file://readonly.patch \
@@ -15,7 +15,7 @@ SRC_URI = "git://github.com/pornel/pngquant.git \
 
 S = "${WORKDIR}/git"
 
-inherit autotools
+inherit autotools-brokensep
 
 do_install() {
     install -d ${D}/usr/bin

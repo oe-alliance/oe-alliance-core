@@ -3,12 +3,12 @@ PRIORITY = "required"
 LICENSE = "GPLv3"
 LIC_FILES_CHKSUM = "file://LICENSE.GPLv3;md5=5ed852a46d22220a8b07a68e564d84c7"
 
-inherit autotools pkgconfig gitpkgv
+inherit autotools-brokensep pkgconfig gitpkgv
 
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r6"
+PR = "r7"
 
 PACKAGES += " ${PN}-src"
 

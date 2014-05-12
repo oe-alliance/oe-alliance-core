@@ -1,3 +1,5 @@
+B = "${S}"
+
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
 SRC_URI += " file://volatiles.99_autofs file://auto.network file://autofs.default"

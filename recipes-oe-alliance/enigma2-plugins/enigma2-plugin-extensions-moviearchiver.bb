@@ -9,7 +9,7 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "0.2.+git${SRCPV}"
 PKGV = "0.2.+git${GITPKGV}"
-PR = "r1"
+PR = "r2"
 
 
 SRC_URI="git://github.com/MovieArchiver/enigma2-plugin-extensions-moviearchiver.git"
@@ -22,7 +22,7 @@ FILES_${PN} = "/etc /usr/lib"
 FILES_${PN}-src = "/usr/lib/enigma2/python/Plugins/Extensions/MovieArchiver/*.py"
 FILES_${PN}-po = "/usr/lib/enigma2/python/Plugins/Extensions/MovieArchiver/locale/*/*/*.po"
 
-inherit autotools
+inherit autotools-brokensep
 
 EXTRA_OECONF = "\
     --with-libsdl=no --with-boxtype=${MACHINE} --with-po \

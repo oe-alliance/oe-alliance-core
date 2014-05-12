@@ -3,7 +3,7 @@ HOMEPAGE = "http://mediatomb.org/"
 LICENSE = "GPLv2"
 DEPENDS = "expat ffmpeg sqlite3 libexif js zlib file id3lib curl"
 PV = "0.12.1"
-PR = "r5"
+PR = "r6"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=0b609ee7722218aa600220f779cb5035"
 
@@ -26,7 +26,7 @@ CONFFILES_${PN} = "${sysconfdir}/mediatomb/config.xml"
 INITSCRIPT_NAME = "mediatomb"
 INITSCRIPT_PARAMS = "defaults 90"
 
-inherit autotools pkgconfig update-rc.d
+inherit autotools-brokensep pkgconfig update-rc.d
 
 EXTRA_OECONF = "--disable-mysql \
                 --disable-rpl-malloc \

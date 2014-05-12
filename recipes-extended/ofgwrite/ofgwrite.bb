@@ -9,11 +9,11 @@ SRCREV = "${AUTOREV}"
 PV = "1.x+git${SRCPV}"
 PKGV = "1.x+git${GITPKGV}"
 VER ="1.x"
-PR = "r1"
+PR = "r2"
 
 SRC_URI="git://github.com/oe-alliance/ofgwrite.git"
 
-inherit autotools pkgconfig
+inherit autotools-brokensep pkgconfig
 
 S = "${WORKDIR}/git"
 

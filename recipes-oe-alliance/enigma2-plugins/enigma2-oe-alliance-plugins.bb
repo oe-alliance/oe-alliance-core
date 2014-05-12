@@ -108,12 +108,12 @@ DESCRIPTION_enigma2-plugin-systemplugins-wirelessaccesspoint = "Using a Wireless
 RDEPENDS_enigma2-plugin-systemplugins-wirelessaccesspoint = "hostap-daemon bridge-utils"
 
 
-inherit gitpkgv autotools pythonnative
+inherit autotools-brokensep gitpkgv pythonnative
 
 SRCREV = "${AUTOREV}"
 PV = "2.0+git${SRCPV}"
 PKGV = "2.0+git${GITPKGV}"
-PR = "r8"
+PR = "r9"
 
 SRC_URI="git://github.com/oe-alliance/oe-alliance-plugins.git;protocol=git"
 

@@ -9,11 +9,11 @@ RDEPENDS_${PN} = "ofgwrite python-process libcrypto-compat-0.9.7 python-compress
 RCONFLICTS_${PN} = "settings-autorestore"
 RREPLACES_${PN} = "settings-autorestore"
 
-inherit gitpkgv autotools pythonnative
+inherit autotools-brokensep gitpkgv pythonnative
 SRCREV = "${AUTOREV}"
 PV = "3.0+git${SRCPV}"
 PKGV = "3.0+git${GITPKGV}"
-PR = "r2"
+PR = "r3"
 
 SRC_URI="git://github.com/OpenViX/vix-core.git;protocol=git"
 

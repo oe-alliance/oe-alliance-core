@@ -6,7 +6,7 @@ DEPENDS = "python"
 
 require conf/license/license-gplv2.inc
 
-inherit gitpkgv autotools pythonnative
+inherit autotools-brokensep gitpkgv pythonnative
 
 PACKAGES += " ${PN}-src"
 

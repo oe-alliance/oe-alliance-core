@@ -6,14 +6,14 @@ LIC_FILES_CHKSUM = "file://tuxcom.c;beginline=8;endline=22;md5=8cfd78763de33face
 DEPENDS = "freetype"
 
 PV = "1.13+svn${SRCPV}"
-PR = "r2"
+PR = "r3"
 
 SRC_URI = "${PLISVNURL}/${PLISVNBRANCH}/external;module=tuxcom;protocol=${PLISVNPROTO} \
     file://add_advanced_rc.diff"
 
 S = "${WORKDIR}/tuxcom"
 
-inherit autotools
+inherit autotools-brokensep
 
 do_install() {
     install -d ${D}/usr/plugins

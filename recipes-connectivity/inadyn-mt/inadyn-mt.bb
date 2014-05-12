@@ -3,7 +3,7 @@ LICENSE = "GPLv3"
 LIC_FILES_CHKSUM = "file://COPYING;md5=3c34afdc3adf82d2448f12715a255122"
 
 PV = "v.02.24.38"
-PR = "r2"
+PR = "r3"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/${PN}/${PN}/${PN}.${PV}/${PN}.${PV}.tar.gz \
     file://inadyn-mt.sh \
@@ -16,7 +16,7 @@ SRC_URI[sha256sum] = "3a1028218e395cfda981fd912d2c097d3433037e62ca0594ea0f3bdf2b
 
 S = "${WORKDIR}/${PN}.${PV}"
 
-inherit autotools update-rc.d
+inherit autotools-brokensep update-rc.d
 
 INITSCRIPT_NAME = "inadyn-mt"
 CONFFILES_${PN} = "/etc/inadyn.conf"

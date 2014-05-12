@@ -9,7 +9,7 @@ inherit gitpkgv pythonnative
 SRCREV = "${AUTOREV}"
 PV = "inofficial-3.2.+git${SRCPV}"
 PKGV = "inofficial-3.2.+git${GITPKGV}"
-PR = "r1"
+PR = "r2"
 
 
 SRC_URI="git://github.com/e2plugins/etportal-inofficial.git"
@@ -22,7 +22,7 @@ FILES_${PN} = "/usr/lib /tmp"
 FILES_${PN}-src = "/usr/lib/enigma2/python/Plugins/Extensions/EtPortal/*.py"
 FILES_${PN}-po = "/usr/lib/enigma2/python/Plugins/Extensions/EtPortal/locale/*/*/*.po"
 
-inherit autotools
+inherit autotools-brokensep
 
 EXTRA_OECONF = "\
     --with-libsdl=no --with-boxtype=${MACHINE} --with-po \

@@ -9,11 +9,11 @@ PROVIDES = "${PN} \
     enigma2-plugin-extensions-fancontrol2 \
     "
 
-inherit autotools gitpkgv pythonnative
+inherit autotools-brokensep gitpkgv pythonnative
 
 PV = "2.0+git${SRCPV}"
 PKGV = "2.0+git${GITPKGV}"
-PR = "r4"
+PR = "r5"
 
 SRC_URI = "${ENIGMA2_PLUGINS_URI} file://pluginnotwanted.patch"
 

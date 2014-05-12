@@ -1,12 +1,12 @@
 SUMMARY = "autossh"
 LICENSE = "GPLv2+"
-PR = "r0"
+PR = "r1"
 
 LIC_FILES_CHKSUM = "file://autossh.c;beginline=1;endline=24;md5=755a81ffe573faf6c18d1f1061d097c4"
 
 SRC_URI = "http://www.harding.motd.ca/autossh/${PN}-${PV}.tgz"
 
-inherit autotools
+inherit autotools-brokensep
 
 S = "${WORKDIR}/${PN}-${PV}"
 

@@ -12,7 +12,7 @@ PROVIDES =+ "enigma2-hbbtv-util"
 SRC_DATE = "20140430_0"
 SRC_URI = ""
 
-PR = "r30_${SRC_DATE}"
+PR = "r32_${SRC_DATE}"
 
 S = "${WORKDIR}/opera-hbbtv"
 

@@ -3,13 +3,13 @@ MAINTAINER = "Don Davici"
 
 require conf/license/license-gplv2.inc
 
-inherit gitpkgv pythonnative autotools
+inherit autotools-brokensep gitpkgv pythonnative
 
 SRCREV = "${AUTOREV}"
 # SRCREV = "ebdc7c77f88c7fb50c642703786ff7d50bf3bd80"
 PV = "1.09+git${SRCPV}"
 PKGV = "1.09+git${GITPKGV}"
-PR = "r4"
+PR = "r5"
 
 DEPENDS = "python"
 RDEPENDS_${PN} = "gst-plugins-bad-fragmented curl mjpegtools python-ctypes libshowiframe0"

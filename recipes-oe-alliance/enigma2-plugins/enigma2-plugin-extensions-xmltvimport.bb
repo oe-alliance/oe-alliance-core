@@ -8,13 +8,13 @@ inherit gitpkgv pythonnative
 
 PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"
-PR = "r30"
+PR = "r31"
 
 SRC_URI = "git://github.com/oe-alliance/XMTV-Import.git;protocol=git"
 
 S = "${WORKDIR}/git"
 
-inherit autotools
+inherit autotools-brokensep
 
 DEPENDS = "python xmltvimport-library"
 RDEPENDS_${PN} = "python-compression python-shell xmltvimport-library"

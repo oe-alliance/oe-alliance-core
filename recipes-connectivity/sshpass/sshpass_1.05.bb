@@ -1,12 +1,12 @@
 SUMMARY = "sshpass"
 LICENSE = "GPLv2+"
-PR = "r0"
+PR = "r1"
 
 LIC_FILES_CHKSUM = "file://main.c;beginline=1;endline=19;md5=bb3cd21c281c2ac32d4cb77974a88ae2"
 
 SRC_URI = "http://downloads.sourceforge.net/project/sshpass/sshpass/${PV}/${PN}-${PV}.tar.gz"
 
-inherit autotools
+inherit autotools-brokensep
 
 S = "${WORKDIR}/${PN}-${PV}"
 
