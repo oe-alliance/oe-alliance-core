@@ -12,7 +12,7 @@ PACKAGE_ARCH := "${MACHINE_ARCH}"
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r6"
+PR = "r7"
 
 SRC_URI = "git://github.com/oe-alliance/enigma2-display-skins.git;protocol=git file://skinsnotwanted"
 
@@ -22,7 +22,7 @@ FILES_${PN} = "/usr/share/enigma2/display"
 FILES_${PN}-meta = "${datadir}/meta"
 RDEPENDS_${PN}-meta = ""
 
-inherit autotools
+inherit autotools-brokensep
 
 S = "${WORKDIR}/git"
 
