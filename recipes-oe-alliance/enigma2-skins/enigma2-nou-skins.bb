@@ -9,7 +9,7 @@ EPSM = "enigma2-plugin-skins"
 SRCREV = "${AUTOREV}"
 PV = "5.6+git${SRCPV}"
 PKGV = "5.6+git${GITPKGV}"
-PR = "r0"
+PR = "r1"
 
 PACKAGES = "${EPSM}-neonovum-hd ${EPSM}-mynovum-hd ${EPSM}-nou-hd ${EPSM}-neonovum-hd-weather ${EPSM}-mynovum-hd-weather ${EPSM}-nou-hd-weather novum-hd-common novum-hd-renderer novum-hd-renderer-src"
 
@@ -44,6 +44,5 @@ do_install() {
     chmod -R a+rX ${D}/usr/lib/enigma2/python/Components/Renderer
     install -d ${D}/usr/share/enigma2
     mv ${S}/Nou/skin/* ${D}/usr/share/enigma2/
-    mv ${S}/Rossi/Blue-HD ${D}/usr/share/enigma2/
     chmod -R a+rX ${D}/usr/share/enigma2/
 }
