@@ -10,7 +10,7 @@ inherit gitpkgv
 
 PV = "experimental-git${SRCPV}"
 PKGV = "experimental-git${GITPKGV}"
-PR = "r4"
+PR = "r5"
 BRANCH = "3.2"
 
 SRC_URI = "git://schwerkraft.elitedvb.net/enigma2-skins/enigma2-skins.git;protocol=git;branch=${BRANCH}  file://skinsnotwanted"
@@ -28,7 +28,7 @@ FILES_${PN} = "/usr/share/enigma2 /usr/share/fonts"
 FILES_${PN}-meta = "${datadir}/meta"
 RDEPENDS_${PN}-meta = ""
 
-inherit autotools
+inherit autotools-brokensep
 
 S = "${WORKDIR}/git"
 
