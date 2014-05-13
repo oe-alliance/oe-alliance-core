@@ -8,7 +8,7 @@ inherit gitpkgv allarch
 SRCREV = "${AUTOREV}"
 PV = "3.0+git${SRCPV}"
 PKGV = "3.0+git${GITPKGV}"
-PR = "r0"
+PR = "r1"
 
 SRC_URI = "git://github.com/oe-alliance/oe-alliance-skins.git;protocol=git"
 
@@ -22,7 +22,6 @@ do_compile_append() {
 
 do_install() {
     install -d ${D}/usr/share/enigma2
-    mv ${S}/Nou/skin/* ${D}/usr/share/enigma2/
     mv ${S}/Rossi/Blue-HD ${D}/usr/share/enigma2/
     chmod -R a+rX ${D}/usr/share/enigma2/
 }
