@@ -1,5 +1,5 @@
-SUMMARY = "oe-alliance skins for Enigma2"
-MAINTAINER = "oe-alliance"
+SUMMARY = "Nou skins for Enigma2"
+MAINTAINER = "Rossi"
 
 require conf/license/license-gplv2.inc
 
@@ -7,12 +7,12 @@ inherit gitpkgv allarch
 
 EPSM = "enigma2-plugin-skins"
 SRCREV = "${AUTOREV}"
-PV = "2.0+git${SRCPV}"
-PKGV = "2.0+git${GITPKGV}"
-PR = "r4"
+PV = "5.6+git${SRCPV}"
+PKGV = "5.6+git${GITPKGV}"
+PR = "r0"
 
-PACKAGES = "${EPSM}-blue-hd ${EPSM}-neonovum-hd ${EPSM}-mynovum-hd ${EPSM}-nou-hd ${EPSM}-neonovum-hd-weather ${EPSM}-mynovum-hd-weather ${EPSM}-nou-hd-weather novum-hd-common novum-hd-renderer novum-hd-renderer-src"
-PROVIDES = "${PN} ${EPSM}-blue-hd ${EPSM}-neonovum-hd ${EPSM}-mynovum-hd ${EPSM}-nou-hd ${EPSM}-neonovum-hd-weather ${EPSM}-mynovum-hd-weather ${EPSM}-nou-hd-weather novum-hd-common novum-hd-renderer novum-hd-renderer-src"
+PACKAGES = "${EPSM}-neonovum-hd ${EPSM}-mynovum-hd ${EPSM}-nou-hd ${EPSM}-neonovum-hd-weather ${EPSM}-mynovum-hd-weather ${EPSM}-nou-hd-weather novum-hd-common novum-hd-renderer novum-hd-renderer-src"
+
 RDEPENDS_${EPSM}-neonovum-hd = "novum-hd-renderer novum-hd-common"
 RDEPENDS_${EPSM}-neonovum-hd-weather = "novum-hd-renderer novum-hd-common enigma2-plugin-extensions-weatherplugin enigma2-plugin-systemplugins-weathercomponenthandler enigma2-plugin-skincomponents-weathercomponent"
 RDEPENDS_${EPSM}-mynovum-hd = "novum-hd-renderer novum-hd-common"
@@ -21,8 +21,6 @@ RDEPENDS_${EPSM}-nou-hd = "novum-hd-renderer novum-hd-common"
 RDEPENDS_${EPSM}-nou-hd-weather = "novum-hd-renderer novum-hd-common enigma2-plugin-extensions-weatherplugin enigma2-plugin-systemplugins-weathercomponenthandler enigma2-plugin-skincomponents-weathercomponent"
 
 SRC_URI = "git://github.com/oe-alliance/oe-alliance-skins.git;protocol=git"
-
-FILES_${EPSM}-blue-hd = "/usr/share/enigma2/Blue-HD"
 
 FILES_novum-hd-renderer = "/usr/lib/enigma2/python/Components/Renderer/*.pyo"
 FILES_novum-hd-renderer-src = "/usr/lib/enigma2/python/Components/Renderer/*.py"
