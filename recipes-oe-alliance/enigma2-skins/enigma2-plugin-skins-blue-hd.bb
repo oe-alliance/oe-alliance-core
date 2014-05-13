@@ -12,7 +12,7 @@ PR = "r0"
 
 SRC_URI = "git://github.com/oe-alliance/oe-alliance-skins.git;protocol=git"
 
-FILES = "/usr/share/enigma2/Blue-HD"
+FILES_${PN} = "/usr/share/enigma2/Blue-HD"
 
 S = "${WORKDIR}/git"
 
