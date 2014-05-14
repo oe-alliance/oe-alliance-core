@@ -1,7 +1,7 @@
 SUMMARY = "Linux kernel for ${MACHINE}"
 SECTION = "kernel"
 LICENSE = "GPLv2"
-PR = "r1"
+PR = "r2"
 inherit machine_kernel_pr
 
 KERNEL_RELEASE := "${PV}"
