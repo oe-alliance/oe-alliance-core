@@ -3,13 +3,15 @@ SECTION = "base"
 PRIORITY = "optional"
 LICENSE = "CLOSED"
 
+PACKAGE_ARCH = "${MACHINE_ARCH}"
+
 SRC_URI = "http://www.et-view.com/data/enigma2-plugin-systemplugins-blindscan_2011-04-15_mipsel.ipk"
 
 PROVIDES += "virtual/blindscan-dvbs"
 RPROVIDES_${PN} += "virtual/blindscan-dvbs"
 
 PV = "1.0"
-PR = "r1"
+PR = "r2"
 
 S = "${WORKDIR}"
 

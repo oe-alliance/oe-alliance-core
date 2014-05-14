@@ -1,12 +1,14 @@
 SUMMARY = "Utilities needed to do transponder blindscan with dreambox dvb receivers"
 LICENSE = "CLOSED"
 
+PACKAGE_ARCH = "${MACHINE_ARCH}"
+
 PROVIDES += "virtual/blindscan-dvbs virtual/blindscan-dvbc"
 RPROVIDES_${PN} += "virtual/blindscan-dvbs virtual/blindscan-dvbc"
 
 DEPENDS = "ncurses"
 
-PR = "r1"
+PR = "r2"
 
 SRC_URI += "http://dreamboxupdate.com/download/opendreambox/2.0.0/blindscan-utils/blindscan-utils_${PV}_${PACKAGE_ARCH}.tar.bz2;name=${PACKAGE_ARCH}"
 

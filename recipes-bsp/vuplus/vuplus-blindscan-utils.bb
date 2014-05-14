@@ -3,6 +3,8 @@ SECTION = "base"
 PRIORITY = "optional"
 RDEPENDS_${PN} = "ncurses"
 
+PACKAGE_ARCH = "${MACHINE_ARCH}"
+
 LICENSE = "CLOSED"
 
 PACKAGES = "vuplus-blindscan-dvbs-utils vuplus-blindscan-dvbs-utils-dbg vuplus-blindscan-dvbc-utils vuplus-blindscan-dvbc-utils-dbg"
@@ -14,7 +16,7 @@ RPROVIDES_vuplus-blindscan-dvbc-utils += "virtual/blindscan-dvbc"
 SRC_URI = "http://archive.vuplus.com/download/utils/vuplus-blindscan-utils-${PV}.tar.bz2"
 
 PV = "3.5"
-PR = "r0"
+PR = "r1"
 
 S = "${WORKDIR}/blindscan-utils"
 
