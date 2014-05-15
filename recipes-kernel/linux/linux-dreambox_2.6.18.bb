@@ -1,5 +1,5 @@
 inherit machine_kernel_pr
-PR = "r2"
+PR = "r3"
 
 MACHINE_KERNEL_PR_append = ".2"
 

@@ -3,6 +3,8 @@ SECTION = "base"
 PRIORITY = "optional"
 RDEPENDS_${PN} = "ncurses"
 
+PACKAGE_ARCH = "${MACHINE_ARCH}"
+
 LICENSE = "CLOSED"
 
 PACKAGES = "ini-blindscan-dvbs-utils ini-blindscan-dvbs-utils-dbg ini-blindscan-dvbc-utils ini-blindscan-dvbc-utils-dbg"
@@ -14,7 +16,7 @@ RPROVIDES_ini-blindscan-dvbc-utils += "virtual/blindscan-dvbc"
 SRC_URI = "file://tda1002x file://ini_blindscan"
 
 PV = "2.1"
-PR = "r2"
+PR = "r3"
 
 S = "${WORKDIR}/"
 

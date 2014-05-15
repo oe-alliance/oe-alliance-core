@@ -1,8 +1,10 @@
 SUMMARY = "openViX bootlogo Helios pack2"
 LICENSE = "CLOSED"
 
+inherit allarch
+
 PV = "1.0"
-PR = "r3"
+PR = "r4"
 
 SRC_URI = "http://enigma2.world-of-satellite.com/bootlogos/openvix-helios3.zip"
 

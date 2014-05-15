@@ -3,11 +3,13 @@ PRIORITY = "required"
 LICENSE = "GPLv3"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 
+PACKAGE_ARCH = "${MACHINE_ARCH}"
+
 inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"
-PR = "r10"
+PR = "r11"
 
 PROVIDES += "virtual/transtreamproxy"
 RPROVIDES_${PN} += "virtual/transtreamproxy"

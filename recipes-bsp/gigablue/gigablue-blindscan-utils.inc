@@ -3,6 +3,10 @@ SECTION = "base"
 PRIORITY = "optional"
 LICENSE = "CLOSED"
 
+PACKAGE_ARCH = "${MACHINE_ARCH}"
+
+PR = "r1"
+
 PACKAGES = "gigablue-blindscan-dvbs-utils-${MACHINE} gigablue-blindscan-dvbc-utils-${MACHINE}"
 
 PROVIDES += "virtual/blindscan-dvbc virtual/blindscan-dvbs"

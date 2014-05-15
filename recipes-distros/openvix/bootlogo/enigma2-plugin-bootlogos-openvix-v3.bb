@@ -1,8 +1,10 @@
 SUMMARY = "openViX 3.0 bootlogo"
 LICENSE = "CLOSED"
 
+inherit allarch
+
 PV = "1.0"
-PR = "r2"
+PR = "r3"
 
 SRC_URI = "http://enigma2.world-of-satellite.com/bootlogos/openvix-v3.zip"
 
