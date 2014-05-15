@@ -76,5 +76,13 @@ BOOTLOGO_FILENAME = "splash.bin"
 
 require conf/machine/include/tune-mips32.inc
 
+EXTRA_IMAGEDEPENDS += " \
+    enigma2-plugin-systemplugins-remotecontrolcode \
+    "
+
+MACHINE_EXTRA_RDEPENDS_${PN} = " \
+    enigma2-plugin-systemplugins-remotecontrolcode \
+    "
+
 # add support for extra feeds
 PACKAGE_ARCHS += " ${MACHINEBUILD}"
