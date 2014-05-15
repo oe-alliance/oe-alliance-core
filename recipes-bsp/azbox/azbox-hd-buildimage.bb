@@ -5,13 +5,15 @@ LICENSE = "CLOSED"
 PROVIDES = "azbox-hd-buildimage"
 
 PV="1.3"
+PR = "r1"
+
 SRC_URI = "file://pack_e2.c \
        file://Makefile.am \
        file://configure.ac"
 
 S = "${WORKDIR}/pack_e2"
 
-inherit autotools native
+inherit autotools-brokensep native
 
 do_configure_prepend() {
     install -m 0644 ${WORKDIR}/pack_e2.c ${S}
