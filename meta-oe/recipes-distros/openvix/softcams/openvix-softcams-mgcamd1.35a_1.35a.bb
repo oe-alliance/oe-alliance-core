@@ -15,7 +15,7 @@ RPROVIDES_enigma2-plugin-softcams-mgcamd135a += "openvix-softcams-mgcamd135a"
 
 SRC_URI = "http://enigma2.world-of-satellite.com/git-extras/mgcamd-1.35a.zip"
 
-S = "${WORKDIR}//mgcamd-1.35a"
+S = "${WORKDIR}/mgcamd-1.35a"
 
 INHIBIT_PACKAGE_STRIP = "1"
 
