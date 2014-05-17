@@ -1,0 +1,15 @@
+diff --git a/configure.ac b/configure.ac
+index a396b05..2c5c61c 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -169,8 +169,8 @@ case "${enable_backend}" in
+ #    AC_DEFINE(ENABLE_BACKEND_ARM, 1, [Enable Arm backend])
+     ENABLE_BACKEND_C64X=yes
+     AC_DEFINE(ENABLE_BACKEND_C64X, 1, [Enable c64x backend])
+-    ENABLE_BACKEND_MIPS=yes
+-    AC_DEFINE(ENABLE_BACKEND_MIPS, 1, [Enable MIPS backend])
++#    ENABLE_BACKEND_MIPS=yes
++#    AC_DEFINE(ENABLE_BACKEND_MIPS, 1, [Enable MIPS backend])
+     ;;
+ esac
+ AM_CONDITIONAL(ENABLE_BACKEND_SSE, test "x$ENABLE_BACKEND_SSE" = "xyes")
