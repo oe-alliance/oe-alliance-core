@@ -8,11 +8,9 @@ KERNEL_RELEASE := "${PV}"
 PV = "${KERNEL_RELEASE}"
 PKGV = "${KERNEL_RELEASE}"
 
-MACHINE_KERNEL_PR_append = ".1"
+MACHINE_KERNEL_PR_append = ".2"
 
 LIC_FILES_CHKSUM = "file://${S}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
-
-FILESEXTRAPATHS_prepend := "${OEA-META-OE-BASE}/meta-oe/recipes-kernel/linux/files:"
 
 SRC_URI[kernel.md5sum] = "10eebcb0178fb4540e2165bfd7efc7ad"
 SRC_URI[kernel.sha256sum] = "fa395fec7de633df1cb85b6248b8f35af98380ed128a8bc465fb48bc4d252633"

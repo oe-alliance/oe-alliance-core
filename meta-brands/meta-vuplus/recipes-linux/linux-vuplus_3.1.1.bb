@@ -7,9 +7,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 inherit machine_kernel_pr
 
 SRCREV = "r2"
-MACHINE_KERNEL_PR_append = ".1"
-
-FILESEXTRAPATHS_prepend := "${OEA-META-OE-BASE}/meta-oe/recipes-kernel/linux/files:"
+MACHINE_KERNEL_PR_append = ".2"
 
 SRC_URI[md5sum] = "4dc3ac322453abbfaade7020cddea205"
 SRC_URI[sha256sum] = "1d18eb39677a23eace6b27ee25656c25f21b57be7e77a2adcdd15c76d1c3e875"

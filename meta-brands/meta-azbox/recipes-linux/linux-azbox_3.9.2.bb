@@ -5,7 +5,7 @@ LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${KV}/COPYING;md5=d7810fab7487fb0aad
 
 inherit machine_kernel_pr
 
-MACHINE_KERNEL_PR_append = ".2"
+MACHINE_KERNEL_PR_append = ".3"
 PR = "r4"
 
 KV = "3.9.2"
@@ -23,8 +23,6 @@ PKG_kernel-image = "kernel-image"
 RPROVIDES_kernel-base = "kernel-${KERNEL_VERSION}"
 RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
 ALLOW_EMPTY_kernel-dev = "1"
-
-FILESEXTRAPATHS_prepend := "${OEA-META-OE-BASE}/meta-oe/recipes-kernel/linux/files:"
 
 SRC_URI += "${KERNELORG_MIRROR}/linux/kernel/v3.x/linux-${KV}.tar.bz2;name=azbox-kernel \
     http://source.mynonpublic.com/${MACHINE}/${MACHINE}-${SRC}.tar.gz;name=azbox-kernel-${MACHINE} \

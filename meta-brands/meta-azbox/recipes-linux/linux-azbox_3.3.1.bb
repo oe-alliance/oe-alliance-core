@@ -4,7 +4,7 @@ LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${KV}/COPYING;md5=d7810fab7487fb0aad
 PR = "r4"
 inherit machine_kernel_pr
 
-MACHINE_KERNEL_PR_append = ".1"
+MACHINE_KERNEL_PR_append = ".2"
 
 DEPENDS = "genromfs-native gcc"
 DEPENDS_azboxhd = "genromfs-native azbox-hd-buildimage gcc "
@@ -22,8 +22,6 @@ PKG_kernel-base = "kernel-base"
 PKG_kernel-image = "kernel-image"
 RPROVIDES_kernel-base = "kernel-${KERNEL_VERSION}"
 RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
-
-FILESEXTRAPATHS_prepend := "${OEA-META-OE-BASE}/meta-oe/recipes-kernel/linux/files:"
 
 SRC_URI += "http://source.mynonpublic.com/linux-azbox-${KV}-new-2.tar.bz2;name=azbox-kernel \
        file://mips-refactor-clearpage-and-copypage.patch \

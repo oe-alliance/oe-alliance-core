@@ -6,9 +6,7 @@ KV = "3.9.7"
 inherit machine_kernel_pr
 
 SRCDATE = "20140404"
-MACHINE_KERNEL_PR_append = ".4"
-
-FILESEXTRAPATHS_prepend := "${OEA-META-OE-BASE}/meta-oe/recipes-kernel/linux/files:"
+MACHINE_KERNEL_PR_append = ".5"
 
 SRC_URI[md5sum] = "74d909a2081479136fa453b743325138"
 SRC_URI[sha256sum] = "de0aaf466ecf8b47653a859f66ff59da49e7a16aa26c9987d0c089255675de04"

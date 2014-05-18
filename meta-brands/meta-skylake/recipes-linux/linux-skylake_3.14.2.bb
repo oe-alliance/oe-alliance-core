@@ -6,14 +6,12 @@ KERNEL_RELEASE = "3.14.2"
 
 inherit machine_kernel_pr
 
-FILESEXTRAPATHS_prepend := "${OEA-META-OE-BASE}/meta-oe/recipes-kernel/linux/files:"
-
 SRC_URI[md5sum] = "6b21ecf8f196703b9f9b27812991401c"
 SRC_URI[sha256sum] = "9b9b54ef83c4f475fd663001ea3d73ed71d029e35165dc16d9fd3f83ae69165c"
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-PR = "r0"
+MACHINE_KERNEL_PR_append = ".1"
 
 # By default, kernel.bbclass modifies package names to allow multiple kernels
 # to be installed in parallel. We revert this change and rprovide the versioned

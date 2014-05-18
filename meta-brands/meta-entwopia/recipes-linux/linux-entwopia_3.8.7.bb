@@ -7,14 +7,12 @@ PR = "r2"
 KERNEL_RELEASE = "3.8.7"
 SRCDATE = "20140326"
 
-FILESEXTRAPATHS_prepend := "${OEA-META-OE-BASE}/meta-oe/recipes-kernel/linux/files:"
-
 SRC_URI[md5sum] = "fab173102d678bded9292956467291ac"
 SRC_URI[sha256sum] = "6e2c4de8f5d1aaaf21ca23f3c0b6346b7bda93c5999fdbad94714735c89dbe3c"
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}-base/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-MACHINE_KERNEL_PR_append = ".3"
+MACHINE_KERNEL_PR_append = ".4"
 
 # By default, kernel.bbclass modifies package names to allow multiple kernels
 # to be installed in parallel. We revert this change and rprovide the versioned
