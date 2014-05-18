@@ -8,8 +8,8 @@ RDEPENDS_${PN} = "python-cheetah python-json python-unixadmin python-misc python
 
 inherit gitpkgv
 SRCREV = "${AUTOREV}"
-PV = "0.2.6+git${SRCPV}"
-PKGV = "0.2.6+git${GITPKGV}"
+PV = "0.2.9+git${SRCPV}"
+PKGV = "0.2.9+git${GITPKGV}"
 PR = "r0"
 
 inherit pythonnative
