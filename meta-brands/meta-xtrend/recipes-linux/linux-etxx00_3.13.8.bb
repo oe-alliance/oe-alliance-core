@@ -2,13 +2,12 @@ SUMMARY = "Linux kernel for ${MACHINE}"
 SECTION = "kernel"
 LICENSE = "GPLv2"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
-PR = "r2"
 
 inherit machine_kernel_pr
 
 KERNEL_RELEASE = "3.13.8"
 
-FILESEXTRAPATHS_prepend := "${OEA-META-OE-BASE}/meta-oe/recipes-kernel/linux/files:"
+MACHINE_KERNEL_PR_append = ".1"
 
 SRC_URI[md5sum] = "0fa7714d78d9ea2eedc9f673935c2ac2"
 SRC_URI[sha256sum] = "4738b2de254a84b4597b6e806848547929027b48822d7701c0009d74f0c4950d"
