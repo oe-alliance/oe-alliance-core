@@ -7,7 +7,8 @@ SUMMARY = "tuxbox tuxtxt for enigma2"
 inherit gitpkgv
 
 SRC_URI = "git://git.code.sf.net/p/openpli/tuxtxt;protocol=git \
-           file://0001-Workaround-for-Gigablue-Quad-receivers.patch"
+           file://0001-Workaround-for-Gigablue-Quad-receivers.patch \
+           file://0002-Use-separate-transparency-for-menu-and-teletext.patch"
 
 S = "${WORKDIR}/git/tuxtxt"
 

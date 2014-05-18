@@ -1,0 +1,62 @@
+From c16d030ab008d8efe8bc1760141f7d9666cd613e Mon Sep 17 00:00:00 2001
+From: betacentauri <betacentauri@arcor.de>
+Date: Sun, 18 May 2014 14:01:38 +0200
+Subject: [PATCH] Use separate transparency for menu and teletext
+
+---
+ plugin/plugin.py | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
+
+diff --git a/plugin/plugin.py b/plugin/plugin.py
+index b4e1a50..fc539d0 100644
+--- a/plugin/plugin.py
++++ b/plugin/plugin.py
+@@ -2,6 +2,8 @@ from enigma import eTuxtxtApp, getDesktop
+ from Screens.Screen import Screen
+ from Plugins.Plugin import PluginDescriptor
+ from Components.ActionMap import NumberActionMap
++from Components.SystemInfo import SystemInfo
++from Components.config import config
+ 
+ class RcCode:
+ 	RC_0 = 0x00
+@@ -37,6 +39,10 @@ class ShellStarter(Screen):
+ 		</screen>"""
+ 
+ 	def __init__(self, session, args = None):
++		try: # new config.osd.alpha_teletext may not be available everywhere
++			self.setOSDAlpha(config.osd.alpha_teletext)
++		except:
++			pass
+ 		self.skin = ShellStarter.skin
+ 		Screen.__init__(self, session)
+ 		eTuxtxtApp.getInstance().appClosed.get().append(self.appClosed)
+@@ -75,6 +81,10 @@ class ShellStarter(Screen):
+ 		#force redraw
+ 		dsk = getDesktop(0)
+ 		dsk.resize(dsk.size())
++		try: # config.osd.alpha may not be available everywhere
++			self.setOSDAlpha(config.osd.alpha)
++		except:
++			pass
+ 		self.close()
+ 
+ 	def handleNumberKey(self, key):
+@@ -125,6 +135,14 @@ class ShellStarter(Screen):
+ 	def handleKeyExit(self):
+ 		eTuxtxtApp.getInstance().handleKey(RcCode.RC_HOME)
+ 
++	def setOSDAlpha(self,configElement):
++		if SystemInfo["CanChangeOsdAlpha"]:
++			print 'Tuxtxt setting OSD alpha:', str(configElement.value)
++			config.av.osd_alpha.setValue(configElement.value)
++			f = open("/proc/stb/video/alpha", "w")
++			f.write(str(configElement.value))
++			f.close()
++
+ def main(session, **kwargs):
+ 	session.open(ShellStarter)
+ 
+-- 
+1.8.4.GIT
+
