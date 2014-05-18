@@ -1,0 +1,68 @@
+BER/MER is converted in dB and scaled to the full range 0-65536 for output;
+added a module parameter to select SNR/MER output in dBx10;
+
+From: Gianluca Gennari <gennarone@gmail.com>
+---
+ drivers/staging/media/as102/as102_drv.c |    4 ++++
+ drivers/staging/media/as102/as102_fe.c  |   16 ++++++++++++++++
+ 2 files changed, 20 insertions(+)
+
+diff --git a/drivers/staging/media/as102/as102_drv.c b/drivers/staging/media/as102/as102_drv.c
+index ac92eaf..a87107f 100644
+--- a/drivers/staging/media/as102/as102_drv.c
++++ b/drivers/staging/media/as102/as102_drv.c
+@@ -56,6 +56,10 @@ int elna_enable = 1;
+ module_param_named(elna_enable, elna_enable, int, 0644);
+ MODULE_PARM_DESC(elna_enable, "Activate eLNA (default: on)");
+ 
++int snr_db;
++module_param_named(snr_db, snr_db, int, 0644);
++MODULE_PARM_DESC(snr_db, "Output SNR/MER in dBx10 (default: no)");
++
+ DVB_DEFINE_MOD_OPT_ADAPTER_NR(adapter_nr);
+ 
+ static void as102_stop_stream(struct as102_dev_t *dev)
+diff --git a/drivers/staging/media/as102/as102_fe.c b/drivers/staging/media/as102/as102_fe.c
+index d188818..a4c5d89 100644
+--- a/drivers/staging/media/as102/as102_fe.c
++++ b/drivers/staging/media/as102/as102_fe.c
+@@ -20,6 +20,9 @@
+ #include "as102_drv.h"
+ #include "as10x_types.h"
+ #include "as10x_cmd.h"
++#include "dvb_math.h"
++
++extern int snr_db;
+ 
+ static void as10x_fe_copy_tps_parameters(struct dtv_frontend_properties *dst,
+ 					 struct as10x_tps *src);
+@@ -182,6 +185,7 @@ out:
+ static int as102_fe_read_snr(struct dvb_frontend *fe, u16 *snr)
+ {
+ 	struct as102_dev_t *dev;
++	u32 mer_db;
+ 
+ 	ENTER();
+ 
+@@ -191,6 +195,18 @@ static int as102_fe_read_snr(struct dvb_frontend *fe, u16 *snr)
+ 
+ 	*snr = dev->demod_stats.mer;
+ 
++	/* convert in dBx10 */
++	if (*snr > 0) {
++	  mer_db = 10 * intlog10(*snr);
++	  *snr = mer_db / ((1 << 24) / 10);
++	}
++
++	dprintk(debug, "MER=%d dBx10\n", *snr);
++
++	/* scale the MER value to the full range 0-65536, capping MER at 29 dB */
++	if (!snr_db)
++		*snr = (*snr >= 290) ? 0xffff : (0xffff / 290) * *snr;
++
+ 	LEAVE();
+ 	return 0;
+ }
+-- 
+1.7.9.5
+
