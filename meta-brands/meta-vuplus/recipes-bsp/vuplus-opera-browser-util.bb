@@ -9,7 +9,7 @@ RDEPENDS_${PN} = "tslib-conf libts-1.0-0 libsysfs2 libgmp10 libmpfr4 enigma2-hbb
 PACKAGES =+ "${PN}-src enigma2-hbbtv-util enigma2-hbbtv-util-src"
 PROVIDES =+ "enigma2-hbbtv-util"
 
-SRC_DATE = "20140430_0"
+SRC_DATE = "20140519_1"
 SRC_URI = ""
 
 PR = "r32_${SRC_DATE}"
@@ -44,7 +44,7 @@ do_install() {
     install -d ${D}/usr/local/hbb-browser
     mv ${S}/opera/* ${D}/usr/local/hbb-browser/
     # workaround for broken startup script and segfault in libfaketime.so
-    sed -i -e '1,2d' -e 's/libfaketime.so //g' ${D}/usr/local/hbb-browser/launcher
+    # sed -i -e '1,2d' -e 's/libfaketime.so //g' ${D}/usr/local/hbb-browser/launcher
 
     install -d ${D}/etc
     mv ${S}/dfb/etc/* ${D}/etc/
