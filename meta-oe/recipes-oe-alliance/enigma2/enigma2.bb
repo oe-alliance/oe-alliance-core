@@ -282,7 +282,7 @@ do_install_append() {
     ln -s /usr/lib/enigma2/python/Components/PackageInfo.pyo ${D}/usr/lib/enigma2/python/Components/DreamboxInfoHandler.pyo
     install -d ${D}${sysconfdir}
     git --git-dir=${S}/.git log --since=10.weeks --pretty=format:"%s" > ${D}${sysconfdir}/e2-git.log
-    git --git-dir=${OEA-META-OE-BASE}/../.git log --since=10.weeks --pretty=format:"%s" > ${D}${sysconfdir}/oe-git.log
+    git --git-dir=${OE-ALLIANCE_BASE}/../.git log --since=10.weeks --pretty=format:"%s" > ${D}${sysconfdir}/oe-git.log
 }
 
 python populate_packages_prepend() {
