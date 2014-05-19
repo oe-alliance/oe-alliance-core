@@ -1,5 +1,5 @@
 SUMMARY = "Blue HD skin for Enigma2"
-MAINTAINER = "Rossi"
+MAINTAINER = "rossi2000"
 
 require conf/license/license-gplv2.inc
 
