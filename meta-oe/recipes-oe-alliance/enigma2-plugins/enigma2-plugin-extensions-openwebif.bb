@@ -4,13 +4,13 @@ LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://README;firstline=10;lastline=12;md5=9c14f792d0aeb54e15490a28c89087f7"
 
 DEPENDS = "python-cheetah-native"
-RDEPENDS_${PN} = "python-cheetah python-json python-unixadmin python-misc python-pyopenssl python-shell aio-grab oe-alliance-branding"
+RDEPENDS_${PN} = "python-cheetah python-compression python-json python-unixadmin python-misc python-pyopenssl python-shell aio-grab oe-alliance-branding"
 
 inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "0.2.9+git${SRCPV}"
 PKGV = "0.2.9+git${GITPKGV}"
-PR = "r0"
+PR = "r1"
 
 inherit pythonnative
 
