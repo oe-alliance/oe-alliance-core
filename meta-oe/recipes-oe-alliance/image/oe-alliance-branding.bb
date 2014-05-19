@@ -47,39 +47,39 @@ EXTRA_OECONF = " \
 
 do_configure_prepend() {
     if [ "${BRAND_OEM}" = "vuplus" ]; then
-        DRIVERSDATE=`grep "SRCDATE = " ${OEA-META-OE-BASE}/meta-oe/recipes-bsp/vuplus/vuplus-dvb-modules-${MACHINE}.bb | cut -b 12-19`
+        DRIVERSDATE=`grep "SRCDATE = " ${OEA-META-VUPLUS-BASE}/recipes-drivers/vuplus-dvb-modules-${MACHINE}.bb | cut -b 12-19`
     elif [ "${BRAND_OEM}" = "xtrend" ]; then
-        DRIVERSDATE=`grep "SRCDATE = " ${OEA-META-OE-BASE}/meta-oe/recipes-bsp/etxx00/et-dvb-modules-${MACHINE}.bb | cut -b 12-19`
+        DRIVERSDATE=`grep "SRCDATE = " ${OEA-META-XTREND-BASE}/recipes-drivers/et-dvb-modules-${MACHINE}.bb | cut -b 12-19`
     elif [ "${BRAND_OEM}" = "entwopia" ]; then
-        DRIVERSDATE=`grep "SRCDATE = " ${OEA-META-OE-BASE}/meta-oe/recipes-bsp/entwopia/entwopia-dvb-modules-${MACHINE}.bb | cut -b 12-19`
+        DRIVERSDATE=`grep "SRCDATE = " ${OEA-META-ENTWOPIA-BASE}/recipes-drivers/entwopia-dvb-modules-${MACHINE}.bb | cut -b 12-19`
     elif [ "${MACHINE}" = "dags1" ]; then
-        DRIVERSDATE=`grep "SRCDATE = " ${OEA-META-OE-BASE}/meta-oe/recipes-bsp/dags/dags-dvb-modules-7335.bb | cut -b 12-19`
+        DRIVERSDATE=`grep "SRCDATE = " ${OEA-META-DAGS-BASE}/recipes-drivers/dags-dvb-modules-7335.bb | cut -b 12-19`
     elif [ "${MACHINE}" = "dags2" ]; then
-        DRIVERSDATE=`grep "SRCDATE = " ${OEA-META-OE-BASE}/meta-oe/recipes-bsp/dags/dags-dvb-modules-7335-ci.bb | cut -b 12-19`
+        DRIVERSDATE=`grep "SRCDATE = " ${OEA-META-DAGS-BASE}/recipes-drivers/dags-dvb-modules-7335-ci.bb | cut -b 12-19`
     elif [ "${MACHINE}" = "dags3" ]; then
-        DRIVERSDATE=`grep "SRCDATE = " ${OEA-META-OE-BASE}/meta-oe/recipes-bsp/dags/dags-dvb-modules-7356.bb | cut -b 12-19`
+        DRIVERSDATE=`grep "SRCDATE = " ${OEA-META-DAGS-BASE}/recipes-drivers/dags-dvb-modules-7356.bb | cut -b 12-19`
     elif [ "${BRAND_OEM}" = "gigablue" ]; then
-        DRIVERSDATE=`grep "SRCDATE = " ${OEA-META-OE-BASE}/meta-oe/recipes-bsp/gigablue/gigablue-dvb-modules-${MACHINE}.bb | cut -b 12-19`
+        DRIVERSDATE=`grep "SRCDATE = " ${OEA-META-GIGABLUE-BASE}/recipes-drivers/gigablue-dvb-modules-${MACHINE}.bb | cut -b 12-19`
     elif [ "${BRAND_OEM}" = "odin" ]; then
-        DRIVERSDATE=`grep "SRCDATE = " ${OEA-META-OE-BASE}/meta-oe/recipes-bsp/odin/odin-dvb-modules-${MACHINE}.bb | cut -b 12-19`
+        DRIVERSDATE=`grep "SRCDATE = " ${OEA-META-ODIN-BASE}/recipes-drivers/odin-dvb-modules-${MACHINE}.bb | cut -b 12-19`
     elif [ "${BRAND_OEM}" = "ini" ]; then
-        DRIVERSDATE=`grep "SRCDATE = " ${OEA-META-OE-BASE}/meta-oe/recipes-bsp/ini/ini-dvb-modules-${MACHINE}.bb | cut -b 12-19`
+        DRIVERSDATE=`grep "SRCDATE = " ${OEA-META-INI-BASE}/recipes-drivers/ini-dvb-modules-${MACHINE}.bb | cut -b 12-19`
     elif [ "${BRAND_OEM}" = "xp" ]; then
-        DRIVERSDATE=`grep "SRCDATE = " ${OEA-META-OE-BASE}/meta-oe/recipes-bsp/xp/xp-dvb-modules-${MACHINE}.bb | cut -b 12-19`
+        DRIVERSDATE=`grep "SRCDATE = " ${OEA-META-XP-BASE}/recipes-drivers/xp-dvb-modules-${MACHINE}.bb | cut -b 12-19`
     elif [ "${BRAND_OEM}" = "cube" ]; then
-        DRIVERSDATE=`grep "SRCDATE = " ${OEA-META-OE-BASE}/meta-oe/recipes-bsp/cube/e2bmc-dvb-modules-cube.bb | cut -b 12-19`
+        DRIVERSDATE=`grep "SRCDATE = " ${OEA-META-CUBE-BASE}/recipes-drivers/e2bmc-dvb-modules-cube.bb | cut -b 12-19`
     elif [ "${BRAND_OEM}" = "ebox" ]; then
-        DRIVERSDATE=`grep "SRCDATE = " ${OEA-META-OE-BASE}/meta-oe/recipes-bsp/ebox/ebox-dvb-modules-${MACHINE}.bb | cut -b 12-19`
+        DRIVERSDATE=`grep "SRCDATE = " ${OEA-META-EBOX-BASE}/recipes-drivers/ebox-dvb-modules-${MACHINE}.bb | cut -b 12-19`
     elif [ "${BRAND_OEM}" = "ixuss" ]; then
-        DRIVERSDATE=`grep "SRCDATE = " ${OEA-META-OE-BASE}/meta-oe/recipes-bsp/ixuss/ixuss-dvb-modules-${MACHINE}.bb | cut -b 12-19`
+        DRIVERSDATE=`grep "SRCDATE = " ${OEA-META-IXUSS-BASE}/recipes-drivers/ixuss-dvb-modules-${MACHINE}.bb | cut -b 12-19`
     elif [ "${BRAND_OEM}" = "azbox" ]; then
-        DRIVERSDATE=`grep "SRCDATE = " ${OEA-META-OE-BASE}/meta-oe/recipes-bsp/azbox/azbox-dvb-modules.bb | cut -b 12-19`
+        DRIVERSDATE=`grep "SRCDATE = " ${OEA-META-AZBOX-BASE}/recipes-drivers/azbox-dvb-modules.bb | cut -b 12-19`
     elif [ "${MACHINE}" = "blackbox7405" ]; then
-        DRIVERSDATE=`grep "SRCDATE = " ${OEA-META-OE-BASE}/meta-oe/recipes-bsp/blackbox/blackbox-dvb-modules-blackbox7405.bb | cut -b 12-19`
+        DRIVERSDATE=`grep "SRCDATE = " ${OEA-META-BLACKBOX-BASE}/recipes-drivers/blackbox-dvb-modules-blackbox7405.bb | cut -b 12-19`
     elif [ "${BRAND_OEM}" = "formuler" ]; then
-        DRIVERSDATE=`grep "SRCDATE = " ${OEA-META-OE-BASE}/meta-oe/recipes-bsp/formuler/formuler-dvb-modules-${MACHINE}.bb | cut -b 12-19`
+        DRIVERSDATE=`grep "SRCDATE = " ${OEA-META-FORMULER-BASE}/recipes-drivers/formuler-dvb-modules-${MACHINE}.bb | cut -b 12-19`
     elif [ "${BRAND_OEM}" = "skylake" ]; then
-        DRIVERSDATE=`grep "SRCDATE = " ${OEA-META-OE-BASE}/meta-oe/recipes-bsp/skylake/skylake-dvb-modules-${MACHINE}.bb | cut -b 12-19`
+        DRIVERSDATE=`grep "SRCDATE = " ${OEA-META-SKYLAKE-BASE}/recipes-drivers/skylake-dvb-modules-${MACHINE}.bb | cut -b 12-19`
     elif [ "${BRAND_OEM}" = "dreambox" ]; then
         DRIVERSDATE="20140313"
     else
