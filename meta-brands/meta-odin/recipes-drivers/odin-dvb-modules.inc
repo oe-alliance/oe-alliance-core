@@ -4,11 +4,11 @@ PRIORITY = "required"
 LICENSE = "CLOSED"
 
 PV = "${KV}+${SRCDATE}"
-PR = "r3"
+PR = "r4"
 
 RDEPENDS_${PN}_odinm9 += "odin-fpupdate-${MACHINE}"
 
-SRC_URI = "http://source.mynonpublic.com/download/${MACHINE}-drivers-${KV}-${SRCDATE}.tar.gz"
+SRC_URI = "http://source.mynonpublic.com/download/${MACHINE}-drivers-${KV}-${SRCDATE}.zip"
 
 S = "${WORKDIR}"
 
