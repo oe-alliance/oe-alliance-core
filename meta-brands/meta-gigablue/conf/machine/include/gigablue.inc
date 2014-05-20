@@ -28,6 +28,7 @@ include conf/machine/include/autoload-filesystems.inc
     
 PREFERRED_PROVIDER_virtual/blindscan-dvbc = "gigablue-blindscan-utils-${MACHINE}"
 PREFERRED_PROVIDER_virtual/blindscan-dvbs = "gigablue-blindscan-utils-${MACHINE}"
+PREFERRED_PROVIDER_virtual/transtreamproxy = "gb-transtreamproxy"
     
 DVBMEDIASINK_CONFIG = "--with-wmv"
 
