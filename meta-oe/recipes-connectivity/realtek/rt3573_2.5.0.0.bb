@@ -4,11 +4,11 @@ SECTION = "kernel/modules"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://iwpriv_usage.txt;md5=8876ae2c103446a442658f1cc2a01b76"
 
-PR = "r6"
+PR = "r7"
 
 inherit module
 
-SRC_URI = "http://source.mynonpublic.com/20120911_RT3573_Linux_STA_v2.5.0.0_Rev3_DPO.tar.gz"
+SRC_URI = "http://code-ini.com/software/mirror/20120911_RT3573_Linux_STA_v2.5.0.0_Rev3_DPO.tar.gz"
 
 EXTRA_OEMAKE = "LINUX_SRC=${STAGING_KERNEL_DIR}"
 
