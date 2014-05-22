@@ -25,4 +25,3 @@ RDEPENDS_packagegroup-base-nfs += "\
     nfs-utils-client \
     portmap \
     portmap-utils"
-
