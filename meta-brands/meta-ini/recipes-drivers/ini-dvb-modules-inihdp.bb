@@ -1,9 +1,9 @@
-KV = "3.3.8-2.0"
-SRCDATE = "20140519"
+KV = "3.14.2"
+SRCDATE = "20140522"
 
-SRC_URI[md5sum] = "0edbc95c9e7fe7dcc227a8277aa1a832"
-SRC_URI[sha256sum] = "ac89001499f4fe4c1e37463da7dec73f2d4f2ef927865700f257e4197d1b6994"
+SRC_URI[md5sum] = "5dd6fcd8f0d72100e2ca50df5a3e601c"
+SRC_URI[sha256sum] = "0c3d2b759fe2e83f33cc18069788e7f00fa07398728b43303a67e2d780e519c8"
 
-SRC_URI = "http://code-ini.com/software/drivers/ini-hdp-drivers-3.3.8-${SRCDATE}.zip"
+SRC_URI = "http://code-ini.com/software/beta/drv/hdp/ini-hdp-drivers-${KV}-${SRCDATE}.zip"
 
 require ini-dvb-modules.inc

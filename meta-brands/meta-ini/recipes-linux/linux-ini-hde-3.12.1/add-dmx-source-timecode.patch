@@ -1,8 +1,8 @@
-diff --git a/include/linux/dvb/dmx.h b/include/linux/dvb/dmx.h
-index f078f3a..21032e1 100644
---- a/include/linux/dvb/dmx.h
-+++ b/include/linux/dvb/dmx.h
-@@ -135,6 +135,9 @@ typedef enum {
+diff --git a/include/uapi/linux/dvb/dmx.h b/include/uapi/linux/dvb/dmx.h
+index b2a9ad8..e791d4c 100644
+--- a/include/uapi/linux/dvb/dmx.h
++++ b/include/uapi/linux/dvb/dmx.h
+@@ -133,6 +133,9 @@ typedef enum {
  	DMX_SOURCE_DVR3
  } dmx_source_t;
  
