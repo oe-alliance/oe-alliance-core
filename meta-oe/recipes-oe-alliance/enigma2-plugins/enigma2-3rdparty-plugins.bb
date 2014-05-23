@@ -9,7 +9,7 @@ inherit gitpkgv deploy
 SRCREV = "${AUTOREV}"
 PV = "2.1+gitr${SRCPV}"
 PKGV = "2.1+gitr${GITPKGV}"
-PR = "r11"
+PR = "r12"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -30,7 +30,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-atmolightd_0.7-pre22_all.ipk \
     enigma2-plugin-extensions-autobouquets-e2_201310201900-r2_mips32el.ipk \
     enigma2-plugin-extensions-bildonline_3.0rc10_mips32el.ipk \
-    enigma2-plugin-extensions-bluray_1.4rc1_mips32el.ipk \
+    enigma2-plugin-extensions-bluray_1.4rc2_mips32el.ipk \
     enigma2-plugin-extensions-boblight-enigma2_0.8r6_mips32el.ipk \
     enigma2-plugin-extensions-camofs_8.50_all.ipk \
     enigma2-plugin-extensions-chefkoch_1.4_mips32el.ipk \
@@ -46,7 +46,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-kicker_3.3rc4_mips32el.ipk \
     enigma2-plugin-extensions-livefootball-oe2.0_4.9_all.ipk \
     enigma2-plugin-extensions-mediainfo_0.6_r04_all.ipk \
-    enigma2-plugin-extensions-mediaportal_5.1.3_all.ipk \
+    enigma2-plugin-extensions-mediaportal_5.2.2_all.ipk \
     enigma2-plugin-extensions-msnwetter_0.6rc3_mips32el.ipk \
     enigma2-plugin-extensions-mtv_0.1_mips32el.ipk \
     enigma2-plugin-extensions-muzutv_1.1rc4_mips32el.ipk \
