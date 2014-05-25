@@ -9,7 +9,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "1.0"
-PR = "r48"
+PR = "r49"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 DEPENDS = "enigma2-plugin-drivers-usbserial"
@@ -76,7 +76,7 @@ RRECOMMENDS_${PN} = "\
     parted \
     procps \
     pyload \
-    python-circuits python-circuits-bricks python-cocy python-mechanize python-requests \
+    python-circuits python-circuits-bricks python-cocy python-mechanize python-requests livestreamer \
     rsync \
     rtorrent \
     sabnzbd \
