@@ -9,7 +9,7 @@ inherit gitpkgv deploy
 SRCREV = "${AUTOREV}"
 PV = "2.1+gitr${SRCPV}"
 PKGV = "2.1+gitr${GITPKGV}"
-PR = "r12"
+PR = "r13"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -29,7 +29,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-dvb-sundtek.controlcenter_1.0-20110318-r2_mipsel.ipk \
     enigma2-plugin-extensions-atmolightd_0.7-pre22_all.ipk \
     enigma2-plugin-extensions-autobouquets-e2_201310201900-r2_mips32el.ipk \
-    enigma2-plugin-extensions-bildonline_3.0rc10_mips32el.ipk \
+    enigma2-plugin-extensions-bildonline_3.1_mips32el.ipk \
     enigma2-plugin-extensions-bluray_1.4rc2_mips32el.ipk \
     enigma2-plugin-extensions-boblight-enigma2_0.8r6_mips32el.ipk \
     enigma2-plugin-extensions-camofs_8.50_all.ipk \
