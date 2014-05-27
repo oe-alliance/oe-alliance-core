@@ -9,7 +9,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "1.0"
-PR = "r17"
+PR = "r18"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 OPTIONAL_WIFIDRIVERS = "${@base_contains("MACHINE_FEATURES", "wifiusblegacy", "enigma2-plugin-drivers-network-usb-rt3070", " \
@@ -29,10 +29,10 @@ DEPENDS = "enigma2 enigma2-plugins enigma2-oe-alliance-plugins network-usb-drive
 RDEPENDS_${PN} = "\
     enigma2-plugin-systemplugins-wirelesslan \
     ${@base_contains("MACHINE", "vuduo2", "enigma2-plugin-drivers-network-usb-rt3070", "", d)} \
-    ${@base_contains("MACHINE", "inihdp", "enigma2-plugin-drivers-network-usb-rt3070", "", d)} \
+    ${@base_contains("MACHINE", "inihdp", "enigma2-plugin-drivers-network-usb-rt3070 enigma2-plugin-drivers-network-usb-r8723a", "", d)} \
     ${@base_contains("MACHINE_BRAND", "Vu+", "enigma2-plugin-drivers-network-usb-rtl8192cu", "", d)} \
     ${@base_contains("MACHINE_BRAND", "GigaBlue", "enigma2-plugin-drivers-network-usb-rtl8192cu", "", d)} \
-    ${@base_contains("BRAND_OEM", "ini", "enigma2-plugin-drivers-network-usb-rtl8192cu enigma2-plugin-drivers-network-usb-r8723a", "", d)} \
+    ${@base_contains("BRAND_OEM", "ini", "enigma2-plugin-drivers-network-usb-rtl8192cu", "", d)} \
     ${@base_contains("MACHINE_FEATURES", "wifi61", "rt61", "", d)} \
     ${@base_contains("DISTRO_FEATURES", "wifi-extra", "${OPTIONAL_WIFIDRIVERS}", "", d)} \
     ${@base_contains("DISTRO_NAME", "openatv", "enigma2-plugin-drivers-network-usb-rtl8192cu", "", d)} \
