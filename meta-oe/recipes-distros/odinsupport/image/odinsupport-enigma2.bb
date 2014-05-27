@@ -31,8 +31,8 @@ RRECOMMENDS_${PN} = "\
     enigma2-plugin-systemplugins-swapmanager \
     enigma2-plugin-systemplugins-fastscan \
     enigma2-plugin-extensions-autotimer \
-	enigma2-plugin-systemplugins-osdpositionsetup \
-	enigma2-plugin-systemplugins-positionersetup \
+    enigma2-plugin-systemplugins-osdpositionsetup \
+    enigma2-plugin-systemplugins-positionersetup \
     ${@base_contains("MACHINE_FEATURES", "blindscan-dvbs", "enigma2-plugin-systemplugins-blindscan" , "", d)} \
     ${@base_contains("MACHINE_FEATURES", "boxmodel", "boxmodel", "", d)} \
     "
