@@ -11,7 +11,7 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"
-VER ="4.0"
+VER ="2.2"
 PR = "r1"
 
 SRC_URI="git://github.com/settopbox-support/default-skin.git"
