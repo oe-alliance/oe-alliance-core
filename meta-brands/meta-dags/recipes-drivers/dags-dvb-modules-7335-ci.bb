@@ -3,15 +3,15 @@ SECTION = "base"
 PRIORITY = "required"
 LICENSE = "CLOSED"
 
-SRCDATE = "20140519"
+SRCDATE = "20140527"
 KV = "3.9.7"
 PV = "${KV}+${SRCDATE}"
 PR = "r0"
 
 SRC_URI = "http://en3.homeftp.net/release/images/oedrivers/bcmlinuxdvb_7335-${KV}-1ci-${SRCDATE}.tar.gz"
 
-SRC_URI[md5sum] = "5fc05d9546b514b712554ed7c0c39e34"
-SRC_URI[sha256sum] = "6e5051ece7ddd41888e804d0beeb43eee4095322a82df8a3e68d85cfb459cd5c"
+SRC_URI[md5sum] = "4c327931552be414352ff497ed1bde8e"
+SRC_URI[sha256sum] = "74762a0a143310eda8d8dcca0c58c35b971342a7f1b46b4ead0fc610890efee1"
 
 S = "${WORKDIR}"
 
