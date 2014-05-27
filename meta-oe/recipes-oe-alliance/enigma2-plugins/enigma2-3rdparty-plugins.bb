@@ -9,7 +9,7 @@ inherit gitpkgv deploy
 SRCREV = "${AUTOREV}"
 PV = "2.1+gitr${SRCPV}"
 PKGV = "2.1+gitr${GITPKGV}"
-PR = "r15"
+PR = "r16"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -35,7 +35,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-camofs_8.50_all.ipk \
     enigma2-plugin-extensions-chefkoch_1.4_mips32el.ipk \
     enigma2-plugin-extensions-csfd_9_45-20140125_all.ipk \
-    enigma2-plugin-extensions-digitalfernsehen_0.9rc3_mips32el.ipk \
+    enigma2-plugin-extensions-digitalfernsehen_1.0rc1_mips32el.ipk \
     enigma2-plugin-extensions-facebook_1.2rc7_mips32el.ipk \
     enigma2-plugin-extensions-filesearchfs_2.53_all.ipk \
     enigma2-plugin-extensions-focusonline_1.0rc3_mips32el.ipk \
@@ -43,7 +43,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-googlenewsreader_1.0_mips32el.ipk \
     enigma2-plugin-extensions-hetweer_2.4_mips32el.ipk \
     enigma2-plugin-extensions-hdmitest_0.4_mipsel.ipk \
-    enigma2-plugin-extensions-kicker_3.3rc4_mips32el.ipk \
+    enigma2-plugin-extensions-kicker_3.3rc5_mips32el.ipk \
     enigma2-plugin-extensions-livefootball-oe2.0_4.9_all.ipk \
     enigma2-plugin-extensions-mediainfo_0.6_r04_all.ipk \
     enigma2-plugin-extensions-mediaportal_5.2.2_all.ipk \
@@ -54,7 +54,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-mp3browser_1.8rc6_mips32el.ipk \
     enigma2-plugin-extensions-navibar_1.1.1_all.ipk \
     enigma2-plugin-extensions-opkg-tools_1.3_mipsel.ipk \
-    enigma2-plugin-extensions-planerfs_5.27_all.ipk \
+    enigma2-plugin-extensions-planerfs_6.0_all.ipk \
     enigma2-plugin-extensions-pluginspanel_1.0_r01_all.ipk \
     enigma2-plugin-extensions-picturecenterfs_5.17_all.ipk \
     enigma2-plugin-extensions-radiode_0.1_mips32el.ipk \
@@ -87,6 +87,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-xbmcaddons_6.0_r0_all.ipk \
     enigma2-plugin-extensions-xbmcwetter_1.0rc4_mips32el.ipk \
     enigma2-plugin-extensions-yampmusicplayer_2.1.1-2012-09-23_mipsel.ipk \
+    enigma2-plugin-extensions-zdfnewmediathek_1.7rc5_mips32el.ipk \
     enigma2-plugin-systemplugins-bouquetsprotection_0.2-rc1_all.ipk \
     enigma2-plugin-systemplugins-lcnscanner_1.0-r4_mips32el.ipk \
     enigma2-plugin-systemplugins-recordinfobar_1.0-rc15_mipsel.ipk \
