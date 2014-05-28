@@ -12,7 +12,6 @@ ${@base_contains('MACHINEBUILD', 'xpeedlx', 'LX-x' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'xpeedlx3', 'LX-3' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbmini', 'Premium Mini' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbtwin', 'Premium Twin' , '', d)}\
-${@base_contains('MACHINEBUILD', 'mbultra', 'Premium Ultra' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'atemio5x00', '5x00-HD' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'atemionemesis', 'Nemesis' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'beyonwizt3', 'T3' , '', d)}\
@@ -27,7 +26,6 @@ ${@base_contains('MACHINEBUILD', 'xpeedlx', 'GI' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'xpeedlx3', 'GI' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbmini', 'Miraclebox' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbtwin', 'Miraclebox' , '', d)}\
-${@base_contains('MACHINEBUILD', 'mbultra', 'Miraclebox' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'atemio5x00', 'Atemio' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'atemionemesis', 'Atemio' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'beyonwizt3', 'Beyonwiz' , '', d)}\
@@ -42,7 +40,6 @@ ${@base_contains('MACHINEBUILD', 'xpeedlx', 'xpeedlx' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'xpeedlx3', 'xpeedlx3' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbmini', 'miraclebox/mini' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbtwin', 'miraclebox/twin' , '', d)}\
-${@base_contains('MACHINEBUILD', 'mbultra', 'miraclebox/ultra' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'atemio5x00', 'atemio/5x00' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'atemionemesis', 'atemio/8x00' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'beyonwizt3', 'beyonwiz/hdx' , '', d)}\
@@ -57,7 +54,6 @@ ${@base_contains('MACHINEBUILD', 'xpeedlx', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'xpeedlx3', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbmini', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbtwin', 'mtd1' , '', d)}\
-${@base_contains('MACHINEBUILD', 'mbultra', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'atemio5x00', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'atemionemesis', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'beyonwizt3', 'mtd1' , '', d)}\
@@ -67,14 +63,13 @@ MTD_ROOTFS = "\
 ${@base_contains('MACHINEBUILD', 'ventonhdx', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'sezam1000hd', 'mtd3' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'sezam5000hd', 'mtd2' , '', d)}\
-${@base_contains('MACHINEBUILD', 'sezammarvel', 'mtd0' , '', d)}\
+${@base_contains('MACHINEBUILD', 'sezammarvel', 'mtd3' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'xpeedlx', 'mtd3' , '', d)}\
-${@base_contains('MACHINEBUILD', 'xpeedlx3', 'mtd0' , '', d)}\
+${@base_contains('MACHINEBUILD', 'xpeedlx3', 'mtd3' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbmini', 'mtd3' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbtwin', 'mtd2' , '', d)}\
-${@base_contains('MACHINEBUILD', 'mbultra', 'mtd0' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'atemio5x00', 'mtd3' , '', d)}\
-${@base_contains('MACHINEBUILD', 'atemionemesis', 'mtd0' , '', d)}\
+${@base_contains('MACHINEBUILD', 'atemionemesis', 'mtd3' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'beyonwizt3', 'mtd2' , '', d)}\
 "
 
