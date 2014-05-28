@@ -1,0 +1,31 @@
+adjust signal strength report for devices with eLNA set to 0xA0
+
+From: Gianluca Gennari <gennarone@gmail.com>
+---
+ drivers/staging/media/as102/as102_fe.c |   10 ++++++++++
+ 1 files changed, 10 insertions(+), 0 deletions(-)
+
+diff --git a/drivers/staging/media/as102/as102_fe.c b/drivers/staging/media/as102/as102_fe.c
+index 99e26c5..03fbbc8 100644
+--- a/drivers/staging/media/as102/as102_fe.c
++++ b/drivers/staging/media/as102/as102_fe.c
+@@ -242,6 +242,16 @@ static int as102_fe_read_signal_strength(struct dvb_frontend *fe,
+ 
+ 	*strength = (((0xffff * 400) * dev->signal_strength + 41000) * 2);
+ 
++	switch (dev->elna_cfg) {
++	case 0xA0:
++		/* with eLNA set to 0xA0, the signal strength is capped at about 53% */
++		*strength = *strength > 0x8ccc ? 0xffff : *strength * 20 / 11;
++		break;
++	case 0XC0:
++	default:
++		break;
++	}
++
+ 	LEAVE();
+ 	return 0;
+ }
+-- 
+1.7.0.4
+

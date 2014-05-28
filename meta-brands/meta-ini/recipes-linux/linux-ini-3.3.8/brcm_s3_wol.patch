@@ -1,0 +1,89 @@
+diff --git a/arch/mips/brcmstb/s3_standby.S b/arch/mips/brcmstb/s3_standby.S
+index f1d836a..038a67d 100644
+--- a/arch/mips/brcmstb/s3_standby.S
++++ b/arch/mips/brcmstb/s3_standby.S
+@@ -76,6 +76,7 @@
+ # save cp0 sr
+ 	sw	t1, 48(t0)
+ 
++#if 0
+ # Write-back gp registers - cache will be gone after wakeup
+ # align context area address to the cache line
+ 	addiu	t1, a2, -1
+@@ -118,6 +119,7 @@ skip_dram_encode:
+ 	sw	t1, 0(t0)
+ 	lw	zero, 0(t0)
+ 
++#endif
+ # deep power down request
+ pd_request:
+ 	li	t0, REG(BCHP_AON_CTRL_PM_CTRL)
+diff --git a/drivers/net/ethernet/broadcom/genet/bcmgenet.c b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
+old mode 100644
+new mode 100755
+index faf58ab..52e31ed
+--- a/drivers/net/ethernet/broadcom/genet/bcmgenet.c
++++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
+@@ -3123,6 +3123,34 @@ static int bcmgenet_set_wol(struct net_device *dev,
+ 		umac->mpd_ctrl |= MPD_PW_EN;
+ 	}
+ 
++	if ( (pDevCtrl->phyType == BRCM_PHY_TYPE_EXT_RGMII) || (pDevCtrl->phyType == BRCM_PHY_TYPE_EXT_RGMII_NO_ID) )
++	{
++		if(wol->wolopts & WAKE_MAGIC)
++		{
++			pDevCtrl->mii.mdio_write(dev, pDevCtrl->phyAddr, 0x1f, 0x0007);
++			pDevCtrl->mii.mdio_write(dev, pDevCtrl->phyAddr, 0x1e, 0x006e);
++			pDevCtrl->mii.mdio_write(dev, pDevCtrl->phyAddr, 0x15, dev->dev_addr[1]<<8 | dev->dev_addr[0]);
++			pDevCtrl->mii.mdio_write(dev, pDevCtrl->phyAddr, 0x16, dev->dev_addr[3]<<8 | dev->dev_addr[2]);
++			pDevCtrl->mii.mdio_write(dev, pDevCtrl->phyAddr, 0x17, dev->dev_addr[5]<<8 | dev->dev_addr[4]);
++			pDevCtrl->mii.mdio_write(dev, pDevCtrl->phyAddr, 0x1f, 0x0007);
++			pDevCtrl->mii.mdio_write(dev, pDevCtrl->phyAddr, 0x1e, 0x006d);
++			pDevCtrl->mii.mdio_write(dev, pDevCtrl->phyAddr, 0x16, 0x9fff);
++			pDevCtrl->mii.mdio_write(dev, pDevCtrl->phyAddr, 0x15, 0x1000);
++			pDevCtrl->mii.mdio_write(dev, pDevCtrl->phyAddr, 0x1e, 0x006d);
++			pDevCtrl->mii.mdio_write(dev, pDevCtrl->phyAddr, 0x19, 0x0001);
++			pDevCtrl->mii.mdio_write(dev, pDevCtrl->phyAddr, 0x1f, 0x0000);
++
++		}
++		else
++		{
++			pDevCtrl->mii.mdio_write(dev, pDevCtrl->phyAddr, 0x1f, 0x0007);
++			pDevCtrl->mii.mdio_write(dev, pDevCtrl->phyAddr, 0x1e, 0x006d);
++			pDevCtrl->mii.mdio_write(dev, pDevCtrl->phyAddr, 0x16, 0x9fff);
++			pDevCtrl->mii.mdio_write(dev, pDevCtrl->phyAddr, 0x15, 0x0000);
++			pDevCtrl->mii.mdio_write(dev, pDevCtrl->phyAddr, 0x1f, 0x0000);
++		}
++	}
++
+ 	device_set_wakeup_enable(&dev->dev, wol->wolopts);
+ 	pDevCtrl->wolopts = wol->wolopts;
+ 	return 0;
+diff --git a/kernel/power/suspend.c b/kernel/power/suspend.c
+index 038d72b..dce3483 100644
+--- a/kernel/power/suspend.c
++++ b/kernel/power/suspend.c
+@@ -131,6 +131,15 @@ void __attribute__ ((weak)) arch_suspend_enable_irqs(void)
+  *
+  * This function should be called after devices have been suspended.
+  */
++void (*brcm_s3_cb)(void);
++
++
++void register_brcm_s3_cb(void (*cb)(void))
++{
++        brcm_s3_cb = cb;
++}
++EXPORT_SYMBOL(register_brcm_s3_cb);
++
+ static int suspend_enter(suspend_state_t state, bool *wakeup)
+ {
+ 	int error;
+@@ -156,6 +165,7 @@ static int suspend_enter(suspend_state_t state, bool *wakeup)
+ 	if (suspend_test(TEST_PLATFORM))
+ 		goto Platform_wake;
+ 
++	if(brcm_s3_cb) brcm_s3_cb();
+ 	error = disable_nonboot_cpus();
+ 	if (error || suspend_test(TEST_CPUS))
+ 		goto Enable_cpus;

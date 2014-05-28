@@ -1,0 +1,155 @@
+cxd2820r: by default SNR output is scaled to full 0-65535 range;
+output in dBx10 can be enabled through a module parameter;
+
+Signed-off-by: Gianluca Gennari <gennarone@gmail.com>
+---
+ drivers/media/dvb/frontends/cxd2820r_core.c |    4 +++
+ drivers/media/dvb/frontends/cxd2820r_priv.h |    1 +
+ drivers/media/dvb/frontends/cxd2820r_t.c    |   29 +++++++++++++++++++++--
+ drivers/media/dvb/frontends/cxd2820r_t2.c   |   33 ++++++++++++++++++++++++--
+ 4 files changed, 61 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/media/dvb/frontends/cxd2820r_core.c b/drivers/media/dvb/frontends/cxd2820r_core.c
+index 3bba37d..3e8d5a3 100644
+--- a/drivers/media/dvb/frontends/cxd2820r_core.c
++++ b/drivers/media/dvb/frontends/cxd2820r_core.c
+@@ -25,6 +25,10 @@ int cxd2820r_debug;
+ module_param_named(debug, cxd2820r_debug, int, 0644);
+ MODULE_PARM_DESC(debug, "Turn on/off frontend debugging (default:off).");
+ 
++int cxd2820r_snrdb;
++module_param_named(snrdb,cxd2820r_snrdb, int, 0644);
++MODULE_PARM_DESC(snrdb, "Turn on/off SNR output in dBx10 (default:off).");
++
+ /* write multiple registers */
+ static int cxd2820r_wr_regs_i2c(struct cxd2820r_priv *priv, u8 i2c, u8 reg,
+ 	u8 *val, int len)
+diff --git a/drivers/media/dvb/frontends/cxd2820r_priv.h b/drivers/media/dvb/frontends/cxd2820r_priv.h
+index 9a9822c..7038235 100644
+--- a/drivers/media/dvb/frontends/cxd2820r_priv.h
++++ b/drivers/media/dvb/frontends/cxd2820r_priv.h
+@@ -63,6 +63,7 @@ struct cxd2820r_priv {
+ /* cxd2820r_core.c */
+ 
+ extern int cxd2820r_debug;
++extern int cxd2820r_snrdb;
+ 
+ int cxd2820r_gpio(struct dvb_frontend *fe);
+ 
+diff --git a/drivers/media/dvb/frontends/cxd2820r_t.c b/drivers/media/dvb/frontends/cxd2820r_t.c
+index 1a02623..d8fbdcf 100644
+--- a/drivers/media/dvb/frontends/cxd2820r_t.c
++++ b/drivers/media/dvb/frontends/cxd2820r_t.c
+@@ -309,7 +309,6 @@ int cxd2820r_read_signal_strength_t(struct dvb_frontend *fe,
+ 
+ 	/* scale value to 0x0000-0xffff from 0x0000-0x0fff */
+ 	*strength = tmp * 0xffff / 0x0fff;
+-
+ 	return ret;
+ error:
+ 	dbg("%s: failed:%d", __func__, ret);
+@@ -321,7 +320,7 @@ int cxd2820r_read_snr_t(struct dvb_frontend *fe, u16 *snr)
+ 	struct cxd2820r_priv *priv = fe->demodulator_priv;
+ 	int ret;
+ 	u8 buf[2];
+-	u16 tmp;
++	u16 tmp, max_snr;
+ 	/* report SNR in dB * 10 */
+ 
+ 	ret = cxd2820r_rd_regs(priv, 0x00028, buf, sizeof(buf));
+@@ -336,8 +335,32 @@ int cxd2820r_read_snr_t(struct dvb_frontend *fe, u16 *snr)
+ 	else
+ 		*snr = 0;
+ 
+-	dbg("%s: dBx10=%d val=%04x", __func__, *snr, tmp);
++	if (cxd2820r_snrdb)
++		goto db_out;
++
++	/* scale SNR to full range */
++	ret = cxd2820r_rd_regs(priv, 0x0002f, buf, 1);
++	if (ret)
++		goto error;
+ 
++	switch ((buf[0] >> 6) & 0x03) {
++	case 0: /* QPSK */
++		max_snr = 230;
++		break;
++	case 1: /* QAM_16 */
++		max_snr = 260;
++		break;
++	case 2: /* QAM_64 */
++	default:
++		max_snr = 290;
++		break;
++	}
++
++	*snr = (*snr >= max_snr) ? 0xffff : (0xffff / max_snr) * *snr;
++	dbg("%s: SNR=%d val=%04x", __func__, *snr, tmp);
++	return ret;
++db_out:
++	dbg("%s: dBx10=%d val=%04x", __func__, *snr, tmp);
+ 	return ret;
+ error:
+ 	dbg("%s: failed:%d", __func__, ret);
+diff --git a/drivers/media/dvb/frontends/cxd2820r_t2.c b/drivers/media/dvb/frontends/cxd2820r_t2.c
+index 3a5759e..10f99e55 100644
+--- a/drivers/media/dvb/frontends/cxd2820r_t2.c
++++ b/drivers/media/dvb/frontends/cxd2820r_t2.c
+@@ -343,7 +343,6 @@ int cxd2820r_read_signal_strength_t2(struct dvb_frontend *fe,
+ 
+ 	/* scale value to 0x0000-0xffff from 0x0000-0x0fff */
+ 	*strength = tmp * 0xffff / 0x0fff;
+-
+ 	return ret;
+ error:
+ 	dbg("%s: failed:%d", __func__, ret);
+@@ -355,7 +354,7 @@ int cxd2820r_read_snr_t2(struct dvb_frontend *fe, u16 *snr)
+ 	struct cxd2820r_priv *priv = fe->demodulator_priv;
+ 	int ret;
+ 	u8 buf[2];
+-	u16 tmp;
++	u16 tmp, max_snr;
+ 	/* report SNR in dB * 10 */
+ 
+ 	ret = cxd2820r_rd_regs(priv, 0x02028, buf, sizeof(buf));
+@@ -370,8 +369,36 @@ int cxd2820r_read_snr_t2(struct dvb_frontend *fe, u16 *snr)
+ 	else
+ 		*snr = 0;
+ 
+-	dbg("%s: dBx10=%d val=%04x", __func__, *snr, tmp);
++	if (cxd2820r_snrdb)
++		goto db_out;
++
++	/* scale SNR to full range */
++	ret = cxd2820r_rd_regs(priv, 0x0205d, buf, 1);
++	if (ret)
++		goto error;
+ 
++	switch (buf[0] & 0x07) {
++	/* FIXME: check the values */
++	case 0: /* QPSK */
++		max_snr = 170;
++		break;
++	case 1: /* QAM_16 */
++		max_snr = 200;
++		break;
++	case 2: /* QAM_64 */
++		max_snr = 230;
++		break;
++	case 3: /* QAM_256 */
++	default:
++		max_snr = 260;
++		break;
++	}
++
++	*snr = (*snr >= max_snr) ? 0xffff : (0xffff / max_snr) * *snr;
++	dbg("%s: SNR=%d val=%04x", __func__, *snr, tmp);
++	return ret;
++db_out:
++	dbg("%s: dBx10=%d val=%04x", __func__, *snr, tmp);
+ 	return ret;
+ error:
+ 	dbg("%s: failed:%d", __func__, ret);
+-- 
+1.7.5.4
+

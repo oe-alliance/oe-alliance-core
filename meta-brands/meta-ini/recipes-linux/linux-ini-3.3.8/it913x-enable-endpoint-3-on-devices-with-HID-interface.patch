@@ -1,0 +1,43 @@
+From 99f04e839a96cf100b73c5e385549fb9fa2e67c7 Mon Sep 17 00:00:00 2001
+From: macnuts <macnuts@gmx.com>
+Date: Thu, 2 Jan 2014 12:50:07 +0100
+Subject: [PATCH] it913x [BUG] Enable endpoint 3 on devices with HID interface
+
+On some USB controllers when endpoint 3 (used by HID) is not enabled
+this causes a USB reset.
+
+The original patch by Malcolm Priestley <tvboxspy@gmail.com>
+at https://linuxtv.org/patch/15074/ for usb-dvb-v2.
+
+Backported to usb-dvb by macnuts.
+Many thanks to athiok for guidance.
+
+diff --git a/drivers/media/dvb/dvb-usb/it913x.c b/drivers/media/dvb/dvb-usb/it913x.c
+index bd2cac0..2d6ef3c 100644
+--- a/drivers/media/dvb/dvb-usb/it913x.c
++++ b/drivers/media/dvb/dvb-usb/it913x.c
+@@ -768,13 +768,19 @@ static int it913x_frontend_attach(struct dvb_usb_adapter *adap)
+		ret = it913x_wr_reg(udev, DEV_0_DMOD, MP2IF2_SW_RST, 0x1);
+		ret = it913x_wr_reg(udev, DEV_0, EP0_TX_EN, 0x0f);
+		ret = it913x_wr_reg(udev, DEV_0, EP0_TX_NAK, 0x1b);
+-		ret = it913x_wr_reg(udev, DEV_0, EP0_TX_EN, 0x2f);
++		if (adap->dev->props.rc.core.rc_codes == NULL) /* Enable endpoint 3 */
++			ret = it913x_wr_reg(udev, DEV_0, EP0_TX_EN, 0x3f);
++		else
++			ret = it913x_wr_reg(udev, DEV_0, EP0_TX_EN, 0x2f);
+		ret = it913x_wr_reg(udev, DEV_0, EP4_TX_LEN_LSB,
+					ep_size & 0xff);
+		ret = it913x_wr_reg(udev, DEV_0, EP4_TX_LEN_MSB, ep_size >> 8);
+		ret = it913x_wr_reg(udev, DEV_0, EP4_MAX_PKT, pkt_size);
+	} else if (adap->id == 1 && adap->fe_adap[0].fe) {
+-		ret = it913x_wr_reg(udev, DEV_0, EP0_TX_EN, 0x6f);
++		if (adap->dev->props.rc.core.rc_codes == NULL)
++			ret = it913x_wr_reg(udev, DEV_0, EP0_TX_EN, 0x7f);
++		else
++			ret = it913x_wr_reg(udev, DEV_0, EP0_TX_EN, 0x6f);
+		ret = it913x_wr_reg(udev, DEV_0, EP5_TX_LEN_LSB,
+					ep_size & 0xff);
+		ret = it913x_wr_reg(udev, DEV_0, EP5_TX_LEN_MSB, ep_size >> 8);
+-- 
+1.8.5.2
+
