@@ -156,7 +156,7 @@ inherit autotools-brokensep gitpkgv pkgconfig pythonnative
 
 PV = "3.0+git${SRCPV}"
 PKGV = "3.0+git${GITPKGV}"
-PR = "r6"
+PR = "r7"
 
 SRC_URI = "${ENIGMA2_URI}"
 
@@ -282,7 +282,7 @@ do_install_append() {
     ln -s /usr/lib/enigma2/python/Components/PackageInfo.pyo ${D}/usr/lib/enigma2/python/Components/DreamboxInfoHandler.pyo
     install -d ${D}${sysconfdir}
     git --git-dir=${S}/.git log --since=10.weeks --pretty=format:"%s" > ${D}${sysconfdir}/e2-git.log
-    git --git-dir=${OE-ALLIANCE_BASE}/../.git log --since=10.weeks --pretty=format:"%s" > ${D}${sysconfdir}/oe-git.log
+    git --git-dir=${OE-ALLIANCE_BASE}/.git log --since=10.weeks --pretty=format:"%s" > ${D}${sysconfdir}/oe-git.log
 }
 
 python populate_packages_prepend() {
