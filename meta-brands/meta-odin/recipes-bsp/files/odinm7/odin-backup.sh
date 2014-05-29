@@ -1,4 +1,5 @@
 #!/bin/sh
+ubiattach /dev/ubi_ctrl -m 2
 if [ -e /dev/ubi1_0 ]; then
 	if  [ ! -e /media/backup ]; then
 		mkdir /media/backup
