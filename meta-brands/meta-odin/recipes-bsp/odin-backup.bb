@@ -6,7 +6,7 @@ LICENSE = "GPLv2"
 require conf/license/license-gplv2.inc
 
 PV = "1.0"
-PR = "r4"
+PR = "r5"
 
 SRC_URI = "file://odin-backup.sh \
            "
