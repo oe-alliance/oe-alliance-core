@@ -16,6 +16,7 @@ MACHINE_EXTRA_RRECOMMENDS = " \
     gst-plugin-dtsdownmix \
     ntfs-3g \
     kernel-module-cifs \
+    kernel-module-autofs4 \	
     kernel-module-hmac \
     kernel-module-md4 \
     kernel-module-ecb \
