@@ -1,0 +1,7 @@
+KV = "3.6.0"
+SRCDATE = "20140530"
+
+require odin-dvb-modules.inc
+
+SRC_URI[md5sum] = "82051c3de31d1109774618b4eaa754e5"
+SRC_URI[sha256sum] = "74ba437a96475434e2588780a2b8e1e261b1a1578ab3844b5c8106b5b69dae32"
