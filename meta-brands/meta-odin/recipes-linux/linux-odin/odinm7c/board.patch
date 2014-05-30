@@ -1,0 +1,29 @@
+--- a/arch/mips/brcmstb/board.c	2012-10-14 00:47:18.000000000 +0900
++++ b/arch/mips/brcmstb/board.c	2013-05-21 16:26:28.000000000 +0900
+@@ -23,6 +23,7 @@
+ #include <linux/bitops.h>
+ #include <linux/bmoca.h>
+ #include <linux/mtd/partitions.h>
++#include <mtd/mtd-abi.h>
+ 
+ #include <asm/addrspace.h>
+ #include <asm/page.h>
+@@ -765,8 +766,17 @@
+ 		.offset = 0,
+ 		.size = MTDPART_SIZ_FULL,
+ 	}, {
+-		.name = "kernel",
++		.name = "os1",
+ 		.offset = 0,
++		.size = 256 * 1024 * 1024,
++		.mask_flags = MTD_WRITEABLE,
++	}, {
++		.name = "backup",
++		.offset = 256 * 1024 * 1024,
++		.size = 8 * 1024 * 1024,
++	}, {
++		.name = "kernel",
++		.offset = MTDPART_OFS_APPEND,
+ 		.size = 6 * 1024 * 1024,
+ 	}, {
+ 		.name = "rootfs",
