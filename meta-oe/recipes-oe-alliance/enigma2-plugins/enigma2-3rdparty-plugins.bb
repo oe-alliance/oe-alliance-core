@@ -9,7 +9,7 @@ inherit gitpkgv deploy
 SRCREV = "${AUTOREV}"
 PV = "2.1+gitr${SRCPV}"
 PKGV = "2.1+gitr${GITPKGV}"
-PR = "r21"
+PR = "r22"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -131,6 +131,10 @@ THIRDPARTY_MACHINE_PLUGINS_et10000 = " \
      "
 THIRDPARTY_MACHINE_PLUGINS_e3hd = " \
     enigma2-plugin-extensions-hbbtv_4.1_E3HD_mips32el.ipk \
+    "
+	
+THIRDPARTY_MACHINE_PLUGINS_e3hd = " \
+    enigma2-plugin-extensions-hbbtv_4.1_ODIN_mips32el.ipk \
     "
 
 do_install() {
