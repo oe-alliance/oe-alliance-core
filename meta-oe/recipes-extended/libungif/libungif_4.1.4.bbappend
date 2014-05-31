@@ -1,0 +1,1 @@
+DEPENDS = "libxau libxcb"
