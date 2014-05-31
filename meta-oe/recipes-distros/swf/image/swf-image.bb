@@ -18,8 +18,9 @@ IMAGE_INSTALL = " \
     swf-bootlogo \
     swf-spinner \
     swf-version-info \
-    enigma2-plugin-settings-default-swf \
     enigma2-plugin-extensions-bmediacenter-swf \
+    enigma2-plugin-picons-default-swf \
+    enigma2-plugin-settings-default-swf \
     ${ENIGMA2_PLUGINS} \
     ${ENIGMA2_INI_PLUGINS} \
     ${@base_contains("MACHINE", "inihdx", "${ENIGMA2_USB_DRV}" , "", d)} \
@@ -30,9 +31,9 @@ IMAGE_INSTALL = " \
     ushare \
     ofgwrite \
     libshowiframe \
-    packagegroup-smbfs \
-    packagegroup-smbfs-client \
-    neutrino \
+    task-base-smbfs-client \
+    task-base-smbfs \
+    task-base-nfs \
     mc \
     swf-base \
     "
@@ -110,7 +111,7 @@ ROOTFS_POSTPROCESS_COMMAND += "rootfs_postprocess; "
 
 export NFO = '${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.nfo'
 
-do_generate_nfo() {
+generate_nfo() {
     VER=`grep Version: "${IMAGE_ROOTFS}/var/lib/opkg/info/enigma2.control" | cut -b 10-26`
     echo "Enigma2: ${VER}" > ${NFO}
     echo "Machine: ${MACHINE}" >> ${NFO}
@@ -126,4 +127,6 @@ do_generate_nfo() {
     echo "MD5: ${MD5SUM}" >> ${NFO}
 }
 
-addtask generate_nfo after do_rootfs
+do_rootfs_append() {
+    generate_nfo
+}
