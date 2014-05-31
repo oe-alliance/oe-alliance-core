@@ -44,7 +44,7 @@ KERNEL_OUTPUT = "${KERNEL_IMAGETYPE}"
 KERNEL_CONSOLE = "ttyS0,115200n8"
 
 
-MACHINE_FEATURES += "3dtv alsa hdmicec switchoff wifi ci bootsplash boxmodel audioeffect"
+MACHINE_FEATURES += "3dtv alsa hdmicec switchoff wifi bootsplash boxmodel audioeffect"
 
 BOOTLOGO_FILENAME = "splash.bin"
 

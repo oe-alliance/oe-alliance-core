@@ -1,0 +1,3 @@
+#! /bin/sh 
+
+echo "gbipbox" > /proc/stb/info/gbmodel

@@ -194,11 +194,12 @@ SRC_URI_append_gb800seplus = " \
 SRC_URI_append_gb800ue = " \
     file://gb800-evfd.patch \
     "
-
 SRC_URI_append_gbquadplus = " \
     file://gb800-evfd.patch \
     "
-
+SRC_URI_append_gbipbox = " \
+    file://gb800-evfd.patch \
+    "
 
 S = "${WORKDIR}/git"
 

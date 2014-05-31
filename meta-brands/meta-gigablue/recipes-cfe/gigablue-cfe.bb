@@ -12,6 +12,7 @@ PR = "r28"
 
 S = "${WORKDIR}"
 
+SRC_URI_gbipbox = " file://burn.bat"
 SRC_URI_gb800se = " file://burn.bat"
 SRC_URI_gb800solo = " file://burn.bat"
 SRC_URI_gb800ue = " file://gb800ue/lcdwaitkey.bin file://gb800ue/lcdwarning.bin"
