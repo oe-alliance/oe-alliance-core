@@ -1,13 +1,14 @@
 SUMMARY = "Linux kernel for ${MACHINE}"
 SECTION = "kernel"
 LICENSE = "GPLv2"
+PR = "r1"
 
 KERNEL_RELEASE = "3.14.2"
 
 inherit machine_kernel_pr
 
-SRC_URI[md5sum] = "6b21ecf8f196703b9f9b27812991401c"
-SRC_URI[sha256sum] = "9b9b54ef83c4f475fd663001ea3d73ed71d029e35165dc16d9fd3f83ae69165c"
+SRC_URI[md5sum] = "0973ea076765bcbc8435a2fcf02ae520"
+SRC_URI[sha256sum] = "59df1f4ecacacef11298b62711fc307cfe001ab071ef0faa0a5da5d1c21700f8"
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
