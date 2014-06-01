@@ -1,6 +1,6 @@
 SECTION = "console/network"
 LICENSE = "GPLv3"
-DEPENDS = "readline virtual/libiconv talloc"
+DEPENDS = "readline virtual/libiconv talloc attr"
 
 SRC_URI = "http://samba.org/samba/ftp/stable/samba-${PV}.tar.gz \
            file://volatiles.03_samba \
