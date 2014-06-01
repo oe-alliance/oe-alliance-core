@@ -3,14 +3,14 @@ HOMEPAGE = "http://djmount.sourceforge.net/"
 LICENSE = "GPLv2+"
 DEPENDS = "libupnp fuse"
 RDEPENDS_${PN} = "fuse"
-PR = "r4"
+PR = "r5"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=eb723b61539feef013de476e68b5c50a"
 
 INITSCRIPT_NAME = "djmount"
 INITSCRIPT_PARAMS = "defaults"
 
-inherit autotools update-rc.d
+inherit autotools-brokensep update-rc.d
 
 EXTRA_OECONF = "--with-external-libupnp --with-fuse-prefix='${STAGING_LIBDIR}'"
 
