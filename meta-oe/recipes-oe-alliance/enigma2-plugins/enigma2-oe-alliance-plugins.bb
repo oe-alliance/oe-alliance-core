@@ -55,6 +55,7 @@ DEPENDS = "\
     wvdial \
     wvstreams \
     usbutils \
+    hostap-daemon bridge-utils \
     "
 
 DESCRIPTION_enigma2-plugin-systemplugins-audioeffect = "Audio Effect setup"
@@ -113,7 +114,7 @@ inherit autotools-brokensep gitpkgv pythonnative
 SRCREV = "${AUTOREV}"
 PV = "2.0+git${SRCPV}"
 PKGV = "2.0+git${GITPKGV}"
-PR = "r9"
+PR = "r11"
 
 SRC_URI="git://github.com/oe-alliance/oe-alliance-plugins.git;protocol=git"
 
