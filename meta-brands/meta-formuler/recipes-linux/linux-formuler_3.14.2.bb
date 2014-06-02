@@ -1,7 +1,7 @@
 SUMMARY = "Linux kernel for ${MACHINE}"
 SECTION = "kernel"
 LICENSE = "GPLv2"
-PR = "r1"
+PR = "r2"
 
 KERNEL_RELEASE = "3.14.2"
 
@@ -36,6 +36,7 @@ SRC_URI += "http://downloads.formuler.info/linux-${PV}.tar.gz \
 	file://it913x-switch-off-PID-filter-by-default.patch \
 	file://mxl5007t-add-no_probe-and-no_reset-parameters.patch \
 	file://tda18271-advertise-supported-delsys.patch \
+	file://timedate.patch \
 	"
 
 S = "${WORKDIR}/linux-${PV}"
