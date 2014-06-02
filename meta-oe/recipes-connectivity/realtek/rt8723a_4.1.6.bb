@@ -2,20 +2,20 @@ SUMMARY = "Realtek 8723A v1.0"
 HOMEPAGE = "http://www.realtek.com.tw"
 SECTION = "kernel/modules"
 LICENSE = "GPLv2"
-LIC_FILES_CHKSUM = "file://Makefile;md5=b60d4f09fa0f027334487c4cb2fd8117"
+LIC_FILES_CHKSUM = "file://Makefile;md5=b5b238c45bb0acc6b381f229a69d6b41"
 
 inherit module
 
-PR = "r11"
+PR = "r14"
 
 MACHINE_KERNEL_PR_append = ".0"
 
-SRC_URI = "http://code-ini.com/software/mirror/rtl8723A_WiFi_linux_v4.1.6_7336.20130431.tar.gz"
+SRC_URI = "http://code-ini.com/software/mirror/rtl8723A_WiFi_linux_v4.1.6_7336.20140602.tar.gz"
 
 inherit module
 
 EXTRA_OEMAKE = "LINUX_SRC=${STAGING_KERNEL_DIR}"
-S = "${WORKDIR}/rtl8723A_WiFi_linux_v4.1.6_7336.20130431"
+S = "${WORKDIR}/rtl8723A_WiFi_linux_v4.1.6_7336.20140602"
 
 do_install() {
     install -d ${D}/lib/modules/${KERNEL_VERSION}/kernel/drivers/net/wireless
@@ -23,6 +23,6 @@ do_install() {
 
 }
 
-SRC_URI[md5sum] = "6c96ed8f0c3c5e630c21eb8016ee857d"
-SRC_URI[sha256sum] = "5b657a1a49f0e55a81ba36d179ee30f533983ab94bc4e48c87136c31c0b9029f"
+SRC_URI[md5sum] = "a2370c98b521c779fd526abeb9c1b842"
+SRC_URI[sha256sum] = "12fef9125e180b1da348ed3988d51a405d75c06752e0e4508541f1e6ff252534"
 
