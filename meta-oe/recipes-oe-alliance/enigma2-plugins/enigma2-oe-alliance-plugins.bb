@@ -37,8 +37,8 @@ PROVIDES += " \
     enigma2-plugin-extensions-fempa \
     enigma2-plugin-extensions-lcd4linux \
     enigma2-plugin-extensions-remotechannelstreamconverter \
-    enigma2-plugin-systemplugins-wirelessaccesspoint \
-    "
+    ${@base_contains("MACHINE_FEATURES", "legacykernel", "" , "enigma2-plugin-systemplugins-wirelessaccesspoint", d)} \
+     "
 
 DEPENDS = "\
     ${@base_contains("MACHINE_FEATURES", "blindscan-dvbc", "virtual/blindscan-dvbc" , "", d)} \
@@ -55,7 +55,7 @@ DEPENDS = "\
     wvdial \
     wvstreams \
     usbutils \
-    hostap-daemon bridge-utils \
+    ${@base_contains("MACHINE_FEATURES", "legacykernel", "" , "hostap-daemon bridge-utils", d)} \	
     "
 
 DESCRIPTION_enigma2-plugin-systemplugins-audioeffect = "Audio Effect setup"
