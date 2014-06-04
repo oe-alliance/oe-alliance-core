@@ -23,6 +23,7 @@ RRECOMMENDS_${PN} = "\
     enigma2-plugin-extensions-imdb \
     enigma2-plugin-extensions-addonopendroid \
     enigma2-plugin-extensions-autosettings \
+    enigma2-plugin-extensions-bmediacenter \
     enigma2-plugin-extensions-epgsearch \
     enigma2-plugin-extensions-dvdplayer \
     enigma2-plugin-extensions-volume-adjust \
