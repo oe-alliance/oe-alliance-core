@@ -1,0 +1,61 @@
+From 00994c786378b977fa4e28002d2c615b761f8009 Mon Sep 17 00:00:00 2001
+From: Andreas Monzner <andreas.monzner@dream-property.net>
+Date: Thu, 5 Jun 2014 01:46:59 +0200
+Subject: [PATCH] linuxtv-api: DMM drivers are now ready for linux tv api >
+ 5.4 to correctly handle autoinversion and zigzag on tune we
+ need a small change / backport (we only use the propert
+ cache now)
+
+---
+ drivers/media/dvb/dvb-core/dvb_frontend.c |   11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/media/dvb/dvb-core/dvb_frontend.c b/drivers/media/dvb/dvb-core/dvb_frontend.c
+index 05514a5..685bc8a 100644
+--- a/drivers/media/dvb/dvb-core/dvb_frontend.c
++++ b/drivers/media/dvb/dvb-core/dvb_frontend.c
+@@ -276,6 +276,7 @@ static int dvb_frontend_swzigzag_autotune(struct dvb_frontend *fe, int check_wra
+ 	int ready = 0;
+ 	int fe_set_err = 0;
+ 	struct dvb_frontend_private *fepriv = fe->frontend_priv;
++	struct dtv_frontend_properties *c = &fe->dtv_property_cache, tmp;
+ 	int original_inversion = fepriv->parameters_in.inversion;
+ 	u32 original_frequency = fepriv->parameters_in.frequency;
+ 
+@@ -346,10 +347,13 @@ static int dvb_frontend_swzigzag_autotune(struct dvb_frontend *fe, int check_wra
+ 		__func__, fepriv->lnb_drift, fepriv->inversion,
+ 		fepriv->auto_step, fepriv->auto_sub_step, fepriv->started_auto_step);
+ 
++	tmp = *c;
++
+ 	/* set the frontend itself */
+ 	fepriv->parameters_in.frequency += fepriv->lnb_drift;
++	c->frequency = fepriv->parameters_in.frequency;
+ 	if (autoinversion)
+-		fepriv->parameters_in.inversion = fepriv->inversion;
++		c->inversion = fepriv->parameters_in.inversion = fepriv->inversion;
+ 	if (fe->ops.set_frontend)
+ 		fe_set_err = fe->ops.set_frontend(fe, &fepriv->parameters_in);
+ 	fepriv->parameters_out = fepriv->parameters_in;
+@@ -358,6 +362,8 @@ static int dvb_frontend_swzigzag_autotune(struct dvb_frontend *fe, int check_wra
+ 		return fe_set_err;
+ 	}
+ 
++	*c = tmp;
++
+ 	fepriv->parameters_in.frequency = original_frequency;
+ 	fepriv->parameters_in.inversion = original_inversion;
+ 
+@@ -415,7 +421,8 @@ static void dvb_frontend_swzigzag(struct dvb_frontend *fe)
+ 		/* if we're tuned, then we have determined the correct inversion */
+ 		if ((!(fe->ops.info.caps & FE_CAN_INVERSION_AUTO)) &&
+ 		    (fepriv->parameters_in.inversion == INVERSION_AUTO)) {
+-			fepriv->parameters_in.inversion = fepriv->inversion;
++			struct dtv_frontend_properties *c = &fe->dtv_property_cache;
++			c->inversion = fepriv->parameters_in.inversion = fepriv->inversion;
+ 		}
+ 		return;
+ 	}
+-- 
+1.7.10.4
+
