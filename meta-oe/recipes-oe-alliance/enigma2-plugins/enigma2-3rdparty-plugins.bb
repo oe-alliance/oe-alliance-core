@@ -9,7 +9,7 @@ inherit gitpkgv deploy
 SRCREV = "${AUTOREV}"
 PV = "2.1+gitr${SRCPV}"
 PKGV = "2.1+gitr${GITPKGV}"
-PR = "r29"
+PR = "r30"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -41,7 +41,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-focusonline_1.0rc3_mips32el.ipk \
     enigma2-plugin-extensions-gmailreader-oe2.0_1.3_all.ipk \
     enigma2-plugin-extensions-googlenewsreader_1.0_mips32el.ipk \
-    enigma2-plugin-extensions-hetweer_2.5_mips32el.ipk \
+    enigma2-plugin-extensions-hetweer_2.6_mips32el.ipk \
     enigma2-plugin-extensions-hdmitest_0.4_mipsel.ipk \
     enigma2-plugin-extensions-kicker_3.3rc5_mips32el.ipk \
     enigma2-plugin-extensions-livefootball-oe2.0_4.9_all.ipk \
