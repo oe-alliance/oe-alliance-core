@@ -6,12 +6,11 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=4d92cd373abda3937c2bc47fbc49d
 ALLOW_EMPTY_${PN} = "1"
 
 PV = "1.0"
-PR = "r5"
+PR = "r6"
 
 inherit packagegroup
 
 RRECOMMENDS_${PN} = "\
-    opendrox-3rdparty-plugins \
     enigma2-skins \
     enigma2-pliplugins \
 	cdfs \
@@ -19,4 +18,5 @@ RRECOMMENDS_${PN} = "\
     enigma2-plugin-extensions-xmltvimport \
     enigma2-plugin-systemplugins-crossepg \
     enigma2-plugin-skins-opendrox \
+    enigma2-plugin-extensions-bmediacenter \
     "

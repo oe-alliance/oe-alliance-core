@@ -7,11 +7,11 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PV = "1.0"
-PR = "r14"
+PR = "r17"
 
 inherit packagegroup
 
-DEPENDS = "enigma2-pliplugins opendrox-feeds opendrox-3rdparty-plugins"
+DEPENDS = "enigma2-pliplugins opendrox-feeds"
 
 RRECOMMENDS_${PN} = "\
     opendrox-version-info \
@@ -22,8 +22,9 @@ RRECOMMENDS_${PN} = "\
     enigma2-plugin-extensions-autotimer \
     enigma2-plugin-extensions-imdb \
     enigma2-plugin-extensions-addonopendroid \
+    enigma2-plugin-extensions-autosettings \
+    enigma2-plugin-extensions-bmediacenter \
     enigma2-plugin-extensions-epgsearch \
-    enigma2-plugin-extensions-mediaplayer \
     enigma2-plugin-extensions-dvdplayer \
     enigma2-plugin-extensions-volume-adjust \
     enigma2-plugin-systemplugins-videotune \
