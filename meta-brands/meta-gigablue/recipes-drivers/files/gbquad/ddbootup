@@ -2,7 +2,7 @@
 
 echo "gbquad" > /proc/stb/info/gbmodel
 
-#DESCRIPTION=This will set ETH0 and USB to Thread 2 and add Networktweaks
+#DESCRIPTION=This will set ETH0 and USB to Thread 2
 echo 000002 > /proc/irq/4/smp_affinity # BVNF0 
 #echo 000002 > /proc/irq/8/smp_affinity # CLKGEN
 echo 000002 > /proc/irq/25/smp_affinity # eth0
@@ -25,69 +25,7 @@ echo 000002 > /proc/irq/75/smp_affinity # ehci_hcd:usb4
 echo 000002 > /proc/irq/76/smp_affinity # ohci_hcd:usb7
 echo 000002 > /proc/irq/77/smp_affinity # ohci_hcd:usb8
 #echo 000002 > /proc/irq/80/smp_affinity # XPT_MSG
-#echo 000002 > /proc/irq/77/smp_affinity # ohci_hcd:usb8
 ulimit -n 4096
 ulimit -s 16384
-ifconfig eth0 txqueuelen 50000
-ifconfig eth0 -promisc
-ethtool -K eth0 gro off
-ethtool -K eth0 gso off
-echo 1024 65000 > /proc/sys/net/ipv4/ip_local_port_range
-echo 500 512000 64 2048 > /proc/sys/kernel/sem
-echo 268435456 > /proc/sys/kernel/shmmax
-echo 2048 > /proc/sys/kernel/msgmni
-echo 64000 >/proc/sys/kernel/msgmax
-sysctl -w fs.file-max=209708
-sysctl -w vm.swappiness=10
-sysctl -w vm.dirty_ratio=60
-sysctl -w vm.dirty_background_ratio=2 
-sysctl -w vm.vfs_cache_pressure=50
-sysctl -w vm.mmap_min_addr=4096
-sysctl -w vm.overcommit_ratio=0
-sysctl -w vm.overcommit_memory=0
-sysctl -w net.core.rmem_max=16777216
-sysctl -w net.core.wmem_max=16777216
-sysctl -w net.core.rmem_default=131072
-sysctl -w net.core.wmem_default=131072
-sysctl -w net.core.somaxconn=32768
-sysctl -w net.core.optmem_max=65536
-sysctl -w net.core.hot_list_length=1024
-sysctl -w net.ipv4.tcp_rmem='8192 87380 16777216'
-sysctl -w net.ipv4.tcp_wmem='8192 65536 16777216'
-sysctl -w net.ipv4.tcp_mem='65536 131072 262144'
-sysctl -w net.ipv4.udp_mem='65536 131072 262144' 
-sysctl -w net.ipv4.tcp_max_orphans=16384
-sysctl -w net.ipv4.tcp_orphan_retries=0
-sysctl -w net.ipv4.ipfrag_high_thresh=512000
-sysctl -w net.ipv4.ipfrag_low_thresh=446464
-sysctl -w net.ipv4.tcp_rfc1337=1
-sysctl -w net.ipv4.ip_no_pmtu_disc=0
-sysctl -w net.ipv4.tcp_sack=1
-sysctl -w net.ipv4.tcp_dsack=1
-sysctl -w net.ipv4.tcp_fack=1
-sysctl -w net.ipv4.tcp_window_scaling=1
-sysctl -w net.ipv4.tcp_timestamps=1
-sysctl -w net.ipv4.tcp_ecn=0
-sysctl -w net.ipv4.tcp_congestion_control=cubic
-sysctl -w net.ipv4.ip_forward=0
-sysctl -w net.ipv4.tcp_no_metrics_save=1
-sysctl -w net.ipv4.conf.all.forwarding=0
-sysctl -w net.ipv4.conf.default.forwarding=0
-sysctl -w net.ipv4.conf.all.send_redirects=0
-sysctl -w net.ipv4.conf.default.send_redirects=0
-sysctl -w net.ipv4.conf.all.accept_source_route=0
-sysctl -w net.ipv4.conf.default.accept_source_route=0
-sysctl -w net.ipv4.conf.all.accept_redirects=0
-sysctl -w net.ipv4.conf.default.accept_redirects=0
-sysctl -w sunrpc.tcp_slot_table_entries=32
-sysctl -w sunrpc.udp_slot_table_entries=32
-sysctl -w net.unix.max_dgram_qlen=50
-#sysctl -w net.ipv4.tcp_frto=2
-#sysctl -w net.ipv4.tcp_frto_response=2
-#sysctl -w net.core.netdev_max_backlog=250000
-#sysctl -w net.ipv4.tcp_moderate_rcvbuf=0
-#sysctl -w net.ipv4.tcp_low_latency=0
-sysctl -w net.ipv4.route.flush=1
 echo ""
 sleep 1
-

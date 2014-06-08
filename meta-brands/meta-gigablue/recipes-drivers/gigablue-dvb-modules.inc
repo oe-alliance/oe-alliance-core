@@ -4,7 +4,7 @@ PRIORITY = "required"
 LICENSE = "CLOSED"
 
 PV = "${KV}+${SRCDATE}"
-PR = "r14"
+PR = "r15"
 
 SRC_URI_append = " file://ddbootup"
 
