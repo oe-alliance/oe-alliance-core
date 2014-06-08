@@ -156,7 +156,7 @@ inherit autotools-brokensep gitpkgv pkgconfig pythonnative
 
 PV = "3.0+git${SRCPV}"
 PKGV = "3.0+git${GITPKGV}"
-PR = "r7"
+PR = "r8"
 
 SRC_URI = "${ENIGMA2_URI}"
 
