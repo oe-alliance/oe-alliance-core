@@ -1,1 +1,1 @@
-DEPENDS = "libxau libxcb"
+DEPENDS = "libxau libxcb libsm"
