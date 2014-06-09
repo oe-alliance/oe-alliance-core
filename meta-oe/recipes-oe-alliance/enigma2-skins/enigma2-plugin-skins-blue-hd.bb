@@ -1,4 +1,4 @@
-SUMMARY = "Blue HD skin for Enigma2"
+SUMMARY = "Blue HD by rossi2000 and simonsez"
 MAINTAINER = "rossi2000"
 
 require conf/license/license-gplv2.inc
@@ -8,7 +8,7 @@ inherit gitpkgv allarch
 SRCREV = "${AUTOREV}"
 PV = "3.0+git${SRCPV}"
 PKGV = "3.0+git${GITPKGV}"
-PR = "r1"
+PR = "r2"
 
 SRC_URI = "git://github.com/oe-alliance/oe-alliance-skins.git;protocol=git"
 
