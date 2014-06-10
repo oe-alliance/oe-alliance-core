@@ -9,7 +9,7 @@ inherit gitpkgv deploy
 SRCREV = "${AUTOREV}"
 PV = "2.1+gitr${SRCPV}"
 PKGV = "2.1+gitr${GITPKGV}"
-PR = "r31"
+PR = "r32"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -29,7 +29,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-dvb-sundtek.controlcenter_1.0-20110318-r2_mipsel.ipk \
     enigma2-plugin-extensions-atmolightd_0.7-pre22_all.ipk \
     enigma2-plugin-extensions-autobouquets-e2_201310201900-r2_mips32el.ipk \
-    enigma2-plugin-extensions-bildonline_3.1_mips32el.ipk \
+    enigma2-plugin-extensions-bildonline_3.1rc1_mips32el.ipk \
     enigma2-plugin-extensions-bluray_1.4rc2_mips32el.ipk \
     enigma2-plugin-extensions-boblight-enigma2_0.8r6_mips32el.ipk \
     enigma2-plugin-extensions-camofs_8.55_all.ipk \
@@ -50,12 +50,12 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-msnwetter_0.6rc3_mips32el.ipk \
     enigma2-plugin-extensions-mtv_0.1_mips32el.ipk \
     enigma2-plugin-extensions-muzutv_1.5rc2_mips32el.ipk \
-    enigma2-plugin-extensions-moviebrowser_3.4rc9_mips32el.ipk \
+    enigma2-plugin-extensions-moviebrowser_3.4rc10_mips32el.ipk \
     enigma2-plugin-extensions-mp3browser_1.8rc6_mips32el.ipk \
     enigma2-plugin-extensions-navibar_1.1.1_all.ipk \
     enigma2-plugin-extensions-opkg-tools_1.3_mipsel.ipk \
     enigma2-plugin-extensions-oscamstatusview_0.5_mips32el.ipk \
-    enigma2-plugin-extensions-planerfs_6.0_all.ipk \
+    enigma2-plugin-extensions-planerfs_6.40_all.ipk \
     enigma2-plugin-extensions-pluginspanel_1.0_r01_all.ipk \
     enigma2-plugin-extensions-picturecenterfs_5.17_all.ipk \
     enigma2-plugin-extensions-radiode_0.1_mips32el.ipk \
