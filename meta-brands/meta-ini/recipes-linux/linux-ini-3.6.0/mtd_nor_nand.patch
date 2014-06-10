@@ -1,0 +1,190 @@
+diff -urN arch/mips/brcmstb.orig/board.c arch/mips/brcmstb/board.c
+--- arch/mips/brcmstb.orig/board.c	2011-01-25 04:52:47.000000000 +0900
++++ arch/mips/brcmstb/board.c	2012-02-14 21:10:26.369636608 +0900
+@@ -711,8 +711,19 @@
+ #if defined(CONFIG_BRCM_FIXED_MTD_PARTITIONS)
+ 
+ static struct mtd_partition fixed_partition_map[] = {
+-	/* name			offset		size */
+-	{ "entire_device",	0x00000000,	MTDPART_SIZ_FULL },
++	{
++		.name = "complete",
++		.offset = 0,
++		.size = MTDPART_SIZ_FULL,
++	}, {
++		.name = "kernel",
++		.offset = 0,
++		.size = 6 * 1024 * 1024,
++	}, {
++		.name = "rootfs",
++		.offset = MTDPART_OFS_APPEND,
++		.size = MTDPART_SIZ_FULL,
++	},
+ };
+ 
+ /*
+@@ -724,6 +735,76 @@
+ 	return ARRAY_SIZE(fixed_partition_map);
+ }
+ 
++#if 1 // added by STM
++static struct mtd_partition fixed_partition_map_NAND[] = {
++	{
++		.name = "complete",
++		.offset = 0,
++		.size = MTDPART_SIZ_FULL,
++	}, {
++		.name = "kernel",
++		.offset = 0,
++		.size = 6 * 1024 * 1024,
++	}, {
++		.name = "rootfs",
++		.offset = MTDPART_OFS_APPEND,
++		.size = MTDPART_SIZ_FULL,
++	},
++};
++static struct mtd_partition fixed_partition_map_NOR[] = {
++	{
++		.name   = "cfe",
++		.offset = 0x0,
++		.size   = 512*1024,
++	},
++	{
++		.name   = "splash",
++		.offset = 0x80000,
++		.size   = 0x200000,
++	},
++	{
++		.name   = "macadr",
++		.offset = 0x280000,
++		.size   = 0x80000,
++	},
++	{
++		.name   = "nvram",
++		.offset = 0x300000,
++		.size   = 0x80000,
++	},
++	{
++		.name   = "bootconfig",
++		.offset = 0x380000,
++		.size   = 0x40000,
++	},
++	{
++		.name   = "facconfig",
++		.offset = 0x3C0000,
++		.size   = 0x40000,
++	},
++};
++
++#define TYPE_NOR		1
++#define TYPE_NAND		2
++#define TYPE_SPI		3
++
++int __init board_get_partition_map_type(int type, struct mtd_partition **p)
++{
++	if(type == TYPE_NAND)
++	{
++		*p = fixed_partition_map_NAND;
++		return ARRAY_SIZE(fixed_partition_map_NAND);
++	}
++	else if(type == TYPE_NOR)
++	{
++		*p = fixed_partition_map_NOR;
++		return ARRAY_SIZE(fixed_partition_map_NOR);
++	}
++
++	*p = fixed_partition_map;
++	return ARRAY_SIZE(fixed_partition_map);
++}
++#endif
+ #else /* defined(CONFIG_BRCM_FIXED_MTD_PARTITIONS) */
+ 
+ /*
+diff -urN arch/mips/brcmstb.orig/setup.c arch/mips/brcmstb/setup.c
+--- arch/mips/brcmstb.orig/setup.c	2011-01-25 04:52:47.000000000 +0900
++++ arch/mips/brcmstb/setup.c	2012-02-14 21:31:28.965667050 +0900
+@@ -663,10 +663,16 @@
+ 
+ 		memset(&res, 0, sizeof(res));
+ 		memset(&pdata, 0, sizeof(pdata));
+-
++		
++#if defined(CONFIG_BRCM_FIXED_MTD_PARTITIONS)
++		pdata.width = cs_info[cs].width;		
++		pdata.nr_parts = nr_parts = board_get_partition_map_type(TYPE_NOR, &parts);
++		pdata.parts = parts;
++#else
+ 		pdata.width = cs_info[cs].width;
+ 		pdata.nr_parts = nr_parts;
+ 		pdata.parts = parts;
++#endif
+ 
+ 		res.start = cs_info[cs].start;
+ 		res.end = cs_info[cs].start + cs_info[cs].len - 1;
+@@ -684,10 +690,16 @@
+ 	case TYPE_NAND: {
+ 		struct brcmnand_platform_data pdata;
+ 		static int nand_id;
+-
++		
++#if defined(CONFIG_BRCM_FIXED_MTD_PARTITIONS)
++		pdata.chip_select = cs;
++		pdata.nr_parts = nr_parts = board_get_partition_map_type(TYPE_NAND, &parts);
++		pdata.parts = parts;
++#else
+ 		pdata.chip_select = cs;
+ 		pdata.nr_parts = nr_parts;
+ 		pdata.parts = parts;
++#endif
+ 
+ 		pdev = platform_device_alloc("brcmnand", nand_id++);
+ 		if (!pdev ||
+@@ -713,6 +725,10 @@
+ 			spi_master_registered = 1;
+ 		}
+ 
++#if defined(CONFIG_BRCM_FIXED_MTD_PARTITIONS)
++		nr_parts = board_get_partition_map_type(TYPE_SPI, &parts);
++#endif
++
+ 		ret = brcm_setup_spi_flash(cs, bus_num, nr_parts, parts);
+ 		if (ret < 0) {
+ 			printk(KERN_WARNING
+@@ -771,6 +787,11 @@
+ 		if (strcmp(brcm_mtd_flash_type, type_names[i]) == 0)
+ 			primary_type = i;
+ 
++	/* ignore CFE variables; use hardcoded mtd config */
++	primary = 1;
++	primary_type = TYPE_NAND;
++	nandcs[1] = 1;
++
+ 	/* scan each chip select to see what (if anything) lives there */
+ 	for (i = 0; i < NUM_CS; i++) {
+ 		u32 base, size, config __maybe_unused;
+@@ -783,6 +804,11 @@
+ 		cs_info[i].start = (base >> (13 + size)) << (13 + size);
+ 		cs_info[i].len = 8192UL << (base & 0xf);
+ 
++#if 0 // added by STM
++		/* ignore what's on CS0 */
++		if (i == 0) continue;
++#endif
++
+ #ifdef BCHP_EBI_CS_CONFIG_0
+ 		config = BDEV_RD(BCHP_EBI_CS_CONFIG_0 + (i * 8));
+ 		if (config & BCHP_EBI_CS_CONFIG_0_enable_MASK)
+ 
+diff -urN arch/mips/include/asm/brcmstb.orig/brcmstb.h arch/mips/include/asm/brcmstb/brcmstb.h
+--- arch/mips/include/asm/brcmstb.orig/brcmstb.h	2011-01-25 04:52:34.000000000 +0900
++++ arch/mips/include/asm/brcmstb/brcmstb.h	2012-02-14 21:03:01.405695009 +0900
+@@ -1257,6 +1257,9 @@
+ void __init board_get_ram_size(unsigned long *dram0_mb,
+ 	unsigned long *dram1_mb);
+ int __init board_get_partition_map(struct mtd_partition **p);
++#if 1 // added by STM
++int __init board_get_partition_map_type(int type, struct mtd_partition **p);
++#endif
+ 
+ int __init bchip_strap_ram_size(void);
+ int __init bchip_strap_flash_type(void);
