@@ -13,7 +13,7 @@ ${@base_contains('MACHINEBUILD', 'xpeedlx3', 'LX-3' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbmini', 'Premium Mini' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbtwin', 'Premium Twin' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'atemio5x00', '5x00-HD' , '', d)}\
-${@base_contains('MACHINEBUILD', 'atemio6x00', '6x00-HD' , '', d)}\+
+${@base_contains('MACHINEBUILD', 'atemio6x00', '6x00-HD' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'atemionemesis', 'Nemesis' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'beyonwizt3', 'T3' , '', d)}\
 "
