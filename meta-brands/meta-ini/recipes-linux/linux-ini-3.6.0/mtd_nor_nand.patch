@@ -1,32 +1,12 @@
-diff -urN arch/mips/brcmstb.orig/board.c arch/mips/brcmstb/board.c
---- arch/mips/brcmstb.orig/board.c	2011-01-25 04:52:47.000000000 +0900
-+++ arch/mips/brcmstb/board.c	2012-02-14 21:10:26.369636608 +0900
-@@ -711,8 +711,19 @@
- #if defined(CONFIG_BRCM_FIXED_MTD_PARTITIONS)
- 
- static struct mtd_partition fixed_partition_map[] = {
--	/* name			offset		size */
--	{ "entire_device",	0x00000000,	MTDPART_SIZ_FULL },
-+	{
-+		.name = "complete",
-+		.offset = 0,
-+		.size = MTDPART_SIZ_FULL,
-+	}, {
-+		.name = "kernel",
-+		.offset = 0,
-+		.size = 6 * 1024 * 1024,
-+	}, {
-+		.name = "rootfs",
-+		.offset = MTDPART_OFS_APPEND,
-+		.size = MTDPART_SIZ_FULL,
-+	},
- };
- 
- /*
-@@ -724,6 +735,76 @@
+diff -urN a/arch/mips/brcmstb/board.c b/arch/mips/brcmstb/board.c
+--- a/arch/mips/brcmstb/board.c	2012-10-14 00:47:18.000000000 +0900
++++ b/arch/mips/brcmstb/board.c	2014-06-10 18:56:50.455864755 +0900
+@@ -784,6 +784,79 @@
  	return ARRAY_SIZE(fixed_partition_map);
  }
  
++
++ 
 +#if 1 // added by STM
 +static struct mtd_partition fixed_partition_map_NAND[] = {
 +	{
@@ -97,19 +77,18 @@ diff -urN arch/mips/brcmstb.orig/board.c arch/mips/brcmstb/board.c
 +	return ARRAY_SIZE(fixed_partition_map);
 +}
 +#endif
++
  #else /* defined(CONFIG_BRCM_FIXED_MTD_PARTITIONS) */
  
  /*
-diff -urN arch/mips/brcmstb.orig/setup.c arch/mips/brcmstb/setup.c
---- arch/mips/brcmstb.orig/setup.c	2011-01-25 04:52:47.000000000 +0900
-+++ arch/mips/brcmstb/setup.c	2012-02-14 21:31:28.965667050 +0900
-@@ -663,10 +663,16 @@
- 
+diff -urN a/arch/mips/brcmstb/setup.c b/arch/mips/brcmstb/setup.c
+--- a/arch/mips/brcmstb/setup.c	2012-10-14 00:47:18.000000000 +0900
++++ b/arch/mips/brcmstb/setup.c	2014-06-10 18:57:05.027444565 +0900
+@@ -755,9 +755,15 @@
  		memset(&res, 0, sizeof(res));
  		memset(&pdata, 0, sizeof(pdata));
--
-+		
-+#if defined(CONFIG_BRCM_FIXED_MTD_PARTITIONS)
+ 
++#if defined(CONFIG_BRCM_FIXED_MTD_PARTITIONS)	// by STM
 +		pdata.width = cs_info[cs].width;		
 +		pdata.nr_parts = nr_parts = board_get_partition_map_type(TYPE_NOR, &parts);
 +		pdata.parts = parts;
@@ -121,13 +100,11 @@ diff -urN arch/mips/brcmstb.orig/setup.c arch/mips/brcmstb/setup.c
  
  		res.start = cs_info[cs].start;
  		res.end = cs_info[cs].start + cs_info[cs].len - 1;
-@@ -684,10 +690,16 @@
- 	case TYPE_NAND: {
+@@ -776,9 +782,15 @@
  		struct brcmnand_platform_data pdata;
  		static int nand_id;
--
-+		
-+#if defined(CONFIG_BRCM_FIXED_MTD_PARTITIONS)
+ 
++#if defined(CONFIG_BRCM_FIXED_MTD_PARTITIONS)	// by STM
 +		pdata.chip_select = cs;
 +		pdata.nr_parts = nr_parts = board_get_partition_map_type(TYPE_NAND, &parts);
 +		pdata.parts = parts;
@@ -139,50 +116,35 @@ diff -urN arch/mips/brcmstb.orig/setup.c arch/mips/brcmstb/setup.c
  
  		pdev = platform_device_alloc("brcmnand", nand_id++);
  		if (!pdev ||
-@@ -713,6 +725,10 @@
+@@ -807,6 +819,9 @@
  			spi_master_registered = 1;
  		}
  
-+#if defined(CONFIG_BRCM_FIXED_MTD_PARTITIONS)
++#if defined(CONFIG_BRCM_FIXED_MTD_PARTITIONS)	// by STM
 +		nr_parts = board_get_partition_map_type(TYPE_SPI, &parts);
 +#endif
-+
  		ret = brcm_setup_spi_flash(cs, bus_num, nr_parts, parts);
  		if (ret < 0) {
  			printk(KERN_WARNING
-@@ -771,6 +787,11 @@
- 		if (strcmp(brcm_mtd_flash_type, type_names[i]) == 0)
- 			primary_type = i;
- 
-+	/* ignore CFE variables; use hardcoded mtd config */
-+	primary = 1;
-+	primary_type = TYPE_NAND;
-+	nandcs[1] = 1;
-+
- 	/* scan each chip select to see what (if anything) lives there */
- 	for (i = 0; i < NUM_CS; i++) {
- 		u32 base, size, config __maybe_unused;
-@@ -783,6 +804,11 @@
+@@ -892,8 +907,10 @@
  		cs_info[i].start = (base >> (13 + size)) << (13 + size);
  		cs_info[i].len = 8192UL << (base & 0xf);
  
 +#if 0 // added by STM
-+		/* ignore what's on CS0 */
-+		if (i == 0) continue;
+ 		/* ignore what's on CS0 */
+ 		if (i == 0) continue;
 +#endif
-+
+ 
  #ifdef BCHP_EBI_CS_CONFIG_0
  		config = BDEV_RD(BCHP_EBI_CS_CONFIG_0 + (i * 8));
- 		if (config & BCHP_EBI_CS_CONFIG_0_enable_MASK)
- 
-diff -urN arch/mips/include/asm/brcmstb.orig/brcmstb.h arch/mips/include/asm/brcmstb/brcmstb.h
---- arch/mips/include/asm/brcmstb.orig/brcmstb.h	2011-01-25 04:52:34.000000000 +0900
-+++ arch/mips/include/asm/brcmstb/brcmstb.h	2012-02-14 21:03:01.405695009 +0900
-@@ -1257,6 +1257,9 @@
+diff -urN a/arch/mips/include/asm/brcmstb/brcmstb.h b/arch/mips/include/asm/brcmstb/brcmstb.h
+--- a/arch/mips/include/asm/brcmstb/brcmstb.h	2012-10-14 00:47:18.000000000 +0900
++++ b/arch/mips/include/asm/brcmstb/brcmstb.h	2014-06-10 18:57:54.810840612 +0900
+@@ -882,6 +882,9 @@
  void __init board_get_ram_size(unsigned long *dram0_mb,
  	unsigned long *dram1_mb);
  int __init board_get_partition_map(struct mtd_partition **p);
-+#if 1 // added by STM
++#if	1	// added by STM
 +int __init board_get_partition_map_type(int type, struct mtd_partition **p);
 +#endif
  
