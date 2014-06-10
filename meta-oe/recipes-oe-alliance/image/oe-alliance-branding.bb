@@ -120,6 +120,11 @@ do_install_append() {
         ln -sf /usr/share/enigma2/xpeedlx1.jpg ${D}/usr/lib/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes/xpeedlx1.jpg
         install -m 0644 ${S}/BoxBranding/boxes/xpeedlx2.jpg ${D}/usr/share/enigma2/xpeedlx2.jpg
         ln -sf /usr/share/enigma2/xpeedlx2.jpg ${D}/usr/lib/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes/xpeedlx2.jpg
+    elif [ ${MACHINEBUILD} = "atemio6x00" ]; then
+        install -m 0644 ${S}/BoxBranding/boxes/atemio6100.jpg ${D}/usr/share/enigma2/atemio6100.jpg
+        ln -sf /usr/share/enigma2/atemio6100.jpg ${D}/usr/lib/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes/atemio6100.jpg
+        install -m 0644 ${S}/BoxBranding/boxes/atemio6200.jpg ${D}/usr/share/enigma2/atemio6200.jpg
+        ln -sf /usr/share/enigma2/atemio6200.jpg ${D}/usr/lib/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes/atemio6200.jpg        
     else
         install -m 0644 ${S}/BoxBranding/boxes/${MACHINEBUILD}.jpg ${D}/usr/share/enigma2/${MACHINEBUILD}.jpg
         ln -sf /usr/share/enigma2/${MACHINEBUILD}.jpg ${D}/usr/lib/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes/${MACHINEBUILD}.jpg
