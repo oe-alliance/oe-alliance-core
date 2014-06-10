@@ -1,4 +1,4 @@
-SUMMARY = "Nou skins for Enigma2"
+SUMMARY = "Nou skins by Nashu"
 MAINTAINER = "Rossi"
 
 require conf/license/license-gplv2.inc
@@ -7,8 +7,8 @@ inherit gitpkgv allarch
 
 EPSM = "enigma2-plugin-skins"
 SRCREV = "${AUTOREV}"
-PV = "5.6+git${SRCPV}"
-PKGV = "5.6+git${GITPKGV}"
+PV = "6.0+git${SRCPV}"
+PKGV = "6.0+git${GITPKGV}"
 PR = "r1"
 
 PACKAGES = "${EPSM}-neonovum-hd ${EPSM}-mynovum-hd ${EPSM}-nou-hd ${EPSM}-neonovum-hd-weather ${EPSM}-mynovum-hd-weather ${EPSM}-nou-hd-weather novum-hd-common novum-hd-renderer novum-hd-renderer-src"
