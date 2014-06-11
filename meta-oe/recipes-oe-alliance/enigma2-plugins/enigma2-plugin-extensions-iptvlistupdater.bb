@@ -2,15 +2,15 @@ SUMMARY = "IPTV Bouquet Updater Plugin by Nobody28 & satinfo "
 MAINTAINER = "Nobody28 & satinfo"
 SECTION = "extra"
 PRIORITY = "optional"
-RDEPENDS_${PN} = "gst-plugins-bad-rtmp librtmp1 python-textutils udpxy curl"
+RDEPENDS_${PN} = "gst-plugins-bad-rtmp python-textutils udpxy curl"
 
 require conf/license/license-gplv2.inc
 
 inherit autotools-brokensep gitpkgv pythonnative
 SRCREV = "${AUTOREV}"
-PV = "1.61.+git${SRCPV}"
-PKGV = "1.61.+git${GITPKGV}"
-PR = "r26"
+PV = "1.62.+git${SRCPV}"
+PKGV = "1.62.+git${GITPKGV}"
+PR = "r27"
 
 RREPLACES_enigma2-plugin-extensions-iptvlistupdater = "enigma2-plugin-extensions-iptv-list-updater"
 RCONFLICTS_enigma2-plugin-extensions-iptvlistupdater = "enigma2-plugin-extensions-iptv-list-updater"
