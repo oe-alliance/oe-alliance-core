@@ -121,7 +121,7 @@ MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS = "\
     "
 
 MACHINE_EXTRA_RRECOMMENDS = " \
-    vuplus-shutdown \
+    dags-shutdown \
     gst-plugin-dvbmediasink \
     "
 
