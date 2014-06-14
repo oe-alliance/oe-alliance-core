@@ -1,7 +1,10 @@
 require conf/license/license-gplv2.inc
 
 PV = "1.0"
-PR = "r1"
+PR = "r2"
+
+RREPLACES_${PN} += "vuplus-shutdown"
+RCONFLICTS_${PN} += "vuplus-shutdown"
 
 SRC_URI = " \
     file://turnoff_power \
