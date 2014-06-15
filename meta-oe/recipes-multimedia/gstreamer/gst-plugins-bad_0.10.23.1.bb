@@ -10,7 +10,7 @@ DEPENDS += "gst-plugins-base libmusicbrainz tremor curl libmms librtmp faad2"
 CONFLICTS = "librsvg"
 
 SRCREV = "${AUTOREV}"
-PR = "r13"
+PR = "r14"
 GIT_PV = ""
 
 EXTRA_OECONF += "--disable-examples --disable-experimental --disable-sdl --disable-cdaudio --disable-directfb --enable-faad \
@@ -21,6 +21,7 @@ ARM_INSTRUCTION_SET = "arm"
 SRC_URI = "git://anongit.freedesktop.org/gstreamer/${PN};protocol=git;branch=0.10"
 
 SRC_URI += " \
+        file://0001-rtmp-seeking-not-working-revert-to-3bd8cf88aa4b9661e.patch \
         file://0003-mpegpsdemux_speedup.diff.patch \
         file://0004-mpegdemux-compile-fixes.patch \
         file://0005-hlsdemux-locking-fixes.patch \

@@ -1,0 +1,67 @@
+From 084d98b40fc973031096437c34c34075b7f30bc0 Mon Sep 17 00:00:00 2001
+From: mx3L <mx3Lmail@gmail.com>
+Date: Sat, 12 Oct 2013 00:40:03 -0700
+Subject: [PATCH 1/1] rtmp-seeking not working revert to
+ 3bd8cf88aa4b9661e5d4b3cd08b8e91f8a1137bd
+
+---
+ ext/rtmp/gstrtmpsrc.c | 22 ----------------------
+ 1 file changed, 22 deletions(-)
+
+diff --git a/ext/rtmp/gstrtmpsrc.c b/ext/rtmp/gstrtmpsrc.c
+index 2e818f5..e9ab2eb 100644
+--- a/ext/rtmp/gstrtmpsrc.c
++++ b/ext/rtmp/gstrtmpsrc.c
+@@ -57,8 +57,6 @@
+ #include <winsock2.h>
+ #endif
+ 
+-#include <sys/socket.h>
+-
+ GST_DEBUG_CATEGORY_STATIC (rtmpsrc_debug);
+ #define GST_CAT_DEFAULT rtmpsrc_debug
+ 
+@@ -84,7 +82,6 @@ static void gst_rtmp_src_get_property (GObject * object, guint prop_id,
+     GValue * value, GParamSpec * pspec);
+ static void gst_rtmp_src_finalize (GObject * object);
+ 
+-static gboolean gst_rtmp_src_unlock (GstBaseSrc * src);
+ static gboolean gst_rtmp_src_stop (GstBaseSrc * src);
+ static gboolean gst_rtmp_src_start (GstBaseSrc * src);
+ static gboolean gst_rtmp_src_is_seekable (GstBaseSrc * src);
+@@ -148,7 +145,6 @@ gst_rtmp_src_class_init (GstRTMPSrcClass * klass)
+ 
+   gstbasesrc_class->start = GST_DEBUG_FUNCPTR (gst_rtmp_src_start);
+   gstbasesrc_class->stop = GST_DEBUG_FUNCPTR (gst_rtmp_src_stop);
+-  gstbasesrc_class->unlock = GST_DEBUG_FUNCPTR (gst_rtmp_src_unlock);
+   gstbasesrc_class->is_seekable = GST_DEBUG_FUNCPTR (gst_rtmp_src_is_seekable);
+   gstbasesrc_class->prepare_seek_segment =
+       GST_DEBUG_FUNCPTR (gst_rtmp_src_prepare_seek_segment);
+@@ -584,24 +580,6 @@ gst_rtmp_src_start (GstBaseSrc * basesrc)
+ #undef STR2AVAL
+ 
+ static gboolean
+-gst_rtmp_src_unlock (GstBaseSrc * basesrc)
+-{
+-  GstRTMPSrc *rtmpsrc = GST_RTMP_SRC (basesrc);
+-
+-  GST_DEBUG_OBJECT (rtmpsrc, "unlock");
+-
+-  /* This cancels the recv() underlying RTMP_Read, but will cause a
+-   * SIGPIPE.  Hopefully the app is ignoring it, or you've patched
+-   * librtmp. */
+-  if (rtmpsrc->rtmp && rtmpsrc->rtmp->m_sb.sb_socket > 0) {
+-    shutdown (rtmpsrc->rtmp->m_sb.sb_socket, SHUT_RDWR);
+-  }
+-
+-  return TRUE;
+-}
+-
+-
+-static gboolean
+ gst_rtmp_src_stop (GstBaseSrc * basesrc)
+ {
+   GstRTMPSrc *src;
+-- 
+1.8.4
+
