@@ -32,7 +32,7 @@ RDEPENDS_${PN} = "\
     sdparm \
     packagegroup-base \
     packagegroup-core-boot \
-    tzdata tzdata-europe tzdata-australia tzdata-asia tzdata-pacific tzdata-australia tzdata-africa \
+    tzdata tzdata-europe tzdata-australia tzdata-asia tzdata-pacific tzdata-africa \
     util-linux-sfdisk \
     util-linux-blkid \
     volatile-media \
