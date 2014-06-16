@@ -141,16 +141,16 @@ THIRDPARTY_MACHINE_PLUGINS_odinm7c = " \
     enigma2-plugin-extensions-hbbtv_4.1_ODIN_mips32el.ipk \
     "
 THIRDPARTY_MACHINE_PLUGINS_inihdp = " \
-    enigma2-plugin-extensions-inihbbtv_1.0-r33_20140616_mips32el.ipk \
+    enigma2-plugin-extensions-hbbtv_1.1-INI_mips32el.ipk \
     "
 THIRDPARTY_MACHINE_PLUGINS_inihdx = " \
-    enigma2-plugin-extensions-inihbbtv_1.0-r33_20140616_mips32el.ipk \
+    enigma2-plugin-extensions-hbbtv_1.1-INI_mips32el.ipk \
     "
 THIRDPARTY_MACHINE_PLUGINS_inihde = " \
-    enigma2-plugin-extensions-inihbbtv_1.0-r33_20140616_mips32el.ipk \
+    enigma2-plugin-extensions-hbbtv_1.1-INI_mips32el.ipk \
     "
 THIRDPARTY_MACHINE_PLUGINS_inihde2 = " \
-    enigma2-plugin-extensions-inihbbtv_1.0-r33_20140616_mips32el.ipk \
+    enigma2-plugin-extensions-hbbtv_1.1-INI_mips32el.ipk \
     "    
     
 do_install() {
