@@ -149,7 +149,7 @@ THIRDPARTY_MACHINE_PLUGINS_inihdx = " \
 THIRDPARTY_MACHINE_PLUGINS_inihde = " \
     enigma2-plugin-extensions-inihbbtv_1.0-r33_20140616_mips32el.ipk \
     "
-THIRDPARTY_MACHINE_PLUGINS_inihd22 = " \
+THIRDPARTY_MACHINE_PLUGINS_inihde2 = " \
     enigma2-plugin-extensions-inihbbtv_1.0-r33_20140616_mips32el.ipk \
     "    
     
