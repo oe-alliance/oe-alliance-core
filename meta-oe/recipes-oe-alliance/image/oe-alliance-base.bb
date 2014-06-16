@@ -9,7 +9,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "1.0"
-PR = "r18"
+PR = "r19"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 RDEPENDS_${PN} = "\
@@ -32,7 +32,7 @@ RDEPENDS_${PN} = "\
     sdparm \
     packagegroup-base \
     packagegroup-core-boot \
-    tzdata tzdata-europe tzdata-australia tzdata-asia \
+    tzdata tzdata-europe tzdata-australia tzdata-asia tzdata-pacific tzdata-australia tzdata-africa \
     util-linux-sfdisk \
     util-linux-blkid \
     volatile-media \
