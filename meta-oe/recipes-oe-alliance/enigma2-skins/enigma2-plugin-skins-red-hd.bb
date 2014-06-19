@@ -1,4 +1,4 @@
-SUMMARY = "Red HD skin for Enigma2"
+SUMMARY = "Red HD by rossi2000 and simonsez"
 MAINTAINER = "rossi2000"
 
 require conf/license/license-gplv2.inc
