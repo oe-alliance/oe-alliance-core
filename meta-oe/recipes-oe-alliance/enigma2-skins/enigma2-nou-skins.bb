@@ -1,5 +1,5 @@
 SUMMARY = "Nou skins by Nashu"
-MAINTAINER = "Rossi"
+MAINTAINER = "rossi2000"
 
 require conf/license/license-gplv2.inc
 
