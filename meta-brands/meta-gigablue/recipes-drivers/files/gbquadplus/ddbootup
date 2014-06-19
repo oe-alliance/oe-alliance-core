@@ -3,10 +3,10 @@
 echo "gbquadplus" > /proc/stb/info/gbmodel
 
 #DESCRIPTION=This will set ETH0 and USB to Thread 2
-echo 000002 > /proc/irq/4/smp_affinity # BVNF0 
+#echo 000002 > /proc/irq/4/smp_affinity # BVNF0 
 #echo 000002 > /proc/irq/8/smp_affinity # CLKGEN
-echo 000002 > /proc/irq/25/smp_affinity # eth0
-echo 000002 > /proc/irq/29/smp_affinity # GFX
+#echo 000002 > /proc/irq/25/smp_affinity # eth0
+#echo 000002 > /proc/irq/29/smp_affinity # GFX
 #echo 000002 > /proc/irq/31/smp_affinity # brcmstb_nand
 #echo 000002 > /proc/irq/39/smp_affinity # RAAGA_FW
 #echo 000002 > /proc/irq/43/smp_affinity # SDS0_RCVR0
@@ -15,17 +15,17 @@ echo 000002 > /proc/irq/29/smp_affinity # GFX
 #echo 000002 > /proc/irq/60/smp_affinity # UPG_MAIN
 #echo 000002 > /proc/irq/62/smp_affinity # UPG_SC
 #echo 000002 > /proc/irq/56/smp_affinity # serial
-echo 000002 > /proc/irq/69/smp_affinity # ehci_hcd:usb1
-echo 000002 > /proc/irq/70/smp_affinity # ehci_hcd:usb2
-echo 000002 > /proc/irq/71/smp_affinity # ohci_hcd:usb5
-echo 000002 > /proc/irq/72/smp_affinity # ohci_hcd:usb6
-echo 000002 > /proc/irq/73/smp_affinity # ehci_hcd:usb2
-echo 000002 > /proc/irq/74/smp_affinity # ehci_hcd:usb3
-echo 000002 > /proc/irq/75/smp_affinity # ehci_hcd:usb4
-echo 000002 > /proc/irq/76/smp_affinity # ohci_hcd:usb7
-echo 000002 > /proc/irq/77/smp_affinity # ohci_hcd:usb8
+#echo 000002 > /proc/irq/69/smp_affinity # ehci_hcd:usb1
+#echo 000002 > /proc/irq/70/smp_affinity # ehci_hcd:usb2
+#echo 000002 > /proc/irq/71/smp_affinity # ohci_hcd:usb5
+#echo 000002 > /proc/irq/72/smp_affinity # ohci_hcd:usb6
+#echo 000002 > /proc/irq/73/smp_affinity # ehci_hcd:usb2
+#echo 000002 > /proc/irq/74/smp_affinity # ehci_hcd:usb3
+#echo 000002 > /proc/irq/75/smp_affinity # ehci_hcd:usb4
+#echo 000002 > /proc/irq/76/smp_affinity # ohci_hcd:usb7
+#echo 000002 > /proc/irq/77/smp_affinity # ohci_hcd:usb8
 #echo 000002 > /proc/irq/80/smp_affinity # XPT_MSG
-ulimit -n 4096
-ulimit -s 16384
-echo ""
-sleep 1
+#ulimit -n 4096
+#ulimit -s 16384
+#echo ""
+#sleep 1
