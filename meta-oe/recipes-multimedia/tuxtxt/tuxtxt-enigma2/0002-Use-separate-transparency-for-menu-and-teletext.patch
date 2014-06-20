@@ -31,10 +31,10 @@ index b4e1a50..fc539d0 100644
  		self.skin = ShellStarter.skin
  		Screen.__init__(self, session)
  		eTuxtxtApp.getInstance().appClosed.get().append(self.appClosed)
-@@ -75,6 +81,10 @@ class ShellStarter(Screen):
- 		#force redraw
- 		dsk = getDesktop(0)
- 		dsk.resize(dsk.size())
+@@ -81,6 +81,10 @@ class ShellStarter(Screen):
+ 		if hasattr(self.session, "pip"):
+ 			self.session.pip.pigmode(False)
+ 			self.session.pip.relocate()
 +		try: # config.osd.alpha may not be available everywhere
 +			self.setOSDAlpha(config.osd.alpha)
 +		except:
