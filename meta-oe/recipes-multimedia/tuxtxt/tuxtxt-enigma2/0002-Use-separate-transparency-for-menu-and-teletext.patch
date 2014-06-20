@@ -8,19 +8,19 @@ Subject: [PATCH] Use separate transparency for menu and teletext
  1 file changed, 18 insertions(+)
 
 diff --git a/plugin/plugin.py b/plugin/plugin.py
-index b4e1a50..fc539d0 100644
+index 1bb9a38..5284053 100644
 --- a/plugin/plugin.py
 +++ b/plugin/plugin.py
-@@ -2,6 +2,8 @@ from enigma import eTuxtxtApp, getDesktop
- from Screens.Screen import Screen
+@@ -3,6 +3,8 @@ from Screens.Screen import Screen
  from Plugins.Plugin import PluginDescriptor
  from Components.ActionMap import NumberActionMap
+ from Screens.PictureInPicture import PipPigMode
 +from Components.SystemInfo import SystemInfo
 +from Components.config import config
  
  class RcCode:
  	RC_0 = 0x00
-@@ -37,6 +39,10 @@ class ShellStarter(Screen):
+@@ -38,6 +40,10 @@ class ShellStarter(Screen):
  		</screen>"""
  
  	def __init__(self, session, args = None):
@@ -30,10 +30,10 @@ index b4e1a50..fc539d0 100644
 +			pass
  		self.skin = ShellStarter.skin
  		Screen.__init__(self, session)
- 		eTuxtxtApp.getInstance().appClosed.get().append(self.appClosed)
-@@ -81,6 +81,10 @@ class ShellStarter(Screen):
+ 		self.session = session
+@@ -81,6 +87,10 @@ class ShellStarter(Screen):
+ 		PipPigMode(False)
  		if hasattr(self.session, "pip"):
- 			self.session.pip.pigmode(False)
  			self.session.pip.relocate()
 +		try: # config.osd.alpha may not be available everywhere
 +			self.setOSDAlpha(config.osd.alpha)
@@ -42,7 +42,7 @@ index b4e1a50..fc539d0 100644
  		self.close()
  
  	def handleNumberKey(self, key):
-@@ -125,6 +135,14 @@ class ShellStarter(Screen):
+@@ -131,6 +141,14 @@ class ShellStarter(Screen):
  	def handleKeyExit(self):
  		eTuxtxtApp.getInstance().handleKey(RcCode.RC_HOME)
  
