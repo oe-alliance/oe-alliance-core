@@ -1,0 +1,21 @@
+--- a/scripts/Makefile.headersinst	2013-03-11 12:04:39.034212322 +0100
++++ b/scripts/Makefile.headersinst	2013-03-11 12:06:17.462215866 +0100
+@@ -71,7 +71,7 @@
+ quiet_cmd_install = INSTALL $(printdir) ($(words $(all-files))\
+                             file$(if $(word 2, $(all-files)),s))
+       cmd_install = \
+-        $(PERL) $< $(installdir) $(SRCARCH) $(input-files); \
++        xargs $(PERL) $< $(installdir) $(SRCARCH) < $(INSTALL_HDR_PATH)/.input-files; \
+         for F in $(wrapper-files); do                                   \
+                 echo "\#include <asm-generic/$$F>" > $(installdir)/$$F;    \
+         done;                                                           \
+@@ -100,7 +100,9 @@
+ $(install-file): scripts/headers_install.pl $(input-files) FORCE
+ 	$(if $(unwanted),$(call cmd,remove),)
+ 	$(if $(wildcard $(dir $@)),,$(shell mkdir -p $(dir $@)))
++	@echo $(input-files) > $(INSTALL_HDR_PATH)/.input-files
+ 	$(call if_changed,install)
++	@rm $(INSTALL_HDR_PATH)/.input-files
+ 
+ else
+ __headerscheck: $(subdirs) $(check-file)
