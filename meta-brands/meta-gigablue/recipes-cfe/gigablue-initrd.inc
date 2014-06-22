@@ -7,7 +7,7 @@ PACKAGE_ARCH := "${MACHINE_ARCH}"
 
 require conf/license/license-gplv2.inc
 
-PR = "r2"
+PR = "r3"
 ALLOW_EMPTY_${PN} = "1"
 
 SRC_URI = "http://archiv.openmips.com/gigablue-initrd-${MACHINE}-${SRCDATE}.tgz"
@@ -18,6 +18,12 @@ inherit deploy
 do_deploy() {
     if [ -e initrd.bin ]; then
     install -m 0644 initrd.bin ${DEPLOYDIR}/initrd.bin
+    fi
+    if [ -e warning.bin ]; then
+    install -m 0644 warning.bin ${DEPLOYDIR}/warning.bin
+    fi
+    if [ -e dvb.tar.gz ]; then
+    install -m 0644 dvb.tar.gz ${DEPLOYDIR}/dvb.tar.gz
     fi
 }
 
