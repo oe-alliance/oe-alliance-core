@@ -58,7 +58,7 @@ IMAGE_CMD_ubi_prepend = " \
     "
 
 UBI_VOLNAME = "rootfs"
-MKUBIFS_ARGS = "-m 2048 -e 126976 -c 4096 -F"
+MKUBIFS_ARGS = "-m 2048 -e 126976 -c 8192 -F"
 UBINIZE_ARGS = "-m 2048 -p 128KiB"
 
 IMAGE_CMD_ubi_append = " \
