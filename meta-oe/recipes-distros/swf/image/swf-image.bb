@@ -6,7 +6,7 @@ MAINTAINER = "SWF"
 
 require conf/license/license-gplv2.inc
 
-DEPENDS = "enigma2-pliplugins swf-feeds swf-3rdparty-plugins"
+DEPENDS = "enigma2-pliplugins swf-feeds "
 
 PV = "${IMAGE_VERSION}"
 PR = "r${DATETIME}"
@@ -19,7 +19,6 @@ IMAGE_INSTALL = " \
     swf-spinner \
     swf-version-info \
     enigma2-plugin-extensions-bmediacenter-swf \
-    enigma2-plugin-picons-default-swf \
     enigma2-plugin-settings-default-swf \
     ${ENIGMA2_PLUGINS} \
     ${ENIGMA2_INI_PLUGINS} \
@@ -111,7 +110,7 @@ ROOTFS_POSTPROCESS_COMMAND += "rootfs_postprocess; "
 
 export NFO = '${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.nfo'
 
-generate_nfo() {
+do_generate_nfo() {
     VER=`grep Version: "${IMAGE_ROOTFS}/var/lib/opkg/info/enigma2.control" | cut -b 10-26`
     echo "Enigma2: ${VER}" > ${NFO}
     echo "Machine: ${MACHINE}" >> ${NFO}
@@ -127,6 +126,4 @@ generate_nfo() {
     echo "MD5: ${MD5SUM}" >> ${NFO}
 }
 
-do_rootfs_append() {
-    generate_nfo
-}
+addtask generate_nfo after do_rootfs
