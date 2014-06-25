@@ -18,6 +18,11 @@ ${@base_contains('MACHINEBUILD', 'sogno8800hd', 'sogno/8800hd' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'uniboxhde', 'unibox/hde' , '', d)}\
 "
 
+MKUBIFS_ARGS = "\
+${@base_contains('MACHINEBUILD', 'sogno8800hd', '-m 2048 -e 126976 -c 4096 -F' , '', d)}\
+${@base_contains('MACHINEBUILD', 'uniboxhde', '-m 2048 -e 126976 -c 8192 -F' , '', d)}\
+"
+
 MTD_ROOTFS = "mtd7"
 MTD_KERNEL = "mtd8"
 KERNEL_FILE = "kernel.bin"
@@ -58,7 +63,6 @@ IMAGE_CMD_ubi_prepend = " \
     "
 
 UBI_VOLNAME = "rootfs"
-MKUBIFS_ARGS = "-m 2048 -e 126976 -c 8192 -F"
 UBINIZE_ARGS = "-m 2048 -p 128KiB"
 
 IMAGE_CMD_ubi_append = " \
