@@ -9,7 +9,7 @@ inherit gitpkgv deploy
 SRCREV = "${AUTOREV}"
 PV = "2.1+gitr${SRCPV}"
 PKGV = "2.1+gitr${GITPKGV}"
-PR = "r43"
+PR = "r44"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -81,7 +81,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-verkehrsinfo_0.9_mips32el.ipk \
     enigma2-plugin-extensions-vuplusforum_0.7rc3_mips32el.ipk \
     enigma2-plugin-extensions-webmedia_10.0_r02_oe2.0_all.ipk \
-    enigma2-plugin-extensions-webradiofs_12.06_all.ipk \
+    enigma2-plugin-extensions-webradiofs_12.07_all.ipk \
     enigma2-plugin-extensions-wikipedia_2.1rc5_mips32el.ipk \
     enigma2-plugin-extensions-xbmcaddons_6.0_r0_all.ipk \
     enigma2-plugin-extensions-xbmcwetter_1.0rc4_mips32el.ipk \
