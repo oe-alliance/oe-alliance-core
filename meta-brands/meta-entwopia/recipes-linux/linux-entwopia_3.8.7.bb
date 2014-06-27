@@ -2,7 +2,7 @@ SUMMARY = "Linux kernel for ${MACHINE}"
 SECTION = "kernel"
 LICENSE = "GPLv2"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
-PR = "r2"
+PR = "r3"
 
 KERNEL_RELEASE = "3.8.7"
 SRCDATE = "20140326"
@@ -12,7 +12,7 @@ SRC_URI[sha256sum] = "6e2c4de8f5d1aaaf21ca23f3c0b6346b7bda93c5999fdbad94714735c8
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}-base/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-MACHINE_KERNEL_PR_append = ".4"
+MACHINE_KERNEL_PR_append = ".5"
 
 # By default, kernel.bbclass modifies package names to allow multiple kernels
 # to be installed in parallel. We revert this change and rprovide the versioned
@@ -47,7 +47,7 @@ SRC_URI += "http://source.entwopia.com/ew7358/${MACHINE}-linux-${PV}-base-${SRCD
     file://mxl5007t-add-no_probe-and-no_reset-parameters.patch \
     file://nfs-max-rwsize-8k.patch \
     file://0001-rt2800usb-add-support-for-rt55xx.patch \
-    file://rtl28xxu-and-tuners-update-to-latest-version-09-09-2013.patch \
+    file://rtl28xxu-update-to-the-latest-version-02-06-2013.patch
     file://rtl2832-scale-SNR-to-full-range.patch \
     file://em28xx-dvb-enable-LNA-by-default-for-PCTV290e.patch \
     file://zl10353-output-full-range-SNR.patch \
