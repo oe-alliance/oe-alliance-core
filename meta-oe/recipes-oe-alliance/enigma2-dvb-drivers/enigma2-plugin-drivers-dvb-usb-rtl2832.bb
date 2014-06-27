@@ -5,8 +5,9 @@ require conf/license/license-gplv2.inc
 
 DVBPROVIDER ?= "kernel"
 
-RDEPENDS_${PN} = " \
+RRECOMMENDS_${PN} = " \
     ${DVBPROVIDER}-module-dvb-usb-rtl2832 \
+    ${DVBPROVIDER}-module-dvb-usb-rtl28xxu \	
     ${DVBPROVIDER}-module-rtl2832 \
     ${DVBPROVIDER}-module-e4000 \
     ${DVBPROVIDER}-module-r820t \	
