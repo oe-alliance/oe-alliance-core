@@ -47,7 +47,7 @@ SRC_URI += "http://source.entwopia.com/ew7358/${MACHINE}-linux-${PV}-base-${SRCD
     file://mxl5007t-add-no_probe-and-no_reset-parameters.patch \
     file://nfs-max-rwsize-8k.patch \
     file://0001-rt2800usb-add-support-for-rt55xx.patch \
-    file://rtl28xxu-update-to-the-latest-version-02-06-2013.patch
+    file://rtl28xxu-update-to-the-latest-version-02-06-2013.patch \
     file://rtl2832-scale-SNR-to-full-range.patch \
     file://em28xx-dvb-enable-LNA-by-default-for-PCTV290e.patch \
     file://zl10353-output-full-range-SNR.patch \
