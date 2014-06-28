@@ -22,20 +22,11 @@ MACHINE_EXTRA_RRECOMMENDS = " \
     kernel-module-ecb \
     dreambox-boot-progress \
     tpmd \
+    kernel-module-fuse \
+    kernel-module-nfsd \
+    kernel-module-exportfs \	
     "
     
-MACHINE_EXTRA_RRECOMMENDS_append_dm800se = " \
-    kernel-module-fuse \
-    kernel-module-nfsd \
-    kernel-module-exportfs \
-    "
-	
-MACHINE_EXTRA_RRECOMMENDS_append_dm500hd = " \
-    kernel-module-fuse \
-    kernel-module-nfsd \
-    kernel-module-exportfs \
-    "	
-
 MACHINE_FEATURES += "dreambox alsa usbhost 3dtv switchoff tpm"
 # Add "dreambox" override for recipes
 MACHINEOVERRIDES .= ":dreambox"
