@@ -6,8 +6,8 @@ require conf/license/license-gplv2.inc
 inherit gitpkgv allarch
 
 SRCREV = "${AUTOREV}"
-PV = "1.2+git${SRCPV}"
-PKGV = "1.2+git${GITPKGV}"
+PV = "1.3+git${SRCPV}"
+PKGV = "1.3+git${GITPKGV}"
 PR = "r1"
 
 SRC_URI = "git://github.com/oe-alliance/oe-alliance-skins.git;protocol=git"
