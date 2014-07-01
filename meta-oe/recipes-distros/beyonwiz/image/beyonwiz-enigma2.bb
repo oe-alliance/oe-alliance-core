@@ -67,6 +67,7 @@ RDEPENDS_${PN} = "\
 	\
 	enigma2-plugin-systemplugins-softwaremanager \
 	enigma2-plugin-systemplugins-inilcnscanner \
+	${HBBTV} \
 "
 
 RRECOMMENDS_${PN} = "\
@@ -88,3 +89,8 @@ RRECOMMENDS_${PN} = "\
     ${@base_contains("MACHINE_FEATURES", "transcoding", "enigma2-plugin-systemplugins-transcodingsetup", "", d)} \
     ${@base_contains("MACHINE_FEATURES", "videoenhancement", "enigma2-plugin-systemplugins-videoenhancement", "", d)} \
     "
+    
+HBBTV = "\
+	enigma2-plugin-extensions-hbbtv \
+	vuplus-opera-browser-util \
+	"
