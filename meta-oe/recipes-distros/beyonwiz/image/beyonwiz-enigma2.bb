@@ -7,15 +7,30 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "1.0"
-PR = "r4"
+PR = "r6"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 inherit packagegroup
 
-RCONFLICTS_${PN} = "enigma2-plugin-extensions-permanenttimeshift enigma2-plugin-systemplugins-skinselector"
-RREPLACES_${PN} = "enigma2-plugin-extensions-permanenttimeshift enigma2-plugin-systemplugins-skinselector"
+RCONFLICTS_${PN} = "\
+    enigma2-plugin-extensions-permanenttimeshift \
+    enigma2-plugin-systemplugins-skinselector\
+"
 
-DEPENDS = "beyonwiz-feeds enigma2 enigma2-plugins enigma2-oe-alliance-plugins oe-alliance-feeds enigma2-3rdparty-plugins ${@base_contains("MACHINE_FEATURES", "wifi", "oe-alliance-wifi", "", d)}"
+RREPLACES_${PN} = "\
+    enigma2-plugin-extensions-permanenttimeshift \
+    enigma2-plugin-systemplugins-skinselector\
+"
+
+DEPENDS = "\
+    beyonwiz-feeds \
+    enigma2 \
+    enigma2-plugins \
+    enigma2-oe-alliance-plugins \
+    oe-alliance-feeds \
+    enigma2-3rdparty-plugins \
+    ${@base_contains("MACHINE_FEATURES", "wifi", "oe-alliance-wifi", "", d)}\
+"
 
 RDEPENDS_${PN} = "\
 	oe-alliance-feeds-configs \
@@ -27,8 +42,6 @@ RDEPENDS_${PN} = "\
 	${@base_conditional('MACHINE', 'dm800', '', 'mtd-utils-ubifs', d)} \
 	procps \
 	parted \
-	\
-	\
 	\
 	enigma2-skindefault \
 	\
@@ -54,7 +67,6 @@ RDEPENDS_${PN} = "\
 	\
 	enigma2-plugin-systemplugins-softwaremanager \
 	enigma2-plugin-systemplugins-inilcnscanner \
-	${@base_contains("MACHINE", "inihdx", "${HBBTV}" , "", d)} \
 "
 
 RRECOMMENDS_${PN} = "\
@@ -74,9 +86,5 @@ RRECOMMENDS_${PN} = "\
     ${@base_contains("MACHINE_FEATURES", "libpassthrough", "libpassthrough libdlsym", "", d)} \
     ${@base_contains("MACHINE_FEATURES", "fan", "enigma2-plugin-systemplugins-tempfancontrol", "", d)} \
     ${@base_contains("MACHINE_FEATURES", "transcoding", "enigma2-plugin-systemplugins-transcodingsetup", "", d)} \
+    ${@base_contains("MACHINE_FEATURES", "videoenhancement", "enigma2-plugin-systemplugins-videoenhancement", "", d)} \
     "
-    
-HBBTV = "\
-	enigma2-plugin-extensions-inihbbtv \
-	vuplus-opera-browser-util \
-	"

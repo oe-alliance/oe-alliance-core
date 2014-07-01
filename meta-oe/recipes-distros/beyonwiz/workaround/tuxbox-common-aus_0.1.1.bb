@@ -4,7 +4,7 @@ MAINTAINER = "Beyonwiz team"
 
 inherit gitpkgv allarch
 PV = "1"
-PR = "r3"
+PR = "r4"
 
 SRC_URI = "file://satellites.xml file://terrestrial.xml file://cables.xml file://timezone.xml"
 

@@ -1,23 +1,28 @@
 SUMMARY = "Beyonwiz version info"
 SECTION = "base"
 PRIORITY = "required"
-MAINTAINER = "Beyonwiz team"
-LICENSE = "proprietary"
-LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=4d92cd373abda3937c2bc47fbc49d690 \
-                    file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
+MAINTAINER = "Beyonwiz"
+LICENSE = "CLOSED"
+
+PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PV = "${IMAGE_VERSION}"
 PR = "${BUILD_VERSION}"
-PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 URL = "http://www.beyonwiz.com.au"
 
 S = "${WORKDIR}"
 
-inherit autotools
-
 PACKAGES = "${PN}"
 
+FILES_${PN} += "/etc/image-version"
+
+do_build[nostamp] = "1"
+do_clean[nostamp] = "1"
+do_package[nostamp] = "1"
+do_packagedata[nostamp] = "1"
+do_populate_sysroot[nostamp] = "1"
+do_install[nostamp] = "1"
 do_install() {
     if [ "${DISTRO_TYPE}" = "experimental" ] ; then
         BUILDTYPE="1"
@@ -37,6 +42,3 @@ do_install() {
     echo "url=${URL}" >> ${D}/etc/image-version
     echo "catalog=${URL}" >> ${D}/etc/image-version
 }
-
-FILES_${PN} = "/etc/image-version"
-

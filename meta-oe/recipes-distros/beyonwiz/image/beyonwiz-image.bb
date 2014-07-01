@@ -1,13 +1,11 @@
 SUMMARY = "Beyonwiz Image"
 SECTION = "base"
 PRIORITY = "required"
-LICENSE = "proprietary"
+LICENSE = "Proprietary"
 MAINTAINER = "Beyonwiz team"
 
-require conf/license/license-gplv2.inc
-
 PV = "${IMAGE_VERSION}"
-PR = "r${DATETIME}"
+PR = "${BUILD_VERSION}"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 IMAGE_INSTALL = "beyonwiz-base"
@@ -47,4 +45,5 @@ do_package_remove_unused_ipk () {
         fi
     done
 }
+
 # addtask package_remove_unused_ipk before do_rootfs

@@ -17,8 +17,6 @@ SRC_URI="git://bitbucket.org/beyonwiz/picons-australia.git;protocol=https"
 
 S = "${WORKDIR}/git"
 
-FILES_${PN} = "/picon/*"
-
 PACKAGES = "${PN}"
 
 FILES_${PN} = "/picon/*"

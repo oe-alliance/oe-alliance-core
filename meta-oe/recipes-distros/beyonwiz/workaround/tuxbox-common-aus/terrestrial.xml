@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-    Extracted from ACMA databases:  2 April 2014
-    ACMA RTV Introduction file:     Intro-BroadcastTransmitterExcel-2014-04.csv
-    ACMA RTV DTV stations file:     DTV-BroadcastTransmitterExcel-2014-04.csv
-    Dept Comms Digital Retune file: Channel-Change-Timetable-24-March-2014.csv
-    Created:                        2014-04-11 17:08
+    Extracted from ACMA databases:  1 June 2014
+    ACMA RTV Introduction file:     Intro-BroadcastTransmitterExcel-2014-06.csv
+    ACMA RTV DTV stations file:     DTV-BroadcastTransmitterExcel-2014-06.csv
+    Dept Comms Digital Retune file: Channel-Change-Timetable-4-Jun-2014.csv
+    Created:                        2014-06-12 14:50
+
     Sorted:                         By population
+    Full Scan:                      First
+    Retune frequencies:             Last
+    125kHz frequency offsets:       Not Stripped
 
     Based on Australian Communications and Media Authority data
     and Australian Communications Department data
@@ -135,34 +139,28 @@
         Artarmon, Gore Hill, Kings Cross, Manly, Willoughby
     -->
     <terrestrial name="Sydney">
-        <!-- ATN6 @ Artarmon, Willoughby -->
+        <!-- ATN6 @ Artarmon -->
         <transponder centre_frequency="177500000" bandwidth="1"/>
-        <!-- SBS7 @ Artarmon, Gore Hill -->
+        <!-- SBS7 @ Artarmon -->
         <transponder centre_frequency="184500000" bandwidth="1"/>
-        <!-- TCN8 @ Artarmon, Willoughby -->
+        <!-- TCN8 @ Willoughby -->
         <transponder centre_frequency="191625000" bandwidth="1"/>
-        <!-- TEN11 @ Artarmon, Willoughby -->
+        <!-- TEN11 @ Artarmon -->
         <transponder centre_frequency="219500000" bandwidth="1"/>
-        <!-- ABC12 @ Artarmon, Gore Hill -->
+        <!-- ABC12 @ Artarmon -->
         <transponder centre_frequency="226500000" bandwidth="1"/>
         <!-- ATN28 @ Kings Cross, Manly -->
         <transponder centre_frequency="529500000" bandwidth="1"/>
         <!-- TSN29 @ Gore Hill -->
         <transponder centre_frequency="536625000" bandwidth="1"/>
         <!-- ABC30 @ Kings Cross, Manly -->
-        <transponder centre_frequency="543625000" bandwidth="1"/>
+        <transponder centre_frequency="543500000" bandwidth="1"/>
         <!-- TEN31 @ Kings Cross, Manly -->
         <transponder centre_frequency="550500000" bandwidth="1"/>
         <!-- SBS32 @ Kings Cross, Manly -->
         <transponder centre_frequency="557500000" bandwidth="1"/>
         <!-- TCN33 @ Kings Cross, Manly -->
         <transponder centre_frequency="564500000" bandwidth="1"/>
-        <!-- SBS34 @ Artarmon, Gore Hill, Kings Cross, Manly -->
-        <transponder centre_frequency="571500000" bandwidth="1"/>
-        <!-- TEN45 @ Kings Cross, Manly -->
-        <transponder centre_frequency="648500000" bandwidth="1"/>
-        <!-- ATN48 @ Kings Cross, Manly -->
-        <transponder centre_frequency="669500000" bandwidth="1"/>
     </terrestrial>
     <!--Areas Served
         Ferntree Gully, Marysville, Melbourne, Melbourne Inner Suburbs, Safety Beach, Selby, South Yarra, Upwey, Warburton (Vic)
@@ -171,40 +169,18 @@
         Arthurs Seat, Ferntree Gully, Melbourne, Mount Dandenong, Mount Gordon, Mount Victoria, Mt Dandenong, Selby, South Yarra, Upwey
     -->
     <terrestrial name="Melbourne">
-        <!-- SBS40 *retune* on 09/09/14 @ Arthurs Seat, Ferntree Gully, Melbourne, Selby, South Yarra, Upwey -->
-        <transponder centre_frequency="613500000" bandwidth="1"/>
-        <!-- MGV42 *retune* on 27/10/14 @ South Yarra -->
-        <transponder centre_frequency="627500000" bandwidth="1"/>
-        <!-- ABC43 *retune* on 09/09/14 @ Arthurs Seat, Ferntree Gully, Melbourne, Selby, South Yarra, Upwey -->
-        <transponder centre_frequency="634500000" bandwidth="1"/>
-        <!-- ATV45 *retune* on 09/09/14 @ Arthurs Seat, Ferntree Gully, Melbourne, Selby, South Yarra, Upwey -->
-        <transponder centre_frequency="648500000" bandwidth="1"/>
-        <!-- HSV6 @ Mount Dandenong, Mt Dandenong -->
+        <!-- HSV6 @ Mount Dandenong -->
         <transponder centre_frequency="177500000" bandwidth="1"/>
         <!-- SBS7 @ Mount Dandenong -->
         <transponder centre_frequency="184500000" bandwidth="1"/>
-        <!-- GTV8 @ Mount Dandenong, Mt Dandenong -->
+        <!-- GTV8 @ Mt Dandenong -->
         <transponder centre_frequency="191625000" bandwidth="1"/>
-        <!-- ATV11 @ Mount Dandenong, Mt Dandenong -->
+        <!-- ATV11 @ Mt Dandenong -->
         <transponder centre_frequency="219500000" bandwidth="1"/>
         <!-- ABC12 @ Mount Dandenong -->
         <transponder centre_frequency="226500000" bandwidth="1"/>
         <!-- MGV32 @ Mount Dandenong -->
         <transponder centre_frequency="557625000" bandwidth="1"/>
-        <!-- SBS34 @ Ferntree Gully, Mount Gordon, Mount Victoria, Selby, Upwey -->
-        <transponder centre_frequency="571500000" bandwidth="1"/>
-        <!-- ABC35 @ Ferntree Gully, Mount Gordon, Mount Victoria, Selby, Upwey -->
-        <transponder centre_frequency="578500000" bandwidth="1"/>
-        <!-- HSV36 @ Ferntree Gully, Mount Gordon, Mount Victoria, Selby, Upwey -->
-        <transponder centre_frequency="585500000" bandwidth="1"/>
-        <!-- GTV37 @ Ferntree Gully, Mount Gordon, Mount Victoria, Selby, Upwey -->
-        <transponder centre_frequency="592500000" bandwidth="1"/>
-        <!-- ATV38 @ Arthurs Seat, Ferntree Gully, Melbourne, Mount Gordon, Mount Victoria, Selby, South Yarra, Upwey -->
-        <transponder centre_frequency="599500000" bandwidth="1"/>
-        <!-- HSV41 @ Arthurs Seat, Ferntree Gully, Melbourne, Selby, South Yarra, Upwey -->
-        <transponder centre_frequency="620500000" bandwidth="1"/>
-        <!-- GTV44 @ Arthurs Seat, Ferntree Gully, Melbourne, Selby, South Yarra, Upwey -->
-        <transponder centre_frequency="641500000" bandwidth="1"/>
         <!-- ABC47 @ Ferntree Gully, Selby, Upwey -->
         <transponder centre_frequency="662500000" bandwidth="1"/>
         <!-- SBS50 @ Ferntree Gully, Selby, Upwey -->
@@ -221,6 +197,37 @@
         <transponder centre_frequency="774500000" bandwidth="1"/>
         <!-- MGV66 @ South Yarra -->
         <transponder centre_frequency="795500000" bandwidth="1"/>
+        <!-- SBS34 @ Mount Gordon, Mount Victoria -->
+        <!-- SBS34 *retune from* SBS50 on 23/07/14 @ Selby, Upwey -->
+        <transponder centre_frequency="571500000" bandwidth="1"/>
+        <!-- ABC35 @ Mount Gordon, Mount Victoria -->
+        <!-- ABC35 *retune from* ABC47 on 23/07/14 @ Selby, Upwey -->
+        <transponder centre_frequency="578500000" bandwidth="1"/>
+        <!-- HSV36 @ Mount Gordon, Mount Victoria -->
+        <!-- HSV36 *retune from* HSV41 on 23/07/14 @ Selby, Upwey -->
+        <transponder centre_frequency="585500000" bandwidth="1"/>
+        <!-- GTV37 @ Mount Gordon, Mount Victoria -->
+        <!-- GTV37 *retune from* GTV44 on 23/07/14 @ Selby, Upwey -->
+        <transponder centre_frequency="592500000" bandwidth="1"/>
+        <!-- ATV38 @ Mount Gordon, Mount Victoria -->
+        <!-- ATV38 *retune from* ATV54 on 23/07/14 @ Selby, Upwey -->
+        <transponder centre_frequency="599500000" bandwidth="1"/>
+        <!-- SBS40 *retune from* SBS50 on 22/09/14 @ Arthurs Seat, Ferntree Gully, Melbourne -->
+        <!-- SBS40 *retune from* SBS57 on 12/11/14 @ South Yarra -->
+        <transponder centre_frequency="613500000" bandwidth="1"/>
+        <!-- HSV41 @ Ferntree Gully, Selby, Upwey -->
+        <!-- HSV41 *retune from* HSV63 on 22/09/14 @ Arthurs Seat, Melbourne, South Yarra -->
+        <transponder centre_frequency="620500000" bandwidth="1"/>
+        <!-- MGV42 *retune from* MGV66 on 12/11/14 @ South Yarra -->
+        <transponder centre_frequency="627500000" bandwidth="1"/>
+        <!-- ABC43 *retune from* ABC47 on 22/09/14 @ Arthurs Seat, Ferntree Gully, Melbourne -->
+        <!-- ABC43 *retune from* ABC60 on 12/11/14 @ South Yarra -->
+        <transponder centre_frequency="634500000" bandwidth="1"/>
+        <!-- GTV44 @ Ferntree Gully, Selby, Upwey -->
+        <!-- GTV44 *retune from* GTV51 on 22/09/14 @ Arthurs Seat, Melbourne, South Yarra -->
+        <transponder centre_frequency="641500000" bandwidth="1"/>
+        <!-- ATV45 *retune from* ATV54 on 22/09/14 @ Arthurs Seat, Ferntree Gully, Melbourne, South Yarra -->
+        <transponder centre_frequency="648500000" bandwidth="1"/>
     </terrestrial>
     <!--Areas Served
         Brisbane
@@ -249,15 +256,15 @@
         Bedfordale, Bickley, Carmel, Walliston
     -->
     <terrestrial name="Perth">
-        <!-- TVW6 @ Bickley, Carmel -->
+        <!-- TVW6 @ Carmel -->
         <transponder centre_frequency="177500000" bandwidth="1"/>
-        <!-- SBS7 @ Bickley, Carmel -->
+        <!-- SBS7 @ Bickley -->
         <transponder centre_frequency="184500000" bandwidth="1"/>
         <!-- STW8 @ Walliston -->
         <transponder centre_frequency="191500000" bandwidth="1"/>
-        <!-- NEW11 @ Bickley, Carmel -->
+        <!-- NEW11 @ Carmel -->
         <transponder centre_frequency="219500000" bandwidth="1"/>
-        <!-- ABC12 @ Bickley, Carmel -->
+        <!-- ABC12 @ Bickley -->
         <transponder centre_frequency="226500000" bandwidth="1"/>
         <!-- CTW32 @ Carmel -->
         <transponder centre_frequency="557500000" bandwidth="1"/>
@@ -291,21 +298,13 @@
         <transponder centre_frequency="226500000" bandwidth="1"/>
         <!-- CTS33 @ Crafers -->
         <transponder centre_frequency="564500000" bandwidth="1"/>
-        <!-- SBS34 @ Adelaide, Newland Hill -->
-        <transponder centre_frequency="571500000" bandwidth="1"/>
-        <!-- SBS34 @ Elizabeth Downs -->
+        <!-- SBS34 @ Adelaide, Elizabeth Downs, Newland Hill -->
         <transponder centre_frequency="571625000" bandwidth="1"/>
-        <!-- SAS35 @ Adelaide, Newland Hill -->
-        <transponder centre_frequency="578500000" bandwidth="1"/>
-        <!-- SAS35 @ Elizabeth Downs -->
+        <!-- SAS35 @ Adelaide, Elizabeth Downs, Newland Hill -->
         <transponder centre_frequency="578625000" bandwidth="1"/>
-        <!-- NWS36 @ Adelaide, Newland Hill -->
-        <transponder centre_frequency="585500000" bandwidth="1"/>
-        <!-- NWS36 @ Elizabeth Downs -->
+        <!-- NWS36 @ Adelaide, Elizabeth Downs, Newland Hill -->
         <transponder centre_frequency="585625000" bandwidth="1"/>
-        <!-- ADS37 @ Adelaide, Newland Hill -->
-        <transponder centre_frequency="592500000" bandwidth="1"/>
-        <!-- ADS37 @ Elizabeth Downs -->
+        <!-- ADS37 @ Adelaide, Elizabeth Downs, Newland Hill -->
         <transponder centre_frequency="592625000" bandwidth="1"/>
         <!-- ABC39 @ Adelaide, Elizabeth Downs, Newland Hill -->
         <transponder centre_frequency="606500000" bandwidth="1"/>
@@ -317,34 +316,6 @@
         Currumbin, Mount Tamborine
     -->
     <terrestrial name="Gold Coast">
-        <!-- BTQ34 *retune* on 19/12/14 @ Currumbin, Mount Tamborine -->
-        <transponder centre_frequency="571500000" bandwidth="1"/>
-        <!-- QTQ35 *retune* on 19/12/14 @ Currumbin, Mount Tamborine -->
-        <transponder centre_frequency="578500000" bandwidth="1"/>
-        <!-- TVQ36 *retune* on 19/12/14 @ Currumbin, Mount Tamborine -->
-        <transponder centre_frequency="585500000" bandwidth="1"/>
-        <!-- NEN37 *retune* on 19/12/14 @ Currumbin, Mount Tamborine -->
-        <transponder centre_frequency="592500000" bandwidth="1"/>
-        <!-- NBN38 *retune* on 19/12/14 @ Currumbin, Mount Tamborine -->
-        <transponder centre_frequency="599500000" bandwidth="1"/>
-        <!-- NRN39 *retune* on 19/12/14 @ Currumbin, Mount Tamborine -->
-        <transponder centre_frequency="606500000" bandwidth="1"/>
-        <!-- SBS40 *retune* on 18/12/14 @ Currumbin, Mount Tamborine -->
-        <transponder centre_frequency="613500000" bandwidth="1"/>
-        <!-- ABC41 *retune* on 18/12/14 @ Currumbin, Mount Tamborine -->
-        <transponder centre_frequency="620500000" bandwidth="1"/>
-        <!-- BTQ42 *retune* on 18/12/14 @ Currumbin, Mount Tamborine -->
-        <transponder centre_frequency="627500000" bandwidth="1"/>
-        <!-- TVQ44 *retune* on 18/12/14 @ Currumbin, Mount Tamborine -->
-        <transponder centre_frequency="641500000" bandwidth="1"/>
-        <!-- QTQ45 *retune* on 18/12/14 @ Currumbin, Mount Tamborine -->
-        <transponder centre_frequency="648500000" bandwidth="1"/>
-        <!-- TVQ49 *retune* on 19/12/14 @ Currumbin, Mount Tamborine -->
-        <transponder centre_frequency="676500000" bandwidth="1"/>
-        <!-- ABC50 *retune* on 19/12/14 @ Currumbin, Mount Tamborine -->
-        <transponder centre_frequency="683500000" bandwidth="1"/>
-        <!-- SBS36 @ Currumbin, Mount Tamborine -->
-        <transponder centre_frequency="585625000" bandwidth="1"/>
         <!-- NRN43 @ Currumbin, Mount Tamborine -->
         <transponder centre_frequency="634625000" bandwidth="1"/>
         <!-- BTQ53 @ Currumbin, Mount Tamborine -->
@@ -359,6 +330,39 @@
         <transponder centre_frequency="788625000" bandwidth="1"/>
         <!-- NBN68 @ Currumbin, Mount Tamborine -->
         <transponder centre_frequency="809625000" bandwidth="1"/>
+        <!-- BTQ34 *retune from* BTQ53 on 28/10/14 @ Currumbin -->
+        <transponder centre_frequency="571500000" bandwidth="1"/>
+        <!-- QTQ35 *retune from* QTQ59 on 28/10/14 @ Currumbin -->
+        <transponder centre_frequency="578500000" bandwidth="1"/>
+        <!-- SBS36 @ Currumbin, Mount Tamborine -->
+        <!-- TVQ36 *retune from* TVQ56 on 28/10/14 @ Currumbin -->
+        <transponder centre_frequency="585625000" bandwidth="1"/>
+        <!-- NEN37 *retune from* NEN65 on 28/10/14 @ Currumbin -->
+        <transponder centre_frequency="592500000" bandwidth="1"/>
+        <!-- NBN38 *retune from* NBN68 on 28/10/14 @ Currumbin -->
+        <transponder centre_frequency="599500000" bandwidth="1"/>
+        <!-- NRN39 *retune from* NRN43 on 28/10/14 @ Currumbin -->
+        <transponder centre_frequency="606500000" bandwidth="1"/>
+        <!-- SBS40 *retune from* SBS36 on 28/10/14 @ Mount Tamborine -->
+        <transponder centre_frequency="613500000" bandwidth="1"/>
+        <!-- ABC41 *retune from* ABC62 on 28/10/14 @ Mount Tamborine -->
+        <transponder centre_frequency="620500000" bandwidth="1"/>
+        <!-- BTQ42 *retune from* BTQ53 on 28/10/14 @ Mount Tamborine -->
+        <transponder centre_frequency="627500000" bandwidth="1"/>
+        <!-- TVQ44 *retune from* TVQ56 on 28/10/14 @ Mount Tamborine -->
+        <transponder centre_frequency="641500000" bandwidth="1"/>
+        <!-- QTQ45 *retune from* QTQ59 on 28/10/14 @ Mount Tamborine -->
+        <transponder centre_frequency="648500000" bandwidth="1"/>
+        <!-- NEN46 *retune from* NEN65 on 28/10/14 @ Mount Tamborine -->
+        <transponder centre_frequency="655500000" bandwidth="1"/>
+        <!-- NBN47 *retune from* NBN68 on 28/10/14 @ Mount Tamborine -->
+        <transponder centre_frequency="662500000" bandwidth="1"/>
+        <!-- NRN48 *retune from* NRN43 on 28/10/14 @ Mount Tamborine -->
+        <transponder centre_frequency="669500000" bandwidth="1"/>
+        <!-- SBS49 *retune from* SBS36 on 28/10/14 @ Currumbin -->
+        <transponder centre_frequency="676500000" bandwidth="1"/>
+        <!-- ABC50 *retune from* ABC62 on 28/10/14 @ Currumbin -->
+        <transponder centre_frequency="683500000" bandwidth="1"/>
     </terrestrial>
     <!--Areas Served
         Kotara, Merewether, Newcastle
@@ -367,10 +371,6 @@
         Charlestown, Mt Sugarloaf, Newcastle
     -->
     <terrestrial name="Newcastle">
-        <!-- NEN35 *retune* on 04/09/14 @ Charlestown, Mt Sugarloaf, Newcastle -->
-        <transponder centre_frequency="578500000" bandwidth="1"/>
-        <!-- NRN39 *retune* on 04/09/14 @ Charlestown, Mt Sugarloaf, Newcastle -->
-        <transponder centre_frequency="606500000" bandwidth="1"/>
         <!-- NBN36 @ Charlestown, Mt Sugarloaf, Newcastle -->
         <transponder centre_frequency="585500000" bandwidth="1"/>
         <!-- ABC37 @ Charlestown, Mt Sugarloaf, Newcastle -->
@@ -381,6 +381,10 @@
         <transponder centre_frequency="690500000" bandwidth="1"/>
         <!-- NEN53 @ Charlestown, Mt Sugarloaf, Newcastle -->
         <transponder centre_frequency="704500000" bandwidth="1"/>
+        <!-- NEN35 *retune from* NEN53 on 10/09/14 @ Charlestown, Mt Sugarloaf, Newcastle -->
+        <transponder centre_frequency="578500000" bandwidth="1"/>
+        <!-- NRN39 *retune from* NRN51 on 10/09/14 @ Charlestown, Mt Sugarloaf, Newcastle -->
+        <transponder centre_frequency="606500000" bandwidth="1"/>
     </terrestrial>
     <!--Areas Served
         Canberra, Conder, Tuggeranong, Weston Creek/Woden
@@ -389,10 +393,6 @@
         Banks, Black Mountain, Mt Taylor, Tuggeranong Hill
     -->
     <terrestrial name="Canberra">
-        <!-- SBS7 *retune* on 05/11/14 @ Black Mountain -->
-        <transponder centre_frequency="184500000" bandwidth="1"/>
-        <!-- ABC8 *retune* on 05/11/14 @ Black Mountain -->
-        <transponder centre_frequency="191500000" bandwidth="1"/>
         <!-- CTC6 @ Black Mountain -->
         <transponder centre_frequency="177500000" bandwidth="1"/>
         <!-- ABC9A @ Black Mountain -->
@@ -413,16 +413,6 @@
         <transponder centre_frequency="599500000" bandwidth="1"/>
         <!-- CTC39 @ Banks -->
         <transponder centre_frequency="606500000" bandwidth="1"/>
-        <!-- ABC41 @ Mt Taylor, Tuggeranong Hill -->
-        <transponder centre_frequency="620500000" bandwidth="1"/>
-        <!-- CBN42 @ Tuggeranong Hill -->
-        <transponder centre_frequency="627500000" bandwidth="1"/>
-        <!-- WIN43 @ Tuggeranong Hill -->
-        <transponder centre_frequency="634500000" bandwidth="1"/>
-        <!-- CTC44 @ Tuggeranong Hill -->
-        <transponder centre_frequency="641500000" bandwidth="1"/>
-        <!-- SBS45 @ Mt Taylor, Tuggeranong Hill -->
-        <transponder centre_frequency="648500000" bandwidth="1"/>
         <!-- SBS57 @ Mt Taylor, Tuggeranong Hill -->
         <transponder centre_frequency="732500000" bandwidth="1"/>
         <!-- ABC59 @ Mt Taylor, Tuggeranong Hill -->
@@ -433,6 +423,25 @@
         <transponder centre_frequency="788500000" bandwidth="1"/>
         <!-- CBN68 @ Tuggeranong Hill -->
         <transponder centre_frequency="809500000" bandwidth="1"/>
+        <!-- SBS7 *retune from* SBS30 on 27/11/14 @ Black Mountain -->
+        <transponder centre_frequency="184500000" bandwidth="1"/>
+        <!-- ABC8 *retune from* ABC9A on 27/11/14 @ Black Mountain -->
+        <transponder centre_frequency="191500000" bandwidth="1"/>
+        <!-- ABC41 @ Mt Taylor, Tuggeranong Hill -->
+        <!-- ABC41 *retune from* ABC59 on 09/10/14 @ Mt Taylor, Tuggeranong Hill -->
+        <transponder centre_frequency="620500000" bandwidth="1"/>
+        <!-- CBN42 @ Tuggeranong Hill -->
+        <!-- CBN42 *retune from* CBN68 on 09/10/14 @ Tuggeranong Hill -->
+        <transponder centre_frequency="627500000" bandwidth="1"/>
+        <!-- WIN43 @ Tuggeranong Hill -->
+        <!-- WIN43 *retune from* WIN65 on 09/10/14 @ Tuggeranong Hill -->
+        <transponder centre_frequency="634500000" bandwidth="1"/>
+        <!-- CTC44 @ Tuggeranong Hill -->
+        <!-- CTC44 *retune from* CTC62 on 09/10/14 @ Tuggeranong Hill -->
+        <transponder centre_frequency="641500000" bandwidth="1"/>
+        <!-- SBS45 @ Mt Taylor, Tuggeranong Hill -->
+        <!-- SBS45 *retune from* SBS57 on 09/10/14 @ Mt Taylor, Tuggeranong Hill -->
+        <transponder centre_frequency="648500000" bandwidth="1"/>
     </terrestrial>
     <!--Areas Served
         Nambour, Noosa/Tewantin, Sunshine Coast North, Sunshine Coast South
@@ -441,30 +450,6 @@
         Bald Knob, Dulong, Tewantin
     -->
     <terrestrial name="Sunshine Coast">
-        <!-- BTQ34 *retune* on 14/07/14 @ Bald Knob -->
-        <transponder centre_frequency="571500000" bandwidth="1"/>
-        <!-- QTQ37 *retune* on 14/07/14 @ Bald Knob -->
-        <transponder centre_frequency="592500000" bandwidth="1"/>
-        <!-- TVQ38 *retune* on 14/07/14 @ Bald Knob -->
-        <transponder centre_frequency="599500000" bandwidth="1"/>
-        <!-- SBS40 *retune* on 09/07/14 @ Bald Knob, Dulong, Tewantin -->
-        <transponder centre_frequency="613500000" bandwidth="1"/>
-        <!-- ABC41 *retune* on 09/07/14 @ Bald Knob, Dulong, Tewantin -->
-        <transponder centre_frequency="620500000" bandwidth="1"/>
-        <!-- STQ42 *retune* on 09/07/14 @ Bald Knob, Dulong, Tewantin -->
-        <transponder centre_frequency="627500000" bandwidth="1"/>
-        <!-- RTQ43 *retune* on 09/07/14 @ Bald Knob, Dulong, Tewantin -->
-        <transponder centre_frequency="634500000" bandwidth="1"/>
-        <!-- TNQ44 *retune* on 09/07/14 @ Bald Knob, Dulong, Tewantin -->
-        <transponder centre_frequency="641500000" bandwidth="1"/>
-        <!-- RTQ46 *retune* on 14/07/14 @ Bald Knob, Dulong, Tewantin -->
-        <transponder centre_frequency="655500000" bandwidth="1"/>
-        <!-- STQ48 *retune* on 14/07/14 @ Bald Knob, Dulong, Tewantin -->
-        <transponder centre_frequency="669500000" bandwidth="1"/>
-        <!-- ABC49 *retune* on 14/07/14 @ Bald Knob, Dulong, Tewantin -->
-        <transponder centre_frequency="676500000" bandwidth="1"/>
-        <!-- SBS50 *retune* on 14/07/14 @ Bald Knob, Dulong, Tewantin -->
-        <transponder centre_frequency="683500000" bandwidth="1"/>
         <!-- SBS35 @ Bald Knob -->
         <transponder centre_frequency="578500000" bandwidth="1"/>
         <!-- SBS36 @ Bald Knob, Dulong, Tewantin -->
@@ -485,6 +470,30 @@
         <transponder centre_frequency="788625000" bandwidth="1"/>
         <!-- RTQ68 @ Bald Knob, Dulong, Tewantin -->
         <transponder centre_frequency="809500000" bandwidth="1"/>
+        <!-- BTQ34 *retune from* BTQ53 on 15/07/14 @ Bald Knob -->
+        <transponder centre_frequency="571500000" bandwidth="1"/>
+        <!-- QTQ37 *retune from* QTQ59 on 15/07/14 @ Bald Knob -->
+        <transponder centre_frequency="592500000" bandwidth="1"/>
+        <!-- TVQ38 *retune from* TVQ56 on 15/07/14 @ Bald Knob -->
+        <transponder centre_frequency="599500000" bandwidth="1"/>
+        <!-- SBS40 *retune from* SBS36 on 09/07/14 @ Dulong, Tewantin -->
+        <transponder centre_frequency="613500000" bandwidth="1"/>
+        <!-- ABC41 *retune from* ABC62 on 09/07/14 @ Dulong, Tewantin -->
+        <transponder centre_frequency="620500000" bandwidth="1"/>
+        <!-- STQ42 *retune from* STQ65 on 09/07/14 @ Dulong, Tewantin -->
+        <transponder centre_frequency="627500000" bandwidth="1"/>
+        <!-- RTQ43 *retune from* RTQ68 on 09/07/14 @ Dulong, Tewantin -->
+        <transponder centre_frequency="634500000" bandwidth="1"/>
+        <!-- TNQ44 *retune from* TNQ47 on 09/07/14 @ Dulong, Tewantin -->
+        <transponder centre_frequency="641500000" bandwidth="1"/>
+        <!-- RTQ46 *retune from* RTQ68 on 22/07/14 @ Bald Knob -->
+        <transponder centre_frequency="655500000" bandwidth="1"/>
+        <!-- STQ48 *retune from* STQ65 on 22/07/14 @ Bald Knob -->
+        <transponder centre_frequency="669500000" bandwidth="1"/>
+        <!-- ABC49 *retune from* ABC62 on 22/07/14 @ Bald Knob -->
+        <transponder centre_frequency="676500000" bandwidth="1"/>
+        <!-- SBS50 *retune from* SBS36 on 22/07/14 @ Bald Knob -->
+        <transponder centre_frequency="683500000" bandwidth="1"/>
     </terrestrial>
     <!--Areas Served
         Illawarra, Wollongong
@@ -493,10 +502,6 @@
         Brokers Nose, Knights Hill
     -->
     <terrestrial name="Wollongong">
-        <!-- ABC35 *retune* on 09/06/14 @ Knights Hill -->
-        <transponder centre_frequency="578500000" bandwidth="1"/>
-        <!-- SBS39 *retune* on 09/06/14 @ Knights Hill -->
-        <transponder centre_frequency="606500000" bandwidth="1"/>
         <!-- WIN36 @ Knights Hill -->
         <transponder centre_frequency="585500000" bandwidth="1"/>
         <!-- CTC37 @ Knights Hill -->
@@ -517,6 +522,10 @@
         <transponder centre_frequency="690500000" bandwidth="1"/>
         <!-- SBS54 @ Knights Hill -->
         <transponder centre_frequency="711625000" bandwidth="1"/>
+        <!-- ABC35 *retune from* ABC51 on 10/06/14 @ Knights Hill -->
+        <transponder centre_frequency="578500000" bandwidth="1"/>
+        <!-- SBS39 *retune from* SBS54 on 10/06/14 @ Knights Hill -->
+        <transponder centre_frequency="606500000" bandwidth="1"/>
     </terrestrial>
     <!--Areas Served
         Acton Road, Hobart, Hobart NE Suburbs, Taroona
@@ -525,20 +534,6 @@
         Acton, Mt Wellington, Opossum Bay, Risdon, White Rock Point
     -->
     <terrestrial name="Hobart">
-        <!-- SBS6 *retune* on 09/10/14 @ Mt Wellington -->
-        <transponder centre_frequency="177500000" bandwidth="1"/>
-        <!-- TDT34 *retune* on 16/07/14 @ Acton -->
-        <transponder centre_frequency="571500000" bandwidth="1"/>
-        <!-- TNT40 *retune* on 22/07/14 @ Opossum Bay, Risdon -->
-        <transponder centre_frequency="613500000" bandwidth="1"/>
-        <!-- TVT43 *retune* on 22/07/14 @ Opossum Bay -->
-        <transponder centre_frequency="634500000" bandwidth="1"/>
-        <!-- SBS46 *retune* on 22/07/14 @ Risdon -->
-        <transponder centre_frequency="655500000" bandwidth="1"/>
-        <!-- ABC47 *retune* on 22/07/14 -->
-        <transponder centre_frequency="662500000" bandwidth="1"/>
-        <!-- TVT49 *retune* on 22/07/14 @ Risdon -->
-        <transponder centre_frequency="676500000" bandwidth="1"/>
         <!-- TVT7 @ Mt Wellington -->
         <transponder centre_frequency="184625000" bandwidth="1"/>
         <!-- ABC8 @ Mt Wellington -->
@@ -565,10 +560,6 @@
         <transponder centre_frequency="627625000" bandwidth="1"/>
         <!-- ABC45 @ White Rock Point -->
         <transponder centre_frequency="648625000" bandwidth="1"/>
-        <!-- TNT48 @ Opossum Bay, Risdon -->
-        <transponder centre_frequency="669500000" bandwidth="1"/>
-        <!-- TDT51 @ Acton, Risdon -->
-        <transponder centre_frequency="690500000" bandwidth="1"/>
         <!-- ABC56 @ Risdon -->
         <transponder centre_frequency="725375000" bandwidth="1"/>
         <!-- TNT62 @ Risdon -->
@@ -579,6 +570,26 @@
         <transponder centre_frequency="788500000" bandwidth="1"/>
         <!-- TDT66 @ Risdon -->
         <transponder centre_frequency="795500000" bandwidth="1"/>
+        <!-- SBS6 *retune from* SBS9A on 30/10/14 @ Mt Wellington -->
+        <transponder centre_frequency="177500000" bandwidth="1"/>
+        <!-- TDT34 *retune from* TDT51 on 16/07/14 @ Acton -->
+        <transponder centre_frequency="571500000" bandwidth="1"/>
+        <!-- TNT40 *retune from* TNT48 on 22/07/14 @ White Rock Point -->
+        <transponder centre_frequency="613500000" bandwidth="1"/>
+        <!-- TVT43 *retune from* TVT39 on 22/07/14 @ White Rock Point -->
+        <transponder centre_frequency="634500000" bandwidth="1"/>
+        <!-- SBS46 *retune from* SBS64 on 22/07/14 @ Risdon -->
+        <transponder centre_frequency="655500000" bandwidth="1"/>
+        <!-- ABC47 *retune from* ABC56 on 22/07/14 @ Risdon -->
+        <transponder centre_frequency="662500000" bandwidth="1"/>
+        <!-- TNT48 @ Opossum Bay -->
+        <!-- TNT48 *retune from* TNT62 on 22/07/14 @ Risdon -->
+        <transponder centre_frequency="669500000" bandwidth="1"/>
+        <!-- TVT49 *retune from* TVT65 on 22/07/14 @ Risdon -->
+        <transponder centre_frequency="676500000" bandwidth="1"/>
+        <!-- TDT51 *retune from* TDT66 on 22/07/14 @ Risdon -->
+        <!-- TDT51 @ Acton -->
+        <transponder centre_frequency="690500000" bandwidth="1"/>
     </terrestrial>
     <!--Areas Served
         Geelong
@@ -587,16 +598,6 @@
         Highton
     -->
     <terrestrial name="Geelong">
-        <!-- HSV46 *retune* on 11/09/14 @ Highton -->
-        <transponder centre_frequency="655500000" bandwidth="1"/>
-        <!-- GTV47 *retune* on 11/09/14 @ Highton -->
-        <transponder centre_frequency="662500000" bandwidth="1"/>
-        <!-- ATV48 *retune* on 11/09/14 @ Highton -->
-        <transponder centre_frequency="669500000" bandwidth="1"/>
-        <!-- ABC49 *retune* on 11/09/14 @ Highton -->
-        <transponder centre_frequency="676500000" bandwidth="1"/>
-        <!-- SBS50 *retune* on 11/09/14 @ Highton -->
-        <transponder centre_frequency="683500000" bandwidth="1"/>
         <!-- SBS53 @ Highton -->
         <transponder centre_frequency="704500000" bandwidth="1"/>
         <!-- ABC64 @ Highton -->
@@ -607,36 +608,42 @@
         <transponder centre_frequency="802500000" bandwidth="1"/>
         <!-- ATV69 @ Highton -->
         <transponder centre_frequency="816500000" bandwidth="1"/>
+        <!-- HSV46 *retune from* HSV66 on 24/09/14 @ Highton -->
+        <transponder centre_frequency="655500000" bandwidth="1"/>
+        <!-- GTV47 *retune from* GTV67 on 24/09/14 @ Highton -->
+        <transponder centre_frequency="662500000" bandwidth="1"/>
+        <!-- ATV48 *retune from* ATV69 on 24/09/14 @ Highton -->
+        <transponder centre_frequency="669500000" bandwidth="1"/>
+        <!-- ABC49 *retune from* ABC64 on 24/09/14 @ Highton -->
+        <transponder centre_frequency="676500000" bandwidth="1"/>
+        <!-- SBS50 *retune from* SBS53 on 24/09/14 @ Highton -->
+        <transponder centre_frequency="683500000" bandwidth="1"/>
     </terrestrial>
     <!--Areas Served
         Stuart, Townsville, Townsville North
     -->
     <!--Transmitter Sites
-        Murray, Stuart, Yarrawonga
+        Mount Stuart, Stuart, Yarrawonga
     -->
     <terrestrial name="Townsville">
-        <!-- ABC34 *retune* on 16/07/14 @ Murray -->
-        <transponder centre_frequency="571500000" bandwidth="1"/>
-        <!-- RTQ35 *retune* on 16/07/14 @ Murray -->
-        <transponder centre_frequency="578500000" bandwidth="1"/>
-        <!-- ABC46 *retune* on 08/04/14 @ Stuart, Yarrawonga -->
-        <transponder centre_frequency="655500000" bandwidth="1"/>
-        <!-- STQ47 *retune* on 08/04/14 @ Stuart, Yarrawonga -->
-        <transponder centre_frequency="662500000" bandwidth="1"/>
-        <!-- TNQ48 *retune* on 08/04/14 @ Stuart, Yarrawonga -->
-        <transponder centre_frequency="669500000" bandwidth="1"/>
-        <!-- RTQ49 *retune* on 08/04/14 @ Stuart, Yarrawonga -->
-        <transponder centre_frequency="676500000" bandwidth="1"/>
-        <!-- ABC31 @ Murray -->
+        <!-- ABC31 @ Mount Stuart -->
         <transponder centre_frequency="550500000" bandwidth="1"/>
-        <!-- TNQ36 @ Murray -->
+        <!-- TNQ36 @ Mount Stuart -->
         <transponder centre_frequency="585500000" bandwidth="1"/>
-        <!-- SBS37 @ Murray -->
+        <!-- SBS37 @ Mount Stuart -->
         <transponder centre_frequency="592500000" bandwidth="1"/>
-        <!-- STQ38 @ Murray -->
+        <!-- STQ38 @ Mount Stuart -->
         <transponder centre_frequency="599500000" bandwidth="1"/>
-        <!-- RTQ41 @ Murray -->
+        <!-- RTQ41 @ Mount Stuart -->
         <transponder centre_frequency="620625000" bandwidth="1"/>
+        <!-- ABC46 @ Stuart, Yarrawonga -->
+        <transponder centre_frequency="655500000" bandwidth="1"/>
+        <!-- STQ47 @ Stuart, Yarrawonga -->
+        <transponder centre_frequency="662500000" bandwidth="1"/>
+        <!-- TNQ48 @ Stuart, Yarrawonga -->
+        <transponder centre_frequency="669500000" bandwidth="1"/>
+        <!-- RTQ49 @ Stuart, Yarrawonga -->
+        <transponder centre_frequency="676500000" bandwidth="1"/>
         <!-- SBS51 @ Stuart, Yarrawonga -->
         <transponder centre_frequency="690500000" bandwidth="1"/>
         <!-- ABC54 @ Stuart, Yarrawonga -->
@@ -646,7 +653,11 @@
         <!-- TNQ60 @ Stuart, Yarrawonga -->
         <transponder centre_frequency="753500000" bandwidth="1"/>
         <!-- RTQ63 @ Stuart, Yarrawonga -->
-        <transponder centre_frequency="774500000" bandwidth="1"/>
+        <transponder centre_frequency="774625000" bandwidth="1"/>
+        <!-- ABC34 *retune from* ABC31 on 21/07/14 @ Mount Stuart -->
+        <transponder centre_frequency="571500000" bandwidth="1"/>
+        <!-- RTQ35 *retune from* RTQ41 on 21/07/14 @ Mount Stuart -->
+        <transponder centre_frequency="578500000" bandwidth="1"/>
     </terrestrial>
     <!--Areas Served
         Cairns, Cairns East, Cairns IBL, Cairns North, Gordonvale, Wangetti
@@ -655,30 +666,6 @@
         Green Hill, Mt Bellenden Ker, Mt Yarrabah, Palm Cove, Portsmith, Saddle Mountain
     -->
     <terrestrial name="Cairns">
-        <!-- SBS7 *retune* on 20/10/14 @ Mt Bellenden Ker -->
-        <transponder centre_frequency="184500000" bandwidth="1"/>
-        <!-- SBS34 *retune* on 15/09/14 @ Green Hill, Mt Yarrabah, Saddle Mountain -->
-        <transponder centre_frequency="571500000" bandwidth="1"/>
-        <!-- ABC35 *retune* on 15/09/14 @ Green Hill, Mt Yarrabah, Palm Cove, Saddle Mountain -->
-        <transponder centre_frequency="578500000" bandwidth="1"/>
-        <!-- STQ36 *retune* on 15/09/14 @ Green Hill, Mt Yarrabah, Saddle Mountain -->
-        <transponder centre_frequency="585500000" bandwidth="1"/>
-        <!-- RTQ37 *retune* on 15/09/14 @ Green Hill, Mt Yarrabah, Saddle Mountain -->
-        <transponder centre_frequency="592500000" bandwidth="1"/>
-        <!-- TNQ38 *retune* on 15/09/14 @ Green Hill, Mt Yarrabah, Saddle Mountain -->
-        <transponder centre_frequency="599500000" bandwidth="1"/>
-        <!-- RTQ41 *retune* on 17/09/14 @ Green Hill, Mt Yarrabah, Saddle Mountain -->
-        <transponder centre_frequency="620500000" bandwidth="1"/>
-        <!-- TNQ44 *retune* on 17/09/14 @ Green Hill, Mt Yarrabah, Saddle Mountain -->
-        <transponder centre_frequency="641500000" bandwidth="1"/>
-        <!-- SBS45 *retune* on 17/09/14 @ Green Hill, Mt Yarrabah, Saddle Mountain -->
-        <transponder centre_frequency="648500000" bandwidth="1"/>
-        <!-- SBS47 *retune* on 07/07/14 @ Green Hill, Mt Yarrabah, Saddle Mountain -->
-        <transponder centre_frequency="662500000" bandwidth="1"/>
-        <!-- ABC48 *retune* on 07/07/14 @ Green Hill, Mt Yarrabah, Palm Cove, Saddle Mountain -->
-        <transponder centre_frequency="669500000" bandwidth="1"/>
-        <!-- STQ50 *retune* on 07/07/14 @ Green Hill, Mt Yarrabah, Saddle Mountain -->
-        <transponder centre_frequency="683500000" bandwidth="1"/>
         <!-- TNQ6 @ Mt Bellenden Ker, Portsmith -->
         <transponder centre_frequency="177500000" bandwidth="1"/>
         <!-- ABC8 @ Mt Bellenden Ker -->
@@ -699,6 +686,30 @@
         <transponder centre_frequency="676500000" bandwidth="1"/>
         <!-- SBS52 @ Green Hill, Mt Yarrabah, Saddle Mountain -->
         <transponder centre_frequency="697625000" bandwidth="1"/>
+        <!-- SBS7 *retune from* SBS29 on 29/09/14 @ Mt Bellenden Ker -->
+        <transponder centre_frequency="184500000" bandwidth="1"/>
+        <!-- SBS34 *retune from* SBS52 on 15/09/14 @ Saddle Mountain -->
+        <transponder centre_frequency="571500000" bandwidth="1"/>
+        <!-- ABC35 *retune from* ABC42 on 15/09/14 @ Saddle Mountain -->
+        <transponder centre_frequency="578500000" bandwidth="1"/>
+        <!-- STQ36 *retune from* STQ43 on 15/09/14 @ Saddle Mountain -->
+        <transponder centre_frequency="585500000" bandwidth="1"/>
+        <!-- RTQ37 *retune from* RTQ49 on 15/09/14 @ Saddle Mountain -->
+        <transponder centre_frequency="592500000" bandwidth="1"/>
+        <!-- TNQ38 *retune from* TNQ46 on 15/09/14 @ Saddle Mountain -->
+        <transponder centre_frequency="599500000" bandwidth="1"/>
+        <!-- RTQ41 *retune from* RTQ49 on 17/09/14 @ Mt Yarrabah -->
+        <transponder centre_frequency="620500000" bandwidth="1"/>
+        <!-- TNQ44 *retune from* TNQ46 on 17/09/14 @ Mt Yarrabah -->
+        <transponder centre_frequency="641500000" bandwidth="1"/>
+        <!-- SBS45 *retune from* SBS52 on 17/09/14 @ Mt Yarrabah -->
+        <transponder centre_frequency="648500000" bandwidth="1"/>
+        <!-- SBS47 *retune from* SBS52 on 16/07/14 @ Green Hill -->
+        <transponder centre_frequency="662500000" bandwidth="1"/>
+        <!-- ABC48 *retune from* ABC42 on 16/07/14 @ Green Hill -->
+        <transponder centre_frequency="669500000" bandwidth="1"/>
+        <!-- STQ50 *retune from* STQ43 on 16/07/14 @ Green Hill -->
+        <transponder centre_frequency="683500000" bandwidth="1"/>
     </terrestrial>
     <!--Areas Served
         Darwin
@@ -717,8 +728,6 @@
         <transponder centre_frequency="557500000" bandwidth="1"/>
         <!-- DTD33 @ Knuckey Lagoon -->
         <transponder centre_frequency="564625000" bandwidth="1"/>
-        <!--  @ Knuckey Lagoon -->
-        <transponder centre_frequency="578500000" bandwidth="1"/>
     </terrestrial>
     <!--Areas Served
         Toowoomba
@@ -727,16 +736,6 @@
         Toowoomba
     -->
     <terrestrial name="Toowoomba">
-        <!-- SBS46 *retune* on 04/08/14 @ Toowoomba -->
-        <transponder centre_frequency="655500000" bandwidth="1"/>
-        <!-- ABC47 *retune* on 04/08/14 @ Toowoomba -->
-        <transponder centre_frequency="662500000" bandwidth="1"/>
-        <!-- STQ48 *retune* on 04/08/14 @ Toowoomba -->
-        <transponder centre_frequency="669500000" bandwidth="1"/>
-        <!-- RTQ49 *retune* on 04/08/14 @ Toowoomba -->
-        <transponder centre_frequency="676500000" bandwidth="1"/>
-        <!-- TNQ50 *retune* on 04/08/14 @ Toowoomba -->
-        <transponder centre_frequency="683500000" bandwidth="1"/>
         <!-- ABC55 @ Toowoomba -->
         <transponder centre_frequency="718500000" bandwidth="1"/>
         <!-- STQ58 @ Toowoomba -->
@@ -747,5 +746,15 @@
         <transponder centre_frequency="781500000" bandwidth="1"/>
         <!-- SBS67 @ Toowoomba -->
         <transponder centre_frequency="802500000" bandwidth="1"/>
+        <!-- SBS46 *retune from* SBS67 on 12/08/14 @ Toowoomba -->
+        <transponder centre_frequency="655500000" bandwidth="1"/>
+        <!-- ABC47 *retune from* ABC55 on 12/08/14 @ Toowoomba -->
+        <transponder centre_frequency="662500000" bandwidth="1"/>
+        <!-- STQ48 *retune from* STQ58 on 12/08/14 @ Toowoomba -->
+        <transponder centre_frequency="669500000" bandwidth="1"/>
+        <!-- RTQ49 *retune from* RTQ64 on 12/08/14 @ Toowoomba -->
+        <transponder centre_frequency="676500000" bandwidth="1"/>
+        <!-- TNQ50 *retune from* TNQ61 on 12/08/14 @ Toowoomba -->
+        <transponder centre_frequency="683500000" bandwidth="1"/>
     </terrestrial>
 </locations>

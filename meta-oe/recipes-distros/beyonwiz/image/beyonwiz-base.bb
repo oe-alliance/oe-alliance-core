@@ -22,7 +22,7 @@ RDEPENDS_${PN} = "\
     hddtemp \
     rsync \
     busybox-cron \
-    ${ENIGMA2_DVB_USB_DRV} \ 
+    ${ENIGMA2_DVB_USB_DRV} \
     \
     \
     oe-alliance-branding \
@@ -46,7 +46,7 @@ RDEPENDS_${PN} = "\
     util-linux-sfdisk \
     util-linux-blkid \
     volatile-media \
-    vsftpd \    
+    vsftpd \
     "
 
 ENIGMA2_DVB_USB_DRV = "\
@@ -60,4 +60,4 @@ ENIGMA2_DVB_USB_DRV = "\
     enigma2-plugin-drivers-dvb-usb-af9035 \
     enigma2-plugin-drivers-dvb-usb-a867 \
     enigma2-plugin-drivers-usbserial \
-"
+    "
