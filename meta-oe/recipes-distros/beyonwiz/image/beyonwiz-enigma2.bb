@@ -7,7 +7,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "1.0"
-PR = "r6"
+PR = "r7"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 inherit packagegroup
@@ -23,7 +23,6 @@ RREPLACES_${PN} = "\
 "
 
 DEPENDS = "\
-    beyonwiz-feeds \
     enigma2 \
     enigma2-plugins \
     enigma2-oe-alliance-plugins \
@@ -39,13 +38,10 @@ RDEPENDS_${PN} = "\
 	tuxbox-links \
 	tuxbox-common-aus \
 	mtd-utils \
-	${@base_conditional('MACHINE', 'dm800', '', 'mtd-utils-ubifs', d)} \
 	procps \
 	parted \
 	\
 	enigma2-skindefault \
-	\
-	beyonwiz-version-info \
 	\
 	enigma2-plugin-picons-tv-australia \
 	\
@@ -67,7 +63,7 @@ RDEPENDS_${PN} = "\
 	\
 	enigma2-plugin-systemplugins-softwaremanager \
 	enigma2-plugin-systemplugins-inilcnscanner \
-	${HBBTV} \
+	enigma2-plugin-extensions-hbbtv \
 "
 
 RRECOMMENDS_${PN} = "\
@@ -89,8 +85,3 @@ RRECOMMENDS_${PN} = "\
     ${@base_contains("MACHINE_FEATURES", "transcoding", "enigma2-plugin-systemplugins-transcodingsetup", "", d)} \
     ${@base_contains("MACHINE_FEATURES", "videoenhancement", "enigma2-plugin-systemplugins-videoenhancement", "", d)} \
     "
-    
-HBBTV = "\
-	enigma2-plugin-extensions-hbbtv \
-	vuplus-opera-browser-util \
-	"

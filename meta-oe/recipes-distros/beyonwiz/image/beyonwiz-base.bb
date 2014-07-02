@@ -7,13 +7,16 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "1.0"
-PR = "r3"
+PR = "r4"
 
 inherit packagegroup
 
 RDEPENDS_${PN} = "\
     beyonwiz-enigma2 \
     beyonwiz-bootlogo \
+    beyonwiz-feeds \    
+    beyonwiz-version-info \    
+    \
     python-gdata \
     minidlna djmount fuse-utils \
     task-base-smbfs \
@@ -24,9 +27,7 @@ RDEPENDS_${PN} = "\
     busybox-cron \
     ${ENIGMA2_DVB_USB_DRV} \
     \
-    \
     oe-alliance-branding \
-    ${@base_contains("MACHINE_FEATURES", "iniwol", "ini-coldboot ini-ethwol", "", d)} \
     avahi-daemon \
     dropbear \
     early-configure \
@@ -58,6 +59,5 @@ ENIGMA2_DVB_USB_DRV = "\
     enigma2-plugin-drivers-dvb-usb-pctv452e \
     enigma2-plugin-drivers-dvb-usb-dtt200u \
     enigma2-plugin-drivers-dvb-usb-af9035 \
-    enigma2-plugin-drivers-dvb-usb-a867 \
     enigma2-plugin-drivers-usbserial \
     "
