@@ -4,15 +4,15 @@ SECTION = "kernel/modules"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://iwpriv_usage.txt;md5=8876ae2c103446a442658f1cc2a01b76"
 
-PR = "r7"
+PR = "r8"
 
 inherit module
 
-SRC_URI = "http://code-ini.com/software/mirror/20120911_RT3573_Linux_STA_v2.5.0.0_Rev3_DPO.tar.gz"
+SRC_URI = "http://code-ini.com/software/mirror/20120911_RT3573_Linux_STA_v2.5.0.0_Rev4_DPO.tar.gz"
 
 EXTRA_OEMAKE = "LINUX_SRC=${STAGING_KERNEL_DIR}"
 
-S = "${WORKDIR}/20120911_RT3573_Linux_STA_v2.5.0.0_Rev3_DPO/"
+S = "${WORKDIR}/20120911_RT3573_Linux_STA_v2.5.0.0_Rev4_DPO/"
 
 do_install() {
     install -d ${D}/lib/modules/${KERNEL_VERSION}/kernel/drivers/net/wireless
@@ -22,7 +22,7 @@ do_install() {
     install -m 0644 ${S}/RT2870STACard.dat ${D}/etc/Wireless/RT3573STA/RT3573STACard.dat
 }
 
-SRC_URI[md5sum] = "58a3814c3d0d7bf81f81a631e5cfc9f5"
-SRC_URI[sha256sum] = "d98a3113673b1ad0d7f71203f1aecb1d870417536924e489233aec1819c91d9e"
+SRC_URI[md5sum] = "08256c9b2ae77308b608662dc0ba3a1b"
+SRC_URI[sha256sum] = "d3422502e09020bd6909aa63be87747604de976a312c3d38c811b6cf6ac84fe9"
 
 FILES_${PN}_append = "${sysconfdir}/Wireless"

@@ -1,0 +1,22 @@
+--- DPO_RT3070_LinuxSTA_V2.3.0.4_20100604.orig/Makefile
++++ DPO_RT3070_LinuxSTA_V2.3.0.4_20100604/Makefile
+@@ -258,6 +258,6 @@
+	cp -f $(RT28xx_DIR)/os/linux/rtnet$(CHIPSET)apsta.o /tftpboot
+ endif
+ else
+-	cp -f $(RT28xx_DIR)/os/linux/rt$(CHIPSET)sta.o /tftpboot
++	cp -f $(RT28xx_DIR)/os/linux/rt$(CHIPSET)sta.o $(RT28xx_DIR)
+ ifeq ($(OSABL),YES)
+	cp -f $(RT28xx_DIR)/os/linux/rtutil$(CHIPSET)sta.o /tftpboot
+	cp -f $(RT28xx_DIR)/os/linux/rtnet$(CHIPSET)sta.o /tftpboot
+--- DPO_RT3070_LinuxSTA_V2.3.0.4_20100604.orig/Makefile
++++ DPO_RT3070_LinuxSTA_V2.3.0.4_20100604/Makefile
+@@ -305,6 +305,6 @@
+	cp -f $(RT28xx_DIR)/os/linux/rtnet$(CHIPSET)apsta.ko /tftpboot
+ endif
+ else
+-	cp -f $(RT28xx_DIR)/os/linux/rt$(CHIPSET)sta.ko /tftpboot
++	cp -f $(RT28xx_DIR)/os/linux/rt$(CHIPSET)sta.ko $(RT28xx_DIR)
+ ifeq ($(OSABL),YES)
+	cp -f $(RT28xx_DIR)/os/linux/rtutil$(CHIPSET)sta.ko /tftpboot
+	cp -f $(RT28xx_DIR)/os/linux/rtnet$(CHIPSET)sta.ko /tftpboot

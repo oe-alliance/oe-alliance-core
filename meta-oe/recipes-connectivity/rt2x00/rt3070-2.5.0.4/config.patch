@@ -1,0 +1,16 @@
+--- 2011_0719_RT3070_RT3370_RT5370_RT5372_Linux_STA_V2.5.0.3_DPO.orig/os/linux/config.mk
++++ 2011_0719_RT3070_RT3370_RT5370_RT5372_Linux_STA_V2.5.0.3_DPO/os/linux/config.mk
+@@ -53,11 +53,11 @@ HAS_LLTD=n
+ HAS_APCLI=n
+
+ # Support Wpa_Supplicant
+-HAS_WPA_SUPPLICANT=n
++HAS_WPA_SUPPLICANT=y
+
+
+ # Support Native WpaSupplicant for Network Maganger
+-HAS_NATIVE_WPA_SUPPLICANT_SUPPORT=n
++HAS_NATIVE_WPA_SUPPLICANT_SUPPORT=y
+
+ #Support Net interface block while Tx-Sw queue full
+ HAS_BLOCK_NET_IF=n

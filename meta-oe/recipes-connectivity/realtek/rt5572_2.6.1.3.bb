@@ -4,11 +4,11 @@ SECTION = "kernel/modules"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://iwpriv_usage.txt;md5=8876ae2c103446a442658f1cc2a01b76"
 
-PR = "r4"
+PR = "r6"
 
 inherit module
 
-SRC_URI = "http://code-ini.com/software/mirror/rt5572_2.6.1.3.tar.gz"
+SRC_URI = "http://code-ini.com/software/mirror/rt5572_2.6.1.4.tar.gz"
 
 EXTRA_OEMAKE = "LINUX_SRC=${STAGING_KERNEL_DIR}"
 
@@ -22,7 +22,7 @@ do_install() {
     install -m 0644 ${S}/RT2870STACard.dat ${D}${sysconfdir}/Wireless/RT5572STA/RT5572STACard.dat
 }
 
-SRC_URI[md5sum] = "73793cd42bfbbf3a3be7eb687de79138"
-SRC_URI[sha256sum] = "351ae0bdee6a45f0ed650bbbf378df15204f37ad5534bcc1bf9433eb06b86ca7"
+SRC_URI[md5sum] = "88d11654985e8da2101bc92d4fa00340"
+SRC_URI[sha256sum] = "50bc80038a1a691bdcce426e95e9480f1d424fbc99690dac91a51c67b49090ea"
 
 FILES_${PN}_append = "${sysconfdir}/Wireless"
