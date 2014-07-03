@@ -1,13 +1,10 @@
-KV = "3.6.0"
-SRCDATE = "20140603"
+KV = "3.12.1"
+SRCDATE = "20140701"
 
-SRC_URI[md5sum] = "2cb1c6f95ce804416e806fe32fa009c7"
-SRC_URI[sha256sum] = "5a9c83d88a306d0e13a66a66199a2e0e111c176f7022d75aee0915357f8eec25"
+SRC_URI[md5sum] = "14aa9dbda3bea2b33070de9cd880e569"
+SRC_URI[sha256sum] = "34cd707e6f52e81d7e1322b827f6b94c151aa58a3e68a818fd3ef7f8134d42b0"
 
 SRC_URI = "http://code-ini.com/software/drivers/ini-1000-drivers-${KV}-${SRCDATE}.zip"
-
-RREPLACES_${PN} = "venton-dvb-modules-ventonhde"
-RCONFLICTS_${PN} = "venton-dvb-modules-ventonhde"
 
 require ini-dvb-modules.inc
 
