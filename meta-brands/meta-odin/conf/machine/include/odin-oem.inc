@@ -10,6 +10,7 @@ ${@base_contains('MACHINEBUILD', 'axodinc', 'AX ODIN-C' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'starsatlx', 'LX' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'genius', 'genius' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'evo', 'EVO' , '', d)}\
+${@base_contains('MACHINEBUILD', 'galaxym6', 'GalaxyM6' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'geniuse3hd', 'Genius E3HD' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'evoe3hd', 'E3HD' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'axase3', 'E3HD' , '', d)}\
@@ -24,6 +25,7 @@ ${@base_contains('MACHINEBUILD', 'axodinc', 'Opticum' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'starsatlx', 'Starsat' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'genius', 'Galaxy Innovations' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'evo', 'Optibox' , '', d)}\
+${@base_contains('MACHINEBUILD', 'galaxym6', 'T-rex' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'geniuse3hd', 'Galaxy Innovations' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'evoe3hd', 'Optibox' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'axase3', 'Axas' , '', d)}\
@@ -38,6 +40,7 @@ ${@base_contains('MACHINEBUILD', 'axodinc', 'en2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'starsatlx', 'en2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'genius', 'en2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'evo', 'en2' , '', d)}\
+${@base_contains('MACHINEBUILD', 'galaxym6', 'en2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'geniuse3hd', 'e3hd' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'evoe3hd', 'e3hd' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'axase3', 'e3hd' , '', d)}\
@@ -52,6 +55,7 @@ ${@base_contains('MACHINEBUILD', 'axodinc', 'mtd3' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'starsatlx', 'mtd3' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'genius', 'mtd3' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'evo', 'mtd3' , '', d)}\
+${@base_contains('MACHINEBUILD', 'galaxym6', 'mtd3' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'geniuse3hd', 'mtd1' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'evoe3hd', 'mtd1' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'axase3', 'mtd1' , '', d)}\
@@ -66,6 +70,7 @@ ${@base_contains('MACHINEBUILD', 'axodinc', 'mtd4' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'starsatlx', 'mtd4' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'genius', 'mtd4' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'evo', 'mtd4' , '', d)}\
+${@base_contains('MACHINEBUILD', 'galaxym6', 'mtd4' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'geniuse3hd', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'evoe3hd', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'axase3', 'mtd2' , '', d)}\
