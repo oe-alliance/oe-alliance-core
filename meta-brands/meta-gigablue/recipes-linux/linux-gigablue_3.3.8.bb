@@ -7,7 +7,7 @@ PR = "r4"
 
 inherit machine_kernel_pr
 
-MACHINE_KERNEL_PR_append = ".7"
+MACHINE_KERNEL_PR_append = ".8"
 
 SRC_URI[md5sum] = "dbd9b0dcf632d52b5765a9d7372e0205"
 SRC_URI[sha256sum] = "6922bb05875664d54fa653fb27b4ea91fb28009fc6122d760e601429c43e69af"
