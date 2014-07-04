@@ -3,7 +3,7 @@ HOMEPAGE = "https://security.appspot.com/vsftpd.html"
 SECTION = "network"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=a6067ad950b28336613aed9dd47b1271"
-PR = "r1"
+PR = "r2"
 
 DEPENDS = "libcap openssl"
 
@@ -12,6 +12,7 @@ SRC_URI = "https://security.appspot.com/downloads/vsftpd-${PV}.tar.gz \
            file://makefile-libs.patch \
            file://makefile-strip.patch \
            file://vsftpd.conf \
+           file://vsftpd.ftpusers \
            file://login-blank-password.patch \
 "
 
@@ -31,7 +32,7 @@ PAMLIB = "${@base_contains('DISTRO_FEATURES', 'pam', '-L${STAGING_BASELIBDIR} -l
 NOPAM_SRC ="${@base_contains('PACKAGECONFIG', 'tcp-wrappers', 'file://nopam-with-tcp_wrappers.patch', 'file://nopam.patch', d)}"
 SRC_URI += "${@base_contains('DISTRO_FEATURES', 'pam', '', '${NOPAM_SRC}', d)}"
 
-CONFFILES_${PN} = "${sysconfdir}/vsftpd.conf"
+CONFFILES_${PN} = "${sysconfdir}/vsftpd.conf ${sysconfdir}/vsftpd.ftpusers"
 LDFLAGS_append =" -lcrypt -lcap"
 
 do_configure() {
@@ -52,6 +53,7 @@ do_install() {
     oe_runmake 'DESTDIR=${D}' install
     install -d ${D}${sysconfdir}
     install -m 600 ${WORKDIR}/vsftpd.conf ${D}${sysconfdir}/vsftpd.conf
+    install -m 600 ${WORKDIR}/vsftpd.ftpusers ${D}${sysconfdir}/vsftpd.ftpusers
     if ! test -z ${PAMLIB} ; then
         install -d ${D}${sysconfdir}/pam.d/
         cp ${S}/RedHat/vsftpd.pam ${D}${sysconfdir}/pam.d/vsftpd
