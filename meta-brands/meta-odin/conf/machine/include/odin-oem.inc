@@ -14,7 +14,7 @@ ${@base_contains('MACHINEBUILD', 'galaxym6', 'GalaxyM6' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'geniuse3hd', 'Genius E3HD' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'evoe3hd', 'E3HD' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'axase3', 'E3HD' , '', d)}\
-${@base_contains('MACHINEBUILD', 'axase3c', 'E3HD' , '', d)}\
+${@base_contains('MACHINEBUILD', 'axase3c', 'E3HD-C' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'maram9', 'M9' , '', d)}\
 "
 
