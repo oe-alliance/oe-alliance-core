@@ -1,0 +1,111 @@
+From 3972a1528d5eaf058e6710873ed23647c5157a65 Mon Sep 17 00:00:00 2001
+From: Athanasios Oikonomou <athoik@gmail.com>
+Date: Thu, 3 Jul 2014 22:45:37 +0300
+Subject: [PATCH] nanddump: Truncate empty blocks (FF) from dump
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+The nanddump get an additional -t option for truncate where the dump read only as long as is to be found FFFFFFFF.
+This allows you to read secondstage from /dev/mtd1 without having to trim with difficulty.
+
+das nanddump kriegt eine zusätzliche -t option für truncate wo beim dumpen nur solange gelesen wird bis man FFFFFFFF findet.
+Damit kann man den secondstage loader aus dem /dev/mtd1 lesen ohne ihn nachher noch mühsam trimmen zu müssen.
+
+https://www.dream-multimedia-tv.de/board/index.php?page=Thread&threadID=18761
+
+diff --git a/nanddump.c b/nanddump.c
+index 4ee7ed4..368acfb 100644
+--- a/nanddump.c
++++ b/nanddump.c
+@@ -52,6 +52,7 @@ static void display_help(int status)
+ "-p         --prettyprint        Print nice (hexdump)\n"
+ "-q         --quiet              Don't display progress and status messages\n"
+ "-s addr    --startaddress=addr  Start address\n"
++"-t         --truncate           Truncate empty blocks (FF) from dump\n"
+ "\n"
+ "--bb=METHOD, where METHOD can be `padbad', `dumpbad', or `skipbad':\n"
+ "    padbad:  dump flash data, substituting 0xFF for any bad blocks\n"
+@@ -87,6 +88,7 @@ static const char		*dumpfile;		// dump file name
+ static bool			quiet = false;		// suppress diagnostic output
+ static bool			canonical = false;	// print nice + ascii
+ static bool			forcebinary = false;	// force printing binary to tty
++static bool			cutoff = false;
+ 
+ static enum {
+ 	padbad,   // dump flash data, substituting 0xFF for any bad blocks
+@@ -101,7 +103,7 @@ static void process_options(int argc, char * const argv[])
+ 
+ 	for (;;) {
+ 		int option_index = 0;
+-		static const char short_options[] = "hs:f:l:opqnca";
++		static const char short_options[] = "hs:f:l:opqncat";
+ 		static const struct option long_options[] = {
+ 			{"version", no_argument, 0, 0},
+ 			{"bb", required_argument, 0, 0},
+@@ -111,6 +113,7 @@ static void process_options(int argc, char * const argv[])
+ 			{"canonicalprint", no_argument, 0, 'c'},
+ 			{"file", required_argument, 0, 'f'},
+ 			{"oob", no_argument, 0, 'o'},
++			{"truncate", no_argument, 0, 't'},
+ 			{"prettyprint", no_argument, 0, 'p'},
+ 			{"startaddress", required_argument, 0, 's'},
+ 			{"length", required_argument, 0, 'l'},
+@@ -172,8 +175,12 @@ static void process_options(int argc, char * const argv[])
+ 			case 'a':
+ 				forcebinary = true;
+ 				break;
++			case 't':
++				cutoff = true;
++				break;
+ 			case 'c':
+ 				canonical = true;
++				break;
+ 			case 'p':
+ 				pretty_print = true;
+ 				break;
+@@ -205,6 +212,12 @@ static void process_options(int argc, char * const argv[])
+ 		exit(EXIT_FAILURE);
+ 	}
+ 
++	if (cutoff && pretty_print) {
++		fprintf(stderr, "The truncate and pretty print options are mutually-\n"
++				"exclusive. Choose one or the other.\n");
++		exit(EXIT_FAILURE);
++	}
++
+ 	if (forcebinary && pretty_print) {
+ 		fprintf(stderr, "The forcebinary and pretty print options are\n"
+ 				"mutually-exclusive. Choose one or the "
+@@ -439,11 +452,24 @@ int main(int argc, char * const argv[])
+ 		}
+ 
+ 		/* Write out page data */
+-		if (pretty_print) {
++		if (pretty_print || cutoff) {
+ 			for (i = 0; i < bs; i += PRETTY_ROW_SIZE) {
+-				pretty_dump_to_buffer(readbuf + i, PRETTY_ROW_SIZE,
+-						pretty_buf, PRETTY_BUF_LEN, true, canonical, ofs + i);
+-				write(ofd, pretty_buf, strlen(pretty_buf));
++				if (pretty_print) {
++					pretty_dump_to_buffer(readbuf + i, 
++						PRETTY_ROW_SIZE, pretty_buf, PRETTY_BUF_LEN, true,  canonical, ofs + i);
++					write(ofd, pretty_buf, strlen(pretty_buf));
++				}
++				else {  /* truncate at FFFFFFFF */
++					unsigned int tmp = ((unsigned int*)readbuf)[(i>>2)] & ((unsigned int*)readbuf)[(i>>2)+1] & ((unsigned int*)readbuf)[(i>> 2)+2] & ((unsigned int*)readbuf)[(i>>2)+3];
++					if (tmp == 0xFFFFFFFF) {
++						if (!quiet)
++							fprintf(stderr,"truncate at 0x%08x...\n" , (unsigned int) (ofs + i));
++						goto closeall;
++					}
++					else {
++						write(ofd, readbuf + i, PRETTY_ROW_SIZE);
++					}
++				}
+ 			}
+ 		} else
+ 			write(ofd, readbuf, bs);
+-- 
+1.7.10.4
+
