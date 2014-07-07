@@ -2,7 +2,7 @@ SUMMARY = "Opendrox Image"
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "proprietary"
-MAINTAINER = "Opendroid Team"
+MAINTAINER = "Opendrox Team"
 
 require conf/license/license-gplv2.inc
 

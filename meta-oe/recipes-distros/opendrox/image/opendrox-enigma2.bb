@@ -7,7 +7,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PV = "1.0"
-PR = "r17"
+PR = "r22"
 
 inherit packagegroup
 
@@ -23,6 +23,7 @@ RRECOMMENDS_${PN} = "\
     enigma2-plugin-extensions-imdb \
     enigma2-plugin-extensions-addonopendroid \
     enigma2-plugin-extensions-autosettings \
+    enigma2-plugin-extensions-extrapanel \
     enigma2-plugin-extensions-bmediacenter \
     enigma2-plugin-extensions-epgsearch \
     enigma2-plugin-extensions-dvdplayer \
@@ -32,6 +33,8 @@ RRECOMMENDS_${PN} = "\
     enigma2-plugin-systemplugins-softwaremanager \
     enigma2-plugin-systemplugins-positionersetup \
     enigma2-plugin-systemplugins-videoenhancement \
+    ${@base_contains("MACHINE_FEATURES", "dreambox", "enigma2-plugin-extensions-dflash mtd-utils-jffs2", "", d)} \
+    ${@base_contains("MACHINE_FEATURES", "boxmodel", "boxmodel", "", d)} \
     ${@base_contains("MACHINE_FEATURES", "smallflash", "", \
     " \
     enigma2-plugin-extensions-audiosync \
