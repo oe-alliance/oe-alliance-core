@@ -7,7 +7,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "1.0"
-PR = "r7"
+PR = "r8"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 inherit packagegroup
@@ -49,7 +49,6 @@ RDEPENDS_${PN} = "\
 	enigma2-plugin-extensions-iniecasa python-flickrapi \ 
 	enigma2-plugin-extensions-inilastfm python-twisted-web python-crypt \
 	enigma2-plugin-extensions-inishoutcast streamripper \
-	enigma2-plugin-extensions-inizaphistorybrowser \
 	enigma2-plugin-extensions-iniwebcamviewer \ 
 	enigma2-plugin-extensions-iniairplayer \
 	enigma2-plugin-extensions-inigmailreader python-email python-subprocess \
