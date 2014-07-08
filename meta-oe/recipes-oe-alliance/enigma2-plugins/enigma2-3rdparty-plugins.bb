@@ -9,7 +9,7 @@ inherit gitpkgv deploy
 SRCREV = "${AUTOREV}"
 PV = "2.1+gitr${SRCPV}"
 PKGV = "2.1+gitr${GITPKGV}"
-PR = "r53"
+PR = "r54"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -38,7 +38,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-digitalfernsehen_1.0rc1_mips32el.ipk \
     enigma2-plugin-extensions-facebook_1.3_mips32el.ipk \
     enigma2-plugin-extensions-filesearchfs_2.53_all.ipk \
-    enigma2-plugin-extensions-focusonline_1.0rc3_mips32el.ipk \
+    enigma2-plugin-extensions-focusonline_1.0rc4_mips32el.ipk \
     enigma2-plugin-extensions-gmailreader-oe2.0_1.3_all.ipk \
     enigma2-plugin-extensions-googlenewsreader_1.0_mips32el.ipk \
     enigma2-plugin-extensions-hetweer_2.6_mips32el.ipk \
@@ -52,7 +52,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-msnwetter_0.6rc3_mips32el.ipk \
     enigma2-plugin-extensions-mtv_0.1_mips32el.ipk \
     enigma2-plugin-extensions-muzutv_1.5rc2_mips32el.ipk \
-    enigma2-plugin-extensions-moviebrowser_3.5rc1_mips32el.ipk \
+    enigma2-plugin-extensions-moviebrowser_3.5rc2_mips32el.ipk \
     enigma2-plugin-extensions-mp3browser_1.9_mips32el.ipk \
     enigma2-plugin-extensions-navibar_1.1.1_all.ipk \
     enigma2-plugin-extensions-opkg-tools_1.3_mipsel.ipk \
