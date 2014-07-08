@@ -2,7 +2,7 @@ SUMMARY = "Linux kernel for ${MACHINE}"
 SECTION = "kernel"
 LICENSE = "GPLv2"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
-PR = "r3"
+PR = "r4"
 
 KERNEL_RELEASE = "3.8.7"
 SRCDATE = "20140326"
@@ -79,7 +79,7 @@ kernel_do_install_append() {
 pkg_postinst_kernel-image () {
     if [ "x$D" == "x" ]; then
         if [ -f /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz ] ; then
-            flash_erase /dev/mtd1 0 0
+            flash_erase /dev/mtd2 0 0
             nandwrite -p /dev/mtd1 /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz
             rm -f /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz
         fi

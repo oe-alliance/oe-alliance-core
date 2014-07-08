@@ -18,8 +18,8 @@ ${@base_contains('MACHINEBUILD', 'enfinity', 'enfinity' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'marvel1', 'marvel1' , '', d)}\
 "
 
-MTD_ROOTFS = "mtd2"
-MTD_KERNEL = "mtd1"
+MTD_ROOTFS = "mtd0"
+MTD_KERNEL = "mtd2"
 KERNEL_FILE = "kernel.bin"
 ROOTFS_FILE = "rootfs.bin"
 
