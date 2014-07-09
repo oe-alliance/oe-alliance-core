@@ -39,7 +39,7 @@ SRC_URI += "http://archiv.openmips.com/gigablue-linux-${PV}-20140704.tgz \
     file://timedate.patch \
     "
 
-SRC_URI_append_gbquadplus = "brcm_s3_wol.patch"
+SRC_URI_append_gbquadplus = " file://brcm_s3_wol.patch"
 
 S = "${WORKDIR}/linux-${PV}"
 
