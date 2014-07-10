@@ -4,10 +4,9 @@ require conf/license/license-gplv2.inc
 
 inherit allarch
 
-PR = "r36"
+PR = "r37"
 
 DEPENDS = "\
-    ${@base_contains("MACHINE_FEATURES", "dvbc-only", "", " \
     enigma2-plugin-settings-henksat-19e \
     enigma2-plugin-settings-henksat-23e \
     enigma2-plugin-settings-henksat-13e-19e \
@@ -83,3 +82,15 @@ DEPENDS = "\
     enigma2-plugin-settings-vhannibal.quad.nordic \
     enigma2-plugin-settings-vhannibal.trial.30w \
     \
+    enigma2-plugin-settings-gigablue-19e \
+    enigma2-plugin-settings-gigablue-19e-13e \
+    enigma2-plugin-settings-gigablue-19e-13e-5e-75e \
+    enigma2-plugin-settings-gigablue-19e-16e-13e \
+    enigma2-plugin-settings-gigablue-42e-19e-13e-7e \
+    enigma2-plugin-settings-gigablue-hepsidijital \
+    \
+    enigma2-plugin-settings-gigablue-wilhelmtel \
+    enigma2-plugin-settings-gigablue-unity-media \
+    enigma2-plugin-settings-gigablue-kabel-bw \
+    enigma2-plugin-settings-gigablue-kabeldeutschland \
+    "
