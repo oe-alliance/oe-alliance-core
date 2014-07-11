@@ -4,9 +4,9 @@ require conf/license/license-gplv2.inc
 
 inherit allarch
 
-PR = "r38"
+PR = "r39"
 
-DEPENDS = "\
+DEPENDS = " \
     enigma2-plugin-settings-henksat-19e \
     enigma2-plugin-settings-henksat-23e \
     enigma2-plugin-settings-henksat-13e-19e \

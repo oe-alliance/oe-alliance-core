@@ -6,7 +6,7 @@ inherit gitpkgv allarch
 SRCREV = "${AUTOREV}"
 PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"
-PR = "r5"
+PR = "r6"
 
 SRC_URI = "git://github.com/oe-alliance/oe-alliance-settings.git;protocol=git"
 S = "${WORKDIR}/git"

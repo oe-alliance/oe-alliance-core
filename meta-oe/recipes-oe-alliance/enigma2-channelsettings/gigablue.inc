@@ -2,7 +2,7 @@ LICENSE = "CLOSED"
 
 PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"
-PR = "r0"
+PR = "r1"
 SRCREV = "${AUTOREV}"
 
 SRC_URI = "git://github.com/openmips/settings.git;protocol=git"

@@ -2,7 +2,7 @@ LICENSE = "CLOSED"
 
 PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"
-PR = "r0"
+PR = "r1"
 
 SRC_URI = "git://github.com/haroo/HansSettings.git;protocol=git"
 S = "${WORKDIR}/git"

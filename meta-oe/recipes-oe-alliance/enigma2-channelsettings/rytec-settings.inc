@@ -2,7 +2,7 @@ SUMMARY = "Rytec settings ${SATNAMES}"
 MAINTAINER ?= "Mike Looijmans"
 LICENSE = "CLOSED"
 
-PR = "r1"
+PR = "r2"
 
 PACKAGES = "${PN}"
 
