@@ -9,14 +9,14 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "1.0"
-PR = "r49"
+PR = "r50"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 DEPENDS = "enigma2-plugin-drivers-usbserial"
 RECOMMENDS = "enigma2-plugin-extensions-et-livestream"
 
 
-RRECOMMENDS_${PN} = "\
+RDEPENDS_${PN} = " \
     bootlogos-enigma2-meta \
     dvb-usb-drivers-meta \
     network-usb-drivers-meta \
