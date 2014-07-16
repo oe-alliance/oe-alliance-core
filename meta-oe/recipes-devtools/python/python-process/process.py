@@ -14,7 +14,10 @@ class Process(object):
 		self.pid = int(pid)
 		self.command = command
 		self.state = state
-		self.parent_pid = int(parent_pid)
+		try:
+			self.parent_pid = int(parent_pid)
+		except:
+			self.parent_pid = int(0)
 		self.parent = None
 		self.children = []
 
