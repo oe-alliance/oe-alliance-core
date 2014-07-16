@@ -29,7 +29,7 @@ EXTRA_OECONF = " \
 
 # mozjs requires autoreconf 2.13
 do_configure() {
-    ./configure ${EXTRA_OECONF}
+    ${S}/configure ${EXTRA_OECONF}
 }
 
 PACKAGES =+ "lib${PN}"
