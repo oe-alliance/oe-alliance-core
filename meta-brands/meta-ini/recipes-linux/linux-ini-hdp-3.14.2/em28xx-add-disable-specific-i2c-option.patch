@@ -1,0 +1,37 @@
++--- a/drivers/media/usb/em28xx/em28xx-cards.c
+++++ b/drivers/media/usb/em28xx/em28xx-cards.c
++@@ -55,6 +55,14 @@ module_param(disable_usb_speed_check, in
++ MODULE_PARM_DESC(disable_usb_speed_check,
++ "override min bandwidth requirement of 480M bps");
++
+++static unsigned int disable_first_i2c_device;
+++module_param(disable_first_i2c_device, int, 0444);
+++MODULE_PARM_DESC(disable_first_i2c_device, "manual disable of 1st i2c-device on em2874");
+++
+++static unsigned int disable_second_i2c_device;
+++module_param(disable_second_i2c_device, int, 0444);
+++MODULE_PARM_DESC(disable_second_i2c_device, "manual disable of 2nd i2c-device on em2874");
+++
++ static unsigned int card[] = {[0 ... (EM28XX_MAXBOARDS - 1)] = -1U };
++ module_param_array(card, int, NULL, 0444);
++ MODULE_PARM_DESC(card, "card type");
++@@ -3041,7 +3049,8 @@ static int em28xx_init_dev(struct em28xx
++ if (dev->board.is_em2800)
++ retval = em28xx_i2c_register(dev, 0, EM28XX_I2C_ALGO_EM2800);
++ else
++- retval = em28xx_i2c_register(dev, 0, EM28XX_I2C_ALGO_EM28XX);
+++ if(disable_first_i2c_device == 0)
+++ retval = em28xx_i2c_register(dev, 0, EM28XX_I2C_ALGO_EM28XX);
++ if (retval < 0) {
++ em28xx_errdev("%s: em28xx_i2c_register bus 0 - error [%d]!\n",
++ __func__, retval);
++@@ -3054,7 +3063,8 @@ static int em28xx_init_dev(struct em28xx
++ retval = em28xx_i2c_register(dev, 1,
++ EM28XX_I2C_ALGO_EM25XX_BUS_B);
++ else
++- retval = em28xx_i2c_register(dev, 1,
+++ if (disable_second_i2c_device == 0)
+++ retval = em28xx_i2c_register(dev, 1,
++ EM28XX_I2C_ALGO_EM28XX);
++ if (retval < 0) {
++ em28xx_errdev("%s: em28xx_i2c_register bus 1 - error [%d]!\n",
