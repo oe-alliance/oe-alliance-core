@@ -5,12 +5,10 @@ require conf/license/license-gplv2.inc
 
 DVBPROVIDER ?= "kernel"
 
-RDEPENDS_${PN} = " \
+RRECOMMENDS_${PN} = " \
     ${DVBPROVIDER}-module-dvb-usb-dib0700 \
     ${DVBPROVIDER}-module-dvb-usb-dibusb-common \
     ${DVBPROVIDER}-module-dvb-usb-dibusb-mc \
-    ${@base_contains("MACHINE_FEATURES", "legacykernel", \
-    " \
     ${DVBPROVIDER}-module-dib0090 \
     ${DVBPROVIDER}-module-dib3000mb \
     ${DVBPROVIDER}-module-dib3000mc \
@@ -21,7 +19,7 @@ RDEPENDS_${PN} = " \
     ${DVBPROVIDER}-module-dib0070 \
     ${DVBPROVIDER}-module-dib8000 \
     ${DVBPROVIDER}-module-dvb-usb \
-    " , "", d)} \
+    ${DVBPROVIDER}-module-tuner-xc2028 \
     firmware-dvb-usb-dib0700-1.20 \
     firmware-dvb-usb-dibusb-5.0.0.11 \
     firmware-dvb-usb-dibusb-6.0.0.8 \
@@ -31,6 +29,6 @@ RDEPENDS_${PN} = " \
     "
 
 PV = "1.0"
-PR = "r6"
+PR = "r7"
 
 ALLOW_EMPTY_${PN} = "1"
