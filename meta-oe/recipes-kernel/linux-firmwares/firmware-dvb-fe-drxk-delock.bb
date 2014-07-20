@@ -1,16 +1,15 @@
 LICENSE = "CLOSED"
 
-SUMMARY = "Firmware for EM2874B used in DeLock61959"
+SUMMARY = "link firmware for EM2874B used in DeLock61959"
 PACKAGE_ARCH = "all"
 
-SRC_URI = "file://dvb-demod-drxk-01.tar.gz"
+DEPENDS = "firmware-dvb-fe-drxk_a3"
 
 S = "${WORKDIR}"
 
 do_install() {
-    install -d ${D}/lib/firmware
-    install -m 0755 dvb-demod-drxk-01.fw ${D}/lib/firmware/dvb-demod-drxk-01.fw
+    ln -s ${D}/lib/firmware/drxk_a3.mc ${D}/lib/firmware/dvb-demod-drxk-01.fw
 }
 
 PACKAGES = "${PN}"
-FILES_${PN} += "${base_libdir}/firmware"
+ALLOW_EMPTY_${PN} = "1"
