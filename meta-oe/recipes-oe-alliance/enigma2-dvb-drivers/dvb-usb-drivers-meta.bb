@@ -17,7 +17,6 @@ DEPENDS = "\
     enigma2-plugin-drivers-dvb-usb-a867 \
     enigma2-plugin-drivers-dvb-usb-dvbsky \
     enigma2-plugin-drivers-dvb-usb-rtl2832 \
-    enigma2-plugin-drivers-dvb-usb-delock61959 \
     "
 
-PR = "r6"
+PR = "r7"
