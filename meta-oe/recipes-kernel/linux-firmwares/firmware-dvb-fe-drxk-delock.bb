@@ -3,7 +3,7 @@ LICENSE = "CLOSED"
 SUMMARY = "link firmware for EM2874B used in DeLock61959"
 PACKAGE_ARCH = "all"
 
-DEPENDS = "firmware-dvb-fe-drxk_a3"
+RDEPENDS_${PN} = "firmware-dvb-fe-drxk_a3"
 
 S = "${WORKDIR}"
 
