@@ -33,7 +33,6 @@ SRC_URI += "http://code-ini.com/software/kernel/bcm7425-linux-${KV}-${SRCDATE}.t
 	file://it913x-switch-off-PID-filter-by-default.patch \
 	file://mxl5007t-add-no_probe-and-no_reset-parameters.patch \
 	file://tda18271-advertise-supported-delsys.patch \
-	file://em28xx-add-disable-specific-i2c-option.patch \
 	"
 
 S = "${WORKDIR}/linux-${PV}"
