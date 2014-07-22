@@ -3,10 +3,12 @@ SECTION = "base"
 PRIORITY = "required"
 LICENSE = "CLOSED"
 
+PACKAGE_ARCH = "${MACHINE_ARCH}"
+
 SRCDATE = "20140711"
 KV = "3.9.7"
 PV = "${KV}+${SRCDATE}"
-PR = "r0"
+PR = "r1"
 
 SRC_URI = "http://en3.homeftp.net/release/images/oedrivers/bcmlinuxdvb_7335-${KV}-${SRCDATE}.tar.gz"
 

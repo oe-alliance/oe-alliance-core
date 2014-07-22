@@ -3,10 +3,12 @@ SECTION = "base"
 PRIORITY = "required"
 LICENSE = "CLOSED"
 
+PACKAGE_ARCH = "${MACHINE_ARCH}"
+
 SRCDATE = "20140711"
 KV = "3.9.7"
 PV = "${KV}+${SRCDATE}"
-PR = "r2"
+PR = "r3"
 
 SRC_URI[md5sum] = "f6436ef3b79b61ff9bcc3dc675f973cb"
 SRC_URI[sha256sum] = "d4b1b1a1465e88417b1cf7255307a5c4d75310b46ab6d56653d36ffe3c8e83ea"
