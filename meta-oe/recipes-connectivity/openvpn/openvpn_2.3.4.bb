@@ -8,8 +8,8 @@ DEPENDS = "lzo openssl libpam"
 inherit autotools
 
 SRCREV = "8962827529636126b0c9005ce6bb46f47cb3a9f9"
-PV = "2.3.3"
-PKGV = "2.3.3"
+PV = "2.3.4"
+PKGV = "2.3.4"
 PR = "r1"
 
 SRC_URI="git://git.code.sf.net/p/openvpn/openvpn;protocol=http;branch=release/2.3 \
