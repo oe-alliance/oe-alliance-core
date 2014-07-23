@@ -1,5 +1,8 @@
 #! /bin/sh 
 
+# enable MiniTV to show bootlogo in display. Will be switched to desired usermode once E2 starts.
+echo 1 > /proc/stb/lcd/mode
+
 echo "gbquadplus" > /proc/stb/info/gbmodel
 
 #DESCRIPTION=This will set ETH0 and USB to Thread 2

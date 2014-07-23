@@ -1,4 +1,7 @@
 #! /bin/sh 
 
+# enable MiniTV to show bootlogo in display. Will be switched to desired usermode once E2 starts.
+echo 1 > /proc/stb/lcd/mode
+
 echo "gb800ueplus" > /proc/stb/info/gbmodel
 
