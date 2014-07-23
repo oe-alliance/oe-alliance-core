@@ -9,7 +9,7 @@ inherit gitpkgv deploy
 SRCREV = "${AUTOREV}"
 PV = "2.1+gitr${SRCPV}"
 PKGV = "2.1+gitr${GITPKGV}"
-PR = "r61"
+PR = "r62"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -33,7 +33,8 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-bluray_1.5_mips32el.ipk \
     enigma2-plugin-extensions-boblight-enigma2_0.8r6_mips32el.ipk \
     enigma2-plugin-extensions-camofs_8.55_all.ipk \
-    enigma2-plugin-extensions-chefkoch_1.4c1_mips32el.ipk \
+    enigma2-plugin-extensions-chefkoch_1.4c2_mips32el.ipk \
+    enigma2-plugin-extensions-clevertanken_0.5rc1_mips32el.ipk \
     enigma2-plugin-extensions-csfd_9_45-20140125_all.ipk \
     enigma2-plugin-extensions-digitalfernsehen_1.0rc1_mips32el.ipk \
     enigma2-plugin-extensions-facebook_1.3_mips32el.ipk \
@@ -80,7 +81,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-transmission_2.83_mips32el.ipk \
     enigma2-plugin-extensions-tsmedia_7.2_full_all.ipk \
     enigma2-plugin-extensions-tvspielfilm_6.3_mips32el.ipk \
-    enigma2-plugin-extensions-verkehrsinfo_0.9_mips32el.ipk \
+    enigma2-plugin-extensions-verkehrsinfo_1.0rc1_mips32el.ipk \
     enigma2-plugin-extensions-vuplusforum_0.7rc3_mips32el.ipk \
     enigma2-plugin-extensions-webmedia_10.0_r02_oe2.0_all.ipk \
     enigma2-plugin-extensions-webradiofs_12.12_all.ipk \
