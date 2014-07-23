@@ -39,10 +39,15 @@ DEPENDS = " \
     enigma2-plugin-settings-cst.motor.db \
     enigma2-plugin-settings-cst.trial3.db \
     enigma2-plugin-settings-cst.trial5.db \
+    enigma2-plugin-settings-malimali.3e.7e.9e.13e.16e.19e \
     enigma2-plugin-settings-malimali.9e.13e.19e \
     enigma2-plugin-settings-malimali.13e \
     enigma2-plugin-settings-malimali.13e.19e \
+    enigma2-plugin-settings-malimali.13e.16e.19e \
     enigma2-plugin-settings-malimali.19e \
+    enigma2-plugin-settings-malimali.39e.28e.23e.19e.16e.13e.0.8w \
+    enigma2-plugin-settings-malimali.39e.28e.26e.23e.19e.16e.13e.7e.0.8w \
+    enigma2-plugin-settings-malimali.39e.28e.26e.23e.19e.16e.13e.0.8w \
     enigma2-plugin-settings-malimali.motor.42e.to.30w \
     enigma2-plugin-settings-matze-19e-13e \
     enigma2-plugin-settings-matze-19e \
