@@ -12,7 +12,7 @@ SRC_URI[sha256sum] = "6441c603ac7043395270f1a0396ca39a244290fdff29512cbfe6b622c7
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-MACHINE_KERNEL_PR_append = ".5"
+MACHINE_KERNEL_PR_append = ".6"
 
 # By default, kernel.bbclass modifies package names to allow multiple kernels
 # to be installed in parallel. We revert this change and rprovide the versioned
@@ -30,6 +30,7 @@ SRC_URI += "http://archiv.openmips.com/gigablue-linux-${PV}-20140411.tgz \
     file://af9033-output-full-range-SNR.patch \
     file://as102-adjust-signal-strength-report.patch \
     file://as102-scale-MER-to-full-range.patch \
+    file://brcmstb.patch \
     file://cxd2820r-output-full-range-SNR.patch \
     file://dvb-usb-dib0700-disable-sleep.patch \
     file://dvb_usb_disable_rc_polling.patch \

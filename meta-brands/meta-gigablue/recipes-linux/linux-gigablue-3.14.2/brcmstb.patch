@@ -1,6 +1,6 @@
-diff -urN b/arch/mips/brcmstb/prom.c a/arch/mips/brcmstb/prom.c
---- b/arch/mips/brcmstb/prom.c	2014-05-07 21:14:28.000000000 +0200
-+++ a/arch/mips/brcmstb/prom.c	2014-07-07 06:54:26.687296000 +0200
+diff -urN a/arch/mips/brcmstb/prom.c b/arch/mips/brcmstb/prom.c
+--- a/arch/mips/brcmstb/prom.c	2014-05-07 21:14:28.000000000 +0200
++++ b/arch/mips/brcmstb/prom.c	2014-07-07 06:54:26.687296000 +0200
 @@ -224,6 +224,10 @@
  	FETCH("LINUX_FFS_SIZE", parse_hex, &brcm_mtd_rootfs_len);
  	FETCH("LINUX_PART_STARTAD", parse_hex, &brcm_mtd_kernel_start);
@@ -12,9 +12,9 @@ diff -urN b/arch/mips/brcmstb/prom.c a/arch/mips/brcmstb/prom.c
  	FETCH("OCAP_PART_STARTAD", parse_hex, &brcm_mtd_ocap_start);
  	FETCH("OCAP_PART_SIZE", parse_hex, &brcm_mtd_ocap_len);
  	FETCH("FLASH_SIZE", parse_ulong, &brcm_mtd_flash_size_mb);
-diff -urN b/drivers/brcmstb/board.c a/drivers/brcmstb/board.c
---- b/drivers/brcmstb/board.c	2014-05-07 21:14:29.000000000 +0200
-+++ a/drivers/brcmstb/board.c	2014-07-07 06:54:02.959888000 +0200
+diff -urN a/drivers/brcmstb/board.c b/drivers/brcmstb/board.c
+--- a/drivers/brcmstb/board.c	2014-05-07 21:14:29.000000000 +0200
++++ b/drivers/brcmstb/board.c	2014-07-22 22:39:07.995495349 +0200
 @@ -34,6 +34,10 @@
  unsigned long brcm_mtd_rootfs_len;
  unsigned long brcm_mtd_kernel_start;
@@ -26,6 +26,37 @@ diff -urN b/drivers/brcmstb/board.c a/drivers/brcmstb/board.c
  unsigned long brcm_mtd_ocap_start;
  unsigned long brcm_mtd_ocap_len;
  unsigned long brcm_mtd_flash_size_mb;
+@@ -258,7 +262,7 @@
+ 		brcm_moca_rf_band = MOCA_BAND_HIGHRF;
+ 
+ #elif defined(CONFIG_BCM7346)
+-
++#if 0
+ 	PINMUX(15, gpio_068, 2);	/* MoCA link */
+ 	PINMUX(16, gpio_069, 1);	/* MoCA activity */
+ 
+@@ -287,10 +291,10 @@
+ 	PINMUX(18, vo_656_clk, 1);	/* SDIO_CLK */
+ 	PINMUX(18, vo_656_7, 1);	/* SDIO_CMD */
+ 	PINMUX(18, vo_656_6, 2);	/* SDIO_WPROT */
+-
++#endif
+ #elif defined(CONFIG_BCM7358) || defined(CONFIG_BCM7552) || \
+ 	defined(CONFIG_BCM7360) || defined(CONFIG_BCM7362)
+-
++#if 0
+ 	PINMUX(11, gpio_89, 1);		/* UARTB TX */
+ 	PINMUX(11, gpio_90, 1);		/* UARTB RX */
+ 	PINMUX(11, gpio_91, 1);		/* UARTC TX */
+@@ -318,7 +322,7 @@
+ 	AON_PADCTRL(1, aon_gpio_18_pad_ctrl, 2);
+ 	AON_PADCTRL(1, aon_gpio_19_pad_ctrl, 2);
+ 	AON_PADCTRL(1, aon_gpio_20_pad_ctrl, 2);
+-
++#endif
+ #elif defined(CONFIG_BCM7425)
+ 
+ 	if (sdio_0_disabled < 0)
 @@ -745,6 +749,10 @@
  	nr_parts = 2;
  	if (brcm_mtd_kernel_len != 0)
@@ -66,9 +97,9 @@ diff -urN b/drivers/brcmstb/board.c a/drivers/brcmstb/board.c
  
  	*p = ret;
  	return nr_parts;
-diff -urN b/include/linux/brcmstb/brcmstb.h a/include/linux/brcmstb/brcmstb.h
---- b/include/linux/brcmstb/brcmstb.h	2014-05-07 21:14:47.000000000 +0200
-+++ a/include/linux/brcmstb/brcmstb.h	2014-07-07 06:54:45.334829000 +0200
+diff -urN a/include/linux/brcmstb/brcmstb.h b/include/linux/brcmstb/brcmstb.h
+--- a/include/linux/brcmstb/brcmstb.h	2014-05-07 21:14:47.000000000 +0200
++++ b/include/linux/brcmstb/brcmstb.h	2014-07-07 06:54:45.334829000 +0200
 @@ -699,6 +699,10 @@
  extern unsigned long brcm_mtd_rootfs_len;
  extern unsigned long brcm_mtd_kernel_start;
