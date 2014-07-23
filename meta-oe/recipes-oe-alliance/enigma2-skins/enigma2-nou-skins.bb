@@ -7,8 +7,8 @@ inherit gitpkgv allarch
 
 EPSM = "enigma2-plugin-skins"
 SRCREV = "${AUTOREV}"
-PV = "7.4+git${SRCPV}"
-PKGV = "7.4+git${GITPKGV}"
+PV = "10.9+git${SRCPV}"
+PKGV = "10.9+git${GITPKGV}"
 PR = "r1"
 
 PACKAGES = "${EPSM}-neonovum-hd ${EPSM}-mynovum-hd ${EPSM}-nou-hd ${EPSM}-neonovum-hd-weather ${EPSM}-mynovum-hd-weather ${EPSM}-nou-hd-weather novum-hd-common novum-hd-renderer novum-hd-renderer-src"
