@@ -1,5 +1,5 @@
 diff -urN a/arch/mips/brcmstb/board.c b/arch/mips/brcmstb/board.c
---- a/arch/mips/brcmstb/board.c	2014-07-22 23:20:10.830054237 +0200
+--- a/arch/mips/brcmstb/board.c	2014-07-23 17:45:41.768600409 +0200
 +++ b/arch/mips/brcmstb/board.c	2014-07-22 23:27:27.709355017 +0200
 @@ -40,6 +40,10 @@
  unsigned long brcm_mtd_rootfs_len;
@@ -41,16 +41,19 @@ diff -urN a/arch/mips/brcmstb/board.c b/arch/mips/brcmstb/board.c
  
  	ret = kzalloc(nr_parts * sizeof(struct mtd_partition), GFP_KERNEL);
  	if (!ret)
-@@ -811,15 +819,25 @@
+@@ -811,21 +819,25 @@
  	ret[0].size = brcm_mtd_rootfs_len;
  	ret[0].name = "rootfs";
  
+-#if 0
 -	ret[1].offset = 0;
 -	ret[1].size = MTDPART_SIZ_FULL;
 -	ret[1].name = "entire_device";
-+        ret[1].offset = brcm_mtd_rootfs_start;
-+        ret[1].size = brcm_mtd_rootfs_len;
-+        ret[1].name = "rootfs(redundant)";
+-#else
+         ret[1].offset = brcm_mtd_rootfs_start;
+         ret[1].size = brcm_mtd_rootfs_len;
+         ret[1].name = "rootfs(redundant)";
+-#endif
  
  	if (brcm_mtd_kernel_len != 0) {
  		ret[2].offset = brcm_mtd_kernel_start;
