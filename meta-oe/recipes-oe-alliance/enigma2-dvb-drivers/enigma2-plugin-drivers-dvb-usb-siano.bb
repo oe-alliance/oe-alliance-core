@@ -15,9 +15,10 @@ RDEPENDS_${PN} = " \
     firmware-dvb-siano \
     firmware-dvb-nova-12mhz-b0 \
     firmware-isdbt-nova-12mhz-b0 \
+    firmware-dvb-usb-siano-sms2200 \
     "
 
 PV = "1.0"
-PR = "r7"
+PR = "r8"
 
 ALLOW_EMPTY_${PN} = "1"
