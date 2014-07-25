@@ -5,6 +5,8 @@ LICENSE = "CLOSED"
 PV = "1.0"
 PR = "r0"
 
+PACKAGE_ARCH = "${MACHINE_ARCH}"
+
 SRC_URI = "file://ethwol.sh"
 
 inherit update-rc.d
