@@ -9,7 +9,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "1.0"
-PR = "r22"
+PR = "r23"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 RDEPENDS_${PN} = "\
@@ -17,6 +17,8 @@ RDEPENDS_${PN} = "\
     oe-alliance-branding \
     ${@base_contains("MACHINE_FEATURES", "wol", "vuplus-coldboot vuplus-ethwol", "", d)} \
     ${@base_contains("MACHINE_FEATURES", "iniwol", "ini-coldboot ini-ethwol", "", d)} \
+    ${@base_contains("MACHINE_FEATURES", "gbwol", "gigablue-ethwol", "", d)} \
+    ${@base_contains("MACHINE_FEATURES", "gbsoftwol", "gigablue-ethsoftwol", "", d)} \
     ${@base_contains("MACHINE_FEATURES", "no-nmap", "" , "nmap", d)} \
     avahi-daemon \
     dropbear \
