@@ -9,7 +9,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "1.0"
-PR = "r49"
+PR = "r50"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 DEPENDS = "enigma2 enigma2-plugins enigma2-oe-alliance-plugins oe-alliance-feeds enigma2-3rdparty-plugins ${@base_contains("MACHINE_FEATURES", "wifi", "oe-alliance-wifi", "", d)}"
@@ -27,7 +27,7 @@ RDEPENDS_${PN} = "\
     "
 
 RRECOMMENDS_${PN} = "\
-    enigma2-plugin-systemplugins-autobouquetsmaker \
+    ${@base_contains("DISTRO_FEATURES", "no-autobouquetsmaker", "" , "enigma2-plugin-systemplugins-autobouquetsmaker", d)} \
     enigma2-plugin-systemplugins-hotplug \
     enigma2-plugin-extensions-mediascanner \
     enigma2-plugin-extensions-pictureplayer \
