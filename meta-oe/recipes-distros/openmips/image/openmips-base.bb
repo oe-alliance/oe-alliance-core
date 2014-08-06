@@ -24,8 +24,8 @@ RDEPENDS_${PN} = "\
     libcrypto-compat-0.9.8 \
     ${@base_contains("MACHINE_FEATURES", "singlecore", "", \
     " \
-    task-base-smbfs-client \
-    task-base-smbfs \
-    task-base-nfs \
+    packagegroup-base-smbfs-client \
+    packagegroup-base-smbfs \
+    packagegroup-base-nfs \
     ", d)} \	
     "

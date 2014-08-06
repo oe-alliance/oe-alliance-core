@@ -19,8 +19,8 @@ RDEPENDS_${PN} = "\
     \
     python-gdata \
     minidlna djmount fuse-utils \
-    task-base-smbfs \
-    task-base-smbfs-client \
+    packagegroup-base-smbfs-client \
+    packagegroup-base-smbfs \
     ntfs-3g \
     hddtemp \
     rsync \

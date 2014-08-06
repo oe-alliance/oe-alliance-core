@@ -14,9 +14,9 @@ IMAGE_INSTALL = "openatv-base \
     ${@base_contains("MACHINE_FEATURES", "dvbc-only", "", "enigma2-plugin-settings-defaultsat", d)} \
     ${@base_contains("MACHINE_FEATURES", "singlecore", "", \
     " \
-    task-base-smbfs-client \
-    task-base-smbfs \
-    task-base-nfs \
+    packagegroup-base-smbfs-client \
+    packagegroup-base-smbfs \
+    packagegroup-base-nfs \
     ", d)} \
     "
 
