@@ -1,0 +1,13 @@
+diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
+index 7820f3a..fb6b332 100644
+--- a/net/ipv4/tcp_output.c
++++ b/net/ipv4/tcp_output.c
+@@ -51,7 +51,7 @@ int sysctl_tcp_retrans_collapse __read_mostly = 1;
+ int sysctl_tcp_workaround_signed_windows __read_mostly = 0;
+ 
+ /* Default TSQ limit of two TSO segments */
+-int sysctl_tcp_limit_output_bytes __read_mostly = 131072;
++int sysctl_tcp_limit_output_bytes __read_mostly = 4194304;
+ 
+ /* This limits the percentage of the congestion window which we
+  * will allow a single TSO frame to consume.  Building TSO frames

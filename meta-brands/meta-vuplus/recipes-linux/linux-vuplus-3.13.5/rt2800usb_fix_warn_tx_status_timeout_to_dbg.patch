@@ -1,0 +1,13 @@
+diff --git a/drivers/net/wireless/rt2x00/rt2800usb.c b/drivers/net/wireless/rt2x00/rt2800usb.c
+index a81ceb6..4acd4b2 100644
+--- a/drivers/net/wireless/rt2x00/rt2800usb.c
++++ b/drivers/net/wireless/rt2x00/rt2800usb.c
+@@ -128,7 +128,7 @@ static inline bool rt2800usb_entry_txstatus_timeout(struct queue_entry *entry)
+ 
+ 	tout = time_after(jiffies, entry->last_action + msecs_to_jiffies(100));
+ 	if (unlikely(tout))
+-		rt2x00_warn(entry->queue->rt2x00dev,
++		rt2x00_dbg(entry->queue->rt2x00dev,
+ 			    "TX status timeout for entry %d in queue %d\n",
+ 			    entry->entry_idx, entry->queue->qid);
+ 	return tout;

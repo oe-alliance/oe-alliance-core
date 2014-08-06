@@ -4,19 +4,34 @@ PRIORITY = "optional"
 LICENSE = "CLOSED"
 
 DEPENDS = "tslib mpfr gmp"
-RDEPENDS_${PN} = "tslib-conf libts-1.0-0 libsysfs2 libgmp10 libmpfr4 enigma2-hbbtv-util vuplus-opera-dumpait"
+RDEPENDS_${PN} = "tslib-conf libts-1.0-0 libsysfs2 libgmp10 libmpfr4 vuplus-opera-dumpait"
 
-PACKAGES =+ "${PN}-src enigma2-hbbtv-util enigma2-hbbtv-util-src"
-PROVIDES =+ "enigma2-hbbtv-util"
-
-SRC_DATE = "20140519_1"
+SRC_DATE = "20140725_0"
 SRC_URI = ""
 
-PR = "r32_${SRC_DATE}"
+PR = "r35_${SRC_DATE}"
 
 S = "${WORKDIR}/opera-hbbtv"
 
 INHIBIT_PACKAGE_STRIP = "1"
+PRIVATE_LIBS_${PN} = "libopera_hbbtv.so \
+libdsmcc.so \
+libdirect-1.4.so.6 \
+libdirectfb-1.4.so.6 \
+libfusion-1.4.so.6 \
+libdirectfbwm_default.so \
+libdirectfb_linux_input.so \
+libdirectfb_devmem.so \
+libdirectfb_dummy.so \
+libdirectfb_fbdev.so \
+libidirectfbfont_dgiff.so \
+libidirectfbvideoprovider_v4l.so \
+libidirectfbvideoprovider_gif.so \
+libidirectfbimageprovider_dfiff.so \
+libidirectfbimageprovider_gif.so \
+libidirectfbimageprovider_jpeg.so \
+libicoreresourcemanager_test.so \
+libdirectfb_vuplus.so"
 
 SRC_FILE = "opera-hbbtv_${SRC_DATE}.tar.gz"
 do_fetch() {
@@ -33,38 +48,27 @@ do_unpack() {
     tar xvfz ${SRC_FILE}
 }
 
-# Just a quick hack to "compile" the python parts.
-do_compile_append() {
-    python -O -m compileall ${S}
+do_compile() {
 }
 
 do_install() {
-    rm -f ${S}/opera/lib/libopera.so
-
     install -d ${D}/usr/local/hbb-browser
     mv ${S}/opera/* ${D}/usr/local/hbb-browser/
-    # workaround for broken startup script and segfault in libfaketime.so
-    # sed -i -e '1,2d' -e 's/libfaketime.so //g' ${D}/usr/local/hbb-browser/launcher
-
-    install -d ${D}/etc
-    mv ${S}/dfb/etc/* ${D}/etc/
-
-    install -d ${D}/usr/bin
-    mv ${S}/dfb/usr/bin/* ${D}/usr/bin/
-
     install -d ${D}/usr/lib
     mv ${S}/dfb/usr/lib/* ${D}/usr/lib/
+}
 
-    install -d ${D}/usr/share
-    mv ${S}/dfb/usr/share/* ${D}/usr/share/
-
-    install -d ${D}/usr/lib/enigma2/python/Plugins/Extensions/HbbTV
-    mv ${S}/plugin/* ${D}/usr/lib/enigma2/python/Plugins/Extensions/HbbTV
+package_do_shlibs_append() {
+    deps = "${PKGDEST}/${PN}.shlibdeps"
+    tmp = "/tmp/.${PN}.shlibdeps"
+    os.system("sed -e '/vbrowser/d' %s > %s" % (deps, tmp))
+    os.system("cp %s %s" % (tmp, deps))
 }
 
 do_package_qa() {
 }
 
-FILES_${PN} = "/usr/lib /usr/local /usr/share /usr/bin /etc "
-FILES_enigma2-hbbtv-util = "/usr/lib/enigma2/python/Plugins/Extensions/HbbTV/*.pyo /usr/lib/enigma2/python/Plugins/Extensions/HbbTV/*.so"
-FILES_enigma2-hbbtv-util-src = "/usr/lib/enigma2/python/Plugins/Extensions/HbbTV/*.py"
+sysroot_stage_all() {
+}
+
+FILES_${PN} = "/usr/*"

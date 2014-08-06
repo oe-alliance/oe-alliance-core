@@ -55,7 +55,7 @@ DEPENDS = "\
     wvdial \
     wvstreams \
     usbutils \
-    ${@base_contains("MACHINE_FEATURES", "legacykernel", "" , "hostap-daemon bridge-utils", d)} \	
+    ${@base_contains("MACHINE_FEATURES", "legacykernel", "" , "hostapd bridge-utils", d)} \	
     "
 
 DESCRIPTION_enigma2-plugin-systemplugins-audioeffect = "Audio Effect setup"
@@ -106,7 +106,7 @@ DESCRIPTION_enigma2-plugin-extensions-remotechannelstreamconverter = "Fetch chan
 RDEPENDS_enigma2-plugin-extensions-remotechannelstreamconverter = "python-shell"
 RREPLACES_enigma2-plugin-extensions-remotechannelstreamconverter = "enigma2-plugin-extensions-remotestreamconvert"
 DESCRIPTION_enigma2-plugin-systemplugins-wirelessaccesspoint = "Using a Wireless module as AP."
-RDEPENDS_enigma2-plugin-systemplugins-wirelessaccesspoint = "hostap-daemon bridge-utils"
+RDEPENDS_enigma2-plugin-systemplugins-wirelessaccesspoint = "hostapd bridge-utils"
 
 
 inherit autotools-brokensep gitpkgv pythonnative
@@ -116,7 +116,7 @@ PV = "2.0+git${SRCPV}"
 PKGV = "2.0+git${GITPKGV}"
 PR = "r11"
 
-SRC_URI="git://github.com/oe-alliance/oe-alliance-plugins.git;protocol=git"
+SRC_URI="git://github.com/atvcaptain/oe-alliance-plugins.git;protocol=git"
 
 EXTRA_OECONF = " \
     BUILD_SYS=${BUILD_SYS} \
