@@ -9,7 +9,7 @@ DEPENDS += "cdparanoia cairo jpeg libpng zlib libid3tag flac speex libsoup-2.4"
 DEPENDS += "gst-plugins-base"
 
 SRCREV = "${AUTOREV}"
-PR = "r20"
+PR = "r21"
 GIT_PV = ""
 
 EXTRA_OECONF = "--enable-orc --disable-esd --disable-aalib --disable-shout2 --disable-libcaca --disable-hal"
@@ -29,6 +29,7 @@ SRC_URI += " \
     file://rtsp-check-all-protocols.patch \
     ${@base_contains('MACHINE_FEATURES', 'legacykernel', 'file://v4l-compile-fix-old-kernel.patch', '', d)} \
     file://add-support-3.12.patch \
+    file://mp4-parse-fix-typo.patch \
 "
 
 do_common_update() {
