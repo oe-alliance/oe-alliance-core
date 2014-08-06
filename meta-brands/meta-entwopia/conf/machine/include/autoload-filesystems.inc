@@ -1,1 +1,1 @@
-module_autoload_xfs = "xfs"
+KERNEL_MODULE_AUTOLOAD += "xfs"

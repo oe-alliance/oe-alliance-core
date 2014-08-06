@@ -35,10 +35,10 @@ MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS = "\
     kernel-module-nfsd \
     kernel-module-exportfs \	
     "
-module_autoload_cifs = "cifs"
-module_autoload_iso9660 = "iso9660"
-module_autoload_udf = "udf"
-module_autoload_ntfs = "ntfs"
+KERNEL_MODULE_AUTOLOAD += "cifs"
+KERNEL_MODULE_AUTOLOAD += "iso9660"
+KERNEL_MODULE_AUTOLOAD += "udf"
+KERNEL_MODULE_AUTOLOAD += "ntfs"
 
 MACHINE_FEATURES += "dreambox alsa usbhost tpm kernel26-legacy"
 

@@ -26,9 +26,9 @@ MACHINE_EXTRA_RRECOMMENDS = " \
     gst-plugin-dvbmediasink \
     "
 
-module_autoload_ext2 = "ext2"
-module_autoload_ext3 = "ext3"
-module_autoload_ext4 = "ext4"
+KERNEL_MODULE_AUTOLOAD += "ext2"
+KERNEL_MODULE_AUTOLOAD += "ext3"
+KERNEL_MODULE_AUTOLOAD += "ext4"
 
 include conf/machine/include/autoload-filesystems.inc
 
