@@ -40,7 +40,6 @@ SRC_URI = "http://archiv.openmips.com/linux-gbquad-3.3.8-2.0_20130716.tar.gz \
     file://dvb_usb_disable_rc_polling.patch \
     file://fix-dvb-siano-sms-order.patch \
     file://nfs-max-rwsize-8k.patch \
-    file://linux-3.3.8-dvbsky.patch \
     "
 	
 SRC_URI_append_gbquadplus = " file://brcm_s3_wol.patch"

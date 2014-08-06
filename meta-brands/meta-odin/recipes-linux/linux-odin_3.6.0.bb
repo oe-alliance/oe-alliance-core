@@ -43,7 +43,6 @@ SRC_URI += "http://source.mynonpublic.com/download/linux-${PV}.tar.gz \
     file://it913x-switch-off-PID-filter-by-default.patch \
     file://tda18271-advertise-supported-delsys.patch \
     file://fix-dvb-siano-sms-order.patch \
-    file://linux-3.6.0-dvbsky.patch \
     file://${MACHINE}-board.patch \
     file://mxl5007t-add-no_probe-and-no_reset-parameters.patch \
     file://nfs-max-rwsize-8k.patch \

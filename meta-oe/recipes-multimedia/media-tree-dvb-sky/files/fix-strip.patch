@@ -1,0 +1,19 @@
+changeset:   15145:72aa2db63b3d
+tag:         tip
+user:        Andreas Oberritter <obi@linuxtv.org>
+date:        Tue Oct 12 10:03:53 2010 +0000
+summary:     make_makefile.pl: use $(CROSS_COMPILE)strip
+
+diff --git a/v4l/scripts/make_makefile.pl b/v4l/scripts/make_makefile.pl
+--- a/v4l/scripts/make_makefile.pl
++++ b/v4l/scripts/make_makefile.pl
+@@ -223,7 +223,7 @@
+ 	print OUT "echo -n \"\$\$i \"; ";
+ 	print OUT "install -m 644 -c \$\$i \$(DESTDIR)\$(KDIR26)/$dir; fi; done; ";
+ 	print OUT "if [  \$\$n -ne 0 ]; then echo; ";
+-	print OUT "strip --strip-debug \$(DESTDIR)\$(KDIR26)/$dir/*.ko; ";
++	print OUT "\$(CROSS_COMPILE)strip --strip-debug \$(DESTDIR)\$(KDIR26)/$dir/*.ko; ";
+ 	print OUT "fi;\n\n";
+ }
+ print OUT "\t@echo\n";
+
