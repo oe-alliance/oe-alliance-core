@@ -3,18 +3,25 @@ PACKAGE_ARCH = "all"
 
 require conf/license/license-gplv2.inc
 
-DVBPROVIDER ?= "kernel"
-
-RDEPENDS_${PN} = " \
-    kernel-module-dvb-usb-dvbsky \
-    kernel-module-m88ds3103 \
-    kernel-module-dvb-usb-v2 \
+RDEPEND = " \
+    usb-dvb-dvbsky-dvbs \
     firmware-dvb-usb-s660 \
     firmware-dvb-fe-ds3000 \
     firmware-dvb-fe-ds3xxx \
     "
 
-PV = "1.0"
+RDEPENDS_${PN} = " \
+    dvb-sky-module-dvbs-dvb-usb-dvbsky \
+    dvb-sky-module-dvbs-dvb-usb-v2.ipk \
+    dvb-sky-module-dvbs-dvbsky-m88ds3103 \
+    dvb-sky-module-dvbs-dvbsky-m88rs6000 \
+    dvb-sky-module-dvbs-sit2fe \
+    firmware-dvb-usb-s660 \
+    firmware-dvb-fe-ds3000 \
+    firmware-dvb-fe-ds3xxx \
+    "
+
+PV = "2.0"
 PR = "r0"
 
 ALLOW_EMPTY_${PN} = "1"
