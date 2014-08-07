@@ -15,6 +15,13 @@ S = "${WORKDIR}/git"
 
 inherit autotools
 
+do_configure_prepend() {
+    touch ${S}/NEWS
+    touch ${S}/README
+    touch ${S}/AUTHORS
+    touch ${S}/ChangeLog
+}
+
 pkg_postinst_${PN} () {
     rm -f $D/autofs
     mkdir $D/autofs
