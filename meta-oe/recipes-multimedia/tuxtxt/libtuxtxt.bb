@@ -15,7 +15,14 @@ PR = "r2"
 
 EXTRA_OECONF = "--with-boxtype=generic"
 
-inherit autotools pkgconfig gettext
+inherit autotools pkgconfig
+
+do_configure_prepend() {
+    touch ${S}/NEWS
+    touch ${S}/README
+    touch ${S}/AUTHORS
+    touch ${S}/ChangeLog
+}
 
 FILES_${PN} = "/usr/lib/libtuxtxt.so.*"
 FILES_${PN}-dev = "/usr/include/ /usr/lib/libtuxtxt.la /usr/lib/libtuxtxt.so /usr/lib/pkgconfig/tuxbox-tuxtxt.pc"

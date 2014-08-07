@@ -12,7 +12,7 @@ SRC_URI[sha256sum] = "aea6af7b99eba38ffa9dc5ad1521c2cc652e043cea0e7482e239d2a3fc
 
 S = "${WORKDIR}/${PN}"
 
-inherit autotools
+inherit autotools-brokensep pkgconfig
 
 EXTRA_OECONF = " \
         ac_cv_prog_MAGICKCONFIG= \
