@@ -8,7 +8,7 @@ PR = "r11"
 
 SCHWERKRAFT_PROJECT = "dvbmediasink"
 
-inherit autotools schwerkraft-git
+inherit autotools schwerkraft-git pkgconfig
 
 SRC_URI += " \
     file://getdecodertime.patch \

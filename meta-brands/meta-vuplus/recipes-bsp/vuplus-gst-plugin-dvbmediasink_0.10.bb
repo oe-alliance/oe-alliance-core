@@ -8,7 +8,7 @@ RDEPENDS_${PN} = "gst-ffmpeg"
 
 PR = "r26"
 
-inherit autotools git-project
+inherit autotools git-project pkgconfig
 
 BRANCH="master"
 SRCREV = "9cd3627a42178b74e3aec24413f4b0e0be76de59"

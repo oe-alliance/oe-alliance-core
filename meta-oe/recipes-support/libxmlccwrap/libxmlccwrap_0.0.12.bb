@@ -15,7 +15,7 @@ SRC_URI = "http://www.ant.uni-bremen.de/whomes/rinas/libxmlccwrap/download/${P}.
 SRC_URI[md5sum] = "9f8bbad3452d704603246273b2dda758"
 SRC_URI[sha256sum] = "38fb5f75f8b7dad1c8d535cc7b18ea9f1603e14a8b9256a2f60cf721513dc299"
 
-inherit autotools
+inherit autotools pkgconfig
 
 FILES_${PN} = "${libdir}/${P}${SOLIBSDEV}"
 FILES_${PN}-dev = "${includedir} ${libdir}/${PN}${SOLIBSDEV} ${libdir}/*.la"

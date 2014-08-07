@@ -10,7 +10,7 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/mjpeg/${BP}.tar.gz"
 SRC_URI[md5sum] = "57bf5dd78976ca9bac972a6511b236f3"
 SRC_URI[sha256sum] = "864f143d7686377f8ab94d91283c696ebd906bf256b2eacc7e9fb4dddcedc407"
 
-inherit autotools
+inherit autotools gettext pkgconfig
 
 EXTRA_OECONF = " \
         --without-libquicktime \

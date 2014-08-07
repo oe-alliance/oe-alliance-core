@@ -28,7 +28,7 @@ EXTRA_OECONF = " \
                 --with-apr-util=${STAGING_BINDIR_CROSS} \
                 ac_cv_path_RUBY=none"
 
-inherit autotools
+inherit autotools-brokensep
 
 export LDFLAGS += " -L${STAGING_LIBDIR} "
 
