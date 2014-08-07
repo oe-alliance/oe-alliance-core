@@ -5,6 +5,13 @@ echo 1 > /proc/stb/lcd/mode
 
 echo "gbquad" > /proc/stb/info/gbmodel
 
+# ZRAM TEST
+# mem_by_cpu=$(($(grep MemTotal /proc/meminfo | awk ' { print $2 } ')*256))
+# modprobe zram num_devices=1
+# echo $mem_by_cpu > /sys/block/zram0/disksize 
+# mkswap /dev/zram0
+# swapon /dev/zram0
+
 #DESCRIPTION=This will set ETH0 and USB to Thread 2
 #echo 000002 > /proc/irq/4/smp_affinity # BVNF0 
 #echo 000002 > /proc/irq/8/smp_affinity # CLKGEN

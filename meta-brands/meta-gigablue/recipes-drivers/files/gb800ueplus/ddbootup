@@ -5,3 +5,9 @@ echo 1 > /proc/stb/lcd/mode
 
 echo "gb800ueplus" > /proc/stb/info/gbmodel
 
+# ZRAM TEST
+# mem_by_cpu=$(($(grep MemTotal /proc/meminfo | awk ' { print $2 } ')*256))
+# modprobe zram num_devices=1
+# echo $mem_by_cpu > /sys/block/zram0/disksize 
+# mkswap /dev/zram0
+# swapon /dev/zram0

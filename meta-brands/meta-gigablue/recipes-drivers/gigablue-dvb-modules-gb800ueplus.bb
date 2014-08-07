@@ -1,11 +1,11 @@
 SRCDATE = "20140731"
 
-KV = "3.12.1"
+KV = "3.14.2"
 
-SRC_URI[md5sum] = "ebec726a0968fe661eca019207e4d59d"
-SRC_URI[sha256sum] = "6b96c9f46198a5be98ca8f2d6ae9a8ecbe464beee09bb4b3a901d232909abba7"
+SRC_URI[md5sum] = "aafd0fd558704b32c0f72ec45e44999c"
+SRC_URI[sha256sum] = "e7d1e714c36e2e6c884eb280879a63a6612b8e84bd90d76dcd3f4de18b5fab6d"
 
-SRC_URI = "http://archiv.openmips.com/gigablue-drivers-${KV}-gb800xxplus-${SRCDATE}.zip"
+SRC_URI = "http://archiv.openmips.com/beta/gigablue-drivers-${KV}-gb800xxplus-${SRCDATE}.zip"
 
 require gigablue-dvb-modules.inc
 

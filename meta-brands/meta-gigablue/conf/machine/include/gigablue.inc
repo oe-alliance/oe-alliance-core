@@ -15,9 +15,15 @@ MACHINE_ESSENTIAL_EXTRA_RDEPENDS = " \
 
 DVBPROVIDER = "kernel"
 
-MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS = "\
+MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS = " \
     kernel-module-cdfs \
+    kernel-module-zram \
+    kernel-module-8192cu \
+    kernel-module-smsc75xx \
     "
+
+# MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS_append_gbquad = "kernel-module-smsc75xx"
+# MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS_append_gbquadplus = "kernel-module-smsc75xx"
 
 MACHINE_EXTRA_RRECOMMENDS = " \
     gst-plugin-dvbmediasink \
