@@ -185,7 +185,7 @@ RPROVIDES_${PN} = "${NEUTRINOHDBIN}"
 include neutrinohdurl.inc
 
 SRC_URI = "\
-    svn://${NEUTRINOHDHOST}/${SUBURI};scmdata=keep \
+    svn://${NEUTRINOHDHOST}/${SUBURI};scmdata=keep;protocol=http \
     "
 
 S = "${WORKDIR}/${MODULE}"
