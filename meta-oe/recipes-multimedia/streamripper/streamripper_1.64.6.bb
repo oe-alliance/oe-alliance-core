@@ -15,3 +15,10 @@ EXTRA_OECONF = "--disable-oggtest \
         --with-vorbis=${STAGING_LIBDIR}"
 
 inherit autotools
+
+do_configure_prepend() {
+    touch ${S}/NEWS
+    touch ${S}/README
+    touch ${S}/AUTHORS
+    touch ${S}/ChangeLog
+}
