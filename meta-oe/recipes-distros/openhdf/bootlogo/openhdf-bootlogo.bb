@@ -9,7 +9,7 @@ require conf/license/license-gplv2.inc
 RDEPENDS_${PN} += "showiframe"
 
 PV = "4.1"
-PR = "r3"
+PR = "r4"
 
 S = "${WORKDIR}"
 
@@ -52,8 +52,8 @@ do_install() {
 
 inherit deploy
 do_deploy() {
-    if [ "${BRAND_OEM}" = "vuplus" ] || [ "${BRAND_OEM}" = "dags" ]; then
-        install -m 0644 splash480.bmp ${DEPLOYDIR}/${BOOTLOGO_FILENAME}
+    if [ "${BRAND_OEM}" = "dags" ] || [ "${BRAND_OEM}" = "vuplus" ]; then
+        install -m 0644 splash480.bmp ${DEPLOYDIR}/splash.bmp
     else
         install -m 0644 splash576.bmp ${DEPLOYDIR}/${BOOTLOGO_FILENAME}
     fi
