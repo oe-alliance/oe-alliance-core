@@ -1,9 +1,9 @@
-SRCDATE = "20140731"
+SRCDATE = "20140807"
 
 KV = "3.14.2"
 
-SRC_URI[md5sum] = "5fef78e76fe49aee384d26293b6ba12d"
-SRC_URI[sha256sum] = "ab8eb4189e7232cbccd66bcfd5b0377c10dbfb69d5225748d0113daf1d8405d2"
+SRC_URI[md5sum] = "ae6d0033aeb8c6b06834d85df58fd65d"
+SRC_URI[sha256sum] = "f3f8ed4ad6ca35d53480291f9ccd7ceb4b3dce8116004fed7bf90bb5b0714565"
 
 SRC_URI = "http://archiv.openmips.com/beta/gigablue-drivers-${KV}-gbquad-${SRCDATE}.zip"
 
