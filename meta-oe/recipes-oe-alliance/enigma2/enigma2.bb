@@ -156,7 +156,7 @@ inherit autotools-brokensep gitpkgv pkgconfig pythonnative
 
 PV = "3.0+git${SRCPV}"
 PKGV = "3.0+git${GITPKGV}"
-PR = "r11"
+PR = "r12"
 
 SRC_URI = "${ENIGMA2_URI}"
 
@@ -181,24 +181,6 @@ SRC_URI_append_azboxminime = " \
     "
 SRC_URI_append_vuduo = " \
     file://duo_VFD.patch \
-    "
-SRC_URI_append_gb800solo = " \
-    file://gb800-evfd.patch \
-    "
-SRC_URI_append_gb800se = " \
-    file://gb800-evfd.patch \
-    "
-SRC_URI_append_gb800seplus = " \
-    file://gb800-evfd.patch \
-    "			
-SRC_URI_append_gb800ue = " \
-    file://gb800-evfd.patch \
-    "
-SRC_URI_append_gbquadplus = " \
-    file://gb800-evfd.patch \
-    "
-SRC_URI_append_gbipbox = " \
-    file://gb800-evfd.patch \
     "
 
 S = "${WORKDIR}/git"
