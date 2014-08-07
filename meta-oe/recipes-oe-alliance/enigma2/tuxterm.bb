@@ -9,7 +9,7 @@ PN = "tuxterm"
 PV = "0.2+svn${SRCPV}"
 PR = "r1"
 
-SRC_URI = "${PLISVNURL}/${PLISVNBRANCH}/external;module=${PN};protocol=${PLISVNPROTO}"
+SRC_URI = "${PLISVNURL}/${PLISVNBRANCH}/external;module=${PN}"
 
 S = "${WORKDIR}/${PN}"
 
