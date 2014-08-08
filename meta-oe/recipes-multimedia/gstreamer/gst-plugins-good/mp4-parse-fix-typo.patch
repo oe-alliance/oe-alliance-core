@@ -1,0 +1,11 @@
+--- a/gst/isomp4/qtdemux.h	2014-07-01 14:00:17.000000000 +0200
++++ b/gst/isomp4/qtdemux.h	2014-08-02 17:59:43.934999831 +0200
+@@ -111,7 +111,7 @@
+   guint64 seek_offset;
+ 
+   gboolean upstream_seekable;
+-  gboolean upstream_size;
++  gint64 upstream_size;
+ };
+ 
+ struct _GstQTDemuxClass {
