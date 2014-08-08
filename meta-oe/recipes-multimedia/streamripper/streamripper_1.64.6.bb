@@ -3,7 +3,7 @@ SECTION = "console/multimedia"
 LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=8ca43cbc842c2336e835926c2166c28b"
 DEPENDS = "libogg libvorbis faad2 glib-2.0 libmad"
-PR = "r1"
+PR = "r2"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/streamripper/streamripper-${PV}.tar.gz"
 SRC_URI[md5sum] = "a37a1a8b8f9228522196a122a1c2dd32"
@@ -22,4 +22,7 @@ do_configure_prepend() {
     touch ${S}/NEWS
     touch ${S}/AUTHORS
     touch ${S}/ChangeLog
+    touch ${S}/libmad-0.15.1b/NEWS
+    touch ${S}/libmad-0.15.1b/AUTHORS
+    touch ${S}/libmad-0.15.1b/ChangeLog
 }

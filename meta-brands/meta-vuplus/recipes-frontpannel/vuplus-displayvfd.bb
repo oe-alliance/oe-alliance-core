@@ -22,3 +22,9 @@ do_install() {
 
 FILES_${PN} = "${bindir}"
 
+do_configure_prepend() {
+    touch ${S}/NEWS
+    touch ${S}/AUTHORS
+    touch ${S}/ChangeLog
+    touch ${S}/README
+}

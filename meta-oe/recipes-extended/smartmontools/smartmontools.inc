@@ -8,3 +8,7 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/smartmontools/smartmontools-${PV}.tar.gz"
 S = "${WORKDIR}/smartmontools-${PV}"
 
 inherit autotools
+
+do_configure_prepend() {
+    touch ${S}/ChangeLog
+}

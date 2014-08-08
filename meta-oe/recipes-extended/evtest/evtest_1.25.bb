@@ -4,13 +4,15 @@ AUTHOR = "Vojtech Pavlik <vojtech@suse.cz>"
 SECTION = "console/utils"
 #PRIORITY = "optional"
 LICENSE = "GPLv2"
-PR = "r3"
+PR = "r4"
 LIC_FILES_CHKSUM = "file://COPYING;md5=751419260aa954499f7abaabaa882bbe"
 
 
 DEPENDS = "libxml2"
 
-SRC_URI = "http://cgit.freedesktop.org/~whot/evtest/snapshot/evtest-${PV}.tar.bz2;name=archive"
+SRC_URI = "http://cgit.freedesktop.org/~whot/evtest/snapshot/evtest-${PV}.tar.bz2;name=archive \
+           file://fix-xml-issue.patch \
+"
 
 inherit autotools-brokensep
 

@@ -48,7 +48,7 @@ INITSCRIPT_PARAMS = "defaults 11"
 INITSCRIPT_NAME_${PN}-client = "nfscommon"
 INITSCRIPT_PARAMS_${PN}-client = "defaults 19 11"
 
-inherit autotools-brokensep update-rc.d systemd
+inherit autotools-brokensep pkgconfig update-rc.d systemd
 
 SYSTEMD_SERVICE_${PN} = "nfs-server.service nfs-mountd.service"
 SYSTEMD_SERVICE_${PN}-client = "nfs-statd.service"

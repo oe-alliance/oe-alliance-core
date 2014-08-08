@@ -6,11 +6,13 @@ PRIORITY = "optional"
 LICENSE = "GPLv2"
 DEPENDS = "glib-2.0 fuse curl"
 RDEPENDS_${PN} += " libcurl "
-PR = "r1"
+PR = "r2"
 
 require conf/license/license-gplv2.inc
 
-SRC_URI = "${SOURCEFORGE_MIRROR}/curlftpfs/${P}.tar.gz"
+SRC_URI = "${SOURCEFORGE_MIRROR}/curlftpfs/${P}.tar.gz \
+          file://fix-modules-check.patch \
+"
 
 S = "${WORKDIR}/${P}"
 

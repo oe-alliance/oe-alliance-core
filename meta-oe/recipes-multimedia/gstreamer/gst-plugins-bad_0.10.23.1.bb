@@ -68,6 +68,7 @@ do_configure_prepend() {
     rm ${S}/m4/lib-link.m4 || true
     # manually provide remove-potcdate.sin, while our intltoolize does not install it
     cp ${STAGING_DATADIR_NATIVE}/gettext/po/remove-potcdate.sin ${S}/po/
+    touch ${S}/ABOUT-NLS
 }
 
 require mips-only.inc

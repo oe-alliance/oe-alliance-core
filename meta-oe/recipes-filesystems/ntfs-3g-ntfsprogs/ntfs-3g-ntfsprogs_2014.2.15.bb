@@ -13,7 +13,7 @@ S = "${WORKDIR}/ntfs-3g_ntfsprogs-${PV}"
 SRC_URI[md5sum] = "f11d563816249d730a00498983485f3a"
 SRC_URI[sha256sum] = "4c3099400cb14b231a3c9d718b3a8d152d38555059341ce5fc6d02292a4a5b56"
 
-inherit autotools
+inherit autotools pkgconfig
 
 # required or it calls ldconfig at install step
 EXTRA_OEMAKE = "LDCONFIG=echo"

@@ -1,0 +1,12 @@
+--- a/configure.ac	2008-04-23 13:37:42.000000000 +0200
++++ b/configure.ac	2014-08-08 20:54:13.264146547 +0200
+@@ -10,9 +10,6 @@
+ AC_PROG_LIBTOOL
+ export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig:$PKG_CONFIG_PATH
+ 
+-PKG_CHECK_MODULES(GLIB, [glib-2.0])
+-PKG_CHECK_MODULES(FUSE, [fuse >= 2.2])
+-
+ LIBCURL_CHECK_CONFIG([yes], [7.17.0], [], [AC_MSG_ERROR(["libcurl not found"])])
+ if test "$libcurl_protocol_FTP" != yes; then
+ 	AC_MSG_ERROR(["We need libcurl with support for FTP protocol."])

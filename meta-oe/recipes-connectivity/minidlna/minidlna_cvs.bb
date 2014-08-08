@@ -32,3 +32,7 @@ do_install_append() {
     install -d ${D}${sysconfdir}/init.d/
     install -m 755 ${WORKDIR}/init ${D}${sysconfdir}/init.d/${PN}
 }
+
+do_configure_prepend() {
+    touch ${S}/ABOUT-NLS
+}
