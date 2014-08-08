@@ -17,7 +17,7 @@ EXTRA_OECONF = "--disable-oggtest \
 inherit autotools
 
 do_configure_prepend() {
-    touch ${S}/NEWS
-    touch ${S}/AUTHORS
-    touch ${S}/ChangeLog
+    touch ${WORKDIR}/NEWS
+    touch ${WORKDIR}/AUTHORS
+    touch ${WORKDIR}/ChangeLog
 }
