@@ -18,7 +18,6 @@ inherit autotools
 
 do_configure_prepend() {
     touch ${S}/NEWS
-    touch ${S}/README
     touch ${S}/AUTHORS
     touch ${S}/ChangeLog
 }
