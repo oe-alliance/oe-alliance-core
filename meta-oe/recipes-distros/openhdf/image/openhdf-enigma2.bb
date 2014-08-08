@@ -7,7 +7,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PV = "1.0"
-PR = "r53"
+PR = "r54"
 
 inherit packagegroup
 
@@ -37,12 +37,11 @@ RRECOMMENDS_${PN} = "\
     enigma2-plugin-systemplugins-hotplug \
     enigma2-plugin-systemplugins-positionersetup \
     enigma2-plugin-systemplugins-videoenhancement \
-    ${@base_contains("MACHINE_FEATURES", "smallflash", "", \
-    " \
     enigma2-plugin-extensions-enhancedmoviecenter \
     enigma2-plugin-extensions-audiosync \
     enigma2-plugin-extensions-cooltvguide \
-    ", d)} \
+    ${@base_contains("MACHINE_FEATURES", "smallflash", "", d)} \
+	${@base_contains("MACHINE_FEATURES", "boxmodel", "boxmodel", "", d)} \
     "
 
 RRECOMMENDS_${PN}_append_gb800solo = ""
