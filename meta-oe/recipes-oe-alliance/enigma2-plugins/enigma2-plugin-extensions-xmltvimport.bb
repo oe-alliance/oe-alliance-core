@@ -39,6 +39,13 @@ do_install_append() {
 install_egg_info() {
 }
 
+do_configure_prepend() {
+    touch ${S}/NEWS
+    touch ${S}/README
+    touch ${S}/AUTHORS
+    touch ${S}/ChangeLog
+}
+
 python populate_packages_prepend() {
     enigma2_plugindir = bb.data.expand('${libdir}/enigma2/python/Plugins', d)
     do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/[a-zA-Z0-9_]+.*$', 'enigma2-plugin-%s', '%s', recursive=True, match_path=True, prepend=True, extra_depends="enigma2")
