@@ -16,8 +16,10 @@ EXTRA_OECONF = "--disable-oggtest \
 
 inherit autotools
 
+S = "${WORKDIR}/streamripper-1.64.6"
+
 do_configure_prepend() {
-    touch ${WORKDIR}/NEWS
-    touch ${WORKDIR}/AUTHORS
-    touch ${WORKDIR}/ChangeLog
+    touch ${S}/NEWS
+    touch ${S}/AUTHORS
+    touch ${S}/ChangeLog
 }
