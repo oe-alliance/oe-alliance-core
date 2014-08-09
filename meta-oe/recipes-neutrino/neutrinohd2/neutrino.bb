@@ -8,8 +8,6 @@ NEUTRINOHDBIN = "neutrino"
 
 SUBURI = "svn/branches;module=nhd2-exp"
 
-SRCREV = "AUTOINC"
-
 URL = "http://www.cuberevo-forum.eu"
 
 require neutrinohd-extra.inc

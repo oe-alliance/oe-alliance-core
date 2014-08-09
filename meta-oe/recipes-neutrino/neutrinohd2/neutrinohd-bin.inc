@@ -2,8 +2,9 @@ SUMMARY = "neutrinoHD2 binary, freshly compiled"
 #LICENSE = "GPLv3"
 include conf/license/license-gplv2.inc
 
-PV = "svn${SRCPV}"
-PR = "r65"
+PV = "svn-2226"
+PR = "r66"
+SRCPV = "2226"
 
 BOXTYPE = "UNKNOWN"
 
@@ -184,11 +185,12 @@ RPROVIDES_${PN} = "${NEUTRINOHDBIN}"
 
 include neutrinohdurl.inc
 
-SRC_URI = "\
-    svn://${NEUTRINOHDHOST}/${SUBURI};scmdata=keep;protocol=http \
-    "
+do_fetch() {
+    svn checkout http://neutrinohd2.googlecode.com/svn/branches/nhd2-exp/
+}
 
 S = "${WORKDIR}/${MODULE}"
+
 
 inherit autotools pkgconfig
 
