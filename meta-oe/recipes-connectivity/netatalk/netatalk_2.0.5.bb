@@ -14,7 +14,7 @@ SRC_URI = "http://ovh.dl.sourceforge.net/sourceforge/netatalk/netatalk-${PV}.tar
 SRC_URI[src.md5sum] = "f35cd7a4ce26c780de380cd2bcae5ce6"
 SRC_URI[src.sha256sum] = "7e02b0d2849ec83459c65d240809ff95ee4a857a3ba38af2cafbbe3717d0c672"
 
-inherit autotools update-rc.d
+inherit autotools pkgconfig update-rc.d
 
 INITSCRIPT_NAME = "atalk"
 INITSCRIPT_PARAMS = "defaults 20"

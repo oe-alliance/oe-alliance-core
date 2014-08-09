@@ -1,5 +1,5 @@
 SECTION = "net"
-PR = "3"
+PR = "4"
 
 require conf/license/license-gplv2.inc
 
@@ -12,7 +12,7 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/project/netatalk/netatalk/${PV}/netatalk-${PV}.
         file://afpd.service \
         file://init"
 
-inherit autotools update-rc.d
+inherit autotools pkgconfig update-rc.d
 
 INITSCRIPT_NAME = "atalk"
 INITSCRIPT_PARAMS = "defaults 20"

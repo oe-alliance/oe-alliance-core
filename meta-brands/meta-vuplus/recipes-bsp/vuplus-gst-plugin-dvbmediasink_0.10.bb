@@ -6,9 +6,14 @@ LIC_FILES_CHKSUM = "file://src/gstdvbaudiosink.c;beginline=1;endline=45;md5=023e
 DEPENDS = "gstreamer gst-plugins-base"
 RDEPENDS_${PN} = "gst-ffmpeg"
 
-PR = "r26"
+PR = "r27"
 
 inherit autotools git-project pkgconfig
+
+do_configure_prepend() {
+    touch ${S}/NEWS
+    touch ${S}/README
+}
 
 BRANCH="master"
 SRCREV = "9cd3627a42178b74e3aec24413f4b0e0be76de59"

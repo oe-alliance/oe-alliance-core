@@ -9,7 +9,7 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/project/netatalk/netatalk/${PV}/netatalk-${PV}.
         file://afp.conf \
         file://afpd.service"
 
-inherit autotools
+inherit autotools pkgconfig
 
 PACKAGES = "${PN}-dbg ${PN} ${PN}-doc ${PN}-dev"
 
