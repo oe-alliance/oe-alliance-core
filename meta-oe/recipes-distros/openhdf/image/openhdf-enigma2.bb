@@ -40,8 +40,7 @@ RRECOMMENDS_${PN} = "\
     enigma2-plugin-extensions-enhancedmoviecenter \
     enigma2-plugin-extensions-audiosync \
     enigma2-plugin-extensions-cooltvguide \
-    ${@base_contains("MACHINE_FEATURES", "smallflash", "", d)} \
-	${@base_contains("MACHINE_FEATURES", "boxmodel", "boxmodel", "", d)} \
+    ${@base_contains("MACHINE_FEATURES", "boxmodel", "boxmodel", "", d)} \
     "
 
 RRECOMMENDS_${PN}_append_gb800solo = ""
