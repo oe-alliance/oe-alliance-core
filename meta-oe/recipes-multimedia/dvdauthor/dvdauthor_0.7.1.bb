@@ -1,21 +1,21 @@
 SUMMARY = "create DVD-Video file system"
 SECTION = "console/multimedia"
 LICENSE = "GPLv2+"
-LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f"
+LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 DEPENDS = "freetype libdvdread libfribidi libpng libxml2 zlib"
-PR = "r3"
 
-SRC_URI = "${SOURCEFORGE_MIRROR}/${PN}/${P}.tar.gz \
-           file://pkg-config-freetype.patch \
-"
-SRC_URI[md5sum] = "2694a5a3ef460106ea3caf0f7f60ff80"
-SRC_URI[sha256sum] = "501fb11b09c6eb9c5a229dcb400bd81e408cc78d34eab6749970685023c51fe9"
+inherit gitpkgv
+SRCREV = "${AUTOREV}"
+PV = "0.7.2+git${SRCPV}"
+PKGV = "0.7.2+git${GITPKGV}"
+VER ="0.7.2"
+PR = "r1"
 
-S = "${WORKDIR}/${PN}"
+SRC_URI="git://github.com/atvcaptain/dvdauthor.git"
+
+S = "${WORKDIR}/git"
 
 inherit autotools gettext pkgconfig
-
-CXXFLAGS_append = " -I=${includedir}/libxml2 -I=${includedir}/freetype"
 
 EXTRA_OECONF = " \
         ac_cv_prog_MAGICKCONFIG= \
