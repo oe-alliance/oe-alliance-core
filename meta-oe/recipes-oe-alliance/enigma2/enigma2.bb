@@ -10,7 +10,7 @@ DEPENDS = " \
     jpeg \
     libdreamdvd libdvbsi++ libfribidi libmad libpng libsigc++-1.2 libungif libxml2 libxmlccwrap \
     openssl \
-    python python-imaging python-twisted python-wifi \
+    python python-imaging python-twisted python-wifi python-twisted-protocols python-numbers \
     swig-native \
     tuxtxt-enigma2 \
     "
@@ -156,7 +156,7 @@ inherit autotools-brokensep gitpkgv pkgconfig pythonnative
 
 PV = "3.0+git${SRCPV}"
 PKGV = "3.0+git${GITPKGV}"
-PR = "r12"
+PR = "r13"
 
 SRC_URI = "${ENIGMA2_URI}"
 
