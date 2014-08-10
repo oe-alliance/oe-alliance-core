@@ -6,7 +6,7 @@ require conf/license/license-gplv2.inc
 RDEPENDS_${PN} = " \
     ${@base_contains("MACHINE_FEATURES", "legacykernel", "", " \
     dvb-sky-module-dvb-usb-dvbsky \
-    dvb-sky-module-dvb-usb-v2.ipk \
+    dvb-sky-module-dvb-usb-v2 \
     dvb-sky-module-dvbsky-m88ds3103 \
     dvb-sky-module-dvbsky-m88rs6000 \
     dvb-sky-module-sit2fe \
@@ -16,6 +16,6 @@ RDEPENDS_${PN} = " \
     ", d)}"
 
 PV = "2.0"
-PR = "r3"
+PR = "r4"
 
 ALLOW_EMPTY_${PN} = "1"
