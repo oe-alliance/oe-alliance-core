@@ -9,7 +9,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "1.0"
-PR = "r23"
+PR = "r24"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 RDEPENDS_${PN} = "\
@@ -40,5 +40,6 @@ RDEPENDS_${PN} = "\
     util-linux-blkid \
     volatile-media \
     vsftpd \
+    python-twisted-protocols python-numbers \
     "
 
