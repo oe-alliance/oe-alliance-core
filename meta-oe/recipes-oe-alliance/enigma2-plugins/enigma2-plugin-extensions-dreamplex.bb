@@ -7,14 +7,14 @@ inherit autotools-brokensep gitpkgv pythonnative
 
 SRCREV = "${AUTOREV}"
 # SRCREV = "ebdc7c77f88c7fb50c642703786ff7d50bf3bd80"
-PV = "1.09+git${SRCPV}"
-PKGV = "1.09+git${GITPKGV}"
-PR = "r5"
+PV = "2.0+git${SRCPV}"
+PKGV = "2.0+git${GITPKGV}"
+PR = "r0"
 
 DEPENDS = "python"
 RDEPENDS_${PN} = "gst-plugins-bad-fragmented curl mjpegtools python-ctypes libshowiframe0"
 
-SRC_URI = "git://github.com/DonDavici/DreamPlex.git;protocol=git;branch=andyblac"
+SRC_URI = "git://github.com/DonDavici/DreamPlex.git;protocol=git;branch=videoMaker"
 
 EXTRA_OECONF = " \
     BUILD_SYS=${BUILD_SYS} \
