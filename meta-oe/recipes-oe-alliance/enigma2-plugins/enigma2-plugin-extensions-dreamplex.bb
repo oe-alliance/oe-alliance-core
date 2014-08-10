@@ -14,7 +14,7 @@ PR = "r0"
 DEPENDS = "python"
 RDEPENDS_${PN} = "gst-plugins-bad-fragmented curl mjpegtools python-ctypes libshowiframe0"
 
-SRC_URI = "git://github.com/DonDavici/DreamPlex.git;protocol=git;branch=videoMaker"
+SRC_URI = "git://github.com/atvcaptain/DreamPlex.git;protocol=git;branch=andyblac"
 
 EXTRA_OECONF = " \
     BUILD_SYS=${BUILD_SYS} \
