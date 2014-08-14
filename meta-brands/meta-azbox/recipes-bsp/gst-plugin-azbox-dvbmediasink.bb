@@ -9,14 +9,21 @@ SRC_URI = "git://github.com/OpenAZBox/azbox-dvbmediasink.git;protocol=git"
 
 S = "${WORKDIR}/git"
 
-inherit gitpkgv
+inherit gitpkgv pkgconfig
 
 SRCREV ?= "${AUTOREV}"
 PV = "0.10.0+git${SRCPV}"
 PKGV = "0.10.0+git${GITPKGV}"
-PR = "r00"
+PR = "r01"
 
 inherit autotools pkgconfig
+
+do_configure_prepend() {
+    touch ${S}/NEWS
+    touch ${S}/README
+    touch ${S}/AUTHORS
+    touch ${S}/ChangeLog
+}
 
 FILES_${PN} = "${libdir}/gstreamer-0.10/*.so*"
 FILES_${PN}-dev += "${libdir}/gstreamer-0.10/*.la"

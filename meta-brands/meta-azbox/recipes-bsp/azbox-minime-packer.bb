@@ -5,18 +5,19 @@ LICENSE = "CLOSED"
 PROVIDES = "azbox-minime-packer"
 
 PV="1.4"
-SRC_URI = "file://pack_minime_image.c \
-       file://Makefile.am \
-       file://configure.ac"
+PR = "r1"
 
-S = "${WORKDIR}/pack_minime_image"
+SRC_URI = "file://pack_minime_image.c"
 
-inherit autotools native
+inherit native
 
-do_configure_prepend() {
-    install -m 0644 ${WORKDIR}/pack_minime_image.c ${S}
-    install -m 0644 ${WORKDIR}/configure.ac ${S}
-    install -m 0644 ${WORKDIR}/Makefile.am ${S}
+S = "${WORKDIR}"
+
+do_compile() {
+    ${CC} -o pack_minime_image pack_minime_image.c
 }
 
-BBCLASSEXTEND = "native"
+do_install() {
+    install -d ${D}/${bindir}/
+    install -m 0755 ${S}/pack_minime_image ${D}/${bindir}/
+}
