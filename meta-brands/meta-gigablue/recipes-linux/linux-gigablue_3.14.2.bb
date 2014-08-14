@@ -12,7 +12,7 @@ SRC_URI[sha256sum] = "71a39fd493cbedb9e9c1ca2e4004d32e667d7cf5ef7ad381fec88a993b
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-MACHINE_KERNEL_PR_append = ".1"
+MACHINE_KERNEL_PR_append = ".2"
 
 # By default, kernel.bbclass modifies package names to allow multiple kernels
 # to be installed in parallel. We revert this change and rprovide the versioned
@@ -35,8 +35,9 @@ SRC_URI += "http://archiv.openmips.com/gigablue-linux-${PV}-20140806.tgz \
     file://it913x-switch-off-PID-filter-by-default.patch \
     file://mxl5007t-add-no_probe-and-no_reset-parameters.patch \
     file://tda18271-advertise-supported-delsys.patch \
-    file://vlan_depth.patch \
     "
+
+SRC_URI_append_gbquadplus = "file://vlan_depth.patch"
 
 S = "${WORKDIR}/linux-${PV}"
 
