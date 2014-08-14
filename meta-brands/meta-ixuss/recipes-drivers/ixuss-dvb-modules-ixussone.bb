@@ -1,10 +1,10 @@
 KV = "3.3.0"
-SRCDATE = "20140430"
+SRCDATE = "20140813"
 
 require ixuss-dvb-modules.inc
 
 DOWNLOADMACHINE = "one"
 
-SRC_URI[md5sum] = "679e5637472b1e42ab62dd3326fe5a98"
-SRC_URI[sha256sum] = "4b4f78405f8c34c8bbe63469707f0b4fccb7069c3958c9d7fedfe45d92428778"
+SRC_URI[md5sum] = "8eafbb85500783b6ecd39da8e1b50e30"
+SRC_URI[sha256sum] = "b0ad47c5bbb21a0e995ba79655a36d66140f39d9020e69efe08cf1e44e11c454"
 
