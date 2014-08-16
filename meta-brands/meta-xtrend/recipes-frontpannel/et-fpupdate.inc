@@ -8,8 +8,8 @@ PR = "r4"
 PV = "${FPVERSION}"
 
 SRC_URI = " \
-    http://www.et-view.com/download/fpupdate-${FPUPDATE}.zip \
-    http://www.et-view.com/download/avrmain-${MACHINE}-${FPVERSION}.zip;name=avrmain \
+    http://www.xtrendet.net/fpupdate-${FPUPDATE}.zip \
+    http://www.xtrendet.net/avrmain-${MACHINE}-${FPVERSION}.zip;name=avrmain \
     "
 
 S = "${WORKDIR}"

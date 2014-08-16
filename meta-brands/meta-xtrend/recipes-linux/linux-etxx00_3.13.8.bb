@@ -22,7 +22,7 @@ PKG_kernel-image = "kernel-image"
 RPROVIDES_kernel-base = "kernel-${KERNEL_VERSION}"
 RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
 
-SRC_URI += "http://xtrendet.com/linux-${PV}.tar.gz \
+SRC_URI += "http://xtrendet.net/linux-${PV}.tar.gz \
     file://defconfig \
     file://add-dmx-source-timecode.patch \
     file://af9015-output-full-range-SNR.patch \
