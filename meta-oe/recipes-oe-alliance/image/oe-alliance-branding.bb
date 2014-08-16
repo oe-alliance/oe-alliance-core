@@ -11,8 +11,8 @@ inherit autotools-brokensep gitpkgv pythonnative
 PACKAGES += " ${PN}-src"
 
 SRCREV = "${AUTOREV}"
-PV = "2.2+git${SRCPV}"
-PKGV = "2.2+git${GITPKGV}"
+PV = "2.3+git${SRCPV}"
+PKGV = "2.3+git${GITPKGV}"
 PR = "r${DATETIME}"
 
 SRC_URI="git://github.com/oe-alliance/branding-module.git;protocol=git"
@@ -124,7 +124,12 @@ do_install_append() {
         install -m 0644 ${S}/BoxBranding/boxes/atemio6100.jpg ${D}/usr/share/enigma2/atemio6100.jpg
         ln -sf /usr/share/enigma2/atemio6100.jpg ${D}/usr/lib/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes/atemio6100.jpg
         install -m 0644 ${S}/BoxBranding/boxes/atemio6200.jpg ${D}/usr/share/enigma2/atemio6200.jpg
-        ln -sf /usr/share/enigma2/atemio6200.jpg ${D}/usr/lib/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes/atemio6200.jpg        
+        ln -sf /usr/share/enigma2/atemio6200.jpg ${D}/usr/lib/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes/atemio6200.jpg
+    elif [ ${MACHINEBUILD} = "et7x00" ]; then
+        install -m 0644 ${S}/BoxBranding/boxes/et7000.jpg ${D}/usr/share/enigma2/et7000.jpg
+        ln -sf /usr/share/enigma2/et7000.jpg ${D}/usr/lib/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes/et7000.jpg
+        install -m 0644 ${S}/BoxBranding/boxes/et7500.jpg ${D}/usr/share/enigma2/et7500.jpg
+        ln -sf /usr/share/enigma2/et7500.jpg ${D}/usr/lib/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes/et7500.jpg 
     else
         install -m 0644 ${S}/BoxBranding/boxes/${MACHINEBUILD}.jpg ${D}/usr/share/enigma2/${MACHINEBUILD}.jpg
         ln -sf /usr/share/enigma2/${MACHINEBUILD}.jpg ${D}/usr/lib/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes/${MACHINEBUILD}.jpg
