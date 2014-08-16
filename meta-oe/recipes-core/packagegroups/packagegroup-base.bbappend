@@ -8,9 +8,13 @@ RDEPENDS_packagegroup-base := "${@oe_filter_out('packagegroup-base-smbfs', '${RD
 
 RDEPENDS_packagegroup-base-smbfs += "\
     cifs \
-    sambaserver"
+    sambaserver \
+    samba \
+    "
 
-RDEPENDS_packagegroup-base-smbfs-client = "samba"
+RDEPENDS_packagegroup-base-smbfs-client = "\
+    smbclient \
+    "
 
 RRRECOMMENDS_packagegroup-base-appletalk = "\
     kernel-module-appletalk \

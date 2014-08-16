@@ -14,8 +14,9 @@ EXTRA_OECONF += " \
     samba_cv_HAVE_IFACE_IFCONF=yes \
     "
 
-PACKAGES =+ "smbfs smbfs-doc sambaserver libpopt libtalloc"
+PACKAGES =+ "smbfs smbfs-doc sambaserver libpopt libtalloc smbclient"
 
+FILES_smbclient = "${bindir}/smbclient"
 FILES_smbfs = "${bindir}/smbmount ${bindir}/smbumount ${bindir}/smbmnt ${base_sbindir}/mount.smbfs ${base_sbindir}/mount.smb"
 FILES_smbfs-doc = "${mandir}/man8/smbmount.8 ${mandir}/man8/smbumount.8 ${mandir}/man8/smbmnt.8"
 FILES_sambaserver = "${sbindir}/smbd ${sbindir}/nmbd ${libdir}/charset/*.so ${libdir}/*.dat \
