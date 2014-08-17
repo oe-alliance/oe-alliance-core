@@ -7,7 +7,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PV = "1.0"
-PR = "r39"
+PR = "r40"
 
 inherit packagegroup
 
@@ -46,5 +46,3 @@ RRECOMMENDS_${PN}_append_dm500hd = " swap-workaround"
 RRECOMMENDS_${PN}_append_ebox5000 = " swap-workaround"
 RRECOMMENDS_${PN}_append_ebox5100 = " swap-workaround"
 RRECOMMENDS_${PN}_append_eboxlumi = " swap-workaround"
-RRECOMMENDS_${PN}_append_vusolo2 = " enigma2-plugin-extensions-hbbtv"
-RRECOMMENDS_${PN}_append_vuduo2 = " enigma2-plugin-extensions-hbbtv"
