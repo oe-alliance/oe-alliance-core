@@ -5,12 +5,12 @@ LICENSE = "CLOSED"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-SRC_URI = "http://www.xtrendet.net/enigma2-plugin-systemplugins-blindscan_2011-04-15_mipsel.ipk"
+SRC_URI = "http://www.xtrendet.net/enigma2-plugin-systemplugins-blindscan_2012-02-14_mipsel.zip"
 
 PROVIDES += "virtual/blindscan-dvbs"
 RPROVIDES_${PN} += "virtual/blindscan-dvbs"
 
-PV = "1.0"
+PV = "1.1"
 PR = "r2"
 
 S = "${WORKDIR}"
