@@ -10,9 +10,9 @@ DEPENDS = "gstreamer glib-2.0 libxml2"
 require conf/license/license-gplv2.inc
 
 PV = "1.0"
-PR = "r0"
+PR = "r1"
 
-inherit autotools pkgconfig
+inherit pkgconfig
 
 SRC_URI = "file://eplayer4.c file://Makefile"
 
