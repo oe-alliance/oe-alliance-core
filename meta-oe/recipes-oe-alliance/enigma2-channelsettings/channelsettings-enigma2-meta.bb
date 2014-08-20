@@ -5,7 +5,7 @@ require conf/license/license-gplv2.inc
 inherit allarch
 
 PV = "2.0"
-PR = "r2"
+PR = "r3"
 
 DEPENDS = " \
     enigma2-plugin-settings-henksat-19e \
@@ -26,12 +26,6 @@ DEPENDS = " \
     enigma2-plugin-settings-rytec-13e19e23e28e \
     enigma2-plugin-settings-rytec-motor \
     \
-    enigma2-plugin-settings-catseye.23e.19e \
-    enigma2-plugin-settings-catseye.5e.1w \
-    enigma2-plugin-settings-catseye.7w \
-    enigma2-plugin-settings-catseye.28e \
-    enigma2-plugin-settings-catseye.28e.23e.19e.16e.13e \
-    enigma2-plugin-settings-catseye.75e.to.60w \
     enigma2-plugin-settings-cst.dual1.db \
     enigma2-plugin-settings-cst.dual2.db \
     enigma2-plugin-settings-cst.four3.db \
