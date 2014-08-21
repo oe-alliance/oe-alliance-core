@@ -20,6 +20,8 @@ RRECOMMENDS_${PN} = " \
     ${DVBPROVIDER}-module-dib8000 \
     ${DVBPROVIDER}-module-dvb-usb \
     ${DVBPROVIDER}-module-tuner-xc2028 \
+    ${DVBPROVIDER}-module-fc0013 \
+    ${DVBPROVIDER}-module-mt2266 \
     firmware-dvb-usb-dib0700-1.20 \
     firmware-dvb-usb-dibusb-5.0.0.11 \
     firmware-dvb-usb-dibusb-6.0.0.8 \
@@ -29,6 +31,6 @@ RRECOMMENDS_${PN} = " \
     "
 
 PV = "1.0"
-PR = "r7"
+PR = "r8"
 
 ALLOW_EMPTY_${PN} = "1"
