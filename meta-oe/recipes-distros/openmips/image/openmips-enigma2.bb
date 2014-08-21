@@ -7,7 +7,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PV = "1.0"
-PR = "r23"
+PR = "r24"
 
 inherit packagegroup
 
@@ -34,11 +34,6 @@ RRECOMMENDS_${PN} = "\
     enigma2-plugin-extensions-epgsearch \
     enigma2-plugin-systemplugins-osdpositionsetup \
     enigma2-plugin-systemplugins-positionersetup \
-    enigma2-plugin-drivers-network-usb-smsc75xx \
-    enigma2-plugin-drivers-network-usb-ax88179-178a \
-    enigma2-plugin-drivers-network-usb-asix \
-    enigma2-plugin-drivers-network-usb-rt3573 \
-    enigma2-plugin-drivers-network-usb-rt5572 \
     ${@base_contains("MACHINE_FEATURES", "videoenhancement", "", "enigma2-plugin-systemplugins-videoenhancement", d)} \
     ${@base_contains("MACHINE_FEATURES", "3dtv", "enigma2-plugin-systemplugins-osd3dsetup" , "", d)} \
     "
