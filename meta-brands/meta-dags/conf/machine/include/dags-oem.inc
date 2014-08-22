@@ -70,7 +70,7 @@ ${@base_contains('MACHINEBUILD', 'roxxs200hd', 'update/ios200/cfe' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mediaart200hd', 'update/ios200/cfe' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'optimussos1plus', 'update/optimussos1plus/cfe' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'optimussos2plus', 'update/optimussos2plus/cfe' , '', d)}\
-${@base_contains('MACHINEBUILD', 'optimussos3plus', 'update/optimussos3plus/cfe' , '', d)}\
+${@base_contains('MACHINEBUILD', 'optimussos3plus', 'update/force1plus/cfe' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'optimussos1', 'update/optimussos1/cfe' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'optimussos2', 'update/optimussos2/cfe' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mediabox', 'update/mediabox/cfe' , '', d)}\
