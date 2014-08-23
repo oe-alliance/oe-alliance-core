@@ -1,6 +1,6 @@
 #!/bin/sh
 
-mount -t tmpfs -o size=64k tmpfs /media
+mountpoint -q "/media" || mount -t tmpfs -o size=64k tmpfs /media
 
 create_point() {
 	if [ ! -d $2 ]
