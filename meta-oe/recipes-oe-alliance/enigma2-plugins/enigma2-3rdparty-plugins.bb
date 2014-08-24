@@ -9,7 +9,7 @@ inherit gitpkgv deploy
 SRCREV = "${AUTOREV}"
 PV = "2.1+gitr${SRCPV}"
 PKGV = "2.1+gitr${GITPKGV}"
-PR = "r75"
+PR = "r76"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -62,7 +62,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-planerfs_6.44_all.ipk \
     enigma2-plugin-extensions-pluginspanel_1.0_r01_all.ipk \
 	enigma2-plugin-extensions-piconmanager_0.1-20140820-r0_all.ipk \
-    enigma2-plugin-extensions-picturecenterfs_5.17_all.ipk \
+    enigma2-plugin-extensions-picturecenterfs_5.30_all.ipk \
     enigma2-plugin-extensions-radiode_0.1_mips32el.ipk \
     enigma2-plugin-extensions-radioonline-oe2.0_1.0_all.ipk \
     enigma2-plugin-extensions-screensaver_5.6.9_all.ipk \
@@ -86,7 +86,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-verkehrsinfo_1.0rc1_mips32el.ipk \
     enigma2-plugin-extensions-vuplusforum_0.7rc3_mips32el.ipk \
     enigma2-plugin-extensions-webmedia_10.0_r02_oe2.0_all.ipk \
-    enigma2-plugin-extensions-webradiofs_12.22_all.ipk \
+    enigma2-plugin-extensions-webradiofs_12.25_all.ipk \
     enigma2-plugin-extensions-wikipedia_2.2_mips32el.ipk \
     enigma2-plugin-extensions-xbmcaddons_6.0_r0_all.ipk \
     enigma2-plugin-extensions-xbmcwetter_1.0rc4_mips32el.ipk \
