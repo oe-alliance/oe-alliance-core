@@ -9,7 +9,7 @@ inherit gitpkgv deploy
 SRCREV = "${AUTOREV}"
 PV = "2.1+gitr${SRCPV}"
 PKGV = "2.1+gitr${GITPKGV}"
-PR = "r74"
+PR = "r75"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -68,7 +68,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-screensaver_5.6.9_all.ipk \
     enigma2-plugin-extensions-screengrabber_2.1a_mips32el.ipk \
     enigma2-plugin-extensions-seriesplugin_0.9_mips32el.ipk \
-    enigma2-plugin-extensions-sherlock-vuplus_5.01_mipsel.ipk \
+    enigma2-plugin-extensions-sherlock_5.01r1_mipsel.ipk \
     enigma2-plugin-extensions-skyrecorder_1.5.1_all.ipk \
     enigma2-plugin-extensions-songs-to_0.1_mips32el.ipk \
     enigma2-plugin-extensions-spiegelonline_2.5rc8_mips32el.ipk \
