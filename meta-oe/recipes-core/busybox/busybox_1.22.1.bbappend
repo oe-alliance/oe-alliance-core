@@ -1,3 +1,5 @@
+PR = "r34"
+
 SRC_URI_IGNORED = " \
             file://0001-ifupdown-support-post-up-pre-down-hooks.patch \
             file://0002-ifupdown-code-shrink.patch \
@@ -19,6 +21,7 @@ SRC_URI += " \
             file://mdev-mount.sh \
             file://inetd \
             file://inetd.conf \
+            file://0008-make_unicode_printable.patch \
             "
 
 # we do not really depend on mtd-utils, but as mtd-utils replaces 

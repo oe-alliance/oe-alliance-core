@@ -10,8 +10,8 @@ SRC_URI = "http://xtrendet.net/${MACHINE}-dvbc-blindscan-${PV}.zip"
 PROVIDES += "virtual/blindscan-dvbc"
 RPROVIDES_${PN} += "virtual/blindscan-dvbc"
 
-PV = "1.1"
-PR = "r0"
+PV = "1.4"
+PR = "r2"
 
 S = "${WORKDIR}"
 
@@ -25,5 +25,5 @@ do_install() {
 
 INHIBIT_PACKAGE_STRIP = "1"
 
-SRC_URI[md5sum] = "5d4ffa8a29ef1baf75bc2b4738f6ac80"
-SRC_URI[sha256sum] = "c7be879586a5c325e0467a96fb3c3f5e0774cdfda06e29a85fff987c10bdea84"
+SRC_URI[md5sum] = "3fff0dc4669b58f2db6017df1f1e5368"
+SRC_URI[sha256sum] = "83eb9cb8ce5fbc3411d7ee6c0a8c52ed7a9f2ef19881dd788e83a5c21494556b"
