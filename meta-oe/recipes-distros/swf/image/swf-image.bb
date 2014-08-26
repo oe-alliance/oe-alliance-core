@@ -19,10 +19,15 @@ IMAGE_INSTALL = " \
     swf-spinner \
     swf-version-info \
     enigma2-plugin-extensions-bmediacenter-swf \
-    enigma2-plugin-settings-default-swf \
     ${ENIGMA2_PLUGINS} \
     ${ENIGMA2_INI_PLUGINS} \
     ${@base_contains("MACHINE", "inihdx", "${ENIGMA2_USB_DRV}" , "", d)} \
+    ${@base_contains("MACHINE", "e3hd", "${ENIGMA2_USB_DRV}" , "", d)} \
+    ${@base_contains("MACHINEBUILD", "axase3c", "enigma2-plugin-settings-default-unitymedia" , "", d)} \
+    ${@base_contains("MACHINEBUILD", "axase3", "enigma2-plugin-settings-default-swf" , "", d)} \
+    ${@base_contains("MACHINEBUILD", "uniboxhde", "enigma2-plugin-settings-default-swf" , "", d)} \
+    ${@base_contains("MACHINE", "inihdx", "enigma2-plugin-settings-default-swf" , "", d)} \
+    ${@base_contains("MACHINE", "uniboxhde", "enigma2-plugin-settings-default-swf" , "", d)} \
     ntfs-3g \
     hddtemp \
     busybox-cron \
@@ -30,9 +35,9 @@ IMAGE_INSTALL = " \
     ushare \
     ofgwrite \
     libshowiframe \
-    packagegroup-base-smbfs-client \
-    packagegroup-base-smbfs \
-    packagegroup-base-nfs \
+    task-base-smbfs-client \
+    task-base-smbfs \
+    task-base-nfs \
     mc \
     swf-base \
     "
