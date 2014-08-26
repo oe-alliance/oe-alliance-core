@@ -2,7 +2,7 @@ DESCRIPTION = "Linux kernel for ${MACHINE}"
 LICENSE = "GPLv2"
 SECTION = "kernel"
 KV = "3.12.4"
-PR = "r3"
+PR = "r4"
 
 SRCDATE = "1211"
 SRCDATE_ebox7358 = "17072014"

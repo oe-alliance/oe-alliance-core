@@ -259,7 +259,6 @@ CONFIG_PREEMPT_NONE=y
 CONFIG_LOCKDEP_SUPPORT=y
 CONFIG_STACKTRACE_SUPPORT=y
 CONFIG_DEFCONFIG_LIST="/lib/modules/$UNAME_RELEASE/.config"
-CONFIG_IRQ_WORK=y
 CONFIG_BUILDTIME_EXTABLE_SORT=y
 
 #
@@ -727,7 +726,8 @@ CONFIG_MTD_PHYSMAP=y
 # Self-contained MTD device drivers
 #
 # CONFIG_MTD_DATAFLASH is not set
-# CONFIG_MTD_M25P80 is not set
+CONFIG_MTD_M25P80=y
+CONFIG_M25PXX_USE_FAST_READ=y
 # CONFIG_MTD_SST25L is not set
 # CONFIG_MTD_SLRAM is not set
 # CONFIG_MTD_PHRAM is not set
@@ -2656,7 +2656,7 @@ CONFIG_HAVE_ARCH_KGDB=y
 # CONFIG_KGDB is not set
 # CONFIG_EARLY_PRINTK is not set
 CONFIG_CMDLINE_BOOL=y
-CONFIG_CMDLINE="bmem=256M@512M ubi.mtd=rootfs rootfstype=ubifs root=ubi0:rootfs rw console=ttyS0,115200n8"
+CONFIG_CMDLINE="bmem=224M@544M ubi.mtd=rootfs rootfstype=ubifs root=ubi0:rootfs rw console=ttyS0,115200n8"
 # CONFIG_CMDLINE_OVERRIDE is not set
 # CONFIG_RUNTIME_DEBUG is not set
 
