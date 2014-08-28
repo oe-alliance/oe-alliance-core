@@ -7,6 +7,7 @@ MACHINE_NAME = "\
 ${@base_contains('MACHINEBUILD', 'tm2t', 'TM-2T-OE' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmnano', 'TM-NANO-OE' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmnano2t', 'TM-NANO-2T' , '', d)}\
+${@base_contains('MACHINEBUILD', 'tmnano3t', 'TM-NANO-3T' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmnano2super', 'TM-NANO 2 Super' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmsingle', 'TM-Single' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmtwin', 'TM-Twin-OE' , '', d)}\
@@ -27,11 +28,11 @@ ${@base_contains('MACHINEBUILD', 'optimussos2', 'Optimuss OS2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mediabox', 'MediaBox HD LX' , '', d)}\
 "
 
-
 MACHINE_BRAND = "\
 ${@base_contains('MACHINEBUILD', 'tm2t', 'Technomate' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmnano', 'Technomate' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmnano2t', 'Technomate' , '', d)}\
+${@base_contains('MACHINEBUILD', 'tmnano3t', 'Technomate' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmnano2super', 'Technomate' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmsingle', 'Technomate' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmtwin', 'Technomate' , '', d)}\
@@ -56,6 +57,7 @@ IMAGEDIR ?= "\
 ${@base_contains('MACHINEBUILD', 'tm2t', 'update/tm2toe/cfe' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmnano', 'update/tmnanooe/cfe' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmnano2t', 'update/tmnano2t/cfe' , '', d)}\
+${@base_contains('MACHINEBUILD', 'tmnano3t', 'update/force1plus/cfe' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmnano2super', 'update/tmnano2super/cfe' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmsingle', 'update/tmsingle/cfe' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmtwin', 'update/tmtwinoe/cfe' , '', d)}\
@@ -80,6 +82,7 @@ MTD_KERNEL = "\
 ${@base_contains('MACHINEBUILD', 'tm2t', 'mtd6' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmnano', 'mtd1' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmnano2t', 'mtd1' , '', d)}\
+${@base_contains('MACHINEBUILD', 'tmnano3t', 'mtd1' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmnano2super', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmsingle', 'mtd6' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmtwin', 'mtd6' , '', d)}\
@@ -104,6 +107,7 @@ MTD_ROOTFS = "\
 ${@base_contains('MACHINEBUILD', 'tm2t', 'mtd4' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmnano', 'mtd0' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmnano2t', 'mtd0' , '', d)}\
+${@base_contains('MACHINEBUILD', 'tmnano3t', 'mtd0' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmnano2super', 'mtd0' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmsingle', 'mtd4' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmtwin', 'mtd4' , '', d)}\
@@ -126,6 +130,7 @@ ${@base_contains('MACHINEBUILD', 'mediabox', 'mtd4' , '', d)}\
 
 SPLASH1_BMP = "\
 ${@base_contains('MACHINEBUILD', 'tmnano2super', 'splash1.bmp' , '', d)}\
+${@base_contains('MACHINEBUILD', 'tmnano3t', 'splash1.bmp' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'force1', 'splash1_os2.bmp' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'force1plus', 'splash1_os2.bmp' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'worldvisionf1', 'splash1_os1.bmp' , '', d)}\
