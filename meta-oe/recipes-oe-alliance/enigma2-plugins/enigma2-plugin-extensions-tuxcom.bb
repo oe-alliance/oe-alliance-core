@@ -6,20 +6,20 @@ LIC_FILES_CHKSUM = "file://tuxcom.c;beginline=8;endline=22;md5=8cfd78763de33face
 DEPENDS = "freetype"
 
 PV = "1.13+svn${SRCPV}"
-PR = "r3"
+PR = "r4"
 
 SRC_URI = "${PLISVNURL}/${PLISVNBRANCH}/external;module=tuxcom \
     file://add_advanced_rc.diff"
 
 S = "${WORKDIR}/tuxcom"
 
-inherit autotools-brokensep
+inherit autotools-brokensep pkgconfig
 
 do_install() {
     install -d ${D}/usr/plugins
     install -d ${D}/usr/share/fonts
     install -d ${D}/usr/lib/enigma2/python/Plugins/Extensions/Tuxcom
-    install -m 0755 ${WORKDIR}/build/tuxcom ${D}/usr/plugins/tuxcom
+    install -m 0755 ${S}/tuxcom ${D}/usr/plugins/tuxcom
     install -m 0644 ${S}/fonts/pakenham.ttf ${D}/usr/share/fonts/pakenham.ttf
     install -m 0644 ${S}/python/__init__.py ${D}/usr/lib/enigma2/python/Plugins/Extensions/Tuxcom/__init__.py
     install -m 0644 ${S}/python/plugin.py ${D}/usr/lib/enigma2/python/Plugins/Extensions/Tuxcom/plugin.py
