@@ -9,7 +9,6 @@ ${@base_contains('MACHINEBUILD', 'sezam1000hd', '1000-HD' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'sezam5000hd', '5000-HD' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'sezammarvel', 'Marvel' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'xpeedlx', 'LX-x' , '', d)}\
-${@base_contains('MACHINEBUILD', 'xpeedlxse', 'LX-x Se' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'xpeedlx3', 'LX-3' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbmini', 'Premium Mini' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbtwin', 'Premium Twin' , '', d)}\
@@ -27,7 +26,6 @@ ${@base_contains('MACHINEBUILD', 'sezam1000hd', 'Sezam' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'sezam5000hd', 'Sezam' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'sezammarvel', 'Sezam' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'xpeedlx', 'GI' , '', d)}\
-${@base_contains('MACHINEBUILD', 'xpeedlxse', 'GI' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'xpeedlx3', 'GI' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbmini', 'Miraclebox' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbtwin', 'Miraclebox' , '', d)}\
@@ -45,7 +43,6 @@ ${@base_contains('MACHINEBUILD', 'sezam1000hd', 'hde' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'sezam5000hd', 'hdx' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'sezammarvel', 'hdp' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'xpeedlx', 'xpeedlx' , '', d)}\
-${@base_contains('MACHINEBUILD', 'xpeedlxse', 'xpeedlxse' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'xpeedlx3', 'xpeedlx3' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbmini', 'miraclebox/mini' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbtwin', 'miraclebox/twin' , '', d)}\
@@ -63,7 +60,6 @@ ${@base_contains('MACHINEBUILD', 'sezam1000hd', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'sezam5000hd', 'mtd1' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'sezammarvel', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'xpeedlx', 'mtd2' , '', d)}\
-${@base_contains('MACHINEBUILD', 'xpeedlxse', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'xpeedlx3', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbmini', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbtwin', 'mtd1' , '', d)}\
@@ -81,7 +77,6 @@ ${@base_contains('MACHINEBUILD', 'sezam1000hd', 'mtd0' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'sezam5000hd', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'sezammarvel', 'mtd0' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'xpeedlx', 'mtd0' , '', d)}\
-${@base_contains('MACHINEBUILD', 'xpeedlxse', 'mtd0' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'xpeedlx3', 'mtd0' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbmini', 'mtd0' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbtwin', 'mtd2' , '', d)}\
