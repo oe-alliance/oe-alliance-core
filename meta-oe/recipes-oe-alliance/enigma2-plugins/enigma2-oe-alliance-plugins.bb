@@ -15,6 +15,7 @@ PACKAGES += " \
 PROVIDES += " \
     enigma2-plugin-extensions-autotimer \
     enigma2-plugin-systemplugins-autobouquetsmaker \
+    enigma2-plugin-extensions-btdevicesmanager \    
     enigma2-plugin-systemplugins-blindscan \
     enigma2-plugin-extensions-dlnabrowser \
     enigma2-plugin-extensions-dlnaserver \
@@ -33,6 +34,7 @@ PROVIDES += " \
     ${@base_contains("MACHINE_FEATURES", "audioeffect", "enigma2-plugin-systemplugins-audioeffect" , "", d)} \
     enigma2-plugin-systemplugins-transcodingsetup \
     enigma2-plugin-systemplugins-micomupgrade \
+    enigma2-plugin-systemplugins-multitranscodingsetup \
     enigma2-plugin-extensions-ondemand \
     enigma2-plugin-extensions-fempa \
     enigma2-plugin-extensions-lcd4linux \
@@ -62,6 +64,8 @@ DESCRIPTION_enigma2-plugin-systemplugins-audioeffect = "Audio Effect setup"
 DESCRIPTION_enigma2-plugin-systemplugins-autobouquetsmaker = "Automatically build and update bouquets from the satellite stream."
 RREPLACES_enigma2-plugin-systemplugins-autobouquetsmaker = "enigma2-plugin-extensions-autobouquets"
 RCONFLICTS_enigma2-plugin-systemplugins-autobouquetsmaker = "enigma2-plugin-extensions-autobouquets"
+DESCRIPTION_enigma2-plugin-extensions-btdevicesmanager = "this is bt devices manger to pair e.x keyboard or mouse"
+RDEPENDS_enigma2-plugin-extensions-btdevicesmanager = "bluez4-testtools bluez4 bluez-hcidump"
 DESCRIPTION_enigma2-plugin-systemplugins-blindscan = "blindscan..."
 RDEPENDS_enigma2-plugin-systemplugins-blindscan = "virtual/blindscan-dvbs"
 DESCRIPTION_enigma2-plugin-extensions-dlnabrowser = "this is dlna/upnp browser using djmount"
@@ -91,6 +95,7 @@ RDEPENDS_enigma2-plugin-extensions-hbbtv = "vuplus-opera-browser-util"
 DEPENDS_enigma2-plugin-extensions-hbbtv = "vuplus-opera-browser-util"
 DESCRIPTION_enigma2-plugin-systemplugins-transcodingsetup = "Setup transcoding of your VU+"
 RDEPENDS_enigma2-plugin-systemplugins-transcodingsetup = "virtual/transtreamproxy"
+DESCRIPTION_enigma2-plugin-systemplugins-multitranscodingsetup = "Setup transcoding of your INI HDp"
 DESCRIPTION_enigma2-plugin-systemplugins-micomupgrade = "micomupgrade"
 RDEPENDS_enigma2-plugin-extensions-ondemand = "python-dnspython python-beautifulsoup python-lxml python-simplejson python-pyamf"
 DESCRIPTION_enigma2-plugin-extensions-ondemand = "Watch on demand TV."
@@ -113,7 +118,7 @@ inherit autotools-brokensep gitpkgv pythonnative
 SRCREV = "${AUTOREV}"
 PV = "2.0+git${SRCPV}"
 PKGV = "2.0+git${GITPKGV}"
-PR = "r13"
+PR = "r14"
 
 SRC_URI="git://github.com/oe-alliance/oe-alliance-plugins.git;protocol=git;branch=2.3"
 
