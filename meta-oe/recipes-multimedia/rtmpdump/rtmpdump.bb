@@ -3,20 +3,21 @@ SUMMARY = "rtmpdump Real-Time Messaging Protocol"
 require conf/license/license-gplv2.inc
 
 
-DEPENDS = "openssl"
+DEPENDS = "openssl zlib"
 
-PV = "2.3"
-PR = "r1"
+inherit gitpkgv
 
-SRC_URI ="http://rtmpdump.mplayerhq.hu/download/rtmpdump-${PV}.tgz"
+SRCREV = "${AUTOREV}"
+PKGV = "2.48+git${GITPKGV}"
+PV = "2.48+git${SRCPV}"
+PR = "r4"
 
-SRC_URI[md5sum] = "eb961f31cd55f0acf5aad1a7b900ef59"
-SRC_URI[sha256sum] = "ef38b7a99d82ce6912063d21063aeaf28185341b3df486e24bffce5354224b2c"
+SRC_URI = "git://github.com/oe-alliance/rtmpdump.git;protocol=git"
 
-S = "${WORKDIR}/rtmpdump-2.3"
+S = "${WORKDIR}/git"
 
 do_compile() {
-    make CROSS_COMPILE=${TARGET_PREFIX}
+    oe_runmake CROSS_COMPILE=${TARGET_PREFIX} CFLAGS="${CFLAGS} -fPIC" LDFLAGS="${LDFLAGS}"
 }
 
 

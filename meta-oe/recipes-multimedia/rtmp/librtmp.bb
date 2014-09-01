@@ -11,8 +11,8 @@ PACKAGES =+ " librtmp1"
 inherit gitpkgv
 
 SRCREV = "${AUTOREV}"
-PKGV = "2.4+git${GITPKGV}"
-PV = "2.4+git${SRCPV}"
+PKGV = "2.48+git${GITPKGV}"
+PV = "2.48+git${SRCPV}"
 PR = "r4"
 
 SRC_URI = "git://github.com/oe-alliance/rtmpdump.git;protocol=git"
