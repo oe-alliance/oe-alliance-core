@@ -13,7 +13,7 @@ inherit autotools-brokensep gitpkgv pythonnative pkgconfig
 
 PV = "2.0+git${SRCPV}"
 PKGV = "2.0+git${GITPKGV}"
-PR = "r5"
+PR = "r6"
 
 SRC_URI = "${ENIGMA2_PLUGINS_URI} file://pluginnotwanted.patch"
 
@@ -25,6 +25,7 @@ EXTRA_OECONF = " \
     --without-debug \
     --with-po \
     --with-boxtype=${MACHINE} \
+    --with-distro=${DISTRO} \
     ${@base_contains('MACHINE_FEATURES', 'tpm', '--with-tpm' , '', d)} \
     ${@base_contains('DISTRO_FEATURES', 'pli', '--with-pli' , '', d)} \
 "
