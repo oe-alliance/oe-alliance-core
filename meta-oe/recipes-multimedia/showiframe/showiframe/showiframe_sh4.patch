@@ -1,0 +1,15 @@
+--- a/showiframe_orig.c	2014-06-25 19:01:03.206750830 +0200
++++ b/showiframe.c	2014-06-25 21:16:45.880023572 +0200
+@@ -109,10 +109,11 @@
+ 		if (!seq_end_avail)
+ 			write_all(fd, seq_end, sizeof(seq_end));
+ 		write_all(fd, stuffing, 8192);
+-		usleep(150000);
++		usleep(120000000);
+ 		c(ioctl(fd, VIDEO_STOP, 0));
+ 		c(ioctl(fd, VIDEO_SELECT_SOURCE, VIDEO_SOURCE_DEMUX));
+ 	}
++	close(fd);
+ 	return 0;
+ }
+ 

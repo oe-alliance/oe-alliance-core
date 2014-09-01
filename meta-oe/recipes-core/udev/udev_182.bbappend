@@ -14,6 +14,10 @@ SRC_URI_append_cube= " \
     file://udev-builtin-input_id.patch \
 "
 
+SRC_URI_append_sh4= " \
+    file://udev-builtin-input_id.patch \
+"
+
 inherit update-rc.d
 
 INITSCRIPT_NAME = "udev"

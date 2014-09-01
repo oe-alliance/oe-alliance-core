@@ -166,7 +166,8 @@ SRC_URI += "file://debian/ca.patch \
             file://debian/shared-lib-ext.patch \
             file://debian/stddef.patch \
             file://debian/version-script.patch \
-            file://debian/perl-path.diff"
+            file://debian/perl-path.diff \
+            file://debian/openssl-0.9.8x-nodocs.patch"
 
 SRC_URI += "file://configure-targets.patch \
             file://shared-libs.patch \

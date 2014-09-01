@@ -27,6 +27,10 @@ EXTRA_OECONF = " \
     --libdir=${libdir} \
 "
 
+EXTRA_OECONF_append_sh4 = " \
+    --enable-optimize=-O2 \
+"
+
 # mozjs requires autoreconf 2.13
 do_configure() {
     ${S}/configure ${EXTRA_OECONF}

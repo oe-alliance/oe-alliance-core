@@ -16,6 +16,12 @@ DEPENDS = "\
     openvix-softcams-newcs \
     openvix-softcams-rqcamd \
     openvix-softcams-scam \
+    "    
+
+# Remove unavailable sh4 softcams
+DEPENDS_sh4 = "\
+    openvix-softcams-oscam \
+    openvix-softcams-oscam-pcscd \
     "
 
 PR = "r4"

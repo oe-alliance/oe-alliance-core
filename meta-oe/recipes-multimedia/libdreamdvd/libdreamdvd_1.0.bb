@@ -9,3 +9,7 @@ inherit autotools pkgconfig git-project
 
 SRC_URI = " git://github.com/mirakels/libdreamdvd.git"
 
+SRC_URI_append_sh4 = "\
+    file://libdreamdvd-1.0-support_sh4.patch;patch=1 \
+"
+

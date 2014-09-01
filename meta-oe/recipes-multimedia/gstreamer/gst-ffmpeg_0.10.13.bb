@@ -23,6 +23,10 @@ SRC_URI = "http://gstreamer.freedesktop.org/src/${BPN}/${BPN}-${PV}.tar.bz2 \
            file://libav_e5500.patch \
 "
 
+SRC_URI_append_sh4 = " \
+    file://libav-fix-sh4-compile-gcc48.patch \
+    "
+
 SRC_URI[md5sum] = "7f5beacaf1312db2db30a026b36888c4"
 SRC_URI[sha256sum] = "76fca05b08e00134e3cb92fa347507f42cbd48ddb08ed3343a912def187fbb62"
 

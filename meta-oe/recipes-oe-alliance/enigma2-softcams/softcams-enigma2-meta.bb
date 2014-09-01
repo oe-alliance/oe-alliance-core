@@ -16,4 +16,9 @@ DEPENDS = "\
     enigma2-plugin-softcams-scam \
     "
 
+# Remove unavailable sh4 softcams
+DEPENDS_sh4 = "\
+    enigma2-plugin-softcams-oscam \
+    "
+
 PR = "r2"
