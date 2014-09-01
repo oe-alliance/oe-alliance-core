@@ -1,0 +1,15 @@
+diff -Naur git/arch/sh/kernel/setup.c gitmod/arch/sh/kernel/setup.c
+--- a/arch/sh/kernel/setup.c	2014-07-02 08:24:53.000000000 +0200
++++ b/arch/sh/kernel/setup.c	2014-07-02 08:55:34.498504929 +0200
+@@ -570,8 +570,10 @@
+ 	if (!cpu_online(cpu))
+ 		return 0;
+ 
+-	if (cpu == 0)
++	if (cpu == 0) {
+ 		seq_printf(m, "machine\t\t: %s\n", get_system_type());
++		seq_printf(m, "system type\t: %s STB platform\n", get_cpu_subtype(c));
++	}
+ 	else
+ 		seq_printf(m, "\n");
+ 

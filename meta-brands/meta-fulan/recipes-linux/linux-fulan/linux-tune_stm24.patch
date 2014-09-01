@@ -1,0 +1,11 @@
+--- linux-sh4/fs/cifs/cifspdu.h	2009-12-03 04:51:21.000000000 +0100
++++ linux-sh4/fs/cifs/cifspdu.h.patched	2011-07-20 01:05:11.000000000 +0200
+@@ -118,7 +118,7 @@
+ /*
+  * Starting value for maximum SMB size negotiation
+  */
+-#define CIFS_MAX_MSGSIZE (4*4096)
++#define CIFS_MAX_MSGSIZE (16*4096)
+ 
+ /*
+  * Size of encrypted user password in bytes

@@ -1,0 +1,79 @@
+diff -Nur linux-sh4-2.6.32.28_stm24_0207_orig/drivers/ata/sata_stm.c linux-sh4/drivers/ata/sata_stm.c
+--- linux-sh4-2.6.32.28_stm24_0207_orig/drivers/ata/sata_stm.c	2011-10-28 00:21:08.000000000 +0200
++++ linux-sh4/drivers/ata/sata_stm.c	2011-11-03 21:54:28.000000000 +0100
+@@ -871,6 +871,8 @@
+ 	} else if (readl(mmio + DMAC_RAWERR) & 1) {
+ 		ata_port_printk(ap, KERN_ERR, "DMA error asserted\n");
+ 	}
++	
++	else handled = 0;
+ 
+ 	return handled;
+ 
+@@ -951,20 +953,20 @@
+ 	struct ata_host *host = dev_instance;
+ 	unsigned int handled = 0;
+ 	unsigned int i;
+-	struct stm_host_priv *hpriv = host->private_data;
+ 
+ DPRINTK("ENTER\n");
+ 
+ 	spin_lock(&host->lock);
+ 
+-	for (i = 0; i < host->n_ports; i++) {
+-		if (hpriv->shared_dma_host_irq)
+-			handled += stm_sata_dma_irq(host->ports[i]);
+-		handled += stm_sata_host_irq(host->ports[i]);
++	for (i = 0; i < host->n_ports; i++) 
++	   {
++		handled += stm_sata_dma_irq(host->ports[i]);
++		if (!(handled)) handled += stm_sata_host_irq(host->ports[i]);
++		else handled = 0;
+ 	}
+ 
+ 	spin_unlock(&host->lock);
+-
++	
+ 	return IRQ_RETVAL(handled);
+ }
+ 
+@@ -1229,6 +1231,9 @@
+ 	hpriv->device_state = devm_stm_device_init(dev,
+ 		sata_private_info->device_config);
+ 
++	if (!hpriv->device_state)
++		return -EBUSY; 
++
+ 	mem_res = platform_get_resource(pdev,IORESOURCE_MEM,0);
+ 	phys_base = mem_res->start;
+ 	phys_size = mem_res->end - mem_res->start + 1;
+diff -Nur linux-sh4-2.6.32.28_stm24_0207_orig/include/linux/libata.h linux-sh4/include/linux/libata.h
+--- linux-sh4-2.6.32.28_stm24_0207_orig/include/linux/libata.h	2011-10-28 00:21:08.000000000 +0200
++++ linux-sh4/include/linux/libata.h	2011-10-30 18:22:18.000000000 +0100
+@@ -52,6 +52,7 @@
+  * compile-time options: to be removed as soon as all the drivers are
+  * converted to the new debugging mechanism
+  */
++//#define ATA_DEBUG
+ #undef ATA_DEBUG		/* debugging output */
+ #undef ATA_VERBOSE_DEBUG	/* yet more debugging output */
+ #undef ATA_IRQ_TRAP		/* define to ack screaming irqs */
+@@ -938,6 +939,18 @@
+ #undef writew
+ #define writew(v_,a_)	sata_writew(ap, v_, a_)
+ 
++/* overwrite the original definition from io.h */
++#undef __raw_readb
++#define __raw_readb(a_)		readb(a_)
++#undef __raw_writeb
++#define __raw_writeb(v_,a_)	writeb(v_,a_)
++#undef __raw_readw
++#define __raw_readw(a_)		readw(a_)
++#undef __raw_writew
++#define __raw_writew(v_,a_)	writew(v_,a_)
++
++
++
+ struct ata_port_info {
+ 	unsigned long		flags;
+ 	unsigned long		link_flags;

@@ -1,0 +1,33 @@
+--- lirc-0.9.0/daemons/ir_remote.c.org	2011-03-25 15:28:18.000000000 -0700
++++ lirc-0.9.0/daemons/ir_remote.c	2012-01-05 05:59:30.000000000 -0800
+@@ -506,9 +506,17 @@
+ 	lirc_t min_remaining_gap, max_remaining_gap;
+ 	struct ir_remote *scan;
+ 	struct ir_ncode *scan_ncode;
++	int try_last_remote = 1;
+ 
+ 	/* use remotes carefully, it may be changed on SIGHUP */
+-	decoding = remote = remotes;
++	if (last_remote == NULL) {
++		decoding = remote = remotes;
++		try_last_remote = 0;
++	} else {
++		decoding = remote = last_remote;
++		try_last_remote = 1;
++	}
++	
+ 	while (remote) {
+ 		LOGPRINTF(1, "trying \"%s\" remote", remote->name);
+ 
+@@ -556,6 +564,11 @@
+ 			}
+ 		} else {
+ 			LOGPRINTF(1, "failed \"%s\" remote", remote->name);
++			if (try_last_remote == 1) {
++				try_last_remote = 0;
++				decoding = remote = remotes;
++				continue;
++			}
+ 		}
+ 		remote->toggle_mask_state = 0;
+ 		remote = remote->next;

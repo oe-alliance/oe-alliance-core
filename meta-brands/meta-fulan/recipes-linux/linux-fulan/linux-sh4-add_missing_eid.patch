@@ -1,0 +1,15 @@
+diff -Naur a/include/linux/ieee80211.h b/include/linux/ieee80211.h
+--- a/include/linux/ieee80211.h	2014-07-07 08:47:08.402383926 +0200
++++ b/include/linux/ieee80211.h	2014-07-07 08:49:13.996804989 +0200
+@@ -1084,7 +1084,10 @@
+ 	WLAN_EID_WPA = 221,
+ 	WLAN_EID_GENERIC = 221,
+ 	WLAN_EID_VENDOR_SPECIFIC = 221,
+-	WLAN_EID_QOS_PARAMETER = 222
++	WLAN_EID_QOS_PARAMETER = 222,
++
++	WLAN_EID_MOBILITY_DOMAIN = 54,
++	WLAN_EID_FAST_BSS_TRANSITION = 55,
+ };
+ 
+ /* Action category code */

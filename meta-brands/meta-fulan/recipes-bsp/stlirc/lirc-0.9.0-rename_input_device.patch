@@ -1,0 +1,22 @@
+Index: lirc-0.9.0/daemons/lircd.c
+===================================================================
+--- lirc-0.9.0.orig/daemons/lircd.c	2014-03-26 20:05:26.507128449 +0100
++++ lirc-0.9.0/daemons/lircd.c	2014-03-26 20:07:24.199128294 +0100
+@@ -102,6 +102,8 @@
+ 
+ 
+ char *progname = "lircd";
++char *uinputname = "remote control";
++
+ const char *configfile = NULL;
+ #ifndef USE_SYSLOG
+ char *logfile = LOGFILE;
+@@ -956,7 +958,7 @@
+ 	nolinger(sockfd);
+ 
+ 	if (useuinput) {
+-		uinputfd = setup_uinputfd(progname);
++		uinputfd = setup_uinputfd(uinputname);
+		setup_repeatrate_uinputfd(uinputfd);
+ 	}
+ 	if (listen_tcpip) {

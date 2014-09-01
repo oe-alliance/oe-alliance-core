@@ -1,0 +1,84 @@
+diff --git a/daemons/lircd.c b/daemons/lircd.c
+index 6c21a3a..9c880f6 100644
+--- a/daemons/lircd.c
++++ b/daemons/lircd.c
+@@ -386,6 +386,9 @@ void dosighup(int sig)
+ #endif
+ 
+ 	config();
++#ifdef UINPUT_NEUTRINO_HACK
++	/* TODO: re-register uinput keys after re-reading the config file */
++#endif
+ 
+ 	for (i = 0; i < clin; i++) {
+ 		if (!
+@@ -432,11 +435,30 @@ int setup_uinputfd(const char *name)
+ 		goto setup_error;
+ 	}
+ 
++#ifdef UINPUT_NEUTRINO_HACK
++	/* register only the used keycodes, but all of them */
++	struct ir_remote *remote;
++	struct ir_ncode *codes;
++	int ret;
++	linux_input_code input_code;
++	remote = remotes;
++	while (remote) {
++		codes = remote->codes;
++		while (codes->name != NULL) {
++			ret = get_input_code(codes->name, &input_code);
++			if (ret != -1)
++				ioctl(fd, UI_SET_KEYBIT, input_code);
++			codes++;
++		}
++		remote = remote->next;
++	}
++#else
+ 	for (key = KEY_RESERVED; key <= KEY_UNKNOWN; key++) {
+ 		if (ioctl(fd, UI_SET_KEYBIT, key) != 0) {
+ 			goto setup_error;
+ 		}
+ 	}
++#endif
+ 
+ 	if (ioctl(fd, UI_DEV_CREATE) != 0) {
+ 		goto setup_error;
+@@ -1798,6 +1820,8 @@ void input_message(const char *message, const char *remote_name, const char *but
+ 				logperror(LOG_ERR, NULL);
+ 			}
+ 
++#ifndef UINPUT_NEUTRINO_HACK
++/* neutrino does not need and/or deal well with the SYN_REPORT events... */
+ 			/* Need to write sync event */
+ 			memset(&event, 0, sizeof(event));
+ 			event.type = EV_SYN;
+@@ -1807,6 +1831,7 @@ void input_message(const char *message, const char *remote_name, const char *but
+ 				logprintf(LOG_ERR, "writing EV_SYN to uinput failed");
+ 				logperror(LOG_ERR, NULL);
+ 			}
++#endif
+ 		}
+ 	}
+ #endif
+@@ -2233,6 +2258,10 @@ int main(int argc, char **argv)
+ 
+ 	signal(SIGPIPE, SIG_IGN);
+ 
++#ifdef UINPUT_NEUTRINO_HACK
++	remotes = NULL;
++	config();		/* read config file */
++#endif
+ 	start_server(permission, nodaemon);
+ 
+ 	act.sa_handler = sigterm;
+@@ -2246,8 +2275,10 @@ int main(int argc, char **argv)
+ 	act.sa_flags = SA_RESTART;	/* don't fiddle with EINTR */
+ 	sigaction(SIGALRM, &act, NULL);
+ 
++#ifndef UINPUT_NEUTRINO_HACK
+ 	remotes = NULL;
+ 	config();		/* read config file */
++#endif
+ 
+ 	act.sa_handler = sighup;
+ 	sigemptyset(&act.sa_mask);

@@ -1,0 +1,10 @@
+--- a/drivers/stm/stx7100.c	2011-01-20 19:00:37.000000000 +0100
++++ b/drivers/stm/stx7100.c	2011-02-01 20:06:06.974479000 +0100
+@@ -129,6 +129,7 @@
+ static struct stm_plat_fdma_fw_regs stm_fdma_firmware_7100 = {
+ 	.rev_id    = 0x8000 + (0x000 << 2), /* 0x8000 */
+ 	.cmd_statn = 0x8000 + (0x010 << 2), /* 0x8040 */
++	.req_ctln  = 0x9780, 
+ 	.ptrn      = 0x8000 + (0x460 << 2), /* 0x9180 */
+ 	.cntn      = 0x8000 + (0x462 << 2), /* 0x9188 */
+ 	.saddrn    = 0x8000 + (0x463 << 2), /* 0x918c */

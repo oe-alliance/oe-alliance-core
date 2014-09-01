@@ -1,0 +1,17 @@
+diff --git a/daemons/lircd.c b/daemons/lircd.c
+index 9c880f6..0fa27c0 100644
+--- a/daemons/lircd.c
++++ b/daemons/lircd.c
+@@ -1814,7 +1814,12 @@ void input_message(const char *message, const char *remote_name, const char *but
+ 			memset(&event, 0, sizeof(event));
+ 			event.type = EV_KEY;
+ 			event.code = input_code;
++			/* the input subsystem is handling repeats on its own, so no need
++			 * to send a repeat event here
++			 * this would only break the rate and delay settings
+ 			event.value = release ? 0 : (reps > 0 ? 2 : 1);
++			 */
++			event.value = release ? 0 : 1;
+ 			if (write(uinputfd, &event, sizeof(event)) != sizeof(event)) {
+ 				logprintf(LOG_ERR, "writing to uinput failed");
+ 				logperror(LOG_ERR, NULL);

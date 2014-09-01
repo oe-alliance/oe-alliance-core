@@ -1,0 +1,11 @@
+diff -Naur stslave_orig/hotplug_example/stslave.conf stslave/hotplug_example/stslave.conf
+--- stslave_orig/hotplug_example/stslave.conf	2012-11-25 19:35:37.379872707 +0100
++++ stslave/hotplug_example/stslave.conf	2012-11-25 19:41:02.985487366 +0100
+@@ -4,7 +4,6 @@
+ # /etc/stslave.conf
+ #
+ st_firmware_0_0.elf=<elf_file_dev0_firm0_path>
+-st_firmware_0_1.elf=<elf_file_dev0_firm1_path>
+ st_firmware_1_0.elf=<elf_file_dev1_firm0_path>
+ #
+ #

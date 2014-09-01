@@ -1,0 +1,669 @@
+diff -ruN linux-sh4/fs/cifs/cifssmb.c linux-sh4-patched/fs/cifs/cifssmb.c
+--- linux-sh4/fs/cifs/cifssmb.c	2007-10-09 22:31:38.000000000 +0200
++++ linux-sh4-patched/fs/cifs/cifssmb.c	2010-12-01 20:15:10.000000000 +0100
+@@ -315,32 +315,38 @@
+ 	int rc = -EINVAL;
+ 	int total_size;
+ 	char *pBCC;
++	u16 BCC;
++	__le16 ParameterOffset, ParameterCount,
++			DataOffset, DataCount;
++	__u8 WordCount;
++	char *SMB = (char *)pSMB;
+ 
+ 	/* check for plausible wct, bcc and t2 data and parm sizes */
+ 	/* check for parm and data offset going beyond end of smb */
++
+ 	if (pSMB->hdr.WordCount >= 10) {
+-		if ((le16_to_cpu(pSMB->t2_rsp.ParameterOffset) <= 1024) &&
+-		   (le16_to_cpu(pSMB->t2_rsp.DataOffset) <= 1024)) {
++		memcpy(&ParameterOffset, &pSMB->t2_rsp.ParameterOffset, sizeof(ParameterOffset));
++		memcpy(&DataOffset, &pSMB->t2_rsp.DataOffset, sizeof(DataOffset));
++		if ((le16_to_cpu(ParameterOffset) <= 1024) &&
++		   (le16_to_cpu(DataOffset) <= 1024)) {
+ 			/* check that bcc is at least as big as parms + data */
+ 			/* check that bcc is less than negotiated smb buffer */
+-			total_size = le16_to_cpu(pSMB->t2_rsp.ParameterCount);
++			memcpy(&ParameterCount, &pSMB->t2_rsp.ParameterCount, sizeof(ParameterCount));
++			total_size = le16_to_cpu(ParameterCount);
+ 			if (total_size < 512) {
+-				total_size +=
+-					le16_to_cpu(pSMB->t2_rsp.DataCount);
++				memcpy(&DataCount, &pSMB->t2_rsp.DataCount, sizeof(DataCount));
++				total_size += le16_to_cpu(DataCount);
+ 				/* BCC le converted in SendReceive */
+-				pBCC = (pSMB->hdr.WordCount * 2) +
+-					sizeof(struct smb_hdr) +
+-					(char *)pSMB;
+-				if ((total_size <= (*(u16 *)pBCC)) &&
+-				   (total_size <
+-					CIFSMaxBufSize+MAX_CIFS_HDR_SIZE)) {
++				memcpy(&WordCount, &pSMB->hdr.WordCount, sizeof(WordCount));
++				pBCC = (WordCount * 2) + sizeof(struct smb_hdr) + SMB;
++				memcpy(&BCC, pBCC, sizeof(BCC));
++				if ((total_size <= BCC) && (total_size < CIFSMaxBufSize+MAX_CIFS_HDR_SIZE)) {
+ 					return 0;
+ 				}
+ 			}
+ 		}
+ 	}
+-	cifs_dump_mem("Invalid transact2 SMB: ", (char *)pSMB,
+-		sizeof(struct smb_t2_rsp) + 16);
++	cifs_dump_mem("Invalid transact2 SMB: ", SMB, sizeof(struct smb_t2_rsp) + 16);
+ 	return rc;
+ }
+ int
+diff -ruN linux-sh4/fs/cifs/cifs_unicode.c linux-sh4-patched/fs/cifs/cifs_unicode.c
+--- linux-sh4/fs/cifs/cifs_unicode.c	2007-10-09 22:31:38.000000000 +0200
++++ linux-sh4-patched/fs/cifs/cifs_unicode.c	2010-12-01 17:43:54.000000000 +0100
+@@ -191,6 +191,7 @@
+ 	      const struct nls_table *codepage)
+ {
+ 	int charlen;
++	__le16 temp;
+ 	int i;
+ 	wchar_t *wchar_to = (wchar_t *)to; /* needed to quiet sparse */
+ 
+@@ -204,14 +204,18 @@
+ 			       ("strtoUCS: char2uni of %d returned %d",
+ 				(int)*from, charlen));
+ 			/* A question mark */
+-			to[i] = cpu_to_le16(0x003f);
++			temp = cpu_to_le16(0x003f);
++			memcpy(&to[i], &temp, sizeof(temp));
+ 			charlen = 1;
+-		} else
+-			to[i] = cpu_to_le16(wchar_to[i]);
+-
++		} else {
++			memcpy(&temp, &wchar_to[i], sizeof(temp));
++			temp = cpu_to_le16(temp); 
++			memcpy(&to[i], &temp, sizeof(temp)); 
+ 	}
+ 
+-	to[i] = 0;
++	}
++	temp = 0x0000;
++	memcpy(&to[i], &temp, sizeof(temp));
+ 	return i;
+ }
+ 
+diff -ruN linux-sh4/fs/nls/nls_ascii.c linux-sh4-patched/fs/nls/nls_ascii.c
+--- linux-sh4/fs/nls/nls_ascii.c	2007-10-09 22:31:38.000000000 +0200
++++ linux-sh4-patched/fs/nls/nls_ascii.c	2010-12-01 18:48:25.000000000 +0100
+@@ -136,8 +136,13 @@
+ 
+ static int char2uni(const unsigned char *rawstring, int boundlen, wchar_t *uni)
+ {
+-	*uni = charset2uni[*rawstring];
+-	if (*uni == 0x0000)
++	wchar_t temp;
++
++	memcpy(uni, &charset2uni[*rawstring], sizeof(*uni));
++	memcpy(&temp, uni, sizeof(*uni));
++
++	if (temp == 0x0000)
++
+ 		return -EINVAL;
+ 	return 1;
+ }
+diff -ruN linux-sh4/fs/nls/nls_base.c linux-sh4-patched/fs/nls/nls_base.c
+--- linux-sh4/fs/nls/nls_base.c	2007-10-09 22:31:38.000000000 +0200
++++ linux-sh4-patched/fs/nls/nls_base.c	2010-12-01 18:46:07.000000000 +0100
+@@ -455,8 +455,13 @@
+ 
+ static int char2uni(const unsigned char *rawstring, int boundlen, wchar_t *uni)
+ {
+-	*uni = charset2uni[*rawstring];
+-	if (*uni == 0x0000)
++	wchar_t temp;
++
++	memcpy(uni, &charset2uni[*rawstring], sizeof(*uni));
++	memcpy(&temp, uni, sizeof(*uni));
++
++	if (temp == 0x0000)
++
+ 		return -EINVAL;
+ 	return 1;
+ }
+diff -ruN linux-sh4/fs/nls/nls_cp1250.c linux-sh4-patched/fs/nls/nls_cp1250.c
+--- linux-sh4/fs/nls/nls_cp1250.c	2007-10-09 22:31:38.000000000 +0200
++++ linux-sh4-patched/fs/nls/nls_cp1250.c	2010-12-01 20:42:31.000000000 +0100
+@@ -317,8 +317,12 @@
+ 
+ static int char2uni(const unsigned char *rawstring, int boundlen, wchar_t *uni)
+ {
+-        *uni = charset2uni[*rawstring];
+-        if (*uni == 0x0000)
++	wchar_t temp;
++
++	memcpy(uni, &charset2uni[*rawstring], sizeof(*uni));
++	memcpy(&temp, uni, sizeof(*uni));
++
++	if (temp == 0x0000)
+                 return -EINVAL;
+         return 1;
+ }
+diff -ruN linux-sh4/fs/nls/nls_cp1255.c linux-sh4-patched/fs/nls/nls_cp1255.c
+--- linux-sh4/fs/nls/nls_cp1255.c	2007-10-09 22:31:38.000000000 +0200
++++ linux-sh4-patched/fs/nls/nls_cp1255.c	2010-12-01 18:55:24.000000000 +0100
+@@ -352,8 +352,12 @@
+ 
+ static int char2uni(const unsigned char *rawstring, int boundlen, wchar_t *uni)
+ {
+-	*uni = charset2uni[*rawstring];
+-	if (*uni == 0x0000)
++	wchar_t temp;
++
++	memcpy(uni, &charset2uni[*rawstring], sizeof(*uni));
++	memcpy(&temp, uni, sizeof(*uni));
++
++	if (temp == 0x0000)
+ 		return -EINVAL;
+ 	return 1;
+ }
+diff -ruN linux-sh4/fs/nls/nls_cp437.c linux-sh4-patched/fs/nls/nls_cp437.c
+--- linux-sh4/fs/nls/nls_cp437.c	2007-10-09 22:31:38.000000000 +0200
++++ linux-sh4-patched/fs/nls/nls_cp437.c	2010-12-01 18:56:45.000000000 +0100
+@@ -357,8 +357,13 @@
+ 
+ static int char2uni(const unsigned char *rawstring, int boundlen, wchar_t *uni)
+ {
+-	*uni = charset2uni[*rawstring];
+-	if (*uni == 0x0000)
++	wchar_t temp;
++
++	memcpy(uni, &charset2uni[*rawstring], sizeof(*uni));
++	memcpy(&temp, uni, sizeof(*uni));
++
++	if (temp == 0x0000)
++
+ 		return -EINVAL;
+ 	return 1;
+ }
+diff -ruN linux-sh4/fs/nls/nls_cp737.c linux-sh4-patched/fs/nls/nls_cp737.c
+--- linux-sh4/fs/nls/nls_cp737.c	2007-10-09 22:31:38.000000000 +0200
++++ linux-sh4-patched/fs/nls/nls_cp737.c	2010-12-01 18:57:52.000000000 +0100
+@@ -320,8 +320,12 @@
+ 
+ static int char2uni(const unsigned char *rawstring, int boundlen, wchar_t *uni)
+ {
+-	*uni = charset2uni[*rawstring];
+-	if (*uni == 0x0000)
++	wchar_t temp;
++
++	memcpy(uni, &charset2uni[*rawstring], sizeof(*uni));
++	memcpy(&temp, uni, sizeof(*uni));
++
++	if (temp == 0x0000)
+ 		return -EINVAL;
+ 	return 1;
+ }
+diff -ruN linux-sh4/fs/nls/nls_cp775.c linux-sh4-patched/fs/nls/nls_cp775.c
+--- linux-sh4/fs/nls/nls_cp775.c	2007-10-09 22:31:38.000000000 +0200
++++ linux-sh4-patched/fs/nls/nls_cp775.c	2010-12-01 19:00:34.000000000 +0100
+@@ -289,8 +289,12 @@
+ 
+ static int char2uni(const unsigned char *rawstring, int boundlen, wchar_t *uni)
+ {
+-	*uni = charset2uni[*rawstring];
+-	if (*uni == 0x0000)
++	wchar_t temp;
++
++	memcpy(uni, &charset2uni[*rawstring], sizeof(*uni));
++	memcpy(&temp, uni, sizeof(*uni));
++
++	if (temp == 0x0000)
+ 		return -EINVAL;
+ 	return 1;
+ }
+diff -ruN linux-sh4/fs/nls/nls_cp850.c linux-sh4-patched/fs/nls/nls_cp850.c
+--- linux-sh4/fs/nls/nls_cp850.c	2007-10-09 22:31:38.000000000 +0200
++++ linux-sh4-patched/fs/nls/nls_cp850.c	2010-12-01 19:01:51.000000000 +0100
+@@ -285,8 +285,12 @@
+ 
+ static int char2uni(const unsigned char *rawstring, int boundlen, wchar_t *uni)
+ {
+-	*uni = charset2uni[*rawstring];
+-	if (*uni == 0x0000)
++	wchar_t temp;
++
++	memcpy(uni, &charset2uni[*rawstring], sizeof(*uni));
++	memcpy(&temp, uni, sizeof(*uni));
++
++	if (temp == 0x0000)
+ 		return -EINVAL;
+ 	return 1;
+ }
+diff -ruN linux-sh4/fs/nls/nls_cp852.c linux-sh4-patched/fs/nls/nls_cp852.c
+--- linux-sh4/fs/nls/nls_cp852.c	2007-10-09 22:31:38.000000000 +0200
++++ linux-sh4-patched/fs/nls/nls_cp852.c	2010-12-01 19:02:55.000000000 +0100
+@@ -307,8 +307,12 @@
+ 
+ static int char2uni(const unsigned char *rawstring, int boundlen, wchar_t *uni)
+ {
+-	*uni = charset2uni[*rawstring];
+-	if (*uni == 0x0000)
++	wchar_t temp;
++
++	memcpy(uni, &charset2uni[*rawstring], sizeof(*uni));
++	memcpy(&temp, uni, sizeof(*uni));
++
++	if (temp == 0x0000)
+ 		return -EINVAL;
+ 	return 1;
+ }
+diff -ruN linux-sh4/fs/nls/nls_cp855.c linux-sh4-patched/fs/nls/nls_cp855.c
+--- linux-sh4/fs/nls/nls_cp855.c	2007-10-09 22:31:38.000000000 +0200
++++ linux-sh4-patched/fs/nls/nls_cp855.c	2010-12-01 19:04:14.000000000 +0100
+@@ -269,8 +269,12 @@
+ 
+ static int char2uni(const unsigned char *rawstring, int boundlen, wchar_t *uni)
+ {
+-	*uni = charset2uni[*rawstring];
+-	if (*uni == 0x0000)
++	wchar_t temp;
++
++	memcpy(uni, &charset2uni[*rawstring], sizeof(*uni));
++	memcpy(&temp, uni, sizeof(*uni));
++
++	if (temp == 0x0000)
+ 		return -EINVAL;
+ 	return 1;
+ }
+diff -ruN linux-sh4/fs/nls/nls_cp857.c linux-sh4-patched/fs/nls/nls_cp857.c
+--- linux-sh4/fs/nls/nls_cp857.c	2007-10-09 22:31:38.000000000 +0200
++++ linux-sh4-patched/fs/nls/nls_cp857.c	2010-12-01 19:05:29.000000000 +0100
+@@ -271,8 +271,12 @@
+ 
+ static int char2uni(const unsigned char *rawstring, int boundlen, wchar_t *uni)
+ {
+-	*uni = charset2uni[*rawstring];
+-	if (*uni == 0x0000)
++	wchar_t temp;
++
++	memcpy(uni, &charset2uni[*rawstring], sizeof(*uni));
++	memcpy(&temp, uni, sizeof(*uni));
++
++	if (temp == 0x0000)
+ 		return -EINVAL;
+ 	return 1;
+ }
+diff -ruN linux-sh4/fs/nls/nls_cp861.c linux-sh4-patched/fs/nls/nls_cp861.c
+--- linux-sh4/fs/nls/nls_cp861.c	2007-10-09 22:31:38.000000000 +0200
++++ linux-sh4-patched/fs/nls/nls_cp861.c	2010-12-01 19:06:40.000000000 +0100
+@@ -357,8 +357,12 @@
+ 
+ static int char2uni(const unsigned char *rawstring, int boundlen, wchar_t *uni)
+ {
+-	*uni = charset2uni[*rawstring];
+-	if (*uni == 0x0000)
++	wchar_t temp;
++
++	memcpy(uni, &charset2uni[*rawstring], sizeof(*uni));
++	memcpy(&temp, uni, sizeof(*uni));
++
++	if (temp == 0x0000)
+ 		return -EINVAL;
+ 	return 1;
+ }
+diff -ruN linux-sh4/fs/nls/nls_cp862.c linux-sh4-patched/fs/nls/nls_cp862.c
+--- linux-sh4/fs/nls/nls_cp862.c	2007-10-09 22:31:38.000000000 +0200
++++ linux-sh4-patched/fs/nls/nls_cp862.c	2010-12-01 19:07:51.000000000 +0100
+@@ -391,8 +391,12 @@
+ 
+ static int char2uni(const unsigned char *rawstring, int boundlen, wchar_t *uni)
+ {
+-	*uni = charset2uni[*rawstring];
+-	if (*uni == 0x0000)
++	wchar_t temp;
++
++	memcpy(uni, &charset2uni[*rawstring], sizeof(*uni));
++	memcpy(&temp, uni, sizeof(*uni));
++
++	if (temp == 0x0000)
+ 		return -EINVAL;
+ 	return 1;
+ }
+diff -ruN linux-sh4/fs/nls/nls_cp863.c linux-sh4-patched/fs/nls/nls_cp863.c
+--- linux-sh4/fs/nls/nls_cp863.c	2007-10-09 22:31:38.000000000 +0200
++++ linux-sh4-patched/fs/nls/nls_cp863.c	2010-12-01 19:09:03.000000000 +0100
+@@ -351,8 +351,12 @@
+ 
+ static int char2uni(const unsigned char *rawstring, int boundlen, wchar_t *uni)
+ {
+-	*uni = charset2uni[*rawstring];
+-	if (*uni == 0x0000)
++	wchar_t temp;
++
++	memcpy(uni, &charset2uni[*rawstring], sizeof(*uni));
++	memcpy(&temp, uni, sizeof(*uni));
++
++	if (temp == 0x0000)
+ 		return -EINVAL;
+ 	return 1;
+ }
+diff -ruN linux-sh4/fs/nls/nls_cp864.c linux-sh4-patched/fs/nls/nls_cp864.c
+--- linux-sh4/fs/nls/nls_cp864.c	2007-10-09 22:31:38.000000000 +0200
++++ linux-sh4-patched/fs/nls/nls_cp864.c	2010-12-01 19:09:54.000000000 +0100
+@@ -377,8 +377,12 @@
+ 
+ static int char2uni(const unsigned char *rawstring, int boundlen, wchar_t *uni)
+ {
+-	*uni = charset2uni[*rawstring];
+-	if (*uni == 0x0000)
++	wchar_t temp;
++
++	memcpy(uni, &charset2uni[*rawstring], sizeof(*uni));
++	memcpy(&temp, uni, sizeof(*uni));
++
++	if (temp == 0x0000)
+ 		return -EINVAL;
+ 	return 1;
+ }
+diff -ruN linux-sh4/fs/nls/nls_cp865.c linux-sh4-patched/fs/nls/nls_cp865.c
+--- linux-sh4/fs/nls/nls_cp865.c	2007-10-09 22:31:38.000000000 +0200
++++ linux-sh4-patched/fs/nls/nls_cp865.c	2010-12-01 19:11:00.000000000 +0100
+@@ -357,8 +357,12 @@
+ 
+ static int char2uni(const unsigned char *rawstring, int boundlen, wchar_t *uni)
+ {
+-	*uni = charset2uni[*rawstring];
+-	if (*uni == 0x0000)
++	wchar_t temp;
++
++	memcpy(uni, &charset2uni[*rawstring], sizeof(*uni));
++	memcpy(&temp, uni, sizeof(*uni));
++
++	if (temp == 0x0000)
+ 		return -EINVAL;
+ 	return 1;
+ }
+diff -ruN linux-sh4/fs/nls/nls_cp866.c linux-sh4-patched/fs/nls/nls_cp866.c
+--- linux-sh4/fs/nls/nls_cp866.c	2007-10-09 22:31:38.000000000 +0200
++++ linux-sh4-patched/fs/nls/nls_cp866.c	2010-12-01 19:12:45.000000000 +0100
+@@ -275,8 +275,12 @@
+ 
+ static int char2uni(const unsigned char *rawstring, int boundlen, wchar_t *uni)
+ {
+-	*uni = charset2uni[*rawstring];
+-	if (*uni == 0x0000)
++	wchar_t temp;
++
++	memcpy(uni, &charset2uni[*rawstring], sizeof(*uni));
++	memcpy(&temp, uni, sizeof(*uni));
++
++	if (temp == 0x0000)
+ 		return -EINVAL;
+ 	return 1;
+ }
+diff -ruN linux-sh4/fs/nls/nls_cp869.c linux-sh4-patched/fs/nls/nls_cp869.c
+--- linux-sh4/fs/nls/nls_cp869.c	2007-10-09 22:31:38.000000000 +0200
++++ linux-sh4-patched/fs/nls/nls_cp869.c	2010-12-01 19:14:07.000000000 +0100
+@@ -285,8 +285,12 @@
+ 
+ static int char2uni(const unsigned char *rawstring, int boundlen, wchar_t *uni)
+ {
+-	*uni = charset2uni[*rawstring];
+-	if (*uni == 0x0000)
++	wchar_t temp;
++
++	memcpy(uni, &charset2uni[*rawstring], sizeof(*uni));
++	memcpy(&temp, uni, sizeof(*uni));
++
++	if (temp == 0x0000)
+ 		return -EINVAL;
+ 	return 1;
+ }
+diff -ruN linux-sh4/fs/nls/nls_cp874.c linux-sh4-patched/fs/nls/nls_cp874.c
+--- linux-sh4/fs/nls/nls_cp874.c	2007-10-09 22:31:38.000000000 +0200
++++ linux-sh4-patched/fs/nls/nls_cp874.c	2010-12-01 19:15:24.000000000 +0100
+@@ -243,8 +243,12 @@
+ 
+ static int char2uni(const unsigned char *rawstring, int boundlen, wchar_t *uni)
+ {
+-	*uni = charset2uni[*rawstring];
+-	if (*uni == 0x0000)
++	wchar_t temp;
++
++	memcpy(uni, &charset2uni[*rawstring], sizeof(*uni));
++	memcpy(&temp, uni, sizeof(*uni));
++
++	if (temp == 0x0000)
+ 		return -EINVAL;
+ 	return 1;
+ }
+diff -ruN linux-sh4/fs/nls/nls_iso8859-13.c linux-sh4-patched/fs/nls/nls_iso8859-13.c
+--- linux-sh4/fs/nls/nls_iso8859-13.c	2007-10-09 22:31:38.000000000 +0200
++++ linux-sh4-patched/fs/nls/nls_iso8859-13.c	2010-12-01 19:16:41.000000000 +0100
+@@ -255,8 +255,12 @@
+ 
+ static int char2uni(const unsigned char *rawstring, int boundlen, wchar_t *uni)
+ {
+-	*uni = charset2uni[*rawstring];
+-	if (*uni == 0x0000)
++	wchar_t temp;
++
++	memcpy(uni, &charset2uni[*rawstring], sizeof(*uni));
++	memcpy(&temp, uni, sizeof(*uni));
++
++	if (temp == 0x0000)
+ 		return -EINVAL;
+ 	return 1;
+ }
+diff -ruN linux-sh4/fs/nls/nls_iso8859-14.c linux-sh4-patched/fs/nls/nls_iso8859-14.c
+--- linux-sh4/fs/nls/nls_iso8859-14.c	2007-10-09 22:31:38.000000000 +0200
++++ linux-sh4-patched/fs/nls/nls_iso8859-14.c	2010-12-01 19:17:46.000000000 +0100
+@@ -311,8 +311,12 @@
+ 
+ static int char2uni(const unsigned char *rawstring, int boundlen, wchar_t *uni)
+ {
+-	*uni = charset2uni[*rawstring];
+-	if (*uni == 0x0000)
++	wchar_t temp;
++
++	memcpy(uni, &charset2uni[*rawstring], sizeof(*uni));
++	memcpy(&temp, uni, sizeof(*uni));
++
++	if (temp == 0x0000)
+ 		return -EINVAL;
+ 	return 1;
+ }
+diff -ruN linux-sh4/fs/nls/nls_iso8859-15.c linux-sh4-patched/fs/nls/nls_iso8859-15.c
+--- linux-sh4/fs/nls/nls_iso8859-15.c	2007-10-09 22:31:38.000000000 +0200
++++ linux-sh4-patched/fs/nls/nls_iso8859-15.c	2010-12-01 19:18:35.000000000 +0100
+@@ -277,8 +277,12 @@
+ 
+ static int char2uni(const unsigned char *rawstring, int boundlen, wchar_t *uni)
+ {
+-	*uni = charset2uni[*rawstring];
+-	if (*uni == 0x0000)
++	wchar_t temp;
++
++	memcpy(uni, &charset2uni[*rawstring], sizeof(*uni));
++	memcpy(&temp, uni, sizeof(*uni));
++
++	if (temp == 0x0000)
+ 		return -EINVAL;
+ 	return 1;
+ }
+diff -ruN linux-sh4/fs/nls/nls_iso8859-1.c linux-sh4-patched/fs/nls/nls_iso8859-1.c
+--- linux-sh4/fs/nls/nls_iso8859-1.c	2007-10-09 22:31:38.000000000 +0200
++++ linux-sh4-patched/fs/nls/nls_iso8859-1.c	2010-12-01 19:20:01.000000000 +0100
+@@ -227,8 +227,12 @@
+ 
+ static int char2uni(const unsigned char *rawstring, int boundlen, wchar_t *uni)
+ {
+-	*uni = charset2uni[*rawstring];
+-	if (*uni == 0x0000)
++	wchar_t temp;
++
++	memcpy(uni, &charset2uni[*rawstring], sizeof(*uni));
++	memcpy(&temp, uni, sizeof(*uni));
++
++	if (temp == 0x0000)
+ 		return -EINVAL;
+ 	return 1;
+ }
+diff -ruN linux-sh4/fs/nls/nls_iso8859-2.c linux-sh4-patched/fs/nls/nls_iso8859-2.c
+--- linux-sh4/fs/nls/nls_iso8859-2.c	2007-10-09 22:31:38.000000000 +0200
++++ linux-sh4-patched/fs/nls/nls_iso8859-2.c	2010-12-01 19:21:39.000000000 +0100
+@@ -278,8 +278,12 @@
+ 
+ static int char2uni(const unsigned char *rawstring, int boundlen, wchar_t *uni)
+ {
+-	*uni = charset2uni[*rawstring];
+-	if (*uni == 0x0000)
++	wchar_t temp;
++
++	memcpy(uni, &charset2uni[*rawstring], sizeof(*uni));
++	memcpy(&temp, uni, sizeof(*uni));
++
++	if (temp == 0x0000)
+ 		return -EINVAL;
+ 	return 1;
+ }
+diff -ruN linux-sh4/fs/nls/nls_iso8859-3.c linux-sh4-patched/fs/nls/nls_iso8859-3.c
+--- linux-sh4/fs/nls/nls_iso8859-3.c	2007-10-09 22:31:38.000000000 +0200
++++ linux-sh4-patched/fs/nls/nls_iso8859-3.c	2010-12-01 19:22:23.000000000 +0100
+@@ -278,8 +278,12 @@
+ 
+ static int char2uni(const unsigned char *rawstring, int boundlen, wchar_t *uni)
+ {
+-	*uni = charset2uni[*rawstring];
+-	if (*uni == 0x0000)
++	wchar_t temp;
++
++	memcpy(uni, &charset2uni[*rawstring], sizeof(*uni));
++	memcpy(&temp, uni, sizeof(*uni));
++
++	if (temp == 0x0000)
+ 		return -EINVAL;
+ 	return 1;
+ }
+diff -ruN linux-sh4/fs/nls/nls_iso8859-4.c linux-sh4-patched/fs/nls/nls_iso8859-4.c
+--- linux-sh4/fs/nls/nls_iso8859-4.c	2007-10-09 22:31:38.000000000 +0200
++++ linux-sh4-patched/fs/nls/nls_iso8859-4.c	2010-12-01 19:23:12.000000000 +0100
+@@ -278,8 +278,12 @@
+ 
+ static int char2uni(const unsigned char *rawstring, int boundlen, wchar_t *uni)
+ {
+-	*uni = charset2uni[*rawstring];
+-	if (*uni == 0x0000)
++	wchar_t temp;
++
++	memcpy(uni, &charset2uni[*rawstring], sizeof(*uni));
++	memcpy(&temp, uni, sizeof(*uni));
++
++	if (temp == 0x0000)
+ 		return -EINVAL;
+ 	return 1;
+ }
+diff -ruN linux-sh4/fs/nls/nls_iso8859-5.c linux-sh4-patched/fs/nls/nls_iso8859-5.c
+--- linux-sh4/fs/nls/nls_iso8859-5.c	2007-10-09 22:31:38.000000000 +0200
++++ linux-sh4-patched/fs/nls/nls_iso8859-5.c	2010-12-01 19:24:07.000000000 +0100
+@@ -242,8 +242,12 @@
+ 
+ static int char2uni(const unsigned char *rawstring, int boundlen, wchar_t *uni)
+ {
+-	*uni = charset2uni[*rawstring];
+-	if (*uni == 0x0000)
++	wchar_t temp;
++
++	memcpy(uni, &charset2uni[*rawstring], sizeof(*uni));
++	memcpy(&temp, uni, sizeof(*uni));
++
++	if (temp == 0x0000)
+ 		return -EINVAL;
+ 	return 1;
+ }
+diff -ruN linux-sh4/fs/nls/nls_iso8859-6.c linux-sh4-patched/fs/nls/nls_iso8859-6.c
+--- linux-sh4/fs/nls/nls_iso8859-6.c	2007-10-09 22:31:38.000000000 +0200
++++ linux-sh4-patched/fs/nls/nls_iso8859-6.c	2010-12-01 19:24:48.000000000 +0100
+@@ -233,8 +233,12 @@
+ 
+ static int char2uni(const unsigned char *rawstring, int boundlen, wchar_t *uni)
+ {
+-	*uni = charset2uni[*rawstring];
+-	if (*uni == 0x0000)
++	wchar_t temp;
++
++	memcpy(uni, &charset2uni[*rawstring], sizeof(*uni));
++	memcpy(&temp, uni, sizeof(*uni));
++
++	if (temp == 0x0000)
+ 		return -EINVAL;
+ 	return 1;
+ }
+diff -ruN linux-sh4/fs/nls/nls_iso8859-7.c linux-sh4-patched/fs/nls/nls_iso8859-7.c
+--- linux-sh4/fs/nls/nls_iso8859-7.c	2007-10-09 22:31:38.000000000 +0200
++++ linux-sh4-patched/fs/nls/nls_iso8859-7.c	2010-12-01 19:25:39.000000000 +0100
+@@ -287,8 +287,12 @@
+ 
+ static int char2uni(const unsigned char *rawstring, int boundlen, wchar_t *uni)
+ {
+-	*uni = charset2uni[*rawstring];
+-	if (*uni == 0x0000)
++	wchar_t temp;
++
++	memcpy(uni, &charset2uni[*rawstring], sizeof(*uni));
++	memcpy(&temp, uni, sizeof(*uni));
++
++	if (temp == 0x0000)
+ 		return -EINVAL;
+ 	return 1;
+ }
+diff -ruN linux-sh4/fs/nls/nls_iso8859-9.c linux-sh4-patched/fs/nls/nls_iso8859-9.c
+--- linux-sh4/fs/nls/nls_iso8859-9.c	2007-10-09 22:31:38.000000000 +0200
++++ linux-sh4-patched/fs/nls/nls_iso8859-9.c	2010-12-01 19:26:25.000000000 +0100
+@@ -242,8 +242,12 @@
+ 
+ static int char2uni(const unsigned char *rawstring, int boundlen, wchar_t *uni)
+ {
+-	*uni = charset2uni[*rawstring];
+-	if (*uni == 0x0000)
++	wchar_t temp;
++
++	memcpy(uni, &charset2uni[*rawstring], sizeof(*uni));
++	memcpy(&temp, uni, sizeof(*uni));
++
++	if (temp == 0x0000)
+ 		return -EINVAL;
+ 	return 1;
+ }
+diff -ruN linux-sh4/fs/nls/nls_koi8-r.c linux-sh4-patched/fs/nls/nls_koi8-r.c
+--- linux-sh4/fs/nls/nls_koi8-r.c	2007-10-09 22:31:38.000000000 +0200
++++ linux-sh4-patched/fs/nls/nls_koi8-r.c	2010-12-01 19:27:47.000000000 +0100
+@@ -293,8 +293,12 @@
+ 
+ static int char2uni(const unsigned char *rawstring, int boundlen, wchar_t *uni)
+ {
+-	*uni = charset2uni[*rawstring];
+-	if (*uni == 0x0000)
++	wchar_t temp;
++
++	memcpy(uni, &charset2uni[*rawstring], sizeof(*uni));
++	memcpy(&temp, uni, sizeof(*uni));
++
++	if (temp == 0x0000)
+ 		return -EINVAL;
+ 	return 1;
+ }
+diff -ruN linux-sh4/fs/nls/nls_koi8-u.c linux-sh4-patched/fs/nls/nls_koi8-u.c
+--- linux-sh4/fs/nls/nls_koi8-u.c	2007-10-09 22:31:38.000000000 +0200
++++ linux-sh4-patched/fs/nls/nls_koi8-u.c	2010-12-01 19:28:42.000000000 +0100
+@@ -300,8 +300,12 @@
+ 
+ static int char2uni(const unsigned char *rawstring, int boundlen, wchar_t *uni)
+ {
+-	*uni = charset2uni[*rawstring];
+-	if (*uni == 0x0000)
++	wchar_t temp;
++
++	memcpy(uni, &charset2uni[*rawstring], sizeof(*uni));
++	memcpy(&temp, uni, sizeof(*uni));
++
++	if (temp == 0x0000)
+ 		return -EINVAL;
+ 	return 1;
+ }

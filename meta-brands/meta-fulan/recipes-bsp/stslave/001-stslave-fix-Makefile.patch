@@ -1,0 +1,20 @@
+diff -Naur stslave/Makefile stslave_mod/Makefile
+--- stslave/Makefile	2012-11-25 19:15:37.293921815 +0100
++++ stslave_mod/Makefile	2012-11-25 19:15:55.370011449 +0100
+@@ -20,13 +20,13 @@
+ 
+ #--- targets ----
+ 
+-install: cmdlib.a $(TARGET)
++install: commands/cmdlib.a $(TARGET)
+ 
+ $(TARGET): $(OBJ) stlog.h commands/cmdlib.a
+ 	$(CC) -o $@ $(CFLAGS) $(LDFLAGS) $(OBJ) commands/cmdlib.a -lbfd -liberty
+ 
+-cmdlib.a:
+-	make -C commands AR=$(AR) CC=$(CC)
++commands/cmdlib.a:
++	$(MAKE) -C commands $(MFLAGS) 
+ 
+ clean:
+ 	@rm -f $(TARGET) $(OBJ) *.bck core

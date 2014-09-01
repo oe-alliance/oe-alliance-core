@@ -1,0 +1,122 @@
+--- ../stmmac/common.h	2010-11-05 14:33:04.000000000 +0100
++++ linux-sh4/drivers/net/stmmac/common.h	2011-03-07 10:34:25.169234600 +0100
+@@ -299,7 +299,7 @@
+ 	void (*set_umac_addr) (void __iomem *ioaddr, unsigned char *addr,
+ 			       unsigned int reg_n);
+ 	void (*get_umac_addr) (void __iomem *ioaddr, unsigned char *addr,
+-			       unsigned int reg_n);
++			       unsigned int reg_n, char* ethaddr);
+ 	void (*set_eee_mode) (void __iomem *ioaddr, u32 lpi_ctrl_status);
+ 	void (*reset_eee_mode) (void __iomem *ioaddr, u32 lpi_ctrl_status);
+ 	void (*set_eee_timer) (void __iomem *ioaddr, int ls, int tw);
+@@ -344,7 +344,7 @@
+ extern void stmmac_set_mac_addr(void __iomem *ioaddr, u8 addr[6],
+ 				unsigned int high, unsigned int low);
+ extern void stmmac_get_mac_addr(void __iomem *ioaddr, unsigned char *addr,
+-				unsigned int high, unsigned int low);
++				unsigned int high, unsigned int low, char* ethaddr);
+ 
+ extern void stmmac_set_mac(void __iomem *ioaddr, bool enable);
+ 
+--- ../stmmac/dwmac100_core.c	2010-11-05 14:33:04.000000000 +0100
++++ linux-sh4/drivers/net/stmmac/dwmac100_core.c	2011-03-07 10:51:00.940303400 +0100
+@@ -83,9 +83,9 @@
+ }
+ 
+ static void dwmac100_get_umac_addr(void __iomem *ioaddr, unsigned char *addr,
+-				   unsigned int reg_n)
++				   unsigned int reg_n, char* ethaddr)
+ {
+-	stmmac_get_mac_addr(ioaddr, addr, MAC_ADDR_HIGH, MAC_ADDR_LOW);
++	stmmac_get_mac_addr(ioaddr, addr, MAC_ADDR_HIGH, MAC_ADDR_LOW, ethaddr);
+ }
+ 
+ static void dwmac100_set_filter(struct net_device *dev)
+--- ../stmmac/dwmac_lib.c	2010-11-05 14:33:04.000000000 +0100
++++ linux-sh4/drivers/net/stmmac/dwmac_lib.c	2011-03-07 10:31:24.974419700 +0100
+@@ -251,21 +251,27 @@
+ 	writel(value, ioaddr + MAC_CTRL_REG);
+ }
+ 
+-void stmmac_get_mac_addr(void __iomem *ioaddr, unsigned char *addr,
+-			 unsigned int high, unsigned int low)
++static inline unsigned char hex(char ch)
+ {
+-	unsigned int hi_addr, lo_addr;
+-
+-	/* Read the MAC address from the hardware */
+-	hi_addr = readl(ioaddr + high);
+-	lo_addr = readl(ioaddr + low);
++	if (ch >= 'a' && ch <= 'f')
++		return ch-'a'+10;
++	if (ch >= 'A' && ch <= 'F')
++		return ch-'A'+10;
++	if (ch >= '0' && ch <= '9')
++		return ch-'0';
++	return -1;
++}
+ 
+-	/* Extract the MAC address from the high and low words */
+-	addr[0] = lo_addr & 0xff;
+-	addr[1] = (lo_addr >> 8) & 0xff;
+-	addr[2] = (lo_addr >> 16) & 0xff;
+-	addr[3] = (lo_addr >> 24) & 0xff;
+-	addr[4] = hi_addr & 0xff;
+-	addr[5] = (hi_addr >> 8) & 0xff;
++void stmmac_get_mac_addr(void __iomem *ioaddr, unsigned char *addr,
++			 unsigned int high, unsigned int low, char* ethaddr)
++{
++	int i, j;
++	for(i = 0, j = 0; i < 6; i++)
++	{
++		addr[i] = (hex(ethaddr[j])<<4) + hex(ethaddr[j + 1]);
++		j += 3;
++	}
++	printk("PARSE CMDLINE: %s\n", ethaddr);
++	printk("ETHADDR: %02X:%02X:%02X:%02X:%02X:%02X\n", addr[0], addr[1], addr[2], addr[3], addr[4], addr[5]);
+ }
+ 
+--- ../stmmac/stmmac_main.c	2010-11-05 14:33:04.000000000 +0100
++++ linux-sh4/drivers/net/stmmac/stmmac_main.c	2011-03-07 11:14:45.916621500 +0100
+@@ -127,6 +127,8 @@
+ module_param(buf_sz, int, S_IRUGO | S_IWUSR);
+ MODULE_PARM_DESC(buf_sz, "DMA buffer size");
+ 
++static char g_env_mac[] = "00:00:00:00:00:00";
++
+ static const u32 default_msg_level = (NETIF_MSG_DRV | NETIF_MSG_PROBE |
+ 				      NETIF_MSG_LINK | NETIF_MSG_IFUP |
+ 				      NETIF_MSG_IFDOWN | NETIF_MSG_TIMER);
+@@ -978,7 +980,7 @@
+ 	if (!is_valid_ether_addr(priv->dev->dev_addr)) {
+ 		priv->hw->mac->get_umac_addr((void __iomem *)
+ 					     priv->dev->base_addr,
+-					     priv->dev->dev_addr, 0);
++					     priv->dev->dev_addr, 0, g_env_mac);
+ 		if  (!is_valid_ether_addr(priv->dev->dev_addr))
+ 			random_ether_addr(priv->dev->dev_addr);
+ 	}
+@@ -2261,6 +2263,8 @@
+ 					   (unsigned long *)&tmrate))
+ 				goto err;
+ #endif
++		} else if( !strncmp(opt,"ethaddr:", 8)) {
++			memcpy(g_env_mac, opt + 8, 17);
+ 		}
+ 	}
+ 	return 0;
+--- ./dwmac1000_core.c	2010-11-05 14:33:03.000000000 +0100
++++ linux-sh4/drivers/net/stmmac/dwmac1000_core.c	2011-03-07 19:02:21.000000000 +0100
+@@ -76,10 +76,10 @@
+ }
+ 
+ static void dwmac1000_get_umac_addr(void __iomem *ioaddr, unsigned char *addr,
+-				unsigned int reg_n)
++				unsigned int reg_n, char* ethaddr)
+ {
+ 	stmmac_get_mac_addr(ioaddr, addr, GMAC_ADDR_HIGH(reg_n),
+-				GMAC_ADDR_LOW(reg_n));
++				GMAC_ADDR_LOW(reg_n), ethaddr);
+ }
+ 
+ static void dwmac1000_set_filter(struct net_device *dev)

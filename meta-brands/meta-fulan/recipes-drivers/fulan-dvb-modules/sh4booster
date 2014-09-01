@@ -1,0 +1,11 @@
+#!/bin/sh
+
+# set booster start frequenz
+if [ "$(grep config.plugins.booster.startfrequenz= /etc/enigma2/settings | sed 's/config.plugins.booster.startfrequenz=//g')" != "" ]; then
+	echo  $(grep config.plugins.booster.startfrequenz= /etc/enigma2/settings | sed 's/config.plugins.booster.startfrequenz=//g') > /proc/cpu_frequ/pll0_ndiv_mdiv
+fi
+
+# load ramzswap
+insmod /lib/modules/`uname -r`/extra/compcache/ramzswap.ko 
+swapon /dev/ramzswap0
+swapon -a

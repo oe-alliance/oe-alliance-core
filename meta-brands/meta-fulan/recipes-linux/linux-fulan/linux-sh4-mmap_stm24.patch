@@ -1,0 +1,12 @@
+--- linux-sh4/net/core/filter.c.orig	2012-03-28 19:35:25.000000000 +0200
++++ linux-sh4/net/core/filter.c	2012-03-31 19:10:14.507703275 +0200
+@@ -291,9 +291,6 @@
+ 			mem[f_k] = X;
+ 			continue;
+ 		default:
+-			WARN_RATELIMIT(1, "Unknown code:%u jt:%u tf:%u k:%u\n",
+-				       fentry->code, fentry->jt,
+-				       fentry->jf, fentry->k);
+ 			return 0;
+ 		}
+ 

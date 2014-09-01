@@ -1,0 +1,11 @@
+--- linux-sh4-2.6.32.46_stm24_0209.orig/arch/sh/mm/init.c	2009-12-03 05:51:21.000000000 +0200
++++ linux-sh4/arch/sh/mm/init.c	2011-11-25 00:43:21.513560933 +0200
+@@ -133,6 +133,8 @@
+ 		j = 0;
+ 	}
+ }
++
++EXPORT_SYMBOL(init_mm);
+ #endif	/* CONFIG_MMU */
+ 
+ /*

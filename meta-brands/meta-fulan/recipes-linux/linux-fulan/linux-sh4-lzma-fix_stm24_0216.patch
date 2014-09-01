@@ -1,0 +1,12 @@
+--- linux-sh4/scripts/Makefile.lib.orig	2011-07-10 20:13:49.000000000 +0200
++++ linux-sh4/scripts/Makefile.lib	2011-07-10 17:59:45.361846000 +0200
+@@ -227,8 +227,7 @@
+ # ---------------------------------------------------------------------------
+ 
+ quiet_cmd_lzma = LZMA    $@
+-cmd_lzma = (cat $(filter-out FORCE,$^) | \
+-	lzma -9 && $(call size_append, $(filter-out FORCE,$^))) > $@ || \
++cmd_lzma = (lzma -9 -c $(filter-out FORCE,$^) && $(call size_append, $(filter-out FORCE,$^))) > $@ || \
+ 	(rm -f $@ ; false)
+ 
+ quiet_cmd_lzo = LZO    $@

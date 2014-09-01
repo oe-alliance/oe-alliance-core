@@ -1,0 +1,107 @@
+--- a/drivers/ata/sata_stm.c	2011-01-20 19:00:37.000000000 +0100
++++ b/drivers/ata/sata_stm.c	2011-02-03 22:21:54.172903000 +0100
+@@ -1056,6 +1056,26 @@
+ 	return 0;
+ }
+ 
++static unsigned char stm_readb(const volatile void __iomem *addr)
++{
++	return readl(addr);
++}
++
++static unsigned short stm_readw(const volatile void __iomem *addr)
++{
++	return readl(addr);
++}
++
++static void stm_writeb(unsigned char b, volatile void __iomem *addr)
++{
++	writel(b, addr);
++}
++
++static void stm_writew(unsigned short b, volatile void __iomem *addr)
++{
++	writel(b, addr);
++}
++
+ static int __devinit stm_sata_probe(struct platform_device *pdev)
+ {
+ 	struct stm_plat_sata_data *sata_private_info = pdev->dev.platform_data;
+@@ -1124,9 +1144,11 @@
+ 	       hpriv->softsg ? "soft" : "hard");
+ 
+ 	if (sata_private_info->only_32bit) {
+-		printk(KERN_ERR DRV_NAME " hardware doesn't support "
+-			"byte/long ops, giving up\n");
+-		return -EINVAL;
++		printk(KERN_DEBUG DRV_NAME " forcing all byte/word ops to long\n");
++		stm_ops.readb = stm_readb;
++		stm_ops.readw = stm_readw;
++		stm_ops.writeb = stm_writeb;
++		stm_ops.writew = stm_writew;
+ 	}
+ 
+ 	sata_rev = readl(mmio_base + SATA_VERSIONR);
+--- a/include/linux/libata.h	2011-01-20 19:00:37.000000000 +0100
++++ b/include/linux/libata.h	2011-02-03 22:18:57.117901000 +0100
+@@ -883,8 +883,60 @@
+ 	 * fields must be pointers.
+ 	 */
+ 	const struct ata_port_operations	*inherits;
++	
++	unsigned char (*readb)(const volatile void __iomem *addr);
++	unsigned short (*readw)(const volatile void __iomem *addr);
++	void (*writeb)(unsigned char b, volatile void __iomem *addr);
++	void (*writew)(unsigned short b, volatile void __iomem *addr);
+ };
+ 
++static inline u8 sata_readb(struct ata_port *ap, const volatile void __iomem *addr)
++{
++	u8 r;
++	if (ap->ops->readb)
++		r = (ap->ops->readb)(addr);
++	else
++		r = readb(addr);
++
++	return r;
++}
++
++static inline u16 sata_readw(struct ata_port *ap, const volatile void __iomem *addr)
++{
++	u16 r;
++	if (ap->ops->readw)
++		r = (ap->ops->readw)(addr);
++	else
++		r = readw(addr);
++
++	return r;
++}
++
++static inline void sata_writeb(struct ata_port *ap, u8 b, volatile void __iomem *addr)
++{
++	if (ap->ops->writeb)
++		(ap->ops->writeb)(b, addr);
++	else
++		writeb(b, addr);
++}
++
++static inline void sata_writew(struct ata_port *ap, u16 b, volatile void __iomem *addr)
++{
++	if (ap->ops->writew)
++		(ap->ops->writew)(b, addr);
++	else
++		writew(b, addr);
++}
++
++#undef readb
++#define readb(a_)	sata_readb(ap, a_)
++#undef writeb
++#define writeb(v_,a_)	sata_writeb(ap, v_, a_)
++#undef readw
++#define readw(a_)	sata_readw(ap, a_)
++#undef writew
++#define writew(v_,a_)	sata_writew(ap, v_, a_)
++
+ struct ata_port_info {
+ 	unsigned long		flags;
+ 	unsigned long		link_flags;

@@ -1,0 +1,67 @@
+Index: lirc-0.9.0/daemons/lircd.c
+===================================================================
+--- lirc-0.9.0.orig/daemons/lircd.c
++++ lirc-0.9.0/daemons/lircd.c
+@@ -148,6 +148,7 @@ char *protocol_string[] = {
+ 
+ static void log_enable(int enabled);
+ static int log_enabled = 1;
++static void setup_repeatrate_uinputfd(int source);
+ 
+ #ifndef USE_SYSLOG
+ #define HOSTNAME_LEN 128
+@@ -410,6 +411,46 @@ void dosighup(int sig)
+ 	}
+ }
+ 
++/**
++ * @brief Set the repeat rate for a given input device
++ * @details For some applications we need to define a
++ *  repeate rate otherwise the remote control get unusable
++ *
++ * @param source file descripter of the input device
++ * @return 0 on succcess and any value in case of an error
++ */
++static void setup_repeatrate_uinputfd(int source)
++{
++
++    int res = 0;
++    /*
++     * Ugly hack maybe we should make this adjustable
++     * via commandline or move to application...
++     */
++    const int delay = 700; /* 700 ms initial delay */
++    const int period = 100; /* 100 ms per period */
++    struct input_event ie;
++    ie.type = EV_REP;
++    ie.code = REP_DELAY;
++    ie.value = delay;
++    if (-1 == write(source, &ie, sizeof(ie)))
++    {   res = 1;
++        logprintf(LOG_ERR, "REP_DELAY: %s",strerror(errno));
++    }
++    ie.code = REP_PERIOD;
++    ie.value = period;
++    if (-1 == write(source, &ie, sizeof(ie)))
++    {
++        res = 2;
++        logprintf(LOG_ERR, "REP_PERIOD: %s",strerror(errno));
++    }
++    if( 0 == res )
++    {
++        logprintf(LOG_INFO, "Repeat rate set to delay: %d period: %d",delay,period);
++    }
++}
++
++
+ int setup_uinputfd(const char *name)
+ {
+ #if defined(__linux__)
+@@ -958,6 +999,7 @@ void start_server(mode_t permission, int
+ 
+ 	if (useuinput) {
+ 		uinputfd = setup_uinputfd(progname);
++		setup_repeatrate_uinputfd(uinputfd);
+ 	}
+ 	if (listen_tcpip) {
+ 		int enable = 1;

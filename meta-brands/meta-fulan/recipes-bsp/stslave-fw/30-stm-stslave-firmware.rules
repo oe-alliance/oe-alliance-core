@@ -1,0 +1,2 @@
+ACTION=="add", KERNEL=="st231-0", SUBSYSTEM=="coproc-dev", RUN+="/usr/bin/ustslave /dev/st231-0 /boot/video.elf" 
+ACTION=="add", KERNEL=="st231-1", SUBSYSTEM=="coproc-dev", RUN+="/usr/bin/ustslave /dev/st231-1 /boot/audio.elf" 

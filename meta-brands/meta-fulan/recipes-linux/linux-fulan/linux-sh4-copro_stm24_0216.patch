@@ -1,0 +1,22 @@
+--- linux-sh4-2.6.32.46_stm24_0209.orig/drivers/stm/copro-st_socs.c	2011-11-24 22:22:25.000000000 +0200
++++ linux-sh4/drivers/stm/copro-st_socs.c	2011-11-24 23:31:13.110812473 +0200
+@@ -3,6 +3,19 @@
+ #include <linux/init.h>
+ #include <linux/delay.h>
+ #include <linux/seq_file.h>
++#if defined CONFIG_CPU_SUBTYPE_STX7100
++#include <linux/stm/stx7100.h>
++#elif defined CONFIG_CPU_SUBTYPE_STX7105
++#include <linux/stm/stx7105.h>
++#elif defined CONFIG_CPU_SUBTYPE_STX7111
++#include <linux/stm/stx7111.h>
++#elif defined CONFIG_CPU_SUBTYPE_STX7141
++#include <linux/stm/stx7141.h>
++#elif defined CONFIG_CPU_SUBTYPE_STX7200
++#include <linux/stm/stx7200.h>
++#else
++#error Need to define the sysconf configuration for this CPU subtype
++#endif
+ #include <linux/stm/coprocessor.h>
+ #include <linux/stm/sysconf.h>
+ #include <linux/pfn.h>

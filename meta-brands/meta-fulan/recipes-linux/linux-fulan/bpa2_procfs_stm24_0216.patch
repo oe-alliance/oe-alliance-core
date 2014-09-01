@@ -1,0 +1,61 @@
+--- linux-sh4-2.6.32.46_stm24_0209.orig/mm/bpa2.c	2011-11-24 22:22:26.000000000 +0200
++++ linux-sh4/mm/bpa2.c	2011-11-25 00:49:26.232559732 +0200
+@@ -64,7 +64,7 @@
+ #include <linux/kernel.h>
+ #include <linux/init.h>
+ #include <linux/pci.h>
+-#include <linux/debugfs.h>
++#include <linux/proc_fs.h>
+ #include <linux/seq_file.h>
+ #include <linux/string.h>
+ #include <linux/mm.h>
+@@ -676,7 +676,7 @@
+ 
+ 
+ 
+-#ifdef CONFIG_DEBUG_FS
++#ifdef CONFIG_PROC_FS
+ 
+ static void *bpa2_seq_start(struct seq_file *s, loff_t *pos)
+ {
+@@ -767,30 +767,31 @@
+ 	.show = bpa2_seq_show,
+ };
+ 
+-static int bpa2_debugfs_open(struct inode *inode, struct file *file)
++static int bpa2_proc_open(struct inode *inode, struct file *file)
+ {
+ 	return seq_open(file, &bpa2_seq_ops);
+ }
+ 
+-static const struct file_operations bpa2_debugfs_ops = {
++static struct file_operations bpa2_proc_ops = {
+ 	.owner = THIS_MODULE,
+-	.open = bpa2_debugfs_open,
++	.open = bpa2_proc_open,
+ 	.read = seq_read,
+ 	.llseek = seq_lseek,
+ 	.release = seq_release,
+ };
+ 
+-static int __init bpa2_debugfs_init(void)
++static int __init bpa2_proc_init(void)
+ {
+-	debugfs_create_file("bpa2", S_IFREG | S_IRUGO,
+-			NULL, NULL, &bpa2_debugfs_ops);
++	struct proc_dir_entry *entry = create_proc_entry("bpa2", 0, NULL);
++
++	if (entry)
++		entry->proc_fops = &bpa2_proc_ops;
+ 
+ 	return 0;
+ }
+-subsys_initcall(bpa2_debugfs_init);
+-
+-#endif /* CONFIG_DEBUG_FS */
++subsys_initcall(bpa2_proc_init);
+ 
++#endif /* CONFIG_PROC_FS */
+ 
+ 
+ void bpa2_memory(struct bpa2_part *part, unsigned long *base,
