@@ -82,6 +82,8 @@ do_configure_prepend() {
         DRIVERSDATE=`grep "SRCDATE = " ${OEA-META-SKYLAKE-BASE}/recipes-drivers/skylake-dvb-modules-${MACHINE}.bb | cut -b 12-19`
     elif [ "${BRAND_OEM}" = "dreambox" ]; then
         DRIVERSDATE="20140616"
+    elif [ "${BRAND_OEM}" = "fulan" ]; then
+        DRIVERSDATE=`grep "SRCDATE = " ${OEA-META-FULAN-BASE}/recipes-drivers/fulan-dvb-modules.bb | cut -b 12-19`
     else
         DRIVERSDATE='N/A'
     fi

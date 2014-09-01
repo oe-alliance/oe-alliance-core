@@ -1,0 +1,6 @@
+#!/bin/sh
+
+# set audio mixer sound level
+/usr/bin/amixer -c 1 set Analog playback '60%' unmute &
+/usr/bin/amixer -c 1 set SPDIF playback '60%' unmute &
+/usr/bin/amixer -c 1 set HDMI playback '60%' unmute &

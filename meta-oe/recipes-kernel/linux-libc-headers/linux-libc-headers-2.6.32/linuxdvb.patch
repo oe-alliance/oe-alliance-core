@@ -1,0 +1,108 @@
+*** a/include/linux/dvb/frontend.h	2011-08-09 09:35:36.000000000 +0800
+--- b/include/linux/dvb/frontend.h	2011-12-07 11:02:08.856831910 +0800
+*************** typedef enum fe_caps {
+*** 62,67 ****
+--- 62,69 ----
+  	FE_CAN_8VSB			= 0x200000,
+  	FE_CAN_16VSB			= 0x400000,
+  	FE_HAS_EXTENDED_CAPS		= 0x800000,   /* We need more bitspace for newer APIs, indicate this. */
++ 	FE_CAN_MULTISTREAM		= 0x4000000,  /* frontend supports multistream filtering */
++ 	FE_CAN_TURBO_FEC		= 0x8000000,  /* frontend supports "turbo fec modulation" */
+  	FE_CAN_2G_MODULATION		= 0x10000000, /* frontend supports "2nd generation modulation" (DVB-S2) */
+  	FE_NEEDS_BENDING		= 0x20000000, /* not supported anymore, don't use (frontend requires frequency bending) */
+  	FE_CAN_RECOVER			= 0x40000000, /* frontend can recover from a cable unplug automatically */
+*************** typedef enum fe_transmit_mode {
+*** 174,187 ****
+  	TRANSMISSION_MODE_2K,
+  	TRANSMISSION_MODE_8K,
+  	TRANSMISSION_MODE_AUTO,
+! 	TRANSMISSION_MODE_4K
+  } fe_transmit_mode_t;
+  
+  typedef enum fe_bandwidth {
+  	BANDWIDTH_8_MHZ,
+  	BANDWIDTH_7_MHZ,
+  	BANDWIDTH_6_MHZ,
+! 	BANDWIDTH_AUTO
+  } fe_bandwidth_t;
+  
+  
+--- 176,195 ----
+  	TRANSMISSION_MODE_2K,
+  	TRANSMISSION_MODE_8K,
+  	TRANSMISSION_MODE_AUTO,
+! 	TRANSMISSION_MODE_4K,
+! 	TRANSMISSION_MODE_1K,
+! 	TRANSMISSION_MODE_16K,
+! 	TRANSMISSION_MODE_32K,
+  } fe_transmit_mode_t;
+  
+  typedef enum fe_bandwidth {
+  	BANDWIDTH_8_MHZ,
+  	BANDWIDTH_7_MHZ,
+  	BANDWIDTH_6_MHZ,
+! 	BANDWIDTH_AUTO,
+! 	BANDWIDTH_5_MHZ,
+! 	BANDWIDTH_10_MHZ,
+! 	BANDWIDTH_1_712_MHZ,
+  } fe_bandwidth_t;
+  
+  
+*************** typedef enum fe_guard_interval {
+*** 190,196 ****
+  	GUARD_INTERVAL_1_16,
+  	GUARD_INTERVAL_1_8,
+  	GUARD_INTERVAL_1_4,
+! 	GUARD_INTERVAL_AUTO
+  } fe_guard_interval_t;
+  
+  
+--- 198,207 ----
+  	GUARD_INTERVAL_1_16,
+  	GUARD_INTERVAL_1_8,
+  	GUARD_INTERVAL_1_4,
+! 	GUARD_INTERVAL_AUTO,
+! 	GUARD_INTERVAL_1_128,
+! 	GUARD_INTERVAL_19_128,
+! 	GUARD_INTERVAL_19_256,
+  } fe_guard_interval_t;
+  
+  
+*************** struct dvb_frontend_event {
+*** 302,310 ****
+  
+  #define DTV_ISDBT_LAYER_ENABLED	41
+  
+! #define DTV_ISDBS_TS_ID		42
+  
+! #define DTV_MAX_COMMAND				DTV_ISDBS_TS_ID
+  
+  typedef enum fe_pilot {
+  	PILOT_ON,
+--- 313,324 ----
+  
+  #define DTV_ISDBT_LAYER_ENABLED	41
+  
+! #define DTV_STREAM_ID		42
+! #define DTV_ISDBS_TS_ID		DTV_STREAM_ID
+! #define DTV_DVBT2_PLP_ID	43
+! #define DTV_DVBS2_MIS_ID	DTV_DVBT2_PLP_ID
+  
+! #define DTV_MAX_COMMAND				DTV_DVBT2_PLP_ID
+  
+  typedef enum fe_pilot {
+  	PILOT_ON,
+*************** typedef enum fe_delivery_system {
+*** 336,343 ****
+--- 350,360 ----
+  	SYS_DMBTH,
+  	SYS_CMMB,
+  	SYS_DAB,
++ 	SYS_DVBT2,
+  } fe_delivery_system_t;
+  
++ #define NO_STREAM_ID_FILTER	(~0U)
++ 
+  struct dtv_cmds_h {
+  	char	*name;		/* A display name for debugging purposes */
+  
