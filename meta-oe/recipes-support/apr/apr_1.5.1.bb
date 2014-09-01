@@ -9,13 +9,14 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=4dfd4cd216828c8cae5de5a12f3844c8 \
 
 BBCLASSEXTEND = "native"
 
-PR = "r2"
+PR = "r3"
 
 SRC_URI = "${APACHE_MIRROR}/apr/${BPN}-${PV}.tar.bz2 \
            file://configure_fixes.patch \
            file://cleanup.patch \
            file://configfix.patch \
            file://run-ptest \
+           file://fix-cross-compile.patch \
 "
 
 SRC_URI[md5sum] = "5486180ec5a23efb5cae6d4292b300ab"
