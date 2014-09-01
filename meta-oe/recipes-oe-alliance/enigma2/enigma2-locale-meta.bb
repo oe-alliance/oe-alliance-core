@@ -3,7 +3,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 require conf/license/license-gplv2.inc
 
-RRECOMMENDS = "\
+RRECOMMENDS_${PN} = "\
     enigma2-locale-ar \
     enigma2-locale-bg \
     enigma2-locale-ca \
