@@ -13,7 +13,7 @@ inherit autotools-brokensep gitpkgv pythonnative pkgconfig
 
 PV = "2.0+git${SRCPV}"
 PKGV = "2.0+git${GITPKGV}"
-PR = "r7"
+PR = "r8"
 
 SRC_URI = "${ENIGMA2_PLUGINS_URI} file://pluginnotwanted.patch"
 
