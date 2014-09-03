@@ -120,7 +120,7 @@ inherit autotools-brokensep gitpkgv pythonnative
 SRCREV = "${AUTOREV}"
 PV = "2.0+git${SRCPV}"
 PKGV = "2.0+git${GITPKGV}"
-PR = "r14"
+PR = "r15"
 
 SRC_URI="git://github.com/oe-alliance/oe-alliance-plugins.git;protocol=git;branch=2.3"
 
