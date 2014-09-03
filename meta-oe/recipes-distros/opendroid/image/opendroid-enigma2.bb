@@ -7,7 +7,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PV = "1.0"
-PR = "r23"
+PR = "r24"
 
 inherit packagegroup
 
@@ -24,10 +24,11 @@ RRECOMMENDS_${PN} = "\
     enigma2-plugin-extensions-addonopendroid \
     enigma2-plugin-extensions-autosettings \
     enigma2-plugin-extensions-extrapanel \
+    enigma2-plugin-extensions-mediaplayer \
+    enigma2-plugin-extensions-dvdplayer \
     enigma2-plugin-extensions-epgsearch \
     enigma2-plugin-extensions-volume-adjust \
     enigma2-plugin-systemplugins-videotune \
-    enigma2-plugin-systemplugins-crossepg \
     enigma2-plugin-systemplugins-softwaremanager \
     enigma2-plugin-systemplugins-positionersetup \
     enigma2-plugin-systemplugins-videoenhancement \
