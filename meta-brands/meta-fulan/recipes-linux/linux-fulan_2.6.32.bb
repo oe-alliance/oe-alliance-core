@@ -17,7 +17,7 @@ DEPENDS_spark += " \
 inherit kernel machine_kernel_pr
 
 SRCDATE = "20140717"
-MACHINE_KERNEL_PR_append = ".25"
+MACHINE_KERNEL_PR_append = ".26"
 
 STM_PATCH_STR = "0216"
 LINUX_VERSION = "2.6.32.61"
@@ -39,15 +39,15 @@ SRC_URI = "git://git.stlinux.com/stm/linux-sh4-2.6.32.y.git;protocol=git;branch=
     file://linux-sh4-copro_stm24_${STM_PATCH_STR}.patch;patch=1 \
     file://linux-sh4-strcpy_stm24_${STM_PATCH_STR}.patch;patch=1 \
     file://linux-sh4-ext23_as_ext4_stm24_${STM_PATCH_STR}.patch;patch=1 \
-    file://bpa2_procfs_stm24_${STM_PATCH_STR}.patch;patch=1 \
+    file://linux-sh4-bpa2_procfs_stm24_${STM_PATCH_STR}.patch;patch=1 \
     file://linux-ftdi_sio.c_stm24_${STM_PATCH_STR}.patch;patch=1 \
     file://linux-sh4-lzma-fix_stm24_${STM_PATCH_STR}.patch;patch=1 \
     file://linux-tune_stm24.patch;patch=1 \
     file://linux-sh4-console_missing_argument_stm24_${STM_PATCH_STR}.patch;patch=1 \
     file://linux-sh4-mmap_stm24.patch;patch=1 \
-    file://kbuild-generate-mudules-builtin.patch;patch=1 \
     file://linux-sh4-cpuinfo.patch;patch=1 \
     file://linux-sh4-add_missing_eid.patch;patch=1 \
+    file://kbuild-generate-mudules-builtin.patch;patch=1 \
     file://defconfig \
     file://st-coprocessor.h \
 "
@@ -63,8 +63,8 @@ SRC_URI_append_spark = " \
     file://linux-sh4-lmb_stm24_${STM_PATCH_STR}.patch;patch=1 \
     file://linux-sh4-spark_setup_stm24_${STM_PATCH_STR}.patch;patch=1 \
     file://linux-sh4-lirc_stm_stm24_${STM_PATCH_STR}.patch;patch=1 \
-    file://af901x-NXP-TDA18218.patch;patch=1 \
-    file://dvb-as102.patch;patch=1 \
+    file://linux-sh4-spark-af901x-NXP-TDA18218.patch;patch=1 \
+    file://linux-sh4-spark-dvb-as102.patch;patch=1 \
 "
 
 S = "${WORKDIR}/git"

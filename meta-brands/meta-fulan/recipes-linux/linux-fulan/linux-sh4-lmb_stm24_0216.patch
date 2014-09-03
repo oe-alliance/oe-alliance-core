@@ -1,6 +1,6 @@
---- linux-sh4/arch/sh/kernel/setup.c.orig	2011-06-13 03:34:27.000000000 -0700
-+++ linux-sh4/arch/sh/kernel/setup.c	2011-06-25 14:15:35.000000000 -0700
-@@ -239,45 +239,39 @@
+--- linux-sh4/arch/sh/kernel/setup.c.orig
++++ linux-sh4/arch/sh/kernel/setup.c
+@@ -240,45 +240,39 @@
  void __init setup_bootmem_allocator(unsigned long free_pfn)
  {
  	unsigned long bootmap_size;
@@ -65,7 +65,7 @@
  	sparse_memory_present_with_active_regions(0);
  
  #ifdef CONFIG_BLK_DEV_INITRD
-@@ -308,37 +302,12 @@
+@@ -309,37 +303,12 @@
  static void __init setup_memory(void)
  {
  	unsigned long start_pfn;
@@ -103,7 +103,7 @@
  	setup_bootmem_allocator(start_pfn);
  }
  #else
-@@ -443,7 +412,6 @@
+@@ -444,7 +441,6 @@
  	nodes_clear(node_online_map);
  
  	/* Setup bootmem with available RAM */

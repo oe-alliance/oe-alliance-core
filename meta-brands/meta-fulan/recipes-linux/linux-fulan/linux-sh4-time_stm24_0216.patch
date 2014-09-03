@@ -1,5 +1,5 @@
---- linux-sh4-2.6.32.46_stm24_0209.orig/kernel/time/timekeeping.c	2011-11-24 22:22:25.000000000 +0200
-+++ linux-sh4/kernel/time/timekeeping.c	2011-11-25 00:38:33.758560158 +0200
+*** linux-sh4.orig/kernel/time/timekeeping.c
+--- linux-sh4/kernel/time/timekeeping.c
 @@ -141,6 +141,8 @@
   */
  __cacheline_aligned_in_smp DEFINE_SEQLOCK(xtime_lock);
@@ -16,5 +16,5 @@
 +EXPORT_SYMBOL(xtime);
 +EXPORT_SYMBOL_GPL(wall_to_monotonic);
  
- /*
-  * The raw monotonic time for the CLOCK_MONOTONIC_RAW posix clock.
+ /* Offset clock monotonic -> clock realtime */
+ static ktime_t offs_real;

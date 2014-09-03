@@ -1,7 +1,6 @@
---- linux-sh4/drivers/video/console/cfbcondecor.c	2012-12-31 16:08:27.072530782 +0100
-+++ linux-sh4/drivers/video/console/cfbcondecor.c	2012-12-31 16:08:27.048530781 +0100
-@@ -378,8 +378,8 @@
- void fbcon_decor_clear(struct vc_data *vc, struct fb_info *info, int sy, int sx,
+--- linux-sh4/drivers/video/console/cfbcondecor.c
++++ linux-sh4/drivers/video/console/cfbcondecor.c
+@@ -379,7 +379,7 @@
         int height, int width)
  {
   int bgshift = (vc->vc_hi_font_mask) ? 13 : 12;

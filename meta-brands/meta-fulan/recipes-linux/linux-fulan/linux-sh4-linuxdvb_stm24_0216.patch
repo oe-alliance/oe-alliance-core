@@ -16,16 +16,6 @@
  
  	if (ts_pes < DMX_PES_OTHER)
  		ts_type = TS_DECODER;
---- linux-sh4.org/include/linux/dvb/frontend.h.org	2012-12-31 16:08:27.072530782 +0100
-+++ linux-sh4/include/linux/dvb/frontend.h	2012-12-31 16:08:27.048530781 +0100
-@@ -336,6 +336,7 @@
- 	SYS_DMBTH,
- 	SYS_CMMB,
- 	SYS_DAB,
-+	SYS_DVBT2,
- } fe_delivery_system_t;
- 
- struct dtv_cmds_h {
 *** linux-sh4-2.6.32.46_stm24_0209.orig/drivers/media/dvb/dvb-core/dmxdev.c	2011-11-24 22:22:24.000000000 +0200
 --- linux-sh4/drivers/media/dvb/dvb-core/dmxdev.c	2011-11-24 23:02:30.636994000 +0200
 ***************
@@ -873,3 +863,246 @@
   	};
   };
   
+*** linux-sh4-2.6.32.59_stm24_0211/include/linux/dvb/frontend.h	2011-08-09 09:35:36.000000000 +0800
+--- linux-sh4-2.6.32.59_stm24_0211.i2s/include/linux/dvb/frontend.h	2011-12-07 11:02:08.856831910 +0800
+*************** typedef enum fe_caps {
+*** 62,67 ****
+--- 62,69 ----
+  	FE_CAN_8VSB			= 0x200000,
+  	FE_CAN_16VSB			= 0x400000,
+  	FE_HAS_EXTENDED_CAPS		= 0x800000,   /* We need more bitspace for newer APIs, indicate this. */
++ 	FE_CAN_MULTISTREAM		= 0x4000000,  /* frontend supports multistream filtering */
++ 	FE_CAN_TURBO_FEC		= 0x8000000,  /* frontend supports "turbo fec modulation" */
+  	FE_CAN_2G_MODULATION		= 0x10000000, /* frontend supports "2nd generation modulation" (DVB-S2) */
+  	FE_NEEDS_BENDING		= 0x20000000, /* not supported anymore, don't use (frontend requires frequency bending) */
+  	FE_CAN_RECOVER			= 0x40000000, /* frontend can recover from a cable unplug automatically */
+*************** typedef enum fe_transmit_mode {
+*** 174,187 ****
+  	TRANSMISSION_MODE_2K,
+  	TRANSMISSION_MODE_8K,
+  	TRANSMISSION_MODE_AUTO,
+! 	TRANSMISSION_MODE_4K
+  } fe_transmit_mode_t;
+  
+  typedef enum fe_bandwidth {
+  	BANDWIDTH_8_MHZ,
+  	BANDWIDTH_7_MHZ,
+  	BANDWIDTH_6_MHZ,
+! 	BANDWIDTH_AUTO
+  } fe_bandwidth_t;
+  
+  
+--- 176,195 ----
+  	TRANSMISSION_MODE_2K,
+  	TRANSMISSION_MODE_8K,
+  	TRANSMISSION_MODE_AUTO,
+! 	TRANSMISSION_MODE_4K,
+! 	TRANSMISSION_MODE_1K,
+! 	TRANSMISSION_MODE_16K,
+! 	TRANSMISSION_MODE_32K,
+  } fe_transmit_mode_t;
+  
+  typedef enum fe_bandwidth {
+  	BANDWIDTH_8_MHZ,
+  	BANDWIDTH_7_MHZ,
+  	BANDWIDTH_6_MHZ,
+! 	BANDWIDTH_AUTO,
+! 	BANDWIDTH_5_MHZ,
+! 	BANDWIDTH_10_MHZ,
+! 	BANDWIDTH_1_712_MHZ,
+  } fe_bandwidth_t;
+  
+  
+*************** typedef enum fe_guard_interval {
+*** 190,196 ****
+  	GUARD_INTERVAL_1_16,
+  	GUARD_INTERVAL_1_8,
+  	GUARD_INTERVAL_1_4,
+! 	GUARD_INTERVAL_AUTO
+  } fe_guard_interval_t;
+  
+  
+--- 198,207 ----
+  	GUARD_INTERVAL_1_16,
+  	GUARD_INTERVAL_1_8,
+  	GUARD_INTERVAL_1_4,
+! 	GUARD_INTERVAL_AUTO,
+! 	GUARD_INTERVAL_1_128,
+! 	GUARD_INTERVAL_19_128,
+! 	GUARD_INTERVAL_19_256,
+  } fe_guard_interval_t;
+  
+  
+*************** struct dvb_frontend_event {
+*** 302,310 ****
+  
+  #define DTV_ISDBT_LAYER_ENABLED	41
+  
+! #define DTV_ISDBS_TS_ID		42
+  
+! #define DTV_MAX_COMMAND				DTV_ISDBS_TS_ID
+  
+  typedef enum fe_pilot {
+  	PILOT_ON,
+--- 313,324 ----
+  
+  #define DTV_ISDBT_LAYER_ENABLED	41
+  
+! #define DTV_STREAM_ID		42
+! #define DTV_ISDBS_TS_ID		DTV_STREAM_ID
+! #define DTV_DVBT2_PLP_ID	43
+! #define DTV_DVBS2_MIS_ID	DTV_DVBT2_PLP_ID
+  
+! #define DTV_MAX_COMMAND				DTV_DVBT2_PLP_ID
+  
+  typedef enum fe_pilot {
+  	PILOT_ON,
+*************** typedef enum fe_delivery_system {
+*** 336,343 ****
+--- 350,360 ----
+  	SYS_DMBTH,
+  	SYS_CMMB,
+  	SYS_DAB,
++ 	SYS_DVBT2,
+  } fe_delivery_system_t;
+  
++ #define NO_STREAM_ID_FILTER	(~0U)
++ 
+  struct dtv_cmds_h {
+  	char	*name;		/* A display name for debugging purposes */
+  
+*** linux-sh4-2.6.32.59_stm24_0211/include/linux/dvb/version.h	2011-08-09 09:35:36.000000000 +0800
+--- linux-sh4-2.6.32.59_stm24_0211.i2s/include/linux/dvb/version.h	2011-12-07 11:02:08.856831910 +0800
+***************
+*** 24,29 ****
+  #define _DVBVERSION_H_
+  
+  #define DVB_API_VERSION 5
+! #define DVB_API_VERSION_MINOR 1
+  
+  #endif /*_DVBVERSION_H_*/
+--- 24,29 ----
+  #define _DVBVERSION_H_
+  
+  #define DVB_API_VERSION 5
+! #define DVB_API_VERSION_MINOR 3
+  
+  #endif /*_DVBVERSION_H_*/
+*** linux-sh4-2.6.32.59_stm24_0211/drivers/media/dvb/dvb-core/dvb_frontend.h	2011-08-09 09:35:36.000000000 +0800
+--- linux-sh4-2.6.32.59_stm24_0211.i2s/drivers/media/dvb/dvb-core/dvb_frontend.h	2011-12-07 11:02:08.856831910 +0800
+*************** struct dtv_frontend_properties {
+*** 356,363 ****
+  	    u8			interleaving;
+  	} layer[3];
+  
+! 	/* ISDB-T specifics */
+! 	u32			isdbs_ts_id;
+  };
+  
+  struct dvb_frontend {
+--- 356,363 ----
+  	    u8			interleaving;
+  	} layer[3];
+  
+! 	/* Multistream specifics */
+! 	u32			stream_id;
+  };
+  
+  struct dvb_frontend {
+*** linux-sh4-2.6.32.59_stm24_0211/drivers/media/dvb/dvb-core/dvb_frontend.c	2011-08-09 09:35:36.000000000 +0800
+--- linux-sh4-2.6.32.59_stm24_0211.i2s/drivers/media/dvb/dvb-core/dvb_frontend.c	2011-12-07 11:02:08.856831910 +0800
+*************** static int dvb_frontend_clear_cache(stru
+*** 883,888 ****
+--- 883,890 ----
+  		fe->dtv_property_cache.layer[i].segment_count = -1;
+  	}
+  
++ 	fe->dtv_property_cache.stream_id = -1;
++ 
+  	return 0;
+  }
+  
+*************** static struct dtv_cmds_h dtv_cmds[] = {
+*** 1032,1038 ****
+  	_DTV_CMD(DTV_ISDBT_LAYERC_SEGMENT_COUNT, 0, 0),
+  	_DTV_CMD(DTV_ISDBT_LAYERC_TIME_INTERLEAVING, 0, 0),
+  
+! 	_DTV_CMD(DTV_ISDBS_TS_ID, 1, 0),
+  
+  	/* Get */
+  	[DTV_DISEQC_SLAVE_REPLY] = {
+--- 1034,1041 ----
+  	_DTV_CMD(DTV_ISDBT_LAYERC_SEGMENT_COUNT, 0, 0),
+  	_DTV_CMD(DTV_ISDBT_LAYERC_TIME_INTERLEAVING, 0, 0),
+  
+! 	_DTV_CMD(DTV_STREAM_ID, 1, 0),
+! 	_DTV_CMD(DTV_DVBT2_PLP_ID, 1, 0),
+  
+  	/* Get */
+  	[DTV_DISEQC_SLAVE_REPLY] = {
+*************** static void dtv_property_adv_params_sync
+*** 1248,1257 ****
+  		break;
+  	}
+  
+! 	if(c->delivery_system == SYS_ISDBT) {
+! 		/* Fake out a generic DVB-T request so we pass validation in the ioctl */
+! 		p->frequency = c->frequency;
+! 		p->inversion = c->inversion;
+  		p->u.ofdm.constellation = QAM_AUTO;
+  		p->u.ofdm.code_rate_HP = FEC_AUTO;
+  		p->u.ofdm.code_rate_LP = FEC_AUTO;
+--- 1251,1259 ----
+  		break;
+  	}
+  
+! 	/* Fake out a generic DVB-T request so we pass validation in the ioctl */
+! 	if ((c->delivery_system == SYS_ISDBT) ||
+! 	    (c->delivery_system == SYS_DVBT2)) {
+  		p->u.ofdm.constellation = QAM_AUTO;
+  		p->u.ofdm.code_rate_HP = FEC_AUTO;
+  		p->u.ofdm.code_rate_LP = FEC_AUTO;
+*************** static int dtv_property_process_get(stru
+*** 1423,1430 ****
+  	case DTV_ISDBT_LAYERC_TIME_INTERLEAVING:
+  		tvp->u.data = fe->dtv_property_cache.layer[2].interleaving;
+  		break;
+! 	case DTV_ISDBS_TS_ID:
+! 		tvp->u.data = fe->dtv_property_cache.isdbs_ts_id;
+  		break;
+  	default:
+  		r = -1;
+--- 1425,1435 ----
+  	case DTV_ISDBT_LAYERC_TIME_INTERLEAVING:
+  		tvp->u.data = fe->dtv_property_cache.layer[2].interleaving;
+  		break;
+! 	case DTV_STREAM_ID:
+! 		tvp->u.data = fe->dtv_property_cache.stream_id;
+! 		break;
+! 	case DTV_DVBT2_PLP_ID:
+! 		tvp->u.data = fe->dtv_property_cache.stream_id;
+  		break;
+  	default:
+  		r = -1;
+*************** static int dtv_property_process_set(stru
+*** 1577,1584 ****
+  	case DTV_ISDBT_LAYERC_TIME_INTERLEAVING:
+  		fe->dtv_property_cache.layer[2].interleaving = tvp->u.data;
+  		break;
+! 	case DTV_ISDBS_TS_ID:
+! 		fe->dtv_property_cache.isdbs_ts_id = tvp->u.data;
+  		break;
+  	default:
+  		r = -1;
+--- 1582,1592 ----
+  	case DTV_ISDBT_LAYERC_TIME_INTERLEAVING:
+  		fe->dtv_property_cache.layer[2].interleaving = tvp->u.data;
+  		break;
+! 	case DTV_STREAM_ID:
+! 		fe->dtv_property_cache.stream_id = tvp->u.data;
+! 		break;
+! 	case DTV_DVBT2_PLP_ID:
+! 		fe->dtv_property_cache.stream_id = tvp->u.data;
+  		break;
+  	default:
+  		r = -1;
