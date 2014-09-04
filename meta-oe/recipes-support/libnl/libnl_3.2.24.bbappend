@@ -15,7 +15,7 @@ do_install_append_dm800() {
     install -m 0644 ${S}/include/linux/tc_ematch/tc_em_nbyte.h ${D}${includedir}/linux/tc_ematch/tc_em_nbyte.h
     install -m 0644 ${S}/include/linux/tc_ematch/tc_em_text.h  ${D}${includedir}/linux/tc_ematch/tc_em_text.h
     install -m 0755 -d ${D}${includedir}/gnu
-    install -m 0644 ${S}/stubs-o32_hard.h  ${D}${includedir}/gnu/stubs-o32_hard.h
+    install -m 0644 ${WORKDIR}/stubs-o32_hard.h  ${D}${includedir}/gnu/stubs-o32_hard.h
 }
 
 FILES_${PN}-dev_append_dm800 = " ${includedir}/linux/tc_ematch/*.h ${includedir}/linux/nl80211.h"
