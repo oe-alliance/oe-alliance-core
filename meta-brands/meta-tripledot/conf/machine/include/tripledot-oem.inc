@@ -15,8 +15,8 @@ IMAGEDIR ?= "\
 ${@base_contains('MACHINEBUILD', 'enibox', 'enibox' , '', d)}\
 "
 
-MTD_KERNEL = "mtd1"
-MTD_ROOTFS = "mtd2"
+MTD_KERNEL = "mtd2"
+MTD_ROOTFS = "mtd8"
 KERNEL_FILE = "kernel.bin"
 ROOTFS_FILE = "rootfs.bin"
 
