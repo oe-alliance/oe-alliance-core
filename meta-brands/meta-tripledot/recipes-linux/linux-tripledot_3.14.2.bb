@@ -4,6 +4,7 @@ LICENSE = "GPLv2"
 PR = "r0"
 
 KERNEL_RELEASE = "3.14.2"
+SRCDATE = "20140517"
 
 inherit machine_kernel_pr
 
