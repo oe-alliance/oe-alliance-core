@@ -73,3 +73,6 @@ MACHINE_FEATURES += "3dtv alsa blindscan-dvbs hdmicec switchoff wifi bootsplash"
 BOOTLOGO_FILENAME = "splash.bin"
 
 require conf/machine/include/tune-mips32.inc
+
+# add support for extra feeds
+PACKAGE_ARCHS += " ${MACHINEBUILD}"
