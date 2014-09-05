@@ -9,7 +9,7 @@ inherit gitpkgv deploy
 SRCREV = "${AUTOREV}"
 PV = "2.1+gitr${SRCPV}"
 PKGV = "2.1+gitr${GITPKGV}"
-PR = "r81"
+PR = "r82"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -33,10 +33,10 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-bluray_1.5c1_mips32el.ipk \
     enigma2-plugin-extensions-boblight-enigma2_0.8r6_mips32el.ipk \
     enigma2-plugin-extensions-camofs_8.57_all.ipk \
-    enigma2-plugin-extensions-chefkoch_1.4c3_mips32el.ipk \
+    enigma2-plugin-extensions-chefkoch_1.4c4_mips32el.ipk \
     enigma2-plugin-extensions-clevertanken_0.5rc1_mips32el.ipk \
     enigma2-plugin-extensions-csfd_9_45-20140125_all.ipk \
-    enigma2-plugin-extensions-digitalfernsehen_1.0rc1_mips32el.ipk \
+    enigma2-plugin-extensions-digitalfernsehen_1.0rc3_mips32el.ipk \
     enigma2-plugin-extensions-facebook_1.3_mips32el.ipk \
     enigma2-plugin-extensions-filesearchfs_2.53_all.ipk \
     enigma2-plugin-extensions-focusonline_1.0rc4_mips32el.ipk \
@@ -46,7 +46,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-hetweer_2.6_mips32el.ipk \
     enigma2-plugin-extensions-hdmitest_0.4_mipsel.ipk \
     enigma2-plugin-extensions-isettinge2-3.2.6-oe2.0-mips32el.ipk \
-    enigma2-plugin-extensions-kicker_3.3rc7_mips32el.ipk \
+    enigma2-plugin-extensions-kicker_3.3rc8_mips32el.ipk \
     enigma2-plugin-extensions-kino_1.4c1_mips32el.ipk \
     enigma2-plugin-extensions-livefootball-oe2.0_5.4_all.ipk \
     enigma2-plugin-extensions-mediainfo_0.6_r04_all.ipk \
@@ -71,7 +71,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-sherlock_5.01r1_mipsel.ipk \
     enigma2-plugin-extensions-skyrecorder_1.5.1_all.ipk \
     enigma2-plugin-extensions-songs-to_0.1_mips32el.ipk \
-    enigma2-plugin-extensions-spiegelonline_2.5rc8_mips32el.ipk \
+    enigma2-plugin-extensions-spiegelonline_2.5rc10_mips32el.ipk \
     enigma2-plugin-extensions-sportmax_1.2_mips32el.ipk \
     enigma2-plugin-extensions-subtitleplayer_3.28_mips32el.ipk \
     enigma2-plugin-extensions-spinnerselector_2.0r5_mips32el.ipk \
@@ -87,8 +87,8 @@ THIRDPARTY_PLUGINS = " \
 	enigma2-plugin-extensions-vhannibal-autosetting-1.1-oe2.0-mips32el.ipk \
     enigma2-plugin-extensions-vuplusforum_0.7rc3_mips32el.ipk \
     enigma2-plugin-extensions-webmedia_10.0_r02_oe2.0_all.ipk \
-    enigma2-plugin-extensions-webradiofs_12.28_all.ipk \
-    enigma2-plugin-extensions-wikipedia_2.2_mips32el.ipk \
+    enigma2-plugin-extensions-webradiofs_12.29_all.ipk \
+    enigma2-plugin-extensions-wikipedia_2.2rc1_mips32el.ipk \
 	enigma2-plugin-extensions-wwech_1.01_all.ipk \
     enigma2-plugin-extensions-xbmcaddons_6.0_r0_all.ipk \
     enigma2-plugin-extensions-xbmcwetter_1.0rc4_mips32el.ipk \
