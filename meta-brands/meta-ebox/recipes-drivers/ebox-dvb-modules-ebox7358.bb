@@ -3,15 +3,15 @@ SECTION = "base"
 PRIORITY = "required"
 LICENSE = "CLOSED"
 
-SRCDATE = "20140825"
+SRCDATE = "20140905"
 KV = "3.12.4"
 PV = "${KV}+${SRCDATE}"
 PR = "r0"
 
 SRC_URI = "http://archiv.mixos-support.com/ebox-dvb-modules-${MACHINE}-${KV}-${SRCDATE}.zip"
 
-SRC_URI[md5sum] = "fe78bb68a3893544922af6aecc90b02a"
-SRC_URI[sha256sum] = "7e75c3dde8a5e4ade7df8598cab0c8f704ab818cb8fa0d2552ac0670e91ff4ff"
+SRC_URI[md5sum] = "70b327a198afff510d9247fb0f3335f5"
+SRC_URI[sha256sum] = "81b9398fe729cc7472c84f52dbbff80816864f0804a32c1f004283884ba3ad4d"
 
 S = "${WORKDIR}"
 
