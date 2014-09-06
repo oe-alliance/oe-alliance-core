@@ -4,22 +4,22 @@ SECTION = "kernel"
 KV = "3.12.4"
 PR = "r4"
 
-SRCDATE = "1211"
+SRCDATE = "06092014"
 SRCDATE_ebox7358 = "17072014"
 MACHINE_KERNEL_PR_append = ".5"
 
-SRC_URI[ebox5100.md5sum] = "2c6957a0f3662910e53df8eb31705e01"
-SRC_URI[ebox5100.sha256sum] = "2ba88a551a5c3a7095a2000e03841895d7b3892116d379d1009a8de9f5820f89"
-SRC_URI[eboxlumi.md5sum] = "2c6957a0f3662910e53df8eb31705e01"
-SRC_URI[eboxlumi.sha256sum] = "2ba88a551a5c3a7095a2000e03841895d7b3892116d379d1009a8de9f5820f89"
-SRC_URI[ebox5000.md5sum] = "bafb17f5e8dd1c4935d2ec213b2d62e1"
-SRC_URI[ebox5000.sha256sum] = "36b844b07e5f38b3b597bc55bd182438f9fd3b3c52d234914f6aabf031e31be9"
+SRC_URI[ebox5100.md5sum] = "a7700c7fd8f2b5c4c903c48bae76a966"
+SRC_URI[ebox5100.sha256sum] = "3d9f17888fd7b965a9a200823da9dd302452dee01f78724554b727d9a75d61cc"
+SRC_URI[eboxlumi.md5sum] = "a7700c7fd8f2b5c4c903c48bae76a966"
+SRC_URI[eboxlumi.sha256sum] = "3d9f17888fd7b965a9a200823da9dd302452dee01f78724554b727d9a75d61cc"
+SRC_URI[ebox5000.md5sum] = "a7700c7fd8f2b5c4c903c48bae76a966"
+SRC_URI[ebox5000.sha256sum] = "3d9f17888fd7b965a9a200823da9dd302452dee01f78724554b727d9a75d61cc"
 SRC_URI[ebox7358.md5sum] = "62e9de9bf928f70a2d7d8bb2c4ae2127"
 SRC_URI[ebox7358.sha256sum] = "bd2bb7854e0bb8c5d1ba583d949b167214ff3fb96aa8b4554026aa6ab0fd7ce8"
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${KV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-SRC_URI = "http://archiv.mixos-support.com/${MACHINE}-linux-${KV}_${SRCDATE}.tar.bz2;name=${MACHINE} \
+SRC_URI = "http://archiv.mixos-support.com/${MACHINE}-linux-${KV}_${SRCDATE}.tar.gz;name=${MACHINE} \
     file://defconfig \
     "
 	
