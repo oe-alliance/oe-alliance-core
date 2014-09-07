@@ -87,7 +87,7 @@ THIRDPARTY_PLUGINS = " \
 	enigma2-plugin-extensions-vhannibal-autosetting-1.1-oe2.0-mips32el.ipk \
     enigma2-plugin-extensions-vuplusforum_0.7rc3_mips32el.ipk \
     enigma2-plugin-extensions-webmedia_10.0_r02_oe2.0_all.ipk \
-    enigma2-plugin-extensions-webradiofs_12.29_all.ipk \
+    enigma2-plugin-extensions-webradiofs_12.30_all.ipk \
     enigma2-plugin-extensions-wikipedia_2.2rc1_mips32el.ipk \
 	enigma2-plugin-extensions-wwech_1.01_all.ipk \
     enigma2-plugin-extensions-xbmcaddons_6.0_r0_all.ipk \
