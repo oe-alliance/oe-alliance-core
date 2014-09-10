@@ -45,7 +45,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-googlenewsreader_1.0_mips32el.ipk \
     enigma2-plugin-extensions-hetweer_2.6_mips32el.ipk \
     enigma2-plugin-extensions-hdmitest_0.4_mipsel.ipk \
-    enigma2-plugin-extensions-isettinge2-3.2.8-oe2.0-mips32el.ipk \
+    enigma2-plugin-extensions-isettinge2-3.2.8-oe2.0-${DEFAULTTUNE}.ipk \
     enigma2-plugin-extensions-kicker_3.3rc8_mips32el.ipk \
     enigma2-plugin-extensions-kino_1.4c1_mips32el.ipk \
     enigma2-plugin-extensions-livefootball-oe2.0_5.4_all.ipk \
@@ -96,10 +96,6 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-zdfnewmediathek_1.7rc5_mips32el.ipk \
     enigma2-plugin-systemplugins-bouquetsprotection_0.2-rc1_all.ipk \
     enigma2-plugin-systemplugins-recordinfobar_1.0-rc15_mipsel.ipk \
-    "
-
-THIRDPARTY_PLUGINS_append_sh4 = " \
-    enigma2-plugin-extensions-isettinge2-3.2.8-oe2.0-sh4.ipk \
     "
 
 #     Install any packages t_append =hat are only For this machines feed here, uncomment the line below and change as required
