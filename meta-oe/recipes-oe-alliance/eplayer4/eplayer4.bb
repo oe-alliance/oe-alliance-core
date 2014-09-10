@@ -5,12 +5,12 @@ PRIORITY = "optional"
 LICENSE = "GPLv2"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-DEPENDS = "gstreamer glib-2.0 libxml2"
+DEPENDS = "gstreamer gst-plugins-base glib-2.0 libxml2"
 
 require conf/license/license-gplv2.inc
 
 PV = "1.0"
-PR = "r1"
+PR = "r2"
 
 inherit pkgconfig
 
