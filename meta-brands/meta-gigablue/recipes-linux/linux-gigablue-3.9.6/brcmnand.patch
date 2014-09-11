@@ -1,0 +1,19 @@
+diff -urN a/drivers/mtd/brcmnand/brcmnand_base.c b/drivers/mtd/brcmnand/brcmnand_base.c
+--- a/drivers/mtd/brcmnand/brcmnand_base.c	2014-03-12 09:27:05.000000000 +0100
++++ b/drivers/mtd/brcmnand/brcmnand_base.c	2014-09-11 14:54:40.197572083 +0200
+@@ -9757,6 +9757,15 @@
+ 	
+ #endif  //#if CONFIG_MTD_BRCMNAND_VERSION >= CONFIG_MTD_BRCMNAND_VERS_1_0
+ 
++#if 1
++	// THT from TM/RP: 020609: Clear NAND_CS_NAND_SELECT_AUTO_DEVICE_ID_CONFIG		
++	{
++		volatile unsigned long nand_select;	
++		nand_select = brcmnand_ctrl_read(BCHP_NAND_CS_NAND_SELECT);
++		nand_select &= ~BCHP_NAND_CS_NAND_SELECT_AUTO_DEVICE_ID_CONFIG_MASK;
++		brcmnand_ctrl_write(BCHP_NAND_CS_NAND_SELECT, nand_select);
++	}
++#endif
+ 
+ 	return;
+ }
