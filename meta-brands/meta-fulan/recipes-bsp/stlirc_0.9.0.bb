@@ -24,6 +24,7 @@ SRC_URI = "http://prdownloads.sourceforge.net/lirc/lirc-${PV}.tar.bz2 \
     file://lirc-0.9.0-neutrino-uinput-hack.diff;patch=1 \
     file://lirc-0.9.0-try_first_last_remote.diff;patch=1 \
     file://lirc-0.9.0-uinput-repeat-fix.diff;patch=1 \
+    file://fix-libusb-config.patch;patch=1 \
     file://lirc-0.9.0-repeat_and_delay_hack.patch \
     file://lirc-0.9.0-rename_input_device.patch \
     file://lircd.init \
@@ -43,7 +44,7 @@ PARALLEL_MAKE = ""
 
 CFLAGS_append = " -DUINPUT_NEUTRINO_HACK "
 
-EXTRA_OECONF += "--with-kerneldir=${STAGING_KERNEL_DIR} ${DRIVER} --without-x --with-driver=userspace "
+EXTRA_OECONF += "--with-kerneldir=${STAGING_KERNEL_DIR} ${DRIVER} --without-x --with-driver=none --with-driver=userspace "
 
 inherit autotools module-base update-rc.d
 
