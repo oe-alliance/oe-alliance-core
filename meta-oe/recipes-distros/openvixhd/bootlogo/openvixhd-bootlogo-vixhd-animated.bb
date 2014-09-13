@@ -2,7 +2,7 @@ SUMMARY = "ViX-HD animated bootlogo"
 LICENSE = "CLOSED"
 
 PV = "2.3"
-PR = "r7"
+PR = "r8"
 
 SRC_URI = "file://openvixhd-vixhd-animated.zip"
 

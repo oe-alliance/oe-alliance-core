@@ -7,7 +7,7 @@ require conf/license/license-gplv2.inc
 
 ALLOW_EMPTY_${PN} = "1"
 PV = "2.3"
-PR = "r1"
+PR = "r2"
 
 DEPENDS = " \
         enigma2-plugin-picons-crokers \

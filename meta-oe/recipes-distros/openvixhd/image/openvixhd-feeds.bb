@@ -17,9 +17,3 @@ RRECOMMENDS_${PN} = "\
     openvixhd-softcams-meta \
 	openvixhd-picons-meta \
     "
-
-RRECOMMENDS_${PN}_append_gbipbox = "enigma2-plugin-systemplugins-gbipboxclient"
-RRECOMMENDS_${PN}_append_gb800seplus = "enigma2-plugin-systemplugins-gbipboxclient"
-RRECOMMENDS_${PN}_append_gb800ueplus = "enigma2-plugin-systemplugins-gbipboxclient"
-RRECOMMENDS_${PN}_append_gbquad = "gbipboxserver"
-RRECOMMENDS_${PN}_append_gbquadplus = "gbipboxserver"

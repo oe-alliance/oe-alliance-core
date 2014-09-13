@@ -1,5 +1,5 @@
-SUMMARY = "ViX-HD Core"
-MAINTAINER = "rossi2000"
+SUMMARY = "Vix Core"
+MAINTAINER = "Andy Blackburn"
 
 require conf/license/license-gplv2.inc
 
@@ -11,11 +11,11 @@ RREPLACES_${PN} = "settings-autorestore"
 
 inherit autotools-brokensep gitpkgv pythonnative
 SRCREV = "${AUTOREV}"
-PV = "2.3+git${SRCPV}"
-PKGV = "2.3+git${GITPKGV}"
+PV = "3.0+git${SRCPV}"
+PKGV = "3.0+git${GITPKGV}"
 PR = "r3"
 
-SRC_URI="git://github.com/rossi2000/vix-core.git;protocol=git"
+SRC_URI="git://github.com/OpenViX/vix-core.git;protocol=git"
 
 S = "${WORKDIR}/git"
 

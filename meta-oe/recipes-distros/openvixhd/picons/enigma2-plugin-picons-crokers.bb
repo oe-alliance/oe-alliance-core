@@ -10,10 +10,10 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "2.3+git${SRCPV}"
 PKGV = "2.3+git${GITPKGV}"
-PR = "r5"
+PR = "r6"
 
 
-SRC_URI="git://github.com/rossi2000/enigma2-plugin-picons-crokers.git;protocol=git"
+SRC_URI="git://github.com/OpenViX-1080p/enigma2-plugin-picons-crokers.git;protocol=git"
 
 S = "${WORKDIR}/git"
 
@@ -22,8 +22,4 @@ FILES_${PN} = "/picon"
 do_install() {
     install -d ${D}/picon
     install -m 0644 ${WORKDIR}/git/picon/*.* ${D}/picon
-}
-
-do_install_append() {
-    find ${D}/picon/ -name 'picon_default.png' -exec rm {} \;
 }

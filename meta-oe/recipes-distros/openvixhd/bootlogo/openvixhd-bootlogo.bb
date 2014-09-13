@@ -1,4 +1,4 @@
-SUMMARY = "openViX-HD bootlogo init"
+SUMMARY = "OpenViX-HD bootlogo init"
 SECTION = "base"
 PRIORITY = "required"
 MAINTAINER = "rossi2000"
@@ -10,7 +10,7 @@ DEPENDS += "eplayer4"
 RDEPENDS_${PN} += "showiframe openvixhd-bootlogo-vixhd-animated eplayer4"
 
 PV = "2.3"
-PR = "r9"
+PR = "r10"
 
 S = "${WORKDIR}"
 

@@ -2,7 +2,7 @@ SUMMARY = "OpenViX-HD Image"
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "proprietary"
-MAINTAINER = "ViX-HD team"
+MAINTAINER = "OpenViX-HD team"
 
 require conf/license/license-gplv2.inc
 

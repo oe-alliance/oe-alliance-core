@@ -1,4 +1,4 @@
-SUMMARY = "ViX-HD version info"
+SUMMARY = "OpenViX-HD version info"
 SECTION = "base"
 PRIORITY = "required"
 MAINTAINER = "ViX team"
@@ -10,7 +10,7 @@ PV = "${IMAGE_VERSION}"
 PR = "${BUILD_VERSION}"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-URL = "http://vixhd.dyndns.org"
+URL = "http://www.world-of-satellite.com"
 
 S = "${WORKDIR}"
 

@@ -1,4 +1,4 @@
-SUMMARY = "YouViX skins by rossi2000 and simonsez"
+SUMMARY = "OpenViX-HD YouViX skins by rossi2000 and simonsez"
 MAINTAINER = "rossi2000"
 
 require conf/license/license-gplv2.inc
@@ -9,14 +9,14 @@ EPSM = "enigma2-plugin-skins"
 SRCREV = "${AUTOREV}"
 PV = "2.3+git${SRCPV}"
 PKGV = "2.3+git${GITPKGV}"
-PR = "r4"
+PR = "r5"
 
 PACKAGES = "${EPSM}-youvix-blue ${EPSM}-youvix-red youvix-common"
 
 RDEPENDS_${EPSM}-youvix-blue = "youvix-common"
 RDEPENDS_${EPSM}-youvix-red = "youvix-common"
 
-SRC_URI = "git://github.com/rossi2000/vixhd-skins.git;protocol=git"
+SRC_URI = "git://github.com/OpenViX-1080p/vixhd-skins.git;protocol=git"
 
 FILES_youvix-common = "/usr/share/enigma2/YouViX-Common"
 FILES_${EPSM}-youvix-blue = "/usr/share/enigma2/YouViX-Blue"
