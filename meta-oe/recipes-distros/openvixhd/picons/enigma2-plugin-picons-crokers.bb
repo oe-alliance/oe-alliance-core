@@ -10,10 +10,10 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "2.3+git${SRCPV}"
 PKGV = "2.3+git${GITPKGV}"
-PR = "r6"
+PR = "r7"
 
 
-SRC_URI="git://github.com/OpenViX-1080p/enigma2-plugin-picons-crokers.git;protocol=git"
+SRC_URI="git://github.com/rossi2000/enigma2-plugin-picons-crokers.git;protocol=git"
 
 S = "${WORKDIR}/git"
 
