@@ -18,7 +18,7 @@ DEPENDS = "openvixhd-feeds"
 
 RDEPENDS_${PN} = "\
     enigma2-skindefault \
-    enigma2-plugin-vix-core \
+    enigma2-plugin-vixhd-core \
     "
 
 RRECOMMENDS_${PN} = "\
