@@ -1,8 +1,8 @@
 diff --git a/Makefile.am b/Makefile.am
-index 0cac3a5..8c9193c 100644
+index d0f54e5..e535329 100644
 --- a/Makefile.am
 +++ b/Makefile.am
-@@ -2,28 +2,17 @@ ACLOCAL_AMFLAGS = -I m4
+@@ -2,29 +2,18 @@ ACLOCAL_AMFLAGS = -I m4
  
  SUBDIRS = \
  	advhdmi \
@@ -14,6 +14,7 @@ index 0cac3a5..8c9193c 100644
 -	automaticcleanup \
  	automaticvolumeadjustment \
  	autoresolution \
+ 	autotimer \
 -	babelzapper \
  	birthdayreminder \
 -	bonjour \
@@ -31,7 +32,7 @@ index 0cac3a5..8c9193c 100644
  	emailclient \
  	emission \
  	eparted \
-@@ -37,71 +26,48 @@ SUBDIRS = \
+@@ -38,74 +27,52 @@ SUBDIRS = \
  	fstabeditor \
  	ftpbrowser \
  	googlemaps \
@@ -96,16 +97,11 @@ index 0cac3a5..8c9193c 100644
  	oscaminfo \
  	esame \
  	schiffe \
--	sudoku \
+ 	sudoku \
 -	vierg \
 -	bmediacenter \
 -	advancedmovieselection
-+	sudoku
- 
- if OPENVIX
- SUBDIRS += vixautotimer
-@@ -110,7 +76,7 @@ SUBDIRS += autotimer
- endif
++	vierg
  
  if DREAMBOX
 -SUBDIRS +=  fancontrol2 letterbox logomanager movielistpreview genuinedreambox
