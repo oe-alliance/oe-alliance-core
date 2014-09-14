@@ -18,7 +18,7 @@ RREPLACES_${PN} = "lirc"
 RREPLACES_stlirc-exec = "lirc-exec"
 RREPLACES_stlirc-remotes = "lirc-remotes"
 
-PR = "r2"
+PR = "r3"
 
 SRC_URI = "http://prdownloads.sourceforge.net/lirc/lirc-${PV}.tar.bz2 \
     file://lirc-0.9.0-neutrino-uinput-hack.diff;patch=1 \
