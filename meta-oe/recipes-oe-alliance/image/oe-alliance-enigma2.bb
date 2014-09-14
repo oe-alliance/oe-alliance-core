@@ -9,12 +9,13 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "1.0"
-PR = "r55"
+PR = "r56"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-DEPENDS = "enigma2 enigma2-plugins enigma2-oe-alliance-plugins oe-alliance-feeds enigma2-3rdparty-plugins ${@base_contains("MACHINE_FEATURES", "wifi", "oe-alliance-wifi", "", d)}"
+DEPENDS = "enigma2 enigma2-locale-meta enigma2-plugins enigma2-oe-alliance-plugins oe-alliance-feeds enigma2-3rdparty-plugins ${@base_contains("MACHINE_FEATURES", "wifi", "oe-alliance-wifi", "", d)}"
 
 RDEPENDS_${PN} = "\
+    enigma2-locale-meta \
     oe-alliance-feeds-configs \
     aio-grab \
     enigma2 \
@@ -34,7 +35,6 @@ RRECOMMENDS_${PN} = "\
     enigma2-plugin-extensions-openwebif \
     enigma2-plugin-systemplugins-networkbrowser \
     enigma2-plugin-systemplugins-networkwizard \
-    ${ENIGMA2_LOCALES} \
     \
     oe-alliance-drivers \
     \
@@ -51,45 +51,4 @@ RRECOMMENDS_${PN} = "\
     ${@base_contains("MACHINE_FEATURES", "fan", "enigma2-plugin-systemplugins-tempfancontrol", "", d)} \
     ${@base_contains("MACHINE_FEATURES", "transcoding", "enigma2-plugin-systemplugins-transcodingsetup", "", d)} \
     ${@base_contains("MACHINE_FEATURES", "inibt", "enigma2-plugin-extensions-btdevicesmanager" , "", d)} \
-    "
-
-ENIGMA2_LOCALES = "\
-    enigma2-locale-ar \
-    enigma2-locale-bg \
-    enigma2-locale-ca \
-    enigma2-locale-cs \
-    enigma2-locale-da \
-    enigma2-locale-de \
-    enigma2-locale-el \
-    enigma2-locale-en \
-    enigma2-locale-en-gb \
-    enigma2-locale-es \
-    enigma2-locale-et \
-    enigma2-locale-fa \
-    enigma2-locale-fi \
-    enigma2-locale-fr \
-    enigma2-locale-fy \
-    enigma2-locale-he \
-    enigma2-locale-hr \
-    enigma2-locale-hu \
-    enigma2-locale-is \
-    enigma2-locale-it \
-    enigma2-locale-ku \
-    enigma2-locale-lt \
-    enigma2-locale-lv \
-    enigma2-locale-nb \
-    enigma2-locale-nl \
-    enigma2-locale-no \
-    enigma2-locale-pl \
-    enigma2-locale-pt \
-    enigma2-locale-pt-br \
-    enigma2-locale-ro \
-    enigma2-locale-ru \
-    enigma2-locale-sk \
-    enigma2-locale-sl \
-    enigma2-locale-sr \
-    enigma2-locale-sv \
-    enigma2-locale-th \
-    enigma2-locale-tr \
-    enigma2-locale-uk \
     "
