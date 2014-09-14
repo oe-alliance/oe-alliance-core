@@ -7,7 +7,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PV = "1.0"
-PR = "r24"
+PR = "r25"
 
 inherit packagegroup
 
@@ -42,8 +42,8 @@ RRECOMMENDS_${PN} = "\
 
 RRECOMMENDS_${PN}_append_gb800solo = ""
 RRECOMMENDS_${PN}_append_gb800se = ""
-RRECOMMENDS_${PN}_append_gb800ue = "python-imaging"
-RRECOMMENDS_${PN}_append_gbquad = "python-imaging"
+RRECOMMENDS_${PN}_append_gb800ue = ""
+RRECOMMENDS_${PN}_append_gbquad = ""
 RRECOMMENDS_${PN}_append_dags1 = "enigma2-plugin-systemplugins-osd3dsetup"
 RRECOMMENDS_${PN}_append_dags2 = "enigma2-plugin-systemplugins-osd3dsetup"
 RRECOMMENDS_${PN}_append_dags3 = "enigma2-plugin-systemplugins-osd3dsetup"
