@@ -9,7 +9,7 @@ inherit gitpkgv deploy
 SRCREV = "${AUTOREV}"
 PV = "2.1+gitr${SRCPV}"
 PKGV = "2.1+gitr${GITPKGV}"
-PR = "r86"
+PR = "r87"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -90,7 +90,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-webradiofs_12.30_all.ipk \
     enigma2-plugin-extensions-wikipedia_2.2rc1_mips32el.ipk \
     enigma2-plugin-extensions-wwech_1.01_all.ipk \
-    enigma2-plugin-extensions-xbmcaddons_6.0_r0_all.ipk \
+    enigma2-plugin-extensions-xbmcaddons_8.0_r0_all.ipk \
     enigma2-plugin-extensions-xbmcwetter_1.0rc4_mips32el.ipk \
     enigma2-plugin-extensions-yampmusicplayer_2.1.1-2012-09-23_mipsel.ipk \
     enigma2-plugin-extensions-zdfnewmediathek_1.7rc5_mips32el.ipk \
