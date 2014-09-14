@@ -9,7 +9,7 @@ inherit gitpkgv deploy
 SRCREV = "${AUTOREV}"
 PV = "2.1+gitr${SRCPV}"
 PKGV = "2.1+gitr${GITPKGV}"
-PR = "r91"
+PR = "r92"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -31,7 +31,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-autobouquets-e2_20140905_mips32el.ipk \
     enigma2-plugin-extensions-bildonline_3.1rc1_mips32el.ipk \
     enigma2-plugin-extensions-bluray_1.5c1_mips32el.ipk \
-    enigma2-plugin-extensions-boblight-enigma2_0.8r6a_mips32el.ipk \
+    enigma2-plugin-extensions-boblight-enigma2_0.8r6b_mips32el.ipk \
     enigma2-plugin-extensions-camofs_8.57_all.ipk \
     enigma2-plugin-extensions-chefkoch_1.4c4_mips32el.ipk \
     enigma2-plugin-extensions-clevertanken_0.5rc1_mips32el.ipk \
