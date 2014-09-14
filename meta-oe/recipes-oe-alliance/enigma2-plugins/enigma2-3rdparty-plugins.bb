@@ -9,7 +9,6 @@ inherit gitpkgv deploy
 SRCREV = "${AUTOREV}"
 PV = "2.1+gitr${SRCPV}"
 PKGV = "2.1+gitr${GITPKGV}"
-<<<<<<< HEAD
 PR = "r91"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
