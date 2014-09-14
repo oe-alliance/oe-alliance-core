@@ -10,10 +10,7 @@ SRCREV = "${AUTOREV}"
 PV = "2.1+gitr${SRCPV}"
 PKGV = "2.1+gitr${GITPKGV}"
 <<<<<<< HEAD
-PR = "r90"
-=======
-PR = "r89"
->>>>>>> origin/2.3
+PR = "r91"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
