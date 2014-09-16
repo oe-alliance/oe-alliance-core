@@ -1,5 +1,5 @@
 SUMMARY = "Enigma2 Skin opendrox"
-MAINTAINER = "opendroid"
+MAINTAINER = "opendrox"
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "proprietary"
@@ -12,7 +12,7 @@ SRCREV = "${AUTOREV}"
 PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"
 VER ="1.0"
-PR = "r6"
+PR = "r7"
 
 SRC_URI="git://github.com/opendroid-Team/Skin-Default2.git"
 

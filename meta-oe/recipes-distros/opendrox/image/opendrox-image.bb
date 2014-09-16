@@ -10,7 +10,7 @@ PV = "${IMAGE_VERSION}"
 PR = "r${DATETIME}"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-IMAGE_INSTALL = "opendrox-base \
+IMAGE_INSTALL = "openhdf-base \
   ${@base_contains("MACHINE_FEATURES", "smallflash", "", \
   " \
   packagegroup-base-smbfs-client \
@@ -37,8 +37,8 @@ rootfs_postprocess() {
     ln -s usr/lib/enigma2/spinner usr/lib/enigma2/skin_default/spinner || true
 
     cd $curdir
-    if [ -f ../../../meta-oe-alliance/recipes-distros/opendrox/custom/parser.sh ]; then
-        cp ./../../../meta-oe-alliance/recipes-distros/opendrox/custom/parser.sh .
+    if [ -f ../../../meta-oe-alliance/recipes-distros/openhdf/custom/parser.sh ]; then
+        cp ./../../../meta-oe-alliance/recipes-distros/openhdf/custom/parser.sh .
         ./parser.sh
         rm -rf parser.sh
     fi
@@ -54,7 +54,7 @@ do_generate_nfo() {
     echo "Machine: ${MACHINE}" >> ${NFO}
     DATE=`date +%Y-%m-%d' '%H':'%M`
     echo "Date: ${DATE}" >> ${NFO}
-    echo "Issuer: opendrox" >> ${NFO}
+    echo "Issuer: Opendrox" >> ${NFO}
     echo "Link: ${DISTRO_FEED_URI}" >> ${NFO}
     if [ "${DESC}" != "" ]; then
         echo "Description: ${DESC}" >> ${NFO}

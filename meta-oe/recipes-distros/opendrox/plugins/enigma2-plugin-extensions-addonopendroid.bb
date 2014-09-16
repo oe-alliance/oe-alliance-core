@@ -1,5 +1,5 @@
 DESCRIPTION = "enigma2-plugin-extensions-addonopendroid"
-MAINTAINER = "opendroid"
+MAINTAINER = "opendrox"
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "proprietary"
@@ -12,7 +12,7 @@ SRCREV = "${AUTOREV}"
 PV = "3.0+git${SRCPV}"
 PKGV = "3.0+git${GITPKGV}"
 VER ="3.0"
-PR = "r1"
+PR = "r2"
 
 SRC_URI="git://github.com/opendroid-Team/enigma2-plugin-extensions-addonopendroid.git"
 
