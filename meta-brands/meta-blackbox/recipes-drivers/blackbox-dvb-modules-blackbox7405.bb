@@ -1,10 +1,10 @@
 KV = "3.9.7"
-SRCDATE = "20140913"
+SRCDATE = "20140916"
 
 RDEPENDS_${PN} += "blackbox7405-mac-check"
 
-SRC_URI[md5sum] = "3b705a66c96b8e2c189a75f1ab647505"
-SRC_URI[sha256sum] = "e696af98f823e9283c1d3827e98551408a1e4b427bb0ee5cc303ad7bc27c8ec0"
+SRC_URI[md5sum] = "e7ccb24dfa85922a5cd3bd1f9fdb5cac"
+SRC_URI[sha256sum] = "1afdf8055a1bd3af764d3c1e11adee35923417990503617a6ff9f9b7b2bb568d"
 
 SRC_URI = "http://pluginvalley.kr/bcm/driver/linuxdvb_7405-${KV}-${SRCDATE}.tar.gz"
 
