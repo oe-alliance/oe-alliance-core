@@ -1,24 +1,25 @@
 SUMMARY = "Linux kernel for ${MACHINE}"
 LICENSE = "GPLv2"
 SECTION = "kernel"
-KV = "3.9.7"
+KV = "3.9.7-r1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 inherit machine_kernel_pr
 
-SRCDATE = "20140404"
-MACHINE_KERNEL_PR_append = ".5"
+DATE = "20140404"
+MACHINE_KERNEL_PR_append = ".6"
 
-SRC_URI[md5sum] = "74d909a2081479136fa453b743325138"
-SRC_URI[sha256sum] = "de0aaf466ecf8b47653a859f66ff59da49e7a16aa26c9987d0c089255675de04"
+SRC_URI[md5sum] = "af363fb33b02a2885589678ab80754c2"
+SRC_URI[sha256sum] = "a360f90a557979ea9c021a81786352d9e0dcf86d971256a80dc47d05b1e5a7b2"
 
-LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${KV}-r1/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
+LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${KV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-SRC_URI = "http://en3.homeftp.net/pub/src/linux-${KV}-r1-${SRCDATE}.tar.gz \
+SRC_URI = "http://en3homeftp.net/pub/src/linux-${KV}-${DATE}-1.tar.gz \
     file://defconfig \
+    file://sit2_op.o \
     "
 
-S = "${WORKDIR}/linux-${KV}-r1"
+S = "${WORKDIR}/linux-${KV}"
 
 inherit kernel
 
@@ -32,6 +33,7 @@ FILES_kernel-image = "${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz"
 
 do_configure_prepend() {
     oe_machinstall -m 0644 ${WORKDIR}/defconfig ${S}/.config
+    cp ${WORKDIR}/sit2_op.o ${S}/drivers/media/dvb-frontends/sit2_op.o
     oe_runmake oldconfig
 }
 
