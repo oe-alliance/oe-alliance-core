@@ -18,6 +18,7 @@ LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad
 
 SRC_URI = "http://archiv.openmips.com/gigablue-linux-${PV}-${SRCDATE}.tgz \
         file://defconfig \
+        file://nor-maps-gb800solo.patch \
         file://add-dmx-source-timecode.patch \
         file://af9015-output-full-range-SNR.patch \
         file://af9033-output-full-range-SNR.patch \
@@ -62,8 +63,8 @@ kernel_do_install_append() {
 pkg_postinst_kernel-image_gb800se () {
     if [ "x$D" == "x" ]; then
         if [ -f /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz ] ; then
-            flash_erase /dev/mtd2 0 0
-            nandwrite -p /dev/mtd2 /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz
+            flash_erase /dev/${MTD_KERNEL} 0 0
+            nandwrite -p /dev/${MTD_KERNEL} /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz
         fi
     fi
     rm -f /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz
@@ -73,8 +74,8 @@ pkg_postinst_kernel-image_gb800se () {
 pkg_postinst_kernel-image_gb800ue () {
     if [ "x$D" == "x" ]; then
         if [ -f /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz ] ; then
-            flash_erase /dev/mtd2 0 0
-            nandwrite -p /dev/mtd2 /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz
+            flash_erase /dev/${MTD_KERNEL} 0 0
+            nandwrite -p /dev/${MTD_KERNEL} /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz
         fi
     fi
     rm -f /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz
@@ -84,8 +85,8 @@ pkg_postinst_kernel-image_gb800ue () {
 pkg_postinst_kernel-image_gb800solo () {
     if [ "x$D" == "x" ]; then
         if [ -f /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz ] ; then
-            flash_erase /dev/mtd2 0 0
-            flashcp /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz /dev/mtd2
+            flash_erase /dev/${MTD_KERNEL} 0 0
+            flashcp /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz /dev/${MTD_KERNEL}
         fi
     fi
     rm -f /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz

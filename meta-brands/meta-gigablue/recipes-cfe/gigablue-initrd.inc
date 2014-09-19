@@ -7,7 +7,7 @@ PACKAGE_ARCH := "${MACHINE_ARCH}"
 
 require conf/license/license-gplv2.inc
 
-PR = "r6"
+PR = "r8"
 ALLOW_EMPTY_${PN} = "1"
 
 SRC_URI = "http://archiv.openmips.com/gigablue-initrd-${MACHINE}-${SRCDATE}.tgz"
@@ -24,6 +24,12 @@ do_deploy() {
     fi
     if [ -e dvb.tar.gz ]; then
     install -m 0644 dvb.tar.gz ${DEPLOYDIR}/dvb.tar.gz
+    fi
+    if [ -e initrd.bat ]; then
+    install -m 0644 initrd.bat ${DEPLOYDIR}/initrd.bat
+    fi
+    if [ -e burn.bat ]; then
+    install -m 0644 burn.bat ${DEPLOYDIR}/burn.bat
     fi
 }
 

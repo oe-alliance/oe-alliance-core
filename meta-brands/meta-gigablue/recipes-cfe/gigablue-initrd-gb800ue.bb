@@ -1,4 +1,4 @@
-SRCDATE = "20140912"
+SRCDATE = "20140913"
 
 require gigablue-initrd.inc
 

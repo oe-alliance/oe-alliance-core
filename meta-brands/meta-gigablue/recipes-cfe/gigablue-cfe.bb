@@ -8,12 +8,10 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 require conf/license/license-gplv2.inc
 inherit deploy
 
-PR = "r28"
+PR = "r29"
 
 S = "${WORKDIR}"
 
-SRC_URI_gbipbox = " file://burn.bat"
-SRC_URI_gb800se = " file://burn.bat"
 SRC_URI_gb800solo = " file://burn.bat"
 SRC_URI_gb800ue = " file://gb800ue/lcdwaitkey.bin file://gb800ue/lcdwarning.bin"
 SRC_URI_gbquad = " file://gbquad/lcdwaitkey.bin file://gbquad/lcdwarning.bin"
