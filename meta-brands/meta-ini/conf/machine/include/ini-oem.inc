@@ -150,9 +150,12 @@ IMAGE_CMD_ubi_append = " \
     zip ${IMAGE_NAME}_usb.zip ${IMAGEDIR}/*; \
     rm -f ${DEPLOY_DIR_IMAGE}/*.ubifs; \
     rm -rf ${IMAGEDIR}; \
+    rm -rf atemio; \
+    rm -rf miraclebox; \
+    rm -rf beyonwiz; \ 
     "
 
-MACHINE_FEATURES += "3dtv alsa hdmicec switchoff wifi bootsplash dvb-c blindscan-dvbc blindscan-dvbs ci"
+MACHINE_FEATURES += "3dtv alsa hdmicec switchoff wifi bootsplash "
 
 BOOTLOGO_FILENAME = "splash.bin"
 
