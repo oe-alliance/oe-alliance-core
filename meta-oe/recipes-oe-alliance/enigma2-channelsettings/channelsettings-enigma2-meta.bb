@@ -5,7 +5,7 @@ require conf/license/license-gplv2.inc
 inherit allarch
 
 PV = "2.0"
-PR = "r3"
+PR = "r4"
 
 DEPENDS = " \
     enigma2-plugin-settings-henksat-19e \
@@ -38,6 +38,7 @@ DEPENDS = " \
     enigma2-plugin-settings-malimali.13e \
     enigma2-plugin-settings-malimali.13e.19e \
     enigma2-plugin-settings-malimali.13e.16e.19e \
+    enigma2-plugin-settings-malimali.13e.16e.19e.28e \
     enigma2-plugin-settings-malimali.19e \
     enigma2-plugin-settings-malimali.39e.28e.23e.19e.16e.13e.0.8w \
     enigma2-plugin-settings-malimali.39e.28e.26e.23e.19e.16e.13e.7e.0.8w \
