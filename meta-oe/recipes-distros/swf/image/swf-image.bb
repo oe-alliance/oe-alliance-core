@@ -35,9 +35,6 @@ IMAGE_INSTALL = " \
     ushare \
     ofgwrite \
     libshowiframe \
-    task-base-smbfs-client \
-    task-base-smbfs \
-    task-base-nfs \
     mc \
     swf-base \
     "
