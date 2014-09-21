@@ -7,7 +7,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 ALLOW_EMPTY_${PN} = "1"
 
 PV = "1.0"
-PR = "r1"
+PR = "r2"
 
 inherit packagegroup
 
@@ -17,7 +17,7 @@ inherit packagegroup
 DEPENDS = "enigma2-pliplugins opendrox-feeds"
 
 RRECOMMENDS_${PN} = "\
-    openxta-version-info \
+    opendrox-version-info \
     enigma2-plugin-pli-softcamsetup \
     enigma2-plugin-extensions-autotimer \
     enigma2-plugin-extensions-graphmultiepg \
