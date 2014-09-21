@@ -1,9 +1,7 @@
-SUMMARY = "Enigma2 Skin opendrox"
-MAINTAINER = "opendroid"
+SUMMARY = "OpenXTA Panel"
+MAINTAINER = "OpenXTA-Team"
 SECTION = "base"
-PRIORITY = "required"
 LICENSE = "proprietary"
-PACKAGE_ARCH = "all"
 
 require conf/license/license-gplv2.inc
 
@@ -12,14 +10,17 @@ SRCREV = "${AUTOREV}"
 PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"
 VER ="1.0"
-PR = "r6"
+PR = "r2"
 
-SRC_URI="git://github.com/opendroid-Team/Skin-Default2.git"
+
+SRC_URI="git://github.com/XTAv2/xt-panel.git"
 
 S = "${WORKDIR}/git"
 
 FILES_${PN} = "/usr/*"
 
+
 do_install() {
     cp -rp ${S}/usr ${D}/
+    chmod -R 777 ${D}/usr/lib/enigma2/python/Plugins/SystemPlugins/XTPanel
 }
