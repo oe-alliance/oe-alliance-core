@@ -8,9 +8,12 @@ inherit autotools gitpkgv allarch
 SRCREV = "${AUTOREV}"
 PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"
-PR = "r16"
+PR = "r0"
 
-SRC_URI = "git://github.com/oe-alliance/oe-alliance-e2-skindefault.git;protocol=git"
+PACKAGES = "enigma2-skindefault"
+PROVIDES = "enigma2-skindefault"
+
+SRC_URI = "git://github.com/oe-alliance/oe-alliance-e2-skindefault.git;protocol=git;branch=1080p"
 
 S = "${WORKDIR}/git"
 
