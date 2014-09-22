@@ -17,7 +17,7 @@ RREPLACES_${PN} = "enigma2-plugin-extensions-permanenttimeshift enigma2-plugin-s
 DEPENDS = "openvixhd-feeds"
 
 RDEPENDS_${PN} = "\
-    enigma2-skindefault \
+    enigma2-skindefault-1080p \
     enigma2-plugin-vix-core \
     "
 
