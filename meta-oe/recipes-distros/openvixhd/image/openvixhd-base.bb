@@ -7,7 +7,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "2.3"
-PR = "r9"
+PR = "r10"
 
 inherit packagegroup
 
@@ -15,6 +15,7 @@ RDEPENDS_${PN} = "\
     oe-alliance-base \
     openvixhd-enigma2 \
     openvixhd-bootlogo \
+    openvixhd-bootlogo-animated \
     openvixhd-spinner \
     libcrypto-compat-0.9.8 \
     "

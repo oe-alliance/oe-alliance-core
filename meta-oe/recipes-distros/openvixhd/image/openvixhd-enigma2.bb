@@ -7,7 +7,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "2.3"
-PR = "r10"
+PR = "r11"
 
 inherit packagegroup
 
@@ -18,7 +18,7 @@ DEPENDS = "openvixhd-feeds"
 
 RDEPENDS_${PN} = "\
     enigma2-skindefault \
-    enigma2-plugin-vixhd-core \
+    enigma2-plugin-vix-core \
     "
 
 RRECOMMENDS_${PN} = "\

@@ -6,11 +6,10 @@ PACKAGE_ARCH = "${MACHINEBUILD}"
 
 require conf/license/license-gplv2.inc
 
-DEPENDS += "eplayer4"
-RDEPENDS_${PN} += "showiframe openvixhd-bootlogo-vixhd-animated eplayer4"
+RDEPENDS_${PN} += "showiframe"
 
 PV = "2.3"
-PR = "r10"
+PR = "r11"
 
 S = "${WORKDIR}"
 

@@ -9,11 +9,12 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "2.3"
-PR = "r5"
+PR = "r6"
 
 RRECOMMENDS_${PN} = "\
     oe-alliance-skins \
     enigma2-display-skins \
+    openvixhd-bootlogos-meta \
     openvixhd-softcams-meta \
-	openvixhd-picons-meta \
+    openvixhd-picons-meta \
     "

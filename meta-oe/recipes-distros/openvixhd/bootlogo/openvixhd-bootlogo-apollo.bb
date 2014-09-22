@@ -2,9 +2,9 @@ SUMMARY = "openViX-HD bootlogo"
 LICENSE = "CLOSED"
 
 PV = "2.3"
-PR = "r2"
+PR = "r0"
 
-SRC_URI = "file://openvixhd-vixhd.zip"
+SRC_URI = "file://openvixhd-apollo.zip"
 
 S = "${WORKDIR}"
 
@@ -16,7 +16,7 @@ do_install() {
     install -m 0644 radio.mvi ${D}/usr/share/enigma2/skin_default/radio.mvi
 }
 
-SRC_URI[md5sum] = "8cf095009dd1dbd84aecf19082782713"
-SRC_URI[sha256sum] = "5b8d6a615a1a364b49c33d37ed0f1f406ff8dcb19c6d6c12c2cbdc54b7abe85b"
+SRC_URI[md5sum] = "C2751D7C29DDB2D9829D03D8B9B920D3"
+SRC_URI[sha256sum] = "BFF90177FF32A4509ED7180A641C2F197F09221D72A8611BACE5B69B286608DA"
 
 FILES_${PN} = "/usr/share"
