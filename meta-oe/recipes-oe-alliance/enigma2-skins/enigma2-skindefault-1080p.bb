@@ -8,7 +8,7 @@ inherit autotools gitpkgv allarch
 SRCREV = "${AUTOREV}"
 PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"
-PR = "r2"
+PR = "r3"
 
 PACKAGES = "enigma2-skindefault"
 PROVIDES = "enigma2-skindefault"
@@ -27,7 +27,7 @@ PROVIDES =+ " font-roboto-enigma"
 FILES_font-roboto-enigma = "${datadir}/fonts"
 FILES_enigma2-skindefault = "${datadir}/enigma2"
 
-RDEPENDS_${PN} = "font-roboto-enigma"
+RDEPENDS_enigma2-skindefault = "font-roboto-enigma"
 
 EXTRA_OECONF = "\
     BUILD_SYS=${BUILD_SYS} \
