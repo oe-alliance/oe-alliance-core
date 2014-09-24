@@ -2,10 +2,10 @@ SUMMARY = "ViX-HD animated bootlogo"
 LICENSE = "CLOSED"
 
 PV = "2.3"
-PR = "r0"
+PR = "r1"
 
 DEPENDS = "eplayer4"
-RDEPENDS_{PN} = "eplayer4"
+RDEPENDS_${PN} = "eplayer4"
 
 SRC_URI = "file://bootvideo.mp4"
 
