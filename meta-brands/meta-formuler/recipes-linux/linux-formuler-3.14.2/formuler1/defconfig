@@ -2877,7 +2877,7 @@ CONFIG_CRYPTO_AUTHENC=m
 #
 # Authenticated Encryption with Associated Data
 #
-CONFIG_CRYPTO_CCM=m
+CONFIG_CRYPTO_CCM=y
 # CONFIG_CRYPTO_GCM is not set
 CONFIG_CRYPTO_SEQIV=m
 
