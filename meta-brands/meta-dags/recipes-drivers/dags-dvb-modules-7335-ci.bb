@@ -10,7 +10,7 @@ KV = "3.9.7"
 PV = "${KV}+${SRCDATE}"
 PR = "r1"
 
-SRC_URI = "http://en3.homeftp.net/release/images/oedrivers/bcmlinuxdvb_7335-${KV}-1ci-${SRCDATE}.tar.gz"
+SRC_URI = "http://en3homeftp.net/release/images/oedrivers/bcmlinuxdvb_7335-${KV}-1ci-${SRCDATE}.tar.gz"
 
 SRC_URI[md5sum] = "c105781cf631d8d8192da516b501986c"
 SRC_URI[sha256sum] = "68edd55f4dff6bfbd482f9f47ed0ca7aa32fc05a1bd4fd3205ad4eff5443d49f"
