@@ -3,5 +3,5 @@
 NTPSERVERS="pool.ntp.org"
 
 # Set to "yes" to write time to hardware clock on success
-UPDATE_HWCLOCK="yes"
+UPDATE_HWCLOCK="no"
 
