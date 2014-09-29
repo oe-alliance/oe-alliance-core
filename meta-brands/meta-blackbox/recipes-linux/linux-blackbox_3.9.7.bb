@@ -7,13 +7,13 @@ PR = "r16"
 inherit machine_kernel_pr
 
 KV = "3.9.7"
-SRCDATE = "20140920"
+SRCDATE = "20140928"
 
-SRC_URI[md5sum] = "a992aa439f03147f1a5b32c652d6d9fa"
-SRC_URI[sha256sum] = "013c9c21a31a75b426c78606baae39c0f0d9aabe8e62446cfceacbd848aeed1a"
+SRC_URI[md5sum] = "07e8ca63d83569e009572c28363efcc9"
+SRC_URI[sha256sum] = "6b3fa1de4c92f52b91334be14c6390b63e63c3fb02bffa071bd5d1df947d96cd"
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-MACHINE_KERNEL_PR_append = ".32"
+MACHINE_KERNEL_PR_append = ".33"
 
 # By default, kernel.bbclass modifies package names to allow multiple kernels
 # to be installed in parallel. We revert this change and rprovide the versioned
