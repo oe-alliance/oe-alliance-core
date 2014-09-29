@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=4d92cd373abda3937c2bc47fbc49d
 ALLOW_EMPTY_${PN} = "1"
 
 PV = "1.0"
-PR = "r7"
+PR = "r14"
 
 inherit packagegroup
 
@@ -21,7 +21,4 @@ RDEPENDS_${PN} = "\
     python-gdata \
     unrar \
     ofgwrite \
-    enigma2-plugin-drivers-dvb-usb-af9035 \
-    enigma2-plugin-drivers-dvb-usb-dib0700 \
-    enigma2-plugin-drivers-dvb-usb-af9015 \
     "

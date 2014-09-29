@@ -7,7 +7,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PV = "1.0"
-PR = "r25"
+PR = "r1"
 
 inherit packagegroup
 
@@ -17,26 +17,28 @@ RRECOMMENDS_${PN} = "\
     opendroid-version-info \
     enigma2-skindefault \
     python-compression \
-    enigma2-plugin-skins-opendroid \
+    enigma2-plugin-skins-opendroid \ 
     enigma2-plugin-drivers-usbserial \
     enigma2-plugin-extensions-autotimer \
-    enigma2-plugin-extensions-imdb \
-    enigma2-plugin-extensions-addonopendroid \
-    enigma2-plugin-extensions-autosettings \
-    enigma2-plugin-extensions-extrapanel \
-    enigma2-plugin-extensions-mediaplayer \
-    enigma2-plugin-extensions-dvdplayer \
     enigma2-plugin-extensions-epgsearch \
+    enigma2-plugin-extensions-et-portal \
+    enigma2-plugin-extensions-imdb \
+    enigma2-plugin-extensions-mediaplayer \
+    enigma2-plugin-extensions-cutlisteditor \
+    enigma2-plugin-extensions-dvdplayer \
+    enigma2-plugin-extensions-virtualzapmod \
     enigma2-plugin-extensions-volume-adjust \
+    enigma2-plugin-pli-softcamsetup \
     enigma2-plugin-systemplugins-videotune \
     enigma2-plugin-systemplugins-softwaremanager \
+    enigma2-plugin-systemplugins-hotplug \
     enigma2-plugin-systemplugins-positionersetup \
     enigma2-plugin-systemplugins-videoenhancement \
-    ${@base_contains("MACHINE_FEATURES", "dreambox", "enigma2-plugin-extensions-dflash mtd-utils-jffs2", "", d)} \
-    ${@base_contains("MACHINE_FEATURES", "boxmodel", "boxmodel", "", d)} \
     ${@base_contains("MACHINE_FEATURES", "smallflash", "", \
     " \
+    enigma2-plugin-extensions-enhancedmoviecenter \
     enigma2-plugin-extensions-audiosync \
+    enigma2-plugin-extensions-cooltvguide \
     ", d)} \
     "
 
@@ -56,4 +58,3 @@ RRECOMMENDS_${PN}_append_et9x00 = ""
 RRECOMMENDS_${PN}_append_et6x00 = "" 
 RRECOMMENDS_${PN}_append_et5x00 = "" 
 RRECOMMENDS_${PN}_append_et4x00 = "" 
-
