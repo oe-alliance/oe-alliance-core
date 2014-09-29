@@ -82,10 +82,10 @@ case "$ACTION" in
 					else
 						# mount the first removable device on /media/hdd only then no other internal hdd present
 						DEVICETYPE="hdd"
-						DEVLIST=`cat /proc/diskstats | cut -c 14- | cut -d " " -f1 | grep "sd[a-z][0-9]"`
+						DEVLIST=`ls -1 /sys/block |  grep "sd[a-z]"`
 						for DEV in $DEVLIST; do
 							DEVBASE=`expr substr $DEV 1 3`
-							readlink -fn /sys/block/$DEVBASE/device | grep -qs 'pci\|ahci' >> /home/mount.log
+							readlink -fn /sys/block/$DEVBASE/device | grep -qs 'pci\|ahci'
 							EXTERNAL=$?
 							if [ "${REMOVABLE}" -eq "0" -a $EXTERNAL -eq 0 ] ; then
 								DEVICETYPE="usb"
