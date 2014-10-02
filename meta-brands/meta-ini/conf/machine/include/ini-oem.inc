@@ -98,13 +98,32 @@ ${@base_contains('MACHINEBUILD', 'beyonwizt3', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'beyonwizt4', 'mtd0' , '', d)}\
 "
 
+MACHINE_DRIVER = "\
+${@base_contains('MACHINEBUILD', 'ventonhdx', 'inihdx' , '', d)}\
+${@base_contains('MACHINEBUILD', 'sezam1000hd', 'inihde' , '', d)}\
+${@base_contains('MACHINEBUILD', 'sezam5000hd', 'inihdx' , '', d)}\
+${@base_contains('MACHINEBUILD', 'sezammarvel', 'ini-900' , '', d)}\
+${@base_contains('MACHINEBUILD', 'xpeedlx', 'inihde' , '', d)}\
+${@base_contains('MACHINEBUILD', 'xpeedlx3', 'ini-900' , '', d)}\
+${@base_contains('MACHINEBUILD', 'mbmini', 'inihde' , '', d)}\
+${@base_contains('MACHINEBUILD', 'mbtwin', 'inihdx' , '', d)}\
+${@base_contains('MACHINEBUILD', 'mbultra', 'ini-800' , '', d)}\
+${@base_contains('MACHINEBUILD', 'atemio5x00', 'inihde' , '', d)}\
+${@base_contains('MACHINEBUILD', 'atemio6000', 'inihde2am' , '', d)}\
+${@base_contains('MACHINEBUILD', 'atemio6100', 'inihde2am' , '', d)}\
+${@base_contains('MACHINEBUILD', 'atemio6200', 'inihde2am' , '', d)}\
+${@base_contains('MACHINEBUILD', 'atemionemesis', 'ini-800' , '', d)}\
+${@base_contains('MACHINEBUILD', 'beyonwizt3', 'inihdx' , '', d)}\
+${@base_contains('MACHINEBUILD', 'beyonwizt4', 'ini-840t4' , '', d)}\
+"
+
 KERNEL_FILE = "kernel.bin"
 ROOTFS_FILE = "rootfs.bin"
 
 DVBPROVIDER = "kernel"
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS = "\
-	ini-dvb-modules-${MACHINE} \
+	ini-dvb-modules-${MACHINE_DRIVER} \
 	"
 
 MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS = "\
