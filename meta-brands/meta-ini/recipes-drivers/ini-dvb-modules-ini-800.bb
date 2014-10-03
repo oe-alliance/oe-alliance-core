@@ -8,7 +8,7 @@ KV = "3.14.2"
 SRCDATE = "20141001"
 
 PV = "${KV}+${SRCDATE}"
-PR = "r1"
+PR = "r2"
 
 SRC_URI[md5sum] = "c74eb11b3b8b7f262ccbdb942aeac040"
 SRC_URI[sha256sum] = "891523171457144a1f923e10f4594df0ff468778050546aa144e7f2efa5b44e9"
@@ -29,7 +29,7 @@ do_install() {
     install -d ${D}/${sysconfdir}/modules-load.d
     for i in dvb; do
         install -m 0755 ${WORKDIR}/$i.ko ${D}/lib/modules/${KV}/extra/dvb_${MACHINEBUILD}.ko
-        echo dvb_${MACHINEBUILD}.ko >> ${D}/${sysconfdir}/modules-load.d/_${MACHINEBUILD}.conf
+        echo dvb_${MACHINEBUILD} >> ${D}/${sysconfdir}/modules-load.d/_${MACHINEBUILD}.conf
     done
 }
 

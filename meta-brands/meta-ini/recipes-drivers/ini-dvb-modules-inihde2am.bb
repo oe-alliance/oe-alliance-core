@@ -29,7 +29,7 @@ do_install() {
     install -d ${D}/${sysconfdir}/modules-load.d
     for i in dvb; do
         install -m 0755 ${WORKDIR}/$i.ko ${D}/lib/modules/${KV}/extra/dvb_${MACHINEBUILD}.ko
-        echo dvb_${MACHINEBUILD}.ko >> ${D}/${sysconfdir}/modules-load.d/_${MACHINEBUILD}.conf
+        echo dvb_${MACHINEBUILD} >> ${D}/${sysconfdir}/modules-load.d/_${MACHINEBUILD}.conf
     done
 }
 
