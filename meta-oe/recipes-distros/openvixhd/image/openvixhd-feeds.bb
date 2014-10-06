@@ -9,7 +9,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "2.3"
-PR = "r8"
+PR = "r9"
 
 RRECOMMENDS_${PN} = "\
     enigma2-display-skins \
@@ -17,4 +17,5 @@ RRECOMMENDS_${PN} = "\
     openvixhd-skins-meta \
     openvixhd-bootlogos-meta \
     openvixhd-picons-meta \
+	dreamplexskins-meta \
     "
