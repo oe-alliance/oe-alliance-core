@@ -1,5 +1,5 @@
 SUMMARY = "opendroid-spinner"
-MAINTAINER = "Opendroid"
+MAINTAINER = "opendroid"
 SECTION = "base"
 LICENSE = "proprietary"
 PACKAGE_ARCH = "all"
@@ -7,7 +7,7 @@ PACKAGE_ARCH = "all"
 require conf/license/license-gplv2.inc
 
 PV = "1.0"
-PR = "r1"
+PR = "r3"
 
 SRC_URI="file://wait*.png" 
         
