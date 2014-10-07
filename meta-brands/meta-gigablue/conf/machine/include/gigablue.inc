@@ -18,7 +18,6 @@ DVBPROVIDER = "kernel"
 MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS = " \
     kernel-module-cdfs \
     kernel-module-zram \
-    kernel-module-8192cu \
     kernel-module-smsc75xx \
     "
 

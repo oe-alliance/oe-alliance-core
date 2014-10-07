@@ -2802,7 +2802,7 @@ CONFIG_EARLY_PRINTK=y
 # CONFIG_EARLY_PRINTK_8250 is not set
 CONFIG_CMDLINE_BOOL=y
 CONFIG_CMDLINE="bmem=24M bmem=256M@512M ubi.mtd=rootfs root=ubi0:rootfs rootfstype=ubifs console=ttyS0,115200n8"
-# CONFIG_CMDLINE_OVERRIDE is not set
+CONFIG_CMDLINE_OVERRIDE=y
 # CONFIG_RUNTIME_DEBUG is not set
 
 #

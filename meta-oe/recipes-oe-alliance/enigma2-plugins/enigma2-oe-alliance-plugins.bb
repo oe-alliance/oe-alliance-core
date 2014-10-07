@@ -15,7 +15,7 @@ PACKAGES += " \
 PROVIDES += " \
     enigma2-plugin-extensions-autotimer \
     enigma2-plugin-systemplugins-autobouquetsmaker \
-    enigma2-plugin-extensions-btdevicesmanager \    
+    enigma2-plugin-extensions-btdevicesmanager \
     enigma2-plugin-systemplugins-blindscan \
     enigma2-plugin-extensions-dlnabrowser \
     enigma2-plugin-extensions-dlnaserver \
@@ -59,7 +59,7 @@ DEPENDS = "\
     wvdial \
     wvstreams \
     usbutils \
-    ${@base_contains("MACHINE_FEATURES", "legacykernel", "" , "hostapd bridge-utils", d)} \	
+    ${@base_contains("MACHINE_FEATURES", "legacykernel", "" , "hostapd bridge-utils", d)} \
     "
 
 DESCRIPTION_enigma2-plugin-systemplugins-audioeffect = "Audio Effect setup"
@@ -120,9 +120,9 @@ inherit autotools-brokensep gitpkgv pythonnative
 SRCREV = "${AUTOREV}"
 PV = "2.0+git${SRCPV}"
 PKGV = "2.0+git${GITPKGV}"
-PR = "r15"
+PR = "r16"
 
-SRC_URI="git://github.com/oe-alliance/oe-alliance-plugins.git;protocol=git;branch=2.3"
+SRC_URI = "${OEA_PLUGINS_URI}"
 
 EXTRA_OECONF = " \
     BUILD_SYS=${BUILD_SYS} \

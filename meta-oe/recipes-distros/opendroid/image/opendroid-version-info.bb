@@ -31,7 +31,7 @@ do_install() {
     echo "version=${IMAGE_VERSION}" >> ${D}/etc/image-version
     echo "build=${BUILD_VERSION}" >> ${D}/etc/image-version
     echo "date=${DATETIME}" >> ${D}/etc/image-version
-    echo "comment=opendroid" >> ${D}/etc/image-version
+    echo "comment=Opendroid" >> ${D}/etc/image-version
     echo "target=9" >> ${D}/etc/image-version
     echo "creator=Opendroid" >> ${D}/etc/image-version
     echo "url=${URL}" >> ${D}/etc/image-version
@@ -40,5 +40,4 @@ do_install() {
 }
 
 FILES_${PN} += "/etc/model /etc/image-version /etc/oe-git.log /etc/e2-git.log"
-
 

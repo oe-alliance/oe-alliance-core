@@ -1,5 +1,7 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
+PR .= ".1"
+
 PACKAGE_ARCH := "${MACHINE_ARCH}"
 
 SRC_URI += " \
@@ -7,7 +9,8 @@ SRC_URI += " \
     file://92_sata-hddown.dpatch \
     ${@base_contains("MACHINE_FEATURES", "gbprogress", "file://proc_progressgb.patch", "file://proc_progress.patch", d)} \
     ${@base_contains("MACHINE_FEATURES", "gbplusprogress", "file://proc_progressgbplus.patch", "", d)} \
-    ${@base_contains("MACHINE_FEATURES", "vuprogress", "file://proc_progress_vuplus.patch", "", d)}"
+    ${@base_contains("MACHINE_FEATURES", "vuprogress", "file://proc_progress_vuplus.patch", "", d)} \
+    ${@base_contains("MACHINE", "inihdp", "file://proc_progress_ini.patch", "", d)}"
 
 SRC_URI_append_sh4 = " \
     file://devinit \

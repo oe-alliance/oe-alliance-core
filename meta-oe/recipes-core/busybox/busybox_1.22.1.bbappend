@@ -1,4 +1,4 @@
-PR = "r34"
+PR = "r36"
 
 SRC_URI_IGNORED = " \
             file://0001-ifupdown-support-post-up-pre-down-hooks.patch \

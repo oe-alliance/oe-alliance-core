@@ -1,5 +1,7 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/${P}:"
 
+PR .= ".1"
+
 RDEPENDS_${PN}_append = " sdparm"
 
 do_install_append() {

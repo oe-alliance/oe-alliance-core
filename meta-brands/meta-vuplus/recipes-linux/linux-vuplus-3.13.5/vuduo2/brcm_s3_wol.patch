@@ -37,14 +37,14 @@ index c23156a..9ae22a9 100644
  
  	device_set_wakeup_enable(&dev->dev, wol->wolopts);
  	pDevCtrl->wolopts = wol->wolopts;
-diff --git a/kernel/power/suspend.c b/kernel/power/suspend.c
-index 62ee437..ffd0bb5 100644
---- a/kernel/power/suspend.c
-+++ b/kernel/power/suspend.c
-@@ -167,6 +167,15 @@ void __attribute__ ((weak)) arch_suspend_enable_irqs(void)
- 	local_irq_enable();
+diff --git a/drivers/brcmstb/setup.c b/drivers/brcmstb/setup.c
+index 21a6e42..954b902 100644
+--- a/drivers/brcmstb/setup.c
++++ b/drivers/brcmstb/setup.c
+@@ -932,6 +932,15 @@ void brcm_machine_restart(const char *command)
+                ;
  }
- 
+
 +void (*brcm_s3_cb)(void);
 +
 +
@@ -54,14 +54,15 @@ index 62ee437..ffd0bb5 100644
 +}
 +EXPORT_SYMBOL(register_brcm_s3_cb);
 +
- /**
-  * suspend_enter - Make the system enter the given sleep state.
-  * @state: System sleep state to enter.
-@@ -211,6 +220,7 @@ static int suspend_enter(suspend_state_t state, bool *wakeup)
- 	}
- 
- 	ftrace_stop();
-+	if(brcm_s3_cb) brcm_s3_cb();
- 	error = disable_nonboot_cpus();
- 	if (error || suspend_test(TEST_CPUS))
- 		goto Enable_cpus;
+ void brcm_machine_halt(void)
+ {
+ #ifdef CONFIG_BRCM_IRW_HALT
+@@ -939,6 +948,7 @@ void brcm_machine_halt(void)
+        BDEV_WR_F_RB(SUN_TOP_CTRL_GENERAL_CTRL_1, irw_top_sw_pwroff, 0);
+        BDEV_WR_F_RB(SUN_TOP_CTRL_GENERAL_CTRL_1, irw_top_sw_pwroff, 1);
+ #endif
++       if(brcm_s3_cb) brcm_s3_cb();
+ #ifdef CONFIG_BRCM_HAS_AON
+        /* may be S3 cold boot */
+        brcm_pm_s3_cold_boot();
+

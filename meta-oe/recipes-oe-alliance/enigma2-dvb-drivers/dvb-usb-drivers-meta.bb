@@ -15,8 +15,8 @@ DEPENDS = "\
     enigma2-plugin-drivers-dvb-usb-dtt200u \
     enigma2-plugin-drivers-dvb-usb-af9035 \
     enigma2-plugin-drivers-dvb-usb-a867 \
-    ${@base_contains("TARGET_ARCH", "sh4", "" , "enigma2-plugin-drivers-dvb-usb-dvbsky", d)} \
+    ${@base_contains("TARGET_ARCH", "sh4", "" , "enigma2-plugin-drivers-dvb-usb-dvbsky enigma2-plugin-drivers-dvb-usb-opticombo", d)} \
     enigma2-plugin-drivers-dvb-usb-rtl2832 \
     "
 
-PR = "r7"
+PR = "r8"

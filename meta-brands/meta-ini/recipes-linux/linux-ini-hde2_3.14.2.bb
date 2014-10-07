@@ -10,6 +10,8 @@ SRC_URI[sha256sum] = "2190050bcf2df5617e75a9f861328195855e002115da19a1a9131baab2
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
+MACHINE_KERNEL_PR_append = ".1"
+
 inherit machine_kernel_pr
 
 # By default, kernel.bbclass modifies package names to allow multiple kernels
@@ -22,6 +24,8 @@ RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
 
 SRC_URI += "http://code-ini.com/software/kernel/bcm7362-linux-${KV}-${SRCDATE}.tgz \
 	file://defconfig \
+	file://add-rt2x00-wifi-devices.patch \
+	file://add-rtl8192cu-wifi-devices.patch \
 	file://add-dmx-source-timecode.patch \
 	file://af9015-output-full-range-SNR.patch \
 	file://af9033-output-full-range-SNR.patch \
