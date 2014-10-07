@@ -16,7 +16,6 @@ RRECOMMENDS_${PN} = "\
     enigma2-plugin-systemplugins-videoenhancement \
     enigma2-plugin-systemplugins-videoclippingsetup \
     enigma2-plugin-extensions-volume-adjust \
-    enigma2-plugin-settings-default-swf \
     enigma2-plugin-drivers-network-usb-rt3573 \
     enigma2-plugin-drivers-network-usb-rt5572 \
     enigma2-plugin-drivers-network-usb-ath9k-htc \
