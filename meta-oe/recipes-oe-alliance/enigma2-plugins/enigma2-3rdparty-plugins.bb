@@ -9,7 +9,7 @@ inherit gitpkgv deploy
 SRCREV = "${AUTOREV}"
 PV = "2.1+gitr${SRCPV}"
 PKGV = "2.1+gitr${GITPKGV}"
-PR = "r97"
+PR = "r98"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -46,7 +46,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-hetweer_2.6_mips32el.ipk \
     enigma2-plugin-extensions-hdmitest_0.4_mipsel.ipk \
     enigma2-plugin-extensions-isettinge2-3.2.8-oe2.0-${DEFAULTTUNE}.ipk \
-    enigma2-plugin-extensions-kicker_3.3rc8_mips32el.ipk \
+    enigma2-plugin-extensions-kicker_3.3rc10_mips32el.ipk \
     enigma2-plugin-extensions-kino_1.4c1_mips32el.ipk \
     enigma2-plugin-extensions-livefootball-oe2.0_5.4_all.ipk \
     enigma2-plugin-extensions-mediainfo_2.2r1_all.ipk \
@@ -82,8 +82,8 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-thetvdb_0.7-20120607-r1_mips32el.ipk \
     enigma2-plugin-extensions-translator_0.9c2_mips32el.ipk \
     enigma2-plugin-extensions-transmission_2.83_mips32el.ipk \
-    enigma2-plugin-extensions-tsmedia_7.2_full_all.ipk \
-    enigma2-plugin-extensions-tvspielfilm_6.3c2_mips32el.ipk \
+    enigma2-plugin-extensions-tsmedia-oe2.0_7.9_full_all.ipk \
+    enigma2-plugin-extensions-tvspielfilm_6.3c3_mips32el.ipk \
     enigma2-plugin-extensions-verkehrsinfo_1.0rc1_mips32el.ipk \
     enigma2-plugin-extensions-vhannibal-autosetting-1.1-oe2.0-mips32el.ipk \
     enigma2-plugin-extensions-vuplusforum_0.7rc3_mips32el.ipk \
