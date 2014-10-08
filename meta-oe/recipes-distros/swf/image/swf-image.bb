@@ -18,6 +18,7 @@ IMAGE_INSTALL = " \
     swf-bootlogo \
     swf-spinner \
     swf-version-info \
+    libcrypto-compat-0.9.8 \
     enigma2-plugin-extensions-bmediacenter-swf \
     ${ENIGMA2_PLUGINS} \
     ${ENIGMA2_INI_PLUGINS} \
@@ -35,6 +36,8 @@ IMAGE_INSTALL = " \
     ushare \
     ofgwrite \
     libshowiframe \
+    packagegroup-base-smbfs \
+    packagegroup-base-nfs \
     mc \
     swf-base \
     "
