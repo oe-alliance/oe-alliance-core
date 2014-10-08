@@ -31,7 +31,7 @@ PROVIDES += " \
     enigma2-plugin-extensions-ondemand-openuitzendinggemist \
     enigma2-plugin-extensions-tunerserver \
     ${@base_contains('MACHINE_BRAND', 'Vu+', 'enigma2-plugin-extensions-hbbtv ' , ' ', d)} \
-    ${@base_contains("MACHINE_FEATURES", "audioeffect", "enigma2-plugin-systemplugins-audioeffect" , "", d)} \
+    ${@base_contains('MACHINE_FEATURES', 'audioeffect', 'enigma2-plugin-systemplugins-audioeffect' , '', d)} \
     enigma2-plugin-systemplugins-transcodingsetup \
     enigma2-plugin-systemplugins-micomupgrade \
     enigma2-plugin-systemplugins-multitranscodingsetup \
@@ -39,15 +39,15 @@ PROVIDES += " \
     enigma2-plugin-extensions-fempa \
     enigma2-plugin-extensions-lcd4linux \
     enigma2-plugin-extensions-remotechannelstreamconverter \
-    ${@base_contains("MACHINE_FEATURES", "legacykernel", "" , "enigma2-plugin-systemplugins-wirelessaccesspoint", d)} \
+    ${@base_contains('MACHINE_FEATURES', 'legacykernel', '' , 'enigma2-plugin-systemplugins-wirelessaccesspoint', d)} \
     ${@base_contains('MACHINE', 'spark7162', 'enigma2-plugin-systemplugins-uniontunertype ' , ' ', d)} \
     ${@base_contains('MACHINE_FEATURES', 'sh4booster', 'enigma2-plugin-systemplugins-sh4boostercontrol' , ' ', d)} \
      "
 
 DEPENDS = "\
-    ${@base_contains("MACHINE_FEATURES", "blindscan-dvbc", "virtual/blindscan-dvbc" , "", d)} \
-    ${@base_contains("MACHINE_FEATURES", "blindscan-dvbs", "virtual/blindscan-dvbs" , "", d)} \
-    ${@base_contains("MACHINE_FEATURES", "transcoding", "virtual/transtreamproxy" , "", d)} \
+    ${@base_contains('MACHINE_FEATURES', 'blindscan-dvbc', 'virtual/blindscan-dvbc' , '', d)} \
+    ${@base_contains('MACHINE_FEATURES', 'blindscan-dvbs', 'virtual/blindscan-dvbs' , '', d)} \
+    ${@base_contains('MACHINE_FEATURES', 'transcoding', 'virtual/transtreamproxy' , '', d)} \
     python-dnspython python-beautifulsoup python-lxml python-simplejson python-pyamf python-icalendar python-pyusb \
     djmount \
     librtmp \
@@ -59,7 +59,7 @@ DEPENDS = "\
     wvdial \
     wvstreams \
     usbutils \
-    ${@base_contains("MACHINE_FEATURES", "legacykernel", "" , "hostapd bridge-utils", d)} \
+    ${@base_contains('MACHINE_FEATURES', 'legacykernel', '' , 'hostapd bridge-utils', d)} \
     "
 
 DESCRIPTION_enigma2-plugin-systemplugins-audioeffect = "Audio Effect setup"
@@ -120,7 +120,7 @@ inherit autotools-brokensep gitpkgv pythonnative
 SRCREV = "${AUTOREV}"
 PV = "2.0+git${SRCPV}"
 PKGV = "2.0+git${GITPKGV}"
-PR = "r16"
+PR = "r17"
 
 SRC_URI = "${OEA_PLUGINS_URI}"
 
