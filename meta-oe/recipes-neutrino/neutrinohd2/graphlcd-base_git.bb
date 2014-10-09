@@ -6,25 +6,26 @@ include conf/license/license-gplv2.inc
 
 DEPENDS = "virtual/libusb0 ncurses readline fontconfig freetype"
 
-inherit gitpkgv
+#inherit gitpkgv
 
-PV = "git${SRCPV}"
-PKGV = "git${GITPKGV}"
+#PV = "git${SRCPV}"
+#PKGV = "git${GITPKGV}"
 PR = "r9"
 
-SRCREV = "AUTOINC"
+#SRCREV = "AUTOINC"
 
 EXTRA_OECONF = " \
 	"
-
+#git://projects.vdr-developer.org/graphlcd-base.git;branch=touchcol;protocol=git \
 SRC_URI = "\
-	git://projects.vdr-developer.org/graphlcd-base.git;branch=touchcol;protocol=git \
+	file://graphlcd-base-touchcol.tar.bz2 \
 	file://graphlcd.conf \
 	file://glcd-mipsel.patch \
 	file://glcd-vuduo2.patch \
 	"
 
-S =  "${WORKDIR}/git"
+#S =  "${WORKDIR}/git"
+S =  "${WORKDIR}/graphlcd-base-touchcol"
 
 inherit autotools pkgconfig
 
