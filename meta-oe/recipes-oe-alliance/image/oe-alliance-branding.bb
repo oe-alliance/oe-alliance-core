@@ -84,8 +84,15 @@ do_configure_prepend() {
         DRIVERSDATE=`grep "SRCDATE = " ${OEA-META-SKYLAKE-BASE}/recipes-drivers/skylake-dvb-modules-${MACHINE}.bb | cut -b 12-19`
     elif [ "${BRAND_OEM}" = "tripledot" ]; then
         DRIVERSDATE=`grep "SRCDATE = " ${OEA-META-TRIPLEDOT-BASE}/recipes-drivers/tripledot-dvb-modules-${MACHINE}.bb | cut -b 12-19`
-    elif [ "${BRAND_OEM}" = "dreambox" ]; then
-        DRIVERSDATE="20140616"
+	elif [ "${BRAND_OEM}" = "dreambox" ]; then
+		if [ "${MACHINE}" = "dm7080" ]; then
+			DRIVERSDATE="20141003"
+		elif [ "${MACHINE}" = "dm800" ]; then
+			DRIVERSDATE="20131228"
+		elif [ "${MACHINE}" = "dm8000" ]; then
+			DRIVERSDATE="20140604"
+		else
+			DRIVERSDATE="20140616"
     elif [ "${BRAND_OEM}" = "fulan" ]; then
         DRIVERSDATE=`grep "SRCDATE = " ${OEA-META-FULAN-BASE}/recipes-drivers/fulan-dvb-modules.bb | cut -b 12-19`
     else

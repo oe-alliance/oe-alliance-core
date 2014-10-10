@@ -1,2 +1,0 @@
-# progress: for /etc/rcS.d/S42progress write "44" to /proc/progress
-echo $0 | cut -b 13-14 > /proc/progress

@@ -20,7 +20,6 @@ MACHINE_EXTRA_RRECOMMENDS = " \
     kernel-module-hmac \
     kernel-module-md4 \
     kernel-module-ecb \
-    dreambox-boot-progress \
     tpmd \
     kernel-module-fuse \
     kernel-module-nfsd \
