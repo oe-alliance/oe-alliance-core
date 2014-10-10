@@ -8,9 +8,9 @@ inherit autotools gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"
-PR = "r2"
+PR = "r3"
 
-SRC_URI = "git://code.vuplus.com/git/filestreamproxy.git;protocol=git;branch=master"
+SRC_URI = "git://code.vuplus.com/git/filestreamproxy.git;protocol=http;branch=master"
 
 S = "${WORKDIR}/git"
 

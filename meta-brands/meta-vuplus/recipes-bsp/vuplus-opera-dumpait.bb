@@ -8,11 +8,11 @@ inherit autotools-brokensep pkgconfig gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r7"
+PR = "r8"
 
 PACKAGES += " ${PN}-src"
 
-SRC_URI = "git://code.vuplus.com/git/dumpait.git;protocol=git"
+SRC_URI = "git://code.vuplus.com/git/dumpait.git;protocol=http"
 
 S = "${WORKDIR}/git"
 DESTDIR = "enigma2/python/Plugins/Extensions/HbbTV"
