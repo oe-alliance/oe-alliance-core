@@ -5,7 +5,7 @@ index d0f54e5..e535329 100644
 @@ -2,29 +2,18 @@ ACLOCAL_AMFLAGS = -I m4
  
  SUBDIRS = \
- 	advhdmi \
+- 	advhdmi \
 -	aihdcontroler \
  	antiscrollbar \
 -	aspectratioswitch \
@@ -29,6 +29,7 @@ index d0f54e5..e535329 100644
 -	easymedia \
 -	ecasa \
 -	eibox \
+-	elektro \
  	emailclient \
  	emission \
  	eparted \
@@ -82,6 +83,7 @@ index d0f54e5..e535329 100644
  	unwetterinfo \
 -	valixdcontrol \
 -	videocolorspace \
+-	virtualzap \
  	vlcplayer \
  	vps \
  	weatherplugin \
@@ -94,7 +96,7 @@ index d0f54e5..e535329 100644
 -	zaphistorybrowser \
  	zapstatistic \
  	zdfmediathek \
- 	oscaminfo \
+- 	oscaminfo \
  	esame \
  	schiffe \
  	sudoku \
