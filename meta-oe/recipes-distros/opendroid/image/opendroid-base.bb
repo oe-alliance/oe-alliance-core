@@ -12,6 +12,7 @@ inherit packagegroup
 
 RDEPENDS_${PN} = "\
     oe-alliance-base \
+    oe-alliance-base \
     opendroid-enigma2 \
     opendroid-bootlogo \
     opendroid-spinner \
