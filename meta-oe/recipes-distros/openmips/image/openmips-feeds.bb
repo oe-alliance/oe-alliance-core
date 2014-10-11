@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=4d92cd373abda3937c2bc47fbc49d
 ALLOW_EMPTY_${PN} = "1"
 
 PV = "1.0"
-PR = "r0"
+PR = "r1"
 
 inherit packagegroup
 
@@ -19,8 +19,38 @@ RRECOMMENDS_${PN} = "\
     enigma2-plugin-systemplugins-autobouquetsmaker\
     "
 
-RRECOMMENDS_${PN}_append_gbipbox = "enigma2-plugin-systemplugins-gbipboxclient"
-RRECOMMENDS_${PN}_append_gb800seplus = "enigma2-plugin-systemplugins-gbipboxclient"
-RRECOMMENDS_${PN}_append_gb800ueplus = "enigma2-plugin-systemplugins-gbipboxclient"
-RRECOMMENDS_${PN}_append_gbquad = "gbipboxserver"
-RRECOMMENDS_${PN}_append_gbquadplus = "gbipboxserver"
+RRECOMMENDS_${PN}_append_gbipbox = "\
+    enigma2-plugin-extensions-gbipboxclient \
+    enigma2-plugin-extensions-openmultiboot \
+    openmultiboot \
+    "
+RRECOMMENDS_${PN}_append_gb800seplus = "\
+    enigma2-plugin-extensions-gbipboxclient \
+    enigma2-plugin-extensions-openmultiboot \
+    openmultiboot \
+    "
+RRECOMMENDS_${PN}_append_gb800ueplus = "\
+    enigma2-plugin-extensions-gbipboxclient \
+    enigma2-plugin-extensions-openmultiboot \
+    openmultiboot \
+    "
+RRECOMMENDS_${PN}_append_gbquad = "\
+    enigma2-plugin-extensions-openmultiboot \
+    openmultiboot \
+    "
+RRECOMMENDS_${PN}_append_gbquadplus = "\
+    enigma2-plugin-extensions-openmultiboot \
+    openmultiboot \
+    "
+RRECOMMENDS_${PN}_append_gb800ue = "\
+    enigma2-plugin-extensions-openmultiboot \
+    openmultiboot \
+    "
+RRECOMMENDS_${PN}_append_gb800se = "\
+    enigma2-plugin-extensions-openmultiboot \
+    openmultiboot \
+    "
+RRECOMMENDS_${PN}_append_gb800solo = "\
+    enigma2-plugin-extensions-openmultiboot \
+    openmultiboot \
+    "
