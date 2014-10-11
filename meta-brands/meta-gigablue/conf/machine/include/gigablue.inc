@@ -18,10 +18,9 @@ DVBPROVIDER = "kernel"
 MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS = " \
     kernel-module-cdfs \
     kernel-module-zram \
-    kernel-module-smsc75xx \
     "
 
-# MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS_append_gbquad = "kernel-module-smsc75xx"
+MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS_append_gbquad = "kernel-module-smsc75xx"
 # MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS_append_gbquadplus = "kernel-module-smsc75xx"
 
 MACHINE_EXTRA_RRECOMMENDS = " \
