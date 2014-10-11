@@ -12,9 +12,9 @@ inherit packagegroup
 
 RDEPENDS_${PN} = "\
     oe-alliance-base \
-    openhdf-enigma2 \
-    openhdf-bootlogo \
-    openhdf-spinner \
+    opendroid-enigma2 \
+    opendroid-bootlogo \
+    opendroid-spinner \
     ntfs-3g \
     hddtemp \
     busybox-cron \
