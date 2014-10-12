@@ -6,16 +6,19 @@ BRAND_OEM = "entwopia"
 MACHINE_NAME = "\
 ${@base_contains('MACHINEBUILD', 'enfinity', 'ENfinity' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'marvel1', 'Marvel 1' , '', d)}\
+${@base_contains('MACHINEBUILD', 'x2plus', 'enifinty x2plus' , '', d)}\
 "
 
 MACHINE_BRAND = "\
 ${@base_contains('MACHINEBUILD', 'enfinity', 'EVO' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'marvel1', 'VisionNet' , '', d)}\
+${@base_contains('MACHINEBUILD', 'x2plus', 'EVO' , '', d)}\
 "
 
 IMAGEDIR ?= "\
 ${@base_contains('MACHINEBUILD', 'enfinity', 'enfinity' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'marvel1', 'marvel1' , '', d)}\
+${@base_contains('MACHINEBUILD', 'x2plus', 'x2plus' , '', d)}\
 "
 
 MTD_ROOTFS = "mtd0"
@@ -47,9 +50,6 @@ DEFAULTTUNE = "mips32el"
 GLIBC_EXTRA_OECONF = "--with-tls --with-__thread"
 
 PREFERRED_PROVIDER_virtual/kernel = "linux-entwopia"
-
-PREFERRED_VERSION_linux-entwopia = "3.8.7"
-PREFERRED_VERSION_linux-libc-headers = "3.8"
 
 KERNEL_IMAGETYPE = "vmlinux"
 KERNEL_OUTPUT = "${KERNEL_IMAGETYPE}"
