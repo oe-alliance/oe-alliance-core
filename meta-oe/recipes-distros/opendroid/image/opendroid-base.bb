@@ -14,18 +14,11 @@ RDEPENDS_${PN} = "\
     oe-alliance-base \
     opendroid-enigma2 \
     opendroid-bootlogo \
-    opendroid-version-info \
-    opendroid-base-files \
-    opendroid-settings \    
-    openssh-sftp-server \
+    opendroid-spinner \
     ntfs-3g \
     hddtemp \
     busybox-cron \
-    python-imaging \
-    ofgwrite \
-    libcrypto-compat-0.9.8 \
     python-gdata \
-    libshowiframe \
-    dvbsnoop \
-    enigma2-plugin-drivers-usbserial \    
+    unrar \
+    ofgwrite \
     "

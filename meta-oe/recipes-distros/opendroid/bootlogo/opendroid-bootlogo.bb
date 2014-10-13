@@ -1,29 +1,30 @@
-DESCRIPTION = "OpenDroid bootlogo"
+SUMMARY = "Opendroid-Team"
 SECTION = "base"
 PRIORITY = "required"
-MAINTAINER = "opendroid"
+MAINTAINER = "Opendroid-Team"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 require conf/license/license-gplv2.inc
 
 RDEPENDS_${PN} += "showiframe"
 
-PV = "4.2"
-PR = "r1"
+PV = "4.1"
+PR = "r6"
 
 S = "${WORKDIR}"
 
 INITSCRIPT_NAME = "bootlogo"
-INITSCRIPT_PARAMS = "start 05 S ."
+INITSCRIPT_PARAMS = "start 06 S ."
 
 inherit update-rc.d
 
-SRC_URI = "file://bootlogo.mvi file://backdrop.mvi file://bootlogo_wait.mvi file://radio.mvi file://bootlogo.sh ${@base_contains("MACHINE_FEATURES", "bootsplash", "file://splash.bin" , "", d)} ${@base_contains("MACHINE_FEATURES", "bootsplash", "file://splash480.bin" , "", d)}"
+SRC_URI = "file://bootlogo.mvi file://radio.mvi file://bootlogo.sh file://splash576.bmp file://splash480.bmp"
 SRC_URI_append_gb800ue = "file://lcdsplash.bin file://lcdwaitkey.bin file://lcdwarning.bin"
 SRC_URI_append_gbquad = "file://lcdsplash.bin file://lcdwaitkey.bin file://lcdwarning.bin"
 SRC_URI_append_gb800ueplus = "file://lcdsplash.bin file://lcdwaitkey.bin file://lcdwarning.bin"
 SRC_URI_append_gbquadplus = "file://lcdsplash400.bin file://lcdwaitkey400.bin file://lcdwarning400.bin"
 SRC_URI_append_vuduo2 = "file://lcdbootlogo.png file://bootlogo.py"
+SRC_URI_append_dags3 = "file://splash1_os1.bmp file://splash1_os2.bmp file://splash2.bmp file://splash3.bmp"
 
 BINARY_VERSION = "1.3"
 
@@ -89,11 +90,9 @@ do_install_append_vuduo2() {
 inherit deploy
 do_deploy() {
     if [ "${BRAND_OEM}" = "vuplus" ] || [ "${BRAND_OEM}" = "dags" ]; then
-	install -m 0644 splash480.bin ${DEPLOYDIR}/${BOOTLOGO_FILENAME}
+        install -m 0644 splash480.bmp ${DEPLOYDIR}/${BOOTLOGO_FILENAME}
     else
-    	if [ -e splash.bin ]; then
-        	install -m 0644 splash.bin ${DEPLOYDIR}/${BOOTLOGO_FILENAME}
-    	fi
+        install -m 0644 splash576.bmp ${DEPLOYDIR}/${BOOTLOGO_FILENAME}
     fi
     if [ -e lcdsplash.bin ]; then
     install -m 0644 lcdsplash.bin ${DEPLOYDIR}/lcdsplash.bin
@@ -101,7 +100,18 @@ do_deploy() {
     if [ -e lcdsplash400.bin ]; then
         install -m 0644 lcdsplash400.bin ${DEPLOYDIR}/lcdsplash.bin
     fi
-
+    if [ -e splash1_os1.bmp ]; then
+        install -m 0644 splash1_os1.bmp ${DEPLOYDIR}/splash1_os1.bmp
+    fi
+    if [ -e splash1_os2.bmp ]; then
+        install -m 0644 splash1_os2.bmp ${DEPLOYDIR}/splash1_os2.bmp
+    fi
+    if [ -e splash2.bmp ]; then
+        install -m 0644 splash2.bmp ${DEPLOYDIR}/splash2.bmp
+    fi
+    if [ -e splash3.bmp ]; then
+        install -m 0644 splash3.bmp ${DEPLOYDIR}/splash3.bmp
+    fi
 }
 
 addtask deploy before do_build after do_install
@@ -154,4 +164,3 @@ pkg_postrm_${PN}() {
 
 PACKAGE_ARCH := "${MACHINE_ARCH}"
 FILES_${PN} = "/boot /usr/share /etc/init.d"
-
