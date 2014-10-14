@@ -1,7 +1,6 @@
-DESCRIPTION = "enigma2-plugin-extensions-infopanel"
+SUMMARY = "opendroid default Settings "
 MAINTAINER = "opendroid"
 SECTION = "base"
-PRIORITY = "required"
 LICENSE = "proprietary"
 PACKAGE_ARCH = "all"
 
@@ -12,14 +11,15 @@ SRCREV = "${AUTOREV}"
 PV = "3.0+git${SRCPV}"
 PKGV = "3.0+git${GITPKGV}"
 VER ="3.0"
-PR = "r1"
+PR = "r0"
 
-SRC_URI="git://github.com/opendroid-Team/enigma2-plugin-extensions-extrapanel.git"
+SRC_URI="git://github.com/opendroid-Team/opendroid-settings.git"
 
 S = "${WORKDIR}/git"
 
-FILES_${PN} = "/usr/*"
+FILES_${PN} = "/etc/*"
+
 
 do_install() {
-	cp -rp ${S}/usr ${D}/
+	cp -rp ${S}/etc ${D}/
 }
