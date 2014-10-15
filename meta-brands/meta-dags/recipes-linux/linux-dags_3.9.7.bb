@@ -7,7 +7,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 inherit machine_kernel_pr
 
 DATE = "20140404"
-MACHINE_KERNEL_PR_append = ".6"
+MACHINE_KERNEL_PR_append = ".7"
 
 SRC_URI[md5sum] = "af363fb33b02a2885589678ab80754c2"
 SRC_URI[sha256sum] = "a360f90a557979ea9c021a81786352d9e0dcf86d971256a80dc47d05b1e5a7b2"
