@@ -1,12 +1,12 @@
-SUMMARY = "opendroid Image"
+SUMMARY = "SWF Image"
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "proprietary"
-MAINTAINER = "opendroid"
+MAINTAINER = "SWF"
 
 require conf/license/license-gplv2.inc
 
-DEPENDS = "enigma2-pliplugins opendroid-feeds "
+DEPENDS = "enigma2-pliplugins swf-feeds "
 
 PV = "${IMAGE_VERSION}"
 PR = "r${DATETIME}"
@@ -33,6 +33,7 @@ IMAGE_INSTALL = " \
     packagegroup-base-smbfs \
     packagegroup-base-nfs \
     mc \
+    opendroid-base \
     "
 
 ENIGMA2_PLUGINS = "\
@@ -40,6 +41,8 @@ ENIGMA2_PLUGINS = "\
     enigma2-plugin-extensions-imdb \
     enigma2-plugin-extensions-cutlisteditor \
     enigma2-plugin-extensions-dvdplayer \
+    enigma2-plugin-extensions-cooltvguide \
+    enigma2-plugin-extensions-mediaportal \
     ${@base_contains("MACHINE", "ventonhdx", "enigma2-plugin-extensions-foreca" , "", d)} \
     enigma2-plugin-extensions-dlnabrowser \
     ${@base_contains("MACHINE", "ventonhdx", "enigma2-plugin-systemplugins-videotune" , "", d)} \

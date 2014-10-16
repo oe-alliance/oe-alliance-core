@@ -33,6 +33,7 @@ IMAGE_INSTALL = " \
     packagegroup-base-smbfs \
     packagegroup-base-nfs \
     mc \
+    opendroid-base \
     "
 
 ENIGMA2_PLUGINS = "\
