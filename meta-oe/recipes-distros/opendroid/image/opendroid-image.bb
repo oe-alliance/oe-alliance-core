@@ -40,7 +40,6 @@ ENIGMA2_PLUGINS = "\
     enigma2-plugin-extensions-imdb \
     enigma2-plugin-extensions-cutlisteditor \
     enigma2-plugin-extensions-dvdplayer \
-    ${@base_contains("MACHINE", "ventonhdx", "enigma2-plugin-extensions-foreca" , "", d)} \
     enigma2-plugin-extensions-dlnabrowser \
     ${@base_contains("MACHINE", "ventonhdx", "enigma2-plugin-systemplugins-videotune" , "", d)} \
     enigma2-plugin-systemplugins-softwaremanager \
