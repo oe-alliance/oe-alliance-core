@@ -4,14 +4,13 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=4d92cd373abda3937c2bc47fbc49d
                     file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
 
 PV = "1.0"
-PR = "r46"
+PR = "r48"
 
 inherit packagegroup
 
 
 
 RRECOMMENDS_${PN} = "\
-    enigma2-plugin-skins-opendroid \
     enigma2-plugin-settings-default-opendroid \
     enigma2-plugin-extensions-addonopendroid \
     enigma2-plugin-extensions-autosettings \

@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=4d92cd373abda3937c2bc47fbc49d
 ALLOW_EMPTY_${PN} = "1"
 
 PV = "1.0"
-PR = "r8"
+PR = "r10"
 
 inherit packagegroup
 
@@ -14,10 +14,10 @@ RCONFLICTS_${PN} = "enigma2-plugin-extensions-permanenttimeshift enigma2-plugin-
 RREPLACES_${PN} = "enigma2-plugin-extensions-permanenttimeshift enigma2-plugin-systemplugins-skinselector"
 
 RRECOMMENDS_${PN} = "\
+    oe-alliance-skins \
     enigma2-skins \
     enigma2-plugin-extensions-project-valerie \
     enigma2-plugin-extensions-xmltvimport \
     enigma2-plugin-systemplugins-crossepg \
-    enigma2-plugin-skins-opendroid \
     enigma2-plugin-settings-default-opendroid \
     "

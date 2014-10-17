@@ -5,13 +5,13 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 inherit machine_kernel_pr
 
-KERNEL_RELEASE = "3.14.10"
-SRCDATE = "20140724"
+KERNEL_RELEASE = "3.14.21"
+SRCDATE = "20141009"
 
 MACHINE_KERNEL_PR_append = ".2"
 
-SRC_URI[md5sum] = "798e7138e914cb16944861c775470632"
-SRC_URI[sha256sum] = "1134cb446e1671e5627f3afeea8dc05b5e79ec26c476abd0d20b41c13ab8a0d4"
+SRC_URI[md5sum] = "02cfdc2aa853d934f2289e28fe8e6bd2"
+SRC_URI[sha256sum] = "d524b16ce7fe3a5bd83b0c20d11a3afb389866166270b5822ad285e2f62ff1e4"
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 # By default, kernel.bbclass modifies package names to allow multiple kernels
