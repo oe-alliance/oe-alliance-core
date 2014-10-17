@@ -1,14 +1,20 @@
 SUMMARY = "dreamplex-hd meta package for skin sets"
-SECTION = "base"
+LICENSE = "MIT"
 LICENSE = "proprietary"
-PACKAGE_ARCH = "all"
 
 require conf/license/license-gplv2.inc
 
 ALLOW_EMPTY_${PN} = "1"
-PV = "1.0"
-PR = "r2"
+PACKAGES = "${PN}"
 
-DEPENDS = " \
-        enigma2-plugin-skins-dreamplex-youvix-blue \
-"
+PV = "1.0"
+PR = "r3"
+
+inherit packagegroup
+
+DEPENDS = "enigma2 enigma2-plugin-skins-dreamplex-youvix"
+
+RDEPENDS_${PN} = "\
+    enigma2-plugin-skins-dreamplex-youvix-blue \
+    enigma2-plugin-skins-dreamplex-youvix-red \
+    "
