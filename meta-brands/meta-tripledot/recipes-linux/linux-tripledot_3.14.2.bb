@@ -1,7 +1,7 @@
 SUMMARY = "Linux kernel for ${MACHINE}"
 SECTION = "kernel"
 LICENSE = "GPLv2"
-PR = "r1"
+PR = "r2"
 
 KERNEL_RELEASE = "3.14.2"
 SRCDATE = "20140517"
@@ -25,6 +25,8 @@ RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
 
 SRC_URI += "http://source.mynonpublic.com/tripledot/${MACHINE}-linux-${PV}-base-${SRCDATE}.tgz \
 	file://defconfig \
+	file://add-rt2x00-wifi-devices.patch \
+	file://add-rtl8192cu-wifi-devices.patch \
 	file://add-dmx-source-timecode.patch \
 	file://af9015-output-full-range-SNR.patch \
 	file://af9033-output-full-range-SNR.patch \
