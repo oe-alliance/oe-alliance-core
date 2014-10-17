@@ -3,13 +3,13 @@ HOMEPAGE = "http://www.asix.com.tw/"
 SECTION = "kernel/modules"
 LICENSE = "GPLv2"
 
-PR = "r5"
+PR = "r6"
 
 inherit module
 
 LIC_FILES_CHKSUM = "file://readme;endline=19;md5=f87a675da5e11ab9def922704bdda58b"
 
-inherit module machine_kernel_pr
+inherit module
 
 SRC_URI = "http://code-ini.com/software/mirror/AX88179_178A_LINUX_DRIVER_v1.4.1_SOURCE.tar.gz"
 
