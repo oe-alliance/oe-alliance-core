@@ -8,7 +8,7 @@ inherit machine_kernel_pr
 KERNEL_RELEASE = "3.14.21"
 SRCDATE = "20141009"
 
-MACHINE_KERNEL_PR_append = ".2"
+MACHINE_KERNEL_PR_append = ".3"
 
 SRC_URI[md5sum] = "02cfdc2aa853d934f2289e28fe8e6bd2"
 SRC_URI[sha256sum] = "d524b16ce7fe3a5bd83b0c20d11a3afb389866166270b5822ad285e2f62ff1e4"
