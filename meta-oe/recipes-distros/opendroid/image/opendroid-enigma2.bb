@@ -3,22 +3,57 @@ LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=4d92cd373abda3937c2bc47fbc49d690 \
                     file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
 
+ALLOW_EMPTY_${PN} = "1"
+PACKAGE_ARCH = "${MACHINE_ARCH}"
+
 PV = "1.0"
-PR = "r48"
+PR = "r53"
 
 inherit packagegroup
 
-
+DEPENDS = "enigma2-pliplugins opendroid-feeds"
 
 RRECOMMENDS_${PN} = "\
-    enigma2-plugin-settings-default-opendroid \
+    opendroid-version-info \
+    enigma2-skindefault \
+    python-compression \
+    enigma2-plugin-skins-opendroid \
+    enigma2-plugin-drivers-usbserial \
+    enigma2-plugin-extensions-autotimer \
+    enigma2-plugin-extensions-imdb \
     enigma2-plugin-extensions-addonopendroid \
     enigma2-plugin-extensions-autosettings \
-    enigma2-plugin-systemplugins-softwaremanager \
-    enigma2-plugin-systemplugins-videomode \
-    enigma2-plugin-systemplugins-videoenhancement \
+    enigma2-plugin-extensions-extrapanel \
+    enigma2-plugin-extensions-mediaplayer \
+    enigma2-plugin-extensions-epgsearch \
+    enigma2-plugin-extensions-dvdplayer \
     enigma2-plugin-extensions-volume-adjust \
-    ${@base_contains("MACHINE_FEATURES", "blindscan-dvbs", "enigma2-plugin-systemplugins-blindscan" , "", d)} \
-    ${@base_contains("MACHINE_FEATURES", "blindscan-dvbc", "virtual/blindscan-dvbc" , "", d)} \
-    ${@base_contains("MACHINE_FEATURES", "boxmodel", "boxmodel", "", d)} \ 
-   "
+    enigma2-plugin-systemplugins-videotune \
+    enigma2-plugin-systemplugins-crossepg \
+    enigma2-plugin-systemplugins-softwaremanager \
+    enigma2-plugin-systemplugins-positionersetup \
+    enigma2-plugin-systemplugins-videoenhancement \
+    ${@base_contains("MACHINE_FEATURES", "dreambox", "enigma2-plugin-extensions-dflash mtd-utils-jffs2", "", d)} \
+    ${@base_contains("MACHINE_FEATURES", "boxmodel", "boxmodel", "", d)} \
+    ${@base_contains("MACHINE_FEATURES", "smallflash", "", \
+    " \
+    enigma2-plugin-extensions-audiosync \
+    ", d)} \
+    "
+
+RRECOMMENDS_${PN}_append_gb800solo = ""
+RRECOMMENDS_${PN}_append_gb800se = ""
+RRECOMMENDS_${PN}_append_gb800ue = ""
+RRECOMMENDS_${PN}_append_gbquad = ""
+RRECOMMENDS_${PN}_append_dags1 = "enigma2-plugin-systemplugins-osd3dsetup"
+RRECOMMENDS_${PN}_append_dags2 = "enigma2-plugin-systemplugins-osd3dsetup"
+RRECOMMENDS_${PN}_append_dags3 = "enigma2-plugin-systemplugins-osd3dsetup"
+RRECOMMENDS_${PN}_append_dags4 = "enigma2-plugin-systemplugins-osd3dsetup"
+RRECOMMENDS_${PN}_append_ixussone = ""
+RRECOMMENDS_${PN}_append_vuduo = "" 
+RRECOMMENDS_${PN}_append_vusolo = "" 
+RRECOMMENDS_${PN}_append_vusolo2 = "" 
+RRECOMMENDS_${PN}_append_et9x00 = "" 
+RRECOMMENDS_${PN}_append_et6x00 = "" 
+RRECOMMENDS_${PN}_append_et5x00 = "" 
+RRECOMMENDS_${PN}_append_et4x00 = "" 
