@@ -11,7 +11,7 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "0.8.1+gitr${SRCPV}"
 PKGV = "0.8.1+gitr${GITPKGV}"
-PR = "r2"
+PR = "r3"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
@@ -24,6 +24,7 @@ PARALLEL_MAKE = ""
 CFLAGS_append = " -I${STAGING_INCDIR}/libxml2/ -I${STAGING_INCDIR}/${PYTHON_DIR}/"
 CFLAGS_append = " ${@base_contains('BRAND_OEM', 'xtrend', ' -DNO_DVB_POLL' , '', d)}"
 CFLAGS_append = " ${@base_contains('BRAND_OEM', 'xp', ' -DNO_DVB_POLL' , '', d)}"
+CFLAGS_append = " ${@base_contains('BRAND_OEM', 'skylake', ' -DNO_DVB_POLL' , '', d)}"
 
 INHIBIT_PACKAGE_STRIP = "1"
 
