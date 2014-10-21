@@ -7,12 +7,12 @@ inherit machine_kernel_pr
 
 KERNEL_RELEASE = "3.14.2"
 
-SRC_URI[md5sum] = "eebed57074c7d222ad33af939d2ec0c8"
-SRC_URI[sha256sum] = "71a39fd493cbedb9e9c1ca2e4004d32e667d7cf5ef7ad381fec88a993b75efdf"
+SRC_URI[md5sum] = "3a36a72a0833fc1a0ff35c5c48cb3e8f"
+SRC_URI[sha256sum] = "03b8d8f5066929d28b8210bfb422ac0d679bdb2c9cb625d51f65f646da8ecd34"
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-MACHINE_KERNEL_PR_append = ".00"
+MACHINE_KERNEL_PR_append = ".02"
 
 # By default, kernel.bbclass modifies package names to allow multiple kernels
 # to be installed in parallel. We revert this change and rprovide the versioned
@@ -22,7 +22,7 @@ PKG_kernel-image = "kernel-image"
 RPROVIDES_kernel-base = "kernel-${KERNEL_VERSION}"
 RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
 
-SRC_URI += "http://archiv.openmips.com/gigablue-linux-${PV}-20140806.tgz \
+SRC_URI += "http://archiv.openmips.com/gigablue-linux-${PV}-20141019.tgz \
     file://defconfig \
     file://add-dmx-source-timecode.patch \
     file://af9015-output-full-range-SNR.patch \
