@@ -41,3 +41,4 @@ do_install() {
 
 FILES_${PN} += "/etc/model /etc/image-version /etc/oe-git.log /etc/e2-git.log"
 
+

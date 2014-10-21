@@ -54,7 +54,7 @@ do_generate_nfo() {
     echo "Machine: ${MACHINE}" >> ${NFO}
     DATE=`date +%Y-%m-%d' '%H':'%M`
     echo "Date: ${DATE}" >> ${NFO}
-    echo "Issuer: Opendroid" >> ${NFO}
+    echo "Issuer: opendroid" >> ${NFO}
     echo "Link: ${DISTRO_FEED_URI}" >> ${NFO}
     if [ "${DESC}" != "" ]; then
         echo "Description: ${DESC}" >> ${NFO}
@@ -65,3 +65,4 @@ do_generate_nfo() {
 }
 
 addtask generate_nfo after do_rootfs
+
