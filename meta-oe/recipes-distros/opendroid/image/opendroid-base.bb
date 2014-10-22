@@ -15,10 +15,13 @@ RDEPENDS_${PN} = "\
     opendroid-enigma2 \
     opendroid-bootlogo \
     opendroid-spinner \
+    openssh-sftp-server \
     ntfs-3g \
     hddtemp \
     busybox-cron \
-    python-gdata \
-    unrar \
-    ofgwrite \
+    python-imaging \
+    rtmpdump \
+    packagegroup-base-smbfs-client \
+    ${@base_contains("MACHINE_FEATURES", "dreambox", "", "ofgwrite", d)} \	
+    bash \
     "
