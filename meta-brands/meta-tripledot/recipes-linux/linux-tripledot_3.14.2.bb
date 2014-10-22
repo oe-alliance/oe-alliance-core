@@ -4,16 +4,16 @@ LICENSE = "GPLv2"
 PR = "r2"
 
 KERNEL_RELEASE = "3.14.2"
-SRCDATE = "20140517"
+SRCDATE = "20141022"
 
 inherit machine_kernel_pr
 
-SRC_URI[md5sum] = "12d5ab837da35c8f1b2dbd082d752f68"
-SRC_URI[sha256sum] = "27c9c771c5f942bda544fc3f12b08bd9c17e33ed346a9fe4e4866c6dbbfff1d3"
+SRC_URI[md5sum] = "98809608079ff7147890006004952eeb"
+SRC_URI[sha256sum] = "5e77fad16ef45240247192db43e51ed5ead0edbe2ed6a40aea10f62b904e826d"
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}-base/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-MACHINE_KERNEL_PR_append = ".0"
+MACHINE_KERNEL_PR_append = ".1"
 
 # By default, kernel.bbclass modifies package names to allow multiple kernels
 # to be installed in parallel. We revert this change and rprovide the versioned
