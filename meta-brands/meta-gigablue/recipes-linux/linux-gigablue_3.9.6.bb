@@ -7,7 +7,7 @@ KV = "3.9.6"
 inherit machine_kernel_pr
 
 SRCDATE = "20140904"
-MACHINE_KERNEL_PR_append = ".01"
+MACHINE_KERNEL_PR_append = ".04"
 
 SRC_URI[md5sum] = "0cb37745787e0ff5070e14a7bbf3dc5c"
 SRC_URI[sha256sum] = "018d9792c6ba00400d7779568bc096cd1df2edb8d57501d3477c4734655c6e0f"
