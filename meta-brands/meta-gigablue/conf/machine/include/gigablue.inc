@@ -18,6 +18,11 @@ DVBPROVIDER = "kernel"
 MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS = " \
     kernel-module-cdfs \
     kernel-module-zram \
+    kernel-module-ext2 \
+    kernel-module-ext3 \
+    kernel-module-ext4 \
+    kernel-module-cifs \
+    kernel-module-autofs4 \
     "
 
 MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS_append_gbquad = "kernel-module-smsc75xx"
