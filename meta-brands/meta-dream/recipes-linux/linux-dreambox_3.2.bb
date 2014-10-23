@@ -55,4 +55,8 @@ SRC_URI[unionfs.sha256sum] = "ce6ffa3c17a11dcca24196c11f6efc95c59b65a5b99958e73e
 
 S = "${WORKDIR}/linux-3.2"
 
+KERNEL_IMAGETYPE = "vmlinux"
+KERNEL_OUTPUT = "${KERNEL_IMAGETYPE}"
+KERNEL_CONSOLE = "${@base_contains('MACHINE_FEATURES', 'usbconsole', 'ttyS0,115200', 'null', d)}"
+
 require linux-dreambox.inc

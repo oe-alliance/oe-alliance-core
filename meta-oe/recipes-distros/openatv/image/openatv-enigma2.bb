@@ -7,7 +7,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PV = "1.0"
-PR = "r40"
+PR = "r41"
 
 inherit packagegroup
 
@@ -31,7 +31,7 @@ RRECOMMENDS_${PN} = " \
     enigma2-plugin-extensions-mediaplayer \
     enigma2-plugin-extensions-enhancedmoviecenter \
     enigma2-plugin-extensions-supportchannel \	
-    ${@base_contains("MACHINE_FEATURES", "dreambox", "enigma2-plugin-extensions-dflash mtd-utils-jffs2", "", d)} \
+    ${@base_contains("MACHINE_FEATURES", "dreamboxv1", "enigma2-plugin-extensions-dflash mtd-utils-jffs2", "", d)} \
     ${@base_contains("MACHINE_FEATURES", "boxmodel", "boxmodel", "", d)} \
     "
 

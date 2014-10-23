@@ -3,9 +3,12 @@ SECTION = "base"
 LICENSE = "CLOSED"
 DEPENDS += "virtual/kernel"
 PRIORITY = "required"
-INC_PR = "r7"
+INC_PR = "r8"
 
-DREAMBOX_DVB_MODULES_MIRROR ?= "http://sources.dreamboxupdate.com/download/opendreambox/2.0.0/dreambox-dvb-modules"
+DMVER = "2.0.0"
+DMVER_dm7080 = "2.2.0"
+
+DREAMBOX_DVB_MODULES_MIRROR ?= "http://sources.dreamboxupdate.com/download/opendreambox/${DMVER}/dreambox-dvb-modules"
 
 SRC_URI = " \
             ${DREAMBOX_DVB_MODULES_MIRROR}/dreambox-dvb-modules-${MACHINE}-${DM_LOCALVERSION}-${DRIVERDATE}.tar.bz2;name=modules \

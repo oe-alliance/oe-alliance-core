@@ -36,13 +36,9 @@ PREFERRED_PROVIDER_virtual/kernel = "linux-dreambox"
 PREFERRED_PROVIDER_virtual/blindscan-dvbs = "dreambox-blindscan-utils"
 PREFERRED_PROVIDER_virtual/blindscan-dvbc = "dreambox-blindscan-utils"
 
-PREFERRED_VERSION_linux-dreambox = "3.2"
+PREFERRED_VERSION_linux-dreambox ?= "3.2"
 PREFERRED_VERSION_linux-libc-headers = "3.2"
 PREFERRED_VERSION_nfs-utils ?= "1.2.8"
-
-KERNEL_IMAGETYPE = "vmlinux"
-KERNEL_OUTPUT = "${KERNEL_IMAGETYPE}"
-KERNEL_CONSOLE = "${@base_contains('MACHINE_FEATURES', 'usbconsole', 'ttyS0,115200', 'null', d)}"
 
 DREAMBOX_BUILDIMAGE = "buildimage --arch ${MACHINE} ${EXTRA_BUILDCMD} \
     --erase-block-size ${DREAMBOX_ERASE_BLOCK_SIZE} \

@@ -1,0 +1,23 @@
+Source: git://git.debian.org/git/pkg-xorg/lib/mesa
+commit f18181516aef48395304122a804b4f7d036cb73f
+Author: Julien Cristau <jcristau@debian.org>
+Date:   Tue Jun 25 21:30:34 2013 +0200
+
+    Don't call wayland_buffer_is_drm from libgbm, it's in libEGL
+    
+    Closes: #712556
+
+diff --git a/src/gbm/backends/dri/gbm_dri.c b/src/gbm/backends/dri/gbm_dri.c
+index a3a0530..92d1a36 100644
+--- a/src/gbm/backends/dri/gbm_dri.c
++++ b/src/gbm/backends/dri/gbm_dri.c
+@@ -376,9 +376,6 @@ gbm_dri_bo_import(struct gbm_device *gbm,
+    {
+       struct wl_drm_buffer *wb = (struct wl_drm_buffer *) buffer;
+ 
+-      if (!wayland_buffer_is_drm(buffer))
+-         return NULL;
+-
+       image = wb->driver_buffer;
+ 
+       switch (wb->format) {
