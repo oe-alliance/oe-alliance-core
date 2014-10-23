@@ -5,14 +5,17 @@ BRAND_OEM = "tripledot"
 
 MACHINE_NAME = "\
 ${@base_contains('MACHINEBUILD', 'enibox', 'EniBox' , '', d)}\
+${@base_contains('MACHINEBUILD', 'mago', 'MAGO' , '', d)}\
 "
 
 MACHINE_BRAND = "\
 ${@base_contains('MACHINEBUILD', 'enibox', 'hdbox' , '', d)}\
+${@base_contains('MACHINEBUILD', 'mago', 'relock' , '', d)}\
 "
 
 IMAGEDIR ?= "\
 ${@base_contains('MACHINEBUILD', 'enibox', 'enibox' , '', d)}\
+${@base_contains('MACHINEBUILD', 'mago', 'mago' , '', d)}\
 "
 
 MTD_KERNEL = "mtd2"
