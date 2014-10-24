@@ -7,7 +7,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PV = "1.0"
-PR = "r1"
+PR = "r2"
 
 inherit packagegroup
 
@@ -24,6 +24,7 @@ RRECOMMENDS_${PN} = "\
     openssl-old \
     enigma2-plugin-extensions-enhancedmoviecenter \
     enigma2-plugin-skins-opendroid \
+    enigma2-plugin-skins-mega32
     enigma2-plugin-settings-defaultsat \
     ${@base_contains("MACHINE_BRAND", "AZBOX", "enigma2-plugin-extensions-azplay enigma2-plugin-extensions-aziptv", "", d)} \
     "
