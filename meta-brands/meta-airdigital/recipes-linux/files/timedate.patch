@@ -1,0 +1,25 @@
+From a313009033c74fc349fccf3d0c04a9bcbeec052b Mon Sep 17 00:00:00 2001
+From: formuler <github@formuler.tv>
+Date: Mon, 21 Jul 2014 12:48:01 +0200
+Subject: [PATCH] fix build for gcc4.9
+
+---
+ drivers/net/ethernet/broadcom/genet/bcmgenet.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/net/ethernet/broadcom/genet/bcmgenet.h b/drivers/net/ethernet/broadcom/genet/bcmgenet.h
+index 9fbf842..0ed3ed9 100644
+--- a/drivers/net/ethernet/broadcom/genet/bcmgenet.h
++++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.h
+@@ -22,7 +22,7 @@
+ 
+ #define CARDNAME				"bcmgenet"
+ #define VERSION     "2.0"
+-#define VER_STR     "v" VERSION " " __DATE__ " " __TIME__
++#define VER_STR     "v" VERSION
+ 
+ #define pr_fmt(fmt)				CARDNAME ": " fmt
+ 
+-- 
+1.7.9.5
+
