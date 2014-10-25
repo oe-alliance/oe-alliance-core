@@ -8,7 +8,7 @@ require conf/license/license-gplv2.inc
 
 PV = "${IMAGE_VERSION}"
 PR = "${BUILD_VERSION}"
-PACKAGE_ARCH = "${MACHINEBUILD}"
+PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 URL = "http://www.droidsat.org"
 
@@ -33,7 +33,7 @@ do_install() {
     echo "date=${DATETIME}" >> ${D}/etc/image-version
     echo "comment=opendroid" >> ${D}/etc/image-version
     echo "target=9" >> ${D}/etc/image-version
-    echo "creator=opendroid" >> ${D}/etc/image-version
+    echo "creator=Opendroid" >> ${D}/etc/image-version
     echo "url=${URL}" >> ${D}/etc/image-version
     echo "catalog=${URL}" >> ${D}/etc/image-version
     echo "${MACHINE}" > ${D}/etc/model

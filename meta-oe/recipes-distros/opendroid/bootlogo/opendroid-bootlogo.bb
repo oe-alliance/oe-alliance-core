@@ -1,15 +1,15 @@
-SUMMARY = "opendroid bootlogo"
+SUMMARY = "Opendroid-Team"
 SECTION = "base"
 PRIORITY = "required"
-MAINTAINER = "opendroid Team"
+MAINTAINER = "Opendroid-Team"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 require conf/license/license-gplv2.inc
 
 RDEPENDS_${PN} += "showiframe"
 
-PV = "4.2"
-PR = "r6"
+PV = "4.1"
+PR = "r7"
 
 S = "${WORKDIR}"
 
@@ -24,8 +24,7 @@ SRC_URI_append_gbquad = "file://lcdsplash.bin file://lcdwaitkey.bin file://lcdwa
 SRC_URI_append_gb800ueplus = "file://lcdsplash.bin file://lcdwaitkey.bin file://lcdwarning.bin"
 SRC_URI_append_gbquadplus = "file://lcdsplash400.bin file://lcdwaitkey400.bin file://lcdwarning400.bin"
 SRC_URI_append_vuduo2 = "file://lcdbootlogo.png file://bootlogo.py"
-SRC_URI_append_dags3 = "file://splash1.bmp file://splash1_os1.bmp file://splash1_os2.bmp file://splash2.bmp file://splash3.bmp"
-SRC_URI_append_dags4 = "file://splash1.bmp file://splash1_os1.bmp file://splash1_os2.bmp file://splash2.bmp file://splash3.bmp"
+SRC_URI_append_dags3 = "file://splash1_os1.bmp file://splash1_os2.bmp file://splash2.bmp file://splash3.bmp"
 
 BINARY_VERSION = "1.3"
 
@@ -106,9 +105,6 @@ do_deploy() {
     fi
     if [ -e splash1_os2.bmp ]; then
         install -m 0644 splash1_os2.bmp ${DEPLOYDIR}/splash1_os2.bmp
-    fi
-	if [ -e splash1.bmp ]; then
-        install -m 0644 splash1.bmp ${DEPLOYDIR}/splash1.bmp
     fi
     if [ -e splash2.bmp ]; then
         install -m 0644 splash2.bmp ${DEPLOYDIR}/splash2.bmp
