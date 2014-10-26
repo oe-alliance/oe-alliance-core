@@ -5,4 +5,4 @@ SRC_URI[dm7080.sha256sum] = "fb19e6b5e8f94c5c637e324f0dd367304c2b88f5faf4ca1bcb6
 
 inherit opendreambox-precompiled-binary2
 
-PACKAGE_ARCH = "${MACHINE_ARCH}"
+PACKAGE_ARCH = "${MACHINE}"
