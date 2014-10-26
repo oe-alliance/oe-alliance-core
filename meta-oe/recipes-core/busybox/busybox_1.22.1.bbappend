@@ -22,7 +22,12 @@ SRC_URI += " \
             file://inetd \
             file://inetd.conf \
             file://0008-make_unicode_printable.patch \
+            file://busybox-telnetd.xinetd.in \
+            file://busybox-telnetd@.service \
+            file://busybox-telnetd.socket \
             "
+
+inherit xinetd
 
 # we do not really depend on mtd-utils, but as mtd-utils replaces 
 # include/mtd/* we cannot build in parallel with mtd-utils
@@ -47,8 +52,31 @@ do_install_append() {
     if grep -q "CONFIG_CRONTAB=y" ${WORKDIR}/defconfig; then
         install -d ${D}${sysconfdir}/cron/crontabs
     fi
+    if grep -q "CONFIG_TELNETD=y" ${B}/.config; then
+        install -d ${D}${systemd_unitdir}/system
+        ln -sf /dev/null ${D}${systemd_unitdir}/system/busybox-telnetd.service
+        install -m644 ${WORKDIR}/busybox-telnetd@.service ${D}${systemd_unitdir}/system
+        install -m644 ${WORKDIR}/busybox-telnetd.socket ${D}${systemd_unitdir}/system
+    fi
     install -d ${D}${sysconfdir}/mdev
     install -m 0755 ${WORKDIR}/mdev-mount.sh ${D}${sysconfdir}/mdev
 }
 
+# force mdev
+
+addtask mdev_preinstall after do_install before do_package
+
+do_mdev_preinstall() {
+	install -d ${D}${sysconfdir}/init.d
+	install -m 0755 ${WORKDIR}/mdev ${D}${sysconfdir}/init.d/mdev
+	install -d ${D}${sysconfdir}/rcS.d
+	ln -sf ../init.d/mdev ${D}${sysconfdir}/rcS.d/S03mdev
+	install -d ${D}${sysconfdir}/rc2.d
+	ln -sf ../init.d/mdev ${D}${sysconfdir}/rc2.d/S03mdev
+}
+
 FILESEXTRAPATHS_prepend := "${THISDIR}/${P}:"
+
+SYSTEMD_PACKAGES += "${PN}"
+SYSTEMD_SERVICE_${PN} = "busybox-telnetd.socket"
+XINETD_SERVICE_${PN} = "busybox-telnetd"

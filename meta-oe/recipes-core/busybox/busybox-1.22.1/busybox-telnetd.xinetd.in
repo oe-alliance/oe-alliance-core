@@ -1,0 +1,7 @@
+service telnet
+{
+	socket_type = stream
+	user = root
+	server = @SBINDIR@/telnetd
+	wait = no
+}

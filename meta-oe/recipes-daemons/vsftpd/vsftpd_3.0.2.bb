@@ -14,7 +14,12 @@ SRC_URI = "https://security.appspot.com/downloads/vsftpd-${PV}.tar.gz \
            file://vsftpd.conf \
            file://vsftpd.ftpusers \
            file://login-blank-password.patch \
+           file://vsftpd@.service \
+           file://vsftpd.socket \
+           file://vsftpd.xinetd.in \
 "
+
+inherit systemd xinetd
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=a6067ad950b28336613aed9dd47b1271 \
                         file://COPYRIGHT;md5=04251b2eb0f298dae376d92454f6f72e \
@@ -60,6 +65,13 @@ do_install() {
         sed -i "s:/lib/security:${base_libdir}/security:" ${D}${sysconfdir}/pam.d/vsftpd
         sed -i "s:ftpusers:vsftpd.ftpusers:" ${D}${sysconfdir}/pam.d/vsftpd
     fi
-
+    if ${@base_contains('DISTRO_FEATURES', 'systemd', 'true', 'false', d)}; then
+        install -d ${D}${systemd_unitdir}/system
+        ln -sf /dev/null ${D}${systemd_unitdir}/system/vsftpd.service
+        install -m644 ${WORKDIR}/vsftpd@.service ${D}${systemd_unitdir}/system
+        install -m644 ${WORKDIR}/vsftpd.socket ${D}${systemd_unitdir}/system
+    fi
 	install -d ${D}${localstatedir}/share/empty
 }
+
+SYSTEMD_SERVICE_${PN} = "vsftpd.socket"

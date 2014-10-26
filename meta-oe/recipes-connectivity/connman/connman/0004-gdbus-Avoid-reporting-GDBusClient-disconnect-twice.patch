@@ -1,0 +1,76 @@
+From f81c94eeb8c47c5fcc283d85917aa6d0a729feb8 Mon Sep 17 00:00:00 2001
+From: Claudio Takahasi <claudio.takahasi@openbossa.org>
+Date: Wed, 2 Apr 2014 15:30:21 -0300
+Subject: [PATCH 4/9] gdbus: Avoid reporting GDBusClient disconnect twice
+
+No matter if disconnection was reported previously, g_dbus_client_unref()
+was always calling service disconnect callback. This patch fix the
+following scenario:
+1) service disconnects from the bus
+2) disconnect callback gets called
+3) client calls g_dbus_client_unref(), disconnect callback is called
+   again.
+
+(cherry picked from commit 0e5631123a4de32df85ee282cc4ca8bab7e63a0e)
+Signed-off-by: Andreas Oberritter <obi@opendreambox.org>
+---
+ gdbus/client.c | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
+
+diff --git a/gdbus/client.c b/gdbus/client.c
+index 3bf883a..eb68a0f 100644
+--- a/gdbus/client.c
++++ b/gdbus/client.c
+@@ -51,6 +51,7 @@ struct GDBusClient {
+ 	GDBusWatchFunction connect_func;
+ 	void *connect_data;
+ 	GDBusWatchFunction disconn_func;
++	gboolean connected;
+ 	void *disconn_data;
+ 	GDBusMessageFunction signal_func;
+ 	void *signal_data;
+@@ -1146,6 +1147,8 @@ static void service_connect(DBusConnection *conn, void *user_data)
+ 
+ 	get_managed_objects(client);
+ 
++	client->connected = TRUE;
++
+ 	g_dbus_client_unref(client);
+ }
+ 
+@@ -1156,8 +1159,10 @@ static void service_disconnect(DBusConnection *conn, void *user_data)
+ 	g_list_free_full(client->proxy_list, proxy_free);
+ 	client->proxy_list = NULL;
+ 
+-	if (client->disconn_func)
++	if (client->disconn_func) {
+ 		client->disconn_func(conn, client->disconn_data);
++		client->connected = FALSE;
++	}
+ }
+ 
+ static DBusHandlerResult message_filter(DBusConnection *connection,
+@@ -1210,6 +1215,7 @@ GDBusClient *g_dbus_client_new(DBusConnection *connection,
+ 	client->dbus_conn = dbus_connection_ref(connection);
+ 	client->service_name = g_strdup(service);
+ 	client->base_path = g_strdup(path);
++	client->connected = FALSE;
+ 
+ 	client->match_rules = g_ptr_array_sized_new(1);
+ 	g_ptr_array_set_free_func(client->match_rules, g_free);
+@@ -1284,7 +1290,11 @@ void g_dbus_client_unref(GDBusClient *client)
+ 
+ 	g_list_free_full(client->proxy_list, proxy_free);
+ 
+-	if (client->disconn_func)
++	/*
++	 * Don't call disconn_func twice if disconnection
++	 * was previously reported.
++	 */
++	if (client->disconn_func && client->connected)
+ 		client->disconn_func(client->dbus_conn, client->disconn_data);
+ 
+ 	g_dbus_remove_watch(client->dbus_conn, client->watch);
+-- 
+1.9.1
+

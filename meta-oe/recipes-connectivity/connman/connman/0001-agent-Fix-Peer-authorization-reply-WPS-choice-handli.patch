@@ -1,0 +1,31 @@
+From bda68cd8d4a8bfe1ea029f78fcc42e997d4d3e3d Mon Sep 17 00:00:00 2001
+From: Tomasz Bursztyka <tomasz.bursztyka@linux.intel.com>
+Date: Thu, 28 Aug 2014 09:18:33 +0300
+Subject: [PATCH 1/9] agent: Fix Peer authorization reply WPS choice handling
+ logic
+
+If WPS details were not requested, any valid reply is enough for
+accepting the request.
+
+(cherry picked from commit f89f9999e7b4b10c213c99d09e93ce75774daa32)
+Signed-off-by: Andreas Oberritter <obi@opendreambox.org>
+---
+ src/agent-connman.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/agent-connman.c b/src/agent-connman.c
+index f3d1bc4..b2049a3 100644
+--- a/src/agent-connman.c
++++ b/src/agent-connman.c
+@@ -710,7 +710,7 @@ static void request_peer_authorization_reply(DBusMessage *reply,
+ 		dbus_message_iter_next(&dict);
+ 	}
+ 
+-	if (auth_reply->wps_requested)
++	if (!auth_reply->wps_requested)
+ 		choice_done = true;
+ 
+ done:
+-- 
+1.9.1
+
