@@ -24,6 +24,8 @@ do_install() {
     cp -rp ${S}/usr ${D}/
 }
 
+do_populate_sysroot[noexec] = "1"
+
 pkg_preinst_${PN}() {
 #!/bin/sh
 echo "Checking for skin.MySkin.xml in the skinfolder"

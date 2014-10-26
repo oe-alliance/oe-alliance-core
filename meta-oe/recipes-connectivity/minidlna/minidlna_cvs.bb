@@ -8,6 +8,9 @@ SRCDATE = "20130204"
 PV = "1.1.99+cvs${SRCDATE}"
 PR = "r3"
 
+# NLS causes autoconfigure problems - we don't need the extra languages anyway, so disable nls
+EXTRA_OECONF_append = " --disable-nls "
+
 SRC_URI = "cvs://anonymous@minidlna.cvs.sourceforge.net/cvsroot/minidlna;module=minidlna \
         file://0001_default_sqlite_caches.diff \
         file://minidlna.conf \

@@ -14,6 +14,8 @@ SRC_URI = "http://www.dvbsky.net/download/linux/meida_build-bst-14-140912.tar.gz
 
 S = "${WORKDIR}/media_build-bst-14"
 
+do_populate_sysroot[noexec] = "1"
+
 do_configure_prepend() {
     CUR=`pwd`
     cp ${WORKDIR}/sit2_op.o ${S}/v4l/sit2_op.o

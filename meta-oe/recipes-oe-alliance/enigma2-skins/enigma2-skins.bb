@@ -48,3 +48,5 @@ python populate_packages_prepend () {
 
     bb.data.setVar('PACKAGES', ' '.join(newlist), d)
 }
+
+do_populate_sysroot[noexec] = "1"

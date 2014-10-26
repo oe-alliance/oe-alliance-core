@@ -1,5 +1,6 @@
 SUMMARY = "Merge machine and distro options to create a enigma2 machine task/package"
 LICENSE = "MIT"
+PACKAGE_ARCH = "${MACHINE_ARCH}"
 LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=4d92cd373abda3937c2bc47fbc49d690 \
                     file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
 
@@ -10,7 +11,7 @@ PACKAGES = "${PN}"
 
 PV = "1.0"
 PR = "r56"
-PACKAGE_ARCH = "${MACHINE_ARCH}"
+
 
 DEPENDS = "enigma2 enigma2-locale-meta enigma2-plugins enigma2-oe-alliance-plugins oe-alliance-feeds enigma2-3rdparty-plugins ${@base_contains("MACHINE_FEATURES", "wifi", "oe-alliance-wifi", "", d)}"
 

@@ -16,3 +16,5 @@ SRC_URI[md5sum] = "94d9df26a33cb610db4cb45204ce6fa9"
 SRC_URI[sha256sum] = "445e1ccae7aa8ab0dd3b8d629597f099c8c24fe2e2117b8be0f465f7dfabf854"
 
 include python-package-split.inc
+
+do_populate_sysroot[noexec] = "1"

@@ -23,6 +23,8 @@ INSANE_SKIP_${PN} = "dev-so"
 
 RRECOMMENDS_${PN}-atalkd = "kernel-module-appletalk"
 
+SSTATE_DUPWHITELIST += "${STAGING_INCDIR}/netatalk/at.h"
+
 FILES_${PN}-atalkd += "${sysconfdir}/netatalk/atalkd.conf \
                     /usr/sbin/atalkd"
 FILES_${PN}-pap +=    "/usr/bin/pap \

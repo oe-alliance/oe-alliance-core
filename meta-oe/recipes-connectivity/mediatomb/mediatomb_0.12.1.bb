@@ -3,7 +3,7 @@ HOMEPAGE = "http://mediatomb.org/"
 LICENSE = "GPLv2"
 DEPENDS = "expat ffmpeg sqlite3 libexif js zlib file id3lib curl"
 PV = "0.12.1"
-PR = "r6"
+PR = "r7"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=0b609ee7722218aa600220f779cb5035"
 
@@ -14,6 +14,7 @@ SRC_URI[sha256sum] = "31163c34a7b9d1c9735181737cb31306f29f1f2a0335fb4f53ecccf8f6
 SRC_URI = "${SOURCEFORGE_MIRROR}/mediatomb/mediatomb-${PV}.tar.gz \
         file://youtube_warning.patch \
         file://libav_0.7_support.patch \
+        file://libavformat_0.11_support.patch \
         file://config.xml \
         file://init \
         file://fix_hash_compile_errors.patch \

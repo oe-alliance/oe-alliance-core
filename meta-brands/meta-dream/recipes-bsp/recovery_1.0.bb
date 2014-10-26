@@ -42,3 +42,5 @@ FILES_flash-scripts = " \
 
 BRANCH = "master"
 BRANCH_dm7080 = "dm7080"
+
+COMPATIBLE_MACHINE = "^(dm7080)$"
