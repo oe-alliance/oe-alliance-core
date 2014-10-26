@@ -46,3 +46,5 @@ if [ -z "$D" ]; then
     flash-kernel /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION}
 fi
 }
+
+COMPATIBLE_MACHINE = "^(dm7080)$"
