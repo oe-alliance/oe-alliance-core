@@ -10,7 +10,7 @@ ${@base_contains('MACHINEBUILD', 'mago', 'MAGO' , '', d)}\
 
 MACHINE_BRAND = "\
 ${@base_contains('MACHINEBUILD', 'enibox', 'hdbox' , '', d)}\
-${@base_contains('MACHINEBUILD', 'mago', 'relock' , '', d)}\
+${@base_contains('MACHINEBUILD', 'mago', 'relook' , '', d)}\
 "
 
 IMAGEDIR ?= "\
