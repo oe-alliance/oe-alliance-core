@@ -159,7 +159,9 @@ PV = "3.0+git${SRCPV}"
 PKGV = "3.0+git${GITPKGV}"
 PR = "r14"
 
-SRC_URI = "${ENIGMA2_URI}"
+SRC_URI = "${ENIGMA2_URI} \
+           file://enigma2.service \
+"
 
 SRC_URI_append_azboxhd = " \
     file://azboxe2.patch \
