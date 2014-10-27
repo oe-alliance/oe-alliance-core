@@ -5,6 +5,7 @@ BRAND_OEM = "fulan"
 
 MACHINE_NAME = "\
 ${@base_contains('MACHINEBUILD', 'amiko8900', 'SHD-8900 Alien' , '', d)}\
+${@base_contains('MACHINEBUILD', 'amikomini', 'Alien-Mini' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'sognorevolution', 'Spark Revolution' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'arguspingulux', 'argus pingulux' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'arguspinguluxmini', 'argus pingulux mini' , '', d)}\
@@ -27,6 +28,7 @@ ${@base_contains('MACHINEBUILD', 'dynaspark7162', 'SPARK 7162' , '', d)}\
 
 MACHINE_BRAND = "\
 ${@base_contains('MACHINEBUILD', 'amiko8900', 'Amiko' , '', d)}\
+${@base_contains('MACHINEBUILD', 'amikomini', 'Amiko' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'sognorevolution', 'SOGNO' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'arguspingulux', 'Edision' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'arguspinguluxmini', 'Edision' , '', d)}\
@@ -49,6 +51,7 @@ ${@base_contains('MACHINEBUILD', 'dynaspark7162', 'Dynavision' , '', d)}\
 
 IMAGEDIR ?= "\
 ${@base_contains('MACHINEBUILD', 'amiko8900', 'enigma2' , '', d)}\
+${@base_contains('MACHINEBUILD', 'amikomini', 'enigma2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'sognorevolution', 'enigma2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'arguspingulux', 'enigma2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'arguspinguluxmini', 'enigma2' , '', d)}\
@@ -71,6 +74,7 @@ ${@base_contains('MACHINEBUILD', 'dynaspark7162', 'enigma2' , '', d)}\
 
 MTD_KERNEL = "\
 ${@base_contains('MACHINEBUILD', 'amiko8900', 'mtd5' , '', d)}\
+${@base_contains('MACHINEBUILD', 'amikomini', 'mtd5' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'sognorevolution', 'mtd5' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'arguspingulux', 'mtd5' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'arguspinguluxmini', 'mtd5' , '', d)}\
@@ -93,6 +97,7 @@ ${@base_contains('MACHINEBUILD', 'dynaspark7162', 'mtd5' , '', d)}\
 
 MTD_ROOTFS = "\
 ${@base_contains('MACHINEBUILD', 'amiko8900', 'mtd6' , '', d)}\
+${@base_contains('MACHINEBUILD', 'amikomini', 'mtd6' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'sognorevolution', 'mtd6' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'arguspingulux', 'mtd6' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'arguspinguluxmini', 'mtd6' , '', d)}\
