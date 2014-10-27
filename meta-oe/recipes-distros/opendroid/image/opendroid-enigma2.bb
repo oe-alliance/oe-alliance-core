@@ -19,20 +19,22 @@ RRECOMMENDS_${PN} = "\
     python-compression \
     enigma2-plugin-skins-opendroid \
     enigma2-plugin-drivers-usbserial \
-    enigma2-plugin-extensions-autotimer \
-    enigma2-plugin-extensions-imdb \
     enigma2-plugin-extensions-addonopendroid \
     enigma2-plugin-extensions-autosettings \
     enigma2-plugin-extensions-extrapanel \
-    enigma2-plugin-extensions-bmediacenter \
+    enigma2-plugin-extensions-autotimer \
     enigma2-plugin-extensions-epgsearch \
-    enigma2-plugin-extensions-dvdplayer \
-    enigma2-plugin-extensions-volume-adjust \
+    enigma2-plugin-extensions-graphmultiepg \
+    enigma2-plugin-extensions-imdb \
+    enigma2-plugin-extensions-cutlisteditor \
+    enigma2-plugin-extensions-tvweb \
+    enigma2-plugin-systemplugins-videomode \
     enigma2-plugin-systemplugins-videotune \
-    enigma2-plugin-systemplugins-crossepg \
+    enigma2-plugin-systemplugins-autoresolution \
     enigma2-plugin-systemplugins-softwaremanager \
-    enigma2-plugin-systemplugins-positionersetup \
-    enigma2-plugin-systemplugins-videoenhancement \
+    enigma2-plugin-systemplugins-hotplug \
+    enigma2-plugin-extensions-mediaplayer \
+	${@base_contains("MACHINE_FEATURES", "blindscan-dvbs", "enigma2-plugin-systemplugins-blindscan" , "", d)} \
     ${@base_contains("MACHINE_FEATURES", "dreambox", "enigma2-plugin-extensions-dflash mtd-utils-jffs2", "", d)} \
     ${@base_contains("MACHINE_FEATURES", "boxmodel", "boxmodel", "", d)} \
     ${@base_contains("MACHINE_FEATURES", "smallflash", "", \
@@ -51,7 +53,8 @@ RRECOMMENDS_${PN}_append_dags3 = "enigma2-plugin-systemplugins-osd3dsetup"
 RRECOMMENDS_${PN}_append_ixussone = ""
 RRECOMMENDS_${PN}_append_vuduo = "" 
 RRECOMMENDS_${PN}_append_vusolo = "" 
-RRECOMMENDS_${PN}_append_vusolo2 = "" 
+RRECOMMENDS_${PN}_append_vusolo2 = "enigma2-plugin-extensions-hbbtv"
+RRECOMMENDS_${PN}_append_vuduo2 = "enigma2-plugin-extensions-hbbtv" 
 RRECOMMENDS_${PN}_append_et9x00 = "" 
 RRECOMMENDS_${PN}_append_et6x00 = "" 
 RRECOMMENDS_${PN}_append_et5x00 = "" 
