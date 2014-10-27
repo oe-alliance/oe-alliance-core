@@ -1,5 +1,5 @@
 EXTRA_OECONF += " \
-	--disable-gudev \ --disable-gudev
+	--disable-gudev \
 "
 
 do_install() {
