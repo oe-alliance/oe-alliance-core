@@ -8,13 +8,12 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "1.0"
-PR = "r4"
+PR = "r5"
 
 inherit packagegroup
 
 DEPENDS = "enigma2 enigma2-plugin-skinpacks-dreamplex-youvix"
 
 RDEPENDS_${PN} = "\
-    enigma2-plugin-skinpacks-dreamplex-youvix-blue \
     enigma2-plugin-skinpacks-dreamplex-youvix-red \
     "
