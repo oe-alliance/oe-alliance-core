@@ -10,7 +10,7 @@ if [ -f /etc/enigma2/bootvideo.* ]; then
 	BOOTVIDEO=/etc/enigma2/`ls /etc/enigma2/ | grep bootvideo*`
 fi
 
-if [ -f /usr/share/bootvideo.* ] || [ -f /hdd/bootvideo.* ]; then
+if [ -f /usr/share/bootvideo.* ] || [ -f /etc/enigma2/bootvideo.* ]; then
 	echo bootvideo found @ $BOOTVIDEO
 		if [ "$(grep config.audio.volume /etc/enigma2/settings)" ]; then
 			vol=`grep config.audio.volume /etc/enigma2/settings | cut -d"=" -f2`
