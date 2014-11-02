@@ -6,11 +6,11 @@
 if [ -f /usr/share/bootvideo.* ]; then
 	BOOTVIDEO=/usr/share/`ls /usr/share/ | grep bootvideo*`
 fi
-if [ -f /media/usb/bootvideo.* ]; then
-	BOOTVIDEO=/media/usb/`ls /media/usb/ | grep bootvideo*`
+if [ -f /etc/enigma2/bootvideo.* ]; then
+	BOOTVIDEO=/etc/enigma2/`ls /etc/enigma2/ | grep bootvideo*`
 fi
 
-if [ -f /usr/share/bootvideo.* ] || [ -f /usb/bootvideo.* ]; then
+if [ -f /usr/share/bootvideo.* ] || [ -f /hdd/bootvideo.* ]; then
 	echo bootvideo found @ $BOOTVIDEO
 		if [ "$(grep config.audio.volume /etc/enigma2/settings)" ]; then
 			vol=`grep config.audio.volume /etc/enigma2/settings | cut -d"=" -f2`
