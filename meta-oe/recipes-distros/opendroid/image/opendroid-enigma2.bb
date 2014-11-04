@@ -7,7 +7,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PV = "1.0"
-PR = "r23"
+PR = "r2"
 
 inherit packagegroup
 
@@ -44,16 +44,16 @@ RRECOMMENDS_${PN} = "\
 
 RRECOMMENDS_${PN}_append_gb800solo = ""
 RRECOMMENDS_${PN}_append_gb800se = ""
-RRECOMMENDS_${PN}_append_gb800ue = "python-imaging"
-RRECOMMENDS_${PN}_append_gbquad = "python-imaging"
+RRECOMMENDS_${PN}_append_gb800ue = ""
+RRECOMMENDS_${PN}_append_gbquad = "" 
 RRECOMMENDS_${PN}_append_dags1 = "enigma2-plugin-systemplugins-osd3dsetup"
 RRECOMMENDS_${PN}_append_dags2 = "enigma2-plugin-systemplugins-osd3dsetup"
 RRECOMMENDS_${PN}_append_dags3 = "enigma2-plugin-systemplugins-osd3dsetup"
 RRECOMMENDS_${PN}_append_ixussone = ""
 RRECOMMENDS_${PN}_append_vuduo = "" 
 RRECOMMENDS_${PN}_append_vusolo = "" 
-RRECOMMENDS_${PN}_append_vusolo2 = "enigma2-plugin-extensions-hbbtv"
-RRECOMMENDS_${PN}_append_vuduo2 = "enigma2-plugin-extensions-hbbtv" 
+RRECOMMENDS_${PN}_append_vusolo2 = ""
+RRECOMMENDS_${PN}_append_vuduo2 = "" 
 RRECOMMENDS_${PN}_append_et9x00 = "" 
 RRECOMMENDS_${PN}_append_et6x00 = "" 
 RRECOMMENDS_${PN}_append_et5x00 = "" 

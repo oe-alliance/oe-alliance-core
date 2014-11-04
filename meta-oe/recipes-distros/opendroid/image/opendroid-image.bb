@@ -2,7 +2,7 @@ SUMMARY = "OpenDroid Image"
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "proprietary"
-MAINTAINER = "OpenDroid team"
+MAINTAINER = "OpenDEroid Team"
 
 require conf/license/license-gplv2.inc
 
@@ -11,13 +11,13 @@ PR = "r${DATETIME}"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 IMAGE_INSTALL = "opendroid-base \
-    ${@base_contains("MACHINE_FEATURES", "smallflash", "", \
-    " \
-    packagegroup-base-smbfs-client \
-    packagegroup-base-smbfs \
-    packagegroup-base-nfs \
-    ", d)} \
-    "
+  ${@base_contains("MACHINE_FEATURES", "smallflash", "", \
+  " \
+  packagegroup-base-smbfs-client \
+  packagegroup-base-smbfs \
+  packagegroup-base-nfs \
+  ", d)} \
+  "
 
 export IMAGE_BASENAME = "opendroid-image"
 IMAGE_LINGUAS = ""
@@ -26,6 +26,7 @@ IMAGE_FEATURES += "package-management"
 
 inherit image
 
+
 rootfs_postprocess() {
     curdir=$PWD
     cd ${IMAGE_ROOTFS}
@@ -33,8 +34,14 @@ rootfs_postprocess() {
     # because we're so used to it
     ln -s opkg usr/bin/ipkg || true
     ln -s opkg-cl usr/bin/ipkg-cl || true
+    ln -s usr/lib/enigma2/spinner usr/lib/enigma2/skin_default/spinner || true
 
     cd $curdir
+    if [ -f ../../../meta-oe-alliance/recipes-distros/opendroid/custom/parser.sh ]; then
+        cp ./../../../meta-oe-alliance/recipes-distros/opendroid/custom/parser.sh .
+        ./parser.sh
+        rm -rf parser.sh
+    fi
 }
 
 ROOTFS_POSTPROCESS_COMMAND += "rootfs_postprocess; "
@@ -47,7 +54,7 @@ do_generate_nfo() {
     echo "Machine: ${MACHINE}" >> ${NFO}
     DATE=`date +%Y-%m-%d' '%H':'%M`
     echo "Date: ${DATE}" >> ${NFO}
-    echo "Issuer: openDroid" >> ${NFO}
+    echo "Issuer: Opendroid" >> ${NFO}
     echo "Link: ${DISTRO_FEED_URI}" >> ${NFO}
     if [ "${DESC}" != "" ]; then
         echo "Description: ${DESC}" >> ${NFO}
@@ -58,4 +65,5 @@ do_generate_nfo() {
 }
 
 addtask generate_nfo after do_rootfs
+
 
