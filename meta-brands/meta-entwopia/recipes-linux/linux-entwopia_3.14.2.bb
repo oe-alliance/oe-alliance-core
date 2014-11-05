@@ -4,12 +4,15 @@ LICENSE = "GPLv2"
 PR .= ".r0"
 
 KERNEL_RELEASE = "3.14.2"
-SRCDATE = "20140813"
+SRCDATE_ew7356 = "20140813"
+SRCDATE_ew7358 = "20141102"
 
 inherit machine_kernel_pr
 
-SRC_URI[md5sum] = "22568cbbb6c7a59bde2b1afc4c1c7a05"
-SRC_URI[sha256sum] = "e9b56c20fb0767ef6c5fc5bde57faa0a177ee93aa5b3b8145b7081681d2fce30"
+SRC_URI[ew7356.md5sum] = "22568cbbb6c7a59bde2b1afc4c1c7a05"
+SRC_URI[ew7356.sha256sum] = "e9b56c20fb0767ef6c5fc5bde57faa0a177ee93aa5b3b8145b7081681d2fce30"
+SRC_URI[ew7358.md5sum] = "e0d617b82d4efe455ee5b1f56c0c2155"
+SRC_URI[ew7358.sha256sum] = "b3480496dd888b6a0fce0202cd424e54a3868555edd56d050861e0c9439e843c"
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}-base/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
@@ -23,7 +26,7 @@ PKG_kernel-image = "kernel-image"
 RPROVIDES_kernel-base = "kernel-${KERNEL_VERSION}"
 RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
 
-SRC_URI += "http://source.entwopia.com/${MACHINE}/${MACHINE}-linux-${PV}-base-${SRCDATE}.tgz \
+SRC_URI += "http://source.entwopia.com/${MACHINE}/${MACHINE}-linux-${PV}-base-${SRCDATE}.tgz;name=${MACHINE} \
 	file://defconfig \
 	file://add-rt2x00-wifi-devices.patch \
 	file://add-rtl8192cu-wifi-devices.patch \
