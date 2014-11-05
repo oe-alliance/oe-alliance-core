@@ -6,11 +6,11 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 inherit machine_kernel_pr
 
-DATE = "20140404"
-MACHINE_KERNEL_PR_append = ".7"
+DATE = "20141105"
+MACHINE_KERNEL_PR_append = ".8"
 
-SRC_URI[md5sum] = "af363fb33b02a2885589678ab80754c2"
-SRC_URI[sha256sum] = "a360f90a557979ea9c021a81786352d9e0dcf86d971256a80dc47d05b1e5a7b2"
+SRC_URI[md5sum] = "dad0d1e0df320d8182c2840c0c7f675f"
+SRC_URI[sha256sum] = "4a76587eb70c3ad7ca33e63c4bb06c09cfa36a8f1e51554e646816eed229cdfe"
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${KV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
