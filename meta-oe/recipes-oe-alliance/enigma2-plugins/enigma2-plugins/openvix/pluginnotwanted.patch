@@ -1,8 +1,8 @@
 diff --git a/Makefile.am b/Makefile.am
-index d0f54e5..57e11ef 100644
+index d0f54e5..336bef5 100644
 --- a/Makefile.am
 +++ b/Makefile.am
-@@ -1,111 +1,56 @@
+@@ -1,111 +1,58 @@
  ACLOCAL_AMFLAGS = -I m4
  
  SUBDIRS = \
@@ -92,8 +92,8 @@ index d0f54e5..57e11ef 100644
  	vlcplayer \
  	vps \
  	weatherplugin \
--	weathercomponent \
--	weathercomponenthandler \
+ 	weathercomponent \
+ 	weathercomponenthandler \
 -	webadmin \
 -	webbouqueteditor \
  	webcamviewer \
