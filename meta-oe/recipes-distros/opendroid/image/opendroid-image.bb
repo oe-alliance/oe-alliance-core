@@ -2,7 +2,7 @@ SUMMARY = "OpenDroid Image"
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "proprietary"
-MAINTAINER = "OpenDEroid Team"
+MAINTAINER = "OpenDroid Team"
 
 require conf/license/license-gplv2.inc
 
