@@ -14,7 +14,7 @@ SRC_URI[sha256sum] = "4a76587eb70c3ad7ca33e63c4bb06c09cfa36a8f1e51554e646816eed2
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${KV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-SRC_URI = "http://en3homeftp.net/pub/src/linux-${KV}-${DATE}-1.tar.gz \
+SRC_URI = "http://en3homeftp.net/pub/src/linux-${KV}-${DATE}.tar.gz \
     file://defconfig \
     file://sit2_op.o \
     "
