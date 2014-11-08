@@ -7,7 +7,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "1.0"
-PR = "3"
+PR = "4"
 
 inherit packagegroup
 
@@ -16,4 +16,5 @@ DEPENDS = "enigma2 enigma2-plugin-vixhd-skins"
 RDEPENDS_${PN} = "\
     enigma2-plugin-skins-youvix-red \
 	enigma2-plugin-skins-youvix-green \
+	enigma2-plugin-skins-youvix-darkblue \
     "
