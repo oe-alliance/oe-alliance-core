@@ -1,4 +1,4 @@
-SUMMARY = "Opendroid version info"
+SUMMARY = "OpenDroid version info"
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "proprietary"
@@ -33,12 +33,10 @@ do_install() {
     echo "date=${DATETIME}" >> ${D}/etc/image-version
     echo "comment=opendroid" >> ${D}/etc/image-version
     echo "target=9" >> ${D}/etc/image-version
-    echo "creator=Opendroid" >> ${D}/etc/image-version
+    echo "creator=OpenDroid" >> ${D}/etc/image-version
     echo "url=${URL}" >> ${D}/etc/image-version
     echo "catalog=${URL}" >> ${D}/etc/image-version
     echo "${MACHINE}" > ${D}/etc/model
 }
 
 FILES_${PN} += "/etc/model /etc/image-version /etc/oe-git.log /etc/e2-git.log"
-
-

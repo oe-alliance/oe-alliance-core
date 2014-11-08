@@ -9,13 +9,12 @@ EPSM = "enigma2-plugin-skins"
 SRCREV = "${AUTOREV}"
 PV = "2.3+git${SRCPV}"
 PKGV = "2.3+git${GITPKGV}"
-PR = "r7"
+PR = "r8"
 
-PACKAGES = "${EPSM}-youvix-blue ${EPSM}-youvix-red"
+PACKAGES = "${EPSM}-youvix-red"
 
 SRC_URI = "git://github.com/OpenViX/vixhd-skins.git;protocol=git"
 
-FILES_${EPSM}-youvix-blue = "/usr/share/enigma2/YouViX-Blue"
 FILES_${EPSM}-youvix-red = "/usr/share/enigma2/YouViX-Red"
 
 S = "${WORKDIR}/git"

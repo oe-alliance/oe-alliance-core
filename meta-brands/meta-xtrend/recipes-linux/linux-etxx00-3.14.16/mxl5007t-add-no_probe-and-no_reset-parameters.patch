@@ -54,7 +54,7 @@ index 69e453e..7886a5a 100644
  		if (fe->ops.i2c_gate_ctrl)
  			fe->ops.i2c_gate_ctrl(fe, 0);
 diff --git a/drivers/media/tuners/mxl5007t.h b/drivers/media/tuners/mxl5007t.h
-index aa3eea0..d99758f 100644
+index 37b0942..f47bb27 100644
 --- a/drivers/media/tuners/mxl5007t.h
 +++ b/drivers/media/tuners/mxl5007t.h
 @@ -73,8 +73,10 @@ struct mxl5007t_config {
@@ -68,20 +68,29 @@ index aa3eea0..d99758f 100644
 +	unsigned int no_reset:1;
  };
  
- #if defined(CONFIG_MEDIA_TUNER_MXL5007T) || (defined(CONFIG_MEDIA_TUNER_MXL5007T_MODULE) && defined(MODULE))
+ #if IS_ENABLED(CONFIG_MEDIA_TUNER_MXL5007T)
 diff --git a/drivers/media/usb/dvb-usb-v2/af9035.c b/drivers/media/usb/dvb-usb-v2/af9035.c
-index 61ae7f9..9799ca8 100644
+index 1ea17dc..12e913f 100644
 --- a/drivers/media/usb/dvb-usb-v2/af9035.c
 +++ b/drivers/media/usb/dvb-usb-v2/af9035.c
-@@ -792,6 +792,8 @@ static struct mxl5007t_config af9035_mxl5007t_config = {
- 	.loop_thru_enable = 0,
- 	.clk_out_enable = 0,
- 	.clk_out_amp = MxL_CLKOUT_AMP_0_94V,
-+	.no_probe = 1,
-+	.no_reset = 1,
+@@ -969,6 +969,8 @@ static struct mxl5007t_config af9035_mxl5007t_config[] = {
+ 		.loop_thru_enable = 0,
+ 		.clk_out_enable = 0,
+ 		.clk_out_amp = MxL_CLKOUT_AMP_0_94V,
++		.no_probe = 1,
++		.no_reset = 1,
+ 	}, {
+ 		.xtal_freq_hz = MxL_XTAL_24_MHZ,
+ 		.if_freq_hz = MxL_IF_4_57_MHZ,
+@@ -976,6 +978,8 @@ static struct mxl5007t_config af9035_mxl5007t_config[] = {
+ 		.loop_thru_enable = 1,
+ 		.clk_out_enable = 1,
+ 		.clk_out_amp = MxL_CLKOUT_AMP_0_94V,
++		.no_probe = 1,
++		.no_reset = 1,
+ 	}
  };
  
- static struct tda18218_config af9035_tda18218_config = {
 -- 
 1.7.9.5
 

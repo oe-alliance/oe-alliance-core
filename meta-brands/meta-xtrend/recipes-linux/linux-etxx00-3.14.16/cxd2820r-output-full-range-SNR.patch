@@ -82,10 +82,10 @@ index fa184ca..4268c53 100644
  			tmp);
  
 diff --git a/drivers/media/dvb-frontends/cxd2820r_t2.c b/drivers/media/dvb-frontends/cxd2820r_t2.c
-index e82d82a..69945cc 100644
+index 2ba130e..bfa8441 100644
 --- a/drivers/media/dvb-frontends/cxd2820r_t2.c
 +++ b/drivers/media/dvb-frontends/cxd2820r_t2.c
-@@ -351,7 +351,7 @@ int cxd2820r_read_snr_t2(struct dvb_frontend *fe, u16 *snr)
+@@ -368,7 +368,7 @@ int cxd2820r_read_snr_t2(struct dvb_frontend *fe, u16 *snr)
  	struct cxd2820r_priv *priv = fe->demodulator_priv;
  	int ret;
  	u8 buf[2];
@@ -94,7 +94,7 @@ index e82d82a..69945cc 100644
  	/* report SNR in dB * 10 */
  
  	ret = cxd2820r_rd_regs(priv, 0x02028, buf, sizeof(buf));
-@@ -366,6 +366,35 @@ int cxd2820r_read_snr_t2(struct dvb_frontend *fe, u16 *snr)
+@@ -383,6 +383,36 @@ int cxd2820r_read_snr_t2(struct dvb_frontend *fe, u16 *snr)
  	else
  		*snr = 0;
  
@@ -127,9 +127,10 @@ index e82d82a..69945cc 100644
 +	dev_dbg(&priv->i2c->dev, "%s: SNR=%d val=%04x", __func__, *snr, tmp);
 +	return ret;
 +db_out:
++
  	dev_dbg(&priv->i2c->dev, "%s: dBx10=%d val=%04x\n", __func__, *snr,
  			tmp);
- 
+
 -- 
 1.7.9.5
 

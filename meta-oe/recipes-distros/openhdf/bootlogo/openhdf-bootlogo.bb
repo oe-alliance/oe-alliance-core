@@ -8,8 +8,8 @@ require conf/license/license-gplv2.inc
 
 RDEPENDS_${PN} += "showiframe"
 
-PV = "4.1"
-PR = "r1"
+PV = "4.2"
+PR = "r0"
 
 S = "${WORKDIR}"
 
@@ -18,7 +18,7 @@ INITSCRIPT_PARAMS = "start 06 S ."
 
 inherit update-rc.d
 
-SRC_URI = "file://bootlogo.mvi file://radio.mvi file://bootlogo.sh ${@base_contains("MACHINE_FEATURES", "bootsplash", "file://splash.bin" , "", d)} "
+SRC_URI = "file://bootlogo.mvi file://radio.mvi file://bootlogo.sh file://splash576.bmp file://splash480.bmp"
 SRC_URI_append_gb800ue = "file://lcdsplash.bin"
 SRC_URI_append_gbquad = "file://lcdsplash.bin"
 SRC_URI_append_gb800ueplus = "file://lcdsplash.bin"
@@ -53,8 +53,10 @@ do_install() {
 
 inherit deploy
 do_deploy() {
-    if [ -e splash.bin ]; then
-        install -m 0644 splash.bin ${DEPLOYDIR}/${BOOTLOGO_FILENAME}
+    if [ "${BRAND_OEM}" = "dags" ]; then
+        install -m 0644 splash480.bmp ${DEPLOYDIR}/${BOOTLOGO_FILENAME}
+    else
+        install -m 0644 splash576.bmp ${DEPLOYDIR}/${BOOTLOGO_FILENAME}
     fi
     if [ -e lcdsplash.bin ]; then
         install -m 0644 lcdsplash.bin ${DEPLOYDIR}/lcdsplash.bin

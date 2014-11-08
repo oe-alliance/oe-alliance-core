@@ -9,7 +9,10 @@ SRCREV = "${AUTOREV}"
 # SRCREV = "ebdc7c77f88c7fb50c642703786ff7d50bf3bd80"
 PV = "2.0+git${SRCPV}"
 PKGV = "2.0+git${GITPKGV}"
-PR = "r0"
+PR = "r1"
+
+PACKAGES = "enigma2-plugin-extensions-dreamplex"
+PROVIDES = "enigma2-plugin-extensions-dreamplex"
 
 DEPENDS = "python"
 RDEPENDS_${PN} = "gst-plugins-bad-fragmented curl mjpegtools python-ctypes libshowiframe0"
@@ -23,8 +26,8 @@ EXTRA_OECONF = " \
     STAGING_LIBDIR=${STAGING_LIBDIR} \
     "
 
-PACKAGES += "${PN}-meta"
-FILES_${PN}-meta = "${datadir}/meta"
+PACKAGES += "enigma2-plugin-extensions-dreamplex-meta"
+FILES_enigma2-plugin-extensions-dreamplex-meta = "${datadir}/meta"
 
 S = "${WORKDIR}/git"
 

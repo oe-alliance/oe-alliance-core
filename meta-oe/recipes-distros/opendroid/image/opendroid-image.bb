@@ -1,8 +1,8 @@
-SUMMARY = "Opendroid Image"
+SUMMARY = "OpenDroid Image"
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "proprietary"
-MAINTAINER = "Opendroid Team"
+MAINTAINER = "OpenDroid Team"
 
 require conf/license/license-gplv2.inc
 
@@ -54,7 +54,7 @@ do_generate_nfo() {
     echo "Machine: ${MACHINE}" >> ${NFO}
     DATE=`date +%Y-%m-%d' '%H':'%M`
     echo "Date: ${DATE}" >> ${NFO}
-    echo "Issuer: opendroid" >> ${NFO}
+    echo "Issuer: Opendroid" >> ${NFO}
     echo "Link: ${DISTRO_FEED_URI}" >> ${NFO}
     if [ "${DESC}" != "" ]; then
         echo "Description: ${DESC}" >> ${NFO}
@@ -65,4 +65,5 @@ do_generate_nfo() {
 }
 
 addtask generate_nfo after do_rootfs
+
 
