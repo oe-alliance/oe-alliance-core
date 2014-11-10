@@ -2,7 +2,7 @@ SUMMARY = "openViX-HD bootlogo"
 LICENSE = "CLOSED"
 
 PV = "2.3"
-PR = "r0"
+PR = "r1"
 
 SRC_URI = "file://openvixhd-apollo.zip"
 

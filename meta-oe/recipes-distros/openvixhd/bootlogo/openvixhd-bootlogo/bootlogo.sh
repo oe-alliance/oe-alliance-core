@@ -23,7 +23,7 @@ if [ -f /usr/share/bootvideo.* ] || [ -f /etc/enigma2/bootvideo.* ]; then
 		fi
 	#(sleep 25; killall gst-launch) & 
 	#gst-launch playbin2 uri=file://$BOOTVIDEO &
-	(sleep 11; killall eplayer4) &
+	(sleep 20; killall eplayer4) &
 	/usr/bin/eplayer4 $BOOTVIDEO
 	else
 	echo No flash bootlogo found, check /usr/share for your flashbootlogo, now showing original bootlogo
