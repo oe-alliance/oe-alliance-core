@@ -7,18 +7,21 @@ MACHINE_NAME = "\
 ${@base_contains('MACHINEBUILD', 'enfinity', 'ENfinity' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'marvel1', 'Marvel 1' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'x2plus', 'enifinty x2plus' , '', d)}\
+${@base_contains('MACHINEBUILD', 'bre2ze', 'brE2ze' , '', d)}\
 "
 
 MACHINE_BRAND = "\
 ${@base_contains('MACHINEBUILD', 'enfinity', 'EVO' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'marvel1', 'VisionNet' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'x2plus', 'EVO' , '', d)}\
+${@base_contains('MACHINEBUILD', 'bre2ze', 'WWIO' , '', d)}\
 "
 
 IMAGEDIR ?= "\
 ${@base_contains('MACHINEBUILD', 'enfinity', 'enfinity' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'marvel1', 'marvel1' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'x2plus', 'x2plus' , '', d)}\
+${@base_contains('MACHINEBUILD', 'bre2ze', 'bre2ze' , '', d)}\
 "
 
 MTD_ROOTFS = "mtd0"
