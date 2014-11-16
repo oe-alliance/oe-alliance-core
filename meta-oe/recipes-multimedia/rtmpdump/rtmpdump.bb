@@ -10,7 +10,7 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PKGV = "2.48+git${GITPKGV}"
 PV = "2.48+git${SRCPV}"
-PR = "r4"
+PR = "r5"
 
 SRC_URI = "git://github.com/oe-alliance/rtmpdump.git;protocol=git"
 
