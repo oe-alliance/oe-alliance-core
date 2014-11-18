@@ -1,8 +1,0 @@
---- a/drivers/net/ethernet/broadcom/genet/Makefile	2014-06-02 19:08:12.651964124 +0200
-+++ b/drivers/net/ethernet/broadcom/genet/Makefile	2014-06-02 19:07:44.771964537 +0200
-@@ -2,3 +2,4 @@
- brcmgenet-objs := bcmgenet.o bcmmii.o ethsw.o
- 
- EXTRA_CFLAGS += -I.
-+EXTRA_CFLAGS += -Wno-date-time
-\ No newline at end of file
