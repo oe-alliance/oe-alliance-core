@@ -2,7 +2,7 @@ SUMMARY = "ViX-HD animated bootlogo"
 LICENSE = "CLOSED"
 
 PV = "2.3"
-PR = "r1"
+PR = "r2"
 
 DEPENDS = "eplayer4"
 RDEPENDS_${PN} = "eplayer4"

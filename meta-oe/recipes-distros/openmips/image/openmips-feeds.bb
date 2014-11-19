@@ -6,18 +6,15 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=4d92cd373abda3937c2bc47fbc49d
 ALLOW_EMPTY_${PN} = "1"
 
 PV = "1.0"
-PR = "r3"
+PR = "r4"
 
 inherit packagegroup
 
 RRECOMMENDS_${PN} = "\
     oe-alliance-skins \
     enigma2-skins \
-    enigma2-plugin-extensions-gb-multiquickbutton \
     enigma2-plugin-extensions-enhancedmoviecenter \
     enigma2-plugin-extensions-cooltvguide \
     enigma2-plugin-systemplugins-autobouquetsmaker\
     enigma2-plugin-extensions-gbipboxclient \
-    enigma2-plugin-extensions-openmultiboot \
-    openmultiboot \
     "

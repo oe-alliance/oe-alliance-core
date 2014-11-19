@@ -10,7 +10,7 @@ inherit gitpkgv pythonnative
 SRCREV = "${AUTOREV}"
 PV = "4.0.+git${SRCPV}"
 PKGV = "4.0.+git${GITPKGV}"
-PR = "r7"
+PR = "r8"
 
 
 SRC_URI="git://github.com/betonme/e2openplugin-EnhancedMovieCenter.git"
