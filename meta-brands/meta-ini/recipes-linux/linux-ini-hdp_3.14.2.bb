@@ -32,7 +32,6 @@ SRC_URI += "http://code-ini.com/software/kernel/bcm7425-linux-${KV}-${SRCDATE}.t
 	file://cxd2820r-output-full-range-SNR.patch \
 	file://dvb_usb_disable_rc_polling.patch \
 	file://dvb-usb-dib0700-disable-sleep.patch \
-	file://fix-proc-cputype.patch \
 	file://iosched-slice_idle-1.patch \
 	file://it913x-switch-off-PID-filter-by-default.patch \
 	file://mxl5007t-add-no_probe-and-no_reset-parameters.patch \
