@@ -1,22 +1,21 @@
 SUMMARY = "Linux kernel for ${MACHINE}"
 LICENSE = "GPLv2"
 SECTION = "kernel"
-KV = "3.9.7-r1"
+KV = "3.9.7-r2"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 inherit machine_kernel_pr
 
-DATE = "20141105"
+DATE = "20141120"
 MACHINE_KERNEL_PR_append = ".8"
 
-SRC_URI[md5sum] = "dad0d1e0df320d8182c2840c0c7f675f"
-SRC_URI[sha256sum] = "4a76587eb70c3ad7ca33e63c4bb06c09cfa36a8f1e51554e646816eed229cdfe"
+SRC_URI[md5sum] = "dccfbe420bbc64291ab87b0545475841"
+SRC_URI[sha256sum] = "c8c139148e099ed3ec88103f7d2dbd0420ec6156b4ac9adc4b7e6d7d955f456e"
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${KV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
 SRC_URI = "http://en3homeftp.net/pub/src/linux-${KV}-${DATE}.tar.gz \
     file://defconfig \
-    file://sit2_op.o \
     "
 
 S = "${WORKDIR}/linux-${KV}"

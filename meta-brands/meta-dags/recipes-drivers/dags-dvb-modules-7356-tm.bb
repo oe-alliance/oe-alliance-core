@@ -5,15 +5,15 @@ LICENSE = "CLOSED"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-SRCDATE = "20141112"
+SRCDATE = "20141120"
 KV = "3.9.7"
 PV = "${KV}+${SRCDATE}"
 PR = "r3"
 
-SRC_URI[md5sum] = "49a623a9533d35052d29d20c131af833"
-SRC_URI[sha256sum] = "54530a95867c45dcce1f169747bf3741d8ebb2ba3d4ed7ca67d2c3076fac9607"
+SRC_URI[md5sum] = "871e01ba6cb210aa6290db5b74b1b10c"
+SRC_URI[sha256sum] = "39762ff872b5c67a0c4243376567f775e2ca5c06f15fc221c07230a0b5e99ea5"
 
-SRC_URI = "http://en3homeftp.net/release/images/oedrivers/bcmlinuxdvb_7356-${KV}-tmnano3t-${SRCDATE}.tar.gz"
+SRC_URI = "http://en3homeftp.net/release/images/oedrivers/bcmlinuxdvb_7356-${KV}-tmnano3t-1080-${SRCDATE}.tar.gz"
 
 S = "${WORKDIR}"
 
