@@ -9,7 +9,7 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"
-PR = "r1"
+PR = "r2"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 DEPENDS = "freetype"
@@ -24,6 +24,7 @@ EXTRA_OEMAKE = " \
     'CFLAGS=${CFLAGS} \
     -I=${includedir}/freetype2 \
     ${@base_contains("MACHINE_FEATURES", "singlecore", "-DOMB_DEFAULT_TIMER=10" , "-DOMB_DEFAULT_TIMER=5", d)} \
+    ${@base_contains("MACHINE_FEATURES", "textlcd", "-DOMB_HAVE_TEXTLCD" , "", d)} \
     ${@base_contains("IMAGE_FSTYPES", "ubi", "-DOMB_FLASH_UBI" , "", d)} \
     ${@base_contains("IMAGE_FSTYPES", "jffs2", "-DOMB_FLASH_JFFS2" , "", d)} \
     -DOMB_KERNEL_MTD=\"/dev/${MTD_KERNEL}\"' \
