@@ -174,7 +174,7 @@ IMAGE_CMD_ubi_append = " \
     rm -rf beyonwiz; \ 
     "
 
-MACHINE_FEATURES += "3dtv alsa hdmicec switchoff wifi bootsplash "
+MACHINE_FEATURES += "3dtv alsa hdmicec switchoff wifi bootsplash omb"
 
 BOOTLOGO_FILENAME = "splash.bin"
 

@@ -50,7 +50,7 @@ IMAGE_CMD_ubi_prepend = " \
     rm -rf ${IMAGE_ROOTFS}/tmp/*; \
     "
 
-MACHINE_FEATURES += "3dtv alsa hdmicec switchoff wifi bootsplash audioeffect"
+MACHINE_FEATURES += "3dtv alsa hdmicec switchoff wifi bootsplash audioeffect omb"
 
 BOOTLOGO_FILENAME = "splash_cfe_auto.bin"
 
