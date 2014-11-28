@@ -8,20 +8,22 @@ DEPENDS = "openssl zlib"
 PROVIDES =+ " librtmp1"
 PACKAGES =+ " librtmp1"
 
-inherit gitpkgv
+inherit autotools-brokensep gitpkgv
 
 SRCREV = "${AUTOREV}"
 PKGV = "2.48+git${GITPKGV}"
 PV = "2.48+git${SRCPV}"
-PR = "r4"
+PR = "r6"
 
 SRC_URI = "git://github.com/oe-alliance/rtmpdump.git;protocol=git"
 
 S = "${WORKDIR}/git/librtmp"
 
-do_compile() {
-    oe_runmake CROSS_COMPILE=${TARGET_PREFIX} CFLAGS="${CFLAGS} -fPIC" LDFLAGS="${LDFLAGS}"
-}
+
+EXTRA_OEMAKE = " \
+    CC='${CC}' LD='${LD} ${STAGING_LIBDIR}' \
+    SYS=posix INC=-I=/usr/include DESTDIR=${D} \
+    prefix=${prefix} libdir=${libdir} incdir=${includedir}/librtmp bindir=${bindir} mandir=${mandir}"
 
 do_install() {
     install -d ${D}${libdir}
