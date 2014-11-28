@@ -92,7 +92,7 @@ ${@base_contains('MACHINEBUILD', 'tmtwin', 'mtd6' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'iqonios100hd', 'mtd6' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'iqonios200hd', 'mtd6' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'iqonios300hd', 'mtd6' , '', d)}\
-${@base_contains('MACHINEBUILD', 'iqonios300hdv2', 'mtd6' , '', d)}\
+${@base_contains('MACHINEBUILD', 'iqonios300hdv2', 'mtd1' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'force1', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'force1plus', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'worldvisionf1', 'mtd2' , '', d)}\
@@ -205,7 +205,7 @@ IMAGE_CMD_ubi_append = " \
     "
 
 
-MACHINE_FEATURES += "3dtv alsa hdmicec switchoff wifi bootsplash textlcd fan ci"
+MACHINE_FEATURES += "3dtv alsa hdmicec switchoff wifi bootsplash textlcd fan ci omb skins1080"
 
 BOOTLOGO_FILENAME = "splash.bmp"
 

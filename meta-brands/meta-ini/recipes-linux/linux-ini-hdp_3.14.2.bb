@@ -3,14 +3,14 @@ SECTION = "kernel"
 LICENSE = "GPLv2"
 
 KV = "3.14.2"
-SRCDATE = "20140601"
+SRCDATE = "20141120"
 
-SRC_URI[md5sum] = "b7c326591a95551e1570573603a0dfc4"
-SRC_URI[sha256sum] = "02edced87f59b5f36c25c47607d2dbef61828f736089ec7c24d703f9d70cb0f7"
+SRC_URI[md5sum] = "969333ae13ca341f097944aec06d7c7d"
+SRC_URI[sha256sum] = "448e7b1f48fcc73c25431a412256ee7b3eec9e3c520630de70a9cb1eb7654ce3"
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-MACHINE_KERNEL_PR_append = ".1"
+MACHINE_KERNEL_PR_append = ".3"
 
 inherit machine_kernel_pr
 
@@ -32,7 +32,6 @@ SRC_URI += "http://code-ini.com/software/kernel/bcm7425-linux-${KV}-${SRCDATE}.t
 	file://cxd2820r-output-full-range-SNR.patch \
 	file://dvb_usb_disable_rc_polling.patch \
 	file://dvb-usb-dib0700-disable-sleep.patch \
-	file://fix-proc-cputype.patch \
 	file://iosched-slice_idle-1.patch \
 	file://it913x-switch-off-PID-filter-by-default.patch \
 	file://mxl5007t-add-no_probe-and-no_reset-parameters.patch \

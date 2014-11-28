@@ -8,7 +8,7 @@ KV = "3.14.2"
 SRCDATE = "20141105"
 
 PV = "${KV}+${SRCDATE}"
-PR = "r4"
+PR = "r5"
 
 SRC_URI[md5sum] = "65fe02feeb4c252b2b78e592e8f2454b"
 SRC_URI[sha256sum] = "50360a41d91ca3760f0173231f4445cad944c7c13b4ba7b7abf34836ebca1b44"
@@ -31,6 +31,9 @@ do_install() {
         install -m 0755 ${WORKDIR}/$i.ko ${D}/lib/modules/${KV}/extra/dvb_${MACHINEBUILD}.ko
         echo dvb_${MACHINEBUILD} >> ${D}/${sysconfdir}/modules-load.d/_${MACHINEBUILD}.conf
     done
+    
+    install -d ${D}/${sysconfdir}/modprobe.d
+    echo "blacklist rtk_btusb" > ${D}/${sysconfdir}/modprobe.d/blacklist.conf    
 }
 
 FILES_${PN} += "${sysconfdir}/modules-load.d/_${MACHINEBUILD}.conf"
