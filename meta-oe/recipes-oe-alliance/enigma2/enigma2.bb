@@ -255,9 +255,7 @@ FILES_${PN}-src = "\
     "
 
 FILES_${PN} += " \
-    ${bindir} ${sysconfdir}/e2-git.log \
-    /lib/systemd/system/enigma2.service \
-    "
+    ${bindir} ${sysconfdir}/e2-git.log"
 
 # Save po files
 PACKAGES =+ "${PN}-po"
@@ -283,34 +281,4 @@ python populate_packages_prepend() {
 
     enigma2_podir = bb.data.expand('${datadir}/enigma2/po', d)
     do_split_packages(d, enigma2_podir, '^(\w+)/[a-zA-Z0-9_/]+.*$', 'enigma2-locale-%s', '%s', recursive=True, match_path=True, prepend=True, extra_depends="enigma2")
-}
-
-inherit systemd
-
-SYSTEMD_SERVICE_${PN} = "enigma2.service"
-
-do_install_append() {
-	install -d ${D}/usr/share/keymaps
-	find ${D}/usr/lib/enigma2/python/ -name '*.pyc' -exec rm {} \;
-	install -d ${D}${systemd_unitdir}/system
-	ln -sf /dev/null ${D}${systemd_unitdir}/system/enigma2.service
-	install -m644 ${WORKDIR}/enigma2.service ${D}${systemd_unitdir}/system
-}
-
-FILES_${PN} += "\
-	/lib/systemd/system/enigma2.service \
-	"
-
-# Override systemd_postinst from systemd.bbclass to replace 'restart' with 'start'.
-systemd_postinst() {
-OPTS=""
-if [ -n "$D" ]; then
-	OPTS="--root=$D"
-fi
-if type systemctl >/dev/null 2>/dev/null; then
-	systemctl $OPTS ${SYSTEMD_AUTO_ENABLE} ${SYSTEMD_SERVICE}
-	if [ -z "$D" -a "${SYSTEMD_AUTO_ENABLE}" = "enable" ]; then
-		systemctl start ${SYSTEMD_SERVICE}
-	fi
-fi
 }
