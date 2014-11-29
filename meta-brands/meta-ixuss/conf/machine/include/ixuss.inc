@@ -23,7 +23,7 @@ MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS = "\
 
 MACHINE_EXTRA_RRECOMMENDS = " \
     ixuss-shutdown \
-    gst-plugin-dvbmediasink \
+    gstreamer1.0-plugin-dvbmediasink \
     "
 
 KERNEL_MODULE_AUTOLOAD += "ext2"

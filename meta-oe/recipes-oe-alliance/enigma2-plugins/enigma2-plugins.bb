@@ -26,6 +26,7 @@ EXTRA_OECONF = " \
     --with-po \
     --with-boxtype=${MACHINE} \
     --with-distro=${DISTRO} \
+    --with-gstversion=1.0 \
     ${@base_contains('MACHINE_FEATURES', 'tpm', '--with-tpm' , '', d)} \
     ${@base_contains('DISTRO_FEATURES', 'pli', '--with-pli' , '', d)} \
 "
