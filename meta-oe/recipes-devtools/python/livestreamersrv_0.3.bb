@@ -9,9 +9,11 @@ require conf/license/license-gplv2.inc
 
 RDEPENDS_${PN} = "livestreamer"
 
-SRC_URI = "git://github.com/athoik/livestreamersrv"
+SRC_URI = "git://github.com/athoik/livestreamersrv.git"
 S = "${WORKDIR}/git/"
-SRCREV = "v${PV}"
+
+inherit gitpkgv
+SRCREV = "${AUTOREV}"
 PR = "r0"
 
 do_install_append() {
