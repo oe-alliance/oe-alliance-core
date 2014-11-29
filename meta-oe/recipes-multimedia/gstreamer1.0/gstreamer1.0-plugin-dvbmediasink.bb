@@ -21,8 +21,12 @@ PKGV = "${GSTVERSION}+git${GITPKGV}"
 PR = "r0"
 
 do_configure_prepend() {
-        sed -i 's/AC_INIT.*$/AC_INIT(gst-plugin-dvbmediasink, 1.0.0, @pli4)/' ${S}/configure.ac
-        sed -i 's/AM_INIT_AUTOMAKE.*$/AM_INIT_AUTOMAKE([foreign])/' ${S}/configure.ac
+    sed -i 's/AC_INIT.*$/AC_INIT(gst-plugin-dvbmediasink, 1.0.0, @pli4)/' ${S}/configure.ac
+    sed -i 's/AM_INIT_AUTOMAKE.*$/AM_INIT_AUTOMAKE([foreign])/' ${S}/configure.ac
+    touch ${S}/NEWS
+    touch ${S}/README
+    touch ${S}/AUTHORS
+    touch ${S}/ChangeLog
 }
 
 inherit autotools pkgconfig
