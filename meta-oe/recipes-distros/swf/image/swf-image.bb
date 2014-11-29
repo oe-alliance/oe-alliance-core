@@ -14,6 +14,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 IMAGE_INSTALL = " \
     oe-alliance-base \
+    enigma2-skindefault \
     swf-enigma2 \
     swf-bootlogo \
     swf-spinner \
@@ -31,6 +32,7 @@ IMAGE_INSTALL = " \
     ${@base_contains("MACHINE", "uniboxhde", "enigma2-plugin-settings-default-swf" , "", d)} \
     ntfs-3g \
     hddtemp \
+    eplayer4 \
     busybox-cron \
     python-gdata \
     ushare \
@@ -38,18 +40,20 @@ IMAGE_INSTALL = " \
     libshowiframe \
     packagegroup-base-smbfs \
     packagegroup-base-nfs \
+    openmultiboot \
     mc \
     swf-base \
     "
 
 ENIGMA2_PLUGINS = "\
     enigma2-plugin-extensions-epgsearch \
+    enigma2-plugin-extensions-openmultiboot \
     enigma2-plugin-extensions-imdb \
     enigma2-plugin-extensions-cutlisteditor \
     enigma2-plugin-extensions-dvdplayer \
     enigma2-plugin-extensions-cooltvguide \
     enigma2-plugin-extensions-mediaportal \
-    ${@base_contains("MACHINE", "ventonhdx", "enigma2-plugin-extensions-foreca" , "", d)} \
+    enigma2-plugin-extensions-foreca \
     enigma2-plugin-extensions-dlnabrowser \
     ${@base_contains("MACHINE", "ventonhdx", "enigma2-plugin-systemplugins-videotune" , "", d)} \
     enigma2-plugin-systemplugins-softwaremanager \
