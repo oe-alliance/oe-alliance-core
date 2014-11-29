@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=4d92cd373abda3937c2bc47fbc49d
 ALLOW_EMPTY_${PN} = "1"
 
 PV = "1.0"
-PR = "r5"
+PR = "r8"
 
 inherit packagegroup
 
@@ -17,6 +17,7 @@ RRECOMMENDS_${PN} = "\
     oe-alliance-skins \
     openatv-picons-meta \
     enigma2-skins \
+    enigma2-plugin-picons-swf \
     enigma2-plugin-settings-default-ventonsupport \
     enigma2-plugin-extensions-project-valerie \
     enigma2-plugin-extensions-xmltvimport \
