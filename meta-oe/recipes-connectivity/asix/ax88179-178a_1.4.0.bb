@@ -3,7 +3,7 @@ HOMEPAGE = "http://www.asix.com.tw/"
 SECTION = "kernel/modules"
 LICENSE = "GPLv2"
 
-PR = "r7"
+PR = "r8"
 
 inherit module
 
@@ -38,6 +38,8 @@ SRC_URI_append_dm800sev2 = " \
 S = "${WORKDIR}/AX88179_178A_LINUX_DRIVER_v1.4.1_SOURCE"
 
 EXTRA_OEMAKE = "KSRC=${STAGING_KERNEL_DIR}"
+
+do_populate_sysroot[noexec] = "1"
 
 do_compile () {
     unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS CC LD CPP
