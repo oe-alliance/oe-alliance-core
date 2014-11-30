@@ -11,13 +11,13 @@ PR = "2"
 
 inherit packagegroup
 
-DEPENDS = "enigma2 "
+DEPENDS = "enigma2"
 
 RDEPENDS_${PN} = "\
     enigma2-plugin-skins1080-youvix-blue \
-	enigma2-plugin-skins1080-youvix-red \
-	enigma2-plugin-skins1080-youvix-green \
-	enigma2-plugin-skins1080-youvix-purple \
+    enigma2-plugin-skins1080-youvix-red \
+    enigma2-plugin-skins1080-youvix-green \
+    enigma2-plugin-skins1080-youvix-purple \
     enigma2-plugin-skinpacks-dreamplex-youplex-blue \
     enigma2-plugin-skinpacks-dreamplex-youplex-red \
     enigma2-plugin-skinpacks-dreamplex-youplex-green \
