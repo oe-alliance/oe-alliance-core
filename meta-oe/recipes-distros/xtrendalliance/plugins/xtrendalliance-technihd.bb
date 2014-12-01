@@ -16,9 +16,9 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"
-PR = "r5"
+PR = "r6"
 
-SRC_URI="git://github.com/xtrend-alliance/TechniHD.git"
+SRC_URI="git://github.com/XtrendAlliance/TechniHD.git"
 
 S = "${WORKDIR}/git"
 
