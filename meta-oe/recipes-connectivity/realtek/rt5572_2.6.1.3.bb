@@ -4,11 +4,12 @@ SECTION = "kernel/modules"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://iwpriv_usage.txt;md5=8876ae2c103446a442658f1cc2a01b76"
 
-PR = "r6"
+PR = "r7"
 
 inherit module
 
-SRC_URI = "http://code-ini.com/software/mirror/rt5572_2.6.1.4.tar.gz"
+SRC_URI = "http://code-ini.com/software/mirror/rt5572_2.6.1.4.tar.gz \
+    file://remove_linux_2_4_compability.patch"
 
 EXTRA_OEMAKE = "LINUX_SRC=${STAGING_KERNEL_DIR}"
 
