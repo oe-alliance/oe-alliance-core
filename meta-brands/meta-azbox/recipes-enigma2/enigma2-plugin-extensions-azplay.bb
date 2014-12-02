@@ -20,6 +20,8 @@ do_compile() {
     python -O -m compileall ${S}
 }
 
+do_populate_sysroot[noexec] = "1"
+
 python populate_packages_prepend () {
     enigma2_plugindir = bb.data.expand('${libdir}/enigma2/python/Plugins', d)
 
