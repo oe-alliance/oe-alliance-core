@@ -8,6 +8,7 @@ DVBPROVIDER_dags1 = "kernel"
 DVBPROVIDER_dags2 = "kernel"
 DVBPROVIDER_dags3 = "kernel"
 DVBPROVIDER_dags4 = "kernel"
+DVBPROVIDER_dags5 = "kernel"
 
 RRECOMMENDS_${PN} = " \
     ${@base_contains("MACHINE_FEATURES", "legacykernel", "", " \
