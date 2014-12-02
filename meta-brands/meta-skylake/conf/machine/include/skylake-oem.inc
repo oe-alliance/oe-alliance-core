@@ -49,7 +49,7 @@ DEFAULTTUNE = "mips32el"
 
 PREFERRED_PROVIDER_virtual/kernel = "linux-skylake"
 
-PREFERRED_VERSION_linux-skylake = "3.14.2"
+PREFERRED_VERSION_linux-skylake = "3.17.2"
 PREFERRED_VERSION_linux-libc-headers = "3.13"
 
 KERNEL_IMAGETYPE = "vmlinux"
@@ -79,7 +79,7 @@ IMAGE_CMD_ubi_append = " \
     "
 
 
-MACHINE_FEATURES += "3dtv alsa hdmicec switchoff wifi bootsplash"
+MACHINE_FEATURES += "3dtv alsa hdmicec switchoff wifi bootsplash omb"
 
 BOOTLOGO_FILENAME = "splash.bin"
 

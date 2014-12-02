@@ -10,7 +10,7 @@ PV = "${IMAGE_VERSION}"
 PR = "${BUILD_VERSION}"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-URL = "http://www.Xtrend-Support.com"
+URL = "http://www.et-view-support.com"
 
 S = "${WORKDIR}"
 

@@ -10,7 +10,8 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "1.0"
-PR = "r52"
+PR = "r53"
+PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 DEPENDS = "enigma2-plugin-drivers-usbserial"
 RECOMMENDS = "enigma2-plugin-extensions-et-livestream"
@@ -40,6 +41,8 @@ RDEPENDS_${PN} = " \
     enigma2-plugin-extensions-et-portal \
     enigma2-plugin-codec-audio-apple-lossless-alac \
     enigma2-plugin-extensions-moviearchiver \
+    ${@base_contains("MACHINE_FEATURES", "omb", "enigma2-plugin-extensions-openmultiboot", "", d)} \
+    ${@base_contains("MACHINE_FEATURES", "omb", "openmultiboot", "", d)} \
     \
     ${@base_contains("MACHINE_FEATURES", "fullgraphiclcd", "lcdpicons-enigma2-meta" , "", d)} \
     \
@@ -76,7 +79,7 @@ RDEPENDS_${PN} = " \
     parted \
     procps \
     pyload \
-    python-circuits python-circuits-bricks python-cocy python-mechanize python-requests livestreamer \
+    python-circuits python-circuits-bricks python-cocy python-mechanize python-requests livestreamer livestreamersrv \
     rsync \
     rtorrent \
     sabnzbd \

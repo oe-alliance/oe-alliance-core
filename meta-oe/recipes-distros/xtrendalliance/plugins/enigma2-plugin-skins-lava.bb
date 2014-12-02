@@ -12,9 +12,9 @@ SRCREV = "${AUTOREV}"
 PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"
 VER ="1.0"
-PR = "r1"
+PR = "r2"
 
-SRC_URI="git://github.com/xtrend-alliance/lava-skin.git"
+SRC_URI="git://github.com/XtrendAlliance/lava-skin.git"
 
 S = "${WORKDIR}/git"
 

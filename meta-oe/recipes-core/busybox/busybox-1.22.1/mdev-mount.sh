@@ -119,7 +119,7 @@ case "$ACTION" in
 			boxtype=`cat /etc/model`
 			if [ "$boxtype&&" == "hd2400&&" ] && [ "${MDEV}" == "sdb1" ] && [ -f "/tmp/sda" ]; then
 				mkdir -p /media/usb
-				if ! mount -t auto /dev/sda1 "/media/usb" ; then
+				if ! mount -t auto /dev/sda "/media/usb" ; then
 					rmdir "/media/usb"
 				fi
 				rm /tmp/sda

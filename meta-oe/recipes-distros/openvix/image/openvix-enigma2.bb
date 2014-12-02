@@ -28,4 +28,3 @@ RRECOMMENDS_${PN} = "\
     enigma2-plugin-extensions-xmltvimport \
     enigma2-plugin-systemplugins-crossepg \
     "
-
