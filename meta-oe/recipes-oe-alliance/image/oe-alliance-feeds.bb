@@ -78,7 +78,7 @@ RDEPENDS_${PN} = " \
     parted \
     procps \
     pyload \
-    python-circuits python-circuits-bricks python-cocy python-mechanize python-requests livestreamer \
+    python-circuits python-circuits-bricks python-cocy python-mechanize python-requests livestreamer livestreamersrv \
     rsync \
     rtorrent \
     sabnzbd \

@@ -6,16 +6,19 @@ BRAND_OEM = "tripledot"
 MACHINE_NAME = "\
 ${@base_contains('MACHINEBUILD', 'enibox', 'EniBox' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mago', 'MAGO' , '', d)}\
+${@base_contains('MACHINEBUILD', 'tyrant', 'tyrant' , '', d)}\
 "
 
 MACHINE_BRAND = "\
 ${@base_contains('MACHINEBUILD', 'enibox', 'hdbox' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mago', 'relook' , '', d)}\
+${@base_contains('MACHINEBUILD', 'tyrant', 'tripledot' , '', d)}\
 "
 
 IMAGEDIR ?= "\
 ${@base_contains('MACHINEBUILD', 'enibox', 'enibox' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mago', 'mago' , '', d)}\
+${@base_contains('MACHINEBUILD', 'tyrant', 'tyrant' , '', d)}\
 "
 
 MTD_KERNEL = "mtd2"
@@ -71,7 +74,7 @@ IMAGE_CMD_ubi_append = " \
     "
 
 
-MACHINE_FEATURES += "3dtv alsa blindscan-dvbs hdmicec switchoff wifi bootsplash omb"
+MACHINE_FEATURES += "3dtv alsa hdmicec switchoff wifi bootsplash omb"
 
 BOOTLOGO_FILENAME = "splash.bin"
 

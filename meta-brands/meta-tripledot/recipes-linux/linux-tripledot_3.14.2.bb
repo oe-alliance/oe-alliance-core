@@ -4,12 +4,15 @@ LICENSE = "GPLv2"
 PR = "r2"
 
 KERNEL_RELEASE = "3.14.2"
-SRCDATE = "20141022"
+SRCDATE_vg5000 = "20141022"
+SRCDATE_vg1000 = "20141120"
 
 inherit machine_kernel_pr
 
-SRC_URI[md5sum] = "98809608079ff7147890006004952eeb"
-SRC_URI[sha256sum] = "5e77fad16ef45240247192db43e51ed5ead0edbe2ed6a40aea10f62b904e826d"
+SRC_URI[vg5000.md5sum] = "98809608079ff7147890006004952eeb"
+SRC_URI[vg5000.sha256sum] = "5e77fad16ef45240247192db43e51ed5ead0edbe2ed6a40aea10f62b904e826d"
+SRC_URI[vg1000.md5sum] = "def98bc4cc41151a648721944667d324"
+SRC_URI[vg1000.sha256sum] = "8045863bacebe9b2526bda8e3d27f25799b210c7799f840f4a617064befce71d"
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}-base/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
@@ -23,7 +26,7 @@ PKG_kernel-image = "kernel-image"
 RPROVIDES_kernel-base = "kernel-${KERNEL_VERSION}"
 RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
 
-SRC_URI += "http://source.mynonpublic.com/tripledot/${MACHINE}-linux-${PV}-base-${SRCDATE}.tgz \
+SRC_URI += "http://source.mynonpublic.com/tripledot/${MACHINE}-linux-${PV}-base-${SRCDATE}.tgz;name=${MACHINE} \
 	file://defconfig \
 	file://add-rt2x00-wifi-devices.patch \
 	file://add-rtl8192cu-wifi-devices.patch \
@@ -67,8 +70,8 @@ kernel_do_install_append() {
 pkg_postinst_kernel-image () {
 	if [ "x$D" == "x" ]; then
 		if [ -f /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz ] ; then
-			flash_erase /dev/mtd2 0 0
-			nandwrite -p /dev/mtd2 /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz
+			flash_erase /dev/${MTD_KERNEL} 0 0
+			nandwrite -p /dev/${MTD_KERNEL} /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz
 			rm -f /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz
 		fi
 	fi

@@ -12,9 +12,9 @@ SRCREV = "${AUTOREV}"
 PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"
 VER ="1.0"
-PR = "r2"
+PR = "r3"
 
-SRC_URI="git://github.com/xtrend-alliance/xta.git"
+SRC_URI="git://github.com/XtrendAlliance/xta.git"
 
 S = "${WORKDIR}/git"
 

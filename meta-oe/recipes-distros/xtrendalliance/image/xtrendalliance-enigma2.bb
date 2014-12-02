@@ -7,16 +7,15 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 ALLOW_EMPTY_${PN} = "1"
 
 PV = "1.0"
-PR = "r24"
+PR = "r25"
 
 inherit packagegroup
 
-DEPENDS = "enigma2-pliplugins xtrendalliance-feeds"
+DEPENDS = "xtrendalliance-feeds"
 
 RRECOMMENDS_${PN} = "\
     xtrendalliance-version-info \
     enigma2-plugin-drivers-usbserial \
-    enigma2-plugin-pli-softcamsetup \
     xtrendalliance-feed-config \
     enigma2-plugin-extensions-xtrendpanel \
     enigma2-plugin-extensions-graphmultiepg \
@@ -35,7 +34,6 @@ RRECOMMENDS_${PN} = "\
     enigma2-plugin-skins-technihd \
     enigma2-plugin-skins-xta \
     enigma2-plugin-systemplugins-videoenhancement \
-    enigma2-plugin-extensions-iptvlistupdater \
     ${@base_contains("MACHINE_FEATURES", "3dtv", "enigma2-plugin-systemplugins-osd3dsetup" , "", d)} \
     "
 
