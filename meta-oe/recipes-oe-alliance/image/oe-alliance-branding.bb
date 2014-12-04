@@ -152,12 +152,14 @@ do_install_append() {
         install -m 0644 ${S}/BoxBranding/boxes/${MACHINEBUILD}.jpg ${D}/usr/share/enigma2/${MACHINEBUILD}.jpg
         ln -sf /usr/share/enigma2/${MACHINEBUILD}.jpg ${D}/usr/lib/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes/${MACHINEBUILD}.jpg
     fi
+    if [ ${DISTRO} = "openxta" ]; then
+        rm -f ${D}/usr/lib/enigma2/python/Components/RcModel.py*
+    fi
     ln -sf /usr/share/enigma2/rc_models ${D}/usr/lib/enigma2/python/Plugins/Extensions/OpenWebif/public/static/remotes
 }
 
 FILES_${PN}-src = "${libdir}/enigma2/python/Components/*.py"
 FILES_${PN} = "${libdir}/enigma2/python/*.so /usr/share ${libdir}/enigma2/python/Components/*.pyo ${libdir}/enigma2/python/Plugins"
-FILES_${PN}_openxta = "${libdir}/enigma2/python/*.so /usr/share ${libdir}/enigma2/python/Plugins"
 FILES_${PN}-dev += "${libdir}/enigma2/python/*.la"
 FILES_${PN}-staticdev += "${libdir}/enigma2/python/*.a"
 FILES_${PN}-dbg += "${libdir}/enigma2/python/.debug"
