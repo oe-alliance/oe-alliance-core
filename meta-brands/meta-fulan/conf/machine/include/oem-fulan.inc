@@ -178,6 +178,7 @@ MACHINE_ESSENTIAL_EXTRA_RDEPENDS += " \
     stslave-fw \
     ustslave \
     stfbcontrol \
+    fp-control \
     stlirc \
     fulan-dvb-modules \
     mtd-utils-jffs2 \
