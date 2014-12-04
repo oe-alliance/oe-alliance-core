@@ -13,7 +13,9 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=f9a8f968107345e0b75aa8c2ecaa7ec8"
 DEPENDS = "perl-native-runtime"
 
 SRC_URI = "http://www.openssl.org/source/openssl-${PV}.tar.gz \
+           file://find.pl \
           "
+
 S = "${WORKDIR}/openssl-${PV}"
 
 AR_append = " r"
@@ -41,6 +43,10 @@ FILES_${PN}-dev += "${base_libdir}/libcrypto${SOLIBSDEV}"
 
 RPROVIDES_libcrypto-old = "libcrypto${PV}"
 RPROVIDES_libssl-old = "libssl${PV}"
+
+do_configure_prepend() {
+  cp ${WORKDIR}/find.pl ${S}/util/find.pl
+}
 
 do_configure_prepend_darwin () {
 	sed -i -e '/version-script=openssl\.ld/d' Configure
