@@ -11,7 +11,7 @@ DEPENDS = "tslib mpfr gmp"
 SRCREV = "${AUTOREV}"
 PV = "2.1+gitr${SRCPV}"
 PKGV = "2.1+gitr${GITPKGV}"
-PR = "r116"
+PR = "r117"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -125,22 +125,28 @@ THIRDPARTY_PLUGINS = " \
 
 #     Install any packages t_append =hat are only For this machines feed here, uncomment the line below and change as required
 THIRDPARTY_MACHINE_PLUGINS_vuuno = " \
-    enigma2-plugin-extensions-sdg-imagedownloader-v0.6-oe-2.0-vu-all.ipk \
+    enigma2-plugin-extensions-sdg-imagedownloader-v0.7-oe-2.0-vu-all.ipk \
     "
 THIRDPARTY_MACHINE_PLUGINS_vuultimo = " \
-    enigma2-plugin-extensions-sdg-imagedownloader-v0.6-oe-2.0-vu-all.ipk \
+    enigma2-plugin-extensions-sdg-imagedownloader-v0.7-oe-2.0-vu-all.ipk \
     "
 THIRDPARTY_MACHINE_PLUGINS_vusolo = " \
-    enigma2-plugin-extensions-sdg-imagedownloader-v0.6-oe-2.0-vu-all.ipk \
+    enigma2-plugin-extensions-sdg-imagedownloader-v0.7-oe-2.0-vu-all.ipk \
     "
 THIRDPARTY_MACHINE_PLUGINS_vuduo = " \
-    enigma2-plugin-extensions-sdg-imagedownloader-v0.6-oe-2.0-vu-all.ipk \
+    enigma2-plugin-extensions-sdg-imagedownloader-v0.7-oe-2.0-vu-all.ipk \
     "
 THIRDPARTY_MACHINE_PLUGINS_vusolo2 = " \
-    enigma2-plugin-extensions-sdg-imagedownloader-v0.6-oe-2.0-vu-all.ipk \
+    enigma2-plugin-extensions-sdg-imagedownloader-v0.7-oe-2.0-vu-all.ipk \
     "
 THIRDPARTY_MACHINE_PLUGINS_vuduo2 = " \
-    enigma2-plugin-extensions-sdg-imagedownloader-v0.6-oe-2.0-vu-all.ipk \
+    enigma2-plugin-extensions-sdg-imagedownloader-v0.7-oe-2.0-vu-all.ipk \
+    "
+THIRDPARTY_MACHINE_PLUGINS_vusolose = " \
+    enigma2-plugin-extensions-sdg-imagedownloader-v0.7-oe-2.0-vu-all.ipk \
+    "
+THIRDPARTY_MACHINE_PLUGINS_vuzero = " \
+    enigma2-plugin-extensions-sdg-imagedownloader-v0.7-oe-2.0-vu-all.ipk \
     "
 THIRDPARTY_MACHINE_PLUGINS_et4x00 = " \
     enigma2-plugin-extensions-newxtrend-hbbtv_2.5_mips32el.ipk \
