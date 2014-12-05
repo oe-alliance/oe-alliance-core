@@ -26,6 +26,7 @@ SRC_URI_append_gbquadplus = "file://lcdsplash400.bin file://lcdwaitkey400.bin fi
 SRC_URI_append_vuduo2 = "file://lcdbootlogo.png file://bootlogo.py"
 SRC_URI_append_dags3 = "file://splash1.bmp file://splash1_os1.bmp file://splash1_os2.bmp file://splash2.bmp file://splash3.bmp"
 SRC_URI_append_dags4 = "file://splash1.bmp file://splash1_os1.bmp file://splash1_os2.bmp file://splash2.bmp file://splash3.bmp"
+SRC_URI_append_dags5 = "file://splash1.bmp file://splash1_os1.bmp file://splash1_os2.bmp file://splash2.bmp file://splash3.bmp"
 
 BINARY_VERSION = "1.3"
 
