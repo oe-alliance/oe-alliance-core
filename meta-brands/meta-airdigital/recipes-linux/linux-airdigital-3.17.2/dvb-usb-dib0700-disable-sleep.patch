@@ -13,15 +13,15 @@ Perhaps the dib8000/9000 need the same workaround
  1 file changed, 1 insertion(+)
 
 diff --git a/drivers/media/usb/dvb-usb/dib0700_devices.c b/drivers/media/usb/dvb-usb/dib0700_devices.c
-index 1179842..2a3093e 100644
+index ce47d3f..13401f4 100644
 --- a/drivers/media/usb/dvb-usb/dib0700_devices.c
 +++ b/drivers/media/usb/dvb-usb/dib0700_devices.c
-@@ -774,6 +774,7 @@ static int dib7070_tuner_reset(struct dvb_frontend *fe, int onoff)
- static int dib7070_tuner_sleep(struct dvb_frontend *fe, int onoff)
- {
+@@ -814,6 +814,7 @@ static int dib7070_tuner_sleep(struct dvb_frontend *fe, int onoff)
+ 	struct dib0700_adapter_state *state = adap->priv;
+ 
  	deb_info("sleep: %d", onoff);
 +	if (onoff) return 0;
- 	return dib7000p_set_gpio(fe, 9, 0, onoff);
+ 	return state->dib7000p_ops.set_gpio(fe, 9, 0, onoff);
  }
  
 -- 
