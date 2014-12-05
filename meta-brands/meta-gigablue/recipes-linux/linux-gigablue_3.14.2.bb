@@ -12,7 +12,7 @@ SRC_URI[sha256sum] = "03b8d8f5066929d28b8210bfb422ac0d679bdb2c9cb625d51f65f646da
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-MACHINE_KERNEL_PR_append = ".04"
+MACHINE_KERNEL_PR_append = ".05"
 
 # By default, kernel.bbclass modifies package names to allow multiple kernels
 # to be installed in parallel. We revert this change and rprovide the versioned
@@ -25,6 +25,8 @@ RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
 SRC_URI += "http://archiv.openmips.com/gigablue-linux-${PV}-20141019.tgz \
     file://defconfig \
     file://add-dmx-source-timecode.patch \
+    file://add-rtl8192cu-wifi-devices.patch \
+    file://add-rt2x00-wifi-devices.patch \
     file://af9015-output-full-range-SNR.patch \
     file://af9033-output-full-range-SNR.patch \
     file://cxd2820r-output-full-range-SNR.patch \
@@ -34,10 +36,16 @@ SRC_URI += "http://archiv.openmips.com/gigablue-linux-${PV}-20141019.tgz \
     file://iosched-slice_idle-1.patch \
     file://it913x-switch-off-PID-filter-by-default.patch \
     file://mxl5007t-add-no_probe-and-no_reset-parameters.patch \
+    file://nfs-max-rwsize-8k.patch \
     file://tda18271-advertise-supported-delsys.patch \
+    file://rt2800usb_fix_warn_tx_status_timeout_to_dbg.patch \
     "
 
-SRC_URI_append_gbquadplus = "file://vlan_depth.patch"
+SRC_URI_append_gbquadplus = " \
+    file://vlan_depth.patch \
+    file://linux-bcm_ethernet.patch \
+    "
+
 
 S = "${WORKDIR}/linux-${PV}"
 
