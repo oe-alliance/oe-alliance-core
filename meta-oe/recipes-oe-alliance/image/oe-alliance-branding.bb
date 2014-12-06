@@ -91,7 +91,7 @@ do_configure_prepend() {
     elif [ "${BRAND_OEM}" = "dreambox" ]; then
         if [ "${MACHINE}" = "dm7080" ]; then
             DRIVERSDATE="20141112"
-        if [ "${MACHINE}" = "dm820" ]; then
+        elif [ "${MACHINE}" = "dm820" ]; then
             DRIVERSDATE="20141112"
         elif [ "${MACHINE}" = "dm800" ]; then
             DRIVERSDATE="20131228"
