@@ -11,7 +11,7 @@ DEPENDS = "tslib mpfr gmp"
 SRCREV = "${AUTOREV}"
 PV = "2.1+gitr${SRCPV}"
 PKGV = "2.1+gitr${GITPKGV}"
-PR = "r117"
+PR = "r119"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -30,7 +30,7 @@ S = "${WORKDIR}/git"
 THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-sundtekcontrolcenter_current_all.ipk \
     enigma2-plugin-extensions-atmolightd_0.7-pre22_all.ipk \
-    enigma2-plugin-extensions-autobouquets-e2_20140924_mips32el.ipk \
+    enigma2-plugin-extensions-autobouquets-e2_20141113_mips32el.ipk \
     enigma2-plugin-extensions-bildonline_3.1rc4_mips32el.ipk \
     enigma2-plugin-extensions-bluray_1.5c2_mips32el.ipk \
     enigma2-plugin-extensions-boblight-enigma2_0.8r6b_mips32el.ipk \
@@ -52,6 +52,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-isettinge2-3.3.0-oe2.0-mips32el.ipk \
     enigma2-plugin-extensions-kicker_3.3rc11_mips32el.ipk \
     enigma2-plugin-extensions-kino_1.4rc3_mips32el.ipk \
+    enigma2-plugin-extensions-kodidirect_1.0_r0_all.ipk \
     enigma2-plugin-extensions-livefootball-oe2.0_5.4_all.ipk \
     enigma2-plugin-extensions-mediainfo_2.5_all.ipk \
     enigma2-plugin-extensions-mediaportal_6.1.1_all.ipk \
