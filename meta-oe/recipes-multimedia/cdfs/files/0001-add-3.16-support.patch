@@ -1,0 +1,87 @@
+From 7c8b2cf585d07d1fbf8ed7305f4d0d5dc0fd66ba Mon Sep 17 00:00:00 2001
+From: pieterg <pieterg@users.sourceforge.net>
+Date: Thu, 27 Nov 2014 13:20:17 +0100
+Subject: [PATCH] add 3.16 support
+
+-generic_aio_read has been dropped
+-avoid racy interruptible_sleep_on (dropped in 3.15)
+---
+ audio.c  | 13 +++++++++++++
+ cdfs.h   |  8 ++++++++
+ daemon.c |  3 ++-
+ 3 files changed, 23 insertions(+), 1 deletion(-)
+
+diff --git a/audio.c b/audio.c
+index 616d384..67f1664 100644
+--- a/audio.c
++++ b/audio.c
+@@ -166,6 +166,19 @@ void cdfs_cdda_file_read(struct inode * inode, char * buf, size_t count, unsigne
+ 
+ /***************************************************************************/
+ 
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(3,16,0)
++ssize_t
++generic_file_aio_read(struct kiocb *iocb, const struct iovec *iov,
++		unsigned long nr_segs, loff_t pos)
++{
++	size_t count = iov_length(iov, nr_segs);
++	struct iov_iter i;
++
++	iov_iter_init(&i, READ, iov, nr_segs, count);
++	return generic_file_read_iter(iocb, &i);
++}
++#endif
++
+ struct file_operations cdfs_cdda_file_operations = {
+     .read = do_sync_read,
+     .aio_read = generic_file_aio_read,
+diff --git a/cdfs.h b/cdfs.h
+index 5dc585e..bfb5f15 100644
+--- a/cdfs.h
++++ b/cdfs.h
+@@ -57,6 +57,10 @@
+ #include <linux/proc_fs.h>
+ #include <linux/string.h>
+ #include <asm/uaccess.h>
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(3,16,0)
++#include <linux/fs.h>
++#include <linux/uio.h>
++#endif
+ 
+ #define CDFS_MAGIC 0xCDDA
+ #define CDFS_MAXFN 128
+@@ -200,6 +204,10 @@ extern int kcdfsd_pid;
+ extern struct task_struct *kcdfsd_pid;
+ #endif
+ 
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(3,16,0)
++ssize_t generic_file_aio_read(struct kiocb *iocb, const struct iovec *iov, unsigned long nr_segs, loff_t pos);
++#endif
++
+ /* for discid stuff */
+ unsigned long discid(cd *);
+ 
+diff --git a/daemon.c b/daemon.c
+index dcd0e16..b512fc6 100644
+--- a/daemon.c
++++ b/daemon.c
+@@ -29,6 +29,7 @@
+ 
+ #include "cdfs.h"
+ #include <linux/sched.h>
++#include <linux/wait.h>
+ 
+ #if LINUX_VERSION_CODE < KERNEL_VERSION(3, 8, 0)
+ int kcdfsd_pid = 0;
+@@ -175,7 +176,7 @@ int kcdfsd_thread(void *unused){
+   /* Send me a signal to get me die */
+   do {
+     kcdfsd_process_request();
+-    interruptible_sleep_on(&kcdfsd_wait);
++    wait_event_interruptible(kcdfsd_wait, !kcdfsd_running);
+   } while (!signal_pending(current));
+ 
+   kcdfsd_running = 0;
+-- 
+1.9.1
+
