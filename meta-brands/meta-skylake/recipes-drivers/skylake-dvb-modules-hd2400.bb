@@ -1,6 +1,6 @@
-KV = "3.17.2"
-SRCDATE = "20141117"
+KV = "3.17.3"
+SRCDATE = "20141205"
 
 require skylake-dvb-modules.inc
-SRC_URI[md5sum] = "410969228ba04c5f0f8c7cdae35204ba"
-SRC_URI[sha256sum] = "e9d249208511ea4f3896d97e1399eb570beef9f8d8ad7fcb047719aa00a0baa6"
+SRC_URI[md5sum] = "54a7f1a073ab34d9129866520bcd05d5"
+SRC_URI[sha256sum] = "fb0f2e4adcbb7907850c30a9bd438714491306e997569709bbbb73d44d0eac4e"
