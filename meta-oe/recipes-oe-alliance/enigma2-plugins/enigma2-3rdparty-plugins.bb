@@ -11,7 +11,7 @@ DEPENDS = "tslib mpfr gmp"
 SRCREV = "${AUTOREV}"
 PV = "2.1+gitr${SRCPV}"
 PKGV = "2.1+gitr${GITPKGV}"
-PR = "r119"
+PR = "r120"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -199,7 +199,8 @@ do_install() {
 }
 
 python populate_packages_prepend () {
-    p = ""
+    pkg  = ""
+    pkgs = ""
     plugins = bb.data.getVar('THIRDPARTY_PLUGINS', d, 1)
     if bb.data.getVar('THIRDPARTY_MACHINE_PLUGINS', d, 1) is not None:
         plugins += bb.data.getVar('THIRDPARTY_MACHINE_PLUGINS', d, 1)
@@ -208,9 +209,11 @@ python populate_packages_prepend () {
 
     if plugins is not None:
         for package in plugins.split():
-            p += package.split('_')[0] + " "
+            pkg = package.split('_')[0]
+            pkgs += pkg + " "
+            bb.data.setVar('ALLOW_EMPTY_' + pkg, '1', d)
 
-    bb.data.setVar('PACKAGES', p, d)
+    bb.data.setVar('PACKAGES', pkgs, d)
 }
 
 do_deploy() {
