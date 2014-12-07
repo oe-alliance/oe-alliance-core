@@ -90,7 +90,7 @@ do_configure_prepend() {
         DRIVERSDATE=`grep "SRCDATE = " ${OEA-META-AIRDIGITAL-BASE}/recipes-drivers/airdigital-dvb-modules-${MACHINE}.bb | cut -b 12-19`
     elif [ "${BRAND_OEM}" = "dreambox" ]; then
         if [ "${MACHINE}" = "dm7080" ]; then
-            DRIVERSDATE="20141112"
+            DRIVERSDATE="20141207"
         elif [ "${MACHINE}" = "dm820" ]; then
             DRIVERSDATE="20141112"
         elif [ "${MACHINE}" = "dm800" ]; then
