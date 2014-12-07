@@ -1,4 +1,4 @@
-SUMMARY = "meta file for enigma2 softcam packages"
+SUMMARY = "meta file for enigma2 bootlogo packages"
 
 require conf/license/license-gplv2.inc
 
@@ -26,6 +26,7 @@ DEPENDS = "\
     enigma2-plugin-bootlogos-maxwells-sound \
     enigma2-plugin-bootlogos-maxwells-spectrum \
     enigma2-plugin-bootlogos-maxwells-variation \
+	enigma2-plugin-bootlogos1080-youvix
     "
 
 PR = "r3"
