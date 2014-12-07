@@ -22,6 +22,7 @@ SRC_URI = "file://bootlogo.mvi file://radio.mvi file://bootlogo.sh file://splash
 SRC_URI_append_gb800ue = "file://lcdsplash.bin file://lcdwaitkey.bin file://lcdwarning.bin"
 SRC_URI_append_gbquad = "file://lcdsplash.bin file://lcdwaitkey.bin file://lcdwarning.bin"
 SRC_URI_append_gb800ueplus = "file://lcdsplash.bin file://lcdwaitkey.bin file://lcdwarning.bin"
+SRC_URI_append_gbultraue = "file://lcdsplash.bin file://lcdwaitkey.bin file://lcdwarning.bin"
 SRC_URI_append_gbquadplus = "file://lcdsplash400.bin file://lcdwaitkey400.bin file://lcdwarning400.bin"
 SRC_URI_append_vuduo2 = "file://lcdbootlogo.png file://bootlogo.py"
 SRC_URI_append_dags3 = "file://splash1.bmp file://splash1_os1.bmp file://splash1_os2.bmp file://splash2.bmp file://splash3.bmp"
@@ -73,6 +74,12 @@ do_install_append_gbquad() {
 }
 
 do_install_append_gb800ueplus() {
+    install -d ${D}/usr/share
+    install -m 0644 lcdwaitkey.bin ${D}/usr/share/lcdwaitkey.bin
+    install -m 0644 lcdwarning.bin ${D}/usr/share/lcdwarning.bin	
+}
+
+do_install_append_gbultraue() {
     install -d ${D}/usr/share
     install -m 0644 lcdwaitkey.bin ${D}/usr/share/lcdwaitkey.bin
     install -m 0644 lcdwarning.bin ${D}/usr/share/lcdwarning.bin	
