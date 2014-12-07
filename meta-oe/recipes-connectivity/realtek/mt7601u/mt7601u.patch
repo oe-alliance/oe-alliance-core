@@ -1,0 +1,99 @@
+--- MT7601U/include/wfd_cmm.h	2014-12-07 18:32:37.642286102 +0100
++++ MT7601U/include/wfd_cmm.h	2014-12-07 18:33:00.830286671 +0100
+@@ -111,7 +111,7 @@
+ 	USHORT SinkCoupled:1;
+ 	USHORT SessionAvail:2;
+ 	USHORT WSD:1;
+-	USHORT PC:1;								/* Preferred Connectivity */
++	USHORT DevPC:1;								/* Preferred Connectivity */
+ 	USHORT CP:1;
+ 	USHORT TimeSync:1;
+ 	USHORT Rsvd:6;
+@@ -119,7 +119,7 @@
+ 	USHORT Rsvd:6;
+ 	USHORT TimeSync:1;							/* 802.1AS Support */
+ 	USHORT CP:1;								/* Content Protection */
+-	USHORT PC:1;								/* Preferred Connectivity */
++	USHORT DevPC:1;								/* Preferred Connectivity */
+ 	USHORT WSD:1;								/* WFD Service Discovery */
+ 	USHORT SessionAvail:2;
+ 	USHORT SinkCoupled:1;
+@@ -225,7 +225,7 @@
+ 	UCHAR  	SinkCoupled;
+ 	UCHAR  	SessionAvail;
+ 	UCHAR  	WSD;
+-	UCHAR  	PC;
++	UCHAR  	DevPC;
+ 	UCHAR  	CP;                     /* WFD Content Protection capability */
+ 	UCHAR  	TimeSync;
+ 	USHORT 	RtspPort;				/* Deafult WFD_RTSP_DEFAULT_PORT */
+--- MT7601U/common/wfd.c	2014-12-07 18:34:55.746289494 +0100
++++ MT7601U/common/wfd.c	2014-12-07 18:35:54.982290950 +0100
+@@ -405,10 +405,10 @@
+ 			DevInfo.SessionAvail = pWFDCtrl->SessionAvail;
+ 			DevInfo.WSD = pWFDCtrl->WSD;
+ 			if (OPSTATUS_TEST_FLAG(pAd, fOP_STATUS_MEDIA_STATE_CONNECTED) && (INFRA_ON(pAd)))
+-				DevInfo.PC = pWFDCtrl->PC;
++				DevInfo.DevPC = pWFDCtrl->DevPC;
+ 			else
+-				DevInfo.PC = WFD_PC_P2P;
+-			DevInfo.CP = pWFDCtrl->CP;
++				DevInfo.DevPC = WFD_PC_P2P;
++			DevInfo.DevCP = pWFDCtrl->DevCP;
+ 			DevInfo.TimeSync = pWFDCtrl->TimeSync;
+ 			/* RTMPMoveMemory(pDest + 1, &DevInfo, sizeof(WFD_DEVICE_INFO)); */
+ 			tmpValue = cpu2be16(*pDevInfo);
+@@ -587,7 +587,7 @@
+ 						SessionInfo.WfdDevInfo.SinkCoupled = pAd->P2pTable.Client[P2pIdx].WfdEntryInfo.sink_coupled;
+ 						SessionInfo.WfdDevInfo.SessionAvail = pAd->P2pTable.Client[P2pIdx].WfdEntryInfo.session_avail;
+ 						SessionInfo.WfdDevInfo.WSD = pAd->P2pTable.Client[P2pIdx].WfdEntryInfo.wfd_service_discovery;
+-						SessionInfo.WfdDevInfo.PC = pAd->P2pTable.Client[P2pIdx].WfdEntryInfo.wfd_PC;
++						SessionInfo.WfdDevInfo.DevPC = pAd->P2pTable.Client[P2pIdx].WfdEntryInfo.wfd_PC;
+ 						SessionInfo.WfdDevInfo.TimeSync = pAd->P2pTable.Client[P2pIdx].WfdEntryInfo.wfd_time_sync;
+ 						SessionInfo.MaxThroughput = pAd->P2pTable.Client[P2pIdx].WfdEntryInfo.max_throughput;
+ 						SessionInfo.CoupledSinkInfo = pAd->P2pTable.Client[P2pIdx].WfdEntryInfo.coupled_sink_status;
+--- MT7601U/sta/rtmp_data.c	2014-12-07 19:50:10.610400439 +0100
++++ MT7601U/sta/rtmp_data.c	2014-12-07 19:57:04.578410613 +0100
+@@ -376,6 +376,7 @@
+ 	MAC_TABLE_ENTRY *pEntry = NULL;
+ 	UCHAR FromWhichBSSID = BSS0;
+ 	UCHAR UserPriority = 0;
++	RXD_STRUC *pRxD;
+ 
+ //+++Add by shiang for debug
+ if (0 /*!(pRxInfo->Mcast || pRxInfo->Bcast)*/){
+@@ -404,6 +405,7 @@
+ 
+ 
+ #ifdef QOS_DLS_SUPPORT
++		pRxD = (RXD_STRUC *)(&pRxBlk->hw_rx_info[0]);
+ 		if (RTMPRcvFrameDLSCheck
+ 		    (pAd, pHeader, pRxWI->RxWIMPDUByteCnt, pRxD)) {
+ 			return;
+@@ -877,6 +879,7 @@
+ 	UCHAR FromWhichBSSID = BSS0;
+ 	UCHAR UserPriority = 0;
+ 	UCHAR *pData;
++	RXD_STRUC *pRxD;
+ 
+ //+++Add by shiang for debug
+ if (0 /*!(pRxInfo->Mcast || pRxInfo->Bcast)*/){
+@@ -905,6 +908,7 @@
+ 
+ 
+ #ifdef QOS_DLS_SUPPORT
++		pRxD = (RXD_STRUC *)(&pRxBlk->hw_rx_info[0]);
+ 		if (RTMPRcvFrameDLSCheck
+ 		    (pAd, pHeader, pRxWI->RxWIMPDUByteCnt, pRxD)) {
+ 			return;
+--- MT7601U/common/cmm_cs.c	2014-12-07 20:32:21.318462625 +0100
++++ MT7601U/common/cmm_cs.c	2014-12-07 20:18:22.654442019 +0100
+@@ -27,6 +27,8 @@
+ 
+ #include "rt_config.h"
+ 
++#define INT_SOURCE_CSR          0x200
++
+ #ifdef CARRIER_DETECTION_SUPPORT
+ static ULONG time[20];
+ static ULONG idle[20];
