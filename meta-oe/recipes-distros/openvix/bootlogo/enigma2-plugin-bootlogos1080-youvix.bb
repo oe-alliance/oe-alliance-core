@@ -12,7 +12,7 @@ do_install() {
     install -d ${D}/etc/enigma2
     install -m 0644 bootlogo.mvi ${D}/etc/enigma2/bootlogo.mvi
     install -m 0644 backdrop.mvi ${D}/etc/enigma2/backdrop.mvi
-    install -m 0644 radio.mvi ${D}/etc/enimga2/radio.mvi
+    install -m 0644 radio.mvi ${D}/etc/enigma2/radio.mvi
 }
 
 SRC_URI[md5sum] = "C2751D7C29DDB2D9829D03D8B9B920D3"
