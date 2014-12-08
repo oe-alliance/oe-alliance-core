@@ -1,0 +1,13 @@
+diff -Naur libcap-2.24/libcap/include/uapi/linux/capability.h libcap-2.24-mod/libcap/include/uapi/linux/capability.h
+--- libcap-2.24/libcap/include/uapi/linux/capability.h	2014-01-06 02:11:54.000000000 +0100
++++ libcap-2.24-mod/libcap/include/uapi/linux/capability.h	2014-12-02 19:54:50.347004297 +0100
+@@ -49,6 +49,9 @@
+ } __user *cap_user_data_t;
+ 
+ 
++#define XATTR_CAPS_SUFFIX "capability"
++#define XATTR_NAME_CAPS XATTR_SECURITY_PREFIX XATTR_CAPS_SUFFIX
++
+ #define VFS_CAP_REVISION_MASK	0xFF000000
+ #define VFS_CAP_REVISION_SHIFT	24
+ #define VFS_CAP_FLAGS_MASK	~VFS_CAP_REVISION_MASK
