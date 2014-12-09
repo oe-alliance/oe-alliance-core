@@ -9,7 +9,7 @@ require conf/license/license-gplv2.inc
 RDEPENDS_${PN} += "showiframe"
 
 PV = "4.2"
-PR = "r7"
+PR = "r8"
 
 S = "${WORKDIR}"
 
@@ -91,7 +91,7 @@ do_install_append_vuduo2() {
 
 inherit deploy
 do_deploy() {
-    if [ "${BRAND_OEM}" = "vuplus" ] || [ "${BRAND_OEM}" = "dags" ]; then
+    if [ "${MACHINE}" = "vuduo" ] || [ "${MACHINE}" = "vuduo2" ] || [ "${MACHINE}" = "vuuno" ] || [ "${MACHINE}" = "vusolo" ] || [ "${MACHINE}" = "vusolo2" ] || [ "${BRAND_OEM}" = "dags" ]; then
         install -m 0644 splash480.bmp ${DEPLOYDIR}/${BOOTLOGO_FILENAME}
     else
         install -m 0644 splash576.bmp ${DEPLOYDIR}/${BOOTLOGO_FILENAME}
