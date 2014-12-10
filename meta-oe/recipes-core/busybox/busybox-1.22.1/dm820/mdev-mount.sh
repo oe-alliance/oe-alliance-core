@@ -19,11 +19,12 @@ case "$ACTION" in
 			# Already mounted
 			exit 0
 		fi
-		DEVBASE=`expr substr $MDEV 1 7`
+		DEVCHECK=`expr substr $MDEV 1 7`
 		# blacklisted DM7080/820
-		if [ $DEVBASE == "mmcblk0" ] ; then
+		if [ $DEVCHECK == "mmcblk0" ] ; then
 			exit 0
 		fi
+		DEVBASE=`expr substr $MDEV 1 3`
 		# check for "please don't mount it" file
 		if [ -f "/dev/nomount.${DEVBASE}" ] ; then
 			# blocked
@@ -45,9 +46,9 @@ case "$ACTION" in
 				exit 0
 			fi
 		fi
-		#if [ "${DEVBASE}" == "mmc" ] ; then
-		#	DEVBASE="mmcblk0"
-		#fi
+		if [ "${DEVBASE}" == "mmc" ] ; then
+			DEVBASE="mmcblk1"
+		fi
 		boxtype=`cat /etc/model`
 		if [ "$boxtype&&" == "hd2400&&" ] && [ "${DEVBASE}" == "sdb" ] && [ -d /media/hdd ]; then
 				# workaround intern/extern detection
