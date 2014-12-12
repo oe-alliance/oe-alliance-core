@@ -7,6 +7,7 @@ inherit allarch
 DEPENDS = "\
     enigma2-plugin-bootlogos-openvix-v3 \
     enigma2-plugin-bootlogos-openvix-zeus \
+	enigma2-plugin-bootlogos-openvix-helios \
     enigma2-plugin-bootlogos-openvix-helios2 \
     enigma2-plugin-bootlogos-openvix-helios3 \
     enigma2-plugin-bootlogos-maxwells-abstract \
@@ -29,4 +30,4 @@ DEPENDS = "\
     enigma2-plugin-bootlogos-youvix-1080 \
     "
 
-PR = "r4"
+PR = "r5"

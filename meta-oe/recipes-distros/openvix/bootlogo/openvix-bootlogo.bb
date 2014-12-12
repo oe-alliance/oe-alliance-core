@@ -6,10 +6,10 @@ PACKAGE_ARCH = "${MACHINEBUILD}"
 
 require conf/license/license-gplv2.inc
 
-RDEPENDS_${PN} += "showiframe openvix-bootlogo-helios"
+RDEPENDS_${PN} += "showiframe openvix-bootlogo-hades"
 
 PV = "4.4"
-PR = "r0"
+PR = "r2"
 
 S = "${WORKDIR}"
 
