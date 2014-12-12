@@ -1,7 +1,7 @@
 [Unit]
 Description=Generate options for connection service
 Before=connman.service
-ConditionKernelCommandLine=nfsroot
+ConditionKernelCommandLine=root=/dev/nfs
 After=syslog.target
 
 [Service]

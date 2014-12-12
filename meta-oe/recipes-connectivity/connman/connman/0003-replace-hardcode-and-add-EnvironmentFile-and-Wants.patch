@@ -1,7 +1,7 @@
-From 42f55b5e641a6ac0c44be34399170201bdb4af93 Mon Sep 17 00:00:00 2001
+From f1f27acf3c73e8c50f8b7a2164c800089988efbd Mon Sep 17 00:00:00 2001
 From: Andreas Oberritter <obi@opendreambox.org>
 Date: Tue, 5 Aug 2014 15:18:24 +0200
-Subject: [PATCH 9/9] replace hardcode, and add EnvironmentFile and Wants
+Subject: [PATCH 3/3] replace hardcode, and add EnvironmentFile and Wants
 
 Upstream-Status: Inappropriate [distribution]
 
@@ -11,13 +11,13 @@ Signed-off-by: Roy Li <rongqing.li@windriver.com>
  1 file changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/src/connman.service.in b/src/connman.service.in
-index 7b6195e..01bdcb4 100644
+index ed62add..093e485 100644
 --- a/src/connman.service.in
 +++ b/src/connman.service.in
-@@ -3,12 +3,14 @@ Description=Connection service
- Requires=dbus.socket
+@@ -4,12 +4,14 @@ Requires=dbus.socket
  After=dbus.socket
- Before=remote-fs.target
+ Before=remote-fs-pre.target
+ Wants=remote-fs-pre.target
 +Wants=connman-env.service
  
  [Service]

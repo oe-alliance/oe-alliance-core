@@ -11,7 +11,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "1.0"
-PR = "r25"
+PR = "r26"
 
 RDEPENDS_${PN} = "\
     oe-alliance-enigma2 \
@@ -37,6 +37,7 @@ RDEPENDS_${PN} = "\
     sdparm \
     packagegroup-base \
     packagegroup-core-boot \
+    packagegroup-net-connman \
     tzdata tzdata-europe tzdata-australia tzdata-asia tzdata-pacific tzdata-africa tzdata-americas \
     util-linux-sfdisk \
     util-linux-blkid \

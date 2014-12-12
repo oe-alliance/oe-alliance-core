@@ -43,11 +43,6 @@ if [ "$root" = "/dev/nfs" -o -n "$nfsroot" -a -n "$ip" ]; then
 				;;
 		esac
 	done
-
-	if [ -n "$options" ] && grep -q '^nameserver [0-9.]*[1-9]' /proc/net/pnp; then
-		options="-r $options"
-		grep -Ew '^(domain|nameserver)' /proc/net/pnp >/etc/resolv.conf
-	fi
 fi
 
 [ -d /run/connmand ] || mkdir -p /run/connmand
