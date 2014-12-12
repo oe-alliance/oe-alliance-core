@@ -29,7 +29,7 @@ MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS_append_gbquad = "kernel-module-smsc75xx"
 # MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS_append_gbquadplus = "kernel-module-smsc75xx"
 
 MACHINE_EXTRA_RRECOMMENDS = " \
-    gst-plugin-dvbmediasink \
+    gstreamer1.0-plugin-dvbmediasink \
     gigablue-cfe \
     "
 

@@ -17,6 +17,8 @@ INSANE_SKIP_${PN} = "dev-so"
 
 RRECOMMENDS_${PN} = "kernel-module-appletalk"
 
+SSTATE_DUPWHITELIST += "${STAGING_INCDIR}/netatalk/at.h"
+
 EXTRA_OECONF += "ac_cv_path_KRB5_CONFIG=no \
                 ac_cv_header_rpcsvc_rquota_h=no \
                 --with-bdb=${STAGING_DIR_TARGET}${prefix_native} \

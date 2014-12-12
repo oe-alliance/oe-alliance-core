@@ -1,4 +1,4 @@
-SUMMARY = "meta file for enigma2 softcam packages"
+SUMMARY = "meta file for enigma2 bootlogo packages"
 
 require conf/license/license-gplv2.inc
 
@@ -7,6 +7,7 @@ inherit allarch
 DEPENDS = "\
     enigma2-plugin-bootlogos-openvix-v3 \
     enigma2-plugin-bootlogos-openvix-zeus \
+    enigma2-plugin-bootlogos-openvix-helios \
     enigma2-plugin-bootlogos-openvix-helios2 \
     enigma2-plugin-bootlogos-openvix-helios3 \
     enigma2-plugin-bootlogos-maxwells-abstract \
@@ -26,6 +27,7 @@ DEPENDS = "\
     enigma2-plugin-bootlogos-maxwells-sound \
     enigma2-plugin-bootlogos-maxwells-spectrum \
     enigma2-plugin-bootlogos-maxwells-variation \
+    enigma2-plugin-bootlogos-youvix-1080 \
     "
 
-PR = "r3"
+PR = "r5"

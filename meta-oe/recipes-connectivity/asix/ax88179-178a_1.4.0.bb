@@ -3,7 +3,7 @@ HOMEPAGE = "http://www.asix.com.tw/"
 SECTION = "kernel/modules"
 LICENSE = "GPLv2"
 
-PR = "r7"
+PR = "r10"
 
 inherit module
 

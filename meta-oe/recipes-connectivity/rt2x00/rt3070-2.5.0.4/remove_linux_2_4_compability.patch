@@ -1,0 +1,195 @@
+--- 2011_0719_RT3070_RT3370_RT5370_RT5372_Linux_STA_V2.5.0.4_DPO/Makefile	2014-12-01 20:12:58.317803513 +0100
++++ 2011_0719_RT3070_RT3370_RT5370_RT5372_Linux_STA_V2.5.0.4_DPO/Makefile	2014-12-01 20:16:31.137794802 +0100
+@@ -307,47 +307,6 @@
+ 	$(MAKE) -C $(RT28xx_DIR)/os/Threadx -f $(RT28xx_DIR)/os/ThreadX/Makefile
+ 
+ LINUX:
+-ifneq (,$(findstring 2.4,$(LINUX_SRC)))
+-
+-ifeq ($(OSABL),YES)
+-	cp -f os/linux/Makefile.4.util $(RT28xx_DIR)/os/linux/Makefile
+-	$(MAKE) -C $(RT28xx_DIR)/os/linux/
+-endif
+-
+-	cp -f os/linux/Makefile.4 $(RT28xx_DIR)/os/linux/Makefile
+-	$(MAKE) -C $(RT28xx_DIR)/os/linux/
+-
+-ifeq ($(OSABL),YES)
+-	cp -f os/linux/Makefile.4.netif $(RT28xx_DIR)/os/linux/Makefile
+-	$(MAKE) -C $(RT28xx_DIR)/os/linux/
+-endif
+-
+-ifeq ($(RT28xx_MODE),AP)
+-	cp -f $(RT28xx_DIR)/os/linux/rt$(CHIPSET)ap.o /tftpboot
+-ifeq ($(OSABL),YES)
+-	cp -f $(RT28xx_DIR)/os/linux/rtutil$(CHIPSET)ap.o /tftpboot
+-	cp -f $(RT28xx_DIR)/os/linux/rtnet$(CHIPSET)ap.o /tftpboot
+-endif
+-ifeq ($(PLATFORM),INF_AMAZON_SE)
+-	cp -f /tftpboot/rt2870ap.o /backup/ifx/build/root_filesystem/lib/modules/2.4.31-Amazon_SE-3.6.2.2-R0416_Ralink/kernel/drivers/net
+-endif
+-else	
+-ifeq ($(RT28xx_MODE),APSTA)
+-	cp -f $(RT28xx_DIR)/os/linux/rt$(CHIPSET)apsta.o /tftpboot
+-ifeq ($(OSABL),YES)
+-	cp -f $(RT28xx_DIR)/os/linux/rtutil$(CHIPSET)apsta.o /tftpboot
+-	cp -f $(RT28xx_DIR)/os/linux/rtnet$(CHIPSET)apsta.o /tftpboot
+-endif
+-else
+-	cp -f $(RT28xx_DIR)/os/linux/rt$(CHIPSET)sta.o $(RT28xx_DIR)
+-ifeq ($(OSABL),YES)
+-	cp -f $(RT28xx_DIR)/os/linux/rtutil$(CHIPSET)sta.o /tftpboot
+-	cp -f $(RT28xx_DIR)/os/linux/rtnet$(CHIPSET)sta.o /tftpboot
+-endif
+-endif	
+-endif	
+-else
+-
+ ifeq ($(OSABL),YES)
+ 	cp -f os/linux/Makefile.6.util $(RT28xx_DIR)/os/linux/Makefile
+ 	$(MAKE) -C $(LINUX_SRC) SUBDIRS=$(RT28xx_DIR)/os/linux modules
+@@ -392,7 +351,6 @@
+ endif
+ endif
+ endif
+-endif
+ 
+ 
+ release:
+@@ -434,61 +392,33 @@
+ 
+ uninstall:
+ ifeq ($(TARGET), LINUX)
+-ifneq (,$(findstring 2.4,$(LINUX_SRC)))
+-	$(MAKE) -C $(RT28xx_DIR)/os/linux -f Makefile.4 uninstall
+-else
+ 	$(MAKE) -C $(RT28xx_DIR)/os/linux -f Makefile.6 uninstall
+ endif
+-endif
+ 
+ install:
+ ifeq ($(TARGET), LINUX)
+-ifneq (,$(findstring 2.4,$(LINUX_SRC)))
+-	$(MAKE) -C $(RT28xx_DIR)/os/linux -f Makefile.4 install
+-else
+ 	$(MAKE) -C $(RT28xx_DIR)/os/linux -f Makefile.6 install
+ endif
+-endif
+ 
+ libwapi:
+-ifneq (,$(findstring 2.4,$(LINUX_SRC)))
+-	cp -f os/linux/Makefile.libwapi.4 $(RT28xx_DIR)/os/linux/Makefile
+-	$(MAKE) -C $(RT28xx_DIR)/os/linux/
+-else
+ 	cp -f os/linux/Makefile.libwapi.6 $(RT28xx_DIR)/os/linux/Makefile	
+ 	$(MAKE) -C  $(LINUX_SRC) SUBDIRS=$(RT28xx_DIR)/os/linux modules	
+-endif	
+ 
+ osutil:
+ ifeq ($(OSABL),YES)
+-ifneq (,$(findstring 2.4,$(LINUX_SRC)))
+-	cp -f os/linux/Makefile.4.util $(RT28xx_DIR)/os/linux/Makefile
+-	$(MAKE) -C $(RT28xx_DIR)/os/linux/
+-else
+ 	cp -f os/linux/Makefile.6.util $(RT28xx_DIR)/os/linux/Makefile
+ 	$(MAKE) -C $(LINUX_SRC) SUBDIRS=$(RT28xx_DIR)/os/linux modules
+ endif
+-endif
+ 
+ osnet:
+ ifeq ($(OSABL),YES)
+-ifneq (,$(findstring 2.4,$(LINUX_SRC)))
+-	cp -f os/linux/Makefile.4.netif $(RT28xx_DIR)/os/linux/Makefile
+-	$(MAKE) -C $(RT28xx_DIR)/os/linux/
+-else
+ 	cp -f os/linux/Makefile.6.netif $(RT28xx_DIR)/os/linux/Makefile
+ 	$(MAKE) -C $(LINUX_SRC) SUBDIRS=$(RT28xx_DIR)/os/linux modules
+ endif
+-endif
+ 
+ osdrv:
+-ifneq (,$(findstring 2.4,$(LINUX_SRC)))
+-	cp -f os/linux/Makefile.4 $(RT28xx_DIR)/os/linux/Makefile
+-	$(MAKE) -C $(RT28xx_DIR)/os/linux/
+-else
+ 	cp -f os/linux/Makefile.6 $(RT28xx_DIR)/os/linux/Makefile
+ 	$(MAKE) -C $(LINUX_SRC) SUBDIRS=$(RT28xx_DIR)/os/linux modules
+-endif
+ 
+ # Declare the contents of the .PHONY variable as phony.  We keep that information in a variable
+ .PHONY: $(PHONY)
+--- 2011_0719_RT3070_RT3370_RT5370_RT5372_Linux_STA_V2.5.0.4_DPO/os/linux/config.mk	2014-12-01 20:12:54.005803689 +0100
++++ 2011_0719_RT3070_RT3370_RT5370_RT5372_Linux_STA_V2.5.0.4_DPO/os/linux/config.mk	2014-12-01 20:14:27.317799870 +0100
+@@ -591,14 +591,9 @@
+ endif
+ 
+ ifeq ($(PLATFORM),INF_DANUBE)
+-ifneq (,$(findstring 2.4,$(LINUX_SRC)))
+-# Linux 2.4
+-WFLAGS += -DINF_DANUBE -DRT_BIG_ENDIAN
+-else
+ # Linux 2.6
+ WFLAGS += -DRT_BIG_ENDIAN
+ endif
+-endif
+ 
+ ifeq ($(PLATFORM),INF_AR9)
+ WFLAGS += -DRT_BIG_ENDIAN -DINF_AR9
+@@ -690,11 +685,7 @@
+ endif
+ 
+ ifeq ($(PLATFORM),INF_DANUBE)
+-	ifneq (,$(findstring 2.4,$(LINUX_SRC)))
+-	CFLAGS := -I$(RT28xx_DIR)/include $(WFLAGS) -Wundef -fno-strict-aliasing -fno-common -ffreestanding -Os -fomit-frame-pointer -G 0 -mno-abicalls -fno-pic -pipe -msoft-float  -mabi=32 -march=mips32 -Wa,-32 -Wa,-march=mips32 -Wa,-mips32 -Wa,--trap -I$(LINUX_SRC)/include/asm-mips/mach-generic
+-	else
+ 	CFLAGS := -I$(RT28xx_DIR)/include $(WFLAGS) -Wundef -fno-strict-aliasing -fno-common -ffreestanding -Os -fomit-frame-pointer -G 0 -mno-abicalls -fno-pic -pipe -msoft-float  -mabi=32 -march=mips32r2 -Wa,-32 -Wa,-march=mips32r2 -Wa,-mips32r2 -Wa,--trap -I$(LINUX_SRC)/include/asm-mips/mach-generic
+-	endif
+ export CFLAGS
+ endif
+ 
+@@ -724,14 +715,8 @@
+ endif
+ 
+ ifeq ($(PLATFORM),PC)
+-    ifneq (,$(findstring 2.4,$(LINUX_SRC)))
+-	# Linux 2.4
+-	CFLAGS := -D__KERNEL__ -I$(LINUX_SRC)/include -I$(RT28xx_DIR)/include -O2 -fomit-frame-pointer -fno-strict-aliasing -fno-common -pipe -mpreferred-stack-boundary=2 -march=i686 -DMODULE -DMODVERSIONS -include $(LINUX_SRC)/include/linux/modversions.h $(WFLAGS)
+-	export CFLAGS
+-    else
+ 	# Linux 2.6
+ 	EXTRA_CFLAGS := $(WFLAGS) -I$(RT28xx_DIR)/include
+-    endif
+ endif
+ 
+ #If the kernel version of RMI is newer than 2.6.27, please change "CFLAGS" to "EXTRA_FLAGS"
+@@ -782,11 +767,6 @@
+ endif
+ 
+ ifeq ($(PLATFORM),MT85XX)
+-    ifneq (,$(findstring 2.4,$(LINUX_SRC)))
+-	# Linux 2.4
+-	CFLAGS := -D__KERNEL__ -I$(LINUX_SRC)/include -I$(RT28xx_DIR)/include -O2 -fomit-frame-pointer -fno-strict-aliasing -fno-common -pipe -mpreferred-stack-boundary=2 -march=i686 -DMODULE -DMODVERSIONS -include $(LINUX_SRC)/include/linux/modversions.h $(WFLAGS)
+-	export CFLAGS
+-    else
+ 	# Linux 2.6
+ 	EXTRA_CFLAGS += $(WFLAGS) -I$(RT28xx_DIR)/include
+ 	EXTRA_CFLAGS += -D _NO_TYPEDEF_BOOL_ \
+@@ -799,18 +779,11 @@
+ 	                -D _NO_TYPEDEF_INT32_ \
+ 	                -D _NO_TYPEDEF_INT64_ \
+ 	                
+-    endif
+ endif
+ 
+ ifeq ($(PLATFORM),NXP_TV550)
+-    ifneq (,$(findstring 2.4,$(LINUX_SRC)))
+-        # Linux 2.4
+-        CFLAGS := -D__KERNEL__ -I$(LINUX_SRC)/include -I$(RT28xx_DIR)/include -O2 -fomit-frame-pointer -fno-strict-aliasing -fno-common -pipe -mpreferred-stack-boundary=2 -march=mips -DMODULE -DMODVERSIONS -include $(LINUX_SRC)/include/linux/modversions.h $(WFLAGS)
+-        export CFLAGS
+-    else
+         # Linux 2.6
+         EXTRA_CFLAGS := $(WFLAGS) -I$(RT28xx_DIR)/include
+-    endif
+ endif
+ 
+ ifeq ($(PLATFORM),MVL5)

@@ -38,6 +38,7 @@ SRC_URI += "http://code-ini.com/software/kernel/bcm7358-linux-${KV}-${SRCDATE}.t
     file://nfs-max-rwsize-8k.patch \
     file://mxl5007t-add-no_probe-and-no_reset-parameters.patch \
     file://0001-restore-minimal-amount-of-queueing.patch \
+    file://rt2800usb_fix_warn_tx_status_timeout_to_dbg.patch \
     "
 
 S = "${WORKDIR}/linux-${PV}"

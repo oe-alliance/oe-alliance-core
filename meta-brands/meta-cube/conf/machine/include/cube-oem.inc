@@ -28,7 +28,7 @@ MACHINE_ESSENTIAL_EXTRA_RDEPENDS = "\
 DVBPROVIDER = "kernel"
 
 MACHINE_EXTRA_RRECOMMENDS = " \
-    gst-plugin-dvbmediasink \
+    gstreamer1.0-plugin-dvbmediasink \
     mtd-utils-native \
     "
 	
