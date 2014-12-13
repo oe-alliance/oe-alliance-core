@@ -11,6 +11,7 @@ ${@base_contains('MACHINEBUILD', 'sezammarvel', 'Marvel' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'xpeedlx', 'LX-x' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'xpeedlx3', 'LX-3' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbmini', 'Premium Mini' , '', d)}\
+${@base_contains('MACHINEBUILD', 'mbminiplus', 'Premium Mini Plus' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbtwin', 'Premium Twin' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbultra', 'Premium Ultra' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'atemio5x00', '5x00-HD' , '', d)}\
@@ -30,6 +31,7 @@ ${@base_contains('MACHINEBUILD', 'sezammarvel', 'Sezam' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'xpeedlx', 'GI' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'xpeedlx3', 'GI' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbmini', 'Miraclebox' , '', d)}\
+${@base_contains('MACHINEBUILD', 'mbminiplus', 'Miraclebox' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbtwin', 'Miraclebox' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbultra', 'Miraclebox' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'atemio5x00', 'Atemio' , '', d)}\
@@ -49,6 +51,7 @@ ${@base_contains('MACHINEBUILD', 'sezammarvel', 'hdp' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'xpeedlx', 'xpeedlx' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'xpeedlx3', 'xpeedlx3' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbmini', 'miraclebox/mini' , '', d)}\
+${@base_contains('MACHINEBUILD', 'mbminiplus', 'miraclebox/miniplus' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbtwin', 'miraclebox/twin' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbultra', 'miraclebox/ultra' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'atemio5x00', 'atemio/5x00' , '', d)}\
@@ -68,6 +71,7 @@ ${@base_contains('MACHINEBUILD', 'sezammarvel', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'xpeedlx', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'xpeedlx3', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbmini', 'mtd2' , '', d)}\
+${@base_contains('MACHINEBUILD', 'mbminiplus', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbtwin', 'mtd1' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbultra', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'atemio5x00', 'mtd2' , '', d)}\
@@ -87,6 +91,7 @@ ${@base_contains('MACHINEBUILD', 'sezammarvel', 'mtd0' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'xpeedlx', 'mtd0' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'xpeedlx3', 'mtd0' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbmini', 'mtd0' , '', d)}\
+${@base_contains('MACHINEBUILD', 'mbminiplus', 'mtd0' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbtwin', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbultra', 'mtd0' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'atemio5x00', 'mtd0' , '', d)}\
@@ -106,6 +111,7 @@ ${@base_contains('MACHINEBUILD', 'sezammarvel', 'ini-900' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'xpeedlx', 'inihde' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'xpeedlx3', 'ini-900' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbmini', 'inihde' , '', d)}\
+${@base_contains('MACHINEBUILD', 'mbminiplus', 'inihde2sv' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbtwin', 'inihdx' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbultra', 'ini-800' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'atemio5x00', 'inihde' , '', d)}\
@@ -131,7 +137,7 @@ MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS = "\
     "
 
 MACHINE_EXTRA_RRECOMMENDS = " \
-    gst-plugin-dvbmediasink \
+    gstreamer1.0-plugin-dvbmediasink \
     "
 
 include conf/machine/include/autoload-filesystems.inc
@@ -168,6 +174,9 @@ IMAGE_CMD_ubi_append = " \
     cd ${DEPLOY_DIR_IMAGE}; \
     zip ${IMAGE_NAME}_usb.zip ${IMAGEDIR}/*; \
     rm -f ${DEPLOY_DIR_IMAGE}/*.ubifs; \
+    rm -f ${DEPLOY_DIR_IMAGE}/*.manifest; \
+    rm -f ${DEPLOY_DIR_IMAGE}/.ubifs; \
+    rm -f ${DEPLOY_DIR_IMAGE}/.manifest; \
     rm -rf ${IMAGEDIR}; \
     rm -rf atemio; \
     rm -rf miraclebox; \
