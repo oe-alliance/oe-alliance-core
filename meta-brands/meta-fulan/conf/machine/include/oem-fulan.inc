@@ -136,6 +136,8 @@ DVBPROVIDER = "kernel"
 USE_VT = "0"
 MACHINE_FEATURES = "3dtv alsa hdmicec switchoff wifi kernel26 ext2 usbhost serial dvb-c singlecore textlcd sh4booster no-nmap"
 
+DVBMEDIASINK_CONFIG = "--with-wma --with-wmv --with-pcm --with-dtsdownmix --with-eac3"
+
 KERNEL_IMAGETYPE = "uImage"
 #KERNEL_OUTPUT = "${KERNEL_IMAGETYPE}"
 
@@ -185,8 +187,7 @@ MACHINE_ESSENTIAL_EXTRA_RDEPENDS += " \
     "
 
 MACHINE_EXTRA_RRECOMMENDS = " \
-    kernel-modules \
-    fulan-gst-plugin-dvbmediasink \
+    gstreamer1.0-plugin-dvbmediasink \
     enigma2-plugin-systemplugins-sh4boostercontrol \
     enigma2-plugin-systemplugins-sh4osdadjustment \
     "
