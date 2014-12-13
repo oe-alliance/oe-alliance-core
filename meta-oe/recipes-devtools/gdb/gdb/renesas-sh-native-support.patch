@@ -410,7 +410,7 @@ Index: gdb-7.5/gdb/sh-linux-tdep.c
 +sh_supply_gregset (const struct regset *regset, struct regcache *regcache,
 +             int regnum, const void *gregs, size_t len)
 +{
-+  const struct gdbarch_tdep *tdep = gdbarch_tdep (regset->arch);
++  struct gdbarch *gdbarch = get_regcache_arch (regcache); const struct gdbarch_tdep *tdep = gdbarch_tdep (gdbarch);
 +  const char *regs = gregs;
 +  int i;
 +
@@ -434,7 +434,7 @@ Index: gdb-7.5/gdb/sh-linux-tdep.c
 +              const struct regcache *regcache,
 +              int regnum, void *gregs, size_t len)
 +{
-+  const struct gdbarch_tdep *tdep = gdbarch_tdep (regset->arch);
++  struct gdbarch *gdbarch = get_regcache_arch (regcache); const struct gdbarch_tdep *tdep = gdbarch_tdep (gdbarch);
 +  char *regs = gregs;
 +  int i;
 +
@@ -456,7 +456,7 @@ Index: gdb-7.5/gdb/sh-linux-tdep.c
 +sh_supply_fpregset (const struct regset *regset, struct regcache *regcache,
 +              int regnum, const void *fpregs, size_t len)
 +{
-+  const struct gdbarch_tdep *tdep = gdbarch_tdep (regset->arch);
++  struct gdbarch *gdbarch = get_regcache_arch (regcache); const struct gdbarch_tdep *tdep = gdbarch_tdep (gdbarch);
 +  const char *regs = fpregs;
 +  int i;
 +
@@ -482,7 +482,7 @@ Index: gdb-7.5/gdb/sh-linux-tdep.c
 +               const struct regcache *regcache,
 +               int regnum, void *fpregs, size_t len)
 +{
-+  const struct gdbarch_tdep *tdep = gdbarch_tdep (regset->arch);
++  struct gdbarch *gdbarch = get_regcache_arch (regcache); const struct gdbarch_tdep *tdep = gdbarch_tdep (gdbarch);
 +  char *regs = fpregs;
 +  int i;
 +
@@ -501,6 +501,16 @@ Index: gdb-7.5/gdb/sh-linux-tdep.c
 +/* Return the appropriate register set for the core section identified
 +   by SECT_NAME and SECT_SIZE.  */
 +
++static const struct regset sh_gregset =
++  {
++    NULL, sh_supply_gregset, sh_collect_gregset
++  };
++
++static const struct regset sh_fpregset =
++  {
++    NULL, sh_supply_fpregset, sh_collect_fpregset
++  };
++
 +const struct regset *
 +sh_linux_regset_from_core_section (struct gdbarch *gdbarch,
 +                   const char *sect_name, size_t sect_size)
@@ -508,20 +518,10 @@ Index: gdb-7.5/gdb/sh-linux-tdep.c
 +  struct gdbarch_tdep *tdep = gdbarch_tdep (gdbarch);
 +
 +  if (strcmp (sect_name, ".reg") == 0 && sect_size == tdep->sizeof_gregset)
-+    {
-+      if (tdep->gregset == NULL)
-+    tdep->gregset = regset_alloc (gdbarch, sh_supply_gregset,
-+                      sh_collect_gregset);
-+      return tdep->gregset;
-+    }
++      return &sh_gregset;
 +
 +  if ((strcmp (sect_name, ".reg2") == 0 && sect_size == tdep->sizeof_fpregset))
-+    {
-+      if (tdep->fpregset == NULL)
-+    tdep->fpregset = regset_alloc (gdbarch, sh_supply_fpregset,
-+                       sh_collect_fpregset);
-+      return tdep->fpregset;
-+    }
++      return &sh_fpregset;
 +
 +  return NULL;
 +}
