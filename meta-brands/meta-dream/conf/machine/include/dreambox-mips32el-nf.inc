@@ -3,6 +3,10 @@
 TARGET_ARCH = "mipsel"
 DEFAULTTUNE = "mips32el-nf"
 
+MTD_KERNEL = "mtd2"
+KERNEL_FILE = "kernel.bin"
+ROOTFS_FILE = "rootfs.bin"
+
 EXTRA_IMAGEDEPENDS += "dreambox-secondstage-${MACHINE}"
 
 GLIBC_EXTRA_OECONF = "--with-tls --with-__thread"
