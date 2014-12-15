@@ -11,7 +11,7 @@ DEPENDS = "tslib mpfr gmp"
 SRCREV = "${AUTOREV}"
 PV = "2.1+gitr${SRCPV}"
 PKGV = "2.1+gitr${GITPKGV}"
-PR = "r121"
+PR = "r122"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -63,6 +63,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-moviebrowser_3.5rc4_mips32el.ipk \
     enigma2-plugin-extensions-mp3browser_1.9c4_mips32el.ipk \
     enigma2-plugin-extensions-navibar_1.1.1_all.ipk \
+    enigma2-plugin-extensions-netatmo_1.3-20140830-r108_all.ipk \
     enigma2-plugin-extensions-opkg-tools_1.3_mipsel.ipk \
     enigma2-plugin-extensions-oscamstatusview_0.5_mips32el.ipk \
     enigma2-plugin-extensions-planerfs_6.45_all.ipk \
