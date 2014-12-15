@@ -27,7 +27,7 @@ EXTRA_OEMAKE = " \
     ${@base_contains("MACHINE_FEATURES", "textlcd", "-DOMB_HAVE_TEXTLCD" , "", d)} \
     ${@base_contains("IMAGE_FSTYPES", "ubi", "-DOMB_FLASH_UBI" , "", d)} \
     ${@base_contains("IMAGE_FSTYPES", "jffs2", "-DOMB_FLASH_JFFS2" , "", d)} \
-    ${@base_contains("MACHINE_FEATURES", "dreambox", "-DOMB_DREAMBOX", "", d)}
+    ${@base_contains("MACHINE_FEATURES", "dreambox", "-DOMB_DREAMBOX", "", d)} \
     -DOMB_KERNEL_MTD=\"/dev/${MTD_KERNEL}\"' \
     'LDFLAGS= -lfreetype ${LDFLAGS}' \
     "
