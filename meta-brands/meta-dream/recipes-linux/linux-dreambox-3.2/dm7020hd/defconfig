@@ -880,6 +880,7 @@ CONFIG_MTD_BLOCK2MTD=m
 # CONFIG_MTD_DOCG3 is not set
 # CONFIG_MTD_NAND is not set
 # CONFIG_MTD_ONENAND is not set
+CONFIG_MTD_NAND_NANDSIM=m
 
 #
 # LPDDR flash memory drivers
