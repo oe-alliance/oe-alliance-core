@@ -1,6 +1,6 @@
 inherit machine_kernel_pr
 
-MACHINE_KERNEL_PR_append = ".5"
+MACHINE_KERNEL_PR_append = ".6"
 
 PATCHREV = "4e0356d04e89df800361b9252f990716f5523c6e"
 PATCHLEVEL = "60"
@@ -22,7 +22,6 @@ SRC_URI = " \
     file://0002-add-crypto-api-xz-support.patch \
     file://0003-add-XZ-compression-support-to-UBIFS.patch \
     file://0004-block2mtd-add-possibility-to-change-the-writesize.patch \
-    file://0005-block2mtd-add-possibility-to-remove-block2mtd-device.patch \
     file://0006-mtd-block2mtd-fix-recursive-call-of-mtd_writev.patch \
     file://0007-mtd-block2mtd-throttle-writes-by-calling-balance_dir.patch \
     file://0008-The-ubi-maintained-flag-must-be-set-earlier-to-preve.patch \
