@@ -1,10 +1,6 @@
-DOWNLOADMACHINE = "gb800solo"
-PV = "3.1.1"
-PR = "r6"
+SRCDATE = "20141217"
 
-SRCDATE = "20130308"
+SRC_URI[md5sum] = "6efae2e4f052584f22b4e201b32e16ec"
+SRC_URI[sha256sum] = "620fbb40c04d07350d49dae89eb490099936c053ead084569b80471f8b2d2709"
 
 require gigablue-blindscan-utils.inc
-
-SRC_URI[md5sum] = "d98c2d4cf4bb8c461e486f2ec068172e"
-SRC_URI[sha256sum] = "7c0452164ca362b1f19b25669b7890b112b49822ca37f0c9dbe8ece429c1c923"
