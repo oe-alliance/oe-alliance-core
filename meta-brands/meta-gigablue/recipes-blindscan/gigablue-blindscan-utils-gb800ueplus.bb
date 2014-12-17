@@ -1,10 +1,6 @@
-DOWNLOADMACHINE = "gbquad"
-PV = "3.5.1"
-PR = "r4"
+SRCDATE = "20141217"
 
-SRCDATE = "20130308"
+SRC_URI[md5sum] = "6efae2e4f052584f22b4e201b32e16ec"
+SRC_URI[sha256sum] = "620fbb40c04d07350d49dae89eb490099936c053ead084569b80471f8b2d2709"
 
 require gigablue-blindscan-utils.inc
-
-SRC_URI[md5sum] = "671e1e0a4f031e33e87f4bb06c3c73a3"
-SRC_URI[sha256sum] = "543d346d5d87816832c8d71a0e017ad11bacc136be17f5dd52cde828f4436afb"
