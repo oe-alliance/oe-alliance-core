@@ -4,12 +4,11 @@ LICENSE = "GPLv2"
 PR = "r0"
 
 KERNEL_RELEASE = "3.14.2"
-SRCDATE = "20141216"
 
 inherit machine_kernel_pr
 
-SRC_URI[md5sum] = "fe7c5e255522ed603664a9e4904607d0"
-SRC_URI[sha256sum] = "0f0289d9a569e432ceb5f8c7ec59323a851f557cb0b8ed0a416a10e3b3a97561"
+SRC_URI[md5sum] = "7276fcda85e4594c993ea6192cd7df0f"
+SRC_URI[sha256sum] = "72236f0ff51f42496d5d7bae372f4ddc686bc0eb433aa8b6295bbda0558d3e63"
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
@@ -23,7 +22,7 @@ PKG_kernel-image = "kernel-image"
 RPROVIDES_kernel-base = "kernel-${KERNEL_VERSION}"
 RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
 
-SRC_URI += "http://source.mynonpublic.com/ceryon/ceryon-linux-${PV}-${SRCDATE}.tar.gz \
+SRC_URI += "http://source.mynonpublic.com/ceryon/linux-${PV}.tar.gz \
 	file://defconfig \
 	file://add-rt2x00-wifi-devices.patch \
 	file://add-rtl8192cu-wifi-devices.patch \
