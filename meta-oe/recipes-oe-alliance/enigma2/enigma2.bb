@@ -28,7 +28,6 @@ RDEPENDS_${PN} = " \
 RRECOMMENDS_${PN} = " \
     glib-networking \
     gstreamer1.0-plugin-subsink \
-    ${@base_contains("TARGET_ARCH", "mipsel", "gst-plugin-libxt" , "", d)} \
     ${GST_BASE_RDEPS} \
     ${GST_GOOD_RDEPS} \
     ${GST_BAD_RDEPS} \
@@ -156,7 +155,7 @@ inherit autotools-brokensep gitpkgv pkgconfig pythonnative
 
 PV = "3.0+git${SRCPV}"
 PKGV = "3.0+git${GITPKGV}"
-PR = "r17"
+PR = "r18"
 
 SRC_URI = "${ENIGMA2_URI}"
 
