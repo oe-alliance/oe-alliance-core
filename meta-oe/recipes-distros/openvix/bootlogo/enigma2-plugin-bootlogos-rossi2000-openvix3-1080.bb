@@ -7,5 +7,5 @@ PR = "r0"
 
 SRC_URI = "http://vixhades-files.kicks-ass.org/rossi2000/bootlogos/rossi2000-openvix3-1080.zip"
 
-SRC_URI[md5sum] = "c68d58baa151aa15b39edfbd2ade280b"
-SRC_URI[sha256sum] = "98ad2e5f73428c59b651ffe57c3d9e6238694532ef3455121a4353e2b920cf4c"
+SRC_URI[md5sum] = "7f31ab360732ad7a7fbbca9bfb179a0b"
+SRC_URI[sha256sum] = "009bc214029bf764dd3e3e4d9b00740cb83f3f425d762ec9dffa95f4b413e7e1"
