@@ -9,7 +9,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "1.0"
-PR = "r20"
+PR = "r21"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 OPTIONAL_WIFIDRIVERS = "${@base_contains("MACHINE_FEATURES", "wifiusblegacy", "enigma2-plugin-drivers-network-usb-rt3070", " \
@@ -37,6 +37,7 @@ RDEPENDS_${PN} = "\
     ${@base_contains("DISTRO_FEATURES", "wifi-extra", "${OPTIONAL_WIFIDRIVERS}", "", d)} \
     ${@base_contains("DISTRO_NAME", "openatv", "enigma2-plugin-drivers-network-usb-rtl8192cu", "", d)} \
     ${@base_contains("DISTRO_NAME", "axassupport", "enigma2-plugin-drivers-network-usb-rtl8192cu", "", d)} \
-	${@base_contains("DISTRO_NAME", "openxta", "enigma2-plugin-drivers-network-usb-rtl8192cu", "", d)} \
+    ${@base_contains("DISTRO_NAME", "openxta", "enigma2-plugin-drivers-network-usb-rtl8192cu", "", d)} \
     ${@base_contains("DISTRO_NAME", "odinsupport", "enigma2-plugin-drivers-network-usb-rtl8192cu", "", d)} \
+    ${@base_contains("MACHINEBUILD", "bre2ze", "enigma2-plugin-drivers-network-usb-mt7601u", "", d)} \
     "

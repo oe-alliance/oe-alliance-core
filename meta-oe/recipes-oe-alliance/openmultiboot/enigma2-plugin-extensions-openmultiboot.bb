@@ -23,6 +23,8 @@ RDEPENDS_${PN} = "kernel-module-nandsim openmultiboot"
 
 RDEPENDS_${PN}_gb800solo = "kernel-module-block2mtd openmultiboot"
 RDEPENDS_${PN}_dm800 = "kernel-module-block2mtd openmultiboot unjffs2"
+RDEPENDS_${PN}_spark7162 = "kernel-module-block2mtd openmultiboot unjffs2"
+RDEPENDS_${PN}_spark = "kernel-module-block2mtd openmultiboot unjffs2"
 
 EXTRA_OECONF = "\
     --with-po \
