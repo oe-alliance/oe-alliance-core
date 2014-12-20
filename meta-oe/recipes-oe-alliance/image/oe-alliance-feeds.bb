@@ -9,7 +9,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "1.0"
-PR = "r54"
+PR = "r55"
 
 DEPENDS = "enigma2-plugin-drivers-usbserial"
 RECOMMENDS = "enigma2-plugin-extensions-et-livestream"
@@ -38,6 +38,7 @@ RDEPENDS_${PN} = " \
     enigma2-plugin-extensions-iptvlistupdater \
     enigma2-plugin-extensions-et-portal \
     enigma2-plugin-extensions-moviearchiver \
+    enigma2-plugin-extensions-yahooweather \
     ${@base_contains("MACHINE_FEATURES", "omb", "enigma2-plugin-extensions-openmultiboot", "", d)} \
     ${@base_contains("MACHINE_FEATURES", "omb", "openmultiboot", "", d)} \
     \
