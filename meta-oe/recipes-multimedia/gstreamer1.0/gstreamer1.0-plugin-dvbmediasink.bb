@@ -10,6 +10,11 @@ RDEPENDS_${PN} = "gstreamer1.0-libav"
 GSTVERSION = "1.0"
 
 SRC_URI = "git://git.code.sf.net/p/openpli/gst-plugin-dvbmediasink;protocol=git;branch=gst-1.0"
+
+SRC_URI_append_sh4 = " \
+    file://dvbmediasink_sh4_fix.patch;patch=1 \
+"
+
 SRCREV = "${AUTOREV}"
 
 S = "${WORKDIR}/git"
@@ -18,7 +23,7 @@ inherit gitpkgv
 
 PV = "${GSTVERSION}+git${SRCPV}"
 PKGV = "${GSTVERSION}+git${GITPKGV}"
-PR = "r0"
+PR = "r1"
 
 do_configure_prepend() {
     sed -i 's/AC_INIT.*$/AC_INIT(gst-plugin-dvbmediasink, 1.0.0, @pli4)/' ${S}/configure.ac

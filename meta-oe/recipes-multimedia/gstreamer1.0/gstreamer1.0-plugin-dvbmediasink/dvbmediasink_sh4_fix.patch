@@ -1,0 +1,238 @@
+diff --git a/gstdvbaudiosink.c b/gstdvbaudiosink.c
+index 2725def..55cc588 100644
+--- a/gstdvbaudiosink.c
++++ b/gstdvbaudiosink.c
+@@ -74,6 +74,10 @@
+ #include <poll.h>
+ #include <stdio.h>
+ 
++#ifdef __sh__
++#include <linux/dvb/stm_ioctls.h>
++#endif
++
+ #include <gst/gst.h>
+ #include <gst/audio/audio.h>
+ #include <gst/base/gstbasesink.h>
+@@ -205,6 +209,36 @@ GST_STATIC_PAD_TEMPLATE(
+ 	)
+ );
+ 
++#define AUDIO_ENCODING_UNKNOWN  0xFF
++
++unsigned int bypass_to_encoding (unsigned int bypass)
++{
++#ifdef AUDIO_SET_ENCODING
++	switch(bypass)
++	{
++	case AUDIOTYPE_AC3:
++	case AUDIOTYPE_AC3_PLUS:
++		return AUDIO_ENCODING_AC3;
++	case AUDIOTYPE_MPEG:
++		return AUDIO_ENCODING_MPEG1;
++	case AUDIOTYPE_DTS:
++		return AUDIO_ENCODING_DTS;
++	case AUDIOTYPE_LPCM:
++		return AUDIO_ENCODING_LPCMA;
++	case AUDIOTYPE_MP3:
++		return AUDIO_ENCODING_MP3;
++	case AUDIOTYPE_AAC_PLUS:
++		return AUDIO_ENCODING_AAC;
++	case AUDIOTYPE_WMA:
++	case AUDIOTYPE_WMA_PRO:
++		return AUDIO_ENCODING_WMA;
++	default:
++		return AUDIO_ENCODING_UNKNOWN;
++	}
++#endif
++	return AUDIO_ENCODING_UNKNOWN;
++}
++
+ #if GST_VERSION_MAJOR < 1
+ static void gst_dvbaudiosink_init(GstDVBAudioSink *self, GstDVBAudioSinkClass *gclass);
+ #else
+@@ -314,6 +348,11 @@ static void gst_dvbaudiosink_init(GstDVBAudioSink *self)
+ 	self->unlockfd[0] = self->unlockfd[1] = -1;
+ 	self->rate = 1.0;
+ 	self->timestamp = GST_CLOCK_TIME_NONE;
++#ifdef AUDIO_SET_ENCODING
++	self->use_set_encoding = TRUE;
++#else
++	self->use_set_encoding = FALSE;
++#endif	
+ 
+ 	gst_base_sink_set_sync(GST_BASE_SINK(self), FALSE);
+ 	gst_base_sink_set_async_enabled(GST_BASE_SINK(self), TRUE);
+@@ -751,11 +790,26 @@ static gboolean gst_dvbaudiosink_set_caps(GstBaseSink *basesink, GstCaps *caps)
+ 		if (self->fd >= 0) ioctl(self->fd, AUDIO_STOP, 0);
+ 		self->playing = FALSE;
+ 	}
+-	if (self->fd < 0 || ioctl(self->fd, AUDIO_SET_BYPASS_MODE, bypass) < 0)
++
++	if (self->use_set_encoding)
+ 	{
+-		GST_ELEMENT_ERROR(self, STREAM, TYPE_NOT_FOUND,(NULL),("hardware decoder can't be set to bypass mode type %s", type));
+-		return FALSE;
++#ifdef AUDIO_SET_ENCODING
++		unsigned int encoding = bypass_to_encoding(bypass);
++		if (self->fd < 0 || ioctl(self->fd, AUDIO_SET_ENCODING, encoding) < 0)
++		{
++			GST_ELEMENT_WARNING(self, STREAM, DECODE,(NULL),("hardware decoder can't be set to encoding %i", encoding));
++		}
++#endif
++	}
++	else
++	{
++		if (self->fd < 0 || ioctl(self->fd, AUDIO_SET_BYPASS_MODE, bypass) < 0)
++		{
++			GST_ELEMENT_ERROR(self, STREAM, TYPE_NOT_FOUND,(NULL),("hardware decoder can't be set to bypass mode type %s", type));
++			return FALSE;
++		}
+ 	}
++
+ 	if (self->fd >= 0) ioctl(self->fd, AUDIO_PLAY);
+ 	self->playing = TRUE;
+ 
+@@ -798,6 +852,11 @@ static gboolean gst_dvbaudiosink_event(GstBaseSink *sink, GstEvent *event)
+ 	case GST_EVENT_EOS:
+ 	{
+ 		struct pollfd pfd[2];
++
++#ifdef AUDIO_FLUSH
++		ioctl(self->fd, AUDIO_FLUSH, 1/*NONBLOCK*/); //Notify the player that no addionional data will be injected
++#endif
++
+ 		pfd[0].fd = self->unlockfd[0];
+ 		pfd[0].events = POLLIN;
+ 		pfd[1].fd = self->fd;
+diff --git a/gstdvbaudiosink.h b/gstdvbaudiosink.h
+index a83be80..9850415 100644
+--- a/gstdvbaudiosink.h
++++ b/gstdvbaudiosink.h
+@@ -111,6 +111,8 @@ struct _GstDVBAudioSink
+ 	gint64 lastpts;
+ 	gint64 timestamp_offset;
+ 
++        gboolean use_set_encoding;
++
+ 	queue_entry_t *queue;
+ };
+ 
+diff --git a/gstdvbvideosink.c b/gstdvbvideosink.c
+index a6b0a10..baf1004 100644
+--- a/gstdvbvideosink.c
++++ b/gstdvbvideosink.c
+@@ -73,6 +73,10 @@
+ #include <string.h>
+ #include <stdio.h>
+ 
++#ifdef __sh__
++#include <linux/dvb/stm_ioctls.h>
++#endif
++
+ #include <gst/gst.h>
+ #include <gst/base/gstbasesink.h>
+ 
+@@ -238,6 +242,42 @@ GST_STATIC_PAD_TEMPLATE (
+ 	)
+ );
+ 
++#define VIDEO_ENCODING_UNKNOWN  0xFF
++
++unsigned int streamtype_to_encoding(unsigned int streamtype)
++{
++#ifdef VIDEO_SET_ENCODING
++	switch(streamtype)
++	{
++	case STREAMTYPE_MPEG2:
++		return VIDEO_ENCODING_AUTO;
++	case STREAMTYPE_MPEG4_H264:
++		return VIDEO_ENCODING_H264;
++	case STREAMTYPE_H263:
++		return VIDEO_ENCODING_H263;
++	case STREAMTYPE_MPEG4_Part2:
++		return VIDEO_ENCODING_MPEG4P2;
++	case STREAMTYPE_MPEG1:
++		return VIDEO_ENCODING_AUTO;
++	case STREAMTYPE_XVID:
++		return VIDEO_ENCODING_MPEG4P2;
++	case STREAMTYPE_DIVX311:
++		return VIDEO_ENCODING_MPEG4P2;
++	case STREAMTYPE_DIVX4:
++		return VIDEO_ENCODING_MPEG4P2;
++	case STREAMTYPE_DIVX5:
++		return VIDEO_ENCODING_MPEG4P2;
++	case STREAMTYPE_VC1:
++		return VIDEO_ENCODING_VC1;
++	case STREAMTYPE_VC1_SM:
++		return VIDEO_ENCODING_WMV;
++	default:
++		return VIDEO_ENCODING_UNKNOWN;
++	}
++#endif
++	return VIDEO_ENCODING_UNKNOWN;
++}
++
+ #if GST_VERSION_MAJOR < 1
+ static void gst_dvbvideosink_init(GstDVBVideoSink *self, GstDVBVideoSinkClass *gclass);
+ #else
+@@ -349,6 +389,11 @@ static void gst_dvbvideosink_init(GstDVBVideoSink *self)
+ 	self->unlockfd[0] = self->unlockfd[1] = -1;
+ 	self->saved_fallback_framerate[0] = 0;
+ 	self->rate = 1.0;
++#ifdef VIDEO_SET_ENCODING
++	self->use_set_encoding      = TRUE;
++#else
++	self->use_set_encoding      = FALSE;
++#endif	
+ 
+ 	gst_base_sink_set_sync(GST_BASE_SINK(self), FALSE);
+ 	gst_base_sink_set_async_enabled(GST_BASE_SINK(self), TRUE);
+@@ -424,6 +469,10 @@ static gboolean gst_dvbvideosink_event(GstBaseSink *sink, GstEvent *event)
+ 		pfd[1].fd = self->fd;
+ 		pfd[1].events = POLLIN;
+ 
++#ifdef VIDEO_FLUSH
++		ioctl(self->fd, VIDEO_FLUSH, 1/*NONBLOCK*/); //Notify the player that no addionional data will be injected
++#endif
++
+ #if GST_VERSION_MAJOR < 1
+ 		GST_PAD_PREROLL_UNLOCK(sink->sinkpad);
+ #else
+@@ -1631,9 +1680,22 @@ static gboolean gst_dvbvideosink_set_caps(GstBaseSink *basesink, GstCaps *caps)
+ 			if (self->fd >= 0) ioctl(self->fd, VIDEO_STOP, 0);
+ 			self->playing = FALSE;
+ 		}
+-		if (self->fd < 0 || ioctl(self->fd, VIDEO_SET_STREAMTYPE, self->stream_type) < 0)
++		if (self->use_set_encoding)
++		{
++#ifdef VIDEO_SET_ENCODING
++			unsigned int encoding = streamtype_to_encoding(self->stream_type);
++			if (self->fd < 0 || ioctl(self->fd, VIDEO_SET_ENCODING, encoding) < 0)
++			{
++				GST_ELEMENT_ERROR(self, STREAM, DECODE, (NULL), ("hardware decoder can't be set to encoding %i", encoding));
++			}
++#endif
++		}
++		else
+ 		{
+-			GST_ELEMENT_ERROR(self, STREAM, CODEC_NOT_FOUND, (NULL), ("hardware decoder can't handle streamtype %i", self->stream_type));
++			if (self->fd < 0 || ioctl(self->fd, VIDEO_SET_STREAMTYPE, self->stream_type) < 0)
++			{
++				GST_ELEMENT_ERROR(self, STREAM, CODEC_NOT_FOUND, (NULL), ("hardware decoder can't handle streamtype %i", self->stream_type));
++			}
+ 		}
+ 		if (self->fd >= 0) 
+ 		{
+diff --git a/gstdvbvideosink.h b/gstdvbvideosink.h
+index 8cf1dc2..ad04bcb 100644
+--- a/gstdvbvideosink.h
++++ b/gstdvbvideosink.h
+@@ -115,6 +115,8 @@ struct _GstDVBVideoSink
+ 	gint64 timestamp_offset;
+ 	gboolean must_send_header;
+ 
++	gboolean use_set_encoding;
++
+ 	queue_entry_t *queue;
+ };
+ 
