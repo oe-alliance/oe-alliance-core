@@ -11,7 +11,7 @@ DEPENDS = "tslib mpfr gmp"
 SRCREV = "${AUTOREV}"
 PV = "2.1+gitr${SRCPV}"
 PKGV = "2.1+gitr${GITPKGV}"
-PR = "r124"
+PR = "r125"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -85,7 +85,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-sportportal_2013_all.ipk \
     enigma2-plugin-extensions-systemtools-for-ppanels_0.83_mipsel.ipk \
     enigma2-plugin-extensions-thetvdb_0.7-20120607-r1_mips32el.ipk \
-    enigma2-plugin-extensions-translator_0.9c2_mips32el.ipk \
+    enigma2-plugin-extensions-translator_0.9rc2_mips32el.ipk \
     enigma2-plugin-extensions-transmission_2.83_mips32el.ipk \
     enigma2-plugin-extensions-tsmedia_7.9_full_all.ipk \
     enigma2-plugin-extensions-tvspielfilm_6.3rc5_mips32el.ipk \
