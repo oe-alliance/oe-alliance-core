@@ -200,8 +200,6 @@ MACHINE_EXTRA_RDEPENDS = "\
     enigma2-plugin-systemplugins-vfdcontrol \
     "
 
-OLDEST_KERNEL = "2.6.32"
-
 include conf/machine/include/autoload-filesystems.inc
 
 require conf/machine/include/tune-sh4.inc
