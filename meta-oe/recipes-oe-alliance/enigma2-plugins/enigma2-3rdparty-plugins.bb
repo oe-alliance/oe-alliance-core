@@ -11,7 +11,7 @@ DEPENDS = "tslib mpfr gmp"
 SRCREV = "${AUTOREV}"
 PV = "2.1+gitr${SRCPV}"
 PKGV = "2.1+gitr${GITPKGV}"
-PR = "r125"
+PR = "r126"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -193,10 +193,10 @@ THIRDPARTY_MACHINE_PLUGINS_inihde = " \
     "
 THIRDPARTY_MACHINE_PLUGINS_inihde2 = " \
     enigma2-plugin-extensions-hbbtv_1.1-INI_mips32el.ipk \
-    "    
-    
-do_install() {
-}
+    "
+
+do_install[noexec] = "1"
+do_package_write_ipk[noexec] = "1"
 
 python populate_packages_prepend () {
     pkg  = ""
