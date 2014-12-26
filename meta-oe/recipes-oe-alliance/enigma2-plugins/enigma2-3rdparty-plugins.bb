@@ -11,7 +11,7 @@ DEPENDS = "tslib mpfr gmp"
 SRCREV = "${AUTOREV}"
 PV = "2.1+gitr${SRCPV}"
 PKGV = "2.1+gitr${GITPKGV}"
-PR = "r126"
+PR = "r127"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -49,7 +49,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-googlenewsreader_1.0_mips32el.ipk \
     enigma2-plugin-extensions-hetweer_2.6_mips32el.ipk \
     enigma2-plugin-extensions-hdmitest_0.4_mipsel.ipk \
-    enigma2-plugin-extensions-isettinge2-3.3.0-oe2.0-${DEFAULTTUNE}.ipk \
+    enigma2-plugin-extensions-isettinge2-3.3.1-oe2.0-mips32el.ipk \
     enigma2-plugin-extensions-kicker_3.3rc11_mips32el.ipk \
     enigma2-plugin-extensions-kino_1.4rc3_mips32el.ipk \
     enigma2-plugin-extensions-kodidirect_1.0_r0_all.ipk \
@@ -67,7 +67,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-oscamstatusview_0.5_mips32el.ipk \
     enigma2-plugin-extensions-planerfs_6.45_all.ipk \
     enigma2-plugin-extensions-pluginspanel_1.0_r01_all.ipk \
-    enigma2-plugin-extensions-piconmanager_0.1-20140820-r0_all.ipk \
+    enigma2-plugin-extensions-piconmanager-by-vti_0.1-20141225-r0_all.ipk \
     enigma2-plugin-extensions-picturecenterfs_6.03_all.ipk \
     enigma2-plugin-extensions-radiode_0.1_mips32el.ipk \
     enigma2-plugin-extensions-radioonline-oe2.0_1.0_all.ipk \

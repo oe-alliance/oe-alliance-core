@@ -35,17 +35,13 @@ SRC_URI += "http://archiv.openmips.com/gigablue-linux-${PV}-20141019.tgz \
     file://fix-proc-cputype.patch \
     file://iosched-slice_idle-1.patch \
     file://it913x-switch-off-PID-filter-by-default.patch \
+    file://linux-bcm_ethernet.patch \
     file://mxl5007t-add-no_probe-and-no_reset-parameters.patch \
     file://nfs-max-rwsize-8k.patch \
-    file://tda18271-advertise-supported-delsys.patch \
     file://rt2800usb_fix_warn_tx_status_timeout_to_dbg.patch \
-    "
-
-SRC_URI_append_gbquadplus = " \
+    file://tda18271-advertise-supported-delsys.patch \
     file://vlan_depth.patch \
-    file://linux-bcm_ethernet.patch \
     "
-
 
 S = "${WORKDIR}/linux-${PV}"
 
