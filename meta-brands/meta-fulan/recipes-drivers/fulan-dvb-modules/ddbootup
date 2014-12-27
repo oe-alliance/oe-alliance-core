@@ -1,9 +1,7 @@
 #!/bin/sh
 
 # Create display device if not present
-if ! [ -e /dev/dbox/oled0 ] ; then
-	mkdir -p /dev/dbox
-	/bin/mknod /dev/dbox/oled0 c 147 0
+if [ -e /dev/dbox/oled0 ] ; then
 	ln -s /dev/dbox/oled0 /dev/vfd
 fi
 
@@ -15,5 +13,3 @@ fi
 # Flush eth0 device which is set by kernel cmdline
 ip addr flush dev eth0
 
-rm -f /dev/dvb/adapter0/ca1
-ln -s /dev/dvb/adapter0/ca0 /dev/dvb/adapter0/ca1
