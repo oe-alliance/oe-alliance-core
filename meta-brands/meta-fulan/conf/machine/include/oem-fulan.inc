@@ -182,6 +182,7 @@ MACHINE_ESSENTIAL_EXTRA_RDEPENDS += " \
     stfbcontrol \
     fp-control \
     stlirc \
+    stinit \
     fulan-dvb-modules \
     mtd-utils-jffs2 \
     "

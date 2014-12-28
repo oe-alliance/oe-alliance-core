@@ -6,6 +6,8 @@ SECTION = "kernel/modules"
 LICENSE = " GPLv2"
 LIC_FILES_CHKSUM = "file://${WORKDIR}/COPYING;md5=751419260aa954499f7abaabaa882bbe"
 
+RDEPENDS_${PN} = "stinit"
+
 SRCDATE = "20141227"
 KV = "2.6.32.61-stm24-0217"
 
@@ -14,7 +16,7 @@ inherit module gitpkgv
 PACKAGES = "${PN} ${PN}-dev"
 
 SRCREV = "${AUTOREV}"
-PR = "r18"
+PR = "r20"
 PV = "${KV}+git${SRCPV}"
 PKGV = "${KV}+git${GITPKGV}"
 
