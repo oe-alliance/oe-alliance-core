@@ -195,7 +195,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PACKAGES =+ "enigma2-fonts"
 PV_enigma2-fonts = "2010.11.14"
-PR_enigma2-fonts = "r0"
+PR_enigma2-fonts = "r1"
 PKGV_enigma2-fonts = "${PV_enigma2-fonts}"
 FILES_enigma2-fonts = "${datadir}/fonts"
 
