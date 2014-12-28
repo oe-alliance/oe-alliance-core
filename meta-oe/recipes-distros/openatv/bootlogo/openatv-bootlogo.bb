@@ -9,7 +9,7 @@ require conf/license/license-gplv2.inc
 RDEPENDS_${PN} += "showiframe"
 
 PV = "4.2"
-PR = "r11"
+PR = "r12"
 
 S = "${WORKDIR}"
 
@@ -22,6 +22,7 @@ SRC_URI = "file://bootlogo.mvi file://radio.mvi file://bootlogo.sh file://splash
 SRC_URI_append_gb800ue = "file://lcdsplash.bin file://lcdwaitkey.bin file://lcdwarning.bin"
 SRC_URI_append_gbquad = "file://lcdsplash.bin file://lcdwaitkey.bin file://lcdwarning.bin"
 SRC_URI_append_gb800ueplus = "file://lcdsplash.bin file://lcdwaitkey.bin file://lcdwarning.bin"
+SRC_URI_append_gbultraue = "file://lcdsplash.bin file://lcdwaitkey.bin file://lcdwarning.bin"
 SRC_URI_append_gbquadplus = "file://lcdsplash400.bin file://lcdwaitkey400.bin file://lcdwarning400.bin"
 SRC_URI_append_vuduo2 = "file://lcdbootlogo.png file://bootlogo.py"
 SRC_URI_append_dags3 = "file://splash1.bmp file://splash1_os1.bmp file://splash1_os2.bmp file://splash2.bmp file://splash3.bmp"
@@ -69,13 +70,19 @@ do_install_append_gb800ue() {
 do_install_append_gbquad() {
     install -d ${D}/usr/share
     install -m 0644 lcdwaitkey.bin ${D}/usr/share/lcdwaitkey.bin
-    install -m 0644 lcdwarning.bin ${D}/usr/share/lcdwarning.bin	
+    install -m 0644 lcdwarning.bin ${D}/usr/share/lcdwarning.bin
 }
 
 do_install_append_gb800ueplus() {
     install -d ${D}/usr/share
     install -m 0644 lcdwaitkey.bin ${D}/usr/share/lcdwaitkey.bin
-    install -m 0644 lcdwarning.bin ${D}/usr/share/lcdwarning.bin	
+    install -m 0644 lcdwarning.bin ${D}/usr/share/lcdwarning.bin
+}
+
+do_install_append_gbultraue() {
+    install -d ${D}/usr/share
+    install -m 0644 lcdwaitkey.bin ${D}/usr/share/lcdwaitkey.bin
+    install -m 0644 lcdwarning.bin ${D}/usr/share/lcdwarning.bin
 }
 
 do_install_append_gbquadplus() {
@@ -108,7 +115,7 @@ do_deploy() {
     if [ -e splash1_os2.bmp ]; then
         install -m 0644 splash1_os2.bmp ${DEPLOYDIR}/splash1_os2.bmp
     fi
-	if [ -e splash1.bmp ]; then
+    if [ -e splash1.bmp ]; then
         install -m 0644 splash1.bmp ${DEPLOYDIR}/splash1.bmp
     fi
     if [ -e splash2.bmp ]; then
