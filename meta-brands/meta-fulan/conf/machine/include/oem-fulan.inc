@@ -178,13 +178,14 @@ MACHINE_ESSENTIAL_EXTRA_RDEPENDS += " \
     stslave-fw \
     ustslave \
     stfbcontrol \
+    fp-control \
     stlirc \
+    stinit \
     fulan-dvb-modules \
     mtd-utils-jffs2 \
     "
 
 MACHINE_EXTRA_RRECOMMENDS = " \
-    kernel-modules \
     fulan-gst-plugin-dvbmediasink \
     enigma2-plugin-systemplugins-sh4boostercontrol \
     enigma2-plugin-systemplugins-sh4osdadjustment \
