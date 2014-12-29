@@ -5,7 +5,7 @@ BRAND_OEM = "blackbox"
 
 MACHINE_NAME = "\
 ${@base_contains('MACHINEBUILD', 'sogno8800hd', '8800HD' , '', d)}\
-${@base_contains('MACHINEBUILD', 'uniboxhde', 'HDECO' , '', d)}\
+${@base_contains('MACHINEBUILD', 'uniboxhde', 'HDECO+' , '', d)}\
 "
 
 MACHINE_BRAND = "\
@@ -20,7 +20,7 @@ ${@base_contains('MACHINEBUILD', 'uniboxhde', 'unibox/hde' , '', d)}\
 
 MKUBIFS_ARGS = "\
 ${@base_contains('MACHINEBUILD', 'sogno8800hd', '-m 2048 -e 126976 -c 4096 -F' , '', d)}\
-${@base_contains('MACHINEBUILD', 'uniboxhde', '-m 2048 -e 126976 -c 8192 -F' , '', d)}\
+${@base_contains('MACHINEBUILD', 'uniboxhde', '-m 2048 -e 126976 -c 8160 -F' , '', d)}\
 "
 
 MTD_ROOTFS = "mtd7"
@@ -47,9 +47,8 @@ DEFAULTTUNE = "mips32el"
 
 GLIBC_EXTRA_OECONF = "--with-tls --with-__thread"
 
-PREFERRED_PROVIDER_virtual/kernel = "linux-blackbox"
-PREFERRED_VERSION_linux-blackbox = "3.9.7"
-PREFERRED_VERSION_linux-libc-headers = "3.9.7"
+PREFERRED_PROVIDER_virtual/blindscan-dvbs = "blackbox-blindscan-utils"
+PREFERRED_PROVIDER_virtual/blindscan-dvbc = "blackbox-blindscan-utils"
 
 KERNEL_IMAGETYPE = "vmlinux"
 KERNEL_OUTPUT = "${KERNEL_IMAGETYPE}"
