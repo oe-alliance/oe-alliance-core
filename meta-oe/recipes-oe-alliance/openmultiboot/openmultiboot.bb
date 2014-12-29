@@ -9,10 +9,10 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"
-PR = "r3"
+PR = "r4"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-DEPENDS = "freetype"
+DEPENDS = "freetype ${@base_contains("BRAND_OEM", "fulan", "fulan-dvb-modules" , "", d)}"
 
 SRC_URI = "git://github.com/oe-alliance/openmultiboot.git;protocol=git"
 
