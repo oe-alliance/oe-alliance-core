@@ -11,7 +11,7 @@ DEPENDS = "tslib mpfr gmp"
 SRCREV = "${AUTOREV}"
 PV = "2.1+gitr${SRCPV}"
 PKGV = "2.1+gitr${GITPKGV}"
-PR = "r133"
+PR = "r135"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -55,7 +55,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-kodidirect_1.0_r0_all.ipk \
     enigma2-plugin-extensions-livefootball-oe2.0_5.4_all.ipk \
     enigma2-plugin-extensions-mediainfo_2.5_all.ipk \
-    enigma2-plugin-extensions-mediaportal_6.3.1_all.ipk \
+    enigma2-plugin-extensions-mediaportal_6.4.0_all.ipk \
     enigma2-plugin-extensions-mediaportal-wallicons \
     enigma2-plugin-extensions-msnwetter_0.6rc3_mips32el.ipk \
     enigma2-plugin-extensions-mtv_0.1_mips32el.ipk \
@@ -81,7 +81,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-songs-to_0.1_mips32el.ipk \
     enigma2-plugin-extensions-spiegelonline_2.5rc12_mips32el.ipk \
     enigma2-plugin-extensions-sportmax_1.2_mips32el.ipk \
-    enigma2-plugin-extensions-subtitleplayer_3.29rc1_mips32el \
+    enigma2-plugin-extensions-subtitleplayer_3.29rc2_mips32el \
     enigma2-plugin-extensions-spinnerselector_2.0r5_mips32el.ipk \
     enigma2-plugin-extensions-sport1ticker_0.4_all.ipk \
     enigma2-plugin-extensions-sportportal_2013_all.ipk \
