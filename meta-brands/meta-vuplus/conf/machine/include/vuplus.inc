@@ -5,7 +5,7 @@ BRAND_OEM = "vuplus"
 MACHINE_BRAND = "Vu+"
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS = " \
-    vuplus-dvb-modules-${MACHINE} \
+    ${@base_contains("MACHINE_FEATURES", "dvbproxy", "vuplus-dvb-proxy-${MACHINE} vuplus-libgles-${MACHINE} vuplus-platform-util-${MACHINE}", "vuplus-dvb-modules-${MACHINE}", d)} \
     "
 
 DVBPROVIDER = "kernel"

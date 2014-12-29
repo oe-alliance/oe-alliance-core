@@ -14,6 +14,7 @@ DEPENDS = " \
     swig-native \
     tuxtxt-enigma2 \
     ${@base_contains("TARGET_ARCH", "sh4", "libmmeimage " , "", d)} \
+    ${@base_contains("MACHINE_FEATURES", "uianimation", "vuplus-libgles-${MACHINE} libvugles2" , "", d)} \
     "
 
 RDEPENDS_${PN} = " \
@@ -23,6 +24,7 @@ RDEPENDS_${PN} = " \
     glibc-gconv-iso8859-15 \
     hotplug-e2-helper \
     ${PYTHON_RDEPS} \
+    ${@base_contains("MACHINE_FEATURES", "uianimation", "vuplus-libgles-${MACHINE} libvugles2" , "", d)} \
     "
 
 RRECOMMENDS_${PN} = " \
@@ -219,6 +221,7 @@ EXTRA_OECONF = " \
     ${@base_contains("MACHINE_FEATURES", "gigabluelcd", "--with-gigabluelcd" , "", d)} \
     ${@base_contains("MACHINE_FEATURES", "nolcd", "--with-nolcd" , "", d)} \
     ${@base_contains("TARGET_ARCH", "sh4", "--enable-sh=yes " , "", d)} \
+    ${@base_contains("MACHINE_FEATURES", "uianimation", "--with-libvugles2" , "", d)} \
     "
 
 # Swig generated 200k enigma.py file has no purpose for end users

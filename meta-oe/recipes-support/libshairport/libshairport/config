@@ -1,0 +1,8 @@
+# Default values for transmission daemon
+# please fill in and enable service.
+DAEMON_ENABLED="NO"
+DAEMON_USER="transmission"
+DAEMON_GROUP="transmission"
+DOWNLOAD_DIR="/media/sda1/torrents/"
+CONFIG_DIR="/var/lib/transmission-daemon"
+

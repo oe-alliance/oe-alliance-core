@@ -1,0 +1,49 @@
+#! /bin/sh
+#
+# This is an init script for openembedded
+# Copy it to /etc/init.d/transmission and type
+# > update-rc.d transmission defaults 60
+#
+# 
+
+# load default values
+[ -f /etc/default/transmission-daemon ] && . /etc/default/transmission-daemon
+
+if [ "$DAEMON_ENABLED" != "YES" ] ; then
+	echo "Transmission Deamon Not Enabled"
+	echo "edit /etc/default/transmission to enable"
+	exit
+fi
+
+# Exit if the package is not installed
+test -f /usr/bin/transmission-daemon || exit 0
+
+SSDOPTIONS="--chuid $DAEMON_USER:$DAEMON_GROUP"
+TRANSOPTIONS="-g $CONFIG_DIR -w $DOWNLOAD_DIR"
+
+case "$1" in
+  start)
+    echo  "Starting transmission-daemon"
+    /sbin/start-stop-daemon $SSDOPTIONS --start --quiet --exec /usr/bin/transmission-daemon -- $TRANSOPTIONS
+    ;;
+  stop)
+    echo  "Stopping transmission-daemon"
+    /sbin/start-stop-daemon --stop --quiet --exec /usr/bin/transmission-daemon
+    ;;
+  restart)
+    echo -n "Stopping transmission-daemon"
+    /sbin/start-stop-daemon --stop --quiet --exec /usr/bin/transmission-daemon
+    for i in 1 2 3 ;
+    do
+        sleep 1
+        echo -n "."
+    done
+    echo  "Restarting transmission-daemon" 
+    /sbin/start-stop-daemon $SSDOPTIONS --start --quiet --exec /usr/bin/transmission-daemon -- $TRANSOPTIONS
+    ;;
+  *)
+    echo "Usage: /etc/init.d/tranmission {start|stop|restart}"
+    exit 1
+esac
+
+exit 0

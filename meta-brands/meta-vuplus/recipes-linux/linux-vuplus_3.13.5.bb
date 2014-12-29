@@ -7,15 +7,17 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 inherit machine_kernel_pr
 
 SRCREV = ""
-MACHINE_KERNEL_PR_append = ".6"
+MACHINE_KERNEL_PR_append = ".7"
 
 SRC_URI[md5sum] = "19e9956653437b99b4fa6ec3e16a3e99"
 SRC_URI[sha256sum] = "ef7fb307582ff243aacff8a13025fe028634aaf650ada309991ae03622962f61"
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
+KERNEL_CONFIG = "${@base_contains("MACHINE_FEATURES", "dvbproxy", "defconfig_proxy", "defconfig", d)}"
+
 SRC_URI = "http://archive.vuplus.com/download/kernel/stblinux-${KV}.tar.bz2 \
-    file://defconfig \
+    file://${KERNEL_CONFIG} \
     file://rt2800usb_fix_warn_tx_status_timeout_to_dbg.patch \
     file://add-dmx-source-timecode.patch \
     file://af9015-output-full-range-SNR.patch \
@@ -29,6 +31,7 @@ SRC_URI = "http://archive.vuplus.com/download/kernel/stblinux-${KV}.tar.bz2 \
     file://tda18271-advertise-supported-delsys.patch \
     file://mxl5007t-add-no_probe-and-no_reset-parameters.patch \
     file://linux-tcp_output.patch \
+    ${@base_contains("MACHINE_FEATURES", "dvbproxy", "file://linux_dvb_adapter.patch;patch=1;pnum=1", "", d)} \
     "
 
 SRC_URI_append_vuduo2 = "file://brcm_s3_wol.patch;patch=1;pnum=1 "
@@ -48,7 +51,7 @@ KERNEL_IMAGEDEST = "/tmp"
 FILES_kernel-image = "${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz"
 
 do_configure_prepend() {
-    oe_machinstall -m 0644 ${WORKDIR}/defconfig ${S}/.config
+    oe_machinstall -m 0644 ${WORKDIR}/${KERNEL_CONFIG} ${S}/.config
     oe_runmake oldconfig
 }
 
