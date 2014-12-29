@@ -8,7 +8,7 @@ DEPENDS += "gstreamer1.0-plugins-base libid3tag"
 inherit gettext
 
 
-PACKAGECONFIG ??= " \
+PACKAGECONFIG ?= " \
     orc a52dec lame mad mpeg2dec \
     "
 

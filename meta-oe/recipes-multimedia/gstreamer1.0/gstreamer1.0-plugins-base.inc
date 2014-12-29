@@ -3,13 +3,14 @@ require gstreamer1.0-plugins.inc
 LICENSE = "GPLv2+ & LGPLv2+"
 
 DEPENDS += "${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'virtual/libx11 libxv', '', d)}"
+DEPENDS += "${@bb.utils.contains('DISTRO_FEATURES', 'alsa', 'alsa-lib', '', d)}"
 DEPENDS += "freetype liboil util-linux"
 
 inherit gettext
 
 PACKAGES_DYNAMIC =+ "^libgst.*"
 
-PACKAGECONFIG ??= " \
+PACKAGECONFIG ?= " \
     ${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'x11', '', d)} \
     ${@bb.utils.contains('DISTRO_FEATURES', 'alsa', 'alsa', '', d)} \
     orc ivorbis ogg theora vorbis \
