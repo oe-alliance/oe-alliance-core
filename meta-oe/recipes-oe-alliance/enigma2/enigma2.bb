@@ -160,7 +160,7 @@ inherit autotools-brokensep gitpkgv pkgconfig pythonnative
 
 PV = "3.0+git${SRCPV}"
 PKGV = "3.0+git${GITPKGV}"
-PR = "r18"
+PR = "r19"
 
 SRC_URI = "${ENIGMA2_URI}"
 
@@ -197,7 +197,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PACKAGES =+ "enigma2-fonts"
 PV_enigma2-fonts = "2010.11.14"
-PR_enigma2-fonts = "r0"
+PR_enigma2-fonts = "r1"
 PKGV_enigma2-fonts = "${PV_enigma2-fonts}"
 FILES_enigma2-fonts = "${datadir}/fonts"
 
