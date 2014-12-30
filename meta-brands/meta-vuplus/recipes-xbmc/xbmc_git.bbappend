@@ -46,6 +46,15 @@ EXTRA_OECONF = " \
 
 do_configure_prepend(){
 	cp -av ${WORKDIR}/xbmc-support/gles_init.* ${WORKDIR}/git/xbmc/windowing/egl/
+    cd ${S}
+}
+
+do_install_prepend(){
+    cd ${S}
+}
+
+do_compile_prepend(){
+    cd ${S}
 }
 
 do_install_append(){

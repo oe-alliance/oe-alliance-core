@@ -51,9 +51,7 @@ export STAGING_INCDIR
 export PYTHON_DIR
 
 do_configure() {
-    cd ${S}
-    sh bootstrap
-    cd ..
+    ./bootstrap
     oe_runconf
 }
 
