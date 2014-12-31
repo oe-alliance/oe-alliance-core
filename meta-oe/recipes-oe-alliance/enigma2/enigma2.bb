@@ -95,7 +95,6 @@ GST_GOOD_RDEPS = " \
     "
 
 GST_BAD_RDEPS = " \
-    gstreamer1.0-plugins-bad-cdxaparse \
     gstreamer1.0-plugins-bad-mms \
     gstreamer1.0-plugins-bad-mpegpsdemux \
     gstreamer1.0-plugins-bad-mpegtsdemux \
@@ -157,7 +156,7 @@ inherit autotools-brokensep gitpkgv pkgconfig pythonnative
 
 PV = "3.0+git${SRCPV}"
 PKGV = "3.0+git${GITPKGV}"
-PR = "r21"
+PR = "r22"
 
 SRC_URI = "${ENIGMA2_URI}"
 
