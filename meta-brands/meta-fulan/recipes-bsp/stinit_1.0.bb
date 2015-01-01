@@ -5,8 +5,6 @@ PR = "r3"
 
 RDEPENDS_${PN} = "ustslave"
 
-RCONFLICTS_${PN} += "sysvinit"
-
 SRC_URI = "file://init.sh4"
 
 FILES_${PN} = "/bin/devinit"
