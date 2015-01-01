@@ -1,21 +1,17 @@
 DESCRIPTION = "STM Specific init script"
 LICENSE = "CLOSED"
 
-PR = "r2"
+PR = "r3"
 
 RDEPENDS_${PN} = "ustslave"
 
+RCONFLICTS_${PN} += "sysvinit"
+
 SRC_URI = "file://init.sh4"
 
-FILES_${PN} = "/bin"
+FILES_${PN} = "/bin/devinit"
 
 do_install () {
     install -d ${D}/bin
-    install -m 755 ${WORKDIR}/init.sh4 ${D}/bin
+    install -m 755 ${WORKDIR}/init.sh4 ${D}/bin/devinit
 }
-
-# Hack to avoid conflicts with old systemv package
-pkg_postinst_${PN}() {
-    mv /bin/init.sh4 /bin/devinit
-}
-
