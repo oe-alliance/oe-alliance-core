@@ -4,8 +4,6 @@ PR .= ".3"
 
 PACKAGE_ARCH := "${MACHINE_ARCH}"
 
-RCONFLICTS_${PN} += "stinit"
-
 SRC_URI += " \
     file://67_init_hddown.dpatch \
     file://92_sata-hddown.dpatch \
