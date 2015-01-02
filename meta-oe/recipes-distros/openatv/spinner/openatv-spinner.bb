@@ -15,8 +15,6 @@ SRC_URI="file://wait1.png \
         file://wait4.png \
         file://wait5.png \
         file://wait6.png \
-        file://wait7.png \
-        file://wait8.png \
         "
         
 S = "${WORKDIR}"
