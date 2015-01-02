@@ -23,8 +23,8 @@ ${@base_contains('MACHINEBUILD', 'sogno8800hd', '-m 2048 -e 126976 -c 4096 -F' ,
 ${@base_contains('MACHINEBUILD', 'uniboxhde', '-m 2048 -e 126976 -c 8160 -F' , '', d)}\
 "
 
-MTD_ROOTFS = "mtd7"
-MTD_KERNEL = "mtd8"
+MTD_ROOTFS = "mtd6"
+MTD_KERNEL = "mtd7"
 KERNEL_FILE = "kernel.bin"
 ROOTFS_FILE = "rootfs.bin"
 
