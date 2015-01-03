@@ -4,9 +4,9 @@ LICENSE = "CLOSED"
 inherit allarch
 
 PV = "1.0"
-PR = "r4"
+PR = "r5"
 
-SRC_URI = "http://enigma2.world-of-satellite.com/bootlogos/openvix-helios3.zip"
+SRC_URI = "http://openvix.co.uk/feeds_extras/bootlogos/openvix-helios3.zip"
 
 S = "${WORKDIR}"
 
