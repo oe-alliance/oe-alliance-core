@@ -1,18 +1,15 @@
-SUMMARY = "Linux kernel for ${MACHINE}"
+DESCRIPTION = "Linux kernel for ${MACHINE}"
 SECTION = "kernel"
 LICENSE = "GPLv2"
-PR = "r2"
 
-KERNEL_RELEASE = "3.14.2"
+KERNEL_RELEASE = "3.17.3"
 
-inherit machine_kernel_pr
+MACHINE_KERNEL_PR_append = ".0"
 
-SRC_URI[md5sum] = "7276fcda85e4594c993ea6192cd7df0f"
-SRC_URI[sha256sum] = "72236f0ff51f42496d5d7bae372f4ddc686bc0eb433aa8b6295bbda0558d3e63"
+SRC_URI[md5sum] = "b0fd34ad64658bf6797c41cca2c7385f"
+SRC_URI[sha256sum] = "48899fd56b99c34fe6175e3de563138384eec3cad0a03387cec919bd8bd50157"
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
-
-MACHINE_KERNEL_PR_append = ".3"
 
 # By default, kernel.bbclass modifies package names to allow multiple kernels
 # to be installed in parallel. We revert this change and rprovide the versioned
@@ -24,26 +21,22 @@ RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
 
 SRC_URI += "http://downloads.formuler.info/linux-${PV}.tar.gz \
 	file://defconfig \
-	file://add-rt2x00-wifi-devices.patch \
-	file://add-rtl8192cu-wifi-devices.patch \
 	file://add-dmx-source-timecode.patch \
 	file://af9015-output-full-range-SNR.patch \
 	file://af9033-output-full-range-SNR.patch \
 	file://cxd2820r-output-full-range-SNR.patch \
-	file://dvb_usb_disable_rc_polling.patch \
 	file://dvb-usb-dib0700-disable-sleep.patch \
+	file://dvb_usb_disable_rc_polling.patch \
+	file://iosched-slice_idle-1.patch \
 	file://fix-proc-cputype.patch \
 	file://formuler_partition_layout.patch \
-	file://iosched-slice_idle-1.patch \
-	file://it913x-switch-off-PID-filter-by-default.patch \
 	file://mxl5007t-add-no_probe-and-no_reset-parameters.patch \
 	file://tda18271-advertise-supported-delsys.patch \
-	file://timedate.patch \
 	"
 
 S = "${WORKDIR}/linux-${PV}"
 
-inherit kernel
+inherit kernel machine_kernel_pr
 
 export OS = "Linux"
 KERNEL_OBJECT_SUFFIX = "ko"
