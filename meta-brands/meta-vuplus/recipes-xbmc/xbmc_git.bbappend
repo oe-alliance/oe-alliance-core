@@ -6,11 +6,48 @@ LIC_FILES_CHKSUM = "file://LICENSE.GPL;md5=6eb631b6da7fdb01508a80213ffc35ff"
 
 DEPENDS = "vuplus-libgles-${MACHINE} libxslt libusb1 libcec libplist expat yajl gperf-native fribidi mpeg2dec samba fontconfig curl python libass libmodplug libmicrohttpd wavpack libmms cmake-native libsdl-image libsdl-mixer mysql5 sqlite3 libmms faad2 libcdio libpcre boost lzo enca avahi libsamplerate0  bzip2 virtual/libsdl jasper zip-native zlib libtinyxml taglib libbluray libshairport librtmp zlib libnfs libxslt"
 
-RDEPENDS_${PN} = "eglibc-gconv-utf-32 libxslt lzma tiff yajl"
-RDEPENDS_${PN} += "python-distutils python-subprocess python-robotparser python-mechanize libshairport"
-RDEPENDS_${PN} += "libnfs"
+RDEPENDS = "python"
+RDEPENDS += "\
+	python-distutils \
+	python-subprocess \
+	python-robotparser \
+	python-mechanize \
+	python-threading \
+	python-shell \
+	python-zlib \
+	python-sqlite3 \
+	python-json \
+	python-xml \
+	python-html \
+	python-netserver \
+	python-misc \
+	python-pygobject \
+	python-pygobject-lib \
+	python-textutils \
+	python-simplejson \
+	python-xmlrpc   \
+	python-pprint \
+	python-difflib \
+	python-email \
+	python-compression \
+	python-compile \
+	python-compiler \
+	python-numbers \
+	nfs-utils-client \
+	libshairport \
+	eglibc-gconv-utf-32 \
+	lzma \
+	tiff \
+	yajl \
+	libxslt \
+	libupnp \
+	libplist \
+	librtmp \
+	libbluray \
+	libnfs \
+"
 
-BUILD_PR="r0"
+BUILD_PR="r1"
 NATIVEGLES_PR="20141202_p0"
 
 BRANCH = "gotham_vuplus"
