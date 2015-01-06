@@ -33,7 +33,7 @@ DEPENDS = "\
     enigma2-plugin-bootlogos-rossi2000-openvix5-1080 \
     enigma2-plugin-bootlogos-rossi2000-openvix6-1080 \
     enigma2-plugin-bootlogos-rossi2000-openvix7-1080 \
-    enigma2-plugin-bootlogos-youvix-1080 \
+    enigma2-plugin-bootlogos-rossi2000-youvix-1080 \
     "
 
 PR = "r6"
