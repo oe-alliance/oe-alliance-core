@@ -6,7 +6,7 @@ LICENSE = "CLOSED"
 DEPENDS = "tslib mpfr gmp"
 RDEPENDS_${PN} = "tslib-conf libts-1.0-0 libsysfs2 libgmp10 libmpfr4 vuplus-opera-dumpait"
 
-SRC_DATE = "20140725_0"
+SRC_DATE = "20150106_0"
 SRC_URI = ""
 
 PR = "r35_${SRC_DATE}"
