@@ -3,7 +3,9 @@ PR = "4"
 
 require conf/license/license-gplv2.inc
 
-DEPENDS = "cups db openssl"
+DEPENDS = "cups db openssl libgcrypt tcp-wrappers acl"
+
+RDEPENDS_${PN} = "perl"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/project/netatalk/netatalk/${PV}/netatalk-${PV}.tar.gz;name=src \
         file://netatalk.conf \
@@ -17,7 +19,7 @@ inherit autotools pkgconfig update-rc.d
 INITSCRIPT_NAME = "atalk"
 INITSCRIPT_PARAMS = "defaults 20"
 
-PACKAGES = "${PN}-atalkd ${PN}-pap ${PN}-timelord ${PN}-dbg ${PN} ${PN}-doc ${PN}-dev"
+PACKAGES = "${PN}-atalkd ${PN}-pap ${PN}-timelord ${PN}-dbg ${PN} ${PN}-doc ${PN}-dev ${PN}-staticdev"
 
 INSANE_SKIP_${PN} = "dev-so"
 
@@ -33,7 +35,7 @@ FILES_${PN}-pap +=    "/usr/bin/pap \
                     /usr/bin/papstatus"
 FILES_${PN}-timelord += "/usr/sbin/timelord"
 FILES_${PN}-dbg += "${sysconfdir}/netatalk/uams/.debug"
-FILES_${PN}-staticdev += "${libdir}/.a"
+FILES_${PN}-staticdev += "${libdir}/*.a"
 
 # FILES_${PN} += "${sysconfdir}/netatalk/uams/uams_clrtxt.so \
 #                 ${sysconfdir}/netatalk/uams/uams_dhx2.so \
@@ -47,7 +49,9 @@ EXTRA_OECONF += "ac_cv_path_KRB5_CONFIG=no \
                 --enable-static=no \
                 --disable-srvloc \
                 --without-pam \
-                --with-ssl-dir=${STAGING_DIR_TARGET}${prefix_native}"
+                --with-ssl-dir=${STAGING_DIR_TARGET}${prefix_native} \
+                --with-libgcrypt-dir=${STAGING_DIR_TARGET}${prefix_native} \
+"
 LDFLAGS += "-lpthread -L${STAGING_LIBDIR}"
 
 do_install_append() {
