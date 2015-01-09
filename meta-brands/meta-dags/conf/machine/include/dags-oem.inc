@@ -91,7 +91,7 @@ MTD_KERNEL = "\
 ${@base_contains('MACHINEBUILD', 'tm2t', 'mtd6' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmnano', 'mtd1' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmnano2t', 'mtd1' , '', d)}\
-${@base_contains('MACHINEBUILD', 'tmnano3t', 'mtd1' , '', d)}\
+${@base_contains('MACHINEBUILD', 'tmnano3t', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmnano2super', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmsingle', 'mtd6' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmtwin', 'mtd6' , '', d)}\
