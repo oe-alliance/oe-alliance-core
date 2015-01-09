@@ -31,6 +31,7 @@ SRC_URI += "http://downloads.formuler.info/linux-${PV}.tar.gz \
 	file://fix-proc-cputype.patch \
 	file://formuler_partition_layout.patch \
 	file://mxl5007t-add-no_probe-and-no_reset-parameters.patch \
+	file://sdio-pinmux.patch \
 	file://tda18271-advertise-supported-delsys.patch \
 	"
 
