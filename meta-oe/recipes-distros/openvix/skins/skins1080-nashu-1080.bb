@@ -9,19 +9,19 @@ EPSM = "enigma2-plugin-skins1080"
 SRCREV = "${AUTOREV}"
 PV = "0.4+git${SRCPV}"
 PKGV = "0.4+git${GITPKGV}"
-PR = "r1"
+PR = "r2"
 
-PACKAGES = "nashu-1080-renderer nashu-1080-renderer-src ${EPSM}-mynovum_fhd2_black-1080 ${EPSM}-novum_fhd_slim-1080"
+PACKAGES = "nashu-1080-renderer nashu-1080-renderer-src ${EPSM}-mynovum-fhd2-black-1080 ${EPSM}-novum-fhd-slim-1080"
 
 SRC_URI = "git://github.com/OpenViX/vixhd-skins.git;protocol=git"
 
 FILES_nashu-1080-renderer = "/usr/lib/enigma2/python/Components/Renderer/*.pyo"
 FILES_nashu-1080-renderer-src = "/usr/lib/enigma2/python/Components/Renderer/*.py"
-FILES_${EPSM}-mynovum_fhd2_black-1080 = "/usr/share/enigma2/myNOVUM_FHD2_Black"
-FILES_${EPSM}-novum_fhd_slim-1080 = "/usr/share/enigma2/NOVUM_FHD_Slim"
+FILES_${EPSM}-mynovum-fhd2-black-1080 = "/usr/share/enigma2/myNOVUM_FHD2_Black"
+FILES_${EPSM}-novum-fhd-slim-1080 = "/usr/share/enigma2/NOVUM_FHD_Slim"
 
-RDEPENDS_${EPSM}-mynovum_fhd2_black-1080 = "nashu-1080-renderer"
-RDEPENDS_${EPSM}-novum_fhd_slim-1080 = "nashu-1080-renderer"
+RDEPENDS_${EPSM}-mynovum-fhd2-black-1080 = "nashu-1080-renderer"
+RDEPENDS_${EPSM}-novum-fhd-slim-1080 = "nashu-1080-renderer"
 
 S = "${WORKDIR}/git"
 
