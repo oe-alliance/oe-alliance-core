@@ -26,6 +26,7 @@ RRECOMMENDS_${PN} = "\
     enigma2-plugin-extensions-graphmultiepg \
     enigma2-plugin-extensions-imdb \
     enigma2-plugin-extensions-cutlisteditor \
+    enigma2-plugin-systemplugins-videoenhancement \
     enigma2-plugin-systemplugins-videomode \
     enigma2-plugin-systemplugins-videoenhancement \
     enigma2-plugin-systemplugins-videotune \

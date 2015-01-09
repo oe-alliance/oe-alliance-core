@@ -3,8 +3,8 @@ SECTION = "libs"
 LICENSE = "CLOSED"
 PACKAGE_ARCH := "${MACHINE_ARCH}"
 
-SRCDATE = "20141210"
-SRCDATE_PR = "r3"
+SRCDATE = "20150109"
+SRCDATE_PR = "r1"
 PR = "${SRCDATE}.${SRCDATE_PR}"
 
 SRC_URI = "http://archive.vuplus.com/download/build_support/vuplus/${PN}-${PV}-${PR}.tar.gz"
@@ -26,5 +26,5 @@ do_install() {
 PACKAGES = "${PN}"
 FILES_${PN} = "/usr/include /usr/lib"
 
-SRC_URI[md5sum] = "a9f3552dcbf185153f010022b6e62f3b"
-SRC_URI[sha256sum] = "be31586f0b54fc671d4c26c89f75b9e0b5754ed3de1f47d37f7560ed3febffff"
+SRC_URI[md5sum] = "6aa14c822d9975334d964d385a6b5926"
+SRC_URI[sha256sum] = "1e321ca68e14401d4115fb5ac7934c025b0a2b266d1556905f5ef324968921e3"

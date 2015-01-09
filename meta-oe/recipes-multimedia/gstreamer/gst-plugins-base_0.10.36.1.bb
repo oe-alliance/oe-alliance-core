@@ -11,7 +11,7 @@ DEPENDS += "alsa-lib freetype liboil libogg libvorbis libtheora avahi util-linux
 DEPENDS += "gstreamer"
 
 SRCREV = "${AUTOREV}"
-PR = "r16"
+PR = "r17"
 GIT_PV = ""
 
 inherit autotools pkgconfig gettext git-project
@@ -23,6 +23,7 @@ SRC_URI += " \
         file://disable-vorbis-encoder.patch \
         file://gst-plugins-base-tremor.patch \
         file://configure.ac-fix-subparse-plugin.patch \
+        file://0035-playbin2-add-custom-user-agent-property.patch \
         ${@base_contains('MACHINE_BRAND', 'Dreambox', '', 'file://revert-0dfdd9186e143daa568521c4e55c9923e5cbc466.patch', d)} \
 "
 
