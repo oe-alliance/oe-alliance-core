@@ -10,6 +10,7 @@ inherit module
 
 SRC_URI = "http://source.mynonpublic.com/DPO_MT7601U_LinuxSTA_3.0.0.4_20130913c.zip \
           file://mt7601u.patch \
+          file://remove_linux_2_4_compability.patch \
           "
 
 EXTRA_OEMAKE = "LINUX_SRC=${STAGING_KERNEL_DIR}"

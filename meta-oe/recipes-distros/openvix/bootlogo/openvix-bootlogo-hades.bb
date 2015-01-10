@@ -4,7 +4,7 @@ LICENSE = "CLOSED"
 PV = "1.0"
 PR = "r1"
 
-SRC_URI = "http://vixhades-files.kicks-ass.org/rossi2000/bootlogos/openvix-hades.zip"
+SRC_URI = "http://openvix.co.uk/feeds_extras/bootlogos/openvix-hades.zip"
 
 S = "${WORKDIR}"
 

@@ -16,19 +16,12 @@ DVBPROVIDER = "kernel"
 
 MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS = "\
     kernel-module-cdfs \
-    kernel-module-ext2 \
-    kernel-module-ext3 \
-    kernel-module-ext4 \
     "
 
 MACHINE_EXTRA_RRECOMMENDS = " \
     ixuss-shutdown \
     gstreamer1.0-plugin-dvbmediasink \
     "
-
-KERNEL_MODULE_AUTOLOAD += "ext2"
-KERNEL_MODULE_AUTOLOAD += "ext3"
-KERNEL_MODULE_AUTOLOAD += "ext4"
 
 include conf/machine/include/autoload-filesystems.inc
 

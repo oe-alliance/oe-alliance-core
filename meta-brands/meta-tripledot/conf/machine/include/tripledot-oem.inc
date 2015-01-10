@@ -7,18 +7,21 @@ MACHINE_NAME = "\
 ${@base_contains('MACHINEBUILD', 'enibox', 'EniBox' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mago', 'MAGO' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tyrant', 'tyrant' , '', d)}\
+${@base_contains('MACHINEBUILD', 'xcombo', 'xcombo plus' , '', d)}\
 "
 
 MACHINE_BRAND = "\
 ${@base_contains('MACHINEBUILD', 'enibox', 'hdbox' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mago', 'relook' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tyrant', 'tripledot' , '', d)}\
+${@base_contains('MACHINEBUILD', 'xcombo', 'EVO' , '', d)}\
 "
 
 IMAGEDIR ?= "\
 ${@base_contains('MACHINEBUILD', 'enibox', 'enibox' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mago', 'mago' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tyrant', 'tyrant' , '', d)}\
+${@base_contains('MACHINEBUILD', 'xcombo', 'xcombo' , '', d)}\
 "
 
 MTD_KERNEL = "mtd2"

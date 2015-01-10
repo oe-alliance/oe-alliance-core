@@ -11,6 +11,7 @@ ${@base_contains('MACHINEBUILD', 'tmnano3t', 'TM-NANO-3T' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmnano2super', 'TM-NANO 2 Super' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmsingle', 'TM-Single' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmtwin', 'TM-Twin-OE' , '', d)}\
+${@base_contains('MACHINEBUILD', 'tmnanose', 'TM-NANO-SE' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'iqonios100hd', 'IOS-100HD' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'iqonios200hd', 'IOS-200HD' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'iqonios300hd', 'IOS-300HD' , '', d)}\
@@ -27,6 +28,7 @@ ${@base_contains('MACHINEBUILD', 'optimussos2plus', 'Optimuss OS2 Plus' , '', d)
 ${@base_contains('MACHINEBUILD', 'optimussos3plus', 'Optimuss OS3 Plus' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'optimussos1', 'Optimuss OS1' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'optimussos2', 'Optimuss OS2' , '', d)}\
+${@base_contains('MACHINEBUILD', 'optimussos', 'Optimuss OS' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mediabox', 'MediaBox HD LX' , '', d)}\
 "
 
@@ -38,6 +40,7 @@ ${@base_contains('MACHINEBUILD', 'tmnano3t', 'Technomate' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmnano2super', 'Technomate' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmsingle', 'Technomate' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmtwin', 'Technomate' , '', d)}\
+${@base_contains('MACHINEBUILD', 'tmnanose', 'Technomate' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'iqonios100hd', 'Iqon' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'iqonios200hd', 'Iqon' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'iqonios300hd', 'Iqon' , '', d)}\
@@ -54,6 +57,7 @@ ${@base_contains('MACHINEBUILD', 'optimussos2plus', 'Edision' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'optimussos3plus', 'Edision' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'optimussos1', 'Edision' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'optimussos2', 'Edision' , '', d)}\
+${@base_contains('MACHINEBUILD', 'optimussos', 'Edision' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mediabox', 'Jepssen' , '', d)}\
 "
 
@@ -65,6 +69,7 @@ ${@base_contains('MACHINEBUILD', 'tmnano3t', 'update/force1plus/cfe' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmnano2super', 'update/tmnano2super/cfe' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmsingle', 'update/tmsingle/cfe' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmtwin', 'update/tmtwinoe/cfe' , '', d)}\
+${@base_contains('MACHINEBUILD', 'tmnanose', 'update/tmnanose/cfe' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'iqonios100hd', 'update/ios100/cfe' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'iqonios200hd', 'update/ios200/cfe' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'iqonios300hd', 'update/ios300/cfe' , '', d)}\
@@ -81,6 +86,7 @@ ${@base_contains('MACHINEBUILD', 'optimussos2plus', 'update/optimussos2plus/cfe'
 ${@base_contains('MACHINEBUILD', 'optimussos3plus', 'update/optimussos3plus/cfe' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'optimussos1', 'update/optimussos1/cfe' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'optimussos2', 'update/optimussos2/cfe' , '', d)}\
+${@base_contains('MACHINEBUILD', 'optimussos', 'update/optimussos/cfe' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mediabox', 'update/mediabox/cfe' , '', d)}\
 "
 
@@ -88,10 +94,11 @@ MTD_KERNEL = "\
 ${@base_contains('MACHINEBUILD', 'tm2t', 'mtd6' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmnano', 'mtd1' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmnano2t', 'mtd1' , '', d)}\
-${@base_contains('MACHINEBUILD', 'tmnano3t', 'mtd1' , '', d)}\
+${@base_contains('MACHINEBUILD', 'tmnano3t', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmnano2super', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmsingle', 'mtd6' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmtwin', 'mtd6' , '', d)}\
+${@base_contains('MACHINEBUILD', 'tmnanose', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'iqonios100hd', 'mtd6' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'iqonios200hd', 'mtd6' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'iqonios300hd', 'mtd6' , '', d)}\
@@ -108,6 +115,7 @@ ${@base_contains('MACHINEBUILD', 'optimussos2plus', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'optimussos3plus', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'optimussos1', 'mtd1' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'optimussos2', 'mtd6' , '', d)}\
+${@base_contains('MACHINEBUILD', 'optimussos', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mediabox', 'mtd6' , '', d)}\
 "
 
@@ -119,6 +127,7 @@ ${@base_contains('MACHINEBUILD', 'tmnano3t', 'mtd0' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmnano2super', 'mtd0' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmsingle', 'mtd4' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmtwin', 'mtd4' , '', d)}\
+${@base_contains('MACHINEBUILD', 'tmnanose', 'mtd0' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'iqonios100hd', 'mtd4' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'iqonios200hd', 'mtd4' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'iqonios300hd', 'mtd4' , '', d)}\
@@ -135,12 +144,14 @@ ${@base_contains('MACHINEBUILD', 'optimussos2plus', 'mtd0' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'optimussos3plus', 'mtd0' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'optimussos1', 'mtd4' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'optimussos2', 'mtd4' , '', d)}\
+${@base_contains('MACHINEBUILD', 'optimussos', 'mtd0' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mediabox', 'mtd4' , '', d)}\
 "
 
 SPLASH1_BMP = "\
 ${@base_contains('MACHINEBUILD', 'tmnano2super', 'splash1.bmp' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmnano3t', 'splash1.bmp' , '', d)}\
+${@base_contains('MACHINEBUILD', 'tmnanose', 'splash1.bmp' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'force1', 'splash1_os2.bmp' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'force1plus', 'splash1_os2.bmp' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'worldvisionf1', 'splash1_os1.bmp' , '', d)}\
@@ -149,6 +160,7 @@ ${@base_contains('MACHINEBUILD', 'worldvisionf1plus', 'splash1_os1.bmp' , '', d)
 ${@base_contains('MACHINEBUILD', 'optimussos1plus', 'splash1_os1.bmp' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'optimussos2plus', 'splash1_os2.bmp' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'optimussos3plus', 'splash1_os2.bmp' , '', d)}\
+${@base_contains('MACHINEBUILD', 'optimussos', 'splash1_os1.bmp' , '', d)}\
 "
 
 KERNEL_FILE = "oe_kernel.bin"

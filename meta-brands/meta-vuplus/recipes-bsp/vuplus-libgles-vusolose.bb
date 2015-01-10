@@ -1,0 +1,7 @@
+SRCDATE = "20141231"
+SRCDATE_PR = "r1"
+
+require vuplus-libgles.inc
+
+SRC_URI[md5sum] = "563af9060518686c151b7a77cae86fef"
+SRC_URI[sha256sum] = "3e9dd2196e3c78de540e6101623136da795d86291ea677fb730c2c9ae79654e6"

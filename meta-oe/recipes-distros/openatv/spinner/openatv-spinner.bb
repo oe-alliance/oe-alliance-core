@@ -7,7 +7,7 @@ PACKAGE_ARCH = "all"
 require conf/license/license-gplv2.inc
 
 PV = "1.0"
-PR = "r6"
+PR = "r8"
 
 SRC_URI="file://wait1.png \
         file://wait2.png \

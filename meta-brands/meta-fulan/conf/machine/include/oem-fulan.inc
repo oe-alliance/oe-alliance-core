@@ -134,7 +134,9 @@ SERIAL_CONSOLE = "115200 ttyAS0"
 DVBPROVIDER = "kernel"
 
 USE_VT = "0"
-MACHINE_FEATURES = "3dtv alsa hdmicec switchoff wifi kernel26 ext2 usbhost serial dvb-c singlecore textlcd sh4booster no-nmap"
+MACHINE_FEATURES = "3dtv alsa hdmicec switchoff wifi kernel26 ext2 usbhost serial dvb-c singlecore textlcd sh4booster no-nmap omb"
+
+DVBMEDIASINK_CONFIG = "--with-wma --with-wmv --with-pcm --with-dtsdownmix --with-eac3"
 
 KERNEL_IMAGETYPE = "uImage"
 #KERNEL_OUTPUT = "${KERNEL_IMAGETYPE}"
@@ -180,13 +182,13 @@ MACHINE_ESSENTIAL_EXTRA_RDEPENDS += " \
     stfbcontrol \
     fp-control \
     stlirc \
+    stinit \
     fulan-dvb-modules \
     mtd-utils-jffs2 \
     "
 
 MACHINE_EXTRA_RRECOMMENDS = " \
-    kernel-modules \
-    fulan-gst-plugin-dvbmediasink \
+    gstreamer1.0-plugin-dvbmediasink \
     enigma2-plugin-systemplugins-sh4boostercontrol \
     enigma2-plugin-systemplugins-sh4osdadjustment \
     "
@@ -198,8 +200,6 @@ EXTRA_IMAGEDEPENDS += "\
 MACHINE_EXTRA_RDEPENDS = "\
     enigma2-plugin-systemplugins-vfdcontrol \
     "
-
-OLDEST_KERNEL = "2.6.32"
 
 include conf/machine/include/autoload-filesystems.inc
 

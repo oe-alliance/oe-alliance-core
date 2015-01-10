@@ -7,7 +7,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "1.0"
-PR = "2"
+PR = "7"
 
 inherit packagegroup
 
@@ -22,4 +22,9 @@ RDEPENDS_${PN} = "\
     enigma2-plugin-skinpacks-dreamplex-youplex-red \
     enigma2-plugin-skinpacks-dreamplex-youplex-green \
     enigma2-plugin-skinpacks-dreamplex-youplex-purple \
+    enigma2-plugin-skins1080-vixbmc-1080 \
+    enigma2-plugin-skins1080-vixbmc-1080-bello \
+    enigma2-plugin-skins1080-metrixhd-1080 \
+    enigma2-plugin-skins1080-mynovum-fhd2-black-1080 \
+    enigma2-plugin-skins1080-novum-fhd-slim-1080 \
     "

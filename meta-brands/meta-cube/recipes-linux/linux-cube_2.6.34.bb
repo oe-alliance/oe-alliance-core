@@ -23,6 +23,7 @@ PKG_kernel-image = "kernel-image"
 RPROVIDES_kernel-base = "kernel-${KERNEL_VERSION}"
 RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
 
+DEPENDS = " mtd-utils-native"
 RDEPENDS_kernel-image = "updateubivolume"
 
 SRC_URI = " \

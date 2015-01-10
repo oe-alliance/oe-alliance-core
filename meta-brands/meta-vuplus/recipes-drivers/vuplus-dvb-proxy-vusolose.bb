@@ -1,0 +1,8 @@
+KV = "3.13.5"
+SRCDATE = "20141231"
+SRCDATE_PR = "r1"
+
+require vuplus-dvb-proxy.inc
+
+SRC_URI[md5sum] = "31d9a8a55b8d108ce683190b51805634"
+SRC_URI[sha256sum] = "c4da726282416e8e42c8316ed513e922f61d116894233b8587f3c592c6aabfdb"

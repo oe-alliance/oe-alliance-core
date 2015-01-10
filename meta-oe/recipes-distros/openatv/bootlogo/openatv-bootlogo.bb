@@ -9,7 +9,7 @@ require conf/license/license-gplv2.inc
 RDEPENDS_${PN} += "showiframe"
 
 PV = "4.2"
-PR = "r8"
+PR = "r12"
 
 S = "${WORKDIR}"
 
@@ -70,13 +70,19 @@ do_install_append_gb800ue() {
 do_install_append_gbquad() {
     install -d ${D}/usr/share
     install -m 0644 lcdwaitkey.bin ${D}/usr/share/lcdwaitkey.bin
-    install -m 0644 lcdwarning.bin ${D}/usr/share/lcdwarning.bin	
+    install -m 0644 lcdwarning.bin ${D}/usr/share/lcdwarning.bin
 }
 
 do_install_append_gb800ueplus() {
     install -d ${D}/usr/share
     install -m 0644 lcdwaitkey.bin ${D}/usr/share/lcdwaitkey.bin
-    install -m 0644 lcdwarning.bin ${D}/usr/share/lcdwarning.bin	
+    install -m 0644 lcdwarning.bin ${D}/usr/share/lcdwarning.bin
+}
+
+do_install_append_gbultraue() {
+    install -d ${D}/usr/share
+    install -m 0644 lcdwaitkey.bin ${D}/usr/share/lcdwaitkey.bin
+    install -m 0644 lcdwarning.bin ${D}/usr/share/lcdwarning.bin
 }
 
 do_install_append_gbultraue() {
@@ -98,7 +104,7 @@ do_install_append_vuduo2() {
 
 inherit deploy
 do_deploy() {
-    if [ "${MACHINE}" = "vuduo" ] || [ "${MACHINE}" = "vuduo2" ] || [ "${MACHINE}" = "vuuno" ] || [ "${MACHINE}" = "vusolo" ] || [ "${MACHINE}" = "vusolo2" ] || [ "${BRAND_OEM}" = "dags" ]; then
+    if [ "${MACHINE}" = "vuduo" ] || [ "${MACHINE}" = "vuduo2" ] || [ "${MACHINE}" = "vuuno" ] || [ "${MACHINE}" = "vusolo" ] || [ "${MACHINE}" = "vusolose" ] || [ "${MACHINE}" = "vuultimo" ] || [ "${MACHINE}" = "vuzero" ] || [ "${BRAND_OEM}" = "dags" ]; then
         install -m 0644 splash480.bmp ${DEPLOYDIR}/${BOOTLOGO_FILENAME}
     else
         install -m 0644 splash576.bmp ${DEPLOYDIR}/${BOOTLOGO_FILENAME}
@@ -115,7 +121,7 @@ do_deploy() {
     if [ -e splash1_os2.bmp ]; then
         install -m 0644 splash1_os2.bmp ${DEPLOYDIR}/splash1_os2.bmp
     fi
-	if [ -e splash1.bmp ]; then
+    if [ -e splash1.bmp ]; then
         install -m 0644 splash1.bmp ${DEPLOYDIR}/splash1.bmp
     fi
     if [ -e splash2.bmp ]; then

@@ -14,6 +14,7 @@ DEPENDS = " \
     swig-native \
     tuxtxt-enigma2 \
     ${@base_contains("TARGET_ARCH", "sh4", "libmmeimage " , "", d)} \
+    ${@base_contains("MACHINE_FEATURES", "uianimation", "vuplus-libgles-${MACHINE} libvugles2" , "", d)} \
     "
 
 RDEPENDS_${PN} = " \
@@ -23,12 +24,12 @@ RDEPENDS_${PN} = " \
     glibc-gconv-iso8859-15 \
     hotplug-e2-helper \
     ${PYTHON_RDEPS} \
+    ${@base_contains("MACHINE_FEATURES", "uianimation", "vuplus-libgles-${MACHINE} libvugles2" , "", d)} \
     "
 
 RRECOMMENDS_${PN} = " \
     glib-networking \
     gstreamer1.0-plugin-subsink \
-    ${@base_contains("TARGET_ARCH", "mipsel", "gst-plugin-libxt" , "", d)} \
     ${GST_BASE_RDEPS} \
     ${GST_GOOD_RDEPS} \
     ${GST_BAD_RDEPS} \
@@ -94,7 +95,6 @@ GST_GOOD_RDEPS = " \
     "
 
 GST_BAD_RDEPS = " \
-    gstreamer1.0-plugins-bad-cdxaparse \
     gstreamer1.0-plugins-bad-mms \
     gstreamer1.0-plugins-bad-mpegpsdemux \
     gstreamer1.0-plugins-bad-mpegtsdemux \
@@ -156,7 +156,7 @@ inherit autotools-brokensep gitpkgv pkgconfig pythonnative
 
 PV = "3.0+git${SRCPV}"
 PKGV = "3.0+git${GITPKGV}"
-PR = "r17"
+PR = "r22"
 
 SRC_URI = "${ENIGMA2_URI}"
 
@@ -193,7 +193,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PACKAGES =+ "enigma2-fonts"
 PV_enigma2-fonts = "2010.11.14"
-PR_enigma2-fonts = "r0"
+PR_enigma2-fonts = "r1"
 PKGV_enigma2-fonts = "${PV_enigma2-fonts}"
 FILES_enigma2-fonts = "${datadir}/fonts"
 
@@ -218,6 +218,7 @@ EXTRA_OECONF = " \
     ${@base_contains("MACHINE_FEATURES", "gigabluelcd", "--with-gigabluelcd" , "", d)} \
     ${@base_contains("MACHINE_FEATURES", "nolcd", "--with-nolcd" , "", d)} \
     ${@base_contains("TARGET_ARCH", "sh4", "--enable-sh=yes " , "", d)} \
+    ${@base_contains("MACHINE_FEATURES", "uianimation", "--with-libvugles2" , "", d)} \
     "
 
 LDFLAGS_prepend = " -lxml2 "

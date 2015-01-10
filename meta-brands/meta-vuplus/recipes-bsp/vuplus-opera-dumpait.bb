@@ -8,7 +8,7 @@ inherit autotools-brokensep pkgconfig gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r8"
+PR = "r10"
 
 PACKAGES += " ${PN}-src"
 

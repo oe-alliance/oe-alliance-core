@@ -1,0 +1,195 @@
+From c9807cd8c7acd23aaef76749888b39f6f0742ce0 Mon Sep 17 00:00:00 2001
+From: Sangdol Kim <doliyu@marusys.com>
+Date: Thu, 7 Mar 2013 17:08:41 +0900
+Subject: [PATCH] [xbmc]patch for xbmc
+
+---
+ src/hairtunes.c |   17 +++++++++++++
+ src/shairport.c |   69 ++++++++++++++++++++++++++++++++++++++++++++++++++++--
+ 2 files changed, 83 insertions(+), 3 deletions(-)
+
+diff --git a/src/hairtunes.c b/src/hairtunes.c
+index 6957da9..2f71429 100644
+--- a/src/hairtunes.c
++++ b/src/hairtunes.c
+@@ -120,6 +120,10 @@ int ab_buffering = 1, ab_synced = 0;
+ pthread_mutex_t ab_mutex;
+ pthread_cond_t ab_buffer_ready;
+ 
++#ifdef XBMC
++static int g_initialized = 0;
++#endif
++
+ static void die(char *why) {
+     xprintf("FATAL: %s\n", why);
+     //exit(1);
+@@ -192,6 +196,7 @@ int hairtunes_init(char *pAeskey, char *pAesiv, char *fmtpstr, int pCtrlPort, in
+     ab_buffering = 1;
+     ab_synced = 0;
+     pthread_mutex_init(&ab_mutex, NULL);
++	printf("init hairtune_init\n");
+     pthread_cond_init(&ab_buffer_ready, NULL);
+ 
+     if(pAeskey != NULL)    
+@@ -253,6 +258,8 @@ int hairtunes_init(char *pAeskey, char *pAesiv, char *fmtpstr, int pCtrlPort, in
+     }
+     xprintf("bye!\n");
+     fflush(stderr);
++#else
++	g_initialized = 1;
+ #endif
+ 
+     return EXIT_SUCCESS;
+@@ -1005,6 +1012,13 @@ void clean_output(void)
+ 
+ void hairtunes_cleanup(void)
+ {
++#ifdef XBMC
++  if( g_initialized == 0 )
++  {
++    printf("hairtunes_cleanup : already initialized\n");
++    return;
++  }
++#endif
+   pthread_cond_signal(&ab_buffer_ready);
+   clean_output();
+   clean_rtp();
+@@ -1013,4 +1027,7 @@ void hairtunes_cleanup(void)
+ 
+   pthread_mutex_destroy(&ab_mutex);
+   pthread_cond_destroy(&ab_buffer_ready);
++#ifdef XBMC
++  g_initialized = 0;
++#endif
+ }
+diff --git a/src/shairport.c b/src/shairport.c
+index f520990..8edf69f 100644
+--- a/src/shairport.c
++++ b/src/shairport.c
+@@ -311,13 +311,16 @@ int shairport_main(int argc, char **argv)
+     return 1;
+   }
+ }
+-
++#ifdef XBMC
++static int tClientSock = 0;
++#endif
+ int shairport_loop(void)
+ {
+     if (!m_running || tServerSock <= 0)
+         return 0;
+-
+-    int tClientSock = 0;
++#ifndef XBMC
++    static int tClientSock = 0;
++#endif
+ 
+     fd_set fds;
+     FD_ZERO(&fds);
+@@ -395,6 +398,8 @@ void shairport_exit(void)
+ {
+   m_running = 0;
+   close(tServerSock);
++	printf("exit airport\n");
++
+ }
+ 
+ int shairport_is_running(void)
+@@ -502,7 +507,11 @@ void handleClient(int pSock, char *pPassword, char *pHWADDR)
+   struct connection  tConn;
+   initConnection(&tConn, &tKeys, &tComms, pSock, pPassword);
+ 
++#ifdef XBMC
++  while( m_running )
++#else
+   while(1)
++#endif
+   {
+     tMoreDataNeeded = 1;
+ 
+@@ -510,7 +519,11 @@ void handleClient(int pSock, char *pPassword, char *pHWADDR)
+     initBuffer(&tConn.resp, 80);
+     
+     int tError = FALSE;
++#ifdef XBMC
++    while(1 == tMoreDataNeeded && m_running )
++#else
+     while(1 == tMoreDataNeeded)
++#endif
+     {
+       tError = readDataFromClient(pSock, &(tConn.recv));
+       //if(!tError && strlen(tConn.recv.data) > 0)
+@@ -565,12 +578,59 @@ int readDataFromClient(int pSock, struct shairbuffer *pClientBuffer)
+ 
+   int tRetval = 1;
+   int tEnd = -1;
++#ifdef XBMC
++  while(tRetval > 0 && tEnd < 0 && m_running )
++#else
+   while(tRetval > 0 && tEnd < 0)
++#endif
+   {
++#ifdef XBMC
++	struct timeval	tv;
++	fd_set			set;
++	int result;
++#endif
+      // Read from socket until \n\n, \r\n\r\n, or \r\r is found
+       xprintf("Waiting To Read...\n");
+       fflush(stdout);
++
++#ifdef XBMC
++	FD_ZERO( &set );
++	FD_SET( (int)pSock, &set );
++
++	tv.tv_sec=0;
++	tv.tv_usec = 200000;
++	//printf("select\n");
++	result = select ( (int)pSock + 1, &set, NULL, NULL, &tv );
++
++	//printf("select 2\n");
++	if( result < 0 )
++	{
++		printf("timed out\n");
++		continue;
++	}
++
++	if( (int)pSock <  0 )
++		continue;
++	if( FD_ISSET( (int)pSock, &set ) )
++	{
++		//printf("Read Data \n");
++      		tRetval = read(pSock, tReadBuf, MAX_SIZE);
++		//printf("Read Data2 \n");
++	}
++	else if( result == 0 )
++	{
++		xprintf("ReadTimeout\n");
++		continue;
++	}
++	else
++	{
++		//printf("other fd\n");
++		continue;
++	}
++
++#else
+       tRetval = read(pSock, tReadBuf, MAX_SIZE);
++#endif
+       // if new buffer contains the end of request string, only copy partial buffer?
+       tEnd = findEnd(tReadBuf);
+       if(tEnd >= 0)
+@@ -1101,7 +1161,10 @@ void cleanup(struct connection *pConn)
+     closePipe(&(pConn->hairtunes->out[0]));
+     closePipe(&(pConn->hairtunes->out[1]));
+   }
++#else
++   hairtunes_cleanup();
+ #endif
++
+   if(pConn->keys != NULL)
+   {
+     if(pConn->keys->aesiv != NULL)
+-- 
+1.7.2.3
+

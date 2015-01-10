@@ -7,7 +7,7 @@ MACHINE_NAME = "\
 ${@base_contains('MACHINEBUILD', 'enfinity', 'ENfinity' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'marvel1', 'Marvel 1' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'x2plus', 'enfinity x2plus' , '', d)}\
-${@base_contains('MACHINEBUILD', 'bre2ze', 'brE2ze' , '', d)}\
+${@base_contains('MACHINEBUILD', 'bre2ze', 'BRE2ZE' , '', d)}\
 "
 
 MACHINE_BRAND = "\

@@ -7,7 +7,6 @@ inherit allarch
 DEPENDS = "\
     enigma2-plugin-bootlogos-openvix-v3 \
     enigma2-plugin-bootlogos-openvix-zeus \
-    enigma2-plugin-bootlogos-openvix-helios \
     enigma2-plugin-bootlogos-openvix-helios2 \
     enigma2-plugin-bootlogos-openvix-helios3 \
     enigma2-plugin-bootlogos-maxwells-abstract \
@@ -27,7 +26,14 @@ DEPENDS = "\
     enigma2-plugin-bootlogos-maxwells-sound \
     enigma2-plugin-bootlogos-maxwells-spectrum \
     enigma2-plugin-bootlogos-maxwells-variation \
-    enigma2-plugin-bootlogos-youvix-1080 \
+	enigma2-plugin-bootlogos-rossi2000-openvix1-1080 \
+    enigma2-plugin-bootlogos-rossi2000-openvix2-1080 \
+    enigma2-plugin-bootlogos-rossi2000-openvix3-1080 \
+    enigma2-plugin-bootlogos-rossi2000-openvix4-1080 \
+    enigma2-plugin-bootlogos-rossi2000-openvix5-1080 \
+    enigma2-plugin-bootlogos-rossi2000-openvix6-1080 \
+    enigma2-plugin-bootlogos-rossi2000-openvix7-1080 \
+    enigma2-plugin-bootlogos-rossi2000-youvix-1080 \
     "
 
-PR = "r5"
+PR = "r6"
