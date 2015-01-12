@@ -21,7 +21,7 @@ RRECOMMENDS_${PN} = "\
     enigma2-plugin-drivers-usbserial \
     enigma2-plugin-extensions-autosettings \
     enigma2-plugin-extensions-extrapanel \
-    enigma2-plugin-extension-weatherplugin \
+    enigma2-plugin-extensions-weatherplugin \
     enigma2-plugin-extensions-autotimer \
     enigma2-plugin-extensions-epgsearch \
     enigma2-plugin-extensions-graphmultiepg \

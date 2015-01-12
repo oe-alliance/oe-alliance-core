@@ -1,4 +1,4 @@
-DESCRIPTION = "enigma2-plugin-extension-weatherplugin"
+DESCRIPTION = "enigma2-plugin-extensions-weatherplugin"
 MAINTAINER = "opendroid"
 SECTION = "base"
 PRIORITY = "required"
