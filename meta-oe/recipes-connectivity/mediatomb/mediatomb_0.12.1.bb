@@ -38,7 +38,7 @@ EXTRA_OECONF = "--disable-mysql \
                 --enable-libexif \
                 --enable-inotify \
                 --enable-db-autocreate \
-                --disable-largefile \
+                --enable-largefile \
                 --with-sqlite3-h=${STAGING_INCDIR} \
                 --with-sqlite3-libs=${STAGING_LIBDIR} \
                 --with-magic-h=${STAGING_INCDIR} \
