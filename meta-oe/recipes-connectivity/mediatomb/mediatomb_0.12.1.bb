@@ -3,7 +3,7 @@ HOMEPAGE = "http://mediatomb.org/"
 LICENSE = "GPLv2"
 DEPENDS = "expat ffmpeg sqlite3 libexif js zlib file id3lib curl"
 PV = "0.12.1"
-PR = "r6"
+PR = "r7"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=0b609ee7722218aa600220f779cb5035"
 
@@ -37,7 +37,7 @@ EXTRA_OECONF = "--disable-mysql \
                 --enable-libexif \
                 --enable-inotify \
                 --enable-db-autocreate \
-                --disable-largefile \
+                --enable-largefile \
                 --with-sqlite3-h=${STAGING_INCDIR} \
                 --with-sqlite3-libs=${STAGING_LIBDIR} \
                 --with-magic-h=${STAGING_INCDIR} \
