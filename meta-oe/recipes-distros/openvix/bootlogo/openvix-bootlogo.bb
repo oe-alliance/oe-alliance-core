@@ -8,7 +8,7 @@ require conf/license/license-gplv2.inc
 
 RDEPENDS_${PN} += "showiframe openvix-bootlogo-helios"
 
-PV = "4.4"
+PV = "4.5"
 PR = "r0"
 
 S = "${WORKDIR}"
@@ -28,6 +28,7 @@ SRC_URI_append_dags1 = "file://tm-splash.bmp file://iqon-splash.bmp file://splas
 SRC_URI_append_dags2 = "file://tm-splash.bmp file://iqon-splash.bmp file://splash1.bmp file://splash2.bmp file://splash3.bmp"
 SRC_URI_append_dags3 = "file://tm-splash.bmp file://iqon-splash.bmp file://splash1.bmp file://splash2.bmp file://splash3.bmp"
 SRC_URI_append_dags4 = "file://tm-splash.bmp file://iqon-splash.bmp file://splash1.bmp file://splash2.bmp file://splash3.bmp"
+SRC_URI_append_dags5 = "file://tm-splash.bmp file://iqon-splash.bmp file://splash1.bmp file://splash2.bmp file://splash3.bmp"
 
 FILES_${PN} = "/usr/share /etc/init.d"
 
