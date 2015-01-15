@@ -60,7 +60,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-msnwetter_0.6rc3_mips32el.ipk \
     enigma2-plugin-extensions-mtv_0.1_mips32el.ipk \
     enigma2-plugin-extensions-muzutv_1.5rc3_mips32el.ipk \
-    enigma2-plugin-extensions-mediastream_3.0.5_all.ipk \
+    enigma2-plugin-extensions-mediastream-5.0_mips32el.ipk \
     enigma2-plugin-extensions-moviebrowser_3.5rc5_mips32el.ipk \
     enigma2-plugin-extensions-mp3browser_1.9c7_mips32el.ipk \
     enigma2-plugin-extensions-navibar_1.1.1_all.ipk \
