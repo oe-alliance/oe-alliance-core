@@ -2,7 +2,7 @@ DESCRIPTION="blackbox7405 mac checker - flasher"
 LICENSE = "Gpl2"
 LICENSE = "CLOSED"
 
-PR = "r5"
+PR = "r6"
 PV = "0.1"
 
 SRC_URI="file://blackbox7405_mac_check \
