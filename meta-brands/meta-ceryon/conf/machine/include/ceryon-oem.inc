@@ -12,7 +12,7 @@ ${@base_contains('MACHINEBUILD', 'p62', 'PowerSat' , '', d)}\
 "
 
 IMAGEDIR ?= "\
-${@base_contains('MACHINEBUILD', 'p62', '7000s' , '', d)}\
+${@base_contains('MACHINEBUILD', 'p62', 'ceryon7362' , '', d)}\
 "
 
 MTD_KERNEL = "mtd1"
@@ -31,6 +31,7 @@ MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS = "\
     "
 
 MACHINE_EXTRA_RRECOMMENDS = " \
+    ceryon-shutdown \
     gst-plugin-dvbmediasink \
     "
 
