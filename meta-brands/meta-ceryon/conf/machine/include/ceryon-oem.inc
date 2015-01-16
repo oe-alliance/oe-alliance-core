@@ -31,6 +31,7 @@ MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS = "\
     "
 
 MACHINE_EXTRA_RRECOMMENDS = " \
+    ceryon-shutdown \
     gst-plugin-dvbmediasink \
     "
 
