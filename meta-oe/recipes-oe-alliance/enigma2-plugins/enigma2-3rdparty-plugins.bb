@@ -11,7 +11,7 @@ DEPENDS = "tslib mpfr gmp"
 SRCREV = "${AUTOREV}"
 PV = "2.1+gitr${SRCPV}"
 PKGV = "2.1+gitr${GITPKGV}"
-PR = "r141"
+PR = "r142"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -67,7 +67,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-openopera_1.0-r0_mips32el.ipk \
     enigma2-plugin-extensions-opkg-tools_1.3_mipsel.ipk \
     enigma2-plugin-extensions-oscamstatusview_0.5rc1_mips32el.ipk \
-    enigma2-plugin-extensions-piconmanager_0.1-20141226-r4_all.ipk \
+    enigma2-plugin-extensions-piconmanager_1.0-20150114-r0_all.ipk \
     enigma2-plugin-extensions-picturecenterfs_6.03_all.ipk \
     enigma2-plugin-extensions-planerfs_6.45_all.ipk \
     enigma2-plugin-extensions-pluginspanel_1.0_r01_all.ipk \
