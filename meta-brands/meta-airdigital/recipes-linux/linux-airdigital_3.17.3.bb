@@ -3,12 +3,12 @@ SECTION = "kernel"
 LICENSE = "GPLv2"
 PR = "r0"
 
-KERNEL_RELEASE = "3.17.2"
+KERNEL_RELEASE = "3.17.3"
 
 inherit machine_kernel_pr
 
-SRC_URI[md5sum] = "17327c45f224a9d7aa984a31746131e4"
-SRC_URI[sha256sum] = "7aeb8e13ceb877c636cb3105fbb5a0738093c54205e242e8ced3370623c7f368"
+SRC_URI[md5sum] = "b0fd34ad64658bf6797c41cca2c7385f"
+SRC_URI[sha256sum] = "48899fd56b99c34fe6175e3de563138384eec3cad0a03387cec919bd8bd50157"
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
