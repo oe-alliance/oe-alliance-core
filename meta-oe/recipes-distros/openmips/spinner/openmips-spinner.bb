@@ -1,12 +1,12 @@
 DESCRIPTION = "openmips-spinner"
-MAINTAINER = "openMIPS Team"
+MAINTAINER = "openMips Team"
 SECTION = "base"
 LICENSE = "proprietary"
 PACKAGE_ARCH = "all"
 
 require conf/license/license-gplv2.inc
 
-PV = "4.0"
+PV = "4.2"
 PR = "r0"
 
 SRC_URI="file://wait1.png \

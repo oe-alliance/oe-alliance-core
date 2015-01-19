@@ -6,7 +6,7 @@ BRAND_OEM = "entwopia"
 MACHINE_NAME = "\
 ${@base_contains('MACHINEBUILD', 'enfinity', 'ENfinity' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'marvel1', 'Marvel 1' , '', d)}\
-${@base_contains('MACHINEBUILD', 'x2plus', 'enfinity x2plus' , '', d)}\
+${@base_contains('MACHINEBUILD', 'x2plus', 'enfinityX 2plus' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'bre2ze', 'BRE2ZE' , '', d)}\
 "
 
