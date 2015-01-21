@@ -11,7 +11,7 @@ DEPENDS = "tslib mpfr gmp"
 SRCREV = "${AUTOREV}"
 PV = "2.1+gitr${SRCPV}"
 PKGV = "2.1+gitr${GITPKGV}"
-PR = "r144"
+PR = "r145"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -40,7 +40,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-csfd_10-10-20150103_all.ipk \
     enigma2-plugin-extensions-cyrussettings_1.0.0_all.ipk \
     enigma2-plugin-extensions-digitalfernsehen_1.0rc4_mips32el.ipk \
-    enigma2-plugin-extensions-enigmalight_0.1r5-b12_all.ipk \
+    enigma2-plugin-extensions-enigmalight_0.1r6-b2-alpha8_all.ipk \
     enigma2-plugin-extensions-facebook_1.3rc1_mips32el.ipk \
     enigma2-plugin-extensions-filesearchfs_2.53_all.ipk \
     enigma2-plugin-extensions-focusonline_1.0rc5_mips32el.ipk \
@@ -48,7 +48,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-gmailreader-oe2.0_1.3_all.ipk \
     enigma2-plugin-extensions-googlenewsreader_1.0_mips32el.ipk \
     enigma2-plugin-extensions-hdmitest_0.4_mipsel.ipk \
-    enigma2-plugin-extensions-hetweer_2.6_mips32el.ipk \
+    enigma2-plugin-extensions-hetweer_2.6r1_all.ipk \
     enigma2-plugin-extensions-isettinge2-3.3.1-oe2.0-mips32el.ipk \
     enigma2-plugin-extensions-kicker_3.3rc11_mips32el.ipk \
     enigma2-plugin-extensions-kino_1.4rc3_mips32el.ipk \
