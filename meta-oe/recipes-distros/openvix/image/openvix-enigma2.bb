@@ -7,7 +7,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "1.0"
-PR = "r19"
+PR = "r20"
 
 inherit packagegroup
 
@@ -27,4 +27,5 @@ RRECOMMENDS_${PN} = "\
     enigma2-plugin-extensions-imdb \
     enigma2-plugin-extensions-xmltvimport \
     enigma2-plugin-systemplugins-crossepg \
+    ${@base_contains("MACHINE_FEATURES", "uianimation", "enigma2-plugin-systemplugins-animationsetup" , "", d)} \
     "
