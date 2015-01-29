@@ -1,0 +1,141 @@
+diff --git a/gstdvbaudiosink.c b/gstdvbaudiosink.c
+old mode 100644
+new mode 100755
+index 2725def..ab89d60
+--- a/gstdvbaudiosink.c
++++ b/gstdvbaudiosink.c
+@@ -666,7 +666,7 @@ static gboolean gst_dvbaudiosink_set_caps(GstBaseSink *basesink, GstCaps *caps)
+ 		const gchar *formatstring = NULL;
+ #endif
+ 		gint width = 0, depth = 0, rate = 0, channels, block_align, byterate;
+-		self->codec_data = gst_buffer_new_and_alloc(18);
++		self->codec_data = gst_buffer_new_and_alloc(18 + 8);
+ #if GST_VERSION_MAJOR < 1
+ 		data = GST_BUFFER_DATA(self->codec_data);
+ 		size = GST_BUFFER_SIZE(self->codec_data);
+@@ -706,6 +706,39 @@ static gboolean gst_dvbaudiosink_set_caps(GstBaseSink *basesink, GstCaps *caps)
+ 		byterate = channels * rate * width / 8;
+ 		block_align = channels * width / 8;
+ 		memset(data, 0, size);
++    #if 1
++		self->fixed_buffersize      =  rate * 30 / 1000;
++		self->fixed_buffersize      *= channels * depth / 8;
++		self->fixed_buffertimestamp =  GST_CLOCK_TIME_NONE;
++		self->fixed_bufferduration  =  GST_SECOND * (GstClockTime)self->fixed_buffersize / (GstClockTime)byterate;
++        memcpy(data,"BCMA",4);
++        data[4]  = (self->fixed_buffersize & 0xFF000000) >> 24;
++        data[5]  = (self->fixed_buffersize & 0xFF0000) >> 16; 
++        data[6]  = (self->fixed_buffersize & 0xFF00) >> 8; 
++        data[7]  = (self->fixed_buffersize & 0xFF);
++		/* format tag */
++		data[8]  = format & 0xff;
++		data[9]  = (format >> 8) & 0xff;
++		/* channels */
++		data[10] = channels & 0xff;
++		data[11] = (channels >> 8) & 0xff;
++		/* sample rate */
++		data[12] = rate & 0xff;
++		data[13] = (rate >> 8) & 0xff;
++		data[14] = (rate >> 16) & 0xff;
++		data[15] = (rate >> 24) & 0xff;
++		/* byte rate */
++		data[16] = byterate & 0xff;
++		data[17] = (byterate >> 8) & 0xff;
++		data[18] = (byterate >> 16) & 0xff;
++		data[19] = (byterate >> 24) & 0xff;
++		/* block align */
++		data[20] = block_align & 0xff;
++		data[21] = (block_align >> 8) & 0xff;
++		/* word size */
++		data[22] = depth & 0xff;
++		data[23] = (depth >> 8) & 0xff;
++    #else
+ 		/* format tag */
+ 		*(data++) = format & 0xff;
+ 		*(data++) = (format >> 8) & 0xff;
+@@ -732,6 +765,7 @@ static gboolean gst_dvbaudiosink_set_caps(GstBaseSink *basesink, GstCaps *caps)
+ 		self->fixed_buffersize *= channels * depth / 8;
+ 		self->fixed_buffertimestamp = GST_CLOCK_TIME_NONE;
+ 		self->fixed_bufferduration = GST_SECOND * (GstClockTime)self->fixed_buffersize / (GstClockTime)byterate;
++    #endif		
+ 		GST_INFO_OBJECT(self, "MIMETYPE %s", type);
+ 		bypass = AUDIOTYPE_RAW;
+ #if GST_VERSION_MAJOR >= 1
+diff --git a/gstdvbvideosink.c b/gstdvbvideosink.c
+old mode 100644
+new mode 100755
+index a6b0a10..6fe16dd
+--- a/gstdvbvideosink.c
++++ b/gstdvbvideosink.c
+@@ -1655,6 +1655,10 @@ static gboolean gst_dvbvideosink_set_caps(GstBaseSink *basesink, GstCaps *caps)
+ 					codec_data_pointer = codecdatamap.data;
+ 					codec_size = codecdatamap.size;
+ #endif
++                #if 1   /* sidabary */
++                    self->codec_data = gst_value_get_buffer(codec_data);   
++                    gst_buffer_ref(self->codec_data);
++                #else
+ 					videocodecdata.length = 8 + codec_size;
+ 					data = videocodecdata.data = (guint8*)g_malloc(videocodecdata.length);
+ 					memset(data, 0, videocodecdata.length);
+@@ -1662,6 +1666,7 @@ static gboolean gst_dvbvideosink_set_caps(GstBaseSink *basesink, GstCaps *caps)
+ 					memcpy(data, codec_data_pointer, codec_size);
+ 					ioctl(self->fd, VIDEO_SET_CODEC_DATA, &videocodecdata);
+ 					g_free(videocodecdata.data);
++                #endif
+ #if GST_VERSION_MAJOR >= 1
+ 					gst_buffer_unmap(gst_value_get_buffer(codec_data), &codecdatamap);
+ #endif
+@@ -1677,6 +1682,17 @@ static gboolean gst_dvbvideosink_set_caps(GstBaseSink *basesink, GstCaps *caps)
+ 					guint8 *data;
+ 					video_codec_data_t videocodecdata;
+ 					gint width, height;
++                    /* sidabary */
++                    GstBuffer   *dest;
++                    guint8  brcm_vc1sm_sequence_header[] = 
++                    {
++                        0x00, 0x00, 0x01, 0x0F,
++                        0x00, 0x00, 0x00, 0x00,
++                        0x00, 0x00, 0x00, 0x00,
++                        0x00, 0x00, 0x00, 0x00,
++                        0x00, 0x00, 0x00,
++                    };
++
+ #if GST_VERSION_MAJOR < 1
+ 					codec_size = GST_BUFFER_SIZE(gst_value_get_buffer(codec_data));
+ 					codec_data_pointer = GST_BUFFER_DATA(gst_value_get_buffer(codec_data));
+@@ -1689,6 +1705,26 @@ static gboolean gst_dvbvideosink_set_caps(GstBaseSink *basesink, GstCaps *caps)
+ 					if (codec_size > 4) codec_size = 4;
+ 					gst_structure_get_int(structure, "width", &width);
+ 					gst_structure_get_int(structure, "height", &height);
++            #if 1   /* sidabary */                   
++                    brcm_vc1sm_sequence_header[4] = (width >> 8) & 0xff;
++                    brcm_vc1sm_sequence_header[5] = width & 0xff;
++                    brcm_vc1sm_sequence_header[6] = (height >> 8) & 0xff;
++                    brcm_vc1sm_sequence_header[7] = height & 0xff;
++                    dest = gst_buffer_new_and_alloc(sizeof(brcm_vc1sm_sequence_header));
++                #if GST_VERSION_MAJOR < 1
++                    memcpy(GST_BUFFER_DATA(dest),brcm_vc1sm_sequence_header,sizeof(brcm_vc1sm_sequence_header));
++                    memcpy(GST_BUFFER_DATA(dest) + 8,codec_data_pointer,4);
++                #else
++                    GstMapInfo  codec_dest_map;
++                    gst_buffer_map(dest, &codec_dest_map, GST_MAP_READ | GST_MAP_WRITE);
++                    memcpy(codec_dest_map.data,brcm_vc1sm_sequence_header,sizeof(brcm_vc1sm_sequence_header));
++                    memcpy(codec_dest_map.data + 8,codec_data_pointer,4); 
++                #endif                                                                  
++                    self->codec_data = dest;
++                #if GST_VERSION_MAJOR >= 1    
++                    gst_buffer_unmap(dest,&codec_dest_map);
++                #endif
++	        #else
+ 					videocodecdata.length = 33;
+ 					data = videocodecdata.data = (guint8*)g_malloc(videocodecdata.length);
+ 					memset(data, 0, videocodecdata.length);
+@@ -1702,6 +1738,7 @@ static gboolean gst_dvbvideosink_set_caps(GstBaseSink *basesink, GstCaps *caps)
+ 					if (codec_data && codec_size) memcpy(data, codec_data_pointer, codec_size);
+ 					ioctl(self->fd, VIDEO_SET_CODEC_DATA, &videocodecdata);
+ 					g_free(videocodecdata.data);
++            #endif     
+ #if GST_VERSION_MAJOR >= 1
+ 					gst_buffer_unmap(gst_value_get_buffer(codec_data), &codecdatamap);
+ #endif
