@@ -10,8 +10,8 @@ KV = "3.9.7"
 PV = "${KV}+${SRCDATE}"
 PR = "r3"
 
-SRC_URI[md5sum] = "f376dfe284ae11ea3f8400f2918c6d32"
-SRC_URI[sha256sum] = "47b4102241b00eb2c3c5d89eb5174ae8ab241d7740f8e9312be04bed5ec880e0"
+SRC_URI[md5sum] = "70aca0b66a1de6245326bb0d519239d5"
+SRC_URI[sha256sum] = "e2cf1ae370a089d574c62ef57aa2dd40b297865b47135aee2643f9dce41dc06f"
 
 SRC_URI = "http://en3homeftp.net/release/images/oedrivers/bcmlinuxdvb_7356-${KV}-tmnano3t-${SRCDATE}.tar.gz"
 
