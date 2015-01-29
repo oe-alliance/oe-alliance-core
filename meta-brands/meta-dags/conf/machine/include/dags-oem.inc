@@ -188,6 +188,7 @@ DVBMEDIASINK_CONFIG = "--with-wma --with-wmv --with-pcm --with-dts"
 PREFERRED_PROVIDER_virtual/kernel = "linux-dags"
 PREFERRED_PROVIDER_virtual/blindscan-dvbs = "vuplus-blindscan-utils"
 PREFERRED_PROVIDER_virtual/blindscan-dvbc = "vuplus-blindscan-utils"
+PREFERRED_PROVIDER_virtual/transtreamproxy = "vuplus-transtreamproxy"
 
 KERNEL_IMAGETYPE = "vmlinux"
 KERNEL_OUTPUT = "${KERNEL_IMAGETYPE}"
