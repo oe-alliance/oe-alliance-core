@@ -21,6 +21,7 @@ ${@base_contains('MACHINEBUILD', 'atemio6200', '6200-HD' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'atemionemesis', 'Nemesis' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'beyonwizt3', 'T3' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'beyonwizt4', 'T4' , '', d)}\
+${@base_contains('MACHINEBUILD', 'bwidowx', 'Black Widow-X' , '', d)}\
 "
 
 MACHINE_BRAND = "\
@@ -41,6 +42,7 @@ ${@base_contains('MACHINEBUILD', 'atemio6200', 'Atemio' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'atemionemesis', 'Atemio' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'beyonwizt3', 'Beyonwiz' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'beyonwizt4', 'Beyonwiz' , '', d)}\
+${@base_contains('MACHINEBUILD', 'bwidowx', 'SPACE' , '', d)}\
 "
 
 IMAGEDIR ?= "\
@@ -61,6 +63,7 @@ ${@base_contains('MACHINEBUILD', 'atemio6200', 'atemio/6200' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'atemionemesis', 'atemio/8x00' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'beyonwizt3', 'beyonwiz/hdx' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'beyonwizt4', 'beyonwiz/hdp' , '', d)}\
+${@base_contains('MACHINEBUILD', 'bwidowx', 'bwidowx' , '', d)}\
 "
 
 MTD_KERNEL = "\
@@ -81,6 +84,7 @@ ${@base_contains('MACHINEBUILD', 'atemio6200', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'atemionemesis', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'beyonwizt3', 'mtd1' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'beyonwizt4', 'mtd2' , '', d)}\
+${@base_contains('MACHINEBUILD', 'bwidowx', 'mtd2' , '', d)}\
 "
 
 MTD_ROOTFS = "\
@@ -101,6 +105,7 @@ ${@base_contains('MACHINEBUILD', 'atemio6200', 'mtd0' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'atemionemesis', 'mtd0' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'beyonwizt3', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'beyonwizt4', 'mtd0' , '', d)}\
+${@base_contains('MACHINEBUILD', 'bwidowx', 'mtd0' , '', d)}\
 "
 
 MACHINE_DRIVER = "\
@@ -121,6 +126,7 @@ ${@base_contains('MACHINEBUILD', 'atemio6200', 'inihde2am' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'atemionemesis', 'ini-800' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'beyonwizt3', 'inihdx' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'beyonwizt4', 'ini-840t4' , '', d)}\
+${@base_contains('MACHINEBUILD', 'bwidowx', 'yhgd2580' , '', d)}\
 "
 
 KERNEL_FILE = "kernel.bin"
