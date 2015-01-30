@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=751419260aa954499f7abaabaa882bbe"
 DEPENDS = " \
     freetype \
     gettext-native \
-    gst-plugins-base gstreamer \
+    ${@base_contains("GST_VERSION", "1.0", "gstreamer1.0-plugins-base gstreamer1.0", "gst-plugins-base gstreamer", d)} \
     jpeg \
     libdreamdvd libdvbsi++ libfribidi libmad libpng libsigc++-1.2 libungif libxml2 libxmlccwrap \
     openssl \
@@ -29,7 +29,7 @@ RDEPENDS_${PN} = " \
 
 RRECOMMENDS_${PN} = " \
     glib-networking \
-    gst-plugin-subsink \
+    ${@base_contains("GST_VERSION", "1.0", "gstreamer1.0-plugin-subsink", "gst-plugin-subsink", d)} \
     ${@base_contains("TARGET_ARCH", "mipsel", "gst-plugin-libxt" , "", d)} \
     ${GST_BASE_RDEPS} \
     ${GST_GOOD_RDEPS} \
@@ -207,6 +207,7 @@ EXTRA_OECONF = " \
     STAGING_INCDIR=${STAGING_INCDIR} \
     STAGING_LIBDIR=${STAGING_LIBDIR} \
     --with-boxtype=${MACHINE} \
+    --with-machinebuild="${MACHINEBUILD}" \
     --with-libsdl=no \
     --enable-dependency-tracking \
     ${@base_contains("MACHINE_FEATURES", "textlcd", "--with-textlcd" , "", d)} \
