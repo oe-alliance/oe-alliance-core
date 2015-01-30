@@ -175,6 +175,7 @@ MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS = "\
 MACHINE_EXTRA_RRECOMMENDS = " \
     dags-shutdown \
     gst-plugin-dvbmediasink \
+    gst-ffmpeg \
     "
 
 include conf/machine/include/autoload-filesystems.inc
@@ -183,7 +184,7 @@ TARGET_ARCH = "mipsel"
 DEFAULTTUNE = "mips32el"
 
 GLIBC_EXTRA_OECONF = "--with-tls"
-DVBMEDIASINK_CONFIG = "--with-wma --with-wmv --with-pcm --with-dts"
+DVBMEDIASINK_CONFIG = "--with-wmv --with-pcm --with-dts"
 
 PREFERRED_PROVIDER_virtual/kernel = "linux-dags"
 PREFERRED_PROVIDER_virtual/blindscan-dvbs = "vuplus-blindscan-utils"
