@@ -87,7 +87,7 @@ index 714899e..61a488e
  					memcpy(data, GST_BUFFER_DATA(gst_value_get_buffer(codec_data)), codec_size);
  					ioctl(self->fd, VIDEO_SET_CODEC_DATA, &videocodecdata);
  					g_free(videocodecdata.data);
-+                #endif					
++                #endif
  				}
  			}
  			else if (self->codec_type == CT_VC1_SM)
@@ -97,7 +97,7 @@ index 714899e..61a488e
  				{
 -					guint8 *data;
 +				    guint8 *codec_data_pointer;
-+					guint8 *data
++					guint8 *data;
  					video_codec_data_t videocodecdata;
  					gint width, height;
 -					gint codec_size = GST_BUFFER_SIZE(gst_value_get_buffer(codec_data));
