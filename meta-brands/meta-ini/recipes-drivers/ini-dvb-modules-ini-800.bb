@@ -5,13 +5,13 @@ LICENSE = "CLOSED"
 PACKAGE_ARCH = "${MACHINEBUILD}"
 
 KV = "3.14.2"
-SRCDATE = "20150112"
+SRCDATE = "20150130"
 
 PV = "${KV}+${SRCDATE}"
 PR = "r5"
 
-SRC_URI[md5sum] = "512ce2f4a55ee8364852f11785b2bfae"
-SRC_URI[sha256sum] = "418387debe460ddf175773d6a551659e2a5f7295c5bfbadabd77bce8ca517ad0"
+SRC_URI[md5sum] = "90ad8e10624a4d1f1a3ec783a408d861"
+SRC_URI[sha256sum] = "7212854b29fcb7925319dfc1e7af0d78987bdc71803403e4fbbe8f108f0903f3"
 
 SRC_URI = "http://code-ini.com/software/drivers/ini-800-drivers-${KV}-${SRCDATE}.zip"
 
