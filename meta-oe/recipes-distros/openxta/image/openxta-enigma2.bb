@@ -26,7 +26,7 @@ RRECOMMENDS_${PN} = "\
     enigma2-plugin-extensions-extraspanel \
     enigma2-plugin-extensions-et-portal \
     enigma2-plugin-extensions-openxtareader \
-	enigma2-plugin-extensions-kodidirect \
+    enigma2-plugin-extensions-kodidirect \
     enigma2-plugin-systemplugins-videomode \
     enigma2-plugin-systemplugins-autoresolution \
     enigma2-plugin-systemplugins-osdpositionsetup \
