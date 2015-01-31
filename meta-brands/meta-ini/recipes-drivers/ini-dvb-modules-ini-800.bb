@@ -10,8 +10,8 @@ SRCDATE = "20150130"
 PV = "${KV}+${SRCDATE}"
 PR = "r5"
 
-SRC_URI[md5sum] = "90ad8e10624a4d1f1a3ec783a408d861"
-SRC_URI[sha256sum] = "7212854b29fcb7925319dfc1e7af0d78987bdc71803403e4fbbe8f108f0903f3"
+SRC_URI[md5sum] = "d960d27e49a4299d330534b98bf6e8d8"
+SRC_URI[sha256sum] = "52a965c7d9f803c76616f164d9367853d1bfbcb40e9436b9247c92b0fa48c002"
 
 SRC_URI = "http://code-ini.com/software/drivers/ini-800-drivers-${KV}-${SRCDATE}.zip"
 
