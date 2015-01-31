@@ -7,7 +7,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 ALLOW_EMPTY_${PN} = "1"
 
 PV = "1.0"
-PR = "r37"
+PR = "r38"
 
 inherit packagegroup
 
@@ -26,7 +26,7 @@ RRECOMMENDS_${PN} = "\
     enigma2-plugin-extensions-extraspanel \
     enigma2-plugin-extensions-et-portal \
     enigma2-plugin-extensions-openxtareader \
-    enigma2-plugin-extensions-xbmcaddons \
+	enigma2-plugin-extensions-kodidirect \
     enigma2-plugin-systemplugins-videomode \
     enigma2-plugin-systemplugins-autoresolution \
     enigma2-plugin-systemplugins-osdpositionsetup \
