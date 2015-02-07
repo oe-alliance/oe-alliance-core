@@ -26,7 +26,6 @@ DEPENDS = "\
     enigma2-plugin-bootlogos-maxwells-sound \
     enigma2-plugin-bootlogos-maxwells-spectrum \
     enigma2-plugin-bootlogos-maxwells-variation \
-    enigma2-plugin-bootlogos1080-youvix \
 	enigma2-plugin-bootlogos-rossi2000-openvix1-1080 \
     enigma2-plugin-bootlogos-rossi2000-openvix2-1080 \
     enigma2-plugin-bootlogos-rossi2000-openvix3-1080 \
@@ -34,6 +33,7 @@ DEPENDS = "\
     enigma2-plugin-bootlogos-rossi2000-openvix5-1080 \
     enigma2-plugin-bootlogos-rossi2000-openvix6-1080 \
     enigma2-plugin-bootlogos-rossi2000-openvix7-1080 \
+    enigma2-plugin-bootlogos-rossi2000-youvix-1080 \
     "
 
-PR = "r4"
+PR = "r5"
