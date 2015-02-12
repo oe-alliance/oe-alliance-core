@@ -4,7 +4,7 @@ SUMMARY = "XBMC Media Center"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://LICENSE.GPL;md5=6eb631b6da7fdb01508a80213ffc35ff"
 
-DEPENDS = "vuplus-libgles-${MACHINE} libxslt libusb1 libcec libplist expat yajl gperf-native fribidi mpeg2dec samba fontconfig curl python libass libmodplug libmicrohttpd wavpack libmms cmake-native libsdl-image libsdl-mixer mysql5 sqlite3 libmms faad2 libcdio libpcre boost lzo enca avahi libsamplerate0  bzip2 virtual/libsdl jasper zip-native zlib libtinyxml taglib libbluray libshairport librtmp zlib libnfs libxslt"
+DEPENDS = "vuplus-libgles-${MACHINE} libcurl4 libxslt libusb1 libcec libplist expat yajl gperf-native fribidi mpeg2dec samba fontconfig curl python libass libmodplug libmicrohttpd wavpack libmms cmake-native libsdl-image libsdl-mixer mysql5 sqlite3 libmms faad2 libcdio libpcre boost lzo enca avahi libsamplerate0  bzip2 virtual/libsdl jasper zip-native zlib libtinyxml taglib libbluray libshairport librtmp zlib libnfs libxslt"
 
 RDEPENDS_${PN} = "python"
 RDEPENDS_${PN} += "\
@@ -45,9 +45,10 @@ RDEPENDS_${PN} += "\
 	librtmp \
 	libbluray \
 	libnfs \
+	libcurl4 \
 "
 
-BUILD_PR="r1"
+BUILD_PR="r2"
 NATIVEGLES_PR="20141202_p0"
 
 BRANCH = "gotham_vuplus"
