@@ -7,7 +7,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "1.0"
-PR = "r16"
+PR = "r17"
 
 inherit packagegroup
 
@@ -32,4 +32,6 @@ RDEPENDS_${PN} = "\
 	enigma2-plugin-skins-novum_hd_slim \
     enigma2-nou-skins \
     enigma2-plugin-skins-army-moodblue-hd \
+    enigma2-plugin-skins-kravenhd \
+    enigma2-plugin-skins-kravenfullhd \
     "
