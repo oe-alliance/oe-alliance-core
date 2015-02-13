@@ -45,10 +45,9 @@ RDEPENDS_${PN} += "\
 	librtmp \
 	libbluray \
 	libnfs \
-	libcurl4 \
 "
 
-BUILD_PR="r2"
+BUILD_PR="r3"
 NATIVEGLES_PR="20141202_p0"
 
 BRANCH = "gotham_vuplus"
