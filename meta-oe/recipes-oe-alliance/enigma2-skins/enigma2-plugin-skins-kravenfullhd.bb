@@ -6,9 +6,9 @@ require conf/license/license-gplv2.inc
 inherit gitpkgv allarch
 
 SRCREV = "${AUTOREV}"
-PV = "1.5+git${SRCPV}"
-PKGV = "1.5+git${GITPKGV}"
-VER="1.5"
+PV = "1.6+git${SRCPV}"
+PKGV = "1.6+git${GITPKGV}"
+VER="1.6"
 
 RDEPENDS_${PN} = "enigma2-plugin-systemplugins-weathercomponenthandler enigma2-plugin-extensions-weatherplugin enigma2-plugin-systemplugins-extnumberzap"
 
