@@ -1,0 +1,27 @@
+diff --git a/BcmLinuxDVB/linux-3.9.7-r1/drivers/media/dvb-core/dvb_demux.c b/BcmLinuxDVB/linux-3.9.7-r1/drivers/media/dvb-core/dvb_demux.c
+index 9eee251..a0b8be1 100644
+--- a/drivers/media/dvb-core/dvb_demux.c
++++ b/drivers/media/dvb-core/dvb_demux.c
+@@ -60,6 +60,9 @@ MODULE_PARM_DESC(dvb_demux_feed_err_pkts,
+ 			printk(x);                              \
+ 	} while (0)
+ 
++int (*dmx_swfilter_hook)(struct dvb_demux *dvbdmx, const u8 *buffer, size_t length) = NULL;
++EXPORT_SYMBOL(dmx_swfilter_hook);
++
+ /******************************************************************************
+  * static inlined helper functions
+  ******************************************************************************/
+@@ -567,6 +570,12 @@ bailout:
+ 
+ void dvb_dmx_swfilter(struct dvb_demux *demux, const u8 *buf, size_t count)
+ {
++	if(dmx_swfilter_hook)
++	{
++		if(dmx_swfilter_hook(demux, buf, count) >= 0)
++			return;
++	}
++
+ 	_dvb_dmx_swfilter(demux, buf, count, 188);
+ }
+ EXPORT_SYMBOL(dvb_dmx_swfilter);
