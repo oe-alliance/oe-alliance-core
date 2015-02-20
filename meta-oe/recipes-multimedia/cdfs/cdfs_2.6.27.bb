@@ -17,6 +17,7 @@ SRC_URI = " \
         file://0001-support-up-to-3.12.patch \
         file://add-3.14-support.patch \
         file://0001-add-3.16-support.patch \
+        file://0001-add-3.19-support.patch \
 "
 SRC_URI[md5sum] = "ac64c014a90e3c488394832ea29605b3"
 SRC_URI[sha256sum] = "d034f6c6d9578fe2addfaeceaa101584a4a1fc9f27d825c340baebd345d8d724"
