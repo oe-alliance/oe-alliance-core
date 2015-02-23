@@ -28,7 +28,7 @@ do_install() {
     chmod -R a+rX ${D}/usr/share/enigma2/
 }
 
-pkg_postinst_${PN} () {
+pkg_postinst_${PN}() {
 #!/bin/sh
 if [ -f /tmp/skin.xml ]; then
 mv /tmp/skin.xml /usr/share/enigma2/BlackSpirit.HD
@@ -39,7 +39,7 @@ echo "                                                          "
 exit 0
 }
 
-pkg_postrm_${PN} () {
+pkg_postrm_${PN}() {
 #!/bin/sh
 rm -rf /usr/share/enigma2/BlackSpirit.HD
 rm -rf /usr/lib/enigma2/python/Plugins/Extensions/BlackSpiritHD
@@ -51,7 +51,7 @@ echo "                                                          "
 exit 0
 }
 
-pkg_preinst_${PN} () {
+pkg_preinst_${PN}() {
 #!/bin/sh
 echo "Checking for previous installations..."
 if [ -f /usr/share/enigma2/BlackSpirit.HD/skin.xml ]; then
@@ -76,7 +76,7 @@ echo "                                                           "
 exit 0
 }
 
-pkg_prerm_${PN} () {
+pkg_prerm_${PN}() {
 #!/bin/sh
 echo "                                                           "
 echo "             BlackSpirit.HD is now being removed...        "
