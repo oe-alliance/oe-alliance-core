@@ -28,18 +28,20 @@ do_install() {
     chmod -R a+rX ${D}/usr/share/enigma2/
 }
 
-pkg_postinst_${PN} () {
+pkg_postinst_${PN}() {
 #!/bin/sh
 if [ -f /tmp/skin.xml ]; then
-mv /tmp/skin.xml /usr/share/enigma2/BlackSpirit.HD
+    mv /tmp/skin.xml /usr/share/enigma2/BlackSpirit.HD
 fi
+ln -s /usr/share/enigma2/BlackSpirit.HD/img /usr/share/enigma2/BlackSpirit.HD/icons
+ln -s /usr/share/enigma2/BlackSpirit.HD/img /usr/share/enigma2/BlackSpirit.HD/buttons 
 echo "                                                          "
 echo "             ...Skin successful installed.                "
 echo "                                                          "
 exit 0
 }
 
-pkg_postrm_${PN} () {
+pkg_postrm_${PN}() {
 #!/bin/sh
 rm -rf /usr/share/enigma2/BlackSpirit.HD
 rm -rf /usr/lib/enigma2/python/Plugins/Extensions/BlackSpiritHD
@@ -51,24 +53,24 @@ echo "                                                          "
 exit 0
 }
 
-pkg_preinst_${PN} () {
+pkg_preinst_${PN}() {
 #!/bin/sh
 echo "Checking for previous installations..."
 if [ -f /usr/share/enigma2/BlackSpirit.HD/skin.xml ]; then
     rm -rf /usr/share/enigma2/BlackSpirit.HD
     rm -rf /usr/lib/enigma2/python/Components/Converter/BS_*
     rm -rf /usr/lib/enigma2/python/Components/Renderer/BS_*
-		echo "                                                           "
-		echo "          Previous BlackSpirit.HD installation             "
-		echo "                 was found and removed!                    "
-		echo "                                                           "
+    echo "                                                           "
+    echo "          Previous BlackSpirit.HD installation             "
+    echo "                 was found and removed!                    "
+    echo "                                                           "
 fi
 if [ -f /usr/lib/enigma2/python/Plugins/Extensions/BlackSpiritHD/plugin.py ]; then
     rm -rf /usr/lib/enigma2/python/Plugins/Extensions/BlackSpiritHD
-		echo "                                                           "
-		echo "           BlackSpirit.HD configuration plugin             "
-		echo "                 was found and removed!                    "
-		echo "                                                           "
+    echo "                                                           "
+    echo "           BlackSpirit.HD configuration plugin             "
+    echo "                 was found and removed!                    "
+    echo "                                                           "
 fi
 echo "                                                           "
 echo "               Proceeding to installation...               "
@@ -76,7 +78,7 @@ echo "                                                           "
 exit 0
 }
 
-pkg_prerm_${PN} () {
+pkg_prerm_${PN}() {
 #!/bin/sh
 echo "                                                           "
 echo "             BlackSpirit.HD is now being removed...        "

@@ -15,6 +15,7 @@ DEPENDS = "\
     enigma2-plugin-drivers-network-usb-rtl8812au \
     enigma2-plugin-drivers-network-usb-rtl8812au \
     enigma2-plugin-drivers-network-usb-r8723a \
+    enigma2-plugin-drivers-network-usb-rt8723bs \
     enigma2-plugin-drivers-network-usb-mt7601u \
     ", d)} \
     enigma2-plugin-drivers-network-usb-asix \
@@ -27,4 +28,4 @@ DEPENDS = "\
     enigma2-plugin-drivers-network-usb-rtl8192cu \
     "
 
-PR = "r14"
+PR = "r15"
