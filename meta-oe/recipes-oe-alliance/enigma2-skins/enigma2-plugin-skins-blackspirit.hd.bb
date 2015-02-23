@@ -33,6 +33,8 @@ pkg_postinst_${PN}() {
 if [ -f /tmp/skin.xml ]; then
     mv /tmp/skin.xml /usr/share/enigma2/BlackSpirit.HD
 fi
+ln -s /usr/share/enigma2/BlackSpirit.HD/img /usr/share/enigma2/BlackSpirit.HD/icons
+ln -s /usr/share/enigma2/BlackSpirit.HD/img /usr/share/enigma2/BlackSpirit.HD/buttons 
 echo "                                                          "
 echo "             ...Skin successful installed.                "
 echo "                                                          "
