@@ -5,14 +5,20 @@ BRAND_OEM = "ceryon"
 
 MACHINE_NAME = "\
 ${@base_contains('MACHINEBUILD', 'p62', 'P62' , '', d)}\
+${@base_contains('MACHINEBUILD', 'nano', 'NANO' , '', d)}\
+${@base_contains('MACHINEBUILD', 'nanoc', 'NANO-C' , '', d)}\
 "
 
 MACHINE_BRAND = "\
 ${@base_contains('MACHINEBUILD', 'p62', 'PowerSat' , '', d)}\
+${@base_contains('MACHINEBUILD', 'nano', 'WWIO' , '', d)}\
+${@base_contains('MACHINEBUILD', 'nanoc', 'WWIO' , '', d)}\
 "
 
 IMAGEDIR ?= "\
 ${@base_contains('MACHINEBUILD', 'p62', 'ceryon7362' , '', d)}\
+${@base_contains('MACHINEBUILD', 'nano', 'nano' , '', d)}\
+${@base_contains('MACHINEBUILD', 'nanoc', 'nano' , '', d)}\
 "
 
 MTD_KERNEL = "mtd1"
@@ -74,7 +80,9 @@ IMAGE_CMD_ubi_append = " \
     "
 
 
-MACHINE_FEATURES += "3dtv alsa hdmicec switchoff wifi bootsplash omb"
+MACHINE_FEATURES += "3dtv alsa hdmicec switchoff wifi bootsplash omb \
+    ${@base_contains('MACHINEBUILD', 'nanoc', 'dvbc-only' , '', d)} \
+    "
 
 BOOTLOGO_FILENAME = "splash.bin"
 
