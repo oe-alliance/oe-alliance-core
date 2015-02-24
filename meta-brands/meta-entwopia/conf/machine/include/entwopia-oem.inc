@@ -53,7 +53,6 @@ DEFAULTTUNE = "mips32el"
 GLIBC_EXTRA_OECONF = "--with-tls --with-__thread"
 
 PREFERRED_PROVIDER_virtual/kernel = "linux-entwopia"
-PREFERRED_PROVIDER_virtual/transtreamproxy = "vuplus-transtreamproxy"
 
 KERNEL_IMAGETYPE = "vmlinux"
 KERNEL_OUTPUT = "${KERNEL_IMAGETYPE}"
