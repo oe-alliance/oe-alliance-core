@@ -5,14 +5,17 @@ BRAND_OEM = "broadmedia"
 
 MACHINE_NAME = "\
 ${@base_contains('MACHINEBUILD', 'broadmedia300', 'G300' , '', d)}\
+${@base_contains('MACHINEBUILD', 'sf3038', 'SF3038' , '', d)}\
 "
 
 MACHINE_BRAND = "\
 ${@base_contains('MACHINEBUILD', 'broadmedia300', 'BroadMedia' , '', d)}\
+${@base_contains('MACHINEBUILD', 'sf3038', 'Octagon' , '', d)}\
 "
 
 IMAGEDIR ?= "\
 ${@base_contains('MACHINEBUILD', 'broadmedia300', 'g300' , '', d)}\
+${@base_contains('MACHINEBUILD', 'sf3038', 'g300' , '', d)}\
 "
 
 MTD_KERNEL = "mtd1"
