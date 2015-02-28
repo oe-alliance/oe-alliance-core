@@ -35,27 +35,29 @@ libdirectfb_vuplus.so"
 
 SRC_FILE = "opera-hbbtv_${SRC_DATE}.tar.gz"
 do_fetch() {
-    if [ ! -e ${DL_DIR}/${SRC_FILE} -a -e /etc/vuplus_browser.pwd ]; then
+    if [[ ! -e ${DL_DIR}/${SRC_FILE} && -e /etc/vuplus_browser.pwd ]]; then
 sshpass -f /etc/vuplus_browser.pwd sftp -o StrictHostKeyChecking=no guestuser@code.vuplus.com << +
 get ${SRC_FILE}
 bye
 +
     fi
-    cp -av ${DL_DIR}/${SRC_FILE} ${WORKDIR}/
+    [ -f ${DL_DIR}/${SRC_FILE} ] && cp -av ${DL_DIR}/${SRC_FILE} ${WORKDIR}/ || true
 }
 
 do_unpack() {
-    tar xvfz ${SRC_FILE}
+    [ -f ${DL_DIR}/${SRC_FILE} ] && tar xvfz ${SRC_FILE} || true
 }
 
 do_compile() {
 }
 
 do_install() {
+    if [[ -d ${S}/opera ]]; then
     install -d ${D}/usr/local/hbb-browser
     mv ${S}/opera/* ${D}/usr/local/hbb-browser/
     install -d ${D}/usr/lib
     mv ${S}/dfb/usr/lib/* ${D}/usr/lib/
+    fi
 }
 
 package_do_shlibs_append() {
