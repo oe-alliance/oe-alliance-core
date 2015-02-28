@@ -118,9 +118,9 @@ do_deploy() {
     rm -f ${DEPLOY_DIR_IPK}/3rdparty/enigma2-plugin-extensions-hbbtv_* || true
     rm -f ${DEPLOY_DIR_IPK}/3rdparty/enigma2-plugin-extensions-multiquickbutton*.ipk || true
     rm -f ${DEPLOY_DIR_IPK}/3rdparty/enigma2-plugin-extensions-backupsuite*.ipk || true
-    install -m 0644 enigma2-plugin-extensions-et-portal*.ipk ${DEPLOY_DIR_IPK}/3rdparty || true
-    install -m 0644 ${S}/*${MACHINE}.ipk ${DEPLOY_DIR_IPK}/${MACHINE}_3rdparty #|| true
-    install -m 0644 ${S}/*${MACHINEBUILD}.ipk ${DEPLOY_DIR_IPK}/${MACHINE}_3rdparty #|| true
+    [ -e ${S}/*enigma2-plugin-extensions-et-portal*.ipk ] && install -m 0644 ${S}/*enigma2-plugin-extensions-et-portal*.ipk ${DEPLOY_DIR_IPK}/3rdparty || true
+    [ -e ${S}/*${MACHINE}.ipk ] && install -m 0644 ${S}/*${MACHINE}.ipk ${DEPLOY_DIR_IPK}/${MACHINE}_3rdparty #|| true
+    [ -e ${S}/*${MACHINEBUILD}.ipk ] && install -m 0644 ${S}/*${MACHINEBUILD}.ipk ${DEPLOY_DIR_IPK}/${MACHINE}_3rdparty #|| true
     for i in ${THIRDPARTY_MACHINE_PLUGINS}; do
         if [ -f $i ]; then
             install -m 0644 $i ${DEPLOY_DIR_IPK}/${MACHINE}_3rdparty || true
