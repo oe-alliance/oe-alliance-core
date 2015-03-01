@@ -4,10 +4,9 @@ SECTION = "kernel"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 KV = "3.1.1"
 
-inherit machine_kernel_pr
+inherit kernel machine_kernel_pr
 
 SRCDATE = "20120526"
-MACHINE_KERNEL_PR_append = ".6"
 
 SRC_URI[md5sum] = "5899790c27f6f4069fbceb64b67635eb"
 SRC_URI[sha256sum] = "9a99171a05781c545734c72ea08d3fe3bcb176070b43b7db63ef56a406f7925d"
@@ -40,8 +39,7 @@ SRC_URI = "http://archiv.openmips.com/linux-${KV}-gb800xx-${KV}_${SRCDATE}.tar.g
         "
 
 S = "${WORKDIR}/linux-${KV}"
-
-inherit kernel
+B = "${WORKDIR}/build"
 
 export OS = "Linux"
 KERNEL_OBJECT_SUFFIX = "ko"
@@ -50,11 +48,6 @@ KERNEL_IMAGETYPE = "vmlinux"
 KERNEL_IMAGEDEST = "/tmp"
 
 FILES_kernel-image = "${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz"
-
-do_configure_prepend() {
-    oe_machinstall -m 0644 ${WORKDIR}/defconfig ${S}/.config
-    oe_runmake oldconfig
-}
 
 kernel_do_install_append() {
     ${STRIP} ${D}${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION}

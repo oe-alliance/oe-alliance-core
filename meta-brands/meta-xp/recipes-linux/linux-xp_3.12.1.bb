@@ -13,8 +13,6 @@ SRC_URI[sha256sum] = "ad746f01788f3da639f9eadb6473cd2aec9f3b4c27f631e0a752a525cc
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-MACHINE_KERNEL_PR_append = ".11"
-
 # By default, kernel.bbclass modifies package names to allow multiple kernels
 # to be installed in parallel. We revert this change and rprovide the versioned
 # package names instead, to allow only one kernel to be installed.
@@ -44,6 +42,7 @@ SRC_URI += "http://www.xp-support.tv/support/linux/linux-${PV}-xp.tar.gz \
     "
 
 S = "${WORKDIR}/linux-${PV}"
+B = "${WORKDIR}/build"
 
 inherit kernel
 
@@ -54,11 +53,6 @@ KERNEL_IMAGETYPE = "vmlinux"
 KERNEL_IMAGEDEST = "/tmp"
 
 FILES_kernel-image = "${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz"
-
-do_configure_prepend() {
-    oe_machinstall -m 0644 ${WORKDIR}/defconfig ${S}/.config
-    oe_runmake oldconfig
-}
 
 kernel_do_install_append() {
     ${STRIP} ${D}${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION}

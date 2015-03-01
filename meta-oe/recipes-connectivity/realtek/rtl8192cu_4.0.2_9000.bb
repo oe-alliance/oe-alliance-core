@@ -11,7 +11,7 @@ SRC_URI = " \
 
 S = "${WORKDIR}/rtl8188C_8192C_usb_linux_v4.0.2_9000.20130911"
 
-inherit module siteinfo
+inherit module machine_kernel_pr siteinfo 
 
 EXTRA_OEMAKE = "CONFIG_RTL8192CU=m"
 

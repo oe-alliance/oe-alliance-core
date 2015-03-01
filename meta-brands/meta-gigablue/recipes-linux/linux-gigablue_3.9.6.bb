@@ -4,10 +4,9 @@ SECTION = "kernel"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 KV = "3.9.6"
 
-inherit machine_kernel_pr
+inherit kernel machine_kernel_pr
 
 SRCDATE = "20140904"
-MACHINE_KERNEL_PR_append = ".05"
 
 SRC_URI[md5sum] = "0cb37745787e0ff5070e14a7bbf3dc5c"
 SRC_URI[sha256sum] = "018d9792c6ba00400d7779568bc096cd1df2edb8d57501d3477c4734655c6e0f"
@@ -38,8 +37,7 @@ SRC_URI = "http://archiv.openmips.com/gigablue-linux-${PV}-${SRCDATE}.tgz \
         "
 
 S = "${WORKDIR}/linux-${KV}"
-
-inherit kernel
+B = "${WORKDIR}/build"
 
 export OS = "Linux"
 KERNEL_OBJECT_SUFFIX = "ko"
@@ -48,11 +46,6 @@ KERNEL_IMAGETYPE = "vmlinux"
 KERNEL_IMAGEDEST = "/tmp"
 
 FILES_kernel-image = "${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz"
-
-do_configure_prepend() {
-    oe_machinstall -m 0644 ${WORKDIR}/defconfig ${S}/.config
-    oe_runmake oldconfig
-}
 
 kernel_do_install_append() {
     ${STRIP} ${D}${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION}

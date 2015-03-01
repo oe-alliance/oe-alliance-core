@@ -1,7 +1,5 @@
 inherit machine_kernel_pr
 
-MACHINE_KERNEL_PR_append = ".10"
-
 PATCHREV = "a210e7b36b8f028554c7f45485c5b363a513275f"
 PATCHLEVEL = "105"
 
@@ -19,6 +17,7 @@ SRC_URI[dream-patch.md5sum] = "ba1e49421dc25c5ede02a4bea2c63c8c"
 SRC_URI[dream-patch.sha256sum] = "f85f6532093cf640727e9c2a4adbacb5ef7cff972e276d8a20555562871b0114"
 
 S = "${WORKDIR}/linux-3.4"
+B = "${WORKDIR}/build"
 
 do_configure_prepend() {
         sed -e "/^SUBLEVEL = /d" -i ${S}/Makefile

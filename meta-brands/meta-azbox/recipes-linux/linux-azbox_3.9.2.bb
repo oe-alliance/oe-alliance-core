@@ -3,9 +3,8 @@ SECTION = "kernel"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${KV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-inherit machine_kernel_pr
+inherit kernel machine_kernel_pr
 
-MACHINE_KERNEL_PR_append = ".3"
 PR = "r4"
 
 KV = "3.9.2"
@@ -73,8 +72,7 @@ SRC_URI[azbox-initrd-azboxminime.md5sum] = "3b7508985058ac0a5d9d310f669cc5bc"
 SRC_URI[azbox-initrd-azboxminime.sha256sum] = "b7979e03bd53f6c975079761c3399d5dd80e9db5addeae27726f09f87a86be72"
 
 S = "${WORKDIR}/linux-${KV}"
-
-inherit kernel
+B = "${WORKDIR}/build"
 
 export OS = "Linux"
 KERNEL_OBJECT_SUFFIX = "ko"
@@ -87,10 +85,6 @@ FILES_kernel-image = "/boot/zbimage-linux-xload"
 
 CFLAGS_prepend = "-I${WORKDIR} "
 
-do_configure_prepend() {
-    oe_machinstall -m 0644 ${WORKDIR}/defconfig ${S}/.config
-    oe_runmake oldconfig
-}
 
 kernel_do_compile() {
     gcc ${CFLAGS} ${WORKDIR}/genzbf.c -o ${WORKDIR}/genzbf

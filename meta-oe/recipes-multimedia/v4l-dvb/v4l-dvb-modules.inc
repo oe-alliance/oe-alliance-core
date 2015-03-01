@@ -5,7 +5,7 @@ LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=a907e355dcd2c89b14aa4dbcb7764d4f"
 INC_PR = "r3"
 
-inherit module
+inherit module machine_kernel_pr
 
 PACKAGES_DYNAMIC += "v4l-dvb-module-*"
 PACKAGES_DYNAMIC += "v4l-dvb-firmware-*"
@@ -16,12 +16,12 @@ do_configure() {
 
 do_compile() {
     unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS
-    oe_runmake DIR="${STAGING_KERNEL_DIR}" ${MAKE_TARGETS}
+    oe_runmake DIR="${STAGING_KERNEL_BUILDDIR}" ${MAKE_TARGETS}
 }
 
 do_install() {
     unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS
-    oe_runmake DIR="${STAGING_KERNEL_DIR}" DEPMOD=echo DESTDIR="${D}" install
+    oe_runmake DIR="${STAGING_KERNEL_BUILDDIR}" DEPMOD=echo DESTDIR="${D}" install
 }
 
 PACKAGES = "v4l-dvb-modules"

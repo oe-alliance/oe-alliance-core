@@ -4,7 +4,7 @@ SECTION = "kernel/modules"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://ifcfg-wlan0;md5=a84acae65af4b2d44d5035aa9f63cd85"
 
-inherit module
+inherit module machine_kernel_pr
 
 PR = "r1"
 

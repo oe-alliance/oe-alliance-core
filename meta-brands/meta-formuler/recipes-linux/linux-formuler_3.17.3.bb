@@ -4,8 +4,6 @@ LICENSE = "GPLv2"
 
 KERNEL_RELEASE = "3.17.3"
 
-MACHINE_KERNEL_PR_append = ".0"
-
 SRC_URI[md5sum] = "b0fd34ad64658bf6797c41cca2c7385f"
 SRC_URI[sha256sum] = "48899fd56b99c34fe6175e3de563138384eec3cad0a03387cec919bd8bd50157"
 
@@ -36,6 +34,7 @@ SRC_URI += "http://downloads.formuler.info/linux-${PV}.tar.gz \
 	"
 
 S = "${WORKDIR}/linux-${PV}"
+B = "${WORKDIR}/build"
 
 inherit kernel machine_kernel_pr
 
@@ -46,11 +45,6 @@ KERNEL_IMAGETYPE = "vmlinux"
 KERNEL_IMAGEDEST = "/tmp"
 
 FILES_kernel-image = "${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}*"
-
-do_configure_prepend() {
-	oe_machinstall -m 0644 ${WORKDIR}/defconfig ${S}/.config
-	oe_runmake oldconfig
-}
 
 kernel_do_install_append() {
 	${STRIP} ${D}${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION}

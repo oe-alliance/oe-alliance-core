@@ -2,13 +2,11 @@ SUMMARY = "Linux kernel for ${MACHINE}"
 SECTION = "kernel"
 LICENSE = "GPLv2"
 PR = "r2"
-inherit machine_kernel_pr
+inherit kernel machine_kernel_pr
 
 KERNEL_RELEASE := "${PV}"
 PV = "${KERNEL_RELEASE}"
 PKGV = "${KERNEL_RELEASE}"
-
-MACHINE_KERNEL_PR_append = ".2"
 
 LIC_FILES_CHKSUM = "file://${S}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
@@ -194,8 +192,7 @@ SRC_URI = " \
 	"
 
 S = "${WORKDIR}/linux-${PV}"
-
-inherit kernel
+B = "${WORKDIR}/build"
 
 export OS = "Linux"
 KERNEL_OBJECT_SUFFIX = "ko"
@@ -203,11 +200,6 @@ KERNEL_IMAGETYPE = "zImage"
 KERNEL_IMAGEDEST = "/tmp"
 
 FILES_kernel-image = "${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION}"
-
-do_configure_prepend() {
-    oe_machinstall -m 0644 ${WORKDIR}/defconfig ${S}/.config
-    oe_runmake oldconfig
-}
 
 kernel_do_install_append() {
     cp include/generated/asm-offsets.h $kerneldir/include/generated/asm-offsets.h

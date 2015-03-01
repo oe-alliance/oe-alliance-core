@@ -1,6 +1,6 @@
 SUMMARY = "AirTunes protocol server"
 DEPENDS = "openssl"
-LICENSE = "proprietary"
+LICENSE = "GPLv2"
 
 inherit gitpkgv
 
@@ -9,7 +9,7 @@ PKGV = "1.0+git${GITPKGV}"
 PR = "r0"
 SRCREV ?= "${AUTOREV}"
 
-LIC_FILES_CHKSUM = "file://LICENSE;md5=ed539e41bdcf2568e838ae58205dc02d"
+require conf/license/license-gplv2.inc
 
 SRC_URI = "git://github.com/skaman/shairport.git;protocol=git"
 

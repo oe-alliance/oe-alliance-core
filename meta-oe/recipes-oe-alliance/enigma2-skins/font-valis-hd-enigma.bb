@@ -13,6 +13,8 @@ SRC_URI="file://hd.ttf file://hdi.ttf"
 
 FILES_font-valis-hd = "/usr/*"
 
+S = "${WORKDIR}"
+
 do_install() {
     install -d ${D}/usr/share/fonts
     install -m 0644 ${WORKDIR}/*.ttf ${D}/usr/share/fonts

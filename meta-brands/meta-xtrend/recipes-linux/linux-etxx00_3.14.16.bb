@@ -10,8 +10,6 @@ SRC_URI[sha256sum] = "364da9db34c3fe4d50536e046aa3a6d89cdc5bdc68a636a52dc21e40b8
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-MACHINE_KERNEL_PR_append = ".0"
-
 # By default, kernel.bbclass modifies package names to allow multiple kernels
 # to be installed in parallel. We revert this change and rprovide the versioned
 # package names instead, to allow only one kernel to be installed.
@@ -35,6 +33,7 @@ SRC_URI += "http://xtrendet.net/linux-${PV}.tar.gz \
     "
 
 S = "${WORKDIR}/linux-${PV}"
+B = "${WORKDIR}/build"
 
 inherit kernel machine_kernel_pr
 
@@ -45,11 +44,6 @@ KERNEL_IMAGETYPE = "vmlinux"
 KERNEL_IMAGEDEST = "/tmp"
 
 FILES_kernel-image = "${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}*"
-
-do_configure_prepend() {
-    oe_machinstall -m 0644 ${WORKDIR}/defconfig ${S}/.config
-    oe_runmake oldconfig
-}
 
 kernel_do_install_append() {
     ${STRIP} ${D}${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION}

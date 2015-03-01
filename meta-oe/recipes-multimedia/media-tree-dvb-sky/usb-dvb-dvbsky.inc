@@ -3,7 +3,7 @@ HOMEPAGE = "http://linuxtv.org/"
 SECTION = "kernel/modules"
 LICENSE = "GPLv2"
 
-inherit module
+inherit module machine_kernel_pr
 
 PACKAGES_DYNAMIC += "dvb-sky-module-*"
 
@@ -13,12 +13,12 @@ do_configure() {
 
 do_compile() {
     unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS
-    oe_runmake DIR="${STAGING_KERNEL_DIR}" ${MAKE_TARGETS}
+    oe_runmake DIR="${STAGING_KERNEL_BUILDDIR}" ${MAKE_TARGETS}
 }
 
 do_install() {
     unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS
-    oe_runmake DIR="${STAGING_KERNEL_DIR}" DEPMOD=echo DESTDIR="${D}" install
+    oe_runmake DIR="${STAGING_KERNEL_BUILDDIR}" DEPMOD=echo DESTDIR="${D}" install
 }
 
 PACKAGES = "dvb-sky-modules-dvbs ${PN}-tests"
@@ -96,12 +96,12 @@ python split_kernel_module_packages () {
         m = kerverrexp.match(kernelver)
         if m:
             kernelver_stripped = m.group(1)
-        staging_kernel_dir = d.getVar("STAGING_KERNEL_DIR", True)
+        STAGING_KERNEL_BUILDDIR = d.getVar("STAGING_KERNEL_BUILDDIR", True)
         system_map_file = "%s/boot/System.map-%s" % (dvar, kernelver)
         if not os.path.exists(system_map_file):
-            system_map_file = "%s/System.map-%s" % (staging_kernel_dir, kernelver)
+            system_map_file = "%s/System.map-%s" % (STAGING_KERNEL_BUILDDIR, kernelver)
             if not os.path.exists(system_map_file):
-                bb.fatal("System.map-%s does not exist in '%s/boot' nor STAGING_KERNEL_DIR '%s'" % (kernelver, dvar, staging_kernel_dir))
+                bb.fatal("System.map-%s does not exist in '%s/boot' nor STAGING_KERNEL_BUILDDIR '%s'" % (kernelver, dvar, STAGING_KERNEL_BUILDDIR))
 
         cmd = "depmod -n -a -b %s -F %s %s" % (dvar, system_map_file, kernelver_stripped)
         f = os.popen(cmd, 'r')

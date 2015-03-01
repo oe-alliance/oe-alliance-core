@@ -17,7 +17,6 @@ DEPENDS_spark += " \
 inherit kernel machine_kernel_pr
 
 SRCDATE = "20141110"
-MACHINE_KERNEL_PR_append = ".27"
 
 STM_PATCH_STR = "0217"
 LINUX_VERSION = "2.6.32.61"
@@ -68,6 +67,7 @@ SRC_URI_append_spark = " \
 "
 
 S = "${WORKDIR}/git"
+B = "${WORKDIR}/build"
 PARALLEL_MAKEINST = ""
 
 export OS = "Linux"

@@ -3,11 +3,9 @@ SECTION = "kernel"
 LICENSE = "GPLv2"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-inherit machine_kernel_pr
+inherit kernel machine_kernel_pr
 
 KERNEL_RELEASE = "3.13.8"
-
-MACHINE_KERNEL_PR_append = ".1"
 
 SRC_URI[md5sum] = "0fa7714d78d9ea2eedc9f673935c2ac2"
 SRC_URI[sha256sum] = "4738b2de254a84b4597b6e806848547929027b48822d7701c0009d74f0c4950d"
@@ -40,8 +38,7 @@ SRC_URI += "http://xtrendet.net/linux-${PV}.tar.gz \
     "
 
 S = "${WORKDIR}/linux-${PV}"
-
-inherit kernel
+B = "${WORKDIR}/build"
 
 export OS = "Linux"
 KERNEL_OBJECT_SUFFIX = "ko"
@@ -50,11 +47,6 @@ KERNEL_IMAGETYPE = "vmlinux"
 KERNEL_IMAGEDEST = "/tmp"
 
 FILES_kernel-image = "${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz"
-
-do_configure_prepend() {
-    oe_machinstall -m 0644 ${WORKDIR}/defconfig ${S}/.config
-    oe_runmake oldconfig
-}
 
 kernel_do_install_append() {
     ${STRIP} ${D}${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION}

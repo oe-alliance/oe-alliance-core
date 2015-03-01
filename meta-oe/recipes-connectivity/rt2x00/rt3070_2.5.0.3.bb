@@ -5,7 +5,7 @@ LIC_FILES_CHKSUM = "file://os/linux/rt_linux.c;endline=25;md5=21ed2a5918a3062a6c
 
 PR = "r5"
 
-inherit module
+inherit module machine_kernel_pr
 
 SRC_URI = " \
     http://code-ini.com/software/mirror/2011_0719_RT3070_RT3370_RT5370_RT5372_Linux_STA_V${PV}_DPO.tar.gz \
@@ -19,7 +19,7 @@ S = "${WORKDIR}/2011_0719_RT3070_RT3370_RT5370_RT5372_Linux_STA_V${PV}_DPO"
 
 inherit module
 
-EXTRA_OEMAKE = "LINUX_SRC=${STAGING_KERNEL_DIR}"
+EXTRA_OEMAKE = "LINUX_SRC=${STAGING_KERNEL_BUILDDIR}"
 
 do_install() {
     install -d ${D}${base_libdir}/modules/${KERNEL_VERSION}/kernel/drivers/net/wireless

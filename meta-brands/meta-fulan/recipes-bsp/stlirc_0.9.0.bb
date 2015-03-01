@@ -44,7 +44,7 @@ PARALLEL_MAKE = ""
 
 CFLAGS_append = " -DUINPUT_NEUTRINO_HACK "
 
-EXTRA_OECONF += "--with-kerneldir=${STAGING_KERNEL_DIR} ${DRIVER} --without-x --with-driver=none --with-driver=userspace "
+EXTRA_OECONF += "--with-kerneldir=${STAGING_KERNEL_BUILDDIR} ${DRIVER} --without-x --with-driver=none --with-driver=userspace "
 
 inherit autotools module-base update-rc.d
 

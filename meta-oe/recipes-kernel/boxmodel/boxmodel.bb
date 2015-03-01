@@ -19,8 +19,8 @@ inherit module machine_kernel_pr
 do_compile () {
     unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS CC LD CPP
     oe_runmake 'MODPATH="${D}${base_libdir}/modules/${KERNEL_VERSION}/kernel/drivers/boxmodel" ' \
-        'KERNEL_SOURCE="${STAGING_KERNEL_DIR}" ' \
-        'KDIR="${STAGING_KERNEL_DIR}"' \
+        'KERNEL_SOURCE="${STAGING_KERNEL_BUILDDIR}" ' \
+        'KDIR="${STAGING_KERNEL_BUILDDIR}"' \
         'KERNEL_VERSION="${KERNEL_VERSION}" ' \
         'CC="${KERNEL_CC}" ' \
         'LD="${KERNEL_LD}" '

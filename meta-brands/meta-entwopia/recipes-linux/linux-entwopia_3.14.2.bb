@@ -8,7 +8,7 @@ SRCDATE_ew7356 = "20141118"
 SRCDATE_ew7358 = "20141102"
 SRCDATE_ew7362 = "20140517"
 
-inherit machine_kernel_pr
+inherit kernel machine_kernel_pr
 
 SRC_URI[ew7356.md5sum] = "15f56eb97fcc3512b031fffec7046f99"
 SRC_URI[ew7356.sha256sum] = "060093585e4de86cf5c1f717d1f6fca486a633675e94fa5a07fab566ec074e33"
@@ -18,8 +18,6 @@ SRC_URI[ew7362.md5sum] = "23781bce0ab453e7c18092f1f6dd2e2b"
 SRC_URI[ew7362.sha256sum] = "bf31e5b1c6e9295bdcd531b94a0f327f70b07bc901cd68dbc1730f04274a86d4"
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}-base/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
-
-MACHINE_KERNEL_PR_append = ".1"
 
 # By default, kernel.bbclass modifies package names to allow multiple kernels
 # to be installed in parallel. We revert this change and rprovide the versioned
@@ -48,8 +46,7 @@ SRC_URI += "http://source.entwopia.com/${MACHINE}/${MACHINE}-linux-${PV}-base-${
 	"
 
 S = "${WORKDIR}/linux-${PV}-base"
-
-inherit kernel
+B = "${WORKDIR}/build"
 
 export OS = "Linux"
 KERNEL_OBJECT_SUFFIX = "ko"
@@ -58,11 +55,6 @@ KERNEL_IMAGETYPE = "vmlinux"
 KERNEL_IMAGEDEST = "/tmp"
 
 FILES_kernel-image = "${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}*"
-
-do_configure_prepend() {
-	oe_machinstall -m 0644 ${WORKDIR}/defconfig ${S}/.config
-	oe_runmake oldconfig
-}
 
 kernel_do_install_append() {
 	${STRIP} ${D}${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION}

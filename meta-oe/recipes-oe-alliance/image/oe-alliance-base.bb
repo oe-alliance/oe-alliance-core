@@ -37,7 +37,6 @@ RDEPENDS_${PN} = "\
     sdparm \
     packagegroup-base \
     packagegroup-core-boot \
-    packagegroup-net-connman \
     tzdata tzdata-europe tzdata-australia tzdata-asia tzdata-pacific tzdata-africa tzdata-americas \
     util-linux-sfdisk \
     util-linux-blkid \

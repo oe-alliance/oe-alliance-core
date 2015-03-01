@@ -3,12 +3,10 @@ SECTION = "kernel"
 LICENSE = "GPLv2"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-inherit machine_kernel_pr
+inherit kernel machine_kernel_pr
 
 KERNEL_RELEASE = "3.14.21"
 SRCDATE = "20141009"
-
-MACHINE_KERNEL_PR_append = ".3"
 
 SRC_URI[md5sum] = "02cfdc2aa853d934f2289e28fe8e6bd2"
 SRC_URI[sha256sum] = "d524b16ce7fe3a5bd83b0c20d11a3afb389866166270b5822ad285e2f62ff1e4"
@@ -37,8 +35,7 @@ SRC_URI += "http://xtrendet.net/xtrend-linux-${PV}-${SRCDATE}.tar.gz \
     "
 
 S = "${WORKDIR}/linux-${PV}"
-
-inherit kernel
+B = "${WORKDIR}/build"
 
 export OS = "Linux"
 KERNEL_OBJECT_SUFFIX = "ko"
@@ -47,11 +44,6 @@ KERNEL_IMAGETYPE = "vmlinux"
 KERNEL_IMAGEDEST = "/tmp"
 
 FILES_kernel-image = "${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz"
-
-do_configure_prepend() {
-    oe_machinstall -m 0644 ${WORKDIR}/defconfig ${S}/.config
-    oe_runmake oldconfig
-}
 
 kernel_do_install_append() {
     ${STRIP} ${D}${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION}

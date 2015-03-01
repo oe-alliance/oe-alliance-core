@@ -22,11 +22,6 @@ kernel_conf_variable() {
 DEFCONFIG_IN_SRC_URI = "${@base_contains('SRC_URI', 'file://defconfig', 'true', 'false', d)}"
 
 do_configure_prepend() {
-    if [ -n "${DEFCONFIG}" ] && ! ${DEFCONFIG_IN_SRC_URI}; then
-        oe_runmake ${DEFCONFIG}_defconfig
-        mv ${B}/.config ${WORKDIR}/defconfig
-    fi
-
     echo "" > ${S}/.config
     CONF_SED_SCRIPT=""
 

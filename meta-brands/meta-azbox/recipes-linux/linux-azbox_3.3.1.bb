@@ -2,9 +2,7 @@ SUMMARY = "Linux kernel for ${MACHINE}"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${KV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 PR = "r4"
-inherit machine_kernel_pr
-
-MACHINE_KERNEL_PR_append = ".2"
+inherit kernel machine_kernel_pr
 
 DEPENDS = "genromfs-native gcc"
 DEPENDS_azboxhd = "genromfs-native azbox-hd-buildimage gcc "
@@ -52,8 +50,7 @@ SRC_URI[azbox-initrd-azboxminime.md5sum] = "f9686a2373d3966f531ab783e41a2d80"
 SRC_URI[azbox-initrd-azboxminime.sha256sum] = "122a9f7e8b368b47e74eb8451d2dd856bed80dbe7e23c35cca63cb95dded891d"
 
 S = "${WORKDIR}/linux-${KV}"
-
-inherit kernel
+B = "${WORKDIR}/build"
 
 export OS = "Linux"
 KERNEL_OBJECT_SUFFIX = "ko"
@@ -65,11 +62,6 @@ KERNEL_IMAGEDEST = "/tmp"
 FILES_kernel-image = "/boot/zbimage-linux-xload"
 
 CFLAGS_prepend = "-I${WORKDIR} "
-
-do_configure_prepend() {
-    oe_machinstall -m 0644 ${WORKDIR}/defconfig ${S}/.config
-    oe_runmake oldconfig
-}
 
 kernel_do_compile() {
     gcc ${CFLAGS} ${WORKDIR}/genzbf.c -o ${WORKDIR}/genzbf

@@ -4,7 +4,7 @@ SECTION = "kernel/modules"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://Makefile;md5=137c892e644370bd9573a3091781d8fa"
 
-inherit module
+inherit module machine_kernel_pr
 
 PR = "r7"
 

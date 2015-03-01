@@ -9,11 +9,9 @@ SRCDATE = "20140610"
 SRC_URI[md5sum] = "3a2b0f1df094019e07290e85e9ba700e"
 SRC_URI[sha256sum] = "a2e7e6a3b9344412e33855372a71f6c1f2e12a598ca8c8cc6b1b0a929ae698b0"
 
-inherit machine_kernel_pr
+inherit kernel machine_kernel_pr
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
-
-MACHINE_KERNEL_PR_append = ".3"
 
 # By default, kernel.bbclass modifies package names to allow multiple kernels
 # to be installed in parallel. We revert this change and rprovide the versioned
@@ -50,8 +48,7 @@ SRC_URI += "http://code-ini.com/software/kernel/bcm7413-linux-${KV}-${SRCDATE}.t
     "
 
 S = "${WORKDIR}/linux-${PV}"
-
-inherit kernel
+B = "${WORKDIR}/build"
 
 export OS = "Linux"
 KERNEL_OBJECT_SUFFIX = "ko"
@@ -60,11 +57,6 @@ KERNEL_IMAGETYPE = "vmlinux"
 KERNEL_IMAGEDEST = "/tmp"
 
 FILES_kernel-image = "${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz"
-
-do_configure_prepend() {
-    oe_machinstall -m 0644 ${WORKDIR}/defconfig ${S}/.config
-    oe_runmake oldconfig
-}
 
 kernel_do_install_append() {
     ${STRIP} ${D}${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION}

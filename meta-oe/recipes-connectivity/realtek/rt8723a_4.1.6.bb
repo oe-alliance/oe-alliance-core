@@ -4,7 +4,7 @@ SECTION = "kernel/modules"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://Makefile;md5=6325fabe3996c2783285cc021ee13c96"
 
-inherit module
+inherit module machine_kernel_pr
 
 PR = "r16"
 
@@ -12,15 +12,13 @@ MACHINE_KERNEL_PR_append = ".0"
 
 SRC_URI = "http://code-ini.com/software/mirror/rtl8723A_WiFi_linux_v4.1.6_7336.20140624.tar.gz"
 
-inherit module
-
 EXTRA_OEMAKE = "LINUX_SRC=${STAGING_KERNEL_DIR}"
 S = "${WORKDIR}/rtl8723A_WiFi_linux_v4.1.6_7336.20140624"
+B = "${WORKDIR}/build"
 
 do_install() {
     install -d ${D}/lib/modules/${KERNEL_VERSION}/kernel/drivers/net/wireless
     install -m 0644 ${S}/8723au.ko ${D}${base_libdir}/modules/${KERNEL_VERSION}/kernel/drivers/net/wireless
-
 }
 
 SRC_URI[md5sum] = "922f8fb001ee8d58f87737453834e2b7"

@@ -1,7 +1,5 @@
 inherit machine_kernel_pr
 
-MACHINE_KERNEL_PR_append = ".7"
-
 PATCHREV = "4e0356d04e89df800361b9252f990716f5523c6e"
 PATCHLEVEL = "60"
 
@@ -53,6 +51,7 @@ SRC_URI[unionfs.md5sum] = "06e7c9f6cafd49b72184be851116c511"
 SRC_URI[unionfs.sha256sum] = "ce6ffa3c17a11dcca24196c11f6efc95c59b65a5b99958e73e8d4cc8e4b1f1ef"
 
 S = "${WORKDIR}/linux-3.2"
+B = "${WORKDIR}/build"
 
 KERNEL_IMAGETYPE = "vmlinux"
 KERNEL_OUTPUT = "${KERNEL_IMAGETYPE}"

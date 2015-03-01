@@ -81,18 +81,18 @@ do_configure_prepend () {
 
 do_compile() {
     unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS
-    oe_runmake KERNEL_PATH=${STAGING_KERNEL_DIR}   \
-        KERNEL_SRC=${STAGING_KERNEL_DIR}    \
+    oe_runmake KERNEL_PATH=${STAGING_KERNEL_BUILDDIR}   \
+        KERNEL_SRC=${STAGING_KERNEL_BUILDDIR}    \
         KERNEL_VERSION=${KERNEL_VERSION}    \
-        -C ${STAGING_KERNEL_DIR}   \
+        -C ${STAGING_KERNEL_BUILDDIR}   \
         ${@d.getVar('MACHINE',1).upper()}=1 \
         M=${S} V=1 \
         ARCH=sh \
         PLAYER191=player191 \
         DRIVER_TOPDIR="${S}" \
-        KERNEL_LOCATION="${STAGING_KERNEL_DIR}" \
-        CONFIG_KERNEL_BUILD="${STAGING_KERNEL_DIR}" \
-        CONFIG_KERNEL_PATH="${STAGING_KERNEL_DIR}" \
+        KERNEL_LOCATION="${STAGING_KERNEL_BUILDDIR}" \
+        CONFIG_KERNEL_BUILD="${STAGING_KERNEL_BUILDDIR}" \
+        CONFIG_KERNEL_PATH="${STAGING_KERNEL_BUILDDIR}" \
         CONFIG_MODULES_PATH="${D}" \
         CONFIG_PLAYER_191=y \
         CCFLAGSY="-I${STAGING_DIR_HOST}/usr/include" \
@@ -101,18 +101,18 @@ do_compile() {
 
 do_install() {
     unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS
-    oe_runmake KERNEL_PATH=${STAGING_KERNEL_DIR}   \
-        KERNEL_SRC=${STAGING_KERNEL_DIR}    \
+    oe_runmake KERNEL_PATH=${STAGING_KERNEL_BUILDDIR}   \
+        KERNEL_SRC=${STAGING_KERNEL_BUILDDIR}    \
         KERNEL_VERSION=${KERNEL_VERSION}    \
-        -C ${STAGING_KERNEL_DIR}   \
+        -C ${STAGING_KERNEL_BUILDDIR}   \
         ${@d.getVar('MACHINE',1).upper()}=1 \
         M=${S} V=1 \
         ARCH=sh \
         PLAYER191=player191 \
         DRIVER_TOPDIR="${S}" \
-        KERNEL_LOCATION="${STAGING_KERNEL_DIR}" \
-        CONFIG_KERNEL_BUILD="${STAGING_KERNEL_DIR}" \
-        CONFIG_KERNEL_PATH="${STAGING_KERNEL_DIR}" \
+        KERNEL_LOCATION="${STAGING_KERNEL_BUILDDIR}" \
+        CONFIG_KERNEL_BUILD="${STAGING_KERNEL_BUILDDIR}" \
+        CONFIG_KERNEL_PATH="${STAGING_KERNEL_BUILDDIR}" \
         CONFIG_MODULES_PATH="${D}" \
         CONFIG_PLAYER_191=y \
         CCFLAGSY="-I${STAGING_DIR_HOST}/usr/include" \

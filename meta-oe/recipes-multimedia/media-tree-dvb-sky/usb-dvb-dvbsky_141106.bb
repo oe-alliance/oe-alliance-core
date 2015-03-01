@@ -19,7 +19,7 @@ do_populate_sysroot[noexec] = "1"
 do_configure_prepend() {
     CUR=`pwd`
     cp ${WORKDIR}/sit2_op.o ${S}/v4l/sit2_op.o
-    make DIR=${STAGING_KERNEL_DIR} allyesconfig
+    make DIR=${STAGING_KERNEL_BUILDDIR} allyesconfig
     cd $CUR
 }
 
