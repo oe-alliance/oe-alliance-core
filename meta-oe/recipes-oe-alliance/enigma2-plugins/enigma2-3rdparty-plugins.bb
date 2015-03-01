@@ -11,7 +11,7 @@ DEPENDS = "tslib mpfr gmp"
 SRCREV = "${AUTOREV}"
 PV = "2.1+gitr${SRCPV}"
 PKGV = "2.1+gitr${GITPKGV}"
-PR = "r146"
+PR = "r154"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -29,47 +29,48 @@ S = "${WORKDIR}/git"
 
 THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-sundtekcontrolcenter_1.4.0-20140223-r3_all.ipk \
+    enigma2-plugin-systemplugins-extnumberzap_1.0-rc12_mipsel.ipk \
     enigma2-plugin-extensions-atmolightd_0.7-pre22_all.ipk \
     enigma2-plugin-extensions-autobouquets-e2_20141113r1_mips32el.ipk \
     enigma2-plugin-extensions-bildonline_3.1rc4_mips32el.ipk \
     enigma2-plugin-extensions-bluray_1.5c2_mips32el.ipk \
     enigma2-plugin-extensions-boblight-enigma2_0.8r7_mips32el.ipk \
-    enigma2-plugin-extensions-camofs_8.66_all.ipk \
+    enigma2-plugin-extensions-camofs_8.72_all.ipk \
     enigma2-plugin-extensions-chefkoch_1.4c4_mips32el.ipk \
     enigma2-plugin-extensions-clevertanken_0.5rc1_mips32el.ipk \
     enigma2-plugin-extensions-csfd_10-10-20150103_all.ipk \
     enigma2-plugin-extensions-cyrussettings_1.0.0_all.ipk \
     enigma2-plugin-extensions-digitalfernsehen_1.0rc4_mips32el.ipk \
-    enigma2-plugin-extensions-enigmalight_0.1r6-b2-alpha8_all.ipk \
-    enigma2-plugin-extensions-facebook_1.3rc1_mips32el.ipk \
+    enigma2-plugin-extensions-enigmalight_0.2-rc1_all.ipk \
+    enigma2-plugin-extensions-facebook_1.4_mips32el.ipk \
     enigma2-plugin-extensions-filesearchfs_2.53_all.ipk \
     enigma2-plugin-extensions-focusonline_1.0rc5_mips32el.ipk \
-    enigma2-plugin-extensions-fragmutti_0.2rc1_mips32el.ipk \
+    enigma2-plugin-extensions-fragmutti_0.2rc2_mips32el.ipk \
     enigma2-plugin-extensions-gmailreader-oe2.0_1.3_all.ipk \
     enigma2-plugin-extensions-googlenewsreader_1.0_mips32el.ipk \
     enigma2-plugin-extensions-hdmitest_0.4_mipsel.ipk \
-    enigma2-plugin-extensions-hetweer_2.6r1_all.ipk \
-    enigma2-plugin-extensions-isettinge2-3.3.1-oe2.0-mips32el.ipk \
+    enigma2-plugin-extensions-hetweer_2.6-r4_mipsel.ipk \
+    enigma2-plugin-extensions-isettinge2-3.3.1-oe2.0-${@base_contains("TARGET_ARCH", "sh4", "sh4" , "mips32el", d)}.ipk \
     enigma2-plugin-extensions-kicker_3.3rc11_mips32el.ipk \
     enigma2-plugin-extensions-kino_1.4rc3_mips32el.ipk \
-    enigma2-plugin-extensions-kodidirect_1.0_r0_all.ipk \
+    enigma2-plugin-extensions-kodidirect_2.0_r0_all.ipk \
     enigma2-plugin-extensions-livefootball-oe2.0_5.4_all.ipk \
     enigma2-plugin-extensions-mediainfo_2.5_all.ipk \
-    enigma2-plugin-extensions-mediaportal_6.6.0_all.ipk \
+    enigma2-plugin-extensions-mediaportal_6.7.2_all.ipk \
     enigma2-plugin-extensions-mediaportal-wallicons \
     enigma2-plugin-extensions-mediastream-5.0_mips32el.ipk \
-    enigma2-plugin-extensions-moviebrowser_3.5rc5_mips32el.ipk \
+    enigma2-plugin-extensions-moviebrowser_3.6rc1_mips32el.ipk \
     enigma2-plugin-extensions-mp3browser_1.9c7_mips32el.ipk \
     enigma2-plugin-extensions-msnwetter_0.6rc3_mips32el.ipk \
     enigma2-plugin-extensions-mtv_0.1_mips32el.ipk \
-    enigma2-plugin-extensions-muzutv_1.5rc3_mips32el.ipk \
+    enigma2-plugin-extensions-muzutv_1.5rc4_mips32el.ipk \
     enigma2-plugin-extensions-navibar_1.1.1_all.ipk \
     enigma2-plugin-extensions-openopera_1.0-r0_mips32el.ipk \
     enigma2-plugin-extensions-opkg-tools_1.3_mipsel.ipk \
-    enigma2-plugin-extensions-oscamstatusview_0.5rc1_mips32el.ipk \
-    enigma2-plugin-extensions-piconmanager_1.1-20150120-r0_all.ipk \
-    enigma2-plugin-extensions-picturecenterfs_6.03_all.ipk \
-    enigma2-plugin-extensions-planerfs_6.45_all.ipk \
+    enigma2-plugin-extensions-oscamstatusview_0.5rc3_mips32el.ipk \
+    enigma2-plugin-extensions-piconmanager_2.1-20150216-r2_all.ipk \
+    enigma2-plugin-extensions-picturecenterfs_6.05_all.ipk \
+    enigma2-plugin-extensions-planerfs_6.50_all.ipk \
     enigma2-plugin-extensions-pluginspanel_1.0_r01_all.ipk \
     enigma2-plugin-extensions-radiode_0.1_mips32el.ipk \
     enigma2-plugin-extensions-radioonline-oe2.0_1.0_all.ipk \
@@ -90,13 +91,13 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-tmbd_6.1_mipsel.ipk \
     enigma2-plugin-extensions-translator_0.9rc2_mips32el.ipk \
     enigma2-plugin-extensions-transmission_2.83_mips32el.ipk \
-    enigma2-plugin-extensions-tsmedia_7.9_full_all.ipk \
+    enigma2-plugin-extensions-tsmedia_8.9_all.ipk \
     enigma2-plugin-extensions-tvspielfilm_6.3rc6_mips32el.ipk \
     enigma2-plugin-extensions-verkehrsinfo_1.0rc1_mips32el.ipk \
     enigma2-plugin-extensions-vhannibalautosettings_1.1_mips32el.ipk \
     enigma2-plugin-extensions-vuplusforum_0.7rc3_mips32el.ipk \
     enigma2-plugin-extensions-webmedia_10.0_r02_oe2.0_all.ipk \
-    enigma2-plugin-extensions-webradiofs_12.79_all.ipk \
+    enigma2-plugin-extensions-webradiofs_13.01_all.ipk \
     enigma2-plugin-extensions-wikipedia_2.2rc5_mips32el.ipk \
     enigma2-plugin-extensions-wwech_1.01_all.ipk \
     enigma2-plugin-extensions-xbmcaddons_8.1_r0_all.ipk \
@@ -105,27 +106,27 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-zdfnewmediathek_1.7rc5_mips32el.ipk \
     enigma2-plugin-systemplugins-bouquetsprotection_0.2-rc1_all.ipk \
     enigma2-plugin-systemplugins-recordinfobar_1.0-rc15_mipsel.ipk \
-    enigma2-plugin-picons-tv-ocram.hd.black-white_2014-11-01--10-28-46_all.ipk \
-    enigma2-plugin-picons-tv-ocram.hd.blue-black_2014-11-01--10-28-46_all.ipk \
-    enigma2-plugin-picons-tv-ocram.hd.reflection-black_2014-11-01--10-28-46_all.ipk \
-    enigma2-plugin-picons-tv-ocram.hd.transparent-black_2014-11-01--10-28-46_all.ipk \
-    enigma2-plugin-picons-tv-ocram.hd.transparent-white_2014-11-01--10-28-46_all.ipk \
-    enigma2-plugin-picons-tv-ocram.hd.white-black_2014-11-01--10-28-46_all.ipk \
-    enigma2-plugin-picons-tv-ocram.sd.black-white_2014-11-01--10-28-46_all.ipk \
-    enigma2-plugin-picons-tv-ocram.sd.blue-black_2014-11-01--10-28-46_all.ipk \
-    enigma2-plugin-picons-tv-ocram.sd.reflection-black_2014-11-01--10-28-46_all.ipk \
-    enigma2-plugin-picons-tv-ocram.sd.transparent-black_2014-11-01--10-28-46_all.ipk \
-    enigma2-plugin-picons-tv-ocram.sd.transparent-white_2014-11-01--10-28-46_all.ipk \
-    enigma2-plugin-picons-tv-ocram.sd.white-black_2014-11-01--10-28-46_all.ipk \
-    enigma2-plugin-picons-tv-ocram.shd.black-white_2014-11-01--10-28-46_all.ipk \
-    enigma2-plugin-picons-tv-ocram.shd.blue-black_2014-11-01--10-28-46_all.ipk \
-    enigma2-plugin-picons-tv-ocram.shd.reflection-black_2014-11-01--10-28-46_all.ipk \
-    enigma2-plugin-picons-tv-ocram.shd.transparent-black_2014-11-01--10-28-46_all.ipk \
-    enigma2-plugin-picons-tv-ocram.shd.transparent-black-nopadding_2014-11-01--10-28-46_all.ipk \
-    enigma2-plugin-picons-tv-ocram.shd.transparent-white_2014-11-01--10-28-46_all.ipk \
-    enigma2-plugin-picons-tv-ocram.shd.transparent-white-nopadding_2014-11-01--10-28-46_all.ipk \
-    enigma2-plugin-picons-tv-ocram.shd.white-black_2014-11-01--10-28-46_all.ipk \
-    "
+    enigma2-plugin-picons-tv-ocram.hd.black-white_2015-02-26--08-13-06_all.ipk \
+    enigma2-plugin-picons-tv-ocram.hd.blue-black_2015-02-26--08-13-06_all.ipk \
+    enigma2-plugin-picons-tv-ocram.hd.reflection-black_2015-02-26--08-13-06_all.ipk \
+    enigma2-plugin-picons-tv-ocram.hd.transparent-black_2015-02-26--08-13-06_all.ipk \
+    enigma2-plugin-picons-tv-ocram.hd.transparent-white_2015-02-26--08-13-06_all.ipk \
+    enigma2-plugin-picons-tv-ocram.hd.white-black_2015-02-26--08-13-06_all.ipk \
+    enigma2-plugin-picons-tv-ocram.sd.black-white_2015-02-26--08-13-06_all.ipk \
+    enigma2-plugin-picons-tv-ocram.sd.blue-black_2015-02-26--08-13-06_all.ipk \
+    enigma2-plugin-picons-tv-ocram.sd.reflection-black_2015-02-26--08-13-06_all.ipk \
+    enigma2-plugin-picons-tv-ocram.sd.transparent-black_2015-02-26--08-13-06_all.ipk \
+    enigma2-plugin-picons-tv-ocram.sd.transparent-white_2015-02-26--08-13-06_all.ipk \
+    enigma2-plugin-picons-tv-ocram.sd.white-black_2015-02-26--08-13-06_all.ipk \
+    enigma2-plugin-picons-tv-ocram.shd.black-white_2015-02-26--08-13-06_all.ipk \
+    enigma2-plugin-picons-tv-ocram.shd.blue-black_2015-02-26--08-13-06_all.ipk \
+    enigma2-plugin-picons-tv-ocram.shd.reflection-black_2015-02-26--08-13-06_all.ipk \
+    enigma2-plugin-picons-tv-ocram.shd.transparent-black-nopadding_2015-02-26--08-13-06_all.ipk \
+    enigma2-plugin-picons-tv-ocram.shd.transparent-black_2015-02-26--08-13-06_all.ipk \
+    enigma2-plugin-picons-tv-ocram.shd.transparent-white-nopadding_2015-02-26--08-13-06_all.ipk \
+    enigma2-plugin-picons-tv-ocram.shd.transparent-white_2015-02-26--08-13-06_all.ipk \
+    enigma2-plugin-picons-tv-ocram.shd.white-black_2015-02-26--08-13-06_all.ipk \
+   "
 
 #     Install any packages t_append =hat are only For this machines feed here, uncomment the line below and change as required
 THIRDPARTY_MACHINE_PLUGINS_vuuno = " \

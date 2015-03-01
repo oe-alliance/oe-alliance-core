@@ -7,10 +7,10 @@ PR = "r1"
 inherit kernel machine_kernel_pr
 
 KV = "3.14.21"
-SRCDATE = "20141219"
+SRCDATE = "20150218"
 
-SRC_URI[md5sum] = "178774e1e71613d9554584db06126215"
-SRC_URI[sha256sum] = "5f370f292f440da4e4d1c8282a934d77c6035a16fa33f3bc59029ea5e9222d92"
+SRC_URI[md5sum] = "c901589c619ace211d5e5d6ee6119f44"
+SRC_URI[sha256sum] = "65c473604ae2c68a62f8adedc26513ad752a8963ecdeb7946f9f3139783e39fd"
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
 # By default, kernel.bbclass modifies package names to allow multiple kernels

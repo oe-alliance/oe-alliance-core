@@ -6,18 +6,21 @@ BRAND_OEM = "skylake"
 MACHINE_NAME = "\
 ${@base_contains('MACHINEBUILD', 'mutant2400', 'HD2400' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mutant1100', 'HD1100' , '', d)}\
+${@base_contains('MACHINEBUILD', 'mutant1200', 'HD1200' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'quadbox2400', 'QuadBox HD2400' , '', d)}\
 "
 
 MACHINE_BRAND = "\
 ${@base_contains('MACHINEBUILD', 'mutant2400', 'Mut@nt' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mutant1100', 'Mut@nt' , '', d)}\
+${@base_contains('MACHINEBUILD', 'mutant1200', 'Mut@nt' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'quadbox2400', 'AX' , '', d)}\
 "
 
 IMAGEDIR ?= "\
 ${@base_contains('MACHINEBUILD', 'mutant2400', 'hd2400' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mutant1100', 'hd1100' , '', d)}\
+${@base_contains('MACHINEBUILD', 'mutant1200', 'hd1200' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'quadbox2400', 'hd2400' , '', d)}\
 "
 

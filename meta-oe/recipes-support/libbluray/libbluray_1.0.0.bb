@@ -4,7 +4,7 @@ HOMEPAGE = "http://videolan.org"
 DEPENDS = "libxml2"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM="file://COPYING;md5=435ed639f84d4585d93824e7da3d85da"
-PR = "r4"
+PR = "r5"
 
 S="${WORKDIR}/git"
 
@@ -15,7 +15,5 @@ inherit autotools-brokensep pkgconfig
 
 do_package_qa() {
 }
-
-PACKAGES += "${PN}"
 
 FILES_${PN} = "/"

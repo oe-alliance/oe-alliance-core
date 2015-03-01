@@ -7,8 +7,8 @@ inherit gitpkgv allarch
 
 EPSM = "enigma2-plugin-skins1080"
 SRCREV = "${AUTOREV}"
-PV = "0.6+git${SRCPV}"
-PKGV = "0.6+git${GITPKGV}"
+PV = "2.2+git${SRCPV}"
+PKGV = "2.2+git${GITPKGV}"
 PR = "r1"
 
 PACKAGES = "nashu-1080-renderer nashu-1080-renderer-src ${EPSM}-mynovum-fhd2-black-1080 ${EPSM}-novum-fhd-slim-1080 ${EPSM}-mynovum-fhd2-1080"

@@ -15,6 +15,7 @@ LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${KV}/COPYING;md5=d7810fab7487fb0aad
 
 SRC_URI = "http://en3homeftp.net/pub/src/linux-${KV}-${DATE}.tar.gz \
     file://defconfig \
+    file://dmx_demux.patch \
     file://sit2_op.o \
     "
 

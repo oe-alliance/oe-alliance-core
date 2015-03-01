@@ -18,7 +18,9 @@ ${@base_contains('MACHINEBUILD', 'iqonios300hd', 'IOS-300HD' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'iqonios300hdv2', 'IOS-300HDV2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'force1', 'Force 1' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'force1plus', 'Force 1 Plus' , '', d)}\
-${@base_contains('MACHINEBUILD', 'force2solid', 'force2 solid' , '', d)}\
+${@base_contains('MACHINEBUILD', 'megaforce1plus', 'Force 1 Plus' , '', d)}\
+${@base_contains('MACHINEBUILD', 'force2', 'force2' , '', d)}\
+${@base_contains('MACHINEBUILD', 'megaforce2', 'force2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'worldvisionf1', 'force1' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'worldvisionf1plus', 'force1 Plus' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'roxxs200hd', 'Roxxs 200HD' , '', d)}\
@@ -47,7 +49,9 @@ ${@base_contains('MACHINEBUILD', 'iqonios300hd', 'Iqon' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'iqonios300hdv2', 'Iqon' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'force1', 'Iqon' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'force1plus', 'Iqon' , '', d)}\
-${@base_contains('MACHINEBUILD', 'force2solid', 'Iqon' , '', d)}\
+${@base_contains('MACHINEBUILD', 'megaforce1plus', 'MEGASAT' , '', d)}\
+${@base_contains('MACHINEBUILD', 'force2', 'Iqon' , '', d)}\
+${@base_contains('MACHINEBUILD', 'megaforce2', 'MEGASAT' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'worldvisionf1', 'WorldVision' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'worldvisionf1plus', 'WorldVision' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'roxxs200hd', 'Roxxs' , '', d)}\
@@ -76,7 +80,9 @@ ${@base_contains('MACHINEBUILD', 'iqonios300hd', 'update/ios300/cfe' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'iqonios300hdv2', 'update/ios300new/cfe' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'force1', 'update/force1/cfe' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'force1plus', 'update/force1plus/cfe' , '', d)}\
-${@base_contains('MACHINEBUILD', 'force2solid', 'update/force2solid/cfe' , '', d)}\
+${@base_contains('MACHINEBUILD', 'megaforce1plus', 'update/force1plus/cfe' , '', d)}\
+${@base_contains('MACHINEBUILD', 'force2', 'update/force2solid/cfe' , '', d)}\
+${@base_contains('MACHINEBUILD', 'megaforce2', 'update/force2solid/cfe' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'worldvisionf1', 'update/force1/cfe' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'worldvisionf1plus', 'update/force1plus/cfe' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'roxxs200hd', 'update/ios200/cfe' , '', d)}\
@@ -105,7 +111,9 @@ ${@base_contains('MACHINEBUILD', 'iqonios300hd', 'mtd6' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'iqonios300hdv2', 'mtd1' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'force1', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'force1plus', 'mtd2' , '', d)}\
-${@base_contains('MACHINEBUILD', 'force2solid', 'mtd2' , '', d)}\
+${@base_contains('MACHINEBUILD', 'megaforce1plus', 'mtd2' , '', d)}\
+${@base_contains('MACHINEBUILD', 'force2', 'mtd2' , '', d)}\
+${@base_contains('MACHINEBUILD', 'megaforce2', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'worldvisionf1', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'worldvisionf1plus', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'roxxs200hd', 'mtd6' , '', d)}\
@@ -134,7 +142,9 @@ ${@base_contains('MACHINEBUILD', 'iqonios300hd', 'mtd4' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'iqonios300hdv2', 'mtd4' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'force1', 'mtd0' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'force1plus', 'mtd0' , '', d)}\
-${@base_contains('MACHINEBUILD', 'force2solid', 'mtd0' , '', d)}\
+${@base_contains('MACHINEBUILD', 'megaforce1plus', 'mtd0' , '', d)}\
+${@base_contains('MACHINEBUILD', 'force2', 'mtd0' , '', d)}\
+${@base_contains('MACHINEBUILD', 'megaforce2', 'mtd0' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'worldvisionf1', 'mtd0' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'worldvisionf1plus', 'mtd0' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'roxxs200hd', 'mtd4' , '', d)}\
@@ -154,8 +164,10 @@ ${@base_contains('MACHINEBUILD', 'tmnano3t', 'splash1.bmp' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmnanose', 'splash1.bmp' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'force1', 'splash1_os2.bmp' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'force1plus', 'splash1_os2.bmp' , '', d)}\
+${@base_contains('MACHINEBUILD', 'megaforce1plus', 'splash1_os2.bmp' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'worldvisionf1', 'splash1_os1.bmp' , '', d)}\
-${@base_contains('MACHINEBUILD', 'force2solid', 'splash1_os1.bmp' , '', d)}\
+${@base_contains('MACHINEBUILD', 'force2', 'splash1.bmp' , '', d)}\
+${@base_contains('MACHINEBUILD', 'megaforce2', 'splash1.bmp' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'worldvisionf1plus', 'splash1_os1.bmp' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'optimussos1plus', 'splash1_os1.bmp' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'optimussos2plus', 'splash1_os2.bmp' , '', d)}\
@@ -183,11 +195,12 @@ TARGET_ARCH = "mipsel"
 DEFAULTTUNE = "mips32el"
 
 GLIBC_EXTRA_OECONF = "--with-tls"
-DVBMEDIASINK_CONFIG = "--with-wma --with-wmv --with-pcm --with-dts"
+DVBMEDIASINK_CONFIG = "--with-wmv --with-pcm --with-dts"
 
 PREFERRED_PROVIDER_virtual/kernel = "linux-dags"
 PREFERRED_PROVIDER_virtual/blindscan-dvbs = "vuplus-blindscan-utils"
 PREFERRED_PROVIDER_virtual/blindscan-dvbc = "vuplus-blindscan-utils"
+PREFERRED_PROVIDER_virtual/transtreamproxy = "vuplus-transtreamproxy"
 
 KERNEL_IMAGETYPE = "vmlinux"
 KERNEL_OUTPUT = "${KERNEL_IMAGETYPE}"
@@ -229,7 +242,7 @@ IMAGE_CMD_ubi_append = " \
     "
 
 
-MACHINE_FEATURES += "3dtv alsa hdmicec switchoff wifi bootsplash textlcd fan ci omb skins1080"
+MACHINE_FEATURES += "3dtv alsa hdmicec switchoff wifi bootsplash textlcd ci omb skins1080"
 
 BOOTLOGO_FILENAME = "splash.bmp"
 

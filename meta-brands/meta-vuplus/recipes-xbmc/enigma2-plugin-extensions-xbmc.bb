@@ -3,11 +3,11 @@ LICENSE = "CLOSED"
 
 PKG_DATE="20141219.0_beta"
 
-PV="1.0"
+PV="1.1"
 PR="${PKG_DATE}_r0"
 
-DEPENDS += "enigma2 xbmc"
-RDEPENDS_${PN} += "xbmc"
+DEPENDS += "enigma2 virtual/xbmc"
+RDEPENDS_${PN} += "virtual/xbmc"
 
 SRC_URI = "http://archive.vuplus.com/download/build_support/e2xbmc-plugin_${PKG_DATE}.tar.gz"
 

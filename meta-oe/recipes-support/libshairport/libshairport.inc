@@ -3,7 +3,7 @@ SECTION = "misc"
 HOMEPAGE = "http://xbmc.org/"
 DEPENDS = "openssl"
 LICENSE = "GPLv2"
-INC_PR = "r4"
+INC_PR = "r5"
 S="${WORKDIR}/${PN}-${PV}_lib"
 SRC_URI = "http://mirrors.xbmc.org/build-deps/darwin-libs/${PN}-${PV}_lib.tar.gz;name=archive \
            file://001_add_ao.patch;apply=yes;striplevel=0 \
@@ -23,7 +23,5 @@ inherit autotools package
 
 do_package_qa() {
 }
-
-PACKAGES += "${PN}"
 
 FILES_${PN} = "/"

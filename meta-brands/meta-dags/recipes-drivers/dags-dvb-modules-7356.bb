@@ -5,13 +5,13 @@ LICENSE = "CLOSED"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-SRCDATE = "20150123"
+SRCDATE = "20150226"
 KV = "3.9.7"
 PV = "${KV}+${SRCDATE}"
 PR = "r3"
 
-SRC_URI[md5sum] = "22739fe466f4636c4b2970014c271bda"
-SRC_URI[sha256sum] = "ebaad227617b41818fea421ade7f0f5afb416260d34cae02ddb89d3edd55ba82"
+SRC_URI[md5sum] = "6e6a61de909612d0260cb5bc62c67095"
+SRC_URI[sha256sum] = "fd42858b98eead7ebdd5cc17794fc65e42550b25fe464eee240c87ddddb5b83e"
 
 SRC_URI = "http://en3homeftp.net/release/images/oedrivers/bcmlinuxdvb_7356-${KV}-${SRCDATE}.tar.gz"
 

@@ -1,6 +1,6 @@
 inherit machine_kernel_pr
 
-PATCHREV = "a210e7b36b8f028554c7f45485c5b363a513275f"
+PATCHREV = "209710a594b4d5643a3bfbc01f45ede012bc7da7"
 PATCHLEVEL = "105"
 
 SRC_URI = " \
@@ -13,8 +13,8 @@ SRC_URI[kernel.md5sum] = "967f72983655e2479f951195953e8480"
 SRC_URI[kernel.sha256sum] = "ff3dee6a855873d12487a6f4070ec2f7996d073019171361c955639664baa0c6"
 SRC_URI[stable-patch.md5sum] = "0f43fcca926776fd6fe849dcf62e633e"
 SRC_URI[stable-patch.sha256sum] = "e596f2b874a6a8f31a6f93cb40457694d30ff641d760b70a7419c983e67d1317"
-SRC_URI[dream-patch.md5sum] = "ba1e49421dc25c5ede02a4bea2c63c8c"
-SRC_URI[dream-patch.sha256sum] = "f85f6532093cf640727e9c2a4adbacb5ef7cff972e276d8a20555562871b0114"
+SRC_URI[dream-patch.md5sum] = "3eb59164d4c97c22619b78782bc53cbf"
+SRC_URI[dream-patch.sha256sum] = "20fa24a54c9d0c40454971585beb0cc27d45c3f48979d12760f1cf47a16420ba"
 
 S = "${WORKDIR}/linux-3.4"
 B = "${WORKDIR}/build"

@@ -1,5 +1,5 @@
 #!/bin/sh
-killall -9 smbd
-rm -rf /var/log/log.smbd
-killall -9 nmbd
-rm -rf /var/log/log.nmbd
+killall -q -1 smbd
+rm -rf /var/log/log.smbd 2>/dev/null
+killall -q -1 nmbd
+rm -rf /var/log/log.nmbd 2>/dev/null
