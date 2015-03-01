@@ -4,19 +4,16 @@ include conf/machine/include/build-extras.inc
 BRAND_OEM = "ceryon"
 
 MACHINE_NAME = "\
-${@base_contains('MACHINEBUILD', 'p62', 'P62' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'nano', 'NANO' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'nanoc', 'NANO-C' , '', d)}\
 "
 
 MACHINE_BRAND = "\
-${@base_contains('MACHINEBUILD', 'p62', 'PowerSat' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'nano', 'WWIO' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'nanoc', 'WWIO' , '', d)}\
 "
 
 IMAGEDIR ?= "\
-${@base_contains('MACHINEBUILD', 'p62', 'ceryon7362' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'nano', 'nano' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'nanoc', 'nano' , '', d)}\
 "
