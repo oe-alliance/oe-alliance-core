@@ -1,5 +1,5 @@
 KV = "3.13.5"
-SRCDATE = "SRCDATE = "20150302"
+SRCDATE = "20150302"
 SRCDATE_PR = "r0"
 
 require vuplus-dvb-proxy.inc
