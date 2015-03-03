@@ -1,0 +1,23 @@
+--- a/drivers/brcmstb/board.c	2015-02-11 22:00:00.000000000 +0100
++++ b/drivers/brcmstb/board.c	2015-02-11 22:00:00.000000000 +0100
+@@ -642,17 +639,17 @@
+ 	{
+ 		.name = "complete",
+ 		.size = MTDPART_SIZ_FULL,
+-		.offset = 0x00000000
++		.offset = 0x00500000,
+ 	},
+ 	{
+ 		.name = "kernel",
+ 		.size = 0x00600000,
+-		.offset = 0x00000000
++		.offset = 0x00500000,
+ 	},
+ 	{
+ 		.name = "rootfs",
+ 		.size = MTDPART_SIZ_FULL,
+-		.offset = 0x00600000
++		.offset = 0x00b00000
+ 	},
+ };
+ 
