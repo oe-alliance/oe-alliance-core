@@ -5,15 +5,15 @@ LICENSE = "CLOSED"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-SRCDATE = "20150226"
+SRCDATE = "20150303"
 KV = "3.9.7"
 PV = "${KV}+${SRCDATE}"
 PR = "r1"
 
 SRC_URI = "http://en3homeftp.net/release/images/oedrivers/bcmlinuxdvb_7335-${KV}-${SRCDATE}.tar.gz"
 
-SRC_URI[md5sum] = "3e3acc5ac15662d3c6d28b3d7d571816"
-SRC_URI[sha256sum] = "a41b731c8493ade170daa6a6bc89d8ecf90a02ffed707ce3d75d797954f3a117"
+SRC_URI[md5sum] = "3ddd59cef0f25f9b9dae136bd95e5177"
+SRC_URI[sha256sum] = "f0e0151ab0050ad86f3e2a2c9321a0abb98a6eab4c136bbe9d17d6b56a3a502d"
 
 S = "${WORKDIR}"
 
