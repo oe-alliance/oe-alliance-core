@@ -9,10 +9,14 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r1"
+PR = "r2"
 
 
 SRC_URI = "git://github.com/22ktv/rtl8723bs.git"
+
+SRC_URI_append_sh4 = " \
+    file://rt8723bs_sh4.patch;patch=1 \
+    "
 
 S = "${WORKDIR}/git"
 

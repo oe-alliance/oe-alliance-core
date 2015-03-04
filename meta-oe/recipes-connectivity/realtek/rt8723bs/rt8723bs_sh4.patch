@@ -1,0 +1,28 @@
+--- a/Makefile	2015-03-04 07:23:24.661999333 +0100
++++ b/Makefile	2015-03-04 07:50:04.294356180 +0100
+@@ -106,7 +106,8 @@
+ CONFIG_PLATFORM_ARM_SPREADTRUM_6820 = n
+ CONFIG_PLATFORM_ARM_SPREADTRUM_8810 = n
+ CONFIG_PLATFORM_ARM_WMT = n
+-CONFIG_PLATFORM_MIPS_BRCMSTB = y
++CONFIG_PLATFORM_MIPS_BRCMSTB = n
++CONFIG_PLATFORM_SH4_STSTB = y
+ ###############################################################
+ 
+ CONFIG_DRVEXT_MODULE = n
+@@ -1275,6 +1276,15 @@
+ KSRC ?= /lib/modules/$(uname -r)/build
+ USER_MODULE_NAME := r8723bs
+ endif
++
++ifeq ($(CONFIG_PLATFORM_SH4_STSTB), y)
++EXTRA_CFLAGS += -DCONFIG_LITTLE_ENDIAN
++EXTRA_CFLAGS += -DRTW_USE_CFG80211_STA_EVENT
++ARCH := sh
++CROSS_COMPILE ?= sh4-unknown-linux-gnu-
++KSRC ?= /lib/modules/$(uname -r)/build
++USER_MODULE_NAME := r8723bs
++endif
+ 
+ ifeq ($(CONFIG_MULTIDRV), y)	
+ 
