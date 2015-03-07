@@ -9,13 +9,13 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "1.0"
-PR = "r18"
+PR = "r19"
 
 RRECOMMENDS_${PN} = "\
     oe-alliance-skins \
     enigma2-display-skins \
+    enigma2-skins-openvix \
     openvix-softcams-meta \
     openvix-bootlogos-meta \
     ${@base_contains("MACHINE_FEATURES", "skins1080", "hd-skins-meta", "", d)} \
-    enigma2-skins-openvix \
     "
