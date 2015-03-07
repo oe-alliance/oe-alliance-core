@@ -1,6 +1,6 @@
 SUMMARY = "Custom Skins for Enigma2"
 MAINTAINER = "openvix"
-PACKAGES = "${PN}-meta ${PN}"
+PACKAGES = "${PN} ${PN}-meta enigma2-plugin-skincomponents-metrix-src enigma2-plugin-skincomponents-novum-src "
 PACKAGES_DYNAMIC = "enigma2-plugin-skins-openvix-*"
 
 LICENSE = "Proprietary"
@@ -12,7 +12,7 @@ PACKAGE_ARCH := "${MACHINE_ARCH}"
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r7"
+PR = "r8"
 
 SRC_URI = "git://github.com/OpenViX/skins.git;protocol=git"
 
@@ -67,7 +67,6 @@ RREPLACES_enigma2-plugin-skins-openvix-novum-fhd-slim = "enigma2-plugin-skins108
 
 # note that enigma2-skins is just an empty package to satisfy silly dependencies.
 ALLOW_EMPTY_${PN} = "1"
-PACKAGES += "${PN}-meta enigma2-plugin-skincomponents-metrix-src enigma2-plugin-skincomponents-novum-src "
 FILES_${PN} = "${datadir}/enigma2"
 FILES_${PN}-meta = "${datadir}/meta"
 RDEPENDS_${PN}-meta = ""
