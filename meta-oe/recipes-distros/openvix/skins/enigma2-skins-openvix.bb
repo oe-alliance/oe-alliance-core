@@ -1,7 +1,7 @@
 SUMMARY = "Custom Skins for Enigma2"
-MAINTAINER = "oe-aliance"
+MAINTAINER = "openvix"
 PACKAGES = "${PN}-meta ${PN}"
-PACKAGES_DYNAMIC = "enigma2-plugin-display-*"
+PACKAGES_DYNAMIC = "enigma2-plugin-skins-*"
 
 LICENSE = "Proprietary"
 LIC_FILES_CHKSUM = "file://README.md;startline=1;endline=6;md5=d87dcebda7b395f6f541992adbb03d9d"
@@ -12,7 +12,7 @@ PACKAGE_ARCH := "${MACHINE_ARCH}"
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r3"
+PR = "r4"
 
 SRC_URI = "git://github.com/OpenViX/skins.git;protocol=git"
 
