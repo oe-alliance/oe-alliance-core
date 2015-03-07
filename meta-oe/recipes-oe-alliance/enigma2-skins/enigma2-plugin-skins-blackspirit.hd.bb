@@ -6,9 +6,9 @@ require conf/license/license-gplv2.inc
 inherit gitpkgv allarch
 
 SRCREV = "${AUTOREV}"
-PV = "0.53rc1+git${SRCPV}"
-PKGV = "0.53rc1+git${GITPKGV}"
-VER="0.53rc1"
+PV = "0.60rc2+git${SRCPV}"
+PKGV = "0.60rc2+git${GITPKGV}"
+VER="0.60rc2"
 
 RDEPENDS_${PN} = "enigma2-plugin-systemplugins-extnumberzap"
 
@@ -26,6 +26,8 @@ do_install() {
     install -d ${D}/usr/share/enigma2
     cp -rp ${S}/usr ${D}/
     chmod -R a+rX ${D}/usr/share/enigma2/
+    ln -s ${D}/usr/share/enigma2/BlackSpirit.HD/img ${D}/usr/share/enigma2/BlackSpirit.HD/icons
+    ln -s ${D}/usr/share/enigma2/BlackSpirit.HD/img ${D}/usr/share/enigma2/BlackSpirit.HD/buttons
 }
 
 pkg_postinst_${PN}() {

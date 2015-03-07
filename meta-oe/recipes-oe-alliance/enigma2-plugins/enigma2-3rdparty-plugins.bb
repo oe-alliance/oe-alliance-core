@@ -11,7 +11,7 @@ DEPENDS = "tslib mpfr gmp"
 SRCREV = "${AUTOREV}"
 PV = "2.1+gitr${SRCPV}"
 PKGV = "2.1+gitr${GITPKGV}"
-PR = "r154"
+PR = "r157"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -49,8 +49,8 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-gmailreader-oe2.0_1.3_all.ipk \
     enigma2-plugin-extensions-googlenewsreader_1.0_mips32el.ipk \
     enigma2-plugin-extensions-hdmitest_0.4_mipsel.ipk \
-    enigma2-plugin-extensions-hetweer_2.6-r4_mipsel.ipk \
-    enigma2-plugin-extensions-isettinge2-3.3.1-oe2.0-${@base_contains("TARGET_ARCH", "sh4", "sh4" , "mips32el", d)}.ipk \
+    enigma2-plugin-extensions-hetweer_2.7_all.ipk \
+    enigma2-plugin-extensions-isettinge2-3.3.2-oe2.0-${@base_contains("TARGET_ARCH", "sh4", "sh4" , "mips32el", d)}.ipk \
     enigma2-plugin-extensions-kicker_3.3rc11_mips32el.ipk \
     enigma2-plugin-extensions-kino_1.4rc3_mips32el.ipk \
     enigma2-plugin-extensions-kodidirect_2.0_r0_all.ipk \
@@ -58,7 +58,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-mediainfo_2.5_all.ipk \
     enigma2-plugin-extensions-mediaportal_6.7.2_all.ipk \
     enigma2-plugin-extensions-mediaportal-wallicons \
-    enigma2-plugin-extensions-mediastream-5.0_mips32el.ipk \
+    enigma2-plugin-extensions-mediastream_6.0_all.ipk \
     enigma2-plugin-extensions-moviebrowser_3.6rc1_mips32el.ipk \
     enigma2-plugin-extensions-mp3browser_1.9c7_mips32el.ipk \
     enigma2-plugin-extensions-msnwetter_0.6rc3_mips32el.ipk \

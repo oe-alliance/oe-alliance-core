@@ -33,6 +33,8 @@ SRC_URI += "http://downloads.mutant-digital.net/linux-${PV}.tar.gz \
 	file://tda18271-advertise-supported-delsys.patch \
 	"
 
+SRC_URI_append_hd500c = "file://nand_partition_layout.patch"
+
 S = "${WORKDIR}/linux-${PV}"
 B = "${WORKDIR}/build"
 
