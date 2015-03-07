@@ -1,7 +1,7 @@
 SUMMARY = "Custom Skins for Enigma2"
 MAINTAINER = "openvix"
 PACKAGES = "${PN}-meta ${PN}"
-PACKAGES_DYNAMIC = "enigma2-plugin-skins-*"
+PACKAGES_DYNAMIC = "enigma2-plugin-skins-openvix-*"
 
 LICENSE = "Proprietary"
 LIC_FILES_CHKSUM = "file://README.md;startline=1;endline=6;md5=d87dcebda7b395f6f541992adbb03d9d"
@@ -12,7 +12,7 @@ PACKAGE_ARCH := "${MACHINE_ARCH}"
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r4"
+PR = "r5"
 
 SRC_URI = "git://github.com/OpenViX/skins.git;protocol=git"
 
@@ -67,7 +67,7 @@ RREPLACES_enigma2-plugin-skins-openvix-novum-fhd-slim = "enigma2-plugin-skins108
 
 # note that enigma2-skins is just an empty package to satisfy silly dependencies.
 ALLOW_EMPTY_${PN} = "1"
-FILES_${PN} = "/usr/share/enigma2"
+FILES_${PN} = "${datadir}/enigma2"
 FILES_${PN}-meta = "${datadir}/meta"
 RDEPENDS_${PN}-meta = ""
 
@@ -79,19 +79,13 @@ EXTRA_OECONF += "\
     ${@base_contains("MACHINE_FEATURES", "skins1080", "--with-skins1080" , "", d)} \
     "
 
-python populate_packages_prepend () {
-    if bb.data.expand('${REL_MINOR}', d) != "4":
-        enigma2_skindir = bb.data.expand('${datadir}/enigma2', d)
-        do_split_packages(d, enigma2_skindir, '(.*?)/.*', 'enigma2-plugin-skins-openvix-%s', 'Enigma2 Skin Pack: %s', recursive=True, match_path=True, prepend=True)
-
-    currentlist = bb.data.getVar('PACKAGES', d, 1)
-    # pkgnotwanted = open(bb.data.getVar('S', d, 1) + "/../skinsnotwanted").read()
-#     logger.warning("NOT WANTED %s ", pkgnotwanted)
-
-    # newlist = currentlist.split(" ")
-    # for line in pkgnotwanted.split("\n"):
-    #     if line in newlist:
-    #         newlist.remove(line)
-
-    bb.data.setVar('PACKAGES', ' '.join(currentlist), d)
+python populate_packages_prepend() {
+    enigma2_skindir = bb.data.expand('${datadir}/enigma2', d)
+    do_split_packages(d, enigma2_skindir, '(.*?)/.*', 'enigma2-plugin-skins-openvix-%s', 'Enigma2 Skin Pack: %s', recursive=True, match_path=True, prepend=True, extra_depends="enigma2")
+    enigma2_plugindir = bb.data.expand('${libdir}/enigma2/python/Plugins', d)
+    do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/[a-zA-Z0-9_]+.*$', 'enigma2-plugin-%s', '%s', recursive=True, match_path=True, prepend=True, extra_depends="enigma2")
+    do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/.*\.py$', 'enigma2-plugin-%s-src', '%s (source files)', recursive=True, match_path=True, prepend=True, extra_depends="enigma2")
+    enigma2_convdir = bb.data.expand('${libdir}/enigma2/python/Components/Converter', d)
+    do_split_packages(d, enigma2_convdir, '^(\w+/\w+)/[a-zA-Z0-9_]+.*$', 'enigma2-convertor-%s', '%s', recursive=True, match_path=True, prepend=True, extra_depends="enigma2")
+    do_split_packages(d, enigma2_convdir, '^(\w+/\w+)/.*\.py$', 'enigma2-convertor-%s-src', '%s (source files)', recursive=True, match_path=True, prepend=True, extra_depends="enigma2")
 }
