@@ -13,7 +13,7 @@ MACHINE_KERNEL_PR_append = ".0"
 SRC_URI = "http://code-ini.com/software/mirror/8723AE_8723AU_Linux_BT_20140623.tar.gz"
 
 inherit module
-
+do_configure[depends] += "virtual/kernel:do_shared_workdir"
 EXTRA_OEMAKE = "LINUX_SRC=${STAGING_KERNEL_DIR}"
 S = "${WORKDIR}/8723AE_8723AU_Linux_BT_20140623"
 

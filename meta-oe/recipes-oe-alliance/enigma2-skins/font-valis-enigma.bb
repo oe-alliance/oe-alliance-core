@@ -6,6 +6,7 @@ PACKAGE_ARCH = "all"
 PV = "2009.11.12"
 PR = "r3"
 
+S = "${WORKDIR}"
 
 SRC_URI="file://valis_enigma.ttf"
 

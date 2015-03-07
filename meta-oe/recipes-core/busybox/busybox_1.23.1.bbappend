@@ -1,4 +1,5 @@
 PR .= ".10"
+PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 SRC_URI_IGNORED = " \
             file://0001-ifupdown-support-post-up-pre-down-hooks.patch \
@@ -16,7 +17,6 @@ SRC_URI_IGNORED += " \
             "
 
 SRC_URI += " \
-            file://0007-busybox-1.22.1-iplink.patch \
             file://mount_single_uuid.patch \
             file://mdev-mount.sh \
             file://inetd \

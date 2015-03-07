@@ -16,7 +16,7 @@ SRC_URI[md5sum] = "433192a7f42557a33c8255c86141882d"
 SRC_URI[sha256sum] = "303b0d96ec2fcb03b874b32bedc248359c639ae1bb1cfccf52d5bbb72ca467d5"
 
 FILES_${PN} += " /lib/firmware/"
-
+do_configure[depends] += "virtual/kernel:do_shared_workdir"
 S = "${WORKDIR}/2010_0825_RT61_Linux_STA_v${PV}/Module"
 
 EXTRA_OEMAKE = "LINUX_SRC=${STAGING_KERNEL_BUILDDIR}"

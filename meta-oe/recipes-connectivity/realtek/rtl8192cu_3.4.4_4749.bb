@@ -14,7 +14,7 @@ SRC_URI = "http://code-ini.com/software/mirror/rtl8188C_8192C_usb_linux_v3.4.4_4
     file://add-3.8-support.patch \
     file://rt8192cu_procfs.patch \
     "
-
+do_configure[depends] += "virtual/kernel:do_shared_workdir"
 S = "${WORKDIR}/rtl8188C_8192C_usb_linux_v3.4.4_4749.20140602"
 
 EXTRA_OEMAKE = "KSRC=${STAGING_KERNEL_DIR}"

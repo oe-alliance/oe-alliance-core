@@ -8,6 +8,8 @@ PR = "r1"
 
 SRC_URI = "file://volatile-media.sh"
 
+S = "${WORKDIR}"
+
 PACKAGES = "${PN}"
 
 FILES_${PN} = "/etc"

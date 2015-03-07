@@ -12,6 +12,8 @@ SRC_URI = "http://www.dvbsky.net/download/linux/media_build-bst-14-141106.tar.gz
            file://sit2_op.o \
 "
 
+do_configure[depends] += "virtual/kernel:do_shared_workdir"
+
 S = "${WORKDIR}/media_build-bst-14"
 
 do_populate_sysroot[noexec] = "1"

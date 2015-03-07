@@ -1,0 +1,10 @@
+--- libxmlccwrap-0.0.12/xmlccwrap/Makefile.am	2015-03-07 17:59:47.897774417 +0100
++++ libxmlccwrap-0.0.12/xmlccwrap/Makefile.am	2015-03-07 18:00:32.765775042 +0100
+@@ -1,6 +1,6 @@
+ lib_LTLIBRARIES = libxmlccwrap.la
+ 
+-INCLUDES = -I$(top_srcdir) `xml2-config --cflags` `xslt-config --cflags`
++INCLUDES = -I$(top_srcdir)
+   
+ libxmlccwrap_la_LDFLAGS = -release $(VERSION)
+ libxmlccwrap_la_SOURCES=xmlccwrap.cc libxmlexport.cc

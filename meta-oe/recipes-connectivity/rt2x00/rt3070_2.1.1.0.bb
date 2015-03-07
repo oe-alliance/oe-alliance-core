@@ -12,7 +12,7 @@ SRC_URI = "http://www.ralinktech.com.tw/data/drivers/2009_0525_RT3070_Linux_STA_
      "
 
 EXTRA_OEMAKE = "LINUX_SRC=${STAGING_KERNEL_BUILDDIR}"
-
+do_configure[depends] += "virtual/kernel:do_shared_workdir"
 S = "${WORKDIR}/2009_0525_RT3070_Linux_STA_v${PV}"
 
 do_install() {

@@ -6,15 +6,30 @@ LIC_FILES_CHKSUM = "file://Makefile;md5=6325fabe3996c2783285cc021ee13c96"
 
 inherit module machine_kernel_pr
 
-PR = "r16"
-
-MACHINE_KERNEL_PR_append = ".0"
+PR = "r19"
 
 SRC_URI = "http://code-ini.com/software/mirror/rtl8723A_WiFi_linux_v4.1.6_7336.20140624.tar.gz"
 
+do_configure[depends] += "virtual/kernel:do_shared_workdir"
+
 EXTRA_OEMAKE = "LINUX_SRC=${STAGING_KERNEL_DIR}"
-S = "${WORKDIR}/rtl8723A_WiFi_linux_v4.1.6_7336.20140624"
-B = "${WORKDIR}/build"
+
+S = "${WORKDIR}/rtl8723A_WiFi_linux_v4.1.6_7336.20140624/"
+
+do_compile () {
+    unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS CC LD CPP
+    oe_runmake 'MODPATH={D}${base_libdir}/modules/${KERNEL_VERSION}/kernel/drivers/net' \
+        'KERNEL_SOURCE=${STAGING_KERNEL_DIR}' \
+        'LINUX_SRC=${STAGING_KERNEL_DIR}' \
+        'KDIR=${STAGING_KERNEL_DIR}' \
+        'KERNDIR=${STAGING_KERNEL_DIR}' \
+        'KSRC=${STAGING_KERNEL_DIR}' \
+        'KERNEL_VERSION=${KERNEL_VERSION}' \
+        'KVER=${KERNEL_VERSION}' \
+        'CC=${KERNEL_CC}' \
+        'AR=${KERNEL_AR}' \
+        'LD=${KERNEL_LD}'
+}
 
 do_install() {
     install -d ${D}/lib/modules/${KERNEL_VERSION}/kernel/drivers/net/wireless

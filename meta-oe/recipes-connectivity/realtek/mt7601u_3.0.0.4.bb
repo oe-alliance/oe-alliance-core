@@ -14,7 +14,7 @@ SRC_URI = "http://source.mynonpublic.com/DPO_MT7601U_LinuxSTA_3.0.0.4_20130913c.
           "
 
 EXTRA_OEMAKE = "LINUX_SRC=${STAGING_KERNEL_DIR}"
-
+do_configure[depends] += "virtual/kernel:do_shared_workdir"
 S = "${WORKDIR}/MT7601U/"
 
 do_install() {

@@ -11,7 +11,7 @@ SRC_URI = "http://archiv.openmips.com/RT73.tar.gz \
            file://COPYING"
 
 inherit module machine_kernel_pr
- 
+do_configure[depends] += "virtual/kernel:do_shared_workdir"
 S = "${WORKDIR}/RT73/Module/"
  
 EXTRA_OEMAKE = "KERNDIR=${STAGING_KERNEL_BUILDDIR}"

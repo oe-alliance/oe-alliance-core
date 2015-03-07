@@ -9,8 +9,6 @@ inherit module
 
 LIC_FILES_CHKSUM = "file://readme;endline=19;md5=f87a675da5e11ab9def922704bdda58b"
 
-inherit module
-
 SRC_URI = "http://code-ini.com/software/mirror/AX88179_178A_LINUX_DRIVER_v1.4.1_SOURCE.tar.gz"
 
 SRC_URI_append_dm500hd = " \
@@ -34,7 +32,9 @@ SRC_URI_append_dm500hdv2 = " \
 SRC_URI_append_dm800sev2 = " \
             file://dreambox.patch \
             "
-            
+ 
+do_configure[depends] += "virtual/kernel:do_shared_workdir"
+ 
 S = "${WORKDIR}/AX88179_178A_LINUX_DRIVER_v1.4.1_SOURCE"
 
 EXTRA_OEMAKE = "KSRC=${STAGING_KERNEL_BUILDDIR}"

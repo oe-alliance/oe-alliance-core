@@ -15,7 +15,7 @@ SRC_URI = " \
 "
 SRC_URI[md5sum] = "c314f126ba47fac563988b08b5554d82"
 SRC_URI[sha256sum] = "c1555c6e8b042eb50579f5dae379d8dab3b2cde20e2e443a6b056d4b7812b3fe"
-
+do_configure[depends] += "virtual/kernel:do_shared_workdir"
 S = "${WORKDIR}/2011_0719_RT3070_RT3370_RT5370_RT5372_Linux_STA_V${PV}_DPO"
 
 inherit module

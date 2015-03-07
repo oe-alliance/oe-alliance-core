@@ -12,7 +12,7 @@ SRC_URI = "http://downloads.pli-images.org/misc/2008_0506_RT73_Linux_STA_Drv1.1.
            file://COPYING"
 
 inherit module machine_kernel_pr
- 
+do_configure[depends] += "virtual/kernel:do_shared_workdir"
 S = "${WORKDIR}/2008_0506_RT73_Linux_STA_Drv1.1.0.1/Module/"
  
 EXTRA_OEMAKE = "KERNDIR=${STAGING_KERNEL_BUILDDIR}"

@@ -7,6 +7,7 @@ require conf/license/license-gplv2.inc
 
 SRC_URI = "file://${PN}.sh"
 
+S = "${WORKDIR}"
 
 do_install() {
     install -d ${D}/etc/rcS.d

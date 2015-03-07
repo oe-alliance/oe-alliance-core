@@ -12,7 +12,7 @@ SRC_URI = "http://code-ini.com/software/mirror/20120911_RT3573_Linux_STA_v2.5.0.
     file://remove_linux_2_4_compability.patch"
 
 EXTRA_OEMAKE = "LINUX_SRC=${STAGING_KERNEL_DIR}"
-
+do_configure[depends] += "virtual/kernel:do_shared_workdir"
 S = "${WORKDIR}/20120911_RT3573_Linux_STA_v2.5.0.0_Rev4_DPO/"
 
 do_install() {

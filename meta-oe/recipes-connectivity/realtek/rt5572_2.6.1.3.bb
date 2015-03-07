@@ -12,7 +12,7 @@ SRC_URI = "http://code-ini.com/software/mirror/rt5572_2.6.1.4.tar.gz \
     file://remove_linux_2_4_compability.patch"
 
 EXTRA_OEMAKE = "LINUX_SRC=${STAGING_KERNEL_DIR}"
-
+do_configure[depends] += "virtual/kernel:do_shared_workdir"
 S = "${WORKDIR}/RT5572/"
 
 do_install() {

@@ -26,6 +26,7 @@ SRC_URI += "http://source.mynonpublic.com/broadmedia/${MACHINE}-linux-${PV}.tar.
     "
 
 S = "${WORKDIR}/linux-${PV}"
+B = "${WORKDIR}/build"
 
 inherit kernel
 

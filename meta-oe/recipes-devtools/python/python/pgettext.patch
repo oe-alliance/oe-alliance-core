@@ -352,9 +352,9 @@ index 5dd5430..510ecda 100755
              l = l[5:]
              msgid = msgstr = ''
 @@ -172,7 +183,9 @@ def make(filename, outfile):
+         if not l:
              continue
-         # XXX: Does this always follow Python escape semantics?
-         l = eval(l)
+         l = ast.literal_eval(l)
 -        if section == ID:
 +        if section == CTXT:
 +            msgctxt += l

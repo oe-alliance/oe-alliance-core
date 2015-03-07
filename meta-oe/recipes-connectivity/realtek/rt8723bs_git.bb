@@ -17,7 +17,7 @@ SRC_URI = "git://github.com/22ktv/rtl8723bs.git"
 SRC_URI_append_sh4 = " \
     file://rt8723bs_sh4.patch;patch=1 \
     "
-
+do_configure[depends] += "virtual/kernel:do_shared_workdir"
 S = "${WORKDIR}/git"
 
 inherit module
