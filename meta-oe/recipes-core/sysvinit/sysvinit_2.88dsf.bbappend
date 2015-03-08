@@ -2,8 +2,6 @@ FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
 PR .= ".3"
 
-S = "${WORKDIR}"
-
 PACKAGE_ARCH := "${MACHINE_ARCH}"
 
 SRC_URI += " \
