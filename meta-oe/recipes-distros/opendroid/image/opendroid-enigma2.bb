@@ -7,7 +7,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PV = "1.0"
-PR = "r5"
+PR = "r25"
 
 inherit packagegroup
 
@@ -15,6 +15,7 @@ DEPENDS = "enigma2-pliplugins opendroid-feeds"
 
 RRECOMMENDS_${PN} = "\
     opendroid-version-info \
+    enigma2-plugin-extensions-weatherplugin \
     enigma2-skindefault \
     python-compression \
     enigma2-plugin-skins-opendroid \
