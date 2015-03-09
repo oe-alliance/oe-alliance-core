@@ -7,7 +7,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PV = "1.0"
-PR = "r24"
+PR = "r25"
 
 inherit packagegroup
 
@@ -30,7 +30,6 @@ RRECOMMENDS_${PN} = "\
     enigma2-plugin-systemplugins-videoenhancement \
     enigma2-plugin-systemplugins-videomode \
     enigma2-plugin-systemplugins-videotune \
-    enigma2-plugin-systemplugins-weathercomponenthandler \
     enigma2-plugin-systemplugins-autoresolution \
     enigma2-plugin-systemplugins-softwaremanager \
     enigma2-plugin-systemplugins-hotplug \
