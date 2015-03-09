@@ -1,8 +1,8 @@
 diff --git a/Makefile.am b/Makefile.am
-index d0f54e5..336bef5 100644
+index 4c72f8b..cf730fe 100644
 --- a/Makefile.am
 +++ b/Makefile.am
-@@ -1,111 +1,58 @@
+@@ -1,112 +1,58 @@
  ACLOCAL_AMFLAGS = -I m4
  
  SUBDIRS = \
@@ -76,6 +76,7 @@ index d0f54e5..336bef5 100644
 -	reftopiconname \
  	remotetimer \
 -	rsdownloader \
+ 	seriesplugin \
 -	setpasswd \
  	shoutcast \
  	showclock \
@@ -108,7 +109,6 @@ index d0f54e5..336bef5 100644
 -	vierg \
 -	bmediacenter \
 -	advancedmovieselection
-+	sudoku
  
  if DREAMBOX
 -SUBDIRS +=  fancontrol2 letterbox logomanager movielistpreview genuinedreambox
