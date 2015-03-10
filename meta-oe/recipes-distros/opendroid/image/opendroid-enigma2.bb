@@ -15,7 +15,7 @@ DEPENDS = "enigma2-pliplugins opendroid-feeds"
 
 RRECOMMENDS_${PN} = "\
     opendroid-version-info \
-    enigma2-plugin-extensions-weatherplugin \
+    enigma2-plugin-extensions-weatherplugin-od \
     enigma2-skindefault \
     python-compression \
     enigma2-plugin-skins-opendroid \
