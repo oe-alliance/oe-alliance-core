@@ -4,7 +4,7 @@ SECTION = "kernel"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 KV = "2.6.32"
-PR = "r8"
+PR = "r10"
 
 DEPENDS_spark7162 += " \
            stlinux24-sh4-stx7105-fdma-firmware \
@@ -79,14 +79,15 @@ FILES_kernel-image = "${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}"
 
 KEEPUIMAGE = "true"
 
-do_configure () {
-    rm -f ${S}/.config || true
-    cp ${WORKDIR}/defconfig ${S}/.config
-    sed -i "s#^\(CONFIG_EXTRA_FIRMWARE_DIR=\).*#\1\"${STAGING_DIR_HOST}/lib/firmware\"#" .config;
-        yes '' | oe_runmake oldconfig
-    if test -e scripts/Makefile.fwinst ; then
-        sed -i -e "s:-m0644:-m 0644:g" scripts/Makefile.fwinst
-    fi
+do_configure_prepend() {
+    oe_machinstall -m 0644 ${WORKDIR}/defconfig ${B}/.config
+    sed -i "s#^\(CONFIG_EXTRA_FIRMWARE_DIR=\).*#\1\"${STAGING_DIR_HOST}/lib/firmware\"#" ${B}/.config;
+}
+
+do_shared_workdir_prepend() {
+    # Workaround for missing dir required in latest oe
+    mkdir -p ${B}/include/generated
+    touch ${B}/include/generated/null
 }
 
 do_install_append() {
