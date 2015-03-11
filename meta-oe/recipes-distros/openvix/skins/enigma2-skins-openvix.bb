@@ -12,7 +12,7 @@ PACKAGE_ARCH := "${MACHINE_ARCH}"
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r13"
+PR = "r14"
 
 SRC_URI = "git://github.com/OpenViX/skins.git;protocol=git"
 
@@ -63,6 +63,9 @@ RCONFLICTS_enigma2-plugin-skins-openvix-mynovum-fhd2 = "enigma2-plugin-skins1080
 RREPLACES_enigma2-plugin-skins-openvix-mynovum-fhd2 = "enigma2-plugin-skins1080-mynovum-fhd2-1080"
 RCONFLICTS_enigma2-plugin-skins-openvix-novum-fhd-slim = "enigma2-plugin-skins1080-novum-fhd-slim-1080"
 RREPLACES_enigma2-plugin-skins-openvix-novum-fhd-slim = "enigma2-plugin-skins1080-novum-fhd-slim-1080"
+
+RREPLACES_enigma2-plugin-skins-openvix-mhd-common = "enigma2-plugin-skins-openvix-mhdc"
+RCONFLICTS_enigma2-plugin-skins-openvix-mhd-common = "enigma2-plugin-skins-openvix-mhdc"
 
 
 # note that enigma2-skins is just an empty package to satisfy silly dependencies.
