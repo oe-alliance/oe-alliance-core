@@ -1,5 +1,5 @@
 SUMMARY = "A default skin for Enigma2."
-MAINTAINER = "OE-Allinace"
+MAINTAINER = "OE-Alliance"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://README.md;md5=ec650e1109116ae1feccebec8d4e01e1"
 
@@ -8,7 +8,7 @@ inherit autotools gitpkgv allarch
 SRCREV = "${AUTOREV}"
 PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"
-PR = "r18"
+PR = "r19"
 
 PACKAGES = "enigma2-skindefault"
 PROVIDES = "enigma2-skindefault"
