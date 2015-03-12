@@ -12,9 +12,11 @@ PACKAGE_ARCH := "${MACHINE_ARCH}"
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r15"
+PR = "r23"
 
 SRC_URI = "git://github.com/OpenViX/skins.git;protocol=git"
+
+DEPENDS += "font-roboto-enigma font-valis-hd "
 
 RCONFLICTS_enigma2-plugin-skins-openvix-vix-day-hd = "enigma2-plugin-skins-vix-day-hd"
 RREPLACES_enigma2-plugin-skins-openvix-vix-day-hd = "enigma2-plugin-skins-vix-day-hd"
