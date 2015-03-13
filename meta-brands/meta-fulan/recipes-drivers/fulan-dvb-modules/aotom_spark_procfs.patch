@@ -69,28 +69,6 @@ index ffb0c1d..0f02fea 100644
  
  	{cProcDir  , "stb/tsmux"                                                        , NULL, NULL, NULL, NULL, ""},
  	{cProcEntry, "stb/tsmux/input0"                                                 , NULL, NULL, NULL, NULL, ""},
-diff --git a/frontcontroller/aotom/aotom_main.c b/frontcontroller/aotom/aotom_main.c
-index 63e729e..9618279 100755
---- a/frontcontroller/aotom/aotom_main.c
-+++ b/frontcontroller/aotom/aotom_main.c
-@@ -322,7 +322,7 @@ int run_draw_thread(struct vfd_ioctl_data *draw_data)
- 	YWPANEL_VFD_ShowString(buf);
- 	} else {
- 	draw_thread_stop = 2;
--	draw_task = kthread_run(draw_thread,draw_data,"draw thread");
-+	draw_task = kthread_run(draw_thread,draw_data,"draw_thread");
- 
- 	//wait until thread has copied the argument
- 	while(draw_thread_stop == 2)
-@@ -960,7 +960,7 @@ static int __init aotom_init_module(void)
- 		led_state[i].period = 0;
- 		led_state[i].stop = 1;
- 		sema_init(&led_state[i].led_sem, 0);
--		led_state[i].led_task = kthread_run(led_thread, (void *) i, "led thread");
-+		led_state[i].led_task = kthread_run(led_thread, (void *) i, "led_thread");
- 	}
- 
- 
 diff --git a/frontcontroller/aotom_spark/Makefile b/frontcontroller/aotom_spark/Makefile
 index 52b07a8..af25f70 100644
 --- a/frontcontroller/aotom_spark/Makefile
@@ -141,15 +119,6 @@ index 895f51c..93fe8c8 100644
  
  static void clear_display(void)
  {
-@@ -328,7 +332,7 @@ static int run_draw_thread(struct vfd_ioctl_data *draw_data)
- 			msleep(1);
- 	}
- 	draw_thread_status = DRAW_THREAD_STATUS_INIT;
--	draw_task = kthread_run(draw_thread, draw_data, "draw thread");
-+	draw_task = kthread_run(draw_thread, draw_data, "draw_thread");
- 	//wait until thread has copied the argument
- 	while (draw_thread_status == DRAW_THREAD_STATUS_INIT)
- 		msleep(1);
 @@ -354,7 +358,7 @@ int vfd_init_func(void)
  	return 0;
  }
@@ -259,29 +228,23 @@ index 895f51c..93fe8c8 100644
  	sema_init(&write_sem, 1);
  	sema_init(&draw_thread_sem, 1);
  	for (i = 0; i < LED_COUNT; i++)
-@@ -962,8 +1042,9 @@ static int __init aotom_init_module(void)
+@@ -962,6 +1042,7 @@ static int __init aotom_init_module(void)
  		led_state[i].state = LED_OFF;
  		led_state[i].period = 0;
  		led_state[i].stop = 1;
 +		led_state[i].enable = 1;
  		sema_init(&led_state[i].led_sem, 0);
--		led_state[i].led_task = kthread_run(led_thread, (void *) i, "led thread");
-+		led_state[i].led_task = kthread_run(led_thread, (void *) i, "led_thread");
+ 		led_state[i].led_task = kthread_run(led_thread, (void *) i, "led_thread");
  	}
- 	if (panel_version.DisplayInfo == YWPANEL_FP_DISPTYPE_VFD)
- 	{
-@@ -981,8 +1062,8 @@ static int __init aotom_init_module(void)
- 	else
+@@ -982,6 +1063,7 @@ static int __init aotom_init_module(void)
  		rtc_pdev = platform_device_register_simple(RTC_NAME, -1, NULL, 0);
  	if (IS_ERR(rtc_pdev))
--		printk(KERN_ERR "%s platform_device_register_simple failed: %ld\n",
--			   __func__, PTR_ERR(rtc_pdev));
-+		printk(KERN_ERR "%s platform_device_register_simple failed: %ld\n", __func__, PTR_ERR(rtc_pdev));
+ 		printk(KERN_ERR "%s platform_device_register_simple failed: %ld\n", __func__, PTR_ERR(rtc_pdev));
 +	create_proc_fp();
  	dprintk(5, "%s <\n", __func__);
  	return 0;
  }
-@@ -1015,9 +1096,15 @@ static void __exit aotom_cleanup_module(void)
+@@ -1014,9 +1096,15 @@ static void __exit aotom_cleanup_module(void)
  		msleep(1);
  	dprintk(5, "[BTN] unloading ...\n");
  	button_dev_exit();

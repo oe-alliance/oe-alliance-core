@@ -8,15 +8,15 @@ LIC_FILES_CHKSUM = "file://${WORKDIR}/COPYING;md5=751419260aa954499f7abaabaa882b
 
 RDEPENDS_${PN} = "stinit"
 
-SRCDATE = "20150207"
+SRCDATE = "20150309"
 KV = "2.6.32.61-stm24-0217"
-SRCREV = "6908cae5a1ccf5e085b60aed14b72d652aa88619"
+SRCREV = "16748e41ae1ef7c98c65e7e54db0511e5b9b7eb8"
 
 inherit module
 
 PACKAGES = "${PN} ${PN}-dev"
 
-PR = "r22"
+PR = "r24"
 PV = "${KV}+${SRCDATE}"
 
 PTI_NP_PATH ?= "/data/pti_np"
@@ -27,6 +27,7 @@ SRC_URI = " \
     file://fix_videomode_names.patch;patch=1 \
     file://silence_tuner_printk.patch;patch=1 \
     file://silence_stmfb_printk.patch;patch=1 \
+    file://fix_makefile.patch;patch=1 \
     file://ddbootup \
     file://sh4booster \
     file://modules.conf \
@@ -73,26 +74,23 @@ do_configure_prepend () {
     ln -s ${S}/stgfb/stmfb-3.1_stm24_0104 ${S}/stgfb/stmfb
     rm -f .config 
     printf "export CONFIG_PLAYER_191=y\nexport CONFIG_MULTICOM324=y\n" > .config
-    # disable wireless build
-    sed -i 's/^\(obj-y.*+= wireless\)/# \1/' Makefile
-    # disable led and button - it's not for spark
-    sed -i 's@^\(obj-y.*+= \(led\|button\)/\)@# \1@' Makefile
 }
 
 do_compile() {
     unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS
-    oe_runmake KERNEL_PATH=${STAGING_KERNEL_BUILDDIR}   \
-        KERNEL_SRC=${STAGING_KERNEL_BUILDDIR}    \
+    oe_runmake KERNEL_PATH=${STAGING_KERNEL_DIR}   \
+        KERNEL_SRC=${STAGING_KERNEL_DIR}    \
         KERNEL_VERSION=${KERNEL_VERSION}    \
-        -C ${STAGING_KERNEL_BUILDDIR}   \
+        -C ${STAGING_KERNEL_DIR}   \
+	O=${STAGING_KERNEL_BUILDDIR} \
         ${@d.getVar('MACHINE',1).upper()}=1 \
         M=${S} V=1 \
         ARCH=sh \
         PLAYER191=player191 \
         DRIVER_TOPDIR="${S}" \
-        KERNEL_LOCATION="${STAGING_KERNEL_BUILDDIR}" \
+        KERNEL_LOCATION="${STAGING_KERNEL_DIR}" \
         CONFIG_KERNEL_BUILD="${STAGING_KERNEL_BUILDDIR}" \
-        CONFIG_KERNEL_PATH="${STAGING_KERNEL_BUILDDIR}" \
+        CONFIG_KERNEL_PATH="${STAGING_KERNEL_DIR}" \
         CONFIG_MODULES_PATH="${D}" \
         CONFIG_PLAYER_191=y \
         CCFLAGSY="-I${STAGING_DIR_HOST}/usr/include" \
@@ -101,18 +99,19 @@ do_compile() {
 
 do_install() {
     unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS
-    oe_runmake KERNEL_PATH=${STAGING_KERNEL_BUILDDIR}   \
-        KERNEL_SRC=${STAGING_KERNEL_BUILDDIR}    \
+    oe_runmake KERNEL_PATH=${STAGING_KERNEL_DIR}   \
+        KERNEL_SRC=${STAGING_KERNEL_DIR}    \
         KERNEL_VERSION=${KERNEL_VERSION}    \
-        -C ${STAGING_KERNEL_BUILDDIR}   \
+        -C ${STAGING_KERNEL_DIR}   \
+	O=${STAGING_KERNEL_BUILDDIR} \
         ${@d.getVar('MACHINE',1).upper()}=1 \
         M=${S} V=1 \
         ARCH=sh \
         PLAYER191=player191 \
         DRIVER_TOPDIR="${S}" \
-        KERNEL_LOCATION="${STAGING_KERNEL_BUILDDIR}" \
+        KERNEL_LOCATION="${STAGING_KERNEL_DIR}" \
         CONFIG_KERNEL_BUILD="${STAGING_KERNEL_BUILDDIR}" \
-        CONFIG_KERNEL_PATH="${STAGING_KERNEL_BUILDDIR}" \
+        CONFIG_KERNEL_PATH="${STAGING_KERNEL_DIR}" \
         CONFIG_MODULES_PATH="${D}" \
         CONFIG_PLAYER_191=y \
         CCFLAGSY="-I${STAGING_DIR_HOST}/usr/include" \
