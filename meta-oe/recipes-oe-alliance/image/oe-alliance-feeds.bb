@@ -9,7 +9,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "1.0"
-PR = "r54"
+PR = "r55"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 DEPENDS = "enigma2-plugin-drivers-usbserial"
@@ -107,3 +107,4 @@ RRECOMMENDS_${PN}_append_vusolo = "enigma2-plugin-extensions-hbbtv"
 RRECOMMENDS_${PN}_append_vusolo2 = "enigma2-plugin-extensions-hbbtv"
 RRECOMMENDS_${PN}_append_vuduo = "enigma2-plugin-extensions-hbbtv"
 RRECOMMENDS_${PN}_append_vuduo2 = "enigma2-plugin-extensions-hbbtv"
+RRECOMMENDS_${PN}_append_vuzero = "enigma2-plugin-extensions-hbbtv"
