@@ -3,6 +3,8 @@ include conf/machine/include/build-extras.inc
 
 BRAND_OEM = "ini"
 
+GST_VERSION = "1.0"
+
 MACHINE_NAME = "\
 ${@base_contains('MACHINEBUILD', 'ventonhdx', 'HD-x' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'sezam1000hd', '1000-HD' , '', d)}\

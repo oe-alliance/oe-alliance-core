@@ -4,6 +4,8 @@ include conf/machine/include/build-extras.inc
 BRAND_OEM = "vuplus"
 MACHINE_BRAND = "Vu+"
 
+GST_VERSION = "1.0"
+
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS = " \
     ${@base_contains("MACHINE_FEATURES", "dvbproxy", "vuplus-dvb-proxy-${MACHINE} vuplus-libgles-${MACHINE} vuplus-platform-util-${MACHINE}", "vuplus-dvb-modules-${MACHINE}", d)} \
     "
@@ -16,8 +18,8 @@ MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS = "\
 
 MACHINE_EXTRA_RRECOMMENDS = " \
     vuplus-shutdown \
-    vuplus-gst-plugin-dvbmediasink \
-    ${@base_contains('DISTRO_FEATURES', 'audioeffect', 'enigma2-plugin-systemplugins-audioeffect' , '', d)} \
+    gstreamer1.0-plugin-dvbmediasink \
+    DVBMEDIASINK_CONFIG = "--with-vuplus --with-pcm --with-dtsdownmix --with-eac3 --with-amr --with-wmv" \
     "
 
 include conf/machine/include/autoload-filesystems.inc

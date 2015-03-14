@@ -5,14 +5,18 @@ include conf/machine/include/build-extras.inc
 BRAND_OEM = "dreambox"
 MACHINE_BRAND = "Dreambox"
 
+GST_VERSION = "1.0"
+
 EXTRA_IMAGEDEPENDS += "dreambox-secondstage-${MACHINE}"
 
 GLIBC_EXTRA_OECONF = "--with-tls --with-__thread"
 
+DVBMEDIASINK_CONFIG = "--with-vuplus --with-pcm --with-dtsdownmix --with-eac3 --with-amr --with-wmv"
+
 include conf/machine/include/autoload-filesystems.inc
 
 MACHINE_EXTRA_RRECOMMENDS = " \
-    gst-plugin-dreambox-dvbmediasink \
+    gstreamer1.0-plugin-dvbmediasink \
     gst-plugin-dtsdownmix \
     ntfs-3g \
     kernel-module-cifs \
@@ -23,7 +27,7 @@ MACHINE_EXTRA_RRECOMMENDS = " \
     tpmd \
     kernel-module-fuse \
     kernel-module-nfsd \
-    kernel-module-exportfs \	
+    kernel-module-exportfs \
     "
     
 MACHINE_FEATURES += "dreambox alsa usbhost 3dtv switchoff tpm"
