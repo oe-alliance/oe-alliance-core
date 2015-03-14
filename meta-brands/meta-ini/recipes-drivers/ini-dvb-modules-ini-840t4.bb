@@ -5,13 +5,13 @@ LICENSE = "CLOSED"
 PACKAGE_ARCH = "${MACHINEBUILD}"
 
 KV = "3.14.2"
-SRCDATE = "20150211"
+SRCDATE = "20150223"
 
 PV = "${KV}+${SRCDATE}"
 PR = "r2"
 
-SRC_URI[md5sum] = "10167b3accedcc9fee4aabd33d6b75f8"
-SRC_URI[sha256sum] = "e0d2d1ae95a77b1a277dc874f6812d9d14456718a6a8989bfeaa4b56e9ca5fcd"
+SRC_URI[md5sum] = "d84a27b3cb6314d4781ae69b473626cd"
+SRC_URI[sha256sum] = "c1d553d5232fecaf8dc4ad6ee806a2eeb9825d0f9ec7d4d134de76dc7ac954e8"
 
 SRC_URI = "http://code-ini.com/software/drivers/ini-840t4-drivers-${KV}-${SRCDATE}.zip"
 

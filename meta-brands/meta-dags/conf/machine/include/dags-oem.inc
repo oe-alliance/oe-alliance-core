@@ -12,6 +12,7 @@ ${@base_contains('MACHINEBUILD', 'tmnano2super', 'TM-NANO 2 Super' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmsingle', 'TM-Single' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmtwin', 'TM-Twin-OE' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmnanose', 'TM-NANO-SE' , '', d)}\
+${@base_contains('MACHINEBUILD', 'tmnanocombo', 'TM-NANO-COMBO' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'iqonios100hd', 'IOS-100HD' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'iqonios200hd', 'IOS-200HD' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'iqonios300hd', 'IOS-300HD' , '', d)}\
@@ -20,6 +21,7 @@ ${@base_contains('MACHINEBUILD', 'force1', 'Force 1' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'force1plus', 'Force 1 Plus' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'megaforce1plus', 'Force 1 Plus' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'force2', 'force2' , '', d)}\
+${@base_contains('MACHINEBUILD', 'force2plus', 'force2 Plus' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'megaforce2', 'force2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'worldvisionf1', 'force1' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'worldvisionf1plus', 'force1 Plus' , '', d)}\
@@ -43,6 +45,7 @@ ${@base_contains('MACHINEBUILD', 'tmnano2super', 'Technomate' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmsingle', 'Technomate' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmtwin', 'Technomate' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmnanose', 'Technomate' , '', d)}\
+${@base_contains('MACHINEBUILD', 'tmnanocombo', 'Technomate' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'iqonios100hd', 'Iqon' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'iqonios200hd', 'Iqon' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'iqonios300hd', 'Iqon' , '', d)}\
@@ -51,6 +54,7 @@ ${@base_contains('MACHINEBUILD', 'force1', 'Iqon' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'force1plus', 'Iqon' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'megaforce1plus', 'MEGASAT' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'force2', 'Iqon' , '', d)}\
+${@base_contains('MACHINEBUILD', 'force2plus', 'Iqon' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'megaforce2', 'MEGASAT' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'worldvisionf1', 'WorldVision' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'worldvisionf1plus', 'WorldVision' , '', d)}\
@@ -74,6 +78,7 @@ ${@base_contains('MACHINEBUILD', 'tmnano2super', 'update/tmnano2super/cfe' , '',
 ${@base_contains('MACHINEBUILD', 'tmsingle', 'update/tmsingle/cfe' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmtwin', 'update/tmtwinoe/cfe' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmnanose', 'update/tmnanose/cfe' , '', d)}\
+${@base_contains('MACHINEBUILD', 'tmnanocombo', 'update/tmnanocombo/cfe' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'iqonios100hd', 'update/ios100/cfe' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'iqonios200hd', 'update/ios200/cfe' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'iqonios300hd', 'update/ios300/cfe' , '', d)}\
@@ -83,6 +88,7 @@ ${@base_contains('MACHINEBUILD', 'force1plus', 'update/force1plus/cfe' , '', d)}
 ${@base_contains('MACHINEBUILD', 'megaforce1plus', 'update/force1plus/cfe' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'force2', 'update/force2solid/cfe' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'megaforce2', 'update/force2solid/cfe' , '', d)}\
+${@base_contains('MACHINEBUILD', 'force2plus', 'update/force2plus/cfe' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'worldvisionf1', 'update/force1/cfe' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'worldvisionf1plus', 'update/force1plus/cfe' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'roxxs200hd', 'update/ios200/cfe' , '', d)}\
@@ -105,6 +111,7 @@ ${@base_contains('MACHINEBUILD', 'tmnano2super', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmsingle', 'mtd6' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmtwin', 'mtd6' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmnanose', 'mtd2' , '', d)}\
+${@base_contains('MACHINEBUILD', 'tmnanocombo', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'iqonios100hd', 'mtd6' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'iqonios200hd', 'mtd6' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'iqonios300hd', 'mtd6' , '', d)}\
@@ -113,6 +120,7 @@ ${@base_contains('MACHINEBUILD', 'force1', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'force1plus', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'megaforce1plus', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'force2', 'mtd2' , '', d)}\
+${@base_contains('MACHINEBUILD', 'force2plus', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'megaforce2', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'worldvisionf1', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'worldvisionf1plus', 'mtd2' , '', d)}\
@@ -136,6 +144,7 @@ ${@base_contains('MACHINEBUILD', 'tmnano2super', 'mtd0' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmsingle', 'mtd4' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmtwin', 'mtd4' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmnanose', 'mtd0' , '', d)}\
+${@base_contains('MACHINEBUILD', 'tmnanocombo', 'mtd0' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'iqonios100hd', 'mtd4' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'iqonios200hd', 'mtd4' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'iqonios300hd', 'mtd4' , '', d)}\
@@ -144,6 +153,7 @@ ${@base_contains('MACHINEBUILD', 'force1', 'mtd0' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'force1plus', 'mtd0' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'megaforce1plus', 'mtd0' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'force2', 'mtd0' , '', d)}\
+${@base_contains('MACHINEBUILD', 'force2plus', 'mtd0' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'megaforce2', 'mtd0' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'worldvisionf1', 'mtd0' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'worldvisionf1plus', 'mtd0' , '', d)}\
@@ -162,11 +172,13 @@ SPLASH1_BMP = "\
 ${@base_contains('MACHINEBUILD', 'tmnano2super', 'splash1.bmp' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmnano3t', 'splash1.bmp' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmnanose', 'splash1.bmp' , '', d)}\
+${@base_contains('MACHINEBUILD', 'tmnanocombo', 'splash1.bmp' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'force1', 'splash1_os2.bmp' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'force1plus', 'splash1_os2.bmp' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'megaforce1plus', 'splash1_os2.bmp' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'worldvisionf1', 'splash1_os1.bmp' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'force2', 'splash1.bmp' , '', d)}\
+${@base_contains('MACHINEBUILD', 'force2plus', 'splash1.bmp' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'megaforce2', 'splash1.bmp' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'worldvisionf1plus', 'splash1_os1.bmp' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'optimussos1plus', 'splash1_os1.bmp' , '', d)}\
