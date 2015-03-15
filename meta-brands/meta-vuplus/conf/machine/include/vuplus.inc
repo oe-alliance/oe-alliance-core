@@ -19,12 +19,11 @@ MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS = "\
 MACHINE_EXTRA_RRECOMMENDS = " \
     vuplus-shutdown \
     gstreamer1.0-plugin-dvbmediasink \
-    DVBMEDIASINK_CONFIG = "--with-vuplus --with-pcm --with-dtsdownmix --with-eac3 --with-amr --with-wmv" \
     "
 
 include conf/machine/include/autoload-filesystems.inc
 
-DVBMEDIASINK_CONFIG = "--with-wmv --with-wma --with-pcm --with-eac3"
+DVBMEDIASINK_CONFIG = "--with-vuplus --with-pcm --with-dtsdownmix --with-eac3 --with-amr --with-wmv"
 
 TARGET_ARCH = "mipsel"
 DEFAULTTUNE = "mips32el"
