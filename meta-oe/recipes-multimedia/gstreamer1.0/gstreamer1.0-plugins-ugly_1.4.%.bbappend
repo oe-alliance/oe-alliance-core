@@ -1,3 +1,4 @@
+FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 PACKAGECONFIG[amrnb]     = "--enable-amrnb,--disable-amrnb,opencore-amr"
 PACKAGECONFIG[amrwb]     = "--enable-amrwb,--disable-amrwb,opencore-amr"
 PACKAGECONFIG += "cdio dvdread amrnb amrwb mad"
