@@ -11,7 +11,7 @@ EXTRA_IMAGEDEPENDS += "dreambox-secondstage-${MACHINE}"
 
 GLIBC_EXTRA_OECONF = "--with-tls --with-__thread"
 
-DVBMEDIASINK_CONFIG = "--with-dreambox --with-pcm --with-eac3 --with-amr --with-wmv --with-wma"
+DVBMEDIASINK_CONFIG = "--with-dreambox --with-pcm --with-wmv --with-dtsdownmix --with-eac3 --with-amr --with-limited-mpeg4v2"
 
 include conf/machine/include/autoload-filesystems.inc
 
