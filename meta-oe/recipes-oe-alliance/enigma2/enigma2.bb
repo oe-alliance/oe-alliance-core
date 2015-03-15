@@ -67,6 +67,8 @@ GST_BASE_RDEPS = "${@base_contains('GST_VERSION', '1.0', ' \
     gstreamer1.0-plugins-base-app \
     gstreamer1.0-plugins-base-audioconvert \
     gstreamer1.0-plugins-base-audioresample \
+    gstreamer1.0-plugins-base-audiorate \
+    gstreamer1.0-plugins-base-videoconvert \
     gstreamer1.0-plugins-base-ivorbisdec \
     gstreamer1.0-plugins-base-ogg \
     gstreamer1.0-plugins-base-playback \
@@ -104,6 +106,7 @@ GST_GOOD_RDEPS = "${@base_contains('GST_VERSION', '1.0', ' \
     gstreamer1.0-plugins-good-souphttpsrc \
     gstreamer1.0-plugins-good-udp \
     gstreamer1.0-plugins-good-wavparse \
+    gstreamer1.0-plugins-good-wavpack \
     ', ' \
     gst-plugins-good-apetag \
     gst-plugins-good-audioparsers \
@@ -124,7 +127,6 @@ GST_GOOD_RDEPS = "${@base_contains('GST_VERSION', '1.0', ' \
     ', d)}"
 
 GST_BAD_RDEPS = "${@base_contains('GST_VERSION', '1.0', ' \
-    gstreamer1.0-plugins-bad-cdxaparse \
     gstreamer1.0-plugins-bad-mms \
     gstreamer1.0-plugins-bad-mpegpsdemux \
     gstreamer1.0-plugins-bad-mpegtsdemux \
@@ -132,6 +134,7 @@ GST_BAD_RDEPS = "${@base_contains('GST_VERSION', '1.0', ' \
     gstreamer1.0-plugins-bad-faad \
     gstreamer1.0-plugins-bad-fragmented \
     gstreamer1.0-plugins-bad-videoparsersbad \
+    gstreamer1.0-plugins-bad-autoconvert \
     ', ' \
     gst-plugins-bad-cdxaparse \
     gst-plugins-bad-mms \
@@ -203,7 +206,7 @@ inherit autotools-brokensep gitpkgv pkgconfig pythonnative
 
 PV = "3.0+git${SRCPV}"
 PKGV = "3.0+git${GITPKGV}"
-PR = "r22"
+PR = "r23"
 
 SRC_URI = "${ENIGMA2_URI}"
 
