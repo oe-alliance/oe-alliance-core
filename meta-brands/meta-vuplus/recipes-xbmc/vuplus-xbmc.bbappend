@@ -36,7 +36,6 @@ RDEPENDS_${PN} += "\
 	nfs-utils-client \
 	libshairport \
 	glibc-gconv-utf-32 \
-	lzma \
 	tiff \
 	yajl \
 	libxslt \
