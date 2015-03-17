@@ -40,7 +40,7 @@ inherit gitpkgv
 
 PV = "${GSTVERSION}+git${SRCPV}"
 PKGV = "${GSTVERSION}+git${GITPKGV}"
-PR = "r8"
+PR = "r9"
 
 do_configure_prepend() {
     sed -i 's/AC_INIT.*$/AC_INIT(gst-plugin-dvbmediasink, 1.0.0, @pli4)/' ${S}/configure.ac
