@@ -16,13 +16,14 @@ MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS = "\
 
 MACHINE_EXTRA_RRECOMMENDS = " \
     vuplus-shutdown \
-    vuplus-gst-plugin-dvbmediasink \
+    gst-plugin-dvbmediasink \
+    gst-ffmpeg \
     ${@base_contains('DISTRO_FEATURES', 'audioeffect', 'enigma2-plugin-systemplugins-audioeffect' , '', d)} \
     "
 
 include conf/machine/include/autoload-filesystems.inc
 
-DVBMEDIASINK_CONFIG = "--with-wmv --with-wma --with-pcm --with-eac3"
+DVBMEDIASINK_CONFIG = "--with-amr --with-wmv --with-pcm --with-eac3"
 
 TARGET_ARCH = "mipsel"
 DEFAULTTUNE = "mips32el"
