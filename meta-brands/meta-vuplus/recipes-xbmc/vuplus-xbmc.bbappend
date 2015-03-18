@@ -47,11 +47,11 @@ RDEPENDS_${PN} += "\
 	libcurl \
 "
 
-BUILD_PR="r3"
+BUILD_PR="r4"
 NATIVEGLES_PR="20141202_p0"
 
 BRANCH = "gotham_vuplus"
-SRCREV = "a4cee0ded4d72572be519ffe8c3aad329113e10a"
+SRCREV = "ed2750e32e965dfdc624d7f49adc7e27913c81e5"
 
 PV = "13.2"
 PR = "${BUILD_PR}_${NATIVEGLES_PR}_${SRCREV}"
