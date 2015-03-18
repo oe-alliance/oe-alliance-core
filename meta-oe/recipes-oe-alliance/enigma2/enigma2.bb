@@ -154,9 +154,9 @@ CONFFILES_enigma2-plugin-extensions-openxtareader = "/usr/lib/enigma2/python/Plu
 
 inherit autotools-brokensep gitpkgv pkgconfig pythonnative
 
-PV = "3.0+git${SRCPV}"
-PKGV = "3.0+git${GITPKGV}"
-PR = "r22"
+PV = "5.0+git${SRCPV}"
+PKGV = "5.0+git${GITPKGV}"
+PR = "r0"
 
 SRC_URI = "${ENIGMA2_URI}"
 
@@ -192,8 +192,8 @@ PACKAGES += "${PN}-meta"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PACKAGES =+ "enigma2-fonts"
-PV_enigma2-fonts = "2010.11.14"
-PR_enigma2-fonts = "r1"
+PV_enigma2-fonts = "20150318"
+PR_enigma2-fonts = "r0"
 PKGV_enigma2-fonts = "${PV_enigma2-fonts}"
 FILES_enigma2-fonts = "${datadir}/fonts"
 
