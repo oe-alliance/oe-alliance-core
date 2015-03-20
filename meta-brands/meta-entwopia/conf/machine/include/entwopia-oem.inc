@@ -3,6 +3,8 @@ include conf/machine/include/build-extras.inc
 
 BRAND_OEM = "entwopia"
 
+GST_VERSION = "1.0"
+
 MACHINE_NAME = "\
 ${@base_contains('MACHINEBUILD', 'enfinity', 'ENfinity' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'marvel1', 'Marvel 1' , '', d)}\

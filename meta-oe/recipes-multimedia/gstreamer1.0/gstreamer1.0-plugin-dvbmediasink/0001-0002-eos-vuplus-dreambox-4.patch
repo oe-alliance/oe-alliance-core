@@ -1,0 +1,354 @@
+From 1be437409b600c62827c808790992ebd17337267 Mon Sep 17 00:00:00 2001
+From: mx3L <mx3ldev@gmail.com>
+Date: Thu, 12 Mar 2015 15:47:44 +0100
+Subject: [PATCH] dvbmediasink: hold PREROLL_LOCK on passing EOS to basesink
+
+Some media (waw audio) were causing deadlock after EOS event
+ending with "Attempt to unlock mutex that was not locked"
+
+Further investigation of basesink revelead that it expects
+of us to hold PREROLL_LOCK on passing EOS event.
+
+For more information visit:
+
+http://forums.openpli.org/topic/29501-gstreamer-10/page-34#entry480811
+
+From 3f3a1e12a21bf7cfb36bf8b60e73519aefa4369c Mon Sep 17 00:00:00 2001
+From: christophecvr <stefansat@telenet.be>
+Date: Mon, 16 Mar 2015 09:59:27 +0100
+Subject: [PATCH] Branch gst-1.0: sink adapt for vuplus and dreambox
+Introduces box related type config parameters:
+--with-vuplus, --with-dreambox
+Fixed the video stream type to match those used by vuplus and dreambox
+Fixed the audio bypass type to match those used by dreambox
+Adapted the pes headers in function off boxtype vuplus and or dreambox
+Corrected one typo which was in patch 3
+Now also wmv3 plays on dreambox
+
+For more information visit:
+
+http://forums.openpli.org/topic/29501-gstreamer-10/page-39
+---
+ configure.ac      | 14 ++++++++++++++
+ gstdvbaudiosink.c | 25 +++++++++++++++++++++---
+ gstdvbaudiosink.h | 20 +++++++++++++++++++
+ gstdvbvideosink.c | 58 ++++++++++++++++++++++++++++++++++++++++++++++++++++---
+ gstdvbvideosink.h | 17 ++++++++++++++++
+ 5 files changed, 128 insertions(+), 6 deletions(-)
+
+diff --git a/configure.ac b/configure.ac
+index 2ee6c6a..c702eec 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -220,6 +220,20 @@ AC_ARG_WITH(dtsdownmix,
+ if test "$have_dtsdownmix" = "yes"; then
+ 	AC_DEFINE([HAVE_DTSDOWNMIX],[1],[Define to 1 for DTS downmix support])
+ fi
++
++AC_ARG_WITH(vuplus,
++	AS_HELP_STRING([--with-vuplus],[build for vuplus, yes or no]),
++	[vuplus=$withval],[vuplus=no])
++if test "$vuplus" = "yes"; then
++	AC_DEFINE([VUPLUS],[1],[Define to 1 for vuplus ])
++fi
++
++AC_ARG_WITH(dreambox,
++	AS_HELP_STRING([--with-dreambox],[build for dreambox, yes or no]),
++	[dreambox=$withval],[dreambox=no])
++if test "$dreambox" = "yes"; then
++	AC_DEFINE([DREAMBOX],[1],[build for dreambox, yes or no ])
++fi
+ DTS_LIBS="-ldca $LIBM"
+ AC_SUBST(DTS_LIBS)
+ AM_CONDITIONAL(HAVE_DTSDOWNMIX, test "$have_dtsdownmix" = "yes")
+diff --git a/gstdvbaudiosink.c b/gstdvbaudiosink.c
+index 2725def..9cd12e0 100644
+--- a/gstdvbaudiosink.c
++++ b/gstdvbaudiosink.c
+@@ -74,9 +74,15 @@
+ #include <poll.h>
+ #include <stdio.h>
+ 
++#if GST_VERSION_MAJOR < 1
+ #include <gst/gst.h>
+ #include <gst/audio/audio.h>
+ #include <gst/base/gstbasesink.h>
++#else
++#include <gstreamer-1.0/gst/gst.h>
++#include <gstreamer-1.0/gst/audio/audio.h>
++#include <gstreamer-1.0/gst/base/gstbasesink.h>
++#endif
+ 
+ #include "common.h"
+ #include "gstdvbaudiosink.h"
+@@ -797,12 +803,12 @@ static gboolean gst_dvbaudiosink_event(GstBaseSink *sink, GstEvent *event)
+ 		break;
+ 	case GST_EVENT_EOS:
+ 	{
++		gboolean pass_eos = FALSE;
+ 		struct pollfd pfd[2];
+ 		pfd[0].fd = self->unlockfd[0];
+ 		pfd[0].events = POLLIN;
+ 		pfd[1].fd = self->fd;
+ 		pfd[1].events = POLLIN;
+-
+ #if GST_VERSION_MAJOR < 1
+ 		GST_PAD_PREROLL_UNLOCK(sink->sinkpad);
+ #else
+@@ -828,7 +834,7 @@ static gboolean gst_dvbaudiosink_event(GstBaseSink *sink, GstEvent *event)
+ 			if (pfd[1].revents & POLLIN)
+ 			{
+ 				GST_DEBUG_OBJECT(self, "got buffer empty from driver!\n");
+-				ret = GST_BASE_SINK_CLASS(parent_class)->event(sink, event);
++				pass_eos = TRUE;
+ 				break;
+ 			}
+ 
+@@ -844,7 +850,8 @@ static gboolean gst_dvbaudiosink_event(GstBaseSink *sink, GstEvent *event)
+ #else
+ 		GST_BASE_SINK_PREROLL_LOCK(sink);
+ #endif
+-
++		if (pass_eos)
++			ret = GST_BASE_SINK_CLASS(parent_class)->event(sink, event);
+ 		break;
+ 	}
+ #if GST_VERSION_MAJOR < 1
+@@ -1188,6 +1195,12 @@ GstFlowReturn gst_dvbaudiosink_push_buffer(GstDVBAudioSink *self, GstBuffer *buf
+ 		if (self->codec_data)
+ 		{
+ 			size_t payload_len = size;
++#ifdef DREAMBOX
++			pes_header[pes_header_len++] = 0x42; // B
++			pes_header[pes_header_len++] = 0x43; // C
++			pes_header[pes_header_len++] = 0x4D; // M
++			pes_header[pes_header_len++] = 0x41; // A
++#endif
+ 			pes_header[pes_header_len++] = (payload_len >> 24) & 0xff;
+ 			pes_header[pes_header_len++] = (payload_len >> 16) & 0xff;
+ 			pes_header[pes_header_len++] = (payload_len >> 8) & 0xff;
+@@ -1214,6 +1227,12 @@ GstFlowReturn gst_dvbaudiosink_push_buffer(GstDVBAudioSink *self, GstBuffer *buf
+ 		if (self->codec_data && codec_data_size >= 18)
+ 		{
+ 			size_t payload_len = size;
++#ifdef DREAMBOX
++			pes_header[pes_header_len++] = 0x42; // B
++			pes_header[pes_header_len++] = 0x43; // C
++			pes_header[pes_header_len++] = 0x4D; // M
++			pes_header[pes_header_len++] = 0x41; // A
++#endif
+ 			pes_header[pes_header_len++] = (payload_len >> 24) & 0xff;
+ 			pes_header[pes_header_len++] = (payload_len >> 16) & 0xff;
+ 			pes_header[pes_header_len++] = (payload_len >> 8) & 0xff;
+diff --git a/gstdvbaudiosink.h b/gstdvbaudiosink.h
+index a83be80..dfce273 100644
+--- a/gstdvbaudiosink.h
++++ b/gstdvbaudiosink.h
+@@ -67,6 +67,25 @@ typedef struct _GstDVBAudioSink		GstDVBAudioSink;
+ typedef struct _GstDVBAudioSinkClass	GstDVBAudioSinkClass;
+ typedef struct _GstDVBAudioSinkPrivate	GstDVBAudioSinkPrivate;
+ 
++#ifdef DREAMBOX
++typedef enum {
++	AUDIOTYPE_UNKNOWN = -1,
++	AUDIOTYPE_AC3 = 0,
++	AUDIOTYPE_MPEG = 1,
++	AUDIOTYPE_DTS = 2,
++	AUDIOTYPE_LPCM = 6,
++	AUDIOTYPE_AC3_PLUS = 7,
++	AUDIOTYPE_AAC = 8,
++	AUDIOTYPE_AAC_HE = 9,
++	AUDIOTYPE_MP3 = 0xa,
++	AUDIOTYPE_AAC_PLUS = 0xb,
++	AUDIOTYPE_WMA = 0xd,
++	AUDIOTYPE_WMA_PRO = 0xe,
++	AUDIOTYPE_RAW = 0xf,
++	AUDIOTYPE_DTS_HD = 0x10,
++	AUDIOTYPE_AMR = 0x23
++} t_audio_type;
++#else
+ typedef enum {
+ 	AUDIOTYPE_UNKNOWN = -1,
+ 	AUDIOTYPE_AC3 = 0,
+@@ -84,6 +103,7 @@ typedef enum {
+ 	AUDIOTYPE_AMR = 0x23,
+ 	AUDIOTYPE_RAW = 0x30
+ } t_audio_type;
++#endif
+ 
+ struct _GstDVBAudioSink
+ {
+diff --git a/gstdvbvideosink.c b/gstdvbvideosink.c
+index a6b0a10..300e676 100644
+--- a/gstdvbvideosink.c
++++ b/gstdvbvideosink.c
+@@ -73,8 +73,13 @@
+ #include <string.h>
+ #include <stdio.h>
+ 
++#if GST_VERSION_MAJOR < 1
+ #include <gst/gst.h>
+ #include <gst/base/gstbasesink.h>
++#else
++#include <gstreamer-1.0/gst/gst.h>
++#include <gstreamer-1.0/gst/base/gstbasesink.h>
++#endif
+ 
+ #define PACK_UNPACKED_XVID_DIVX5_BITSTREAM
+ 
+@@ -418,6 +423,7 @@ static gboolean gst_dvbvideosink_event(GstBaseSink *sink, GstEvent *event)
+ 		break;
+ 	case GST_EVENT_EOS:
+ 	{
++		gboolean pass_eos = FALSE;
+ 		struct pollfd pfd[2];
+ 		pfd[0].fd = self->unlockfd[0];
+ 		pfd[0].events = POLLIN;
+@@ -449,7 +455,7 @@ static gboolean gst_dvbvideosink_event(GstBaseSink *sink, GstEvent *event)
+ 			if (pfd[1].revents & POLLIN)
+ 			{
+ 				GST_DEBUG_OBJECT (self, "got buffer empty from driver!\n");
+-				ret = GST_BASE_SINK_CLASS(parent_class)->event(sink, event);
++				pass_eos = TRUE;
+ 				break;
+ 			}
+ 
+@@ -465,6 +471,8 @@ static gboolean gst_dvbvideosink_event(GstBaseSink *sink, GstEvent *event)
+ #else
+ 		GST_BASE_SINK_PREROLL_LOCK(sink);
+ #endif
++		if(pass_eos)
++			ret = GST_BASE_SINK_CLASS(parent_class)->event(sink, event);
+ 
+ 		break;
+ 	}
+@@ -1590,13 +1598,13 @@ static gboolean gst_dvbvideosink_set_caps(GstBaseSink *basesink, GstCaps *caps)
+ 		{
+ 			self->stream_type = STREAMTYPE_VC1;
+ 			self->codec_type = CT_VC1;
+-			GST_INFO_OBJECT (self, "MIMETYPE video/x-wmv WVC1 -> STREAMTYPE_VC1");
++			GST_INFO_OBJECT (self, "MIMETYPE video/x-wmv %s -> STREAMTYPE_VC1", value);
+ 		}
+ 		else
+ 		{
+ 			self->stream_type = STREAMTYPE_VC1_SM;
+ 			self->codec_type = CT_VC1_SM;
+-			GST_INFO_OBJECT (self, "MIMETYPE video/x-wmv -> STREAMTYPE_VC1_SM");
++			GST_INFO_OBJECT (self, "MIMETYPE video/x-wmv %s -> STREAMTYPE_VC1_SM", value);
+ 		}
+ 	}
+ 
+@@ -1655,6 +1663,19 @@ static gboolean gst_dvbvideosink_set_caps(GstBaseSink *basesink, GstCaps *caps)
+ 					codec_data_pointer = codecdatamap.data;
+ 					codec_size = codecdatamap.size;
+ #endif
++#if defined(VUPLUS) || defined(DREAMBOX)
++#if GST_VERSION_MAJOR < 1
++					self->codec_data = gst_buffer_new_and_alloc(8 + codec_size);
++					data = GST_BUFFER_DATA(self->codec_data);
++#else
++					GstMapInfo map;
++					self->codec_data = gst_buffer_new_and_alloc(8 + codec_size);
++					gst_buffer_map(self->codec_data, &map, GST_MAP_WRITE);
++					data = map.data;
++#endif
++					data += 8;
++					if (codec_data && codec_size) memcpy(data , codec_data_pointer, codec_size);
++#else
+ 					videocodecdata.length = 8 + codec_size;
+ 					data = videocodecdata.data = (guint8*)g_malloc(videocodecdata.length);
+ 					memset(data, 0, videocodecdata.length);
+@@ -1662,8 +1683,12 @@ static gboolean gst_dvbvideosink_set_caps(GstBaseSink *basesink, GstCaps *caps)
+ 					memcpy(data, codec_data_pointer, codec_size);
+ 					ioctl(self->fd, VIDEO_SET_CODEC_DATA, &videocodecdata);
+ 					g_free(videocodecdata.data);
++#endif
+ #if GST_VERSION_MAJOR >= 1
+ 					gst_buffer_unmap(gst_value_get_buffer(codec_data), &codecdatamap);
++#if defined(VUPLUS) || defined(DREAMBOX)
++					gst_buffer_unmap(self->codec_data, &map);
++#endif
+ #endif
+ 				}
+ 			}
+@@ -1689,6 +1714,29 @@ static gboolean gst_dvbvideosink_set_caps(GstBaseSink *basesink, GstCaps *caps)
+ 					if (codec_size > 4) codec_size = 4;
+ 					gst_structure_get_int(structure, "width", &width);
+ 					gst_structure_get_int(structure, "height", &height);
++#if defined(VUPLUS) || defined(DREAMBOX)
++#if GST_VERSION_MAJOR < 1
++					self->codec_data = gst_buffer_new_and_alloc(18 + codec_size);
++					data = GST_BUFFER_DATA(self->codec_data);
++#else
++					GstMapInfo map;
++					self->codec_data = gst_buffer_new_and_alloc(18 + codec_size);
++					gst_buffer_map(self->codec_data, &map, GST_MAP_WRITE);
++					data = map.data;
++#endif
++					/* pes header */
++					*(data++) = 0x00;
++					*(data++) = 0x00;
++					*(data++) = 0x01;
++					*(data++) = 0x0f;
++					/* width */
++					*(data++) = (width >> 8) & 0xff;
++					*(data++) = width & 0xff;
++					/* height */
++					*(data++) = (height >> 8) & 0xff;
++					*(data++) = height & 0xff;
++					if (codec_data && codec_size) memcpy(data, codec_data_pointer, codec_size);
++#else
+ 					videocodecdata.length = 33;
+ 					data = videocodecdata.data = (guint8*)g_malloc(videocodecdata.length);
+ 					memset(data, 0, videocodecdata.length);
+@@ -1702,8 +1750,12 @@ static gboolean gst_dvbvideosink_set_caps(GstBaseSink *basesink, GstCaps *caps)
+ 					if (codec_data && codec_size) memcpy(data, codec_data_pointer, codec_size);
+ 					ioctl(self->fd, VIDEO_SET_CODEC_DATA, &videocodecdata);
+ 					g_free(videocodecdata.data);
++#endif
+ #if GST_VERSION_MAJOR >= 1
+ 					gst_buffer_unmap(gst_value_get_buffer(codec_data), &codecdatamap);
++#if defined(VUPLUS) || defined(DREAMBOX)
++					gst_buffer_unmap(self->codec_data, &map);
++#endif
+ #endif
+ 				}
+ 			}
+diff --git a/gstdvbvideosink.h b/gstdvbvideosink.h
+index 8cf1dc2..179d0bd 100644
+--- a/gstdvbvideosink.h
++++ b/gstdvbvideosink.h
+@@ -66,6 +66,22 @@ typedef struct _GstDVBVideoSinkClass	GstDVBVideoSinkClass;
+ typedef struct _GstDVBVideoSinkPrivate	GstDVBVideoSinkPrivate;
+ 
+ typedef enum { CT_MPEG1, CT_MPEG2, CT_H264, CT_DIVX311, CT_DIVX4, CT_MPEG4_PART2, CT_VC1, CT_VC1_SM } t_codec_type;
++#if defined(VUPLUS) || defined(DREAMBOX)
++typedef enum {
++	STREAMTYPE_UNKNOWN = -1,
++	STREAMTYPE_MPEG2 = 0,
++	STREAMTYPE_MPEG4_H264 = 1,
++	STREAMTYPE_H263 = 2,
++	STREAMTYPE_MPEG4_Part2 = 4,
++	STREAMTYPE_MPEG1 = 6,
++	STREAMTYPE_XVID = 10,
++	STREAMTYPE_DIVX311 = 13,
++	STREAMTYPE_DIVX4 = 14,
++	STREAMTYPE_DIVX5 = 15,
++	STREAMTYPE_VC1 = 16,
++	STREAMTYPE_VC1_SM = 17
++} t_stream_type;
++#else
+ typedef enum {
+ 	STREAMTYPE_UNKNOWN = -1,
+ 	STREAMTYPE_MPEG2 = 0,
+@@ -80,6 +96,7 @@ typedef enum {
+ 	STREAMTYPE_DIVX4 = 14,
+ 	STREAMTYPE_DIVX5 = 15
+ } t_stream_type;
++#endif
+ 
+ struct _GstDVBVideoSink
+ {
+-- 
+1.9.1
+

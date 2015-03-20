@@ -1,8 +1,8 @@
 diff --git a/Makefile.am b/Makefile.am
-index d0f54e5..336bef5 100644
+index 4c72f8b..d1d5fe6 100644
 --- a/Makefile.am
 +++ b/Makefile.am
-@@ -1,111 +1,58 @@
+@@ -1,112 +1,61 @@
  ACLOCAL_AMFLAGS = -I m4
  
  SUBDIRS = \
@@ -46,7 +46,7 @@ index d0f54e5..336bef5 100644
 -	growlee \
  	imdb \
  	infobartunerstate \
--	internetradio \
+ 	internetradio \
  	kiddytimer \
 -	letterbox \
  	mediadownloader \
@@ -70,12 +70,13 @@ index d0f54e5..336bef5 100644
  	pipservicerelation \
  	podcast \
 -	porncenter \
--	pushservice \
--	quickbutton \
+ 	pushservice \
+ 	quickbutton \
  	reconstructapsc \
 -	reftopiconname \
  	remotetimer \
 -	rsdownloader \
+ 	seriesplugin \
 -	setpasswd \
  	shoutcast \
  	showclock \
@@ -100,7 +101,7 @@ index d0f54e5..336bef5 100644
 -	werbezapper \
 -	zaphistorybrowser \
  	zapstatistic \
- 	zdfmediathek \
+-	zdfmediathek \
 -	oscaminfo \
 -	esame \
 -	schiffe \
@@ -108,7 +109,7 @@ index d0f54e5..336bef5 100644
 -	vierg \
 -	bmediacenter \
 -	advancedmovieselection
-+	sudoku
++	zdfmediathek
  
  if DREAMBOX
 -SUBDIRS +=  fancontrol2 letterbox logomanager movielistpreview genuinedreambox

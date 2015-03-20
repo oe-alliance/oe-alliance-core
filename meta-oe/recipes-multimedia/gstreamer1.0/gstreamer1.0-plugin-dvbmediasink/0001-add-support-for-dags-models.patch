@@ -1,0 +1,136 @@
+From 0e169c626a3facabe4e2d99561adb0718a6b2f38 Mon Sep 17 00:00:00 2001
+From: Captain <captain.onboard@web.de>
+Date: Mon, 16 Mar 2015 21:20:30 +0100
+Subject: [PATCH] add support for dags models
+
+---
+ configure.ac      |  7 +++++++
+ gstdvbaudiosink.c | 38 ++++++++++++++++++++++++++++++++++++++
+ gstdvbvideosink.c |  8 ++++----
+ 3 files changed, 49 insertions(+), 4 deletions(-)
+
+diff --git a/configure.ac b/configure.ac
+index c702eec..0dc3a9e 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -221,6 +221,13 @@ if test "$have_dtsdownmix" = "yes"; then
+ 	AC_DEFINE([HAVE_DTSDOWNMIX],[1],[Define to 1 for DTS downmix support])
+ fi
+ 
++AC_ARG_WITH(dags,
++	AS_HELP_STRING([--with-dags],[build for dags, yes or no]),
++	[dags=$withval],[dags=no])
++if test "$dags" = "yes"; then
++	AC_DEFINE([DAGS],[1],[build for dags, yes or no ])
++fi
++
+ AC_ARG_WITH(vuplus,
+ 	AS_HELP_STRING([--with-vuplus],[build for vuplus, yes or no]),
+ 	[vuplus=$withval],[vuplus=no])
+diff --git a/gstdvbaudiosink.c b/gstdvbaudiosink.c
+index 9cd12e0..c73d2fe 100644
+--- a/gstdvbaudiosink.c
++++ b/gstdvbaudiosink.c
+@@ -672,7 +672,11 @@ static gboolean gst_dvbaudiosink_set_caps(GstBaseSink *basesink, GstCaps *caps)
+ 		const gchar *formatstring = NULL;
+ #endif
+ 		gint width = 0, depth = 0, rate = 0, channels, block_align, byterate;
++#ifdef DAGS
++		self->codec_data = gst_buffer_new_and_alloc(18 + 8);
++#else
+ 		self->codec_data = gst_buffer_new_and_alloc(18);
++#endif
+ #if GST_VERSION_MAJOR < 1
+ 		data = GST_BUFFER_DATA(self->codec_data);
+ 		size = GST_BUFFER_SIZE(self->codec_data);
+@@ -712,6 +716,39 @@ static gboolean gst_dvbaudiosink_set_caps(GstBaseSink *basesink, GstCaps *caps)
+ 		byterate = channels * rate * width / 8;
+ 		block_align = channels * width / 8;
+ 		memset(data, 0, size);
++#ifdef DAGS
++		self->fixed_buffersize      =  rate * 30 / 1000;
++		self->fixed_buffersize      *= channels * depth / 8;
++		self->fixed_buffertimestamp =  GST_CLOCK_TIME_NONE;
++		self->fixed_bufferduration  =  GST_SECOND * (GstClockTime)self->fixed_buffersize / (GstClockTime)byterate;
++        memcpy(data,"BCMA",4);
++        data[4]  = (self->fixed_buffersize & 0xFF000000) >> 24;
++        data[5]  = (self->fixed_buffersize & 0xFF0000) >> 16; 
++        data[6]  = (self->fixed_buffersize & 0xFF00) >> 8; 
++        data[7]  = (self->fixed_buffersize & 0xFF);
++		/* format tag */
++		data[8]  = format & 0xff;
++		data[9]  = (format >> 8) & 0xff;
++		/* channels */
++		data[10] = channels & 0xff;
++		data[11] = (channels >> 8) & 0xff;
++		/* sample rate */
++		data[12] = rate & 0xff;
++		data[13] = (rate >> 8) & 0xff;
++		data[14] = (rate >> 16) & 0xff;
++		data[15] = (rate >> 24) & 0xff;
++		/* byte rate */
++		data[16] = byterate & 0xff;
++		data[17] = (byterate >> 8) & 0xff;
++		data[18] = (byterate >> 16) & 0xff;
++		data[19] = (byterate >> 24) & 0xff;
++		/* block align */
++		data[20] = block_align & 0xff;
++		data[21] = (block_align >> 8) & 0xff;
++		/* word size */
++		data[22] = depth & 0xff;
++		data[23] = (depth >> 8) & 0xff;
++#else
+ 		/* format tag */
+ 		*(data++) = format & 0xff;
+ 		*(data++) = (format >> 8) & 0xff;
+@@ -738,6 +775,7 @@ static gboolean gst_dvbaudiosink_set_caps(GstBaseSink *basesink, GstCaps *caps)
+ 		self->fixed_buffersize *= channels * depth / 8;
+ 		self->fixed_buffertimestamp = GST_CLOCK_TIME_NONE;
+ 		self->fixed_bufferduration = GST_SECOND * (GstClockTime)self->fixed_buffersize / (GstClockTime)byterate;
++#endif
+ 		GST_INFO_OBJECT(self, "MIMETYPE %s", type);
+ 		bypass = AUDIOTYPE_RAW;
+ #if GST_VERSION_MAJOR >= 1
+diff --git a/gstdvbvideosink.c b/gstdvbvideosink.c
+index 300e676..5911b54 100644
+--- a/gstdvbvideosink.c
++++ b/gstdvbvideosink.c
+@@ -1663,7 +1663,7 @@ static gboolean gst_dvbvideosink_set_caps(GstBaseSink *basesink, GstCaps *caps)
+ 					codec_data_pointer = codecdatamap.data;
+ 					codec_size = codecdatamap.size;
+ #endif
+-#if defined(VUPLUS) || defined(DREAMBOX)
++#if defined(VUPLUS) || defined(DREAMBOX) || defined(DAGS)
+ #if GST_VERSION_MAJOR < 1
+ 					self->codec_data = gst_buffer_new_and_alloc(8 + codec_size);
+ 					data = GST_BUFFER_DATA(self->codec_data);
+@@ -1686,7 +1686,7 @@ static gboolean gst_dvbvideosink_set_caps(GstBaseSink *basesink, GstCaps *caps)
+ #endif
+ #if GST_VERSION_MAJOR >= 1
+ 					gst_buffer_unmap(gst_value_get_buffer(codec_data), &codecdatamap);
+-#if defined(VUPLUS) || defined(DREAMBOX)
++#if defined(VUPLUS) || defined(DREAMBOX) || defined(DAGS)
+ 					gst_buffer_unmap(self->codec_data, &map);
+ #endif
+ #endif
+@@ -1714,7 +1714,7 @@ static gboolean gst_dvbvideosink_set_caps(GstBaseSink *basesink, GstCaps *caps)
+ 					if (codec_size > 4) codec_size = 4;
+ 					gst_structure_get_int(structure, "width", &width);
+ 					gst_structure_get_int(structure, "height", &height);
+-#if defined(VUPLUS) || defined(DREAMBOX)
++#if defined(VUPLUS) || defined(DREAMBOX) || defined(DAGS)
+ #if GST_VERSION_MAJOR < 1
+ 					self->codec_data = gst_buffer_new_and_alloc(18 + codec_size);
+ 					data = GST_BUFFER_DATA(self->codec_data);
+@@ -1753,7 +1753,7 @@ static gboolean gst_dvbvideosink_set_caps(GstBaseSink *basesink, GstCaps *caps)
+ #endif
+ #if GST_VERSION_MAJOR >= 1
+ 					gst_buffer_unmap(gst_value_get_buffer(codec_data), &codecdatamap);
+-#if defined(VUPLUS) || defined(DREAMBOX)
++#if defined(VUPLUS) || defined(DREAMBOX) || defined(DAGS)
+ 					gst_buffer_unmap(self->codec_data, &map);
+ #endif
+ #endif
+-- 
+1.9.5.msysgit.0
+

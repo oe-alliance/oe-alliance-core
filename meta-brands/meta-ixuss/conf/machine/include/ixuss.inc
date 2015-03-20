@@ -8,6 +8,8 @@ MTD_KERNEL = "mtd1"
 KERNEL_FILE = "kernel.bin"
 ROOTFS_FILE = "rootfs.bin"
 
+GST_VERSION = "1.0"
+
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS = " \
     ixuss-dvb-modules-${MACHINE} \
     "

@@ -3,6 +3,8 @@ include conf/machine/include/build-extras.inc
 
 BRAND_OEM = "broadmedia"
 
+GST_VERSION = "1.0"
+
 MACHINE_NAME = "\
 ${@base_contains('MACHINEBUILD', 'broadmedia300', 'G300' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'sf3038', 'SF3038' , '', d)}\
@@ -34,7 +36,7 @@ MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS = "\
     "
 
 MACHINE_EXTRA_RRECOMMENDS = " \
-    gst-plugin-dvbmediasink \
+    gstreamer1.0-plugin-dvbmediasink \
     "
 
 include conf/machine/include/autoload-filesystems.inc
