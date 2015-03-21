@@ -9,14 +9,15 @@ DEPENDS += "cdparanoia cairo jpeg libpng zlib libid3tag flac speex libsoup-2.4"
 DEPENDS += "gst-plugins-base"
 
 SRCREV = "${AUTOREV}"
-PR = "r21"
+PR = "r22"
 GIT_PV = ""
 
 EXTRA_OECONF = "--enable-orc --disable-esd --disable-aalib --disable-shout2 --disable-libcaca --disable-hal"
 
 inherit autotools pkgconfig gettext git-project
 
-SRC_URI = "git://anongit.freedesktop.org/gstreamer/${PN};protocol=git;branch=0.10"
+#SRC_URI = "git://anongit.freedesktop.org/gstreamer/${PN};protocol=git;branch=0.10"
+SRC_URI = "git://anongit.freedesktop.org/git/gstreamer/${PN};protocol=http;branch=0.10"
 
 SRC_URI += " \
     file://orc.m4-fix-location-of-orcc-when-cross-compiling.patch \
@@ -33,6 +34,8 @@ SRC_URI += " \
 "
 
 do_common_update() {
+    sed  's!git://anongit.freedesktop.org/gstreamer/common!http://anongit.freedesktop.org/git/gstreamer/common.git!' -i ${S}/.git/config
+    sed  's!git://anongit.freedesktop.org/gstreamer/common!http://anongit.freedesktop.org/git/gstreamer/common.git!' -i ${S}/.gitmodules
     cd ${S}
     # Make sure we have common
     if test ! -f common/gst-autogen.sh;

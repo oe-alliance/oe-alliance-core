@@ -10,7 +10,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=55ca817ccb7d5b5b66355690e9abc605 \
 DEPENDS = "glib-2.0 libxml2 bison-native flex-native"
 
 SRCREV = "${AUTOREV}"
-PR = "r11"
+PR = "r12"
 GIT_PV = ""
 
 RRECOMMENDS_${PN}_qemux86    += "kernel-module-snd-ens1370 kernel-module-snd-rawmidi"
@@ -25,7 +25,8 @@ GSTREAMER_DEBUG ?= "--disable-debug"
 EXTRA_OECONF = "--disable-docs-build --disable-dependency-tracking --with-check=no --disable-examples --disable-tests --disable-valgrind ${GSTREAMER_DEBUG}"
 
 inherit autotools pkgconfig gettext git-project
-SRC_URI = "git://anongit.freedesktop.org/gstreamer/${PN};protocol=git;branch=0.10"
+#SRC_URI = "git://anongit.freedesktop.org/gstreamer/${PN};protocol=git;branch=0.10"
+SRC_URI = "git://anongit.freedesktop.org/git/gstreamer/${PN};protocol=http;branch=0.10"
 
 SRC_URI += " \
     file://check_fix.patch \
@@ -35,6 +36,8 @@ SRC_URI += " \
 "
 
 do_common_update() {
+    sed  's!git://anongit.freedesktop.org/gstreamer/common!http://anongit.freedesktop.org/git/gstreamer/common.git!' -i ${S}/.git/config
+    sed  's!git://anongit.freedesktop.org/gstreamer/common!http://anongit.freedesktop.org/git/gstreamer/common.git!' -i ${S}/.gitmodules
     cd ${S}
     # Make sure we have common
     if test ! -f common/gst-autogen.sh;
