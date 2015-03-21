@@ -1,0 +1,34 @@
+From 884356a67306acdabe932107adf498d6f91ee02c Mon Sep 17 00:00:00 2001
+From: Andreas Monzner <andreas.monzner@dream-property.net>
+Date: Mon, 16 Mar 2015 13:54:35 +0100
+Subject: [PATCH 4/4] correctly initiate nand flash ecc config when old 2nd
+ stage loader is used to boot the box (maybe via
+ network)
+
+---
+ drivers/mtd/brcmnand/brcmnand_base.c |    9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+diff --git a/drivers/mtd/brcmnand/brcmnand_base.c b/drivers/mtd/brcmnand/brcmnand_base.c
+index e49149d..4410fe4 100644
+--- a/drivers/mtd/brcmnand/brcmnand_base.c
++++ b/drivers/mtd/brcmnand/brcmnand_base.c
+@@ -9545,6 +9545,15 @@ printk("%s: Ecc level set to %d, sectorSize=%d from ID table\n", __FUNCTION__, c
+ 	 */
+ 
+ 	if (foundInIdTable && brcmnand_dev_id == TOSHIBA_TC58NVG3S0ETA00 && brcmnand_maf_id == FLASHTYPE_TOSHIBA && (nand_config >> 24) == 0x48) {
++		/* force BCH-4 error correction
++		 * this is needed when the 2nd stage loader has set the wrong
++		 * ecc config (old 2nd stage loader used and bootet via network)
++		 */
++		uint32_t acc = brcmnand_ctrl_read(bchp_nand_acc_control(chip->ctrl->CS[chip->csi]));
++		acc &= 0xFF00FFFF;
++		acc |= 0x440000;
++		chip->ctrl_write(bchp_nand_acc_control(chip->ctrl->CS[chip->csi]), acc);
++
+ 		nand_config &= ~(BCHP_NAND_CONFIG_BLOCK_SIZE_MASK);
+ 		nand_config |= (BCHP_NAND_CONFIG_BLOCK_SIZE_BK_SIZE_128KB << BCHP_NAND_CONFIG_BLOCK_SIZE_SHIFT);
+ 
+-- 
+1.7.10.4
+
