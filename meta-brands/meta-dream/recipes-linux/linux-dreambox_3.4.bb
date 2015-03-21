@@ -1,7 +1,7 @@
 inherit machine_kernel_pr
 
-PATCHREV = "209710a594b4d5643a3bfbc01f45ede012bc7da7"
-PATCHLEVEL = "105"
+PATCHREV = "38c24319e8b82eeab5d102eba355718ae8f50c48"
+PATCHLEVEL = "106"
 
 SRC_URI = " \
     ${KERNELORG_MIRROR}/linux/kernel/v3.x/linux-3.4.tar.xz;name=kernel \
@@ -11,10 +11,10 @@ SRC_URI = " \
 "
 SRC_URI[kernel.md5sum] = "967f72983655e2479f951195953e8480"
 SRC_URI[kernel.sha256sum] = "ff3dee6a855873d12487a6f4070ec2f7996d073019171361c955639664baa0c6"
-SRC_URI[stable-patch.md5sum] = "0f43fcca926776fd6fe849dcf62e633e"
-SRC_URI[stable-patch.sha256sum] = "e596f2b874a6a8f31a6f93cb40457694d30ff641d760b70a7419c983e67d1317"
-SRC_URI[dream-patch.md5sum] = "3eb59164d4c97c22619b78782bc53cbf"
-SRC_URI[dream-patch.sha256sum] = "20fa24a54c9d0c40454971585beb0cc27d45c3f48979d12760f1cf47a16420ba"
+SRC_URI[stable-patch.md5sum] = "fee956dfe6e1bb4bd0224ceb16338d9b"
+SRC_URI[stable-patch.sha256sum] = "eeeeb599392391a8117b8c7d6fdc85153038d1d43e4b9582620b4c62e061e21d"
+SRC_URI[dream-patch.md5sum] = "bdca5598db039833c4badf61db3a303f"
+SRC_URI[dream-patch.sha256sum] = "1eae07fc11f027d6363abe0d88d0ef7ba5def5e548fc1ddb58d4908af9702a03"
 
 S = "${WORKDIR}/linux-3.4"
 B = "${WORKDIR}/build"
@@ -29,9 +29,9 @@ do_compile_append() {
 require linux-dreambox2.inc
 require linux-extra-image.inc
 
-CMDLINE = "bmem=384M@640M memc1=768M console=ttyS0,1000000 root=/dev/mmcblk0p1 rootwait rootfstype=ext4"
+CMDLINE = "bmem=512M@512M memc1=768M console=ttyS0,1000000 root=/dev/mmcblk0p1 rootwait rootfstype=ext4"
 
-KERNEL_VERSION = "3.4-3.0-${MACHINE}"
+KERNEL_VERSION = "3.4-3.5-${MACHINE}"
 KERNEL_IMAGETYPE = "vmlinux.bin"
 KERNEL_ALT_IMAGETYPE = "vmlinux"
 KERNEL_EXTRA_IMAGETYPE = "vmlinuz"

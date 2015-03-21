@@ -25,7 +25,7 @@ SRC_URI = " \
     file://0008-The-ubi-maintained-flag-must-be-set-earlier-to-preve.patch \
     file://0009-fixed-partition-is-ubi-maintained-check.patch \
     file://0001-add-memory-mapping-support-to-usbfs-used-by-sundtek-.patch \
-    file://0001-linuxtv-api-DMM-drivers-are-now-ready-for-linux-tv-a.patch \	
+    file://0001-linuxtv-api-DMM-drivers-are-now-ready-for-linux-tv-a.patch \
     file://0001-brmcnand_base-disable-flash-BBT-on-64MB-nand.patch \
     file://0002-ubifs-add-config-option-to-use-zlib-as-default-compr.patch \
     file://em28xx_fix_terratec_entries.patch \
@@ -38,8 +38,17 @@ SRC_URI = " \
     file://defconfig \
 "
 
-SRC_URI_append_dm800sev2 = " file://0001-add-support-for-DM800SEv2-and-DM500HDv2-simplified-1.patch"
-SRC_URI_append_dm500hdv2 = " file://0001-add-support-for-DM800SEv2-and-DM500HDv2-simplified-1.patch"
+SRC_URI_append_dm800sev2 = " file://0001-add-support-for-DM800SEv2-and-DM500HDv2-simplified-1.patch \
+             file://0001-add-support-for-toshiba-nand-flash-add-workaround-fo.patch \
+             file://0004-correctly-initiate-nand-flash-ecc-config-when-old-2n.patch \
+"
+SRC_URI_append_dm500hdv2 = " file://0001-add-support-for-DM800SEv2-and-DM500HDv2-simplified-1.patch \
+             file://0001-add-support-for-toshiba-nand-flash-add-workaround-fo.patch \
+             file://0004-correctly-initiate-nand-flash-ecc-config-when-old-2n.patch \
+"
+SRC_URI_append_dm7020 = " file://0001-add-support-for-toshiba-nand-flash-add-workaround-fo.patch \
+             file://0004-correctly-initiate-nand-flash-ecc-config-when-old-2n.patch \
+"
 
 SRC_URI[kernel.md5sum] = "7ceb61f87c097fc17509844b71268935"
 SRC_URI[kernel.sha256sum] = "c881fc2b53cf0da7ca4538aa44623a7de043a41f76fd5d0f51a31f6ed699d463"
