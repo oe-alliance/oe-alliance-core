@@ -3,7 +3,7 @@ HOMEPAGE = "http://linuxtv.org/"
 SECTION = "kernel/modules"
 LICENSE = "GPLv2"
 
-inherit module machine_kernel_pr
+inherit module
 
 PACKAGES_DYNAMIC += "dvb-sky-module-*"
 
@@ -13,12 +13,22 @@ do_configure() {
 
 do_compile() {
     unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS
-    oe_runmake DIR="${STAGING_KERNEL_BUILDDIR}" ${MAKE_TARGETS}
+    oe_runmake KERNEL_PATH=${STAGING_KERNEL_BUILDDIR}   \
+        DIR="${STAGING_KERNEL_BUILDDIR}" \
+        KERNEL_VERSION=${KERNEL_VERSION} \
+        CC="${KERNEL_CC}" LD="${KERNEL_LD}" \
+        AR="${KERNEL_AR}" \
+        O=${STAGING_KERNEL_BUILDDIR} \
+       ${MAKE_TARGETS}
 }
 
 do_install() {
     unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS
-    oe_runmake DIR="${STAGING_KERNEL_BUILDDIR}" DEPMOD=echo DESTDIR="${D}" install
+    oe_runmake DEPMOD=echo DESTDIR="${D}" \
+        DIR="${STAGING_KERNEL_BUILDDIR}" \
+        CC="${KERNEL_CC}" LD="${KERNEL_LD}" \
+        O=${STAGING_KERNEL_BUILDDIR} \
+        install
 }
 
 PACKAGES = "dvb-sky-modules-dvbs ${PN}-tests"
@@ -96,12 +106,12 @@ python split_kernel_module_packages () {
         m = kerverrexp.match(kernelver)
         if m:
             kernelver_stripped = m.group(1)
-        STAGING_KERNEL_BUILDDIR = d.getVar("STAGING_KERNEL_BUILDDIR", True)
+        staging_kernel_dir = d.getVar("STAGING_KERNEL_BUILDDIR", True)
         system_map_file = "%s/boot/System.map-%s" % (dvar, kernelver)
         if not os.path.exists(system_map_file):
-            system_map_file = "%s/System.map-%s" % (STAGING_KERNEL_BUILDDIR, kernelver)
+            system_map_file = "%s/System.map-%s" % (staging_kernel_dir, kernelver)
             if not os.path.exists(system_map_file):
-                bb.fatal("System.map-%s does not exist in '%s/boot' nor STAGING_KERNEL_BUILDDIR '%s'" % (kernelver, dvar, STAGING_KERNEL_BUILDDIR))
+                bb.fatal("System.map-%s does not exist in '%s/boot' nor STAGING_KERNEL_BUILDDIR '%s'" % (kernelver, dvar, staging_kernel_dir))
 
         cmd = "depmod -n -a -b %s -F %s %s" % (dvar, system_map_file, kernelver_stripped)
         f = os.popen(cmd, 'r')
