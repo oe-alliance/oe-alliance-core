@@ -3069,7 +3069,7 @@ CONFIG_HAVE_ARCH_KGDB=y
 # CONFIG_TEST_KSTRTOX is not set
 CONFIG_EARLY_PRINTK=y
 CONFIG_CMDLINE_BOOL=y
-CONFIG_CMDLINE="bmem=384M@640M memc1=768M console=ttyS0,1000000 root=/dev/mmcblk0p1 rootwait rootfstype=ext4"
+CONFIG_CMDLINE="bmem=512M@512M memc1=768M console=ttyS0,1000000 root=/dev/mmcblk0p1 rootwait rootfstype=ext4"
 # CONFIG_CMDLINE_EXTEND is not set
 # CONFIG_CMDLINE_OVERRIDE is not set
 # CONFIG_DEBUG_STACKOVERFLOW is not set
