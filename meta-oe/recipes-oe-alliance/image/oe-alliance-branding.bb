@@ -96,9 +96,9 @@ do_configure_prepend() {
         DRIVERSDATE=`grep "SRCDATE = " ${OEA-META-XCORE-BASE}/recipes-drivers/xcore-dvb-modules-${MACHINE}.bb | cut -b 12-19`
     elif [ "${BRAND_OEM}" = "dreambox" ]; then
         if [ "${MACHINE}" = "dm7080" ]; then
-            DRIVERSDATE="20150127"
+            DRIVERSDATE="20150316"
         elif [ "${MACHINE}" = "dm820" ]; then
-            DRIVERSDATE="20150127"
+            DRIVERSDATE="20150316"
         elif [ "${MACHINE}" = "dm800" ]; then
             DRIVERSDATE="20131228"
         elif [ "${MACHINE}" = "dm8000" ]; then
