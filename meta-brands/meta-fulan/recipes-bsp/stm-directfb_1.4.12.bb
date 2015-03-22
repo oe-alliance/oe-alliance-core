@@ -24,3 +24,5 @@ LEAD_SONAME = "libdirectfb-1.4.so.5"
 
 SRC_URI[md5sum] = "55bbcedee602406b85f68b75be691302"
 SRC_URI[sha256sum] = "3d5dc03c1884d65a5cad7da6e8cbe456a0ee288b8422e586ce28d256d01eb33d"
+
+COMPATIBLE_MACHINE = "^(spark|spark7162)$"
