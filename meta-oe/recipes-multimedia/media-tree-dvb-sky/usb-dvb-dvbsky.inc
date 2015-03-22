@@ -14,6 +14,7 @@ do_configure() {
 do_compile() {
     unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS
     oe_runmake KERNEL_PATH=${STAGING_KERNEL_BUILDDIR}   \
+        KDIR="${STAGING_KERNEL_DIR}" \
         DIR="${STAGING_KERNEL_DIR}" \
         KERNEL_VERSION=${KERNEL_VERSION} \
         CC="${KERNEL_CC}" LD="${KERNEL_LD}" \
@@ -25,6 +26,7 @@ do_compile() {
 do_install() {
     unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS
     oe_runmake DEPMOD=echo DESTDIR="${D}" \
+        KDIR="${STAGING_KERNEL_DIR}" \
         DIR="${STAGING_KERNEL_DIR}" \
         CC="${KERNEL_CC}" LD="${KERNEL_LD}" \
         O=${STAGING_KERNEL_BUILDDIR} \
