@@ -8,12 +8,12 @@ RREPLACES_${PN} = "kernel-module-rtl8192cu"
 
 PR = "r3"
 
-inherit module machine_kernel_pr
+inherit module
 
 SRC_URI = "http://downloads.pli-images.org/misc/rtl8188C_8192C_8192D_usb_linux_v3.3.0_2971.20111128.tar.gz \
     file://additional_productids.patch \
     "
-do_configure[depends] += "virtual/kernel:do_shared_workdir"
+
 S = "${WORKDIR}/rtl8188C_8192C_8192D_usb_linux_v3.3.0_2971.20111128"
 
 inherit module

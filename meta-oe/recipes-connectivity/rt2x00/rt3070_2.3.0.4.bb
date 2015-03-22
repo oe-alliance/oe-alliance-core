@@ -6,7 +6,7 @@ SECTION = "kernel/modules"
 
 PR = "r3"
 
-inherit module machine_kernel_pr
+inherit module
 
 # Original URL needs a click-wrap license.
 SRC_URI = "http://www.penguin.cz/~utx/hardware/Ralink_3071/DPO_RT3070_LinuxSTA_V${PV}_20100604.tar.bz2 \
@@ -15,8 +15,8 @@ SRC_URI = "http://www.penguin.cz/~utx/hardware/Ralink_3071/DPO_RT3070_LinuxSTA_V
     file://rt3070sta-2.3.0.4-add-vendor.patch \
     "
 
-EXTRA_OEMAKE = "LINUX_SRC=${STAGING_KERNEL_BUILDDIR}"
-do_configure[depends] += "virtual/kernel:do_shared_workdir"
+EXTRA_OEMAKE = "LINUX_SRC=${STAGING_KERNEL_DIR}"
+
 S = "${WORKDIR}/DPO_RT3070_LinuxSTA_V${PV}_20100604"
 
 # Source is in .tar.tar.bz2 format.

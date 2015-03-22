@@ -7,22 +7,24 @@ LIC_FILES_CHKSUM = "file://../../COPYING;md5=94d55d512a9ba36caa9b7df079bae19f"
 RREPLACES_${PN} = "rt73-k2wrlz"
 RCONFLICTS_${PN} = "rt73-k2wrlz"
 
+MACHINE_KERNEL_PR_append = ".2"
+
 SRC_URI = "http://archiv.openmips.com/RT73.tar.gz \
            file://COPYING"
 
-inherit module machine_kernel_pr
-do_configure[depends] += "virtual/kernel:do_shared_workdir"
+inherit module
+ 
 S = "${WORKDIR}/RT73/Module/"
  
-EXTRA_OEMAKE = "KERNDIR=${STAGING_KERNEL_BUILDDIR}"
+EXTRA_OEMAKE = "KERNDIR=${STAGING_KERNEL_DIR}"
 
 do_compile () {
     unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS CC LD CPP
     oe_runmake 'MODPATH={D}${base_libdir}/modules/${KERNEL_VERSION}/kernel/drivers/net' \
-        'KERNEL_SOURCE=${STAGING_KERNEL_BUILDDIR}' \
-        'LINUX_SRC=${STAGING_KERNEL_BUILDDIR}' \
-        'KDIR=${STAGING_KERNEL_BUILDDIR}' \
-        'KERNDIR=${STAGING_KERNEL_BUILDDIR}' \
+        'KERNEL_SOURCE=${STAGING_KERNEL_DIR}' \
+        'LINUX_SRC=${STAGING_KERNEL_DIR}' \
+        'KDIR=${STAGING_KERNEL_DIR}' \
+        'KERNDIR=${STAGING_KERNEL_DIR}' \
         'KERNEL_VERSION=${KERNEL_VERSION}' \
         'CC=${KERNEL_CC}' \
         'LD=${KERNEL_LD}'

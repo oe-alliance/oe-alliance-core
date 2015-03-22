@@ -5,12 +5,12 @@ SECTION = "kernel/modules"
 
 PR = "r3"
 
-inherit module machine_kernel_pr
+inherit module
 
 SRC_URI = "http://archiv.openmips.com/RT3070_RT3370_RT5370_RT5372.tar.gz"
 
-EXTRA_OEMAKE = "LINUX_SRC=${STAGING_KERNEL_BUILDDIR}"
-do_configure[depends] += "virtual/kernel:do_shared_workdir"
+EXTRA_OEMAKE = "LINUX_SRC=${STAGING_KERNEL_DIR}"
+
 S = "${WORKDIR}/RT3070_RT3370_RT5370_RT5372"
 
 do_install() {

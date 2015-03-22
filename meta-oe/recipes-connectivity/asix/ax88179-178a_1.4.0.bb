@@ -37,16 +37,16 @@ do_configure[depends] += "virtual/kernel:do_shared_workdir"
  
 S = "${WORKDIR}/AX88179_178A_LINUX_DRIVER_v1.4.1_SOURCE"
 
-EXTRA_OEMAKE = "KSRC=${STAGING_KERNEL_BUILDDIR}"
+EXTRA_OEMAKE = "KSRC=${STAGING_KERNEL_DIR}"
 
 do_compile () {
     unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS CC LD CPP
     oe_runmake 'MODPATH={D}${base_libdir}/modules/${KERNEL_VERSION}/kernel/drivers/net' \
-        'KERNEL_SOURCE=${STAGING_KERNEL_BUILDDIR}' \
-        'LINUX_SRC=${STAGING_KERNEL_BUILDDIR}' \
+        'KERNEL_SOURCE=${STAGING_KERNEL_DIR}' \
+        'LINUX_SRC=${STAGING_KERNEL_DIR}' \
         'KDIR=${STAGING_KERNEL_BUILDDIR}' \
         'KERNDIR=${STAGING_KERNEL_BUILDDIR}' \
-        'KSRC=${STAGING_KERNEL_BUILDDIR}' \
+        'KSRC=${STAGING_KERNEL_DIR}' \
         'KERNEL_VERSION=${KERNEL_VERSION}' \
         'KVER=${KERNEL_VERSION}' \
         'CC=${KERNEL_CC}' \

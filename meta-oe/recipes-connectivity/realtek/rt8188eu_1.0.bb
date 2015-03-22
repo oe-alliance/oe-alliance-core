@@ -4,7 +4,7 @@ SECTION = "kernel/modules"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://ifcfg-wlan0;md5=a84acae65af4b2d44d5035aa9f63cd85"
 
-inherit module machine_kernel_pr
+inherit module
 
 PR = "r1"
 
@@ -13,7 +13,7 @@ MACHINE_KERNEL_PR_append = ".0"
 SRC_URI = "http://source.mynonpublic.com/rpi-rtl8188eu-20092013.tar.gz"
 
 EXTRA_OEMAKE = "LINUX_SRC=${STAGING_KERNEL_DIR}"
-do_configure[depends] += "virtual/kernel:do_shared_workdir"
+
 S = "${WORKDIR}/rpi-rtl8188eu/"
 
 do_install() {

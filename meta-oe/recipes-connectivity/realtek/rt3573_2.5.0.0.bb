@@ -6,13 +6,13 @@ LIC_FILES_CHKSUM = "file://iwpriv_usage.txt;md5=8876ae2c103446a442658f1cc2a01b76
 
 PR = "r9"
 
-inherit module machine_kernel_pr
+inherit module
 
 SRC_URI = "http://code-ini.com/software/mirror/20120911_RT3573_Linux_STA_v2.5.0.0_Rev4_DPO.tar.gz \
     file://remove_linux_2_4_compability.patch"
 
 EXTRA_OEMAKE = "LINUX_SRC=${STAGING_KERNEL_DIR}"
-do_configure[depends] += "virtual/kernel:do_shared_workdir"
+
 S = "${WORKDIR}/20120911_RT3573_Linux_STA_v2.5.0.0_Rev4_DPO/"
 
 do_install() {

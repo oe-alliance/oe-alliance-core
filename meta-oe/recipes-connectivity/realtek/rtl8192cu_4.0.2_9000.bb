@@ -8,10 +8,10 @@ SRC_URI = " \
     file://rtl8188C_8192C_usb_linux_v4.0.2_9000.20130911.tar.gz \
     file://r8192cu_remove_debug.patch \
     "
-do_configure[depends] += "virtual/kernel:do_shared_workdir"
+
 S = "${WORKDIR}/rtl8188C_8192C_usb_linux_v4.0.2_9000.20130911"
 
-inherit module machine_kernel_pr siteinfo 
+inherit module siteinfo
 
 EXTRA_OEMAKE = "CONFIG_RTL8192CU=m"
 

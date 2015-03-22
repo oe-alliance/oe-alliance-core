@@ -4,15 +4,15 @@ LICENSE = "GPLv2"
 
 PR = "r4"
 
-inherit module machine_kernel_pr
+inherit module
 
 SRC_URI = "http://www.ralinktech.com.tw/data/drivers/2009_0525_RT3070_Linux_STA_v${PV}.tar.bz2 \
            file://makefile.patch \
        file://config.patch \
      "
 
-EXTRA_OEMAKE = "LINUX_SRC=${STAGING_KERNEL_BUILDDIR}"
-do_configure[depends] += "virtual/kernel:do_shared_workdir"
+EXTRA_OEMAKE = "LINUX_SRC=${STAGING_KERNEL_DIR}"
+
 S = "${WORKDIR}/2009_0525_RT3070_Linux_STA_v${PV}"
 
 do_install() {

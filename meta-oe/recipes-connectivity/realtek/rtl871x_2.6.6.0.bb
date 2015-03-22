@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://../COPYING;md5=94d55d512a9ba36caa9b7df079bae19f"
 
 PR = "r3"
 
-inherit module machine_kernel_pr
+inherit module
 
 PR = "r1"
 
@@ -15,7 +15,7 @@ SRC_URI = "http://source.mynonpublic.com/rtl871x-01112013.tar.gz \
 
 SRC_URI[md5sum] = "5faf6a314a63e1f3be9b227157bb76a1"
 SRC_URI[sha256sum] = "e0fd28318dc0b2846e869d69a95b0a7a7d2fe182964448e4e1d74bdd12e4418f"
-do_configure[depends] += "virtual/kernel:do_shared_workdir"
+
 S = "${WORKDIR}/rtl871x"
 
 EXTRA_OEMAKE = "KERNDIR=${STAGING_KERNEL_DIR}"

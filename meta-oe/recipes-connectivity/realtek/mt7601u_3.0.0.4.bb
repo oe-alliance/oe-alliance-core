@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://iwpriv_usage.txt;md5=8876ae2c103446a442658f1cc2a01b76
 
 PR = "r7"
 
-inherit module machine_kernel_pr
+inherit module
 
 SRC_URI = "http://source.mynonpublic.com/DPO_MT7601U_LinuxSTA_3.0.0.4_20130913c.zip \
           file://mt7601u.patch \
@@ -14,7 +14,7 @@ SRC_URI = "http://source.mynonpublic.com/DPO_MT7601U_LinuxSTA_3.0.0.4_20130913c.
           "
 
 EXTRA_OEMAKE = "LINUX_SRC=${STAGING_KERNEL_DIR}"
-do_configure[depends] += "virtual/kernel:do_shared_workdir"
+
 S = "${WORKDIR}/MT7601U/"
 
 do_install() {

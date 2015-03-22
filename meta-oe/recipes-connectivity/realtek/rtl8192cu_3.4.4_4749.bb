@@ -7,14 +7,14 @@ LIC_FILES_CHKSUM = "file://os_dep/linux/os_intfs.c;endline=19;md5=f8d10a6bd2fdfa
 
 PR = "r10"
 
-inherit module machine_kernel_pr
+inherit module
 
 SRC_URI = "http://code-ini.com/software/mirror/rtl8188C_8192C_usb_linux_v3.4.4_4749.20140602.tar.gz \
     file://additional_productids.patch \
     file://add-3.8-support.patch \
     file://rt8192cu_procfs.patch \
     "
-do_configure[depends] += "virtual/kernel:do_shared_workdir"
+
 S = "${WORKDIR}/rtl8188C_8192C_usb_linux_v3.4.4_4749.20140602"
 
 EXTRA_OEMAKE = "KSRC=${STAGING_KERNEL_DIR}"
