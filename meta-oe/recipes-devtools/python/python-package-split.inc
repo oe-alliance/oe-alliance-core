@@ -24,6 +24,12 @@ FILES_${PN}-tests += " \
 FILES_${PN}-doc += " \
     ${PYTHON_SITEPACKAGES_DIR}/*-info \
     ${PYTHON_SITEPACKAGES_DIR}/*/*-info \
+    ${PYTHON_SITEPACKAGES_DIR}/*-INFO \
+    ${PYTHON_SITEPACKAGES_DIR}/*/*-INFO \
+    ${PYTHON_SITEPACKAGES_DIR}/*-safe \
+    ${PYTHON_SITEPACKAGES_DIR}/*/*-safe \
+    ${PYTHON_SITEPACKAGES_DIR}/*.txt \
+    ${PYTHON_SITEPACKAGES_DIR}/*/*.txt \
     "
 
 FILES_${PN}-dbg += " \
