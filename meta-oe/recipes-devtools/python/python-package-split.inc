@@ -9,6 +9,11 @@ FILES_${PN}-src = " \
     ${PYTHON_SITEPACKAGES_DIR}/*/*/*.py \
     ${PYTHON_SITEPACKAGES_DIR}/*/*/*/*.py \
     ${PYTHON_SITEPACKAGES_DIR}/*/*/*/*/*.py \
+    ${PYTHON_SITEPACKAGES_DIR}/*.c \
+    ${PYTHON_SITEPACKAGES_DIR}/*/*.c \
+    ${PYTHON_SITEPACKAGES_DIR}/*/*/*.c \
+    ${PYTHON_SITEPACKAGES_DIR}/*/*/*/*.c \
+    ${PYTHON_SITEPACKAGES_DIR}/*/*/*/*/*.c \
     "
 
 FILES_${PN}-tests += " \
