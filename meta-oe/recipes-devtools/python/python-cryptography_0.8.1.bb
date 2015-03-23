@@ -3,10 +3,10 @@ SECTION = "devel/python"
 LICENSE = "BSD"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=8c3617db4fb6fae01f1d253ab91511e4"
 
-DEPENDS_${PN} = "python-six python-cffi python-pycparser python-enum34 python-pyasn1 python-cffi-native"
+DEPENDS_${PN} = "python-six python-cffi python-pycparser python-pycparser-native python-enum34 python-pyasn1 python-cffi-native"
 RDEPENDS_${PN} = "python-six python-cffi python-pycparser"
 
-PR = "r0"
+PR = "r1"
 
 SRC_URI = "http://pypi.python.org/packages/source/c/cryptography/cryptography-${PV}.tar.gz"
 
