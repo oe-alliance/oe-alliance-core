@@ -15,18 +15,18 @@ RDEPENDS_${PN} = "\
     openmips-enigma2 \
     openmips-bootlogo \
     openmips-spinner \
-    hddtemp \
-    dosfstools \
+    openssh-sftp-server \
     ntfs-3g \
+    hddtemp \
     busybox-cron \
     python-imaging \
-    ofgwrite \
     rtmpdump \
-    libcrypto-compat-0.9.8 \
+    packagegroup-base-smbfs-client \
     ${@base_contains("MACHINE_FEATURES", "singlecore", "", \
     " \
     packagegroup-base-smbfs \
     packagegroup-base-nfs \
     ", d)} \
-    packagegroup-base-smbfs-client \
+    ofgwrite \
+    bash \
     "
