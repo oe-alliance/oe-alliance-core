@@ -9,26 +9,26 @@ DEPENDS = "gstreamer1.0 gstreamer1.0-plugins-base libdca ${@base_contains("BRAND
 
 GSTVERSION = "1.0"
 
-SRC_URI = "git://git.code.sf.net/p/openpli/gst-plugin-dvbmediasink;protocol=git;branch=gst-1.0 \
-"
+#SRC_URI = "git://git.code.sf.net/p/openpli/gst-plugin-dvbmediasink;protocol=git;branch=gst-1.0"
+SRC_URI = "git://github.com/christophecvr/gstreamer1.0-plugin-multibox-dvbmediasink.git;protocol=git"
 
 SRC_URI_append_sh4 = " \
     file://dvbmediasink_sh4_fix.patch;patch=1 \
 "
 SRC_URI_append_dags1 = " \
-    file://0001-add-support-for-dags-models.patch;patch=1 \ 
+    file://0001-dags-fix-dts.patch;patch=1 \ 
 "
 SRC_URI_append_dags2 = " \
-    file://0001-add-support-for-dags-models.patch;patch=1 \ 
+    file://0001-dags-fix-dts.patch;patch=1 \ 
 "
 SRC_URI_append_dags3 = " \
-    file://0001-add-support-for-dags-models.patch;patch=1 \ 
+    file://0001-dags-fix-dts.patch;patch=1 \ 
 "
 SRC_URI_append_dags4 = " \
-    file://0001-add-support-for-dags-models.patch;patch=1 \ 
+    file://0001-dags-fix-dts.patch;patch=1 \ 
 "
 SRC_URI_append_dags5 = " \
-    file://0001-add-support-for-dags-models.patch;patch=1 \ 
+    file://0001-dags-fix-dts.patch;patch=1 \ 
 "
 
 SRCREV = "${AUTOREV}"
