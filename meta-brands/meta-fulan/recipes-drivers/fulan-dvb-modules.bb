@@ -16,7 +16,7 @@ inherit module
 
 PACKAGES = "${PN} ${PN}-dev"
 
-PR = "r24"
+PR = "r25"
 
 PV = "${KV}+${SRCDATE}"
 
@@ -75,6 +75,7 @@ do_configure_prepend () {
     ln -s ${S}/stgfb/stmfb-3.1_stm24_0104 ${S}/stgfb/stmfb
     rm -f .config 
     printf "export CONFIG_PLAYER_191=y\nexport CONFIG_MULTICOM324=y\n" > .config
+    export KERNEL_LOCATION="${STAGING_KERNEL_DIR}"
 }
 
 do_compile() {
