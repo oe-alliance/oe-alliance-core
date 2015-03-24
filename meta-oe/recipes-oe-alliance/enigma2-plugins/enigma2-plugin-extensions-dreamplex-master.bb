@@ -7,8 +7,8 @@ inherit autotools-brokensep gitpkgv pythonnative
 
 SRCREV = "${AUTOREV}"
 # SRCREV = "ebdc7c77f88c7fb50c642703786ff7d50bf3bd80"
-PV = "2.1.0+git${SRCPV}"
-PKGV = "2.1.0+git${GITPKGV}"
+PV = "2.1.1+git${SRCPV}"
+PKGV = "2.1.1+git${GITPKGV}"
 PR = "r1"
 
 PACKAGES = "enigma2-plugin-extensions-dreamplex"
