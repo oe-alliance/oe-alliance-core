@@ -90,16 +90,24 @@ do_shared_workdir_prepend() {
     touch ${B}/include/generated/null
 }
 
-do_install_append() {
-    kerneldir=${D}${KERNEL_SRC_PATH}
+do_shared_workdir_append() {
+    kerneldir=${STAGING_KERNEL_BUILDDIR}
     if [ -f include/linux/bounds.h ]; then
         mkdir -p $kerneldir/include/linux
         cp include/linux/bounds.h $kerneldir/include/linux/bounds.h
     fi
     if [ -f include/asm-sh/machtypes.h ]; then
         mkdir -p $kerneldir/include/asm-sh
+        ln -s $kerneldir/include/asm-sh $kerneldir/include/asm
         cp include/asm-sh/machtypes.h $kerneldir/include/asm-sh
     fi
+    if [ -e include/linux/utsrelease.h ]; then
+        mkdir -p $kerneldir/include/linux
+        cp include/linux/utsrelease.h $kerneldir/include/linux/utsrelease.h
+    fi
+}
+
+do_install_append() {
     install -d ${D}${includedir}/linux	
     install -m 644 ${WORKDIR}/st-coprocessor.h ${D}${includedir}/linux
     oe_runmake headers_install INSTALL_HDR_PATH=${D}${exec_prefix}/src/linux-${KERNEL_VERSION} ARCH=$ARCH
