@@ -1,5 +1,4 @@
-inherit machine_kernel_pr
-PR = "r3"
+inherit kernel machine_kernel_pr
 
 PATCHREV = "ac6cc9511a5f70eaa584c63fc5c3de33cae1d0e7"
 
@@ -40,6 +39,7 @@ SRC_URI[unionfs.md5sum] = "c0c838b717f98a19a09483fb10e7299e"
 SRC_URI[unionfs.sha256sum] = "b2e04936254bbf778c963de862061027c858a2e157bb2e48c773d2ed2445282e"
 
 S = "${WORKDIR}/linux-${PV}"
+B = "${WORKDIR}/build"
 
 require linux-dreambox.inc
 

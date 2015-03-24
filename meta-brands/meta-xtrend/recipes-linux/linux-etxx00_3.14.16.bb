@@ -1,7 +1,8 @@
 SUMMARY = "Linux kernel for ${MACHINE}"
 SECTION = "kernel"
 LICENSE = "GPLv2"
-PACKAGE_ARCH = "${MACHINE_ARCH}"
+
+inherit kernel machine_kernel_pr
 
 KERNEL_RELEASE = "3.14.16"
 
@@ -34,8 +35,6 @@ SRC_URI += "http://xtrendet.net/linux-${PV}.tar.gz \
 
 S = "${WORKDIR}/linux-${PV}"
 B = "${WORKDIR}/build"
-
-inherit kernel machine_kernel_pr
 
 export OS = "Linux"
 KERNEL_OBJECT_SUFFIX = "ko"

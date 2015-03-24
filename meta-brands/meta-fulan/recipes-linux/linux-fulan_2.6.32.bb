@@ -4,7 +4,7 @@ SECTION = "kernel"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 KV = "2.6.32"
-PR = "r10"
+
 
 DEPENDS_spark7162 += " \
            stlinux24-sh4-stx7105-fdma-firmware \

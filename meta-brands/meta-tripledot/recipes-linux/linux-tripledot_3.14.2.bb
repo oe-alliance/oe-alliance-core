@@ -1,7 +1,6 @@
 SUMMARY = "Linux kernel for ${MACHINE}"
 SECTION = "kernel"
 LICENSE = "GPLv2"
-PR = "r3"
 
 KERNEL_RELEASE = "3.14.2"
 SRCDATE_vg5000 = "20141208"

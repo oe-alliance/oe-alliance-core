@@ -2,7 +2,8 @@ SUMMARY = "Linux kernel for ${MACHINE}"
 SECTION = "kernel"
 LICENSE = "GPLv2"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
-PR = "r0"
+
+inherit kernel machine_kernel_pr
 
 KERNEL_RELEASE = "3.17.8"
 
@@ -10,8 +11,6 @@ SRC_URI[md5sum] = "7d2d52a4bc332c6a96ed3a8749c79a15"
 SRC_URI[sha256sum] = "a126e409ad7261fdfb59b65e3b3d53fc442b218eecd1db1de252bdde37c9570e"
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
-
-MACHINE_KERNEL_PR_append = ".0"
 
 # By default, kernel.bbclass modifies package names to allow multiple kernels
 # to be installed in parallel. We revert this change and rprovide the versioned
@@ -28,8 +27,6 @@ SRC_URI += "http://source.mynonpublic.com/broadmedia/${MACHINE}-linux-${PV}.tar.
 S = "${WORKDIR}/linux-${PV}"
 B = "${WORKDIR}/build"
 
-inherit kernel
-
 export OS = "Linux"
 KERNEL_OBJECT_SUFFIX = "ko"
 KERNEL_OUTPUT = "vmlinux"
@@ -37,11 +34,6 @@ KERNEL_IMAGETYPE = "vmlinux"
 KERNEL_IMAGEDEST = "/tmp"
 
 FILES_kernel-image = "${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz"
-
-do_configure_prepend() {
-    oe_machinstall -m 0644 ${WORKDIR}/defconfig ${S}/.config
-    oe_runmake oldconfig
-}
 
 kernel_do_install_append() {
     ${STRIP} ${D}${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION}

@@ -1,4 +1,4 @@
-inherit machine_kernel_pr
+inherit kernel machine_kernel_pr
 
 PATCHREV = "38c24319e8b82eeab5d102eba355718ae8f50c48"
 PATCHLEVEL = "106"
