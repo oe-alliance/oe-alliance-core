@@ -1,5 +1,5 @@
 KV = "3.4-3.5"
-DRIVERDATE = "20150315"
+DRIVERDATE = "20150316"
 
 require dreambox-dvb-modules-dm820.inc
 
