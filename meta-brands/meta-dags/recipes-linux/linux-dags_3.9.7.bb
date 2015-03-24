@@ -30,7 +30,7 @@ KERNEL_IMAGEDEST = "/tmp"
 FILES_kernel-image = "${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz"
 
 do_configure_prepend() {
-    cp -rf ${WORKDIR}/sit2_op.o ${S}/drivers/media/dvb-frontends/sit2_op.o
+    cp -rf ${WORKDIR}/sit2_op.o ${B}/drivers/media/dvb-frontends/sit2_op.o
 }
 
 kernel_do_install_append() {
