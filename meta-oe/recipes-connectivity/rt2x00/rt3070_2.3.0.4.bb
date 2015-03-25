@@ -15,7 +15,7 @@ SRC_URI = "http://www.penguin.cz/~utx/hardware/Ralink_3071/DPO_RT3070_LinuxSTA_V
     file://rt3070sta-2.3.0.4-add-vendor.patch \
     "
 
-EXTRA_OEMAKE = "LINUX_SRC=${STAGING_KERNEL_DIR}"
+EXTRA_OEMAKE = "LINUX_SRC=${STAGING_KERNEL_DIR} KDIR=${STAGING_KERNEL_DIR}"
 
 S = "${WORKDIR}/DPO_RT3070_LinuxSTA_V${PV}_20100604"
 

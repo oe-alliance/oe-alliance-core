@@ -12,7 +12,7 @@ MACHINE_KERNEL_PR_append = ".0"
 
 SRC_URI = "http://source.mynonpublic.com/rpi-rtl8188eu-20092013.tar.gz"
 
-EXTRA_OEMAKE = "LINUX_SRC=${STAGING_KERNEL_DIR}"
+EXTRA_OEMAKE = "LINUX_SRC=${STAGING_KERNEL_DIR} KDIR=${STAGING_KERNEL_DIR}"
 
 S = "${WORKDIR}/rpi-rtl8188eu/"
 

@@ -21,7 +21,7 @@ FILES_${PN} += " /lib/firmware/"
 
 S = "${WORKDIR}/2010_0825_RT61_Linux_STA_v${PV}/Module"
 
-EXTRA_OEMAKE = "LINUX_SRC=${STAGING_KERNEL_DIR}"
+EXTRA_OEMAKE = "LINUX_SRC=${STAGING_KERNEL_DIR} KDIR=${STAGING_KERNEL_DIR}"
 
 do_install() {
     install -d ${D}/lib/modules/${KERNEL_VERSION}/kernel/drivers/net/wireless

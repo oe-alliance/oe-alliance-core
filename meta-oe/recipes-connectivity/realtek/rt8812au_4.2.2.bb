@@ -14,7 +14,7 @@ SRC_URI = "http://code-ini.com/software/mirror/rtl8812AU_8821AU_linux_v4.2.2_750
     file://rt8812au-procfs.patch \
     "
 
-EXTRA_OEMAKE = "LINUX_SRC=${STAGING_KERNEL_DIR}"
+EXTRA_OEMAKE = "LINUX_SRC=${STAGING_KERNEL_DIR} KDIR=${STAGING_KERNEL_DIR}"
 
 S = "${WORKDIR}/rtl8812AU_8821AU_linux_v4.2.2_7502.20140602/"
 

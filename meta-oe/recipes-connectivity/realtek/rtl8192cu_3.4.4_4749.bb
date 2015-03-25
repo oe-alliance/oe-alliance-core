@@ -17,7 +17,7 @@ SRC_URI = "http://code-ini.com/software/mirror/rtl8188C_8192C_usb_linux_v3.4.4_4
 
 S = "${WORKDIR}/rtl8188C_8192C_usb_linux_v3.4.4_4749.20140602"
 
-EXTRA_OEMAKE = "KSRC=${STAGING_KERNEL_DIR}"
+EXTRA_OEMAKE = "KSRC=${STAGING_KERNEL_DIR} KDIR=${STAGING_KERNEL_DIR}"
 
 do_install() {
     install -d ${D}/lib/modules/${KERNEL_VERSION}/kernel/drivers/net/wireless

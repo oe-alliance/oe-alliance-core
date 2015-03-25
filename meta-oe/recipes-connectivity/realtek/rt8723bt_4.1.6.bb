@@ -14,7 +14,7 @@ SRC_URI = "http://code-ini.com/software/mirror/8723AE_8723AU_Linux_BT_20140623.t
 
 inherit module
 
-EXTRA_OEMAKE = "LINUX_SRC=${STAGING_KERNEL_DIR}"
+EXTRA_OEMAKE = "LINUX_SRC=${STAGING_KERNEL_DIR} KDIR=${STAGING_KERNEL_DIR}"
 S = "${WORKDIR}/8723AE_8723AU_Linux_BT_20140623"
 
 FILES_${PN} = "${base_libdir}/firmware/"

@@ -18,7 +18,7 @@ S = "${WORKDIR}/rtl8188C_8192C_8192D_usb_linux_v3.3.0_2971.20111128"
 
 inherit module
 
-EXTRA_OEMAKE = "KSRC=${STAGING_KERNEL_DIR}"
+EXTRA_OEMAKE = "KSRC=${STAGING_KERNEL_DIR} KDIR=${STAGING_KERNEL_DIR}"
 
 do_install() {
     install -d ${D}/lib/modules/${KERNEL_VERSION}/kernel/drivers/net/wireless

@@ -11,7 +11,7 @@ inherit module
 SRC_URI = "http://code-ini.com/software/mirror/rt5572_2.6.1.4.tar.gz \
     file://remove_linux_2_4_compability.patch"
 
-EXTRA_OEMAKE = "LINUX_SRC=${STAGING_KERNEL_DIR}"
+EXTRA_OEMAKE = "LINUX_SRC=${STAGING_KERNEL_DIR} KDIR=${STAGING_KERNEL_DIR}"
 
 S = "${WORKDIR}/RT5572/"
 

@@ -13,7 +13,7 @@ S = "${WORKDIR}/rtl8188C_8192C_usb_linux_v4.0.2_9000.20130911"
 
 inherit module siteinfo
 
-EXTRA_OEMAKE = "CONFIG_RTL8192CU=m"
+EXTRA_OEMAKE = "CONFIG_RTL8192CU=m KDIR=${STAGING_KERNEL_DIR}"
 
 do_configure() {
         sed -e "s/^CONFIG_PLATFORM_I386_PC.*=.*y/EXTRA_CFLAGS += -DCONFIG_${@base_conditional('SITEINFO_ENDIANNESS', 'le', 'LITTLE', 'BIG', d)}_ENDIAN/" -i Makefile
