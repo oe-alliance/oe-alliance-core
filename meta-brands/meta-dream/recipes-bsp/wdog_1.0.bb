@@ -4,6 +4,7 @@ PRIORITY = "required"
 LICENSE = "CLOSED"
 RDEPENDS_${PN} = "dreambox-compat"
 PR = "r3"
+require conf/license/license-close.inc
 
 SRC_URI[mips32el.md5sum] = "037fcab221a559ec765ce58943c4e95c"
 SRC_URI[mips32el.sha256sum] = "96f3bcb25599562c57f3e451cfc884e39b924b6998032b0b562c66430d271483"

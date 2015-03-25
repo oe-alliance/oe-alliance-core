@@ -9,6 +9,7 @@
 # Instead of CAMSTART/CAMSTOP, you can create an init.d script called init.${CAMNAME}
 
 LICENSE = "CLOSED"
+require conf/license/license-close.inc
 
 FILES_${PN} = "/usr/bin /etc"
 

@@ -1,5 +1,6 @@
 SUMMARY = "mgcamd ${PV} softcam"
 LICENSE = "CLOSED"
+require conf/license/license-close.inc
 
 RDEPENDS_${PN} = "libcrypto-compat-0.9.7"
 

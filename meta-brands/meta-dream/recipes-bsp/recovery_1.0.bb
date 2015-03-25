@@ -5,6 +5,7 @@ SRCREV = "f6d9de6dc38272d83f19f63afe874e1cb58a8c61"
 SRCREV_dm7080 = "54707ebcd84f7c9bfefc534e92ab242b5b4b432e"
 SRCREV_dm820 = "9919a65aeb1c7e6f54f6b6df21cb94354f611901"
 
+require conf/license/license-close.inc
 SRC_URI_append = ";branch=${BRANCH}"
 
 inherit opendreambox-git

@@ -1,5 +1,6 @@
 SUMMARY = "openViX bootlogo Helios pack2"
 LICENSE = "CLOSED"
+require conf/license/license-close.inc
 
 inherit allarch
 

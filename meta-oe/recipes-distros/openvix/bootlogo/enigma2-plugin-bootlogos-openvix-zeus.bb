@@ -1,5 +1,6 @@
 SUMMARY = "openViX bootlogo Zeus"
 LICENSE = "CLOSED"
+require conf/license/license-close.inc
 
 inherit allarch
 

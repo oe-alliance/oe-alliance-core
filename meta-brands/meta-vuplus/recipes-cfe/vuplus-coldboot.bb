@@ -1,6 +1,7 @@
 SUMMARY = "S3 cold boot"
 MAINTAINER = "vuplus team"
 LICENSE = "CLOSED"
+require conf/license/license-close.inc
 
 PV = "1.0"
 PR = "r4"

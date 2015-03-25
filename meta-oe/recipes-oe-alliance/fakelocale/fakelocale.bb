@@ -4,6 +4,7 @@ SECTION = "base"
 PRIORITY = "required"
 MAINTAINER = "OpenPli team"
 PR = "r8"
+require conf/license/license-close.inc
 
 SRC_URI = "file://lctimelocales.tar.gz file://locale.alias file://SYS_LC_MESSAGES"
 

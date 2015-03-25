@@ -1,5 +1,6 @@
 MAINTAINER = "oe-alliance team"
 LICENSE = "CLOSED"
+require conf/license/license-close.inc
 
 inherit gitpkgv allarch
 

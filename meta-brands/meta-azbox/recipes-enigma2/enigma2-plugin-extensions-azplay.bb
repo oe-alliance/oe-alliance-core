@@ -3,6 +3,7 @@ RDEPENDS_${PN} = "enigma2 curl fuse libupnp"
 DEPENDS = "python-native"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 LICENSE = "CLOSED"
+require conf/license/license-close.inc
 
 SRCREV_pn-${PN} ?= "${AUTOREV}"
 

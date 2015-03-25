@@ -1,5 +1,6 @@
 SUMMARY = "openViX-HD bootlogo"
 LICENSE = "CLOSED"
+require conf/license/license-close.inc
 
 PV = "2.3"
 PR = "r1"

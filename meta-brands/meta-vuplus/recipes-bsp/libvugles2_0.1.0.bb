@@ -2,6 +2,7 @@ SUMMARY = "shared library for E2 animation"
 SECTION = "libs"
 LICENSE = "CLOSED"
 PACKAGE_ARCH := "${MACHINE_ARCH}"
+require conf/license/license-close.inc
 
 SRCDATE = "20150109"
 SRCDATE_PR = "r1"

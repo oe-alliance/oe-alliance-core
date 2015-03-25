@@ -1,5 +1,6 @@
 SECTION = "base"
 LICENSE = "CLOSED"
+require conf/license/license-close.inc
 
 PKG_DATE="20141219.0_beta"
 

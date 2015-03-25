@@ -2,6 +2,7 @@ SUMMARY = "Tool for DVB-S/S2 blindscan"
 SECTION = "base"
 PRIORITY = "optional"
 LICENSE = "CLOSED"
+require conf/license/license-close.inc
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 SRC_URI = "http://azbox-enigma2-project.googlecode.com/files/azbox-blindscan-utils-${MACHINE}-${PV}.tar.bz2;name=azbox-blind-${MACHINE}"

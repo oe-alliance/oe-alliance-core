@@ -6,6 +6,7 @@ PROVIDES = "virtual/bootloader"
 RPROVIDES_${PN} += "dreambox-secondstage"
 MD5SUM = "${@d.getVarFlag('SRC_URI', '%s.md5sum' % MACHINE)}"
 PACKAGE_ARCH := "${MACHINE_ARCH}"
+require conf/license/license-close.inc
 
 PR = "r0"
 

@@ -1,5 +1,6 @@
 SUMMARY = "gstreamer libxtrend plugin"
 LICENSE = "CLOSED"
+require conf/license/license-close.inc
 SECTION = "multimedia"
 PRIORITY = "optional"
 

@@ -3,6 +3,7 @@ SECTION = "base"
 PRIORITY = "required"
 LICENSE = "CLOSED"
 PACKAGE_ARCH = "${MACHINEBUILD}"
+require conf/license/license-close.inc
 
 KV = "3.6.0"
 SRCDATE = "20150219"

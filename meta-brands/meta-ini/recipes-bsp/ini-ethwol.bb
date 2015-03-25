@@ -1,6 +1,7 @@
 DESCIPTION = "S3 set eth0 wol"
 MAINTAINER = "INI Team"
 LICENSE = "CLOSED"
+require conf/license/license-close.inc
 
 PV = "1.0"
 PR = "r1"

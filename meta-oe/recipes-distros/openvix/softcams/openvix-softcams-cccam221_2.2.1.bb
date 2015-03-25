@@ -1,5 +1,6 @@
 SUMMARY = "CCcam ${PV} softcam"
 LICENSE = "CLOSED"
+require conf/license/license-close.inc
 
 PR = "r3"
 

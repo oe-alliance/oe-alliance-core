@@ -1,6 +1,7 @@
 SUMMARY = "Tuxbox common files"
 LICENSE = "CLOSED"
 MAINTAINER = "Beyonwiz team"
+require conf/license/license-close.inc
 
 inherit gitpkgv allarch
 PV = "1"

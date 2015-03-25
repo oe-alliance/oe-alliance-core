@@ -1,5 +1,6 @@
 SUMMARY = "evocamd ${PV} softcam"
 LICENSE = "CLOSED"
+require conf/license/license-close.inc
 
 PR = "r0"
 

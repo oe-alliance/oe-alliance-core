@@ -4,6 +4,7 @@ LICENSE = "CLOSED"
 DEPENDS = "libdlsym"
 SRCREV = "108ef8c6337ec803467428a2d0744c6db9772928"
 PR = "r0"
+require conf/license/license-close.inc
 
 inherit autotools opendreambox-git
 

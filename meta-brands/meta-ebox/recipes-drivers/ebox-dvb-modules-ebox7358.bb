@@ -2,6 +2,7 @@ SUMMARY = "Hardware drivers for ${MACHINE}"
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "CLOSED"
+require conf/license/license-close.inc
 
 SRCDATE = "20140912"
 KV = "3.12.4"

@@ -1,5 +1,6 @@
 DESCRIPTION = "STM Specific init script"
 LICENSE = "CLOSED"
+require conf/license/license-close.inc
 
 PR = "r3"
 

@@ -1,4 +1,5 @@
 LICENSE = "CLOSED"
+require conf/license/license-close.inc
 
 SRCREV = "46c66487a85cd05a4acbd5eb4828f72783d1be4c"
 

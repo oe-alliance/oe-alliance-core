@@ -1,4 +1,5 @@
 LICENSE = "CLOSED"
+require conf/license/license-close.inc
 
 FILES_${PN} = "/usr/bin /etc"
 

@@ -1,4 +1,5 @@
 LICENSE = "CLOSED"
+require conf/license/license-close.inc
 
 SUMMARY = "Firmware for drxk dvb-c/dvb-t dvb frontend"
 PACKAGE_ARCH = "all"

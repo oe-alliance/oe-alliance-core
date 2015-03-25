@@ -1,5 +1,6 @@
 SUMMARY = "openViX 3.0 bootlogo"
 LICENSE = "CLOSED"
+require conf/license/license-close.inc
 
 inherit allarch
 

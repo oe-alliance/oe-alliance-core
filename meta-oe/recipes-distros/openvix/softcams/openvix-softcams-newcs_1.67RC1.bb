@@ -1,5 +1,6 @@
 SUMMARY = "newcs ${PV} cardserver"
 LICENSE = "CLOSED"
+require conf/license/license-close.inc
 
 PR = "r0"
 

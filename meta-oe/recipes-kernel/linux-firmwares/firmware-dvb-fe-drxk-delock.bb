@@ -1,4 +1,5 @@
 LICENSE = "CLOSED"
+require conf/license/license-close.inc
 
 SUMMARY = "link firmware for EM2874B used in DeLock61959"
 PACKAGE_ARCH = "all"

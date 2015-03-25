@@ -3,6 +3,7 @@ SECTION = "base"
 PRIORITY = "optional"
 LICENSE = "CLOSED"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
+require conf/license/license-close.inc
 
 PV = "3.6.0"
 SRC = "1213"

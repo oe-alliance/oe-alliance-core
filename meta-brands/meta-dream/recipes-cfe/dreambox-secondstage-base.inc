@@ -5,6 +5,7 @@ PROVIDES += "virtual/bootloader"
 RPROVIDES_${PN} += "dreambox-secondstage"
 PRIORITY = "required"
 INC_PR = "r20"
+require conf/license/license-close.inc
 
 do_install() {
     install -d ${D}/tmp

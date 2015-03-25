@@ -3,6 +3,7 @@ SECTION = "base"
 PRIORITY = "required"
 LICENSE = "CLOSED"
 PACKAGE_ARCH := "${MACHINE_ARCH}"
+require conf/license/license-close.inc
 
 PV="15.1"
 PR="${SRCDATE}.${SRCDATE_PR}"
