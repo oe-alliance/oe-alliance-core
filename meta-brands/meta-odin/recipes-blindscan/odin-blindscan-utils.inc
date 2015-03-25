@@ -1,11 +1,9 @@
-SUMMARY = "Utils for blindscan"
+SUMMARY = "Utils for DVB-S blindscan"
 SECTION = "base"
 PRIORITY = "optional"
 LICENSE = "CLOSED"
-require conf/license/license-close.inc
-
 PACKAGE_ARCH = "${MACHINE_ARCH}"
-
+require conf/license/license-close.inc
 PR = "r1"
 
 PACKAGES = "odin-blindscan-dvbs-utils-${MACHINE} odin-blindscan-dvbc-utils-${MACHINE}"

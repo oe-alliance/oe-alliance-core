@@ -1,13 +1,5 @@
-SUMMARY = "Utils for DVB-S blindscan"
-SECTION = "base"
-PRIORITY = "optional"
-LICENSE = "CLOSED"
-PACKAGE_ARCH = "${MACHINE_ARCH}"
-require conf/license/license-close.inc
-
 PV = "3.6.0"
 SRC = "1213"
-PR = "r1"
 
 require odin-blindscan-utils.inc
 
