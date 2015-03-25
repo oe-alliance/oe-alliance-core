@@ -34,7 +34,7 @@ do_install_prepend() {
 
 do_install_append() {
     install -d ${D}${sysconfdir}/samba/private
-    install -d ${D}${sysconfdir}/network/if-down.d
+    install -d ${D}${sysconfdir}/network/if-post-down.d
     install -m 0755 ${WORKDIR}/01samba-kill ${D}${sysconfdir}/network/if-post-down.d
     install -d ${D}${sysconfdir}/network/if-up.d
     install -m 0755 ${WORKDIR}/01samba-start ${D}${sysconfdir}/network/if-up.d
