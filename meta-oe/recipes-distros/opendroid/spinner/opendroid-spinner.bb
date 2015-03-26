@@ -7,7 +7,7 @@ PACKAGE_ARCH = "all"
 require conf/license/license-gplv2.inc
 
 PV = "1.0"
-PR = "r1"
+PR = "r2"
 
 SRC_URI="file://wait1.png \
     file://wait2.png \
@@ -24,11 +24,7 @@ SRC_URI="file://wait1.png \
     file://wait13.png \
     file://wait14.png \
     file://wait15.png \
-	file://wait16.png \
-    file://wait17.png \
-    file://wait18.png \
-    file://wait19.png \
-    file://wait20.png \
+    file://wait16.png \
 	"
         
 S = "${WORKDIR}"        
