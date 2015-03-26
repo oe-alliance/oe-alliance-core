@@ -38,6 +38,7 @@ FILES_kernel-image = "${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz"
 
 do_configure_prepend() {
     rm -rf ${STAGING_KERNEL_DIR}/.cofig
+    rm -rf ${STAGING_KERNEL_DIR}/.config
     rm -rf ${STAGING_KERNEL_DIR}/.config.old
     rm -rf ${STAGING_KERNEL_DIR}/include/generated
     rm -rf ${STAGING_KERNEL_DIR}/include/config
