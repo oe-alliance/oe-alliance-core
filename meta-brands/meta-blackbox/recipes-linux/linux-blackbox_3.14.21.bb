@@ -24,7 +24,7 @@ SRC_URI += "http://unibox.to/feeds/eco/development/kernel/linux-${KV}-${SRCDATE}
     file://defconfig \
     file://nfs-max-rwsize-8k.patch \
     "
-	
+
 S = "${WORKDIR}/linux-${PV}"
 B = "${WORKDIR}/build"
 
@@ -35,6 +35,14 @@ KERNEL_IMAGETYPE = "vmlinux"
 KERNEL_IMAGEDEST = "/tmp"
 
 FILES_kernel-image = "${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz"
+
+do_configure_prepend() {
+    rm -rf ${STAGING_KERNEL_DIR}/.cofig
+    rm -rf ${STAGING_KERNEL_DIR}/.config.old
+    rm -rf ${STAGING_KERNEL_DIR}/include/generated
+    rm -rf ${STAGING_KERNEL_DIR}/include/config
+    rm -rf ${STAGING_KERNEL_DIR}/arch/mips/include/generated
+}
 
 kernel_do_install_append() {
     ${STRIP} ${D}${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION}
