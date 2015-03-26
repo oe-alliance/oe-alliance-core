@@ -28,6 +28,8 @@ do_install() {
     oe_runmake DEPMOD=echo DESTDIR="${D}" \
         KDIR="${STAGING_KERNEL_DIR}" \
         DIR="${STAGING_KERNEL_DIR}" \
+        KERNEL_VERSION=${KERNEL_VERSION} \
+        KERNELRELEASE=${KERNEL_VERSION} \
         CC="${KERNEL_CC}" LD="${KERNEL_LD}" \
         O=${STAGING_KERNEL_BUILDDIR} \
         install
