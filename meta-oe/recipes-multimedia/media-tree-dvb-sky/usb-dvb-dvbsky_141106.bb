@@ -3,6 +3,8 @@ RDEPENDS_${PN} += "kmod"
 LIC_FILES_CHKSUM = "file://COPYING;md5=eb723b61539feef013de476e68b5c50a"
 PR = "r7"
 
+do_configure[depends] += "virtual/kernel:do_shared_workdir"
+
 SRC_URI[md5sum] = "8073a7921a6f1e154083d71bc2ef5b46"
 SRC_URI[sha256sum] = "b0a32dc6efb5cb62c0572938de10cd3d718d94191fe4648a9722b7fdddcad2d5"
 
