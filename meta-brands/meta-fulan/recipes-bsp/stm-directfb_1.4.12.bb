@@ -3,7 +3,7 @@ require stm-directfb.inc
 RPROVIDES_${PN} = "directfb"
 
 RV = "1.4-5"
-PR = "r2"
+PR = "r3"
 
 DEPENDS += "sysfsutils"
 

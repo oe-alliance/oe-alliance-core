@@ -1,0 +1,52 @@
+diff --git a/drivers/brcmstb/board.c b/drivers/brcmstb/board.c
+index 3bdd0a1..d806cdb 100644
+--- a/drivers/brcmstb/board.c
++++ b/drivers/brcmstb/board.c
+@@ -296,28 +296,28 @@ void board_pinmux_setup(void)
+ 	PINMUX(11, gpio_91, 1);		/* UARTC TX */
+ 	PINMUX(11, gpio_92, 1);		/* UARTC RX */
+ 
+-	AON_PINMUX(1, aon_gpio_08, 6);	/* SDIO */
+-	AON_PINMUX(1, aon_gpio_12, 5);
+-	AON_PINMUX(1, aon_gpio_13, 5);
+-	AON_PINMUX(2, aon_gpio_14, 4);
+-	AON_PINMUX(2, aon_gpio_15, 5);
+-	AON_PINMUX(2, aon_gpio_16, 5);
+-	AON_PINMUX(2, aon_gpio_17, 5);
+-	AON_PINMUX(2, aon_gpio_18, 5);
+-	AON_PINMUX(2, aon_gpio_19, 5);
+-	AON_PINMUX(2, aon_gpio_20, 5);
++	PINMUX(14, gpio_113, 3);	/* SDIO */
++	PINMUX(14, gpio_114, 3);
++	PINMUX(14, gpio_115, 3);
++	PINMUX(14, gpio_116, 3);
++	PINMUX(14, gpio_117, 3);
++	PINMUX(14, gpio_118, 3);
++	PINMUX(15, gpio_119, 3);
++	PINMUX(15, gpio_120, 3);
++	PINMUX(15, gpio_121, 3);
++	PINMUX(15, gpio_122, 3);
+ 
+ 	/* enable SDIO pullups */
+-	AON_PADCTRL(0, aon_gpio_08_pad_ctrl, 2);
+-	AON_PADCTRL(1, aon_gpio_12_pad_ctrl, 2);
+-	AON_PADCTRL(1, aon_gpio_13_pad_ctrl, 2);
+-	AON_PADCTRL(1, aon_gpio_14_pad_ctrl, 2);
+-	AON_PADCTRL(1, aon_gpio_15_pad_ctrl, 2);
+-	AON_PADCTRL(1, aon_gpio_16_pad_ctrl, 2);
+-	AON_PADCTRL(1, aon_gpio_17_pad_ctrl, 2);
+-	AON_PADCTRL(1, aon_gpio_18_pad_ctrl, 2);
+-	AON_PADCTRL(1, aon_gpio_19_pad_ctrl, 2);
+-	AON_PADCTRL(1, aon_gpio_20_pad_ctrl, 2);
++	PADCTRL(7, gpio_113_pad_ctrl, 2);
++	PADCTRL(7, gpio_114_pad_ctrl, 2);
++	PADCTRL(7, gpio_115_pad_ctrl, 2);
++	PADCTRL(7, gpio_116_pad_ctrl, 2);
++	PADCTRL(8, gpio_117_pad_ctrl, 2);
++	PADCTRL(8, gpio_118_pad_ctrl, 2);
++	PADCTRL(8, gpio_119_pad_ctrl, 2);
++	PADCTRL(8, gpio_120_pad_ctrl, 2);
++	PADCTRL(8, gpio_121_pad_ctrl, 2);
++	PADCTRL(8, gpio_122_pad_ctrl, 2);
+ 
+ #elif defined(CONFIG_BCM7425)

@@ -9,7 +9,7 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r2"
+PR = "r4"
 
 
 SRC_URI = "git://github.com/22ktv/rtl8723bs.git"
@@ -23,6 +23,10 @@ S = "${WORKDIR}/git"
 inherit module
 
 EXTRA_OEMAKE = "KSRC=${STAGING_KERNEL_DIR} KDIR=${STAGING_KERNEL_DIR}"
+
+do_configure_prepend () {
+    export KDIR=${STAGING_KERNEL_DIR}
+}
 
 do_compile () {
     unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS CC LD CPP

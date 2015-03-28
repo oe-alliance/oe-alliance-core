@@ -1,18 +1,16 @@
 # We know about rtc
 include conf/machine/include/build-extras.inc
 
-BRAND_OEM = "formuler"
-MACHINE_BRAND = "Formuler"
+BRAND_OEM = "ax"
+MACHINE_BRAND = "AX"
 
 MTD_KERNEL = "mtd1"
 MTD_ROOTFS = "mtd2"
 KERNEL_FILE = "kernel.bin"
 ROOTFS_FILE = "rootfs.bin"
 
-GST_VERSION = "1.0"
-
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS = "\
-    formuler-dvb-modules-${MACHINE} \
+    ax-dvb-modules-${MACHINE} \
     "
 
 DVBPROVIDER = "kernel"
@@ -22,7 +20,7 @@ MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS = "\
     "
 
 MACHINE_EXTRA_RRECOMMENDS = " \
-    gstreamer1.0-plugin-dvbmediasink \
+    gst-plugin-dvbmediasink \
     "
 
 include conf/machine/include/autoload-filesystems.inc
@@ -32,7 +30,7 @@ DVBMEDIASINK_CONFIG = "--with-wma --with-wmv --with-pcm --with-dts --with-eac3"
 TARGET_ARCH = "mipsel"
 DEFAULTTUNE = "mips32el"
 
-PREFERRED_PROVIDER_virtual/kernel = "linux-formuler"
+PREFERRED_PROVIDER_virtual/kernel = "linux-ax"
 
 KERNEL_IMAGETYPE = "vmlinux"
 KERNEL_OUTPUT = "${KERNEL_IMAGETYPE}"
@@ -56,9 +54,6 @@ IMAGE_CMD_ubi_append = " \
     cd ${DEPLOY_DIR_IMAGE}; \
     zip ${IMAGE_NAME}_usb.zip ${IMAGEDIR}/*; \
     rm -f ${DEPLOY_DIR_IMAGE}/*.ubifs; \
-    rm -f ${DEPLOY_DIR_IMAGE}/*.manifest; \
-    rm -f ${DEPLOY_DIR_IMAGE}/.ubifs; \
-    rm -f ${DEPLOY_DIR_IMAGE}/.manifest; \
     rm -Rf ${IMAGEDIR}; \
     "
 
