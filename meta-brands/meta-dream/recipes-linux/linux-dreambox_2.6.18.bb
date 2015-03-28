@@ -30,6 +30,7 @@ SRC_URI = " \
         file://linux-2.6.18-mod_devicetable_h.patch \
         file://linux-2.6.18-3g-modems.patch \
         file://mips_refactor_page_dev0.patch \
+        file://linux-2.6.18-utimensat-backport.patch \
 "
 SRC_URI[kernel.md5sum] = "296a6d150d260144639c3664d127d174"
 SRC_URI[kernel.sha256sum] = "c95280ff6c5d2a17788f7cc582d23ae8a9a7ba3f202ec6e4238eaadfce7c163d"
@@ -40,6 +41,11 @@ SRC_URI[unionfs.sha256sum] = "b2e04936254bbf778c963de862061027c858a2e157bb2e48c7
 
 S = "${WORKDIR}/linux-${PV}"
 B = "${WORKDIR}/build"
+
+do_shared_workdir_prepend() {
+    mkdir -p ${B}/include/generated/
+    cp -fR ${B}/include/linux/* ${B}/include/generated/
+}
 
 require linux-dreambox.inc
 
