@@ -1,28 +1,13 @@
---- a/Makefile	2015-03-04 07:23:24.661999333 +0100
-+++ b/Makefile	2015-03-04 07:50:04.294356180 +0100
-@@ -106,7 +106,8 @@
- CONFIG_PLATFORM_ARM_SPREADTRUM_6820 = n
- CONFIG_PLATFORM_ARM_SPREADTRUM_8810 = n
- CONFIG_PLATFORM_ARM_WMT = n
--CONFIG_PLATFORM_MIPS_BRCMSTB = y
-+CONFIG_PLATFORM_MIPS_BRCMSTB = n
-+CONFIG_PLATFORM_SH4_STSTB = y
- ###############################################################
- 
- CONFIG_DRVEXT_MODULE = n
-@@ -1275,6 +1276,15 @@
- KSRC ?= /lib/modules/$(uname -r)/build
- USER_MODULE_NAME := r8723bs
- endif
-+
-+ifeq ($(CONFIG_PLATFORM_SH4_STSTB), y)
-+EXTRA_CFLAGS += -DCONFIG_LITTLE_ENDIAN
-+EXTRA_CFLAGS += -DRTW_USE_CFG80211_STA_EVENT
-+ARCH := sh
-+CROSS_COMPILE ?= sh4-unknown-linux-gnu-
-+KSRC ?= /lib/modules/$(uname -r)/build
-+USER_MODULE_NAME := r8723bs
-+endif
- 
- ifeq ($(CONFIG_MULTIDRV), y)	
- 
+diff --git a/Makefile b/Makefile
+index 28cefd9..c632ba2 100644
+--- a/Makefile
++++ b/Makefile
+@@ -32,7 +32,7 @@ ccflags-y += -I$(src)/include
+ ccflags-y += -I$(src)/hal
+ ccflags-y += -DCONFIG_RTL8723B
+ ccflags-y += -DCONFIG_LITTLE_ENDIAN
+-ccflags-y += -DCONFIG_IOCTL_CFG80211
++#ccflags-y += -DCONFIG_IOCTL_CFG80211
+ ccflags-y += -DRTW_USE_CFG80211_STA_EVENT
+ ccflags-$(CONFIG_MP_INCLUDED) += -DCONFIG_MP_INCLUDED
+ ccflags-$(CONFIG_POWER_SAVING) += -DCONFIG_POWER_SAVING
