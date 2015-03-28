@@ -2,12 +2,11 @@ SUMMARY = "Dreambox box-specific configuration files"
 SECTION = "base"
 PRIORITY = "required"
 MAINTAINER = "PLi team"
-LICENSE = "WTFPL"
-LIC_FILES_CHKSUM = "file://LICENSE;md5=1b71aebc25e7533ebaa5b320a20e7ed2"
+require conf/license/license-gplv2.inc
 PV = "1.0"
 PR = "r3"
 
-SRC_URI = "file://skin_box.xml file://LICENSE"
+SRC_URI = "file://skin_box.xml"
 
 PACKAGES = "${PN}"
 FILES_${PN} = "/usr/share/enigma2"

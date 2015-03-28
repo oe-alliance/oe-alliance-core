@@ -16,7 +16,7 @@ SRC_URI = "http://www.dvbsky.net/download/linux/media_build-bst-14-141106.tar.gz
 
 S = "${WORKDIR}/media_build-bst-14"
 
-EXTRA_OEMAKE = "KDIR=${STAGING_KERNEL_DIR} SRCDIR=${STAGING_KERNEL_DIR}"
+EXTRA_OEMAKE = "KDIR=${STAGING_KERNEL_DIR} SRCDIR=${STAGING_KERNEL_DIR} OUTDIR=${STAGING_KERNEL_BUILDDIR}"
 
 do_populate_sysroot[noexec] = "1"
 
