@@ -18,6 +18,7 @@ STM_VERSION = "STM2011.09.27"
 
 SRC_URI = "${STLINUX_SH_UPD_SRPMS}/stlinux24-target-directfb-${PV}+${STM_VERSION}-3.src.rpm  \
            file://directfb-1.2.x-fix-pkgconfig-cflags.patch \
+           file://directfb-1.4.11+STM2010.12.15-4.libpng.patch \
            file://configurefix.patch \
 "
 LOCAL_SRC = "\
