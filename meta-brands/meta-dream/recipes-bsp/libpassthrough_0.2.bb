@@ -1,6 +1,4 @@
 SUMMARY = "Dreambox TS/M2TS audio passthrough helper lib"
-LICENSE = "Proprietary"
-require conf/license/license-close.inc
 PR = "r0"
 
 SRC_URI[mips32el.md5sum] = "9b7234d88a54e2ec0d27f3cd3af1fb06"
