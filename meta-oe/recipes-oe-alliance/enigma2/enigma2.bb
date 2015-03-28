@@ -60,7 +60,6 @@ PYTHON_RDEPS = " \
     python-subprocess \
     python-process \
     python-imaging \
-    python-cryptography \
     "
 
 GST_BASE_RDEPS = "${@base_contains('GST_VERSION', '1.0', ' \

@@ -1,0 +1,157 @@
+Author: Sandro Tosi <morph@debian.org>
+Description: Fix the doc build system, providing a working clean target and building
+the latex doc using htlatex (in main) instead of latex2html
+--- pyopenssl-0.12.orig/doc/Makefile
++++ pyopenssl-0.12/doc/Makefile
+@@ -10,11 +10,11 @@
+ 
+ html: pyOpenSSL.tex
+ 	$(MKHOWTO) --html --iconserver . $^
+-	-rm -rf html
+-	mv pyOpenSSL html
++	-rm -rf html/
++	mkdir html/
++	mv *.html pyOpenSSL.css html/
+ 
+ clean:
+-	rm -rf html pyOpenSSL.dvi pyOpenSSL.ps pyOpenSSL.txt \
+-	    pyOpenSSL.l2h pyOpenSSL.how
++	rm -rf html/ *.html pyOpenSSL.[0-9a-su-z]* pyOpenSSL.txt pyOpenSSL.tmp
+ 
+ .PHONY: default all html dvi ps text clean
+--- pyopenssl-0.12.orig/doc/tools/mkhowto
++++ pyopenssl-0.12/doc/tools/mkhowto
+@@ -55,8 +55,8 @@
+ BIBTEX_BINARY = "bibtex"
+ DVIPS_BINARY = "dvips"
+ LATEX_BINARY = "latex"
+-LATEX2HTML_BINARY = "latex2html"
+-LYNX_BINARY = "lynx"
++LATEX2HTML_BINARY = "htlatex"
++LYNX_BINARY = "w3m"
+ MAKEINDEX_BINARY = "makeindex"
+ PDFLATEX_BINARY = "pdflatex"
+ PERL_BINARY = "perl"
+@@ -232,33 +232,10 @@
+             self.build_ps()
+         if "html" in formats:
+             self.require_temps()
+-            self.build_html(self.options.builddir or self.doc)
+-            if self.options.icon_server == ".":
+-                pattern = os.path.join(MYDIR, "html", "icons",
+-                                       "*." + self.options.image_type)
+-                imgs = glob.glob(pattern)
+-                if not imgs:
+-                    self.warning(
+-                        "Could not locate support images of type %s."
+-                        % `self.options.image_type`)
+-                for fn in imgs:
+-                    new_fn = os.path.join(self.doc, os.path.basename(fn))
+-                    shutil.copyfile(fn, new_fn)
++            self.build_html()
+         if "text" in formats:
+-            self.require_temps()
+-            tempdir = self.doc
+-            need_html = "html" not in formats
+-            if self.options.max_split_depth != 1:
+-                fp = open(self.l2h_aux_init_file, "a")
+-                fp.write("# re-hack this file for --text:\n")
+-                l2hoption(fp, "MAX_SPLIT_DEPTH", "1")
+-                fp.write("1;\n")
+-                fp.close()
+-                tempdir = self.doc + "-temp-html"
+-                need_html = 1
+-            if need_html:
+-                self.build_html(tempdir, max_split_depth=1)
+-            self.build_text(tempdir)
++            self.build_html()
++            self.build_text()
+         if self.options.discard_temps:
+             self.cleanup()
+ 
+@@ -282,6 +259,10 @@
+     def build_pdf(self):
+         self.use_latex(PDFLATEX_BINARY)
+ 
++    def build_html(self):
++        self.setup_texinputs()
++        self.run("%s %s" % (LATEX2HTML_BINARY, self.doc))
++
+     def use_latex(self, binary):
+         self.require_temps(binary=binary)
+         if self.latex_runs < 2:
+@@ -333,72 +314,8 @@
+     def build_ps(self):
+         self.run("%s -N0 -o %s.ps %s" % (DVIPS_BINARY, self.doc, self.doc))
+ 
+-    def build_html(self, builddir=None, max_split_depth=None):
+-        if builddir is None:
+-            builddir = self.doc
+-        if max_split_depth is None:
+-            max_split_depth = self.options.max_split_depth
+-        texfile = None
+-        for p in string.split(os.environ["TEXINPUTS"], os.pathsep):
+-            fn = os.path.join(p, self.doc + ".tex")
+-            if os.path.isfile(fn):
+-                texfile = fn
+-                break
+-        if not texfile:
+-            self.warning("Could not locate %s.tex; aborting." % self.doc)
+-            sys.exit(1)
+-        # remove leading ./ (or equiv.); might avoid problems w/ dvips
+-        if texfile[:2] == os.curdir + os.sep:
+-            texfile = texfile[2:]
+-        # build the command line and run LaTeX2HTML:
+-        if not os.path.isdir(builddir):
+-            os.mkdir(builddir)
+-        else:
+-            for fname in glob.glob(os.path.join(builddir, "*.html")):
+-                os.unlink(fname)
+-        args = [LATEX2HTML_BINARY,
+-                "-init_file", self.l2h_aux_init_file,
+-                "-dir", builddir,
+-                texfile
+-                ]
+-        self.run(string.join(args))     # XXX need quoting!
+-        # ... postprocess
+-        shutil.copyfile(self.options.style_file,
+-                        os.path.join(builddir, self.doc + ".css"))
+-        shutil.copyfile(os.path.join(builddir, self.doc + ".html"),
+-                        os.path.join(builddir, "index.html"))
+-        if max_split_depth != 1:
+-            if self.options.numeric:
+-                label_file = os.path.join(builddir, "labels.pl")
+-                fp = open(label_file)
+-                about_node = None
+-                target = " = q/about/;\n"
+-                x = len(target)
+-                while 1:
+-                    line = fp.readline()
+-                    if not line:
+-                        break
+-                    if line[-x:] == target:
+-                        line = fp.readline()
+-                        m = re.search(r"\|(node\d+\.[a-z]+)\|", line)
+-                        about_node = m.group(1)
+-                        shutil.copyfile(os.path.join(builddir, about_node),
+-                                        os.path.join(builddir, "about.html"))
+-                        break
+-            else:
+-                pwd = os.getcwd()
+-                try:
+-                    os.chdir(builddir)
+-                    self.run("%s %s *.html" % (PERL_BINARY, NODE2LABEL_SCRIPT))
+-                finally:
+-                    os.chdir(pwd)
+-
+-    def build_text(self, tempdir=None):
+-        if tempdir is None:
+-            tempdir = self.doc
+-        indexfile = os.path.join(tempdir, "index.html")
+-        self.run("%s -nolist -dump %s >%s.txt"
+-                 % (LYNX_BINARY, indexfile, self.doc))
++    def build_text(self):
++        self.run("%s -dump %s > %s.txt" % (LYNX_BINARY, "pyOpenSSL.html", self.doc))
+ 
+     def require_temps(self, binary=None):
+         if not self.latex_runs:
