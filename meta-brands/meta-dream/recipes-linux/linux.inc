@@ -220,7 +220,6 @@ do_configure_prepend() {
                 echo "CONFIG_ROOT_NFS=y"                 >> ${S}/.config
                 echo "CONFIG_CMDLINE=\"${CMDLINE_NFSROOT_USB}\"" >> ${S}/.config
         fi
-        yes '' | oe_runmake oldconfig
 }
 
 do_configure_append() {

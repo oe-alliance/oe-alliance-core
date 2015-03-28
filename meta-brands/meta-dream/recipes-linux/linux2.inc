@@ -65,7 +65,6 @@ do_configure_prepend() {
     sed -e "${CONF_SED_SCRIPT}" \
     < '${WORKDIR}/defconfig' >>'${S}/.config'
 
-    yes '' | oe_runmake oldconfig
 }
 
 do_configure_append() {
