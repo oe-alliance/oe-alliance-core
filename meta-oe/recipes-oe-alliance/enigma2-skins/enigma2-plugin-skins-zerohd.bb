@@ -14,7 +14,7 @@ SRC_URI="git://github.com/KravenHD/ZeroHD.git;protocol=git"
 
 FILES_${PN} = "/usr/*"
 
-S = "${WORKDIR}/git"
+S = "${WORKDIR}/git/data"
 
 do_compile_append() {
 python -O -m compileall ${S}
