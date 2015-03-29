@@ -1,9 +1,12 @@
 require stm-directfb.inc
 
+PROVIDES = "directfb"
 RPROVIDES_${PN} = "directfb"
+RREPLACES_${PN} = "directfb"
+RCONFLICTS_${PN} = "directfb"
 
 RV = "1.4-5"
-PR = "r2"
+PR = "r4"
 
 DEPENDS += "sysfsutils"
 
