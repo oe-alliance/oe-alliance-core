@@ -6,9 +6,9 @@ require conf/license/license-gplv2.inc
 inherit gitpkgv allarch
 
 SRCREV = "${AUTOREV}"
-PV = "1.0+git${SRCPV}"
-PKGV = "1.0+git${GITPKGV}"
-VER="1.0"
+PV = "1.3+git${SRCPV}"
+PKGV = "1.3+git${GITPKGV}"
+VER="1.3"
 
 SRC_URI="git://github.com/KravenHD/ZeroHD.git;protocol=git"
 
