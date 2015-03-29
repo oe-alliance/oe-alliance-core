@@ -1,3 +1,5 @@
+DEPENDS = "kmod-native"
+
 inherit kernel machine_kernel_pr
 
 PATCHREV = "ac6cc9511a5f70eaa584c63fc5c3de33cae1d0e7"
@@ -41,19 +43,32 @@ SRC_URI[unionfs.sha256sum] = "b2e04936254bbf778c963de862061027c858a2e157bb2e48c7
 S = "${WORKDIR}/linux-${PV}"
 B = "${WORKDIR}/build"
 
+do_configure_prepend() {
+    rm -rf ${STAGING_KERNEL_DIR}/.cofig
+    rm -rf ${STAGING_KERNEL_DIR}/.config
+    rm -rf ${STAGING_KERNEL_DIR}/.config.old
+    rm -rf ${STAGING_KERNEL_DIR}/include/generated
+    rm -rf ${STAGING_KERNEL_DIR}/include/config
+    rm -rf ${STAGING_KERNEL_DIR}/arch/mips/include/generated
+}
+
 do_shared_workdir_prepend() {
     mkdir -p ${B}/include/generated/
     cp -fR ${B}/include/linux/* ${B}/include/generated/
+    while [ ! -f ${B}/Module.symvers ]
+    do
+      sleep 2
+    done
 }
 
-require linux-dreambox.inc
+require linux-dreambox3.inc
 
 do_install_prepend() {
         mkdir -p ${S}/tools
 }
 
 do_install_append() {
-        cp include/asm/asm-offsets.h $kerneldir/include/asm/asm-offsets.h
+        cp ${B}/include/asm/asm-offsets.h ${B}/include/generated/asm-offsets.h
 }
 
 do_package_qa() {
