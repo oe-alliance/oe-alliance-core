@@ -4,7 +4,7 @@
  	sound.h stddef.h synclink.h telephony.h termios.h ticable.h	\
  	times.h tiocl.h tipc.h toshiba.h ultrasound.h un.h utime.h	\
  	utsname.h video_decoder.h video_encoder.h videotext.h vt.h	\
-+	bsg.h fiemap.h oom.h rfkill.h if_pppol2tp.h \
++	bsg.h fiemap.h oom.h rfkill.h if_pppol2tp.h pps.h \
  	wavefront.h wireless.h xattr.h x25.h zorro_ids.h
  
  unifdef-y += acct.h adb.h adfs_fs.h agpgart.h apm_bios.h atalk.h	\
