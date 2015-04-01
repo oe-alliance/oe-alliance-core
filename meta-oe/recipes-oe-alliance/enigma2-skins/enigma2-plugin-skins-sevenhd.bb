@@ -31,7 +31,7 @@ pkg_postinst_${PN} () {
 echo " "
 echo " ...Skin successful installed. "
 echo " "
-exit0
+exit 0
 }
 
 pkg_postrm_${PN} () {
@@ -43,7 +43,7 @@ rm -rf /usr/lib/enigma2/python/Components/Renderer/SevenHD*
 echo " "
 echo " ...Skin successful removed. "
 echo " "
-exit0
+exit 0
 }
 
 pkg_preinst_${PN} () {
@@ -73,5 +73,5 @@ pkg_prerm_${PN} () {
 echo " "
 echo " The Skin SevenHD is now being removed... "
 echo " "
-exit0
+exit 0
 }

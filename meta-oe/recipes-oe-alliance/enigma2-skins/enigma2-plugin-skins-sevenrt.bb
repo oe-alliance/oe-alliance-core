@@ -43,7 +43,7 @@ rm -rf /usr/lib/enigma2/python/Components/Renderer/SevenRT*
 echo " "
 echo " ...Skin successful removed. "
 echo " "
-exit0
+exit 0
 }
 
 pkg_preinst_${PN} () {
@@ -68,7 +68,7 @@ fi
 	echo " "
 	echo " The Skin SevenRT is now being installed... "
 	echo " "
-exit0
+exit 0
 }
 
 pkg_prerm_${PN} () {
@@ -76,5 +76,5 @@ pkg_prerm_${PN} () {
 echo " "
 echo " The Skin SevenRT is now being removed... "
 echo " "
-exit0
+exit 0
 }
