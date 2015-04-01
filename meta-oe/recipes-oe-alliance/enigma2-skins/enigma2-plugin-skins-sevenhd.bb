@@ -65,7 +65,7 @@ if [ -f /usr/lib/enigma2/python/Plugins/Extensions/SevenHD/plugin.py ]; then
 	echo " was found and removed! "
 	echo " "
 fi
-exit0
+exit 0
 }
 
 pkg_prerm_${PN} () {
