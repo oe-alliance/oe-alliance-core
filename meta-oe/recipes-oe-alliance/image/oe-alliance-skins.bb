@@ -24,5 +24,7 @@ RDEPENDS_${PN} = "\
     enigma2-plugin-skins-zerohd \
     enigma2-plugin-skins-sevenhd \
     enigma2-plugin-skins-sevenrt \
+	enigma2-plugin-skins-zerofullhd \
+	enigma2-plugin-skins-sevenfullhd \
     enigma2-plugin-skins-blackspirit.hd \
     "
