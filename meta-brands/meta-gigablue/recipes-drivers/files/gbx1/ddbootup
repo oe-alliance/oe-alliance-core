@@ -1,6 +1,9 @@
 #! /bin/sh 
 
-echo "gbultra" > /proc/stb/info/gbmodel
+# enable MiniTV to show bootlogo in display. Will be switched to desired usermode once E2 starts.
+echo 1 > /proc/stb/lcd/mode
+
+echo "gbx1" > /proc/stb/info/gbmodel
 
 # ZRAM TEST
 # mem_by_cpu=$(($(grep MemTotal /proc/meminfo | awk ' { print $2 } ')*256))

@@ -21,7 +21,7 @@ SRC_URI_gb800seplus = " file://gb800seplus/warning.bin"
 SRC_URI_gbipbox = " file://gbipbox/warning.bin"
 SRC_URI_gbultraue = " file://gbultraue/lcdwaitkey.bin file://gbultraue/lcdwarning.bin file://gbultraue/warning.bin"
 SRC_URI_gbultrase = " file://gbultrase/warning.bin"
-SRC_URI_gbultra = " file://gbultra/warning.bin"
+SRC_URI_gbx1 = " file://gbx1/warning.bin"
 
 ALLOW_EMPTY_${PN} = "1"
 
