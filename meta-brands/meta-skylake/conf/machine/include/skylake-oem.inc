@@ -3,8 +3,6 @@ include conf/machine/include/build-extras.inc
 
 BRAND_OEM = "skylake"
 
-GST_VERSION = "1.0"
-
 MACHINE_NAME = "\
 ${@base_contains('MACHINEBUILD', 'mutant2400', 'HD2400' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mutant1100', 'HD1100' , '', d)}\

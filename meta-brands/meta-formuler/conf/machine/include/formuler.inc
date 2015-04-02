@@ -9,8 +9,6 @@ MTD_ROOTFS = "mtd2"
 KERNEL_FILE = "kernel.bin"
 ROOTFS_FILE = "rootfs.bin"
 
-GST_VERSION = "1.0"
-
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS = "\
     formuler-dvb-modules-${MACHINE} \
     "

@@ -3,8 +3,6 @@ include conf/machine/include/build-extras.inc
 
 BRAND_OEM = "airdigital"
 
-GST_VERSION = "1.0"
-
 MACHINE_NAME = "\
 ${@base_contains('MACHINEBUILD', 'zgemmash1', 'Star H1' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'zgemmash2', 'Star H2' , '', d)}\

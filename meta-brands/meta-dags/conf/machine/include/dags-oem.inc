@@ -3,8 +3,6 @@ include conf/machine/include/build-extras.inc
 
 BRAND_OEM = "dags"
 
-GST_VERSION = "1.0"
-
 MACHINE_NAME = "\
 ${@base_contains('MACHINEBUILD', 'tm2t', 'TM-2T-OE' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmnano', 'TM-NANO-OE' , '', d)}\

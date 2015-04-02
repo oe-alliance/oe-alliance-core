@@ -3,8 +3,6 @@ include conf/machine/include/build-extras.inc
 
 BRAND_OEM = "cube"
 
-GST_VERSION = "1.0"
-
 MACHINE_NAME = "\
 ${@base_contains('MACHINEBUILD', 'dcube', 'R2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'ultima', 'Ultima' , '', d)}\

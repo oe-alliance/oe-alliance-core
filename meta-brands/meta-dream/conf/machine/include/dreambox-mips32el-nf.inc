@@ -37,7 +37,7 @@ MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS = "\
     kernel-module-nls-cp850 \
     kernel-module-fuse \
     kernel-module-nfsd \
-    kernel-module-exportfs \	
+    kernel-module-exportfs \
     "
 KERNEL_MODULE_AUTOLOAD += "cifs"
 KERNEL_MODULE_AUTOLOAD += "iso9660"

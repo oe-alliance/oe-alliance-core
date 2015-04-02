@@ -1,9 +1,9 @@
 SUMMARY = "Linux kernel for ${MACHINE}"
 SECTION = "kernel"
 LICENSE = "GPLv2"
-PACKAGE_ARCH = "${MACHINE_ARCH}"
-PR = "r0"
 SRC = "20150227"
+
+inherit kernel machine_kernel_pr
 
 KERNEL_RELEASE = "3.19"
 
@@ -11,8 +11,6 @@ SRC_URI[md5sum] = "0b842b124f826b82e3f41653c7a82c8d"
 SRC_URI[sha256sum] = "02d8bd2b085a15fa75ca2cc906b38f42714f3d8c59285488bed230bdda7922e9"
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-brcmstb-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
-
-MACHINE_KERNEL_PR_append = ".0"
 
 # By default, kernel.bbclass modifies package names to allow multiple kernels
 # to be installed in parallel. We revert this change and rprovide the versioned
@@ -27,8 +25,7 @@ SRC_URI += "http://source.mynonpublic.com/xcore/${MACHINE}-linux-${PV}-${SRC}.ta
     "
 
 S = "${WORKDIR}/linux-brcmstb-${PV}"
-
-inherit kernel
+B = "${WORKDIR}/build"
 
 export OS = "Linux"
 KERNEL_OBJECT_SUFFIX = "ko"
@@ -37,11 +34,6 @@ KERNEL_IMAGETYPE = "vmlinux"
 KERNEL_IMAGEDEST = "/tmp"
 
 FILES_kernel-image = "${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz"
-
-do_configure_prepend() {
-    oe_machinstall -m 0644 ${WORKDIR}/defconfig ${S}/.config
-    oe_runmake oldconfig
-}
 
 kernel_do_install_append() {
     ${STRIP} ${D}${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION}

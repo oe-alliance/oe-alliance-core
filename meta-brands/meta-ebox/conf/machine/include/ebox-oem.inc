@@ -6,8 +6,6 @@ MACHINE_OEM = "ebox"
 KERNEL_FILE = "kernel_cfe_auto.bin"
 ROOTFS_FILE = "root_cfe_auto.bin"
 
-GST_VERSION = "1.0"
-
 MACHINE_NAME = "\
 ${@base_contains('MACHINEBUILD', 'mixosf5', 'F5' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mixosf5mini', 'F5 mini' , '', d)}\

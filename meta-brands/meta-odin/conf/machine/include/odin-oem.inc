@@ -3,8 +3,6 @@ include conf/machine/include/build-extras.inc
 
 BRAND_OEM = "odin"
 
-GST_VERSION = "1.0"
-
 MACHINE_NAME = "\
 ${@base_contains('MACHINEBUILD', 'classm', 'CLASS M' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'axodin', 'AX ODIN' , '', d)}\

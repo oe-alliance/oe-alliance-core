@@ -3,8 +3,6 @@ include conf/machine/include/build-extras.inc
 
 BRAND_OEM = "ceryon"
 
-GST_VERSION = "1.0"
-
 MACHINE_NAME = "\
 ${@base_contains('MACHINEBUILD', 'nano', 'NANO' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'nanoc', 'NANO-C' , '', d)}\

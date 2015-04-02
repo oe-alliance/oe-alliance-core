@@ -9,7 +9,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "1.0"
-PR = "r57"
+PR = "r58"
 
 DEPENDS = "enigma2-plugin-drivers-usbserial"
 RECOMMENDS = "enigma2-plugin-extensions-et-livestream"
@@ -54,7 +54,7 @@ RDEPENDS_${PN} = " \
     dosfstools \
     dvbsnoop \
     dvdfs \
-    ${@base_contains("MACHINE_FEATURES", "legacykernel", "" , "evtest", d)} \
+    ${@base_contains("MACHINE_FEATURES", "legacykernel", "" , "evtest strace", d)} \
     exfat-utils \
     fuse-exfat \
     gdb \
@@ -86,7 +86,6 @@ RDEPENDS_${PN} = " \
     smartmontools \
     smbnetfs \
     sshpass \
-    strace \
     tcpdump \
     transmission \
     ushare \

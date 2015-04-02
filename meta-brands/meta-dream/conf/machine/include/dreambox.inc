@@ -5,8 +5,6 @@ include conf/machine/include/build-extras.inc
 BRAND_OEM = "dreambox"
 MACHINE_BRAND = "Dreambox"
 
-GST_VERSION = "1.0"
-
 EXTRA_IMAGEDEPENDS += "dreambox-secondstage-${MACHINE}"
 
 GLIBC_EXTRA_OECONF = "--with-tls --with-__thread"

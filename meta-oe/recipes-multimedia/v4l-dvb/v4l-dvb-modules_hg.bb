@@ -1,8 +1,9 @@
-DEPENDS += "module-init-tools"
-RDEPENDS_${PN} += "module-init-tools-depmod"
+DEPENDS += "virtual/kernel module-init-tools"
+RDEPENDS_${PN} += "kmod"
 SRCDATE = "20100904"
 PV = "0.0+hg${SRCDATE}"
 PR = "${INC_PR}.3"
+do_configure[depends] += "virtual/kernel:do_shared_workdir"
 
 SRC_URI = "hg://linuxtv.org/hg/;module=v4l-dvb;rev=${SRCREV} \
            file://defconfig \
@@ -52,5 +53,9 @@ SRC_URI = "hg://linuxtv.org/hg/;module=v4l-dvb;rev=${SRCREV} \
 
 SRCREV = "6e0befab696a"
 S = "${WORKDIR}/v4l-dvb"
+
+EXTRA_OEMAKE = "'CFLAGS=${CFLAGS} -I=${includedir}' KDIR=${STAGING_KERNEL_DIR} SRCDIR=${STAGING_KERNEL_DIR} OUTDIR=${STAGING_KERNEL_BUILDDIR}"
+
+do_populate_sysroot[noexec] = "1"
 
 require v4l-dvb-modules.inc

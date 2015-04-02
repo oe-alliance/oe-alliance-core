@@ -3,8 +3,6 @@ include conf/machine/include/build-extras.inc
 
 BRAND_OEM = "blackbox"
 
-GST_VERSION = "1.0"
-
 MACHINE_NAME = "\
 ${@base_contains('MACHINEBUILD', 'sogno8800hd', '8800HD' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'uniboxhde', 'HDECO+' , '', d)}\

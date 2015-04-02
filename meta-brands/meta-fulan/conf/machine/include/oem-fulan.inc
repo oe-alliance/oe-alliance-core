@@ -3,8 +3,6 @@ include conf/machine/include/build-extras.inc
 
 BRAND_OEM = "fulan"
 
-GST_VERSION = "1.0"
-
 MACHINE_NAME = "\
 ${@base_contains('MACHINEBUILD', 'amiko8900', 'SHD-8900 Alien' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'amikomini', 'Alien-Mini' , '', d)}\

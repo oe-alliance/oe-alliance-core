@@ -4,8 +4,6 @@ include conf/machine/include/build-extras.inc
 BRAND_OEM = "vuplus"
 MACHINE_BRAND = "Vu+"
 
-GST_VERSION = "1.0"
-
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS = " \
     ${@base_contains("MACHINE_FEATURES", "dvbproxy", "vuplus-dvb-proxy-${MACHINE} vuplus-libgles-${MACHINE} vuplus-platform-util-${MACHINE}", "vuplus-dvb-modules-${MACHINE}", d)} \
     "

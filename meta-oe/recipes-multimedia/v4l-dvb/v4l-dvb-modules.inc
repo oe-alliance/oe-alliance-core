@@ -5,7 +5,7 @@ LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=a907e355dcd2c89b14aa4dbcb7764d4f"
 INC_PR = "r3"
 
-inherit module machine_kernel_pr
+inherit module
 
 PACKAGES_DYNAMIC += "v4l-dvb-module-*"
 PACKAGES_DYNAMIC += "v4l-dvb-firmware-*"
@@ -16,12 +16,26 @@ do_configure() {
 
 do_compile() {
     unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS
-    oe_runmake DIR="${STAGING_KERNEL_BUILDDIR}" ${MAKE_TARGETS}
+    oe_runmake KERNEL_PATH=${STAGING_KERNEL_BUILDDIR}   \
+        KDIR="${STAGING_KERNEL_DIR}" \
+        DIR="${STAGING_KERNEL_DIR}" \
+        KERNEL_VERSION=${KERNEL_VERSION} \
+        CC="${KERNEL_CC}" LD="${KERNEL_LD}" \
+        AR="${KERNEL_AR}" \
+        O=${STAGING_KERNEL_BUILDDIR} \
+       ${MAKE_TARGETS}
 }
 
 do_install() {
     unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS
-    oe_runmake DIR="${STAGING_KERNEL_BUILDDIR}" DEPMOD=echo DESTDIR="${D}" install
+    oe_runmake DEPMOD=echo DESTDIR="${D}" \
+        KDIR="${STAGING_KERNEL_DIR}" \
+        DIR="${STAGING_KERNEL_DIR}" \
+        KERNEL_VERSION=${KERNEL_VERSION} \
+        KERNELRELEASE=${KERNEL_VERSION} \
+        CC="${KERNEL_CC}" LD="${KERNEL_LD}" \
+        O=${STAGING_KERNEL_BUILDDIR} \
+        install
 }
 
 PACKAGES = "v4l-dvb-modules"
@@ -29,14 +43,23 @@ FILES_${PN} = ""
 ALLOW_EMPTY_${PN} = "1"
 
 pkg_postinst_modules() {
+#!/bin/sh
 if [ -z "$D" ]; then
-    depmod -a
-    update-modules || true
+	depmod -a ${KERNEL_VERSION}
+else
+	# image.bbclass will call depmodwrapper after everything is installed,
+	# no need to do it here as well
+	:
 fi
 }
 
-pkg_postrm_modules() {
-update-modules || true
+pkg_postrm_modules () {
+#!/bin/sh
+if [ -z "$D" ]; then
+	depmod -a ${KERNEL_VERSION}
+else
+	depmodwrapper -a -b $D ${KERNEL_VERSION}
+fi
 }
 
 autoload_postinst_fragment() {

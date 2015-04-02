@@ -9,8 +9,6 @@ MTD_KERNEL = "mtd2"
 KERNEL_FILE = "kernel.bin"
 ROOTFS_FILE = "rootfs.bin"
 
-GST_VERSION = "1.0"
-
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS = " \
     gigablue-dvb-modules-${MACHINE} \
     "

@@ -3,8 +3,6 @@ include conf/machine/include/build-extras.inc
 
 BRAND_OEM = "xp"
 
-GST_VERSION = "1.0"
-
 MACHINE_NAME = "\
 ${@base_contains('MACHINEBUILD', 'xp1000mk', 'XP1000' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'xp1000max', 'XP1000' , '', d)}\
