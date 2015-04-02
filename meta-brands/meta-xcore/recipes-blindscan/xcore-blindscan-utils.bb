@@ -6,6 +6,7 @@ RDEPENDS_${PN} = "ncurses"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 LICENSE = "CLOSED"
+require conf/license/license-close.inc
 
 PACKAGES = "xcore-blindscan-dvbs-utils xcore-blindscan-dvbs-utils-dbg"
 
