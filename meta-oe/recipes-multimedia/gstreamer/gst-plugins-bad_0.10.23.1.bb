@@ -14,7 +14,7 @@ PR = "r16"
 GIT_PV = ""
 
 EXTRA_OECONF += "--disable-examples --disable-experimental --disable-sdl --disable-cdaudio --disable-directfb --enable-faad \
-                 --disable-vdpau --disable-apexsink --enable-orc --disable-mpeg2enc --disable-mplex --disable-rsvg --disable-uvch264"
+                 --disable-vdpau --disable-apexsink --enable-orc --disable-mpeg2enc --disable-mplex --disable-rsvg --disable-uvch264 --disable-modplug"
 
 ARM_INSTRUCTION_SET = "arm"
 
