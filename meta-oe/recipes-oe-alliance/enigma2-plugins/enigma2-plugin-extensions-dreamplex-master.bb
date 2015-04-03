@@ -6,9 +6,8 @@ require conf/license/license-gplv2.inc
 inherit autotools-brokensep gitpkgv pythonnative
 
 SRCREV = "${AUTOREV}"
-# SRCREV = "ebdc7c77f88c7fb50c642703786ff7d50bf3bd80"
-PV = "2.1.2+git${SRCPV}"
-PKGV = "2.1.2+git${GITPKGV}"
+PV = "2.1.3+git${SRCPV}"
+PKGV = "2.1.3+git${GITPKGV}"
 PR = "r1"
 
 PACKAGES = "enigma2-plugin-extensions-dreamplex"
