@@ -25,6 +25,8 @@ MACHINE_EXTRA_RRECOMMENDS = " \
     kernel-module-fuse \
     kernel-module-nfsd \
     kernel-module-exportfs \
+    kernel-module-snd-oss \
+    kernel-module-snd-pcm-oss \
     "
     
 MACHINE_FEATURES += "dreambox alsa usbhost 3dtv switchoff tpm"
