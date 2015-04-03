@@ -1,5 +1,5 @@
 diff --git a/gstdvbaudiosink.c b/gstdvbaudiosink.c
-index 2725def..55cc588 100644
+index d918be8..44e10b3 100644
 --- a/gstdvbaudiosink.c
 +++ b/gstdvbaudiosink.c
 @@ -74,6 +74,10 @@
@@ -13,7 +13,7 @@ index 2725def..55cc588 100644
  #include <gst/gst.h>
  #include <gst/audio/audio.h>
  #include <gst/base/gstbasesink.h>
-@@ -205,6 +209,36 @@ GST_STATIC_PAD_TEMPLATE(
+@@ -177,6 +181,36 @@ GST_STATIC_PAD_TEMPLATE(
  	)
  );
  
@@ -47,10 +47,10 @@ index 2725def..55cc588 100644
 +	return AUDIO_ENCODING_UNKNOWN;
 +}
 +
- #if GST_VERSION_MAJOR < 1
- static void gst_dvbaudiosink_init(GstDVBAudioSink *self, GstDVBAudioSinkClass *gclass);
- #else
-@@ -314,6 +348,11 @@ static void gst_dvbaudiosink_init(GstDVBAudioSink *self)
+ static void gst_dvbaudiosink_init(GstDVBAudioSink *self);
+ 
+ #define DEBUG_INIT \
+@@ -257,6 +291,11 @@ static void gst_dvbaudiosink_init(GstDVBAudioSink *self)
  	self->unlockfd[0] = self->unlockfd[1] = -1;
  	self->rate = 1.0;
  	self->timestamp = GST_CLOCK_TIME_NONE;
@@ -62,7 +62,7 @@ index 2725def..55cc588 100644
  
  	gst_base_sink_set_sync(GST_BASE_SINK(self), FALSE);
  	gst_base_sink_set_async_enabled(GST_BASE_SINK(self), TRUE);
-@@ -751,11 +790,26 @@ static gboolean gst_dvbaudiosink_set_caps(GstBaseSink *basesink, GstCaps *caps)
+@@ -683,11 +722,26 @@ static gboolean gst_dvbaudiosink_set_caps(GstBaseSink *basesink, GstCaps *caps)
  		if (self->fd >= 0) ioctl(self->fd, AUDIO_STOP, 0);
  		self->playing = FALSE;
  	}
@@ -92,9 +92,9 @@ index 2725def..55cc588 100644
  	if (self->fd >= 0) ioctl(self->fd, AUDIO_PLAY);
  	self->playing = TRUE;
  
-@@ -798,6 +852,11 @@ static gboolean gst_dvbaudiosink_event(GstBaseSink *sink, GstEvent *event)
- 	case GST_EVENT_EOS:
+@@ -731,6 +785,11 @@ static gboolean gst_dvbaudiosink_event(GstBaseSink *sink, GstEvent *event)
  	{
+ 		gboolean pass_eos = FALSE;
  		struct pollfd pfd[2];
 +
 +#ifdef AUDIO_FLUSH
@@ -105,10 +105,10 @@ index 2725def..55cc588 100644
  		pfd[0].events = POLLIN;
  		pfd[1].fd = self->fd;
 diff --git a/gstdvbaudiosink.h b/gstdvbaudiosink.h
-index a83be80..9850415 100644
+index dfce273..d4fe562 100644
 --- a/gstdvbaudiosink.h
 +++ b/gstdvbaudiosink.h
-@@ -111,6 +111,8 @@ struct _GstDVBAudioSink
+@@ -131,6 +131,8 @@ struct _GstDVBAudioSink
  	gint64 lastpts;
  	gint64 timestamp_offset;
  
@@ -118,7 +118,7 @@ index a83be80..9850415 100644
  };
  
 diff --git a/gstdvbvideosink.c b/gstdvbvideosink.c
-index a6b0a10..baf1004 100644
+index 02acaa3..67d9753 100644
 --- a/gstdvbvideosink.c
 +++ b/gstdvbvideosink.c
 @@ -73,6 +73,10 @@
@@ -187,7 +187,7 @@ index a6b0a10..baf1004 100644
  
  	gst_base_sink_set_sync(GST_BASE_SINK(self), FALSE);
  	gst_base_sink_set_async_enabled(GST_BASE_SINK(self), TRUE);
-@@ -424,6 +469,10 @@ static gboolean gst_dvbvideosink_event(GstBaseSink *sink, GstEvent *event)
+@@ -425,6 +470,10 @@ static gboolean gst_dvbvideosink_event(GstBaseSink *sink, GstEvent *event)
  		pfd[1].fd = self->fd;
  		pfd[1].events = POLLIN;
  
@@ -224,10 +224,10 @@ index a6b0a10..baf1004 100644
  		if (self->fd >= 0) 
  		{
 diff --git a/gstdvbvideosink.h b/gstdvbvideosink.h
-index 8cf1dc2..ad04bcb 100644
+index 3b7b549..fb0b9b5 100644
 --- a/gstdvbvideosink.h
 +++ b/gstdvbvideosink.h
-@@ -115,6 +115,8 @@ struct _GstDVBVideoSink
+@@ -132,6 +132,8 @@ struct _GstDVBVideoSink
  	gint64 timestamp_offset;
  	gboolean must_send_header;
  
