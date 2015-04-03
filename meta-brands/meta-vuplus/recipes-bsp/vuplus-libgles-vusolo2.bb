@@ -1,5 +1,5 @@
 SRCDATE = "20150403"
-SRCDATE_PR = "r2"
+SRCDATE_PR = "r0"
 
 require vuplus-libgles.inc
 
