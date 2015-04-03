@@ -8,9 +8,9 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r0"
+PR = "r1"
 
-CFLAGS_append = " -I${S} "
+CFLAGS_append = " -I${S}  -I${S}/lib "
 
 SRC_URI = "git://github.com/22ktv/bluez-hcitools.git"
 
