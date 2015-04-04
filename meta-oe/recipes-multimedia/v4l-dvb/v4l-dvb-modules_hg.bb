@@ -1,61 +1,15 @@
-DEPENDS += "virtual/kernel module-init-tools"
-RDEPENDS_${PN} += "kmod"
+PACKAGE_ARCH = "${MACHINE_ARCH}"
+
 SRCDATE = "20100904"
-PV = "0.0+hg${SRCDATE}"
-PR = "${INC_PR}.3"
-do_configure[depends] += "virtual/kernel:do_shared_workdir"
+KV = "2.6.18-7.4-dm800"
+PV = "${KV}+${SRCDATE}"
+PR = "r0"
 
-SRC_URI = "hg://linuxtv.org/hg/;module=v4l-dvb;rev=${SRCREV} \
-           file://defconfig \
-           file://v4l-dvb-compat.patch \
-           file://v4l-2.6.18-compat.patch \
-           file://fix-blocking-demux.patch \
-           file://basic-dvb-t2-support.patch \
-           file://localversion.patch \
-           file://fix-strip.patch \
-           file://build-fix.patch \
-           file://backport-1.patch \
-           file://backport-2.patch \
-           file://backport-3.patch \
-           file://backport-4.patch \
-           file://backport-5.patch \
-           file://backport-6.patch \
-           file://backport-7.patch \
-           file://backport-8.patch \
-           file://backport-9.patch \
-           file://backport-a.patch \
-           file://backport-b.patch \
-           file://backport-c.patch \
-           file://backport-d.patch \
-           file://backport-e.patch \
-           file://backport-f.patch \
-           file://backport-g.patch \
-           file://backport-h.patch \
-           file://backport-i.patch \
-           file://backport-j.patch \
-           file://backport-k.patch \
-           file://technisat_airstar_telestick_2.patch \
-           file://v4l-dvb-as102.patch \
-           file://v4l-dvb-a867.patch \
-           file://v4l-dvb-tua9001.patch \
-           file://v4l-dvb-af9033.patch \
-           file://v4l-dvb-af9035.patch \
-           file://v4l-dvb-tda18218.patch \
-           file://v4l-dvb-af9013_fix_for_tda18218_tuner.patch \
-           file://v4l-dvb-af9015_fix_for_tda18218_tuner.patch \
-           file://v4l-dvb-af9013_add_firmware5.1.patch \
-           file://v4l-dvb-af9015_fix_for_A815M.patch \
-           file://v4l-dvb-em28xx_fix.patch \
-           file://v4l-dvb-af9015_add_a850red.patch \
-           file://v4l-dvb-smsdvb_fix_frontend.patch \
-           file://v4l-dvb-smsdvb_always_load.patch \
-"
+SRC_URI[md5sum] = "9b3f0075a840f525c4f83351b7e5ee47"
+SRC_URI[sha256sum] = "facdbf5a57c172325a7aadb168c69b90773a0612f5f574677ab0409df76a9d03"
 
-SRCREV = "6e0befab696a"
-S = "${WORKDIR}/v4l-dvb"
+SRC_URI = "http://source.mynonpublic.com/v4l-dvb-modules_${KV}-${SRCDATE}.zip"
 
-EXTRA_OEMAKE = "'CFLAGS=${CFLAGS} -I=${includedir}' KDIR=${STAGING_KERNEL_DIR} SRCDIR=${STAGING_KERNEL_DIR} OUTDIR=${STAGING_KERNEL_BUILDDIR}"
-
-do_populate_sysroot[noexec] = "1"
+S = "${WORKDIR}/"
 
 require v4l-dvb-modules.inc

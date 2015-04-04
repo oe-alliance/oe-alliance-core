@@ -1,46 +1,33 @@
-SUMMARY = "v4l-dvb drivers"
+SUMMARY = "Hardware V4L drivers for ${MACHINE}"
 HOMEPAGE = "http://linuxtv.org/"
 SECTION = "kernel/modules"
-LICENSE = "GPLv2"
-LIC_FILES_CHKSUM = "file://COPYING;md5=a907e355dcd2c89b14aa4dbcb7764d4f"
-INC_PR = "r3"
+require conf/license/license-gplv2.inc
 
 inherit module
 
+INHIBIT_PACKAGE_STRIP = "1"
+
 PACKAGES_DYNAMIC += "v4l-dvb-module-*"
-PACKAGES_DYNAMIC += "v4l-dvb-firmware-*"
 
 do_configure() {
-    install -m 0644 ${WORKDIR}/defconfig ${S}/v4l/.config
 }
 
 do_compile() {
-    unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS
-    oe_runmake KERNEL_PATH=${STAGING_KERNEL_BUILDDIR}   \
-        KDIR="${STAGING_KERNEL_DIR}" \
-        DIR="${STAGING_KERNEL_DIR}" \
-        KERNEL_VERSION=${KERNEL_VERSION} \
-        CC="${KERNEL_CC}" LD="${KERNEL_LD}" \
-        AR="${KERNEL_AR}" \
-        O=${STAGING_KERNEL_BUILDDIR} \
-       ${MAKE_TARGETS}
 }
 
 do_install() {
-    unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS
-    oe_runmake DEPMOD=echo DESTDIR="${D}" \
-        KDIR="${STAGING_KERNEL_DIR}" \
-        DIR="${STAGING_KERNEL_DIR}" \
-        KERNEL_VERSION=${KERNEL_VERSION} \
-        KERNELRELEASE=${KERNEL_VERSION} \
-        CC="${KERNEL_CC}" LD="${KERNEL_LD}" \
-        O=${STAGING_KERNEL_BUILDDIR} \
-        install
+   install -d ${D}/lib
+   cp -fR ${S}/lib/* ${D}/lib/
 }
 
-PACKAGES = "v4l-dvb-modules"
+PACKAGES = "v4l-dvb-modules ${PN}-tests"
 FILES_${PN} = ""
 ALLOW_EMPTY_${PN} = "1"
+
+FILES_${PN}-tests += " \
+    /lib/firmware/* \
+    /lib/modules/*/modules.* \
+    "
 
 pkg_postinst_modules() {
 #!/bin/sh
@@ -68,85 +55,88 @@ if [ x"$D" = "x" ]; then
 fi
 }
 
-python populate_packages_prepend() {
-    import os
+python split_kernel_module_packages () {
+    import re
+
+    modinfoexp = re.compile("([^=]+)=(.*)")
+    kerverrexp = re.compile('^(.*-hh.*)[\.\+].*$')
+    depmodpat0 = re.compile("^(.*\.k?o):..*$")
+    depmodpat1 = re.compile("^(.*\.k?o):\s*(.*\.k?o)\s*$")
+    depmodpat2 = re.compile("^(.*\.k?o):\s*(.*\.k?o)\s*\\\$")
+    depmodpat3 = re.compile("^\t(.*\.k?o)\s*\\\$")
+    depmodpat4 = re.compile("^\t(.*\.k?o)\s*$")
+
     def extract_modinfo(file):
-        import tempfile, re
+        import tempfile, subprocess
         tempfile.tempdir = d.getVar("WORKDIR", True)
         tf = tempfile.mkstemp()
         tmpfile = tf[1]
-        cmd = "PATH=\"%s\" %sobjcopy -j .modinfo -O binary %s %s" % (d.getVar("PATH", True), d.getVar("HOST_PREFIX", True) or "", file, tmpfile)
-        os.system(cmd)
+        cmd = "%sobjcopy -j .modinfo -O binary %s %s" % (d.getVar("HOST_PREFIX", True) or "", file, tmpfile)
+        subprocess.call(cmd, shell=True)
         f = open(tmpfile)
         l = f.read().split("\000")
         f.close()
         os.close(tf[0])
         os.unlink(tmpfile)
-        exp = re.compile("([^=]+)=(.*)")
         vals = {}
         for i in l:
-            m = exp.match(i)
+            m = modinfoexp.match(i)
             if not m:
                 continue
             vals[m.group(1)] = m.group(2)
         return vals
 
     def parse_depmod():
-        import re
 
         dvar = d.getVar('PKGD', True)
-        if not dvar:
-            bb.error("D not defined")
-            return
 
         kernelver = d.getVar('KERNEL_VERSION', True)
         kernelver_stripped = kernelver
-        m = re.match('^(.*-hh.*)[\.\+].*$', kernelver)
+        m = kerverrexp.match(kernelver)
         if m:
             kernelver_stripped = m.group(1)
-        path = d.getVar("PATH", True)
-        host_prefix = d.getVar("HOST_PREFIX", True) or ""
-        major_version = d.getVar('KERNEL_MAJOR_VERSION', True)
+        staging_kernel_dir = d.getVar("STAGING_KERNEL_BUILDDIR", True)
+        system_map_file = "%s/boot/System.map-%s" % (dvar, kernelver)
+        if not os.path.exists(system_map_file):
+            system_map_file = "%s/System.map-%s" % (staging_kernel_dir, kernelver)
+            if not os.path.exists(system_map_file):
+                bb.fatal("System.map-%s does not exist in '%s/boot' nor STAGING_KERNEL_BUILDDIR '%s'" % (kernelver, dvar, staging_kernel_dir))
 
-        cmd = "PATH=\"%s\" %sdepmod-%s -n -a -r -b %s -F %s/boot/System.map-%s %s" % (path, host_prefix, major_version, dvar, dvar, kernelver, kernelver_stripped)
+        cmd = "depmod -n -a -b %s -F %s %s" % (dvar, system_map_file, kernelver_stripped)
         f = os.popen(cmd, 'r')
 
         deps = {}
-        pattern0 = "^(.*\.k?o):..*$"
-        pattern1 = "^(.*\.k?o):\s*(.*\.k?o)\s*$"
-        pattern2 = "^(.*\.k?o):\s*(.*\.k?o)\s*\\\$"
-        pattern3 = "^\t(.*\.k?o)\s*\\\$"
-        pattern4 = "^\t(.*\.k?o)\s*$"
-
         line = f.readline()
         while line:
-            if not re.match(pattern0, line):
+            if not depmodpat0.match(line):
                 line = f.readline()
                 continue
-            m1 = re.match(pattern1, line)
+            m1 = depmodpat1.match(line)
             if m1:
                 deps[m1.group(1)] = m1.group(2).split()
             else:
-                m2 = re.match(pattern2, line)
+                m2 = depmodpat2.match(line)
                 if m2:
                     deps[m2.group(1)] = m2.group(2).split()
                     line = f.readline()
-                    m3 = re.match(pattern3, line)
+                    m3 = depmodpat3.match(line)
                     while m3:
                         deps[m2.group(1)].extend(m3.group(1).split())
                         line = f.readline()
-                        m3 = re.match(pattern3, line)
-                    m4 = re.match(pattern4, line)
+                        m3 = depmodpat3.match(line)
+                    m4 = depmodpat4.match(line)
                     deps[m2.group(1)].extend(m4.group(1).split())
             line = f.readline()
         f.close()
         return deps
 
     def get_dependencies(file, pattern, format):
+        # file no longer includes PKGD
         file = file.replace(d.getVar('PKGD', True) or '', '', 1)
+        # instead is prefixed with /lib/modules/${KERNEL_VERSION}
+        file = file.replace("/lib/modules/%s/" % d.getVar('KERNEL_VERSION', True) or '', '', 1)
 
-        if module_deps.has_key(file):
-            import re
+        if file in module_deps:
             dependencies = []
             for i in module_deps[file]:
                 m = re.match(pattern, os.path.basename(i))
@@ -159,19 +149,15 @@ python populate_packages_prepend() {
         return []
 
     def frob_metadata(file, pkg, pattern, format, basename):
-        import re
         vals = extract_modinfo(file)
 
         dvar = d.getVar('PKGD', True)
 
-        # If autoloading is requested, output /etc/modutils/<name> and append
+        # If autoloading is requested, output /etc/modules-load.d/<name>.conf and append
         # appropriate modprobe commands to the postinst
         autoload = d.getVar('module_autoload_%s' % basename, True)
-        if not autoload:
-            # Also, try canonical name with dashes
-            autoload = d.getVar('module_autoload_%s' % basename.replace('_', '-'), True)
         if autoload:
-            name = '%s/etc/modutils/%s' % (dvar, basename)
+            name = '%s/etc/modules-load.d/%s.conf' % (dvar, basename)
             f = open(name, 'w')
             for m in autoload.split():
                 f.write('%s\n' % m)
@@ -185,29 +171,24 @@ python populate_packages_prepend() {
         # Write out any modconf fragment
         modconf = d.getVar('module_conf_%s' % basename, True)
         if modconf:
-            if d.getVar("KERNEL_MAJOR_VERSION", True) == "2.6":
-                name = '%s/etc/modprobe.d/%s.conf' % (dvar, basename)
-            else:
-                name = '%s/etc/modutils/%s.conf' % (dvar, basename)
+            name = '%s/etc/modprobe.d/%s.conf' % (dvar, basename)
             f = open(name, 'w')
             f.write("%s\n" % modconf)
             f.close()
 
         files = d.getVar('FILES_%s' % pkg, True)
-        files = "%s /etc/modutils/%s /etc/modutils/%s.conf /etc/modprobe.d/%s.conf" % (files, basename, basename, basename)
+        files = "%s /etc/modules-load.d/%s.conf /etc/modprobe.d/%s.conf" % (files, basename, basename)
         d.setVar('FILES_%s' % pkg, files)
 
-        if vals.has_key("description"):
+        if "description" in vals:
             old_desc = d.getVar('DESCRIPTION_' + pkg, True) or ""
             d.setVar('DESCRIPTION_' + pkg, old_desc + "; " + vals["description"])
 
-        rdepends_str = d.getVar('RDEPENDS_' + pkg, True)
-        if rdepends_str:
-            rdepends = rdepends_str.split()
-        else:
-            rdepends = []
-        rdepends.extend(get_dependencies(file, pattern, format))
-        d.setVar('RDEPENDS_' + pkg, ' '.join(rdepends))
+        rdepends = bb.utils.explode_dep_versions2(d.getVar('RDEPENDS_' + pkg, True) or "")
+        for dep in get_dependencies(file, pattern, format):
+            if not dep in rdepends:
+                rdepends[dep] = []
+        d.setVar('RDEPENDS_' + pkg, bb.utils.join_deps(rdepends, commasep=False))
 
     module_deps = parse_depmod()
     module_regex = '^(.*)\.k?o$'
@@ -216,33 +197,16 @@ python populate_packages_prepend() {
     postinst = d.getVar('pkg_postinst_modules', True)
     postrm = d.getVar('pkg_postrm_modules', True)
 
-    maybe_update_modules = "update-modules "
-    if d.getVar("ONLINE_PACKAGE_MANAGEMENT", True) == "none":
-            maybe_update_modules = ""
+    modules = do_split_packages(d, root='/lib/modules', file_regex=module_regex, output_pattern=module_pattern, description='%s kernel module', postinst=postinst, postrm=postrm, recursive=True, hook=frob_metadata, extra_depends='kernel-%s' % (d.getVar("KERNEL_VERSION", True)))
+    if modules:
+        metapkg = d.getVar('KERNEL_MODULES_META_PACKAGE', True)
+        d.appendVar('RDEPENDS_' + metapkg, ' '+' '.join(modules))
 
-    do_split_packages(d, root='/lib/firmware', file_regex='^(.*)\.bin$', output_pattern='v4l-dvb-firmware-%s', description='Firmware for %s', recursive=True, extra_depends='')
-    do_split_packages(d, root='/lib/firmware', file_regex='^(.*)\.fw$', output_pattern='v4l-dvb-firmware-%s', description='Firmware for %s', recursive=True, extra_depends='')
-    do_split_packages(d, root='/lib/modules', file_regex=module_regex, output_pattern=module_pattern, description='%s kernel module', postinst=postinst, postrm=postrm, recursive=True, hook=frob_metadata, extra_depends='%skernel-%s' % (maybe_update_modules, d.getVar("KERNEL_VERSION", True)))
-
-    import re
-    metapkg = d.getVar('PN', True)
-    d.setVar('ALLOW_EMPTY_' + metapkg, "1")
-    d.setVar('FILES_' + metapkg, "")
-    blacklist = []
-    for l in module_deps.values():
-        for i in l:
-            pkg = module_pattern % legitimize_package_name(re.match(module_regex, os.path.basename(i)).group(1))
-            blacklist.append(pkg)
-    metapkg_rdepends = []
-    packages = d.getVar('PACKAGES', True).split()
-    for pkg in packages[1:]:
-        if not pkg in blacklist and not pkg in metapkg_rdepends:
-            metapkg_rdepends.append(pkg)
-        p = pkg.find('v4l-dvb-module')
-        if p != -1:
-            name = pkg.split('-')[-1]
-            d.setVar('RREPLACES_' + pkg, 'kernel-module-' + name)
-            d.setVar('RCONFLICTS_' + pkg, 'kernel-module-' + name)
-    d.setVar('RDEPENDS_' + metapkg, ' '.join(metapkg_rdepends))
-    d.setVar('DESCRIPTION_' + metapkg, 'v4l-dvb modules meta package')
+    # If modules-load.d and modprobe.d are empty at this point, remove them to
+    # avoid warnings. removedirs only raises an OSError if an empty
+    # directory cannot be removed.
+    dvar = d.getVar('PKGD', True)
+    for dir in ["%s/etc/modprobe.d" % (dvar), "%s/etc/modules-load.d" % (dvar), "%s/etc" % (dvar)]:
+        if len(os.listdir(dir)) == 0:
+            os.rmdir(dir)
 }
