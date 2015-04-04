@@ -11,7 +11,7 @@ DEPENDS = "tslib mpfr gmp"
 SRCREV = "${AUTOREV}"
 PV = "2.1+gitr${SRCPV}"
 PKGV = "2.1+gitr${GITPKGV}"
-PR = "r164"
+PR = "r165"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -69,7 +69,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-opkg-tools_1.3_mipsel.ipk \
     enigma2-plugin-extensions-oscamstatusview_0.5rc3_mips32el.ipk \
     enigma2-plugin-extensions-piconmanager_2.1-20150216-r2_all.ipk \
-    enigma2-plugin-extensions-picturecenterfs_6.05_all.ipk \
+    enigma2-plugin-extensions-picturecenterfs_6.07_all.ipk \
     enigma2-plugin-extensions-planerfs_6.51_all.ipk \
     enigma2-plugin-extensions-pluginspanel_1.0_r01_all.ipk \
     enigma2-plugin-extensions-radiode_0.1_mips32el.ipk \
@@ -96,7 +96,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-vhannibalautosettings_1.1_mips32el.ipk \
     enigma2-plugin-extensions-vuplusforum_0.7rc3_mips32el.ipk \
     enigma2-plugin-extensions-webmedia_10.0_r02_oe2.0_all.ipk \
-    enigma2-plugin-extensions-webradiofs_13.03_all.ipk \
+    enigma2-plugin-extensions-webradiofs_13.09_all.ipk \
     enigma2-plugin-extensions-wikipedia_2.2rc5_mips32el.ipk \
     enigma2-plugin-extensions-wwech_1.01_all.ipk \
     enigma2-plugin-extensions-xbmcaddons_8.1_r0_all.ipk \
