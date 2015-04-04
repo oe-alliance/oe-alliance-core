@@ -1,0 +1,13 @@
+--- a/src/cdrom_id/cdrom_id.c	2012-01-29 01:15:46.952827023 +0100
++++ b/src/cdrom_id/cdrom_id.c	2015-04-04 13:16:24.764932091 +0200
+@@ -41,6 +41,10 @@
+ #include "libudev.h"
+ #include "libudev-private.h"
+ 
++#ifndef SG_FLAG_LUN_INHIBIT
++#define SG_FLAG_LUN_INHIBIT 2
++#endif
++
+ static bool debug;
+ 
+ static void log_fn(struct udev *udev, int priority,

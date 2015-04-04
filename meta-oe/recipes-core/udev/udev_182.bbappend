@@ -8,6 +8,7 @@ SRC_URI += " \
 
 SRC_URI_append_dm800= " \
     file://udev-builtin-input_id.patch \
+    file://udev-cdom_id.patch \
 "
 
 SRC_URI_append_cube= " \
