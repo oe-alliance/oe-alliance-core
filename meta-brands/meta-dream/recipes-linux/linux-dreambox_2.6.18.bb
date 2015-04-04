@@ -1,4 +1,4 @@
-DEPENDS = "kmod-native"
+DEPENDS = "kmod-native linux-libc-headers"
 
 inherit kernel machine_kernel_pr
 
@@ -32,6 +32,7 @@ SRC_URI = " \
         file://linux-2.6.18-mod_devicetable_h.patch \
         file://linux-2.6.18-3g-modems.patch \
         file://mips_refactor_page_dev0.patch \
+        file://mkmakefile-make-3.82-fix-follow-bug-2323.patch \
 "
 SRC_URI[kernel.md5sum] = "296a6d150d260144639c3664d127d174"
 SRC_URI[kernel.sha256sum] = "c95280ff6c5d2a17788f7cc582d23ae8a9a7ba3f202ec6e4238eaadfce7c163d"
@@ -54,7 +55,9 @@ do_configure_prepend() {
 
 do_shared_workdir_prepend() {
     mkdir -p ${B}/include/generated/
+    mkdir -p ${STAGING_KERNEL_BUILDDIR}/include/linux
     cp -fR ${B}/include/linux/* ${B}/include/generated/
+    cp -fR ${B}/include/linux/* ${STAGING_KERNEL_BUILDDIR}/include/linux/
     while [ ! -f ${B}/Module.symvers ]
     do
       sleep 2
@@ -64,13 +67,14 @@ do_shared_workdir_prepend() {
 require linux-dreambox3.inc
 
 do_install_prepend() {
-        mkdir -p ${S}/tools
+    mkdir -p ${S}/tools
 }
 
 do_install_append() {
-        cp ${B}/include/asm/asm-offsets.h ${B}/include/generated/asm-offsets.h
+    cp ${B}/include/asm/asm-offsets.h ${B}/include/generated/asm-offsets.h
+    ln -s ${STAGING_KERNEL_DIR}/include/asm-mips ${STAGING_KERNEL_DIR}/include/asm
 }
 
 do_package_qa() {
-	exit 0
+    exit 0
 }

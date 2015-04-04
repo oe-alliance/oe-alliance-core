@@ -1,0 +1,22 @@
+Signed-off-by: Thomas Chou <thomas at wytron.com.tw>
+---
+ scripts/mkmakefile |    5 ++++-
+ 1 files changed, 4 insertions(+), 1 deletions(-)
+
+diff --git a/scripts/mkmakefile b/scripts/mkmakefile
+index 7f9d544..9fc51a7 100755
+--- a/scripts/mkmakefile
++++ b/scripts/mkmakefile
+@@ -31,6 +31,9 @@ all:
+ 
+ Makefile:;
+ 
+-\$(filter-out all Makefile,\$(MAKECMDGOALS)) %/:
++\$(filter-out all Makefile,\$(MAKECMDGOALS)):
++	\$(MAKE) -C \$(KERNELSRC) O=\$(KERNELOUTPUT) \$@
++
++%/:
+ 	\$(MAKE) -C \$(KERNELSRC) O=\$(KERNELOUTPUT) \$@
+ EOF
+-- 
+1.7.3.1
