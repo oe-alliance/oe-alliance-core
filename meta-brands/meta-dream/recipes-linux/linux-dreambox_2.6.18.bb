@@ -1,4 +1,4 @@
-DEPENDS = "kmod-native linux-libc-headers"
+DEPENDS = "kmod-native"
 
 inherit kernel machine_kernel_pr
 
@@ -55,9 +55,12 @@ do_configure_prepend() {
 
 do_shared_workdir_prepend() {
     mkdir -p ${B}/include/generated/
-    mkdir -p ${STAGING_KERNEL_BUILDDIR}/include/linux
+    mkdir -p ${STAGING_KERNEL_BUILDDIR}/include
+    mkdir -p ${STAGING_KERNEL_BUILDDIR}/scripts
     cp -fR ${B}/include/linux/* ${B}/include/generated/
-    cp -fR ${B}/include/linux/* ${STAGING_KERNEL_BUILDDIR}/include/linux/
+    cp -fR ${B}/include/* ${STAGING_KERNEL_BUILDDIR}/include/
+    cp -fR ${B}/scripts/* ${STAGING_KERNEL_BUILDDIR}/scripts/
+    ln -s ${STAGING_KERNEL_DIR} ${STAGING_KERNEL_BUILDDIR}/source
     while [ ! -f ${B}/Module.symvers ]
     do
       sleep 2
@@ -71,7 +74,6 @@ do_install_prepend() {
 }
 
 do_install_append() {
-    cp ${B}/include/asm/asm-offsets.h ${B}/include/generated/asm-offsets.h
     ln -s ${STAGING_KERNEL_DIR}/include/asm-mips ${STAGING_KERNEL_DIR}/include/asm
 }
 
