@@ -11,6 +11,8 @@ EXTRA_IMAGEDEPENDS += "dreambox-secondstage-${MACHINE}"
 
 GLIBC_EXTRA_OECONF = "--with-tls --with-__thread"
 
+DVBMEDIASINK_CONFIG = "--with-dreambox --with-pcm --with-wma --with-wmv --with-dtsdownmix --with-eac3 --with-dts"
+
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS ?= ""
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "\
@@ -22,7 +24,7 @@ MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "\
 include conf/machine/include/autoload-usbserial.inc
 
 MACHINE_EXTRA_RRECOMMENDS = " \
-    gst-plugin-dreambox-dvbmediasink \
+    gstreamer1.0-plugin-dvbmediasink \
     ntfs-3g \
     kernel-module-hmac \
     kernel-module-md4 \
@@ -38,7 +40,10 @@ MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS = "\
     kernel-module-fuse \
     kernel-module-nfsd \
     kernel-module-exportfs \
+    kernel-module-snd-oss \
+    kernel-module-snd-pcm-oss \
     "
+
 KERNEL_MODULE_AUTOLOAD += "cifs"
 KERNEL_MODULE_AUTOLOAD += "iso9660"
 KERNEL_MODULE_AUTOLOAD += "udf"
