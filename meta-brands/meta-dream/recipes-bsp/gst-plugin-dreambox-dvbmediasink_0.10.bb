@@ -6,9 +6,7 @@ LIC_FILES_CHKSUM = "file://src/gstdvbaudiosink.c;beginline=1;endline=45;md5=023e
 DEPENDS = "gstreamer gst-plugins-base"
 PR = "r11"
 
-SCHWERKRAFT_PROJECT = "dvbmediasink"
-
-inherit autotools schwerkraft-git pkgconfig
+inherit autotools opendreambox-git pkgconfig
 
 SRC_URI += " \
     file://getdecodertime.patch \
