@@ -16,19 +16,19 @@ SRC_URI_append_sh4 = " \
     file://dvbmediasink_sh4_fix.patch;patch=1 \
 "
 SRC_URI_append_dags1 = " \
-    file://0001-dags-fix-dts.patch;patch=1 \ 
+    file://0001-update-dags-support.patch;patch=1 \ 
 "
 SRC_URI_append_dags2 = " \
-    file://0001-dags-fix-dts.patch;patch=1 \ 
+    file://0001-update-dags-support.patch;patch=1 \ 
 "
 SRC_URI_append_dags3 = " \
-    file://0001-dags-fix-dts.patch;patch=1 \ 
+    file://0001-update-dags-support.patch;patch=1 \ 
 "
 SRC_URI_append_dags4 = " \
-    file://0001-dags-fix-dts.patch;patch=1 \ 
+    file://0001-update-dags-support.patch;patch=1 \ 
 "
 SRC_URI_append_dags5 = " \
-    file://0001-dags-fix-dts.patch;patch=1 \ 
+    file://0001-update-dags-support.patch=1 \ 
 "
 
 SRCREV = "${AUTOREV}"

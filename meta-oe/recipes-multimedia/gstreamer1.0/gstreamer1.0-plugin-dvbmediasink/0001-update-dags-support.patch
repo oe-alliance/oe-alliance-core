@@ -1,29 +1,29 @@
-From c3eeef62c02509398214f0424683b22e3d625ad3 Mon Sep 17 00:00:00 2001
+From 2db6d9fd47f81e78f574650689084e790fd5f64f Mon Sep 17 00:00:00 2001
 From: Captain <captain.onboard@web.de>
-Date: Tue, 24 Mar 2015 20:18:38 +0100
-Subject: [PATCH] dags fix dts
+Date: Mon, 6 Apr 2015 07:36:44 +0200
+Subject: [PATCH] update dags support
 
 ---
  gstdvbaudiosink.c | 38 ++++++++++++++++++++++++++++++++++++++
  1 file changed, 38 insertions(+)
 
 diff --git a/gstdvbaudiosink.c b/gstdvbaudiosink.c
-index 9e5b6ff..bbf7f4f 100644
+index 8db9baa..4457b0e 100644
 --- a/gstdvbaudiosink.c
 +++ b/gstdvbaudiosink.c
-@@ -666,7 +666,11 @@ static gboolean gst_dvbaudiosink_set_caps(GstBaseSink *basesink, GstCaps *caps)
+@@ -588,7 +588,11 @@ static gboolean gst_dvbaudiosink_set_caps(GstBaseSink *basesink, GstCaps *caps)
+ 		gint format = 0x01;
  		const gchar *formatstring = NULL;
- #endif
  		gint width = 0, depth = 0, rate = 0, channels, block_align, byterate;
 +#ifdef DAGS
 +		self->codec_data = gst_buffer_new_and_alloc(18 + 8);
 +#else
  		self->codec_data = gst_buffer_new_and_alloc(18);
 +#endif
- #if GST_VERSION_MAJOR < 1
- 		data = GST_BUFFER_DATA(self->codec_data);
- 		size = GST_BUFFER_SIZE(self->codec_data);
-@@ -706,6 +710,39 @@ static gboolean gst_dvbaudiosink_set_caps(GstBaseSink *basesink, GstCaps *caps)
+ 		GstMapInfo map;
+ 		gst_buffer_map(self->codec_data, &map, GST_MAP_WRITE);
+ 		data = map.data;
+@@ -618,6 +622,39 @@ static gboolean gst_dvbaudiosink_set_caps(GstBaseSink *basesink, GstCaps *caps)
  		byterate = channels * rate * width / 8;
  		block_align = channels * width / 8;
  		memset(data, 0, size);
@@ -63,14 +63,14 @@ index 9e5b6ff..bbf7f4f 100644
  		/* format tag */
  		*(data++) = format & 0xff;
  		*(data++) = (format >> 8) & 0xff;
-@@ -732,6 +769,7 @@ static gboolean gst_dvbaudiosink_set_caps(GstBaseSink *basesink, GstCaps *caps)
+@@ -644,6 +681,7 @@ static gboolean gst_dvbaudiosink_set_caps(GstBaseSink *basesink, GstCaps *caps)
  		self->fixed_buffersize *= channels * depth / 8;
  		self->fixed_buffertimestamp = GST_CLOCK_TIME_NONE;
  		self->fixed_bufferduration = GST_SECOND * (GstClockTime)self->fixed_buffersize / (GstClockTime)byterate;
 +#endif
  		GST_INFO_OBJECT(self, "MIMETYPE %s", type);
  		bypass = AUDIOTYPE_RAW;
- #if GST_VERSION_MAJOR >= 1
+ 		gst_buffer_unmap(self->codec_data, &map);
 -- 
 1.9.5.msysgit.0
 
