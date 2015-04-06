@@ -28,7 +28,7 @@ SRC_URI_append_dags4 = " \
     file://0001-update-dags-support.patch;patch=1 \ 
 "
 SRC_URI_append_dags5 = " \
-    file://0001-update-dags-support.patch=1 \ 
+    file://0001-update-dags-support.patch;patch=1\ 
 "
 
 SRCREV = "${AUTOREV}"
