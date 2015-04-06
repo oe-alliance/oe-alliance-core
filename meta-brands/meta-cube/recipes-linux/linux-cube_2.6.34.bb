@@ -21,7 +21,7 @@ PKG_kernel-image = "kernel-image"
 RPROVIDES_kernel-base = "kernel-${KERNEL_VERSION}"
 RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
 
-DEPENDS = " mtd-utils-native"
+DEPENDS = " mtd-utils-native gcc"
 RDEPENDS_kernel-image = "updateubivolume"
 
 SRC_URI = " \
@@ -189,7 +189,7 @@ SRC_URI = " \
     file://262-ephy_powerdown.patch \
     file://263-kronos-krome_splash_fix.patch \
     file://300-dmxdev-unblock-read-on-ioctl.patch \
-	"
+    "
 
 S = "${WORKDIR}/linux-${PV}"
 B = "${WORKDIR}/build"
@@ -202,9 +202,12 @@ KERNEL_IMAGEDEST = "/tmp"
 FILES_kernel-image = "${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION}"
 
 kernel_do_install_append() {
-    cp include/generated/asm-offsets.h $kerneldir/include/generated/asm-offsets.h
     install -d ${D}${KERNEL_IMAGEDEST}
     install -m 0755 ${KERNEL_OUTPUT} ${D}${KERNEL_IMAGEDEST}
+}
+
+do_shared_workdir_prepend() {
+    mkdir -p ${B}/include/generated/
 }
 
 pkg_postinst_kernel-image() {
