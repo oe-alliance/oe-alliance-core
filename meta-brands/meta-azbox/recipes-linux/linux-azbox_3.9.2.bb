@@ -5,8 +5,6 @@ LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${KV}/COPYING;md5=d7810fab7487fb0aad
 
 inherit kernel machine_kernel_pr
 
-PR = "r4"
-
 KV = "3.9.2"
 SRC = "2012"
 SRCDATE = "16092013"
@@ -24,7 +22,6 @@ RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
 ALLOW_EMPTY_kernel-dev = "1"
 
 SRC_URI += "${KERNELORG_MIRROR}/linux/kernel/v3.x/linux-${KV}.tar.bz2;name=azbox-kernel \
-    http://source.mynonpublic.com/${MACHINE}/${MACHINE}-${SRC}.tar.gz;name=azbox-kernel-${MACHINE} \
     file://defconfig \
     file://genzbf.c \
     file://sigblock.h \
@@ -50,17 +47,8 @@ SRC_URI += "${KERNELORG_MIRROR}/linux/kernel/v3.x/linux-${KV}.tar.bz2;name=azbox
     "
 
 SRC_URI_append_azboxhd = "http://azbox-enigma2-project.googlecode.com/files/initramfs-${MACHINE}-oe-core-${KV}-${SRCDATE}.tar.bz2;name=azbox-initrd-${MACHINE}"
-
 SRC_URI_append_azboxme = "http://azbox-enigma2-project.googlecode.com/files/initramfs-${MACHINE}-oe-core-${KV}-${SRCDATE}.tar.bz2;name=azbox-initrd-${MACHINE}"
-
 SRC_URI_append_azboxminime = "http://azbox-enigma2-project.googlecode.com/files/initramfs-${MACHINE}-oe-core-${KV}-${SRCDATE}.tar.bz2;name=azbox-initrd-${MACHINE}"
-
-SRC_URI[azbox-kernel-azboxhd.md5sum] = "1562f8e4c7648cf0bbc02884373b3cf8"
-SRC_URI[azbox-kernel-azboxhd.sha256sum] = "247c332a9b206531b679a290a4b64d3dee9fb15674f1f2c6623f2567e14bf03a"
-SRC_URI[azbox-kernel-azboxme.md5sum] =  "768a5f7e9ba4e43f2444a705dbb3a843"
-SRC_URI[azbox-kernel-azboxme.sha256sum] =  "57180234a9000a9b94459f245393c5eac616f6a39ee242d5f3135cc8b5124544"
-SRC_URI[azbox-kernel-azboxminime.md5sum] = "6e8682e133f09f78fd25ce0b047dbd8d"
-SRC_URI[azbox-kernel-azboxminime.sha256sum] = "aded3f63e802a283eba52611898f4d9cd52d090bb360a7b362f074cc21a22dd7"
 
 SRC_URI[azbox-kernel.md5sum] = "661100fdf8a633f53991684b555373ba"
 SRC_URI[azbox-kernel.sha256sum] = "dfcaa8bf10f87ad04fc46994c3b4646eae914a9eb89e76317fdbbd29f54f1076"
@@ -80,36 +68,30 @@ KERNEL_OUTPUT = "zbimage-linux-xload"
 KERNEL_IMAGETYPE = "zbimage-linux-xload"
 KERNEL_IMAGEDEST = "/tmp"
 
-
-FILES_kernel-image = "/boot/zbimage-linux-xload"
+FILES_kernel-image = "${KERNEL_IMAGEDEST}/zbimage-linux-xload"
 
 CFLAGS_prepend = "-I${WORKDIR} "
 
+EXTRA_OEMAKE = "CONFIG_INITRAMFS_SOURCE=${STAGING_KERNEL_DIR}/initramfs"
+
+do_configure_prepend() {
+    sed -i "s#usr/initramfs_default_node_list#\$(srctree)/usr/initramfs_default_node_list#" ${STAGING_KERNEL_DIR}/usr/Makefile
+    sed -i "s#\$(srctree)/arch/mips/boot/#\$(obj)/#" ${STAGING_KERNEL_DIR}/arch/mips/boot/Makefile
+}
 
 kernel_do_compile() {
     gcc ${CFLAGS} ${WORKDIR}/genzbf.c -o ${WORKDIR}/genzbf
-    install -m 0755 ${WORKDIR}/genzbf ${S}/arch/mips/boot/
+    install -d ${B}/arch/mips/boot/
+    install -m 0755 ${WORKDIR}/genzbf ${B}/arch/mips/boot/
     unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS MACHINE
-    oe_runmake ${KERNEL_IMAGETYPE} CC="${KERNEL_CC}" LD="${KERNEL_LD}" AR="${AR}" OBJDUMP="${OBJDUMP}" NM="${NM}"
-    oe_runmake modules CC="${KERNEL_CC}" LD="${KERNEL_LD}" AR="${AR}" OBJDUMP="${OBJDUMP}"
-    rm -rf ${S}/arch/mips/boot/genzbf	
+    oe_runmake ${KERNEL_IMAGETYPE} CC="${KERNEL_CC}" LD="${KERNEL_LD}" AR="${AR}" OBJDUMP="${OBJDUMP}" NM="${NM}" CONFIG_INITRAMFS_SOURCE="${STAGING_KERNEL_DIR}/initramfs"
+    oe_runmake modules CC="${KERNEL_CC}" LD="${KERNEL_LD}" AR="${AR}" OBJDUMP="${OBJDUMP}" CONFIG_INITRAMFS_SOURCE="${STAGING_KERNEL_DIR}/initramfs"
+    rm -rf ${B}/arch/mips/boot/genzbf
 }
 
-do_install_append () {
-    install -d ${D}/boot
-    install -m 0644 ${WORKDIR}/zbimage-linux-xload ${D}/boot/zbimage-linux-xload
-    rm -rf ${D}/boot/System.map*
-    rm -rf ${D}/boot/Module.symvers*
-    rm -rf ${D}/boot/config*
+do_install_prepend() {
+   mv -f ${STAGING_KERNEL_DIR}/zbimage-linux-xload ${B}/zbimage-linux-xload
 }
 
 do_package_qa() {
-}
-
-do_packagedata_append() {
-    if [ -e ${WORKDIR}/pkgdata/shlibs/kernel-dev.list ]; then
-        rm -rf ${WORKDIR}/packages-split/kernel-dev/usr
-        rm -rf ${WORKDIR}/pkgdata/shlibs/kernel-dev.list
-        rm -rf ${WORKDIR}/pkgdata/shlibs/kernel-dev.ver
-    fi
 }

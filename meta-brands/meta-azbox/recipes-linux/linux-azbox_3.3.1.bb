@@ -5,7 +5,7 @@ PR = "r4"
 inherit kernel machine_kernel_pr
 
 DEPENDS = "genromfs-native gcc"
-DEPENDS_azboxhd = "genromfs-native azbox-hd-buildimage gcc "
+DEPENDS_azboxhd = "genromfs-native azbox-hd-buildimage gcc"
 DEPENDS_azboxminime = "genromfs-native azbox-minime-packer gcc"
 
 
@@ -59,35 +59,30 @@ KERNEL_IMAGETYPE = "zbimage-linux-xload"
 KERNEL_IMAGEDEST = "/tmp"
 
 
-FILES_kernel-image = "/boot/zbimage-linux-xload"
+FILES_kernel-image = "${KERNEL_IMAGEDEST}/zbimage-linux-xload"
 
 CFLAGS_prepend = "-I${WORKDIR} "
 
+EXTRA_OEMAKE = "CONFIG_INITRAMFS_SOURCE=${STAGING_KERNEL_DIR}/initramfs"
+
+do_configure_prepend() {
+    sed -i "s#usr/initramfs_default_node_list#\$(srctree)/usr/initramfs_default_node_list#" ${STAGING_KERNEL_DIR}/usr/Makefile
+    sed -i "s#\$(srctree)/arch/mips/boot/#\$(obj)/#" ${STAGING_KERNEL_DIR}/arch/mips/boot/Makefile
+}
+
 kernel_do_compile() {
     gcc ${CFLAGS} ${WORKDIR}/genzbf.c -o ${WORKDIR}/genzbf
-    install -m 0755 ${WORKDIR}/genzbf ${S}/arch/mips/boot/
+    install -d ${B}/arch/mips/boot/
+    install -m 0755 ${WORKDIR}/genzbf ${B}/arch/mips/boot/
     unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS MACHINE
-    oe_runmake include/linux/version.h CC="${KERNEL_CC}" LD="${KERNEL_LD}"
-    oe_runmake ${KERNEL_IMAGETYPE} CC="${KERNEL_CC}" LD="${KERNEL_LD}" AR="${AR}" OBJDUMP="${OBJDUMP}" NM="${NM}"
-    oe_runmake modules CC="${KERNEL_CC}" LD="${KERNEL_LD}" AR="${AR}" OBJDUMP="${OBJDUMP}"
-	rm -rf ${S}/arch/mips/boot/genzbf
+    oe_runmake ${KERNEL_IMAGETYPE} CC="${KERNEL_CC}" LD="${KERNEL_LD}" AR="${AR}" OBJDUMP="${OBJDUMP}" NM="${NM}" CONFIG_INITRAMFS_SOURCE="${STAGING_KERNEL_DIR}/initramfs"
+    oe_runmake modules CC="${KERNEL_CC}" LD="${KERNEL_LD}" AR="${AR}" OBJDUMP="${OBJDUMP}" CONFIG_INITRAMFS_SOURCE="${STAGING_KERNEL_DIR}/initramfs"
+    rm -rf ${B}/arch/mips/boot/genzbf
+}
+
+do_install_prepend() {
+   mv -f ${STAGING_KERNEL_DIR}/zbimage-linux-xload ${B}/zbimage-linux-xload
 }
 
 do_package_qa() {
-}
-
-do_install_append () {
-    install -d ${D}/boot
-    install -m 0644 ${S}/arch/mips/boot/zbimage-linux-xload ${D}/boot/zbimage-linux-xload
-    rm -rf ${D}/boot/System.map*
-    rm -rf ${D}/boot/Module.symvers*
-    rm -rf ${D}/boot/config*
-}
-
-do_packagedata_append() {
-    if [ -e ${WORKDIR}/pkgdata/shlibs/kernel-dev.list ]; then
-        rm -rf ${WORKDIR}/packages-split/kernel-dev/usr
-        rm -rf ${WORKDIR}/pkgdata/shlibs/kernel-dev.list
-        rm -rf ${WORKDIR}/pkgdata/shlibs/kernel-dev.ver
-    fi
 }
