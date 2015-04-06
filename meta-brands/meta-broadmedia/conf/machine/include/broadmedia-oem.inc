@@ -15,7 +15,7 @@ ${@base_contains('MACHINEBUILD', 'sf3038', 'Octagon' , '', d)}\
 
 IMAGEDIR ?= "\
 ${@base_contains('MACHINEBUILD', 'broadmedia300', 'g300' , '', d)}\
-${@base_contains('MACHINEBUILD', 'sf3038', 'g300' , '', d)}\
+${@base_contains('MACHINEBUILD', 'sf3038', 'sf3038' , '', d)}\
 "
 
 MTD_KERNEL = "mtd1"
