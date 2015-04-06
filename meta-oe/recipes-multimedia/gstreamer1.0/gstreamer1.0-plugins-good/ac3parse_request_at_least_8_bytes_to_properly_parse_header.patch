@@ -1,0 +1,41 @@
+From ff5b235c32f91c08ba9ada6b5a6bfd118debbf54 Mon Sep 17 00:00:00 2001
+From: Matej Knopp <matej.knopp@gmail.com>
+Date: Sun, 4 Jan 2015 15:57:10 +0100
+Subject: ac3parse: request at least 8 bytes to properly parse header
+
+https://bugzilla.gnome.org/show_bug.cgi?id=742325
+
+diff --git a/gst/audioparsers/gstac3parse.c b/gst/audioparsers/gstac3parse.c
+index 50c676a..c166dc8 100644
+--- a/gst/audioparsers/gstac3parse.c
++++ b/gst/audioparsers/gstac3parse.c
+@@ -219,7 +219,7 @@ gst_ac3_parse_reset (GstAc3Parse * ac3parse)
+ static void
+ gst_ac3_parse_init (GstAc3Parse * ac3parse)
+ {
+-  gst_base_parse_set_min_frame_size (GST_BASE_PARSE (ac3parse), 6);
++  gst_base_parse_set_min_frame_size (GST_BASE_PARSE (ac3parse), 8);
+   gst_ac3_parse_reset (ac3parse);
+   ac3parse->baseparse_chainfunc =
+       GST_BASE_PARSE_SINK_PAD (GST_BASE_PARSE (ac3parse))->chainfunc;
+@@ -509,7 +509,7 @@ gst_ac3_parse_handle_frame (GstBaseParse * parse,
+ 
+   gst_buffer_map (buf, &map, GST_MAP_READ);
+ 
+-  if (G_UNLIKELY (map.size < 6)) {
++  if (G_UNLIKELY (map.size < 8)) {
+     *skipsize = 1;
+     goto cleanup;
+   }
+@@ -601,7 +601,7 @@ gst_ac3_parse_handle_frame (GstBaseParse * parse,
+     if (more || !gst_byte_reader_skip (&reader, frmsiz) ||
+         !gst_byte_reader_get_uint16_be (&reader, &word)) {
+       GST_DEBUG_OBJECT (ac3parse, "... but not sufficient data");
+-      gst_base_parse_set_min_frame_size (parse, framesize + 6);
++      gst_base_parse_set_min_frame_size (parse, framesize + 8);
+       *skipsize = 0;
+       goto cleanup;
+     } else {
+-- 
+cgit v0.10.2
+

@@ -6,6 +6,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=a6f89e2100d9b6cdffcea4f398e37343 \
 
 SRC_URI += "file://0001-gstrtpmp4gpay-set-dafault-value-for-MPEG4-without-co.patch \
             file://decrease_asteriskh263_rank.patch \
+            file://ac3parse_request_at_least_8_bytes_to_properly_parse_header.patch \
 "
 
 SRC_URI[md5sum] = "eaf1a6daf73749bc423feac301d60038"

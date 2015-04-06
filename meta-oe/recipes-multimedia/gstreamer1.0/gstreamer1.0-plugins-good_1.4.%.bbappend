@@ -1,4 +1,4 @@
-PR="r1"
+PR="r2"
 FILESEXTRAPATHS_prepend := "${THISDIR}:"
 
 PACKAGECONFIG += "orc cairo flac gudev jpeg libpng soup speex taglib wavpack"
