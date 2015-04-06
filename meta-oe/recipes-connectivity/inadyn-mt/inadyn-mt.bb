@@ -2,8 +2,8 @@ MAINTAINER = "Narcis Ilisei"
 LICENSE = "GPLv3"
 LIC_FILES_CHKSUM = "file://COPYING;md5=3c34afdc3adf82d2448f12715a255122"
 
-PV = "v.02.24.38"
-PR = "r5"
+PV = "v.02.24.44"
+PR = "r0"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/${PN}/${PN}/${PN}.${PV}/${PN}.${PV}.tar.gz \
     file://inadyn-mt.sh \
@@ -11,8 +11,8 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/${PN}/${PN}/${PN}.${PV}/${PN}.${PV}.tar.gz \
     file://remove_host_include_paths.patch \
     "
 
-SRC_URI[md5sum] = "e868ab86df2eb20a1d98c11e8564e52c"
-SRC_URI[sha256sum] = "3a1028218e395cfda981fd912d2c097d3433037e62ca0594ea0f3bdf2b7bf0a4"
+SRC_URI[md5sum] = "0652d99aab1249d6a3afe4d65861e77b"
+SRC_URI[sha256sum] = "f894b5ab92ed4ec4cae2eccc99efef1aa18c0f5f02de66025e50833cc9063c3c"
 
 S = "${WORKDIR}/${PN}.${PV}"
 
