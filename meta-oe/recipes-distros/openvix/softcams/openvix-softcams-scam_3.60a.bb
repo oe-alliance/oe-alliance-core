@@ -4,14 +4,14 @@ require conf/license/license-close.inc
 
 RDEPENDS_${PN} = "libcrypto-compat-0.9.7"
 
-PR = "r0"
+PR = "r1"
 
 PACKAGES = "enigma2-plugin-softcams-scam"
 
 PROVIDES += "openvix-softcams-scam"
 RPROVIDES_enigma2-plugin-softcams-scam += "openvix-softcams-scam"
 
-SRC_URI = "http://enigma2.world-of-satellite.com/git-extras/scam-v${PV}.zip"
+SRC_URI = "http://openvix.co.uk/feeds_extras/git-extras/scam-v${PV}.zip"
 
 S = "${WORKDIR}/scam-v${PV}"
 
