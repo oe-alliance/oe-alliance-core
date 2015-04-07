@@ -1,14 +1,14 @@
 SUMMARY = "rqcamd ${PV} cardserver"
 LICENSE = "CLOSED"
 
-PR = "r0"
+PR = "r1"
 
 PACKAGES = "enigma2-plugin-softcams-rqcamd"
 
 PROVIDES += "openvix-softcams-rqcamd"
 RPROVIDES_enigma2-plugin-softcams-rqcamd += "openvix-softcams-rqcamd"
 
-SRC_URI = "http://enigma2.world-of-satellite.com/git-extras/rqcamd-${PV}.tar.gz"
+SRC_URI = "http://openvix.co.uk/feeds_extras/git-extras/rqcamd-${PV}.tar.gz"
 
 S = "${WORKDIR}"
 
