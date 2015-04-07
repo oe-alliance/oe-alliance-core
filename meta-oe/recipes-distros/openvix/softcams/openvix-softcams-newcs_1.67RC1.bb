@@ -1,14 +1,14 @@
 SUMMARY = "newcs ${PV} cardserver"
 LICENSE = "CLOSED"
 
-PR = "r1"
+PR = "r2"
 
 PACKAGES = "enigma2-plugin-softcams-newcs"
 
 PROVIDES += "openvix-softcams-newcs"
 RPROVIDES_enigma2-plugin-softcams-newcs += "openvix-softcams-newcs"
 
-SRC_URI = "http://openvix.co.uk/feeds_extras/git-extras/newcs-${PV}.zip"
+SRC_URI = "http://openvix.co.uk/feeds_extras/softcams/newcs-${PV}.zip"
 
 S = "${WORKDIR}/newcs-1.67_RC1"
 

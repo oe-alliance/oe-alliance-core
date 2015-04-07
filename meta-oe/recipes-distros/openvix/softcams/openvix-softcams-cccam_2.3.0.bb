@@ -1,14 +1,14 @@
 SUMMARY = "CCcam ${PV} softcam"
 LICENSE = "CLOSED"
 
-PR = "r3"
+PR = "r4"
 
 PACKAGES = "enigma2-plugin-softcams-cccam"
 
 PROVIDES += "openvix-softcams-cccam"
 RPROVIDES_enigma2-plugin-softcams-cccam += "openvix-softcams-cccam"
 
-SRC_URI = "http://openvix.co.uk/feeds_extras/git-extras/CCcam-${PV}.zip"
+SRC_URI = "http://openvix.co.uk/feeds_extras/softcams/CCcam-${PV}.zip"
 
 S = "${WORKDIR}/CCcam-${PV}"
 
