@@ -4,7 +4,7 @@ require conf/license/license-close.inc
 
 RDEPENDS_${PN} = "libcrypto-compat-0.9.7"
 
-PR = "r3"
+PR = "r4"
 
 RREPLACES_${PN} += "enigma2-plugin-softcams-mgcamd"
 RCONFLICTS_${PN} += "enigma2-plugin-softcams-mgcamd"
@@ -14,7 +14,7 @@ PACKAGES = "enigma2-plugin-softcams-mgcamd135a"
 PROVIDES += "openvix-softcams-mgcamd135a"
 RPROVIDES_enigma2-plugin-softcams-mgcamd135a += "openvix-softcams-mgcamd135a"
 
-SRC_URI = "http://openvix.co.uk/feeds_extras/git-extras/mgcamd-1.35a.zip"
+SRC_URI = "http://openvix.co.uk/feeds_extras/softcams/mgcamd-1.35a.zip"
 
 S = "${WORKDIR}/mgcamd-1.35a"
 
