@@ -5,8 +5,8 @@ LICENSE = "WTFPL"
 
 require conf/license/license-gplv2.inc
 
-PV = "20130806"
-PR = "r2"
+PV = "20150407"
+PR = "r0"
 
 SRC_URI = "file://sourcelist file://satmate.sources.xml"
 
