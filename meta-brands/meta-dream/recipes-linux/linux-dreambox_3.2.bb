@@ -37,10 +37,19 @@ SRC_URI = " \
     file://dvb-usb-a867.patch \
     file://dvb-usb-rtl2832.patch \
     file://dvb_usb_disable_rc_polling.patch \
-    file://0001-add-support-for-DM800SEv2-and-DM500HDv2-simplified-1.patch \
-    file://0001-add-support-for-toshiba-nand-flash-add-workaround-fo.patch \
-    file://0004-correctly-initiate-nand-flash-ecc-config-when-old-2n.patch \
     file://defconfig \
+"
+
+SRC_URI_append_dm800sev2 = " file://0001-add-support-for-DM800SEv2-and-DM500HDv2-simplified-1.patch \
+             file://0001-add-support-for-toshiba-nand-flash-add-workaround-fo.patch \
+             file://0004-correctly-initiate-nand-flash-ecc-config-when-old-2n.patch \
+"
+SRC_URI_append_dm500hdv2 = " file://0001-add-support-for-DM800SEv2-and-DM500HDv2-simplified-1.patch \
+             file://0001-add-support-for-toshiba-nand-flash-add-workaround-fo.patch \
+             file://0004-correctly-initiate-nand-flash-ecc-config-when-old-2n.patch \
+"
+SRC_URI_append_dm7020 = " file://0001-add-support-for-toshiba-nand-flash-add-workaround-fo.patch \
+             file://0004-correctly-initiate-nand-flash-ecc-config-when-old-2n.patch \
 "
 
 SRC_URI[kernel.md5sum] = "7ceb61f87c097fc17509844b71268935"
