@@ -6,16 +6,19 @@ BRAND_OEM = "ceryon"
 MACHINE_NAME = "\
 ${@base_contains('MACHINEBUILD', 'nano', 'NANO' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'nanoc', 'NANO-C' , '', d)}\
+${@base_contains('MACHINEBUILD', 'nanopro', 'NANO PRO' , '', d)}\
 "
 
 MACHINE_BRAND = "\
 ${@base_contains('MACHINEBUILD', 'nano', 'WWIO' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'nanoc', 'WWIO' , '', d)}\
+${@base_contains('MACHINEBUILD', 'nanopro', 'Sampler' , '', d)}\
 "
 
 IMAGEDIR ?= "\
 ${@base_contains('MACHINEBUILD', 'nano', 'nano' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'nanoc', 'nano' , '', d)}\
+${@base_contains('MACHINEBUILD', 'nanopro', '7100S' , '', d)}\
 "
 
 MTD_KERNEL = "mtd1"
@@ -62,20 +65,6 @@ IMAGE_CMD_ubi_prepend = " \
     rm -rf ${IMAGE_ROOTFS}/boot/*; \
     rm -rf ${IMAGE_ROOTFS}/tmp/*; \
     "
-
-IMAGE_CMD_ubi_append = " \
-    mkdir -p ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}; \
-    cp ${DEPLOY_DIR_IMAGE}/splash.bin ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/splash.bin; \
-    mv ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.ubi ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/${ROOTFS_FILE}; \
-    gzip -9c ${DEPLOY_DIR_IMAGE}/vmlinux-${MACHINE}.bin > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/${KERNEL_FILE}; \
-    echo ${DISTRO_NAME}-${DISTRO_VERSION}.${BUILD_VERSION} > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/imageversion; \
-    echo "rename this file to 'force' to force an update without confirmation" > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/noforce; \
-    cd ${DEPLOY_DIR_IMAGE}; \
-    zip ${IMAGE_NAME}_usb.zip ${IMAGEDIR}/*; \
-    rm -f ${DEPLOY_DIR_IMAGE}/*.ubifs; \
-    rm -Rf ${IMAGEDIR}; \
-    "
-
 
 MACHINE_FEATURES += "3dtv alsa hdmicec switchoff wifi bootsplash omb \
     ${@base_contains('MACHINEBUILD', 'nanoc', 'dvbc-only' , '', d)} \
