@@ -31,6 +31,7 @@ SRC_URI_append_vuduo2 = "file://lcdbootlogo.png file://bootlogo.py"
 SRC_URI_append_dags3 = "file://splash1.bmp file://splash1_os1.bmp file://splash1_os2.bmp file://splash2.bmp file://splash3.bmp"
 SRC_URI_append_dags4 = "file://splash1.bmp file://splash1_os1.bmp file://splash1_os2.bmp file://splash2.bmp file://splash3.bmp"
 SRC_URI_append_dags5 = "file://splash1_power.bmp file://splash1_os1.bmp file://splash1_os2.bmp file://splash2.bmp file://splash3.bmp"
+SRC_URI_append_7100s = "file://lcdsplash.bin file://lcdwaitkey.bin file://lcdwarning.bin"
 
 BINARY_VERSION = "1.3"
 
@@ -97,6 +98,12 @@ do_install_append_gbquadplus() {
 do_install_append_vuduo2() {
     install -m 0644 lcdbootlogo.png ${D}/usr/share/lcdbootlogo.png
     install -m 0644 bootlogo.py ${D}/${sysconfdir}/init.d/bootlogo.py
+}
+
+do_install_append_7100s() {
+    install -d ${D}/usr/share
+    install -m 0644 lcdwaitkey.bin ${D}/usr/share/lcdwaitkey.bin
+    install -m 0644 lcdwarning.bin ${D}/usr/share/lcdwarning.bin
 }
 
 inherit deploy
