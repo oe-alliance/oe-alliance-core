@@ -15,7 +15,7 @@ RPROVIDES_xcore-blindscan-dvbs-utils += "virtual/blindscan-dvbs"
 SRC_URI = "file://blindscan"
 
 PV = "1.0"
-PR = "r1"
+PR = "r2"
 
 S = "${WORKDIR}/"
 
