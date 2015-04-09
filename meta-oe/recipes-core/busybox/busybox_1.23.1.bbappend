@@ -1,4 +1,4 @@
-PR .= ".10"
+PR .= ".11"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 SRC_URI_IGNORED = " \
@@ -21,8 +21,8 @@ SRC_URI += " \
             file://mdev-mount.sh \
             file://inetd \
             file://inetd.conf \
-            file://0008-make_unicode_printable.patch \
             "
+#           file://0008-make_unicode_printable.patch \
 
 # we do not really depend on mtd-utils, but as mtd-utils replaces 
 # include/mtd/* we cannot build in parallel with mtd-utils
