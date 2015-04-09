@@ -13,7 +13,7 @@ inherit autotools-brokensep gitpkgv pythonnative
 SRCREV = "${AUTOREV}"
 PV = "3.0+git${SRCPV}"
 PKGV = "3.0+git${GITPKGV}"
-PR = "r4"
+PR = "r5"
 
 SRC_URI="git://github.com/OpenViX/vix-core.git;protocol=git"
 
@@ -24,8 +24,6 @@ EXTRA_OECONF = "\
     HOST_SYS=${HOST_SYS} \
     STAGING_INCDIR=${STAGING_INCDIR} \
     STAGING_LIBDIR=${STAGING_LIBDIR} \
-    --with-po \
-    --with-libsdl=no \
     "
 
 PACKAGES =+ "${PN}-src"
