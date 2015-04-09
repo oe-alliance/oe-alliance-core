@@ -8,9 +8,11 @@ inherit autotools-brokensep pkgconfig gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r10"
+PR = "r11"
 
 PACKAGES += " ${PN}-src"
+
+DEPENDS = "libdvbsi++"
 
 SRC_URI = "git://code.vuplus.com/git/dumpait.git;protocol=http"
 
