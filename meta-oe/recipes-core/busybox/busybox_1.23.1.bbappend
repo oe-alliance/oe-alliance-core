@@ -22,7 +22,6 @@ SRC_URI += " \
             file://inetd \
             file://inetd.conf \
             "
-#           file://0008-make_unicode_printable.patch \
 
 # we do not really depend on mtd-utils, but as mtd-utils replaces 
 # include/mtd/* we cannot build in parallel with mtd-utils
