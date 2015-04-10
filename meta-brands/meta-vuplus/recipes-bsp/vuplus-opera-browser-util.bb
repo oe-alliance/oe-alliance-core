@@ -59,9 +59,9 @@ do_install() {
     mv ${S}/opera/* ${D}/usr/local/hbb-browser/
     install -d ${D}/usr/lib
     mv ${S}/dfb/usr/lib/* ${D}/usr/lib/
-    mv ${D}/usr/local/hbb-browser/root/jsplugins/ooif-gst-$GSTVER.so ${D}/usr/local/hbb-browser/root/jsplugins/ooif.so
+    mv ${D}/usr/local/hbb-browser/root/jsplugins/ooif-gst-${GSTVER}.so ${D}/usr/local/hbb-browser/root/jsplugins/ooif.so
     rm -f ${D}/usr/local/hbb-browser/root/jsplugins/ooif-gst*.so
-    mv ${D}/usr/local/hbb-browser/root/video/videobackend-gst-$GSTVER.so ${D}/usr/local/hbb-browser/root/video/videobackend.so
+    mv ${D}/usr/local/hbb-browser/root/video/videobackend-gst-${GSTVER}.so ${D}/usr/local/hbb-browser/root/video/videobackend.so
     rm -f ${D}/usr/local/hbb-browser/root/video/videobackend-gst*.so
 }
 
