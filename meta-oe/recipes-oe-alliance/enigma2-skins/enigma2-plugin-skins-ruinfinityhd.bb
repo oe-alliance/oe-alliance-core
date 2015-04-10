@@ -14,7 +14,7 @@ PKGV = "1.0+git${GITPKGV}"
 VER ="1.0"
 PR = "r2"
 
-SRC_URI="git://github.com/kajgan/ru_infinity_hd.git;protocol=git"
+SRC_URI="git://github.com/openmips/ru_infinity_hd.git;protocol=git"
 
 S = "${WORKDIR}/git"
 
