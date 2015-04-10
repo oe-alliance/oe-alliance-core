@@ -3,12 +3,13 @@ LICENSE = "GPLv3"
 LIC_FILES_CHKSUM = "file://COPYING;md5=3c34afdc3adf82d2448f12715a255122"
 
 PV = "v.02.24.44"
-PR = "r0"
+PR = "r1"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/${PN}/${PN}/${PN}.${PV}/${PN}.${PV}.tar.gz \
     file://inadyn-mt.sh \
     file://inadyn.conf \
     file://remove_host_include_paths.patch \
+    file://inadyn-mt-ip6-127.0.0.1-00-02.24.44.patch \
     "
 
 SRC_URI[md5sum] = "0652d99aab1249d6a3afe4d65861e77b"
