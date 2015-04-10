@@ -7,10 +7,12 @@ require conf/license/license-close.inc
 DEPENDS = "tslib mpfr gmp"
 RDEPENDS_${PN} = "tslib-conf libts-1.0-0 libsysfs2 libgmp10 libmpfr4 vuplus-opera-dumpait"
 
-SRC_DATE = "20150106_0"
+SRC_DATE = "20150410_1"
 SRC_URI = ""
 
 PR = "r35_${SRC_DATE}"
+
+GSTVER = ${@base_contains("GST_VERSION", "1.0", "1.4.5", "0.10.36.1", d)}
 
 S = "${WORKDIR}/opera-hbbtv"
 
@@ -57,6 +59,10 @@ do_install() {
     mv ${S}/opera/* ${D}/usr/local/hbb-browser/
     install -d ${D}/usr/lib
     mv ${S}/dfb/usr/lib/* ${D}/usr/lib/
+    mv ${D}/usr/local/hbb-browser/root/jsplugins/ooif-gst-$GSTVER.so ${D}/usr/local/hbb-browser/root/jsplugins/ooif.so
+    rm -f ${D}/usr/local/hbb-browser/root/jsplugins/ooif-gst*.so
+    mv ${D}/usr/local/hbb-browser/root/video/videobackend-gst-$GSTVER.so ${D}/usr/local/hbb-browser/root/video/videobackend.so
+    rm -f ${D}/usr/local/hbb-browser/root/video/videobackend-gst*.so
 }
 
 package_do_shlibs_append() {

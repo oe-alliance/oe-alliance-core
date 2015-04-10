@@ -1,0 +1,98 @@
+diff -ur inadyn-mt.v.02.24.44/src/inadyn_cmd.c inadyn-mt.v.02.24.44::1/src/inadyn_cmd.c
+--- inadyn-mt.v.02.24.44/src/inadyn_cmd.c	2015-04-09 01:10:21.180699257 -0400
++++ inadyn-mt.v.02.24.44::1/src/inadyn_cmd.c	2015-04-09 01:10:51.597640531 -0400
+@@ -628,39 +628,68 @@
+ 
+ static RC_TYPE get_name_and_port(char *p_src, char **p_dest_name, int *p_dest_port)
+ {
+-    const char *p_port = NULL;
++	char *p_port = NULL;
+ 
+ 
+ 	if (*p_dest_name)
+ 
+ 		free(*p_dest_name);
+ 
++	p_port = strstr(p_src,":");
+ 
+-    p_port = strstr(p_src,":");
+-    if (p_port)
+-    {
+-        int port_nr, len;
+-        int port_ok = sscanf(p_port + 1, "%d",&port_nr);
+-        if (port_ok != 1)
+-        {
+-            return RC_DYNDNS_INVALID_OPTION;
+-        }
+-        *p_dest_port = port_nr;
+-        len = p_port - p_src;
+-
+-	  *p_dest_name=safe_malloc(len+1);
+-	  memcpy(*p_dest_name, p_src, len);
+-
+-        *(*p_dest_name+len) = '\0';
+-    }
+-    else
+-    {
+-	    
+-	    *p_dest_name=safe_malloc(strlen(p_src)+1);
+-
+-	    strcpy(*p_dest_name, p_src);
+-    }
+-    return RC_OK;
++
++	if (p_port) {
++
++		/*ipv6 localhost (i.e., ::1)?*/
++		if (p_port==p_src) {
++
++			p_port++;
++
++			if (!(p_port[0]))
++
++				return RC_DYNDNS_INVALID_OPTION;
++
++			if (!(strstr(p_port,":")))
++
++				return RC_DYNDNS_INVALID_OPTION;
++
++			p_port++;
++
++			if (!(p_port[0]))
++
++				return RC_DYNDNS_INVALID_OPTION;
++
++			p_port=strstr(p_port,":");
++		}
++	}
++
++	if (!(p_port)) {
++
++		*p_dest_name=safe_malloc(strlen(p_src)+1);
++
++		strcpy(*p_dest_name, p_src);
++	}
++	else {
++
++		int	port_nr, len;
++		int	port_ok;
++
++		port_ok=sscanf(p_port+1,"%d",&port_nr);
++
++	        if (port_ok != 1)
++        	{
++	            return RC_DYNDNS_INVALID_OPTION;
++        	}
++	        *p_dest_port = port_nr;
++        	len = p_port - p_src;
++
++		  *p_dest_name=safe_malloc(len+1);
++		  memcpy(*p_dest_name, p_src, len);
++
++	        *(*p_dest_name+len) = '\0';
++	}
++
++	return RC_OK;
+ }
+ 
+ /** Returns the svr name and port if the format is :
