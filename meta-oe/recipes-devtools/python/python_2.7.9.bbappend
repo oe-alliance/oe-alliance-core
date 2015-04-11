@@ -7,6 +7,7 @@ SRC_URI += " \
             file://ctypes-error-handling-fix.patch \
             file://setuptweaks-2.patch \
             file://pgettext.patch \
+            file://create_unverified_context.patch \
 "
 
 EXTRA_OECONF += " \

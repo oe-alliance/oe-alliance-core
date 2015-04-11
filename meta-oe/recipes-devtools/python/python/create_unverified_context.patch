@@ -1,0 +1,10 @@
+--- a/Lib/urllib2.py	2014-12-10 16:59:49.000000000 +0100
++++ b/Lib/urllib2.py	2015-04-11 19:28:41.286184708 +0200
+@@ -112,6 +112,7 @@
+ # check for SSL
+ try:
+     import ssl
++    ssl._create_default_https_context = ssl._create_unverified_context
+ except ImportError:
+     _have_ssl = False
+ else:
