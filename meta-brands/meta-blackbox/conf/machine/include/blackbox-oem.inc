@@ -80,7 +80,7 @@ IMAGE_CMD_ubi_append = " \
     rm -Rf ${IMAGEDIR}; \
     "
 
-MACHINE_FEATURES += "3dtv alsa hdmicec switchoff wifi 3dtvpli bootsplash omb"
+MACHINE_FEATURES += "3dtv alsa hdmicec switchoff 3dtvpli bootsplash omb"
 
 BOOTLOGO_FILENAME = "splash.bin"
 
