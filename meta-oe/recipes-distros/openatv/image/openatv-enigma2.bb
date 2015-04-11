@@ -7,7 +7,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PV = "1.0"
-PR = "r46"
+PR = "r47"
 
 inherit packagegroup
 
@@ -16,7 +16,7 @@ DEPENDS = "enigma2-pliplugins openatv-feeds"
 RRECOMMENDS_${PN} = " \
     enigma2-skindefault \
     openatv-version-info \
-    enigma2-plugin-drivers-usbserial \
+    ${@base_contains("MACHINE_FEATURES", "smallflash", "", "enigma2-plugin-drivers-usbserial", d)} \
     enigma2-plugin-extensions-infopanel \
     enigma2-plugin-extensions-autotimer \
     enigma2-plugin-extensions-epgsearch \
@@ -29,7 +29,7 @@ RRECOMMENDS_${PN} = " \
     enigma2-plugin-systemplugins-softwaremanager \
     enigma2-plugin-systemplugins-hotplug \
     enigma2-plugin-extensions-mediaplayer \
-    enigma2-plugin-extensions-enhancedmoviecenter \
+    ${@base_contains("MACHINE_FEATURES", "smallflash", "", "enigma2-plugin-extensions-enhancedmoviecenter", d)} \
     ${@base_contains("MACHINE_FEATURES", "dreamboxv1", "enigma2-plugin-extensions-dflash mtd-utils-jffs2", "", d)} \
     ${@base_contains("MACHINE_FEATURES", "dreamboxv2", "enigma2-plugin-extensions-dbackup", "", d)} \
     ${@base_contains("MACHINE_FEATURES", "boxmodel", "boxmodel", "", d)} \
