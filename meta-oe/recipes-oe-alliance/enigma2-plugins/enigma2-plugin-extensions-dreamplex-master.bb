@@ -8,13 +8,13 @@ inherit autotools-brokensep gitpkgv pythonnative
 SRCREV = "${AUTOREV}"
 PV = "2.1.3+git${SRCPV}"
 PKGV = "2.1.3+git${GITPKGV}"
-PR = "r1"
+PR = "r2"
 
 PACKAGES = "enigma2-plugin-extensions-dreamplex"
 PROVIDES = "enigma2-plugin-extensions-dreamplex"
 
 DEPENDS = "python"
-RDEPENDS_${PN} = "gst-plugins-bad-fragmented curl mjpegtools python-ctypes libshowiframe0"
+RDEPENDS_${PN} = "${@base_contains("GST_VERSION", "1.0", "gstreamer1.0-plugins-bad-fragmented", "gst-plugins-bad-fragmented", d)} curl mjpegtools python-ctypes libshowiframe0"
 
 SRC_URI = "git://github.com/DonDavici/DreamPlex.git;protocol=git"
 

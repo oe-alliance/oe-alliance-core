@@ -5,7 +5,7 @@ PRIORITY = "optional"
 LICENSE = "GPLv2"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-DEPENDS = "gstreamer gst-plugins-base glib-2.0 libxml2"
+DEPENDS = "${@base_contains("GST_VERSION", "1.0", "gstreamer1.0 gstreamer1.0-plugins-base", "gstreamer gst-plugins-base", d)} glib-2.0 libxml2"
 
 require conf/license/license-gplv2.inc
 
