@@ -10,7 +10,7 @@ RDEPENDS_${PN} = "tslib-conf libts-1.0-0 libsysfs2 libgmp10 libmpfr4 vuplus-oper
 SRC_DATE = "20150410_1"
 SRC_URI = ""
 
-PR = "r35_${SRC_DATE}"
+PR = "r36_${SRC_DATE}"
 
 GSTVER = "${@base_contains("GST_VERSION", "1.0", "1.4.5", "0.10.36.1", d)}"
 
