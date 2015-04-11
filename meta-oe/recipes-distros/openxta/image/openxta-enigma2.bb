@@ -7,7 +7,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 ALLOW_EMPTY_${PN} = "1"
 
 PV = "1.0"
-PR = "r40"
+PR = "r41"
 
 inherit packagegroup
 
@@ -35,6 +35,7 @@ RRECOMMENDS_${PN} = "\
     enigma2-plugin-systemplugins-skinselector \
     enigma2-plugin-skins-technihd \
     enigma2-plugin-skins-xta2 \
+    enigma2-plugin-skins-easylitextafhd \
     ${@base_contains("MACHINE_FEATURES", "3dtv", "enigma2-plugin-systemplugins-osd3dsetup" , "", d)} \
     "
 
