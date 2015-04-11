@@ -34,7 +34,6 @@ RRECOMMENDS_${PN} = "\
     enigma2-plugin-systemplugins-softwaremanager \
     enigma2-plugin-systemplugins-skinselector \
     enigma2-plugin-skins-technihd \
-    enigma2-plugin-skins-xta2 \
     enigma2-plugin-skins-easylitextafhd \
     ${@base_contains("MACHINE_FEATURES", "3dtv", "enigma2-plugin-systemplugins-osd3dsetup" , "", d)} \
     "
