@@ -11,7 +11,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "1.0"
-PR = "r26"
+PR = "r27"
 
 RDEPENDS_${PN} = "\
     oe-alliance-enigma2 \
@@ -42,6 +42,6 @@ RDEPENDS_${PN} = "\
     util-linux-blkid \
     volatile-media \
     vsftpd \
-    python-twisted-protocols python-numbers \
+    python-twisted-protocols python-numbers python-argparse \
     "
 
