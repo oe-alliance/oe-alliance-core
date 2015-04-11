@@ -4,7 +4,7 @@ PACKAGES = "${PN} ${PN}-meta enigma2-plugin-skincomponents-metrix-src enigma2-pl
 PACKAGES_DYNAMIC = "enigma2-plugin-skins-openvix-*"
 
 LICENSE = "Proprietary"
-LIC_FILES_CHKSUM = "file://README.md;startline=1;endline=6;md5=d87dcebda7b395f6f541992adbb03d9d"
+LIC_FILES_CHKSUM = "file://README.md;startline=1;endline=6;md5=f9196ec9a7923f62b4ebd01baef09a1d"
 
 inherit gitpkgv
 
@@ -12,7 +12,7 @@ PACKAGE_ARCH := "${MACHINE_ARCH}"
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r23"
+PR = "r24"
 
 SRC_URI = "git://github.com/OpenViX/skins.git;protocol=git"
 
