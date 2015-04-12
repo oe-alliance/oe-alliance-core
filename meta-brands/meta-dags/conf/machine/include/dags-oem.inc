@@ -7,7 +7,7 @@ MACHINE_NAME = "\
 ${@base_contains('MACHINEBUILD', 'tm2t', 'TM-2T-OE' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmnano', 'TM-NANO-OE' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmnano2t', 'TM-NANO-2T' , '', d)}\
-${@base_contains('MACHINEBUILD', 'tmnano3t', 'TM-NANO-3T' , '', d)}\
+${@base_contains('MACHINEBUILD', 'tmnano3t', 'TM-NANO-3T Combo' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmnano2super', 'TM-NANO 2 Super' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmsingle', 'TM-Single' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmtwin', 'TM-Twin-OE' , '', d)}\
