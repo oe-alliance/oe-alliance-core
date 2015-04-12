@@ -3,7 +3,7 @@ LICENSE = "CLOSED"
 require conf/license/license-close.inc
 
 PV = "1.0"
-PR = "r1"
+PR = "r4"
 
 SRC_URI = "http://openvix.co.uk/feeds_extras/bootlogos/openvix-hades.zip"
 
@@ -17,7 +17,7 @@ do_install() {
     install -m 0644 radio.mvi ${D}/usr/share/enigma2/skin_default/radio.mvi
 }
 
-SRC_URI[md5sum] = "d10bdd79d7f09a792272c2427df8ecea"
-SRC_URI[sha256sum] = "dbb257234085f856eacd827a6c22a6f5f290b1b46abb028a7f87a07b74929eb8"
+SRC_URI[md5sum] = "32baa551a39b270f282030dad8d42b28"
+SRC_URI[sha256sum] = "1abf50c2b8b89779ae70416f5811aa2d60ac856f6aa62fe94654e0ff35b2bba3"
 
 FILES_${PN} = "/usr/share"
