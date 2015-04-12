@@ -3,8 +3,8 @@ DRIVERDATE = "20150316"
 
 require dreambox-dvb-modules-dm820.inc
 
-SRC_URI[dm820.md5sum] = "372657cac34d98df3581407c93b87074"
-SRC_URI[dm820.sha256sum] = "08caffa17667c0c340465b93265d888d17bccb673ad01d3b32fef663f6512852"
+SRC_URI[dm820.md5sum] = "b8673d3c49f84249003d5fdb117a2293"
+SRC_URI[dm820.sha256sum] = "ed828e36be98a2c4df9e08d82691465dc204f3d44635d6e46c8d676822638afc"
 
 pkg_postinst_${PN} () {
 if [ -z "$D" ]; then
