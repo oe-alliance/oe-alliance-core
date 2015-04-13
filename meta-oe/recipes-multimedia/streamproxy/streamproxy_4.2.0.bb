@@ -4,3 +4,31 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=59530bdf33659b29e73d4adb9f9f6552"
 SRCREV = "d9396c07f1ddfcbacec70350604fea0d3ccae821"
 
 inherit autotools schwerkraft-git
+
+pkg_postinst_${PN}() {
+#!/bin/sh
+LINE='8001\t\tstream\ttcp6\tnowait\troot\t/usr/bin/streamproxy\tstreamproxy'
+
+if grep -q '^8001' /etc/inetd.conf; then
+	# Remove old entries for port 8001 (user fixes or previous installs)
+	grep -v '^8001' /etc/inetd.conf > /etc/inetd.tmp
+	mv /etc/inetd.tmp /etc/inetd.conf
+fi
+
+if grep -q '^8002' /etc/inetd.conf; then
+	# Add before port 8002 if it exists
+	sed -i "s#^8002#${LINE}\n8002#" /etc/inetd.conf
+else
+	# Just append
+	echo -e "${LINE}" >> /etc/inetd.conf
+fi
+}
+
+pkg_prerm_${PN}() {
+#!/bin/sh
+if grep -q '^8001' /etc/inetd.conf; then
+	grep -v '^8001' /etc/inetd.conf > /etc/inetd.tmp
+	mv /etc/inetd.tmp /etc/inetd.conf
+fi
+}
+
