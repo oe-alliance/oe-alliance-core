@@ -16,10 +16,10 @@ RREPLACES_${PN} = "enigma2-plugin-display-picon-tv-rossi2000.28.2e"
 
 SRCDATE = "20120309"
 PV = "${SRCDATE}"
-PR = "r5"
+PR = "r6"
 SETTINGS_FILENAME = "sandman.28e.vfd.picons"
 
-SRC_URI = "http://enigma2.world-of-satellite.com/picons/${SETTINGS_FILENAME}_${PV}.tar.gz"
+SRC_URI = "http://openvix.co.uk/feeds_extras/picons/${SETTINGS_FILENAME}_${PV}.tar.gz"
 
 S = "${WORKDIR}/lcd_picon"
 

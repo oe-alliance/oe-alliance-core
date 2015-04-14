@@ -9,12 +9,12 @@ require conf/license/license-gplv2.inc
 SRC_URI[md5sum] = "3dcc04f5e5cd7a5537aaa0881c4a4683"
 SRC_URI[sha256sum] = "9566678662690cc2fb859775dd45fa316565e0b0e8e7ae247da0f7a912e17c21"
 
-PR = "r1"
+PR = "r2"
 SRCDATE = "20120309"
 PV = "${SRCDATE}"
 SETTINGS_FILENAME = "sandman.28e.picons"
 
-SRC_URI = "http://enigma2.world-of-satellite.com/picons/${SETTINGS_FILENAME}_${PV}.tar.gz"
+SRC_URI = "http://openvix.co.uk/feeds_extras/picons/${SETTINGS_FILENAME}_${PV}.tar.gz"
 
 S = "${WORKDIR}/picon"
 
