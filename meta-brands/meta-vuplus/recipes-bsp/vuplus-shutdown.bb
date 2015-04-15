@@ -1,11 +1,13 @@
 require conf/license/license-gplv2.inc
 
 PV = "1.0"
-PR = "r1"
+PR = "r2"
 
 SRC_URI = " \
     file://turnoff_power \
     file://vuplus-shutdown.sh "
+
+S = "${WORKDIR}"
 
 INITSCRIPT_NAME = "vuplus-shutdown"
 INITSCRIPT_PARAMS = "start 89 0 ."
