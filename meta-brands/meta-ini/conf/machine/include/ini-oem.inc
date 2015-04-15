@@ -3,6 +3,8 @@ include conf/machine/include/build-extras.inc
 
 BRAND_OEM = "ini"
 
+GST_VERSION = "1.0"
+
 MACHINE_NAME = "\
 ${@base_contains('MACHINEBUILD', 'ventonhdx', 'HD-x' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'sezam1000hd', '1000-HD' , '', d)}\
@@ -12,6 +14,7 @@ ${@base_contains('MACHINEBUILD', 'xpeedlx', 'LX-x' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'xpeedlx3', 'LX-3' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbmini', 'Premium Mini' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbminiplus', 'Premium Mini Plus' , '', d)}\
+${@base_contains('MACHINEBUILD', 'mbhybrid', 'Premium Hybrid' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbtwin', 'Premium Twin' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbultra', 'Premium Ultra' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'atemio5x00', '5x00-HD' , '', d)}\
@@ -19,9 +22,11 @@ ${@base_contains('MACHINEBUILD', 'atemio6000', '6000-HD' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'atemio6100', '6100-HD' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'atemio6200', '6200-HD' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'atemionemesis', 'Nemesis' , '', d)}\
+${@base_contains('MACHINEBUILD', 'beyonwizt2', 'T2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'beyonwizt3', 'T3' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'beyonwizt4', 'T4' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'bwidowx', 'Black Widow-X' , '', d)}\
+${@base_contains('MACHINEBUILD', 'bwidowx2', 'Black Widow-X2' , '', d)}\
 "
 
 MACHINE_BRAND = "\
@@ -33,6 +38,7 @@ ${@base_contains('MACHINEBUILD', 'xpeedlx', 'GI' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'xpeedlx3', 'GI' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbmini', 'Miraclebox' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbminiplus', 'Miraclebox' , '', d)}\
+${@base_contains('MACHINEBUILD', 'mbhybrid', 'Miraclebox' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbtwin', 'Miraclebox' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbultra', 'Miraclebox' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'atemio5x00', 'Atemio' , '', d)}\
@@ -40,9 +46,11 @@ ${@base_contains('MACHINEBUILD', 'atemio6000', 'Atemio' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'atemio6100', 'Atemio' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'atemio6200', 'Atemio' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'atemionemesis', 'Atemio' , '', d)}\
+${@base_contains('MACHINEBUILD', 'beyonwizt2', 'Beyonwiz' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'beyonwizt3', 'Beyonwiz' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'beyonwizt4', 'Beyonwiz' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'bwidowx', 'SPACE' , '', d)}\
+${@base_contains('MACHINEBUILD', 'bwidowx2', 'SPACE' , '', d)}\
 "
 
 IMAGEDIR ?= "\
@@ -54,6 +62,7 @@ ${@base_contains('MACHINEBUILD', 'xpeedlx', 'xpeedlx' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'xpeedlx3', 'xpeedlx3' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbmini', 'miraclebox/mini' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbminiplus', 'miraclebox/miniplus' , '', d)}\
+${@base_contains('MACHINEBUILD', 'mbhybrid', 'miraclebox/hybrid' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbtwin', 'miraclebox/twin' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbultra', 'miraclebox/ultra' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'atemio5x00', 'atemio/5x00' , '', d)}\
@@ -61,9 +70,11 @@ ${@base_contains('MACHINEBUILD', 'atemio6000', 'atemio/6000' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'atemio6100', 'atemio/6100' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'atemio6200', 'atemio/6200' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'atemionemesis', 'atemio/8x00' , '', d)}\
+${@base_contains('MACHINEBUILD', 'beyonwizt2', 'beyonwiz/hde2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'beyonwizt3', 'beyonwiz/hdx' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'beyonwizt4', 'beyonwiz/hdp' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'bwidowx', 'bwidowx' , '', d)}\
+${@base_contains('MACHINEBUILD', 'bwidowx2', 'bwidowx2' , '', d)}\
 "
 
 MTD_KERNEL = "\
@@ -75,6 +86,7 @@ ${@base_contains('MACHINEBUILD', 'xpeedlx', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'xpeedlx3', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbmini', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbminiplus', 'mtd2' , '', d)}\
+${@base_contains('MACHINEBUILD', 'mbhybrid', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbtwin', 'mtd1' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbultra', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'atemio5x00', 'mtd2' , '', d)}\
@@ -82,9 +94,11 @@ ${@base_contains('MACHINEBUILD', 'atemio6000', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'atemio6100', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'atemio6200', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'atemionemesis', 'mtd2' , '', d)}\
+${@base_contains('MACHINEBUILD', 'beyonwizt2', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'beyonwizt3', 'mtd1' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'beyonwizt4', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'bwidowx', 'mtd2' , '', d)}\
+${@base_contains('MACHINEBUILD', 'bwidowx2', 'mtd2' , '', d)}\
 "
 
 MTD_ROOTFS = "\
@@ -96,6 +110,7 @@ ${@base_contains('MACHINEBUILD', 'xpeedlx', 'mtd0' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'xpeedlx3', 'mtd0' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbmini', 'mtd0' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbminiplus', 'mtd0' , '', d)}\
+${@base_contains('MACHINEBUILD', 'mbhybrid', 'mtd0' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbtwin', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbultra', 'mtd0' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'atemio5x00', 'mtd0' , '', d)}\
@@ -103,9 +118,11 @@ ${@base_contains('MACHINEBUILD', 'atemio6000', 'mtd0' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'atemio6100', 'mtd0' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'atemio6200', 'mtd0' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'atemionemesis', 'mtd0' , '', d)}\
+${@base_contains('MACHINEBUILD', 'beyonwizt2', 'mtd0' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'beyonwizt3', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'beyonwizt4', 'mtd0' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'bwidowx', 'mtd0' , '', d)}\
+${@base_contains('MACHINEBUILD', 'bwidowx2', 'mtd0' , '', d)}\
 "
 
 MACHINE_DRIVER = "\
@@ -117,6 +134,7 @@ ${@base_contains('MACHINEBUILD', 'xpeedlx', 'inihde' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'xpeedlx3', 'ini-900' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbmini', 'inihde' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbminiplus', 'inihde2sv' , '', d)}\
+${@base_contains('MACHINEBUILD', 'mbhybrid', 'ini-442sv' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbtwin', 'inihdx' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbultra', 'ini-800' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'atemio5x00', 'inihde' , '', d)}\
@@ -124,9 +142,11 @@ ${@base_contains('MACHINEBUILD', 'atemio6000', 'inihde2am' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'atemio6100', 'inihde2am' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'atemio6200', 'inihde2am' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'atemionemesis', 'ini-800' , '', d)}\
+${@base_contains('MACHINEBUILD', 'beyonwizt2', 'ini-442dt' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'beyonwizt3', 'inihdx' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'beyonwizt4', 'ini-840t4' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'bwidowx', 'yhgd2580' , '', d)}\
+${@base_contains('MACHINEBUILD', 'bwidowx2', 'inihde2bw' , '', d)}\
 "
 
 KERNEL_FILE = "kernel.bin"
@@ -189,7 +209,7 @@ IMAGE_CMD_ubi_append = " \
     rm -rf beyonwiz; \ 
     "
 
-MACHINE_FEATURES += "3dtv alsa hdmicec switchoff bootsplash omb"
+MACHINE_FEATURES += "3dtv alsa hdmicec switchoff wifi bootsplash extrasplash"
 
 BOOTLOGO_FILENAME = "splash.bin"
 
