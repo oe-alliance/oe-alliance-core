@@ -4,9 +4,8 @@ HOMEPAGE = "www.transmissionbt.com/"
 DEPENDS = "gtk+ gnutls openssl gettext libtool intltool-native curl glib-2.0-native libevent"
 LICENSE = "GPLv2"
 INC_PR = "r2"
-LIC_FILES_CHKSUM = "file://COPYING;md5=a1923fe8f8ff37c33665716af0ec84f1"
 
-SRC_URI = "http://mirrors.m0k.org/transmission/files/transmission-${PV}.tar.xz;name=archive \
+SRC_URI = "https://transmission.cachefly.net/transmission-${PV}.tar.xz;name=archive \
            file://init \
            file://config"
 

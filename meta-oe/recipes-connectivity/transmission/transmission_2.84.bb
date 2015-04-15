@@ -14,6 +14,6 @@ OE_EXTRACONF = "\
     CPPFLAGS=-DTR_EMBEDDED \
     "
 
-SRC_URI[archive.md5sum] = "4620cfbfefee2ce55a6fa12c3ec330a7"
-SRC_URI[archive.sha256sum] = "b0e1b050167e7f71b68e01a8d55b984a828fe880df9abfbc6281cb2a0d7d1433"
-                          
+LIC_FILES_CHKSUM = "file://COPYING;md5=a1923fe8f8ff37c33665716af0ec84f1"
+SRC_URI[archive.md5sum] = "411aec1c418c14f6765710d89743ae42"
+SRC_URI[archive.sha256sum] = "a9fc1936b4ee414acc732ada04e84339d6755cd0d097bcbd11ba2cfc540db9eb"
