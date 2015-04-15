@@ -102,9 +102,9 @@ do_install_append_vuduo2() {
 
 do_install_append_7100s() {
     install -d ${D}/usr/share
-    install -m 0644 lcdwaitkey.bin ${D}/usr/share/lcdwaitkey.bin
-    install -m 0644 lcdwarning.bin ${D}/usr/share/lcdwarning.bin
-    install -m 0644 lcdcomplete.bin ${D}/usr/share/lcdcomplete.bin
+    install -m 0644 ${WORKDIR}/7100s/lcdwaitkey.bin ${D}/usr/share/lcdwaitkey.bin
+    install -m 0644 ${WORKDIR}/7100s/lcdwarning.bin ${D}/usr/share/lcdwarning.bin
+    install -m 0644 ${WORKDIR}/7100s/lcdcomplete.bin ${D}/usr/share/lcdcomplete.bin
 }
 
 inherit deploy
