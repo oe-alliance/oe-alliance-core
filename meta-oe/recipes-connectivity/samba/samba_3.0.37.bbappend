@@ -78,9 +78,6 @@ then
 			if ! grep -qE '^#?(137|netbios-ns)' /etc/inetd.conf; then
 				sed -i "s#^\(\#*$PORT\)#netbios-ns\tdgram\tudp\twait\troot\t/usr/sbin/nmbd\t\t\tnmbd\n\1#" /etc/inetd.conf
 			fi
-			if ! grep -qE '^#?(138|netbios-dgm)' /etc/inetd.conf; then
-				sed -i "s#^\(\#*$PORT\)#netbios-dgm\tdgram\tudp\twait\troot\t/usr/sbin/nmbd\t\t\tnmbd\n\1#" /etc/inetd.conf
-			fi
 			break
 		fi
 	done
@@ -94,15 +91,15 @@ else
 	if ! grep -qE '^#?(137|netbios-ns)' /etc/inetd.conf; then
 		echo -e "netbios-ns\tdgram\tudp\twait\troot\t/usr/sbin/nmbd\t\t\tnmbd" >> /etc/inetd.conf
 	fi
-	if ! grep -qE '^#?(138|netbios-dgm)' /etc/inetd.conf; then
-		echo -e "netbios-dgm\tdgram\tudp\twait\troot\t/usr/sbin/nmbd\t\t\tnmbd" >> /etc/inetd.conf
-	fi
 fi
 
 # Unify port numbers/names to names
 sed -i "s/^\(\#*\)445/\1microsoft-ds/g" /etc/inetd.conf
 sed -i "s/^\(\#*\)137/\1netbios-ns/g"   /etc/inetd.conf
 sed -i "s/^\(\#*\)138/\1netbios-dgm/g"  /etc/inetd.conf
+
+grep -vE '^#?netbios-dgm' /etc/inetd.conf > /tmp/inetd.tmp
+mv /tmp/inetd.tmp /etc/inetd.conf
 
 # Restart the internet superserver
 /etc/init.d/inetd.busybox restart
