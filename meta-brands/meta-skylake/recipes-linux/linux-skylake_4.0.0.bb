@@ -1,18 +1,18 @@
 SUMMARY = "Linux kernel for ${MACHINE}"
 SECTION = "kernel"
 LICENSE = "GPLv2"
-PR = "r1"
+PR = "r0"
 
-KERNEL_RELEASE = "3.17.3"
+KERNEL_RELEASE = "4.0.0"
 
 inherit machine_kernel_pr
 
-SRC_URI[md5sum] = "b0fd34ad64658bf6797c41cca2c7385f"
-SRC_URI[sha256sum] = "48899fd56b99c34fe6175e3de563138384eec3cad0a03387cec919bd8bd50157"
+SRC_URI[md5sum] = "fe703faca8ba14616010cb6b49b9ae4d"
+SRC_URI[sha256sum] = "fa242822f9fd85e28843fe1a1e37a98be244fdfc6109eeab451536b3a7966b6a"
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-MACHINE_KERNEL_PR_append = ".1"
+MACHINE_KERNEL_PR_append = ".0"
 
 # By default, kernel.bbclass modifies package names to allow multiple kernels
 # to be installed in parallel. We revert this change and rprovide the versioned
@@ -24,18 +24,7 @@ RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
 
 SRC_URI += "http://downloads.mutant-digital.net/linux-${PV}.tar.gz \
 	file://defconfig \
-	file://add-dmx-source-timecode.patch \
-	file://af9015-output-full-range-SNR.patch \
-	file://af9033-output-full-range-SNR.patch \
-	file://cxd2820r-output-full-range-SNR.patch \
-	file://dvb-usb-dib0700-disable-sleep.patch \
-	file://dvb_usb_disable_rc_polling.patch \
-	file://iosched-slice_idle-1.patch \
-	file://mxl5007t-add-no_probe-and-no_reset-parameters.patch \
-	file://tda18271-advertise-supported-delsys.patch \
 	"
-
-SRC_URI_append_hd500c = "file://nand_partition_layout.patch"
 
 S = "${WORKDIR}/linux-${PV}"
 

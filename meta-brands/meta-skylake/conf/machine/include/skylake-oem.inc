@@ -55,8 +55,8 @@ DEFAULTTUNE = "mips32el"
 
 PREFERRED_PROVIDER_virtual/kernel = "linux-skylake"
 
-PREFERRED_VERSION_linux-skylake = "3.17.3"
-PREFERRED_VERSION_linux-libc-headers = "3.13"
+PREFERRED_VERSION_linux-skylake = "4.0.0"
+PREFERRED_VERSION_linux-libc-headers = "4.0"
 
 KERNEL_IMAGETYPE = "vmlinux"
 KERNEL_OUTPUT = "${KERNEL_IMAGETYPE}"
