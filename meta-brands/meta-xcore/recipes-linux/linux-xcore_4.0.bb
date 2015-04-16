@@ -1,16 +1,20 @@
 SUMMARY = "Linux kernel for ${MACHINE}"
 SECTION = "kernel"
 LICENSE = "GPLv2"
-SRC = "20150227"
+PACKAGE_ARCH = "${MACHINE_ARCH}"
+PR = "r1"
+SRC = "20150416"
 
 inherit kernel machine_kernel_pr
 
-KERNEL_RELEASE = "3.19"
+KERNEL_RELEASE = "4.0"
 
-SRC_URI[md5sum] = "0b842b124f826b82e3f41653c7a82c8d"
-SRC_URI[sha256sum] = "02d8bd2b085a15fa75ca2cc906b38f42714f3d8c59285488bed230bdda7922e9"
+SRC_URI[md5sum] = "162c999295e6a0b5838741583ea3af58"
+SRC_URI[sha256sum] = "bbdfeed57adccb529fba5233915ac1651eadb91698084d8da61549e2b1c5407d"
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-brcmstb-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
+
+MACHINE_KERNEL_PR_append = ".0"
 
 # By default, kernel.bbclass modifies package names to allow multiple kernels
 # to be installed in parallel. We revert this change and rprovide the versioned
@@ -44,8 +48,8 @@ kernel_do_install_append() {
 pkg_postinst_kernel-image () {
     if [ "x$D" == "x" ]; then
         if [ -f /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz ] ; then
-            flash_erase /dev/mtd1 0 0
-            nandwrite -p /dev/mtd1 /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz
+            flash_erase /dev/${MTD_KERNEL} 0 0
+            nandwrite -p /dev/${MTD_KERNEL} /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz
             rm -f /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz
         fi
     fi
