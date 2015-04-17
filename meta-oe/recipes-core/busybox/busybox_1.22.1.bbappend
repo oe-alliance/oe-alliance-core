@@ -1,4 +1,4 @@
-PR .= ".10"
+PR .= ".11"
 
 SRC_URI_IGNORED = " \
             file://0001-ifupdown-support-post-up-pre-down-hooks.patch \
@@ -52,3 +52,7 @@ do_install_append() {
 }
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/${P}:"
+
+pkg_postinst_${PN}_append () {
+	update-alternatives --install /bin/editor editor /bin/vi 50
+}
