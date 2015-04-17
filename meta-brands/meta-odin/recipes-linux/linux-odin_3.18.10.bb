@@ -18,7 +18,7 @@ PKG_kernel-image = "kernel-image"
 RPROVIDES_kernel-base = "kernel-${KERNEL_VERSION}"
 RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
 
-SRC_URI += "http://source.mynonpublic.com/download/odin-linux-${PV}.tar.zx \
+SRC_URI += "http://source.mynonpublic.com/download/odin-linux-${PV}.tar.xz \
     file://defconfig \
     "
 
