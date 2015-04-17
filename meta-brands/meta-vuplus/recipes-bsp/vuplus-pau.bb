@@ -4,12 +4,14 @@ LICENSE = "CLOSED"
 require conf/license/license-close.inc
 
 PV = "1.0"
-PR = "r0"
+PR = "r1"
 
 SRC_URI = " \
     file://pau \
     file://pau.sh \
 "
+
+S = "${WORKDIR}"
 
 do_install() {
     install -d ${D}${sysconfdir}/init.d/
