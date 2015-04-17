@@ -59,6 +59,7 @@ PREFERRED_PROVIDER_virtual/blindscan-dvbc = "dreambox-blindscan-utils"
 
 PREFERRED_VERSION_linux-dreambox = "2.6.18"
 PREFERRED_VERSION_linux-libc-headers = "2.6.18"
+OLDEST_KERNEL = "2.6.18"
 
 PREFERRED_VERSION_wpa-supplicant = "0.5.8"
 

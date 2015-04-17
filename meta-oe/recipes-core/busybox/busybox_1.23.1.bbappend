@@ -1,4 +1,4 @@
-PR .= ".12"
+PR .= ".13"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 SRC_URI_IGNORED = " \
@@ -17,10 +17,12 @@ SRC_URI_IGNORED += " \
             "
 
 SRC_URI += " \
+            file://0007-busybox-1.22.1-iplink.patch \
             file://mount_single_uuid.patch \
             file://mdev-mount.sh \
             file://inetd \
             file://inetd.conf \
+            file://0008-make_unicode_printable.patch \
             "
 
 # we do not really depend on mtd-utils, but as mtd-utils replaces 
@@ -50,5 +52,8 @@ do_install_append() {
     install -m 0755 ${WORKDIR}/mdev-mount.sh ${D}${sysconfdir}/mdev
 }
 
-
 FILESEXTRAPATHS_prepend := "${THISDIR}/${P}:"
+
+pkg_postinst_${PN}_append () {
+	update-alternatives --install /bin/editor editor /bin/vi 50
+}

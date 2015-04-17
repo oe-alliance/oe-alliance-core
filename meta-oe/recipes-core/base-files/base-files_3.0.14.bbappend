@@ -1,5 +1,7 @@
 PACKAGE_ARCH = "${MACHINEBUILD}"
 
+PR_append = ".2"
+
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 FILESEXTRAPATHS_prepend := "${THISDIR}/${DISTRO_NAME}:"
 FILESEXTRAPATHS_prepend_azboxhd := "${THISDIR}/${MACHINE}:"
@@ -7,6 +9,7 @@ FILESEXTRAPATHS_prepend_azboxhd := "${THISDIR}/${MACHINE}:"
 hostname = "${MACHINEBUILD}"
 
 do_install_append() {
+    rm -rf ${D}/autofs
     rm -rf ${D}/mnt
     rm -rf ${D}/hdd
     ln -sf media/hdd ${D}/hdd

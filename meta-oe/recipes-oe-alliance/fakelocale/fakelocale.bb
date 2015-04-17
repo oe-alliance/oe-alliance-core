@@ -3,10 +3,10 @@ LICENSE = "CLOSED"
 SECTION = "base"
 PRIORITY = "required"
 MAINTAINER = "OpenPli team"
-PR = "r8"
+PR = "r9"
 require conf/license/license-close.inc
 
-SRC_URI = "file://lctimelocales.tar.gz file://locale.alias file://SYS_LC_MESSAGES"
+SRC_URI = "file://lctimelocales.tar.gz file://locale.alias file://SYS_LC_MESSAGES file://LC_CTYPE"
 
 S = "${WORKDIR}/locales"
 
@@ -33,6 +33,9 @@ do_install() {
 
     install -d ${D}${LOCALEDIR}
     cp -rp ${S}/* ${D}/${LOCALEDIR}
+
+    install -d ${D}${LOCALEDIR}/C.UTF8
+    install ${WORKDIR}/LC_CTYPE ${D}${LOCALEDIR}/C.UTF8/
 
     install -d ${D}${LOCALEDIR}/fake/LC_MESSAGES
     install ${WORKDIR}/SYS_LC_MESSAGES ${D}${LOCALEDIR}/fake/LC_MESSAGES/
