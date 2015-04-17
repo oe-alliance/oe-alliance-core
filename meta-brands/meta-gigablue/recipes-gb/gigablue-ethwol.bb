@@ -4,11 +4,13 @@ LICENSE = "CLOSED"
 require conf/license/license-close.inc
 
 PV = "1.0"
-PR = "r0"
+PR = "r1"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 SRC_URI = "file://ethwol.sh"
+
+S = "${WORKDIR}"
 
 inherit update-rc.d
 INITSCRIPT_NAME = "ethwol"
