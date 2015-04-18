@@ -17,12 +17,10 @@ SRC_URI_IGNORED += " \
             "
 
 SRC_URI += " \
-            file://0007-busybox-1.22.1-iplink.patch \
             file://mount_single_uuid.patch \
             file://mdev-mount.sh \
             file://inetd \
             file://inetd.conf \
-            file://0008-make_unicode_printable.patch \
             "
 
 # we do not really depend on mtd-utils, but as mtd-utils replaces 
