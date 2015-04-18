@@ -1,7 +1,8 @@
-diff -Naur git/arch/sh/kernel/setup.c gitmod/arch/sh/kernel/setup.c
---- a/arch/sh/kernel/setup.c	2014-07-02 08:24:53.000000000 +0200
-+++ b/arch/sh/kernel/setup.c	2014-07-02 08:55:34.498504929 +0200
-@@ -570,8 +570,10 @@
+diff --git a/arch/sh/kernel/setup.c b/arch/sh/kernel/setup.c
+index e0ce175..92dc212 100644
+--- a/arch/sh/kernel/setup.c
++++ b/arch/sh/kernel/setup.c
+@@ -578,8 +578,10 @@ static int show_cpuinfo(struct seq_file *m, void *v)
  	if (!cpu_online(cpu))
  		return 0;
  
@@ -13,3 +14,12 @@ diff -Naur git/arch/sh/kernel/setup.c gitmod/arch/sh/kernel/setup.c
  	else
  		seq_printf(m, "\n");
  
+@@ -596,6 +598,8 @@ static int show_cpuinfo(struct seq_file *m, void *v)
+ 
+ 	show_cpuflags(m, c);
+ 
++	seq_printf(m, "cpu MHz\t: %lu\n", c->loops_per_jiffy/(500000/HZ)+3);
++
+ 	seq_printf(m, "cache type\t: ");
+ 
+ 	/*
