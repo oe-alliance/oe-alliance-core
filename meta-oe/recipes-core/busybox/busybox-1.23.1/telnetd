@@ -1,0 +1,33 @@
+#!/bin/sh
+#
+# start/stop telnetd server.
+
+if ! [ -x /usr/sbin/telnetd ]; then
+	exit 0
+fi
+
+case "$1" in
+    start)
+	echo -n "Starting telnet server:"
+	echo -n " telnetd" ; start-stop-daemon -S -x /usr/sbin/telnetd > /dev/null
+	echo "."
+	;;
+    stop)
+	echo -n "Stopping telnet server:"
+	echo -n " telnetd" ; start-stop-daemon -K -x /usr/sbin/telnetd > /dev/null
+	echo "."
+	;;
+    restart)
+	echo -n "Restarting telnet server:"
+	echo -n " telnetd "
+	killall -HUP telnetd
+	echo "."
+	;;
+    *)
+	echo "Usage: /etc/init.d/telnetd {start|stop|restart}"
+	exit 1
+	;;
+esac
+
+exit 0
+
