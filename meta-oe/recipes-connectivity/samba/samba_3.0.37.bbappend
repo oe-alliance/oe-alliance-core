@@ -45,13 +45,13 @@ if type update-rc.d >/dev/null 2>/dev/null; then
 fi
 
 # Remove SysVinit start for Samba
-if [ -e /etc/init.d/samba ]; then
-	chattr -i /etc/init.d/samba*
-	rm /etc/init.d/samba*
+if [ -e $D/etc/init.d/samba ]; then
+	chattr -i $D/etc/init.d/samba*
+	rm $D/etc/init.d/samba*
 fi
 
 # Remove if-*.d start/stop scripts
-LOC=/etc/network
+LOC=$D/etc/network
 for SCRIPT in $LOC/if-up.d/01samba-start $LOC/if-down.d/01samba-kill $LOC/if-post-down.d/01samba-kill
 do
 	if [ -e $SCRIPT ]; then
@@ -65,18 +65,18 @@ pkg_postinst_sambaserver() {
 #!/bin/sh
 
 # For cosmetical reasons we want Samba to be added before streaming
-if grep -qE '^#?\(8001|8002|8003\)' /etc/inetd.conf;
+if grep -qE '^#?\(8001|8002|8003\)' $D/etc/inetd.conf;
 then
 	# Streaming port(s) in inetd - Insert Samba before
 	for PORT in 8001 8002 8003
 	do
-		if grep -qE "^#?$PORT" /etc/inetd.conf;
+		if grep -qE "^#?$PORT" $D/etc/inetd.conf;
 		then
-			if ! grep -qE '^#?(445|microsoft-ds)' /etc/inetd.conf; then
-				sed -i "s#^\(\#*$PORT\)#microsoft-ds\tstream\ttcp6\tnowait\troot\t/usr/sbin/smbd\t\t\tsmbd\n\1#" /etc/inetd.conf
+			if ! grep -qE '^#?(445|microsoft-ds)' $D/etc/inetd.conf; then
+				sed -i "s#^\(\#*$PORT\)#microsoft-ds\tstream\ttcp6\tnowait\troot\t/usr/sbin/smbd\t\t\tsmbd\n\1#" $D/etc/inetd.conf
 			fi
-			if ! grep -qE '^#?(137|netbios-ns)' /etc/inetd.conf; then
-				sed -i "s#^\(\#*$PORT\)#netbios-ns\tdgram\tudp\twait\troot\t/usr/sbin/nmbd\t\t\tnmbd\n\1#" /etc/inetd.conf
+			if ! grep -qE '^#?(137|netbios-ns)' $D/etc/inetd.conf; then
+				sed -i "s#^\(\#*$PORT\)#netbios-ns\tdgram\tudp\twait\troot\t/usr/sbin/nmbd\t\t\tnmbd\n\1#" $D/etc/inetd.conf
 			fi
 			break
 		fi
@@ -85,29 +85,33 @@ then
 else
 
 	# No streaming ports in inetd - Append Samba
-	if ! grep -qE '^#?(445|microsoft-ds)' /etc/inetd.conf; then
-	        echo -e "microsoft-ds\tstream\ttcp6\tnowait\troot\t/usr/sbin/smbd\t\t\tsmbd" >> /etc/inetd.conf
+	if ! grep -qE '^#?(445|microsoft-ds)' $D/etc/inetd.conf; then
+	        echo -e "microsoft-ds\tstream\ttcp6\tnowait\troot\t/usr/sbin/smbd\t\t\tsmbd" >> $D/etc/inetd.conf
 	fi
-	if ! grep -qE '^#?(137|netbios-ns)' /etc/inetd.conf; then
-		echo -e "netbios-ns\tdgram\tudp\twait\troot\t/usr/sbin/nmbd\t\t\tnmbd" >> /etc/inetd.conf
+	if ! grep -qE '^#?(137|netbios-ns)' $D/etc/inetd.conf; then
+		echo -e "netbios-ns\tdgram\tudp\twait\troot\t/usr/sbin/nmbd\t\t\tnmbd" >> $D/etc/inetd.conf
 	fi
 fi
 
 # Unify port numbers/names to names
-sed -i "s/^\(\#*\)445/\1microsoft-ds/g" /etc/inetd.conf
-sed -i "s/^\(\#*\)137/\1netbios-ns/g"   /etc/inetd.conf
-sed -i "s/^\(\#*\)138/\1netbios-dgm/g"  /etc/inetd.conf
+sed -i "s/^\(\#*\)445/\1microsoft-ds/g" $D/etc/inetd.conf
+sed -i "s/^\(\#*\)137/\1netbios-ns/g"   $D/etc/inetd.conf
+sed -i "s/^\(\#*\)138/\1netbios-dgm/g"  $D/etc/inetd.conf
 
-grep -vE '^#?netbios-dgm' /etc/inetd.conf > /tmp/inetd.tmp
-mv /tmp/inetd.tmp /etc/inetd.conf
+grep -vE '^#?netbios-dgm' $D/etc/inetd.conf > $D/tmp/inetd.tmp
+mv $D/tmp/inetd.tmp $D/etc/inetd.conf
 
-# Restart the internet superserver
-/etc/init.d/inetd.busybox restart
-
+if [ -z "$D" -a -f "/etc/init.d/inetd.busybox" ]; then
+	# Restart the internet superserver
+	/etc/init.d/inetd.busybox restart
+fi
+# Dirty work-around for an update continuity problem
+chattr +i $D/etc/init.d/samba
 }
 
 pkg_prerm_sambaserver() {
 #!/bin/sh
+chattr -i $D/etc/init.d/samba
 if type update-rc.d >/dev/null 2>/dev/null; then
 	if [ -n "$D" ]; then
 		OPT="-r $D"
@@ -117,10 +121,12 @@ if type update-rc.d >/dev/null 2>/dev/null; then
 	update-rc.d $OPT samba remove >/dev/null 2>&1
 fi
 
-grep -vE '^#?(445|microsoft-ds|137|netbios-ns|138|netbios-dgm|139|netbios-ssn)' /etc/inetd.conf > /tmp/inetd.tmp
-mv /tmp/inetd.tmp /etc/inetd.conf
+grep -vE '^#?(445|microsoft-ds|137|netbios-ns|138|netbios-dgm|139|netbios-ssn)' $D/etc/inetd.conf > $D/tmp/inetd.tmp
+mv $D/tmp/inetd.tmp $D/etc/inetd.conf
 
-/etc/init.d/inetd.busybox restart
+if [ -z "$D" -a -f "/etc/init.d/inetd.busybox" ]; then
+	/etc/init.d/inetd.busybox restart
+	killall -9 smbd nmbd >/dev/null 2>&1
+fi
 
-killall -9 smbd nmbd >/dev/null 2>&1
 }
