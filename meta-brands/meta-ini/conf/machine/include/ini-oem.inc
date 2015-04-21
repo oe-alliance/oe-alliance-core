@@ -134,7 +134,7 @@ ${@base_contains('MACHINEBUILD', 'xpeedlx', 'inihde' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'xpeedlx3', 'ini-900' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbmini', 'inihde' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbminiplus', 'inihde2sv' , '', d)}\
-${@base_contains('MACHINEBUILD', 'mbhybrid', 'ini-442sv' , '', d)}\
+${@base_contains('MACHINEBUILD', 'mbhybrid', 'inihde2sv' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbtwin', 'inihdx' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbultra', 'ini-800' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'atemio5x00', 'inihde' , '', d)}\
