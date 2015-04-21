@@ -5,13 +5,13 @@ LICENSE = "CLOSED"
 PACKAGE_ARCH = "${MACHINEBUILD}"
 
 KV = "3.12.1"
-SRCDATE = "20150316"
+SRCDATE = "20150420"
 
 PV = "${KV}+${SRCDATE}"
 PR = "r1"
 
-SRC_URI[md5sum] = "35338782d962780551749720ead59e38"                                                                                                                                                                                         
-SRC_URI[sha256sum] = "d924924ce0aa715e8b386ccce19f757b9a79d4bcc7b2e0bea1b1c3c5dc58e72a"
+SRC_URI[md5sum] = "ced23ec29f4a5fca4ccd02d3af8d04f5"                                                                                                                                                                                         
+SRC_URI[sha256sum] = "9fd6ac5b41c03901fdfc376cb4fba0ba1f018961b4eef3ba82d957296e1d4624"
 
 SRC_URI = "http://code-ini.com/software/drivers/yhgd2580-drivers-${KV}-${SRCDATE}.zip"
 
