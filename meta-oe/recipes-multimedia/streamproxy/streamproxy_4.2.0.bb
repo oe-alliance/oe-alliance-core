@@ -7,28 +7,36 @@ inherit autotools schwerkraft-git
 
 pkg_postinst_${PN}() {
 #!/bin/sh
-LINE='8001\t\tstream\ttcp6\tnowait\troot\t/usr/bin/streamproxy\tstreamproxy'
+LINE='8001\t\tstream\ttcp6\tnowait\troot\t/usr/bin/streamproxy\t\tstreamproxy'
 
-if grep -q '^8001' /etc/inetd.conf; then
+if grep -q '^8001' $D/etc/inetd.conf; then
 	# Remove old entries for port 8001 (user fixes or previous installs)
-	grep -v '^8001' /etc/inetd.conf > /etc/inetd.tmp
-	mv /etc/inetd.tmp /etc/inetd.conf
+	grep -v '^[#\s]*8001' $D/etc/inetd.conf > $D/etc/inetd.tmp
+	mv $D/etc/inetd.tmp $D/etc/inetd.conf
 fi
 
-if grep -q '^8002' /etc/inetd.conf; then
+if grep -q '^8002' $D/etc/inetd.conf; then
 	# Add before port 8002 if it exists
-	sed -i "s#^8002#${LINE}\n8002#" /etc/inetd.conf
+	sed -i "s#^[#\s]*8002#${LINE}\n8002#" $D/etc/inetd.conf
 else
 	# Just append
-	echo -e "${LINE}" >> /etc/inetd.conf
+	echo -e "${LINE}" >> $D/etc/inetd.conf
+fi
+
+if [ -z "$D" -a -f "/etc/init.d/inetd.busybox" ]; then
+	/etc/init.d/inetd.busybox restart
 fi
 }
 
 pkg_prerm_${PN}() {
 #!/bin/sh
-if grep -q '^8001' /etc/inetd.conf; then
-	grep -v '^8001' /etc/inetd.conf > /etc/inetd.tmp
-	mv /etc/inetd.tmp /etc/inetd.conf
+if grep -q '^[#\s]*8001' $D/etc/inetd.conf; then
+	grep -v '^[#\s]*8001' $D/etc/inetd.conf > $D/etc/inetd.tmp
+	mv $D/etc/inetd.tmp $D/etc/inetd.conf
+fi
+
+if [ -z "$D" -a -f "/etc/init.d/inetd.busybox" ]; then
+	/etc/init.d/inetd.busybox restart
 fi
 }
 
