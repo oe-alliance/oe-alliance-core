@@ -55,6 +55,8 @@ pkg_postinst_${PN}_append () {
 }
 
 pkg_preinst_${PN}-telnetd_prepend () {
+if [ -e $D/etc/inetd.conf ]; then
 	grep -vE '^#*\s*(23|telnet)' $D/etc/inetd.conf > $D/tmp/inetd.tmp
 	mv $D/tmp/inetd.tmp $D/etc/inetd.conf
+fi
 }
