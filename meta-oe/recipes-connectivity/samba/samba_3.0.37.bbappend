@@ -21,6 +21,7 @@ FILES_libtalloc = "${libdir}/libtalloc.so.*"
 
 CONFFILES_${PN} = ""
 CONFFILES_sambaserver = "${sysconfdir}/samba/smb.conf"
+RDEPENDS_sambaserver += "busybox-inetd"
 
 do_install_prepend() {
     install -c -m 644 ${WORKDIR}/smb.conf ../examples/smb.conf.default
