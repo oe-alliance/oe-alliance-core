@@ -4,13 +4,13 @@ PRIORITY = "required"
 LICENSE = "CLOSED"
 require conf/license/license-close.inc
 
-SRCDATE = "20140918"
+SRCDATE = "20150422"
 KV = "3.12.4"
 PV = "${KV}+${SRCDATE}"
 PR = "r5"
 
-SRC_URI[md5sum] = "d9bef8d4e3cfab6b2aa182e29a95d212"
-SRC_URI[sha256sum] = "01afbe2e49ed7789e6b3f524659d8ce073fd19c90aaea4c30eadf415ce366b62"
+SRC_URI[md5sum] = "b1fb665cd6aff5c0977900b86a896fa1"
+SRC_URI[sha256sum] = "74f109c8c99d7c2ad31460639c20d19e877a5adc844f284275896e35c90397ac"
 
 SRC_URI = "http://archiv.mixos-support.com/ebox-dvb-modules-${MACHINE}-${KV}-${SRCDATE}.zip"
 
