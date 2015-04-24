@@ -5,15 +5,15 @@ LICENSE = "CLOSED"
 PACKAGE_ARCH = "${MACHINEBUILD}"
 
 KV = "3.14.2"
-SRCDATE = "20150304"
+SRCDATE = "20150407"
 
 PV = "${KV}+${SRCDATE}"
 PR = "r1"
 
-SRC_URI[md5sum] = "656ac495bf0f7b7345a828769a3c05b1"
-SRC_URI[sha256sum] = "56b7f21e90dccb6adc59aaeccb9d1a720a5c84e379416351474adc6560477971"
+SRC_URI[md5sum] = "2303722a6a3531f5e68396144ad802af"
+SRC_URI[sha256sum] = "00c02ddb748d5dc2b944a4d5f47572141f9019eadf8df8188c5d741601f6811a"
 
-SRC_URI = "http://code-ini.com/software/drivers/ini-442sv-drivers-${KV}-${SRCDATE}.zip"
+SRC_URI = "http://code-ini.com/software/drivers/yhgd2580-drivers-${KV}-${SRCDATE}.zip"
 
 S = "${WORKDIR}"
 
