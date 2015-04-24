@@ -11,7 +11,7 @@ DEPENDS = "tslib mpfr gmp"
 SRCREV = "${AUTOREV}"
 PV = "2.1+gitr${SRCPV}"
 PKGV = "2.1+gitr${GITPKGV}"
-PR = "r167"
+PR = "r168"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -105,27 +105,22 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-zdfnewmediathek_1.7rc5_mips32el.ipk \
     enigma2-plugin-systemplugins-bouquetsprotection_0.2-rc1_all.ipk \
     enigma2-plugin-systemplugins-recordinfobar_1.0-rc15_mipsel.ipk \
-    enigma2-plugin-picons-tv-ocram.hd.black-white_2015-02-26--08-13-06_all.ipk \
-    enigma2-plugin-picons-tv-ocram.hd.blue-black_2015-02-26--08-13-06_all.ipk \
-    enigma2-plugin-picons-tv-ocram.hd.reflection-black_2015-02-26--08-13-06_all.ipk \
-    enigma2-plugin-picons-tv-ocram.hd.transparent-black_2015-02-26--08-13-06_all.ipk \
-    enigma2-plugin-picons-tv-ocram.hd.transparent-white_2015-02-26--08-13-06_all.ipk \
-    enigma2-plugin-picons-tv-ocram.hd.white-black_2015-02-26--08-13-06_all.ipk \
-    enigma2-plugin-picons-tv-ocram.sd.black-white_2015-02-26--08-13-06_all.ipk \
-    enigma2-plugin-picons-tv-ocram.sd.blue-black_2015-02-26--08-13-06_all.ipk \
-    enigma2-plugin-picons-tv-ocram.sd.reflection-black_2015-02-26--08-13-06_all.ipk \
-    enigma2-plugin-picons-tv-ocram.sd.transparent-black_2015-02-26--08-13-06_all.ipk \
-    enigma2-plugin-picons-tv-ocram.sd.transparent-white_2015-02-26--08-13-06_all.ipk \
-    enigma2-plugin-picons-tv-ocram.sd.white-black_2015-02-26--08-13-06_all.ipk \
-    enigma2-plugin-picons-tv-ocram.shd.black-white_2015-02-26--08-13-06_all.ipk \
-    enigma2-plugin-picons-tv-ocram.shd.blue-black_2015-02-26--08-13-06_all.ipk \
-    enigma2-plugin-picons-tv-ocram.shd.reflection-black_2015-02-26--08-13-06_all.ipk \
-    enigma2-plugin-picons-tv-ocram.shd.transparent-black-nopadding_2015-02-26--08-13-06_all.ipk \
-    enigma2-plugin-picons-tv-ocram.shd.transparent-black_2015-02-26--08-13-06_all.ipk \
-    enigma2-plugin-picons-tv-ocram.shd.transparent-white-nopadding_2015-02-26--08-13-06_all.ipk \
-    enigma2-plugin-picons-tv-ocram.shd.transparent-white_2015-02-26--08-13-06_all.ipk \
-    enigma2-plugin-picons-tv-ocram.shd.white-black_2015-02-26--08-13-06_all.ipk \
-   "
+    enigma2-plugin-picons-100x60.black-white_2015-04-24--11-52-32_all \
+    enigma2-plugin-picons-100x60.blue-black_2015-04-24--11-52-32_all \
+    enigma2-plugin-picons-100x60.reflection-black_2015-04-24--11-52-32_all \
+    enigma2-plugin-picons-100x60.transparent-black_2015-04-24--11-52-32_all \
+    enigma2-plugin-picons-100x60.transparent-white_2015-04-24--11-52-32_all \
+    enigma2-plugin-picons-100x60.white-black_2015-04-24--11-52-32_all \
+    enigma2-plugin-picons-220x132.black-white_2015-04-24--11-52-32_all \
+    enigma2-plugin-picons-220x132.blue-black_2015-04-24--11-52-32_all \
+    enigma2-plugin-picons-220x132.reflection-black_2015-04-24--11-52-32_all \
+    enigma2-plugin-picons-220x132.transparent-black_2015-04-24--11-52-32_all \
+    enigma2-plugin-picons-220x132.transparent-black-nopadding_2015-04-24--11-52-32_all \
+    enigma2-plugin-picons-220x132.transparent-white_2015-04-24--11-52-32_all \
+    enigma2-plugin-picons-220x132.transparent-white-nopadding_2015-04-24--11-52-32_all \
+    enigma2-plugin-picons-220x132.white-black_2015-04-24--11-52-32_all \
+    enigma2-plugin-picons-400x240.transparent-white-nopadding_2015-04-24--11-52-32_all \
+    "
 
 #     Install any packages t_append =hat are only For this machines feed here, uncomment the line below and change as required
 THIRDPARTY_MACHINE_PLUGINS_vuuno = " \
