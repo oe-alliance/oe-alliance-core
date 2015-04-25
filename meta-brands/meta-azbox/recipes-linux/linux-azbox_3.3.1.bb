@@ -4,7 +4,7 @@ LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${KV}/COPYING;md5=d7810fab7487fb0aad
 PR = "r4"
 inherit machine_kernel_pr
 
-MACHINE_KERNEL_PR_append = ".2"
+MACHINE_KERNEL_PR_append = ".3"
 
 DEPENDS = "genromfs-native gcc"
 DEPENDS_azboxhd = "genromfs-native azbox-hd-buildimage gcc "
