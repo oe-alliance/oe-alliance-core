@@ -9,7 +9,7 @@ require conf/license/license-gplv2.inc
 RDEPENDS_${PN} += "showiframe"
 
 PV = "5.0"
-PR = "r0"
+PR = "r1"
 
 S = "${WORKDIR}"
 
@@ -87,12 +87,6 @@ do_install_append_gbultraue() {
     install -d ${D}/usr/share
     install -m 0644 lcdwaitkey.bin ${D}/usr/share/lcdwaitkey.bin
     install -m 0644 lcdwarning.bin ${D}/usr/share/lcdwarning.bin
-}
-
-do_install_append_gbultraue() {
-    install -d ${D}/usr/share
-    install -m 0644 lcdwaitkey.bin ${D}/usr/share/lcdwaitkey.bin
-    install -m 0644 lcdwarning.bin ${D}/usr/share/lcdwarning.bin	
 }
 
 do_install_append_gbquadplus() {
