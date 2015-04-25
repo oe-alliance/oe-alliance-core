@@ -6,7 +6,7 @@ BRAND_OEM = "ceryon"
 MACHINE_NAME = "\
 ${@base_contains('MACHINEBUILD', 'nano', 'NANO' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'nanoc', 'NANO-C' , '', d)}\
-${@base_contains('MACHINEBUILD', 'twinboxlcd', 'TWNBOX LCD' , '', d)}\
+${@base_contains('MACHINEBUILD', 'twinboxlcd', 'TWINBOX LCD' , '', d)}\
 "
 
 MACHINE_BRAND = "\
