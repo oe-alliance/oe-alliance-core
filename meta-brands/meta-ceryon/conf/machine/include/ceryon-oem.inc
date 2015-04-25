@@ -6,19 +6,19 @@ BRAND_OEM = "ceryon"
 MACHINE_NAME = "\
 ${@base_contains('MACHINEBUILD', 'nano', 'NANO' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'nanoc', 'NANO-C' , '', d)}\
-${@base_contains('MACHINEBUILD', 'nanopro', 'NANO PRO' , '', d)}\
+${@base_contains('MACHINEBUILD', 'twinboxlcd', 'TWNBOX LCD' , '', d)}\
 "
 
 MACHINE_BRAND = "\
 ${@base_contains('MACHINEBUILD', 'nano', 'WWIO' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'nanoc', 'WWIO' , '', d)}\
-${@base_contains('MACHINEBUILD', 'nanopro', 'Sampler' , '', d)}\
+${@base_contains('MACHINEBUILD', 'twinboxlcd', 'RED EAGLE' , '', d)}\
 "
 
 IMAGEDIR ?= "\
 ${@base_contains('MACHINEBUILD', 'nano', 'nano' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'nanoc', 'nano' , '', d)}\
-${@base_contains('MACHINEBUILD', 'nanopro', '7100S' , '', d)}\
+${@base_contains('MACHINEBUILD', 'twinboxlcd', '7100S' , '', d)}\
 "
 
 MTD_KERNEL = "mtd1"
