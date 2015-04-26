@@ -11,7 +11,7 @@ EXTRA_IMAGEDEPENDS += "dreambox-secondstage-${MACHINE}"
 
 GLIBC_EXTRA_OECONF = "--with-tls --with-__thread"
 
-DVBMEDIASINK_CONFIG = "--with-dreambox --with-pcm --with-wma --with-wmv --with-dtsdownmix --with-eac3 --with-dts"
+DVBMEDIASINK_CONFIG = "--with-dreambox --with-dts=no"
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS ?= ""
 
