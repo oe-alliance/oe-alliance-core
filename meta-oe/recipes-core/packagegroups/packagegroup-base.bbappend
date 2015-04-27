@@ -3,6 +3,7 @@ PACKAGES += " \
             ${@base_contains("DISTRO_FEATURES", "smbfs", "packagegroup-base-smbfs-client", "", d)} \
             ${@base_contains("DISTRO_FEATURES", "smbfs", "packagegroup-base-smbfs-server", "", d)} \
             ${@base_contains("DISTRO_FEATURES", "smbfs", "packagegroup-base-smbfs-utils", "", d)} \
+            ${@base_contains("DISTRO_FEATURES", "smbfs", "packagegroup-base-samba", "", d)} \
             "
 
 RDEPENDS_packagegroup-base := "${@oe_filter_out('packagegroup-base-nfs', '${RDEPENDS_packagegroup-base}', d)}"
@@ -24,6 +25,13 @@ RDEPENDS_packagegroup-base-smbfs-server = "\
 
 RDEPENDS_packagegroup-base-smbfs-utils = "\
     samba \
+    "
+
+RDEPENDS_packagegroup-base-samba = "\
+    packagegroup-base-smbfs \
+    packagegroup-base-smbfs-client \
+    packagegroup-base-smbfs-server \
+    packagegroup-base-smbfs-utils \
     "
 
 RRRECOMMENDS_packagegroup-base-appletalk = "\
