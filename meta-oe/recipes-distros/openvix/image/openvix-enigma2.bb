@@ -7,7 +7,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "1.0"
-PR = "r22"
+PR = "r23"
 
 inherit packagegroup
 
@@ -22,7 +22,6 @@ RDEPENDS_${PN} = "\
     "
 
 RRECOMMENDS_${PN} = "\
-    git \
     enigma2-plugin-extensions-autotimer \
     enigma2-plugin-extensions-epgsearch \
     enigma2-plugin-extensions-imdb \
