@@ -21,6 +21,7 @@ RDEPENDS_${PN} = "\
     busybox-cron \
     python-imaging \
     rtmpdump \
+    packagegroup-base-smbfs \
     packagegroup-base-smbfs-client \
     ${@base_contains("MACHINE_FEATURES", "dreambox", "", "ofgwrite", d)} \	
     bash \

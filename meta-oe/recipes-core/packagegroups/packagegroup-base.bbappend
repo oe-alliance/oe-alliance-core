@@ -20,7 +20,7 @@ RDEPENDS_packagegroup-base-smbfs-client = "\
 
 RDEPENDS_packagegroup-base-smbfs-server = "\
     packagegroup-base-smbfs \
-    sambaserver \
+    samba-base \
     "
 
 RDEPENDS_packagegroup-base-smbfs-utils = "\
