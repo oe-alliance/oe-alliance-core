@@ -7,7 +7,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "1.0"
-PR = "r16"
+PR = "r17"
 
 inherit packagegroup
 
@@ -22,5 +22,6 @@ RDEPENDS_${PN} = "\
     libcrypto-compat-0.9.8 \
     packagegroup-base-smbfs \
     packagegroup-base-smbfs-client \
+    packagegroup-base-smbfs-server \
     "
 
