@@ -11,10 +11,10 @@ SRC_URI = "http://samba.org/samba/ftp/stable/samba-${PV}.tar.gz \
 
 S = "${WORKDIR}/samba-${PV}/source"
 
-inherit autotools-brokensep
+inherit autotools-brokensep update-rc.d
 
 FILES_${PN}     += "${libdir}/vfs/*.so ${libdir}/charset/*.so ${libdir}/*.dat \
-                    ${libdir}/auth/*.so ${libdir}/security/*.so"
+                    ${libdir}/auth/*.so ${libdir}/security/*.so ${libdir}/pdb"
 FILES_${PN}-dbg += "${libdir}/vfs/.debug/*.so ${libdir}/charset/.debug/*.so \
                     ${libdir}/auth/.debug/*.so ${libdir}/security/.debug/*.so"
 
