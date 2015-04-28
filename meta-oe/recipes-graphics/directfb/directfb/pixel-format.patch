@@ -1,0 +1,28 @@
+---
+  systems/fbdev/fbdev.c | 8 +++++++-
+  1 file changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/systems/fbdev/fbdev.c b/systems/fbdev/fbdev.c
+index aee785b..921c4ad 100644
+--- a/systems/fbdev/fbdev.c
++++ b/systems/fbdev/fbdev.c
+@@ -1979,12 +1979,18 @@ dfb_fbdev_test_mode_simple( const VideoMode *mode )
+  {
+       DFBResult                ret;
+       struct fb_var_screeninfo var;
++     DFBSurfacePixelFormat    pixelformat;
+
+       D_DEBUG_AT( FBDev_Mode, "%s( mode: %p )\n", FUNCTION, mode );
+
+       D_ASSERT( mode != NULL );
+
+-     ret = dfb_fbdev_mode_to_var( mode, dfb_pixelformat_for_depth(mode->bpp), mode->xres, mode->yres,
++     if (dfb_config->mode.format)
++          pixelformat = dfb_config->mode.format;
++     else
++          pixelformat = dfb_pixelformat_for_depth(mode->bpp);
++
++     ret = dfb_fbdev_mode_to_var( mode, pixelformat, mode->xres, mode->yres,
+                                    0, 0, DLBM_FRONTONLY, &var );
+       if (ret)
+            return ret;
