@@ -4,18 +4,21 @@ SECTION = "console/multimedia"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=751419260aa954499f7abaabaa882bbe"
 
-DEPENDS = "libvorbis libogg libao zlib libmikmod flac audiofile virtual/libiconv faad2 curl \
+DEPENDS = "libvorbis libogg libao zlib libmikmod flac audiofile virtual/libiconv faad2 curl icu boost \
            ${@base_conditional('ENTERPRISE_DISTRO', '1', '', 'libmad libid3tag lame', d)}"
 
-PR = "r1"
+inherit gitpkgv
+SRCREV = "5761800197a86ba6de70af026546e678cbda4b91"
+PV = "0.19.9"
+PKGV = "0.19.9"
+PR = "r6"
 
-SRC_URI = "${SOURCEFORGE_MIRROR}/musicpd/mpd-${PV}.tar.bz2 \
+SRC_URI = "git://git.musicpd.org/master/mpd.git;protocol=git \
         file://mpd.conf \
         file://mpd.init \
         "
 
-SRC_URI[md5sum] = "5489dd327fba12c67f01558d2cfa6d57"
-SRC_URI[sha256sum] = "6ec5ad3fdeeb97608e40e041b6a458c61afd023a0fd1eeb464e208fcd36659df"
+S = "${WORKDIR}/git"
 
 inherit autotools update-rc.d
 INITSCRIPT_NAME = "mpd"
@@ -26,20 +29,10 @@ INITSCRIPT_NAME = "mpd"
 # versions.
 
 EXTRA_OECONF = "\
-        --enable-ogg \
-        --with-id3tag-libraries=${STAGING_LIBDIR} \
-        --with-id3tag-includes=${STAGING_INCDIR} \
-        --with-mad-libraries=${STAGING_LIBDIR} \
-        --with-mad-includes=${STAGING_INCDIR} \
-        --with-faad-libraries=${STAGING_LIBDIR} \
-        --with-faad-includes=${STAGING_INCDIR} \
         --enable-curl \
         --disable-ffmpeg \
         --disable-jack \
         --disable-pulse \
-        --enable-mod \
-        --disable-oggflac \
-        --with-lame-includes=${STAGING_INCDIR} \
         "
 
 do_compile_prepend() {
