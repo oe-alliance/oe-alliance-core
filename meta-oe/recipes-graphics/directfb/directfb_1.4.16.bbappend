@@ -1,7 +1,4 @@
 PACKAGE_ARCH = "${MACHINE_ARCH}"
-SRC_URI_append = " \
-    ${@base_contains("MACHINE_FEATURES", "sdl", "file://pixel-format.patch", "", d)} \
-    "
 
 EXTRA_OECONF = "\
   --enable-freetype=yes \
