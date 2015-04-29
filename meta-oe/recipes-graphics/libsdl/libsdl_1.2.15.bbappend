@@ -1,5 +1,5 @@
 PACKAGE_ARCH = "${MACHINE_ARCH}"
-DEPENDS += "${@base_contains("MACHINE_FEATURES", 'directfb', 'directfb', 'directfb', d)} \"
+DEPENDS += "${@base_contains("MACHINE_FEATURES", 'directfb', 'directfb', 'directfb', d)}"
 
 EXTRA_OECONF = "--disable-static --enable-cdrom --enable-threads --enable-timers \
                 --enable-file --disable-oss --disable-esd --disable-arts \
