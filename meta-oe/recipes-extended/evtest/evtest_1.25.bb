@@ -25,5 +25,5 @@ FILES_${PN} = "${bindir}/evtest"
 
 INHIBIT_AUTO_STAGE = "1"
 
-SRC_URI[archive.md5sum] = "770d6af03affe976bdbe3ad1a922c973"
-SRC_URI[archive.sha256sum] = "3d34123c68014dae6f7c19144ef79ea2915fa7a2f89ea35ca375a9cf9e191473"
+SRC_URI[archive.md5sum] = "0ef3fe5e20fa2dee8994827d48482902"
+SRC_URI[archive.sha256sum] = "6e93ef54f0aa7d263f5486ce4a14cac53cf50036bfd20cf045fef2b27ee6664b"
