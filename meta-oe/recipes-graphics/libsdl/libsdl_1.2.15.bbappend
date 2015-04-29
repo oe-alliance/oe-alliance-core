@@ -15,5 +15,5 @@ EXTRA_OECONF = "--disable-static --enable-cdrom --enable-threads --enable-timers
                 --disable-video-svga \
                 --disable-video-picogui --disable-video-qtopia --enable-sdl-dlopen \
                 --disable-rpath \
-                --disable-pulseaudio
+                --disable-pulseaudio \
 "
