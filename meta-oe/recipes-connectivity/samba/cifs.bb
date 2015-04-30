@@ -5,7 +5,7 @@ LICENSE = "GPLv3 & LGPLv3"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 
 PV = "5.9"
-PR = "r1"
+PR = "r2"
 
 SRCREV = "353d491dcb5d69d31434abeb962c8e9a49c36867"
 SRC_URI = "git://git.samba.org/cifs-utils.git"
@@ -19,7 +19,6 @@ PACKAGECONFIG[cifscreds] = "--enable-cifscreds,--disable-cifscreds,keyutils"
 # when enabled, it creates ${sbindir}/cifs.upcall and --ignore-fail-on-non-empty in do_install_append is needed
 PACKAGECONFIG[cifsupcall] = "--enable-cifsupcall,--disable-cifsupcall,krb5 talloc keyutils"
 
-PACKAGES =+ "${PN}-doc"
 FILES_${PN}-doc = "${mandir}/man8/mount.cifs.8"
 
 
