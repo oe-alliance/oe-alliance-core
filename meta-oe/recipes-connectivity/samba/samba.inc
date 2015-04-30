@@ -69,8 +69,6 @@ do_install_append() {
     mkdir -p ${D}${base_sbindir}
     rm -f ${D}${bindir}/*.old
     rm -f ${D}${sbindir}/*.old
-    [ -f ${D}${sbindir}/mount.cifs ] && mv ${D}${sbindir}/mount.cifs ${D}${base_sbindir}/
-    [ -f ${D}${sbindir}/umount.cifs ] && mv ${D}${sbindir}/umount.cifs ${D}${base_sbindir}/
 
     # This is needed for < 3.2.4
     rm -f ${D}${sbindir}/mount.smbfs ${D}${base_sbindir}/mount.smbfs
