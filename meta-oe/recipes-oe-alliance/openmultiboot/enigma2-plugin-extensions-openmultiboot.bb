@@ -9,7 +9,7 @@ inherit gitpkgv pythonnative
 SRCREV = "${AUTOREV}"
 PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"
-PR = "r3"
+PR = "r4"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 SRC_URI = "git://github.com/oe-alliance/openmultibootmanager.git;protocol=git"
@@ -32,6 +32,7 @@ EXTRA_OECONF = "\
     HOST_SYS=${HOST_SYS} \
     STAGING_INCDIR=${STAGING_INCDIR} \
     STAGING_LIBDIR=${STAGING_LIBDIR} \
+    --with-arch=${TARGET_ARCH} \
     "
 
 do_install_append() {
