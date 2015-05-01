@@ -1,7 +1,7 @@
 require conf/license/license-gplv2.inc
 
 PV = "1.0"
-PR = "r2"
+PR = "r3"
 
 RREPLACES_${PN} += "vuplus-shutdown"
 RCONFLICTS_${PN} += "vuplus-shutdown"
@@ -14,6 +14,8 @@ INITSCRIPT_NAME = "dags-shutdown"
 INITSCRIPT_PARAMS = "start 89 0 ."
 
 inherit autotools pkgconfig update-rc.d
+
+S = "${WORKDIR}"
 
 do_install() {
     install -d ${D}/etc/init.d/
