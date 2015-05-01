@@ -62,7 +62,7 @@ ${@base_contains('MACHINEBUILD', 'xpeedlx', 'xpeedlx' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'xpeedlx3', 'xpeedlx3' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbmini', 'miraclebox/mini' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbminiplus', 'miraclebox/miniplus' , '', d)}\
-${@base_contains('MACHINEBUILD', 'mbhybrid', 'miraclebox/hybrid' , '', d)}\
+${@base_contains('MACHINEBUILD', 'mbhybrid', 'miraclebox/minihybrid' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbtwin', 'miraclebox/twin' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbultra', 'miraclebox/ultra' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'atemio5x00', 'atemio/5x00' , '', d)}\
@@ -193,6 +193,12 @@ IMAGE_CMD_ubi_prepend = " \
 IMAGE_CMD_ubi_append = " \
     mkdir -p ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}; \
     ${@base_contains("MACHINE_FEATURES", "bootsplash", "cp ${DEPLOY_DIR_IMAGE}/${BOOTLOGO_FILENAME} ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/${BOOTLOGO_FILENAME};" , "", d)} \
+    ${@base_contains("DISTRO_FEATURES", "extrasplash", "cp ${DEPLOY_DIR_IMAGE}/cfe.bmp ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/;" , "", d)} \
+    ${@base_contains("DISTRO_FEATURES", "extrasplash", "cp ${DEPLOY_DIR_IMAGE}/splash.bmp ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/;" , "", d)} \
+    ${@base_contains("DISTRO_FEATURES", "extrasplash", "cp ${DEPLOY_DIR_IMAGE}/imageversion.bmp ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/;" , "", d)} \
+    ${@base_contains("DISTRO_FEATURES", "extrasplash", "cp ${DEPLOY_DIR_IMAGE}/kernel.bmp ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/;" , "", d)} \
+    ${@base_contains("DISTRO_FEATURES", "extrasplash", "cp ${DEPLOY_DIR_IMAGE}/rootfs.bmp ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/;" , "", d)} \
+    ${@base_contains("DISTRO_FEATURES", "extrasplash", "cp ${DEPLOY_DIR_IMAGE}/finished.bmp ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/;" , "", d)} \
     mv ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.ubi ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/${ROOTFS_FILE}; \
     gzip -f -9c ${DEPLOY_DIR_IMAGE}/vmlinux-${MACHINE}.bin > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/${KERNEL_FILE}; \
     echo ${DISTRO_NAME}-${IMAGE_VERSION}-${MACHINEBUILD}-${DATE} > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/imageversion; \
@@ -209,7 +215,7 @@ IMAGE_CMD_ubi_append = " \
     rm -rf beyonwiz; \ 
     "
 
-MACHINE_FEATURES += "3dtv alsa hdmicec switchoff wifi bootsplash extrasplash omb"
+MACHINE_FEATURES += "3dtv alsa hdmicec switchoff wifi bootsplash omb"
 
 BOOTLOGO_FILENAME = "splash.bin"
 

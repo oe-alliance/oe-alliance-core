@@ -2,7 +2,7 @@ SUMMARY = "replex remultiplexes TS (DVB) to PS (DVD)"
 SECTION = "console/multimedia"
 LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=8ca43cbc842c2336e835926c2166c28b"
-SRC_URI = "http://repository.slacky.eu/slackware-12.2/multimedia/${PN}/${PV}/src/${PN}-${PV}.tar.gz"
+SRC_URI = "http://ftp.arm.slackware.com/slacky/slackware-12.0/utilities/${PN}/${PV}/src/${PN}-${PV}.tar.gz"
 PR = "r0"
 
 SRC_URI[md5sum] = "de02c1b55bc7863f811adffe611f1c71"

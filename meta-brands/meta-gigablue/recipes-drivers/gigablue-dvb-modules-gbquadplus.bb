@@ -1,10 +1,10 @@
-SRCDATE = "20150406"
+SRCDATE = "20150425"
 
 KV = "3.14.2"
 
-SRC_URI[md5sum] = "2a35f31786ec1d00a8ec56bb7e5a6290"
-SRC_URI[sha256sum] = "87cc62d04d734962deb99c9c478ab1e92e4278cab262dfc7bd334c53b7b03abf"
+SRC_URI[md5sum] = "71d384cd1e51c94a74a76d34df77a0af"
+SRC_URI[sha256sum] = "db860f23ef91fa6f24132459eec8b459f8d773442f7dac604fb334ab4b97a923"
 
-SRC_URI = "http://archiv.openmips.com/beta/gigablue-drivers-${KV}-gbquadseries-${SRCDATE}.zip"
+SRC_URI = "http://archiv.openmips.com/beta/gigablue-drivers-${KV}-BCM7356-${SRCDATE}.zip"
 
 require gigablue-dvb-modules.inc

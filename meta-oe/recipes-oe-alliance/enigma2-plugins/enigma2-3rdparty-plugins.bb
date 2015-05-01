@@ -11,7 +11,7 @@ DEPENDS = "tslib mpfr gmp"
 SRCREV = "${AUTOREV}"
 PV = "2.1+gitr${SRCPV}"
 PKGV = "2.1+gitr${GITPKGV}"
-PR = "r168"
+PR = "r171"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -31,7 +31,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-sundtekcontrolcenter_1.4.0-20140223-r3_all.ipk \
     enigma2-plugin-systemplugins-extnumberzap_1.0-rc12_mipsel.ipk \
     enigma2-plugin-extensions-atmolightd_0.7-pre22_all.ipk \
-    enigma2-plugin-extensions-autobouquets-e2_20141113r1_mips32el.ipk \
+    enigma2-plugin-extensions-autobouquets-e2_20150428r1_all.ipk \
     enigma2-plugin-extensions-bildonline_3.1rc6_mips32el.ipk \
     enigma2-plugin-extensions-bluray_1.5c2_mips32el.ipk \
     enigma2-plugin-extensions-boblight-enigma2_0.8r7_mips32el.ipk \
@@ -90,7 +90,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-tmbd_6.1_mipsel.ipk \
     enigma2-plugin-extensions-translator_0.9rc3_mips32el.ipk \
     enigma2-plugin-extensions-transmission_2.83_mips32el.ipk \
-    enigma2-plugin-extensions-tsmedia_9.3_all.ipk \
+    enigma2-plugin-extensions-tsmedia_9.4_all.ipk \
     enigma2-plugin-extensions-tvspielfilm_6.3rc7_mips32el.ipk \
     enigma2-plugin-extensions-verkehrsinfo_1.0rc2_mips32el.ipk \
     enigma2-plugin-extensions-vhannibalautosettings_1.1_mips32el.ipk \
