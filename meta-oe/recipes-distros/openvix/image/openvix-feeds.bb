@@ -18,5 +18,5 @@ RRECOMMENDS_${PN} = "\
     openvix-softcams-meta \
     openvix-bootlogos-meta \
     ${@base_contains("MACHINE_FEATURES", "skins1080", "hd-skins-meta", "", d)} \
-	enigma2-plugin-extensions-enhancedmoviecenter \
+    enigma2-plugin-extensions-enhancedmoviecenter \
     "
