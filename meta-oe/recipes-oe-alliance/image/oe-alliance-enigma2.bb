@@ -9,7 +9,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "1.0"
-PR = "r59"
+PR = "r60"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 DEPENDS = "enigma2 enigma2-locale-meta enigma2-plugins enigma2-oe-alliance-plugins oe-alliance-feeds enigma2-3rdparty-plugins ${@base_contains("MACHINE_FEATURES", "wifi", "oe-alliance-wifi", "", d)}"
@@ -25,7 +25,6 @@ RDEPENDS_${PN} = "\
     ${@base_conditional('MACHINE', 'dm800', '', 'mtd-utils-ubifs', d)} \
     procps \
     parted \
-    ${@base_contains("MACHINE_FEATURES", "multitranscoding", "", "streamproxy", d)} \
     "
 
 RRECOMMENDS_${PN} = "\
