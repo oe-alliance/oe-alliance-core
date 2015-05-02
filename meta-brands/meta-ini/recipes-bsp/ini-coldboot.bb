@@ -22,12 +22,12 @@ do_install() {
 
 pkg_preinst_${PN}_prepend() {
 #!/bin/sh
-chmod -x /etc/init.d/coldboot
+chmod -x $D/etc/init.d/coldboot
 }
 
 pkg_postinst_${PN}_append() {
 #!/bin/sh
-chmod 755 /etc/init.d/coldboot
+chmod 755 $D/etc/init.d/coldboot
 }
 
 pkg_prerm_${PN}() {

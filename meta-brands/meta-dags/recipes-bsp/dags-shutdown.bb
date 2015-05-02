@@ -24,12 +24,12 @@ do_install() {
 
 pkg_preinst_${PN}_prepend() {
 #!/bin/sh
-chmod -x /etc/init.d/dags-shutdown
+chmod -x $D/etc/init.d/dags-shutdown
 }
 
 pkg_postinst_${PN}_append() {
 #!/bin/sh
-chmod 755 /etc/init.d/dags-shutdown
+chmod 755 $D/etc/init.d/dags-shutdown
 }
 
 pkg_prerm_${PN}() {
