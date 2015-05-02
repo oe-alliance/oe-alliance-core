@@ -208,7 +208,7 @@ inherit autotools-brokensep gitpkgv pkgconfig pythonnative
 
 PV = "5.0+git${SRCPV}"
 PKGV = "5.0+git${GITPKGV}"
-PR = "r0"
+PR = "r1"
 
 SRC_URI = "${ENIGMA2_URI}"
 
@@ -255,6 +255,7 @@ EXTRA_OECONF = " \
     STAGING_INCDIR=${STAGING_INCDIR} \
     STAGING_LIBDIR=${STAGING_LIBDIR} \
     --with-boxtype=${MACHINE} \
+    --with-imagetype=${DISTRO_TYPE} \
     --with-machinebuild="${MACHINEBUILD}" \
     --with-libsdl=no \
     --enable-dependency-tracking \
