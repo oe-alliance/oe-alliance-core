@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=4d92cd373abda3937c2bc47fbc49d
 ALLOW_EMPTY_${PN} = "1"
 
 PV = "1.0"
-PR = "r16"
+PR = "r17"
 
 inherit packagegroup
 
@@ -22,6 +22,8 @@ RDEPENDS_${PN} = "\
     python-imaging \
     rtmpdump \
     packagegroup-base-smbfs-client \
+    packagegroup-base-smbfs-server \
+    packagegroup-base-smbfs-utils \
     ${@base_contains("MACHINE_FEATURES", "dreambox", "", "ofgwrite", d)} \
     bash \
     "
