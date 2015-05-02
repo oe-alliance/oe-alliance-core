@@ -4,13 +4,15 @@ LICENSE = "CLOSED"
 require conf/license/license-close.inc
 
 PV = "1.0"
-PR = "r1"
+PR = "r2"
 
 SRC_URI = "file://ethwol.sh"
 
 inherit update-rc.d
 INITSCRIPT_NAME = "ethwol"
 INITSCRIPT_PARAMS = "stop 32 0 ."
+
+S = "${WORKDIR}"
 
 do_install() {
     install -d ${D}/etc/init.d

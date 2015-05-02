@@ -9,7 +9,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "1.0"
-PR = "r19"
+PR = "r21"
 
 RRECOMMENDS_${PN} = "\
     oe-alliance-skins \
