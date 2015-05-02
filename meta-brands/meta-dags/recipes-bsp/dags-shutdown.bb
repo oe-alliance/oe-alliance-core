@@ -1,7 +1,7 @@
 require conf/license/license-gplv2.inc
 
 PV = "1.0"
-PR = "r3"
+PR = "r4"
 
 RREPLACES_${PN} += "vuplus-shutdown"
 RCONFLICTS_${PN} += "vuplus-shutdown"
@@ -15,13 +15,26 @@ INITSCRIPT_PARAMS = "start 89 0 ."
 
 inherit autotools pkgconfig update-rc.d
 
-S = "${WORKDIR}"
-
 do_install() {
     install -d ${D}/etc/init.d/
     install -m 0755 ${WORKDIR}/dags-shutdown.sh ${D}/etc/init.d/dags-shutdown
     install -d ${D}/usr/bin
     install -m 0755 ${WORKDIR}/turnoff_power ${D}/usr/bin
+}
+
+pkg_preinst_${PN}_prepend() {
+#!/bin/sh
+chmod -x /etc/init.d/dags-shutdown
+}
+
+pkg_postinst_${PN}_append() {
+#!/bin/sh
+chmod 755 /etc/init.d/dags-shutdown
+}
+
+pkg_prerm_${PN}() {
+#!/bin/sh
+exit 0
 }
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
