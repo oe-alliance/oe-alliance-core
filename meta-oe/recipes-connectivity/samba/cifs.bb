@@ -21,7 +21,6 @@ PACKAGECONFIG[cifsupcall] = "--enable-cifsupcall,--disable-cifsupcall,krb5 tallo
 
 FILES_${PN}-doc = "${mandir}/man8/mount.cifs.8"
 
-
 inherit autotools pkgconfig
 
 do_install_append() {
@@ -33,3 +32,4 @@ do_install_append() {
 }
 
 RRECOMMENDS_${PN} = "kernel-module-cifs"
+
