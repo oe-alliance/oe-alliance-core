@@ -10,6 +10,7 @@ DEPENDS = "\
     openvix-softcams-cccam221 \
     openvix-softcams-oscam \
     openvix-softcams-oscam-pcscd \
+	openvix-softcams-oscam-latest \
     openvix-softcams-evocamd \
     openvix-softcams-mgcamd135a \
     openvix-softcams-mgcamd138 \
@@ -18,10 +19,4 @@ DEPENDS = "\
     openvix-softcams-scam \
     "    
 
-# Remove unavailable sh4 softcams
-DEPENDS_sh4 = "\
-    openvix-softcams-oscam \
-    openvix-softcams-oscam-pcscd \
-    "
-
-PR = "r4"
+PR = "r5"
