@@ -10,7 +10,7 @@ DEPENDS = "\
     openvix-softcams-cccam221 \
     openvix-softcams-oscam \
     openvix-softcams-oscam-pcscd \
-	openvix-softcams-oscam-latest \
+    openvix-softcams-oscam-latest \
     openvix-softcams-evocamd \
     openvix-softcams-mgcamd135a \
     openvix-softcams-mgcamd138 \
