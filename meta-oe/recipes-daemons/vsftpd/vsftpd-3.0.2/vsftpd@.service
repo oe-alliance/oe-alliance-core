@@ -1,5 +1,0 @@
-[Unit]
-
-[Service]
-ExecStart=-/usr/sbin/vsftpd
-StandardInput=socket

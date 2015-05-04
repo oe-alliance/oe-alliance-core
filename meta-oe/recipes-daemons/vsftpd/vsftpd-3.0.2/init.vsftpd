@@ -1,0 +1,47 @@
+#!/bin/sh
+### BEGIN INIT INFO
+# Provides: vsftpd
+# Default-Start:  2345
+# Default-Stop:   016
+# Short-Description: Very Secure Ftp Daemon
+# Description: vsftpd is a Very Secure FTP daemon. It was written completely from
+#              scratch
+### END INIT INFO
+
+DAEMON=/usr/sbin/vsftpd
+NAME=vsftpd
+DESC="FTP Server"
+ARGS=""
+AVAHI="/etc/avahi/services/ftp"
+
+test -f $DAEMON || exit 0
+
+set -e
+
+case "$1" in
+    start)
+        echo -n "* starting $DESC: $NAME... "
+        start-stop-daemon -S -b -x $DAEMON -- $ARGS
+	[ -e ${AVAHI}.disabled ] && mv ${AVAHI}.disabled ${AVAHI}.service
+        echo "done."
+        ;;
+    stop)
+        echo -n "* stopping $DESC: $NAME... "
+        start-stop-daemon -K -x $DAEMON
+	[ -e ${AVAHI}.service ] && mv ${AVAHI}.service ${AVAHI}.disabled
+        echo "done."
+        ;;
+    restart)
+        echo "* restarting $DESC: $NAME... "
+        $0 stop || true
+        $0 start
+	[ -e ${AVAHI}.disabled ] && mv ${AVAHI}.disabled ${AVAHI}.service
+        echo "done."
+        ;;
+    *)
+        echo "Usage: $0 {start|stop|restart}"
+        exit 1
+        ;;
+esac
+
+exit 0
