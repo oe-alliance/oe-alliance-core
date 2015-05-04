@@ -2,7 +2,7 @@
 include conf/machine/include/build-extras.inc
 
 BRAND_OEM = "ax"
-MACHINE_BRAND = "AX"
+MACHINE_BRAND = "Red Eagle"
 
 MTD_KERNEL = "mtd1"
 MTD_ROOTFS = "mtd2"
