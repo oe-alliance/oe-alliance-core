@@ -7,7 +7,9 @@ PACKAGES += " \
             "
 
 RDEPENDS_packagegroup-base := "${@oe_filter_out('packagegroup-base-nfs', '${RDEPENDS_packagegroup-base}', d)}"
-RDEPENDS_packagegroup-base := "${@oe_filter_out('packagegroup-base-smbfs', '${RDEPENDS_packagegroup-base}', d)}"
+RDEPENDS_packagegroup-base := "${@oe_filter_out('packagegroup-base-smbfs-client', '${RDEPENDS_packagegroup-base}', d)}"
+RDEPENDS_packagegroup-base := "${@oe_filter_out('packagegroup-base-smbfs-server', '${RDEPENDS_packagegroup-base}', d)}"
+RDEPENDS_packagegroup-base := "${@oe_filter_out('packagegroup-base-smbfs-utils', '${RDEPENDS_packagegroup-base}', d)}"
 
 RDEPENDS_packagegroup-base-smbfs-client = "\
     cifs \
