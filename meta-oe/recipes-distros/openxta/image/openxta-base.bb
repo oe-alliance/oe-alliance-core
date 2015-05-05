@@ -4,7 +4,7 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=4d92cd373abda3937c2bc47fbc49d
                     file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
 
 PV = "1.0"
-PR = "r11"
+PR = "r12"
 
 inherit packagegroup
 
@@ -16,7 +16,6 @@ RDEPENDS_${PN} = "\
     dosfstools \
     ntfs-3g \
     packagegroup-base-smbfs-client \
-    packagegroup-base-smbfs \
     packagegroup-base-nfs \
     busybox-cron \
     unrar \

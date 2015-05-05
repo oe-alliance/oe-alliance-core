@@ -9,17 +9,12 @@ PACKAGES += " \
 RDEPENDS_packagegroup-base := "${@oe_filter_out('packagegroup-base-nfs', '${RDEPENDS_packagegroup-base}', d)}"
 RDEPENDS_packagegroup-base := "${@oe_filter_out('packagegroup-base-smbfs', '${RDEPENDS_packagegroup-base}', d)}"
 
-RDEPENDS_packagegroup-base-smbfs += "\
-    cifs \
-    "
-
 RDEPENDS_packagegroup-base-smbfs-client = "\
-    packagegroup-base-smbfs \
+    cifs \
     smbclient \
     "
 
 RDEPENDS_packagegroup-base-smbfs-server = "\
-    packagegroup-base-smbfs \
     samba-base \
     "
 
@@ -28,7 +23,6 @@ RDEPENDS_packagegroup-base-smbfs-utils = "\
     "
 
 RDEPENDS_packagegroup-base-samba = "\
-    packagegroup-base-smbfs \
     packagegroup-base-smbfs-client \
     packagegroup-base-smbfs-server \
     packagegroup-base-smbfs-utils \
