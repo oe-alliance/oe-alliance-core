@@ -29,7 +29,7 @@
  MULTICALL_O = $(sort $(SMBD_MULTI_O) $(NMBD_MULTI_O) $(SMBPASSWD_MULTI_O) $(MULTI_O))
 --- /dev/null
 +++ b/source3/utils/owrt_smbpasswd.c
-@@ -0,0 +1,249 @@
+@@ -0,0 +1,266 @@
 +/*
 + * Copyright (C) 2012 Felix Fietkau <nbd@openwrt.org>
 + * Copyright (C) 2008 John Crispin <blogic@openwrt.org>
@@ -144,10 +144,14 @@
 +	md4hash(strdup(password), nt_p16);
 +
 +	len += snprintf(buf + len, sizeof(buf) - len, "%s:%u:XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX:", user, uid);
-+	for(i = 0; i < NT_HASH_LEN; i++)
-+		len += snprintf(buf + len, sizeof(buf) - len, "%02X", nt_p16[i]);
++       if (strcmp(password,"") == 0) {
++		snprintf(buf + len, sizeof(buf) - len, "NOPASSWORDXXXXXXXXXXXXXXXXXXXXXX:[UXN        ]:LCT-00000001:\n");
++	} else {
++		for(i = 0; i < NT_HASH_LEN; i++)
++			len += snprintf(buf + len, sizeof(buf) - len, "%02X", nt_p16[i]);
 +
-+	snprintf(buf + len, sizeof(buf) - len, ":[UX         ]:LCT-00000001:\n");
++		snprintf(buf + len, sizeof(buf) - len, ":[UX         ]:LCT-00000001:\n");
++	}
 +	fputs(buf, fp);
 +}
 +
@@ -183,8 +187,10 @@
 +		"Usage: %s [options] <username>\n"
 +		"\n"
 +		"Options:\n"
++		"  -L		local mode (ignored for compatibility)\n"
 +		"  -s		read password from stdin\n"
 +		"  -a		add user\n"
++		"  -n		set no password\n"
 +		"  -x		delete user\n",
 +		progname);
 +	return 1;
@@ -196,14 +202,20 @@
 +	const char *user;
 +	char *pw1, *pw2;
 +	FILE *fp;
-+	bool add = false, delete = false, get_stdin = false, found;
++	bool add = false, delete = false, get_stdin = false, no_pass = false, found;
 +	int ch;
 +	int uid;
 +
 +	TALLOC_CTX *frame = talloc_stackframe();
 +
-+	while ((ch = getopt(argc, argv, "asx")) != EOF) {
++	while ((ch = getopt(argc, argv, "asxnL")) != EOF) {
 +		switch (ch) {
++		case 'L':
++			break;
++		case 'n':
++			no_pass = true;
++			add = true;
++			break;
 +		case 's':
 +			get_stdin = true;
 +			break;
@@ -236,15 +248,15 @@
 +		}
 +	}
 +
-+	fp = fopen("/etc/samba/smbpasswd", "r+");
++	fp = fopen("/etc/samba/private/smbpasswd", "r+");
 +	if(!fp) {
-+		fprintf(stderr, "Failed to open /etc/samba/smbpasswd");
++		fprintf(stderr, "Failed to open /etc/samba/private/smbpasswd");
 +		return 3;
 +	}
 +
 +	found = find_passwd_line(fp, user, NULL);
 +	if (!add && !found) {
-+		fprintf(stderr, "Could not find user '%s' in /etc/samba/smbpasswd\n", user);
++		fprintf(stderr, "Could not find user '%s' in /etc/samba/private/smbpasswd\n", user);
 +		return 3;
 +	}
 +
@@ -253,17 +265,22 @@
 +		goto out;
 +	}
 +
-+	pw1 = get_pass("New SMB password:", get_stdin);
-+	if (!pw1)
++	if (no_pass) {
 +		pw1 = strdup("");
-+
-+	pw2 = get_pass("Retype SMB password:", get_stdin);
-+	if (!pw2)
 +		pw2 = strdup("");
++	} else {
++		pw1 = get_pass("New SMB password:", get_stdin);
++		if (!pw1)
++			pw1 = strdup("");
 +
-+	if (strcmp(pw1, pw2) != 0) {
-+		fprintf(stderr, "Mismatch - password unchanged.\n");
-+		goto out_free;
++		pw2 = get_pass("Retype SMB password:", get_stdin);
++		if (!pw2)
++			pw2 = strdup("");
++
++		if (strcmp(pw1, pw2) != 0) {
++			fprintf(stderr, "Mismatch - password unchanged.\n");
++			goto out_free;
++		}
 +	}
 +
 +	if (found)
