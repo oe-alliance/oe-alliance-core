@@ -7,7 +7,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "1.0"
-PR = "r5"
+PR = "r4"
 
 inherit packagegroup
 
@@ -20,6 +20,7 @@ RDEPENDS_${PN} = "\
     python-gdata \
     minidlna djmount fuse-utils \
     packagegroup-base-smbfs-client \
+    packagegroup-base-smbfs \
     ntfs-3g \
     hddtemp \
     rsync \

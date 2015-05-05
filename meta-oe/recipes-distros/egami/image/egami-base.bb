@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=4d92cd373abda3937c2bc47fbc49d
 ALLOW_EMPTY_${PN} = "1"
 
 PV = "1.0"
-PR = "r16"
+PR = "r15"
 
 inherit packagegroup
 
@@ -18,6 +18,7 @@ RDEPENDS_${PN} = "\
     ntfs-3g \
     hddtemp \
     packagegroup-base-smbfs-client \
+    packagegroup-base-smbfs \
     busybox-cron \
     python-imaging \
     ofgwrite \

@@ -14,6 +14,7 @@ IMAGE_INSTALL = "openhdf-base \
   ${@base_contains("MACHINE_FEATURES", "smallflash", "", \
   " \
   packagegroup-base-smbfs-client \
+  packagegroup-base-smbfs \
   packagegroup-base-nfs \
   ", d)} \
   "
