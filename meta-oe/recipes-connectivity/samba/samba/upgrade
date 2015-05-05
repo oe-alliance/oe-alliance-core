@@ -31,7 +31,7 @@ rm /etc/init.d/samba
 
 for PKG in ${PKGS}
 do
-	opkg --force-reinstall install /media/usb/samba/${PKG}*.ipk
+	opkg --force-reinstall install ${PKG}
 done
 
 update-rc.d -f samba-upgrade remove
