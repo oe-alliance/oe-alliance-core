@@ -7,11 +7,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "1.0"
-<<<<<<< HEAD
-PR = "r15"
-=======
 PR = "r17"
->>>>>>> 3b90c39... [openvix] SAMBA - add server package group.
 
 inherit packagegroup
 
@@ -24,11 +20,8 @@ RDEPENDS_${PN} = "\
     openvix-bootlogo \
     openvix-spinner \
     libcrypto-compat-0.9.8 \
-<<<<<<< HEAD
-=======
     packagegroup-base-smbfs \
     packagegroup-base-smbfs-client \
     packagegroup-base-smbfs-server \
->>>>>>> 3b90c39... [openvix] SAMBA - add server package group.
     "
 
