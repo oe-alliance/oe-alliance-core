@@ -26,6 +26,7 @@ sleep 2
 chattr -i /etc/init.d/samba
 rm /etc/init.d/samba
 
+opkg --force-reinstall install samba-base
 for PKG in ${PKGS}
 do
 	opkg --force-reinstall install ${PKG}
