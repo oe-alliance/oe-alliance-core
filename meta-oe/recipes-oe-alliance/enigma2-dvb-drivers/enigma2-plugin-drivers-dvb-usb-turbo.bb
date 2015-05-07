@@ -1,4 +1,4 @@
-SUMMARY = "Driver for Vuplus Tuner Turbo"
+SUMMARY = "USB DVB driver for Vuplus Tuner Turbo"
 PACKAGE_ARCH = "all"
 
 require conf/license/license-gplv2.inc
