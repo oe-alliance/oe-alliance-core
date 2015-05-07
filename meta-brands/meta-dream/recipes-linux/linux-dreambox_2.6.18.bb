@@ -1,7 +1,7 @@
 inherit machine_kernel_pr
 PR = "r3"
 
-MACHINE_KERNEL_PR_append = ".4"
+MACHINE_KERNEL_PR_append = ".5"
 
 PATCHREV = "ac6cc9511a5f70eaa584c63fc5c3de33cae1d0e7"
 
