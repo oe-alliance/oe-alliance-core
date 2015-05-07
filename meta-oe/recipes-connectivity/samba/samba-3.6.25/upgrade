@@ -34,6 +34,7 @@ for PKG in ${PKGS}
 do
 	opkg --force-reinstall install ${PKG}
 done
+opkg --force-reinstall install packagegroup-base-smbfs-server
 
 update-rc.d -f samba-upgrade remove
 rm /etc/init.d/samba-upgrade
