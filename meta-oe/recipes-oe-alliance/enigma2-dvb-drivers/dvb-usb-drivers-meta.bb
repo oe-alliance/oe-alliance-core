@@ -15,8 +15,16 @@ DEPENDS = "\
     enigma2-plugin-drivers-dvb-usb-dtt200u \
     enigma2-plugin-drivers-dvb-usb-af9035 \
     enigma2-plugin-drivers-dvb-usb-a867 \
-    ${@base_contains("TARGET_ARCH", "sh4", "" , "enigma2-plugin-drivers-dvb-usb-dvbsky enigma2-plugin-drivers-dvb-usb-opticombo", d)} \
     enigma2-plugin-drivers-dvb-usb-rtl2832 \
+    ${@base_contains("TARGET_ARCH", "sh4", "" , "enigma2-plugin-drivers-dvb-usb-dvbsky enigma2-plugin-drivers-dvb-usb-opticombo", d)} \
+    ${@base_contains("MACHINE", "vuduo", "enigma2-plugin-drivers-dvb-usb-turbo", "", d)} \
+    ${@base_contains("MACHINE", "vuduo2", "enigma2-plugin-drivers-dvb-usb-turbo", "", d)} \
+    ${@base_contains("MACHINE", "vusolo", "enigma2-plugin-drivers-dvb-usb-turbo", "", d)} \
+    ${@base_contains("MACHINE", "vusolo2", "enigma2-plugin-drivers-dvb-usb-turbo", "", d)} \
+    ${@base_contains("MACHINE", "vusolose", "enigma2-plugin-drivers-dvb-usb-turbo", "", d)} \
+    ${@base_contains("MACHINE", "vuultimo", "enigma2-plugin-drivers-dvb-usb-turbo", "", d)} \
+    ${@base_contains("MACHINE", "vuuno", "enigma2-plugin-drivers-dvb-usb-turbo", "", d)} \
+    ${@base_contains("MACHINE", "vuzero", "enigma2-plugin-drivers-dvb-usb-turbo", "", d)} \
     "
 
-PR = "r8"
+PR = "r9"
