@@ -26,6 +26,14 @@ DEPENDS = "\
     enigma2-plugin-drivers-network-usb-rt5572 \
     enigma2-plugin-drivers-network-usb-r8712u \
     enigma2-plugin-drivers-network-usb-rtl8192cu \
+    ${@base_contains("MACHINE", "vuduo", "enigma2-plugin-drivers-network-usb-turbo", "", d)} \
+    ${@base_contains("MACHINE", "vuduo2", "enigma2-plugin-drivers-network-usb-turbo", "", d)} \
+    ${@base_contains("MACHINE", "vusolo", "enigma2-plugin-drivers-network-usb-turbo", "", d)} \
+    ${@base_contains("MACHINE", "vusolo2", "enigma2-plugin-drivers-network-usb-turbo", "", d)} \
+    ${@base_contains("MACHINE", "vusolose", "enigma2-plugin-drivers-network-usb-turbo", "", d)} \
+    ${@base_contains("MACHINE", "vuultimo", "enigma2-plugin-drivers-network-usb-turbo", "", d)} \
+    ${@base_contains("MACHINE", "vuuno", "enigma2-plugin-drivers-network-usb-turbo", "", d)} \
+    ${@base_contains("MACHINE", "vuzero", "enigma2-plugin-drivers-network-usb-turbo", "", d)} \
     "
 
-PR = "r15"
+PR = "r16"
