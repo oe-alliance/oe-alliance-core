@@ -44,6 +44,4 @@ RDEPENDS_packagegroup-base-appletalk = "\
 
 RDEPENDS_packagegroup-base-nfs += "\
     nfs-utils \
-    nfs-utils-client \
-    portmap \
-    portmap-utils"
+    nfs-utils-client"
