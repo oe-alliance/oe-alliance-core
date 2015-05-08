@@ -6,8 +6,7 @@ DEPENDS += "gstreamer1.0-plugins-base bzip2"
 
 S = "${WORKDIR}/gst-plugins-bad-${PV}"
 
-inherit gettext
-
+inherit gettext bluetooth
 
 PACKAGECONFIG ?= " \
     ${@bb.utils.contains('DISTRO_FEATURES', 'wayland', 'wayland', '', d)} \
