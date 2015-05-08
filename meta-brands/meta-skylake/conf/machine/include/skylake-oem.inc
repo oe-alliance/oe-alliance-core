@@ -9,6 +9,7 @@ ${@base_contains('MACHINEBUILD', 'mutant1100', 'HD1100' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mutant500c', 'HD500C' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mutant1200', 'HD1200' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'quadbox2400', 'QuadBox HD2400' , '', d)}\
+${@base_contains('MACHINEBUILD', 'vizyonvita', 'Vita' , '', d)}\
 "
 
 MACHINE_BRAND = "\
@@ -17,6 +18,7 @@ ${@base_contains('MACHINEBUILD', 'mutant1100', 'Mut@nt' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mutant500c', 'Mut@nt' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mutant1200', 'Mut@nt' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'quadbox2400', 'AX' , '', d)}\
+${@base_contains('MACHINEBUILD', 'vizyonvita', 'Vizyon' , '', d)}\
 "
 
 IMAGEDIR ?= "\
@@ -25,6 +27,7 @@ ${@base_contains('MACHINEBUILD', 'mutant1100', 'hd1100' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mutant500c', 'hd500c' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mutant1200', 'hd1200' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'quadbox2400', 'hd2400' , '', d)}\
+${@base_contains('MACHINEBUILD', 'vizyonvita', 'hd1100' , '', d)}\
 "
 
 MTD_KERNEL = "mtd1"
