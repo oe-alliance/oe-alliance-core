@@ -1,6 +1,6 @@
 require vuplus-tuner-turbo.inc
 
-COMPATIBLE_MACHINE = "^(bm750|vuuno|vuultimo)$"
+COMPATIBLE_MACHINE = "^(vuduo|vuuno|vuultimo)$"
 
 KV = "3.9.6_R1"
 
