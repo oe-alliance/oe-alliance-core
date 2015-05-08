@@ -110,16 +110,16 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-picons-100x60.reflection-black_2015-04-24--11-52-32_all \
     enigma2-plugin-picons-100x60.transparent-black_2015-04-24--11-52-32_all \
     enigma2-plugin-picons-100x60.transparent-white_2015-04-24--11-52-32_all \
-    enigma2-plugin-picons-100x60.white-black_2015-04-24--11-52-32_all \
-    enigma2-plugin-picons-220x132.black-white_2015-04-24--11-52-32_all \
-    enigma2-plugin-picons-220x132.blue-black_2015-04-24--11-52-32_all \
-    enigma2-plugin-picons-220x132.reflection-black_2015-04-24--11-52-32_all \
-    enigma2-plugin-picons-220x132.transparent-black_2015-04-24--11-52-32_all \
-    enigma2-plugin-picons-220x132.transparent-black-nopadding_2015-04-24--11-52-32_all \
-    enigma2-plugin-picons-220x132.transparent-white_2015-04-24--11-52-32_all \
-    enigma2-plugin-picons-220x132.transparent-white-nopadding_2015-04-24--11-52-32_all \
-    enigma2-plugin-picons-220x132.white-black_2015-04-24--11-52-32_all \
-    enigma2-plugin-picons-400x240.transparent-white-nopadding_2015-04-24--11-52-32_all \
+    enigma2-plugin-picons-100x60.white-black_2015-04-24--11-52-32_all.ipk \
+    enigma2-plugin-picons-220x132.black-white_2015-04-24--11-52-32_all.ipk \
+    enigma2-plugin-picons-220x132.blue-black_2015-04-24--11-52-32_all.ipk \
+    enigma2-plugin-picons-220x132.reflection-black_2015-04-24--11-52-32_all.ipk \
+    enigma2-plugin-picons-220x132.transparent-black_2015-04-24--11-52-32_all.ipk \
+    enigma2-plugin-picons-220x132.transparent-black-nopadding_2015-04-24--11-52-32_all.ipk \
+    enigma2-plugin-picons-220x132.transparent-white_2015-04-24--11-52-32_all.ipk \
+    enigma2-plugin-picons-220x132.transparent-white-nopadding_2015-04-24--11-52-32_all.ipk \
+    enigma2-plugin-picons-220x132.white-black_2015-04-24--11-52-32_all.ipk \
+    enigma2-plugin-picons-400x240.transparent-white-nopadding_2015-04-24--11-52-32_all.ipk \
    "
 
 #     Install any packages t_append =hat are only For this machines feed here, uncomment the line below and change as required
