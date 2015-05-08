@@ -3,12 +3,12 @@ SECTION = "kernel"
 LICENSE = "GPLv2"
 PR = "r0"
 
-KERNEL_RELEASE = "4.0.0"
+KERNEL_RELEASE = "4.0.1"
 
 inherit machine_kernel_pr
 
-SRC_URI[md5sum] = "fe703faca8ba14616010cb6b49b9ae4d"
-SRC_URI[sha256sum] = "fa242822f9fd85e28843fe1a1e37a98be244fdfc6109eeab451536b3a7966b6a"
+SRC_URI[md5sum] = "c274792d088cd7bbfe7fe5a76bd798d8"
+SRC_URI[sha256sum] = "6fd63aedd69b3b3b28554cabf71a9efcf05f10758db3d5b99cfb0580e3cde24c"
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
@@ -24,6 +24,8 @@ RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
 
 SRC_URI += "http://downloads.mutant-digital.net/linux-${PV}.tar.gz \
 	file://defconfig \
+	file://add-dmx-source-timecode.patch \
+	file://iosched-slice_idle-1.patch \
 	"
 
 S = "${WORKDIR}/linux-${PV}"
