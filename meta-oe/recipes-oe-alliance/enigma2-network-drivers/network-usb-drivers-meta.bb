@@ -28,4 +28,4 @@ DEPENDS = "\
     enigma2-plugin-drivers-network-usb-rtl8192cu \
     "
 
-PR = "r15"
+PR = "r17"

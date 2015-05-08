@@ -1,5 +1,17 @@
+From ff804bbbe389e1770251b73272952cbf464ed61c Mon Sep 17 00:00:00 2001
+From: Captain <captain.onboard@web.de>
+Date: Mon, 4 May 2015 17:32:27 +0200
+Subject: [PATCH] dvbmediasink_sh4_fix
+
+---
+ gstdvbaudiosink.c | 65 +++++++++++++++++++++++++++++++++++++++++++++++++++---
+ gstdvbaudiosink.h |  2 ++
+ gstdvbvideosink.c | 66 +++++++++++++++++++++++++++++++++++++++++++++++++++++--
+ gstdvbvideosink.h |  2 ++
+ 4 files changed, 130 insertions(+), 5 deletions(-)
+
 diff --git a/gstdvbaudiosink.c b/gstdvbaudiosink.c
-index d918be8..44e10b3 100644
+index 271e9b9..ccbf266 100644
 --- a/gstdvbaudiosink.c
 +++ b/gstdvbaudiosink.c
 @@ -74,6 +74,10 @@
@@ -13,7 +25,7 @@ index d918be8..44e10b3 100644
  #include <gst/gst.h>
  #include <gst/audio/audio.h>
  #include <gst/base/gstbasesink.h>
-@@ -177,6 +181,36 @@ GST_STATIC_PAD_TEMPLATE(
+@@ -191,6 +195,36 @@ GST_STATIC_PAD_TEMPLATE(
  	)
  );
  
@@ -50,7 +62,7 @@ index d918be8..44e10b3 100644
  static void gst_dvbaudiosink_init(GstDVBAudioSink *self);
  
  #define DEBUG_INIT \
-@@ -257,6 +291,11 @@ static void gst_dvbaudiosink_init(GstDVBAudioSink *self)
+@@ -275,6 +309,11 @@ static void gst_dvbaudiosink_init(GstDVBAudioSink *self)
  	self->unlockfd[0] = self->unlockfd[1] = -1;
  	self->rate = 1.0;
  	self->timestamp = GST_CLOCK_TIME_NONE;
@@ -62,7 +74,7 @@ index d918be8..44e10b3 100644
  
  	gst_base_sink_set_sync(GST_BASE_SINK(self), FALSE);
  	gst_base_sink_set_async_enabled(GST_BASE_SINK(self), TRUE);
-@@ -683,11 +722,26 @@ static gboolean gst_dvbaudiosink_set_caps(GstBaseSink *basesink, GstCaps *caps)
+@@ -700,11 +739,26 @@ static gboolean gst_dvbaudiosink_set_caps(GstBaseSink *basesink, GstCaps *caps)
  		if (self->fd >= 0) ioctl(self->fd, AUDIO_STOP, 0);
  		self->playing = FALSE;
  	}
@@ -92,7 +104,7 @@ index d918be8..44e10b3 100644
  	if (self->fd >= 0) ioctl(self->fd, AUDIO_PLAY);
  	self->playing = TRUE;
  
-@@ -731,6 +785,11 @@ static gboolean gst_dvbaudiosink_event(GstBaseSink *sink, GstEvent *event)
+@@ -748,6 +802,11 @@ static gboolean gst_dvbaudiosink_event(GstBaseSink *sink, GstEvent *event)
  	{
  		gboolean pass_eos = FALSE;
  		struct pollfd pfd[2];
@@ -118,7 +130,7 @@ index dfce273..d4fe562 100644
  };
  
 diff --git a/gstdvbvideosink.c b/gstdvbvideosink.c
-index 02acaa3..67d9753 100644
+index 58b1d67..ce44ac5 100644
 --- a/gstdvbvideosink.c
 +++ b/gstdvbvideosink.c
 @@ -73,6 +73,10 @@
@@ -172,10 +184,10 @@ index 02acaa3..67d9753 100644
 +	return VIDEO_ENCODING_UNKNOWN;
 +}
 +
- #if GST_VERSION_MAJOR < 1
- static void gst_dvbvideosink_init(GstDVBVideoSink *self, GstDVBVideoSinkClass *gclass);
- #else
-@@ -349,6 +389,11 @@ static void gst_dvbvideosink_init(GstDVBVideoSink *self)
+ static void gst_dvbvideosink_init(GstDVBVideoSink *self);
+ 
+ #define DEBUG_INIT \
+@@ -322,6 +362,11 @@ static void gst_dvbvideosink_init(GstDVBVideoSink *self)
  	self->unlockfd[0] = self->unlockfd[1] = -1;
  	self->saved_fallback_framerate[0] = 0;
  	self->rate = 1.0;
@@ -183,11 +195,11 @@ index 02acaa3..67d9753 100644
 +	self->use_set_encoding      = TRUE;
 +#else
 +	self->use_set_encoding      = FALSE;
-+#endif	
++#endif
  
  	gst_base_sink_set_sync(GST_BASE_SINK(self), FALSE);
  	gst_base_sink_set_async_enabled(GST_BASE_SINK(self), TRUE);
-@@ -425,6 +470,10 @@ static gboolean gst_dvbvideosink_event(GstBaseSink *sink, GstEvent *event)
+@@ -419,6 +464,10 @@ static gboolean gst_dvbvideosink_event(GstBaseSink *sink, GstEvent *event)
  		pfd[1].fd = self->fd;
  		pfd[1].events = POLLIN;
  
@@ -195,16 +207,17 @@ index 02acaa3..67d9753 100644
 +		ioctl(self->fd, VIDEO_FLUSH, 1/*NONBLOCK*/); //Notify the player that no addionional data will be injected
 +#endif
 +
- #if GST_VERSION_MAJOR < 1
- 		GST_PAD_PREROLL_UNLOCK(sink->sinkpad);
- #else
-@@ -1631,9 +1680,22 @@ static gboolean gst_dvbvideosink_set_caps(GstBaseSink *basesink, GstCaps *caps)
+ 		GST_BASE_SINK_PREROLL_UNLOCK(sink);
+ 		while (1)
+ 		{
+@@ -1511,9 +1560,22 @@ static gboolean gst_dvbvideosink_set_caps(GstBaseSink *basesink, GstCaps *caps)
  			if (self->fd >= 0) ioctl(self->fd, VIDEO_STOP, 0);
  			self->playing = FALSE;
  		}
 -		if (self->fd < 0 || ioctl(self->fd, VIDEO_SET_STREAMTYPE, self->stream_type) < 0)
 +		if (self->use_set_encoding)
-+		{
+ 		{
+-			GST_ELEMENT_ERROR(self, STREAM, CODEC_NOT_FOUND, (NULL), ("hardware decoder can't handle streamtype %i", self->stream_type));
 +#ifdef VIDEO_SET_ENCODING
 +			unsigned int encoding = streamtype_to_encoding(self->stream_type);
 +			if (self->fd < 0 || ioctl(self->fd, VIDEO_SET_ENCODING, encoding) < 0)
@@ -214,8 +227,7 @@ index 02acaa3..67d9753 100644
 +#endif
 +		}
 +		else
- 		{
--			GST_ELEMENT_ERROR(self, STREAM, CODEC_NOT_FOUND, (NULL), ("hardware decoder can't handle streamtype %i", self->stream_type));
++		{
 +			if (self->fd < 0 || ioctl(self->fd, VIDEO_SET_STREAMTYPE, self->stream_type) < 0)
 +			{
 +				GST_ELEMENT_ERROR(self, STREAM, CODEC_NOT_FOUND, (NULL), ("hardware decoder can't handle streamtype %i", self->stream_type));
@@ -236,3 +248,6 @@ index 3b7b549..fb0b9b5 100644
  	queue_entry_t *queue;
  };
  
+-- 
+1.9.5.msysgit.0
+
