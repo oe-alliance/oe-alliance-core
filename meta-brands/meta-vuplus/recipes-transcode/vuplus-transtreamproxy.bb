@@ -9,12 +9,13 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"
-PR = "r13"
+PR = "r14"
 
 PROVIDES += "virtual/transtreamproxy"
 RPROVIDES_${PN} += "virtual/transtreamproxy"
 
-DEPENDS = "boost"
+DEPENDS = "boost virtual/inetd"
+RDEPENDS_${PN} += "virtual/inetd"
 
 SRC_URI = "git://code.vuplus.com/git/filestreamproxy.git;protocol=http;branch=transtreamproxy"
 
