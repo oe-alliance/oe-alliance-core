@@ -1,0 +1,1 @@
+DEPENDS_append_sh4 = " stlirc"
