@@ -9,7 +9,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "1.0"
-PR = "r59"
+PR = "r60"
 
 DEPENDS = "enigma2-plugin-drivers-usbserial"
 RECOMMENDS = "enigma2-plugin-extensions-et-livestream"
@@ -57,7 +57,7 @@ RDEPENDS_${PN} = " \
     ${@base_contains("MACHINE_FEATURES", "legacykernel", "" , "evtest strace", d)} \
     exfat-utils \
     fuse-exfat \
-    gdb \
+    ${@base_contains("TARGET_ARCH", "sh4", "" , "gdb", d)} \
     hddtemp \
     hdparm \
     htop \
