@@ -44,7 +44,7 @@ PARALLEL_MAKE = ""
 
 INITSCRIPT_PACKAGES = "${PN} ${PN}-client"
 INITSCRIPT_NAME = "nfsserver"
-INITSCRIPT_PARAMS = "defaults 11"
+INITSCRIPT_PARAMS = "defaults 13"
 INITSCRIPT_NAME_${PN}-client = "nfscommon"
 INITSCRIPT_PARAMS_${PN}-client = "defaults 19 11"
 
