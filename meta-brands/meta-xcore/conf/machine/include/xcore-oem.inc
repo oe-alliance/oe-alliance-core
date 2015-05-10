@@ -62,7 +62,6 @@ PREFERRED_PROVIDER_virtual/blindscan-dvbc = "xcore-blindscan-utils"
 
 PREFERRED_PROVIDER_virtual/kernel = "linux-xcore"
 
-KERNEL_IMAGETYPE = "vmlinux"
 KERNEL_OUTPUT = "${KERNEL_IMAGETYPE}"
 KERNEL_CONSOLE = "ttyS0,115200n8"
 

@@ -2,6 +2,7 @@ SUMMARY = "Linux kernel for ${MACHINE}"
 SECTION = "kernel"
 LICENSE = "GPLv2"
 
+
 MACHINE_KERNEL_PR_append = ".0"
 
 inherit kernel machine_kernel_pr
@@ -28,7 +29,6 @@ SRC_URI += "http://source.mynonpublic.com/xcore/linux-brcmstb-${PV}-${SRCDATE}.t
 
 S = "${WORKDIR}/linux-brcmstb-${PV}"
 
-inherit kernel
 
 export OS = "Linux"
 KERNEL_OBJECT_SUFFIX = "ko"
@@ -43,17 +43,16 @@ kernel_do_install_append() {
     install -m 0755 ${KERNEL_OUTPUT} ${D}${KERNEL_IMAGEDEST}
 }
 
-MTD_DEVICE_inihdx = "mtd1"
-MTD_DEVICE_mbtwin = "mtd1"
-MTD_DEVICE_bcm7358 = "mtd1"
-MTD_DEVICE_inihde = "mtd2"
-MTD_DEVICE_vp7358 = "mtd1"
+do_configure_prepend() {
+    oe_machinstall -m 0644 ${WORKDIR}/defconfig ${S}/.config
+    oe_runmake oldconfig
+}
 
 pkg_postinst_kernel-image () {
     if [ "x$D" == "x" ]; then
         if [ -f /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz ] ; then
-            flash_erase /dev/${MTD_DEVICE} 0 0
-            nandwrite -p /dev/${MTD_DEVICE} /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz
+            flash_erase /dev/${MTD_KERNEL} 0 0
+            nandwrite -p /dev/${MTD_KERNEL} /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz
             rm -f /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz
         fi
     fi
