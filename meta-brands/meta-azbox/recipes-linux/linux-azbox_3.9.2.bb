@@ -91,3 +91,6 @@ do_install_append () {
 	install -m 0644 ${S}/arch/mips/boot/zbimage-linux-xload ${D}/boot/zbimage-linux-xload
 
 }
+
+do_package_qa() {
+}
