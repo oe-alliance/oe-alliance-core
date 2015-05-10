@@ -4387,7 +4387,7 @@ diff -Naur linux-3.9.2.ref/arch/mips/include/asm/tango3/emhwlib_dram_tango3.h li
 +++ linux-3.9.2/arch/mips/include/asm/tango3/emhwlib_dram_tango3.h	2013-07-23 19:31:23.000000000 +0200
 @@ -0,0 +1,48 @@
 +/*****************************************
-+ Copyright © 2004-2005
++ Copyright Â© 2004-2005
 + Sigma Designs, Inc. 
 + *****************************************/
 +/**
