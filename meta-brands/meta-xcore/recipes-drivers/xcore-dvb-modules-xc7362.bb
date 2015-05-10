@@ -1,5 +1,6 @@
 KV = "4.0.0"
 SRCDATE = "20150508"
+KOFILES = "brcmstb ci fts260 mn88472"
 
 require xcore-dvb-modules.inc
 SRC_URI[md5sum] = "472c2a1e26f7c2b7a5abac44c4e81049"

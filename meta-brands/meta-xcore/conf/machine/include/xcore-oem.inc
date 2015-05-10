@@ -5,18 +5,34 @@ BRAND_OEM = "xcore"
 
 MACHINE_NAME = "\
 ${@base_contains('MACHINEBUILD', 'tomcat', 'Tomcat' , '', d)}\
+${@base_contains('MACHINEBUILD', 'vp7358ci', '7358ci' , '', d)}\
+${@base_contains('MACHINEBUILD', 'bcm7358', '7358' , '', d)}\
 "
 
 MACHINE_BRAND = "\
 ${@base_contains('MACHINEBUILD', 'tomcat', 'XCORE' , '', d)}\
+${@base_contains('MACHINEBUILD', 'vp7358ci', 'Sample2' , '', d)}\
+${@base_contains('MACHINEBUILD', 'bcm7358', 'Sample1' , '', d)}\
 "
 
 IMAGEDIR ?= "\
 ${@base_contains('MACHINEBUILD', 'tomcat', 'firmware' , '', d)}\
+${@base_contains('MACHINEBUILD', 'vp7358ci', 'vp7358ci' , '', d)}\
+${@base_contains('MACHINEBUILD', 'bcm7358', 'bcm7358' , '', d)}\
 "
 
-MTD_KERNEL = "mtd0"
-MTD_ROOTFS = "mtd2"
+MTD_KERNEL = "\
+${@base_contains('MACHINEBUILD', 'vp7358ci', 'mtd2' , '', d)}\
+${@base_contains('MACHINEBUILD', 'bcm7358', 'mtd2' , '', d)}\
+${@base_contains('MACHINEBUILD', 'tomcat', 'mtd0' , '', d)}\
+"
+
+MTD_ROOTFS = "\
+${@base_contains('MACHINEBUILD', 'vp7358ci', 'mtd3' , '', d)}\
+${@base_contains('MACHINEBUILD', 'bcm7358', 'mtd3' , '', d)}\
+${@base_contains('MACHINEBUILD', 'tomcat', 'mtd2' , '', d)}\
+"
+
 KERNEL_FILE = "kernel.bin"
 ROOTFS_FILE = "rootfs.bin"
 
@@ -26,15 +42,12 @@ MACHINE_ESSENTIAL_EXTRA_RDEPENDS = "\
 
 DVBPROVIDER = "kernel"
 
-MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS = "\
+MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS += " \
     kernel-module-cdfs \
-    kernel-module-hci-uart \
     "
 
-MACHINE_EXTRA_RRECOMMENDS = " \
+MACHINE_EXTRA_RRECOMMENDS += " \
     gst-plugin-dvbmediasink \
-    firmware-rtl8723b \
-    bluez-hcitools \
     "
 
 include conf/machine/include/autoload-filesystems.inc
@@ -60,20 +73,7 @@ IMAGE_CMD_ubi_prepend = " \
     rm -rf ${IMAGE_ROOTFS}/tmp/*; \
     "
 
-IMAGE_CMD_ubi_append = " \
-    mkdir -p ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}; \
-    cp ${DEPLOY_DIR_IMAGE}/splash.bin ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/splash.bin; \
-    mv ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.ubi ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/${ROOTFS_FILE}; \
-    gzip -9c ${DEPLOY_DIR_IMAGE}/vmlinux-${MACHINE}.bin > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/${KERNEL_FILE}; \
-    echo ${DISTRO_NAME}-${DISTRO_VERSION}.${BUILD_VERSION} > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/imageversion; \
-    echo "rename this file to 'force' to force an update without confirmation" > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/noforce; \
-    cd ${DEPLOY_DIR_IMAGE}; \
-    zip ${IMAGE_NAME}_usb.zip ${IMAGEDIR}/*; \
-    rm -f ${DEPLOY_DIR_IMAGE}/*.ubifs; \
-    rm -Rf ${IMAGEDIR}; \
-    "
-
-MACHINE_FEATURES += "alsa wifi 3dtv switchoff hdmicec bootsplash omb"
+MACHINE_FEATURES += "alsa wifi 3dtv switchoff hdmicec bootsplash omb boxmodel"
 
 BOOTLOGO_FILENAME = "splash.bin"
 
