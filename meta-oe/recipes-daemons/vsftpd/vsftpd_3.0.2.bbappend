@@ -2,7 +2,6 @@ SRC_URI += "file://vsftpd.chroot_list \
             file://init.vsftpd \
             file://ftp.service \
            "
-PR .= ".1"
 
 inherit update-rc.d
 
