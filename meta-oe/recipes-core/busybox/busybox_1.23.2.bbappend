@@ -1,4 +1,4 @@
-PR .= ".17"
+PR .= ".18"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 SRC_URI += " \
@@ -7,6 +7,7 @@ SRC_URI += " \
             file://telnetd \
             file://inetd \
             file://inetd.conf \
+            file://vi.sh \
             "
 
 # we do not really depend on mtd-utils, but as mtd-utils replaces 
@@ -51,12 +52,17 @@ do_install_append() {
     fi
     install -d ${D}${sysconfdir}/mdev
     install -m 0755 ${WORKDIR}/mdev-mount.sh ${D}${sysconfdir}/mdev
+    install -m 0755 ${WORKDIR}/vi.sh ${D}${base_bindir}/vi.sh
 }
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/${P}:"
 
 pkg_postinst_${PN}_append () {
-	update-alternatives --install /bin/editor editor /bin/vi 50
+	update-alternatives --install /bin/editor editor /bin/vi.sh 50
+}
+
+pkg_postrm_${PN}_append () {
+	update-alternatives --remove editor /bin/vi.sh
 }
 
 pkg_preinst_${PN}-telnetd_prepend () {
