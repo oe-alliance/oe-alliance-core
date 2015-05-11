@@ -32,8 +32,8 @@ S = "${WORKDIR}/linux-brcmstb-${PV}"
 
 export OS = "Linux"
 KERNEL_OBJECT_SUFFIX = "ko"
-KERNEL_OUTPUT = "vmlinuz"
-KERNEL_IMAGETYPE = "vmlinuz"
+KERNEL_OUTPUT = "vmlinux"
+KERNEL_IMAGETYPE = "vmlinux"
 KERNEL_IMAGEDEST = "/tmp"
 
 FILES_kernel-image = "${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}"
