@@ -72,7 +72,7 @@ IMAGE_CMD_ubi_prepend = " \
     rm -rf ${IMAGE_ROOTFS}/tmp/*; \
     "
 
-MACHINE_FEATURES += "alsa wifi 3dtv switchoff hdmicec bootsplash omb boxmodel"
+MACHINE_FEATURES += "alsa wifi 3dtv switchoff hdmicec bootsplash omb"
 
 BOOTLOGO_FILENAME = "splash.bin"
 
