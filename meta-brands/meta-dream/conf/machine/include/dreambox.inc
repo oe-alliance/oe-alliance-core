@@ -16,17 +16,17 @@ MACHINE_EXTRA_RRECOMMENDS = " \
     gst-plugin-dtsdownmix \
     ntfs-3g \
     kernel-module-cifs \
-    kernel-module-autofs4 \	
+    kernel-module-autofs4 \
     kernel-module-hmac \
     kernel-module-md4 \
     kernel-module-ecb \
     tpmd \
     kernel-module-fuse \
     kernel-module-nfsd \
-    kernel-module-exportfs \	
+    kernel-module-exportfs \
     "
     
-MACHINE_FEATURES += "dreambox alsa usbhost 3dtv switchoff tpm"
+MACHINE_FEATURES += "dreambox alsa usbhost 3dtv switchoff tpm blindscan-dvbs"
 # Add "dreambox" override for recipes
 MACHINEOVERRIDES .= ":dreambox"
 
