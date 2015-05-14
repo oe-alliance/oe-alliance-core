@@ -17,7 +17,7 @@ MACHINE_EXTRA_RRECOMMENDS = " \
     gstreamer1.0-plugin-dvbmediasink \
     ntfs-3g \
     kernel-module-cifs \
-    kernel-module-autofs4 \	
+    kernel-module-autofs4 \
     kernel-module-hmac \
     kernel-module-md4 \
     kernel-module-ecb \
@@ -29,7 +29,7 @@ MACHINE_EXTRA_RRECOMMENDS = " \
     kernel-module-snd-pcm-oss \
     "
     
-MACHINE_FEATURES += "dreambox alsa usbhost 3dtv switchoff tpm"
+MACHINE_FEATURES += "dreambox alsa usbhost 3dtv switchoff tpm blindscan-dvbs"
 # Add "dreambox" override for recipes
 MACHINEOVERRIDES .= ":dreambox"
 
