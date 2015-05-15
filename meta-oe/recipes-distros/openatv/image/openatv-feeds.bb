@@ -7,7 +7,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PV = "1.0"
-PR = "r18"
+PR = "r19"
 
 inherit packagegroup
 
@@ -31,3 +31,13 @@ RRECOMMENDS_${PN} = "\
     enigma2-plugin-extensions-specialjump \
     ${@base_contains("MACHINE_BRAND", "AZBOX", "enigma2-plugin-extensions-azplay enigma2-plugin-extensions-aziptv", "", d)} \
     "
+
+RRECOMMENDS_${PN}_append_gb800solo = "enigma2-plugin-extensions-gbipboxclient"
+RRECOMMENDS_${PN}_append_gb800se = "enigma2-plugin-extensions-gbipboxclient"
+RRECOMMENDS_${PN}_append_gb800ue = "enigma2-plugin-extensions-gbipboxclient"
+RRECOMMENDS_${PN}_append_gb800seplus = "enigma2-plugin-extensions-gbipboxclient"
+RRECOMMENDS_${PN}_append_gb800ueplus = "enigma2-plugin-extensions-gbipboxclient"
+RRECOMMENDS_${PN}_append_gbultraue = "enigma2-plugin-extensions-gbipboxclient"
+RRECOMMENDS_${PN}_append_gbx1 = "enigma2-plugin-extensions-gbipboxclient"
+RRECOMMENDS_${PN}_append_gbquad = "enigma2-plugin-extensions-gbipboxclient"
+RRECOMMENDS_${PN}_append_gbquadplus = "enigma2-plugin-extensions-gbipboxclient"
