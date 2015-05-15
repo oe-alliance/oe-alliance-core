@@ -81,6 +81,9 @@ IMAGE_CMD_ubi_append = " \
     cd ${DEPLOY_DIR_IMAGE}; \
     zip ${IMAGE_NAME}_usb.zip ${IMAGEDIR}/*; \
     rm -f ${DEPLOY_DIR_IMAGE}/*.ubifs; \
+    rm -f ${DEPLOY_DIR_IMAGE}/*.manifest; \
+    rm -f ${DEPLOY_DIR_IMAGE}/.ubifs; \
+    rm -f ${DEPLOY_DIR_IMAGE}/.manifest; \
     rm -Rf ${IMAGEDIR}; \
     "
 
@@ -97,6 +100,9 @@ IMAGE_CMD_tar_prepend = " \
 IMAGE_CMD_tar_append = "; \
     tar -rf ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.tar -C ${DEPLOY_DIR_IMAGE} boot; \
     rm -Rf ${DEPLOY_DIR_IMAGE}/boot; \
+    rm -f ${DEPLOY_DIR_IMAGE}/*.manifest; \
+    rm -f ${DEPLOY_DIR_IMAGE}/.manifest; \
+    rm -f ${DEPLOY_DIR_IMAGE}/.tar.gz; \
     "
 
 MACHINE_FEATURES += "3dtv alsa hdmicec switchoff wifi bootsplash omb"
