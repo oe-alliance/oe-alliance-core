@@ -44,13 +44,6 @@ case "$ACTION" in
 		if [ "${DEVBASE}" == "mmc" ] ; then
 			DEVBASE="mmcblk0"
 		fi
-		boxtype=`cat /etc/model`
-		if [ "$boxtype&&" == "hd2400&&" ] && [ "${DEVBASE}" == "sdb" ] && [ -d /media/hdd ]; then
-				# workaround intern/extern detection
-				umount /media/hdd
-				rmdir -rf /media/hdd
-				touch /tmp/sda
-		fi
 		# first allow fstab to determine the mountpoint
 		if ! mount /dev/$MDEV > /dev/null 2>&1 ; then
 			# no fstab entry, use automatic mountpoint
@@ -115,14 +108,6 @@ case "$ACTION" in
 			fi
 			if ! mount -t auto /dev/$MDEV "${MOUNTPOINT}" ; then
 				rmdir "${MOUNTPOINT}"
-			fi
-			boxtype=`cat /etc/model`
-			if [ "$boxtype&&" == "hd2400&&" ] && [ "${MDEV}" == "sdb1" ] && [ -f "/tmp/sda" ]; then
-				mkdir -p /media/usb
-				if ! mount -t auto /dev/sda "/media/usb" ; then
-					rmdir "/media/usb"
-				fi
-				rm /tmp/sda
 			fi
 		fi
 		;;
