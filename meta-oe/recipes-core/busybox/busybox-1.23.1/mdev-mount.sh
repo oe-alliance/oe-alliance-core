@@ -53,6 +53,26 @@ case "$ACTION" in
 			if [ "${REMOVABLE}" -eq "0" -a $EXTERNAL -eq 0 ] ; then
 				# mount the first non-removable internal device on /media/hdd
 				DEVICETYPE="hdd"
+				# check mount /media/hdd exits but internal hdd now found remount 
+				# the first device to the device name or usb
+				if [ -d /media/hdd ] ; then
+					TEMPDEV=`cat /proc/mounts | grep /media/hdd | cut -d' ' -f 1`
+					TEMPDEV1=`echo ${TEMPDEV} | cut -d'/' -f 3`
+					umount /media/hdd || umount ${TEMPDEV}
+					# Use mkdir as 'atomic' action, failure means someone beat us to the punch
+					MOUNTPOINT="/media/usb"
+					# Remove mountpoint not being used
+					if [ -z "`grep $MOUNTPOINT /proc/mounts`" ] ; then
+						rm -rf $MOUNTPOINT
+					fi
+					if ! mkdir $MOUNTPOINT ; then
+						MOUNTPOINT="/media/$TEMPDEV1"
+						mkdir -p $MOUNTPOINT
+					fi
+					if ! mount -t auto ${TEMPDEV} "${MOUNTPOINT}" ; then
+						rmdir "${MOUNTPOINT}"
+					fi
+				fi
 			else
 				MODEL=`cat /sys/block/$DEVBASE/device/model`
 				MODEL1=`cat /sys/block/$DEVBASE/device/type`
