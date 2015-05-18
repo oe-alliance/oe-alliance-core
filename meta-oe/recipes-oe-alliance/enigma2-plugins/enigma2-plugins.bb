@@ -65,6 +65,7 @@ DEPENDS = "enigma2 \
     python-google-api-client \
     python-httplib2 \
     python-youtube-dl \
+    python-ctypes \
     dvdbackup \
     libcddb \
     nmap \
