@@ -7,21 +7,21 @@ MACHINE_NAME = "\
 ${@base_contains('MACHINEBUILD', 'nano', 'NANO' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'nanoc', 'NANO-C' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'twinboxlcd', 'TWINBOX LCD' , '', d)}\
-${@base_contains('MACHINEBUILD', 'micro', 'Premium Micro' , '', d)}\
+${@base_contains('MACHINEBUILD', 'mbmicro', 'Premium Micro' , '', d)}\
 "
 
 MACHINE_BRAND = "\
 ${@base_contains('MACHINEBUILD', 'nano', 'WWIO' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'nanoc', 'WWIO' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'twinboxlcd', 'RED EAGLE' , '', d)}\
-${@base_contains('MACHINEBUILD', 'micro', 'Miraclebox' , '', d)}\
+${@base_contains('MACHINEBUILD', 'mbmicro', 'Miraclebox' , '', d)}\
 "
 
 IMAGEDIR ?= "\
 ${@base_contains('MACHINEBUILD', 'nano', 'nano' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'nanoc', 'nano' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'twinboxlcd', 'redeagle/twinlcdbox' , '', d)}\
-${@base_contains('MACHINEBUILD', 'micro', 'nano' , '', d)}\
+${@base_contains('MACHINEBUILD', 'mbmicro', 'miraclebox/micro' , '', d)}\
 "
 
 MTD_KERNEL = "mtd1"
