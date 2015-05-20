@@ -20,7 +20,7 @@ ${@base_contains('MACHINEBUILD', 'mbmicro', 'Miraclebox' , '', d)}\
 IMAGEDIR ?= "\
 ${@base_contains('MACHINEBUILD', 'nano', 'nano' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'nanoc', 'nano' , '', d)}\
-${@base_contains('MACHINEBUILD', 'twinboxlcd', 'redeagle/twinlcdbox' , '', d)}\
+${@base_contains('MACHINEBUILD', 'twinboxlcd', 'redeagle/twinboxlcd' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbmicro', 'miraclebox/micro' , '', d)}\
 "
 
