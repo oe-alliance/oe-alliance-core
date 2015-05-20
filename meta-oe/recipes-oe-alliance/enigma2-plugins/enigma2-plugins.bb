@@ -13,7 +13,7 @@ inherit autotools-brokensep gitpkgv pythonnative pkgconfig
 
 PV = "2.0+git${SRCPV}"
 PKGV = "2.0+git${GITPKGV}"
-PR = "r8"
+PR = "r9"
 
 SRC_URI = "${ENIGMA2_PLUGINS_URI} file://pluginnotwanted.patch"
 
@@ -62,6 +62,10 @@ DEPENDS = "enigma2 \
     python-mutagen \
     python-twisted \
     python-daap \
+    python-google-api-client \
+    python-httplib2 \
+    python-youtube-dl \
+    python-ctypes \
     dvdbackup \
     libcddb \
     nmap \

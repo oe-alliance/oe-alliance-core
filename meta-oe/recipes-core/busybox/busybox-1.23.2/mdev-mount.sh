@@ -44,13 +44,6 @@ case "$ACTION" in
 		if [ "${DEVBASE}" == "mmc" ] ; then
 			DEVBASE="mmcblk0"
 		fi
-		boxtype=`cat /etc/model`
-		if [ "$boxtype&&" == "hd2400&&" ] && [ "${DEVBASE}" == "sdb" ] && [ -d /media/hdd ]; then
-				# workaround intern/extern detection
-				umount /media/hdd
-				rmdir -rf /media/hdd
-				touch /tmp/sda
-		fi
 		# first allow fstab to determine the mountpoint
 		if ! mount /dev/$MDEV > /dev/null 2>&1 ; then
 			# no fstab entry, use automatic mountpoint
@@ -60,6 +53,26 @@ case "$ACTION" in
 			if [ "${REMOVABLE}" -eq "0" -a $EXTERNAL -eq 0 ] ; then
 				# mount the first non-removable internal device on /media/hdd
 				DEVICETYPE="hdd"
+				# check mount /media/hdd exits but internal hdd now found remount 
+				# the first device to the device name or usb
+				if [ -d /media/hdd ] ; then
+					TEMPDEV=`cat /proc/mounts | grep /media/hdd | cut -d' ' -f 1`
+					TEMPDEV1=`echo ${TEMPDEV} | cut -d'/' -f 3`
+					umount /media/hdd || umount ${TEMPDEV}
+					# Use mkdir as 'atomic' action, failure means someone beat us to the punch
+					MOUNTPOINT="/media/usb"
+					# Remove mountpoint not being used
+					if [ -z "`grep $MOUNTPOINT /proc/mounts`" ] ; then
+						rm -rf $MOUNTPOINT
+					fi
+					if ! mkdir $MOUNTPOINT ; then
+						MOUNTPOINT="/media/$TEMPDEV1"
+						mkdir -p $MOUNTPOINT
+					fi
+					if ! mount -t auto ${TEMPDEV} "${MOUNTPOINT}" ; then
+						rmdir "${MOUNTPOINT}"
+					fi
+				fi
 			else
 				MODEL=`cat /sys/block/$DEVBASE/device/model`
 				MODEL1=`cat /sys/block/$DEVBASE/device/type`
@@ -115,14 +128,6 @@ case "$ACTION" in
 			fi
 			if ! mount -t auto /dev/$MDEV "${MOUNTPOINT}" ; then
 				rmdir "${MOUNTPOINT}"
-			fi
-			boxtype=`cat /etc/model`
-			if [ "$boxtype&&" == "hd2400&&" ] && [ "${MDEV}" == "sdb1" ] && [ -f "/tmp/sda" ]; then
-				mkdir -p /media/usb
-				if ! mount -t auto /dev/sda "/media/usb" ; then
-					rmdir "/media/usb"
-				fi
-				rm /tmp/sda
 			fi
 		fi
 		;;
