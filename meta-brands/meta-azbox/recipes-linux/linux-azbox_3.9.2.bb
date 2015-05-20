@@ -89,5 +89,9 @@ kernel_do_compile() {
 do_install_append () {
 	install -d ${D}/boot
 	install -m 0644 ${S}/arch/mips/boot/zbimage-linux-xload ${D}/boot/zbimage-linux-xload
+	rm -rf ${S}/usr/src/kernel/initramfs/lib/*.so*
 
+}
+
+do_package_qa() {
 }
