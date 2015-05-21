@@ -5,11 +5,12 @@ LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${KV}/COPYING;md5=d7810fab7487fb0aad
 
 inherit machine_kernel_pr
 
-MACHINE_KERNEL_PR_append = ".3"
-PR = "r4"
+MACHINE_KERNEL_PR_append = ".4"
+PR = "r4.0"
 
 KV = "3.9.2"
-SRC = "2012"
+SRC = "2015"
+SRCREV = "r3"
 SRCDATE = "16092013"
 SRCDATE_azboxme = "14092013"
 SRCDATE_azboxminime = "14092013"
@@ -25,7 +26,7 @@ RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
 ALLOW_EMPTY_kernel-dev = "1"
 
 SRC_URI += "${KERNELORG_MIRROR}/linux/kernel/v3.x/linux-${KV}.tar.bz2;name=azbox-kernel \
-    http://source.mynonpublic.com/${MACHINE}/${MACHINE}-${SRC}.tar.gz;name=azbox-kernel-${MACHINE} \
+    http://source.mynonpublic.com/${MACHINE}/${MACHINE}-${SRC}-${SRCREV}.tar.gz;name=azbox-kernel-${MACHINE} \
     file://defconfig \
     file://genzbf.c \
     file://sigblock.h \
@@ -51,17 +52,16 @@ SRC_URI += "${KERNELORG_MIRROR}/linux/kernel/v3.x/linux-${KV}.tar.bz2;name=azbox
     "
 
 SRC_URI_append_azboxhd = "http://azbox-enigma2-project.googlecode.com/files/initramfs-${MACHINE}-oe-core-${KV}-${SRCDATE}.tar.bz2;name=azbox-initrd-${MACHINE}"
-
 SRC_URI_append_azboxme = "http://azbox-enigma2-project.googlecode.com/files/initramfs-${MACHINE}-oe-core-${KV}-${SRCDATE}.tar.bz2;name=azbox-initrd-${MACHINE}"
-
 SRC_URI_append_azboxminime = "http://azbox-enigma2-project.googlecode.com/files/initramfs-${MACHINE}-oe-core-${KV}-${SRCDATE}.tar.bz2;name=azbox-initrd-${MACHINE}"
 
-SRC_URI[azbox-kernel-azboxhd.md5sum] = "1562f8e4c7648cf0bbc02884373b3cf8"
-SRC_URI[azbox-kernel-azboxhd.sha256sum] = "247c332a9b206531b679a290a4b64d3dee9fb15674f1f2c6623f2567e14bf03a"
-SRC_URI[azbox-kernel-azboxme.md5sum] =  "768a5f7e9ba4e43f2444a705dbb3a843"
-SRC_URI[azbox-kernel-azboxme.sha256sum] =  "57180234a9000a9b94459f245393c5eac616f6a39ee242d5f3135cc8b5124544"
-SRC_URI[azbox-kernel-azboxminime.md5sum] = "6e8682e133f09f78fd25ce0b047dbd8d"
-SRC_URI[azbox-kernel-azboxminime.sha256sum] = "aded3f63e802a283eba52611898f4d9cd52d090bb360a7b362f074cc21a22dd7"
+SRC_URI[azbox-kernel-azboxhd.md5sum] = "e2d40ad97c06e128bdfbe376450e32bc"
+SRC_URI[azbox-kernel-azboxhd.sha256sum] = "fe5ed2501c1bfd4a226796c0e14548d279756c1c2046394a2fc412f327fc2500"
+SRC_URI[azbox-kernel-azboxme.md5sum] =  "e34270fce1a3d6b80f22d0e0bbb522bb"
+SRC_URI[azbox-kernel-azboxme.sha256sum] =  "4d098845bbf596cdec8042c0b1e23acadd592480beb54a4d934b53fc3a787a9f"
+SRC_URI[azbox-kernel-azboxminime.md5sum] = "9878bdfc331e5898123a35c8477be4cc"
+SRC_URI[azbox-kernel-azboxminime.sha256sum] = "89e8cac457303d20d3bab7069623080257d6b132477620a5c867beff25bb0d5d"
+
 
 SRC_URI[azbox-kernel.md5sum] = "661100fdf8a633f53991684b555373ba"
 SRC_URI[azbox-kernel.sha256sum] = "dfcaa8bf10f87ad04fc46994c3b4646eae914a9eb89e76317fdbbd29f54f1076"
