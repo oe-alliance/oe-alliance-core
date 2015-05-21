@@ -16,7 +16,7 @@ inherit module
 
 PACKAGES = "${PN} ${PN}-dev"
 
-PR = "r27"
+PR = "r28"
 PV = "${KV}+${SRCDATE}"
 
 PTI_NP_PATH ?= "/data/pti_np"
@@ -126,6 +126,9 @@ do_install() {
     install -m 644 stgfb/stmfb/linux/drivers/video/stmfb.h ${D}/${includedir}/linux
     install -m 644 multicom/include/mme.h ${D}/${includedir}
     install -m 644 include/player2/JPEG_VideoTransformerTypes.h ${D}/${includedir}
+    install -m 644 include/player2/JPEGDECHW_VideoTransformerTypes.h ${D}/${includedir}
+    install -m 644 include/player2/PNGDecode_interface.h ${D}/${includedir}
+    install -m 644 include/player2/RLEDecode_interface.h ${D}/${includedir}
 
     #install modutils config
     install -d ${D}/${sysconfdir}/modules-load.d
