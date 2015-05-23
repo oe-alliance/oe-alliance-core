@@ -36,7 +36,7 @@ SRCREV_pn-enigma2-plugin-settings-henksat-wavefrontier ?= "${HENKSAT_GITREV}"
 SRCREV_pn-enigma2-plugin-settings-henksat-rotating ?= "${HENKSAT_GITREV}"
 SRCREV_pn-enigma2-plugin-settings-henksat-13e-19e-23e-28e-4.8e-0.8w ?= "${HENKSAT_GITREV}"
 SRCREV_pn-enigma2-plugin-settings-henksat-13e-19e-23e-28e-42e-7e ?= "${HENKSAT_GITREV}"
-SRCREV_pn-enigma2-plugin-settings-henksat-ziggo-1111 ?= "${HENKSAT_GITREV}"
+SRCREV_pn-enigma2-plugin-settings-henksat-ziggo ?= "${HENKSAT_GITREV}"
 
 HANS_GITREV ?= "${AUTOREV}"
 SRCREV_pn-enigma2-plugin-settings-hans-19e-23e ?= "${HANS_GITREV}"
