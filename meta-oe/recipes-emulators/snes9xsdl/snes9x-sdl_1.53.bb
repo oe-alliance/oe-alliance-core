@@ -8,7 +8,9 @@ LIC_FILES_CHKSUM = "file://../docs/snes9x-license.txt;md5=2990ee23aa20730e9a6736
                     file://../docs/lgpl-2.1.txt;md5=243b725d71bb5df4a1e5920b344b86ad" 
 
 SRC_URI = "git://github.com/domaemon/snes9x-sdl.git \ 
-           file://cross_compile.patch;striplevel=2"
+           file://cross_compile.patch;striplevel=2 \
+           file://0001-add-more-sdl-keys.patch;striplevel=2 \
+"
 
 SRCREV = "59d68a2c2ed8cb7266c689e704a1d843961ac6bc"
 

@@ -1,3 +1,4 @@
+FILESEXTRAPATHS_prepend := "${THISDIR}/${P}:"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 DEPENDS += "${@base_contains("MACHINE_FEATURES", 'directfb', 'directfb', 'directfb', d)}"
 
@@ -17,3 +18,9 @@ EXTRA_OECONF = "--disable-static --enable-cdrom --enable-threads --enable-timers
                 --disable-rpath \
                 --disable-pulseaudio \
 "
+
+SRC_URI_append = " \
+           file://Add_key_symbols.patch \
+"
+
+PR .= ".1"
