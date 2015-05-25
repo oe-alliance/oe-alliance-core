@@ -60,6 +60,7 @@ DEPENDS = "\
     wvdial \
     wvstreams \
     usbutils \
+    satip-client \
     ${@base_contains('MACHINE_FEATURES', 'legacykernel', '' , 'hostapd bridge-utils', d)} \
     "
 
@@ -123,7 +124,7 @@ inherit autotools-brokensep gitpkgv pythonnative
 SRCREV = "${AUTOREV}"
 PV = "2.0+git${SRCPV}"
 PKGV = "2.0+git${GITPKGV}"
-PR = "r19"
+PR = "r20"
 
 SRC_URI = "${OEA_PLUGINS_URI}"
 
