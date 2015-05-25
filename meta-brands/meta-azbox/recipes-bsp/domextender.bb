@@ -4,7 +4,6 @@ SECTION = "base"
 PRIORITY = "required"
 MAINTAINER = "OpenSPA"
 LICENSE = "CLOSED"
-require conf/license/license-close.inc
 
 PV = "1.0"
 PR = "r0"

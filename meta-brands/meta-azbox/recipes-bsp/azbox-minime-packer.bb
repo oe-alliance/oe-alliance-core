@@ -1,7 +1,6 @@
 SUMMARY = "Create Azbox MiniME webinterface update image"
 SECTION = "console/utils"
 LICENSE = "CLOSED"
-require conf/license/license-close.inc
 
 PROVIDES = "azbox-minime-packer"
 
