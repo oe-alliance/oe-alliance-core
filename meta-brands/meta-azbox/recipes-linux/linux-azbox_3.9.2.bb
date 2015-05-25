@@ -1,10 +1,19 @@
-DESCRIPTION = "Linux kernel for ${MACHINE}"
+SUMMARY = "Linux kernel for ${MACHINE}"
+SECTION = "kernel"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${KV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
+inherit machine_kernel_pr
+
+MACHINE_KERNEL_PR_append = ".4"
+PR = "r4"
+
 KV = "3.9.2"
-SRCDATE = "14092013"
-SRCDATE_azboxhd = "16092013"
+SRC = "2015"
+SRCREV = "r3"
+SRCDATE = "16092013"
+SRCDATE_azboxme = "14092013"
+SRCDATE_azboxminime = "14092013"
 
 DEPENDS = "genromfs-native gcc"
 DEPENDS_azboxhd = "genromfs-native azbox-hd-buildimage gcc"
@@ -14,37 +23,45 @@ PKG_kernel-base = "kernel-base"
 PKG_kernel-image = "kernel-image"
 RPROVIDES_kernel-base = "kernel-${KERNEL_VERSION}"
 RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
+ALLOW_EMPTY_kernel-dev = "1"
 
 SRC_URI += "${KERNELORG_MIRROR}/linux/kernel/v3.x/linux-${KV}.tar.bz2;name=azbox-kernel \
-	file://defconfig \
-	file://genzbf.c \
-	file://sigblock.h \
-	file://zboot.h \
-	file://emhwlib_registers_tango2.h \
-	file://kernel-3.9.2.patch \
-	file://add-dmx-source-timecode.patch \
-	file://af9015-output-full-range-SNR.patch \
-	file://af9033-output-full-range-SNR.patch \
-	file://as102-adjust-signal-strength-report.patch \
-	file://as102-scale-MER-to-full-range.patch \
-	file://cinergy_s2_usb_r2.patch \
-	file://cxd2820r-output-full-range-SNR.patch \
-	file://dvb-usb-dib0700-disable-sleep.patch \
-	file://dvb_usb_disable_rc_polling.patch \
-	file://it913x-switch-off-PID-filter-by-default.patch \
-	file://tda18271-advertise-supported-delsys.patch \
-	file://fix-dvb-siano-sms-order.patch \
-	file://mxl5007t-add-no_probe-and-no_reset-parameters.patch \
-	file://nfs-max-rwsize-8k.patch \
-	file://0001-rt2800usb-add-support-for-rt55xx.patch \
-	file://0001-Revert-MIPS-Fix-potencial-corruption.patch \
-	"
+    http://source.mynonpublic.com/${MACHINE}/${MACHINE}-${SRC}-${SRCREV}.tar.gz;name=azbox-kernel-${MACHINE} \
+    file://defconfig \
+    file://genzbf.c \
+    file://sigblock.h \
+    file://zboot.h \
+    file://emhwlib_registers_tango2.h \
+    file://kernel-3.9.2.patch \
+    file://add-dmx-source-timecode.patch \
+    file://af9015-output-full-range-SNR.patch \
+    file://af9033-output-full-range-SNR.patch \
+    file://as102-adjust-signal-strength-report.patch \
+    file://as102-scale-MER-to-full-range.patch \
+    file://cinergy_s2_usb_r2.patch \
+    file://cxd2820r-output-full-range-SNR.patch \
+    file://dvb-usb-dib0700-disable-sleep.patch \
+    file://dvb_usb_disable_rc_polling.patch \
+    file://it913x-switch-off-PID-filter-by-default.patch \
+    file://tda18271-advertise-supported-delsys.patch \
+    file://fix-dvb-siano-sms-order.patch \
+    file://mxl5007t-add-no_probe-and-no_reset-parameters.patch \
+    file://nfs-max-rwsize-8k.patch \
+    file://0001-rt2800usb-add-support-for-rt55xx.patch \
+    file://0001-Revert-MIPS-Fix-potencial-corruption.patch \
+    "
 
-SRC_URI_append_azboxhd += "http://azbox-enigma2-project.googlecode.com/files/initramfs-${MACHINE}-oe-core-${KV}-${SRCDATE}.tar.bz2;name=azbox-initrd-${MACHINE}"
-
+SRC_URI_append_azboxhd = "http://azbox-enigma2-project.googlecode.com/files/initramfs-${MACHINE}-oe-core-${KV}-${SRCDATE}.tar.bz2;name=azbox-initrd-${MACHINE}"
 SRC_URI_append_azboxme = "http://azbox-enigma2-project.googlecode.com/files/initramfs-${MACHINE}-oe-core-${KV}-${SRCDATE}.tar.bz2;name=azbox-initrd-${MACHINE}"
-
 SRC_URI_append_azboxminime = "http://azbox-enigma2-project.googlecode.com/files/initramfs-${MACHINE}-oe-core-${KV}-${SRCDATE}.tar.bz2;name=azbox-initrd-${MACHINE}"
+
+SRC_URI[azbox-kernel-azboxhd.md5sum] = "e2d40ad97c06e128bdfbe376450e32bc"
+SRC_URI[azbox-kernel-azboxhd.sha256sum] = "fe5ed2501c1bfd4a226796c0e14548d279756c1c2046394a2fc412f327fc2500"
+SRC_URI[azbox-kernel-azboxme.md5sum] =  "e34270fce1a3d6b80f22d0e0bbb522bb"
+SRC_URI[azbox-kernel-azboxme.sha256sum] =  "4d098845bbf596cdec8042c0b1e23acadd592480beb54a4d934b53fc3a787a9f"
+SRC_URI[azbox-kernel-azboxminime.md5sum] = "9878bdfc331e5898123a35c8477be4cc"
+SRC_URI[azbox-kernel-azboxminime.sha256sum] = "89e8cac457303d20d3bab7069623080257d6b132477620a5c867beff25bb0d5d"
+
 
 SRC_URI[azbox-kernel.md5sum] = "661100fdf8a633f53991684b555373ba"
 SRC_URI[azbox-kernel.sha256sum] = "dfcaa8bf10f87ad04fc46994c3b4646eae914a9eb89e76317fdbbd29f54f1076"
@@ -71,27 +88,34 @@ FILES_kernel-image = "/boot/zbimage-linux-xload"
 CFLAGS_prepend = "-I${WORKDIR} "
 
 do_configure_prepend() {
-	oe_machinstall -m 0644 ${WORKDIR}/defconfig ${S}/.config
-	oe_runmake oldconfig
+    oe_machinstall -m 0644 ${WORKDIR}/defconfig ${S}/.config
+    oe_runmake oldconfig
 }
 
 kernel_do_compile() {
-	gcc ${CFLAGS} ${WORKDIR}/genzbf.c -o ${WORKDIR}/genzbf
-	strip ${WORKDIR}/genzbf
-	
-	install -m 0755 ${WORKDIR}/genzbf ${S}/arch/mips/boot/
-
-	unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS MACHINE
-	oe_runmake ${KERNEL_IMAGETYPE} CC="${KERNEL_CC}" LD="${KERNEL_LD}" AR="${AR}" OBJDUMP="${OBJDUMP}" NM="${NM}"
-	oe_runmake modules CC="${KERNEL_CC}" LD="${KERNEL_LD}" AR="${AR}" OBJDUMP="${OBJDUMP}"
+    gcc ${CFLAGS} ${WORKDIR}/genzbf.c -o ${WORKDIR}/genzbf
+    install -m 0755 ${WORKDIR}/genzbf ${S}/arch/mips/boot/
+    unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS MACHINE
+    oe_runmake ${KERNEL_IMAGETYPE} CC="${KERNEL_CC}" LD="${KERNEL_LD}" AR="${AR}" OBJDUMP="${OBJDUMP}" NM="${NM}"
+    oe_runmake modules CC="${KERNEL_CC}" LD="${KERNEL_LD}" AR="${AR}" OBJDUMP="${OBJDUMP}"
+    rm -rf ${S}/arch/mips/boot/genzbf	
 }
 
 do_install_append () {
-	install -d ${D}/boot
-	install -m 0644 ${S}/arch/mips/boot/zbimage-linux-xload ${D}/boot/zbimage-linux-xload
-	rm -rf ${S}/usr/src/kernel/initramfs/lib/*.so*
-
+    install -d ${D}/boot
+    install -m 0644 ${WORKDIR}/zbimage-linux-xload ${D}/boot/zbimage-linux-xload
+    rm -rf ${D}/boot/System.map*
+    rm -rf ${D}/boot/Module.symvers*
+    rm -rf ${D}/boot/config*
 }
 
 do_package_qa() {
+}
+
+do_packagedata_append() {
+    if [ -e ${WORKDIR}/pkgdata/shlibs/kernel-dev.list ]; then
+        rm -rf ${WORKDIR}/packages-split/kernel-dev/usr
+        rm -rf ${WORKDIR}/pkgdata/shlibs/kernel-dev.list
+        rm -rf ${WORKDIR}/pkgdata/shlibs/kernel-dev.ver
+    fi
 }
