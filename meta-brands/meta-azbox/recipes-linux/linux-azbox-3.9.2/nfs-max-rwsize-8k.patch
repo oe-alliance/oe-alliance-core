@@ -1,0 +1,11 @@
+--- a/include/linux/nfs_xdr.h	2013-01-25 09:53:34.398180414 +0100
++++ b/include/linux/nfs_xdr.h	2013-01-23 19:20:28.574279579 +0100
+@@ -10,7 +10,7 @@
+  * support a megabyte or more.  The default is left at 4096 bytes, which is
+  * reasonable for NFS over UDP.
+  */
+-#define NFS_MAX_FILE_IO_SIZE	(1048576U)
++#define NFS_MAX_FILE_IO_SIZE	(8192U)
+ #define NFS_DEF_FILE_IO_SIZE	(4096U)
+ #define NFS_MIN_FILE_IO_SIZE	(1024U)
+
