@@ -15,7 +15,7 @@ PR = "r3"
 DEPENDS = "libcap libnfsidmap libevent util-linux sqlite3"
 RDEPENDS_${PN}-client = "rpcbind"
 RDEPENDS_${PN} = "${PN}-client"
-RRECOMMENDS_${PN} = "kernel-module-nfsd"
+RRECOMMENDS_${PN} = "kernel-module-nfsd kernel-module-exportfs"
 
 inherit useradd
 
