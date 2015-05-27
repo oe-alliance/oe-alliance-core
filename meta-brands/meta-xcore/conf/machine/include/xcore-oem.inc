@@ -5,18 +5,29 @@ BRAND_OEM = "xcore"
 
 MACHINE_NAME = "\
 ${@base_contains('MACHINEBUILD', 'tomcat', 'Tomcat' , '', d)}\
+${@base_contains('MACHINEBUILD', 'spycat', 'CAT' , '', d)}\
 "
 
 MACHINE_BRAND = "\
 ${@base_contains('MACHINEBUILD', 'tomcat', 'XCORE' , '', d)}\
+${@base_contains('MACHINEBUILD', 'spycat', 'SPY' , '', d)}\
 "
 
 IMAGEDIR ?= "\
 ${@base_contains('MACHINEBUILD', 'tomcat', 'firmware' , '', d)}\
+${@base_contains('MACHINEBUILD', 'spycat', 'spycat' , '', d)}\
 "
 
-MTD_KERNEL = "mtd0"
-MTD_ROOTFS = "mtd2"
+MTD_KERNEL = "\
+${@base_contains('MACHINEBUILD', 'tomcat', 'mtd0' , '', d)}\
+${@base_contains('MACHINEBUILD', 'spycat', 'mtd0' , '', d)}\
+"
+
+MTD_ROOTFS = "\
+${@base_contains('MACHINEBUILD', 'tomcat', 'mtd2' , '', d)}\
+${@base_contains('MACHINEBUILD', 'spycat', 'mtd2' , '', d)}\
+"
+
 KERNEL_FILE = "kernel.bin"
 ROOTFS_FILE = "rootfs.bin"
 
