@@ -5,42 +5,55 @@ BRAND_OEM = "xcore"
 
 MACHINE_NAME = "\
 ${@base_contains('MACHINEBUILD', 'spycat', 'CAT' , '', d)}\
+${@base_contains('MACHINEBUILD', 'vp7358ci', '7358ci' , '', d)}\
+${@base_contains('MACHINEBUILD', 'bcm7358', '7358' , '', d)}\
 "
 
 MACHINE_BRAND = "\
 ${@base_contains('MACHINEBUILD', 'spycat', 'SPY' , '', d)}\
+${@base_contains('MACHINEBUILD', 'vp7358ci', 'Sample2' , '', d)}\
+${@base_contains('MACHINEBUILD', 'bcm7358', 'Sample1' , '', d)}\
 "
 
 IMAGEDIR ?= "\
 ${@base_contains('MACHINEBUILD', 'spycat', 'spycat' , '', d)}\
+${@base_contains('MACHINEBUILD', 'vp7358ci', 'vp7358ci' , '', d)}\
+${@base_contains('MACHINEBUILD', 'bcm7358', 'bcm7358' , '', d)}\
 "
 
 MTD_KERNEL = "\
 ${@base_contains('MACHINEBUILD', 'spycat', 'mtd0' , '', d)}\
+${@base_contains('MACHINEBUILD', 'vp7358ci', 'mtd2' , '', d)}\
+${@base_contains('MACHINEBUILD', 'bcm7358', 'mtd2' , '', d)}\
 "
 
 MTD_ROOTFS = "\
 ${@base_contains('MACHINEBUILD', 'spycat', 'mtd2' , '', d)}\
+${@base_contains('MACHINEBUILD', 'vp7358ci', 'mtd3' , '', d)}\
+${@base_contains('MACHINEBUILD', 'bcm7358', 'mtd3' , '', d)}\
+"
+
+MACHINE_DRIVER = "\
+${@base_contains('MACHINEBUILD', 'spycat', 'spycat' , '', d)}\
+${@base_contains('MACHINEBUILD', 'vp7358ci', 'vp7358ci' , '', d)}\
+${@base_contains('MACHINEBUILD', 'bcm7358', 'bcm7358' , '', d)}\
 "
 
 KERNEL_FILE = "kernel.bin"
 ROOTFS_FILE = "rootfs.bin"
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS = "\
-    xcore-dvb-modules-${MACHINE} \
+    xcore-dvb-modules-${MACHINE_DRIVER} \
     "
 
 DVBPROVIDER = "kernel"
 
-MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS = "\
+MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS += " \
     kernel-module-cdfs \
-    kernel-module-hci-uart \
     "
 
-MACHINE_EXTRA_RRECOMMENDS = " \
+MACHINE_EXTRA_RRECOMMENDS += " \
     gst-plugin-dvbmediasink \
-    firmware-rtl8723b \
-    bluez-hcitools \
     "
 
 include conf/machine/include/autoload-filesystems.inc
@@ -55,7 +68,6 @@ PREFERRED_PROVIDER_virtual/blindscan-dvbc = "xcore-blindscan-utils"
 
 PREFERRED_PROVIDER_virtual/kernel = "linux-xcore"
 
-KERNEL_IMAGETYPE = "vmlinux"
 KERNEL_OUTPUT = "${KERNEL_IMAGETYPE}"
 KERNEL_CONSOLE = "ttyS0,115200n8"
 
@@ -64,22 +76,6 @@ IMAGE_FSTYPES ?= "ubi"
 IMAGE_CMD_ubi_prepend = " \
     rm -rf ${IMAGE_ROOTFS}/boot/*; \
     rm -rf ${IMAGE_ROOTFS}/tmp/*; \
-    "
-
-IMAGE_CMD_ubi_append = " \
-    mkdir -p ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}; \
-    cp ${DEPLOY_DIR_IMAGE}/splash.bin ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/splash.bin; \
-    mv ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.ubi ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/${ROOTFS_FILE}; \
-    gzip -9c ${DEPLOY_DIR_IMAGE}/vmlinux-${MACHINE}.bin > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/${KERNEL_FILE}; \
-    echo ${DISTRO_NAME}-${DISTRO_VERSION}.${BUILD_VERSION} > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/imageversion; \
-    echo "rename this file to 'force' to force an update without confirmation" > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/noforce; \
-    cd ${DEPLOY_DIR_IMAGE}; \
-    zip ${IMAGE_NAME}_usb.zip ${IMAGEDIR}/*; \
-    rm -f ${DEPLOY_DIR_IMAGE}/*.ubifs; \
-    rm -f ${DEPLOY_DIR_IMAGE}/*.manifest; \
-    rm -f ${DEPLOY_DIR_IMAGE}/.ubifs; \
-    rm -f ${DEPLOY_DIR_IMAGE}/.manifest; \
-    rm -Rf ${IMAGEDIR}; \
     "
 
 MACHINE_FEATURES += "alsa 3dtv switchoff hdmicec bootsplash omb"
