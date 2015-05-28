@@ -10,7 +10,9 @@ SRCREV = "${AUTOREV}"
 PV = "0.0.3+git${SRCPV}"
 PKGV = "0.0.3+git${GITPKGV}"
 VER ="0.0.3"
-PR = "r1"
+PR = "r2"
+
+CFLAGS_prepend = "-Wall -g -DVTUNER_TYPE_ORIGINAL"
 
 CFLAGS_prepend_vuduo = "-Wall -g -DVTUNER_TYPE_VUPLUS"
 CFLAGS_prepend_vuduo2 = "-Wall -g -DVTUNER_TYPE_VUPLUS"
