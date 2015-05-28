@@ -2,6 +2,7 @@ SUMMARY = "Hardware user space LIBs for ${MACHINE}"
 SECTION = "libs"
 PRIORITY = "required"
 LICENSE = "CLOSED"
+require conf/license/license-close.inc
 
 PR = "r5"
 
