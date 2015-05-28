@@ -6,7 +6,7 @@ LICENSE = "CLOSED"
 PV = "${KV}+${SRCDATE}"
 PR = "r0"
 
-SRC_URI = "http://source.mynonpublic.com/xcore/${MACHINE}-drivers-${KV}-${SRCDATE}.zip"
+SRC_URI = "http://source.mynonpublic.com/xcore/${MACHINE_DRIVER}-drivers-${KV}-${SRCDATE}.zip"
 
 S = "${WORKDIR}"
 
@@ -29,6 +29,7 @@ do_install() {
 do_install_append_xc7362() {
     install -d ${D}/lib/firmware
     install -m 0755 ${WORKDIR}/mn88472.fw ${D}/lib/firmware
+    install -m 0755 ${WORKDIR}/mn88473.fw ${D}/lib/firmware
 }
 
 FILES_${PN} += "${sysconfdir}/modules-load.d/_${MACHINE}.conf"

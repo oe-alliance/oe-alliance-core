@@ -33,11 +33,17 @@ ${@base_contains('MACHINEBUILD', 'vp7358ci', 'mtd3' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'bcm7358', 'mtd3' , '', d)}\
 "
 
+MACHINE_DRIVER = "\
+${@base_contains('MACHINEBUILD', 'spycat', 'spycat' , '', d)}\
+${@base_contains('MACHINEBUILD', 'vp7358ci', 'vp7358ci' , '', d)}\
+${@base_contains('MACHINEBUILD', 'bcm7358', 'bcm7358' , '', d)}\
+"
+
 KERNEL_FILE = "kernel.bin"
 ROOTFS_FILE = "rootfs.bin"
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS = "\
-    xcore-dvb-modules-${MACHINE} \
+    xcore-dvb-modules-${MACHINE_DRIVER} \
     "
 
 DVBPROVIDER = "kernel"
