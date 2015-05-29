@@ -3,6 +3,7 @@ RDEPENDS_${PN} = "enigma2 curl fuse libupnp"
 DEPENDS = "python-native"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 LICENSE = "CLOSED"
+require conf/license/license-close.inc
 
 SRCREV_pn-${PN} ?= "${AUTOREV}"
 
@@ -19,6 +20,8 @@ S = "${WORKDIR}/git"
 do_compile() {
     python -O -m compileall ${S}
 }
+
+do_populate_sysroot[noexec] = "1"
 
 python populate_packages_prepend () {
     enigma2_plugindir = bb.data.expand('${libdir}/enigma2/python/Plugins', d)

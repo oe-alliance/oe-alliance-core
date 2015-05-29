@@ -3,10 +3,7 @@ SECTION = "kernel"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${KV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-inherit machine_kernel_pr
-
-MACHINE_KERNEL_PR_append = ".4"
-PR = "r4"
+inherit kernel machine_kernel_pr
 
 KV = "3.9.2"
 SRC = "2015"
@@ -18,6 +15,10 @@ SRCDATE_azboxminime = "14092013"
 DEPENDS = "genromfs-native gcc"
 DEPENDS_azboxhd = "genromfs-native azbox-hd-buildimage gcc"
 DEPENDS_azboxminime = "genromfs-native azbox-minime-packer gcc"
+
+KERNEL_IMAGE_MAXSIZE_azboxhd = "6815744"
+#KERNEL_IMAGE_MAXSIZE_azboxme = "6815744"
+#KERNEL_IMAGE_MAXSIZE_azboxminime = "6815744"
 
 PKG_kernel-base = "kernel-base"
 PKG_kernel-image = "kernel-image"
@@ -62,7 +63,6 @@ SRC_URI[azbox-kernel-azboxme.sha256sum] =  "4d098845bbf596cdec8042c0b1e23acadd59
 SRC_URI[azbox-kernel-azboxminime.md5sum] = "9878bdfc331e5898123a35c8477be4cc"
 SRC_URI[azbox-kernel-azboxminime.sha256sum] = "89e8cac457303d20d3bab7069623080257d6b132477620a5c867beff25bb0d5d"
 
-
 SRC_URI[azbox-kernel.md5sum] = "661100fdf8a633f53991684b555373ba"
 SRC_URI[azbox-kernel.sha256sum] = "dfcaa8bf10f87ad04fc46994c3b4646eae914a9eb89e76317fdbbd29f54f1076"
 SRC_URI[azbox-initrd-azboxhd.md5sum] = "7effc9bc7eb0ed2e9232dedf6e0c74cc"
@@ -73,49 +73,52 @@ SRC_URI[azbox-initrd-azboxminime.md5sum] = "3b7508985058ac0a5d9d310f669cc5bc"
 SRC_URI[azbox-initrd-azboxminime.sha256sum] = "b7979e03bd53f6c975079761c3399d5dd80e9db5addeae27726f09f87a86be72"
 
 S = "${WORKDIR}/linux-${KV}"
-
-inherit kernel
+B = "${WORKDIR}/build"
 
 export OS = "Linux"
 KERNEL_OBJECT_SUFFIX = "ko"
-KERNEL_OUTPUT = "zbimage-linux-xload"
 KERNEL_IMAGETYPE = "zbimage-linux-xload"
 KERNEL_IMAGEDEST = "/tmp"
 
-
-FILES_kernel-image = "/boot/zbimage-linux-xload"
+FILES_kernel-image = "${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KV}-opensat"
 
 CFLAGS_prepend = "-I${WORKDIR} "
 
+EXTRA_OEMAKE = "CONFIG_INITRAMFS_SOURCE=${STAGING_KERNEL_DIR}/initramfs"
+
 do_configure_prepend() {
-    oe_machinstall -m 0644 ${WORKDIR}/defconfig ${S}/.config
-    oe_runmake oldconfig
+    sed -i "s#usr/initramfs_default_node_list#\$(srctree)/usr/initramfs_default_node_list#" ${STAGING_KERNEL_DIR}/usr/Makefile
+    sed -i "s#\$(srctree)/arch/mips/boot/#\$(obj)/#" ${STAGING_KERNEL_DIR}/arch/mips/boot/Makefile
+}
+
+kernel_do_compile_prepend() {
+    gcc ${CFLAGS} ${WORKDIR}/genzbf.c -o ${WORKDIR}/genzbf
+    install -d ${B}/arch/${ARCH}/boot/
+    install -m 0755 ${WORKDIR}/genzbf ${B}/arch/${ARCH}/boot/
 }
 
 kernel_do_compile() {
-    gcc ${CFLAGS} ${WORKDIR}/genzbf.c -o ${WORKDIR}/genzbf
-    install -m 0755 ${WORKDIR}/genzbf ${S}/arch/mips/boot/
     unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS MACHINE
-    oe_runmake ${KERNEL_IMAGETYPE} CC="${KERNEL_CC}" LD="${KERNEL_LD}" AR="${AR}" OBJDUMP="${OBJDUMP}" NM="${NM}"
-    oe_runmake modules CC="${KERNEL_CC}" LD="${KERNEL_LD}" AR="${AR}" OBJDUMP="${OBJDUMP}"
-    rm -rf ${S}/arch/mips/boot/genzbf	
+    oe_runmake ${KERNEL_IMAGETYPE} CC="${KERNEL_CC}" LD="${KERNEL_LD}" AR="${AR}" OBJDUMP="${OBJDUMP}" NM="${NM}" CONFIG_INITRAMFS_SOURCE="${STAGING_KERNEL_DIR}/initramfs"
+    oe_runmake modules CC="${KERNEL_CC}" LD="${KERNEL_LD}" AR="${AR}" OBJDUMP="${OBJDUMP}" CONFIG_INITRAMFS_SOURCE="${STAGING_KERNEL_DIR}/initramfs"
 }
 
-do_install_append () {
-    install -d ${D}/boot
-    install -m 0644 ${WORKDIR}/zbimage-linux-xload ${D}/boot/zbimage-linux-xload
-    rm -rf ${D}/boot/System.map*
-    rm -rf ${D}/boot/Module.symvers*
-    rm -rf ${D}/boot/config*
+kernel_do_compile_append() {
+    rm -rf ${B}/arch/${ARCH}/boot/genzbf
+    rm -rf ${B}/arch/${ARCH}/boot/${KERNEL_IMAGETYPE}
+    install -m 0644 ${WORKDIR}/zbimage-linux-xload ${B}/arch/${ARCH}/boot/${KERNEL_IMAGETYPE}
 }
 
-do_package_qa() {
+# This is part of kernel.bbclass but doesn't get executed when not copied here
+do_sizecheck() {
+        if [ ! -z "${KERNEL_IMAGE_MAXSIZE}" ]; then
+                cd ${B}
+                size=`ls -lL ${KERNEL_OUTPUT} | awk '{ print $5}'`
+                if [ $size -ge ${KERNEL_IMAGE_MAXSIZE} ]; then
+                        die "This kernel (size=$size > ${KERNEL_IMAGE_MAXSIZE}) is too big for your device. Please reduce the size of the kernel by making more of it modular."
+                fi
+        fi
 }
+do_sizecheck[dirs] = "${B}"
 
-do_packagedata_append() {
-    if [ -e ${WORKDIR}/pkgdata/shlibs/kernel-dev.list ]; then
-        rm -rf ${WORKDIR}/packages-split/kernel-dev/usr
-        rm -rf ${WORKDIR}/pkgdata/shlibs/kernel-dev.list
-        rm -rf ${WORKDIR}/pkgdata/shlibs/kernel-dev.ver
-    fi
-}
+addtask sizecheck before do_install after do_strip

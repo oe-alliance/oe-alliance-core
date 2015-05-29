@@ -2,12 +2,10 @@ SUMMARY = "Linux kernel for ${MACHINE}"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${KV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 PR = "r4"
-inherit machine_kernel_pr
-
-MACHINE_KERNEL_PR_append = ".3"
+inherit kernel machine_kernel_pr
 
 DEPENDS = "genromfs-native gcc"
-DEPENDS_azboxhd = "genromfs-native azbox-hd-buildimage gcc "
+DEPENDS_azboxhd = "genromfs-native azbox-hd-buildimage gcc"
 DEPENDS_azboxminime = "genromfs-native azbox-minime-packer gcc"
 
 
@@ -33,13 +31,13 @@ SRC_URI += "http://source.mynonpublic.com/linux-azbox-${KV}-new-2.tar.bz2;name=a
        file://sata.patch \
        "
 
-SRC_URI_append_azboxhd += "http://source.mynonpublic.com/initramfs-${MACHINE}-oe-core-${KV}-${SRCDATE}.tar.bz2;name=azbox-initrd-${MACHINE} \
+SRC_URI_append_azboxhd += "http://source.mynonpublic.com/azbox/initramfs-${MACHINE}-oe-core-${KV}-${SRCDATE}.tar.bz2;name=azbox-initrd-${MACHINE} \
        file://hdide.patch \
        "
 
-SRC_URI_append_azboxme = "http://azbox-enigma2-project.googlecode.com/files/initramfs-${MACHINE}-oe-core-${SRCDATE}.tar.bz2;name=azbox-initrd-${MACHINE}"
+SRC_URI_append_azboxme = "http://source.mynonpublic.com/azbox/initramfs-${MACHINE}-oe-core-${SRCDATE}.tar.bz2;name=azbox-initrd-${MACHINE}"
 
-SRC_URI_append_azboxminime = "http://azbox-enigma2-project.googlecode.com/files/initramfs-${MACHINE}-oe-core-${SRCDATE}.tar.bz2;name=azbox-initrd-${MACHINE}"
+SRC_URI_append_azboxminime = "http://source.mynonpublic.com/azbox/initramfs-${MACHINE}-oe-core-${SRCDATE}.tar.bz2;name=azbox-initrd-${MACHINE}"
 
 
 SRC_URI[azbox-kernel.md5sum] = "dfd04abeaf3741b3d2a44428ca5aeaa1"
@@ -52,8 +50,7 @@ SRC_URI[azbox-initrd-azboxminime.md5sum] = "f9686a2373d3966f531ab783e41a2d80"
 SRC_URI[azbox-initrd-azboxminime.sha256sum] = "122a9f7e8b368b47e74eb8451d2dd856bed80dbe7e23c35cca63cb95dded891d"
 
 S = "${WORKDIR}/linux-${KV}"
-
-inherit kernel
+B = "${WORKDIR}/build"
 
 export OS = "Linux"
 KERNEL_OBJECT_SUFFIX = "ko"
@@ -62,40 +59,30 @@ KERNEL_IMAGETYPE = "zbimage-linux-xload"
 KERNEL_IMAGEDEST = "/tmp"
 
 
-FILES_kernel-image = "/boot/zbimage-linux-xload"
+FILES_kernel-image = "${KERNEL_IMAGEDEST}/zbimage-linux-xload"
 
 CFLAGS_prepend = "-I${WORKDIR} "
 
+EXTRA_OEMAKE = "CONFIG_INITRAMFS_SOURCE=${STAGING_KERNEL_DIR}/initramfs"
+
 do_configure_prepend() {
-    oe_machinstall -m 0644 ${WORKDIR}/defconfig ${S}/.config
-    oe_runmake oldconfig
+    sed -i "s#usr/initramfs_default_node_list#\$(srctree)/usr/initramfs_default_node_list#" ${STAGING_KERNEL_DIR}/usr/Makefile
+    sed -i "s#\$(srctree)/arch/mips/boot/#\$(obj)/#" ${STAGING_KERNEL_DIR}/arch/mips/boot/Makefile
 }
 
 kernel_do_compile() {
     gcc ${CFLAGS} ${WORKDIR}/genzbf.c -o ${WORKDIR}/genzbf
-    install -m 0755 ${WORKDIR}/genzbf ${S}/arch/mips/boot/
+    install -d ${B}/arch/mips/boot/
+    install -m 0755 ${WORKDIR}/genzbf ${B}/arch/mips/boot/
     unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS MACHINE
-    oe_runmake include/linux/version.h CC="${KERNEL_CC}" LD="${KERNEL_LD}"
-    oe_runmake ${KERNEL_IMAGETYPE} CC="${KERNEL_CC}" LD="${KERNEL_LD}" AR="${AR}" OBJDUMP="${OBJDUMP}" NM="${NM}"
-    oe_runmake modules CC="${KERNEL_CC}" LD="${KERNEL_LD}" AR="${AR}" OBJDUMP="${OBJDUMP}"
-	rm -rf ${S}/arch/mips/boot/genzbf
+    oe_runmake ${KERNEL_IMAGETYPE} CC="${KERNEL_CC}" LD="${KERNEL_LD}" AR="${AR}" OBJDUMP="${OBJDUMP}" NM="${NM}" CONFIG_INITRAMFS_SOURCE="${STAGING_KERNEL_DIR}/initramfs"
+    oe_runmake modules CC="${KERNEL_CC}" LD="${KERNEL_LD}" AR="${AR}" OBJDUMP="${OBJDUMP}" CONFIG_INITRAMFS_SOURCE="${STAGING_KERNEL_DIR}/initramfs"
+    rm -rf ${B}/arch/mips/boot/genzbf
+}
+
+do_install_prepend() {
+   mv -f ${STAGING_KERNEL_DIR}/zbimage-linux-xload ${B}/zbimage-linux-xload
 }
 
 do_package_qa() {
-}
-
-do_install_append () {
-    install -d ${D}/boot
-    install -m 0644 ${S}/arch/mips/boot/zbimage-linux-xload ${D}/boot/zbimage-linux-xload
-    rm -rf ${D}/boot/System.map*
-    rm -rf ${D}/boot/Module.symvers*
-    rm -rf ${D}/boot/config*
-}
-
-do_packagedata_append() {
-    if [ -e ${WORKDIR}/pkgdata/shlibs/kernel-dev.list ]; then
-        rm -rf ${WORKDIR}/packages-split/kernel-dev/usr
-        rm -rf ${WORKDIR}/pkgdata/shlibs/kernel-dev.list
-        rm -rf ${WORKDIR}/pkgdata/shlibs/kernel-dev.ver
-    fi
 }
