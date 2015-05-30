@@ -10,6 +10,8 @@ MACHINE_ESSENTIAL_EXTRA_RDEPENDS = " \
 
 DVBPROVIDER = "kernel"
 
+GST_VERSION = "0.10"
+
 MACHINE_EXTRA_RRECOMMENDS = " \
     gst-plugin-azbox-dvbmediasink \
     azbox-mrua \
