@@ -29,5 +29,5 @@ do_package_qa() {
 FILES_${PN}="/"
 
 SRC_URI[md5sum] = "74687180693181e80ab2631741bb95e3"
-+SRC_URI[sha256sum] = "c9f8f30df576caedf165fe69aeec4acced3904383278fa9278e3923c7fa6a200"
+SRC_URI[sha256sum] = "c9f8f30df576caedf165fe69aeec4acced3904383278fa9278e3923c7fa6a200"
 
