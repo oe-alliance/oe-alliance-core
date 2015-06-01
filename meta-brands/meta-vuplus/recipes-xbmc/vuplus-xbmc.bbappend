@@ -108,6 +108,6 @@ PARALLEL_MAKE = " -j8 "
 FILES_${PN} += "/usr/bin /usr/share /usr/lib"
 
 SRC_URI[xbmc-support.md5sum] = "28d0a2461f5a8244cbc908dd0e0ab5bc"
-+SRC_URI[xbmc-support.sha256sum] = "ecd7520c8649fc426c8bc941a30daec000cd10fc21fcdd9a494bf23f497d7423"
+SRC_URI[xbmc-support.sha256sum] = "ecd7520c8649fc426c8bc941a30daec000cd10fc21fcdd9a494bf23f497d7423"
 
 #COMPATIBLE_MACHINE = "^(vusolose|vusolo2|vuduo2)$"
