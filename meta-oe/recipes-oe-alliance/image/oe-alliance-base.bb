@@ -11,7 +11,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "1.0"
-PR = "r27"
+PR = "r28"
 
 RDEPENDS_${PN} = "\
     oe-alliance-enigma2 \
@@ -45,3 +45,11 @@ RDEPENDS_${PN} = "\
     python-twisted-protocols python-numbers python-argparse \
     "
 
+RRECOMMENDS_${PN} = "\
+    kernel-module-fat \
+    kernel-module-msdos \
+    kernel-module-vfat \
+    kernel-module-nls-cp437 \
+    kernel-module-nls-iso8859-1 \
+    kernel-module-nls-iso8859-15 \
+    "
