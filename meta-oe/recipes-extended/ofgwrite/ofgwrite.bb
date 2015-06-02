@@ -9,7 +9,7 @@ SRCREV = "${AUTOREV}"
 PV = "2.x.+git${SRCPV}"
 PKGV = "2.x.+git${GITPKGV}"
 VER ="2.x"
-PR = "r0"
+PR = "r1"
 
 SRC_URI = "git://github.com/oe-alliance/ofgwrite.git"
 
