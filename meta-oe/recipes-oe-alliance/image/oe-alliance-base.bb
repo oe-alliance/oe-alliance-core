@@ -9,7 +9,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "1.0"
-PR = "r25"
+PR = "r26"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 RDEPENDS_${PN} = "\
@@ -44,3 +44,11 @@ RDEPENDS_${PN} = "\
     python-twisted-protocols python-numbers \
     "
 
+RRECOMMENDS_${PN} = "\
+    kernel-module-fat \
+    kernel-module-msdos \
+    kernel-module-vfat \
+    kernel-module-nls-cp437 \
+    kernel-module-nls-iso8859-1 \
+    kernel-module-nls-iso8859-15 \
+    "
