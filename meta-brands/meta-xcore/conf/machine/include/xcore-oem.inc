@@ -4,13 +4,13 @@ include conf/machine/include/build-extras.inc
 BRAND_OEM = "xcore"
 
 MACHINE_NAME = "\
-${@base_contains('MACHINEBUILD', 'spycat', 'CAT' , '', d)}\
+${@base_contains('MACHINEBUILD', 'spycat', 'SPYCAT' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'vp7358ci', '7358ci' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'bcm7358', '7358' , '', d)}\
 "
 
 MACHINE_BRAND = "\
-${@base_contains('MACHINEBUILD', 'spycat', 'SPY' , '', d)}\
+${@base_contains('MACHINEBUILD', 'spycat', 'XCORE' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'vp7358ci', 'Sample2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'bcm7358', 'Sample1' , '', d)}\
 "
