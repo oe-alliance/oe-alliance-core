@@ -9,13 +9,14 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 LICENSE = "MIT & GPLv2+ & BSD"
 LIC_FILES_CHKSUM = "file://COPYING;md5=95f3a93a5c3c7888de623b46ea085a84"
 
-PR = "r4"
+PR = "r5"
 
 # util-linux for libblkid
 DEPENDS = "libcap libnfsidmap libevent util-linux sqlite3"
 RDEPENDS_${PN}-client = "rpcbind"
 RDEPENDS_${PN} = "${PN}-client"
 RRECOMMENDS_${PN} = "kernel-module-nfsd kernel-module-exportfs"
+RRECOMMENDS_${PN}-client = "kernel-module-nfs kernel-module-exportfs"
 
 inherit useradd
 

@@ -9,7 +9,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "1.0"
-PR = "r26"
+PR = "r27"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 RDEPENDS_${PN} = "\
@@ -44,7 +44,13 @@ RDEPENDS_${PN} = "\
     python-twisted-protocols python-numbers \
     "
 
+# The following RRECOMMENDS ensure that images on boxes with very limited
+# kernel space behave identical to those that have these options built-in
+# by including the corresponding kernel modules.
+# So far these are xfs and vfat and their dependencies
 RRECOMMENDS_${PN} = "\
+    kernel-module-xfs \
+    kernel-module-exportfs \
     kernel-module-fat \
     kernel-module-msdos \
     kernel-module-vfat \
