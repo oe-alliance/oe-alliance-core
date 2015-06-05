@@ -148,25 +148,25 @@ THIRDPARTY_MACHINE_PLUGINS_vuzero = " \
     enigma2-plugin-extensions-sdg-imagedownloader-v0.7-oe-2.0-vu-all.ipk \
     "
 THIRDPARTY_MACHINE_PLUGINS_et4x00 = " \
-    enigma2-plugin-extensions-newxtrend-hbbtv_2.5_mips32el.ipk \
+    enigma2-plugin-extensions-newxtrend-hbbtv_2.9_mips32el.ipk \
     "
 THIRDPARTY_MACHINE_PLUGINS_et6x00 = " \
     enigma2-plugin-extensions-et-webbrowser_2.0.0-r0_et6x00.ipk \
     "
 THIRDPARTY_MACHINE_PLUGINS_et7x00 = " \
-    enigma2-plugin-extensions-newxtrend-hbbtv_2.5_mips32el.ipk \
+    enigma2-plugin-extensions-newxtrend-hbbtv_2.9_mips32el.ipk \
     "
 THIRDPARTY_MACHINE_PLUGINS_et8000 = " \
-    enigma2-plugin-extensions-newxtrend-hbbtv_2.5_mips32el.ipk \
+    enigma2-plugin-extensions-newxtrend-hbbtv_2.9_mips32el.ipk \
      "
 THIRDPARTY_MACHINE_PLUGINS_et8500 = " \
-    enigma2-plugin-extensions-newxtrend-hbbtv_2.5_mips32el.ipk \
+    enigma2-plugin-extensions-newxtrend-hbbtv_2.9_mips32el.ipk \
     "
 THIRDPARTY_MACHINE_PLUGINS_et9x00 = " \
     enigma2-plugin-extensions-et-webbrowser_2.0.0-r0_et9x00.ipk \
     "
 THIRDPARTY_MACHINE_PLUGINS_et10000 = " \
-    enigma2-plugin-extensions-newxtrend-hbbtv_2.5_mips32el.ipk \
+    enigma2-plugin-extensions-newxtrend-hbbtv_2.9_mips32el.ipk \
      "
 THIRDPARTY_MACHINE_PLUGINS_e3hd = " \
     enigma2-plugin-extensions-hbbtv_4.1_E3HD_mips32el.ipk \
