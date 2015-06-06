@@ -9,7 +9,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "1.0"
-PR = "r61"
+PR = "r62"
 
 DEPENDS = "enigma2-plugin-drivers-usbserial"
 RECOMMENDS = "enigma2-plugin-extensions-et-livestream"
@@ -50,6 +50,7 @@ RDEPENDS_${PN} = " \
     autofs \
     autossh \
     avahi-ui \
+    binutils \
     ctorrent \
     cups \
     djmount \
