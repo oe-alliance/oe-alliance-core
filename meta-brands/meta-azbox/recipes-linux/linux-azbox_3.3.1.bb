@@ -4,7 +4,7 @@ SRCREV = "r4"
 SRCDATE = "14052013"
 SRCDATE_azboxhd = "02022014"
 
-PR = "r2"
+PR = "r4"
 MACHINE_KERNEL_PR_append = ".4"
 
 SRC_URI += "http://source.mynonpublic.com/linux-azbox-${KV}-new-2.tar.bz2;name=azbox-kernel \
