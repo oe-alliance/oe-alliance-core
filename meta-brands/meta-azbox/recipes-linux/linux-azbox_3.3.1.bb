@@ -1,10 +1,10 @@
 KV = "3.3.1"
 SRC = "2015"
-SRCREV = "r3"
+SRCREV = "r4"
 SRCDATE = "14052013"
 SRCDATE_azboxhd = "02022014"
 
-PR = "r4"
+PR = "r2"
 MACHINE_KERNEL_PR_append = ".4"
 
 SRC_URI += "http://source.mynonpublic.com/linux-azbox-${KV}-new-2.tar.bz2;name=azbox-kernel \
@@ -24,8 +24,8 @@ SRC_URI_append_azboxhd += "http://source.mynonpublic.com/azbox/initramfs-${MACHI
 
 SRC_URI[azbox-kernel.md5sum] = "dfd04abeaf3741b3d2a44428ca5aeaa1"
 SRC_URI[azbox-kernel.sha256sum] = "31b73397220d85aedf3c914026371fc1eeac67e3de09a5610b70b209d2a8b9df"
-SRC_URI[azbox-kernel-azboxhd.md5sum] = "eac667385c3a2cf6009510f427113f62"
-SRC_URI[azbox-kernel-azboxhd.sha256sum] = "c0d7340d2abdea62714d3c5a5c2296411a6d146f53160ee173c6b181feaad722"
+SRC_URI[azbox-kernel-azboxhd.md5sum] = "df2576b23a9fb81f218fb6c24340805f"
+SRC_URI[azbox-kernel-azboxhd.sha256sum] = "92d20d33aa457061ec859ad14ac4a856728f680b470d2c0143cd8837226c8fe6"
 SRC_URI[azbox-initrd-azboxhd.md5sum] = "be250b8a23c782ba569ebaa65956d7e1"
 SRC_URI[azbox-initrd-azboxhd.sha256sum] = "2cd4c203ac1f321c8b4f4f011411a5f987b3ea64e61f16ce6df73e9e15d39d4f"
 
