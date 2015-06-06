@@ -9,7 +9,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "1.0"
-PR = "r57"
+PR = "r60"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 DEPENDS = "enigma2-plugin-drivers-usbserial"
@@ -51,6 +51,7 @@ RDEPENDS_${PN} = " \
     autofs \
     autossh \
     avahi-ui \
+    binutils \
     ctorrent \
     cups \
     djmount \
