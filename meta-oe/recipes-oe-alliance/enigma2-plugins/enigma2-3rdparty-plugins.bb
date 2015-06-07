@@ -11,7 +11,7 @@ DEPENDS = "tslib mpfr gmp"
 SRCREV = "${AUTOREV}"
 PV = "2.1+gitr${SRCPV}"
 PKGV = "2.1+gitr${GITPKGV}"
-PR = "r182"
+PR = "r183"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -105,21 +105,21 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-zdfnewmediathek_1.7rc5_mips32el.ipk \
     enigma2-plugin-systemplugins-bouquetsprotection_0.2-rc1_all.ipk \
     enigma2-plugin-systemplugins-recordinfobar_1.0-rc15_mipsel.ipk \
-    enigma2-plugin-picons-100x60.black-white_2015-04-24--11-52-32_all.ipk \
-    enigma2-plugin-picons-100x60.blue-black_2015-04-24--11-52-32_all.ipk \
-    enigma2-plugin-picons-100x60.reflection-black_2015-04-24--11-52-32_all.ipk \
-    enigma2-plugin-picons-100x60.transparent-black_2015-04-24--11-52-32_all.ipk \
-    enigma2-plugin-picons-100x60.transparent-white_2015-04-24--11-52-32_all.ipk \
-    enigma2-plugin-picons-100x60.white-black_2015-04-24--11-52-32_all.ipk \
-    enigma2-plugin-picons-220x132.black-white_2015-04-24--11-52-32_all.ipk \
-    enigma2-plugin-picons-220x132.blue-black_2015-04-24--11-52-32_all.ipk \
-    enigma2-plugin-picons-220x132.reflection-black_2015-04-24--11-52-32_all.ipk \
-    enigma2-plugin-picons-220x132.transparent-black_2015-04-24--11-52-32_all.ipk \
-    enigma2-plugin-picons-220x132.transparent-black-nopadding_2015-04-24--11-52-32_all.ipk \
-    enigma2-plugin-picons-220x132.transparent-white_2015-04-24--11-52-32_all.ipk \
-    enigma2-plugin-picons-220x132.transparent-white-nopadding_2015-04-24--11-52-32_all.ipk \
-    enigma2-plugin-picons-220x132.white-black_2015-04-24--11-52-32_all.ipk \
-    enigma2-plugin-picons-400x240.transparent-white-nopadding_2015-04-24--11-52-32_all.ipk \
+    enigma2-plugin-picons-100x60.black-white_2015-06-07--04-31-22_all.ipk \
+    enigma2-plugin-picons-100x60.blue-black_2015-06-07--04-31-22_all.ipk \
+    enigma2-plugin-picons-100x60.reflection-black_2015-06-07--04-31-22_all.ipk \
+    enigma2-plugin-picons-100x60.transparent-black_2015-06-07--04-31-22_all.ipk \
+    enigma2-plugin-picons-100x60.transparent-white_2015-06-07--04-31-22_all.ipk \
+    enigma2-plugin-picons-100x60.white-black_2015-06-07--04-31-22_all.ipk \
+    enigma2-plugin-picons-220x132.black-white_2015-06-07--04-31-22_all.ipk \
+    enigma2-plugin-picons-220x132.blue-black_2015-06-07--04-31-22_all.ipk \
+    enigma2-plugin-picons-220x132.reflection-black_2015-06-07--04-31-22_all.ipk \
+    enigma2-plugin-picons-220x132.transparent-black-nopadding_2015-06-07--04-31-22_all.ipk \
+    enigma2-plugin-picons-220x132.transparent-black_2015-06-07--04-31-22_all.ipk \
+    enigma2-plugin-picons-220x132.transparent-white-nopadding_2015-06-07--04-31-22_all.ipk \
+    enigma2-plugin-picons-220x132.transparent-white_2015-06-07--04-31-22_all.ipk \
+    enigma2-plugin-picons-220x132.white-black_2015-06-07--04-31-22_all.ipk \
+    enigma2-plugin-picons-400x240.transparent-white-nopadding_2015-06-07--04-31-22_all.ipk \
     "
 
 #     Install any packages t_append =hat are only For this machines feed here, uncomment the line below and change as required
