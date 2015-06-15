@@ -3,8 +3,8 @@ DRIVERDATE = "20150316"
 
 require dreambox-dvb-modules-dm7080.inc
 
-SRC_URI[dm7080.md5sum] = "b4f5268d03abe7564128dae92f92a207"
-SRC_URI[dm7080.sha256sum] = "affc941cad8f00723106a777cabfa248f993111245fd08a5b2a5a94e7bf89c46"
+SRC_URI[dm7080.md5sum] = "84e98510d85f63b4056f826d30756204"
+SRC_URI[dm7080.sha256sum] = "8f873a74e01aaff9ea30351a1465a87f48f2cc20460a6aa549dfcebabc557fac"
 
 pkg_postinst_${PN} () {
 if [ -z "$D" ]; then
