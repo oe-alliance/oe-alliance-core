@@ -12,7 +12,7 @@ PV = "${KV}+${SRCDATE}"
 SRC_URI[md5sum] = "42b663bde2fb0bf2547a98c030fc7b94"
 SRC_URI[sha256sum] = "56ea501d9450df27346ef1be124f0c0ac446862b49c2e61d71884b9d38b9f817"
 
-SRC_URI = "http://code-ini.com/software/beta/drv/zxcvbnm/ini-840t4-drivers-${KV}-${SRCDATE}.zip"
+SRC_URI = "http://code-ini.com/software/drivers/ini-840t4-drivers-${KV}-${SRCDATE}.zip"
 
 S = "${WORKDIR}"
 
