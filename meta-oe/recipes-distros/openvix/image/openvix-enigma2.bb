@@ -7,7 +7,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "1.0"
-PR = "r23"
+PR = "r24"
 
 inherit packagegroup
 
@@ -29,3 +29,5 @@ RRECOMMENDS_${PN} = "\
     enigma2-plugin-systemplugins-crossepg \
     ${@base_contains("MACHINE_FEATURES", "uianimation", "enigma2-plugin-systemplugins-animationsetup" , "", d)} \
     "
+
+RRECOMMENDS_${PN}_append_et8500 = " enigma2-plugin-extensions-yahooweather"
