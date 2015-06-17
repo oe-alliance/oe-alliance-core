@@ -1,5 +1,5 @@
 KV = "3.4-3.5"
-DRIVERDATE = "20150316"
+DRIVERDATE = "20150612"
 
 require dreambox-dvb-modules-dm7080.inc
 
