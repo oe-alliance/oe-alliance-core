@@ -15,10 +15,10 @@ SRC_URI_append_sh4 = " \
 
 EXTRA_OECONF = "\
   --enable-freetype=yes \
-  ${@base_contains("MACHINE_FEATURES", "sdl", "--enable-sdl=yes --enable-imlib2=no --enable-mesa=no", "--enable-sdl=no", d)} \
+  --disable-sdl \
   --enable-zlib=yes \
   --with-gfxdrivers=none \
-  --enable-vnc=no \
-  --enable-x11=no \
+  --disable-vnc \
+  --disable-x11 \
   ${@base_contains("TARGET_ARCH", "sh4", "--enable-stmfbdev=yes --enable-mme=yes", "", d)} \
 "

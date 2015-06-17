@@ -1,0 +1,108 @@
+diff -Nur DirectFB-1.4.11.orig/systems/stmfbdev/stmfbdev.c DirectFB-1.4.11/systems/stmfbdev/stmfbdev.c
+--- DirectFB-1.4.11.orig/systems/stmfbdev/stmfbdev.c	2010-11-15 13:35:37.000000000 -0800
++++ DirectFB-1.4.11/systems/stmfbdev/stmfbdev.c	1969-12-31 16:00:00.000000000 -0800
+@@ -187,11 +187,13 @@
+      if (ret)
+           goto error;
+ 
++#ifdef HAVE_VT
+      if (dfb_config->vt) {
+           ret = dfb_vt_initialize();
+           if (ret)
+                goto error;
+      }
++#endif
+ 
+      /* Retrieve fixed information like video ram size */
+      if (ioctl( stmfbdev->fd, FBIOGET_FSCREENINFO, &shared->fix ) < 0) {
+@@ -267,11 +269,13 @@
+      if (ret)
+           goto error;
+ 
++#ifdef HAVE_VT
+      if (dfb_config->vt) {
+           ret = dfb_vt_join();
+           if (ret)
+                goto error;
+      }
++#endif
+ 
+      /* Map the framebuffer */
+      stmfbdev->framebuffer_base = mmap( NULL, stmfbdev->shared->fix.smem_len,
+@@ -311,11 +315,13 @@
+      munmap( dfb_stmfbdev->framebuffer_base,
+              dfb_stmfbdev->shared->fix.smem_len );
+ 
++#ifdef HAVE_VT
+      if (dfb_config->vt) {
+           ret = dfb_vt_shutdown( emergency );
+           if (ret)
+                return ret;
+      }
++#endif
+ 
+      close( dfb_stmfbdev->fd );
+ 
+@@ -342,11 +348,13 @@
+      munmap( dfb_stmfbdev->framebuffer_base,
+              dfb_stmfbdev->shared->fix.smem_len );
+ 
++#ifdef HAVE_VT
+      if (dfb_config->vt) {
+           ret = dfb_vt_leave( emergency );
+           if (ret)
+                return ret;
+      }
++#endif
+ 
+      close( dfb_stmfbdev->fd );
+ 
+@@ -448,6 +456,7 @@
+ system_input_filter( CoreInputDevice *device,
+                      DFBInputEvent   *event )
+ {
++#ifdef HAVE_VT
+      if (dfb_config->vt && dfb_config->vt_switching) {
+           switch (event->type) {
+                case DIET_KEYPRESS:
+@@ -468,6 +477,7 @@
+                     break;
+           }
+      }
++#endif
+ 
+      return false;
+ }
+diff -Nur DirectFB-1.4.11.orig/inputdrivers/linux_input/linux_input.c DirectFB-1.4.11/inputdrivers/linux_input/linux_input.c
+--- DirectFB-1.4.11.orig/inputdrivers/linux_input/linux_input.c	2010-11-15 13:35:37.000000000 -0800
++++ DirectFB-1.4.11/inputdrivers/linux_input/linux_input.c	1969-12-31 16:00:00.000000000 -0800
+@@ -1254,9 +1254,12 @@
+ 
+      // Only allow USB keyboard and mouse support if the systems driver has
+      // the Virtual Terminal file ("/dev/tty0") open and available for use.
++#if HAVE_VT
+      if (!stmfb_dev->vt || stmfb_dev->vt->fd < 0)
+           return 0;
++#endif
+      }
++
+      goto success;
+ #endif
+ next2:
+@@ -1841,6 +1841,7 @@
+       /* Track associated entry in device_nums and device_names array. */
+       data->index = number;
+ 
++#ifdef HAVE_VT
+      if (info->desc.min_keycode >= 0 && info->desc.max_keycode >= info->desc.min_keycode) {
+ #if defined(LINUX_INPUT_USE_FBDEV)
+           if (dfb_system_type() == CORE_FBDEV) {
+@@ -1864,6 +1865,7 @@
+           if (data->vt_fd < 0)
+                D_WARN( "no keymap support (requires /dev/tty0 - CONFIG_VT)" );
+      }
++#endif
+ 
+      /* check if the device has LEDs */
+      ret = ioctl( fd, EVIOCGBIT(EV_LED, sizeof(ledbit)), ledbit );
+

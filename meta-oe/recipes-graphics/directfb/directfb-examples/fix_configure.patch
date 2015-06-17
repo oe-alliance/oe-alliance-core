@@ -1,0 +1,11 @@
+--- a/configure.in	2015-05-30 09:00:26.975455416 +0200
++++ b/configure.in	2015-05-31 12:04:32.527349145 +0200
+@@ -39,7 +39,7 @@
+ fi)
+ 
+ 
+-PKG_CHECK_MODULES(DIRECTFB, directfb >= $VERSION,[ WATER=`$PKG_CONFIG --variable=water directfb` ],
++PKG_CHECK_MODULES([DIRECTFB], directfb >= $VERSION,[ WATER=`$PKG_CONFIG --variable=water directfb` ],
+ 	AC_MSG_ERROR([$DIRECTFB_PKG_ERRORS
+ *** DirectFB $VERSION or newer is required. The latest version
+ *** of DirectFB is available from http://www.directfb.org/.]))
