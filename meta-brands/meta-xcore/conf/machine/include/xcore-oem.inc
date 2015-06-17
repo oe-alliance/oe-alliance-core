@@ -7,14 +7,14 @@ MACHINE_NAME = "\
 ${@base_contains('MACHINEBUILD', 'spycat', 'SPYCAT' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'vp7358ci', '7358ci' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'bcm7358', '7358' , '', d)}\
-${@base_contains('MACHINEBUILD', 'osmini', 'osmini' , '', d)}\
+${@base_contains('MACHINEBUILD', 'osmini', 'OS mini' , '', d)}\
 "
 
 MACHINE_BRAND = "\
 ${@base_contains('MACHINEBUILD', 'spycat', 'XCORE' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'vp7358ci', 'Sample2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'bcm7358', 'Sample1' , '', d)}\
-${@base_contains('MACHINEBUILD', 'osmini', 'Edison' , '', d)}\
+${@base_contains('MACHINEBUILD', 'osmini', 'Edision' , '', d)}\
 "
 
 IMAGEDIR ?= "\
