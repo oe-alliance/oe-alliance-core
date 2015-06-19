@@ -19,14 +19,14 @@ EXTRA_OECONF = "\
   ${@base_contains("TARGET_ARCH", "sh4", "--with-gfxdrivers=stgfx", "--with-gfxdrivers=none", d)} \
   --disable-vnc \
   --disable-x11 \
-  ${@base_contains("TARGET_ARCH", "sh4", "--enable-mme=yes --enable-stmfbdev", "", d)} \
+  ${@base_contains("TARGET_ARCH", "sh4", "--disable-fbdev --disable-devmem --enable-mme --enable-stmfbdev", "", d)} \
 "
 
 FILES_${PN}_append_sh4 += "\
   ${libdir}/directfb-${RV}/gfxdrivers/*.so \
 "
 
-FILES_${PN}-dev += "\
+FILES_${PN}-dev_append_sh4 += "\
   ${libdir}/directfb-${RV}/gfxdrivers/*.la \
 "
 
