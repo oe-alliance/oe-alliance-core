@@ -14,7 +14,8 @@ IMAGE_INSTALL = "opendroid-base \
   ${@base_contains("MACHINE_FEATURES", "smallflash", "", \
   " \
   packagegroup-base-smbfs-client \
-  packagegroup-base-smbfs \
+  packagegroup-base-smbfs-server \
+  packagegroup-base-smbfs-utils \
   packagegroup-base-nfs \
   ", d)} \
   "
