@@ -23,6 +23,9 @@ DVBPROVIDER_triplex = "kernel"
 
 DVBPROVIDER_xp1000 = "kernel"
 
+DVBPROVIDER_formuler1 = "kernel"
+DVBPROVIDER_formuler3 = "kernel"
+
 RRECOMMENDS_${PN} = " \
     ${@base_contains("MACHINE_FEATURES", "legacykernel", "", " \
     ${DVBPROVIDER}-module-dvb-usb-dvbsky \
