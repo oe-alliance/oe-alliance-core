@@ -1,0 +1,40 @@
+--- vsftpd-3.0.2.orig/twoprocess.c
++++ vsftpd-3.0.2/twoprocess.c
+@@ -41,7 +41,8 @@
+                                 struct mystr* p_chroot_str,
+                                 struct mystr* p_chdir_str,
+                                 const struct mystr* p_user_str,
+-                                const struct mystr* p_orig_user_str);
++                                const struct mystr* p_orig_user_str,
++                                int do_chroot);
+ 
+ static void
+ handle_sigchld(void* duff)
+@@ -454,7 +455,7 @@
+       secutil_option |= VSF_SECUTIL_OPTION_ALLOW_WRITEABLE_ROOT;
+     }
+     calculate_chdir_dir(was_anon, &userdir_str, &chroot_str, &chdir_str,
+-                        p_user_str, p_orig_user_str);
++                        p_user_str, p_orig_user_str, do_chroot);
+     vsf_secutil_change_credentials(p_user_str, &userdir_str, &chroot_str,
+                                    0, secutil_option);
+     if (!str_isempty(&chdir_str))
+@@ -522,7 +523,8 @@
+                     struct mystr* p_chroot_str,
+                     struct mystr* p_chdir_str,
+                     const struct mystr* p_user_str,
+-                    const struct mystr* p_orig_user_str)
++                    const struct mystr* p_orig_user_str,
++                    int do_chroot)
+ {
+   if (!anon_login)
+   {
+@@ -542,7 +544,7 @@
+   {
+     str_alloc_text(p_chroot_str, tunable_anon_root);
+   }
+-  else if (!anon_login && tunable_local_root)
++  else if (!anon_login && tunable_local_root && !do_chroot)
+   {
+     str_alloc_text(p_chroot_str, tunable_local_root);
+     if (tunable_user_sub_token)
