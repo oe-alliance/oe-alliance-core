@@ -21,6 +21,8 @@ DVBPROVIDER_hd2400 = "kernel"
 
 DVBPROVIDER_triplex = "kernel"
 
+DVBPROVIDER_xp1000 = "kernel"
+
 RRECOMMENDS_${PN} = " \
     ${@base_contains("MACHINE_FEATURES", "legacykernel", "", " \
     ${DVBPROVIDER}-module-dvb-usb-dvbsky \
