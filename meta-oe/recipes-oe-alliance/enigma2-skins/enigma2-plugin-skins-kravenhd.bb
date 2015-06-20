@@ -6,11 +6,9 @@ require conf/license/license-gplv2.inc
 inherit gitpkgv allarch
 
 SRCREV = "${AUTOREV}"
-PV = "5.7.4+git${SRCPV}"
-PKGV = "5.7.4+git${GITPKGV}"
-VER="5.7.4"
-
-RDEPENDS_${PN} = "enigma2-plugin-systemplugins-weathercomponenthandler enigma2-plugin-extensions-weatherplugin enigma2-plugin-systemplugins-extnumberzap"
+PV = "6.0+git${SRCPV}"
+PKGV = "6.0+git${GITPKGV}"
+VER="6.0"
 
 SRC_URI="git://github.com/KravenHD/KravenHD.git;protocol=git"
 
