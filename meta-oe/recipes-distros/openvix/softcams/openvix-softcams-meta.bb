@@ -11,6 +11,7 @@ DEPENDS = "\
     openvix-softcams-oscam \
     openvix-softcams-oscam-pcscd \
     openvix-softcams-oscam-latest \
+	openvix-softcams-oscam-pcscd-latest \
     openvix-softcams-evocamd \
     openvix-softcams-mgcamd135a \
     openvix-softcams-mgcamd138 \
@@ -19,4 +20,4 @@ DEPENDS = "\
     openvix-softcams-scam \
     "    
 
-PR = "r5"
+PR = "r6"
