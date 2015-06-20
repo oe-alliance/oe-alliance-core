@@ -121,7 +121,7 @@ ${@base_contains('MACHINEBUILD', 'dynaspark7162', 'mtd6' , '', d)}\
 KERNEL_FILE = "uImage"
 ROOTFS_FILE = "e2jffs2.img"
 
-MACHINE_KERNEL_PR = "r13"
+MACHINE_KERNEL_PR = "r14"
 
 TARGET_ARCH = "sh4"
 

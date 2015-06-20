@@ -872,7 +872,8 @@ CONFIG_SERIO_SERPORT=y
 #
 # Character devices
 #
-# CONFIG_VT is not set
+CONFIG_VT=y
+CONFIG_VT_CONSOLE=y
 # CONFIG_DEVKMEM is not set
 # CONFIG_SERIAL_NONSTANDARD is not set
 
