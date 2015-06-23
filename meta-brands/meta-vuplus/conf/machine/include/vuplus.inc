@@ -16,6 +16,7 @@ MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS = "\
 
 MACHINE_EXTRA_RRECOMMENDS = " \
     vuplus-shutdown \
+    vuplus-satipclient \
     gstreamer1.0-plugin-dvbmediasink \
     gstreamer1.0-libav \
     "
