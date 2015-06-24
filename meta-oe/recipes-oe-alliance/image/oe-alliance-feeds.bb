@@ -105,6 +105,8 @@ RDEPENDS_${PN} = " \
     streamproxy \
     "
 
+RDEPENDS_${PN}_remove_xc7362 = "network-usb-drivers-meta"
+
 RRECOMMENDS_${PN}_append_vuuno = "enigma2-plugin-extensions-hbbtv"
 RRECOMMENDS_${PN}_append_vuultimo = "enigma2-plugin-extensions-hbbtv"
 RRECOMMENDS_${PN}_append_vusolo = "enigma2-plugin-extensions-hbbtv"
