@@ -12,14 +12,14 @@ SRC_URI = " \
 
 inherit update-rc.d
 
-INITSCRIPT_NAME = "${PN}"
+INITSCRIPT_NAME = "satipclient"
 INITSCRIPT_PARAMS = "defaults"
 
 do_install_append() {
     install -d ${D}/usr/bin
     install -m 0755 ${WORKDIR}/satipclient ${D}/usr/bin
     install -d ${D}/etc/init.d
-    install -m 0755 ${WORKDIR}/${PN}.sh ${D}/etc/init.d/${PN}
+    install -m 0755 ${WORKDIR}/satipclient.sh ${D}/etc/init.d/satipclient
 }
 
 SRC_URI[md5sum] = "6b4123717ab2c0f74b53761ddc5f058e"
