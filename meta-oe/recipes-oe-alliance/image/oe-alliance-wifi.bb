@@ -26,6 +26,8 @@ OPTIONAL_WIFIDRIVERS = "${@base_contains("MACHINE_FEATURES", "wifiusblegacy", "e
 
 DEPENDS = "enigma2 enigma2-plugins enigma2-oe-alliance-plugins network-usb-drivers-meta"
 
+DEPENDS_remove_xc7362 = "network-usb-drivers-meta"
+
 RDEPENDS_${PN} = "\
     enigma2-plugin-systemplugins-wirelesslan \
     ${@base_contains("MACHINE", "vuduo2", "enigma2-plugin-drivers-network-usb-rt3070", "", d)} \
