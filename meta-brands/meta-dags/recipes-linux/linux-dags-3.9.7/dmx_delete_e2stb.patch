@@ -1,0 +1,67 @@
+diff --git a/drivers/media/dvb-core/dmxdev.c b/drivers/media/dvb-core/dmxdev.c
+index 9622b39..28deec6 100644
+--- a/drivers/media/dvb-core/dmxdev.c
++++ b/drivers/media/dvb-core/dmxdev.c
+@@ -37,7 +37,6 @@ module_param(debug, int, 0644);
+ MODULE_PARM_DESC(debug, "Turn on/off debugging (default:off).");
+ 
+ #define dprintk	if (debug) printk
+-#define  E2_STD 1
+ 
+ static int dvb_dmxdev_buffer_write(struct dvb_ringbuffer *buf,
+ 				   const u8 *src, size_t len)
+@@ -239,14 +238,6 @@ static ssize_t dvb_dvr_write(struct file *file, const char __user *buf,
+ 		mutex_unlock(&dmxdev->mutex);
+ 		return -ENODEV;
+ 	}
+-#if  E2_STD
+-	if(dmxdev->demux->set_desc_type(dmxdev->demux, 0))
+-	{
+-			mutex_unlock(&dmxdev->mutex);
+-			return -EBUSY;
+-
+-	}
+-#endif
+ 	ret = dmxdev->demux->write(dmxdev->demux, buf, count);
+ 	mutex_unlock(&dmxdev->mutex);
+ 	return ret;
+@@ -1238,11 +1229,7 @@ static unsigned int dvb_dvr_poll(struct file *file, poll_table *wait)
+ 		if (!dvb_ringbuffer_empty(&dmxdev->dvr_buffer))
+ 			mask |= (POLLIN | POLLRDNORM | POLLPRI);
+ 	} else
+-#if  E2_STD
+-        return dmxdev->demux->set_desc_pid(dmxdev->demux, 0,0);
+-#else
+ 		mask |= (POLLOUT | POLLWRNORM | POLLPRI);
+-#endif
+ 
+ 	return mask;
+ }
+diff --git a/drivers/media/dvb-core/dvbdev.c b/drivers/media/dvb-core/dvbdev.c
+index cd67136..dafb6e0 100644
+--- a/drivers/media/dvb-core/dvbdev.c
++++ b/drivers/media/dvb-core/dvbdev.c
+@@ -336,14 +336,23 @@ void dvb_unregister_device(struct dvb_device *dvbdev)
+ {
+ 	if (!dvbdev)
+ 		return;
++
++#if 0		
+ 	if(dvbdev->type==DVB_DEVICE_FRONTEND)
+ 		tunercnt--;
++#endif		
++		
+ 	down_write(&minor_rwsem);
+ 	dvb_minors[dvbdev->minor] = NULL;
+ 	up_write(&minor_rwsem);
+ 
+ 	device_destroy(dvb_class, MKDEV(DVB_MAJOR, dvbdev->minor));
+ 
++#if 1   /* sidabary-7362a0-00 */
++	if(dvbdev->type==DVB_DEVICE_FRONTEND)
++		tunercnt--;
++#endif		
++
+ 	list_del (&dvbdev->list_head);
+ 	kfree (dvbdev->fops);
+ 	kfree (dvbdev);
