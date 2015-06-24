@@ -4,39 +4,45 @@ include conf/machine/include/build-extras.inc
 BRAND_OEM = "xcore"
 
 MACHINE_NAME = "\
-${@base_contains('MACHINEBUILD', 'spycat', 'CAT' , '', d)}\
+${@base_contains('MACHINEBUILD', 'spycat', 'SPYCAT' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'vp7358ci', '7358ci' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'bcm7358', '7358' , '', d)}\
+${@base_contains('MACHINEBUILD', 'osmini', 'OS mini' , '', d)}\
 "
 
 MACHINE_BRAND = "\
-${@base_contains('MACHINEBUILD', 'spycat', 'SPY' , '', d)}\
+${@base_contains('MACHINEBUILD', 'spycat', 'XCORE' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'vp7358ci', 'Sample2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'bcm7358', 'Sample1' , '', d)}\
+${@base_contains('MACHINEBUILD', 'osmini', 'Edision' , '', d)}\
 "
 
 IMAGEDIR ?= "\
 ${@base_contains('MACHINEBUILD', 'spycat', 'spycat' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'vp7358ci', 'vp7358ci' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'bcm7358', 'bcm7358' , '', d)}\
+${@base_contains('MACHINEBUILD', 'osmini', 'osmini' , '', d)}\
 "
 
 MTD_KERNEL = "\
 ${@base_contains('MACHINEBUILD', 'spycat', 'mtd0' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'vp7358ci', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'bcm7358', 'mtd2' , '', d)}\
+${@base_contains('MACHINEBUILD', 'osmini', 'mtd0' , '', d)}\
 "
 
 MTD_ROOTFS = "\
 ${@base_contains('MACHINEBUILD', 'spycat', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'vp7358ci', 'mtd3' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'bcm7358', 'mtd3' , '', d)}\
+${@base_contains('MACHINEBUILD', 'osmini', 'mtd2' , '', d)}\
 "
 
 MACHINE_DRIVER = "\
 ${@base_contains('MACHINEBUILD', 'spycat', 'spycat' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'vp7358ci', 'vp7358ci' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'bcm7358', 'bcm7358' , '', d)}\
+${@base_contains('MACHINEBUILD', 'osmini', 'osmini' , '', d)}\
 "
 
 KERNEL_FILE = "kernel.bin"
