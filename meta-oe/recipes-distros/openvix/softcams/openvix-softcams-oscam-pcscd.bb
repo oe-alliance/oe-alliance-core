@@ -8,7 +8,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 PV = "1.20+svn${SRCPV}"
 SRCREV = "9620"
 SRC_URI = "svn://www.streamboard.tv/svn/oscam;protocol=http;module=trunk;scmdata=keep;rev=${SRCREV}"
-PR = "r5"
+PR = "r6"
 
 PACKAGES = "enigma2-plugin-softcams-oscam-pcscd"
 
@@ -36,7 +36,7 @@ EXTRA_OECMAKE += "\
 
 do_install() {
     install -d ${D}/usr/softcams
-    install -m 0755 ${WORKDIR}/build/oscam ${D}/usr/softcams/oscam${SRCREV}PCSC
+    install -m 0755 ${WORKDIR}/build/oscam ${D}/usr/softcams/oscam-pcsc
 }
 
 FILES_enigma2-plugin-softcams-oscam-pcscd = "/usr"
