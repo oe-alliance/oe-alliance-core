@@ -1,0 +1,102 @@
+diff --git a/audio.c b/audio.c
+index 98f4fd15a5f2..281023ae2da4 100644
+--- a/audio.c
++++ b/audio.c
+@@ -166,7 +166,17 @@ void cdfs_cdda_file_read(struct inode * inode, char * buf, size_t count, unsigne
+ 
+ /***************************************************************************/
+ 
+-#if LINUX_VERSION_CODE >= KERNEL_VERSION(3,16,0)
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(4,1,0)
++ssize_t
++generic_file_readv(struct kiocb *iocb, struct iov_iter *to)
++{
++	size_t count = iov_length(to->iov, to->nr_segs);
++	struct iov_iter i;
++
++	iov_iter_init(&i, READ, to->iov, to->nr_segs, count);
++	return generic_file_read_iter(iocb, &i);
++}
++#elif LINUX_VERSION_CODE >= KERNEL_VERSION(3,16,0)
+ ssize_t
+ generic_file_aio_read(struct kiocb *iocb, const struct iovec *iov,
+ 		unsigned long nr_segs, loff_t pos)
+@@ -180,8 +190,12 @@ generic_file_aio_read(struct kiocb *iocb, const struct iovec *iov,
+ #endif
+ 
+ struct file_operations cdfs_cdda_file_operations = {
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(4,1,0)
++    .read_iter = generic_file_readv,
++#else
+     .read = do_sync_read,
+     .aio_read = generic_file_aio_read,
++#endif
+     .mmap = generic_file_mmap,
+ };
+ 
+diff --git a/cdXA.c b/cdXA.c
+index 3649fdeddb80..e1e12e99c582 100644
+--- a/cdXA.c
++++ b/cdXA.c
+@@ -26,8 +26,12 @@
+ #include "cdfs.h"
+ 
+ struct file_operations cdfs_cdXA_file_operations = {
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(4,1,0)
++    .read_iter = generic_file_readv,
++#else
+     .read = do_sync_read,
+     .aio_read = generic_file_aio_read,
++#endif
+     .mmap = generic_file_mmap,
+ };
+ 
+diff --git a/cddata.c b/cddata.c
+index 0d21062d09d4..e1494a7093b7 100644
+--- a/cddata.c
++++ b/cddata.c
+@@ -76,8 +76,12 @@ unsigned cdfs_data_bmap(struct super_block * sb, int inode, int block){
+ 
+ 
+ struct file_operations cdfs_cddata_file_operations = {
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(4,1,0)
++    .read_iter = generic_file_readv,
++#else
+   .read = do_sync_read,
+   .aio_read = generic_file_aio_read,
++#endif
+ #ifdef OLD_KERNEL
+   .mmap             = generic_file_mmap
+ #else
+diff --git a/cdfs.h b/cdfs.h
+index bfb5f1586ef1..d95c048f06f2 100644
+--- a/cdfs.h
++++ b/cdfs.h
+@@ -204,7 +204,9 @@ extern int kcdfsd_pid;
+ extern struct task_struct *kcdfsd_pid;
+ #endif
+ 
+-#if LINUX_VERSION_CODE >= KERNEL_VERSION(3,16,0)
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(4,1,0)
++ssize_t generic_file_readv(struct kiocb *iocb, struct iov_iter *to);
++#elif LINUX_VERSION_CODE >= KERNEL_VERSION(3,16,0)
+ ssize_t generic_file_aio_read(struct kiocb *iocb, const struct iovec *iov, unsigned long nr_segs, loff_t pos);
+ #endif
+ 
+diff --git a/hfs.c b/hfs.c
+index 62f444da66ce..5804e5248ed6 100644
+--- a/hfs.c
++++ b/hfs.c
+@@ -194,8 +194,12 @@ void cdfs_copy_from_cdhfs(struct super_block * sb, int inode, unsigned int start
+ /***************************************************************************/
+ 
+ struct file_operations cdfs_cdhfs_file_operations = {
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(4,1,0)
++    .read_iter = generic_file_readv,
++#else
+   .read = do_sync_read,
+   .aio_read = generic_file_aio_read,
++#endif
+   .mmap             = generic_file_mmap
+ };
+ 
