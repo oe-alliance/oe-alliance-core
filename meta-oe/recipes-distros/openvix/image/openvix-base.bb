@@ -7,7 +7,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "1.0"
-PR = "r17"
+PR = "r18"
 
 inherit packagegroup
 
@@ -20,8 +20,5 @@ RDEPENDS_${PN} = "\
     openvix-bootlogo \
     openvix-spinner \
     libcrypto-compat-0.9.8 \
-    packagegroup-base-smbfs \
-    packagegroup-base-smbfs-client \
-    packagegroup-base-smbfs-server \
     "
 
