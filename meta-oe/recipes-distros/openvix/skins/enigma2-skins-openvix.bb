@@ -12,11 +12,11 @@ PACKAGE_ARCH := "${MACHINE_ARCH}"
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r28"
+PR = "r29"
 
 SRC_URI = "git://github.com/OpenViX/skins.git;protocol=git"
 
-DEPENDS += "font-roboto-enigma font-valis-hd "
+DEPENDS += "font-roboto-enigma font-valis-hd enigma2-plugin-extensions-yahooweather "
 
 RCONFLICTS_enigma2-plugin-skins-openvix-vix-day-hd = "enigma2-plugin-skins-vix-day-hd"
 RREPLACES_enigma2-plugin-skins-openvix-vix-day-hd = "enigma2-plugin-skins-vix-day-hd"
@@ -92,8 +92,8 @@ RDEPENDS_enigma2-plugin-skins-openvix-youvix-blue = "enigma2-plugin-skins-openvi
 RDEPENDS_enigma2-plugin-skins-openvix-youvix-green = "enigma2-plugin-skins-openvix-youvix-common"
 RDEPENDS_enigma2-plugin-skins-openvix-youvix-purple = "enigma2-plugin-skins-openvix-youvix-common"
 RDEPENDS_enigma2-plugin-skins-openvix-youvix-red = "enigma2-plugin-skins-openvix-youvix-common"
-RDEPENDS_enigma2-plugin-skins-openvix-vixbmc-1080-bello = "enigma2-plugin-skins-openvix-vixbmc-1080-common"
-RDEPENDS_enigma2-plugin-skins-openvix-vixbmc-1080-confluence = "enigma2-plugin-skins-openvix-vixbmc-1080-common"
+RDEPENDS_enigma2-plugin-skins-openvix-vixbmc-1080-bello = "enigma2-plugin-skins-openvix-vixbmc-1080-common enigma2-plugin-extensions-yahooweather"
+RDEPENDS_enigma2-plugin-skins-openvix-vixbmc-1080-confluence = "enigma2-plugin-skins-openvix-vixbmc-1080-common enigma2-plugin-extensions-yahooweather"
 
 FILES_enigma2-plugin-skincomponents-metrix += " ${libdir}/enigma2/python/Components/Converter/RemainingToTextMod.pyo ${libdir}/enigma2/python/Components/Converter/MetrixCombinedEventName.pyo ${libdir}/enigma2/python/Components/Converter/ClockToTextMod.pyo ${libdir}/enigma2/python/Components/Converter/MetrixRefString.pyo ${libdir}/enigma2/python/Components/Converter/vhdConvEventName.pyo ${libdir}/enigma2/python/Components/Converter/MetrixWeather.pyo ${libdir}/enigma2/python/Components/Converter/EventNameMod.pyo ${libdir}/enigma2/python/Components/Renderer/VReference.py ${libdir}/enigma2/python/Components/Renderer/VReference.pyo ${libdir}/enigma2/python/Components/Renderer/XPicon.pyo ${libdir}/enigma2/python/Components/Renderer/XPiconChannel.pyo ${libdir}/enigma2/python/Components/Renderer/VVolumeText.pyo ${libdir}/enigma2/python/Components/Renderer/NextEvent.pyo"
 FILES_enigma2-plugin-skincomponents-metrix-src += " ${libdir}/enigma2/python/Components/Converter/EventNameMod.py ${libdir}/enigma2/python/Components/Converter/RemainingToTextMod.py ${libdir}/enigma2/python/Components/Converter/vhdConvEventName.py ${libdir}/enigma2/python/Components/Converter/MetrixRefString.py ${libdir}/enigma2/python/Components/Converter/MetrixWeather.py ${libdir}/enigma2/python/Components/Converter/MetrixCombinedEventName.py ${libdir}/enigma2/python/Components/Converter/ClockToTextMod.py ${libdir}/enigma2/python/Components/Renderer/VVolumeText.py ${libdir}/enigma2/python/Components/Renderer/XPicon.py ${libdir}/enigma2/python/Components/Renderer/XPiconChannel.py ${libdir}/enigma2/python/Components/Renderer/NextEvent.py"
