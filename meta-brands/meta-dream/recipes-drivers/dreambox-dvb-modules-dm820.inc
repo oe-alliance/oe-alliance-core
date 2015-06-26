@@ -25,6 +25,7 @@ do_install() {
     install -d ${D}/lib/modules/${DM_LOCALVERSION}/extra
     install -m 0644 ${S}/LICENSE ${D}/lib/modules/${DM_LOCALVERSION}/extra
     install -m 0644 ${S}/*.ko ${D}/lib/modules/${DM_LOCALVERSION}/extra
+    install -m 0644 ${S}/nims/si2166b/*.ko ${D}/lib/modules/${DM_LOCALVERSION}/extra
 }
 
 PACKAGES = "${PN}"
