@@ -10,6 +10,8 @@ SRC_URI = " \
     file://satipclient.sh \
 "
 
+S = "${WORKDIR}"
+
 inherit update-rc.d
 
 INITSCRIPT_NAME = "satipclient"
