@@ -4,22 +4,16 @@ include conf/machine/include/build-extras.inc
 BRAND_OEM = "ceryon"
 
 MACHINE_NAME = "\
-${@base_contains('MACHINEBUILD', 'nano', 'NANO' , '', d)}\
-${@base_contains('MACHINEBUILD', 'nanoc', 'NANO-C' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'twinboxlcd', 'TWINBOX LCD' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbmicro', 'Premium Micro' , '', d)}\
 "
 
 MACHINE_BRAND = "\
-${@base_contains('MACHINEBUILD', 'nano', 'WWIO' , '', d)}\
-${@base_contains('MACHINEBUILD', 'nanoc', 'WWIO' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'twinboxlcd', 'RED EAGLE' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbmicro', 'Miraclebox' , '', d)}\
 "
 
 IMAGEDIR ?= "\
-${@base_contains('MACHINEBUILD', 'nano', 'nano' , '', d)}\
-${@base_contains('MACHINEBUILD', 'nanoc', 'nano' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'twinboxlcd', 'redeagle/twinboxlcd' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbmicro', 'miraclebox/micro' , '', d)}\
 "
@@ -69,9 +63,7 @@ IMAGE_CMD_ubi_prepend = " \
     rm -rf ${IMAGE_ROOTFS}/tmp/*; \
     "
 
-MACHINE_FEATURES += "3dtv alsa hdmicec switchoff bootsplash omb \
-    ${@base_contains('MACHINEBUILD', 'nanoc', 'dvbc-only' , '', d)} \
-    "
+MACHINE_FEATURES += "3dtv alsa hdmicec switchoff bootsplash omb"
 
 BOOTLOGO_FILENAME = "splash.bin"
 
