@@ -17,11 +17,6 @@ RPROVIDES_enigma2-plugin-softcams-oscam-pcscd += "openvix-softcams-oscam-pcscd"
 
 DEPENDS = "libusb openssl pcsc-lite"
 RDEPENDS_enigma2-plugin-softcams-oscam-pcscd = "pcsc-lite"
-RCONFLICTS_enigma2-plugin-softcams-oscam-pcscd = "oscam oscam-stable oscam-unstable oscam-experimental oscam-util-list-smargo"
-RCONFLICTS_enigma2-plugin-softcams-oscam-pcscd += "enigma2-plugin-softcams-oscam-cs"
-RCONFLICTS_enigma2-plugin-softcams-oscam-pcscd += "enigma2-plugin-softcams-oscam-stable-cs enigma2-plugin-softcams-oscam-unstable-cs enigma2-plugin-softcams-oscam-experimental-cs"
-RCONFLICTS_enigma2-plugin-softcams-oscam-pcscd += "enigma2-plugin-softcams-oscam-stable    enigma2-plugin-softcams-oscam-unstable    enigma2-plugin-softcams-oscam-experimental"
-RREPLACES_enigma2-plugin-softcams-oscam-pcscd = "${RCONFLICTS_${PN}}"
 
 S = "${WORKDIR}/trunk"
 

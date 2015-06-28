@@ -16,11 +16,6 @@ PROVIDES += "openvix-softcams-oscam-latest"
 RPROVIDES_enigma2-plugin-softcams-oscam-latest += "openvix-softcams-oscam-latest"
 
 DEPENDS = "libusb openssl"
-RCONFLICTS_enigma2-plugin-softcams-oscam-latest = "oscam oscam-stable oscam-unstable oscam-experimental oscam-util-list-smargo"
-RCONFLICTS_enigma2-plugin-softcams-oscam-latest += "enigma2-plugin-softcams-oscam-cs"
-RCONFLICTS_enigma2-plugin-softcams-oscam-latest += "enigma2-plugin-softcams-oscam-stable-cs enigma2-plugin-softcams-oscam-unstable-cs enigma2-plugin-softcams-oscam-experimental-cs"
-RCONFLICTS_enigma2-plugin-softcams-oscam-latest += "enigma2-plugin-softcams-oscam-stable    enigma2-plugin-softcams-oscam-unstable    enigma2-plugin-softcams-oscam-experimental"
-RREPLACES_enigma2-plugin-softcams-oscam-latest = "${RCONFLICTS_${PN}}"
 
 S = "${WORKDIR}/trunk"
 
