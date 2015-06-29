@@ -140,7 +140,7 @@ ${@base_contains('MACHINEBUILD', 'atemio6000', 'inihde2am' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'atemio6100', 'inihde2am' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'atemio6200', 'inihde2am' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'atemionemesis', 'ini-800' , '', d)}\
-${@base_contains('MACHINEBUILD', 'beyonwizt2', 'ini-442dt' , '', d)}\
+${@base_contains('MACHINEBUILD', 'beyonwizt2', 'inihde2au' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'beyonwizt3', 'inihdx' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'beyonwizt4', 'ini-840t4' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'bwidowx', 'yhgd2580' , '', d)}\
