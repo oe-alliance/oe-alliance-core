@@ -24,6 +24,7 @@ do_install() {
     echo "box_type=${MACHINEBUILD}" > ${D}/etc/image-version
     echo "build_type=${BUILDTYPE}" >> ${D}/etc/image-version
     echo "version=${IMAGE_VERSION}" >> ${D}/etc/image-version
+	echo "type=${DISTRO_TYPE}" >> ${D}/etc/image-version
     echo "build=${BUILD_VERSION}" >> ${D}/etc/image-version
     echo "date=${DATETIME}" >> ${D}/etc/image-version
     echo "comment=ViX" >> ${D}/etc/image-version
