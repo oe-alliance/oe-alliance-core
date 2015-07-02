@@ -5,19 +5,19 @@
  		.name = "complete",
  		.size = MTDPART_SIZ_FULL,
 -		.offset = 0x00000000
-+		.offset = 0x00700000,
++		.offset = 0x00800000,
  	},
  	{
  		.name = "kernel",
  		.size = 0x00600000,
 -		.offset = 0x00000000
-+		.offset = 0x00700000,
++		.offset = 0x00800000,
  	},
  	{
  		.name = "rootfs",
  		.size = MTDPART_SIZ_FULL,
 -		.offset = 0x00600000
-+		.offset = 0x00d00000
++		.offset = 0x00e00000
  	},
  };
  
