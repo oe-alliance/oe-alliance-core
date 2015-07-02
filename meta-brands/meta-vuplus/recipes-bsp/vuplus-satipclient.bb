@@ -1,8 +1,8 @@
 SUMMARY = "VUPLUS satip client using vtuner"
 LICENSE = "CLOSED"
 
-SRCDATE = "20150623"
-SRCDATE_PR = "r1"
+SRCDATE = "20150702"
+SRCDATE_PR = "r0"
 PR = "${SRCDATE}.${SRCDATE_PR}"
 
 SRC_URI = " \
@@ -22,5 +22,5 @@ do_install_append() {
     install -m 0755 ${WORKDIR}/satipclient.sh ${D}/etc/init.d/satipclient
 }
 
-SRC_URI[md5sum] = "6b4123717ab2c0f74b53761ddc5f058e"
-SRC_URI[sha256sum] = "4bbd2446cd1cdb60546385db2938275b80e6c86eb03ca52dbeeedf1bd3b10cad"
+SRC_URI[md5sum] = "2609bf7f92dc8e807841b1af25b94c1d"
+SRC_URI[sha256sum] = "401257a051ae9106504f0cfb771aa572db1512926ef038dcd25b45b2b154c955"
