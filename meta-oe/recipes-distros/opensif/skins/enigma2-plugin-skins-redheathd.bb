@@ -16,9 +16,6 @@ PR_font-nmsbd2 = "r0"
 PKGV_font-nmsbd2 = "${PV_font-nmsbd2}"
 DESCRIPTION_font-nmsbd2 = "Nmsbd2 font"
 
-PV_font-verdanar = "20120113"
-PR_font-verdanar = "r0"
-PKGV_font-verdanar = "${PV_font-verdanar}"
 DESCRIPTION_font-verdanar = "Verdana_R font"
 
 PACKAGES = "${PN} font-nmsbd2 font-verdanar"

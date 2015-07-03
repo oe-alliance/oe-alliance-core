@@ -11,9 +11,6 @@ PKGV = "1.0+git${GITPKGV}"
 PR = "r3"
 SRCREV = "${AUTOREV}"
 
-PV_font-daconi-digital-bold = "20120921"
-PR_font-daconi-digital-bold = "r0"
-PKGV_font-daconi-digital-bold = "${PV_font-daconi-digital-bold}"
 DESCRIPTION_font-daconi-digital-bold = "Daconi digital Bold font"
 
 PACKAGES = "${PN} font-daconi-digital-bold"

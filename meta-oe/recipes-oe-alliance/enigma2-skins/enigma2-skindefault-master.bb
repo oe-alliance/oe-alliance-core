@@ -19,9 +19,6 @@ SRC_URI = "git://github.com/oe-alliance/oe-alliance-e2-skindefault.git;protocol=
 
 S = "${WORKDIR}/git"
 
-PV_font-roboto-enigma = "2013.02.21"
-PR_font-roboto-enigma = "r0"
-PKGV_font-roboto-enigma = "${PV_font-roboto-enigma}"
 DESCRIPTION_font-roboto-enigma = "Roboto enigma font"
 
 PACKAGES =+ " font-roboto-enigma"

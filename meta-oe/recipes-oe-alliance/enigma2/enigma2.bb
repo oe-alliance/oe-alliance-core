@@ -244,9 +244,6 @@ PACKAGES += "${PN}-meta"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PACKAGES =+ "enigma2-fonts"
-PV_enigma2-fonts = "20150318"
-PR_enigma2-fonts = "r0"
-PKGV_enigma2-fonts = "${PV_enigma2-fonts}"
 FILES_enigma2-fonts = "${datadir}/fonts"
 
 EXTRA_OECONF = " \

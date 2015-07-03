@@ -11,9 +11,6 @@ PKGV = "1.0+git${GITPKGV}"
 PR = "r1"
 SRCREV = "${AUTOREV}"
 
-PV_font-daconi-digital-watch = "${PV}"
-PR_font-daconi-digital-watch = "r0"
-PKGV_font-daconi-digital-watch = "${PKGV}"
 DESCRIPTION_font-daconi-digital-watch = "Daconi digital watch font"
 
 PV_enigma2-plugin-skins-jules-black-hd-supremacy = "${PV}"
