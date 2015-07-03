@@ -2,24 +2,34 @@ require gstreamer1.0-plugins.inc
 
 LICENSE = "GPLv2+ & LGPLv2+ & LGPLv2.1+ "
 
-DEPENDS += "gstreamer1.0-plugins-base bzip2"
+DEPENDS += "gstreamer1.0-plugins-base bzip2 libpng jpeg libdca"
 
 S = "${WORKDIR}/gst-plugins-bad-${PV}"
 
-inherit gettext bluetooth
+SRC_URI += "file://configure-allow-to-disable-libssh2.patch \
+           "
 
-PACKAGECONFIG ?= " \
+inherit gettext
+
+# opengl packageconfig factored out to make it easy for distros
+# and BSP layers to pick either (desktop) opengl, gles2, or no GL
+PACKAGECONFIG_GL ?= "${@bb.utils.contains('DISTRO_FEATURES', 'opengl', 'gles2', '', d)}"
+
+PACKAGECONFIG ??= " \
+    ${PACKAGECONFIG_GL} \
     ${@bb.utils.contains('DISTRO_FEATURES', 'wayland', 'wayland', '', d)} \
-    ${@bb.utils.contains('DISTRO_FEATURES', 'opengl', 'gl', '', d)} \
     ${@bb.utils.contains('DISTRO_FEATURES', 'bluetooth', 'bluez', '', d)} \
     ${@bb.utils.contains('DISTRO_FEATURES', 'directfb', 'directfb', '', d)} \
     orc curl uvch264 neon sndfile \
     hls sbc dash bz2 smoothstreaming \
+    faac faad libmms dash webp rtmp \
     "
+
 # dash = Dynamic Adaptive Streaming over HTTP
 PACKAGECONFIG[assrender]       = "--enable-assrender,--disable-assrender,libass"
 PACKAGECONFIG[curl]            = "--enable-curl,--disable-curl,curl"
-PACKAGECONFIG[gl]              = "--enable-gl,--disable-gl,virtual/egl virtual/libgles2"
+PACKAGECONFIG[gles2]           = "--enable-gles2 --enable-egl,--disable-gles2 --disable-egl,virtual/libgles2 virtual/egl"
+PACKAGECONFIG[opengl]          = "--enable-opengl,--disable-opengl,virtual/libgl libglu"
 PACKAGECONFIG[faac]            = "--enable-faac,--disable-faac,faac"
 PACKAGECONFIG[faad]            = "--enable-faad,--disable-faad,faad2"
 PACKAGECONFIG[libmms]          = "--enable-libmms,--disable-libmms,libmms"
@@ -40,11 +50,12 @@ PACKAGECONFIG[bz2]             = "--enable-bz2,--disable-bz2,bzip2"
 PACKAGECONFIG[fluidsynth]      = "--enable-fluidsynth,--disable-fluidsynth,fluidsynth"
 PACKAGECONFIG[schroedinger]    = "--enable-schro,--disable-schro,schroedinger"
 PACKAGECONFIG[smoothstreaming] = "--enable-smoothstreaming,--disable-smoothstreaming,libxml2"
-PACKAGECONFIG[bluez]           = "--enable-bluez,--disable-bluez,${BLUEZ}"
+PACKAGECONFIG[bluez]           = "--enable-bluez,--disable-bluez,bluez4"
 PACKAGECONFIG[rsvg]            = "--enable-rsvg,--disable-rsvg,librsvg"
 PACKAGECONFIG[sndfile]         = "--enable-sndfile,--disable-sndfile,libsndfile1"
 PACKAGECONFIG[webp]            = "--enable-webp,--disable-webp,libwebp"
-PACKAGECONFIG[rtmp]            = "--enable-rtmp,--disable-rtmp,rtmpdump"
+PACKAGECONFIG[rtmp]            = "--enable-rtmp,--disable-rtmp,librtmp"
+PACKAGECONFIG[libssh2]         = "--enable-libssh2,--disable-libssh2,libssh2"
 
 # these plugins have not been ported to 1.0 (yet):
 #   directdraw vcd apexsink dc1394 lv2 linsys musepack mythtv
@@ -64,18 +75,20 @@ EXTRA_OECONF += " \
     --enable-shm \
     --enable-fbdev \
     --enable-decklink \
+    --enable-dts \
+    --enable-mpegdemux \
     --disable-acm \
     --disable-android_media \
     --disable-apexsink \
     --disable-apple_media \
     --disable-avc \
     --disable-chromaprint \
+    --disable-cocoa \
     --disable-daala \
     --disable-dc1394 \
     --disable-direct3d \
     --disable-directdraw \
     --disable-directsound \
-    --disable-dts \
     --disable-gme \
     --disable-gsettings \
     --disable-gsm \
@@ -119,4 +132,6 @@ EXTRA_OECONF += " \
     "
 
 ARM_INSTRUCTION_SET = "arm"
+
+FILES_gstreamer1.0-plugins-bad-opencv += "${datadir}/gst-plugins-bad/1.0/opencv*"
 

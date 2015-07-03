@@ -15,10 +15,10 @@ index 8217d79..48034bf 100644
        caps = gst_caps_new_simple ("video/mpeg",
            "mpegversion", G_TYPE_INT, 4,
            "systemstream", G_TYPE_BOOLEAN, FALSE, NULL);
-+      gchar *fstr = g_strdup_printf ("%" GST_FOURCC_FORMAT,
++      {gchar *fstr = g_strdup_printf ("%" GST_FOURCC_FORMAT,
 +          GST_FOURCC_ARGS (codec_fcc));
 +      gst_caps_set_simple (caps, "fourcc", G_TYPE_STRING, fstr, NULL);
-+      g_free (fstr);
++      g_free (fstr);}
        if (codec_name)
          *codec_name = g_strdup ("MPEG-4");
        break;
