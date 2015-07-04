@@ -8,6 +8,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=73a5855a8119deb017f5f13cf327095d \
 
 SRC_URI += " \
             file://0001-rtmp-fix-seeking-and-potential-segfault.patch \
+            file://dvbapi5-fix-old-kernel.patch \
 "
 
 SRC_URI[md5sum] = "6f36b8730362d51f547dc3cce244621e"
