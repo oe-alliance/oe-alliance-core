@@ -3,7 +3,7 @@ HOMEPAGE = "http://linuxtv.org/"
 SECTION = "kernel/modules"
 LICENSE = "GPLv2"
 
-inherit module
+inherit module machine_kernel_pr
 
 PACKAGES_DYNAMIC += "dvb-sky-module-*"
 

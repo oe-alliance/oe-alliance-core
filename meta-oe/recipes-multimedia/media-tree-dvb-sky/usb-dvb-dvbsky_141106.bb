@@ -1,6 +1,5 @@
 DEPENDS = "virtual/kernel module-init-tools"
 RDEPENDS_${PN} += "kmod"
-SECTION = "kernel/modules"
 LIC_FILES_CHKSUM = "file://COPYING;md5=eb723b61539feef013de476e68b5c50a"
 PR = "r8"
 
