@@ -2,8 +2,8 @@ require dreambox-dvb-modules.inc
 
 PR = "${INC_PR}.2"
 
-SRC_URI[modules.md5sum] = "023e2546f40cd9a9c7a7f968bfd86f7e"
-SRC_URI[modules.sha256sum] = "a5479477232c89a93b5d327d77d2173399873ea9f6411f146ffa4f7456f9e9d7"
+SRC_URI[modules.md5sum] = "c4421f27f70a67b2929cc29e790604aa"
+SRC_URI[modules.sha256sum] = "224ceee0df07abb10522a2bc6479f11c953c7db12bbf8a0529c49971637256c7"
 
 SRC_URI += "file://patch_modules.sh"
 
