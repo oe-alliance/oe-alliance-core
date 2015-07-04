@@ -63,3 +63,6 @@ pkg_postinst_kernel-image () {
     fi
     true
 }
+
+do_rm_work() {
+}

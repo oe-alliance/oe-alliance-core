@@ -50,3 +50,6 @@ fi
 }
 
 COMPATIBLE_MACHINE = "^(dm820|dm7080)$"
+
+do_rm_work() {
+}

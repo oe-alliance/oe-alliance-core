@@ -29,3 +29,6 @@ SRC_URI[azbox-initrd-azboxhd.md5sum] = "be250b8a23c782ba569ebaa65956d7e1"
 SRC_URI[azbox-initrd-azboxhd.sha256sum] = "2cd4c203ac1f321c8b4f4f011411a5f987b3ea64e61f16ce6df73e9e15d39d4f"
 
 include recipes-linux/linux-azbox.inc
+
+do_rm_work() {
+}

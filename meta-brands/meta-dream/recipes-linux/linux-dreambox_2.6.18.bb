@@ -80,3 +80,6 @@ do_install_append() {
 do_package_qa() {
     exit 0
 }
+
+do_rm_work() {
+}

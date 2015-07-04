@@ -83,3 +83,6 @@ pkg_postinst_kernel-image_gb800solo () {
     rm -f /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz
     true
 }
+
+do_rm_work() {
+}

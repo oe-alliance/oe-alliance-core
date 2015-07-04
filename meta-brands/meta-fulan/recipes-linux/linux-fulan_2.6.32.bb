@@ -140,3 +140,5 @@ pkg_postinst_kernel-image() {
     true
 }
 
+do_rm_work() {
+}

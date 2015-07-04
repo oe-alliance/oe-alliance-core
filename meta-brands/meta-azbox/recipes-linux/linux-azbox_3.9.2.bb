@@ -52,3 +52,6 @@ SRC_URI[azbox-initrd-azboxminime.md5sum] = "3b7508985058ac0a5d9d310f669cc5bc"
 SRC_URI[azbox-initrd-azboxminime.sha256sum] = "b7979e03bd53f6c975079761c3399d5dd80e9db5addeae27726f09f87a86be72"
 
 include recipes-linux/linux-azbox.inc
+
+do_rm_work() {
+}
