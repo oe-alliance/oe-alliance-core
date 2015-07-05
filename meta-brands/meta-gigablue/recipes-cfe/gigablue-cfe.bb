@@ -33,7 +33,7 @@ do_deploy() {
         install -m 0644 lcdwarning400.bin ${DEPLOYDIR}/lcdwarning400.bin
     fi
     if [ -e warning.bin ]; then
-        install -m 0644 ${MACHINE}/warning.bin ${DEPLOYDIR}/warning.bin
+        install -m 0644 warning.bin ${DEPLOYDIR}/warning.bin
     fi
 }
 
