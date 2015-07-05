@@ -18,11 +18,11 @@ INITSCRIPT_PARAMS = "start 06 S ."
 
 inherit update-rc.d
 
-SRC_URI = "file://bootlogo.mvi file://radio.mvi file://bootlogo.sh file://splash576.bmp file://splash480.bmp"
-SRC_URI_append_gb800ue = "file://lcdsplash.bin"
-SRC_URI_append_gbquad = "file://lcdsplash.bin"
-SRC_URI_append_gb800ueplus = "file://lcdsplash.bin"
-SRC_URI_append_gbquadplus = "file://lcdsplash400.bin file://lcdwaitkey400.bin file://lcdwarning400.bin"
+SRC_URI = "file://bootlogo.mvi file://radio.mvi file://bootlogo.sh file://splash576.bmp file://splash480.bmp \
+    ${@base_contains("MACHINE_FEATURES", "gigabluelcd220", "file://lcdsplash220.bin file://lcdwaitkey220.bin file://lcdwarning220.bin" , "", d)} \
+    ${@base_contains("MACHINE_FEATURES", "gigabluelcd400", "file://lcdsplash400.bin file://lcdwaitkey400.bin file://lcdwarning400.bin" , "", d)} \
+"
+
 SRC_URI_append_dags3 = "file://splash1.bmp file://splash1_os1.bmp file://splash1_os2.bmp file://splash2.bmp file://splash3.bmp"
 SRC_URI_append_dags4 = "file://splash1.bmp file://splash1_os1.bmp file://splash1_os2.bmp file://splash2.bmp file://splash3.bmp"
 
@@ -49,6 +49,10 @@ do_install() {
     install -m 0644 radio.mvi ${D}/usr/share/enigma2/radio.mvi
     install -d ${D}/${sysconfdir}/init.d
     install -m 0755 ${S}/bootlogo.sh ${D}/${sysconfdir}/init.d/bootlogo
+    ${@base_contains("MACHINE_FEATURES", "gigabluelcd400", "install -m 0644 lcdwaitkey400.bin ${D}/usr/share/lcdwaitkey.bin" , "", d)}
+    ${@base_contains("MACHINE_FEATURES", "gigabluelcd400", "install -m 0644 lcdwarning400.bin ${D}/usr/share/lcdwarning.bin" , "", d)}
+    ${@base_contains("MACHINE_FEATURES", "gigabluelcd220", "install -m 0644 lcdwaitkey220.bin ${D}/usr/share/lcdwaitkey.bin" , "", d)}
+    ${@base_contains("MACHINE_FEATURES", "gigabluelcd220", "install -m 0644 lcdwarning220.bin ${D}/usr/share/lcdwarning.bin" , "", d)}
 }
 
 inherit deploy
@@ -58,11 +62,11 @@ do_deploy() {
     else
         install -m 0644 splash576.bmp ${DEPLOYDIR}/${BOOTLOGO_FILENAME}
     fi
-    if [ -e lcdsplash.bin ]; then
-        install -m 0644 lcdsplash.bin ${DEPLOYDIR}/lcdsplash.bin
+    if [ -e lcdsplash220.bin ]; then
+        install -m 0644 lcdsplash220.bin ${DEPLOYDIR}/lcdsplash220.bin
     fi
     if [ -e lcdsplash400.bin ]; then
-        install -m 0644 lcdsplash400.bin ${DEPLOYDIR}/lcdsplash.bin
+        install -m 0644 lcdsplash400.bin ${DEPLOYDIR}/lcdsplash400.bin
     fi
     if [ -e splash1_os1.bmp ]; then
         install -m 0644 splash1_os1.bmp ${DEPLOYDIR}/splash1_os1.bmp

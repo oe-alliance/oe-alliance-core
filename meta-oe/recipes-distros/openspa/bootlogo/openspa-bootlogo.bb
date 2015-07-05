@@ -18,9 +18,7 @@ INITSCRIPT_PARAMS = "start 06 S ."
 
 inherit update-rc.d
 
-SRC_URI = "file://bootlogo.mvi file://radio.mvi file://bootlogo.sh ${@base_contains("MACHINE_FEATURES", "bootsplash", "file://splash.bin file://splash.bmp" , "", d)} "
-SRC_URI_append_gb800ue = "file://lcdsplash.bin"
-SRC_URI_append_gbquad = "file://lcdsplash.bin"
+SRC_URI = "file://bootlogo.mvi file://radio.mvi file://bootlogo.sh ${@base_contains("MACHINE_FEATURES", "bootsplash", "file://splash.bin file://splash.bmp" , "", d)}"
 
 BINARY_VERSION = "1.3"
 
@@ -64,9 +62,6 @@ do_deploy() {
         else
             install -m 0644 splash.bin ${DEPLOYDIR}/${BOOTLOGO_FILENAME}
         fi
-    fi
-    if [ -e lcdsplash.bin ]; then
-        install -m 0644 lcdsplash.bin ${DEPLOYDIR}/lcdsplash.bin
     fi
 }
 

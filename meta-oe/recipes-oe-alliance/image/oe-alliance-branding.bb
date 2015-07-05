@@ -64,7 +64,7 @@ do_configure_prepend() {
     elif [ "${MACHINE}" = "dags5" ]; then
         DRIVERSDATE=`grep "SRCDATE = " ${OEA-META-DAGS-BASE}/recipes-drivers/dags-dvb-modules-7362.bb | cut -b 12-19`
     elif [ "${BRAND_OEM}" = "gigablue" ]; then
-        DRIVERSDATE=`grep "SRCDATE = " ${OEA-META-GIGABLUE-BASE}/recipes-drivers/gigablue-dvb-modules-${MACHINE}.bb | cut -b 12-19`
+        DRIVERSDATE=`grep "SRCDATE = " ${OEA-META-GIGABLUE-BASE}/recipes-drivers/gigablue-dvb-modules-${MACHINE_DRIVER}.bb | cut -b 12-19`
     elif [ "${BRAND_OEM}" = "odin" ]; then
         DRIVERSDATE=`grep "SRCDATE = " ${OEA-META-ODIN-BASE}/recipes-drivers/odin-dvb-modules-${MACHINE_DRIVER}.bb | cut -b 12-19`
     elif [ "${BRAND_OEM}" = "ini" ]; then

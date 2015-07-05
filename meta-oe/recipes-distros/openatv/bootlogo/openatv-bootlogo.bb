@@ -21,17 +21,16 @@ INITSCRIPT_PARAMS_vusolose = "start 70 S . stop 89 0 ."
 
 inherit update-rc.d
 
-SRC_URI = "file://bootlogo.mvi file://radio.mvi file://bootlogo.sh file://splash576.bmp file://splash480.bmp"
-SRC_URI_append_gb800ue = "file://lcdsplash.bin file://lcdwaitkey.bin file://lcdwarning.bin"
-SRC_URI_append_gbquad = "file://lcdsplash.bin file://lcdwaitkey.bin file://lcdwarning.bin"
-SRC_URI_append_gb800ueplus = "file://lcdsplash.bin file://lcdwaitkey.bin file://lcdwarning.bin"
-SRC_URI_append_gbultraue = "file://lcdsplash.bin file://lcdwaitkey.bin file://lcdwarning.bin"
-SRC_URI_append_gbquadplus = "file://lcdsplash400.bin file://lcdwaitkey400.bin file://lcdwarning400.bin"
+SRC_URI = "file://bootlogo.mvi file://radio.mvi file://bootlogo.sh file://splash576.bmp file://splash480.bmp \
+    ${@base_contains("MACHINE_FEATURES", "gigabluelcd220", "file://lcdsplash220.bin file://lcdwaitkey220.bin file://lcdwarning220.bin" , "", d)} \
+    ${@base_contains("MACHINE_FEATURES", "gigabluelcd400", "file://lcdsplash400.bin file://lcdwaitkey400.bin file://lcdwarning400.bin" , "", d)} \
+"
+
 SRC_URI_append_vuduo2 = "file://lcdbootlogo.png file://bootlogo.py"
 SRC_URI_append_dags3 = "file://splash1.bmp file://splash1_os1.bmp file://splash1_os2.bmp file://splash2.bmp file://splash3.bmp"
 SRC_URI_append_dags4 = "file://splash1.bmp file://splash1_os1.bmp file://splash1_os2.bmp file://splash2.bmp file://splash3.bmp"
 SRC_URI_append_dags5 = "file://splash1_power.bmp file://splash1_os1.bmp file://splash1_os2.bmp file://splash2.bmp file://splash3.bmp"
-SRC_URI_append_7100s = "file://lcdsplash.bin file://7100s/lcdwaitkey.bin file://7100s/lcdwarning.bin file://7100s/lcdcomplete.bin"
+SRC_URI_append_7100s = "file://lcdsplash220.bin file://7100s/lcdwaitkey220.bin file://7100s/lcdwarning220.bin file://7100s/lcdcomplete220.bin"
 
 BINARY_VERSION = "1.3"
 
@@ -64,35 +63,10 @@ do_install() {
     install -m 0644 radio.mvi ${D}/usr/share/enigma2/radio.mvi
     install -d ${D}/${sysconfdir}/init.d
     install -m 0755 bootlogo.sh ${D}/${sysconfdir}/init.d/bootlogo
-}
-do_install_append_gb800ue() {
-    install -d ${D}/usr/share
-    install -m 0644 lcdwaitkey.bin ${D}/usr/share/lcdwaitkey.bin
-    install -m 0644 lcdwarning.bin ${D}/usr/share/lcdwarning.bin
-}
-
-do_install_append_gbquad() {
-    install -d ${D}/usr/share
-    install -m 0644 lcdwaitkey.bin ${D}/usr/share/lcdwaitkey.bin
-    install -m 0644 lcdwarning.bin ${D}/usr/share/lcdwarning.bin
-}
-
-do_install_append_gb800ueplus() {
-    install -d ${D}/usr/share
-    install -m 0644 lcdwaitkey.bin ${D}/usr/share/lcdwaitkey.bin
-    install -m 0644 lcdwarning.bin ${D}/usr/share/lcdwarning.bin
-}
-
-do_install_append_gbultraue() {
-    install -d ${D}/usr/share
-    install -m 0644 lcdwaitkey.bin ${D}/usr/share/lcdwaitkey.bin
-    install -m 0644 lcdwarning.bin ${D}/usr/share/lcdwarning.bin
-}
-
-do_install_append_gbquadplus() {
-    install -d ${D}/usr/share
-    install -m 0644 lcdwaitkey400.bin ${D}/usr/share/lcdwaitkey.bin
-    install -m 0644 lcdwarning400.bin ${D}/usr/share/lcdwarning.bin
+    ${@base_contains("MACHINE_FEATURES", "gigabluelcd400", "install -m 0644 lcdwaitkey400.bin ${D}/usr/share/lcdwaitkey.bin" , "", d)}
+    ${@base_contains("MACHINE_FEATURES", "gigabluelcd400", "install -m 0644 lcdwarning400.bin ${D}/usr/share/lcdwarning.bin" , "", d)}
+    ${@base_contains("MACHINE_FEATURES", "gigabluelcd220", "install -m 0644 lcdwaitkey220.bin ${D}/usr/share/lcdwaitkey.bin" , "", d)}
+    ${@base_contains("MACHINE_FEATURES", "gigabluelcd220", "install -m 0644 lcdwarning220.bin ${D}/usr/share/lcdwarning.bin" , "", d)}
 }
 
 do_install_append_vuduo2() {
@@ -102,9 +76,9 @@ do_install_append_vuduo2() {
 
 do_install_append_7100s() {
     install -d ${D}/usr/share
-    install -m 0644 ${WORKDIR}/7100s/lcdwaitkey.bin ${D}/usr/share/lcdwaitkey.bin
-    install -m 0644 ${WORKDIR}/7100s/lcdwarning.bin ${D}/usr/share/lcdwarning.bin
-    install -m 0644 ${WORKDIR}/7100s/lcdcomplete.bin ${D}/usr/share/lcdcomplete.bin
+    install -m 0644 ${WORKDIR}/7100s/lcdwaitkey220.bin ${D}/usr/share/lcdwaitkey.bin
+    install -m 0644 ${WORKDIR}/7100s/lcdwarning220.bin ${D}/usr/share/lcdwarning.bin
+    install -m 0644 ${WORKDIR}/7100s/lcdcomplete220.bin ${D}/usr/share/lcdcomplete.bin
 }
 
 inherit deploy
@@ -114,11 +88,11 @@ do_deploy() {
     else
         install -m 0644 splash576.bmp ${DEPLOYDIR}/${BOOTLOGO_FILENAME}
     fi
-    if [ -e lcdsplash.bin ]; then
-    install -m 0644 lcdsplash.bin ${DEPLOYDIR}/lcdsplash.bin
+    if [ -e lcdsplash220.bin ]; then
+    install -m 0644 lcdsplash220.bin ${DEPLOYDIR}/lcdsplash220.bin
     fi
     if [ -e lcdsplash400.bin ]; then
-        install -m 0644 lcdsplash400.bin ${DEPLOYDIR}/lcdsplash.bin
+        install -m 0644 lcdsplash400.bin ${DEPLOYDIR}/lcdsplash400.bin
     fi
     if [ -e splash1_os1.bmp ]; then
         install -m 0644 splash1_os1.bmp ${DEPLOYDIR}/splash1_os1.bmp
