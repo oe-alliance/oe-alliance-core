@@ -78,13 +78,28 @@ ${@base_contains('MACHINEBUILD', 'axase3c', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'maram9', 'mtd3' , '', d)}\
 "
 
+MACHINE_DRIVER = "\
+${@base_contains('MACHINEBUILD', 'classm', 'odinm7' , '', d)}\
+${@base_contains('MACHINEBUILD', 'axodin', 'odinm7s' , '', d)}\
+${@base_contains('MACHINEBUILD', 'axodinc', 'odinm7c' , '', d)}\
+${@base_contains('MACHINEBUILD', 'starsatlx', 'odinm7' , '', d)}\
+${@base_contains('MACHINEBUILD', 'genius', 'odinm7' , '', d)}\
+${@base_contains('MACHINEBUILD', 'evo', 'odinm7' , '', d)}\
+${@base_contains('MACHINEBUILD', 'galaxym6', 'odinm7' , '', d)}\
+${@base_contains('MACHINEBUILD', 'geniuse3hd', 'e3hd' , '', d)}\
+${@base_contains('MACHINEBUILD', 'evoe3hd', 'e3hd' , '', d)}\
+${@base_contains('MACHINEBUILD', 'axase3', 'e3hd' , '', d)}\
+${@base_contains('MACHINEBUILD', 'axase3c', 'e3hd' , '', d)}\
+${@base_contains('MACHINEBUILD', 'maram9', 'maram9' , '', d)}\
+"
+
 KERNEL_FILE = "kernel.bin"
 ROOTFS_FILE = "rootfs.bin"
 
 DVBPROVIDER = "kernel"
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS = "\
-    odin-dvb-modules-${MACHINE} \
+    odin-dvb-modules-${MACHINE_DRIVER} \
     "
 
 MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS = "\

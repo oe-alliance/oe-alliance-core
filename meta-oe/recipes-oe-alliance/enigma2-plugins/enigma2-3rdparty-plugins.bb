@@ -175,12 +175,6 @@ THIRDPARTY_MACHINE_PLUGINS_e3hd = " \
 THIRDPARTY_MACHINE_PLUGINS_odinm7 = " \
     enigma2-plugin-extensions-hbbtv_4.1_ODIN_mips32el.ipk \
     "
-THIRDPARTY_MACHINE_PLUGINS_odinm7s = " \
-    enigma2-plugin-extensions-hbbtv_4.1_ODIN_mips32el.ipk \
-    "
-THIRDPARTY_MACHINE_PLUGINS_odinm7c = " \
-    enigma2-plugin-extensions-hbbtv_4.1_ODIN_mips32el.ipk \
-    "
 THIRDPARTY_MACHINE_PLUGINS_inihdp = " \
     enigma2-plugin-extensions-hbbtv_1.1-INI_mips32el.ipk \
     "
