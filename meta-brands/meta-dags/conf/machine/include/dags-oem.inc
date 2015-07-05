@@ -189,7 +189,7 @@ ${@base_contains('MACHINEBUILD', 'optimussos', 'splash1_os1.bmp' , '', d)}\
 
 MACHINE_DRIVER = "\
 ${@base_contains('MACHINEBUILD', 'tm2t', 'dags7335' , '', d)}\
-${@base_contains('MACHINEBUILD', 'tmnano', dags7335' , '', d)}\
+${@base_contains('MACHINEBUILD', 'tmnano', 'dags7335' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmnano2t', 'dags7335' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmnano3t', 'dags7356tm' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmnano2super', 'dags7356tm' , '', d)}\
