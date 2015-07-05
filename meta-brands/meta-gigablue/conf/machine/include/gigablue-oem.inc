@@ -98,6 +98,7 @@ ROOTFS_FILE = "rootfs.bin"
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS = " \
     gigablue-dvb-modules-${MACHINE_DRIVER} \
+    gigablue-ddbootup \
     "
 
 DVBPROVIDER = "kernel"

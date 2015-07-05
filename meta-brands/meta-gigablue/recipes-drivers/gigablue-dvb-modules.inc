@@ -3,6 +3,7 @@ SECTION = "base"
 PRIORITY = "required"
 LICENSE = "CLOSED"
 require conf/license/license-close.inc
+PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PV = "${KV}+${SRCDATE}"
 PR = "r29"
@@ -17,14 +18,6 @@ do_compile() {
 }
 
 do_install() {
-    install -d ${D}${sysconfdir}/init.d
-    install -d ${D}${sysconfdir}/rcS.d
-    echo '#! /bin/sh' > ${WORKDIR}/ddbootup
-    ${@base_contains("MACHINE_FEATURES", "gigabluelcd", "echo 'echo 1 > /proc/stb/lcd/mode' >> ${WORKDIR}/ddbootup" , "", d)}
-    echo 'touch /dev/dbox/lcd0' >> ${WORKDIR}/ddbootup
-    echo 'echo "${MACHINEBUILD}" > /proc/stb/info/gbmodel' >> ${WORKDIR}/ddbootup
-    install -m 0755 ${WORKDIR}/ddbootup ${D}${sysconfdir}/init.d
-    ln -sf ../init.d/ddbootup ${D}${sysconfdir}/rcS.d/S39ddbootup
     install -d ${D}/lib/modules/${KV}/extra
     for f in *.ko; do
         install -m 0644 ${WORKDIR}/$f ${D}/lib/modules/${KV}/extra/$f;
