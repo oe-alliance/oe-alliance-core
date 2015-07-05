@@ -7,7 +7,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PV = "5.0"
-PR = "r3"
+PR = "r4"
 
 inherit packagegroup
 
@@ -20,7 +20,6 @@ RRECOMMENDS_${PN} = "\
     python-compression \
     enigma2-plugin-skins-opendroid \
     enigma2-plugin-drivers-usbserial \
-    enigma2-plugin-extensions-autosettings \
     enigma2-plugin-extensions-extrapanel \
     enigma2-plugin-extensions-autotimer \
     enigma2-plugin-extensions-epgsearch \
