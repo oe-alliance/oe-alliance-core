@@ -15,20 +15,14 @@ SRC_URI = "git://github.com/christophecvr/gstreamer1.0-plugin-multibox-dvbmedias
 SRC_URI_append_sh4 = " \
     file://0001-dvbmediasink_sh4_fix.patch;patch=1 \
 "
-SRC_URI_append_dags1 = " \
+SRC_URI_append_dags7335 = " \
     file://0001-update-dags-support.patch;patch=1 \ 
 "
-SRC_URI_append_dags2 = " \
+SRC_URI_append_dags7356 = " \
     file://0001-update-dags-support.patch;patch=1 \ 
 "
-SRC_URI_append_dags3 = " \
+SRC_URI_append_dags7362 = " \
     file://0001-update-dags-support.patch;patch=1 \ 
-"
-SRC_URI_append_dags4 = " \
-    file://0001-update-dags-support.patch;patch=1 \ 
-"
-SRC_URI_append_dags5 = " \
-    file://0001-update-dags-support.patch;patch=1\ 
 "
 
 SRCREV = "${AUTOREV}"

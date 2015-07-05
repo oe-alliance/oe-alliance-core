@@ -4,11 +4,9 @@ PACKAGE_ARCH = "all"
 require conf/license/license-gplv2.inc
 
 DVBPROVIDER = "dvb-sky"
-DVBPROVIDER_dags1 = "kernel"
-DVBPROVIDER_dags2 = "kernel"
-DVBPROVIDER_dags3 = "kernel"
-DVBPROVIDER_dags4 = "kernel"
-DVBPROVIDER_dags5 = "kernel"
+DVBPROVIDER_dags7356 = "kernel"
+DVBPROVIDER_dags7335 = "kernel"
+DVBPROVIDER_dags7362 = "kernel"
 
 DVBPROVIDER_xc7362 = "kernel"
 DVBPROVIDER_xc7358 = "kernel"

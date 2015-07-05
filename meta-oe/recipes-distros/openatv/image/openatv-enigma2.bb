@@ -38,8 +38,7 @@ RRECOMMENDS_${PN} = " \
 
 RRECOMMENDS_${PN}_append_et5x00 = " swap-workaround"
 RRECOMMENDS_${PN}_append_vusolo = " swap-workaround"
-RRECOMMENDS_${PN}_append_gb800se = " swap-workaround"
-RRECOMMENDS_${PN}_append_gb800ue = " swap-workaround"
+RRECOMMENDS_${PN}_append_gb7325 = " swap-workaround"
 RRECOMMENDS_${PN}_append_gb800solo = " swap-workaround"
 RRECOMMENDS_${PN}_append_dm800 = " swap-workaround"
 RRECOMMENDS_${PN}_append_dm800se = " swap-workaround"

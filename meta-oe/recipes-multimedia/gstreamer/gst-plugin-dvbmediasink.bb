@@ -9,19 +9,13 @@ DEPENDS = "gstreamer gst-plugins-base libdca"
 
 SRC_URI = "git://git.code.sf.net/p/openpli/${PN};protocol=git"
 
-SRC_URI_append_dags1 = " \
+SRC_URI_append_dags7335 = " \
     file://dvbavmediasink-0.1.patch;patch=1 \ 
 "
-SRC_URI_append_dags2 = " \
+SRC_URI_append_dags7356 = " \
     file://dvbavmediasink-0.1.patch;patch=1 \ 
 "
-SRC_URI_append_dags3 = " \
-    file://dvbavmediasink-0.1.patch;patch=1 \ 
-"
-SRC_URI_append_dags4 = " \
-    file://dvbavmediasink-0.1.patch;patch=1 \ 
-"
-SRC_URI_append_dags5 = " \
+SRC_URI_append_dags7362 = " \
     file://dvbavmediasink-0.1.patch;patch=1 \ 
 "
 

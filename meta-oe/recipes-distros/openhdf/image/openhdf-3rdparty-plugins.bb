@@ -30,10 +30,7 @@ DEPENDS = "enigma2"
 THIRDPARTY_MACHINE_PLUGINS_gbquad = " \
     enigma2-plugin-extensions-multiquickbutton_*_gb_*.ipk \
     "
-THIRDPARTY_MACHINE_PLUGINS_gb800ue = " \
-    enigma2-plugin-extensions-multiquickbutton_*_gb_*.ipk \
-    "
-THIRDPARTY_MACHINE_PLUGINS_gb800se = " \
+THIRDPARTY_MACHINE_PLUGINS_gb7325 = " \
     enigma2-plugin-extensions-multiquickbutton_*_gb_*.ipk \
     "
 THIRDPARTY_MACHINE_PLUGINS_gb800solo = " \
@@ -74,33 +71,6 @@ THIRDPARTY_MACHINE_PLUGINS_odinm7 = " \
     enigma2-plugin-extensions-hbbtv_2.12_ODIN_mips32el.ipk \
     "
 THIRDPARTY_MACHINE_PLUGINS_maram9 = " \
-    enigma2-plugin-extensions-hbbtv_2.12_ODIN_mips32el.ipk \
-    "
-THIRDPARTY_MACHINE_PLUGINS_starsatlx = " \
-    enigma2-plugin-extensions-hbbtv_2.12_ODIN_mips32el.ipk \
-    "
-THIRDPARTY_MACHINE_PLUGINS_classm = " \
-    enigma2-plugin-extensions-hbbtv_2.12_ODIN_mips32el.ipk \
-    "
-THIRDPARTY_MACHINE_PLUGINS_axodin = " \
-    enigma2-plugin-extensions-hbbtv_2.12_ODIN_mips32el.ipk \
-    "
-THIRDPARTY_MACHINE_PLUGINS_axase3 = " \
-    enigma2-plugin-extensions-hbbtv_2.12_ODIN_mips32el.ipk \
-    "
-THIRDPARTY_MACHINE_PLUGINS_tmtwin = " \
-    enigma2-plugin-extensions-hbbtv_2.12_ODIN_mips32el.ipk \
-    "
-THIRDPARTY_MACHINE_PLUGINS_tmsingle = " \
-    enigma2-plugin-extensions-hbbtv_2.12_ODIN_mips32el.ipk \
-    "
-THIRDPARTY_MACHINE_PLUGINS_xp100mk= " \
-    enigma2-plugin-extensions-hbbtv_2.12_ODIN_mips32el.ipk \
-    "
-THIRDPARTY_MACHINE_PLUGINS_sf8= " \
-    enigma2-plugin-extensions-hbbtv_2.12_ODIN_mips32el.ipk \
-    "
-THIRDPARTY_MACHINE_PLUGINS_xp1000= " \
     enigma2-plugin-extensions-hbbtv_2.12_ODIN_mips32el.ipk \
     "
 

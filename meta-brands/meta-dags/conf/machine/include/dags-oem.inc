@@ -187,10 +187,47 @@ ${@base_contains('MACHINEBUILD', 'optimussos3plus', 'splash1_os2.bmp' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'optimussos', 'splash1_os1.bmp' , '', d)}\
 "
 
+MACHINE_DRIVER = "\
+${@base_contains('MACHINEBUILD', 'tm2t', 'dags7335' , '', d)}\
+${@base_contains('MACHINEBUILD', 'tmnano', dags7335' , '', d)}\
+${@base_contains('MACHINEBUILD', 'tmnano2t', 'dags7335' , '', d)}\
+${@base_contains('MACHINEBUILD', 'tmnano3t', 'dags7356tm' , '', d)}\
+${@base_contains('MACHINEBUILD', 'tmnano2super', 'dags7356tm' , '', d)}\
+${@base_contains('MACHINEBUILD', 'tmsingle', 'dags7335' , '', d)}\
+${@base_contains('MACHINEBUILD', 'tmtwin', 'dags7335' , '', d)}\
+${@base_contains('MACHINEBUILD', 'tmnanose', 'dags7362' , '', d)}\
+${@base_contains('MACHINEBUILD', 'tmnanosecombo', 'dags7362' , '', d)}\
+${@base_contains('MACHINEBUILD', 'iqonios100hd', 'dags7335' , '', d)}\
+${@base_contains('MACHINEBUILD', 'iqonios200hd', 'dags7335ci' , '', d)}\
+${@base_contains('MACHINEBUILD', 'iqonios300hd', 'dags7335' , '', d)}\
+${@base_contains('MACHINEBUILD', 'iqonios300hdv2', 'dags7335' , '', d)}\
+${@base_contains('MACHINEBUILD', 'force1', 'dags7356' , '', d)}\
+${@base_contains('MACHINEBUILD', 'force1plus', 'dags7356' , '', d)}\
+${@base_contains('MACHINEBUILD', 'megaforce1plus', 'dags7356' , '', d)}\
+${@base_contains('MACHINEBUILD', 'force2', 'dags7362' , '', d)}\
+${@base_contains('MACHINEBUILD', 'force2plus', 'dags7362' , '', d)}\
+${@base_contains('MACHINEBUILD', 'megaforce2', 'dags7362' , '', d)}\
+${@base_contains('MACHINEBUILD', 'worldvisionf1', 'dags7356' , '', d)}\
+${@base_contains('MACHINEBUILD', 'worldvisionf1plus', 'dags7356' , '', d)}\
+${@base_contains('MACHINEBUILD', 'roxxs200hd', 'dags7335ci' , '', d)}\
+${@base_contains('MACHINEBUILD', 'mediaart200hd', 'dags7335ci' , '', d)}\
+${@base_contains('MACHINEBUILD', 'optimussos1plus', 'dags7356' , '', d)}\
+${@base_contains('MACHINEBUILD', 'optimussos2plus', 'dags7356' , '', d)}\
+${@base_contains('MACHINEBUILD', 'optimussos3plus', 'dags7356' , '', d)}\
+${@base_contains('MACHINEBUILD', 'optimussos1', 'dags7335' , '', d)}\
+${@base_contains('MACHINEBUILD', 'optimussos2', 'dags7335ci' , '', d)}\
+${@base_contains('MACHINEBUILD', 'optimussos', 'dags7362' , '', d)}\
+${@base_contains('MACHINEBUILD', 'mediabox', 'dags7335' , '', d)}\
+"
+
 KERNEL_FILE = "oe_kernel.bin"
 ROOTFS_FILE = "oe_rootfs.bin"
 
 DVBPROVIDER = "kernel"
+
+MACHINE_ESSENTIAL_EXTRA_RDEPENDS = " \
+    dags-dvb-modules-${MACHINE_DRIVER} \
+    "
 
 MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS = "\
     kernel-module-cdfs \
@@ -209,6 +246,9 @@ DEFAULTTUNE = "mips32el"
 
 GLIBC_EXTRA_OECONF = "--with-tls"
 DVBMEDIASINK_CONFIG = "--with-dags --with-pcm --with-eac3 --with-amr --with-wmv"
+
+PREFERRED_VERSION_linux-dags = "3.9.7"
+PREFERRED_VERSION_linux-libc-headers = "3.9.7"
 
 PREFERRED_PROVIDER_virtual/kernel = "linux-dags"
 PREFERRED_PROVIDER_virtual/blindscan-dvbs = "vuplus-blindscan-utils"
@@ -233,15 +273,15 @@ IMAGE_CMD_ubi_prepend = " \
 IMAGE_CMD_ubi_append = " \
     mkdir -p ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}; \
     ${@base_contains("MACHINE_FEATURES", "bootsplash", "cp ${DEPLOY_DIR_IMAGE}/${BOOTLOGO_FILENAME} ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/${BOOTLOGO_FILENAME};" , "", d)} \
-    ${@base_contains("MACHINE", "dags3", "cp ${DEPLOY_DIR_IMAGE}/${SPLASH1_BMP} ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/splash1.bmp;" , "", d)} \
-    ${@base_contains("MACHINE", "dags3", "cp ${DEPLOY_DIR_IMAGE}/splash2.bmp ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/splash2.bmp;" , "", d)} \
-    ${@base_contains("MACHINE", "dags3", "cp ${DEPLOY_DIR_IMAGE}/splash3.bmp ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/splash3.bmp;" , "", d)} \
-    ${@base_contains("MACHINE", "dags4", "cp ${DEPLOY_DIR_IMAGE}/${SPLASH1_BMP} ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/splash1.bmp;" , "", d)} \
-    ${@base_contains("MACHINE", "dags4", "cp ${DEPLOY_DIR_IMAGE}/splash2.bmp ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/splash2.bmp;" , "", d)} \
-    ${@base_contains("MACHINE", "dags4", "cp ${DEPLOY_DIR_IMAGE}/splash3.bmp ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/splash3.bmp;" , "", d)} \
-    ${@base_contains("MACHINE", "dags5", "cp ${DEPLOY_DIR_IMAGE}/${SPLASH1_BMP} ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/splash1.bmp;" , "", d)} \
-    ${@base_contains("MACHINE", "dags5", "cp ${DEPLOY_DIR_IMAGE}/splash2.bmp ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/splash2.bmp;" , "", d)} \
-    ${@base_contains("MACHINE", "dags5", "cp ${DEPLOY_DIR_IMAGE}/splash3.bmp ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/splash3.bmp;" , "", d)} \
+    ${@base_contains("MACHINE", "dags7356", "cp ${DEPLOY_DIR_IMAGE}/${SPLASH1_BMP} ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/splash1.bmp;" , "", d)} \
+    ${@base_contains("MACHINE", "dags7356", "cp ${DEPLOY_DIR_IMAGE}/splash2.bmp ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/splash2.bmp;" , "", d)} \
+    ${@base_contains("MACHINE", "dags7356", "cp ${DEPLOY_DIR_IMAGE}/splash3.bmp ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/splash3.bmp;" , "", d)} \
+    ${@base_contains("MACHINE", "dags7356", "cp ${DEPLOY_DIR_IMAGE}/${SPLASH1_BMP} ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/splash1.bmp;" , "", d)} \
+    ${@base_contains("MACHINE", "dags7356", "cp ${DEPLOY_DIR_IMAGE}/splash2.bmp ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/splash2.bmp;" , "", d)} \
+    ${@base_contains("MACHINE", "dags7356", "cp ${DEPLOY_DIR_IMAGE}/splash3.bmp ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/splash3.bmp;" , "", d)} \
+    ${@base_contains("MACHINE", "dags7362", "cp ${DEPLOY_DIR_IMAGE}/${SPLASH1_BMP} ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/splash1.bmp;" , "", d)} \
+    ${@base_contains("MACHINE", "dags7362", "cp ${DEPLOY_DIR_IMAGE}/splash2.bmp ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/splash2.bmp;" , "", d)} \
+    ${@base_contains("MACHINE", "dags7362", "cp ${DEPLOY_DIR_IMAGE}/splash3.bmp ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/splash3.bmp;" , "", d)} \
     mv ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.ubi ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/${ROOTFS_FILE}; \
     gzip -f -9c ${DEPLOY_DIR_IMAGE}/vmlinux-${MACHINE}.bin > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/${KERNEL_FILE}; \
     echo ${DISTRO_NAME}-${DISTRO_VERSION}-${MACHINEBUILD}-${DATE} > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/imageversion; \
