@@ -90,7 +90,7 @@ ${@base_contains('MACHINEBUILD', 'geniuse3hd', 'e3hd' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'evoe3hd', 'e3hd' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'axase3', 'e3hd' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'axase3c', 'e3hd' , '', d)}\
-${@base_contains('MACHINEBUILD', 'maram9', 'maram9' , '', d)}\
+${@base_contains('MACHINEBUILD', 'maram9', 'odinm9' , '', d)}\
 "
 
 KERNEL_FILE = "kernel.bin"
