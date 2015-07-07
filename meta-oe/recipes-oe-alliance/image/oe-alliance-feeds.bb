@@ -9,7 +9,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "1.0"
-PR = "r62"
+PR = "r63"
 
 DEPENDS = "enigma2-plugin-drivers-usbserial"
 RECOMMENDS = "enigma2-plugin-extensions-et-livestream"
@@ -100,6 +100,7 @@ RDEPENDS_${PN} = " \
     idle3-tools \
     pngquant \
     streamproxy \
+    ${@base_contains("GST_VERSION", "1.0", "eplayer5", "eplayer4", d)} \
     "
 
 RDEPENDS_${PN}_remove_xc7362 = "network-usb-drivers-meta"
