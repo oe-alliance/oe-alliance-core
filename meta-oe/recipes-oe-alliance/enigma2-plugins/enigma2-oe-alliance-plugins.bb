@@ -28,7 +28,7 @@ PROVIDES += " \
     enigma2-plugin-systemplugins-remotecontrolcode \
     enigma2-plugin-extensions-webbrowser \
     enigma2-plugin-extensions-ondemand-openuitzendinggemist \
-    enigma2-plugin-extensions-satipclient \
+    enigma2-plugin-systemplugins-satipclient \
     enigma2-plugin-extensions-tunerserver \
     ${@base_contains('MACHINE_BRAND', 'Vu+', 'enigma2-plugin-extensions-hbbtv ' , ' ', d)} \
     enigma2-plugin-systemplugins-transcodingsetup \
@@ -90,9 +90,10 @@ DESCRIPTION_enigma2-plugin-extensions-webbrowser = "Webbrowser launcher"
 RDEPENDS_enigma2-plugin-extensions-webbrowser = "python-gdata libqtwebkite4 webbrowser-utils qt4-embedded-fonts qt4-embedded-plugin-imageformat-gif qt4-embedded-plugin-imageformat-ico qt4-embedded-plugin-imageformat-jpeg qt4-embedded-plugin-imageformat-mng qt4-embedded-plugin-imageformat-svg qt4-embedded-plugin-imageformat-tiff qt4-embedded-plugin-iconengine-svgicon"
 FILES_enigma2-plugin-extensions-webbrowser_append = "${datadir}/keymaps"
 DESCRIPTION_enigma2-plugin-extensions-ondemand-openuitzendinggemist = "Watch NL-IP TV"
-DESCRIPTION_enigma2-plugin-extensions-satipclient = "Satip Client setup"
-RDEPENDS_enigma2-plugin-extensions-satipclient = "satip-client"
-DEPENDS_enigma2-plugin-extensions-satipclient = "satip-client"
+DESCRIPTION_enigma2-plugin-systemplugins-satipclient = "Satip Client setup"
+RDEPENDS_enigma2-plugin-systemplugins-satipclient = "satip-client"
+DEPENDS_enigma2-plugin-systemplugins-satipclient = "satip-client"
+REPLACES_enigma2-plugin-systemplugins-satipclient = "enigma2-plugin-extensions-satipclient"
 DESCRIPTION_enigma2-plugin-extensions-tunerserver = "Builds a virtual channels list"
 DESCRIPTION_enigma2-plugin-extensions-hbbtv = "HbbTV player"
 RDEPENDS_enigma2-plugin-extensions-hbbtv = "vuplus-opera-browser-util"
@@ -122,7 +123,7 @@ inherit autotools-brokensep gitpkgv pythonnative
 SRCREV = "${AUTOREV}"
 PV = "2.0+git${SRCPV}"
 PKGV = "2.0+git${GITPKGV}"
-PR = "r20"
+PR = "r21"
 
 SRC_URI = "${OEA_PLUGINS_URI}"
 
