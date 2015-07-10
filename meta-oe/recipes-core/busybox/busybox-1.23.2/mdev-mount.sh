@@ -127,7 +127,9 @@ case "$ACTION" in
 				mkdir -p $MOUNTPOINT
 			fi
 			if ! mount -t auto /dev/$MDEV "${MOUNTPOINT}" ; then
-				rmdir "${MOUNTPOINT}"
+				if ! mount.exfat /dev/$MDEV "${MOUNTPOINT}" ; then
+					rmdir "${MOUNTPOINT}"
+				fi
 			fi
 		fi
 		;;
