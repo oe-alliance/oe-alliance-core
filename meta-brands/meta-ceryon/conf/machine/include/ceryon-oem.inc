@@ -56,6 +56,10 @@ KERNEL_CONSOLE = "ttyS0,115200n8"
 
 IMAGE_FSTYPES ?= "ubi"
 
+UBI_VOLNAME = "rootfs"
+MKUBIFS_ARGS = "-m 2048 -e 126976 -c 4096"
+UBINIZE_ARGS = "-m 2048 -p 128KiB"
+
 IMAGEDIR ?= "${MACHINE}"
 
 IMAGE_CMD_ubi_prepend = " \
@@ -63,7 +67,27 @@ IMAGE_CMD_ubi_prepend = " \
     rm -rf ${IMAGE_ROOTFS}/tmp/*; \
     "
 
-MACHINE_FEATURES += "3dtv alsa hdmicec switchoff bootsplash omb"
+IMAGE_CMD_ubi_append = "; \
+    mkdir -p ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}; \
+    ${@base_contains("MACHINE_FEATURES", "lcd220", "cp ${DEPLOY_DIR_IMAGE}/lcdsplash220.bin ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/lcdsplash.bin;" , "", d)} \
+    ${@base_contains("MACHINE_FEATURES", "lcd220", "cp ${DEPLOY_DIR_IMAGE}/lcdwarning220.bin ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/lcdwarning.bin;" , "", d)} \
+    ${@base_contains("MACHINE_FEATURES", "lcd220", "cp ${DEPLOY_DIR_IMAGE}/lcdwaitkey220.bin ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/lcdwaitkey.bin;" , "", d)} \
+    cp ${DEPLOY_DIR_IMAGE}/splash.bin ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/splash.bin; \
+    mv ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}_rootfs.rootfs.ubi ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/${ROOTFS_FILE}; \
+    gzip -9c ${DEPLOY_DIR_IMAGE}/vmlinux-${MACHINE}.bin > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/${KERNEL_FILE}; \
+    echo ${DISTRO_NAME}-${DISTRO_VERSION}.${BUILD_VERSION} > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/imageversion; \
+    echo "rename this file to 'force' to force an update without confirmation" > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/noforce; \
+    cd ${DEPLOY_DIR_IMAGE}; \
+    zip ${IMAGE_NAME}_usb.zip ${IMAGEDIR}/*; \
+    rm -f ${DEPLOY_DIR_IMAGE}/*.ubi; \
+    rm -f ${DEPLOY_DIR_IMAGE}/*.ubifs; \
+    rm -f ${DEPLOY_DIR_IMAGE}/*.manifest; \
+    rm -f ${DEPLOY_DIR_IMAGE}/.ubifs; \
+    rm -f ${DEPLOY_DIR_IMAGE}/.manifest; \
+    rm -Rf ${IMAGEDIR}; \
+    "
+
+MACHINE_FEATURES += "3dtv alsa hdmicec switchoff bootsplash omb videoenhancement"
 
 BOOTLOGO_FILENAME = "splash.bin"
 
