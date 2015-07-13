@@ -5,6 +5,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 KV = "2.6.32"
 
+MACHINE_KERNEL_PR_append = ".1"
 
 DEPENDS_spark7162 += " \
            stlinux24-sh4-stx7105-fdma-firmware \
@@ -77,7 +78,7 @@ KERNEL_IMAGEDEST = "/tmp"
 
 FILES_kernel-image = "${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}"
 
-KEEPUIMAGE = "true"
+KEEPUIMAGE = "yes"
 
 do_configure_prepend() {
     oe_machinstall -m 0644 ${WORKDIR}/defconfig ${B}/.config
