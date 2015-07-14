@@ -1,7 +1,7 @@
-SUMMARY = "openViX bootlogo init"
+SUMMARY = "OpenViX Bootlogo"
 SECTION = "base"
 PRIORITY = "required"
-MAINTAINER = "openViX"
+MAINTAINER = "OpenViX"
 PACKAGE_ARCH = "${MACHINEBUILD}"
 
 require conf/license/license-gplv2.inc
@@ -9,7 +9,7 @@ require conf/license/license-gplv2.inc
 RDEPENDS_${PN} += "showiframe openvix-bootlogo-hades"
 
 PV = "4.4"
-PR = "r2"
+PR = "r3"
 
 S = "${WORKDIR}"
 
@@ -33,6 +33,7 @@ FILES_${PN} = "/usr/share /etc/init.d"
 do_install() {
     install -d ${D}/${sysconfdir}/init.d
     install -m 0755 bootlogo.sh ${D}/${sysconfdir}/init.d/bootlogo
+    install -d ${D}/usr/share
     ${@base_contains("MACHINE_FEATURES", "gigabluelcd400", "install -m 0644 lcdwaitkey400.bin ${D}/usr/share/lcdwaitkey.bin" , "", d)}
     ${@base_contains("MACHINE_FEATURES", "gigabluelcd400", "install -m 0644 lcdwarning400.bin ${D}/usr/share/lcdwarning.bin" , "", d)}
     ${@base_contains("MACHINE_FEATURES", "gigabluelcd220", "install -m 0644 lcdwaitkey220.bin ${D}/usr/share/lcdwaitkey.bin" , "", d)}
