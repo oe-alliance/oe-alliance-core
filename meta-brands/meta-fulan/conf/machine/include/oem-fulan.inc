@@ -135,7 +135,6 @@ SERIAL_CONSOLE = "115200 ttyAS0"
 
 DVBPROVIDER = "kernel"
 
-USE_VT = "0"
 MACHINE_FEATURES = "3dtv alsa hdmicec switchoff kernel26 ext2 usbhost serial dvb-c singlecore textlcd sh4booster no-nmap omb skins1080 directfb sdl"
 
 DVBMEDIASINK_CONFIG = "--with-wma --with-wmv --with-pcm --with-dtsdownmix --with-eac3"
@@ -209,4 +208,3 @@ include conf/machine/include/autoload-filesystems.inc
 require conf/machine/include/tune-sh4.inc
 
 # add support for extra feeds
-PACKAGE_ARCHS += " ${MACHINEBUILD}"
