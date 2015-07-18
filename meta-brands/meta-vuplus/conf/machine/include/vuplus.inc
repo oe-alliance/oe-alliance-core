@@ -18,7 +18,6 @@ MACHINE_EXTRA_RRECOMMENDS = " \
     vuplus-shutdown \
     gst-plugin-dvbmediasink \
     gst-ffmpeg \
-    vuplus-satipclient \
     ${@base_contains('DISTRO_FEATURES', 'audioeffect', 'enigma2-plugin-systemplugins-audioeffect' , '', d)} \
     "
 
