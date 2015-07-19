@@ -4,7 +4,7 @@ HOMEPAGE = "http://www.openssl.org/"
 BUGTRACKER = "http://www.openssl.org/news/vulnerabilities.html"
 SECTION = "libs/network"
 
-INC_PR = "r15"
+INC_PR = "r16"
 
 # "openssl | SSLeay" dual license
 LICENSE = "openssl"
@@ -41,6 +41,7 @@ FILES_libcrypto-old = "${base_libdir}/libcrypto${SOLIBS}"
 FILES_libssl-old = "${libdir}/libssl.so.*"
 FILES_${PN}-dev += "${base_libdir}/libcrypto${SOLIBSDEV}"
 
+PROVIDES =+ "libcrypto${PV} libssl${PV}"
 RPROVIDES_libcrypto-old = "libcrypto${PV}"
 RPROVIDES_libssl-old = "libssl${PV}"
 
