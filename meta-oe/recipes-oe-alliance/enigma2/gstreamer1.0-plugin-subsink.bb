@@ -6,7 +6,6 @@ LICENSE = "LGPLv2.1"
 LIC_FILES_CHKSUM = "file://COPYING;md5=7fbc338309ac38fefcd64b04bb903e34"
 
 SRC_URI = "git://git.code.sf.net/p/openpli/gstsubsink;protocol=git;branch=gst-1.0"
-SRCREV = "${AUTOREV}"
 
 S = "${WORKDIR}/git"
 

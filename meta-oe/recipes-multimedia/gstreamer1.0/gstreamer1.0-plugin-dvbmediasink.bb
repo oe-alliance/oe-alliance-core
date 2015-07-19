@@ -25,8 +25,6 @@ SRC_URI_append_dags7362 = " \
     file://0001-update-dags-support.patch;patch=1 \ 
 "
 
-SRCREV = "${AUTOREV}"
-
 S = "${WORKDIR}/git"
 
 inherit gitpkgv
