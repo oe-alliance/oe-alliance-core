@@ -36,12 +36,12 @@ export AS = "${CC} -c"
 
 inherit pkgconfig siteinfo
 
-PACKAGES =+ " libcrypto-old libssl-old"
+PACKAGES =+ "libcrypto-old libssl-old"
 FILES_libcrypto-old = "${base_libdir}/libcrypto${SOLIBS}"
 FILES_libssl-old = "${libdir}/libssl.so.*"
 FILES_${PN}-dev += "${base_libdir}/libcrypto${SOLIBSDEV}"
 
-PROVIDES =+ "libcrypto${PV} libssl${PV}"
+PROVIDES =+ " libcrypto${PV} libssl${PV}"
 RPROVIDES_libcrypto-old = "libcrypto${PV}"
 RPROVIDES_libssl-old = "libssl${PV}"
 
