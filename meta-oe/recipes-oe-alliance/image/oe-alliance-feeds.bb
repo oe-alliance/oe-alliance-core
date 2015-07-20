@@ -9,7 +9,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "1.0"
-PR = "r63"
+PR = "r64"
 
 DEPENDS = "enigma2-plugin-drivers-usbserial"
 RECOMMENDS = "enigma2-plugin-extensions-et-livestream"
@@ -28,7 +28,6 @@ RDEPENDS_${PN} = " \
     enigma2-plugin-drivers-ntfs-3g \
     enigma2-plugin-drivers-exfat \
     enigma2-plugin-drivers-usbserial \
-    enigma2-plugin-extensions-ambx \
     enigma2-plugin-extensions-tuxcom \
     enigma2-plugin-security-firewall \
     enigma2-plugin-extensions-openairplay \
