@@ -6,16 +6,19 @@ BRAND_OEM = "ceryon"
 MACHINE_NAME = "\
 ${@base_contains('MACHINEBUILD', 'twinboxlcd', 'TWINBOX LCD' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbmicro', 'Premium Micro' , '', d)}\
+${@base_contains('MACHINEBUILD', 'odin2hybrid', 'ODIN2' , '', d)}\
 "
 
 MACHINE_BRAND = "\
 ${@base_contains('MACHINEBUILD', 'twinboxlcd', 'RED EAGLE' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbmicro', 'Miraclebox' , '', d)}\
+${@base_contains('MACHINEBUILD', 'odin2hybrid', 'Opticum' , '', d)}\
 "
 
 IMAGEDIR ?= "\
 ${@base_contains('MACHINEBUILD', 'twinboxlcd', 'redeagle/twinboxlcd' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbmicro', 'miraclebox/micro' , '', d)}\
+${@base_contains('MACHINEBUILD', 'odin2hybrid', 'odin2/hybrid' , '', d)}\
 "
 
 MTD_KERNEL = "mtd1"
@@ -63,7 +66,7 @@ IMAGE_CMD_ubi_prepend = " \
     rm -rf ${IMAGE_ROOTFS}/tmp/*; \
     "
 
-MACHINE_FEATURES += "3dtv alsa hdmicec switchoff bootsplash omb"
+MACHINE_FEATURES += "3dtv alsa hdmicec switchoff bootsplash omb directfb sdl"
 
 BOOTLOGO_FILENAME = "splash.bin"
 
