@@ -11,7 +11,7 @@ PV = "0.10.0+git${SRCPV}"
 PKGV = "0.10.0+git${GITPKGV}"
 PR = "r2"
 
-SRC_URI = "git://git.code.sf.net/p/openpli/gstsubsink;protocol=git"
+SRC_URI = "git://github.com/OpenPLi/gst-plugin-subsink.git;protocol=git"
 
 S = "${WORKDIR}/git"
 
