@@ -5,12 +5,12 @@ LICENSE = "CLOSED"
 require conf/license/license-close.inc
 
 DEPENDS = "tslib mpfr gmp libcrypto0.9.8"
-RDEPENDS_${PN} = "tslib-conf libts-1.0-0 libsysfs2 libgmp10 libmpfr4 vuplus-opera-dumpait libcrypto0.9.8"
+RDEPENDS_${PN} = "tslib-conf libts-1.0-0 libsysfs2 libgmp10 libmpfr4 vuplus-opera-dumpait libcrypto0.9.8x"
 
 SRC_DATE = "20150622_0"
 SRC_URI = ""
 
-PR = "r38_${SRC_DATE}"
+PR = "r39_${SRC_DATE}"
 
 GSTVER = "${@base_contains("GST_VERSION", "1.0", "1.4.5", "0.10.36.1", d)}"
 
