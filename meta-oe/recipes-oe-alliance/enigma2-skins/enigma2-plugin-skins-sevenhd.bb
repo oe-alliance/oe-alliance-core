@@ -14,7 +14,7 @@ SRC_URI="git://github.com/KravenHD/SevenHD.git;protocol=git"
 
 FILES_${PN} = "/usr/*"
 
-S = "${WORKDIR}/git/data"
+S = "${WORKDIR}/git/"
 
 do_compile_append() {
 python -O -m compileall ${S}
