@@ -25,6 +25,7 @@ ${@base_contains('MACHINEBUILD', 'beyonwizt3', 'T3' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'beyonwizt4', 'T4' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'bwidowx', 'Black Widow-X' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'bwidowx2', 'Black Widow-X2' , '', d)}\
+${@base_contains('MACHINEBUILD', 'opticumtt', 'Twin' , '', d)}\
 "
 
 MACHINE_BRAND = "\
@@ -49,6 +50,7 @@ ${@base_contains('MACHINEBUILD', 'beyonwizt3', 'Beyonwiz' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'beyonwizt4', 'Beyonwiz' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'bwidowx', 'SPACE' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'bwidowx2', 'SPACE' , '', d)}\
+${@base_contains('MACHINEBUILD', 'opticumtt', 'Opticum' , '', d)}\
 "
 
 IMAGEDIR ?= "\
@@ -73,6 +75,7 @@ ${@base_contains('MACHINEBUILD', 'beyonwizt3', 'beyonwiz/hdx' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'beyonwizt4', 'beyonwiz/hdp' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'bwidowx', 'bwidowx' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'bwidowx2', 'bwidowx2' , '', d)}\
+${@base_contains('MACHINEBUILD', 'opticumtt', 'opticum/tt' , '', d)}\
 "
 
 MTD_KERNEL = "\
@@ -97,6 +100,7 @@ ${@base_contains('MACHINEBUILD', 'beyonwizt3', 'mtd1' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'beyonwizt4', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'bwidowx', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'bwidowx2', 'mtd2' , '', d)}\
+${@base_contains('MACHINEBUILD', 'opticumtt', 'mtd2' , '', d)}\
 "
 
 MTD_ROOTFS = "\
@@ -121,6 +125,7 @@ ${@base_contains('MACHINEBUILD', 'beyonwizt3', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'beyonwizt4', 'mtd0' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'bwidowx', 'mtd0' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'bwidowx2', 'mtd0' , '', d)}\
+${@base_contains('MACHINEBUILD', 'opticumtt', 'mtd0' , '', d)}\
 "
 
 MACHINE_DRIVER = "\
@@ -145,6 +150,7 @@ ${@base_contains('MACHINEBUILD', 'beyonwizt3', 'inihdx' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'beyonwizt4', 'ini-840t4' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'bwidowx', 'yhgd2580' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'bwidowx2', 'inihde2bw' , '', d)}\
+${@base_contains('MACHINEBUILD', 'opticumtt', 'ini-435oc' , '', d)}\
 "
 
 KERNEL_FILE = "kernel.bin"
@@ -191,6 +197,12 @@ IMAGE_CMD_ubi_prepend = " \
 IMAGE_CMD_ubi_append = " \
     mkdir -p ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}; \
     ${@base_contains("MACHINE_FEATURES", "bootsplash", "cp ${DEPLOY_DIR_IMAGE}/${BOOTLOGO_FILENAME} ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/${BOOTLOGO_FILENAME};" , "", d)} \
+    ${@base_contains("DISTRO_FEATURES", "extrasplash", "cp ${DEPLOY_DIR_IMAGE}/cfe.bmp ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/;" , "", d)} \
+    ${@base_contains("DISTRO_FEATURES", "extrasplash", "cp ${DEPLOY_DIR_IMAGE}/splash.bmp ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/;" , "", d)} \
+    ${@base_contains("DISTRO_FEATURES", "extrasplash", "cp ${DEPLOY_DIR_IMAGE}/imageversion.bmp ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/;" , "", d)} \
+    ${@base_contains("DISTRO_FEATURES", "extrasplash", "cp ${DEPLOY_DIR_IMAGE}/kernel.bmp ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/;" , "", d)} \
+    ${@base_contains("DISTRO_FEATURES", "extrasplash", "cp ${DEPLOY_DIR_IMAGE}/rootfs.bmp ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/;" , "", d)} \
+    ${@base_contains("DISTRO_FEATURES", "extrasplash", "cp ${DEPLOY_DIR_IMAGE}/finished.bmp ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/;" , "", d)} \
     mv ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.ubi ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/${ROOTFS_FILE}; \
     gzip -f -9c ${DEPLOY_DIR_IMAGE}/vmlinux-${MACHINE}.bin > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/${KERNEL_FILE}; \
     echo ${DISTRO_NAME}-${IMAGE_VERSION}-${MACHINEBUILD}-${DATE} > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/imageversion; \
@@ -204,10 +216,13 @@ IMAGE_CMD_ubi_append = " \
     rm -rf ${IMAGEDIR}; \
     rm -rf atemio; \
     rm -rf miraclebox; \
-    rm -rf beyonwiz; \ 
+    rm -rf beyonwiz; \
+    rm -rf bwidowx; \
+    rm -rf bwidowx2; \
+    rm -rf opticum; \
     "
 
-MACHINE_FEATURES += "3dtv alsa hdmicec switchoff wifi bootsplash extrasplash omb"
+MACHINE_FEATURES += "3dtv alsa hdmicec switchoff wifi bootsplash omb"
 
 BOOTLOGO_FILENAME = "splash.bin"
 
