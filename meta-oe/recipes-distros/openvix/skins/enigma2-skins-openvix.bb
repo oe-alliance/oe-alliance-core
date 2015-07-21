@@ -10,13 +10,13 @@ inherit gitpkgv
 
 PACKAGE_ARCH := "${MACHINE_ARCH}"
 SRCREV = "${AUTOREV}"
-PV = "git${SRCPV}"
-PKGV = "git${GITPKGV}"
-PR = "r29"
+PV = "2.1+git${SRCPV}"
+PKGV = "2.1+git${GITPKGV}"
+PR = "r1"
 
 SRC_URI = "git://github.com/OpenViX/skins.git;protocol=git"
 
-DEPENDS += "font-roboto-enigma font-valis-hd enigma2-plugin-extensions-yahooweather "
+DEPENDS += "enigma2 font-roboto-enigma font-valis-hd enigma2-plugin-extensions-yahooweather "
 
 RCONFLICTS_enigma2-plugin-skins-openvix-vix-day-hd = "enigma2-plugin-skins-vix-day-hd"
 RREPLACES_enigma2-plugin-skins-openvix-vix-day-hd = "enigma2-plugin-skins-vix-day-hd"
