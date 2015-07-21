@@ -4,7 +4,7 @@ HOMEPAGE = "http://www.openssl.org/"
 BUGTRACKER = "http://www.openssl.org/news/vulnerabilities.html"
 SECTION = "libs/network"
 
-INC_PR = "r16"
+INC_PR = "r17"
 
 # "openssl | SSLeay" dual license
 LICENSE = "openssl"
@@ -41,9 +41,9 @@ FILES_libcrypto-old = "${base_libdir}/libcrypto${SOLIBS}"
 FILES_libssl-old = "${libdir}/libssl.so.*"
 FILES_${PN}-dev += "${base_libdir}/libcrypto${SOLIBSDEV}"
 
-PROVIDES =+ " libcrypto${PV} libssl${PV}"
-RPROVIDES_libcrypto-old = "libcrypto${PV}"
-RPROVIDES_libssl-old = "libssl${PV}"
+PROVIDES =+ " libcrypto0.9.8 libssl0.9.8"
+RPROVIDES_libcrypto-old = "libcrypto0.9.8"
+RPROVIDES_libssl-old = "libssl0.9.8"
 
 do_configure_prepend() {
   cp ${WORKDIR}/find.pl ${S}/util/find.pl
