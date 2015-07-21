@@ -31,6 +31,7 @@ ${@base_contains('MACHINEBUILD', 'xpeedlxcc', 'mtd2' , '', d)}\
 MACHINE_DRIVER = "\
 ${@base_contains('MACHINEBUILD', 'xpeedlxcs2', 'xpeedc' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'xpeedlxcc', 'xpeedc' , '', d)}\
+"
 
 KERNEL_FILE = "kernel.bin"
 ROOTFS_FILE = "rootfs.bin"
