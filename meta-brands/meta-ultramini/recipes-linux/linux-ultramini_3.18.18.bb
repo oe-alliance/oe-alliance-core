@@ -23,7 +23,7 @@ SRC_URI += "http://source.mynonpublic.com/ultramini/ultramini-linux-${PV}.tar.xz
     "
 
 S = "${WORKDIR}/linux-${PV}"
-B = "${WORKDIR}/build"
+
 
 export OS = "Linux"
 KERNEL_OBJECT_SUFFIX = "ko"
@@ -32,6 +32,12 @@ KERNEL_IMAGETYPE = "vmlinux"
 KERNEL_IMAGEDEST = "/tmp"
 
 FILES_kernel-image = "${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz"
+
+do_configure_prepend() {
+    oe_machinstall -m 0644 ${WORKDIR}/defconfig ${S}/.config
+    oe_runmake oldconfig
+}
+
 
 kernel_do_install_append() {
     ${STRIP} ${D}${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION}
