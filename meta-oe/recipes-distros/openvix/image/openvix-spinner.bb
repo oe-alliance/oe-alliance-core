@@ -1,4 +1,4 @@
-SUMMARY = "Enigma2 busy spinner"
+SUMMARY = "OpenViX Spinner"
 MAINTAINER = "OpenViX"
 
 require conf/license/license-gplv2.inc

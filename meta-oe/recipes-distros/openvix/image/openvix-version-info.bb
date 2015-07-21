@@ -1,7 +1,7 @@
-SUMMARY = "ViX version info"
+SUMMARY = "OpenViX Version Info"
+MAINTAINER = "OpenViX"
 SECTION = "base"
 PRIORITY = "required"
-MAINTAINER = "ViX team"
 LICENSE = "proprietary"
 
 require conf/license/license-gplv2.inc
@@ -27,9 +27,9 @@ do_install() {
     echo "type=${DISTRO_TYPE}" >> ${D}/etc/image-version
     echo "build=${BUILD_VERSION}" >> ${D}/etc/image-version
     echo "date=${DATETIME}" >> ${D}/etc/image-version
-    echo "comment=ViX" >> ${D}/etc/image-version
+    echo "comment=OpenViX" >> ${D}/etc/image-version
     echo "target=9" >> ${D}/etc/image-version
-    echo "creator=openViX" >> ${D}/etc/image-version
+    echo "creator=OpenViX" >> ${D}/etc/image-version
     echo "url=${URL}" >> ${D}/etc/image-version
     echo "catalog=${URL}" >> ${D}/etc/image-version
 }

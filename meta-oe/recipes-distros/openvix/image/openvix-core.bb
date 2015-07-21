@@ -1,5 +1,5 @@
-SUMMARY = "Vix Core"
-MAINTAINER = "Andy Blackburn"
+SUMMARY = "OpenViX Core"
+MAINTAINER = "OpenViX"
 
 require conf/license/license-gplv2.inc
 
@@ -9,11 +9,14 @@ RDEPENDS_${PN} = "ofgwrite python-process libcrypto-compat-0.9.7 python-compress
 RCONFLICTS_${PN} = "settings-autorestore"
 RREPLACES_${PN} = "settings-autorestore"
 
+PROVIDES += "openvix-core"
+RPROVIDES_enigma2-plugin-vix-core += "openvix-core"
+
 inherit autotools-brokensep gitpkgv pythonnative
 SRCREV = "${AUTOREV}"
 PV = "3.0+git${SRCPV}"
 PKGV = "3.0+git${GITPKGV}"
-PR = "r5"
+PR = "r8"
 
 SRC_URI="git://github.com/OpenViX/vix-core.git;protocol=git"
 
@@ -26,8 +29,9 @@ EXTRA_OECONF = "\
     STAGING_LIBDIR=${STAGING_LIBDIR} \
     "
 
-PACKAGES =+ "${PN}-src"
-PACKAGES =+ "${PN}-po"
+PACKAGES =+ "enigma2-plugin-vix-core"
+PACKAGES =+ "enigma2-plugin-vix-core-src"
+PACKAGES =+ "enigma2-plugin-vix-core-po"
 CONFFILES_${PN} += "${sysconfdir}/exports"
 FILES_${PN} = "/etc /usr/lib"
 FILES_${PN}-dbg = "/usr/lib/enigma2/python/Plugins/SystemPlugins/ViX/.debug/"
