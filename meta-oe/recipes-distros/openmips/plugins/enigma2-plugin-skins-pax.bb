@@ -11,7 +11,7 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"
-VER ="5.0"
+VER ="5.1"
 PR = "r0"
 
 SRC_URI="git://github.com/openmips/skin-pax.git;protocol=git"
