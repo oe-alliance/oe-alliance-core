@@ -34,6 +34,7 @@ ${@base_contains('MACHINEBUILD', 'optimussos1', 'Optimuss OS1' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'optimussos2', 'Optimuss OS2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'optimussos', 'Optimuss OS' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mediabox', 'MediaBox HD LX' , '', d)}\
+${@base_contains('MACHINEBUILD', 'fusionhd', 'FUSION HD' , '', d)}\
 "
 
 MACHINE_BRAND = "\
@@ -67,6 +68,7 @@ ${@base_contains('MACHINEBUILD', 'optimussos1', 'Edision' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'optimussos2', 'Edision' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'optimussos', 'Edision' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mediabox', 'Jepssen' , '', d)}\
+${@base_contains('MACHINEBUILD', 'fusionhd', 'XSARIUS' , '', d)}\
 "
 
 IMAGEDIR ?= "\
@@ -100,6 +102,7 @@ ${@base_contains('MACHINEBUILD', 'optimussos1', 'update/optimussos1/cfe' , '', d
 ${@base_contains('MACHINEBUILD', 'optimussos2', 'update/optimussos2/cfe' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'optimussos', 'update/optimussos/cfe' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mediabox', 'update/mediabox/cfe' , '', d)}\
+${@base_contains('MACHINEBUILD', 'fusionhd', 'update/fusionhd/cfe' , '', d)}\
 "
 
 MTD_KERNEL = "\
@@ -133,6 +136,7 @@ ${@base_contains('MACHINEBUILD', 'optimussos1', 'mtd1' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'optimussos2', 'mtd6' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'optimussos', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mediabox', 'mtd6' , '', d)}\
+${@base_contains('MACHINEBUILD', 'fusionhd', 'mtd2' , '', d)}\
 "
 
 MTD_ROOTFS = "\
@@ -166,6 +170,7 @@ ${@base_contains('MACHINEBUILD', 'optimussos1', 'mtd4' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'optimussos2', 'mtd4' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'optimussos', 'mtd0' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mediabox', 'mtd4' , '', d)}\
+${@base_contains('MACHINEBUILD', 'fusionhd', 'mtd0' , '', d)}\
 "
 
 SPLASH1_BMP = "\
@@ -185,6 +190,7 @@ ${@base_contains('MACHINEBUILD', 'optimussos1plus', 'splash1_os1.bmp' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'optimussos2plus', 'splash1_os2.bmp' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'optimussos3plus', 'splash1_os2.bmp' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'optimussos', 'splash1_os1.bmp' , '', d)}\
+${@base_contains('MACHINEBUILD', 'fusionhd', 'splash1.bmp' , '', d)}\
 "
 
 KERNEL_FILE = "oe_kernel.bin"
