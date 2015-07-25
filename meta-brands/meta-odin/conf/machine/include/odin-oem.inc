@@ -80,8 +80,8 @@ ${@base_contains('MACHINEBUILD', 'maram9', 'mtd3' , '', d)}\
 
 MACHINE_DRIVER = "\
 ${@base_contains('MACHINEBUILD', 'classm', 'odinm7' , '', d)}\
-${@base_contains('MACHINEBUILD', 'axodin', 'odinm7s' , '', d)}\
-${@base_contains('MACHINEBUILD', 'axodinc', 'odinm7c' , '', d)}\
+${@base_contains('MACHINEBUILD', 'axodin', 'odinm7' , '', d)}\
+${@base_contains('MACHINEBUILD', 'axodinc', 'odinm7' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'starsatlx', 'odinm7' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'genius', 'odinm7' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'evo', 'odinm7' , '', d)}\
