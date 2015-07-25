@@ -22,13 +22,11 @@ S="${WORKDIR}/git"
 do_compile() {
     cheetah-compile -R --nobackup ${S}/plugin
     python -O -m compileall ${S}
-    pushd ${S}
-    for f in $(find ./locale -name *.po ); do
+    for f in $(find ${S}/locale -name *.po ); do
         l=$(echo ${f%} | sed 's/\.po//' | sed 's/.*locale\///')
         mkdir -p ${S}/plugin/locale/${l%}/LC_MESSAGES
         msgfmt -o ${S}/plugin/locale/${l%}/LC_MESSAGES/OpenWebif.mo ./locale/$l.po
     done
-    popd
 }
 
 PLUGINPATH = "/usr/lib/enigma2/python/Plugins/Extensions/${MODULE}"

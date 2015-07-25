@@ -1,0 +1,10 @@
+prefix=/usr
+libdir=${prefix}/lib
+includedir=${prefix}/include
+
+Name: LibAmPlayer
+Description: Amlogic Video/Audio Playback Engine
+Version: 0.2
+Requires:
+Libs: -L${libdir} -lamavutils -lamadec -lamcodec
+Cflags: -I${includedir}/amlogic/amcodec

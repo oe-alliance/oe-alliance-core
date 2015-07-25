@@ -1,0 +1,42 @@
+Index: amcodec/Makefile
+===================================================================
+--- amcodec.orig/Makefile
++++ amcodec/Makefile
+@@ -2,19 +2,19 @@
+ ROOTFS?=$(PREFIX)
+ LIB_DIR?=$(PREFIX)/lib
+ HEADERS_DIR?=$(INC_DIR)/include
+-CROSS=$(CC:%gcc=%)
++#CROSS=$(CC:%gcc=%)
+ QUITE_CMD=1
+
+ INSTALL_FLAGS=-m 755
+
+-CPP=$(CROSS)g++
+-AS=$(CROSS)as
+-AR=$(CROSS)ar
+-LD=$(CROSS)ld
+-NM=$(CROSS)nm
+-STRIP=$(CROSS)strip
+-OBJCOPY=$(CROSS)objcopy
+-export CC CPP AS AR LD NM STRIP OBJCOPY
++#CPP=$(CROSS)g++
++#AS=$(CROSS)as
++#AR=$(CROSS)ar
++#LD=$(CROSS)ld
++#NM=$(CROSS)nm
++#STRIP=$(CROSS)strip
++#OBJCOPY=$(CROSS)objcopy
++#export CC CPP AS AR LD NM STRIP OBJCOPY
+
+ TOPDIR=$(shell pwd)
+ SRC?=$(TOPDIR)
+@@ -29,7 +29,7 @@ DIRS=audio_ctl/ codec/
+ LIB_VERSION=
+ LIB_SUB_VERSION=.0.0
+
+-LDFLAGS+=  -O2  -L$(PREFIX)/lib  -lamadec -lm -lc  -shared -Wl,--shared -Wl,-soname,$(TARGET)$(LIB_VERSION)
++LDFLAGS+=  -O2  -L$(PREFIX)/lib -lamavutils -lamadec -lm -lc  -shared -Wl,--shared -Wl,-soname,$(TARGET)$(LIB_VERSION)
+
+ #INCLUDE=$(DIRS:%/=-I$(SRC)/%/include)
+ INCLUDE=${SRCTREE}/include/

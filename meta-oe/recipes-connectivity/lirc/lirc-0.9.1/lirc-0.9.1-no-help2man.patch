@@ -1,0 +1,28 @@
+Index: lirc-0.9.1/Makefile.am
+===================================================================
+--- lirc-0.9.1.orig/Makefile.am
++++ lirc-0.9.1/Makefile.am
+@@ -9,7 +9,7 @@ AUTOMAKE_OPTIONS = 1.5 check-news dist-b
+ EXTRA_DIST =  setup.sh setup-driver.sh setup-functions.sh setup.data data2setup.sh README TODO
+ EXTRA_DIST += autogen.sh
+
+-SUBDIRS = drivers daemons tools doc
++SUBDIRS = drivers daemons tools
+
+ if INSTALL_ETC
+ lirc_confdir        = $(sysconfdir)/lirc
+Index: lirc-0.9.1/configure.ac
+===================================================================
+--- lirc-0.9.1.orig/configure.ac
++++ lirc-0.9.1/configure.ac
+@@ -19,10 +19,6 @@ AC_PROG_MAKE_SET
+ AC_PATH_PROG(mknod, mknod, /bin/mknod)
+ AC_PATH_PROG(mkfifo, mkfifo, /usr/bin/mkfifo)
+ AC_PATH_PROG(depmod, depmod, /sbin/depmod, $PATH:/sbin)
+-AC_CHECK_PROG(HELP2MAN, help2man, [ok], [fail])
+-if test "$HELP2MAN" != ok; then
+-    AC_MSG_ERROR([help2man is required to build lirc])
+-fi
+ AC_PROG_LN_S
+ LT_INIT([disable-static])
+ AM_PATH_PYTHON(,, [:])

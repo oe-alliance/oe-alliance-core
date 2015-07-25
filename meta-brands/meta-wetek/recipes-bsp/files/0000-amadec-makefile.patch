@@ -1,0 +1,13 @@
+Index: amadec/Makefile
+===================================================================
+--- amadec.orig/Makefile
++++ amadec/Makefile
+@@ -7,7 +7,7 @@ TARGET_OBJS=adec-external-ctrl.o adec-in
+ 
+ INSTALL_DIR=${M_PREFIX}/lib
+ 
+-LDFLAGS += -shared -lpthread -lm -lasound -lrt -ldl
++LDFLAGS += -shared -lamavutils -lpthread -lm -lasound -lrt -ldl
+ 
+ CFLAGS+=-O2 -fPIC
+ CFLAGS+=-I$(shell pwd) -I$(shell pwd)/include -I$(shell pwd)/../amavutils/include -I${PREFIX}/include -I${PREFIX}/usr/include -L${PREFIX}/lib -L${PREFIX}/usr/lib
