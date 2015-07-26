@@ -1,4 +1,4 @@
-PR .= ".23"
+PR .= ".24"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 SRC_URI += " \
@@ -37,7 +37,8 @@ RRECOMMENDS_${PN} += "${PN}-telnetd"
 
 PACKAGES =+ "${PN}-cron"
 INITSCRIPT_PACKAGES += "${PN}-cron"
-INITSCRIPT_NAME_${PN}-cron = "${BPN}-cron" 
+INITSCRIPT_NAME_${PN}-cron = "${BPN}-cron"
+INITSCRIPT_PARAMS_${PN}-mdev = "start 04 S ."
 FILES_${PN}-cron = "${sysconfdir}/cron ${sysconfdir}/init.d/${BPN}-cron"
 RDEPENDS_${PN}-cron += "${PN}"
 
