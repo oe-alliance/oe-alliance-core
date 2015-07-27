@@ -5,8 +5,8 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 inherit kernel machine_kernel_pr
 
-SRC_URI[md5sum] = "1cfdadf2ad82c1488380d1e0b4b9edb5"
-SRC_URI[sha256sum] = "2fbed0298e312d90aa8b69772b271c70c43d2127dab75fee8943a0319a8978dd"
+SRC_URI[md5sum] = "a5cb2250dbf8389e3c4faa1153151e79"
+SRC_URI[sha256sum] = "6a52272b3034fd21b339b8509e7ce5600e42cf17404d676525d2e10327e9576f"
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
@@ -52,4 +52,7 @@ pkg_postinst_kernel-image () {
         fi
     fi
     true
+}
+
+do_rm_work() {
 }

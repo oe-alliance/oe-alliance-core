@@ -1,7 +1,9 @@
-KV = "3.6.0"
-SRCDATE = "20140516"
+KV = "3.18.18"
+SRCDATE = "20150723"
 
 require odin-dvb-modules.inc
 
-SRC_URI[md5sum] = "a09b0bd89c0ec74b33143a717488adcd"
-SRC_URI[sha256sum] = "fdb6d44faefbe011fa34f5569109c81e771df01a3d2a4d192baa5198dbfbf936"
+SRC_URI = "http://source.mynonpublic.com/download/odinm7-drivers-${KV}-${SRCDATE}.zip"
+
+SRC_URI[md5sum] = "ba21e246d2fa5bcd18667cd6efa89230"
+SRC_URI[sha256sum] = "4922ae5e053dc96c970b5edb5a808e57703c6213180c8421896a7540c02f2451"

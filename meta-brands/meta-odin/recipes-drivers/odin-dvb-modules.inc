@@ -8,8 +8,6 @@ PR = "r4"
 
 RDEPENDS_${PN}_odinm9 += "odin-fpupdate-${MACHINE}"
 
-SRC_URI = "http://source.mynonpublic.com/download/${MACHINE}-drivers-${KV}-${SRCDATE}.zip"
-
 S = "${WORKDIR}"
 
 INHIBIT_PACKAGE_STRIP = "1"
