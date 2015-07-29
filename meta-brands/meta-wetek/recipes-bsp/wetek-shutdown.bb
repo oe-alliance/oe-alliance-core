@@ -10,6 +10,8 @@ INITSCRIPT_PARAMS = "start 39 0 ."
 
 inherit autotools pkgconfig update-rc.d
 
+S = "${WORKDIR}"
+
 do_install() {
     install -d ${D}/etc/init.d/
     install -m 0755 ${WORKDIR}/wetek-shutdown.sh ${D}/etc/init.d/wetek-shutdown
