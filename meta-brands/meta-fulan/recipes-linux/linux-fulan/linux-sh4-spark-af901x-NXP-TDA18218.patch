@@ -1,9 +1,9 @@
 diff -r 0f41fd7df85d drivers/media/common/tuners/Kconfig
 --- a/drivers/media/common/tuners/Kconfig	Thu Feb 11 02:33:12 2010 +0200
 +++ b/drivers/media/common/tuners/Kconfig	Thu Feb 25 17:21:11 2010 +0100
-@@ -179,4 +179,11 @@
+@@ -172,4 +172,11 @@
  	help
- 	  A driver for the silicon tuner MAX2165 from Maxim.
+ 	  Say Y here to support the Freescale MC44S803 based tuners
  
 +config MEDIA_TUNER_TDA18218
 +	tristate "NXP TDA18218 silicon tuner"
@@ -599,7 +599,7 @@ diff -r 0f41fd7df85d drivers/media/dvb/dvb-usb/af9015.c
  
  static int dvb_usb_af9015_debug;
  module_param_named(debug, dvb_usb_af9015_debug, int, 0644);
-@@ -273,7 +270,8 @@
+@@ -269,7 +270,8 @@
  
  	while (i < num) {
  		if (msg[i].addr == af9015_af9013_config[0].demod_address ||
@@ -609,7 +609,7 @@ diff -r 0f41fd7df85d drivers/media/dvb/dvb-usb/af9015.c
  			addr = msg[i].buf[0] << 8;
  			addr += msg[i].buf[1];
  			mbox = msg[i].buf[2];
-@@ -286,7 +284,8 @@
+@@ -282,7 +284,8 @@
  
  		if (num > i + 1 && (msg[i+1].flags & I2C_M_RD)) {
  			if (msg[i].addr ==
@@ -619,7 +619,7 @@ diff -r 0f41fd7df85d drivers/media/dvb/dvb-usb/af9015.c
  				req.cmd = READ_MEMORY;
  			else
  				req.cmd = READ_I2C;
-@@ -301,7 +300,8 @@
+@@ -297,7 +300,8 @@
  		} else if (msg[i].flags & I2C_M_RD) {
  			ret = -EINVAL;
  			if (msg[i].addr ==
@@ -629,7 +629,7 @@ diff -r 0f41fd7df85d drivers/media/dvb/dvb-usb/af9015.c
  				goto error;
  			else
  				req.cmd = READ_I2C;
-@@ -315,7 +315,8 @@
+@@ -311,7 +315,8 @@
  			i += 1;
  		} else {
  			if (msg[i].addr ==
@@ -639,7 +639,7 @@ diff -r 0f41fd7df85d drivers/media/dvb/dvb-usb/af9015.c
  				req.cmd = WRITE_MEMORY;
  			else
  				req.cmd = WRITE_I2C;
-@@ -995,6 +998,7 @@
+@@ -980,6 +985,7 @@
  		case AF9013_TUNER_MT2060_2:
  		case AF9013_TUNER_TDA18271:
  		case AF9013_TUNER_QT1010A:
@@ -647,7 +647,7 @@ diff -r 0f41fd7df85d drivers/media/dvb/dvb-usb/af9015.c
  			af9015_af9013_config[i].rf_spec_inv = 1;
  			break;
  		case AF9013_TUNER_MXL5003D:
-@@ -1214,6 +1214,10 @@
+@@ -1198,6 +1204,10 @@
  	.dig_out = 1,
  };
  
@@ -658,7 +658,7 @@ diff -r 0f41fd7df85d drivers/media/dvb/dvb-usb/af9015.c
  static int af9015_tuner_attach(struct dvb_usb_adapter *adap)
  {
  	struct af9015_state *state = adap->dev->priv;
-@@ -1294,6 +1268,10 @@
+@@ -1245,6 +1255,10 @@
  		ret = dvb_attach(mc44s803_attach, adap->fe, i2c_adap,
  			&af9015_mc44s803_config) == NULL ? -ENODEV : 0;
  		break;
@@ -669,7 +669,7 @@ diff -r 0f41fd7df85d drivers/media/dvb/dvb-usb/af9015.c
  	case AF9013_TUNER_UNKNOWN:
  	default:
  		ret = -ENODEV;
-@@ -1307,6 +1307,7 @@
+@@ -1283,6 +1297,7 @@
  	{USB_DEVICE(USB_VID_KWORLD_2,  USB_PID_KWORLD_MC810)},
  	{USB_DEVICE(USB_VID_KYE,       USB_PID_GENIUS_TVGO_DVB_T03)},
  /* 25 */{USB_DEVICE(USB_VID_KWORLD_2,  USB_PID_KWORLD_399U_2)},
@@ -680,18 +680,18 @@ diff -r 0f41fd7df85d drivers/media/dvb/dvb-usb/af9015.c
 diff -r 0f41fd7df85d drivers/media/dvb/dvb-usb/dvb-usb-ids.h
 --- a/drivers/media/dvb/dvb-usb/dvb-usb-ids.h	Thu Feb 11 02:33:12 2010 +0200
 +++ b/drivers/media/dvb/dvb-usb/dvb-usb-ids.h	Thu Feb 25 17:21:11 2010 +0100
-@@ -129,6 +129,7 @@
+@@ -119,6 +119,7 @@
  #define USB_PID_KWORLD_VSTREAM_WARM			0x17df
  #define USB_PID_TERRATEC_CINERGY_T_USB_XE		0x0055
  #define USB_PID_TERRATEC_CINERGY_T_USB_XE_REV2		0x0069
-+#define USB_PID_TERRATEC_CINERGY_T_STICK_RC        0x0097
++#define USB_PID_TERRATEC_CINERGY_T_STICK_RC		0x0097
  #define USB_PID_TWINHAN_VP7041_COLD			0x3201
  #define USB_PID_TWINHAN_VP7041_WARM			0x3202
  #define USB_PID_TWINHAN_VP7020_COLD			0x3203
 diff -r 0f41fd7df85d drivers/media/dvb/frontends/af9013.c
 --- a/drivers/media/dvb/frontends/af9013.c	Thu Feb 11 02:33:12 2010 +0200
 +++ b/drivers/media/dvb/frontends/af9013.c	Thu Feb 25 17:21:11 2010 +0100
-@@ -488,6 +488,20 @@
+@@ -487,6 +487,20 @@
  				break;
  			}
  		}
@@ -712,7 +712,7 @@ diff -r 0f41fd7df85d drivers/media/dvb/frontends/af9013.c
  
  		while (if_sample_freq > (adc_freq / 2))
  			if_sample_freq = if_sample_freq - adc_freq;
-@@ -1390,6 +1404,7 @@
+@@ -1389,6 +1403,7 @@
  		init = tuner_init_mt2060_2;
  		break;
  	case AF9013_TUNER_TDA18271:

@@ -1,8 +1,8 @@
 *** a/arch/sh/kernel/setup.c	2011-01-05 10:45:31.000000000 +0100
 --- b/setup.c	2011-01-22 12:22:31.340928000 +0100
 ***************
-*** 388,393 ****
---- 388,421 ----
+*** 389,394 ****
+--- 389,422 ----
   #endif
   #endif
   
@@ -303,8 +303,8 @@
 *** linux-sh4-2.6.32.46_stm24_0209.orig/drivers/net/stmmac/stmmac_mdio.c	2011-11-24 22:22:25.000000000 +0200
 --- linux-sh4/drivers/net/stmmac/stmmac_mdio.c	2011-11-24 23:33:55.732873713 +0200
 ***************
-*** 169,174 ****
---- 169,175 ----
+*** 170,175 ****
+--- 170,176 ----
   	priv->mii = new_bus;
   
   	found = 0;
@@ -313,7 +313,7 @@
   		struct phy_device *phydev = new_bus->phy_map[addr];
   		if (phydev) {
 ***************
-*** 191,202 ****
+*** 194,205 ****
   			 * and no PHY number was provided to the MAC,
   			 * use the one probed here.
   			 */
@@ -339,7 +339,7 @@
 ! 					(phydev->phy_id == 0x00181b80) || // Davicom DM9131
 ! 					(phydev->phy_id == 0x1c040011) || // STe100p
 ! 					(phydev->phy_id == 0x00061c50) || // STe101p
-! 					(phydev->phy_id == 0x00008201) || //
+! 					(phydev->phy_id == 0x00008201) || // RTL8201CP
 ! 					(phydev->phy_id == 0x0007c0f1) || // Pingulux
 ! 					(phydev->phy_id == 0x001cc912)))  // RTL821x
 ! 			{
@@ -392,41 +392,27 @@
   EXPORT_SYMBOL(__nand_correct_data);
 *** linux-sh4/drivers/mtd/nand/nand_base.c_org
 --- linux-sh4/drivers/mtd/nand/nand_base.c
-***************
-*** 1201,1220 ****
-  
-  			/* Now read the page into the buffer */
-  			if (unlikely(ops->mode == MTD_OOB_RAW))
-! 				ret = chip->ecc.read_page_raw(mtd, chip,
-! 							      bufpoi, page);
-! 			else if (!aligned && NAND_SUBPAGE_READ(chip) && !oob)
-! 				ret = chip->ecc.read_subpage(mtd, chip, col, bytes, bufpoi);
-  			else
-! 				ret = chip->ecc.read_page(mtd, chip, bufpoi,
-! 							  page);
-  			if (ret < 0)
-  				break;
-  
-  			/* Transfer not aligned data */
-  			if (!aligned) {
-! 				if (!NAND_SUBPAGE_READ(chip) && !oob)
-! 					chip->pagebuf = realpage;
-  				memcpy(buf, chip->buffers->databuf + col, bytes);
-  			}
-  
---- 1201,1215 ----
-  
-  			/* Now read the page into the buffer */
-  			if (unlikely(ops->mode == MTD_OOB_RAW))
-! 				ret = chip->ecc.read_page_raw(mtd, chip,bufpoi, page);
-  			else
-! 				ret = chip->ecc.read_page(mtd, chip, bufpoi, page);
-  			if (ret < 0)
-  				break;
-  
-  			/* Transfer not aligned data */
-  			if (!aligned) {
-! 				chip->pagebuf = realpage;
-  				memcpy(buf, chip->buffers->databuf + col, bytes);
-  			}
-  
+@@ -1386,20 +1386,15 @@
+ 
+ 			/* Now read the page into the buffer */
+ 			if (unlikely(ops->mode == MTD_OOB_RAW))
+-				ret = chip->ecc.read_page_raw(mtd, chip,
+-							      bufpoi, page);
+-			else if (!aligned && NAND_SUBPAGE_READ(chip) && !oob)
+-				ret = chip->ecc.read_subpage(mtd, chip, col, bytes, bufpoi);
++				ret = chip->ecc.read_page_raw(mtd, chip,bufpoi, page);
+ 			else
+-				ret = chip->ecc.read_page(mtd, chip, bufpoi,
+-							  page);
++				ret = chip->ecc.read_page(mtd, chip, bufpoi, page);
+ 			if (ret < 0)
+ 				break;
+ 
+ 			/* Transfer not aligned data */
+ 			if (!aligned) {
+-				if (!NAND_SUBPAGE_READ(chip) && !oob)
+-					chip->pagebuf = realpage;
++				chip->pagebuf = realpage;
+ 				memcpy(buf, chip->buffers->databuf + col, bytes);
+ 			}
+ 
