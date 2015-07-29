@@ -20,4 +20,4 @@ DEPENDS = "\
     openvix-softcams-scam \
     "    
 
-PR = "r7"
+PR = "r8"
