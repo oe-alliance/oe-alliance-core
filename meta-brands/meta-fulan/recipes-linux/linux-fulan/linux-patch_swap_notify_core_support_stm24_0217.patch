@@ -1,0 +1,38 @@
+ include/linux/blkdev.h |    2 ++
+ mm/swapfile.c          |    3 +++
+ 2 files changed, 5 insertions(+), 0 deletions(-)
+
+diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
+index 5c80189..af027de 100644
+--- a/include/linux/blkdev.h
++++ b/include/linux/blkdev.h
+@@ -1278,6 +1278,8 @@
+ 						unsigned long long);
+ 	int (*revalidate_disk) (struct gendisk *);
+ 	int (*getgeo)(struct block_device *, struct hd_geometry *);
++	/* this callback is with swap_lock and sometimes page table lock held */
++	void (*swap_slot_free_notify) (struct block_device *, unsigned long);
+ 	struct module *owner;
+ };
+ 
+diff --git a/mm/swapfile.c b/mm/swapfile.c
+index 6c0585b..0c373bc 100644
+--- a/mm/swapfile.c
++++ b/mm/swapfile.c
+@@ -579,6 +579,7 @@ static int swap_entry_free(struct swap_info_struct *p,
+ 	count = p->swap_map[offset];
+ 	/* free if no reference */
+ 	if (!count) {
++		struct gendisk *disk = p->bdev->bd_disk;
+ 		if (offset < p->lowest_bit)
+ 			p->lowest_bit = offset;
+ 		if (offset > p->highest_bit)
+@@ -587,6 +588,8 @@ static int swap_entry_free(struct swap_info_struct *p,
+ 			swap_list.next = p - swap_info;
+ 		nr_swap_pages++;
+ 		p->inuse_pages--;
++		if (disk->fops->swap_slot_free_notify)
++			disk->fops->swap_slot_free_notify(p->bdev, offset);
+ 	}
+ 	if (!swap_count(count))
+ 		mem_cgroup_uncharge_swap(ent);

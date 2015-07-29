@@ -96,7 +96,7 @@
  		if  (!is_valid_ether_addr(priv->dev->dev_addr))
  			random_ether_addr(priv->dev->dev_addr);
  	}
-@@ -2262,6 +2264,8 @@
+@@ -2287,6 +2289,8 @@
  					   (unsigned long *)&tmrate))
  				goto err;
  #endif

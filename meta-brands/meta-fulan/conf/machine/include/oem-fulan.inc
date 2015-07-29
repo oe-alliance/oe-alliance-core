@@ -186,7 +186,6 @@ MACHINE_ESSENTIAL_EXTRA_RDEPENDS += " \
     stinit \
     fulan-dvb-modules \
     mtd-utils-jffs2 \
-    directfb-examples \
     "
 
 MACHINE_EXTRA_RRECOMMENDS = " \
@@ -208,3 +207,5 @@ include conf/machine/include/autoload-filesystems.inc
 require conf/machine/include/tune-sh4.inc
 
 # add support for extra feeds
+PACKAGE_ARCHS += " ${MACHINEBUILD}"
+

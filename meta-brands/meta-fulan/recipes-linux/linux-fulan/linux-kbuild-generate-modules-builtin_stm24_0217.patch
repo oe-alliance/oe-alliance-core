@@ -76,11 +76,9 @@ index ab8dc35..49efae7 100644
  KCONFIG_AUTOHEADER
  --------------------------------------------------
  This environment variable can be set to specify the path & name of the
-diff --git a/Makefile b/Makefile
-index 74ad9a9..90692ff 100644
 --- a/Makefile
 +++ b/Makefile
-@@ -463,7 +463,7 @@ ifeq ($(KBUILD_EXTMOD),)
+@@ -465,7 +465,7 @@
  # Carefully list dependencies so we do not try to build scripts twice
  # in parallel
  PHONY += scripts
@@ -89,7 +87,7 @@ index 74ad9a9..90692ff 100644
  	$(Q)$(MAKE) $(build)=$(@)
  
  # Objects we will link into vmlinux / subdirs we need to visit
-@@ -490,7 +490,7 @@ $(KCONFIG_CONFIG) include/config/auto.conf.cmd: ;
+@@ -492,7 +492,7 @@
  # with it and forgot to run make oldconfig.
  # if auto.conf.cmd is missing then we are probably in a cleaned tree so
  # we execute the config step to be sure to catch updated Kconfig files
@@ -97,8 +95,8 @@ index 74ad9a9..90692ff 100644
 +include/config/%.conf: $(KCONFIG_CONFIG) include/config/auto.conf.cmd
  	$(Q)$(MAKE) -f $(srctree)/Makefile silentoldconfig
  else
- # external modules needs include/generated/autoconf.h and include/config/auto.conf
-@@ -875,6 +875,9 @@ $(sort $(vmlinux-init) $(vmlinux-main)) $(vmlinux-lds): $(vmlinux-dirs) ;
+ # external modules needs include/linux/autoconf.h and include/config/auto.conf
+@@ -908,6 +908,9 @@
  PHONY += $(vmlinux-dirs)
  $(vmlinux-dirs): prepare scripts
  	$(Q)$(MAKE) $(build)=$@
@@ -108,7 +106,7 @@ index 74ad9a9..90692ff 100644
  
  # Build the kernel release string
  #
-@@ -1079,6 +1082,7 @@ all: modules
+@@ -1158,6 +1161,7 @@
  PHONY += modules
  modules: $(vmlinux-dirs) $(if $(KBUILD_BUILTIN),vmlinux)
  	$(Q)$(AWK) '!x[$$0]++' $(vmlinux-dirs:%=$(objtree)/%/modules.order) > $(objtree)/modules.order
@@ -116,7 +114,7 @@ index 74ad9a9..90692ff 100644
  	@$(kecho) '  Building modules, stage 2.';
  	$(Q)$(MAKE) -f $(srctree)/scripts/Makefile.modpost
  	$(Q)$(MAKE) -f $(srctree)/scripts/Makefile.fwinst obj=firmware __fw_modbuild
-@@ -1108,6 +1112,7 @@ _modinst_:
+@@ -1187,6 +1191,7 @@
  		ln -s $(objtree) $(MODLIB)/build ; \
  	fi
  	@cp -f $(objtree)/modules.order $(MODLIB)/
@@ -124,16 +122,17 @@ index 74ad9a9..90692ff 100644
  	$(Q)$(MAKE) -f $(srctree)/scripts/Makefile.modinst
  
  # This depmod is only for convenience to give the initial
-@@ -1168,7 +1173,7 @@ clean: archclean $(clean-dirs)
+@@ -1249,7 +1254,8 @@
  		\( -name '*.[oas]' -o -name '*.ko' -o -name '.*.cmd' \
  		-o -name '.*.d' -o -name '.*.tmp' -o -name '*.mod.c' \
  		-o -name '*.symtypes' -o -name 'modules.order' \
 -		-o -name 'Module.markers' -o -name '.tmp_*.o.*' \
-+		-o -name 'Module.markers' -o modules.order -o -name '.tmp_*.o.*' \
++		-o -name 'modules.builtin' -o -name 'Module.markers' \
++		-o -name '.tmp_*.o.*' \
  		-o -name '*.gcno' \) -type f -print | xargs rm -f
  
  # mrproper - Delete all generated files, including .config
-@@ -1366,7 +1371,8 @@ $(clean-dirs):
+@@ -1448,7 +1453,8 @@
  clean:	rm-dirs := $(MODVERDIR)
  clean: rm-files := $(KBUILD_EXTMOD)/Module.symvers \
                     $(KBUILD_EXTMOD)/Module.markers \
@@ -143,26 +142,21 @@ index 74ad9a9..90692ff 100644
  clean: $(clean-dirs)
  	$(call cmd,rmdirs)
  	$(call cmd,rmfiles)
-diff --git a/scripts/Kbuild.include b/scripts/Kbuild.include
-index c67e73e..ed2773e 100644
 --- a/scripts/Kbuild.include
 +++ b/scripts/Kbuild.include
-@@ -149,6 +149,12 @@ ld-option = $(call try-run,\
+@@ -153,6 +153,12 @@
+ # Usage:
  # $(Q)$(MAKE) $(build)=dir
  build := -f $(if $(KBUILD_SRC),$(srctree)/)scripts/Makefile.build obj
- 
++
 +###
 +# Shorthand for $(Q)$(MAKE) -f scripts/Makefile.modbuiltin obj=
 +# Usage:
 +# $(Q)$(MAKE) $(modbuiltin)=dir
 +modbuiltin := -f $(if $(KBUILD_SRC),$(srctree)/)scripts/Makefile.modbuiltin obj
-+
+ 
  # Prefix -I with $(srctree) if it is not an absolute path.
  # skip if -I has no parameter
- addtree = $(if $(patsubst -I%,%,$(1)), \
-diff --git a/scripts/Makefile.modbuiltin b/scripts/Makefile.modbuiltin
-new file mode 100644
-index 0000000..102a276
 --- /dev/null
 +++ b/scripts/Makefile.modbuiltin
 @@ -0,0 +1,55 @@
@@ -221,11 +215,9 @@ index 0000000..102a276
 +# information in a variable se we can use it in if_changed and friends.
 +
 +.PHONY: $(PHONY)
-diff --git a/scripts/kconfig/confdata.c b/scripts/kconfig/confdata.c
-index 797a741..c4dec80 100644
 --- a/scripts/kconfig/confdata.c
 +++ b/scripts/kconfig/confdata.c
-@@ -677,7 +677,7 @@ int conf_write_autoconf(void)
+@@ -677,7 +677,7 @@
  	struct symbol *sym;
  	const char *str;
  	const char *name;
@@ -234,16 +226,17 @@ index 797a741..c4dec80 100644
  	time_t now;
  	int i, l;
  
-@@ -692,9 +692,16 @@ int conf_write_autoconf(void)
+@@ -691,10 +691,17 @@
+ 	out = fopen(".tmpconfig", "w");
  	if (!out)
  		return 1;
- 
++
 +	tristate = fopen(".tmpconfig_tristate", "w");
 +	if (!tristate) {
 +		fclose(out);
 +		return 1;
 +	}
-+
+ 
  	out_h = fopen(".tmpconfig.h", "w");
  	if (!out_h) {
  		fclose(out);
@@ -251,7 +244,7 @@ index 797a741..c4dec80 100644
  		return 1;
  	}
  
-@@ -707,6 +714,9 @@ int conf_write_autoconf(void)
+@@ -707,6 +714,9 @@
  		     "# %s"
  		     "#\n",
  		     sym_get_string_value(sym), ctime(&now));
@@ -261,7 +254,7 @@ index 797a741..c4dec80 100644
  	fprintf(out_h, "/*\n"
  		       " * Automatically generated C config: don't edit\n"
  		       " * Linux kernel version: %s\n"
-@@ -727,10 +737,14 @@ int conf_write_autoconf(void)
+@@ -727,10 +737,14 @@
  				break;
  			case mod:
  				fprintf(out, "CONFIG_%s=m\n", sym->name);
@@ -276,7 +269,7 @@ index 797a741..c4dec80 100644
  				fprintf(out_h, "#define CONFIG_%s 1\n", sym->name);
  				break;
  			}
-@@ -772,6 +786,7 @@ int conf_write_autoconf(void)
+@@ -772,12 +786,18 @@
  		}
  	}
  	fclose(out);
@@ -284,17 +277,14 @@ index 797a741..c4dec80 100644
  	fclose(out_h);
  
  	name = getenv("KCONFIG_AUTOHEADER");
-@@ -779,6 +794,11 @@ int conf_write_autoconf(void)
- 		name = "include/generated/autoconf.h";
+ 	if (!name)
+ 		name = "include/linux/autoconf.h";
  	if (rename(".tmpconfig.h", name))
- 		return 1;
++		return 1;
 +	name = getenv("KCONFIG_TRISTATE");
 +	if (!name)
 +		name = "include/config/tristate.conf";
 +	if (rename(".tmpconfig_tristate", name))
-+		return 1;
+ 		return 1;
  	name = conf_get_autoconfig_name();
  	/*
- 	 * This must be the last step, kbuild has a dependency on auto.conf
--- 
-1.6.5.3
