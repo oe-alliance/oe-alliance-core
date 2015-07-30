@@ -4,17 +4,22 @@ include conf/machine/include/build-extras.inc
 BRAND_OEM = "broadmedia"
 
 MACHINE_NAME = "\
-${@base_contains('MACHINEBUILD', 'broadmedia300', 'G300' , '', d)}\
+${@base_contains('MACHINEBUILD', 'twinplus', 'twinplus' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'sf3038', 'SF3038' , '', d)}\
 "
 
 MACHINE_BRAND = "\
-${@base_contains('MACHINEBUILD', 'broadmedia300', 'BroadMedia' , '', d)}\
+${@base_contains('MACHINEBUILD', 'twinplus', 'BroadMedia' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'sf3038', 'Octagon' , '', d)}\
 "
 
 IMAGEDIR ?= "\
-${@base_contains('MACHINEBUILD', 'broadmedia300', 'g300' , '', d)}\
+${@base_contains('MACHINEBUILD', 'twinplus', 'twinplus' , '', d)}\
+${@base_contains('MACHINEBUILD', 'sf3038', 'sf3038' , '', d)}\
+"
+
+MACHINE_DRIVER = "\
+${@base_contains('MACHINEBUILD', 'twinplus', 'twinplus' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'sf3038', 'sf3038' , '', d)}\
 "
 
@@ -24,7 +29,7 @@ KERNEL_FILE = "kernel.bin"
 ROOTFS_FILE = "rootfs.bin"
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS = "\
-    broadmedia-dvb-modules-${MACHINE} \
+    broadmedia-dvb-modules-${MACHINE_DRIVER} \
     "
 
 DVBPROVIDER = "kernel"
