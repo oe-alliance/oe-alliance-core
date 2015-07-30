@@ -7,7 +7,7 @@ require conf/license/license-close.inc
 PV = "${KV}+${SRCDATE}"
 PR = "r0"
 
-SRC_URI = "http://source.mynonpublic.com/broadmedia/${MACHINE}-drivers-${KV}-${SRCDATE}.zip"
+SRC_URI = "http://source.mynonpublic.com/broadmedia/${MACHINE_DRIVER}-drivers-${KV}-${SRCDATE}.zip"
 
 S = "${WORKDIR}"
 
