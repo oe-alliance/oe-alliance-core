@@ -36,4 +36,4 @@ DEPENDS = "\
     enigma2-plugin-bootlogos-rossi2000-youvix-1080 \
     "
 
-PR = "r7"
+PR = "r8"

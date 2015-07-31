@@ -1,9 +1,9 @@
 SUMMARY = "Maxwell aurora bootlogo"
 
-require recipes-oe-alliance/bootlogo/bootlogos.inc
+require recipes-distros/openvix/bootlogos/openvix-bootlogos.inc
 
 PV = "1.0"
-PR = "r3"
+PR = "r4"
 
 SRC_URI = "http://openvix.co.uk/feeds_extras/bootlogos/Maxwells_Aurora_r2.zip"
 

@@ -1,9 +1,9 @@
 SUMMARY = "Maxwell earth bootlogo"
 
-require recipes-oe-alliance/bootlogo/bootlogos.inc
+require recipes-distros/openvix/bootlogos/openvix-bootlogos.inc
 
 PV = "1.0"
-PR = "r1"
+PR = "r2"
 
 SRC_URI = "http://openvix.co.uk/feeds_extras/bootlogos/Maxwells_Earth.zip"
 
