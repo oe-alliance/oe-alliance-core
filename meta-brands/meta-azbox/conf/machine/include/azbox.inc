@@ -10,7 +10,6 @@ MACHINE_ESSENTIAL_EXTRA_RDEPENDS = " \
 
 DVBPROVIDER = "kernel"
 
-GST_VERSION = "0.10"
 
 MACHINE_EXTRA_RRECOMMENDS = " \
     gst-plugin-azbox-dvbmediasink \
@@ -19,7 +18,7 @@ MACHINE_EXTRA_RRECOMMENDS = " \
     kernel-module-cifs \
     "
 
-DVBMEDIASINK_CONFIG = "--with-wma --with-wmv --with-pcm --with-dtsdownmix"
+DVBMEDIASINK_CONFIG = "--with-wma --with-wmv --with-pcm --with-dtsdownmix --with-azbox"
 
 MACHINE_FEATURES += " kernel26 alsa usbhost wifi nl80211 3dtv switchoff lpcm textlcd 32bpp hdtv dvbapi5 dvb-c blindscan-dvbs boxmodel"
 
