@@ -12,7 +12,7 @@ DVBPROVIDER = "kernel"
 
 
 MACHINE_EXTRA_RRECOMMENDS = " \
-    gst-plugin-azbox-dvbmediasink \
+    gstreamer1.0-plugin-azbox-dvbmediasink \
     azbox-mrua \
     azbox-compat \
     kernel-module-cifs \
