@@ -25,6 +25,8 @@ S = "${WORKDIR}"
 
 INHIBIT_PACKAGE_STRIP = "1"
 
+FILES_SOLIBSDEV =""
+
 do_install() {
     install -d ${D}${libdir}
     for f in *.so; do
