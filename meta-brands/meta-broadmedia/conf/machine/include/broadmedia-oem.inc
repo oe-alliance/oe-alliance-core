@@ -4,22 +4,22 @@ include conf/machine/include/build-extras.inc
 BRAND_OEM = "broadmedia"
 
 MACHINE_NAME = "\
-${@base_contains('MACHINEBUILD', 'twinplus', 'twinplus' , '', d)}\
+${@base_contains('MACHINEBUILD', 'mbtwinplus', 'Premium Twin Plus' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'sf3038', 'SF3038' , '', d)}\
 "
 
 MACHINE_BRAND = "\
-${@base_contains('MACHINEBUILD', 'twinplus', 'BroadMedia' , '', d)}\
+${@base_contains('MACHINEBUILD', 'mbtwinplus', 'Miraclebox' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'sf3038', 'Octagon' , '', d)}\
 "
 
 IMAGEDIR ?= "\
-${@base_contains('MACHINEBUILD', 'twinplus', 'twinplus' , '', d)}\
+${@base_contains('MACHINEBUILD', 'mbtwinplus', 'twinplus' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'sf3038', 'sf3038' , '', d)}\
 "
 
 MACHINE_DRIVER = "\
-${@base_contains('MACHINEBUILD', 'twinplus', 'twinplus' , '', d)}\
+${@base_contains('MACHINEBUILD', 'mbtwinplus', 'twinplus' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'sf3038', 'sf3038' , '', d)}\
 "
 
