@@ -19,7 +19,7 @@ inherit gitpkgv pkgconfig
 SRCREV = "${AUTOREV}"
 PV = "${GSTVERSION}+git${SRCPV}"
 PKGV = "${GSTVERSION}+git${GITPKGV}"
-PR = "r03"
+PR = "r01"
 
 inherit autotools
 
