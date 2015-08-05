@@ -4,7 +4,7 @@ PRIORITY = "required"
 LICENSE = "CLOSED"
 require conf/license/license-close.inc
 
-PR = "r5"
+PR = "r6"
 
 SRCDATE = "3.11-1"
 SRCDATE_azboxhd = "2.8-3"
