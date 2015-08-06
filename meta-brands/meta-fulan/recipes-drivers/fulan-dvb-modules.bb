@@ -16,7 +16,7 @@ inherit module
 
 PACKAGES = "${PN} ${PN}-dev"
 
-PR = "r30"
+PR = "r31"
 PV = "${KV}+${SRCDATE}"
 
 PTI_NP_PATH ?= "/data/pti_np"
@@ -24,6 +24,7 @@ PTI_NP_PATH ?= "/data/pti_np"
 SRC_URI = " \
     git://github.com/Duckbox-Developers/driver.git;protocol=git \
     file://aotom_spark_procfs.patch;patch=1 \
+    file://aotom_progress.patch;patch=1 \
     file://fix_videomode_names.patch;patch=1 \
     file://silence_tuner_printk.patch;patch=1 \
     file://silence_stmfb_printk.patch;patch=1 \
