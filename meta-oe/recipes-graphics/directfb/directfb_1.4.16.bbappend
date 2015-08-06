@@ -8,3 +8,7 @@ EXTRA_OECONF = "\
   --disable-vnc \
   --disable-x11 \
 "
+
+SRC_URI = "http://sources.buildroot.net/DirectFB-${PV}.tar.gz \
+           file://directfb-1.2.x-fix-pkgconfig-cflags.patch \
+           file://configurefix.patch"
