@@ -7,18 +7,21 @@ MACHINE_NAME = "\
 ${@base_contains('MACHINEBUILD', 'twinboxlcd', 'TWINBOX LCD' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbmicro', 'Premium Micro' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'odin2hybrid', 'ODIN2' , '', d)}\
+${@base_contains('MACHINEBUILD', 'e4hd', 'E4HD' , '', d)}\
 "
 
 MACHINE_BRAND = "\
 ${@base_contains('MACHINEBUILD', 'twinboxlcd', 'RED EAGLE' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbmicro', 'Miraclebox' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'odin2hybrid', 'Opticum' , '', d)}\
+${@base_contains('MACHINEBUILD', 'e4hd', 'AXAS' , '', d)}\
 "
 
 IMAGEDIR ?= "\
 ${@base_contains('MACHINEBUILD', 'twinboxlcd', 'redeagle/twinboxlcd' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbmicro', 'miraclebox/micro' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'odin2hybrid', 'odin2/hybrid' , '', d)}\
+${@base_contains('MACHINEBUILD', 'e4hd', 'e4hd' , '', d)}\
 "
 
 MTD_KERNEL = "mtd1"
