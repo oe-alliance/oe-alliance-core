@@ -81,6 +81,7 @@ IMAGE_CMD_ubi_append = "; \
     rm -f ${DEPLOY_DIR_IMAGE}/*.manifest; \
     rm -f ${DEPLOY_DIR_IMAGE}/.ubifs; \
     rm -f ${DEPLOY_DIR_IMAGE}/.manifest; \
+    rm -Rf ${DEPLOY_DIR_IMAGE}/boot; \
     rm -Rf ${IMAGEDIR}; \
     "
 
