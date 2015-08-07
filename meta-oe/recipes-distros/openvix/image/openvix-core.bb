@@ -4,10 +4,10 @@ MAINTAINER = "OpenViX"
 require conf/license/license-gplv2.inc
 
 DEPENDS = "enigma2 python-process libcrypto-compat-0.9.7"
-RDEPENDS_${PN} = "ofgwrite python-process libcrypto-compat-0.9.7 python-compression zip procps python-beautifulsoup"
+RDEPENDS_enigma2-plugin-vix-core = "ofgwrite python-process libcrypto-compat-0.9.7 python-compression zip procps python-beautifulsoup"
 
-RCONFLICTS_${PN} = "settings-autorestore"
-RREPLACES_${PN} = "settings-autorestore"
+RCONFLICTS_enigma2-plugin-vix-core = "settings-autorestore"
+RREPLACES_enigma2-plugin-vix-core = "settings-autorestore"
 
 PROVIDES += "openvix-core"
 RPROVIDES_enigma2-plugin-vix-core += "openvix-core"
@@ -16,7 +16,7 @@ inherit autotools-brokensep gitpkgv pythonnative
 SRCREV = "${AUTOREV}"
 PV = "3.0+git${SRCPV}"
 PKGV = "3.0+git${GITPKGV}"
-PR = "r8"
+PR = "r10"
 
 SRC_URI="git://github.com/OpenViX/vix-core.git;protocol=git"
 
@@ -32,12 +32,12 @@ EXTRA_OECONF = "\
 PACKAGES =+ "enigma2-plugin-vix-core"
 PACKAGES =+ "enigma2-plugin-vix-core-src"
 PACKAGES =+ "enigma2-plugin-vix-core-po"
-CONFFILES_${PN} += "${sysconfdir}/exports"
-FILES_${PN} = "/etc /usr/lib"
-FILES_${PN}-dbg = "/usr/lib/enigma2/python/Plugins/SystemPlugins/ViX/.debug/"
-FILES_${PN}-src = "/usr/lib/enigma2/python/Plugins/SystemPlugins/ViX/*.py"
-FILES_${PN}-po = "/usr/lib/enigma2/python/Plugins/SystemPlugins/ViX/locale/*.po"
-FILES_${PN}-doc = "/usr/share/enigma2/README*"
+CONFFILES_enigma2-plugin-vix-core += "${sysconfdir}/exports"
+FILES_enigma2-plugin-vix-core = "/etc /usr/lib"
+FILES_enigma2-plugin-vix-core-dbg = "/usr/lib/enigma2/python/Plugins/SystemPlugins/ViX/.debug/"
+FILES_enigma2-plugin-vix-core-src = "/usr/lib/enigma2/python/Plugins/SystemPlugins/ViX/*.py"
+FILES_enigma2-plugin-vix-core-po = "/usr/lib/enigma2/python/Plugins/SystemPlugins/ViX/locale/*.po"
+FILES_enigma2-plugin-vix-core-doc = "/usr/share/enigma2/README*"
 
 do_install_append() {
     if [ -f ${DEPLOY_DIR_IMAGE}/burn.bat ]; then
