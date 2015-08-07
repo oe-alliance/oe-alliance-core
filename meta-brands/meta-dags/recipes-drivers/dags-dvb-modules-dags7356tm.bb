@@ -20,6 +20,8 @@ S = "${WORKDIR}"
 
 INHIBIT_PACKAGE_STRIP = "1"
 
+do_populate_sysroot[noexec] = "1"
+
 inherit module
 
 do_compile() {
