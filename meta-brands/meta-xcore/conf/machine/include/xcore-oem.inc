@@ -12,7 +12,7 @@ ${@base_contains('MACHINEBUILD', 'osmini', 'OS mini' , '', d)}\
 "
 
 MACHINE_BRAND = "\
-${@base_contains('MACHINEBUILD', 'spycat', 'XCORE' , '', d)}\
+${@base_contains('MACHINEBUILD', 'spycat', 'SPYCAT' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'spycatmini', 'XCORE' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'vp7358ci', 'Sample2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'bcm7358', 'Sample1' , '', d)}\
