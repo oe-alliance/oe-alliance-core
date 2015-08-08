@@ -61,7 +61,7 @@ DEPENDS = "\
     wvdial \
     wvstreams \
     usbutils \
-    satip-client \
+    satipclient \
     ${@base_contains('MACHINE_FEATURES', 'legacykernel', '' , 'hostapd bridge-utils', d)} \
     "
 
@@ -94,8 +94,8 @@ RDEPENDS_enigma2-plugin-extensions-webbrowser = "python-gdata libqtwebkite4 webb
 FILES_enigma2-plugin-extensions-webbrowser_append = "${datadir}/keymaps"
 DESCRIPTION_enigma2-plugin-extensions-ondemand-openuitzendinggemist = "Watch NL-IP TV"
 DESCRIPTION_enigma2-plugin-systemplugins-satipclient = "Satip Client setup"
-RDEPENDS_enigma2-plugin-systemplugins-satipclient = "satip-client"
-DEPENDS_enigma2-plugin-systemplugins-satipclient = "satip-client"
+RDEPENDS_enigma2-plugin-systemplugins-satipclient = "satipclient"
+DEPENDS_enigma2-plugin-systemplugins-satipclient = "satipclient"
 REPLACES_enigma2-plugin-systemplugins-satipclient = "enigma2-plugin-extensions-satipclient"
 DESCRIPTION_enigma2-plugin-extensions-tunerserver = "Builds a virtual channels list"
 DESCRIPTION_enigma2-plugin-extensions-hbbtv = "HbbTV player"
@@ -127,7 +127,7 @@ inherit autotools-brokensep gitpkgv pythonnative
 SRCREV = "${AUTOREV}"
 PV = "2.0+git${SRCPV}"
 PKGV = "2.0+git${GITPKGV}"
-PR = "r21"
+PR = "r22"
 
 SRC_URI = "${OEA_PLUGINS_URI}"
 
