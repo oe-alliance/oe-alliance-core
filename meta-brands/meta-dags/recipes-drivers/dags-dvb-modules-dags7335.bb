@@ -20,8 +20,6 @@ S = "${WORKDIR}"
 
 INHIBIT_PACKAGE_STRIP = "1"
 
-do_populate_sysroot[noexec] = "1"
-
 inherit module
 
 do_compile() {
@@ -31,13 +29,9 @@ do_populate_sysroot[noexec] = "1"
 
 do_install() {
     install -d ${D}/lib/modules/${KV}/extra
-    for f in lib/modules/${KV}/extra/*.ko; do
-        install -m 0644 $f ${D}/$f;
-    done
+    install -m 0644 ${WORKDIR}/lib/modules/${KV}/extra/bcmlinuxdvb.ko ${D}/lib/modules/${KV}/extra/bcmlinuxdvb_${MACHINEBUILD}.ko
     install -d ${D}/${sysconfdir}/modules-load.d
-    for i in `ls ${D}/lib/modules/${KV}/extra | grep \\.ko | sed -e 's/.ko//g'`; do
-        echo $i _hwtype=\$hwtypenum >> ${D}/${sysconfdir}/modules-load.d/_${MACHINE}.conf
-    done
+    echo bcmlinuxdvb_${MACHINEBUILD} _hwtype=\$hwtypenum >> ${D}/${sysconfdir}/modules-load.d/_${MACHINEBUILD}.conf
 }
 
-FILES_${PN} += "${sysconfdir}/modules-load.d/_${MACHINE}.conf"
+FILES_${PN} += "${sysconfdir}/modules-load.d/_${MACHINEBUILD}.conf"
