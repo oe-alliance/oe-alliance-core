@@ -3,6 +3,7 @@ SECTION = "base"
 PRIORITY = "required"
 LICENSE = "CLOSED"
 require conf/license/license-close.inc
+PACKAGE_ARCH = "${MACHINEBUILD}"
 
 PV = "${KV}+${SRCDATE}"
 PR = "r4"
