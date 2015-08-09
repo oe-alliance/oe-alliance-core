@@ -16,3 +16,4 @@ SRC_URI[sha256sum] = "0629e601e5f6a200aeb7c4a4c8e8a1515af5ed2a8d7c79016155146a58
 
 S = "${WORKDIR}/gst-plugins-bad-${PV}"
 
+TARGET_CFLAGS_append = " -Wno-error=maybe-uninitialized"
