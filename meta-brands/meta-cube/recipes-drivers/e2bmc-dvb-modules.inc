@@ -8,7 +8,7 @@ PR = "r3"
 
 DRIVERMACHINE ?= "${MACHINE}"
 
-SRC_URI = "http://www.flashimage.net/drivers/cube-drivers-${KV}-${SRCDATE}.zip"
+SRC_URI = "http://source.mynonpublic.com/cube/cube-drivers-${KV}-${SRCDATE}.zip"
 
 S = "${WORKDIR}"
 
