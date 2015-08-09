@@ -1,5 +1,5 @@
 diff --git a/frontcontroller/aotom_spark/aotom_procfs.c b/frontcontroller/aotom_spark/aotom_procfs.c
-index 340a593..80d374c 100644
+index 340a593..2dc2913 100644
 --- a/frontcontroller/aotom_spark/aotom_procfs.c
 +++ b/frontcontroller/aotom_spark/aotom_procfs.c
 @@ -34,6 +34,7 @@
@@ -18,7 +18,7 @@ index 340a593..80d374c 100644
  
  static int vfd_write(struct file *file, const char __user *buf,
                             unsigned long count, void *data)
-@@ -121,6 +123,46 @@ static int vfd_write(struct file *file, const char __user *buf,
+@@ -121,6 +123,49 @@ static int vfd_write(struct file *file, const char __user *buf,
    return ret;
  }
  
@@ -34,19 +34,22 @@ index 340a593..80d374c 100644
 +		ret = -EFAULT;
 +		if (copy_from_user(page, buf, count))
 +			goto out;
-+		myString = (char*) kmalloc(count + 1, GFP_KERNEL);
++		myString = (char*) kmalloc(count+1, GFP_KERNEL);
 +		strncpy(myString, page, count);
 +		myString[count] = '\0';
 +		sscanf(myString, "%d", &progress);
 +		kfree(myString);
 +		if (aotomGetVersion() != YWPANEL_FP_DISPTYPE_LED) {
-+			myString = (char*) kmalloc(16, GFP_KERNEL);
-+			sprintf(myString,"Load %d", progress);
-+                	aotomWriteText(myString, 8);
-+			kfree(myString);
++			myString = (char*) kmalloc(count+6, GFP_KERNEL);
++			if (myString) {
++				strcpy(myString, "Load ");
++				strncat(myString, page, count);
++				aotomWriteText(myString, (count+6) < 8 ? (count+6) : 8);
++				kfree(myString);
++			}
 +		}
 +		else {
-+                	aotomWriteText(page, count);
++			aotomWriteText(page, count);
 +		}
 +	}
 +	ret = count;
@@ -65,7 +68,7 @@ index 340a593..80d374c 100644
  // Proc for accessing quick control of aotom
  // String format: fxy
  // f is "l" (for led) or "i" (for icons)
-@@ -655,6 +697,7 @@ struct fp_procs
+@@ -655,6 +700,7 @@ struct fp_procs
  } fp_procs[] =
  {
    { "vfd", NULL, vfd_write },
