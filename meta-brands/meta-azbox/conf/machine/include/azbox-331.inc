@@ -10,10 +10,10 @@ MACHINE_ESSENTIAL_EXTRA_RDEPENDS = " \
 
 DVBPROVIDER = "kernel"
 
-GST_VERSION = "0.10"
+#GST_VERSION = "0.10"
 
 MACHINE_EXTRA_RRECOMMENDS = " \
-    gst-plugin-azbox-dvbmediasink \
+    gstreamer1.0-plugin-dvbmediasink \
     azbox-mrua \
     azbox-compat \
     kernel-module-cifs \
