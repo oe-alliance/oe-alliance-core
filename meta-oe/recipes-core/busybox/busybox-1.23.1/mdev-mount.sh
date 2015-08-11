@@ -116,7 +116,7 @@ case $ACTION in
 							fi
 							# Remove mountpoint not being used
 							if [ -z "`grep $MOUNTPOINT /proc/mounts`" ] ; then
-								rm -rf $MOUNTPOINT
+								rmdir $MOUNTPOINT
 							fi
 							if ! mkdir $MOUNTPOINT ; then
 								MOUNTPOINT="/media/$TEMPDEV1"
@@ -199,8 +199,8 @@ case $ACTION in
 
 			# Remove mountpoint not being used
 			if [ -z "`grep $MOUNTPOINT /proc/mounts`" ] ; then
-				#echo "[mdev-mount.sh] rm -rf $MOUNTPOINT" >> $LOG
-				rm -rf $MOUNTPOINT
+				#echo "[mdev-mount.sh] rmdir $MOUNTPOINT" >> $LOG
+				rmdir $MOUNTPOINT
 			fi
 			if ! mkdir $MOUNTPOINT ; then
 				#echo "[mdev-mount.sh] mkdir $MOUNTPOINT failed, using /media/$MDEV" >> $LOG
