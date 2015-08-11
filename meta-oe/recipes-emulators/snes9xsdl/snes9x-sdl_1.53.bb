@@ -19,8 +19,6 @@ S = "${WORKDIR}/git/sdl"
 DEPENDS = "libsdl"
 RDEPENDS_${PN} = "directfb libsdl"
 
-directfb
-
 inherit autotools-brokensep
 
 do_install() {
