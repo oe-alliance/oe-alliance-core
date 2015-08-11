@@ -4,7 +4,7 @@ PRIORITY = "required"
 LICENSE = "CLOSED"
 require conf/license/license-close.inc
 
-PR = "r5"
+PR = "r6"
 
 SRCDATE = "3.11-1"
 SRCDATE_azboxhd = "2.8-3"
@@ -24,6 +24,8 @@ SRC_URI[azbox-mrua-azboxminime.sha256sum] = "49a531e062c41e901acdf29f80ab3db688b
 S = "${WORKDIR}"
 
 INHIBIT_PACKAGE_STRIP = "1"
+
+FILES_SOLIBSDEV =""
 
 do_install() {
     install -d ${D}${libdir}
