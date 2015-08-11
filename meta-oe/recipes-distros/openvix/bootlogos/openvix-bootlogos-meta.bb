@@ -26,7 +26,16 @@ DEPENDS = "\
     enigma2-plugin-bootlogos-maxwells-sound \
     enigma2-plugin-bootlogos-maxwells-spectrum \
     enigma2-plugin-bootlogos-maxwells-variation \
-	enigma2-plugin-bootlogos-rossi2000-openvix1-1080 \
+    enigma2-plugin-bootlogos-mk-duo2 \
+    enigma2-plugin-bootlogos-mk-frozen \
+    enigma2-plugin-bootlogos-mk-goldenplate \
+    enigma2-plugin-bootlogos-mk-joker \
+    enigma2-plugin-bootlogos-mk-lykanhypersport \
+    enigma2-plugin-bootlogos-mk-minions \
+    enigma2-plugin-bootlogos-mk-tiger \
+    enigma2-plugin-bootlogos-mk-tigerglow \
+    enigma2-plugin-bootlogos-mk-vixsteel \
+    enigma2-plugin-bootlogos-rossi2000-openvix1-1080 \
     enigma2-plugin-bootlogos-rossi2000-openvix2-1080 \
     enigma2-plugin-bootlogos-rossi2000-openvix3-1080 \
     enigma2-plugin-bootlogos-rossi2000-openvix4-1080 \
@@ -36,4 +45,4 @@ DEPENDS = "\
     enigma2-plugin-bootlogos-rossi2000-youvix-1080 \
     "
 
-PR = "r8"
+PR = "r9"
