@@ -87,7 +87,7 @@ case $ACTION in
 					# if mount /media/hdd already exits but an internal hdd is now found  
 					# then remount the first device to the device name or to /media/usb
 					# (unless the mounted device is already an internal non-removable device)
-					if [ -d /media/hdd ] ; then
+					if grep -q "/media/hdd" /proc/mounts ; then
 						#echo "[mdev-mount.sh] /media/hdd exists" >> $LOG
 						TEMPDEV=`cat /proc/mounts | grep /media/hdd | cut -d' ' -f 1`
 						# check if mounted device is already an internal device
@@ -116,6 +116,7 @@ case $ACTION in
 							fi
 							# Remove mountpoint not being used
 							if [ -z "`grep $MOUNTPOINT /proc/mounts`" ] ; then
+								find $MOUNTPOINT -type d -delete
 								rmdir $MOUNTPOINT
 							fi
 							if ! mkdir $MOUNTPOINT ; then
@@ -125,6 +126,7 @@ case $ACTION in
 							if ! mount -t auto ${TEMPDEV} "${MOUNTPOINT}" ; then
 								if ! mount.exfat ${TEMPDEV} "${MOUNTPOINT}" ; then
 									#echo "[mdev-mount.sh] mount failed 1" >> $LOG
+									find "${MOUNTPOINT}" -type d -delete
 									rmdir "${MOUNTPOINT}"
 								fi
 							fi
@@ -200,6 +202,7 @@ case $ACTION in
 			# Remove mountpoint not being used
 			if [ -z "`grep $MOUNTPOINT /proc/mounts`" ] ; then
 				#echo "[mdev-mount.sh] rmdir $MOUNTPOINT" >> $LOG
+				find $MOUNTPOINT  -type d -delete
 				rmdir $MOUNTPOINT
 			fi
 			if ! mkdir $MOUNTPOINT ; then
@@ -210,6 +213,7 @@ case $ACTION in
 			if ! mount -t auto /dev/$MDEV "${MOUNTPOINT}" ; then
 				if ! mount.exfat /dev/$MDEV "${MOUNTPOINT}" ; then
 					#echo "[mdev-mount.sh] mount failed 2" >> $LOG
+					find "${MOUNTPOINT}" -type d -delete
 					rmdir "${MOUNTPOINT}"
 				fi
 			fi
@@ -222,6 +226,7 @@ case $ACTION in
 			MOUNTPOINT="/media/$MDEV"
 		fi
 		umount $MOUNTPOINT || umount /dev/$MDEV
+		find $MOUNTPOINT  -type d -delete
 		rmdir $MOUNTPOINT
 		echo "[mdev-mount.sh] umounted $MOUNTPOINT" >> $LOG
 		;;
