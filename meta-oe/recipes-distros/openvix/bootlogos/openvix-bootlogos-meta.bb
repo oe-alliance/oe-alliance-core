@@ -1,4 +1,4 @@
-SUMMARY = "meta file for enigma2 bootlogo packages"
+SUMMARY = "Meta file for OpenViX Bootlogos"
 
 require conf/license/license-gplv2.inc
 
@@ -26,12 +26,19 @@ DEPENDS = "\
     enigma2-plugin-bootlogos-maxwells-sound \
     enigma2-plugin-bootlogos-maxwells-spectrum \
     enigma2-plugin-bootlogos-maxwells-variation \
+    enigma2-plugin-bootlogos-mk-avengers \
+    enigma2-plugin-bootlogos-mk-breakingbad \
     enigma2-plugin-bootlogos-mk-duo2 \
     enigma2-plugin-bootlogos-mk-frozen \
+    enigma2-plugin-bootlogos-mk-gameofthrones \
+    enigma2-plugin-bootlogos-mk-godfather \
     enigma2-plugin-bootlogos-mk-goldenplate \
     enigma2-plugin-bootlogos-mk-joker \
     enigma2-plugin-bootlogos-mk-lykanhypersport \
     enigma2-plugin-bootlogos-mk-minions \
+    enigma2-plugin-bootlogos-mk-scarface \
+    enigma2-plugin-bootlogos-mk-snowleopard \
+    enigma2-plugin-bootlogos-mk-terminatorgenisys \
     enigma2-plugin-bootlogos-mk-tiger \
     enigma2-plugin-bootlogos-mk-tigerglow \
     enigma2-plugin-bootlogos-mk-vixsteel \
@@ -45,4 +52,4 @@ DEPENDS = "\
     enigma2-plugin-bootlogos-rossi2000-youvix-1080 \
     "
 
-PR = "r9"
+PR = "r10"
