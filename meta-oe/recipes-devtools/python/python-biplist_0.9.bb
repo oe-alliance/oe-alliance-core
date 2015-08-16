@@ -4,7 +4,7 @@ SUMMARY = "Binary Property List (plist) files provide a faster and smaller\
            iOS, or other clients."
 SECTION = "devel/python"
 PRIORITY = "optional"
-HOMEPAGE = "http://github.com/wooster/biplist"
+HOMEPAGE = "https://pypi.python.org/pypi/biplist"
 SRCNAME = "biplist"
 DEPENDS = "python"
 LICENSE = "BSD"
@@ -12,11 +12,11 @@ PR = "r1"
 
 require conf/license/license-gplv2.inc
 
-SRC_URI = "https://github.com/downloads/wooster/biplist/${SRCNAME}-${PV}.tar.gz"
+SRC_URI = " https://bitbucket.org/wooster/biplist/downloads/${SRCNAME}-${PV}.tar.gz"
 S = "${WORKDIR}/${SRCNAME}-${PV}"
 
 inherit setuptools
 
-SRC_URI[md5sum] = "870f2e0d16a48440b37dadedca06552b"
-SRC_URI[sha256sum] = "d3097952e344b5d440c7588162faadf02474cd522527acd9e0a0a4923ddbff45"
+SRC_URI[md5sum] = "e7c57465356c22a819ddb3a5b20ac94d"
+SRC_URI[sha256sum] = "b35bc5602fb01c8f8bd05ff18c55f4e861c382d1bd6fb12ce55fc81e9706d1af"
 
