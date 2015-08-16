@@ -34,6 +34,7 @@ MACHINE_ESSENTIAL_EXTRA_RDEPENDS = "\
     "
 
 DVBPROVIDER = "kernel"
+DVBSKYPROVIDER = "kernel"
 
 MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS = "\
     kernel-module-cdfs \
