@@ -1,33 +1,41 @@
 #!/bin/sh
-### BEGIN INIT INFO
-# Provides:          umountfs
-# Required-Start:
-# Required-Stop:     
-# Default-Start:
-# Default-Stop:      0 6
-# Short-Description: Turn off swap and unmount all local file systems.
-# Description:
-### END INIT INFO
+#
+# umountfs	Turn off swap and unmount all local filesystems.
+#
 
 PATH=/sbin:/bin:/usr/sbin:/usr/bin
+
+# Ensure /proc is mounted
+test -r /proc/mounts || mount -t proc proc /proc
 
 echo "Deactivating swap..."
 swapoff -a
 
-# Sleep give epg time to save 
-sleep 5
+# We leave /proc mounted, the umount of /dev/devpts seems to fail
+# quite frequently, the busybox umount apparently gives up at the
+# first failure, so it is necessary to go file system by file
+# system.  It is necessary to go backward in the /proc list, because
+# later things may have been mounted on earlier mounts.
+unmount() {
+	local dev mp type opts
+	if read dev mp type opts
+	then
+		# recurse - unmount later items
+		unmount
+		# skip / and needed virtual filesystems
+		case "$mp" in
+		/|/dev|/proc|/sys) return 0;;
+		esac
+		# then unmount this, if possible, otherwise make
+		# it read-only
+		umount -f -r "$mp"
+	fi
+}
 
-# We leave /proc mounted.
 echo "Unmounting local filesystems..."
-grep -q /mnt/ram /proc/mounts && mount -o remount,ro /mnt/ram
+unmount </proc/mounts
+
 mount -o remount,ro /
 
-umount -f -a -r > /dev/null 2>&1
-
-if [ "$RUNLEVEL" = "0" ]; then
-  # hdparm -Y /dev/sd?
-  sdparm --command=stop /dev/sd?
-  sleep 5
-fi
-
-exit 0
+# sync to flush pending writes for loop-mounted file system.
+sync
