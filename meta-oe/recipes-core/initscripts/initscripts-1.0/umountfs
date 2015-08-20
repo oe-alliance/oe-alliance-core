@@ -11,6 +11,9 @@ test -r /proc/mounts || mount -t proc proc /proc
 echo "Deactivating swap..."
 swapoff -a
 
+# Sleep give epg time to save 
+sleep 5
+
 # We leave /proc mounted, the umount of /dev/devpts seems to fail
 # quite frequently, the busybox umount apparently gives up at the
 # first failure, so it is necessary to go file system by file
