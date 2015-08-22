@@ -42,3 +42,12 @@ mount -o remount,ro /
 
 # sync to flush pending writes for loop-mounted file system.
 sync
+
+# Add an extra delay of 5 sec to make sure even a problematic HDD has enough time to go to park-position.
+if [ "$RUNLEVEL" = "0" ]; then
+  # hdparm -Y /dev/sd?
+  sdparm --command=stop /dev/sd?
+  sleep 5
+fi
+
+exit 0
