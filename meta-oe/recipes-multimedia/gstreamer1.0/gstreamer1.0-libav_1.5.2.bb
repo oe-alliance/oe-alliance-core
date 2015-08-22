@@ -18,8 +18,8 @@ SRC_URI_append_sh4 = " \
     file://libav-fix-sh4-compile-gcc48.patch \
 "
 
-SRC_URI[md5sum] = "008794cfb7a19ae131712db2346b2eec"
-SRC_URI[sha256sum] = "3a7299c7dc3dcbf150e172771e458b557d10278c8069d4ea5e2bc1c806e55232"
+SRC_URI[md5sum] = "cca866c6f9a39faaa7e939e4d3992b48"
+SRC_URI[sha256sum] = "1f08336ca0def537cffdc16977fcc437e75719a48a7548ab9914a9f6b7b8bea5"
 
 LIBAV_EXTRA_CONFIGURE_COMMON_ARG = "--target-os=linux \
   --cc='${CC}' --as='${CC}' --ld='${CC}' --nm='${NM}' --ar='${AR}' \
