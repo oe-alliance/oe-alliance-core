@@ -130,6 +130,8 @@ MACHINE_EXTRA_RDEPENDS = "\
     enigma2-plugin-systemplugins-vfdcontrol \
     "
 
+MACHINE_EXTRA_RDEPENDS_append_gb800solo = "mtd-utils-jffs2"
+
 include conf/machine/include/autoload-filesystems.inc
     
 PREFERRED_PROVIDER_virtual/blindscan-dvbc = "gigablue-blindscan-utils"
