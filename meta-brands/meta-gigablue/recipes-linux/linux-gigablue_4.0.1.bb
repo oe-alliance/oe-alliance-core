@@ -21,6 +21,8 @@ RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
 
 SRC_URI += "http://archiv.openmips.com/gigablue-linux-${PV}-20150828.tgz \
     file://defconfig \
+    file://add-dmx-source-timecode.patch \
+    file://iosched-slice_idle-1.patch \
     "
 
 S = "${WORKDIR}/linux-${PV}"
