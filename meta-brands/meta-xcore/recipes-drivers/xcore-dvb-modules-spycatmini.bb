@@ -1,7 +1,7 @@
-KV = "4.1.6"
-SRCDATE = "20150824"
+KV = "4.2.0"
+SRCDATE = "20150831"
 KOFILES = "brcmstb-${MACHINE_DRIVER} fts260 mn88473"
 
 require xcore-dvb-modules.inc
-SRC_URI[md5sum] = "4e8260c8d33a4865049ec825a5ffefe7"
-SRC_URI[sha256sum] = "9aba9f07222d21bc753e3f30d5ea58f4e05f6196e51cf71c513e5c3a5cc100dd"
+SRC_URI[md5sum] = "16e72f04e0c553ff214fcb7d139264f3"
+SRC_URI[sha256sum] = "c32b97ab9eb928ffbcb1e9c13b6579f899373500c71853c0940e937b7fd30350"
