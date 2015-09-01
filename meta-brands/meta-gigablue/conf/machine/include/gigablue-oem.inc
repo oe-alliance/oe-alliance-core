@@ -131,6 +131,7 @@ MACHINE_EXTRA_RDEPENDS = "\
     "
 
 MACHINE_EXTRA_RDEPENDS_append_gb800solo = "mtd-utils-jffs2"
+MACHINE_EXTRA_RDEPENDS_append_gbipbox = "enigma2-plugin-extensions-gbipboxclient"
 
 include conf/machine/include/autoload-filesystems.inc
     
