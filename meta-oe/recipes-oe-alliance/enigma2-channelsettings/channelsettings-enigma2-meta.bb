@@ -5,7 +5,7 @@ require conf/license/license-gplv2.inc
 inherit allarch
 
 PV = "2.0"
-PR = "r11"
+PR = "r12"
 
 DEPENDS = " \
     enigma2-plugin-settings-henksat-19e \
@@ -49,7 +49,6 @@ DEPENDS = " \
     enigma2-plugin-settings-predrag.39e.28e.26e.23e.19e.16e.13e.7.0e.0.8w.4w \
     enigma2-plugin-settings-predrag.motor.42e.to.30w \
     enigma2-plugin-settings-vhannibal.dual.feeds \
-    enigma2-plugin-settings-vhannibal.dual.feeds.dtt.italia \
     enigma2-plugin-settings-vhannibal.dual.feeds.dtt.milano \
     enigma2-plugin-settings-vhannibal.dual.feeds.dtt.napoli \
     enigma2-plugin-settings-vhannibal.dual.feeds.dtt.roma \
@@ -71,7 +70,7 @@ DEPENDS = " \
     enigma2-plugin-settings-vhannibal.quad.9e.13e.16e.19e \
     enigma2-plugin-settings-vhannibal.quad.13e.19e.23e.28e \
     enigma2-plugin-settings-vhannibal.quad.nordic \
-    enigma2-plugin-settings-vhannibal.trial.30w \
+    enigma2-plugin-settings-vhannibal.13e.19e.30w \
     \
     enigma2-plugin-settings-gigablue-19e \
     enigma2-plugin-settings-gigablue-19e-13e \
