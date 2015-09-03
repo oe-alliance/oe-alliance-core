@@ -5,8 +5,11 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 inherit kernel machine_kernel_pr
 
-SRC_URI[md5sum] = "a5cb2250dbf8389e3c4faa1153151e79"
-SRC_URI[sha256sum] = "6a52272b3034fd21b339b8509e7ce5600e42cf17404d676525d2e10327e9576f"
+KERNEL_RELEASE = "3.18.18"
+SRCDATE = "20150812"
+
+SRC_URI[md5sum] = "9b0a98d2ce3f64769d56311bfac4432a"
+SRC_URI[sha256sum] = "eb8736304a4ad5f3518ba4db07c01251238caa454f0e16a80b28d4de4374d8f9"
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
@@ -18,8 +21,15 @@ PKG_kernel-image = "kernel-image"
 RPROVIDES_kernel-base = "kernel-${KERNEL_VERSION}"
 RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
 
-SRC_URI += "http://source.mynonpublic.com/ultramini/ultramini-linux-${PV}.tar.xz \
+SRC_URI += "http://xpeedlxclass.eu/xpeedc-linux-${PV}-${SRCDATE}.tar.gz \
     file://defconfig \
+    file://add-dmx-source-timecode.patch \
+    file://af9015-output-full-range-SNR.patch \
+    file://cxd2820r-output-full-range-SNR.patch \
+    file://fix-proc-cputype.patch \
+    file://iosched-slice_idle-1.patch \
+    file://mxl5007t-add-no_probe-and-no_reset-parameters.patch \
+    file://tda18271-advertise-supported-delsys.patch \
     "
 
 S = "${WORKDIR}/linux-${PV}"
