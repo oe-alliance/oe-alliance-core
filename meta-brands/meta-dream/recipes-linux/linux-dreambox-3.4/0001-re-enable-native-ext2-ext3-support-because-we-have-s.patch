@@ -1,0 +1,62 @@
+From f1ca71eca804fb12d9512c1e7e64d9ea0138fc9d Mon Sep 17 00:00:00 2001
+From: Andreas Monzner <andreas.monzner@dream-property.net>
+Date: Wed, 2 Sep 2015 14:36:15 +0200
+Subject: [PATCH] re-enable native ext2/ext3 support because we have sometimes
+ strange recording problems with ext3 filesystems mounted by ext4 driver
+
+---
+ arch/mips/configs/dm7080_defconfig | 10 +++++++---
+ arch/mips/configs/dm820_defconfig  | 10 +++++++---
+ 2 files changed, 14 insertions(+), 6 deletions(-)
+
+diff --git a/arch/mips/configs/dm7080_defconfig b/arch/mips/configs/dm7080_defconfig
+index e5abcce..28ceea1 100644
+--- a/arch/mips/configs/dm7080_defconfig
++++ b/arch/mips/configs/dm7080_defconfig
+@@ -2775,12 +2775,16 @@ CONFIG_IOMMU_SUPPORT=y
+ #
+ # File systems
+ #
+-# CONFIG_EXT2_FS is not set
+-# CONFIG_EXT3_FS is not set
++CONFIG_EXT2_FS=y
++# CONFIG_EXT2_FS_XATTR is not set
++# CONFIG_EXT2_FS_XIP is not set
++CONFIG_EXT3_FS=y
++CONFIG_EXT3_DEFAULTS_TO_ORDERED=y
++# CONFIG_EXT3_FS_XATTR is not set
+ CONFIG_EXT4_FS=y
+-CONFIG_EXT4_USE_FOR_EXT23=y
+ # CONFIG_EXT4_FS_XATTR is not set
+ # CONFIG_EXT4_DEBUG is not set
++CONFIG_JBD=y
+ CONFIG_JBD2=y
+ CONFIG_REISERFS_FS=m
+ # CONFIG_REISERFS_CHECK is not set
+diff --git a/arch/mips/configs/dm820_defconfig b/arch/mips/configs/dm820_defconfig
+index f8876e3..3ae20fa 100644
+--- a/arch/mips/configs/dm820_defconfig
++++ b/arch/mips/configs/dm820_defconfig
+@@ -2775,12 +2775,16 @@ CONFIG_IOMMU_SUPPORT=y
+ #
+ # File systems
+ #
+-# CONFIG_EXT2_FS is not set
+-# CONFIG_EXT3_FS is not set
++CONFIG_EXT2_FS=y
++# CONFIG_EXT2_FS_XATTR is not set
++# CONFIG_EXT2_FS_XIP is not set
++CONFIG_EXT3_FS=y
++CONFIG_EXT3_DEFAULTS_TO_ORDERED=y
++# CONFIG_EXT3_FS_XATTR is not set
+ CONFIG_EXT4_FS=y
+-CONFIG_EXT4_USE_FOR_EXT23=y
+ # CONFIG_EXT4_FS_XATTR is not set
+ # CONFIG_EXT4_DEBUG is not set
++CONFIG_JBD=y
+ CONFIG_JBD2=y
+ CONFIG_REISERFS_FS=m
+ # CONFIG_REISERFS_CHECK is not set
+-- 
+1.9.1
+
