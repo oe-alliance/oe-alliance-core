@@ -9,7 +9,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "1.0"
-PR = "r61"
+PR = "r62"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 DEPENDS = "enigma2-plugin-drivers-usbserial"
@@ -82,6 +82,7 @@ RDEPENDS_${PN} = " \
     procps \
     pyload \
     python-circuits python-circuits-bricks python-cocy python-mechanize python-requests livestreamer livestreamersrv \
+    python-ujson python-singledispatch python-futures \
     rsync \
     rtorrent \
     sabnzbd \
@@ -105,6 +106,7 @@ RDEPENDS_${PN} = " \
     "
 
 RDEPENDS_${PN}_remove_xc7362 = "network-usb-drivers-meta"
+RDEPENDS_${PN}_remove_xc7358ci = "network-usb-drivers-meta"
 
 RRECOMMENDS_${PN}_append_vuuno = "enigma2-plugin-extensions-hbbtv"
 RRECOMMENDS_${PN}_append_vuultimo = "enigma2-plugin-extensions-hbbtv"
