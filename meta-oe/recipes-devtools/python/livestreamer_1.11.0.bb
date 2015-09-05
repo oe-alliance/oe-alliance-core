@@ -13,6 +13,8 @@ RDEPENDS_${PN} = "python \
 	python-requests \
 	python-shell \
 	python-subprocess \
+	python-singledispatch \
+	python-futures \
 	"
 
 inherit gitpkgv
@@ -20,7 +22,7 @@ SRCREV = "${AUTOREV}"
 PV = "1.11.0+git${SRCPV}"
 PKGV = "1.11.0+git${GITPKGV}"
 VER ="1.11.0"
-PR = "r0"
+PR = "r1"
 
 SRC_URI = "git://github.com/chrippa/livestreamer.git;protocol=git"
 
