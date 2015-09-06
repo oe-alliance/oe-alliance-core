@@ -5,15 +5,15 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 inherit machine_kernel_pr
 
-KERNEL_RELEASE = "3.13.8"
+KERNEL_RELEASE = "3.18.18"
+SRCDATE = "20150812"
 
-MACHINE_KERNEL_PR_append = ".1"
+MACHINE_KERNEL_PR_append = ".0"
 
-SRC_URI[md5sum] = "0fa7714d78d9ea2eedc9f673935c2ac2"
-SRC_URI[sha256sum] = "4738b2de254a84b4597b6e806848547929027b48822d7701c0009d74f0c4950d"
+SRC_URI[md5sum] = "9b0a98d2ce3f64769d56311bfac4432a"
+SRC_URI[sha256sum] = "eb8736304a4ad5f3518ba4db07c01251238caa454f0e16a80b28d4de4374d8f9"
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
-
 # By default, kernel.bbclass modifies package names to allow multiple kernels
 # to be installed in parallel. We revert this change and rprovide the versioned
 # package names instead, to allow only one kernel to be installed.
@@ -22,21 +22,15 @@ PKG_kernel-image = "kernel-image"
 RPROVIDES_kernel-base = "kernel-${KERNEL_VERSION}"
 RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
 
-SRC_URI += "http://xtrendet.net/linux-${PV}.tar.gz \
+SRC_URI += "http://xtrendet.net/xtrend-linux-${PV}-${SRCDATE}.tar.gz \
     file://defconfig \
     file://add-dmx-source-timecode.patch \
     file://af9015-output-full-range-SNR.patch \
-    file://af9033-output-full-range-SNR.patch \
-    file://as102-adjust-signal-strength-report.patch \
-    file://as102-scale-MER-to-full-range.patch \
     file://cxd2820r-output-full-range-SNR.patch \
-    file://dvb-usb-dib0700-disable-sleep.patch \
-    file://dvb_usb_disable_rc_polling.patch \
     file://fix-proc-cputype.patch \
     file://iosched-slice_idle-1.patch \
-    file://it913x-switch-off-PID-filter-by-default.patch \
-    file://tda18271-advertise-supported-delsys.patch \
     file://mxl5007t-add-no_probe-and-no_reset-parameters.patch \
+    file://tda18271-advertise-supported-delsys.patch \
     "
 
 S = "${WORKDIR}/linux-${PV}"
@@ -61,6 +55,7 @@ kernel_do_install_append() {
     gzip -9c ${D}${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION} > ${D}${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz
     rm ${D}${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION}
 }
+
 
 pkg_postinst_kernel-image () {
     if [ "x$D" == "x" ]; then
