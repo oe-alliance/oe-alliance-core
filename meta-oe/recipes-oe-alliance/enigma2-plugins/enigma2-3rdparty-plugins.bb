@@ -11,7 +11,7 @@ DEPENDS = "tslib mpfr gmp"
 SRCREV = "${AUTOREV}"
 PV = "2.1+gitr${SRCPV}"
 PKGV = "2.1+gitr${GITPKGV}"
-PR = "r202"
+PR = "r208"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -33,9 +33,9 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-atmolightd_0.7-pre22_all.ipk \
     enigma2-plugin-extensions-autobouquets-e2_20150721_all.ipk \
     enigma2-plugin-extensions-bildonline_3.1rc6_mips32el.ipk \
-    enigma2-plugin-extensions-bluray_1.5c2_mips32el.ipk \
+    enigma2-plugin-extensions-bluray_1.5c3_mips32el.ipk \
     enigma2-plugin-extensions-boblight-enigma2_0.8r7_mips32el.ipk \
-    enigma2-plugin-extensions-camofs_9.09_all.ipk \
+    enigma2-plugin-extensions-camofs_9.16_all.ipk \
     enigma2-plugin-extensions-chefkoch_1.4c4_mips32el.ipk \
     enigma2-plugin-extensions-clevertanken_0.5rc1_mips32el.ipk \
     enigma2-plugin-extensions-csfd_10-10-20150103_all.ipk \
@@ -45,23 +45,23 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-facebook_1.4_mips32el.ipk \
     enigma2-plugin-extensions-filesearchfs_2.53_all.ipk \
     enigma2-plugin-extensions-focusonline_1.0rc8_mips32el.ipk \
-    enigma2-plugin-extensions-fragmutti_0.3_mips32el.ipk \
+    enigma2-plugin-extensions-fragmutti_0.4_mips32el.ipk \
     enigma2-plugin-extensions-gmailreader-oe2.0_1.3_all.ipk \
     enigma2-plugin-extensions-googlenewsreader_1.0_mips32el.ipk \
     enigma2-plugin-extensions-hdmitest_0.4_mipsel.ipk \
-    enigma2-plugin-extensions-hetweer_2.7_all.ipk \
+    enigma2-plugin-extensions-hetweer_2.7rc3_mips32el.ipk \
     enigma2-plugin-extensions-isettinge2-3.3.3-oe2.0-${@base_contains("TARGET_ARCH", "sh4", "sh4" , "mips32el", d)}.ipk \
     enigma2-plugin-extensions-iptvplayer_67.02.02.01_all.ipk \
     enigma2-plugin-extensions-kicker_3.3rc15_mips32el.ipk \
-    enigma2-plugin-extensions-kino_1.5_mips32el.ipk \
+    enigma2-plugin-extensions-kino_1.5rc1_mips32el.ipk \
     enigma2-plugin-extensions-kodidirect_2.0_r0_all.ipk \
     enigma2-plugin-extensions-livefootball-oe2.0_5.4_all.ipk \
     enigma2-plugin-extensions-mediainfo_2.7_all.ipk \
     enigma2-plugin-extensions-mediaportal_7.1.4_all.ipk \
     enigma2-plugin-extensions-mediaportal-wallicons \
     enigma2-plugin-extensions-mediastream_6.0_all.ipk \
-    enigma2-plugin-extensions-moviebrowser_3.6rc2_mips32el.ipk \
-    enigma2-plugin-extensions-mp3browser_1.9c7_mips32el.ipk \
+    enigma2-plugin-extensions-moviebrowser_3.6rc3_mips32el.ipk \
+    enigma2-plugin-extensions-mp3browser_1.9c8_mips32el.ipk \
     enigma2-plugin-extensions-msnwetter_0.6rc3_mips32el.ipk \
     enigma2-plugin-extensions-mtv_0.1_mips32el.ipk \
     enigma2-plugin-extensions-muzutv_1.5rc4_mips32el.ipk \
@@ -71,7 +71,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-oscamstatusview_0.7rc1_mips32el.ipk \
     enigma2-plugin-extensions-piconmanager_2.1-20150216-r2_all.ipk \
     enigma2-plugin-extensions-picturecenterfs_6.10_all.ipk \
-    enigma2-plugin-extensions-planerfs_6.57_all.ipk \
+    enigma2-plugin-extensions-planerfs_6.59_all.ipk \
     enigma2-plugin-extensions-pluginspanel_1.0_r01_all.ipk \
     enigma2-plugin-extensions-radiode_0.1_mips32el.ipk \
     enigma2-plugin-extensions-radioonline-oe2.0_1.0_all.ipk \
@@ -89,17 +89,17 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-systemtools-for-ppanels_0.83_mipsel.ipk \
     enigma2-plugin-extensions-thetvdb_0.7-20120607-r1_mips32el.ipk \
     enigma2-plugin-extensions-tmbd_6.5_mipsel.ipk \
-    enigma2-plugin-extensions-translator_0.9rc3_mips32el.ipk \
+    enigma2-plugin-extensions-translator_1.0_mips32el.ipk \
     enigma2-plugin-extensions-transmission_2.83_mips32el.ipk \
-    enigma2-plugin-extensions-tsmedia_10.0_all.ipk \
+    enigma2-plugin-extensions-tsmedia_10.6_all.ipk \
     enigma2-plugin-extensions-tstube_1.2_all.ipk \
-    enigma2-plugin-extensions-tvspielfilm_6.4rc2_mips32el.ipk \
+    enigma2-plugin-extensions-tvspielfilm_6.4rc3_mips32el.ipk \
     enigma2-plugin-extensions-verkehrsinfo_1.1rc1_mips32el.ipk \
     enigma2-plugin-extensions-vhannibalautosettings_1.1_mips32el.ipk \
     enigma2-plugin-extensions-vuplusforum_0.7rc3_mips32el.ipk \
     enigma2-plugin-extensions-webmedia_10.0_r02_oe2.0_all.ipk \
-    enigma2-plugin-extensions-webradiofs_13.32_all.ipk \
-    enigma2-plugin-extensions-wikipedia_2.2rc5_mips32el.ipk \
+    enigma2-plugin-extensions-webradiofs_13.40_all.ipk \
+    enigma2-plugin-extensions-wikipedia_2.2rc6_mips32el.ipk \
     enigma2-plugin-extensions-wwech_1.01_all.ipk \
     enigma2-plugin-extensions-xbmcaddons_8.1_r0_all.ipk \
     enigma2-plugin-extensions-xbmcwetter_1.3rc4_mips32el.ipk \
@@ -107,21 +107,6 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-zdfnewmediathek_1.7rc5_mips32el.ipk \
     enigma2-plugin-systemplugins-bouquetsprotection_0.2-rc1_all.ipk \
     enigma2-plugin-systemplugins-recordinfobar_1.0-rc15_mipsel.ipk \
-    enigma2-plugin-picons-100x60.black-white_2015-08-07_all.ipk \
-    enigma2-plugin-picons-100x60.blue-black_2015-08-07_all.ipk \
-    enigma2-plugin-picons-100x60.reflection-black_2015-08-07_all.ipk \
-    enigma2-plugin-picons-100x60.transparent-black_2015-08-07_all.ipk \
-    enigma2-plugin-picons-100x60.transparent-white_2015-08-07_all.ipk \
-    enigma2-plugin-picons-100x60.white-black_2015-08-07_all.ipk \
-    enigma2-plugin-picons-220x132.black-white_2015-08-07_all.ipk \
-    enigma2-plugin-picons-220x132.blue-black_2015-08-07_all.ipk \
-    enigma2-plugin-picons-220x132.reflection-black_2015-08-07_all.ipk \
-    enigma2-plugin-picons-220x132.transparent-black_2015-08-07_all.ipk \
-    enigma2-plugin-picons-220x132.transparent-black-nopadding_2015-08-07_all.ipk \
-    enigma2-plugin-picons-220x132.transparent-white_2015-08-07_all.ipk \
-    enigma2-plugin-picons-220x132.transparent-white-nopadding_2015-08-07_all.ipk \
-    enigma2-plugin-picons-220x132.white-black_2015-08-07_all.ipk \
-    enigma2-plugin-picons-400x240.transparent-white-nopadding_2015-08-07_all.ipk \
     "
 
 #     Install any packages t_append =hat are only For this machines feed here, uncomment the line below and change as required

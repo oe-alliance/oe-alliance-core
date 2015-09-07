@@ -6,7 +6,7 @@ LICENSE = "CLOSED"
 PV = "${KV}+${SRCDATE}"
 PR = "r0"
 
-SRC_URI = "http://source.mynonpublic.com/ultramini/${MACHINE_DRIVER}-drivers-${KV}-${SRCDATE}.zip"
+SRC_URI = "http://xpeedlxclass.eu/${MACHINE_DRIVER}-drivers-${KV}-${SRCDATE}.zip"
 
 S = "${WORKDIR}"
 

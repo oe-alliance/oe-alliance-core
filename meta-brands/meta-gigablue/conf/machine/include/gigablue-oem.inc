@@ -131,6 +131,7 @@ MACHINE_EXTRA_RDEPENDS = "\
     "
 
 MACHINE_EXTRA_RDEPENDS_append_gb800solo = "mtd-utils-jffs2"
+MACHINE_EXTRA_RDEPENDS_append_gbipbox = "enigma2-plugin-extensions-gbipboxclient"
 
 include conf/machine/include/autoload-filesystems.inc
     
@@ -175,7 +176,7 @@ IMAGE_CMD_ubi_append = "; \
     cp ${DEPLOY_DIR_IMAGE}/warning.bin ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/warning.bin; \
     mv ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}_rootfs.rootfs.ubi ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/${ROOTFS_FILE}; \
     gzip -f -c ${DEPLOY_DIR_IMAGE}/vmlinux-${MACHINE}.bin > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/${KERNEL_FILE}; \
-    echo ${DISTRO_NAME}-${DISTRO_VERSION}-${DATE} > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/imageversion; \
+    echo ${IMAGE_VER_STRING} > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/imageversion; \
     echo "rename this file to 'force' to force an update without confirmation" > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/noforce; \
     cd ${DEPLOY_DIR_IMAGE}; \
     zip -r ${IMAGE_NAME}_usb.zip gigablue/*; \
