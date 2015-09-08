@@ -5,7 +5,9 @@ DEPENDS = "libpng freetype ${@base_contains("BRAND_OEM", "fulan", "fulan-dvb-mod
 
 inherit gitpkgv
 
-SRC_URI = "git://github.com/OpenPLi/tuxtxt.git;protocol=git"
+SRC_URI = "git://github.com/OpenPLi/tuxtxt.git;protocol=git \
+    file://tuxtxt_getPressedKey.patch \
+"
 
 SRC_URI_append_sh4 = " \
     file://tuxtxtlib_sh4_fix.patch;patch=1 \
@@ -15,7 +17,7 @@ S = "${WORKDIR}/git/libtuxtxt"
 
 PV = "2.0+git${SRCPV}"
 PKGV = "2.0+git${GITPKGV}"
-PR = "r3"
+PR = "r4"
 
 EXTRA_OECONF = "--with-boxtype=generic"
 
