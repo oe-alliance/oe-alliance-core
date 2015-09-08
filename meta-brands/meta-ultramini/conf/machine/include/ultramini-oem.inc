@@ -58,8 +58,8 @@ TARGET_ARCH = "mipsel"
 DEFAULTTUNE = "mips32el"
 
 PREFERRED_PROVIDER_virtual/kernel = "linux-ultramini"
-PREFERRED_PROVIDER_virtual/blindscan-dvbc = "ultramini-blindscan-utils"
-PREFERRED_PROVIDER_virtual/blindscan-dvbs = "ultramini-blindscan-utils"
+PREFERRED_PROVIDER_virtual/blindscan-dvbc = "ultramini-blindscan-utils-dvbs"
+PREFERRED_PROVIDER_virtual/blindscan-dvbs = "ultramini-blindscan-utils-dvbc"
 
 PREFERRED_VERSION_nfs-utils ?= "1.2.8"
 
@@ -96,7 +96,7 @@ IMAGE_CMD_ubi_append = "; \
     "
 
 MACHINE_FEATURES += "3dtv alsa hdmicec switchoff wifi bootsplash omb skins1080 \
-    ${@base_contains('MACHINEBUILD', 'xpeedlxcc', 'dvb-c dvbc-only' , '', d)} \
+    ${@base_contains('MACHINEBUILD', 'xpeedlxcc', 'dvb-c dvbc-only blindscan-dvbc' , '', d)} \
     "
 
 BOOTLOGO_FILENAME = "splash.bin"
