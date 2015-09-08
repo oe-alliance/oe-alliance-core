@@ -8,7 +8,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 require conf/license/license-gplv2.inc
 inherit deploy
 
-PR = "r32"
+PR = "r33"
 
 S = "${WORKDIR}"
 
@@ -20,7 +20,6 @@ SRC_URI_gb800ueplus = " file://gb800ueplus/lcdwaitkey.bin file://gb800ueplus/lcd
 SRC_URI_gb800seplus = " file://gb800seplus/warning.bin"
 SRC_URI_gbipbox = " file://gbipbox/warning.bin"
 SRC_URI_gbultraue = " file://gbultraue/lcdwaitkey.bin file://gbultraue/lcdwarning.bin file://gbultraue/warning.bin"
-SRC_URI_gbultrase = " file://gbultrase/warning.bin"
 SRC_URI_gbx1 = " file://gbx1/warning.bin"
 SRC_URI_gbx3 = " file://gbx3/warning.bin"
 
