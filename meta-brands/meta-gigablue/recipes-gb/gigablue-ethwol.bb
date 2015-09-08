@@ -3,7 +3,7 @@ MAINTAINER = "GigaBlue"
 LICENSE = "CLOSED"
 
 PV = "1.0"
-PR = "r0"
+PR = "r1"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
