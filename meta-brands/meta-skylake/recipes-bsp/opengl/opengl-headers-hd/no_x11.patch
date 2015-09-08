@@ -1,0 +1,21 @@
+diff --git a/EGL/eglplatform.h b/EGL/eglplatform.h
+index bfac71b..83c2d1a 100644
+--- a/EGL/eglplatform.h
++++ b/EGL/eglplatform.h
+@@ -90,13 +90,9 @@ typedef void*                           EGLNativeDisplayType;
+ 
+ #elif defined(__unix__)
+ 
+-/* X11 (tentative)  */
+-#include <X11/Xlib.h>
+-#include <X11/Xutil.h>
+-
+-typedef Display *EGLNativeDisplayType;
+-typedef Pixmap   EGLNativePixmapType;
+-typedef Window   EGLNativeWindowType;
++typedef int   EGLNativeDisplayType;
++typedef void *EGLNativeWindowType;
++typedef void *EGLNativePixmapType;
+ 
+ #else
+ #error "Platform not recognized"
