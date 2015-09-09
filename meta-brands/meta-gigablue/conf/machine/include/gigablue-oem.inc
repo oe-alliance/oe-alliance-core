@@ -134,11 +134,11 @@ MACHINE_EXTRA_RDEPENDS_append_gb800solo = "mtd-utils-jffs2"
 MACHINE_EXTRA_RDEPENDS_append_gbipbox = "enigma2-plugin-extensions-gbipboxclient"
 
 include conf/machine/include/autoload-filesystems.inc
-    
+
 PREFERRED_PROVIDER_virtual/blindscan-dvbc = "gigablue-blindscan-utils"
 PREFERRED_PROVIDER_virtual/blindscan-dvbs = "gigablue-blindscan-utils"
 PREFERRED_PROVIDER_virtual/transtreamproxy = "gb-transtreamproxy"
-    
+
 DVBMEDIASINK_CONFIG = "--with-wmv"
 
 TARGET_ARCH = "mipsel"
