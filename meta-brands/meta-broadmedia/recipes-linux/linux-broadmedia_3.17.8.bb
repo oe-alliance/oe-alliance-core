@@ -22,6 +22,7 @@ RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
 
 SRC_URI += "http://source.mynonpublic.com/broadmedia/${MACHINE}-linux-${PV}.tar.gz \
     file://defconfig \
+    file://RFC-V2-MIPS-fix-build-with-binutils-2.24.51.patch \
     "
 
 S = "${WORKDIR}/linux-${PV}"
