@@ -1,6 +1,7 @@
 DESCRIPTION = "GLES/EGL headers"
 
 LICENSE = "CLOSED"
+require conf/license/license-close.inc
 
 PR = "r0"
 

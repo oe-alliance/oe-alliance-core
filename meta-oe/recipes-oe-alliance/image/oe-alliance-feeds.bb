@@ -9,7 +9,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "1.0"
-PR = "r67"
+PR = "r68"
 
 DEPENDS = "enigma2-plugin-drivers-usbserial"
 RECOMMENDS = "enigma2-plugin-extensions-et-livestream"
@@ -44,6 +44,7 @@ RDEPENDS_${PN} = " \
     ${@base_contains("MACHINE_FEATURES", "xbmc", "enigma2-plugin-extensions-xbmc", "", d)} \
     \
     ${@base_contains("MACHINE_FEATURES", "sdl", "snes9x-sdl" , "", d)} \
+    ${@base_contains("MACHINE_FEATURES", "gles", "libmicrohttpd libnfs libshairport libtinyxml mysql5 yajl" , "", d)} \
     \
     autofs \
     autossh \
@@ -112,3 +113,5 @@ RRECOMMENDS_${PN}_append_vusolo2 = "enigma2-plugin-extensions-hbbtv"
 RRECOMMENDS_${PN}_append_vuduo = "enigma2-plugin-extensions-hbbtv"
 RRECOMMENDS_${PN}_append_vuduo2 = "enigma2-plugin-extensions-hbbtv"
 RRECOMMENDS_${PN}_append_vuzero = "enigma2-plugin-extensions-hbbtv"
+RRECOMMENDS_${PN}_append_hd2400 = "opengl-hd"
+

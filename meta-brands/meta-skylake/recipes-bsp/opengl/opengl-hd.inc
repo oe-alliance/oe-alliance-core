@@ -1,6 +1,7 @@
 DESCRIPTION = "GLES/EGL libraries"
 
 LICENSE = "CLOSED"
+require conf/license/license-close.inc
 
 PROVIDES = "virtual/egl"
 
