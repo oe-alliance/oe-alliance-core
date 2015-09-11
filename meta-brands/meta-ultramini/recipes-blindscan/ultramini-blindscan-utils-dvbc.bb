@@ -6,13 +6,13 @@ require conf/license/license-close.inc
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-SRC_URI = "http://xpeedlxclass.eu/${MACHINE_DRIVER}-dvbc-blindscan-${PV}.zip"
+SRC_URI = "http://xpeedlxclass.eu/xpeedc-dvbc-blindscan-${PV}.zip"
 
 PROVIDES += "virtual/blindscan-dvbc"
 RPROVIDES_${PN} += "virtual/blindscan-dvbc"
 
 PV = "1.5"
-PR = "r1"
+PR = "r2"
 
 S = "${WORKDIR}"
 
