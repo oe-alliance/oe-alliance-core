@@ -7,7 +7,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PV = "1.0"
-PR = "r4"
+PR = "r5"
 
 inherit packagegroup
 
@@ -36,6 +36,5 @@ RRECOMMENDS_${PN} = "\
     enigma2-plugin-extensions-bmediacenter \
     enigma2-plugin-settings-default-ventonsupport \
     enigma2-plugin-extensions-operahbbtv \
-    ${@base_contains("DISTRO_FEATURES", "cip", "enigma2-plugin-extensions-ciplushelper", "", d)} \
     ${@base_contains("MACHINE_FEATURES", "skins1080", "hd-skins-meta", "", d)} \
     "
