@@ -208,9 +208,9 @@ CONFFILES_enigma2-plugin-extensions-openxtareader = "/usr/lib/enigma2/python/Plu
 
 inherit autotools-brokensep gitpkgv pkgconfig pythonnative
 
-PV = "5.0+git${SRCPV}"
-PKGV = "5.0+git${GITPKGV}"
-PR = "r2"
+PV = "5.1+git${SRCPV}"
+PKGV = "5.1+git${GITPKGV}"
+PR = "r0"
 
 SRC_URI = "${ENIGMA2_URI}"
 
