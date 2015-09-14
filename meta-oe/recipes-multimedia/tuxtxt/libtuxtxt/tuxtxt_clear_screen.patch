@@ -1,0 +1,45 @@
+diff --git a/tuxtxt_common.h b/tuxtxt_common.h
+index 1a3c6b1..fd785ef 100644
+--- a/tuxtxt_common.h
++++ b/tuxtxt_common.h
+@@ -5533,6 +5533,32 @@ int tuxtxt_InitRendering(tstRenderInfo* renderinfo,int setTVFormat)
+ 		return 0;
+ 	}
+ 
++	/* get fixed screeninfo */
++	if (ioctl(renderinfo->fb, FBIOGET_FSCREENINFO, &renderinfo->fix_screeninfo) == -1)
++	{
++		perror("TuxTxt <FBIOGET_FSCREENINFO>");
++		FTC_Manager_Done(renderinfo->manager);
++		FT_Done_FreeType(renderinfo->library);
++		return 0;
++	}
++
++	/* map framebuffer into memory */
++	renderinfo->lfb = (unsigned char*)mmap(0, renderinfo->fix_screeninfo.smem_len, PROT_READ | PROT_WRITE, MAP_SHARED, renderinfo->fb, 0);
++	if (!renderinfo->lfb)
++	{
++		perror("TuxTxt <mmap>");
++		FTC_Manager_Done(renderinfo->manager);
++		FT_Done_FreeType(renderinfo->library);
++		return 0;
++	}
++
++	/* clear screen */
++	memset(renderinfo->lfb, 0, renderinfo->var_screeninfo.yres * renderinfo->fix_screeninfo.line_length);
++
++	/* unmap framebuffer */
++	msync(renderinfo->lfb, renderinfo->fix_screeninfo.smem_len, MS_SYNC);
++	munmap(renderinfo->lfb, renderinfo->fix_screeninfo.smem_len);
++
+ 	/* change to PAL resolution */
+ 	if (renderinfo->var_screeninfo.xres != 720) 
+ 	{
+@@ -5643,6 +5669,7 @@ void tuxtxt_EndRendering(tstRenderInfo* renderinfo)
+ 	renderinfo->manager = 0;
+ 	renderinfo->library = 0;
+ 	tuxtxt_ClearFB(renderinfo,renderinfo->previousbackcolor);
++	tuxtxt_ClearBB(renderinfo,renderinfo->previousbackcolor);
+ 	/* unmap framebuffer */
+ 	msync(renderinfo->lfb, renderinfo->fix_screeninfo.smem_len, MS_SYNC);
+ 	munmap(renderinfo->lfb, renderinfo->fix_screeninfo.smem_len);
