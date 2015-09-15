@@ -11,8 +11,8 @@ inherit autotools-brokensep gitpkgv pythonnative
 PACKAGES += " ${PN}-src"
 
 SRCREV = "${AUTOREV}"
-PV = "2.3+git${SRCPV}"
-PKGV = "2.3+git${GITPKGV}"
+PV = "3.2+git${SRCPV}"
+PKGV = "3.2+git${GITPKGV}"
 PR = "r${DATETIME}"
 
 SRC_URI="git://github.com/oe-alliance/branding-module.git;protocol=git"
@@ -97,7 +97,7 @@ do_configure_prepend() {
         if [ "${MACHINE}" = "dm7080" ]; then
             DRIVERSDATE="20150902"
         elif [ "${MACHINE}" = "dm820" ]; then
-            DRIVERSDATE="20150902"
+            DRIVERSDATE="20150911"
         elif [ "${MACHINE}" = "dm800" ]; then
             DRIVERSDATE="20131228"
         elif [ "${MACHINE}" = "dm8000" ]; then

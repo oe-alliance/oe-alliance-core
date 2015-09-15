@@ -1,0 +1,62 @@
+diff --git a/arch/mips/Makefile b/arch/mips/Makefile
+index 9336509..cffbd49 100644
+--- a/arch/mips/Makefile
++++ b/arch/mips/Makefile
+@@ -88,7 +88,7 @@ all-$(CONFIG_SYS_SUPPORTS_ZBOOT)+= vmlinuz
+ # crossformat linking we rely on the elf2ecoff tool for format conversion.
+ #
+ cflags-y			+= -G 0 -mno-abicalls -fno-pic -pipe
+-cflags-y			+= -msoft-float
++cflags-y			+= -msoft-float -Wa,-msoft-float
+ LDFLAGS_vmlinux			+= -G 0 -static -n -nostdlib
+ KBUILD_AFLAGS_MODULE		+= -mlong-calls
+ KBUILD_CFLAGS_MODULE		+= -mlong-calls
+diff --git a/arch/mips/kernel/r2300_switch.S b/arch/mips/kernel/r2300_switch.S
+index 20b7b04..f33bf8b 100644
+--- a/arch/mips/kernel/r2300_switch.S
++++ b/arch/mips/kernel/r2300_switch.S
+@@ -22,6 +22,7 @@
+ #include <asm/asmmacro.h>
+ 
+ 	.set	mips1
++	.set	hardfloat
+ 	.align	5
+ 
+ /*
+diff --git a/arch/mips/kernel/r4k_fpu.S b/arch/mips/kernel/r4k_fpu.S
+index 8352523..722962c 100644
+--- a/arch/mips/kernel/r4k_fpu.S
++++ b/arch/mips/kernel/r4k_fpu.S
+@@ -21,6 +21,7 @@
+ 
+ 	.macro	EX insn, reg, src
+ 	.set	push
++	.set	hardfloat
+ 	.set	nomacro
+ .ex\@:	\insn	\reg, \src
+ 	.set	pop
+diff --git a/arch/mips/kernel/r4k_switch.S b/arch/mips/kernel/r4k_switch.S
+index 4c4ec18..5313b6f 100644
+--- a/arch/mips/kernel/r4k_switch.S
++++ b/arch/mips/kernel/r4k_switch.S
+@@ -34,6 +34,7 @@
+  *		       struct thread_info *next_ti, s32 fp_save)
+  */
+ 	.align	5
++	.set hardfloat
+ 	LEAF(resume)
+ 	mfc0	t1, CP0_STATUS
+ 	LONG_S	t1, THREAD_STATUS(a0)
+diff --git a/arch/mips/kernel/r6000_fpu.S b/arch/mips/kernel/r6000_fpu.S
+index da0fbe4..c13e3ff 100644
+--- a/arch/mips/kernel/r6000_fpu.S
++++ b/arch/mips/kernel/r6000_fpu.S
+@@ -17,6 +17,7 @@
+ #include <asm/regdef.h>
+ 
+ 	.set	noreorder
++	.set	hardfloat
+ 	.set	mips2
+ 	/* Save floating point context */
+ 	LEAF(_save_fp_context)
+

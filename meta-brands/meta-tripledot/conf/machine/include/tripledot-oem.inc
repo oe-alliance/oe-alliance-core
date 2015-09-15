@@ -10,6 +10,7 @@ ${@base_contains('MACHINEBUILD', 'tyrant', 'tyrant' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'xcombo', 'enfinityX combo plus' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'x1plus', 'enfinityX 1plus' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'sf108', 'SF108 E2HD' , '', d)}\
+${@base_contains('MACHINEBUILD', 't2cable', 'ENFINITY T2/CABLE' , '', d)}\
 "
 
 MACHINE_BRAND = "\
@@ -19,6 +20,7 @@ ${@base_contains('MACHINEBUILD', 'tyrant', 'tripledot' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'xcombo', 'EVO' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'x1plus', 'EVO' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'sf108', 'Octagon' , '', d)}\
+${@base_contains('MACHINEBUILD', 't2cable', 'EVO' , '', d)}\
 "
 
 IMAGEDIR ?= "\
@@ -28,6 +30,7 @@ ${@base_contains('MACHINEBUILD', 'tyrant', 'tyrant' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'xcombo', 'xcombo' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'x1plus', 'x1plus' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'sf108', 'sf108' , '', d)}\
+${@base_contains('MACHINEBUILD', 't2cable', 't2cable' , '', d)}\
 "
 
 MTD_KERNEL = "mtd2"
