@@ -3,6 +3,7 @@ LICENSE = "LGPLv2.1"
 LIC_FILES_CHKSUM = "file://COPYING;md5=393a5ca445f6965873eca0259a17f833"
 DEPENDS = "freetype libtuxtxt"
 SUMMARY = "tuxbox tuxtxt for enigma2"
+PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 inherit gitpkgv
 
@@ -16,7 +17,7 @@ S = "${WORKDIR}/git/tuxtxt"
 
 PV = "2.0+git${SRCPV}"
 PKGV = "2.0+git${GITPKGV}"
-PR = "r11"
+PR = "r12"
 
 do_configure_prepend() {
     touch ${S}/NEWS
@@ -54,4 +55,6 @@ CONFFILES_${PN} = "/etc/tuxtxt/tuxtxt2.conf"
 
 inherit autotools pkgconfig
 
-EXTRA_OECONF = "--with-boxtype=generic --with-configdir=/etc"
+EXTRA_OECONF = "--with-boxtype=generic --with-configdir=/etc \
+    ${@base_contains("MACHINE_FEATURES", "textlcd", "--with-textlcd" , "", d)} \
+    "
