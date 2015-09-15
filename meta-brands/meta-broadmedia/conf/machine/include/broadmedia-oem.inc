@@ -14,7 +14,7 @@ ${@base_contains('MACHINEBUILD', 'sf3038', 'Octagon' , '', d)}\
 "
 
 IMAGEDIR ?= "\
-${@base_contains('MACHINEBUILD', 'mbtwinplus', 'twinplus' , '', d)}\
+${@base_contains('MACHINEBUILD', 'mbtwinplus', 'miraclebox/twinplus' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'sf3038', 'sf3038' , '', d)}\
 "
 
