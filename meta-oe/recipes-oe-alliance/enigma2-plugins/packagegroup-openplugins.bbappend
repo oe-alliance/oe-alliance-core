@@ -3,7 +3,6 @@ DEPENDS = " \
     enigma2-plugin-extensions-antilogo \
     enigma2-plugin-extensions-bitrate \
     enigma2-plugin-extensions-buienradar \
-    enigma2-plugin-extensions-foreca \
     enigma2-plugin-extensions-meteoitalia2 \
     enigma2-plugin-extensions-multiquickbutton \
     enigma2-plugin-extensions-newsreader \
