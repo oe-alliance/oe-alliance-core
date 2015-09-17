@@ -96,7 +96,7 @@ IMAGE_CMD_ubi_append = "; \
     "
 
 MACHINE_FEATURES += "3dtv alsa hdmicec switchoff wifi bootsplash omb skins1080 \
-    ${@base_contains('MACHINEBUILD', 'xpeedlxcc', 'dvb-c dvbc-only blindscan-dvbc' , '', d)} \
+    ${@base_contains('MACHINEBUILD', 'xpeedlxcc', 'dvbc-only blindscan-dvbc' , '', d)} \
     "
 
 BOOTLOGO_FILENAME = "splash.bin"
