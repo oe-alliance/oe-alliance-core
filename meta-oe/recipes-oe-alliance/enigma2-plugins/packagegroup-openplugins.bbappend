@@ -3,7 +3,7 @@ DEPENDS = " \
     enigma2-plugin-extensions-antilogo \
     enigma2-plugin-extensions-bitrate \
     enigma2-plugin-extensions-buienradar \
-    enigma2-plugin-extensions-foreca \
+    ${@base_contains("DISTRO_NAME", "openvix", "enigma2-plugin-extensions-foreca", "", d)} \
     enigma2-plugin-extensions-meteoitalia2 \
     enigma2-plugin-extensions-multiquickbutton \
     enigma2-plugin-extensions-newsreader \
