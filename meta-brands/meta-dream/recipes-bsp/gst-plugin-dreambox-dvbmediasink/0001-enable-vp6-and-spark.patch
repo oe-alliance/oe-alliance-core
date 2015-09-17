@@ -1,0 +1,35 @@
+From 03c6fad8adfba4129f87667b38660b4ee274188b Mon Sep 17 00:00:00 2001
+From: Captain <captain.onboard@web.de>
+Date: Fri, 18 Sep 2015 00:54:03 +0200
+Subject: [PATCH] enable vp6 and spark
+
+---
+ src/gstdvbvideosink.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/src/gstdvbvideosink.c b/src/gstdvbvideosink.c
+index f8a3435..8ebb5d1 100644
+--- a/src/gstdvbvideosink.c
++++ b/src/gstdvbvideosink.c
+@@ -266,12 +266,12 @@ GST_STATIC_PAD_TEMPLATE (
+ 		"video/x-wmv, "
+ 		"wmvversion = (int) 3, "
+ 		COMMON_VIDEO_CAPS "; "
+-//		"video/x-flash-video, "
+-//		COMMON_VIDEO_CAPS "; "
+-//		"video/x-vp6, "
+-//		COMMON_VIDEO_CAPS "; "
+-//		"video/x-vp6-flash, "
+-//		COMMON_VIDEO_CAPS "; "
++		"video/x-flash-video, "
++		COMMON_VIDEO_CAPS "; "
++		"video/x-vp6, "
++		COMMON_VIDEO_CAPS "; "
++		"video/x-vp6-flash, "
++		COMMON_VIDEO_CAPS "; "
+ 		"video/x-vp8, "
+ 		COMMON_VIDEO_CAPS "; ")
+ );
+-- 
+1.9.5.msysgit.0
+
