@@ -5,14 +5,20 @@ LIC_FILES_CHKSUM = "file://src/gstdvbaudiosink.c;beginline=1;endline=45;md5=023e
                     file://src/gstdvbvideosink.c;beginline=1;endline=44;md5=b597d3f0a4e3b49db42d2b5140bd7004"
 DEPENDS = "gstreamer gst-plugins-base"
 PR = "r12"
-SRCREV = "9dc98551a8ff9f43a2817fae10b1f0ddaf98effb"
+inherit autotools  pkgconfig
 
-inherit autotools opendreambox-git pkgconfig
+inherit gitpkgv
 
-SRC_URI += " \
+SRCREV = "${AUTOREV}"
+PV = "${PV}+git${SRCPV}"
+PKGV = "${PV}+git${GITPKGV}"
+
+SRC_URI = "git://git.opendreambox.org/git/gst-plugin-dvbmediasink.git;protocol=git \
     file://getdecodertime.patch \
     file://0001-enable-vp6-and-spark.patch \
 "
+
+S = "${WORKDIR}/git"
 
 do_configure_prepend() {
     touch ${S}/NEWS
