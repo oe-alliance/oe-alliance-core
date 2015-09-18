@@ -13,9 +13,8 @@ SRCREV = "${AUTOREV}"
 PV = "${PV}+git${SRCPV}"
 PKGV = "${PV}+git${GITPKGV}"
 
-SRC_URI = "git://git.opendreambox.org/git/gst-plugin-dvbmediasink.git;protocol=git \
+SRC_URI = "git://github.com/atvcaptain/gst-plugin-dvbmediasink-dmm.git \
     file://getdecodertime.patch \
-    file://0001-enable-vp6-and-spark.patch \
 "
 
 S = "${WORKDIR}/git"
