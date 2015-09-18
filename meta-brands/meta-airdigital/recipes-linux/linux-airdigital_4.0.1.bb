@@ -26,6 +26,7 @@ SRC_URI += "http://source.mynonpublic.com/zgemma/linux-${PV}.tar.gz \
 	file://defconfig \
 	file://add-dmx-source-timecode.patch \
 	file://iosched-slice_idle-1.patch \
+	file://0001-bcmgenet.patch \
 	"
 
 S = "${WORKDIR}/linux-${PV}"
