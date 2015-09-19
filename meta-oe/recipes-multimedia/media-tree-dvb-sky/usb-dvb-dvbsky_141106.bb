@@ -1,7 +1,7 @@
-DEPENDS = "virtual/kernel module-init-tools perl"
+DEPENDS = "virtual/kernel module-init-tools"
 RDEPENDS_${PN} += "kmod"
 LIC_FILES_CHKSUM = "file://COPYING;md5=eb723b61539feef013de476e68b5c50a"
-PR = "r9"
+PR = "r8"
 
 do_configure[depends] += "virtual/kernel:do_shared_workdir"
 
