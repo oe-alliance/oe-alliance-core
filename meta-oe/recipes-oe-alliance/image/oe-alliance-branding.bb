@@ -95,7 +95,7 @@ do_configure_prepend() {
         DRIVERSDATE=`grep "SRCDATE = " ${OEA-META-WETEK-BASE}/recipes-drivers/wetek-dvb-modules-${MACHINE}.bb | cut -b 12-19`
     elif [ "${BRAND_OEM}" = "dreambox" ]; then
         if [ "${MACHINE}" = "dm7080" ]; then
-            DRIVERSDATE="20150902"
+            DRIVERSDATE="20150901"
         elif [ "${MACHINE}" = "dm820" ]; then
             DRIVERSDATE="20150911"
         elif [ "${MACHINE}" = "dm800" ]; then
