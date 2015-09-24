@@ -1,7 +1,7 @@
-From 9d2cb3003d265e677a4e3b7ebf2457817580f944 Mon Sep 17 00:00:00 2001
+From b8166ebfe0c9065b216dc4a242ed2d3ddccb1f8c Mon Sep 17 00:00:00 2001
 From: Captain <captain.onboard@web.de>
-Date: Wed, 16 Sep 2015 17:34:59 +0200
-Subject: [PATCH] add VB6, VB8, SPARK
+Date: Thu, 24 Sep 2015 18:57:32 +0200
+Subject: [PATCH] -add-VB6-VB8-SPARK
 
 ---
  configure.ac      | 21 +++++++++++++++++++++
@@ -42,10 +42,10 @@ index a8321ac..e959348 100644
  	AS_HELP_STRING([--with-dtsdownmix],[build dts downmix element, yes or no]),
  	[have_dtsdownmix=$withval],[have_dtsdownmix=no])
 diff --git a/gstdvbvideosink.c b/gstdvbvideosink.c
-index 3cf2fe4..4b2300a 100644
+index e9637b7..21e381f 100644
 --- a/gstdvbvideosink.c
 +++ b/gstdvbvideosink.c
-@@ -224,6 +224,20 @@ GST_STATIC_PAD_TEMPLATE (
+@@ -231,6 +231,20 @@ GST_STATIC_PAD_TEMPLATE (
  	"video/x-wmv, "
  		VIDEO_CAPS ", wmvversion = (int) 3; "
  #endif
@@ -66,7 +66,7 @@ index 3cf2fe4..4b2300a 100644
  	"video/mpegts, systemstream=(boolean)true, "
  		VIDEO_CAPS "; "
  	)
-@@ -951,6 +965,21 @@ static GstFlowReturn gst_dvbvideosink_render(GstBaseSink *sink, GstBuffer *buffe
+@@ -994,6 +1008,21 @@ static GstFlowReturn gst_dvbvideosink_render(GstBaseSink *sink, GstBuffer *buffe
  				}
  			}
  		}
@@ -88,7 +88,7 @@ index 3cf2fe4..4b2300a 100644
  	}
  
  #ifdef PACK_UNPACKED_XVID_DIVX5_BITSTREAM
-@@ -1526,6 +1555,24 @@ static gboolean gst_dvbvideosink_set_caps(GstBaseSink *basesink, GstCaps *caps)
+@@ -1569,6 +1598,24 @@ static gboolean gst_dvbvideosink_set_caps(GstBaseSink *basesink, GstCaps *caps)
  			GST_INFO_OBJECT (self, "MIMETYPE video/x-wmv %s -> STREAMTYPE_VC1_SM", value);
  		}
  	}
@@ -114,7 +114,7 @@ index 3cf2fe4..4b2300a 100644
  	if (self->stream_type != STREAMTYPE_UNKNOWN)
  	{
 diff --git a/gstdvbvideosink.h b/gstdvbvideosink.h
-index b5c5abb..b936af2 100644
+index 3bafdcc..fcf8106 100644
 --- a/gstdvbvideosink.h
 +++ b/gstdvbvideosink.h
 @@ -65,7 +65,7 @@ typedef struct _GstDVBVideoSink		GstDVBVideoSink;
@@ -122,8 +122,8 @@ index b5c5abb..b936af2 100644
  typedef struct _GstDVBVideoSinkPrivate	GstDVBVideoSinkPrivate;
  
 -typedef enum { CT_MPEG1, CT_MPEG2, CT_H264, CT_DIVX311, CT_DIVX4, CT_MPEG4_PART2, CT_VC1, CT_VC1_SM } t_codec_type;
-+typedef enum { CT_MPEG1, CT_MPEG2, CT_H264, CT_DIVX311, CT_DIVX4, CT_MPEG4_PART2, CT_VC1, CT_VC1_SM, CT_SPARK, CT_VP6, CT_VP8 } t_codec_type;
- #if defined(VUPLUS) || defined(DREAMBOX)
++typedef enum { CT_MPEG1, CT_MPEG2, CT_H264, CT_DIVX311, CT_DIVX4, CT_MPEG4_PART2, CT_VC1, CT_VC1_SM, CT_SPARK, CT_VP6, CT_VP8} t_codec_type;
+ #if defined(DREAMBOX)
  typedef enum {
  	STREAMTYPE_UNKNOWN = -1,
 @@ -79,7 +79,10 @@ typedef enum {
