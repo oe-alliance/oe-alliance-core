@@ -8,7 +8,7 @@ KV = "3.12.4"
 PV = "${KV}+${SRCDATE}"
 PR = "r0"
 
-SRC_URI = "http://archiv.mixos-support.com/ebox-dvb-modules-${MACHINE}-${KV}-${SRCDATE}.zip"
+SRC_URI = "http://source.mynonpublic.com/ebox/ebox-dvb-modules-${MACHINE}-${KV}-${SRCDATE}.zip"
 
 SRC_URI[md5sum] = "5ba1f1f486b2bf04766cb331388b57ca"
 SRC_URI[sha256sum] = "e4a973ba8325cd3d75341c98a9d9d3b80669aab53f0687c5f4b78a7a44ef65fb"

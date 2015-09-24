@@ -19,7 +19,7 @@ SRC_URI[ebox7358.sha256sum] = "bd2bb7854e0bb8c5d1ba583d949b167214ff3fb96aa8b4554
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${KV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-SRC_URI = "http://archiv.mixos-support.com/${MACHINE}-linux-${KV}_${SRCDATE}.tar.xz;name=${MACHINE} \
+SRC_URI = "http://source.mynonpublic.com/ebox/${MACHINE}-linux-${KV}_${SRCDATE}.tar.xz;name=${MACHINE} \
     file://defconfig \
     "
 
