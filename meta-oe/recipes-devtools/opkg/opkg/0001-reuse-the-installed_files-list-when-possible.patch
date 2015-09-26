@@ -39,7 +39,7 @@ index a99cf6b..96c299e 100644
 +{
 +	file_name = strip_offline_root(file_name);
 +
-+	hash_table_insert(&conf->file_hash, file_name, owning_pkg);
++	hash_table_insert(&opkg_config->file_hash, file_name, owning_pkg);
 +
 +	/* mark this package to have its filelist written */
 +	owning_pkg->state_flag |= SF_FILELIST_CHANGED;
