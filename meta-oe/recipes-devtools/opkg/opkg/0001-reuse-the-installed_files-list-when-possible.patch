@@ -16,15 +16,15 @@ diff --git a/libopkg/opkg_install.c b/libopkg/opkg_install.c
 index 30d9c03..c1c88aa 100644
 --- a/libopkg/opkg_install.c
 +++ b/libopkg/opkg_install.c
-@@ -192,7 +192,7 @@ printf("%s\n", __FUNCTION__);
- 		__func__, new_pkg->name, new_file, owner?owner->name:"<NULL>");
+@@ -193,7 +193,7 @@
+                  owner ? owner->name : "<NULL>");
  
- 	  if (!owner || (owner == old_pkg) || obs)
--	       file_hash_set_file_owner(new_file, new_pkg);
-+	       file_hash_set_file_owner_with_old(new_file, new_pkg, old_pkg);
-      }
+         if (!owner || (owner == old_pkg) || obs)
+-            file_hash_set_file_owner(new_file, new_pkg);
++            file_hash_set_file_owner_with_old(new_file, new_pkg, old_pkg);
+     }
  
-      if (old_pkg) {
+     if (old_pkg) {
 diff --git a/libopkg/pkg_hash.c b/libopkg/pkg_hash.c
 index a99cf6b..96c299e 100644
 --- a/libopkg/pkg_hash.c
@@ -55,14 +55,15 @@ diff --git a/libopkg/pkg_hash.h b/libopkg/pkg_hash.h
 index b3cf3d1..36b0ca6 100644
 --- a/libopkg/pkg_hash.h
 +++ b/libopkg/pkg_hash.h
-@@ -51,6 +51,7 @@ pkg_t *pkg_hash_fetch_installed_by_name_dest(const char *pkg_name,
+@@ -56,6 +56,7 @@
  void file_hash_remove(const char *file_name);
  pkg_t *file_hash_get_file_owner(const char *file_name);
- void file_hash_set_file_owner(const char *file_name, pkg_t *pkg);
+ void file_hash_set_file_owner(const char *file_name, pkg_t * pkg);
 +void file_hash_set_file_owner_with_old(const char *file_name, pkg_t *owning_pkg, pkg_t *old_owning_pkg);
  
- #endif
- 
+ #ifdef __cplusplus
+ }
+
 -- 
 1.7.9.5
 
