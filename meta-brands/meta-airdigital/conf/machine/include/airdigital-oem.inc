@@ -8,6 +8,9 @@ ${@base_contains('MACHINEBUILD', 'zgemmash1', 'Star H1' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'zgemmash2', 'Star H2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'zgemmas2s', 'Star 2S' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'zgemmass', 'Star S' , '', d)}\
+${@base_contains('MACHINEBUILD', 'zgemmahs', 'H.S' , '', d)}\
+${@base_contains('MACHINEBUILD', 'zgemmah2s', 'H.2S' , '', d)}\
+${@base_contains('MACHINEBUILD', 'zgemmah2h', 'H.2H' , '', d)}\
 "
 
 MACHINE_BRAND = "\
@@ -15,6 +18,9 @@ ${@base_contains('MACHINEBUILD', 'zgemmash1', 'Zgemma' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'zgemmash2', 'Zgemma' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'zgemmas2s', 'Zgemma' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'zgemmass', 'Zgemma' , '', d)}\
+${@base_contains('MACHINEBUILD', 'zgemmahs', 'Zgemma' , '', d)}\
+${@base_contains('MACHINEBUILD', 'zgemmah2s', 'Zgemma' , '', d)}\
+${@base_contains('MACHINEBUILD', 'zgemmah2h', 'Zgemma' , '', d)}\
 "
 
 IMAGEDIR ?= "\
@@ -22,6 +28,9 @@ ${@base_contains('MACHINEBUILD', 'zgemmash1', 'zgemma/sh1' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'zgemmash2', 'zgemma/sh1' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'zgemmas2s', 'zgemma/sh1' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'zgemmass', 'zgemma/sh1' , '', d)}\
+${@base_contains('MACHINEBUILD', 'zgemmahs', 'zgemma/h3' , '', d)}\
+${@base_contains('MACHINEBUILD', 'zgemmah2s', 'zgemma/h3' , '', d)}\
+${@base_contains('MACHINEBUILD', 'zgemmah2h', 'zgemma/h3' , '', d)}\
 "
 
 MTD_KERNEL = "mtd1"

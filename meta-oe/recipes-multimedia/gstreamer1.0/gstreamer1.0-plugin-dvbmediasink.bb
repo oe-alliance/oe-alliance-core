@@ -25,13 +25,21 @@ SRC_URI_append_dags7362 = " \
     file://0001-update-dags-support.patch;patch=1 \ 
 "
 
+SRC_URI_append_dm7080 = " \
+    file://0001-add-VB6-VB8-SPARK.patch;patch=1 \ 
+"
+
+SRC_URI_append_dm820 = " \
+    file://0001-add-VB6-VB8-SPARK.patch;patch=1 \ 
+"
+
 S = "${WORKDIR}/git"
 
 inherit gitpkgv
 
 PV = "${GSTVERSION}+git${SRCPV}"
 PKGV = "${GSTVERSION}+git${GITPKGV}"
-PR = "r10"
+PR = "r12"
 
 do_configure_prepend() {
     sed -i 's/AC_INIT.*$/AC_INIT(gst-plugin-dvbmediasink, 1.0.0, @pli4)/' ${S}/configure.ac

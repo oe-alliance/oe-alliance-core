@@ -135,7 +135,7 @@ SERIAL_CONSOLE = "115200 ttyAS0"
 
 DVBPROVIDER = "kernel"
 
-MACHINE_FEATURES = "3dtv alsa hdmicec switchoff kernel26 ext2 usbhost serial dvb-c singlecore textlcd sh4booster no-nmap omb skins1080 directfb sdl"
+MACHINE_FEATURES = "3dtv alsa hdmicec switchoff kernel26 ext2 usbhost serial singlecore textlcd sh4booster no-nmap omb skins1080 directfb sdl"
 
 DVBMEDIASINK_CONFIG = "--with-wma --with-wmv --with-pcm --with-dtsdownmix --with-eac3"
 

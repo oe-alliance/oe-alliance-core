@@ -12,7 +12,7 @@ PR = "r5"
 SRC_URI[md5sum] = "b1fb665cd6aff5c0977900b86a896fa1"
 SRC_URI[sha256sum] = "74f109c8c99d7c2ad31460639c20d19e877a5adc844f284275896e35c90397ac"
 
-SRC_URI = "http://archiv.mixos-support.com/ebox-dvb-modules-${MACHINE}-${KV}-${SRCDATE}.zip"
+SRC_URI = "http://source.mynonpublic.com/ebox/ebox-dvb-modules-${MACHINE}-${KV}-${SRCDATE}.zip"
 
 
 S = "${WORKDIR}"
