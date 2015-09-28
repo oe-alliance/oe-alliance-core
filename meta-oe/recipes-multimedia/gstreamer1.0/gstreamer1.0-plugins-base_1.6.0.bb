@@ -13,8 +13,8 @@ SRC_URI += " \
 	file://subparse-avoid-false-negatives-dealing-with-UTF-8.patch \
 "
 
-SRC_URI[md5sum] = "138bedbfdd16eaebb8f57e52a7688e97"
-SRC_URI[sha256sum] = "b1355ee5300ed64126cc69d7f84750a4e00027d05dff89391fed3657d2b27e9a"
+SRC_URI[md5sum] = "3c223f1d2716e1861ba84287ea02b164"
+SRC_URI[sha256sum] = "314fd1b707f65caf8eb6164d9422fc51e2b220a890ccd2de6ec03a2883d77231"
 
 S = "${WORKDIR}/gst-plugins-base-${PV}"
 
