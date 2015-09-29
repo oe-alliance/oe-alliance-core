@@ -11,7 +11,7 @@ DEPENDS = "tslib mpfr gmp"
 SRCREV = "${AUTOREV}"
 PV = "2.1+gitr${SRCPV}"
 PKGV = "2.1+gitr${GITPKGV}"
-PR = "r214"
+PR = "r215"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -63,10 +63,8 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-mediastream_6.0_all.ipk \
     enigma2-plugin-extensions-moviebrowser_3.6rc3_mips32el.ipk \
     enigma2-plugin-extensions-mp3browser_1.9c8_mips32el.ipk \
-    enigma2-plugin-extensions-msnwetter_0.6rc3_mips32el.ipk \
     enigma2-plugin-extensions-mtv_0.1_mips32el.ipk \
     enigma2-plugin-extensions-muzutv_1.5rc5_mips32el.ipk \
-    enigma2-plugin-extensions-navibar_1.1.1_all.ipk \
     ${@base_contains('MACHINE_BRAND', 'Vu+', '' , 'enigma2-plugin-extensions-openopera_1.0-r0_mips32el.ipk', d)} \
     enigma2-plugin-extensions-opkg-tools_1.3_mipsel.ipk \
     enigma2-plugin-extensions-oscamstatusview_0.7rc1_mips32el.ipk \
@@ -74,8 +72,6 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-picturecenterfs_6.10_all.ipk \
     enigma2-plugin-extensions-planerfs_6.59_all.ipk \
     enigma2-plugin-extensions-pluginspanel_1.0_r01_all.ipk \
-    enigma2-plugin-extensions-radiode_0.1_mips32el.ipk \
-    enigma2-plugin-extensions-radioonline-oe2.0_1.0_all.ipk \
     enigma2-plugin-extensions-screengrabber_2.1a_mips32el.ipk \
     enigma2-plugin-extensions-screensaver_5.6.9_all.ipk \
     enigma2-plugin-extensions-sherlock_5.01r1_mipsel.ipk \
@@ -89,7 +85,6 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-subtitleplayer_3.29rc2_mips32el \
     enigma2-plugin-extensions-systemtools-for-ppanels_0.83_mipsel.ipk \
     enigma2-plugin-extensions-thetvdb_0.7-20120607-r1_mips32el.ipk \
-    enigma2-plugin-extensions-tmbd_6.5_mipsel.ipk \
     enigma2-plugin-extensions-translator_1.0_mips32el.ipk \
     enigma2-plugin-extensions-transmission_2.83_mips32el.ipk \
     enigma2-plugin-extensions-tsmedia_10.6_all.ipk \
@@ -104,7 +99,6 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-wwech_1.01_all.ipk \
     enigma2-plugin-extensions-xbmcaddons_8.1_r0_all.ipk \
     enigma2-plugin-extensions-xbmcwetter_1.3rc4_mips32el.ipk \
-    enigma2-plugin-extensions-yampmusicplayer_2.1.1-2012-09-23_mipsel.ipk \
     enigma2-plugin-extensions-zdfnewmediathek_1.7rc5_mips32el.ipk \
     enigma2-plugin-systemplugins-bouquetsprotection_0.2-rc1_all.ipk \
     enigma2-plugin-systemplugins-recordinfobar_1.0-rc15_mipsel.ipk \
