@@ -10,8 +10,8 @@ SRC_URI = " \
     file://0001-Revert-baseparse-fix-GST_BASE_PARSE_FLAG_LOST_SYNC.patch \
 "
 
-SRC_URI[md5sum] = "468ae1ce2a82244201fb705fe2954102"
-SRC_URI[sha256sum] = "e4f1503c798ba6f0e076f1e44afecd65df00d1bb55b203755717f3e7b38e53d5"
+SRC_URI[md5sum] = "201c15ac4b956833f7f6774485433969"
+SRC_URI[sha256sum] = "52ef885647afef11c8b7645a9afefe04aa09e8971c4b932e7717872ab8a30fcc"
 
 S = "${WORKDIR}/gstreamer-${PV}"
 
