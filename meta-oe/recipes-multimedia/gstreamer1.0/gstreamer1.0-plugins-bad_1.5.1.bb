@@ -11,8 +11,8 @@ SRC_URI += " \
             file://dvbapi5-fix-old-kernel.patch \
 "
 
-SRC_URI[md5sum] = "111632f8d1d1ba39bbf3665aaafcb28c"
-SRC_URI[sha256sum] = "d8ff26128d4ecd2ffeb28e14843808d2d971b09056b7cee6f08afcae01fc0f49"
+SRC_URI[md5sum] = "6f36b8730362d51f547dc3cce244621e"
+SRC_URI[sha256sum] = "0629e601e5f6a200aeb7c4a4c8e8a1515af5ed2a8d7c79016155146a5863193c"
 
 S = "${WORKDIR}/gst-plugins-bad-${PV}"
 
