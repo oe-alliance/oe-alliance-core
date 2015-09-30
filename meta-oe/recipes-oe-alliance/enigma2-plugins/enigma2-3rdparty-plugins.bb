@@ -11,7 +11,7 @@ DEPENDS = "tslib mpfr gmp"
 SRCREV = "${AUTOREV}"
 PV = "2.1+gitr${SRCPV}"
 PKGV = "2.1+gitr${GITPKGV}"
-PR = "r216"
+PR = "r217"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -29,7 +29,6 @@ S = "${WORKDIR}/git"
 
 THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-sundtekcontrolcenter-20150912-1.ipk \
-    enigma2-plugin-extensions-airplayer_0.4.1_mips32el.ipk \
     enigma2-plugin-extensions-atmolightd_0.7-pre22_all.ipk \
     enigma2-plugin-extensions-autobouquets-e2_20150721_all.ipk \
     enigma2-plugin-extensions-bildonline_3.1rc6_mips32el.ipk \
@@ -39,7 +38,6 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-chefkoch_1.4c4_mips32el.ipk \
     enigma2-plugin-extensions-clevertanken_0.5rc1_mips32el.ipk \
     enigma2-plugin-extensions-csfd_10-10-20150103_all.ipk \
-    enigma2-plugin-extensions-dflash_10.2_all.ipk \
     enigma2-plugin-extensions-cyrussettings_1.0.0_all.ipk \
     enigma2-plugin-extensions-digitalfernsehen_1.1rc4_mips32el.ipk \
     enigma2-plugin-extensions-ehue_0.2-r0_all.ipk \
@@ -74,7 +72,6 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-pluginspanel_1.0_r01_all.ipk \
     enigma2-plugin-extensions-screengrabber_2.1a_mips32el.ipk \
     enigma2-plugin-extensions-screensaver_5.6.9_all.ipk \
-    enigma2-plugin-extensions-sdg-imagedownloader-v0.7-oe-2.0-vu-all.ipk \
     enigma2-plugin-extensions-sherlock_5.01r1_mipsel.ipk \
     enigma2-plugin-extensions-skyrecorder_1.6.1_all.ipk \
     enigma2-plugin-extensions-songs-to_0.1_mips32el.ipk \
@@ -84,7 +81,6 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-sportmax_1.2_mips32el.ipk \
     enigma2-plugin-extensions-sportportal_2013_all.ipk \
     enigma2-plugin-extensions-subtitleplayer_3.29rc2_mips32el \
-    enigma2-plugin-extensions-systemtools-for-ppanels_0.83_mipsel.ipk \
     enigma2-plugin-extensions-thetvdb_0.7-20120607-r1_mips32el.ipk \
     enigma2-plugin-extensions-translator_1.0_mips32el.ipk \
     enigma2-plugin-extensions-transmission_2.83_mips32el.ipk \
