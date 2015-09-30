@@ -11,7 +11,7 @@ DEPENDS = "tslib mpfr gmp"
 SRCREV = "${AUTOREV}"
 PV = "2.1+gitr${SRCPV}"
 PKGV = "2.1+gitr${GITPKGV}"
-PR = "r215"
+PR = "r216"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -29,7 +29,6 @@ S = "${WORKDIR}/git"
 
 THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-sundtekcontrolcenter-20150912-1.ipk \
-    enigma2-plugin-systemplugins-extnumberzap_1.0-rc12_mipsel.ipk \
     enigma2-plugin-extensions-atmolightd_0.7-pre22_all.ipk \
     enigma2-plugin-extensions-autobouquets-e2_20150721_all.ipk \
     enigma2-plugin-extensions-bildonline_3.1rc6_mips32el.ipk \
@@ -41,8 +40,8 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-csfd_10-10-20150103_all.ipk \
     enigma2-plugin-extensions-cyrussettings_1.0.0_all.ipk \
     enigma2-plugin-extensions-digitalfernsehen_1.1rc4_mips32el.ipk \
-    enigma2-plugin-extensions-enigmalight_0.2-rc1_all.ipk \
     enigma2-plugin-extensions-ehue_0.2-r0_all.ipk \
+    enigma2-plugin-extensions-enigmalight_0.2-rc1_all.ipk \
     enigma2-plugin-extensions-facebook_1.4_mips32el.ipk \
     enigma2-plugin-extensions-filesearchfs_2.53_all.ipk \
     enigma2-plugin-extensions-focusonline_1.0rc8_mips32el.ipk \
@@ -51,8 +50,8 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-googlenewsreader_1.0_mips32el.ipk \
     enigma2-plugin-extensions-hdmitest_0.4_mipsel.ipk \
     enigma2-plugin-extensions-hetweer_2.7rc3_mips32el.ipk \
-    enigma2-plugin-extensions-isettinge2-3.3.3-oe2.0-${@base_contains("TARGET_ARCH", "sh4", "sh4" , "mips32el", d)}.ipk \
     enigma2-plugin-extensions-iptvplayer_67.02.02.01_all.ipk \
+    enigma2-plugin-extensions-isettinge2-3.3.3-oe2.0-${@base_contains("TARGET_ARCH", "sh4", "sh4" , "mips32el", d)}.ipk \
     enigma2-plugin-extensions-kicker_3.3rc15_mips32el.ipk \
     enigma2-plugin-extensions-kino_1.6rc1_mips32el.ipk \
     enigma2-plugin-extensions-kodidirect_3.0_r0_all.ipk \
@@ -82,7 +81,6 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-sport1ticker_0.4_all.ipk \
     enigma2-plugin-extensions-sportmax_1.2_mips32el.ipk \
     enigma2-plugin-extensions-sportportal_2013_all.ipk \
-    enigma2-plugin-extensions-subtitleplayer_3.29rc2_mips32el \
     enigma2-plugin-extensions-systemtools-for-ppanels_0.83_mipsel.ipk \
     enigma2-plugin-extensions-thetvdb_0.7-20120607-r1_mips32el.ipk \
     enigma2-plugin-extensions-translator_1.0_mips32el.ipk \
@@ -101,6 +99,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-xbmcwetter_1.3rc4_mips32el.ipk \
     enigma2-plugin-extensions-zdfnewmediathek_1.7rc5_mips32el.ipk \
     enigma2-plugin-systemplugins-bouquetsprotection_0.2-rc1_all.ipk \
+    enigma2-plugin-systemplugins-extnumberzap_1.0-rc12_mipsel.ipk \
     enigma2-plugin-systemplugins-recordinfobar_1.0-rc15_mipsel.ipk \
     "
 
