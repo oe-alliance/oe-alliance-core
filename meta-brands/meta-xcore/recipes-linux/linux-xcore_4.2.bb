@@ -14,7 +14,7 @@ SRC_URI[sha256sum] = "137fe9a18d399ddedefd9c4dc2bcb9be1161f632a6bdc64dffa1bcdda8
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-brcmstb-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-MACHINE_KERNEL_PR_append = ".0"
+MACHINE_KERNEL_PR_append = ".1"
 
 # By default, kernel.bbclass modifies package names to allow multiple kernels
 # to be installed in parallel. We revert this change and rprovide the versioned
@@ -26,6 +26,7 @@ RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
 
 SRC_URI += "http://source.mynonpublic.com/xcore/${MACHINE}-linux-${PV}-${SRC}.tar.gz \
     file://defconfig \
+    file://add-proc-cpu-mhz.patch \
     "
 
 S = "${WORKDIR}/linux-brcmstb-${PV}"

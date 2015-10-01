@@ -1,0 +1,78 @@
+diff --git a/arch/mips/bmips/setup.c b/arch/mips/bmips/setup.c
+index 010e4ee6ca0d..f3c0dc72306e 100644
+--- a/arch/mips/bmips/setup.c
++++ b/arch/mips/bmips/setup.c
+@@ -124,6 +124,38 @@ const char *get_system_type(void)
+ 	return "Generic BMIPS kernel";
+ }
+ 
++unsigned long brcmstb_cpu_khz;
++
++#define BCHP_TIMER_TIMER_IS	0x00406680
++#define BCHP_TIMER_TIMER0_CTRL	0x00406688
++#define BCHP_TIMER_TIMER3_CTRL	0x00406694
++
++static __init unsigned long bmips4380_cpu_freq(void)
++{
++	void __iomem *regs = (void __iomem *)KSEG1ADDR(0x10000000);
++	unsigned long freq;
++
++	__raw_writel(0, regs + BCHP_TIMER_TIMER3_CTRL);
++	__raw_readl(regs + BCHP_TIMER_TIMER3_CTRL);
++	__raw_writel(__raw_readl(regs + BCHP_TIMER_TIMER_IS) | BIT(3),
++			regs + BCHP_TIMER_TIMER_IS);
++	__raw_readl(regs + BCHP_TIMER_TIMER_IS);
++
++	__raw_writel(0xc0000000 | (27000000 / 50),
++			regs + BCHP_TIMER_TIMER0_CTRL);
++
++	write_c0_count(0);
++
++	while ((__raw_readl(regs + BCHP_TIMER_TIMER_IS) & 1) == 0)
++		;
++
++	freq = read_c0_count();
++
++	__raw_writel(0, regs + BCHP_TIMER_TIMER0_CTRL);
++
++	return (freq * 50) * 2;
++}
++
+ void __init plat_time_init(void)
+ {
+ 	struct device_node *np;
+@@ -137,6 +169,8 @@ void __init plat_time_init(void)
+ 	of_node_put(np);
+ 
+ 	mips_hpt_frequency = freq;
++
++	brcmstb_cpu_khz = bmips4380_cpu_freq() / 1000;
+ }
+ 
+ void __init plat_mem_setup(void)
+diff --git a/arch/mips/kernel/proc.c b/arch/mips/kernel/proc.c
+index 298b2b773d12..383f488d42e6 100644
+--- a/arch/mips/kernel/proc.c
++++ b/arch/mips/kernel/proc.c
+@@ -32,6 +32,10 @@ int proc_cpuinfo_notifier_call_chain(unsigned long val, void *v)
+ 	return raw_notifier_call_chain(&proc_cpuinfo_chain, val, v);
+ }
+ 
++#ifdef CONFIG_BMIPS_GENERIC
++extern unsigned long brcmstb_cpu_khz;
++#endif
++
+ static int show_cpuinfo(struct seq_file *m, void *v)
+ {
+ 	struct proc_cpuinfo_notifier_args proc_cpuinfo_notifier_args;
+@@ -65,6 +69,10 @@ static int show_cpuinfo(struct seq_file *m, void *v)
+ 	seq_printf(m, "BogoMIPS\t\t: %u.%02u\n",
+ 		      cpu_data[n].udelay_val / (500000/HZ),
+ 		      (cpu_data[n].udelay_val / (5000/HZ)) % 100);
++#ifdef CONFIG_BMIPS_GENERIC
++	seq_printf(m, "cpu MHz\t\t\t: %lu.%03lu\n", brcmstb_cpu_khz / 1000,
++			brcmstb_cpu_khz % 1000);
++#endif
+ 	seq_printf(m, "wait instruction\t: %s\n", cpu_wait ? "yes" : "no");
+ 	seq_printf(m, "microsecond timers\t: %s\n",
+ 		      cpu_has_counter ? "yes" : "no");
