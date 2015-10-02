@@ -8,6 +8,7 @@ ${@base_contains('MACHINEBUILD', 'twinboxlcd', 'TWINBOX LCD' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbmicro', 'Premium Micro' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'odin2hybrid', 'ODIN2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'e4hd', 'E4HD' , '', d)}\
+${@base_contains('MACHINEBUILD', 'e4hdc', 'E4HD Hybrit' , '', d)}\
 "
 
 MACHINE_BRAND = "\
@@ -15,6 +16,7 @@ ${@base_contains('MACHINEBUILD', 'twinboxlcd', 'RED EAGLE' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbmicro', 'Miraclebox' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'odin2hybrid', 'Opticum' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'e4hd', 'AXAS' , '', d)}\
+${@base_contains('MACHINEBUILD', 'e4hdc', 'AXAS' , '', d)}\
 "
 
 IMAGEDIR ?= "\
@@ -22,6 +24,7 @@ ${@base_contains('MACHINEBUILD', 'twinboxlcd', 'redeagle/twinboxlcd' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbmicro', 'miraclebox/micro' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'odin2hybrid', 'odin2/hybrid' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'e4hd', 'e4hd' , '', d)}\
+${@base_contains('MACHINEBUILD', 'e4hdc', 'e4hd' , '', d)}\
 "
 
 MTD_KERNEL = "mtd1"
@@ -91,7 +94,9 @@ IMAGE_CMD_ubi_append = "; \
     rm -Rf ${IMAGEDIR}; \
     "
 
-MACHINE_FEATURES += "3dtv alsa hdmicec switchoff bootsplash omb videoenhancement directfb sdl skins1080"
+MACHINE_FEATURES += "3dtv alsa hdmicec switchoff bootsplash omb videoenhancement directfb sdl skins1080 \
+    ${@base_contains('MACHINEBUILD', 'e4hdc', 'dvb-c-only' , '', d)} \
+"
 
 BOOTLOGO_FILENAME = "splash.bin"
 
