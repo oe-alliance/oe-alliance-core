@@ -8,6 +8,7 @@ ${@base_contains('MACHINEBUILD', 'enfinity', 'ENfinity' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'marvel1', 'Marvel 1' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'x2plus', 'enfinityX 2plus' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'bre2ze', 'BRE2ZE' , '', d)}\
+${@base_contains('MACHINEBUILD', 'evomini', 'ENfinity mini' , '', d)}\
 "
 
 MACHINE_BRAND = "\
@@ -15,6 +16,7 @@ ${@base_contains('MACHINEBUILD', 'enfinity', 'EVO' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'marvel1', 'VisionNet' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'x2plus', 'EVO' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'bre2ze', 'WWIO' , '', d)}\
+${@base_contains('MACHINEBUILD', 'evomini', 'EVO' , '', d)}\
 "
 
 IMAGEDIR ?= "\
@@ -22,6 +24,7 @@ ${@base_contains('MACHINEBUILD', 'enfinity', 'enfinity' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'marvel1', 'marvel1' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'x2plus', 'x2plus' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'bre2ze', 'bre2ze' , '', d)}\
+${@base_contains('MACHINEBUILD', 'evomini', 'mini' , '', d)}\
 "
 
 MTD_ROOTFS = "mtd0"
@@ -87,7 +90,7 @@ IMAGE_CMD_ubi_append = "; \
     "
 
 
-MACHINE_FEATURES += "3dtv alsa hdmicec switchoff bootsplash omb"
+MACHINE_FEATURES += "3dtv alsa hdmicec switchoff bootsplash omb skins1080"
 
 BOOTLOGO_FILENAME = "splash.bin"
 
