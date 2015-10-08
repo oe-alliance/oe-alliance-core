@@ -12,6 +12,7 @@ ${@base_contains('MACHINEBUILD', 'tmnano2super', 'TM-NANO 2 Super' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmsingle', 'TM-Single' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmtwin', 'TM-Twin-OE' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmnanose', 'TM-NANO-SE' , '', d)}\
+${@base_contains('MACHINEBUILD', 'tmnanosem2', 'TM-NANO-SE M2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmnanosecombo', 'TM-NANO-SE Combo' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'iqonios100hd', 'IOS-100HD' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'iqonios200hd', 'IOS-200HD' , '', d)}\
@@ -47,6 +48,7 @@ ${@base_contains('MACHINEBUILD', 'tmnano2super', 'Technomate' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmsingle', 'Technomate' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmtwin', 'Technomate' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmnanose', 'Technomate' , '', d)}\
+${@base_contains('MACHINEBUILD', 'tmnanosem2', 'Technomate' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmnanosecombo', 'Technomate' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'iqonios100hd', 'Iqon' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'iqonios200hd', 'Iqon' , '', d)}\
@@ -82,6 +84,7 @@ ${@base_contains('MACHINEBUILD', 'tmnano2super', 'update/tmnano2super/cfe' , '',
 ${@base_contains('MACHINEBUILD', 'tmsingle', 'update/tmsingle/cfe' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmtwin', 'update/tmtwinoe/cfe' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmnanose', 'update/tmnanose/cfe' , '', d)}\
+${@base_contains('MACHINEBUILD', 'tmnanosem2', 'update/tmnanosem2/cfe' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmnanosecombo', 'update/tmnanosecombo/cfe' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'iqonios100hd', 'update/ios100/cfe' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'iqonios200hd', 'update/ios200/cfe' , '', d)}\
@@ -117,6 +120,7 @@ ${@base_contains('MACHINEBUILD', 'tmnano2super', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmsingle', 'mtd6' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmtwin', 'mtd6' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmnanose', 'mtd2' , '', d)}\
+${@base_contains('MACHINEBUILD', 'tmnanosem2', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmnanosecombo', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'iqonios100hd', 'mtd6' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'iqonios200hd', 'mtd6' , '', d)}\
@@ -152,6 +156,7 @@ ${@base_contains('MACHINEBUILD', 'tmnano2super', 'mtd0' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmsingle', 'mtd4' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmtwin', 'mtd4' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmnanose', 'mtd0' , '', d)}\
+${@base_contains('MACHINEBUILD', 'tmnanosem2', 'mtd0' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmnanosecombo', 'mtd0' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'iqonios100hd', 'mtd4' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'iqonios200hd', 'mtd4' , '', d)}\
@@ -182,6 +187,7 @@ SPLASH1_BMP = "\
 ${@base_contains('MACHINEBUILD', 'tmnano2super', 'splash1.bmp' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmnano3t', 'splash1.bmp' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmnanose', 'splash1.bmp' , '', d)}\
+${@base_contains('MACHINEBUILD', 'tmnanosem2', 'splash1.bmp' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmnanosecombo', 'splash1.bmp' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'force1', 'splash1_os2.bmp' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'force1plus', 'splash1_os2.bmp' , '', d)}\
