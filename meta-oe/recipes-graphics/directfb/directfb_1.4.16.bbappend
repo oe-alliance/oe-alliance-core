@@ -1,4 +1,5 @@
 PACKAGE_ARCH = "${MACHINE_ARCH}"
+PR .= ".1"
 
 EXTRA_OECONF = "\
   --enable-freetype=yes \
@@ -12,3 +13,6 @@ EXTRA_OECONF = "\
 SRC_URI = "http://sources.buildroot.net/DirectFB-${PV}.tar.gz \
            file://directfb-1.2.x-fix-pkgconfig-cflags.patch \
            file://configurefix.patch"
+
+do_rm_work() {
+}
