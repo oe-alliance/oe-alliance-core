@@ -6,9 +6,9 @@ require conf/license/license-gplv2.inc
 inherit gitpkgv allarch
 
 SRCREV = "${AUTOREV}"
-PV = "3.4.0+git${SRCPV}"
-PKGV = "3.4.0+git${GITPKGV}"
-VER="3.4.0"
+PV = "3.5.2+git${SRCPV}"
+PKGV = "3.5.2+git${GITPKGV}"
+VER="3.5.2"
 
 SRC_URI="git://github.com/KravenHD/SevenHD.git;protocol=git"
 
