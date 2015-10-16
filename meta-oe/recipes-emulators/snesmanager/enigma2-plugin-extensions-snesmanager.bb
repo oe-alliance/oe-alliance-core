@@ -23,6 +23,6 @@ FILES_${PN} = "/usr/* "
 
 
 do_install() {
-    chmod 777 ${D}/usr/bin/snes_run.sh
     cp -rp ${S}/usr ${D}/
+    chmod 777 ${D}/usr/bin/snes_run.sh
 }
