@@ -5,10 +5,10 @@ LICENSE = "CLOSED"
 require conf/license/license-close.inc
 
 KV = "3.10.76"
-SRCDATE = "20150702"
+SRCDATE = "20150908"
 
 PV = "${KV}+${SRCDATE}"
-PR = "r1"
+PR = "r6"
 
 SRC_URI = "file://wetek-e2-procfs-${KV}-${SRCDATE}.zip"
 
