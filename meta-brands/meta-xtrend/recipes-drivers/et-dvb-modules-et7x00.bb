@@ -3,6 +3,6 @@ SRCDATE = "20151013"
 
 require et-dvb-modules.inc
 
-SRC_URI[md5sum] = "76005e1a7e5267973d6eb15ec03a4821"
-SRC_URI[sha256sum] = "7bdc7e6ce12eacbad4f3660a033c037bfbf211547afaa78419b76f4cf2b28075"
+SRC_URI[md5sum] = "95adeccc552cf75cd3e538267ee4d305"
+SRC_URI[sha256sum] = "70db07a041ed1deab196f83b92d6936ab5f0bd8e89a5af759a4d983062f9758e"
 
