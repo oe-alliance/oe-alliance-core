@@ -5,7 +5,10 @@ require conf/license/license-gplv2.inc
 
 RRECOMMENDS_${PN} = " \
     kernel-module-usbnet \
+	${@base_contains("MACHINE_FEATURES", "wifiusbmodule", " \
+	kernel-module-ax88179-178a", " \
     ax88179-178a \
+	", d)} \
     "
 
 PV = "1.0"

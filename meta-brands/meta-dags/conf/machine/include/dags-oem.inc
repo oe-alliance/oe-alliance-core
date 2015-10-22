@@ -37,6 +37,7 @@ ${@base_contains('MACHINEBUILD', 'optimussos2', 'Optimuss OS2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'optimussos', 'Optimuss OS' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mediabox', 'MediaBox HD LX' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'fusionhd', 'FUSION HD' , '', d)}\
+${@base_contains('MACHINEBUILD', 'fusionhdse', 'FUSION HD SE' , '', d)}\
 "
 
 MACHINE_BRAND = "\
@@ -73,6 +74,7 @@ ${@base_contains('MACHINEBUILD', 'optimussos2', 'Edision' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'optimussos', 'Edision' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mediabox', 'Jepssen' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'fusionhd', 'XSARIUS' , '', d)}\
+${@base_contains('MACHINEBUILD', 'fusionhdse', 'XSARIUS' , '', d)}\
 "
 
 IMAGEDIR ?= "\
@@ -109,6 +111,7 @@ ${@base_contains('MACHINEBUILD', 'optimussos2', 'update/optimussos2/cfe' , '', d
 ${@base_contains('MACHINEBUILD', 'optimussos', 'update/optimussos/cfe' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mediabox', 'update/mediabox/cfe' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'fusionhd', 'update/fusionhd/cfe' , '', d)}\
+${@base_contains('MACHINEBUILD', 'fusionhdse', 'update/fusionhdse/cfe' , '', d)}\
 "
 
 MTD_KERNEL = "\
@@ -145,6 +148,7 @@ ${@base_contains('MACHINEBUILD', 'optimussos2', 'mtd6' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'optimussos', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mediabox', 'mtd6' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'fusionhd', 'mtd2' , '', d)}\
+${@base_contains('MACHINEBUILD', 'fusionhdse', 'mtd2' , '', d)}\
 "
 
 MTD_ROOTFS = "\
@@ -181,6 +185,7 @@ ${@base_contains('MACHINEBUILD', 'optimussos2', 'mtd4' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'optimussos', 'mtd0' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mediabox', 'mtd4' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'fusionhd', 'mtd0' , '', d)}\
+${@base_contains('MACHINEBUILD', 'fusionhdse', 'mtd0' , '', d)}\
 "
 
 SPLASH1_BMP = "\
@@ -203,6 +208,7 @@ ${@base_contains('MACHINEBUILD', 'optimussos2plus', 'splash1_os2.bmp' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'optimussos3plus', 'splash1_os2.bmp' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'optimussos', 'splash1_os1.bmp' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'fusionhd', 'splash1.bmp' , '', d)}\
+${@base_contains('MACHINEBUILD', 'fusionhdse', 'splash1.bmp' , '', d)}\
 "
 
 MACHINE_DRIVER = "\
@@ -239,6 +245,7 @@ ${@base_contains('MACHINEBUILD', 'optimussos2', 'dags7335ci' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'optimussos', 'dags7362' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mediabox', 'dags7335' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'fusionhd', 'dags7362' , '', d)}\
+${@base_contains('MACHINEBUILD', 'fusionhdse', 'dags7362' , '', d)}\
 "
 
 KERNEL_FILE = "oe_kernel.bin"
@@ -268,9 +275,6 @@ DEFAULTTUNE = "mips32el"
 
 GLIBC_EXTRA_OECONF = "--with-tls"
 DVBMEDIASINK_CONFIG = "--with-dags --with-pcm --with-eac3 --with-amr --with-wmv"
-
-PREFERRED_VERSION_linux-dags = "3.9.7"
-PREFERRED_VERSION_linux-libc-headers = "3.9.7"
 
 PREFERRED_PROVIDER_virtual/kernel = "linux-dags"
 PREFERRED_PROVIDER_virtual/blindscan-dvbs = "vuplus-blindscan-utils"
@@ -315,7 +319,7 @@ IMAGE_CMD_ubi_append = "; \
     "
 
 
-MACHINE_FEATURES += "3dtv alsa hdmicec switchoff bootsplash textlcd ci omb skins1080"
+MACHINE_FEATURES += "3dtv alsa hdmicec switchoff bootsplash textlcd ci omb skins1080 wifiusbmodule"
 
 BOOTLOGO_FILENAME = "splash.bmp"
 
