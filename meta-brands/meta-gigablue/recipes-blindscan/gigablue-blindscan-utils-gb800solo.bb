@@ -1,6 +1,6 @@
-SRCDATE = "20150826"
+SRCDATE = "20151013"
 
-SRC_URI[md5sum] = "f07acdb6c8d37784fab67420335b720d"
-SRC_URI[sha256sum] = "c366975c086726c343f8dae855b82e9be2e3d2ed44ce2dfb33693a98a8f3b604"
+SRC_URI[md5sum] = "c51ad24b8fcd74671bf9790707485c7b"
+SRC_URI[sha256sum] = "5d77489dd0c588bb962a588e2b919cf018d5d7e732ff8a1e08db1d4a16236252"
 
 require gigablue-blindscan-utils.inc
