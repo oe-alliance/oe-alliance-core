@@ -29,6 +29,9 @@ SRC_URI += "http://source.mynonpublic.com/zgemma/linux-${PV}.tar.gz \
 	file://0001-bcmgenet.patch \
 	"
 
+SRC_URI_append_h3 = "file://sdio-pinmux.patch"
+
+
 S = "${WORKDIR}/linux-${PV}"
 B = "${WORKDIR}/build"
 
