@@ -1,8 +1,8 @@
 KV = "3.18.18"
-SRCDATE = "20151021"
+SRCDATE = "20151028"
 
 SRC_URI = "http://xpeedlxclass.eu/${MACHINE_DRIVER}-drivers-${KV}-${SRCDATE}.zip"
 require ultramini-dvb-modules.inc
 
-SRC_URI[md5sum] = "f25aa72e8dd86a24529a76f6b6ca7c43"
-+SRC_URI[sha256sum] = "b5a4bbbdc3a828a669ff643ca4618501a468cb9828062cfc001009cd558f501e"
+SRC_URI[md5sum] = "e4ae612bd06bced43b3af27ff7725b2b"
+SRC_URI[sha256sum] = "1cea3ab924ff343d9b14b227542cba0e59b0c31836f40dfeea94af3f218b0b05"
