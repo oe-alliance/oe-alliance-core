@@ -6,31 +6,37 @@ BRAND_OEM = "ultramini"
 MACHINE_NAME = "\
 ${@base_contains('MACHINEBUILD', 'xpeedlxcs2', 'XPEED LX CLASS S2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'xpeedlxcc', 'XPEED LX CLASS C' , '', d)}\
+${@base_contains('MACHINEBUILD', 'et7x00mini', 'ET-7000 Mini' , '', d)}\
 "
 
 MACHINE_BRAND = "\
 ${@base_contains('MACHINEBUILD', 'xpeedlxcs2', 'GOLDEN INTERSTAR' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'xpeedlxcc', 'GOLDEN INTERSTAR' , '', d)}\
+${@base_contains('MACHINEBUILD', 'et7x00mini', 'Galaxy Innovations' , '', d)}\
 "
 
 IMAGEDIR ?= "\
 ${@base_contains('MACHINEBUILD', 'xpeedlxcs2', 'xpeedc' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'xpeedlxcc', 'xpeedc' , '', d)}\
+${@base_contains('MACHINEBUILD', 'et7x00mini', 'et7x00' , '', d)}\
 "
 
 MTD_KERNEL = "\
 ${@base_contains('MACHINEBUILD', 'xpeedlxcs2', 'mtd1' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'xpeedlxcc', 'mtd1' , '', d)}\
+${@base_contains('MACHINEBUILD', 'et7x00mini', 'mtd1' , '', d)}\
 "
 
 MTD_ROOTFS = "\
 ${@base_contains('MACHINEBUILD', 'xpeedlxcs2', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'xpeedlxcc', 'mtd2' , '', d)}\
+${@base_contains('MACHINEBUILD', 'et7x00mini', 'mtd2' , '', d)}\
 "
 
 MACHINE_DRIVER = "\
 ${@base_contains('MACHINEBUILD', 'xpeedlxcs2', 'xpeedc' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'xpeedlxcc', 'xpeedc' , '', d)}\
+${@base_contains('MACHINEBUILD', 'et7x00mini', 'et7x00' , '', d)}\
 "
 
 KERNEL_FILE = "kernel.bin"
