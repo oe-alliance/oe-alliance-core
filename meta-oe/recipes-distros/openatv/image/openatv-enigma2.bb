@@ -7,7 +7,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PV = "1.0"
-PR = "r46"
+PR = "r47"
 
 inherit packagegroup
 
@@ -35,15 +35,3 @@ RRECOMMENDS_${PN} = " \
     ${@base_contains("MACHINE_FEATURES", "boxmodel", "boxmodel", "", d)} \
     ${@base_contains("MACHINE_FEATURES", "uianimation", "enigma2-plugin-systemplugins-animationsetup" , "", d)} \
     "
-
-RRECOMMENDS_${PN}_append_et5x00 = " swap-workaround"
-RRECOMMENDS_${PN}_append_vusolo = " swap-workaround"
-RRECOMMENDS_${PN}_append_gb800se = " swap-workaround"
-RRECOMMENDS_${PN}_append_gb800ue = " swap-workaround"
-RRECOMMENDS_${PN}_append_gb800solo = " swap-workaround"
-RRECOMMENDS_${PN}_append_dm800 = " swap-workaround"
-RRECOMMENDS_${PN}_append_dm800se = " swap-workaround"
-RRECOMMENDS_${PN}_append_dm500hd = " swap-workaround"
-RRECOMMENDS_${PN}_append_ebox5000 = " swap-workaround"
-RRECOMMENDS_${PN}_append_ebox5100 = " swap-workaround"
-RRECOMMENDS_${PN}_append_eboxlumi = " swap-workaround"
