@@ -4,9 +4,7 @@ PRIORITY = "required"
 LICENSE = "CLOSED"
 
 PV = "${KV}+${SRCDATE}"
-PR = "r0"
-
-SRC_URI = "http://xpeedlxclass.eu/${MACHINE_DRIVER}-drivers-${KV}-${SRCDATE}.zip"
+PR = "r1"
 
 S = "${WORKDIR}"
 
@@ -21,9 +19,9 @@ do_install() {
     install -d ${D}/lib/modules/${KV}/extra
     install -d ${D}/${sysconfdir}/modules-load.d
     for i in tpm modloader modloader2 dvb; do
-        install -m 0755 ${WORKDIR}/$i.ko ${D}/lib/modules/${KV}/extra
-        echo $i >> ${D}/${sysconfdir}/modules-load.d/_${MACHINE}.conf
+        install -m 0755 ${WORKDIR}/${i}.ko ${D}/lib/modules/${KV}/extra/${i}_${MACHINEBUILD}
+        echo ${i}_${MACHINEBUILD} >> ${D}/${sysconfdir}/modules-load.d/_${MACHINEBUILD}.conf
     done
 }
 
-FILES_${PN} += "${sysconfdir}/modules-load.d/_${MACHINE}.conf"
+FILES_${PN} += "${sysconfdir}/modules-load.d/_${MACHINEBUILD}.conf"
