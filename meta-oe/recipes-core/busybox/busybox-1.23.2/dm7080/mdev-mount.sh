@@ -1,5 +1,29 @@
 #!/bin/sh
 
+mkdir -p /tmp
+#LOG='/etc/mdev/mdev-mount.log'
+
+
+## device information log
+#echo  >> $LOG
+#echo  >> $LOG
+#echo "**************************" >> $LOG
+#echo  >> $LOG
+#echo "Action= "$ACTION >> $LOG
+#echo "Hotplug count ="$SEQNUM >> $LOG
+#echo "Major= "$MAJOR >> $LOG
+#echo "Mdev= "$MDEV >> $LOG
+#echo "Devpath= "$DEVPATH >> $LOG
+#echo "Devtype= "$DEVTYPE >> $LOG
+#echo "Subsystem= "$SUBSYSTEM >> $LOG
+#echo "Minor= "$MINOR >> $LOG
+#echo "Physdevpath= "$PHYSDEVPATH >> $LOG
+#echo "Physdevdriver= "$PHYSDEVDRIVER >> $LOG
+#echo "Physdevbus= "$PHYSDEVBUS >> $LOG
+#echo "Working directory= "$PWD >> $LOG
+#echo  >> $LOG
+
+
 notify() {
 	# we don't really depend on the hotplug_e2_helper, but when it exists, call it
 	if [ -x /usr/bin/hotplug_e2_helper ] ; then
@@ -7,7 +31,7 @@ notify() {
 	fi
 }
 
-case "$ACTION" in
+case $ACTION in
 	add|"")
 		ACTION="add"
 		FSTYPE=`blkid /dev/${MDEV} | grep -v 'TYPE="swap"' | grep ${MDEV} | sed -e "s/.*TYPE=//" -e 's/"//g'`
@@ -24,7 +48,14 @@ case "$ACTION" in
 		if [ $DEVCHECK == "mmcblk0" ] ; then
 			exit 0
 		fi
-		DEVBASE=`expr substr $MDEV 1 3`
+		DEVCHECK=`expr substr $MDEV 1 6`
+		if [ "${DEVCHECK}" == "mmcblk" ] ; then
+			DEVBASE=`expr substr $MDEV 1 7`
+			PARTNUM=`expr substr $MDEV 9 1`
+		else
+			DEVBASE=`expr substr $MDEV 1 3`
+			PARTNUM=`expr substr $MDEV 4 1`
+		fi
 		# check for "please don't mount it" file
 		if [ -f "/dev/nomount.${DEVBASE}" ] ; then
 			# blocked
@@ -46,29 +77,79 @@ case "$ACTION" in
 				exit 0
 			fi
 		fi
-		if [ "${DEVBASE}" == "mmc" ] ; then
-			DEVBASE="mmcblk1"
-		fi
-		boxtype=`cat /etc/model`
-		if [ "$boxtype&&" == "hd2400&&" ] && [ "${DEVBASE}" == "sdb" ] && [ -d /media/hdd ]; then
-				# workaround intern/extern detection
-				umount /media/hdd
-				rmdir -rf /media/hdd
-				touch /tmp/sda
-		fi
+		# due to multiple calls of mdev mount only first partition as usual, others as devicename.
 		# first allow fstab to determine the mountpoint
 		if ! mount /dev/$MDEV > /dev/null 2>&1 ; then
+			#echo "[mdev-mount.sh] no fstab entry, use automatic mountpoint" >> $LOG
 			# no fstab entry, use automatic mountpoint
 			REMOVABLE=`cat /sys/block/$DEVBASE/removable`
 			readlink -fn /sys/block/$DEVBASE/device | grep -qs 'pci\|ahci'
 			EXTERNAL=$?
 			if [ "${REMOVABLE}" -eq "0" -a $EXTERNAL -eq 0 ] ; then
-				# mount the first non-removable internal device on /media/hdd
-				DEVICETYPE="hdd"
+				#echo "[mdev-mount.sh] non removable, non external" >> $LOG
+				if [ $PARTNUM -le "1" ] ; then
+					#echo "[mdev-mount.sh] 1st partition found" >> $LOG
+					# mount the first non-removable internal device on /media/hdd
+					DEVICETYPE="hdd"
+					# if mount /media/hdd already exits but an internal hdd is now found  
+					# then remount the first device to the device name or to /media/usb
+					# (unless the mounted device is already an internal non-removable device)
+					if grep -q "/media/hdd" /proc/mounts ; then
+						#echo "[mdev-mount.sh] /media/hdd exists" >> $LOG
+						TEMPDEV=`cat /proc/mounts | grep /media/hdd | cut -d' ' -f 1`
+						# check if mounted device is already an internal device
+						DEVBASE_MOUNTED=`expr substr $TEMPDEV 6 3`
+						REMOVABLE_MOUNTED=`cat /sys/block/$DEVBASE_MOUNTED/removable`
+						readlink -fn /sys/block/$DEVBASE_MOUNTED/device | grep -qs 'pci\|ahci'
+						EXTERNAL_MOUNTED=$?
+						if [ ${REMOVABLE_MOUNTED} -eq 0 -a ${EXTERNAL_MOUNTED} -eq 0 ] ; then
+							#echo "[mdev-mount.sh] $TEMPDEV non removable, non external" >> $LOG
+							# mounted device is an internal device --> mount new internal device
+							DEVICETYPE=$MDEV   
+						else
+							#echo "[mdev-mount.sh] $TEMPDEV removable or external" >> $LOG
+							# switch mounts
+							TEMPDEV1=`echo ${TEMPDEV} | cut -d'/' -f 3`
+							umount /media/hdd || umount ${TEMPDEV}
+							#echo "[mdev-mount.sh] umounted /media/hdd (preparing swap with new device found)" >> $LOG
+							# Use mkdir as 'atomic' action, failure means someone beat us to the punch
+							if grep -q "/media/usb" /proc/mounts ; then
+								#echo "[mdev-mount.sh] /media/usb exists 1" >> $LOG
+								# usb mountpoint is used --> use divicefile as usual
+								MOUNTPOINT="/media/$MDEV"
+							else
+								#echo "[mdev-mount.sh] /media/usb doesnt exist 1" >> $LOG
+								MOUNTPOINT="/media/usb"
+							fi
+							# Remove mountpoint not being used
+							if [ -z "`grep $MOUNTPOINT /proc/mounts`" ] ; then
+								find $MOUNTPOINT -type d -delete
+								rmdir $MOUNTPOINT
+							fi
+							if ! mkdir $MOUNTPOINT ; then
+								MOUNTPOINT="/media/$TEMPDEV1"
+								mkdir -p $MOUNTPOINT
+							fi
+							if ! mount -t auto ${TEMPDEV} "${MOUNTPOINT}" ; then
+								if ! mount.exfat ${TEMPDEV} "${MOUNTPOINT}" ; then
+									#echo "[mdev-mount.sh] mount failed 1" >> $LOG
+									find "${MOUNTPOINT}" -type d -delete
+									rmdir "${MOUNTPOINT}"
+								fi
+							fi
+							#echo "[mdev-mount.sh] mounted $MDEV on $MOUNTPOINT (swap complete)" >> $LOG
+						fi
+					fi
+				else
+					#echo "[mdev-mount.sh] next partition $PARTNUM of non USB device found" >> $LOG
+					# Mount next partition as detected device
+					DEVICETYPE=$MDEV
+				fi
 			else
+				#echo "[mdev-mount.sh] removable or external" >> $LOG
 				MODEL=`cat /sys/block/$DEVBASE/device/model`
 				MODEL1=`cat /sys/block/$DEVBASE/device/type`
-				if [ "$MODEL" == "USB CF Reader   " ]; then
+				if [ "$MODEL" == "USB CF Reader     " ]; then
 					DEVICETYPE="cf"
 				elif [ "$MODEL" == "Compact Flash   " ]; then
 					DEVICETYPE="cf"
@@ -86,24 +167,39 @@ case "$ACTION" in
 					DEVICETYPE="mmc1"
 				elif [ "$MODEL" == "MS/MS-Pro       " ]; then
 					DEVICETYPE="mmc1"
-				elif [ "$MODEL1" == "SD" ]; then
+				elif [ "$MODEL1" == "SD	            " ]; then
 					DEVICETYPE="mmc1"
 				else
-					if grep -q "/media/hdd" /proc/mounts ; then
-						DEVICETYPE="usb"
-					else
-						# mount the first removable device on /media/hdd only then no other internal hdd present
-						DEVICETYPE="hdd"
-						DEVLIST=`ls -1 /sys/block | grep "sd[a-z]"`
-						for DEV in $DEVLIST; do
-							DEVBASE=`expr substr $DEV 1 3`
-							readlink -fn /sys/block/$DEVBASE/device | grep -qs 'pci\|ahci'
-							EXTERNAL=$?
-							if [ "${REMOVABLE}" -eq "0" -a $EXTERNAL -eq 0 ] ; then
+					#echo "[mdev-mount.sh] USB device found" >> $LOG
+					if [ $PARTNUM -eq "1" -o $PARTNUM -eq "5" ] ; then
+						#echo "[mdev-mount.sh] 1st partition found" >> $LOG
+						if grep -q "/media/hdd" /proc/mounts ; then
+							#echo "[mdev-mount.sh] /media/hdd exists" >> $LOG
+							if grep -q "/media/usb" /proc/mounts ; then
+								#echo "[mdev-mount.sh] /media/usb exists" >> $LOG
+								DEVICETYPE=$MDEV
+							else
 								DEVICETYPE="usb"
-								break
 							fi
-						done
+						else
+							# mount the first removable device on /media/hdd only when no other internal hdd is present
+							DEVICETYPE="hdd"
+							DEVLIST=`ls -1 /sys/block | grep "sd[a-z]\|mmcblk[0-9]"`
+							for DEV in $DEVLIST; do
+								DEVBASE=`expr substr $DEV 1 3`
+								readlink -fn /sys/block/$DEVBASE/device | grep -qs 'pci\|ahci'
+								EXTERNAL=$?
+								if [ "${REMOVABLE}" -eq "0" -a $EXTERNAL -eq 0 ] ; then
+									DEVICETYPE="usb"
+									#echo "[mdev-mount.sh] internal sdx detected -> mount as USB" >> $LOG
+									break
+								fi
+							done
+						fi
+					else
+						#echo "[mdev-mount.sh] next partition $PARTNUM of USB device found" >> $LOG
+						# Mount next partition as detected device
+						DEVICETYPE=$MDEV
 					fi
 				fi
 			fi
@@ -112,23 +208,23 @@ case "$ACTION" in
 
 			# Remove mountpoint not being used
 			if [ -z "`grep $MOUNTPOINT /proc/mounts`" ] ; then
-				rm -rf $MOUNTPOINT
+				#echo "[mdev-mount.sh] rmdir $MOUNTPOINT" >> $LOG
+				find $MOUNTPOINT  -type d -delete
+				rmdir $MOUNTPOINT
 			fi
 			if ! mkdir $MOUNTPOINT ; then
+				#echo "[mdev-mount.sh] mkdir $MOUNTPOINT failed, using /media/$MDEV" >> $LOG
 				MOUNTPOINT="/media/$MDEV"
 				mkdir -p $MOUNTPOINT
 			fi
 			if ! mount -t auto /dev/$MDEV "${MOUNTPOINT}" ; then
-				rmdir "${MOUNTPOINT}"
-			fi
-			boxtype=`cat /etc/model`
-			if [ "$boxtype&&" == "hd2400&&" ] && [ "${MDEV}" == "sdb1" ] && [ -f "/tmp/sda" ]; then
-				mkdir -p /media/usb
-				if ! mount -t auto /dev/sda1 "/media/usb" ; then
-					rmdir "/media/usb"
+				if ! mount.exfat /dev/$MDEV "${MOUNTPOINT}" ; then
+					#echo "[mdev-mount.sh] mount failed 2" >> $LOG
+					find "${MOUNTPOINT}" -type d -delete
+					rmdir "${MOUNTPOINT}"
 				fi
-				rm /tmp/sda
 			fi
+			#echo "[mdev-mount.sh] mounted $MDEV on $MOUNTPOINT" >> $LOG
 		fi
 		;;
 	remove)
@@ -137,7 +233,9 @@ case "$ACTION" in
 			MOUNTPOINT="/media/$MDEV"
 		fi
 		umount $MOUNTPOINT || umount /dev/$MDEV
+		find $MOUNTPOINT  -type d -delete
 		rmdir $MOUNTPOINT
+		#echo "[mdev-mount.sh] umounted $MOUNTPOINT" >> $LOG
 		;;
 	*)
 		# Unexpected keyword
