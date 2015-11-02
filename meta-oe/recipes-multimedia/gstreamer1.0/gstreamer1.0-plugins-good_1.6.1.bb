@@ -8,7 +8,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=a6f89e2100d9b6cdffcea4f398e37343 \
 SRC_URI += "file://0001-gstrtpmp4gpay-set-dafault-value-for-MPEG4-without-co.patch \
 "
 
-SRC_URI[md5sum] = "2c20faa2406afb840699e97e913d8fb4"
-SRC_URI[sha256sum] = "0cc3f90e4322efe1f774272e8fe5c185be37cf7999cd5ca7e0e0607e03d56a57"
+SRC_URI[md5sum] = "a930f5ff133f17baf39d2876628b7890"
+SRC_URI[sha256sum] = "86d4b814099f7b7b16be19d4b94fa41002ac01fdf1525b07c5764d54c0605935"
 
 S = "${WORKDIR}/gst-plugins-good-${PV}"
