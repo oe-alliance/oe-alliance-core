@@ -7,10 +7,11 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=c54ce9345727175ff66d17b67ff51f58 \
                    "
 
 SRC_URI += " \
-	file://get-caps-from-src-pad-when-query-caps.patch \
-	file://taglist-not-send-to-down-stream-if-all-the-frame-cor.patch \
-	file://0001-riff-media-added-fourcc-to-all-mpeg4-video-caps.patch \
-	file://subparse-avoid-false-negatives-dealing-with-UTF-8.patch \
+    file://get-caps-from-src-pad-when-query-caps.patch \
+    file://taglist-not-send-to-down-stream-if-all-the-frame-cor.patch \
+    file://0001-riff-media-added-fourcc-to-all-mpeg4-video-caps.patch \
+    file://0001-riff-media-added-fourcc-to-all-ffmpeg-mpeg4-video-ca.patch \
+    file://subparse-avoid-false-negatives-dealing-with-UTF-8.patch \
 "
 
 SRC_URI[md5sum] = "a89933afbe45d8f8c92d89c2f1199ecb"
