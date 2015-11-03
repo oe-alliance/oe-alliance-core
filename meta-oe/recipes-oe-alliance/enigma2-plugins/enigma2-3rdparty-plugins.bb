@@ -9,11 +9,11 @@ inherit gitpkgv deploy
 DEPENDS = "tslib mpfr gmp"
 
 SRCREV = "${AUTOREV}"
-PV = "2.1+gitr${SRCPV}"
-PKGV = "2.1+gitr${GITPKGV}"
-PR = "r230"
+PV = "3.2+gitr${SRCPV}"
+PKGV = "3.2+gitr${GITPKGV}"
+PR = "r0"
 
-SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
+SRC_URI="git://github.com/oe-alliance/3rdparty-plugins2.git;protocol=git"
 
 EXTRA_OECONF = " \
     BUILD_SYS=${BUILD_SYS} \
