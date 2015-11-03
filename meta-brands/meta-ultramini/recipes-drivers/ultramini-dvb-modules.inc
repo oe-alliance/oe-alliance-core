@@ -4,7 +4,7 @@ PRIORITY = "required"
 LICENSE = "CLOSED"
 
 PV = "${KV}+${SRCDATE}"
-PR = "r1"
+PR = "r2"
 
 S = "${WORKDIR}"
 
@@ -19,7 +19,7 @@ do_install() {
     install -d ${D}/lib/modules/${KV}/extra
     install -d ${D}/${sysconfdir}/modules-load.d
     for i in tpm modloader modloader2 dvb; do
-        install -m 0755 ${WORKDIR}/${i}.ko ${D}/lib/modules/${KV}/extra/${i}_${MACHINEBUILD}
+        install -m 0755 ${WORKDIR}/${i}.ko ${D}/lib/modules/${KV}/extra/${i}_${MACHINEBUILD}.ko
         echo ${i}_${MACHINEBUILD} >> ${D}/${sysconfdir}/modules-load.d/_${MACHINEBUILD}.conf
     done
 }
