@@ -1,0 +1,57 @@
+diff --git a/arch/arm/mm/mmu.c b/arch/arm/mm/mmu.c
+index 14428d2..f15c22e 100644
+--- a/arch/arm/mm/mmu.c
++++ b/arch/arm/mm/mmu.c
+@@ -1028,15 +1028,10 @@ void __init debug_ll_io_init(void)
+ static void * __initdata vmalloc_min =
+ 	(void *)(VMALLOC_END - (240 << 20) - VMALLOC_OFFSET);
+ 
+-static bool __initdata brcmstb_did_override_vmalloc;
+-
+ /*
+  * vmalloc=size forces the vmalloc area to be exactly 'size'
+  * bytes. This can be used to increase (or decrease) the vmalloc
+  * area - the default is 240m.
+- *
+- * NOTE: different default for BRCMSTB with >= 1GiB RAM, see
+- * brcmstb_maybe_increase_vmalloc() below.
+  */
+ static int __init early_vmalloc(char *arg)
+ {
+@@ -1057,35 +1052,17 @@ static int __init early_vmalloc(char *arg)
+ 	}
+ 
+ 	vmalloc_min = (void *)(VMALLOC_END - vmalloc_reserve);
+-	brcmstb_did_override_vmalloc = true;
+ 	return 0;
+ }
+ early_param("vmalloc", early_vmalloc);
+ 
+-static void __init brcmstb_maybe_increase_vmalloc(void)
+-{
+-#ifdef CONFIG_BRCMSTB
+-	if (brcmstb_did_override_vmalloc)
+-		return;
+-	if (meminfo.bank[0].size >= SZ_1G || meminfo.nr_banks > 1) {
+-		vmalloc_min = (void *)(VMALLOC_END - (744 << 20) -
+-				VMALLOC_OFFSET);
+-	}
+-#else
+-	return;
+-#endif
+-}
+-
+ phys_addr_t arm_lowmem_limit __initdata = 0;
+ 
+ void __init sanity_check_meminfo(void)
+ {
+ 	phys_addr_t memblock_limit = 0;
+ 	int i, j, highmem = 0;
+-	phys_addr_t vmalloc_limit;
+-
+-	brcmstb_maybe_increase_vmalloc();
+-	vmalloc_limit = __pa(vmalloc_min - 1) + 1;
++	phys_addr_t vmalloc_limit = __pa(vmalloc_min - 1) + 1;
+ 
+ 	for (i = 0, j = 0; i < meminfo.nr_banks; i++) {
+ 		struct membank *bank = &meminfo.bank[j];

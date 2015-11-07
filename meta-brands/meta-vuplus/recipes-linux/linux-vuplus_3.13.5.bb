@@ -5,6 +5,8 @@ KV = "3.13.5"
 
 inherit kernel machine_kernel_pr
 
+MACHINE_KERNEL_PR_append = ".1"
+
 SRCREV = ""
 
 SRC_URI[md5sum] = "19e9956653437b99b4fa6ec3e16a3e99"
@@ -33,7 +35,9 @@ SRC_URI = "http://archive.vuplus.com/download/kernel/stblinux-${KV}.tar.bz2 \
     "
 
 SRC_URI_append_vuduo2 = "file://brcm_s3_wol.patch;patch=1;pnum=1 "
-SRC_URI_append_vuduose = "file://brcm_s3_wol.patch;patch=1;pnum=1 "
+SRC_URI_append_vuduose = "file://brcm_s3_wol.patch;patch=1;pnum=1 \
+                          file://linux_mtd_bbt_maxblock.patch \
+"
 SRC_URI_append_vusolo2 = "file://linux-bcm_ethernet.patch;patch=1;pnum=1 "
  
 S = "${WORKDIR}/linux"
