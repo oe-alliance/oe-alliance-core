@@ -1,7 +1,6 @@
 #!/bin/sh
 
 mkdir -p /tmp
-LOG='/tmp/mdev-mount.log'
 #LOG='/etc/mdev/mdev-mount.log'
 
 
@@ -44,8 +43,13 @@ case $ACTION in
 			# Already mounted
 			exit 0
 		fi
-		DEVBASE=`expr substr $MDEV 1 3`
-		PARTNUM=`expr substr $MDEV 4 1`
+		if [ "${MAJOR}" == "179" ] ; then
+			DEVBASE=`expr substr $MDEV 1 7`
+			PARTNUM=`expr substr $MDEV 9 1`
+		else
+			DEVBASE=`expr substr $MDEV 1 3`
+			PARTNUM=`expr substr $MDEV 4 1`
+		fi
 		# check for "please don't mount it" file
 		if [ -f "/dev/nomount.${DEVBASE}" ] ; then
 			# blocked
@@ -66,9 +70,6 @@ case $ACTION in
 				# empty device, bail out
 				exit 0
 			fi
-		fi
-		if [ "${DEVBASE}" == "mmc" ] ; then
-			DEVBASE="mmcblk0"
 		fi
 		# due to multiple calls of mdev mount only first partition as usual, others as devicename.
 		# first allow fstab to determine the mountpoint
@@ -104,7 +105,7 @@ case $ACTION in
 							# switch mounts
 							TEMPDEV1=`echo ${TEMPDEV} | cut -d'/' -f 3`
 							umount /media/hdd || umount ${TEMPDEV}
-							echo "[mdev-mount.sh] umounted /media/hdd (preparing swap with new device found)" >> $LOG
+							#echo "[mdev-mount.sh] umounted /media/hdd (preparing swap with new device found)" >> $LOG
 							# Use mkdir as 'atomic' action, failure means someone beat us to the punch
 							if grep -q "/media/usb" /proc/mounts ; then
 								#echo "[mdev-mount.sh] /media/usb exists 1" >> $LOG
@@ -130,7 +131,7 @@ case $ACTION in
 									rmdir "${MOUNTPOINT}"
 								fi
 							fi
-							echo "[mdev-mount.sh] mounted $MDEV on $MOUNTPOINT (swap complete)" >> $LOG
+							#echo "[mdev-mount.sh] mounted $MDEV on $MOUNTPOINT (swap complete)" >> $LOG
 						fi
 					fi
 				else
@@ -177,14 +178,14 @@ case $ACTION in
 						else
 							# mount the first removable device on /media/hdd only when no other internal hdd is present
 							DEVICETYPE="hdd"
-							DEVLIST=`ls -1 /sys/block | grep "sd[a-z]"`
+							DEVLIST=`ls -1 /sys/block | grep "sd[a-z]\|mmcblk[0-9]"`
 							for DEV in $DEVLIST; do
 								DEVBASE=`expr substr $DEV 1 3`
 								readlink -fn /sys/block/$DEVBASE/device | grep -qs 'pci\|ahci'
 								EXTERNAL=$?
 								if [ "${REMOVABLE}" -eq "0" -a $EXTERNAL -eq 0 ] ; then
 									DEVICETYPE="usb"
-									echo "[mdev-mount.sh] internal sdx detected -> mount as USB" >> $LOG
+									#echo "[mdev-mount.sh] internal sdx detected -> mount as USB" >> $LOG
 									break
 								fi
 							done
@@ -217,7 +218,7 @@ case $ACTION in
 					rmdir "${MOUNTPOINT}"
 				fi
 			fi
-			echo "[mdev-mount.sh] mounted $MDEV on $MOUNTPOINT" >> $LOG
+			#echo "[mdev-mount.sh] mounted $MDEV on $MOUNTPOINT" >> $LOG
 		fi
 		;;
 	remove)
@@ -228,7 +229,7 @@ case $ACTION in
 		umount $MOUNTPOINT || umount /dev/$MDEV
 		find $MOUNTPOINT  -type d -delete
 		rmdir $MOUNTPOINT
-		echo "[mdev-mount.sh] umounted $MOUNTPOINT" >> $LOG
+		#echo "[mdev-mount.sh] umounted $MOUNTPOINT" >> $LOG
 		;;
 	*)
 		# Unexpected keyword

@@ -1,0 +1,22 @@
+diff --git a/src/transport_protocol_descriptor.cpp b/src/transport_protocol_descriptor.cpp
+index 40e7426..9412e14 100644
+--- a/src/transport_protocol_descriptor.cpp
++++ b/src/transport_protocol_descriptor.cpp
+@@ -136,7 +136,7 @@ InteractionTransport::InteractionTransport(const uint8_t * const buffer, size_t
+ 	pos += urlBase->getLength() + 1;
+ 	length -= pos;
+ 	if (pos > 1 && length > 0) {
+-		int num_extensions = buffer[pos++];
++		int num_extensions = buffer[pos];
+ 		length -= 1;
+ 		pos += 1;
+ 		for (size_t i = 0; i < num_extensions && length > 0; ++i) {
+@@ -193,7 +193,7 @@ TransportProtocolDescriptor::TransportProtocolDescriptor(const uint8_t * const b
+ 				interactionTransports.push_back(p);
+ 				if (!p->getUrlBase()->getLength())
+ 					valid = false;
+-				pos += bytesLeft - oldBytesLeft;
++				pos += oldBytesLeft - bytesLeft;
+ 			}
+ 			break;
+ 		}

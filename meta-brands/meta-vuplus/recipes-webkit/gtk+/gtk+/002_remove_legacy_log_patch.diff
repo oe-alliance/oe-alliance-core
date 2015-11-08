@@ -1,0 +1,50 @@
+diff --git a/gdk/directfb/gdkevents-directfb.c b/gdk/directfb/gdkevents-directfb.c
+index fd32145..c0ddb27 100644
+--- a/gdk/directfb/gdkevents-directfb.c
++++ b/gdk/directfb/gdkevents-directfb.c
+@@ -697,7 +697,11 @@ gdk_event_translate (GdkEvent       *event,
+       break;
+ 
+     default:
++#if 0 /*oskwon*/
+       g_message ("unhandled DirectFB windowing event 0x%08x", dfbevent->type);
++#else
++      break;
++#endif
+     }
+ 
+  done:
+diff --git a/gdk/directfb/gdkkeys-directfb.c b/gdk/directfb/gdkkeys-directfb.c
+index e775384..d14bbc8 100644
+--- a/gdk/directfb/gdkkeys-directfb.c
++++ b/gdk/directfb/gdkkeys-directfb.c
+@@ -1999,7 +1999,9 @@ guint
+ gdk_keymap_lookup_key (GdkKeymap          *keymap,
+                        const GdkKeymapKey *key)
+ {
++#if 0 /*oswkon*/
+   g_warning ("gdk_keymap_lookup_key unimplemented \n");
++#endif
+   return 0;
+ }
+ 
+@@ -2007,15 +2009,18 @@ void
+ gdk_keymap_add_virtual_modifiers (GdkKeymap       *keymap,
+                                   GdkModifierType *state)
+ {
++#if 0 /*oswkon*/
+   g_warning ("gdk_keymap_add_virtual_modifiers unimplemented \n");
++#endif
+ }
+ 
+ gboolean
+ gdk_keymap_map_virtual_modifiers (GdkKeymap       *keymap,
+                                   GdkModifierType *state)
+ {
++#if 0 /*oswkon*/
+   g_warning ("gdk_keymap_map_virtual_modifiers unimplemented \n");
+-
++#endif
+   return TRUE;
+ }
+ 

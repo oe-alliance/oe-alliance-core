@@ -11,7 +11,7 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "0.8.1+gitr${SRCPV}"
 PKGV = "0.8.1+gitr${GITPKGV}"
-PR = "r3"
+PR = "r5"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 

@@ -23,7 +23,7 @@ SRC_URI_append = " \
            file://Add_key_symbols.patch \
 "
 
-PR .= ".2"
+PR .= ".3"
 
 do_rm_work() {
 }

@@ -9,7 +9,7 @@ require conf/license/license-gplv2.inc
 RDEPENDS_${PN} += "showiframe"
 
 PV = "5.1"
-PR = "r1"
+PR = "r2"
 
 S = "${WORKDIR}"
 
@@ -18,6 +18,7 @@ INITSCRIPT_PARAMS = "start 06 S ."
 INITSCRIPT_PARAMS_vuduo2 = "start 70 S . stop 89 0 ."
 INITSCRIPT_PARAMS_vusolo2 = "start 70 S . stop 89 0 ."
 INITSCRIPT_PARAMS_vusolose = "start 70 S . stop 89 0 ."
+INITSCRIPT_PARAMS_vusolo4k = "start 70 S . stop 89 0 ."
 
 inherit update-rc.d
 
@@ -82,7 +83,7 @@ do_install_append_7100s() {
 
 inherit deploy
 do_deploy() {
-    if [ "${MACHINE}" = "vuduo" ] || [ "${MACHINE}" = "vuduo2" ] || [ "${MACHINE}" = "vuuno" ] || [ "${MACHINE}" = "vusolo" ] || [ "${MACHINE}" = "vusolose" ] || [ "${MACHINE}" = "vuultimo" ] || [ "${MACHINE}" = "vuzero" ] || [ "${BRAND_OEM}" = "dags" ]; then
+    if [ "${MACHINE}" = "vuduo" ] || [ "${MACHINE}" = "vuduo2" ] || [ "${MACHINE}" = "vuuno" ] || [ "${MACHINE}" = "vusolo" ] || [ "${MACHINE}" = "vusolose" ] || [ "${MACHINE}" = "vuultimo" ] || [ "${MACHINE}" = "vuzero" ] || [ "${MACHINE}" = "vusolo4k" ] || [ "${BRAND_OEM}" = "dags" ]; then
         install -m 0644 splash480.bmp ${DEPLOYDIR}/${BOOTLOGO_FILENAME}
     else
         install -m 0644 splash576.bmp ${DEPLOYDIR}/${BOOTLOGO_FILENAME}

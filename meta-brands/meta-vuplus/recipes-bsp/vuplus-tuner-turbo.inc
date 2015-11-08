@@ -13,6 +13,13 @@ SRC_URI = " \
     http://archive.vuplus.com/download/usb/tuner/turbo/vuplus_tuner_turbo_bin_fw_${FW_SRCDATE}.tar.gz;name=binfw \
 "
 
+SRCDATE_arm = "20151104"
+FW_SRCDATE_arm = "20151104"
+SRC_URI_arm = " \
+    	http://archive.vuplus.com/download/usb/tuner/turbo/vuplus_tuner_turbo_driver_${PV}_${TARGET_ARCH}_${SRCDATE}.tar.gz;name=driver \
+    	http://archive.vuplus.com/download/usb/tuner/turbo/vuplus_tuner_turbo_bin_fw_${TARGET_ARCH}_${FW_SRCDATE}.tar.gz;name=binfw_arm \
+"
+
 DEPENDS += "virtual/kernel module-init-tools"
 RDEPENDS_${PN} += "module-init-tools-depmod"
 
@@ -42,3 +49,5 @@ FILES_${PN} = "/"
 SRC_URI[binfw.md5sum] = "517a9d54e41fae16612bcfe431ef7a3e"
 SRC_URI[binfw.sha256sum] = "b39f0b38684c44a13dd62ac4286a4a73bcf74fd25a881ecfe97d292535163ca0"
 
+SRC_URI[binfw_arm.md5sum] = "dd0a349eb062af2ff0d23078c4911f61"
+SRC_URI[binfw_arm.sha256sum] = "dd7e4f54957bedcac1f9a25bb31037a16b6c210916e6527cb4547298c237bdc8"
