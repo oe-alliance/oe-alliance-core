@@ -18,6 +18,7 @@ INITSCRIPT_PARAMS = "start 06 S ."
 INITSCRIPT_PARAMS_vuduo2 = "start 70 S . stop 89 0 ."
 INITSCRIPT_PARAMS_vusolo2 = "start 70 S . stop 89 0 ."
 INITSCRIPT_PARAMS_vusolose = "start 70 S . stop 89 0 ."
+INITSCRIPT_PARAMS_vusolos4k = "start 70 S . stop 89 0 ."
 
 inherit update-rc.d
 
