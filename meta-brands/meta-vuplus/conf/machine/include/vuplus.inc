@@ -22,8 +22,6 @@ MACHINE_EXTRA_RRECOMMENDS = " \
 
 include conf/machine/include/autoload-filesystems.inc
 
-DVBMEDIASINK_CONFIG = "--with-vuplus --with-pcm --with-eac3 --with-amr --with-wmv"
-
 PREFERRED_VERSION_nfs-utils ?= "1.2.8"
 
 PREFERRED_PROVIDER_virtual/kernel = "linux-vuplus"
