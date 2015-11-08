@@ -5,7 +5,7 @@ LICENSE = "CLOSED"
 require conf/license/license-close.inc
 
 DEPENDS = "tslib mpfr gmp libcrypto0.9.8 ${@base_contains("GST_VERSION", "1.0", "gstreamer1.0", "gstreamer", d)}"
-RDEPENDS_${PN} = "tslib-conf libts-1.0-0 libsysfs2 libgmp10 libmpfr4 vuplus-opera-dumpait libcrypto0.9.8"
+RDEPENDS_${PN} = "libsysfs2 libgmp10 libmpfr4 vuplus-opera-dumpait libcrypto0.9.8"
 
 SRC_DATE = "20151001_1"
 SRC_URI = ""
