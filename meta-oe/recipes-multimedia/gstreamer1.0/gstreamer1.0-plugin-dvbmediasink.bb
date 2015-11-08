@@ -33,6 +33,10 @@ SRC_URI_append_dm820 = " \
     file://0001-add-VB6-VB8-SPARK.patch;patch=1 \ 
 "
 
+SRC_URI_append_vusolo4k = " \
+    file://0001-add-VB6-VB8-SPARK.patch;patch=1 \ 
+"
+
 S = "${WORKDIR}/git"
 
 inherit gitpkgv

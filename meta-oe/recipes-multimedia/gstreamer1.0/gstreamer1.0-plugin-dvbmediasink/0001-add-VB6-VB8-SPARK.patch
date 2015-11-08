@@ -1,4 +1,4 @@
-From b8166ebfe0c9065b216dc4a242ed2d3ddccb1f8c Mon Sep 17 00:00:00 2001
+From 9f2227e9e5018ef0f088742ff405ff5bc61863a3 Mon Sep 17 00:00:00 2001
 From: Captain <captain.onboard@web.de>
 Date: Thu, 24 Sep 2015 18:57:32 +0200
 Subject: [PATCH] -add-VB6-VB8-SPARK
@@ -10,10 +10,10 @@ Subject: [PATCH] -add-VB6-VB8-SPARK
  3 files changed, 77 insertions(+), 3 deletions(-)
 
 diff --git a/configure.ac b/configure.ac
-index a8321ac..e959348 100644
+index 90f2987..8e5f045 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -214,6 +214,27 @@ if test "$have_eac3" = "yes"; then
+@@ -222,6 +222,27 @@ if test "$have_eac3" = "yes"; then
  	AC_DEFINE([HAVE_EAC3],[1],[Define to 1 for E-AC3 support])
  fi
  
@@ -42,10 +42,10 @@ index a8321ac..e959348 100644
  	AS_HELP_STRING([--with-dtsdownmix],[build dts downmix element, yes or no]),
  	[have_dtsdownmix=$withval],[have_dtsdownmix=no])
 diff --git a/gstdvbvideosink.c b/gstdvbvideosink.c
-index e9637b7..21e381f 100644
+index 5d2c7b8..3e6952e 100644
 --- a/gstdvbvideosink.c
 +++ b/gstdvbvideosink.c
-@@ -231,6 +231,20 @@ GST_STATIC_PAD_TEMPLATE (
+@@ -235,6 +235,20 @@ GST_STATIC_PAD_TEMPLATE (
  	"video/x-wmv, "
  		VIDEO_CAPS ", wmvversion = (int) 3; "
  #endif
@@ -66,7 +66,7 @@ index e9637b7..21e381f 100644
  	"video/mpegts, systemstream=(boolean)true, "
  		VIDEO_CAPS "; "
  	)
-@@ -994,6 +1008,21 @@ static GstFlowReturn gst_dvbvideosink_render(GstBaseSink *sink, GstBuffer *buffe
+@@ -998,6 +1012,21 @@ static GstFlowReturn gst_dvbvideosink_render(GstBaseSink *sink, GstBuffer *buffe
  				}
  			}
  		}
@@ -88,7 +88,7 @@ index e9637b7..21e381f 100644
  	}
  
  #ifdef PACK_UNPACKED_XVID_DIVX5_BITSTREAM
-@@ -1569,6 +1598,24 @@ static gboolean gst_dvbvideosink_set_caps(GstBaseSink *basesink, GstCaps *caps)
+@@ -1641,6 +1670,24 @@ static gboolean gst_dvbvideosink_set_caps(GstBaseSink *basesink, GstCaps *caps)
  			GST_INFO_OBJECT (self, "MIMETYPE video/x-wmv %s -> STREAMTYPE_VC1_SM", value);
  		}
  	}
@@ -114,19 +114,19 @@ index e9637b7..21e381f 100644
  	if (self->stream_type != STREAMTYPE_UNKNOWN)
  	{
 diff --git a/gstdvbvideosink.h b/gstdvbvideosink.h
-index 3bafdcc..fcf8106 100644
+index a20ef17..5bb9315 100644
 --- a/gstdvbvideosink.h
 +++ b/gstdvbvideosink.h
 @@ -65,7 +65,7 @@ typedef struct _GstDVBVideoSink		GstDVBVideoSink;
  typedef struct _GstDVBVideoSinkClass	GstDVBVideoSinkClass;
  typedef struct _GstDVBVideoSinkPrivate	GstDVBVideoSinkPrivate;
  
--typedef enum { CT_MPEG1, CT_MPEG2, CT_H264, CT_DIVX311, CT_DIVX4, CT_MPEG4_PART2, CT_VC1, CT_VC1_SM } t_codec_type;
-+typedef enum { CT_MPEG1, CT_MPEG2, CT_H264, CT_DIVX311, CT_DIVX4, CT_MPEG4_PART2, CT_VC1, CT_VC1_SM, CT_SPARK, CT_VP6, CT_VP8} t_codec_type;
+-typedef enum { CT_MPEG1, CT_MPEG2, CT_H264, CT_DIVX311, CT_DIVX4, CT_MPEG4_PART2, CT_VC1, CT_VC1_SM, CT_H265 } t_codec_type;
++typedef enum { CT_MPEG1, CT_MPEG2, CT_H264, CT_DIVX311, CT_DIVX4, CT_MPEG4_PART2, CT_VC1, CT_VC1_SM, CT_H265, CT_SPARK, CT_VP6, CT_VP8} t_codec_type;
  #if defined(DREAMBOX)
  typedef enum {
  	STREAMTYPE_UNKNOWN = -1,
-@@ -79,7 +79,10 @@ typedef enum {
+@@ -80,7 +80,10 @@ typedef enum {
  	STREAMTYPE_DIVX4 = 14,
  	STREAMTYPE_DIVX5 = 15,
  	STREAMTYPE_VC1 = 16,
@@ -138,7 +138,7 @@ index 3bafdcc..fcf8106 100644
  } t_stream_type;
  #else
  typedef enum {
-@@ -94,7 +97,10 @@ typedef enum {
+@@ -96,7 +99,10 @@ typedef enum {
  	STREAMTYPE_XVID = 10,
  	STREAMTYPE_DIVX311 = 13,
  	STREAMTYPE_DIVX4 = 14,
