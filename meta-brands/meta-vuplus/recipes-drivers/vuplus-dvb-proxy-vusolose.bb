@@ -1,4 +1,5 @@
 KV = "3.13.5"
+PV = "${KV}"
 SRCDATE = "20150623"
 SRCDATE_PR = "r0"
 
