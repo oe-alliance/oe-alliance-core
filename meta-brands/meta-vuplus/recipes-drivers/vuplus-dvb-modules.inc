@@ -4,6 +4,7 @@ PRIORITY = "required"
 LICENSE = "CLOSED"
 require conf/license/license-close.inc
 
+PV = "${KV}"
 PR = "r1"
 
 DOWNLOADMACHINE ?= "${MACHINE}"
