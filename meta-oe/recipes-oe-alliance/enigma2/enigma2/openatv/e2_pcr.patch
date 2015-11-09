@@ -1,0 +1,20 @@
+diff --git a/lib/service/servicedvb.cpp b/lib/service/servicedvb.cpp
+index 04f8066..f093a53 100644
+--- a/lib/service/servicedvb.cpp
++++ b/lib/service/servicedvb.cpp
+@@ -2888,13 +2888,10 @@ void eDVBServicePlay::updateDecoder(bool sendSeekableStateChanged)
+ 		m_decoder->setVideoPID(vpid, vpidtype);
+ 		m_have_video_pid = (vpid > 0 && vpid < 0x2000);
+ 
+-		if (!(m_is_pvr || m_is_stream || m_timeshift_active || (pcrpid == 0x1FFF)))
+-			m_decoder->setSyncPCR(pcrpid);
+-		else
+-			m_decoder->setSyncPCR(-1);
+-
+ 		selectAudioStream();
+ 
++		m_decoder->setSyncPCR(pcrpid);
++
+ 		if (m_decoder_index == 0)
+ 		{
+ 			m_decoder->setTextPID(tpid);
