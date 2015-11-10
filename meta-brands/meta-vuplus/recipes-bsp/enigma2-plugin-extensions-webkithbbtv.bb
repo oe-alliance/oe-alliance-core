@@ -4,6 +4,8 @@ PRIORITY = "required"
 LICENSE = "CLOSED"
 require conf/license/license-close.inc
 
+RDEPENDS_${PN} = "vuplus-webkithbbtv-dumpait"
+
 PV = "1.0"
 PR = "20151006.r1"
 SRC_URI = "http://archive.vuplus.com/download/build_support/webkit-hbbtv-plugin_${PR}.tar.gz"
