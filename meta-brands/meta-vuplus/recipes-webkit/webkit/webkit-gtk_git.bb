@@ -20,7 +20,10 @@ PV = "r95199"
 BRANCH="vuplus-webkit"
 SRCREV="66de070e17c185bbf388688ceb7084b503f743a2"
 
-SRC_URI = "git://code.vuplus.com:/git/webkit-r95199-base.git;protocol=http;branch=${BRANCH};rev=${SRCREV}"
+SRC_URI = "git://code.vuplus.com:/git/webkit-r95199-base.git;protocol=http;branch=${BRANCH};rev=${SRCREV} \
+  file://bison-2.6.patch \
+  file://webkit-gtk-ANGLE-doesn-t-build-with-bison-3.patch \
+"
 
 inherit autotools lib_package gtk-doc pkgconfig
 
