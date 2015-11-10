@@ -43,7 +43,7 @@ PROVIDES += " \
     ${@base_contains('MACHINE_FEATURES', 'legacykernel', '' , 'enigma2-plugin-systemplugins-wirelessaccesspoint', d)} \
     ${@base_contains('MACHINE', 'spark7162', 'enigma2-plugin-systemplugins-uniontunertype ' , ' ', d)} \
     ${@base_contains('MACHINE_FEATURES', 'sh4booster', 'enigma2-plugin-systemplugins-sh4boostercontrol' , ' ', d)} \
-    ${@base_contains('MACHINE_BRAND', 'WETEK', 'enigma2-plugin-extensions-rcuselect' , ' ', d)} \
+    ${@base_contains('MACHINE_BRAND', 'WETEK', 'enigma2-plugin-extensions-rcuselect enigma2-plugin-extensions-rezap' , ' ', d)} \
      "
 
 DEPENDS = "\
@@ -121,6 +121,7 @@ RREPLACES_enigma2-plugin-extensions-remotechannelstreamconverter = "enigma2-plug
 DESCRIPTION_enigma2-plugin-systemplugins-wirelessaccesspoint = "Using a Wireless module as AP."
 RDEPENDS_enigma2-plugin-systemplugins-wirelessaccesspoint = "hostapd bridge-utils"
 DESCRIPTION_enigma2-plugin-extensions-rcuselect = "Change Remote for Wetek"
+DESCRIPTION_enigma2-plugin-extensions-rezap = "ReZap Sync Tool for Wetek"
 
 
 inherit autotools-brokensep gitpkgv pythonnative
