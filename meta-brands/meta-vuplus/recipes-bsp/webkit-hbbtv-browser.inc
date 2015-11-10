@@ -8,6 +8,8 @@ PV = "1.0"
 PR = "${SRCDATE}"
 SRC_URI = "http://archive.vuplus.com/download/build_support/webkit-hbbtv-browser_${MACHINE}_${SRCDATE}.tar.gz"
 
+S = "${WORKDIR}"
+
 DEPENDS = "webkit-gtk enigma2-plugin-extensions-webkithbbtv"
 RDEPENDS_${PN} = "webkit-gtk enigma2-plugin-extensions-webkithbbtv"
 
