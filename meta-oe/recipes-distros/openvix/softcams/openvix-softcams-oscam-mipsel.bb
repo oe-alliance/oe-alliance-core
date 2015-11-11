@@ -8,12 +8,12 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 PV = "1.20+svn${SRCPV}"
 SRCREV = "9620"
 SRC_URI = "svn://www.streamboard.tv/svn/oscam;protocol=http;module=trunk;scmdata=keep;rev=${SRCREV}"
-PR = "r17"
+PR = "r18"
 
 PACKAGES = "enigma2-plugin-softcams-oscam"
 
-PROVIDES += "openvix-softcams-oscam"
-RPROVIDES_enigma2-plugin-softcams-oscam += "openvix-softcams-oscam"
+PROVIDES += "openvix-softcams-oscam-mipsel"
+RPROVIDES_enigma2-plugin-softcams-oscam += "openvix-softcams-oscam-mipsel"
 
 DEPENDS = "libusb openssl"
 RCONFLICTS_enigma2-plugin-softcams-oscam = "oscam oscam-stable oscam-unstable oscam-experimental oscam-util-list-smargo"

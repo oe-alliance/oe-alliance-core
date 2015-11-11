@@ -9,7 +9,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 PACKAGES = "${PN}"
 
 PV = "1.0"
-PR = "r28"
+PR = "r29"
 
 inherit packagegroup
 
@@ -19,5 +19,5 @@ DEPENDS = "\
     enigma2-skins-openvix \
     openvix-bootlogos-meta \
     ${@base_contains("MACHINE_FEATURES", "skins1080", "hd-skins-meta", "", d)} \
-    ${@base_contains("TARGET_ARCH", "mipsel", "openvix-softcams", "", d)} \
+    openvix-softcams-meta \
     "

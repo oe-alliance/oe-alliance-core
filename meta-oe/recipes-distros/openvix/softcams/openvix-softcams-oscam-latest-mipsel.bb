@@ -6,14 +6,14 @@ LICENSE = "GPLv3"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 
 PV = "1.20+svn${SRCPV}"
-SRCREV = "11063"
+SRCREV = "11108"
 SRC_URI = "svn://www.streamboard.tv/svn/oscam;protocol=http;module=trunk;scmdata=keep;rev=${SRCREV}"
 PR = "r1"
 
 PACKAGES = "enigma2-plugin-softcams-oscam-latest"
 
-PROVIDES += "openvix-softcams-oscam-latest"
-RPROVIDES_enigma2-plugin-softcams-oscam-latest += "openvix-softcams-oscam-latest"
+PROVIDES += "openvix-softcams-oscam-latest-mipsel"
+RPROVIDES_enigma2-plugin-softcams-oscam-latest += "openvix-softcams-oscam-latest-mipsel"
 
 DEPENDS = "libusb openssl"
 

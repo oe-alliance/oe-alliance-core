@@ -6,17 +6,17 @@ LICENSE = "GPLv3"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 
 PV = "1.20+svn${SRCPV}"
-SRCREV = "9620"
+SRCREV = "11108"
 SRC_URI = "svn://www.streamboard.tv/svn/oscam;protocol=http;module=trunk;scmdata=keep;rev=${SRCREV}"
-PR = "r6"
+PR = "r1"
 
-PACKAGES = "enigma2-plugin-softcams-oscam-pcscd"
+PACKAGES = "enigma2-plugin-softcams-oscam-pcscd-latest"
 
-PROVIDES += "openvix-softcams-oscam-pcscd"
-RPROVIDES_enigma2-plugin-softcams-oscam-pcscd += "openvix-softcams-oscam-pcscd"
+PROVIDES += "openvix-softcams-oscam-pcscd-latest-mipsel"
+RPROVIDES_enigma2-plugin-softcams-oscam-pcscd-latest += "openvix-softcams-oscam-pcscd-latest-mipsel"
 
 DEPENDS = "libusb openssl pcsc-lite"
-RDEPENDS_enigma2-plugin-softcams-oscam-pcscd = "pcsc-lite"
+RDEPENDS_enigma2-plugin-softcams-oscam-pcscd-latest = "pcsc-lite"
 
 S = "${WORKDIR}/trunk"
 
@@ -31,7 +31,7 @@ EXTRA_OECMAKE += "\
 
 do_install() {
     install -d ${D}/usr/softcams
-    install -m 0755 ${WORKDIR}/build/oscam ${D}/usr/softcams/oscam-pcsc
+    install -m 0755 ${WORKDIR}/build/oscam ${D}/usr/softcams/oscam-pcsc-latest
 }
 
-FILES_enigma2-plugin-softcams-oscam-pcscd = "/usr"
+FILES_enigma2-plugin-softcams-oscam-pcscd-latest= "/usr"
