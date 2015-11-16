@@ -1,0 +1,95 @@
+--- gst-fluendo-mpegdemux-0.10.72/src/gstmpegtsdemux.c.orig	2013-02-12 04:01:37.000000000 -0800
++++ gst-fluendo-mpegdemux-0.10.72/src/gstmpegtsdemux.c	2014-08-13 19:19:54.242459978 -0700
+@@ -84,7 +84,8 @@ enum
+   PROP_MAX_PES_BUFFER_SIZE,
+   PROP_FORCE_PCR_SEGMENT,
+   PROP_PCR_DIFFERENCE,
+-  PROP_PTS_OFFSET
++  PROP_PTS_OFFSET,
++  PROP_VBR_DURATION
+ };
+ 
+ #define GSTTIME_TO_BYTES(time) \
+@@ -100,6 +101,7 @@ enum
+       "mpegversion = (int) { 1, 2, 4 }, " \
+       "systemstream = (boolean) FALSE; " \
+     "video/x-h264;" \
++    "video/x-h265;" \
+     "video/x-dirac;" \
+     "video/x-wmv," \
+       "wmvversion = (int) 3, " \
+@@ -326,6 +328,11 @@ gst_fluts_demux_class_init (GstFluTSDemu
+           "Initial PTS offset for timestamps",
+           0, G_MAXUINT64, DEFAULT_PTS_OFFSET, G_PARAM_READWRITE));
+ 
++	g_object_class_install_property (gobject_class, PROP_VBR_DURATION,
++      g_param_spec_uint64 ("duration", "Initial duration",
++          "for seek event",
++          0, G_MAXUINT64, 0, G_PARAM_READWRITE));
++
+   gstelement_class->change_state = gst_fluts_demux_change_state;
+ #ifdef HAVE_LATENCY
+   gstelement_class->provide_clock = gst_fluts_demux_provide_clock;
+@@ -588,6 +595,7 @@ gst_fluts_stream_is_video (GstFluTSStrea
+     case ST_VIDEO_MPEG2:
+     case ST_VIDEO_MPEG4:
+     case ST_VIDEO_H264:
++    case ST_VIDEO_H265:
+       return TRUE;
+     case ST_VIDEO_DIRAC:
+       return gst_fluts_is_dirac_stream (stream);
+@@ -799,6 +807,11 @@ gst_fluts_demux_fill_stream (GstFluTSStr
+       name = g_strdup_printf ("video_%04x", stream->PID);
+       caps = gst_caps_new_simple ("video/x-h264", NULL);
+       break;
++    case ST_VIDEO_H265:
++      template = klass->video_template;
++      name = g_strdup_printf ("video_%04x", stream->PID);
++      caps = gst_caps_new_simple ("video/x-h265", NULL);
++      break;
+     case ST_VIDEO_DIRAC:
+       if (gst_fluts_is_dirac_stream (stream)) {
+         template = klass->video_template;
+@@ -3205,8 +3218,24 @@ gst_fluts_demux_handle_seek_push (GstFlu
+ 
+   GST_DEBUG_OBJECT (demux, "try with bitrate");
+ 
++	#if 0
+   bstart = GSTTIME_TO_BYTES (start);
+   bstop = GSTTIME_TO_BYTES (stop);
++	#else
++	if(start != -1){
++		bstart = demux->filelength * start / demux->privateduration;
++	}
++	else {
++		bstart = -1;
++	}
++		
++	if(stop != -1) {
++		bstop = demux->filelength * stop / demux->privateduration;
++	}
++	else {
++		bstop = -1;
++	}
++	#endif
+ 
+   GST_DEBUG_OBJECT (demux, "in bytes bstart %" G_GINT64_FORMAT " bstop %"
+       G_GINT64_FORMAT, bstart, bstop);
+@@ -3375,6 +3404,7 @@ gst_fluts_demux_sink_event (GstPad * pad
+         GST_INFO_OBJECT (demux, "received new segment: rate %g "
+             "format %d, start: %" G_GINT64_FORMAT ", stop: %" G_GINT64_FORMAT
+             ", time: %" G_GINT64_FORMAT, rate, format, start, stop, time);
++				demux->filelength = stop;
+       }
+       /* For BYTES newsegment we just store the estimated position in time
+        * format. The demuxer will figure out the start and stop values from
+@@ -3997,6 +4027,9 @@ gst_fluts_demux_set_property (GObject *
+     case PROP_PTS_OFFSET:
+       demux->pts_offset = g_value_get_uint64 (value);
+       break;
++		case PROP_VBR_DURATION:
++			demux->privateduration = g_value_get_uint64(value);
++			break;
+     default:
+       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+       break;

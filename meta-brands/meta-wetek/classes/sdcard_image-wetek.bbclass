@@ -106,5 +106,11 @@ IMAGE_CMD_wetek-sdimg () {
 
 	# Burn Partitions
 	dd if=${WORKDIR}/boot.img of=${SDIMG} conv=notrunc seek=1 bs=$(expr ${IMAGE_ROOTFS_ALIGNMENT} \* 1024) && sync && sync
+	### try adjusting
+	tune2fs -o ^acl ${SDIMG_ROOTFS}
+	tune2fs -o  ^user_xattr ${SDIMG_ROOTFS}
+	#tune2fs -E mount_opts=auto_da_alloc ${SDIMG_ROOTFS} 
+	#tune2fs -e remount-ro ${SDIMG_ROOTFS}
+	tune2fs -E  mount_opts=noatime  ${SDIMG_ROOTFS}
 	dd if=${SDIMG_ROOTFS} of=${SDIMG} conv=notrunc seek=1 bs=$(expr 1024 \* ${BOOT_SPACE_ALIGNED} + ${IMAGE_ROOTFS_ALIGNMENT} \* 1024) && sync && sync
 }

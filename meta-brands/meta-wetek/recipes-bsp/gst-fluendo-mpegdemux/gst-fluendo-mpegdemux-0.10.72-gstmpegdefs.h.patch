@@ -1,0 +1,11 @@
+--- gst-fluendo-mpegdemux-0.10.72/src/gstmpegdefs.h.orig	2012-03-28 03:49:59.000000000 -0700
++++ gst-fluendo-mpegdemux-0.10.72/src/gstmpegdefs.h	2014-08-12 17:45:39.890136561 -0700
+@@ -143,7 +143,7 @@
+ #define ST_MPEG4_ES                     0x12
+ #define ST_MPEG4_SECTION                0x13
+ #define ST_VIDEO_H264                   0x1b
+-
++#define ST_VIDEO_H265                   0x24
+ /* Un-official Dirac extension */
+ #define ST_VIDEO_DIRAC                  0xd1
+ 

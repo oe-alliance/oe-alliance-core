@@ -4,11 +4,12 @@ LICENSE = "GPLv2"
 
 LIC_FILES_CHKSUM = "file://${S}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-SRC_URI[md5sum] = "279b893c95f209ff47aa275fe85285ea"
-SRC_URI[sha256sum] = "e91a92f32e2a5e3e34d6d10bf9a218d3407313db1c96991c5f2db73daa4860a1"
+SRC_URI[md5sum] = "ad154243840671482ff94caea3f80b47"
+SRC_URI[sha256sum] = "1925da3f7fc23fb34e7418c2b57eeec004646b7e63c5fc2c800a1fc1e7b8f499"
 
 inherit kernel machine_kernel_pr
 
+MACHINE_KERNEL_PR_append = ".1"
 DEPENDS = "xz-native bc-native u-boot-mkimage-native gcc"
 
 # Avoid issues with Amlogic kernel binary components
@@ -58,4 +59,7 @@ do_install_append () {
     touch ${STAGING_KERNEL_DIR}/include/linux/smp_lock.h
     # remove *.z from installation path those are object files from amlogic for binary modules
     find ${D}/usr/src/kernel -type f -name "*.z" | xargs rm -f
+}
+
+do_rm_work() {
 }
