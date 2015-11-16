@@ -215,6 +215,7 @@ KERNEL_FILE = "oe_kernel.bin"
 ROOTFS_FILE = "oe_rootfs.bin"
 
 DVBPROVIDER = "kernel"
+DVBSKYPROVIDER = "kernel"
 
 MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS = "\
     kernel-module-cdfs \

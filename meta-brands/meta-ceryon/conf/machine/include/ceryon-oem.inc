@@ -37,6 +37,7 @@ MACHINE_ESSENTIAL_EXTRA_RDEPENDS = "\
     "
 
 DVBPROVIDER = "kernel"
+DVBSKYPROVIDER = "kernel"
 
 MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS = "\
     kernel-module-cdfs \
@@ -56,8 +57,8 @@ DEFAULTTUNE = "mips32el"
 
 PREFERRED_PROVIDER_virtual/kernel = "linux-ceryon"
 
-PREFERRED_VERSION_linux-ceryon = "3.14.2"
-PREFERRED_VERSION_linux-libc-headers = "3.13"
+PREFERRED_VERSION_linux-ceryon = "4.0.1"
+PREFERRED_VERSION_linux-libc-headers = "4.0"
 
 KERNEL_IMAGETYPE = "vmlinux"
 KERNEL_OUTPUT = "${KERNEL_IMAGETYPE}"
