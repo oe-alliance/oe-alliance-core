@@ -1,5 +1,5 @@
-MODULE = "Nobile-Mod"
-SUMMARY = "HDFreaks.cc Nobile Mod"
+MODULE = "XionHDF"
+SUMMARY = "HDFreaks.cc XionHDF"
 MAINTAINER = "HDFreaks"
 SECTION = "base"
 PRIORITY = "required"
@@ -15,7 +15,7 @@ PKGV = "1.0+git${GITPKGV}"
 VER ="1.0"
 PR = "r1"
 
-SRC_URI="git://github.com/openhdf/nobile-skin.git"
+SRC_URI="git://github.com/KravenHD/XionHDF.git"
 
 S = "${WORKDIR}/git"
 
