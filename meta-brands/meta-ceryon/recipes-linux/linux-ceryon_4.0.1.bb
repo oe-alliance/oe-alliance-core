@@ -2,12 +2,12 @@ SUMMARY = "Linux kernel for ${MACHINE}"
 SECTION = "kernel"
 LICENSE = "GPLv2"
 
-KERNEL_RELEASE = "3.14.2"
+KERNEL_RELEASE = "4.0.1"
 
 inherit kernel machine_kernel_pr
 
-SRC_URI[md5sum] = "7276fcda85e4594c993ea6192cd7df0f"
-SRC_URI[sha256sum] = "72236f0ff51f42496d5d7bae372f4ddc686bc0eb433aa8b6295bbda0558d3e63"
+SRC_URI[md5sum] = "53d1614e476bc1141b35266cb31ba091"
+SRC_URI[sha256sum] = "385d8efec92b5d3bc8e16c37673e4a2a38a6541b684311650040aa5d67508c3e"
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
@@ -19,24 +19,8 @@ PKG_kernel-image = "kernel-image"
 RPROVIDES_kernel-base = "kernel-${KERNEL_VERSION}"
 RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
 
-SRC_URI += "http://source.mynonpublic.com/ceryon/linux-${PV}.tar.gz \
+SRC_URI += "http://source.mynonpublic.com/ceryon/ceryon-linux-${PV}.tgz \
 	file://defconfig \
-	file://add-rt2x00-wifi-devices.patch \
-	file://add-rtl8192cu-wifi-devices.patch \
-	file://add-dmx-source-timecode.patch \
-	file://af9015-output-full-range-SNR.patch \
-	file://af9033-output-full-range-SNR.patch \
-	file://cxd2820r-output-full-range-SNR.patch \
-	file://dvb_usb_disable_rc_polling.patch \
-	file://dvb-usb-dib0700-disable-sleep.patch \
-	file://fix-proc-cputype.patch \
-	file://ceryon7362_partition_layout.patch \
-	file://ceryon7362_disable_pinmux.patch \
-	file://iosched-slice_idle-1.patch \
-	file://it913x-switch-off-PID-filter-by-default.patch \
-	file://mxl5007t-add-no_probe-and-no_reset-parameters.patch \
-	file://tda18271-advertise-supported-delsys.patch \
-	file://timedate.patch \
 	"
 
 S = "${WORKDIR}/linux-${PV}"
