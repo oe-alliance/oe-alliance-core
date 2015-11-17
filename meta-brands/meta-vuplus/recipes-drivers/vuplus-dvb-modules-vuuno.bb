@@ -1,7 +1,7 @@
 KV = "3.9.6"
-SRCDATE = "20150623"
+SRCDATE = "20151117"
 
 require vuplus-dvb-modules.inc
 
-SRC_URI[md5sum] = "b33a718d75d320ba842dbeb9a6887e88"
-SRC_URI[sha256sum] = "b7f873d0287f7dd2f66bf031a05ef714bb58a1007605dac093368404b7828bd2"
+SRC_URI[md5sum] = "f5c67ee111746ce463a2d9de62a74fb0"
+SRC_URI[sha256sum] = "404ddd3860dba884ffe6be2c9feaaffc57dd79d61dbf7e18b37ab49e0e4bc5f6"
