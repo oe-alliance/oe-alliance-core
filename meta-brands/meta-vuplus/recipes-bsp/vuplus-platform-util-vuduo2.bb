@@ -1,8 +1,8 @@
-SRCDATE = "20150623"
+SRCDATE = "20151117"
 SRCDATE_PR = "r0"
-
+PV="15.1"
 
 require vuplus-platform-util.inc
 
-SRC_URI[md5sum] = "ee83dcf4aa4b6a9a3748bdb40c39da3d"
-+SRC_URI[sha256sum] = "4b703552fbf02f3919787d9b0df6af27c19347346881d293de2050ea26207c3c"
+SRC_URI[md5sum] = "05af480d2dfded16c98142d86401228a"
+SRC_URI[sha256sum] = "b1eb2b430a7ecfa601d254f0b0068006850274f2945f7804d8f1602453ee30ae"
