@@ -1,4 +1,4 @@
-DESCRIPTION = "enigma2-plugin-extensions-isetting"
+DESCRIPTION = "plugins.extension-vhannibal-autosetting"
 MAINTAINER = "opendroid"
 SECTION = "base"
 PRIORITY = "required"
@@ -11,16 +11,15 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "3.0+git${SRCPV}"
 PKGV = "3.0+git${GITPKGV}"
-VER ="3.3.4"
-PR = "r5"
+VER ="3.0"
+PR = "r1"
 
-SRC_URI="git://github.com/opendroid-Team/enigma2-plugin-extensions-isetting.git"
+SRC_URI="git://github.com/opendroid-Team/plugins.extension-vhannibal-autosetting.git"
 
 S = "${WORKDIR}/git"
-INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
-INHIBIT_PACKAGE_STRIP = "1"
+
+FILES_${PN} = "/usr/*"
 
 do_install() {
-    cp -rp ${S}/usr ${D}/
+	cp -rp ${S}/usr ${D}/
 }
-FILES_${PN} = "/"
