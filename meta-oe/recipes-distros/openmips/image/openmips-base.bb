@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=4d92cd373abda3937c2bc47fbc49d
 ALLOW_EMPTY_${PN} = "1"
 
 PV = "1.0"
-PR = "r17"
+PR = "r20"
 
 inherit packagegroup
 
@@ -23,6 +23,7 @@ RDEPENDS_${PN} = "\
     python-imaging \
     ofgwrite \
     rtmpdump \
+    zip \
     libcrypto-compat-0.9.8 \
     ${@base_contains("MACHINE_FEATURES", "singlecore", "", \
     " \
