@@ -7,7 +7,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PV = "1.0"
-PR = "r26"
+PR = "r27"
 
 inherit packagegroup
 
@@ -34,7 +34,7 @@ RRECOMMENDS_${PN} = "\
     enigma2-plugin-extensions-epgsearch \
     enigma2-plugin-systemplugins-osdpositionsetup \
     enigma2-plugin-systemplugins-positionersetup \
-    ${@base_contains("MACHINE_FEATURES", "osdanimation", "", "enigma2-plugin-systemplugins-animationsetup", d)} \
+    ${@base_contains("MACHINE_FEATURES", "osdanimation", "enigma2-plugin-systemplugins-animationsetup", "", d)} \
     ${@base_contains("MACHINE_FEATURES", "videoenhancement", "", "enigma2-plugin-systemplugins-videoenhancement", d)} \
     ${@base_contains("MACHINE_FEATURES", "3dtv", "enigma2-plugin-systemplugins-osd3dsetup" , "", d)} \
     "
