@@ -52,7 +52,7 @@ TARGET_ARCH = "mipsel"
 DEFAULTTUNE = "mips32el"
 
 PREFERRED_PROVIDER_virtual/kernel = "linux-xp"
-PREFERRED_VERSION_linux-xp = "4.01"
+PREFERRED_VERSION_linux-xp = "4.0.1"
 PREFERRED_VERSION_linux-libc-headers = "4.0"
 
 KERNEL_IMAGETYPE = "vmlinux"
