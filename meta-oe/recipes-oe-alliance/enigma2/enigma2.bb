@@ -161,7 +161,7 @@ inherit autotools-brokensep gitpkgv pkgconfig pythonnative
 
 PV = "3.0+git${SRCPV}"
 PKGV = "3.0+git${GITPKGV}"
-PR = "r22"
+PR = "r23"
 
 SRC_URI = "${ENIGMA2_URI}"
 
@@ -225,6 +225,7 @@ EXTRA_OECONF = " \
     ${@base_contains("MACHINE_FEATURES", "nolcd", "--with-nolcd" , "", d)} \
     ${@base_contains("TARGET_ARCH", "sh4", "--enable-sh=yes " , "", d)} \
     ${@base_contains("MACHINE_FEATURES", "uianimation", "--with-libvugles2" , "", d)} \
+    ${@base_contains("MACHINE_FEATURES", "osdanimation", "--with-osdanimation" , "", d)} \
     "
 
 # Swig generated 200k enigma.py file has no purpose for end users
