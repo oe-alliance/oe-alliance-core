@@ -1,10 +1,10 @@
 KV = "3.14.21"
-SRCDATE = "20151111"
+SRCDATE = "20151118"
 
 RDEPENDS_${PN} += "blackbox7405-mac-check"
 
-SRC_URI[md5sum] = "a5663f4325104afc9877309cd75d2175"
-SRC_URI[sha256sum] = "c6f9a76526c297e7fef1f0482dd2df76aa5d2d97cad21e6343d7dc8985081641"
+SRC_URI[md5sum] = "9d78c5c74cf131ee3a5f85a31dde6185"
+SRC_URI[sha256sum] = "c00bce20037981c0e6212db44c7bd5756d28627e53321dee8aea8e9db9348452"
 
 SRC_URI = "http://unibox.to/feeds/eco/development/drivers/linuxdvb_7405-${KV}-${SRCDATE}.tar.gz"
 
