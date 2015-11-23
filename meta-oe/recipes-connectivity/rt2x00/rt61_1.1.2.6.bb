@@ -9,7 +9,7 @@ inherit module
 PR = "r4"
 MACHINE_KERNEL_PR_append = ".2"
 
-SRC_URI = "http://archiv.mixos-support.com/2010_0825_RT61_Linux_STA_v${PV}.tar.bz2 \
+SRC_URI = "http://source.mynonpublic.com/ebox/2010_0825_RT61_Linux_STA_v${PV}.tar.bz2 \
               file://makefile_rt61_1.1.2.6.patch \
 "
 
