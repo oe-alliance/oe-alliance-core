@@ -1,7 +1,7 @@
-SRCDATE = "20151117"
+SRCDATE = "20151124"
 SRCDATE_PR = "r0"
 
 require vuplus-libgles.inc
 
-SRC_URI[md5sum] = "307ee58e6c5a9149f4c8d795af445a78"
-+SRC_URI[sha256sum] = "60ed2e7e77ca1a7c6c4e5a7c47aa445845ae62696a2ea2db38088243359a8768"
+SRC_URI[md5sum] = "83afd26e6dfea0a3483fe3e25933d88e"
+SRC_URI[sha256sum] = "1bbaf0ae5fc94e5c51b2431f382428c3dfe369833e135e9e39b0f232bae4f9cc"
