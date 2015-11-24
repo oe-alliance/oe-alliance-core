@@ -21,7 +21,7 @@ SRC_URI += "http://archive.vuplus.com/download/kernel/stblinux-3.14-1.8.tar.bz2 
 	file://usb_core_hub_msleep.patch \
 	"
 
-SRC_URI += "${@base_contains("VUPLUS_FEATURES", "dvbproxy", "file://linux_dvb_adapter.patch;patch=1;pnum=1", "", d)}"
+SRC_URI += "${@base_contains("MACHINE_FEATURES", "dvbproxy", "file://linux_dvb_adapter.patch;patch=1;pnum=1", "", d)}"
 
 S = "${WORKDIR}/linux"
 B = "${WORKDIR}/build"
