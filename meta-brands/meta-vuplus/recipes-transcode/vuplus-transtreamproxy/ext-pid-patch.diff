@@ -1,0 +1,55 @@
+diff --git a/configure.ac b/configure.ac
+index dfe149a..4a9f975 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -32,6 +32,18 @@ AC_SUBST(PLATFORM)
+ AC_SUBST(INCPATH)
+ 
+ # Checks for typedefs, structures, and compiler characteristics.
++AC_SUBST(USE_EXT_PID)
++
++AC_ARG_ENABLE([ext-pid],
++  [AS_HELP_STRING([--enable-ext-pid],
++  [enable extend pid (default is no)])],
++  [use_ext_pid=$enableval],
++  [use_ext_pid=no])
++
++if test "$use_ext_pid" = "yes"; then
++	AC_DEFINE([HAVE_EXT_PID], [1], [Define to 1 if support extend pid.])
++	USE_EXT_PID=1
++fi
+ 
+ # Checks for library functions.
+ 
+diff --git a/src/Encoder.h b/src/Encoder.h
+index 5831482..1075b90 100644
+--- a/src/Encoder.h
++++ b/src/Encoder.h
+@@ -8,6 +8,8 @@
+ #ifndef ENCODER_H_
+ #define ENCODER_H_
+ 
++#include "config.h"
++
+ #include <string>
+ 
+ #include "3rdparty/trap.h"
+@@ -30,9 +32,16 @@ private:
+ 
+ public:
+ 	enum {
+-		IOCTL_SET_VPID   = 1,
+-		IOCTL_SET_APID   = 2,
++#ifdef HAVE_EXT_PID
++		IOCTL_SET_VPID	 = 11,
++		IOCTL_SET_APID	 = 12,
++		IOCTL_SET_PMTPID = 13,
++#else
++		IOCTL_SET_VPID	 = 1,
++		IOCTL_SET_APID	 = 2,
+ 		IOCTL_SET_PMTPID = 3,
++#endif
++
+ 		IOCTL_START_TRANSCODING = 100,
+ 		IOCTL_STOP_TRANSCODING  = 200
+ 	};
