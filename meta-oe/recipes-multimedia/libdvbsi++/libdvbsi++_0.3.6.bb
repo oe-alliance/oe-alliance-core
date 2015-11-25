@@ -3,7 +3,7 @@ AUTHOR = "Andreas Oberritter"
 SECTION = "libs/multimedia"
 LICENSE = "LGPLv2.1"
 LIC_FILES_CHKSUM = "file://COPYING;md5=a6f89e2100d9b6cdffcea4f398e37343"
-PR = "r3"
+PR = "r2"
 
 SRC_URI = "http://www.saftware.de/${PN}/${P}.tar.bz2"
 SRC_URI += "file://transport_protocol_descriptor.patch"
@@ -15,6 +15,3 @@ inherit autotools pkgconfig
 SRC_URI_append_sh4 = " \
     file://libdvbsi++-fix-unaligned-access-on-SuperH.patch \
 "
-
-CFLAGS_vusolo4k += " -fstack-protector-all "
-CXXFLAGS_vusolo4k += " -fstack-protector-all "

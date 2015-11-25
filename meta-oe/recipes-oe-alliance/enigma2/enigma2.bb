@@ -279,9 +279,6 @@ EXTRA_OECONF = " \
 
 LDFLAGS_prepend = "${@base_contains('GST_VERSION', '1.0', ' -lxml2 ', '', d)}"
 
-CFLAGS_vusolo4k += " -fstack-protector-all "
-CXXFLAGS_vusolo4k += " -fstack-protector-all "
-
 # Swig generated 200k enigma.py file has no purpose for end users
 FILES_${PN}-dbg += "\
     /usr/lib/enigma2/python/enigma.py \
