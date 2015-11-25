@@ -4,5 +4,5 @@ PV="15.1"
 
 require vuplus-platform-util.inc
 
-SRC_URI[md5sum] = "cd790804b97be72bf5cbed28b373fb22"
-SRC_URI[sha256sum] = "e8a53328a3183122239cd8d6bff7c5293cc6827318d97870f2a33086a3f3e346"
+SRC_URI[md5sum] = "ba0fac59d364b8dbfcc2bf87d792ef3b"
+SRC_URI[sha256sum] = "3a826b0c34c5ca21097e78888cbe5354bb70bfda727c5889ba6bd62e0738"
