@@ -11,7 +11,7 @@ DEPENDS = "tslib mpfr gmp"
 SRCREV = "${AUTOREV}"
 PV = "2.3+gitr${SRCPV}"
 PKGV = "2.3+gitr${GITPKGV}"
-PR = "r3"
+PR = "r4"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins2.git;protocol=git"
 
@@ -39,7 +39,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-clevertanken_0.6_mips32el.ipk \
     enigma2-plugin-extensions-csfd_10-10-20150103_all.ipk \
     enigma2-plugin-extensions-cyrussettings_1.0.0_all.ipk \
-    enigma2-plugin-extensions-digitalfernsehen_1.1rc4_mips32el.ipk \
+    enigma2-plugin-extensions-digitalfernsehen_1.1rc6_mips32el.ipk \
     enigma2-plugin-extensions-ehue_0.2-r0_all.ipk \
     enigma2-plugin-extensions-enigmalight_0.2-rc1_all.ipk \
     enigma2-plugin-extensions-facebook_1.4_mips32el.ipk \
@@ -52,14 +52,14 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-iptvplayer_81.00.00.00_all.ipk \
     enigma2-plugin-extensions-isettinge2-3.3.3-oe2.0-${@base_contains("TARGET_ARCH", "sh4", "sh4" , "mips32el", d)}.ipk \
     enigma2-plugin-extensions-kicker_3.3rc15_mips32el.ipk \
-    enigma2-plugin-extensions-kino_1.6rc3_mips32el.ipk \
+    enigma2-plugin-extensions-kino_1.6rc5_mips32el.ipk \
     enigma2-plugin-extensions-kodidirect_3.0_r0_all.ipk \
     enigma2-plugin-extensions-livefootball-oe2.0_5.4_all.ipk \
     enigma2-plugin-extensions-mediainfo_2.7r1_all.ipk \
     enigma2-plugin-extensions-mediaportal_7.3.0_all.ipk \
     enigma2-plugin-extensions-mediaportal-wallicons \
     enigma2-plugin-extensions-mediastream_6.0_all.ipk \
-    enigma2-plugin-extensions-moviebrowser_3.6rc3_mips32el.ipk \
+    enigma2-plugin-extensions-moviebrowser_3.6rc6_mips32el.ipk \
     enigma2-plugin-extensions-mp3browser_1.9c8_mips32el.ipk \
     enigma2-plugin-extensions-mtv_0.1_mips32el.ipk \
     enigma2-plugin-extensions-muzutv_1.5rc5_mips32el.ipk \
@@ -75,13 +75,14 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-sherlock_5.01r1_mipsel.ipk \
     enigma2-plugin-extensions-skyrecorder_1.6.1_all.ipk \
     enigma2-plugin-extensions-songs-to_0.1_mips32el.ipk \
-    enigma2-plugin-extensions-spiegelonline_2.5rc15_mips32el.ipk \
+    enigma2-plugin-extensions-spiegelonline_2.5rc16_mips32el.ipk \
     enigma2-plugin-extensions-spinnerselector_2.0r5_mips32el.ipk \
     enigma2-plugin-extensions-sport1ticker_0.4_all.ipk \
     enigma2-plugin-extensions-sportmax_1.2_mips32el.ipk \
     enigma2-plugin-extensions-sportportal_2013_all.ipk \
     enigma2-plugin-extensions-subtitleplayer_3.29rc2_mips32el \
-    enigma2-plugin-extensions-thetvdb_0.7-20120607-r1_mips32el.ipk \
+    enigma2-plugin-extensions-thetvdb_0.7-20120607-r2_mips32el.ipk \
+    enigma2-plugin-extensions-tmbd_6.7_all.ipk \
     enigma2-plugin-extensions-translator_1.0_mips32el.ipk \
     enigma2-plugin-extensions-transmission_2.83_mips32el.ipk \
     enigma2-plugin-extensions-tsmedia_11.0_all.ipk \
