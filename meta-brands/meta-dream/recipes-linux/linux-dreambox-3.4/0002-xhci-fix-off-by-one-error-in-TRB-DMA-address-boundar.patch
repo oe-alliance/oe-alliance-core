@@ -1,0 +1,53 @@
+From 07dbc38508f5b9322f0b2dd796f4ea7d809957b7 Mon Sep 17 00:00:00 2001
+From: Mathias Nyman <mathias.nyman@linux.intel.com>
+Date: Mon, 3 Aug 2015 16:07:48 +0300
+Subject: [PATCH 2/2] xhci: fix off by one error in TRB DMA address boundary
+ check
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+We need to check that a TRB is part of the current segment
+before calculating its DMA address.
+
+Previously a ring segment didn't use a full memory page, and every
+new ring segment got a new memory page, so the off by one
+error in checking the upper bound was never seen.
+
+Now that we use a full memory page, 256 TRBs (4096 bytes), the off by one
+didn't catch the case when a TRB was the first element of the next segment.
+
+This is triggered if the virtual memory pages for a ring segment are
+next to each in increasing order where the ring buffer wraps around and
+causes errors like:
+
+[  106.398223] xhci_hcd 0000:00:14.0: ERROR Transfer event TRB DMA ptr not part of current TD ep_index 0 comp_code 1
+[  106.398230] xhci_hcd 0000:00:14.0: Looking for event-dma fffd3000 trb-start fffd4fd0 trb-end fffd5000 seg-start fffd4000 seg-end fffd4ff0
+
+The trb-end address is one outside the end-seg address.
+
+Cc: <stable@vger.kernel.org>
+Tested-by: Arkadiusz Miśkiewicz <arekm@maven.pl>
+Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+(cherry picked from commit 7895086afde2a05fa24a0e410d8e6b75ca7c8fdd)
+---
+ drivers/usb/host/xhci-ring.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/usb/host/xhci-ring.c b/drivers/usb/host/xhci-ring.c
+index e3d2925..0a619dd 100644
+--- a/drivers/usb/host/xhci-ring.c
++++ b/drivers/usb/host/xhci-ring.c
+@@ -85,7 +85,7 @@ dma_addr_t xhci_trb_virt_to_dma(struct xhci_segment *seg,
+ 		return 0;
+ 	/* offset in TRBs */
+ 	segment_offset = trb - seg->trbs;
+-	if (segment_offset > TRBS_PER_SEGMENT)
++	if (segment_offset >= TRBS_PER_SEGMENT)
+ 		return 0;
+ 	return seg->dma + (segment_offset * sizeof(*trb));
+ }
+-- 
+1.9.1
+
