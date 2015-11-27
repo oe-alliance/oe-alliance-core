@@ -4,11 +4,12 @@ LICENSE = "GPLv2"
 
 LIC_FILES_CHKSUM = "file://${S}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-SRC_URI[md5sum] = "859abc5682c4bb0a919cb8de250c5a13"
-SRC_URI[sha256sum] = "0086b86450bbf478c54e140fb66a22282e560ae39f63a832dbac0b6392820984"
+SRC_URI[md5sum] = "ad154243840671482ff94caea3f80b47"
+SRC_URI[sha256sum] = "1925da3f7fc23fb34e7418c2b57eeec004646b7e63c5fc2c800a1fc1e7b8f499"
 
 inherit kernel machine_kernel_pr
 
+MACHINE_KERNEL_PR_append = ".1"
 DEPENDS = "xz-native bc-native u-boot-mkimage-native gcc"
 
 # Avoid issues with Amlogic kernel binary components
@@ -20,13 +21,12 @@ LINUX_VERSION_EXTENSION ?= "amlogic"
 
 COMPATIBLE_MACHINE = "(wetekplay)"
 
-WETEK_TAG="57df9d9788"
-SRC_URI = "https://github.com/wetek-enigma/linux-wetek/archive/${WETEK_TAG}.tar.gz \
+SRC_URI = "http://github.com/wetek-enigma/linux-wetek/archive/master.tar.gz \
     file://defconfig \
     file://fix-blocking-demux.patch \
 "
 
-S = "${WORKDIR}/linux-wetek-${WETEK_TAG}"
+S = "${WORKDIR}/linux-wetek-master"
 B = "${WORKDIR}/build"
 
 
@@ -59,4 +59,7 @@ do_install_append () {
     touch ${STAGING_KERNEL_DIR}/include/linux/smp_lock.h
     # remove *.z from installation path those are object files from amlogic for binary modules
     find ${D}/usr/src/kernel -type f -name "*.z" | xargs rm -f
+}
+
+do_rm_work() {
 }

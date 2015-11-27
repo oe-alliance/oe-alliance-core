@@ -4,8 +4,8 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/meta/files/common-licenses/GPL-2.0;md5=80
 
 DEPENDS = "freetype libpng"
 
-PR = "r5"
-SRC_URI = "file://displayvfd.tgz"
+PR = "r6"
+SRC_URI = "file://displayvfd.zip"
 
 S = "${WORKDIR}/displayvfd"
 

@@ -7,7 +7,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PV = "5.2"
-PR = "r5"
+PR = "r9"
 
 inherit packagegroup
 
@@ -20,7 +20,7 @@ RRECOMMENDS_${PN} = "\
     enigma2-plugin-skins-opendroid \
     enigma2-plugin-drivers-usbserial \
     enigma2-plugin-extensions-extrapanel \
-    enigma2-plugin-extensions-isetting \
+    enigma2-plugin-extensions-autosetting \
     enigma2-plugin-extensions-autotimer \
     enigma2-plugin-extensions-epgsearch \
     enigma2-plugin-extensions-graphmultiepg \

@@ -19,7 +19,7 @@ PKG_kernel-image = "kernel-image"
 RPROVIDES_kernel-base = "kernel-${KERNEL_VERSION}"
 RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
 
-SRC_URI += "http://118.37.185.125/download/stblinux/stblinux-3.3.0-20130404.tgz \
+SRC_URI += "http://source.mynonpublic.com/stblinux-3.3.0-20130404.tgz \
     file://defconfig \
     file://fix-proc-cputype.patch \
     file://0001-Revert-MIPS-Add-fast-get_user_pages.patch \

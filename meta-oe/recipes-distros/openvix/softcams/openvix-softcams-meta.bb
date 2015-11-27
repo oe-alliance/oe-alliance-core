@@ -5,19 +5,19 @@ require conf/license/license-gplv2.inc
 PROVIDES = "openvix-softcams"
 
 DEPENDS = "\
-    openvix-softcams-cccam \
-    openvix-softcams-cccam209 \
-    openvix-softcams-cccam221 \
-    openvix-softcams-evocamd \
-    openvix-softcams-mgcamd135a \
-    openvix-softcams-mgcamd138 \
-    openvix-softcams-newcs \
-    openvix-softcams-oscam \
-    openvix-softcams-oscam-latest \
-    openvix-softcams-oscam-pcscd \
-    openvix-softcams-oscam-pcscd-latest \
-    openvix-softcams-rqcamd \
-    openvix-softcams-scam \
+    ${@base_contains("TARGET_ARCH", "mipsel", "openvix-softcams-cccam", "", d)} \
+    ${@base_contains("TARGET_ARCH", "mipsel", "openvix-softcams-cccam209", "", d)} \
+    ${@base_contains("TARGET_ARCH", "mipsel", "openvix-softcams-cccam221", "", d)} \
+    ${@base_contains("TARGET_ARCH", "mipsel", "openvix-softcams-evocamd", "", d)} \
+    ${@base_contains("TARGET_ARCH", "mipsel", "openvix-softcams-mgcamd135a", "", d)} \
+    ${@base_contains("TARGET_ARCH", "mipsel", "openvix-softcams-mgcamd138", "", d)} \
+    ${@base_contains("TARGET_ARCH", "mipsel", "openvix-softcams-newcs", "", d)} \
+    ${@base_contains("TARGET_ARCH", "mipsel", "openvix-softcams-oscam-mipsel" , "", d)} \
+    ${@base_contains("TARGET_ARCH", "mipsel", "openvix-softcams-oscam-latest-mipsel" , "openvix-softcams-oscam-latest-arm", d)} \
+    ${@base_contains("TARGET_ARCH", "mipsel", "openvix-softcams-oscam-pcscd-mipsel" , "", d)} \
+    ${@base_contains("TARGET_ARCH", "mipsel", "openvix-softcams-oscam-pcscd-latest-mipsel" , "openvix-softcams-oscam-pcscd-latest-arm", d)} \
+    ${@base_contains("TARGET_ARCH", "mipsel", "openvix-softcams-rqcamd", "", d)} \
+    ${@base_contains("TARGET_ARCH", "mipsel", "openvix-softcams-scam", "", d)} \
     "    
 
-PR = "r8"
+PR = "r10"

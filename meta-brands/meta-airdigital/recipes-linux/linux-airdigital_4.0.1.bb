@@ -12,7 +12,7 @@ SRC_URI[sha256sum] = "6fd63aedd69b3b3b28554cabf71a9efcf05f10758db3d5b99cfb0580e3
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-MACHINE_KERNEL_PR_append = ".0"
+MACHINE_KERNEL_PR_append = ".1"
 
 # By default, kernel.bbclass modifies package names to allow multiple kernels
 # to be installed in parallel. We revert this change and rprovide the versioned
@@ -27,6 +27,7 @@ SRC_URI += "http://source.mynonpublic.com/zgemma/linux-${PV}.tar.gz \
 	file://add-dmx-source-timecode.patch \
 	file://iosched-slice_idle-1.patch \
 	file://0001-bcmgenet.patch \
+	file://sdio-pinmux.patch \
 	"
 
 S = "${WORKDIR}/linux-${PV}"

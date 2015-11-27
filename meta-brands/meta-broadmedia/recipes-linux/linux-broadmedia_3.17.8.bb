@@ -2,13 +2,14 @@ SUMMARY = "Linux kernel for ${MACHINE}"
 SECTION = "kernel"
 LICENSE = "GPLv2"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
+SRC = "20151111"
 
 inherit kernel machine_kernel_pr
 
 KERNEL_RELEASE = "3.17.8"
 
-SRC_URI[md5sum] = "7d2d52a4bc332c6a96ed3a8749c79a15"
-SRC_URI[sha256sum] = "a126e409ad7261fdfb59b65e3b3d53fc442b218eecd1db1de252bdde37c9570e"
+SRC_URI[md5sum] = "5545f4f1ea8e74db7afdd50df40e0fc9"
+SRC_URI[sha256sum] = "81bc9a0981d28fd1b86cf26c642a7b7b529f7364f4f13b52cf1228123c9b2ddf"
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
@@ -20,9 +21,8 @@ PKG_kernel-image = "kernel-image"
 RPROVIDES_kernel-base = "kernel-${KERNEL_VERSION}"
 RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
 
-SRC_URI += "http://source.mynonpublic.com/broadmedia/${MACHINE}-linux-${PV}.tar.gz \
+SRC_URI += "http://source.mynonpublic.com/broadmedia/${MACHINE}-linux-${PV}-${SRC}.tar.gz \
     file://defconfig \
-    file://RFC-V2-MIPS-fix-build-with-binutils-2.24.51.patch \
     "
 
 S = "${WORKDIR}/linux-${PV}"

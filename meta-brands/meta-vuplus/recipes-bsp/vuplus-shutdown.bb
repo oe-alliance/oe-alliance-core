@@ -1,7 +1,7 @@
 require conf/license/license-gplv2.inc
 
 PV = "1.0"
-PR = "r3"
+PR = "r5"
 
 SRC_URI = " \
     file://turnoff_power \

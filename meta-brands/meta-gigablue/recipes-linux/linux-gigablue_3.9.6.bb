@@ -13,6 +13,8 @@ SRC_URI[sha256sum] = "018d9792c6ba00400d7779568bc096cd1df2edb8d57501d3477c473465
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
+MACHINE_KERNEL_PR_append = ".1"
+
 SRC_URI = "http://archiv.openmips.com/gigablue-linux-${PV}-${SRCDATE}.tgz \
         file://defconfig \
         file://nor-maps-gb800solo.patch \

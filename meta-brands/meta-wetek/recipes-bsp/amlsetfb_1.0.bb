@@ -4,7 +4,7 @@ SECTION = "base"
 
 include conf/license/license-gplv2.inc
 
-PR = "r2"
+PR = "r7"
 
 INHIBIT_DEFAULT_DEPS = "1"
 RDEPENDS_${PN} = "initscripts fbset fbset-modes"

@@ -7,18 +7,19 @@ LIC_FILES_CHKSUM = "file://../docs/snes9x-license.txt;md5=2990ee23aa20730e9a6736
                     file://../docs/gpl-2.0.txt;md5=751419260aa954499f7abaabaa882bbe \
                     file://../docs/lgpl-2.1.txt;md5=243b725d71bb5df4a1e5920b344b86ad" 
 
-SRC_URI = "git://github.com/domaemon/snes9x-sdl.git \ 
-           file://cross_compile.patch;striplevel=2 \
-           file://0001-add-more-sdl-keys.patch;striplevel=2 \
-"
+SRC_URI = "git://github.com/emulatorE2/snes9x-sdl.git"
 
-SRCREV = "59d68a2c2ed8cb7266c689e704a1d843961ac6bc"
+inherit gitpkgv autotools-brokensep
+
+SRCREV = "${AUTOREV}"
+PV = "1.53+git${SRCPV}"
+PKGV = "1.53+git${GITPKGV}"
+VER ="1.53"
+PR = "r0"
 
 S = "${WORKDIR}/git/sdl"
 
 DEPENDS = "libsdl"
-
-inherit autotools-brokensep
 
 do_install() {
     install -d ${D}${bindir}

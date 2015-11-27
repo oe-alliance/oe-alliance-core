@@ -22,24 +22,17 @@ MACHINE_EXTRA_RRECOMMENDS = " \
 
 include conf/machine/include/autoload-filesystems.inc
 
-DVBMEDIASINK_CONFIG = "--with-vuplus --with-pcm --with-eac3 --with-amr --with-wmv"
-
-TARGET_ARCH = "mipsel"
-DEFAULTTUNE = "mips32el"
-
 PREFERRED_VERSION_nfs-utils ?= "1.2.8"
 
 PREFERRED_PROVIDER_virtual/kernel = "linux-vuplus"
 PREFERRED_PROVIDER_virtual/blindscan-dvbc = "vuplus-blindscan-utils"
 PREFERRED_PROVIDER_virtual/blindscan-dvbs = "vuplus-blindscan-utils"
 PREFERRED_PROVIDER_virtual/transtreamproxy = "vuplus-transtreamproxy"
-PREFERRED_PROVIDER_virtual/xmbc = "vuplus-xbmc"
+PREFERRED_PROVIDER_virtual/xmbc = "vuplus-xbmc-${MACHINE}"
 
 KERNEL_IMAGETYPE = "vmlinux"
 KERNEL_OUTPUT = "${KERNEL_IMAGETYPE}"
 KERNEL_CONSOLE = "ttyS0,115200n8"
-
-IMAGE_FSTYPES ?= "ubi"
 
 UBI_VOLNAME = "rootfs"
 MKUBIFS_ARGS = "-m 2048 -e 126976 -c ${MKFS_UBI_MAX_ERASE_BLK_COUNT} ${MKFS_EXTRA}"
@@ -52,9 +45,6 @@ IMAGE_CMD_ubi_prepend = " \
     rm -rf ${IMAGE_ROOTFS}/tmp/*; \
     "
 
-MACHINE_FEATURES += "3dtv alsa hdmicec switchoff bootsplash omb"
+MACHINE_FEATURES += "3dtv alsa hdmicec switchoff bootsplash"
 
 BOOTLOGO_FILENAME = "splash_cfe_auto.bin"
-
-require conf/machine/include/tune-mips32.inc
-

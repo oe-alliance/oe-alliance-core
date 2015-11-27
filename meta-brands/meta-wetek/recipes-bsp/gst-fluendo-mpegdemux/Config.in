@@ -1,0 +1,8 @@
+config BR2_PACKAGE_GST_FLUENDO_MPEGDEMUX
+	bool "gst-fluendo-mpegdemux"
+	depends on BR2_PACKAGE_GSTREAMER 
+	
+	help
+	  open source http://core.fluendo.com/gstreamer/src/gst-fluendo-mpegdemux/
+
+

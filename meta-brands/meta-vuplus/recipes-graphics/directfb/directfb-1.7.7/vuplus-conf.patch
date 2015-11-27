@@ -1,0 +1,28 @@
+diff --git a/src/misc/conf.c b/src/misc/conf.c
+index 7cc6e18..e46e75a 100644
+--- a/src/misc/conf.c
++++ b/src/misc/conf.c
+@@ -465,11 +465,11 @@ static void config_allocate( void )
+      dfb_config->pci.dev                  = 0;
+      dfb_config->pci.func                 = 0;
+ 
+-     dfb_config->banner                   = true;
++     dfb_config->banner                   = false; // vuplus
+      dfb_config->deinit_check             = true;
+      dfb_config->mmx                      = true;
+-     dfb_config->vt                       = true;
+-     dfb_config->vt_switch                = true;
++     dfb_config->vt                       = false; // vuplus
++     dfb_config->vt_switch                = false; // vuplus
+      dfb_config->vt_num                   = -1;
+      dfb_config->vt_switching             = true;
+      dfb_config->kd_graphics              = true;
+@@ -479,7 +479,7 @@ static void config_allocate( void )
+      dfb_config->mouse_gpm_source         = false;
+      dfb_config->mouse_source             = D_STRDUP( DEV_NAME );
+      dfb_config->linux_input_grab         = false;
+-     dfb_config->linux_input_force        = false;
++     dfb_config->linux_input_force        = true; // vuplus
+      dfb_config->window_policy            = -1;
+      dfb_config->buffer_mode              = -1;
+      dfb_config->wm                       = D_STRDUP( "default" );
