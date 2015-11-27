@@ -1,0 +1,32 @@
+From 8dc9a116247937cbc67ea45a1b1a448d8a7da626 Mon Sep 17 00:00:00 2001
+From: Mathias Nyman <mathias.nyman@linux.intel.com>
+Date: Fri, 29 May 2015 17:01:53 +0300
+Subject: [PATCH 1/2] xhci: Return correct number of tranferred bytes for
+ stalled control endpoints
+
+Fix the xhci driver from bluntly setting the transferred length to 0 if
+we get a STALL on anything else than the data stage of a control transfer.
+
+Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+(cherry picked from commit 22ae47e65e7c1819e3598b16fcedc469ff97ec58)
+---
+ drivers/usb/host/xhci-ring.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/usb/host/xhci-ring.c b/drivers/usb/host/xhci-ring.c
+index 5e93425..e3d2925 100644
+--- a/drivers/usb/host/xhci-ring.c
++++ b/drivers/usb/host/xhci-ring.c
+@@ -2037,7 +2037,7 @@ static int process_ctrl_td(struct xhci_hcd *xhci, struct xhci_td *td,
+ 			td->urb->actual_length =
+ 				td->urb->transfer_buffer_length -
+ 				EVENT_TRB_LEN(le32_to_cpu(event->transfer_len));
+-		else
++		else if (!td->urb_length_set)
+ 			td->urb->actual_length = 0;
+ 
+ 		return finish_td(xhci, td, event_trb, event, ep, status, false);
+-- 
+1.9.1
+
