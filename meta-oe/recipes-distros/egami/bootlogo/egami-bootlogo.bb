@@ -9,7 +9,7 @@ require conf/license/license-gplv2.inc
 RDEPENDS_${PN} += "showiframe"
 
 PV = "2.0"
-PR = "r1"
+PR = "r2"
 
 S = "${WORKDIR}"
 
@@ -31,7 +31,6 @@ SRC_URI_append_vuduo2 = "file://lcdbootlogo.png file://bootlogo.py file://splash
 BINARY_VERSION = "1.3"
 
 SRC_URI += "${@base_contains("MACHINE_FEATURES", "dreamboxv1", "http://dreamboxupdate.com/download/opendreambox/2.0.0/dreambox-bootlogo/dreambox-bootlogo_${BINARY_VERSION}_${MACHINE_ARCH}.tar.bz2;name=${MACHINE_ARCH}" , "", d)}"
-SRC_URI += "${@base_contains("DISTRO_FEATURES", "extrasplash", "file://cfe.bmp file://finished.bmp file://imageversion.bmp file://kernel.bmp file://rootfs.bmp file://splash.bmp", "", d)}"
 
 SRC_URI[dm800.md5sum] = "0aacd07cc4d19b388c6441b007e3525a"
 SRC_URI[dm800.sha256sum] = "978a7c50fd0c963013477b5ba08462b35597ea130ae428c828bfcbb5c7cf4cac"
@@ -98,24 +97,6 @@ do_deploy() {
     if [ -e splash.bin ]; then
         install -m 0644 splash.bin ${DEPLOYDIR}/${BOOTLOGO_FILENAME}
     fi
-    if [ -e cfe.bmp ]; then
-        install -m 0644 cfe.bmp ${DEPLOYDIR}/cfe.bmp
-    fi    
-    if [ -e finished.bmp ]; then
-        install -m 0644 finished.bmp ${DEPLOYDIR}/finished.bmp
-    fi     
-    if [ -e imageversion.bmp ]; then
-        install -m 0644 imageversion.bmp ${DEPLOYDIR}/imageversion.bmp
-    fi         
-    if [ -e kernel.bmp ]; then
-        install -m 0644 kernel.bmp ${DEPLOYDIR}/kernel.bmp
-    fi     
-    if [ -e rootfs.bmp ]; then
-        install -m 0644 rootfs.bmp ${DEPLOYDIR}/rootfs.bmp
-    fi         
-    if [ -e splash.bmp ]; then
-        install -m 0644 splash.bmp ${DEPLOYDIR}/splash.bmp
-    fi       
     if [ -e lcdsplash.bin ]; then
         install -m 0644 lcdsplash.bin ${DEPLOYDIR}/lcdsplash.bin
     fi
