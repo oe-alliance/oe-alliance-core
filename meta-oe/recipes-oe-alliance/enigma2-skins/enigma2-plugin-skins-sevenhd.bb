@@ -1,14 +1,14 @@
-SUMMARY = "SevenHD Skin for Enigma2 by Kraven and oerlgrey"
-MAINTAINER = "Kraven and oerlgrey"
+SUMMARY = "Skin for Enigma2 (HD, FHD, UHD, 4K)"
+MAINTAINER = "Team Kraven"
 
 require conf/license/license-gplv2.inc
 
 inherit gitpkgv allarch
 
 SRCREV = "${AUTOREV}"
-PV = "3.6.12+git${SRCPV}"
-PKGV = "3.6.12+git${GITPKGV}"
-VER="3.6.12"
+PV = "3.6.15+git${SRCPV}"
+PKGV = "3.6.15+git${GITPKGV}"
+VER="3.6.15"
 
 RDEPENDS_${PN} = "python-requests python-subprocess"
 
