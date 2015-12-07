@@ -11,7 +11,7 @@ DEPENDS = "tslib mpfr gmp"
 SRCREV = "${AUTOREV}"
 PV = "3.2+gitr${SRCPV}"
 PKGV = "3.2+gitr${GITPKGV}"
-PR = "r8"
+PR = "r9"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -72,6 +72,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-picturecenterfs_6.10_all.ipk \
     enigma2-plugin-extensions-planerfs_6.59_all.ipk \
     enigma2-plugin-extensions-pluginspanel_1.0_r01_all.ipk \
+    enigma2-plugin-extensions-radioo_0.45c_all.ipk \
     enigma2-plugin-extensions-screengrabber_2.1a_mips32el.ipk \
     enigma2-plugin-extensions-screensaver_5.6.9_all.ipk \
     enigma2-plugin-extensions-sherlock_5.01r1_mipsel.ipk \
