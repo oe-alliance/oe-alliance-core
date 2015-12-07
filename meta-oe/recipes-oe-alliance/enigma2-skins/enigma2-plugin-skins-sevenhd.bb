@@ -6,9 +6,9 @@ require conf/license/license-gplv2.inc
 inherit gitpkgv allarch
 
 SRCREV = "${AUTOREV}"
-PV = "3.6.15+git${SRCPV}"
-PKGV = "3.6.15+git${GITPKGV}"
-VER="3.6.15"
+PV = "3.6.20+git${SRCPV}"
+PKGV = "3.6.20+git${GITPKGV}"
+VER="3.6.20"
 
 RDEPENDS_${PN} = "python-requests python-subprocess"
 
@@ -16,7 +16,7 @@ SRC_URI="git://github.com/KravenHD/SevenHD.git;protocol=git"
 
 FILES_${PN} = "/usr/*"
 
-S = "${WORKDIR}/git"
+S = "${WORKDIR}/git/data"
 
 do_compile_append() {
 python -O -m compileall ${S}
