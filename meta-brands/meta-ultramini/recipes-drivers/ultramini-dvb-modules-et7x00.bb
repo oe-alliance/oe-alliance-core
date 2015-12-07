@@ -1,8 +1,8 @@
 KV = "3.18.24"
-SRCDATE = "20151109"
+SRCDATE = "20151202"
 
 SRC_URI = "http://source.mynonpublic.com/ultramini/${MACHINE_DRIVER}-drivers-${KV}-${SRCDATE}.zip"
 require ultramini-dvb-modules.inc
 
-SRC_URI[md5sum] = "22a10f5310649afdb72dbd2f49c897a5"
-SRC_URI[sha256sum] = "4a433619a9a7efc16c7eeca4ca0505009a23cfda7e1edf4e18af4a03fb3380e8"
+SRC_URI[md5sum] = "16e530e5cf87a4c0c49a93dae43fe469"
+SRC_URI[sha256sum] = "cbaab2837c7c98df8f74821a9524d85de769005635f26ab337c533a9447da4b2"
