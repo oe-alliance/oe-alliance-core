@@ -169,7 +169,7 @@ MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS = "\
     "
 
 MACHINE_EXTRA_RRECOMMENDS = " \
-    gstreamer1.0-plugin-dvbmediasink \
+    ${@base_contains("GST_VERSION", "1.0", "gstreamer1.0-plugin-dvbmediasink", "gst-plugin-dvbmediasink", d)} \
     "
 
 include conf/machine/include/autoload-filesystems.inc
