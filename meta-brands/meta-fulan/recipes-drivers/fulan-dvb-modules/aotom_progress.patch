@@ -1,0 +1,78 @@
+diff --git a/frontcontroller/aotom_spark/aotom_procfs.c b/frontcontroller/aotom_spark/aotom_procfs.c
+index 340a593..2dc2913 100644
+--- a/frontcontroller/aotom_spark/aotom_procfs.c
++++ b/frontcontroller/aotom_spark/aotom_procfs.c
+@@ -34,6 +34,7 @@
+  *  /proc/
+  *             |
+  *             +--- vfd (w)
++ "             +--- progress (rw)
+  *  /proc/stb/fp
+  *             |
+  *             +--- aotom (w)
+@@ -101,6 +102,7 @@ extern int aotomGetVersion();
+ 
+ static int rtc_offset = 0;
+ static u32 wakeup_time = 0;
++static int progress = 0;
+ 
+ static int vfd_write(struct file *file, const char __user *buf,
+                            unsigned long count, void *data)
+@@ -121,6 +123,49 @@ static int vfd_write(struct file *file, const char __user *buf,
+   return ret;
+ }
+ 
++static int progress_write(struct file *file, const char __user *buf,
++                           unsigned long count, void *data)
++{
++	char* page;
++	char* myString;
++	ssize_t ret = -ENOMEM;
++	page = (char*)__get_free_page(GFP_KERNEL);
++	if (page)
++	{
++		ret = -EFAULT;
++		if (copy_from_user(page, buf, count))
++			goto out;
++		myString = (char*) kmalloc(count+1, GFP_KERNEL);
++		strncpy(myString, page, count);
++		myString[count] = '\0';
++		sscanf(myString, "%d", &progress);
++		kfree(myString);
++		if (aotomGetVersion() != YWPANEL_FP_DISPTYPE_LED) {
++			myString = (char*) kmalloc(count+6, GFP_KERNEL);
++			if (myString) {
++				strcpy(myString, "Load ");
++				strncat(myString, page, count);
++				aotomWriteText(myString, (count+6) < 8 ? (count+6) : 8);
++				kfree(myString);
++			}
++		}
++		else {
++			aotomWriteText(page, count);
++		}
++	}
++	ret = count;
++out:
++	free_page((unsigned long)page);
++	return ret;
++}
++
++static int progress_read(char *page, char **start, off_t off, int count, int *eof, void *data) {
++	int len = 0;
++	if(NULL != page)
++		len = sprintf(page,"%d\n", progress);
++	return len;
++}
++
+ // Proc for accessing quick control of aotom
+ // String format: fxy
+ // f is "l" (for led) or "i" (for icons)
+@@ -655,6 +700,7 @@ struct fp_procs
+ } fp_procs[] =
+ {
+   { "vfd", NULL, vfd_write },
++  { "progress", progress_read, progress_write },
+   { "stb/fp/rtc", aotom_read_rtc, aotom_write_rtc },
+   { "stb/fp/rtc_offset", aotom_read_rtc_offset, aotom_write_rtc_offset },
+   { "stb/fp/aotom", NULL, aotom_write },
