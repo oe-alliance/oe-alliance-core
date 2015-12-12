@@ -34,6 +34,7 @@ RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
 SRC_URI = "git://git.stlinux.com/stm/linux-sh4-2.6.32.y.git;protocol=git;branch=stmicro \
     file://linux-kbuild-generate-modules-builtin_stm24_${STM_PATCH_STR}.patch \
     file://linux-sh4-linuxdvb_stm24_${STM_PATCH_STR}.patch;patch=1 \
+    file://linux-sh4-linuxdvb_stm24_${STM_PATCH_STR}_ca.patch;patch=1 \
     file://linux-sh4-sound_stm24_${STM_PATCH_STR}.patch;patch=1 \
     file://linux-sh4-time_stm24_${STM_PATCH_STR}.patch;patch=1 \
     file://linux-sh4-init_mm_stm24_${STM_PATCH_STR}.patch;patch=1 \
