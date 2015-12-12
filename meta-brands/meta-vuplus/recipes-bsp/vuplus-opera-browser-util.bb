@@ -7,7 +7,7 @@ require conf/license/license-close.inc
 DEPENDS = "tslib mpfr gmp libcrypto0.9.8 ${@base_contains("GST_VERSION", "1.0", "gstreamer1.0", "gstreamer", d)}"
 RDEPENDS_${PN} = "libsysfs2 libgmp10 libmpfr4 vuplus-opera-dumpait libcrypto0.9.8"
 
-SRC_DATE = "20151208_0"
+SRC_DATE = "20151001_1"
 SRC_URI = ""
 
 PR = "r42_${SRC_DATE}"
@@ -57,9 +57,6 @@ do_compile() {
 do_install() {
     install -d ${D}/usr/local/hbb-browser
     mv ${S}/opera/* ${D}/usr/local/hbb-browser/
-    OPENSSL_VERSION=$(pkg-config --modversion "openssl")
-    mv ${D}/usr/local/hbb-browser/lib/hbbtv-ssl-$OPENSSL_VERSION.app ${D}/usr/local/hbb-browser/lib/hbbtv.app
-    rm -f ${D}/usr/local/hbb-browser/lib/hbbtv-ssl*.app
     install -d ${D}/usr/lib
     mv ${S}/dfb/usr/lib/* ${D}/usr/lib/
     mv ${D}/usr/local/hbb-browser/root/jsplugins/ooif-gst-${GSTVER}.so ${D}/usr/local/hbb-browser/root/jsplugins/ooif.so
