@@ -117,6 +117,17 @@ RREPLACES_enigma2-plugin-extensions-remotechannelstreamconverter = "enigma2-plug
 DESCRIPTION_enigma2-plugin-systemplugins-wirelessaccesspoint = "Using a Wireless module as AP."
 RDEPENDS_enigma2-plugin-systemplugins-wirelessaccesspoint = "hostapd bridge-utils"
 
+pkg_preinst_enigma2-plugin-systemplugins-autobouquetsmaker_prepend() {
+#!/bin/sh
+echo "Checking for an ABM cache file"
+
+if [ -f /usr/lib/enigma2/python/Plugins/SystemPlugins/AutoBouquetsMaker/providers/providers.cache ]; then
+	rm -f /usr/lib/enigma2/python/Plugins/SystemPlugins/AutoBouquetsMaker/providers/providers.cache > /dev/null 2>&1
+	echo "Cache file has been removed"
+else
+	echo "No cache file found"
+fi
+}
 
 inherit autotools-brokensep gitpkgv pythonnative
 
