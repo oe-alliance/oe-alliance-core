@@ -1,0 +1,34 @@
+From 0aed8c2e1b32692727d8736a2c11c25fd3ae2a8e Mon Sep 17 00:00:00 2001
+From: arn354 <arn354@email.de>
+Date: Sun, 13 Dec 2015 14:58:12 +0100
+Subject: [PATCH] Patch makefile * add EXTRA_CFLAGS * disable POWER_SAVING
+
+---
+ Makefile | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/Makefile b/Makefile
+index c399011..bb8fcaf 100644
+--- a/Makefile
++++ b/Makefile
+@@ -7,6 +7,8 @@ EXTRA_CFLAGS += -O1
+ #EXTRA_CFLAGS += -pedantic
+ #EXTRA_CFLAGS += -Wshadow -Wpointer-arith -Wcast-qual -Wstrict-prototypes -Wmissing-prototypes
+ 
++EXTRA_CFLAGS += -Wframe-larger-than=1536
++
+ EXTRA_CFLAGS += -Wno-unused-variable
+ EXTRA_CFLAGS += -Wno-unused-value
+ EXTRA_CFLAGS += -Wno-unused-label
+@@ -29,7 +31,7 @@ CONFIG_PCI_HCI = n
+ CONFIG_SDIO_HCI = n
+ 
+ CONFIG_MP_INCLUDED = n
+-CONFIG_POWER_SAVING = y
++CONFIG_POWER_SAVING = n
+ CONFIG_USB_AUTOSUSPEND = n
+ CONFIG_HW_PWRP_DETECTION = n
+ CONFIG_WIFI_TEST = n
+-- 
+2.6.1.windows.1
+
