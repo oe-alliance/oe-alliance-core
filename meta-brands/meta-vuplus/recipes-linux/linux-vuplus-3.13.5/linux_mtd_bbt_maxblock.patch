@@ -1,0 +1,13 @@
+diff --git a/include/linux/mtd/bbm.h b/include/linux/mtd/bbm.h
+index 36bb6a5..0380293 100644
+--- a/include/linux/mtd/bbm.h
++++ b/include/linux/mtd/bbm.h
+@@ -123,7 +123,7 @@ struct nand_bbt_descr {
+ #define NAND_BBT_DYNAMICSTRUCT	0x80000000
+ 
+ /* The maximum number of blocks to scan for a bbt */
+-#define NAND_BBT_SCAN_MAXBLOCKS	4
++#define NAND_BBT_SCAN_MAXBLOCKS	8
+ 
+ /*
+  * Constants for oob configuration
