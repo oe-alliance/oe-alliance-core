@@ -130,7 +130,7 @@ index 2643e4b..d6deea0 100644
  };
  
 diff --git a/gstdvbvideosink.c b/gstdvbvideosink.c
-index 40d7466..e0b631f 100644
+index ee723d0..479ed72 100644
 --- a/gstdvbvideosink.c
 +++ b/gstdvbvideosink.c
 @@ -64,6 +64,10 @@
@@ -144,7 +144,7 @@ index 40d7466..e0b631f 100644
  #include <gst/gst.h>
  #include <gst/base/gstbasesink.h>
  
-@@ -242,6 +246,42 @@ GST_STATIC_PAD_TEMPLATE (
+@@ -282,6 +286,42 @@ GST_STATIC_PAD_TEMPLATE (
  	)
  );
  
@@ -187,10 +187,10 @@ index 40d7466..e0b631f 100644
  static void gst_dvbvideosink_init(GstDVBVideoSink *self);
  static void gst_dvbvideosink_dispose(GObject *obj);
  static void gst_dvbvideosink_reset(GObject *obj);
-@@ -339,6 +379,11 @@ static void gst_dvbvideosink_init(GstDVBVideoSink *self)
- 	self->unlockfd[0] = self->unlockfd[1] = -1;
+@@ -380,6 +420,11 @@ static void gst_dvbvideosink_init(GstDVBVideoSink *self)
  	self->saved_fallback_framerate[0] = 0;
  	self->rate = 1.0;
+ 	self->wmv_asf = FALSE;
 +#ifdef VIDEO_SET_ENCODING
 +	self->use_set_encoding = TRUE;
 +#else
@@ -199,7 +199,7 @@ index 40d7466..e0b631f 100644
  
  	gst_base_sink_set_sync(GST_BASE_SINK(self), FALSE);
  	gst_base_sink_set_async_enabled(GST_BASE_SINK(self), TRUE);
-@@ -473,6 +518,9 @@ static gboolean gst_dvbvideosink_event(GstBaseSink *sink, GstEvent *event)
+@@ -514,6 +559,9 @@ static gboolean gst_dvbvideosink_event(GstBaseSink *sink, GstEvent *event)
  		pfd[1].fd = self->fd;
  		pfd[1].events = POLLIN;
  
@@ -209,7 +209,7 @@ index 40d7466..e0b631f 100644
  		GST_BASE_SINK_PREROLL_UNLOCK(sink);
  		while (1)
  		{
-@@ -1676,9 +1724,22 @@ static gboolean gst_dvbvideosink_set_caps(GstBaseSink *basesink, GstCaps *caps)
+@@ -1736,9 +1784,22 @@ static gboolean gst_dvbvideosink_set_caps(GstBaseSink *basesink, GstCaps *caps)
  			if (self->fd >= 0) ioctl(self->fd, VIDEO_STOP, 0);
  			self->playing = FALSE;
  		}
@@ -235,11 +235,11 @@ index 40d7466..e0b631f 100644
  		if (self->fd >= 0) 
  		{
 diff --git a/gstdvbvideosink.h b/gstdvbvideosink.h
-index a20ef17..70b99eb 100644
+index 00ce937..57fc8b3 100644
 --- a/gstdvbvideosink.h
 +++ b/gstdvbvideosink.h
 @@ -136,6 +136,8 @@ struct _GstDVBVideoSink
- 	gboolean must_send_header;
+ 	gboolean must_send_header, wmv_asf;
  	gint8 ok_to_write;
  
 +	gboolean use_set_encoding;

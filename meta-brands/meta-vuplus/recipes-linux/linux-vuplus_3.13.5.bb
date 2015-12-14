@@ -35,7 +35,7 @@ SRC_URI = "http://archive.vuplus.com/download/kernel/stblinux-${KV}.tar.bz2 \
     "
 
 SRC_URI_append_vuduo2 = "file://brcm_s3_wol.patch;patch=1;pnum=1 "
-SRC_URI_append_vuduose = "file://brcm_s3_wol.patch;patch=1;pnum=1 \
+SRC_URI_append_vusolose = "file://brcm_s3_wol.patch;patch=1;pnum=1 \
                           file://linux_mtd_bbt_maxblock.patch \
 "
 SRC_URI_append_vusolo2 = "file://linux-bcm_ethernet.patch;patch=1;pnum=1 "

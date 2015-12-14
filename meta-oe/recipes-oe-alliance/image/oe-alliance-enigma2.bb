@@ -10,7 +10,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "1.0"
-PR = "r65"
+PR = "r66"
 
 DEPENDS = "enigma2 enigma2-locale-meta enigma2-plugins enigma2-oe-alliance-plugins oe-alliance-feeds enigma2-3rdparty-plugins oe-alliance-wifi"
 
@@ -53,7 +53,6 @@ RRECOMMENDS_${PN} = "\
     ${@base_contains("MACHINE_FEATURES", "transcoding", "enigma2-plugin-systemplugins-transcodingsetup", "", d)} \
     ${@base_contains("MACHINE_FEATURES", "inibt", "enigma2-plugin-extensions-btdevicesmanager" , "", d)} \
     ${@base_contains("MACHINE_FEATURES", "minitv", "enigma2-plugin-extensions-minitv" , "", d)} \
-    ${@base_contains("MACHINE_FEATURES", "fastzap", "enigma2-plugin-systemplugins-fastzapsupport" , "", d)} \
     "
 
 GST_BASE_DVD = "${@base_contains('GST_VERSION', '1.0', ' \

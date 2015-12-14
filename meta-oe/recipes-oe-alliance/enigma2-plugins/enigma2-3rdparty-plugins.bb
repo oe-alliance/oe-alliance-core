@@ -11,9 +11,9 @@ DEPENDS = "tslib mpfr gmp"
 SRCREV = "${AUTOREV}"
 PV = "3.2+gitr${SRCPV}"
 PKGV = "3.2+gitr${GITPKGV}"
-PR = "r6"
+PR = "r12"
 
-SRC_URI="git://github.com/oe-alliance/3rdparty-plugins2.git;protocol=git"
+SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
 EXTRA_OECONF = " \
     BUILD_SYS=${BUILD_SYS} \
@@ -50,7 +50,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-googlenewsreader_1.0_mips32el.ipk \
     enigma2-plugin-extensions-hdmitest_0.4_mipsel.ipk \
     enigma2-plugin-extensions-hetweer_2.7rc3_mips32el.ipk \
-    enigma2-plugin-extensions-iptvplayer_81.00.00.00_all.ipk \
+    enigma2-plugin-extensions-iptvplayer_90.02.00.00_all.ipk \
     enigma2-plugin-extensions-isettinge2-3.3.3-oe2.0-${@base_contains("TARGET_ARCH", "sh4", "sh4" , "mips32el", d)}.ipk \
     enigma2-plugin-extensions-kicker_3.3rc15_mips32el.ipk \
     enigma2-plugin-extensions-kino_1.6rc5_mips32el.ipk \
@@ -69,9 +69,12 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-opkg-tools_1.3_mipsel.ipk \
     enigma2-plugin-extensions-oscamstatusview_0.7rc1_mips32el.ipk \
     enigma2-plugin-extensions-piconmanager_2.1-20150216-r2_all.ipk \
+    enigma2-plugin-extensions-piconsupdater_0.3.4_mips32el.ipk \
     enigma2-plugin-extensions-picturecenterfs_6.10_all.ipk \
     enigma2-plugin-extensions-planerfs_6.59_all.ipk \
+    enigma2-plugin-extensions-pluginupdater_0.1r2_all.ipk \
     enigma2-plugin-extensions-pluginspanel_1.0_r01_all.ipk \
+    enigma2-plugin-extensions-radioo_0.45c_all.ipk \
     enigma2-plugin-extensions-screengrabber_2.1a_mips32el.ipk \
     enigma2-plugin-extensions-screensaver_5.6.9_all.ipk \
     enigma2-plugin-extensions-sherlock_5.01r1_mipsel.ipk \
@@ -92,7 +95,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-verkehrsinfo_1.1rc1_mips32el.ipk \
     enigma2-plugin-extensions-vhannibalautosettings_1.1_mips32el.ipk \
     enigma2-plugin-extensions-vuplusforum_0.7rc3_mips32el.ipk \
-    enigma2-plugin-extensions-webmedia_10.0_r02_oe2.0_all.ipk \
+    enigma2-plugin-extensions-webmedia_14.0_r0_all.ipk \
     enigma2-plugin-extensions-webradiofs_13.52_all.ipk \
     enigma2-plugin-extensions-wikipedia_2.2rc7_mips32el.ipk \
     enigma2-plugin-extensions-wwech_1.01_all.ipk \
@@ -141,6 +144,7 @@ THIRDPARTY_MACHINE_PLUGINS_et7x00 = " \
     "
 THIRDPARTY_MACHINE_PLUGINS_et8000 = " \
     enigma2-plugin-extensions-newxtrend-hbbtv_3.9_mips32el.ipk \
+    enigma2-plugin-systemplugins-autorebootET8000_1.2_mipsel.ipk \
      "
 THIRDPARTY_MACHINE_PLUGINS_et8500 = " \
     enigma2-plugin-extensions-newxtrend-hbbtv_3.9_mips32el.ipk \
