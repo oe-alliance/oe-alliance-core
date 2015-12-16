@@ -12,7 +12,7 @@ PACKAGE_ARCH := "${MACHINE_ARCH}"
 SRCREV = "${AUTOREV}"
 PV = "2.1+git${SRCPV}"
 PKGV = "2.1+git${GITPKGV}"
-PR = "r2"
+PR = "r3"
 
 SRC_URI = "git://github.com/OpenViX/skins.git;protocol=git"
 
@@ -125,6 +125,7 @@ DESCRIPTION_enigma2-plugin-skins-openvix-metrixfhd = "1080 skin for OpenViX"
 DESCRIPTION_enigma2-plugin-skins-openvix-mynovum-fhd2-black = "1080 skin for OpenViX"
 DESCRIPTION_enigma2-plugin-skins-openvix-mynovum-fhd2 = "1080 skin for OpenViX"
 DESCRIPTION_enigma2-plugin-skins-openvix-novum-fhd-slim = "1080 skin for OpenViX"
+DESCRIPTION_enigma2-plugin-skins-openvix-halo = "1080 skin for OpenViX"
 
 inherit autotools-brokensep
 
