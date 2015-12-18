@@ -11,7 +11,7 @@ DEPENDS = "tslib mpfr gmp"
 SRCREV = "${AUTOREV}"
 PV = "2.3+gitr${SRCPV}"
 PKGV = "2.3+gitr${GITPKGV}"
-PR = "r12"
+PR = "r13"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -40,7 +40,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-clevertanken_0.6_mips32el.ipk \
     enigma2-plugin-extensions-csfd_10-10-20150103_all.ipk \
     enigma2-plugin-extensions-cyrussettings_1.0.0_all.ipk \
-    enigma2-plugin-extensions-digitalfernsehen_1.1rc6_mips32el.ipk \
+    enigma2-plugin-extensions-digitalfernsehen_1.1rc9_mips32el.ipk \
     enigma2-plugin-extensions-ehue_0.2-r0_all.ipk \
     enigma2-plugin-extensions-enigmalight_0.2-rc1_all.ipk \
     enigma2-plugin-extensions-facebook_1.4_mips32el.ipk \
@@ -53,7 +53,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-iptvplayer_90.02.00.00_all.ipk \
     enigma2-plugin-extensions-isettinge2-3.3.3-oe2.0-${@base_contains("TARGET_ARCH", "sh4", "sh4" , "mips32el", d)}.ipk \
     enigma2-plugin-extensions-kicker_3.3rc15_mips32el.ipk \
-    enigma2-plugin-extensions-kino_1.6rc5_mips32el.ipk \
+    enigma2-plugin-extensions-kino_1.6rc7_mips32el.ipk \
     enigma2-plugin-extensions-kodidirect_3.0_r0_all.ipk \
     enigma2-plugin-extensions-livefootball-oe2.0_5.4_all.ipk \
     enigma2-plugin-extensions-mediainfo_2.7r1_all.ipk \
@@ -70,7 +70,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-oscamstatusview_0.7rc1_mips32el.ipk \
     enigma2-plugin-extensions-piconmanager_2.1-20150216-r2_all.ipk \
     enigma2-plugin-extensions-piconsupdater_0.3.4_mips32el.ipk \
-    enigma2-plugin-extensions-picturecenterfs_6.10_all.ipk \
+    enigma2-plugin-extensions-picturecenterfs_6.25_all.ipk \
     enigma2-plugin-extensions-planerfs_6.59_all.ipk \
     enigma2-plugin-extensions-pluginupdater_0.1r2_all.ipk \
     enigma2-plugin-extensions-pluginspanel_1.0_r01_all.ipk \
