@@ -18,4 +18,5 @@ RRECOMMENDS_${PN} = "\
     enigma2-plugin-extensions-cooltvguide \
     enigma2-plugin-systemplugins-autobouquetsmaker\
     enigma2-plugin-extensions-gbipboxclient \
+    enigma2-plugin-extensions-oscamsmartcard \
     "
