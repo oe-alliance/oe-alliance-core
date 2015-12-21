@@ -177,6 +177,9 @@ THIRDPARTY_MACHINE_PLUGINS_inihde2 = " \
 THIRDPARTY_MACHINE_PLUGINS_ultramini = " \
     enigma2-plugin-extensions-xpeedlx-hbbtv_1.2-r0-11+43da75f-r0_mips32el.ipk \
     "
+THIRDPARTY_MACHINE_PLUGINS_9900lx = " \
+    enigma2-plugin-extensions-hbbtv_1.0-r0-15+c25d268-r0_9900lx.ipk \
+    "
 
 do_install[noexec] = "1"
 do_package_write_ipk[noexec] = "1"

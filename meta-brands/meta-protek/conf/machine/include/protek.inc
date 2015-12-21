@@ -11,7 +11,7 @@ ROOTFS_FILE = "rootfs.bin"
 DVBPROVIDER = "kernel"
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS = "\
-    protek-dvb-modules-${MACHINE_DRIVER} \
+    protek-dvb-modules-${MACHINE} \
     "
 
 MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS = "\

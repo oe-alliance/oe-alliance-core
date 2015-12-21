@@ -1,7 +1,7 @@
 KV = "3.18.24"
 SRCDATE = "20151221"
 
-SRC_URI = "http://source.mynonpublic.com/protek/${MACHINE_DRIVER}-drivers-${KV}-${SRCDATE}.zip"
+SRC_URI = "http://source.mynonpublic.com/protek/${MACHINE}-drivers-${KV}-${SRCDATE}.zip"
 require protek-dvb-modules.inc
 
 SRC_URI[md5sum] = "8a1fbfe5f2743611925e6c4db2ba0bb4"
