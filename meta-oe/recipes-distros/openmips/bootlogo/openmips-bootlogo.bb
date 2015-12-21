@@ -9,8 +9,8 @@ require conf/license/license-gplv2.inc
 
 RDEPENDS_${PN} += "showiframe"
 
-PV = "4.0"
-PR = "r9"
+PV = "4.3"
+PR = "r0"
 
 S = "${WORKDIR}"
 
