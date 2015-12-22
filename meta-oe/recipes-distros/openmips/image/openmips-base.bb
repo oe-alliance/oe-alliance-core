@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=4d92cd373abda3937c2bc47fbc49d
 ALLOW_EMPTY_${PN} = "1"
 
 PV = "4.3"
-PR = "r0"
+PR = "r1"
 
 inherit packagegroup
 
@@ -24,7 +24,6 @@ RDEPENDS_${PN} = "\
     ofgwrite \
     rtmpdump \
     zip \
-    enigma2-plugin-systemplugins-gbciplushelper \
     libcrypto-compat-0.9.8 \
     ${@base_contains("MACHINE_FEATURES", "singlecore", "", \
     " \
@@ -33,4 +32,5 @@ RDEPENDS_${PN} = "\
     ", d)} \
     packagegroup-base-smbfs-client \
     packagegroup-base-smbfs \
+    ${@base_contains("MACHINE_FEATURES", "ci", "enigma2-plugin-systemplugins-gbciplushelper" , "", d)} \
     "
