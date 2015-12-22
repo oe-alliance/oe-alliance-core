@@ -32,5 +32,4 @@ RDEPENDS_${PN} = "\
     packagegroup-base-smbfs \
     ofgwrite \
     bash \
-    ${@base_contains("MACHINE_FEATURES", "ci", "enigma2-plugin-systemplugins-gbciplushelper" , "", d)} \
     "
