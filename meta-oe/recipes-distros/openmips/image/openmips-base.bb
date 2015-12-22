@@ -23,7 +23,6 @@ RDEPENDS_${PN} = "\
     python-imaging \
     rtmpdump \
     zip \
-    enigma2-plugin-systemplugins-gbciplushelper \
     ${@base_contains("MACHINE_FEATURES", "singlecore", "", \
     " \
     packagegroup-base-smbfs-server \
@@ -33,4 +32,5 @@ RDEPENDS_${PN} = "\
     packagegroup-base-smbfs \
     ofgwrite \
     bash \
+    ${@base_contains("MACHINE_FEATURES", "ci", "enigma2-plugin-systemplugins-gbciplushelper" , "", d)} \
     "
