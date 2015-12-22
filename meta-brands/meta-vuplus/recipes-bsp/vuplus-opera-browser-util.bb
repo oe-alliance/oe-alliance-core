@@ -6,7 +6,7 @@ LICENSE = "CLOSED"
 DEPENDS = "tslib mpfr gmp ${@base_contains("GST_VERSION", "1.0", "gstreamer1.0", "gstreamer", d)}"
 RDEPENDS_${PN} = "tslib-conf libts-1.0-0 libsysfs2 libgmp10 libmpfr4 vuplus-opera-dumpait"
 
-SRC_DATE = "20151213_0"
+SRC_DATE = "20151222_0"
 SRC_URI = ""
 
 PR = "r36_${SRC_DATE}"
