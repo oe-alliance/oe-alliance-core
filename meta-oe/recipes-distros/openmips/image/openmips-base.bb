@@ -32,5 +32,4 @@ RDEPENDS_${PN} = "\
     ", d)} \
     packagegroup-base-smbfs-client \
     packagegroup-base-smbfs \
-    ${@base_contains("MACHINE_FEATURES", "ci", "enigma2-plugin-systemplugins-gbciplushelper" , "", d)} \
     "
