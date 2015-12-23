@@ -11,7 +11,7 @@ DEPENDS = "tslib mpfr gmp"
 SRCREV = "${AUTOREV}"
 PV = "3.2+gitr${SRCPV}"
 PKGV = "3.2+gitr${GITPKGV}"
-PR = "r15"
+PR = "r16"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -181,7 +181,8 @@ THIRDPARTY_MACHINE_PLUGINS_9900lx = " \
     enigma2-plugin-extensions-hbbtv_1.0-r0-15+c25d268-r0_9900lx.ipk \
     "
 THIRDPARTY_MACHINE_PLUGINS_g300 = " \
-    enigma2-plugin-extensions-hbbtv-g300_1.0_mips32el.ipk \
+    ${@base_contains('MACHINEBUILD', 'sf3038', 'enigma2-plugin-extensions-hbbtv-octagon_1.0_mips32el.ipk' , '', d)} \
+    ${@base_contains('MACHINEBUILD', 'mbtwinplus', 'enigma2-plugin-extensions-hbbtv-miracle_1.0_mips32el.ipk' , '', d)} \
     "
 
 do_install[noexec] = "1"
