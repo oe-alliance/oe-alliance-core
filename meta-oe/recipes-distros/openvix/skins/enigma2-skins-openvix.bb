@@ -10,9 +10,9 @@ inherit gitpkgv
 
 PACKAGE_ARCH := "${MACHINE_ARCH}"
 SRCREV = "${AUTOREV}"
-PV = "2.1+git${SRCPV}"
-PKGV = "2.1+git${GITPKGV}"
-PR = "r3"
+PV = "3.2+git${SRCPV}"
+PKGV = "3.2+git${GITPKGV}"
+PR = "r1"
 
 SRC_URI = "git://github.com/OpenViX/skins.git;protocol=git"
 
@@ -97,8 +97,8 @@ RDEPENDS_enigma2-plugin-skins-openvix-vixbmc-1080-confluence = "enigma2-plugin-s
 
 FILES_enigma2-plugin-skincomponents-metrix += " ${libdir}/enigma2/python/Components/Converter/RemainingToTextMod.pyo ${libdir}/enigma2/python/Components/Converter/MetrixCombinedEventName.pyo ${libdir}/enigma2/python/Components/Converter/ClockToTextMod.pyo ${libdir}/enigma2/python/Components/Converter/MetrixRefString.pyo ${libdir}/enigma2/python/Components/Converter/vhdConvEventName.pyo ${libdir}/enigma2/python/Components/Converter/MetrixWeather.pyo ${libdir}/enigma2/python/Components/Converter/EventNameMod.pyo ${libdir}/enigma2/python/Components/Renderer/VReference.py ${libdir}/enigma2/python/Components/Renderer/VReference.pyo ${libdir}/enigma2/python/Components/Renderer/XPicon.pyo ${libdir}/enigma2/python/Components/Renderer/XPiconChannel.pyo ${libdir}/enigma2/python/Components/Renderer/VVolumeText.pyo ${libdir}/enigma2/python/Components/Renderer/NextEvent.pyo"
 FILES_enigma2-plugin-skincomponents-metrix-src += " ${libdir}/enigma2/python/Components/Converter/EventNameMod.py ${libdir}/enigma2/python/Components/Converter/RemainingToTextMod.py ${libdir}/enigma2/python/Components/Converter/vhdConvEventName.py ${libdir}/enigma2/python/Components/Converter/MetrixRefString.py ${libdir}/enigma2/python/Components/Converter/MetrixWeather.py ${libdir}/enigma2/python/Components/Converter/MetrixCombinedEventName.py ${libdir}/enigma2/python/Components/Converter/ClockToTextMod.py ${libdir}/enigma2/python/Components/Renderer/VVolumeText.py ${libdir}/enigma2/python/Components/Renderer/XPicon.py ${libdir}/enigma2/python/Components/Renderer/XPiconChannel.py ${libdir}/enigma2/python/Components/Renderer/NextEvent.py"
-FILES_enigma2-plugin-skincomponents-novum += " ${libdir}/enigma2/python/Components/Renderer/NovSingleEpgListNobile.pyo"
-FILES_enigma2-plugin-skincomponents-novum-src += " ${libdir}/enigma2/python/Components/Renderer/NovSingleEpgListNobile.py"
+FILES_enigma2-plugin-skincomponents-novum += " ${libdir}/enigma2/python/Components/Renderer/NovSingleEpgListNobile.pyo  ${libdir}/enigma2/python/Components/Converter/NovumEventsInfo.pyo"
+FILES_enigma2-plugin-skincomponents-novum-src += " ${libdir}/enigma2/python/Components/Renderer/NovSingleEpgListNobile.py  ${libdir}/enigma2/python/Components/Converter/NovumEventsInfo.py"
 
 DESCRIPTION_enigma2-plugin-skins-openvix-vix-day-hd = "720 skin for OpenViX"
 DESCRIPTION_enigma2-plugin-skins-openvix-vix-night-hd = "720 skin for OpenViX"
