@@ -181,7 +181,7 @@ THIRDPARTY_MACHINE_PLUGINS_9900lx = " \
     enigma2-plugin-extensions-hbbtv_1.0-r0-15+c25d268-r0_9900lx.ipk \
     "
 THIRDPARTY_MACHINE_PLUGINS_g300 = " \
-    enigma2-plugin-extensions-hbbtv-g300_1.0_mips32el.ipk
+    enigma2-plugin-extensions-hbbtv-g300_1.0_mips32el.ipk \
     "
 
 do_install[noexec] = "1"
