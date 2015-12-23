@@ -11,7 +11,7 @@ DEPENDS = "tslib mpfr gmp"
 SRCREV = "${AUTOREV}"
 PV = "3.2+gitr${SRCPV}"
 PKGV = "3.2+gitr${GITPKGV}"
-PR = "r16"
+PR = "r17"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -35,7 +35,6 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-bluray_1.5c3_mips32el.ipk \
     enigma2-plugin-extensions-boblight-enigma2_0.8r7_mips32el.ipk \
     enigma2-plugin-extensions-camofs_9.19_all.ipk \
-    enigma2-plugin-systemplugins-channelselectionnavigator_0.8_mipsel.ipk \
     enigma2-plugin-extensions-chefkoch_1.4c4_mips32el.ipk \
     enigma2-plugin-extensions-clevertanken_0.6_mips32el.ipk \
     enigma2-plugin-extensions-csfd_10-10-20150103_all.ipk \
@@ -105,6 +104,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-zdfnewmediathek_1.7rc5_mips32el.ipk \
     enigma2-plugin-feeds-picons.xyz_2015-08-31--19-55-30_all.ipk \
     enigma2-plugin-systemplugins-bouquetsprotection_0.2-rc1_all.ipk \
+    enigma2-plugin-systemplugins-channelselectionnavigator_0.9_mipsel.ipk \
     enigma2-plugin-systemplugins-extnumberzap_1.0-rc12_mipsel.ipk \
     enigma2-plugin-systemplugins-recordinfobar_1.0-rc15_mipsel.ipk \
     "
