@@ -11,7 +11,7 @@ DEPENDS = "tslib mpfr gmp"
 SRCREV = "${AUTOREV}"
 PV = "2.3+gitr${SRCPV}"
 PKGV = "2.3+gitr${GITPKGV}"
-PR = "r13"
+PR = "r14"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -181,6 +181,11 @@ THIRDPARTY_MACHINE_PLUGINS_inihde2 = " \
     "
 THIRDPARTY_MACHINE_PLUGINS_ultramini = " \
     enigma2-plugin-extensions-xpeedlx-hbbtv_1.2-r0-11+43da75f-r0_mips32el.ipk \
+    "
+
+THIRDPARTY_MACHINE_PLUGINS_g300 = " \
+    ${@base_contains('MACHINEBUILD', 'sf3038', 'enigma2-plugin-extensions-hbbtv-octagon_1.0_mips32el.ipk' , '', d)} \
+    ${@base_contains('MACHINEBUILD', 'mbtwinplus', 'enigma2-plugin-extensions-hbbtv-miracle_1.0_mips32el.ipk' , '', d)} \
     "
     
 do_install() {

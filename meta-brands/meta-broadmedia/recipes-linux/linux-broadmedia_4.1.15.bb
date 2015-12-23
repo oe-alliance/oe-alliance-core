@@ -2,17 +2,16 @@ SUMMARY = "Linux kernel for ${MACHINE}"
 SECTION = "kernel"
 LICENSE = "GPLv2"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
-PR = "r0"
-SRC = "20151111"
+SRC = "20151216"
 
-KERNEL_RELEASE = "3.17.8"
+inherit kernel machine_kernel_pr
 
-SRC_URI[md5sum] = "5545f4f1ea8e74db7afdd50df40e0fc9"
-SRC_URI[sha256sum] = "81bc9a0981d28fd1b86cf26c642a7b7b529f7364f4f13b52cf1228123c9b2ddf"
+KERNEL_RELEASE = "4.1.15"
+
+SRC_URI[md5sum] = "606f82d844aebcc8dbd36d6b9e8ffa8c"
+SRC_URI[sha256sum] = "94614db16c16b2b70880132840f25ed2caf168c7938a09b61d75f13f9883d11c"
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
-
-MACHINE_KERNEL_PR_append = ".0"
 
 # By default, kernel.bbclass modifies package names to allow multiple kernels
 # to be installed in parallel. We revert this change and rprovide the versioned
@@ -22,13 +21,11 @@ PKG_kernel-image = "kernel-image"
 RPROVIDES_kernel-base = "kernel-${KERNEL_VERSION}"
 RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
 
-SRC_URI += "http://source.mynonpublic.com/broadmedia/${MACHINE}-linux-${PV}-${SRC}.tar.gz \
+SRC_URI += "http://source.mynonpublic.com/broadmedia/${MACHINE}-linux-${PV}-${SRC}.tar.xz \
     file://defconfig \
     "
 
 S = "${WORKDIR}/linux-${PV}"
-
-inherit kernel
 
 export OS = "Linux"
 KERNEL_OBJECT_SUFFIX = "ko"
@@ -42,7 +39,6 @@ do_configure_prepend() {
     oe_machinstall -m 0644 ${WORKDIR}/defconfig ${S}/.config
     oe_runmake oldconfig
 }
-
 kernel_do_install_append() {
     ${STRIP} ${D}${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION}
     gzip -9c ${D}${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION} > ${D}${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz
