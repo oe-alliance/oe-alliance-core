@@ -111,10 +111,8 @@ MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS = " \
     kernel-module-ext4 \
     kernel-module-cifs \
     kernel-module-autofs4 \
+    ${@base_contains('MACHINEBUILD', 'gbquad', 'kernel-module-smsc75xx' , '', d)} \
     "
-
-MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS_append_gbquad = "kernel-module-smsc75xx"
-# MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS_append_gbquadplus = "kernel-module-smsc75xx"
 
 MACHINE_EXTRA_RRECOMMENDS = " \
     gstreamer1.0-plugin-dvbmediasink \
