@@ -1,7 +1,7 @@
-From 9f2227e9e5018ef0f088742ff405ff5bc61863a3 Mon Sep 17 00:00:00 2001
-From: Captain <captain.onboard@web.de>
-Date: Thu, 24 Sep 2015 18:57:32 +0200
-Subject: [PATCH] -add-VB6-VB8-SPARK
+From de68329f322a9177dd7ef5db3d8c8406cf1561ea Mon Sep 17 00:00:00 2001
+From: captain <openatv@gmail.com>
+Date: Wed, 23 Dec 2015 08:59:39 +0100
+Subject: [PATCH] add-VB6-VB8-SPARK
 
 ---
  configure.ac      | 21 +++++++++++++++++++++
@@ -42,10 +42,10 @@ index 90f2987..8e5f045 100644
  	AS_HELP_STRING([--with-dtsdownmix],[build dts downmix element, yes or no]),
  	[have_dtsdownmix=$withval],[have_dtsdownmix=no])
 diff --git a/gstdvbvideosink.c b/gstdvbvideosink.c
-index 5d2c7b8..3e6952e 100644
+index dcfe131..9db1038 100644
 --- a/gstdvbvideosink.c
 +++ b/gstdvbvideosink.c
-@@ -235,6 +235,20 @@ GST_STATIC_PAD_TEMPLATE (
+@@ -272,6 +272,20 @@ GST_STATIC_PAD_TEMPLATE (
  	"video/x-wmv, "
  		VIDEO_CAPS ", wmvversion = (int) 3; "
  #endif
@@ -63,10 +63,10 @@ index 5d2c7b8..3e6952e 100644
 +	"video/x-vp8, "
 +		VIDEO_CAPS "; "
 +#endif
- 	"video/mpegts, systemstream=(boolean)true, "
- 		VIDEO_CAPS "; "
  	)
-@@ -998,6 +1012,21 @@ static GstFlowReturn gst_dvbvideosink_render(GstBaseSink *sink, GstBuffer *buffe
+ );
+ 
+@@ -1049,6 +1063,21 @@ static GstFlowReturn gst_dvbvideosink_render(GstBaseSink *sink, GstBuffer *buffe
  				}
  			}
  		}
@@ -88,7 +88,7 @@ index 5d2c7b8..3e6952e 100644
  	}
  
  #ifdef PACK_UNPACKED_XVID_DIVX5_BITSTREAM
-@@ -1641,6 +1670,24 @@ static gboolean gst_dvbvideosink_set_caps(GstBaseSink *basesink, GstCaps *caps)
+@@ -1677,6 +1706,24 @@ static gboolean gst_dvbvideosink_set_caps(GstBaseSink *basesink, GstCaps *caps)
  			GST_INFO_OBJECT (self, "MIMETYPE video/x-wmv %s -> STREAMTYPE_VC1_SM", value);
  		}
  	}
@@ -114,7 +114,7 @@ index 5d2c7b8..3e6952e 100644
  	if (self->stream_type != STREAMTYPE_UNKNOWN)
  	{
 diff --git a/gstdvbvideosink.h b/gstdvbvideosink.h
-index a20ef17..5bb9315 100644
+index 00ce937..c598f1a 100644
 --- a/gstdvbvideosink.h
 +++ b/gstdvbvideosink.h
 @@ -65,7 +65,7 @@ typedef struct _GstDVBVideoSink		GstDVBVideoSink;
@@ -151,5 +151,5 @@ index a20ef17..5bb9315 100644
  #endif
  
 -- 
-1.9.5.msysgit.0
+2.6.3.windows.1
 
