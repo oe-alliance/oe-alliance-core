@@ -11,7 +11,7 @@ DEPENDS = "tslib mpfr gmp"
 SRCREV = "${AUTOREV}"
 PV = "2.3+gitr${SRCPV}"
 PKGV = "2.3+gitr${GITPKGV}"
-PR = "r17"
+PR = "r19"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -35,7 +35,6 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-bluray_1.5c3_mips32el.ipk \
     enigma2-plugin-extensions-boblight-enigma2_0.8r7_mips32el.ipk \
     enigma2-plugin-extensions-camofs_9.19_all.ipk \
-    enigma2-plugin-systemplugins-channelselectionnavigator_0.8_mipsel.ipk \
     enigma2-plugin-extensions-chefkoch_1.4c4_mips32el.ipk \
     enigma2-plugin-extensions-clevertanken_0.6_mips32el.ipk \
     enigma2-plugin-extensions-csfd_10-10-20150103_all.ipk \
@@ -49,6 +48,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-fragmutti_0.4_mips32el.ipk \
     enigma2-plugin-extensions-gmailreader-oe2.0_1.3_all.ipk \
     enigma2-plugin-extensions-googlenewsreader_1.0_mips32el.ipk \
+    enigma2-plugin-extensions-hdmitest_0.4_mipsel.ipk \
     enigma2-plugin-extensions-hetweer_2.7rc3_mips32el.ipk \
     enigma2-plugin-extensions-iptvplayer_90.02.00.00_all.ipk \
     enigma2-plugin-extensions-isettinge2-3.3.3-oe2.0-${@base_contains("TARGET_ARCH", "sh4", "sh4" , "mips32el", d)}.ipk \
@@ -85,7 +85,6 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-sport1ticker_0.4_all.ipk \
     enigma2-plugin-extensions-sportmax_1.2_mips32el.ipk \
     enigma2-plugin-extensions-sportportal_2013_all.ipk \
-    enigma2-plugin-extensions-subtitleplayer_3.29rc2_mips32el \
     enigma2-plugin-extensions-thetvdb_0.7-20120607-r2_mips32el.ipk \
     enigma2-plugin-extensions-tmbd_6.7_all.ipk \
     enigma2-plugin-extensions-translator_1.0_mips32el.ipk \
@@ -103,6 +102,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-xbmcaddons_8.1_r0_all.ipk \
     enigma2-plugin-extensions-xbmcwetter_1.3rc4_mips32el.ipk \
     enigma2-plugin-extensions-zdfnewmediathek_1.7rc5_mips32el.ipk \
+    enigma2-plugin-feeds-picons.xyz_2015-08-31--19-55-30_all.ipk \
     enigma2-plugin-systemplugins-bouquetsprotection_0.2-rc1_all.ipk \
     enigma2-plugin-systemplugins-channelselectionnavigator_0.9_mipsel.ipk \
     enigma2-plugin-systemplugins-extnumberzap_1.0-rc12_mipsel.ipk \
