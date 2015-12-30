@@ -4,7 +4,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda2f7b4f302"
 
-PR = "r0"
+PR = "r1"
 
 DEPENDS = "libamavutils alsa-lib rtmpdump"
 
@@ -16,6 +16,7 @@ inherit lib_package
 SRC_URI = "http://sources.openelec.tv/devel/libamcodec-75f23da.tar.xz \
            file://0000-amadec-makefile.patch \
            file://audiodsp_codec_ddp_dcv.bin \
+		   file://libamadec.pc \
 "
 
 S = "${WORKDIR}/libamcodec-75f23da/amadec"
@@ -33,6 +34,7 @@ EXTRA_OEMAKE = "\
 
 ### NOTE: we are installing closed src DTS encoder as well for transcoding
 do_install() {
+	install -d ${D}${libdir}/pkgconfig
     install -d ${D}${includedir}/amlogic/amadec
     install -d ${D}${base_libdir}/firmware
     install -d ${D}${libdir}
@@ -41,6 +43,7 @@ do_install() {
     install -m 0755 ${S}/acodec_lib/*.so  ${D}/${libdir}
     install -m 0644 ${S}/${FWL}/*.bin  ${D}${base_libdir}/firmware/
     install -m 0644 ${WORKDIR}/audiodsp_codec_ddp_dcv.bin ${D}${base_libdir}/firmware/
+	install -m 0644 ${WORKDIR}/libamadec.pc ${D}${libdir}/pkgconfig/	
 }
 
 FILES_${PN} = "${libdir}/* ${base_libdir}/firmware"

@@ -4,11 +4,11 @@ PRIORITY = "required"
 LICENSE = "CLOSED"
 require conf/license/license-close.inc
 
-KV = "3.10.76"
-SRCDATE = "20151108"
+KV = "3.10.93"
+SRCDATE = "20151207"
 
 PV = "${KV}+${SRCDATE}"
-PR = "r7"
+PR = "r1"
 
 RDEPENDS_${PN} += "wetek-e2-procfs-${MACHINE} firmware-avl6211 firmware-mn88436 firmware-ap6210 firmware-dvb-usb-af9015"
 
