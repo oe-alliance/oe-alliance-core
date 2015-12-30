@@ -7,44 +7,48 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PV = "1.0"
-PR = "r53"
+PR = "r70"
 
 inherit packagegroup
 
-DEPENDS = "enigma2-pliplugins openhdf-feeds openhdf-3rdparty-plugins"
+RCONFLICTS_${PN} = "enigma2-plugin-pli-softcamsetup" 
+RREPLACES_${PN} = "enigma2-plugin-pli-softcamsetup"
 
-RRECOMMENDS_${PN} = "\
+DEPENDS = "openhdf-feeds openhdf-3rdparty-plugins"
+
+RRECOMMENDS_${PN} = " \
     openhdf-version-info \
     enigma2-skindefault \
     python-compression \
-    enigma2-plugin-skins-nobile \
-    enigma2-plugin-skins-army-mod \
+    enigma2-plugin-skins-xionhdf \ 
     enigma2-plugin-drivers-usbserial \
     enigma2-plugin-extensions-autotimer \
     enigma2-plugin-extensions-epgsearch \
-    enigma2-plugin-extensions-et-portal \
     enigma2-plugin-extensions-imdb \
     enigma2-plugin-extensions-hdftoolbox \
-    enigma2-plugin-extensions-mediaplayer \
     enigma2-plugin-extensions-cutlisteditor \
     enigma2-plugin-extensions-dvdplayer \
-    enigma2-plugin-extensions-virtualzapmod \
-    enigma2-plugin-extensions-volume-adjust \
     enigma2-plugin-pli-softcamsetup \
+    enigma2-plugin-systemplugins-extnumberzap \
+    enigma2-plugin-extensions-volume-adjust \
     enigma2-plugin-systemplugins-devicemanager \
     enigma2-plugin-systemplugins-videotune \
     enigma2-plugin-systemplugins-softwaremanager \
     enigma2-plugin-systemplugins-hotplug \
     enigma2-plugin-systemplugins-positionersetup \
-    enigma2-plugin-systemplugins-videoenhancement \
-    ${@base_contains("MACHINE_FEATURES", "smallflash", "", \
-    " \
     enigma2-plugin-extensions-enhancedmoviecenter \
     enigma2-plugin-extensions-audiosync \
-    enigma2-plugin-extensions-cooltvguide \
-    ", d)} \
+    ${@base_contains("MACHINE_FEATURES", "videoenhancement", "", "enigma2-plugin-systemplugins-videoenhancement", d)} \
+    ${@base_contains("MACHINE_FEATURES", "boxmodel", "boxmodel", "", d)} \
+    ${@base_contains("MACHINE_FEATURES", "dreamboxv1", "enigma2-plugin-extensions-dflash mtd-utils-jffs2", "", d)} \
+    ${@base_contains("MACHINE_FEATURES", "dreamboxv2", "enigma2-plugin-extensions-dbackup", "", d)} \
+    ${@base_contains("MACHINE_FEATURES", "uianimation", "enigma2-plugin-systemplugins-animationsetup" , "", d)} \
+    ${@base_contains("MACHINE_FEATURES", "osdanimation", "enigma2-plugin-systemplugins-animationsetup" , "", d)} \
+    ${@base_contains("MACHINE_FEATURES", "webkithbbtv", "webkit-hbbtv-browser", "", d)} \
+    ${@base_contains("MACHINE_FEATURES", "grautec", "enigma2-plugin-extensions-grautec", "", d)} \
     "
 
 RRECOMMENDS_${PN}_append_dags7335 = "enigma2-plugin-systemplugins-osd3dsetup"
 RRECOMMENDS_${PN}_append_dags7356 = "enigma2-plugin-systemplugins-osd3dsetup"
 RRECOMMENDS_${PN}_append_dags7362 = "enigma2-plugin-systemplugins-osd3dsetup"
+RRECOMMENDS_${PN}_append_wetekplay = "enigma2-plugin-extensions-snesmanager pbk"
