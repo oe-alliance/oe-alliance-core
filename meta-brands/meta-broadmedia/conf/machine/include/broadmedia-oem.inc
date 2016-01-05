@@ -52,6 +52,9 @@ DEFAULTTUNE = "mips32el"
 
 PREFERRED_PROVIDER_virtual/kernel = "linux-broadmedia"
 
+PREFERRED_PROVIDER_virtual/blindscan-dvbs = "broadmedia-blindscan-utils"
+PREFERRED_PROVIDER_virtual/blindscan-dvbc = "broadmedia-blindscan-utils"
+
 KERNEL_IMAGETYPE = "vmlinux"
 KERNEL_OUTPUT = "${KERNEL_IMAGETYPE}"
 KERNEL_CONSOLE = "ttyS0,115200n8"
