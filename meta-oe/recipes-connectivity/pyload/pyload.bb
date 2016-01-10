@@ -25,7 +25,7 @@ PR = "r1"
 
 inherit update-rc.d
 
-SRC_URI = "http://download.pyload.org/pyload-src-v${PV}.zip \
+SRC_URI = "http://sources.openelec.tv/mirror/pyload/pyload-src-v${PV}.zip \
   file://pyload.init \
   file://pyload.tar.gz.defaults"
 SRC_URI[md5sum] = "28876150af22999b6f539c8579d3b415"
