@@ -1,0 +1,15 @@
+diff -Nur a/arch/mips/brcmstb/prom.c b/arch/mips/brcmstb/prom.c
+--- a/arch/mips/brcmstb/prom.c	2015-11-25 13:04:42.160926318 +0900
++++ b/arch/mips/brcmstb/prom.c	2015-11-25 13:04:21.296926472 +0900
+@@ -212,7 +212,11 @@
+ 	FETCH("ETH0_HWADDR", parse_eth0_hwaddr, brcm_primary_macaddr);
+ 	FETCH("ETH0_MDIO_MODE", parse_eth0_mdio_mode, &brcm_eth0_no_mdio);
+ 	FETCH("ETH0_PHY", parse_string, brcm_eth0_phy);
++#if defined(CONFIG_BCM7429)
++	strcpy(brcm_eth0_phyaddr, "0");
++#else
+ 	FETCH("ETH0_PHYADDR", parse_string, brcm_eth0_phyaddr);
++#endif
+ 	FETCH("ETH0_SPEED", parse_ulong, &brcm_eth0_speed);
+ 
+ 	FETCH("DRAM0_SIZE", parse_ulong, &brcm_dram0_size_mb);
