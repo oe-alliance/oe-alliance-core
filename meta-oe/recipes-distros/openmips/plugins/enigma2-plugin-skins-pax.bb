@@ -14,7 +14,7 @@ PKGV = "4.3+git${GITPKGV}"
 VER ="4.3"
 PR = "r0"
 
-SRC_URI="git://github.com/openmips/skin-pax.git;protocol=git -b 4.3"
+SRC_URI="git://github.com/openmips/skin-pax.git;protocol=git;branch=4.3"
 
 S = "${WORKDIR}/git"
 
