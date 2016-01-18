@@ -63,7 +63,6 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-moviebrowser_3.6rc6_mips32el.ipk \
     enigma2-plugin-extensions-mp3browser_1.9c8_mips32el.ipk \
     enigma2-plugin-extensions-mtv_0.1_mips32el.ipk \
-    enigma2-plugin-extensions-muzutv_1.5rc5_mips32el.ipk \
     ${@base_contains('MACHINE_BRAND', 'Vu+', '' , 'enigma2-plugin-extensions-openopera_1.0-r0_mips32el.ipk', d)} \
     enigma2-plugin-extensions-opkg-tools_1.3_mipsel.ipk \
     enigma2-plugin-extensions-oscamstatusview_0.7rc1_mips32el.ipk \
@@ -80,9 +79,8 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-skyrecorder_1.6.1_all.ipk \
     enigma2-plugin-extensions-songs-to_0.1_mips32el.ipk \
     enigma2-plugin-extensions-spiegelonline_2.5rc16_mips32el.ipk \
-    enigma2-plugin-extensions-spinnerselector_2.0r7_mips32el.ipk \
+    enigma2-plugin-extensions-spinnerselector_2.0r8_mips32el.ipk \
     enigma2-plugin-extensions-sport1ticker_0.4_all.ipk \
-    enigma2-plugin-extensions-sportmax_1.2_mips32el.ipk \
     enigma2-plugin-extensions-sportportal_2013_all.ipk \
     enigma2-plugin-extensions-thetvdb_0.7-20120607-r2_mips32el.ipk \
     enigma2-plugin-extensions-tmbd_6.7_all.ipk \
