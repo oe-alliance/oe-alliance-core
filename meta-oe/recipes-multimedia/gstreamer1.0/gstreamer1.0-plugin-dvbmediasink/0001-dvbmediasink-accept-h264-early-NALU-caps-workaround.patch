@@ -1,0 +1,39 @@
+From e76f73cccbd5b351712e636efe7e38d5f14315db Mon Sep 17 00:00:00 2001
+From: Athanasios Oikonomou <athoik@gmail.com>
+Date: Fri, 11 Dec 2015 16:27:20 +0100
+Subject: [PATCH] dvbmediasink: accept h264 early NALU caps (workaround)
+
+Recent changes in h264parse forward caps without width and height and we have
+to accept those caps in order to get later updated caps with more information.
+
+Here is the description why that happens:
+
+The problem here is that the AU delimiter appears in MPEG-TS streams before any
+SPS/PPS, and needs to be forwarded. h264parse has no code to hold back the NALU
+until caps have been determined (and implementing that right might be
+problematic) - so it needs to set some caps and push the AU before it knows
+anything more specific about the stream.
+
+The caps might get updated again later if there are SEI packets that provide
+more information again.
+
+https://bugzilla.gnome.org/show_bug.cgi?id=755885
+---
+ gstdvbvideosink.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/gstdvbvideosink.c b/gstdvbvideosink.c
+index ee723d0..4e28109 100644
+--- a/gstdvbvideosink.c
++++ b/gstdvbvideosink.c
+@@ -231,6 +231,7 @@ GST_STATIC_PAD_TEMPLATE (
+ 		VIDEO_CAPS "; "
+ 	"video/x-h264, "
+ 		"parsed = (boolean)true; "
++		"alignment = (string) nal; "
+ #endif
+ #ifdef HAVE_H263
+ 	"video/x-h263, "
+-- 
+2.6.3.windows.1
+

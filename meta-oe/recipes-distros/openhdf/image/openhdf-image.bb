@@ -11,13 +11,15 @@ PR = "r${DATETIME}"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 IMAGE_INSTALL = "openhdf-base \
-  ${@base_contains("MACHINE_FEATURES", "smallflash", "", \
-  " \
-  packagegroup-base-smbfs-client \
-  packagegroup-base-smbfs \
-  packagegroup-base-nfs \
-  ", d)} \
-  "
+    ${@base_contains("MACHINE_FEATURES", "dvbc-only", "", "enigma2-plugin-settings-defaultsat", d)} \
+    ${@base_contains("MACHINE_FEATURES", "singlecore", "", \
+    " \
+    packagegroup-base-smbfs-client \
+    packagegroup-base-smbfs-utils \
+    packagegroup-base-smbfs-server \
+    packagegroup-base-nfs \
+    ", d)} \
+    "
 
 export IMAGE_BASENAME = "openhdf-image"
 IMAGE_LINGUAS = ""
@@ -29,6 +31,12 @@ inherit image
 
 rootfs_postprocess() {
     curdir=$PWD
+
+    if [ -f /home/oa/test/3.3/meta-oe-alliance/meta-oe/recipes-distros/openhdf/custom/parser.sh ]; then
+        cp /home/oa/test/3.3/meta-oe-alliance/meta-oe/recipes-distros/openhdf/custom/parser.sh .
+        ./parser.sh ${MACHINEBUILD} ${IMAGE_ROOTFS}
+        rm -rf parser.sh
+    fi
     cd ${IMAGE_ROOTFS}
 
     # because we're so used to it
@@ -36,12 +44,7 @@ rootfs_postprocess() {
     ln -s opkg-cl usr/bin/ipkg-cl || true
     ln -s usr/lib/enigma2/spinner usr/lib/enigma2/skin_default/spinner || true
 
-    cd $curdir
-    if [ -f ../../../meta-oe-alliance/recipes-distros/openhdf/custom/parser.sh ]; then
-        cp ./../../../meta-oe-alliance/recipes-distros/openhdf/custom/parser.sh .
-        ./parser.sh
-        rm -rf parser.sh
-    fi
+    echo ${DEPLOY_DIR_IMAGE} > /tmp/DEPLOY_DIR_IMAGE
 }
 
 ROOTFS_POSTPROCESS_COMMAND += "rootfs_postprocess; "

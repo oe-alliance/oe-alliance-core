@@ -16,7 +16,7 @@ inherit module
 
 PACKAGES = "${PN} ${PN}-dev"
 
-PR = "r35"
+PR = "r36"
 PV = "${KV}+${SRCDATE}"
 
 PTI_NP_PATH ?= "/data/pti_np"
@@ -30,6 +30,7 @@ SRC_URI = " \
     file://silence_stmfb_printk.patch;patch=1 \
     file://fix_makefile.patch;patch=1 \
     file://disable_video_free_on_release.patch;patch=1 \
+    file://add_hdmi_colorspace_proc.patch;patch=1 \
     file://ddbootup \
     file://sh4booster \
     file://modules.conf \

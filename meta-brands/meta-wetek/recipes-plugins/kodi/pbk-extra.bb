@@ -6,7 +6,7 @@ PRIORITY = "required"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 #PV = "1"
-PR = "r4"
+PR = "r5"
 
 require conf/license/license-gplv2.inc
 

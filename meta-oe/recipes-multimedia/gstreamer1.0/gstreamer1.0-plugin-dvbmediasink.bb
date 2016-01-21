@@ -10,7 +10,8 @@ DEPENDS = "gstreamer1.0 gstreamer1.0-plugins-base libdca ${@base_contains("BRAND
 GSTVERSION = "1.0"
 
 #SRC_URI = "git://git.code.sf.net/p/openpli/gst-plugin-dvbmediasink;protocol=git;branch=gst-1.0"
-SRC_URI = "git://github.com/christophecvr/gstreamer1.0-plugin-multibox-dvbmediasink.git;protocol=git"
+SRC_URI = "git://github.com/christophecvr/gstreamer1.0-plugin-multibox-dvbmediasink.git;protocol=git \
+"
 
 SRC_URI_append_sh4 = " \
     file://0001-dvbmediasink_sh4_fix.patch;patch=1 \
@@ -34,7 +35,7 @@ SRC_URI_append_dm820 = " \
 "
 
 SRC_URI_append_vusolo4k = " \
-    file://0001-add-VB6-VB8-SPARK.patch;patch=1 \ 
+    file://0001-add-VB6-VB8-SPARK.patch;patch=1 \
 "
 
 S = "${WORKDIR}/git"
@@ -43,7 +44,7 @@ inherit gitpkgv
 
 PV = "${GSTVERSION}+git${SRCPV}"
 PKGV = "${GSTVERSION}+git${GITPKGV}"
-PR = "r12"
+PR = "r13"
 
 do_configure_prepend() {
     sed -i 's/AC_INIT.*$/AC_INIT(gst-plugin-dvbmediasink, 1.0.0, @pli4)/' ${S}/configure.ac
@@ -56,7 +57,7 @@ do_configure_prepend() {
 
 inherit autotools pkgconfig
 
-FILES_${PN} = "${libdir}/gstreamer-${GSTVERSION}/*.so*"
+FILES_${PN} = "${libdir}/gstreamer-${GSTVERSION}/*.so* ${sysconfdir}/gstreamer/aactranscode"
 FILES_${PN}-dev += "${libdir}/gstreamer-${GSTVERSION}/*.la"
 FILES_${PN}-staticdev += "${libdir}/gstreamer-${GSTVERSION}/*.a"
 FILES_${PN}-dbg += "${libdir}/gstreamer-${GSTVERSION}/.debug"

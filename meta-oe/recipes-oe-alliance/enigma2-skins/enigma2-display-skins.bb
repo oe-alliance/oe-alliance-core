@@ -8,11 +8,11 @@ LIC_FILES_CHKSUM = "file://README.md;startline=1;endline=6;md5=d87dcebda7b395f6f
 
 inherit gitpkgv
 
-PACKAGE_ARCH := "${MACHINE_ARCH}"
+PACKAGE_ARCH = "${MACHINEBUILD}"
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r9"
+PR = "r10"
 
 SRC_URI = "git://github.com/oe-alliance/enigma2-display-skins.git;protocol=git file://skinsnotwanted"
 

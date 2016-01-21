@@ -6,8 +6,8 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=4d92cd373abda3937c2bc47fbc49d
 ALLOW_EMPTY_${PN} = "1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-PV = "5.2"
-PR = "r9"
+PV = "5.3"
+PR = "r10"
 
 inherit packagegroup
 

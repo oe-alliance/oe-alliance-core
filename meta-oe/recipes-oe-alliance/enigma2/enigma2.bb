@@ -211,7 +211,7 @@ inherit autotools-brokensep gitpkgv pkgconfig pythonnative
 
 PV = "5.1+git${SRCPV}"
 PKGV = "5.1+git${GITPKGV}"
-PR = "r1"
+PR = "r2"
 
 SRC_URI = "${ENIGMA2_URI}"
 
@@ -244,7 +244,7 @@ FILES_${PN} += "${datadir}/keymaps"
 FILES_${PN}-meta = "${datadir}/meta"
 PACKAGES =+ "${PN}-src"
 PACKAGES += "${PN}-meta"
-PACKAGE_ARCH = "${MACHINE_ARCH}"
+PACKAGE_ARCH = "${MACHINEBUILD}"
 
 PACKAGES =+ "enigma2-fonts"
 FILES_enigma2-fonts = "${datadir}/fonts"

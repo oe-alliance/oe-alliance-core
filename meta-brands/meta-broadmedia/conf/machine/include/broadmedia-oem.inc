@@ -33,6 +33,7 @@ MACHINE_ESSENTIAL_EXTRA_RDEPENDS = "\
     "
 
 DVBPROVIDER = "kernel"
+DVBSKYPROVIDER = "kernel"
 
 MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS = "\
     kernel-module-cdfs \
@@ -50,6 +51,9 @@ TARGET_ARCH = "mipsel"
 DEFAULTTUNE = "mips32el"
 
 PREFERRED_PROVIDER_virtual/kernel = "linux-broadmedia"
+
+PREFERRED_PROVIDER_virtual/blindscan-dvbs = "broadmedia-blindscan-utils"
+PREFERRED_PROVIDER_virtual/blindscan-dvbc = "broadmedia-blindscan-utils"
 
 KERNEL_IMAGETYPE = "vmlinux"
 KERNEL_OUTPUT = "${KERNEL_IMAGETYPE}"
