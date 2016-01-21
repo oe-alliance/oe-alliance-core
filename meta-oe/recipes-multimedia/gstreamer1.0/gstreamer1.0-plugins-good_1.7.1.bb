@@ -11,7 +11,7 @@ SRC_URI += "file://0001-gstrtpmp4gpay-set-dafault-value-for-MPEG4-without-co.pat
 
 S = "${WORKDIR}/git"
 SRCREV = "${AUTOREV}"
-SRCREV = "2706a35ebe4b0c44a6c668337be7d5b264da654a"
+SRCREV = "5d147467928b47b12439cc1519041a4093357aef"
 inherit gitpkgv
 PV = "1.7+git${SRCPV}"
 PKGV = "1.7+git${GITPKGV}"

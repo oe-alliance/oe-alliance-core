@@ -15,7 +15,7 @@ SRC_URI = "git://anongit.freedesktop.org/gstreamer/gst-libav;branch=master \
 
 S = "${WORKDIR}/git"
 #SRCREV = "${AUTOREV}"
-SRCREV = "83ce87e7c815e5f78bb72b52c5739d75c4a85b72"
+SRCREV = "da335a0ea368d2f71e2824adc3e027332db8a58c"
 inherit gitpkgv
 PV = "1.7+git${SRCPV}"
 PKGV = "1.7+git${GITPKGV}"

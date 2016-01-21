@@ -14,7 +14,7 @@ SRC_URI += " \
 
 S = "${WORKDIR}/git"
 #SRCREV = "${AUTOREV}"
-SRCREV = "62053852de01fb324a915b27c00f5b8dc0f66fb3"
+SRCREV = "3674742957efcd217344f9a114551f02f60265f8"
 inherit gitpkgv
 PV = "1.7+git${SRCPV}"
 PKGV = "1.7+git${GITPKGV}"

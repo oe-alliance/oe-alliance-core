@@ -8,7 +8,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=73a5855a8119deb017f5f13cf327095d \
 SRC_URI = "git://anongit.freedesktop.org/gstreamer/gst-plugins-bad;branch=master"
 S = "${WORKDIR}/git"
 #SRCREV = "${AUTOREV}"
-SRCREV = "63ffe374ab56a7423a4b0f9b369535a01249d817"
+SRCREV = "5b04e77c0ce653150d60f8faa9c6909963b5825c"
 inherit gitpkgv
 PV = "1.7+git${SRCPV}"
 PKGV = "1.7+git${GITPKGV}"
