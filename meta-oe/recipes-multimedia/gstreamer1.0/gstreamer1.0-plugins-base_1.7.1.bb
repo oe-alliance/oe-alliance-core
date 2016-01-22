@@ -16,8 +16,8 @@ S = "${WORKDIR}/git"
 #SRCREV = "${AUTOREV}"
 SRCREV = "3674742957efcd217344f9a114551f02f60265f8"
 inherit gitpkgv
-PV = "1.7+git${SRCPV}"
-PKGV = "1.7+git${GITPKGV}"
+#PV = "1.7+git${SRCPV}"
+#PKGV = "1.7+git${GITPKGV}"
 
 
 do_configure_prepend() {
