@@ -10,8 +10,8 @@ S = "${WORKDIR}/git"
 #SRCREV = "${AUTOREV}"
 SRCREV = "5b04e77c0ce653150d60f8faa9c6909963b5825c"
 inherit gitpkgv
-PV = "1.7+git${SRCPV}"
-PKGV = "1.7+git${GITPKGV}"
+#PV = "1.7+git${SRCPV}"
+#PKGV = "1.7+git${GITPKGV}"
 
 SRC_URI += " \
 	file://0001-rtmp-fix-seeking-and-potential-segfault.patch \

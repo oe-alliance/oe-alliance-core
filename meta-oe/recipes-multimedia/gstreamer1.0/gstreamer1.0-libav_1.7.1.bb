@@ -17,8 +17,8 @@ S = "${WORKDIR}/git"
 #SRCREV = "${AUTOREV}"
 SRCREV = "da335a0ea368d2f71e2824adc3e027332db8a58c"
 inherit gitpkgv
-PV = "1.7+git${SRCPV}"
-PKGV = "1.7+git${GITPKGV}"
+#PV = "1.7+git${SRCPV}"
+#PKGV = "1.7+git${GITPKGV}"
 
 SRC_URI_append_sh4 = " \
     file://libav-fix-sh4-compile-gcc48.patch \

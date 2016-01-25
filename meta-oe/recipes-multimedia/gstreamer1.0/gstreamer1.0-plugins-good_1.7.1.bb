@@ -13,8 +13,8 @@ S = "${WORKDIR}/git"
 SRCREV = "${AUTOREV}"
 SRCREV = "5d147467928b47b12439cc1519041a4093357aef"
 inherit gitpkgv
-PV = "1.7+git${SRCPV}"
-PKGV = "1.7+git${GITPKGV}"
+#PV = "1.7+git${SRCPV}"
+#PKGV = "1.7+git${GITPKGV}"
 
 
 CFLAGS_append += " -Wno-maybe-uninitialized -Wno-uninitialized "
