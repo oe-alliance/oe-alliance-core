@@ -3,9 +3,9 @@ index 3f47580..ca3b8cb 100644
 --- a/Lib/gettext.py
 +++ b/Lib/gettext.py
 @@ -53,6 +53,7 @@ from errno import ENOENT
- __all__ = ['NullTranslations', 'GNUTranslations', 'Catalog',
-            'find', 'translation', 'install', 'textdomain', 'bindtextdomain',
-            'dgettext', 'dngettext', 'gettext', 'ngettext',
+            'bind_textdomain_codeset',
+            'dgettext', 'dngettext', 'gettext', 'lgettext', 'ldgettext',
+            'ldngettext', 'lngettext', 'ngettext',
 +           'pgettext', 'lpgettext', 'npgettext', 'lnpgettext', 'ldnpgettext',
             ]
  

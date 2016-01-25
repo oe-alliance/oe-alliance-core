@@ -8,6 +8,7 @@ inherit gitpkgv
 
 SRC_URI = "git://github.com/OpenPLi/tuxtxt.git;protocol=git \
     file://tuxtxt_getPressedKey.patch \
+    file://acinclude_fix_DVB_API_VERSION_check_for_gcc5.patch \
 "
 
 SRC_URI_append_sh4 = " \

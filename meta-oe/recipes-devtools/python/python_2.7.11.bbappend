@@ -4,7 +4,6 @@ SRC_URI += " \
             file://04-default-is-optimized.patch \
             file://99-ignore-optimization-flag.patch \
             file://no-ldconfig.patch \
-            file://ctypes-error-handling-fix.patch \
             file://setuptweaks-2.patch \
             file://pgettext.patch \
             file://create_unverified_context.patch \

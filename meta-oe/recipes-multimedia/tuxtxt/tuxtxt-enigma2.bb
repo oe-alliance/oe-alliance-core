@@ -9,7 +9,9 @@ inherit gitpkgv
 
 SRC_URI = "git://github.com/OpenPLi/tuxtxt.git;protocol=git \
            file://0001-Workaround-for-Gigablue-Quad-receivers.patch \
-           file://0002-Use-separate-transparency-for-menu-and-teletext.patch"
+           file://0002-Use-separate-transparency-for-menu-and-teletext.patch \
+           file://acinclude_fix_DVB_API_VERSION_check_for_gcc5.patch \
+"
 
 SRC_URI_append_wetekplay = " file://0001-WETEK-add-support-AIR-mouse-and-switch-to-FB2.patch"
 

@@ -3,7 +3,7 @@ DESCRIPTION = "GLES/EGL libraries"
 LICENSE = "CLOSED"
 require conf/license/license-close.inc
 
-PROVIDES = "virtual/egl"
+#PROVIDES = "virtual/egl"
 
 DEPENDS = "opengl-headers-hd"
 

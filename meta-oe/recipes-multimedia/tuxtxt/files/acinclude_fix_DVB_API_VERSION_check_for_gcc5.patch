@@ -1,0 +1,11 @@
+--- a/acinclude.m4	2016-01-25 08:06:28.437466400 +0100
++++ b/acinclude.m4	2016-01-25 08:11:14.133461504 +0100
+@@ -189,7 +189,7 @@
+ #include <linux/dvb/version.h>
+ version DVB_API_VERSION
+ 	]])])
+-	DVB_API_VERSION=`(eval "$ac_cpp conftest.$ac_ext") 2>&AS_MESSAGE_LOG_FD | $EGREP "^version" | sed "s,version\ ,,"`
++	DVB_API_VERSION=`(eval "$ac_cpp -traditional-cpp conftest.$ac_ext") 2>&AS_MESSAGE_LOG_FD | $EGREP "^version" | sed "s,version\ ,,"`
+ 	rm -f conftest*
+ 
+ 	AC_MSG_NOTICE([found dvb version $DVB_API_VERSION])
