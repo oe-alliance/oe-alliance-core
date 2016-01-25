@@ -17,10 +17,8 @@ RDEPENDS_${PN} = "\
     opendroid-spinner \
     ntfs-3g \
     hddtemp \
-    packagegroup-base-nfs \
     busybox-cron \
     python-imaging \
     unrar \
     ofgwrite \
-    packagegroup-base-smbfs-client \
     "
