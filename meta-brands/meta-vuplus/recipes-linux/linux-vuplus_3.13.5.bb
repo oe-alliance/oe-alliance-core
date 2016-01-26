@@ -31,6 +31,9 @@ SRC_URI = "http://archive.vuplus.com/download/kernel/stblinux-${KV}.tar.bz2 \
     file://tda18271-advertise-supported-delsys.patch \
     file://mxl5007t-add-no_probe-and-no_reset-parameters.patch \
     file://linux-tcp_output.patch \
+    file://linux-3.13-gcc-4.9.3-build-error-fixed.patch \
+    file://kernel-add-support-for-gcc-5.patch \
+    file://rtl8712-fix-warnings.patch \
     ${@base_contains("MACHINE_FEATURES", "dvbproxy", "file://linux_dvb_adapter.patch;patch=1;pnum=1", "", d)} \
     "
 
