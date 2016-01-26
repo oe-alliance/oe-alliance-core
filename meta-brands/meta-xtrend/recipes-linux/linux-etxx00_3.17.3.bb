@@ -30,8 +30,9 @@ SRC_URI += "http://xtrendet.net/linux-${PV}.tar.gz \
 	file://dvb-usb-dib0700-disable-sleep.patch \
 	file://dvb_usb_disable_rc_polling.patch \
 	file://iosched-slice_idle-1.patch \
-	file://mxl5007t-add-no_probe-and-no_reset-parameters.patch \
 	file://tda18271-advertise-supported-delsys.patch \
+	file://mxl5007t-add-no_probe-and-no_reset-parameters.patch \
+	file://MIPS-Fix-build-with-binutils-2_24_51.patch \
 	file://bcmgenet_phyaddr.patch \
 	"
 
