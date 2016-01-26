@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=4d92cd373abda3937c2bc47fbc49d
 ALLOW_EMPTY_${PN} = "1"
 
 PV = "5.3"
-PR = "r6"
+PR = "r7"
 
 inherit packagegroup
 
@@ -17,10 +17,8 @@ RDEPENDS_${PN} = "\
     opendroid-spinner \
     ntfs-3g \
     hddtemp \
-    packagegroup-base-nfs \
     busybox-cron \
     python-imaging \
     unrar \
     ofgwrite \
-    packagegroup-base-smbfs-client \
     "
