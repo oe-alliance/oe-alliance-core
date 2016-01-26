@@ -6,7 +6,7 @@ LICENSE = "CLOSED"
 PV = "${KV}+${SRCDATE}"
 PR = "r3"
 
-SRC_URI = "http://www.xp-support.tv/support/drivers/${MACHINE}-drivers-${KV}-${SRCDATE}.zip"
+SRC_URI = "http://source.mynonpublic.com/${MACHINE}/${MACHINE}-drivers-${KV}-${SRCDATE}.zip"
 
 S = "${WORKDIR}"
 
