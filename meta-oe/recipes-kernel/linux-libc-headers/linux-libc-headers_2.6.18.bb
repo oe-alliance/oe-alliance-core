@@ -1,7 +1,5 @@
 require recipes-kernel/linux-libc-headers/linux-libc-headers.inc
 
-PR = "r5"
-
 SRC_URI += " \
         file://mips-add-missing-headers.patch \
         file://mips-fix-ptrace-header.patch \
@@ -21,7 +19,7 @@ SRC_URI += " \
         file://mips-utimensat.patch \
         file://mips-pps.patch \
 "
-SRC_URI[md5sum] = "296a6d150d260144639c3664d127d174"
-SRC_URI[sha256sum] = "c95280ff6c5d2a17788f7cc582d23ae8a9a7ba3f202ec6e4238eaadfce7c163d"
+SRC_URI[md5sum] = "6badae7fe759131d9ba334bf3864a4ab"
+SRC_URI[sha256sum] = "ebbebe73aebdf235413763e78eddd48a16738630305ad298635ab25e83d6ebc6"
 
 SSTATE_DUPWHITELIST += "${STAGING_INCDIR}/scsi/scsi_ioctl.h ${STAGING_INCDIR}/scsi/sg.h"

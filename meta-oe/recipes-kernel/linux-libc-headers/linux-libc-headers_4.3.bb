@@ -1,7 +1,5 @@
 require recipes-kernel/linux-libc-headers/linux-libc-headers.inc
 
-PR = "0"
-
 SRC_URI = "${KERNELORG_MIRROR}/linux/kernel/v4.x/linux-${PV}.tar.xz"
 
 SRC_URI[md5sum] = "58b35794eee3b6d52ce7be39357801e7"
