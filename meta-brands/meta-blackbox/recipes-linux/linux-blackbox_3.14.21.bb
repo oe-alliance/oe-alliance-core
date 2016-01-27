@@ -25,6 +25,9 @@ RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
 SRC_URI += "http://unibox.to/feeds/eco/development/kernel/linux-${KV}-${SRCDATE}.tar.gz \
     file://defconfig \
     file://nfs-max-rwsize-8k.patch \
+    file://linux-3.14.21-gcc-4.9.3-build-error-fixed.patch \
+    file://kernel-add-support-for-gcc-5.patch \
+    file://rtl8712-fix-warnings.patch \
     "
 
 S = "${WORKDIR}/linux-${PV}"
