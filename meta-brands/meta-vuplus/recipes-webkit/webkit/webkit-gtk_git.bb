@@ -18,7 +18,7 @@ PR = "r3"
 PV = "r95199"
 
 BRANCH="vuplus-webkit"
-SRCREV="66de070e17c185bbf388688ceb7084b503f743a2"
+SRCREV="9eed47d1f873a13759d3fd8ead72739b328d710a"
 
 SRC_URI = "git://code.vuplus.com:/git/webkit-r95199-base.git;protocol=http;branch=${BRANCH};rev=${SRCREV} \
   file://bison-2.6.patch \

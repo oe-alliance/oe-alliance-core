@@ -7,7 +7,7 @@ require conf/license/license-close.inc
 RDEPENDS_${PN} = "vuplus-webkithbbtv-dumpait"
 
 PV = "1.0"
-PR = "20151006.r1"
+PR = "20151228.r0"
 SRC_URI = "http://archive.vuplus.com/download/build_support/webkit-hbbtv-plugin_${PR}.tar.gz"
 
 S = "${WORKDIR}"
@@ -29,5 +29,5 @@ RPROVIDES_${PN} += "enigma2-plugin-extensions-webkithbbtv"
 FILES_${PN} = "/"
 
 
-SRC_URI[md5sum] = "3dcc2cf9379849ce472113b90b31f1ea"
-SRC_URI[sha256sum] = "cde2a763dea1b124e9b3f14aeccb5b2cd43407eef4a088f844d59478b6340e75"
+SRC_URI[md5sum] = "d0b4dbbb074064ec17c9d76e639ddbc3"
+SRC_URI[sha256sum] = "1aa76e29f7f850fd4744e639c63bd79e3b2b51a7e251f26e39e6cb21d2b48fb9"
