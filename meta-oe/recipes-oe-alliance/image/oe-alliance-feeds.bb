@@ -8,7 +8,7 @@ inherit packagegroup
 ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
-PV = "${IMAGE_VERSION}"
+PV = "5.2"
 PR = "r0"
 
 DEPENDS = "enigma2-plugin-drivers-usbserial"

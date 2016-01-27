@@ -9,7 +9,7 @@ inherit packagegroup
 ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
-PV = "${IMAGE_VERSION}"
+PV = "5.2"
 PR = "r0"
 
 OPTIONAL_WIFIDRIVERS = "${@base_contains("MACHINE_FEATURES", "wifiusblegacy", "enigma2-plugin-drivers-network-usb-rt3070", " \
