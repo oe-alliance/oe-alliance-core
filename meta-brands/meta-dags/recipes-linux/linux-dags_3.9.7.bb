@@ -15,6 +15,12 @@ LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${KV}/COPYING;md5=d7810fab7487fb0aad
 SRC_URI = "http://en3homeftp.net/pub/src/linux-${KV}-${DATE}.tar.gz \
     file://defconfig \
     file://dmx_demux.patch \
+    file://fix_fuse_for_linux_mips_3-9.patch \
+    file://rt2800usb_fix_warn_tx_status_timeout_to_dbg.patch \
+    file://linux-3.9.7-gcc-4.9.3-build-error-fixed.patch \
+    file://kernel-add-support-for-gcc-5.patch \
+    file://rtl8712-fix-warnings.patch \
+    file://rtl8187se-fix-warnings.patch \
     ${@base_contains("DISTRO_NAME", "openvix", "file://dmx_delete_e2stb.patch", "", d)} \
     file://sit2_op.o \
     "
