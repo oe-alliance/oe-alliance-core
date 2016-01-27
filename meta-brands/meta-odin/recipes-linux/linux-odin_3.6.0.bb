@@ -21,6 +21,7 @@ RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
 
 SRC_URI += "http://source.mynonpublic.com/download/linux-${PV}.tar.gz \
     file://defconfig \
+    file://0001-kernel-add-support-for-gcc-5.patch \
     file://0001-Revert-MIPS-mm-Add-compound-tail-page-_mapcount-when.patch \
     file://0001-Revert-MIPS-Add-fast-get_user_pages.patch \
     file://add-dmx-source-timecode.patch \
@@ -36,6 +37,7 @@ SRC_URI += "http://source.mynonpublic.com/download/linux-${PV}.tar.gz \
     file://dvb_usb_disable_rc_polling.patch \
     file://em28xx_add_terratec_h5_rev3.patch \
     file://fix-proc-cputype.patch \
+    file://fixme-hardfloat.patch \
     file://iosched-slice_idle-1.patch \
     file://it913x-switch-off-PID-filter-by-default.patch \
     file://tda18271-advertise-supported-delsys.patch \
@@ -43,6 +45,8 @@ SRC_URI += "http://source.mynonpublic.com/download/linux-${PV}.tar.gz \
     file://${MACHINE}-board.patch \
     file://mxl5007t-add-no_probe-and-no_reset-parameters.patch \
     file://nfs-max-rwsize-8k.patch \
+    file://rtl8712-fix-warnings.patch \
+    file://rtl8187se-fix-warnings.patch \
     "
 
 S = "${WORKDIR}/linux-${PV}"
