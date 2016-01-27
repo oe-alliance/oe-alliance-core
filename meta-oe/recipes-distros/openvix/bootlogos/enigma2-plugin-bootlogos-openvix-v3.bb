@@ -2,8 +2,8 @@ SUMMARY = "OpenViX 3.0 bootlogo"
 
 require recipes-distros/openvix/bootlogos/openvix-bootlogos.inc
 
-PV = "1.0"
-PR = "r5"
+PV = "${IMAGE_VERSION}"
+PR = "r0"
 
 SRC_URI = "http://openvix.co.uk/feeds_extras/bootlogos/openvix-v3.zip"
 
