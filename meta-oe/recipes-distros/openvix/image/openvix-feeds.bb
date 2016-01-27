@@ -8,8 +8,8 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 PACKAGES = "${PN}"
 
-PV = "1.0"
-PR = "r29"
+PV = "${IMAGE_VERSION}"
+PR = "r0"
 
 inherit packagegroup
 

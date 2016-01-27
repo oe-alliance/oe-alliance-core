@@ -10,9 +10,9 @@ inherit gitpkgv
 
 PACKAGE_ARCH := "${MACHINE_ARCH}"
 SRCREV = "${AUTOREV}"
-PV = "3.2+git${SRCPV}"
-PKGV = "3.2+git${GITPKGV}"
-PR = "r2"
+PV = "${IMAGE_VERSION}+git${SRCPV}"
+PKGV = "${IMAGE_VERSION}+git${GITPKGV}"
+PR = "r0"
 
 SRC_URI = "git://github.com/OpenViX/skins.git;protocol=git"
 
