@@ -1,0 +1,555 @@
+diff -Nur a/arch/mips/include/asm/asmmacro.h b/arch/mips/include/asm/asmmacro.h
+--- a/arch/mips/include/asm/asmmacro.h	2014-05-07 21:14:28.000000000 +0200
++++ b/arch/mips/include/asm/asmmacro.h	2016-01-27 20:14:20.889242100 +0100
+@@ -74,6 +74,11 @@
+ #endif /* CONFIG_MIPS_MT_SMTC */
+ 
+ 	.macro	fpu_save_16even thread tmp=t0
++/* Test for GCC >= 4.9.3 */
++#if GCC_VERSION >= 40903
++	.set	push
++	SET_HARDFLOAT
++#endif
+ 	cfc1	\tmp, fcr31
+ 	sdc1	$f0,  THREAD_FPR0(\thread)
+ 	sdc1	$f2,  THREAD_FPR2(\thread)
+@@ -92,11 +97,19 @@
+ 	sdc1	$f28, THREAD_FPR28(\thread)
+ 	sdc1	$f30, THREAD_FPR30(\thread)
+ 	sw	\tmp, THREAD_FCR31(\thread)
++/* Test for GCC >= 4.9.3 */
++#if GCC_VERSION >= 40903
++	.set	pop
++#endif
+ 	.endm
+ 
+ 	.macro	fpu_save_16odd thread
+ 	.set	push
+ 	.set	mips64r2
++/* Test for GCC >= 4.9.3 */
++#if GCC_VERSION >= 40903
++	SET_HARDFLOAT
++#endif
+ 	sdc1	$f1,  THREAD_FPR1(\thread)
+ 	sdc1	$f3,  THREAD_FPR3(\thread)
+ 	sdc1	$f5,  THREAD_FPR5(\thread)
+@@ -127,6 +140,11 @@
+ 	.endm
+ 
+ 	.macro	fpu_restore_16even thread tmp=t0
++/* Test for GCC >= 4.9.3 */
++#if GCC_VERSION >= 40903
++	.set	push
++	SET_HARDFLOAT
++#endif
+ 	lw	\tmp, THREAD_FCR31(\thread)
+ 	ldc1	$f0,  THREAD_FPR0(\thread)
+ 	ldc1	$f2,  THREAD_FPR2(\thread)
+@@ -145,11 +163,19 @@
+ 	ldc1	$f28, THREAD_FPR28(\thread)
+ 	ldc1	$f30, THREAD_FPR30(\thread)
+ 	ctc1	\tmp, fcr31
++/* Test for GCC >= 4.9.3 */
++#if GCC_VERSION >= 40903
++	.set	pop
++#endif
+ 	.endm
+ 
+ 	.macro	fpu_restore_16odd thread
+ 	.set	push
+ 	.set	mips64r2
++/* Test for GCC >= 4.9.3 */
++#if GCC_VERSION >= 40903
++	SET_HARDFLOAT
++#endif
+ 	ldc1	$f1,  THREAD_FPR1(\thread)
+ 	ldc1	$f3,  THREAD_FPR3(\thread)
+ 	ldc1	$f5,  THREAD_FPR5(\thread)
+diff -Nur a/arch/mips/include/asm/asmmacro-32.h b/arch/mips/include/asm/asmmacro-32.h
+--- a/arch/mips/include/asm/asmmacro-32.h	2014-05-07 21:14:28.000000000 +0200
++++ b/arch/mips/include/asm/asmmacro-32.h	2016-01-27 20:05:47.546513600 +0100
+@@ -13,6 +13,11 @@
+ #include <asm/mipsregs.h>
+ 
+ 	.macro	fpu_save_single thread tmp=t0
++/* Test for GCC >= 4.9.3 */
++#if GCC_VERSION >= 40903
++	.set push
++	SET_HARDFLOAT
++#endif
+ 	cfc1	\tmp,  fcr31
+ 	swc1	$f0,  THREAD_FPR0(\thread)
+ 	swc1	$f1,  THREAD_FPR1(\thread)
+@@ -47,9 +52,18 @@
+ 	swc1	$f30, THREAD_FPR30(\thread)
+ 	swc1	$f31, THREAD_FPR31(\thread)
+ 	sw	\tmp, THREAD_FCR31(\thread)
++/* Test for GCC >= 4.9.3 */
++#if GCC_VERSION >= 40903
++	.set pop
++#endif
+ 	.endm
+ 
+ 	.macro	fpu_restore_single thread tmp=t0
++/* Test for GCC >= 4.9.3 */
++#if GCC_VERSION >= 40903
++	.set push
++	SET_HARDFLOAT
++#endif
+ 	lw	\tmp, THREAD_FCR31(\thread)
+ 	lwc1	$f0,  THREAD_FPR0(\thread)
+ 	lwc1	$f1,  THREAD_FPR1(\thread)
+@@ -84,6 +98,10 @@
+ 	lwc1	$f30, THREAD_FPR30(\thread)
+ 	lwc1	$f31, THREAD_FPR31(\thread)
+ 	ctc1	\tmp, fcr31
++/* Test for GCC >= 4.9.3 */
++#if GCC_VERSION >= 40903
++	.set pop
++#endif
+ 	.endm
+ 
+ 	.macro	cpu_save_nonscratch thread
+diff -Nur a/arch/mips/include/asm/fpregdef.h b/arch/mips/include/asm/fpregdef.h
+--- a/arch/mips/include/asm/fpregdef.h	2014-05-07 21:14:28.000000000 +0200
++++ b/arch/mips/include/asm/fpregdef.h	2016-01-27 19:50:55.366953000 +0100
+@@ -14,6 +14,25 @@
+ 
+ #include <asm/sgidefs.h>
+ 
++#define GCC_VERSION (__GNUC__ * 10000 \
++			+ __GNUC_MINOR__ * 100 \
++			+ __GNUC_PATCHLEVEL__)
++
++/*oskwon fixed.*/
++/*
++ * starting with binutils 2.24.51.20140729, MIPS binutils warn about mixing
++ * hardfloat and softfloat object files.  The kernel build uses soft-float by
++ * default, so we also need to pass -msoft-float along to GAS if it supports it.
++ * But this in turn causes assembler errors in files which access hardfloat
++ * registers.  We detect if GAS supports "-msoft-float" in the Makefile and
++ * explicitly put ".set hardfloat" where floating point registers are touched.
++ */
++#ifdef GAS_HAS_SET_HARDFLOAT
++#define SET_HARDFLOAT .set hardfloat
++#else
++#define SET_HARDFLOAT
++#endif
++
+ #if _MIPS_SIM == _MIPS_SIM_ABI32
+ 
+ /*
+diff -Nur a/arch/mips/include/asm/mipsregs.h b/arch/mips/include/asm/mipsregs.h
+--- a/arch/mips/include/asm/mipsregs.h	2014-05-07 21:14:28.000000000 +0200
++++ b/arch/mips/include/asm/mipsregs.h	2016-01-27 19:50:55.366953000 +0100
+@@ -1251,7 +1251,7 @@
+ /*
+  * Macros to access the floating point coprocessor control registers
+  */
+-#define read_32bit_cp1_register(source)					\
++#define _read_32bit_cp1_register(source, gas_hardfloat)					\
+ ({									\
+ 	int __res;							\
+ 									\
+@@ -1261,12 +1261,21 @@
+ 	"	# gas fails to assemble cfc1 for some archs,	\n"	\
+ 	"	# like Octeon.					\n"	\
+ 	"	.set	mips1					\n"	\
++	"	"STR(gas_hardfloat)"				\n"	\
+ 	"	cfc1	%0,"STR(source)"			\n"	\
+ 	"	.set	pop					\n"	\
+ 	: "=r" (__res));						\
+ 	__res;								\
+ })
+ 
++#ifdef GAS_HAS_SET_HARDFLOAT
++#define read_32bit_cp1_register(source)					\
++	_read_32bit_cp1_register(source, .set hardfloat)
++#else
++#define read_32bit_cp1_register(source)					\
++	_read_32bit_cp1_register(source, )
++#endif
++
+ #ifdef HAVE_AS_DSP
+ #define rddsp(mask)							\
+ ({									\
+diff -Nur a/arch/mips/kernel/branch.c b/arch/mips/kernel/branch.c
+--- a/arch/mips/kernel/branch.c	2014-05-07 21:14:28.000000000 +0200
++++ b/arch/mips/kernel/branch.c	2016-01-27 19:50:55.366953000 +0100
+@@ -19,6 +19,10 @@
+ #include <asm/ptrace.h>
+ #include <asm/uaccess.h>
+ 
++#define GCC_VERSION (__GNUC__ * 10000 \
++			+ __GNUC_MINOR__ * 100 \
++			+ __GNUC_PATCHLEVEL__)
++
+ /*
+  * Calculate and return exception PC in case of branch delay slot
+  * for microMIPS and MIPS16e. It does not clear the ISA mode bit.
+@@ -366,7 +370,13 @@
+ 	case cop1_op:
+ 		preempt_disable();
+ 		if (is_fpu_owner())
++/* Test for GCC >= 4.9.3 */
++#if GCC_VERSION >= 40903
++			fcr31 = read_32bit_cp1_register(CP1_STATUS); /*oskwon*/
++#else
+ 			asm volatile("cfc1\t%0,$31" : "=r" (fcr31));
++#endif
++
+ 		else
+ 			fcr31 = current->thread.fpu.fcr31;
+ 		preempt_enable();
+diff -Nur a/arch/mips/kernel/genex.S b/arch/mips/kernel/genex.S
+--- a/arch/mips/kernel/genex.S	2014-05-07 21:14:28.000000000 +0200
++++ b/arch/mips/kernel/genex.S	2016-01-27 19:50:55.366953000 +0100
+@@ -408,6 +408,10 @@
+ 	.set	push
+ 	/* gas fails to assemble cfc1 for some archs (octeon).*/ \
+ 	.set	mips1
++/* Test for GCC >= 4.9.3 */
++#if GCC_VERSION >= 40903
++	SET_HARDFLOAT
++#endif
+ 	cfc1	a1, fcr31
+ 	li	a2, ~(0x3f << 12)
+ 	and	a2, a1
+diff -Nur a/arch/mips/kernel/r2300_fpu.S b/arch/mips/kernel/r2300_fpu.S
+--- a/arch/mips/kernel/r2300_fpu.S	2014-05-07 21:14:28.000000000 +0200
++++ b/arch/mips/kernel/r2300_fpu.S	2016-01-27 19:50:55.366953000 +0100
+@@ -28,6 +28,11 @@
+ 	.set	mips1
+ 	/* Save floating point context */
+ LEAF(_save_fp_context)
++/* Test for GCC >= 4.9.3 */
++#if GCC_VERSION >= 40903
++	.set	push
++	SET_HARDFLOAT
++#endif
+ 	li	v0, 0					# assume success
+ 	cfc1	t1,fcr31
+ 	EX(swc1 $f0,(SC_FPREGS+0)(a0))
+@@ -65,6 +70,10 @@
+ 	EX(sw	t1,(SC_FPC_CSR)(a0))
+ 	cfc1	t0,$0				# implementation/version
+ 	jr	ra
++/* Test for GCC >= 4.9.3 */
++#if GCC_VERSION >= 40903
++	.set	pop
++#endif
+ 	.set	nomacro
+ 	 EX(sw	t0,(SC_FPC_EIR)(a0))
+ 	.set	macro
+@@ -80,6 +89,11 @@
+  * stack frame which might have been changed by the user.
+  */
+ LEAF(_restore_fp_context)
++/* Test for GCC >= 4.9.3 */
++#if GCC_VERSION >= 40903
++	.set	push
++	SET_HARDFLOAT
++#endif
+ 	li	v0, 0					# assume success
+ 	EX(lw t0,(SC_FPC_CSR)(a0))
+ 	EX(lwc1 $f0,(SC_FPREGS+0)(a0))
+@@ -116,6 +130,10 @@
+ 	EX(lwc1 $f31,(SC_FPREGS+248)(a0))
+ 	jr	ra
+ 	 ctc1	t0,fcr31
++/* Test for GCC >= 4.9.3 */
++#if GCC_VERSION >= 40903
++	.set	pop
++#endif
+ 	END(_restore_fp_context)
+ 	.set	reorder
+ 
+diff -Nur a/arch/mips/kernel/r2300_switch.S b/arch/mips/kernel/r2300_switch.S
+--- a/arch/mips/kernel/r2300_switch.S	2014-05-07 21:14:28.000000000 +0200
++++ b/arch/mips/kernel/r2300_switch.S	2016-01-27 19:50:55.382579900 +0100
+@@ -120,6 +120,12 @@
+ 
+ #define FPU_DEFAULT  0x00000000
+ 
++/* Test for GCC >= 4.9.3 */
++#if GCC_VERSION >= 40903
++	.set push
++	SET_HARDFLOAT
++#endif
++
+ LEAF(_init_fpu)
+ 	mfc0	t0, CP0_STATUS
+ 	li	t1, ST0_CU1
+@@ -165,3 +171,8 @@
+ 	mtc1	t0, $f31
+ 	jr	ra
+ 	END(_init_fpu)
++/* Test for GCC >= 4.9.3 */
++#if GCC_VERSION >= 40903
++	.set pop
++#endif
++
+diff -Nur a/arch/mips/kernel/r4k_fpu.S b/arch/mips/kernel/r4k_fpu.S
+--- a/arch/mips/kernel/r4k_fpu.S	2014-05-07 21:14:28.000000000 +0200
++++ b/arch/mips/kernel/r4k_fpu.S	2016-01-27 20:18:37.022197200 +0100
+@@ -19,8 +19,18 @@
+ #include <asm/asm-offsets.h>
+ #include <asm/regdef.h>
+ 
++/* Test for GCC >= 4.9.3 */
++#if GCC_VERSION >= 40903
++/* preprocessor replaces the fp in ".set fp=64" with $30 otherwise */
++#undef fp
++#endif
++
+ 	.macro	EX insn, reg, src
+ 	.set	push
++/* Test for GCC >= 4.9.3 */
++#if GCC_VERSION >= 40903
++	SET_HARDFLOAT
++#endif
+ 	.set	nomacro
+ .ex\@:	\insn	\reg, \src
+ 	.set	pop
+@@ -33,7 +43,16 @@
+ 	.set	mips3
+ 
+ LEAF(_save_fp_context)
++/* Test for GCC >= 4.9.3 */
++#if GCC_VERSION >= 40903
++	.set	push
++	SET_HARDFLOAT
++#endif
+ 	cfc1	t1, fcr31
++/* Test for GCC >= 4.9.3 */
++#if GCC_VERSION >= 40903
++	.set	pop
++#endif
+ 
+ #if defined(CONFIG_64BIT) || defined(CONFIG_CPU_MIPS32_R2)
+ 	.set	push
+@@ -64,6 +83,11 @@
+ 1:	.set	pop
+ #endif
+ 
++/* Test for GCC >= 4.9.3 */
++#if GCC_VERSION >= 40903
++	.set push
++	SET_HARDFLOAT
++#endif
+ 	/* Store the 16 even double precision registers */
+ 	EX	sdc1 $f0, SC_FPREGS+0(a0)
+ 	EX	sdc1 $f2, SC_FPREGS+16(a0)
+@@ -84,11 +108,20 @@
+ 	EX	sw t1, SC_FPC_CSR(a0)
+ 	jr	ra
+ 	 li	v0, 0					# success
++/* Test for GCC >= 4.9.3 */
++#if GCC_VERSION >= 40903
++	.set pop
++#endif
+ 	END(_save_fp_context)
+ 
+ #ifdef CONFIG_MIPS32_COMPAT
+ 	/* Save 32-bit process floating point context */
+ LEAF(_save_fp_context32)
++/* Test for GCC >= 4.9.3 */
++#if GCC_VERSION >= 40903
++	.set push
++	SET_HARDFLOAT
++#endif
+ 	cfc1	t1, fcr31
+ 
+ 	mfc0	t0, CP0_STATUS
+@@ -134,6 +167,10 @@
+ 	EX	sw t1, SC32_FPC_CSR(a0)
+ 	cfc1	t0, $0				# implementation/version
+ 	EX	sw t0, SC32_FPC_EIR(a0)
++/* Test for GCC >= 4.9.3 */
++#if GCC_VERSION >= 40903
++	.set pop
++#endif
+ 
+ 	jr	ra
+ 	 li	v0, 0					# success
+@@ -175,6 +212,12 @@
+ 	EX	ldc1 $f31, SC_FPREGS+248(a0)
+ 1:	.set pop
+ #endif
++
++/* Test for GCC >= 4.9.3 */
++#if GCC_VERSION >= 40903
++	.set push
++	SET_HARDFLOAT
++#endif
+ 	EX	ldc1 $f0, SC_FPREGS+0(a0)
+ 	EX	ldc1 $f2, SC_FPREGS+16(a0)
+ 	EX	ldc1 $f4, SC_FPREGS+32(a0)
+@@ -192,6 +235,10 @@
+ 	EX	ldc1 $f28, SC_FPREGS+224(a0)
+ 	EX	ldc1 $f30, SC_FPREGS+240(a0)
+ 	ctc1	t1, fcr31
++/* Test for GCC >= 4.9.3 */
++#if GCC_VERSION >= 40903
++	.set pop
++#endif
+ 	jr	ra
+ 	 li	v0, 0					# success
+ 	END(_restore_fp_context)
+@@ -199,6 +246,11 @@
+ #ifdef CONFIG_MIPS32_COMPAT
+ LEAF(_restore_fp_context32)
+ 	/* Restore an o32 sigcontext.  */
++/* Test for GCC >= 4.9.3 */
++#if GCC_VERSION >= 40903
++	.set push
++	SET_HARDFLOAT
++#endif
+ 	EX	lw t1, SC32_FPC_CSR(a0)
+ 
+ 	mfc0	t0, CP0_STATUS
+@@ -242,6 +294,10 @@
+ 	ctc1	t1, fcr31
+ 	jr	ra
+ 	 li	v0, 0					# success
++/* Test for GCC >= 4.9.3 */
++#if GCC_VERSION >= 40903
++	.set pop
++#endif
+ 	END(_restore_fp_context32)
+ #endif
+ 
+diff -Nur a/arch/mips/kernel/r4k_switch.S b/arch/mips/kernel/r4k_switch.S
+--- a/arch/mips/kernel/r4k_switch.S	2014-05-07 21:14:28.000000000 +0200
++++ b/arch/mips/kernel/r4k_switch.S	2016-01-27 19:50:55.382579900 +0100
+@@ -22,6 +22,12 @@
+ 
+ #include <asm/asmmacro.h>
+ 
++/* Test for GCC >= 4.9.3 */
++#if GCC_VERSION >= 40903
++/* preprocessor replaces the fp in ".set fp=64" with $30 otherwise */
++#undef fp
++#endif
++
+ /*
+  * Offset to the current process status flags, the first 32 bytes of the
+  * stack are not used.
+@@ -151,6 +157,12 @@
+ 
+ #define FPU_DEFAULT  0x00000000
+ 
++/* Test for GCC >= 4.9.3 */
++#if GCC_VERSION >= 40903
++	.set push
++	SET_HARDFLOAT
++#endif
++
+ LEAF(_init_fpu)
+ #ifdef CONFIG_MIPS_MT_SMTC
+ 	/* Rather than manipulate per-VPE Status, set per-TC bit in TCStatus */
+@@ -290,3 +302,9 @@
+ #endif
+ 	jr	ra
+ 	END(_init_fpu)
++
++/* Test for GCC >= 4.9.3 */
++#if GCC_VERSION >= 40903
++	.set pop	/* SET_HARDFLOAT */
++#endif
++
+diff -Nur a/arch/mips/kernel/r6000_fpu.S b/arch/mips/kernel/r6000_fpu.S
+--- a/arch/mips/kernel/r6000_fpu.S	2014-05-07 21:14:28.000000000 +0200
++++ b/arch/mips/kernel/r6000_fpu.S	2016-01-27 19:50:55.382579900 +0100
+@@ -18,6 +18,11 @@
+ 
+ 	.set	noreorder
+ 	.set	mips2
++/* Test for GCC >= 4.9.3 */
++#if GCC_VERSION >= 40903
++	.set	push
++	SET_HARDFLOAT
++#endif
+ 	/* Save floating point context */
+ 	LEAF(_save_fp_context)
+ 	mfc0	t0,CP0_STATUS
+@@ -49,6 +54,11 @@
+ 	 nop
+ 	END(_save_fp_context)
+ 
++/* Test for GCC >= 4.9.3 */
++#if GCC_VERSION >= 40903
++	.set pop	/* SET_HARDFLOAT */
++#endif
++
+ /* Restore FPU state:
+  *  - fp gp registers
+  *  - cp1 status/control register
+diff -Nur a/arch/mips/Makefile b/arch/mips/Makefile
+--- a/arch/mips/Makefile	2014-05-07 21:14:28.000000000 +0200
++++ b/arch/mips/Makefile	2016-01-27 21:03:33.834623800 +0100
+@@ -57,6 +57,15 @@
+ endif
+ cflags-y += $(call cc-option, -mno-check-zero-division)
+ 
++GCC_VERSION = $(shell $(CC) --version | grep ^mipsel-oe-linux-gcc | sed 's/^.* //g' | sed -e 's/\.\([0-9][0-9]\)/\1/g' -e 's/\.\([0-9]\)/0\1/g' -e 's/^[0-9]\{3,4\}$$/&00/')
++GCC_GTEQ_493 = $(shell expr $(GCC_VERSION) \>= 40903)
++ifeq ($(GCC_GTEQ_493),1)
++  # oskwon fixed.
++  ifneq ($(call as-option,-Wa$(comma)-msoft-float,),)
++    cflags-y += -DGAS_HAS_SET_HARDFLOAT -Wa,-msoft-float
++  endif
++endif
++
+ ifdef CONFIG_32BIT
+ ld-emul			= $(32bit-emul)
+ vmlinux-32		= vmlinux
+@@ -156,7 +165,7 @@
+ cflags-$(CONFIG_CPU_CAVIUM_OCTEON) += -Wa,-march=octeon
+ endif
+ cflags-$(CONFIG_CAVIUM_CN63XXP1) += -Wa,-mfix-cn63xxp1
+-cflags-$(CONFIG_CPU_BMIPS)	+= -march=mips32 -Wa,-mips32 -Wa,--trap
++cflags-$(CONFIG_CPU_BMIPS)	+= -march=mips32 -Wa,-mips32 -Wa,--trap -Wno-bool-compare
+ 
+ cflags-$(CONFIG_CPU_R4000_WORKAROUNDS)	+= $(call cc-option,-mfix-r4000,)
+ cflags-$(CONFIG_CPU_R4400_WORKAROUNDS)	+= $(call cc-option,-mfix-r4400,)
+diff -Nur a/arch/mips/math-emu/cp1emu.c b/arch/mips/math-emu/cp1emu.c
+--- a/arch/mips/math-emu/cp1emu.c	2014-05-07 21:14:28.000000000 +0200
++++ b/arch/mips/math-emu/cp1emu.c	2016-01-27 19:50:55.382579900 +0100
+@@ -51,6 +51,10 @@
+ 
+ #include "ieee754.h"
+ 
++#define GCC_VERSION (__GNUC__ * 10000 \
++			+ __GNUC_MINOR__ * 100 \
++			+ __GNUC_PATCHLEVEL__)
++
+ /* Strap kernel emulator for full MIPS IV emulation */
+ 
+ #ifdef __mips
+@@ -559,7 +563,12 @@
+ 		case mm_bc1t_op:
+ 			preempt_disable();
+ 			if (is_fpu_owner())
++/* Test for GCC >= 4.9.3 */
++#if GCC_VERSION >= 40903
++				fcr31 = read_32bit_cp1_register(CP1_STATUS);
++#else
+ 				asm volatile("cfc1\t%0,$31" : "=r" (fcr31));
++#endif
+ 			else
+ 				fcr31 = current->thread.fpu.fcr31;
+ 			preempt_enable();
+@@ -817,7 +826,12 @@
+ 		if (insn.i_format.rs == bc_op) {
+ 			preempt_disable();
+ 			if (is_fpu_owner())
++/* Test for GCC >= 4.9.3 */
++#if GCC_VERSION >= 40903
++				fcr31 = read_32bit_cp1_register(CP1_STATUS);
++#else
+ 				asm volatile("cfc1\t%0,$31" : "=r" (fcr31));
++#endif
+ 			else
+ 				fcr31 = current->thread.fpu.fcr31;
+ 			preempt_enable();
