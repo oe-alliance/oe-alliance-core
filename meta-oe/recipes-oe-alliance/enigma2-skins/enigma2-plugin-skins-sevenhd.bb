@@ -6,9 +6,9 @@ require conf/license/license-gplv2.inc
 inherit gitpkgv allarch
 
 SRCREV = "${AUTOREV}"
-PV = "3.6.60+git${SRCPV}"
-PKGV = "3.6.60+git${GITPKGV}"
-VER="3.6.60"
+PV = "3.6.62+git${SRCPV}"
+PKGV = "3.6.62+git${GITPKGV}"
+VER="3.6.62"
 
 RDEPENDS_${PN} = "python-requests python-subprocess python-imaging enigma2-plugin-systemplugins-mphelp python-lxml"
 
@@ -80,7 +80,7 @@ fi
 
 echo "                                                           "
 echo "         The Skin SevenHD is now being installed...        "
-echo "
+echo "                                                           "
 exit 0
 }
 
