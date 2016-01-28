@@ -24,3 +24,5 @@ do_install() {
     cp -rp ${S}/usr/share/* ${D}/usr/share/
     chmod -R a+rX ${D}/usr/share/enigma2/
 }
+
+do_package_qa [noexec] = "1"
