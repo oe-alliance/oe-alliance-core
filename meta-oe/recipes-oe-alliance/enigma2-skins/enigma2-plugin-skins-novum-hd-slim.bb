@@ -27,3 +27,5 @@ do_install() {
     mv ${S}/Nashu/NOVUM_HD_Slim ${D}/usr/share/enigma2/
     chmod -R a+rX ${D}/usr/share/enigma2/
 }
+
+do_package_qa[noexec] = "1"

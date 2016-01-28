@@ -91,3 +91,6 @@ echo " The Skin SevenHD is now being removed... "
 echo " "
 exit 0
 }
+
+do_package_qa[noexec] = "1"
+

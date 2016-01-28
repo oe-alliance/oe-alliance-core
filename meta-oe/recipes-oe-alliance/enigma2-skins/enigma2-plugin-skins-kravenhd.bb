@@ -92,3 +92,6 @@ pkg_prerm_${PN} () {
 echo "KravenHD Skin will be now removed..."
 exit 0
 }
+
+do_package_qa[noexec] = "1"
+
