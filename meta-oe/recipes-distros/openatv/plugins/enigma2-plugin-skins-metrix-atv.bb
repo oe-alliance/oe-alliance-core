@@ -27,7 +27,7 @@ do_install() {
 }
 
 do_populate_sysroot[noexec] = "1"
-do_package_qa [noexec] = "1"
+do_package_qa[noexec] = "1"
 
 pkg_preinst_${PN}() {
 #!/bin/sh

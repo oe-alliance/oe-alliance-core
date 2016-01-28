@@ -25,4 +25,4 @@ do_install() {
     chmod -R a+rX ${D}/usr/share/enigma2/
 }
 
-do_package_qa [noexec] = "1"
+do_package_qa[noexec] = "1"
