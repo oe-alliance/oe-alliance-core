@@ -23,3 +23,5 @@ FILES_${PN} = "/usr/*"
 do_install() {
     cp -rp ${S}/usr ${D}/
 }
+
+do_package_qa[noexec] = "1"
