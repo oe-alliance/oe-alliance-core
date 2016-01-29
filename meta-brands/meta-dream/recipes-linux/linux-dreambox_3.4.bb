@@ -12,11 +12,8 @@ SRC_URI = " \
     file://defconfig \
     file://0001-xhci-Return-correct-number-of-tranferred-bytes-for-s.patch \
     file://0002-xhci-fix-off-by-one-error-in-TRB-DMA-address-boundar.patch \
-    file://0001-kernel-add-support-for-gcc-5.patch \
-    file://fixme-hardfloat.patch \
-    file://rtl8712-fix-warnings.patch \
-    file://rtl8187se-fix-warnings.patch \
 "
+
 SRC_URI[kernel.md5sum] = "967f72983655e2479f951195953e8480"
 SRC_URI[kernel.sha256sum] = "ff3dee6a855873d12487a6f4070ec2f7996d073019171361c955639664baa0c6"
 SRC_URI[stable-patch.md5sum] = "4225d2f3a2bdd2d2fed94b5b83a5a8bb"
