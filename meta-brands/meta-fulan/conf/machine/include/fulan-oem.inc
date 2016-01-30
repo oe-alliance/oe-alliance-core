@@ -156,7 +156,7 @@ IMAGE_FSTYPES ?= "jffs2"
 #INHERIT += "usb_image-spark71xx"
 
 IMAGE_CLASSES += "usb_image-spark71xx"
-INITRAMFS_FSTYPES = "ext2.gz spark-updt"
+INITRAMFS_FSTYPES = "ext2.gz"
 
 IMAGE_CMD_jffs2_prepend = " \
     rm -rf ${IMAGE_ROOTFS}/tmp/*; \
