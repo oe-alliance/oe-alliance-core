@@ -12,7 +12,7 @@ LIC_FILES_CHKSUM = "\
 ICU_LIB = "icu"
 
 DEPENDS = "zlib enchant libsoup-2.4 curl libxml2 cairo libidn gnutls geoclue \
-           gtk+ gstreamer1.0 gstreamer1.0-plugins-base flex-native gperf-native perl-native-runtime sqlite3 ${ICU_LIB}"
+           gtk+ gstreamer1.0 gstreamer1.0-plugins-base flex-native gperf-native perl-native sqlite3 ${ICU_LIB}"
 
 PR = "r3"
 PV = "r95199"
