@@ -8,8 +8,6 @@ PACKAGE_ARCH = "${MACHINEBUILD}"
 PV = "${KV}+${SRCDATE}"
 PR = "r4"
 
-RDEPENDS_${PN}_odinm9 += "odin-fpupdate-${MACHINE}"
-
 S = "${WORKDIR}"
 
 INHIBIT_PACKAGE_STRIP = "1"
