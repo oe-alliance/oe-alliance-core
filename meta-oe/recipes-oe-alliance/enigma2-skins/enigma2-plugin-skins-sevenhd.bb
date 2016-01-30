@@ -40,7 +40,7 @@ fi
 
 echo "                                                          "
 echo "             ...Skin successful installed.                "
-echo "
+echo "                                                          "
 exit 0
 }
 
