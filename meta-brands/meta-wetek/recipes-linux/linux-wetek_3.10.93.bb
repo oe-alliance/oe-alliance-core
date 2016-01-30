@@ -4,8 +4,8 @@ LICENSE = "GPLv2"
 
 LIC_FILES_CHKSUM = "file://${S}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-SRC_URI[md5sum] = "c920509e4a3fe9dacb3e171ebd2685cc"
-SRC_URI[sha256sum] = "30f268aa0d58bb3e5f6170d1ac010a4453da2a6c49be80e7b4aa84f8ec24865b"
+SRC_URI[md5sum] = "2defbb77eecc3ff1be1fffd9f1e7c203"
+SRC_URI[sha256sum] = "1deedddfaeb1f0292a2ba9a9a766e668efbac368e7ba136116c12cc717506e9a"
 
 inherit kernel machine_kernel_pr
 
@@ -31,7 +31,7 @@ B = "${WORKDIR}/build"
 
 do_configure_prepend () {
     cd ${STAGING_KERNEL_DIR}
-   find -type f -name "*.z" -print0 | xargs -0 cp -f --parents -t ${B}
+    find -type f -name "*.z" -print0 | xargs -0 cp -f --parents -t ${B}
 }
 
 do_compile_prepend () {
