@@ -49,5 +49,5 @@ if [ "$RUNLEVEL" = "0" ]; then
   sdparm --command=stop /dev/sd?
   sleep 5
 fi
-
+echo "umountfs Good Bye..."
 exit 0
