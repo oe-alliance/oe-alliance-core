@@ -1,1 +1,3 @@
+DEPENDS += "gdb"
+
 B = "${S}"
