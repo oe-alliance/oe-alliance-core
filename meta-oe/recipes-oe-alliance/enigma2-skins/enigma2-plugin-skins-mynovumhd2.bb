@@ -6,11 +6,11 @@ require conf/license/license-gplv2.inc
 inherit gitpkgv allarch
 
 SRCREV = "${AUTOREV}"
-PV = "17.0+git${SRCPV}"
-PKGV = "17.0+git${GITPKGV}"
+PV = "17.2+git${SRCPV}"
+PKGV = "17.2+git${GITPKGV}"
 PR = "r1"
 
-RDEPENDS_${PN} = "enigma2-plugin-skincomponents-novum"
+RDEPENDS_${PN} = "enigma2-plugin-skincomponents-novum enigma2-plugin-systemplugins-weathercomponenthandler"
 
 SRC_URI = "git://github.com/oe-alliance/oe-alliance-skins.git;protocol=git"
 
