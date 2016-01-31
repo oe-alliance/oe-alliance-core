@@ -10,3 +10,5 @@ SRC_URI_append_sh4 = " \
     "
 
 DEPENDS = "alsa-lib zlib libogg yasm-native"
+
+EXTRA_OECONF_append = " --disable-mipsdspr1 --disable-mipsdspr2 "
