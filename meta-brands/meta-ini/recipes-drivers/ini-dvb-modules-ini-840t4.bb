@@ -6,12 +6,12 @@ PACKAGE_ARCH = "${MACHINEBUILD}"
 require conf/license/license-close.inc
 
 KV = "3.14.2"
-SRCDATE = "20150501"
+SRCDATE = "20160121"
 
 PV = "${KV}+${SRCDATE}"
 
-SRC_URI[md5sum] = "42b663bde2fb0bf2547a98c030fc7b94"
-SRC_URI[sha256sum] = "56ea501d9450df27346ef1be124f0c0ac446862b49c2e61d71884b9d38b9f817"
+SRC_URI[md5sum] = "292d96aa1a11455a2d77963adab9065e"
+SRC_URI[sha256sum] = "cdbacedfbc49c8854abde93793703baec81169f337ad7bd671874dad4e7317c3"
 
 SRC_URI = "http://code-ini.com/software/drivers/ini-840t4-drivers-${KV}-${SRCDATE}.zip"
 

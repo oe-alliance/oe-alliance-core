@@ -6,13 +6,13 @@ PACKAGE_ARCH = "${MACHINEBUILD}"
 require conf/license/license-close.inc
 
 KV = "3.14.2"
-SRCDATE = "20150708"
+SRCDATE = "20160121"
 
 PV = "${KV}+${SRCDATE}"
 PR = "r5"
 
-SRC_URI[md5sum] = "6c525fc1a66275bcf2fcd259fc5fa58a"
-SRC_URI[sha256sum] = "d60237ad0ecc3cb67a1874f6b756af0cff50ee91c13a5a6fe71bc6b7a749dc33"
+SRC_URI[md5sum] = "3919231c1ee6ad231c5bc75ffca37b2f"
+SRC_URI[sha256sum] = "242028aa90ace81b62d50ca115801c5d276d8aba6291eb7544831aabaabb60c9"
 
 SRC_URI = "http://code-ini.com/software/drivers/ini-800-drivers-${KV}-${SRCDATE}.zip"
 
