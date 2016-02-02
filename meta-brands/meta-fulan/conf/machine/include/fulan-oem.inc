@@ -132,6 +132,7 @@ PREFERRED_VERSION_linux-libc-headers = "2.6.32"
 PREFERRED_VERSION_directfb = "1.4.12"
 SERIAL_CONSOLE = "115200 ttyAS0"
 #PREFERRED_VERSION_lirc ?= "0.9.0"
+PREFERRED_VERSION_libtalloc = "2.0.1"
 
 DVBPROVIDER = "kernel"
 
