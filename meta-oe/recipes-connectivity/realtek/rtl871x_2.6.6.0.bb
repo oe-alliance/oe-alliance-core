@@ -11,6 +11,7 @@ inherit module
 PR = "r1"
 
 SRC_URI = "http://source.mynonpublic.com/rtl871x-01112013.tar.gz \
+           file://rtl871x-gcc5.patch \
            file://COPYING"
 
 SRC_URI[md5sum] = "5faf6a314a63e1f3be9b227157bb76a1"
