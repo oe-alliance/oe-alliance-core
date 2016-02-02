@@ -1,18 +1,18 @@
-SUMMARY = "Hardware drivers for ${MACHINEBUILD}"
+SUMMARY = "Hardware drivers for Atemio 6x00"
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "CLOSED"
 PACKAGE_ARCH = "${MACHINEBUILD}"
 
 KV = "3.14.2"
-SRCDATE = "20150518"
+SRCDATE = "20160122"
 
 PV = "${KV}+${SRCDATE}"
 PR = "r1"
 
-SRC_URI[md5sum] = "c6d1745ac6927b28633b22573e0dfa81"
-SRC_URI[sha256sum] = "f63a729fb93b311e00effa9cefb46d4424f070cbc769c3ce0d1d882b9d9d4c7c"
-
+SRC_URI[md5sum] = "89e13cc774eb5180442f802fc919ad59"
+SRC_URI[sha256sum] = "e65792e30e50473d06fb874daad6e239d1d7afc627758b589d690643e58f112b"
+ 
 SRC_URI = "http://code-ini.com/software/drivers/ini-422-drivers-${KV}-${SRCDATE}.zip"
 
 S = "${WORKDIR}"

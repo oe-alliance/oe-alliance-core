@@ -1,18 +1,18 @@
-SUMMARY = "Hardware drivers for ${MACHINEBUILD}"
+SUMMARY = "Hardware drivers for Miraclebox MINI+"
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "CLOSED"
 PACKAGE_ARCH = "${MACHINEBUILD}"
 
 KV = "3.14.2"
-SRCDATE = "20150519"
+SRCDATE = "20160122"
 
 PV = "${KV}+${SRCDATE}"
 PR = "r1"
 
-SRC_URI[md5sum] = "2a5389739c47c29245920d0ba7ee4c60"
-SRC_URI[sha256sum] = "6d4d5e63ad624166c2ea94d1eaf37b4146b07d28124f6bb6fd0741e4eaf7adcd"
-
+SRC_URI[md5sum] = "0fdcd091fc5657b14fa953e28aca6f5f"
+SRC_URI[sha256sum] = "f664e8503e463fc0a2201f0596eab3fca7a3c1fe5faf8e91cd2a8d26b977c27c"
+ 
 SRC_URI = "http://code-ini.com/software/drivers/ini-442sv-drivers-${KV}-${SRCDATE}.zip"
 
 S = "${WORKDIR}"
