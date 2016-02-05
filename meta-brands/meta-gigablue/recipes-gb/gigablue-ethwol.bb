@@ -4,9 +4,9 @@ LICENSE = "CLOSED"
 require conf/license/license-close.inc
 
 PV = "1.0"
-PR = "r2"
+PR = "r3"
 
-PACKAGE_ARCH = "${MACHINEBUILD}"
+PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 SRC_URI = "file://ethwol.sh"
 
