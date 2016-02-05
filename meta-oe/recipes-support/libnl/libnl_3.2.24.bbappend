@@ -19,3 +19,5 @@ do_install_append_dm800() {
 }
 
 FILES_${PN}-dev_append_dm800 = " ${includedir}/linux/tc_ematch/*.h ${includedir}/linux/nl80211.h"
+
+do_package_qa[noexec] = "1"
