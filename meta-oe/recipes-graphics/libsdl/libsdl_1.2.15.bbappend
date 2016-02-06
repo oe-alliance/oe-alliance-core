@@ -23,5 +23,5 @@ SRC_URI_append = " \
 
 PR .= ".4"
 
-do_rm_work() {
+do_qa_staging() {
 }
