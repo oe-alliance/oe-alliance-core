@@ -1,0 +1,11 @@
+--- a/gst-libs/ext/libav/libavutil/bswap.h	2014-04-15 08:12:30.686280108 +0200
++++ b/gst-libs/ext/libav/libavutil/bswap.h	2014-04-15 08:12:41.667591662 +0200
+@@ -40,8 +40,6 @@
+ #   include "avr32/bswap.h"
+ #elif ARCH_BFIN
+ #   include "bfin/bswap.h"
+-#elif ARCH_SH4
+-#   include "sh4/bswap.h"
+ #elif ARCH_X86
+ #   include "x86/bswap.h"
+ #endif

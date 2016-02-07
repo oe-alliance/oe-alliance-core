@@ -1,0 +1,66 @@
+From cc5681e3d07023e8684c5da962c4fb5fcecfd385 Mon Sep 17 00:00:00 2001
+From: "Reynaldo H. Verdejo Pinochet" <reynaldo@osg.samsung.com>
+Date: Fri, 28 Nov 2014 13:26:13 -0300
+Subject: [PATCH] subparse: avoid false negatives dealing with UTF-8
+
+g_utf8_validate() chokes at any NUL among max_len
+bytes so we should avoid passing null character
+terminators if present. Additionally, only part of
+the available data might be valid UTF-8. For example
+a byte at the end might be the start of a valid UTF-8
+run (ie: d0) but not be a valid UTF-8 character by
+itself. In this case, we consume only the valid portion
+of the run.
+
+https://bugzilla.gnome.org/show_bug.cgi?id=740784
+---
+ gst/subparse/gstsubparse.c | 23 +++++++++++++++++++++--
+ 1 file changed, 21 insertions(+), 2 deletions(-)
+
+diff --git a/gst/subparse/gstsubparse.c b/gst/subparse/gstsubparse.c
+index 11b76c3..2719fd7 100644
+--- a/gst/subparse/gstsubparse.c
++++ b/gst/subparse/gstsubparse.c
+@@ -437,6 +437,9 @@ convert_encoding (GstSubParse * self, const gchar * str, gsize len,
+   const gchar *encoding;
+   GError *err = NULL;
+   gchar *ret = NULL;
++  gsize nuls = 0;
++  gsize valid_utf8_len;
++  const gchar *invalid_utf8_start;
+ 
+   *consumed = 0;
+ 
+@@ -457,11 +460,27 @@ convert_encoding (GstSubParse * self, const gchar * str, gsize len,
+ 
+   /* Otherwise check if it's UTF8 */
+   if (self->valid_utf8) {
+-    if (g_utf8_validate (str, len, NULL)) {
++    /* Trim NUL terminator(s) if present */
++    while (len > 0 && str[len - 1] == '\0') {
++      len--;
++      nuls++;
++    }
++
++    /* Consume whole byte run if all valid UTF-8 */
++    if (g_utf8_validate (str, len, &invalid_utf8_start)) {
+       GST_LOG_OBJECT (self, "valid UTF-8, no conversion needed");
+-      *consumed = len;
++      *consumed = len + nuls;
+       return g_strndup (str, len);
+     }
++
++    /* Consume initial data as far as we have at least 1 valid code point */
++    valid_utf8_len = invalid_utf8_start - str;
++    if (valid_utf8_len) {
++      GST_WARNING_OBJECT (self, "At least some of the data was invalid UTF-8");
++      *consumed = valid_utf8_len;
++      return g_strndup (str, valid_utf8_len);
++    }
++
+     GST_INFO_OBJECT (self, "invalid UTF-8!");
+     self->valid_utf8 = FALSE;
+   }
+-- 
+2.1.4
+
