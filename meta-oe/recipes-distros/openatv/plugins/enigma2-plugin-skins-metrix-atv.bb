@@ -12,14 +12,15 @@ SRCREV = "${AUTOREV}"
 PV = "2.1+git${SRCPV}"
 PKGV = "2.1+git${GITPKGV}"
 VER ="2.1"
-PR = "r6"
+PR = "r7"
 
-PACKAGES =+ "enigma2-plugin-skins-metrix-atv-fhd-icons"
-SRC_URI="${@base_contains("DISTRO_TYPE", "release", "git://github.com/openatv/MetrixHD.git;protocol=git" , "git://github.com/openatv/MetrixHD.git;protocol=git;branch=dev", d)}"
+PACKAGES =+ "enigma2-plugin-skins-metrix-atv-fhd-icons enigma2-plugin-skins-metrix-atv-uhd-icons"
+SRC_URI="git://github.com/openatv/MetrixHD.git"
 
 S = "${WORKDIR}/git"
 
 FILES_enigma2-plugin-skins-metrix-atv-fhd-icons = "/usr/share/enigma2/MetrixHD/FHD"
+FILES_enigma2-plugin-skins-metrix-atv-uhd-icons = "/usr/share/enigma2/MetrixHD/UHD"
 FILES_${PN} = "/usr"
 
 do_install() {
