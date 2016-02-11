@@ -2,6 +2,8 @@ SUMMARY = "AirTunes protocol server"
 DEPENDS = "openssl"
 LICENSE = "GPLv2"
 
+DEPENDS = "alsa-lib openssl"
+
 inherit gitpkgv
 
 PV = "1.0+git${SRCPV}"

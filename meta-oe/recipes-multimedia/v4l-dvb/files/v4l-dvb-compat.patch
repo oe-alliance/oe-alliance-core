@@ -1,0 +1,158 @@
+# HG changeset patch
+# User Andreas Oberritter <obi@linuxtv.org>
+# Date 1284051179 0
+# Node ID 604fc5b3136ea3bc92c47a1c04007a4c6ecce97c
+# Parent  6e0befab696af3ee5c8e563d699dd11559aef508
+(cross-)compile fixes for 2.6.18
+
+diff -r 6e0befab696a -r 604fc5b3136e linux/drivers/media/IR/Kconfig
+--- a/linux/drivers/media/IR/Kconfig	Fri Sep 03 00:28:05 2010 -0300
++++ b/linux/drivers/media/IR/Kconfig	Thu Sep 09 16:52:59 2010 +0000
+@@ -1,5 +1,5 @@
+ config IR_CORE
+-	tristate
++	tristate "Enable IR core"
+ 	depends on INPUT
+ 	default INPUT
+ 
+diff -r 6e0befab696a -r 604fc5b3136e linux/drivers/media/video/em28xx/Kconfig
+--- a/linux/drivers/media/video/em28xx/Kconfig	Fri Sep 03 00:28:05 2010 -0300
++++ b/linux/drivers/media/video/em28xx/Kconfig	Thu Sep 09 16:52:59 2010 +0000
+@@ -1,6 +1,6 @@
+ config VIDEO_EM28XX
+ 	tristate "Empia EM28xx USB video capture support"
+-	depends on VIDEO_DEV && I2C && INPUT
++	depends on VIDEO_DEV && I2C && INPUT && IR_CORE
+ 	select VIDEO_TUNER
+ 	select VIDEO_TVEEPROM
+ 	select VIDEO_IR
+diff -r 6e0befab696a -r 604fc5b3136e linux/drivers/media/video/v4l2-event.c
+--- a/linux/drivers/media/video/v4l2-event.c	Fri Sep 03 00:28:05 2010 -0300
++++ b/linux/drivers/media/video/v4l2-event.c	Thu Sep 09 16:52:59 2010 +0000
+@@ -28,6 +28,7 @@
+ 
+ #include <linux/sched.h>
+ #include <linux/slab.h>
++#include "compat.h"
+ 
+ int v4l2_event_init(struct v4l2_fh *fh)
+ {
+diff -r 6e0befab696a -r 604fc5b3136e v4l/Makefile
+--- a/v4l/Makefile	Fri Sep 03 00:28:05 2010 -0300
++++ b/v4l/Makefile	Thu Sep 09 16:52:59 2010 +0000
+@@ -42,13 +42,13 @@
+ default:: config-compat.h Makefile.media links oss firmware
+ 	@echo Kernel build directory is $(OUTDIR)
+ 	$(MAKE) -C $(OUTDIR) SUBDIRS=$(PWD) $(MYCFLAGS) modules
+-	./scripts/rmmod.pl check
++	if [ -z "$(DIR)" ]; then ./scripts/rmmod.pl check; fi
+ #	$(MAKE) checkpatch
+ 
+ mismatch:: config-compat.h Makefile.media links oss firmware
+ 	@echo Kernel build directory is $(OUTDIR)
+ 	$(MAKE) -Wfatal-errors -C $(OUTDIR) SUBDIRS=$(PWD) $(MYCFLAGS) CONFIG_DEBUG_SECTION_MISMATCH=y modules
+-	./scripts/rmmod.pl check
++	if [ -z "$(DIR)" ]; then ./scripts/rmmod.pl check; fi
+ 
+ firmware::
+ 	$(MAKE) -C firmware prep
+diff -r 6e0befab696a -r 604fc5b3136e v4l/compat.h
+--- a/v4l/compat.h	Fri Sep 03 00:28:05 2010 -0300
++++ b/v4l/compat.h	Thu Sep 09 16:52:59 2010 +0000
+@@ -33,6 +33,10 @@
+ #include <linux/i2c-dev.h>
+ #endif
+ 
++#ifndef kmalloc_track_caller
++#define kmalloc_track_caller(size, flags) ____kmalloc(size, flags)
++#endif
++
+ #if LINUX_VERSION_CODE < KERNEL_VERSION(2, 6, 30)
+ #include <linux/mm.h>
+ #include <asm/uaccess.h>
+@@ -55,6 +59,18 @@
+ 		return ERR_PTR(-EFAULT);
+ 	}
+ 
++	return p;
++}
++#endif
++
++#if LINUX_VERSION_CODE < KERNEL_VERSION(2, 6, 19)
++static inline void *kmemdup(const void *src, size_t len, gfp_t gfp)
++{
++	void *p;
++
++	p = kmalloc_track_caller(len, gfp);
++	if (p)
++		memcpy(p, src, len);
+ 	return p;
+ }
+ #endif
+@@ -368,7 +384,8 @@
+ #define hweight64(x)  generic_hweight64(x)
+ #endif
+ 
+-#if LINUX_VERSION_CODE < KERNEL_VERSION(2, 6, 24)
++#ifdef NEED_UINTPTR_T_TYPE
++/* uintptr_t type was added in 2.6.24 */
+ typedef unsigned long uintptr_t;
+ #endif
+ 
+diff -r 6e0befab696a -r 604fc5b3136e v4l/scripts/make_config_compat.pl
+--- a/v4l/scripts/make_config_compat.pl	Fri Sep 03 00:28:05 2010 -0300
++++ b/v4l/scripts/make_config_compat.pl	Thu Sep 09 16:52:59 2010 +0000
+@@ -98,6 +98,25 @@
+ 
+ 	if ($old_syntax) {
+ 		$out.= "\n#define NEED_BOOL_TYPE 1\n";
++	}
++	close INDEP;
++}
++
++sub check_uintptr_t()
++{
++	my $file = "$kdir/include/linux/types.h";
++	my $need_type = 1;
++
++	open INDEP, "<$file" or die "File not found: $file";
++	while (<INDEP>) {
++		if (m/^\s*typedef.*uintptr_t;/) {
++			$need_type = 0;
++			last;
++		}
++	}
++
++	if ($need_type) {
++		$out.= "\n#define NEED_UINTPTR_T_TYPE 1\n";
+ 	}
+ 	close INDEP;
+ }
+@@ -365,6 +384,7 @@
+ 	check_snd_ctl_boolean_mono_info();
+ 	check_snd_pcm_rate_to_rate_bit();
+ 	check_bool();
++	check_uintptr_t();
+ 	check_is_singular();
+ 	check_clamp();
+ 	check_proc_create();
+diff -r 6e0befab696a -r 604fc5b3136e v4l/scripts/make_makefile.pl
+--- a/v4l/scripts/make_makefile.pl	Fri Sep 03 00:28:05 2010 -0300
++++ b/v4l/scripts/make_makefile.pl	Thu Sep 09 16:52:59 2010 +0000
+@@ -204,6 +204,7 @@
+ find({wanted => \&parse_dir, no_chdir => 1}, '../linux/drivers/staging');
+ 
+ # Creating Install rule
++print OUT "DEPMOD ?= \"/sbin/depmod\"\n";
+ print OUT "media-install::\n";
+ 
+ removeobsolete();
+@@ -226,7 +227,7 @@
+ 	print OUT "fi;\n\n";
+ }
+ print OUT "\t@echo\n";
+-print OUT "\t/sbin/depmod -a \$(KERNELRELEASE) \$(if \$(DESTDIR),-b \$(DESTDIR))\n\n";
++print OUT "\t\$(DEPMOD) -a \$(KERNELRELEASE) \$(if \$(DESTDIR),-b \$(DESTDIR))\n\n";
+ 
+ # Creating Remove rule
+ print OUT "media-rminstall::\n";

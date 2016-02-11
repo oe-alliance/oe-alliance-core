@@ -1,0 +1,131 @@
+# HG changeset patch
+# User Andreas Oberritter <obi@linuxtv.org>
+# Date 1284052381 0
+# Node ID 03dc113ca9af927f8a406b02d1b356258ecdcdee
+# Parent  604fc5b3136ea3bc92c47a1c04007a4c6ecce97c
+DVB/V4L: interrupt blocking demux read on demux ioctl
+
+diff --git a/linux/drivers/media/dvb/dvb-core/dmxdev.c b/linux/drivers/media/dvb/dvb-core/dmxdev.c
+--- a/linux/drivers/media/dvb/dvb-core/dmxdev.c
++++ b/linux/drivers/media/dvb/dvb-core/dmxdev.c
+@@ -83,7 +83,11 @@
+ 
+ 		ret = wait_event_interruptible(src->queue,
+ 					       !dvb_ringbuffer_empty(src) ||
+-					       (src->error != 0));
++					       (src->error != 0) ||
++					       (src->do_wait != 1));
++		if (src->do_wait != 1)
++			ret = -EINTR;
++
+ 		if (ret < 0)
+ 			break;
+ 
+@@ -963,6 +967,22 @@
+ 	return ret;
+ }
+ 
++static int dvb_demux_lock_filter(struct dmxdev_filter *dmxdevfilter)
++{
++	int ret;
++
++	dmxdevfilter->buffer.do_wait = 0;
++
++	if (waitqueue_active(&dmxdevfilter->buffer.queue))
++		wake_up(&dmxdevfilter->buffer.queue);
++
++	ret = mutex_lock_interruptible(&dmxdevfilter->mutex);
++
++	dmxdevfilter->buffer.do_wait = 1;
++
++	return ret;
++}
++
+ static int dvb_demux_do_ioctl(struct inode *inode, struct file *file,
+ 			      unsigned int cmd, void *parg)
+ {
+@@ -976,7 +996,7 @@
+ 
+ 	switch (cmd) {
+ 	case DMX_START:
+-		if (mutex_lock_interruptible(&dmxdevfilter->mutex)) {
++		if (dvb_demux_lock_filter(dmxdevfilter)) {
+ 			mutex_unlock(&dmxdev->mutex);
+ 			return -ERESTARTSYS;
+ 		}
+@@ -988,7 +1008,7 @@
+ 		break;
+ 
+ 	case DMX_STOP:
+-		if (mutex_lock_interruptible(&dmxdevfilter->mutex)) {
++		if (dvb_demux_lock_filter(dmxdevfilter)) {
+ 			mutex_unlock(&dmxdev->mutex);
+ 			return -ERESTARTSYS;
+ 		}
+@@ -997,7 +1017,7 @@
+ 		break;
+ 
+ 	case DMX_SET_FILTER:
+-		if (mutex_lock_interruptible(&dmxdevfilter->mutex)) {
++		if (dvb_demux_lock_filter(dmxdevfilter)) {
+ 			mutex_unlock(&dmxdev->mutex);
+ 			return -ERESTARTSYS;
+ 		}
+@@ -1006,7 +1026,7 @@
+ 		break;
+ 
+ 	case DMX_SET_PES_FILTER:
+-		if (mutex_lock_interruptible(&dmxdevfilter->mutex)) {
++		if (dvb_demux_lock_filter(dmxdevfilter)) {
+ 			mutex_unlock(&dmxdev->mutex);
+ 			return -ERESTARTSYS;
+ 		}
+@@ -1015,7 +1035,7 @@
+ 		break;
+ 
+ 	case DMX_SET_BUFFER_SIZE:
+-		if (mutex_lock_interruptible(&dmxdevfilter->mutex)) {
++		if (dvb_demux_lock_filter(dmxdevfilter)) {
+ 			mutex_unlock(&dmxdev->mutex);
+ 			return -ERESTARTSYS;
+ 		}
+@@ -1059,7 +1079,7 @@
+ 		break;
+ 
+ 	case DMX_ADD_PID:
+-		if (mutex_lock_interruptible(&dmxdevfilter->mutex)) {
++		if (dvb_demux_lock_filter(dmxdevfilter)) {
+ 			ret = -ERESTARTSYS;
+ 			break;
+ 		}
+@@ -1068,7 +1088,7 @@
+ 		break;
+ 
+ 	case DMX_REMOVE_PID:
+-		if (mutex_lock_interruptible(&dmxdevfilter->mutex)) {
++		if (dvb_demux_lock_filter(dmxdevfilter)) {
+ 			ret = -ERESTARTSYS;
+ 			break;
+ 		}
+diff --git a/linux/drivers/media/dvb/dvb-core/dvb_ringbuffer.c b/linux/drivers/media/dvb/dvb-core/dvb_ringbuffer.c
+--- a/linux/drivers/media/dvb/dvb-core/dvb_ringbuffer.c
++++ b/linux/drivers/media/dvb/dvb-core/dvb_ringbuffer.c
+@@ -45,6 +45,7 @@
+ 	rbuf->data=data;
+ 	rbuf->size=len;
+ 	rbuf->error=0;
++	rbuf->do_wait=1;
+ 
+ 	init_waitqueue_head(&rbuf->queue);
+ 
+diff --git a/linux/drivers/media/dvb/dvb-core/dvb_ringbuffer.h b/linux/drivers/media/dvb/dvb-core/dvb_ringbuffer.h
+--- a/linux/drivers/media/dvb/dvb-core/dvb_ringbuffer.h
++++ b/linux/drivers/media/dvb/dvb-core/dvb_ringbuffer.h
+@@ -38,6 +38,7 @@
+ 	int               error;
+ 
+ 	wait_queue_head_t queue;
++	int               do_wait;
+ 	spinlock_t        lock;
+ };
+ 

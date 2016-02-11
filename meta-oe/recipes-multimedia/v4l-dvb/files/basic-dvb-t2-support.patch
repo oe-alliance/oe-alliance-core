@@ -1,0 +1,143 @@
+# HG changeset patch
+# User Andreas Oberritter <obi@linuxtv.org>
+# Date 1284052513 0
+# Node ID 558dc662028e9ae5debcfb708da07ab67be8b3d8
+# Parent  03dc113ca9af927f8a406b02d1b356258ecdcdee
+DVB: Add basic support for DVB-T2
+
+diff --git a/linux/drivers/media/dvb/dvb-core/dvb_frontend.c b/linux/drivers/media/dvb/dvb-core/dvb_frontend.c
+--- a/linux/drivers/media/dvb/dvb-core/dvb_frontend.c
++++ b/linux/drivers/media/dvb/dvb-core/dvb_frontend.c
+@@ -1161,10 +1161,9 @@
+ 		break;
+ 	}
+ 
+-	if(c->delivery_system == SYS_ISDBT) {
+-		/* Fake out a generic DVB-T request so we pass validation in the ioctl */
+-		p->frequency = c->frequency;
+-		p->inversion = c->inversion;
++	/* Fake out a generic DVB-T request so we pass validation in the ioctl */
++	if ((c->delivery_system == SYS_ISDBT) ||
++	    (c->delivery_system == SYS_DVBT2)) {
+ 		p->u.ofdm.constellation = QAM_AUTO;
+ 		p->u.ofdm.code_rate_HP = FEC_AUTO;
+ 		p->u.ofdm.code_rate_LP = FEC_AUTO;
+diff --git a/linux/include/linux/dvb/frontend.h b/linux/include/linux/dvb/frontend.h
+--- a/linux/include/linux/dvb/frontend.h
++++ b/linux/include/linux/dvb/frontend.h
+@@ -175,14 +175,20 @@
+ 	TRANSMISSION_MODE_2K,
+ 	TRANSMISSION_MODE_8K,
+ 	TRANSMISSION_MODE_AUTO,
+-	TRANSMISSION_MODE_4K
++	TRANSMISSION_MODE_4K,
++	TRANSMISSION_MODE_1K,
++	TRANSMISSION_MODE_16K,
++	TRANSMISSION_MODE_32K,
+ } fe_transmit_mode_t;
+ 
+ typedef enum fe_bandwidth {
+ 	BANDWIDTH_8_MHZ,
+ 	BANDWIDTH_7_MHZ,
+ 	BANDWIDTH_6_MHZ,
+-	BANDWIDTH_AUTO
++	BANDWIDTH_AUTO,
++	BANDWIDTH_5_MHZ,
++	BANDWIDTH_10_MHZ,
++	BANDWIDTH_1_712_MHZ,
+ } fe_bandwidth_t;
+ 
+ 
+@@ -191,7 +197,10 @@
+ 	GUARD_INTERVAL_1_16,
+ 	GUARD_INTERVAL_1_8,
+ 	GUARD_INTERVAL_1_4,
+-	GUARD_INTERVAL_AUTO
++	GUARD_INTERVAL_AUTO,
++	GUARD_INTERVAL_1_128,
++	GUARD_INTERVAL_19_128,
++	GUARD_INTERVAL_19_256,
+ } fe_guard_interval_t;
+ 
+ 
+@@ -305,7 +314,9 @@
+ 
+ #define DTV_ISDBS_TS_ID		42
+ 
+-#define DTV_MAX_COMMAND				DTV_ISDBS_TS_ID
++#define DTV_DVBT2_PLP_ID	43
++
++#define DTV_MAX_COMMAND				DTV_DVBT2_PLP_ID
+ 
+ typedef enum fe_pilot {
+ 	PILOT_ON,
+@@ -337,6 +348,7 @@
+ 	SYS_DMBTH,
+ 	SYS_CMMB,
+ 	SYS_DAB,
++	SYS_DVBT2,
+ } fe_delivery_system_t;
+ 
+ struct dtv_cmds_h {
+diff --git a/linux/include/linux/dvb/version.h b/linux/include/linux/dvb/version.h
+--- a/linux/include/linux/dvb/version.h
++++ b/linux/include/linux/dvb/version.h
+@@ -24,6 +24,6 @@
+ #define _DVBVERSION_H_
+ 
+ #define DVB_API_VERSION 5
+-#define DVB_API_VERSION_MINOR 2
++#define DVB_API_VERSION_MINOR 3
+ 
+ #endif /*_DVBVERSION_H_*/
+--- v4l-dvb-org/linux/drivers/media/dvb/dvb-core/dvb_frontend.c	2011-08-13 18:16:51.000000000 +0200
++++ v4l-dvb/linux/drivers/media/dvb/dvb-core/dvb_frontend.c	2011-08-13 18:21:12.953703247 +0200
+@@ -917,7 +917,7 @@
+ 	.buffer = b \
+ }
+ 
+-static struct dtv_cmds_h dtv_cmds[] = {
++static struct dtv_cmds_h dtv_cmds[DTV_MAX_COMMAND + 1] = {
+ 	_DTV_CMD(DTV_TUNE, 1, 0),
+ 	_DTV_CMD(DTV_CLEAR, 1, 0),
+ 
+@@ -979,6 +979,7 @@
+ 	_DTV_CMD(DTV_ISDBT_LAYERC_TIME_INTERLEAVING, 0, 0),
+ 
+ 	_DTV_CMD(DTV_ISDBS_TS_ID, 1, 0),
++	_DTV_CMD(DTV_DVBT2_PLP_ID, 1, 0),
+ 
+ 	/* Get */
+ 	_DTV_CMD(DTV_DISEQC_SLAVE_REPLY, 0, 1),
+@@ -1334,6 +1335,9 @@
+ 	case DTV_ISDBS_TS_ID:
+ 		tvp->u.data = c->isdbs_ts_id;
+ 		break;
++	case DTV_DVBT2_PLP_ID:
++		tvp->u.data = fe->dtv_property_cache.dvbt2_plp_id;
++		break;
+ 	default:
+ 		return -EINVAL;
+ 	}
+@@ -1498,6 +1502,9 @@
+ 	case DTV_ISDBS_TS_ID:
+ 		c->isdbs_ts_id = tvp->u.data;
+ 		break;
++	case DTV_DVBT2_PLP_ID:
++		fe->dtv_property_cache.dvbt2_plp_id = tvp->u.data;
++		break;
+ 	default:
+ 		return -EINVAL;
+ 	}
+--- v4l-dvb-org/linux/drivers/media/dvb/dvb-core/dvb_frontend.h	2011-04-13 01:43:27.000000000 +0200
++++ v4l-dvb/linux/drivers/media/dvb/dvb-core/dvb_frontend.h	2011-08-13 18:21:12.973703248 +0200
+@@ -359,6 +359,9 @@
+ 
+ 	/* ISDB-T specifics */
+ 	u32			isdbs_ts_id;
++
++	/* DVB-T2 specifics */
++	u32                     dvbt2_plp_id;
+ };
+ 
+ struct dvb_frontend {

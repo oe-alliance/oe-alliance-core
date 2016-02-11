@@ -1,0 +1,31 @@
+commit b0db82d74acaf2a8a22ac58b0b614378526af620
+Author: Andreas Oberritter <obi@linuxtv.org>
+Date:   Thu Aug 4 11:27:37 2011 +0000
+
+    DVB: dvb_frontend: fix stale parameters on initial frontend event
+    
+    - FE_SET_FRONTEND triggers a frontend event, which uses stale data.
+      Modify it to use the data given by the user.
+    
+    - Fixes a regression caused by a5959dbea37973a2440eeba39fba32c79d862ec2.
+    
+    Signed-off-by: Andreas Oberritter <obi@linuxtv.org>
+    Signed-off-by: ghost <andreas.monzner@multimedia-labs.de>
+
+diff -Naur a/linux/drivers/media/dvb/dvb-core/dvb_frontend.c b/linux/drivers/media/dvb/dvb-core/dvb_frontend.c
+--- a/linux/drivers/media/dvb/dvb-core/dvb_frontend.c	2011-08-09 19:03:24.704217518 +0200
++++ b/linux/drivers/media/dvb/dvb-core/dvb_frontend.c	2011-08-09 19:03:35.744217384 +0200
+@@ -1834,6 +1834,13 @@
+ 			dtv_property_cache_sync(fe, c, &fepriv->parameters_in);
+ 		}
+ 
++		/*
++		 * Initialize output parameters to match the values given by
++		 * the user. FE_SET_FRONTEND triggers an initial frontend event
++		 * with status = 0, which copies output parameters to userspace.
++		 */
++		fepriv->parameters_out = fepriv->parameters_in;
++
+ 		memset(&fetunesettings, 0, sizeof(struct dvb_frontend_tune_settings));
+ 		memcpy(&fetunesettings.parameters, parg,
+ 		       sizeof (struct dvb_frontend_parameters));

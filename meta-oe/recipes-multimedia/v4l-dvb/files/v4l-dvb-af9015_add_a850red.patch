@@ -1,0 +1,1456 @@
+diff -ruN v4l-dvb/linux/drivers/media/common/tuners/tda18218.c v4l-dvb.orig/linux/drivers/media/common/tuners/tda18218.c
+--- v4l-dvb/linux/drivers/media/common/tuners/tda18218.c	2011-01-19 21:19:56.304793000 +0100
++++ v4l-dvb.orig/linux/drivers/media/common/tuners/tda18218.c	2011-01-20 17:47:27.397899308 +0100
+@@ -22,11 +22,14 @@
+ #include "compat.h"
+ #include "tda18218_priv.h"
+ 
++static int debug;
++module_param(debug, int, 0644);
++MODULE_PARM_DESC(debug, "Turn on/off debugging (default:off).");
++
+ /* write multiple registers */
+-static int tda18218_wr_regs(struct dvb_frontend *fe, u8 reg, u8 *val, u8 len)
++static int tda18218_wr_regs(struct tda18218_priv *priv, u8 reg, u8 *val, u8 len)
+ {
+-	struct tda18218_priv *priv = fe->tuner_priv;
+-	int ret;
++	int ret = 0;
+ 	u8 buf[1+len], quotient, remainder, i, msg_len, msg_len_max;
+ 	struct i2c_msg msg[1] = {
+ 		{
+@@ -36,9 +39,6 @@
+ 		}
+ 	};
+ 
+-	if (fe->ops.i2c_gate_ctrl)
+-		fe->ops.i2c_gate_ctrl(fe, 1); /* open I2C-gate */
+-
+ 	msg_len_max = priv->cfg->i2c_wr_max - 1;
+ 	quotient = len / msg_len_max;
+ 	remainder = len % msg_len_max;
+@@ -59,22 +59,18 @@
+ 	if (ret == 1) {
+ 		ret = 0;
+ 	} else {
+-		printk(KERN_WARNING "I2C write failed ret:%d reg:%02x len:%d\n",
+-			ret, reg, len);
++		warn("i2c wr failed ret:%d reg:%02x len:%d", ret, reg, len);
+ 		ret = -EREMOTEIO;
+ 	}
+ 
+-	if (fe->ops.i2c_gate_ctrl)
+-		fe->ops.i2c_gate_ctrl(fe, 0); /* close I2C-gate */
+-
+ 	return ret;
+ }
+ 
+ /* read multiple registers */
+-static int tda18218_rd_regs(struct dvb_frontend *fe, u8 reg, u8 *val, u8 len)
++static int tda18218_rd_regs(struct tda18218_priv *priv, u8 reg, u8 *val, u8 len)
+ {
+-	struct tda18218_priv *priv = fe->tuner_priv;
+ 	int ret;
++	u8 buf[reg+len]; /* we must start read always from reg 0x00 */
+ 	struct i2c_msg msg[2] = {
+ 		{
+ 			.addr = priv->cfg->i2c_address,
+@@ -84,40 +80,34 @@
+ 		}, {
+ 			.addr = priv->cfg->i2c_address,
+ 			.flags = I2C_M_RD,
+-			.len = len,
+-			.buf = val,
++			.len = sizeof(buf),
++			.buf = buf,
+ 		}
+ 	};
+ 
+-	if (fe->ops.i2c_gate_ctrl)
+-		fe->ops.i2c_gate_ctrl(fe, 1); /* open I2C-gate */
+-
+ 	ret = i2c_transfer(priv->i2c, msg, 2);
+ 	if (ret == 2) {
++		memcpy(val, &buf[reg], len);
+ 		ret = 0;
+ 	} else {
+-		printk(KERN_WARNING "I2C read failed ret:%d reg:%02x len:%d\n",
+-			ret, reg, len);
++		warn("i2c rd failed ret:%d reg:%02x len:%d", ret, reg, len);
+ 		ret = -EREMOTEIO;
+ 	}
+ 
+-	if (fe->ops.i2c_gate_ctrl)
+-		fe->ops.i2c_gate_ctrl(fe, 0); /* close I2C-gate */
+-
+ 	return ret;
+ }
+ 
+ /* write single register */
+-static int tda18218_wr_reg(struct dvb_frontend *fe, u8 reg, u8 val)
++static int tda18218_wr_reg(struct tda18218_priv *priv, u8 reg, u8 val)
+ {
+-	return tda18218_wr_regs(fe, reg, &val, 1);
++	return tda18218_wr_regs(priv, reg, &val, 1);
+ }
+ 
+ /* read single register */
+ 
+-static int tda18218_rd_reg(struct dvb_frontend *fe, u8 reg, u8 *val)
++static int tda18218_rd_reg(struct tda18218_priv *priv, u8 reg, u8 *val)
+ {
+-	return tda18218_rd_regs(fe, reg, val, 1);
++	return tda18218_rd_regs(priv, reg, val, 1);
+ }
+ 
+ static int tda18218_set_params(struct dvb_frontend *fe,
+@@ -125,83 +115,137 @@
+ {
+ 	struct tda18218_priv *priv = fe->tuner_priv;
+ 	int ret;
+-	u8 *regs = priv->tda18218_regs;
+-	u8 BP_Filter, LP_Fc;
++	u8 buf[3], i, BP_Filter, LP_Fc;
+ 	u32 LO_Frac;
+-	u8 buf[4];
+-	/* TODO AGC, find out this proprietary algorithm... */
++	/* TODO: find out correct AGC algorithm */
++	u8 agc[][2] = {
++		{ R20_AGC11, 0x60 },
++		{ R23_AGC21, 0x02 },
++		{ R20_AGC11, 0xa0 },
++		{ R23_AGC21, 0x09 },
++		{ R20_AGC11, 0xe0 },
++		{ R23_AGC21, 0x0c },
++		{ R20_AGC11, 0x40 },
++		{ R23_AGC21, 0x01 },
++		{ R20_AGC11, 0x80 },
++		{ R23_AGC21, 0x08 },
++		{ R20_AGC11, 0xc0 },
++		{ R23_AGC21, 0x0b },
++		{ R24_AGC22, 0x1c },
++		{ R24_AGC22, 0x0c },
++	};
++
++	if (fe->ops.i2c_gate_ctrl)
++		fe->ops.i2c_gate_ctrl(fe, 1); /* open I2C-gate */
+ 
+ 	/* low-pass filter cut-off frequency */
+ 	switch (params->u.ofdm.bandwidth) {
+ 	case BANDWIDTH_6_MHZ:
+ 		LP_Fc = 0;
++		LO_Frac = params->frequency + 4000000;
+ 		break;
+ 	case BANDWIDTH_7_MHZ:
+ 		LP_Fc = 1;
++		LO_Frac = params->frequency + 3500000;
+ 		break;
+ 	case BANDWIDTH_8_MHZ:
+ 	default:
+ 		LP_Fc = 2;
++		LO_Frac = params->frequency + 4000000;
+ 		break;
+ 	}
+ 
+ 	/* band-pass filter */
+-	if (params->frequency < 188000000)
++	if (LO_Frac < 188000000)
+ 		BP_Filter = 3;
+-	else if (params->frequency < 253000000)
++	else if (LO_Frac < 253000000)
+ 		BP_Filter = 4;
+-	else if (params->frequency < 343000000)
++	else if (LO_Frac < 343000000)
+ 		BP_Filter = 5;
+ 	else
+ 		BP_Filter = 6;
+ 
+-	buf[0] = (regs[R_IF1] & ~7) | BP_Filter; /* BP_Filter[2:0] */
+-	buf[1] = (regs[R_IF2] & ~3) | LP_Fc; /* LP_Fc[1:0] */
+-	buf[2] = regs[R_AGC2B];
+-	ret = tda18218_wr_regs(fe, R_IF1, buf, 3);
++	buf[0] = (priv->regs[R1A_IF1] & ~7) | BP_Filter; /* BP_Filter */
++	buf[1] = (priv->regs[R1B_IF2] & ~3) | LP_Fc; /* LP_Fc */
++	buf[2] = priv->regs[R1C_AGC2B];
++	ret = tda18218_wr_regs(priv, R1A_IF1, buf, 3);
+ 	if (ret)
+ 		goto error;
+ 
+-	LO_Frac = (params->frequency + 4000000) / 1000;
+-	buf[0] = LO_Frac >> 12; /* LO_Frac_0[31:24] */
+-	buf[1] = LO_Frac >> 4; /* LO_Frac_1[23:16] */
+-	buf[2] = LO_Frac << 4 | (regs[R_MD5] & 0x0f); /* LO_Frac_2[15:12] */
+-	buf[3] = 0xff;
+-	ret = tda18218_wr_regs(fe, R_MD3, buf, 4);
++	buf[0] = (LO_Frac / 1000) >> 12; /* LO_Frac_0 */
++	buf[1] = (LO_Frac / 1000) >> 4; /* LO_Frac_1 */
++	buf[2] = (LO_Frac / 1000) << 4 |
++		(priv->regs[R0C_MD5] & 0x0f); /* LO_Frac_2 */
++	ret = tda18218_wr_regs(priv, R0A_MD3, buf, 3);
+ 	if (ret)
+ 		goto error;
+ 
+-	buf[0] = regs[R_MD8] | (1 << 6); /* Freq_prog_Start */
+-	ret = tda18218_wr_regs(fe, R_MD8, buf, 1);
++	buf[0] = priv->regs[R0F_MD8] | (1 << 6); /* Freq_prog_Start */
++	ret = tda18218_wr_regs(priv, R0F_MD8, buf, 1);
+ 	if (ret)
+ 		goto error;
+ 
+-	buf[0] = regs[R_MD8] & ~(1 << 6); /* Freq_prog_Start */
+-	ret = tda18218_wr_regs(fe, R_MD8, buf, 1);
++	buf[0] = priv->regs[R0F_MD8] & ~(1 << 6); /* Freq_prog_Start */
++	ret = tda18218_wr_regs(priv, R0F_MD8, buf, 1);
+ 	if (ret)
+ 		goto error;
+ 
+-	return 0;
++	/* trigger AGC */
++	for (i = 0; i < ARRAY_SIZE(agc); i++) {
++		ret = tda18218_wr_reg(priv, agc[i][0], agc[i][1]);
++		if (ret)
++			goto error;
++	}
++
+ error:
++	if (fe->ops.i2c_gate_ctrl)
++		fe->ops.i2c_gate_ctrl(fe, 0); /* close I2C-gate */
++
++	if (ret)
++		dbg("%s: failed ret:%d", __func__, ret);
++
++	return ret;
++}
++
++static int tda18218_sleep(struct dvb_frontend *fe)
++{
++	struct tda18218_priv *priv = fe->tuner_priv;
++	int ret;
++
++	if (fe->ops.i2c_gate_ctrl)
++		fe->ops.i2c_gate_ctrl(fe, 1); /* open I2C-gate */
++
++	/* standby */
++	ret = tda18218_wr_reg(priv, R17_PD1, priv->regs[R17_PD1] | (1 << 0));
++
++	if (fe->ops.i2c_gate_ctrl)
++		fe->ops.i2c_gate_ctrl(fe, 0); /* close I2C-gate */
++
++	if (ret)
++		dbg("%s: failed ret:%d", __func__, ret);
++
+ 	return ret;
+ }
+ 
+ static int tda18218_init(struct dvb_frontend *fe)
+ {
+ 	struct tda18218_priv *priv = fe->tuner_priv;
+-	u8 *regs = priv->tda18218_regs;
+ 	int ret;
+ 
+-	/* TODO implement calibration */
++	/* TODO: calibrations */
+ 
+-	/* TODO inits from the sniff... */
+-	regs[R_IF1] = 0x0e;
+-	regs[R_IF2] = 0x29;
+-	regs[R_PSM2] = 0x00;
++	if (fe->ops.i2c_gate_ctrl)
++		fe->ops.i2c_gate_ctrl(fe, 1); /* open I2C-gate */
+ 
+-	ret = tda18218_wr_regs(fe, R_ID, regs, TDA18218_NUM_REGS);
++	ret = tda18218_wr_regs(priv, R00_ID, priv->regs, TDA18218_NUM_REGS);
+ 
+-	return 0;
++	if (fe->ops.i2c_gate_ctrl)
++		fe->ops.i2c_gate_ctrl(fe, 0); /* close I2C-gate */
++
++	if (ret)
++		dbg("%s: failed ret:%d", __func__, ret);
++
++	return ret;
+ }
+ 
+ static int tda18218_release(struct dvb_frontend *fe)
+@@ -213,20 +257,25 @@
+ 
+ static const struct dvb_tuner_ops tda18218_tuner_ops = {
+ 	.info = {
+-		.name           = "NXP TDA18218HN",
++		.name           = "NXP TDA18218",
++
++		.frequency_min  = 174000000,
++		.frequency_max  = 864000000,
++		.frequency_step =      1000,
+ 	},
+ 
+ 	.release       = tda18218_release,
+ 	.init          = tda18218_init,
++	.sleep         = tda18218_sleep,
+ 
+-	.set_params = tda18218_set_params,
++	.set_params    = tda18218_set_params,
+ };
+ 
+ struct dvb_frontend *tda18218_attach(struct dvb_frontend *fe,
+ 	struct i2c_adapter *i2c, struct tda18218_config *cfg)
+ {
+ 	struct tda18218_priv *priv = NULL;
+-	u8 tmp = 0;
++	u8 val;
+ 	int ret;
+ 	/* chip default registers values */
+ 	static u8 def_regs[] = {
+@@ -246,23 +295,41 @@
+ 	priv->i2c = i2c;
+ 	fe->tuner_priv = priv;
+ 
++	if (fe->ops.i2c_gate_ctrl)
++		fe->ops.i2c_gate_ctrl(fe, 1); /* open I2C-gate */
++
+ 	/* check if the tuner is there */
+-	ret = tda18218_rd_reg(fe, R_ID, &tmp);
+-	if (ret || tmp != 0xc0) {
++	ret = tda18218_rd_reg(priv, R00_ID, &val);
++	dbg("%s: ret:%d chip ID:%02x", __func__, ret, val);
++	if (ret || val != def_regs[R00_ID]) {
+ 		kfree(priv);
+ 		return NULL;
+ 	}
+ 
+-	printk(KERN_INFO "NXP TDA18218HN successfully identified.\n");
++	info("NXP TDA18218HN successfully identified.");
+ 
+ 	memcpy(&fe->ops.tuner_ops, &tda18218_tuner_ops,
+ 		sizeof(struct dvb_tuner_ops));
+-	memcpy(priv->tda18218_regs, def_regs, sizeof(def_regs));
++	memcpy(priv->regs, def_regs, sizeof(def_regs));
++
++	/* loop-through enabled chip default register values */
++	if (priv->cfg->loop_through) {
++		priv->regs[R17_PD1] = 0xb0;
++		priv->regs[R18_PD2] = 0x59;
++	}
++
++	/* standby */
++	ret = tda18218_wr_reg(priv, R17_PD1, priv->regs[R17_PD1] | (1 << 0));
++	if (ret)
++		dbg("%s: failed ret:%d", __func__, ret);
++
++	if (fe->ops.i2c_gate_ctrl)
++		fe->ops.i2c_gate_ctrl(fe, 0); /* close I2C-gate */
+ 
+ 	return fe;
+ }
+ EXPORT_SYMBOL(tda18218_attach);
+ 
+-MODULE_DESCRIPTION("TDA18218 silicon tuner driver");
++MODULE_DESCRIPTION("NXP TDA18218HN silicon tuner driver");
+ MODULE_AUTHOR("Antti Palosaari <crope@iki.fi>");
+ MODULE_LICENSE("GPL");
+diff -ruN v4l-dvb/linux/drivers/media/common/tuners/tda18218.h v4l-dvb.orig/linux/drivers/media/common/tuners/tda18218.h
+--- v4l-dvb/linux/drivers/media/common/tuners/tda18218.h	2011-01-19 21:19:56.304793000 +0100
++++ v4l-dvb.orig/linux/drivers/media/common/tuners/tda18218.h	2011-01-20 17:47:47.694360792 +0100
+@@ -1,21 +1,21 @@
+ /*
+- *  Driver for  NXP TDA18218 silicon tuner
++ * NXP TDA18218HN silicon tuner driver
+  *
+- *  Copyright (C) 2010 Lauris Ding <ld...@gmx.de>
++ * Copyright (C) 2010 Antti Palosaari <crope@iki.fi>
+  *
+- *  This program is free software; you can redistribute it and/or modify
+- *  it under the terms of the GNU General Public License as published by
+- *  the Free Software Foundation; either version 2 of the License, or
+- *  (at your option) any later version.
++ *    This program is free software; you can redistribute it and/or modify
++ *    it under the terms of the GNU General Public License as published by
++ *    the Free Software Foundation; either version 2 of the License, or
++ *    (at your option) any later version.
+  *
+- *  This program is distributed in the hope that it will be useful,
+- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- *  GNU General Public License for more details.
++ *    This program is distributed in the hope that it will be useful,
++ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *    GNU General Public License for more details.
+  *
+- *  You should have received a copy of the GNU General Public License
+- *  along with this program; if not, write to the Free Software
+- *  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
++ *    You should have received a copy of the GNU General Public License
++ *    along with this program; if not, write to the Free Software
++ *    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+  */
+ 
+ #ifndef TDA18218_H
+@@ -26,6 +26,7 @@
+ struct tda18218_config {
+ 	u8 i2c_address;
+ 	u8 i2c_wr_max;
++	u8 loop_through:1;
+ };
+ 
+ #if defined(CONFIG_MEDIA_TUNER_TDA18218) || \
+diff -ruN v4l-dvb/linux/drivers/media/common/tuners/tda18218_priv.h v4l-dvb.orig/linux/drivers/media/common/tuners/tda18218_priv.h
+--- v4l-dvb/linux/drivers/media/common/tuners/tda18218_priv.h	2011-01-19 21:19:56.304793000 +0100
++++ v4l-dvb.orig/linux/drivers/media/common/tuners/tda18218_priv.h	2011-01-20 17:48:14.645493107 +0100
+@@ -1,84 +1,98 @@
+ /*
+- *  Driver for NXP TDA18218 silicon tuner
++ * NXP TDA18218HN silicon tuner driver
+  *
+- *  Copyright (C) 2010 Lauris Ding <ld...@gmx.de>
+- *  This program is free software; you can redistribute it and/or modify
+- *  it under the terms of the GNU General Public License as published by
+- *  the Free Software Foundation; either version 2 of the License, or
+- *  (at your option) any later version.
++ * Copyright (C) 2010 Antti Palosaari <crope@iki.fi>
+  *
+- *  This program is distributed in the hope that it will be useful,
+- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- *  GNU General Public License for more details.
++ *    This program is free software; you can redistribute it and/or modify
++ *    it under the terms of the GNU General Public License as published by
++ *    the Free Software Foundation; either version 2 of the License, or
++ *    (at your option) any later version.
+  *
+- *  You should have received a copy of the GNU General Public License
+- *  along with this program; if not, write to the Free Software
+- *  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
++ *    This program is distributed in the hope that it will be useful,
++ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *    GNU General Public License for more details.
++ *
++ *    You should have received a copy of the GNU General Public License
++ *    along with this program; if not, write to the Free Software
++ *    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+  */
+ 
+ #ifndef TDA18218_PRIV_H
+ #define TDA18218_PRIV_H
+ 
+-#define R_ID         0x00	/* ID byte */
+-#define R_R1         0x01	/* Read byte 1 */
+-#define R_R2         0x02	/* Read byte 2 */
+-#define R_R3         0x03	/* Read byte 3 */
+-#define R_R4         0x04	/* Read byte 4 */
+-#define R_R5         0x05	/* Read byte 5 */
+-#define R_R6         0x06	/* Read byte 6 */
+-#define R_MD1        0x07	/* Main Divider byte 1 */
+-#define R_PSM1       0x08	/* PSM byte 1 */
+-#define R_MD2        0x09	/* Main Divider byte 2 */
+-#define R_MD3        0x0a	/* Main Divider byte 1 */
+-#define R_MD4        0x0b	/* Main Divider byte 4 */
+-#define R_MD5        0x0c	/* Main Divider byte 5 */
+-#define R_MD6        0x0d	/* Main Divider byte 6 */
+-#define R_MD7        0x0e	/* Main Divider byte 7 */
+-#define R_MD8        0x0f	/* Main Divider byte 8 */
+-#define R_CD1        0x10	/* Cal Divider byte 1 */
+-#define R_CD2        0x11	/* Cal Divider byte 2 */
+-#define R_CD3        0x12	/* Cal Divider byte 3 */
+-#define R_CD4        0x13	/* Cal Divider byte 4 */
+-#define R_CD5        0x14	/* Cal Divider byte 5 */
+-#define R_CD6        0x15	/* Cal Divider byte 6 */
+-#define R_CD7        0x16	/* Cal Divider byte 7 */
+-#define R_PD1        0x17	/* Power-down byte 1 */
+-#define R_PD2        0x18	/* Power-down byte 2 */
+-#define R_XTOUT      0x19	/* XTOUT byte */
+-#define R_IF1        0x1a	/* IF byte 1 */
+-#define R_IF2        0x1b	/* IF byte 2 */
+-#define R_AGC2B      0x1c	/* AGC2b byte */
+-#define R_PSM2       0x1d	/* PSM byte 2 */
+-#define R_PSM3       0x1e	/* PSM byte 3 */
+-#define R_PSM4       0x1f	/* PSM byte 4 */
+-#define R_AGC11      0x20	/* AGC1 byte 1 */
+-#define R_AGC12      0x21	/* AGC1 byte 2 */
+-#define R_AGC13      0x22	/* AGC1 byte 3 */
+-#define R_AGC21      0x23	/* AGC2 byte 1 */
+-#define R_AGC22      0x24	/* AGC2 byte 2 */
+-#define R_AAGC       0x25	/* Analog AGC byte */
+-#define R_RC         0x26	/* RC byte */
+-#define R_RSSI       0x27	/* RSSI byte */
+-#define R_IRCAL1     0x28	/* IR CAL byte 1 */
+-#define R_IRCAL2     0x29	/* IR CAL byte 2 */
+-#define R_IRCAL3     0x2a	/* IR CAL byte 3 */
+-#define R_IRCAL4     0x2b	/* IR CAL byte 4 */
+-#define R_RFCAL1     0x2c	/* RF CAL byte 1 */
+-#define R_RFCAL2     0x2d	/* RF CAL byte 2 */
+-#define R_RFCAL3     0x2e	/* RF CAL byte 3 */
+-#define R_RFCAL4     0x2f	/* RF CAL byte 4 */
+-#define R_RFCAL5     0x30	/* RF CAL byte 5 */
+-#define R_RFCAL6     0x31	/* RF CAL byte 6 */
+-#define R_RFCAL7     0x32	/* RF CAL byte 7 */
+-#define R_RFCAL8     0x33	/* RF CAL byte 8 */
+-#define R_RFCAL9     0x34	/* RF CAL byte 9 */
+-#define R_RFCAL10    0x35	/* RF CAL byte 10 */
+-#define R_RFCALRAM1  0x36	/* RF CAL RAM byte 1 */
+-#define R_RFCALRAM2  0x37	/* RF CAL RAM byte 2 */
+-#define R_MARGIN     0x38	/* Margin byte */
+-#define R_FMAX1      0x39	/* Fmax byte 1 */
+-#define R_FMAX2      0x3a	/* Fmax byte 2 */
++#define LOG_PREFIX "tda18218"
++
++#undef dbg
++#define dbg(f, arg...) \
++	if (debug) \
++		printk(KERN_DEBUG   LOG_PREFIX": " f "\n" , ## arg)
++#undef err
++#define err(f, arg...)  printk(KERN_ERR     LOG_PREFIX": " f "\n" , ## arg)
++#undef info
++#define info(f, arg...) printk(KERN_INFO    LOG_PREFIX": " f "\n" , ## arg)
++#undef warn
++#define warn(f, arg...) printk(KERN_WARNING LOG_PREFIX": " f "\n" , ## arg)
++
++#define R00_ID         0x00	/* ID byte */
++#define R01_R1         0x01	/* Read byte 1 */
++#define R02_R2         0x02	/* Read byte 2 */
++#define R03_R3         0x03	/* Read byte 3 */
++#define R04_R4         0x04	/* Read byte 4 */
++#define R05_R5         0x05	/* Read byte 5 */
++#define R06_R6         0x06	/* Read byte 6 */
++#define R07_MD1        0x07	/* Main divider byte 1 */
++#define R08_PSM1       0x08	/* PSM byte 1 */
++#define R09_MD2        0x09	/* Main divider byte 2 */
++#define R0A_MD3        0x0a	/* Main divider byte 1 */
++#define R0B_MD4        0x0b	/* Main divider byte 4 */
++#define R0C_MD5        0x0c	/* Main divider byte 5 */
++#define R0D_MD6        0x0d	/* Main divider byte 6 */
++#define R0E_MD7        0x0e	/* Main divider byte 7 */
++#define R0F_MD8        0x0f	/* Main divider byte 8 */
++#define R10_CD1        0x10	/* Call divider byte 1 */
++#define R11_CD2        0x11	/* Call divider byte 2 */
++#define R12_CD3        0x12	/* Call divider byte 3 */
++#define R13_CD4        0x13	/* Call divider byte 4 */
++#define R14_CD5        0x14	/* Call divider byte 5 */
++#define R15_CD6        0x15	/* Call divider byte 6 */
++#define R16_CD7        0x16	/* Call divider byte 7 */
++#define R17_PD1        0x17	/* Power-down byte 1 */
++#define R18_PD2        0x18	/* Power-down byte 2 */
++#define R19_XTOUT      0x19	/* XTOUT byte */
++#define R1A_IF1        0x1a	/* IF byte 1 */
++#define R1B_IF2        0x1b	/* IF byte 2 */
++#define R1C_AGC2B      0x1c	/* AGC2b byte */
++#define R1D_PSM2       0x1d	/* PSM byte 2 */
++#define R1E_PSM3       0x1e	/* PSM byte 3 */
++#define R1F_PSM4       0x1f	/* PSM byte 4 */
++#define R20_AGC11      0x20	/* AGC1 byte 1 */
++#define R21_AGC12      0x21	/* AGC1 byte 2 */
++#define R22_AGC13      0x22	/* AGC1 byte 3 */
++#define R23_AGC21      0x23	/* AGC2 byte 1 */
++#define R24_AGC22      0x24	/* AGC2 byte 2 */
++#define R25_AAGC       0x25	/* Analog AGC byte */
++#define R26_RC         0x26	/* RC byte */
++#define R27_RSSI       0x27	/* RSSI byte */
++#define R28_IRCAL1     0x28	/* IR CAL byte 1 */
++#define R29_IRCAL2     0x29	/* IR CAL byte 2 */
++#define R2A_IRCAL3     0x2a	/* IR CAL byte 3 */
++#define R2B_IRCAL4     0x2b	/* IR CAL byte 4 */
++#define R2C_RFCAL1     0x2c	/* RF CAL byte 1 */
++#define R2D_RFCAL2     0x2d	/* RF CAL byte 2 */
++#define R2E_RFCAL3     0x2e	/* RF CAL byte 3 */
++#define R2F_RFCAL4     0x2f	/* RF CAL byte 4 */
++#define R30_RFCAL5     0x30	/* RF CAL byte 5 */
++#define R31_RFCAL6     0x31	/* RF CAL byte 6 */
++#define R32_RFCAL7     0x32	/* RF CAL byte 7 */
++#define R33_RFCAL8     0x33	/* RF CAL byte 8 */
++#define R34_RFCAL9     0x34	/* RF CAL byte 9 */
++#define R35_RFCAL10    0x35	/* RF CAL byte 10 */
++#define R36_RFCALRAM1  0x36	/* RF CAL RAM byte 1 */
++#define R37_RFCALRAM2  0x37	/* RF CAL RAM byte 2 */
++#define R38_MARGIN     0x38	/* Margin byte */
++#define R39_FMAX1      0x39	/* Fmax byte 1 */
++#define R3A_FMAX2      0x3a	/* Fmax byte 2 */
+ 
+ #define TDA18218_NUM_REGS 59
+ 
+@@ -86,7 +100,7 @@
+ 	struct tda18218_config *cfg;
+ 	struct i2c_adapter *i2c;
+ 
+-	u8 tda18218_regs[TDA18218_NUM_REGS];
++	u8 regs[TDA18218_NUM_REGS];
+ };
+ 
+ #endif
+diff -ruN v4l-dvb/linux/drivers/media/dvb/dvb-usb/af9015.c v4l-dvb.orig/linux/drivers/media/dvb/dvb-usb/af9015.c
+--- v4l-dvb/linux/drivers/media/dvb/dvb-usb/af9015.c	2011-01-19 21:19:52.764816000 +0100
++++ v4l-dvb.orig/linux/drivers/media/dvb/dvb-usb/af9015.c	2011-01-20 22:00:16.416039596 +0100
+@@ -34,6 +34,7 @@
+ #include "mxl5005s.h"
+ #include "mc44s803.h"
+ #include "tda18218.h"
++#include "mxl5007t.h"
+ 
+ static int dvb_usb_af9015_debug;
+ module_param_named(debug, dvb_usb_af9015_debug, int, 0644);
+@@ -75,7 +76,6 @@
+ 	u8 write = 1;
+ 	u8 msg_len = REQ_HDR_LEN;
+ 	static u8 seq; /* packet sequence number */
+-	u8 i2c = 0;
+ 
+ 	if (mutex_lock_interruptible(&af9015_usb_mutex) < 0)
+ 		return -EAGAIN;
+@@ -89,15 +89,6 @@
+ 	buf[6] = req->addr_len;
+ 	buf[7] = req->data_len;
+ 
+-/* 001281:  OUT: 000001 ms 073403 ms BULK[00002] >>> 22 13 c0 00 05 e0 01 10 00 00 d0 00 40 00 00 07 ff 84 09 00 13 00 00 01
+-22 cmd
+-13 seq
+-c0 i2c_addr
+-00 05 addr
+-e0 mbox (dont care?)
+-01 addr_len
+-10 data_len
+-*/
+ 	switch (req->cmd) {
+ 	case GET_CONFIG:
+ 	case READ_MEMORY:
+@@ -140,13 +131,8 @@
+ 		msg_len += req->data_len;
+ 	}
+ 
+-	if (buf[0] == READ_WRITE_I2C)
+-		i2c = 1;
+-
+-	if (i2c) {
+-		deb_xfer(">>> ");
+-		debug_dump(buf, msg_len, deb_xfer);
+-	}
++	deb_xfer(">>> ");
++	debug_dump(buf, msg_len, deb_xfer);
+ 
+ 	/* send req */
+ 	ret = usb_bulk_msg(udev, usb_sndbulkpipe(udev, 0x02), buf, msg_len,
+@@ -177,10 +163,8 @@
+ 		goto error_unlock;
+ 	}
+ 
+-	if (i2c) {
+-		deb_xfer("<<< ");
+-		debug_dump(buf, act_len, deb_xfer);
+-	}
++	deb_xfer("<<< ");
++	debug_dump(buf, act_len, deb_xfer);
+ 
+ 	/* remote controller query status is 1 if remote code is not received */
+ 	if (req->cmd == GET_IR_CODE && buf[1] == 1) {
+@@ -225,12 +209,18 @@
+ 	return af9015_write_regs(d, addr, &val, 1);
+ }
+ 
+-static int af9015_read_reg(struct dvb_usb_device *d, u16 addr, u8 *val)
++static int af9015_read_regs(struct dvb_usb_device *d, u16 addr, u8 *val, u8 len)
+ {
+-	struct req_t req = {READ_MEMORY, AF9015_I2C_DEMOD, addr, 0, 0, 1, val};
++	struct req_t req = {READ_MEMORY, AF9015_I2C_DEMOD, addr, 0, 0, len,
++		val};
+ 	return af9015_ctrl_msg(d, &req);
+ }
+ 
++static int af9015_read_reg(struct dvb_usb_device *d, u16 addr, u8 *val)
++{
++	return af9015_read_regs(d, addr, val, 1);
++}
++
+ static int af9015_write_reg_i2c(struct dvb_usb_device *d, u8 addr, u16 reg,
+ 	u8 val)
+ {
+@@ -261,7 +251,7 @@
+ 	struct dvb_usb_device *d = i2c_get_adapdata(adap);
+ 	int ret = 0, i = 0;
+ 	u16 addr;
+-	u8 mbox, addr_len;
++	u8 uninitialized_var(mbox), addr_len;
+ 	struct req_t req;
+ 
+ /* TODO: implement bus lock
+@@ -292,8 +282,7 @@
+ 
+ 	while (i < num) {
+ 		if (msg[i].addr == af9015_af9013_config[0].demod_address ||
+-                        msg[i].addr == af9015_af9013_config[1].demod_address  ||
+-                        msg[i].addr == 0x3a) {
++		    msg[i].addr == af9015_af9013_config[1].demod_address) {
+ 			addr = msg[i].buf[0] << 8;
+ 			addr += msg[i].buf[1];
+ 			mbox = msg[i].buf[2];
+@@ -301,13 +290,12 @@
+ 		} else {
+ 			addr = msg[i].buf[0];
+ 			addr_len = 1;
+-			mbox = 0;
++			/* mbox is don't care in that case */
+ 		}
+ 
+ 		if (num > i + 1 && (msg[i+1].flags & I2C_M_RD)) {
+ 			if (msg[i].addr ==
+-                            af9015_af9013_config[0].demod_address ||
+-                            msg[i].addr == 0x3a)
++				af9015_af9013_config[0].demod_address)
+ 				req.cmd = READ_MEMORY;
+ 			else
+ 				req.cmd = READ_I2C;
+@@ -322,8 +310,7 @@
+ 		} else if (msg[i].flags & I2C_M_RD) {
+ 			ret = -EINVAL;
+ 			if (msg[i].addr ==
+-                            af9015_af9013_config[0].demod_address ||
+-                            msg[i].addr == 0x3a)
++				af9015_af9013_config[0].demod_address)
+ 				goto error;
+ 			else
+ 				req.cmd = READ_I2C;
+@@ -337,12 +324,10 @@
+ 			i += 1;
+ 		} else {
+ 			if (msg[i].addr ==
+-                            af9015_af9013_config[0].demod_address || 
+-                            msg[i].addr == 0x3a) 
++				af9015_af9013_config[0].demod_address)
+ 				req.cmd = WRITE_MEMORY;
+ 			else
+ 				req.cmd = WRITE_I2C;
+-//001281:  OUT: 000001 ms 073403 ms BULK[00002] >>> 22 13 c0 00 05 e0 01 10 00 00 d0 00 40 00 00 07 ff 84 09 00 13 00 00 01
+ 			req.i2c_addr = msg[i].addr;
+ 			req.addr = addr;
+ 			req.mbox = mbox;
+@@ -372,9 +357,6 @@
+ static struct i2c_algorithm af9015_i2c_algo = {
+ 	.master_xfer = af9015_i2c_xfer,
+ 	.functionality = af9015_i2c_func,
+-#ifdef NEED_ALGO_CONTROL
+-	.algo_control = dummy_algo_control,
+-#endif
+ };
+ 
+ static int af9015_do_reg_bit(struct dvb_usb_device *d, u16 addr, u8 bit, u8 op)
+@@ -522,7 +504,8 @@
+ 	/* wait 2nd demodulator ready */
+ 	msleep(100);
+ 
+-	ret = af9015_read_reg_i2c(d, 0x3a, 0x98be, &val);
++	ret = af9015_read_reg_i2c(d,
++		af9015_af9013_config[1].demod_address, 0x98be, &val);
+ 	if (ret)
+ 		goto error;
+ 	else
+@@ -1056,6 +1039,7 @@
+ 		case AF9013_TUNER_MXL5003D:
+ 		case AF9013_TUNER_MXL5005D:
+ 		case AF9013_TUNER_MXL5005R:
++		case AF9013_TUNER_MXL5007T:
+ 			af9015_af9013_config[i].rf_spec_inv = 0;
+ 			break;
+ 		case AF9013_TUNER_MC44S803:
+@@ -1078,7 +1062,10 @@
+ 	/* AverMedia AVerTV Volar Black HD (A850) device have bad EEPROM
+ 	   content :-( Override some wrong values here. */
+ 	if (le16_to_cpu(udev->descriptor.idVendor) == USB_VID_AVERMEDIA &&
+-	    le16_to_cpu(udev->descriptor.idProduct) == USB_PID_AVERMEDIA_A850) {
++		((le16_to_cpu(udev->descriptor.idProduct) ==
++			USB_PID_AVERMEDIA_A850) ||
++		(le16_to_cpu(udev->descriptor.idProduct) ==
++			USB_PID_AVERMEDIA_A850T))) {
+ 		deb_info("%s: AverMedia A850: overriding config\n", __func__);
+ 		/* disable dual mode */
+ 		af9015_config.dual_mode = 0;
+@@ -1156,11 +1143,6 @@
+ 
+ 	strncpy(state->i2c_adap.name, d->desc->name,
+ 		sizeof(state->i2c_adap.name));
+-#ifdef I2C_ADAP_CLASS_TV_DIGITAL
+-	state->i2c_adap.class = I2C_ADAP_CLASS_TV_DIGITAL,
+-#else
+-	state->i2c_adap.class = I2C_CLASS_TV_DIGITAL,
+-#endif
+ 	state->i2c_adap.algo      = d->props.i2c_algo;
+ 	state->i2c_adap.algo_data = NULL;
+ 	state->i2c_adap.dev.parent = &d->udev->dev;
+@@ -1227,7 +1209,7 @@
+ 
+ static struct tda18271_config af9015_tda18271_config = {
+ 	.gate = TDA18271_GATE_DIGITAL,
+-	.small_i2c = 1,
++	.small_i2c = TDA18271_16_BYTE_CHUNK_INIT,
+ };
+ 
+ static struct mxl5005s_config af9015_mxl5003_config = {
+@@ -1270,8 +1252,13 @@
+ };
+ 
+ static struct tda18218_config af9015_tda18218_config = {
+-    .i2c_address = 0xc0,
+-    .i2c_wr_max = 17,
++	.i2c_address = 0xc0,
++	.i2c_wr_max = 21,
++};
++
++static struct mxl5007t_config af9015_mxl5007t_config = {
++	.xtal_freq_hz = MxL_XTAL_24_MHZ,
++	.if_freq_hz = MxL_IF_4_57_MHZ,
+ };
+ 
+ static int af9015_tuner_attach(struct dvb_usb_adapter *adap)
+@@ -1279,7 +1266,7 @@
+ 	struct af9015_state *state = adap->dev->priv;
+ 	struct i2c_adapter *i2c_adap;
+ 	int ret;
+-	deb_info("%s: \n", __func__);
++	deb_info("%s:\n", __func__);
+ 
+ 	/* select I2C adapter */
+ 	if (adap->id == 0)
+@@ -1325,6 +1312,10 @@
+ 		ret = dvb_attach(mc44s803_attach, adap->fe, i2c_adap,
+ 			&af9015_mc44s803_config) == NULL ? -ENODEV : 0;
+ 		break;
++	case AF9013_TUNER_MXL5007T:
++		ret = dvb_attach(mxl5007t_attach, adap->fe, i2c_adap,
++			0xc0, &af9015_mxl5007t_config) == NULL ? -ENODEV : 0;
++		break;
+ 	case AF9013_TUNER_UNKNOWN:
+ 	default:
+ 		ret = -ENODEV;
+@@ -1370,10 +1361,16 @@
+ /* 30 */{USB_DEVICE(USB_VID_KWORLD_2,  USB_PID_KWORLD_UB383_T)},
+ 	{USB_DEVICE(USB_VID_KWORLD_2,  USB_PID_KWORLD_395U_4)},
+ 	{USB_DEVICE(USB_VID_AVERMEDIA, USB_PID_AVERMEDIA_A815M)},
++	{USB_DEVICE(USB_VID_TERRATEC,  USB_PID_TERRATEC_CINERGY_T_STICK_RC)},
++	{USB_DEVICE(USB_VID_TERRATEC,
++		USB_PID_TERRATEC_CINERGY_T_STICK_DUAL_RC)},
++/* 35 */{USB_DEVICE(USB_VID_AVERMEDIA, USB_PID_AVERMEDIA_A850T)},
++	{USB_DEVICE(USB_VID_GTEK,      USB_PID_TINYTWIN_3)},
+ 	{0},
+ };
+ MODULE_DEVICE_TABLE(usb, af9015_usb_table);
+ 
++#define AF9015_RC_INTERVAL 500
+ static struct dvb_usb_device_properties af9015_properties[] = {
+ 	{
+ 		.caps = DVB_USB_IS_AN_I2C_ADAPTER,
+@@ -1425,14 +1422,14 @@
+ 		.identify_state = af9015_identify_state,
+ 
+ 		.rc_query         = af9015_rc_query,
+-		.rc_interval      = 150,
++		.rc_interval      = AF9015_RC_INTERVAL,
+ 
+ 		.i2c_algo = &af9015_i2c_algo,
+ 
+-                .num_device_descs = 9, /* check max from dvb-usb.h */
++		.num_device_descs = 12, /* check max from dvb-usb.h */
+ 		.devices = {
+ 			{
+-				.name = "Afatech AF9015 DVB-T USB2.0 stick",
++				.name = "Afatech AF9015 (ChinaPen) DVB-T USB2.0 stick",
+ 				.cold_ids = {&af9015_usb_table[0],
+ 					     &af9015_usb_table[1], NULL},
+ 				.warm_ids = {NULL},
+@@ -1457,7 +1454,8 @@
+ 			{
+ 				.name = "DigitalNow TinyTwin DVB-T Receiver",
+ 				.cold_ids = {&af9015_usb_table[5],
+-					     &af9015_usb_table[28], NULL},
++					     &af9015_usb_table[28],
++					     &af9015_usb_table[36], NULL},
+ 				.warm_ids = {NULL},
+ 			},
+ 			{
+@@ -1481,6 +1479,21 @@
+ 				.cold_ids = {&af9015_usb_table[9], NULL},
+ 				.warm_ids = {NULL},
+ 			},
++			{
++				.name = "TerraTec Cinergy T Stick RC",
++				.cold_ids = {&af9015_usb_table[33], NULL},
++				.warm_ids = {NULL},
++			},
++			{
++				.name = "TerraTec Cinergy T Stick Dual RC",
++				.cold_ids = {&af9015_usb_table[34], NULL},
++				.warm_ids = {NULL},
++			},
++			{
++				.name = "AverMedia AVerTV Red HD/HD+ (A850T)",
++				.cold_ids = {&af9015_usb_table[35], NULL},
++				.warm_ids = {NULL},
++			},
+ 		}
+ 	}, {
+ 		.caps = DVB_USB_IS_AN_I2C_ADAPTER,
+@@ -1532,11 +1545,11 @@
+ 		.identify_state = af9015_identify_state,
+ 
+ 		.rc_query         = af9015_rc_query,
+-		.rc_interval      = 150,
++		.rc_interval      = AF9015_RC_INTERVAL,
+ 
+ 		.i2c_algo = &af9015_i2c_algo,
+ 
+-                .num_device_descs = 9, /* check max from dvb-usb.h */
++		.num_device_descs = 9, /* check max from dvb-usb.h */
+ 		.devices = {
+ 			{
+ 				.name = "Xtensions XD-380",
+@@ -1583,7 +1596,7 @@
+ 				.warm_ids = {NULL},
+ 			},
+ 			{
+-				.name = "AverMedia AVerTV Volar Black HD " \
++				.name = "AverMedia AVerTV Volar Black HD/HD+ " \
+ 					"(A850)",
+ 				.cold_ids = {&af9015_usb_table[20], NULL},
+ 				.warm_ids = {NULL},
+@@ -1639,11 +1652,11 @@
+ 		.identify_state = af9015_identify_state,
+ 
+ 		.rc_query         = af9015_rc_query,
+-		.rc_interval      = 150,
++		.rc_interval      = AF9015_RC_INTERVAL,
+ 
+ 		.i2c_algo = &af9015_i2c_algo,
+ 
+-                .num_device_descs = 9, /* check max from dvb-usb.h */
++		.num_device_descs = 9, /* check max from dvb-usb.h */
+ 		.devices = {
+ 			{
+ 				.name = "AverMedia AVerTV Volar GPS 805 (A805)",
+@@ -1736,7 +1749,7 @@
+ static void af9015_i2c_exit(struct dvb_usb_device *d)
+ {
+ 	struct af9015_state *state = d->priv;
+-	deb_info("%s: \n", __func__);
++	deb_info("%s:\n", __func__);
+ 
+ 	/* remove 2nd I2C adapter */
+ 	if (d->state & DVB_USB_STATE_I2C)
+@@ -1746,7 +1759,7 @@
+ static void af9015_usb_device_exit(struct usb_interface *intf)
+ {
+ 	struct dvb_usb_device *d = usb_get_intfdata(intf);
+-	deb_info("%s: \n", __func__);
++	deb_info("%s:\n", __func__);
+ 
+ 	/* remove 2nd I2C adapter */
+ 	if (d != NULL && d->desc != NULL)
+@@ -1786,4 +1799,3 @@
+ MODULE_AUTHOR("Antti Palosaari <crope@iki.fi>");
+ MODULE_DESCRIPTION("Driver for Afatech AF9015 DVB-T");
+ MODULE_LICENSE("GPL");
+-
+diff -ruN v4l-dvb/linux/drivers/media/dvb/dvb-usb/dvb-usb-i2c.c v4l-dvb.orig/linux/drivers/media/dvb/dvb-usb/dvb-usb-i2c.c
+--- v4l-dvb/linux/drivers/media/dvb/dvb-usb/dvb-usb-i2c.c	2011-01-19 21:19:52.764816000 +0100
++++ v4l-dvb.orig/linux/drivers/media/dvb/dvb-usb/dvb-usb-i2c.c	2011-01-20 18:08:57.013750914 +0100
+@@ -20,7 +20,6 @@
+ 	}
+ 
+ 	strlcpy(d->i2c_adap.name, d->desc->name, sizeof(d->i2c_adap.name));
+-	d->i2c_adap.class = I2C_CLASS_TV_DIGITAL,
+ 	d->i2c_adap.algo      = d->props.i2c_algo;
+ 	d->i2c_adap.algo_data = NULL;
+ 	d->i2c_adap.dev.parent = &d->udev->dev;
+diff -ruN v4l-dvb/linux/drivers/media/dvb/dvb-usb/dvb-usb-ids.h v4l-dvb.orig/linux/drivers/media/dvb/dvb-usb/dvb-usb-ids.h
+--- v4l-dvb/linux/drivers/media/dvb/dvb-usb/dvb-usb-ids.h	2011-01-19 21:19:52.764816000 +0100
++++ v4l-dvb.orig/linux/drivers/media/dvb/dvb-usb/dvb-usb-ids.h	2011-01-20 18:11:22.757495103 +0100
+@@ -32,6 +32,7 @@
+ #define USB_VID_EMPIA				0xeb1a
+ #define USB_VID_GENPIX				0x09c0
+ #define USB_VID_GRANDTEC			0x5032
++#define USB_VID_GTEK				0x1f4d
+ #define USB_VID_HANFTEK				0x15f4
+ #define USB_VID_HAUPPAUGE			0x2040
+ #define USB_VID_HYPER_PALTEK			0x1025
+@@ -133,6 +134,8 @@
+ #define USB_PID_KWORLD_VSTREAM_WARM			0x17df
+ #define USB_PID_TERRATEC_CINERGY_T_USB_XE		0x0055
+ #define USB_PID_TERRATEC_CINERGY_T_USB_XE_REV2		0x0069
++#define USB_PID_TERRATEC_CINERGY_T_STICK_RC		0x0097
++#define USB_PID_TERRATEC_CINERGY_T_STICK_DUAL_RC	0x0099
+ #define USB_PID_TWINHAN_VP7041_COLD			0x3201
+ #define USB_PID_TWINHAN_VP7041_WARM			0x3202
+ #define USB_PID_TWINHAN_VP7020_COLD			0x3203
+@@ -143,6 +146,7 @@
+ #define USB_PID_TWINHAN_VP7021_WARM			0x3208
+ #define USB_PID_TINYTWIN				0x3226
+ #define USB_PID_TINYTWIN_2				0xe402
++#define USB_PID_TINYTWIN_3				0x9016
+ #define USB_PID_DNTV_TINYUSB2_COLD			0x3223
+ #define USB_PID_DNTV_TINYUSB2_WARM			0x3224
+ #define USB_PID_ULTIMA_TVBOX_COLD			0x8105
+@@ -196,12 +200,12 @@
+ #define USB_PID_AVERMEDIA_A309				0xa309
+ #define USB_PID_AVERMEDIA_A310				0xa310
+ #define USB_PID_AVERMEDIA_A850				0x850a
+-#define USB_PID_AVERMEDIA_A850T                        0x850b
++#define USB_PID_AVERMEDIA_A850T				0x850b
+ #define USB_PID_AVERMEDIA_A805				0xa805
+-#define USB_PID_AVERMEDIA_A815M	                0x815a
++#define USB_PID_AVERMEDIA_A815M				0x815a
+ #define USB_PID_AVERMEDIA_A825				0x0825
+-#define USB_PID_AVERMEDIA_A835                         0xa835
+-#define USB_PID_AVERMEDIA_B835                         0xb835
++#define USB_PID_AVERMEDIA_A835              0xa835
++#define USB_PID_AVERMEDIA_B835              0xb835
+ #define USB_PID_TECHNOTREND_CONNECT_S2400               0x3006
+ #define USB_PID_TECHNOTREND_CONNECT_CT3650		0x300d
+ #define USB_PID_TERRATEC_CINERGY_DT_XS_DIVERSITY	0x005a
+diff -ruN v4l-dvb/linux/drivers/media/dvb/frontends/af9013.c v4l-dvb.orig/linux/drivers/media/dvb/frontends/af9013.c
+--- v4l-dvb/linux/drivers/media/dvb/frontends/af9013.c	2011-01-19 21:19:56.289623000 +0100
++++ v4l-dvb.orig/linux/drivers/media/dvb/frontends/af9013.c	2011-01-20 17:50:10.881718473 +0100
+@@ -1,5 +1,5 @@
+ /*
+- * DVB USB Linux driver for Afatech AF9015 DVB-T USB2.0 receiver
++ * Afatech AF9013 demodulator driver
+  *
+  * Copyright (C) 2007 Antti Palosaari <crope@iki.fi>
+  *
+@@ -43,6 +43,8 @@
+ 
+ 	struct af9013_config config;
+ 
++	/* tuner/demod RF and IF AGC limits used for signal strength calc */
++	u8 signal_strength_en, rf_50, rf_80, if_50, if_80;
+ 	u16 signal_strength;
+ 	u32 ber;
+ 	u32 ucblocks;
+@@ -221,184 +223,37 @@
+ 
+ static int af9013_set_coeff(struct af9013_state *state, fe_bandwidth_t bw)
+ {
+-	int ret = 0;
+-	u8 i = 0;
+-	u8 buf[24];
+-	u32 uninitialized_var(ns_coeff1_2048nu);
+-	u32 uninitialized_var(ns_coeff1_8191nu);
+-	u32 uninitialized_var(ns_coeff1_8192nu);
+-	u32 uninitialized_var(ns_coeff1_8193nu);
+-	u32 uninitialized_var(ns_coeff2_2k);
+-	u32 uninitialized_var(ns_coeff2_8k);
+-
++	int ret, i, j, found;
+ 	deb_info("%s: adc_clock:%d bw:%d\n", __func__,
+ 		state->config.adc_clock, bw);
+ 
+-	switch (state->config.adc_clock) {
+-	case 28800: /* 28.800 MHz */
+-		switch (bw) {
+-		case BANDWIDTH_6_MHZ:
+-			ns_coeff1_2048nu = 0x01e79e7a;
+-			ns_coeff1_8191nu = 0x0079eb6e;
+-			ns_coeff1_8192nu = 0x0079e79e;
+-			ns_coeff1_8193nu = 0x0079e3cf;
+-			ns_coeff2_2k     = 0x00f3cf3d;
+-			ns_coeff2_8k     = 0x003cf3cf;
+-			break;
+-		case BANDWIDTH_7_MHZ:
+-			ns_coeff1_2048nu = 0x0238e38e;
+-			ns_coeff1_8191nu = 0x008e3d55;
+-			ns_coeff1_8192nu = 0x008e38e4;
+-			ns_coeff1_8193nu = 0x008e3472;
+-			ns_coeff2_2k     = 0x011c71c7;
+-			ns_coeff2_8k     = 0x00471c72;
+-			break;
+-		case BANDWIDTH_8_MHZ:
+-			ns_coeff1_2048nu = 0x028a28a3;
+-			ns_coeff1_8191nu = 0x00a28f3d;
+-			ns_coeff1_8192nu = 0x00a28a29;
+-			ns_coeff1_8193nu = 0x00a28514;
+-			ns_coeff2_2k     = 0x01451451;
+-			ns_coeff2_8k     = 0x00514514;
+-			break;
+-		default:
+-			ret = -EINVAL;
+-		}
+-		break;
+-	case 20480: /* 20.480 MHz */
+-		switch (bw) {
+-		case BANDWIDTH_6_MHZ:
+-			ns_coeff1_2048nu = 0x02adb6dc;
+-			ns_coeff1_8191nu = 0x00ab7313;
+-			ns_coeff1_8192nu = 0x00ab6db7;
+-			ns_coeff1_8193nu = 0x00ab685c;
+-			ns_coeff2_2k     = 0x0156db6e;
+-			ns_coeff2_8k     = 0x0055b6dc;
+-			break;
+-		case BANDWIDTH_7_MHZ:
+-			ns_coeff1_2048nu = 0x03200001;
+-			ns_coeff1_8191nu = 0x00c80640;
+-			ns_coeff1_8192nu = 0x00c80000;
+-			ns_coeff1_8193nu = 0x00c7f9c0;
+-			ns_coeff2_2k     = 0x01900000;
+-			ns_coeff2_8k     = 0x00640000;
+-			break;
+-		case BANDWIDTH_8_MHZ:
+-			ns_coeff1_2048nu = 0x03924926;
+-			ns_coeff1_8191nu = 0x00e4996e;
+-			ns_coeff1_8192nu = 0x00e49249;
+-			ns_coeff1_8193nu = 0x00e48b25;
+-			ns_coeff2_2k     = 0x01c92493;
+-			ns_coeff2_8k     = 0x00724925;
++	/* lookup coeff from table */
++	for (i = 0, found = 0; i < ARRAY_SIZE(coeff_table); i++) {
++		if (coeff_table[i].adc_clock == state->config.adc_clock &&
++			coeff_table[i].bw == bw) {
++			found = 1;
+ 			break;
+-		default:
+-			ret = -EINVAL;
+ 		}
+-		break;
+-	case 28000: /* 28.000 MHz */
+-		switch (bw) {
+-		case BANDWIDTH_6_MHZ:
+-			ns_coeff1_2048nu = 0x01f58d10;
+-			ns_coeff1_8191nu = 0x007d672f;
+-			ns_coeff1_8192nu = 0x007d6344;
+-			ns_coeff1_8193nu = 0x007d5f59;
+-			ns_coeff2_2k     = 0x00fac688;
+-			ns_coeff2_8k     = 0x003eb1a2;
+-			break;
+-		case BANDWIDTH_7_MHZ:
+-			ns_coeff1_2048nu = 0x02492492;
+-			ns_coeff1_8191nu = 0x00924db7;
+-			ns_coeff1_8192nu = 0x00924925;
+-			ns_coeff1_8193nu = 0x00924492;
+-			ns_coeff2_2k     = 0x01249249;
+-			ns_coeff2_8k     = 0x00492492;
+-			break;
+-		case BANDWIDTH_8_MHZ:
+-			ns_coeff1_2048nu = 0x029cbc15;
+-			ns_coeff1_8191nu = 0x00a7343f;
+-			ns_coeff1_8192nu = 0x00a72f05;
+-			ns_coeff1_8193nu = 0x00a729cc;
+-			ns_coeff2_2k     = 0x014e5e0a;
+-			ns_coeff2_8k     = 0x00539783;
+-			break;
+-		default:
+-			ret = -EINVAL;
+-		}
+-		break;
+-	case 25000: /* 25.000 MHz */
+-		switch (bw) {
+-		case BANDWIDTH_6_MHZ:
+-			ns_coeff1_2048nu = 0x0231bcb5;
+-			ns_coeff1_8191nu = 0x008c7391;
+-			ns_coeff1_8192nu = 0x008c6f2d;
+-			ns_coeff1_8193nu = 0x008c6aca;
+-			ns_coeff2_2k     = 0x0118de5b;
+-			ns_coeff2_8k     = 0x00463797;
+-			break;
+-		case BANDWIDTH_7_MHZ:
+-			ns_coeff1_2048nu = 0x028f5c29;
+-			ns_coeff1_8191nu = 0x00a3dc29;
+-			ns_coeff1_8192nu = 0x00a3d70a;
+-			ns_coeff1_8193nu = 0x00a3d1ec;
+-			ns_coeff2_2k     = 0x0147ae14;
+-			ns_coeff2_8k     = 0x0051eb85;
+-			break;
+-		case BANDWIDTH_8_MHZ:
+-			ns_coeff1_2048nu = 0x02ecfb9d;
+-			ns_coeff1_8191nu = 0x00bb44c1;
+-			ns_coeff1_8192nu = 0x00bb3ee7;
+-			ns_coeff1_8193nu = 0x00bb390d;
+-			ns_coeff2_2k     = 0x01767dce;
+-			ns_coeff2_8k     = 0x005d9f74;
+-			break;
+-		default:
+-			ret = -EINVAL;
+-		}
+-		break;
+-	default:
+-		err("invalid xtal");
+-		return -EINVAL;
+-	}
+-	if (ret) {
+-		err("invalid bandwidth");
+-		return ret;
+ 	}
+ 
+-	buf[i++] = (u8) ((ns_coeff1_2048nu & 0x03000000) >> 24);
+-	buf[i++] = (u8) ((ns_coeff1_2048nu & 0x00ff0000) >> 16);
+-	buf[i++] = (u8) ((ns_coeff1_2048nu & 0x0000ff00) >> 8);
+-	buf[i++] = (u8) ((ns_coeff1_2048nu & 0x000000ff));
+-	buf[i++] = (u8) ((ns_coeff2_2k     & 0x01c00000) >> 22);
+-	buf[i++] = (u8) ((ns_coeff2_2k     & 0x003fc000) >> 14);
+-	buf[i++] = (u8) ((ns_coeff2_2k     & 0x00003fc0) >> 6);
+-	buf[i++] = (u8) ((ns_coeff2_2k     & 0x0000003f));
+-	buf[i++] = (u8) ((ns_coeff1_8191nu & 0x03000000) >> 24);
+-	buf[i++] = (u8) ((ns_coeff1_8191nu & 0x00ffc000) >> 16);
+-	buf[i++] = (u8) ((ns_coeff1_8191nu & 0x0000ff00) >> 8);
+-	buf[i++] = (u8) ((ns_coeff1_8191nu & 0x000000ff));
+-	buf[i++] = (u8) ((ns_coeff1_8192nu & 0x03000000) >> 24);
+-	buf[i++] = (u8) ((ns_coeff1_8192nu & 0x00ffc000) >> 16);
+-	buf[i++] = (u8) ((ns_coeff1_8192nu & 0x0000ff00) >> 8);
+-	buf[i++] = (u8) ((ns_coeff1_8192nu & 0x000000ff));
+-	buf[i++] = (u8) ((ns_coeff1_8193nu & 0x03000000) >> 24);
+-	buf[i++] = (u8) ((ns_coeff1_8193nu & 0x00ffc000) >> 16);
+-	buf[i++] = (u8) ((ns_coeff1_8193nu & 0x0000ff00) >> 8);
+-	buf[i++] = (u8) ((ns_coeff1_8193nu & 0x000000ff));
+-	buf[i++] = (u8) ((ns_coeff2_8k     & 0x01c00000) >> 22);
+-	buf[i++] = (u8) ((ns_coeff2_8k     & 0x003fc000) >> 14);
+-	buf[i++] = (u8) ((ns_coeff2_8k     & 0x00003fc0) >> 6);
+-	buf[i++] = (u8) ((ns_coeff2_8k     & 0x0000003f));
++	if (!found) {
++		err("invalid bw or clock");
++		ret = -EINVAL;
++		goto error;
++	}
+ 
+-	deb_info("%s: coeff:", __func__);
+-	debug_dump(buf, sizeof(buf), deb_info);
++	deb_info("%s: coeff: ", __func__);
++	debug_dump(coeff_table[i].val, sizeof(coeff_table[i].val), deb_info);
+ 
+ 	/* program */
+-	for (i = 0; i < sizeof(buf); i++) {
+-		ret = af9013_write_reg(state, 0xae00 + i, buf[i]);
++	for (j = 0; j < sizeof(coeff_table[i].val); j++) {
++		ret = af9013_write_reg(state, 0xae00 + j,
++			coeff_table[i].val[j]);
+ 		if (ret)
+ 			break;
+ 	}
+ 
++error:
+ 	return ret;
+ }
+ 
+@@ -480,15 +335,14 @@
+ 				if_sample_freq = 3300000; /* 3.3 MHz */
+ 				break;
+ 			case BANDWIDTH_7_MHZ:
+-				if_sample_freq = 3800000; /* 3.8 MHz */
++				if_sample_freq = 3500000; /* 3.5 MHz */
+ 				break;
+ 			case BANDWIDTH_8_MHZ:
+ 			default:
+-				if_sample_freq = 4300000; /* 4.3 MHz */
++				if_sample_freq = 4000000; /* 4.0 MHz */
+ 				break;
+ 			}
+-		}
+-		else if(state->config.tuner == AF9013_TUNER_TDA18218) {
++		} else if (state->config.tuner == AF9013_TUNER_TDA18218) {
+ 			switch (bw) {
+ 			case BANDWIDTH_6_MHZ:
+ 				if_sample_freq = 3000000; /* 3 MHz */
+@@ -776,6 +630,10 @@
+ 
+ 	state->frequency = params->frequency;
+ 
++	/* program tuner */
++	if (fe->ops.tuner_ops.set_params)
++		fe->ops.tuner_ops.set_params(fe, params);
++
+ 	/* program CFOE coefficients */
+ 	ret = af9013_set_coeff(state, params->u.ofdm.bandwidth);
+ 	if (ret)
+@@ -806,10 +664,6 @@
+ 	if (ret)
+ 		goto error;
+ 
+-	/* program tuner */
+-	if (fe->ops.tuner_ops.set_params)
+-		fe->ops.tuner_ops.set_params(fe, params);
+-
+ 	/* program TPS and bandwidth, check if auto mode needed */
+ 	ret = af9013_set_ofdm_params(state, &params->u.ofdm, &auto_mode);
+ 	if (ret)
+@@ -1111,46 +965,32 @@
+ static int af9013_update_signal_strength(struct dvb_frontend *fe)
+ {
+ 	struct af9013_state *state = fe->demodulator_priv;
+-	int ret;
+-	u8 tmp0;
+-	u8 rf_gain, rf_50, rf_80, if_gain, if_50, if_80;
++	int ret = 0;
++	u8 rf_gain, if_gain;
+ 	int signal_strength;
+ 
+ 	deb_info("%s\n", __func__);
+ 
+-	state->signal_strength = 0;
+-
+-	ret = af9013_read_reg_bits(state, 0x9bee, 0, 1, &tmp0);
+-	if (ret)
+-		goto error;
+-	if (tmp0) {
+-		ret = af9013_read_reg(state, 0x9bbd, &rf_50);
+-		if (ret)
+-			goto error;
+-		ret = af9013_read_reg(state, 0x9bd0, &rf_80);
+-		if (ret)
+-			goto error;
+-		ret = af9013_read_reg(state, 0x9be2, &if_50);
+-		if (ret)
+-			goto error;
+-		ret = af9013_read_reg(state, 0x9be4, &if_80);
+-		if (ret)
+-			goto error;
++	if (state->signal_strength_en) {
+ 		ret = af9013_read_reg(state, 0xd07c, &rf_gain);
+ 		if (ret)
+ 			goto error;
+ 		ret = af9013_read_reg(state, 0xd07d, &if_gain);
+ 		if (ret)
+ 			goto error;
+-		signal_strength = (0xffff / (9 * (rf_50 + if_50) - \
+-			11 * (rf_80 + if_80))) * (10 * (rf_gain + if_gain) - \
+-			11 * (rf_80 + if_80));
++		signal_strength = (0xffff / \
++			(9 * (state->rf_50 + state->if_50) - \
++			11 * (state->rf_80 + state->if_80))) * \
++			(10 * (rf_gain + if_gain) - \
++			11 * (state->rf_80 + state->if_80));
+ 		if (signal_strength < 0)
+ 			signal_strength = 0;
+ 		else if (signal_strength > 0xffff)
+ 			signal_strength = 0xffff;
+ 
+ 		state->signal_strength = signal_strength;
++	} else {
++		state->signal_strength = 0;
+ 	}
+ 
+ error:
+@@ -1383,6 +1223,7 @@
+ 		break;
+ 	case AF9013_TUNER_MXL5005D:
+ 	case AF9013_TUNER_MXL5005R:
++	case AF9013_TUNER_MXL5007T:
+ 		len = ARRAY_SIZE(tuner_init_mxl5005);
+ 		init = tuner_init_mxl5005;
+ 		break;
+@@ -1454,6 +1295,27 @@
+ 	if (ret)
+ 		goto error;
+ 
++	/* read values needed for signal strength calculation */
++	ret = af9013_read_reg_bits(state, 0x9bee, 0, 1,
++		&state->signal_strength_en);
++	if (ret)
++		goto error;
++
++	if (state->signal_strength_en) {
++		ret = af9013_read_reg(state, 0x9bbd, &state->rf_50);
++		if (ret)
++			goto error;
++		ret = af9013_read_reg(state, 0x9bd0, &state->rf_80);
++		if (ret)
++			goto error;
++		ret = af9013_read_reg(state, 0x9be2, &state->if_50);
++		if (ret)
++			goto error;
++		ret = af9013_read_reg(state, 0x9be4, &state->if_80);
++		if (ret)
++			goto error;
++	}
++
+ error:
+ 	return ret;
+ }
+diff -ruN v4l-dvb/linux/drivers/media/dvb/frontends/af9013.h v4l-dvb.orig/linux/drivers/media/dvb/frontends/af9013.h
+--- v4l-dvb/linux/drivers/media/dvb/frontends/af9013.h	2011-01-19 21:19:56.276817000 +0100
++++ v4l-dvb.orig/linux/drivers/media/dvb/frontends/af9013.h	2011-01-20 17:50:21.093761961 +0100
+@@ -1,5 +1,5 @@
+ /*
+- * DVB USB Linux driver for Afatech AF9015 DVB-T USB2.0 receiver
++ * Afatech AF9013 demodulator driver
+  *
+  * Copyright (C) 2007 Antti Palosaari <crope@iki.fi>
+  *
+@@ -44,6 +44,7 @@
+ 	AF9013_TUNER_MT2060_2   = 147, /* Microtune */
+ 	AF9013_TUNER_TDA18271   = 156, /* NXP */
+ 	AF9013_TUNER_QT1010A    = 162, /* Quantek */
++	AF9013_TUNER_MXL5007T   = 177, /* MaxLinear */
+ 	AF9013_TUNER_TDA18218   = 179, /* NXP */
+ };
+ 
+diff -ruN v4l-dvb/linux/drivers/media/dvb/frontends/af9013_priv.h v4l-dvb.orig/linux/drivers/media/dvb/frontends/af9013_priv.h
+--- v4l-dvb/linux/drivers/media/dvb/frontends/af9013_priv.h	2011-01-19 21:19:56.284859000 +0100
++++ v4l-dvb.orig/linux/drivers/media/dvb/frontends/af9013_priv.h	2011-01-20 17:50:37.357992826 +0100
+@@ -1,5 +1,5 @@
+ /*
+- * DVB USB Linux driver for Afatech AF9015 DVB-T USB2.0 receiver
++ * Afatech AF9013 demodulator driver
+  *
+  * Copyright (C) 2007 Antti Palosaari <crope@iki.fi>
+  *
+@@ -60,6 +60,56 @@
+ 	u8 snr;
+ };
+ 
++struct coeff {
++	u32 adc_clock;
++	fe_bandwidth_t bw;
++	u8 val[24];
++};
++
++/* pre-calculated coeff lookup table */
++static struct coeff coeff_table[] = {
++	/* 28.800 MHz */
++	{ 28800, BANDWIDTH_8_MHZ, { 0x02, 0x8a, 0x28, 0xa3, 0x05, 0x14,
++		0x51, 0x11, 0x00, 0xa2, 0x8f, 0x3d, 0x00, 0xa2, 0x8a,
++		0x29, 0x00, 0xa2, 0x85, 0x14, 0x01, 0x45, 0x14, 0x14 } },
++	{ 28800, BANDWIDTH_7_MHZ, { 0x02, 0x38, 0xe3, 0x8e, 0x04, 0x71,
++		0xc7, 0x07, 0x00, 0x8e, 0x3d, 0x55, 0x00, 0x8e, 0x38,
++		0xe4, 0x00, 0x8e, 0x34, 0x72, 0x01, 0x1c, 0x71, 0x32 } },
++	{ 28800, BANDWIDTH_6_MHZ, { 0x01, 0xe7, 0x9e, 0x7a, 0x03, 0xcf,
++		0x3c, 0x3d, 0x00, 0x79, 0xeb, 0x6e, 0x00, 0x79, 0xe7,
++		0x9e, 0x00, 0x79, 0xe3, 0xcf, 0x00, 0xf3, 0xcf, 0x0f } },
++	/* 20.480 MHz */
++	{ 20480, BANDWIDTH_8_MHZ, { 0x03, 0x92, 0x49, 0x26, 0x07, 0x24,
++		0x92, 0x13, 0x00, 0xe4, 0x99, 0x6e, 0x00, 0xe4, 0x92,
++		0x49, 0x00, 0xe4, 0x8b, 0x25, 0x01, 0xc9, 0x24, 0x25 } },
++	{ 20480, BANDWIDTH_7_MHZ, { 0x03, 0x20, 0x00, 0x01, 0x06, 0x40,
++		0x00, 0x00, 0x00, 0xc8, 0x06, 0x40, 0x00, 0xc8, 0x00,
++		0x00, 0x00, 0xc7, 0xf9, 0xc0, 0x01, 0x90, 0x00, 0x00 } },
++	{ 20480, BANDWIDTH_6_MHZ, { 0x02, 0xad, 0xb6, 0xdc, 0x05, 0x5b,
++		0x6d, 0x2e, 0x00, 0xab, 0x73, 0x13, 0x00, 0xab, 0x6d,
++		0xb7, 0x00, 0xab, 0x68, 0x5c, 0x01, 0x56, 0xdb, 0x1c } },
++	/* 28.000 MHz */
++	{ 28000, BANDWIDTH_8_MHZ, { 0x02, 0x9c, 0xbc, 0x15, 0x05, 0x39,
++		0x78, 0x0a, 0x00, 0xa7, 0x34, 0x3f, 0x00, 0xa7, 0x2f,
++		0x05, 0x00, 0xa7, 0x29, 0xcc, 0x01, 0x4e, 0x5e, 0x03 } },
++	{ 28000, BANDWIDTH_7_MHZ, { 0x02, 0x49, 0x24, 0x92, 0x04, 0x92,
++		0x49, 0x09, 0x00, 0x92, 0x4d, 0xb7, 0x00, 0x92, 0x49,
++		0x25, 0x00, 0x92, 0x44, 0x92, 0x01, 0x24, 0x92, 0x12 } },
++	{ 28000, BANDWIDTH_6_MHZ, { 0x01, 0xf5, 0x8d, 0x10, 0x03, 0xeb,
++		0x1a, 0x08, 0x00, 0x7d, 0x67, 0x2f, 0x00, 0x7d, 0x63,
++		0x44, 0x00, 0x7d, 0x5f, 0x59, 0x00, 0xfa, 0xc6, 0x22 } },
++	/* 25.000 MHz */
++	{ 25000, BANDWIDTH_8_MHZ, { 0x02, 0xec, 0xfb, 0x9d, 0x05, 0xd9,
++		0xf7, 0x0e, 0x00, 0xbb, 0x44, 0xc1, 0x00, 0xbb, 0x3e,
++		0xe7, 0x00, 0xbb, 0x39, 0x0d, 0x01, 0x76, 0x7d, 0x34 } },
++	{ 25000, BANDWIDTH_7_MHZ, { 0x02, 0x8f, 0x5c, 0x29, 0x05, 0x1e,
++		0xb8, 0x14, 0x00, 0xa3, 0xdc, 0x29, 0x00, 0xa3, 0xd7,
++		0x0a, 0x00, 0xa3, 0xd1, 0xec, 0x01, 0x47, 0xae, 0x05 } },
++	{ 25000, BANDWIDTH_6_MHZ, { 0x02, 0x31, 0xbc, 0xb5, 0x04, 0x63,
++		0x79, 0x1b, 0x00, 0x8c, 0x73, 0x91, 0x00, 0x8c, 0x6f,
++		0x2d, 0x00, 0x8c, 0x6a, 0xca, 0x01, 0x18, 0xde, 0x17 } },
++};
++
+ /* QPSK SNR lookup table */
+ static struct snr_table qpsk_snr_table[] = {
+ 	{ 0x0b4771,  0 },
+@@ -480,9 +530,10 @@
+ 	{ 0x9bd9, 0, 8, 0x08 },
+ };
+ 
+-/* MaxLinear MXL5005 tuner init
++/* MaxLinear MXL5005S & MXL5007T tuner init
+    AF9013_TUNER_MXL5005D   =  13
+-   AF9013_TUNER_MXL5005R   =  30 */
++   AF9013_TUNER_MXL5005R   =  30
++   AF9013_TUNER_MXL5007T   = 177 */
+ static struct regdesc tuner_init_mxl5005[] = {
+ 	{ 0x9bd5, 0, 8, 0x01 },
+ 	{ 0x9bd6, 0, 8, 0x07 },

@@ -1,0 +1,39 @@
+diff -Naur v4l-dvb-org/linux/drivers/media/dvb/dvb-core/dvbdev.c v4l-dvb/linux/drivers/media/dvb/dvb-core/dvbdev.c
+--- v4l-dvb-org/linux/drivers/media/dvb/dvb-core/dvbdev.c	2010-09-23 11:13:16.717123999 +0200
++++ v4l-dvb/linux/drivers/media/dvb/dvb-core/dvbdev.c	2010-09-23 11:14:07.832369385 +0200
+@@ -201,7 +201,7 @@
+ {
+ 	struct dvb_device *dvbdev;
+ 	struct file_operations *dvbdevfops;
+-#if LINUX_VERSION_CODE >= KERNEL_VERSION(2,6,18)
++#if LINUX_VERSION_CODE > KERNEL_VERSION(2,6,18)
+ 	struct device *clsdev;
+ #else
+ 	struct class_device *clsdev;
+@@ -276,10 +276,13 @@
+ 	clsdev = device_create_drvdata(dvb_class, adap->device,
+ 			       MKDEV(DVB_MAJOR, minor),
+ 			       dvbdev, "dvb%d.%s%d", adap->num, dnames[type], id);
+-#else
++#elif LINUX_VERSION_CODE > KERNEL_VERSION(2, 6, 18)
+ 	clsdev = device_create(dvb_class, adap->device,
+ 			       MKDEV(DVB_MAJOR, minor),
+ 			       "dvb%d.%s%d", adap->num, dnames[type], id);
++#else
++	clsdev = class_device_create(dvb_class, NULL, MKDEV(DVB_MAJOR, minor),
++			    adap->device, "dvb%d.%s%d", adap->num, dnames[type], id);
+ #endif
+ 	if (IS_ERR(clsdev)) {
+ 		printk(KERN_ERR "%s: failed to create device dvb%d.%s%d (%ld)\n",
+@@ -304,7 +307,11 @@
+ 	dvb_minors[dvbdev->minor] = NULL;
+ 	up_write(&minor_rwsem);
+ 
++#if LINUX_VERSION_CODE > KERNEL_VERSION(2,6,18)
+ 	device_destroy(dvb_class, MKDEV(DVB_MAJOR, dvbdev->minor));
++#else
++	class_device_destroy(dvb_class, MKDEV(DVB_MAJOR, dvbdev->minor));
++#endif
+ 
+ 	list_del (&dvbdev->list_head);
+ 	kfree (dvbdev->fops);

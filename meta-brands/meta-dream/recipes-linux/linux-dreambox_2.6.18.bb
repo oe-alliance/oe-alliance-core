@@ -1,6 +1,7 @@
-DEPENDS = "kmod-native"
+inherit machine_kernel_pr
+PR = "r3"
 
-inherit kernel machine_kernel_pr
+MACHINE_KERNEL_PR_append = ".6"
 
 PATCHREV = "ac6cc9511a5f70eaa584c63fc5c3de33cae1d0e7"
 
@@ -32,7 +33,6 @@ SRC_URI = " \
         file://linux-2.6.18-mod_devicetable_h.patch \
         file://linux-2.6.18-3g-modems.patch \
         file://mips_refactor_page_dev0.patch \
-        file://mkmakefile-make-3.82-fix-follow-bug-2323.patch \
 "
 SRC_URI[kernel.md5sum] = "296a6d150d260144639c3664d127d174"
 SRC_URI[kernel.sha256sum] = "c95280ff6c5d2a17788f7cc582d23ae8a9a7ba3f202ec6e4238eaadfce7c163d"
@@ -42,44 +42,17 @@ SRC_URI[unionfs.md5sum] = "c0c838b717f98a19a09483fb10e7299e"
 SRC_URI[unionfs.sha256sum] = "b2e04936254bbf778c963de862061027c858a2e157bb2e48c773d2ed2445282e"
 
 S = "${WORKDIR}/linux-${PV}"
-B = "${WORKDIR}/build"
-
-do_configure_prepend() {
-    rm -rf ${STAGING_KERNEL_DIR}/.cofig
-    rm -rf ${STAGING_KERNEL_DIR}/.config
-    rm -rf ${STAGING_KERNEL_DIR}/.config.old
-    rm -rf ${STAGING_KERNEL_DIR}/include/generated
-    rm -rf ${STAGING_KERNEL_DIR}/include/config
-    rm -rf ${STAGING_KERNEL_DIR}/arch/mips/include/generated
-}
-
-do_shared_workdir_prepend() {
-    mkdir -p ${B}/include/generated/
-    mkdir -p ${STAGING_KERNEL_BUILDDIR}/include
-    mkdir -p ${STAGING_KERNEL_BUILDDIR}/scripts
-    cp -fR ${B}/include/linux/* ${B}/include/generated/
-    cp -fR ${B}/include/* ${STAGING_KERNEL_BUILDDIR}/include/
-    cp -fR ${B}/scripts/* ${STAGING_KERNEL_BUILDDIR}/scripts/
-    ln -s ${STAGING_KERNEL_DIR} ${STAGING_KERNEL_BUILDDIR}/source
-    while [ ! -f ${B}/Module.symvers ]
-    do
-      sleep 2
-    done
-}
 
 require linux-dreambox3.inc
 
 do_install_prepend() {
-    mkdir -p ${S}/tools
+        mkdir -p ${S}/tools
 }
 
 do_install_append() {
-    ln -s ${STAGING_KERNEL_DIR}/include/asm-mips ${STAGING_KERNEL_DIR}/include/asm
+        cp include/asm/asm-offsets.h $kerneldir/include/asm/asm-offsets.h
 }
 
 do_package_qa() {
-    exit 0
-}
-
-do_rm_work() {
+	exit 0
 }

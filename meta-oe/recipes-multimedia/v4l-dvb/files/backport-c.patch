@@ -1,0 +1,78 @@
+commit 94ba346ef539ded9c717cabd05d1b482673da0be
+Author: Andreas Oberritter <obi@linuxtv.org>
+Date:   Thu Aug 4 13:24:28 2011 +0000
+
+    DVB: dvb_frontend: update locking in dvb_frontend_{add,get_event}
+    
+    - dvb_frontend_add_event:
+      - fepriv->parameters_out isn't protected by events->mtx, so
+        move the call to fe->ops.get_frontend out of the locked area.
+      - move the assignment of e->status into the locked area.
+    
+    - dvb_frontend_get_event:
+      - use direct assignment instead of memcpy.
+    
+    - dvb_frontend_add_event and dvb_frontend_get_event:
+      - use mutex_lock instead of mutex_lock_interruptible, because
+        all code paths protected by this mutex won't block.
+    
+    Signed-off-by: Andreas Oberritter <obi@linuxtv.org>
+    Signed-off-by: ghost <andreas.monzner@multimedia-labs.de>
+
+diff --git a/linux/drivers/media/dvb/dvb-core/dvb_frontend.c b/linux/drivers/media/dvb/dvb-core/dvb_frontend.c
+index 9f39581..c03acdb 100644
+--- a/linux/drivers/media/dvb/dvb-core/dvb_frontend.c
++++ b/linux/drivers/media/dvb/dvb-core/dvb_frontend.c
+@@ -156,30 +156,25 @@ static void dvb_frontend_add_event(struct dvb_frontend *fe, fe_status_t status)
+ 
+ 	dprintk ("%s\n", __func__);
+ 
+-	if (mutex_lock_interruptible (&events->mtx))
+-		return;
++	if ((status & FE_HAS_LOCK) && fe->ops.get_frontend)
++		fe->ops.get_frontend(fe, &fepriv->parameters_out);
+ 
+-	wp = (events->eventw + 1) % MAX_EVENT;
++	mutex_lock(&events->mtx);
+ 
++	wp = (events->eventw + 1) % MAX_EVENT;
+ 	if (wp == events->eventr) {
+ 		events->overflow = 1;
+ 		events->eventr = (events->eventr + 1) % MAX_EVENT;
+ 	}
+ 
+ 	e = &events->events[events->eventw];
+-
+-	if (status & FE_HAS_LOCK)
+-		if (fe->ops.get_frontend)
+-			fe->ops.get_frontend(fe, &fepriv->parameters_out);
+-
++	e->status = status;
+ 	e->parameters = fepriv->parameters_out;
+ 
+ 	events->eventw = wp;
+ 
+ 	mutex_unlock(&events->mtx);
+ 
+-	e->status = status;
+-
+ 	wake_up_interruptible (&events->wait_queue);
+ }
+ 
+@@ -209,14 +209,9 @@ static int dvb_frontend_get_event(struct dvb_frontend *fe,
+ 			return ret;
+ 	}
+ 
+-	if (mutex_lock_interruptible (&events->mtx))
+-		return -ERESTARTSYS;
+-
+-	memcpy (event, &events->events[events->eventr],
+-		sizeof(struct dvb_frontend_event));
+-
++	mutex_lock(&events->mtx);
++	*event = events->events[events->eventr];
+ 	events->eventr = (events->eventr + 1) % MAX_EVENT;
+-
+ 	mutex_unlock(&events->mtx);
+ 
+ 	return 0;

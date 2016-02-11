@@ -1,0 +1,181 @@
+diff -ruN v4l-dvb.orig/linux/drivers/media/dvb/dvb-usb/af9015.c v4l-dvb/linux/drivers/media/dvb/dvb-usb/af9015.c
+--- v4l-dvb.orig/linux/drivers/media/dvb/dvb-usb/af9015.c	2010-09-09 14:38:50.000000000 +0200
++++ v4l-dvb/linux/drivers/media/dvb/dvb-usb/af9015.c	2010-11-14 22:53:27.477390000 +0100
+@@ -33,6 +33,7 @@
+ #include "tda18271.h"
+ #include "mxl5005s.h"
+ #include "mc44s803.h"
++#include "tda18218.h"
+ 
+ static int dvb_usb_af9015_debug;
+ module_param_named(debug, dvb_usb_af9015_debug, int, 0644);
+@@ -74,6 +75,7 @@
+ 	u8 write = 1;
+ 	u8 msg_len = REQ_HDR_LEN;
+ 	static u8 seq; /* packet sequence number */
++	u8 i2c = 0;
+ 
+ 	if (mutex_lock_interruptible(&af9015_usb_mutex) < 0)
+ 		return -EAGAIN;
+@@ -87,6 +89,15 @@
+ 	buf[6] = req->addr_len;
+ 	buf[7] = req->data_len;
+ 
++/* 001281:  OUT: 000001 ms 073403 ms BULK[00002] >>> 22 13 c0 00 05 e0 01 10 00 00 d0 00 40 00 00 07 ff 84 09 00 13 00 00 01
++22 cmd
++13 seq
++c0 i2c_addr
++00 05 addr
++e0 mbox (dont care?)
++01 addr_len
++10 data_len
++*/
+ 	switch (req->cmd) {
+ 	case GET_CONFIG:
+ 	case READ_MEMORY:
+@@ -129,8 +140,13 @@
+ 		msg_len += req->data_len;
+ 	}
+ 
+-	deb_xfer(">>> ");
+-	debug_dump(buf, msg_len, deb_xfer);
++	if (buf[0] == READ_WRITE_I2C)
++		i2c = 1;
++
++	if (i2c) {
++		deb_xfer(">>> ");
++		debug_dump(buf, msg_len, deb_xfer);
++	}
+ 
+ 	/* send req */
+ 	ret = usb_bulk_msg(udev, usb_sndbulkpipe(udev, 0x02), buf, msg_len,
+@@ -161,8 +177,10 @@
+ 		goto error_unlock;
+ 	}
+ 
+-	deb_xfer("<<< ");
+-	debug_dump(buf, act_len, deb_xfer);
++	if (i2c) {
++		deb_xfer("<<< ");
++		debug_dump(buf, act_len, deb_xfer);
++	}
+ 
+ 	/* remote controller query status is 1 if remote code is not received */
+ 	if (req->cmd == GET_IR_CODE && buf[1] == 1) {
+@@ -274,7 +292,8 @@
+ 
+ 	while (i < num) {
+ 		if (msg[i].addr == af9015_af9013_config[0].demod_address ||
+-		    msg[i].addr == af9015_af9013_config[1].demod_address) {
++                        msg[i].addr == af9015_af9013_config[1].demod_address  ||
++                        msg[i].addr == 0x3a) {
+ 			addr = msg[i].buf[0] << 8;
+ 			addr += msg[i].buf[1];
+ 			mbox = msg[i].buf[2];
+@@ -287,7 +306,8 @@
+ 
+ 		if (num > i + 1 && (msg[i+1].flags & I2C_M_RD)) {
+ 			if (msg[i].addr ==
+-				af9015_af9013_config[0].demod_address)
++                            af9015_af9013_config[0].demod_address ||
++                            msg[i].addr == 0x3a)
+ 				req.cmd = READ_MEMORY;
+ 			else
+ 				req.cmd = READ_I2C;
+@@ -302,7 +322,8 @@
+ 		} else if (msg[i].flags & I2C_M_RD) {
+ 			ret = -EINVAL;
+ 			if (msg[i].addr ==
+-				af9015_af9013_config[0].demod_address)
++                            af9015_af9013_config[0].demod_address ||
++                            msg[i].addr == 0x3a)
+ 				goto error;
+ 			else
+ 				req.cmd = READ_I2C;
+@@ -316,10 +337,12 @@
+ 			i += 1;
+ 		} else {
+ 			if (msg[i].addr ==
+-				af9015_af9013_config[0].demod_address)
++                            af9015_af9013_config[0].demod_address || 
++                            msg[i].addr == 0x3a) 
+ 				req.cmd = WRITE_MEMORY;
+ 			else
+ 				req.cmd = WRITE_I2C;
++//001281:  OUT: 000001 ms 073403 ms BULK[00002] >>> 22 13 c0 00 05 e0 01 10 00 00 d0 00 40 00 00 07 ff 84 09 00 13 00 00 01
+ 			req.i2c_addr = msg[i].addr;
+ 			req.addr = addr;
+ 			req.mbox = mbox;
+@@ -1027,6 +1050,7 @@
+ 		case AF9013_TUNER_MT2060_2:
+ 		case AF9013_TUNER_TDA18271:
+ 		case AF9013_TUNER_QT1010A:
++		case AF9013_TUNER_TDA18218:
+ 			af9015_af9013_config[i].rf_spec_inv = 1;
+ 			break;
+ 		case AF9013_TUNER_MXL5003D:
+@@ -1038,9 +1062,6 @@
+ 			af9015_af9013_config[i].gpio[1] = AF9013_GPIO_LO;
+ 			af9015_af9013_config[i].rf_spec_inv = 1;
+ 			break;
+-		case AF9013_TUNER_TDA18218:
+-			warn("tuner NXP TDA18218 not supported yet");
+-			return -ENODEV;
+ 		default:
+ 			warn("tuner id:%d not supported, please report!", val);
+ 			return -ENODEV;
+@@ -1248,6 +1269,11 @@
+ 	.dig_out = 1,
+ };
+ 
++static struct tda18218_config af9015_tda18218_config = {
++    .i2c_address = 0xc0,
++    .i2c_wr_max = 17,
++};
++
+ static int af9015_tuner_attach(struct dvb_usb_adapter *adap)
+ {
+ 	struct af9015_state *state = adap->dev->priv;
+@@ -1278,6 +1304,10 @@
+ 		ret = dvb_attach(tda18271_attach, adap->fe, 0xc0, i2c_adap,
+ 			&af9015_tda18271_config) == NULL ? -ENODEV : 0;
+ 		break;
++	case AF9013_TUNER_TDA18218:
++		ret = dvb_attach(tda18218_attach, adap->fe, i2c_adap,
++			&af9015_tda18218_config) == NULL ? -ENODEV : 0;
++		break;
+ 	case AF9013_TUNER_MXL5003D:
+ 		ret = dvb_attach(mxl5005s_attach, adap->fe, i2c_adap,
+ 			&af9015_mxl5003_config) == NULL ? -ENODEV : 0;
+@@ -1398,7 +1428,7 @@
+ 
+ 		.i2c_algo = &af9015_i2c_algo,
+ 
+-		.num_device_descs = 9, /* max 9 */
++                .num_device_descs = 9, /* check max from dvb-usb.h */
+ 		.devices = {
+ 			{
+ 				.name = "Afatech AF9015 DVB-T USB2.0 stick",
+@@ -1505,7 +1535,7 @@
+ 
+ 		.i2c_algo = &af9015_i2c_algo,
+ 
+-		.num_device_descs = 9, /* max 9 */
++                .num_device_descs = 9, /* check max from dvb-usb.h */
+ 		.devices = {
+ 			{
+ 				.name = "Xtensions XD-380",
+@@ -1612,7 +1642,7 @@
+ 
+ 		.i2c_algo = &af9015_i2c_algo,
+ 
+-		.num_device_descs = 8, /* max 9 */
++                .num_device_descs = 8, /* check max from dvb-usb.h */
+ 		.devices = {
+ 			{
+ 				.name = "AverMedia AVerTV Volar GPS 805 (A805)",
+@@ -1750,3 +1780,4 @@
+ MODULE_AUTHOR("Antti Palosaari <crope@iki.fi>");
+ MODULE_DESCRIPTION("Driver for Afatech AF9015 DVB-T");
+ MODULE_LICENSE("GPL");
++

@@ -1,0 +1,27 @@
+From 825726e9eba24dbfaf5ebb6be966b65436aa11e3 Mon Sep 17 00:00:00 2001
+From: Andreas Oberritter <obi@linuxtv.org>
+Date: Wed, 24 Aug 2011 14:10:35 +0000
+Subject: [PATCH 2/2] DVB: dvb_frontend: check function pointers on reinitialize
+
+Signed-off-by: Andreas Oberritter <obi@linuxtv.org>
+---
+ drivers/media/dvb/dvb-core/dvb_frontend.c |    6 ++----
+ 1 files changed, 2 insertions(+), 4 deletions(-)
+
+--- a/linux/drivers/media/dvb/dvb-core/dvb_frontend.c	2011-08-24 16:24:55.000000000 +0200
++++ b/linux/drivers/media/dvb/dvb-core/dvb_frontend.c	2011-08-24 16:28:12.540275301 +0200
+@@ -590,12 +590,10 @@
+ 
+ 		if (fepriv->reinitialise) {
+ 			dvb_frontend_init(fe);
+-			if (fepriv->tone != -1) {
++			if (fe->ops.set_tone && fepriv->tone != -1)
+ 				fe->ops.set_tone(fe, fepriv->tone);
+-			}
+-			if (fepriv->voltage != -1) {
++			if (fe->ops.set_voltage && fepriv->voltage != -1)
+ 				fe->ops.set_voltage(fe, fepriv->voltage);
+-			}
+ 			fepriv->reinitialise = 0;
+ 		}
+ 

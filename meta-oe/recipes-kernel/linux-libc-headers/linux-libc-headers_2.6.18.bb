@@ -18,6 +18,8 @@ SRC_URI += " \
         file://makefile_make3-8-2.patch \
         file://mips-utimensat.patch \
         file://mips-pps.patch \
+        file://if-alg-header.patch \
+        file://socket-protocol.patch \
 "
 SRC_URI[md5sum] = "6badae7fe759131d9ba334bf3864a4ab"
 SRC_URI[sha256sum] = "ebbebe73aebdf235413763e78eddd48a16738630305ad298635ab25e83d6ebc6"

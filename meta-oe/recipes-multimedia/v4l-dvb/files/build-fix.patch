@@ -1,0 +1,11 @@
+--- v4l-dvb-org/linux/drivers/media/dvb/frontends/bcm3510_priv.h	2010-09-27 23:05:47.014695899 +0200
++++ v4l-dvb/linux/drivers/media/dvb/frontends/bcm3510_priv.h	2010-09-27 23:03:43.666610967 +0200
+@@ -311,7 +311,7 @@
+ #define MSGID_TRI_STATE 0x2e
+ struct bcm3510_hab_cmd_tri_state {
+ 	u8 RE :1; /* a/d ram port pins */
+-	u8 PE :1; /* baud clock pin */
++	u8 XE :1; /* baud clock pin */
+ 	u8 AC :1; /* a/d clock pin */
+ 	u8 BE :1; /* baud clock pin */
+ 	u8 unused :4;

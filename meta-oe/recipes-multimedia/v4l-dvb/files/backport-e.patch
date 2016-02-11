@@ -1,0 +1,41 @@
+From 4c4e24eb2549c1e48af535b143653458ed6d6f86 Mon Sep 17 00:00:00 2001
+From: Andreas Oberritter <obi@linuxtv.org>
+Date: Mon, 8 Aug 2011 14:35:01 +0000
+Subject: [PATCH 2/3] DVB: dvb_frontend: Fix compatibility criteria for satellite receivers
+Cc: user.vdr@gmail.com,
+    alannisota@gmail.com
+
+- When converting satellite receiver parameters from S2API to legacy,
+  identify a satellite receiver by its 'delivery_system' instead of
+  'modulation', which may overlap between different delivery systems.
+
+Signed-off-by: Andreas Oberritter <obi@linuxtv.org>
+---
+ drivers/media/dvb/dvb-core/dvb_frontend.c |   13 +++++--------
+ 1 files changed, 5 insertions(+), 8 deletions(-)
+
+diff -Naur a/linux/drivers/media/dvb/dvb-core/dvb_frontend.c b/linux/drivers/media/dvb/dvb-core/dvb_frontend.c
+--- a/linux/drivers/media/dvb/dvb-core/dvb_frontend.c	2011-08-09 19:03:35.000000000 +0200
++++ b/linux/drivers/media/dvb/dvb-core/dvb_frontend.c	2011-08-09 19:13:06.288210465 +0200
+@@ -1144,16 +1144,13 @@
+ 	p->frequency = c->frequency;
+ 	p->inversion = c->inversion;
+ 
+-	switch(c->modulation) {
+-	case PSK_8:
+-	case APSK_16:
+-	case APSK_32:
+-	case QPSK:
++	if (c->delivery_system == SYS_DSS ||
++	    c->delivery_system == SYS_DVBS ||
++	    c->delivery_system == SYS_DVBS2 ||
++	    c->delivery_system == SYS_ISDBS ||
++	    c->delivery_system == SYS_TURBO) {
+ 		p->u.qpsk.symbol_rate = c->symbol_rate;
+ 		p->u.qpsk.fec_inner = c->fec_inner;
+-		break;
+-	default:
+-		break;
+ 	}
+ 
+ 	/* Fake out a generic DVB-T request so we pass validation in the ioctl */

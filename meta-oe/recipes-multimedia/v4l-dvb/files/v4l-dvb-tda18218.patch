@@ -1,0 +1,442 @@
+diff -ruN v4l-dvb.orig/linux/drivers/media/common/tuners/Kconfig v4l-dvb/linux/drivers/media/common/tuners/Kconfig
+--- v4l-dvb.orig/linux/drivers/media/common/tuners/Kconfig	2010-11-14 17:28:32.846776110 +0100
++++ v4l-dvb/linux/drivers/media/common/tuners/Kconfig	2010-11-14 22:46:51.606593000 +0100
+@@ -186,4 +186,11 @@
+ 	help
+ 	  A driver for the silicon tuner TUA 9001 from Infineon.
+ 
++config MEDIA_TUNER_TDA18218
++	tristate "NXP TDA18218 silicon tuner"
++	depends on VIDEO_MEDIA && I2C
++	default m if MEDIA_TUNER_CUSTOMISE
++	help
++	  A driver for the silicon tuner TDA18218 from NXP.
++
+ endif # MEDIA_TUNER_CUSTOMISE
+diff -ruN v4l-dvb.orig/linux/drivers/media/common/tuners/Makefile v4l-dvb/linux/drivers/media/common/tuners/Makefile
+--- v4l-dvb.orig/linux/drivers/media/common/tuners/Makefile	2010-11-14 17:28:32.846776110 +0100
++++ v4l-dvb/linux/drivers/media/common/tuners/Makefile	2010-11-14 22:46:39.275133000 +0100
+@@ -25,6 +25,7 @@
+ obj-$(CONFIG_MEDIA_TUNER_MC44S803) += mc44s803.o
+ obj-$(CONFIG_MEDIA_TUNER_MAX2165) += max2165.o
+ obj-$(CONFIG_MEDIA_TUNER_TUA9001) += tua9001.o
++obj-$(CONFIG_MEDIA_TUNER_TDA18218) += tda18218.o
+ 
+ EXTRA_CFLAGS += -Idrivers/media/dvb/dvb-core
+ EXTRA_CFLAGS += -Idrivers/media/dvb/frontends
+diff -ruN v4l-dvb.orig/linux/drivers/media/common/tuners/tda18218.c v4l-dvb/linux/drivers/media/common/tuners/tda18218.c
+--- v4l-dvb.orig/linux/drivers/media/common/tuners/tda18218.c	1970-01-01 01:00:00.000000000 +0100
++++ v4l-dvb/linux/drivers/media/common/tuners/tda18218.c	2010-11-14 22:45:58.870774983 +0100
+@@ -0,0 +1,268 @@
++/*
++ * NXP TDA18218HN silicon tuner driver
++ *
++ * Copyright (C) 2010 Antti Palosaari <crope@iki.fi>
++ *
++ *    This program is free software; you can redistribute it and/or modify
++ *    it under the terms of the GNU General Public License as published by
++ *    the Free Software Foundation; either version 2 of the License, or
++ *    (at your option) any later version.
++ *
++ *    This program is distributed in the hope that it will be useful,
++ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *    GNU General Public License for more details.
++ *
++ *    You should have received a copy of the GNU General Public License
++ *    along with this program; if not, write to the Free Software
++ *    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
++ */
++
++#include "tda18218.h"
++#include "compat.h"
++#include "tda18218_priv.h"
++
++/* write multiple registers */
++static int tda18218_wr_regs(struct dvb_frontend *fe, u8 reg, u8 *val, u8 len)
++{
++	struct tda18218_priv *priv = fe->tuner_priv;
++	int ret;
++	u8 buf[1+len], quotient, remainder, i, msg_len, msg_len_max;
++	struct i2c_msg msg[1] = {
++		{
++			.addr = priv->cfg->i2c_address,
++			.flags = 0,
++			.buf = buf,
++		}
++	};
++
++	if (fe->ops.i2c_gate_ctrl)
++		fe->ops.i2c_gate_ctrl(fe, 1); /* open I2C-gate */
++
++	msg_len_max = priv->cfg->i2c_wr_max - 1;
++	quotient = len / msg_len_max;
++	remainder = len % msg_len_max;
++	msg_len = msg_len_max;
++	for (i = 0; (i <= quotient && remainder); i++) {
++		if (i == quotient)  /* set len of the last msg */
++			msg_len = remainder;
++
++		msg[0].len = msg_len + 1;
++		buf[0] = reg + i * msg_len_max;
++		memcpy(&buf[1], &val[i * msg_len_max], msg_len);
++
++		ret = i2c_transfer(priv->i2c, msg, 1);
++		if (ret != 1)
++			break;
++	}
++
++	if (ret == 1) {
++		ret = 0;
++	} else {
++		printk(KERN_WARNING "I2C write failed ret:%d reg:%02x len:%d\n",
++			ret, reg, len);
++		ret = -EREMOTEIO;
++	}
++
++	if (fe->ops.i2c_gate_ctrl)
++		fe->ops.i2c_gate_ctrl(fe, 0); /* close I2C-gate */
++
++	return ret;
++}
++
++/* read multiple registers */
++static int tda18218_rd_regs(struct dvb_frontend *fe, u8 reg, u8 *val, u8 len)
++{
++	struct tda18218_priv *priv = fe->tuner_priv;
++	int ret;
++	struct i2c_msg msg[2] = {
++		{
++			.addr = priv->cfg->i2c_address,
++			.flags = 0,
++			.len = 1,
++			.buf = "\x00",
++		}, {
++			.addr = priv->cfg->i2c_address,
++			.flags = I2C_M_RD,
++			.len = len,
++			.buf = val,
++		}
++	};
++
++	if (fe->ops.i2c_gate_ctrl)
++		fe->ops.i2c_gate_ctrl(fe, 1); /* open I2C-gate */
++
++	ret = i2c_transfer(priv->i2c, msg, 2);
++	if (ret == 2) {
++		ret = 0;
++	} else {
++		printk(KERN_WARNING "I2C read failed ret:%d reg:%02x len:%d\n",
++			ret, reg, len);
++		ret = -EREMOTEIO;
++	}
++
++	if (fe->ops.i2c_gate_ctrl)
++		fe->ops.i2c_gate_ctrl(fe, 0); /* close I2C-gate */
++
++	return ret;
++}
++
++/* write single register */
++static int tda18218_wr_reg(struct dvb_frontend *fe, u8 reg, u8 val)
++{
++	return tda18218_wr_regs(fe, reg, &val, 1);
++}
++
++/* read single register */
++
++static int tda18218_rd_reg(struct dvb_frontend *fe, u8 reg, u8 *val)
++{
++	return tda18218_rd_regs(fe, reg, val, 1);
++}
++
++static int tda18218_set_params(struct dvb_frontend *fe,
++	struct dvb_frontend_parameters *params)
++{
++	struct tda18218_priv *priv = fe->tuner_priv;
++	int ret;
++	u8 *regs = priv->tda18218_regs;
++	u8 BP_Filter, LP_Fc;
++	u32 LO_Frac;
++	u8 buf[4];
++	/* TODO AGC, find out this proprietary algorithm... */
++
++	/* low-pass filter cut-off frequency */
++	switch (params->u.ofdm.bandwidth) {
++	case BANDWIDTH_6_MHZ:
++		LP_Fc = 0;
++		break;
++	case BANDWIDTH_7_MHZ:
++		LP_Fc = 1;
++		break;
++	case BANDWIDTH_8_MHZ:
++	default:
++		LP_Fc = 2;
++		break;
++	}
++
++	/* band-pass filter */
++	if (params->frequency < 188000000)
++		BP_Filter = 3;
++	else if (params->frequency < 253000000)
++		BP_Filter = 4;
++	else if (params->frequency < 343000000)
++		BP_Filter = 5;
++	else
++		BP_Filter = 6;
++
++	buf[0] = (regs[R_IF1] & ~7) | BP_Filter; /* BP_Filter[2:0] */
++	buf[1] = (regs[R_IF2] & ~3) | LP_Fc; /* LP_Fc[1:0] */
++	buf[2] = regs[R_AGC2B];
++	ret = tda18218_wr_regs(fe, R_IF1, buf, 3);
++	if (ret)
++		goto error;
++
++	LO_Frac = (params->frequency + 4000000) / 1000;
++	buf[0] = LO_Frac >> 12; /* LO_Frac_0[31:24] */
++	buf[1] = LO_Frac >> 4; /* LO_Frac_1[23:16] */
++	buf[2] = LO_Frac << 4 | (regs[R_MD5] & 0x0f); /* LO_Frac_2[15:12] */
++	buf[3] = 0xff;
++	ret = tda18218_wr_regs(fe, R_MD3, buf, 4);
++	if (ret)
++		goto error;
++
++	buf[0] = regs[R_MD8] | (1 << 6); /* Freq_prog_Start */
++	ret = tda18218_wr_regs(fe, R_MD8, buf, 1);
++	if (ret)
++		goto error;
++
++	buf[0] = regs[R_MD8] & ~(1 << 6); /* Freq_prog_Start */
++	ret = tda18218_wr_regs(fe, R_MD8, buf, 1);
++	if (ret)
++		goto error;
++
++	return 0;
++error:
++	return ret;
++}
++
++static int tda18218_init(struct dvb_frontend *fe)
++{
++	struct tda18218_priv *priv = fe->tuner_priv;
++	u8 *regs = priv->tda18218_regs;
++	int ret;
++
++	/* TODO implement calibration */
++
++	/* TODO inits from the sniff... */
++	regs[R_IF1] = 0x0e;
++	regs[R_IF2] = 0x29;
++	regs[R_PSM2] = 0x00;
++
++	ret = tda18218_wr_regs(fe, R_ID, regs, TDA18218_NUM_REGS);
++
++	return 0;
++}
++
++static int tda18218_release(struct dvb_frontend *fe)
++{
++	kfree(fe->tuner_priv);
++	fe->tuner_priv = NULL;
++	return 0;
++}
++
++static const struct dvb_tuner_ops tda18218_tuner_ops = {
++	.info = {
++		.name           = "NXP TDA18218HN",
++	},
++
++	.release       = tda18218_release,
++	.init          = tda18218_init,
++
++	.set_params = tda18218_set_params,
++};
++
++struct dvb_frontend *tda18218_attach(struct dvb_frontend *fe,
++	struct i2c_adapter *i2c, struct tda18218_config *cfg)
++{
++	struct tda18218_priv *priv = NULL;
++	u8 tmp = 0;
++	int ret;
++	/* chip default registers values */
++	static u8 def_regs[] = {
++		0xc0, 0x88, 0x00, 0x8e, 0x03, 0x00, 0x00, 0xd0, 0x00, 0x40,
++		0x00, 0x00, 0x07, 0xff, 0x84, 0x09, 0x00, 0x13, 0x00, 0x00,
++		0x01, 0x84, 0x09, 0xf0, 0x19, 0x0a, 0x8e, 0x69, 0x98, 0x01,
++		0x00, 0x58, 0x10, 0x40, 0x8c, 0x00, 0x0c, 0x48, 0x85, 0xc9,
++		0xa7, 0x00, 0x00, 0x00, 0x30, 0x81, 0x80, 0x00, 0x39, 0x00,
++		0x8a, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xf6, 0xf6
++	};
++
++	priv = kzalloc(sizeof(struct tda18218_priv), GFP_KERNEL);
++	if (priv == NULL)
++		return NULL;
++
++	priv->cfg = cfg;
++	priv->i2c = i2c;
++	fe->tuner_priv = priv;
++
++	/* check if the tuner is there */
++	ret = tda18218_rd_reg(fe, R_ID, &tmp);
++	if (ret || tmp != 0xc0) {
++		kfree(priv);
++		return NULL;
++	}
++
++	printk(KERN_INFO "NXP TDA18218HN successfully identified.\n");
++
++	memcpy(&fe->ops.tuner_ops, &tda18218_tuner_ops,
++		sizeof(struct dvb_tuner_ops));
++	memcpy(priv->tda18218_regs, def_regs, sizeof(def_regs));
++
++	return fe;
++}
++EXPORT_SYMBOL(tda18218_attach);
++
++MODULE_DESCRIPTION("TDA18218 silicon tuner driver");
++MODULE_AUTHOR("Antti Palosaari <crope@iki.fi>");
++MODULE_LICENSE("GPL");
+diff -ruN v4l-dvb.orig/linux/drivers/media/common/tuners/tda18218.h v4l-dvb/linux/drivers/media/common/tuners/tda18218.h
+--- v4l-dvb.orig/linux/drivers/media/common/tuners/tda18218.h	1970-01-01 01:00:00.000000000 +0100
++++ v4l-dvb/linux/drivers/media/common/tuners/tda18218.h	2010-11-14 22:45:58.870774983 +0100
+@@ -0,0 +1,44 @@
++/*
++ *  Driver for  NXP TDA18218 silicon tuner
++ *
++ *  Copyright (C) 2010 Lauris Ding <ld...@gmx.de>
++ *
++ *  This program is free software; you can redistribute it and/or modify
++ *  it under the terms of the GNU General Public License as published by
++ *  the Free Software Foundation; either version 2 of the License, or
++ *  (at your option) any later version.
++ *
++ *  This program is distributed in the hope that it will be useful,
++ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *  GNU General Public License for more details.
++ *
++ *  You should have received a copy of the GNU General Public License
++ *  along with this program; if not, write to the Free Software
++ *  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
++ */
++
++#ifndef TDA18218_H
++#define TDA18218_H
++
++#include "dvb_frontend.h"
++
++struct tda18218_config {
++	u8 i2c_address;
++	u8 i2c_wr_max;
++};
++
++#if defined(CONFIG_MEDIA_TUNER_TDA18218) || \
++	(defined(CONFIG_MEDIA_TUNER_TDA18218_MODULE) && defined(MODULE))
++extern struct dvb_frontend *tda18218_attach(struct dvb_frontend *fe,
++	struct i2c_adapter *i2c, struct tda18218_config *cfg);
++#else
++static inline struct dvb_frontend *tda18218_attach(struct dvb_frontend *fe,
++	struct i2c_adapter *i2c, struct tda18218_config *cfg)
++{
++	printk(KERN_WARNING "%s: driver disabled by Kconfig\n", __func__);
++	return NULL;
++}
++#endif
++
++#endif
+diff -ruN v4l-dvb.orig/linux/drivers/media/common/tuners/tda18218_priv.h v4l-dvb/linux/drivers/media/common/tuners/tda18218_priv.h
+--- v4l-dvb.orig/linux/drivers/media/common/tuners/tda18218_priv.h	1970-01-01 01:00:00.000000000 +0100
++++ v4l-dvb/linux/drivers/media/common/tuners/tda18218_priv.h	2010-11-14 22:45:58.870774983 +0100
+@@ -0,0 +1,92 @@
++/*
++ *  Driver for NXP TDA18218 silicon tuner
++ *
++ *  Copyright (C) 2010 Lauris Ding <ld...@gmx.de>
++ *  This program is free software; you can redistribute it and/or modify
++ *  it under the terms of the GNU General Public License as published by
++ *  the Free Software Foundation; either version 2 of the License, or
++ *  (at your option) any later version.
++ *
++ *  This program is distributed in the hope that it will be useful,
++ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *  GNU General Public License for more details.
++ *
++ *  You should have received a copy of the GNU General Public License
++ *  along with this program; if not, write to the Free Software
++ *  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
++ */
++
++#ifndef TDA18218_PRIV_H
++#define TDA18218_PRIV_H
++
++#define R_ID         0x00	/* ID byte */
++#define R_R1         0x01	/* Read byte 1 */
++#define R_R2         0x02	/* Read byte 2 */
++#define R_R3         0x03	/* Read byte 3 */
++#define R_R4         0x04	/* Read byte 4 */
++#define R_R5         0x05	/* Read byte 5 */
++#define R_R6         0x06	/* Read byte 6 */
++#define R_MD1        0x07	/* Main Divider byte 1 */
++#define R_PSM1       0x08	/* PSM byte 1 */
++#define R_MD2        0x09	/* Main Divider byte 2 */
++#define R_MD3        0x0a	/* Main Divider byte 1 */
++#define R_MD4        0x0b	/* Main Divider byte 4 */
++#define R_MD5        0x0c	/* Main Divider byte 5 */
++#define R_MD6        0x0d	/* Main Divider byte 6 */
++#define R_MD7        0x0e	/* Main Divider byte 7 */
++#define R_MD8        0x0f	/* Main Divider byte 8 */
++#define R_CD1        0x10	/* Cal Divider byte 1 */
++#define R_CD2        0x11	/* Cal Divider byte 2 */
++#define R_CD3        0x12	/* Cal Divider byte 3 */
++#define R_CD4        0x13	/* Cal Divider byte 4 */
++#define R_CD5        0x14	/* Cal Divider byte 5 */
++#define R_CD6        0x15	/* Cal Divider byte 6 */
++#define R_CD7        0x16	/* Cal Divider byte 7 */
++#define R_PD1        0x17	/* Power-down byte 1 */
++#define R_PD2        0x18	/* Power-down byte 2 */
++#define R_XTOUT      0x19	/* XTOUT byte */
++#define R_IF1        0x1a	/* IF byte 1 */
++#define R_IF2        0x1b	/* IF byte 2 */
++#define R_AGC2B      0x1c	/* AGC2b byte */
++#define R_PSM2       0x1d	/* PSM byte 2 */
++#define R_PSM3       0x1e	/* PSM byte 3 */
++#define R_PSM4       0x1f	/* PSM byte 4 */
++#define R_AGC11      0x20	/* AGC1 byte 1 */
++#define R_AGC12      0x21	/* AGC1 byte 2 */
++#define R_AGC13      0x22	/* AGC1 byte 3 */
++#define R_AGC21      0x23	/* AGC2 byte 1 */
++#define R_AGC22      0x24	/* AGC2 byte 2 */
++#define R_AAGC       0x25	/* Analog AGC byte */
++#define R_RC         0x26	/* RC byte */
++#define R_RSSI       0x27	/* RSSI byte */
++#define R_IRCAL1     0x28	/* IR CAL byte 1 */
++#define R_IRCAL2     0x29	/* IR CAL byte 2 */
++#define R_IRCAL3     0x2a	/* IR CAL byte 3 */
++#define R_IRCAL4     0x2b	/* IR CAL byte 4 */
++#define R_RFCAL1     0x2c	/* RF CAL byte 1 */
++#define R_RFCAL2     0x2d	/* RF CAL byte 2 */
++#define R_RFCAL3     0x2e	/* RF CAL byte 3 */
++#define R_RFCAL4     0x2f	/* RF CAL byte 4 */
++#define R_RFCAL5     0x30	/* RF CAL byte 5 */
++#define R_RFCAL6     0x31	/* RF CAL byte 6 */
++#define R_RFCAL7     0x32	/* RF CAL byte 7 */
++#define R_RFCAL8     0x33	/* RF CAL byte 8 */
++#define R_RFCAL9     0x34	/* RF CAL byte 9 */
++#define R_RFCAL10    0x35	/* RF CAL byte 10 */
++#define R_RFCALRAM1  0x36	/* RF CAL RAM byte 1 */
++#define R_RFCALRAM2  0x37	/* RF CAL RAM byte 2 */
++#define R_MARGIN     0x38	/* Margin byte */
++#define R_FMAX1      0x39	/* Fmax byte 1 */
++#define R_FMAX2      0x3a	/* Fmax byte 2 */
++
++#define TDA18218_NUM_REGS 59
++
++struct tda18218_priv {
++	struct tda18218_config *cfg;
++	struct i2c_adapter *i2c;
++
++	u8 tda18218_regs[TDA18218_NUM_REGS];
++};
++
++#endif

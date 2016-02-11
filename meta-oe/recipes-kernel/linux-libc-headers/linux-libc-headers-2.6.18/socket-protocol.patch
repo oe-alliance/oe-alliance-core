@@ -1,0 +1,11 @@
+--- a/include/asm-mips/socket.h	2016-02-06 23:55:25.948971655 +0100
++++ b/include/asm-mips/socket.h	2016-02-06 23:55:58.932971090 +0100
+@@ -42,6 +42,8 @@
+ #define SO_SNDTIMEO	0x1005	/* send timeout */
+ #define SO_RCVTIMEO 	0x1006	/* receive timeout */
+ #define SO_ACCEPTCONN	0x1009
++#define SO_PROTOCOL     0x1028  /* protocol type */
++#define SO_DOMAIN       0x1029  /* domain/socket family */
+ 
+ /* linux-specific, might as well be the same as on i386 */
+ #define SO_NO_CHECK	11

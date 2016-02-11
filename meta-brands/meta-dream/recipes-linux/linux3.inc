@@ -220,6 +220,7 @@ do_configure_prepend() {
                 echo "CONFIG_ROOT_NFS=y"                 >> ${S}/.config
                 echo "CONFIG_CMDLINE=\"${CMDLINE_NFSROOT_USB}\"" >> ${S}/.config
         fi
+        yes '' | oe_runmake oldconfig
 }
 
 do_configure_append() {
@@ -228,6 +229,9 @@ do_configure_append() {
     fi
 }
 
+do_install_append() {
+    oe_runmake headers_install INSTALL_HDR_PATH=${D}${exec_prefix}/src/linux-${KERNEL_VERSION} ARCH=$ARCH
+}
 
 PACKAGES =+ "kernel-headers"
 FILES_kernel-headers = "${exec_prefix}/src/linux*"
