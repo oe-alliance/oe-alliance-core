@@ -1,6 +1,6 @@
 inherit image_types
 
-IMAGE_CMD_jffs2.nfi = " \
+IMAGE_CMD_jffs2nfi = " \
     mkfs.jffs2 \
         --root=${IMAGE_ROOTFS}/boot \
         --compression-mode=none \
@@ -20,7 +20,7 @@ IMAGE_CMD_jffs2.nfi = " \
         > ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.nfi; \
 "
 
-IMAGE_CMD_sum.jffs2.nfi = " \
+IMAGE_CMD_sum.jffs2nfi = " \
     mkfs.jffs2 \
         --root=${IMAGE_ROOTFS}/boot \
         --compression-mode=none \
@@ -48,7 +48,7 @@ IMAGE_CMD_sum.jffs2.nfi = " \
         > ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.nfi; \
 "
 
-IMAGE_CMD_ubi.nfi = " \
+IMAGE_CMD_ubinfi = " \
     mkfs.jffs2 \
         --root=${IMAGE_ROOTFS}/boot \
         --compression-mode=none \
@@ -131,13 +131,13 @@ IMAGE_CMD_ubi.nfi = " \
     fi; \
 "
 
-EXTRA_IMAGECMD_jffs2.nfi ?= "-e ${DREAMBOX_ERASE_BLOCK_SIZE} -n -l"
-EXTRA_IMAGECMD_sum.jffs2.nfi ?= "-e ${DREAMBOX_ERASE_BLOCK_SIZE} -n -l"
-EXTRA_IMAGECMD_ubi.nfi ?= "-e ${DREAMBOX_ERASE_BLOCK_SIZE} -n -l"
-EXTRA_IMAGECMDV2_ubi.nfi ?= "-e ${DREAMBOX_ERASE_BLOCK_SIZEV2} -n -l"
+EXTRA_IMAGECMD_jffs2nfi ?= "-e ${DREAMBOX_ERASE_BLOCK_SIZE} -n -l"
+EXTRA_IMAGECMD_sum.jffs2nfi ?= "-e ${DREAMBOX_ERASE_BLOCK_SIZE} -n -l"
+EXTRA_IMAGECMD_ubinfi ?= "-e ${DREAMBOX_ERASE_BLOCK_SIZE} -n -l"
+EXTRA_IMAGECMDV2_ubinfi ?= "-e ${DREAMBOX_ERASE_BLOCK_SIZEV2} -n -l"
 
-IMAGE_DEPENDS_jffs2.nfi = "${IMAGE_DEPENDS_jffs2} dreambox-buildimage-native"
-IMAGE_DEPENDS_sum.jffs2.nfi = "${IMAGE_DEPENDS_sum.jffs2} dreambox-buildimage-native"
-IMAGE_DEPENDS_ubi.nfi = "${IMAGE_DEPENDS_ubi} ${IMAGE_DEPENDS_ubifs} dreambox-buildimage-native"
+IMAGE_DEPENDS_jffs2nfi = "${IMAGE_DEPENDS_jffs2} dreambox-buildimage-native"
+IMAGE_DEPENDS_sum.jffs2nfi = "${IMAGE_DEPENDS_sum.jffs2} dreambox-buildimage-native"
+IMAGE_DEPENDS_ubinfi = "${IMAGE_DEPENDS_ubi} ${IMAGE_DEPENDS_ubifs} dreambox-buildimage-native"
 
-IMAGE_TYPES += "jffs2.nfi sum.jffs2.nfi ubi.nfi"
+IMAGE_TYPES += "jffs2nfi sum.jffs2nfi ubinfi"

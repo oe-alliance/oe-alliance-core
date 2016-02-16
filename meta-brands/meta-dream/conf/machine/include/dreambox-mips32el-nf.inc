@@ -75,7 +75,7 @@ DREAMBOX_BUILDIMAGE = "buildimage --arch ${MACHINE} ${EXTRA_BUILDCMD} \
     --flash-size ${DREAMBOX_FLASH_SIZE} \
     --sector-size ${DREAMBOX_SECTOR_SIZE}"
 
-IMAGE_FSTYPES ?= "jffs2.nfi"
+IMAGE_FSTYPES ?= "jffs2nfi"
 
 require conf/machine/include/tune-mips32.inc
 
