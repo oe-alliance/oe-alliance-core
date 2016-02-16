@@ -1,0 +1,12 @@
+--- a/quota_nld.c	2016-02-16 14:24:53.526751738 +0100
++++ b/quota_nld.c	2016-02-16 14:26:52.206749704 +0100
+@@ -29,8 +29,8 @@
+ #include <sys/stat.h>
+ #include <asm/types.h>
+ 
+-#include <linux/netlink.h>
+ #include <netlink/socket.h>
++#include <linux/netlink.h>
+ #include <netlink/genl/genl.h>
+ #include <netlink/genl/ctrl.h>
+ 
