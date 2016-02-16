@@ -11,7 +11,7 @@ inherit gitpkgv pkgconfig
 
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r10"
+PR = "r11"
 
 SRC_URI = "git://github.com/OpenAZBox/AZPlay.git;protocol=git"
 
@@ -42,15 +42,11 @@ do_install_azboxhd() {
     install -d ${D}/etc/init.d
     install -m 0755 ${S}/bin/init ${D}/etc/init.d/djmount
 
-
-    install -d ${D}/usr/lib/
-    install -m 0755 ${S}/lib/lib* ${D}/usr/lib/
-
     install -d ${D}/usr/lib/enigma2/python/Plugins/Extensions/AZPlay/
     install -m 0644 ${S}/plugin/*.pyo ${D}/usr/lib/enigma2/python/Plugins/Extensions/AZPlay/
 
-        install -d ${D}/usr/lib/enigma2/python/Plugins/Extensions/AZPlay/img/
-        install -m 0644 ${S}/img/*.png ${D}/usr/lib/enigma2/python/Plugins/Extensions/AZPlay/img/
+    install -d ${D}/usr/lib/enigma2/python/Plugins/Extensions/AZPlay/img/
+    install -m 0644 ${S}/img/*.png ${D}/usr/lib/enigma2/python/Plugins/Extensions/AZPlay/img/
 }
 
 do_install() {
@@ -62,19 +58,14 @@ do_install() {
     install -d ${D}/etc/init.d
     install -m 0755 ${S}/bin/init ${D}/etc/init.d/djmount
 
-
-    install -d ${D}/usr/lib/
-    install -m 0755 ${S}/lib/lib* ${D}/usr/lib/
-
     install -d ${D}/usr/lib/enigma2/python/Plugins/Extensions/AZPlay/
     install -m 0644 ${S}/plugin/*.pyo ${D}/usr/lib/enigma2/python/Plugins/Extensions/AZPlay/
 
-        install -d ${D}/usr/lib/enigma2/python/Plugins/Extensions/AZPlay/img/
-        install -m 0644 ${S}/img/*.png ${D}/usr/lib/enigma2/python/Plugins/Extensions/AZPlay/img/
+    install -d ${D}/usr/lib/enigma2/python/Plugins/Extensions/AZPlay/img/
+    install -m 0644 ${S}/img/*.png ${D}/usr/lib/enigma2/python/Plugins/Extensions/AZPlay/img/
 }
 
 FILES_${PN} = "/usr/bin/"
-FILES_${PN} += "/usr/lib/"
 FILES_${PN} += "/etc/init.d/"
 FILES_${PN} += "/usr/lib/enigma2/python/Plugins/Extensions/AZPlay/"
 FILES_${PN} += "/usr/lib/enigma2/python/Plugins/Extensions/AZPlay/img/"
