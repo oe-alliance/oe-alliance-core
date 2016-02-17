@@ -6,31 +6,37 @@ BRAND_OEM = "ultramini"
 MACHINE_NAME = "\
 ${@base_contains('MACHINEBUILD', 'xpeedlxcs2', 'XPEED LX CLASS S2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'xpeedlxcc', 'XPEED LX CLASS C' , '', d)}\
+${@base_contains('MACHINEBUILD', 'et7x00mini', 'ET-7000 Mini' , '', d)}\
 "
 
 MACHINE_BRAND = "\
 ${@base_contains('MACHINEBUILD', 'xpeedlxcs2', 'GOLDEN INTERSTAR' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'xpeedlxcc', 'GOLDEN INTERSTAR' , '', d)}\
+${@base_contains('MACHINEBUILD', 'et7x00mini', 'Galaxy Innovations' , '', d)}\
 "
 
 IMAGEDIR ?= "\
 ${@base_contains('MACHINEBUILD', 'xpeedlxcs2', 'xpeedc' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'xpeedlxcc', 'xpeedc' , '', d)}\
+${@base_contains('MACHINEBUILD', 'et7x00mini', 'et7x00' , '', d)}\
 "
 
 MTD_KERNEL = "\
 ${@base_contains('MACHINEBUILD', 'xpeedlxcs2', 'mtd1' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'xpeedlxcc', 'mtd1' , '', d)}\
+${@base_contains('MACHINEBUILD', 'et7x00mini', 'mtd1' , '', d)}\
 "
 
 MTD_ROOTFS = "\
 ${@base_contains('MACHINEBUILD', 'xpeedlxcs2', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'xpeedlxcc', 'mtd2' , '', d)}\
+${@base_contains('MACHINEBUILD', 'et7x00mini', 'mtd2' , '', d)}\
 "
 
 MACHINE_DRIVER = "\
 ${@base_contains('MACHINEBUILD', 'xpeedlxcs2', 'xpeedc' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'xpeedlxcc', 'xpeedc' , '', d)}\
+${@base_contains('MACHINEBUILD', 'et7x00mini', 'et7x00' , '', d)}\
 "
 
 KERNEL_FILE = "kernel.bin"
@@ -47,7 +53,7 @@ MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS = "\
     "
 
 MACHINE_EXTRA_RRECOMMENDS = " \
-    gst-plugin-dvbmediasink \
+    gstreamer1.0-plugin-dvbmediasink \
     "
 
 include conf/machine/include/autoload-filesystems.inc
@@ -58,8 +64,8 @@ TARGET_ARCH = "mipsel"
 DEFAULTTUNE = "mips32el"
 
 PREFERRED_PROVIDER_virtual/kernel = "linux-ultramini"
-PREFERRED_PROVIDER_virtual/blindscan-dvbc = "ultramini-blindscan-utils"
-PREFERRED_PROVIDER_virtual/blindscan-dvbs = "ultramini-blindscan-utils"
+PREFERRED_PROVIDER_virtual/blindscan-dvbc = "ultramini-blindscan-utils-dvbc"
+PREFERRED_PROVIDER_virtual/blindscan-dvbs = "ultramini-blindscan-utils-dvbs"
 
 PREFERRED_VERSION_nfs-utils ?= "1.2.8"
 
@@ -78,15 +84,16 @@ IMAGE_CMD_ubi_prepend = " \
     rm -rf ${IMAGE_ROOTFS}/tmp/*; \
     "
 
-IMAGE_CMD_ubi_append = " \
+IMAGE_CMD_ubi_append = "\
     mkdir -p ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}; \
     ${@base_contains("MACHINE_FEATURES", "bootsplash", "cp ${DEPLOY_DIR_IMAGE}/${BOOTLOGO_FILENAME} ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/${BOOTLOGO_FILENAME};" , "", d)} \
     mv ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.ubi ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/${ROOTFS_FILE}; \
     gzip -9c ${DEPLOY_DIR_IMAGE}/vmlinux-${MACHINE}.bin > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/${KERNEL_FILE}; \
-    echo ${DISTRO_NAME}-${DISTRO_VERSION}.${BUILD_VERSION} > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/imageversion; \
+    echo ${IMAGE_VER_STRING} > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/imageversion; \
     echo "rename this file to 'force' to force an update without confirmation" > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/noforce; \
     cd ${DEPLOY_DIR_IMAGE}; \
     zip ${IMAGE_NAME}_usb.zip ${IMAGEDIR}/*; \
+    rm -f ${DEPLOY_DIR_IMAGE}/*.ubi; \
     rm -f ${DEPLOY_DIR_IMAGE}/*.ubifs; \
     rm -f ${DEPLOY_DIR_IMAGE}/*.manifest; \
     rm -f ${DEPLOY_DIR_IMAGE}/.ubifs; \
@@ -95,7 +102,7 @@ IMAGE_CMD_ubi_append = " \
     "
 
 MACHINE_FEATURES += "3dtv alsa hdmicec switchoff wifi bootsplash omb skins1080 \
-    ${@base_contains('MACHINEBUILD', 'xpeedlxcc', 'dvb-c dvbc-only' , '', d)} \
+    ${@base_contains('MACHINEBUILD', 'xpeedlxcc', 'dvb-c dvbc-only blindscan-dvbc' , '', d)} \
     "
 
 BOOTLOGO_FILENAME = "splash.bin"

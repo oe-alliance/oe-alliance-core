@@ -1,24 +1,11 @@
-SUMMARY = "openViX bootlogo Zeus"
-LICENSE = "CLOSED"
-require conf/license/license-close.inc
+SUMMARY = "OpenViX bootlogo Zeus"
 
-inherit allarch
+require recipes-distros/openvix/bootlogos/openvix-bootlogos.inc
 
-PV = "1.0"
-PR = "r4"
+PV = "${IMAGE_VERSION}"
+PR = "r0"
 
 SRC_URI = "http://openvix.co.uk/feeds_extras/bootlogos/openvix-zeus.zip"
 
-S = "${WORKDIR}"
-
-do_install() {
-    install -d ${D}/etc/enigma2
-    install -m 0644 bootlogo.mvi ${D}/etc/enigma2/bootlogo.mvi
-    install -m 0644 backdrop.mvi ${D}/etc/enigma2/backdrop.mvi
-    install -m 0644 radio.mvi ${D}/etc/enigma2/radio.mvi
-}
-
 SRC_URI[md5sum] = "25bb4a9526350cfaa28cfa9fe288eebe"
 SRC_URI[sha256sum] = "30b68be08383209f831aa035df8acb0da2500e36f9c8d2ef786d049a7dadacd3"
-
-FILES_${PN} = "/etc"

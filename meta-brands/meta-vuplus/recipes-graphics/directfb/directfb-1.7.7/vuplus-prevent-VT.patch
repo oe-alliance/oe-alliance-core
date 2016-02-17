@@ -1,0 +1,64 @@
+diff --git a/inputdrivers/linux_input/linux_input.c b/inputdrivers/linux_input/linux_input.c
+index e275762..9e2d622 100644
+--- a/inputdrivers/linux_input/linux_input.c
++++ b/inputdrivers/linux_input/linux_input.c
+@@ -284,7 +284,11 @@ int basic_keycodes [] = {
+      /*KEY_CLOSECD, KEY_EJECTCD, KEY_EJECTCLOSECD,*/
+      DIKS_EJECT, DIKS_EJECT, DIKS_EJECT,
+ 
++#if 0 //vuplus
+      DIKS_NEXT, DIKS_PLAYPAUSE, DIKS_PREVIOUS, DIKS_STOP, DIKS_RECORD,
++#else
++     DIKS_FASTFORWARD, DIKS_PLAYPAUSE, DIKS_REWIND, DIKS_STOP, DIKS_RECORD,
++#endif
+      DIKS_REWIND, DIKS_PHONE,
+ 
+      /*KEY_ISO,*/ DIKI_UNKNOWN,
+@@ -1260,6 +1264,7 @@ driver_get_available( void )
+           return 0;
+ 
+      if (dfb_system_type() == CORE_FBDEV && !dfb_config->linux_input_force) {
++#if 0 // vuplus
+           FBDev *dfb_fbdev = (FBDev*) dfb_system_data();
+           D_ASSERT( dfb_fbdev );
+ 
+@@ -1268,6 +1273,7 @@ driver_get_available( void )
+           // FIXME:  Additional logic needed for system drivers not similar to fbdev?
+           if (!dfb_fbdev->vt || dfb_fbdev->vt->fd < 0)
+                return 0;
++#endif
+      }
+ 
+      /* Use the devices specified in the configuration. */
+@@ -1480,6 +1486,7 @@ get_capability( void )
+           FBDev *dfb_fbdev = (FBDev*) dfb_system_data();
+           D_ASSERT( dfb_fbdev );
+ 
++#if 0 // hschang
+           // Only allow USB keyboard and mouse support if the systems driver has
+           // the Virtual Terminal file ("/dev/tty0") open and available for use.
+           // FIXME:  Additional logic needed for system drivers not similar to fbdev?
+@@ -1487,6 +1494,7 @@ get_capability( void )
+                D_DEBUG_AT( Debug_LinuxInput, "  -> no VT\n" );
+                goto exit;
+           }
++#endif
+      }
+ 
+      D_DEBUG_AT( Debug_LinuxInput, "  -> returning HOTPLUG\n" );
+@@ -1855,6 +1863,7 @@ driver_open_device( CoreInputDevice  *device,
+       /* Track associated entry in device_nums and device_names array. */
+       data->index = number;
+ 
++#if 0 // hschang
+      if (info->desc.min_keycode >= 0 && info->desc.max_keycode >= info->desc.min_keycode) {
+           if (dfb_system_type() == CORE_FBDEV) {
+                FBDev *dfb_fbdev = dfb_system_data();
+@@ -1868,6 +1877,7 @@ driver_open_device( CoreInputDevice  *device,
+           if (data->vt_fd < 0)
+                D_WARN( "no keymap support (requires /dev/tty0 - CONFIG_VT)" );
+      }
++#endif
+ 
+      /* check if the device has LEDs */
+      ret = ioctl( fd, EVIOCGBIT(EV_LED, sizeof(ledbit)), ledbit );

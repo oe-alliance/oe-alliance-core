@@ -1,0 +1,27 @@
+diff --git a/sound/stm/conv_i2sspdif.c b/sound/stm/conv_i2sspdif.c
+index 84b1664..ef847a0 100644
+--- a/sound/stm/conv_i2sspdif.c
++++ b/sound/stm/conv_i2sspdif.c
+@@ -199,9 +199,9 @@ static int snd_stm_conv_i2sspdif_iec958_set(struct snd_stm_conv_i2sspdif
+ 
+ 
+ 	if (!ok) {
+-		snd_stm_printe("WARNING! Failed to set channel status registers"
++		/* snd_stm_printe("WARNING! Failed to set channel status registers"
+ 				" for converter %s! (tried %d times)\n",
+-			       dev_name(conv_i2sspdif->device), i);
++			       dev_name(conv_i2sspdif->device), i); */
+ 		return -EINVAL;
+ 	}
+ 
+@@ -286,8 +286,8 @@ static int snd_stm_conv_i2sspdif_enable(struct snd_stm_conv_i2sspdif
+ 	iec958 = conv_i2sspdif->iec958_default;
+ 	spin_unlock(&conv_i2sspdif->iec958_default_lock);
+ 	if (snd_stm_conv_i2sspdif_iec958_set(conv_i2sspdif, &iec958) != 0)
+-		snd_stm_printe("WARNING! Can't set channel status "
+-				"registers!\n");
++		/* snd_stm_printe("WARNING! Can't set channel status "
++				"registers!\n"); */
+ 
+ 	conv_i2sspdif->enabled = 1;
+ 

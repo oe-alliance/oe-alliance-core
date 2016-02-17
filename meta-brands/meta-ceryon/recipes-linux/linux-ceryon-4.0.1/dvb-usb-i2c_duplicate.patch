@@ -1,0 +1,35 @@
+--- a/drivers/i2c/i2c-core.c	2015-05-07 18:27:18.000000000 +0900
++++ b/drivers/i2c/i2c-core.c	2015-11-30 19:48:17.495207796 +0900
+@@ -62,7 +62,6 @@
+    calls are serialized */
+ static DEFINE_MUTEX(core_lock);
+ static DEFINE_IDR(i2c_adapter_idr);
+-static struct i2c_adapter *first_adapter = NULL, *last_adapter = NULL;
+ 
+ static struct device_type i2c_client_type;
+ static int i2c_detect(struct i2c_adapter *adapter, struct i2c_driver *driver);
+@@ -1394,13 +1393,6 @@
+ 		return -EINVAL;
+ 	}
+ 
+-	if (!first_adapter) {
+-		first_adapter = adap;
+-		last_adapter = adap;
+-	}
+-	if (last_adapter)
+-		adap = last_adapter;
+-
+ 	rt_mutex_init(&adap->bus_lock);
+ 	mutex_init(&adap->userspace_clients_lock);
+ 	INIT_LIST_HEAD(&adap->userspace_clients);
+@@ -2316,9 +2308,8 @@
+ 	adapter = idr_find(&i2c_adapter_idr, nr);
+ 	if (adapter && !try_module_get(adapter->owner))
+ 		adapter = NULL;
+-	if (!adapter)
+-		last_adapter = NULL;
+ 	mutex_unlock(&core_lock);
++    
+ 	return adapter;
+ }
+ EXPORT_SYMBOL(i2c_get_adapter);

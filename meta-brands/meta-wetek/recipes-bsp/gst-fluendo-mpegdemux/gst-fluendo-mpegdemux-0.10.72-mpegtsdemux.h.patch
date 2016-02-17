@@ -1,0 +1,13 @@
+--- gst-fluendo-mpegdemux-0.10.72/src/gstmpegtsdemux.h.orig	2013-02-12 04:01:37.000000000 -0800
++++ gst-fluendo-mpegdemux-0.10.72/src/gstmpegtsdemux.h	2014-04-27 22:56:14.649490000 -0700
+@@ -225,6 +225,10 @@ struct _GstFluTSDemux
+ 
+   /* New segment event for downstream pads */
+   GstEvent *new_seg_event;
++
++	/*private*/
++	guint64 filelength;
++	guint64 privateduration;
+ };
+ 
+ struct _GstFluTSDemuxClass

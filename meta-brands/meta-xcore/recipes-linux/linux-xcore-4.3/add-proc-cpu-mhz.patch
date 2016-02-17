@@ -1,0 +1,58 @@
+diff --git a/arch/mips/bmips/setup.c b/arch/mips/bmips/setup.c
+index 3269f4f0d31d..e7b04338239c 100644
+--- a/arch/mips/bmips/setup.c
++++ b/arch/mips/bmips/setup.c
+@@ -124,6 +124,8 @@ const char *get_system_type(void)
+ 	return "Generic BMIPS kernel";
+ }
+ 
++unsigned long bcm7xxx_cpu_khz;
++
+ #define REG_BCM7346_TIMER	((void __iomem *)CKSEG1ADDR(0x104067c0))
+ #define REG_BCM7362_TIMER	((void __iomem *)CKSEG1ADDR(0x10406680))
+ 
+@@ -178,12 +180,16 @@ void __init plat_time_init(void)
+ 	mips_hpt_frequency = freq;
+ 
+ 	if (of_flat_dt_is_compatible(of_get_flat_dt_root(),
+-				     "brcm,bcm7346"))
++				     "brcm,bcm7346")) {
+ 		mips_hpt_frequency = bcm73xx_cpu_frequency(REG_BCM7346_TIMER);
++		bcm7xxx_cpu_khz = mips_hpt_frequency * 8 / 1000;
++	}
+ 
+ 	if (of_flat_dt_is_compatible(of_get_flat_dt_root(),
+-				     "brcm,bcm7362"))
++				     "brcm,bcm7362")) {
+ 		mips_hpt_frequency = bcm73xx_cpu_frequency(REG_BCM7362_TIMER);
++		bcm7xxx_cpu_khz = mips_hpt_frequency * 2 / 1000;
++	}
+ }
+ 
+ void __init plat_mem_setup(void)
+diff --git a/arch/mips/kernel/proc.c b/arch/mips/kernel/proc.c
+index 298b2b773d12..58d009ed04e2 100644
+--- a/arch/mips/kernel/proc.c
++++ b/arch/mips/kernel/proc.c
+@@ -32,6 +32,10 @@ int proc_cpuinfo_notifier_call_chain(unsigned long val, void *v)
+ 	return raw_notifier_call_chain(&proc_cpuinfo_chain, val, v);
+ }
+ 
++#ifdef CONFIG_BMIPS_GENERIC
++extern unsigned long bcm7xxx_cpu_khz;
++#endif
++
+ static int show_cpuinfo(struct seq_file *m, void *v)
+ {
+ 	struct proc_cpuinfo_notifier_args proc_cpuinfo_notifier_args;
+@@ -65,6 +69,10 @@ static int show_cpuinfo(struct seq_file *m, void *v)
+ 	seq_printf(m, "BogoMIPS\t\t: %u.%02u\n",
+ 		      cpu_data[n].udelay_val / (500000/HZ),
+ 		      (cpu_data[n].udelay_val / (5000/HZ)) % 100);
++#ifdef CONFIG_BMIPS_GENERIC
++		seq_printf(m, "cpu MHz\t\t\t: %lu.%03lu\n", bcm7xxx_cpu_khz / 1000,
++				bcm7xxx_cpu_khz % 1000);
++#endif
+ 	seq_printf(m, "wait instruction\t: %s\n", cpu_wait ? "yes" : "no");
+ 	seq_printf(m, "microsecond timers\t: %s\n",
+ 		      cpu_has_counter ? "yes" : "no");

@@ -43,7 +43,7 @@ PROVIDES += " \
     ${@base_contains('MACHINE_FEATURES', 'legacykernel', '' , 'enigma2-plugin-systemplugins-wirelessaccesspoint', d)} \
     ${@base_contains('MACHINE', 'spark7162', 'enigma2-plugin-systemplugins-uniontunertype ' , ' ', d)} \
     ${@base_contains('MACHINE_FEATURES', 'sh4booster', 'enigma2-plugin-systemplugins-sh4boostercontrol' , ' ', d)} \
-    ${@base_contains('MACHINE_BRAND', 'WETEK', 'enigma2-plugin-extensions-rcuselect' , ' ', d)} \
+    ${@base_contains('MACHINE_BRAND', 'WETEK', 'enigma2-plugin-extensions-rcuselect enigma2-plugin-extensions-rezap' , ' ', d)} \
      "
 
 DEPENDS = "\
@@ -61,7 +61,8 @@ DEPENDS = "\
     wvdial \
     wvstreams \
     usbutils \
-    satip-client \
+    satipclient \
+    bluez-hidd \
     ${@base_contains('MACHINE_FEATURES', 'legacykernel', '' , 'hostapd bridge-utils', d)} \
     "
 
@@ -70,7 +71,7 @@ DESCRIPTION_enigma2-plugin-systemplugins-autobouquetsmaker = "Automatically buil
 RREPLACES_enigma2-plugin-systemplugins-autobouquetsmaker = "enigma2-plugin-extensions-autobouquets"
 RCONFLICTS_enigma2-plugin-systemplugins-autobouquetsmaker = "enigma2-plugin-extensions-autobouquets"
 DESCRIPTION_enigma2-plugin-extensions-btdevicesmanager = "this is bt devices manger to pair e.x keyboard or mouse"
-RDEPENDS_enigma2-plugin-extensions-btdevicesmanager = "${BLUEZ}-testtools ${BLUEZ} bluez-hcidump"
+RDEPENDS_enigma2-plugin-extensions-btdevicesmanager = "${BLUEZ}-testtools ${BLUEZ} bluez-hcidump bluez-hidd"
 DESCRIPTION_enigma2-plugin-systemplugins-blindscan = "blindscan..."
 RDEPENDS_enigma2-plugin-systemplugins-blindscan = "virtual/blindscan-dvbs"
 DESCRIPTION_enigma2-plugin-extensions-dlnabrowser = "this is dlna/upnp browser using djmount"
@@ -94,8 +95,8 @@ RDEPENDS_enigma2-plugin-extensions-webbrowser = "python-gdata libqtwebkite4 webb
 FILES_enigma2-plugin-extensions-webbrowser_append = "${datadir}/keymaps"
 DESCRIPTION_enigma2-plugin-extensions-ondemand-openuitzendinggemist = "Watch NL-IP TV"
 DESCRIPTION_enigma2-plugin-systemplugins-satipclient = "Satip Client setup"
-RDEPENDS_enigma2-plugin-systemplugins-satipclient = "satip-client"
-DEPENDS_enigma2-plugin-systemplugins-satipclient = "satip-client"
+RDEPENDS_enigma2-plugin-systemplugins-satipclient = "satipclient"
+DEPENDS_enigma2-plugin-systemplugins-satipclient = "satipclient"
 REPLACES_enigma2-plugin-systemplugins-satipclient = "enigma2-plugin-extensions-satipclient"
 DESCRIPTION_enigma2-plugin-extensions-tunerserver = "Builds a virtual channels list"
 DESCRIPTION_enigma2-plugin-extensions-hbbtv = "HbbTV player"
@@ -120,14 +121,26 @@ RREPLACES_enigma2-plugin-extensions-remotechannelstreamconverter = "enigma2-plug
 DESCRIPTION_enigma2-plugin-systemplugins-wirelessaccesspoint = "Using a Wireless module as AP."
 RDEPENDS_enigma2-plugin-systemplugins-wirelessaccesspoint = "hostapd bridge-utils"
 DESCRIPTION_enigma2-plugin-extensions-rcuselect = "Change Remote for Wetek"
+DESCRIPTION_enigma2-plugin-extensions-rezap = "ReZap Sync Tool for Wetek"
 
+pkg_preinst_enigma2-plugin-systemplugins-autobouquetsmaker_prepend() {
+#!/bin/sh
+echo "Checking for an ABM cache file"
+
+if [ -f /usr/lib/enigma2/python/Plugins/SystemPlugins/AutoBouquetsMaker/providers/providers.cache ]; then
+	rm -f /usr/lib/enigma2/python/Plugins/SystemPlugins/AutoBouquetsMaker/providers/providers.cache > /dev/null 2>&1
+	echo "Cache file has been removed"
+else
+	echo "No cache file found"
+fi
+}
 
 inherit autotools-brokensep gitpkgv pythonnative
 
 SRCREV = "${AUTOREV}"
 PV = "2.0+git${SRCPV}"
 PKGV = "2.0+git${GITPKGV}"
-PR = "r21"
+PR = "r23"
 
 SRC_URI = "${OEA_PLUGINS_URI}"
 

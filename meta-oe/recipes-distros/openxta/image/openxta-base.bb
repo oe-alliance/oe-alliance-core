@@ -16,7 +16,8 @@ RDEPENDS_${PN} = "\
     dosfstools \
     ntfs-3g \
     packagegroup-base-smbfs-client \
-    packagegroup-base-smbfs \
+    packagegroup-base-smbfs-server \
+    packagegroup-base-smbfs-utils \
     packagegroup-base-nfs \
     busybox-cron \
     unrar \

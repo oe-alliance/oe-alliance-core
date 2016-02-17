@@ -5,7 +5,7 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=4d92cd373abda3937c2bc47fbc49d
 
 ALLOW_EMPTY_${PN} = "1"
 
-PV = "5.1"
+PV = "${IMAGE_VERSION}"
 PR = "r0"
 
 inherit packagegroup
@@ -22,6 +22,7 @@ RDEPENDS_${PN} = "\
     busybox-cron \
     python-imaging \
     rtmpdump \
+    zip \
     ${@base_contains("MACHINE_FEATURES", "singlecore", "", \
     " \
     packagegroup-base-smbfs-server \

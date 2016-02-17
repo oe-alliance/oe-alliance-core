@@ -1,7 +1,7 @@
 KV = "2.6.34"
-SRCDATE = "20140606"
+SRCDATE = "20141203"
 
 require e2bmc-dvb-modules.inc
 
-SRC_URI[md5sum] = "f721cd05e99f72c1c3d6e5e4469a1d2a"
-SRC_URI[sha256sum] = "f9b1145a6b592185e4d93f0222f40d765808715b492f96502bdd5b28f8d944e5"
+SRC_URI[md5sum] = "724ca6e6d4e919e6d34f1b89cc7f9762"
+SRC_URI[sha256sum] = "65a14db6c23f14e8cbc89231ecafb5bf7d8e1a7b0b6b2da5fd472086839bf123"

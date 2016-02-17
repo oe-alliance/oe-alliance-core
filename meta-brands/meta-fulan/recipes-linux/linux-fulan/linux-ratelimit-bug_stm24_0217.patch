@@ -1,0 +1,31 @@
+From: Jiri Slaby <jslaby@suse.cz>
+Subject: PPC: fix net core build
+Patch-mainline: not yet
+
+After "net: filter: Use WARN_RATELIMIT" was applied as a part of
+patches.kernel.org/patch-2.6.32.42-43 we are choking at:
+net/core/filter.c: In function 'sk_run_filter':
+net/core/filter.c:297: error: implicit declaration of function 'WARN_RATELIMIT'
+on configs without CONFIG_BUG.
+
+Signed-off-by: Jiri Slaby <jslaby@suse.cz>
+---
+ include/asm-generic/bug.h |    7 +++++++
+ 1 file changed, 7 insertions(+)
+
+--- a/include/asm-generic/bug.h
++++ b/include/asm-generic/bug.h
+@@ -126,6 +126,13 @@ extern void warn_slowpath_null(const cha
+ })
+ #endif
+ 
++#ifndef WARN_RATELIMIT
++#define WARN_RATELIMIT(condition, format...) ({				\
++	int __ret_warn_on = !!(condition);				\
++	unlikely(__ret_warn_on);					\
++})
++#endif
++
+ #endif
+ 
+ #define WARN_ON_ONCE(condition)	({				\

@@ -31,6 +31,9 @@ SRC_URI += "http://xtrendet.net/linux-${PV}.tar.gz \
     file://it913x-switch-off-PID-filter-by-default.patch \
     file://tda18271-advertise-supported-delsys.patch \
     file://mxl5007t-add-no_probe-and-no_reset-parameters.patch \
+    file://linux-3.14.16-gcc-4.9.3-build-error-fixed.patch \
+    file://kernel-add-support-for-gcc-5.patch \
+    file://rtl8712-fix-warnings.patch \
     "
 
 S = "${WORKDIR}/linux-${PV}"

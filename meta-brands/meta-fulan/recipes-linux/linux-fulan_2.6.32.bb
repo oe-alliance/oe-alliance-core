@@ -5,7 +5,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 KV = "2.6.32"
 
-MACHINE_KERNEL_PR_append = ".1"
+MACHINE_KERNEL_PR_append = ".4"
 
 DEPENDS_spark7162 += " \
            stlinux24-sh4-stx7105-fdma-firmware \
@@ -32,7 +32,9 @@ RPROVIDES_kernel-base = "kernel-${KERNEL_VERSION}"
 RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
 
 SRC_URI = "git://git.stlinux.com/stm/linux-sh4-2.6.32.y.git;protocol=git;branch=stmicro \
+    file://linux-kbuild-generate-modules-builtin_stm24_${STM_PATCH_STR}.patch \
     file://linux-sh4-linuxdvb_stm24_${STM_PATCH_STR}.patch;patch=1 \
+    file://linux-sh4-linuxdvb_stm24_${STM_PATCH_STR}_ca.patch;patch=1 \
     file://linux-sh4-sound_stm24_${STM_PATCH_STR}.patch;patch=1 \
     file://linux-sh4-time_stm24_${STM_PATCH_STR}.patch;patch=1 \
     file://linux-sh4-init_mm_stm24_${STM_PATCH_STR}.patch;patch=1 \
@@ -43,11 +45,14 @@ SRC_URI = "git://git.stlinux.com/stm/linux-sh4-2.6.32.y.git;protocol=git;branch=
     file://linux-ftdi_sio.c_stm24_${STM_PATCH_STR}.patch;patch=1 \
     file://linux-sh4-lzma-fix_stm24_${STM_PATCH_STR}.patch;patch=1 \
     file://linux-tune_stm24.patch;patch=1 \
-    file://linux-sh4-console_missing_argument_stm24_${STM_PATCH_STR}.patch;patch=1 \
+    file://linux-sh4-permit_gcc_command_line_sections_stm24.patch;patch=1 \
     file://linux-sh4-mmap_stm24.patch;patch=1 \
+    file://linux-ratelimit-bug_stm24_${STM_PATCH_STR}.patch;patch=1 \
+    file://linux-patch_swap_notify_core_support_stm24_${STM_PATCH_STR}.patch;patch=1 \
+    file://linux-sh4-console_missing_argument_stm24_${STM_PATCH_STR}.patch;patch=1 \
     file://linux-sh4-cpuinfo.patch;patch=1 \
     file://linux-sh4-add_missing_eid.patch;patch=1 \
-    file://kbuild-generate-mudules-builtin.patch;patch=1 \
+    file://silence_conv_i2sspdif_warning.patch;patch=1 \
     file://defconfig \
     file://st-coprocessor.h \
 "
@@ -112,7 +117,7 @@ do_install_append() {
     install -d ${D}${includedir}/linux	
     install -m 644 ${WORKDIR}/st-coprocessor.h ${D}${includedir}/linux
     oe_runmake headers_install INSTALL_HDR_PATH=${D}${exec_prefix}/src/linux-${KERNEL_VERSION} ARCH=$ARCH
-    cp ${D}${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION} ${D}${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}
+    mv ${D}${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION} ${D}${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}
 }
 
 # hack to override kernel.bbclass...

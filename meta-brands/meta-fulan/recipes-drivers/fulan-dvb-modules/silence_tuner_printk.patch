@@ -1266,7 +1266,7 @@ index bc881e7..a8f9e46 100644
 @@ -3182,8 +3182,10 @@ static int stv090x_get_dmdlock(struct stv090x_state *state, s32 timeout)
  
  		if (!lock)
- 			msleep(10);
+ 			msleep(1);
 +#ifdef VERY_VERBOSE
  		else
  			printk("Demodulator acquired LOCK\n");

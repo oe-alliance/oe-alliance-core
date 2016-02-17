@@ -54,13 +54,13 @@ IMAGE_CMD_ubi.nfi = " \
         --compression-mode=none \
         --output=${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.boot.jffs2 \
         ${EXTRA_IMAGECMD}; \
-    if 	[ "${MACHINE}" = "dm7020hd" ]; then \
+    if [ "${MACHINE}" = "dm7020hd" ]; then \
         mkfs.jffs2 \
             --root=${IMAGE_ROOTFS}/boot \
             --compression-mode=none \
             --output=${DEPLOY_DIR_IMAGE}/${IMAGE_NAMEV2}.boot.jffs2 \
             ${EXTRA_IMAGECMDV2}; \
-    fi; \		
+    fi; \
     rm -rf ${IMAGE_ROOTFS}/boot/*; \
     echo \[root\] > ubinize.cfg; \
     echo mode=ubi >> ubinize.cfg; \
@@ -94,7 +94,7 @@ IMAGE_CMD_ubi.nfi = " \
         --data-partition ${DREAMBOX_PART1_SIZE}:${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.boot.jffs2 \
         --data-partition ${DREAMBOX_PART2_SIZE}:${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.ubi \
         > ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.nfi; \
-    if 	[ "${MACHINE}" = "dm7020hd" ]; then \
+    if [ "${MACHINE}" = "dm7020hd" ]; then \
         echo dm7020hdv2 > ${IMAGE_ROOTFS}/etc/.machine; \
         echo \[root\] > ubinize.cfg; \
         echo mode=ubi >> ubinize.cfg; \

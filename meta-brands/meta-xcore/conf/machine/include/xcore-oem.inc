@@ -4,15 +4,15 @@ include conf/machine/include/build-extras.inc
 BRAND_OEM = "xcore"
 
 MACHINE_NAME = "\
-${@base_contains('MACHINEBUILD', 'spycat', 'SPYCAT' , '', d)}\
-${@base_contains('MACHINEBUILD', 'spycatmini', 'SPYCAT' , '', d)}\
+${@base_contains('MACHINEBUILD', 'spycat', 'SpyCat' , '', d)}\
+${@base_contains('MACHINEBUILD', 'spycatmini', 'SpyCat' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'vp7358ci', '7358ci' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'bcm7358', '7358' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'osmini', 'OS mini' , '', d)}\
 "
 
 MACHINE_BRAND = "\
-${@base_contains('MACHINEBUILD', 'spycat', 'XCORE' , '', d)}\
+${@base_contains('MACHINEBUILD', 'spycat', 'SPYCAT' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'spycatmini', 'XCORE' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'vp7358ci', 'Sample2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'bcm7358', 'Sample1' , '', d)}\
@@ -59,13 +59,14 @@ MACHINE_ESSENTIAL_EXTRA_RDEPENDS = "\
     "
 
 DVBPROVIDER = "kernel"
+DVBSKYPROVIDER = "kernel"
 
 MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS += " \
     kernel-module-cdfs \
     "
 
 MACHINE_EXTRA_RRECOMMENDS += " \
-    gst-plugin-dvbmediasink \
+    gstreamer1.0-plugin-dvbmediasink \
     "
 
 include conf/machine/include/autoload-filesystems.inc

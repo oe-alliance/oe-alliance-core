@@ -24,3 +24,5 @@ FILES_${PN} = "/picon/* /piconlcd/*"
 do_install() {
 	cp -rp ${S}/* ${D}/
 }
+
+do_package_qa[noexec] = "1"

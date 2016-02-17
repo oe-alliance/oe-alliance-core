@@ -1,0 +1,14 @@
+diff --git a/arch/mips/Makefile b/arch/mips/Makefile
+index f2dfd40..4a08160 100644
+--- a/arch/mips/Makefile
++++ b/arch/mips/Makefile
+@@ -88,7 +88,7 @@ all-$(CONFIG_SYS_SUPPORTS_ZBOOT)+= vmlinuz
+ # crossformat linking we rely on the elf2ecoff tool for format conversion.
+ #
+ cflags-y			+= -G 0 -mno-abicalls -fno-pic -pipe
+-cflags-y			+= -msoft-float
++cflags-y			+= -mhard-float
+ LDFLAGS_vmlinux			+= -G 0 -static -n -nostdlib
+ KBUILD_AFLAGS_MODULE		+= -mlong-calls
+ KBUILD_CFLAGS_MODULE		+= -mlong-calls
+

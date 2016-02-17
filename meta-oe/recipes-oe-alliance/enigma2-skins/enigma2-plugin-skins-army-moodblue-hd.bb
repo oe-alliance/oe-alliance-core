@@ -20,3 +20,5 @@ do_install() {
     install -d ${D}/usr/
     cp -rp ${S}/usr/* ${D}/usr/
 }
+
+do_package_qa[noexec] = "1"

@@ -37,6 +37,10 @@ SRC_URI = " \
     file://dvb-usb-a867.patch \
     file://dvb-usb-rtl2832.patch \
     file://dvb_usb_disable_rc_polling.patch \
+    file://0001-kernel-add-support-for-gcc-5.patch \
+    file://fixme-hardfloat.patch \
+    file://rtl8712-fix-warnings.patch \
+    file://rtl8187se-fix-warnings.patch \
     file://defconfig \
 "
 

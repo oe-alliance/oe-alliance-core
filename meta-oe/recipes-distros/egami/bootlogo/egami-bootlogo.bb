@@ -21,17 +21,16 @@ INITSCRIPT_PARAMS_vusolose = "start 70 S . stop 89 0 ."
 
 inherit update-rc.d
 
-SRC_URI = "file://bootlogo.mvi file://backdrop.mvi file://bootlogo_wait.mvi file://radio.mvi file://bootlogo.sh ${@base_contains("MACHINE_FEATURES", "bootsplash", "file://splash.bin" , "", d)} \
-    ${@base_contains("MACHINE_FEATURES", "gigabluelcd220", "file://lcdsplash220.bin file://lcdwaitkey220.bin file://lcdwarning220.bin" , "", d)} \
-    ${@base_contains("MACHINE_FEATURES", "gigabluelcd400", "file://lcdsplash400.bin file://lcdwaitkey400.bin file://lcdwarning400.bin" , "", d)} \
-"
-
+SRC_URI = "file://bootlogo.mvi file://backdrop.mvi file://bootlogo_wait.mvi file://radio.mvi file://bootlogo.sh ${@base_contains("MACHINE_FEATURES", "bootsplash", "file://splash.bin" , "", d)} "
+SRC_URI_append_gb800ue = "file://lcdsplash.bin file://lcdwaitkey.bin file://lcdwarning.bin"
+SRC_URI_append_gbquad = "file://lcdsplash.bin file://lcdwaitkey.bin file://lcdwarning.bin"
+SRC_URI_append_gb800ueplus = "file://lcdsplash.bin file://lcdwaitkey.bin file://lcdwarning.bin"
+SRC_URI_append_gbquadplus = "file://lcdsplash400.bin file://lcdwaitkey400.bin file://lcdwarning400.bin"
 SRC_URI_append_vuduo2 = "file://lcdbootlogo.png file://bootlogo.py file://splash.bin"
 
 BINARY_VERSION = "1.3"
 
 SRC_URI += "${@base_contains("MACHINE_FEATURES", "dreamboxv1", "http://dreamboxupdate.com/download/opendreambox/2.0.0/dreambox-bootlogo/dreambox-bootlogo_${BINARY_VERSION}_${MACHINE_ARCH}.tar.bz2;name=${MACHINE_ARCH}" , "", d)}"
-SRC_URI += "${@base_contains("DISTRO_FEATURES", "extrasplash", "file://cfe.bmp file://finished.bmp file://imageversion.bmp file://kernel.bmp file://rootfs.bmp file://splash.bmp", "", d)}"
 
 SRC_URI[dm800.md5sum] = "0aacd07cc4d19b388c6441b007e3525a"
 SRC_URI[dm800.sha256sum] = "978a7c50fd0c963013477b5ba08462b35597ea130ae428c828bfcbb5c7cf4cac"
@@ -62,10 +61,30 @@ do_install() {
     install -d ${D}/${sysconfdir}/init.d
     install -m 0755 ${S}/bootlogo.sh ${D}/${sysconfdir}/init.d/bootlogo
     install -m 0644 bootlogo2.py ${D}/${sysconfdir}/init.d/bootlogo2.py
-    ${@base_contains("MACHINE_FEATURES", "gigabluelcd400", "install -m 0644 lcdwaitkey400.bin ${D}/usr/share/lcdwaitkey.bin" , "", d)}
-    ${@base_contains("MACHINE_FEATURES", "gigabluelcd400", "install -m 0644 lcdwarning400.bin ${D}/usr/share/lcdwarning.bin" , "", d)}
-    ${@base_contains("MACHINE_FEATURES", "gigabluelcd220", "install -m 0644 lcdwaitkey220.bin ${D}/usr/share/lcdwaitkey.bin" , "", d)}
-    ${@base_contains("MACHINE_FEATURES", "gigabluelcd220", "install -m 0644 lcdwarning220.bin ${D}/usr/share/lcdwarning.bin" , "", d)}
+}
+
+do_install_append_gb800ue() {
+    install -d ${D}/usr/share
+    install -m 0644 lcdwaitkey.bin ${D}/usr/share/lcdwaitkey.bin
+    install -m 0644 lcdwarning.bin ${D}/usr/share/lcdwarning.bin
+}
+
+do_install_append_gbquad() {
+    install -d ${D}/usr/share
+    install -m 0644 lcdwaitkey.bin ${D}/usr/share/lcdwaitkey.bin
+    install -m 0644 lcdwarning.bin ${D}/usr/share/lcdwarning.bin
+}
+
+do_install_append_gb800ueplus() {
+    install -d ${D}/usr/share
+    install -m 0644 lcdwaitkey.bin ${D}/usr/share/lcdwaitkey.bin
+    install -m 0644 lcdwarning.bin ${D}/usr/share/lcdwarning.bin
+}
+
+do_install_append_gbquadplus() {
+    install -d ${D}/usr/share
+    install -m 0644 lcdwaitkey400.bin ${D}/usr/share/lcdwaitkey.bin
+    install -m 0644 lcdwarning400.bin ${D}/usr/share/lcdwarning.bin
 }
 
 do_install_append_vuduo2() {
@@ -78,29 +97,11 @@ do_deploy() {
     if [ -e splash.bin ]; then
         install -m 0644 splash.bin ${DEPLOYDIR}/${BOOTLOGO_FILENAME}
     fi
-    if [ -e cfe.bmp ]; then
-        install -m 0644 cfe.bmp ${DEPLOYDIR}/cfe.bmp
-    fi    
-    if [ -e finished.bmp ]; then
-        install -m 0644 finished.bmp ${DEPLOYDIR}/finished.bmp
-    fi     
-    if [ -e imageversion.bmp ]; then
-        install -m 0644 imageversion.bmp ${DEPLOYDIR}/imageversion.bmp
-    fi         
-    if [ -e kernel.bmp ]; then
-        install -m 0644 kernel.bmp ${DEPLOYDIR}/kernel.bmp
-    fi     
-    if [ -e rootfs.bmp ]; then
-        install -m 0644 rootfs.bmp ${DEPLOYDIR}/rootfs.bmp
-    fi         
-    if [ -e splash.bmp ]; then
-        install -m 0644 splash.bmp ${DEPLOYDIR}/splash.bmp
-    fi       
-    if [ -e lcdsplash220.bin ]; then
-        install -m 0644 lcdsplash220.bin ${DEPLOYDIR}/lcdsplash220.bin
+    if [ -e lcdsplash.bin ]; then
+        install -m 0644 lcdsplash.bin ${DEPLOYDIR}/lcdsplash.bin
     fi
     if [ -e lcdsplash400.bin ]; then
-        install -m 0644 lcdsplash400.bin ${DEPLOYDIR}/lcdsplash400.bin
+        install -m 0644 lcdsplash400.bin ${DEPLOYDIR}/lcdsplash.bin
     fi
 }
 

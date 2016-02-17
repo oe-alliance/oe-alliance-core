@@ -4,17 +4,17 @@ PRIORITY = "required"
 LICENSE = "CLOSED"
 require conf/license/license-close.inc
 
-PACKAGE_ARCH = "${MACHINE_ARCH}"
+PACKAGE_ARCH = "${MACHINEBUILD}"
 
-SRCDATE = "20150626"
+SRCDATE = "20160115"
 KV = "3.9.7"
 PV = "${KV}+${SRCDATE}"
 PR = "r1"
 
 SRC_URI = "http://en3homeftp.net/release/images/oedrivers/bcmlinuxdvb_7335-${KV}-1ci-${SRCDATE}.tar.gz"
 
-SRC_URI[md5sum] = "3d5b19119bf98d42a652798ba1875abb"
-SRC_URI[sha256sum] = "f3b25f3320c58875af1dc68c72f54a1402d8f46fb1777bf63fbe3d1f11f3ef56"
+SRC_URI[md5sum] = "279fa36008fced71404f5968acf48999"
+SRC_URI[sha256sum] = "b8a635cee0f65a7380723c73cf86728c02dcb5502a49938e20ab30d088f43d75"
 
 S = "${WORKDIR}"
 
@@ -29,13 +29,9 @@ do_populate_sysroot[noexec] = "1"
 
 do_install() {
     install -d ${D}/lib/modules/${KV}/extra
-    for f in lib/modules/${KV}/extra/*.ko; do
-        install -m 0644 $f ${D}/$f;
-    done
+    install -m 0644 ${WORKDIR}/lib/modules/${KV}/extra/bcmlinuxdvb.ko ${D}/lib/modules/${KV}/extra/bcmlinuxdvb_${MACHINEBUILD}.ko
     install -d ${D}/${sysconfdir}/modules-load.d
-    for i in `ls ${D}/lib/modules/${KV}/extra | grep \\.ko | sed -e 's/.ko//g'`; do
-        echo $i _hwtype=\$hwtypenum >> ${D}/${sysconfdir}/modules-load.d/_${MACHINE}.conf
-    done
+    echo bcmlinuxdvb_${MACHINEBUILD} _hwtype=\$hwtypenum >> ${D}/${sysconfdir}/modules-load.d/_${MACHINEBUILD}.conf
 }
 
-FILES_${PN} += "${sysconfdir}/modules-load.d/_${MACHINE}.conf"
+FILES_${PN} += "${sysconfdir}/modules-load.d/_${MACHINEBUILD}.conf"

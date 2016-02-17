@@ -1,0 +1,11 @@
+--- a/m4/tuxbox.m4	2016-01-25 08:59:08.369412248 +0100
++++ b/m4/tuxbox.m4	2016-01-25 09:00:58.317410364 +0100
+@@ -20,7 +20,7 @@
+ #include <linux/dvb/version.h>
+ version DVB_API_VERSION
+ 	]])])
+-	DVB_API_VERSION=`(eval "$ac_cpp conftest.$ac_ext") 2>&AS_MESSAGE_LOG_FD | $EGREP "^version" | sed "s,version\ ,,"`
++	DVB_API_VERSION=`(eval "$ac_cpp -traditional-cpp conftest.$ac_ext") 2>&AS_MESSAGE_LOG_FD | $EGREP "^version" | sed "s,version\ ,,"`
+ 	rm -f conftest*
+ 
+ 	AC_MSG_NOTICE([found dvb version $DVB_API_VERSION])

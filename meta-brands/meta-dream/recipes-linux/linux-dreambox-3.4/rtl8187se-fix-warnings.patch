@@ -1,0 +1,102 @@
+diff --git a/drivers/staging/rtl8187se/ieee80211/ieee80211_rx.c b/drivers/staging/rtl8187se/ieee80211/ieee80211_rx.c
+index 446f15e..6b89bf0 100644
+--- a/drivers/staging/rtl8187se/ieee80211/ieee80211_rx.c
++++ b/drivers/staging/rtl8187se/ieee80211/ieee80211_rx.c
+@@ -873,7 +873,7 @@ ieee80211_TranslateToDbm(
+ 
+ 	return SignalPower;
+ }
+-inline int ieee80211_network_init(
++static inline int ieee80211_network_init(
+ 	struct ieee80211_device *ieee,
+ 	struct ieee80211_probe_response *beacon,
+ 	struct ieee80211_network *network,
+@@ -1283,7 +1283,7 @@ inline void update_network(struct ieee80211_network *dst,
+ }
+ 
+ 
+-inline void ieee80211_process_probe_response(
++static inline void ieee80211_process_probe_response(
+ 	struct ieee80211_device *ieee,
+ 	struct ieee80211_probe_response *beacon,
+ 	struct ieee80211_rx_stats *stats)
+diff --git a/drivers/staging/rtl8187se/ieee80211/ieee80211_softmac.c b/drivers/staging/rtl8187se/ieee80211/ieee80211_softmac.c
+index 00f9af0..7245f54 100644
+--- a/drivers/staging/rtl8187se/ieee80211/ieee80211_softmac.c
++++ b/drivers/staging/rtl8187se/ieee80211/ieee80211_softmac.c
+@@ -187,7 +187,7 @@ void init_mgmt_queue(struct ieee80211_device *ieee)
+ 
+ void ieee80211_sta_wakeup(struct ieee80211_device *ieee, short nl);
+ 
+-inline void softmac_mgmt_xmit(struct sk_buff *skb, struct ieee80211_device *ieee)
++static inline void softmac_mgmt_xmit(struct sk_buff *skb, struct ieee80211_device *ieee)
+ {
+ 	unsigned long flags;
+ 	short single = ieee->softmac_features & IEEE_SOFTMAC_SINGLE_QUEUE;
+@@ -276,7 +276,7 @@ inline void softmac_ps_mgmt_xmit(struct sk_buff *skb, struct ieee80211_device *i
+ //	dev_kfree_skb_any(skb);//edit by thomas
+ }
+ //by amy for power save
+-inline struct sk_buff *ieee80211_disassociate_skb(
++static inline struct sk_buff *ieee80211_disassociate_skb(
+ 							struct ieee80211_network *beacon,
+ 							struct ieee80211_device *ieee,
+ 							u8	asRsn)
+@@ -316,7 +316,7 @@ SendDisassociation(
+ }
+ 
+ //by amy for power save
+-inline struct sk_buff *ieee80211_probe_req(struct ieee80211_device *ieee)
++static inline struct sk_buff *ieee80211_probe_req(struct ieee80211_device *ieee)
+ {
+ 	unsigned int len,rate_len;
+ 	u8 *tag;
+@@ -735,7 +735,7 @@ void ieee80211_start_scan_syncro(struct ieee80211_device *ieee)
+ 
+ }
+ 
+-inline struct sk_buff *ieee80211_authentication_req(struct ieee80211_network *beacon,
++static inline struct sk_buff *ieee80211_authentication_req(struct ieee80211_network *beacon,
+ 	struct ieee80211_device *ieee, int challengelen)
+ {
+ 	struct sk_buff *skb;
+@@ -1027,7 +1027,7 @@ void ieee80211_resp_to_probe(struct ieee80211_device *ieee, u8 *dest)
+ }
+ 
+ 
+-inline struct sk_buff *ieee80211_association_req(struct ieee80211_network *beacon,struct ieee80211_device *ieee)
++static inline struct sk_buff *ieee80211_association_req(struct ieee80211_network *beacon,struct ieee80211_device *ieee)
+ {
+ 	struct sk_buff *skb;
+ 	//unsigned long flags;
+@@ -1646,7 +1646,7 @@ short ieee80211_sta_ps_sleep(struct ieee80211_device *ieee, u32 *time_h, u32 *ti
+ 
+ }
+ 
+-inline void ieee80211_sta_ps(struct ieee80211_device *ieee)
++static inline void ieee80211_sta_ps(struct ieee80211_device *ieee)
+ {
+ 
+ 	u32 th,tl;
+@@ -2108,7 +2108,7 @@ void ieee80211_rtl_stop_queue(struct ieee80211_device *ieee)
+ }
+ 
+ 
+-inline void ieee80211_randomize_cell(struct ieee80211_device *ieee)
++static inline void ieee80211_randomize_cell(struct ieee80211_device *ieee)
+ {
+ 
+ 	random_ether_addr(ieee->current_network.bssid);
+diff --git a/drivers/staging/rtl8187se/r8180_core.c b/drivers/staging/rtl8187se/r8180_core.c
+index d10d75e..c8ca1de 100644
+--- a/drivers/staging/rtl8187se/r8180_core.c
++++ b/drivers/staging/rtl8187se/r8180_core.c
+@@ -1028,7 +1028,7 @@ inline u16 ieeerate2rtlrate(int rate)
+ 
+ static u16 rtl_rate[] = {10, 20, 55, 110, 60, 90, 120, 180, 240, 360, 480, 540, 720};
+ 
+-inline u16 rtl8180_rate2rate(short rate)
++static inline u16 rtl8180_rate2rate(short rate)
+ {
+ 	if (rate > 12)
+ 		return 10;

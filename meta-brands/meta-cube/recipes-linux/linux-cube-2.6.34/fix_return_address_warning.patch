@@ -1,0 +1,11 @@
+--- a/arch/arm/include/asm/ftrace.h	2016-02-02 21:10:37.951063735 +0100
++++ b/arch/arm/include/asm/ftrace.h	2016-02-02 21:10:58.359063385 +0100
+@@ -27,7 +27,7 @@
+ 
+ #else
+ 
+-extern inline void *return_address(unsigned int level)
++static inline void *return_address(unsigned int level)
+ {
+ 	return NULL;
+ }

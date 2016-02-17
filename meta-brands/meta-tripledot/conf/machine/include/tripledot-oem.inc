@@ -10,6 +10,7 @@ ${@base_contains('MACHINEBUILD', 'tyrant', 'tyrant' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'xcombo', 'enfinityX combo plus' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'x1plus', 'enfinityX 1plus' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'sf108', 'SF108 E2HD' , '', d)}\
+${@base_contains('MACHINEBUILD', 't2cable', 'ENFINITY T2/CABLE' , '', d)}\
 "
 
 MACHINE_BRAND = "\
@@ -19,6 +20,7 @@ ${@base_contains('MACHINEBUILD', 'tyrant', 'tripledot' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'xcombo', 'EVO' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'x1plus', 'EVO' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'sf108', 'Octagon' , '', d)}\
+${@base_contains('MACHINEBUILD', 't2cable', 'EVO' , '', d)}\
 "
 
 IMAGEDIR ?= "\
@@ -28,6 +30,7 @@ ${@base_contains('MACHINEBUILD', 'tyrant', 'tyrant' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'xcombo', 'xcombo' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'x1plus', 'x1plus' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'sf108', 'sf108' , '', d)}\
+${@base_contains('MACHINEBUILD', 't2cable', 't2cable' , '', d)}\
 "
 
 MTD_KERNEL = "mtd2"
@@ -69,12 +72,12 @@ IMAGE_CMD_ubi_prepend = " \
     rm -rf ${IMAGE_ROOTFS}/tmp/*; \
     "
 
-IMAGE_CMD_ubi_append = "; \
+IMAGE_CMD_ubi_append = "\
     mkdir -p ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}; \
     cp ${DEPLOY_DIR_IMAGE}/splash.bin ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/splash.bin; \
-    mv ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}_rootfs.rootfs.ubi ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/${ROOTFS_FILE}; \
+    mv ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.ubi ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/${ROOTFS_FILE}; \
     gzip -9c ${DEPLOY_DIR_IMAGE}/vmlinux-${MACHINE}.bin > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/${KERNEL_FILE}; \
-    echo ${DISTRO_NAME}-${DISTRO_VERSION}.${BUILD_VERSION} > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/imageversion; \
+    echo ${IMAGE_VER_STRING} > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/imageversion; \
     echo "rename this file to 'force' to force an update without confirmation" > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/noforce; \
     cd ${DEPLOY_DIR_IMAGE}; \
     zip ${IMAGE_NAME}_usb.zip ${IMAGEDIR}/*; \

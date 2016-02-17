@@ -9,7 +9,7 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"
-PR = "r14"
+PR = "r16"
 
 PROVIDES += "virtual/transtreamproxy"
 RPROVIDES_${PN} += "virtual/transtreamproxy"
@@ -20,6 +20,8 @@ RDEPENDS_${PN} += "virtual/inetd"
 SRC_URI = "git://code.vuplus.com/git/filestreamproxy.git;protocol=http;branch=transtreamproxy"
 
 inherit autotools
+
+EXTRA_OECONF_vusolo4k += " --enable-ext-pid "
 
 S = "${WORKDIR}/git"
 

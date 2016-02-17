@@ -3,12 +3,15 @@ SECTION = "kernel"
 LICENSE = "GPLv2"
 
 KERNEL_RELEASE = "3.14.2"
+SRCDATE_jj7362 = "20141208"
 SRCDATE_vg5000 = "20141208"
 SRCDATE_vg1000 = "20141208"
 SRCDATE_vg2000 = "20141208"
 
 inherit kernel machine_kernel_pr
 
+SRC_URI[jj7362.md5sum] = "8e0385481057a214f0635c8b947dbb7d"
+SRC_URI[jj7362.sha256sum] = "6c782f1003a48c508832660b1053d68f3c616f5b1ece373d06125a0e7f47d23a"
 SRC_URI[vg5000.md5sum] = "8e0385481057a214f0635c8b947dbb7d"
 SRC_URI[vg5000.sha256sum] = "6c782f1003a48c508832660b1053d68f3c616f5b1ece373d06125a0e7f47d23a"
 SRC_URI[vg2000.md5sum] = "8e0385481057a214f0635c8b947dbb7d"
@@ -42,6 +45,9 @@ SRC_URI += "http://source.mynonpublic.com/tripledot/${MACHINE}-linux-${PV}-base-
 	file://mxl5007t-add-no_probe-and-no_reset-parameters.patch \
 	file://tda18271-advertise-supported-delsys.patch \
 	file://timedate.patch \
+	file://linux-3.14.2-gcc-4.9.3-build-error-fixed.patch \
+	file://kernel-add-support-for-gcc-5.patch \
+	file://rtl8712-fix-warnings.patch \
 	"
 
 S = "${WORKDIR}/linux-${PV}-base"

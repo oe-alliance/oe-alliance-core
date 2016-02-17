@@ -6,12 +6,12 @@ KERNEL_RELEASE = "4.0.1"
 
 inherit kernel machine_kernel_pr
 
-SRC_URI[md5sum] = "1ac384bccda144d1be2a5764394c6b19"
-SRC_URI[sha256sum] = "8fc1de9aa9cabe99c4d6857ba14cb2465a8f27f8c58f18cdfe88ee17cb10432d"
+SRC_URI[md5sum] = "c274792d088cd7bbfe7fe5a76bd798d8"
+SRC_URI[sha256sum] = "6fd63aedd69b3b3b28554cabf71a9efcf05f10758db3d5b99cfb0580e3cde24c"
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-MACHINE_KERNEL_PR_append = ".0"
+MACHINE_KERNEL_PR_append = ".1"
 
 # By default, kernel.bbclass modifies package names to allow multiple kernels
 # to be installed in parallel. We revert this change and rprovide the versioned
@@ -21,11 +21,13 @@ PKG_kernel-image = "kernel-image"
 RPROVIDES_kernel-base = "kernel-${KERNEL_VERSION}"
 RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
 
-SRC_URI += "http://downloads.formuler.info/linux-${PV}.tar.gz \
+SRC_URI += "http://downloads.mutant-digital.net/linux-${PV}.tar.gz \
 	file://defconfig \
 	file://formuler_partition_layout.patch \
 	file://add-dmx-source-timecode.patch \
 	file://iosched-slice_idle-1.patch \
+	file://sdio-pinmux.patch \
+	file://0001-bcmgenet.patch \
 	"
 
 S = "${WORKDIR}/linux-${PV}"

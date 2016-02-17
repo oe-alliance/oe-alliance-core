@@ -111,10 +111,8 @@ MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS = " \
     kernel-module-ext4 \
     kernel-module-cifs \
     kernel-module-autofs4 \
+    ${@base_contains('MACHINEBUILD', 'gbquad', 'kernel-module-smsc75xx' , '', d)} \
     "
-
-MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS_append_gbquad = "kernel-module-smsc75xx"
-# MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS_append_gbquadplus = "kernel-module-smsc75xx"
 
 MACHINE_EXTRA_RRECOMMENDS = " \
     gstreamer1.0-plugin-dvbmediasink \
@@ -128,14 +126,17 @@ EXTRA_IMAGEDEPENDS += "\
 
 MACHINE_EXTRA_RDEPENDS = "\
     enigma2-plugin-systemplugins-vfdcontrol \
-    "
+    ${@base_contains('MACHINEBUILD', 'gb800solo', 'mtd-utils-jffs2' , '', d)} \
+    ${@base_contains('MACHINEBUILD', 'gbipbox', 'enigma2-plugin-extensions-gbipboxclient' , '', d)} \
+"
+
 
 include conf/machine/include/autoload-filesystems.inc
-    
+
 PREFERRED_PROVIDER_virtual/blindscan-dvbc = "gigablue-blindscan-utils"
 PREFERRED_PROVIDER_virtual/blindscan-dvbs = "gigablue-blindscan-utils"
 PREFERRED_PROVIDER_virtual/transtreamproxy = "gb-transtreamproxy"
-    
+
 DVBMEDIASINK_CONFIG = "--with-wmv"
 
 TARGET_ARCH = "mipsel"
@@ -150,7 +151,7 @@ KERNEL_OUTPUT = "${KERNEL_IMAGETYPE}"
 KERNEL_CONSOLE = "ttyS0,115200n8"
 
 
-MACHINE_FEATURES += "3dtv alsa hdmicec switchoff bootsplash boxmodel omb skins1080 blindscan-dvbs"
+MACHINE_FEATURES += "3dtv alsa hdmicec switchoff bootsplash boxmodel omb skins1080"
 
 BOOTLOGO_FILENAME = "splash.bin"
 
@@ -161,7 +162,7 @@ IMAGE_CMD_ubi_prepend = " \
     rm -rf ${IMAGE_ROOTFS}/tmp/*; \
     "
 
-IMAGE_CMD_ubi_append = "; \
+IMAGE_CMD_ubi_append = "\
     mkdir -p ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}; \
     ${@base_contains("MACHINE_FEATURES", "gigabluelcd220", "cp ${DEPLOY_DIR_IMAGE}/lcdsplash220.bin ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/lcdsplash.bin;" , "", d)} \
     ${@base_contains("MACHINE_FEATURES", "gigabluelcd220", "cp ${DEPLOY_DIR_IMAGE}/lcdwarning220.bin ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/lcdwarning.bin;" , "", d)} \
@@ -171,9 +172,9 @@ IMAGE_CMD_ubi_append = "; \
     ${@base_contains("MACHINE_FEATURES", "gigabluelcd400", "cp ${DEPLOY_DIR_IMAGE}/lcdwaitkey400.bin ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/lcdwaitkey.bin;" , "", d)} \
     cp ${DEPLOY_DIR_IMAGE}/splash.bin ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/splash.bin; \
     cp ${DEPLOY_DIR_IMAGE}/warning.bin ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/warning.bin; \
-    mv ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}_rootfs.rootfs.ubi ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/${ROOTFS_FILE}; \
+    mv ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.ubi ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/${ROOTFS_FILE}; \
     gzip -f -c ${DEPLOY_DIR_IMAGE}/vmlinux-${MACHINE}.bin > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/${KERNEL_FILE}; \
-    echo ${DISTRO_NAME}-${DISTRO_VERSION}-${DATE} > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/imageversion; \
+    echo ${IMAGE_VER_STRING} > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/imageversion; \
     echo "rename this file to 'force' to force an update without confirmation" > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/noforce; \
     cd ${DEPLOY_DIR_IMAGE}; \
     zip -r ${IMAGE_NAME}_usb.zip gigablue/*; \

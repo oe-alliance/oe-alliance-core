@@ -8,6 +8,10 @@ ${@base_contains('MACHINEBUILD', 'zgemmash1', 'Star H1' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'zgemmash2', 'Star H2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'zgemmas2s', 'Star 2S' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'zgemmass', 'Star S' , '', d)}\
+${@base_contains('MACHINEBUILD', 'zgemmahs', 'H.S' , '', d)}\
+${@base_contains('MACHINEBUILD', 'zgemmah2s', 'H.2S' , '', d)}\
+${@base_contains('MACHINEBUILD', 'zgemmah2h', 'H.2H' , '', d)}\
+${@base_contains('MACHINEBUILD', 'zgemmaslc', 'Star LC' , '', d)}\
 "
 
 MACHINE_BRAND = "\
@@ -15,6 +19,10 @@ ${@base_contains('MACHINEBUILD', 'zgemmash1', 'Zgemma' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'zgemmash2', 'Zgemma' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'zgemmas2s', 'Zgemma' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'zgemmass', 'Zgemma' , '', d)}\
+${@base_contains('MACHINEBUILD', 'zgemmahs', 'Zgemma' , '', d)}\
+${@base_contains('MACHINEBUILD', 'zgemmah2s', 'Zgemma' , '', d)}\
+${@base_contains('MACHINEBUILD', 'zgemmah2h', 'Zgemma' , '', d)}\
+${@base_contains('MACHINEBUILD', 'zgemmaslc', 'Zgemma' , '', d)}\
 "
 
 IMAGEDIR ?= "\
@@ -22,6 +30,10 @@ ${@base_contains('MACHINEBUILD', 'zgemmash1', 'zgemma/sh1' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'zgemmash2', 'zgemma/sh1' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'zgemmas2s', 'zgemma/sh1' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'zgemmass', 'zgemma/sh1' , '', d)}\
+${@base_contains('MACHINEBUILD', 'zgemmahs', 'zgemma/h3' , '', d)}\
+${@base_contains('MACHINEBUILD', 'zgemmah2s', 'zgemma/h3' , '', d)}\
+${@base_contains('MACHINEBUILD', 'zgemmah2h', 'zgemma/h3' , '', d)}\
+${@base_contains('MACHINEBUILD', 'zgemmaslc', 'zgemma/lc' , '', d)}\
 "
 
 MTD_KERNEL = "mtd1"
@@ -63,12 +75,12 @@ IMAGE_CMD_ubi_prepend = " \
     rm -rf ${IMAGE_ROOTFS}/tmp/*; \
     "
 
-IMAGE_CMD_ubi_append = "; \
+IMAGE_CMD_ubi_append = "\
     mkdir -p ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}; \
     cp ${DEPLOY_DIR_IMAGE}/splash.bin ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/splash.bin; \
-    mv ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}_rootfs.rootfs.ubi ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/${ROOTFS_FILE}; \
+    mv ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.ubi ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/${ROOTFS_FILE}; \
     gzip -9c ${DEPLOY_DIR_IMAGE}/vmlinux-${MACHINE}.bin > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/${KERNEL_FILE}; \
-    echo ${DISTRO_NAME}-${DISTRO_VERSION}.${BUILD_VERSION} > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/imageversion; \
+    echo ${IMAGE_VER_STRING} > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/imageversion; \
     echo "rename this file to 'force' to force an update without confirmation" > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/noforce; \
     cd ${DEPLOY_DIR_IMAGE}; \
     zip ${IMAGE_NAME}_usb.zip ${IMAGEDIR}/*; \

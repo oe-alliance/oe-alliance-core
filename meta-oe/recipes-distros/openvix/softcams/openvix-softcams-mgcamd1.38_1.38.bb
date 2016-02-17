@@ -2,12 +2,13 @@ SUMMARY = "mgcamd ${PV} softcam"
 LICENSE = "CLOSED"
 require conf/license/license-close.inc
 
-RDEPENDS_${PN} = "libcrypto-compat-0.9.7"
+RDEPENDS_enigma2-plugin-softcams-mgcamd138 = "libcrypto-compat-0.9.7"
+DEPENDS = "libcrypto-compat-0.9.7"
 
-PR = "r4"
+PR = "r5"
 
-RREPLACES_${PN} += "enigma2-plugin-softcams-mgcamd"
-RCONFLICTS_${PN} += "enigma2-plugin-softcams-mgcamd"
+RREPLACES_enigma2-plugin-softcams-mgcamd138 += "enigma2-plugin-softcams-mgcamd"
+RCONFLICTS_enigma2-plugin-softcams-mgcamd138 += "enigma2-plugin-softcams-mgcamd"
 
 PACKAGES = "enigma2-plugin-softcams-mgcamd138"
 

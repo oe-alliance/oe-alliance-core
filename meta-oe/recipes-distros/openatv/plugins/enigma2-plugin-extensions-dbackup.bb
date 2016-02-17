@@ -40,3 +40,5 @@ rm /usr/lib/enigma2/python/Plugins/Extensions/WebInterface/web-data/img/ring.png
 rm -r /usr/lib/enigma2/python/Plugins/Extensions/dBackup > /dev/null 2>&1
 exit 0
 }
+
+do_package_qa[noexec] = "1"

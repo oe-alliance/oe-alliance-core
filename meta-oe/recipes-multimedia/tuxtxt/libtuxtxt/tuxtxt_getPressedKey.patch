@@ -1,0 +1,54 @@
+diff --git a/libtuxtxt.c b/libtuxtxt.c
+index 476c7db..4e606d8 100644
+--- a/libtuxtxt.c
++++ b/libtuxtxt.c
+@@ -46,6 +46,8 @@
+ static int tuxtxt_initialized=0;
+ static pthread_mutex_t tuxtxt_control_lock = PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP;
+ static pthread_mutex_t tuxtxt_key_queue_lock = PTHREAD_MUTEX_INITIALIZER;
++static pthread_cond_t tuxtxt_key_queue_cond = PTHREAD_COND_INITIALIZER;
++static int tuxtxt_key_queue_waiters=0;
+ 
+ int tuxtxt_init()
+ {
+@@ -578,6 +580,8 @@ void tuxtxt_handlePressedKey(int key)
+ 	{
+ 		tuxtxt_queue_tail++;
+ 		tuxtxt_pressed_keys_queue[tuxtxt_queue_tail % QUEUE_SIZE] = key;
++		if (tuxtxt_key_queue_waiters)
++			pthread_cond_signal(&tuxtxt_key_queue_cond);
+ 	}
+ 	pthread_mutex_unlock(&tuxtxt_key_queue_lock);
+ }
+@@ -585,7 +589,23 @@ void tuxtxt_handlePressedKey(int key)
+ int tuxtxt_getPressedKey()
+ {
+ 	int key;
++	struct timespec ts;
++	int rc;
+ 	pthread_mutex_lock(&tuxtxt_key_queue_lock);
++	tuxtxt_key_queue_waiters++;
++	clock_gettime(CLOCK_REALTIME, &ts);
++#define NSECS_PER_SEC  1000000000ul
++#define NSECS_PER_MSEC    1000000ul
++	ts.tv_nsec += 100 * NSECS_PER_MSEC;
++	if (ts.tv_nsec >= NSECS_PER_SEC)
++	{
++		ts.tv_nsec -= NSECS_PER_SEC;
++		ts.tv_sec++;
++	}
++	rc = 0;
++	while (tuxtxt_queue_head == tuxtxt_queue_tail && rc == 0)
++		rc = pthread_cond_timedwait(&tuxtxt_key_queue_cond, &tuxtxt_key_queue_lock, &ts);
++
+ 	if (tuxtxt_queue_head == tuxtxt_queue_tail)
+ 		key = -1;
+ 	else
+@@ -593,6 +613,7 @@ int tuxtxt_getPressedKey()
+ 		tuxtxt_queue_head++;
+ 		key = tuxtxt_pressed_keys_queue[tuxtxt_queue_head % QUEUE_SIZE];
+ 	}
++	tuxtxt_key_queue_waiters--;
+ 	pthread_mutex_unlock(&tuxtxt_key_queue_lock);
+ 	return key;
+ }

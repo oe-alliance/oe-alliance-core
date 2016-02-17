@@ -8,8 +8,8 @@ inherit allarch
 RREPLACES_${PN} += "enigma2-spinner"
 RCONFLICTS_${PN} += "enigma2-spinner"
 
-PV = "1.0"
-PR = "r1"
+PV = "${IMAGE_VERSION}"
+PR = "r0"
 
 SRC_URI = "file://spinner.tgz"
 

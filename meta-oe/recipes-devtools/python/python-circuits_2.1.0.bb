@@ -12,8 +12,8 @@ S = "${WORKDIR}/prologic-circuits-42e62ab9f8dd"
 
 inherit setuptools
 
-SRC_URI[md5sum] = "918a4afe4cd30183695359da7bd6d819"
-SRC_URI[sha256sum] = "c59e5bc43e52475035c0de34a26ab413b29108e527a21653551cdb251ac926b0"
+SRC_URI[md5sum] = "35b09153c13eb5151f219b9857328c96"
+SRC_URI[sha256sum] = "bddf798d44cc3b149c187eea1df6c78df90de75a873f6401aadc45c2d5ecedea"
 
 include python-package-split.inc
 

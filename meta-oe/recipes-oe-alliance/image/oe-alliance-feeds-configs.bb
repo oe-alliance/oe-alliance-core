@@ -5,7 +5,7 @@ require conf/license/license-gplv2.inc
 RCONFLICTS_${PN} = "distro-feed-configs"
 RREPLACES_${PN} = "distro-feed-configs"
 PACKAGE_ARCH = "${MACHINEBUILD}"
-PR = "r19"
+PR = "r24"
 
 do_compile() {
     mkdir -p ${S}/${sysconfdir}/opkg
@@ -18,4 +18,4 @@ do_install () {
         install -m 0644 ${S}/${sysconfdir}/opkg/* ${D}${sysconfdir}/opkg/
 }
 
-CONFFILES_${PN} += '${@ " ".join( [ ( "${sysconfdir}/opkg/%s-feed.conf" % feed ) for feed in "all ${PACKAGE_EXTRA_ARCHS} ${MACHINE_ARCH} 3rdparty ${MACHINE}_3rdparty  ${MACHINEBUILD} ".split() ] ) }'
+CONFFILES_${PN} += '${@ " ".join( [ ( "${sysconfdir}/opkg/%s-feed.conf" % feed ) for feed in "all ${PACKAGE_EXTRA_ARCHS} ${MACHINE_ARCH} 3rdparty ${MACHINE}_3rdparty  ${MACHINEBUILD} ocram".split() ] ) }'

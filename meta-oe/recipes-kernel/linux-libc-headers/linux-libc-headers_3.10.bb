@@ -1,5 +1,3 @@
-KORG_ARCHIVE_COMPRESSION = "xz"
-
 require recipes-kernel/linux-libc-headers/linux-libc-headers.inc
 
 SRC_URI[md5sum] = "4f25cd5bec5f8d5a7d935b3f2ccb8481"

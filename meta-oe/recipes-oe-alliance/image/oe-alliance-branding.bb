@@ -11,8 +11,8 @@ inherit autotools-brokensep gitpkgv pythonnative
 PACKAGES += " ${PN}-src"
 
 SRCREV = "${AUTOREV}"
-PV = "2.3+git${SRCPV}"
-PKGV = "2.3+git${GITPKGV}"
+PV = "5.2+git${SRCPV}"
+PKGV = "5.2+git${GITPKGV}"
 PR = "r${DATETIME}"
 
 SRC_URI="git://github.com/oe-alliance/branding-module.git;protocol=git"
@@ -47,7 +47,9 @@ EXTRA_OECONF = " \
     "
 
 do_configure_prepend() {
-    if [ "${BRAND_OEM}" = "vuplus" ]; then
+    if [ "${MACHINE}" = "vusolo4k" -o "${MACHINE}" = "vusolo2" -o "${MACHINE}" = "vusolose" -o "${MACHINE}" = "vuduo2" ]; then
+        DRIVERSDATE=`grep "SRCDATE = " ${OEA-META-VUPLUS-BASE}/recipes-drivers/vuplus-dvb-proxy-${MACHINE}.bb | cut -b 12-19`
+    elif [ "${BRAND_OEM}" = "vuplus" ]; then
         DRIVERSDATE=`grep "SRCDATE = " ${OEA-META-VUPLUS-BASE}/recipes-drivers/vuplus-dvb-modules-${MACHINE}.bb | cut -b 12-19`
     elif [ "${BRAND_OEM}" = "xtrend" ]; then
         DRIVERSDATE=`grep "SRCDATE = " ${OEA-META-XTREND-BASE}/recipes-drivers/et-dvb-modules-${MACHINE}.bb | cut -b 12-19`
@@ -84,7 +86,7 @@ do_configure_prepend() {
     elif [ "${BRAND_OEM}" = "ceryon" ]; then
         DRIVERSDATE=`grep "SRCDATE = " ${OEA-META-CERYON-BASE}/recipes-drivers/ceryon-dvb-modules-${MACHINE}.bb | cut -b 12-19`
     elif [ "${BRAND_OEM}" = "broadmedia" ]; then
-        DRIVERSDATE=`grep "SRCDATE = " ${OEA-META-BROADMEDIA-BASE}/recipes-drivers/broadmedia-dvb-modules-${MACHINE}.bb | cut -b 12-19`
+        DRIVERSDATE=`grep "SRCDATE = " ${OEA-META-BROADMEDIA-BASE}/recipes-drivers/broadmedia-dvb-modules-${MACHINE_DRIVER}.bb | cut -b 12-19`
     elif [ "${BRAND_OEM}" = "xcore" ]; then
         DRIVERSDATE=`grep "SRCDATE = " ${OEA-META-XCORE-BASE}/recipes-drivers/xcore-dvb-modules-${MACHINE_DRIVER}.bb | cut -b 12-19`
     elif [ "${BRAND_OEM}" = "ax" ]; then
@@ -93,15 +95,23 @@ do_configure_prepend() {
         DRIVERSDATE=`grep "SRCDATE = " ${OEA-META-ULTRAMINI-BASE}/recipes-drivers/ultramini-dvb-modules-${MACHINE_DRIVER}.bb | cut -b 12-19`
     elif [ "${BRAND_OEM}" = "wetek" ]; then
         DRIVERSDATE=`grep "SRCDATE = " ${OEA-META-WETEK-BASE}/recipes-drivers/wetek-dvb-modules-${MACHINE}.bb | cut -b 12-19`
+    elif [ "${BRAND_OEM}" = "protek" ]; then
+        DRIVERSDATE=`grep "SRCDATE = " ${OEA-META-PROTEK-BASE}/recipes-drivers/protek-dvb-modules-${MACHINE}.bb | cut -b 12-19`
     elif [ "${BRAND_OEM}" = "dreambox" ]; then
         if [ "${MACHINE}" = "dm7080" ]; then
-            DRIVERSDATE="20150622"
+            DRIVERSDATE="20151202"
         elif [ "${MACHINE}" = "dm820" ]; then
-            DRIVERSDATE="20150622"
+            DRIVERSDATE="20151202"
         elif [ "${MACHINE}" = "dm800" ]; then
             DRIVERSDATE="20131228"
         elif [ "${MACHINE}" = "dm8000" ]; then
             DRIVERSDATE="20140604"
+        elif [ "${MACHINE}" = "dm7020hd" ]; then
+            DRIVERSDATE="20151201"
+        elif [ "${MACHINE}" = "dm800se" ]; then
+            DRIVERSDATE="20151201"
+        elif [ "${MACHINE}" = "dm800sev2" ]; then
+            DRIVERSDATE="20151201"
         else
             DRIVERSDATE="20150618"
         fi

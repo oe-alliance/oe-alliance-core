@@ -6,6 +6,7 @@ HOMEPAGE = "http://ushare.geexbox.org/"
 DEPENDS = "libupnp virtual/libiconv virtual/libintl gettext"
 SRC_URI = "http://ushare.geexbox.org/releases/ushare-${PV}.tar.bz2 \
         file://remove-lsb-dependency.patch \
+        file://0002-ushare-fix-building-with-gcc-5.x.patch \
         file://ushare.conf \
         file://init"
 

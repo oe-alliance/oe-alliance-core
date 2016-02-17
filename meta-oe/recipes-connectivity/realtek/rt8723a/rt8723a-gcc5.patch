@@ -1,0 +1,13 @@
+diff --git a/include/ieee80211.h b/include/ieee80211.h
+index 80ce52b..d8150d8 100644
+--- a/include/ieee80211.h
++++ b/include/ieee80211.h
+@@ -881,7 +881,7 @@ enum ieee80211_state {
+ #define MAC_FMT "%02x:%02x:%02x:%02x:%02x:%02x"
+ #define MAC_ARG(x) ((u8*)(x))[0],((u8*)(x))[1],((u8*)(x))[2],((u8*)(x))[3],((u8*)(x))[4],((u8*)(x))[5]
+ 
+-extern inline int is_multicast_mac_addr(const u8 *addr)
++static inline int is_multicast_mac_addr(const u8 *addr)
+ {
+         return ((addr[0] != 0xff) && (0x01 & addr[0]));
+ }

@@ -21,6 +21,7 @@ RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
 
 SRC_URI += "http://www.xtrendet.net/linux-${PV}.tar.gz \
     file://defconfig \
+    file://0001-kernel-add-support-for-gcc-5.patch \
     file://0001-Revert-default-authentication-needs-to-be-at-least-n.patch \
     file://0001-Revert-MIPS-mm-Add-compound-tail-page-_mapcount-when.patch \
     file://0001-Revert-MIPS-Add-fast-get_user_pages.patch \
@@ -37,15 +38,18 @@ SRC_URI += "http://www.xtrendet.net/linux-${PV}.tar.gz \
     file://dvb_usb_disable_rc_polling.patch \
     file://em28xx_add_terratec_h5_rev3.patch \
     file://fix-proc-cputype.patch \
+    file://fixme-hardfloat.patch \
     file://iosched-slice_idle-1.patch \
     file://it913x-switch-off-PID-filter-by-default.patch \
     file://tda18271-advertise-supported-delsys.patch \
-    file://fix-dvb-siano-sms-order.patch \
+    file://dvb-usb-siano-always-load-smsdvb-v2.patch \
     file://mxl5007t-add-no_probe-and-no_reset-parameters.patch \
     file://nfs-max-rwsize-8k.patch \
     file://0001-rt2800usb-add-support-for-rt55xx.patch \
-    file://rtl28xxu-update-to-the-latest-version-02-06-2013.patch \
+    file://rtl28xxu-and-tuners-update-to-latest-version-09-09-2013.patch \
     file://rtl2832-scale-SNR-to-full-range.patch \
+    file://rtl8712-fix-warnings.patch \
+    file://rtl8187se-fix-warnings.patch \
     file://em28xx-dvb-enable-LNA-by-default-for-PCTV290e.patch \
     file://zl10353-output-full-range-SNR.patch \
     "

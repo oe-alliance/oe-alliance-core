@@ -3,36 +3,17 @@ PACKAGE_ARCH = "all"
 
 require conf/license/license-gplv2.inc
 
-DVBPROVIDER = "dvb-sky"
-DVBPROVIDER_dags7356 = "kernel"
-DVBPROVIDER_dags7335 = "kernel"
-DVBPROVIDER_dags7362 = "kernel"
-
-DVBPROVIDER_xc7362 = "kernel"
-DVBPROVIDER_xc7358 = "kernel"
-DVBPROVIDER_xc7358ci = "kernel"
-
-DVBPROVIDER_hd500c = "kernel"
-DVBPROVIDER_hd1100 = "kernel"
-DVBPROVIDER_hd1200 = "kernel"
-DVBPROVIDER_hd2400 = "kernel"
-
-DVBPROVIDER_triplex = "kernel"
-
-DVBPROVIDER_xp1000 = "kernel"
-
-DVBPROVIDER_formuler1 = "kernel"
-DVBPROVIDER_formuler3 = "kernel"
+DVBSKYPROVIDER ?= "dvb-sky"
 
 RRECOMMENDS_${PN} = " \
     ${@base_contains("MACHINE_FEATURES", "legacykernel", "", " \
-    ${DVBPROVIDER}-module-dvb-usb-dvbsky \
-    ${DVBPROVIDER}-module-dvb-usb-v2 \
-    ${DVBPROVIDER}-module-dvbsky-m88ds3103 \
-    ${DVBPROVIDER}-module-dvbsky-m88rs6000 \
-    ${DVBPROVIDER}-module-sit2fe \
-    ${DVBPROVIDER}-module-si2168 \
-    ${DVBPROVIDER}-module-si2157 \
+    ${DVBSKYPROVIDER}-module-dvb-usb-dvbsky \
+    ${DVBSKYPROVIDER}-module-dvb-usb-v2 \
+    ${DVBSKYPROVIDER}-module-dvbsky-m88ds3103 \
+    ${DVBSKYPROVIDER}-module-dvbsky-m88rs6000 \
+    ${DVBSKYPROVIDER}-module-sit2fe \
+    ${DVBSKYPROVIDER}-module-si2168 \
+    ${DVBSKYPROVIDER}-module-si2157 \
     firmware-dvb-usb-s660 \
     firmware-dvb-fe-ds3000 \
     firmware-dvb-fe-ds3xxx \

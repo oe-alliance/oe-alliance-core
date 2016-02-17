@@ -8,15 +8,15 @@ LIC_FILES_CHKSUM = "file://${WORKDIR}/COPYING;md5=751419260aa954499f7abaabaa882b
 
 RDEPENDS_${PN} = "stinit"
 
-SRCDATE = "20150402"
+SRCDATE = "20151113"
 KV = "2.6.32.61-stm24-0217"
-SRCREV = "15f0e5e65dd5d33750cd92ba87b0b4ea934332b5"
+SRCREV = "68dd588335a29d3cc4fab7bbbf51a29c2132af2d"
 
 inherit module
 
 PACKAGES = "${PN} ${PN}-dev"
 
-PR = "r30"
+PR = "r36"
 PV = "${KV}+${SRCDATE}"
 
 PTI_NP_PATH ?= "/data/pti_np"
@@ -24,11 +24,13 @@ PTI_NP_PATH ?= "/data/pti_np"
 SRC_URI = " \
     git://github.com/Duckbox-Developers/driver.git;protocol=git \
     file://aotom_spark_procfs.patch;patch=1 \
+    file://aotom_progress.patch;patch=1 \
     file://fix_videomode_names.patch;patch=1 \
     file://silence_tuner_printk.patch;patch=1 \
     file://silence_stmfb_printk.patch;patch=1 \
     file://fix_makefile.patch;patch=1 \
     file://disable_video_free_on_release.patch;patch=1 \
+    file://add_hdmi_colorspace_proc.patch;patch=1 \
     file://ddbootup \
     file://sh4booster \
     file://modules.conf \

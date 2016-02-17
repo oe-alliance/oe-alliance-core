@@ -6,15 +6,19 @@ SRCDATE = "14052013"
 SRCDATE_azboxhd = "02022014"
 
 SRC_URI += "http://source.mynonpublic.com/linux-azbox-${KV}-new-2.tar.bz2;name=azbox-kernel \
-       http://source.mynonpublic.com/${MACHINE}/${MACHINE}-${KV}-${SRC}-${SRCREV}.tar.gz;name=azbox-kernel-${MACHINE} \
-       file://mips-refactor-clearpage-and-copypage.patch \
-       file://defconfig \
-       file://genzbf.c \
-       file://sigblock.h \
-       file://zboot.h \
-       file://emhwlib_registers_tango2.h \
-       file://sata.patch \
-       "
+    http://source.mynonpublic.com/${MACHINE}/${MACHINE}-${KV}-${SRC}-${SRCREV}.tar.gz;name=azbox-kernel-${MACHINE} \
+    file://mips-refactor-clearpage-and-copypage.patch \
+    file://defconfig \
+    file://genzbf.c \
+    file://sigblock.h \
+    file://zboot.h \
+    file://emhwlib_registers_tango2.h \
+    file://sata.patch \
+    file://0001-kernel-add-support-for-gcc-5.patch \
+    file://fixme-hardfloat.patch \
+    file://rtl8712-fix-warnings.patch \
+    file://rtl8187se-fix-warnings.patch \
+    "
 
 SRC_URI_append_azboxhd += "http://source.mynonpublic.com/azbox/initramfs-${MACHINE}-oe-core-${KV}-${SRCDATE}.tar.bz2;name=azbox-initrd-${MACHINE} \
        file://hdide.patch \

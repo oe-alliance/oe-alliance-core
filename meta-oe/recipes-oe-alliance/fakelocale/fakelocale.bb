@@ -46,3 +46,5 @@ do_install() {
 }
 
 FILES_${PN} = "${LOCALEDIR} ${LOCALEDIR2}"
+
+do_package_qa[noexec] = "1"

@@ -19,9 +19,11 @@ PKG_kernel-image = "kernel-image"
 RPROVIDES_kernel-base = "kernel-${KERNEL_VERSION}"
 RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
 
-SRC_URI += "http://118.37.185.125/download/stblinux/stblinux-3.3.0-20130404.tgz \
+SRC_URI += "http://source.mynonpublic.com/stblinux-3.3.0-20130404.tgz \
     file://defconfig \
+    file://0001-kernel-add-support-for-gcc-5.patch \
     file://fix-proc-cputype.patch \
+    file://fixme-hardfloat.patch \
     file://0001-Revert-MIPS-Add-fast-get_user_pages.patch \
     file://disable_early_fb.patch \
     file://iosched-slice_idle-1.patch \
@@ -51,6 +53,8 @@ SRC_URI += "http://118.37.185.125/download/stblinux/stblinux-3.3.0-20130404.tgz 
     file://dvb_usb_disable_rc_polling.patch \
     file://fix-dvb-siano-sms-order.patch \
     file://nfs-max-rwsize-8k.patch \
+    file://rtl8712-fix-warnings.patch \
+    file://rtl8187se-fix-warnings.patch \
     "
 
 S = "${WORKDIR}/linux-${PV}"

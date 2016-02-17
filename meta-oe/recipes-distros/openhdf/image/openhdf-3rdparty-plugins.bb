@@ -9,7 +9,7 @@ inherit gitpkgv autotools deploy
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r36"
+PR = "r41"
 SRC_URI="git://github.com/openhdf/3rdparty-plugins.git;protocol=git"
 
 EXTRA_OECONF = " \
@@ -27,13 +27,16 @@ S = "${WORKDIR}/git"
 
 DEPENDS = "enigma2"
 
-THIRDPARTY_MACHINE_PLUGINS_gbquad = " \
+THIRDPARTY_MACHINE_PLUGINS_gb7356 = " \
+    enigma2-plugin-extensions-multiquickbutton_*_gb_*.ipk \
+    "
+THIRDPARTY_MACHINE_PLUGINS_gb7358 = " \
+    enigma2-plugin-extensions-multiquickbutton_*_gb_*.ipk \
+    "
+THIRDPARTY_MACHINE_PLUGINS_gb7362 = " \
     enigma2-plugin-extensions-multiquickbutton_*_gb_*.ipk \
     "
 THIRDPARTY_MACHINE_PLUGINS_gb7325 = " \
-    enigma2-plugin-extensions-multiquickbutton_*_gb_*.ipk \
-    "
-THIRDPARTY_MACHINE_PLUGINS_gb800solo = " \
     enigma2-plugin-extensions-multiquickbutton_*_gb_*.ipk \
     "
 THIRDPARTY_MACHINE_PLUGINS_vusolo = " \
@@ -73,7 +76,9 @@ THIRDPARTY_MACHINE_PLUGINS_odinm7 = " \
 THIRDPARTY_MACHINE_PLUGINS_maram9 = " \
     enigma2-plugin-extensions-hbbtv_2.12_ODIN_mips32el.ipk \
     "
-
+THIRDPARTY_EXTRA_PLUGINS = " \
+    enigma2-plugin-extensions-et-portal*.ipk \
+    "
 do_install() {
 }
 
@@ -88,17 +93,19 @@ do_deploy() {
     rm -f ${DEPLOY_DIR_IPK}/3rdparty/enigma2-plugin-extensions-hbbtv_* || true
     rm -f ${DEPLOY_DIR_IPK}/3rdparty/enigma2-plugin-extensions-multiquickbutton*.ipk || true
     rm -f ${DEPLOY_DIR_IPK}/3rdparty/enigma2-plugin-extensions-backupsuite*.ipk || true
-    [ -e ${S}/*enigma2-plugin-extensions-et-portal*.ipk ] && install -m 0644 ${S}/*enigma2-plugin-extensions-et-portal*.ipk ${DEPLOY_DIR_IPK}/3rdparty || true
+#    [ -e ${S}/*enigma2-plugin-extensions-et-portal*.ipk ] && install -m 0644 ${S}/*enigma2-plugin-extensions-et-portal*.ipk ${DEPLOY_DIR_IPK}/3rdparty || true
     [ -e ${S}/*${MACHINE}.ipk ] && install -m 0644 ${S}/*${MACHINE}.ipk ${DEPLOY_DIR_IPK}/${MACHINE}_3rdparty #|| true
     [ -e ${S}/*${MACHINEBUILD}.ipk ] && install -m 0644 ${S}/*${MACHINEBUILD}.ipk ${DEPLOY_DIR_IPK}/${MACHINE}_3rdparty #|| true
     for i in ${THIRDPARTY_MACHINE_PLUGINS}; do
         if [ -f $i ]; then
-            install -m 0644 $i ${DEPLOY_DIR_IPK}/${MACHINE}_3rdparty || true
+            install -m 0644 $i ${DEPLOY_DIR_IPK}/${MACHINE}_3rdparty 
+            install -m 0644 $i ${PKGDATA_DIR} 
         fi
     done;
     for i in ${THIRDPARTY_EXTRA_PLUGINS}; do
         if [ -f $i ]; then
             install -m 0644 $i ${DEPLOY_DIR_IPK}/3rdparty || true
+            install -m 0644 $i ${PKGDATA_DIR} 
         fi
     done;
     pkgdir=${DEPLOY_DIR_IPK}/3rdparty

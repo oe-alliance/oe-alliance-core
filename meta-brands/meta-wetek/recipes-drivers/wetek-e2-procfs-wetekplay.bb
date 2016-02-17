@@ -4,8 +4,8 @@ PRIORITY = "required"
 LICENSE = "CLOSED"
 require conf/license/license-close.inc
 
-KV = "3.10.76"
-SRCDATE = "20150702"
+KV = "3.10.93"
+SRCDATE = "20160126"
 
 PV = "${KV}+${SRCDATE}"
 PR = "r1"

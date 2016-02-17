@@ -3,7 +3,7 @@ SECTION = "base"
 LICENSE = "CLOSED"
 DEPENDS += "virtual/kernel"
 PRIORITY = "required"
-INC_PR = "r8"
+INC_PR = "r9"
 require conf/license/license-close.inc
 
 DREAMBOX_DVB_MODULES_MIRROR ?= "http://dreamboxupdate.com/download/opendreambox/2.2.0/dreambox-dvb-modules/${KV}-${MACHINE}-${DRIVERDATE}/${MACHINE}/${MD5SUM}"
@@ -27,6 +27,7 @@ do_install() {
     install -m 0644 ${S}/LICENSE ${D}/lib/modules/${DM_LOCALVERSION}/extra
     install -m 0644 ${S}/*.ko ${D}/lib/modules/${DM_LOCALVERSION}/extra
     install -m 0644 ${S}/nims/si2166b/*.ko ${D}/lib/modules/${DM_LOCALVERSION}/extra
+	install -m 0644 ${S}/nims/si2169c/*.ko ${D}/lib/modules/${DM_LOCALVERSION}/extra
 }
 
 PACKAGES = "${PN}"
