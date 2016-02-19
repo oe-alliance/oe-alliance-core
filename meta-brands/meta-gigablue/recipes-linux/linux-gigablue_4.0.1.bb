@@ -11,7 +11,7 @@ SRC_URI[sha256sum] = "38aafba52d6492c35bc3e7d1ea782ea21c84c69931d963de8ce8029771
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-MACHINE_KERNEL_PR_append = ".2"
+MACHINE_KERNEL_PR_append = ".3"
 
 # By default, kernel.bbclass modifies package names to allow multiple kernels
 # to be installed in parallel. We revert this change and rprovide the versioned
@@ -25,6 +25,7 @@ SRC_URI += "http://archiv.openmips.com/gigablue-linux-${PV}-20150828.tgz \
     file://defconfig \
     file://add-dmx-source-timecode.patch \
     file://iosched-slice_idle-1.patch \
+    file://bcmgenet.patch \
     "
 
 S = "${WORKDIR}/linux-${PV}"
