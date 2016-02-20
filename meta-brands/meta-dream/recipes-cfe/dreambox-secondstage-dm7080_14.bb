@@ -4,7 +4,7 @@ LICENSE = "CLOSED"
 PRIORITY = "required"
 PROVIDES = "virtual/bootloader"
 RPROVIDES_${PN} += "dreambox-secondstage"
-MD5SUM = "${@d.getVarFlag('SRC_URI', '%s.md5sum' % MACHINE)}"
+MD5SUM = "${@d.getVarFlag('SRC_URI', '%s.md5sum' % MACHINE, True)}"
 PACKAGE_ARCH := "${MACHINE_ARCH}"
 require conf/license/license-close.inc
 
