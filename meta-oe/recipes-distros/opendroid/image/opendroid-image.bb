@@ -11,13 +11,10 @@ PR = "r0${DATETIME}"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 IMAGE_INSTALL = "opendroid-base \
-  ${@base_contains("MACHINE_FEATURES", "smallflash", "", \
-  " \
   packagegroup-base-smbfs-client \
   packagegroup-base-smbfs-server \
   packagegroup-base-smbfs-utils \
   packagegroup-base-nfs \
-  ", d)} \
   "
 
 export IMAGE_BASENAME = "opendroid-image"
