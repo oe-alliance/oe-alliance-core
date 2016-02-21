@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=4d92cd373abda3937c2bc47fbc49d
 ALLOW_EMPTY_${PN} = "1"
 
 PV = "5.3"
-PR = "r9"
+PR = "r10"
 
 inherit packagegroup
 
@@ -19,6 +19,7 @@ RDEPENDS_${PN} = "\
     hddtemp \
     busybox-cron \
     python-imaging \
-    unrar \
+    rtmpdump \
+    packagegroup-base-smbfs-client \
     ${@base_contains("MACHINE_FEATURES", "dreambox", "", "ofgwrite", d)} \
     "
