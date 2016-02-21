@@ -24,7 +24,7 @@ RRECOMMENDS_${PN} = "\
     enigma2-plugin-extensions-graphmultiepg \
     enigma2-plugin-extensions-imdb \
     enigma2-plugin-extensions-cutlisteditor \
-    enigma2-plugin-systemplugins-crossepg \
+    ${@base_contains("MACHINE_FEATURES", "smallflash", "", "enigma2-plugin-systemplugins-crossepg", d)} \
     enigma2-plugin-systemplugins-videotune \
     ${@base_contains("MACHINE_FEATURES", "videoenhancement", "", "enigma2-plugin-systemplugins-videoenhancement", d)} \
     enigma2-plugin-systemplugins-softwaremanager \
