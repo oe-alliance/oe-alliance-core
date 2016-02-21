@@ -1,0 +1,11 @@
+--- a/Makefile	2016-02-21 19:21:14.579043736 +0100
++++ b/Makefile	2016-02-21 19:21:31.579043445 +0100
+@@ -15,8 +15,6 @@
+ hidd-objs = \
+ 	hidd.o
+ 
+-CFLAGS = -I. -Ilib -I${includedir}/glib-2.0 -I/usr/lib/glib-2.0/include -Wall
+-
+ all: hidd 
+ 
+ hidd: $(hidd-objs) $(lib)
