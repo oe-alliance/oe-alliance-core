@@ -4,7 +4,7 @@ LICENSE = "CLOSED"
 PROVIDES += "virtual/bootloader"
 RPROVIDES_${PN} += "dreambox-secondstage"
 PRIORITY = "required"
-INC_PR = "r20"
+INC_PR = "r21"
 require conf/license/license-close.inc
 
 do_install() {
