@@ -21,11 +21,11 @@ PACKAGES = "${PN}"
 do_install() {
     # generate /etc/image-version
     install -d ${D}/etc
-    echo "Creator = OpenViX" >> ${D}/etc/image-version
+    echo "Creator = OpenViX" > ${D}/etc/image-version
     echo "Version = ${IMAGE_VERSION}" >> ${D}/etc/image-version
     echo "Build = ${BUILD_VERSION}" >> ${D}/etc/image-version
     echo "Type = ${DISTRO_TYPE}" >> ${D}/etc/image-version
-    echo "Machine = ${MACHINEBUILD}" > ${D}/etc/image-version
+    echo "Machine = ${MACHINEBUILD}" >> ${D}/etc/image-version
     echo "URL = ${URL}" >> ${D}/etc/image-version
 }
 

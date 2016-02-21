@@ -1,0 +1,9 @@
+--- a/Makefile	2016-02-21 14:01:20.839372664 +0100
++++ b/Makefile	2016-02-21 14:01:45.835372236 +0100
+@@ -1,6 +1,5 @@
+ PROG        = usb_modeswitch
+ VERS        = 1.2.4
+-CC          = gcc
+ CFLAGS      += -Wall
+ LIBS        = -l usb
+ RM          = /bin/rm -f

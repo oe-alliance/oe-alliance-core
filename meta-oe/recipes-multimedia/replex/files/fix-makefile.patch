@@ -1,0 +1,12 @@
+--- a/Makefile	2016-02-20 21:52:17.708369076 +0100
++++ b/Makefile	2016-02-20 21:51:54.476369474 +0100
+@@ -2,8 +2,7 @@
+ DISTNAME = replex-$(VERSION)
+ TARNAME = $(DISTNAME).tar.gz	
+ INCS   = -I..
+-CFLAGS =  -g -m32 -Wall -O6 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -D_LARGEFILE64_SOURCE -DVERSION=\"$(VERSION)\"
+-LDFLAGS = -m32
++CFLAGS =  -g -Wall -O6 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -D_LARGEFILE64_SOURCE -DVERSION=\"$(VERSION)\"
+ LIBS   = -L. 
+ MFLAG  = -M
+ OBJS = element.o pes.o mpg_common.o ts.o ringbuffer.o avi.o multiplex.o

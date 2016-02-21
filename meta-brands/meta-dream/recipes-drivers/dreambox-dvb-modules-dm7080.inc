@@ -38,7 +38,7 @@ RDEPENDS_${PN} += "dreambox-secondstage-${MACHINE} kernel-${DM_LOCALVERSION}"
 # precompiled modules depend on a specific version.
 DM_LOCALVERSION = "${@'-'.join('${PV}'.split('-')[:-1])}-${MACHINE}"
 DRIVERDATE = "${@'${PV}'.split('-')[-1]}"
-MD5SUM = "${@d.getVarFlag('SRC_URI', 'dm7080.md5sum')}"
+MD5SUM = "${@d.getVarFlag('SRC_URI', 'dm7080.md5sum', True)}"
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/dreambox-dvb-modules:"
 
