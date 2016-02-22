@@ -8,7 +8,7 @@ inherit gitpkgv allarch
 SRCREV = "${AUTOREV}"
 PV = "17.4+git${SRCPV}"
 PKGV = "17.4+git${GITPKGV}"
-PR = "r1"
+PR = "r2"
 
 RDEPENDS_${PN} = "enigma2-plugin-skincomponents-novum enigma2-plugin-systemplugins-weathercomponenthandler"
 
@@ -25,7 +25,7 @@ do_compile_append() {
 
 do_install() {
    install -d ${D}/usr/share/enigma2
-   mv ${S}/Nashu/myNOVUM_HD2 ${D}/usr/share/enigma2/
+   cp -rp ${S}/Nashu/myNOVUM_HD2 ${D}/usr/share/enigma2/
    chmod -R a+rX ${D}/usr/share/enigma2/
 }
 
