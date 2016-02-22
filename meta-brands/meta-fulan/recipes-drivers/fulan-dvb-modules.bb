@@ -16,7 +16,7 @@ inherit module
 
 PACKAGES = "${PN} ${PN}-dev"
 
-PR = "r36"
+PR = "r37"
 PV = "${KV}+${SRCDATE}"
 
 PTI_NP_PATH ?= "/data/pti_np"
@@ -42,6 +42,8 @@ FILES_${PN} = "${sysconfdir}/init.d ${sysconfdir}/rcS.d ${sysconfdir}/modules-lo
 FILES = ""
 
 S = "${WORKDIR}/git"
+
+EXTRA_OEMAKE = "-e MAKEFLAGS="
 
 do_configure_prepend () {
 
