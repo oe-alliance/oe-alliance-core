@@ -7,16 +7,14 @@ inherit bluetooth
 
 DEPENDS = "glib-2.0 ${BLUEZ}"
 
-PR = "r1"
+PR = "r2"
 
-SRC_URI[md5sum] = "f684a38586b9da8350432aed92f5c947"
-SRC_URI[sha256sum] = "a4c28cf81488de92adcada26e5f72dfab8566e0b48b395ca093ad4826f67960f"
+SRC_URI[md5sum] = "8a7ceca8821017c0cda882b29734122f"
+SRC_URI[sha256sum] = "02d3bf69e0de58c2e2182eaf65be9a4c0e753a1a5b303d2943e8043534194d49"
 
 CFLAGS_append = " -Wall -I${S} -I${S}/lib -I${includedir}/glib-2.0 -I${STAGING_DIR}/${MACHINE}/usr/lib/glib-2.0/include"
 
-SRC_URI = "http://source.mynonpublic.com/bluez-hidd-1.0.zip \
-    file://makefile.patch \
-"
+SRC_URI = "http://source.mynonpublic.com/bluez-hidd-1.1.zip"
 
 S = "${WORKDIR}/bluez-hidd"
 
