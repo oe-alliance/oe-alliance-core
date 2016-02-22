@@ -17,7 +17,7 @@ IMAGE_INSTALL = "opendroid-base \
 	packagegroup-base-smbfs-server \
 	packagegroup-base-smbfs-utils \
 	packagegroup-base-nfs \
-	", d} \
+	", d)} \
 	"
 
 export IMAGE_BASENAME = "opendroid-image"
