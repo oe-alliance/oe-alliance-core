@@ -11,6 +11,7 @@ ${@base_contains('MACHINEBUILD', 'xcombo', 'enfinityX combo plus' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'x1plus', 'enfinityX 1plus' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'sf108', 'SF108 E2HD' , '', d)}\
 ${@base_contains('MACHINEBUILD', 't2cable', 'ENFINITY T2/CABLE' , '', d)}\
+${@base_contains('MACHINEBUILD', 'sf98', 'SF98' , '', d)}\
 "
 
 MACHINE_BRAND = "\
@@ -21,6 +22,7 @@ ${@base_contains('MACHINEBUILD', 'xcombo', 'EVO' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'x1plus', 'EVO' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'sf108', 'Octagon' , '', d)}\
 ${@base_contains('MACHINEBUILD', 't2cable', 'EVO' , '', d)}\
+${@base_contains('MACHINEBUILD', 'sf98', 'Octagon' , '', d)}\
 "
 
 IMAGEDIR ?= "\
@@ -31,10 +33,31 @@ ${@base_contains('MACHINEBUILD', 'xcombo', 'xcombo' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'x1plus', 'x1plus' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'sf108', 'sf108' , '', d)}\
 ${@base_contains('MACHINEBUILD', 't2cable', 't2cable' , '', d)}\
+${@base_contains('MACHINEBUILD', 'sf98', 'sf98' , '', d)}\
 "
 
-MTD_KERNEL = "mtd2"
-MTD_ROOTFS = "mtd8"
+MTD_KERNEL ?= "\
+${@base_contains('MACHINEBUILD', 'enibox', 'mtd2' , '', d)}\
+${@base_contains('MACHINEBUILD', 'mago', 'mtd2' , '', d)}\
+${@base_contains('MACHINEBUILD', 'tyrant', 'mtd2' , '', d)}\
+${@base_contains('MACHINEBUILD', 'xcombo', 'mtd2' , '', d)}\
+${@base_contains('MACHINEBUILD', 'x1plus', 'mtd2' , '', d)}\
+${@base_contains('MACHINEBUILD', 'sf108', 'mtd2' , '', d)}\
+${@base_contains('MACHINEBUILD', 't2cable', 'mtd2' , '', d)}\
+${@base_contains('MACHINEBUILD', 'sf98', 'mtd2' , '', d)}\
+"
+
+MTD_ROOTFS ?= "\
+${@base_contains('MACHINEBUILD', 'enibox', 'mtd8' , '', d)}\
+${@base_contains('MACHINEBUILD', 'mago', 'mtd8' , '', d)}\
+${@base_contains('MACHINEBUILD', 'tyrant', 'mtd8' , '', d)}\
+${@base_contains('MACHINEBUILD', 'xcombo', 'mtd8' , '', d)}\
+${@base_contains('MACHINEBUILD', 'x1plus', 'mtd8' , '', d)}\
+${@base_contains('MACHINEBUILD', 'sf108', 'mtd8' , '', d)}\
+${@base_contains('MACHINEBUILD', 't2cable', 'mtd8' , '', d)}\
+${@base_contains('MACHINEBUILD', 'sf98', 'mtd0' , '', d)}\
+"
+
 KERNEL_FILE = "kernel.bin"
 ROOTFS_FILE = "rootfs.bin"
 
