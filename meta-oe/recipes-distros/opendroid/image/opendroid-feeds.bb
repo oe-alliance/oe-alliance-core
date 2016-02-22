@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=4d92cd373abda3937c2bc47fbc49d
 ALLOW_EMPTY_${PN} = "1"
 
 PV = "5.3"
-PR = "r6"
+PR = "r7"
 
 inherit packagegroup
 
@@ -19,6 +19,7 @@ RRECOMMENDS_${PN} = "\
     enigma2-plugin-systemplugins-crossepg \
     enigma2-plugin-skins-opendroid \
     "
+
 RRECOMMENDS_${PN}_append_gb800solo = "enigma2-plugin-extensions-gbipboxclient"
 RRECOMMENDS_${PN}_append_gb7325 = "enigma2-plugin-extensions-gbipboxclient"
 RRECOMMENDS_${PN}_append_gb7358 = "enigma2-plugin-extensions-gbipboxclient"
