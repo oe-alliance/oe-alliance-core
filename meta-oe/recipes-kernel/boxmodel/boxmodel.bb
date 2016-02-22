@@ -14,17 +14,12 @@ S = "${WORKDIR}"
 PV = "1.0"
 PR = "r10"
 
-inherit module machine_kernel_pr
+inherit module
 
-do_compile () {
-    unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS CC LD CPP
+do_compile () {  
+    unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS
     oe_runmake 'MODPATH="${D}${base_libdir}/modules/${KERNEL_VERSION}/kernel/drivers/boxmodel" ' \
-        'KERNEL_SOURCE="${STAGING_KERNEL_BUILDDIR}" ' \
-        'KDIR="${STAGING_KERNEL_BUILDDIR}"' \
-        'KERNEL_VERSION="${KERNEL_VERSION}" ' \
-        'CC="${KERNEL_CC}" ' \
-        'LD="${KERNEL_LD}" '
-
+    -C "${STAGING_KERNEL_BUILDDIR}" SUBDIRS="${S}" modules
 }
 
 do_install () {
