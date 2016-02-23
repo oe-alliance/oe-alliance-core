@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="latin-1"?>
+<sources>
+
+<!--
+You can list as many <source> entries in a file as you wish.
+Files or urls for sources and channels ending in '.gz' will be treated as
+gzipped and decompressed while processing.
+Use the "type" attribute to set the python module that handles the file,
+currently only type="gen_xmltv" is supported, more will follow once this plugin
+gets more popular.
+The channels property is the local file or URL with channel ID to service ref
+mappings. The default is the same filename but with .channels.xml as extension.
+Each source may use a different channels definition, or multiple sources may use
+the same, whatever is convenient.
+The description must be unique for each source, and is displayed on the UI.
+-->
+
+<source type="epg.dat" channels="http://www.xmltvepg.be/rytec.channels.xml.gz">
+	<description>Satmate Sky UK</description>
+	<url>http://hqsatellite.com/satmate/skyuk_epg.dat.gz</url>
+</source>
+<source type="epg.dat" channels="http://www.xmltvepg.be/rytec.channels.xml.gz">
+	<description>Satmate Sky IT</description>
+	<url>http://hqsatellite.com/satmate/skyit_epg.dat.gz</url>
+</source>
+</sources>
