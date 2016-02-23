@@ -1,3 +1,5 @@
+FILESEXTRAPATHS_append := "${THISDIR}/files"
+
 B = "${S}"
 
 SRC_URI_append = " \
