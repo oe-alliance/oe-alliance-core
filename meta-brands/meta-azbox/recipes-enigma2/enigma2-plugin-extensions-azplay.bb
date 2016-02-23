@@ -1,5 +1,5 @@
 SUMMARY = "Azbox AZplayer app plugin"
-RDEPENDS_${PN} = "enigma2 curl fuse libupnp"
+RDEPENDS_${PN} = "enigma2 fuse libupnp azbox-mrua azbox-compat"
 DEPENDS = "python-native"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 LICENSE = "CLOSED"
@@ -11,7 +11,7 @@ inherit gitpkgv pkgconfig
 
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r11"
+PR = "r12"
 
 SRC_URI = "git://github.com/OpenAZBox/AZPlay.git;protocol=git"
 
@@ -42,6 +42,9 @@ do_install_azboxhd() {
     install -d ${D}/etc/init.d
     install -m 0755 ${S}/bin/init ${D}/etc/init.d/djmount
 
+    install -d ${D}/usr/lib/
+    install -m 0755 ${S}/lib/libpng* ${D}/usr/lib/
+
     install -d ${D}/usr/lib/enigma2/python/Plugins/Extensions/AZPlay/
     install -m 0644 ${S}/plugin/*.pyo ${D}/usr/lib/enigma2/python/Plugins/Extensions/AZPlay/
 
@@ -58,6 +61,9 @@ do_install() {
     install -d ${D}/etc/init.d
     install -m 0755 ${S}/bin/init ${D}/etc/init.d/djmount
 
+    install -d ${D}/usr/lib/
+    install -m 0755 ${S}/lib/libpng* ${D}/usr/lib/
+
     install -d ${D}/usr/lib/enigma2/python/Plugins/Extensions/AZPlay/
     install -m 0644 ${S}/plugin/*.pyo ${D}/usr/lib/enigma2/python/Plugins/Extensions/AZPlay/
 
@@ -65,8 +71,14 @@ do_install() {
     install -m 0644 ${S}/img/*.png ${D}/usr/lib/enigma2/python/Plugins/Extensions/AZPlay/img/
 }
 
+do_package_qa() {
+}
+
 FILES_${PN} = "/usr/bin/"
+FILES_${PN} += "/usr/lib/"
 FILES_${PN} += "/etc/init.d/"
 FILES_${PN} += "/usr/lib/enigma2/python/Plugins/Extensions/AZPlay/"
 FILES_${PN} += "/usr/lib/enigma2/python/Plugins/Extensions/AZPlay/img/"
 
+PACKAGES = "enigma2-plugin-extensions-azplay"
+PROVIDES="${PACKAGES}"
