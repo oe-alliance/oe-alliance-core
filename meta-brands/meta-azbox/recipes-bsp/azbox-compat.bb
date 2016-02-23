@@ -8,8 +8,6 @@ require conf/license/license-close.inc
 PV = "1.0"
 PR = "r6"
 
-inherit allarch
-
 do_install() {
     install -d ${D}/lib
     ln -sf libgcc_s.so.1 ${D}/lib/libgcc_s_nof.so.1
