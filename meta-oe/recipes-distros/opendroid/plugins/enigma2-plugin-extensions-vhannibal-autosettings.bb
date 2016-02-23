@@ -12,9 +12,9 @@ SRCREV = "${AUTOREV}"
 PV = "1.3+git${SRCPV}"
 PKGV = "1.3+git${GITPKGV}"
 VER ="1.3"
-PR = "r0"
+PR = "r1"
 
-SRC_URI="git://github.com/opendroid-Team/vhannibal-autosetting.git"
+SRC_URI="git://github.com/opendroid-Team/vhannibal-autosettings.git"
 
 S = "${WORKDIR}/git"
 
