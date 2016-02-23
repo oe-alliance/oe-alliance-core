@@ -1,0 +1,14 @@
+diff -Naur talloc-2.1.1.orig/lib/replace/test/testsuite.c talloc-2.1.1/lib/replace/test/testsuite.c
+--- talloc-2.1.1.orig/lib/replace/test/testsuite.c	2016-01-21 07:21:25.126492650 +0100
++++ talloc-2.1.1/lib/replace/test/testsuite.c	2016-01-21 07:15:03.532225087 +0100
+@@ -31,9 +31,9 @@
+   we include all the system/ include files here so that libreplace tests
+   them in the build farm
+ */
+-#include "system/capability.h"
+ #include "system/dir.h"
+ #include "system/filesys.h"
++#include "system/capability.h"
+ #include "system/glob.h"
+ #include "system/iconv.h"
+ #include "system/locale.h"
