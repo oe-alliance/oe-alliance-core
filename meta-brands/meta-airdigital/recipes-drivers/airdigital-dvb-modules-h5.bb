@@ -3,6 +3,6 @@ SRCDATE = "20160121"
 
 require airdigital-dvb-modules.inc
 
-SRC_URI[md5sum] = "5598c37d2058adc7a4298d44c7ea9c89"
-SRC_URI[sha256sum] = "fb357b72b51a1abbf8ccc55488db14807d1cd61c1662665b717658a31330eb7b"
+SRC_URI[md5sum] = "07bcfb0b78a1d9ab0d98dab9428c5372"
+SRC_URI[sha256sum] = "bb4f38725e87803ea3a871be17d93e99ad4efab462fec97ef6dbbf31f54dab3b"
 
