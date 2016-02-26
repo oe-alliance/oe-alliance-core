@@ -1,4 +1,4 @@
-SRCDATE = "20150901"
+SRCDATE = "20160226"
 
 require vuplus-initrd-cfe.inc
 
