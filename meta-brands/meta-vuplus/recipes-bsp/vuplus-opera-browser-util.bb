@@ -38,23 +38,24 @@ libdirectfb_vuplus.so"
 
 SRC_FILE = "opera-hbbtv_${SRC_DATE}.tar.gz"
 do_fetch() {
-    if [ ! -e ${DL_DIR}/${SRC_FILE} -a -e /etc/vuplus_browser.pwd ]; then
+    if [[ ! -e ${DL_DIR}/${SRC_FILE} && -e /etc/vuplus_browser.pwd ]]; then
 sshpass -f /etc/vuplus_browser.pwd sftp -o StrictHostKeyChecking=no guestuser@code.vuplus.com << +
 get ${SRC_FILE}
 bye
 +
     fi
-    cp -av ${DL_DIR}/${SRC_FILE} ${WORKDIR}/
+    [ -f ${DL_DIR}/${SRC_FILE} ] && cp -av ${DL_DIR}/${SRC_FILE} ${WORKDIR}/ || true
 }
 
 do_unpack() {
-    tar xvfz ${SRC_FILE}
+    [ -f ${DL_DIR}/${SRC_FILE} ] && tar xvfz ${SRC_FILE} || true
 }
 
 do_compile() {
 }
 
 do_install() {
+	if [[ -d ${S}/opera ]]; then
     install -d ${D}/usr/local/hbb-browser
     mv ${S}/opera/* ${D}/usr/local/hbb-browser/
     install -d ${D}/usr/lib
@@ -63,6 +64,7 @@ do_install() {
     rm -f ${D}/usr/local/hbb-browser/root/jsplugins/ooif-gst*.so
     mv ${D}/usr/local/hbb-browser/root/video/videobackend-gst-${GSTVER}.so ${D}/usr/local/hbb-browser/root/video/videobackend.so
     rm -f ${D}/usr/local/hbb-browser/root/video/videobackend-gst*.so
+	fi
 }
 
 package_do_shlibs_append() {
