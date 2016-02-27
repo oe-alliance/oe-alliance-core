@@ -31,7 +31,7 @@ MACHINE_EXTRA_RRECOMMENDS = " \
     kernel-module-snd-pcm-oss \
     "
     
-MACHINE_FEATURES += "dreambox alsa usbhost 3dtv switchoff tpm blindscan-dvbs"
+MACHINE_FEATURES += "dreambox alsa usbhost 3dtv switchoff tpm blindscan-dvbs boxmodel feature1 feature2"
 # Add "dreambox" override for recipes
 MACHINEOVERRIDES .= ":dreambox"
 

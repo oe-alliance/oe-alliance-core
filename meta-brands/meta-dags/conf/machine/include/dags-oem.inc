@@ -326,7 +326,7 @@ IMAGE_CMD_ubi_append = "\
     "
 
 
-MACHINE_FEATURES += "3dtv alsa hdmicec switchoff bootsplash textlcd ci omb skins1080 wifiusbmodule"
+MACHINE_FEATURES += "3dtv alsa hdmicec switchoff bootsplash textlcd ci omb skins1080 wifiusbmodule feature1 feature2"
 
 BOOTLOGO_FILENAME = "splash.bmp"
 

@@ -101,7 +101,7 @@ IMAGE_CMD_ubi_append = "\
     rm -Rf ${IMAGEDIR}; \
     "
 
-MACHINE_FEATURES += "3dtv alsa hdmicec switchoff wifi bootsplash omb skins1080 \
+MACHINE_FEATURES += "3dtv alsa hdmicec switchoff wifi bootsplash omb skins1080 boxmodel feature1 feature2 \
     ${@base_contains('MACHINEBUILD', 'xpeedlxcc', 'dvb-c dvbc-only blindscan-dvbc' , '', d)} \
     "
 

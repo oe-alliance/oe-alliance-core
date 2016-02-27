@@ -155,9 +155,9 @@ IMAGE_CMD_ubi_append = "\
     rm -Rf ${IMAGEDIR}; \
     "
 
-MACHINE_FEATURES += "3dtv alsa hdmicec switchoff bootsplash blindscan-dvbs blindscan-dvbc omb \
+MACHINE_FEATURES += "3dtv alsa hdmicec switchoff bootsplash blindscan-dvbs blindscan-dvbc omb boxmodel feature1 feature2 \
     ${@base_contains('MACHINEBUILD', 'axodinc', 'dvb-c dvbc-only' , '', d)} \
-    ${@base_contains('MACHINEBUILD', 'axase3c', 'dvb-c dvbc-only' , '', d)} \	
+    ${@base_contains('MACHINEBUILD', 'axase3c', 'dvb-c dvbc-only' , '', d)} \
     "
 
 BOOTLOGO_FILENAME = "splash.bin"
