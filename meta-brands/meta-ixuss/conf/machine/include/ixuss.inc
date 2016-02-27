@@ -73,7 +73,7 @@ IMAGE_CMD_ubi_append = "\
     "
 
 
-MACHINE_FEATURES += "3dtv alsa hdmicec switchoff textlcd bootsplash boxmodel omb"
+MACHINE_FEATURES += "3dtv alsa hdmicec switchoff textlcd bootsplash boxmodel omb feature1 feature2"
 
 BOOTLOGO_FILENAME = "cfe-bootlogo.bmp"
 
