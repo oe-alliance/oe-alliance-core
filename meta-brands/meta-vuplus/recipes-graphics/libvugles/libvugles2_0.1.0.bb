@@ -2,6 +2,7 @@ SUMMARY = "shared library for E2 animation"
 SECTION = "libs"
 LICENSE = "CLOSED"
 require conf/license/license-close.inc
+PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PR = "${SRCDATE}.${SRCDATE_PR}"
 
