@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=4d92cd373abda3937c2bc47fbc49d
 ALLOW_EMPTY_${PN} = "1"
 
 PV = "${IMAGE_VERSION}"
-PR = "r0"
+PR = "r1"
 
 inherit packagegroup
 
@@ -19,4 +19,5 @@ RRECOMMENDS_${PN} = "\
     enigma2-plugin-systemplugins-autobouquetsmaker\
     enigma2-plugin-extensions-gbipboxclient \
     enigma2-plugin-extensions-oscamsmartcard \
+    enigma2-plugin-extensions-xmltvimport \
     "
