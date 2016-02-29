@@ -11,7 +11,7 @@ DEPENDS = "tslib mpfr gmp"
 SRCREV = "${AUTOREV}"
 PV = "3.2+gitr${SRCPV}"
 PKGV = "3.2+gitr${GITPKGV}"
-PR = "r42"
+PR = "r43"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -153,12 +153,6 @@ THIRDPARTY_MACHINE_PLUGINS_et9x00 = " \
 THIRDPARTY_MACHINE_PLUGINS_et10000 = " \
     enigma2-plugin-extensions-newxtrend-hbbtv_3.9_mips32el.ipk \
      "
-THIRDPARTY_MACHINE_PLUGINS_e3hd = " \
-    enigma2-plugin-extensions-hbbtv_4.1_E3HD_mips32el.ipk \
-    "
-THIRDPARTY_MACHINE_PLUGINS_odinm7 = " \
-    enigma2-plugin-extensions-hbbtv_4.1_ODIN_mips32el.ipk \
-    "
 THIRDPARTY_MACHINE_PLUGINS_ultramini = " \
     enigma2-plugin-extensions-xpeedlx-hbbtv_1.2-r0-11+43da75f-r0_mips32el.ipk \
     "
