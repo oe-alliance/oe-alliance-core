@@ -8,9 +8,9 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"
-PR = "r28"
+PR = "r29"
 
-SRC_URI = "git://github.com/oe-alliance/XMTV-Import.git;protocol=git"
+SRC_URI = "git://github.com/oe-alliance/XMLTV-Import.git;protocol=git"
 
 S = "${WORKDIR}/git/dreamcrc"
 
