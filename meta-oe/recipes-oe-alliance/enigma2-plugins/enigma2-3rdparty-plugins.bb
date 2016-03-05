@@ -11,7 +11,7 @@ DEPENDS = "tslib mpfr gmp"
 SRCREV = "${AUTOREV}"
 PV = "3.2+gitr${SRCPV}"
 PKGV = "3.2+gitr${GITPKGV}"
-PR = "r44"
+PR = "r45"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -57,7 +57,6 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-kodidirect_3.0_r0_all.ipk \
     enigma2-plugin-extensions-livefootball-oe2.0_5.4_all.ipk \
     enigma2-plugin-extensions-mediainfo_2.8.1_all.ipk \
-    ${@base_contains("GST_VERSION", "1.0", 'enigma2-plugin-extensions-mediaportal-gst1_7.4.3_all.ipk' , 'enigma2-plugin-extensions-mediaportal_7.4.3_all.ipk', d)} \
     enigma2-plugin-extensions-mediaportal-wallicons \
     enigma2-plugin-extensions-mediastream_6.0_all.ipk \
     enigma2-plugin-extensions-moviebrowser_3.6rc6_mips32el.ipk \
