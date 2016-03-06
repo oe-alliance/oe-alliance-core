@@ -21,10 +21,10 @@ index e49149d..4410fe4 100644
 +		 * this is needed when the 2nd stage loader has set the wrong
 +		 * ecc config (old 2nd stage loader used and bootet via network)
 +		 */
-+		uint32_t acc = brcmnand_ctrl_read(bchp_nand_acc_control(chip->ctrl->CS[chip->csi]));
++		uint32_t acc = brcmnand_ctrl_read(bchp_nand_acc_control(cs));
 +		acc &= 0xFF00FFFF;
 +		acc |= 0x440000;
-+		chip->ctrl_write(bchp_nand_acc_control(chip->ctrl->CS[chip->csi]), acc);
++		chip->ctrl_write(bchp_nand_config(chip->ctrl->CS[chip->csi]), acc);
 +
  		nand_config &= ~(BCHP_NAND_CONFIG_BLOCK_SIZE_MASK);
  		nand_config |= (BCHP_NAND_CONFIG_BLOCK_SIZE_BK_SIZE_128KB << BCHP_NAND_CONFIG_BLOCK_SIZE_SHIFT);

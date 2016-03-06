@@ -1,0 +1,24 @@
+diff -Nuar a/drivers/media/dvb/siano/sms-cards.c b/drivers/media/dvb/siano/sms-cards.c
+--- a/drivers/media/dvb/siano/sms-cards.c	2011-11-11 22:19:27.000000000 +0200
++++ b/drivers/media/dvb/siano/sms-cards.c	2011-11-11 22:19:27.000000000 +0200
+@@ -292,19 +292,7 @@
+ 
+ int sms_board_load_modules(int id)
+ {
+-	switch (id) {
+-	case SMS1XXX_BOARD_HAUPPAUGE_CATAMOUNT:
+-	case SMS1XXX_BOARD_HAUPPAUGE_OKEMO_A:
+-	case SMS1XXX_BOARD_HAUPPAUGE_OKEMO_B:
+-	case SMS1XXX_BOARD_HAUPPAUGE_WINDHAM:
+-	case SMS1XXX_BOARD_HAUPPAUGE_TIGER_MINICARD:
+-	case SMS1XXX_BOARD_HAUPPAUGE_TIGER_MINICARD_R2:
+-		request_module("smsdvb");
+-		break;
+-	default:
+-		/* do nothing */
+-		break;
+-	}
++	request_module("smsdvb");
+ 	return 0;
+ }
+ EXPORT_SYMBOL_GPL(sms_board_load_modules);
