@@ -3,10 +3,12 @@ inherit image_types
 IMAGE_CMD_jffs2.nfi = " \
     mkfs.jffs2 \
         --root=${IMAGE_ROOTFS}/boot \
-        --compression-mode=none \
+        --disable-compressor=lzo \
+        --compression-mode=size \
         --output=${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.boot.jffs2 \
         ${EXTRA_IMAGECMD}; \
     rm -rf ${IMAGE_ROOTFS}/boot/*; \
+    printf '/dev/mtdblock2\t/boot\t\tjffs2\tro\t\t\t\t0 0\n' >> ${IMAGE_ROOTFS}/etc/fstab; \
     mkfs.jffs2 \
         --root=${IMAGE_ROOTFS} \
         --disable-compressor=lzo \
@@ -23,7 +25,8 @@ IMAGE_CMD_jffs2.nfi = " \
 IMAGE_CMD_sum.jffs2.nfi = " \
     mkfs.jffs2 \
         --root=${IMAGE_ROOTFS}/boot \
-        --compression-mode=none \
+        --disable-compressor=lzo \
+        --compression-mode=size \
         --output=${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.boot.jffs2 \
         ${EXTRA_IMAGECMD}; \
     sumtool \
@@ -31,10 +34,11 @@ IMAGE_CMD_sum.jffs2.nfi = " \
         -o ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.boot.sum.jffs2 \
         ${EXTRA_IMAGECMD}; \
     rm -rf ${IMAGE_ROOTFS}/boot/*; \
+    printf '/dev/mtdblock2\t/boot\t\tjffs2\tro\t\t\t\t0 0\n' >> ${IMAGE_ROOTFS}/etc/fstab; \
     mkfs.jffs2 \
         --root=${IMAGE_ROOTFS} \
         --enable-compressor=lzo \
-        --compression-mode=priority \
+        --compression-mode=size \
         --output=${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.jffs2 \
         ${EXTRA_IMAGECMD}; \
     sumtool \
@@ -51,17 +55,20 @@ IMAGE_CMD_sum.jffs2.nfi = " \
 IMAGE_CMD_ubi.nfi = " \
     mkfs.jffs2 \
         --root=${IMAGE_ROOTFS}/boot \
-        --compression-mode=none \
+        --disable-compressor=lzo \
+        --compression-mode=size \
         --output=${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.boot.jffs2 \
         ${EXTRA_IMAGECMD}; \
     if 	[ "${MACHINE}" = "dm7020hd" ]; then \
         mkfs.jffs2 \
             --root=${IMAGE_ROOTFS}/boot \
-            --compression-mode=none \
+            --disable-compressor=lzo \
+            --compression-mode=size \
             --output=${DEPLOY_DIR_IMAGE}/${IMAGE_NAMEV2}.boot.jffs2 \
             ${EXTRA_IMAGECMDV2}; \
-    fi; \		
+    fi; \
     rm -rf ${IMAGE_ROOTFS}/boot/*; \
+    printf '/dev/mtdblock2\t/boot\t\tjffs2\tro\t\t\t\t0 0\n' >> ${IMAGE_ROOTFS}/etc/fstab; \
     echo \[root\] > ubinize.cfg; \
     echo mode=ubi >> ubinize.cfg; \
     echo image=${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.ubifs >> ubinize.cfg; \
@@ -80,7 +87,7 @@ IMAGE_CMD_ubi.nfi = " \
             echo vol_name=data >> ubinize.cfg; \
             echo vol_size=${UBINIZE_DATAVOLSIZE} >> ubinize.cfg; \
             echo vol_flags=autoresize >> ubinize.cfg; \
-            printf '/dev/ubi0_1\t/data\t\tubifs\trw\t\t\t\t0 0\n' >> ${IMAGE_ROOTFS}/etc/fstab; \
+            printf '/dev/ubi0_1\t/data\t\tubifs\trw,nofail\t\t\t\t0 0\n' >> ${IMAGE_ROOTFS}/etc/fstab; \
             install -d ${IMAGE_ROOTFS}/data; \
         fi; \
     fi; \
@@ -114,7 +121,7 @@ IMAGE_CMD_ubi.nfi = " \
                 echo vol_name=data >> ubinize.cfg; \
                 echo vol_size=${UBINIZE_DATAVOLSIZEV2} >> ubinize.cfg; \
                 echo vol_flags=autoresize >> ubinize.cfg; \
-                printf '/dev/ubi0_1\t/data\t\tubifs\trw\t\t\t\t0 0\n' >> ${IMAGE_ROOTFS}/etc/fstab; \
+                printf '/dev/ubi0_1\t/data\t\tubifs\trw,nofail\t\t\t\t0 0\n' >> ${IMAGE_ROOTFS}/etc/fstab; \
                 install -d ${IMAGE_ROOTFS}/data; \
             fi; \
         fi; \
