@@ -10,7 +10,7 @@ VERSION := "${PV}"
 PV = "${VERSION}+git${SRCPV}"
 PKGV = "${VERSION}+git${GITPKGV}"
 
-SRCREV = "c396f4753c103b1930b2b25ea528cfeaaf7c51fe"
+SRCREV = "95d4dd192e659f297e782fd71edbee038f9dc443"
 
 SRC_URI = "git://git.opendreambox.org/git/buildimage.git;protocol=git"
 
