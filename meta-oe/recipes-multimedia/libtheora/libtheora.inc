@@ -2,7 +2,7 @@ SECTION = "libs"
 SUMMARY = "theora  is a high-quality video codec \
 that is free of intellectual property restrictions"
 LICENSE = "BSD"
-LIC_FILES_CHKSUM = "files://LICENSE;md5=82ccf023e3ce1aa18043edc61f948e2c"
+LIC_FILES_CHKSUM = "file://COPYING;md5=cf91718f59eb6a83d06dc7bcaf411132"
 DEPENDS = "pkgconfig libogg"
 
 INC_PR = "r3"
