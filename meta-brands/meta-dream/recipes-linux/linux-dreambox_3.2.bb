@@ -1,3 +1,11 @@
+SUMMARY = "Linux kernel for ${MACHINE}"
+SECTION = "kernel"
+LICENSE = "GPLv2"
+LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
+
+PRECOMPILED_ARCH = "${MACHINE}"
+PRECOMPILED_ARCH_dm7020hdv2 = "dm7020hd"
+
 inherit kernel machine_kernel_pr
 
 MACHINE_KERNEL_PR_append = ".1"
@@ -30,10 +38,37 @@ SRC_URI = " \
     file://dvb_usb_disable_rc_polling.patch \
     file://dvb-usb-smsdvb_fix_frontend.patch \
     file://0001-it913x-backport-changes-to-3.2-kernel.patch \
-    file://0001-linuxtv-api-DMM-drivers-are-now-ready-for-linux-tv-a.patch;apply=no \
     file://0001-correctly-initiate-nand-flash-ecc-config-when-old-2n.patch \
+    file://rtl8712-fix-warnings.patch;apply=no \
+    file://fixme-hardfloat.patch;apply=no \
     file://defconfig \
 "
+
+PACKAGES_DYNAMIC = "kernel-*"
+
+# For packages that RDEPEND on particular kernel modules, list the ones built into
+# the kernel here, so that it is known that the kernel has them built in.
+KERNEL_BUILTIN_MODULES = ""
+
+KERNEL_BUILTIN_MODULES_dm8000 = "\
+    kernel-module-aes-generic \
+    kernel-module-crc32c \
+    kernel-module-mac80211 \
+    kernel-module-cfg80211 \
+    kernel-module-ath \
+    kernel-module-ath5k \
+    kernel-module-sr-mod \
+    kernel-module-isofs \
+    kernel-module-udf \
+    "
+
+# By default, kernel.bbclass modifies package names to allow multiple kernels
+# to be installed in parallel. We revert this change and rprovide the versioned
+# package names instead, to allow only one kernel to be installed.
+PKG_kernel-base = "kernel-base"
+PKG_kernel-image = "kernel-image"
+RPROVIDES_kernel-base = "kernel-${KERNEL_VERSION}"
+RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION} ${KERNEL_BUILTIN_MODULES}"
 
 SRC_URI[kernel.md5sum] = "7ceb61f87c097fc17509844b71268935"
 SRC_URI[kernel.sha256sum] = "c881fc2b53cf0da7ca4538aa44623a7de043a41f76fd5d0f51a31f6ed699d463"
@@ -47,11 +82,70 @@ SRC_URI[unionfs.sha256sum] = "ce6ffa3c17a11dcca24196c11f6efc95c59b65a5b99958e73e
 S = "${WORKDIR}/linux-3.2"
 B = "${WORKDIR}/build"
 
+export OS = "Linux"
+KERNEL_OBJECT_SUFFIX = "ko"
+KERNEL_OUTPUT = "vmlinux"
 KERNEL_IMAGETYPE = "vmlinux"
-KERNEL_OUTPUT = "${KERNEL_IMAGETYPE}"
-KERNEL_CONSOLE = "${@base_contains('MACHINE_FEATURES', 'usbconsole', 'ttyS0,115200', 'null', d)}"
+KERNEL_IMAGEDEST = "/boot"
 
-require linux-dreambox.inc
+FILES_kernel-image = "${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz"
+
+do_install_append() {
+        ${STRIP} ${D}/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION}
+        gzip -9 ${D}/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION}
+        echo "/boot/bootlogo-${PRECOMPILED_ARCH}.elf.gz filename=/boot/bootlogo-${PRECOMPILED_ARCH}.jpg" > ${D}/${KERNEL_IMAGEDEST}/autoexec.bat
+        echo "/boot/${KERNEL_IMAGETYPE}-${KERNEL_VERSION}.gz ${CMDLINE}" >> ${D}/${KERNEL_IMAGEDEST}/autoexec.bat
+}
+
+FILES_kernel-image += "${KERNEL_IMAGEDEST}/autoexec*.bat"
+FILES_kernel-vmlinux = "/boot/vmlinux-${KERNEL_VERSION}*"
+
+pkg_preinst_kernel-image() {
+    if [ -z "$D" ]
+    then
+        if mountpoint -q /${KERNEL_IMAGEDEST}
+        then
+            mount -o remount,rw,compr=none /${KERNEL_IMAGEDEST}
+        else
+            mount -t jffs2 -o rw,compr=none mtd:boot /${KERNEL_IMAGEDEST} || mount -t jffs2 -o rw,compr=none mtd:'boot partition' /${KERNEL_IMAGEDEST}
+        fi
+    fi
+}
+pkg_prerm_kernel-image() {
+    if [ -z "$D" ]
+    then
+        if mountpoint -q /${KERNEL_IMAGEDEST}
+        then
+            mount -o remount,rw,compr=none /${KERNEL_IMAGEDEST}
+        else
+            mount -t jffs2 -o rw,compr=none mtd:boot /${KERNEL_IMAGEDEST}
+        fi
+    fi
+}
+pkg_postinst_kernel-image() {
+        if [ -z "$D" ] && mountpoint -q /${KERNEL_IMAGEDEST}; then
+                if grep -q '\<root=/dev/mtdblock3\>' /proc/cmdline && grep -q '\<root=ubi0:rootfs\>' /boot/autoexec.bat; then
+                        sed -ie 's!${CMDLINE_UBI}!${CMDLINE_JFFS2}!' /boot/autoexec.bat;
+                fi
+                umount /${KERNEL_IMAGEDEST};
+        fi
+}
+pkg_postrm_kernel-image() {
+    if [ -z "$D" ]
+    then
+        umount /${KERNEL_IMAGEDEST}
+    fi
+}
+
+# Do not use update-alternatives!
+pkg_postinst_kernel () {
+}
+pkg_postrm_kernel () {
+}
+
+CMDLINE_JFFS2 = "root=/dev/mtdblock3 rootfstype=jffs2 rw ${CMDLINE_CONSOLE}"
+CMDLINE_UBI = "ubi.mtd=root root=ubi0:rootfs rootfstype=ubifs rw ${CMDLINE_CONSOLE}"
+CMDLINE = "${@base_contains('IMAGE_FSTYPES', 'ubinfi', '${CMDLINE_UBI}', '${CMDLINE_JFFS2}', d)}"
 
 do_rm_work() {
 }
