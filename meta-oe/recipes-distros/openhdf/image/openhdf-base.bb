@@ -19,7 +19,7 @@ RDEPENDS_${PN} = "\
     hddtemp \
     busybox-cron \
     python-gdata \
-	python-requests \
+    python-requests \
     unrar \
     ofgwrite \
     packagegroup-base-smbfs-client \
