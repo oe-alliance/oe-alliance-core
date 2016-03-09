@@ -1,0 +1,20 @@
+--- a/src/shared/missing.h	2016-03-09 16:59:01.609087098 +0100
++++ b/src/shared/missing.h	2016-03-09 17:12:48.733071372 +0100
+@@ -55,6 +55,8 @@
+ #    define __NR_getrandom 352
+ #  elif defined(__s390x__)
+ #    define __NR_getrandom 349
++#  elif defined(__sh__)
++#    define __NR_getrandom 337
+ #  else
+ #    warning "__NR_getrandom unknown for your architecture"
+ #    define __NR_getrandom 0xffffffff
+@@ -126,6 +128,8 @@
+ #    define __NR_name_to_handle_at 370
+ #  elif defined(__powerpc__)
+ #    define __NR_name_to_handle_at 345
++#  elif defined(__sh__)
++#    define __NR_name_to_handle_at 338
+ #  else
+ #    error "__NR_name_to_handle_at is not defined"
+ #  endif
