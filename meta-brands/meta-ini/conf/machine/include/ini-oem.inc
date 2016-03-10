@@ -12,6 +12,7 @@ ${@base_contains('MACHINEBUILD', 'sezam5000hd', '5000-HD' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'sezammarvel', 'Marvel' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'xpeedlx', 'LX-x' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'xpeedlx3', 'LX-3' , '', d)}\
+${@base_contains('MACHINEBUILD', 'xpeedlxpro', 'Xpeed LX Pro' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbmini', 'Premium Mini' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbminiplus', 'Premium Mini Plus' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbhybrid', 'Premium Hybrid' , '', d)}\
@@ -37,6 +38,7 @@ ${@base_contains('MACHINEBUILD', 'sezam5000hd', 'Sezam' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'sezammarvel', 'Sezam' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'xpeedlx', 'GI' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'xpeedlx3', 'GI' , '', d)}\
+${@base_contains('MACHINEBUILD', 'xpeedlxpro', 'GI' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbmini', 'Miraclebox' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbminiplus', 'Miraclebox' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbhybrid', 'Miraclebox' , '', d)}\
@@ -62,6 +64,7 @@ ${@base_contains('MACHINEBUILD', 'sezam5000hd', 'hdx' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'sezammarvel', 'hdp' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'xpeedlx', 'xpeedlx' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'xpeedlx3', 'xpeedlx3' , '', d)}\
+${@base_contains('MACHINEBUILD', 'xpeedlxpro', 'xpeedlxpro' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbmini', 'miraclebox/mini' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbminiplus', 'miraclebox/miniplus' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbhybrid', 'miraclebox/minihybrid' , '', d)}\
@@ -87,6 +90,7 @@ ${@base_contains('MACHINEBUILD', 'sezam5000hd', 'mtd1' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'sezammarvel', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'xpeedlx', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'xpeedlx3', 'mtd2' , '', d)}\
+${@base_contains('MACHINEBUILD', 'xpeedlxpro', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbmini', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbminiplus', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbhybrid', 'mtd2' , '', d)}\
@@ -112,6 +116,7 @@ ${@base_contains('MACHINEBUILD', 'sezam5000hd', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'sezammarvel', 'mtd0' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'xpeedlx', 'mtd0' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'xpeedlx3', 'mtd0' , '', d)}\
+${@base_contains('MACHINEBUILD', 'xpeedlxpro', 'mtd0' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbmini', 'mtd0' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbminiplus', 'mtd0' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbhybrid', 'mtd0' , '', d)}\
@@ -137,6 +142,7 @@ ${@base_contains('MACHINEBUILD', 'sezam5000hd', 'inihdx' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'sezammarvel', 'ini-900' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'xpeedlx', 'inihde' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'xpeedlx3', 'ini-900' , '', d)}\
+${@base_contains('MACHINEBUILD', 'xpeedlxpro', 'yhgd5034' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbmini', 'inihde' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbminiplus', 'inihde2sv' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbhybrid', 'inihde2sv' , '', d)}\
@@ -208,7 +214,7 @@ IMAGE_CMD_ubi_append = "\
     mv ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.ubi ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/${ROOTFS_FILE}; \
     gzip -f -9c ${DEPLOY_DIR_IMAGE}/vmlinux-${MACHINE}.bin > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/${KERNEL_FILE}; \
     echo ${IMAGE_VER_STRING} > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/imageversion; \
-    echo "rename this file to 'force' to force an update without confirmation" > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/noforce; \
+    ${@base_contains("MACHINEBUILD", "xpeedlxpro", "echo "rename this file to 'force' to force an update without confirmation" > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/force;" , "echo "rename this file to 'force' to force an update without confirmation" > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/noforce;", d)} \
     cd ${DEPLOY_DIR_IMAGE}; \
     zip ${IMAGE_NAME}_usb.zip ${IMAGEDIR}/*; \
     rm -f ${DEPLOY_DIR_IMAGE}/*.ubi; \
