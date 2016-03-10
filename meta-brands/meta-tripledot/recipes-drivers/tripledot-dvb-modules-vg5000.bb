@@ -1,6 +1,6 @@
 KV = "3.14.2"
-SRCDATE = "20160302"
+SRCDATE = "20160309"
 
 require tripledot-dvb-modules.inc
-SRC_URI[md5sum] = "309f416c18ad3e386f26c02425c88465"
-SRC_URI[sha256sum] = "adbfbd578023495a088dbeab7737636ce906a15893ceccb5fd5749563109137d"
+SRC_URI[md5sum] = "e3ccbb1bb564c5079813c89e7f64d600"
+SRC_URI[sha256sum] = "fc281cba0e1f24557b93e2e89ee07eca220ef0d25ec1f30d9b28807b9fd8ba08"
