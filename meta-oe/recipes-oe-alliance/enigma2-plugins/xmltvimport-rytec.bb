@@ -6,7 +6,7 @@ LICENSE = "WTFPL"
 require conf/license/license-gplv2.inc
 
 PV = "20160308"
-PR = "r1"
+PR = "r2"
 SRC_URI = "http://rytecepg.ipservers.eu/epg_data/rytec.sources.xml.${PV}.gz \
     file://satmate.sources.xml \
     "
@@ -23,6 +23,6 @@ FILES_${PN} = "/etc/xmltvimport"
 
 do_install() {
     install -d ${D}/etc/xmltvimport
-    install -m 644 ${S}/rytec.sources.xml.${PV} ${D}/etc/xmltvimport/
+    install -m 644 ${S}/rytec.sources.xml.${PV} ${D}/etc/xmltvimport/rytec.sources.xml
     install -m 644 ${S}/satmate.sources.xml ${D}/etc/xmltvimport/
 }
