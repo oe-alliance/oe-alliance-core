@@ -82,7 +82,7 @@ index 52b07a8..af25f70 100644
  
      obj-m += aotom.o
 diff --git a/frontcontroller/aotom_spark/aotom_main.c b/frontcontroller/aotom_spark/aotom_main.c
-index 895f51c..93fe8c8 100644
+index 4c5d82b..d630806 100644
 --- a/frontcontroller/aotom_spark/aotom_main.c
 +++ b/frontcontroller/aotom_spark/aotom_main.c
 @@ -5,6 +5,7 @@
@@ -93,7 +93,7 @@ index 895f51c..93fe8c8 100644
   *
   * This program is free software; you can redistribute it and/or modify
   * it under the terms of the GNU General Public License as published by
-@@ -52,6 +53,7 @@
+@@ -51,6 +52,7 @@
  #include <linux/rtc.h>
  #include <linux/platform_device.h>
  
@@ -101,7 +101,7 @@ index 895f51c..93fe8c8 100644
  #include "aotom_main.h"
  
  static short paramDebug = 0;
-@@ -78,6 +80,7 @@ typedef struct
+@@ -77,6 +79,7 @@ typedef struct
  	int state;
  	int period;
  	int stop;
@@ -109,7 +109,7 @@ index 895f51c..93fe8c8 100644
  	struct task_struct *led_task;
  	struct semaphore led_sem;
  } tLedState;
-@@ -114,7 +117,8 @@ static struct task_struct *draw_task = 0;
+@@ -113,7 +116,8 @@ static struct task_struct *draw_task = 0;
  #define DRAW_THREAD_STATUS_INIT     2
  static int draw_thread_status = DRAW_THREAD_STATUS_STOPPED;
  
@@ -119,7 +119,7 @@ index 895f51c..93fe8c8 100644
  
  static void clear_display(void)
  {
-@@ -354,7 +358,7 @@ int vfd_init_func(void)
+@@ -353,7 +357,7 @@ int vfd_init_func(void)
  	return 0;
  }
  
@@ -128,7 +128,7 @@ index 895f51c..93fe8c8 100644
  {
  	int  res = 0;
  	dprintk(5, "%s > %d, %d\n", __func__, which, on);
-@@ -373,8 +377,77 @@ static int aotomSetIcon(int which, int on)
+@@ -372,8 +376,77 @@ static int aotomSetIcon(int which, int on)
  	return res;
  }
  
@@ -207,7 +207,7 @@ index 895f51c..93fe8c8 100644
  
  static ssize_t AOTOMdev_write(struct file *filp, const char *buff, size_t len, loff_t *off)
  {
-@@ -940,6 +1013,11 @@ static struct platform_driver aotom_rtc_driver =
+@@ -939,6 +1012,11 @@ static struct platform_driver aotom_rtc_driver =
  	},
  };
  
@@ -219,7 +219,7 @@ index 895f51c..93fe8c8 100644
  static int __init aotom_init_module(void)
  {
  	int i;
-@@ -955,6 +1033,8 @@ static int __init aotom_init_module(void)
+@@ -954,6 +1032,8 @@ static int __init aotom_init_module(void)
  		return -1;
  	if (register_chrdev(VFD_MAJOR, "VFD", &vfd_fops))
  		printk("unable to get major %d for VFD\n", VFD_MAJOR);
@@ -228,7 +228,7 @@ index 895f51c..93fe8c8 100644
  	sema_init(&write_sem, 1);
  	sema_init(&draw_thread_sem, 1);
  	for (i = 0; i < LED_COUNT; i++)
-@@ -962,6 +1042,7 @@ static int __init aotom_init_module(void)
+@@ -961,6 +1041,7 @@ static int __init aotom_init_module(void)
  		led_state[i].state = LED_OFF;
  		led_state[i].period = 0;
  		led_state[i].stop = 1;
@@ -236,7 +236,7 @@ index 895f51c..93fe8c8 100644
  		sema_init(&led_state[i].led_sem, 0);
  		led_state[i].led_task = kthread_run(led_thread, (void *) i, "led_thread");
  	}
-@@ -982,6 +1063,7 @@ static int __init aotom_init_module(void)
+@@ -981,6 +1062,7 @@ static int __init aotom_init_module(void)
  		rtc_pdev = platform_device_register_simple(RTC_NAME, -1, NULL, 0);
  	if (IS_ERR(rtc_pdev))
  		printk(KERN_ERR "%s platform_device_register_simple failed: %ld\n", __func__, PTR_ERR(rtc_pdev));
@@ -244,7 +244,7 @@ index 895f51c..93fe8c8 100644
  	dprintk(5, "%s <\n", __func__);
  	return 0;
  }
-@@ -1014,9 +1096,15 @@ static void __exit aotom_cleanup_module(void)
+@@ -1013,9 +1095,15 @@ static void __exit aotom_cleanup_module(void)
  		msleep(1);
  	dprintk(5, "[BTN] unloading ...\n");
  	button_dev_exit();
@@ -262,10 +262,10 @@ index 895f51c..93fe8c8 100644
  module_init(aotom_init_module);
 diff --git a/frontcontroller/aotom_spark/aotom_procfs.c b/frontcontroller/aotom_spark/aotom_procfs.c
 new file mode 100644
-index 0000000..340a593
+index 0000000..83fd4e4
 --- /dev/null
 +++ b/frontcontroller/aotom_spark/aotom_procfs.c
-@@ -0,0 +1,702 @@
+@@ -0,0 +1,753 @@
 +/*
 + * aotom_procfs.c
 + *
@@ -302,6 +302,7 @@ index 0000000..340a593
 + *  /proc/
 + *             |
 + *             +--- vfd (w)
++ "             +--- progress (rw)
 + *  /proc/stb/fp
 + *             |
 + *             +--- aotom (w)
@@ -369,6 +370,7 @@ index 0000000..340a593
 +
 +static int rtc_offset = 0;
 +static u32 wakeup_time = 0;
++static int progress = 0;
 +
 +static int vfd_write(struct file *file, const char __user *buf,
 +                           unsigned long count, void *data)
@@ -387,6 +389,49 @@ index 0000000..340a593
 +    free_page((unsigned long)page);
 +  }
 +  return ret;
++}
++
++static int progress_write(struct file *file, const char __user *buf,
++                           unsigned long count, void *data)
++{
++	char* page;
++	char* myString;
++	ssize_t ret = -ENOMEM;
++	page = (char*)__get_free_page(GFP_KERNEL);
++	if (page)
++	{
++		ret = -EFAULT;
++		if (copy_from_user(page, buf, count))
++			goto out;
++		myString = (char*) kmalloc(count+1, GFP_KERNEL);
++		strncpy(myString, page, count);
++		myString[count] = '\0';
++		sscanf(myString, "%d", &progress);
++		kfree(myString);
++		if (aotomGetVersion() != YWPANEL_FP_DISPTYPE_LED) {
++			myString = (char*) kmalloc(count+6, GFP_KERNEL);
++			if (myString) {
++				strcpy(myString, "Load ");
++				strncat(myString, page, count);
++				aotomWriteText(myString, (count+6) < 8 ? (count+6) : 8);
++				kfree(myString);
++			}
++		}
++		else {
++			aotomWriteText(page, count);
++		}
++	}
++	ret = count;
++out:
++	free_page((unsigned long)page);
++	return ret;
++}
++
++static int progress_read(char *page, char **start, off_t off, int count, int *eof, void *data) {
++	int len = 0;
++	if(NULL != page)
++		len = sprintf(page,"%d\n", progress);
++	return len;
 +}
 +
 +// Proc for accessing quick control of aotom
@@ -495,6 +540,7 @@ index 0000000..340a593
 +	char *page = NULL;
 +	ssize_t ret = -ENOMEM;
 +	int test = -1;
++	u32 rtc_time;
 +	char *myString = kmalloc(count + 1, GFP_KERNEL);
 +	printk("%s %ld - ", __FUNCTION__, count);
 +	page = (char *)__get_free_page(GFP_KERNEL);
@@ -506,7 +552,11 @@ index 0000000..340a593
 +		strncpy(myString, page, count);
 +		myString[count] = '\0';
 +		printk("%s -> %s\n",__FUNCTION__, myString);
++		rtc_time = YWPANEL_FP_GetTime()-rtc_offset;
 +		test = sscanf (myString,"%d",&rtc_offset);
++		// Update time with new offset
++		YWPANEL_FP_SetTime(rtc_time+rtc_offset);
++		YWPANEL_FP_ControlTimer(true);
 +		printk(" offset: %d\n",rtc_offset);
 +		/* always return count to avoid endless loop */
 +		ret = count;
@@ -923,6 +973,7 @@ index 0000000..340a593
 +} fp_procs[] =
 +{
 +  { "vfd", NULL, vfd_write },
++  { "progress", progress_read, progress_write },
 +  { "stb/fp/rtc", aotom_read_rtc, aotom_write_rtc },
 +  { "stb/fp/rtc_offset", aotom_read_rtc_offset, aotom_write_rtc_offset },
 +  { "stb/fp/aotom", NULL, aotom_write },
