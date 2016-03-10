@@ -5,14 +5,14 @@ LICENSE = "WTFPL"
 
 require conf/license/license-gplv2.inc
 
-PV = "20151125"
+PV = "20160308"
 PR = "r1"
-SRC_URI = "http://rytecepg.ipservers.eu/epg_data/rytec.sources.${PV}.zip \
+SRC_URI = "http://rytecepg.ipservers.eu/epg_data/rytec.sources.xml.${PV}.gz \
     file://satmate.sources.xml \
     "
 
-SRC_URI[md5sum] = "55a391ef99b22617c759525063b0ea2d"
-SRC_URI[sha256sum] = "591fe09304f2418866b48fe6049f18c2da7cb89068259c6cbca6f3237c570cff"
+SRC_URI[md5sum] = "e23973ddadc095828c9fc0d0a1581ab4"
+SRC_URI[sha256sum] = "bace6cd1dd9696e927e831ab46c58bbc18a9029714343caabd83c5470dea80c3"
 
 S = "${WORKDIR}"
 
