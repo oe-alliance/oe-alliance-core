@@ -2,12 +2,13 @@ HOMEPAGE = "https://github/Duckbox-Developers/apps"
 SECTION = "base"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
-DEPENDS = "fulan-dvb-modules"
+DEPENDS = "fulan-dvb-modules-${MACHINE}"
 
-SRCREV = "6d79026a12591038663721c14adb76f8f5c3cc42"
-INC_PR = "r1"
-PV = "1.0"
-PKGV = "1.0"
+inherit autotools gitpkgv
+
+SRCREV = "${AUTOREV}"
+PV = "1.0+git${SRCPV}"
+PKGV = "1.0+git${GITPKGV}"
 
 SRC_URI = " \
     git://github.com/Duckbox-Developers/apps.git;protocol=git \
@@ -15,9 +16,7 @@ SRC_URI = " \
 
 S = "${WORKDIR}/git/tools"
 
-inherit autotools 
-
-EXTRA_OECONF = "--enable-silent-rules --enable-maintainer-mode --prefix="
+EXTRA_OECONF = "--enable-silent-rules --prefix="
 
 LDFLAGS += "-lpthread -lrt"
 

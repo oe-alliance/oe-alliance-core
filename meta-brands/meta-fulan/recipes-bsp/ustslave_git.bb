@@ -4,3 +4,4 @@ require ddt-apps.inc
 
 RDEPEND += "stslave-fw"
 
+PR = "r0"

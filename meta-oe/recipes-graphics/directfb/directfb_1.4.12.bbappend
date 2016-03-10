@@ -4,7 +4,7 @@ RREPLACES_${PN} += "stm-directfb"
 RCONFLICTS_${PN} += "stm-directb"
 
 DEPENDS += " \
-    ${@base_contains("BRAND_OEM", "fulan", "fulan-dvb-modules" , "", d)} \
+    ${@base_contains("BRAND_OEM", "fulan", "fulan-dvb-modules-${MACHINE}" , "", d)} \
 "
 
 SRC_URI_prepend_sh4 = " \

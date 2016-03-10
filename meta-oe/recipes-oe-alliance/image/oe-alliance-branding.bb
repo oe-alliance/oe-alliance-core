@@ -116,7 +116,7 @@ do_configure_prepend() {
             DRIVERSDATE="20150618"
         fi
     elif [ "${BRAND_OEM}" = "fulan" ]; then
-        DRIVERSDATE=`grep "SRCDATE = " ${OEA-META-FULAN-BASE}/recipes-drivers/fulan-dvb-modules.bb | cut -b 12-19`
+        DRIVERSDATE=`grep "SRCDATE = " ${OEA-META-FULAN-BASE}/recipes-drivers/fulan-dvb-modules-${MACHINE}.bb | cut -b 12-19`
     else
         DRIVERSDATE='N/A'
     fi
