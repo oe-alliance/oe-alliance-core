@@ -23,6 +23,6 @@ FILES_${PN} = "/etc/xmltvimport"
 
 do_install() {
     install -d ${D}/etc/xmltvimport
-    install -m 644 ${S}/rytec.sources.xml ${D}/etc/xmltvimport/
+    install -m 644 ${S}/rytec.sources.xml.${PV} ${D}/etc/xmltvimport/
     install -m 644 ${S}/satmate.sources.xml ${D}/etc/xmltvimport/
 }
