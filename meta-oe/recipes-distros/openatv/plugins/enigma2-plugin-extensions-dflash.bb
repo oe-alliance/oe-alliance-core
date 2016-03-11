@@ -4,7 +4,7 @@ SECTION = "base"
 PRIORITY = "required"
 LICENSE = "proprietary"
 PACKAGE_ARCH = "all"
-RDEPENDS = "dreambox-buildimage"
+RDEPENDS_${PN} = "dreambox-buildimage"
 
 require conf/license/license-gplv2.inc
 
