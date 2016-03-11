@@ -1,18 +1,18 @@
 SUMMARY = "direct Flashing and Backup for Enigma2"
-MAINTAINER = "gutemine <gutemine@unknown.com>"
+MAINTAINER = "gutemine <gutemine@oozoon.de>"
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "proprietary"
 PACKAGE_ARCH = "all"
-DEPENDS = "enigma2"
+RDEPENDS_${PN} = "dreambox-buildimage"
 
 require conf/license/license-gplv2.inc
 
 inherit gitpkgv
 SRCREV = "${AUTOREV}"
-PV = "12.6+git${SRCPV}"
-PKGV = "12.6+git${GITPKGV}"
-VER ="12.6"
+PV = "13.7+git${SRCPV}"
+PKGV = "13.7+git${GITPKGV}"
+VER ="13.7"
 PR = "r0"
 
 SRC_URI="git://github.com/openatv/enigma2-plugin-extensions-dflash.git"
@@ -23,18 +23,9 @@ FILES_${PN} = "/usr/*"
 
 do_install() {
     cp -rp ${S}/usr ${D}/
-    chmod -R 777 ${D}/usr/lib/enigma2/python/Plugins/Extensions/dFlash
-}
-
-pkg_postinst_${PN}() {
-#!/bin/sh
-rm usr/lib/enigma2/python/Plugins/Extensions/WebInterface/WebChilds/External/dFlash* > /dev/null 2>&1
-rm usr/lib/enigma2/python/Plugins/Extensions/WebInterface/WebChilds/External/dflash* > /dev/null 2>&1
-if grep -qs dm7025 /proc/stb/info/model -o grep -qs dm800 /proc/stb/info/model; then
-   rm /usr/lib/enigma2/python/Plugins/Extensions/dFlash/bin/mkfs.ubifs > /dev/null 2>&1
-   touch /usr/lib/enigma2/python/Plugins/Extensions/dFlash/bin/mkfs.ubifs > /dev/null 2>&1
-fi                                            
-exit 0
+    install -d ${D}/usr/sbin
+    install -m 0755 ${S}/bin/nand_check ${D}/usr/sbin/nand_check
+    install -m 0755 ${S}/bin/nfiwrite ${D}/usr/sbin/nfiwrite
 }
 
 pkg_postrm_${PN}() {
@@ -44,3 +35,5 @@ rm /usr/lib/enigma2/python/Plugins/Extensions/WebInterface/web-data/img/ring.png
 rm -r /usr/lib/enigma2/python/Plugins/Extensions/dFlash > /dev/null 2>&1
 exit 0
 }
+
+do_package_qa[noexec] = "1"

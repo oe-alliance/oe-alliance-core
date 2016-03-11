@@ -1,0 +1,75 @@
+From 9d25a2a1d546e94ea0adaa38ec27c176ed9163f8 Mon Sep 17 00:00:00 2001
+From: captain <openatv@gmail.com>
+Date: Fri, 11 Mar 2016 19:04:47 +0100
+Subject: [PATCH] add -e option for warn only
+
+---
+ src/buildimage.c | 15 ++++++++++++++-
+ 1 file changed, 14 insertions(+), 1 deletion(-)
+
+diff --git a/src/buildimage.c b/src/buildimage.c
+index de27994..4edf17b 100644
+--- a/src/buildimage.c
++++ b/src/buildimage.c
+@@ -74,6 +74,7 @@ static const struct option options[] = {
+ 	{ "flash-size", required_argument, NULL, 'f' },
+ 	{ "help", no_argument, NULL, 'h' },
+ 	{ "raw", no_argument, NULL, 'r' },
++	{ "warning", no_argument, NULL, 'w' },
+ 	{ "sector-size", required_argument, NULL, 's' },
+ 	{ NULL, 0, NULL, 0 },
+ };
+@@ -85,6 +86,7 @@ static bool broadcom_nand;
+ static bool hw_ecc;
+ static bool large_page;
+ static bool raw;
++static bool warning_only;
+ 
+ /* reserve to two sectors plus 1% for badblocks, and round down */
+ static inline size_t badblock_safe(size_t x)
+@@ -390,8 +392,15 @@ static bool partition_append(const char *option, fnc_encode_ecc encode)
+ 			num_partitions, (unsigned long long)st.st_size,
+ 			(unsigned long long)badblock_safe(val), filename);
+ 	if (st.st_size > badblock_safe(val)) {
++	     if (warning_only)
++	        {
++		fprintf(stderr, "Partition #%u (%s) is too big. This doesn't work in Flash.", num_partitions, filename);
++	        }
++	     else
++	        {
+ 		fprintf(stderr, "Partition #%u (%s) is too big. This doesn't work. Sorry.", num_partitions, filename);
+ 		return false;
++	        }
+ 	}
+ 
+ 	f = fopen(filename, "r");
+@@ -450,6 +459,7 @@ static const char usage[] =
+ "    -r             --raw\n"
+ "    -B             --brcmnand\n"
+ "    -H             --hw-ecc (for boot partition)\n"
++"    -w             --warning on size limits\n"
+ "\n"
+ "  buildimage -a dm8000 -e 0x20000 -f 0x4000000 -s 2048 \\\n"
+ "             -b 0x100000:secondstage-dm8000.bin -d 0x300000:boot.jffs2 \\\n"
+@@ -462,7 +472,7 @@ int main(int argc, char *argv[])
+ 	const char *arch = NULL;
+ 	int opt;
+ 
+-	while ((opt = getopt_long(argc, argv, "BHa:b:d:e:f:ho:rs:", options, NULL)) != -1) {
++	while ((opt = getopt_long(argc, argv, "BHa:b:d:e:f:ho:rws:", options, NULL)) != -1) {
+ 		switch (opt) {
+ 		case 'B':
+ 			broadcom_nand = true;
+@@ -509,6 +519,9 @@ int main(int argc, char *argv[])
+ 		case 'r':
+ 			raw = true;
+ 			break;
++		case 'w':
++			warning_only = true;
++			break;
+ 		case 's':
+ 			/* minimum: 512 bytes */
+ 			if (!parse_size(optarg, &sector_size) || (sector_size & 0x1ff)) {
+-- 
+2.6.3.windows.1
+

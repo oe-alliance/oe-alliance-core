@@ -27,7 +27,7 @@ SRC_URI = " \
     file://rtl8712-backport-c.patch \
     file://rtl8712-backport-d.patch \
     file://make-3.82-hack.patch \
-    file://0001-brmcnand_base-disable-flash-BBT-on-64MB-nand.patch \
+    file://0001-brmcnand_base-disable-flash-BBT-on-64MB-nand.patch;apply=no \
     file://0002-ubifs-add-config-option-to-use-zlib-as-default-compr.patch \
     file://em28xx_fix_terratec_entries.patch \
     file://em28xx_add_terratec_h5_rev3.patch \
