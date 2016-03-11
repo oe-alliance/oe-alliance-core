@@ -20,6 +20,4 @@ S = "${WORKDIR}/git"
 
 inherit autotools
 
-BBCLASSEXTEND = "native"
-
 OPENDREAMBOX_PROJECT = "buildimage"
