@@ -19,6 +19,7 @@ RDEPENDS_${PN} = "\
     hddtemp \
     busybox-cron \
     python-gdata \
+    python-requests \
     unrar \
     ofgwrite \
     "
