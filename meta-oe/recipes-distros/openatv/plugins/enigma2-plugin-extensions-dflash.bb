@@ -4,7 +4,7 @@ SECTION = "base"
 PRIORITY = "required"
 LICENSE = "proprietary"
 PACKAGE_ARCH = "all"
-DEPENDS = "dreambox-buildimage, mtd-utils-ubifs, mtd-utils-jffs2, mtd-utils"
+DEPENDS = "dreambox-buildimage mtd-utils-ubifs mtd-utils-jffs2 mtd-utils"
 
 require conf/license/license-gplv2.inc
 
