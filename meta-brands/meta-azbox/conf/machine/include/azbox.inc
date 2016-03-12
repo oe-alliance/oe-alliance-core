@@ -41,7 +41,7 @@ EXTRA_IMAGEDEPENDS += " \
     kmod \
     "
 
-MACHINE_EXTRA_RDEPENDS_${PN} = " \
+MACHINE_EXTRA_RDEPENDS = " \
     enigma2-plugin-systemplugins-rtisys \
     enigma2-plugin-systemplugins-videosettingssetup \
     "
