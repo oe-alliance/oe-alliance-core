@@ -11,8 +11,8 @@ SRCDATE = "20160125"
 PV = "${KV}+${SRCDATE}"
 PR = "r1"
 
-SRC_URI[md5sum] = "d072cd602211a6b4a1eda968df36cdc1"
-SRC_URI[sha256sum] = "083d15a07f8702e1216f5ec39ee1879d1459e307a6ee7ae223651fed856dae93"
+SRC_URI[md5sum] = "b26afc5dcf01cae27db27bc9f0ab02ce"
+SRC_URI[sha256sum] = "5736bec09ef68014c94837f3ebabb96d2d0a492d58e3d6e58c747610a5084411"
 
 SRC_URI = "http://code-ini.com/software/drivers/ini-x000-drivers-${KV}-${SRCDATE}.zip"
 
