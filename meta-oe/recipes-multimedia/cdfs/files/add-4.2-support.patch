@@ -1,5 +1,5 @@
 diff --git a/audio.c b/audio.c
-index 98f4fd15a5f2..281023ae2da4 100644
+index 98f4fd1..281023a 100644
 --- a/audio.c
 +++ b/audio.c
 @@ -166,7 +166,17 @@ void cdfs_cdda_file_read(struct inode * inode, char * buf, size_t count, unsigne
@@ -35,7 +35,7 @@ index 98f4fd15a5f2..281023ae2da4 100644
  };
  
 diff --git a/cdXA.c b/cdXA.c
-index 3649fdeddb80..e1e12e99c582 100644
+index 3649fde..e1e12e9 100644
 --- a/cdXA.c
 +++ b/cdXA.c
 @@ -26,8 +26,12 @@
@@ -52,7 +52,7 @@ index 3649fdeddb80..e1e12e99c582 100644
  };
  
 diff --git a/cddata.c b/cddata.c
-index 0d21062d09d4..e1494a7093b7 100644
+index 0d21062..e1494a7 100644
 --- a/cddata.c
 +++ b/cddata.c
 @@ -76,8 +76,12 @@ unsigned cdfs_data_bmap(struct super_block * sb, int inode, int block){
@@ -69,7 +69,7 @@ index 0d21062d09d4..e1494a7093b7 100644
    .mmap             = generic_file_mmap
  #else
 diff --git a/cdfs.h b/cdfs.h
-index bfb5f1586ef1..d95c048f06f2 100644
+index bfb5f15..d95c048 100644
 --- a/cdfs.h
 +++ b/cdfs.h
 @@ -204,7 +204,9 @@ extern int kcdfsd_pid;
@@ -84,7 +84,7 @@ index bfb5f1586ef1..d95c048f06f2 100644
  #endif
  
 diff --git a/hfs.c b/hfs.c
-index 62f444da66ce..5804e5248ed6 100644
+index 9513059..5804e52 100644
 --- a/hfs.c
 +++ b/hfs.c
 @@ -194,8 +194,12 @@ void cdfs_copy_from_cdhfs(struct super_block * sb, int inode, unsigned int start
@@ -100,3 +100,11 @@ index 62f444da66ce..5804e5248ed6 100644
    .mmap             = generic_file_mmap
  };
  
+@@ -206,7 +210,6 @@ int kcdfsd_add_cdhfs_request(struct file * file, struct page *page){
+ #else
+   return kcdfsd_add_request(file->f_dentry, page, CDHFS_REQUEST);
+ #endif
+-  
+ }
+ 
+ struct address_space_operations cdfs_cdhfs_aops = {

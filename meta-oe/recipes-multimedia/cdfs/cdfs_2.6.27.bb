@@ -4,6 +4,8 @@ SECTION = "kernel/modules"
 LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=8ca43cbc842c2336e835926c2166c28b"
 
+MACHINE_KERNEL_PR_append = ".5"
+
 SRC_URI = " \
         http://users.elis.ugent.be/~mronsse/cdfs/download/${P}.tar.bz2 \
         file://0001-Fix-compile-error-with-linux-2.6.32.patch \
@@ -15,8 +17,8 @@ SRC_URI = " \
         file://0001-support-up-to-3.12.patch \
         file://add-3.14-support.patch \
         file://0001-add-3.16-support.patch \
-        file://0001-add-3.19-support.patch \
-        file://0001-add-4.1-support.patch \
+        file://add-4.0-support.patch \
+        file://add-4.2-support.patch \
 "
 SRC_URI[md5sum] = "ac64c014a90e3c488394832ea29605b3"
 SRC_URI[sha256sum] = "d034f6c6d9578fe2addfaeceaa101584a4a1fc9f27d825c340baebd345d8d724"

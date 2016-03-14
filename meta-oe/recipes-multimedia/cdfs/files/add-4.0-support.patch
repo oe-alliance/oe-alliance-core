@@ -1,0 +1,90 @@
+Index: cdfs-2.6.27/root.c
+===================================================================
+--- cdfs-2.6.27.orig/root.c	2015-04-17 21:47:45.913480810 +0200
++++ cdfs-2.6.27/root.c	2015-04-17 21:47:46.041480805 +0200
+@@ -456,7 +456,11 @@
+ #else
+ static int cdfs_readdir(struct file *filp, void *dirent, filldir_t filldir) {
+ #endif
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(3, 19, 0)
++  struct inode *inode = filp->f_path.dentry->d_inode;
++#else
+   struct inode *inode = filp->f_dentry->d_inode;
++#endif
+   int i;
+   cd * this_cd = cdfs_info(inode->i_sb);
+ 
+Index: cdfs-2.6.27/audio.c
+===================================================================
+--- cdfs-2.6.27.orig/audio.c	2015-04-17 21:47:45.973480808 +0200
++++ cdfs-2.6.27/audio.c	2015-04-17 21:47:46.041480805 +0200
+@@ -187,12 +187,20 @@
+ 
+ int kcdfsd_add_cdda_request(struct file * file, struct page *page){
+   PRINT("kcdfsd_add_cdda_request(%x, %x)\n", file, page);
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(3, 19, 0)
++  return kcdfsd_add_request(file->f_path.dentry, page, CDDA_REQUEST);
++#else
+   return kcdfsd_add_request(file->f_dentry, page, CDDA_REQUEST);
++#endif
+ }
+ 
+ int kcdfsd_add_cdda_raw_request(struct file * file, struct page *page){
+   PRINT("kcdfsd_add_cdda_request(%x, %x)\n", file, page);
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(3, 19, 0)
++  return kcdfsd_add_request(file->f_path.dentry, page, CDDA_RAW_REQUEST);
++#else
+   return kcdfsd_add_request(file->f_dentry, page, CDDA_RAW_REQUEST);
++#endif
+ }
+ 
+ struct address_space_operations cdfs_cdda_aops = {
+Index: cdfs-2.6.27/cdXA.c
+===================================================================
+--- cdfs-2.6.27.orig/cdXA.c	2015-04-17 21:47:44.561480865 +0200
++++ cdfs-2.6.27/cdXA.c	2015-04-17 21:47:46.041480805 +0200
+@@ -38,7 +38,11 @@
+ /************************************************************/
+ 
+ int kcdfsd_add_cdXA_request(struct file * file, struct page *page){
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(3, 19, 0)
++  return kcdfsd_add_request(file->f_path.dentry, page, CDXA_REQUEST);
++#else
+   return kcdfsd_add_request(file->f_dentry, page, CDXA_REQUEST);
++#endif
+ }
+ 
+ /***********************************************************/            
+Index: cdfs-2.6.27/cddata.c
+===================================================================
+--- cdfs-2.6.27.orig/cddata.c	2009-12-21 15:04:03.000000000 +0100
++++ cdfs-2.6.27/cddata.c	2015-04-17 21:53:20.069467131 +0200
+@@ -97,7 +97,11 @@
+ /************************************************************/
+ 
+ int kcdfsd_add_cddata_request(struct file * file, struct page *page){
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(3, 19, 0)
++  return kcdfsd_add_request(file->f_path.dentry, page, CDDATA_REQUEST);
++#else
+   return kcdfsd_add_request(file->f_dentry, page, CDDATA_REQUEST);
++#endif
+ }
+ 
+ /***********************************************************/            
+Index: cdfs-2.6.27/hfs.c
+===================================================================
+--- cdfs-2.6.27.orig/hfs.c	2009-12-21 14:54:06.000000000 +0100
++++ cdfs-2.6.27/hfs.c	2015-04-17 21:54:42.085463773 +0200
+@@ -201,7 +201,12 @@
+ 
+ 
+ int kcdfsd_add_cdhfs_request(struct file * file, struct page *page){
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(3, 19, 0)
++  return kcdfsd_add_request(file->f_path.dentry, page, CDHFS_REQUEST);
++#else
+   return kcdfsd_add_request(file->f_dentry, page, CDHFS_REQUEST);
++#endif
++  
+ }
+ 
+ struct address_space_operations cdfs_cdhfs_aops = {
