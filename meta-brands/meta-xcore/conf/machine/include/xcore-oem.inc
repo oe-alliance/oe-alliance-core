@@ -23,7 +23,7 @@ ${@base_contains('MACHINEBUILD', 'osminiplus', 'Edision' , '', d)}\
 
 IMAGEDIR ?= "\
 ${@base_contains('MACHINEBUILD', 'spycat', 'spycat' , '', d)}\
-${@base_contains('MACHINEBUILD', 'spycatmini', 'spycat' , '', d)}\
+${@base_contains('MACHINEBUILD', 'spycatmini', 'spycatmini' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'vp7358ci', 'vp7358ci' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'bcm7358', 'bcm7358' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'osmini', 'osmini' , '', d)}\
