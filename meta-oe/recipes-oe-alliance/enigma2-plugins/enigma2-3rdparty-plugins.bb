@@ -11,7 +11,7 @@ DEPENDS = "tslib mpfr gmp"
 SRCREV = "${AUTOREV}"
 PV = "3.2+gitr${SRCPV}"
 PKGV = "3.2+gitr${GITPKGV}"
-PR = "r42"
+PR = "r43"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -30,7 +30,6 @@ S = "${WORKDIR}/git"
 THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-sundtekcontrolcenter-20151106-1.ipk \
     enigma2-plugin-extensions-atmolightd_0.7-pre22_all.ipk \
-    enigma2-plugin-extensions-autobouquets-e2_20160202_all.ipk \
     enigma2-plugin-extensions-bildonline_3.1rc6_mips32el.ipk \
     enigma2-plugin-extensions-bluray_1.5c3_mips32el.ipk \
     enigma2-plugin-extensions-boblight-enigma2_0.8r8_mips32el.ipk \
