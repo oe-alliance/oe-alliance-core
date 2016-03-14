@@ -1,0 +1,100 @@
+//cdtextunfi: update for libcdio >= 0.90
+
+diff --git a/src/cdtextinfo.c b/src/cdtextinfo.c
+index e4a6440..5ea0568 100644 (file)
+--- a/src/cdtextinfo.c
++++ b/src/cdtextinfo.c
+@@ -258,9 +258,20 @@ int print_cddb_info(CdIo_t *p_cdio, track_t i_tracks, track_t i_first_track)
+ 
+ int print_cdtext_info(CdIo_t *p_cdio, track_t i_tracks, track_t i_track)
+ {
+-    const cdtext_t *cdtext = cdio_get_cdtext(p_cdio, 0);
+-
+-    if ( cdtext == NULL || cdtext && !cdtext->field[9] )
++    const cdtext_t *cdtext;
++    const char *field = NULL;
++
++#if CDIO_API_VERSION >= 6
++    cdtext = cdio_get_cdtext(p_cdio);
++    if (cdtext)
++       field = cdtext_get(cdtext, CDTEXT_FIELD_TITLE, 0);
++#else
++    cdtext = cdio_get_cdtext(p_cdio, 0);
++    if (cdtext)
++       field = cdtext->field[CDTEXT_TITLE];
++#endif
++
++    if ( cdtext == NULL || field == NULL )
+     {
+        if ( options.xml )
+            printf("\t<query source=\"CD-TEXT\" num_matches=\"0\" />\n");
+@@ -277,12 +288,17 @@ int print_cdtext_info(CdIo_t *p_cdio, track_t i_tracks, track_t i_track)
+        cdtext_field_t i;
+        for (i=0; i < MAX_CDTEXT_FIELDS; i++)
+        {
+-           if (cdtext->field[i])
++#if CDIO_API_VERSION >= 6
++           field = cdtext_get(cdtext, i, 0);
++#else
++           field = cdtext->field[i];
++#endif
++           if (field)
+            {
+                if ( options.xml )
+-                   printf("\t\t\t\t<%s>%s</%s>\n",cdtext_field2str(i),cdtext->field[i],cdtext_field2str(i));
++                   printf("\t\t\t\t<%s>%s</%s>\n",cdtext_field2str(i), field, cdtext_field2str(i));
+                else
+-                   printf("%s:%s\n", cdtext_field2str(i), cdtext->field[i]);
++                   printf("%s:%s\n", cdtext_field2str(i), field);
+            }
+        }
+        if ( options.xml )
+@@ -296,9 +312,11 @@ int print_cdtext_info(CdIo_t *p_cdio, track_t i_tracks, track_t i_track)
+ 
+        for ( ; i_track < i_tracks; i_track++ )
+        {
+-           const cdtext_t *cdtext = cdio_get_cdtext(p_cdio, i_track);
++#if CDIO_API_VERSION < 6
++           cdtext = cdio_get_cdtext(p_cdio, i_track);
+            if (!cdtext)
+                continue;
++#endif
+ 
+            if ( options.xml )
+            {
+@@ -307,17 +325,29 @@ int print_cdtext_info(CdIo_t *p_cdio, track_t i_tracks, track_t i_track)
+                cdtext_field_t i;
+                for (i=0; i < MAX_CDTEXT_FIELDS; i++)
+                {
+-                   if (cdtext->field[i])
++#if CDIO_API_VERSION >= 6
++                   field = cdtext_get(cdtext, i, i_track);
++#else
++                   field = cdtext->field[i];
++#endif
++                   if (field)
+                    {
+                        if ( options.xml )
+-                           printf("\t\t\t\t\t\t<%s>%s</%s>\n",cdtext_field2str(i),cdtext->field[i],cdtext_field2str(i));
++                           printf("\t\t\t\t\t\t<%s>%s</%s>\n",cdtext_field2str(i), field, cdtext_field2str(i));
+                    }
+                }
+                printf("\t\t\t\t</track>\n");
+            }
+ 
+-           else if (cdtext->field[9])
+-               printf("%d:%s\n", i_track, cdtext->field[9]);
++           else {
++#if CDIO_API_VERSION >= 6
++               field = cdtext_get(cdtext, CDTEXT_FIELD_TITLE, i_track);
++#else
++               field = cdtext->field[CDTEXT_TITLE];
++#endif
++               if (field)
++                   printf("%d:%s\n", i_track, field);
++           }
+        }
+ 
+        if ( options.xml )
+RSS
+Atom
