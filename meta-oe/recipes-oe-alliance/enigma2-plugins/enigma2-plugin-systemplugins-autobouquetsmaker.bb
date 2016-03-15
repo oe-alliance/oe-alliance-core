@@ -10,7 +10,7 @@ inherit autotools-brokensep gitpkgv pythonnative
 SRCREV = "${AUTOREV}"
 PV = "2.1+git${SRCPV}"
 PKGV = "2.1+git${GITPKGV}"
-PR = "r0"
+PR = "r1"
 
 SRC_URI = "git://github.com/oe-alliance/AutoBouquetsMaker.git;protocol=git"
 
@@ -23,7 +23,7 @@ EXTRA_OECONF = " \
 
 S = "${WORKDIR}/git"
 
-DEPENDS = "engima2"
+DEPENDS = "enigma2"
 
 python populate_packages_prepend() {
     enigma2_plugindir = bb.data.expand('${libdir}/enigma2/python/Plugins', d)
