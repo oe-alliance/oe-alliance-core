@@ -25,6 +25,8 @@ do_compile_append() {
 
 do_install() {
    install -d ${D}/usr/share/enigma2
-   cp ${S}/Nashu/NOVUM_FHD_Light ${D}/usr/share/enigma2/
+   cp -rp ${S}/Nashu/NOVUM_FHD_Light ${D}/usr/share/enigma2/
    chmod -R a+rX ${D}/usr/share/enigma2/
 }
+
+do_package_qa[noexec] = "1"
