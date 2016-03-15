@@ -16,7 +16,6 @@ PACKAGES += " \
 
 PROVIDES += " \
     enigma2-plugin-extensions-autotimer \
-    enigma2-plugin-systemplugins-autobouquetsmaker \
     enigma2-plugin-extensions-btdevicesmanager \
     enigma2-plugin-systemplugins-blindscan \
     enigma2-plugin-extensions-dlnabrowser \
@@ -67,7 +66,6 @@ DEPENDS = "\
     "
 
 DESCRIPTION_enigma2-plugin-systemplugins-audioeffect = "Audio Effect setup"
-DESCRIPTION_enigma2-plugin-systemplugins-autobouquetsmaker = "Automatically build and update bouquets from the DVB stream."
 DESCRIPTION_enigma2-plugin-extensions-btdevicesmanager = "this is bt devices manger to pair e.x keyboard or mouse"
 RDEPENDS_enigma2-plugin-extensions-btdevicesmanager = "${BLUEZ}-testtools ${BLUEZ} bluez-hcidump bluez-hidd"
 DESCRIPTION_enigma2-plugin-systemplugins-blindscan = "blindscan..."
@@ -120,18 +118,6 @@ DESCRIPTION_enigma2-plugin-systemplugins-wirelessaccesspoint = "Using a Wireless
 RDEPENDS_enigma2-plugin-systemplugins-wirelessaccesspoint = "hostapd bridge-utils"
 DESCRIPTION_enigma2-plugin-extensions-rcuselect = "Change Remote for Wetek"
 DESCRIPTION_enigma2-plugin-extensions-rezap = "ReZap Sync Tool for Wetek"
-
-pkg_preinst_enigma2-plugin-systemplugins-autobouquetsmaker_prepend() {
-#!/bin/sh
-echo "Checking for an ABM cache file"
-
-if [ -f /usr/lib/enigma2/python/Plugins/SystemPlugins/AutoBouquetsMaker/providers/providers.cache ]; then
-	rm -f /usr/lib/enigma2/python/Plugins/SystemPlugins/AutoBouquetsMaker/providers/providers.cache > /dev/null 2>&1
-	echo "Cache file has been removed"
-else
-	echo "No cache file found"
-fi
-}
 
 inherit autotools-brokensep gitpkgv pythonnative
 
