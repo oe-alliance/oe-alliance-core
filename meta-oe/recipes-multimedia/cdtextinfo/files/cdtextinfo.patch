@@ -1,0 +1,64 @@
+diff --git a/src/cdtextinfo.c b/src/cdtextinfo.c
+index e4a6440..e16ba36 100644
+--- a/src/cdtextinfo.c
++++ b/src/cdtextinfo.c
+@@ -258,9 +258,9 @@ int print_cddb_info(CdIo_t *p_cdio, track_t i_tracks, track_t i_first_track)
+ 
+ int print_cdtext_info(CdIo_t *p_cdio, track_t i_tracks, track_t i_track)
+ {
+-    const cdtext_t *cdtext = cdio_get_cdtext(p_cdio, 0);
++    const cdtext_t *cdtext = cdio_get_cdtext(p_cdio);
+ 
+-    if ( cdtext == NULL || cdtext && !cdtext->field[9] )
++    if ( cdtext == NULL || cdtext && !cdtext_get_const(cdtext, 9, 0) )
+     {
+        if ( options.xml )
+            printf("\t<query source=\"CD-TEXT\" num_matches=\"0\" />\n");
+@@ -277,12 +277,12 @@ int print_cdtext_info(CdIo_t *p_cdio, track_t i_tracks, track_t i_track)
+        cdtext_field_t i;
+        for (i=0; i < MAX_CDTEXT_FIELDS; i++)
+        {
+-           if (cdtext->field[i])
++           if (cdtext_get_const(cdtext, i, 0))
+            {
+                if ( options.xml )
+-                   printf("\t\t\t\t<%s>%s</%s>\n",cdtext_field2str(i),cdtext->field[i],cdtext_field2str(i));
++                   printf("\t\t\t\t<%s>%s</%s>\n",cdtext_field2str(i),cdtext_get_const(cdtext, i, 0), cdtext_field2str(i));
+                else
+-                   printf("%s:%s\n", cdtext_field2str(i), cdtext->field[i]);
++                   printf("%s:%s\n", cdtext_field2str(i), cdtext_get_const(cdtext, i, 0));
+            }
+        }
+        if ( options.xml )
+@@ -296,9 +296,6 @@ int print_cdtext_info(CdIo_t *p_cdio, track_t i_tracks, track_t i_track)
+ 
+        for ( ; i_track < i_tracks; i_track++ )
+        {
+-           const cdtext_t *cdtext = cdio_get_cdtext(p_cdio, i_track);
+-           if (!cdtext)
+-               continue;
+ 
+            if ( options.xml )
+            {
+@@ -307,17 +304,17 @@ int print_cdtext_info(CdIo_t *p_cdio, track_t i_tracks, track_t i_track)
+                cdtext_field_t i;
+                for (i=0; i < MAX_CDTEXT_FIELDS; i++)
+                {
+-                   if (cdtext->field[i])
++                   if (cdtext_get_const(cdtext, i, i_track))
+                    {
+                        if ( options.xml )
+-                           printf("\t\t\t\t\t\t<%s>%s</%s>\n",cdtext_field2str(i),cdtext->field[i],cdtext_field2str(i));
++                           printf("\t\t\t\t\t\t<%s>%s</%s>\n",cdtext_field2str(i), cdtext_get_const(cdtext, i, i_track), cdtext_field2str(i));
+                    }
+                }
+                printf("\t\t\t\t</track>\n");
+            }
+ 
+-           else if (cdtext->field[9])
+-               printf("%d:%s\n", i_track, cdtext->field[9]);
++           else if (cdtext_get_const(cdtext, 9, i_track))
++               printf("%d:%s\n", i_track, cdtext_get_const(cdtext, 9, i_track));
+        }
+ 
+        if ( options.xml )
