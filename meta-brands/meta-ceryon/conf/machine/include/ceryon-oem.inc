@@ -61,6 +61,9 @@ DVBMEDIASINK_CONFIG = "--with-wma --with-wmv --with-pcm --with-dts --with-eac3"
 TARGET_ARCH = "mipsel"
 DEFAULTTUNE = "mips32el"
 
+PREFERRED_PROVIDER_virtual/blindscan-dvbs = "ceryon-blindscan-utils"
+PREFERRED_PROVIDER_virtual/blindscan-dvbc = "ceryon-blindscan-utils"
+
 PREFERRED_PROVIDER_virtual/kernel = "linux-ceryon"
 
 PREFERRED_VERSION_linux-ceryon = "4.0.1"
@@ -101,7 +104,7 @@ IMAGE_CMD_ubi_append = "\
     rm -Rf ${IMAGEDIR}; \
     "
 
-MACHINE_FEATURES += "3dtv alsa hdmicec switchoff bootsplash omb videoenhancement directfb sdl skins1080 feature1 feature2 \
+MACHINE_FEATURES += "3dtv alsa hdmicec switchoff bootsplash omb videoenhancement directfb sdl skins1080 feature1 feature2 blindscan-dvbs blindscan-dvbc \
     ${@base_contains('MACHINEBUILD', 'e4hdhybrid', 'dvb-c dvb-c-only' , '', d)} \
 "
 
