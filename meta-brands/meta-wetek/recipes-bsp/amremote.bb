@@ -3,7 +3,7 @@ LICENSE = "GPLv2"
 SECTION = "base"
 PRIORITY = "required"
 
-PR = "r5"
+PR = "r6"
 
 require conf/license/license-gplv2.inc
 
@@ -19,6 +19,7 @@ SRC_URI = "git://github.com/wetek-enigma/amremote.git \
            file://octagonsf8.conf \
            file://wetek_et10000remote.conf \
            file://wetek_hd2400remote.conf \
+           file://wetek_tmnanoremote.conf \
 "
 
 S = "${WORKDIR}/git"
@@ -42,6 +43,7 @@ do_install() {
     install -m 0644 ${WORKDIR}/octagonsf8.conf ${D}${sysconfdir}/amremote/
     install -m 0644 ${WORKDIR}/wetek_et10000remote.conf ${D}${sysconfdir}/amremote/
     install -m 0644 ${WORKDIR}/wetek_hd2400remote.conf ${D}${sysconfdir}/amremote/
+    install -m 0644 ${WORKDIR}/wetek_tmnanoremote.conf ${D}${sysconfdir}/amremote/
 }
 
 FILES_${PN} = "${bindir} ${sysconfdir}"
