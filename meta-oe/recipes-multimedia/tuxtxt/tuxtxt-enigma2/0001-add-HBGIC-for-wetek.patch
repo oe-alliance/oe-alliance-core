@@ -1,0 +1,25 @@
+From 530e46f785f321a2ddce9bba25701a5d753e2a26 Mon Sep 17 00:00:00 2001
+From: captain <openatv@gmail.com>
+Date: Fri, 29 Jan 2016 13:34:04 +0100
+Subject: [PATCH] add HBGIC for wetek
+
+---
+ tuxtxt/tuxtxt.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tuxtxt/tuxtxt.c b/tuxtxt/tuxtxt.c
+index f550688..eef13d6 100644
+--- a/tuxtxt.c
++++ b/tuxtxt.c
+@@ -225,7 +225,7 @@ int tuxtxt_run_ui(int pid, int demux)
+ 		}
+ 		if (ioctl(rc[rc_num], EVIOCGNAME(128), tmp) < 0)
+ 			perror("EVIOCGNAME failed");
+-		if (!strstr(tmp, "remote control") && !strstr(tmp, "key"))
++		if (!strstr(tmp, "remote control") && !strstr(tmp, "key") && !strstr(tmp, "HBGIC"))
+ 		{
+ 			close(rc[rc_num]);
+ 			rc[rc_num] = -1;
+-- 
+2.6.3.windows.1
+
