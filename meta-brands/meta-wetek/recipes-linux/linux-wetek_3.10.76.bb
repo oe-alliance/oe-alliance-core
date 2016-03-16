@@ -4,8 +4,8 @@ LICENSE = "GPLv2"
 
 LIC_FILES_CHKSUM = "file://${S}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-SRC_URI[md5sum] = "df6828070cef08319f5c5780bb1edc86"
-SRC_URI[sha256sum] = "15d2a75ad9078b105ea506ec20e3a6a5fc83a41d7ba080f1486060be0f7cdcf9"
+SRC_URI[md5sum] = "ad154243840671482ff94caea3f80b47"
+SRC_URI[sha256sum] = "1925da3f7fc23fb34e7418c2b57eeec004646b7e63c5fc2c800a1fc1e7b8f499"
 
 inherit kernel machine_kernel_pr
 
@@ -16,16 +16,17 @@ DEPENDS = "xz-native bc-native u-boot-mkimage-native gcc"
 INSANE_SKIP_${PN} += "already-stripped"
 INHIBIT_PACKAGE_STRIP = "1"
 INHIBIT_PACKAGE_DEBUG_STRIP = "1"
-LINUX_VERSION ?= "3.10.93"
+LINUX_VERSION ?= "3.10.76"
 LINUX_VERSION_EXTENSION ?= "amlogic"
 
 COMPATIBLE_MACHINE = "(wetekplay)"
 
-SRC_URI = "http://github.com/wetek-enigma/linux-wetek-3.10.y/archive/master.tar.gz \
+SRC_URI = "http://github.com/wetek-enigma/linux-wetek/archive/master.tar.gz \
     file://defconfig \
+    file://fix-blocking-demux.patch \
 "
 
-S = "${WORKDIR}/linux-wetek-3.10.y-master"
+S = "${WORKDIR}/linux-wetek-master"
 B = "${WORKDIR}/build"
 
 
