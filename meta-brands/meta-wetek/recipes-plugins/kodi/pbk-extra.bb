@@ -24,6 +24,5 @@ do_install() {
 
 FILES_${PN} = "/usr/share/*"
 
-sysroot_stage_all() {
-    :
-}
+do_populate_sysroot[noexec] = "1"
+do_package_qa[noexec] = "1"
