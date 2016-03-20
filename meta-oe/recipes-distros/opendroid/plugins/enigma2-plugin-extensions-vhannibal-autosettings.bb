@@ -1,4 +1,4 @@
-DESCRIPTION = "plugins.extension-vhannibal-autosetting"
+DESCRIPTION = "vhannibal autosettings plugin"
 MAINTAINER = "opendroid"
 SECTION = "base"
 PRIORITY = "required"
@@ -9,9 +9,9 @@ require conf/license/license-gplv2.inc
 
 inherit gitpkgv
 SRCREV = "${AUTOREV}"
-PV = "3.0+git${SRCPV}"
-PKGV = "3.0+git${GITPKGV}"
-VER ="3.0"
+PV = "1.3+git${SRCPV}"
+PKGV = "1.3+git${GITPKGV}"
+VER ="1.3"
 PR = "r1"
 
 SRC_URI="git://github.com/opendroid-Team/vhannibal-autosettings.git"
