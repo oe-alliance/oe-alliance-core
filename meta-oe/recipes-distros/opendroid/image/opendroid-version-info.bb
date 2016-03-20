@@ -1,8 +1,8 @@
-SUMMARY = "OpenDroid version info"
+SUMMARY = "openDroid version info"
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "proprietary"
-MAINTAINER = "Opendroid"
+MAINTAINER = "openDroid Team"
 
 require conf/license/license-gplv2.inc
 
