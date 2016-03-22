@@ -5,10 +5,6 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 RREPLACES_${PN} += "stm-directfb"
 RCONFLICTS_${PN} += "stm-directb"
 
-DEPENDS += " \
-    ${@base_contains("BRAND_OEM", "fulan", "fulan-dvb-modules-${MACHINE}" , "", d)} \
-"
-
 SRC_URI_append_sh4 = " \
     file://DirectFB-1.7.7.stm.fixed.patch;patch=1 \
 "

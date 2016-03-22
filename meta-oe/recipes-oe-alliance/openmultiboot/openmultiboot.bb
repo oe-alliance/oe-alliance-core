@@ -12,8 +12,6 @@ PKGV = "1.0+git${GITPKGV}"
 PR = "r4"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-DEPENDS = "freetype ${@base_contains("BRAND_OEM", "fulan", "fulan-dvb-modules-${MACHINE}" , "", d)}"
-
 SRC_URI = "git://github.com/oe-alliance/openmultiboot.git;protocol=git"
 
 inherit autotools-brokensep pkgconfig

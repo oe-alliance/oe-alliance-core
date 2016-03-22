@@ -1,7 +1,7 @@
 SUMMARY = "tuxbox libtuxtxt"
 LICENSE = "LGPLv2.1"
 LIC_FILES_CHKSUM = "file://COPYING;md5=393a5ca445f6965873eca0259a17f833"
-DEPENDS = "libpng freetype ${@base_contains("BRAND_OEM", "fulan", "fulan-dvb-modules-${MACHINE}" , "", d)}"
+DEPENDS = "libpng freetype"
 PACKAGE_ARCH := "${MACHINE_ARCH}"
 
 inherit gitpkgv

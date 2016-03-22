@@ -129,10 +129,8 @@ do_install() {
         INSTALL_MOD_PATH=${D} modules_install
 
     # install header files
-    install -d ${D}/${includedir}/linux/dvb
+    install -d ${D}/${includedir}/
     install -m 644 bpamem/bpamem.h ${D}/${includedir}
-    install -m 644 player2/linux/include/linux/dvb/stm_ioctls.h ${D}/${includedir}/linux/dvb
-    install -m 644 stgfb/stmfb/linux/drivers/video/stmfb.h ${D}/${includedir}/linux
     install -m 644 multicom/include/mme.h ${D}/${includedir}
     install -m 644 include/player2/JPEG_VideoTransformerTypes.h ${D}/${includedir}
     install -m 644 include/player2/JPEGDECHW_VideoTransformerTypes.h ${D}/${includedir}
