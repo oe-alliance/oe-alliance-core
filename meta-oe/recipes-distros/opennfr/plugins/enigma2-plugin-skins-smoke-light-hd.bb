@@ -1,4 +1,4 @@
-DESCRIPTION = "Enigma2 Skin Smoke-Light-HD"
+SUMMARY = "Enigma2 Skin Smoke-Light-HD"
 MAINTAINER = "opennfr-stein17"
 SECTION = "base"
 PRIORITY = "required"
@@ -20,5 +20,8 @@ S = "${WORKDIR}/git"
 FILES_${PN} = "/usr/*"
 
 do_install() {
-	cp -rp ${S}/usr ${D}/
+    cp -rp ${S}/usr ${D}/
 }
+
+do_populate_sysroot[noexec] = "1"
+do_package_qa[noexec] = "1"

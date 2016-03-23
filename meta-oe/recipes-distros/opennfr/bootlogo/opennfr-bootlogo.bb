@@ -1,4 +1,4 @@
-DESCRIPTION = "OpenNFR bootlogo"
+SUMMARY = "OpenNFR bootlogo"
 SECTION = "base"
 PRIORITY = "required"
 MAINTAINER = "opennfr"

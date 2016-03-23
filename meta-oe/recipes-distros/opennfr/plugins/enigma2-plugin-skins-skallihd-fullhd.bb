@@ -1,4 +1,4 @@
-DESCRIPTION = "Enigma2 Skin OpenNFR-SkalliHD-FullHD"
+SUMMARY = "Enigma2 Skin OpenNFR-SkalliHD-FullHD"
 MAINTAINER = "opennfr"
 SECTION = "base"
 PRIORITY = "required"
@@ -21,5 +21,8 @@ S = "${WORKDIR}/git"
 FILES_${PN} = "/usr/*"
 
 do_install() {
-	cp -rp ${S}/usr ${D}/
+    cp -rp ${S}/usr ${D}/
 }
+
+do_populate_sysroot[noexec] = "1"
+do_package_qa[noexec] = "1"
