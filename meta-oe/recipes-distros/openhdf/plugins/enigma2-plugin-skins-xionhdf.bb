@@ -13,7 +13,7 @@ SRCREV = "${AUTOREV}"
 PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"
 VER ="1.0"
-PR = "r3"
+PR = "r5"
 
 SRC_URI="git://github.com/KravenHD/XionHDF.git"
 
@@ -58,6 +58,7 @@ exit 0
 pkg_postinst_${PN} () {
 #!/bin/sh
 if [ -f /tmp/XionHDF/skin.xml ]; then
+	cp -R /usr/share/enigma2/XionHDF/buttonsets/ /tmp/XionHDF/
 	rm -rf /usr/share/enigma2/XionHDF/
 	mv /tmp/XionHDF /usr/share/enigma2/
 fi
