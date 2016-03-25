@@ -12,7 +12,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
                     file://gst-libs/ext/libav/COPYING.LGPLv3;md5=e6a600fd5e1d9cbde2d983680233ad02"
 
 SRC_URI = " \
-    git://anongit.freedesktop.org/gstreamer/gst-libav;branch=master \
+    git://anongit.freedesktop.org/gstreamer/gst-libav;branch=master;name=master \
     git://anongit.freedesktop.org/gstreamer/common;destsuffix=git/common;name=common \
     git://source.ffmpeg.org/ffmpeg;destsuffix=git/gst-libs/ext/libav;name=ffmpeg;branch=release/3.0 \
     file://0001-Disable-yasm-for-libav-when-disable-yasm.patch \
