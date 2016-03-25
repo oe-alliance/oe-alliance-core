@@ -7,32 +7,43 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PV = "1.0"
-PR = "r6"
+PR = "r3"
 
 inherit packagegroup
 
 RRECOMMENDS_${PN} = "\
-    curlftpfs \
-    cdfs \
-    oe-alliance-skins \
-    enigma2-display-skins \
-    enigma2-skins-openvix \
-    openatv-picons-meta \
-    enigma2-skins \
-    egami-bootlogos-meta \
-    enigma2-plugin-skins.egami-egarmymoodblue \
-    enigma2-plugin-skins.egami-edreamy \
-    enigma2-plugin-skins.egami-edreamyfhd \
-    enigma2-plugin-skins.egami-a4you \
-    enigma2-plugin-skins-metrix-atv \
-    enigma2-plugin-skins-opendroid \
-    enigma2-plugin-skins-nobile \
-    enigma2-plugin-skins-pax \
-    enigma2-plugin-skincomponents-egskinscomponents \
-    enigma2-plugin-extensions-project-valerie \
-    enigma2-plugin-extensions-xmltvimport \
-    enigma2-plugin-extensions-enhancedmoviecenter \
-    enigma2-plugin-extensions-cooltvguide \
-    enigma2-plugin-extensions-bmediacenter \
-    ${@base_contains("MACHINE_FEATURES", "skins1080", "hd-skins-meta", "", d)} \
-    "
+	curlftpfs \
+	cdfs \
+	\
+	enigma2-display-skins \
+	openatv-picons-meta \
+	egami-bootlogos-meta \
+	\
+	oe-alliance-skins \
+	enigma2-skins \
+	enigma2-skins-openvix \
+	enigma2-plugin-skins.egami-egarmymoodblue \
+	enigma2-plugin-skins.egami-edreamy \
+	enigma2-plugin-skins.egami-edreamyfhd \
+	enigma2-plugin-skins.egami-a4you \
+	enigma2-plugin-skins-pli-hd \
+	enigma2-plugin-skins-metrix-atv \
+	enigma2-plugin-skins-nobile \
+	enigma2-plugin-skins-pax \
+	enigma2-plugin-skincomponents-egskinscomponents \
+	\
+	enigma2-plugin-systemplugins-autobouquetsmaker \
+	enigma2-plugin-extensions-autobouquets \
+	\
+	enigma2-plugin-extensions-project-valerie \
+	enigma2-plugin-extensions-xmltvimport \
+	enigma2-plugin-extensions-enhancedmoviecenter \
+	enigma2-plugin-extensions-cooltvguide \
+	enigma2-plugin-extensions-bmediacenter \
+	enigma2-plugin-extensions-blurayplayer \
+	enigma2-plugin-extensions-openmultiboot openmultiboot \
+	\
+	python-twisted-web python-gdata python-textutils python-json python-google-api-client python-httplib2 python-youtube-dl-src python-ctypes python-six python-oauth2client python-uritemplate \
+	\
+	${@base_contains("MACHINE_FEATURES", "skins1080", "hd-skins-meta", "", d)} \
+"

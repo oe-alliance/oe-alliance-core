@@ -10,7 +10,15 @@ PV = "${IMAGE_VERSION}"
 PR = "r${DATETIME}"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-IMAGE_INSTALL = "egami-base"
+IMAGE_INSTALL = "egami-base \
+    ${@base_contains("MACHINE_FEATURES", "singlecore", "", \
+    " \
+    packagegroup-base-smbfs-client \
+    packagegroup-base-smbfs-server \
+    packagegroup-base-smbfs-utils \
+    packagegroup-base-nfs \
+    ", d)} \
+    "
 
 export IMAGE_BASENAME = "egami-image"
 IMAGE_LINGUAS = ""

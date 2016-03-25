@@ -7,43 +7,53 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "1.0"
-PR = "r9"
+PR = "r1"
 
 inherit packagegroup
 
-RCONFLICTS_${PN} = "enigma2-plugin-extensions-permanenttimeshift enigma2-plugin-systemplugins-skinselector"
-RREPLACES_${PN} = "enigma2-plugin-extensions-permanenttimeshift enigma2-plugin-systemplugins-skinselector"
+DEPENDS = "enigma2-pliplugins egami-feeds"
 
-DEPENDS = "egami-feeds"
-
-RDEPENDS_${PN} = "\
+RRECOMMENDS_${PN} = "\
+    kernel-module-ftdi-sio \
+    kernel-module-pl2303 \
+    \
+    streamripper \
+    \
     enigma2-skindefault \
     \
     enigma2-plugin-extensions-autotimer \
     enigma2-plugin-extensions-epgsearch \
     enigma2-plugin-extensions-imdb \
+    enigma2-plugin-extensions-dvdplayer \
     enigma2-plugin-extensions-mediaplayer \
     enigma2-plugin-extensions-cutlisteditor \
+    enigma2-plugin-extensions-moviecut \
     enigma2-plugin-extensions-filecommander \
-    enigma2-plugin-extensions-accuweather \
     enigma2-plugin-extensions-egamipermanentclock \
     enigma2-plugin-extensions-egaminews \
-    enigma2-plugin-extensions-egamiboot \
-    enigma2-plugin-extensions-egamifaq \
+    ${@base_contains("MACHINE_BRAND", "WeTeK", "", "enigma2-plugin-extensions-egamiboot", d)} \
     \
-    enigma2-plugin-systemplugins-egamipluginspeedup \
+    enigma2-plugin-extensions-weatherplugin enigma2-plugin-systemplugins-weathercomponenthandler enigma2-plugin-skincomponents-weathercomponent \
     \
     ${@base_contains("MACHINE_BRAND", "Sezam", "${SEZAM_PLUGINS}" , "", d)} \
-"
-
-RRECOMMENDS_${PN} = "\
-    enigma2-plugin-extensions-enhancedmoviecenter \
+    ${@base_contains("MACHINE_FEATURES", "dreamboxv2", "enigma2-plugin-extensions-dbackup", "", d)} \
+    ${@base_contains("MACHINE_FEATURES", "boxmodel", "boxmodel", "", d)} \
+    ${@base_contains("MACHINE_FEATURES", "uianimation", "enigma2-plugin-systemplugins-animationsetup" , "", d)} \
+    ${@base_contains("MACHINE_FEATURES", "osdanimation", "enigma2-plugin-systemplugins-animationsetup" , "", d)} \
+    ${@base_contains("MACHINE_FEATURES", "webkithbbtv", "webkit-hbbtv-browser", "", d)} \
+    ${@base_contains("MACHINE_FEATURES", "grautec", "enigma2-plugin-extensions-grautec", "", d)} \
+    ${@base_contains("MACHINE_FEATURES", "chromiumos", "enigma2-plugin-extensions-chromium", "", d)} \
+    ${@base_contains("MACHINE_FEATURES", "smallflash", "", "enigma2-plugin-extensions-enhancedmoviecenter", d)} \
+    ${@base_contains("MACHINE_FEATURES", "videoenhancement", "", "enigma2-plugin-systemplugins-videoenhancement", d)} \
     \
     enigma2-plugin-systemplugins-crossepg \
     enigma2-plugin-systemplugins-softwaremanager \
+    \
+    enigma2-plugin-systemplugins-egamipluginspeedup \
 "
+
 SEZAM_PLUGINS = "\
     enigma2-plugin-systemplugins-3gmodemmanager \
     enigma2-plugin-systemplugins-fastscan \
-    enigma2-plugin-extensions-inimytube python-twisted-web python-gdata python-textutils python-json python-google-api-client python-httplib2 python-youtube-dl-src python-ctypes python-six python-oauth2client python-uritemplate \
+    enigma2-plugin-extensions-youtube \
 "
