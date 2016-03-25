@@ -24,7 +24,6 @@ RDEPENDS_${PN} = "\
     busybox-cron \
     python-imaging \
     ofgwrite \
-    libcrypto-compat-0.9.8 \
     python-gdata \
     libshowiframe \
     dvbsnoop \
