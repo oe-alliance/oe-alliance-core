@@ -3,7 +3,7 @@
 # and set the correct videomode before showing the bootlogo
 [ -f /etc/videomode ] && cat /etc/videomode > /proc/stb/video/videomode
 
-[ -f /etc/init.d/bootlogo2.py ] && /usr/bin/python /etc/init.d/bootlogo2.py &
+#[ -f /etc/init.d/bootlogo2.py ] && /usr/bin/python /etc/init.d/bootlogo2.py &
 
 BOOTLOGO=/usr/share/bootlogo.mvi
 [ -f /etc/enigma2/bootlogo.mvi ] && BOOTLOGO=/etc/enigma2/bootlogo.mvi

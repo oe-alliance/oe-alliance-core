@@ -15,7 +15,7 @@ INHIBIT_PACKAGE_STRIP = "1"
  
 ALLOW_EMPTY_${PN} = "1"
 
-PR = "r19"
+PR = "r1"
 
 S="${WORKDIR}/git/files"
 
@@ -24,13 +24,13 @@ do_install() {
     install -m 755 ${S}/bin/emud ${D}/bin/emud
     install -m 755 ${S}/bin/installer ${D}/bin/installer
     install -m 755 ${S}/bin/zip ${D}/bin/zip
-    
+
     install -d ${D}/etc
     cp -a ${S}/etc/* ${D}/etc/
-        
+
     install -d ${D}/scripts
     cp -a ${S}/scripts/* ${D}/scripts/
-    
+
     install -d ${D}/media
     mkdir -p ${D}/media/card
     mkdir -p ${D}/media/cf

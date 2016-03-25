@@ -7,28 +7,24 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "1.0"
-PR = "r8"
+PR = "r1"
 
 inherit packagegroup
 
 RDEPENDS_${PN} = "\
-    oe-alliance-base \
-    \
-    egami-enigma2 \
-    egami-bootlogo \
-    egami-version-info \
-    egami-base-files \
-    \
-    libcrypto-compat-0.9.8 \
-    \
-    python-imaging python-compression \
-    rtmpdump \
-    packagegroup-base-smbfs-client \
-    busybox-cron \
-    ntfs-3g \
-    hddtemp hdparm \
-    mc \
-    dvbsnoop \
-    minidlna djmount \
-    ofgwrite \
-    "
+	oe-alliance-base \
+	\
+	egami-enigma2 \
+	egami-bootlogo \
+	egami-version-info \
+	egami-base-files \
+	\
+	python-imaging python-compression \
+	packagegroup-base-smbfs-client \
+	busybox-cron \
+	ntfs-3g \
+	dosfstools \
+	hddtemp hdparm \
+	dvbsnoop \
+	djmount \
+"

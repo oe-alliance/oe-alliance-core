@@ -242,10 +242,15 @@ SRC_URI_append_openatv = " \
 SRC_URI_append_openhdf = " \
     file://tuxbox_fix_DVB_API_VERSION_check_for_gcc5.patch \
     "
+SRC_URI_append_opennfr = " \
+    file://tuxbox_fix_DVB_API_VERSION_check_for_gcc5.patch \
+    "
 SRC_URI_append_opendroid = " \
     file://tuxbox_fix_DVB_API_VERSION_check_for_gcc5.patch \
     "
-
+SRC_URI_append_egami = " \
+    file://tuxbox_fix_DVB_API_VERSION_check_for_gcc5.patch \
+    "
 
 S = "${WORKDIR}/git"
 
