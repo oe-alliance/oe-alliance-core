@@ -1,0 +1,165 @@
+diff --git a/addons/library.xbmc.addon/libXBMC_addon.h b/addons/library.xbmc.addon/libXBMC_addon.h
+index 40dbca7..5014fb2 100644
+--- a/addons/library.xbmc.addon/libXBMC_addon.h
++++ b/addons/library.xbmc.addon/libXBMC_addon.h
+@@ -59,6 +59,8 @@ typedef intptr_t      ssize_t;
+ #define ADDON_HELPER_ARCH       "mipsel-oe-linux"
+ #elif defined(__mips__)
+ #define ADDON_HELPER_ARCH       "mips"
++#elif defined(TARGET_DVBBOXARM) // oskwon
++#define ADDON_HELPER_ARCH       "arm"
+ #else
+ #define ADDON_HELPER_ARCH       "i486-linux"
+ #endif
+diff --git a/configure.ac b/configure.ac
+index 16ccb0b..7ae1ce6 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -768,6 +768,19 @@ case $use_platform in
+      CFLAGS="$CFLAGS"
+      CXXFLAGS="$CXXFLAGS"
+      ;;
++  dvbboxarm)
++     target_platform=target_dvbbox
++     ARCH="arm"
++     use_arch="arm"
++     use_joystick=no
++     use_gles=yes
++     use_x11=no
++     use_wayland=no
++     AC_DEFINE(HAS_EGLGLES, [1], [Define if supporting EGL based GLES Framebuffer])
++     USE_DVBBOXARM_EGL=1
++     CFLAGS="$CFLAGS"
++     CXXFLAGS="$CXXFLAGS"
++     ;;
+ esac
+ 
+ if test "$host_vendor" = "apple"; then
+diff --git a/m4/xbmc_arch.m4 b/m4/xbmc_arch.m4
+index e72c460..d21f482 100644
+--- a/m4/xbmc_arch.m4
++++ b/m4/xbmc_arch.m4
+@@ -84,5 +84,8 @@ case $use_platform in
+   dvbbox)
+      AC_SUBST(ARCH_DEFINES, "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -D_MIPSEL -DTARGET_DVBBOX")
+      ;;
++  dvbboxarm)
++     AC_SUBST(ARCH_DEFINES, "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_DVBBOXARM")
++     ;;
+ esac
+ ])
+diff --git a/xbmc/input/linux/LinuxInputDevices.cpp b/xbmc/input/linux/LinuxInputDevices.cpp
+index 984e6ce..bb09e57 100644
+--- a/xbmc/input/linux/LinuxInputDevices.cpp
++++ b/xbmc/input/linux/LinuxInputDevices.cpp
+@@ -260,7 +260,7 @@ KeyMap keyMap[] = {
+   { 378               , XBMCK_RIGHT       }, // Green
+   { 381               , XBMCK_UP          }, // Yellow
+   { 366               , XBMCK_DOWN        }, // Blue
+-#if defined(TARGET_DVBBOX)
++#if defined(TARGET_DVBBOX) || defined(TARGET_DVBBOXARM)
+   { KEY_OK            , XBMCK_RETURN      }, // Ok
+   { KEY_EXIT          , XBMCK_ESCAPE      }, // EXIT
+ #endif
+@@ -541,7 +541,7 @@ bool CLinuxInputDevice::KeyEvent(const struct input_event& levt, XBMC_Event& dev
+ 
+ 
+     int keyMapValue;
+-#if defined(TARGET_DVBBOX)
++#if defined(TARGET_DVBBOX) || defined(TARGET_DVBBOXARM)
+     if (devt.key.keysym.mod & (XBMCKMOD_SHIFT | XBMCKMOD_CAPS)) keyMapValue = entry.shift;
+     else if (devt.key.keysym.mod & XBMCKMOD_ALT) keyMapValue = entry.alt;
+     else if (devt.key.keysym.mod & XBMCKMOD_META) keyMapValue = entry.altShift;
+@@ -733,7 +733,7 @@ XBMC_Event CLinuxInputDevice::ReadEvent()
+       break;
+     }
+ 
+-#if defined(TARGET_DVBBOX)
++#if defined(TARGET_DVBBOX) || defined(TARGET_DVBBOXARM)
+     if (access("/tmp/playing.lock", F_OK) == 0) {
+         break;
+     }
+@@ -983,7 +983,7 @@ bool CLinuxInputDevices::CheckDevice(const char *device)
+   if (fd < 0)
+     return false;
+ 
+-#if !defined(TARGET_DVBBOX) && !defined(VKEY_ENABLE) // oskwon
++#if !defined(TARGET_DVBBOX) && !defined(TARGET_DVBBOXARM) && !VKEY_ENABLE // oskwon
+   if (ioctl(fd, EVIOCGRAB, 1) && errno != EINVAL)
+   {
+     close(fd);
+@@ -1083,7 +1083,7 @@ bool CLinuxInputDevice::Open()
+     return false;
+   }
+ 
+-#if !defined(TARGET_DVBBOX) && !defined(VKEY_ENABLE)
++#if !defined(TARGET_DVBBOX) && !defined(TARGET_DVBBOXARM) && !VKEY_ENABLE
+   /* grab device */
+   ret = ioctl(fd, EVIOCGRAB, 1);
+   if (ret && errno != EINVAL)
+@@ -1160,7 +1160,7 @@ bool CLinuxInputDevice::Open()
+ 
+ driver_open_device_error:
+ 
+-#if !defined(TARGET_DVBBOX) && !defined(VKEY_ENABLE)
++#if !defined(TARGET_DVBBOX) && !defined(TARGET_DVBBOXARM) && !VKEY_ENABLE
+   ioctl(fd, EVIOCGRAB, 0);
+ #endif
+   if (m_vt_fd >= 0)
+@@ -1236,7 +1236,7 @@ bool CLinuxInputDevice::GetKeymapEntry(KeymapEntry& entry)
+  */
+ void CLinuxInputDevice::Close()
+ {
+-#if !defined(TARGET_DVBBOX) && !defined(VKEY_ENABLE)
++#if !defined(TARGET_DVBBOX) && !defined(TARGET_DVBBOXARM) && !VKEY_ENABLE
+   /* release device */
+   ioctl(m_fd, EVIOCGRAB, 0);
+ #endif
+diff --git a/xbmc/utils/CPUInfo.cpp b/xbmc/utils/CPUInfo.cpp
+index e305073..77471a4 100644
+--- a/xbmc/utils/CPUInfo.cpp
++++ b/xbmc/utils/CPUInfo.cpp
+@@ -270,7 +270,7 @@ CCPUInfo::CCPUInfo(void)
+   if (m_fProcTemperature == NULL)   
+     m_fProcTemperature = fopen("/sys/class/thermal/thermal_zone0/temp", "r");  // On Raspberry PIs
+ 
+-#if defined(TARGET_DVBBOX)
++#if defined(TARGET_DVBBOX) || defined(TARGET_DVBBOXARM) // oskwon
+   m_fCPUFreq = fopen ("/sys/devices/platform/brcmstb/cpu_khz", "r");
+ #else
+   m_fCPUFreq = fopen ("/sys/devices/system/cpu/cpu0/cpufreq/scaling_cur_freq", "r");
+@@ -326,7 +326,7 @@ CCPUInfo::CCPUInfo(void)
+           StringUtils::Trim(m_cores[nCurrId].m_strModel);
+         }
+       }
+-#if defined(TARGET_DVBBOX)
++#if defined(TARGET_DVBBOX) || defined(TARGET_DVBBOXARM) // oskwon
+       else if (strncmp(buffer, "system type", strlen("system type"))==0)
+       {
+         char *needle = strstr(buffer, ":");
+diff --git a/xbmc/windowing/egl/EGLWrapper.cpp b/xbmc/windowing/egl/EGLWrapper.cpp
+index 96c3461..669e58e 100644
+--- a/xbmc/windowing/egl/EGLWrapper.cpp
++++ b/xbmc/windowing/egl/EGLWrapper.cpp
+@@ -38,7 +38,7 @@
+ #endif
+ #include "EGLNativeTypeAmlogic.h"
+ #include "EGLWrapper.h"
+-#if defined(TARGET_DVBBOX)
++#if defined(TARGET_DVBBOX) || defined(TARGET_DVBBOXARM) // oskwon
+   #include "EGLNativeTypeDvbBox.h"
+ #endif
+ 
+diff --git a/xbmc/xbmc.cpp b/xbmc/xbmc.cpp
+index c87b550..19b01a8 100644
+--- a/xbmc/xbmc.cpp
++++ b/xbmc/xbmc.cpp
+@@ -95,7 +95,7 @@ extern "C" int XBMC_Run(bool renderGUI)
+   g_RBP.Deinitialize();
+ #endif
+ 
+-#ifdef TARGET_DVBBOX // oskwon
++#if defined(TARGET_DVBBOX) || defined(TARGET_DVBBOXARM) // oskwon
+   system("xbmc.helper --stop");
+ #endif /*TARGET_DVBBOX*/
+   return status;

@@ -1,0 +1,50 @@
+diff --git a/Makefile.in b/Makefile.in
+index 955342c..d81f716 100644
+--- a/Makefile.in
++++ b/Makefile.in
+@@ -437,13 +437,13 @@ DYNOBJSXBMC+= xbmc/freebsd/freebsd.a
+ endif
+ 
+ ifeq (@USE_STATIC_FFMPEG@,1)
+-FFMPEGOBJS = @FFMPEG_LIBDIR@/libavcodec.a \
+-             @FFMPEG_LIBDIR@/libavfilter.a \
+-             @FFMPEG_LIBDIR@/libswresample.a \
+-             @FFMPEG_LIBDIR@/libavformat.a \
+-             @FFMPEG_LIBDIR@/libavutil.a \
+-             @FFMPEG_LIBDIR@/libpostproc.a \
+-             @FFMPEG_LIBDIR@/libswscale.a
++FFMPEGOBJS = @FFMPEG_LIBDIR@/libavcodec-ffmpeg.a\
++             @FFMPEG_LIBDIR@/libavfilter-ffmpeg.a\
++             @FFMPEG_LIBDIR@/libswresample-ffmpeg.a\
++             @FFMPEG_LIBDIR@/libavformat-ffmpeg.a\
++             @FFMPEG_LIBDIR@/libavutil-ffmpeg.a\
++             @FFMPEG_LIBDIR@/libpostproc-ffmpeg.a \
++             @FFMPEG_LIBDIR@/libswscale-ffmpeg.a
+ DYNOBJSXBMC+= $(FFMPEGOBJS)
+ LIBS+= @GNUTLS_ALL_LIBS@ @VORBISENC_ALL_LIBS@
+ 
+diff --git a/configure.ac b/configure.ac
+index 16ccb0b..d223154 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -1707,13 +1707,13 @@ else
+ fi
+ 
+ # FFmpeg
+-FFMPEG_LIBNAMES="libavcodec >= 56.26.100
+-                 libavfilter >= 5.11.102
+-                 libavformat >= 56.25.101
+-                 libavutil >= 54.20.100
+-                 libpostproc >= 53.3.100
+-                 libswscale >= 3.1.101
+-                 libswresample >= 1.1.100"
++FFMPEG_LIBNAMES="libavcodec-ffmpeg >= 56.26.100
++                 libavfilter-ffmpeg >= 5.11.102
++                 libavformat-ffmpeg >= 56.25.101
++                 libavutil-ffmpeg >= 54.20.100
++                 libpostproc-ffmpeg >= 53.3.100
++                 libswscale-ffmpeg >= 3.1.101
++                 libswresample-ffmpeg >= 1.1.100"
+ 
+ ffmpeg_build="${abs_top_srcdir}/tools/depends/target/ffmpeg"
+ FFMPEG_VER_SHA=$(grep "VERSION=" ${ffmpeg_build}/FFMPEG-VERSION | sed 's/VERSION=//g')
