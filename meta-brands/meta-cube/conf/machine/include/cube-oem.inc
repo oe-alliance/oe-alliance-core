@@ -31,7 +31,7 @@ MACHINE_EXTRA_RRECOMMENDS = " \
     gstreamer1.0-plugin-dvbmediasink \
     mtd-utils-native \
     "
-	
+
 include conf/machine/include/autoload-filesystems.inc
 
 DVBMEDIASINK_CONFIG = "--with-wma --with-wmv --with-pcm --with-dtsdownmix --with-eac3"
@@ -86,6 +86,9 @@ TARGET_ARCH = "arm"
 TUNE_FEATURES = "cortexa9 vfp"
 include conf/machine/include/tune-cortexa9.inc
 TUNE_CCARGS += "-mfpu=vfpv3-d16"
+
+MACHINE_FEATURES_BACKFILL_CONSIDERED = "gobject-introspection-data"
+QEMU_TARGETS = "arm"
 
 IMAGE_FSTYPES ?= "imgzip256"
 
