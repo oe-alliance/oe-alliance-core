@@ -1,0 +1,33 @@
+diff --git a/src/plugin/plugin.py b/src/plugin/plugin.py
+index 82bcb93..6a16ec9 100644
+--- a/src/plugin/plugin.py
++++ b/src/plugin/plugin.py
+@@ -8,6 +8,7 @@ from Components.Console import Console
+ from Components.PluginComponent import PluginDescriptor
+ from Components.ServiceEventTracker import InfoBarBase
+ from Components.ServiceEventTracker import ServiceEventTracker
++from Components.config import config
+ from Screens.HelpMenu import HelpableScreen
+ from Screens.InfoBarGenerics import InfoBarNotifications, InfoBarSeek, \
+     InfoBarAudioSelection, InfoBarShowHide
+@@ -268,6 +269,12 @@ class E2KodiExtServer(UDSServer):
+         self.stopTimer = eTimer()
+         self.stopTimer.callback.append(KODI_LAUNCHER.stop)
+         self.stopTimer.start(500, True)
++	port = config.av.videoport.value
++	mode = config.av.videomode[port].value
++	rate = config.av.videorate[config.av.videomode[config.av.videoport.value].value].value
++	rate = rate.replace('Hz','')
++	cmd = 'echo "%s%s" > /proc/stb/video/videomode' % (mode,rate)
++	os.system (cmd)
+ 
+     def handlePlayStatusMessage(self, status, data):
+         position = getPlayPositionInSeconds(SESSION)
+@@ -427,6 +434,7 @@ def startLauncher(session, **kwargs):
+     global SESSION
+     SESSION = session
+     global KODI_LAUNCHER
++    os.system ('echo "720p50" > /proc/stb/video/videomode')
+     KODI_LAUNCHER = session.open(KodiLauncher)
+ 
+ def Plugins(**kwargs):
