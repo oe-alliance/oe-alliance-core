@@ -13,6 +13,7 @@ SRC_URI += "file://linuxdvb.patch \
 SRC_URI_append_sh4 = "\
     file://stmfb.h \
     file://stm_ioctls.h \
+    file://bpamem.h \
 "
 
 do_install_append_sh4() {
