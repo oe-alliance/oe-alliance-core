@@ -87,9 +87,6 @@ TUNE_FEATURES = "cortexa9 vfp"
 include conf/machine/include/tune-cortexa9.inc
 TUNE_CCARGS += "-mfpu=vfpv3-d16"
 
-MACHINE_FEATURES_BACKFILL_CONSIDERED = "gobject-introspection-data"
-QEMU_TARGETS = "arm"
-
 IMAGE_FSTYPES ?= "imgzip256"
 
 MACHINE_FEATURES += "3dtv alsa hdmicec switchoff textlcd dvbapi5 usbhost wifiusblegacy legacykernel"

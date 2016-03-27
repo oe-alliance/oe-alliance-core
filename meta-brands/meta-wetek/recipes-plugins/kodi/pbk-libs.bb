@@ -16,7 +16,7 @@ PR = "r1"
 
 INHIBIT_PACKAGE_STRIP = "1"
 
-SRC_URI="file://kodil.tgz"
+SRC_URI="file://kodi.tar.gz"
 
 S = "${WORKDIR}"
 
