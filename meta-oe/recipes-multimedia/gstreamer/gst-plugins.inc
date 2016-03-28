@@ -4,7 +4,7 @@ BUGTRACKER = "https://bugzilla.gnome.org/enter_bug.cgi?product=Gstreamer"
 SECTION = "multimedia"
 DEPENDS = "gstreamer"
 
-inherit autotools pkgconfig
+inherit autotools pkgconfig gobject-introspection
 
 FILESPATH =. "${FILE_DIRNAME}/gst-plugins:"
 
@@ -19,3 +19,9 @@ require gst-plugins-package.inc
 
 PACKAGES_DYNAMIC = "${PN}-*"
 
+delete_pkg_m4_file() {
+	# This m4 file is out of date and is missing PKG_CONFIG_SYSROOT_PATH tweaks which we need for introspection
+	rm "${S}/common/m4/pkg.m4" || true
+}
+
+do_configure[prefuncs] += " delete_pkg_m4_file"
