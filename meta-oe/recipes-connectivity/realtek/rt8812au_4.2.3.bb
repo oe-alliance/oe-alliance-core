@@ -6,19 +6,15 @@ LIC_FILES_CHKSUM = "file://ifcfg-wlan0;md5=a84acae65af4b2d44d5035aa9f63cd85"
 
 inherit module
 
-PR = "r6"
+PR = "r7"
 
 MACHINE_KERNEL_PR_append = ".1"
 
-SRC_URI = "http://code-ini.com/software/mirror/rtl8812AU_8821AU_linux_v4.2.2_7502.20140602.tar.gz \
-    file://rt8812au-procfs.patch \
-    file://rt8812au-strncasecmp.patch \
-    file://rt8812au-gcc5.patch \
-    "
+SRC_URI = "http://source.mynonpublic.com/rtl8812AU_8821AU_linux-4.2.3-20160329.zip"
 
 EXTRA_OEMAKE = "LINUX_SRC=${STAGING_KERNEL_DIR} KDIR=${STAGING_KERNEL_DIR}"
 
-S = "${WORKDIR}/rtl8812AU_8821AU_linux_v4.2.2_7502.20140602/"
+S = "${WORKDIR}/"
 
 do_compile () {
     unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS CC LD CPP
@@ -41,6 +37,6 @@ do_install() {
 
 }
 
-SRC_URI[md5sum] = "dd5085665501b0a3a5fbfc84dd4a6f37"
-SRC_URI[sha256sum] = "98606139a9f7e741bc25e79f96fcbfe286e41010e1856b5e5511f68aba71068d"
+SRC_URI[md5sum] = "270be04c3237e09d232e1e38059a9fae"
+SRC_URI[sha256sum] = "f76ee751a8bd4627c6c6dc27c865853297e7cbfad864af5bb300defe87ecbbff"
 
