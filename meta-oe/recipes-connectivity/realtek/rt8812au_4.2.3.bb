@@ -10,7 +10,9 @@ PR = "r7"
 
 MACHINE_KERNEL_PR_append = ".1"
 
-SRC_URI = "http://source.mynonpublic.com/rtl8812AU_8821AU_linux-4.2.3-20160329.zip"
+SRC_URI = "http://source.mynonpublic.com/rtl8812AU_8821AU_linux-4.2.3-20160329.zip \
+    file://rtw_cfg80211_rx_mgmt.patch \
+"
 
 SRC_URI_sh4 += "file://CONFIG_IOCTL_CFG80211.patch"
 
