@@ -1,4 +1,4 @@
-PR .= ".30"
+PR .= ".31"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 SRC_URI += " \
