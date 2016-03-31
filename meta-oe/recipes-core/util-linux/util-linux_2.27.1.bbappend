@@ -1,5 +1,5 @@
 PACKAGES =+ "util-linux-flock"
-FILES_util-linux-flock = "${base_bindir}/flock"
+FILES_util-linux-flock = "${base_sbindir}/flock.${BPN}"
 
 ALTERNATIVE_util-linux-flock = "flock"
 ALTERNATIVE_LINK_NAME[flock] = "${base_sbindir}/flock"
