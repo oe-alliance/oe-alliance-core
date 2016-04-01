@@ -14,7 +14,7 @@ SRC_URI = "http://source.mynonpublic.com/rtl8812AU_8821AU_linux-4.2.3-20160329.z
     file://rtw_cfg80211_rx_mgmt.patch \
 "
 
-SRC_URI_sh4 += "file://CONFIG_IOCTL_CFG80211.patch"
+SRC_URI_append_sh4 = "file://CONFIG_IOCTL_CFG80211.patch"
 
 EXTRA_OEMAKE = "LINUX_SRC=${STAGING_KERNEL_DIR} KDIR=${STAGING_KERNEL_DIR}"
 
