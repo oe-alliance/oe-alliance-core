@@ -3,13 +3,14 @@ LICENSE = "GPLv2"
 SECTION = "base"
 PRIORITY = "required"
 
-PR = "r7"
+PR = "r8"
 
 require conf/license/license-gplv2.inc
 
-SRCREV = "2bb64e38fc1f082af6c6a6bd24e58e9f0fcca010"
+#SRCREV = "2bb64e38fc1f082af6c6a6bd24e58e9f0fcca010"
 
-SRC_URI = "git://github.com/wetek-enigma/amremote.git \
+#SRC_URI = "git://github.com/wetek-enigma/amremote.git"
+SRC_URI = "file://amremote-ecdf401.tar.xz \
            file://wetek.conf \
            file://wetek1.conf \
            file://wetek2.conf \
@@ -22,11 +23,10 @@ SRC_URI = "git://github.com/wetek-enigma/amremote.git \
            file://wetek_tmnanoremote.conf \
            file://gb800ueplus.conf \
            file://gilx3.conf \
+           file://zgemmastar.conf \
 "
 
-S = "${WORKDIR}/git"
-
-
+S = "${WORKDIR}/amremote-ecdf401/"
 
 do_compile() {
     oe_runmake
@@ -48,6 +48,7 @@ do_install() {
     install -m 0644 ${WORKDIR}/wetek_tmnanoremote.conf ${D}${sysconfdir}/amremote/
     install -m 0644 ${WORKDIR}/gilx3.conf ${D}${sysconfdir}/amremote/
     install -m 0644 ${WORKDIR}/gb800ueplus.conf ${D}${sysconfdir}/amremote/
+    install -m 0644 ${WORKDIR}/zgemmastar.conf ${D}${sysconfdir}/amremote/
 }
 
 FILES_${PN} = "${bindir} ${sysconfdir}"

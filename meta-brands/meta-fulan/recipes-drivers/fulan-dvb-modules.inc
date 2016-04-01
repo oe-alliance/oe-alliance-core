@@ -9,9 +9,6 @@ LIC_FILES_CHKSUM = "file://${WORKDIR}/COPYING;md5=751419260aa954499f7abaabaa882b
 
 RDEPENDS_${PN} = "stinit"
 
-RREPLACES_${PN} += "fulan-dvb-modules"
-RCONFLICTS_${PN} += "fulan-dvb-modules"
-
 SRCDATE = "20160308"
 KV = "2.6.32.61-stm24-0217"
 SRCREV = "7c31533e4916733120467b5af62303a14a278829"
@@ -20,7 +17,7 @@ inherit module
 
 PACKAGES = "${PN} ${PN}-dev"
 
-INC_PR = "r38"
+INC_PR = "r39"
 PV = "${KV}+${SRCDATE}"
 
 PTI_NP_PATH ?= "/data/pti_np"
@@ -130,7 +127,6 @@ do_install() {
 
     # install header files
     install -d ${D}/${includedir}/
-    install -m 644 bpamem/bpamem.h ${D}/${includedir}
     install -m 644 multicom/include/mme.h ${D}/${includedir}
     install -m 644 include/player2/JPEG_VideoTransformerTypes.h ${D}/${includedir}
     install -m 644 include/player2/JPEGDECHW_VideoTransformerTypes.h ${D}/${includedir}

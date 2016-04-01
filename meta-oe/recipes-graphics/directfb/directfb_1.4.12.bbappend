@@ -1,8 +1,5 @@
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-RREPLACES_${PN} += "stm-directfb"
-RCONFLICTS_${PN} += "stm-directb"
-
 SRC_URI_prepend_sh4 = " \
     file://directfb-1.4.12+STM2011.09.27-3.patch;patch=1 \
     file://directfb-1.4.11+STM2010.12.15-4.libpng.patch;patch=1 \

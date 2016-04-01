@@ -10,7 +10,7 @@ inherit packagegroup
 ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
-PV = "5.2"
+PV = "5.3"
 PR = "r0"
 
 RDEPENDS_${PN} = "\
@@ -40,6 +40,7 @@ RDEPENDS_${PN} = "\
     tzdata tzdata-europe tzdata-australia tzdata-asia tzdata-pacific tzdata-africa tzdata-americas \
     util-linux-sfdisk \
     util-linux-blkid \
+    util-linux-flock \
     volatile-media \
     vsftpd \
     python-twisted-protocols python-numbers python-argparse \

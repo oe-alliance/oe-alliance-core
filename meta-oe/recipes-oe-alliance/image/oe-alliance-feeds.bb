@@ -42,7 +42,7 @@ RDEPENDS_${PN} = " \
     enigma2-plugin-extensions-autobouquets \
     ${@base_contains("MACHINE_FEATURES", "omb", "enigma2-plugin-extensions-openmultiboot", "", d)} \
     ${@base_contains("MACHINE_FEATURES", "omb", "openmultiboot", "", d)} \
-    ${@base_contains("MACHINE_FEATURES", "xbmc", "enigma2-plugin-extensions-xbmc", "", d)} \
+    ${@base_contains("MACHINE_FEATURES", "vukodixx", "enigma2-plugin-extensions-vuplus-kodi", "", d)} \
     ${@base_contains("MACHINE_FEATURES", "webkithbbtv", "webkit-hbbtv-browser", "", d)} \
     ${@base_contains("MACHINE_FEATURES", "chromiumos", "enigma2-plugin-extensions-chromium", "", d)} \
     \

@@ -31,7 +31,7 @@ MACHINE_EXTRA_RRECOMMENDS = " \
     gstreamer1.0-plugin-dvbmediasink \
     mtd-utils-native \
     "
-	
+
 include conf/machine/include/autoload-filesystems.inc
 
 DVBMEDIASINK_CONFIG = "--with-wma --with-wmv --with-pcm --with-dtsdownmix --with-eac3"

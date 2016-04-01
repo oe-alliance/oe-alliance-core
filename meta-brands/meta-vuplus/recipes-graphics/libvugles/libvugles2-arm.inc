@@ -1,6 +1,8 @@
 SRCDATE = "20150722"
 SRCDATE_PR = "r1"
 
+DEPENDS = "vuplus-libgles-${MACHINE}"
+
 SRC_URI = "http://archive.vuplus.com/download/build_support/vuplus/${PN}-${PV}-${TARGET_ARCH}-${PR}.tar.gz"
 
 SRC_URI[md5sum] = "d7ae1f6a17ad651a274af74851a86853"

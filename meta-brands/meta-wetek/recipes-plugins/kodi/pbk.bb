@@ -19,9 +19,8 @@ S = "${WORKDIR}"
 
 do_install() {
     install -d ${D}/usr
-#    cp -rp ${S}/usr ${D}
     cp -axr ${S}/usr ${D}
-     cp -ax ${S}/usr/lib/xbmc ${D}/usr/lib
+    cp -ax ${S}/usr/lib/xbmc ${D}/usr/lib
 }
 
 FILES_${PN} = "/usr/bin/* /usr/lib/* /usr/share/*"
@@ -81,16 +80,10 @@ RDEPENDS_${PN} += "\
 	libcurl \
 "
 
-#do_package_qa(){
-#}
+do_package_qa(){
+}
 
 sysroot_stage_all() {
     :
 }
-
-#do_rm_work(){
-#}
-
-
-
 
