@@ -11,7 +11,7 @@ RRECOMMENDS_${PN} = "enigma2-plugin-extensions-subssupport"
 
 SRCREV = "1dd3e0696fe42af4cfb48eb49ebddeb5bd2c0207"
 SRC_URI = "git://github.com/mx3L/kodiext;protocol=git;branch=master \
-	file://videomode.patch"
+    file://videomode.patch"
 
 S = "${WORKDIR}/git"
 
