@@ -3,6 +3,8 @@ SECTION = "devel"
 LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://README.md;md5=a7dbd11cb99ed74462135e2e5c074b44"
 
+DEPENDS = "util-linux"
+
 PV = "1.0"
 PR = "r0"
 
