@@ -11,7 +11,7 @@ DEPENDS = "tslib mpfr gmp"
 SRCREV = "${AUTOREV}"
 PV = "3.2+gitr${SRCPV}"
 PKGV = "3.2+gitr${GITPKGV}"
-PR = "r54"
+PR = "r55"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -60,7 +60,6 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-mediastream_6.0_all.ipk \
     enigma2-plugin-extensions-moviebrowser_3.6rc7_all.ipk \
     enigma2-plugin-extensions-mp3browser_1.9c8_mips32el.ipk \
-    enigma2-plugin-extensions-mtv_0.1_mips32el.ipk \
     ${@base_contains('MACHINE_BRAND', 'Vu+', '' , 'enigma2-plugin-extensions-openopera_1.0-r0_mips32el.ipk', d)} \
     enigma2-plugin-extensions-opkg-tools_1.3_mipsel.ipk \
     enigma2-plugin-extensions-oscamstatusview_0.7rc1_mips32el.ipk \
