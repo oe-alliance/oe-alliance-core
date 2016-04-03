@@ -56,9 +56,9 @@ RDEPENDS_${PN} += "\
 inherit autotools-brokensep gettext python-dir
 
 inherit gitpkgv
-SRCREV = "43af1c2539e787671554d4460ff65711420c6cd4"
+SRCREV = "51a024a87cd345251236cc679f2271e8999276c7"
 PV = "16.0"
-PR = "r0-${SRCREV}"
+PR = "r1-${SRCREV}"
 
 SRC_URI = "git://github.com/OpenSPA/xbmc.git;protocol=git;branch=vu_kodi_16.x \
     http://archive.vuplus.com/download/build_support/xbmc-support_${GLPR}${GLARCH}.tar.gz;name=xbmc-support \
