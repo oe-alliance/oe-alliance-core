@@ -5,65 +5,121 @@ PACKAGE_ARCH := "${MACHINE_ARCH}"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://LICENSE.GPL;md5=930e2a5f63425d8dd72dbd7391c43c46"
 
-DEPENDS = "vuplus-libgles-${MACHINE} libxslt libusb1 libcec libplist expat yajl gperf-native fribidi mpeg2dec samba fontconfig curl python libass libmodplug libmicrohttpd wavpack libmms cmake-native libsdl-image mysql5 sqlite3 libmms faad2 libcdio libpcre boost lzo enca avahi libsamplerate0  bzip2 virtual/libsdl jasper zip-native zlib libtinyxml libtinyxml-native taglib libbluray libshairport librtmp zlib libnfs libxslt libsquish jsonschemabuilder-native ffmpeg-kodi libdcadec crossguid"
-
 PROVIDES += "virtual/kodi"
 RPROVIDES_${PN} += "virtual/kodi"
 
+DEPENDS = "\
+	vuplus-libgles-${MACHINE} \
+	libxslt \
+	libusb1 \
+	libcec \
+	libplist \
+	expat \
+	yajl \
+	gperf-native \
+	fribidi \
+	mpeg2dec \
+	samba \
+	fontconfig \
+	curl \
+	python \
+	libass \
+	libmodplug \
+	libmicrohttpd \
+	wavpack \
+	libmms\
+	cmake-native \
+	libsdl-image \
+	libsdl-mixer \
+	mysql5 \
+	sqlite3 \
+	libmms \
+	faad2 \
+	libcdio \
+	libpcre \
+	boost \
+	lzo \
+	enca \
+	avahi \
+	libsamplerate0 \
+	bzip2 \
+	virtual/libsdl \
+	jasper \
+	zip-native \
+	zlib \
+	libtinyxml \
+	taglib \
+	libbluray \
+	libshairport \
+	librtmp \
+	zlib \
+	libnfs \
+	libxslt \
+	libsquish \
+	libdcadec \
+	libcrossguid \
+"
+
+PROVIDES += "kodi"
+RPROVIDES_${PN} += "kodi"
+
 RDEPENDS_${PN} = "python"
 RDEPENDS_${PN} += "\
-    python-distutils \
-    python-subprocess \
-    python-robotparser \
-    python-mechanize \
-    python-threading \
-    python-shell \
-    python-zlib \
-    python-sqlite3 \
-    python-json \
-    python-xml \
-    python-html \
-    python-netserver \
-    python-misc \
-    python-pygobject \
-    python-pygobject-lib \
-    python-textutils \
-    python-simplejson \
-    python-xmlrpc   \
-    python-pprint \
-    python-difflib \
-    python-email \
-    python-compression \
-    python-compile \
-    python-compiler \
-    python-numbers \
-    python-pkgutil \
-    nfs-utils-client \
-    libshairport \
-    glibc-gconv-utf-32 \
-    xz \
-    tiff \
-    yajl \
-    libxslt \
-    libupnp \
-    libplist \
-    librtmp \
-    libbluray \
-    libnfs \
-    alsa-lib \
-    alsa-plugins \
+	python-distutils \
+	python-subprocess \
+	python-robotparser \
+	python-mechanize \
+	python-threading \
+	python-shell \
+	python-zlib \
+	python-sqlite3 \
+	python-json \
+	python-xml \
+	python-html \
+	python-netserver \
+	python-misc \
+	python-pygobject \
+	python-pygobject-lib \
+	python-textutils \
+	python-simplejson \
+	python-xmlrpc   \
+	python-pprint \
+	python-difflib \
+	python-email \
+	python-compression \
+	python-compile \
+	python-compiler \
+	python-numbers \
+	python-pkgutil \
+	nfs-utils-client \
+	libshairport \
+	glibc-gconv-utf-32 \
+	xz \
+	tiff \
+	yajl \
+	libxslt \
+	libupnp \
+	libplist \
+	librtmp \
+	libbluray \
+	libnfs \
+	libtinyxml \
+	alsa-lib \
+	shairplay \
 "
 
-inherit autotools-brokensep gettext python-dir
+BRANCH = "jarvis_vuplus"
+SRCREV = "528f9f8abfc045b8cf8edea013aaf19fd02dba09"
 
-inherit gitpkgv
-SRCREV = "51a024a87cd345251236cc679f2271e8999276c7"
-PV = "16.0"
-PR = "r2-${SRCREV}"
+PV = "16.1.rc2"
+PR = "${BUILD_PR}_${GLPR}_${SRCREV}"
 
-SRC_URI = "git://github.com/OpenSPA/xbmc.git;protocol=git;branch=vu_kodi_16.x \
-    http://archive.vuplus.com/download/build_support/xbmc-support_${GLPR}${GLARCH}.tar.gz;name=xbmc-support \
+SRC_URI = "\
+	git://code.vuplus.com/git/xbmc.git;protocol=http;branch=${BRANCH};tag=${SRCREV} \
+	http://archive.vuplus.com/download/build_support/kodi/xbmc-support_${MACHINE}_${GLPR}.tar.gz;name=xbmc-support \
 "
+
+inherit autotools-brokensep autotools lib_package pkgconfig gettext python-dir
 
 S = "${WORKDIR}/git"
 
@@ -72,25 +128,24 @@ CACHED_CONFIGUREVARS += " \
 "
 
 EXTRA_OECONF = " \
-    --enable-gles \
-    --enable-libusb \
-    --enable-airplay \
-    --enable-rtmp \
-    --enable-alsa \
-    --disable-pulse \
-    --disable-optical-drive \
-    --enable-external-libraries \
-    --disable-ssh \
-    --disable-x11 \
-    --disable-joystick \
-    --disable-libcec \
-    --disable-lirc \
-    --disable-texturepacker \
-    --with-ffmpeg=shared \
-    --enable-pulse=no \
+	--enable-gles \
+	--enable-libusb \
+	--enable-airplay \
+	--enable-rtmp	\
+	--enable-optimizations \
+	--disable-optical-drive \
+	--disable-ssh \
+	--disable-x11 \
+	--disable-dbus \
+	--disable-pulse \
+	--disable-gtest \
+	--disable-joystick \
+	--disable-alsa \
+	--disable-lirc \
+	--disable-libcec \
+	--disable-texturepacker \
+	--disable-debug \
 "
-
-#EXTRA_OECONF_append_armv7a = " --cpu=cortex-a8 "
 
 FULL_OPTIMIZATION_armv7a = "-fexpensive-optimizations -fomit-frame-pointer -O4 -ffast-math"
 BUILD_OPTIMIZATION = "${FULL_OPTIMIZATION}"
@@ -102,40 +157,46 @@ export STAGING_LIBDIR
 export STAGING_INCDIR
 export PYTHON_DIR
 
-export TINYXML_CFLAGS="-I/${STAGING_INCDIR}"
-export TINYXML_LIBS="-L${STAGING_LIBDIR} -ltinyxml"
-export SQUISH_CFLAGS="-I/${STAGING_INCDIR}"  
-export SQUISH_LIBS="-L${STAGING_LIBDIR} -lsquish"
-
 do_configure() {
-    cp -av ${WORKDIR}/xbmc-support/gles_init.* ${WORKDIR}/git/xbmc/windowing/egl/
-    ./bootstrap
-    oe_runconf
+	cp -av ${WORKDIR}/xbmc-support/gles_init.* ${WORKDIR}/git/xbmc/windowing/egl/
+	sh bootstrap
+	sed -i 's/-V -qversion//' configure
+	oe_runconf
 }
 
-#PARALLEL_MAKE = " -j8 "
-
 do_compile_prepend() {
-    for i in $(find . -name "Makefile") ; do
-        sed -i -e 's:I/usr/include:I${STAGING_INCDIR}:g' $i
-    done
+	for i in $(find . -name "Makefile") ; do
+		sed -i -e 's:I/usr/include:I${STAGING_INCDIR}:g' $i
+	done
 
-    for i in $(find . -name "*.mak*" -o	-name "Makefile") ; do
-        sed -i -e 's:I/usr/include:I${STAGING_INCDIR}:g' -e 's:-rpath \$(libdir):-rpath ${libdir}:g' $i
-    done
+	for i in $(find . -name "*.mak*" -o	-name "Makefile") ; do
+		sed -i -e 's:I/usr/include:I${STAGING_INCDIR}:g' -e 's:-rpath \$(libdir):-rpath ${libdir}:g' $i
+	done
 }
 
 INSANE_SKIP_${PN} = "rpaths"
 
+# on ARM architectures xbmc will use GLES which will make the regular wrapper fail, so start it directly
+#do_install_append_arm() {
+#	sed -i -e 's:Exec=xbmc:Exec=${libdir}/xbmc/xbmc.bin:g' ${D}${datadir}/applications/xbmc.desktop
+#}
+
 do_install_append(){
-    find ${D} -name "*.cmake" -exec rm -rf {} \;
-    install -d ${D}${bindir}
-    install -m 0755 ${WORKDIR}/xbmc-support/xbmc.helper ${D}${bindir}
-    rm -rf ${D}/usr/share/kodi/addons/service.xbmc.versioncheck
+	install -d ${D}${bindir}
+	install -m 0755 ${WORKDIR}/xbmc-support/xbmc.helper ${D}${bindir}
+	install -m 0755 ${WORKDIR}/xbmc-support/libxbmc_base.so ${D}${libdir}
 }
 
 do_package_qa(){
 }
+
+FILES_${PN} = "${libdir}/kodi ${libdir}/xbmc"
+FILES_${PN} += "${bindir}/kodi ${bindir}/xbmc ${bindir}/xbmc.helper"
+FILES_${PN} += "${datadir}/icons ${datadir}/kodi ${datadir}/xbmc"
+FILES_${PN} += "${libdir}/libxbmc_base.so"
+FILES_${PN}-dev = "${includedir}"
+FILES_${PN}-bin = "${bindir}/kodi-standalone ${bindir}/xbmc-standalone ${datadir}/xsessions"
+FILES_${PN}-dbg += "${libdir}/kodi/.debug ${libdir}/kodi/*/.debug ${libdir}/kodi/*/*/.debug ${libdir}/kodi/*/*/*/.debug ${datadir}/applications"
 
 # xbmc uses some kind of dlopen() method for libcec so we need to add it manually
 RRECOMMENDS_${PN}_append = " libcec \
@@ -148,13 +209,3 @@ RRECOMMENDS_${PN}_append = " libcec \
 RRECOMMENDS_${PN}_append_libc-glibc = " glibc-charmap-ibm850 glibc-gconv-ibm850"
 
 INSANE_SKIP_${PN} = "already-stripped"
-
-PACKAGE_ARCH := "${MACHINE_ARCH}"
-
-FILES_${PN} += "${datadir}/xsessions ${datadir}/icons /usr/bin /usr/share /usr/lib"
-FILES_${PN}-dbg += "\
-    /usr/lib/kodi/.debug \
-    /usr/lib/kodi/system/.debug \
-    /usr/lib/kodi/system/*/*/.debug \
-    /usr/lib/kodi/addons/*/.debug \
-    "

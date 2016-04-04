@@ -3,10 +3,9 @@ require kodi.inc
 COMPATIBLE_MACHINE = "^(vusolo4k)$"
 
 BUILD_PR = "r0"
-GLARCH = "-arm"
-GLPR = "20150603_p0"
+GLPR = "20160331_r0"
 
-EXTRA_OECONF += " --with-platform=dvbboxarm "
+EXTRA_OECONF += " --with-platform=vuplus-arm --with-ffmpeg=force_vuplus_arm "
 
-SRC_URI[xbmc-support.md5sum] = "3803968ff78af7437982caf02647238b"
-SRC_URI[xbmc-support.sha256sum] = "d8e556854a29ef3dd78fab18454f0e91f01a23b7df299400276deb1f8fb495c6"
+SRC_URI[xbmc-support.md5sum] = "1ae0c982f8db9625a7f831874f6f0605"
+SRC_URI[xbmc-support.sha256sum] = "1be88ba6d4cbc0a0b1f10c83995132aa9bd5a088cf5b7080e1b0ef90170d96f7"
