@@ -9,7 +9,7 @@ PR = "${SRCDATE}"
 SRC_URI = "http://code.vuplus.com/download/chromium/chromium-vuplus_${MACHINE}_${SRCDATE}.tar.gz"
 
 DEPENDS_${PN} = "nss"
-RDEPENDS_${PN} = "nspr nss"
+RDEPENDS_${PN} = "nspr nss libxslt libcurl libudev"
 
 do_install() {
 	install -d ${D}/usr/local/chromium
