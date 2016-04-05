@@ -6,8 +6,6 @@ PROVIDES = "openvix-softcams"
 
 DEPENDS = "\
     ${@base_contains("TARGET_ARCH", "mipsel", "openvix-softcams-cccam", "", d)} \
-    ${@base_contains("TARGET_ARCH", "mipsel", "openvix-softcams-cccam209", "", d)} \
-    ${@base_contains("TARGET_ARCH", "mipsel", "openvix-softcams-cccam221", "", d)} \
     ${@base_contains("TARGET_ARCH", "mipsel", "openvix-softcams-evocamd", "", d)} \
     ${@base_contains("TARGET_ARCH", "mipsel", "openvix-softcams-mgcamd135a", "", d)} \
     ${@base_contains("TARGET_ARCH", "mipsel", "openvix-softcams-mgcamd138", "", d)} \
@@ -20,4 +18,4 @@ DEPENDS = "\
     ${@base_contains("TARGET_ARCH", "mipsel", "openvix-softcams-scam", "", d)} \
     "    
 
-PR = "r10"
+PR = "r11"
