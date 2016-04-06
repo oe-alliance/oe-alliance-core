@@ -1,0 +1,122 @@
+*** mt7610u_wifi_sta_v3002_dpo_20130916/common/cmm_wpa.c	2013-09-16 16:03:08.000000000 +0200
+--- mt7610u_wifi_sta_v3002_dpo_20130916/common/cmm_wpa.c	2014-05-01 11:19:57.965952000 +0200
+*************** VOID WPAInstallSharedKey(
+*** 4172,4178 ****
+  		pSharedKey->CipherAlg = CIPHER_AES;
+  	else
+  	{
+! 		DBGPRINT(RT_DEBUG_ERROR, ("%s : fails (IF/ra%d) \n", 
+  										__FUNCTION__, BssIdx));	
+  		return;
+  	}
+--- 4172,4178 ----
+  		pSharedKey->CipherAlg = CIPHER_AES;
+  	else
+  	{
+! 		DBGPRINT(RT_DEBUG_ERROR, ("%s : fails (IF/wlan%d) \n", 
+  										__FUNCTION__, BssIdx));	
+  		return;
+  	}
+*************** VOID WPAInstallSharedKey(
+*** 4184,4190 ****
+  		/* Sanity check the length */
+  		if ((GtkLen != LEN_WEP64) && (GtkLen != LEN_WEP128))
+  		{
+! 			DBGPRINT(RT_DEBUG_ERROR, ("%s : (IF/ra%d) WEP key invlaid(%d) \n", 
+  										__FUNCTION__, BssIdx, GtkLen));	
+  			return;
+  		}
+--- 4184,4190 ----
+  		/* Sanity check the length */
+  		if ((GtkLen != LEN_WEP64) && (GtkLen != LEN_WEP128))
+  		{
+! 			DBGPRINT(RT_DEBUG_ERROR, ("%s : (IF/wlan%d) WEP key invlaid(%d) \n", 
+  										__FUNCTION__, BssIdx, GtkLen));	
+  			return;
+  		}
+*************** VOID WPAInstallSharedKey(
+*** 4197,4203 ****
+  		/* Sanity check the length */
+  		if (GtkLen < LEN_TK)
+  		{
+! 			DBGPRINT(RT_DEBUG_ERROR, ("%s : (IF/ra%d) WPA key invlaid(%d) \n", 
+  										__FUNCTION__, BssIdx, GtkLen));	
+  			return;
+  		}
+--- 4197,4203 ----
+  		/* Sanity check the length */
+  		if (GtkLen < LEN_TK)
+  		{
+! 			DBGPRINT(RT_DEBUG_ERROR, ("%s : (IF/wlan%d) WPA key invlaid(%d) \n", 
+  										__FUNCTION__, BssIdx, GtkLen));	
+  			return;
+  		}
+*** mt7610u_wifi_sta_v3002_dpo_20130916/include/rtmp_def.h	2013-09-16 16:03:08.000000000 +0200
+--- mt7610u_wifi_sta_v3002_dpo_20130916/include/rtmp_def.h	2014-05-01 11:21:10.037952000 +0200
+*************** enum WIFI_MODE{
+*** 1621,1634 ****
+  #define INF_MBSSID_DEV_NAME		"wlan"
+  #else
+  #if CONFIG_RT_FIRST_CARD == 7610
+! #define INF_MAIN_DEV_NAME		"ra"
+! #define INF_MBSSID_DEV_NAME		"ra"
+  #elif CONFIG_RT_SECOND_CARD == 7610
+  #define INF_MAIN_DEV_NAME		"rai"
+  #define INF_MBSSID_DEV_NAME		"rai"
+  #else
+! #define INF_MAIN_DEV_NAME		"ra"
+! #define INF_MBSSID_DEV_NAME		"ra"
+  #endif
+  #endif /* ANDROID_SUPPORT */
+  #if CONFIG_RT_FIRST_CARD == 7610
+--- 1621,1634 ----
+  #define INF_MBSSID_DEV_NAME		"wlan"
+  #else
+  #if CONFIG_RT_FIRST_CARD == 7610
+! #define INF_MAIN_DEV_NAME		"wlan"
+! #define INF_MBSSID_DEV_NAME		"wlan"
+  #elif CONFIG_RT_SECOND_CARD == 7610
+  #define INF_MAIN_DEV_NAME		"rai"
+  #define INF_MBSSID_DEV_NAME		"rai"
+  #else
+! #define INF_MAIN_DEV_NAME		"wlan"
+! #define INF_MBSSID_DEV_NAME		"wlan"
+  #endif
+  #endif /* ANDROID_SUPPORT */
+  #if CONFIG_RT_FIRST_CARD == 7610
+*** mt7610u_wifi_sta_v3002_dpo_20130916/os/linux/rt_profile.c	2013-09-16 16:03:08.000000000 +0200
+--- mt7610u_wifi_sta_v3002_dpo_20130916/os/linux/rt_profile.c	2014-05-01 11:21:35.889952000 +0200
+*************** NDIS_STATUS	RTMPReadParametersHook(
+*** 164,170 ****
+  		for (i = 0; i < pAd->ApCfg.BssidNum; i++)
+  		{
+  			pAd->ApCfg.MBSSID[i].Hostapd=FALSE;
+! 			DBGPRINT(RT_DEBUG_TRACE, ("Reset ra%d hostapd support=FLASE", i));
+  			
+  		}
+  #endif /*HOSTAPD_SUPPORT */
+--- 164,170 ----
+  		for (i = 0; i < pAd->ApCfg.BssidNum; i++)
+  		{
+  			pAd->ApCfg.MBSSID[i].Hostapd=FALSE;
+! 			DBGPRINT(RT_DEBUG_TRACE, ("Reset wlan%d hostapd support=FLASE", i));
+  			
+  		}
+  #endif /*HOSTAPD_SUPPORT */
+*************** VOID RtmpDrvSendWirelessEvent(
+*** 263,269 ****
+  		if (pAddr)
+  			pBufPtr += sprintf(pBufPtr, "(RT2860) STA(%02x:%02x:%02x:%02x:%02x:%02x) ", PRINT_MAC(pAddr));				
+  		else if (BssIdx < MAX_MBSSID_NUM(pAd))
+! 			pBufPtr += sprintf(pBufPtr, "(RT2860) BSS(ra%d) ", BssIdx);
+  		else
+  			pBufPtr += sprintf(pBufPtr, "(RT2860) ");
+  
+--- 263,269 ----
+  		if (pAddr)
+  			pBufPtr += sprintf(pBufPtr, "(RT2860) STA(%02x:%02x:%02x:%02x:%02x:%02x) ", PRINT_MAC(pAddr));				
+  		else if (BssIdx < MAX_MBSSID_NUM(pAd))
+! 			pBufPtr += sprintf(pBufPtr, "(RT2860) BSS(wlan%d) ", BssIdx);
+  		else
+  			pBufPtr += sprintf(pBufPtr, "(RT2860) ");
+  
