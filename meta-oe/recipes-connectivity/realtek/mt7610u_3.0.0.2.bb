@@ -9,11 +9,11 @@ PR = "r0"
 inherit module
 
 SRC_URI = "file://mt7610u_wifi_sta_v3002_dpo_20130916.tar.bz2 \
-	file://${PN}/${PV}/config.patch;patch=1 \
-	file://${PN}/${PV}/change_device_name.patch;patch=1 \
-	file://${PN}/${PV}/firmware_file_rename.patch;patch=1 \
-	file://${PN}/${PV}/new_devices.patch;patch=1 \
-	file://${PN}/${PV}/buildfix.patch;patch=1 \
+	file://config.patch;patch=1 \
+	file://change_device_name.patch;patch=1 \
+	file://firmware_file_rename.patch;patch=1 \
+	file://new_devices.patch;patch=1 \
+	file://buildfix.patch;patch=1 \
 	"
 
 S = "${WORKDIR}/mt7610u_wifi_sta_v3002_dpo_20130916"
