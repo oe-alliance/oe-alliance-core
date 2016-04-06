@@ -17,7 +17,7 @@ DEPENDS = "\
     enigma2-plugin-drivers-network-usb-r8723a \
     enigma2-plugin-drivers-network-usb-rt8723bs \
     enigma2-plugin-drivers-network-usb-mt7601u \
-    ", d)} \
+    enigma2-plugin-drivers-network-usb-mt7610u \
     enigma2-plugin-drivers-network-usb-asix \
     enigma2-plugin-drivers-network-usb-ax88179-178a \
     enigma2-plugin-drivers-network-usb-rt73 \

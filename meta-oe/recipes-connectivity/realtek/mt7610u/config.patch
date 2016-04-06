@@ -1,0 +1,29 @@
+*** mt7610u_wifi_sta_v3002_dpo_20130916/os/linux/config.mk	2013-09-16 16:03:08.000000000 +0200
+--- mt7610u_wifi_sta_v3002_dpo_20130916/os/linux/config.mk	2014-05-01 11:16:39.257952000 +0200
+*************** HAS_APCLI=n
+*** 23,34 ****
+  
+  # Support Wpa_Supplicant
+  # i.e. wpa_supplicant -Dralink
+! HAS_WPA_SUPPLICANT=n
+  
+  
+  # Support Native WpaSupplicant for Network Maganger
+  # i.e. wpa_supplicant -Dwext
+! HAS_NATIVE_WPA_SUPPLICANT_SUPPORT=n
+  
+  #Support Net interface block while Tx-Sw queue full
+  HAS_BLOCK_NET_IF=n
+--- 23,34 ----
+  
+  # Support Wpa_Supplicant
+  # i.e. wpa_supplicant -Dralink
+! HAS_WPA_SUPPLICANT=y
+  
+  
+  # Support Native WpaSupplicant for Network Maganger
+  # i.e. wpa_supplicant -Dwext
+! HAS_NATIVE_WPA_SUPPLICANT_SUPPORT=y
+  
+  #Support Net interface block while Tx-Sw queue full
+  HAS_BLOCK_NET_IF=n
