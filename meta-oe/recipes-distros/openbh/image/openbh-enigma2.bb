@@ -7,7 +7,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PV = "1.0"
-PR = "r54"
+PR = "r55"
 
 inherit packagegroup
 
@@ -49,6 +49,7 @@ RRECOMMENDS_${PN} = " \
     ${@base_contains("MACHINE_FEATURES", "omb", "enigma2-plugin-extensions-openmultiboot", "", d)} \
     ${@base_contains("MACHINE_FEATURES", "omb", "openmultiboot", "", d)} \
     ${@base_contains("MACHINE_FEATURES", "vukodi", "enigma2-plugin-extensions-vuplus-kodi", "", d)} \
+    dvb-usb-drivers-meta \
     "
 
 RRECOMMENDS_${PN}_append_wetekplay = " enigma2-plugin-skins-metrix-bh-fhd-icons enigma2-plugin-systemplugins-wirelesslan"
