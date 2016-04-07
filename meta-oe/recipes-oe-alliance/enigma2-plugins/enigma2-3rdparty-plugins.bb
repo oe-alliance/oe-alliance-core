@@ -11,7 +11,7 @@ DEPENDS = "tslib mpfr gmp"
 SRCREV = "${AUTOREV}"
 PV = "3.2+gitr${SRCPV}"
 PKGV = "3.2+gitr${GITPKGV}"
-PR = "r55"
+PR = "r56"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -35,7 +35,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-boblight-enigma2_0.8r8_mips32el.ipk \
     enigma2-plugin-extensions-camofs_9.19_all.ipk \
     enigma2-plugin-extensions-chefkoch_1.4rc5_all.ipk \
-    enigma2-plugin-extensions-clevertanken_0.7_all.ipk \
+    enigma2-plugin-extensions-clevertanken_0.7rc1_all.ipk \
     enigma2-plugin-extensions-csfd_10-10-20150103_all.ipk \
     enigma2-plugin-extensions-cyrussettings_1.0.0_all.ipk \
     enigma2-plugin-extensions-digitalfernsehen_1.1rc9_mips32el.ipk \
@@ -51,7 +51,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-hetweer_3.0_all.ipk \
     enigma2-plugin-extensions-iptvplayer_90.02.00.00_all.ipk \
     enigma2-plugin-extensions-isettinge2-3.3.3-oe2.0-${@base_contains("TARGET_ARCH", "sh4", "sh4" , "mips32el", d)}.ipk \
-    enigma2-plugin-extensions-kicker_3.4rc3_all.ipk \
+    enigma2-plugin-extensions-kicker_3.4rc4_all.ipk \
     enigma2-plugin-extensions-kino_1.6rc8_all.ipk \
     enigma2-plugin-extensions-kodidirect_3.0_r0_all.ipk \
     enigma2-plugin-extensions-livefootball-oe2.0_5.4_all.ipk \
@@ -85,12 +85,12 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-transmission_2.83_mips32el.ipk \
     enigma2-plugin-extensions-tsmedia_11.0_all.ipk \
     enigma2-plugin-extensions-tstube_1.2_all.ipk \
-    enigma2-plugin-extensions-tvspielfilm_6.4rc5_all.ipk \
+    enigma2-plugin-extensions-tvspielfilm_6.4rc6_all.ipk \
     enigma2-plugin-extensions-verkehrsinfo_1.1rc1_mips32el.ipk \
     enigma2-plugin-extensions-vhannibalautosettings_1.1_mips32el.ipk \
     enigma2-plugin-extensions-vuplusforum_0.7rc3_mips32el.ipk \
     enigma2-plugin-extensions-webmedia_14.0_r0_all.ipk \
-    enigma2-plugin-extensions-webradiofs_14.34_all.ipk \
+    enigma2-plugin-extensions-webradiofs_14.37_all.ipk \
     enigma2-plugin-extensions-wikipedia_2.2rc7_mips32el.ipk \
     enigma2-plugin-extensions-wwech_1.03_all.ipk \
     enigma2-plugin-extensions-xbmcaddons_8.1_r0_all.ipk \
