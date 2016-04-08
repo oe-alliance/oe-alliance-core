@@ -13,16 +13,14 @@ INSANE_SKIP_${PN} = "already-stripped textrel"
 
 inherit lib_package
 
-SRC_URI = "http://sources.openelec.tv/devel/libamcodec-75f23da.tar.xz \
-           file://0000-amadec-makefile.patch \
+SRC_URI = "file://libamcodec-75f23da.tar.gz;md5=2ff1cbc415271733e1241e8cde0b105e \
            file://audiodsp_codec_ddp_dcv.bin \
 		   file://libamadec.pc \
 "
 
 S = "${WORKDIR}/libamcodec-75f23da/amadec"
 
-SRC_URI[md5sum] = "55148d35b559e37efa1be016cbf90fe1"
-SRC_URI[sha256sum] = "22080b09237a66de69e168e7b088c123ae88518c3bcaf60e09f7923bab1d2f53"
+
 
 FWL_wetekplay = "firmware-m6"
 

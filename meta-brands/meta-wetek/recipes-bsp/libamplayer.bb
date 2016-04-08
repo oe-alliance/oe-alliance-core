@@ -11,18 +11,17 @@ RDEPENDS_${PN} = "libamadec libamcodec"
 
 inherit lib_package
 
-SRC_URI = "http://sources.openelec.tv/devel/libamcodec-75f23da.tar.xz \
-           file://00-amplayer-makefile-fixes.patch \
+SRC_URI = "file://libamcodec-75f23da.tar.gz;md5=2ff1cbc415271733e1241e8cde0b105e \
            file://libamplayer.pc \
 "
 
 S = "${WORKDIR}/libamcodec-75f23da/amplayer"
 
-SRC_URI[md5sum] = "55148d35b559e37efa1be016cbf90fe1"
-SRC_URI[sha256sum] = "22080b09237a66de69e168e7b088c123ae88518c3bcaf60e09f7923bab1d2f53"
+
 
 EXTRA_OEMAKE = "\
     'CC=${CC}' \
+	'LD=${LD}' \	
     'CFLAGS=-fPIC -DENABLE_FREE_SCALE -I${S}/include -I${S}/../amffmpeg -I${S}/player/ \
     -I${S}/player/include -I${S} -I${STAGING_INCDIR}/amlogic/amcodec' \
     'LDFLAGS=-lamadec -lm -lc  -shared -Wl,--shared ' \
