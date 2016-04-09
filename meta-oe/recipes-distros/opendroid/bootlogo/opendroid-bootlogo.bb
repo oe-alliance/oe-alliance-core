@@ -9,7 +9,7 @@ require conf/license/license-gplv2.inc
 RDEPENDS_${PN} += "showiframe"
 
 PV = "5.5"
-PR = "r15"
+PR = "r16"
 
 S = "${WORKDIR}"
 
@@ -22,9 +22,11 @@ INITSCRIPT_PARAMS_vusolo4k = "start 70 S ."
 PRECOMPILED_ARCH = "${MACHINE}"
 PRECOMPILED_ARCH_dm7020hdv2 = "dm7020hd"
 
+
+
 inherit update-rc.d
 
-SRC_URI = "file://bootlogo.mvi file://radio.mvi file://bootlogo.sh file://splash576.bmp file://splash480.bmp file://splash1280.jpg \
+SRC_URI = "file://bootlogo.mvi file://radio.mvi file://bootlogo.sh file://splash576.bmp file://splash480.bmp \
     ${@base_contains("MACHINE_FEATURES", "gigabluelcd220", "file://lcdsplash220.bin file://lcdwaitkey220.bin file://lcdwarning220.bin" , "", d)} \
     ${@base_contains("MACHINE_FEATURES", "gigabluelcd400", "file://lcdsplash400.bin file://lcdwaitkey400.bin file://lcdwarning400.bin" , "", d)} \
 "
