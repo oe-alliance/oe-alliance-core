@@ -6,7 +6,7 @@ LICENSE = "WTFPL"
 require conf/license/license-gplv2.inc
 
 PV = "20160328"
-PR = "r2"
+PR = "r3"
 SRC_URI = "http://source.mynonpublic.com/rytecepg/rytec.sources.xml.${PV}.gz \
     file://satmate.sources.xml \
     "
@@ -19,10 +19,10 @@ S = "${WORKDIR}"
 DEPENDS = "enigma2-plugin-extensions-xmltvimport"
 PACKAGES = "${PN}"
 
-FILES_${PN} = "/etc/xmltvimport"
+FILES_${PN} = "/etc/epgimport"
 
 do_install() {
-    install -d ${D}/etc/xmltvimport
-    install -m 644 ${S}/rytec.sources.xml.${PV} ${D}/etc/xmltvimport/rytec.sources.xml
-    install -m 644 ${S}/satmate.sources.xml ${D}/etc/xmltvimport/
+    install -d ${D}/etc/epgimport
+    install -m 644 ${S}/rytec.sources.xml.${PV} ${D}/etc/epgimport/rytec.sources.xml
+    install -m 644 ${S}/satmate.sources.xml ${D}/etc/epgimport/
 }

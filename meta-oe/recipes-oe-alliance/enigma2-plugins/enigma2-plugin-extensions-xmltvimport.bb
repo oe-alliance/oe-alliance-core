@@ -2,7 +2,7 @@ SUMMARY = "Imports xmltv files into the EPG cache of enigma2"
 MAINTAINER = "oe-alliance"
 
 LICENSE = "GPLv2"
-LIC_FILES_CHKSUM = "file://etc/xmltvimport/readme.txt;startline=1;endline=4;md5=c162054328d930d453543efef81be1d8"
+LIC_FILES_CHKSUM = "file://etc/epgimport/readme.txt;startline=1;endline=4;md5=c162054328d930d453543efef81be1d8"
 
 inherit gitpkgv pythonnative
 
