@@ -23,6 +23,6 @@ FILES_${PN} = "/etc/epgimport"
 
 do_install() {
     install -d ${D}/etc/epgimport
-    install -m 644 ${S}/rytec.sources.xml ${D}/etc/epgimport/rytec.sources.xml
+    install -m 644 ${S}/rytec.sources.xml.${PV} ${D}/etc/epgimport/rytec.sources.xml
     install -m 644 ${S}/satmate.sources.xml ${D}/etc/epgimport/
 }
