@@ -12,7 +12,7 @@ SRC_URI = "file://Ncam_Ci.sh file://StartBhCam file://Delete_all_Crashlogs.sh fi
 	file://delite.key file://server.crt file://server.key \
 	file://Netstat.sh file://Uptime.sh file://bp_swap"
 
-PR = "r9"
+PR = "r10"
 
 FILES_${PN} = "/"
 
@@ -68,4 +68,9 @@ do_install() {
 	install -d ${D}/etc/rc4.d
 	ln -s /etc/init.d/openvpn ${D}/etc/rc4.d/K40openvpn
 
+}
+
+do_install_append_vusolo4k() {
+	install -d ${D}/lib
+	ln -sf ld-2.23.so ${D}/lib/ld-linux.so.3
 }
