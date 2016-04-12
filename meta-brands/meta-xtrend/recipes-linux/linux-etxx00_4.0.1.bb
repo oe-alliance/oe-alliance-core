@@ -26,6 +26,7 @@ SRC_URI += "http://xtrendet.net/linux-${PV}.tar.gz \
 	file://add-dmx-source-timecode.patch \
 	file://iosched-slice_idle-1.patch \
 	file://0001-genet1-1000mbit.patch \
+	file://0001-bcmgenet.patch \
 	"
 
 S = "${WORKDIR}/linux-${PV}"
