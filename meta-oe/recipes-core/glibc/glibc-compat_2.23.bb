@@ -1,0 +1,18 @@
+SUMMARY = "Compatibility for packages that link to hardfloat ld-linux lib to emulate softfloat one"
+
+require conf/license/license-gplv2.inc
+
+PACKAGE_ARCH = "all"
+RDEPENDS_${PN} = "glibc"
+PV = "1.0"
+PR = "r2"
+
+RREPLACES_${PN} = "libcrypto0.9.8 libssl0.9.8"
+RCONFLICTS_${PN} = "libcrypto0.9.8 libssl0.9.8"
+
+do_install () {
+    install -d ${D}/lib
+    ln -sf ld-${PV} ${D}/lib/ld-linux.so.3
+}
+
+FILES_${PN} = "/lib"
