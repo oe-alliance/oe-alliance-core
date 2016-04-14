@@ -30,4 +30,5 @@ do_compile_append_sh4() {
 do_compile_append_wetekplay() {
     echo "arch mips32el $priority" >> $archconf
     echo "arch mipsel $priority" >> $archconf
+    echo "arch cortexa9hf-vfp-neon $priority" >> $archconf
 }
