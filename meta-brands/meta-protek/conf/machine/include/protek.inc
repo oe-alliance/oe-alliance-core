@@ -9,6 +9,7 @@ KERNEL_FILE = "kernel.bin"
 ROOTFS_FILE = "rootfs.bin"
 
 DVBPROVIDER = "kernel"
+DVBSKYPROVIDER = "kernel"
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS = "\
     protek-dvb-modules-${MACHINE} \
