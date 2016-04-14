@@ -4,8 +4,8 @@ LICENSE = "GPLv2"
 
 LIC_FILES_CHKSUM = "file://${S}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-SRC_URI[md5sum] = "df6828070cef08319f5c5780bb1edc86"
-SRC_URI[sha256sum] = "15d2a75ad9078b105ea506ec20e3a6a5fc83a41d7ba080f1486060be0f7cdcf9"
+SRC_URI[md5sum] = "9712aee820b5a9a7cd1dc6f57fc58bb8"
+SRC_URI[sha256sum] = "2a6843b68142835e81f6e73f4b9e0c3bb1c11e59029a866ab5691c95c634e859"
 
 inherit kernel machine_kernel_pr
 
@@ -23,7 +23,6 @@ COMPATIBLE_MACHINE = "(wetekplay)"
 
 SRC_URI = "http://github.com/wetek-enigma/linux-wetek-3.10.y/archive/master.tar.gz \
     file://defconfig \
-    file://gcc5-return_address.patch \
 "
 
 S = "${WORKDIR}/linux-wetek-3.10.y-master"
