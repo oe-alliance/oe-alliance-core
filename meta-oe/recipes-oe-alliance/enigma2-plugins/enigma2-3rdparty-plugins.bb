@@ -11,7 +11,7 @@ DEPENDS = "tslib mpfr gmp"
 SRCREV = "${AUTOREV}"
 PV = "2.3+gitr${SRCPV}"
 PKGV = "2.3+gitr${GITPKGV}"
-PR = "r48"
+PR = "r49"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -67,7 +67,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-piconmanager_2.2-20150329-r0_all.ipk \
     enigma2-plugin-extensions-piconsupdater_0.3.6_mips32el.ipk \
     enigma2-plugin-extensions-picturecenterfs_7.23_all.ipk \
-    enigma2-plugin-extensions-planerfs_6.59_all.ipk \
+    enigma2-plugin-extensions-planerfs_6.60_all.ipk \
     enigma2-plugin-extensions-pluginupdater_0.1r2_all.ipk \
     enigma2-plugin-extensions-pluginspanel_1.0_r01_all.ipk \
     enigma2-plugin-extensions-radioo_0.45c_all.ipk \
@@ -84,14 +84,14 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-tmbd_6.7_all.ipk \
     enigma2-plugin-extensions-translator_1.0_mips32el.ipk \
     enigma2-plugin-extensions-transmission_2.83_mips32el.ipk \
-    enigma2-plugin-extensions-tsmedia_11.0_all.ipk \
+    enigma2-plugin-extensions-tsmedia_11.1_all.ipk \
     enigma2-plugin-extensions-tstube_1.2_all.ipk \
     enigma2-plugin-extensions-tvspielfilm_6.4rc5_all.ipk \
     enigma2-plugin-extensions-verkehrsinfo_1.1rc1_mips32el.ipk \
     enigma2-plugin-extensions-vhannibalautosettings_1.1_mips32el.ipk \
     enigma2-plugin-extensions-vuplusforum_0.7rc3_mips32el.ipk \
     enigma2-plugin-extensions-webmedia_14.0_r0_all.ipk \
-    enigma2-plugin-extensions-webradiofs_14.39_all.ipk \
+    enigma2-plugin-extensions-webradiofs_14.40_all.ipk \
     enigma2-plugin-extensions-wikipedia_2.2rc7_mips32el.ipk \
     enigma2-plugin-extensions-wwech_1.03_all.ipk \
     enigma2-plugin-extensions-xbmcaddons_8.1_r0_all.ipk \
