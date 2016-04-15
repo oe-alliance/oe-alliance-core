@@ -69,8 +69,3 @@ do_install() {
 	ln -s /etc/init.d/openvpn ${D}/etc/rc4.d/K40openvpn
 
 }
-
-do_install_append_vusolo4k() {
-	install -d ${D}/lib
-	ln -sf ld-2.23.so ${D}/lib/ld-linux.so.3
-}
