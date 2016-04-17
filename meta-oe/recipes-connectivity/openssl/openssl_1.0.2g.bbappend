@@ -4,4 +4,4 @@ PR .= ".3"
 
 PACKAGE_ARCH := "${MACHINE_ARCH}"
 
-SRC_URI = " file://fix_openssl_100_version.diff"
+SRC_URI_append = " file://fix_openssl_100_version.diff"
