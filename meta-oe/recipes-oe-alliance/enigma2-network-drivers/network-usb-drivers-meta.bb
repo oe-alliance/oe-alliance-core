@@ -13,7 +13,6 @@ DEPENDS = "\
     enigma2-plugin-drivers-network-usb-smsc75xx \
     enigma2-plugin-drivers-network-usb-zd1211rw \
     enigma2-plugin-drivers-network-usb-rtl8812au \
-    enigma2-plugin-drivers-network-usb-rtl8812au \
     enigma2-plugin-drivers-network-usb-r8723a \
     enigma2-plugin-drivers-network-usb-rt8723bs \
     enigma2-plugin-drivers-network-usb-mt7601u \
