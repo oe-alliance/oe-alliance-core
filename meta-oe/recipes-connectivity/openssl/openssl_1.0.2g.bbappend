@@ -1,7 +1,7 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
-PR .= ".2"
+PR .= ".3"
 
 PACKAGE_ARCH := "${MACHINE_ARCH}"
 
-SRC_URI_append_arm = " file://fix_openssl_100_version.diff"
+SRC_URI = " file://fix_openssl_100_version.diff"
