@@ -142,6 +142,8 @@ do_compile () {
 
 }
 
+SSTATE_DUPWHITELIST += "${STAGING_INCDIR}/netatalk/at.h"
+
 require glibc-package.inc
 
 BBCLASSEXTEND = "nativesdk"
