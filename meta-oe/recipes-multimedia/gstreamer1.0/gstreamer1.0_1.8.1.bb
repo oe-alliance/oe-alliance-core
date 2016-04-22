@@ -17,7 +17,7 @@ SRC_URI += " \
 
 S = "${WORKDIR}/git"
 
-SRCREV_master = "1abf889dddc75b4e4db2f4505a4287cb20878d27"
+SRCREV_master = "529406598582b0931ff6fd081e0a7435a7480eec"
 SRCREV_common = "1b39f6d85a3d51ac6d1b44d8c821fd9b76b34454"
 SRCREV_FORMAT = "master"
 inherit gitpkgv

@@ -21,7 +21,7 @@ SRC_URI = " \
 
 S = "${WORKDIR}/git"
 
-SRCREV_master = "2d362cc9206785bab4d20c7e375b9c8872d60f95"
+SRCREV_master = "ae3a80eec7129bc9f6d812ecfbe857ccd5b6c74f"
 SRCREV_common = "1b39f6d85a3d51ac6d1b44d8c821fd9b76b34454"
 SRCREV_ffmpeg = "c40983a6f631d22fede713d535bb9c31d5c9740c"
 SRCREV_FORMAT = "master"
