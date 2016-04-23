@@ -1,21 +1,34 @@
 # We know about rtc
 include conf/machine/include/build-extras.inc
 
-BRAND_OEM = "skylake"
+BRAND_OEM = "gfutures"
 
 MACHINE_NAME = "\
-${@base_contains('MACHINEBUILD', 'mutant2400', 'HD2400' , '', d)}\
-${@base_contains('MACHINEBUILD', 'quadbox2400', 'QuadBox HD2400' , '', d)}\
+${@base_contains('MACHINEBUILD', 'mutant1100', 'HD1100' , '', d)}\
+${@base_contains('MACHINEBUILD', 'mutant1265', 'HD1265' , '', d)}\
+${@base_contains('MACHINEBUILD', 'mutant1500', 'HD1500' , '', d)}\
+${@base_contains('MACHINEBUILD', 'mutant1100', 'HD1100' , '', d)}\
+${@base_contains('MACHINEBUILD', 'mutant500c', 'HD500C' , '', d)}\
+${@base_contains('MACHINEBUILD', 'mutant1200', 'HD1200' , '', d)}\
+${@base_contains('MACHINEBUILD', 'vizyonvita', 'Vita' , '', d)}\
 "
 
 MACHINE_BRAND = "\
-${@base_contains('MACHINEBUILD', 'mutant2400', 'Mut@nt' , '', d)}\
-${@base_contains('MACHINEBUILD', 'quadbox2400', 'AX' , '', d)}\
+${@base_contains('MACHINEBUILD', 'mutant1100', 'Mut@nt' , '', d)}\
+${@base_contains('MACHINEBUILD', 'mutant1265', 'Mut@nt' , '', d)}\
+${@base_contains('MACHINEBUILD', 'mutant1500', 'Mut@nt' , '', d)}\
+${@base_contains('MACHINEBUILD', 'mutant500c', 'Mut@nt' , '', d)}\
+${@base_contains('MACHINEBUILD', 'mutant1200', 'Mut@nt' , '', d)}\
+${@base_contains('MACHINEBUILD', 'vizyonvita', 'Vizyon' , '', d)}\
 "
 
 IMAGEDIR ?= "\
-${@base_contains('MACHINEBUILD', 'mutant2400', 'hd2400' , '', d)}\
-${@base_contains('MACHINEBUILD', 'quadbox2400', 'hd2400' , '', d)}\
+${@base_contains('MACHINEBUILD', 'mutant1100', 'hd1100' , '', d)}\
+${@base_contains('MACHINEBUILD', 'mutant1265', 'hd1265' , '', d)}\
+${@base_contains('MACHINEBUILD', 'mutant1500', 'hd1500' , '', d)}\
+${@base_contains('MACHINEBUILD', 'mutant500c', 'hd500c' , '', d)}\
+${@base_contains('MACHINEBUILD', 'mutant1200', 'hd1200' , '', d)}\
+${@base_contains('MACHINEBUILD', 'vizyonvita', 'hd1100' , '', d)}\
 "
 
 MTD_KERNEL = "mtd1"
@@ -24,7 +37,7 @@ KERNEL_FILE = "kernel.bin"
 ROOTFS_FILE = "rootfs.bin"
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS = "\
-    skylake-dvb-modules-${MACHINE} \
+    gfutures-dvb-modules-${MACHINE} \
     kernel-vmlinux \
     "
 
@@ -41,12 +54,15 @@ MACHINE_EXTRA_RRECOMMENDS = " \
 
 include conf/machine/include/autoload-filesystems.inc
 
-DVBMEDIASINK_CONFIG = "--with-wma --with-wmv --with-pcm --with-dts --with-eac3"
+DVBMEDIASINK_CONFIG = "--with-wma --with-wmv --with-pcm --with-dts --with-eac3 \
+    ${@base_contains('MACHINEBUILD', 'mutant1265', '--with-h265 --with-vb8' , '', d)} \
+    ${@base_contains('MACHINEBUILD', 'mutant1500', '--with-h265 --with-vb8' , '', d)} \
+"
 
 TARGET_ARCH = "mipsel"
 DEFAULTTUNE = "mips32el"
 
-PREFERRED_PROVIDER_virtual/kernel = "linux-skylake"
+PREFERRED_PROVIDER_virtual/kernel = "linux-gfutures"
 
 KERNEL_IMAGETYPE = "vmlinux"
 KERNEL_OUTPUT = "${KERNEL_IMAGETYPE}"
