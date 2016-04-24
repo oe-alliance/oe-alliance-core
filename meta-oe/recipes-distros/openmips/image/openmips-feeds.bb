@@ -15,7 +15,6 @@ RRECOMMENDS_${PN} = "\
     enigma2-skins \
     enigma2-plugin-skins-gb-fhd \
     enigma2-plugin-skins-pli-hd \
-    enigma2-plugin-skins-pax-fhd \
     enigma2-plugin-extensions-enhancedmoviecenter \
     enigma2-plugin-extensions-cooltvguide \
     enigma2-plugin-systemplugins-autobouquetsmaker\
