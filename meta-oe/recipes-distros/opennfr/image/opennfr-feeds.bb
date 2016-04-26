@@ -31,7 +31,9 @@ RRECOMMENDS_${PN} = "\
     enigma2-plugin-skins-skallihd-fullhd \
     enigma2-plugin-skins-iflat-blassermod \
     enigma2-plugin-skins-fenris-blassermod \
-	enigma2-plugin-skins-prime-nfrstyle \
+    bcm \
+    opera-dumpait \
+    enigma2-plugin-skins-prime-nfrstyle \
     enigma2-plugin-skins-smoke-light-hd \
     enigma2-plugin-extensions-vmc \
 " 
