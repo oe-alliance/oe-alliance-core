@@ -54,7 +54,7 @@ RRECOMMENDS_${PN} = " \
     "
 
 RRECOMMENDS_${PN}_append_wetekplay = " enigma2-plugin-skins-metrix-bh-fhd-icons enigma2-plugin-systemplugins-wirelesslan"
-RRECOMMENDS_${PN}_append_vusolo4k = "enigma2-plugin-skins-metrix-bh"
+RRECOMMENDS_${PN}_append_vusolo4k = "enigma2-plugin-skins-metrix-bh enigma2-plugin-systemplugins-solo4kmisccontrol"
 RRECOMMENDS_${PN}_append_vuduo2 = "enigma2-plugin-skins-metrix-bh"
 RRECOMMENDS_${PN}_append_vusolo2 = "enigma2-plugin-skins-metrix-bh"
 RRECOMMENDS_${PN}_append_vusolose = "enigma2-plugin-skins-metrix-bh"
