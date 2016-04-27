@@ -7,6 +7,8 @@ LIC_FILES_CHKSUM = "file://LICENSE.GPL;md5=930e2a5f63425d8dd72dbd7391c43c46"
 
 PROVIDES += "virtual/kodi"
 RPROVIDES_${PN} += "virtual/kodi"
+RREPLACES_${PN} += "virtual/xbmc"
+RCONFLICTS_${PN} += "virtual/xbmc"
 
 DEPENDS = "\
 	vuplus-libgles-${MACHINE} \
