@@ -15,6 +15,8 @@ S = "${WORKDIR}"
 
 INITSCRIPT_NAME = "bootlogo"
 INITSCRIPT_PARAMS = "start 06 S ."
+PRECOMPILED_ARCH = "${MACHINE}"
+PRECOMPILED_ARCH_dm7020hdv2 = "dm7020hd"
 INITSCRIPT_PARAMS_vuduo2 = "start 70 S ."
 INITSCRIPT_PARAMS_vusolo2 = "start 70 S ."
 INITSCRIPT_PARAMS_vusolose = "start 70 S ."
