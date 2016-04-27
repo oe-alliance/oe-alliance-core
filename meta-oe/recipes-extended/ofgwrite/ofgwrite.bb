@@ -7,13 +7,10 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=0636e73ff0215e8d672dc4c32c317bb3 \
 inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PKGV = "3.x+git${GITPKGV}"
-PKGV_openvix = "2.x+git${GITPKGV}"
 PV = "3.x+git${SRCPV}"
-PV_openvix = "2.x+git${SRCPV}"
-PR = "r1"
+PR = "r2"
 
 SRC_URI = "git://github.com/oe-alliance/ofgwrite.git"
-SRC_URI_openvix = "git://github.com/oe-alliance/ofgwrite.git;branch=v2.x"
 
 inherit autotools-brokensep pkgconfig
 
@@ -26,9 +23,4 @@ do_install() {
     install -m 755 ${S}/ofgwrite ${D}/usr/bin
     install -m 755 ${S}/ofgwrite_bin ${D}/usr/bin
     install -m 755 ${S}/ofgwrite_test ${D}/usr/bin
-}
-
-do_install_openvix() {
-    install -d ${D}/usr/bin
-    install -m 755 ${S}/ofgwrite ${D}/usr/bin
 }
