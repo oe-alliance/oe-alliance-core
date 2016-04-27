@@ -34,6 +34,7 @@ EXTRA_OECONF = " \
     --with-machinemake="${MACHINEBUILD}" \
     --with-imageversion="${DISTRO_VERSION}" \
     --with-imagebuild="${BUILD_VERSION}" \
+    --with-imagedevbuild="${DEVELOPER_BUILD_VERSION}" \
     --with-imagetype="${DISTRO_TYPE}" \
     --with-imagedir="${IMAGEDIR}" \
     --with-imagefs="${IMAGE_FSTYPES}" \
