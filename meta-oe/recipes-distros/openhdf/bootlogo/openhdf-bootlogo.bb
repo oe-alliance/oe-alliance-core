@@ -9,12 +9,14 @@ require conf/license/license-gplv2.inc
 RDEPENDS_${PN} += "showiframe"
 
 PV = "5.3"
-PR = "r2"
+PR = "r3"
 
 S = "${WORKDIR}"
 
 INITSCRIPT_NAME = "bootlogo"
 INITSCRIPT_PARAMS = "start 06 S ."
+PRECOMPILED_ARCH = "${MACHINE}"
+PRECOMPILED_ARCH_dm7020hdv2 = "dm7020hd"
 
 inherit update-rc.d
 
@@ -46,7 +48,7 @@ FILES_${PN} = "/boot /usr/share /etc/init.d"
 
 do_install() {
     ${@base_contains("MACHINE_FEATURES", "dreamboxv1", "install -d ${D}/boot", "", d)}
-    ${@base_contains("MACHINE_FEATURES", "dreamboxv1", "install -m 0755 ${S}/dreambox-bootlogo_${BINARY_VERSION}_${MACHINE_ARCH}/bootlogo-${MACHINE_ARCH}.elf.gz ${D}/boot/; install -m 0755 ${S}/dreambox-bootlogo_${BINARY_VERSION}_${MACHINE_ARCH}/bootlogo-${MACHINE_ARCH}.jpg ${D}/boot/", "", d)}
+    ${@base_contains("MACHINE_FEATURES", "dreamboxv1", "install -m 0755 ${S}/dreambox-bootlogo_${BINARY_VERSION}_${PRECOMPILED_ARCH}/bootlogo-${PRECOMPILED_ARCH}.elf.gz ${D}/boot/; install -m 0755 ${S}/splash1280.jpg ${D}/boot/bootlogo-${PRECOMPILED_ARCH}.jpg", "", d)}
     install -d ${D}/usr/share
     install -m 0644 bootlogo.mvi ${D}/usr/share/bootlogo.mvi
     ln -sf /usr/share/bootlogo.mvi ${D}/usr/share/backdrop.mvi
