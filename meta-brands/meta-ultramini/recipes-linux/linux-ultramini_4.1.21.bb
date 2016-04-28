@@ -5,11 +5,11 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 inherit kernel machine_kernel_pr
 
-KERNEL_RELEASE = "3.18.24"
-SRCDATE = "20151109"
+KERNEL_RELEASE = "4.1.21"
+SRCDATE = "20160408"
 
-SRC_URI[md5sum] = "b7b64609db25ae28e85dd0549ee697a4"
-SRC_URI[sha256sum] = "ef2dbd871ae67ca9dafeedd21668338b9bc929258f67867bef8efdf9b0ee5b15"
+SRC_URI[md5sum] = "e7ba35d427bfa40d78cd6e23db7872a2"
+SRC_URI[sha256sum] = "88f648e462e9d37c6ed9401b33ee1dd08495e9f66b9c653aefd9fd0a4f5afb26"
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
@@ -21,16 +21,9 @@ PKG_kernel-image = "kernel-image"
 RPROVIDES_kernel-base = "kernel-${KERNEL_VERSION}"
 RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
 
-SRC_URI += "http://xpeedlxclass.eu/xpeedc-linux-${PV}-${SRCDATE}.tar.gz \
+SRC_URI += "http://xpeedlxclass.eu/linux-${PV}.tar.xz \
     file://defconfig \
-    file://add-dmx-source-timecode.patch \
-    file://af9015-output-full-range-SNR.patch \
-    file://cxd2820r-output-full-range-SNR.patch \
-    file://fix-proc-cputype.patch \
-    file://iosched-slice_idle-1.patch \
-    file://mxl5007t-add-no_probe-and-no_reset-parameters.patch \
-    file://tda18271-advertise-supported-delsys.patch \
-    "
+"
 
 S = "${WORKDIR}/linux-${PV}"
 B = "${WORKDIR}/build"
