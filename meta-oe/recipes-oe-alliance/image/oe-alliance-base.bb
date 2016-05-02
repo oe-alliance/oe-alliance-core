@@ -11,7 +11,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "5.3"
-PR = "r3"
+PR = "r2"
 
 RDEPENDS_${PN} = "\
     oe-alliance-enigma2 \
@@ -23,7 +23,6 @@ RDEPENDS_${PN} = "\
     ${@base_contains("MACHINE_FEATURES", "no-nmap", "" , "nmap", d)} \
     ${@base_contains("TARGET_ARCH", "sh4", "alsa-utils-amixer-conf" , "", d)} \
     avahi-daemon \
-    ${@base_contains("DISTRO", "openvix", "", "llmnrd", d)} \
     dropbear \
     early-configure \
     e2fsprogs-mke2fs \
