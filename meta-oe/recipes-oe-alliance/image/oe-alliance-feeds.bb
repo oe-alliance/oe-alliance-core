@@ -9,7 +9,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "5.2"
-PR = "r4"
+PR = "r5"
 
 DEPENDS = "enigma2-plugin-drivers-usbserial"
 RECOMMENDS = "enigma2-plugin-extensions-et-livestream"
@@ -69,7 +69,7 @@ RDEPENDS_${PN} = " \
     inadyn-mt \
     iperf \
     joe \
-    llmnrd \
+    ${@base_contains("DISTRO", "openvix", "llmnrd", "", d)} \
     mc \
     minidlna \
     mpd \
