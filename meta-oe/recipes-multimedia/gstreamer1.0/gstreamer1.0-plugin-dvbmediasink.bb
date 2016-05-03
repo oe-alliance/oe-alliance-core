@@ -36,13 +36,17 @@ SRC_URI_append_vusolo4k = " \
     file://0001-add-VB6-VB8-SPARK.patch;patch=1 \
 "
 
+SRC_URI_append_xc7362 = " \
+    file://0001-add-VB6-VB8-SPARK.patch;patch=1 \
+"
+
 S = "${WORKDIR}/git"
 
 inherit gitpkgv
 
 PV = "${GSTVERSION}+git${SRCPV}"
 PKGV = "${GSTVERSION}+git${GITPKGV}"
-PR = "r13"
+PR = "r14"
 
 do_configure_prepend() {
     sed -i 's/AC_INIT.*$/AC_INIT(gst-plugin-dvbmediasink, 1.0.0, @pli4)/' ${S}/configure.ac
