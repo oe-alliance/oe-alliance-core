@@ -18,7 +18,6 @@ IMAGE_INSTALL = "openatv-base \
     packagegroup-base-smbfs-server \
     packagegroup-base-smbfs-utils \
     packagegroup-base-nfs \
-    llmnrd \
     ", d)} \
     "
 
