@@ -8,14 +8,15 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-# PR = "r2"
-
-# CFLAGS_append = " -I${S}  -I${S}/lib "
+PR = "r1"
 
 # SRC_URI = "git://github.com/tklauser/llmnrd.git"
 SRC_URI = "git://github.com/Schimmelreiter/llmnrd.git \
     file://llmnrd.sh \
 "
+
+PACKAGES =+ "llmnr-query"
+FILES_llmnr-query = "${bindir}/llmnr-query"
 
 S = "${WORKDIR}/git"
 
@@ -32,9 +33,9 @@ do_compile() {
 }
 
 do_install() {
-    install -d ${D}/usr/bin
-    install -m 755 ${S}/llmnrd ${D}/usr/bin
-    install -m 755 ${S}/llmnr-query ${D}/usr/bin
-    install -d ${D}/etc/init.d
-    install -m 755 ${WORKDIR}/llmnrd.sh ${D}/etc/init.d/llmnrd
+    install -d ${D}${bindir}
+    install -m 755 ${S}/llmnrd ${D}${bindir}
+    install -m 755 ${S}/llmnr-query ${D}${bindir}
+    install -d ${D}${sysconfdir}/init.d
+    install -m 755 ${WORKDIR}/llmnrd.sh ${D}${sysconfdir}/init.d/llmnrd
 }
