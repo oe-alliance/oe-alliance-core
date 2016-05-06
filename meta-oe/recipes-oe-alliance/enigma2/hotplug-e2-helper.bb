@@ -7,7 +7,7 @@ inherit gitpkgv
 
 PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"
-PR = "r1"
+PR = "r2"
 
 SRC_URI = "git://github.com/OpenPLi/${PN}.git;protocol=git"
 
@@ -24,6 +24,5 @@ do_configure_prepend() {
 
 pkg_postinst_${PN} () {
     rm -f $D/autofs
-    mkdir $D/autofs
     true
 }
