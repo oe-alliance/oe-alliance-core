@@ -9,7 +9,7 @@ inherit gitpkgv autotools deploy
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r41"
+PR = "r42"
 SRC_URI="git://github.com/openhdf/3rdparty-plugins.git;protocol=git"
 
 EXTRA_OECONF = " \
@@ -27,6 +27,8 @@ S = "${WORKDIR}/git"
 
 DEPENDS = "enigma2"
 
+THIRDPARTY_PLUGINS = " \
+   "
 THIRDPARTY_MACHINE_PLUGINS_gb7356 = " \
     enigma2-plugin-extensions-multiquickbutton_*_gb_*.ipk \
     "
@@ -51,21 +53,45 @@ THIRDPARTY_MACHINE_PLUGINS_vusolo2 = " \
 THIRDPARTY_MACHINE_PLUGINS_vuduo2 = " \
     enigma2-plugin-extensions-multiquickbutton_*_vu_all.ipk \
     "
+THIRDPARTY_MACHINE_PLUGINS_et10000 = " \
+    enigma2-plugin-extensions-et-*.ipk \
+    enigma2-plugin-extensions-multiquickbutton_*_et_mipsel.ipk \
+    enigma2-plugin-extensions-newxtrend-hbbtv_*_mips32el.ipk \
+    "
 THIRDPARTY_MACHINE_PLUGINS_et9x00 = " \
     enigma2-plugin-extensions-et-*.ipk \
     enigma2-plugin-extensions-multiquickbutton_*_et_mipsel.ipk \
+    enigma2-plugin-extensions-newxtrend-hbbtv_*_mips32el.ipk \
+    "
+THIRDPARTY_MACHINE_PLUGINS_et8000 = " \
+    enigma2-plugin-extensions-et-*.ipk \
+    enigma2-plugin-extensions-multiquickbutton_*_et_mipsel.ipk \
+    enigma2-plugin-extensions-newxtrend-hbbtv_*_mips32el.ipk \
+    "
+THIRDPARTY_MACHINE_PLUGINS_et8500 = " \
+    enigma2-plugin-extensions-et-*.ipk \
+    enigma2-plugin-extensions-multiquickbutton_*_et_mipsel.ipk \
+    enigma2-plugin-extensions-newxtrend-hbbtv_*_mips32el.ipk \
+    "
+THIRDPARTY_MACHINE_PLUGINS_et7x00 = " \
+    enigma2-plugin-extensions-et-*.ipk \
+    enigma2-plugin-extensions-multiquickbutton_*_et_mipsel.ipk \
+    enigma2-plugin-extensions-newxtrend-hbbtv_*_mips32el.ipk \
     "
 THIRDPARTY_MACHINE_PLUGINS_et6x00 = " \
     enigma2-plugin-extensions-et-*.ipk \
     enigma2-plugin-extensions-multiquickbutton_*_et_mipsel.ipk \
+    enigma2-plugin-extensions-newxtrend-hbbtv_*_mips32el.ipk \
     "
 THIRDPARTY_MACHINE_PLUGINS_et5x00 = " \
     enigma2-plugin-extensions-et-*.ipk \
     enigma2-plugin-extensions-multiquickbutton_*_et_mipsel.ipk \
+    enigma2-plugin-extensions-newxtrend-hbbtv_*_mips32el.ipk \
     "
 THIRDPARTY_MACHINE_PLUGINS_et4x00 = " \
     enigma2-plugin-extensions-et-*.ipk \
     enigma2-plugin-extensions-multiquickbutton_*_et_mipsel.ipk \
+    enigma2-plugin-extensions-newxtrend-hbbtv_*_mips32el.ipk \
     "
 THIRDPARTY_MACHINE_PLUGINS_e3hd = " \
     enigma2-plugin-extensions-hbbtv_2.13_E3HD_mips32el.ipk \
@@ -75,6 +101,18 @@ THIRDPARTY_MACHINE_PLUGINS_odinm7 = " \
     "
 THIRDPARTY_MACHINE_PLUGINS_maram9 = " \
     enigma2-plugin-extensions-hbbtv_2.12_ODIN_mips32el.ipk \
+    "
+THIRDPARTY_MACHINE_PLUGINS_ultramini = " \
+    enigma2-plugin-extensions-xpeedlx-hbbtv_*_mips32el.ipk \
+    "
+THIRDPARTY_MACHINE_PLUGINS_xpeedlx = " \
+    enigma2-plugin-extensions-xpeedlx-hbbtv_*_mips32el.ipk \
+    "
+THIRDPARTY_MACHINE_PLUGINS_xpeedlx3 = " \
+    enigma2-plugin-extensions-xpeedlx-hbbtv_*_mips32el.ipk \
+    "
+THIRDPARTY_MACHINE_PLUGINS_sf3038 = " \
+    enigma2-plugin-extensions-hbbtv-sf3038_*_mips32el.ipk \
     "
 THIRDPARTY_EXTRA_PLUGINS = " \
     enigma2-plugin-extensions-et-portal*.ipk \
@@ -93,6 +131,9 @@ do_deploy() {
     rm -f ${DEPLOY_DIR_IPK}/3rdparty/enigma2-plugin-extensions-hbbtv_* || true
     rm -f ${DEPLOY_DIR_IPK}/3rdparty/enigma2-plugin-extensions-multiquickbutton*.ipk || true
     rm -f ${DEPLOY_DIR_IPK}/3rdparty/enigma2-plugin-extensions-backupsuite*.ipk || true
+    rm -f ${DEPLOY_DIR_IPK}/3rdparty/enigma2-plugin-extensions-newxtrend-hbbtv_*_mips32el.ipk || true
+    rm -f ${DEPLOY_DIR_IPK}/3rdparty/enigma2-plugin-extensions-xpeedlx-hbbtv_*_mips32el.ipk || true
+    rm -f ${DEPLOY_DIR_IPK}/3rdparty/enigma2-plugin-extensions-hbbtv-sf3038_*_mips32el.ipk || true
 #    [ -e ${S}/*enigma2-plugin-extensions-et-portal*.ipk ] && install -m 0644 ${S}/*enigma2-plugin-extensions-et-portal*.ipk ${DEPLOY_DIR_IPK}/3rdparty || true
     [ -e ${S}/*${MACHINE}.ipk ] && install -m 0644 ${S}/*${MACHINE}.ipk ${DEPLOY_DIR_IPK}/${MACHINE}_3rdparty #|| true
     [ -e ${S}/*${MACHINEBUILD}.ipk ] && install -m 0644 ${S}/*${MACHINEBUILD}.ipk ${DEPLOY_DIR_IPK}/${MACHINE}_3rdparty #|| true
