@@ -1,6 +1,8 @@
 KV = "3.8.7"
 SRCDATE = "20130524"
 
+SRC_URI = "http://www.xtrendet.net/${MACHINE}-drivers-${KV}-${SRCDATE}.zip"
+
 RDEPENDS_${PN} += "et-fpupdate-${MACHINE}"
 
 require et-dvb-modules.inc
