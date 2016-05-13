@@ -5,13 +5,13 @@ LICENSE = "CLOSED"
 require conf/license/license-close.inc
 
 PV = "${KV}+${SRCDATE}"
-PR = "r13"
+PR = "r14"
 
 RDEPENDS_${PN}_et5x00 += "et-fpupdate-${MACHINE}"
 RDEPENDS_${PN}_et6x00 += "et-fpupdate-${MACHINE}"
 RDEPENDS_${PN}_et9x00 += "et-fpupdate-${MACHINE}"
 
-SRC_URI ?= "http://www.xtrendet.net/${MACHINE}-drivers-${KV}-${SRCDATE}.zip"
+
 
 S = "${WORKDIR}"
 
