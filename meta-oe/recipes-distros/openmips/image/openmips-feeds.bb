@@ -6,13 +6,12 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=4d92cd373abda3937c2bc47fbc49d
 ALLOW_EMPTY_${PN} = "1"
 
 PV = "${IMAGE_VERSION}"
-PR = "r3"
+PR = "r4"
 
 inherit packagegroup
 
 RRECOMMENDS_${PN} = "\
-    oe-alliance-skins \
-    enigma2-skins \
+    curlftpfs \
     enigma2-plugin-skins-gb-fhd \
     enigma2-plugin-skins-pli-hd \
     enigma2-plugin-extensions-enhancedmoviecenter \
@@ -21,5 +20,10 @@ RRECOMMENDS_${PN} = "\
     enigma2-plugin-extensions-gbipboxclient \
     enigma2-plugin-extensions-oscamsmartcard \
     enigma2-plugin-extensions-xmltvimport \
+    enigma2-skins \
+    enigma2-plugin-skins-pax-fhd \
+    monit \
+    oe-alliance-skins \
     openssl-old \
+    v4l-utils \
     "
