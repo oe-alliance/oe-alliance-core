@@ -15,7 +15,6 @@ DEPENDS = "\
     enigma2-plugin-drivers-network-usb-rtl8812au \
     enigma2-plugin-drivers-network-usb-r8723a \
     enigma2-plugin-drivers-network-usb-rt8723bs \
-    ${@base_contains("TARGET_ARCH", "mipsel", "enigma2-plugin-drivers-network-usb-rt8723bu" , "", d)} \
     enigma2-plugin-drivers-network-usb-mt7601u \
     enigma2-plugin-drivers-network-usb-mt7610u \
     enigma2-plugin-drivers-network-usb-rtl8192eu \
@@ -30,4 +29,4 @@ DEPENDS = "\
     enigma2-plugin-drivers-network-usb-rtl8192cu \
     "
 
-PR = "r20"
+PR = "r21"
