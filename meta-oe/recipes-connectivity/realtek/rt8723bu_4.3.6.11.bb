@@ -11,7 +11,7 @@ PR = "r1"
 MACHINE_KERNEL_PR_append = ".0"
 
 SRC_URI = "http://source.mynonpublic.com/rtl8723bu_v4.3.6.11_12942.20141204_BTCOEX20140507-4E40.zip \
-    file:/rt8723bu-gcc5.patch \
+    file://rt8723bu-gcc5.patch \
 "
 
 EXTRA_OEMAKE = "LINUX_SRC=${STAGING_KERNEL_DIR} KDIR=${STAGING_KERNEL_DIR}"
