@@ -9,7 +9,7 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"
-PR = "r4"
+PR = "r5"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 DEPENDS = "freetype"
@@ -55,6 +55,9 @@ fi
 pkg_postinst_${PN}() {
 rm /sbin/init
 ln -s /sbin/open_multiboot /sbin/init
+}
+
+pkg_postinst_${PN}_openbh() {
 }
 
 pkg_postrm_${PN}() {

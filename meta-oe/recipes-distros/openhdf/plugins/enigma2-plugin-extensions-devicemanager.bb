@@ -2,7 +2,7 @@ SUMMARY = "Enigma2 Device Manager"
 MAINTAINER = "SystemPlugins"
 SECTION = "base"
 PRIORITY = "required"
-PACKAGE_ARCH = "${MACHINE_ARCH}"
+PACKAGE_ARCH = "all"
 
 require conf/license/license-gplv2.inc
 

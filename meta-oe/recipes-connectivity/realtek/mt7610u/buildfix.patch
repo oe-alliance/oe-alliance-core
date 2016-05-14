@@ -1,0 +1,52 @@
+*** mt7610u_wifi_sta_v3002_dpo_20130916/os/linux/rt_linux.c	2013-09-16 16:03:08.000000000 +0200
+--- mt7610u_wifi_sta_v3002_dpo_20130916/os/linux/rt_linux.c	2015-10-26 12:36:37.882536858 +0100
+*************** static inline void __RtmpOSFSInfoChange(
+*** 1105,1110 ****
+--- 1105,1113 ----
+  		pOSFSInfo->fsuid = current->fsuid;
+  		pOSFSInfo->fsgid = current->fsgid;
+  		current->fsuid = current->fsgid = 0;
++ #elif LINUX_VERSION_CODE > KERNEL_VERSION(3,14,0)
++ 		pOSFSInfo->fsuid = current_fsuid().val;
++ 		pOSFSInfo->fsgid = current_fsgid().val;
+  #else
+  		pOSFSInfo->fsuid = current_fsuid();
+  		pOSFSInfo->fsgid = current_fsgid();
+*** mt7610u_wifi_sta_v3002_dpo_20130916/sta/sta_cfg.c	2013-09-16 16:03:08.000000000 +0200
+--- mt7610u_wifi_sta_v3002_dpo_20130916/sta/sta_cfg.c	2015-10-26 12:37:32.446536066 +0100
+*************** VOID RTMPIoctlShow(
+*** 5398,5404 ****
+              wrq->u.data.length = strlen(extra) + 1; /* 1: size of '\0' */
+              break;
+          case SHOW_DRVIER_VERION:
+!             snprintf(extra, size, "Driver version-%s, %s %s\n", STA_DRIVER_VERSION, __DATE__, __TIME__ );
+              wrq->u.data.length = strlen(extra) + 1; /* 1: size of '\0' */
+              break;
+  #ifdef DOT11_N_SUPPORT
+--- 5398,5404 ----
+              wrq->u.data.length = strlen(extra) + 1; /* 1: size of '\0' */
+              break;
+          case SHOW_DRVIER_VERION:
+! 		snprintf(extra, size, "Driver version-%s\n", STA_DRIVER_VERSION);
+              wrq->u.data.length = strlen(extra) + 1; /* 1: size of '\0' */
+              break;
+  #ifdef DOT11_N_SUPPORT
+*** mt7610u_wifi_sta_v3002_dpo_20130916/common/cmm_info.c	2013-09-16 16:03:08.000000000 +0200
+--- mt7610u_wifi_sta_v3002_dpo_20130916/common/cmm_info.c	2015-10-26 12:42:09.698532042 +0100
+*************** INT Set_DriverVersion_Proc(
+*** 44,50 ****
+  
+  #ifdef CONFIG_STA_SUPPORT
+  	IF_DEV_CONFIG_OPMODE_ON_STA(pAd)
+! 		DBGPRINT(RT_DEBUG_TRACE, ("Driver version-%s %s %s\n", STA_DRIVER_VERSION, __DATE__, __TIME__));
+  #endif /* CONFIG_STA_SUPPORT */
+  
+      return TRUE;
+--- 44,50 ----
+  
+  #ifdef CONFIG_STA_SUPPORT
+  	IF_DEV_CONFIG_OPMODE_ON_STA(pAd)
+! 		DBGPRINT(RT_DEBUG_TRACE, ("Driver version-%s\n", STA_DRIVER_VERSION));
+  #endif /* CONFIG_STA_SUPPORT */
+  
+      return TRUE;

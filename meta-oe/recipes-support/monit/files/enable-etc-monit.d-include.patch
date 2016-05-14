@@ -1,0 +1,9 @@
+--- a/monitrc	2014-03-27 13:27:21.000000000 +0100
++++ b/monitrc	2014-03-31 13:12:49.515395387 +0200
+@@ -248,5 +248,5 @@
+ ## It is possible to include additional configuration parts from other files or
+ ## directories.
+ #
+-#  include /etc/monit.d/*
++include /etc/monit.d/*
+ #

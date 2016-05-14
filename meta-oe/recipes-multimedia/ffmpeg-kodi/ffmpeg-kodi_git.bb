@@ -1,6 +1,6 @@
 DESCRIPTION = "FFMPEG for Kodi"
 
-DEPENDS += " zlib "
+DEPENDS += " zlib openssl "
 
 LICENSE = "GPLv2"
 

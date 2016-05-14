@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=4d92cd373abda3937c2bc47fbc49d
 ALLOW_EMPTY_${PN} = "1"
 
 PV = "1.0"
-PR = "r16"
+PR = "r19"
 
 inherit packagegroup
 
@@ -16,6 +16,7 @@ RDEPENDS_${PN} = "\
     openhdf-bootlogo \
     openhdf-spinner \
     ntfs-3g \
+    curl \
     hddtemp \
     busybox-cron \
     python-gdata \
@@ -25,4 +26,5 @@ RDEPENDS_${PN} = "\
     packagegroup-base-smbfs-client \
     rtmpdump \
     ${@base_contains("MACHINE_FEATURES", "dreambox", "", "ofgwrite", d)} \
+    libungif \
     "

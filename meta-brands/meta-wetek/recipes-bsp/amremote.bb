@@ -7,10 +7,9 @@ PR = "r8"
 
 require conf/license/license-gplv2.inc
 
-#SRCREV = "2bb64e38fc1f082af6c6a6bd24e58e9f0fcca010"
+SRCREV = "cac12639977a2924d4bb120e02d1aa15cffcd607"
 
-#SRC_URI = "git://github.com/wetek-enigma/amremote.git"
-SRC_URI = "file://amremote-ecdf401.tar.xz \
+SRC_URI = "git://github.com/wetek-enigma/amremote.git \
            file://wetek.conf \
            file://wetek1.conf \
            file://wetek2.conf \
@@ -26,7 +25,7 @@ SRC_URI = "file://amremote-ecdf401.tar.xz \
            file://zgemmastar.conf \
 "
 
-S = "${WORKDIR}/amremote-ecdf401/"
+S = "${WORKDIR}/git"
 
 do_compile() {
     oe_runmake

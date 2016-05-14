@@ -17,7 +17,7 @@ RPROVIDES_xcore-blindscan-dvbc-utils += "virtual/blindscan-dvbc"
 SRC_URI = "file://blindscan file://tda1002x"
 
 PV = "1.0"
-PR = "r5"
+PR = "r6"
 
 S = "${WORKDIR}/"
 

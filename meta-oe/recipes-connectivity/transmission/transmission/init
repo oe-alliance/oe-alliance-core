@@ -1,49 +1,75 @@
-#! /bin/sh
-#
-# This is an init script for openembedded
-# Copy it to /etc/init.d/transmission and type
-# > update-rc.d transmission defaults 60
-#
-# 
+#!/bin/sh
 
-# load default values
-[ -f /etc/default/transmission-daemon ] && . /etc/default/transmission-daemon
+# ----- CONFIGURATION -----
 
-if [ "$DAEMON_ENABLED" != "YES" ] ; then
-	echo "Transmission Deamon Not Enabled"
-	echo "edit /etc/default/transmission to enable"
-	exit
-fi
+LINE="--------------------------------------"
+TRANSMISSION_ON=0
+NAME="transmission-daemon"
+DAEMON="/usr/bin/transmission-daemon"
+DIRECTORY="/hdd/transmission"
+RPC_PORT=9091
+DOWNLOAD_DIR="/hdd/transmission/download"
+CONFIG_DIR="/hdd/transmission/config"
+WATCH_DIR="/hdd/transmission/watch"
+USER="root"
+PASSWORD="dreambox"
+ARGS="-c $WATCH_DIR -g $CONFIG_DIR -a *.*.*.* -w $DOWNLOAD_DIR -p $RPC_PORT -t -u $USER -v $PASSWORD"
+INET_ADDR=`awk '/address/{print$2}' /etc/network/interfaces`
+PATH=/usr/sbin:/usr/bin:/sbin:/bin
+TRANSMISSION_WEB_HOME="/usr/share/transmission/web/"
 
-# Exit if the package is not installed
-test -f /usr/bin/transmission-daemon || exit 0
+# ----- END OF CONFIGURATION -----
 
-[ -z "$DAEMON_USER" ] || SSDOPTIONS="--chuid $DAEMON_USER:$DAEMON_GROUP"
-TRANSOPTIONS="-g $CONFIG_DIR -w $DOWNLOAD_DIR"
+if [ ! -d $DIRECTORY ] ; then mkdir $DIRECTORY; fi
+if [ ! -d $DOWNLOAD_DIR ] ; then mkdir $DOWNLOAD_DIR; fi
+if [ ! -d $CONFIG_DIR ] ; then mkdir $CONFIG_DIR; fi
+if [ ! -d $WATCH_DIR ] ; then mkdir $WATCH_DIR; fi
 
-case "$1" in
-  start)
-    echo  "Starting transmission-daemon"
-    /sbin/start-stop-daemon $SSDOPTIONS --start --quiet --exec /usr/bin/transmission-daemon -- $TRANSOPTIONS
-    ;;
-  stop)
-    echo  "Stopping transmission-daemon"
-    /sbin/start-stop-daemon --stop --quiet --exec /usr/bin/transmission-daemon
-    ;;
-  restart)
-    echo -n "Stopping transmission-daemon"
-    /sbin/start-stop-daemon --stop --quiet --exec /usr/bin/transmission-daemon
-    for i in 1 2 3 ;
-    do
-        sleep 1
-        echo -n "."
-    done
-    echo  "Restarting transmission-daemon" 
-    /sbin/start-stop-daemon $SSDOPTIONS --start --quiet --exec /usr/bin/transmission-daemon -- $TRANSOPTIONS
-    ;;
-  *)
-    echo "Usage: /etc/init.d/tranmission {start|stop|restart}"
-    exit 1
+
+case $1 in
+	start)
+		echo -n "starting $NAME... "
+		echo
+		start-stop-daemon -S -b -n $NAME -a $DAEMON -- $ARGS 
+		sleep 2
+		echo
+		echo $LINE
+		echo "Transmission Started !!!"
+		echo "Open your browser at http://ip-from-box:9091"
+		echo $LINE
+		echo
+	;;
+        stop)
+		echo
+		echo -n "stopping $NAME... "
+		killall $NAME
+		echo "done."
+	;;
+	restart)
+		echo
+		echo -n "restarting $NAME... "
+		$0 stop
+		sleep 5
+		$0 start
+		echo
+	;;
+        autostart | enable)
+		echo
+        	update-rc.d transmissiond defaults 99
+		sleep 2
+		echo
+	;;
+        noautostart | disable)
+		echo
+        	update-rc.d -f transmissiond remove
+		sleep 2
+		echo
+	;;
+
+	*)
+	echo " "
+	echo "Options: $0 {start|restart|stop|enable|disable}"
+	echo " "
 esac
 
 exit 0

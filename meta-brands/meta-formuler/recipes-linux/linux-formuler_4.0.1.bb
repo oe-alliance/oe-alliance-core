@@ -21,7 +21,7 @@ PKG_kernel-image = "kernel-image"
 RPROVIDES_kernel-base = "kernel-${KERNEL_VERSION}"
 RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
 
-SRC_URI += "http://downloads.mutant-digital.net/linux-${PV}.tar.gz \
+SRC_URI += "http://downloads.formuler.info/linux-${PV}.tar.gz \
 	file://defconfig \
 	file://formuler_partition_layout.patch \
 	file://add-dmx-source-timecode.patch \

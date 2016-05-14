@@ -36,13 +36,14 @@ ${@base_contains('MACHINEBUILD', 'et7x00mini', 'mtd2' , '', d)}\
 MACHINE_DRIVER = "\
 ${@base_contains('MACHINEBUILD', 'xpeedlxcs2', 'xpeedc' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'xpeedlxcc', 'xpeedc' , '', d)}\
-${@base_contains('MACHINEBUILD', 'et7x00mini', 'et7x00' , '', d)}\
+${@base_contains('MACHINEBUILD', 'et7x00mini', 'et7000mini' , '', d)}\
 "
 
 KERNEL_FILE = "kernel.bin"
 ROOTFS_FILE = "rootfs.bin"
 
 DVBPROVIDER = "kernel"
+DVBSKYPROVIDER = "kernel"
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS = "\
     ultramini-dvb-modules-${MACHINE_DRIVER} \

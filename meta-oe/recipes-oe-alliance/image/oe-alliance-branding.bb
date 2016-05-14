@@ -34,6 +34,7 @@ EXTRA_OECONF = " \
     --with-machinemake="${MACHINEBUILD}" \
     --with-imageversion="${DISTRO_VERSION}" \
     --with-imagebuild="${BUILD_VERSION}" \
+    --with-imagedevbuild="${DEVELOPER_BUILD_VERSION}" \
     --with-imagetype="${DISTRO_TYPE}" \
     --with-imagedir="${IMAGEDIR}" \
     --with-imagefs="${IMAGE_FSTYPES}" \
@@ -79,6 +80,8 @@ do_configure_prepend() {
         DRIVERSDATE=`grep "SRCDATE = " ${OEA-META-FORMULER-BASE}/recipes-drivers/formuler-dvb-modules-${MACHINE}.bb | cut -b 12-19`
     elif [ "${BRAND_OEM}" = "skylake" ]; then
         DRIVERSDATE=`grep "SRCDATE = " ${OEA-META-SKYLAKE-BASE}/recipes-drivers/skylake-dvb-modules-${MACHINE}.bb | cut -b 12-19`
+    elif [ "${BRAND_OEM}" = "gfutures" ]; then
+        DRIVERSDATE=`grep "SRCDATE = " ${OEA-META-GFUTURES-BASE}/recipes-drivers/gfutures-dvb-modules-${MACHINE}.bb | cut -b 12-19`
     elif [ "${BRAND_OEM}" = "tripledot" ]; then
         DRIVERSDATE=`grep "SRCDATE = " ${OEA-META-TRIPLEDOT-BASE}/recipes-drivers/tripledot-dvb-modules-${MACHINE}.bb | cut -b 12-19`
     elif [ "${BRAND_OEM}" = "airdigital" ]; then
@@ -165,6 +168,11 @@ do_install_append() {
         ln -sf /usr/share/enigma2/et7000.jpg ${D}/usr/lib/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes/et7000.jpg
         install -m 0644 ${S}/BoxBranding/boxes/et7500.jpg ${D}/usr/share/enigma2/et7500.jpg
         ln -sf /usr/share/enigma2/et7500.jpg ${D}/usr/lib/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes/et7500.jpg 
+    elif [ ${MACHINEBUILD} = "twinboxlcd" ]; then
+        install -m 0644 ${S}/BoxBranding/boxes/twinboxlcdci.jpg ${D}/usr/share/enigma2/twinboxlcdci.jpg
+        ln -sf /usr/share/enigma2/twinboxlcdci.jpg ${D}/usr/lib/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes/twinboxlcdci.jpg
+        install -m 0644 ${S}/BoxBranding/boxes/twinboxlcd.jpg ${D}/usr/share/enigma2/twinboxlcd.jpg
+        ln -sf /usr/share/enigma2/twinboxlcd.jpg ${D}/usr/lib/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes/twinboxlcd.jpg 
     else
         install -m 0644 ${S}/BoxBranding/boxes/${MACHINEBUILD}.jpg ${D}/usr/share/enigma2/${MACHINEBUILD}.jpg
         ln -sf /usr/share/enigma2/${MACHINEBUILD}.jpg ${D}/usr/lib/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes/${MACHINEBUILD}.jpg

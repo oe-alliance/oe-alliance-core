@@ -7,7 +7,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "1.0"
-PR = "r1"
+PR = "r2"
 
 inherit packagegroup
 
@@ -20,6 +20,8 @@ RDEPENDS_${PN} = "\
 	egami-base-files \
 	\
 	python-imaging python-compression \
+	rtmpdump \
+	libcrypto-compat-0.9.7 \
 	packagegroup-base-smbfs-client \
 	busybox-cron \
 	ntfs-3g \

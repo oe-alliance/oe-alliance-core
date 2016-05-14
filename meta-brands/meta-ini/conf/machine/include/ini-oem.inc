@@ -156,8 +156,8 @@ ${@base_contains('MACHINEBUILD', 'atemionemesis', 'ini-800' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'beyonwizt2', 'inihde2au' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'beyonwizt3', 'inihdx' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'beyonwizt4', 'ini-840t4' , '', d)}\
-${@base_contains('MACHINEBUILD', 'bwidowx', 'yhgd2580' , '', d)}\
-${@base_contains('MACHINEBUILD', 'bwidowx2', 'inihde2bw' , '', d)}\
+${@base_contains('MACHINEBUILD', 'bwidowx', 'yhgd2580-7358' , '', d)}\
+${@base_contains('MACHINEBUILD', 'bwidowx2', 'yhgd2580-7362' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'opticumtt', 'ini-435oc' , '', d)}\
 "
 

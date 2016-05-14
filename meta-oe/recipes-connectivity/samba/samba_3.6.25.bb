@@ -4,7 +4,7 @@ LIC_FILES_CHKSUM = "file://../COPYING;md5=d32239bcb673463ab874e80d47fae504"
 SECTION = "console/network"
 DEPENDS = "readline virtual/libiconv zlib popt libpam libtalloc attr avahi"
 
-PR = "r4"
+PR = "r6"
 
 inherit autotools-brokensep update-rc.d
 
@@ -197,6 +197,7 @@ do_configure() {
 }
 
 do_compile () {
+    sed -i 's/Globals\.maxprotocol = PROTOCOL_NT1;/Globals.maxprotocol = PROTOCOL_SMB2;/' ${S}/param/loadparm.c
     base_do_compile
 }
 

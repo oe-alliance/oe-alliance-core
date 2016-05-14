@@ -6,7 +6,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 require conf/license/license-gplv2.inc
 
-PR = "r6"
+PR = "r7"
 
 SRC_URI="file://egamiemud.tar.gz"
 

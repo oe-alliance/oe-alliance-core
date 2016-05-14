@@ -5,7 +5,7 @@ PRIORITY = "optional"
 DEPENDS = "openssl swig-native"
 LICENSE = "BSD"
 SRCNAME = "M2Crypto"
-PR = "ml11"
+PR = "ml13"
 
 require conf/license/license-gplv2.inc
 

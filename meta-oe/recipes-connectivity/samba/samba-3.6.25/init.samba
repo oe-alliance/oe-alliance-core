@@ -16,8 +16,11 @@ case "$1" in
   start)
     echo -n "Starting Samba: smbd"
     start-stop-daemon --start --quiet --exec $smbd
-    echo -n " nmbd"
-    start-stop-daemon --start --quiet --exec $nmbd
+    NMBD_DISABLED=`testparm -s --parameter-name='disable netbios' 2>/dev/null || true`
+    if [ "$NMBD_DISABLED" != "Yes" ]; then
+      echo -n " nmbd"
+      start-stop-daemon --start --quiet --exec $nmbd
+    fi
     echo "."
     ;;
   stop)
@@ -46,8 +49,11 @@ case "$1" in
     echo ""
     echo -n "Starting Samba: smbd"
     start-stop-daemon --start --quiet --exec $smbd
-    echo -n " nmbd"
-    start-stop-daemon --start --quiet --exec $nmbd
+    NMBD_DISABLED=`testparm -s --parameter-name='disable netbios' 2>/dev/null || true`
+    if [ "$NMBD_DISABLED" != "Yes" ]; then
+      echo -n " nmbd"
+      start-stop-daemon --start --quiet --exec $nmbd
+    fi
     echo "."
     ;;
   *)

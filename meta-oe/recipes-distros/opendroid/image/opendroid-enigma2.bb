@@ -6,8 +6,8 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=4d92cd373abda3937c2bc47fbc49d
 ALLOW_EMPTY_${PN} = "1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-PV = "5.4"
-PR = "r12"
+PV = "5.5"
+PR = "r15"
 
 inherit packagegroup
 
@@ -19,6 +19,7 @@ RRECOMMENDS_${PN} = "\
     enigma2-plugin-skins-opendroid \
     enigma2-plugin-extensions-extrapanel \
     enigma2-plugin-extensions-autotimer \
+    enigma2-plugin-extensions-weatherplugin-opd \
     enigma2-plugin-extensions-epgsearch \
     enigma2-plugin-extensions-graphmultiepg \
     enigma2-plugin-extensions-vhannibal-autosettings \

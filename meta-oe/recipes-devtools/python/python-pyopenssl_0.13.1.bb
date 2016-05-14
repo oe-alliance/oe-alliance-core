@@ -9,7 +9,7 @@ SRCNAME = "pyOpenSSL"
 DEPENDS = "openssl"
 RDEPENDS_${PN} = "python-threading"
 
-PR = "r3"
+PR = "r5"
 
 SRC_URI = "http://pypi.python.org/packages/source/p/pyOpenSSL/pyOpenSSL-${PV}.tar.gz \
            file://disable_test_set_default_verify_paths.patch \

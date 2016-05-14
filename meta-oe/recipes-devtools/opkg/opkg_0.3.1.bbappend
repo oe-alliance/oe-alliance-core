@@ -1,6 +1,9 @@
+PR .= ".1"
+
 SRC_URI += "file://sanity-check-provides.patch \
     file://0001-reuse-the-installed_files-list-when-possible.patch \
     file://stop_deprecated_version_message.patch \
+    file://warn-only-then-file-not-exist.patch \
     file://modprobe \
     "
 

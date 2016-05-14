@@ -9,7 +9,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "5.2"
-PR = "r1"
+PR = "r5"
 
 DEPENDS = "enigma2-plugin-drivers-usbserial"
 RECOMMENDS = "enigma2-plugin-extensions-et-livestream"
@@ -42,7 +42,7 @@ RDEPENDS_${PN} = " \
     enigma2-plugin-extensions-autobouquets \
     ${@base_contains("MACHINE_FEATURES", "omb", "enigma2-plugin-extensions-openmultiboot", "", d)} \
     ${@base_contains("MACHINE_FEATURES", "omb", "openmultiboot", "", d)} \
-    ${@base_contains("MACHINE_FEATURES", "vukodixx", "enigma2-plugin-extensions-vuplus-kodi", "", d)} \
+    ${@base_contains("MACHINE_FEATURES", "vukodi", "enigma2-plugin-extensions-vuplus-kodi", "", d)} \
     ${@base_contains("MACHINE_FEATURES", "webkithbbtv", "webkit-hbbtv-browser", "", d)} \
     ${@base_contains("MACHINE_FEATURES", "chromiumos", "enigma2-plugin-extensions-chromium", "", d)} \
     \
@@ -62,13 +62,14 @@ RDEPENDS_${PN} = " \
     ${@base_contains("MACHINE_FEATURES", "legacykernel", "" , "evtest strace", d)} \
     exfat-utils \
     fuse-exfat \
-    ${@base_contains("TARGET_ARCH", "sh4", "" , "gdb", d)} \
+    ${@base_contains("TARGET_ARCH", "sh4", "" , "gdb v4l-utils", d)} \
     hddtemp \
     hdparm \
     htop \
     inadyn-mt \
     iperf \
     joe \
+    llmnr-query \
     mc \
     minidlna \
     mpd \
