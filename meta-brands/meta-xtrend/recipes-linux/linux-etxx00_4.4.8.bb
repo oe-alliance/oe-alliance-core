@@ -8,7 +8,7 @@ inherit kernel machine_kernel_pr
 KERNEL_RELEASE = "4.4.8"
 SRCDATE = "20160504"
 
-MACHINE_KERNEL_PR_append = ".0"
+MACHINE_KERNEL_PR_append = ".1"
 
 SRC_URI[md5sum] = "8b67a95176111385270ed3276436193a"
 SRC_URI[sha256sum] = "571438a1c94f5a72903b310682a344757cbf97028e1e5dfbe980472f04a4e9a2"
@@ -24,6 +24,13 @@ RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
 
 SRC_URI += "http://source.mynonpublic.com/xtrend/xtrend-linux-${PV}-${SRCDATE}.tar.xz \
     file://defconfig \
+    file://add-dmx-source-timecode.patch \
+    file://iosched-slice_idle-1.patch \
+    file://0001-Support-TBS-USB-drivers-for-4.3-kernel.patch \
+    file://0001-TBS-fixes-for-4.3-kernel.patch \
+    file://0001-STV-Add-PLS-support.patch \
+    file://0001-STV-Add-SNR-Signal-report-parameters.patch \
+    file://blindscan2.patch \
     "
 
 S = "${WORKDIR}/linux-${PV}"
