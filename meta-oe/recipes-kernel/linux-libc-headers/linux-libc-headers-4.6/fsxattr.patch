@@ -1,0 +1,20 @@
+--- a/include/uapi/linux/fs.h	2016-03-23 12:22:42.814404964 +0100
++++ a/include/uapi/linux/fs.h	2016-03-23 15:01:47.802223492 +0100
+@@ -150,17 +150,6 @@
+ #define MS_MGC_MSK 0xffff0000
+ 
+ /*
+- * Structure for FS_IOC_FSGETXATTR[A] and FS_IOC_FSSETXATTR.
+- */
+-struct fsxattr {
+-	__u32		fsx_xflags;	/* xflags field value (get/set) */
+-	__u32		fsx_extsize;	/* extsize field value (get/set)*/
+-	__u32		fsx_nextents;	/* nextents field value (get)	*/
+-	__u32		fsx_projid;	/* project identifier (get/set) */
+-	unsigned char	fsx_pad[12];
+-};
+-
+-/*
+  * Flags for the fsx_xflags field
+  */
+ #define FS_XFLAG_REALTIME	0x00000001	/* data in realtime volume */
