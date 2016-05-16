@@ -1,8 +1,6 @@
-GFXPR = "20151007.r0"
-GFX_FILE = "directfb_1.7-7_gfxdriver_${MACHINE}_${GFXPR}.tar.gz"
+require directfb-${MACHINE}_1.7.7.inc
 
-SRC_URI[gfxdriver.md5sum] = "e97373ce01e9a41c3445d2c672b2efef"
-SRC_URI[gfxdriver.sha256sum] = "f44830ae6ddaf031aac0ffcfd51227ae6b582219b523fd943c601593bf1d9c22"
+GFX_FILE = "directfb_1.7-7_gfxdriver_${MACHINE}_${GFXPR}.tar.gz"
 
 PR .= ".1"
 
