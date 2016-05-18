@@ -3,14 +3,14 @@ SECTION = "kernel"
 LICENSE = "GPLv2"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 PR = "r0"
-SRC = "20160323"
+SRC = "20160516"
 
-KERNEL_RELEASE = "4.5.0"
+KERNEL_RELEASE = "4.6.0"
 
 inherit kernel machine_kernel_pr
 
-SRC_URI[md5sum] = "c4e70c8b049a70042e4cbdbcc166a7e9"
-SRC_URI[sha256sum] = "d83bf700fc1eeed11fc0376609722b100a087b7c206b492c50371cdfeaf66c59"
+SRC_URI[md5sum] = "8d7e23cad9ef1c6cbce8e97629c6bc1d"
+SRC_URI[sha256sum] = "091ca959f245ee3345fb83d0086e2f43ba1e5db5e892a4af8bee78df5cd29a8b"
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-brcmstb-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
@@ -26,8 +26,7 @@ RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
 
 SRC_URI += "http://source.mynonpublic.com/xcore/${MACHINE}-linux-${PV}-${SRC}.tar.gz \
     file://defconfig \
-    file://add-proc-cpu-mhz.patch \
-    file://add-bcm7xxx-system-type.patch \
+    file://noforce_correct_pointer_usage.patch \
     "
 
 S = "${WORKDIR}/linux-brcmstb-${PV}"

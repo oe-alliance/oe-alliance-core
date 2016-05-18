@@ -1,0 +1,15 @@
+diff --git a/daemon.c b/daemon.c
+index b512fc6ca28c..dfe31f9f12a4 100644
+--- a/daemon.c
++++ b/daemon.c
+@@ -31,6 +31,10 @@
+ #include <linux/sched.h>
+ #include <linux/wait.h>
+ 
++#ifndef PAGE_CACHE_SHIFT
++#define PAGE_CACHE_SHIFT	PAGE_SHIFT
++#endif
++
+ #if LINUX_VERSION_CODE < KERNEL_VERSION(3, 8, 0)
+ int kcdfsd_pid = 0;
+ #else

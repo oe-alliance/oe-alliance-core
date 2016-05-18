@@ -5,7 +5,7 @@ LICENSE = "CLOSED"
 require conf/license/license-close.inc
 
 PV = "1.0"
-PR = "20160331_r1"
+PR = "20160516_r1"
 SRC_URI = "http://code.vuplus.com/download/chromium/e2plugin-chromium-vuplus_${PR}.tar.gz"
 
 DEPENDS_${PN} = "chromium-browser"
@@ -24,6 +24,6 @@ RPROVIDES_${PN} += "enigma2-plugin-extensions-chromium"
 
 FILES_${PN} = "/"
 
-SRC_URI[md5sum] = "48ee52ec132fc7447f555aafbf8c7fcd"
-SRC_URI[sha256sum] = "f271338155df55eed5a1c56f18c9c7ced09d025d1e3c36c9e2e4c25f959bbea6"
+SRC_URI[md5sum] = "463adfde95d9c0677adcb89b4bb1b9da"
+SRC_URI[sha256sum] = "efaa40792935e240f2d91b9fe3bf4d28835fadef62e28d2ac1fb260d9ed23903"
 
