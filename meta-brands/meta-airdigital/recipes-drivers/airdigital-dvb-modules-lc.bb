@@ -1,8 +1,8 @@
 KV = "4.0.1"
-SRCDATE = "20151026"
+SRCDATE = "20160518"
 
 require airdigital-dvb-modules.inc
 
-SRC_URI[md5sum] = "5cd6bf27b839fe1e3f575a5e0a2fe882"
-SRC_URI[sha256sum] = "b4bda5b8f836a60855659e89a1ec71f5ab7893380299cdd7d9469a343dcb096c"
+SRC_URI[md5sum] = "24d14dd65f2189a32f3f9b27ca531d6d"
+SRC_URI[sha256sum] = "a535a0024d5f8153b8837854455ce53135647cf1b12475a6513c347ef9d38802"
 
