@@ -5,7 +5,7 @@ PACKAGES =+ " libavcodec53 libavformat53 libav"
 
 PACKAGECONFIG[avdevice] = "--enable-avdevice,--disable-avdevice"
 
-PR = "r0"
+PR = "r1"
 
 DEPENDS = "libbluray rtmpdump libxml2 openssl"
 RDEPENDS_${PN} = "libbluray rtmpdump libxml2 openssl"
@@ -199,7 +199,7 @@ EXTRA_FFCONF = " \
     --disable-demuxer=xa \
     --disable-demuxer=xbin \
     --disable-demuxer=yop \
-    --disable-demuxer=image2 \
+    --enable-demuxer=image2 \
     --disable-demuxer=image2pipe \
     --disable-demuxer=ingenient \
     --disable-demuxer=image_bmp_pipe \
