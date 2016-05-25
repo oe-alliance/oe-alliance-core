@@ -5,7 +5,7 @@ PACKAGES =+ " libavcodec53 libavformat53 libav"
 
 PACKAGECONFIG[avdevice] = "--enable-avdevice,--disable-avdevice"
 
-PR = "r1"
+PR = "r2"
 
 DEPENDS = "libbluray rtmpdump libxml2 openssl"
 RDEPENDS_${PN} = "libbluray rtmpdump libxml2 openssl"
@@ -73,6 +73,7 @@ EXTRA_FFCONF = " \
     --enable-decoder=mp1 \
     --enable-decoder=mp3adu \
     --enable-decoder=mp3on4 \
+    --enable-decoder=mpeg1video \
     --enable-decoder=nellymoser \
     --enable-decoder=pcm_alaw \
     --enable-decoder=pcm_bluray \
