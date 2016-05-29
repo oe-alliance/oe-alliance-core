@@ -14,7 +14,7 @@
    libc_minimum_kernel=ok
  else
 -  libc_minimum_kernel='too old!'
-+  libc_minimum_kernel='ok'
++  libc_minimum_kernel=ok
  fi
  rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_minimum_kernel" >&5
