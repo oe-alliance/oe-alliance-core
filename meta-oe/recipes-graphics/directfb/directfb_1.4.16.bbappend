@@ -3,7 +3,7 @@ PR .= ".4"
 
 EXTRA_OECONF = "\
   --enable-freetype=yes \
-  ${@base_contains("MACHINE_FEATURES", "sdl", "--enable-sdl --disable-imlib2 --disable-mesa", "--disable-sdl", d)} \
+  ${@bb.utils.contains("MACHINE_FEATURES", "sdl", "--enable-sdl --disable-imlib2 --disable-mesa", "--disable-sdl", d)} \
   --enable-zlib \
   --with-gfxdrivers=none \
   --disable-vnc \

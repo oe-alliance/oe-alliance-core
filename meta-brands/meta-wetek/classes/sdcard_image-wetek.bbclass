@@ -46,7 +46,7 @@ IMAGE_DEPENDS_wetek-sdimg = " \
 			mtools-native \
 			dosfstools-native \
 			virtual/kernel \
-			${@base_contains("KERNEL_IMAGETYPE", "uImage", "u-boot", "",d)} \
+			${@bb.utils.contains("KERNEL_IMAGETYPE", "uImage", "u-boot", "",d)} \
 			"
 
 # SD card image name

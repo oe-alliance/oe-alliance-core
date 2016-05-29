@@ -16,5 +16,5 @@ EXTRA_OECONF = "\
   --with-gfxdrivers=none \
   --disable-vnc \
   --disable-x11 \
-  ${@base_contains("TARGET_ARCH", "sh4", "--enable-stmfbdev=yes --enable-mme=yes", "", d)} \
+  ${@bb.utils.contains("TARGET_ARCH", "sh4", "--enable-stmfbdev=yes --enable-mme=yes", "", d)} \
 "

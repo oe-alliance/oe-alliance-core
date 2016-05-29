@@ -5,7 +5,7 @@ EXTRA_OECONF = "--disable-static --enable-cdrom --enable-threads --enable-timers
                 --enable-file --disable-oss --disable-esd --disable-arts \
                 --disable-diskaudio --disable-nas --disable-esd-shared --disable-esdtest \
                 --disable-mintaudio --disable-nasm --disable-video-dga \
-                ${@base_contains("MACHINE_FEATURES", "sdl", "--enable-video-fbcon", "--disable-video-fbcon", d)} \
+                ${@bb.utils.contains("MACHINE_FEATURES", "sdl", "--enable-video-fbcon", "--disable-video-fbcon", d)} \
                 --disable-video-ps2gs --disable-video-ps3 \
                 --disable-xbios --disable-gem --disable-video-dummy \
                 --enable-input-events --enable-input-tslib --enable-pthreads \
