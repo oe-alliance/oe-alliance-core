@@ -4,7 +4,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 require conf/license/license-gplv2.inc
 
 DEPENDS = "\
-    ${@base_contains("MACHINE_FEATURES", "wifiusblegacy", "", " \
+    ${@bb.utils.contains("MACHINE_FEATURES", "wifiusblegacy", "", " \
     enigma2-plugin-drivers-network-usb-ath9k-htc \
     enigma2-plugin-drivers-network-usb-carl9170 \
     enigma2-plugin-drivers-network-usb-rt2500 \

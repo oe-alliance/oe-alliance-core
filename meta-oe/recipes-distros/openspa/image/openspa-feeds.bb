@@ -20,5 +20,5 @@ RRECOMMENDS_${PN} = "\
     enigma2-plugin-systemplugins-crossepg \
     enigma2-plugin-extensions-cooltvguide \
     enigma2-plugin-extensions-enhancedmoviecenter \
-    ${@base_contains("MACHINE_BRAND", "AZBOX", "enigma2-plugin-extensions-azplay enigma2-plugin-extensions-aziptv", "", d)} \
+    ${@bb.utils.contains("MACHINE_BRAND", "AZBOX", "enigma2-plugin-extensions-azplay enigma2-plugin-extensions-aziptv", "", d)} \
     "

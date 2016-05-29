@@ -5,13 +5,13 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=c54ce9345727175ff66d17b67ff51f58 \
                     file://README;md5=4c2e7b0e7c3ffa2367167e64e79b7872 \
                     file://wpa_supplicant.c;beginline=1;endline=17;md5=2376799d9644dcb6ce69e7d180aa00d9"
 HOMEPAGE = "http://hostap.epitest.fi/wpa_supplicant/"
-DEPENDS = "openssl ${@base_contains("COMBINED_FEATURES", "madwifi", "madwifi-ng", "",d)}"
+DEPENDS = "openssl ${@bb.utils.contains("COMBINED_FEATURES", "madwifi", "madwifi-ng", "",d)}"
 
 PR = "r3"
 
 #we introduce MY_ARCH to get 'armv5te' as arch instead of the misleading 'arm' on armv5te builds
 MY_ARCH := "${PACKAGE_ARCH}"
-PACKAGE_ARCH = "${@base_contains('COMBINED_FEATURES', 'madwifi', '${MACHINE_ARCH}', '${MY_ARCH}', d)}"
+PACKAGE_ARCH = "${@bb.utils.contains('COMBINED_FEATURES', 'madwifi', '${MACHINE_ARCH}', '${MY_ARCH}', d)}"
 
 SRC_URI = "http://hostap.epitest.fi/releases/wpa_supplicant-${PV}.tar.gz \
     file://defconfig-openssl \
@@ -21,7 +21,7 @@ SRC_URI = "http://hostap.epitest.fi/releases/wpa_supplicant-${PV}.tar.gz \
     file://driver-ralink.patch \
     "
 
-TARGET_CFLAGS_append = " ${@base_contains("COMBINED_FEATURES", "madwifi", "-I${STAGING_INCDIR}/madwifi-ng", "",d)}"
+TARGET_CFLAGS_append = " ${@bb.utils.contains("COMBINED_FEATURES", "madwifi", "-I${STAGING_INCDIR}/madwifi-ng", "",d)}"
 
 S = "${WORKDIR}/wpa_supplicant-${PV}"
 
@@ -32,7 +32,7 @@ RREPLACES_${PN} = "wpa-supplicant-cli"
 
 RRECOMMENDS_${PN} = "wpa-supplicant-passphrase"
 
-export HAS_MADWIFI = "${@base_contains('COMBINED_FEATURES', 'madwifi', 1, 0,d)}"
+export HAS_MADWIFI = "${@bb.utils.contains('COMBINED_FEATURES', 'madwifi', 1, 0,d)}"
 
 do_configure () {
         install -m 0755 ${WORKDIR}/defconfig-openssl  .config

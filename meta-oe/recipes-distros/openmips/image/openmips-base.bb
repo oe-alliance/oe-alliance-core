@@ -23,7 +23,7 @@ RDEPENDS_${PN} = "\
     python-imaging \
     rtmpdump \
     zip \
-    ${@base_contains("MACHINE_FEATURES", "singlecore", "", \
+    ${@bb.utils.contains("MACHINE_FEATURES", "singlecore", "", \
     " \
     packagegroup-base-smbfs-server \
     packagegroup-base-nfs \

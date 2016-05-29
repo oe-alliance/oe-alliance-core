@@ -27,8 +27,8 @@ EXTRA_OECONF = " \
     --with-boxtype=${MACHINE} \
     --with-distro=${DISTRO} \
     --with-gstversion=${GST_VERSION} \
-    ${@base_contains('MACHINE_FEATURES', 'tpm', '--with-tpm' , '', d)} \
-    ${@base_contains('DISTRO_FEATURES', 'pli', '--with-pli' , '', d)} \
+    ${@bb.utils.contains('MACHINE_FEATURES', 'tpm', '--with-tpm' , '', d)} \
+    ${@bb.utils.contains('DISTRO_FEATURES', 'pli', '--with-pli' , '', d)} \
 "
 
 RREPLACES_enigma2-plugin-skincomponents-eventlist = "enigma2-plugin-components-eventlist"

@@ -215,12 +215,12 @@ EXTRA_OECONF = "\
     --enable-graphlcd \
     --enable-netzkino \
     --with-boxtype=${BOXTYPE} --with-boxmodel=${BOXMODEL} \
-    ${@base_contains("MACHINE_FEATURES", "gigablue", "--enable-4digits" , "", d)} \
-    ${@base_contains("MACHINE_FEATURES", "odin", "--enable-4digits" , "", d)} \
-    ${@base_contains("MACHINE_FEATURES", "dreambox", "--enable-lcd" , "", d)} \
-    ${@base_contains("MACHINE_FEATURES", "colorlcd220", "--enable-lcd" , "", d)} \
-    ${@base_contains("MACHINE_FEATURES", "bwlcd140", "--enable-lcd" , "", d)} \
-    ${@base_contains("MACHINE_FEATURES", "bwlcd255", "--enable-lcd" , "", d)} \
+    ${@bb.utils.contains("MACHINE_FEATURES", "gigablue", "--enable-4digits" , "", d)} \
+    ${@bb.utils.contains("MACHINE_FEATURES", "odin", "--enable-4digits" , "", d)} \
+    ${@bb.utils.contains("MACHINE_FEATURES", "dreambox", "--enable-lcd" , "", d)} \
+    ${@bb.utils.contains("MACHINE_FEATURES", "colorlcd220", "--enable-lcd" , "", d)} \
+    ${@bb.utils.contains("MACHINE_FEATURES", "bwlcd140", "--enable-lcd" , "", d)} \
+    ${@bb.utils.contains("MACHINE_FEATURES", "bwlcd255", "--enable-lcd" , "", d)} \
 "
 
 do_configure_append() {

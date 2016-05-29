@@ -6,7 +6,7 @@ require conf/license/license-gplv2.inc
 DVBSKYPROVIDER ?= "dvb-sky"
 
 RRECOMMENDS_${PN} = " \
-    ${@base_contains("MACHINE_FEATURES", "legacykernel", "", " \
+    ${@bb.utils.contains("MACHINE_FEATURES", "legacykernel", "", " \
     ${DVBSKYPROVIDER}-module-dvb-usb-dvbsky \
     ${DVBSKYPROVIDER}-module-dvb-usb-v2 \
     ${DVBSKYPROVIDER}-module-dvbsky-m88ds3103 \

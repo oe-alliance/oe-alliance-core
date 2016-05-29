@@ -58,6 +58,6 @@ CONFFILES_${PN} = "/etc/tuxtxt/tuxtxt2.conf"
 inherit autotools pkgconfig
 
 EXTRA_OECONF = "--with-boxtype=generic --with-configdir=/etc \
-    ${@base_contains("MACHINE_FEATURES", "textlcd", "--with-textlcd" , "", d)} \
-    ${@base_contains("MACHINE", "wetekplay", "--with-fbdev=/dev/fb/2" , "", d)} \
+    ${@bb.utils.contains("MACHINE_FEATURES", "textlcd", "--with-textlcd" , "", d)} \
+    ${@bb.utils.contains("MACHINE", "wetekplay", "--with-fbdev=/dev/fb/2" , "", d)} \
     "

@@ -18,6 +18,6 @@ DEPENDS = "\
     enigma2-display-skins \
     enigma2-skins-openvix \
     openvix-bootlogos-meta \
-    ${@base_contains("MACHINE_FEATURES", "skins1080", "hd-skins-meta", "", d)} \
+    ${@bb.utils.contains("MACHINE_FEATURES", "skins1080", "hd-skins-meta", "", d)} \
     openvix-softcams-meta \
     "

@@ -8,7 +8,7 @@ DVBPROVIDER ?= "kernel"
 RDEPENDS_${PN} = " \
     ${DVBPROVIDER}-module-smsusb \
     ${DVBPROVIDER}-module-smsdvb \
-    ${@base_contains("MACHINE_FEATURES", "legacykernel", \
+    ${@bb.utils.contains("MACHINE_FEATURES", "legacykernel", \
     " \
     ${DVBPROVIDER}-module-smsmdtv \
     " , "", d)} \

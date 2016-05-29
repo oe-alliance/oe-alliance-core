@@ -4,93 +4,93 @@ include conf/machine/include/build-extras.inc
 BRAND_OEM = "odin"
 
 MACHINE_NAME = "\
-${@base_contains('MACHINEBUILD', 'classm', 'CLASS M' , '', d)}\
-${@base_contains('MACHINEBUILD', 'axodin', 'AX ODIN' , '', d)}\
-${@base_contains('MACHINEBUILD', 'axodinc', 'AX ODIN-C' , '', d)}\
-${@base_contains('MACHINEBUILD', 'starsatlx', 'LX' , '', d)}\
-${@base_contains('MACHINEBUILD', 'genius', 'genius' , '', d)}\
-${@base_contains('MACHINEBUILD', 'evo', 'EVO' , '', d)}\
-${@base_contains('MACHINEBUILD', 'galaxym6', 'GalaxyM6' , '', d)}\
-${@base_contains('MACHINEBUILD', 'geniuse3hd', 'Genius E3HD' , '', d)}\
-${@base_contains('MACHINEBUILD', 'evoe3hd', 'E3HD' , '', d)}\
-${@base_contains('MACHINEBUILD', 'axase3', 'E3HD' , '', d)}\
-${@base_contains('MACHINEBUILD', 'axase3c', 'E3HD-C' , '', d)}\
-${@base_contains('MACHINEBUILD', 'maram9', 'M9' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'classm', 'CLASS M' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'axodin', 'AX ODIN' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'axodinc', 'AX ODIN-C' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'starsatlx', 'LX' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'genius', 'genius' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'evo', 'EVO' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'galaxym6', 'GalaxyM6' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'geniuse3hd', 'Genius E3HD' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'evoe3hd', 'E3HD' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'axase3', 'E3HD' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'axase3c', 'E3HD-C' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'maram9', 'M9' , '', d)}\
 "
 
 MACHINE_BRAND = "\
-${@base_contains('MACHINEBUILD', 'classm', 'Axas' , '', d)}\
-${@base_contains('MACHINEBUILD', 'axodin', 'Opticum' , '', d)}\
-${@base_contains('MACHINEBUILD', 'axodinc', 'Opticum' , '', d)}\
-${@base_contains('MACHINEBUILD', 'starsatlx', 'Starsat' , '', d)}\
-${@base_contains('MACHINEBUILD', 'genius', 'Galaxy Innovations' , '', d)}\
-${@base_contains('MACHINEBUILD', 'evo', 'Optibox' , '', d)}\
-${@base_contains('MACHINEBUILD', 'galaxym6', 'T-rex' , '', d)}\
-${@base_contains('MACHINEBUILD', 'geniuse3hd', 'Galaxy Innovations' , '', d)}\
-${@base_contains('MACHINEBUILD', 'evoe3hd', 'Optibox' , '', d)}\
-${@base_contains('MACHINEBUILD', 'axase3', 'Axas' , '', d)}\
-${@base_contains('MACHINEBUILD', 'axase3c', 'Axas' , '', d)}\
-${@base_contains('MACHINEBUILD', 'maram9', 'ODIN' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'classm', 'Axas' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'axodin', 'Opticum' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'axodinc', 'Opticum' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'starsatlx', 'Starsat' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'genius', 'Galaxy Innovations' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'evo', 'Optibox' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'galaxym6', 'T-rex' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'geniuse3hd', 'Galaxy Innovations' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'evoe3hd', 'Optibox' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'axase3', 'Axas' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'axase3c', 'Axas' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'maram9', 'ODIN' , '', d)}\
 "
 
 IMAGEDIR ?= "\
-${@base_contains('MACHINEBUILD', 'classm', 'en2' , '', d)}\
-${@base_contains('MACHINEBUILD', 'axodin', 'en2' , '', d)}\
-${@base_contains('MACHINEBUILD', 'axodinc', 'en2' , '', d)}\
-${@base_contains('MACHINEBUILD', 'starsatlx', 'en2' , '', d)}\
-${@base_contains('MACHINEBUILD', 'genius', 'en2' , '', d)}\
-${@base_contains('MACHINEBUILD', 'evo', 'en2' , '', d)}\
-${@base_contains('MACHINEBUILD', 'galaxym6', 'en2' , '', d)}\
-${@base_contains('MACHINEBUILD', 'geniuse3hd', 'e3hd' , '', d)}\
-${@base_contains('MACHINEBUILD', 'evoe3hd', 'e3hd' , '', d)}\
-${@base_contains('MACHINEBUILD', 'axase3', 'e3hd' , '', d)}\
-${@base_contains('MACHINEBUILD', 'axase3c', 'e3hd' , '', d)}\
-${@base_contains('MACHINEBUILD', 'maram9', 'odinm9' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'classm', 'en2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'axodin', 'en2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'axodinc', 'en2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'starsatlx', 'en2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'genius', 'en2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'evo', 'en2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'galaxym6', 'en2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'geniuse3hd', 'e3hd' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'evoe3hd', 'e3hd' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'axase3', 'e3hd' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'axase3c', 'e3hd' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'maram9', 'odinm9' , '', d)}\
 "
 
 MTD_KERNEL = "\
-${@base_contains('MACHINEBUILD', 'classm', 'mtd3' , '', d)}\
-${@base_contains('MACHINEBUILD', 'axodin', 'mtd3' , '', d)}\
-${@base_contains('MACHINEBUILD', 'axodinc', 'mtd3' , '', d)}\
-${@base_contains('MACHINEBUILD', 'starsatlx', 'mtd3' , '', d)}\
-${@base_contains('MACHINEBUILD', 'genius', 'mtd3' , '', d)}\
-${@base_contains('MACHINEBUILD', 'evo', 'mtd3' , '', d)}\
-${@base_contains('MACHINEBUILD', 'galaxym6', 'mtd3' , '', d)}\
-${@base_contains('MACHINEBUILD', 'geniuse3hd', 'mtd1' , '', d)}\
-${@base_contains('MACHINEBUILD', 'evoe3hd', 'mtd1' , '', d)}\
-${@base_contains('MACHINEBUILD', 'axase3', 'mtd1' , '', d)}\
-${@base_contains('MACHINEBUILD', 'axase3c', 'mtd1' , '', d)}\
-${@base_contains('MACHINEBUILD', 'maram9', 'mtd2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'classm', 'mtd3' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'axodin', 'mtd3' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'axodinc', 'mtd3' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'starsatlx', 'mtd3' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'genius', 'mtd3' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'evo', 'mtd3' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'galaxym6', 'mtd3' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'geniuse3hd', 'mtd1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'evoe3hd', 'mtd1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'axase3', 'mtd1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'axase3c', 'mtd1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'maram9', 'mtd2' , '', d)}\
 "
 
 MTD_ROOTFS = "\
-${@base_contains('MACHINEBUILD', 'classm', 'mtd4' , '', d)}\
-${@base_contains('MACHINEBUILD', 'axodin', 'mtd4' , '', d)}\
-${@base_contains('MACHINEBUILD', 'axodinc', 'mtd4' , '', d)}\
-${@base_contains('MACHINEBUILD', 'starsatlx', 'mtd4' , '', d)}\
-${@base_contains('MACHINEBUILD', 'genius', 'mtd4' , '', d)}\
-${@base_contains('MACHINEBUILD', 'evo', 'mtd4' , '', d)}\
-${@base_contains('MACHINEBUILD', 'galaxym6', 'mtd4' , '', d)}\
-${@base_contains('MACHINEBUILD', 'geniuse3hd', 'mtd2' , '', d)}\
-${@base_contains('MACHINEBUILD', 'evoe3hd', 'mtd2' , '', d)}\
-${@base_contains('MACHINEBUILD', 'axase3', 'mtd2' , '', d)}\
-${@base_contains('MACHINEBUILD', 'axase3c', 'mtd2' , '', d)}\
-${@base_contains('MACHINEBUILD', 'maram9', 'mtd3' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'classm', 'mtd4' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'axodin', 'mtd4' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'axodinc', 'mtd4' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'starsatlx', 'mtd4' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'genius', 'mtd4' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'evo', 'mtd4' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'galaxym6', 'mtd4' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'geniuse3hd', 'mtd2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'evoe3hd', 'mtd2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'axase3', 'mtd2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'axase3c', 'mtd2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'maram9', 'mtd3' , '', d)}\
 "
 
 MACHINE_DRIVER = "\
-${@base_contains('MACHINEBUILD', 'classm', 'odinm7' , '', d)}\
-${@base_contains('MACHINEBUILD', 'axodin', 'odinm7' , '', d)}\
-${@base_contains('MACHINEBUILD', 'axodinc', 'odinm7' , '', d)}\
-${@base_contains('MACHINEBUILD', 'starsatlx', 'odinm7' , '', d)}\
-${@base_contains('MACHINEBUILD', 'genius', 'odinm7' , '', d)}\
-${@base_contains('MACHINEBUILD', 'evo', 'odinm7' , '', d)}\
-${@base_contains('MACHINEBUILD', 'galaxym6', 'odinm7' , '', d)}\
-${@base_contains('MACHINEBUILD', 'geniuse3hd', 'e3hd' , '', d)}\
-${@base_contains('MACHINEBUILD', 'evoe3hd', 'e3hd' , '', d)}\
-${@base_contains('MACHINEBUILD', 'axase3', 'e3hd' , '', d)}\
-${@base_contains('MACHINEBUILD', 'axase3c', 'e3hd' , '', d)}\
-${@base_contains('MACHINEBUILD', 'maram9', 'odinm9' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'classm', 'odinm7' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'axodin', 'odinm7' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'axodinc', 'odinm7' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'starsatlx', 'odinm7' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'genius', 'odinm7' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'evo', 'odinm7' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'galaxym6', 'odinm7' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'geniuse3hd', 'e3hd' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'evoe3hd', 'e3hd' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'axase3', 'e3hd' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'axase3c', 'e3hd' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'maram9', 'odinm9' , '', d)}\
 "
 
 KERNEL_FILE = "kernel.bin"
@@ -140,7 +140,7 @@ IMAGE_CMD_ubi_prepend = " \
 
 IMAGE_CMD_ubi_append = "\
     mkdir -p ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}; \
-    ${@base_contains("MACHINE_FEATURES", "bootsplash", "cp ${DEPLOY_DIR_IMAGE}/${BOOTLOGO_FILENAME} ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/${BOOTLOGO_FILENAME};" , "", d)} \
+    ${@bb.utils.contains("MACHINE_FEATURES", "bootsplash", "cp ${DEPLOY_DIR_IMAGE}/${BOOTLOGO_FILENAME} ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/${BOOTLOGO_FILENAME};" , "", d)} \
     mv ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.ubi ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/${ROOTFS_FILE}; \
     gzip -9c ${DEPLOY_DIR_IMAGE}/vmlinux-${MACHINE}.bin > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/${KERNEL_FILE}; \
     echo ${IMAGE_VER_STRING} > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/imageversion; \
@@ -156,8 +156,8 @@ IMAGE_CMD_ubi_append = "\
     "
 
 MACHINE_FEATURES += "3dtv alsa hdmicec switchoff bootsplash blindscan-dvbs blindscan-dvbc omb boxmodel feature1 feature2 \
-    ${@base_contains('MACHINEBUILD', 'axodinc', 'dvb-c dvbc-only' , '', d)} \
-    ${@base_contains('MACHINEBUILD', 'axase3c', 'dvb-c dvbc-only' , '', d)} \
+    ${@bb.utils.contains('MACHINEBUILD', 'axodinc', 'dvb-c dvbc-only' , '', d)} \
+    ${@bb.utils.contains('MACHINEBUILD', 'axase3c', 'dvb-c dvbc-only' , '', d)} \
     "
 
 BOOTLOGO_FILENAME = "splash.bin"

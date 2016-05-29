@@ -21,7 +21,7 @@ SRC_URI = "http://en3homeftp.net/pub/src/linux-${KV}-${DATE}.tar.gz \
     file://kernel-add-support-for-gcc-5.patch \
     file://rtl8712-fix-warnings.patch \
     file://rtl8187se-fix-warnings.patch \
-    ${@base_contains("DISTRO_NAME", "openvix", "file://dmx_delete_e2stb.patch", "", d)} \
+    ${@bb.utils.contains("DISTRO_NAME", "openvix", "file://dmx_delete_e2stb.patch", "", d)} \
     file://sit2_op.o \
     "
 

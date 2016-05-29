@@ -15,7 +15,7 @@ VER ="2.1"
 PR = "r6"
 
 PACKAGES =+ "enigma2-plugin-skins-metrix-atv-fhd-icons"
-SRC_URI="${@base_contains("DISTRO_TYPE", "release", "git://github.com/openatv/MetrixHD.git;protocol=git" , "git://github.com/openatv/MetrixHD.git;protocol=git;branch=dev", d)}"
+SRC_URI="${@bb.utils.contains("DISTRO_TYPE", "release", "git://github.com/openatv/MetrixHD.git;protocol=git" , "git://github.com/openatv/MetrixHD.git;protocol=git;branch=dev", d)}"
 
 S = "${WORKDIR}/git"
 

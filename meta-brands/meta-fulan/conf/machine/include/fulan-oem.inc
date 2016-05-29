@@ -4,118 +4,118 @@ include conf/machine/include/build-extras.inc
 BRAND_OEM = "fulan"
 
 MACHINE_NAME = "\
-${@base_contains('MACHINEBUILD', 'amiko8900', 'SHD-8900 Alien' , '', d)}\
-${@base_contains('MACHINEBUILD', 'amikomini', 'Alien-Mini' , '', d)}\
-${@base_contains('MACHINEBUILD', 'sognorevolution', 'Spark Revolution' , '', d)}\
-${@base_contains('MACHINEBUILD', 'arguspingulux', 'argus pingulux' , '', d)}\
-${@base_contains('MACHINEBUILD', 'arguspinguluxmini', 'argus pingulux mini' , '', d)}\
-${@base_contains('MACHINEBUILD', 'arguspinguluxplus', 'argus pingulux plus' , '', d)}\
-${@base_contains('MACHINEBUILD', 'sparktriplex', 'SPARK TRIPLEX'  , '', d)}\
-${@base_contains('MACHINEBUILD', 'sparkreloaded', 'SPARK RELOADED'  , '', d)}\
-${@base_contains('MACHINEBUILD', 'sparklx', 'SPARK 990 LX'  , '', d)}\
-${@base_contains('MACHINEBUILD', 'sparkone', 'SPARK ONE'  , '', d)}\
-${@base_contains('MACHINEBUILD', 'amikoalien', 'Alien 2' , '', d)}\
-${@base_contains('MACHINEBUILD', 'sognotriple', 'Spark Triple' , '', d)}\
-${@base_contains('MACHINEBUILD', 'sabtriple', 'Unix Triple HD' , '', d)}\
-${@base_contains('MACHINEBUILD', 'sabsolo', 'Unix F+ Solo' , '', d)}\
-${@base_contains('MACHINEBUILD', 'fulanspark1', 'Spark 1+' , '', d)}\
-${@base_contains('MACHINEBUILD', 'giavatar', 'Avatar' , '', d)}\
-${@base_contains('MACHINEBUILD', 'gis8120', 'S 8120' , '', d)}\
-${@base_contains('MACHINEBUILD', 'dynaspark', 'SPARK' , '', d)}\
-${@base_contains('MACHINEBUILD', 'dynasparkplus', 'SPARK Plus HDPVR' , '', d)}\
-${@base_contains('MACHINEBUILD', 'dynaspark7162', 'SPARK 7162' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'amiko8900', 'SHD-8900 Alien' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'amikomini', 'Alien-Mini' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'sognorevolution', 'Spark Revolution' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'arguspingulux', 'argus pingulux' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'arguspinguluxmini', 'argus pingulux mini' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'arguspinguluxplus', 'argus pingulux plus' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'sparktriplex', 'SPARK TRIPLEX'  , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'sparkreloaded', 'SPARK RELOADED'  , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'sparklx', 'SPARK 990 LX'  , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'sparkone', 'SPARK ONE'  , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'amikoalien', 'Alien 2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'sognotriple', 'Spark Triple' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'sabtriple', 'Unix Triple HD' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'sabsolo', 'Unix F+ Solo' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'fulanspark1', 'Spark 1+' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'giavatar', 'Avatar' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gis8120', 'S 8120' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'dynaspark', 'SPARK' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'dynasparkplus', 'SPARK Plus HDPVR' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'dynaspark7162', 'SPARK 7162' , '', d)}\
 "
 
 MACHINE_BRAND = "\
-${@base_contains('MACHINEBUILD', 'amiko8900', 'Amiko' , '', d)}\
-${@base_contains('MACHINEBUILD', 'amikomini', 'Amiko' , '', d)}\
-${@base_contains('MACHINEBUILD', 'sognorevolution', 'SOGNO' , '', d)}\
-${@base_contains('MACHINEBUILD', 'arguspingulux', 'Edision' , '', d)}\
-${@base_contains('MACHINEBUILD', 'arguspinguluxmini', 'Edision' , '', d)}\
-${@base_contains('MACHINEBUILD', 'arguspinguluxplus', 'Edision' , '', d)}\
-${@base_contains('MACHINEBUILD', 'sparktriplex', 'GOLDEN MEDIA'  , '', d)}\
-${@base_contains('MACHINEBUILD', 'sparkreloaded', 'GOLDEN MEDIA'  , '', d)}\
-${@base_contains('MACHINEBUILD', 'sparklx', 'GOLDEN MEDIA'  , '', d)}\
-${@base_contains('MACHINEBUILD', 'sparkone', 'GOLDEN MEDIA'  , '', d)}\
-${@base_contains('MACHINEBUILD', 'amikoalien', 'Amiko' , '', d)}\
-${@base_contains('MACHINEBUILD', 'sognotriple', 'SOGNO' , '', d)}\
-${@base_contains('MACHINEBUILD', 'sabtriple', 'SAB' , '', d)}\
-${@base_contains('MACHINEBUILD', 'sabsolo', 'SAB' , '', d)}\
-${@base_contains('MACHINEBUILD', 'fulanspark1', 'Fulan' , '', d)}\
-${@base_contains('MACHINEBUILD', 'giavatar', 'Galaxy Innovations' , '', d)}\
-${@base_contains('MACHINEBUILD', 'gis8120', 'Galaxy Innovations' , '', d)}\
-${@base_contains('MACHINEBUILD', 'dynaspark', 'Dynavision' , '', d)}\
-${@base_contains('MACHINEBUILD', 'dynasparkplus', 'Dynavision' , '', d)}\
-${@base_contains('MACHINEBUILD', 'dynaspark7162', 'Dynavision' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'amiko8900', 'Amiko' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'amikomini', 'Amiko' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'sognorevolution', 'SOGNO' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'arguspingulux', 'Edision' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'arguspinguluxmini', 'Edision' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'arguspinguluxplus', 'Edision' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'sparktriplex', 'GOLDEN MEDIA'  , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'sparkreloaded', 'GOLDEN MEDIA'  , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'sparklx', 'GOLDEN MEDIA'  , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'sparkone', 'GOLDEN MEDIA'  , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'amikoalien', 'Amiko' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'sognotriple', 'SOGNO' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'sabtriple', 'SAB' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'sabsolo', 'SAB' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'fulanspark1', 'Fulan' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'giavatar', 'Galaxy Innovations' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gis8120', 'Galaxy Innovations' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'dynaspark', 'Dynavision' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'dynasparkplus', 'Dynavision' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'dynaspark7162', 'Dynavision' , '', d)}\
 "
 
 IMAGEDIR ?= "\
-${@base_contains('MACHINEBUILD', 'amiko8900', 'enigma2' , '', d)}\
-${@base_contains('MACHINEBUILD', 'amikomini', 'enigma2' , '', d)}\
-${@base_contains('MACHINEBUILD', 'sognorevolution', 'enigma2' , '', d)}\
-${@base_contains('MACHINEBUILD', 'arguspingulux', 'enigma2' , '', d)}\
-${@base_contains('MACHINEBUILD', 'arguspinguluxmini', 'enigma2' , '', d)}\
-${@base_contains('MACHINEBUILD', 'arguspinguluxplus', 'enigma2' , '', d)}\
-${@base_contains('MACHINEBUILD', 'sparktriplex', 'enigma2'  , '', d)}\
-${@base_contains('MACHINEBUILD', 'sparkreloaded', 'enigma2'  , '', d)}\
-${@base_contains('MACHINEBUILD', 'sparklx', 'enigma2'  , '', d)}\
-${@base_contains('MACHINEBUILD', 'sparkone', 'enigma2'  , '', d)}\
-${@base_contains('MACHINEBUILD', 'amikoalien', 'enigma2' , '', d)}\
-${@base_contains('MACHINEBUILD', 'sognotriple', 'enigma2' , '', d)}\
-${@base_contains('MACHINEBUILD', 'sabtriple', 'enigma2' , '', d)}\
-${@base_contains('MACHINEBUILD', 'sabsolo', 'enigma2' , '', d)}\
-${@base_contains('MACHINEBUILD', 'fulanspark1', 'enigma2' , '', d)}\
-${@base_contains('MACHINEBUILD', 'giavatar', 'enigma2' , '', d)}\
-${@base_contains('MACHINEBUILD', 'gis8120', 'enigma2' , '', d)}\
-${@base_contains('MACHINEBUILD', 'dynaspark', 'enigma2' , '', d)}\
-${@base_contains('MACHINEBUILD', 'dynasparkplus', 'enigma2' , '', d)}\
-${@base_contains('MACHINEBUILD', 'dynaspark7162', 'enigma2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'amiko8900', 'enigma2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'amikomini', 'enigma2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'sognorevolution', 'enigma2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'arguspingulux', 'enigma2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'arguspinguluxmini', 'enigma2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'arguspinguluxplus', 'enigma2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'sparktriplex', 'enigma2'  , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'sparkreloaded', 'enigma2'  , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'sparklx', 'enigma2'  , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'sparkone', 'enigma2'  , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'amikoalien', 'enigma2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'sognotriple', 'enigma2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'sabtriple', 'enigma2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'sabsolo', 'enigma2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'fulanspark1', 'enigma2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'giavatar', 'enigma2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gis8120', 'enigma2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'dynaspark', 'enigma2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'dynasparkplus', 'enigma2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'dynaspark7162', 'enigma2' , '', d)}\
 "
 
 MTD_KERNEL = "\
-${@base_contains('MACHINEBUILD', 'amiko8900', 'mtd5' , '', d)}\
-${@base_contains('MACHINEBUILD', 'amikomini', 'mtd5' , '', d)}\
-${@base_contains('MACHINEBUILD', 'sognorevolution', 'mtd5' , '', d)}\
-${@base_contains('MACHINEBUILD', 'arguspingulux', 'mtd5' , '', d)}\
-${@base_contains('MACHINEBUILD', 'arguspinguluxmini', 'mtd5' , '', d)}\
-${@base_contains('MACHINEBUILD', 'arguspinguluxplus', 'mtd5' , '', d)}\
-${@base_contains('MACHINEBUILD', 'sparktriplex', 'mtd5'  , '', d)}\
-${@base_contains('MACHINEBUILD', 'sparkreloaded', 'mtd5'  , '', d)}\
-${@base_contains('MACHINEBUILD', 'sparklx', 'mtd5'  , '', d)}\
-${@base_contains('MACHINEBUILD', 'sparkone', 'mtd5'  , '', d)}\
-${@base_contains('MACHINEBUILD', 'amikoalien', 'mtd5' , '', d)}\
-${@base_contains('MACHINEBUILD', 'sognotriple', 'mtd5' , '', d)}\
-${@base_contains('MACHINEBUILD', 'sabtriple', 'mtd5' , '', d)}\
-${@base_contains('MACHINEBUILD', 'sabsolo', 'mtd5' , '', d)}\
-${@base_contains('MACHINEBUILD', 'fulanspark1', 'mtd5' , '', d)}\
-${@base_contains('MACHINEBUILD', 'giavatar', 'mtd5' , '', d)}\
-${@base_contains('MACHINEBUILD', 'gis8120', 'mtd5' , '', d)}\
-${@base_contains('MACHINEBUILD', 'dynaspark', 'mtd5' , '', d)}\
-${@base_contains('MACHINEBUILD', 'dynasparkplus', 'mtd5' , '', d)}\
-${@base_contains('MACHINEBUILD', 'dynaspark7162', 'mtd5' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'amiko8900', 'mtd5' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'amikomini', 'mtd5' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'sognorevolution', 'mtd5' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'arguspingulux', 'mtd5' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'arguspinguluxmini', 'mtd5' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'arguspinguluxplus', 'mtd5' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'sparktriplex', 'mtd5'  , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'sparkreloaded', 'mtd5'  , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'sparklx', 'mtd5'  , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'sparkone', 'mtd5'  , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'amikoalien', 'mtd5' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'sognotriple', 'mtd5' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'sabtriple', 'mtd5' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'sabsolo', 'mtd5' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'fulanspark1', 'mtd5' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'giavatar', 'mtd5' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gis8120', 'mtd5' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'dynaspark', 'mtd5' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'dynasparkplus', 'mtd5' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'dynaspark7162', 'mtd5' , '', d)}\
 "
 
 MTD_ROOTFS = "\
-${@base_contains('MACHINEBUILD', 'amiko8900', 'mtd6' , '', d)}\
-${@base_contains('MACHINEBUILD', 'amikomini', 'mtd6' , '', d)}\
-${@base_contains('MACHINEBUILD', 'sognorevolution', 'mtd6' , '', d)}\
-${@base_contains('MACHINEBUILD', 'arguspingulux', 'mtd6' , '', d)}\
-${@base_contains('MACHINEBUILD', 'arguspinguluxmini', 'mtd6' , '', d)}\
-${@base_contains('MACHINEBUILD', 'arguspinguluxplus', 'mtd6' , '', d)}\
-${@base_contains('MACHINEBUILD', 'sparktriplex', 'mtd6'  , '', d)}\
-${@base_contains('MACHINEBUILD', 'sparkreloaded', 'mtd6'  , '', d)}\
-${@base_contains('MACHINEBUILD', 'sparklx', 'mtd6'  , '', d)}\
-${@base_contains('MACHINEBUILD', 'sparkone', 'mtd6'  , '', d)}\
-${@base_contains('MACHINEBUILD', 'amikoalien', 'mtd6' , '', d)}\
-${@base_contains('MACHINEBUILD', 'sognotriple', 'mtd6' , '', d)}\
-${@base_contains('MACHINEBUILD', 'sabtriple', 'mtd6' , '', d)}\
-${@base_contains('MACHINEBUILD', 'sabsolo', 'mtd6' , '', d)}\
-${@base_contains('MACHINEBUILD', 'fulanspark1', 'mtd6' , '', d)}\
-${@base_contains('MACHINEBUILD', 'giavatar', 'mtd6' , '', d)}\
-${@base_contains('MACHINEBUILD', 'gis8120', 'mtd6' , '', d)}\
-${@base_contains('MACHINEBUILD', 'dynaspark', 'mtd6' , '', d)}\
-${@base_contains('MACHINEBUILD', 'dynasparkplus', 'mtd6' , '', d)}\
-${@base_contains('MACHINEBUILD', 'dynaspark7162', 'mtd6' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'amiko8900', 'mtd6' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'amikomini', 'mtd6' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'sognorevolution', 'mtd6' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'arguspingulux', 'mtd6' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'arguspinguluxmini', 'mtd6' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'arguspinguluxplus', 'mtd6' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'sparktriplex', 'mtd6'  , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'sparkreloaded', 'mtd6'  , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'sparklx', 'mtd6'  , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'sparkone', 'mtd6'  , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'amikoalien', 'mtd6' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'sognotriple', 'mtd6' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'sabtriple', 'mtd6' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'sabsolo', 'mtd6' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'fulanspark1', 'mtd6' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'giavatar', 'mtd6' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gis8120', 'mtd6' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'dynaspark', 'mtd6' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'dynasparkplus', 'mtd6' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'dynaspark7162', 'mtd6' , '', d)}\
 "
 
 KERNEL_FILE = "uImage"

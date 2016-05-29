@@ -4,39 +4,39 @@ include conf/machine/include/build-extras.inc
 BRAND_OEM = "ultramini"
 
 MACHINE_NAME = "\
-${@base_contains('MACHINEBUILD', 'xpeedlxcs2', 'XPEED LX CLASS S2' , '', d)}\
-${@base_contains('MACHINEBUILD', 'xpeedlxcc', 'XPEED LX CLASS C' , '', d)}\
-${@base_contains('MACHINEBUILD', 'et7x00mini', 'ET-7000 Mini' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'xpeedlxcs2', 'XPEED LX CLASS S2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'xpeedlxcc', 'XPEED LX CLASS C' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'et7x00mini', 'ET-7000 Mini' , '', d)}\
 "
 
 MACHINE_BRAND = "\
-${@base_contains('MACHINEBUILD', 'xpeedlxcs2', 'GOLDEN INTERSTAR' , '', d)}\
-${@base_contains('MACHINEBUILD', 'xpeedlxcc', 'GOLDEN INTERSTAR' , '', d)}\
-${@base_contains('MACHINEBUILD', 'et7x00mini', 'Galaxy Innovations' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'xpeedlxcs2', 'GOLDEN INTERSTAR' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'xpeedlxcc', 'GOLDEN INTERSTAR' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'et7x00mini', 'Galaxy Innovations' , '', d)}\
 "
 
 IMAGEDIR ?= "\
-${@base_contains('MACHINEBUILD', 'xpeedlxcs2', 'xpeedc' , '', d)}\
-${@base_contains('MACHINEBUILD', 'xpeedlxcc', 'xpeedc' , '', d)}\
-${@base_contains('MACHINEBUILD', 'et7x00mini', 'et7x00' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'xpeedlxcs2', 'xpeedc' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'xpeedlxcc', 'xpeedc' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'et7x00mini', 'et7x00' , '', d)}\
 "
 
 MTD_KERNEL = "\
-${@base_contains('MACHINEBUILD', 'xpeedlxcs2', 'mtd1' , '', d)}\
-${@base_contains('MACHINEBUILD', 'xpeedlxcc', 'mtd1' , '', d)}\
-${@base_contains('MACHINEBUILD', 'et7x00mini', 'mtd1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'xpeedlxcs2', 'mtd1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'xpeedlxcc', 'mtd1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'et7x00mini', 'mtd1' , '', d)}\
 "
 
 MTD_ROOTFS = "\
-${@base_contains('MACHINEBUILD', 'xpeedlxcs2', 'mtd2' , '', d)}\
-${@base_contains('MACHINEBUILD', 'xpeedlxcc', 'mtd2' , '', d)}\
-${@base_contains('MACHINEBUILD', 'et7x00mini', 'mtd2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'xpeedlxcs2', 'mtd2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'xpeedlxcc', 'mtd2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'et7x00mini', 'mtd2' , '', d)}\
 "
 
 MACHINE_DRIVER = "\
-${@base_contains('MACHINEBUILD', 'xpeedlxcs2', 'xpeedc' , '', d)}\
-${@base_contains('MACHINEBUILD', 'xpeedlxcc', 'xpeedc' , '', d)}\
-${@base_contains('MACHINEBUILD', 'et7x00mini', 'et7000mini' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'xpeedlxcs2', 'xpeedc' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'xpeedlxcc', 'xpeedc' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'et7x00mini', 'et7000mini' , '', d)}\
 "
 
 KERNEL_FILE = "kernel.bin"
@@ -87,7 +87,7 @@ IMAGE_CMD_ubi_prepend = " \
 
 IMAGE_CMD_ubi_append = "\
     mkdir -p ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}; \
-    ${@base_contains("MACHINE_FEATURES", "bootsplash", "cp ${DEPLOY_DIR_IMAGE}/${BOOTLOGO_FILENAME} ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/${BOOTLOGO_FILENAME};" , "", d)} \
+    ${@bb.utils.contains("MACHINE_FEATURES", "bootsplash", "cp ${DEPLOY_DIR_IMAGE}/${BOOTLOGO_FILENAME} ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/${BOOTLOGO_FILENAME};" , "", d)} \
     mv ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.ubi ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/${ROOTFS_FILE}; \
     gzip -9c ${DEPLOY_DIR_IMAGE}/vmlinux-${MACHINE}.bin > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/${KERNEL_FILE}; \
     echo ${IMAGE_VER_STRING} > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/imageversion; \
@@ -103,7 +103,7 @@ IMAGE_CMD_ubi_append = "\
     "
 
 MACHINE_FEATURES += "3dtv alsa hdmicec switchoff wifi bootsplash omb skins1080 boxmodel feature1 feature2 \
-    ${@base_contains('MACHINEBUILD', 'xpeedlxcc', 'dvb-c dvbc-only blindscan-dvbc' , '', d)} \
+    ${@bb.utils.contains('MACHINEBUILD', 'xpeedlxcc', 'dvb-c dvbc-only blindscan-dvbc' , '', d)} \
     "
 
 BOOTLOGO_FILENAME = "splash.bin"

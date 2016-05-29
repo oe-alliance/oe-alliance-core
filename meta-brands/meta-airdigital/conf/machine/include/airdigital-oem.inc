@@ -4,42 +4,42 @@ include conf/machine/include/build-extras.inc
 BRAND_OEM = "airdigital"
 
 MACHINE_NAME = "\
-${@base_contains('MACHINEBUILD', 'zgemmash1', 'Star H1' , '', d)}\
-${@base_contains('MACHINEBUILD', 'zgemmash2', 'Star H2' , '', d)}\
-${@base_contains('MACHINEBUILD', 'zgemmas2s', 'Star 2S' , '', d)}\
-${@base_contains('MACHINEBUILD', 'zgemmass', 'Star S' , '', d)}\
-${@base_contains('MACHINEBUILD', 'zgemmahs', 'H.S' , '', d)}\
-${@base_contains('MACHINEBUILD', 'zgemmah2s', 'H.2S' , '', d)}\
-${@base_contains('MACHINEBUILD', 'zgemmah2h', 'H.2H' , '', d)}\
-${@base_contains('MACHINEBUILD', 'zgemmaslc', 'Star LC' , '', d)}\
-${@base_contains('MACHINEBUILD', 'zgemmah5', 'H5' , '', d)}\
-${@base_contains('MACHINEBUILD', 'zgemmai55', 'I55' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'zgemmash1', 'Star H1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'zgemmash2', 'Star H2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'zgemmas2s', 'Star 2S' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'zgemmass', 'Star S' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'zgemmahs', 'H.S' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'zgemmah2s', 'H.2S' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'zgemmah2h', 'H.2H' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'zgemmaslc', 'Star LC' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'zgemmah5', 'H5' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'zgemmai55', 'I55' , '', d)}\
 "
 
 MACHINE_BRAND = "\
-${@base_contains('MACHINEBUILD', 'zgemmash1', 'Zgemma' , '', d)}\
-${@base_contains('MACHINEBUILD', 'zgemmash2', 'Zgemma' , '', d)}\
-${@base_contains('MACHINEBUILD', 'zgemmas2s', 'Zgemma' , '', d)}\
-${@base_contains('MACHINEBUILD', 'zgemmass', 'Zgemma' , '', d)}\
-${@base_contains('MACHINEBUILD', 'zgemmahs', 'Zgemma' , '', d)}\
-${@base_contains('MACHINEBUILD', 'zgemmah2s', 'Zgemma' , '', d)}\
-${@base_contains('MACHINEBUILD', 'zgemmah2h', 'Zgemma' , '', d)}\
-${@base_contains('MACHINEBUILD', 'zgemmaslc', 'Zgemma' , '', d)}\
-${@base_contains('MACHINEBUILD', 'zgemmah5', 'Zgemma' , '', d)}\
-${@base_contains('MACHINEBUILD', 'zgemmai55', 'Zgemma' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'zgemmash1', 'Zgemma' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'zgemmash2', 'Zgemma' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'zgemmas2s', 'Zgemma' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'zgemmass', 'Zgemma' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'zgemmahs', 'Zgemma' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'zgemmah2s', 'Zgemma' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'zgemmah2h', 'Zgemma' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'zgemmaslc', 'Zgemma' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'zgemmah5', 'Zgemma' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'zgemmai55', 'Zgemma' , '', d)}\
 "
 
 IMAGEDIR ?= "\
-${@base_contains('MACHINEBUILD', 'zgemmash1', 'zgemma/sh1' , '', d)}\
-${@base_contains('MACHINEBUILD', 'zgemmash2', 'zgemma/sh1' , '', d)}\
-${@base_contains('MACHINEBUILD', 'zgemmas2s', 'zgemma/sh1' , '', d)}\
-${@base_contains('MACHINEBUILD', 'zgemmass', 'zgemma/sh1' , '', d)}\
-${@base_contains('MACHINEBUILD', 'zgemmahs', 'zgemma/h3' , '', d)}\
-${@base_contains('MACHINEBUILD', 'zgemmah2s', 'zgemma/h3' , '', d)}\
-${@base_contains('MACHINEBUILD', 'zgemmah2h', 'zgemma/h3' , '', d)}\
-${@base_contains('MACHINEBUILD', 'zgemmaslc', 'zgemma/lc' , '', d)}\
-${@base_contains('MACHINEBUILD', 'zgemmah5', 'zgemma/h5' , '', d)}\
-${@base_contains('MACHINEBUILD', 'zgemmai55', 'zgemma/i55' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'zgemmash1', 'zgemma/sh1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'zgemmash2', 'zgemma/sh1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'zgemmas2s', 'zgemma/sh1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'zgemmass', 'zgemma/sh1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'zgemmahs', 'zgemma/h3' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'zgemmah2s', 'zgemma/h3' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'zgemmah2h', 'zgemma/h3' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'zgemmaslc', 'zgemma/lc' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'zgemmah5', 'zgemma/h5' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'zgemmai55', 'zgemma/i55' , '', d)}\
 "
 
 MTD_KERNEL = "mtd1"
@@ -65,7 +65,7 @@ MACHINE_EXTRA_RRECOMMENDS = " \
 include conf/machine/include/autoload-filesystems.inc
 
 DVBMEDIASINK_CONFIG = "--with-wma --with-wmv --with-pcm --with-dts --with-eac3 \
-    ${@base_contains('MACHINEBUILD', 'h5', '--with-h265 --with-vb6 --with-vb8 --with-spark' , '', d)} \
+    ${@bb.utils.contains('MACHINEBUILD', 'h5', '--with-h265 --with-vb6 --with-vb8 --with-spark' , '', d)} \
     "
 
 TARGET_ARCH = "mipsel"
@@ -90,7 +90,7 @@ IMAGE_CMD_ubi_append = "\
     mv ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.ubi ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/${ROOTFS_FILE}; \
     gzip -9c ${DEPLOY_DIR_IMAGE}/vmlinux-${MACHINE}.bin > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/${KERNEL_FILE}; \
     echo ${IMAGE_VER_STRING} > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/imageversion; \
-    ${@base_contains('MACHINE', 'i55', \
+    ${@bb.utils.contains('MACHINE', 'i55', \
     'echo "dont change this file" > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/force;' , \
     'echo "rename this file to force to force an update without confirmation" > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/noforce;', d)} \
     cd ${DEPLOY_DIR_IMAGE}; \

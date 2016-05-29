@@ -4,58 +4,58 @@ include conf/machine/include/build-extras.inc
 BRAND_OEM = "tripledot"
 
 MACHINE_NAME = "\
-${@base_contains('MACHINEBUILD', 'enibox', 'EniBox' , '', d)}\
-${@base_contains('MACHINEBUILD', 'mago', 'MAGO' , '', d)}\
-${@base_contains('MACHINEBUILD', 'tyrant', 'tyrant' , '', d)}\
-${@base_contains('MACHINEBUILD', 'xcombo', 'enfinityX combo plus' , '', d)}\
-${@base_contains('MACHINEBUILD', 'x1plus', 'enfinityX 1plus' , '', d)}\
-${@base_contains('MACHINEBUILD', 'sf108', 'SF108 E2HD' , '', d)}\
-${@base_contains('MACHINEBUILD', 't2cable', 'ENFINITY T2/CABLE' , '', d)}\
-${@base_contains('MACHINEBUILD', 'sf98', 'SF98' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'enibox', 'EniBox' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mago', 'MAGO' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'tyrant', 'tyrant' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'xcombo', 'enfinityX combo plus' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'x1plus', 'enfinityX 1plus' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'sf108', 'SF108 E2HD' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 't2cable', 'ENFINITY T2/CABLE' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'sf98', 'SF98' , '', d)}\
 "
 
 MACHINE_BRAND = "\
-${@base_contains('MACHINEBUILD', 'enibox', 'hdbox' , '', d)}\
-${@base_contains('MACHINEBUILD', 'mago', 'relook' , '', d)}\
-${@base_contains('MACHINEBUILD', 'tyrant', 'tripledot' , '', d)}\
-${@base_contains('MACHINEBUILD', 'xcombo', 'EVO' , '', d)}\
-${@base_contains('MACHINEBUILD', 'x1plus', 'EVO' , '', d)}\
-${@base_contains('MACHINEBUILD', 'sf108', 'Octagon' , '', d)}\
-${@base_contains('MACHINEBUILD', 't2cable', 'EVO' , '', d)}\
-${@base_contains('MACHINEBUILD', 'sf98', 'Octagon' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'enibox', 'hdbox' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mago', 'relook' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'tyrant', 'tripledot' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'xcombo', 'EVO' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'x1plus', 'EVO' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'sf108', 'Octagon' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 't2cable', 'EVO' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'sf98', 'Octagon' , '', d)}\
 "
 
 IMAGEDIR ?= "\
-${@base_contains('MACHINEBUILD', 'enibox', 'enibox' , '', d)}\
-${@base_contains('MACHINEBUILD', 'mago', 'mago' , '', d)}\
-${@base_contains('MACHINEBUILD', 'tyrant', 'tyrant' , '', d)}\
-${@base_contains('MACHINEBUILD', 'xcombo', 'xcombo' , '', d)}\
-${@base_contains('MACHINEBUILD', 'x1plus', 'x1plus' , '', d)}\
-${@base_contains('MACHINEBUILD', 'sf108', 'sf108' , '', d)}\
-${@base_contains('MACHINEBUILD', 't2cable', 't2cable' , '', d)}\
-${@base_contains('MACHINEBUILD', 'sf98', 'sf98' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'enibox', 'enibox' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mago', 'mago' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'tyrant', 'tyrant' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'xcombo', 'xcombo' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'x1plus', 'x1plus' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'sf108', 'sf108' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 't2cable', 't2cable' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'sf98', 'sf98' , '', d)}\
 "
 
 MTD_KERNEL ?= "\
-${@base_contains('MACHINEBUILD', 'enibox', 'mtd2' , '', d)}\
-${@base_contains('MACHINEBUILD', 'mago', 'mtd2' , '', d)}\
-${@base_contains('MACHINEBUILD', 'tyrant', 'mtd2' , '', d)}\
-${@base_contains('MACHINEBUILD', 'xcombo', 'mtd2' , '', d)}\
-${@base_contains('MACHINEBUILD', 'x1plus', 'mtd2' , '', d)}\
-${@base_contains('MACHINEBUILD', 'sf108', 'mtd2' , '', d)}\
-${@base_contains('MACHINEBUILD', 't2cable', 'mtd2' , '', d)}\
-${@base_contains('MACHINEBUILD', 'sf98', 'mtd2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'enibox', 'mtd2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mago', 'mtd2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'tyrant', 'mtd2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'xcombo', 'mtd2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'x1plus', 'mtd2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'sf108', 'mtd2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 't2cable', 'mtd2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'sf98', 'mtd2' , '', d)}\
 "
 
 MTD_ROOTFS ?= "\
-${@base_contains('MACHINEBUILD', 'enibox', 'mtd8' , '', d)}\
-${@base_contains('MACHINEBUILD', 'mago', 'mtd8' , '', d)}\
-${@base_contains('MACHINEBUILD', 'tyrant', 'mtd8' , '', d)}\
-${@base_contains('MACHINEBUILD', 'xcombo', 'mtd8' , '', d)}\
-${@base_contains('MACHINEBUILD', 'x1plus', 'mtd8' , '', d)}\
-${@base_contains('MACHINEBUILD', 'sf108', 'mtd8' , '', d)}\
-${@base_contains('MACHINEBUILD', 't2cable', 'mtd8' , '', d)}\
-${@base_contains('MACHINEBUILD', 'sf98', 'mtd0' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'enibox', 'mtd8' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mago', 'mtd8' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'tyrant', 'mtd8' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'xcombo', 'mtd8' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'x1plus', 'mtd8' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'sf108', 'mtd8' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 't2cable', 'mtd8' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'sf98', 'mtd0' , '', d)}\
 "
 
 KERNEL_FILE = "kernel.bin"
@@ -101,7 +101,7 @@ IMAGE_CMD_ubi_append = "\
     mv ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.ubi ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/${ROOTFS_FILE}; \
     gzip -9c ${DEPLOY_DIR_IMAGE}/vmlinux-${MACHINE}.bin > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/${KERNEL_FILE}; \
     echo ${IMAGE_VER_STRING} > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/imageversion; \
-    ${@base_contains('MACHINE', 'yh7362', \
+    ${@bb.utils.contains('MACHINE', 'yh7362', \
     'echo "dont change this file" > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/force;' , \
     'echo "rename this file to force to force an update without confirmation" > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/noforce;', d)} \
     cd ${DEPLOY_DIR_IMAGE}; \

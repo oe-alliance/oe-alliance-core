@@ -4,31 +4,31 @@ include conf/machine/include/build-extras.inc
 BRAND_OEM = "gfutures"
 
 MACHINE_NAME = "\
-${@base_contains('MACHINEBUILD', 'mutant1100', 'HD1100' , '', d)}\
-${@base_contains('MACHINEBUILD', 'mutant1265', 'HD1265' , '', d)}\
-${@base_contains('MACHINEBUILD', 'mutant1500', 'HD1500' , '', d)}\
-${@base_contains('MACHINEBUILD', 'mutant1100', 'HD1100' , '', d)}\
-${@base_contains('MACHINEBUILD', 'mutant500c', 'HD500C' , '', d)}\
-${@base_contains('MACHINEBUILD', 'mutant1200', 'HD1200' , '', d)}\
-${@base_contains('MACHINEBUILD', 'vizyonvita', 'Vita' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mutant1100', 'HD1100' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mutant1265', 'HD1265' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mutant1500', 'HD1500' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mutant1100', 'HD1100' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mutant500c', 'HD500C' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mutant1200', 'HD1200' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'vizyonvita', 'Vita' , '', d)}\
 "
 
 MACHINE_BRAND = "\
-${@base_contains('MACHINEBUILD', 'mutant1100', 'Mut@nt' , '', d)}\
-${@base_contains('MACHINEBUILD', 'mutant1265', 'Mut@nt' , '', d)}\
-${@base_contains('MACHINEBUILD', 'mutant1500', 'Mut@nt' , '', d)}\
-${@base_contains('MACHINEBUILD', 'mutant500c', 'Mut@nt' , '', d)}\
-${@base_contains('MACHINEBUILD', 'mutant1200', 'Mut@nt' , '', d)}\
-${@base_contains('MACHINEBUILD', 'vizyonvita', 'Vizyon' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mutant1100', 'Mut@nt' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mutant1265', 'Mut@nt' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mutant1500', 'Mut@nt' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mutant500c', 'Mut@nt' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mutant1200', 'Mut@nt' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'vizyonvita', 'Vizyon' , '', d)}\
 "
 
 IMAGEDIR ?= "\
-${@base_contains('MACHINEBUILD', 'mutant1100', 'hd1100' , '', d)}\
-${@base_contains('MACHINEBUILD', 'mutant1265', 'hd1265' , '', d)}\
-${@base_contains('MACHINEBUILD', 'mutant1500', 'hd1500' , '', d)}\
-${@base_contains('MACHINEBUILD', 'mutant500c', 'hd500c' , '', d)}\
-${@base_contains('MACHINEBUILD', 'mutant1200', 'hd1200' , '', d)}\
-${@base_contains('MACHINEBUILD', 'vizyonvita', 'hd1100' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mutant1100', 'hd1100' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mutant1265', 'hd1265' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mutant1500', 'hd1500' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mutant500c', 'hd500c' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mutant1200', 'hd1200' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'vizyonvita', 'hd1100' , '', d)}\
 "
 
 MTD_KERNEL = "mtd1"
@@ -55,8 +55,8 @@ MACHINE_EXTRA_RRECOMMENDS = " \
 include conf/machine/include/autoload-filesystems.inc
 
 DVBMEDIASINK_CONFIG = "--with-wma --with-wmv --with-pcm --with-dts --with-eac3 \
-    ${@base_contains('MACHINEBUILD', 'mutant1265', '--with-h265 --with-vb6 --with-vb8 --with-spark' , '', d)} \
-    ${@base_contains('MACHINEBUILD', 'mutant1500', '--with-h265 --with-vb6 --with-vb8 --with-spark' , '', d)} \
+    ${@bb.utils.contains('MACHINEBUILD', 'mutant1265', '--with-h265 --with-vb6 --with-vb8 --with-spark' , '', d)} \
+    ${@bb.utils.contains('MACHINEBUILD', 'mutant1500', '--with-h265 --with-vb6 --with-vb8 --with-spark' , '', d)} \
 "
 
 TARGET_ARCH = "mipsel"

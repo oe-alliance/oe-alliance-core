@@ -20,6 +20,6 @@ RDEPENDS_${PN} = "\
     openvix-enigma2 \
     openvix-bootlogo \
     openvix-spinner \
-    ${@base_contains("MACHINE", "vusolo4k", "glibc-compat", "", d)} \
+    ${@bb.utils.contains("MACHINE", "vusolo4k", "glibc-compat", "", d)} \
     "
 

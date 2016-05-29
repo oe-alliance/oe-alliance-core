@@ -4,24 +4,24 @@ include conf/machine/include/build-extras.inc
 BRAND_OEM = "xp"
 
 MACHINE_NAME = "\
-${@base_contains('MACHINEBUILD', 'xp1000mk', 'XP1000' , '', d)}\
-${@base_contains('MACHINEBUILD', 'xp1000max', 'XP1000' , '', d)}\
-${@base_contains('MACHINEBUILD', 'sf8', 'SF8' , '', d)}\
-${@base_contains('MACHINEBUILD', 'xp1000plus', 'XP1000 + ' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'xp1000mk', 'XP1000' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'xp1000max', 'XP1000' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'sf8', 'SF8' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'xp1000plus', 'XP1000 + ' , '', d)}\
 "
 
 MACHINE_BRAND = "\
-${@base_contains('MACHINEBUILD', 'xp1000mk', 'MK-Digital' , '', d)}\
-${@base_contains('MACHINEBUILD', 'xp1000max', 'MaxDigital' , '', d)}\
-${@base_contains('MACHINEBUILD', 'sf8', 'Octagon' , '', d)}\
-${@base_contains('MACHINEBUILD', 'xp1000plus', 'Octagon' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'xp1000mk', 'MK-Digital' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'xp1000max', 'MaxDigital' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'sf8', 'Octagon' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'xp1000plus', 'Octagon' , '', d)}\
 "
 
 IMAGEDIR ?= "\
-${@base_contains('MACHINEBUILD', 'xp1000mk', 'xp1000' , '', d)}\
-${@base_contains('MACHINEBUILD', 'xp1000max', 'xp1000' , '', d)}\
-${@base_contains('MACHINEBUILD', 'sf8', 'xp1000' , '', d)}\
-${@base_contains('MACHINEBUILD', 'xp1000plus', 'xp1000' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'xp1000mk', 'xp1000' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'xp1000max', 'xp1000' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'sf8', 'xp1000' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'xp1000plus', 'xp1000' , '', d)}\
 "
 
 MTD_KERNEL = "mtd1"

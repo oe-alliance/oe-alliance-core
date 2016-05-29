@@ -11,7 +11,7 @@ PR = "r${DATETIME}"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 IMAGE_INSTALL = "openspa-base \
-    ${@base_contains("MACHINE_FEATURES", "smallflash", "", \
+    ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "", \
     " \
     packagegroup-base-smbfs-client \
     packagegroup-base-smbfs \

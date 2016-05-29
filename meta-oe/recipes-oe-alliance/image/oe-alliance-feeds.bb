@@ -31,7 +31,7 @@ RDEPENDS_${PN} = " \
     enigma2-plugin-extensions-tuxcom \
     enigma2-plugin-security-firewall \
     enigma2-plugin-extensions-openairplay \
-    ${@base_contains("TARGET_ARCH", "mipsel", "enigma2-plugin-extensions-et-livestream" , "", d)} \
+    ${@bb.utils.contains("TARGET_ARCH", "mipsel", "enigma2-plugin-extensions-et-livestream" , "", d)} \
     enigma2-plugin-extensions-mediatomb \
     enigma2-plugin-extensions-dreamplex \
     enigma2-plugin-extensions-iptvlistupdater \
@@ -40,14 +40,14 @@ RDEPENDS_${PN} = " \
     enigma2-plugin-extensions-yahooweather \
     enigma2-plugin-extensions-youtube \
     enigma2-plugin-extensions-autobouquets \
-    ${@base_contains("MACHINE_FEATURES", "omb", "enigma2-plugin-extensions-openmultiboot", "", d)} \
-    ${@base_contains("MACHINE_FEATURES", "omb", "openmultiboot", "", d)} \
-    ${@base_contains("MACHINE_FEATURES", "vukodi", "enigma2-plugin-extensions-vuplus-kodi", "", d)} \
-    ${@base_contains("MACHINE_FEATURES", "webkithbbtv", "webkit-hbbtv-browser", "", d)} \
-    ${@base_contains("MACHINE_FEATURES", "chromiumos", "enigma2-plugin-extensions-chromium", "", d)} \
+    ${@bb.utils.contains("MACHINE_FEATURES", "omb", "enigma2-plugin-extensions-openmultiboot", "", d)} \
+    ${@bb.utils.contains("MACHINE_FEATURES", "omb", "openmultiboot", "", d)} \
+    ${@bb.utils.contains("MACHINE_FEATURES", "vukodi", "enigma2-plugin-extensions-vuplus-kodi", "", d)} \
+    ${@bb.utils.contains("MACHINE_FEATURES", "webkithbbtv", "webkit-hbbtv-browser", "", d)} \
+    ${@bb.utils.contains("MACHINE_FEATURES", "chromiumos", "enigma2-plugin-extensions-chromium", "", d)} \
     \
-    ${@base_contains("MACHINE_FEATURES", "sdl", "enigma2-plugin-extensions-snesmanager" , "", d)} \
-    ${@base_contains("MACHINE_FEATURES", "gles", "libmicrohttpd libnfs libshairport libtinyxml mysql5 yajl" , "", d)} \
+    ${@bb.utils.contains("MACHINE_FEATURES", "sdl", "enigma2-plugin-extensions-snesmanager" , "", d)} \
+    ${@bb.utils.contains("MACHINE_FEATURES", "gles", "libmicrohttpd libnfs libshairport libtinyxml mysql5 yajl" , "", d)} \
     \
     autofs \
     autossh \
@@ -59,10 +59,10 @@ RDEPENDS_${PN} = " \
     dosfstools \
     dvbsnoop \
     dvdfs \
-    ${@base_contains("MACHINE_FEATURES", "legacykernel", "" , "evtest strace", d)} \
+    ${@bb.utils.contains("MACHINE_FEATURES", "legacykernel", "" , "evtest strace", d)} \
     exfat-utils \
     fuse-exfat \
-    ${@base_contains("TARGET_ARCH", "sh4", "" , "gdb v4l-utils", d)} \
+    ${@bb.utils.contains("TARGET_ARCH", "sh4", "" , "gdb v4l-utils", d)} \
     hddtemp \
     hdparm \
     htop \
@@ -104,7 +104,7 @@ RDEPENDS_${PN} = " \
     idle3-tools \
     pngquant \
     streamproxy \
-    ${@base_contains("GST_VERSION", "1.0", "eplayer5", "eplayer4", d)} \
+    ${@bb.utils.contains("GST_VERSION", "1.0", "eplayer5", "eplayer4", d)} \
     "
 
 RDEPENDS_${PN}_remove_xc7362 = "network-usb-drivers-meta"

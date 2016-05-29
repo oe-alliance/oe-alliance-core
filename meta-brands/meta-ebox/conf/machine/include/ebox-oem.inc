@@ -7,48 +7,48 @@ KERNEL_FILE = "kernel_cfe_auto.bin"
 ROOTFS_FILE = "root_cfe_auto.bin"
 
 MACHINE_NAME = "\
-${@base_contains('MACHINEBUILD', 'mixosf5', 'F5' , '', d)}\
-${@base_contains('MACHINEBUILD', 'mixosf5mini', 'F5 mini' , '', d)}\
-${@base_contains('MACHINEBUILD', 'mixosf7', 'F7' , '', d)}\
-${@base_contains('MACHINEBUILD', 'mixoslumi', 'Lumi' , '', d)}\
-${@base_contains('MACHINEBUILD', 'gi9196m', '9196m' , '', d)}\
-${@base_contains('MACHINEBUILD', 'gi9196lite', '9196 Lite' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mixosf5', 'F5' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mixosf5mini', 'F5 mini' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mixosf7', 'F7' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mixoslumi', 'Lumi' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gi9196m', '9196m' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gi9196lite', '9196 Lite' , '', d)}\
 "
 
 MACHINE_BRAND = "\
-${@base_contains('MACHINEBUILD', 'mixosf5', 'MixOS' , '', d)}\
-${@base_contains('MACHINEBUILD', 'mixosf5mini', 'MixOS' , '', d)}\
-${@base_contains('MACHINEBUILD', 'mixosf7', 'MixOS' , '', d)}\
-${@base_contains('MACHINEBUILD', 'mixoslumi', 'MixOS' , '', d)}\
-${@base_contains('MACHINEBUILD', 'gi9196m', 'Galaxy Innovations' , '', d)}\
-${@base_contains('MACHINEBUILD', 'gi9196lite', 'Galaxy Innovations' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mixosf5', 'MixOS' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mixosf5mini', 'MixOS' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mixosf7', 'MixOS' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mixoslumi', 'MixOS' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gi9196m', 'Galaxy Innovations' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gi9196lite', 'Galaxy Innovations' , '', d)}\
 "
 
 IMAGEDIR ?= "\
-${@base_contains('MACHINEBUILD', 'mixosf5', 'ebox/7403' , '', d)}\
-${@base_contains('MACHINEBUILD', 'mixosf5mini', 'ebox/7403' , '', d)}\
-${@base_contains('MACHINEBUILD', 'mixosf7', 'ebox/7358' , '', d)}\
-${@base_contains('MACHINEBUILD', 'mixoslumi', 'ebox/7403' , '', d)}\
-${@base_contains('MACHINEBUILD', 'gi9196m', 'ebox/7403' , '', d)}\
-${@base_contains('MACHINEBUILD', 'gi9196lite', 'ebox/7403' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mixosf5', 'ebox/7403' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mixosf5mini', 'ebox/7403' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mixosf7', 'ebox/7358' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mixoslumi', 'ebox/7403' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gi9196m', 'ebox/7403' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gi9196lite', 'ebox/7403' , '', d)}\
 "
 
 MTD_KERNEL = "\
-${@base_contains('MACHINEBUILD', 'mixosf5', 'mtd1' , '', d)}\
-${@base_contains('MACHINEBUILD', 'mixosf5mini', 'mtd1' , '', d)}\
-${@base_contains('MACHINEBUILD', 'mixosf7', 'mtd7' , '', d)}\
-${@base_contains('MACHINEBUILD', 'mixoslumi', 'mtd1' , '', d)}\
-${@base_contains('MACHINEBUILD', 'gi9196m', 'mtd1' , '', d)}\
-${@base_contains('MACHINEBUILD', 'gi9196lite', 'mtd1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mixosf5', 'mtd1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mixosf5mini', 'mtd1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mixosf7', 'mtd7' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mixoslumi', 'mtd1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gi9196m', 'mtd1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gi9196lite', 'mtd1' , '', d)}\
 "
 
 MTD_ROOTFS = "\
-${@base_contains('MACHINEBUILD', 'mixosf5', 'mtd2' , '', d)}\
-${@base_contains('MACHINEBUILD', 'mixosf5mini', 'mtd2' , '', d)}\
-${@base_contains('MACHINEBUILD', 'mixosf7', 'mtd6' , '', d)}\
-${@base_contains('MACHINEBUILD', 'mixoslumi', 'mtd2' , '', d)}\
-${@base_contains('MACHINEBUILD', 'gi9196m', 'mtd2' , '', d)}\
-${@base_contains('MACHINEBUILD', 'gi9196lite', 'mtd2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mixosf5', 'mtd2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mixosf5mini', 'mtd2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mixosf7', 'mtd6' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mixoslumi', 'mtd2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gi9196m', 'mtd2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gi9196lite', 'mtd2' , '', d)}\
 "
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS = "\

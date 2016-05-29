@@ -18,7 +18,7 @@ EXTRA_OECONF += "\
 "
 
 PRIVATE_LIBS_${PN} = "\
-	${@base_contains("MACHINE_FEATURES", "dvbproxy", "libinit.so", "", d)} \
+	${@bb.utils.contains("MACHINE_FEATURES", "dvbproxy", "libinit.so", "", d)} \
 "
 
 do_install_append() {

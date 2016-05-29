@@ -25,6 +25,6 @@ RDEPENDS_${PN} = "\
     ofgwrite \
     packagegroup-base-smbfs-client \
     rtmpdump \
-    ${@base_contains("MACHINE_FEATURES", "dreambox", "", "ofgwrite", d)} \
+    ${@bb.utils.contains("MACHINE_FEATURES", "dreambox", "", "ofgwrite", d)} \
     libungif \
     "

@@ -4,18 +4,18 @@ include conf/machine/include/build-extras.inc
 BRAND_OEM = "skylake"
 
 MACHINE_NAME = "\
-${@base_contains('MACHINEBUILD', 'mutant2400', 'HD2400' , '', d)}\
-${@base_contains('MACHINEBUILD', 'quadbox2400', 'QuadBox HD2400' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mutant2400', 'HD2400' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'quadbox2400', 'QuadBox HD2400' , '', d)}\
 "
 
 MACHINE_BRAND = "\
-${@base_contains('MACHINEBUILD', 'mutant2400', 'Mut@nt' , '', d)}\
-${@base_contains('MACHINEBUILD', 'quadbox2400', 'AX' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mutant2400', 'Mut@nt' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'quadbox2400', 'AX' , '', d)}\
 "
 
 IMAGEDIR ?= "\
-${@base_contains('MACHINEBUILD', 'mutant2400', 'hd2400' , '', d)}\
-${@base_contains('MACHINEBUILD', 'quadbox2400', 'hd2400' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mutant2400', 'hd2400' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'quadbox2400', 'hd2400' , '', d)}\
 "
 
 MTD_KERNEL = "mtd1"
