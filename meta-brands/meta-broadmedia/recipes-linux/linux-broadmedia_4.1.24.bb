@@ -2,14 +2,14 @@ SUMMARY = "Linux kernel for ${MACHINE}"
 SECTION = "kernel"
 LICENSE = "GPLv2"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
-SRC = "20151216"
+SRC = "20160520"
 
 inherit kernel machine_kernel_pr
 
-KERNEL_RELEASE = "4.1.15"
+KERNEL_RELEASE = "4.1.24"
 
-SRC_URI[md5sum] = "606f82d844aebcc8dbd36d6b9e8ffa8c"
-SRC_URI[sha256sum] = "94614db16c16b2b70880132840f25ed2caf168c7938a09b61d75f13f9883d11c"
+SRC_URI[md5sum] = "2d7fa0fc629cfa39cb19777ee02df371"
+SRC_URI[sha256sum] = "d987d93b80b9494efa2fae57a0048bda34cefef7451a87ea07b4c60c865e6b9b"
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
@@ -21,7 +21,7 @@ PKG_kernel-image = "kernel-image"
 RPROVIDES_kernel-base = "kernel-${KERNEL_VERSION}"
 RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
 
-SRC_URI += "http://source.mynonpublic.com/broadmedia/${MACHINE}-linux-${PV}-${SRC}.tar.xz \
+SRC_URI += "http://source.mynonpublic.com/broadmedia/broadmedia-linux-${PV}-${SRC}.tar.xz \
     file://defconfig \
     "
 

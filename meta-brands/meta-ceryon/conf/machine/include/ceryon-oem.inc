@@ -11,6 +11,8 @@ ${@base_contains('MACHINEBUILD', 'odinplus', 'ODIN2 Plus' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'e4hd', 'E4HD' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'e4hdhybrid', 'E4HD HYBRID' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'singleboxlcd', 'SINGLEBOX LCD' , '', d)}\
+${@base_contains('MACHINEBUILD', 'sf208', 'SF208 E2 HD LCD SINGLE' , '', d)}\
+${@base_contains('MACHINEBUILD', 'sf228', 'SF228 E2 HD LCD TWIN' , '', d)}\
 "
 
 MACHINE_BRAND = "\
@@ -21,6 +23,8 @@ ${@base_contains('MACHINEBUILD', 'odinplus', 'Opticum' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'e4hd', 'AXAS' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'e4hdhybrid', 'AXAS' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'singleboxlcd', 'RED EAGLE' , '', d)}\
+${@base_contains('MACHINEBUILD', 'sf208', 'OCTAGON' , '', d)}\
+${@base_contains('MACHINEBUILD', 'sf228', 'OCTAGON' , '', d)}\
 "
 
 IMAGEDIR ?= "\
@@ -31,6 +35,8 @@ ${@base_contains('MACHINEBUILD', 'odinplus', 'odinplus' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'e4hd', 'e4hd' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'e4hdhybrid', 'e4hd' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'singleboxlcd', 'redeagle/singleboxlcd' , '', d)}\
+${@base_contains('MACHINEBUILD', 'sf208', 'sf208' , '', d)}\
+${@base_contains('MACHINEBUILD', 'sf228', 'sf228' , '', d)}\
 "
 
 MTD_KERNEL = "mtd1"

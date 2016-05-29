@@ -13,7 +13,7 @@ PKGV = "experimental-git${GITPKGV}"
 PR = "r5"
 BRANCH = "3.2"
 
-SRC_URI = "git://schwerkraft.elitedvb.net/enigma2-skins/enigma2-skins.git;protocol=git;branch=${BRANCH}  file://skinsnotwanted"
+SRC_URI = "git://github.com/opendreambox/enigma2-skins.git;protocol=git;branch=${BRANCH}  file://skinsnotwanted"
 
 #include examples of openpli widgets
 SRC_URI_append = " \
