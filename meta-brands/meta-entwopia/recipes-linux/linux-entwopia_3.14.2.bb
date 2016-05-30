@@ -48,6 +48,7 @@ SRC_URI += "http://source.mynonpublic.com/entwopia/${MACHINE}/${MACHINE}-linux-$
     file://linux-3.14.2-gcc-4.9.3-build-error-fixed.patch \
     file://kernel-add-support-for-gcc-5.patch \
     file://rtl8712-fix-warnings.patch \
+    file://kernel-add-support-for-gcc6.patch \
     "
 
 S = "${WORKDIR}/linux-${PV}-base"

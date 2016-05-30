@@ -22,6 +22,7 @@ RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
 SRC_URI += "http://source.mynonpublic.com/ceryon/ceryon-linux-${PV}.tgz \
 	file://defconfig \
 	file://dvb-usb-i2c_duplicate.patch \
+	file://kernel-add-support-for-gcc6.patch \
 	"
 
 S = "${WORKDIR}/linux-${PV}"

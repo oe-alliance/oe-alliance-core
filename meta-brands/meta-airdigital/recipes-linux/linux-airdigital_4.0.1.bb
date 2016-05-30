@@ -30,6 +30,7 @@ SRC_URI += "http://source.mynonpublic.com/zgemma/linux-${PV}.tar.gz \
 	file://sdio-pinmux.patch \
 	file://0002-add-brcm-chips.patch \
 	file://0003-nand-ecc-strength-and-bitflip.patch \
+	file://kernel-add-support-for-gcc6.patch \
 	"
 
 S = "${WORKDIR}/linux-${PV}"

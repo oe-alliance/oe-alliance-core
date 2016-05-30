@@ -26,6 +26,7 @@ RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
 
 SRC_URI += "http://source.mynonpublic.com/xcore/${MACHINE}-linux-${PV}-${SRC}.tar.gz \
     file://defconfig \
+    file://kernel-add-support-for-gcc6.patch \
     "
 
 S = "${WORKDIR}/linux-brcmstb-${PV}"

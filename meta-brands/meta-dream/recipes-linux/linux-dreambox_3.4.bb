@@ -15,6 +15,7 @@ SRC_URI = " \
     file://fixme-hardfloat.patch \
     file://rtl8712-fix-warnings.patch \
     file://rtl8187se-fix-warnings.patch \
+    file://kernel-add-support-for-gcc6.patch \
 "
 
 SRC_URI[kernel.md5sum] = "967f72983655e2479f951195953e8480"

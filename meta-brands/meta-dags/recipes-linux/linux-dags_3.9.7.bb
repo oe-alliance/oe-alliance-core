@@ -23,6 +23,7 @@ SRC_URI = "http://en3homeftp.net/pub/src/linux-${KV}-${DATE}.tar.gz \
     file://rtl8187se-fix-warnings.patch \
     ${@bb.utils.contains("DISTRO_NAME", "openvix", "file://dmx_delete_e2stb.patch", "", d)} \
     file://sit2_op.o \
+    file://kernel-add-support-for-gcc6.patch \
     "
 
 S = "${WORKDIR}/linux-${KV}"

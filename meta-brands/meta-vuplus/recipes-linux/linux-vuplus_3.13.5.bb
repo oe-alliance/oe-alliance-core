@@ -35,6 +35,7 @@ SRC_URI = "http://archive.vuplus.com/download/kernel/stblinux-${KV}.tar.bz2 \
     file://kernel-add-support-for-gcc-5.patch \
     file://rtl8712-fix-warnings.patch \
     ${@bb.utils.contains("MACHINE_FEATURES", "dvbproxy", "file://linux_dvb_adapter.patch;patch=1;pnum=1", "", d)} \
+    file://kernel-add-support-for-gcc6.patch \
     "
 
 SRC_URI_append_vuduo2 = "file://brcm_s3_wol.patch;patch=1;pnum=1 "

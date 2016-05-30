@@ -33,6 +33,7 @@ SRC_URI += "${KERNELORG_MIRROR}/linux/kernel/v3.x/linux-${KV}.tar.bz2;name=azbox
     file://kernel-add-support-for-gcc-5.patch \
     file://rtl8712-fix-warnings.patch \
     file://rtl8187se-fix-warnings.patch \
+    file://kernel-add-support-for-gcc6.patch \
     "
 
 SRC_URI_append_azboxhd = "http://azbox-enigma2-project.googlecode.com/files/initramfs-${MACHINE}-oe-core-${KV}-${SRCDATE}.tar.bz2;name=azbox-initrd-${MACHINE}"

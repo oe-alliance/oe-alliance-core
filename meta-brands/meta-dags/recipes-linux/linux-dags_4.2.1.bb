@@ -13,6 +13,7 @@ LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad
 
 SRC_URI += "http://en3homeftp.net/pub/src/dags-linux-${PV}-${SRCDATE}.tar.gz \
     file://defconfig \
+    file://kernel-add-support-for-gcc6.patch \
     "
 
 S = "${WORKDIR}/linux-${PV}"

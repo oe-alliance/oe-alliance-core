@@ -23,6 +23,7 @@ RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
 
 SRC_URI += "http://xpeedlxclass.eu/linux-${PV}.tar.xz \
     file://defconfig \
+    file://kernel-add-support-for-gcc6.patch \
 "
 
 S = "${WORKDIR}/linux-${PV}"

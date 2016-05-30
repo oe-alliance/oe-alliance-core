@@ -41,6 +41,7 @@ SRC_URI = "http://archiv.openmips.com/gigablue-linux-${PV}-${SRCDATE}.tgz \
     file://kernel-add-support-for-gcc-5.patch \
     file://rtl8712-fix-warnings.patch \
     file://rtl8187se-fix-warnings.patch \
+    file://kernel-add-support-for-gcc6.patch \
         "
 
 S = "${WORKDIR}/linux-${KV}"

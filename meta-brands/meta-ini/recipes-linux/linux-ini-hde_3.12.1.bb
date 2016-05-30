@@ -42,6 +42,7 @@ SRC_URI += "http://code-ini.com/software/kernel/bcm7358-linux-${KV}-${SRCDATE}.t
     file://linux-3.12.1-gcc-4.9.3-build-error-fixed.patch \
     file://kernel-add-support-for-gcc-5.patch \
     file://rtl8712-fix-warnings.patch \
+    file://kernel-add-support-for-gcc6.patch \
     "
 
 S = "${WORKDIR}/linux-${PV}"

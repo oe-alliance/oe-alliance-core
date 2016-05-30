@@ -23,6 +23,7 @@ COMPATIBLE_MACHINE = "(wetekplay)"
 
 SRC_URI = "http://github.com/wetek-enigma/linux-wetek-3.10.y/archive/master.tar.gz \
     file://defconfig \
+    file://kernel-add-support-for-gcc6.patch \
 "
 
 S = "${WORKDIR}/linux-wetek-3.10.y-master"

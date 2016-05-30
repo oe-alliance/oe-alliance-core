@@ -28,6 +28,7 @@ SRC_URI += "http://downloads.formuler.info/linux-${PV}.tar.gz \
 	file://iosched-slice_idle-1.patch \
 	file://sdio-pinmux.patch \
 	file://0001-bcmgenet.patch \
+	file://kernel-add-support-for-gcc6.patch \
 	"
 
 S = "${WORKDIR}/linux-${PV}"

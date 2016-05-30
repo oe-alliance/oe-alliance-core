@@ -26,6 +26,7 @@ SRC_URI += "http://source.mynonpublic.com/entwopia/${MACHINE}/${MACHINE}-linux-$
     file://iosched-slice_idle-1.patch \
     file://0001-bcmgenet.patch \
     file://0002-add-brcm-chips.patch \
+    file://kernel-add-support-for-gcc6.patch \
     "
 
 S = "${WORKDIR}/linux-${PV}-base"
