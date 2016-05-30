@@ -7,7 +7,7 @@ LICENSE = "proprietary"
 require conf/license/license-gplv2.inc
 
 PV = "${IMAGE_VERSION}"
-PR = "r${DATETIME}"
+PR = "r${DATE}"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 IMAGE_INSTALL = "openvix-base"

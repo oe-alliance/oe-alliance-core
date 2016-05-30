@@ -13,7 +13,7 @@ PACKAGES += " ${PN}-src"
 SRCREV = "${AUTOREV}"
 PV = "5.2+git${SRCPV}"
 PKGV = "5.2+git${GITPKGV}"
-PR = "r${DATETIME}"
+PR = "r${DATE}"
 
 SRC_URI="git://github.com/oe-alliance/branding-module.git;protocol=git"
 
