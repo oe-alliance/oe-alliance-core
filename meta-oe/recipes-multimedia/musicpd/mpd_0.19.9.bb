@@ -16,6 +16,7 @@ PR = "r6"
 SRC_URI = "git://git.musicpd.org/master/mpd.git;protocol=git \
         file://mpd.conf \
         file://mpd.init \
+        file://gcc61.patch \
         "
 
 S = "${WORKDIR}/git"
