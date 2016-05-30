@@ -37,3 +37,6 @@ include recipes-linux/linux-azbox.inc
 
 do_rm_work() {
 }
+
+# extra tasks
+addtask kernel_link_images after do_compile before do_install

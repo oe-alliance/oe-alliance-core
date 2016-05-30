@@ -63,3 +63,6 @@ do_install_append () {
 
 do_rm_work() {
 }
+
+# extra tasks
+addtask kernel_link_images after do_compile before do_install
