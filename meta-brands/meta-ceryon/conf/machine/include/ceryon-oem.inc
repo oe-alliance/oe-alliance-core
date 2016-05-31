@@ -13,6 +13,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'e4hdhybrid', 'E4HD HYBRID' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'singleboxlcd', 'SINGLEBOX LCD' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'sf208', 'SF208 E2 HD LCD SINGLE' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'sf228', 'SF228 E2 HD LCD TWIN' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', '9910lx', '9910LX' , '', d)}\
 "
 
 MACHINE_BRAND = "\
@@ -25,6 +26,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'e4hdhybrid', 'AXAS' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'singleboxlcd', 'RED EAGLE' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'sf208', 'OCTAGON' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'sf228', 'OCTAGON' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', '9910lx', 'Protek' , '', d)}\
 "
 
 IMAGEDIR ?= "\
@@ -37,6 +39,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'e4hdhybrid', 'e4hd' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'singleboxlcd', 'redeagle/singleboxlcd' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'sf208', 'sf208' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'sf228', 'sf228' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', '9910lx', '9910lx' , '', d)}\
 "
 
 MTD_KERNEL = "mtd1"
