@@ -20,8 +20,8 @@ ${@base_contains('MACHINEBUILD', 'sf138', 'Octagon' , '', d)}\
 IMAGEDIR ?= "\
 ${@base_contains('MACHINEBUILD', 'mbtwinplus', 'miraclebox/twinplus' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'sf3038', 'sf3038' , '', d)}\
-${@base_contains('MACHINEBUILD', 'sf128', 'sf128-sf138' , '', d)}\
-${@base_contains('MACHINEBUILD', 'sf138', 'sf128-sf138' , '', d)}\
+${@base_contains('MACHINEBUILD', 'sf128', 'sf128' , '', d)}\
+${@base_contains('MACHINEBUILD', 'sf138', 'sf138' , '', d)}\
 "
 
 MACHINE_DRIVER = "\
