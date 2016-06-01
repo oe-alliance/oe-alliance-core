@@ -1,9 +1,9 @@
 KV = "4.1.21"
 GCCREV = "5.3.0"
-SRCDATE = "20160427"
+SRCDATE = "20160601"
 
 SRC_URI = "http://source.mynonpublic.com/protek/${MACHINE}-drivers-${KV}-${GCCREV}-${SRCDATE}.zip"
 require protek-dvb-modules.inc
 
-SRC_URI[md5sum] = "b90f6282581fe28b5b4b846f080e8376"
-SRC_URI[sha256sum] = "a2c960e22abe004e6e3925dcc8b5a0ec4b56191f695abf8596a7d20e42ab1f54"
+SRC_URI[md5sum] = "3a4054f8242405c6c4be2b2359146472"
+SRC_URI[sha256sum] = "6888e47cc6115c9f8e2536c282df6b44c6087d4482aee249f07338ade03123e5"
