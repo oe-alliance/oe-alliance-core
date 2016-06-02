@@ -30,6 +30,7 @@ PROVIDES += " \
     enigma2-plugin-extensions-webbrowser \
     enigma2-plugin-extensions-ondemand-openuitzendinggemist \
     enigma2-plugin-systemplugins-satipclient \
+    enigma2-plugin-systemplugins-terrestrialscan \
     enigma2-plugin-extensions-tunerserver \
     ${@bb.utils.contains('MACHINE_BRAND', 'Vu+', 'enigma2-plugin-extensions-hbbtv ' , ' ', d)} \
     enigma2-plugin-systemplugins-transcodingsetup \
@@ -81,6 +82,7 @@ DESCRIPTION_enigma2-plugin-systemplugins-vfdcontrol = "vfd controller"
 DESCRIPTION_enigma2-plugin-extensions-streamtv = "iptv player"
 RDEPENDS_enigma2-plugin-extensions-streamtv = "librtmp1"
 DESCRIPTION_enigma2-plugin-systemplugins-tempfancontrol = "Control your internal system fan."
+DESCRIPTION_enigma2-plugin-systemplugins-terrestrialscan = "Selects the strongest transponders where there are duplicates and allows filtering by network id."
 DESCRIPTION_enigma2-plugin-systemplugins-fancontrol = "Control your internal system fan."
 RDEPENDS_enigma2-plugin-systemplugins-fancontrol_et9x00 = "hddtemp"
 DESCRIPTION_enigma2-plugin-systemplugins-remotecontrolcode = "Change Remote Control Code"
@@ -124,7 +126,7 @@ inherit autotools-brokensep gitpkgv pythonnative
 SRCREV = "${AUTOREV}"
 PV = "2.0+git${SRCPV}"
 PKGV = "2.0+git${GITPKGV}"
-PR = "r23"
+PR = "r24"
 
 SRC_URI = "${OEA_PLUGINS_URI}"
 
