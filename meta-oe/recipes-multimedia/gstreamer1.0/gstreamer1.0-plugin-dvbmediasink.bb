@@ -48,6 +48,10 @@ SRC_URI_append_ch625lc = " \
     file://0001-add-vp8-vp9-vp6-spark.patch;patch=1 \
 "
 
+SRC_URI_append_hd11 = " \
+    file://0001-add-vp8-vp9-vp6-spark.patch;patch=1 \
+"
+
 SRC_URI_append_hd1265 = " \
     file://0001-add-vp8-vp9-vp6-spark.patch;patch=1 \
 "
