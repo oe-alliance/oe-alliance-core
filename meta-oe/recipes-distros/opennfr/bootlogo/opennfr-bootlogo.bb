@@ -31,6 +31,7 @@ SRC_URI_append_gb800ue = "file://lcdsplash220.bin file://lcdwaitkey220.bin file:
 #SRC_URI_append_gbquadplus = "file://lcdsplash400.bin file://lcdwaitkey400.bin file://lcdwarning400.bin"
 SRC_URI_append_vuduo2 = "file://lcdbootlogo.png file://bootlogo.py"
 SRC_URI_append_7100s = "file://lcdsplash220.bin file://lcdwaitkey220.bin file://lcdwarning220.bin file://lcdcomplete220.bin"
+SRC_URI_append_7210s = "file://lcdsplash220.bin file://lcdwaitkey220.bin file://lcdwarning220.bin file://lcdcomplete220.bin"
 SRC_URI_append_dags7356 = "file://splash1.bmp file://splash1_os1.bmp file://splash1_os2.bmp file://splash2.bmp file://splash3.bmp"
 SRC_URI_append_dags7362 = "file://splash1_power.bmp file://splash1_os1.bmp file://splash1_os2.bmp file://splash2.bmp file://splash3.bmp"
 
@@ -73,6 +74,13 @@ do_install_append_vuduo2() {
 }
 
 do_install_append_7100s() {
+    install -d ${D}/usr/share
+    install -m 0644 lcdwaitkey220.bin ${D}/usr/share/lcdwaitkey.bin
+    install -m 0644 lcdwarning220.bin ${D}/usr/share/lcdwarning.bin
+    install -m 0644 lcdcomplete220.bin ${D}/usr/share/lcdcomplete.bin
+}
+
+do_install_append_7210s() {
     install -d ${D}/usr/share
     install -m 0644 lcdwaitkey220.bin ${D}/usr/share/lcdwaitkey.bin
     install -m 0644 lcdwarning220.bin ${D}/usr/share/lcdwarning.bin
