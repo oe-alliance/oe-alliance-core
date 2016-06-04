@@ -35,6 +35,8 @@ EXTRA_OECONF = "\
 
 CONFFILES_${PN} = "${sysconfdir}/enigma2/emc-hide.cfg ${sysconfdir}/enigma2/emc-noscan.cfg ${sysconfdir}/enigma2/emc-permsort.cfg ${sysconfdir}/enigma2/emc-topdir.cfg"
 
+do_populate_sysroot[noexec] = "1"
+do_package_qa[noexec] = "1"
 
 pkg_postinst_${PN}() {
 #!/bin/sh
