@@ -40,11 +40,19 @@ SRC_URI_append_xc7362 = " \
     file://0001-add-VB6-VB8-SPARK.patch;patch=1 \
 "
 
+SRC_URI_append_gb73625 = " \
+    file://0001-add-vp8-vp9-vp6-spark.patch;patch=1 \
+"
+
 SRC_URI_append_g100 = " \
     file://0001-add-vp8-vp9-vp6-spark.patch;patch=1 \
 "
 
 SRC_URI_append_ch625lc = " \
+    file://0001-add-vp8-vp9-vp6-spark.patch;patch=1 \
+"
+
+SRC_URI_append_hd11 = " \
     file://0001-add-vp8-vp9-vp6-spark.patch;patch=1 \
 "
 

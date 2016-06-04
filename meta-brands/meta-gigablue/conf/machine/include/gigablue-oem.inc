@@ -16,6 +16,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'gbultrase', 'Ultra SE' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbultraue', 'Ultra UE' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbx1', 'X1' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbx3', 'X3' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbx2', 'X2' , '', d)}\
 "
 
 MACHINE_BRAND = "\
@@ -31,6 +32,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'gbultrase', 'GigaBlue' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbultraue', 'GigaBlue' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbx1', 'GigaBlue' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbx3', 'GigaBlue' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbx2', 'GigaBlue' , '', d)}\
 "
 
 IMAGEDIR ?= "\
@@ -46,6 +48,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'gbultrase', 'gigablue/ultrase' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbultraue', 'gigablue/ultraue' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbx1', 'gigablue/x1' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbx3', 'gigablue/x3' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbx2', 'gigablue/x2' , '', d)}\
 "
 
 MTD_KERNEL = "\
@@ -61,6 +64,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'gbultrase', 'mtd2' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbultraue', 'mtd2' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbx1', 'mtd2' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbx3', 'mtd2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbx2', 'mtd2' , '', d)}\
 "
 
 MTD_ROOTFS = "\
@@ -76,6 +80,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'gbultrase', 'mtd0' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbultraue', 'mtd0' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbx1', 'mtd0' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbx3', 'mtd0' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbx2', 'mtd0' , '', d)}\
 "
 
 MACHINE_DRIVER = "\
@@ -91,6 +96,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'gbultrase', 'gb7362' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbultraue', 'gb7362' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbx1', 'gb7362' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbx3', 'gb7362' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbx2', 'gb73625' , '', d)}\
 "
 
 KERNEL_FILE = "kernel.bin"
