@@ -96,7 +96,7 @@ ${@base_contains('MACHINEBUILD', 'gbultrase', 'gb7362' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'gbultraue', 'gb7362' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'gbx1', 'gb7362' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'gbx3', 'gb7362' , '', d)}\
-${@base_contains('MACHINEBUILD', 'gbx2', 'gb7362' , '', d)}\
+${@base_contains('MACHINEBUILD', 'gbx2', 'gb73625' , '', d)}\
 "
 
 KERNEL_FILE = "kernel.bin"
