@@ -26,6 +26,7 @@ SRC_URI += "http://archiv.openmips.com/gigablue-linux-${PV}-20150828.tgz \
     file://add-dmx-source-timecode.patch \
     file://iosched-slice_idle-1.patch \
     file://bcmgenet.patch \
+    file://0002-add-brcm-chips.patch \
     "
 
 S = "${WORKDIR}/linux-${PV}"
