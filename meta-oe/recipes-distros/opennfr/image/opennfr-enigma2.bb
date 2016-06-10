@@ -25,6 +25,7 @@ RDEPENDS_${PN} = "\
     enigma2-plugin-extensions-imdb \
     \
     enigma2-plugin-systemplugins-fastscan \
+    enigma2-plugin-systemplugins-lncscanner \
     enigma2-plugin-systemplugins-softwaremanager \
     enigma2-plugin-systemplugins-hotplug \
     ${@base_contains("MACHINE_FEATURES", "videoenhancement", "", "enigma2-plugin-systemplugins-videoenhancement", d)} \
