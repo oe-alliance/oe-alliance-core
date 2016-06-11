@@ -7,7 +7,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PV = "${IMAGE_VERSION}"
-PR = "r1"
+PR = "r2"
 
 inherit packagegroup
 
@@ -23,7 +23,7 @@ RRECOMMENDS_${PN} = "\
     enigma2-plugin-extensions-graphmultiepg \
     enigma2-plugin-extensions-mediaplayer \
     enigma2-plugin-extensions-zaphistorybrowser \
-    enigma2-plugin-systemplugins-aspectratioswitch \
+    enigma2-plugin-systemplugins-gbaspectratioswitch \
     enigma2-plugin-systemplugins-autoresolution \
     enigma2-plugin-systemplugins-devicemanager \
     enigma2-plugin-systemplugins-fastscan \
