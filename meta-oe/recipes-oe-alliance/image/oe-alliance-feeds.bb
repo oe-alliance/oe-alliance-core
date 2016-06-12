@@ -9,7 +9,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "5.2"
-PR = "r5"
+PR = "r6"
 
 DEPENDS = "enigma2-plugin-drivers-usbserial"
 RECOMMENDS = "enigma2-plugin-extensions-et-livestream"
@@ -34,7 +34,6 @@ RDEPENDS_${PN} = " \
     ${@bb.utils.contains("TARGET_ARCH", "mipsel", "enigma2-plugin-extensions-et-livestream" , "", d)} \
     enigma2-plugin-extensions-mediatomb \
     enigma2-plugin-extensions-dreamplex \
-    enigma2-plugin-extensions-iptvlistupdater \
     enigma2-plugin-extensions-et-portal \
     enigma2-plugin-extensions-moviearchiver \
     enigma2-plugin-extensions-yahooweather \
