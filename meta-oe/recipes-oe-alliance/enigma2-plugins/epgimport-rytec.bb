@@ -1,4 +1,4 @@
-SUMMARY = "Rytec's sources and channels for the XMLTV importer"
+SUMMARY = "Rytec's sources and channels for the EPG importer"
 MAINTAINER = "oe-alliance"
 PACKAGE_ARCH = "all"
 LICENSE = "WTFPL"
@@ -16,7 +16,7 @@ SRC_URI[sha256sum] = "c14f9bb2a21a64e2ad34afa743c9607917bf47eb275111a774cced2808
 
 S = "${WORKDIR}"
 
-DEPENDS = "enigma2-plugin-extensions-xmltvimport"
+DEPENDS = "enigma2-plugin-extensions-epgimport"
 PACKAGES = "${PN}"
 
 FILES_${PN} = "/etc/epgimport"
