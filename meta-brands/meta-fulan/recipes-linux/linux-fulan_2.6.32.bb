@@ -5,7 +5,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 KV = "2.6.32"
 
-MACHINE_KERNEL_PR_append = ".4"
+MACHINE_KERNEL_PR_append = ".5"
 
 DEPENDS_spark7162 += " \
            stlinux24-sh4-stx7105-fdma-firmware \
@@ -53,6 +53,7 @@ SRC_URI = "git://git.stlinux.com/stm/linux-sh4-2.6.32.y.git;protocol=git;branch=
     file://linux-sh4-cpuinfo.patch;patch=1 \
     file://linux-sh4-add_missing_eid.patch;patch=1 \
     file://silence_conv_i2sspdif_warning.patch;patch=1 \
+    file://latest-perl-fix.patch;patch=1 \
     file://defconfig \
     file://st-coprocessor.h \
 "
@@ -104,6 +105,9 @@ do_shared_workdir_append() {
     fi
     if [ -f include/asm-sh/machtypes.h ]; then
         mkdir -p $kerneldir/include/asm-sh
+	if [ -L $kerneldir/include/asm ]; then
+		rm $kerneldir/include/asm
+	fi
         ln -s $kerneldir/include/asm-sh $kerneldir/include/asm
         cp include/asm-sh/machtypes.h $kerneldir/include/asm-sh
     fi

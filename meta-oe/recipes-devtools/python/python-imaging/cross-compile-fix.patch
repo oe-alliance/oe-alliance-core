@@ -1,0 +1,14 @@
+--- a/setup.py	2016-06-10 19:12:39.128967234 +0200
++++ b/setup.py	2016-06-10 19:13:37.171439903 +0200
+@@ -155,11 +155,6 @@
+ 
+         # FIXME: check /opt/stuff directories here?
+ 
+-        prefix = sysconfig.get_config_var("prefix")
+-        if prefix:
+-            add_directory(library_dirs, os.path.join(prefix, "lib"))
+-            add_directory(include_dirs, os.path.join(prefix, "include"))
+-
+         #
+         # locate tkinter libraries
+ 
