@@ -24,20 +24,16 @@ RRECOMMENDS_${PN} = " \
     enigma2-plugin-extensions-cutlisteditor \
     enigma2-plugin-extensions-dvdplayer \
     enigma2-plugin-extensions-volume-adjust \
-    enigma2-plugin-systemplugins-videotune \
     ${@base_contains("MACHINE_FEATURES", "videoenhancement", "", "enigma2-plugin-systemplugins-videoenhancement", d)} \
     enigma2-plugin-systemplugins-softwaremanager \
     enigma2-plugin-systemplugins-hotplug \
     enigma2-plugin-extensions-mediaplayer \
-    enigma2-plugin-systemplugins-osdpositionsetup \
-    enigma2-plugin-systemplugins-osd3dsetup \
     enigma2-plugin-systemplugins-crossepg \
     enigma2-plugin-extensions-dlnabrowser \
     enigma2-plugin-extensions-dlnaserver \
-    enigma2-plugin-extensions-xmltvimport \
+    enigma2-plugin-extensions-epgimport \
     enigma2-plugin-extensions-epgsearchpli \
     enigma2-plugin-extensions-epgimportfilter \
-    ${@base_contains("MACHINE_FEATURES", "smallflash", "", "enigma2-plugin-extensions-enhancedmoviecenter", d)} \
     ${@base_contains("MACHINE_FEATURES", "dreamboxv1", "enigma2-plugin-extensions-dflash mtd-utils-jffs2", "", d)} \
     ${@base_contains("MACHINE_FEATURES", "dreamboxv2", "enigma2-plugin-extensions-dbackup", "", d)} \
     ${@base_contains("MACHINE_FEATURES", "boxmodel", "boxmodel", "", d)} \
@@ -53,11 +49,6 @@ RRECOMMENDS_${PN} = " \
     dvb-usb-drivers-meta \
     "
 
-RRECOMMENDS_${PN}_append_wetekplay = " enigma2-plugin-skins-metrix-bh-fhd-icons enigma2-plugin-systemplugins-wirelesslan"
-RRECOMMENDS_${PN}_append_vusolo4k = "enigma2-plugin-skins-metrix-bh enigma2-plugin-systemplugins-solo4kmisccontrol"
-RRECOMMENDS_${PN}_append_vuduo2 = "enigma2-plugin-skins-metrix-bh"
-RRECOMMENDS_${PN}_append_vusolo2 = "enigma2-plugin-skins-metrix-bh"
-RRECOMMENDS_${PN}_append_vusolose = "enigma2-plugin-skins-metrix-bh"
-RRECOMMENDS_${PN}_append_vuzero = "enigma2-plugin-skins-metrix-bh"
-RRECOMMENDS_${PN}_append_vuultimo = "enigma2-plugin-skins-metrix-bh"
+RRECOMMENDS_${PN}_append_wetekplay = "enigma2-plugin-systemplugins-wirelesslan"
+RRECOMMENDS_${PN}_append_vusolo4k = "enigma2-plugin-systemplugins-solo4kmisccontrol"
 
