@@ -50,5 +50,4 @@ RRECOMMENDS_${PN} = " \
     "
 
 RRECOMMENDS_${PN}_append_wetekplay = "enigma2-plugin-systemplugins-wirelesslan"
-RRECOMMENDS_${PN}_append_vusolo4k = "enigma2-plugin-systemplugins-solo4kmisccontrol"
 
