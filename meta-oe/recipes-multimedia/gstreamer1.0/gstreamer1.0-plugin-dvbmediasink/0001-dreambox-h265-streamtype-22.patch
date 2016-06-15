@@ -1,0 +1,25 @@
+From 076748011f4cb751e52cd6f6a89c846b81992f4e Mon Sep 17 00:00:00 2001
+From: captain <openatv@gmail.com>
+Date: Thu, 21 Jul 2016 01:05:08 +0200
+Subject: [PATCH] [dreambox] h265 streamtype 22
+
+---
+ gstdvbvideosink.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/gstdvbvideosink.h b/gstdvbvideosink.h
+index f453380..11e982a 100644
+--- a/gstdvbvideosink.h
++++ b/gstdvbvideosink.h
+@@ -74,7 +74,7 @@ typedef enum {
+ 	STREAMTYPE_H263 = 2,
+ 	STREAMTYPE_MPEG4_Part2 = 4,
+ 	STREAMTYPE_MPEG1 = 6,
+-	STREAMTYPE_MPEG4_H265 = 7,
++	STREAMTYPE_MPEG4_H265 = 22,
+ 	STREAMTYPE_XVID = 10,
+ 	STREAMTYPE_DIVX311 = 13,
+ 	STREAMTYPE_DIVX4 = 14,
+-- 
+2.9.2.windows.1
+

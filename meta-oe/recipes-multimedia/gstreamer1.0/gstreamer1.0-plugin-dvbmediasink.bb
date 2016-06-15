@@ -21,15 +21,22 @@ SRC_URI_append_dags7356 = " \
     file://0001-update-dags-support.patch;patch=1 \ 
 "
 SRC_URI_append_dags7362 = " \
-    file://0001-update-dags-support.patch;patch=1 \ 
+    file://0001-update-dags-support.patch;patch=1 \
 "
 
 SRC_URI_append_dm7080 = " \
-    file://0001-add-VB6-VB8-SPARK.patch;patch=1 \ 
+    file://0001-add-VB6-VB8-SPARK.patch;patch=1 \
+    file://0001-dreambox-h265-streamtype-22.patch \
 "
 
 SRC_URI_append_dm820 = " \
-    file://0001-add-VB6-VB8-SPARK.patch;patch=1 \ 
+    file://0001-add-VB6-VB8-SPARK.patch;patch=1 \
+    file://0001-dreambox-h265-streamtype-22.patch \
+"
+
+SRC_URI_append_dm520 = " \
+    file://0001-add-VB6-VB8-SPARK.patch;patch=1 \
+    file://0001-dreambox-h265-streamtype-22.patch \
 "
 
 SRC_URI_append_vusolo4k = " \
