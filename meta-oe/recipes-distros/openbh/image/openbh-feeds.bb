@@ -19,7 +19,7 @@ RRECOMMENDS_${PN} = "\
     enigma2-skins-openvix \
     enigma2-pliplugins \
     enigma2-plugin-extensions-project-valerie \
-    enigma2-plugin-extensions-xmltvimport \
+    enigma2-plugin-extensions-epgimport \
     enigma2-plugin-systemplugins-crossepg \
     curlftpfs \
     cdfs \

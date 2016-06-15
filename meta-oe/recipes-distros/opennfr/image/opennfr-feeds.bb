@@ -7,7 +7,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PV = "1.0"
-PR = "r01"
+PR = "r02"
 
 inherit packagegroup
 
@@ -21,7 +21,7 @@ RRECOMMENDS_${PN} = "\
     enigma2-skins \
     enigma2-pliplugins \
     enigma2-plugin-extensions-project-valerie \
-    enigma2-plugin-extensions-xmltvimport \
+    enigma2-plugin-extensions-epgimport \
     curlftpfs \
     enigma2-plugin-extensions-enhancedmoviecenter \
     enigma2-plugin-extensions-cooltvguide \

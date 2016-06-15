@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=4d92cd373abda3937c2bc47fbc49d
 ALLOW_EMPTY_${PN} = "1"
 
 PV = "5.5"
-PR = "r6"
+PR = "r7"
 
 inherit packagegroup
 
@@ -14,7 +14,7 @@ RRECOMMENDS_${PN} = "\
     oe-alliance-skins \
     enigma2-skins \
     cdfs \
-    enigma2-plugin-extensions-xmltvimport \
+    enigma2-plugin-extensions-epgimport \
     enigma2-plugin-extensions-vhannibal-autosettings \
     enigma2-plugin-systemplugins-crossepg \
     enigma2-plugin-skins-opendroid \

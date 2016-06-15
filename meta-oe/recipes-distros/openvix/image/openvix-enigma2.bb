@@ -8,7 +8,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "${IMAGE_VERSION}"
-PR = "r2"
+PR = "r3"
 
 inherit packagegroup
 
@@ -26,7 +26,7 @@ RRECOMMENDS_${PN} = "\
     enigma2-plugin-extensions-autotimer \
     enigma2-plugin-extensions-epgsearch \
     enigma2-plugin-extensions-imdb \
-    enigma2-plugin-extensions-xmltvimport \
+    enigma2-plugin-extensions-epgimport \
     enigma2-plugin-systemplugins-crossepg \
     ${@bb.utils.contains("MACHINE_FEATURES", "uianimation", "enigma2-plugin-systemplugins-animationsetup" , "", d)} \
     "
