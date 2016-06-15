@@ -11,7 +11,7 @@ DEPENDS = "tslib mpfr gmp"
 SRCREV = "${AUTOREV}"
 PV = "3.2+gitr${SRCPV}"
 PKGV = "3.2+gitr${GITPKGV}"
-PR = "r72"
+PR = "r73"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -33,7 +33,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-bluray_1.5rc3_mips32el.ipk \
     enigma2-plugin-extensions-boblight-enigma2_0.8r8_mips32el.ipk \
     enigma2-plugin-extensions-camofs_9.19_all.ipk \
-    enigma2-plugin-extensions-chefkoch_1.4rc6_all.ipk \
+    enigma2-plugin-extensions-chefkoch_1.4rc7_all.ipk \
     enigma2-plugin-extensions-clevertanken_0.7rc1_all.ipk \
     enigma2-plugin-extensions-csfd_10-85-20150429_all \
     enigma2-plugin-extensions-cyrussettings_1.0.0_all.ipk \
@@ -42,12 +42,11 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-enigmalight_0.2-rc1_all.ipk \
     enigma2-plugin-extensions-facebook_1.4_mips32el.ipk \
     enigma2-plugin-extensions-filesearchfs_2.53_all.ipk \
-    enigma2-plugin-extensions-focusonline_1.0rc9_mips32el.ipk \
+    enigma2-plugin-extensions-focusonline_1.0rc10_mips32el.ipk \
     enigma2-plugin-extensions-fragmutti_0.5_all.ipk \
     enigma2-plugin-extensions-gmailreader-oe2.0_1.3_all.ipk \
     enigma2-plugin-extensions-googlenewsreader_1.0_mips32el.ipk \
     enigma2-plugin-extensions-hdmitest_0.4_mipsel.ipk \
-    enigma2-plugin-extensions-hetweer_3.1_all.ipk \
     enigma2-plugin-extensions-iptvbouquet_1.0_r0_all.ipk \
     enigma2-plugin-extensions-isettinge2-3.3.3-oe2.0-${@bb.utils.contains("TARGET_ARCH", "sh4", "sh4" , "mips32el", d)}.ipk \
     enigma2-plugin-extensions-kicker_3.4rc4_all.ipk \
@@ -80,6 +79,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-sport1ticker_0.4_all.ipk \
     enigma2-plugin-extensions-sportportal_2013_all.ipk \
     enigma2-plugin-extensions-sundtekcontrolcenter_20151106rc1_all.ipk \
+    enigma2-plugin-extensions-tectimetv_3.1_all.ipk \
     enigma2-plugin-extensions-thetvdb_0.7-20120607-r2_mips32el.ipk \
     enigma2-plugin-extensions-tmbd_6.7_all.ipk \
     enigma2-plugin-extensions-translator_1.0rc1_all.ipk \
