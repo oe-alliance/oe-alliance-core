@@ -7,7 +7,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PV = "1.0"
-PR = "r55"
+PR = "r56"
 
 inherit packagegroup
 
@@ -34,7 +34,7 @@ RRECOMMENDS_${PN} = " \
     enigma2-plugin-systemplugins-crossepg \
     enigma2-plugin-extensions-dlnabrowser \
     enigma2-plugin-extensions-dlnaserver \
-    enigma2-plugin-extensions-xmltvimport \
+    enigma2-plugin-extensions-epgimport \
     enigma2-plugin-extensions-epgsearchpli \
     enigma2-plugin-extensions-epgimportfilter \
     ${@base_contains("MACHINE_FEATURES", "smallflash", "", "enigma2-plugin-extensions-enhancedmoviecenter", d)} \
