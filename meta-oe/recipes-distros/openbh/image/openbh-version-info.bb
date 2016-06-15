@@ -26,12 +26,17 @@ do_install() {
     fi
     # generate /etc/image-version
     install -d ${D}/etc
-    echo "Creator = OpenViX" > ${D}/etc/image-version
-    echo "Version = ${IMAGE_VERSION}" >> ${D}/etc/image-version
-    echo "Build = ${BUILD_VERSION}" >> ${D}/etc/image-version
-    echo "Type = ${DISTRO_TYPE}" >> ${D}/etc/image-version
-    echo "Machine = ${MACHINEBUILD}" >> ${D}/etc/image-version
-    echo "URL = ${URL}" >> ${D}/etc/image-version
+    echo "box_type=${MACHINEBUILD}" > ${D}/etc/image-version
+    echo "build_type=${BUILDTYPE}" >> ${D}/etc/image-version
+    echo "version=${IMAGE_VERSION}" >> ${D}/etc/image-version
+    echo "build=${BUILD_VERSION}" >> ${D}/etc/image-version
+    echo "date=${DATETIME}" >> ${D}/etc/image-version
+    echo "comment=openBH" >> ${D}/etc/image-version
+    echo "target=9" >> ${D}/etc/image-version
+    echo "creator=BlackHole" >> ${D}/etc/image-version
+    echo "url=${URL}" >> ${D}/etc/image-version
+    echo "catalog=${URL}" >> ${D}/etc/image-version
+    echo "${MACHINE}" > ${D}/etc/model
 }
 
 FILES_${PN} += "/etc/model /etc/image-version /etc/oe-git.log /etc/e2-git.log"
