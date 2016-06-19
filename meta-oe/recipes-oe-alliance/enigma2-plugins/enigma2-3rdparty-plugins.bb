@@ -11,7 +11,7 @@ DEPENDS = "tslib mpfr gmp"
 SRCREV = "${AUTOREV}"
 PV = "2.3+gitr${SRCPV}"
 PKGV = "2.3+gitr${GITPKGV}"
-PR = "r59"
+PR = "r60"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -49,7 +49,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-hdmitest_0.4_mipsel.ipk \
     enigma2-plugin-extensions-hetweer_3.1_all.ipk \
     enigma2-plugin-extensions-iptvbouquet_1.0_r0_all.ipk \
-    enigma2-plugin-extensions-isettinge2-3.3.3-oe2.0-${@base_contains("TARGET_ARCH", "sh4", "sh4" , "mips32el", d)}.ipk \
+    enigma2-plugin-extensions-isettinge2-3.3.8-oe2.0-${@base_contains("TARGET_ARCH", "sh4", "sh4" , "mips32el", d)}.ipk \
     enigma2-plugin-extensions-kicker_3.4rc3_all.ipk \
     enigma2-plugin-extensions-kino_1.6rc9_all.ipk \
     enigma2-plugin-extensions-kodidirect_3.0_r0_all.ipk \
