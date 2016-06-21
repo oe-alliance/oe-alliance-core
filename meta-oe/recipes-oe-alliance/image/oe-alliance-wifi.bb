@@ -10,7 +10,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "5.2"
-PR = "r3"
+PR = "r4"
 
 OPTIONAL_WIFIDRIVERS = "${@bb.utils.contains("MACHINE_FEATURES", "wifiusblegacy", "enigma2-plugin-drivers-network-usb-rt3070", " \
     enigma2-plugin-drivers-network-usb-ath9k-htc \
@@ -36,6 +36,7 @@ RDEPENDS_${PN} = "\
     ${@bb.utils.contains("MACHINE_BRAND", "Vu+", "enigma2-plugin-drivers-network-usb-rtl8192cu", "", d)} \
     ${@bb.utils.contains("MACHINE_BRAND", "GigaBlue", "enigma2-plugin-drivers-network-usb-rtl8192cu", "", d)} \
     ${@bb.utils.contains("MACHINE_BRAND", "GigaBlue", "enigma2-plugin-drivers-network-usb-rtl8192eu", "", d)} \
+    ${@bb.utils.contains("MACHINE_BRAND", "GigaBlue", "enigma2-plugin-drivers-network-usb-rtl8812au", "", d)} \
     ${@bb.utils.contains("BRAND_OEM", "ini", "enigma2-plugin-drivers-network-usb-rtl8192cu", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "wifi61", "rt61", "", d)} \
     ${@bb.utils.contains("DISTRO_FEATURES", "wifi-extra", "${OPTIONAL_WIFIDRIVERS}", "", d)} \
