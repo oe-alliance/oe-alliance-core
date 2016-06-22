@@ -11,7 +11,7 @@ DEPENDS = "tslib mpfr gmp"
 SRCREV = "${AUTOREV}"
 PV = "2.3+gitr${SRCPV}"
 PKGV = "2.3+gitr${GITPKGV}"
-PR = "r60"
+PR = "r61"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -130,27 +130,24 @@ THIRDPARTY_MACHINE_PLUGINS_vusolose = " \
 THIRDPARTY_MACHINE_PLUGINS_vuzero = " \
     enigma2-plugin-extensions-sdg-imagedownloader-v0.7-oe-2.0-vu-all.ipk \
     "
-THIRDPARTY_MACHINE_PLUGINS_et4x00 = " \
-    enigma2-plugin-extensions-newxtrend-hbbtv_3.9_mips32el.ipk \
-    "
 THIRDPARTY_MACHINE_PLUGINS_et6x00 = " \
     enigma2-plugin-extensions-et-webbrowser_2.0.0-r0_et6x00.ipk \
     "
 THIRDPARTY_MACHINE_PLUGINS_et7x00 = " \
-    enigma2-plugin-extensions-newxtrend-hbbtv_3.9_mips32el.ipk \
+    enigma2-plugin-extensions-newxtrend-hbbtv_4.0-r0_et7x00.ipk \
     "
 THIRDPARTY_MACHINE_PLUGINS_et8000 = " \
-    enigma2-plugin-extensions-newxtrend-hbbtv_3.9_mips32el.ipk \
+    enigma2-plugin-extensions-newxtrend-hbbtv_4.0-r0_et8000.ipk \
+    enigma2-plugin-systemplugins-autorebootET8000_1.2_mipsel.ipk \
      "
 THIRDPARTY_MACHINE_PLUGINS_et8500 = " \
-    enigma2-plugin-extensions-newxtrend-hbbtv_3.9_mips32el.ipk \
-    enigma2-plugin-systemplugins-autorebootET8000_1.2_mipsel.ipk \
+    enigma2-plugin-extensions-newxtrend-hbbtv_4.0-r0_et8500.ipk \
     "
 THIRDPARTY_MACHINE_PLUGINS_et9x00 = " \
     enigma2-plugin-extensions-et-webbrowser_2.0.0-r0_et9x00.ipk \
     "
 THIRDPARTY_MACHINE_PLUGINS_et10000 = " \
-    enigma2-plugin-extensions-newxtrend-hbbtv_3.9_mips32el.ipk \
+    enigma2-plugin-extensions-newxtrend-hbbtv_4.0-r0_et10000.ipk \
      "
 THIRDPARTY_MACHINE_PLUGINS_e3hd = " \
     enigma2-plugin-extensions-hbbtv_4.1_E3HD_mips32el.ipk \
