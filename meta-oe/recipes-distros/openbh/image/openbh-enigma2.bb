@@ -44,7 +44,6 @@ RRECOMMENDS_${PN} = " \
     ${@base_contains("MACHINE_FEATURES", "chromiumos", "enigma2-plugin-extensions-chromium", "", d)} \
     ${@base_contains("MACHINE_FEATURES", "omb", "enigma2-plugin-extensions-openmultiboot", "", d)} \
     ${@base_contains("MACHINE_FEATURES", "omb", "openmultiboot", "", d)} \
-    ${@base_contains("MACHINE_FEATURES", "vukodi", "enigma2-plugin-extensions-vuplus-kodi", "", d)} \
     ${@base_contains("MACHINE", "vusolo4k", "glibc-compat", "", d)} \
     dvb-usb-drivers-meta \
     "
