@@ -220,7 +220,7 @@ ${@base_contains('MACHINEBUILD', 'optimussos3plus', 'splash1_os2.bmp' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'optimussos', 'splash1_os1.bmp' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'fusionhd', 'splash1.bmp' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'fusionhdse', 'splash1.bmp' , '', d)}\
-${@base_contains('MACHINEBUILD', 'purehd', 'splash1.bmp' , '', d)}\
+${@base_contains('MACHINEBUILD', 'purehd', 'splash1_power.bmp' , '', d)}\
 "
 
 MACHINE_DRIVER = "\
@@ -336,6 +336,7 @@ IMAGE_CMD_ubi_append = "\
 MACHINE_FEATURES += "3dtv alsa hdmicec switchoff bootsplash textlcd ci omb skins1080 wifiusbmodule feature1 feature2 \
     ${@base_contains('MACHINEBUILD', 'fusionhd', 'fastscan dvb-c' , '', d)} \
     ${@base_contains('MACHINEBUILD', 'fusionhdse', 'fastscan dvb-c' , '', d)} \
+    ${@base_contains('MACHINEBUILD', 'purehd', 'fastscan dvb-c' , '', d)} \
 "
 
 BOOTLOGO_FILENAME = "splash.bmp"
