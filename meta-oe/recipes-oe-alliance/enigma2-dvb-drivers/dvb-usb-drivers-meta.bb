@@ -3,6 +3,8 @@ PACKAGE_ARCH = "all"
 
 require conf/license/license-gplv2.inc
 
+ALLOW_EMPTY_${PN} = "1"
+
 DEPENDS = "\
     enigma2-plugin-drivers-dvb-usb-dib0700 \
     enigma2-plugin-drivers-dvb-usb-af9015 \
@@ -29,4 +31,4 @@ DEPENDS = "\
     ${@base_contains("MACHINE", "vusolo4k", "enigma2-plugin-drivers-dvb-usb-turbo", "", d)} \
     "
 
-PR = "r10"
+PR = "r11"
