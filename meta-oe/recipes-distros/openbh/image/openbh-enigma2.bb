@@ -17,31 +17,23 @@ RRECOMMENDS_${PN} = " \
     enigma2-skindefault \
     openbh-version-info \
     ${@base_contains("MACHINE_FEATURES", "smallflash", "", "enigma2-plugin-drivers-usbserial", d)} \
-    enigma2-plugin-extensions-infopanel \
     enigma2-plugin-extensions-autotimer \
     enigma2-plugin-extensions-epgsearch \
     enigma2-plugin-extensions-imdb \
     enigma2-plugin-extensions-cutlisteditor \
-    enigma2-plugin-extensions-dvdplayer \
-    enigma2-plugin-extensions-volume-adjust \
     ${@base_contains("MACHINE_FEATURES", "videoenhancement", "", "enigma2-plugin-systemplugins-videoenhancement", d)} \
     enigma2-plugin-systemplugins-softwaremanager \
     enigma2-plugin-systemplugins-hotplug \
     enigma2-plugin-extensions-mediaplayer \
     enigma2-plugin-systemplugins-crossepg \
-    enigma2-plugin-extensions-dlnabrowser \
-    enigma2-plugin-extensions-dlnaserver \
     enigma2-plugin-extensions-epgimport \
-    enigma2-plugin-extensions-epgsearchpli \
     enigma2-plugin-extensions-epgimportfilter \
     ${@base_contains("MACHINE_FEATURES", "dreamboxv1", "enigma2-plugin-extensions-dflash mtd-utils-jffs2", "", d)} \
     ${@base_contains("MACHINE_FEATURES", "dreamboxv2", "enigma2-plugin-extensions-dbackup", "", d)} \
     ${@base_contains("MACHINE_FEATURES", "boxmodel", "boxmodel", "", d)} \
     ${@base_contains("MACHINE_FEATURES", "uianimation", "enigma2-plugin-systemplugins-animationsetup" , "", d)} \
     ${@base_contains("MACHINE_FEATURES", "osdanimation", "enigma2-plugin-systemplugins-animationsetup" , "", d)} \
-    ${@base_contains("MACHINE_FEATURES", "webkithbbtv", "webkit-hbbtv-browser", "", d)} \
     ${@base_contains("MACHINE_FEATURES", "grautec", "enigma2-plugin-extensions-grautec", "", d)} \
-    ${@base_contains("MACHINE_FEATURES", "chromiumos", "enigma2-plugin-extensions-chromium", "", d)} \
     ${@base_contains("MACHINE_FEATURES", "omb", "enigma2-plugin-extensions-openmultiboot", "", d)} \
     ${@base_contains("MACHINE_FEATURES", "omb", "openmultiboot", "", d)} \
     ${@base_contains("MACHINE", "vusolo4k", "glibc-compat", "", d)} \
