@@ -202,7 +202,7 @@ SPLASH1_BMP = "\
 ${@base_contains('MACHINEBUILD', 'tmnano2super', 'splash1.bmp' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmnano3t', 'splash1.bmp' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmnanose', 'splash1_power.bmp' , '', d)}\
-${@base_contains('MACHINEBUILD', 'tmnanoseplus', 'splash1.bmp' , '', d)}\
+${@base_contains('MACHINEBUILD', 'tmnanoseplus', 'splash1_power.bmp' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmnanosem2', 'splash1_power.bmp' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmnanosecombo', 'splash1_power.bmp' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'force1', 'splash1_os2.bmp' , '', d)}\
