@@ -11,7 +11,7 @@ DEPENDS = "tslib mpfr gmp"
 SRCREV = "${AUTOREV}"
 PV = "3.2+gitr${SRCPV}"
 PKGV = "3.2+gitr${GITPKGV}"
-PR = "r74"
+PR = "r75"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -140,7 +140,7 @@ THIRDPARTY_MACHINE_PLUGINS_et8000 = " \
     enigma2-plugin-systemplugins-autorebootET8000_1.2_mipsel.ipk \
      "
 THIRDPARTY_MACHINE_PLUGINS_et8500 = " \
-    enigma2-plugin-extensions-newxtrend-hbbtv_4.0-r0_et8500.ipk.ipk \
+    enigma2-plugin-extensions-newxtrend-hbbtv_4.0-r0_et8500.ipk \
     "
 THIRDPARTY_MACHINE_PLUGINS_et9x00 = " \
     enigma2-plugin-extensions-et-webbrowser_2.0.0-r0_et9x00.ipk \
