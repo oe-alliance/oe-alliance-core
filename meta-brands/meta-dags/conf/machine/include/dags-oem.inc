@@ -201,26 +201,26 @@ ${@bb.utils.contains('MACHINEBUILD', 'purehd', 'mtd0' , '', d)}\
 SPLASH1_BMP = "\
 ${@bb.utils.contains('MACHINEBUILD', 'tmnano2super', 'splash1.bmp' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'tmnano3t', 'splash1.bmp' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'tmnanose', 'splash1.bmp' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'tmnanoseplus', 'splash1.bmp' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'tmnanosem2', 'splash1.bmp' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'tmnanosecombo', 'splash1.bmp' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'tmnanose', 'splash1_power.bmp' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'tmnanoseplus', 'splash1_power.bmp' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'tmnanosem2', 'splash1_power.bmp' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'tmnanosecombo', 'splash1_power.bmp' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'force1', 'splash1_os2.bmp' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'force1plus', 'splash1_os2.bmp' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'megaforce1plus', 'splash1_os2.bmp' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'worldvisionf1', 'splash1_os1.bmp' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'force2', 'splash1.bmp' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'force2plus', 'splash1.bmp' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'force2se', 'splash1.bmp' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'megaforce2', 'splash1.bmp' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'force2plus', 'splash1_power.bmp' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'force2se', 'splash1_power.bmp' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'megaforce2', 'splash1_power.bmp' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'worldvisionf1plus', 'splash1_os1.bmp' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'optimussos1plus', 'splash1_os1.bmp' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'optimussos2plus', 'splash1_os2.bmp' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'optimussos3plus', 'splash1_os2.bmp' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'optimussos', 'splash1_os1.bmp' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'fusionhd', 'splash1.bmp' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'fusionhdse', 'splash1.bmp' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'purehd', 'splash1.bmp' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'fusionhd', 'splash1_power.bmp' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'fusionhdse', 'splash1_power.bmp' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'purehd', 'splash1_power.bmp' , '', d)}\
 "
 
 MACHINE_DRIVER = "\
@@ -336,6 +336,7 @@ IMAGE_CMD_ubi_append = "\
 MACHINE_FEATURES += "3dtv alsa hdmicec switchoff bootsplash textlcd ci omb skins1080 wifiusbmodule feature1 feature2 \
     ${@bb.utils.contains('MACHINEBUILD', 'fusionhd', 'fastscan dvb-c' , '', d)} \
     ${@bb.utils.contains('MACHINEBUILD', 'fusionhdse', 'fastscan dvb-c' , '', d)} \
+    ${@bb.utils.contains('MACHINEBUILD', 'purehd', 'fastscan dvb-c' , '', d)} \
 "
 
 BOOTLOGO_FILENAME = "splash.bmp"

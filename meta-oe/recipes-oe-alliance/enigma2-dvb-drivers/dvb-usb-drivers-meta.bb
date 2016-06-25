@@ -3,7 +3,9 @@ PACKAGE_ARCH = "all"
 
 require conf/license/license-gplv2.inc
 
-DEPENDS = "\
+ALLOW_EMPTY_${PN} = "1"
+
+DEPENDS_${PN} = "\
     enigma2-plugin-drivers-dvb-usb-dib0700 \
     enigma2-plugin-drivers-dvb-usb-af9015 \
     enigma2-plugin-drivers-dvb-usb-siano \
@@ -14,7 +16,7 @@ DEPENDS = "\
     enigma2-plugin-drivers-dvb-usb-pctv452e \
     enigma2-plugin-drivers-dvb-usb-dtt200u \
     enigma2-plugin-drivers-dvb-usb-af9035 \
-    enigma2-plugin-drivers-dvb-usb-a867 \
+    ${@bb.utils.contains("BRAND_OEM", "vuplus", "", "enigma2-plugin-drivers-dvb-usb-a867", d)} \
     enigma2-plugin-drivers-dvb-usb-rtl2832 \
     enigma2-plugin-drivers-dvb-usb-tbs \
     ${@bb.utils.contains("TARGET_ARCH", "sh4", "" , "enigma2-plugin-drivers-dvb-usb-dvbsky enigma2-plugin-drivers-dvb-usb-opticombo", d)} \
@@ -29,4 +31,6 @@ DEPENDS = "\
     ${@bb.utils.contains("MACHINE", "vusolo4k", "enigma2-plugin-drivers-dvb-usb-turbo", "", d)} \
     "
 
-PR = "r10"
+RRECOMMENDS_${PN}_openbh = "${DEPENDS_${PN}}"
+
+PR = "r12"

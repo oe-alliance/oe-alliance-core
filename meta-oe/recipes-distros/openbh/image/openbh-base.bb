@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=4d92cd373abda3937c2bc47fbc49d
 ALLOW_EMPTY_${PN} = "1"
 
 PV = "1.0"
-PR = "r19"
+PR = "r20"
 
 inherit packagegroup
 
@@ -17,7 +17,7 @@ RDEPENDS_${PN} = "\
     openbh-spinner \
     blackhole-base \
     blackholesocker \
-    inadyn \
+    inadyn-mt \
     mc \
     openvpn \
     openssh-sftp-server \
@@ -25,6 +25,7 @@ RDEPENDS_${PN} = "\
     hddtemp \
     busybox-cron \
     python-imaging \
+    dvbsnoop \
     rtmpdump \
     packagegroup-base-smbfs-client \
     ${@bb.utils.contains("MACHINE_FEATURES", "dreambox", "", "ofgwrite", d)} \

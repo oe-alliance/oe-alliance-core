@@ -11,7 +11,7 @@ DEPENDS = "tslib mpfr gmp"
 SRCREV = "${AUTOREV}"
 PV = "3.2+gitr${SRCPV}"
 PKGV = "3.2+gitr${GITPKGV}"
-PR = "r73"
+PR = "r76"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -48,7 +48,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-googlenewsreader_1.0_mips32el.ipk \
     enigma2-plugin-extensions-hdmitest_0.4_mipsel.ipk \
     enigma2-plugin-extensions-iptvbouquet_1.0_r0_all.ipk \
-    enigma2-plugin-extensions-isettinge2-3.3.3-oe2.0-${@bb.utils.contains("TARGET_ARCH", "sh4", "sh4" , "mips32el", d)}.ipk \
+    enigma2-plugin-extensions-isettinge2-3.3.8-oe2.0-${@bb.utils.contains("TARGET_ARCH", "sh4", "sh4" , "mips32el", d)}.ipk \
     enigma2-plugin-extensions-kicker_3.4rc4_all.ipk \
     enigma2-plugin-extensions-kino_1.6rc9_all.ipk \
     enigma2-plugin-extensions-kodidirect_3.0_r0_all.ipk \
@@ -129,30 +129,29 @@ THIRDPARTY_MACHINE_PLUGINS_vusolose = " \
 THIRDPARTY_MACHINE_PLUGINS_vuzero = " \
     enigma2-plugin-extensions-sdg-imagedownloader-v0.7-oe-2.0-vu-all.ipk \
     "
-THIRDPARTY_MACHINE_PLUGINS_et4x00 = " \
-    enigma2-plugin-extensions-newxtrend-hbbtv_3.9_mips32el.ipk \
-    "
 THIRDPARTY_MACHINE_PLUGINS_et6x00 = " \
     enigma2-plugin-extensions-et-webbrowser_2.0.0-r0_et6x00.ipk \
     "
 THIRDPARTY_MACHINE_PLUGINS_et7x00 = " \
-    enigma2-plugin-extensions-newxtrend-hbbtv_3.9_mips32el.ipk \
+    enigma2-plugin-extensions-newxtrend-hbbtv_4.0-r0_et7x00.ipk \
     "
 THIRDPARTY_MACHINE_PLUGINS_et8000 = " \
-    enigma2-plugin-extensions-newxtrend-hbbtv_3.9_mips32el.ipk \
+    enigma2-plugin-extensions-newxtrend-hbbtv_4.0-r0_et8000.ipk \
     enigma2-plugin-systemplugins-autorebootET8000_1.2_mipsel.ipk \
      "
 THIRDPARTY_MACHINE_PLUGINS_et8500 = " \
-    enigma2-plugin-extensions-newxtrend-hbbtv_3.9_mips32el.ipk \
+    enigma2-plugin-extensions-newxtrend-hbbtv_4.0-r0_et8500.ipk \
     "
 THIRDPARTY_MACHINE_PLUGINS_et9x00 = " \
     enigma2-plugin-extensions-et-webbrowser_2.0.0-r0_et9x00.ipk \
     "
 THIRDPARTY_MACHINE_PLUGINS_et10000 = " \
-    enigma2-plugin-extensions-newxtrend-hbbtv_3.9_mips32el.ipk \
+    enigma2-plugin-extensions-newxtrend-hbbtv_4.0-r0_et10000.ipk \
      "
 THIRDPARTY_MACHINE_PLUGINS_ultramini = " \
-    enigma2-plugin-extensions-xpeedlx-hbbtv_1.2-r0-11+43da75f-r0_mips32el.ipk \
+    ${@bb.utils.contains('MACHINEBUILD', 'et7x00mini', 'enigma2-plugin-extensions-hbbtv-et7x00mini_2.0-r0_et7x00mini.ipk' , '', d)} \
+    ${@bb.utils.contains('MACHINEBUILD', 'xpeedlxcc', 'enigma2-plugin-extensions-hbbtv-xpeedc_2.0-r0_xpeedlxcc.ipk' , '', d)} \
+    ${@bb.utils.contains('MACHINEBUILD', 'xpeedlxcs2', 'enigma2-plugin-extensions-hbbtv-xpeedlxcs2_2.0-r0_xpeedlxcs2.ipk' , '', d)} \
     "
 
 THIRDPARTY_MACHINE_PLUGINS_g300 = " \
