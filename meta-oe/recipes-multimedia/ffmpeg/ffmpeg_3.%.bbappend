@@ -146,6 +146,7 @@ EXTRA_FFCONF = " \
     --enable-decoder=qdm2 \
     --enable-decoder=vorbis \
     --enable-decoder=wavpack \
+    --enable-encoder=mpeg1video \
     --disable-demuxer=adp \
     --disable-demuxer=adx \
     --disable-demuxer=afc \
