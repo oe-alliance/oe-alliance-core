@@ -24,4 +24,5 @@ do_install() {
     cp -rp ${S}/usr ${D}/
 }
 
+do_populate_sysroot[noexec] = "1"
 do_package_qa[noexec] = "1"
