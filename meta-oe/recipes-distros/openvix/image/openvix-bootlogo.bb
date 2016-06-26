@@ -9,7 +9,7 @@ require conf/license/license-gplv2.inc
 RDEPENDS_${PN} += "showiframe"
 
 PV = "${IMAGE_VERSION}"
-PR = "r2"
+PR = "r3"
 
 S = "${WORKDIR}"
 
@@ -68,6 +68,9 @@ do_deploy() {
     fi
     if [ -e splash1.bmp ]; then
         install -m 0644 splash1.bmp ${DEPLOYDIR}/splash1.bmp
+    fi
+    if [ -e splash1_power.bmp ]; then
+        install -m 0644 splash1_power.bmp ${DEPLOYDIR}/splash1_power.bmp
     fi
     if [ -e splash2.bmp ]; then
         install -m 0644 splash2.bmp ${DEPLOYDIR}/splash2.bmp

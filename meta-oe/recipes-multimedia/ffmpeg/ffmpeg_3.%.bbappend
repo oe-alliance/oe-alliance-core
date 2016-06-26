@@ -5,7 +5,7 @@ PACKAGES =+ " libavcodec53 libavformat53 libav"
 
 PACKAGECONFIG[avdevice] = "--enable-avdevice,--disable-avdevice"
 
-PR = "r3"
+PR = "r4"
 
 DEPENDS = "libbluray rtmpdump libxml2 openssl librtmp"
 RDEPENDS_${PN} = "libbluray rtmpdump libxml2 openssl"
@@ -50,7 +50,9 @@ EXTRA_FFCONF = " \
     --disable-yasm \
     --disable-fast-unaligned \
     --disable-muxers \
+    --enable-muxer=mpeg1video \
     --enable-encoders \
+    --enable-encoder=mpeg1video \
     --disable-decoders \
     --enable-decoder=alac \
     --enable-decoder=ape \
@@ -69,6 +71,7 @@ EXTRA_FFCONF = " \
     --enable-decoder=mace3 \
     --enable-decoder=mace6 \
     --enable-decoder=metasound \
+    --enable-decoder=mjpeg \
     --enable-decoder=mlp \
     --enable-decoder=mp1 \
     --enable-decoder=mp3adu \
@@ -218,6 +221,7 @@ EXTRA_FFCONF = " \
     --disable-demuxer=image_webp_pipe \
     --disable-demuxer=image_jpeg_pipe \
     --disable-filters \
+    --enable-filter=scale \
     --disable-protocol=data \
     --disable-protocol=icecast \
     --disable-protocol=md5 \
