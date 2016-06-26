@@ -22,8 +22,9 @@ RDEPENDS_${PN} = "\
     tuxbox-links \
     tuxbox-common \
     mtd-utils \
-    ${@base_conditional('MACHINE', 'dm800', '', 'mtd-utils-ubifs', d)} \
-    ${@base_conditional('MACHINE', 'vusolo4k', 'bzip2', '', d)} \
+    ${@bb.utils.contains('MACHINE', 'dm800', '', 'mtd-utils-ubifs', d)} \
+    ${@bb.utils.contains('MACHINE', 'vusolo4k', 'bzip2', '', d)} \
+    ${@bb.utils.contains('MACHINE_FEATURES', 'emmc', 'bzip2', '', d)} \
     procps \
     parted \
     "
