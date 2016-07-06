@@ -1,0 +1,216 @@
+diff --git a/Makefile b/Makefile
+index cf39b4d..4e54054 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1,4 +1,4 @@
+-CC=gcc 
++CC?=gcc
+ CFLG=-O -g -W
+ SRC=diseqc.c blindscan-s2.c
+ HED=diseqc.h blindscan-s2.h
+diff --git a/blindscan-s2.c b/blindscan-s2.c
+index 0579ad5..c126a0b 100644
+--- a/blindscan-s2.c
++++ b/blindscan-s2.c
+@@ -20,7 +20,7 @@
+ 
+ #include "blindscan-s2.h"
+ 
+-int open_frontend (unsigned int adapter, unsigned int frontend);
++int open_frontend (unsigned int adapter, unsigned int frontend, int verbose);
+ 
+ void blindscan (int startfreq, int endfreq, int symrate,
+ 	int step, unsigned int scan_v, unsigned int scan_h, int lof,
+@@ -73,6 +73,7 @@ int main(int argc, char *argv[])
+ 
+ 	static char *usage =
+ 	"\nBlindscan tool for the Linux DVB S2 API\n"
++	"\nModified by SatDreamGr for Enigma2\n"
+ 	"\nusage: blindscan-s2\n"
+ 	"	-b        : run blind scan\n"
+ 	"	-T        : Tune a specific transponder\n"
+@@ -201,7 +202,7 @@ int main(int argc, char *argv[])
+ 
+ 	if (run_blindscan) {
+ 		convert_freq (lof, &startfreq, &endfreq, &symrate, &step);
+-		fefd = open_frontend (adapter, frontend);
++		fefd = open_frontend (adapter, frontend, verbose);
+ 
+ 		if (sat_long)
+ 			motor_usals(fefd, site_lat, site_long, sat_long, verbose, motor_wait_time);
+@@ -244,7 +245,7 @@ int main(int argc, char *argv[])
+ 	return (0);
+ }
+ 
+-int open_frontend (unsigned int adapter, unsigned int frontend) {
++int open_frontend (unsigned int adapter, unsigned int frontend, int verbose) {
+ 	int fefd;
+ 	char fedev[128];
+ 	snprintf(fedev, sizeof(fedev), FEDEV, adapter, frontend);
+@@ -252,10 +253,10 @@ int open_frontend (unsigned int adapter, unsigned int frontend) {
+ 
+         struct dvb_frontend_info info;
+         if ((ioctl(fefd, FE_GET_INFO, &info)) == -1) {
+-                perror("FE_GET_INFO failed\n");
++                if (verbose) perror("FE_GET_INFO failed\n");
+                 return -1;
+         }
+-        printf("frontend: (%s) \nfmin %d MHz \nfmax %d MHz \nmin_sr %d Ksps\nmax_sr %d Ksps\n\n", info.name,
++        if (verbose) printf("frontend: (%s) \nfmin %d MHz \nfmax %d MHz \nmin_sr %d Ksps\nmax_sr %d Ksps\n\n", info.name,
+         info.type == 0 ? info.frequency_min / 1000: info.frequency_min / 1000000,
+         info.type == 0 ? info.frequency_max / 1000: info.frequency_max / 1000000,
+         info.type == 0 ? info.symbol_rate_min / 1000: info.symbol_rate_min /1000000,
+@@ -436,7 +437,7 @@ void getinfo(int fefd, int lof, unsigned int verbose) {
+ 	int dtv_inner_fec_prop = 0;
+ 	fe_status_t status;
+ 	if (ioctl(fefd, FE_READ_STATUS, &status) == -1) {
+-		perror("FE_READ_STATUS failed");
++		if (verbose) perror("FE_READ_STATUS failed");
+ 	}
+ 
+ 	struct dtv_property sp[3];
+@@ -449,7 +450,7 @@ void getinfo(int fefd, int lof, unsigned int verbose) {
+ 	sp_status.props = sp;
+ 
+ 	if (ioctl(fefd, FE_GET_PROPERTY, &sp_status) == -1) {
+-		perror("FE_GET_PROPERTY failed");
++		if (verbose) perror("FE_GET_PROPERTY failed");
+ 		return;
+ 	}
+ 	lvl_scale = sp_status.props[0].u.st.stat[0].scale;
+@@ -490,7 +491,7 @@ void getinfo(int fefd, int lof, unsigned int verbose) {
+ 		{ .cmd = DTV_ROLLOFF },		//[8]
+ 		{ .cmd = DTV_BANDWIDTH_HZ },	//[9]  Not used for DVB-S
+ 		{ .cmd = DTV_PILOT },		//[10] 0 - ON, 1 - OFF
+-		{ .cmd = DTV_DVBS2_MIS_ID }	//[11]
++		{ .cmd = DTV_STREAM_ID }	//[11]
+ 	};
+ 
+ 	struct dtv_properties cmdseq = {
+@@ -559,36 +560,54 @@ void getinfo(int fefd, int lof, unsigned int verbose) {
+ 		lastrol = currentrol;
+ 		lastpil = currentpil;
+ 
++		printf("OK ");
++
++		switch (dtv_voltage_prop) {
++			case 0: printf("VERTICAL   "); break;
++			case 1: printf("HORIZONTAL "); break;
++			case 2: printf("NONE       "); break;
++		}
++
+ 		if (lof >= 1 && lof <= CBAND_LOF && dtv_frequency_prop != 0)
+-			printf("%-5d ", lof - currentfreq);
++			printf("%-8d ", (lof - currentfreq) * 1000);
+ 		else if (dtv_frequency_prop != 0)
+-			printf("%-5d ", currentfreq + lof);
++			printf("%-8d ", (currentfreq + lof) * 1000);
+ 		else
+-			printf("%-5d ", dtv_frequency_prop);
+-	
+-		switch (dtv_voltage_prop) {
+-			case 0: printf("V "); break;
+-			case 1: printf("H "); break;
+-			case 2: printf("N "); break;
+-		}
+-	
+-		printf("%-5d ", currentsr);
+-		printf("SIG %2.1f %s ", signal, (lvl_scale == FE_SCALE_DECIBEL) ? "dBm" : "%");
+-		printf("SNR %2.1f dB ", snr);
++			printf("%-8d ", dtv_frequency_prop * 1000);
++
++		printf("%-8d ", currentsr * 1000);
++
++		//printf("SIG %2.1f %s ", signal, (lvl_scale == FE_SCALE_DECIBEL) ? "dBm" : "%");
++		//printf("SNR %2.1f dB ", snr);
+ 
+ 		switch (dtv_delivery_system_prop) {
+ 			case 4:  printf("DSS    ");  break;
+ 			case 5:  printf("DVB-S  ");  break;
+ 			case 6:  printf("DVB-S2 "); break;
+-			default: printf("SYS(%d) ", dtv_delivery_system_prop); break;
++			default:
++				if (verbose) printf("SYS(%d) ", dtv_delivery_system_prop);
++				else printf("DVB-S  ");
++				break;
+ 		}
+ 
+-		switch (dtv_modulation_prop) {
+-			case 0: printf("QPSK "); break;
+-			case 9: printf("8PSK "); break;
+-			case 10: printf("16APSK "); break;
+-			case 11: printf("32APSK "); break;
+-			default: printf("MOD(%d) ", dtv_modulation_prop); break;
++		switch (dtv_inversion_prop) {
++			case 0:  printf("INVERSION_OFF  ");  break;
++			case 1:  printf("INVERSION_ON   ");   break;
++			case 2:  printf("INVERSION_AUTO "); break;
++			default:
++				if (verbose) printf("INVERSION (%d) ", dtv_inversion_prop);
++				else printf("INVERSION_AUTO ");
++				break;
++		}
++
++		switch (dtv_pilot_prop) {
++			case 0:  printf("PILOT_ON   ");   break;
++			case 1:  printf("PILOT_OFF  ");  break;
++			case 2:  printf("PILOT_AUTO "); break;
++			default:
++				if (verbose) printf("PILOT (%d) ", dtv_pilot_prop);
++				else printf("PILOT_AUTO ");
++				break;
+ 		}
+ 
+ 		switch (dtv_inner_fec_prop) {
+@@ -604,30 +623,32 @@ void getinfo(int fefd, int lof, unsigned int verbose) {
+ 			case 9: printf("FEC_AUTO ");  break;
+ 			case 10: printf("FEC_3_5  ");  break;
+ 			case 11: printf("FEC_9_10 "); break;
+-			default: printf("FEC (%d)  ", dtv_inner_fec_prop); break;
+-		}
+-
+-		switch (dtv_inversion_prop) {
+-			case 0:  printf("INV_OFF ");  break;
+-			case 1:  printf("INV_ON  ");   break;
+-			case 2:  printf("INVAUTO "); break;
+-			default: printf("INV (%d) ", dtv_inversion_prop); break;
++			default:
++				if (verbose) printf("FEC (%d)  ", dtv_inner_fec_prop);
++				else printf("FEC_AUTO ");
++				break;
+ 		}
+ 
+-
+-		switch (dtv_pilot_prop) {
+-			case 0:  printf("PIL_ON  ");   break;
+-			case 1:  printf("PIL_OFF ");  break;
+-			case 2:  printf("PILAUTO "); break;
+-			default: printf("PIL (%d) ", dtv_pilot_prop); break;
++		switch (dtv_modulation_prop) {
++			case 0: printf("QPSK "); break;
++			case 9: printf("8PSK "); break;
++			case 10: printf("16APSK "); break;
++			case 11: printf("32APSK "); break;
++			default:
++				if (verbose) printf("MOD(%d) ", dtv_modulation_prop);
++				else printf("QPSK ");
++				break;
+ 		}
+ 
+ 		switch (dtv_rolloff_prop) {
+-			case 0:  printf("ROL_35\n");   break;
+-			case 1:  printf("ROL_20\n");   break;
+-			case 2:  printf("ROL_25\n");   break;
+-			case 3:  printf("ROL_AUTO\n"); break;
+-			default: printf("ROL (%d)\n", dtv_rolloff_prop); break;
++			case 0:  printf("ROLLOFF_35\n");   break;
++			case 1:  printf("ROLLOFF_20\n");   break;
++			case 2:  printf("ROLLOFF_25\n");   break;
++			case 3:  printf("ROLLOFF_AUTO\n"); break;
++			default:
++				if (verbose) printf("ROL (%d)\n", dtv_rolloff_prop);
++				else printf("ROLLOFF_AUTO\n");
++				break;
+ 		}
+ 
+ 	}

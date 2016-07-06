@@ -1,0 +1,13 @@
+diff --git a/src/utils/dvbls.c b/src/utils/dvbls.c
+index ecf5782..555047a 100644
+--- a/src/utils/dvbls.c
++++ b/src/utils/dvbls.c
+@@ -26,6 +26,8 @@
+ #include <net/if.h>
+ #include <dirent.h>
+ 
++#undef HAVE_LINUX_DVB_NET_H
++
+ #include <linux/dvb/frontend.h>
+ #ifdef HAVE_LINUX_DVB_NET_H
+ #   include <linux/dvb/net.h>
