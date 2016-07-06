@@ -12,6 +12,8 @@ SRC_URI[sha256sum] = "c8c139148e099ed3ec88103f7d2dbd0420ec6156b4ac9adc4b7e6d7d95
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${KV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
+MACHINE_KERNEL_PR_append = ".1"
+
 SRC_URI = "http://en3homeftp.net/pub/src/linux-${KV}-${DATE}.tar.gz \
     file://defconfig \
     file://dmx_demux.patch \
@@ -23,6 +25,11 @@ SRC_URI = "http://en3homeftp.net/pub/src/linux-${KV}-${DATE}.tar.gz \
     file://rtl8187se-fix-warnings.patch \
     ${@base_contains("DISTRO_NAME", "openvix", "file://dmx_delete_e2stb.patch", "", d)} \
     file://sit2_op.o \
+    file://0001-Support-TBS-USB-drivers-3.9.patch \
+    file://0001-STV-Add-PLS-support.patch \
+    file://0001-STV-Add-SNR-Signal-report-parameters.patch \
+    file://0001-stv090x-optimized-TS-sync-control.patch \
+    file://blindscan2.patch \
     "
 
 S = "${WORKDIR}/linux-${KV}"
