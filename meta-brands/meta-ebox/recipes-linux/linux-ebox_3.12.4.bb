@@ -5,6 +5,8 @@ KV = "3.12.4"
 
 inherit kernel machine_kernel_pr
 
+MACHINE_KERNEL_PR_append = ".1"
+
 SRCDATE = "16092014"
 SRCDATE_ebox7358 = "17072014"
 
@@ -24,6 +26,11 @@ SRC_URI = "http://source.mynonpublic.com/ebox/${MACHINE}-linux-${KV}_${SRCDATE}.
     file://linux-3.12.4-gcc-4.9.3-build-error-fixed.patch \
     file://kernel-add-support-for-gcc-5.patch \
     file://rtl8712-fix-warnings.patch \
+    file://0001-Support-TBS-USB-drivers.patch \
+    file://0001-STV-Add-PLS-support.patch \
+    file://0001-STV-Add-SNR-Signal-report-parameters.patch \
+    file://0001-stv090x-optimized-TS-sync-control.patch \
+    file://blindscan2.patch \
     "
 
 S = "${WORKDIR}/linux-${KV}"
