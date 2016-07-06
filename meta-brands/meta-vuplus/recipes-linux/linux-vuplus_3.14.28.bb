@@ -4,7 +4,7 @@ SECTION = "kernel"
 
 MODULE = "linux-3.14.28"
 
-MACHINE_KERNEL_PR_append = ".2"
+MACHINE_KERNEL_PR_append = ".3"
 
 inherit kernel machine_kernel_pr
 
@@ -21,6 +21,11 @@ SRC_URI += "http://archive.vuplus.com/download/kernel/stblinux-3.14-1.8.tar.bz2 
 	file://rt2800usb_fix_warn_tx_status_timeout_to_dbg.patch \
 	file://usb_core_hub_msleep.patch \
 	file://rtl8712_fix_build_error.patch \
+	file://0001-Support-TBS-USB-drivers.patch \
+	file://0001-STV-Add-PLS-support.patch \
+	file://0001-STV-Add-SNR-Signal-report-parameters.patch \
+	file://0001-stv090x-optimized-TS-sync-control.patch \
+	file://blindscan2.patch \
 	"
 
 SRC_URI += "${@base_contains("MACHINE_FEATURES", "dvbproxy", "file://linux_dvb_adapter.patch;patch=1;pnum=1", "", d)}"
