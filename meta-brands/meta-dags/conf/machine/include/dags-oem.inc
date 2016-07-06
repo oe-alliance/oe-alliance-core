@@ -333,7 +333,7 @@ IMAGE_CMD_ubi_append = "\
     "
 
 
-MACHINE_FEATURES += "3dtv alsa hdmicec switchoff bootsplash textlcd ci omb skins1080 wifiusbmodule feature1 feature2 \
+MACHINE_FEATURES += "3dtv alsa hdmicec switchoff bootsplash textlcd ci omb skins1080 wifiusbmodule feature1 feature2 blindscan-tbs \
     ${@base_contains('MACHINEBUILD', 'fusionhd', 'fastscan dvb-c' , '', d)} \
     ${@base_contains('MACHINEBUILD', 'fusionhdse', 'fastscan dvb-c' , '', d)} \
     ${@base_contains('MACHINEBUILD', 'purehd', 'fastscan dvb-c' , '', d)} \

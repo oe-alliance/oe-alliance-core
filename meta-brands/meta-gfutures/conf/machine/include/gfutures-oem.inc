@@ -70,7 +70,7 @@ PREFERRED_PROVIDER_virtual/kernel = "linux-gfutures"
 
 IMAGEDIR ?= "${MACHINE}"
 
-MACHINE_FEATURES += "3dtv alsa hdmicec switchoff"
+MACHINE_FEATURES += "3dtv alsa hdmicec switchoff blindscan-tbs"
 
 EXTRA_IMAGEDEPENDS += " \
     enigma2-plugin-systemplugins-remotecontrolcode \
