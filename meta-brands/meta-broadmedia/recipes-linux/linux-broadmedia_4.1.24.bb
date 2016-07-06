@@ -13,6 +13,8 @@ SRC_URI[sha256sum] = "d987d93b80b9494efa2fae57a0048bda34cefef7451a87ea07b4c60c86
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
+MACHINE_KERNEL_PR_append = ".1"
+
 # By default, kernel.bbclass modifies package names to allow multiple kernels
 # to be installed in parallel. We revert this change and rprovide the versioned
 # package names instead, to allow only one kernel to be installed.
@@ -23,6 +25,11 @@ RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
 
 SRC_URI += "http://source.mynonpublic.com/broadmedia/broadmedia-linux-${PV}-${SRC}.tar.xz \
     file://defconfig \
+    file://0001-Support-TBS-USB-drivers-for-4.1-kernel.patch \
+    file://0001-TBS-fixes-for-4.1-kernel.patch \
+    file://0001-STV-Add-PLS-support.patch \
+    file://0001-STV-Add-SNR-Signal-report-parameters.patch \
+    file://blindscan2.patch \
     "
 
 S = "${WORKDIR}/linux-${PV}"
