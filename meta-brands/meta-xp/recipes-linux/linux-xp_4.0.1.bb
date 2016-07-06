@@ -11,7 +11,7 @@ LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad
 
 inherit kernel machine_kernel_pr
 
-MACHINE_KERNEL_PR_append = ".0"
+MACHINE_KERNEL_PR_append = ".1"
 
 # By default, kernel.bbclass modifies package names to allow multiple kernels
 # to be installed in parallel. We revert this change and rprovide the versioned
@@ -25,6 +25,11 @@ SRC_URI += "http://downloads.mutant-digital.net/linux-${PV}.tar.gz \
 	file://defconfig \
 	file://add-dmx-source-timecode.patch \
 	file://iosched-slice_idle-1.patch \
+	file://0001-Support-TBS-USB-drivers-for-4.0.1-kernel.patch \
+	file://0001-TBS-fixes-for-4.0.1-kernel.patch \
+	file://0001-STV-Add-PLS-support.patch \
+	file://0001-STV-Add-SNR-Signal-report-parameters.patch \
+	file://blindscan2.patch \
 	"
 
 S = "${WORKDIR}/linux-${PV}"

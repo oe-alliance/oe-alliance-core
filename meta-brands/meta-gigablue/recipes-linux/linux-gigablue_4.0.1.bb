@@ -11,7 +11,7 @@ SRC_URI[sha256sum] = "38aafba52d6492c35bc3e7d1ea782ea21c84c69931d963de8ce8029771
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-MACHINE_KERNEL_PR_append = ".3"
+MACHINE_KERNEL_PR_append = ".4"
 
 # By default, kernel.bbclass modifies package names to allow multiple kernels
 # to be installed in parallel. We revert this change and rprovide the versioned
@@ -27,6 +27,11 @@ SRC_URI += "http://archiv.openmips.com/gigablue-linux-${PV}-20150828.tgz \
     file://iosched-slice_idle-1.patch \
     file://bcmgenet.patch \
     file://0002-add-brcm-chips.patch \
+    file://0001-Support-TBS-USB-drivers-for-4.0.1-kernel.patch \
+    file://0001-TBS-fixes-for-4.0.1-kernel.patch \
+    file://0001-STV-Add-PLS-support.patch \
+    file://0001-STV-Add-SNR-Signal-report-parameters.patch \
+    file://blindscan2.patch \
     "
 
 S = "${WORKDIR}/linux-${PV}"
