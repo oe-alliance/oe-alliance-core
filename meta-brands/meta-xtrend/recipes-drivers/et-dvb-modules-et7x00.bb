@@ -6,5 +6,5 @@ SRC_URI = "http://www.xtrendet.net/${MACHINE}-drivers-${KV}-${GCC}-${SRCDATE}.zi
 
 require et-dvb-modules.inc
 
-SRC_URI[md5sum] = "a1391c1374f84e7948bfea05872894c1"
-SRC_URI[sha256sum] = "644cfecf19a1e10bb1a1a3d9cba7256b42e1623a77443342260dea88c8acb89c"
+SRC_URI[md5sum] = "d6f202208794650e31d2191c6e0e7ccc"
+SRC_URI[sha256sum] = "25ed69f819b0977879614313a178922208284e9b67150f776213e1c225315bd6"
