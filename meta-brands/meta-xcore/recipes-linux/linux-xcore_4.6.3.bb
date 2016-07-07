@@ -3,18 +3,18 @@ SECTION = "kernel"
 LICENSE = "GPLv2"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 PR = "r0"
-SRC = "20160516"
+SRC = "20160707"
 
-KERNEL_RELEASE = "4.6.0"
+KERNEL_RELEASE = "4.6.3"
 
 inherit kernel machine_kernel_pr
 
-SRC_URI[md5sum] = "8d7e23cad9ef1c6cbce8e97629c6bc1d"
-SRC_URI[sha256sum] = "091ca959f245ee3345fb83d0086e2f43ba1e5db5e892a4af8bee78df5cd29a8b"
+SRC_URI[md5sum] = "5797c6313e2b78098747b9f9cc590b2e"
+SRC_URI[sha256sum] = "dbc118f1c7fe2f1fc55b88818a32e5c63cf1cdef30d52074424d1cdc0b0aeb3c"
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-brcmstb-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-MACHINE_KERNEL_PR_append = ".1"
+MACHINE_KERNEL_PR_append = ".0"
 
 # By default, kernel.bbclass modifies package names to allow multiple kernels
 # to be installed in parallel. We revert this change and rprovide the versioned
