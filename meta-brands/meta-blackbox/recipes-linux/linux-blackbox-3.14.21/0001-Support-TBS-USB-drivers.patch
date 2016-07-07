@@ -22,9 +22,9 @@ index fabe2fc..cc0970f 100644
  /* Product IDs */
  #define USB_PID_ADSTECH_USB2_COLD			0xa333
 @@ -379,4 +380,10 @@
- #define USB_PID_CTVDIGDUAL_V2				0xe410
  #define USB_PID_PCTV_2002E                              0x025c
  #define USB_PID_PCTV_2002E_SE                           0x025d
+ #define USB_PID_SVEON_STV27                             0xd3af
 +#define USB_PID_TENOW_TBS5910                           0x5910
 +#define USB_PID_TENOW_TBS5920                           0x5920
 +#define USB_PID_TENOW_TBS5921                           0x5921
