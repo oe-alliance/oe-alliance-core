@@ -9,12 +9,16 @@ require conf/license/license-gplv2.inc
 RDEPENDS_${PN} += "showiframe"
 
 PV = "${IMAGE_VERSION}"
-PR = "r3"
+PR = "r4"
 
 S = "${WORKDIR}"
 
 INITSCRIPT_NAME = "bootlogo"
 INITSCRIPT_PARAMS = "start 06 S ."
+INITSCRIPT_PARAMS_vuduo2 = "start 70 S ."
+INITSCRIPT_PARAMS_vusolo2 = "start 70 S ."
+INITSCRIPT_PARAMS_vusolose = "start 70 S ."
+INITSCRIPT_PARAMS_vusolo4k = "start 70 S ."
 
 inherit update-rc.d
 
