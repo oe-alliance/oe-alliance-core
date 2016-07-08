@@ -30,6 +30,7 @@ SRC_URI += "http://downloads.mutant-digital.net/linux-${PV}.tar.gz \
 	file://0001-STV-Add-PLS-support.patch \
 	file://0001-STV-Add-SNR-Signal-report-parameters.patch \
 	file://blindscan2.patch \
+	file://0001-stv090x-optimized-TS-sync-control.patch \
 	"
 
 S = "${WORKDIR}/linux-${PV}"

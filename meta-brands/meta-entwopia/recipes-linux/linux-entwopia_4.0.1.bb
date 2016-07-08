@@ -33,6 +33,7 @@ SRC_URI += "http://source.mynonpublic.com/entwopia/${MACHINE}/${MACHINE}-linux-$
     file://0001-STV-Add-PLS-support.patch \
     file://0001-STV-Add-SNR-Signal-report-parameters.patch \
     file://blindscan2.patch \
+    file://0001-stv090x-optimized-TS-sync-control.patch \
     "
 
 S = "${WORKDIR}/linux-${PV}-base"
