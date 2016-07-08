@@ -6,8 +6,8 @@ require conf/license/license-gplv2.inc
 inherit gitpkgv allarch
 
 SRCREV = "${AUTOREV}"
-PV = "15.9+git${SRCPV}"
-PKGV = "15.9+git${GITPKGV}"
+PV = "16.0+git${SRCPV}"
+PKGV = "16.0+git${GITPKGV}"
 PR = "r0"
 
 RDEPENDS_${PN} = "enigma2-plugin-skincomponents-novum"

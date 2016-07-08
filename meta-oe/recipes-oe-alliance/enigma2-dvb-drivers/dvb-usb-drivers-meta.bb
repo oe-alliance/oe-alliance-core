@@ -33,4 +33,4 @@ DEPENDS_${PN} = "\
 
 RRECOMMENDS_${PN}_openbh = "${DEPENDS_${PN}}"
 
-PR = "r12"
+PR = "r13"

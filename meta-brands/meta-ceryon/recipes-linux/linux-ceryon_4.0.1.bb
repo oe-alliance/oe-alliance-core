@@ -11,6 +11,8 @@ SRC_URI[sha256sum] = "385d8efec92b5d3bc8e16c37673e4a2a38a6541b684311650040aa5d67
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
+MACHINE_KERNEL_PR_append = ".1"
+
 # By default, kernel.bbclass modifies package names to allow multiple kernels
 # to be installed in parallel. We revert this change and rprovide the versioned
 # package names instead, to allow only one kernel to be installed.
@@ -23,6 +25,12 @@ SRC_URI += "http://source.mynonpublic.com/ceryon/ceryon-linux-${PV}.tgz \
 	file://defconfig \
 	file://dvb-usb-i2c_duplicate.patch \
 	file://kernel-add-support-for-gcc6.patch \
+	file://0001-Support-TBS-USB-drivers-for-4.0.1-kernel.patch \
+	file://0001-TBS-fixes-for-4.0.1-kernel.patch \
+	file://0001-STV-Add-PLS-support.patch \
+	file://0001-STV-Add-SNR-Signal-report-parameters.patch \
+	file://blindscan2.patch \
+	file://0001-stv090x-optimized-TS-sync-control.patch \
 	"
 
 S = "${WORKDIR}/linux-${PV}"

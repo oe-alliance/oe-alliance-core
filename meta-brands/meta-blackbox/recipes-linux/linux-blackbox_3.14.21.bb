@@ -12,7 +12,7 @@ SRC_URI[md5sum] = "f7edd5923ead4c334840c62eab3e79f0"
 SRC_URI[sha256sum] = "05c7315ec1703db9598f641b9ee5483218f89e207217e5b9c7d52300d123d88e"
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-MACHINE_KERNEL_PR_append = ".1"
+MACHINE_KERNEL_PR_append = ".2"
 
 # By default, kernel.bbclass modifies package names to allow multiple kernels
 # to be installed in parallel. We revert this change and rprovide the versioned
@@ -29,6 +29,11 @@ SRC_URI += "http://source.mynonpublic.com/unibox/linux-${KV}-${SRCDATE}.tar.gz \
     file://kernel-add-support-for-gcc-5.patch \
     file://rtl8712-fix-warnings.patch \
     file://kernel-add-support-for-gcc6.patch \
+    file://0001-Support-TBS-USB-drivers.patch \
+    file://0001-STV-Add-PLS-support.patch \
+    file://0001-STV-Add-SNR-Signal-report-parameters.patch \
+    file://0001-stv090x-optimized-TS-sync-control.patch \
+    file://blindscan2.patch \
     "
 
 S = "${WORKDIR}/linux-${PV}"

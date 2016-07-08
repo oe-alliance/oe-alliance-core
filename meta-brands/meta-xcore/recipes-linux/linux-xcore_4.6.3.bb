@@ -3,14 +3,14 @@ SECTION = "kernel"
 LICENSE = "GPLv2"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 PR = "r0"
-SRC = "20160516"
+SRC = "20160707"
 
-KERNEL_RELEASE = "4.6.0"
+KERNEL_RELEASE = "4.6.3"
 
 inherit kernel machine_kernel_pr
 
-SRC_URI[md5sum] = "8d7e23cad9ef1c6cbce8e97629c6bc1d"
-SRC_URI[sha256sum] = "091ca959f245ee3345fb83d0086e2f43ba1e5db5e892a4af8bee78df5cd29a8b"
+SRC_URI[md5sum] = "5797c6313e2b78098747b9f9cc590b2e"
+SRC_URI[sha256sum] = "dbc118f1c7fe2f1fc55b88818a32e5c63cf1cdef30d52074424d1cdc0b0aeb3c"
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-brcmstb-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
@@ -27,7 +27,12 @@ RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
 SRC_URI += "http://source.mynonpublic.com/xcore/${MACHINE}-linux-${PV}-${SRC}.tar.gz \
     file://defconfig \
     file://noforce_correct_pointer_usage.patch \
-    file://MIPS-Prevent-restoration-of-MSA-context-in-non-MSA-kernels.patch \
+    file://0001-Support-TBS-USB-drivers-for-4.6-kernel.patch \
+    file://0001-TBS-fixes-for-4.6-kernel.patch \
+    file://0001-STV-Add-PLS-support.patch \
+    file://0001-STV-Add-SNR-Signal-report-parameters.patch \
+    file://blindscan2.patch \
+    file://0001-stv090x-optimized-TS-sync-control.patch \
     "
 
 S = "${WORKDIR}/linux-brcmstb-${PV}"

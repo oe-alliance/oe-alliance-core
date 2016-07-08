@@ -6,7 +6,7 @@ BRAND_OEM = "ceryon"
 MACHINE_NAME = "\
 ${@bb.utils.contains('MACHINEBUILD', 'twinboxlcd', 'TWINBOX LCD' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'mbmicro', 'Premium Micro' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'odin2hybrid', 'ODIN2 Hybrit' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'odin2hybrid', 'ODIN2 Hybrid' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'odinplus', 'ODIN2 Plus' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'e4hd', 'E4HD' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'e4hdhybrid', 'E4HD HYBRID' , '', d)}\
@@ -113,7 +113,7 @@ IMAGE_CMD_ubi_append = "\
     rm -Rf ${IMAGEDIR}; \
     "
 
-MACHINE_FEATURES += "3dtv alsa hdmicec switchoff bootsplash omb videoenhancement directfb sdl skins1080 feature1 feature2 blindscan-dvbs blindscan-dvbc \
+MACHINE_FEATURES += "3dtv alsa hdmicec switchoff bootsplash omb videoenhancement directfb sdl skins1080 feature1 feature2 blindscan-dvbs blindscan-dvbc blindscan-tbs \
     ${@bb.utils.contains('MACHINEBUILD', 'e4hdhybrid', 'dvb-c dvb-c-only' , '', d)} \
 "
 

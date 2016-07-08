@@ -11,9 +11,17 @@ SRC_URI[sha256sum] = "ed11d537b1e19d59b132fd643bebc7469bf20e115bdc23e949e2ce14ae
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
+MACHINE_KERNEL_PR_append = ".2"
+
 SRC_URI += "http://en3homeftp.net/pub/src/dags-linux-${PV}-${SRCDATE}.tar.gz \
     file://defconfig \
     file://kernel-add-support-for-gcc6.patch \
+    file://0001-Support-TBS-USB-drivers-for-4.2-kernel.patch \
+    file://0001-TBS-fixes-for-4.2-kernel.patch \
+    file://0001-STV-Add-PLS-support.patch \
+    file://0001-STV-Add-SNR-Signal-report-parameters.patch \
+    file://blindscan2.patch \
+    file://0001-stv090x-optimized-TS-sync-control.patch \
     "
 
 S = "${WORKDIR}/linux-${PV}"

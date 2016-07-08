@@ -10,6 +10,8 @@ SRC_URI[sha256sum] = "badb5446dad5f9d4454b300677c760c388751867c7728fe9cc1a1b3098
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
+MACHINE_KERNEL_PR_append = ".1"
+
 inherit kernel machine_kernel_pr
 
 # By default, kernel.bbclass modifies package names to allow multiple kernels
@@ -43,6 +45,11 @@ SRC_URI += "http://code-ini.com/software/kernel/bcm7358-linux-${KV}-${SRCDATE}.t
     file://kernel-add-support-for-gcc-5.patch \
     file://rtl8712-fix-warnings.patch \
     file://kernel-add-support-for-gcc6.patch \
+    file://0001-Support-TBS-USB-drivers.patch \
+    file://0001-STV-Add-PLS-support.patch \
+    file://0001-STV-Add-SNR-Signal-report-parameters.patch \
+    file://0001-stv090x-optimized-TS-sync-control.patch \
+    file://blindscan2.patch \
     "
 
 S = "${WORKDIR}/linux-${PV}"

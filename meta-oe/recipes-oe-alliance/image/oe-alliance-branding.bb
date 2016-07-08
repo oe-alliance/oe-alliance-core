@@ -166,6 +166,8 @@ do_install_append() {
     elif [ ${MACHINEBUILD} = "et7x00" ]; then
         install -m 0644 ${S}/BoxBranding/boxes/et7000.jpg ${D}/usr/share/enigma2/et7000.jpg
         ln -sf /usr/share/enigma2/et7000.jpg ${D}/usr/lib/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes/et7000.jpg
+        install -m 0644 ${S}/BoxBranding/boxes/et7100.jpg ${D}/usr/share/enigma2/et7100.jpg
+        ln -sf /usr/share/enigma2/et7100.jpg ${D}/usr/lib/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes/et7100.jpg
         install -m 0644 ${S}/BoxBranding/boxes/et7500.jpg ${D}/usr/share/enigma2/et7500.jpg
         ln -sf /usr/share/enigma2/et7500.jpg ${D}/usr/lib/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes/et7500.jpg 
     elif [ ${MACHINEBUILD} = "twinboxlcd" ]; then

@@ -70,7 +70,7 @@ DESCRIPTION_enigma2-plugin-systemplugins-audioeffect = "Audio Effect setup"
 DESCRIPTION_enigma2-plugin-extensions-btdevicesmanager = "this is bt devices manger to pair e.x keyboard or mouse"
 RDEPENDS_enigma2-plugin-extensions-btdevicesmanager = "${BLUEZ}-testtools ${BLUEZ} bluez-hcidump bluez-hidd"
 DESCRIPTION_enigma2-plugin-systemplugins-blindscan = "blindscan..."
-RDEPENDS_enigma2-plugin-systemplugins-blindscan = "virtual/blindscan-dvbs"
+RRECOMMENDS_enigma2-plugin-systemplugins-blindscan = "virtual/blindscan-dvbs"
 DESCRIPTION_enigma2-plugin-extensions-dlnabrowser = "this is dlna/upnp browser using djmount"
 RDEPENDS_enigma2-plugin-extensions-dlnabrowser = "djmount fuse-utils libfuse2 libupnp3 libneon27"
 DESCRIPTION_enigma2-plugin-extensions-dlnaserver = "this is dlna server using minidlna"
@@ -126,7 +126,7 @@ inherit autotools-brokensep gitpkgv pythonnative
 SRCREV = "${AUTOREV}"
 PV = "2.0+git${SRCPV}"
 PKGV = "2.0+git${GITPKGV}"
-PR = "r24"
+PR = "r25"
 
 SRC_URI = "${OEA_PLUGINS_URI}"
 

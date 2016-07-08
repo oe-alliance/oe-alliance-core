@@ -157,7 +157,7 @@ KERNEL_OUTPUT = "${KERNEL_IMAGETYPE}"
 KERNEL_CONSOLE = "ttyS0,115200n8"
 
 
-MACHINE_FEATURES += "3dtv alsa hdmicec switchoff bootsplash boxmodel omb skins1080 feature1 feature2"
+MACHINE_FEATURES += "3dtv alsa hdmicec switchoff bootsplash boxmodel omb skins1080 feature1 feature2 blindscan-tbs"
 
 BOOTLOGO_FILENAME = "splash.bin"
 

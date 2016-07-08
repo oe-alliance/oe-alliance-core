@@ -13,6 +13,8 @@ SRC_URI[sha256sum] = "88f648e462e9d37c6ed9401b33ee1dd08495e9f66b9c653aefd9fd0a4f
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
+MACHINE_KERNEL_PR_append = ".1"
+
 # By default, kernel.bbclass modifies package names to allow multiple kernels
 # to be installed in parallel. We revert this change and rprovide the versioned
 # package names instead, to allow only one kernel to be installed.
@@ -30,6 +32,12 @@ SRC_URI += "http://source.mynonpublic.com/protek/protek-linux-${PV}-${SRCDATE}.t
     file://iosched-slice_idle-1.patch \
     file://tda18271-advertise-supported-delsys.patch \
     file://kernel-add-support-for-gcc6.patch \
+    file://0001-Support-TBS-USB-drivers-for-4.1-kernel.patch \
+    file://0001-TBS-fixes-for-4.1-kernel.patch \
+    file://0001-STV-Add-PLS-support.patch \
+    file://0001-STV-Add-SNR-Signal-report-parameters.patch \
+    file://blindscan2.patch \
+    file://0001-stv090x-optimized-TS-sync-control.patch \
     "
 
 S = "${WORKDIR}/linux-${PV}"
