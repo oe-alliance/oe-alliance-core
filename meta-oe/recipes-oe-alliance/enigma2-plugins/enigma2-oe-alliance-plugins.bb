@@ -10,7 +10,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=8e37f34d0e40d32ea2bc90ee812c9131"
 PACKAGES_DYNAMIC = "enigma2-plugin-(?!oealliance-).*"
 
 PACKAGES += " \
-    ${@bb.utils.contains('MACHINE_BRAND', 'Vu+', 'enigma2-plugin-extensions-hbbtv ' , ' ', d)} \
+    ${@bb.utils.contains('MACHINE_FEATURES', 'operahbbtv', 'enigma2-plugin-extensions-hbbtv ' , ' ', d)} \
     enigma2-plugin-extensions-lcd4linux \
     "
 
@@ -32,7 +32,7 @@ PROVIDES += " \
     enigma2-plugin-systemplugins-satipclient \
     enigma2-plugin-systemplugins-terrestrialscan \
     enigma2-plugin-extensions-tunerserver \
-    ${@bb.utils.contains('MACHINE_BRAND', 'Vu+', 'enigma2-plugin-extensions-hbbtv ' , ' ', d)} \
+    ${@bb.utils.contains('MACHINE_FEATURES', 'operahbbtv', 'enigma2-plugin-extensions-hbbtv ' , ' ', d)} \
     enigma2-plugin-systemplugins-transcodingsetup \
     enigma2-plugin-systemplugins-micomupgrade \
     enigma2-plugin-systemplugins-multitranscodingsetup \
