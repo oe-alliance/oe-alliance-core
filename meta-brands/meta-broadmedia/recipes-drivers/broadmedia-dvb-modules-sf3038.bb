@@ -1,7 +1,7 @@
 KV = "4.1.24"
 GCCREV = "5.3.0"
-SRCDATE = "20160630"
+SRCDATE = "20160711"
 
 require broadmedia-dvb-modules.inc
-SRC_URI[md5sum] = "c6041ff399a307e2b3fd2e65ae013008"
-SRC_URI[sha256sum] = "8c288f70f85cb4a3591911576f34d4bf3db42c13741469694842c18d5c737eb2"
+SRC_URI[md5sum] = "04bde11f5d851ab6253ea0a2c5e75fcf"
+SRC_URI[sha256sum] = "2dfd8f67937879878bfeabbe14e8c4cb90da688cd2e03990393d029f73cf59f7"
