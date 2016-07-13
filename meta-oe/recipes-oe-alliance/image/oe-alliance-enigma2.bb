@@ -10,7 +10,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "5.2"
-PR = "r2"
+PR = "r3"
 
 DEPENDS = "enigma2 enigma2-locale-meta enigma2-plugins enigma2-oe-alliance-plugins oe-alliance-feeds enigma2-3rdparty-plugins oe-alliance-wifi"
 
@@ -40,7 +40,8 @@ RRECOMMENDS_${PN} = "\
     \
     ${@base_contains("MACHINE_FEATURES", "smallflash", "", "oe-alliance-drivers", d)} \
     \
-    ${@base_contains("MACHINE_FEATURES", "dvbc-only", "", "enigma2-plugin-systemplugins-positionersetup enigma2-plugin-systemplugins-satfinder", d)} \
+    enigma2-plugin-systemplugins-satfinder \
+    ${@base_contains("MACHINE_FEATURES", "dvbc-only", "", "enigma2-plugin-systemplugins-positionersetup", d)} \
     ${@base_contains("MACHINE_FEATURES", "blindscan-dvbs", "enigma2-plugin-systemplugins-blindscan" , "", d)} \
     ${@base_contains("MACHINE_FEATURES", "hdmicec", "enigma2-plugin-systemplugins-hdmicec" , "", d)} \
     ${@base_contains("MACHINE_FEATURES", "nowifi", "", "oe-alliance-wifi", d)} \
