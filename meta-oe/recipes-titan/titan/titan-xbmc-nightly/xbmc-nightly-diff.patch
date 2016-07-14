@@ -1,0 +1,464 @@
+--- a/configure.ac	2015-05-24 14:22:23.000000000 +0200
++++ a/configure.ac.patched	2015-05-28 12:57:10.000000000 +0200
+@@ -186,6 +186,9 @@
+ wayland_disabled="== Wayland disabled. =="
+ x11_enabled="== X11 enabled. =="
+ x11_disabled="== X11 disabled. =="
++directfb_enabled="== directfb enabled. =="
++directfb_disabled="== directfb disabled. =="
++windowing_error="Could not enable directfb and X11 support"
+ pulse_not_found="== Could not find libpulse. PulseAudio support disabled. =="
+ pulse_disabled="== PulseAudio support disabled. =="
+ dvdcss_enabled="== DVDCSS support enabled. =="
+@@ -380,6 +383,12 @@
+   [use_dbus=$enableval],
+   [use_dbus=yes])
+ 
++AC_ARG_ENABLE([directfb],
++  [AS_HELP_STRING([--enable-directfb],
++  [enable directfb (default is no) 'Linux Only'])],
++  [use_directfb=$enableval],
++  [use_directfb=no])
++
+ AC_ARG_ENABLE([pulse],
+   [AS_HELP_STRING([--enable-pulse],
+   [enable PulseAudio support (default is auto)])],
+@@ -703,11 +712,12 @@
+      build_shared_lib=yes
+      ;;
+   mips*-*-linux-gnu*)
++     target_platform=target_dvbbox
+      ARCH="mips"
+      use_arch="mips"
+      use_joystick=no
+-     use_gles=no
+-     use_gl=yes
++     use_gles=yes
++     use_gl=no
+      use_sdl=yes
+      use_wayland=no
+      USE_STATIC_FFMPEG=1
+@@ -753,6 +763,23 @@
+      CFLAGS="$CFLAGS"
+      CXXFLAGS="$CXXFLAGS"
+      ;;
++  dvbbox)
++     target_platform=target_dvbbox
++     ARCH="mips"
++     use_arch="mips"
++     ffmpeg_target_os=linux
++     use_joystick=no
++     use_gles=yes
++     use_sdl=no
++     use_x11=no
++     use_alsa="no"
++     use_wayland=no
++     USE_STATIC_FFMPEG=1
++     AC_DEFINE(HAS_EGLGLES, [1], [Define if supporting EGL based GLES Framebuffer])
++     USE_DVBBOX_EGL=1
++     CFLAGS="$CFLAGS"
++     CXXFLAGS="$CXXFLAGS"
++     ;;
+ esac
+ 
+ if test "$host_vendor" = "apple"; then
+@@ -1076,6 +1103,22 @@
+   fi
+ fi
+ 
++if test "$use_directfb" = "yes" && test "$host_vendor" != "apple"; then
++  if test "x$use_gles" != "xyes"; then
++    AC_MSG_ERROR($directfb_gles)
++  fi
++  AC_MSG_NOTICE($directfb_enabled)
++  PKG_CHECK_MODULES([DIRECTFB],    [directfb],
++    [INCLUDES="$INCLUDES $DIRECTFB_CFLAGS"; LIBS="$LIBS $DIRECTFB_LIBS"],
++    AC_MSG_ERROR($missing_library))
++  AC_DEFINE([HAVE_DIRECTFB], [1], [Define to 1 if you have directfb libs installed.])
++  USE_DIRECTFB=1
++  use_sdl=no;use_joystick=no
++else
++  AC_MSG_RESULT($directfb_disabled)
++  USE_DIRECTFB=0
++fi
++
+ # platform common libraries
+ if test "$use_mysql" = "yes"; then
+   AC_PATH_PROG(MYSQL_CONFIG, mysql_config,"no")
+@@ -1150,21 +1193,7 @@
+ fi
+ AC_CHECK_LIB([bluetooth],   [hci_devid],, AC_MSG_RESULT([Could not find suitable version of libbluetooth]))
+ 
+-AC_LANG_PUSH([C++])
+-PKG_CHECK_MODULES([TINYXML], [tinyxml >= 2.6.2],
+-  [INCLUDES="$INCLUDES $TINYXML_CFLAGS"; LIBS="$LIBS $TINYXML_LIBS"],
+-  [AC_RUN_IFELSE(
+-   [AC_LANG_SOURCE([[
+-#include <stdlib.h>
+-#include <tinyxml.h>
+-
+-int main() {
+-  if (TIXML_MAJOR_VERSION < 2) exit(1);
+-  if (TIXML_MAJOR_VERSION == 2 && ( TIXML_MINOR_VERSION < 6 || ( TIXML_MINOR_VERSION == 6 && TIXML_PATCH_VERSION < 2 ))) exit(1);
+-}
+-    ]])],[AC_CHECK_LIB([tinyxml], [main],, AC_MSG_ERROR("tinyxml >= 2.6.2 not found"))], [AC_MSG_ERROR([tinyxml >= 2.6.2 not found])]
+-  )])
+-AC_LANG_POP([C++])
++AC_CHECK_LIB([tinyxml],     [main],, AC_MSG_ERROR($missing_library))
+ 
+ PKG_CHECK_MODULES([YAJL], [yajl >= 2],
+   [INCLUDES="$INCLUDES $YAJL_CFLAGS"; LIBS="$LIBS $YAJL_LIBS"; YAJL_FOUND="true"],
+@@ -1398,6 +1427,9 @@
+ 
+ # X11
+ if test "$use_x11" = "yes"; then
++  if test "$use_directfb" = "yes"; then
++    AC_MSG_ERROR($windowing_error)
++  fi
+   AC_MSG_NOTICE($x11_enabled)
+   PKG_CHECK_MODULES([X11],    [x11],
+     [INCLUDES="$INCLUDES $X11_CFLAGS"; LIBS="$LIBS $X11_LIBS"],
+@@ -2615,6 +2647,7 @@
+ AC_SUBST(USE_PULSE)
+ AC_SUBST(HAVE_LIBPULSE)
+ AC_SUBST(USE_ALSA)
++AC_SUBST(USE_DIRECTFB)
+ AC_SUBST(USE_TEXTUREPACKER)
+ AC_SUBST(TEXTUREPACKER)
+ AC_SUBST(USE_AIRTUNES)
+
+--- a/Makefile.in	2015-05-28 13:51:59.000000000 +0200
++++ a/Makefile.in.patched	2015-05-28 13:54:03.000000000 +0200
+@@ -122,6 +122,10 @@
+ DIRECTORY_ARCHIVES += xbmc/visualizations/EGLHelpers/eglhelpers.a
+ endif
+ 
++ifeq (@USE_DIRECTFB@,1)
++DIRECTORY_ARCHIVES += xbmc/windowing/dfb/windowing_dfb.a
++endif
++
+ ifeq (@USE_UPNP@,1)
+ DIRECTORY_ARCHIVES += lib/libUPnP/libupnp.a \
+                       xbmc/network/upnp/upnp.a
+
+--- a/xbmc/windowing/dfb/WinSystemDFB.cpp	2015-05-22 23:03:28.000000000 +0200
++++ a/xbmc/windowing/dfb/WinSystemDFB.cpp.patched	2015-05-22 23:01:13.000000000 +0200
+@@ -0,0 +1,184 @@
++/*
++ *      Copyright (C) 2005-2011 Team XBMC
++ *      http://www.xbmc.org
++ *
++ *  This Program is free software; you can redistribute it and/or modify
++ *  it under the terms of the GNU General Public License as published by
++ *  the Free Software Foundation; either version 2, or (at your option)
++ *  any later version.
++ *
++ *  This Program is distributed in the hope that it will be useful,
++ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++ *  GNU General Public License for more details.
++ *
++ *  You should have received a copy of the GNU General Public License
++ *  along with XBMC; see the file COPYING.  If not, write to
++ *  the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
++ *  http://www.gnu.org/copyleft/gpl.html
++ *
++ */
++#include "system.h"
++
++#ifdef HAS_DIRECTFB
++
++#include "WinSystemDFB.h"
++#include "utils/log.h"
++#include "filesystem/SpecialProtocol.h"
++#include "settings/Settings.h"
++#include "guilib/Texture.h"
++
++#include <vector>
++#include <directfb/directfb.h>
++#include <directfb/directfbgl2.h>
++
++CWinSystemDFB::CWinSystemDFB() : CWinSystemBase()
++{
++  m_dfb           = NULL;
++  m_dfb_layer     = NULL;
++  m_dfb_surface   = NULL;
++  m_flipflags     = DFBSurfaceFlipFlags(DSFLIP_BLIT);
++  m_buffermode    = DSCAPS_TRIPLE;
++  m_eWindowSystem = WINDOW_SYSTEM_DFB;
++}
++
++CWinSystemDFB::~CWinSystemDFB()
++{
++  DestroyWindowSystem();
++}
++
++bool CWinSystemDFB::InitWindowSystem()
++{
++  CLog::Log(LOGINFO, "CWinSystemDFB: Creating DirectFB WindowSystem");
++  int ret;
++  DFBSurfaceDescription dsc;
++
++  DirectFBInit(NULL, NULL);
++  DirectFBCreate(&m_dfb);
++
++  ret = m_dfb->GetInterface(m_dfb, "IDirectFBGL2", NULL, m_dfb, (void**) &m_gl2);
++  if (ret)
++  {
++    CLog::Log(LOGERROR, "CWinSystemDFB: Unable to get IDirectFBGL2 interface");
++    return ret;
++  }
++
++  m_dfb->SetCooperativeLevel(m_dfb, DFSCL_FULLSCREEN );
++
++  dsc.flags = DSDESC_CAPS;
++  dsc.caps  = (DFBSurfaceCapabilities)(DSCAPS_PRIMARY | m_buffermode);
++
++  m_dfb->CreateSurface( m_dfb, &dsc, &m_dfb_surface );
++
++  m_dfb_surface->Clear(m_dfb_surface, 0, 0, 0, 0);
++  m_dfb_surface->Flip(m_dfb_surface, NULL, DFBSurfaceFlipFlags(m_flipflags));
++
++  ret = m_gl2->CreateContext( m_gl2, NULL, &m_gl2context );
++  if (ret)
++  {
++    CLog::Log(LOGERROR, "CWinSystemDFB: Unable to create DirectFBGL2 context");
++  }
++
++  ret = m_gl2context->Bind( m_gl2context, m_dfb_surface, m_dfb_surface );
++  if (ret)
++  {
++    CLog::Log(LOGERROR, "CWinSystemDFB: Unable to bind DirectFBGL2 context");
++  }
++
++  if (!CWinSystemBase::InitWindowSystem())
++    return false;
++
++  return true;
++}
++
++bool CWinSystemDFB::DestroyWindowSystem()
++{
++  if (m_gl2context)
++  {
++    m_gl2context->Unbind(m_gl2context);
++    m_gl2context->Release(m_gl2context);
++  }
++  m_gl2context = NULL;
++
++  if (m_gl2)
++    m_gl2->Release(m_gl2);
++  m_gl2 = NULL;
++
++  if (m_dfb_surface)
++    m_dfb_surface->Release(m_dfb_surface);
++  m_dfb_surface = NULL;
++
++  if (m_dfb_layer)
++    m_dfb_layer->Release(m_dfb_layer);
++  m_dfb_layer  = NULL;
++
++  if (m_dfb)
++    m_dfb->Release(m_dfb);
++  m_dfb = NULL;
++
++  return true;
++}
++
++bool CWinSystemDFB::CreateNewWindow(const std::string& name, bool fullScreen, RESOLUTION_INFO& res, PHANDLE_EVENT_FUNC userFunction)
++{
++  m_bWindowCreated = true;
++  return true;
++}
++
++bool CWinSystemDFB::DestroyWindow()
++{
++  m_bWindowCreated = false;
++
++  return true;
++}
++
++bool CWinSystemDFB::ResizeWindow(int newWidth, int newHeight, int newLeft, int newTop)
++{
++  CRenderSystemGLES::ResetRenderSystem(newWidth, newHeight, true, 0);
++  return true;
++}
++
++bool CWinSystemDFB::SetFullScreen(bool fullScreen, RESOLUTION_INFO& res, bool blankOtherDisplays)
++{
++  CLog::Log(LOGDEBUG, "CWinSystemDFB::SetFullScreen");
++  m_nWidth  = res.iWidth;
++  m_nHeight = res.iHeight;
++  m_bFullScreen = fullScreen;
++
++  CreateNewWindow("", fullScreen, res, NULL);
++
++  CRenderSystemGLES::ResetRenderSystem(res.iWidth, res.iHeight, true, 0);
++
++  return true;
++}
++
++void CWinSystemDFB::UpdateResolutions()
++{
++  int width = 0;
++  int height = 0;
++  CWinSystemBase::UpdateResolutions();
++
++  m_dfb_surface->GetSize(m_dfb_surface, &width, &height);
++  //UpdateDesktopResolution(g_settings.m_ResInfo[RES_DESKTOP], 0, width, height, 0.0);
++}
++
++bool CWinSystemDFB::PresentRenderImpl(const CDirtyRegionList &dirty)
++{
++  int ret;
++  m_gl2context->Unbind(m_gl2context);
++  m_dfb_surface->Flip(m_dfb_surface, NULL, (m_flipflags));
++  ret = m_gl2context->Bind(m_gl2context, m_dfb_surface, m_dfb_surface);
++  if (ret)
++  {
++    return false;
++  }
++
++  return true;
++}
++
++void CWinSystemDFB::SetVSyncImpl(bool enable)
++{
++  m_flipflags = enable ? (DFBSurfaceFlipFlags)(m_flipflags | DSFLIP_ONSYNC) : (DFBSurfaceFlipFlags)(m_flipflags & ~DSFLIP_ONSYNC);
++}
++
++#endif
+
+--- a/xbmc/windowing/dfb/WinSystemDFB.h	2015-05-22 23:03:28.000000000 +0200
++++ a/xbmc/windowing/dfb/WinSystemDFB.h.patched	2015-05-22 23:02:33.000000000 +0200
+@@ -0,0 +1,77 @@
++#ifndef WINDOW_SYSTEM_DFB_H
++#define WINDOW_SYSTEM_DFB_H
++
++#pragma once
++
++/*
++ *      Copyright (C) 2011 Team XBMC
++ *      http://www.xbmc.org
++ *
++ *  This Program is free software; you can redistribute it and/or modify
++ *  it under the terms of the GNU General Public License as published by
++ *  the Free Software Foundation; either version 2, or (at your option)
++ *  any later version.
++ *
++ *  This Program is distributed in the hope that it will be useful,
++ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++ *  GNU General Public License for more details.
++ *
++ *  You should have received a copy of the GNU General Public License
++ *  along with XBMC; see the file COPYING.  If not, write to
++ *  the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
++ *  http://www.gnu.org/copyleft/gpl.html
++ *
++ */
++
++#include "rendering/gles/RenderSystemGLES.h"
++#include "utils/GlobalsHandling.h"
++#include "windowing/WinSystem.h"
++#include <directfb/directfbgl2.h>
++
++typedef struct _IDirectFB IDirectFB;
++typedef struct _IDirectFBSurface IDirectFBSurface;
++typedef struct _IDirectFBDisplayLayer IDirectFBDisplayLayer;
++
++class CWinSystemDFB : public CWinSystemBase, public CRenderSystemGLES
++{
++public:
++  CWinSystemDFB();
++  virtual ~CWinSystemDFB();
++
++  virtual bool  InitWindowSystem();
++  virtual bool  DestroyWindowSystem();
++  virtual bool  CreateNewWindow(const std::string& name, bool fullScreen, RESOLUTION_INFO& res, PHANDLE_EVENT_FUNC userFunction);
++  virtual bool  DestroyWindow();
++  virtual bool  ResizeWindow(int newWidth, int newHeight, int newLeft, int newTop);
++  virtual bool  SetFullScreen(bool fullScreen, RESOLUTION_INFO& res, bool blankOtherDisplays);
++  virtual void  UpdateResolutions();
++
++  virtual void  NotifyAppActiveChange(bool bActivated) {return;}
++  virtual void  ShowOSMouse(bool show)  {return;};
++  virtual bool  Minimize()              {return false;};
++  virtual bool  Restore()               {return false;};
++  virtual bool  Hide()                  {return false;};
++  virtual bool  Show(bool raise = true) {return false;};
++
++  IDirectFB*              GetIDirectFB() const   {return m_dfb;};
++  IDirectFBGL2Context*    GetGLContext() const   {return m_gl2context;};
++  IDirectFBSurface*       GetSurface() const     {return m_dfb_surface;};
++
++protected:
++  virtual bool  PresentRenderImpl(const CDirtyRegionList &dirty);
++  virtual void  SetVSyncImpl(bool enable);
++
++  IDirectFB             *m_dfb;
++  IDirectFBDisplayLayer *m_dfb_layer;
++  IDirectFBSurface      *m_dfb_surface;
++  IDirectFBGL2          *m_gl2;
++  IDirectFBGL2Context   *m_gl2context;
++  DFBSurfaceFlipFlags    m_flipflags;
++  DFBSurfaceCapabilities m_buffermode;
++};
++
++XBMC_GLOBAL_REF(CWinSystemDFB,g_Windowing);
++#define g_Windowing XBMC_GLOBAL_USE(CWinSystemDFB)
++
++#endif // WINDOW_SYSTEM_DFB_H
+
+--- a/xbmc/windowing/dfb/Makefile	2015-05-22 23:07:23.000000000 +0200
++++ a/xbmc/windowing/dfb/Makefile.patched	2015-05-22 23:00:07.000000000 +0200
+@@ -0,0 +1,11 @@
++INCLUDES= -I. \
++	-I../../../xbmc/linux \
++	-I../../../xbmc/windowing
++
++SRCS= \
++     WinSystemDFB.cpp \
++
++LIB=windowing_dfb.a
++
++include ../../../Makefile.include
++-include $(patsubst %.cpp,%.P,$(patsubst %.c,%.P,$(SRCS)))
+
+--- a/xbmc/windowing/WinSystem.h	2015-05-22 23:27:12.000000000 +0200
++++ a/xbmc/windowing/WinSystem.h.patched	2015-05-22 23:26:47.000000000 +0200
+@@ -33,6 +33,7 @@
+   WINDOW_SYSTEM_X11,
+   WINDOW_SYSTEM_SDL,
+   WINDOW_SYSTEM_EGL,
++  WINDOW_SYSTEM_DFB,
+   WINDOW_SYSTEM_ANDROID
+ } WindowSystemType;
+
+--- a/xbmc/windowing/WindowingFactory.h	2015-05-22 22:58:28.000000000 +0200
++++ a/xbmc/windowing/WindowingFactory.h.patched	2015-05-22 22:58:09.000000000 +0200
+@@ -35,6 +35,9 @@
+ #elif defined(TARGET_LINUX)   && defined(HAS_GL)   && defined(HAVE_X11)
+ #include "X11/WinSystemX11GL.h"
+ 
++#elif defined(TARGET_LINUX)   && defined(HAS_GLES) && defined(HAS_DIRECTFB)
++#include "dfb/WinSystemDFB.h"
++
+ #elif defined(TARGET_LINUX)   && defined(HAS_GLES) && defined(HAS_EGL) && !defined(HAVE_X11)
+ #include "egl/WinSystemEGL.h"
+
+--- a/xbmc/system.h	2015-05-28 15:39:49.000000000 +0200
++++ a/xbmc/system.h.patched	2015-05-28 16:07:21.000000000 +0200
+@@ -233,6 +233,10 @@
+ #ifdef HAVE_LIBGLESV2
+ #undef HAS_GL
+ #define HAS_GLES 2
++#if defined(HAVE_DIRECTFB)
++#define HAS_DIRECTFB
++#define HAS_LINUX_EVENTS
++#endif
+ #endif
+ 
+ // GLES1.0 detected. Dont use GL!
+
+ 
