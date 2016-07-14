@@ -180,7 +180,7 @@ do_compile() {
 	SVNVERSION=`svn info http://sbnc.dyndns.tv/svn/titan | grep Revision | sed s/'Revision: '//g`
 	echo SVNVERSION: ${SVNVERSION}
 
-    svn update
+#    svn update
 	cp Makefile.am.mipsel Makefile.am
 
 	libtoolize --force
