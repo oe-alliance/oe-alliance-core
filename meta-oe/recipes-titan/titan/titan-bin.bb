@@ -6,7 +6,8 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 require conf/license/license-gplv2.inc
 
-SRCREV = "${AUTOREV}"
+#SRCREV = "${AUTOREV}"
+SRCREV = "37814"
 PV = "2.0+svnr${SRCPV}"
 PR = "r1"
 
