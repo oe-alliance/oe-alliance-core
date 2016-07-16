@@ -1,5 +1,5 @@
---- a/include/linux/dvb/ca.h	2012-01-05 00:55:44.000000000 +0100
-+++ a/include/linux/dvb/ca.h.patched	2016-07-15 00:09:44.000000000 +0200
+--- a/include/uapi/linux/dvb/ca.h	2012-01-05 00:55:44.000000000 +0100
++++ a/include/uapi/linux/dvb/ca.h.patched	2016-07-15 00:09:44.000000000 +0200
 @@ -78,6 +78,24 @@
  	int index;		/* -1 == disable*/
  } ca_pid_t;
