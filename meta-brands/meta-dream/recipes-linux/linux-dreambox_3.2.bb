@@ -42,7 +42,6 @@ SRC_URI = " \
     file://rtl8712-fix-warnings.patch \
     file://fixme-hardfloat.patch \
     file://add-mnt-part.patch \
-    file://add.cacc.patch \
     file://defconfig \
 "
 
