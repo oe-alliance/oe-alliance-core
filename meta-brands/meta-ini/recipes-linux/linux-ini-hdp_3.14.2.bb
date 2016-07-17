@@ -46,7 +46,6 @@ SRC_URI += "http://code-ini.com/software/kernel/bcm7425-linux-${KV}-${SRCDATE}.t
 	file://0001-stv090x-optimized-TS-sync-control.patch \
 	file://blindscan2.patch \
 	file://brcm_remove_entire_mtd.patch \
-	file://add.cacc.patch \
 	"
 
 S = "${WORKDIR}/linux-${PV}"
