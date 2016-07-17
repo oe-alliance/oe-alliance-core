@@ -1,0 +1,76 @@
+diff -u -N -r openssl-1.0.2g.orig/engines/ccgost/openssl.ld openssl-1.0.2g/engines/ccgost/openssl.ld
+--- openssl-1.0.2g.orig/engines/ccgost/openssl.ld	2016-04-14 22:20:50.415751861 +0200
++++ openssl-1.0.2g/engines/ccgost/openssl.ld	2016-04-15 22:32:02.375794081 +0200
+@@ -8,3 +8,5 @@
+ 		*;
+ };
+ 
++OPENSSL_1.0.0 {
++} OPENSSL_1.0.2;
+diff -u -N -r openssl-1.0.2g.orig/engines/openssl.ld openssl-1.0.2g/engines/openssl.ld
+--- openssl-1.0.2g.orig/engines/openssl.ld	2016-04-14 22:20:49.687751860 +0200
++++ openssl-1.0.2g/engines/openssl.ld	2016-04-15 22:31:38.843794069 +0200
+@@ -8,3 +8,5 @@
+ 		*;
+ };
+ 
++OPENSSL_1.0.0 {
++} OPENSSL_1.0.2;
+diff -u -N -r openssl-1.0.2g.orig/openssl.ld openssl-1.0.2g/openssl.ld
+--- openssl-1.0.2g.orig/openssl.ld	2016-04-14 22:20:49.247751861 +0200
++++ openssl-1.0.2g/openssl.ld	2016-04-15 23:22:32.603795550 +0200
+@@ -1,4 +1,4 @@
+-OPENSSL_1.0.2d {
++OPENSSL_1.0.0 {
+ 	global:
+ 		BIO_f_ssl;
+ 		BIO_new_buffer_ssl_connect;
+@@ -4296,6 +4296,14 @@
+ 		CRYPTO_cbc128_decrypt;
+ 		CRYPTO_cfb128_encrypt;
+ 		CRYPTO_cfb128_8_encrypt;
++
++	local:
++		*;
++};
++
++
++OPENSSL_1.0.1 {
++	global:
+ 		SSL_renegotiate_abbreviated;
+ 		TLSv1_1_method;
+ 		TLSv1_1_client_method;
+@@ -4457,7 +4465,15 @@
+ 		BIO_s_datagram_sctp;
+ 		BIO_dgram_is_sctp;
+ 		BIO_dgram_sctp_notification_cb;
++} OPENSSL_1.0.0;
++
++OPENSSL_1.0.1d {
++	global:
+ 		CRYPTO_memcmp;
++} OPENSSL_1.0.1;
++
++OPENSSL_1.0.2 {
++	global:
+ 		SSL_CTX_set_alpn_protos;
+ 		SSL_set_alpn_protos;
+ 		SSL_CTX_set_alpn_select_cb;
+@@ -4595,14 +4611,13 @@
+ 		BUF_strnlen;
+ 		sk_deep_copy;
+ 		SSL_test_functions;
++} OPENSSL_1.0.1d;
+ 
+-	local:
+-		*;
++OPENSSL_1.0.2b {
+ };
+ 
+ OPENSSL_1.0.2g {
+        global:
+                SRP_VBASE_get1_by_user;
+                SRP_user_pwd_free;
+-} OPENSSL_1.0.2d;
+-
++} OPENSSL_1.0.1d;
