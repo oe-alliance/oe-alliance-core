@@ -68,7 +68,7 @@ DVBMEDIASINK_CONFIG = "--with-wma --with-wmv --with-pcm --with-dts --with-eac3 \
 
 PREFERRED_PROVIDER_virtual/kernel = "linux-gfutures"
 
-MACHINE_FEATURES += "3dtv alsa hdmicec switchoff skins1080 blindscan-tbs"
+MACHINE_FEATURES += "3dtv alsa hdmicec switchoff blindscan-tbs"
 
 EXTRA_IMAGEDEPENDS += " \
     enigma2-plugin-systemplugins-remotecontrolcode \
