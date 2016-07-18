@@ -5,7 +5,7 @@ require conf/license/license-gplv2.inc
 inherit allarch
 
 PV = "2.0"
-PR = "r22"
+PR = "r21"
 
 DEPENDS = " \
     enigma2-plugin-settings-henksat-19e \
@@ -23,13 +23,6 @@ DEPENDS = " \
     enigma2-plugin-settings-hans-19e-23e-28e \
     enigma2-plugin-settings-hans-13e-19e-23e-28e \
     enigma2-plugin-settings-hans-13e-19e-23e-28e-rotating \
-    \
-    enigma2-plugin-settings-ciefp.03.sat.19e.16e.13e.iptv \
-    enigma2-plugin-settings-ciefp.04.sat.19e.16e.13e.08w.iptv \
-    enigma2-plugin-settings-ciefp.05.sat.28e.19e.16e.13e.08w.iptv \
-    enigma2-plugin-settings-ciefp.06.sat.28e.23e.19e.16e.13e.08w.iptv \
-    enigma2-plugin-settings-ciefp.11.sat.39e.28e.26e.23e.19e.16e.13e.9e.7e.4.8e.08w.iptv \
-    enigma2-plugin-settings-ciefp.motor.68e.30w.iptv \
     \
     enigma2-plugin-settings-cst.dual1.db \
     enigma2-plugin-settings-cst.dual2.db \
