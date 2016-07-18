@@ -117,6 +117,7 @@ PR = "${BUILD_PR}_${GLPR}_${SRCREV}"
 SRC_URI = "\
 	git://code.vuplus.com/git/xbmc.git;protocol=http;branch=${BRANCH};tag=${SRCREV} \
 	http://archive.vuplus.com/download/build_support/kodi/xbmc-support_${MACHINE}_${GLPR}.tar.gz;name=xbmc-support \
+	file://0001-lib-cximage-6.0-fix-compilation-with-gcc6.patch \
 "
 
 inherit autotools-brokensep autotools lib_package pkgconfig gettext python-dir
