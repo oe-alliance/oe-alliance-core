@@ -1,5 +1,7 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/${P}:"
 
+DEPENDS += "openssl"
+
 SRC_URI += " \
         file://action_wpa.sh \
         file://functions.sh \
