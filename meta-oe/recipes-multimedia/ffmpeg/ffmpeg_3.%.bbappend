@@ -7,7 +7,7 @@ PACKAGECONFIG[avdevice] = "--enable-avdevice,--disable-avdevice"
 
 PR = "r4"
 
-DEPENDS = "libbluray rtmpdump libxml2 openssl librtmp"
+DEPENDS = "libbluray rtmpdump libxml2 openssl librtmp virtual/libsdl"
 RDEPENDS_${PN} = "libbluray rtmpdump libxml2 openssl"
 
 SRC_URI_append = " \
