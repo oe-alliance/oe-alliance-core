@@ -5,7 +5,7 @@ require conf/license/license-gplv2.inc
 
 ALLOW_EMPTY_${PN} = "1"
 
-DEPENDS_${PN} = "\
+DEPENDS = "\
     enigma2-plugin-drivers-dvb-usb-dib0700 \
     enigma2-plugin-drivers-dvb-usb-af9015 \
     enigma2-plugin-drivers-dvb-usb-siano \
@@ -31,6 +31,4 @@ DEPENDS_${PN} = "\
     ${@bb.utils.contains("MACHINE", "vusolo4k", "enigma2-plugin-drivers-dvb-usb-turbo", "", d)} \
     "
 
-RRECOMMENDS_${PN}_openbh = "${DEPENDS_${PN}}"
-
-PR = "r14"
+PR = "r15"
