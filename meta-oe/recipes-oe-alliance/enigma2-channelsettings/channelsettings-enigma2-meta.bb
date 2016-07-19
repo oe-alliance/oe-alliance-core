@@ -5,7 +5,7 @@ require conf/license/license-gplv2.inc
 inherit allarch
 
 PV = "2.0"
-PR = "r21"
+PR = "r22"
 
 DEPENDS = " \
     enigma2-plugin-settings-henksat-19e \
