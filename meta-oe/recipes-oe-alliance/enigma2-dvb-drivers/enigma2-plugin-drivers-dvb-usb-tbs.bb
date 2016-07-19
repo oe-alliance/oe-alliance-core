@@ -17,6 +17,6 @@ RRECOMMENDS_${PN} = " \
 	${@bb.utils.contains("MACHINE_FEATURES", "blindscan-tbs", "enigma2-plugin-systemplugins-blindscan blindscan-s2 astra-sm" , "", d)} \
 	"
 
-PV = "1.0"
+PV = "1.1"
 
 ALLOW_EMPTY_${PN} = "1"
