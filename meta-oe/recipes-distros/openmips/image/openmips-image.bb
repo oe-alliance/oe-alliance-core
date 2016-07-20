@@ -10,8 +10,9 @@ PV = "${IMAGE_VERSION}"
 PR = "r0${DATE}"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-IMAGE_INSTALL = "openmips-base"
+PR[vardepsxeclude]="DATE"
 
+IMAGE_INSTALL = "openmips-base"
 
 export IMAGE_BASENAME = "openmips-image"
 IMAGE_LINGUAS = ""

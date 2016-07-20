@@ -10,6 +10,8 @@ PV = "${IMAGE_VERSION}"
 PR = "r${DATE}"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
+PR[vardepsxeclude]="DATE"
+
 IMAGE_INSTALL = "openbh-base \
     ${@bb.utils.contains("MACHINE_FEATURES", "singlecore", "", \
     " \
