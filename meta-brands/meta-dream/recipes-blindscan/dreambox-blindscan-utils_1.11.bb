@@ -11,8 +11,8 @@ DEPENDS = "ncurses"
 
 PR = "r3"
 
-SRC_URI += "http://dreamboxupdate.com/download/opendreambox/2.0.0/blindscan-utils/blindscan-utils_${PV}_${DEFAULTTUNE}.tar.bz2;name=${DEFAULTTUNE}"
-SRC_URI_dm520 += "http://dreamboxupdate.com/download/opendreambox/2.2.0/blindscan-utils/${PV}/${DEFAULTTUNE}/c4176cf87b943e166b49e15624869243/blindscan-utils_${PV}_${DEFAULTTUNE}.tar.xz;name=${DEFAULTTUNE}"
+SRC_URI_dm800 += "http://dreamboxupdate.com/download/opendreambox/2.0.0/blindscan-utils/blindscan-utils_${PV}_${DEFAULTTUNE}.tar.bz2;name=${DEFAULTTUNE}"
+SRC_URI += "http://dreamboxupdate.com/download/opendreambox/2.2.0/blindscan-utils/${PV}/${DEFAULTTUNE}/c4176cf87b943e166b49e15624869243/blindscan-utils_${PV}_${DEFAULTTUNE}.tar.xz;name=${DEFAULTTUNE}"
 
 S = "${WORKDIR}/blindscan-utils_${PV}_${DEFAULTTUNE}"
 
