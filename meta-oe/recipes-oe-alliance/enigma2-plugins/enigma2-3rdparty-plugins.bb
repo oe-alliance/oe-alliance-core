@@ -90,8 +90,8 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-vhannibalautosettings_1.1_mips32el.ipk \
     enigma2-plugin-extensions-vuplusforum_0.8rc1_all.ipk \
     enigma2-plugin-extensions-webmedia_14.0_r0_all.ipk \
-    enigma2-plugin-extensions-webradiofs_14.46_all.ipk \
-    enigma2-plugin-extensions-weerinfo_1.5_all.ipk \
+    enigma2-plugin-extensions-webradiofs_14.48_all.ipk \
+    enigma2-plugin-extensions-weerinfo_1.5rc1_all.ipk \
     enigma2-plugin-extensions-wikipedia_2.2rc8_all.ipk \
     enigma2-plugin-extensions-wwech_1.03_all.ipk \
     enigma2-plugin-extensions-xbmcaddons_8.1_r0_all.ipk \
@@ -99,7 +99,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-zdfnewmediathek_1.7rc5_mips32el.ipk \
     enigma2-plugin-feeds-picons.xyz_2015-08-31--19-55-30_all.ipk \
     enigma2-plugin-systemplugins-bouquetsprotection_0.2-rc1_all.ipk \
-    enigma2-plugin-systemplugins-channelselectionnavigator_0.9_mipsel.ipk \
+    enigma2-plugin-systemplugins-channelselectionnavigator_1.1_mipsel.ipk \
     enigma2-plugin-systemplugins-extnumberzap_1.0-rc12_mipsel.ipk \
     enigma2-plugin-systemplugins-recinfobar_1.22rc2_mips32el.ipk \
     "
