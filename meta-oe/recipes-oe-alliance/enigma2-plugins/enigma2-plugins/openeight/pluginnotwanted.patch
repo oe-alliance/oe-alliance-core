@@ -1,0 +1,37 @@
+diff --git a/Makefile.am b/Makefile.am
+index 0e7ea08..b304851 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -23,7 +23,6 @@ SUBDIRS = \
+ 	dvdbackup \
+ 	easyinfo \
+ 	easymedia \
+-	ecasa \
+ 	eibox \
+ 	emailclient \
+ 	emission \
+@@ -44,8 +43,6 @@ SUBDIRS = \
+ 	kiddytimer \
+ 	letterbox \
+ 	mediadownloader \
+-	merlinepg \
+-	merlinepgcenter \
+ 	merlinmusicplayer \
+ 	mosaic \
+ 	moviecut \
+@@ -59,7 +56,6 @@ SUBDIRS = \
+ 	ofdb \
+ 	orfat \
+ 	orfteletext \
+-	partnerbox \
+ 	permanentclock \
+ 	pipservicerelation \
+ 	podcast \
+@@ -77,7 +73,6 @@ SUBDIRS = \
+ 	subsdownloader2 \
+ 	svdrp \
+ 	tageditor \
+-	teletext \
+ 	toolkit \
+ 	tvcharts \
+ 	unwetterinfo \
