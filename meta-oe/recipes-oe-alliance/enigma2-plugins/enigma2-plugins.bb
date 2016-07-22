@@ -16,7 +16,7 @@ PKGV = "2.0+git${GITPKGV}"
 PR = "r10"
 
 SRC_URI = "${ENIGMA2_PLUGINS_URI} file://pluginnotwanted.patch"
-SRC_URI_append_openatv = "file://EPGSearch.patch"
+SRC_URI_append_openatv = " file://EPGSearch.patch"
 
 EXTRA_OECONF = " \
     BUILD_SYS=${BUILD_SYS} \
