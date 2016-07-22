@@ -14,6 +14,9 @@ ${@base_contains('MACHINEBUILD', 'zgemmah2h', 'H.2H' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'zgemmaslc', 'Star LC' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'zgemmah5', 'H5' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'zgemmai55', 'I55' , '', d)}\
+${@base_contains('MACHINEBUILD', 'novacombo', 'NOVA COMBO' , '', d)}\
+${@base_contains('MACHINEBUILD', 'novaip', 'NOVA IP' , '', d)}\
+${@base_contains('MACHINEBUILD', 'novatwin', 'NOVA TWIN' , '', d)}\
 "
 
 MACHINE_BRAND = "\
@@ -27,6 +30,9 @@ ${@base_contains('MACHINEBUILD', 'zgemmah2h', 'Zgemma' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'zgemmaslc', 'Zgemma' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'zgemmah5', 'Zgemma' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'zgemmai55', 'Zgemma' , '', d)}\
+${@base_contains('MACHINEBUILD', 'novacombo', 'EVO' , '', d)}\
+${@base_contains('MACHINEBUILD', 'novaip', 'EVO' , '', d)}\
+${@base_contains('MACHINEBUILD', 'novatwin', 'EVO' , '', d)}\
 "
 
 IMAGEDIR ?= "\
@@ -40,6 +46,25 @@ ${@base_contains('MACHINEBUILD', 'zgemmah2h', 'zgemma/h3' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'zgemmaslc', 'zgemma/lc' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'zgemmah5', 'zgemma/h5' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'zgemmai55', 'zgemma/i55' , '', d)}\
+${@base_contains('MACHINEBUILD', 'novacombo', 'novacombo' , '', d)}\
+${@base_contains('MACHINEBUILD', 'novaip', 'novaip' , '', d)}\
+${@base_contains('MACHINEBUILD', 'novatwin', 'novatwin' , '', d)}\
+"
+
+MACHINE_DRIVER = "\
+${@base_contains('MACHINEBUILD', 'zgemmash1', 'sh1' , '', d)}\
+${@base_contains('MACHINEBUILD', 'zgemmash2', 'sh1' , '', d)}\
+${@base_contains('MACHINEBUILD', 'zgemmas2s', 'sh1' , '', d)}\
+${@base_contains('MACHINEBUILD', 'zgemmass', 'sh1' , '', d)}\
+${@base_contains('MACHINEBUILD', 'zgemmahs', 'h3' , '', d)}\
+${@base_contains('MACHINEBUILD', 'zgemmah2s', 'h3' , '', d)}\
+${@base_contains('MACHINEBUILD', 'zgemmah2h', 'h3' , '', d)}\
+${@base_contains('MACHINEBUILD', 'zgemmaslc', 'lc' , '', d)}\
+${@base_contains('MACHINEBUILD', 'zgemmah5', 'h5' , '', d)}\
+${@base_contains('MACHINEBUILD', 'zgemmai55', 'i55' , '', d)}\
+${@base_contains('MACHINEBUILD', 'novacombo', 'novacombo' , '', d)}\
+${@base_contains('MACHINEBUILD', 'novaip', 'novaip' , '', d)}\
+${@base_contains('MACHINEBUILD', 'novatwin', 'novatwin' , '', d)}\
 "
 
 MTD_KERNEL = "mtd1"
@@ -48,7 +73,7 @@ KERNEL_FILE = "kernel.bin"
 ROOTFS_FILE = "rootfs.bin"
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS = "\
-    airdigital-dvb-modules-${MACHINE} \
+    airdigital-dvb-modules-${MACHINE_DRIVER} \
     "
 
 DVBPROVIDER = "kernel"
