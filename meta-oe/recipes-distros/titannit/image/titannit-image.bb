@@ -74,6 +74,10 @@ IMAGE_INSTALL = "\
 	opkg \
 	${@base_contains('MACHINE', 'disabled-build', '', 'packagegroup-base', d)} \
 	packagegroup-core-boot \
+	packagegroup-base-smbfs-client \
+    packagegroup-base-smbfs-server \
+    packagegroup-base-smbfs-utils \
+    packagegroup-base-nfs \
 	parted \
 	pngquant \
 	procps \
