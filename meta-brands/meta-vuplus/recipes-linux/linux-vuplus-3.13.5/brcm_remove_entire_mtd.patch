@@ -1,0 +1,39 @@
+--- a/drivers/brcmstb/board.c	2014-07-15 02:30:01.000000000 +0200
++++ a/drivers/brcmstb/board.c.patched	2015-03-09 16:45:39.000000000 +0100
+@@ -638,21 +638,26 @@
+ #if defined(CONFIG_BRCM_FIXED_MTD_PARTITIONS)
+ 
+ static struct mtd_partition fixed_partition_map[] = {
+-	{
+-		.name = "complete",
+-		.size = MTDPART_SIZ_FULL,
+-		.offset = 0x00000000
++ 	{
++		.name   = "rootfs",
++		.size   = 0xc000000,
++		.offset = 0x1f00000,
+ 	},
+ 	{
+-		.name = "kernel",
+-		.size = 0x00600000,
+-		.offset = 0x00000000
++		.name   = "mnt",
++		.size   = MTDPART_SIZ_FULL,
++		.offset = MTDPART_OFS_APPEND
+ 	},
+ 	{
+-		.name = "rootfs",
+-		.size = MTDPART_SIZ_FULL,
+-		.offset = 0x00600000
++		.name   = "kernel",
++		.size   = 0x700000,
++		.offset = 0x900000,
+ 	},
++	{
++		.name   = "full",
++		.size   = MTDPART_SIZ_FULL,
++		.offset = 0
++ 	},
+ };
+ 
+ /*
