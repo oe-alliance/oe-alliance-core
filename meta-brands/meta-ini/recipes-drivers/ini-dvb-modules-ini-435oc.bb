@@ -1,17 +1,17 @@
-SUMMARY = "Hardware drivers for ${MACHINE}"
+SUMMARY = "Hardware drivers for Opticum Twin"
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "CLOSED"
 PACKAGE_ARCH = "${MACHINEBUILD}"
 
 KV = "3.14.2"
-SRCDATE = "20150610"
+SRCDATE = "20160122"
 
 PV = "${KV}+${SRCDATE}"
 PR = "r1"
 
-SRC_URI[md5sum] = "4fa3c65ba93b3a079f541dd279b3cf89"
-SRC_URI[sha256sum] = "ceb08dc498b40467825d7d4ded7840392c06a5e08dd517056978ea968e7b4901"
+SRC_URI[md5sum] = "3469634ce63a6f121b905dec81b8bd51"
+SRC_URI[sha256sum] = "bf486def7044289debbd7d6017cd2d04ea9bd5eba91eec9b89c951af6654904e"
 
 SRC_URI = "http://code-ini.com/software/drivers/ini-435oc-drivers-${KV}-${SRCDATE}.zip"
 

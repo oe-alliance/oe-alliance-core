@@ -1,19 +1,20 @@
-SUMMARY = "Hardware drivers for ${MACHINEBUILD}"
+SUMMARY = "Hardware drivers for Bwidow X-1"
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "CLOSED"
 PACKAGE_ARCH = "${MACHINEBUILD}"
+require conf/license/license-close.inc
 
-KV = "3.14.2"
-SRCDATE = "20150407"
+KV = "3.12.1"
+SRCDATE = "20160122"
 
 PV = "${KV}+${SRCDATE}"
 PR = "r1"
 
-SRC_URI[md5sum] = "2303722a6a3531f5e68396144ad802af"
-SRC_URI[sha256sum] = "00c02ddb748d5dc2b944a4d5f47572141f9019eadf8df8188c5d741601f6811a"
+SRC_URI[md5sum] = "666809b5d75dd426f0701f24663951ab"
+SRC_URI[sha256sum] = "443c472aa9a66f9b7cf76fc260f4a9524e9831a5ea189d745e06b520a14d9ffd"
 
-SRC_URI = "http://code-ini.com/software/drivers/yhgd2580-drivers-${KV}-${SRCDATE}.zip"
+SRC_URI = "http://code-ini.com/software/drivers/yhgd2580-7358-drivers-${KV}-${SRCDATE}.zip"
 
 S = "${WORKDIR}"
 
