@@ -12,7 +12,6 @@ ${@base_contains('MACHINEBUILD', 'sezam5000hd', '5000-HD' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'sezammarvel', 'Marvel' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'xpeedlx', 'LX-x' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'xpeedlx3', 'LX-3' , '', d)}\
-${@base_contains('MACHINEBUILD', 'xpeedlxpro', 'Xpeed LX Pro' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbmini', 'Premium Mini' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbminiplus', 'Premium Mini Plus' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbhybrid', 'Premium Hybrid' , '', d)}\
@@ -28,7 +27,6 @@ ${@base_contains('MACHINEBUILD', 'beyonwizt3', 'T3' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'beyonwizt4', 'T4' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'bwidowx', 'Black Widow-X' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'bwidowx2', 'Black Widow-X2' , '', d)}\
-${@base_contains('MACHINEBUILD', 'opticumtt', 'Twin' , '', d)}\
 "
 
 MACHINE_BRAND = "\
@@ -38,7 +36,6 @@ ${@base_contains('MACHINEBUILD', 'sezam5000hd', 'Sezam' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'sezammarvel', 'Sezam' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'xpeedlx', 'GI' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'xpeedlx3', 'GI' , '', d)}\
-${@base_contains('MACHINEBUILD', 'xpeedlxpro', 'GI' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbmini', 'Miraclebox' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbminiplus', 'Miraclebox' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbhybrid', 'Miraclebox' , '', d)}\
@@ -54,7 +51,6 @@ ${@base_contains('MACHINEBUILD', 'beyonwizt3', 'Beyonwiz' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'beyonwizt4', 'Beyonwiz' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'bwidowx', 'SPACE' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'bwidowx2', 'SPACE' , '', d)}\
-${@base_contains('MACHINEBUILD', 'opticumtt', 'Opticum' , '', d)}\
 "
 
 IMAGEDIR ?= "\
@@ -64,7 +60,6 @@ ${@base_contains('MACHINEBUILD', 'sezam5000hd', 'hdx' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'sezammarvel', 'hdp' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'xpeedlx', 'xpeedlx' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'xpeedlx3', 'xpeedlx3' , '', d)}\
-${@base_contains('MACHINEBUILD', 'xpeedlxpro', 'xpeedlxpro' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbmini', 'miraclebox/mini' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbminiplus', 'miraclebox/miniplus' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbhybrid', 'miraclebox/minihybrid' , '', d)}\
@@ -80,7 +75,6 @@ ${@base_contains('MACHINEBUILD', 'beyonwizt3', 'beyonwiz/hdx' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'beyonwizt4', 'beyonwiz/hdp' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'bwidowx', 'bwidowx' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'bwidowx2', 'bwidowx2' , '', d)}\
-${@base_contains('MACHINEBUILD', 'opticumtt', 'opticum/tt' , '', d)}\
 "
 
 MTD_KERNEL = "\
@@ -90,7 +84,6 @@ ${@base_contains('MACHINEBUILD', 'sezam5000hd', 'mtd1' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'sezammarvel', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'xpeedlx', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'xpeedlx3', 'mtd2' , '', d)}\
-${@base_contains('MACHINEBUILD', 'xpeedlxpro', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbmini', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbminiplus', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbhybrid', 'mtd2' , '', d)}\
@@ -106,7 +99,6 @@ ${@base_contains('MACHINEBUILD', 'beyonwizt3', 'mtd1' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'beyonwizt4', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'bwidowx', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'bwidowx2', 'mtd2' , '', d)}\
-${@base_contains('MACHINEBUILD', 'opticumtt', 'mtd2' , '', d)}\
 "
 
 MTD_ROOTFS = "\
@@ -116,7 +108,6 @@ ${@base_contains('MACHINEBUILD', 'sezam5000hd', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'sezammarvel', 'mtd0' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'xpeedlx', 'mtd0' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'xpeedlx3', 'mtd0' , '', d)}\
-${@base_contains('MACHINEBUILD', 'xpeedlxpro', 'mtd0' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbmini', 'mtd0' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbminiplus', 'mtd0' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbhybrid', 'mtd0' , '', d)}\
@@ -132,7 +123,6 @@ ${@base_contains('MACHINEBUILD', 'beyonwizt3', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'beyonwizt4', 'mtd0' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'bwidowx', 'mtd0' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'bwidowx2', 'mtd0' , '', d)}\
-${@base_contains('MACHINEBUILD', 'opticumtt', 'mtd0' , '', d)}\
 "
 
 MACHINE_DRIVER = "\
@@ -142,7 +132,6 @@ ${@base_contains('MACHINEBUILD', 'sezam5000hd', 'inihdx' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'sezammarvel', 'ini-900' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'xpeedlx', 'inihde' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'xpeedlx3', 'ini-900' , '', d)}\
-${@base_contains('MACHINEBUILD', 'xpeedlxpro', 'yhgd5034' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbmini', 'inihde' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbminiplus', 'inihde2sv' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbhybrid', 'inihde2sv' , '', d)}\
@@ -156,9 +145,8 @@ ${@base_contains('MACHINEBUILD', 'atemionemesis', 'ini-800' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'beyonwizt2', 'inihde2au' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'beyonwizt3', 'inihdx' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'beyonwizt4', 'ini-840t4' , '', d)}\
-${@base_contains('MACHINEBUILD', 'bwidowx', 'yhgd2580-7358' , '', d)}\
-${@base_contains('MACHINEBUILD', 'bwidowx2', 'yhgd2580-7362' , '', d)}\
-${@base_contains('MACHINEBUILD', 'opticumtt', 'ini-435oc' , '', d)}\
+${@base_contains('MACHINEBUILD', 'bwidowx', 'yhgd2580' , '', d)}\
+${@base_contains('MACHINEBUILD', 'bwidowx2', 'inihde2bw' , '', d)}\
 "
 
 KERNEL_FILE = "kernel.bin"
@@ -175,7 +163,7 @@ MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS = "\
     "
 
 MACHINE_EXTRA_RRECOMMENDS = " \
-    ${@base_contains("GST_VERSION", "1.0", "gstreamer1.0-plugin-dvbmediasink", "gst-plugin-dvbmediasink", d)} \
+    gstreamer1.0-plugin-dvbmediasink \
     "
 
 include conf/machine/include/autoload-filesystems.inc
@@ -202,21 +190,19 @@ IMAGE_CMD_ubi_prepend = " \
     rm -rf ${IMAGE_ROOTFS}/tmp/*; \
     "
 
-IMAGE_CMD_ubi_append = "\
+IMAGE_CMD_ubi_append = "; \
     mkdir -p ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}; \
     ${@base_contains("MACHINE_FEATURES", "bootsplash", "cp ${DEPLOY_DIR_IMAGE}/${BOOTLOGO_FILENAME} ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/${BOOTLOGO_FILENAME};" , "", d)} \
-    ${@base_contains("MACHINE_FEATURES", "extrasplash", "cp ${DEPLOY_DIR_IMAGE}/cfe.bmp ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/;" , "", d)} \
-    ${@base_contains("MACHINE_FEATURES", "extrasplash", "cp ${DEPLOY_DIR_IMAGE}/splash.bmp ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/;" , "", d)} \
-    ${@base_contains("MACHINE_FEATURES", "extrasplash", "cp ${DEPLOY_DIR_IMAGE}/imageversion.bmp ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/;" , "", d)} \
-    ${@base_contains("MACHINE_FEATURES", "extrasplash", "cp ${DEPLOY_DIR_IMAGE}/kernel.bmp ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/;" , "", d)} \
-    ${@base_contains("MACHINE_FEATURES", "extrasplash", "cp ${DEPLOY_DIR_IMAGE}/rootfs.bmp ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/;" , "", d)} \
-    ${@base_contains("MACHINE_FEATURES", "extrasplash", "cp ${DEPLOY_DIR_IMAGE}/finished.bmp ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/;" , "", d)} \
-    mv ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.ubi ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/${ROOTFS_FILE}; \
+    ${@base_contains("DISTRO_FEATURES", "extrasplash", "cp ${DEPLOY_DIR_IMAGE}/cfe.bmp ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/;" , "", d)} \
+    ${@base_contains("DISTRO_FEATURES", "extrasplash", "cp ${DEPLOY_DIR_IMAGE}/splash.bmp ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/;" , "", d)} \
+    ${@base_contains("DISTRO_FEATURES", "extrasplash", "cp ${DEPLOY_DIR_IMAGE}/imageversion.bmp ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/;" , "", d)} \
+    ${@base_contains("DISTRO_FEATURES", "extrasplash", "cp ${DEPLOY_DIR_IMAGE}/kernel.bmp ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/;" , "", d)} \
+    ${@base_contains("DISTRO_FEATURES", "extrasplash", "cp ${DEPLOY_DIR_IMAGE}/rootfs.bmp ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/;" , "", d)} \
+    ${@base_contains("DISTRO_FEATURES", "extrasplash", "cp ${DEPLOY_DIR_IMAGE}/finished.bmp ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/;" , "", d)} \
+    mv ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}_rootfs.rootfs.ubi ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/${ROOTFS_FILE}; \
     gzip -f -9c ${DEPLOY_DIR_IMAGE}/vmlinux-${MACHINE}.bin > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/${KERNEL_FILE}; \
-    echo ${IMAGE_VER_STRING} > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/imageversion; \
-    ${@base_contains('MACHINEBUILD', 'xpeedlxpro', \
-    'echo "dont change this file" > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/force;' , \
-    'echo "rename this file to force to force an update without confirmation" > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/noforce;', d)} \
+    echo ${DISTRO_NAME}-${IMAGE_VERSION}-${MACHINEBUILD}-${DATE} > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/imageversion; \
+    echo "rename this file to 'force' to force an update without confirmation" > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/noforce; \
     cd ${DEPLOY_DIR_IMAGE}; \
     zip ${IMAGE_NAME}_usb.zip ${IMAGEDIR}/*; \
     rm -f ${DEPLOY_DIR_IMAGE}/*.ubi; \
@@ -227,13 +213,10 @@ IMAGE_CMD_ubi_append = "\
     rm -rf ${IMAGEDIR}; \
     rm -rf atemio; \
     rm -rf miraclebox; \
-    rm -rf beyonwiz; \
-    rm -rf bwidowx; \
-    rm -rf bwidowx2; \
-    rm -rf opticum; \
+    rm -rf beyonwiz; \ 
     "
 
-MACHINE_FEATURES += "3dtv alsa hdmicec switchoff wifi bootsplash omb feature1 feature2"
+MACHINE_FEATURES += "3dtv alsa hdmicec switchoff wifi bootsplash omb"
 
 BOOTLOGO_FILENAME = "splash.bin"
 
