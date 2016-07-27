@@ -162,6 +162,7 @@ MACHINE_FEATURES += "3dtv alsa hdmicec switchoff bootsplash boxmodel omb skins10
 BOOTLOGO_FILENAME = "splash.bin"
 
 require conf/machine/include/tune-mips32.inc
+require conf/machine/include/soc-family.inc
 
 IMAGE_CMD_ubi_prepend = " \
     rm -rf ${IMAGE_ROOTFS}/boot/*; \

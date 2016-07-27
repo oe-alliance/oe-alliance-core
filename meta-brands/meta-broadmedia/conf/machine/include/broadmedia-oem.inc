@@ -98,6 +98,7 @@ MACHINE_FEATURES += "alsa 3dtv switchoff hdmicec bootsplash omb boxmodel feature
 BOOTLOGO_FILENAME = "splash.bin"
 
 require conf/machine/include/tune-mips32.inc
+require conf/machine/include/soc-family.inc
 
 # add support for extra feeds
 PACKAGE_ARCHS += " ${MACHINEBUILD}"
