@@ -82,9 +82,11 @@ PREFERRED_VERSION_linux-libc-headers = "3.1"
 
 GLIBC_EXTRA_OECONF = "--with-tls --with-__thread"
 
+SOC_FAMILY = "pnx8471"
 TARGET_ARCH = "arm"
 TUNE_FEATURES = "cortexa9 vfp"
 include conf/machine/include/tune-cortexa9.inc
+require conf/machine/include/soc-family.inc
 TUNE_CCARGS += "-mfpu=vfpv3-d16"
 
 IMAGE_FSTYPES ?= "imgzip256"

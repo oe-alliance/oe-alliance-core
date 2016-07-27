@@ -25,7 +25,7 @@ MACHINE_EXTRA_RRECOMMENDS = " \
 
 include conf/machine/include/autoload-filesystems.inc
 
-CHIPSET = "bcm7413"
+SOC_FAMILY = "bcm7413"
 
 DVBMEDIASINK_CONFIG = "--with-wma --with-wmv --with-pcm --with-dtsdownmix"
 
@@ -78,3 +78,4 @@ MACHINE_FEATURES += "3dtv alsa hdmicec switchoff textlcd bootsplash boxmodel omb
 BOOTLOGO_FILENAME = "cfe-bootlogo.bmp"
 
 require conf/machine/include/tune-mips32.inc
+require conf/machine/include/soc-family.inc

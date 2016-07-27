@@ -51,3 +51,5 @@ IMAGE_CMD_ubi_prepend = " \
 MACHINE_FEATURES += "3dtv alsa hdmicec switchoff bootsplash blindscan-tbs"
 
 BOOTLOGO_FILENAME = "splash_cfe_auto.bin"
+
+require conf/machine/include/soc-family.inc

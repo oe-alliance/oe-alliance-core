@@ -105,6 +105,7 @@ IMAGE_CMD_ubi_append = "\
 MACHINE_FEATURES += "alsa dvbapi5 usbhost switchoff wifi 3dtv hdmicec boxmodel singlecore omb feature1 feature2 blindscan-tbs"
 
 require conf/machine/include/tune-mips32.inc
+require conf/machine/include/soc-family.inc
 
 # add support for extra feeds
 PACKAGE_ARCHS += " ${MACHINEBUILD}"

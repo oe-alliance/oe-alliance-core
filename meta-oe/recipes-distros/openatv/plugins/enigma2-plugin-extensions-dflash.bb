@@ -10,9 +10,9 @@ require conf/license/license-gplv2.inc
 
 inherit gitpkgv
 SRCREV = "${AUTOREV}"
-PV = "13.7+git${SRCPV}"
-PKGV = "13.7+git${GITPKGV}"
-VER ="13.7"
+PV = "13.8+git${SRCPV}"
+PKGV = "13.8+git${GITPKGV}"
+VER ="13.8"
 PR = "r0"
 
 SRC_URI="git://github.com/openatv/enigma2-plugin-extensions-dflash.git"

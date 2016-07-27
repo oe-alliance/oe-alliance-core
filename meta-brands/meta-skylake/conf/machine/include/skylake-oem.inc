@@ -80,6 +80,7 @@ MACHINE_FEATURES += "3dtv alsa hdmicec switchoff bootsplash omb boxmodel feature
 BOOTLOGO_FILENAME = "splash.bin"
 
 require conf/machine/include/tune-mips32.inc
+require conf/machine/include/soc-family.inc
 
 EXTRA_IMAGEDEPENDS += " \
     enigma2-plugin-systemplugins-remotecontrolcode \

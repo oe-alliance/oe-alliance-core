@@ -9,9 +9,9 @@ require conf/license/license-gplv2.inc
 
 inherit gitpkgv
 SRCREV = "${AUTOREV}"
-PV = "0.31+git${SRCPV}"
+PV = "0.48+git${SRCPV}"
 PKGV = "0.31+git${GITPKGV}"
-VER ="0.31"
+VER ="0.48"
 PR = "r0"
 
 SRC_URI="git://github.com/openatv/enigma2-plugin-extensions-dbackup.git"

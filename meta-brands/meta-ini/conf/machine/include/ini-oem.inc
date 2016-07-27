@@ -238,6 +238,7 @@ MACHINE_FEATURES += "3dtv alsa hdmicec switchoff wifi bootsplash omb feature1 fe
 BOOTLOGO_FILENAME = "splash.bin"
 
 require conf/machine/include/tune-mips32.inc
+require conf/machine/include/soc-family.inc
 
 # add support for extra feeds
 PACKAGE_ARCHS += " ${MACHINEBUILD}"

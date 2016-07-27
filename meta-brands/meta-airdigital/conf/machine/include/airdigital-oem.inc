@@ -14,6 +14,9 @@ ${@bb.utils.contains('MACHINEBUILD', 'zgemmah2h', 'H.2H' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmaslc', 'Star LC' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah5', 'H5' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmai55', 'I55' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'novacombo', 'NOVA COMBO' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'novaip', 'NOVA IP' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'novatwin', 'NOVA TWIN' , '', d)}\
 "
 
 MACHINE_BRAND = "\
@@ -27,6 +30,9 @@ ${@bb.utils.contains('MACHINEBUILD', 'zgemmah2h', 'Zgemma' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmaslc', 'Zgemma' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah5', 'Zgemma' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmai55', 'Zgemma' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'novacombo', 'EVO' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'novaip', 'EVO' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'novatwin', 'EVO' , '', d)}\
 "
 
 IMAGEDIR ?= "\
@@ -40,6 +46,25 @@ ${@bb.utils.contains('MACHINEBUILD', 'zgemmah2h', 'zgemma/h3' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmaslc', 'zgemma/lc' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah5', 'zgemma/h5' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmai55', 'zgemma/i55' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'novacombo', 'novacombo' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'novaip', 'novaip' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'novatwin', 'novatwin' , '', d)}\
+"
+
+MACHINE_DRIVER = "\
+${@bb.utils.contains('MACHINEBUILD', 'zgemmash1', 'sh1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'zgemmash2', 'sh1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'zgemmas2s', 'sh1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'zgemmass', 'sh1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'zgemmahs', 'h3' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'zgemmah2s', 'h3' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'zgemmah2h', 'h3' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'zgemmaslc', 'lc' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'zgemmah5', 'h5' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'zgemmai55', 'i55' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'novacombo', 'novacombo' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'novaip', 'novaip' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'novatwin', 'novatwin' , '', d)}\
 "
 
 MTD_KERNEL = "mtd1"
@@ -48,7 +73,7 @@ KERNEL_FILE = "kernel.bin"
 ROOTFS_FILE = "rootfs.bin"
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS = "\
-    airdigital-dvb-modules-${MACHINE} \
+    airdigital-dvb-modules-${MACHINE_DRIVER} \
     "
 
 DVBPROVIDER = "kernel"
@@ -109,6 +134,7 @@ MACHINE_FEATURES += "3dtv alsa hdmicec switchoff bootsplash omb boxmodel feature
 BOOTLOGO_FILENAME = "splash.bin"
 
 require conf/machine/include/tune-mips32.inc
+require conf/machine/include/soc-family.inc
 
 # add support for extra feeds
 PACKAGE_ARCHS += " ${MACHINEBUILD}"
