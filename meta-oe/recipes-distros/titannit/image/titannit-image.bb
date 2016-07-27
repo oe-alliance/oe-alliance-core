@@ -37,6 +37,7 @@ IMAGE_INSTALL = "\
 	firmware-carl9170 \
 	firmware-htc9271 \
 	firmware-htc7010 \
+	firmware-rtl8712u \
 	fuse-exfat \
 	glibc-gconv-iso8859-15 \
 	glib-networking \
@@ -55,6 +56,7 @@ IMAGE_INSTALL = "\
 	rt3070 \
 	rt8812au \
 	rt8723a \
+	${@base_contains("MACHINE_FEATURES", "wifiusblegacy", "rtl871x", "kernel-module-r8712u", d)} \
 	libdreamdvd \
 	libdvdcss \
 	libusb1 \
@@ -72,7 +74,7 @@ IMAGE_INSTALL = "\
 	openssl \
 	openvpn \
 	opkg \
-	${@base_contains('MACHINE', 'disabled-build', '', 'packagegroup-base', d)} \
+	packagegroup-base \
 	packagegroup-core-boot \
 	packagegroup-base-smbfs-client \
     packagegroup-base-smbfs-server \
@@ -105,7 +107,6 @@ IMAGE_INSTALL = "\
 	wpa-supplicant \
 	\
 	\	
-	${@base_contains("MACHINE_FEATURES", "wifiusblegacy", "rtl871x", "kernel-module-r8712u", d)} \
 	${@base_conditional('MACHINE', 'dm800', '', 'mtd-utils-ubifs', d)} \
 	${@base_contains("MACHINE_FEATURES", "dvbc-only", "", "", d)} \
 	${@base_contains("MACHINE_FEATURES", "iniwol", "ini-coldboot ini-ethwol", "", d)} \
@@ -119,6 +120,7 @@ IMAGE_INSTALL = "\
 	titan-bin \
     "
 
+#	${@base_contains('MACHINE', 'disabled-build', '', 'packagegroup-base', d)}
 #	${@base_contains("MACHINE_FEATURES", "dreambox", "", "ofgwrite", d)} \
 # disable for packagegroup-base
 #	libcrypto-compat-0.9.7
