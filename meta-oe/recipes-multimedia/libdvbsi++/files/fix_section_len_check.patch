@@ -1,0 +1,13 @@
+diff --git a/src/time_date_section.cpp b/src/time_date_section.cpp
+index f0e6cf6..97ac02a 100644 (file)
+--- a/src/time_date_section.cpp
++++ b/src/time_date_section.cpp
+@@ -15,7 +15,7 @@
+ 
+ TimeAndDateSection::TimeAndDateSection(const uint8_t * const buffer) : ShortSection(buffer)
+ {
+-	if (sectionLength > 8) {
++	if (sectionLength >= 5) {
+ 		utcTimeMjd = UINT16(&buffer[3]);
+ 		utcTimeBcd = (buffer[5] << 16) | UINT16(&buffer[6]);
+ 	}
