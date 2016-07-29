@@ -208,8 +208,8 @@ RDEPENDS_enigma2-plugin-extensions-openxtareader = "python-lxml"
 
 inherit autotools-brokensep gitpkgv pkgconfig pythonnative
 
-PV = "5.3+git${SRCPV}"
-PKGV = "5.3+git${GITPKGV}"
+PV = "${IMAGE_VERSION}+git${SRCPV}"
+PKGV = "${IMAGE_VERSION}+git${GITPKGV}"
 PR = "r0"
 
 SRC_URI = "${ENIGMA2_URI}"
