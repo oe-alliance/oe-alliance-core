@@ -5,7 +5,7 @@ require conf/license/license-gplv2.inc
 inherit allarch
 
 PV = "2.0"
-PR = "r23"
+PR = "r24"
 
 DEPENDS = " \
     enigma2-plugin-settings-henksat-19e \
@@ -41,23 +41,8 @@ DEPENDS = " \
     enigma2-plugin-settings-malimali.39e.28e.26e.23e.19e.16e.13e.7e.0.8w \
     enigma2-plugin-settings-malimali.motor.42e.to.30w \
     enigma2-plugin-settings-vhannibal.dual.feeds \
-    enigma2-plugin-settings-vhannibal.dual.feeds.dtt.milano \
-    enigma2-plugin-settings-vhannibal.dual.feeds.dtt.napoli \
-    enigma2-plugin-settings-vhannibal.dual.feeds.dtt.roma \
-    enigma2-plugin-settings-vhannibal.dual.feeds.dtt.torino \
     enigma2-plugin-settings-vhannibal.hotbird \
-    enigma2-plugin-settings-vhannibal.hotbird.dtt.italia \
-    enigma2-plugin-settings-vhannibal.hotbird.dtt.milano \
-    enigma2-plugin-settings-vhannibal.hotbird.dtt.napoli \
-    enigma2-plugin-settings-vhannibal.hotbird.dtt.roma \
-    enigma2-plugin-settings-vhannibal.hotbird.dtt.torino \
     enigma2-plugin-settings-vhannibal.motor \
-    enigma2-plugin-settings-vhannibal.motor.and.dtt.forli \
-    enigma2-plugin-settings-vhannibal.motor.and.dtt.italia \
-    enigma2-plugin-settings-vhannibal.motor.and.dtt.milano \
-    enigma2-plugin-settings-vhannibal.motor.and.dtt.napoli \
-    enigma2-plugin-settings-vhannibal.motor.and.dtt.roma \
-    enigma2-plugin-settings-vhannibal.motor.and.dtt.torino \
     enigma2-plugin-settings-vhannibal.quad.7e.13e.19e.42e \
     enigma2-plugin-settings-vhannibal.quad.9e.13e.16e.19e \
     enigma2-plugin-settings-vhannibal.quad.13e.19e.23e.28e \
