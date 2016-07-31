@@ -26,20 +26,15 @@ EMMCRDEPENDS_flash-scripts = " \
     util-linux-sfdisk \
 "
 NANDRDEPENDS_recovery = " \
-    mtd-utils-mkfs.ubifs \
-    mtd-utils-ubiattach \
-    mtd-utils-ubimkvol \
-    mtd-utils-ubirmvol \
-    mtd-utils-ubiformat \
+    mtd-utils-ubifs \
 "
 NANDRDEPENDS_flash-scripts = " \
-    mtd-utils-nandwrite \
+    mtd-utils \
 "
 FASTBOOTRDEPENDS_flash-scripts = " \
     fastboot \
     mkbootblob \
 "
-
 RDEPENDS_${PN} = " \
     flash-scripts \
     gpgv \
