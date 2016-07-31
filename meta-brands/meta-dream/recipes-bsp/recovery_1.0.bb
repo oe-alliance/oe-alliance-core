@@ -33,7 +33,6 @@ NANDRDEPENDS_recovery = " \
     mtd-utils-ubiformat \
 "
 NANDRDEPENDS_flash-scripts = " \
-    mtd-utils-flash-erase \
     mtd-utils-nandwrite \
 "
 FASTBOOTRDEPENDS_flash-scripts = " \
