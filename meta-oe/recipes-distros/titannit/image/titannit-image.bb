@@ -74,7 +74,7 @@ IMAGE_INSTALL = "\
 	openssl \
 	openvpn \
 	opkg \
-	packagegroup-base \
+	${@base_contains('MACHINE', 'disabled-build', '', 'packagegroup-base', d)} \
 	packagegroup-core-boot \
 	packagegroup-base-smbfs-client \
     packagegroup-base-smbfs-server \
@@ -120,7 +120,6 @@ IMAGE_INSTALL = "\
 	titan-bin \
     "
 
-#	${@base_contains('MACHINE', 'disabled-build', '', 'packagegroup-base', d)}
 #	${@base_contains("MACHINE_FEATURES", "dreambox", "", "ofgwrite", d)} \
 # disable for packagegroup-base
 #	libcrypto-compat-0.9.7
