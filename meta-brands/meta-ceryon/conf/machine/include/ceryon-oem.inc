@@ -5,6 +5,7 @@ BRAND_OEM = "ceryon"
 
 MACHINE_NAME = "\
 ${@base_contains('MACHINEBUILD', 'twinboxlcd', 'TWINBOX LCD' , '', d)}\
+${@base_contains('MACHINEBUILD', 'twinboxlcdci5', 'TWINBOX LCD' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbmicro', 'Premium Micro' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'odin2hybrid', 'ODIN2 Hybrid' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'odinplus', 'ODIN2 Plus' , '', d)}\
@@ -13,11 +14,14 @@ ${@base_contains('MACHINEBUILD', 'e4hdhybrid', 'E4HD HYBRID' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'singleboxlcd', 'SINGLEBOX LCD' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'sf208', 'SF208 E2 HD LCD SINGLE' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'sf228', 'SF228 E2 HD LCD TWIN' , '', d)}\
+${@base_contains('MACHINEBUILD', 'sf238', 'SF228 E2 HD LCD TWIN' , '', d)}\
 ${@base_contains('MACHINEBUILD', '9910lx', '9910LX' , '', d)}\
+${@base_contains('MACHINEBUILD', '9915lx', '9915LX' , '', d)}\
 "
 
 MACHINE_BRAND = "\
 ${@base_contains('MACHINEBUILD', 'twinboxlcd', 'RED EAGLE' , '', d)}\
+${@base_contains('MACHINEBUILD', 'twinboxlcdci5', 'RED EAGLE' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbmicro', 'Miraclebox' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'odin2hybrid', 'Opticum' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'odinplus', 'Opticum' , '', d)}\
@@ -26,11 +30,14 @@ ${@base_contains('MACHINEBUILD', 'e4hdhybrid', 'AXAS' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'singleboxlcd', 'RED EAGLE' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'sf208', 'OCTAGON' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'sf228', 'OCTAGON' , '', d)}\
+${@base_contains('MACHINEBUILD', 'sf238', 'OCTAGON' , '', d)}\
 ${@base_contains('MACHINEBUILD', '9910lx', 'Protek' , '', d)}\
+${@base_contains('MACHINEBUILD', '9915lx', 'Protek' , '', d)}\
 "
 
 IMAGEDIR ?= "\
 ${@base_contains('MACHINEBUILD', 'twinboxlcd', 'redeagle/twinboxlcd' , '', d)}\
+${@base_contains('MACHINEBUILD', 'twinboxlcdci5', 'redeagle/twinboxlcd' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mbmicro', 'miraclebox/micro' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'odin2hybrid', 'odin2/hybrid' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'odinplus', 'odinplus' , '', d)}\
@@ -39,7 +46,9 @@ ${@base_contains('MACHINEBUILD', 'e4hdhybrid', 'e4hd' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'singleboxlcd', 'redeagle/singleboxlcd' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'sf208', 'sf208' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'sf228', 'sf228' , '', d)}\
+${@base_contains('MACHINEBUILD', 'sf238', 'sf228' , '', d)}\
 ${@base_contains('MACHINEBUILD', '9910lx', '9910lx' , '', d)}\
+${@base_contains('MACHINEBUILD', '9915lx', '9910lx' , '', d)}\
 "
 
 MTD_KERNEL = "mtd1"
@@ -65,7 +74,12 @@ MACHINE_EXTRA_RRECOMMENDS = " \
 
 include conf/machine/include/autoload-filesystems.inc
 
-DVBMEDIASINK_CONFIG = "--with-wma --with-wmv --with-pcm --with-dts --with-eac3"
+DVBMEDIASINK_CONFIG = "--with-wma --with-wmv --with-pcm --with-dts --with-eac3 \
+    ${@base_contains('MACHINE', '7005s', '--with-h265 --with-vb6 --with-vb8 --with-spark' , '', d)} \
+    ${@base_contains('MACHINE', '7105s', '--with-h265 --with-vb6 --with-vb8 --with-spark' , '', d)} \
+    ${@base_contains('MACHINE', '7215s', '--with-h265 --with-vb6 --with-vb8 --with-spark' , '', d)} \
+    ${@base_contains('MACHINE', '7225s', '--with-h265 --with-vb6 --with-vb8 --with-spark' , '', d)} \
+"
 
 TARGET_ARCH = "mipsel"
 DEFAULTTUNE = "mips32el"
