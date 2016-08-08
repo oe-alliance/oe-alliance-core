@@ -48,7 +48,7 @@ ${@base_contains('MACHINEBUILD', 'sf208', 'sf208' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'sf228', 'sf228' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'sf238', 'sf228' , '', d)}\
 ${@base_contains('MACHINEBUILD', '9910lx', '9910lx' , '', d)}\
-${@base_contains('MACHINEBUILD', '9911lx', '9910lx' , '', d)}\
+${@base_contains('MACHINEBUILD', '9911lx', '9911lx' , '', d)}\
 "
 
 MTD_KERNEL = "mtd1"
