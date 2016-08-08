@@ -16,7 +16,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'sf208', 'SF208 E2 HD LCD SINGLE' , '', d)}
 ${@bb.utils.contains('MACHINEBUILD', 'sf228', 'SF228 E2 HD LCD TWIN' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'sf238', 'SF228 E2 HD LCD TWIN' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', '9910lx', '9910LX' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', '9915lx', '9915LX' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', '9911lx', '9911LX' , '', d)}\
 "
 
 MACHINE_BRAND = "\
@@ -32,7 +32,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'sf208', 'OCTAGON' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'sf228', 'OCTAGON' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'sf238', 'OCTAGON' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', '9910lx', 'Protek' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', '9915lx', 'Protek' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', '9911lx', 'Protek' , '', d)}\
 "
 
 IMAGEDIR ?= "\
@@ -48,7 +48,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'sf208', 'sf208' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'sf228', 'sf228' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'sf238', 'sf228' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', '9910lx', '9910lx' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', '9915lx', '9910lx' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', '9911lx', '9911lx' , '', d)}\
 "
 
 MTD_KERNEL = "mtd1"
