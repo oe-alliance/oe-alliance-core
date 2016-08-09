@@ -1,0 +1,119 @@
+From a18c37e3a1732f4dfb5239dc78d865e913a75361 Mon Sep 17 00:00:00 2001
+From: Julien Isorce <julien.isorce@gmail.com>
+Date: Tue, 20 Dec 2011 15:26:04 +0100
+Subject: [PATCH 1/1] souphttpsrc: add support to load cookies from a
+ cookiejar file
+
+Fix bug #640159
+---
+ ext/soup/gstsouphttpsrc.c |   33 ++++++++++++++++++++++++++++++++-
+ ext/soup/gstsouphttpsrc.h |    3 ++-
+ 2 files changed, 34 insertions(+), 2 deletions(-)
+
+diff --git a/ext/soup/gstsouphttpsrc.c b/ext/soup/gstsouphttpsrc.c
+index 4d2fdef..84668da 100644
+--- a/ext/soup/gstsouphttpsrc.c
++++ b/ext/soup/gstsouphttpsrc.c
+@@ -107,6 +107,7 @@ enum
+   PROP_PROXY_ID,
+   PROP_PROXY_PW,
+   PROP_COOKIES,
++  PROP_COOKIEJAR_FILE_NAME,
+   PROP_IRADIO_MODE,
+   PROP_IRADIO_NAME,
+   PROP_IRADIO_GENRE,
+@@ -256,6 +257,10 @@ gst_soup_http_src_class_init (GstSoupHTTPSrcClass * klass)
+   g_object_class_install_property (gobject_class, PROP_COOKIES,
+       g_param_spec_boxed ("cookies", "Cookies", "HTTP request cookies",
+           G_TYPE_STRV, G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
++  g_object_class_install_property (gobject_class, PROP_COOKIEJAR_FILE_NAME,
++      g_param_spec_string ("cookiejar-file-name", "Cookie jar file name",
++          "Cookie jar file name", "",
++          G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
+   g_object_class_install_property (gobject_class, PROP_IS_LIVE,
+       g_param_spec_boolean ("is-live", "is-live", "Act like a live source",
+           FALSE, G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
+@@ -347,6 +352,7 @@ gst_soup_http_src_init (GstSoupHTTPSrc * src, GstSoupHTTPSrcClass * g_class)
+   src->proxy_id = NULL;
+   src->proxy_pw = NULL;
+   src->cookies = NULL;
++  src->cookiejar_file_name = NULL;
+   src->iradio_mode = DEFAULT_IRADIO_MODE;
+   src->loop = NULL;
+   src->context = NULL;
+@@ -379,6 +385,7 @@ gst_soup_http_src_finalize (GObject * gobject)
+   g_free (src->proxy_id);
+   g_free (src->proxy_pw);
+   g_strfreev (src->cookies);
++  g_free (src->cookiejar_file_name);
+ 
+   G_OBJECT_CLASS (parent_class)->finalize (gobject);
+ }
+@@ -437,6 +444,11 @@ gst_soup_http_src_set_property (GObject * object, guint prop_id,
+       g_strfreev (src->cookies);
+       src->cookies = g_strdupv (g_value_get_boxed (value));
+       break;
++    case PROP_COOKIEJAR_FILE_NAME:
++      if (src->cookiejar_file_name)
++        g_free (src->cookiejar_file_name);
++      src->cookiejar_file_name = g_value_dup_string (value);
++      break;
+     case PROP_IS_LIVE:
+       gst_base_src_set_live (GST_BASE_SRC (src), g_value_get_boolean (value));
+       break;
+@@ -509,6 +521,9 @@ gst_soup_http_src_get_property (GObject * object, guint prop_id,
+     case PROP_COOKIES:
+       g_value_set_boxed (value, g_strdupv (src->cookies));
+       break;
++    case PROP_COOKIEJAR_FILE_NAME:
++      g_value_set_string (value, src->cookiejar_file_name);
++      break;
+     case PROP_IS_LIVE:
+       g_value_set_boolean (value, gst_base_src_is_live (GST_BASE_SRC (src)));
+       break;
+@@ -1145,6 +1160,22 @@ gst_soup_http_src_build_message (GstSoupHTTPSrc * src)
+           *cookie);
+     }
+   }
++
++  if (src->cookiejar_file_name) {
++    SoupCookieJar *cookieJar =
++        soup_cookie_jar_text_new (src->cookiejar_file_name, TRUE);
++    GSList *cookies = soup_cookie_jar_all_cookies (cookieJar);
++
++    for (; cookies; cookies = g_slist_next (cookies)) {
++      gchar *header =
++          soup_cookie_to_cookie_header ((SoupCookie *) cookies->data);
++      soup_message_headers_append (src->msg->request_headers, "Cookie", header);
++    }
++
++    soup_cookies_free (cookies);
++
++  }
++
+   src->retry = FALSE;
+
+   g_signal_connect (src->msg, "got_headers",
+diff --git a/ext/soup/gstsouphttpsrc.h b/ext/soup/gstsouphttpsrc.h
+index 1427e1c..37d45e6 100644
+--- a/ext/soup/gstsouphttpsrc.h
++++ b/ext/soup/gstsouphttpsrc.h
+@@ -9,7 +9,7 @@
+  * This library is distributed in the hope that it will be useful,
+  * but WITHOUT ANY WARRANTY; without even the implied warranty of
+  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+- * Library General Public License for more 
++ * Library General Public License for more
+  */
+ 
+ #ifndef __GST_SOUP_HTTP_SRC_H__
+@@ -57,6 +57,7 @@ struct _GstSoupHTTPSrc {
+   gchar *proxy_id;             /* Authentication user id for proxy URI. */
+   gchar *proxy_pw;             /* Authentication user password for proxy URI. */
+   gchar **cookies;             /* HTTP request cookies. */
++  gchar *cookiejar_file_name;  /* Name of the cookiejar file */
+   GMainContext *context;       /* I/O context. */
+   GMainLoop *loop;             /* Event loop. */
+   SoupSession *session;        /* Async context. */
+-- 
+1.7.5.4

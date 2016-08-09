@@ -1,0 +1,90 @@
+--- a/gst/playback/gstplaybin2.c	2015-09-25 18:12:38.000000000 +0200
++++ a/gst/playback/gstplaybin2.c.patched	2015-09-25 18:24:37.000000000 +0200
+@@ -473,6 +473,7 @@
+   } duration[5];                /* cached durations */
+ 
+   guint64 ring_buffer_max_size; /* 0 means disabled */
++  gchar *user_agent;
+ 
+   GList *contexts;
+ };
+@@ -570,7 +571,8 @@
+   PROP_RING_BUFFER_MAX_SIZE,
+   PROP_FORCE_ASPECT_RATIO,
+   PROP_AUDIO_FILTER,
+-  PROP_VIDEO_FILTER
++  PROP_VIDEO_FILTER,
++  PROP_USER_AGENT
+ };
+ 
+ /* signals */
+@@ -985,6 +987,21 @@
+           "When enabled, scaling will respect original aspect ratio", TRUE,
+           G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
+ 
++   /**
++   * GstPlayBin2:user-agent
++   *
++   * User agent string. Isource element has a string property
++   * named "user-agent" f a as well, playbin2 will set its value to this
++   * string if set.
++   *
++   * This allows an application to conveniently override e.g. the
++   * User-Agent header field for HTTP and RTSP protocol requests.
++   */
++  g_object_class_install_property (gobject_klass, PROP_USER_AGENT,
++      g_param_spec_string ("user-agent", "User Agent",
++          "User agent (for HTTP/RTSP/MMS)", NULL,
++          G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
++
+   /**
+    * GstPlayBin::about-to-finish
+    * @playbin: a #GstPlayBin
+@@ -1565,6 +1582,7 @@
+     g_sequence_free (playbin->velements);
+ 
+   g_list_free_full (playbin->contexts, (GDestroyNotify) gst_context_unref);
++  g_free (playbin->user_agent);
+ 
+   g_rec_mutex_clear (&playbin->lock);
+   g_mutex_clear (&playbin->dyn_lock);
+@@ -2425,6 +2443,10 @@
+       g_object_set (playbin->playsink, "force-aspect-ratio",
+           g_value_get_boolean (value), NULL);
+       break;
++    case PROP_USER_AGENT:
++      g_free (playbin->user_agent);
++      playbin->user_agent = g_value_dup_string (value);
++      break;
+     default:
+       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+       break;
+@@ -2662,6 +2684,9 @@
+     case PROP_RING_BUFFER_MAX_SIZE:
+       g_value_set_uint64 (value, playbin->ring_buffer_max_size);
+       break;
++    case PROP_USER_AGENT:
++      g_value_set_string (value, playbin->user_agent);
++      break;
+     case PROP_FORCE_ASPECT_RATIO:{
+       gboolean v;
+ 
+@@ -5039,6 +5064,18 @@
+   playbin->source = source;
+   GST_OBJECT_UNLOCK (playbin);
+ 
++  if (source && playbin->user_agent) {
++    GObjectClass *klass = G_OBJECT_GET_CLASS (source);
++    GParamSpec *pspec;
++
++    pspec = g_object_class_find_property (klass, "user-agent");
++    if (pspec && G_PARAM_SPEC_TYPE (pspec) == G_TYPE_PARAM_STRING) {
++      GST_DEBUG_OBJECT (playbin, "setting source user-agent to: %s",
++          playbin->user_agent);
++      g_object_set (source, "user-agent", playbin->user_agent, NULL);
++    }
++  }
++
+   g_object_notify (G_OBJECT (playbin), "source");
+ 
+   g_signal_emit (playbin, gst_play_bin_signals[SIGNAL_SOURCE_SETUP],
