@@ -9,7 +9,7 @@ require conf/license/license-gplv2.inc
 RDEPENDS_${PN} += "showiframe"
 
 PV = "5.5"
-PR = "r21"
+PR = "r24"
 
 S = "${WORKDIR}"
 
@@ -31,7 +31,7 @@ SRC_URI = "file://bootlogo.mvi file://radio.mvi file://bootlogo.sh file://splash
 
 SRC_URI_append_vuduo2 = "file://lcdbootlogo.png file://bootlogo.py"
 SRC_URI_append_dags7356 = "file://splash1.bmp file://splash1_os1.bmp file://splash1_os2.bmp file://splash2.bmp file://splash3.bmp"
-SRC_URI_append_dags7362 = "file://splash1.bmp file://splash1_os1.bmp file://splash1_os2.bmp file://splash2.bmp file://splash3.bmp"
+SRC_URI_append_dags7362 = "file://splash1_power.bmp file://splash1_os1.bmp file://splash1_os2.bmp file://splash2.bmp file://splash3.bmp"
 
 BINARY_VERSION = "1.3"
 
@@ -93,6 +93,9 @@ do_deploy() {
     fi
     if [ -e splash1_os2.bmp ]; then
         install -m 0644 splash1_os2.bmp ${DEPLOYDIR}/splash1_os2.bmp
+    fi
+    if [ -e splash1_power.bmp ]; then
+        install -m 0644 splash1_power.bmp ${DEPLOYDIR}/splash1_power.bmp
     fi
     if [ -e splash1.bmp ]; then
         install -m 0644 splash1.bmp ${DEPLOYDIR}/splash1.bmp

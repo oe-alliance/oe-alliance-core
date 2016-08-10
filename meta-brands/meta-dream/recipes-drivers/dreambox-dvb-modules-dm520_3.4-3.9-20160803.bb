@@ -3,8 +3,8 @@ DRIVERDATE = "20160628"
 
 require dreambox-dvb-modules-dm520.inc
 
-SRC_URI[dm520.md5sum] = "7c78ffbc0e7dccaa821e6441ed5aa6fe"
-SRC_URI[dm520.sha256sum] = "69d544c1a6571124cb93f31d3c9f5f163c60f9ed87f85c954f66b6e8e738e529"
+SRC_URI[dm520.md5sum] = "dc4f14c276d0a1b77e6aab394e296bd6"
+SRC_URI[dm520.sha256sum] = "d98784e29aa5f4fa15436ac84ba2b99f365a63241c695cd71e4abd71a9a44540"
 
 pkg_postinst_${PN} () {
 if [ -z "$D" ]; then
