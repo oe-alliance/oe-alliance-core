@@ -10,7 +10,7 @@ LIC_FILES_CHKSUM = "file://${WORKDIR}/COPYING;md5=751419260aa954499f7abaabaa882b
 RDEPENDS_${PN} = "stinit"
 
 KV = "2.6.32.61-stm24-0217"
-SRCREV = "73e34bcd8836af89ef228581dcc55454e26bacd8"
+SRCREV = "f0bd1d2493fc2e93568aa00f3bed3e3040dfb726"
 
 inherit module
 

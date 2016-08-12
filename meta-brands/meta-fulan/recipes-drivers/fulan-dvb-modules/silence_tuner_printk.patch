@@ -1,5 +1,5 @@
 diff --git a/frontends/spark7162/D3501.c b/frontends/spark7162/D3501.c
-index 81cf329..419b03a 100644
+index b3c8a71..66c096f 100644
 --- a/frontends/spark7162/D3501.c
 +++ b/frontends/spark7162/D3501.c
 @@ -173,6 +173,9 @@
@@ -229,7 +229,7 @@ index 81cf329..419b03a 100644
  	m_Value = (m_Value << 8) | temp[2];
 +_DEBUG
  	printk("############nim_s3501_get_type    temp = 0x%x, m_Value = 0x%x\n",
- 		   (int)temp, (int)m_Value);
+ 	       (int)temp, (int)m_Value);
  	//priv->ul_status.m_s3501_type = m_Value; //lwj remove
 @@ -3744,6 +3779,7 @@ static INT32 nim_s3501_adc_setting(struct nim_device *dev)
  	nim_reg_read(dev, R01_ADC, &ver_data, 1);
@@ -284,7 +284,7 @@ index 81cf329..419b03a 100644
  					printk(" wrong 0x65 reg write\n");
  				}
  				priv->t_Param.t_reg_setting_switch |= NIM_SWITCH_RS;
-@@ -4473,6 +4515,7 @@ static int d3501_read_snr(struct dvb_frontend* fe, u16* snr)
+@@ -4473,6 +4515,7 @@ static int d3501_read_snr(struct dvb_frontend *fe, u16 *snr)
  	if (*snr > 90)
  		*snr = 90;
  	*snr = *snr * 255 * 255 / 100;
@@ -292,7 +292,7 @@ index 81cf329..419b03a 100644
  	printk("*snr = %d\n", *snr);
  	return iRet;
  }
-@@ -4502,6 +4545,7 @@ static int d3501_read_signal_strength(struct dvb_frontend* fe,
+@@ -4502,6 +4545,7 @@ static int d3501_read_signal_strength(struct dvb_frontend *fe,
  #endif // 0
  	*Intensity = *Intensity * 255 * 255 / 100;
  	*strength = *Intensity;
@@ -764,7 +764,7 @@ index 81cf329..419b03a 100644
  	printk("[%s][%d]\n", __FUNCTION__, __LINE__);
  	nim_s3501_demod_ctrl(dev, NIM_DEMOD_CTRL_0X51);
  	////printk("1111111[%dms]\n", YWOS_TimeNow() - TuneStartTime);
-@@ -5312,6 +5436,7 @@ static int d3501_set_tone(struct dvb_frontend* fe, fe_sec_tone_mode_t tone)
+@@ -5312,6 +5436,7 @@ static int d3501_set_tone(struct dvb_frontend *fe, fe_sec_tone_mode_t tone)
  
  	nim_reg_write(dev, R7C_DISEQC_CTRL + 0x14, &data, 1);
  
@@ -772,7 +772,7 @@ index 81cf329..419b03a 100644
  	printk("tone = %d\n", tone);
  
  	if (tone == SEC_TONE_ON)                /* Low band -> no 22KHz tone */
-@@ -5336,11 +5461,13 @@ static int d3501_set_voltage(struct dvb_frontend* fe, fe_sec_voltage_t voltage)
+@@ -5336,11 +5461,13 @@ static int d3501_set_voltage(struct dvb_frontend *fe, fe_sec_voltage_t voltage)
  	switch (voltage)
  	{
  		case SEC_VOLTAGE_OFF:
@@ -786,7 +786,7 @@ index 81cf329..419b03a 100644
  			printk("set_voltage_vertical \n");
  			stpio_set_pin(state->fe_lnb_on_off, 1);
  			msleep(1);
-@@ -5350,6 +5477,7 @@ static int d3501_set_voltage(struct dvb_frontend* fe, fe_sec_voltage_t voltage)
+@@ -5350,6 +5477,7 @@ static int d3501_set_voltage(struct dvb_frontend *fe, fe_sec_voltage_t voltage)
  			break;
  
  		case SEC_VOLTAGE_18: /* horizontal */
@@ -803,7 +803,7 @@ index 81cf329..419b03a 100644
  
  	//priv_mem->tuner_id = Handle; //lwj add important
 diff --git a/frontends/spark7162/stv0367/D0367cab.c b/frontends/spark7162/stv0367/D0367cab.c
-index 1f13bd3..8d75b2e 100644
+index 36ad5c1..3406f1c 100644
 --- a/frontends/spark7162/stv0367/D0367cab.c
 +++ b/frontends/spark7162/stv0367/D0367cab.c
 @@ -23,6 +23,9 @@
@@ -816,7 +816,7 @@ index 1f13bd3..8d75b2e 100644
  struct dvb_d0367_fe_qam_state
  {
  	struct i2c_adapter          *i2c;
-@@ -120,6 +123,7 @@ static int dvb_d0367_fe_qam_set_frontend(struct dvb_frontend* fe,
+@@ -120,6 +123,7 @@ static int dvb_d0367_fe_qam_set_frontend(struct dvb_frontend *fe,
  	{
  		BOOL bIsLocked;
  		bIsLocked = FE_367qam_Status(&state->DeviceMap, state->IOHandle);
@@ -824,7 +824,7 @@ index 1f13bd3..8d75b2e 100644
  		printk("%d:bIsLocked = %d\n", __LINE__, bIsLocked);
  	}
  
-@@ -169,6 +173,7 @@ static int dvb_d0367_fe_qam_read_status(struct dvb_frontend* fe,
+@@ -169,6 +173,7 @@ static int dvb_d0367_fe_qam_read_status(struct dvb_frontend *fe,
  #endif  /* 0 */
  	{
  		bIsLocked = FE_367qam_Status(&state->DeviceMap, state->IOHandle);
@@ -832,13 +832,13 @@ index 1f13bd3..8d75b2e 100644
  		printk("bIsLocked = %d\n", bIsLocked);
  	}
  	if (bIsLocked)
-@@ -191,6 +196,7 @@ static int dvb_d0367_fe_qam_read_status(struct dvb_frontend* fe,
+@@ -191,6 +196,7 @@ static int dvb_d0367_fe_qam_read_status(struct dvb_frontend *fe,
  
  		FE_STV0367qam_GetSignalInfo(&state->DeviceMap, state->IOHandle,
- 									&Quality, &Intensity, &Ber,  FirstTimeBER);
+ 					    &Quality, &Intensity, &Ber,  FirstTimeBER);
 +_DEBUG
  		printk("Quality = %d, Intensity = %d, Ber = %d\n",
- 			   Quality, Intensity, Ber);
+ 		       Quality, Intensity, Ber);
  	}
 @@ -340,6 +346,7 @@ U32 D0367qam_GeSymbolRate(TUNER_IOREG_DeviceMap_t *DeviceMap,
  		return SymbolRate;
@@ -879,7 +879,7 @@ index 1f13bd3..8d75b2e 100644
  		printk("TUNER_STATUS_UNLOCKED #######################\n");
  		//Inst->Status = TUNER_STATUS_UNLOCKED;
  	}
-@@ -834,6 +846,7 @@ struct dvb_frontend* dvb_d0367_fe_qam_attach(struct i2c_adapter* i2c)
+@@ -834,6 +846,7 @@ struct dvb_frontend *dvb_d0367_fe_qam_attach(struct i2c_adapter *i2c)
  	{
  		U8 data = 0xFF;
  		data = ChipGetField_0367qam(DeviceMap, IOHandle, R367qam_ID);
@@ -888,7 +888,7 @@ index 1f13bd3..8d75b2e 100644
  	}
  
 diff --git a/frontends/spark_dvbapi5/ix7306.c b/frontends/spark_dvbapi5/ix7306.c
-index c9c4ed1..f53c457 100644
+index 3a6b785..f37d983 100644
 --- a/frontends/spark_dvbapi5/ix7306.c
 +++ b/frontends/spark_dvbapi5/ix7306.c
 @@ -450,7 +450,9 @@ static int ix7306_get_status(struct dvb_frontend *fe, u32 *status)
@@ -902,7 +902,7 @@ index c9c4ed1..f53c457 100644
  
  	return err;
 diff --git a/frontends/spark_dvbapi5/stv090x.c b/frontends/spark_dvbapi5/stv090x.c
-index 671386e..d4dcef3 100644
+index 90c162e..94dfffe 100644
 --- a/frontends/spark_dvbapi5/stv090x.c
 +++ b/frontends/spark_dvbapi5/stv090x.c
 @@ -3182,8 +3182,10 @@ static int stv090x_get_dmdlock(struct stv090x_state *state, s32 timeout)
