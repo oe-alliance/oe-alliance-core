@@ -24,7 +24,6 @@ RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
 
 SRC_URI += "http://downloads.mutant-digital.net/linux-${PV}.tar.gz \
     file://defconfig \
-    file://reserve_dvb_adapter_0.patch \
     file://0001-Support-TBS-USB-drivers-for-4.3-kernel.patch \
     file://0001-TBS-fixes-for-4.3-kernel.patch \
     file://0001-STV-Add-PLS-support.patch \
