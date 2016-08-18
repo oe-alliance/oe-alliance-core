@@ -6,6 +6,7 @@ require conf/license/license-gplv2.inc
 ALLOW_EMPTY_${PN} = "1"
 
 DEPENDS = "\
+    enigma2-plugin-drivers-atsc-usb-hauppauge \
     enigma2-plugin-drivers-dvb-usb-dib0700 \
     enigma2-plugin-drivers-dvb-usb-af9015 \
     enigma2-plugin-drivers-dvb-usb-siano \
@@ -32,4 +33,4 @@ DEPENDS = "\
     "
 
 
-PR = "r13"
+PR = "r14"
