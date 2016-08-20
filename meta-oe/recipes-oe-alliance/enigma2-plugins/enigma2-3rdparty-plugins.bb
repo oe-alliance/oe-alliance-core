@@ -11,7 +11,7 @@ DEPENDS = "tslib mpfr gmp"
 SRCREV = "${AUTOREV}"
 PV = "3.2+gitr${SRCPV}"
 PKGV = "3.2+gitr${GITPKGV}"
-PR = "r95"
+PR = "r96"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -41,6 +41,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-ehue_0.2-r0_all.ipk \
     enigma2-plugin-extensions-enigmalight_0.2-rc1_all.ipk \
     enigma2-plugin-extensions-exodus_2.0_r1_all.ipk \
+    enigma2-plugin-extensions-exodussubssupport_1.5.4_20151105rc1_all.ipk \
     enigma2-plugin-extensions-facebook_1.4_mips32el.ipk \
     enigma2-plugin-extensions-filesearchfs_2.53_all.ipk \
     enigma2-plugin-extensions-focusonline_1.0rc10_all.ipk \
