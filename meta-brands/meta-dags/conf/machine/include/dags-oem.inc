@@ -40,6 +40,7 @@ ${@base_contains('MACHINEBUILD', 'mediabox', 'MediaBox HD LX' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'fusionhd', 'FUSION HD' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'fusionhdse', 'FUSION HD SE' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'purehd', 'PURE HD' , '', d)}\
+${@base_contains('MACHINEBUILD', 'force2plushv', 'FORCE2+ HV' , '', d)}\
 "
 
 MACHINE_BRAND = "\
@@ -79,6 +80,7 @@ ${@base_contains('MACHINEBUILD', 'mediabox', 'Jepssen' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'fusionhd', 'XSARIUS' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'fusionhdse', 'XSARIUS' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'purehd', 'XSARIUS' , '', d)}\
+${@base_contains('MACHINEBUILD', 'force2plushv', 'Iqon' , '', d)}\
 "
 
 IMAGEDIR ?= "\
@@ -118,6 +120,7 @@ ${@base_contains('MACHINEBUILD', 'mediabox', 'update/mediabox/cfe' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'fusionhd', 'update/fusionhd/cfe' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'fusionhdse', 'update/fusionhdse/cfe' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'purehd', 'update/purehd/cfe' , '', d)}\
+${@base_contains('MACHINEBUILD', 'force2plushv', 'update/force2plushv/cfe' , '', d)}\
 "
 
 MTD_KERNEL = "\
@@ -157,6 +160,7 @@ ${@base_contains('MACHINEBUILD', 'mediabox', 'mtd6' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'fusionhd', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'fusionhdse', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'purehd', 'mtd2' , '', d)}\
+${@base_contains('MACHINEBUILD', 'force2plushv', 'mtd2' , '', d)}\
 "
 
 MTD_ROOTFS = "\
@@ -196,6 +200,7 @@ ${@base_contains('MACHINEBUILD', 'mediabox', 'mtd4' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'fusionhd', 'mtd0' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'fusionhdse', 'mtd0' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'purehd', 'mtd0' , '', d)}\
+${@base_contains('MACHINEBUILD', 'force2plushv', 'mtd0' , '', d)}\
 "
 
 SPLASH1_BMP = "\
@@ -221,6 +226,7 @@ ${@base_contains('MACHINEBUILD', 'optimussos', 'splash1_os1.bmp' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'fusionhd', 'splash1_power.bmp' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'fusionhdse', 'splash1_power.bmp' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'purehd', 'splash1_power.bmp' , '', d)}\
+${@base_contains('MACHINEBUILD', 'force2plushv', 'splash1_power.bmp' , '', d)}\
 "
 
 MACHINE_DRIVER = "\
@@ -260,6 +266,7 @@ ${@base_contains('MACHINEBUILD', 'mediabox', 'dags7335' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'fusionhd', 'dags7362' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'fusionhdse', 'dags7362' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'purehd', 'dags7362' , '', d)}\
+${@base_contains('MACHINEBUILD', 'force2plushv', 'dags73625' , '', d)}\
 "
 
 KERNEL_FILE = "oe_kernel.bin"
@@ -288,7 +295,9 @@ TARGET_ARCH = "mipsel"
 DEFAULTTUNE = "mips32el"
 
 GLIBC_EXTRA_OECONF = "--with-tls"
-DVBMEDIASINK_CONFIG = "--with-dags --with-pcm --with-eac3 --with-amr --with-wmv"
+DVBMEDIASINK_CONFIG = "--with-dags --with-pcm --with-eac3 --with-amr --with-wmv \
+    ${@base_contains('MACHINE', 'dags73625', '--with-h265 --with-vb6 --with-vb8 --with-spark' , '', d)} \
+"
 
 PREFERRED_PROVIDER_virtual/kernel = "linux-dags"
 PREFERRED_PROVIDER_virtual/blindscan-dvbs = "vuplus-blindscan-utils"
@@ -337,6 +346,7 @@ MACHINE_FEATURES += "3dtv alsa hdmicec switchoff bootsplash textlcd ci omb skins
     ${@base_contains('MACHINEBUILD', 'fusionhd', 'fastscan dvb-c' , '', d)} \
     ${@base_contains('MACHINEBUILD', 'fusionhdse', 'fastscan dvb-c' , '', d)} \
     ${@base_contains('MACHINEBUILD', 'purehd', 'fastscan dvb-c' , '', d)} \
+    ${@base_contains('MACHINEBUILD', 'force2plushv', 'fastscan dvb-c' , '', d)} \
 "
 
 BOOTLOGO_FILENAME = "splash.bmp"

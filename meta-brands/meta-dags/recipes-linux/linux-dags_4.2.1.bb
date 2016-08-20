@@ -15,6 +15,7 @@ MACHINE_KERNEL_PR_append = ".2"
 
 SRC_URI += "http://en3homeftp.net/pub/src/dags-linux-${PV}-${SRCDATE}.tar.gz \
     file://defconfig \
+    file://0002-add-brcm-chips.patch \
     file://0001-Support-TBS-USB-drivers-for-4.2-kernel.patch \
     file://0001-TBS-fixes-for-4.2-kernel.patch \
     file://0001-STV-Add-PLS-support.patch \
