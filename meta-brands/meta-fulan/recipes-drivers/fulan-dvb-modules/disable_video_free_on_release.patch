@@ -1,24 +1,25 @@
-diff -Naur git/player2_191/linux/drivers/media/dvb/stm/dvb/dvb_video.c git.new/player2_191/linux/drivers/media/dvb/stm/dvb/dvb_video.c
---- git/player2_191/linux/drivers/media/dvb/stm/dvb/dvb_video.c	2015-05-06 21:24:29.466591311 +0200
-+++ git.new/player2_191/linux/drivers/media/dvb/stm/dvb/dvb_video.c	2015-05-06 21:24:02.790938993 +0200
-@@ -1187,6 +1187,7 @@
- 	struct DeviceContext_s*     Context         = (struct DeviceContext_s*)DvbDevice->priv;
- 	struct DvbContext_s*        DvbContext      = Context->DvbContext;
+diff --git a/player2_191/linux/drivers/media/dvb/stm/dvb/dvb_video.c b/player2_191/linux/drivers/media/dvb/stm/dvb/dvb_video.c
+index 5a08615..798ce0b 100644
+--- a/player2_191/linux/drivers/media/dvb/stm/dvb/dvb_video.c
++++ b/player2_191/linux/drivers/media/dvb/stm/dvb/dvb_video.c
+@@ -1192,6 +1192,7 @@ static int VideoRelease(struct inode *Inode,
+ 	struct DeviceContext_s *Context = (struct DeviceContext_s *)DvbDevice->priv;
+ 	struct DvbContext_s *DvbContext = Context->DvbContext;
  	DVB_DEBUG("Id %d\n", Context->Id);
 +/*
  	if ((File->f_flags & O_ACCMODE) != O_RDONLY)
  	{
  		mutex_lock(&(DvbContext->Lock));
-@@ -1194,7 +1195,7 @@
+@@ -1199,7 +1200,7 @@ static int VideoRelease(struct inode *Inode,
  		{
- 			unsigned int    MutexIsLocked       = true;
+ 			unsigned int MutexIsLocked = true;
  			/* Discard previously injected data to free the lock. */
 -			DvbStreamDrain(Context->VideoStream, true);
 +/*			DvbStreamDrain(Context->VideoStream, true);
  			if (mutex_lock_interruptible(Context->ActiveVideoWriteLock) != 0)
- 				MutexIsLocked           = false;
+ 				MutexIsLocked = false;
  			DvbPlaybackRemoveStream(Context->Playback, Context->VideoStream);
-@@ -1204,14 +1205,14 @@
+@@ -1209,14 +1210,14 @@ static int VideoRelease(struct inode *Inode,
  		}
  		DvbDisplayDelete(BACKEND_VIDEO_ID, Context->Id);
  		/* Check to see if audio and demux have also finished so we can release the playback */
@@ -29,14 +30,14 @@ diff -Naur git/player2_191/linux/drivers/media/dvb/stm/dvb/dvb_video.c git.new/p
 -			if (Context->DemuxContext->Playback != NULL)
 +/*			if (Context->DemuxContext->Playback != NULL)
  			{
- 				/* Try and delete playback then set our demux to Null if successful or not.  If we fail someone else
- 				   is still using it but we are done with it. */
+ 				/* Try and delete playback then set our demux to Null if successful or not. If we fail someone else
+ 				 is still using it but we are done with it. */
 -				if (DvbPlaybackDelete(Context->Playback) == 0)
 +/*				if (DvbPlaybackDelete(Context->Playback) == 0)
  					DVB_DEBUG("Playback deleted successfully\n");
  			}
- 			Context->Playback                   = NULL;
-@@ -1224,6 +1225,7 @@
+ 			Context->Playback = NULL;
+@@ -1229,6 +1230,7 @@ static int VideoRelease(struct inode *Inode,
  		VideoInit(Context);
  		mutex_unlock(&(DvbContext->Lock));
  	}

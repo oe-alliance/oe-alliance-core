@@ -1,5 +1,5 @@
 diff --git a/frontends/spark7162/D3501.c b/frontends/spark7162/D3501.c
-index 4dccda5..26a0cc6 100644
+index b3c8a71..66c096f 100644
 --- a/frontends/spark7162/D3501.c
 +++ b/frontends/spark7162/D3501.c
 @@ -173,6 +173,9 @@
@@ -229,7 +229,7 @@ index 4dccda5..26a0cc6 100644
  	m_Value = (m_Value << 8) | temp[2];
 +_DEBUG
  	printk("############nim_s3501_get_type    temp = 0x%x, m_Value = 0x%x\n",
- 		   (int)temp, (int)m_Value);
+ 	       (int)temp, (int)m_Value);
  	//priv->ul_status.m_s3501_type = m_Value; //lwj remove
 @@ -3744,6 +3779,7 @@ static INT32 nim_s3501_adc_setting(struct nim_device *dev)
  	nim_reg_read(dev, R01_ADC, &ver_data, 1);
@@ -284,7 +284,7 @@ index 4dccda5..26a0cc6 100644
  					printk(" wrong 0x65 reg write\n");
  				}
  				priv->t_Param.t_reg_setting_switch |= NIM_SWITCH_RS;
-@@ -4473,6 +4515,7 @@ static int d3501_read_snr(struct dvb_frontend* fe, u16* snr)
+@@ -4473,6 +4515,7 @@ static int d3501_read_snr(struct dvb_frontend *fe, u16 *snr)
  	if (*snr > 90)
  		*snr = 90;
  	*snr = *snr * 255 * 255 / 100;
@@ -292,7 +292,7 @@ index 4dccda5..26a0cc6 100644
  	printk("*snr = %d\n", *snr);
  	return iRet;
  }
-@@ -4502,6 +4545,7 @@ static int d3501_read_signal_strength(struct dvb_frontend* fe,
+@@ -4502,6 +4545,7 @@ static int d3501_read_signal_strength(struct dvb_frontend *fe,
  #endif // 0
  	*Intensity = *Intensity * 255 * 255 / 100;
  	*strength = *Intensity;
@@ -764,7 +764,7 @@ index 4dccda5..26a0cc6 100644
  	printk("[%s][%d]\n", __FUNCTION__, __LINE__);
  	nim_s3501_demod_ctrl(dev, NIM_DEMOD_CTRL_0X51);
  	////printk("1111111[%dms]\n", YWOS_TimeNow() - TuneStartTime);
-@@ -5312,6 +5436,7 @@ static int d3501_set_tone(struct dvb_frontend* fe, fe_sec_tone_mode_t tone)
+@@ -5312,6 +5436,7 @@ static int d3501_set_tone(struct dvb_frontend *fe, fe_sec_tone_mode_t tone)
  
  	nim_reg_write(dev, R7C_DISEQC_CTRL + 0x14, &data, 1);
  
@@ -772,7 +772,7 @@ index 4dccda5..26a0cc6 100644
  	printk("tone = %d\n", tone);
  
  	if (tone == SEC_TONE_ON)                /* Low band -> no 22KHz tone */
-@@ -5336,11 +5461,13 @@ static int d3501_set_voltage(struct dvb_frontend* fe, fe_sec_voltage_t voltage)
+@@ -5336,11 +5461,13 @@ static int d3501_set_voltage(struct dvb_frontend *fe, fe_sec_voltage_t voltage)
  	switch (voltage)
  	{
  		case SEC_VOLTAGE_OFF:
@@ -786,7 +786,7 @@ index 4dccda5..26a0cc6 100644
  			printk("set_voltage_vertical \n");
  			stpio_set_pin(state->fe_lnb_on_off, 1);
  			msleep(1);
-@@ -5350,6 +5477,7 @@ static int d3501_set_voltage(struct dvb_frontend* fe, fe_sec_voltage_t voltage)
+@@ -5350,6 +5477,7 @@ static int d3501_set_voltage(struct dvb_frontend *fe, fe_sec_voltage_t voltage)
  			break;
  
  		case SEC_VOLTAGE_18: /* horizontal */
@@ -802,242 +802,8 @@ index 4dccda5..26a0cc6 100644
  	printk("priv_mem->i2c_adap = %0x\n", (int)priv_mem->i2c_adap);
  
  	//priv_mem->tuner_id = Handle; //lwj add important
-diff --git a/frontends/spark7162/base/ix7306.c b/frontends/spark7162/base/ix7306.c
-index f9add01..f801ee6 100644
---- a/frontends/spark7162/base/ix7306.c
-+++ b/frontends/spark7162/base/ix7306.c
-@@ -24,6 +24,9 @@
- #include "dvb_frontend.h"
- #include "ix7306.h"
- 
-+extern int debug_fe7162;
-+#define _DEBUG if (debug_fe7162)
-+
- struct ix7306_state
- {
- 	struct dvb_frontend     *fe;
-@@ -57,11 +60,14 @@ static int ix7306_write(struct ix7306_state *state, u8 *buf, u8 len)
- 	int i;
- 	struct i2c_msg msg = { .addr = config->addr, .flags = 0, .buf = buf, .len = len };
- 
-+_DEBUG
-+{
- 	for (i = 0; i < len; i++)
- 	{
- 		printk("%02x ", buf[i]);
- 	}
- 	printk("\n");
-+}
- 
- 	err = i2c_transfer(state->i2c, &msg, 1);
- 	if (err != 1)
-@@ -346,6 +352,7 @@ static int ix7306_set_freq(struct dvb_frontend *fe, u32 freq_KHz, u32 tuner_BW)
- {
- 	u32         tuner_bw_K = tuner_BW / 1000;
- 
-+_DEBUG
- 	printk("[%s][%d]\n", __FUNCTION__, __LINE__);
- 
- 	memset(reg_data, 0, sizeof(reg_data));
-@@ -354,6 +361,7 @@ static int ix7306_set_freq(struct dvb_frontend *fe, u32 freq_KHz, u32 tuner_BW)
- 	reg_data[3] = 0xe1;
- 	reg_data[4] = 0x42;
- 
-+_DEBUG
- 	printk("[%s][%d]\n", __FUNCTION__, __LINE__);
- 	tun_setfreq_QM1D1B0004(fe, freq_KHz, tuner_bw_K, &reg_data[0]);
- 
-@@ -364,12 +372,14 @@ static int ix7306_set_state(struct dvb_frontend *fe, enum tuner_param param, str
- {
- 	struct ix7306_state *state = fe->tuner_priv;
- 
-+_DEBUG
- 	printk("[%s][%d]\n", __FUNCTION__, __LINE__);
- 
- 	if (param & DVBFE_TUNER_FREQUENCY)
- 	{
- 		state->frequency = tstate->frequency;
- 		state->bandwidth = tstate->bandwidth;
-+_DEBUG
- 		printk("[%s][%d]\n", __FUNCTION__, __LINE__);
- 		ix7306_set_freq(fe, state->frequency, state->bandwidth);
- 	}
-@@ -421,11 +431,13 @@ static int ix7306_get_status(struct dvb_frontend *fe, u32 *status)
- 
- 	if (result[0] & 0x40)
- 	{
-+_DEBUG
- 		printk("%s: Tuner Phase Locked\n", __func__);
- 		*status = 1;
- 	}
- 	else
- 	{
-+_DEBUG
- 		printk("%s: Tuner Phase Not Locked result - 0x%x, 0x%x,\n", __func__, result[0], result[1]);
- 	}
- 
-@@ -636,11 +648,13 @@ int ix7306_get_frequency(struct dvb_frontend *fe, u32 *frequency)
- 	if (&fe->ops)
- 		frontend_ops = &fe->ops;
- 
-+_DEBUG
- 	printk("[%s][%d]\n", __FUNCTION__, __LINE__);
- 
- 	if (&frontend_ops->tuner_ops)
- 		tuner_ops = &frontend_ops->tuner_ops;
- 
-+_DEBUG
- 	printk("[%s][%d]\n", __FUNCTION__, __LINE__);
- 
- 	if (tuner_ops->get_state)
-@@ -651,6 +665,7 @@ int ix7306_get_frequency(struct dvb_frontend *fe, u32 *frequency)
- 			return err;
- 		}
- 		*frequency = t_state.frequency;
-+_DEBUG
- 		printk("%s: Frequency=%d\n", __func__, t_state.frequency);
- 	}
- 	return 0;
-@@ -680,6 +695,7 @@ int ix7306_set_frequency(struct dvb_frontend *fe, u32 frequency)
- 			return err;
- 		}
- 	}
-+_DEBUG
- 	printk("%s: Frequency=%d\n", __func__, t_state.frequency);
- 	return 0;
- }
-@@ -715,6 +731,7 @@ int ix7306_get_bandwidth(struct dvb_frontend *fe, u32 *bandwidth)
- 		}
- 		*bandwidth = t_state.bandwidth;
- 	}
-+_DEBUG
- 	printk("%s: Bandwidth=%d\n", __func__, t_state.bandwidth);
- 	return 0;
- }
-diff --git a/frontends/spark7162/base/sharp5469c.c b/frontends/spark7162/base/sharp5469c.c
-index d23180c..75cf405 100644
---- a/frontends/spark7162/base/sharp5469c.c
-+++ b/frontends/spark7162/base/sharp5469c.c
-@@ -8,6 +8,9 @@
- #include "dvb_frontend.h"
- #include "sharp5469c.h"
- 
-+extern int debug_fe7162;
-+#define _DEBUG if (debug_fe7162)
-+
- struct sharp5469c_state
- {
- 	struct dvb_frontend     *fe;
-@@ -50,6 +53,7 @@ static int sharp5469c_write(struct sharp5469c_state *state, u8 *buf, u8 length)
- 	const struct sharp5469c_config *config = state->config;
- 	int err = 0;
- 	struct i2c_msg msg = { .addr = config->addr, .flags = 0, .buf = buf, .len = length };
-+_DEBUG
- 	{
- 		int i;
- 		for (i = 0; i < length; i++)
-@@ -85,6 +89,7 @@ static int sharp5469c_get_status(struct dvb_frontend *fe, u32 *status)
- 
- 	if (result[0] & 0x40)
- 	{
-+_DEBUG
- 		printk(KERN_DEBUG "%s: Tuner Phase Locked\n", __func__);
- 		*status = 1;
- 	}
-@@ -127,6 +132,7 @@ static  void sharp5469c_calculate_mop_divider(u32 freq, int *byte)
- 	i64Freq += 5;
- 	i64Freq /= 10;
- 	data = (long)i64Freq;
-+_DEBUG
- 	printk(KERN_ERR "%s: data = %ld\n", __func__, data);
- 	//data = (long)((freq + sharp5469c_calculate_mop_if())/sharp5469c_calculate_mop_step(byte) +0.5);
- 	*(byte + 1) = (int)((data >> 8) & 0x7F); //byte2
-@@ -282,6 +288,7 @@ static int sharp5469c_set_params(struct dvb_frontend* fe, struct dvb_frontend_pa
- 			goto exit;
- 	}
- 	sharp5469c_get_status(fe, &status);
-+_DEBUG
- 	printk(KERN_ERR "%s: status = %d\n", __func__, status);
- 
- 	return 0;
-diff --git a/frontends/spark7162/base/sharp6465.c b/frontends/spark7162/base/sharp6465.c
-index 54644aa..291f6ef 100644
---- a/frontends/spark7162/base/sharp6465.c
-+++ b/frontends/spark7162/base/sharp6465.c
-@@ -8,6 +8,9 @@
- #include "dvb_frontend.h"
- #include "sharp6465.h"
- 
-+extern int debug_fe7162;
-+#define _DEBUG if (debug_fe7162)
-+
- struct sharp6465_state
- {
- 	struct dvb_frontend     *fe;
-@@ -48,6 +51,7 @@ static int sharp6465_write(struct sharp6465_state *state, u8 *buf, u8 length)
- 	int err = 0;
- 	struct i2c_msg msg = { .addr = config->addr, .flags = 0, .buf = buf, .len = length };
- 
-+_DEBUG
- 	printk(KERN_ERR "%s: state->i2c=<%d>, config->addr = %d\n",
- 		   __func__, (int)state->i2c, config->addr);
- 
-@@ -75,6 +79,7 @@ static int sharp6465_get_status(struct dvb_frontend *fe, u32 *status)
- 
- 	if (result[0] & 0x40)
- 	{
-+_DEBUG
- 		printk(KERN_DEBUG "%s: Tuner Phase Locked\n", __func__);
- 		*status = 1;
- 	}
-@@ -141,6 +146,7 @@ static  void calculate_mop_divider(u32 freq, int *byte)
- 	i64Freq += 5;
- 	i64Freq /= 10;
- 	data = (long)i64Freq;
-+_DEBUG
- 	printk(KERN_ERR "%s: data = %ld\n", __func__, data);
- 	//data = (long)((freq + calculate_mop_if())/calculate_mop_step(byte) + 0.5);
- 	*(byte + 1) = (int)((data >> 8) & 0x7F); //byte2
-@@ -246,6 +252,7 @@ static int sharp6465_set_params(struct dvb_frontend* fe, struct dvb_frontend_par
- 	u32 f = params->frequency;
- 	struct dvb_ofdm_parameters *op = &params->u.ofdm;
- 
-+_DEBUG
- 	printk(KERN_ERR "%s: f = %d, bandwidth = %d\n", __func__, f, op->bandwidth);
- 
- 	tuner_SHARP6465_CalWrBuffer(f / 1000, 8 - op->bandwidth - BANDWIDTH_8_MHZ, ucIOBuffer);
-@@ -274,6 +281,7 @@ static int sharp6465_set_params(struct dvb_frontend* fe, struct dvb_frontend_par
- 	if (fe->ops.i2c_gate_ctrl(fe, 1) < 0)
- 		goto exit;
- 	sharp6465_get_status(fe, &status);
-+_DEBUG
- 	printk(KERN_ERR "%s: status = %d\n", __func__, status);
- 
- 	return 0;
-diff --git a/frontends/spark7162/spark7162.c b/frontends/spark7162/spark7162.c
-index 403ae8f..1e629f0 100644
---- a/frontends/spark7162/spark7162.c
-+++ b/frontends/spark7162/spark7162.c
-@@ -102,6 +102,7 @@ enum
- 
- static int eUnionTunerType = UNION_TUNER_T;
- static char *UnionTunerType = "t";
-+int debug_fe7162 = 0;
- 
- /*******************************  数据结构*********************************/
- 
-@@ -957,6 +958,9 @@ module_exit(spark_cleanup);
- module_param(UnionTunerType, charp, 0);
- MODULE_PARM_DESC(UnionTunerType, "Union Tuner Type (t, c)");
- 
-+module_param(debug_fe7162, int, 0);
-+MODULE_PARM_DESC(debug_fe7162, "debug (very noisy!), default 0");
-+
- /* EOF------------------------------------------------------------------------*/
- 
- /* BOL-------------------------------------------------------------------*/
 diff --git a/frontends/spark7162/stv0367/D0367cab.c b/frontends/spark7162/stv0367/D0367cab.c
-index 1f13bd3..8d75b2e 100644
+index 36ad5c1..3406f1c 100644
 --- a/frontends/spark7162/stv0367/D0367cab.c
 +++ b/frontends/spark7162/stv0367/D0367cab.c
 @@ -23,6 +23,9 @@
@@ -1050,7 +816,7 @@ index 1f13bd3..8d75b2e 100644
  struct dvb_d0367_fe_qam_state
  {
  	struct i2c_adapter          *i2c;
-@@ -120,6 +123,7 @@ static int dvb_d0367_fe_qam_set_frontend(struct dvb_frontend* fe,
+@@ -120,6 +123,7 @@ static int dvb_d0367_fe_qam_set_frontend(struct dvb_frontend *fe,
  	{
  		BOOL bIsLocked;
  		bIsLocked = FE_367qam_Status(&state->DeviceMap, state->IOHandle);
@@ -1058,7 +824,7 @@ index 1f13bd3..8d75b2e 100644
  		printk("%d:bIsLocked = %d\n", __LINE__, bIsLocked);
  	}
  
-@@ -169,6 +173,7 @@ static int dvb_d0367_fe_qam_read_status(struct dvb_frontend* fe,
+@@ -169,6 +173,7 @@ static int dvb_d0367_fe_qam_read_status(struct dvb_frontend *fe,
  #endif  /* 0 */
  	{
  		bIsLocked = FE_367qam_Status(&state->DeviceMap, state->IOHandle);
@@ -1066,13 +832,13 @@ index 1f13bd3..8d75b2e 100644
  		printk("bIsLocked = %d\n", bIsLocked);
  	}
  	if (bIsLocked)
-@@ -191,6 +196,7 @@ static int dvb_d0367_fe_qam_read_status(struct dvb_frontend* fe,
+@@ -191,6 +196,7 @@ static int dvb_d0367_fe_qam_read_status(struct dvb_frontend *fe,
  
  		FE_STV0367qam_GetSignalInfo(&state->DeviceMap, state->IOHandle,
- 									&Quality, &Intensity, &Ber,  FirstTimeBER);
+ 					    &Quality, &Intensity, &Ber,  FirstTimeBER);
 +_DEBUG
  		printk("Quality = %d, Intensity = %d, Ber = %d\n",
- 			   Quality, Intensity, Ber);
+ 		       Quality, Intensity, Ber);
  	}
 @@ -340,6 +346,7 @@ U32 D0367qam_GeSymbolRate(TUNER_IOREG_DeviceMap_t *DeviceMap,
  		return SymbolRate;
@@ -1113,7 +879,7 @@ index 1f13bd3..8d75b2e 100644
  		printk("TUNER_STATUS_UNLOCKED #######################\n");
  		//Inst->Status = TUNER_STATUS_UNLOCKED;
  	}
-@@ -834,6 +846,7 @@ struct dvb_frontend* dvb_d0367_fe_qam_attach(struct i2c_adapter* i2c)
+@@ -834,6 +846,7 @@ struct dvb_frontend *dvb_d0367_fe_qam_attach(struct i2c_adapter *i2c)
  	{
  		U8 data = 0xFF;
  		data = ChipGetField_0367qam(DeviceMap, IOHandle, R367qam_ID);
@@ -1121,132 +887,8 @@ index 1f13bd3..8d75b2e 100644
  		printk("set data = 0x%02x\n", data);
  	}
  
-diff --git a/frontends/spark7162/stv0367/D0367ter.c b/frontends/spark7162/stv0367/D0367ter.c
-index 28b4519..7c03902 100644
---- a/frontends/spark7162/stv0367/D0367ter.c
-+++ b/frontends/spark7162/stv0367/D0367ter.c
-@@ -23,6 +23,9 @@
- #include "dvb_frontend.h"
- #include "D0367.h"
- 
-+extern int debug_fe7162;
-+#define _DEBUG if (debug_fe7162)
-+
- struct dvb_d0367_fe_ofdm_state
- {
- 	struct i2c_adapter          *i2c;
-@@ -140,6 +143,7 @@ static int dvb_d0367_fe_ofdm_read_status(struct dvb_frontend* fe,
- #endif  /* 0 */
- 	{
- 		bIsLocked = FE_367ofdm_lock(&state->DeviceMap, state->IOHandle);
-+_DEBUG
- 		printk("bIsLocked = %d\n", bIsLocked);
- 	}
- 	if (bIsLocked)
-@@ -770,8 +774,11 @@ YW_ErrorType_T D0367ter_ScanFreq(TUNER_IOREG_DeviceMap_t *DeviceMap,
- 	// printk("demod_d0367ter_ScanFreq #########Index = %d\n", Index);
- 	pParams.Frequency = D0367ter_GeFrequency(DeviceMap, IOHandle);
- 	pParams.ChannelBW = D0367ter_GeChannelBW(DeviceMap, IOHandle);
-+_DEBUG
-+{
- 	printk("pParams.Frequency = %d\n", pParams.Frequency);
- 	printk("pParams.ChannelBW = %d\n", pParams.ChannelBW);
-+}
- 	pParams.Crystal_Hz = DeviceMap->RegExtClk;
- 	pParams.IF_IQ_Mode = FE_TER_NORMAL_IF_TUNER;//FE_TER_IQ_TUNER;  //most tuner is IF mode, stv4100 is I/Q mode
- 	pParams.Inv        = FE_TER_INVERSION_AUTO; //FE_TER_INVERSION_AUTO
-diff --git a/frontends/spark7162/stv0367/stv0367qam/chip_0367qam.c b/frontends/spark7162/stv0367/stv0367qam/chip_0367qam.c
-index 2e02c8a..7e87266 100644
---- a/frontends/spark7162/stv0367/stv0367qam/chip_0367qam.c
-+++ b/frontends/spark7162/stv0367/stv0367qam/chip_0367qam.c
-@@ -34,6 +34,9 @@
- 
- extern IOARCH_HandleData_t IOARCH_Handle[TUNER_IOARCH_MAX_HANDLES];
- 
-+extern int debug_fe7162;
-+#define _DEBUG if (debug_fe7162)
-+
- #define REPEATER_ON    1
- #define REPEATER_OFF   0
- #define WAITFORLOCK    1
-@@ -226,7 +229,8 @@ YW_ErrorType_T  ChipSetRegisters_0367qam(TUNER_IOREG_DeviceMap_t *DeviceMap, IOA
- 	}
- 	else
- 		return YWHAL_ERROR_INVALID_HANDLE;
--
-+   
-+_DEBUG
- 	if (DeviceMap->Error != 0)
- 	{
- 		printk("d0367ter DeviceMap->Error=%d,FirstRegAddr=%x\n", DeviceMap->Error, FirstRegAddr); //for test
-@@ -284,6 +288,7 @@ YW_ErrorType_T ChipSetField_0367qam(TUNER_IOREG_DeviceMap_t *DeviceMap, IOARCH_H
- 	else
- 		return YWHAL_ERROR_INVALID_HANDLE;
- 
-+_DEBUG
- 	if (DeviceMap->Error != 0)
- 	{
- 		printk("d0376ter chip.c DeviceMap->Error=%d,FirstRegAddr=%x\n", DeviceMap->Error, FieldId); //for test
-diff --git a/frontends/spark7162/stv0367/stv0367qam/d0367_qam.c b/frontends/spark7162/stv0367/stv0367qam/d0367_qam.c
-index 631b1f4..a082151 100644
---- a/frontends/spark7162/stv0367/stv0367qam/d0367_qam.c
-+++ b/frontends/spark7162/stv0367/stv0367qam/d0367_qam.c
-@@ -39,6 +39,9 @@
- #include "stv0367qam_drv.h"
- #include "d0367_qam.h"
- 
-+extern int debug_fe7162;
-+#define _DEBUG if (debug_fe7162)
-+
- STCHIP_Register_t Def367qamVal[STV0367qam_NBREGS] =
- {
- 	{ R367qam_ID,    0x60 }    ,/* ID */
-@@ -250,11 +253,13 @@ YW_ErrorType_T  demod_d0367qam_Identify(IOARCH_Handle_t   IOHandle, U8  ucID, U8
- 	//if (TUNER_IOARCH_ReadWrite(IOHandle, TUNER_IO_SA_READ, R367qam_ID, pucActualID, 1, 50) == YW_NO_ERROR)
- 	if (YW_NO_ERROR == YW_NO_ERROR)
- 	{
-+_DEBUG
- 		printk("demod_d0367qam_Identify pucActualID = 0x%x\n", *pucActualID);//question
- 		return YW_NO_ERROR;
- 	}
- 	else
- 	{
-+_DEBUG
- 		printk("demod_d0367qam_Identify YWHAL_ERROR_UNKNOWN_DEVICE \n");//question
- 		return YWHAL_ERROR_UNKNOWN_DEVICE;
- 	}
-diff --git a/frontends/spark7162/stv0367/stv0367ter/chip_0367ter.c b/frontends/spark7162/stv0367/stv0367ter/chip_0367ter.c
-index 2bc74a2..4a07be6 100644
---- a/frontends/spark7162/stv0367/stv0367ter/chip_0367ter.c
-+++ b/frontends/spark7162/stv0367/stv0367ter/chip_0367ter.c
-@@ -34,6 +34,9 @@
- 
- extern IOARCH_HandleData_t IOARCH_Handle[TUNER_IOARCH_MAX_HANDLES];
- 
-+extern int debug_fe7162;
-+#define _DEBUG if (debug_fe7162)
-+
- #define REPEATER_ON    1
- #define REPEATER_OFF   0
- #define WAITFORLOCK    1
-@@ -231,6 +234,7 @@ YW_ErrorType_T  ChipSetRegisters_0367ter(TUNER_IOREG_DeviceMap_t *DeviceMap, IOA
- 	else
- 		return YWHAL_ERROR_INVALID_HANDLE;
- 
-+_DEBUG
- 	if (DeviceMap->Error != 0)
- 	{
- 		printk("d0367ter DeviceMap->Error=%d,FirstRegAddr=%x\n", DeviceMap->Error, FirstRegAddr); //for test
-@@ -293,6 +297,7 @@ ChipSetField_0367ter(TUNER_IOREG_DeviceMap_t *DeviceMap,
- 	else
- 		return YWHAL_ERROR_INVALID_HANDLE;
- 
-+_DEBUG
- 	if (DeviceMap->Error != 0)
- 	{
- 		printk("d0376ter chip.c DeviceMap->Error=%d,FirstRegAddr=%x\n", DeviceMap->Error, FieldId); //for test
 diff --git a/frontends/spark_dvbapi5/ix7306.c b/frontends/spark_dvbapi5/ix7306.c
-index c9c4ed1..f53c457 100644
+index 3a6b785..f37d983 100644
 --- a/frontends/spark_dvbapi5/ix7306.c
 +++ b/frontends/spark_dvbapi5/ix7306.c
 @@ -450,7 +450,9 @@ static int ix7306_get_status(struct dvb_frontend *fe, u32 *status)
@@ -1260,7 +902,7 @@ index c9c4ed1..f53c457 100644
  
  	return err;
 diff --git a/frontends/spark_dvbapi5/stv090x.c b/frontends/spark_dvbapi5/stv090x.c
-index bc881e7..a8f9e46 100644
+index 90c162e..94dfffe 100644
 --- a/frontends/spark_dvbapi5/stv090x.c
 +++ b/frontends/spark_dvbapi5/stv090x.c
 @@ -3182,8 +3182,10 @@ static int stv090x_get_dmdlock(struct stv090x_state *state, s32 timeout)

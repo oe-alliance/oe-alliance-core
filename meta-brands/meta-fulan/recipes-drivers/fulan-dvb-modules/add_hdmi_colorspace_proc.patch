@@ -1,5 +1,5 @@
 diff --git a/e2_proc/e2_proc_main.c b/e2_proc/e2_proc_main.c
-index 665b7b7..7dde936 100644
+index 88ac7e1..4341320 100644
 --- a/e2_proc/e2_proc_main.c
 +++ b/e2_proc/e2_proc_main.c
 @@ -52,6 +52,10 @@
@@ -13,7 +13,7 @@ index 665b7b7..7dde936 100644
   *  |             --------- force_dvi
   *  |             |
   *  |             --------- policy
-@@ -188,6 +192,8 @@
+@@ -186,6 +190,8 @@
   *  |               --------- progressive
   *  |               |
   *  |               --------- aspect
@@ -22,7 +22,7 @@ index 665b7b7..7dde936 100644
   *  |
   *  ---------- fb
   *  |           |
-@@ -579,6 +585,8 @@ struct ProcStructure_s e2Proc[] =
+@@ -604,6 +610,8 @@ struct ProcStructure_s e2Proc[] =
  	{cProcEntry, "stb/video/alpha"                                                  , NULL, NULL, NULL, NULL, ""},
  	{cProcEntry, "stb/video/aspect"                                                 , NULL, NULL, NULL, NULL, ""},
  	{cProcEntry, "stb/video/aspect_choices"                                         , NULL, NULL, NULL, NULL, ""},
@@ -31,7 +31,7 @@ index 665b7b7..7dde936 100644
  	{cProcEntry, "stb/video/force_dvi"                                              , NULL, NULL, NULL, NULL, ""},
  	{cProcEntry, "stb/video/policy"                                                 , NULL, NULL, NULL, NULL, ""},
  	{cProcEntry, "stb/video/policy_choices"                                         , NULL, NULL, NULL, NULL, ""},
-@@ -676,6 +684,7 @@ struct ProcStructure_s e2Proc[] =
+@@ -677,6 +685,7 @@ struct ProcStructure_s e2Proc[] =
  	{cProcEntry, "stb/vmpeg/0/xres"                                                 , NULL, NULL, NULL, NULL, ""},
  	{cProcEntry, "stb/vmpeg/0/aspect"                                               , NULL, NULL, NULL, NULL, ""},
  	{cProcEntry, "stb/vmpeg/0/framerate"                                            , NULL, NULL, NULL, NULL, ""},
@@ -39,7 +39,7 @@ index 665b7b7..7dde936 100644
  
  	{cProcDir  , "stb/vmpeg/1"                                                      , NULL, NULL, NULL, NULL, ""},
  	{cProcEntry, "stb/vmpeg/1/dst_apply"                                            , NULL, NULL, NULL, NULL, ""},
-@@ -688,6 +697,7 @@ struct ProcStructure_s e2Proc[] =
+@@ -689,6 +698,7 @@ struct ProcStructure_s e2Proc[] =
  	{cProcEntry, "stb/vmpeg/1/xres"                                                 , NULL, NULL, NULL, NULL, ""},
  	{cProcEntry, "stb/vmpeg/1/aspect"                                               , NULL, NULL, NULL, NULL, ""},
  	{cProcEntry, "stb/vmpeg/1/framerate"                                            , NULL, NULL, NULL, NULL, ""},
@@ -48,10 +48,10 @@ index 665b7b7..7dde936 100644
  	{cProcDir  , "stb/hdmi"                                                         , NULL, NULL, NULL, NULL, ""},
  	{cProcEntry, "stb/hdmi/bypass_edid_checking"                                    , NULL, NULL, NULL, NULL, ""},
 diff --git a/player2_191/linux/drivers/media/dvb/stm/dvb/e2_proc/e2_proc_avs.c b/player2_191/linux/drivers/media/dvb/stm/dvb/e2_proc/e2_proc_avs.c
-index bdda7ad..735016a 100644
+index 965375c..19f03f5 100644
 --- a/player2_191/linux/drivers/media/dvb/stm/dvb/e2_proc/e2_proc_avs.c
 +++ b/player2_191/linux/drivers/media/dvb/stm/dvb/e2_proc/e2_proc_avs.c
-@@ -625,3 +625,99 @@ int proc_avs_0_standby_read(char* page, char** start, off_t off, int count, int*
+@@ -700,3 +700,99 @@ int proc_avs_0_standby_read(char *page, char **start, off_t off, int count,
  		len = sprintf(page, "on\n");
  	return len;
  }
@@ -152,36 +152,36 @@ index bdda7ad..735016a 100644
 +	return len;
 +}
 diff --git a/player2_191/linux/drivers/media/dvb/stm/dvb/e2_proc/e2_proc_main.c b/player2_191/linux/drivers/media/dvb/stm/dvb/e2_proc/e2_proc_main.c
-index 9bb21ad..4a2ded3 100644
+index 935915c..101bea0 100644
 --- a/player2_191/linux/drivers/media/dvb/stm/dvb/e2_proc/e2_proc_main.c
 +++ b/player2_191/linux/drivers/media/dvb/stm/dvb/e2_proc/e2_proc_main.c
 @@ -37,6 +37,10 @@
-  *  |             |
-  *  |             --------- force_dvi
-  *  |             |
-+ *  |             --------- hdmi_colorspace
-+ *  |             |
-+ *  |             --------- hdmi_colorspace_choices
-+ *  |             |
-  *  |             --------- policy
-  *  |             |
-  *  |             --------- policy_choices
-@@ -220,6 +224,9 @@ extern int proc_audio_j1_mute_write(struct file* file, const char __user* buf, u
- extern int proc_video_aspect_read(char* page, char** start, off_t off, int count, int* eof, void* data_unused);
- extern int proc_video_aspect_write(struct file* file, const char __user* buf, unsigned long count, void* data);
- extern int proc_video_aspect_choices_read(char* page, char** start, off_t off, int count, int* eof, void* data_unused);
+  * | |
+  * | --------- force_dvi
+  * | |
++ * | --------- hdmi_colorspace
++ * | |
++ * | --------- hdmi_colorspace_choices
++ * | |
+  * | --------- policy
+  * | |
+  * | --------- policy_choices
+@@ -220,6 +224,9 @@ extern int proc_audio_j1_mute_write(struct file *file, const char __user *buf, u
+ extern int proc_video_aspect_read(char *page, char **start, off_t off, int count, int *eof, void *data_unused);
+ extern int proc_video_aspect_write(struct file *file, const char __user *buf, unsigned long count, void *data);
+ extern int proc_video_aspect_choices_read(char *page, char **start, off_t off, int count, int *eof, void *data_unused);
 +extern int proc_video_hdmi_colorspace_write(struct file* file, const char __user* buf, unsigned long count, void* data);
 +extern int proc_video_hdmi_colorspace_read(char* page, char** start, off_t off, int count, int* eof, void* data_unused);
 +extern int proc_video_hdmi_colorspace_choices_read(char* page, char** start, off_t off, int count, int* eof, void* data_unused);
- extern int proc_video_policy_read(char* page, char** start, off_t off, int count, int* eof, void* data_unused);
- extern int proc_video_policy_write(struct file* file, const char __user* buf, unsigned long count, void* data);
- extern int proc_video_policy_choices_read(char* page, char** start, off_t off, int count, int* eof, void* data_unused);
-@@ -375,6 +382,8 @@ struct e2_procs
- 	{"stb/video/alpha",                   proc_video_alpha_read,                  proc_video_alpha_write, 0},
- 	{"stb/video/aspect",                  proc_video_aspect_read,                 proc_video_aspect_write, 0},
- 	{"stb/video/aspect_choices",          proc_video_aspect_choices_read,         NULL, 0},
-+	{"stb/video/hdmi_colorspace",         proc_video_hdmi_colorspace_read,        proc_video_hdmi_colorspace_write, 0},
-+	{"stb/video/hdmi_colorspace_choices", proc_video_hdmi_colorspace_choices_read,NULL, 0},
+ extern int proc_video_policy_read(char *page, char **start, off_t off, int count, int *eof, void *data_unused);
+ extern int proc_video_policy_write(struct file *file, const char __user *buf, unsigned long count, void *data);
+ extern int proc_video_policy_choices_read(char *page, char **start, off_t off, int count, int *eof, void *data_unused);
+@@ -378,6 +385,8 @@ struct e2_procs
  	/*
- 	  {"stb/video/force_dvi", NULL, NULL, 0},
+ 	 {"stb/video/force_dvi", NULL, NULL, 0},
  	*/
++	{"stb/video/hdmi_colorspace", proc_video_hdmi_colorspace_read,        proc_video_hdmi_colorspace_write, 0},
++	{"stb/video/hdmi_colorspace_choices", proc_video_hdmi_colorspace_choices_read,NULL, 0},
+ 	{"stb/video/policy", proc_video_policy_read, proc_video_policy_write, 0},
+ 	{"stb/video/policy_choices", proc_video_policy_choices_read, NULL, 0},
+ 	{"stb/video/videomode", proc_video_videomode_read, proc_video_videomode_write, 0},

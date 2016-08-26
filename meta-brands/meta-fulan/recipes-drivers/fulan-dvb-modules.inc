@@ -9,15 +9,14 @@ LIC_FILES_CHKSUM = "file://${WORKDIR}/COPYING;md5=751419260aa954499f7abaabaa882b
 
 RDEPENDS_${PN} = "stinit"
 
-SRCDATE = "20160308"
 KV = "2.6.32.61-stm24-0217"
-SRCREV = "7c31533e4916733120467b5af62303a14a278829"
+SRCREV = "f0bd1d2493fc2e93568aa00f3bed3e3040dfb726"
 
 inherit module
 
 PACKAGES = "${PN} ${PN}-dev"
 
-INC_PR = "r39"
+INC_PR = "r40"
 PV = "${KV}+${SRCDATE}"
 
 PTI_NP_PATH ?= "/data/pti_np"
@@ -27,10 +26,8 @@ FILESEXTRAPATHS_prepend := "${THISDIR}/fulan-dvb-modules:"
 SRC_URI = " \
     git://github.com/Duckbox-Developers/driver.git;protocol=git \
     file://aotom_spark_procfs.patch;patch=1 \
-    file://fix_videomode_names.patch;patch=1 \
     file://silence_tuner_printk.patch;patch=1 \
     file://silence_stmfb_printk.patch;patch=1 \
-    file://fix_makefile.patch;patch=1 \
     file://disable_video_free_on_release.patch;patch=1 \
     file://add_hdmi_colorspace_proc.patch;patch=1 \
     file://ddbootup \
