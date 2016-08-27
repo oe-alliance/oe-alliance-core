@@ -9,7 +9,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "5.2"
-PR = "r10"
+PR = "r11"
 
 DEPENDS = "enigma2-plugin-drivers-usbserial"
 RECOMMENDS = "enigma2-plugin-extensions-et-livestream"
@@ -39,6 +39,7 @@ RDEPENDS_${PN} = " \
     enigma2-plugin-extensions-yahooweather \
     enigma2-plugin-extensions-youtube \
     enigma2-plugin-extensions-autobouquets \
+    ${@base_contains("TARGET_ARCH", "arm", "", "enigma2-plugin-extensions-serviceapp", d)} \
     ${@base_contains("MACHINE_FEATURES", "omb", "enigma2-plugin-extensions-openmultiboot", "", d)} \
     ${@base_contains("MACHINE_FEATURES", "omb", "openmultiboot", "", d)} \
     ${@base_contains("MACHINE_FEATURES", "vukodi", "enigma2-plugin-extensions-vuplus-kodi", "", d)} \
@@ -105,6 +106,7 @@ RDEPENDS_${PN} = " \
     streamproxy \
     pcsc-lite \
     ${@base_contains("GST_VERSION", "1.0", "eplayer5", "eplayer4", d)} \
+    ${@base_contains("TARGET_ARCH", "arm", "", "exteplayer3", d)} \
     "
 
 RDEPENDS_${PN}_remove_xc7362 = "network-usb-drivers-meta"
