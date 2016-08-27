@@ -39,7 +39,7 @@ RDEPENDS_${PN} = " \
     enigma2-plugin-extensions-yahooweather \
     enigma2-plugin-extensions-youtube \
     enigma2-plugin-extensions-autobouquets \
-    ${@bb.utils.contains("TARGET_ARCH", "sh4", "enigma2-plugin-extensions-serviceapp", "", d)} \
+    ${@bb.utils.contains("TARGET_ARCH", "arm", "", "enigma2-plugin-extensions-serviceapp", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "omb", "enigma2-plugin-extensions-openmultiboot", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "omb", "openmultiboot", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "vukodi", "enigma2-plugin-extensions-vuplus-kodi", "", d)} \
@@ -106,7 +106,7 @@ RDEPENDS_${PN} = " \
     streamproxy \
     pcsc-lite \
     ${@bb.utils.contains("GST_VERSION", "1.0", "eplayer5", "eplayer4", d)} \
-    ${@bb.utils.contains("TARGET_ARCH", "sh4", "exteplayer3", "", d)} \
+    ${@bb.utils.contains("TARGET_ARCH", "arm", "", "exteplayer3", d)} \
     "
 
 RDEPENDS_${PN}_remove_xc7362 = "network-usb-drivers-meta"

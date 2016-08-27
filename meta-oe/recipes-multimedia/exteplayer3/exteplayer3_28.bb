@@ -7,8 +7,13 @@ LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/GPL-2.0;md5=801f80980d171dd6425
 DEPENDS = "ffmpeg"
 RDEPENDS_${PN} = "ffmpeg"
 
+PR = "r1"
+
 SRCREV = "921d3e0958425bc9b202e94b4ecc1d9340fea7e6"
-SRC_URI = "git://github.com/samsamsam-iptvplayer/exteplayer3.git;branch=master"
+SRC_URI = " \
+    git://github.com/samsamsam-iptvplayer/exteplayer3.git;branch=master \
+    file://fix_uint_include.patch;patch=1 \
+"
 
 S = "${WORKDIR}/git/"
 

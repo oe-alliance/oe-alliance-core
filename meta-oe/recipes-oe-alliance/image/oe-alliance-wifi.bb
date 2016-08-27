@@ -10,7 +10,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "5.2"
-PR = "r4"
+PR = "r5"
 
 OPTIONAL_WIFIDRIVERS = "${@bb.utils.contains("MACHINE_FEATURES", "wifiusblegacy", "enigma2-plugin-drivers-network-usb-rt3070", " \
     enigma2-plugin-drivers-network-usb-ath9k-htc \
@@ -19,6 +19,7 @@ OPTIONAL_WIFIDRIVERS = "${@bb.utils.contains("MACHINE_FEATURES", "wifiusblegacy"
     enigma2-plugin-drivers-network-usb-rt2800 \
     enigma2-plugin-drivers-network-usb-rtl8187 \
     enigma2-plugin-drivers-network-usb-zd1211rw \
+    enigma2-plugin-drivers-network-usb-rtl8188eu \
     ", d)} \
     enigma2-plugin-drivers-network-usb-rt73 \
     enigma2-plugin-drivers-network-usb-r8712u \
