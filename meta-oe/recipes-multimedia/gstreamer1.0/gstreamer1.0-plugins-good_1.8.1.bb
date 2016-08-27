@@ -15,6 +15,7 @@ SRC_URI = " \
 
 SRC_URI += " \
     file://0001-gstrtpmp4gpay-set-dafault-value-for-MPEG4-without-co.patch \
+    file://640159-add-support-to-load-cookies-from-a-cookiejar-file.patch \
 "
 
 S = "${WORKDIR}/git"
