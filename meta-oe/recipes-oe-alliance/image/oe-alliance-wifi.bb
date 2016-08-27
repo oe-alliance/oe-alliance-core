@@ -19,6 +19,7 @@ OPTIONAL_WIFIDRIVERS = "${@base_contains("MACHINE_FEATURES", "wifiusblegacy", "e
     enigma2-plugin-drivers-network-usb-rt2800 \
     enigma2-plugin-drivers-network-usb-rtl8187 \
     enigma2-plugin-drivers-network-usb-zd1211rw \
+    enigma2-plugin-drivers-network-usb-rtl8188eu \
     ", d)} \
     enigma2-plugin-drivers-network-usb-rt73 \
     enigma2-plugin-drivers-network-usb-r8712u \
