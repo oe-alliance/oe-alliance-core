@@ -10,7 +10,7 @@ FILES_${PN} += "${base_libdir}/firmware"
 
 PACKAGE_ARCH = "all"
 
-SUMMARY = "Firmware for RTL8188CU"
+SUMMARY = "Firmware for RTL8188EU"
 
 do_install() {
     install -d ${D}${base_libdir}/firmware/rtlwifi
