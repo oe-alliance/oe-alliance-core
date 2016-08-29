@@ -9,7 +9,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "5.2"
-PR = "r11"
+PR = "r12"
 
 DEPENDS = "enigma2-plugin-drivers-usbserial"
 RECOMMENDS = "enigma2-plugin-extensions-et-livestream"
@@ -85,7 +85,7 @@ RDEPENDS_${PN} = " \
     procps \
     pyload \
     python-circuits python-circuits-bricks python-cocy python-mechanize python-requests livestreamer livestreamersrv \
-    python-ujson python-singledispatch python-futures \
+    python-ujson python-singledispatch python-futures python-cfscrape python-js2py \
     rsync \
     rtorrent \
     sabnzbd \
