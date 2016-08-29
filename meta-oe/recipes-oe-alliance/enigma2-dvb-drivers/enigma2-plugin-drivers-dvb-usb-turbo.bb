@@ -6,10 +6,7 @@ require conf/license/license-gplv2.inc
 RRECOMMENDS_${PN} = " \
     kernel-module-dvb-usb \
     kernel-module-dvb-usb-v2 \
-    kernel-module-cypress-firmware \
-    ${@base_contains('KERNEL_VERSION', '3.14.28-1.8', 'kernel-module-cypress-firmware', '', d)} \
-    ${@base_contains('KERNEL_VERSION', '3.13.5', 'kernel-module-cypress-firmware', '', d)} \
-    ${@base_contains('KERNEL_VERSION', '3.9.6', 'kernel-module-dvb-usb-cypress-firmware', '', d)} \
+    ${@base_contains('KERNEL_VERSION', '3.9.6', 'kernel-module-dvb-usb-cypress-firmware', 'module-cypress-firmware', d)} \
     vuplus-tuner-turbo \
     "
 
