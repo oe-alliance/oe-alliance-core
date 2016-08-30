@@ -9,6 +9,7 @@ MACHINE_ESSENTIAL_EXTRA_RDEPENDS = " \
     "
 
 DVBPROVIDER = "kernel"
+DVB_CYPRESS ?= "kernel-module"
 
 MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS = "\
     kernel-module-cdfs \
