@@ -21,9 +21,11 @@ PKG_kernel-base = "kernel-base"
 PKG_kernel-image = "kernel-image"
 RPROVIDES_kernel-base = "kernel-${KERNEL_VERSION}"
 RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
+RDEPENDS_kernel-image = "eudev"
 
 SRC_URI += "http://downloads.mutant-digital.net/linux-${PV}.tar.gz \
     file://defconfig \
+    file://findkerneldevice.py \
     file://0001-Support-TBS-USB-drivers-for-4.3-kernel.patch \
     file://0001-TBS-fixes-for-4.3-kernel.patch \
     file://0001-STV-Add-PLS-support.patch \
@@ -42,14 +44,21 @@ KERNEL_OUTPUT = "arch/${ARCH}/boot/${KERNEL_IMAGETYPE}"
 KERNEL_OBJECT_SUFFIX = "ko"
 KERNEL_IMAGEDEST = "tmp"
 
-FILES_kernel-image = "/${KERNEL_IMAGEDEST}/zImage"
+FILES_kernel-image = "/${KERNEL_IMAGEDEST}/zImage /${KERNEL_IMAGEDEST}/findkerneldevice.py"
 
 kernel_do_install_append() {
         install -d ${D}/${KERNEL_IMAGEDEST}
         install -m 0755 ${KERNEL_OUTPUT} ${D}/${KERNEL_IMAGEDEST}
+        install -m 0755 ${WORKDIR}/findkerneldevice.py ${D}/${KERNEL_IMAGEDEST}
 }
 
 pkg_postinst_kernel-image () {
+    if [ "x$D" == "x" ]; then
+        if [ -f /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE} ] ; then
+            python /${KERNEL_IMAGEDEST}/findkerneldevice.py
+            dd if=/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE} of=/dev/kernel
+        fi
+    fi
     true
 }
 
