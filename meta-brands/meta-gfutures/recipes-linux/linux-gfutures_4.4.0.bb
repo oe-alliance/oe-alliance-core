@@ -21,7 +21,6 @@ PKG_kernel-base = "kernel-base"
 PKG_kernel-image = "kernel-image"
 RPROVIDES_kernel-base = "kernel-${KERNEL_VERSION}"
 RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
-RDEPENDS_kernel-image = "eudev"
 
 SRC_URI += "http://downloads.mutant-digital.net/linux-${PV}.tar.gz \
     file://defconfig \
