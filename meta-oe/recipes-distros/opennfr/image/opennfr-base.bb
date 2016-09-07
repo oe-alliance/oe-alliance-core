@@ -23,6 +23,9 @@ RDEPENDS_${PN} = "\
     hddtemp \
     busybox-cron \
     python-imaging \
+    python-requests \
+    python-cfscrape \
+    python-js2py \
     ofgwrite \
     python-gdata \
     libshowiframe \
