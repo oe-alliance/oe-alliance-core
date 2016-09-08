@@ -11,7 +11,7 @@ DEPENDS = "tslib mpfr gmp"
 SRCREV = "${AUTOREV}"
 PV = "3.2+gitr${SRCPV}"
 PKGV = "3.2+gitr${GITPKGV}"
-PR = "r99"
+PR = "r100"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -38,6 +38,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-csfd_10-85-20150429_all.ipk \
     enigma2-plugin-extensions-cyrussettings_1.0.0_all.ipk \
     enigma2-plugin-extensions-digitalfernsehen_1.1rc10_all.ipk \
+    enigma2-plugin-extensions-dvrproviderplayer_1.14_all.ipk \
     enigma2-plugin-extensions-ehue_0.2-r0_all.ipk \
     enigma2-plugin-extensions-enigmalight_0.2-rc1_all.ipk \
     enigma2-plugin-extensions-exodus_2.0_r1_all.ipk \
@@ -69,6 +70,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-pluginspanel_1.0_r01_all.ipk \
     enigma2-plugin-extensions-pluginupdater_0.1r2_all.ipk \
     enigma2-plugin-extensions-pravoslavietv_0.2_all.ipk \
+    enigma2-plugin-extensions-pzyemail_0.8-20150614_all.ipk \
     enigma2-plugin-extensions-radioo_0.45c_all.ipk \
     enigma2-plugin-extensions-screengrabber_2.5_all.ipk \
     enigma2-plugin-extensions-screensaver_5.7.1_all.ipk \
@@ -87,7 +89,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-transmission_2.84_all.ipk \
     enigma2-plugin-extensions-tsmedia_11.2_all.ipk \
     enigma2-plugin-extensions-tstube_1.2_all.ipk \
-    enigma2-plugin-extensions-tvspielfilm_6.4rc10_all.ipk \
+    enigma2-plugin-extensions-tvspielfilm_6.4rc11_all.ipk \
     enigma2-plugin-extensions-verkehrsinfo_1.1rc1_mips32el.ipk \
     enigma2-plugin-extensions-vcs_2.1_all.ipk \
     enigma2-plugin-extensions-vhannibalautosettings_1.1_mips32el.ipk \
@@ -99,11 +101,11 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-wwech_1.03_all.ipk \
     enigma2-plugin-extensions-xbmcaddons_8.1_r0_all.ipk \
     enigma2-plugin-extensions-xbmcwetter_1.3rc5_all.ipk \
-    enigma2-plugin-extensions-zdfnewmediathek_1.7rc6_mips32el.ipk \
+    enigma2-plugin-extensions-zdfnewmediathek_1.7rc6_all.ipk \
     enigma2-plugin-feeds-picons.xyz_2015-08-31--19-55-30_all.ipk \
     enigma2-plugin-systemplugins-bouquetsprotection_0.2-rc1_all.ipk \
     enigma2-plugin-systemplugins-channelselectionnavigator_1.1_mipsel.ipk \
-    enigma2-plugin-systemplugins-extnumberzap_1.0-rc12_mipsel.ipk \
+    enigma2-plugin-systemplugins-extnumberzap_1.17_all.ipk \
     enigma2-plugin-systemplugins-recinfobar_1.22rc2_mips32el.ipk \
     "
 

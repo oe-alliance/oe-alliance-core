@@ -3,6 +3,9 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 SRC_URI += " \
             file://mount_single_uuid.patch \
+            file://introduce_BUILD_BUG_ON.patch \
+            file://more_BUILD_BUG_ON.patch \
+            file://add_ip_neigh.patch \
             file://mdev-mount.sh \
             file://telnetd \
             file://inetd \
