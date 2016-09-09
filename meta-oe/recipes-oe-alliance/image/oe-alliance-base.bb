@@ -33,6 +33,7 @@ RDEPENDS_${PN} = "\
     libavahi-client \
     libcrypto-compat-0.9.7 \
     modutils-loadscript \
+    ndisc6-rdnssd \
     ntpdate \
     opkg \
     sdparm \
