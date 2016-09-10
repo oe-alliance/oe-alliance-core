@@ -6,6 +6,7 @@ SRC_URI += " \
             file://introduce_BUILD_BUG_ON.patch \
             file://more_BUILD_BUG_ON.patch \
             file://add_ip_neigh.patch \
+            file://use_ipv6_when_ipv4_unroutable.patch \
             file://mdev-mount.sh \
             file://telnetd \
             file://inetd \
