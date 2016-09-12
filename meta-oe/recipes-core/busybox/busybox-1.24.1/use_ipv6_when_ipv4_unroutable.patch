@@ -1,0 +1,57 @@
+--- a/libbb/xconnect.c	2015-09-03 04:15:55.000000000 +0200
++++ b/libbb/xconnect.c	2016-09-10 02:26:09.335343783 +0200
+@@ -185,6 +185,7 @@
+ {
+ IF_NOT_FEATURE_IPV6(sa_family_t af = AF_INET;)
+ 	int rc;
++	int routes;
+ 	len_and_sockaddr *r;
+ 	struct addrinfo *result = NULL;
+ 	struct addrinfo *used_res;
+@@ -291,13 +292,39 @@
+ 	}
+ 	used_res = result;
+ #if ENABLE_FEATURE_PREFER_IPV4_ADDRESS
+-	while (1) {
+-		if (used_res->ai_family == AF_INET)
+-			break;
+-		used_res = used_res->ai_next;
+-		if (!used_res) {
+-			used_res = result;
+-			break;
++	int forcev6=0;
++	FILE *fp = xfopen_for_read("/proc/net/route");
++	routes = fscanf(fp, "%*[^\n]\n");
++	if (routes < 0) {
++		forcev6=1;
++		fclose(fp);
++	} else {
++//		routes = fscanf(fp, "%63s%lx%lx%X%d%d%d%lx%d%d%d\n", void, void, void, void, void, void, void, void, void, void, void);
++//		if ((routes <= 0) &&
++		if (feof(fp)) {
++			forcev6=1;
++		}
++		fclose(fp);
++	}
++	if (forcev6 == 1) {
++		while (1) {
++			if (used_res->ai_family == AF_INET6)
++				break;
++			used_res = used_res->ai_next;
++			if (!used_res) {
++				used_res = result;
++				break;
++			}
++		}
++	} else {
++		while (1) {
++			if (used_res->ai_family == AF_INET)
++				break;
++			used_res = used_res->ai_next;
++			if (!used_res) {
++				used_res = result;
++				break;
++			}
+ 		}
+ 	}
+ #endif

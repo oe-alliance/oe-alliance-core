@@ -1,0 +1,12 @@
+# Defaults for rdnssd initscript
+# sourced by /etc/init.d/rdnssd
+# installed at /etc/default/rdnssd by the maintainer scripts
+
+#
+# This is a POSIX shell fragment
+#
+
+# The path to an optional script to be called whenever the
+# configuration file written by rdnssd (/var/run/rdnssd/resolv.conf)
+# is updated. Comment this out not to call anything.
+MERGE_HOOK="/etc/rdnssd/merge-hook"
