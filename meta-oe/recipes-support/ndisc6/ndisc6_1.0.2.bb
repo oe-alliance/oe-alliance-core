@@ -58,12 +58,12 @@ INITSCRIPT_NAME = "rdnssd"
 INITSCRIPT_PACKAGES = "${PN}-rdnssd"
 
 USERADD_PACKAGES = "${PN}-rdnssd"
-USERADD_PARAM_${PN}-rdnssd = "--system --home /var/run/rdnssd \
-                              --no-create-home --shell /bin/false \
-                              --gid nogroup rdnssd"
+USERADD_PARAM_${PN}-rdnssd = "-S -h /var/run/rdnssd \
+                              -H -s /bin/false \
+                              -G nogroup rdnssd"
 
 EXTRA_OECONF = "--disable-nls"
-PR .= ".1"
+PR .= ".2"
 
 do_install_append () {
     rm -rf ${D}${localstatedir}
