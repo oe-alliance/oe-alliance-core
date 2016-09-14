@@ -21,6 +21,8 @@ LDFLAGS_append =" -lts -lm"
 
 inherit autotools binconfig pkgconfig
 
+BBCLASSEXTEND = "native"
+
 EXTRA_OECONF = "\
   --with-gfxdrivers=none \
   --enable-libmpeg3=no \
