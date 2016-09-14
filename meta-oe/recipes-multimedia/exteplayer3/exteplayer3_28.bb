@@ -30,7 +30,7 @@ SOURCE_FILES =+ "output/writer/common/pes.c"
 SOURCE_FILES =+ "output/writer/common/misc.c"
 SOURCE_FILES =+ "playback/playback.c"
 
-SOURCE_FILES =+ "${@base_contains("TARGET_ARCH", "sh4", "\
+SOURCE_FILES =+ "${@bb.utils.contains("TARGET_ARCH", "sh4", "\
 output/linuxdvb_sh4.c \
 output/writer/sh4/writer.c \
 output/writer/sh4/aac.c \
