@@ -63,6 +63,7 @@ USERADD_PARAM_${PN}-rdnssd = "--system --home /var/run/rdnssd \
                               --gid nogroup rdnssd"
 
 EXTRA_OECONF = "--disable-nls"
+PR .= ".1"
 
 do_install_append () {
     rm -rf ${D}${localstatedir}
