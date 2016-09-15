@@ -4,7 +4,7 @@ LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://README;md5=2a51a796ca47e91336a4d198147ba58f"
 
 PR = "r0"
-inherit autotools pkgconfig
+inherit pkgconfig
 
 SRC_URI = "git://github.com/alfonsotames/libsquish.git"
 SRCREV = "a9b44adc6c9d7ae74e23392a83995ba59b436950"
