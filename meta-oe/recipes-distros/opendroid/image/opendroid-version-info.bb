@@ -14,8 +14,6 @@ URL = "http://www.droidsat.org"
 
 S = "${WORKDIR}"
 
-inherit autotools
-
 PACKAGES = "${PN}"
 
 do_install() {

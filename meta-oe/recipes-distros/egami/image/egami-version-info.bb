@@ -14,8 +14,6 @@ URL = "http://egami-image.com"
 
 S = "${WORKDIR}"
 
-inherit autotools
-
 PACKAGES = "${PN}"
 
 do_install() {

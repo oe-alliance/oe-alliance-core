@@ -14,8 +14,6 @@ URL = "http://www.world-of-satellite.com"
 
 S = "${WORKDIR}"
 
-inherit autotools
-
 PACKAGES = "${PN}"
 
 do_install() {

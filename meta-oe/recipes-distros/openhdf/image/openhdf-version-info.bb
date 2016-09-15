@@ -14,8 +14,6 @@ URL = "http://www.hdfreaks.cc"
 
 S = "${WORKDIR}"
 
-inherit autotools
-
 PACKAGES = "${PN}"
 
 do_install() {

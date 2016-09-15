@@ -14,8 +14,6 @@ URL = "http://openspa.info"
 
 S = "${WORKDIR}"
 
-inherit autotools
-
 PACKAGES = "${PN}"
 
 do_install() {

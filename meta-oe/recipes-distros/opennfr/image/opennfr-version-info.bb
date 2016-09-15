@@ -12,8 +12,6 @@ URL = "http://www.nachtfalke.biz"
 
 S = "${WORKDIR}"
 
-inherit autotools
-
 PACKAGES = "${PN}"
 
 do_install() {

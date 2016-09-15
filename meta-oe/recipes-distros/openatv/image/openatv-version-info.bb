@@ -14,8 +14,6 @@ URL = "http://www.opena.tv"
 
 S = "${WORKDIR}"
 
-inherit autotools
-
 PACKAGES = "${PN}"
 
 do_install() {

@@ -14,8 +14,6 @@ URL = "http://www.vuplus-community.net"
 
 S = "${WORKDIR}"
 
-inherit autotools
-
 PACKAGES = "${PN}"
 
 do_install() {

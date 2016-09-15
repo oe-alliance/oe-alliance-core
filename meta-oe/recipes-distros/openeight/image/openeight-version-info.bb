@@ -14,8 +14,6 @@ URL = "http://www.octagon-germany.de/"
 
 S = "${WORKDIR}"
 
-inherit autotools
-
 PACKAGES = "${PN}"
 
 do_install() {
