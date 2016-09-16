@@ -1,0 +1,6 @@
+KV = "4.0.1"
+SRCDATE = "20160915"
+
+require formuler-dvb-modules.inc
+SRC_URI[md5sum] = "ab6af06789115f70b48d1947f6407978"
+SRC_URI[sha256sum] = "481bb966264964c201a9b69a6127550357873d179bdaf1bb39d62a718e868d2f"
