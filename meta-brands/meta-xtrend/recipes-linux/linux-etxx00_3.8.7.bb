@@ -4,6 +4,8 @@ LICENSE = "GPLv2"
 
 inherit kernel machine_kernel_pr
 
+MACHINE_KERNEL_PR_append = ".1"
+
 KERNEL_RELEASE = "3.8.7"
 
 SRC_URI[md5sum] = "5f6aaac90a4587df34e418bedd7d40eb"
@@ -52,6 +54,12 @@ SRC_URI += "http://www.xtrendet.net/linux-${PV}.tar.gz \
     file://rtl8187se-fix-warnings.patch \
     file://em28xx-dvb-enable-LNA-by-default-for-PCTV290e.patch \
     file://zl10353-output-full-range-SNR.patch \
+    file://stv0900-Multistream-support.patch \
+    file://0001-STV-Add-PLS-support.patch \
+    file://0001-STV-Add-SNR-Signal-report-parameters.patch \
+    file://0001-stv090x-optimized-TS-sync-control.patch \
+    file://2-2-stv090x-on-tuning-lock-return-correct-tuned-paramaters-like-freq-sr-fec-rolloff-etc.patch \
+    file://0001-Support-TBS-USB-drivers.patch \
     "
 
 S = "${WORKDIR}/linux-${PV}"
