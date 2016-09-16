@@ -9,7 +9,7 @@ SRC_URI = " \
 INITSCRIPT_NAME = "ceryon-shutdown"
 INITSCRIPT_PARAMS = "start 31 0 ."
 
-inherit autotools pkgconfig update-rc.d
+inherit pkgconfig update-rc.d
 
 do_install() {
     install -d ${D}/etc/init.d/
