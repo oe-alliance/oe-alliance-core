@@ -1,0 +1,32 @@
+--- a/blindscan-s2.c	2016-09-16 13:02:10.930130055 +0200
++++ b/blindscan-s2.c	2016-09-16 13:04:22.494835869 +0200
+@@ -430,11 +430,17 @@
+ 
+ void getinfo(int fefd, int lof, unsigned int verbose) {
+ 
++	
++#if DVB_API_VERSION > 5
+ 	float snr, signal;
++#else
++	uint16_t snr, snr_percent, signal;
++#endif
+ 	unsigned int lvl_scale, snr_scale;
+ 	int dtv_frequency_prop = 0;
+ 	int dtv_symbol_rate_prop = 0;
+ 	int dtv_inner_fec_prop = 0;
++#if DVB_API_VERSION > 5
+ 	fe_status_t status;
+ 	if (ioctl(fefd, FE_READ_STATUS, &status) == -1) {
+ 		if (verbose) perror("FE_READ_STATUS failed");
+@@ -478,6 +484,11 @@
+ 		snr = (float)snr2/10;
+ 	}
+ 	ioctl(fefd, FE_READ_STATUS, &status);
++#else
++	ioctl(fefd, FE_READ_SIGNAL_STRENGTH, &signal);
++	ioctl(fefd, FE_READ_SNR, &snr);
++	snr_percent = (snr * 100) / 0xffff;
++#endif
+ 	
+ 	struct dtv_property p[] = {
+ 		{ .cmd = DTV_DELIVERY_SYSTEM }, //[0]  0 DVB-S, 9 DVB-S2
