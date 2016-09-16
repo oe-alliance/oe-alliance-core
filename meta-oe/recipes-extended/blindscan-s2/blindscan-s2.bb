@@ -6,6 +6,7 @@ LIC_FILES_CHKSUM = "file://README.md;md5=f084bf390249474bef1b8817e83757fa"
 
 SRC_URI = "git://bitbucket.org/majortom/blindscan-s2.git;protocol=http \
     file://support-enigma2.patch \
+    file://dvb-api3.patch \
 "
 
 inherit gitpkgv
