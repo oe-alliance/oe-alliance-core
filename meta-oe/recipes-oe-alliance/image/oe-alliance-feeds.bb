@@ -9,7 +9,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "5.2"
-PR = "r13"
+PR = "r14"
 
 DEPENDS = "enigma2-plugin-drivers-usbserial"
 RECOMMENDS = "enigma2-plugin-extensions-et-livestream"
@@ -95,6 +95,10 @@ RDEPENDS_${PN} = " \
     python-js2py \
     python-mechanize \
     python-requests \
+    python-twisted-enterprise \
+    python-twisted-protocols-haproxy \
+    python-twisted-protocols-test \
+    python-twisted-trial \
     python-ujson \
     python-singledispatch \
     rsync \
