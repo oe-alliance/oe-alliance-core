@@ -12,8 +12,6 @@ SRC_URI = "https://files.pythonhosted.org/packages/source/T/Twisted/Twisted-${PV
 SRC_URI[md5sum] = "688aa3dc9ef31aa012b76cca54129b38"
 SRC_URI[sha256sum] = "cd8820901900542d21fb1dee2cd4d4d334fff130e3fc30b777f81dd7d7f2836e"
 
-PR = "r1"
-
 S = "${WORKDIR}/Twisted-${PV}"
 
 inherit setuptools
@@ -54,7 +52,6 @@ PACKAGES =+ "\
 RDEPENDS_${PN} = "\
     ${PN}-bin \
     ${PN}-conch \
-    ${PN}-enterprise \
     ${PN}-lore \
     ${PN}-mail \
     ${PN}-names \
