@@ -4,7 +4,7 @@ PACKAGE_ARCH = "all"
 require conf/license/license-gplv2.inc
 
 RRECOMMENDS_${PN} = " \
-    mt7601u \
+    ${@base_contains("MACHINE_FEATURES", "linuxwifi", "kernel-module-mt7601u", "mt7601u", d)} \
     firmware-mt7601u \
     "
 

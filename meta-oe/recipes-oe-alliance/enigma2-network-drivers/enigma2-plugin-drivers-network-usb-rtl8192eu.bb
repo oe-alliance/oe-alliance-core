@@ -4,7 +4,8 @@ PACKAGE_ARCH = "all"
 require conf/license/license-gplv2.inc
 
 RRECOMMENDS_${PN} = " \
-    rtl8192eu \
+    ${@bb.utils.contains("MACHINE_FEATURES", "linuxwifi", "kernel-module-rtl8xxxu", "rtl8192eu", d)} \
+    firmware-rtl8192eu \
     "
 
 PV = "1.0"
