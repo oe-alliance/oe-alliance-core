@@ -17,6 +17,7 @@ SRC_URI = " \
     file://rtl8712-fix-warnings.patch \
     file://rtl8187se-fix-warnings.patch \
     file://kernel-add-support-for-gcc6.patch \
+    file://dvb_frontend-Multistream-support-3.4.patch \
     ${@bb.utils.contains('MACHINE', 'dm520', \
         'file://0001-Revert-MIPS-Fix-build-with-binutils-2.24.51.patch', \
         'file://0001-xhci-Return-correct-number-of-tranferred-bytes-for-s.patch \
