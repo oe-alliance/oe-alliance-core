@@ -19,7 +19,7 @@ EXTRA_OECONF = "--with-pcap=linux \
         --with-libpcre=${STAGING_LIBDIR}/.. \
         --without-nmapfe \
         --without-openssl"
-EXTRA_OEMAKE = "STRIPPROG=${STRIP}"
+# EXTRA_OEMAKE = "STRIPPROG=${STRIP}"
 
 PARALLEL_MAKE = ""
 
