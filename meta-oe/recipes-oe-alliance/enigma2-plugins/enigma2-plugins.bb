@@ -129,3 +129,5 @@ pkg_preinst_enigma2-plugin-extensions-webinterface() {
 rm -rf /usr/lib/enigma2/python/Plugins/Extensions/WebInterface
 exit 0
 }
+
+INSANE_SKIP_${PN} += "build-deps"

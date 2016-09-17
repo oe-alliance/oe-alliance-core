@@ -149,6 +149,7 @@ do_install () {
 	rm -f ${D}${base_libdir}/*.a ${D}${base_libdir}/*.la
 	rm -f ${D}/${libdir}/*.a ${D}/${libdir}/*.la
 	rm -f ${D}${base_libdir}/*.so ${D}${libdir}/*.so
+	rm -rf ${D}${libdir}/engines
 }
 
 PR = "${INC_PR}.0"
