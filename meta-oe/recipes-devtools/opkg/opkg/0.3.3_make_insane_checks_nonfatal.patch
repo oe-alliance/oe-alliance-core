@@ -1,0 +1,79 @@
+diff -Nur a/libopkg/opkg_download.c b/libopkg/opkg_download.c
+--- a/libopkg/opkg_download.c	2015-12-02 22:56:43.000000000 +0100
++++ b/libopkg/opkg_download.c	2016-09-18 03:03:02.756358900 +0200
+@@ -488,8 +488,8 @@
+     }
+ 
+     /* Can't find anything matching the requested URL. */
+-    opkg_msg(ERROR, "Couldn't find anything to satisfy '%s'.\n", url);
+-    r = -1;
++    opkg_msg(NOTICE, "Couldn't find anything to satisfy '%s'.\n", url);
++    r = 0;
+ 
+ CLEANUP:
+     free(pkg_name);
+diff -Nur a/libopkg/opkg_install.c b/libopkg/opkg_install.c
+--- a/libopkg/opkg_install.c	2015-12-02 22:56:43.000000000 +0100
++++ b/libopkg/opkg_install.c	2016-09-18 03:51:38.415125000 +0200
+@@ -223,9 +223,9 @@
+     err = pkg_run_script(old_pkg, "prerm", script_args);
+     free(script_args);
+     if (err != 0) {
+-        opkg_msg(ERROR, "prerm script for package \"%s\" failed\n",
++        opkg_msg(NOTICE, "prerm script for package \"%s\" failed\n",
+                  old_pkg->name);
+-        return -1;
++        return 0;
+     }
+     return 0;
+ }
+@@ -585,9 +585,9 @@
+     err = pkg_run_script(old_pkg, "postrm", script_args);
+     free(script_args);
+     if (err != 0) {
+-        opkg_msg(ERROR, "postrm script for package \"%s\" failed\n",
++        opkg_msg(NOTICE, "postrm script for package \"%s\" failed\n",
+                  old_pkg->name);
+-        return -1;
++        return 0;
+     }
+     return 0;
+ }
+@@ -886,9 +886,6 @@
+     err = prerm_upgrade_old_pkg(pkg, old_pkg);
+     if (err)
+         goto UNWIND_PRERM_UPGRADE_OLD_PKG;
+-    err = preinst_configure(pkg, old_pkg);
+-    if (err)
+-        goto UNWIND_PREINST_CONFIGURE;
+ 
+     err = backup_modified_conffiles(pkg, old_pkg);
+     if (err)
+@@ -902,6 +902,10 @@
+     if (err)
+         goto UNWIND_POSTRM_UPGRADE_OLD_PKG;
+ 
++    err = preinst_configure(pkg, old_pkg);
++    if (err)
++        goto UNWIND_PREINST_CONFIGURE;
++
+     if (opkg_config->noaction)
+         return 0;
+ 
+@@ -1097,14 +1097,14 @@
+     sigprocmask(SIG_UNBLOCK, &newset, &oldset);
+     return 0;
+ 
++ UNWIND_PREINST_CONFIGURE:
++    preinst_configure_unwind(pkg, old_pkg);
+  UNWIND_POSTRM_UPGRADE_OLD_PKG:
+     postrm_upgrade_old_pkg_unwind(pkg, old_pkg);
+  UNWIND_CHECK_DATA_FILE_CLASHES:
+     check_data_file_clashes_unwind(pkg, old_pkg);
+  UNWIND_BACKUP_MODIFIED_CONFFILES:
+     backup_modified_conffiles_unwind(pkg, old_pkg);
+- UNWIND_PREINST_CONFIGURE:
+-    preinst_configure_unwind(pkg, old_pkg);
+  UNWIND_PRERM_UPGRADE_OLD_PKG:
+     prerm_upgrade_old_pkg_unwind(pkg, old_pkg);
+  pkg_is_hosed:
