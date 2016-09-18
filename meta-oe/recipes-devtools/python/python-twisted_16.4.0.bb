@@ -29,7 +29,6 @@ PACKAGES += "\
     ${PN}-protocols-test \
     ${PN}-protocols \
     ${PN}-conch \
-    ${PN}-enterprise \
     ${PN}-lore \
     ${PN}-mail \
     ${PN}-manhole \
@@ -64,7 +63,6 @@ RDEPENDS_${PN} = "\
 RDEPENDS_${PN}-core = "python-core python-zopeinterface python-contextlib"
 RDEPENDS_${PN}-test = "${PN}"
 RDEPENDS_${PN}-conch = "${PN}-core ${PN}-protocols"
-RDEPENDS_${PN}-enterprise = "${PN}-core"
 RDEPENDS_${PN}-lore = "${PN}-core"
 RDEPENDS_${PN}-mail = "${PN}-core ${PN}-protocols"
 RDEPENDS_${PN}-manhole = "${PN}-core"
@@ -143,6 +141,7 @@ ${libdir}/${PYTHON_DIR}/site-packages/twisted/plugins/dropin.cache \
 ${libdir}/${PYTHON_DIR}/site-packages/twisted/_threads \
 ${libdir}/${PYTHON_DIR}/site-packages/twisted/application \
 ${libdir}/${PYTHON_DIR}/site-packages/twisted/cred \
+${libdir}/${PYTHON_DIR}/site-packages/twisted/enterprise \
 ${libdir}/${PYTHON_DIR}/site-packages/twisted/internet \
 ${libdir}/${PYTHON_DIR}/site-packages/twisted/logger \
 ${libdir}/${PYTHON_DIR}/site-packages/twisted/persisted \
@@ -206,10 +205,6 @@ FILES_${PN}-manhole = " \
 ${bindir}/manhole \
 ${libdir}/${PYTHON_DIR}/site-packages/twisted/plugins/twisted_manhole.py* \
 ${libdir}/${PYTHON_DIR}/site-packages/twisted/manhole \
-"
-
-FILES_${PN}-enterprise = " \
-${libdir}/${PYTHON_DIR}/site-packages/twisted/enterprise \
 "
 
 FILES_${PN}-trial = " \
@@ -282,3 +277,5 @@ FILES_${PN}-src = " \
 	${libdir}/${PYTHON_DIR}/site-packages/twisted/*/*.py \
 	${libdir}/${PYTHON_DIR}/site-packages/twisted/*/*/*.py \
 	"
+
+PR .= ".1"
