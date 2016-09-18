@@ -1,0 +1,37 @@
+diff -Nur a/libopkg/opkg_install.c b/libopkg/opkg_install.c
+--- a/libopkg/opkg_install.c	2015-12-02 22:56:43.000000000 +0100
++++ b/libopkg/opkg_install.c	2016-09-18 05:05:09.264411200 +0200
+@@ -237,7 +237,15 @@
+ 
+     sprintf_alloc(&script_args, "upgrade %s", new_version);
+     free(new_version);
+-    err = pkg_run_script(old_pkg, "prerm", script_args);
++    // Busybox needs special care: Do not execute the prerm script
++    // of busybox or all following packages will fail
++    if ((strlen(old_pkg->name) >= 7) && (strncmp(old_pkg->name, "busybox", 7) == 0)) {
++        opkg_msg(NOTICE, "Skipping prerm script for package \"%s\"\n",
++                 old_pkg->name);
++        err = 0;
++    } else {
++        err = pkg_run_script(old_pkg, "prerm", script_args);
++    }
+     free(script_args);
+     if (err != 0) {
+         opkg_msg(NOTICE, "prerm script for package \"%s\" failed\n",
+@@ -610,7 +617,15 @@
+ 
+     sprintf_alloc(&script_args, "upgrade %s", new_version);
+     free(new_version);
+-    err = pkg_run_script(old_pkg, "postrm", script_args);
++    // Busybox needs special care: Do not execute the postrm script
++    // of busybox or all following packages will fail
++    if ((strlen(old_pkg->name) >= 7) && (strncmp(old_pkg->name, "busybox", 7) == 0)) {
++        opkg_msg(NOTICE, "Skipping postrm script for package \"%s\"\n",
++                 old_pkg->name);
++        err = 0;
++    } else {
++        err = pkg_run_script(old_pkg, "postrm", script_args);
++    }
+     free(script_args);
+     if (err != 0) {
+         opkg_msg(NOTICE, "postrm script for package \"%s\" failed\n",
