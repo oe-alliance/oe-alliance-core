@@ -12,8 +12,6 @@ SRC_URI = "https://files.pythonhosted.org/packages/source/T/Twisted/Twisted-${PV
 SRC_URI[md5sum] = "688aa3dc9ef31aa012b76cca54129b38"
 SRC_URI[sha256sum] = "cd8820901900542d21fb1dee2cd4d4d334fff130e3fc30b777f81dd7d7f2836e"
 
-PR = "r1"
-
 S = "${WORKDIR}/Twisted-${PV}"
 
 inherit setuptools
@@ -31,7 +29,6 @@ PACKAGES += "\
     ${PN}-protocols-test \
     ${PN}-protocols \
     ${PN}-conch \
-    ${PN}-enterprise \
     ${PN}-lore \
     ${PN}-mail \
     ${PN}-manhole \
@@ -54,7 +51,6 @@ PACKAGES =+ "\
 RDEPENDS_${PN} = "\
     ${PN}-bin \
     ${PN}-conch \
-    ${PN}-enterprise \
     ${PN}-lore \
     ${PN}-mail \
     ${PN}-names \
@@ -67,7 +63,6 @@ RDEPENDS_${PN} = "\
 RDEPENDS_${PN}-core = "python-core python-zopeinterface python-contextlib"
 RDEPENDS_${PN}-test = "${PN}"
 RDEPENDS_${PN}-conch = "${PN}-core ${PN}-protocols"
-RDEPENDS_${PN}-enterprise = "${PN}-core"
 RDEPENDS_${PN}-lore = "${PN}-core"
 RDEPENDS_${PN}-mail = "${PN}-core ${PN}-protocols"
 RDEPENDS_${PN}-manhole = "${PN}-core"
@@ -146,6 +141,7 @@ ${libdir}/${PYTHON_DIR}/site-packages/twisted/plugins/dropin.cache \
 ${libdir}/${PYTHON_DIR}/site-packages/twisted/_threads \
 ${libdir}/${PYTHON_DIR}/site-packages/twisted/application \
 ${libdir}/${PYTHON_DIR}/site-packages/twisted/cred \
+${libdir}/${PYTHON_DIR}/site-packages/twisted/enterprise \
 ${libdir}/${PYTHON_DIR}/site-packages/twisted/internet \
 ${libdir}/${PYTHON_DIR}/site-packages/twisted/logger \
 ${libdir}/${PYTHON_DIR}/site-packages/twisted/persisted \
@@ -209,10 +205,6 @@ FILES_${PN}-manhole = " \
 ${bindir}/manhole \
 ${libdir}/${PYTHON_DIR}/site-packages/twisted/plugins/twisted_manhole.py* \
 ${libdir}/${PYTHON_DIR}/site-packages/twisted/manhole \
-"
-
-FILES_${PN}-enterprise = " \
-${libdir}/${PYTHON_DIR}/site-packages/twisted/enterprise \
 "
 
 FILES_${PN}-trial = " \
@@ -285,3 +277,5 @@ FILES_${PN}-src = " \
 	${libdir}/${PYTHON_DIR}/site-packages/twisted/*/*.py \
 	${libdir}/${PYTHON_DIR}/site-packages/twisted/*/*/*.py \
 	"
+
+PR .= ".1"

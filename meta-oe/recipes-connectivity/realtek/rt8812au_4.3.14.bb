@@ -6,11 +6,12 @@ LIC_FILES_CHKSUM = "file://ifcfg-wlan0;md5=6061d24ec65e191716f64bb3fe580790"
 
 inherit module
 
-PR = "r7"
+PR = "r8"
 
 MACHINE_KERNEL_PR_append = ".1"
 
 SRC_URI = "http://source.mynonpublic.com/rtl8812AU-driver-4.3.14.zip \
+    file://rt8812au-gcc5.patch \
 "
 
 EXTRA_OEMAKE = "LINUX_SRC=${STAGING_KERNEL_DIR} KDIR=${STAGING_KERNEL_DIR}"
