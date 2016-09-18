@@ -9,7 +9,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "5.2"
-PR = "r13"
+PR = "r15"
 
 DEPENDS = "enigma2-plugin-drivers-usbserial"
 RECOMMENDS = "enigma2-plugin-extensions-et-livestream"
@@ -115,7 +115,6 @@ RDEPENDS_${PN} = " \
     zeroconf \
     "
 
-RDEPENDS_${PN}_remove_xc7362 = "network-usb-drivers-meta"
 RDEPENDS_${PN}_remove_wetekplay = "network-usb-drivers-meta"
 
 RRECOMMENDS_${PN}_append_vuuno = "enigma2-plugin-extensions-hbbtv"

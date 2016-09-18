@@ -1,24 +1,22 @@
-SUMMARY = "Ralink 8812AU/8821AU v4.2.2"
+SUMMARY = "Ralink 8812AU/8821AU v4.3.14"
 HOMEPAGE = "http://www.realtek.com.tw"
 SECTION = "kernel/modules"
 LICENSE = "GPLv2"
-LIC_FILES_CHKSUM = "file://ifcfg-wlan0;md5=a84acae65af4b2d44d5035aa9f63cd85"
+LIC_FILES_CHKSUM = "file://ifcfg-wlan0;md5=6061d24ec65e191716f64bb3fe580790"
 
 inherit module
 
-PR = "r7"
+PR = "r8"
 
 MACHINE_KERNEL_PR_append = ".1"
 
-SRC_URI = "http://source.mynonpublic.com/rtl8812AU_8821AU_linux-4.2.3-20160329.zip \
-    file://rtw_cfg80211_rx_mgmt.patch \
+SRC_URI = "http://source.mynonpublic.com/rtl8812AU-driver-4.3.14.zip \
+    file://rt8812au-gcc5.patch \
 "
-
-SRC_URI_append_sh4 = "file://CONFIG_IOCTL_CFG80211.patch"
 
 EXTRA_OEMAKE = "LINUX_SRC=${STAGING_KERNEL_DIR} KDIR=${STAGING_KERNEL_DIR}"
 
-S = "${WORKDIR}/"
+S = "${WORKDIR}/rtl8812AU-driver-4.3.14"
 
 do_compile () {
     unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS CC LD CPP
@@ -41,6 +39,6 @@ do_install() {
 
 }
 
-SRC_URI[md5sum] = "270be04c3237e09d232e1e38059a9fae"
-SRC_URI[sha256sum] = "f76ee751a8bd4627c6c6dc27c865853297e7cbfad864af5bb300defe87ecbbff"
+SRC_URI[md5sum] = "0f36c65f154971c3b305a1705f9e500f"
+SRC_URI[sha256sum] = "e1ab86b4aca9ee599141d2d23dd5c989e0a6d004c8b87a487b370e80a4aba7e2"
 

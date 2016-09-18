@@ -4,7 +4,7 @@ HOMEPAGE = "http://www.openssl.org/"
 BUGTRACKER = "http://www.openssl.org/news/vulnerabilities.html"
 SECTION = "libs/network"
 
-INC_PR = "r17"
+INC_PR = "r18"
 
 # "openssl | SSLeay" dual license
 LICENSE = "openssl"
@@ -149,6 +149,7 @@ do_install () {
 	rm -f ${D}${base_libdir}/*.a ${D}${base_libdir}/*.la
 	rm -f ${D}/${libdir}/*.a ${D}/${libdir}/*.la
 	rm -f ${D}${base_libdir}/*.so ${D}${libdir}/*.so
+	rm -rf ${D}${libdir}/engines
 }
 
 PR = "${INC_PR}.0"
