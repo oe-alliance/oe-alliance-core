@@ -43,7 +43,7 @@ SRC_URI = " \
     file://fixme-hardfloat.patch \
     file://defconfig \
     file://kernel-add-support-for-gcc6.patch \
-    file://dvb_frontend-Multistream-support-3.4.patch \
+    file://dvb_frontend-Multistream-support-3.2.patch \
 "
 
 PACKAGES_DYNAMIC = "kernel-*"
