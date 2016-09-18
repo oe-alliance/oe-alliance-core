@@ -3,7 +3,8 @@ PR .= ".1"
 SRC_URI += "file://sanity-check-provides.patch \
     file://0001-reuse-the-installed_files-list-when-possible.patch \
     file://stop_deprecated_version_message.patch \
-    file://warn-only-then-file-not-exist.patch \
+    file://0.3.1_make_insane_patches_nonfatal.patch \
+    file://0.3.1_busybox_workaround.patch \
     file://modprobe \
     "
 

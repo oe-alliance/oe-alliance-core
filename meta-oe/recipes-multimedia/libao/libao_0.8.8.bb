@@ -13,7 +13,6 @@ SRC_URI = "http://downloads.xiph.org/releases/ao/libao-${PV}.tar.gz"
 inherit autotools pkgconfig
 
 EXTRA_OECONF = "\
-  --enable-oss \
   --disable-esd \
   --disable-esdtest \
   --disable-alsa \
