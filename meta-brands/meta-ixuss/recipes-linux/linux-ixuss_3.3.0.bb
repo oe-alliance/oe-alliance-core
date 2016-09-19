@@ -56,6 +56,7 @@ SRC_URI += "http://source.mynonpublic.com/stblinux-3.3.0-20130404.tgz \
     file://rtl8712-fix-warnings.patch \
     file://rtl8187se-fix-warnings.patch \
     file://kernel-add-support-for-gcc6.patch \
+    file://timeconst_perl5.patch \
     "
 
 S = "${WORKDIR}/linux-${PV}"
