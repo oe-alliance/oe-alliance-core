@@ -9,9 +9,9 @@ PR = "r6"
 SRCDATE = "3.11-1"
 SRCDATE_azboxhd = "2.8-3"
 
-SRC_URI_azboxme = "http://azbox-enigma2-project.googlecode.com/files/${MACHINE}-mrua-${SRCDATE}.tar.gz;name=azbox-mrua-${MACHINE}"
-SRC_URI_azboxminime = "http://azbox-enigma2-project.googlecode.com/files/${MACHINE}-mrua-${SRCDATE}.tar.gz;name=azbox-mrua-${MACHINE}"
-SRC_URI_azboxhd = "http://azbox-enigma2-project.googlecode.com/files/${MACHINE}-mrua-${SRCDATE}.tar.gz;name=azbox-mrua-${MACHINE}"
+SRC_URI_azboxme = "http://source.mynonpublic.com/azbox/${MACHINE}-mrua-${SRCDATE}.tar.gz;name=azbox-mrua-${MACHINE}"
+SRC_URI_azboxminime = "http://source.mynonpublic.com/azbox/${MACHINE}-mrua-${SRCDATE}.tar.gz;name=azbox-mrua-${MACHINE}"
+SRC_URI_azboxhd = "http://source.mynonpublic.com/azbox/${MACHINE}-mrua-${SRCDATE}.tar.gz;name=azbox-mrua-${MACHINE}"
 
 SRC_URI[azbox-mrua-azboxhd.md5sum] = "2341ac101030721380513e95c60b157e"
 SRC_URI[azbox-mrua-azboxhd.sha256sum] = "3d01a3428135cfaaa0268de9e0734600657170078cbb8ed2aaaf76643bb1881f"
