@@ -17,7 +17,7 @@ SRCGET_azboxhd = "22102013"
 PV = "${KV}+${SRCDATE}"
 PR = "r7"
 
-SRC_URI = "http://azbox-enigma2-project.googlecode.com/files/${MACHINE}-dvb-modules-${KV}-oe-core-${SRCGET}.tar.gz;name=azbox-dvb-modules-${MACHINE}"
+SRC_URI = "http://source.mynonpublic.com/azbox/${MACHINE}-dvb-modules-${KV}-oe-core-${SRCGET}.tar.gz;name=azbox-dvb-modules-${MACHINE}"
 SRC_URI_azboxhd = "http://source.mynonpublic.com/${MACHINE}-dvb-modules-${KV}-oe-core-${SRCGET}.tar.gz;name=azbox-dvb-modules-${MACHINE}"
 
 SRC_URI[azbox-dvb-modules-azboxhd.md5sum] = "03f439093ec5ce00e82a7ccd38fd3323"
