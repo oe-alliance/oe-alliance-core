@@ -5,7 +5,7 @@ LICENSE = "CLOSED"
 require conf/license/license-close.inc
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
-SRC_URI = "http://azbox-enigma2-project.googlecode.com/files/azbox-blindscan-utils-${MACHINE}-${PV}.tar.bz2;name=azbox-blind-${MACHINE}"
+SRC_URI = "http://source.mynonpublic.com/azbox/azbox-blindscan-utils-${MACHINE}-${PV}.tar.bz2;name=azbox-blind-${MACHINE}"
 
 SRC_URI[azbox-blind-azboxhd.md5sum] = "0f536da981f694d821ea4f9c18e660c2"
 SRC_URI[azbox-blind-azboxhd.sha256sum] = "574f3622d83c04faeb1587f19a64e4b1235341915707c83fd18c3f8102b390c0"
