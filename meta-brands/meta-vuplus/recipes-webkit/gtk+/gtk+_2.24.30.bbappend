@@ -11,3 +11,4 @@ SRC_URI += " \
 	file://003_disable_demo_build_patch.diff;apply=yes;striplevel=1 \
 	"
 
+PACKAGECONFIG = "directfb"
