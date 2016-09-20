@@ -1,0 +1,167 @@
+From 4849d6cbe958adf6dfa96dc2eb9289bfb1d43044 Mon Sep 17 00:00:00 2001
+From: Athanasios Oikonomou <athoik@gmail.com>
+Date: Tue, 13 Sep 2016 21:04:21 +0300
+Subject: [PATCH] dvb_frontend: backport multistream support
+
+Patch based on: https://github.com/torvalds/linux/commit/287cefd096b124874dc4d6d155f53547c0654860
+
+Version did not changed though (so old applications might break).
+---
+ drivers/media/dvb/dvb-core/dvb_frontend.c | 26 ++++++++++++++------------
+ drivers/media/dvb/dvb-core/dvb_frontend.h |  7 ++-----
+ drivers/media/dvb/pt1/va1j5jf8007s.c      | 11 ++++++-----
+ include/linux/dvb/frontend.h              | 11 +++++++----
+ 4 files changed, 29 insertions(+), 26 deletions(-)
+
+diff --git a/drivers/media/dvb/dvb-core/dvb_frontend.c b/drivers/media/dvb/dvb-core/dvb_frontend.c
+index 2c0acdb..d5c0a29 100644
+--- a/drivers/media/dvb/dvb-core/dvb_frontend.c
++++ b/drivers/media/dvb/dvb-core/dvb_frontend.c
+@@ -890,6 +890,8 @@ static int dvb_frontend_clear_cache(struct dvb_frontend *fe)
+ 		c->layer[i].segment_count = -1;
+ 	}
+ 
++	c->stream_id = NO_STREAM_ID_FILTER;
++
+ 	return 0;
+ }
+ 
+@@ -962,8 +964,8 @@ static struct dtv_cmds_h dtv_cmds[DTV_MAX_COMMAND + 1] = {
+ 	_DTV_CMD(DTV_ISDBT_LAYERC_SEGMENT_COUNT, 0, 0),
+ 	_DTV_CMD(DTV_ISDBT_LAYERC_TIME_INTERLEAVING, 0, 0),
+ 
+-	_DTV_CMD(DTV_ISDBS_TS_ID, 1, 0),
+-	_DTV_CMD(DTV_DVBT2_PLP_ID, 1, 0),
++	_DTV_CMD(DTV_STREAM_ID, 1, 0),
++	_DTV_CMD(DTV_DVBT2_PLP_ID_LEGACY, 1, 0),
+ 
+ 	/* Get */
+ 	_DTV_CMD(DTV_DISEQC_SLAVE_REPLY, 0, 1),
+@@ -1334,11 +1336,11 @@ static int dtv_property_process_get(struct dvb_frontend *fe,
+ 	case DTV_ISDBT_LAYERC_TIME_INTERLEAVING:
+ 		tvp->u.data = c->layer[2].interleaving;
+ 		break;
+-	case DTV_ISDBS_TS_ID:
+-		tvp->u.data = c->isdbs_ts_id;
+-		break;
+-	case DTV_DVBT2_PLP_ID:
+-		tvp->u.data = c->dvbt2_plp_id;
++
++	/* Multistream support */
++	case DTV_STREAM_ID:
++	case DTV_DVBT2_PLP_ID_LEGACY:
++		tvp->u.data = c->stream_id;
+ 		break;
+ 	default:
+ 		return -EINVAL;
+@@ -1500,11 +1502,11 @@ static int dtv_property_process_set(struct dvb_frontend *fe,
+ 	case DTV_ISDBT_LAYERC_TIME_INTERLEAVING:
+ 		c->layer[2].interleaving = tvp->u.data;
+ 		break;
+-	case DTV_ISDBS_TS_ID:
+-		c->isdbs_ts_id = tvp->u.data;
+-		break;
+-	case DTV_DVBT2_PLP_ID:
+-		c->dvbt2_plp_id = tvp->u.data;
++
++	/* Multistream support */
++	case DTV_STREAM_ID:
++	case DTV_DVBT2_PLP_ID_LEGACY:
++		c->stream_id = tvp->u.data;
+ 		break;
+ 	default:
+ 		return -EINVAL;
+diff --git a/drivers/media/dvb/dvb-core/dvb_frontend.h b/drivers/media/dvb/dvb-core/dvb_frontend.h
+index 67bbfa7..99c757b 100644
+--- a/drivers/media/dvb/dvb-core/dvb_frontend.h
++++ b/drivers/media/dvb/dvb-core/dvb_frontend.h
+@@ -357,11 +357,8 @@ struct dtv_frontend_properties {
+ 	    u8			interleaving;
+ 	} layer[3];
+ 
+-	/* ISDB-T specifics */
+-	u32			isdbs_ts_id;
+-
+-	/* DVB-T2 specifics */
+-	u32                     dvbt2_plp_id;
++	/* Multistream specifics */
++	u32                     stream_id;
+ };
+ 
+ struct dvb_frontend {
+diff --git a/drivers/media/dvb/pt1/va1j5jf8007s.c b/drivers/media/dvb/pt1/va1j5jf8007s.c
+index 451641c..aaf5fa9 100644
+--- a/drivers/media/dvb/pt1/va1j5jf8007s.c
++++ b/drivers/media/dvb/pt1/va1j5jf8007s.c
+@@ -329,8 +329,8 @@ va1j5jf8007s_set_ts_id(struct va1j5jf8007s_state *state)
+ 	u8 buf[3];
+ 	struct i2c_msg msg;
+ 
+-	ts_id = state->fe.dtv_property_cache.isdbs_ts_id;
+-	if (!ts_id)
++	ts_id = state->fe.dtv_property_cache.stream_id;
++	if (!ts_id || ts_id == NO_STREAM_ID_FILTER)
+ 		return 0;
+ 
+ 	buf[0] = 0x8f;
+@@ -356,8 +356,8 @@ va1j5jf8007s_check_ts_id(struct va1j5jf8007s_state *state, int *lock)
+ 	struct i2c_msg msgs[2];
+ 	u32 ts_id;
+ 
+-	ts_id = state->fe.dtv_property_cache.isdbs_ts_id;
+-	if (!ts_id) {
++	ts_id = state->fe.dtv_property_cache.stream_id;
++	if (!ts_id || ts_id == NO_STREAM_ID_FILTER) {
+ 		*lock = 1;
+ 		return 0;
+ 	}
+@@ -587,7 +587,8 @@ static struct dvb_frontend_ops va1j5jf8007s_ops = {
+ 		.frequency_stepsize = 1000,
+ 		.caps = FE_CAN_INVERSION_AUTO | FE_CAN_FEC_AUTO |
+ 			FE_CAN_QAM_AUTO | FE_CAN_TRANSMISSION_MODE_AUTO |
+-			FE_CAN_GUARD_INTERVAL_AUTO | FE_CAN_HIERARCHY_AUTO,
++			FE_CAN_GUARD_INTERVAL_AUTO | FE_CAN_HIERARCHY_AUTO |
++			FE_CAN_MULTISTREAM,
+ 	},
+ 
+ 	.read_snr = va1j5jf8007s_read_snr,
+diff --git a/include/linux/dvb/frontend.h b/include/linux/dvb/frontend.h
+index 1b1094c..f85882a 100644
+--- a/include/linux/dvb/frontend.h
++++ b/include/linux/dvb/frontend.h
+@@ -62,6 +62,7 @@ typedef enum fe_caps {
+ 	FE_CAN_8VSB			= 0x200000,
+ 	FE_CAN_16VSB			= 0x400000,
+ 	FE_HAS_EXTENDED_CAPS		= 0x800000,   /* We need more bitspace for newer APIs, indicate this. */
++	FE_CAN_MULTISTREAM		= 0x4000000,  /* frontend supports multistream filtering */
+ 	FE_CAN_TURBO_FEC		= 0x8000000,  /* frontend supports "turbo fec modulation" */
+ 	FE_CAN_2G_MODULATION		= 0x10000000, /* frontend supports "2nd generation modulation" (DVB-S2) */
+ 	FE_NEEDS_BENDING		= 0x20000000, /* not supported anymore, don't use (frontend requires frequency bending) */
+@@ -312,11 +313,11 @@ struct dvb_frontend_event {
+ 
+ #define DTV_ISDBT_LAYER_ENABLED	41
+ 
+-#define DTV_ISDBS_TS_ID		42
++#define DTV_STREAM_ID		42
++#define DTV_ISDBS_TS_ID_LEGACY	DTV_STREAM_ID
++#define DTV_DVBT2_PLP_ID_LEGACY	43
+ 
+-#define DTV_DVBT2_PLP_ID	43
+-
+-#define DTV_MAX_COMMAND				DTV_DVBT2_PLP_ID
++#define DTV_MAX_COMMAND				DTV_DVBT2_PLP_ID_LEGACY
+ 
+ typedef enum fe_pilot {
+ 	PILOT_ON,
+@@ -352,6 +353,8 @@ typedef enum fe_delivery_system {
+ 	SYS_TURBO,
+ } fe_delivery_system_t;
+ 
++#define NO_STREAM_ID_FILTER	(~0U)
++
+ struct dtv_cmds_h {
+ 	char	*name;		/* A display name for debugging purposes */
+ 
+-- 
+2.1.4
+
