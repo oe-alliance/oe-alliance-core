@@ -27,6 +27,11 @@ S = "${WORKDIR}"
 
 INHIBIT_PACKAGE_STRIP = "1"
 
+ALLOW_EMPTY_kernel-module-hook = "1"
+ALLOW_EMPTY_kernel-module-irvfd = "1"
+PACKAGES += "kernel-module-hook kernel-module-irvfd"
+PROVIDES += "kernel-module-hook kernel-module-irvfd"
+
 inherit module
 
 do_compile() {
