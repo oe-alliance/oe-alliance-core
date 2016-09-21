@@ -6,3 +6,7 @@ SRC_URI[sha256sum] = "6f220258f3ce9f11d0e53860ccc2d9fe746117056212099876dbe5ee1d
 do_install_append_arm() {
 	cp ${S}/include/linux/usb/video.h ${D}${includedir}/linux/usb/video.h
 }
+
+SRC_URI += " \
+        file://dvb_frontend-Multistream-support-3.1.patch \
+"
