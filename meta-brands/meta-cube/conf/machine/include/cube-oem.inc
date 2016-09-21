@@ -79,6 +79,7 @@ PREFERRED_PROVIDER_virtual/egl = "opengl"
 
 PREFERRED_VERSION_linux-cube = "2.6.34"
 PREFERRED_VERSION_linux-libc-headers = "3.1"
+OLDEST_KERNEL = "2.6.34"
 
 GLIBC_EXTRA_OECONF = "--with-tls --with-__thread"
 
