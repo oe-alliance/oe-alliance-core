@@ -17,8 +17,8 @@ EXTRA_OECONF_PATHS = "\
 "
 # We have to point gcc at a sysroot but we don't need to rebuild if this changes
 # e.g. we switch between different machines with different tunes.
-EXTRA_OECONF_PATHS[vardepsexclude] = "TUNE_PKGARCH"
-TARGET_ARCH[vardepsexclude] = "TUNE_ARCH"
+EXTRA_OECONF_PATHS[vardepsexclude] += "TUNE_PKGARCH"
+TARGET_ARCH[vardepsexclude] += "TUNE_ARCH"
 get_gcc_float_setting[vardepvalue] = ""
 
 #

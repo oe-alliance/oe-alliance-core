@@ -69,7 +69,7 @@ def get_tune_parameters(tune, d):
     retdict['package_extra_archs'] = localdata.getVar('PACKAGE_EXTRA_ARCHS', True)
     return retdict
 
-get_tune_parameters[vardepsexclude] = "AVAILTUNES TUNE_CCARGS OVERRIDES TUNE_FEATURES BASE_LIB BASELIB TUNE_ARCH ABIEXTENSION TARGET_FPU TUNE_PKGARCH PACKAGE_EXTRA_ARCHS"
+get_tune_parameters[vardepsexclude] += "AVAILTUNES TUNE_CCARGS OVERRIDES TUNE_FEATURES BASE_LIB BASELIB TUNE_ARCH ABIEXTENSION TARGET_FPU TUNE_PKGARCH PACKAGE_EXTRA_ARCHS"
 
 DEBIANNAME_${MLPREFIX}libgcc = "libgcc1"
 
@@ -96,5 +96,5 @@ target_prefix ?= "${prefix}"
 
 # We need to ensure that for the shared work directory, the do_patch signatures match
 # The real WORKDIR location isn't a dependency for the shared workdir.
-src_patches[vardepsexclude] = "WORKDIR"
+src_patches[vardepsexclude] += "WORKDIR"
 should_apply[vardepsexclude] += "PN"

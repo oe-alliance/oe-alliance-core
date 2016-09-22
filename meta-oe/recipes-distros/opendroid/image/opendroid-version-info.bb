@@ -36,6 +36,6 @@ do_install() {
     echo "catalog=${URL}" >> ${D}/etc/image-version
     echo "${MACHINE}" > ${D}/etc/model
 }
-do_install[vardepsexclude] = "DATETIME"
+do_install[vardepsexclude] += "DATETIME"
 
 FILES_${PN} += "/etc/model /etc/image-version /etc/oe-git.log /etc/e2-git.log"

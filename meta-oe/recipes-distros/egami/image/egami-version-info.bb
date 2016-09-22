@@ -35,6 +35,6 @@ do_install() {
     echo "url=${URL}" >> ${D}/etc/image-version
     echo "catalog=${URL}" >> ${D}/etc/image-version
 }
-do_install[vardepsexclude] = "DATETIME"
+do_install[vardepsexclude] += "DATETIME"
 
 FILES_${PN} = "/etc/image-version"
