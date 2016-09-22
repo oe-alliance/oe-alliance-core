@@ -14,6 +14,8 @@ SRC_URI = "http://source.mynonpublic.com/rtl8812AU-driver-4.3.14.zip \
     file://rt8812au-gcc5.patch \
 "
 
+SRC_URI_append_sh4 = "file://fix_sh4_build.patch"
+
 EXTRA_OEMAKE = "LINUX_SRC=${STAGING_KERNEL_DIR} KDIR=${STAGING_KERNEL_DIR}"
 
 S = "${WORKDIR}/rtl8812AU-driver-4.3.14"
