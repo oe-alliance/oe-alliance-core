@@ -10,7 +10,7 @@ inherit autotools-brokensep update-rc.d
 
 SAMBA_MIRROR = "http://samba.org/samba/ftp"
 
-MIRRORS += "\ 
+MIRRORS += "\
 ${SAMBA_MIRROR}    http://mirror.internode.on.net/pub/samba \n \
 ${SAMBA_MIRROR}    http://www.mirrorservice.org/sites/ftp.samba.org \n \
 "
@@ -40,6 +40,7 @@ SRC_URI = "${SAMBA_MIRROR}/stable/samba-${PV}.tar.gz \
            file://pam.samba \
            file://users.map \
            file://smbpasswd \
+           file://samba.service \
 "
 
 SRC_URI[md5sum] = "76da2fa64edd94a0188531e7ecb27c4e"
@@ -189,7 +190,7 @@ S = "${WORKDIR}/samba-${PV}/source3"
 do_configure() {
     ./script/mkversion.sh
     if [ ! -e acinclude.m4 ]; then
-        touch aclocal.m4    
+        touch aclocal.m4
         cat aclocal.m4 > acinclude.m4
     fi
     gnu-configize --force
@@ -213,13 +214,14 @@ do_install_append() {
     ln -sf ./samba_multicall ${D}${sbindir}/smbd
     ln -sf ./samba_multicall ${D}${sbindir}/nmbd
     ln -sf ../sbin/samba_multicall ${D}${bindir}/smbpasswd
-    
+
     install -D -m 755 ${WORKDIR}/init.samba ${D}${sysconfdir}/init.d/samba
     install -D -m 755 ${WORKDIR}/upgrade ${D}${sysconfdir}/init.d/upgrade
     install -D -m 644 ${WORKDIR}/smb.conf ${D}${sysconfdir}/samba/smb.conf
     install -D -m 600 ${WORKDIR}/users.map ${D}${sysconfdir}/samba/private/users.map
     install -D -m 600 ${WORKDIR}/smbpasswd ${D}${sysconfdir}/samba/private/smbpasswd
     install -D -m 644 ${WORKDIR}/pam.samba ${D}${sysconfdir}/pam.d/samba
+    install -D -m 644 ${WORKDIR}/samba.service ${D}${sysconfdir}/avahi/services/samba.service
 
     rmdir --ignore-fail-on-non-empty ${D}${base_sbindir} || true
     sed -i -e '1s,#!.*perl,#!${USRBINPATH}/env perl,' ${D}${bindir}/findsmb
