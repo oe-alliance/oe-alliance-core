@@ -11,7 +11,7 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PKGV = "2.0+git${GITPKGV}"
 PV = "2.0+svnr${SRCPV}"
-PR = "r2"
+PR = "r3"
 
 SRC_URI = "svn://sbnc.dyndns.tv/svn/;module=titan;protocol=http"
 
