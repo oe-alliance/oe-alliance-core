@@ -87,6 +87,7 @@ IMAGE_INSTALL = "\
 	portmap-utils \
 	python \
     python-codecs \
+    python-compression \
     python-core \
     python-crypt \
     python-fcntl \
