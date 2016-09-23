@@ -12,9 +12,9 @@ S = "${WORKDIR}"
 
 INHIBIT_PACKAGE_STRIP = "1"
 
-inherit module
-
 do_compile() {
+}
+do_populate_sysroot() {
 }
 
 do_install() {
@@ -24,3 +24,4 @@ do_install() {
     done
 }
 
+FILES_${PN} += "/lib/modules/${KV}/extra"

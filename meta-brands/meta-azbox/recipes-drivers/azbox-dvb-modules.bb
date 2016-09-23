@@ -31,14 +31,9 @@ S = "${WORKDIR}"
 
 INHIBIT_PACKAGE_STRIP = "1"
 
-ALLOW_EMPTY_kernel-module-hook = "1"
-ALLOW_EMPTY_kernel-module-irvfd = "1"
-PACKAGES += "kernel-module-hook kernel-module-irvfd"
-PROVIDES += "kernel-module-hook kernel-module-irvfd"
-
-inherit module
-
 do_compile() {
+}
+do_populate_sysroot() {
 }
 
 do_install_azboxhd() {
@@ -65,4 +60,4 @@ do_install() {
     install -m 0644 ${WORKDIR}/dvb-fe-avl6211.fw ${D}/lib/firmware/dvb-fe-avl6211.fw
 }
 
-FILES_${PN} += "${sysconfdir}/modules-load.d/_${MACHINE}.conf /lib/firmware/*"
+FILES_${PN} += "${sysconfdir}/modules-load.d/_${MACHINE}.conf /lib/firmware/* /lib/modules/${KV}/extra"
