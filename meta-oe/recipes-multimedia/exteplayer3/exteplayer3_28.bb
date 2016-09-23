@@ -9,7 +9,7 @@ RDEPENDS_${PN} = "ffmpeg"
 
 PR = "r1"
 
-SRCREV = "921d3e0958425bc9b202e94b4ecc1d9340fea7e6"
+SRCREV = "52690f59e7268d39000abad2a59d0b2904777279"
 SRC_URI = " \
     git://github.com/samsamsam-iptvplayer/exteplayer3.git;branch=master \
     file://fix_uint_include.patch;patch=1 \
