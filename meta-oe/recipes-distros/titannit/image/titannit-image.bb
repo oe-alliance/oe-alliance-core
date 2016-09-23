@@ -79,13 +79,36 @@ IMAGE_INSTALL = "\
 	packagegroup-base-smbfs-client \
     packagegroup-base-smbfs-server \
     packagegroup-base-smbfs-utils \
-    packagegroup-base-nfs \
+    packagegroup-base-nfs \    
 	parted \
 	pngquant \
 	procps \
 	portmap \
 	portmap-utils \
 	python \
+    python-codecs \
+    python-core \
+    python-crypt \
+    python-fcntl \
+    python-lang \
+    python-netclient \
+    python-netserver \
+    python-pickle \
+    python-re \
+    python-shell \
+    python-threading \
+    python-twisted-core \
+    python-twisted-web \
+    python-utf8-hack \
+    python-xml \
+    python-zlib \
+    python-zopeinterface \
+    python-email \
+    python-mime \
+    python-pyusb \
+    python-subprocess \
+    python-process \
+    python-imaging \
 	rtmpdump \
 	samba \
 	sambaserver \
