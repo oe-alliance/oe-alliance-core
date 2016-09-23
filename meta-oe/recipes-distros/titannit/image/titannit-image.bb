@@ -85,6 +85,7 @@ IMAGE_INSTALL = "\
 	procps \
 	portmap \
 	portmap-utils \
+	python \
 	rtmpdump \
 	samba \
 	sambaserver \
