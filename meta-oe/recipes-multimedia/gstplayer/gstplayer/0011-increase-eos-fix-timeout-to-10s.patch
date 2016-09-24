@@ -1,0 +1,26 @@
+From 75c0b514cf62baa14a6f6fe1f0a6358d1ccd0a0b Mon Sep 17 00:00:00 2001
+From: mx3L <mx3ldev@gmail.com>
+Date: Tue, 12 Apr 2016 11:38:14 +0200
+Subject: [PATCH 11/11] increase eos fix timeout to 10s
+
+In adaptive streaming we get sometimes premature eos
+---
+ gstplayer/gst-1.0/gst-backend.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/gstplayer/gst-1.0/gst-backend.c b/gstplayer/gst-1.0/gst-backend.c
+index e726b7f..701ca27 100644
+--- a/gstplayer/gst-1.0/gst-backend.c
++++ b/gstplayer/gst-1.0/gst-backend.c
+@@ -947,7 +947,7 @@ int backend_query_position(int64_t *mseconds)
+             if(decoder_time  == g_eos_fix.decoder_time && 
+                playbin_time  == g_eos_fix.playbin_time )
+             {
+-                if(3000 < (timestamp-g_eos_fix.check_timestamp) )
++                if(10000 < (timestamp-g_eos_fix.check_timestamp) )
+                 {
+                     backend_stop();
+                 }
+-- 
+1.9.1
+

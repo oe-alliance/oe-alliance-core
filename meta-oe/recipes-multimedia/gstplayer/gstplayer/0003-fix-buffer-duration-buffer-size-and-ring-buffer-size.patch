@@ -1,0 +1,88 @@
+From 691b44a617ad22287592d090e1a0d17d5fb2a3ec Mon Sep 17 00:00:00 2001
+From: mx3L <mx3ldev@gmail.com>
+Date: Fri, 11 Mar 2016 12:46:12 +0100
+Subject: [PATCH 03/11] fix buffer-duration, buffer-size and ring-buffer-size
+ options
+
+ring-buffer-max-size - in bytes
+buffer-duration      - can be 0 (turned off)
+                     - in seconds
+buffer-size          - can be 0 (turned off)
+---
+ gstplayer/common/gstplayer.c    | 10 +++++-----
+ gstplayer/gst-1.0/gst-backend.c |  8 ++++----
+ 2 files changed, 9 insertions(+), 9 deletions(-)
+
+diff --git a/gstplayer/common/gstplayer.c b/gstplayer/common/gstplayer.c
+index 3ed59df..947dcdc 100644
+--- a/gstplayer/common/gstplayer.c
++++ b/gstplayer/common/gstplayer.c
+@@ -204,10 +204,10 @@ int main(int argc,char* argv[])
+     gchar *audioSinkName = NULL;
+     
+     gchar *downloadBufferPath = NULL;
+-    guint64 ringBufferMaxSize = 0;
++    gint ringBufferMaxSize = 0;
+     
+-    gint64 bufferDuration = -1;
+-    gint bufferSize = 0;
++    gint bufferDuration = -1;
++    gint bufferSize = -1;
+     
+     StrPair_t **pHeaderFields = NULL;
+     
+@@ -239,13 +239,13 @@ int main(int argc,char* argv[])
+             audioTrackIdx = atoi(optarg);
+             break;
+         case 'r':
+-            sscanf(optarg, "%llu", &ringBufferMaxSize);
++            sscanf(optarg, "%d", &ringBufferMaxSize);
+             break;
+         case 's':
+             sscanf(optarg, "%d", &bufferSize);
+             break;
+         case 'd':
+-            sscanf(optarg, "%lld", &bufferDuration);
++            sscanf(optarg, "%d", &bufferDuration);
+             break;
+         case 'p':
+             downloadBufferPath = g_strdup(optarg);
+diff --git a/gstplayer/gst-1.0/gst-backend.c b/gstplayer/gst-1.0/gst-backend.c
+index 2ffc675..da2df9d 100644
+--- a/gstplayer/gst-1.0/gst-backend.c
++++ b/gstplayer/gst-1.0/gst-backend.c
+@@ -555,7 +555,7 @@ int backend_play(gchar *filename, gchar *download_buffer_path, guint64 ring_buff
+             }
+             
+             
+-            if(0 < ring_buffer_max_size || 0 < buffer_duration || 0 < buffer_size)
++            if(0 < ring_buffer_max_size || 0 <= buffer_duration || 0 <= buffer_size)
+             {
+                 if(g_download_buffer_path && strlen(g_download_buffer_path) && ring_buffer_max_size)
+                 {
+@@ -563,7 +563,7 @@ int backend_play(gchar *filename, gchar *download_buffer_path, guint64 ring_buff
+                     flags |= GST_PLAY_FLAG_DOWNLOAD;
+                     g_signal_connect(G_OBJECT(g_gst_playbin), "element-added", G_CALLBACK(gsElementAddedCallback), NULL);
+                     /* limit file size */
+-                    g_object_set(g_gst_playbin, "ring-buffer-max-size", (guint64)(ring_buffer_max_size * 1024LL * 1024LL), NULL);
++                    g_object_set(g_gst_playbin, "ring-buffer-max-size", (guint64)(ring_buffer_max_size * 1024L), NULL);
+                 }
+                 /*
+                  * regardless whether or not we configured a progressive download file, use a buffer as well
+@@ -571,11 +571,11 @@ int backend_play(gchar *filename, gchar *download_buffer_path, guint64 ring_buff
+                  */
+                 flags |= GST_PLAY_FLAG_BUFFERING;
+                 /* increase the default 2 second / 2 MB buffer limitations to 5s / 5MB */
+-                if(buffer_duration > 0)
++                if(buffer_duration >= 0)
+                 {
+                     g_object_set(G_OBJECT(g_gst_playbin), "buffer-duration", buffer_duration * GST_SECOND, NULL);
+                 }
+-                if(g_buffer_size > 0)
++                if(g_buffer_size >= 0)
+                 {
+                     /* buffer_size should be set in KB */
+                     g_object_set(G_OBJECT(g_gst_playbin), "buffer-size", buffer_size*1024, NULL);
+-- 
+1.9.1
+

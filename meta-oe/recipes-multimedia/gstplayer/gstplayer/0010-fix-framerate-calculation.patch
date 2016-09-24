@@ -1,0 +1,28 @@
+From 9c5b8fa9089a7fa355ce0cc4616ec7edd3321b8f Mon Sep 17 00:00:00 2001
+From: mx3L <mx3ldev@gmail.com>
+Date: Thu, 7 Apr 2016 13:05:06 +0200
+Subject: [PATCH 10/11] fix framerate calculation
+
+if num * 1000 is bigger than MAXINT, then MAXINT is used, so
+framerate calculation is invalid.
+Make sure that aritmethic conversion is to long by using long value
+---
+ gstplayer/common/tracks.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/gstplayer/common/tracks.h b/gstplayer/common/tracks.h
+index 4d766a5..2e6b53e 100644
+--- a/gstplayer/common/tracks.h
++++ b/gstplayer/common/tracks.h
+@@ -341,7 +341,7 @@ static void FillVideoTracks()
+                             {
+                                 denom = 1000;
+                             }
+-                            track->frame_rate = num * 1000 / denom;
++                            track->frame_rate = num * 1000L / denom;
+                         }
+                         track->progressive = -1;
+                         ++j;
+-- 
+1.9.1
+
