@@ -1,4 +1,5 @@
 SUMMARY = "OpenNFR base files"
+LICENSE = "proprietary"
 
 require conf/license/license-gplv2.inc
 
