@@ -1,0 +1,28 @@
+From 2431e1806fe263e405e480899e20417965efdea8 Mon Sep 17 00:00:00 2001
+From: mx3L <mx3ldev@gmail.com>
+Date: Sun, 27 Mar 2016 13:15:35 +0200
+Subject: [PATCH 09/11] try to get PTS from video-sink first
+
+This shouldn't matter, but from my tests it looks like,
+that PTS from video is available sooner after flush than
+PTS from audio.
+---
+ gstplayer/gst-1.0/gst-backend.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/gstplayer/gst-1.0/gst-backend.c b/gstplayer/gst-1.0/gst-backend.c
+index 271a1dd..e726b7f 100644
+--- a/gstplayer/gst-1.0/gst-backend.c
++++ b/gstplayer/gst-1.0/gst-backend.c
+@@ -938,7 +938,7 @@ int backend_query_position(int64_t *mseconds)
+         */
+         if ( g_dvbAudioSink || g_dvbVideoSink)
+         {
+-            g_signal_emit_by_name(g_dvbAudioSink?g_dvbAudioSink:g_dvbVideoSink, "get-decoder-time", &decoder_time);
++            g_signal_emit_by_name(g_dvbVideoSink?g_dvbVideoSink:g_dvbAudioSink, "get-decoder-time", &decoder_time);
+             /* EOS fix start */
+             gint64 timestamp = getTimestamp();
+             if(0 == g_eos_fix.check_timestamp) g_eos_fix.check_timestamp = timestamp;
+-- 
+1.9.1
+

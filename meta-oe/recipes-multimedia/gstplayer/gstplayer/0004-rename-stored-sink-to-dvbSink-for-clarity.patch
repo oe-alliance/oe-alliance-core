@@ -1,0 +1,120 @@
+From 7c9721fbb1c60a38f03abe76a08fad4307b91e86 Mon Sep 17 00:00:00 2001
+From: mx3L <mx3ldev@gmail.com>
+Date: Fri, 11 Mar 2016 12:48:50 +0100
+Subject: [PATCH 04/11] rename stored sink to dvbSink for clarity
+
+---
+ gstplayer/gst-1.0/gst-backend.c | 49 ++++++++++++++++++++---------------------
+ 1 file changed, 24 insertions(+), 25 deletions(-)
+
+diff --git a/gstplayer/gst-1.0/gst-backend.c b/gstplayer/gst-1.0/gst-backend.c
+index da2df9d..97694f6 100644
+--- a/gstplayer/gst-1.0/gst-backend.c
++++ b/gstplayer/gst-1.0/gst-backend.c
+@@ -33,8 +33,8 @@ Based on:
+ #include <fcntl.h>
+ 
+ static GstElement *g_gst_playbin = NULL;
+-static GstElement *g_audioSink   = NULL;
+-static GstElement *g_videoSink   = NULL;
++static GstElement *g_dvbAudioSink   = NULL;
++static GstElement *g_dvbVideoSink   = NULL;
+ static GstElement *g_gstIFDSrc   = NULL;
+ static GstSeekFlags g_seek_flags  = GST_SEEK_FLAG_FLUSH | GST_SEEK_FLAG_KEY_UNIT;
+ #ifdef PLATFORM_I686
+@@ -334,27 +334,27 @@ static gboolean gstBusCall(GstBus *bus, GstMessage *msg)
+                         GValue result = { 0, };
+ 
+                         GstIterator *children = NULL;
+-                        if (g_audioSink)
++                        if (g_dvbAudioSink)
+                         {
+-                            gst_object_unref(GST_OBJECT(g_audioSink));
+-                            g_audioSink = NULL;
++                            gst_object_unref(GST_OBJECT(g_dvbAudioSink));
++                            g_dvbAudioSink = NULL;
+                         }
+-                        if (g_videoSink)
++                        if (g_dvbVideoSink)
+                         {
+-                            gst_object_unref(GST_OBJECT(g_videoSink));
+-                            g_videoSink = NULL;
++                            gst_object_unref(GST_OBJECT(g_dvbVideoSink));
++                            g_dvbVideoSink = NULL;
+                         }
+                         children = gst_bin_iterate_recurse(GST_BIN(g_gst_playbin));
+                         if (gst_iterator_find_custom(children, (GCompareFunc)match_sinktype, &result, (gpointer)"GstDVBAudioSink"))
+                         {
+-                            g_audioSink = GST_ELEMENT_CAST(g_value_dup_object(&result));
++                            g_dvbAudioSink = GST_ELEMENT_CAST(g_value_dup_object(&result));
+                             g_value_unset(&result);
+                         }
+                         gst_iterator_free(children);
+                         children = gst_bin_iterate_recurse(GST_BIN(g_gst_playbin));
+                         if (gst_iterator_find_custom(children, (GCompareFunc)match_sinktype, &result, (gpointer)"GstDVBVideoSink"))
+                         {
+-                            g_videoSink = GST_ELEMENT_CAST(g_value_dup_object(&result));
++                            g_dvbVideoSink = GST_ELEMENT_CAST(g_value_dup_object(&result));
+                             g_value_unset(&result);
+                         }
+                         gst_iterator_free(children);
+@@ -371,15 +371,15 @@ static gboolean gstBusCall(GstBus *bus, GstMessage *msg)
+                     }    break;
+                     case GST_STATE_CHANGE_PAUSED_TO_READY: 
+                     {
+-                        if (g_audioSink)
++                        if (g_dvbAudioSink)
+                         {
+-                            gst_object_unref(GST_OBJECT(g_audioSink));
+-                            g_audioSink = NULL;
++                            gst_object_unref(GST_OBJECT(g_dvbAudioSink));
++                            g_dvbAudioSink = NULL;
+                         }
+-                        if (g_videoSink)
++                        if (g_dvbVideoSink)
+                         {
+-                            gst_object_unref(GST_OBJECT(g_videoSink));
+-                            g_videoSink = NULL;
++                            gst_object_unref(GST_OBJECT(g_dvbVideoSink));
++                            g_dvbVideoSink = NULL;
+                         }
+                     }    break;
+                     case GST_STATE_CHANGE_READY_TO_NULL:
+@@ -661,15 +661,15 @@ int backend_play(gchar *filename, gchar *download_buffer_path, guint64 ring_buff
+ int backend_stop()
+ {
+     int ret = 0;
+-    if (g_audioSink)
++    if (g_dvbAudioSink)
+     {
+-        gst_object_unref(GST_OBJECT(g_audioSink));
+-        g_audioSink = NULL;
++        gst_object_unref(GST_OBJECT(g_dvbAudioSink));
++        g_dvbAudioSink = NULL;
+     }
+-    if (g_videoSink)
++    if (g_dvbVideoSink)
+     {
+-        gst_object_unref(GST_OBJECT(g_videoSink));
+-        g_videoSink = NULL;
++        gst_object_unref(GST_OBJECT(g_dvbVideoSink));
++        g_dvbVideoSink = NULL;
+     }
+     if (g_gstIFDSrc)
+     {
+@@ -835,10 +835,9 @@ int backend_query_position(int64_t *mseconds)
+             test(playbin_time);
+         }
+         */
+-        if ( g_audioSink || g_videoSink)
++        if ( g_dvbAudioSink || g_dvbVideoSink)
+         {
+-            g_signal_emit_by_name(g_audioSink?g_audioSink:g_videoSink, "get-decoder-time", &decoder_time);
+-            
++            g_signal_emit_by_name(g_dvbAudioSink?g_dvbAudioSink:g_dvbVideoSink, "get-decoder-time", &decoder_time);
+             /* EOS fix start */
+             gint64 timestamp = getTimestamp();
+             if(0 == g_eos_fix.check_timestamp) g_eos_fix.check_timestamp = timestamp;
+-- 
+1.9.1
+
