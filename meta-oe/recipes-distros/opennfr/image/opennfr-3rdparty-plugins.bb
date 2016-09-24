@@ -4,12 +4,12 @@ MAINTAINER = "OpenNFR Team"
 LICENSE = "Proprietary"
 LIC_FILES_CHKSUM = "file://COPYING;md5=45de10587e108efb50c321c1affd5e00"
 
-inherit gitpkgv autotools deploy
+inherit gitpkgv deploy
 
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r38"
+PR = "r39"
 SRC_URI="git://github.com/carlo0815/3rdparty-plugins.git;protocol=git;branch=4.4"
 
 EXTRA_OECONF = " \
