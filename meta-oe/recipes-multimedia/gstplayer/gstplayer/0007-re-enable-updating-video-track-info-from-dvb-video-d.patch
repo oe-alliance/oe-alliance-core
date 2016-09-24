@@ -1,0 +1,107 @@
+From 803d240406cdc863377f2e4e948a8736e004504f Mon Sep 17 00:00:00 2001
+From: mx3L <mx3ldev@gmail.com>
+Date: Thu, 17 Mar 2016 09:17:08 +0100
+Subject: [PATCH 07/11] re-enable updating video track info from dvb video
+ device
+
+It has some benefits over relying only on video-caps:
+1. It adds info if video is progressive
+2. It updates video resolution, if we are dealing with adaptive
+streaming
+3. I guess decoder should have better information :)
+---
+ gstplayer/common/gst-backend.h  |  1 +
+ gstplayer/common/tracks.h       | 21 ++++++++++++++++++++-
+ gstplayer/gst-1.0/gst-backend.c |  5 +++--
+ 3 files changed, 24 insertions(+), 3 deletions(-)
+
+diff --git a/gstplayer/common/gst-backend.h b/gstplayer/common/gst-backend.h
+index a75b543..db6b10e 100644
+--- a/gstplayer/common/gst-backend.h
++++ b/gstplayer/common/gst-backend.h
+@@ -74,6 +74,7 @@ typedef struct TrackDescription_s
+     unsigned int          frame_rate;
+     int                   width;
+     int                   height;
++    int                   progressive;
+     
+ } TrackDescription_t;
+ 
+diff --git a/gstplayer/common/tracks.h b/gstplayer/common/tracks.h
+index 921dc86..9faf494 100644
+--- a/gstplayer/common/tracks.h
++++ b/gstplayer/common/tracks.h
+@@ -82,6 +82,24 @@ void UpdateVideoTrackInf_2(const unsigned int framerate)
+     }
+ }
+ 
++void UpdateVideoTrackInf_3(const unsigned int progressive)
++{
++    TrackDescription_t *pVidTrack = GetVideoTrackForUpdate();
++    if(pVidTrack)
++    {
++        int updated = 0;
++        if(pVidTrack->progressive != progressive)
++        {
++            pVidTrack->progressive = progressive;
++            updated = 1;
++        }
++        if(updated)
++        {
++            UpdateVideoTrackInf();
++        }
++    }
++}
++
+ static int GetCurrentTrack(const char *type, int *idx)
+ {
+     //if (*idx == -1)
+@@ -333,6 +351,7 @@ static void FillVideoTracks()
+                             }
+                             track->frame_rate = num * 1000 / denom;
+                         }
++                        track->progressive = -1;
+                         ++j;
+                     }
+                     gst_caps_unref(caps);
+@@ -526,7 +545,7 @@ TrackDescription_t* backend_get_current_track(const char type)
+         else // video
+         {
+             // information about only current video track will be stored
+-            fprintf(stderr, "{\"%c_%c\":{\"id\":%d,\"e\":\"%s\",\"n\":\"%s\",\"w\":%d,\"h\":%d,\"f\":%u}}\n", type, 'c', track->Id , track->Encoding, track->Name, track->width, track->height, track->frame_rate);
++            fprintf(stderr, "{\"%c_%c\":{\"id\":%d,\"e\":\"%s\",\"n\":\"%s\",\"w\":%d,\"h\":%d,\"f\":%u,\"p\":%d}}\n", type, 'c', track->Id , track->Encoding, track->Name, track->width, track->height, track->frame_rate, track->progressive);
+         }
+     }
+     return track; 
+diff --git a/gstplayer/gst-1.0/gst-backend.c b/gstplayer/gst-1.0/gst-backend.c
+index 8167e40..271a1dd 100644
+--- a/gstplayer/gst-1.0/gst-backend.c
++++ b/gstplayer/gst-1.0/gst-backend.c
+@@ -531,14 +531,14 @@ static gboolean gstBusCall(GstBus *bus, GstMessage *msg)
+                         gst_structure_get_int (msgstruct, "aspect_ratio", &aspect);
+                         gst_structure_get_int (msgstruct, "width", &width);
+                         gst_structure_get_int (msgstruct, "height", &height);
+-                        //UpdateVideoTrackInf_1(aspect, width, height);
++                        UpdateVideoTrackInf_1(aspect, width, height);
+                         // printf("eventSizeChanged\n");
+                     }
+                     else if (!strcmp(eventname, "eventFrameRateChanged") || !strcmp(eventname, "eventFrameRateAvail"))
+                     {
+                         int framerate = 0;
+                         gst_structure_get_int (msgstruct, "frame_rate", &framerate);
+-                        //UpdateVideoTrackInf_2((unsigned int)framerate);
++                        UpdateVideoTrackInf_2((unsigned int)framerate);
+                         // printf("eventFrameRateChanged framerate[%d]\n", framerate);
+ 
+                     }
+@@ -546,6 +546,7 @@ static gboolean gstBusCall(GstBus *bus, GstMessage *msg)
+                     {
+                         int progressive = 0;
+                         gst_structure_get_int (msgstruct, "progressive", &progressive);
++                        UpdateVideoTrackInf_3((unsigned int)progressive);
+                         // printf("eventProgressiveChanged\n");
+                     }
+                 }
+-- 
+1.9.1
+

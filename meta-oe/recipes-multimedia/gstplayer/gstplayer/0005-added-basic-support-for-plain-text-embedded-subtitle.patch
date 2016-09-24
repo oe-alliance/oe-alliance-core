@@ -1,0 +1,451 @@
+From c32aad4c8d86d15bafaad9fa916b9b952bd9dc10 Mon Sep 17 00:00:00 2001
+From: mx3L <mx3ldev@gmail.com>
+Date: Thu, 7 Apr 2016 20:03:35 +0200
+Subject: [PATCH 05/11] added basic support for plain text embedded subtitles
+
+---
+ gstplayer/common/gst-backend.h  |   2 +-
+ gstplayer/common/gstplayer.c    |  16 +++--
+ gstplayer/common/tracks.h       | 142 +++++++++++++++++++++++++++++++++++++++-
+ gstplayer/gst-1.0/gst-backend.c | 102 ++++++++++++++++++++++++++++-
+ 4 files changed, 253 insertions(+), 9 deletions(-)
+
+diff --git a/gstplayer/common/gst-backend.h b/gstplayer/common/gst-backend.h
+index fa1dbe2..a75b543 100644
+--- a/gstplayer/common/gst-backend.h
++++ b/gstplayer/common/gst-backend.h
+@@ -79,7 +79,7 @@ typedef struct TrackDescription_s
+ 
+ void backend_init(int *argc, char **argv[], const int sfd);
+ void backend_deinit();
+-int  backend_play(gchar *filename, gchar *download_buffer_path, guint64 ring_buffer_max_size, gint64 buffer_duration, gint buffer_size, StrPair_t **http_header_fields, gchar *video_sink_name, gchar *audio_sink_name);
++int  backend_play(gchar *filename, gchar *download_buffer_path, guint64 ring_buffer_max_size, gint64 buffer_duration, gint buffer_size, StrPair_t **http_header_fields, gchar *video_sink_name, gchar *audio_sink_name, gboolean subtitles_enabled);
+ int  backend_stop();
+ int  backend_seek(const double seconds);
+ int  backend_seek_absolute(const double seconds);
+diff --git a/gstplayer/common/gstplayer.c b/gstplayer/common/gstplayer.c
+index 947dcdc..f2b8b3e 100644
+--- a/gstplayer/common/gstplayer.c
++++ b/gstplayer/common/gstplayer.c
+@@ -172,7 +172,7 @@ static int HandleTracks(const char *argvBuff)
+         default: 
+         {
+             /* switch command available only for audio tracks */
+-            if ('a' == argvBuff[0])
++            if ('a' == argvBuff[0] || 's' == argvBuff[0])
+             {
+                 int id = -1;
+                 sscanf(argvBuff+1, "%d", &id);
+@@ -208,6 +208,8 @@ int main(int argc,char* argv[])
+     
+     gint bufferDuration = -1;
+     gint bufferSize = -1;
++
++    gboolean subtitlesEnabled = FALSE;
+     
+     StrPair_t **pHeaderFields = NULL;
+     
+@@ -227,12 +229,12 @@ int main(int argc,char* argv[])
+     int usedArgs = 2;
+     if(usedArgs > argc)
+     {
+-        printf("Usage: gstplayer filePath [-i audio track index] [-r ring-buffer-max-size] [-s buffer-size] [-d buffer-duration] [-p buffer-path] [-H http-header] [-v videosink] [-a audiosink]\n");
++        printf("Usage: gstplayer filePath [-i audio-track index] [-r ring-buffer-max-size (bytes) ] [-s buffer-size (bytes) ] [-d buffer-duration (seconds) ] [-p buffer-path] [-H http-header] [-v videosink] [-a audiosink] [-e]\n");
+         exit(1);
+     }
+     filename = g_strdup(argv[1]);
+ 
+-    while ((c = getopt (argc-1, argv+1, "i:r:s:d:p:v:a:H:")) != -1)
++    while ((c = getopt (argc-1, argv+1, "i:r:s:d:p:v:a:eH:")) != -1)
+         switch (c)
+         {
+         case 'i':
+@@ -256,18 +258,21 @@ int main(int argc,char* argv[])
+         case 'a':
+             audioSinkName = g_strdup(optarg);
+             break;
++        case 'e':
++            subtitlesEnabled = TRUE;
++            break;
+         case 'H':
+             pHeaderFields = AddHeader(pHeaderFields, optarg);
+             break;
+         case '?':
+         default:
+-            printf("Usage: gstplayer filePath [-i audio track index] [-r ring-buffer-max-size] [-s buffer-size] [-d buffer-duration] [-p buffer-path] [-H http-header] [-v videosink] [-a audiosink]\n");
++            printf("Usage: gstplayer filePath [-i audio-track index] [-r ring-buffer-max-size (bytes) ] [-s buffer-size (bytes) ] [-d buffer-duration (seconds) ] [-p buffer-path] [-H http-header] [-v videosink] [-a audiosink] [-e]\n");
+             exit(1);
+         }
+ 
+     InitInOut();
+     backend_init(&argc, &argv, g_pfd[1]);
+-    commandRetVal = backend_play(filename, downloadBufferPath, ringBufferMaxSize, bufferDuration, bufferSize, pHeaderFields, videoSinkName, audioSinkName);
++    commandRetVal = backend_play(filename, downloadBufferPath, ringBufferMaxSize, bufferDuration, bufferSize, pHeaderFields, videoSinkName, audioSinkName, subtitlesEnabled);
+     fprintf(stderr, "{\"PLAYBACK_PLAY\":{\"file\":\"%s\", \"sts\":%d}}\n", argv[1], commandRetVal);
+ 
+     if(0 == commandRetVal) 
+@@ -301,6 +306,7 @@ int main(int argc,char* argv[])
+             {
+             case 'v':
+             case 'a': 
++            case 's':
+             {
+                 HandleTracks(argvBuff);
+                 break;
+diff --git a/gstplayer/common/tracks.h b/gstplayer/common/tracks.h
+index 71e69ee..4029e3f 100644
+--- a/gstplayer/common/tracks.h
++++ b/gstplayer/common/tracks.h
+@@ -9,10 +9,13 @@
+ int tracksReady = 0;
+ TrackDescription_t *g_audio_tracks = NULL;
+ TrackDescription_t *g_video_tracks = NULL;
++TrackDescription_t *g_subtitle_tracks = NULL;
+ int g_audio_num = 0;
+ int g_video_num = 0;
++int g_subtitle_num = 0;
+ int g_audio_idx = -1;
+ int g_video_idx = -1;
++int g_subtitle_idx = -1;
+ 
+ static void UpdateVideoTrackInf()
+ {
+@@ -78,6 +81,57 @@ static int GetCurrentTrack(const char *type, int *idx)
+     return *idx;
+ }
+ 
++static int SelectSubtitleStream(int i)
++{
++    int current_subtitle;
++    g_object_set (G_OBJECT (g_gst_playbin), "current-text", i, NULL);
++    g_object_get (G_OBJECT (g_gst_playbin), "current-text", &current_subtitle, NULL);
++    g_subtitle_idx = current_subtitle;
++    if ( current_subtitle == i )
++    {
++        return 0;
++    }
++    return -1;
++}
++
++static int SelectSubtitleTrack(unsigned int i)
++{
++    int ret = -1;
++    if (g_subtitle_num > 0)
++    {
++        int validposition = 0;
++        int64_t ppos = 0;
++        
++        if (0 == backend_query_position(&ppos))
++        {
++            validposition = 1;
++            ppos -= 1000;
++            if (ppos < 0)
++            {
++                ppos = 0;
++            }
++        }
++
++        ret = SelectSubtitleStream(i);
++        if (!ret)
++        {
++            if (validposition)
++            {
++                /* flush */
++                double dpos = ppos/1000.0;
++                backend_seek_absolute(dpos);
++            }
++        }
++    }
++    else
++    {
++        g_subtitle_idx = i;
++        ret = 0;
++    }
++    return ret;
++}
++
++
+ static int SelectAudioStream(int i)
+ {
+     int current_audio;
+@@ -274,6 +328,63 @@ static void FillVideoTracks()
+     } 
+ } 
+ 
++static void FillSubtitlesTracks()
++{
++    gint i = 0;
++    gint n_subtitles = 0;
++
++    g_object_get(g_gst_playbin, "n-text", &n_subtitles, NULL);
++    
++    if (NULL != g_subtitle_tracks)
++    {
++        return;
++    }
++    
++    g_subtitle_tracks = malloc(sizeof(TrackDescription_t) * n_subtitles);
++    memset(g_subtitle_tracks, 0, sizeof(TrackDescription_t) * n_subtitles);
++    
++    int j = 0;
++    for (i = 0; i < n_subtitles; i++)
++    {
++        gchar *g_codec   = NULL;
++        gchar *g_lang    = NULL;
++        GstTagList *tags = NULL;
++        GstPad* pad = 0;
++        g_signal_emit_by_name (g_gst_playbin, "get-text-pad", i, &pad);
++        GstCaps* caps = gst_pad_get_current_caps(pad);
++        if (!caps)
++        {
++            continue;
++        }
++        GstStructure* str = gst_caps_get_structure(caps, 0);
++        const gchar *g_type = gst_structure_get_name(str);
++        
++        TrackDescription_t *track = &g_subtitle_tracks[j];
++        track->Id = i;
++        SetStr(&(track->Name), "und");
++        SetStr(&(track->Encoding), (char *)g_type);
++        
++        g_signal_emit_by_name (g_gst_playbin, "get-text-tags", i, &tags);
++        if (tags && GST_IS_TAG_LIST(tags))
++        {
++            if (gst_tag_list_get_string(tags, GST_TAG_SUBTITLE_CODEC, &g_codec))
++            {
++                SetStr(&(track->Encoding), (char *)g_codec);
++                g_free(g_codec);
++            }
++            if (gst_tag_list_get_string(tags, GST_TAG_LANGUAGE_CODE, &g_lang))
++            {
++                SetStr(&(track->Name), (char *)g_lang);
++                g_free(g_lang);
++            }
++            gst_tag_list_free(tags);
++        }
++        gst_caps_unref(caps);
++        ++j;
++    }
++    g_subtitle_num = j;
++}
++
+ static void TracksMessageAsyncDone()
+ {
+     if (0 == g_audio_num)
+@@ -289,7 +400,19 @@ static void TracksMessageAsyncDone()
+         }
+         backend_get_current_track('a');
+     }
+-    
++
++    if (0 == g_subtitle_num)
++    {
++        int subtitle_idx = g_subtitle_idx;
++        FillSubtitlesTracks();
++        backend_get_tracks_list('s', NULL);
++        GetCurrentTrack("current-text", &g_subtitle_idx);
++        if (subtitle_idx >= 0 && subtitle_idx != g_subtitle_idx)
++        {
++            backend_set_track('s', subtitle_idx);
++        }
++        backend_get_current_track('s');
++    }
+     if (0 == g_video_num)
+     {
+         int video_idx = g_video_idx;
+@@ -314,6 +437,11 @@ TrackDescription_t* backend_get_tracks_list(const char type, int *num)
+         pTracks = g_audio_tracks;
+         localNum = g_audio_num;
+     }
++    else if ('s' == type)
++    {
++        pTracks = g_subtitle_tracks;
++        localNum = g_subtitle_num;
++    }
+     
+     if (NULL != num)
+     {
+@@ -351,6 +479,12 @@ TrackDescription_t* backend_get_current_track(const char type)
+         idx     = GetCurrentTrack("current-audio", &g_audio_idx);
+         num     = g_audio_num;
+     }
++    else if ('s' == type)
++    {
++        pTracks = g_subtitle_tracks;
++        idx     = GetCurrentTrack("current-text", &g_subtitle_idx);
++        num     = g_subtitle_num;
++    }
+     else if ('v' == type)
+     {
+         pTracks = g_video_tracks;
+@@ -361,7 +495,7 @@ TrackDescription_t* backend_get_current_track(const char type)
+     if (idx >= 0 && idx < num && NULL != pTracks)
+     {
+         track = &pTracks[idx];
+-        if ('a' == type)
++        if ('a' == type || 's' == type)
+         {
+             fprintf(stderr, "{\"%c_%c\":{\"id\":%d,\"e\":\"%s\",\"n\":\"%s\"}}\n", type, 'c', track->Id , track->Encoding, track->Name);
+         }
+@@ -381,6 +515,10 @@ int backend_set_track(const char type, const int id)
+     {
+         ret = SelectAudioTrack(id);
+     }
++    else if ('s' == type)
++    {
++        ret = SelectSubtitleTrack(id);
++    }
+     return ret;
+ }
+ 
+diff --git a/gstplayer/gst-1.0/gst-backend.c b/gstplayer/gst-1.0/gst-backend.c
+index 97694f6..8167e40 100644
+--- a/gstplayer/gst-1.0/gst-backend.c
++++ b/gstplayer/gst-1.0/gst-backend.c
+@@ -35,6 +35,7 @@ Based on:
+ static GstElement *g_gst_playbin = NULL;
+ static GstElement *g_dvbAudioSink   = NULL;
+ static GstElement *g_dvbVideoSink   = NULL;
++static GstElement *g_subsink = NULL;
+ static GstElement *g_gstIFDSrc   = NULL;
+ static GstSeekFlags g_seek_flags  = GST_SEEK_FLAG_FLUSH | GST_SEEK_FLAG_KEY_UNIT;
+ #ifdef PLATFORM_I686
+@@ -85,6 +86,40 @@ static gint64 getTimestamp()
+ #endif
+ }
+ 
++static void escape_newline(const char *src, char **dest)
++{
++    int tocopy = 0;
++    int newline = 0;
++    const char *ppos_src = src;
++    char *ppos_src_newline = 0;
++    char *ppos_dest = 0;
++
++    while ((ppos_src_newline = strchr(ppos_src, '\n')) != NULL)
++    {
++        ppos_src = ppos_src_newline;
++        ppos_src++;
++        newline++;
++    }
++    int origlen = strlen(src);
++    int newlen = origlen + newline + 1;
++
++    *dest = (char *) malloc(sizeof(char) * newlen);
++    ppos_dest = *dest;
++
++    ppos_src = src;
++    ppos_src_newline = 0;
++
++    while ((ppos_src_newline = strchr(ppos_src, '\n')) != NULL)
++    {
++        tocopy = ppos_src_newline - ppos_src;
++        strncpy(ppos_dest, ppos_src, tocopy);
++        ppos_src = ppos_src_newline + 1;
++        ppos_dest += tocopy;
++        *(ppos_dest++) = '\\';
++        *(ppos_dest++) = 'n';
++    }
++    strcpy(ppos_dest, ppos_src);
++}
+ 
+ static gint match_sinktype(const GValue *velement, const gchar *type)
+ {
+@@ -145,6 +180,37 @@ static int ChangeSpeed(const gboolean result, const float fSpeed)
+     return -1;
+ }
+ 
++static void gstCBsubtitleAvail(GstElement *subsink, GstBuffer *buffer, gpointer user_data)
++{
++    if (!buffer)
++        return;
++
++    GstMapInfo map;
++    if (!gst_buffer_map(buffer, &map, GST_MAP_READ))
++    {
++        gst_buffer_unref(buffer);
++        return;
++    }
++
++    if (GST_BUFFER_PTS_IS_VALID(buffer) && GST_BUFFER_DURATION_IS_VALID(buffer))
++    {
++        gchar *text = NULL;
++        gchar *data = g_strndup((const gchar *) map.data, map.size);
++        escape_newline(data, &text);
++        GstMessage *message = gst_message_new_application(GST_OBJECT(g_gst_playbin),
++            gst_structure_new ("subtitle",
++                "start", GST_TYPE_CLOCK_TIME, GST_BUFFER_PTS(buffer),
++                "duration", GST_TYPE_CLOCK_TIME, GST_BUFFER_DURATION(buffer),
++                "text", G_TYPE_STRING, text, NULL)
++            );
++        g_free(data);
++        g_free(text);
++        gst_element_post_message(g_gst_playbin, message);
++    }
++    gst_buffer_unmap(buffer, &map);
++    gst_buffer_unref(buffer);
++}
++
+ static void gstAboutToFinishCallback(GstElement* object, gpointer userdata)
+ {
+     //g_playback_info.isPlaying = 0;
+@@ -501,6 +567,24 @@ static gboolean gstBusCall(GstBus *bus, GstMessage *msg)
+         gst_element_set_state(g_gst_playbin, GST_STATE_PLAYING);
+         break;
+     }
++    case GST_MESSAGE_APPLICATION:
++    {
++        const GstStructure *msgstruct = gst_message_get_structure(msg);
++        if (NULL != msgstruct)
++        {
++            const gchar *messagename = gst_structure_get_name(msgstruct);
++            if (!strcmp(messagename, "subtitle"))
++            {
++                const gchar *text;
++                GstClockTime start = GST_CLOCK_TIME_NONE;
++                GstClockTime duration = GST_CLOCK_TIME_NONE;
++                gst_structure_get_clock_time(msgstruct, "start", &start);
++                gst_structure_get_clock_time(msgstruct, "duration", &duration);
++                text = gst_structure_get_string(msgstruct, "text");
++                fprintf(stderr, "{\"PLAYBACK_SUBTITLE\":{\"start\":%lld, \"duration\":%lld, \"text\":\"%s\"}}\n", GST_TIME_AS_MSECONDS(start), GST_TIME_AS_MSECONDS(duration), text);
++            }
++        }
++    }
+     default:
+         break;
+     }
+@@ -531,7 +615,7 @@ void backend_init(int *argc, char **argv[], const int sfd)
+     gst_init(argc, argv);
+ }
+ 
+-int backend_play(gchar *filename, gchar *download_buffer_path, guint64 ring_buffer_max_size, gint64 buffer_duration, gint buffer_size, StrPair_t **http_header_fields, gchar *videosink, gchar *audiosink)
++int backend_play(gchar *filename, gchar *download_buffer_path, guint64 ring_buffer_max_size, gint64 buffer_duration, gint buffer_size, StrPair_t **http_header_fields, gchar *videosink, gchar *audiosink, gboolean subtitles_enabled)
+ {
+     backend_stop();
+     g_filename               = filename;
+@@ -628,6 +712,22 @@ int backend_play(gchar *filename, gchar *download_buffer_path, guint64 ring_buff
+                 g_object_set(G_OBJECT (g_gst_playbin), "uri", uri, NULL);
+             }
+             
++            if (subtitles_enabled)
++            {
++                g_subsink = gst_element_factory_make("subsink", NULL);
++                if (g_subsink)
++                {
++                    flags |= GST_PLAY_FLAG_TEXT;
++                    g_signal_connect (g_subsink, "new-buffer", G_CALLBACK (gstCBsubtitleAvail), NULL);
++                    g_object_set (G_OBJECT (g_subsink), "caps", gst_caps_from_string("text/plain; text/x-plain; text/x-raw; text/x-pango-markup"), NULL);
++                    g_object_set (G_OBJECT (g_gst_playbin), "text-sink", g_subsink, NULL);
++                    g_object_set (G_OBJECT (g_gst_playbin), "current-text", -1, NULL);
++                }
++                else
++                {
++                    printf("sorry, can't play subtitles: missing gst-plugin-subsink\n");
++                }
++            }
+             g_object_set(G_OBJECT (g_gst_playbin), "flags", flags, NULL);
+ 
+             if (videosink != NULL)
+-- 
+1.9.1
+

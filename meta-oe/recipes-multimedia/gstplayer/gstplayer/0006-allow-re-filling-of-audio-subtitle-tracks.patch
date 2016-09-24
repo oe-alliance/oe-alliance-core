@@ -1,0 +1,88 @@
+From 5f723ef5204b5ae230e05ba9f87eda56b626fa32 Mon Sep 17 00:00:00 2001
+From: mx3L <mx3ldev@gmail.com>
+Date: Fri, 11 Mar 2016 13:01:21 +0100
+Subject: [PATCH 06/11] allow re-filling of audio/subtitle tracks
+
+sometimes after initial async-done message not all caps are available,
+which causes that not all tracks are added in the array.
+
+So always refill them when client wants to
+---
+ gstplayer/common/tracks.h | 30 +++++++++++++++++++++++++++---
+ 1 file changed, 27 insertions(+), 3 deletions(-)
+
+diff --git a/gstplayer/common/tracks.h b/gstplayer/common/tracks.h
+index 4029e3f..921dc86 100644
+--- a/gstplayer/common/tracks.h
++++ b/gstplayer/common/tracks.h
+@@ -17,6 +17,16 @@ int g_audio_idx = -1;
+ int g_video_idx = -1;
+ int g_subtitle_idx = -1;
+ 
++
++static void freeTrackDescription(TrackDescription_t *track)
++{
++    if (NULL != track)
++    {
++        free(track->Name);
++        free(track->Encoding);
++    }
++}
++
+ static void UpdateVideoTrackInf()
+ {
+     backend_get_current_track('v');
+@@ -207,7 +217,13 @@ static void FillAudioTracks()
+     //m_audioStreams.clear();
+     if (NULL != g_audio_tracks)
+     {
+-        return;
++        int i;
++        for (i=0; i < g_audio_num; i++)
++        {
++            freeTrackDescription(&(g_audio_tracks[i]));
++        }
++        free(g_audio_tracks);
++        g_audio_tracks = NULL;
+     }
+     
+     g_audio_tracks = malloc(sizeof(TrackDescription_t) * n_audio);
+@@ -337,7 +353,13 @@ static void FillSubtitlesTracks()
+     
+     if (NULL != g_subtitle_tracks)
+     {
+-        return;
++        int i;
++        for (i=0; i < g_subtitle_num; i++)
++        {
++            freeTrackDescription(&(g_subtitle_tracks[i]));
++        }
++        free(g_subtitle_tracks);
++        g_subtitle_tracks = NULL;
+     }
+     
+     g_subtitle_tracks = malloc(sizeof(TrackDescription_t) * n_subtitles);
+@@ -434,11 +456,13 @@ TrackDescription_t* backend_get_tracks_list(const char type, int *num)
+     /* At now we need only audio track list */
+     if ('a' == type)
+     {
++        FillAudioTracks();
+         pTracks = g_audio_tracks;
+         localNum = g_audio_num;
+     }
+     else if ('s' == type)
+     {
++        FillSubtitlesTracks();
+         pTracks = g_subtitle_tracks;
+         localNum = g_subtitle_num;
+     }
+@@ -524,4 +548,4 @@ int backend_set_track(const char type, const int id)
+ 
+ #else
+ #error
+-#endif //GST_TRACKS_COMMON_FUNCTIONS
+\ No newline at end of file
++#endif //GST_TRACKS_COMMON_FUNCTIONS
+-- 
+1.9.1
+
