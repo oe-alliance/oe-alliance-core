@@ -7,7 +7,10 @@ LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/GPL-2.0;md5=801f80980d171dd6425
 DEPENDS = "ffmpeg"
 RDEPENDS_${PN} = "ffmpeg"
 
-PR = "r2"
+PV = "28+git${SRCPV}"
+PKGV = "28+git${GITPKGV}"
+
+PR = "r0"
 
 SRCREV = "52690f59e7268d39000abad2a59d0b2904777279"
 SRC_URI = " \
