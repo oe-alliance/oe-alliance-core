@@ -10,7 +10,7 @@ PR = "r7"
 
 MACHINE_KERNEL_PR_append = ".0"
 
-SRC_URI = "http://code-ini.com/software/mirror/8723AE_8723AU_Linux_BT_20140623.tar.gz"
+SRC_URI = "http://source.mynonpublic.com/ini/8723AE_8723AU_Linux_BT_20140623.tar.gz"
 
 inherit module
 

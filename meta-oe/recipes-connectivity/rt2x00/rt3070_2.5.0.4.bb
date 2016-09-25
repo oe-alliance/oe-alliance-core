@@ -8,7 +8,7 @@ PR = "r2"
 inherit module
 
 SRC_URI = " \
-    http://code-ini.com/software/mirror/2011_0719_RT3070_RT3370_RT5370_RT5372_Linux_STA_V${PV}_DPO.tar.gz \
+    http://source.mynonpublic.com/ini/2011_0719_RT3070_RT3370_RT5370_RT5372_Linux_STA_V${PV}_DPO.tar.gz \
     file://makefile.patch \
     file://config.patch \
     file://remove_linux_2_4_compability.patch \

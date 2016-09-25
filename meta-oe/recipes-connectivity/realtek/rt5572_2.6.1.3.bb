@@ -8,7 +8,7 @@ PR = "r7"
 
 inherit module
 
-SRC_URI = "http://code-ini.com/software/mirror/rt5572_2.6.1.4.tar.gz \
+SRC_URI = "http://source.mynonpublic.com/ini/rt5572_2.6.1.4.tar.gz \
     file://remove_linux_2_4_compability.patch"
 
 EXTRA_OEMAKE = "LINUX_SRC=${STAGING_KERNEL_DIR} KDIR=${STAGING_KERNEL_DIR}"

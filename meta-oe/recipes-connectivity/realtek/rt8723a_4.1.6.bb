@@ -10,7 +10,7 @@ PR = "r17"
 
 MACHINE_KERNEL_PR_append = ".0"
 
-SRC_URI = "http://code-ini.com/software/mirror/rtl8723A_WiFi_linux_v4.1.6_7336.20140624.tar.gz \
+SRC_URI = "http://source.mynonpublic.com/ini/rtl8723A_WiFi_linux_v4.1.6_7336.20140624.tar.gz \
     file://rt8723a-gcc5.patch \
     "
 
