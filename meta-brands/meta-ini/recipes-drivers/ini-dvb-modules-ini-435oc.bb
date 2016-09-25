@@ -13,7 +13,7 @@ PR = "r1"
 SRC_URI[md5sum] = "3469634ce63a6f121b905dec81b8bd51"
 SRC_URI[sha256sum] = "bf486def7044289debbd7d6017cd2d04ea9bd5eba91eec9b89c951af6654904e"
 
-SRC_URI = "http://code-ini.com/software/drivers/ini-435oc-drivers-${KV}-${SRCDATE}.zip"
+SRC_URI = "http://source.mynonpublic.com/ini/ini-435oc-drivers-${KV}-${SRCDATE}.zip"
 
 S = "${WORKDIR}"
 

@@ -9,7 +9,7 @@ inherit module
 
 LIC_FILES_CHKSUM = "file://readme;endline=19;md5=f87a675da5e11ab9def922704bdda58b"
 
-SRC_URI = "http://code-ini.com/software/mirror/AX88179_178A_LINUX_DRIVER_v1.4.1_SOURCE.tar.gz"
+SRC_URI = "http://source.mynonpublic.com/ini/AX88179_178A_LINUX_DRIVER_v1.4.1_SOURCE.tar.gz"
 
 SRC_URI_append_dm500hd = " \
             file://dreambox.patch \

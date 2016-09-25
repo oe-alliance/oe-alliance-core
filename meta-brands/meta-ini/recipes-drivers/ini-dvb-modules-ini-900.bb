@@ -14,7 +14,7 @@ PR = "r4"
 SRC_URI[md5sum] = "0c851b0d74f121144932cae1292b6dbc"
 SRC_URI[sha256sum] = "302ca4ed31ff8655115b7d2e8e945cc4e0a212b656413d647524f98f38df6917"
 
-SRC_URI = "http://code-ini.com/software/drivers/ini-900-drivers-${KV}-${SRCDATE}.zip"
+SRC_URI = "http://source.mynonpublic.com/ini/ini-900-drivers-${KV}-${SRCDATE}.zip"
 
 S = "${WORKDIR}"
 
