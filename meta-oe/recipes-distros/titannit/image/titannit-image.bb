@@ -85,31 +85,6 @@ IMAGE_INSTALL = "\
 	procps \
 	portmap \
 	portmap-utils \
-	python \
-    python-codecs \
-    python-compression \
-    python-core \
-    python-crypt \
-    python-fcntl \
-    python-lang \
-    python-netclient \
-    python-netserver \
-    python-pickle \
-    python-re \
-    python-shell \
-    python-threading \
-    python-twisted-core \
-    python-twisted-web \
-    python-utf8-hack \
-    python-xml \
-    python-zlib \
-    python-zopeinterface \
-    python-email \
-    python-mime \
-    python-pyusb \
-    python-subprocess \
-    python-process \
-    python-imaging \
 	rtmpdump \
 	samba \
 	sambaserver \
@@ -145,6 +120,31 @@ IMAGE_INSTALL = "\
 	titan-bin \
     "
 #
+#    python
+#    python-codecs
+#    python-compression
+#    python-core
+#    python-crypt
+#    python-fcntl
+#    python-lang
+#    python-netclient
+#    python-netserver
+#    python-pickle
+#    python-re
+#    python-shell
+#    python-threading
+#    python-twisted-core
+#    python-twisted-web
+#    python-utf8-hack
+#    python-xml
+#    python-zlib
+#    python-zopeinterface
+#    python-email
+#    python-mime
+#    python-pyusb
+#    python-subprocess
+#    python-process
+#    python-imaging
 #	${@base_contains("MACHINE_FEATURES", "dreambox", "", "ofgwrite", d)} \
 # disable for packagegroup-base
 #	libcrypto-compat-0.9.7
