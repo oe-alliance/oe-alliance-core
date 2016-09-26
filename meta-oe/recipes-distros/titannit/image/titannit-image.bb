@@ -119,6 +119,7 @@ IMAGE_INSTALL = "\
 	${@base_contains("TARGET_ARCH", "sh4", "libmmeimage " , "", d)} \
 	titan-bin \
     "
+
 #
 #    python
 #    python-codecs
