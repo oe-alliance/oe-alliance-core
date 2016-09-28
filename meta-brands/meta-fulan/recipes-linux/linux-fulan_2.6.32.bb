@@ -5,7 +5,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 KV = "2.6.32"
 
-MACHINE_KERNEL_PR_append = ".4"
+MACHINE_KERNEL_PR_append = ".5"
 
 DEPENDS_spark7162 += " \
            stlinux24-sh4-stx7105-fdma-firmware \
@@ -17,11 +17,11 @@ DEPENDS_spark += " \
 
 inherit kernel machine_kernel_pr
 
-SRCDATE = "20141110"
+SRCDATE = "20160701"
 
 STM_PATCH_STR = "0217"
-LINUX_VERSION = "2.6.32.61"
-SRCREV = "b43f8252e9f72e5b205c8d622db3ac97736351fc"
+LINUX_VERSION = "2.6.32.71"
+SRCREV = "3ec500f4212f9e4b4d2537c8be5ea32ebf68c43b"
 
 # By default, kernel.bbclass modifies package names to allow multiple kernels
 # to be installed in parallel. We revert this change and rprovide the versioned
@@ -31,7 +31,7 @@ PKG_kernel-image = "kernel-image"
 RPROVIDES_kernel-base = "kernel-${KERNEL_VERSION}"
 RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
 
-SRC_URI = "git://git.stlinux.com/stm/linux-sh4-2.6.32.y.git;protocol=git;branch=stmicro \
+SRC_URI = "git://github.com/Duckbox-Developers/linux-sh4-2.6.32.71.git;protocol=git;branch=stmicro \
     file://linux-kbuild-generate-modules-builtin_stm24_${STM_PATCH_STR}.patch \
     file://linux-sh4-linuxdvb_stm24_${STM_PATCH_STR}.patch;patch=1 \
     file://linux-sh4-linuxdvb_stm24_${STM_PATCH_STR}_ca.patch;patch=1 \
@@ -49,7 +49,6 @@ SRC_URI = "git://git.stlinux.com/stm/linux-sh4-2.6.32.y.git;protocol=git;branch=
     file://linux-sh4-mmap_stm24.patch;patch=1 \
     file://linux-ratelimit-bug_stm24_${STM_PATCH_STR}.patch;patch=1 \
     file://linux-patch_swap_notify_core_support_stm24_${STM_PATCH_STR}.patch;patch=1 \
-    file://linux-sh4-console_missing_argument_stm24_${STM_PATCH_STR}.patch;patch=1 \
     file://linux-sh4-cpuinfo.patch;patch=1 \
     file://linux-sh4-add_missing_eid.patch;patch=1 \
     file://silence_conv_i2sspdif_warning.patch;patch=1 \
