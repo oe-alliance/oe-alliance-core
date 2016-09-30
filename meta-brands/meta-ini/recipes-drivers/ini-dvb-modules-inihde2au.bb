@@ -12,7 +12,7 @@ PV = "${KV}+${SRCDATE}"
 SRC_URI[md5sum] = "5a95aef9199e78f1e89ee40a6c352f09"
 SRC_URI[sha256sum] = "e9d9c4ebf2c8a360ad0d271801c819edb919f96d7f3f809c192c7339d10966ea"
 
-SRC_URI = "http://code-ini.com/software/drivers/ini-442dt-drivers-${KV}-${SRCDATE}.zip"
+SRC_URI = "http://source.mynonpublic.com/ini/ini-442dt-drivers-${KV}-${SRCDATE}.zip"
 
 S = "${WORKDIR}"
 

@@ -14,7 +14,7 @@ PR = "r1"
 SRC_URI[md5sum] = "666809b5d75dd426f0701f24663951ab"
 SRC_URI[sha256sum] = "443c472aa9a66f9b7cf76fc260f4a9524e9831a5ea189d745e06b520a14d9ffd"
 
-SRC_URI = "http://code-ini.com/software/drivers/yhgd2580-7358-drivers-${KV}-${SRCDATE}.zip"
+SRC_URI = "http://source.mynonpublic.com/ini/yhgd2580-7358-drivers-${KV}-${SRCDATE}.zip"
 
 S = "${WORKDIR}"
 
