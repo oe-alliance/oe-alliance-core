@@ -14,6 +14,7 @@ ${@base_contains('MACHINEBUILD', 'tmtwin', 'TM-Twin-OE' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmnanose', 'TM-NANO-SE' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmnanoseplus', 'TM-NANO-SE Plus' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmnanosem2', 'TM-NANO-SE M2' , '', d)}\
+${@base_contains('MACHINEBUILD', 'tmnanosem2plus', 'TM-NANO-SE M2 Plus' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmnanosecombo', 'TM-NANO-SE Combo' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'iqonios100hd', 'IOS-100HD' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'iqonios200hd', 'IOS-200HD' , '', d)}\
@@ -54,6 +55,7 @@ ${@base_contains('MACHINEBUILD', 'tmtwin', 'Technomate' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmnanose', 'Technomate' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmnanoseplus', 'Technomate' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmnanosem2', 'Technomate' , '', d)}\
+${@base_contains('MACHINEBUILD', 'tmnanosem2plus', 'Technomate' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmnanosecombo', 'Technomate' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'iqonios100hd', 'Iqon' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'iqonios200hd', 'Iqon' , '', d)}\
@@ -94,6 +96,7 @@ ${@base_contains('MACHINEBUILD', 'tmtwin', 'update/tmtwinoe/cfe' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmnanose', 'update/tmnanose/cfe' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmnanoseplus', 'update/tmnanoseplus/cfe' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmnanosem2', 'update/tmnanosem2/cfe' , '', d)}\
+${@base_contains('MACHINEBUILD', 'tmnanosem2plus', 'update/tmnanosem2plus/cfe' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmnanosecombo', 'update/tmnanosecombo/cfe' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'iqonios100hd', 'update/ios100/cfe' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'iqonios200hd', 'update/ios200/cfe' , '', d)}\
@@ -134,6 +137,7 @@ ${@base_contains('MACHINEBUILD', 'tmtwin', 'mtd6' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmnanose', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmnanoseplus', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmnanosem2', 'mtd2' , '', d)}\
+${@base_contains('MACHINEBUILD', 'tmnanosem2plus', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmnanosecombo', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'iqonios100hd', 'mtd6' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'iqonios200hd', 'mtd6' , '', d)}\
@@ -174,6 +178,7 @@ ${@base_contains('MACHINEBUILD', 'tmtwin', 'mtd4' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmnanose', 'mtd0' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmnanoseplus', 'mtd0' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmnanosem2', 'mtd0' , '', d)}\
+${@base_contains('MACHINEBUILD', 'tmnanosem2plus', 'mtd0' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmnanosecombo', 'mtd0' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'iqonios100hd', 'mtd4' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'iqonios200hd', 'mtd4' , '', d)}\
@@ -209,6 +214,7 @@ ${@base_contains('MACHINEBUILD', 'tmnano3t', 'splash1.bmp' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmnanose', 'splash1_power.bmp' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmnanoseplus', 'splash1_power.bmp' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmnanosem2', 'splash1_power.bmp' , '', d)}\
+${@base_contains('MACHINEBUILD', 'tmnanosem2plus', 'splash1_power.bmp' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmnanosecombo', 'splash1_power.bmp' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'force1', 'splash1_os2.bmp' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'force1plus', 'splash1_os2.bmp' , '', d)}\
@@ -240,6 +246,7 @@ ${@base_contains('MACHINEBUILD', 'tmtwin', 'dags7335' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmnanose', 'dags7362' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmnanoseplus', 'dags7362' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmnanosem2', 'dags7362' , '', d)}\
+${@base_contains('MACHINEBUILD', 'tmnanosem2plus', 'dags7362' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'tmnanosecombo', 'dags7362' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'iqonios100hd', 'dags7335' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'iqonios200hd', 'dags7335ci' , '', d)}\
@@ -347,6 +354,7 @@ MACHINE_FEATURES += "3dtv alsa hdmicec switchoff bootsplash textlcd ci omb skins
     ${@base_contains('MACHINEBUILD', 'fusionhdse', 'fastscan dvb-c' , '', d)} \
     ${@base_contains('MACHINEBUILD', 'purehd', 'fastscan dvb-c' , '', d)} \
     ${@base_contains('MACHINEBUILD', 'force2plushv', 'fastscan dvb-c' , '', d)} \
+    ${@base_contains('MACHINEBUILD', 'tmnanosem2plus', 'fastscan dvb-c' , '', d)} \
 "
 
 BOOTLOGO_FILENAME = "splash.bmp"
