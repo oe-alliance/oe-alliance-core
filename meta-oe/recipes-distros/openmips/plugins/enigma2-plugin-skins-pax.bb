@@ -14,7 +14,7 @@ PKGV = "${IMAGE_VERSION}+git${GITPKGV}"
 VER ="${IMAGE_VERSION}"
 PR = "r0"
 
-SRC_URI="${@bb.utils.contains("DISTRO_TYPE", "release", "git://github.com/openmips/skin-pax.git;protocol=git" , "git://git@gitlab.openmips.com/dev-openmips/openmips-skin.git;protocol=ssh;branch=master", d)}"
+SRC_URI ?= "${@bb.utils.contains("DISTRO_TYPE", "release", "git://github.com/openmips/skin-pax.git;protocol=git" , "git://git@gitlab.openmips.com/dev-openmips/openmips-skin.git;protocol=ssh;branch=master", d)}"
 
 S = "${WORKDIR}/git"
 
