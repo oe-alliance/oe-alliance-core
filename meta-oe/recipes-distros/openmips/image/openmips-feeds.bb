@@ -6,13 +6,15 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=4d92cd373abda3937c2bc47fbc49d
 ALLOW_EMPTY_${PN} = "1"
 
 PV = "${IMAGE_VERSION}"
-PR = "r1"
+PR = "r0"
 
 inherit packagegroup
 
 RRECOMMENDS_${PN} = "\
+    astra-sm \
     curlftpfs \
     dvb-apps \
+    dvblast \
     enigma2-plugin-skins-gb-fhd \
     enigma2-plugin-skins-pli-hd \
     enigma2-plugin-extensions-blurayplayer \
@@ -24,6 +26,8 @@ RRECOMMENDS_${PN} = "\
     enigma2-plugin-systemplugins-autobouquetsmaker\
     enigma2-skins \
     enigma2-plugin-skins-pax-fhd \
+    libbluray \
+    libudfread \
     monit \
     oe-alliance-skins \
     openssl-old \
