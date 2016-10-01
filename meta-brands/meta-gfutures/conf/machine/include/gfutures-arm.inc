@@ -7,7 +7,7 @@ IMAGE_ROOTFS_SIZE ?= "196608"
 TARGET_ARCH = "arm"
 DEFAULTTUNE = "armv7ahf-neon"
 
-PREFERRED_VERSION_linux-gfutures = "4.7.3"
+PREFERRED_VERSION_linux-gfutures = "4.7.4"
 PREFERRED_VERSION_linux-libc-headers = "4.7"
 
 IMAGE_CMD_hd-emmc_append = "\
