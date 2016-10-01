@@ -12,9 +12,9 @@ SRCREV = "${AUTOREV}"
 PV = "${IMAGE_VERSION}+git${SRCPV}"
 PKGV = "${IMAGE_VERSION}+git${GITPKGV}"
 VER ="${IMAGE_VERSION}"
-PR = "r0"
+PR = "r1"
 
-SRC_URI ?= "${@bb.utils.contains("DISTRO_TYPE", "release", "git://github.com/openmips/skin-pax.git;protocol=git" , "git://git@gitlab.openmips.com/dev-openmips/openmips-skin.git;protocol=ssh;branch=master", d)}"
+SRC_URI="git://github.com/openmips/skin-pax.git;protocol=git"
 
 S = "${WORKDIR}/git"
 
