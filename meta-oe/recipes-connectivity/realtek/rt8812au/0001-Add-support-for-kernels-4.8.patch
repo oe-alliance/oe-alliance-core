@@ -1,0 +1,44 @@
+From 9dcc95a6fc5e41fe941152036fa39a409ba68068 Mon Sep 17 00:00:00 2001
+From: Masashi Honma <masashi.honma@gmail.com>
+Date: Sun, 25 Sep 2016 18:56:40 +0900
+Subject: [PATCH 1/2] Add support for kernels >= 4.8
+
+This patch fix compilation failure caused by modification of
+cfg80211_scan_done() prototype.
+
+Signed-off-by: Masashi Honma <masashi.honma@gmail.com>
+---
+ os_dep/linux/ioctl_cfg80211.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+diff --git a/os_dep/linux/ioctl_cfg80211.c b/os_dep/linux/ioctl_cfg80211.c
+index e9f74df..b693a57 100644
+--- a/os_dep/linux/ioctl_cfg80211.c
++++ b/os_dep/linux/ioctl_cfg80211.c
+@@ -1978,6 +1978,9 @@ void rtw_cfg80211_indicate_scan_done(_adapter *adapter, bool aborted)
+ {
+ 	struct rtw_wdev_priv *pwdev_priv = adapter_wdev_data(adapter);
+ 	_irqL	irqL;
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4, 8, 0))
++	struct cfg80211_scan_info info;
++#endif // (LINUX_VERSION_CODE >= KERNEL_VERSION(4, 8, 0))
+ 
+ 	_enter_critical_bh(&pwdev_priv->scan_req_lock, &irqL);
+ 	if (pwdev_priv->scan_request != NULL) {
+@@ -1992,7 +1995,13 @@ void rtw_cfg80211_indicate_scan_done(_adapter *adapter, bool aborted)
+ 		}
+ 		else
+ 		{
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4, 8, 0))
++			memset(&info, 0, sizeof(info));
++			info.aborted = aborted;
++			cfg80211_scan_done(pwdev_priv->scan_request, &info);
++#else // (LINUX_VERSION_CODE >= KERNEL_VERSION(4, 8, 0))
+ 			cfg80211_scan_done(pwdev_priv->scan_request, aborted);
++#endif // (LINUX_VERSION_CODE >= KERNEL_VERSION(4, 8, 0))
+ 		}
+ 
+ 		pwdev_priv->scan_request = NULL;
+-- 
+2.10.0.windows.1
+
