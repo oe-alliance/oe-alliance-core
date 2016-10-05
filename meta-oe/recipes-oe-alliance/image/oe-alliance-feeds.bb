@@ -113,7 +113,6 @@ RDEPENDS_${PN} = " \
     vim \
     wakelan \
     wget \
-    xfsprogs \
     zeroconf \
     "
 
