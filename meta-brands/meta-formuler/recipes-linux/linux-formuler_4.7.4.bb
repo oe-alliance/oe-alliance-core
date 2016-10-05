@@ -2,12 +2,12 @@ DESCRIPTION = "Linux kernel for ${MACHINE}"
 SECTION = "kernel"
 LICENSE = "GPLv2"
 
-KERNEL_RELEASE = "4.0.1"
+KERNEL_RELEASE = "4.7.4"
 
 inherit kernel machine_kernel_pr
 
-SRC_URI[md5sum] = "c274792d088cd7bbfe7fe5a76bd798d8"
-SRC_URI[sha256sum] = "6fd63aedd69b3b3b28554cabf71a9efcf05f10758db3d5b99cfb0580e3cde24c"
+SRC_URI[md5sum] = "0936cba7e50b5053dd33dcfab3932b55"
+SRC_URI[sha256sum] = "a6956bc0c6156d170c637e59e14aa1084c257045d1e3947e8f2d61119ec6909f"
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
@@ -21,20 +21,17 @@ PKG_kernel-image = "kernel-image"
 RPROVIDES_kernel-base = "kernel-${KERNEL_VERSION}"
 RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
 
-SRC_URI += "http://downloads.formuler.info/linux-${PV}.tar.gz \
-	file://defconfig \
-	file://formuler_partition_layout.patch \
-	file://add-dmx-source-timecode.patch \
-	file://iosched-slice_idle-1.patch \
-	file://sdio-pinmux.patch \
-	file://0001-bcmgenet.patch \
-	file://0001-Support-TBS-USB-drivers-for-4.0.1-kernel.patch \
-	file://0001-TBS-fixes-for-4.0.1-kernel.patch \
-	file://0001-STV-Add-PLS-support.patch \
-	file://0001-STV-Add-SNR-Signal-report-parameters.patch \
-	file://blindscan2.patch \
-	file://0001-stv090x-optimized-TS-sync-control.patch \
-	"
+SRC_URI += "http://downloads.mutant-digital.net/linux-${PV}-${ARCH}.tar.gz \
+    file://defconfig \
+    file://formuler_partition_layout.patch \
+    file://sdio-pinmux.patch \
+    file://0001-Support-TBS-USB-drivers-for-4.6-kernel.patch \
+    file://0001-TBS-fixes-for-4.6-kernel.patch \
+    file://0001-STV-Add-PLS-support.patch \
+    file://0001-STV-Add-SNR-Signal-report-parameters.patch \
+    file://blindscan2.patch \
+    file://0001-stv090x-optimized-TS-sync-control.patch \
+    "
 
 S = "${WORKDIR}/linux-${PV}"
 B = "${WORKDIR}/build"
