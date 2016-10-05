@@ -96,7 +96,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'tmtwin', 'update/tmtwinoe/cfe' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'tmnanose', 'update/tmnanose/cfe' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'tmnanoseplus', 'update/tmnanoseplus/cfe' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'tmnanosem2', 'update/tmnanosem2/cfe' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'tmnanosem2plus', 'update/tmnanosem2plus/cfe' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'tmnanosem2plus', 'update/tmnanoseplus/cfe' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'tmnanosecombo', 'update/tmnanosecombo/cfe' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'iqonios100hd', 'update/ios100/cfe' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'iqonios200hd', 'update/ios200/cfe' , '', d)}\
