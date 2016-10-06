@@ -1,10 +1,10 @@
 KV = "4.4.8"
 GCC = "5.3.0"
-SRCDATE = "20160715"
+SRCDATE = "20161004"
 
 SRC_URI = "http://www.xtrendet.net/${MACHINE}-drivers-${KV}-${GCC}-${SRCDATE}.zip"
 
 require et-dvb-modules.inc
 
-SRC_URI[md5sum] = "4078d4e7c500ae96d837613c66ea28ef"
-SRC_URI[sha256sum] = "b9c08e205320f2823c7867104debdfc845f7d05ccf6802872dce6bf6bcf7f0a8"
+SRC_URI[md5sum] = "52d1104b28dbf07019ef0f2cdc88d16a"
+SRC_URI[sha256sum] = "cad36d1d29e79c5ec5e9130140d2f2d3262c6bb00be241084b9ce1c008607b17"
