@@ -177,6 +177,11 @@ do_install_append() {
         ln -sf /usr/share/enigma2/twinboxlcdci.jpg ${D}/usr/lib/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes/twinboxlcdci.jpg
         install -m 0644 ${S}/BoxBranding/boxes/twinboxlcd.jpg ${D}/usr/share/enigma2/twinboxlcd.jpg
         ln -sf /usr/share/enigma2/twinboxlcd.jpg ${D}/usr/lib/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes/twinboxlcd.jpg 
+    elif [ ${MACHINEBUILD} = "dm520" ]; then
+        install -m 0644 ${S}/BoxBranding/boxes/dm520.jpg ${D}/usr/share/enigma2/dm520.jpg
+        ln -sf /usr/share/enigma2/dm520.jpg ${D}/usr/lib/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes/dm520.jpg
+        install -m 0644 ${S}/BoxBranding/boxes/dm525.jpg ${D}/usr/share/enigma2/dm525.jpg
+        ln -sf /usr/share/enigma2/dm525.jpg ${D}/usr/lib/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes/dm525.jpg 
     else
         install -m 0644 ${S}/BoxBranding/boxes/${MACHINEBUILD}.jpg ${D}/usr/share/enigma2/${MACHINEBUILD}.jpg
         ln -sf /usr/share/enigma2/${MACHINEBUILD}.jpg ${D}/usr/lib/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes/${MACHINEBUILD}.jpg
