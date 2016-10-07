@@ -1,0 +1,13 @@
+diff --git a/drivers/media/dvb-core/dvbdev.c b/drivers/media/dvb-core/dvbdev.c
+index 560450a..eb1a212 100644
+--- a/drivers/media/dvb-core/dvbdev.c
++++ b/drivers/media/dvb-core/dvbdev.c
+@@ -768,7 +768,7 @@ static int dvbdev_check_free_adapter_num(int num)
+ 
+ static int dvbdev_get_free_adapter_num (void)
+ {
+-	int num = 0;
++	int num = 1;
+ 
+ 	while (num < DVB_MAX_ADAPTERS) {
+ 		if (dvbdev_check_free_adapter_num(num))
