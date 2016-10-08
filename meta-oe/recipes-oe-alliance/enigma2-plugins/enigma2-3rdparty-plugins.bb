@@ -11,7 +11,7 @@ DEPENDS = "tslib mpfr gmp"
 SRCREV = "${AUTOREV}"
 PV = "3.2+gitr${SRCPV}"
 PKGV = "3.2+gitr${GITPKGV}"
-PR = "r109"
+PR = "r110"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -52,7 +52,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-hetweer_3.2r2_all.ipk \
     enigma2-plugin-extensions-iptvbouquet_1.0_r0_all.ipk \
     enigma2-plugin-extensions-isettinge2-3.3.8-oe2.0-${@base_contains("TARGET_ARCH", "sh4", "sh4" , "mips32el", d)}.ipk \
-    enigma2-plugin-extensions-kicker_3.4rc9_all.ipk \
+    enigma2-plugin-extensions-kicker_3.4rc10_all.ipk \
     enigma2-plugin-extensions-kino_1.6rc9_all.ipk \
     enigma2-plugin-extensions-kodidirect_3.0_r0_all.ipk \
     enigma2-plugin-extensions-livefootball_6.1_all.ipk \
@@ -77,7 +77,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-sherlock_5.01r1_mipsel.ipk \
     enigma2-plugin-extensions-skyrecorder_1.6.1_all.ipk \
     enigma2-plugin-extensions-songs-to_0.1_mips32el.ipk \
-    enigma2-plugin-extensions-spiegelonline_2.7rc1_all.ipk \
+    enigma2-plugin-extensions-spiegelonline_2.7rc2_all.ipk \
     enigma2-plugin-extensions-spinnerselector_2.1r5_mips32el.ipk \
     enigma2-plugin-extensions-sport1ticker_1.3_all.ipk \
     enigma2-plugin-extensions-sportportal_2013_all.ipk \
@@ -95,7 +95,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-vhannibalautosettings_1.1_mips32el.ipk \
     enigma2-plugin-extensions-vuplusforum_0.8rc1_all.ipk \
     enigma2-plugin-extensions-webmedia_14.0_r0_all.ipk \
-    enigma2-plugin-extensions-webradiofs_14.52_all.ipk \
+    enigma2-plugin-extensions-webradiofs_14.53_all.ipk \
     enigma2-plugin-extensions-weerinfo_2.3_all.ipk \
     enigma2-plugin-extensions-wikipedia_2.2rc10_all.ipk \
     enigma2-plugin-extensions-wwech_1.03_all.ipk \
