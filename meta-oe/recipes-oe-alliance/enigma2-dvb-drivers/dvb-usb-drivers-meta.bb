@@ -7,6 +7,8 @@ ALLOW_EMPTY_${PN} = "1"
 
 DEPENDS = "\
     enigma2-plugin-drivers-atsc-usb-hauppauge \
+    enigma2-plugin-drivers-atsc-950q-usb-hauppauge \
+    enigma2-plugin-drivers-atsc-955q-usb-hauppauge \
     enigma2-plugin-drivers-dvb-usb-dib0700 \
     enigma2-plugin-drivers-dvb-usb-af9015 \
     enigma2-plugin-drivers-dvb-usb-siano \
@@ -33,4 +35,4 @@ DEPENDS = "\
     "
 
 
-PR = "r14"
+PR = "r15"
