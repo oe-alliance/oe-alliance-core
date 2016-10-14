@@ -13,7 +13,7 @@ PKGV = "3.0+git${GITPKGV}"
 VER ="3.0"
 PR = "r5"
 
-SRC_URI="git://bitbucket.org/beyonwiz/picons-australia.git;protocol=https"
+SRC_URI="git://bitbucket.org/beyonwiz/picons-australia.git;protocol=https;branch=master"
 
 S = "${WORKDIR}/git"
 
