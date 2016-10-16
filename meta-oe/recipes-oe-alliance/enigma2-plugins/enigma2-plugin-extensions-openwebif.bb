@@ -5,7 +5,7 @@ LIC_FILES_CHKSUM = "file://README;firstline=10;lastline=12;md5=9c14f792d0aeb54e1
 
 BRANCH="branding"
 
-DEPENDS = "enigma2 python-cheetah-native"
+DEPENDS = "python-cheetah-native"
 RDEPENDS_${PN} = "\
 	aio-grab \
 	python-cheetah \
