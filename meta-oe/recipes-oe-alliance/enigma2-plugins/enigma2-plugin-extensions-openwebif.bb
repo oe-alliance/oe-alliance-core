@@ -3,7 +3,9 @@ DESCRIPTION = "Control your receiver with a browser"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://README;firstline=10;lastline=12;md5=9c14f792d0aeb54e15490a28c89087f7"
 
-DEPENDS = "python-cheetah-native"
+BRANCH="branding"
+
+DEPENDS = "enigma2 python-cheetah-native"
 RDEPENDS_${PN} = "\
 	aio-grab \
 	python-cheetah \
@@ -25,9 +27,9 @@ SRCREV = "${AUTOREV}"
 PV = "1+git${SRCPV}"
 PKGV = "1+git${GITPKGV}"
 
-PACKAGE_ARCH = "${MACHINEBUILD}"
+PACKAGE_ARCH = "all"
 
-SRC_URI = "git://github.com/oe-alliance/e2openplugin-${MODULE}.git;protocol=git;branch=branding"
+SRC_URI = "git://github.com/oe-alliance/e2openplugin-${MODULE}.git;protocol=git;branch=${BRANCH}"
 
 S="${WORKDIR}/git"
 
