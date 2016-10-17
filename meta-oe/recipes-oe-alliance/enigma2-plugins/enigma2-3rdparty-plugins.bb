@@ -78,7 +78,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-skyrecorder_1.6.1_all.ipk \
     enigma2-plugin-extensions-songs-to_0.1_mips32el.ipk \
     enigma2-plugin-extensions-spiegelonline_2.7rc2_all.ipk \
-    enigma2-plugin-extensions-spinnerselector_2.1r5_mips32el.ipk \
+    enigma2-plugin-extensions-spinnerselector_2.1rc6_mips32el.ipk \
     enigma2-plugin-extensions-sport1ticker_1.3_all.ipk \
     enigma2-plugin-extensions-sportportal_2013_all.ipk \
     enigma2-plugin-extensions-sundtekcontrolcenter_20160830-1_all.ipk \
