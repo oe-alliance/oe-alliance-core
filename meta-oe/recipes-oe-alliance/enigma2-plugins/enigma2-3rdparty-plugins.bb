@@ -11,7 +11,7 @@ DEPENDS = "tslib mpfr gmp"
 SRCREV = "${AUTOREV}"
 PV = "3.2+gitr${SRCPV}"
 PKGV = "3.2+gitr${GITPKGV}"
-PR = "r112"
+PR = "r113"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -49,7 +49,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-gmailreader-oe2.0_1.3_all.ipk \
     enigma2-plugin-extensions-googlenewsreader_1.0_mips32el.ipk \
     enigma2-plugin-extensions-hdmitest_0.4_mipsel.ipk \
-    enigma2-plugin-extensions-hetweer_3.5r1_all.ipk \
+    enigma2-plugin-extensions-hetweer_3.5r2_all.ipk \
     enigma2-plugin-extensions-iptvbouquet_1.0_r0_all.ipk \
     enigma2-plugin-extensions-isettinge2-3.3.8-oe2.0-${@base_contains("TARGET_ARCH", "sh4", "sh4" , "mips32el", d)}.ipk \
     enigma2-plugin-extensions-kicker_3.4rc10_all.ipk \
@@ -84,14 +84,14 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-sundtekcontrolcenter_20160830-1_all.ipk \
     enigma2-plugin-extensions-tectimetv_3.1_all.ipk \
     enigma2-plugin-extensions-thetvdb_0.7-20120607-r2_mips32el.ipk \
-    enigma2-plugin-extensions-tmbd_7.5_all.ipk \
+    enigma2-plugin-extensions-tmbd_7.5r1_all.ipk \
     enigma2-plugin-extensions-translator_1.0rc1_all.ipk \
     enigma2-plugin-extensions-transmission_2.84_all.ipk \
-    enigma2-plugin-extensions-tsmedia_11.2_all.ipk \
+    enigma2-plugin-extensions-tsmedia_11.3_all.ipk \
     enigma2-plugin-extensions-tstube_1.2_all.ipk \
     enigma2-plugin-extensions-tvspielfilm_6.4rc12_all.ipk \
     enigma2-plugin-extensions-verkehrsinfo_1.1rc1_mips32el.ipk \
-    enigma2-plugin-extensions-vcs_2.1_all.ipk \
+    enigma2-plugin-extensions-vcs_2.4_all.ipk \
     enigma2-plugin-extensions-vhannibalautosettings_1.1_mips32el.ipk \
     enigma2-plugin-extensions-vuplusforum_0.8rc1_all.ipk \
     enigma2-plugin-extensions-webmedia_14.0_r0_all.ipk \
