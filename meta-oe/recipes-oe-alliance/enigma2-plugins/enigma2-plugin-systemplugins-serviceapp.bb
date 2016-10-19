@@ -1,5 +1,5 @@
 DESCRIPTION = "serviceapp service for enigma2"
-AUTHOR = "Maroö Ondr·öek <mx3ldev@gmail.com>"
+AUTHOR = "Maro≈° Ondr√°≈°ek <mx3ldev@gmail.com>"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 
