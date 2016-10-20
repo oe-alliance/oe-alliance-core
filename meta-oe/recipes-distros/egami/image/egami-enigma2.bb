@@ -7,19 +7,17 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "1.0"
-PR = "r1"
+PR = "r14"
 
 inherit packagegroup
 
 DEPENDS = "enigma2-pliplugins egami-feeds"
 
 RRECOMMENDS_${PN} = "\
-    kernel-module-ftdi-sio \
-    kernel-module-pl2303 \
-    \
-    streamripper \
-    \
     enigma2-skindefault \
+    enigma2-plugin-skins-egmega32 \
+    enigma2-plugin-skins-odreamyfhd \
+    enigma2-plugin-bootlogos-egami-9 \
     \
     enigma2-plugin-extensions-autotimer \
     enigma2-plugin-extensions-epgsearch \
@@ -31,13 +29,12 @@ RRECOMMENDS_${PN} = "\
     enigma2-plugin-extensions-filecommander \
     enigma2-plugin-extensions-egamipermanentclock \
     enigma2-plugin-extensions-egaminews \
+    enigma2-plugin-extensions-epgimport \
     ${@bb.utils.contains("MACHINE_BRAND", "WeTeK", "", "enigma2-plugin-extensions-egamiboot", d)} \
     \
     enigma2-plugin-extensions-weatherplugin enigma2-plugin-systemplugins-weathercomponenthandler enigma2-plugin-skincomponents-weathercomponent \
     \
-    ${@bb.utils.contains("MACHINE_BRAND", "Sezam", "${SEZAM_PLUGINS}" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "dreamboxv2", "enigma2-plugin-extensions-dbackup", "", d)} \
-    ${@bb.utils.contains("MACHINE_FEATURES", "boxmodel", "boxmodel", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "uianimation", "enigma2-plugin-systemplugins-animationsetup" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "osdanimation", "enigma2-plugin-systemplugins-animationsetup" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "webkithbbtv", "webkit-hbbtv-browser", "", d)} \
@@ -46,10 +43,10 @@ RRECOMMENDS_${PN} = "\
     ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "", "enigma2-plugin-extensions-enhancedmoviecenter", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "videoenhancement", "", "enigma2-plugin-systemplugins-videoenhancement", d)} \
     \
-    enigma2-plugin-systemplugins-crossepg \
     enigma2-plugin-systemplugins-softwaremanager \
-    \
     enigma2-plugin-systemplugins-egamipluginspeedup \
+    \
+    ${@bb.utils.contains("MACHINE_BRAND", "Sezam", "${SEZAM_PLUGINS}" , "", d)} \
 "
 
 SEZAM_PLUGINS = "\

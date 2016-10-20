@@ -7,13 +7,11 @@ MAINTAINER = "EGAMI team"
 require conf/license/license-gplv2.inc
 
 PV = "${IMAGE_VERSION}"
-PR = "r${DATE}"
+PR = "r${DATETIME}"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-PR[vardepsxeclude] += "DATE"
-
 IMAGE_INSTALL = "egami-base \
-    ${@bb.utils.contains("MACHINE_FEATURES", "singlecore", "", \
+    ${@base_contains("MACHINE_FEATURES", "singlecore", "", \
     " \
     packagegroup-base-smbfs \
     packagegroup-base-smbfs-client \
