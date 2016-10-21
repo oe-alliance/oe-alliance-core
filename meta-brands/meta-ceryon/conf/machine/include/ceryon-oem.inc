@@ -11,6 +11,7 @@ ${@base_contains('MACHINEBUILD', 'odin2hybrid', 'ODIN2 Hybrid' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'odinplus', 'ODIN2 Plus' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'e4hd', 'E4HD' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'e4hdhybrid', 'E4HD HYBRID' , '', d)}\
+${@base_contains('MACHINEBUILD', 'e4hdcombo', 'E4HD COMBO' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'singleboxlcd', 'SINGLEBOX LCD' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'sf208', 'SF208 E2 HD LCD SINGLE' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'sf228', 'SF228 E2 HD LCD TWIN' , '', d)}\
@@ -27,6 +28,7 @@ ${@base_contains('MACHINEBUILD', 'odin2hybrid', 'Opticum' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'odinplus', 'Opticum' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'e4hd', 'AXAS' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'e4hdhybrid', 'AXAS' , '', d)}\
+${@base_contains('MACHINEBUILD', 'e4hdcombo', 'AXAS' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'singleboxlcd', 'RED EAGLE' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'sf208', 'OCTAGON' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'sf228', 'OCTAGON' , '', d)}\
@@ -43,6 +45,7 @@ ${@base_contains('MACHINEBUILD', 'odin2hybrid', 'odin2/hybrid' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'odinplus', 'odinplus' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'e4hd', 'e4hd' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'e4hdhybrid', 'e4hd' , '', d)}\
+${@base_contains('MACHINEBUILD', 'e4hdcombo', 'e4hdcombo' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'singleboxlcd', 'redeagle/singleboxlcd' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'sf208', 'sf208' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'sf228', 'sf228' , '', d)}\
@@ -129,6 +132,8 @@ IMAGE_CMD_ubi_append = "\
 
 MACHINE_FEATURES += "3dtv alsa hdmicec switchoff bootsplash omb videoenhancement directfb sdl skins1080 feature1 feature2 blindscan-dvbs blindscan-dvbc blindscan-tbs \
     ${@base_contains('MACHINEBUILD', 'e4hdhybrid', 'dvb-c dvb-c-only' , '', d)} \
+    ${@base_contains('MACHINEBUILD', 'e4hdcombo', 'dvb-c' , '', d)} \
+    ${@base_contains('MACHINEBUILD', '9911lx', 'dvb-c' , '', d)} \
 "
 
 BOOTLOGO_FILENAME = "splash.bin"
