@@ -50,7 +50,6 @@ SRC_URI += "http://source.mynonpublic.com/ini/bcm7413-linux-${KV}-${SRCDATE}.tar
     file://rtl8187se-fix-warnings.patch \
     "
 
-SRC_URI_append_openvix = "file://dvb_frontend-Multistream-support-3.6.patch \"
 
 S = "${WORKDIR}/linux-${PV}"
 B = "${WORKDIR}/build"
