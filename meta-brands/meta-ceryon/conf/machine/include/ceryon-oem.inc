@@ -11,6 +11,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'odin2hybrid', 'ODIN2 Hybrid' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'odinplus', 'ODIN2 Plus' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'e4hd', 'E4HD' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'e4hdhybrid', 'E4HD HYBRID' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'e4hdcombo', 'E4HD COMBO' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'singleboxlcd', 'SINGLEBOX LCD' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'sf208', 'SF208 E2 HD LCD SINGLE' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'sf228', 'SF228 E2 HD LCD TWIN' , '', d)}\
@@ -27,6 +28,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'odin2hybrid', 'Opticum' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'odinplus', 'Opticum' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'e4hd', 'AXAS' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'e4hdhybrid', 'AXAS' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'e4hdcombo', 'AXAS' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'singleboxlcd', 'RED EAGLE' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'sf208', 'OCTAGON' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'sf228', 'OCTAGON' , '', d)}\
@@ -43,6 +45,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'odin2hybrid', 'odin2/hybrid' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'odinplus', 'odinplus' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'e4hd', 'e4hd' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'e4hdhybrid', 'e4hd' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'e4hdcombo', 'e4hdcombo' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'singleboxlcd', 'redeagle/singleboxlcd' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'sf208', 'sf208' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'sf228', 'sf228' , '', d)}\
@@ -128,6 +131,8 @@ IMAGE_CMD_ubi_append = "\
 
 MACHINE_FEATURES += "3dtv alsa hdmicec switchoff bootsplash omb videoenhancement directfb sdl skins1080 feature1 feature2 blindscan-dvbs blindscan-dvbc blindscan-tbs \
     ${@bb.utils.contains('MACHINEBUILD', 'e4hdhybrid', 'dvb-c dvb-c-only' , '', d)} \
+    ${@bb.utils.contains('MACHINEBUILD', 'e4hdcombo', 'dvb-c' , '', d)} \
+    ${@bb.utils.contains('MACHINEBUILD', '9911lx', 'dvb-c' , '', d)} \
 "
 
 BOOTLOGO_FILENAME = "splash.bin"
