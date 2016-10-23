@@ -11,8 +11,8 @@ inherit autotools-brokensep gitpkgv pythonnative
 PACKAGES += " ${PN}-src"
 
 SRCREV = "${AUTOREV}"
-PV = "5.2+git${SRCPV}"
-PKGV = "5.2+git${GITPKGV}"
+PV = "6.0+git${SRCPV}"
+PKGV = "6.0+git${GITPKGV}"
 PR = "r${DATE}-${MACHINEBUILD}"
 
 PR[vardepsxeclude] += "DATE"
@@ -187,6 +187,7 @@ do_install_append() {
     else
         install -m 0644 ${S}/BoxBranding/boxes/${MACHINEBUILD}.jpg ${D}/usr/share/enigma2/${MACHINEBUILD}.jpg
         ln -sf /usr/share/enigma2/${MACHINEBUILD}.jpg ${D}/usr/lib/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes/${MACHINEBUILD}.jpg
+        ln -sf /usr/share/enigma2/${MACHINEBUILD}.png ${D}/usr/lib/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes/${MACHINEBUILD}.png
     fi
     if [ ${DISTRO} = "openxta" ]; then
         rm -f ${D}/usr/lib/enigma2/python/Components/RcModel.py*
