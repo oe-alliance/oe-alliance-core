@@ -8,7 +8,9 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "${IMAGE_VERSION}"
-PR = "r1"
+PR = "r2"
+
+PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 inherit packagegroup
 
@@ -20,6 +22,6 @@ RDEPENDS_${PN} = "\
     openvix-enigma2 \
     openvix-bootlogo \
     openvix-spinner \
-    ${@base_contains("MACHINE", "vusolo4k", "glibc-compat", "", d)} \
+    ${@base_contains("TARGET_ARCH", "arm", "glibc-compat", "", d)} \
     "
 

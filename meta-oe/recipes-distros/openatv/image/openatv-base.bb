@@ -6,7 +6,9 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=4d92cd373abda3937c2bc47fbc49d
 ALLOW_EMPTY_${PN} = "1"
 
 PV = "1.0"
-PR = "r21"
+PR = "r22"
+
+PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 inherit packagegroup
 
@@ -23,6 +25,6 @@ RDEPENDS_${PN} = "\
     rtmpdump \
     packagegroup-base-smbfs-client \
     ${@base_contains("MACHINE_FEATURES", "dreambox", "", "ofgwrite", d)} \
-    ${@base_contains("MACHINE", "vusolo4k", "glibc-compat", "", d)} \
+    ${@base_contains("TARGET_ARCH", "arm", "glibc-compat", "", d)} \
     bash \
     "

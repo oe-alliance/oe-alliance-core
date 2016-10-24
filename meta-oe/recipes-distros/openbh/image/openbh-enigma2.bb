@@ -4,10 +4,11 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=4d92cd373abda3937c2bc47fbc49d
                     file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
 
 ALLOW_EMPTY_${PN} = "1"
-PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PV = "1.0"
-PR = "r56"
+PR = "r57"
+
+PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 inherit packagegroup
 
@@ -36,7 +37,7 @@ RRECOMMENDS_${PN} = " \
     ${@base_contains("MACHINE_FEATURES", "grautec", "enigma2-plugin-extensions-grautec", "", d)} \
     ${@base_contains("MACHINE_FEATURES", "omb", "enigma2-plugin-extensions-openmultiboot", "", d)} \
     ${@base_contains("MACHINE_FEATURES", "omb", "openmultiboot", "", d)} \
-    ${@base_contains("MACHINE", "vusolo4k", "glibc-compat", "", d)} \
+    ${@base_contains("TARGET_ARCH", "arm", "glibc-compat", "", d)} \
     dvb-usb-drivers-meta \
     "
 
