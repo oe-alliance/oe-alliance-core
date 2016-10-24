@@ -4,6 +4,7 @@ LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://README;firstline=10;lastline=12;md5=9c14f792d0aeb54e15490a28c89087f7"
 
 BRANCH="branding"
+BRANCH_openhdf="Theme"
 
 DEPENDS = "python-cheetah-native"
 RDEPENDS_${PN} = "\
