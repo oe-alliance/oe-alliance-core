@@ -1,6 +1,6 @@
 KV = "4.0.1"
-SRCDATE = "20161014"
+SRCDATE = "20161024"
 
 require ceryon-dvb-modules.inc
-SRC_URI[md5sum] = "d119585993ea7e89556a2ca816cf0346"
-SRC_URI[sha256sum] = "7fce01fb410233ce8df72418aef11ccea130a0f33759db06008b105d69fbfa26"
+SRC_URI[md5sum] = "b50411a38953ab15bff0465849f77957"
+SRC_URI[sha256sum] = "e68b794b743af41425daebe97c39a964288c0e9f85e5be31241b75ff2e220ada"
