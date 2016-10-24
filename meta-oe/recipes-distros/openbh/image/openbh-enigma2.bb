@@ -29,7 +29,6 @@ RRECOMMENDS_${PN} = " \
     enigma2-plugin-systemplugins-crossepg \
     enigma2-plugin-extensions-epgimport \
     enigma2-plugin-extensions-epgimportfilter \
-<<<<<<< HEAD
     ${@bb.utils.contains("MACHINE_FEATURES", "dreamboxv1", "enigma2-plugin-extensions-dflash mtd-utils-jffs2", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "dreamboxv2", "enigma2-plugin-extensions-dbackup", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "boxmodel", "boxmodel", "", d)} \
