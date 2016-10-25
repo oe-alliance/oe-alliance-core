@@ -28,6 +28,7 @@ ${@base_contains('MACHINEBUILD', 'zgemmahs', 'Zgemma' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'zgemmah2s', 'Zgemma' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'zgemmah2h', 'Zgemma' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'zgemmaslc', 'Zgemma' , '', d)}\
+${@base_contains('MACHINEBUILD', 'zgemmah4', 'Zgemma' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'zgemmah5', 'Zgemma' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'zgemmai55', 'Zgemma' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'novacombo', 'EVO' , '', d)}\
@@ -44,6 +45,7 @@ ${@base_contains('MACHINEBUILD', 'zgemmahs', 'zgemma/h3' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'zgemmah2s', 'zgemma/h3' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'zgemmah2h', 'zgemma/h3' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'zgemmaslc', 'zgemma/lc' , '', d)}\
+${@base_contains('MACHINEBUILD', 'zgemmah4', 'zgemma/h4' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'zgemmah5', 'zgemma/h5' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'zgemmai55', 'zgemma/i55' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'novacombo', 'novacombo' , '', d)}\
@@ -60,6 +62,7 @@ ${@base_contains('MACHINEBUILD', 'zgemmahs', 'h3' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'zgemmah2s', 'h3' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'zgemmah2h', 'h3' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'zgemmaslc', 'lc' , '', d)}\
+${@base_contains('MACHINEBUILD', 'zgemmah4', 'h4' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'zgemmah5', 'h5' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'zgemmai55', 'i55' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'novacombo', 'novacombo' , '', d)}\
