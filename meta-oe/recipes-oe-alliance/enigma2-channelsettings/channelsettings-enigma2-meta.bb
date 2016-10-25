@@ -5,7 +5,7 @@ require conf/license/license-gplv2.inc
 inherit allarch
 
 PV = "2.0"
-PR = "r28"
+PR = "r29"
 
 DEPENDS = " \
     enigma2-plugin-settings-henksat-19e \
@@ -35,17 +35,17 @@ DEPENDS = " \
     enigma2-plugin-settings-malimali.motor.42e.to.30w \
     \
     enigma2-plugin-settings-vhannibal.dual.feeds \
-    enigma2-plugin-settings-vhannibal.dual.feeds.dtt.italia \
-    enigma2-plugin-settings-vhannibal.dual.feeds.dtt.milano \
-    enigma2-plugin-settings-vhannibal.dual.feeds.dtt.napoli \
-    enigma2-plugin-settings-vhannibal.dual.feeds.dtt.roma \
-    enigma2-plugin-settings-vhannibal.dual.feeds.dtt.torino \
+    enigma2-plugin-settings-vhannibal.dual.feeds.and.dtt.italia \
+    enigma2-plugin-settings-vhannibal.dual.feeds.and.dtt.milano \
+    enigma2-plugin-settings-vhannibal.dual.feeds.and.dtt.napoli \
+    enigma2-plugin-settings-vhannibal.dual.feeds.and.dtt.roma \
+    enigma2-plugin-settings-vhannibal.dual.feeds.and.dtt.torino \
     enigma2-plugin-settings-vhannibal.hotbird \
-    enigma2-plugin-settings-vhannibal.hotbird.dtt.italia \
-    enigma2-plugin-settings-vhannibal.hotbird.dtt.milano \
-    enigma2-plugin-settings-vhannibal.hotbird.dtt.napoli \
-    enigma2-plugin-settings-vhannibal.hotbird.dtt.roma \
-    enigma2-plugin-settings-vhannibal.hotbird.dtt.torino \
+    enigma2-plugin-settings-vhannibal.hotbird.and.dtt.italia \
+    enigma2-plugin-settings-vhannibal.hotbird.and.dtt.milano \
+    enigma2-plugin-settings-vhannibal.hotbird.and.dtt.napoli \
+    enigma2-plugin-settings-vhannibal.hotbird.and.dtt.roma \
+    enigma2-plugin-settings-vhannibal.hotbird.and.dtt.torino \
     enigma2-plugin-settings-vhannibal.motor \
     enigma2-plugin-settings-vhannibal.motor.and.dtt.forli \
     enigma2-plugin-settings-vhannibal.motor.and.dtt.italia \
