@@ -12,6 +12,7 @@ ${@base_contains('MACHINEBUILD', 'zgemmahs', 'H.S' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'zgemmah2s', 'H.2S' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'zgemmah2h', 'H.2H' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'zgemmaslc', 'Star LC' , '', d)}\
+${@base_contains('MACHINEBUILD', 'zgemmah4', 'H4' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'zgemmah5', 'H5' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'zgemmai55', 'I55' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'novacombo', 'NOVA COMBO' , '', d)}\
