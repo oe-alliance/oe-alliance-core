@@ -12,6 +12,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'zgemmahs', 'H.S' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah2s', 'H.2S' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah2h', 'H.2H' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmaslc', 'Star LC' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'zgemmah4', 'H4' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah5', 'H5' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmai55', 'I55' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'novacombo', 'NOVA COMBO' , '', d)}\

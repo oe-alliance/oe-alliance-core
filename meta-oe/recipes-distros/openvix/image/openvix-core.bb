@@ -43,7 +43,4 @@ do_install_append() {
     if [ -f ${DEPLOY_DIR_IMAGE}/burn.bat ]; then
         install -m 755 ${DEPLOY_DIR_IMAGE}/burn.bat ${D}/usr/lib/enigma2/python/Plugins/SystemPlugins/ViX/burn.bat
     fi
-    if [ -f ${DEPLOY_DIR_IMAGE}/burn.bat ]; then
-        install -m 755 ${DEPLOY_DIR_IMAGE}/disk.img ${D}/usr/lib/enigma2/python/Plugins/SystemPlugins/ViX/disk.img
-    fi
 }
