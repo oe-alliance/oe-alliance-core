@@ -126,9 +126,9 @@ DESCRIPTION_enigma2-plugin-extensions-rezap = "ReZap Sync Tool for Wetek"
 inherit autotools-brokensep gitpkgv pythonnative
 
 SRCREV = "${AUTOREV}"
-PV = "2.0+git${SRCPV}"
-PKGV = "2.0+git${GITPKGV}"
-PR = "r25"
+PV = "${IMAGE_VERSION}+git${SRCPV}"
+PKGV = "${IMAGE_VERSION}+git${GITPKGV}"
+PR = "r0"
 
 SRC_URI = "${OEA_PLUGINS_URI}"
 

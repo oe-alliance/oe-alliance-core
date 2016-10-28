@@ -10,8 +10,8 @@ inherit packagegroup
 ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
-PV = "5.3"
-PR = "r4"
+PV = "${IMAGE_VERSION}"
+PR = "r0"
 
 RDEPENDS_${PN} = "\
     oe-alliance-enigma2 \

@@ -8,8 +8,8 @@ inherit packagegroup
 ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
-PV = "5.2"
-PR = "r16"
+PV = "${IMAGE_VERSION}"
+PR = "r0"
 
 DEPENDS = "enigma2-plugin-drivers-usbserial"
 RECOMMENDS = "enigma2-plugin-extensions-et-livestream"
