@@ -4,12 +4,12 @@ LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 
 DEPENDS = "enigma2 uchardet openssl"
-RDEPENDS_${PN} = "enigma2 uchardet openssl"
+RDEPENDS_${PN} = "enigma2 uchardet openssl exteplayer3"
 RCONFLICTS_${PN} = "enigma2-plugin-extensions-serviceapp"
 RREPLACES_${PN} = "enigma2-plugin-extensions-serviceapp"
 
 #SRCREV = "${AUTOREV}"
-SRCREV = "e28958c6e41db3d276adc649b4a8af4169bcfcae"
+SRCREV = "cc77ec2621be21db282dcdc70f047f37ab9ac465"
 SRC_URI = "git://github.com/mx3L/serviceapp.git;branch=master"
 
 S = "${WORKDIR}/git"
