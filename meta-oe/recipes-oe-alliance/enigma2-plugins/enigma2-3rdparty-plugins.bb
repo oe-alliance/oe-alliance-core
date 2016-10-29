@@ -11,7 +11,7 @@ DEPENDS = "tslib mpfr gmp"
 SRCREV = "${AUTOREV}"
 PV = "3.2+gitr${SRCPV}"
 PKGV = "3.2+gitr${GITPKGV}"
-PR = "r116"
+PR = "r117"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -36,6 +36,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-chefkoch_1.4rc9_all.ipk \
     enigma2-plugin-extensions-clevertanken_0.7rc1_all.ipk \
     enigma2-plugin-extensions-csfd_10-85-20150429_all.ipk \
+    enigma2-plugin-extensions-customsubservices_0.1.2_all.ipk \
     enigma2-plugin-extensions-cyrussettings_1.0.0_all.ipk \
     enigma2-plugin-extensions-digitalfernsehen_1.1rc10_all.ipk \
     enigma2-plugin-extensions-dvrproviderplayer_1.14_all.ipk \
@@ -49,7 +50,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-gmailreader-oe2.0_1.3_all.ipk \
     enigma2-plugin-extensions-googlenewsreader_1.0_mips32el.ipk \
     enigma2-plugin-extensions-hdmitest_0.4_mipsel.ipk \
-    enigma2-plugin-extensions-hetweer_3.5r2_all.ipk \
+    enigma2-plugin-extensions-hetweer_3.7r2_all.ipk \
     enigma2-plugin-extensions-iptvbouquet_1.0_r0_all.ipk \
     enigma2-plugin-extensions-isettinge2-3.3.8-oe2.0-${@base_contains("TARGET_ARCH", "sh4", "sh4" , "mips32el", d)}.ipk \
     enigma2-plugin-extensions-kicker_3.4rc10_all.ipk \
@@ -60,7 +61,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-mediaportal-wallicons.ipk \
     enigma2-plugin-extensions-moviebrowser_3.6rc9_all.ipk \
     enigma2-plugin-extensions-mp3browser_1.9rc9_all.ipk \
-    enigma2-plugin-extensions-netspeedtest_1.0_all.ipk \
+    enigma2-plugin-extensions-netspeedtest_1.0rc1_all.ipk \
     ${@base_contains('MACHINE_BRAND', 'Vu+', '' , 'enigma2-plugin-extensions-openopera_1.0-r0_mips32el.ipk', d)} \
     enigma2-plugin-extensions-opkg-tools_1.3_mipsel.ipk \
     enigma2-plugin-extensions-oscamstatusview_0.7rc1_mips32el.ipk \
