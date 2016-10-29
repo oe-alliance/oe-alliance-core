@@ -8,6 +8,8 @@ ALLOW_EMPTY_${PN} = "1"
 PV = "${IMAGE_VERSION}"
 PR = "r0"
 
+PACKAGE_ARCH = "${MACHINE_ARCH}"
+
 inherit packagegroup
 
 RDEPENDS_${PN} = "\
@@ -23,6 +25,7 @@ RDEPENDS_${PN} = "\
     python-imaging \
     rtmpdump \
     zip \
+    ${@bb.utils.contains("TARGET_ARCH", "arm", "glibc-compat", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "singlecore", "", \
     " \
     packagegroup-base-smbfs-server \

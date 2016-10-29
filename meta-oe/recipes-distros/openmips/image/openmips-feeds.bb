@@ -8,6 +8,8 @@ ALLOW_EMPTY_${PN} = "1"
 PV = "${IMAGE_VERSION}"
 PR = "r0"
 
+PACKAGE_ARCH = "${MACHINE_ARCH}"
+
 inherit packagegroup
 
 RRECOMMENDS_${PN} = "\
