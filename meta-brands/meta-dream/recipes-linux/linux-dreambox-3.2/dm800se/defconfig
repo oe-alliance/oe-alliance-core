@@ -436,7 +436,7 @@ CONFIG_IP_PNP_DHCP=y
 # CONFIG_NET_IPGRE_DEMUX is not set
 # CONFIG_IP_MROUTE is not set
 # CONFIG_ARPD is not set
-# CONFIG_SYN_COOKIES is not set
+CONFIG_SYN_COOKIES=y
 # CONFIG_INET_AH is not set
 # CONFIG_INET_ESP is not set
 # CONFIG_INET_IPCOMP is not set
