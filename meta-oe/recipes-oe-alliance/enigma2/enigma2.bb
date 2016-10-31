@@ -11,6 +11,7 @@ DEPENDS = " \
     libdreamdvd libdvbsi++ libfribidi libmad libpng libsigc++-1.2 giflib libxml2 libxmlccwrap \
     openssl \
     ${@bb.utils.contains("DISTRO_NAME", "openmips", "libudfread", "", d)} \
+    ${@bb.utils.contains("DISTRO_NAME", "openatv", "libudfread", "", d)} \
     python python-imaging python-twisted python-wifi \
     swig-native \
     tuxtxt-enigma2 \
@@ -171,6 +172,7 @@ GST_UGLY_RDEPS = "${@bb.utils.contains('GST_VERSION', '1.0', ' \
 RDEPENDS_${PN} += " \
     libdreamdvd \
     ${@bb.utils.contains("DISTRO_NAME", "openmips", "libudfread", "", d)} \
+    ${@bb.utils.contains("DISTRO_NAME", "openatv", "libudfread", "", d)} \
     "
 RRECOMMENDS_${PN} += "libdvdcss"
 
