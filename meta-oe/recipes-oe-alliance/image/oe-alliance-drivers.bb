@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=4d92cd373abda3937c2bc47fbc49d
 inherit packagegroup
 
 PV = "${IMAGE_VERSION}"
-PR = "r0"
+PR = "r1"
 
 ALLOW_EMPTY_${PN} = "1"
 
@@ -43,4 +43,17 @@ RRECOMMENDS_${PN}_openbh = " \
     ${@bb.utils.contains("MACHINE", "vuuno", "enigma2-plugin-drivers-dvb-usb-turbo", "", d)} \
     ${@bb.utils.contains("MACHINE", "vuzero", "enigma2-plugin-drivers-dvb-usb-turbo", "", d)} \
     ${@bb.utils.contains("MACHINE", "vusolo4k", "enigma2-plugin-drivers-dvb-usb-turbo", "", d)} \
-"
+    "
+
+RRECOMMENDS_${PN}_egami = " \
+    enigma2-plugin-drivers-dvb-usb-dib0700 \
+    enigma2-plugin-drivers-dvb-usb-af9015 \
+    enigma2-plugin-drivers-dvb-usb-siano \
+    enigma2-plugin-drivers-dvb-usb-em28xx \
+    enigma2-plugin-drivers-dvb-usb-dw2102 \
+    enigma2-plugin-drivers-dvb-usb-as102 \
+    enigma2-plugin-drivers-dvb-usb-it913x \
+    enigma2-plugin-drivers-dvb-usb-dtt200u \
+    enigma2-plugin-drivers-dvb-usb-af9035 \
+    enigma2-plugin-drivers-dvb-usb-rtl2832 \
+    "
