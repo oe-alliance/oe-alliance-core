@@ -10,6 +10,7 @@ DEPENDS = " \
     jpeg \
     libdreamdvd libdvbsi++ libfribidi libmad libpng libsigc++-1.2 giflib libxml2 libxmlccwrap \
     openssl \
+    ${@bb.utils.contains("DISTRO_NAME", "openmips", "libudfread", "", d)} \
     python python-imaging python-twisted python-wifi \
     swig-native \
     tuxtxt-enigma2 \
@@ -167,7 +168,10 @@ GST_UGLY_RDEPS = "${@bb.utils.contains('GST_VERSION', '1.0', ' \
     ', d)}"
 
 # DVD playback is integrated, we need the libraries
-RDEPENDS_${PN} += "libdreamdvd"
+RDEPENDS_${PN} += " \
+    libdreamdvd \
+    ${@bb.utils.contains("DISTRO_NAME", "openmips", "libudfread", "", d)} \
+    "
 RRECOMMENDS_${PN} += "libdvdcss"
 
 # We depend on the font which we use for TXT subtitles (defined in skin_subtitles.xml)
@@ -210,7 +214,7 @@ inherit autotools-brokensep gitpkgv pkgconfig pythonnative
 
 PV = "${IMAGE_VERSION}+git${SRCPV}"
 PKGV = "${IMAGE_VERSION}+git${GITPKGV}"
-PR = "r0"
+PR = "r1"
 
 SRC_URI = "${ENIGMA2_URI}"
 
