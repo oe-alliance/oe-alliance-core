@@ -12,6 +12,7 @@ DEPENDS = " \
     openssl \
     ${@bb.utils.contains("DISTRO_NAME", "openmips", "libudfread", "", d)} \
     ${@bb.utils.contains("DISTRO_NAME", "openatv", "libudfread", "", d)} \
+    ${@bb.utils.contains("DISTRO_NAME", "egami", "libudfread", "", d)} \
     python python-imaging python-twisted python-wifi \
     swig-native \
     tuxtxt-enigma2 \
