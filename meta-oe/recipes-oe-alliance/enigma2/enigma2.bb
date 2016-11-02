@@ -11,6 +11,7 @@ DEPENDS = " \
     libdreamdvd libdvbsi++ libfribidi libmad libpng libsigc++-1.2 giflib libxml2 libxmlccwrap \
     openssl \
     python python-imaging python-twisted python-wifi \
+    ${@base_contains("DISTRO_NAME", "egami", "libudfread", "", d)} \
     swig-native \
     tuxtxt-enigma2 \
     ${@base_contains("MACHINE_FEATURES", "uianimation", "vuplus-libgles-${MACHINE} libvugles2" , "", d)} \
