@@ -34,6 +34,7 @@ RDEPENDS_${PN} = " \
 
 RRECOMMENDS_${PN} = " \
     glib-networking \
+    glibc-gconv-utf-16 \
     ${@bb.utils.contains("GST_VERSION", "1.0", "gstreamer1.0-plugin-subsink", "gst-plugin-subsink", d)} \
     ${GST_BASE_RDEPS} \
     ${GST_GOOD_RDEPS} \
