@@ -11,7 +11,7 @@ DEPENDS = "tslib mpfr gmp"
 SRCREV = "${AUTOREV}"
 PV = "${IMAGE_VERSION}+gitr${SRCPV}"
 PKGV = "${IMAGE_VERSION}+gitr${GITPKGV}"
-PR = "r1"
+PR = "r2"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -35,7 +35,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-camofs_9.19_all.ipk \
     enigma2-plugin-extensions-chefkoch_1.4rc9_all.ipk \
     enigma2-plugin-extensions-clevertanken_0.7rc1_all.ipk \
-    enigma2-plugin-extensions-csfd_10-85-20150429_all.ipk \
+    enigma2-plugin-extensions-csfd_11-55-20160929_all.ipk \
     enigma2-plugin-extensions-customsubservices_0.1.2_all.ipk \
     enigma2-plugin-extensions-cyrussettings_1.0.0_all.ipk \
     enigma2-plugin-extensions-digitalfernsehen_1.1rc10_all.ipk \
