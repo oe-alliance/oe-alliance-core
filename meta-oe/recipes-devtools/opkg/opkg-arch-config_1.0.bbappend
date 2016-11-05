@@ -22,7 +22,19 @@ do_compile_append_vusolo4k() {
     echo "arch armv7ahf-vfp-neon $priority" >> $archconf
 }
 
+do_compile_append_sf4008() {
+    echo "arch mips32el $priority" >> $archconf
+    echo "arch mipsel $priority" >> $archconf
+    echo "arch armv7ahf-vfp-neon $priority" >> $archconf
+}
+
 do_compile_append_hd51() {
+    echo "arch mips32el $priority" >> $archconf
+    echo "arch mipsel $priority" >> $archconf
+    echo "arch armv7ahf-vfp-neon $priority" >> $archconf
+}
+
+do_compile_append_hd52() {
     echo "arch mips32el $priority" >> $archconf
     echo "arch mipsel $priority" >> $archconf
     echo "arch armv7ahf-vfp-neon $priority" >> $archconf
