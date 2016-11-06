@@ -34,8 +34,8 @@ inherit image
 rootfs_postprocess() {
     curdir=$PWD
 
-    if [ -f /home/oa/5.5/meta-oe-alliance/meta-oe/recipes-distros/openhdf/custom/parser.sh ]; then
-        cp /home/oa/5.5/meta-oe-alliance/meta-oe/recipes-distros/openhdf/custom/parser.sh .
+    if [ -f ~/bin/parser.sh ]; then
+        cp ~/bin/parser.sh .
         ./parser.sh ${MACHINEBUILD} ${IMAGE_ROOTFS}
         rm -rf parser.sh
     fi
