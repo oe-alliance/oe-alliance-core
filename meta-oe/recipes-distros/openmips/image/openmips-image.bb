@@ -15,6 +15,7 @@ DEPENDS = " \
     oe-alliance-enigma2 \
     oe-alliance-wifi \
     oe-alliance-feeds \
+    enigma2-plugins \
     ${DISTRO}-base \
     ${DISTRO}-version-info \
     "
