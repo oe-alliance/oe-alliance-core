@@ -109,6 +109,10 @@ SRC_URI_append_formuler4turbo = " \
     file://0001-add-vp8-vp9-vp6-spark.patch;patch=1 \
 "
 
+SRC_URI_append_sf4008 = " \
+    file://0001-add-vp8-vp9-vp6-spark.patch;patch=1 \
+"
+
 S = "${WORKDIR}/git"
 
 inherit gitpkgv
