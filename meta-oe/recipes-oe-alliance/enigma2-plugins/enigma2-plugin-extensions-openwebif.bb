@@ -6,6 +6,7 @@ LIC_FILES_CHKSUM = "file://README;firstline=10;lastline=12;md5=9c14f792d0aeb54e1
 BRANCH="branding"
 BRANCH_openatv="Theme"
 BRANCH_openhdf="Theme"
+BRANCH_openvix="Theme"
 
 DEPENDS = "python-cheetah-native"
 RDEPENDS_${PN} = "\
