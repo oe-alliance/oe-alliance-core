@@ -24,6 +24,7 @@ RDEPENDS_${PN} = "\
     mtd-utils \
     ${@base_conditional('MACHINE', 'dm800', '', 'mtd-utils-ubifs', d)} \
     ${@base_conditional('MACHINE', 'vusolo4k', 'bzip2', '', d)} \
+    ${@base_conditional('MACHINE', 'sf4008', 'bzip2', '', d)} \
     ${@base_contains('MACHINE_FEATURES', 'emmc', 'bzip2', '', d)} \
     procps \
     parted \
