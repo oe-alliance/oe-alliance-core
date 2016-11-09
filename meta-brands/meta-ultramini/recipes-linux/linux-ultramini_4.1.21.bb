@@ -8,8 +8,8 @@ inherit kernel machine_kernel_pr
 KERNEL_RELEASE = "4.1.21"
 SRCDATE = "20160408"
 
-SRC_URI[md5sum] = "e7ba35d427bfa40d78cd6e23db7872a2"
-SRC_URI[sha256sum] = "88f648e462e9d37c6ed9401b33ee1dd08495e9f66b9c653aefd9fd0a4f5afb26"
+SRC_URI[md5sum] = "c0cd41476ff7bf72b87c6a41c6d260d1"
+SRC_URI[sha256sum] = "13d5638b232d26089dc06233e3b806874c4d94d77dfd5e928ed0749824855f17"
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
