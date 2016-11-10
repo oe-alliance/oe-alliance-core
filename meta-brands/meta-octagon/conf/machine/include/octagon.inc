@@ -31,7 +31,7 @@ IMAGE_FSTYPES =+ "tar.bz2"
 
 PREFERRED_PROVIDER_virtual/kernel = "linux-octagon"
 
-MACHINE_FEATURES += "alsa 3dtv switchoff hdmicec omb boxmodel feature1 feature2 blindscan-tbs"
+MACHINE_FEATURES += "alsa 3dtv switchoff hdmicec omb boxmodel feature2 blindscan-tbs"
 
 BOOTLOGO_FILENAME = "splash.bin"
 
