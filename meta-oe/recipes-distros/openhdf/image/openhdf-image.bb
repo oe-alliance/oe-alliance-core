@@ -34,8 +34,8 @@ inherit image
 rootfs_postprocess() {
     curdir=$PWD
 
-    if [ -f /home/oa/5.5/meta-oe-alliance/meta-oe/recipes-distros/openhdf/custom/parser.sh ]; then
-        cp /home/oa/5.5/meta-oe-alliance/meta-oe/recipes-distros/openhdf/custom/parser.sh .
+    if [ -f ~/bin/parser.sh ]; then
+        cp ~/bin/parser.sh .
         ./parser.sh ${MACHINEBUILD} ${IMAGE_ROOTFS}
         rm -rf parser.sh
     fi
@@ -47,6 +47,11 @@ rootfs_postprocess() {
     ln -s usr/lib/enigma2/spinner usr/lib/enigma2/skin_default/spinner || true
 
     echo ${DEPLOY_DIR_IMAGE} > /tmp/DEPLOY_DIR_IMAGE
+
+    # Speedup boot by reducing the host key size. The time it takes grows
+    # exponentially by key size, the default is 2k which takes several
+    # seconds on most boxes.
+    echo 'DROPBEAR_RSAKEY_ARGS="-s 1024"' >> ${IMAGE_ROOTFS}${sysconfdir}/default/dropbear
 }
 
 ROOTFS_POSTPROCESS_COMMAND += "rootfs_postprocess; "

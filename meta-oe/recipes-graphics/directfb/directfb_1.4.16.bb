@@ -1,7 +1,7 @@
 require directfb.inc
 
 RV = "1.4-6"
-PR = "r5"
+PR = "r7"
 
 DEPENDS += "sysfsutils"
 

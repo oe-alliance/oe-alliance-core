@@ -4,12 +4,12 @@ MAINTAINER = "OpenHDF Team"
 LICENSE = "Proprietary"
 LIC_FILES_CHKSUM = "file://COPYING;md5=8e37f34d0e40d32ea2bc90ee812c9131"
 
-inherit gitpkgv autotools deploy
+inherit gitpkgv deploy
 
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r42"
+PR = "r43"
 SRC_URI="git://github.com/openhdf/3rdparty-plugins.git;protocol=git"
 
 EXTRA_OECONF = " \

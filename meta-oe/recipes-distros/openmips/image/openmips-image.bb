@@ -10,6 +10,15 @@ PV = "${IMAGE_VERSION}"
 PR = "${BUILD_VERSION}"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
+DEPENDS = " \
+    oe-alliance-base \
+    oe-alliance-enigma2 \
+    oe-alliance-wifi \
+    oe-alliance-feeds \
+    enigma2-plugins \
+    ${DISTRO}-base \
+    ${DISTRO}-version-info \
+    "
 
 IMAGE_INSTALL = "openmips-base"
 

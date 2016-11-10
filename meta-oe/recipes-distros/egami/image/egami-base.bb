@@ -35,5 +35,5 @@ RRECOMMENDS_${PN} = "\
 	python-imaging python-compression \
 	kernel-module-ftdi-sio \
 	kernel-module-pl2303 \
-	${@base_contains("MACHINE_FEATURES", "boxmodel", "boxmodel", "", d)} \
+	${@bb.utils.contains("MACHINE_FEATURES", "boxmodel", "boxmodel", "", d)} \
 "
