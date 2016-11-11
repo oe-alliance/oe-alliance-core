@@ -193,6 +193,7 @@ SRC_URI = " \
     file://fix_return_address_warning.patch \
     file://rtl8712-fix-warnings.patch \
     file://rtl8187se-fix-warnings.patch \
+    file://timeconst_perl5.patch \
     "
 
 S = "${WORKDIR}/linux-${PV}"
