@@ -15,3 +15,5 @@ do_install () {
 }
 
 FILES_${PN} = "/lib"
+
+do_populate_sysroot[noexec] = "1"

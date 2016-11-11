@@ -25,7 +25,7 @@ RDEPENDS_${PN} = "\
     python-imaging \
     rtmpdump \
     zip \
-    ${@bb.utils.contains("TARGET_ARCH", "arm", "glibc-compat", "", d)} \
+    ${@bb.utils.contains("TUNE_FEATURES", "armv7a", "glibc-compat", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "singlecore", "", \
     " \
     packagegroup-base-smbfs-server \
