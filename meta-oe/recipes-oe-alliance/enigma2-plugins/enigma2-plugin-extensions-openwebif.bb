@@ -48,6 +48,10 @@ do_install_append() {
 	chmod a+rX ${D}${PLUGINPATH}
 }
 
+PACKAGES =+ "${PN}-vxg"
+DESCRIPTION_${PN}-vxg = "Adds Google Chrome support to OpenWebif's WebTV"
+FILES_${PN}-vxg = "/usr/lib/enigma2/python/Plugins/Extensions/OpenWebif/public/js/media_player.pexe"
+RDEPENDS_${PN}-vxg =+ "${PN}"
 FILES_${PN} = "${PLUGINPATH}"
 
 python populate_packages_prepend() {
