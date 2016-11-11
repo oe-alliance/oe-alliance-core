@@ -7,6 +7,7 @@ BRANCH="branding"
 BRANCH_openatv="Theme"
 BRANCH_openhdf="Theme"
 BRANCH_openvix="Theme"
+BRANCH_openmips="Theme"
 
 DEPENDS = "python-cheetah-native"
 RDEPENDS_${PN} = "\
@@ -29,6 +30,7 @@ DISTUTILS_INSTALL_ARGS = "--root=${D} --install-lib=/usr/lib/enigma2/python/Plug
 SRCREV = "${AUTOREV}"
 PV = "1+git${SRCPV}"
 PKGV = "1+git${GITPKGV}"
+PR = "r1"
 
 PACKAGE_ARCH = "all"
 
@@ -49,15 +51,10 @@ do_install_append() {
 	chmod a+rX ${D}${PLUGINPATH}
 }
 
-PACKAGES =+ "${PN}-vxg"
-DESCRIPTION_${PN}-vxg = "Adds Google Chrome support to OpenWebif's WebTV"
-FILES_${PN}-vxg = "/usr/lib/enigma2/python/Plugins/Extensions/OpenWebif/public/js/media_player.pexe"
-RDEPENDS_${PN}-vxg =+ "${PN}"
-FILES_${PN} = "${PLUGINPATH}"
-
 python populate_packages_prepend() {
     enigma2_plugindir = bb.data.expand('${libdir}/enigma2/python/Plugins', d)
     do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/[a-zA-Z0-9_]+.*$', 'enigma2-plugin-%s', '%s', recursive=True, match_path=True, prepend=True, extra_depends="enigma2")
+    do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/.*\.pexe$', 'enigma2-plugin-%s-vxg', '%s (WebTV support for Google Chrome)', recursive=True, match_path=True, prepend=True, extra_depends="${PN}")
     do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/.*\.py$', 'enigma2-plugin-%s-src', '%s (source files)', recursive=True, match_path=True, prepend=True)
     do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/.*\.la$', 'enigma2-plugin-%s-dev', '%s (development)', recursive=True, match_path=True, prepend=True)
     do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/.*\.a$', 'enigma2-plugin-%s-staticdev', '%s (static development)', recursive=True, match_path=True, prepend=True)
