@@ -23,6 +23,7 @@ RDEPENDS_${PN} = "\
     python-imaging \
     rtmpdump \
     zip \
+    ${@base_contains("MACHINE_FEATURES", "smallflash", "", "enigma2-plugin-extensions-openwebif-vxg", d)} \
     ${@base_contains("MACHINE_FEATURES", "singlecore", "", \
     " \
     packagegroup-base-smbfs-server \
