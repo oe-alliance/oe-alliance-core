@@ -17,7 +17,7 @@ PR = "r${DATE}-${MACHINEBUILD}"
 
 PR[vardepsxeclude] += "DATE"
 
-BRANCH="temporary-theme-png"
+BRANCH="master"
 
 SRC_URI="git://github.com/oe-alliance/branding-module.git;protocol=git;branch=${BRANCH}"
 
