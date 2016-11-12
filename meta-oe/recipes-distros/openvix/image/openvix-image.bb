@@ -16,8 +16,8 @@ DEPENDS = " \
     oe-alliance-wifi \
     oe-alliance-feeds \
     enigma2-plugins \
-    ${DISTRO}-base \
-    ${DISTRO}-version-info \
+    openvix-base \
+    openvix-version-info \
     "
 
 PR[vardepsxeclude] += "DATE"
