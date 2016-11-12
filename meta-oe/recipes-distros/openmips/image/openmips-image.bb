@@ -16,8 +16,8 @@ DEPENDS = " \
     oe-alliance-wifi \
     oe-alliance-feeds \
     enigma2-plugins \
-    ${DISTRO}-base \
-    ${DISTRO}-version-info \
+    openmips-base \
+    openmips-version-info \
     "
 
 IMAGE_INSTALL = "openmips-base"
