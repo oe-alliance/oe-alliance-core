@@ -12,6 +12,7 @@ PKGV = "1.0+git${GITPKGV}"
 
 SRC_URI = " \
     git://github.com/Duckbox-Developers/apps.git;protocol=git \
+    file://libtool_dont_stop.patch \
 "
 
 S = "${WORKDIR}/git/tools"
