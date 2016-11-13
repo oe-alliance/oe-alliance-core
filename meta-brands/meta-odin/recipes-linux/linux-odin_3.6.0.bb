@@ -47,6 +47,7 @@ SRC_URI += "http://source.mynonpublic.com/download/linux-${PV}.tar.gz \
     file://nfs-max-rwsize-8k.patch \
     file://rtl8712-fix-warnings.patch \
     file://rtl8187se-fix-warnings.patch \
+    file://timeconst_perl5.patch \
     "
 
 S = "${WORKDIR}/linux-${PV}"
