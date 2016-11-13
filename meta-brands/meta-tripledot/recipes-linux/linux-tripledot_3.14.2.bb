@@ -11,7 +11,7 @@ SRCDATE_yh7362 = "20160217"
 
 inherit kernel machine_kernel_pr
 
-MACHINE_KERNEL_PR_append = ".1"
+MACHINE_KERNEL_PR_append = ".2"
 
 SRC_URI[jj7362.md5sum] = "8e0385481057a214f0635c8b947dbb7d"
 SRC_URI[jj7362.sha256sum] = "6c782f1003a48c508832660b1053d68f3c616f5b1ece373d06125a0e7f47d23a"
