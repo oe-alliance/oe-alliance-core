@@ -1,0 +1,64 @@
+From 746bbba3e55206c67808d3243aad740abc92ab3f Mon Sep 17 00:00:00 2001
+From: Jeff Squyres <jsquyres@cisco.com>
+Date: Thu, 18 Aug 2016 15:40:27 -0700
+Subject: [PATCH] compat: add linux/socket.h for __kernel_sa_family_t
+
+The __kernel_sa_family_t type is not present on older systems (e.g.,
+RHEL 6), and libnl3 will not built without it.  Copy
+/usr/include/linux/socket.h from a RHEL7 system to
+include/linux-private/linux/socket.h so that it will be found by the
+build system.
+
+Fortunately, this socket.h is small and self-contained; it contains
+very little (and does not #include any other files) beyond necessary
+type.
+
+https://github.com/thom311/libnl/pull/107
+
+Signed-off-by: Jeff Squyres <jsquyres@cisco.com>
+Signed-off-by: Thomas Haller <thaller@redhat.com>
+---
+ include/Makefile.am                  |  1 +
+ include/linux-private/linux/socket.h | 21 +++++++++++++++++++++
+ 2 files changed, 22 insertions(+)
+ create mode 100644 include/linux-private/linux/socket.h
+
+diff --git a/include/Makefile.am b/include/Makefile.am
+index f8b977a..fafb90a 100644
+--- a/include/Makefile.am
++++ b/include/Makefile.am
+@@ -153,6 +153,7 @@ noinst_HEADERS = \
+ 	linux-private/linux/netlink.h \
+ 	linux-private/linux/pkt_cls.h \
+ 	linux-private/linux/sock_diag.h \
++	linux-private/linux/socket.h \
+ 	linux-private/linux/tc_act/tc_mirred.h \
+ 	linux-private/linux/tc_act/tc_skbedit.h \
+ 	linux-private/linux/pkt_sched.h \
+diff --git a/include/linux-private/linux/socket.h b/include/linux-private/linux/socket.h
+new file mode 100644
+index 0000000..8c1e501
+--- /dev/null
++++ b/include/linux-private/linux/socket.h
+@@ -0,0 +1,21 @@
++#ifndef _LINUX_SOCKET_H
++#define _LINUX_SOCKET_H
++
++/*
++ * Desired design of maximum size and alignment (see RFC2553)
++ */
++#define _K_SS_MAXSIZE	128	/* Implementation specific max size */
++#define _K_SS_ALIGNSIZE	(__alignof__ (struct sockaddr *))
++				/* Implementation specific desired alignment */
++
++typedef unsigned short __kernel_sa_family_t;
++
++struct __kernel_sockaddr_storage {
++	__kernel_sa_family_t	ss_family;		/* address family */
++	/* Following field(s) are implementation specific */
++	char		__data[_K_SS_MAXSIZE - sizeof(unsigned short)];
++				/* space to achieve desired size, */
++				/* _SS_MAXSIZE value minus size of ss_family */
++} __attribute__ ((aligned(_K_SS_ALIGNSIZE)));	/* force desired alignment */
++
++#endif /* _LINUX_SOCKET_H */
