@@ -5,10 +5,6 @@ SRC_URI_append_dm800 = " file://tc_ematch-header-files.patch \
                          file://stubs-o32_hard.h \
                          "
  
-SRC_URI_append_sh4 = " \
-    file://add-linux-socket.patch \
-    file://remove-in6-include.patch \
-"
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}_${PV}:"
 
