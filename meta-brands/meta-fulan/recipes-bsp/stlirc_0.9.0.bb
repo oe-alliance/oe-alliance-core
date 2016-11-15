@@ -3,7 +3,7 @@ SECTION = "base"
 PRIORITY = "optional"
 HOMEPAGE = "http://www.lirc.org"
 LICENSE = "GPLv2"
-DEPENDS = "virtual/kernel"
+DEPENDS = "virtual/kernel libusb1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 RCONFLICTS_${PN} = "lirc"
