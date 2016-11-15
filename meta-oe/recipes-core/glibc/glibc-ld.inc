@@ -14,10 +14,14 @@ def glibc_dl_info(d):
         "mips64el-n32": ["ld.so.1", "FLAG_ELF_LIBC6"],
         "mips64el": ["ld.so.1", "FLAG_ELF_LIBC6"],
         "mips-nf": ["ld.so.1", "FLAG_ELF_LIBC6"],
+        "mipsisa32r6": ["ld-linux-mipsn8.so.1", "FLAG_ELF_LIBC6"],
+        "mipsisa32r6el": ["ld-linux-mipsn8.so.1", "FLAG_ELF_LIBC6"],
         "mips64-nf-n32": ["ld.so.1", "FLAG_ELF_LIBC6"],
         "mips64-nf": ["ld.so.1", "FLAG_ELF_LIBC6"],
         "mips64el-nf-n32": ["ld.so.1", "FLAG_ELF_LIBC6"],
         "mips64el-nf": ["ld.so.1", "FLAG_ELF_LIBC6"],
+        "mipsisa64r6": ["ld-linux-mipsn8.so.1", "FLAG_ELF_LIBC6"],
+        "mipsisa64r6el": ["ld-linux-mipsn8.so.1", "FLAG_ELF_LIBC6"],
         "powerpc": ["ld.so.1", "FLAG_ELF_LIBC6"],
         "powerpc-nf": ["ld.so.1", "FLAG_ELF_LIBC6"],
         "powerpc64": ["ld64.so.1", "FLAG_ELF_LIBC6"],
@@ -54,4 +58,4 @@ def glibc_dl_info(d):
 
 EGLIBC_KNOWN_INTERPRETER_NAMES = "${@glibc_dl_info(d)['ldconfig']}"
 RTLDLIST = "${@glibc_dl_info(d)['lddrewrite']}"
-glibc_dl_info[vardepsexclude] += "OVERRIDES"
+glibc_dl_info[vardepsexclude] = "OVERRIDES"

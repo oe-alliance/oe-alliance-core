@@ -26,6 +26,7 @@ RDEPENDS_${PN} = "\
     rtmpdump \
     zip \
     ${@bb.utils.contains("TUNE_FEATURES", "armv7a", "glibc-compat", "", d)} \
+    ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "", "enigma2-plugin-extensions-openwebif-vxg", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "singlecore", "", \
     " \
     packagegroup-base-smbfs-server \
