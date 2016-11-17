@@ -17,8 +17,8 @@ DEPENDS = " \
     oe-alliance-wifi \
     oe-alliance-feeds \
     enigma2-plugins \
-    openmips-base \
-    openmips-version-info \
+    ${DISTRO}-base \
+    ${DISTRO}-version-info \
     "
 
 # FIX distro-image.bb ERROR: Taskhash mismatch - part 2  make sure all do_rm_work tasks of build dependencies are finished before starting do_rootfs of distro-image.bb
