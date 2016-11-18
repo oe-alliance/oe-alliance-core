@@ -73,7 +73,11 @@ SRC_URI_append_hd1500 = " \
     file://0001-add-vp8-vp9-vp6-spark.patch;patch=1 \
 "
 
-SRC_URI_append_h5 = " \
+SRC_URI_append_zgemmah5 = " \
+    file://0001-add-vp8-vp9-vp6-spark.patch;patch=1 \
+"
+
+SRC_URI_append_zgemmah52s = " \
     file://0001-add-vp8-vp9-vp6-spark.patch;patch=1 \
 "
 
