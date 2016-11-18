@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=4d92cd373abda3937c2bc47fbc49d
 ALLOW_EMPTY_${PN} = "1"
 
 PV = "1.0"
-PR = "r22"
+PR = "r23"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
@@ -25,6 +25,6 @@ RDEPENDS_${PN} = "\
     rtmpdump \
     packagegroup-base-smbfs-client \
     ${@base_contains("MACHINE_FEATURES", "dreambox", "", "ofgwrite", d)} \
-    ${@base_contains("TARGET_ARCH", "arm", "glibc-compat", "", d)} \
+    ${@base_contains("TUNE_FEATURES", "armv7a", "glibc-compat", "", d)} \
     bash \
     "

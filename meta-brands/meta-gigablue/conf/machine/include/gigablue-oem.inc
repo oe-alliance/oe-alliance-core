@@ -134,6 +134,7 @@ MACHINE_EXTRA_RDEPENDS = "\
     enigma2-plugin-systemplugins-vfdcontrol \
     ${@base_contains('MACHINEBUILD', 'gb800solo', 'mtd-utils-jffs2' , '', d)} \
     ${@base_contains('MACHINEBUILD', 'gbipbox', 'enigma2-plugin-extensions-gbipboxclient' , '', d)} \
+    ${@base_contains('MACHINEBUILD', 'gbx2', 'enigma2-plugin-extensions-gbipboxclient' , '', d)} \
 "
 
 

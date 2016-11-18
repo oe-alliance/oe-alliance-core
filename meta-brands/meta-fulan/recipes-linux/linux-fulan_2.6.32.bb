@@ -53,6 +53,7 @@ SRC_URI = "git://git.stlinux.com/stm/linux-sh4-2.6.32.y.git;protocol=git;branch=
     file://linux-sh4-cpuinfo.patch;patch=1 \
     file://linux-sh4-add_missing_eid.patch;patch=1 \
     file://silence_conv_i2sspdif_warning.patch;patch=1 \
+    file://timeconst_perl5.patch;patch=1 \
     file://defconfig \
     file://st-coprocessor.h \
 "
