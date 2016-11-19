@@ -33,7 +33,7 @@ IMAGE_FEATURES += "package-management"
 
 inherit image
 
-rootfs_postprocess() {
+do_image_preprocess() {
     curdir=$PWD
     cd ${IMAGE_ROOTFS}
 
@@ -49,4 +49,4 @@ rootfs_postprocess() {
     echo 'DROPBEAR_RSAKEY_ARGS="-s 1024"' >> ${IMAGE_ROOTFS}${sysconfdir}/default/dropbear
 }
 
-ROOTFS_POSTPROCESS_COMMAND += "rootfs_postprocess; "
+IMAGE_PREPROCESS_COMMAND += "do_image_preprocess; "
