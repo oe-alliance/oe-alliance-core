@@ -77,6 +77,7 @@ SRC_URI_append_h5 = " \
     file://0001-add-vp8-vp9-vp6-spark.patch;patch=1 \
 "
 
+
 SRC_URI_append_hd51 = " \
     file://0001-add-vp8-vp9-vp6-spark.patch;patch=1 \
 "
