@@ -42,7 +42,7 @@ IMAGE_FEATURES += "package-management"
 
 inherit image
 
-do_image_preprocess() {
+image_preprocess() {
     curdir=$PWD
     cd ${IMAGE_ROOTFS}
 
@@ -58,4 +58,4 @@ do_image_preprocess() {
     echo 'DROPBEAR_RSAKEY_ARGS="-s 1024"' >> ${IMAGE_ROOTFS}${sysconfdir}/default/dropbear
 }
 
-IMAGE_PREPROCESS_COMMAND += "do_image_preprocess; "
+IMAGE_PREPROCESS_COMMAND += "image_preprocess; "
