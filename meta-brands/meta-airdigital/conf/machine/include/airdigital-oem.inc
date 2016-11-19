@@ -98,8 +98,7 @@ MACHINE_EXTRA_RRECOMMENDS = " \
 include conf/machine/include/autoload-filesystems.inc
 
 DVBMEDIASINK_CONFIG = "--with-wma --with-wmv --with-pcm --with-dts --with-eac3 \
-    ${@base_contains('MACHINEBUILD', 'zgemmah5', '--with-h265 --with-vb6 --with-vb8 --with-spark' , '', d)} \
-    ${@base_contains('MACHINEBUILD', 'zgemmah52s', '--with-h265 --with-vb6 --with-vb8 --with-spark' , '', d)} \
+    ${@base_contains('MACHINE', 'h5', '--with-h265 --with-vb6 --with-vb8 --with-spark' , '', d)} \
     "
 
 TARGET_ARCH = "mipsel"
