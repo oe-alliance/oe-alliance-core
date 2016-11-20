@@ -36,4 +36,6 @@ RRECOMMENDS_${PN} = "\
 	kernel-module-ftdi-sio \
 	kernel-module-pl2303 \
 	${@bb.utils.contains("MACHINE_FEATURES", "boxmodel", "boxmodel", "", d)} \
+	${@bb.utils.contains("MACHINE_FEATURES", "dreambox", "", "ofgwrite", d)} \
+	${@bb.utils.contains("TUNE_FEATURES", "armv7a", "glibc-compat", "", d)} \
 "

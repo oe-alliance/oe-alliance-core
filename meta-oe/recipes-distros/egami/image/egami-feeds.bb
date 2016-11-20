@@ -43,6 +43,7 @@ RRECOMMENDS_${PN} = "\
 	enigma2-plugin-extensions-bmediacenter \
 	enigma2-plugin-extensions-blurayplayer \
 	enigma2-plugin-extensions-openmultiboot openmultiboot \
+	enigma2-plugin-extensions-mediaplayer2 \
 	\
 	python-twisted-web python-gdata python-textutils python-json python-google-api-client python-httplib2 python-youtube-dl-src python-ctypes python-six python-oauth2client python-uritemplate \
 	\
