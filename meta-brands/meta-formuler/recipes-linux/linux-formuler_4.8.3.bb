@@ -30,7 +30,6 @@ SRC_URI += "http://source.mynonpublic.com/formuler/linux-${PV}-${ARCH}.tar.gz \
     file://0001-Support-TBS-USB-drivers-for-4.6-kernel.patch \
     file://0001-TBS-fixes-for-4.6-kernel.patch \
     file://bcmgenet_phyaddr.patch \
-    file://blacklist_mmc0.patch \
     file://blindscan2.patch \
     file://formuler_partition_layout.patch \
     file://noforce_correct_pointer_usage.patch \
