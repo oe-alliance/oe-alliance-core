@@ -1,10 +1,12 @@
 SUMMARY = "Hardware user space LIBs for ${MACHINE}"
 SECTION = "libs"
+PACKAGE_ARCH = "${MACHINE_ARCH}"
 PRIORITY = "required"
 LICENSE = "CLOSED"
+PROVIDES = "azbox-mrua"
 require conf/license/license-close.inc
 
-PR = "r6"
+PR = "r7"
 
 SRCDATE = "3.11-1"
 SRCDATE_azboxhd = "2.8-3"
