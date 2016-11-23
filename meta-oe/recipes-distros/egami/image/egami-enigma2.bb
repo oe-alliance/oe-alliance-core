@@ -7,7 +7,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "1.0"
-PR = "r14"
+PR = "r1"
 
 inherit packagegroup
 
@@ -17,7 +17,6 @@ RRECOMMENDS_${PN} = "\
     enigma2-skindefault \
     enigma2-plugin-skins-egmega32 \
     enigma2-plugin-skins-odreamyfhd \
-    enigma2-plugin-bootlogos-egami-9 \
     \
     enigma2-plugin-extensions-autotimer \
     enigma2-plugin-extensions-epgsearch \

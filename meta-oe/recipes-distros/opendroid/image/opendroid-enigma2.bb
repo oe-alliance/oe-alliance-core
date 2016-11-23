@@ -7,7 +7,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PV = "5.5"
-PR = "r15"
+PR = "r17"
 
 inherit packagegroup
 
@@ -17,11 +17,11 @@ RRECOMMENDS_${PN} = "\
     opendroid-version-info \
     enigma2-skindefault \
     enigma2-plugin-skins-opendroid \
-    enigma2-plugin-extensions-extrapanel \
     enigma2-plugin-extensions-autotimer \
     enigma2-plugin-extensions-weatherplugin-opd \
     enigma2-plugin-extensions-epgsearch \
     enigma2-plugin-extensions-graphmultiepg \
+    enigma2-plugin-extensions-epgimport \
     enigma2-plugin-extensions-vhannibal-autosettings \
     enigma2-plugin-extensions-cutlisteditor \
     enigma2-plugin-systemplugins-videotune \

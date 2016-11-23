@@ -9,7 +9,7 @@ RCONFLICTS_${PN} = "enigma2-plugin-extensions-serviceapp"
 RREPLACES_${PN} = "enigma2-plugin-extensions-serviceapp"
 
 #SRCREV = "${AUTOREV}"
-SRCREV = "cc77ec2621be21db282dcdc70f047f37ab9ac465"
+SRCREV = "fce6867eab86399e2e7f6eae2062c2549c678a23"
 SRC_URI = "git://github.com/mx3L/serviceapp.git;branch=master"
 
 S = "${WORKDIR}/git"
@@ -19,7 +19,7 @@ inherit autotools gitpkgv pythonnative pkgconfig
 PV = "0.5+git${SRCPV}"
 PKGV = "0.5+git${GITPKGV}"
 
-PR = "r0"
+PR = "r1"
 
 EXTRA_OECONF = "\
 	BUILD_SYS=${BUILD_SYS} \

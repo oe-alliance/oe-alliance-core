@@ -15,6 +15,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'vizyonvita', 'Vita' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'mutant11', 'HD11' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'mutant51', 'HD51' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'ax51', 'HD51' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'bre2ze4k', 'Bre2ze 4k' , '', d)}\
 "
 
 MACHINE_BRAND = "\
@@ -28,6 +29,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'vizyonvita', 'Vizyon' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'mutant11', 'Mut@nt' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'mutant51', 'Mut@nt' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'ax51', 'AX 4K' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'bre2ze4k', 'WWIO' , '', d)}\
 "
 
 IMAGEDIR ?= "\
@@ -41,10 +43,25 @@ ${@bb.utils.contains('MACHINEBUILD', 'vizyonvita', 'hd1100' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'mutant11', 'hd11' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'mutant51', 'hd51' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'ax51', 'hd51' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'bre2ze4k', 'bre2ze4k' , '', d)}\
+"
+
+MACHINE_DRIVER ?= "\
+${@bb.utils.contains('MACHINEBUILD', 'mutant1100', 'hd1100' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mutant1265', 'hd1265' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mutant1500', 'hd1500' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mutant500c', 'hd500c' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mutant530c', 'hd530c' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mutant1200', 'hd1200' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'vizyonvita', 'hd1100' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mutant11', 'hd11' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mutant51', 'hd51' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'ax51', 'hd51' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'bre2ze4k', 'bre2ze4k' , '', d)}\
 "
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "\
-    gfutures-dvb-modules-${MACHINE} \
+    gfutures-dvb-modules-${MACHINE_DRIVER} \
     kernel-vmlinux \
     "
 
@@ -66,8 +83,7 @@ DVBMEDIASINK_CONFIG = "--with-wma --with-wmv --with-pcm --with-dts --with-eac3 \
     ${@bb.utils.contains('MACHINEBUILD', 'mutant1265', '--with-h265 --with-vb6 --with-vb8 --with-spark' , '', d)} \
     ${@bb.utils.contains('MACHINEBUILD', 'mutant1500', '--with-h265 --with-vb6 --with-vb8 --with-spark' , '', d)} \
     ${@bb.utils.contains('MACHINEBUILD', 'mutant11', '--with-h265 --with-vb6 --with-vb8 --with-spark' , '', d)} \
-    ${@bb.utils.contains('MACHINEBUILD', 'mutant51', '--with-h265 --with-vb6 --with-vb8 --with-vb9 --with-spark' , '', d)} \
-    ${@bb.utils.contains('MACHINEBUILD', 'ax51', '--with-h265 --with-vb6 --with-vb8 --with-vb9 --with-spark' , '', d)} \
+    ${@bb.utils.contains('MACHINE', 'hd51', '--with-h265 --with-vb6 --with-vb8 --with-vb9 --with-spark' , '', d)} \
 "
 
 PREFERRED_PROVIDER_virtual/kernel = "linux-gfutures"

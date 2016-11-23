@@ -2,7 +2,7 @@ DESCRIPTION = "Event Loop Library"
 HOMEPAGE = "http://software.schmorp.de/pkg/libev.html"
 LICENSE = "GPLv3"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=d6ad416afd040c90698edcdf1cbee347"
-SRC_URI = "http://dist.schmorp.de/libev/libev-${PV}.tar.gz"
+SRC_URI = "http://dist.schmorp.de/libev/Attic/libev-${PV}.tar.gz"
 
 inherit autotools
 
