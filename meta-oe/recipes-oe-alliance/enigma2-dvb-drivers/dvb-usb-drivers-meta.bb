@@ -32,6 +32,8 @@ DEPENDS = "\
     ${@base_contains("MACHINE", "vuuno", "enigma2-plugin-drivers-dvb-usb-turbo", "", d)} \
     ${@base_contains("MACHINE", "vuzero", "enigma2-plugin-drivers-dvb-usb-turbo", "", d)} \
     ${@base_contains("MACHINE", "vusolo4k", "enigma2-plugin-drivers-dvb-usb-turbo", "", d)} \
+    ${@base_contains("MACHINE", "vuuno4k", "enigma2-plugin-drivers-dvb-usb-turbo", "", d)} \
+    ${@base_contains("MACHINE", "vuultimo4k", "enigma2-plugin-drivers-dvb-usb-turbo", "", d)} \
     "
 
 

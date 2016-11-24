@@ -22,6 +22,8 @@ SRC_URI = "git://code.vuplus.com/git/filestreamproxy.git;protocol=http;branch=tr
 inherit autotools
 
 EXTRA_OECONF_vusolo4k += " --enable-ext-pid "
+EXTRA_OECONF_vuultimo4k += " --enable-ext-pid "
+EXTRA_OECONF_vuuno4k += " --enable-ext-pid "
 
 S = "${WORKDIR}/git"
 
