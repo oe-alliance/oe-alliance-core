@@ -17,11 +17,13 @@ RDEPENDS_${PN} = "\
     oe-alliance-enigma2 \
     oe-alliance-branding \
     ${@base_contains("MACHINE_FEATURES", "wol", "vuplus-coldboot vuplus-ethwol", "", d)} \
+    ${@base_contains("MACHINE_FEATURES", "wowl", "vuplus-wowl", "", d)} \
     ${@base_contains("MACHINE_FEATURES", "iniwol", "ini-coldboot ini-ethwol", "", d)} \
     ${@base_contains("MACHINE_FEATURES", "gbwol", "gigablue-ethwol", "", d)} \
     ${@base_contains("MACHINE_FEATURES", "gbsoftwol", "gigablue-ethsoftwol", "", d)} \
     ${@base_contains("MACHINE_FEATURES", "no-nmap", "" , "nmap", d)} \
     ${@base_contains("MACHINE_FEATURES", "emmc", "parted dosfstools mtools" , "", d)} \
+    ${@base_contains("MACHINE_FEATURES", "bluetooth", "enigma2-plugin-systemplugins-bluetoothsetup", "", d)} \
     ${@base_contains("TARGET_ARCH", "sh4", "alsa-utils-amixer-conf" , "", d)} \
     avahi-daemon \
     dropbear \

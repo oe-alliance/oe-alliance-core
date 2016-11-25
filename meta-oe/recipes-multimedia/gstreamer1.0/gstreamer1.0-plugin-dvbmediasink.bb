@@ -41,6 +41,14 @@ SRC_URI_append_vusolo4k = " \
     file://0001-add-VB6-VB8-SPARK.patch;patch=1 \
 "
 
+SRC_URI_append_vuuno4k = " \
+    file://0001-add-vp8-vp9-vp6-spark.patch;patch=1 \
+"
+
+SRC_URI_append_vuultimo4k = " \
+    file://0001-add-vp8-vp9-vp6-spark.patch;patch=1 \
+"
+
 SRC_URI_append_xc7362 = " \
     file://0001-add-VB6-VB8-SPARK.patch;patch=1 \
 "

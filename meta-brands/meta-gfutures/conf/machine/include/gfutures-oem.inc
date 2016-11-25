@@ -15,7 +15,7 @@ ${@base_contains('MACHINEBUILD', 'vizyonvita', 'Vita' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mutant11', 'HD11' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mutant51', 'HD51' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'ax51', 'HD51' , '', d)}\
-${@base_contains('MACHINEBUILD', 'bre2ze4k', 'Bre2ze 4k' , '', d)}\
+${@base_contains('MACHINEBUILD', 'bre2ze4k', 'BRE2ZE 4K' , '', d)}\
 "
 
 MACHINE_BRAND = "\

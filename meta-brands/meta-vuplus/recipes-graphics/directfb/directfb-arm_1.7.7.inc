@@ -52,3 +52,4 @@ FILES_${PN}-dbg += "\
 "
 
 BBCLASSEXTEND = "native"
+PACKAGE_ARCH := "${MACHINE_ARCH}"
