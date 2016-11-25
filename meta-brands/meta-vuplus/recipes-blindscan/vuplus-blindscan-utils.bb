@@ -14,7 +14,7 @@ PROVIDES += "virtual/blindscan-dvbs virtual/blindscan-dvbc"
 RPROVIDES_vuplus-blindscan-dvbs-utils += "virtual/blindscan-dvbs"
 RPROVIDES_vuplus-blindscan-dvbc-utils += "virtual/blindscan-dvbc"
 
-SRC_URI = "http://archive.vuplus.com/download/utils/vuplus-blindscan-utils-${PV}.tar.bz2"
+SRC_URI = "http://archive.vuplus.com/download/utils/vuplus-blindscan-utils-${PV}.tar.gz"
 SRC_URI_arm = "http://archive.vuplus.com/download/utils/vuplus-blindscan-utils-${PV}_arm.tar.gz;name=arm"
 
 PV = "4.2"
