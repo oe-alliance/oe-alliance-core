@@ -1,0 +1,53 @@
+From 4639f23ffb43f4815358e0f6665ea78f5c166824 Mon Sep 17 00:00:00 2001
+From: Athanasios Oikonomou <athoik@gmail.com>
+Date: Fri, 25 Nov 2016 07:48:17 +0200
+Subject: [PATCH] CaElementaryStreamInfo: add missing accessors
+
+
+diff --git a/include/dvbsi++/ca_program_map_section.h b/include/dvbsi++/ca_program_map_section.h
+index 7252a1f..a3313a7 100644
+--- a/include/dvbsi++/ca_program_map_section.h
++++ b/include/dvbsi++/ca_program_map_section.h
+@@ -51,6 +51,7 @@ class CaElementaryStreamInfo
+ 		uint16_t getLength(void) const;
+ 
+ 		size_t writeToBuffer(uint8_t * const buffer) const;
++		const CaDescriptorList *getDescriptors(void) const;
+ };
+ 
+ typedef std::list<CaElementaryStreamInfo *> CaElementaryStreamInfoList;
+@@ -80,6 +81,7 @@ class CaProgramMapSection : public DescriptorContainer
+ 		void setListManagement(const uint8_t listmanagement);
+ 		size_t writeToBuffer(uint8_t * const buffer) const;
+ 		ssize_t writeToFile(int fd) const;
++		const CaElementaryStreamInfoList *getEsInfo(void) const;
+ };
+ 
+ typedef std::list<CaProgramMapSection *> CaProgramMapSectionList;
+diff --git a/src/ca_program_map_section.cpp b/src/ca_program_map_section.cpp
+index 17ffd2d..99ede70 100644
+--- a/src/ca_program_map_section.cpp
++++ b/src/ca_program_map_section.cpp
+@@ -105,6 +105,11 @@ size_t CaElementaryStreamInfo::writeToBuffer(uint8_t * const buffer) const
+ 	return total;
+ }
+ 
++const CaDescriptorList *CaElementaryStreamInfo::getDescriptors(void) const
++{
++	return &descriptors;
++}
++
+ bool CaProgramMapSection::append(const ProgramMapSection * const pmt)
+ {
+ 	if (pmt->tableIdExtension != programNumber ||
+@@ -216,3 +221,7 @@ ssize_t CaProgramMapSection::writeToFile(const int fd) const
+ 	return write(fd, buffer, length);
+ }
+ 
++const CaElementaryStreamInfoList *CaProgramMapSection::getEsInfo(void) const
++{
++	return &esInfo;
++}
+-- 
+2.1.4
+
