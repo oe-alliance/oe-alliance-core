@@ -38,7 +38,7 @@ python populate_packages_prepend () {
     # we have to perform some tricks to get non-standard files in the plugin packages,
     # unfortunately FILES_append doesn't work
     def files_append(pn, newfiles):
-        files = bb.data.getVar('FILES_' + pn, d, 1)
+        files = d.getVar('FILES_' + pn, d, 1)
         if files:
             files += " " + newfiles + " "
             bb.data.setVar('FILES_' + pn, files, d)

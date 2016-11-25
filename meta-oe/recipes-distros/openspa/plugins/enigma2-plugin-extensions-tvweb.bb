@@ -20,7 +20,7 @@ S="${WORKDIR}"
 
 
 python do_package_write_ipk() {
-    packages = bb.data.getVar('PACKAGES', d, True)
+    packages = d.getVar('PACKAGES', d, True)
     if not packages:
         bb.debug(1, "No PACKAGES defined, nothing to package")
         return
