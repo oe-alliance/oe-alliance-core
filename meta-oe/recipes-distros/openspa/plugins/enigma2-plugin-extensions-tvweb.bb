@@ -26,7 +26,7 @@ python do_package_write_ipk() {
         return
 
     bb.build.exec_func("read_subpackage_metadata", d)
-    bb.data.setVar('SRC_URI', 'unknown', d)
+    d.setVar('SRC_URI', 'unknown', d)
     bb.build.exec_func("do_package_ipk", d)
 }
 

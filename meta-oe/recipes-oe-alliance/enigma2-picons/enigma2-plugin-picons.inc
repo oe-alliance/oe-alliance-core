@@ -62,8 +62,8 @@ python populate_packages_prepend() {
                     os.system("pngcrush -quiet -bit_depth 8 '%s' '%s'" % (fn, dn))
                 files.append("/picon/" + file)
 
-        bb.data.setVar('FILES_' + packagename, " ".join(files), d)
-        bb.data.setVar('DESCRIPTION_' + packagename, "TV picon set", d)
+        d.setVar('FILES_' + packagename, " ".join(files), d)
+        d.setVar('DESCRIPTION_' + packagename, "TV picon set", d)
         piconpackages.append(packagename)
         try:
             packagename = createPackageName('radio', sat)
@@ -72,8 +72,8 @@ python populate_packages_prepend() {
                 if file.endswith(".png"):
                     os.system("cp -a \"" + sdir + "/" + sat + "/radio/" + file + "\" " + dir + "/picon/")
                     files.append("/picon/" + file)
-            bb.data.setVar('FILES_' + packagename, " ".join(files), d)
-            bb.data.setVar('DESCRIPTION_' + packagename, "Radio picon set", d)
+            d.setVar('FILES_' + packagename, " ".join(files), d)
+            d.setVar('DESCRIPTION_' + packagename, "Radio picon set", d)
             piconpackages.append(packagename)
         except:
             pass
@@ -85,6 +85,6 @@ python populate_packages_prepend() {
         os.rmdir(tmpdir)
     except:
         pass
-    bb.data.setVar('PACKAGES', ' '.join(piconpackages), d)
-    bb.data.setVar('PKGD', dir, d)
+    d.setVar('PACKAGES', ' '.join(piconpackages), d)
+    d.setVar('PKGD', dir, d)
 }

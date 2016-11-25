@@ -41,7 +41,7 @@ python populate_packages_prepend () {
         files = d.getVar('FILES_' + pn, d, True)
         if files:
             files += " " + newfiles + " "
-            bb.data.setVar('FILES_' + pn, files, d)
+            d.setVar('FILES_' + pn, files, d)
 }
 
 do_install_append() {
