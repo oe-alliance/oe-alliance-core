@@ -14,7 +14,7 @@ addtask remove_tarball before do_fetch
 python do_convert_bouquets() {
     import os
     import os.path
-    s = d.getVar('S', d, 1)
+    s = d.getVar('S', True)
     for filename in ["tv", "radio"]:
         inpath = os.path.join(s, "var/tuxbox/config/enigma/userbouquets." + filename + ".epl")
         outpath = os.path.join(s, "var/tuxbox/config/enigma/bouquets." + filename)

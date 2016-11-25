@@ -21,11 +21,11 @@ python populate_packages_prepend() {
     import shutil
     import re
     import tempfile
-    dir = d.getVar('D', d, True)
-    sdir = d.getVar('S', d, True)
-    satnames = d.getVar('PICON_SATNAMES', d, True)
-    pnsuffix = d.getVar('PN_SUFFIX', d, True)
-    resize = d.getVar('RESIZE_COMMAND', d, True)
+    dir = d.getVar('D', True)
+    sdir = d.getVar('S', True)
+    satnames = d.getVar('PICON_SATNAMES', True)
+    pnsuffix = d.getVar('PN_SUFFIX', True)
+    resize = d.getVar('RESIZE_COMMAND', True)
     if not pnsuffix:
         pnsuffix = ''
     piconpackages = []

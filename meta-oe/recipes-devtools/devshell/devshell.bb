@@ -34,7 +34,7 @@ python do_compile() {
     import os
     import os.path
 
-    workdir = d.getVar('WORKDIR', d, 1)
+    workdir = d.getVar('WORKDIR', True)
     shellfile = os.path.join(workdir, bb.data.expand("${TARGET_PREFIX}${DISTRO}-${MACHINE}-devshell", d))
     f = open(shellfile, "w")
     # emit variables and shell functions

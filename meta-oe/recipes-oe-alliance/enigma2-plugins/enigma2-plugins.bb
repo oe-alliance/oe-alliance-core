@@ -120,7 +120,7 @@ python populate_packages_prepend() {
             elif line.startswith('Maintainer: '):
                 bb.data.setVar('MAINTAINER_' + full_package, line[12:], d)
 
-    mydir = d.getVar('D', d, 1) + "/../git/"
+    mydir = d.getVar('D', True) + "/../git/"
     for package in d.getVar('PACKAGES', d, 1).split():
         getControlLines(mydir, d, package.split('-'))
 }

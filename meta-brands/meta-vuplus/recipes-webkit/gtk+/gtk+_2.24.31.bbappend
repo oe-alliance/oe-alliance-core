@@ -1,6 +1,6 @@
 PR_append = ".1"
 
-THISDIR := "${@os.path.dirname(d.getVar('FILE', d, True))}"
+THISDIR := "${@os.path.dirname(d.getVar('FILE', True))}"
 FILESPATH =. "${@base_set_filespath(["${THISDIR}/${PN}"], d)}:"
 
 SRC_URI += " \

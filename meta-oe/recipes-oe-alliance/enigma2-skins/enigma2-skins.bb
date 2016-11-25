@@ -37,8 +37,8 @@ python populate_packages_prepend () {
         enigma2_skindir = bb.data.expand('${datadir}/enigma2', d)
         do_split_packages(d, enigma2_skindir, '(.*?)/.*', 'enigma2-plugin-skins-%s', 'Enigma2 Skin: %s', recursive=True, match_path=True, prepend=True)
 
-    currentlist = d.getVar('PACKAGES', d, 1)
-    pkgnotwanted = open(d.getVar('S', d, 1) + "/../skinsnotwanted").read()
+    currentlist = d.getVar('PACKAGES', True)
+    pkgnotwanted = open(d.getVar('S', True) + "/../skinsnotwanted").read()
 #     logger.warning("NOT WANTED %s ", pkgnotwanted)
 
     newlist = currentlist.split(" ")

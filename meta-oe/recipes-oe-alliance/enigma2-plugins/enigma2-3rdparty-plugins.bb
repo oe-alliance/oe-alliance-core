@@ -172,11 +172,11 @@ do_package_write_ipk[noexec] = "1"
 python populate_packages_prepend () {
     pkg  = ""
     pkgs = ""
-    plugins = d.getVar('THIRDPARTY_PLUGINS', d, 1)
-    if d.getVar('THIRDPARTY_MACHINE_PLUGINS', d, 1) is not None:
-        plugins += d.getVar('THIRDPARTY_MACHINE_PLUGINS', d, 1)
-    if d.getVar('THIRDPARTY_EXTRA_PLUGINS', d, 1) is not None:
-        plugins += d.getVar('THIRDPARTY_EXTRA_PLUGINS', d, 1)
+    plugins = d.getVar('THIRDPARTY_PLUGINS', True)
+    if d.getVar('THIRDPARTY_MACHINE_PLUGINS', True) is not None:
+        plugins += d.getVar('THIRDPARTY_MACHINE_PLUGINS', True)
+    if d.getVar('THIRDPARTY_EXTRA_PLUGINS', True) is not None:
+        plugins += d.getVar('THIRDPARTY_EXTRA_PLUGINS', True)
 
     if plugins is not None:
         for package in plugins.split():
