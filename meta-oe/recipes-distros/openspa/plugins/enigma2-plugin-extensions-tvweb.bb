@@ -25,9 +25,9 @@ python do_package_write_ipk() {
         bb.debug(1, "No PACKAGES defined, nothing to package")
         return
 
-    bb.build.exec_func("read_subpackage_metadata")
+    bb.build.exec_func("read_subpackage_metadata", d)
     d.setVar('SRC_URI', 'unknown')
-    bb.build.exec_func("do_package_ipk")
+    bb.build.exec_func("do_package_ipk", d)
 }
 
 do_install() {
