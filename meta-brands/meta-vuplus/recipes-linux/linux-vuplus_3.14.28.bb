@@ -23,7 +23,6 @@ SRC_URI += "http://archive.vuplus.com/download/kernel/${KERNELSRC};name=${MACHIN
 	file://defconfig \
 	file://bcm_genet_disable_warn.patch \
 	file://linux_dvb-core.patch \
-	file://linux_rpmb_not_alloc.patch \
 	file://rt2800usb_fix_warn_tx_status_timeout_to_dbg.patch \
 	file://usb_core_hub_msleep.patch \
 	file://rtl8712_fix_build_error.patch \
