@@ -15,7 +15,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'vizyonvita', 'Vita' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'mutant11', 'HD11' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'mutant51', 'HD51' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'ax51', 'HD51' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'bre2ze4k', 'Bre2ze 4k' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'bre2ze4k', 'BRE2ZE 4K' , '', d)}\
 "
 
 MACHINE_BRAND = "\

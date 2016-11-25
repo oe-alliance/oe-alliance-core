@@ -49,8 +49,8 @@ IMAGE_CMD_ubi_prepend = " \
     rm -rf ${IMAGE_ROOTFS}/tmp/*; \
     "
 
-MACHINE_FEATURES += "3dtv alsa hdmicec switchoff bootsplash blindscan-tbs"
-
 BOOTLOGO_FILENAME = "splash_cfe_auto.bin"
+
+MACHINE_FEATURES += "3dtv alsa hdmicec switchoff bootsplash blindscan-tbs"
 
 require conf/machine/include/soc-family.inc
