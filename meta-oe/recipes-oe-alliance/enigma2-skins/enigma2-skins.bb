@@ -46,7 +46,7 @@ python populate_packages_prepend () {
         if line in newlist:
             newlist.remove(line)
 
-    d.setVar('PACKAGES', ' '.join(newlist), d)
+    d.setVar('PACKAGES', ' '.join(newlist))
 }
 
 do_populate_sysroot[noexec] = "1"

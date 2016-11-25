@@ -182,9 +182,9 @@ python populate_packages_prepend () {
         for package in plugins.split():
             pkg = package.split('_')[0]
             pkgs += pkg + " "
-            d.setVar('ALLOW_EMPTY_' + pkg, '1', d)
+            d.setVar('ALLOW_EMPTY_' + pkg, '1')
 
-    d.setVar('PACKAGES', pkgs, d)
+    d.setVar('PACKAGES', pkgs)
 }
 
 do_deploy() {
