@@ -14,6 +14,7 @@ PR[vardepsxeclude] += "DATE"
 
 IMAGE_INSTALL = " \
     opennfr-base \
+    packagegroup-base-smbfs \
     packagegroup-base-smbfs-client \
     packagegroup-base-smbfs-server \
     packagegroup-base-smbfs-utils \
