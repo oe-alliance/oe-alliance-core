@@ -14,6 +14,7 @@ SRC_URI = "git://github.com/OpenPLi/tuxtxt.git;protocol=git \
 "
 
 SRC_URI_append_wetekplay = " file://0001-add-HBGIC-for-wetek.patch"
+SRC_URI_append_wetekplay2 = " file://0001-add-HBGIC-for-wetek.patch"
 
 S = "${WORKDIR}/git/tuxtxt"
 
@@ -60,4 +61,5 @@ inherit autotools pkgconfig
 EXTRA_OECONF = "--with-boxtype=generic --with-configdir=/etc \
     ${@base_contains("MACHINE_FEATURES", "textlcd", "--with-textlcd" , "", d)} \
     ${@base_contains("MACHINE", "wetekplay", "--with-fbdev=/dev/fb/2" , "", d)} \
+    ${@base_contains("MACHINE", "wetekplay2", "--with-fbdev=/dev/fb/2" , "", d)} \
     "

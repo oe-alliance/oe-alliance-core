@@ -18,6 +18,7 @@ DEPENDS = " \
     "
 
 DEPENDS_append_wetekplay = " libdvbcsa libamcodec"
+DEPENDS_append_wetekplay2 = " libdvbcsa libamcodec"
 
 RDEPENDS_${PN} = " \
     alsa-conf \

@@ -6,6 +6,7 @@ LIC_FILES_CHKSUM = "file://showiframe.c;firstline=1;endline=1;md5=d67f9281bc4bfe
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 DEPENDS_wetekplay = "libamcodec"
+DEPENDS_wetekplay2 = "libamcodec"
 
 PV = "1.3"
 PR = "r2"
@@ -13,6 +14,7 @@ PR = "r2"
 SRC_URI = "file://showiframe.c"
 
 SRC_URI_append_wetekplay = " file://showiframe.patch"
+SRC_URI_append_wetekplay2 = " file://showiframe.patch"
 
 S = "${WORKDIR}"
 
@@ -24,6 +26,9 @@ do_compile_wetekplay() {
     ${CC} -I${STAGING_INCDIR}/amlogic/amcodec -lamcodec -o showiframe showiframe.c
 }
 
+do_compile_wetekplay2() {
+    ${CC} -I${STAGING_INCDIR}/amlogic/amcodec -lamcodec -o showiframe showiframe.c
+}
 
 do_install() {
     install -d ${D}/${bindir}/
