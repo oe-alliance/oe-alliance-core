@@ -23,7 +23,7 @@ RDEPENDS_${PN} = "\
     ${@base_contains("MACHINE_FEATURES", "gbsoftwol", "gigablue-ethsoftwol", "", d)} \
     ${@base_contains("MACHINE_FEATURES", "no-nmap", "" , "nmap", d)} \
     ${@base_contains("MACHINE_FEATURES", "emmc", "parted dosfstools mtools" , "", d)} \
-    ${@base_contains("MACHINE_FEATURES", "bluetooth", "enigma2-plugin-systemplugins-bluetoothsetup", "", d)} \
+    ${@base_contains("MACHINE_FEATURES", "vubluetooth", "enigma2-plugin-systemplugins-bluetoothsetup", "", d)} \
     ${@base_contains("TARGET_ARCH", "sh4", "alsa-utils-amixer-conf" , "", d)} \
     avahi-daemon \
     dropbear \
