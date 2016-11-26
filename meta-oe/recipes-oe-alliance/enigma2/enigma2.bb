@@ -17,9 +17,6 @@ DEPENDS = " \
     ${@base_contains("MACHINE_FEATURES", "uianimation", "vuplus-libgles-${MACHINE} libvugles2" , "", d)} \
     "
 
-DEPENDS_append_wetekplay = " libdvbcsa libamcodec"
-DEPENDS_append_wetekplay2 = " libdvbcsa libamcodec"
-
 RDEPENDS_${PN} = " \
     alsa-conf \
     enigma2-fonts \
