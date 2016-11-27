@@ -5,7 +5,7 @@ LIC_FILES_CHKSUM = "file://LICENSE.md;md5=af4fe319be2972a4fa475030d294cf1f"
 
 S = "${WORKDIR}/FFmpeg-${PV}-Helix/"
 
-COMPATIBLE_MACHINE = "(wetekplay)"
+COMPATIBLE_MACHINE = "(wetekplay|wetekplay2)"
 
 inherit autotools-brokensep pkgconfig
 

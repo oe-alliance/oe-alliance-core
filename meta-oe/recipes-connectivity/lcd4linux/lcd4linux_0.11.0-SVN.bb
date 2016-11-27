@@ -30,6 +30,10 @@ do_setlibtool_arm (){
     sed -i "s#LIBTOOL=libtool#LIBTOOL=\${STAGING_BINDIR_CROSS}\/arm-oe-linux-gnueabi-libtool#" ${S}/Makefile.am
 }
 
+do_setlibtool_aarch64 (){
+    perl -pi -e "s#LIBTOOL=libtool#LIBTOOL=\${STAGING_BINDIR_CROSS}\/aarch64-oe-linux-libtool#" ${S}/Makefile.am
+}
+
 INITSCRIPT_PARAMS_vuplus = "stop 10 0 6 ."
 inherit autotools update-rc.d gettext pkgconfig
 
