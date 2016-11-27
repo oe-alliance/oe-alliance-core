@@ -16,7 +16,7 @@ SRC_URI = " \
     file://aaa.sh \
 "
 
-COMPATIBLE_MACHINE = "(wetekplay)"
+COMPATIBLE_MACHINE = "(wetekplay|wetekplay2)"
 
 do_install() {
     install -d ${D}${sysconfdir}/init.d
@@ -25,4 +25,3 @@ do_install() {
     update-rc.d -r ${D} amlsetfb.sh start 03 S .
     update-rc.d -r ${D} aaa.sh start 0 S .
 }
-
