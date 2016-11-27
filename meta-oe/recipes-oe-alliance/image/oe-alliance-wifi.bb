@@ -28,6 +28,7 @@ OPTIONAL_WIFIDRIVERS = "${@base_contains("MACHINE_FEATURES", "wifiusblegacy", "e
 DEPENDS = "enigma2 enigma2-plugins enigma2-oe-alliance-plugins network-usb-drivers-meta"
 
 DEPENDS_remove_wetekplay = "network-usb-drivers-meta"
+DEPENDS_remove_wetekplay2 = "network-usb-drivers-meta"
 
 RDEPENDS_${PN} = "\
     enigma2-plugin-systemplugins-wirelesslan \

@@ -5,6 +5,6 @@ FILESEXTRAPATHS_prepend_vusolo4k := "${@base_contains("MACHINE_FEATURES", "vukod
 FILESEXTRAPATHS_prepend_vusolose := "${@base_contains("MACHINE_FEATURES", "vukodi", "${THISDIR}/${PN}/${MACHINE}:", "${THISDIR}/${PN}:", d)}"
 FILESEXTRAPATHS_prepend_vuuno4k := "${@base_contains("MACHINE_FEATURES", "vukodi", "${THISDIR}/${PN}/${MACHINE}:", "${THISDIR}/${PN}:", d)}"
 FILESEXTRAPATHS_prepend_vuultimo4k := "${@base_contains("MACHINE_FEATURES", "vukodi", "${THISDIR}/${PN}/${MACHINE}:", "${THISDIR}/${PN}:", d)}"
-
+FILESEXTRAPATHS_prepend_wetekplay2 := "${THISDIR}/${PN}/${MACHINE}:"
 
 PR_append = ".1"

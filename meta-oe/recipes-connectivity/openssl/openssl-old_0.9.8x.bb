@@ -69,7 +69,7 @@ do_configure () {
 	fi
 	target="$os-${HOST_ARCH}"
 	case $target in
-	linux-arm)
+	linux-arm | linux-aarch64)
 		target=linux-elf-arm
 		;;
 	linux-armeb)
