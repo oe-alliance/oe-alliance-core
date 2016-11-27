@@ -235,6 +235,10 @@ SRC_URI_append_azboxminime = " \
 SRC_URI_append_vuduo = " \
     file://duo_VFD.patch \
     "
+SRC_URI_append_wetekplay2 = " \
+    file://0001-have-64-bit-action-long-int-update.patch \
+    "
+
 SRC_URI_append_openatv = " \
     file://tuxbox_fix_DVB_API_VERSION_check_for_gcc5.patch \
     "
