@@ -15,7 +15,7 @@ PV = "6.0+git${SRCPV}"
 PKGV = "6.0+git${GITPKGV}"
 PR = "r${DATE}-${MACHINEBUILD}"
 
-PR[vardepsxeclude] += "DATE"
+PR[vardepsexclude] += "DATE"
 
 BRANCH="master"
 
