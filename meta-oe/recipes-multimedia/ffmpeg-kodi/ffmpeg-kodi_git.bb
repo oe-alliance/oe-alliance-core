@@ -54,6 +54,14 @@ EXTRA_OECONF_append_vusolo4k = " \
         --extra-cflags=' -march=armv7-a -mfloat-abi=hard -mfpu=neon -mtune=cortex-a15' \
 "
 
+EXTRA_OECONF_append_vuuno4k = " \
+        --extra-cflags=' -march=armv7-a -mfloat-abi=hard -mfpu=neon -mtune=cortex-a15' \
+"
+
+EXTRA_OECONF_append_vuultimo4k = " \
+        --extra-cflags=' -march=armv7-a -mfloat-abi=hard -mfpu=neon -mtune=cortex-a15' \
+"
+
 EXTRA_OECONF_append_wetekplay = " \
 	--extra-cflags=' -march=armv7-a -mfloat-abi=hard -mfpu=neon -mtune=cortex-a9' \
 	--enable-muxer=spdif \

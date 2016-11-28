@@ -15,7 +15,7 @@ PV = "6.0+git${SRCPV}"
 PKGV = "6.0+git${GITPKGV}"
 PR = "r${DATE}-${MACHINEBUILD}"
 
-PR[vardepsxeclude] += "DATE"
+PR[vardepsexclude] += "DATE"
 
 BRANCH="master"
 
@@ -52,7 +52,7 @@ EXTRA_OECONF = " \
     "
 
 do_configure_prepend() {
-    if [ "${MACHINE}" = "vusolo4k" -o "${MACHINE}" = "vusolo2" -o "${MACHINE}" = "vusolose" -o "${MACHINE}" = "vuduo2" ]; then
+    if [ "${MACHINE}" = "vusolo4k" -o "${MACHINE}" = "vusolo2" -o "${MACHINE}" = "vusolose" -o "${MACHINE}" = "vuduo2" -o "${MACHINE}" = "vuuno4k" -o "${MACHINE}" = "vuultimo4k" ]; then
         DRIVERSDATE=`grep "SRCDATE = " ${OEA-META-VUPLUS-BASE}/recipes-drivers/vuplus-dvb-proxy-${MACHINE}.bb | cut -b 12-19`
     elif [ "${BRAND_OEM}" = "vuplus" ]; then
         DRIVERSDATE=`grep "SRCDATE = " ${OEA-META-VUPLUS-BASE}/recipes-drivers/vuplus-dvb-modules-${MACHINE}.bb | cut -b 12-19`
@@ -108,11 +108,11 @@ do_configure_prepend() {
         DRIVERSDATE=`grep "SRCDATE = " ${OEA-META-PROTEK-BASE}/recipes-drivers/protek-dvb-modules-${MACHINE}.bb | cut -b 12-19`
     elif [ "${BRAND_OEM}" = "dreambox" ]; then
         if [ "${MACHINE}" = "dm7080" ]; then
-            DRIVERSDATE="20151202"
+            DRIVERSDATE="20161124"
         elif [ "${MACHINE}" = "dm820" ]; then
-            DRIVERSDATE="20151202"
+            DRIVERSDATE="20161124"
         elif [ "${MACHINE}" = "dm520" ]; then
-            DRIVERSDATE="20160830"
+            DRIVERSDATE="20161126"
         elif [ "${MACHINE}" = "dm800" ]; then
             DRIVERSDATE="20131228"
         elif [ "${MACHINE}" = "dm8000" ]; then

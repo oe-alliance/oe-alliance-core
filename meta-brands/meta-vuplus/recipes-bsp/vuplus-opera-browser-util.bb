@@ -10,7 +10,7 @@ RDEPENDS_${PN} = "libsysfs2 libgmp10 libmpfr4 vuplus-opera-dumpait libcrypto0.9.
 SRC_DATE = "20151222_0"
 SRC_URI = ""
 
-PR = "r43_${SRC_DATE}"
+PR = "r44_${SRC_DATE}"
 
 GSTVER = "${@bb.utils.contains("GST_VERSION", "1.0", "1.4.5", "0.10.36.1", d)}"
 

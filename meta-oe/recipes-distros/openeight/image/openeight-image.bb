@@ -10,7 +10,7 @@ PV = "${IMAGE_VERSION}"
 PR = "r${DATE}"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-PR[vardepsxeclude] += "DATE"
+PR[vardepsexclude] += "DATE"
 
 IMAGE_INSTALL = "openeight-base"
 

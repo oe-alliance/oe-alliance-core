@@ -1,0 +1,28 @@
+diff -Naur mediatomb-0.12.1.orig/src/inotify-nosys.h mediatomb-0.12.1/src/inotify-nosys.h
+--- mediatomb-0.12.1.orig/src/inotify-nosys.h	2016-10-02 01:59:18.152051289 +0200
++++ mediatomb-0.12.1/src/inotify-nosys.h	2016-10-02 02:04:09.836878576 +0200
+@@ -144,13 +144,23 @@
+ # define __NR_inotify_add_watch 254
+ # define __NR_inotify_rm_watch 255
+ 
++#elif defined (__aarch64__)
++# define __NR_inotify_init1     26
++# define __NR_inotify_add_watch 27
++# define __NR_inotify_rm_watch  28
++// no inotify_init for aarch64
++
+ #else
+ # error "Unsupported architecture!"
+ #endif
+ 
+ static inline int inotify_init (void)
+ {
+-	return syscall (__NR_inotify_init);
++#ifdef __NR_inotify_init
++	return syscall(__NR_inotify_init);
++#else
++	return syscall(__NR_inotify_init1, 0);
++#endif
+ }
+ 
+ static inline int inotify_add_watch (int fd, const char *name, uint32_t mask)
