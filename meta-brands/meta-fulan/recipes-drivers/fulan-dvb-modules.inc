@@ -28,7 +28,6 @@ SRC_URI = " \
     file://aotom_spark_procfs.patch;patch=1 \
     file://silence_tuner_printk.patch;patch=1 \
     file://silence_stmfb_printk.patch;patch=1 \
-    file://disable_video_free_on_release.patch;patch=1 \
     file://add_hdmi_colorspace_proc.patch;patch=1 \
     file://ddbootup \
     file://sh4booster \
@@ -36,9 +35,6 @@ SRC_URI = " \
     file://modules-conf.conf \
     file://COPYING \
 " 
-SRC_URI_remove_opennfr = " \
-    file://disable_video_free_on_release.patch;patch=1 \
-"   
 
 FILES_${PN} = "${sysconfdir}/init.d ${sysconfdir}/rcS.d ${sysconfdir}/modules-load.d ${sysconfdir}/modprobe.d"
 FILES = ""
