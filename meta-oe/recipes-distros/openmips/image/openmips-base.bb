@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=4d92cd373abda3937c2bc47fbc49d
 ALLOW_EMPTY_${PN} = "1"
 
 PV = "${IMAGE_VERSION}"
-PR = "r0"
+PR = "r1"
 
 inherit packagegroup
 
@@ -23,7 +23,12 @@ RDEPENDS_${PN} = "\
     python-imaging \
     rtmpdump \
     zip \
-    ${@base_contains("MACHINE_FEATURES", "smallflash", "", "enigma2-plugin-extensions-openwebif-vxg", d)} \
+    ${@base_contains("MACHINE_FEATURES", "smallflash", "", \
+    " \
+    enigma2-plugin-extensions-openwebif-themes \
+    enigma2-plugin-extensions-openwebif-webtv \
+    enigma2-plugin-extensions-openwebif-vxg \
+    ", d)} \
     ${@base_contains("MACHINE_FEATURES", "singlecore", "", \
     " \
     packagegroup-base-smbfs-server \
