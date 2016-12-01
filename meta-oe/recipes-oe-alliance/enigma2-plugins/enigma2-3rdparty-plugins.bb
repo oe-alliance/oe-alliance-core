@@ -50,7 +50,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-gmailreader-oe2.0_1.3_all.ipk \
     enigma2-plugin-extensions-googlenewsreader_1.0_mips32el.ipk \
     enigma2-plugin-extensions-hdmitest_0.4_mipsel.ipk \
-    enigma2-plugin-extensions-hetweer_3.7r5_all.ipk \
+    enigma2-plugin-extensions-hetweer_3.7r6_all.ipk \
     enigma2-plugin-extensions-iptvbouquet_1.0_r0_all.ipk \
     enigma2-plugin-extensions-iptvplayer_128.01.06.00rc1_all.ipk \
     enigma2-plugin-extensions-isettinge2-3.3.8-oe2.0-${@bb.utils.contains("TARGET_ARCH", "sh4", "sh4" , "mips32el", d)}.ipk \
@@ -92,13 +92,13 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-transmission_2.84_all.ipk \
     enigma2-plugin-extensions-tsmedia_11.4_all.ipk \
     enigma2-plugin-extensions-tstube_1.2_all.ipk \
-    enigma2-plugin-extensions-tvspielfilm_6.4rc13_all.ipk \
+    enigma2-plugin-extensions-tvspielfilm_6.4rc14_all.ipk \
     enigma2-plugin-extensions-verkehrsinfo_1.1rc1_mips32el.ipk \
     enigma2-plugin-extensions-vcs_2.4_all.ipk \
     enigma2-plugin-extensions-vhannibalautosettings_1.1_mips32el.ipk \
     enigma2-plugin-extensions-vuplusforum_0.8rc1_all.ipk \
     enigma2-plugin-extensions-webmedia_14.0_r0_all.ipk \
-    enigma2-plugin-extensions-webradiofs_14.60_all.ipk \
+    enigma2-plugin-extensions-webradiofs_14.61_all.ipk \
     enigma2-plugin-extensions-wikipedia_2.2rc10_all.ipk \
     enigma2-plugin-extensions-wwech_1.03_all.ipk \
     enigma2-plugin-extensions-xbmcaddons_8.1_r0_all.ipk \
