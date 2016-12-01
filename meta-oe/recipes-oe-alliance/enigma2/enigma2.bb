@@ -46,6 +46,7 @@ PYTHON_RDEPS = " \
     python-crypt \
     python-fcntl \
     python-lang \
+    python-importlib \
     python-netclient \
     python-netserver \
     python-pickle \

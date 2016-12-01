@@ -20,13 +20,13 @@ S="${WORKDIR}"
 
 
 python do_package_write_ipk() {
-    packages = bb.data.getVar('PACKAGES', d, True)
+    packages = d.getVar('PACKAGES', True)
     if not packages:
         bb.debug(1, "No PACKAGES defined, nothing to package")
         return
 
     bb.build.exec_func("read_subpackage_metadata", d)
-    bb.data.setVar('SRC_URI', 'unknown', d)
+    d.setVar('SRC_URI', 'unknown')
     bb.build.exec_func("do_package_ipk", d)
 }
 
