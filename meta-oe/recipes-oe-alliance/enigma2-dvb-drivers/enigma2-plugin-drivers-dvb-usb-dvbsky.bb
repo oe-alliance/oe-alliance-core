@@ -9,6 +9,7 @@ RRECOMMENDS_${PN} = " \
     ${@bb.utils.contains("MACHINE_FEATURES", "legacykernel", "", " \
     ${DVBSKYPROVIDER}-module-dvb-usb-dvbsky \
     ${DVBSKYPROVIDER}-module-dvb-usb-v2 \
+    ${DVBSKYPROVIDER}-module-m88ds3103 \
     ${DVBSKYPROVIDER}-module-dvbsky-m88ds3103 \
     ${DVBSKYPROVIDER}-module-dvbsky-m88rs6000 \
     ${DVBSKYPROVIDER}-module-sit2fe \
@@ -21,6 +22,6 @@ RRECOMMENDS_${PN} = " \
     ", d)}"
 
 PV = "2.0"
-PR = "r6"
+PR = "r7"
 
 ALLOW_EMPTY_${PN} = "1"
