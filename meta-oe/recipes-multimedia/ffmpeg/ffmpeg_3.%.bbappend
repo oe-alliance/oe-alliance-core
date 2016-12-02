@@ -3,7 +3,7 @@ RSUGGESTS_${PN} = ""
 PROVIDES =+ " libavcodec53 libavformat53 libav"
 PACKAGES =+ " libavcodec53 libavformat53 libav"
 
-PR = "r7"
+PR = "r8"
 
 DEPENDS = "libbluray rtmpdump libxml2 openssl librtmp virtual/libsdl"
 RDEPENDS_${PN} = "libbluray rtmpdump libxml2 openssl"
