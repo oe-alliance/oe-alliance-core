@@ -3,10 +3,7 @@ RSUGGESTS_${PN} = ""
 PROVIDES =+ " libavcodec53 libavformat53 libav"
 PACKAGES =+ " libavcodec53 libavformat53 libav"
 
-PACKAGECONFIG[faac] = "--enable-libfaac,--disable-libfaac,faac"
-USE_NONFREE = "${@bb.utils.contains_any('PACKAGECONFIG', [ 'faac', 'openssl' ], 'yes', '', d)}"
-
-PR = "r6"
+PR = "r7"
 
 DEPENDS = "libbluray rtmpdump libxml2 openssl librtmp virtual/libsdl"
 RDEPENDS_${PN} = "libbluray rtmpdump libxml2 openssl"
