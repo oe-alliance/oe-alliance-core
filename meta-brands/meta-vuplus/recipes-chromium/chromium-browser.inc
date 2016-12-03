@@ -1,6 +1,6 @@
 SUMMARY = "Chromium and YoutubeTV"
 SECTION = "base"
-PRIORITY = "required"
+PRIORITY = "optional"
 LICENSE = "CLOSED"
 require conf/license/license-close.inc
 PACKAGE_ARCH := "${MACHINE_ARCH}"
@@ -9,7 +9,7 @@ PV = "1.0"
 PR = "${SRCDATE}"
 SRC_URI = "http://code.vuplus.com/download/chromium/chromium-vuplus_${MACHINE}_${SRCDATE}.tar.gz"
 
-DEPENDS_${PN} = "nss"
+DEPENDS = "nss"
 RDEPENDS_${PN} = "nspr nss libxslt libcurl libudev"
 
 do_install() {
