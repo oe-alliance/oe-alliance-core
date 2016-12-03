@@ -9,7 +9,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "${IMAGE_VERSION}"
-PR = "r3"
+PR = "r4"
 
 DEPENDS = "enigma2-plugin-drivers-usbserial"
 RECOMMENDS = "enigma2-plugin-extensions-et-livestream"
@@ -89,6 +89,8 @@ RDEPENDS_${PN} = " \
     pcsc-lite \
     procps \
     pyload \
+    python-attr \
+    python-attrs \
     python-circuits \
     python-circuits-bricks \
     python-cfscrape \
@@ -97,7 +99,9 @@ RDEPENDS_${PN} = " \
     python-ipaddress \
     python-js2py \
     python-mechanize \
+    python-pyasn1-modules \
     python-requests \
+    python-service-identity \
     python-ujson \
     python-singledispatch \
     rsync \
