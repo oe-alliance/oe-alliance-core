@@ -1,6 +1,6 @@
 DESCRIPTION = "E2 Chromium Plugin"
 SECTION = "base"
-PRIORITY = "required"
+PRIORITY = "optional"
 LICENSE = "CLOSED"
 require conf/license/license-close.inc
 
@@ -8,7 +8,7 @@ PV = "1.0"
 PR = "20160516_r1"
 SRC_URI = "http://code.vuplus.com/download/chromium/e2plugin-chromium-vuplus_${PR}.tar.gz"
 
-DEPENDS_${PN} = "chromium-browser"
+DEPENDS = "chromium-browser"
 RDEPENDS_${PN} = "chromium-browser"
 
 do_install_append() {
