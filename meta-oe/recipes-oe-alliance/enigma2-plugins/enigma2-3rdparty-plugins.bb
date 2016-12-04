@@ -11,7 +11,7 @@ DEPENDS = "tslib mpfr gmp"
 SRCREV = "${AUTOREV}"
 PV = "${IMAGE_VERSION}+gitr${SRCPV}"
 PKGV = "${IMAGE_VERSION}+gitr${GITPKGV}"
-PR = "r5"
+PR = "r6"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -104,7 +104,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-xbmcaddons_8.1_r0_all.ipk \
     enigma2-plugin-extensions-xbmcwetter_1.3rc5_all.ipk \
     enigma2-plugin-extensions-zdfnewmediathek_2.0_all.ipk \
-    enigma2-plugin-feeds-picons.xyz_2015-08-31--19-55-30_all.ipk \
+    enigma2-plugin-feeds-picons.eu_2016-11-30--19-35-27_all.ipk \
     enigma2-plugin-systemplugins-bouquetsprotection_0.2-rc1_all.ipk \
     enigma2-plugin-systemplugins-channelselectionnavigator_1.2_mipsel.ipk \
     enigma2-plugin-systemplugins-extnumberzap_1.17_all.ipk \
