@@ -2,7 +2,7 @@ SUMMARY = "DVB / MPEG stream analyzer"
 AUTHOR = "Rainer Scherg <rasc@users.sourceforge.net>"
 LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f"
-PV = "1.4.50"
+PV = "1.4.52"
 PR = "r1"
 
 SRC_URI = "http://sourceforge.net/projects/dvbsnoop/files/latest/download/dvbsnoop-${PV}.tar.gz"
