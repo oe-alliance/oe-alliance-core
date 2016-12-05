@@ -8,13 +8,14 @@ RDEPENDS_${PN} = "enigma2 uchardet openssl exteplayer3"
 RCONFLICTS_${PN} = "enigma2-plugin-extensions-serviceapp"
 RREPLACES_${PN} = "enigma2-plugin-extensions-serviceapp"
 
-#SRCREV = "${AUTOREV}"
-SRCREV = "fce6867eab86399e2e7f6eae2062c2549c678a23"
+SRCREV = "${AUTOREV}"
 SRC_URI = "git://github.com/mx3L/serviceapp.git;branch=master"
 
 S = "${WORKDIR}/git"
 
 inherit autotools gitpkgv pythonnative pkgconfig
+
+CXXFLAGS += " -std=gnu++98"
 
 PV = "0.5+git${SRCPV}"
 PKGV = "0.5+git${GITPKGV}"
