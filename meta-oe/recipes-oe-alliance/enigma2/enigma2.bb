@@ -38,6 +38,7 @@ RRECOMMENDS_${PN} = " \
     ${GST_GOOD_RDEPS} \
     ${GST_BAD_RDEPS} \
     ${GST_UGLY_RDEPS} \
+    ${@bb.utils.contains("GST_VERSION", "1.0", "${GST_BAD_OPUS}", "", d)} \
     "
 
 PYTHON_RDEPS = " \
@@ -151,6 +152,10 @@ GST_BAD_RDEPS = "${@bb.utils.contains('GST_VERSION', '1.0', ' \
     gst-plugins-bad-fragmented \
     gst-plugins-bad-faad \
     ', d)}"
+
+GST_BAD_OPUS = " \
+    ${@bb.utils.contains("TARGET_ARCH", "arm", " gstreamer1.0-plugins-base-opus gstreamer1.0-plugins-bad-opusparse", "", d)} \
+    "
 
 GST_UGLY_RDEPS = "${@bb.utils.contains('GST_VERSION', '1.0', ' \
     gstreamer1.0-plugins-ugly-amrnb \
