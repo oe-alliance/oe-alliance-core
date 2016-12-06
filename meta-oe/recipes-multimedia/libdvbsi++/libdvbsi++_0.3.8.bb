@@ -4,11 +4,10 @@ SECTION = "libs/multimedia"
 LICENSE = "LGPLv2.1"
 LIC_FILES_CHKSUM = "file://COPYING;md5=a6f89e2100d9b6cdffcea4f398e37343"
 
-SRCREV = "c4d4597fb8bf77d1fd4b122438c71a762080a245"
+SRCREV = "ff57e585c47fd62b484d0a8f96fe4f020f5840e3"
 
 SRC_URI = "git://git.opendreambox.org/git/obi/libdvbsi++.git \
 	file://fix_section_len_check.patch \
-	file://0001-CaElementaryStreamInfo-add-missing-accessors.patch \
 	"
 PR = "r1"
 
