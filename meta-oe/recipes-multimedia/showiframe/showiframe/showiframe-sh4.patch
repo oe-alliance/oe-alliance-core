@@ -1,5 +1,5 @@
 --- a/showiframe.c	2016-12-05 18:03:47.058157000 +0100
-+++ b/showiframe.c	2016-12-06 09:46:19.454291000 +0100
++++ b/showiframe.c	2016-12-06 10:18:04.716060000 +0100
 @@ -151,6 +151,7 @@
  		size_t pos=0;
  		int seq_end_avail = 0;
@@ -27,14 +27,13 @@
  #endif
  		while(pos <= (s.st_size-4) && !(seq_end_avail = (!iframe[pos] && !iframe[pos+1] && iframe[pos+2] == 1 && iframe[pos+3] == 0xB7)))
  			++pos;
-@@ -192,10 +189,22 @@
+@@ -192,9 +189,22 @@
  			write_all(fd, seq_end, sizeof(seq_end));
  		write_all(fd, stuffing, 8192);
  #ifndef HAVE_AMLOGIC
 -		usleep(150000);
 -		c(ioctl(fd, VIDEO_STOP, 0));
 -		c(ioctl(fd, VIDEO_SELECT_SOURCE, VIDEO_SOURCE_DEMUX));
--	}
 +		int end = 0;
 +		char progress_ch [4];
 +		while (!end)
@@ -51,6 +50,6 @@
 +		ioctl(fd, VIDEO_STOP, 0);
 +		ioctl(fd, VIDEO_SELECT_SOURCE, VIDEO_SOURCE_DEMUX);
 +		close(fd);
+ 	}
  #else
  		do {
- 			ret = codec_get_vbuf_state(pcodec, &vbuf);
