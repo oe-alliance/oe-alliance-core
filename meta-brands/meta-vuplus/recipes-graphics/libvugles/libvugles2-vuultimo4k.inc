@@ -1,6 +1,6 @@
-SRCDATE = "20161018"
+SRCDATE = "20161206"
 SRCDATE_PR = "r1"
 
-SRC_URI[md5sum] = "622befaa2be556d7acc521342efdda40"
-SRC_URI[sha256sum] = "3d8b3f13e453dd32b4d2e92d8a1c5a4cf75ad0eafaad06a0e38cc5255c1f329d"
+SRC_URI[md5sum] = "0bbb30fc3bcffb0420437b5a750e69b2"
+SRC_URI[sha256sum] = "87e39d14473e4c7e82541ea19acf744d8e7e0a171dbe0ab2ba084d6d7e9be270"
 
