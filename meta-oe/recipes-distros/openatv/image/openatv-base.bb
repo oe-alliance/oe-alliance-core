@@ -24,7 +24,7 @@ RDEPENDS_${PN} = "\
     python-imaging \
     rtmpdump \
     packagegroup-base-smbfs-client \
-    ${@base_contains("MACHINE_FEATURES", "dreambox", "", "ofgwrite", d)} \
-    ${@base_contains("TUNE_FEATURES", "armv7a", "glibc-compat", "", d)} \
+    ${@base_contains("MACHINE_FEATURES", "dreamboxv1", "", "ofgwrite", d)} \
+    ${@base_contains("TUNE_FEATURES", "arm", "glibc-compat", "", d)} \
     bash \
     "

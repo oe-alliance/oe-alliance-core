@@ -1,5 +1,5 @@
 PACKAGE_ARCH = "${MACHINEBUILD}"
-PR = "r6"
+PR = "r7"
 
 do_compile_append_mipsel() {
     echo "arch ${TARGET_ARCH} $priority" >> $archconf
@@ -26,6 +26,13 @@ do_compile_append_vuuno4k() {
     echo "arch mips32el $priority" >> $archconf
     echo "arch mipsel $priority" >> $archconf
     echo "arch armv7ahf-vfp-neon $priority" >> $archconf
+}
+
+do_compile_append_dm900() {
+    echo "arch mips32el $priority" >> $archconf
+    echo "arch mipsel $priority" >> $archconf
+    echo "arch armv7ahf-vfp-neon $priority" >> $archconf
+    echo "arch armv7ahf-neon $priority" >> $archconf
 }
 
 do_compile_append_vuultimo4k() {

@@ -1,7 +1,7 @@
-From c022630633624a75b3b58f43dd3c6cc896a56cff Mon Sep 17 00:00:00 2001
-From: Steven J. Hill <sjhill@mips.com>
-Date: Fri, 06 Jul 2012 19:56:01 +0000
-Subject: MIPS: Refactor 'clear_page' and 'copy_page' functions.
+From 8662f76685b13dc713eaabefe41d3918974f60cf Mon Sep 17 00:00:00 2001
+From: "Steven J. Hill" <sjhill@mips.com>
+Date: Thu, 24 May 2012 15:38:24 -0500
+Subject: [PATCH] MIPS: Refactor 'clear_page' and 'copy_page' functions.
 
 Remove usage of the '__attribute__((alias("...")))' hack that aliased
 to integer arrays containing micro-assembled instructions. This hack
@@ -17,11 +17,19 @@ Cc: linux-mips@linux-mips.org
 Patchwork: https://patchwork.linux-mips.org/patch/3866/
 Acked-by: David Daney <david.daney@cavium.com>
 Signed-off-by: Ralf Baechle <ralf@linux-mips.org>
+(cherry picked from commit 22b57d6432f19be7163c94111e2dcd3c7c1c2449)
 ---
-Index: linux-3.2/arch/mips/kernel/mips_ksyms.c
-===================================================================
---- linux-3.2.orig/arch/mips/kernel/mips_ksyms.c
-+++ linux-3.2/arch/mips/kernel/mips_ksyms.c
+ arch/mips/kernel/mips_ksyms.c |  8 +++++-
+ arch/mips/mm/Makefile         |  2 +-
+ arch/mips/mm/page-funcs.S     | 50 ++++++++++++++++++++++++++++++++
+ arch/mips/mm/page.c           | 67 ++++++++++++-------------------------------
+ 4 files changed, 76 insertions(+), 51 deletions(-)
+ create mode 100644 arch/mips/mm/page-funcs.S
+
+diff --git a/arch/mips/kernel/mips_ksyms.c b/arch/mips/kernel/mips_ksyms.c
+index 57ba13e..3fc1691 100644
+--- a/arch/mips/kernel/mips_ksyms.c
++++ b/arch/mips/kernel/mips_ksyms.c
 @@ -5,7 +5,7 @@
   * License.  See the file "COPYING" in the main directory of this archive
   * for more details.
@@ -44,10 +52,10 @@ Index: linux-3.2/arch/mips/kernel/mips_ksyms.c
   * Userspace access stuff.
   */
  EXPORT_SYMBOL(__copy_user);
-Index: linux-3.2/arch/mips/mm/Makefile
-===================================================================
---- linux-3.2.orig/arch/mips/mm/Makefile
-+++ linux-3.2/arch/mips/mm/Makefile
+diff --git a/arch/mips/mm/Makefile b/arch/mips/mm/Makefile
+index d413c9d..42a5af6 100644
+--- a/arch/mips/mm/Makefile
++++ b/arch/mips/mm/Makefile
 @@ -4,7 +4,7 @@
  
  obj-y				+= cache.o dma-default.o extable.o fault.o \
@@ -57,10 +65,11 @@ Index: linux-3.2/arch/mips/mm/Makefile
  
  obj-$(CONFIG_32BIT)		+= ioremap.o pgtable-32.o
  obj-$(CONFIG_64BIT)		+= pgtable-64.o
-Index: linux-3.2/arch/mips/mm/page-funcs.S
-===================================================================
+diff --git a/arch/mips/mm/page-funcs.S b/arch/mips/mm/page-funcs.S
+new file mode 100644
+index 0000000..48a6b38
 --- /dev/null
-+++ linux-3.2/arch/mips/mm/page-funcs.S
++++ b/arch/mips/mm/page-funcs.S
 @@ -0,0 +1,50 @@
 +/*
 + * This file is subject to the terms and conditions of the GNU General Public
@@ -112,10 +121,10 @@ Index: linux-3.2/arch/mips/mm/page-funcs.S
 +	.space 1344
 +END(cpu_copy_page_function_name)
 +EXPORT(__copy_page_end)
-Index: linux-3.2/arch/mips/mm/page.c
-===================================================================
---- linux-3.2.orig/arch/mips/mm/page.c
-+++ linux-3.2/arch/mips/mm/page.c
+diff --git a/arch/mips/mm/page.c b/arch/mips/mm/page.c
+index 36272f7..a22bd40 100644
+--- a/arch/mips/mm/page.c
++++ b/arch/mips/mm/page.c
 @@ -6,6 +6,7 @@
   * Copyright (C) 2003, 04, 05 Ralf Baechle (ralf@linux-mips.org)
   * Copyright (C) 2007  Maciej W. Rozycki
@@ -124,7 +133,7 @@ Index: linux-3.2/arch/mips/mm/page.c
   */
  #include <linux/init.h>
  #include <linux/kernel.h>
-@@ -72,45 +73,6 @@ static struct uasm_reloc __cpuinitdata r
+@@ -72,45 +73,6 @@ static struct uasm_reloc __cpuinitdata relocs[5];
  #define cpu_is_r4600_v1_x()	((read_c0_prid() & 0xfffffff0) == 0x00002010)
  #define cpu_is_r4600_v2_x()	((read_c0_prid() & 0xfffffff0) == 0x00002020)
  
@@ -170,7 +179,7 @@ Index: linux-3.2/arch/mips/mm/page.c
  static int pref_bias_clear_store __cpuinitdata;
  static int pref_bias_copy_load __cpuinitdata;
  static int pref_bias_copy_store __cpuinitdata;
-@@ -283,10 +245,15 @@ static inline void __cpuinit build_clear
+@@ -283,10 +245,15 @@ static inline void __cpuinit build_clear_pref(u32 **buf, int off)
  		}
  }
  
@@ -209,7 +218,7 @@ Index: linux-3.2/arch/mips/mm/page.c
  	pr_debug("\t.set pop\n");
  }
  
-@@ -428,7 +395,7 @@ static inline void build_copy_store_pref
+@@ -428,7 +395,7 @@ static inline void build_copy_store_pref(u32 **buf, int off)
  void __cpuinit build_copy_page(void)
  {
  	int off;

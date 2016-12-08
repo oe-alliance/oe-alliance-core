@@ -23,38 +23,39 @@ SRC_URI_append_dags7362 = " \
 "
 
 SRC_URI_append_dm7080 = " \
-    file://0001-add-VB6-VB8-SPARK.patch;patch=1 \
-    file://0001-dreambox-h265-streamtype-22.patch \
+    file://0001-add-VB6-VB8-VB9-SPARK-TYPE2.patch;patch=1 \
 "
 
 SRC_URI_append_dm820 = " \
-    file://0001-add-VB6-VB8-SPARK.patch;patch=1 \
-    file://0001-dreambox-h265-streamtype-22.patch \
+    file://0001-add-VB6-VB8-VB9-SPARK-TYPE2.patch;patch=1 \
 "
 
 SRC_URI_append_dm520 = " \
-    file://0001-add-VB6-VB8-SPARK.patch;patch=1 \
-    file://0001-dreambox-h265-streamtype-22.patch \
+    file://0001-add-VB6-VB8-VB9-SPARK-TYPE2.patch;patch=1 \
+"
+
+SRC_URI_append_dm900 = " \
+    file://0001-add-VB6-VB8-VB9-SPARK-TYPE2.patch;patch=1 \
 "
 
 SRC_URI_append_vusolo4k = " \
-    file://0001-add-VB6-VB8-SPARK.patch;patch=1 \
+    file://0001-add-VB6-VB8-VB9-SPARK-TYPE2.patch;patch=1 \
 "
 
 SRC_URI_append_vuuno4k = " \
-    file://0001-add-vp8-vp9-vp6-spark.patch;patch=1 \
+    file://0001-add-VB6-VB8-VB9-SPARK-TYPE2.patch;patch=1 \
 "
 
 SRC_URI_append_vuultimo4k = " \
-    file://0001-add-vp8-vp9-vp6-spark.patch;patch=1 \
+    file://0001-add-VB6-VB8-VB9-SPARK-TYPE2.patch;patch=1 \
 "
 
 SRC_URI_append_xc7362 = " \
-    file://0001-add-VB6-VB8-SPARK.patch;patch=1 \
+    file://0001-add-VB6-VB8-VB9-SPARK-TYPE2.patch;patch=1 \
 "
 
 SRC_URI_append_xc7346 = " \
-    file://0001-add-VB6-VB8-SPARK.patch;patch=1 \
+    file://0001-add-VB6-VB8-VB9-SPARK-TYPE2.patch;patch=1 \
 "
 
 SRC_URI_append_gb73625 = " \
