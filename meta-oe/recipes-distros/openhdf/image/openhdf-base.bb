@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=4d92cd373abda3937c2bc47fbc49d
 ALLOW_EMPTY_${PN} = "1"
 
 PV = "1.0"
-PR = "r24"
+PR = "r25"
 
 inherit packagegroup
 
@@ -22,6 +22,7 @@ RDEPENDS_${PN} = "\
     python-gdata \
     python-requests \
     unrar \
+    gstplayer \
     ofgwrite \
     packagegroup-base-smbfs-client \
     rtmpdump \
