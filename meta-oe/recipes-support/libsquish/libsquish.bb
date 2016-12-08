@@ -12,7 +12,8 @@ SRCREV = "a9b44adc6c9d7ae74e23392a83995ba59b436950"
 S = "${WORKDIR}/git"
 
 do_install() {
-   mkdir -p ${D}/usr/{include,lib/pkgconfig}
+   mkdir -p ${D}/usr/include
+   mkdir -p ${D}/usr/lib/pkgconfig
    INSTALL_DIR=${D}/usr make -C ${S} install
 }
 
