@@ -6,32 +6,26 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=4d92cd373abda3937c2bc47fbc49d
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 ALLOW_EMPTY_${PN} = "1"
 
-PV = "1.0"
-PR = "r11"
+PV = "6.0"
+PR = "r1"
 
 inherit packagegroup
 
 DEPENDS = "enigma2-pliplugins openspa-feeds"
 
 RRECOMMENDS_${PN} = " \
-    enigma2-skindefault \
     openspa-version-info \
-    enigma2-plugin-drivers-usbserial \
-    enigma2-plugin-extensions-infopanel \
-    enigma2-plugin-extensions-autotimer \
-    enigma2-plugin-extensions-epgsearch \
-    enigma2-plugin-extensions-graphmultiepg \
-    enigma2-plugin-extensions-imdb \
-    enigma2-plugin-extensions-cutlisteditor \
-    enigma2-plugin-extensions-tvweb \
-    enigma2-plugin-systemplugins-videomode \
-    enigma2-plugin-systemplugins-videotune \
-    enigma2-plugin-systemplugins-autoresolution \
+    ${@base_contains("MACHINE_FEATURES", "smallflash", "", "enigma2-plugin-drivers-usbserial", d)} \
     enigma2-plugin-systemplugins-softwaremanager \
-    enigma2-plugin-systemplugins-hotplug \
-    enigma2-plugin-extensions-mediaplayer \
-    ${@base_contains("MACHINE_FEATURES", "blindscan-dvbs", "enigma2-plugin-systemplugins-blindscan" , "", d)} \
+    ${@base_contains("MACHINE_FEATURES", "smallflash", "", "enigma2-plugin-extensions-openwebif-themes", d)} \
+    ${@base_contains("MACHINE_FEATURES", "smallflash", "enigma2-plugin-extensions-openwebif-webtv", "enigma2-plugin-extensions-openwebif-vxg", d)} \
+    ${@base_contains("MACHINE_FEATURES", "dreamboxv1", "enigma2-plugin-extensions-dflash mtd-utils-jffs2", "", d)} \
+    ${@base_contains("MACHINE_FEATURES", "dreamboxv2", "enigma2-plugin-extensions-dbackup e2fsprogs-badblocks", "", d)} \
+    ${@base_contains("MACHINE_FEATURES", "boxmodel", "boxmodel", "", d)} \
+    ${@base_contains("MACHINE_FEATURES", "uianimation", "enigma2-plugin-systemplugins-animationsetup" , "", d)} \
+    ${@base_contains("MACHINE_FEATURES", "osdanimation", "enigma2-plugin-systemplugins-animationsetup" , "", d)} \
+    ${@base_contains("MACHINE_FEATURES", "grautec", "enigma2-plugin-extensions-grautec", "", d)} \
     "
 
-RRECOMMENDS_${PN}_append_vusolo2 = "enigma2-plugin-extensions-hbbtv"
-RRECOMMENDS_${PN}_append_vuduo2 = "enigma2-plugin-extensions-hbbtv"
+RRECOMMENDS_${PN}_append_wetekplay = " enigma2-plugin-systemplugins-wirelesslan"
+RRECOMMENDS_${PN}_append_wetekplay2 = " enigma2-plugin-systemplugins-wirelesslan"

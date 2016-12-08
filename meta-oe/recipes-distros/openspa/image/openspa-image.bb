@@ -11,9 +11,10 @@ PR = "r${DATETIME}"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 IMAGE_INSTALL = "openspa-base \
-    ${@base_contains("MACHINE_FEATURES", "smallflash", "", \
+    ${@base_contains("MACHINE_FEATURES", "singlecore", "", \
     " \
     packagegroup-base-smbfs-client \
+    packagegroup-base-smbfs-server \
     packagegroup-base-smbfs \
     packagegroup-base-nfs \
     ", d)} \
