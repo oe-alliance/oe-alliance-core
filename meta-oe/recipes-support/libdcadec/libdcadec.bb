@@ -15,7 +15,8 @@ do_compile() {
 }
 
 do_install() {
-	mkdir -p ${D}/usr/{include,lib/pkgconfig}
+	mkdir -p ${D}/usr/include
+	mkdir -p ${D}/usr/lib/pkgconfig
 	PREFIX=/usr DESTDIR=${D} make -C ${S} install
 }
 
