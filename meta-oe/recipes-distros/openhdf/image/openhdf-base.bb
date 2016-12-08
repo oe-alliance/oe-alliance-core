@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=4d92cd373abda3937c2bc47fbc49d
 ALLOW_EMPTY_${PN} = "1"
 
 PV = "1.0"
-PR = "r23"
+PR = "r24"
 
 inherit packagegroup
 
@@ -16,7 +16,7 @@ RDEPENDS_${PN} = "\
     openhdf-bootlogo \
     openhdf-spinner \
     ntfs-3g \
-	curl \
+    curl \
     hddtemp \
     busybox-cron \
     python-gdata \
@@ -25,7 +25,8 @@ RDEPENDS_${PN} = "\
     ofgwrite \
     packagegroup-base-smbfs-client \
     rtmpdump \
-    ${@base_contains("MACHINE_FEATURES", "smallflash", "", \
+    zip \
+    ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "", \
     " \
     enigma2-plugin-extensions-openwebif-themes \
     enigma2-plugin-extensions-openwebif-webtv \
