@@ -41,6 +41,7 @@ SRC_URI = " \
     file://0001-correctly-initiate-nand-flash-ecc-config-when-old-2n.patch \
     file://rtl8712-fix-warnings.patch \
     file://fixme-hardfloat.patch \
+    file://add-mnt-part.patch \
     file://defconfig \
 "
 

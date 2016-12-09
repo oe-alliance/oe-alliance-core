@@ -40,6 +40,7 @@ SRC_URI = "http://archive.vuplus.com/download/kernel/stblinux-${KV}.tar.bz2 \
     file://0001-stv090x-optimized-TS-sync-control.patch \
     file://blindscan2.patch \
     ${@base_contains("MACHINE_FEATURES", "dvbproxy", "file://linux_dvb_adapter.patch;patch=1;pnum=1", "", d)} \
+    file://brcm_remove_entire_mtd.patch \
     "
 
 SRC_URI_append_vuduo2 = "file://brcm_s3_wol.patch;patch=1;pnum=1 "

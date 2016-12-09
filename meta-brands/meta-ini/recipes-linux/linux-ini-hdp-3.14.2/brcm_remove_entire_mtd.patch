@@ -1,0 +1,98 @@
+--- a/drivers/brcmstb/board.c	2014-05-22 06:10:34.000000000 +0200
++++ a/drivers/brcmstb/board.c.patched	2014-08-24 14:35:31.000000000 +0200
+@@ -704,17 +704,21 @@
+ 
+ static struct mtd_partition fixed_partition_map_NAND[] = {
+ 	{
+-		.name = "complete",
+-		.offset = 0,
+-		.size = MTDPART_SIZ_FULL,
++		.name   = "rootfs",
++		.size   = 0x20000000,
++		.offset = 0x700000,
++	}, {
++		.name   = "mnt",
++		.size   = 0x5F500000, //MTDPART_SIZ_FULL,
++		.offset = MTDPART_OFS_APPEND
+ 	}, {
+-		.name = "kernel",
++		.name   = "kernel",
++		.size   = 0x700000,
+ 		.offset = 0,
+-		.size = 7 * 1024 * 1024,
+ 	}, {
+-		.name = "rootfs",
+-		.offset = MTDPART_OFS_APPEND,
+-		.size = MTDPART_SIZ_FULL,
++		.name   = "full",
++		.size   = MTDPART_SIZ_FULL,
++		.offset = 0
+ 	},
+ };
+ static struct mtd_partition fixed_partition_map_NOR[] = {
+@@ -723,6 +727,7 @@
+ 		.offset =  0x00000,
+ 		.size   =  0xA0000,
+ 	},
++/*
+ 	{
+ 		.name   = "splash",
+ 		.offset =  0xA0000,
+@@ -748,6 +753,7 @@
+ 		.offset = 0x3C0000,
+ 		.size   =  0x40000,
+ 	},
++*/
+ };
+ static struct mtd_partition fixed_partition_map_SPI[] = {
+ 	{
+@@ -755,6 +761,7 @@
+ 		.offset =  0x00000,
+ 		.size   =  0xA0000,
+ 	},
++/*
+ 	{
+ 		.name   = "splash",
+ 		.offset =  0xA0000,
+@@ -780,6 +787,7 @@
+ 		.offset = 0x3C0000,
+ 		.size   =  0x40000,
+ 	},
++*/
+ };
+ 
+ int __init board_get_partition_map_type(int type, struct mtd_partition **p)
+@@ -809,19 +817,21 @@
+ 
+ static struct mtd_partition fixed_partition_map[] = {
+ 	{
+-		.name = "complete",
+-		.size = MTDPART_SIZ_FULL,
+-		.offset = 0x00000000
+-	},
+-	{
+-		.name = "kernel",
+-		.size = 0x00600000,
+-		.offset = 0x00000000
+-	},
+-	{
+-		.name = "rootfs",
+-		.size = MTDPART_SIZ_FULL,
+-		.offset = 0x00600000
++		.name   = "rootfs",
++		.size   = 0x10000000,
++		.offset = 0x700000,
++	}, {
++		.name   = "mnt",
++		.size   = MTDPART_SIZ_FULL,
++		.offset = MTDPART_OFS_APPEND
++	}, {
++		.name   = "kernel",
++		.size   = 0x700000,
++		.offset = 0,
++	}, {
++		.name   = "full",
++		.size   = MTDPART_SIZ_FULL,
++		.offset = 0
+ 	},
+ };

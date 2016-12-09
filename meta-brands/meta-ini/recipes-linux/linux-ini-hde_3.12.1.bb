@@ -49,6 +49,7 @@ SRC_URI += "http://source.mynonpublic.com/ini/bcm7358-linux-${KV}-${SRCDATE}.tgz
     file://0001-STV-Add-SNR-Signal-report-parameters.patch \
     file://0001-stv090x-optimized-TS-sync-control.patch \
     file://blindscan2.patch \
+    file://mnt-extra-mtd.patch \
     "
 
 S = "${WORKDIR}/linux-${PV}"

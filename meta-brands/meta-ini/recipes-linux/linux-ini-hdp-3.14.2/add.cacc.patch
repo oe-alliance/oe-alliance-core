@@ -1,0 +1,34 @@
+--- a/include/uapi/linux/dvb/ca.h	2012-01-05 00:55:44.000000000 +0100
++++ a/include/uapi/linux/dvb/ca.h.patched	2016-07-15 00:09:44.000000000 +0200
+@@ -78,6 +78,24 @@
+ 	int index;		/* -1 == disable*/
+ } ca_pid_t;
+ 
++enum ca_descr_data_type {
++	CA_DATA_IV,
++	CA_DATA_KEY
++};
++
++enum ca_descr_parity {
++	CA_PARITY_EVEN,
++	CA_PARITY_ODD
++};
++
++typedef struct ca_descr_data {
++	unsigned int index;
++	enum ca_descr_parity parity;
++	enum ca_descr_data_type data_type;
++	unsigned int length;
++	unsigned char *data;
++}ca_descr_data_t;
++
+ #define CA_RESET          _IO('o', 128)
+ #define CA_GET_CAP        _IOR('o', 129, ca_caps_t)
+ #define CA_GET_SLOT_INFO  _IOR('o', 130, ca_slot_info_t)
+@@ -86,5 +104,6 @@
+ #define CA_SEND_MSG       _IOW('o', 133, ca_msg_t)
+ #define CA_SET_DESCR      _IOW('o', 134, ca_descr_t)
+ #define CA_SET_PID        _IOW('o', 135, ca_pid_t)
++#define CA_SET_DESCR_DATA _IOW('o', 137, ca_descr_data_t)
+ 
+ #endif

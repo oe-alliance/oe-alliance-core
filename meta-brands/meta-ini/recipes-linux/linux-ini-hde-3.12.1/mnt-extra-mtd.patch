@@ -1,0 +1,31 @@
+--- a/arch/mips/brcmstb/board.c	2012-10-13 17:47:18.000000000 +0200
++++ b/arch/mips/brcmstb/board.c	2014-04-10 18:11:20.000000000 +0200
+@@ -761,17 +761,21 @@
+ 
+ static struct mtd_partition fixed_partition_map[] = {
+ 	{
+-		.name = "complete",
++		.name   = "rootfs",
++		.size   = 0xc000000, //0x10000000, 256m 0x8000000, 128m
+ 		.offset = 0,
+-		.size = MTDPART_SIZ_FULL,
+ 	}, {
+-		.name = "kernel",
+-		.offset = 0,
+-		.size = 6 * 1024 * 1024,
++		.name   = "mnt",
++		.size   = 0x13900000, //0xf900000 0x17900000
++		.offset = MTDPART_OFS_APPEND
++	}, {
++		.name   = "kernel",
++		.size   = MTDPART_SIZ_FULL,
++		.offset = MTDPART_OFS_APPEND
+ 	}, {
+-		.name = "rootfs",
+-		.offset = MTDPART_OFS_APPEND,
+-		.size = MTDPART_SIZ_FULL,
++		.name   = "full",
++		.size   = MTDPART_SIZ_FULL,
++		.offset = 0
+ 	},
+ };

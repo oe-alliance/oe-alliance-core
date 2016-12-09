@@ -1,0 +1,11 @@
+--- a/arch/mips/brcmstb/board.c	2015-12-26 20:24:05.000000000 +0100
++++ a/arch/mips/brcmstb/board.c.patched	2016-02-06 22:43:32.000000000 +0100
+@@ -731,7 +731,7 @@
+ 
+ #elif defined(CONFIG_DREAMBOX_DM7020HD)
+ 
+-int legacy_flash_map = 0;
++int legacy_flash_map = 1;
+ 
+ static struct mtd_partition fixed_partition_map_legacy[] = {
+ 	{ .name = "complete",		.offset = 0,			.size = 1024 * 1024 * 1024,	},
