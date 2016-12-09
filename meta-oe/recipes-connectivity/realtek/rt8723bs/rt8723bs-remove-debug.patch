@@ -1,0 +1,20 @@
+diff --git a/include/autoconf.h b/include/autoconf.h
+index 9aa596fb03b8..cbd10b91fa2a 100755
+--- a/include/autoconf.h
++++ b/include/autoconf.h
+@@ -286,7 +286,7 @@
+ /*
+  * Debug Related Config
+  */
+-#define CONFIG_DEBUG
++#undef CONFIG_DEBUG
+ 
+ #ifdef CONFIG_DEBUG
+ #define DBG	1	// for ODM & BTCOEX debug
+@@ -303,4 +303,4 @@
+ #define DBG_CHECK_FW_PS_STATE
+ #define DBG_CHECK_FW_PS_STATE_H2C
+ //#define CONFIG_FW_C2H_DEBUG 
+-/* #define CONFIG_GPIO_API */
+\ No newline at end of file
++/* #define CONFIG_GPIO_API */
