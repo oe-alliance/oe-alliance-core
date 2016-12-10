@@ -7,8 +7,8 @@ PR = "r2"
 
 SRC_URI = "http://sourceforge.net/projects/dvbsnoop/files/latest/download/dvbsnoop-${PV}.tar.gz"
 
-SRC_URI[md5sum] = "bdee38f9f9843577ed1123ce433cf4cb"
-SRC_URI[sha256sum] = "4e5fb42dc00b06e3bd90d442f73dc23aa14df4fe11e3bac16b88f9185d8c9b51"
+SRC_URI[md5sum] = "68a5618c95b4372eea9ac5ec5005f299"
+SRC_URI[sha256sum] = "7658498b26a5d2a0242e81f0cfafa0e43a2bec56f8674e7ac197dfc310866ec6"
 
 S = "${WORKDIR}/dvbsnoop-${PV}"
 
