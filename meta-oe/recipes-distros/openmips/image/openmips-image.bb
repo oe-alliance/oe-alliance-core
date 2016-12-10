@@ -8,6 +8,8 @@ require conf/license/license-gplv2.inc
 
 PV = "${IMAGE_VERSION}"
 PR = "${BUILD_VERSION}"
+PR .= "-r0"
+
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 # FIX distro-image.bb ERROR: Taskhash mismatch - part 1 add packages to build dependencies of distro-image.bb which run on end of build process
