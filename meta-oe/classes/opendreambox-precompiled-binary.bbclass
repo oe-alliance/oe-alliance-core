@@ -7,3 +7,6 @@ S = "${WORKDIR}/${PN}_${PV}_${PACKAGE_ARCH}"
 PACKAGES = "${PN}"
 
 INHIBIT_PACKAGE_STRIP = "1"
+INHIBIT_SYSROOT_STRIP = "1"
+
+INSANE_SKIP_${PN}_append = " already-stripped"
