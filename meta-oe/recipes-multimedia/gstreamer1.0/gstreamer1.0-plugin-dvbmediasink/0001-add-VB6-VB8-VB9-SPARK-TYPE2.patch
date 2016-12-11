@@ -1,13 +1,13 @@
-From a83a2bf3295a76cc5f85525f687b360ede129c6e Mon Sep 17 00:00:00 2001
+From 5152b55269d2dce98474c50d8d4950de02dba013 Mon Sep 17 00:00:00 2001
 From: captain <openatv@gmail.com>
 Date: Thu, 8 Dec 2016 20:41:44 +0100
-Subject: [PATCH] add-VB6-VB8-VB9-SPARK
+Subject: [PATCH] add-VB6-VB8-VB9-SPARK-TYPE2
 
 ---
  configure.ac      | 28 +++++++++++++++++++++++++++
  gstdvbvideosink.c | 57 +++++++++++++++++++++++++++++++++++++++++++++++++++++++
- gstdvbvideosink.h | 15 +++++++++++----
- 3 files changed, 96 insertions(+), 4 deletions(-)
+ gstdvbvideosink.h | 16 ++++++++++++----
+ 3 files changed, 97 insertions(+), 4 deletions(-)
 
 diff --git a/configure.ac b/configure.ac
 index 90f2987..e9c2d97 100644
@@ -131,7 +131,7 @@ index 60c66ac..b8cac45 100644
  	if (self->stream_type != STREAMTYPE_UNKNOWN)
  	{
 diff --git a/gstdvbvideosink.h b/gstdvbvideosink.h
-index 95c657a..f4d95ee 100644
+index 95c657a..057f9af 100644
 --- a/gstdvbvideosink.h
 +++ b/gstdvbvideosink.h
 @@ -65,7 +65,7 @@ typedef struct _GstDVBVideoSink		GstDVBVideoSink;
@@ -163,7 +163,7 @@ index 95c657a..f4d95ee 100644
  } t_stream_type;
  #else
  typedef enum {
-@@ -96,7 +100,10 @@ typedef enum {
+@@ -96,7 +100,11 @@ typedef enum {
  	STREAMTYPE_XVID = 10,
  	STREAMTYPE_DIVX311 = 13,
  	STREAMTYPE_DIVX4 = 14,
@@ -171,6 +171,7 @@ index 95c657a..f4d95ee 100644
 +	STREAMTYPE_DIVX5 = 15,
 +	STREAMTYPE_VB6 = 18,
 +	STREAMTYPE_VB8 = 20,
++	STREAMTYPE_VB9 = 23,
 +	STREAMTYPE_SPARK = 21
  } t_stream_type;
  #endif
