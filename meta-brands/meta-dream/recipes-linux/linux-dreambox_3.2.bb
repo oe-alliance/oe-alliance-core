@@ -22,7 +22,6 @@ SRC_URI = " \
     file://0001-Revert-MIPS-Fix-potencial-corruption.patch \
     file://fadvise_dontneed_change.patch \
     file://fix-proc-cputype.patch \
-    file://mips-refactor-clearpage-and-copypage.patch \
     file://rtl8712-backport-b.patch \
     file://rtl8712-backport-c.patch \
     file://rtl8712-backport-d.patch \
