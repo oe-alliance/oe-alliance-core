@@ -1,0 +1,30 @@
+From b78f17e3d7dcabc0e4dfcd7f969ea2cc5e3b917d Mon Sep 17 00:00:00 2001
+From: Andreas Oberritter <obi@opendreambox.org>
+Date: Sun, 27 Nov 2016 20:38:14 +0100
+Subject: [PATCH] BRCMSTB: Fix build with binutils 2.24.51+
+
+(c.f. "MIPS: Fix build with binutils 2.24.51+")
+
+Signed-off-by: Andreas Oberritter <obi@opendreambox.org>
+---
+ arch/mips/brcmstb/vector.S | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/arch/mips/brcmstb/vector.S b/arch/mips/brcmstb/vector.S
+index 52934f5..79be0fa 100644
+--- a/arch/mips/brcmstb/vector.S
++++ b/arch/mips/brcmstb/vector.S
+@@ -27,10 +27,13 @@
+ #include <asm/brcmstb/brcmstb.h>
+ 
+ 	.macro	CLR_FPR a b c d
++	.set push
++	SET_HARDFLOAT
+ 	mtc1	$0, $\a
+ 	mtc1	$0, $\b
+ 	mtc1	$0, $\c
+ 	mtc1	$0, $\d
++	.set push
+ 	.endm
+ 
+ 	.macro	BARRIER

@@ -4,7 +4,7 @@ SECTION = "kernel/modules"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://iwpriv_usage.txt;md5=8876ae2c103446a442658f1cc2a01b76"
 
-PR = "r0"
+PR = "r1"
 
 inherit module
 
@@ -15,6 +15,8 @@ SRC_URI = "file://mt7610u_wifi_sta_v3002_dpo_20130916.tar.bz2 \
 	file://new_devices.patch;patch=1 \
 	file://buildfix.patch;patch=1 \
 	"
+
+SRC_URI_append_dm900 = " file://fix_build_arm.patch;patch=1"
 
 S = "${WORKDIR}/mt7610u_wifi_sta_v3002_dpo_20130916"
 
