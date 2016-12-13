@@ -1,6 +1,6 @@
 inherit kernel machine_kernel_pr
 
-MACHINE_KERNEL_PR_append = ".14"
+MACHINE_KERNEL_PR_append = ".15"
 
 PATCHREV = "9321e2fc1ab885c955d9134f4c9b5c9b5a4e56b3"
 PATCHLEVEL = "28"
@@ -11,6 +11,7 @@ SRC_URI = " \
     http://dreamboxupdate.com/download/kernel-patches/linux-dreambox-${PV}-${PATCHREV}.patch.xz;apply=yes;name=dream-patch \
     file://0001-dm900-enable-support-for-rtl8192ce-based-usb-wlan-st.patch \
     file://0001-removed-Abocom-WLAN-USB-stick-0x07b8-0x8188-from-rtl.patch \
+    file://0001-DVB-dvb_ringbuffer-add-missing-smp-write-barrier.patch \
     file://defconfig \
 "
 
