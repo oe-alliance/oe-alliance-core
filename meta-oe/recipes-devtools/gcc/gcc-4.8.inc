@@ -2,11 +2,11 @@ require gcc-common.inc
 
 # Third digit in PV should be incremented after a minor release
 
-PV = "4.8.4"
+PV = "4.8.5"
 
 # BINV should be incremented to a revision after a minor gcc release
 
-BINV = "4.8.4"
+BINV = "4.8.5"
 
 FILESEXTRAPATHS =. "${FILE_DIRNAME}/gcc-4.8:"
 
@@ -69,9 +69,10 @@ SRC_URI = "\
     file://0047-repomembug.patch \
     file://0049-Enable-SPE-AltiVec-generation-on-powepc-linux-target.patch \
     file://target-gcc-includedir.patch \
+    file://0051-gcc-483-universal-initializer-no-warning.patch \
 "
-SRC_URI[md5sum] = "5a84a30839b2aca22a2d723de2a626ec"
-SRC_URI[sha256sum] = "4a80aa23798b8e9b5793494b8c976b39b8d9aa2e53cd5ed5534aff662a7f8695"
+SRC_URI[md5sum] = "80d2c2982a3392bb0b89673ff136e223"
+SRC_URI[sha256sum] = "22fb1e7e0f68a63cee631d85b20461d1ea6bda162f03096350e38c8d427ecf23"
 
 S = "${TMPDIR}/work-shared/gcc-${PV}-${PR}/gcc-${PV}"
 B = "${WORKDIR}/gcc-${PV}/build.${HOST_SYS}.${TARGET_SYS}"
@@ -105,16 +106,6 @@ EXTRA_OECONF_INITIAL = "\
     --disable-lto \
     --disable-plugin \
     --enable-decimal-float=no \
-"
-
-EXTRA_OECONF_INTERMEDIATE = "\
-    --disable-libmudflap \
-    --disable-libgomp \
-    --disable-libquadmath \
-    --with-system-zlib \
-    --disable-lto \
-    --disable-plugin \
-    --disable-libssp \
 "
 
 EXTRA_OECONF_append_libc-uclibc = " --disable-decimal-float "
