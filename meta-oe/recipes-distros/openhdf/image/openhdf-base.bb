@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=4d92cd373abda3937c2bc47fbc49d
 ALLOW_EMPTY_${PN} = "1"
 
 PV = "1.0"
-PR = "r22"
+PR = "r23"
 
 inherit packagegroup
 
@@ -15,16 +15,30 @@ RDEPENDS_${PN} = "\
     openhdf-enigma2 \
     openhdf-bootlogo \
     openhdf-spinner \
+    openssh-sftp-server \
     ntfs-3g \
-	curl \
+    curl \
     hddtemp \
     busybox-cron \
     python-gdata \
     python-requests \
+    python-imaging \
     unrar \
     ofgwrite \
     packagegroup-base-smbfs-client \
     rtmpdump \
-    ${@base_contains("MACHINE_FEATURES", "dreambox", "", "ofgwrite", d)} \
+    ${@base_contains("MACHINE_FEATURES", "smallflash", "", \
+    " \
+    enigma2-plugin-extensions-openwebif-themes \
+    enigma2-plugin-extensions-openwebif-webtv \
+    enigma2-plugin-extensions-openwebif-vxg \
+    exteplayer3 \
+    gstplayer \
+    ffmpeg \
+    enigma2-plugin-systemplugins-serviceapp \
+    zip \
+    ", d)} \
+    ${@base_contains("MACHINE_FEATURES", "dreamboxv1", "", "ofgwrite", d)} \
+    ${@base_contains("TUNE_FEATURES", "armv7a", "glibc-compat", "", d)} \
     libungif \
     "
