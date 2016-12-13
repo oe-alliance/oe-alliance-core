@@ -8,10 +8,10 @@ require conf/license/license-gplv2.inc
 
 inherit gitpkgv
 SRCREV = "${AUTOREV}"
-PV = "7.3+git${SRCPV}"
-PKGV = "7.3+git${GITPKGV}"
-VER ="7.3"
-PR = "r1"
+PV = "7.6+git${SRCPV}"
+PKGV = "7.6+git${GITPKGV}"
+VER ="7.6"
+PR = "r0"
 
 
 SRC_URI="git://github.com/openatv/enigma2-plugin-extensions-cooltvguide.git"
