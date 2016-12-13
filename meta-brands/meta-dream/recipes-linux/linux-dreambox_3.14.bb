@@ -40,5 +40,3 @@ KERNEL_DEVICETREE = "dreambox-${MACHINE}.dtb"
 
 do_rm_work() {
 }
-do_package_qa() {
-}
