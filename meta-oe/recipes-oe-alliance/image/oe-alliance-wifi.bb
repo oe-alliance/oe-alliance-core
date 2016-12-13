@@ -42,7 +42,7 @@ RDEPENDS_${PN} = "\
     ${@base_contains("MACHINE_FEATURES", "wifi61", "rt61", "", d)} \
     ${@base_contains("DISTRO_FEATURES", "wifi-extra", "${OPTIONAL_WIFIDRIVERS}", "", d)} \
     ${@base_contains("DISTRO_NAME", "openatv", "enigma2-plugin-drivers-network-usb-rtl8192cu", "", d)} \
-    ${@base_contains("DISTRO_NAME", "openvix", "enigma2-plugin-drivers-network-usb-rtl8192cu", "", d)} \
+    ${@base_contains("DISTRO_NAME", "openvix", "enigma2-plugin-drivers-network-usb-rtl8192cu-rev2", "", d)} \
     ${@base_contains("DISTRO_NAME", "axassupport", "enigma2-plugin-drivers-network-usb-rtl8192cu", "", d)} \
     ${@base_contains("DISTRO_NAME", "openxta", "enigma2-plugin-drivers-network-usb-rtl8192cu", "", d)} \
     ${@base_contains("DISTRO_NAME", "opennfr", "enigma2-plugin-drivers-network-usb-rtl8192cu", "", d)} \
