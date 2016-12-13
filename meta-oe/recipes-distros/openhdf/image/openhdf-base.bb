@@ -22,6 +22,7 @@ RDEPENDS_${PN} = "\
     busybox-cron \
     python-gdata \
     python-requests \
+    python-imaging \
     unrar \
     ofgwrite \
     packagegroup-base-smbfs-client \
