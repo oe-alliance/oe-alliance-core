@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=4d92cd373abda3937c2bc47fbc49d
 ALLOW_EMPTY_${PN} = "1"
 
 PV = "1.0"
-PR = "r23"
+PR = "r24"
 
 inherit packagegroup
 
@@ -25,6 +25,7 @@ RDEPENDS_${PN} = "\
     python-imaging \
     unrar \
     ofgwrite \
+    zip \
     packagegroup-base-smbfs-client \
     rtmpdump \
     ${@base_contains("MACHINE_FEATURES", "smallflash", "", \
@@ -32,13 +33,7 @@ RDEPENDS_${PN} = "\
     enigma2-plugin-extensions-openwebif-themes \
     enigma2-plugin-extensions-openwebif-webtv \
     enigma2-plugin-extensions-openwebif-vxg \
-    exteplayer3 \
-    gstplayer \
-    ffmpeg \
-    enigma2-plugin-systemplugins-serviceapp \
-    zip \
     ", d)} \
-    ${@base_contains("MACHINE_FEATURES", "dreamboxv1", "", "ofgwrite", d)} \
     ${@base_contains("TUNE_FEATURES", "armv7a", "glibc-compat", "", d)} \
     libungif \
     "
