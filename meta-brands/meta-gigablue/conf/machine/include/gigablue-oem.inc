@@ -111,8 +111,41 @@ ${@base_contains('MACHINEBUILD', 'gbultraueh', 'gb73625' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'gbx3h', 'gb73625' , '', d)}\
 "
 
-KERNEL_FILE = "kernel.bin"
-ROOTFS_FILE = "rootfs.bin"
+KERNEL_FILE = "\
+${@base_contains('MACHINEBUILD', 'gb800se', 'kernel.bin' , '', d)}\
+${@base_contains('MACHINEBUILD', 'gb800seplus', 'kernel.bin' , '', d)}\
+${@base_contains('MACHINEBUILD', 'gb800solo', 'kernel.bin' , '', d)}\
+${@base_contains('MACHINEBUILD', 'gb800ue', 'kernel.bin' , '', d)}\
+${@base_contains('MACHINEBUILD', 'gb800ueplus', 'kernel.bin' , '', d)}\
+${@base_contains('MACHINEBUILD', 'gbipbox', 'kernel.bin' , '', d)}\
+${@base_contains('MACHINEBUILD', 'gbquad', 'kernel.bin' , '', d)}\
+${@base_contains('MACHINEBUILD', 'gbquadplus', 'kernel.bin' , '', d)}\
+${@base_contains('MACHINEBUILD', 'gbultrase', 'kernel.bin' , '', d)}\
+${@base_contains('MACHINEBUILD', 'gbultraue', 'kernel.bin' , '', d)}\
+${@base_contains('MACHINEBUILD', 'gbx1', 'kernel.bin' , '', d)}\
+${@base_contains('MACHINEBUILD', 'gbx3', 'kernel.bin' , '', d)}\
+${@base_contains('MACHINEBUILD', 'gbx2', 'kernel.bin' , '', d)}\
+${@base_contains('MACHINEBUILD', 'gbultraueh', 'kernel.bin' , '', d)}\
+${@base_contains('MACHINEBUILD', 'gbx3h', 'kernel.bin' , '', d)}\
+"
+
+ROOTFS_FILE = "\
+${@base_contains('MACHINEBUILD', 'gb800se', 'rootfs.bin' , '', d)}\
+${@base_contains('MACHINEBUILD', 'gb800seplus', 'rootfs.bin' , '', d)}\
+${@base_contains('MACHINEBUILD', 'gb800solo', 'rootfs.bin' , '', d)}\
+${@base_contains('MACHINEBUILD', 'gb800ue', 'rootfs.bin' , '', d)}\
+${@base_contains('MACHINEBUILD', 'gb800ueplus', 'rootfs.bin' , '', d)}\
+${@base_contains('MACHINEBUILD', 'gbipbox', 'rootfs.bin' , '', d)}\
+${@base_contains('MACHINEBUILD', 'gbquad', 'rootfs.bin' , '', d)}\
+${@base_contains('MACHINEBUILD', 'gbquadplus', 'rootfs.bin' , '', d)}\
+${@base_contains('MACHINEBUILD', 'gbultrase', 'rootfs.bin' , '', d)}\
+${@base_contains('MACHINEBUILD', 'gbultraue', 'rootfs.bin' , '', d)}\
+${@base_contains('MACHINEBUILD', 'gbx1', 'rootfs.bin' , '', d)}\
+${@base_contains('MACHINEBUILD', 'gbx3', 'rootfs.bin' , '', d)}\
+${@base_contains('MACHINEBUILD', 'gbx2', 'rootfs.bin' , '', d)}\
+${@base_contains('MACHINEBUILD', 'gbultraueh', 'rootfs.bin' , '', d)}\
+${@base_contains('MACHINEBUILD', 'gbx3h', 'rootfs.bin' , '', d)}\
+"
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS = " \
     gigablue-dvb-modules-${MACHINE_DRIVER} \
@@ -158,23 +191,18 @@ PREFERRED_PROVIDER_virtual/transtreamproxy = "gb-transtreamproxy"
 
 DVBMEDIASINK_CONFIG = "--with-wmv"
 
-TARGET_ARCH = "mipsel"
-DEFAULTTUNE = "mips32el"
-
 GLIBC_EXTRA_OECONF = "--with-tls"
 
 PREFERRED_PROVIDER_virtual/kernel = "linux-gigablue"
 
-KERNEL_IMAGETYPE = "vmlinux"
 KERNEL_OUTPUT = "${KERNEL_IMAGETYPE}"
 KERNEL_CONSOLE = "ttyS0,115200n8"
 
 
-MACHINE_FEATURES += "3dtv alsa hdmicec switchoff bootsplash boxmodel omb skins1080 feature1 feature2 blindscan-tbs"
+MACHINE_FEATURES += "3dtv alsa hdmicec switchoff bootsplash boxmodel skins1080 feature1 feature2 blindscan-tbs"
 
 BOOTLOGO_FILENAME = "splash.bin"
 
-require conf/machine/include/tune-mips32.inc
 require conf/machine/include/soc-family.inc
 
 IMAGE_CMD_ubi_prepend = " \
