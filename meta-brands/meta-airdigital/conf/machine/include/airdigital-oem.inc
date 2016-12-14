@@ -19,6 +19,8 @@ ${@base_contains('MACHINEBUILD', 'zgemmai55', 'I55' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'novacombo', 'NOVA COMBO' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'novaip', 'NOVA IP' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'novatwin', 'NOVA TWIN' , '', d)}\
+${@base_contains('MACHINEBUILD', 'zgemmah3ac', 'H3 AC' , '', d)}\
+${@base_contains('MACHINEBUILD', 'zgemmah5ac', 'H5 AC' , '', d)}\
 "
 
 MACHINE_BRAND = "\
@@ -37,6 +39,8 @@ ${@base_contains('MACHINEBUILD', 'zgemmai55', 'Zgemma' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'novacombo', 'EVO' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'novaip', 'EVO' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'novatwin', 'EVO' , '', d)}\
+${@base_contains('MACHINEBUILD', 'zgemmah3ac', 'Zgemma' , '', d)}\
+${@base_contains('MACHINEBUILD', 'zgemmah5ac', 'Zgemma' , '', d)}\
 "
 
 IMAGEDIR ?= "\
@@ -55,6 +59,8 @@ ${@base_contains('MACHINEBUILD', 'zgemmai55', 'zgemma/i55' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'novacombo', 'novacombo' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'novaip', 'novaip' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'novatwin', 'novatwin' , '', d)}\
+${@base_contains('MACHINEBUILD', 'zgemmah3ac', 'zgemma/h3' , '', d)}\
+${@base_contains('MACHINEBUILD', 'zgemmah5ac', 'zgemma/h5' , '', d)}\
 "
 
 MACHINE_DRIVER = "\
@@ -73,6 +79,8 @@ ${@base_contains('MACHINEBUILD', 'zgemmai55', 'i55' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'novacombo', 'novacombo' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'novaip', 'novaip' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'novatwin', 'novatwin' , '', d)}\
+${@base_contains('MACHINEBUILD', 'zgemmah3ac', 'h3' , '', d)}\
+${@base_contains('MACHINEBUILD', 'zgemmah5ac', 'h5' , '', d)}\
 "
 
 MTD_KERNEL = "mtd1"
