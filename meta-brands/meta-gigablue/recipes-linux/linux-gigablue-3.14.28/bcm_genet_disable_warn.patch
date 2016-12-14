@@ -1,0 +1,9 @@
+diff --git a/drivers/net/ethernet/broadcom/genet/Makefile b/drivers/net/ethernet/broadcom/genet/Makefile
+index 9b6885e..d24166e 100644
+--- a/drivers/net/ethernet/broadcom/genet/Makefile
++++ b/drivers/net/ethernet/broadcom/genet/Makefile
+@@ -1,2 +1,4 @@
+ obj-$(CONFIG_BCMGENET) += genet.o
+ genet-objs := bcmgenet.o bcmmii.o bcmgenet_wol.o
++
++EXTRA_CFLAGS += -Wno-error=date-time
