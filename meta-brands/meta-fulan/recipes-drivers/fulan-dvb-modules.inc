@@ -16,7 +16,7 @@ inherit module
 
 PACKAGES = "${PN} ${PN}-dev"
 
-INC_PR = "r41"
+INC_PR = "r42"
 PV = "${KV}+${SRCDATE}"
 
 PTI_NP_PATH ?= "/data/pti_np"
@@ -29,6 +29,7 @@ SRC_URI = " \
     file://silence_tuner_printk.patch;patch=1 \
     file://silence_stmfb_printk.patch;patch=1 \
     file://add_hdmi_colorspace_proc.patch;patch=1 \
+    file://add_stv090x_multistream.patch;patch=1 \
     file://ddbootup \
     file://sh4booster \
     file://modules.conf \
