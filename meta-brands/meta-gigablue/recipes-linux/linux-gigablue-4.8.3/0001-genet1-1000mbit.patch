@@ -1,0 +1,27 @@
+From 8f44aae0b2b5bfcabb6e8df0bb1c20c312dc18ac Mon Sep 17 00:00:00 2001
+From: arn354 <arn354@email.de>
+Date: Mon, 5 Dec 2016 13:18:58 +0100
+Subject: [PATCH] genet1-1000mbit
+
+---
+ drivers/brcmstb/board.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/drivers/brcmstb/board.c b/drivers/brcmstb/board.c
+index 64188e3..e33635d 100644
+--- a/drivers/brcmstb/board.c
++++ b/drivers/brcmstb/board.c
+@@ -379,6 +379,10 @@ void board_pinmux_setup(void)
+ 	brcm_moca_i2c_base = BPHYSADDR(BCHP_BSCA_REG_START);
+ #endif
+ 
++#if defined(CONFIG_BRCM_HAS_GENET_1)
++	genet_pdata[1].phy_speed = SPEED_1000;
++#endif
++
+ #elif defined(CONFIG_BCM7435)
+ 
+ 	PINMUX(16, gpio_088, 1);        /* MoCA LEDs */
+-- 
+2.8.1.windows.1
+
