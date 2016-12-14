@@ -1,0 +1,11 @@
+--- a/Makefile	2016-05-16 12:27:59.473281412 +0200
++++ b/Makefile	2016-05-16 12:28:42.889280668 +0200
+@@ -783,7 +783,7 @@
+ KBUILD_CFLAGS   += $(call cc-option,-Werror=date-time)
+ 
+ # enforce correct pointer usage
+-KBUILD_CFLAGS   += $(call cc-option,-Werror=incompatible-pointer-types)
++#KBUILD_CFLAGS   += $(call cc-option,-Werror=incompatible-pointer-types)
+ 
+ # use the deterministic mode of AR if available
+ KBUILD_ARFLAGS := $(call ar-option,D)
