@@ -32,7 +32,7 @@ ${@base_contains('MACHINEBUILD', 'mbtwinplus', 'twinplus' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'sf3038', 'sf3038' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'sf128', 'g100' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'sf138', 'g100' , '', d)}\
-${@base_contains('MACHINEBUILD', 'bre2zet2c', 'bre2ze_t2c' , '', d)}\
+${@base_contains('MACHINEBUILD', 'bre2zet2c', 'bre2zet2c' , '', d)}\
 "
 
 MTD_KERNEL = "mtd1"
