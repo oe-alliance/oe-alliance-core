@@ -19,6 +19,7 @@ ${@base_contains('MACHINEBUILD', 'gbx3', 'X3' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'gbx2', 'X2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'gbultraueh', 'Ultra UEh' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'gbx3h', 'X3h' , '', d)}\
+${@base_contains('MACHINEBUILD', 'gbuhdquad', 'UHD QUAD 4k' , '', d)}\
 "
 
 MACHINE_BRAND = "\
@@ -37,6 +38,7 @@ ${@base_contains('MACHINEBUILD', 'gbx3', 'GigaBlue' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'gbx2', 'GigaBlue' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'gbultraueh', 'GigaBlue' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'gbx3h', 'GigaBlue' , '', d)}\
+${@base_contains('MACHINEBUILD', 'gbuhdquad', 'GigaBlue' , '', d)}\
 "
 
 IMAGEDIR ?= "\
@@ -55,6 +57,7 @@ ${@base_contains('MACHINEBUILD', 'gbx3', 'gigablue/x3' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'gbx2', 'gigablue/x2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'gbultraueh', 'gigablue/ultraueh' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'gbx3h', 'gigablue/x3h' , '', d)}\
+${@base_contains('MACHINEBUILD', 'gbuhdquad', 'gigablue/uhdquad' , '', d)}\
 "
 
 MTD_KERNEL = "\
@@ -73,6 +76,7 @@ ${@base_contains('MACHINEBUILD', 'gbx3', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'gbx2', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'gbultraueh', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'gbx3h', 'mtd2' , '', d)}\
+${@base_contains('MACHINEBUILD', 'gbuhdquad', 'mmcblk0p1' , '', d)}\
 "
 
 MTD_ROOTFS = "\
@@ -91,6 +95,7 @@ ${@base_contains('MACHINEBUILD', 'gbx3', 'mtd0' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'gbx2', 'mtd0' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'gbultraueh', 'mtd0' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'gbx3h', 'mtd0' , '', d)}\
+${@base_contains('MACHINEBUILD', 'gbuhdquad', 'mmcblk0p4' , '', d)}\
 "
 
 MACHINE_DRIVER = "\
@@ -109,6 +114,7 @@ ${@base_contains('MACHINEBUILD', 'gbx3', 'gb7362' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'gbx2', 'gb73625' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'gbultraueh', 'gb73625' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'gbx3h', 'gb73625' , '', d)}\
+${@base_contains('MACHINEBUILD', 'gbuhdquad', 'gb7252' , '', d)}\
 "
 
 KERNEL_FILE = "\
@@ -127,6 +133,7 @@ ${@base_contains('MACHINEBUILD', 'gbx3', 'kernel.bin' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'gbx2', 'kernel.bin' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'gbultraueh', 'kernel.bin' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'gbx3h', 'kernel.bin' , '', d)}\
+${@base_contains('MACHINEBUILD', 'gbuhdquad', 'kernel.bin' , '', d)}\
 "
 
 ROOTFS_FILE = "\
@@ -145,6 +152,7 @@ ${@base_contains('MACHINEBUILD', 'gbx3', 'rootfs.bin' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'gbx2', 'rootfs.bin' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'gbultraueh', 'rootfs.bin' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'gbx3h', 'rootfs.bin' , '', d)}\
+${@base_contains('MACHINEBUILD', 'gbuhdquad', 'rootfs.tar.bz2' , '', d)}\
 "
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS = " \
@@ -182,16 +190,11 @@ MACHINE_EXTRA_RDEPENDS = "\
     ${@base_contains('MACHINEBUILD', 'gbx2', 'enigma2-plugin-extensions-gbipboxclient' , '', d)} \
 "
 
-
 include conf/machine/include/autoload-filesystems.inc
 
 PREFERRED_PROVIDER_virtual/blindscan-dvbc = "gigablue-blindscan-utils"
 PREFERRED_PROVIDER_virtual/blindscan-dvbs = "gigablue-blindscan-utils"
 PREFERRED_PROVIDER_virtual/transtreamproxy = "gb-transtreamproxy"
-
-DVBMEDIASINK_CONFIG = "--with-wmv"
-
-GLIBC_EXTRA_OECONF = "--with-tls"
 
 PREFERRED_PROVIDER_virtual/kernel = "linux-gigablue"
 
@@ -205,31 +208,3 @@ BOOTLOGO_FILENAME = "splash.bin"
 
 require conf/machine/include/soc-family.inc
 
-IMAGE_CMD_ubi_prepend = " \
-    rm -rf ${IMAGE_ROOTFS}/boot/*; \
-    rm -rf ${IMAGE_ROOTFS}/tmp/*; \
-    "
-
-IMAGE_CMD_ubi_append = "\
-    mkdir -p ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}; \
-    ${@base_contains("MACHINE_FEATURES", "gigabluelcd220", "cp ${DEPLOY_DIR_IMAGE}/lcdsplash220.bin ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/lcdsplash.bin;" , "", d)} \
-    ${@base_contains("MACHINE_FEATURES", "gigabluelcd220", "cp ${DEPLOY_DIR_IMAGE}/lcdwarning220.bin ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/lcdwarning.bin;" , "", d)} \
-    ${@base_contains("MACHINE_FEATURES", "gigabluelcd220", "cp ${DEPLOY_DIR_IMAGE}/lcdwaitkey220.bin ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/lcdwaitkey.bin;" , "", d)} \
-    ${@base_contains("MACHINE_FEATURES", "gigabluelcd400", "cp ${DEPLOY_DIR_IMAGE}/lcdsplash400.bin ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/lcdsplash.bin;" , "", d)} \
-    ${@base_contains("MACHINE_FEATURES", "gigabluelcd400", "cp ${DEPLOY_DIR_IMAGE}/lcdwarning400.bin ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/lcdwarning.bin;" , "", d)} \
-    ${@base_contains("MACHINE_FEATURES", "gigabluelcd400", "cp ${DEPLOY_DIR_IMAGE}/lcdwaitkey400.bin ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/lcdwaitkey.bin;" , "", d)} \
-    cp ${DEPLOY_DIR_IMAGE}/splash.bin ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/splash.bin; \
-    cp ${DEPLOY_DIR_IMAGE}/warning.bin ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/warning.bin; \
-    mv ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.ubi ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/${ROOTFS_FILE}; \
-    gzip -f -c ${DEPLOY_DIR_IMAGE}/vmlinux-${MACHINE}.bin > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/${KERNEL_FILE}; \
-    echo ${IMAGE_VER_STRING} > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/imageversion; \
-    echo "rename this file to 'force' to force an update without confirmation" > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/noforce; \
-    cd ${DEPLOY_DIR_IMAGE}; \
-    zip -r ${IMAGE_NAME}_usb.zip gigablue/*; \
-    rm -f ${DEPLOY_DIR_IMAGE}/*.ubi; \
-    rm -f ${DEPLOY_DIR_IMAGE}/*.ubifs; \
-    rm -f ${DEPLOY_DIR_IMAGE}/*.manifest; \
-    rm -f ${DEPLOY_DIR_IMAGE}/.ubifs; \
-    rm -f ${DEPLOY_DIR_IMAGE}/.manifest; \
-    rm -rf ${DEPLOY_DIR_IMAGE}/gigablue; \
-    "
