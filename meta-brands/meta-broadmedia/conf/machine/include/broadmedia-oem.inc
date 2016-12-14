@@ -8,6 +8,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'mbtwinplus', 'Premium Twin Plus' , '', d)}
 ${@bb.utils.contains('MACHINEBUILD', 'sf3038', 'SF3038' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'sf128', 'SF128' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'sf138', 'SF138' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'bre2zet2c', 'BRE2ZE T2/C' , '', d)}\
 "
 
 MACHINE_BRAND = "\
@@ -15,6 +16,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'mbtwinplus', 'Miraclebox' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'sf3038', 'Octagon' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'sf128', 'Octagon' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'sf138', 'Octagon' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'bre2zet2c', 'WWIO' , '', d)}\
 "
 
 IMAGEDIR ?= "\
@@ -22,6 +24,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'mbtwinplus', 'miraclebox/twinplus' , '', d
 ${@bb.utils.contains('MACHINEBUILD', 'sf3038', 'sf3038' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'sf128', 'sf128' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'sf138', 'sf138' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'bre2zet2c', 'bre2ze_t2c' , '', d)}\
 "
 
 MACHINE_DRIVER = "\
@@ -29,6 +32,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'mbtwinplus', 'twinplus' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'sf3038', 'sf3038' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'sf128', 'g100' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'sf138', 'g100' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'bre2zet2c', 'bre2zet2c' , '', d)}\
 "
 
 MTD_KERNEL = "mtd1"
@@ -55,6 +59,7 @@ include conf/machine/include/autoload-filesystems.inc
 
 DVBMEDIASINK_CONFIG = "--with-wma --with-wmv --with-pcm --with-dts --with-eac3 \
     ${@bb.utils.contains('MACHINE', 'g100', ' --with-h265 --with-vb6 --with-vb8 --with-spark' , '', d)} \
+    ${@bb.utils.contains('MACHINE', 'g101', ' --with-h265 --with-vb6 --with-vb8 --with-spark' , '', d)} \
 "
 
 TARGET_ARCH = "mipsel"
