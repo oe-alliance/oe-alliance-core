@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=4d92cd373abda3937c2bc47fbc49d
 ALLOW_EMPTY_${PN} = "1"
 
 PV = "1.0"
-PR = "r25"
+PR = "r26"
 
 inherit packagegroup
 
@@ -15,7 +15,6 @@ RDEPENDS_${PN} = "\
     openhdf-enigma2 \
     openhdf-bootlogo \
     openhdf-spinner \
-    openssh-sftp-server \
     ntfs-3g \
     curl \
     hddtemp \
@@ -23,10 +22,8 @@ RDEPENDS_${PN} = "\
     python-gdata \
     python-requests \
     python-plistlib \
-    python-imaging \
     unrar \
     ofgwrite \
-    zip \
     packagegroup-base-smbfs-client \
     rtmpdump \
     ${@base_contains("MACHINE_FEATURES", "smallflash", "", \
