@@ -15,7 +15,6 @@ RDEPENDS_${PN} = "\
     openhdf-enigma2 \
     openhdf-bootlogo \
     openhdf-spinner \
-    openssh-sftp-server \
     ntfs-3g \
     curl \
     hddtemp \
@@ -23,7 +22,6 @@ RDEPENDS_${PN} = "\
     python-gdata \
     python-requests \
     python-plistlib \
-    python-imaging \
     unrar \
     ofgwrite \
     packagegroup-base-smbfs-client \
