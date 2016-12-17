@@ -61,10 +61,12 @@ RDEPENDS_flash-scripts_append_bcm73625 = " \
 "
 
 FILES_flash-scripts = " \
+    ${sbindir}/flash-fsbl \
     ${sbindir}/flash-rescue \
     ${sbindir}/flash-kernel \
     ${sbindir}/flash-ssbl \
     ${sbindir}/librecovery \
+    ${sbindir}/readspi \
     ${sbindir}/select-boot-source \
     ${sbindir}/to-the-rescue \
     ${sbindir}/writespi \
