@@ -44,8 +44,8 @@ do_install() {
 	install -m 0644 ${S}/bcm43569-firmware.bin ${D}/lib/firmware/bcm43569/
 	install -m 0644 ${S}/bcm43569_iton.nvm ${D}/lib/firmware/bcm43569/
 
-        install -d ${D}${INIT_D_DIR}
-        install -m 0755 ${S}/${INITSCRIPT_NAME} ${D}${INIT_D_DIR}/${INITSCRIPT_NAME}
+	install -d ${D}${INIT_D_DIR}
+	install -m 0755 ${S}/${INITSCRIPT_NAME} ${D}${INIT_D_DIR}/${INITSCRIPT_NAME}
 }
 
 INSANE_SKIP_${PN} = "already-stripped"

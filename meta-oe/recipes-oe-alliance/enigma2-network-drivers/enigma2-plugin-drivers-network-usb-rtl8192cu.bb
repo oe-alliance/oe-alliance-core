@@ -1,4 +1,4 @@
-SUMMARY = "Single-Chip IEEE 802.11b/g/n 2T2R WLAN Controller with USB 2.0 Interface"
+SUMMARY = "new universal rt18xxx kernel driver"
 PACKAGE_ARCH = "all"
 
 require conf/license/license-gplv2.inc
@@ -10,6 +10,6 @@ RRECOMMENDS_${PN} = " \
     "
 
 PV = "1.0"
-PR = "r3"
+PR = "r4"
 
 ALLOW_EMPTY_${PN} = "1"

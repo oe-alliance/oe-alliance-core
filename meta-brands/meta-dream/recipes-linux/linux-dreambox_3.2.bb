@@ -14,19 +14,22 @@ PATCHREV = "3c7230bc0819495db75407c365f4d1db70008044"
 PATCHLEVEL = "68"
 
 SRC_URI = " \
-    ${KERNELORG_MIRROR}/linux/kernel/v3.x/linux-3.2.tar.bz2;name=kernel \
-    ${KERNELORG_MIRROR}/linux/kernel/v3.x/patch-3.2.${PATCHLEVEL}.xz;apply=yes;name=kernel-patch \
-    http://sources.dreamboxupdate.com/download/kernel-patches/${P}-${PATCHREV}.patch.bz2;name=dmm-patch \
+    ${KERNELORG_MIRROR}/linux/kernel/v3.x/linux-${PV}.tar.xz;name=kernel \
+    ${KERNELORG_MIRROR}/linux/kernel/v3.x/patch-${PV}.${PATCHLEVEL}.xz;apply=yes;name=stable-patch \
+    http://sources.dreamboxupdate.com/download/kernel-patches/${P}-${PATCHREV}.patch.bz2;name=dream-patch \
     http://download.filesystems.org/unionfs/unionfs-2.x/unionfs-2.5.11_for_3.2.2.diff.gz;name=unionfs \
-    file://clear_sublevel.patch \
+    file://0001-correctly-initiate-nand-flash-ecc-config-when-old-2n.patch \ 
     file://0001-Revert-MIPS-Fix-potencial-corruption.patch \
     file://fadvise_dontneed_change.patch \
     file://fix-proc-cputype.patch \
-    file://mips-refactor-clearpage-and-copypage.patch \
     file://rtl8712-backport-b.patch \
     file://rtl8712-backport-c.patch \
     file://rtl8712-backport-d.patch \
-    file://make-3.82-hack.patch \
+    file://0007-CHROMIUM-make-3.82-hack-to-fix-differing-behaviour-b.patch \
+    file://0008-MIPS-Fix-build-with-binutils-2.24.51.patch \
+    file://0009-MIPS-Refactor-clear_page-and-copy_page-functions.patch \
+    file://0010-BRCMSTB-Fix-build-with-binutils-2.24.51.patch \
+    file://0011-staging-rtl8712-rtl8712-avoid-lots-of-build-warnings.patch \
     file://0001-brmcnand_base-disable-flash-BBT-on-64MB-nand.patch \
     file://0002-ubifs-add-config-option-to-use-zlib-as-default-compr.patch \
     file://em28xx_fix_terratec_entries.patch \
@@ -38,9 +41,6 @@ SRC_URI = " \
     file://dvb_usb_disable_rc_polling.patch \
     file://dvb-usb-smsdvb_fix_frontend.patch \
     file://0001-it913x-backport-changes-to-3.2-kernel.patch \
-    file://0001-correctly-initiate-nand-flash-ecc-config-when-old-2n.patch \
-    file://rtl8712-fix-warnings.patch \
-    file://fixme-hardfloat.patch \
     file://defconfig \
     file://kernel-add-support-for-gcc6.patch \
     file://misc_latin1_to_utf8_conversions.patch \
@@ -73,12 +73,12 @@ PKG_kernel-image = "kernel-image"
 RPROVIDES_kernel-base = "kernel-${KERNEL_VERSION}"
 RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION} ${KERNEL_BUILTIN_MODULES}"
 
-SRC_URI[kernel.md5sum] = "7ceb61f87c097fc17509844b71268935"
-SRC_URI[kernel.sha256sum] = "c881fc2b53cf0da7ca4538aa44623a7de043a41f76fd5d0f51a31f6ed699d463"
-SRC_URI[kernel-patch.md5sum] = "8ba205b73dcd6aa6748d916af294b6f0"
-SRC_URI[kernel-patch.sha256sum] = "77368e2ab9d8d9282ff6e00973fe0ba7948e6b519f2efcab3b008c59526f1bd3"
-SRC_URI[dmm-patch.md5sum] = "9bce4d986a4bfcccdc4b2fecd849269d"
-SRC_URI[dmm-patch.sha256sum] = "8914df36eb1f6a270d2b32c46d93cb81bbaae02604fba6135a9b1509e1ec1d84"
+SRC_URI[kernel.md5sum] = "364066fa18767ec0ae5f4e4abcf9dc51"
+SRC_URI[kernel.sha256sum] = "dd96ed02b53fb5d57762e4b1f573460909de472ca588f81ec6660e4a172e7ba7"
+SRC_URI[stable-patch.md5sum] = "8ba205b73dcd6aa6748d916af294b6f0"
+SRC_URI[stable-patch.sha256sum] = "77368e2ab9d8d9282ff6e00973fe0ba7948e6b519f2efcab3b008c59526f1bd3"
+SRC_URI[dream-patch.md5sum] = "9bce4d986a4bfcccdc4b2fecd849269d"
+SRC_URI[dream-patch.sha256sum] = "8914df36eb1f6a270d2b32c46d93cb81bbaae02604fba6135a9b1509e1ec1d84"
 SRC_URI[unionfs.md5sum] = "06e7c9f6cafd49b72184be851116c511"
 SRC_URI[unionfs.sha256sum] = "ce6ffa3c17a11dcca24196c11f6efc95c59b65a5b99958e73e8d4cc8e4b1f1ef"
 
@@ -104,6 +104,10 @@ do_install_append() {
 
 FILES_kernel-image += "${KERNEL_IMAGEDEST}/autoexec*.bat"
 FILES_kernel-vmlinux = "/boot/vmlinux-${KERNEL_VERSION}*"
+
+do_configure_prepend() {
+        sed -e "/^SUBLEVEL = /d" -i ${S}/Makefile
+}
 
 pkg_preinst_kernel-image() {
     if [ -z "$D" ]

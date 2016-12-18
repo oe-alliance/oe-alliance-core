@@ -17,6 +17,9 @@ ${@bb.utils.contains('MACHINEBUILD', 'gbultraue', 'Ultra UE' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbx1', 'X1' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbx3', 'X3' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbx2', 'X2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbultraueh', 'Ultra UEh' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbx3h', 'X3h' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbuhdquad', 'UHD QUAD 4k' , '', d)}\
 "
 
 MACHINE_BRAND = "\
@@ -33,6 +36,9 @@ ${@bb.utils.contains('MACHINEBUILD', 'gbultraue', 'GigaBlue' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbx1', 'GigaBlue' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbx3', 'GigaBlue' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbx2', 'GigaBlue' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbultraueh', 'GigaBlue' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbx3h', 'GigaBlue' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbuhdquad', 'GigaBlue' , '', d)}\
 "
 
 IMAGEDIR ?= "\
@@ -49,6 +55,9 @@ ${@bb.utils.contains('MACHINEBUILD', 'gbultraue', 'gigablue/ultraue' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbx1', 'gigablue/x1' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbx3', 'gigablue/x3' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbx2', 'gigablue/x2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbultraueh', 'gigablue/ultraueh' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbx3h', 'gigablue/x3h' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbuhdquad', 'gigablue/uhdquad' , '', d)}\
 "
 
 MTD_KERNEL = "\
@@ -65,6 +74,9 @@ ${@bb.utils.contains('MACHINEBUILD', 'gbultraue', 'mtd2' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbx1', 'mtd2' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbx3', 'mtd2' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbx2', 'mtd2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbultraueh', 'mtd2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbx3h', 'mtd2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbuhdquad', 'mmcblk0p1' , '', d)}\
 "
 
 MTD_ROOTFS = "\
@@ -81,6 +93,9 @@ ${@bb.utils.contains('MACHINEBUILD', 'gbultraue', 'mtd0' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbx1', 'mtd0' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbx3', 'mtd0' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbx2', 'mtd0' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbultraueh', 'mtd0' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbx3h', 'mtd0' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbuhdquad', 'mmcblk0p4' , '', d)}\
 "
 
 MACHINE_DRIVER = "\
@@ -97,10 +112,48 @@ ${@bb.utils.contains('MACHINEBUILD', 'gbultraue', 'gb7362' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbx1', 'gb7362' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbx3', 'gb7362' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbx2', 'gb73625' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbultraueh', 'gb73625' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbx3h', 'gb73625' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbuhdquad', 'gb7252' , '', d)}\
 "
 
-KERNEL_FILE = "kernel.bin"
-ROOTFS_FILE = "rootfs.bin"
+KERNEL_FILE = "\
+${@bb.utils.contains('MACHINEBUILD', 'gb800se', 'kernel.bin' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gb800seplus', 'kernel.bin' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gb800solo', 'kernel.bin' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gb800ue', 'kernel.bin' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gb800ueplus', 'kernel.bin' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbipbox', 'kernel.bin' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbquad', 'kernel.bin' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbquadplus', 'kernel.bin' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbultrase', 'kernel.bin' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbultraue', 'kernel.bin' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbx1', 'kernel.bin' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbx3', 'kernel.bin' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbx2', 'kernel.bin' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbultraueh', 'kernel.bin' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbx3h', 'kernel.bin' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbuhdquad', 'kernel.bin' , '', d)}\
+"
+
+ROOTFS_FILE = "\
+${@bb.utils.contains('MACHINEBUILD', 'gb800se', 'rootfs.bin' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gb800seplus', 'rootfs.bin' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gb800solo', 'rootfs.bin' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gb800ue', 'rootfs.bin' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gb800ueplus', 'rootfs.bin' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbipbox', 'rootfs.bin' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbquad', 'rootfs.bin' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbquadplus', 'rootfs.bin' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbultrase', 'rootfs.bin' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbultraue', 'rootfs.bin' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbx1', 'rootfs.bin' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbx3', 'rootfs.bin' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbx2', 'rootfs.bin' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbultraueh', 'rootfs.bin' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbx3h', 'rootfs.bin' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbuhdquad', 'rootfs.tar.bz2' , '', d)}\
+"
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS = " \
     gigablue-dvb-modules-${MACHINE_DRIVER} \
@@ -137,59 +190,19 @@ MACHINE_EXTRA_RDEPENDS = "\
     ${@bb.utils.contains('MACHINEBUILD', 'gbx2', 'enigma2-plugin-extensions-gbipboxclient' , '', d)} \
 "
 
-
 include conf/machine/include/autoload-filesystems.inc
 
 PREFERRED_PROVIDER_virtual/blindscan-dvbc = "gigablue-blindscan-utils"
 PREFERRED_PROVIDER_virtual/blindscan-dvbs = "gigablue-blindscan-utils"
 PREFERRED_PROVIDER_virtual/transtreamproxy = "gb-transtreamproxy"
 
-DVBMEDIASINK_CONFIG = "--with-wmv"
-
-TARGET_ARCH = "mipsel"
-DEFAULTTUNE = "mips32el"
-
-GLIBC_EXTRA_OECONF = "--with-tls"
-
 PREFERRED_PROVIDER_virtual/kernel = "linux-gigablue"
 
-KERNEL_IMAGETYPE = "vmlinux"
 KERNEL_OUTPUT = "${KERNEL_IMAGETYPE}"
 KERNEL_CONSOLE = "ttyS0,115200n8"
 
-
-MACHINE_FEATURES += "3dtv alsa hdmicec switchoff bootsplash boxmodel omb skins1080 feature1 feature2 blindscan-tbs"
+MACHINE_FEATURES += "3dtv alsa hdmicec switchoff bootsplash boxmodel skins1080 feature1 feature2 blindscan-tbs"
 
 BOOTLOGO_FILENAME = "splash.bin"
 
-require conf/machine/include/tune-mips32.inc
 require conf/machine/include/soc-family.inc
-
-IMAGE_CMD_ubi_prepend = " \
-    rm -rf ${IMAGE_ROOTFS}/boot/*; \
-    rm -rf ${IMAGE_ROOTFS}/tmp/*; \
-    "
-
-IMAGE_CMD_ubi_append = "\
-    mkdir -p ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}; \
-    ${@bb.utils.contains("MACHINE_FEATURES", "gigabluelcd220", "cp ${DEPLOY_DIR_IMAGE}/lcdsplash220.bin ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/lcdsplash.bin;" , "", d)} \
-    ${@bb.utils.contains("MACHINE_FEATURES", "gigabluelcd220", "cp ${DEPLOY_DIR_IMAGE}/lcdwarning220.bin ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/lcdwarning.bin;" , "", d)} \
-    ${@bb.utils.contains("MACHINE_FEATURES", "gigabluelcd220", "cp ${DEPLOY_DIR_IMAGE}/lcdwaitkey220.bin ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/lcdwaitkey.bin;" , "", d)} \
-    ${@bb.utils.contains("MACHINE_FEATURES", "gigabluelcd400", "cp ${DEPLOY_DIR_IMAGE}/lcdsplash400.bin ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/lcdsplash.bin;" , "", d)} \
-    ${@bb.utils.contains("MACHINE_FEATURES", "gigabluelcd400", "cp ${DEPLOY_DIR_IMAGE}/lcdwarning400.bin ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/lcdwarning.bin;" , "", d)} \
-    ${@bb.utils.contains("MACHINE_FEATURES", "gigabluelcd400", "cp ${DEPLOY_DIR_IMAGE}/lcdwaitkey400.bin ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/lcdwaitkey.bin;" , "", d)} \
-    cp ${DEPLOY_DIR_IMAGE}/splash.bin ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/splash.bin; \
-    cp ${DEPLOY_DIR_IMAGE}/warning.bin ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/warning.bin; \
-    mv ${IMGDEPLOYDIR}/${IMAGE_NAME}.rootfs.ubi ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/${ROOTFS_FILE}; \
-    gzip -f -c ${DEPLOY_DIR_IMAGE}/vmlinux-${MACHINE}.bin > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/${KERNEL_FILE}; \
-    echo ${IMAGE_VER_STRING} > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/imageversion; \
-    echo "rename this file to 'force' to force an update without confirmation" > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/noforce; \
-    cd ${DEPLOY_DIR_IMAGE}; \
-    zip -r ${IMAGE_NAME}_usb.zip gigablue/*; \
-    rm -f ${DEPLOY_DIR_IMAGE}/*.ubi; \
-    rm -f ${DEPLOY_DIR_IMAGE}/*.ubifs; \
-    rm -f ${DEPLOY_DIR_IMAGE}/*.manifest; \
-    rm -f ${DEPLOY_DIR_IMAGE}/.ubifs; \
-    rm -f ${DEPLOY_DIR_IMAGE}/.manifest; \
-    rm -rf ${DEPLOY_DIR_IMAGE}/gigablue; \
-    "

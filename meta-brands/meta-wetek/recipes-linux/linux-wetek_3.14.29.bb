@@ -19,6 +19,7 @@ COMPATIBLE_MACHINE = "(wetekplay2)"
 
 
 SRC_URI = "http://source.mynonpublic.com/wetek/linux-amlogic-amlogic-3.14.y.tar.gz \
+   file://kernel-add-support-for-gcc6.patch \
    file://defconfig \
    file://boot.ini \
    file://uInitrd \

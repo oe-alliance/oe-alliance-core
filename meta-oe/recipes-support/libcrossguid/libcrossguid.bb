@@ -24,7 +24,8 @@ do_compile() {
 }
 
 do_install() {
-	mkdir -p ${D}/usr/{include,lib/pkgconfig}
+	mkdir -p ${D}/usr/include
+	mkdir -p ${D}/usr/lib/pkgconfig
 	install -m 644 ${S}/guid.h ${D}/usr/include
 	install -m 644 ${S}/libcrossguid.a ${D}/usr/lib
 	install -m 644 ${WORKDIR}/crossguid.pc ${D}/usr/lib/pkgconfig

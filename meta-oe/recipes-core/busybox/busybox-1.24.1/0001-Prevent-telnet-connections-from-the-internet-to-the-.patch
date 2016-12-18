@@ -1,0 +1,195 @@
+From 7c47267e131d04edbc8989206c0530409cf5223e Mon Sep 17 00:00:00 2001
+From: Betacentauri <betacentauri@arcor.de>
+Date: Tue, 6 Dec 2016 13:18:48 +0100
+Subject: [PATCH] Prevent telnet connections from the internet to the box
+
+Connection requests from LAN or via VPN tunnel still work.
+telnet is unsecure! Passwords are sent unencrypted.
+Use ssh instead.
+---
+ networking/telnetd.c | 162 +++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 162 insertions(+)
+
+diff --git a/networking/telnetd.c b/networking/telnetd.c
+index f06e958..27e6c93 100644
+--- a/networking/telnetd.c
++++ b/networking/telnetd.c
+@@ -637,6 +637,161 @@ static void handle_sigchld(int sig UNUSED_PARAM)
+ 
+ 	errno = save_errno;
+ }
++#include <ifaddrs.h>
++int is_permitted_ipv4_connection(unsigned long ipv4)
++{
++	struct ifaddrs *ifaddr, *ifa;
++	unsigned long own_ip;
++	unsigned long subnetmask;
++
++	if (((ipv4 >> 24) == 10)    // private class A 10.x.x.x/8
++	 || ((ipv4 >> 20) == 2753)  // private class B 172.16.x.x/12
++	 || ((ipv4 >> 16) == 49320) // private class C 192.168.x.x/16
++	 || ((ipv4 >> 16) == 43518) // link local 169.254.x.x/16
++	 || ( ipv4 == 2130706433))  // localhist 127.0.0.1
++	{
++		return 1;
++	}
++
++	// Check whether source ip is from own subnet
++	if (getifaddrs(&ifaddr) == 0)
++	{
++		for (ifa = ifaddr; ifa != NULL; ifa = ifa->ifa_next)
++		{
++			if (ifa->ifa_addr == NULL)
++				continue;
++			if (ifa->ifa_addr->sa_family == AF_INET)
++			{
++				own_ip = ntohl(((struct sockaddr_in*)ifa->ifa_addr)->sin_addr.s_addr);
++				subnetmask = ntohl(((struct sockaddr_in*)ifa->ifa_netmask)->sin_addr.s_addr);
++				if ((ipv4 & subnetmask) == (own_ip & subnetmask))
++				{
++					return 1;
++				}
++			}
++		}
++	}
++
++	printf("telnetd src ipv4 %08x\n", ipv4);
++
++	return 0;
++}
++
++int is_permitted_ipv6_connection(unsigned char* ipv6)
++{
++	struct ifaddrs *ifaddr, *ifa;
++	unsigned char buffer[16];
++	unsigned char own_ipv6[16];
++	unsigned char subnetmask[16];
++	unsigned long ipv4;
++	int m;
++	int mask_bits;
++
++	if ((ipv6[0] == 0xFC) // unique local unicast
++	 || (ipv6[0] == 0xFD) // unique local unicast
++	 || ((ipv6[0] == 0xFE) && ((ipv6[1] >> 6) == 0x2)))  // link local address
++	{
++		return 1;
++	}
++
++	// Check localhost
++	memset(buffer, 0, 16);
++	buffer[15] = 1;
++	if (memcmp(buffer, ipv6, 16) == 0)
++	{
++		return 1;
++	}
++
++	// Check ip4 mapped ipv6 address
++	memset(buffer, 0, 10);
++	memset(buffer + 10, 0xFF, 2);
++	if (memcmp(buffer, ipv6, 12) == 0)
++	{
++		memcpy(&ipv4, ipv6 + 12, 4);
++		return is_permitted_ipv4_connection(ntohl(ipv4));
++	}
++
++	// Check whether source ip is from own subnet
++	if (getifaddrs(&ifaddr) == 0)
++	{
++		for (ifa = ifaddr; ifa != NULL; ifa = ifa->ifa_next)
++		{
++			if (ifa->ifa_addr == NULL)
++				continue;
++			if (ifa->ifa_addr->sa_family == AF_INET6)
++			{
++				memcpy(own_ipv6, ((struct sockaddr_in6*)ifa->ifa_addr)->sin6_addr.s6_addr, 16);
++				memcpy(subnetmask, ((struct sockaddr_in6*)ifa->ifa_netmask)->sin6_addr.s6_addr, 16);
++
++				mask_bits = 128;
++				m = 15;
++				while (subnetmask[m] != 0xFF && m >= 0)
++				{
++					switch (subnetmask[m])
++					{
++						case 0x0 : mask_bits = mask_bits - 8; break;
++						case 0xFE: mask_bits = mask_bits - 7; break;
++						case 0xFC: mask_bits = mask_bits - 6; break;
++						case 0xF8: mask_bits = mask_bits - 5; break;
++						case 0xF0: mask_bits = mask_bits - 4; break;
++						case 0xE0: mask_bits = mask_bits - 3; break;
++						case 0xC0: mask_bits = mask_bits - 2; break;
++						case 0x80: mask_bits = mask_bits - 1; break;
++					}
++					m--;
++				}
++				if ((mask_bits % 8) == 0)  // if remainder is 0 use memcmp to compare the first bytes of the ipv6 addresses
++				{
++					if (memcmp(ipv6, own_ipv6, mask_bits / 8) == 0)
++					{
++						return 1;
++					}
++				}
++				else // else use memcmp to compare the first x bytes and a bitmask for x+1 byte.
++				{
++					unsigned char mask = ~((1 << (8 - (mask_bits % 8))) - 1); // calc bit mask
++					if ((memcmp(ipv6, own_ipv6, mask_bits / 8) == 0) && ((ipv6[mask_bits / 8] & mask) == (own_ipv6[mask_bits / 8] & mask)))
++					{
++						return 1;
++					}
++				}
++			}
++		}
++	}
++
++	printf("telnetd src ipv6 ");
++	for (int i=0; i<16; i++)
++		printf("%02x", ipv6[i]);
++	printf("\n");
++
++	return 0;
++}
++
++/* Checks whether source ip address is out of private ip address range or is from same subnet */
++int is_permitted_connection(int fd)
++{
++	int ret = 0;
++	unsigned long ipv4;
++	// get source ip
++	len_and_sockaddr *lsa = get_peer_lsa(fd);
++	if (lsa)
++	{
++		if (lsa->u.sa.sa_family == AF_INET) // IPv4
++		{
++			ipv4 = ntohl(((struct sockaddr_in*)&lsa->u.sa)->sin_addr.s_addr);
++			ret = is_permitted_ipv4_connection(ipv4);
++		}
++		else if (lsa->u.sa.sa_family == AF_INET6) // IPv6
++		{
++			ret = is_permitted_ipv6_connection((unsigned char*)&((struct sockaddr_in6*)&lsa->u.sa)->sin6_addr.s6_addr);
++		}
++		free(lsa);
++	}
++	if (!ret)
++		printf("telnetd deny connection\n");
++
++	return ret;
++}
+ 
+ int telnetd_main(int argc, char **argv) MAIN_EXTERNALLY_VISIBLE;
+ int telnetd_main(int argc UNUSED_PARAM, char **argv)
+@@ -796,6 +951,13 @@ int telnetd_main(int argc UNUSED_PARAM, char **argv)
+ 			goto again;
+ 		close_on_exec_on(fd);
+ 
++		/* Don't allow connections from the internet (except via VPN) as telnet traffic is not encrypted */
++		if (!is_permitted_connection(fd))
++		{
++			close(fd);
++			goto again;
++		}
++
+ 		/* Create a new session and link it into active list */
+ 		new_ts = make_new_session(fd);
+ 		if (new_ts) {
+-- 
+1.9.1
+

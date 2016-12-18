@@ -1,0 +1,48 @@
+From e83999345bfcb3ac0290a88293ebdf16199b31a3 Mon Sep 17 00:00:00 2001
+From: christophecvr <stefansat@telenet.be>
+Date: Sat, 5 Dec 2015 19:32:32 +0100
+Subject: [PATCH] riff-media: added fourcc to all mpeg4 video caps
+
+	modified:   gst-libs/gst/riff/riff-media.c
+---
+ gst-libs/gst/riff/riff-media.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+
+diff --git a/gst-libs/gst/riff/riff-media.c b/gst-libs/gst/riff/riff-media.c
+index 38e9e1a..8701fb2 100644
+--- a/gst-libs/gst/riff/riff-media.c
++++ b/gst-libs/gst/riff/riff-media.c
+@@ -456,12 +456,19 @@ gst_riff_create_video_caps (guint32 codec_fcc,
+     case GST_MAKE_FOURCC ('F', 'M', 'P', '4'):
+     case GST_MAKE_FOURCC ('U', 'M', 'P', '4'):
+     case GST_MAKE_FOURCC ('F', 'F', 'D', 'S'):
++    {
++      gchar *fstr = NULL;
+       caps = gst_caps_new_simple ("video/mpeg",
+           "mpegversion", G_TYPE_INT, 4,
+           "systemstream", G_TYPE_BOOLEAN, FALSE, NULL);
++      fstr = g_strdup_printf ("%" GST_FOURCC_FORMAT,
++          GST_FOURCC_ARGS (codec_fcc));
++      gst_caps_set_simple (caps, "fourcc", G_TYPE_STRING, fstr, NULL);
++      g_free (fstr);
+       if (codec_name)
+         *codec_name = g_strdup ("FFmpeg MPEG-4");
+       break;
++    }
+ 
+     case GST_MAKE_FOURCC ('3', 'I', 'V', '1'):
+     case GST_MAKE_FOURCC ('3', 'I', 'V', '2'):
+@@ -487,6 +494,10 @@ gst_riff_create_video_caps (guint32 codec_fcc,
+       caps = gst_caps_new_simple ("video/mpeg",
+           "mpegversion", G_TYPE_INT, 4,
+           "systemstream", G_TYPE_BOOLEAN, FALSE, NULL);
++      {gchar *fstr = g_strdup_printf ("%" GST_FOURCC_FORMAT,
++          GST_FOURCC_ARGS (codec_fcc));
++      gst_caps_set_simple (caps, "fourcc", G_TYPE_STRING, fstr, NULL);
++      g_free (fstr);}
+       if (codec_name)
+         *codec_name = g_strdup ("MPEG-4");
+       break;
+-- 
+1.9.1
+
