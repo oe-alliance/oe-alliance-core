@@ -132,12 +132,11 @@ OLDEST_KERNEL = "2.6.32"
 
 PREFERRED_PROVIDER_virtual/kernel = "linux-fulan"
 PREFERRED_VERSION_linux-libc-headers = "2.6.32"
-PREFERRED_VERSION_directfb = "1.4.12"
 SERIAL_CONSOLE = "115200 ttyAS0"
 
 DVBPROVIDER = "kernel"
 
-MACHINE_FEATURES = "3dtv alsa hdmicec switchoff kernel26 ext2 usbhost serial dvb-c singlecore textlcd sh4booster no-nmap omb skins1080 directfb sdl"
+MACHINE_FEATURES = "3dtv alsa hdmicec switchoff kernel26 ext2 usbhost serial dvb-c singlecore textlcd sh4booster no-nmap omb skins1080 directfb"
 
 DVBMEDIASINK_CONFIG = "--with-wma --with-wmv --with-pcm --with-dtsdownmix --with-eac3"
 
