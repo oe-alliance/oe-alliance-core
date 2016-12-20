@@ -112,7 +112,7 @@ do_configure_prepend() {
         elif [ "${MACHINE}" = "dm820" ]; then
             DRIVERSDATE="20161209"
         elif [ "${MACHINE}" = "dm520" ]; then
-            DRIVERSDATE="20161208"
+            DRIVERSDATE="20161220"
         elif [ "${MACHINE}" = "dm800" ]; then
             DRIVERSDATE="20131228"
         elif [ "${MACHINE}" = "dm8000" ]; then
@@ -124,7 +124,7 @@ do_configure_prepend() {
         elif [ "${MACHINE}" = "dm800sev2" ]; then
             DRIVERSDATE="20151201"
         elif [ "${MACHINE}" = "dm900" ]; then
-            DRIVERSDATE="20161209"
+            DRIVERSDATE="20161220"
         else
             DRIVERSDATE="20150618"
         fi

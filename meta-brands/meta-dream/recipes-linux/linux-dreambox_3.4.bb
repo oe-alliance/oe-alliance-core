@@ -1,6 +1,6 @@
 inherit kernel machine_kernel_pr
 
-MACHINE_KERNEL_PR_append = ".3"
+MACHINE_KERNEL_PR_append = ".4"
 
 PATCHREV = "e7fe570494f9341822e3f184b1bd3364ee4e0a50"
 PATCHLEVEL = "113"
@@ -11,6 +11,7 @@ SRC_URI = " \
     http://dreamboxupdate.com/download/kernel-patches/linux-dreambox-${PV}-${PATCHREV}.patch.xz;apply=yes;name=dream-patch \
     file://0001-BRCMSTB-dont-enable-new-i2c-driver-by-default.-it-co.patch \
     file://dvb_frontend-Multistream-support-3.4.patch \
+    file://0001-dream-dont-reset-wktmr-on-warm-boot.patch \
     file://kernel-add-support-for-gcc6.patch \
     file://defconfig \
 "
