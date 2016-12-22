@@ -25,6 +25,7 @@ ${@base_contains('MACHINEBUILD', 'force1plus', 'Force 1 Plus' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'megaforce1plus', 'Force 1 Plus' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'force2', 'force2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'force2plus', 'force2 Plus' , '', d)}\
+${@base_contains('MACHINEBUILD', 'force2nano', 'force2 nano' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'force2se', 'force2 se' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'megaforce2', 'force2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'worldvisionf1', 'force1' , '', d)}\
@@ -66,6 +67,7 @@ ${@base_contains('MACHINEBUILD', 'force1plus', 'Iqon' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'megaforce1plus', 'MEGASAT' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'force2', 'Iqon' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'force2plus', 'Iqon' , '', d)}\
+${@base_contains('MACHINEBUILD', 'force2nano', 'Iqon' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'force2se', 'Iqon' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'megaforce2', 'MEGASAT' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'worldvisionf1', 'WorldVision' , '', d)}\
@@ -108,6 +110,7 @@ ${@base_contains('MACHINEBUILD', 'megaforce1plus', 'update/force1plus/cfe' , '',
 ${@base_contains('MACHINEBUILD', 'force2', 'update/force2solid/cfe' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'megaforce2', 'update/force2solid/cfe' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'force2plus', 'update/force2plus/cfe' , '', d)}\
+${@base_contains('MACHINEBUILD', 'force2nano', 'update/force2nano/cfe' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'force2se', 'update/force2se/cfe' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'worldvisionf1', 'update/force1/cfe' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'worldvisionf1plus', 'update/force1plus/cfe' , '', d)}\
@@ -148,6 +151,7 @@ ${@base_contains('MACHINEBUILD', 'force1plus', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'megaforce1plus', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'force2', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'force2plus', 'mtd2' , '', d)}\
+${@base_contains('MACHINEBUILD', 'force2nano', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'force2se', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'megaforce2', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'worldvisionf1', 'mtd2' , '', d)}\
@@ -189,6 +193,7 @@ ${@base_contains('MACHINEBUILD', 'force1plus', 'mtd0' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'megaforce1plus', 'mtd0' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'force2', 'mtd0' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'force2plus', 'mtd0' , '', d)}\
+${@base_contains('MACHINEBUILD', 'force2nano', 'mtd0' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'force2se', 'mtd0' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'megaforce2', 'mtd0' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'worldvisionf1', 'mtd0' , '', d)}\
@@ -222,6 +227,7 @@ ${@base_contains('MACHINEBUILD', 'megaforce1plus', 'splash1_os2.bmp' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'worldvisionf1', 'splash1_os1.bmp' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'force2', 'splash1_power.bmp' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'force2plus', 'splash1_power.bmp' , '', d)}\
+${@base_contains('MACHINEBUILD', 'force2nano', 'splash1_power.bmp' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'force2se', 'splash1_power.bmp' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'megaforce2', 'splash1_power.bmp' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'worldvisionf1plus', 'splash1_os1.bmp' , '', d)}\
@@ -257,6 +263,7 @@ ${@base_contains('MACHINEBUILD', 'force1plus', 'dags7356' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'megaforce1plus', 'dags7356' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'force2', 'dags7362' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'force2plus', 'dags7362' , '', d)}\
+${@base_contains('MACHINEBUILD', 'force2nano', 'dags7362' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'force2se', 'dags7362' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'megaforce2', 'dags7362' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'worldvisionf1', 'dags7356' , '', d)}\
