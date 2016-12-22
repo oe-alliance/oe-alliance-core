@@ -48,7 +48,6 @@ RDEPENDS_${PN}_append_bcm73625 = " \
 
 RDEPENDS_flash-scripts = " \
     coreutils-realpath \
-    tpm-ca \
 "
 RDEPENDS_flash-scripts_append_bcm7435 = " \
     ${EMMCRDEPENDS_flash-scripts} \
