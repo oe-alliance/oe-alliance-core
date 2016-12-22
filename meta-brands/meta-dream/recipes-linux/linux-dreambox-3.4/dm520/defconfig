@@ -1,6 +1,6 @@
 #
 # Automatically generated file; DO NOT EDIT.
-# Linux/mips 3.4-3.8 Kernel Configuration
+# Linux/mips 3.4.113-4.0 Kernel Configuration
 #
 CONFIG_MIPS=y
 
@@ -947,8 +947,11 @@ CONFIG_M25PXX_USE_FAST_READ=y
 # CONFIG_MTD_SST25L is not set
 # CONFIG_MTD_SLRAM is not set
 # CONFIG_MTD_PHRAM is not set
-# CONFIG_MTD_MTDRAM is not set
-# CONFIG_MTD_BLOCK2MTD is not set
+CONFIG_MTD_MTDRAM=m
+CONFIG_MTDRAM_TOTAL_SIZE=4096
+CONFIG_MTDRAM_ERASE_SIZE=128
+CONFIG_MTDRAM_ABS_POS=0x0
+CONFIG_MTD_BLOCK2MTD=y
 
 #
 # Disk-On-Chip Device Drivers
