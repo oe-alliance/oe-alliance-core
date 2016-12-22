@@ -12,6 +12,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'x1plus', 'enfinityX 1plus' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'sf108', 'SF108 E2HD' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 't2cable', 'ENFINITY T2/CABLE' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'sf98', 'SF98' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'evoslim', 'SLIM' , '', d)}\
 "
 
 MACHINE_BRAND = "\
@@ -23,6 +24,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'x1plus', 'EVO' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'sf108', 'Octagon' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 't2cable', 'EVO' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'sf98', 'Octagon' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'evoslim', 'EVO' , '', d)}\
 "
 
 IMAGEDIR ?= "\
@@ -34,6 +36,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'x1plus', 'x1plus' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'sf108', 'sf108' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 't2cable', 't2cable' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'sf98', 'sf98' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'evoslim', 'slim' , '', d)}\
 "
 
 MTD_KERNEL ?= "\
@@ -45,6 +48,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'x1plus', 'mtd2' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'sf108', 'mtd2' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 't2cable', 'mtd2' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'sf98', 'mtd2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'evoslim', 'mtd2' , '', d)}\
 "
 
 MTD_ROOTFS ?= "\
@@ -56,6 +60,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'x1plus', 'mtd8' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'sf108', 'mtd8' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 't2cable', 'mtd8' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'sf98', 'mtd0' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'evoslim', 'mtd0' , '', d)}\
 "
 
 KERNEL_FILE = "kernel.bin"
