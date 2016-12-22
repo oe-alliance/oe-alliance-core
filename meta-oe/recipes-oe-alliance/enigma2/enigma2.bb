@@ -12,6 +12,7 @@ DEPENDS = " \
     openssl \
     python python-imaging python-twisted python-wifi \
     ${@base_contains("DISTRO_NAME", "egami", "libudfread", "", d)} \
+    ${@base_contains("DISTRO_NAME", "openvix", "libudfread", "", d)} \
     swig-native \
     tuxtxt-enigma2 \
     ${@base_contains("MACHINE_FEATURES", "uianimation", "vuplus-libgles-${MACHINE} libvugles2" , "", d)} \
@@ -209,7 +210,7 @@ inherit autotools-brokensep gitpkgv pkgconfig pythonnative
 
 PV = "5.3+git${SRCPV}"
 PKGV = "5.3+git${GITPKGV}"
-PR = "r0"
+PR = "r1"
 
 SRC_URI = "${ENIGMA2_URI}"
 
