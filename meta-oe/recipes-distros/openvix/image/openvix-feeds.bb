@@ -9,7 +9,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 PACKAGES = "${PN}"
 
 PV = "${IMAGE_VERSION}"
-PR = "r0"
+PR = "r1"
 
 inherit packagegroup
 
@@ -20,4 +20,5 @@ DEPENDS = "\
     openvix-bootlogos-meta \
     ${@base_contains("MACHINE_FEATURES", "skins1080", "hd-skins-meta", "", d)} \
     openvix-softcams-meta \
+    enigma2-plugin-extensions-blurayplayer \
     "
