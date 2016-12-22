@@ -1,0 +1,104 @@
+From 3aa82ce9ebc1b2d7f8c70a27def787512b6b64f1 Mon Sep 17 00:00:00 2001
+From: Andreas Monzner <andreas.monzner@dream-property.net>
+Date: Mon, 11 Mar 2013 16:22:55 +0100
+Subject: [PATCH 1/4] block2mtd: add possibility to change the writesize
+
+(cherry picked from commit 88e224371bba45629f03c031faef664a7ff42100)
+---
+ drivers/mtd/devices/block2mtd.c | 28 ++++++++++++++++++----------
+ 1 file changed, 18 insertions(+), 10 deletions(-)
+
+diff --git a/drivers/mtd/devices/block2mtd.c b/drivers/mtd/devices/block2mtd.c
+index 7d7000d..56e559b 100644
+--- a/drivers/mtd/devices/block2mtd.c
++++ b/drivers/mtd/devices/block2mtd.c
+@@ -214,7 +214,7 @@ static void block2mtd_free_device(struct block2mtd_dev *dev)
+ 
+ 
+ /* FIXME: ensure that mtd->size % erase_size == 0 */
+-static struct block2mtd_dev *add_device(char *devname, int erase_size)
++static struct block2mtd_dev *add_device(char *devname, int erase_size, int write_size)
+ {
+ 	const fmode_t mode = FMODE_READ | FMODE_WRITE | FMODE_EXCL;
+ 	struct block_device *bdev;
+@@ -265,7 +265,7 @@ static struct block2mtd_dev *add_device(char *devname, int erase_size)
+ 
+ 	dev->mtd.size = dev->blkdev->bd_inode->i_size & PAGE_MASK;
+ 	dev->mtd.erasesize = erase_size;
+-	dev->mtd.writesize = 1;
++	dev->mtd.writesize = write_size;
+ 	dev->mtd.writebufsize = PAGE_SIZE;
+ 	dev->mtd.type = MTD_RAM;
+ 	dev->mtd.flags = MTD_CAP_RAM;
+@@ -281,9 +281,10 @@ static struct block2mtd_dev *add_device(char *devname, int erase_size)
+ 		goto devinit_err;
+ 	}
+ 	list_add(&dev->list, &blkmtd_device_list);
+-	INFO("mtd%d: [%s] erase_size = %dKiB [%d]", dev->mtd.index,
++	INFO("mtd%d: [%s] erase_size = %dKiB [%d] write_size = %dKiB [%d]", dev->mtd.index,
+ 			dev->mtd.name + strlen("block2mtd: "),
+-			dev->mtd.erasesize >> 10, dev->mtd.erasesize);
++			dev->mtd.erasesize >> 10, dev->mtd.erasesize,
++			dev->mtd.writesize >> 10, dev->mtd.writesize);
+ 	return dev;
+ 
+ devinit_err:
+@@ -350,17 +351,18 @@ static inline void kill_final_newline(char *str)
+ 
+ #ifndef MODULE
+ static int block2mtd_init_called = 0;
+-static char block2mtd_paramline[80 + 12]; /* 80 for device, 12 for erase size */
++static char block2mtd_paramline[80 + 12 + 12]; /* 80 for device, 12 for erase size, 12 for writesize */
+ #endif
+ 
+ 
+ static int block2mtd_setup2(const char *val)
+ {
+-	char buf[80 + 12]; /* 80 for device, 12 for erase size */
++	char buf[80 + 12 + 12]; /* 80 for device, 12 for erase size, 12 for writesize */
+ 	char *str = buf;
+-	char *token[2];
++	char *token[3];
+ 	char *name;
+ 	size_t erase_size = PAGE_SIZE;
++	size_t write_size = 1;
+ 	int i, ret;
+ 
+ 	if (strnlen(val, sizeof(buf)) >= sizeof(buf))
+@@ -369,7 +371,7 @@ static int block2mtd_setup2(const char *val)
+ 	strcpy(str, val);
+ 	kill_final_newline(str);
+ 
+-	for (i = 0; i < 2; i++)
++	for (i = 0; i < 3; i++)
+ 		token[i] = strsep(&str, ",");
+ 
+ 	if (str)
+@@ -388,8 +390,14 @@ static int block2mtd_setup2(const char *val)
+ 			parse_err("illegal erase size");
+ 		}
+ 	}
++	if (token[2]) {
++		ret = parse_num(&write_size, token[2]);
++		if (ret) {
++			parse_err("illegal write size");
++		}
++	}
+ 
+-	add_device(name, erase_size);
++	add_device(name, erase_size, write_size);
+ 
+ 	return 0;
+ }
+@@ -423,7 +431,7 @@ static int block2mtd_setup(const char *val, struct kernel_param *kp)
+ 
+ 
+ module_param_call(block2mtd, block2mtd_setup, NULL, NULL, 0200);
+-MODULE_PARM_DESC(block2mtd, "Device to use. \"block2mtd=<dev>[,<erasesize>]\"");
++MODULE_PARM_DESC(block2mtd, "Device to use. \"block2mtd=<dev>[,<erasesize>,<writesize>]\"");
+ 
+ static int __init block2mtd_init(void)
+ {
+-- 
+2.1.4
+

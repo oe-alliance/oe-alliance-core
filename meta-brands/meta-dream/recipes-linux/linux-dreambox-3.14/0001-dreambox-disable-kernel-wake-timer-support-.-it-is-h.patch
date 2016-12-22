@@ -5,23 +5,9 @@ Subject: [PATCH] dreambox: disable kernel wake timer support .. it is handled
  by our own drivers
 
 ---
- arch/arm/kernel/process.c   | 2 +-
  drivers/soc/brcmstb/Kconfig | 1 +
- 2 files changed, 2 insertions(+), 1 deletion(-)
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/kernel/process.c b/arch/arm/kernel/process.c
-index 5f6e650..3b3a7f1e 100644
---- a/arch/arm/kernel/process.c
-+++ b/arch/arm/kernel/process.c
-@@ -125,7 +125,7 @@ void (*pm_power_off)(void);
- EXPORT_SYMBOL(pm_power_off);
- 
- void (*arm_pm_restart)(enum reboot_mode reboot_mode, const char *cmd) = null_restart;
--EXPORT_SYMBOL_GPL(arm_pm_restart);
-+EXPORT_SYMBOL(arm_pm_restart);
- 
- /*
-  * This is our default idle handler.
 diff --git a/drivers/soc/brcmstb/Kconfig b/drivers/soc/brcmstb/Kconfig
 index cbf6287..9d1149c 100644
 --- a/drivers/soc/brcmstb/Kconfig

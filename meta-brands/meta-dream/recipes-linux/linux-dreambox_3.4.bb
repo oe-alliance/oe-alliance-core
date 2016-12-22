@@ -1,6 +1,6 @@
 inherit kernel machine_kernel_pr
 
-MACHINE_KERNEL_PR_append = ".4"
+MACHINE_KERNEL_PR_append = ".5"
 
 PATCHREV = "e7fe570494f9341822e3f184b1bd3364ee4e0a50"
 PATCHLEVEL = "113"
@@ -11,6 +11,10 @@ SRC_URI = " \
     http://dreamboxupdate.com/download/kernel-patches/linux-dreambox-${PV}-${PATCHREV}.patch.xz;apply=yes;name=dream-patch \
     file://0001-BRCMSTB-dont-enable-new-i2c-driver-by-default.-it-co.patch \
     file://0001-dream-dont-reset-wktmr-on-warm-boot.patch \
+    file://0001-block2mtd-add-possibility-to-change-the-writesize.patch \
+    file://0002-block2mtd-add-possibility-to-remove-block2mtd-device.patch \
+    file://0003-mtd-block2mtd-throttle-writes-by-calling-balance_dir.patch \
+    file://0004-enabled-block2mtd-driver-for-dm520-build-mtdram-kern.patch \
     file://defconfig \
 "
 SRC_URI[kernel.md5sum] = "967f72983655e2479f951195953e8480"
