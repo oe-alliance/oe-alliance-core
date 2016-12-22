@@ -194,4 +194,4 @@ index 41f04da..6951dd3 100644
 +	int               do_wait;
  };
  
- #define DVB_RINGBUFFER_PKTHDRSIZE 3  
+ #define DVB_RINGBUFFER_PKTHDRSIZE 3

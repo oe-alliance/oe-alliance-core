@@ -14,6 +14,8 @@ DEPENDS = " \
     ${@bb.utils.contains("DISTRO_NAME", "openatv", "libudfread", "", d)} \
     ${@bb.utils.contains("DISTRO_NAME", "opennfr", "libudfread", "", d)} \
     ${@bb.utils.contains("DISTRO_NAME", "egami", "libudfread", "", d)} \
+    ${@bb.utils.contains("DISTRO_NAME", "openvix", "libudfread", "", d)} \
+    ${@bb.utils.contains("DISTRO_NAME", "openbh", "libudfread", "", d)} \
     python python-imaging python-twisted python-wifi \
     swig-native \
     tuxtxt-enigma2 \

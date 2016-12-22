@@ -12,15 +12,17 @@ SRC_URI[sha256sum] = "a464515d14dda772047ddba7900858f535057294903341e2c1774009ea
 LIC_FILES_CHKSUM = "file://COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
 SRC_URI += "http://archiv.openmips.com/gigablue-linux-${PV}-20160319.tar.bz2 \
-    file://defconfig \
-    file://bcm_genet_disable_warn.patch \
-    file://linux_dvb-core.patch \
-    file://linux_rpmb_not_alloc.patch \
-    file://linux_vmalloc_revert.patch \
-    file://rt2800usb_fix_warn_tx_status_timeout_to_dbg.patch \
-    file://usb_core_hub_msleep.patch \
-    file://rtl8712_fix_build_error.patch \
-    file://linux_dvb_adapter.patch;patch=1;pnum=1 \
+	file://defconfig \
+	file://bcm_genet_disable_warn.patch \
+	file://linux_dvb-core.patch \
+	file://linux_dvb_adapter.patch \
+	file://rt2800usb_fix_warn_tx_status_timeout_to_dbg.patch \
+	file://usb_core_hub_msleep.patch \
+	file://rtl8712_fix_build_error.patch \
+	file://kernel-add-support-for-gcc6.patch \
+	file://0001-Support-TBS-USB-drivers.patch \
+	file://0001-STV-Add-PLS-support.patch \
+	file://0001-STV-Add-SNR-Signal-report-parameters.patch \
 "
 
 S = "${WORKDIR}/linux"
