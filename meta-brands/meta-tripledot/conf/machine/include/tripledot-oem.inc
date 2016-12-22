@@ -12,6 +12,7 @@ ${@base_contains('MACHINEBUILD', 'x1plus', 'enfinityX 1plus' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'sf108', 'SF108 E2HD' , '', d)}\
 ${@base_contains('MACHINEBUILD', 't2cable', 'ENFINITY T2/CABLE' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'sf98', 'SF98' , '', d)}\
+${@base_contains('MACHINEBUILD', 'evoslim', 'SLIM' , '', d)}\
 "
 
 MACHINE_BRAND = "\
@@ -23,6 +24,7 @@ ${@base_contains('MACHINEBUILD', 'x1plus', 'EVO' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'sf108', 'Octagon' , '', d)}\
 ${@base_contains('MACHINEBUILD', 't2cable', 'EVO' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'sf98', 'Octagon' , '', d)}\
+${@base_contains('MACHINEBUILD', 'evoslim', 'EVO' , '', d)}\
 "
 
 IMAGEDIR ?= "\
@@ -34,6 +36,7 @@ ${@base_contains('MACHINEBUILD', 'x1plus', 'x1plus' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'sf108', 'sf108' , '', d)}\
 ${@base_contains('MACHINEBUILD', 't2cable', 't2cable' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'sf98', 'sf98' , '', d)}\
+${@base_contains('MACHINEBUILD', 'evoslim', 'slim' , '', d)}\
 "
 
 MTD_KERNEL ?= "\
@@ -45,6 +48,7 @@ ${@base_contains('MACHINEBUILD', 'x1plus', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'sf108', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 't2cable', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'sf98', 'mtd2' , '', d)}\
+${@base_contains('MACHINEBUILD', 'evoslim', 'mtd2' , '', d)}\
 "
 
 MTD_ROOTFS ?= "\
@@ -56,6 +60,7 @@ ${@base_contains('MACHINEBUILD', 'x1plus', 'mtd8' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'sf108', 'mtd8' , '', d)}\
 ${@base_contains('MACHINEBUILD', 't2cable', 'mtd8' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'sf98', 'mtd0' , '', d)}\
+${@base_contains('MACHINEBUILD', 'evoslim', 'mtd0' , '', d)}\
 "
 
 KERNEL_FILE = "kernel.bin"
