@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=4d92cd373abda3937c2bc47fbc49d
 ALLOW_EMPTY_${PN} = "1"
 
 PV = "1.0"
-PR = "r57"
+PR = "r58"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
@@ -29,8 +29,8 @@ RRECOMMENDS_${PN} = " \
     enigma2-plugin-systemplugins-crossepg \
     enigma2-plugin-extensions-epgimport \
     enigma2-plugin-extensions-epgimportfilter \
-    ${@base_contains("MACHINE_FEATURES", "dreamboxv1", "enigma2-plugin-extensions-dflash mtd-utils-jffs2", "", d)} \
-    ${@base_contains("MACHINE_FEATURES", "dreamboxv2", "enigma2-plugin-extensions-dbackup", "", d)} \
+    ${@base_contains("MACHINE_FEATURES", "smallflash", "", "enigma2-plugin-extensions-openwebif-themes", d)} \
+    ${@base_contains("MACHINE_FEATURES", "smallflash", "enigma2-plugin-extensions-openwebif-webtv", "enigma2-plugin-extensions-openwebif-vxg", d)} \
     ${@base_contains("MACHINE_FEATURES", "boxmodel", "boxmodel", "", d)} \
     ${@base_contains("MACHINE_FEATURES", "uianimation", "enigma2-plugin-systemplugins-animationsetup" , "", d)} \
     ${@base_contains("MACHINE_FEATURES", "osdanimation", "enigma2-plugin-systemplugins-animationsetup" , "", d)} \
