@@ -13,6 +13,7 @@ DEPENDS = " \
     python python-imaging python-twisted python-wifi \
     ${@base_contains("DISTRO_NAME", "egami", "libudfread", "", d)} \
     ${@base_contains("DISTRO_NAME", "openvix", "libudfread", "", d)} \
+    ${@base_contains("DISTRO_NAME", "openbh", "libudfread", "", d)} \
     swig-native \
     tuxtxt-enigma2 \
     ${@base_contains("MACHINE_FEATURES", "uianimation", "vuplus-libgles-${MACHINE} libvugles2" , "", d)} \
