@@ -19,7 +19,7 @@ PACKAGECONFIG ??= " \
     ${@bb.utils.contains('DISTRO_FEATURES', 'directfb', 'directfb', '', d)} \
     orc curl neon sndfile \
     hls sbc dash bz2 smoothstreaming \
-    faac faad libmms dash dtls rsvg uvch264 webp rtmp opus \
+    faac faad libmms dash dtls rsvg uvch264 webp rtmp opus\
     "
 
 # dash = Dynamic Adaptive Streaming over HTTP

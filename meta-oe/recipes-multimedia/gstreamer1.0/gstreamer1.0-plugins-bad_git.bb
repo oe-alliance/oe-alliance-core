@@ -10,7 +10,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=73a5855a8119deb017f5f13cf327095d \
 
 UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>(\d+(\.\d+)+))"
 
-SRCREV_base = "c03a4829acf6ef5cf8fa2f272a87212a1c8ab539"
+SRCREV_base = "6a0d53b767be43e937d530dc5b42beb2e71251ab"
 SRCREV_common = "39ac2f563e12d22100e320c95aaab8d8e5812ca9"
 SRCREV_FORMAT = "base"
 
@@ -28,7 +28,7 @@ SRC_URI += "file://configure-allow-to-disable-libssh2.patch \
 			"
 S = "${WORKDIR}/git"
 
-GST_VERSION_FULL ="1.11.0.1-07"
+GST_VERSION_FULL ="1.11.0.1-12"
 inherit gitpkgv
 PV = "${GST_VERSION_FULL}+git${SRCPV}"
 PKGV = "${GST_VERSION_FULL}+git${GITPKGV}"

@@ -9,7 +9,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=6762ed442b3822387a51c92d928ead0d \
 
 UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>(\d+(\.\d+)+))"
 
-SRCREV_base = "160ca3713931893f27e24119c75554d8d642d3e9"
+SRCREV_base = "cfb6c7d4f5f52b1a927f5c67c9b41bc868d114f8"
 SRCREV_common = "39ac2f563e12d22100e320c95aaab8d8e5812ca9"
 SRCREV_FORMAT = "base"
 
@@ -22,7 +22,7 @@ SRC_URI += "file://0001-introspection.m4-prefix-pkgconfig-paths-with-PKG_CON.pat
 
 S = "${WORKDIR}/git"
 
-GST_VERSION_FULL ="1.11.0.1-07"
+GST_VERSION_FULL ="1.11.0.1-12"
 inherit gitpkgv
 PV = "${GST_VERSION_FULL}+git${SRCPV}"
 PKGV = "${GST_VERSION_FULL}+git${GITPKGV}"

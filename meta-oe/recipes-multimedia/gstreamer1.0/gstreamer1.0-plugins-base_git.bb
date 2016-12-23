@@ -8,7 +8,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=c54ce9345727175ff66d17b67ff51f58 \
 
 UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>(\d+(\.\d+)+))"
 
-SRCREV_base = "52d74419420e95c68e9384b39a25420d5f880a73"
+SRCREV_base = "7c1a32e28b9d145ee25e3d3141dee7821ba8a7e2"
 SRCREV_common = "39ac2f563e12d22100e320c95aaab8d8e5812ca9"
 SRCREV_FORMAT = "base"
 
@@ -25,7 +25,7 @@ SRC_URI_append = "\
 
 S = "${WORKDIR}/git"
 
-GST_VERSION_FULL ="1.11.0.1-07"
+GST_VERSION_FULL ="1.11.0.1-12"
 inherit gitpkgv
 PV = "${GST_VERSION_FULL}+git${SRCPV}"
 PKGV = "${GST_VERSION_FULL}+git${GITPKGV}"
