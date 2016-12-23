@@ -11,5 +11,5 @@ S = "${WORKDIR}/${PN}-${PV}"
 
 inherit autotools
 
-SRC_URI[md5sum] = "8e8b8b253eb046340ff7b6bf7a6ccd3e"
-SRC_URI[sha256sum] = "277d0c13b722c1bae6ebdf8959df7b55129f8e005edd12f5d2c38baf76ba71a9"
+SRC_URI[md5sum] = "09d2c5dfb43a9f6e9fec8b1ae678e725"
+SRC_URI[sha256sum] = "106bf811c1f36444d7671d8fd2589f8b2e0cca58a2c764da62ffc4a070595385"
