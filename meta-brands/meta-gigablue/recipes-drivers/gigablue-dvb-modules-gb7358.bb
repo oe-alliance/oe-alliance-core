@@ -1,9 +1,9 @@
-SRCDATE = "20161219"
+SRCDATE = "20161224"
 
 KV = "4.0.1"
 
-SRC_URI[md5sum] = "806245aaaad31b3d3f728bdcdb69852e"
-SRC_URI[sha256sum] = "2066dd03b07edc72b83fb4c89bbf5879ae14f57b8108ab057f2324f2b2a96c22"
+SRC_URI[md5sum] = "9742961c4fba8458852e14f5f44b2a9a"
+SRC_URI[sha256sum] = "face3f5ce5ba91f56b9f01af01e61d1e51b1a47f73529fec9ac167f28251ffd2"
 
 SRC_URI = "http://archiv.openmips.com/beta/gigablue-drivers-${KV}-BCM7358-${SRCDATE}.zip"
 
