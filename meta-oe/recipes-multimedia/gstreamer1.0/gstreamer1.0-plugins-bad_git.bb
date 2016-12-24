@@ -22,6 +22,7 @@ SRC_URI += "file://configure-allow-to-disable-libssh2.patch \
 			file://0001-rtmp-fix-seeking-and-potential-segfault.patch \
 			file://0004-rtmp-hls-tsdemux-fix.patch \
 			file://fix-maybe-uninitialized-warnings-when-compiling-with-Os.patch \
+			file://dvbapi5-fix-old-kernel.patch \
 			"
 S = "${WORKDIR}/git"
 
