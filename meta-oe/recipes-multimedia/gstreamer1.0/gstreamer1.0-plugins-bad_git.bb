@@ -3,15 +3,13 @@ DEFAULT_PREFERENCE = "-1"
 include gstreamer1.0-plugins-bad.inc
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=73a5855a8119deb017f5f13cf327095d \
-                    file://gst/tta/filters.h;beginline=12;endline=29;md5=8a08270656f2f8ad7bb3655b83138e5a \
                     file://COPYING.LIB;md5=21682e4e8fea52413fd26c60acb907e5 \
-                    file://gst/tta/crc32.h;beginline=12;endline=29;md5=27db269c575d1e5317fffca2d33b3b50 \
 "
 
 UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>(\d+(\.\d+)+))"
 
-SRCREV_base = "6a0d53b767be43e937d530dc5b42beb2e71251ab"
-SRCREV_common = "39ac2f563e12d22100e320c95aaab8d8e5812ca9"
+SRCREV_base = "bdc123600398046dce2588372e9a7948ab6e3e26"
+SRCREV_common = "93ae13f2c3c58a4c2b7c111817b720a272d504d7"
 SRCREV_FORMAT = "base"
 
 SRC_URI = "git://anongit.freedesktop.org/gstreamer/gst-plugins-bad;branch=master;name=base \
@@ -24,11 +22,10 @@ SRC_URI += "file://configure-allow-to-disable-libssh2.patch \
 			file://0001-rtmp-fix-seeking-and-potential-segfault.patch \
 			file://0004-rtmp-hls-tsdemux-fix.patch \
 			file://fix-maybe-uninitialized-warnings-when-compiling-with-Os.patch \
-			file://dvbapi5-fix-old-kernel.patch \
 			"
 S = "${WORKDIR}/git"
 
-GST_VERSION_FULL ="1.11.0.1-12"
+GST_VERSION_FULL ="1.11.0.1-13"
 inherit gitpkgv
 PV = "${GST_VERSION_FULL}+git${SRCPV}"
 PKGV = "${GST_VERSION_FULL}+git${GITPKGV}"
