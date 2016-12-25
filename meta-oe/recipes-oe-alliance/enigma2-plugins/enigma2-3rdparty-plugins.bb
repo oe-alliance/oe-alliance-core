@@ -11,7 +11,7 @@ DEPENDS = "tslib mpfr gmp"
 SRCREV = "${AUTOREV}"
 PV = "3.4+gitr${SRCPV}"
 PKGV = "3.4+gitr${GITPKGV}"
-PR = "r7"
+PR = "r8"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -33,7 +33,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-bluray_1.5rc3_mips32el.ipk \
     enigma2-plugin-extensions-boblight-enigma2_0.8r8_mips32el.ipk \
     enigma2-plugin-extensions-camofs_9.19_all.ipk \
-    enigma2-plugin-extensions-chefkoch_1.4rc10_all.ipk \
+    enigma2-plugin-extensions-chefkoch_1.4rc11_all.ipk \
     enigma2-plugin-extensions-clevertanken_0.7rc1_all.ipk \
     enigma2-plugin-extensions-csfd_11-55-20160929_all.ipk \
     enigma2-plugin-extensions-customsubservices_0.1.2_all.ipk \
@@ -45,7 +45,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-exodus_2.0_r1_all.ipk \
     enigma2-plugin-extensions-facebook_1.4_mips32el.ipk \
     enigma2-plugin-extensions-filesearchfs_2.53_all.ipk \
-    enigma2-plugin-extensions-focusonline_1.0rc10_all.ipk \
+    enigma2-plugin-extensions-focusonline_1.0rc11_all.ipk \
     enigma2-plugin-extensions-fragmutti_0.5_all.ipk \
     enigma2-plugin-extensions-gmailreader-oe2.0_1.3_all.ipk \
     enigma2-plugin-extensions-googlenewsreader_1.0_mips32el.ipk \
@@ -56,7 +56,7 @@ THIRDPARTY_PLUGINS = " \
     ${@base_contains("TARGET_ARCH", "sh4", "enigma2-plugin-extensions-isettinge2-3.3.8_sh4.ipk" , "", d)} \
     ${@base_contains("TARGET_ARCH", "mipsel", "enigma2-plugin-extensions-isettinge2-3.3.8_mips32el.ipk" , "", d)} \
     ${@base_contains("TARGET_ARCH", "arm", "enigma2-plugin-extensions-isettinge2-3.3.8_armv7ahf-neon.ipk" , "", d)} \
-    enigma2-plugin-extensions-kicker_3.4rc11_all.ipk \
+    enigma2-plugin-extensions-kicker_3.4rc12_all.ipk \
     enigma2-plugin-extensions-kino_1.6rc11_all.ipk \
     enigma2-plugin-extensions-kodidirect_3.1_r0_all.ipk \
     enigma2-plugin-extensions-livefootball_6.1_all.ipk \
@@ -100,16 +100,18 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-vhannibalautosettings_1.1_mips32el.ipk \
     enigma2-plugin-extensions-vuplusforum_0.8rc2_all.ipk \
     enigma2-plugin-extensions-webmedia_14.0_r0_all.ipk \
-    enigma2-plugin-extensions-webradiofs_14.63_all.ipk \
+    enigma2-plugin-extensions-webradiofs_14.69_all.ipk \
     enigma2-plugin-extensions-wikipedia_2.2rc10_all.ipk \
     enigma2-plugin-extensions-wwech_1.03_all.ipk \
     enigma2-plugin-extensions-xbmcaddons_8.1_r0_all.ipk \
     enigma2-plugin-extensions-xbmcwetter_1.3rc5_all.ipk \
-    enigma2-plugin-extensions-zdfnewmediathek_2.0_all.ipk \
+    enigma2-plugin-extensions-zdfnewmediathek_2.0rc1_all.ipk \
     enigma2-plugin-systemplugins-bouquetsprotection_0.2-rc1_all.ipk \
     enigma2-plugin-systemplugins-channelselectionnavigator_1.2_mipsel.ipk \
     enigma2-plugin-systemplugins-extnumberzap_1.17_all.ipk \
     enigma2-plugin-systemplugins-recinfobar_1.22rc2_mips32el.ipk \
+    enigma2-plugin-picons-snp-full.400x240-400x240.light.on.transparent_2016-12-22--08-37-51_all.ipk \
+    enigma2-plugin-picons-srp-full.400x240-400x240.light.on.transparent_2016-12-22--08-37-51_all.ipk \
     "
 
 #     Install any packages t_append =hat are only For this machines feed here, uncomment the line below and change as required
