@@ -11,7 +11,7 @@ DEPENDS = "tslib mpfr gmp"
 SRCREV = "${AUTOREV}"
 PV = "3.4+gitr${SRCPV}"
 PKGV = "3.4+gitr${GITPKGV}"
-PR = "r8"
+PR = "r9"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -30,23 +30,23 @@ S = "${WORKDIR}/git"
 THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-atmolightd_0.7-pre22_all.ipk \
     enigma2-plugin-extensions-bildonline_3.1rc6_mips32el.ipk \
-    enigma2-plugin-extensions-bluray_1.5rc3_mips32el.ipk \
+    enigma2-plugin-extensions-bluray_1.6rc1_all.ipk \
     enigma2-plugin-extensions-boblight-enigma2_0.8r8_mips32el.ipk \
     enigma2-plugin-extensions-camofs_9.19_all.ipk \
-    enigma2-plugin-extensions-chefkoch_1.4rc11_all.ipk \
-    enigma2-plugin-extensions-clevertanken_0.7rc1_all.ipk \
+    enigma2-plugin-extensions-chefkoch_1.5rc1_all.ipk \
+    enigma2-plugin-extensions-clevertanken_0.8rc1_all.ipk \
     enigma2-plugin-extensions-csfd_11-55-20160929_all.ipk \
     enigma2-plugin-extensions-customsubservices_0.1.2_all.ipk \
     enigma2-plugin-extensions-cyrussettings_1.0.0_all.ipk \
-    enigma2-plugin-extensions-digitalfernsehen_1.1rc10_all.ipk \
+    enigma2-plugin-extensions-digitalfernsehen_1.2rc1_all.ipk \
     enigma2-plugin-extensions-dvrproviderplayer_1.14_all.ipk \
     enigma2-plugin-extensions-ehue_0.2-r0_all.ipk \
     enigma2-plugin-extensions-enigmalight_0.2-rc1_all.ipk \
     enigma2-plugin-extensions-exodus_2.0_r1_all.ipk \
     enigma2-plugin-extensions-facebook_1.4_mips32el.ipk \
     enigma2-plugin-extensions-filesearchfs_2.53_all.ipk \
-    enigma2-plugin-extensions-focusonline_1.0rc11_all.ipk \
-    enigma2-plugin-extensions-fragmutti_0.5_all.ipk \
+    enigma2-plugin-extensions-focusonline_1.1rc1_all.ipk \
+    enigma2-plugin-extensions-fragmutti_1.0rc1_all.ipk \
     enigma2-plugin-extensions-gmailreader-oe2.0_1.3_all.ipk \
     enigma2-plugin-extensions-googlenewsreader_1.0_mips32el.ipk \
     enigma2-plugin-extensions-hdmitest_0.4_mipsel.ipk \
@@ -56,19 +56,19 @@ THIRDPARTY_PLUGINS = " \
     ${@base_contains("TARGET_ARCH", "sh4", "enigma2-plugin-extensions-isettinge2-3.3.8_sh4.ipk" , "", d)} \
     ${@base_contains("TARGET_ARCH", "mipsel", "enigma2-plugin-extensions-isettinge2-3.3.8_mips32el.ipk" , "", d)} \
     ${@base_contains("TARGET_ARCH", "arm", "enigma2-plugin-extensions-isettinge2-3.3.8_armv7ahf-neon.ipk" , "", d)} \
-    enigma2-plugin-extensions-kicker_3.4rc12_all.ipk \
-    enigma2-plugin-extensions-kino_1.6rc11_all.ipk \
+    enigma2-plugin-extensions-kicker_3.5rc1_all.ipk \
+    enigma2-plugin-extensions-kino_1.7rc1_all.ipk \
     enigma2-plugin-extensions-kodidirect_3.1_r0_all.ipk \
     enigma2-plugin-extensions-livefootball_6.1_all.ipk \
     enigma2-plugin-extensions-mediainfo_3.0.0_all.ipk \
     enigma2-plugin-extensions-mediaportal_7.7.0_all.ipk \
     enigma2-plugin-extensions-mediaportal-wallicons.ipk \
-    enigma2-plugin-extensions-moviebrowser_3.6rc9_all.ipk \
-    enigma2-plugin-extensions-mp3browser_1.9rc9_all.ipk \
+    enigma2-plugin-extensions-moviebrowser_3.7rc1_all.ipk \
+    enigma2-plugin-extensions-mp3browser_2.0rc1_all.ipk \
     enigma2-plugin-extensions-netspeedtest_1.0rc1_all.ipk \
     ${@base_contains('MACHINE_BRAND', 'Vu+', '' , 'enigma2-plugin-extensions-openopera_1.0-r0_mips32el.ipk', d)} \
     enigma2-plugin-extensions-opkg-tools_1.3_mipsel.ipk \
-    enigma2-plugin-extensions-oscamstatusview_0.7rc1_mips32el.ipk \
+    enigma2-plugin-extensions-oscamstatusview_1.0rc1_all.ipk \
     enigma2-plugin-extensions-piconmanager_2.2-20150329-r0_all.ipk \
     enigma2-plugin-extensions-piconsupdater_0.3.6_mips32el.ipk \
     enigma2-plugin-extensions-picturecenterfs_7.36_all.ipk \
@@ -82,7 +82,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-sherlock_5.01r1_mipsel.ipk \
     enigma2-plugin-extensions-skyrecorder_1.6.1_all.ipk \
     enigma2-plugin-extensions-songs-to_0.1_mips32el.ipk \
-    enigma2-plugin-extensions-spiegelonline_2.7rc5_all.ipk \
+    enigma2-plugin-extensions-spiegelonline_2.8rc1_all.ipk \
     enigma2-plugin-extensions-spinnerselector_2.1rc7_mips32el.ipk \
     enigma2-plugin-extensions-sport1ticker_1.3_all.ipk \
     enigma2-plugin-extensions-sportportal_2013_all.ipk \
@@ -90,22 +90,22 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-tectimetv_3.1_all.ipk \
     enigma2-plugin-extensions-thetvdb_0.7-20120607-r2_mips32el.ipk \
     enigma2-plugin-extensions-tmbd_7.7_all.ipk \
-    enigma2-plugin-extensions-translator_1.0rc1_all.ipk \
+    enigma2-plugin-extensions-translator_1.1rc1_all.ipk \
     enigma2-plugin-extensions-transmission_2.84_all.ipk \
     enigma2-plugin-extensions-tsmedia_11.4_all.ipk \
     enigma2-plugin-extensions-tstube_1.2_all.ipk \
-    enigma2-plugin-extensions-tvspielfilm_6.4rc17_all.ipk \
-    enigma2-plugin-extensions-verkehrsinfo_1.1rc1_mips32el.ipk \
+    enigma2-plugin-extensions-tvspielfilm_6.5rc1_all.ipk \
+    enigma2-plugin-extensions-verkehrsinfo_1.2rc1_all.ipk \
     enigma2-plugin-extensions-vcs_2.4_all.ipk \
     enigma2-plugin-extensions-vhannibalautosettings_1.1_mips32el.ipk \
     enigma2-plugin-extensions-vuplusforum_0.8rc2_all.ipk \
     enigma2-plugin-extensions-webmedia_14.0_r0_all.ipk \
-    enigma2-plugin-extensions-webradiofs_14.69_all.ipk \
-    enigma2-plugin-extensions-wikipedia_2.2rc10_all.ipk \
+    enigma2-plugin-extensions-webradiofs_14.70_all.ipk \
+    enigma2-plugin-extensions-wikipedia_2.3rc1_all.ipk \
     enigma2-plugin-extensions-wwech_1.03_all.ipk \
     enigma2-plugin-extensions-xbmcaddons_8.1_r0_all.ipk \
-    enigma2-plugin-extensions-xbmcwetter_1.3rc5_all.ipk \
-    enigma2-plugin-extensions-zdfnewmediathek_2.0rc1_all.ipk \
+    enigma2-plugin-extensions-xbmcwetter_1.4rc1_all.ipk \
+    enigma2-plugin-extensions-zdfnewmediathek_2.1rc1_all.ipk \
     enigma2-plugin-systemplugins-bouquetsprotection_0.2-rc1_all.ipk \
     enigma2-plugin-systemplugins-channelselectionnavigator_1.2_mipsel.ipk \
     enigma2-plugin-systemplugins-extnumberzap_1.17_all.ipk \
