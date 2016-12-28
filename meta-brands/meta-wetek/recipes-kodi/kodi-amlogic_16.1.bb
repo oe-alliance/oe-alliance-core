@@ -146,3 +146,4 @@ FILES_${PN}-dbg += "\
     /usr/lib/kodi/addons/*/.debug \
     "
 
+COMPATIBLE_MACHINE = "(wetekplay)"
