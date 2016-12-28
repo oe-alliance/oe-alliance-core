@@ -7,18 +7,28 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 ALLOW_EMPTY_${PN} = "1"
 
 PV = "1.0"
-PR = "r6"
+PR = "r7"
 
 inherit packagegroup
 
 RRECOMMENDS_${PN} = "\
-    oe-alliance-skins \
     enigma2-skins \
     enigma2-display-skins \
-    enigma2-pliplugins \
     enigma2-plugin-extensions-epgimport \
     enigma2-plugin-systemplugins-crossepg \
+    curlftpfs \
+    cdfs \
+    openssl-old \
+    ${@base_contains("TARGET_ARCH", "mipsel", "dvb-apps", "", d)} \
     enigma2-plugin-extensions-cooltvguide \
     enigma2-plugin-extensions-enhancedmoviecenter \
+    enigma2-plugin-extensions-blurayplayer \
     ${@base_contains("MACHINE_BRAND", "AZBOX", "enigma2-plugin-extensions-azplay enigma2-plugin-extensions-aziptv", "", d)} \
     "
+
+RRECOMMENDS_${PN}_append_gb800solo = "enigma2-plugin-extensions-gbipboxclient"
+RRECOMMENDS_${PN}_append_gb7325 = "enigma2-plugin-extensions-gbipboxclient"
+RRECOMMENDS_${PN}_append_gb7358 = "enigma2-plugin-extensions-gbipboxclient"
+RRECOMMENDS_${PN}_append_gb7362 = "enigma2-plugin-extensions-gbipboxclient"
+RRECOMMENDS_${PN}_append_gbquad = "enigma2-plugin-extensions-gbipboxclient"
+RRECOMMENDS_${PN}_append_gbquadplus = "enigma2-plugin-extensions-gbipboxclient"

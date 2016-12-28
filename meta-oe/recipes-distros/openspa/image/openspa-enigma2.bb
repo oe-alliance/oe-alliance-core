@@ -7,16 +7,19 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 ALLOW_EMPTY_${PN} = "1"
 
 PV = "6.0"
-PR = "r1"
+PR = "r2"
 
 inherit packagegroup
 
-DEPENDS = "enigma2-pliplugins openspa-feeds"
+DEPENDS = "openspa-feeds"
 
 RRECOMMENDS_${PN} = " \
     openspa-version-info \
     ${@base_contains("MACHINE_FEATURES", "smallflash", "", "enigma2-plugin-drivers-usbserial", d)} \
+    enigma2-plugin-extensions-autotimer \
+    enigma2-plugin-extensions-epgsearch \
     enigma2-plugin-systemplugins-softwaremanager \
+    enigma2-plugin-systemplugins-hotplug \
     ${@base_contains("MACHINE_FEATURES", "smallflash", "", "enigma2-plugin-extensions-openwebif-themes", d)} \
     ${@base_contains("MACHINE_FEATURES", "smallflash", "enigma2-plugin-extensions-openwebif-webtv", "enigma2-plugin-extensions-openwebif-vxg", d)} \
     ${@base_contains("MACHINE_FEATURES", "dreamboxv1", "enigma2-plugin-extensions-dflash mtd-utils-jffs2", "", d)} \
