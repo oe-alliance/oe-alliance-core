@@ -4,7 +4,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda2f7b4f302"
 
-PR = "r1"
+PR = "r2"
 
 DEPENDS = "libamadec"
 RDEPENDS_${PN} = "libamadec"
@@ -12,6 +12,7 @@ RDEPENDS_${PN} = "libamadec"
 inherit lib_package
 
 SRC_URI_wetekplay = "file://libamcodec-75f23da.tar.gz;md5=2ff1cbc415271733e1241e8cde0b105e \
+           file://add-vformat-hevc.patch \
            file://libamcodec.pc \
            file://alsactl.conf \
 "
