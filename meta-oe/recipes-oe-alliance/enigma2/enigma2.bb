@@ -4,6 +4,7 @@ LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=751419260aa954499f7abaabaa882bbe"
 
 DEPENDS = " \
+    avahi \
     freetype \
     gettext-native \
     ${@bb.utils.contains("GST_VERSION", "1.0", "gstreamer1.0-plugins-base gstreamer1.0", "gst-plugins-base gstreamer", d)} \
@@ -184,6 +185,7 @@ RDEPENDS_${PN} += " \
     ${@bb.utils.contains("DISTRO_NAME", "openatv", "libudfread", "", d)} \
     ${@bb.utils.contains("DISTRO_NAME", "opennfr", "libudfread", "", d)} \    
     "
+
 RRECOMMENDS_${PN} += "libdvdcss"
 
 # We depend on the font which we use for TXT subtitles (defined in skin_subtitles.xml)
