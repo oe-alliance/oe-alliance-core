@@ -43,6 +43,8 @@ ${@bb.utils.contains('MACHINEBUILD', 'fusionhd', 'FUSION HD' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'fusionhdse', 'FUSION HD SE' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'purehd', 'PURE HD' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'force2plushv', 'FORCE2+ HV' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'force3uhdplus', 'FORCE3 UHD Plus' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'force3uhd', 'FORCE3 UHD' , '', d)}\
 "
 
 MACHINE_BRAND = "\
@@ -85,6 +87,8 @@ ${@bb.utils.contains('MACHINEBUILD', 'fusionhd', 'XSARIUS' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'fusionhdse', 'XSARIUS' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'purehd', 'XSARIUS' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'force2plushv', 'Iqon' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'force3uhdplus', 'Iqon' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'force3uhd', 'Iqon' , '', d)}\
 "
 
 IMAGEDIR ?= "\
@@ -127,6 +131,8 @@ ${@bb.utils.contains('MACHINEBUILD', 'fusionhd', 'update/fusionhd/cfe' , '', d)}
 ${@bb.utils.contains('MACHINEBUILD', 'fusionhdse', 'update/fusionhdse/cfe' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'purehd', 'update/purehd/cfe' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'force2plushv', 'update/force2plushv/cfe' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'force3uhdplus', 'update/force3uhdplus' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'force3uhd', 'update/force3uhd' , '', d)}\
 "
 
 MTD_KERNEL = "\
@@ -169,6 +175,8 @@ ${@bb.utils.contains('MACHINEBUILD', 'fusionhd', 'mtd2' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'fusionhdse', 'mtd2' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'purehd', 'mtd2' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'force2plushv', 'mtd2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'force3uhdplus', 'mmcblk0p1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'force3uhd', 'mmcblk0p1' , '', d)}\
 "
 
 MTD_ROOTFS = "\
@@ -211,6 +219,8 @@ ${@bb.utils.contains('MACHINEBUILD', 'fusionhd', 'mtd0' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'fusionhdse', 'mtd0' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'purehd', 'mtd0' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'force2plushv', 'mtd0' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'force3uhdplus', 'mmcblk0p4' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'force3uhd', 'mmcblk0p4' , '', d)}\
 "
 
 SPLASH1_BMP = "\
@@ -239,6 +249,8 @@ ${@bb.utils.contains('MACHINEBUILD', 'fusionhd', 'splash1_power.bmp' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'fusionhdse', 'splash1_power.bmp' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'purehd', 'splash1_power.bmp' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'force2plushv', 'splash1_power.bmp' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'force3uhdplus', 'splash1_power.bmp' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'force3uhd', 'splash1_power.bmp' , '', d)}\
 "
 
 MACHINE_DRIVER = "\
@@ -281,10 +293,19 @@ ${@bb.utils.contains('MACHINEBUILD', 'fusionhd', 'dags7362' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'fusionhdse', 'dags7362' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'purehd', 'dags7362' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'force2plushv', 'dags73625' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'force3uhdplus', 'dags7252-300' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'force3uhd', 'dags7252-200' , '', d)}\
 "
 
-KERNEL_FILE = "oe_kernel.bin"
-ROOTFS_FILE = "oe_rootfs.bin"
+MACHINE_FEATURES += "3dtv alsa hdmicec switchoff textlcd ci skins1080 \
+    ${@bb.utils.contains('MACHINEBUILD', 'fusionhd', 'fastscan dvb-c' , '', d)} \
+    ${@bb.utils.contains('MACHINEBUILD', 'fusionhdse', 'fastscan dvb-c' , '', d)} \
+    ${@bb.utils.contains('MACHINEBUILD', 'purehd', 'fastscan dvb-c' , '', d)} \
+    ${@bb.utils.contains('MACHINEBUILD', 'force2plushv', 'fastscan dvb-c' , '', d)} \
+    ${@bb.utils.contains('MACHINEBUILD', 'tmnanosem2plus', 'fastscan dvb-c' , '', d)} \
+"
+
+BOOTLOGO_FILENAME = "splash.bmp"
 
 DVBPROVIDER = "kernel"
 DVBSKYPROVIDER = "kernel"
@@ -297,20 +318,17 @@ MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS = "\
     kernel-module-cdfs \
     "
 
-MACHINE_EXTRA_RRECOMMENDS = " \
-    dags-shutdown \
+MACHINE_EXTRA_RRECOMMENDS += " \
     gstreamer1.0-plugin-dvbmediasink \
     gstreamer1.0-libav \
     "
 
 include conf/machine/include/autoload-filesystems.inc
 
-TARGET_ARCH = "mipsel"
-DEFAULTTUNE = "mips32el"
-
 GLIBC_EXTRA_OECONF = "--with-tls"
 DVBMEDIASINK_CONFIG = "--with-dags --with-pcm --with-eac3 --with-amr --with-wmv \
     ${@bb.utils.contains('MACHINE', 'dags73625', '--with-h265 --with-vb6 --with-vb8 --with-spark' , '', d)} \
+    ${@bb.utils.contains('MACHINE', 'dags7252', '--with-h265 --with-vb6 --with-vb8 --with-vb9 --with-spark' , '', d)} \
 "
 
 PREFERRED_PROVIDER_virtual/kernel = "linux-dags"
@@ -318,55 +336,6 @@ PREFERRED_PROVIDER_virtual/blindscan-dvbs = "vuplus-blindscan-utils"
 PREFERRED_PROVIDER_virtual/blindscan-dvbc = "vuplus-blindscan-utils"
 PREFERRED_PROVIDER_virtual/transtreamproxy = "vuplus-transtreamproxy"
 
-KERNEL_IMAGETYPE = "vmlinux"
-KERNEL_OUTPUT = "${KERNEL_IMAGETYPE}"
-KERNEL_CONSOLE = "ttyS0,115200n8"
-
-IMAGE_FSTYPES ?= "ubi"
-
-UBI_VOLNAME = "rootfs"
-MKUBIFS_ARGS = "-m 2048 -e 126976 -c 4096 -F"
-UBINIZE_ARGS = "-m 2048 -p 128KiB"
-
-IMAGE_CMD_ubi_prepend = " \
-    rm -rf ${IMAGE_ROOTFS}/boot/*; \
-    rm -rf ${IMAGE_ROOTFS}/tmp/*; \
-    "
-
-IMAGE_CMD_ubi_append = "\
-    mkdir -p ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}; \
-    ${@bb.utils.contains("MACHINE_FEATURES", "bootsplash", "cp ${DEPLOY_DIR_IMAGE}/${BOOTLOGO_FILENAME} ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/${BOOTLOGO_FILENAME};" , "", d)} \
-    ${@bb.utils.contains("MACHINE", "dags7356", "cp ${DEPLOY_DIR_IMAGE}/${SPLASH1_BMP} ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/splash1.bmp;" , "", d)} \
-    ${@bb.utils.contains("MACHINE", "dags7356", "cp ${DEPLOY_DIR_IMAGE}/splash2.bmp ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/splash2.bmp;" , "", d)} \
-    ${@bb.utils.contains("MACHINE", "dags7356", "cp ${DEPLOY_DIR_IMAGE}/splash3.bmp ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/splash3.bmp;" , "", d)} \
-    ${@bb.utils.contains("MACHINE", "dags7362", "cp ${DEPLOY_DIR_IMAGE}/${SPLASH1_BMP} ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/splash1.bmp;" , "", d)} \
-    ${@bb.utils.contains("MACHINE", "dags7362", "cp ${DEPLOY_DIR_IMAGE}/splash2.bmp ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/splash2.bmp;" , "", d)} \
-    ${@bb.utils.contains("MACHINE", "dags7362", "cp ${DEPLOY_DIR_IMAGE}/splash3.bmp ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/splash3.bmp;" , "", d)} \
-    mv ${IMGDEPLOYDIR}/${IMAGE_NAME}.rootfs.ubi ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/${ROOTFS_FILE}; \
-    gzip -f -9c ${DEPLOY_DIR_IMAGE}/vmlinux-${MACHINE}.bin > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/${KERNEL_FILE}; \
-    echo ${IMAGE_VER_STRING} > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/imageversion; \
-    cd ${DEPLOY_DIR_IMAGE}; \
-    zip ${IMAGE_NAME}_usb.zip ${IMAGEDIR}/*; \
-    rm -f ${DEPLOY_DIR_IMAGE}/*.ubi; \
-    rm -f ${DEPLOY_DIR_IMAGE}/*.ubifs; \
-    rm -f ${DEPLOY_DIR_IMAGE}/*.manifest; \
-    rm -f ${DEPLOY_DIR_IMAGE}/.ubifs; \
-    rm -f ${DEPLOY_DIR_IMAGE}/.manifest; \
-    rm -Rf update; \
-    "
-
-
-MACHINE_FEATURES += "3dtv alsa hdmicec switchoff bootsplash textlcd ci omb skins1080 wifiusbmodule feature1 feature2 blindscan-tbs \
-    ${@bb.utils.contains('MACHINEBUILD', 'fusionhd', 'fastscan dvb-c' , '', d)} \
-    ${@bb.utils.contains('MACHINEBUILD', 'fusionhdse', 'fastscan dvb-c' , '', d)} \
-    ${@bb.utils.contains('MACHINEBUILD', 'purehd', 'fastscan dvb-c' , '', d)} \
-    ${@bb.utils.contains('MACHINEBUILD', 'force2plushv', 'fastscan dvb-c' , '', d)} \
-    ${@bb.utils.contains('MACHINEBUILD', 'tmnanosem2plus', 'fastscan dvb-c' , '', d)} \
-"
-
-BOOTLOGO_FILENAME = "splash.bmp"
-
-require conf/machine/include/tune-mips32.inc
 require conf/machine/include/soc-family.inc
 
 # add support for extra feeds
