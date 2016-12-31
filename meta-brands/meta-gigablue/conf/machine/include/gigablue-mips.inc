@@ -5,17 +5,17 @@ DEFAULTTUNE = "mips32el"
 KERNEL_IMAGETYPE = "vmlinux"
 
 DVBMEDIASINK_CONFIG = "--with-wmv \
-    ${@bb.utils.contains('MACHINEBUILD', 'gb7356', '--with-wma --with-pcm --with-dts --with-eac3 --with-amr' , '', d)} \
-    ${@bb.utils.contains('MACHINEBUILD', 'gb7358', '--with-wma --with-pcm --with-dts --with-eac3 --with-amr' , '', d)} \
-    ${@bb.utils.contains('MACHINEBUILD', 'gb7362', '--with-wma --with-pcm --with-dts --with-eac3 --with-amr' , '', d)} \
-    ${@bb.utils.contains('MACHINEBUILD', 'gb73625', '--with-wma --with-pcm --with-dts --with-eac3 --with-amr --with-h265 --with-vb6 --with-vb8 --with-spark' , '', d)} \
+    ${@bb.utils.contains('MACHINE', 'gb7356', '--with-wma --with-pcm --with-dts --with-eac3 --with-amr' , '', d)} \
+    ${@bb.utils.contains('MACHINE', 'gb7358', '--with-wma --with-pcm --with-dts --with-eac3 --with-amr' , '', d)} \
+    ${@bb.utils.contains('MACHINE', 'gb7362', '--with-wma --with-pcm --with-dts --with-eac3 --with-amr' , '', d)} \
+    ${@bb.utils.contains('MACHINE', 'gb73625', '--with-wma --with-pcm --with-dts --with-eac3 --with-amr --with-h265 --with-vb6 --with-vb8 --with-spark' , '', d)} \
 "
 
 GLIBC_EXTRA_OECONF = "--with-tls \
-    ${@bb.utils.contains('MACHINEBUILD', 'gb7358', '--with-__thread' , '', d)} \
-    ${@bb.utils.contains('MACHINEBUILD', 'gb7356', '--with-__thread' , '', d)} \
-    ${@bb.utils.contains('MACHINEBUILD', 'gb7362', '--with-__thread' , '', d)} \
-    ${@bb.utils.contains('MACHINEBUILD', 'gb73625', '--with-__thread' , '', d)} \
+    ${@bb.utils.contains('MACHINE', 'gb7358', '--with-__thread' , '', d)} \
+    ${@bb.utils.contains('MACHINE', 'gb7356', '--with-__thread' , '', d)} \
+    ${@bb.utils.contains('MACHINE', 'gb7362', '--with-__thread' , '', d)} \
+    ${@bb.utils.contains('MACHINE', 'gb73625', '--with-__thread' , '', d)} \
 "
 
 IMAGE_CMD_ubi_prepend = " \
