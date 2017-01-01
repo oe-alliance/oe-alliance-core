@@ -14,8 +14,9 @@ DEPENDS = " \
     ${@bb.utils.contains("DISTRO_NAME", "openatv", "avahi libudfread", "", d)} \
     ${@bb.utils.contains("DISTRO_NAME", "opennfr", "libudfread", "", d)} \
     ${@bb.utils.contains("DISTRO_NAME", "egami", "libudfread", "", d)} \
-    ${@bb.utils.contains("DISTRO_NAME", "openvix", "libudfread", "", d)} \
-    ${@bb.utils.contains("DISTRO_NAME", "openbh", "libudfread", "", d)} \
+    ${@bb.utils.contains("DISTRO_NAME", "openvix", "avahi libudfread", "", d)} \
+    ${@bb.utils.contains("DISTRO_NAME", "openbh", "avahi libudfread", "", d)} \
+    ${@bb.utils.contains("DISTRO_NAME", "openspa", "libudfread", "", d)} \
     python python-imaging python-twisted python-wifi \
     swig-native \
     tuxtxt-enigma2 \
@@ -272,9 +273,12 @@ SRC_URI_append_opendroid = " \
 SRC_URI_append_egami = " \
     file://tuxbox_fix_DVB_API_VERSION_check_for_gcc5.patch \
     "
-
 SRC_URI_append_openxta = " \
     file://tuxbox_fix_DVB_API_VERSION_check_for_gcc5.patch \
+    "
+
+SRC_URI_append_openspa = " \
+    file://skin_default.patch \
     "
 
 S = "${WORKDIR}/git"

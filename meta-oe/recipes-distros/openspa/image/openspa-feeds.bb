@@ -12,7 +12,7 @@ PR = "r6"
 inherit packagegroup
 
 RRECOMMENDS_${PN} = "\
-    oe-alliance-skins \
+    openspa-skins \
     enigma2-skins \
     enigma2-display-skins \
     enigma2-pliplugins \

@@ -1,0 +1,16 @@
+--- git-orig/skin.py	2012-09-28 21:39:01.822200358 +0200
++++ git/skin.py	2012-09-28 21:41:06.722196707 +0200
+@@ -75,11 +75,11 @@
+ 
+ # example: loadSkin("nemesis_greenline/skin.xml")
+ config.skin = ConfigSubsection()
+-DEFAULT_SKIN = "PLi-HD/skin.xml"
++DEFAULT_SKIN = "Spa24HD/skin.xml"
+ # on SD hardware, PLi-HD will not be available
+ if not fileExists(resolveFilename(SCOPE_SKIN, DEFAULT_SKIN)):
+ 	# in that case, fallback to Magic (which is an SD skin)
+-	DEFAULT_SKIN = "Magic/skin.xml"
++	DEFAULT_SKIN = "skin.xml"
+ config.skin.primary_skin = ConfigText(default=DEFAULT_SKIN)
+ 
+ profile("LoadSkin")
