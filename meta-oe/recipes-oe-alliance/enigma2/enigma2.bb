@@ -4,15 +4,14 @@ LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=751419260aa954499f7abaabaa882bbe"
 
 DEPENDS = " \
-    avahi \
     freetype \
     gettext-native \
     ${@bb.utils.contains("GST_VERSION", "1.0", "gstreamer1.0-plugins-base gstreamer1.0", "gst-plugins-base gstreamer", d)} \
     jpeg \
     libdreamdvd libdvbsi++ libfribidi libmad libpng libsigc++-1.2 giflib libxml2 libxmlccwrap \
     openssl \
-    ${@bb.utils.contains("DISTRO_NAME", "openmips", "libudfread", "", d)} \
-    ${@bb.utils.contains("DISTRO_NAME", "openatv", "libudfread", "", d)} \
+    ${@bb.utils.contains("DISTRO_NAME", "openmips", "avahi libudfread", "", d)} \
+    ${@bb.utils.contains("DISTRO_NAME", "openatv", "avahi libudfread", "", d)} \
     ${@bb.utils.contains("DISTRO_NAME", "opennfr", "libudfread", "", d)} \
     ${@bb.utils.contains("DISTRO_NAME", "egami", "libudfread", "", d)} \
     ${@bb.utils.contains("DISTRO_NAME", "openvix", "libudfread", "", d)} \
@@ -228,7 +227,7 @@ inherit autotools-brokensep gitpkgv pkgconfig pythonnative
 
 PV = "${IMAGE_VERSION}+git${SRCPV}"
 PKGV = "${IMAGE_VERSION}+git${GITPKGV}"
-PR = "r1"
+PR = "r2"
 
 SRC_URI = "${ENIGMA2_URI}"
 
