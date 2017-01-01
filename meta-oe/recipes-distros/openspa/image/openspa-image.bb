@@ -47,10 +47,12 @@ export NFO = '${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.nfo'
 do_generate_nfo() {
     VER=`grep Version: "${IMAGE_ROOTFS}/usr/lib/ipkg/info/enigma2.control" | cut -b 10-26`
     echo "Enigma2: ${VER}" > ${NFO}
-    echo "Machine: ${MACHINE}" >> ${NFO}
+    echo "Machine: ${MACHINEBUILD}" >> ${NFO}
     DATE=`date +%Y-%m-%d' '%H':'%M`
     echo "Date: ${DATE}" >> ${NFO}
     echo "Issuer: openSPA" >> ${NFO}
+    echo "Version: ${DISTRO_VERSION}" >> ${NFO}
+    echo "Build: ${BUILD_VERSION}" >> ${NFO}
     echo "Link: ${DISTRO_FEED_URI}" >> ${NFO}
     if [ "${DESC}" != "" ]; then
         echo "Description: ${DESC}" >> ${NFO}

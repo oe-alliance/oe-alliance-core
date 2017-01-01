@@ -12,11 +12,11 @@ DEPENDS = " \
     openssl \
     ${@bb.utils.contains("DISTRO_NAME", "openmips", "avahi libudfread", "", d)} \
     ${@bb.utils.contains("DISTRO_NAME", "openatv", "avahi libudfread", "", d)} \
-    ${@bb.utils.contains("DISTRO_NAME", "opennfr", "libudfread", "", d)} \
-    ${@bb.utils.contains("DISTRO_NAME", "egami", "libudfread", "", d)} \
+    ${@bb.utils.contains("DISTRO_NAME", "opennfr", "avahi libudfread", "", d)} \
+    ${@bb.utils.contains("DISTRO_NAME", "egami", "avahi libudfread", "", d)} \
     ${@bb.utils.contains("DISTRO_NAME", "openvix", "avahi libudfread", "", d)} \
     ${@bb.utils.contains("DISTRO_NAME", "openbh", "avahi libudfread", "", d)} \
-    ${@bb.utils.contains("DISTRO_NAME", "openspa", "libudfread", "", d)} \
+    ${@bb.utils.contains("DISTRO_NAME", "openspa", "avahi libudfread", "", d)} \
     python python-imaging python-twisted python-wifi \
     swig-native \
     tuxtxt-enigma2 \
@@ -181,9 +181,6 @@ GST_UGLY_RDEPS = "${@bb.utils.contains('GST_VERSION', '1.0', ' \
 # DVD playback is integrated, we need the libraries
 RDEPENDS_${PN} += " \
     libdreamdvd \
-    ${@bb.utils.contains("DISTRO_NAME", "openmips", "libudfread", "", d)} \
-    ${@bb.utils.contains("DISTRO_NAME", "openatv", "libudfread", "", d)} \
-    ${@bb.utils.contains("DISTRO_NAME", "opennfr", "libudfread", "", d)} \    
     "
 
 RRECOMMENDS_${PN} += "libdvdcss"
@@ -223,12 +220,13 @@ RDEPENDS_enigma2-plugin-extensions-dvdburn = "dvd+rw-tools dvdauthor mjpegtools 
 RDEPENDS_enigma2-plugin-systemplugins-hotplug = "hotplug-e2-helper"
 CONFFILES_enigma2-plugin-extensions-openxtareader = "/usr/lib/enigma2/python/Plugins/Extensions/OpenXtaReader/db/favoriten"
 RDEPENDS_enigma2-plugin-extensions-openxtareader = "python-lxml"
+RDEPENDS_enigma2-plugin-systemplugins-fsblupdater = "python-distutils"
 
 inherit autotools-brokensep gitpkgv pkgconfig pythonnative
 
 PV = "${IMAGE_VERSION}+git${SRCPV}"
 PKGV = "${IMAGE_VERSION}+git${GITPKGV}"
-PR = "r2"
+PR = "r3"
 
 SRC_URI = "${ENIGMA2_URI}"
 
