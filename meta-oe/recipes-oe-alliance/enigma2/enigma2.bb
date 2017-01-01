@@ -13,7 +13,7 @@ DEPENDS = " \
     python python-imaging python-twisted python-wifi \
     ${@base_contains("DISTRO_NAME", "openbh", "avahi libudfread", "", d)} \
     ${@base_contains("DISTRO_NAME", "openmips", "avahi libudfread", "", d)} \
-    ${@base_contains("DISTRO_NAME", "egami", "libudfread", "", d)} \
+    ${@base_contains("DISTRO_NAME", "egami", "avahi libudfread", "", d)} \
     ${@base_contains("DISTRO_NAME", "openvix", "avahi libudfread", "", d)} \
     ${@base_contains("DISTRO_NAME", "openspa", "libudfread", "", d)} \
     swig-native \
