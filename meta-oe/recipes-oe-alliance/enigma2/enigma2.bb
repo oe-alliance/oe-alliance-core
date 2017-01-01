@@ -11,10 +11,10 @@ DEPENDS = " \
     libdreamdvd libdvbsi++ libfribidi libmad libpng libsigc++-1.2 giflib libxml2 libxmlccwrap \
     openssl \
     python python-imaging python-twisted python-wifi \
+    ${@base_contains("DISTRO_NAME", "openbh", "avahi libudfread", "", d)} \
     ${@base_contains("DISTRO_NAME", "openmips", "avahi libudfread", "", d)} \
     ${@base_contains("DISTRO_NAME", "egami", "libudfread", "", d)} \
     ${@base_contains("DISTRO_NAME", "openvix", "avahi libudfread", "", d)} \
-    ${@base_contains("DISTRO_NAME", "openbh", "libudfread", "", d)} \
     swig-native \
     tuxtxt-enigma2 \
     ${@base_contains("MACHINE_FEATURES", "uianimation", "vuplus-libgles-${MACHINE} libvugles2" , "", d)} \
