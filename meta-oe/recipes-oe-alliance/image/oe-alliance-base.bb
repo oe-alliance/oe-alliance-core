@@ -11,7 +11,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "5.3"
-PR = "r4"
+PR = "r5"
 
 RDEPENDS_${PN} = "\
     oe-alliance-enigma2 \
@@ -24,6 +24,7 @@ RDEPENDS_${PN} = "\
     ${@base_contains("MACHINE_FEATURES", "no-nmap", "" , "nmap", d)} \
     ${@base_contains("MACHINE_FEATURES", "emmc", "parted dosfstools mtools" , "", d)} \
     ${@base_contains("MACHINE_FEATURES", "vubluetooth", "enigma2-plugin-systemplugins-bluetoothsetup", "", d)} \
+    ${@base_contains("MACHINE_FEATURES", "recovery", "recovery" , "", d)} \
     ${@base_contains("TARGET_ARCH", "sh4", "alsa-utils-amixer-conf" , "", d)} \
     avahi-daemon \
     dropbear \
