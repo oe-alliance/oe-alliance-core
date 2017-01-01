@@ -12,6 +12,7 @@ PR = "r7"
 inherit packagegroup
 
 RRECOMMENDS_${PN} = "\
+    openspa-skins \
     enigma2-skins \
     enigma2-display-skins \
     enigma2-plugin-extensions-epgimport \

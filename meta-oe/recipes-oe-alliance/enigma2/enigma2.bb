@@ -15,6 +15,7 @@ DEPENDS = " \
     ${@base_contains("DISTRO_NAME", "openmips", "avahi libudfread", "", d)} \
     ${@base_contains("DISTRO_NAME", "egami", "libudfread", "", d)} \
     ${@base_contains("DISTRO_NAME", "openvix", "avahi libudfread", "", d)} \
+    ${@base_contains("DISTRO_NAME", "openspa", "libudfread", "", d)} \
     swig-native \
     tuxtxt-enigma2 \
     ${@base_contains("MACHINE_FEATURES", "uianimation", "vuplus-libgles-${MACHINE} libvugles2" , "", d)} \
@@ -259,6 +260,10 @@ SRC_URI_append_egami = " \
     "
 SRC_URI_append_openxta = " \
     file://tuxbox_fix_DVB_API_VERSION_check_for_gcc5.patch \
+    "
+
+SRC_URI_append_openspa = " \
+    file://skin_default.patch \
     "
 
 S = "${WORKDIR}/git"
