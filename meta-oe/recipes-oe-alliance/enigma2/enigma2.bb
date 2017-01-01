@@ -13,7 +13,7 @@ DEPENDS = " \
     python python-imaging python-twisted python-wifi \
     ${@base_contains("DISTRO_NAME", "openmips", "avahi libudfread", "", d)} \
     ${@base_contains("DISTRO_NAME", "egami", "libudfread", "", d)} \
-    ${@base_contains("DISTRO_NAME", "openvix", "libudfread", "", d)} \
+    ${@base_contains("DISTRO_NAME", "openvix", "avahi libudfread", "", d)} \
     ${@base_contains("DISTRO_NAME", "openbh", "libudfread", "", d)} \
     swig-native \
     tuxtxt-enigma2 \
@@ -212,7 +212,7 @@ inherit autotools-brokensep gitpkgv pkgconfig pythonnative
 
 PV = "5.3+git${SRCPV}"
 PKGV = "5.3+git${GITPKGV}"
-PR = "r2"
+PR = "r3"
 
 SRC_URI = "${ENIGMA2_URI}"
 
@@ -257,7 +257,6 @@ SRC_URI_append_opendroid = " \
 SRC_URI_append_egami = " \
     file://tuxbox_fix_DVB_API_VERSION_check_for_gcc5.patch \
     "
-
 SRC_URI_append_openxta = " \
     file://tuxbox_fix_DVB_API_VERSION_check_for_gcc5.patch \
     "
