@@ -15,7 +15,7 @@ DEPENDS = " \
     ${@base_contains("DISTRO_NAME", "openmips", "avahi libudfread", "", d)} \
     ${@base_contains("DISTRO_NAME", "egami", "avahi libudfread", "", d)} \
     ${@base_contains("DISTRO_NAME", "openvix", "avahi libudfread", "", d)} \
-    ${@base_contains("DISTRO_NAME", "openspa", "libudfread", "", d)} \
+    ${@base_contains("DISTRO_NAME", "openspa", "avahi libudfread", "", d)} \
     swig-native \
     tuxtxt-enigma2 \
     ${@base_contains("MACHINE_FEATURES", "uianimation", "vuplus-libgles-${MACHINE} libvugles2" , "", d)} \
