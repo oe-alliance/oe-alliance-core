@@ -16,6 +16,6 @@ DEPENDS = "\
     ${@base_contains("TARGET_ARCH", "mipsel", "openvix-softcams-oscam-pcscd-latest-mipsel" , "openvix-softcams-oscam-pcscd-latest-arm", d)} \
     ${@base_contains("TARGET_ARCH", "mipsel", "openvix-softcams-rqcamd", "", d)} \
     ${@base_contains("TARGET_ARCH", "mipsel", "openvix-softcams-scam", "", d)} \
-    "    
+    "
 
 PR = "r11"
