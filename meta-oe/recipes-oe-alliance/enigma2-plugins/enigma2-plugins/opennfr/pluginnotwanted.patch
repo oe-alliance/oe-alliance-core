@@ -1,5 +1,7 @@
---- Makefile.am	2017-01-02 20:43:58.000000000 +0100
-+++ Makefile.am	2017-01-02 21:21:37.000000000 +0100
+diff --git a/Makefile.am b/Makefile.am
+index d0f54e5..e535329 100644
+--- a/Makefile.am
++++ b/Makefile.am
 @@ -63,6 +63,7 @@ SUBDIRS = \
  	partnerbox \
  	permanentclock \
@@ -17,16 +19,15 @@
  	webcamviewer \
  	werbezapper \
  	zaphistorybrowser \
-@@ -101,8 +100,6 @@ SUBDIRS = \
- 	esame \
+@@ -102,7 +101,6 @@ SUBDIRS = \
  	schiffe \
  	sudoku \
--	vierg \
+ 	vierg \
 -	bmediacenter \
  	advancedmovieselection
  
  if DREAMBOX
-@@ -130,16 +127,14 @@ if TPM
+@@ -130,9 +127,7 @@ if TPM
  SUBDIRS += \
  	mytube \
  	yttrailer \
@@ -35,12 +36,3 @@
 -	pluginhider \
  	pluginsort 
  endif
- 
- if PLI
- SUBDIRS += networkbrowserpli epgsearchpli
- else
--SUBDIRS += networkbrowser epgsearch
-+SUBDIRS += epgsearch
- endif
- 
- metadir = $(datadir)/meta
