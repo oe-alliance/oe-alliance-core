@@ -1,7 +1,7 @@
 KV = "3.8.7"
 SRCDATE = "20130524"
 
-SRC_URI = "http://www.xtrendet.net/${MACHINE}-drivers-${KV}-${SRCDATE}.zip"
+SRC_URI = "http://www.et-view.com/img_up/shop_pds/bh190/Img_Xtrend/${MACHINE}-drivers-${KV}-${SRCDATE}.zip"
 
 RDEPENDS_${PN} += "et-fpupdate-${MACHINE}"
 
