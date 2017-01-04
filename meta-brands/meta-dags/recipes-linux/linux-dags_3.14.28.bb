@@ -2,7 +2,7 @@ SUMMARY = "Linux kernel for ${MACHINE}"
 LICENSE = "GPLv2"
 SECTION = "kernel"
 
-MACHINE_KERNEL_PR_append = ".5"
+MACHINE_KERNEL_PR_append = ".6"
 
 inherit kernel machine_kernel_pr
 

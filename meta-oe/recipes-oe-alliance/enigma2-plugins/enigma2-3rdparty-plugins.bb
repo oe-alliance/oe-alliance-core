@@ -52,12 +52,12 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-hdmitest_0.4_mipsel.ipk \
     enigma2-plugin-extensions-hetweer_3.7r6_all.ipk \
     enigma2-plugin-extensions-iptvbouquet_1.0_r0_all.ipk \
-    enigma2-plugin-extensions-iptvplayer_128.01.06.00rc1_all.ipk \
+    enigma2-plugin-extensions-iptvplayer_143.01.08.00rc1_all.ipk \
     ${@bb.utils.contains("TARGET_ARCH", "sh4", "enigma2-plugin-extensions-isettinge2-3.3.8_sh4.ipk" , "", d)} \
     ${@bb.utils.contains("TARGET_ARCH", "mipsel", "enigma2-plugin-extensions-isettinge2-3.3.8_mips32el.ipk" , "", d)} \
     ${@bb.utils.contains("TARGET_ARCH", "arm", "enigma2-plugin-extensions-isettinge2-3.3.8_armv7ahf-neon.ipk" , "", d)} \
-    enigma2-plugin-extensions-kicker_3.4rc12_all.ipk \
-    enigma2-plugin-extensions-kino_1.6rc11_all.ipk \
+    enigma2-plugin-extensions-kicker_3.5rc1_all.ipk \
+    enigma2-plugin-extensions-kino_1.7rc1_all.ipk \
     enigma2-plugin-extensions-kodidirect_3.1_r0_all.ipk \
     enigma2-plugin-extensions-livefootball_6.1_all.ipk \
     enigma2-plugin-extensions-mediainfo_3.0.0_all.ipk \
@@ -82,7 +82,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-sherlock_5.01r1_mipsel.ipk \
     enigma2-plugin-extensions-skyrecorder_1.6.1_all.ipk \
     enigma2-plugin-extensions-songs-to_0.1_mips32el.ipk \
-    enigma2-plugin-extensions-spiegelonline_2.8rc1_all.ipk \
+    enigma2-plugin-extensions-spiegelonline_2.8rc2_all.ipk \
     enigma2-plugin-extensions-spinnerselector_2.1rc7_mips32el.ipk \
     enigma2-plugin-extensions-sport1ticker_1.3_all.ipk \
     enigma2-plugin-extensions-sportportal_2013_all.ipk \
@@ -94,18 +94,18 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-transmission_2.84_all.ipk \
     enigma2-plugin-extensions-tsmedia_11.4_all.ipk \
     enigma2-plugin-extensions-tstube_1.2_all.ipk \
-    enigma2-plugin-extensions-tvspielfilm_6.5rc1_all.ipk \
-    enigma2-plugin-extensions-verkehrsinfo_1.2rc1_mips32el.ipk \
+    enigma2-plugin-extensions-tvspielfilm_6.5rc3_all.ipk \
+    enigma2-plugin-extensions-verkehrsinfo_1.2rc1_all.ipk \
     enigma2-plugin-extensions-vcs_2.4_all.ipk \
     enigma2-plugin-extensions-vhannibalautosettings_1.1_mips32el.ipk \
     enigma2-plugin-extensions-vuplusforum_0.8rc2_all.ipk \
     enigma2-plugin-extensions-webmedia_14.0_r0_all.ipk \
-    enigma2-plugin-extensions-webradiofs_14.70_all.ipk \
+    enigma2-plugin-extensions-webradiofs_14.75_all.ipk \
     enigma2-plugin-extensions-wikipedia_2.3rc1_all.ipk \
     enigma2-plugin-extensions-wwech_1.03_all.ipk \
     enigma2-plugin-extensions-xbmcaddons_8.1_r0_all.ipk \
     enigma2-plugin-extensions-xbmcwetter_1.4rc1_all.ipk \
-    enigma2-plugin-extensions-zdfnewmediathek_2.1rc1_all.ipk \
+    enigma2-plugin-extensions-zdfnewmediathek_2.1rc2_all.ipk \
     enigma2-plugin-systemplugins-bouquetsprotection_0.2-rc1_all.ipk \
     enigma2-plugin-systemplugins-channelselectionnavigator_1.2_mipsel.ipk \
     enigma2-plugin-systemplugins-extnumberzap_1.17_all.ipk \
