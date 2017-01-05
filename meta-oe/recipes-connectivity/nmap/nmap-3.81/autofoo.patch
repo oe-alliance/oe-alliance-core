@@ -1,0 +1,827 @@
+
+#
+# Patch managed by http://www.holgerschurig.de/patcher.html
+#
+
+--- /dev/null
++++ nmap-3.77/acinclude.m4
+@@ -0,0 +1,27 @@
++dnl Type of 6th argument to recvfrom(). Usually int or socklen_t.
++AC_DEFUN([RECVFROM_ARG6_TYPE],
++[
++   AC_LANG_PUSH(C++)
++   AC_MSG_CHECKING([for type of 6th argument to recvfrom()])
++   recvfrom6_t=
++   for t in socklen_t int; do
++     AC_TRY_COMPILE([
++#include <stdio.h>
++#include <stdlib.h>
++#include <sys/types.h>
++#include <sys/socket.h>],[
++$t arg;
++recvfrom (0, NULL, 0, 0, NULL, &arg);],[
++      recvfrom6_t="$t"
++      break])
++   done
++
++   if test "x$recvfrom6_t" = x; then
++     AC_MSG_ERROR([Cannot find type for 6th argument to recvfrom()])
++   fi
++
++   AC_MSG_RESULT($recvfrom6_t)
++   AC_DEFINE_UNQUOTED(recvfrom6_t, $recvfrom6_t,
++     [Type of 6th argument to recvfrom()])
++   AC_LANG_POP(C++)
++])
+--- nmap-3.77/configure.ac~autofoo.patch
++++ nmap-3.77/configure.ac
+@@ -42,10 +42,6 @@
+  if test -n "$GXX"; then
+       CXXFLAGS="$CXXFLAGS -Wall "
+  fi
+-AC_CHECK_PROG(CXXPROG, "$CXX", "AVAILABLE", "MISSING")
+-if test $CXXPROG = "MISSING"; then
+-  AC_MSG_ERROR([Could not locate a C++ compiler. If it exists, add it to your PATH or give configure the CXX=path_to_compiler argument.  Otherwise, install a C++ compiler such as g++ or install a binary package of Nmap (see http://www.insecure.org/nmap/nmap_download.html ))])
+-fi
+ 
+ dnl AC_PROG_INSTALL
+ dnl AC_PATH_PROG(MAKEDEPEND, makedepend)
+@@ -65,7 +61,7 @@
+ dnl equiv to '#define inline' to 'inline', '__inline__', '__inline' or ''
+ AC_C_INLINE
+ if test -n "$sgi_cc"; then
+-   AC_DEFINE(inline, )
++   AC_DEFINE(inline, , [Define if we need to declare our own inline])
+ fi
+ 
+ AC_SUBST(COMPAT_OBJS)
+@@ -78,6 +74,19 @@
+ macosx=no
+ needs_cpp_precomp=no
+ 
++AH_TEMPLATE([NETBSD], [Define if building for a netbsd host])
++AH_TEMPLATE([LINUX], [Define if building for a linux host])
++AH_TEMPLATE([OPENBSD], [Define if building for an openbsd host])
++AH_TEMPLATE([SOLARIS], [Define if building for a solaris host])
++AH_TEMPLATE([IRIX], [Define if building for an irix host])
++AH_TEMPLATE([BSDI], [Define if building for a bsdi host])
++AH_TEMPLATE([FREEBSD], [Define if building for a freebsd host])
++AH_TEMPLATE([SUNOS], [Define if building for a sunos host])
++AH_TEMPLATE([MACOSX], [Define if building for a macosx host])
++AH_TEMPLATE([DEC], [Define if building for a digital unix host])
++AH_TEMPLATE([SPRINTF_RETURNS_STRING], [Define if sprintf() returns char *])
++AH_TEMPLATE([STUPID_SOLARIS_CHECKSUM_BUG], [Define to handle the solaris checksum bug])
++AH_TEMPLATE([PCAP_TIMEOUT_IGNORED], [Does the pcap library obey the timeout])
+ case "$host" in
+   *alpha-dec-osf*)
+     AC_DEFINE(DEC)
+@@ -273,7 +282,7 @@
+ 
+ OPENSSL_LIBS=
+ if test "$use_openssl" = "yes"; then
+-  AC_DEFINE(HAVE_OPENSSL)
++  AC_DEFINE(HAVE_OPENSSL, 1, [Define this if we have openssl])
+   OPENSSL_LIBS="-lssl -lcrypto"
+ fi
+ 
+@@ -312,9 +321,11 @@
+   esac]
+ )
+ 
+-if test $linux = yes; then
+-  have_libpcap=no
+-fi
++# If I say I have pcap, damnit, I mean it, even if I am using linux. --CL
++#
++# if test $linux = yes; then
++#   have_libpcap=no
++# fi
+ 
+ if test $needs_cpp_precomp = yes; then
+   CXXFLAGS="-no-cpp-precomp $CXXFLAGS"
+@@ -359,7 +370,7 @@
+ }],
+ [AC_MSG_RESULT(yes); have_libpcap=yes],
+ [AC_MSG_RESULT(no); have_libpcap=no],
+-[AC_MSG_RESULT(no); have_libpcap=no])
++[AC_MSG_RESULT(crosscompiling, assuming yes); have_libpcap=yes])
+ LIBS="$LIBS_OLD"
+ fi
+ 
+@@ -369,7 +380,7 @@
+   PCAP_DEPENDS=""
+   PCAP_CLEAN=""
+   PCAP_DIST_CLEAN=""
+-  AC_DEFINE(HAVE_LIBPCAP)
++  AC_DEFINE(HAVE_LIBPCAP, 1, [Define if we have libpcap])
+ else
+   if test "${LIBPCAP_INC+set}" = "set"; then
+     LDFLAGS="-L$libpcapdir $_ldflags"
+@@ -453,7 +464,7 @@
+                [AC_MSG_RESULT(no); bsd_networking=no]);
+ if test $bsd_networking = yes; then
+ 
+-  AC_DEFINE(BSD_NETWORKING)
++  AC_DEFINE(BSD_NETWORKING, 1, [Define if we have bsd networking])
+   AC_MSG_CHECKING([ip_v in struct ip])
+   AC_TRY_COMPILE([#include <sys/types.h>
+ #include <netinet/in.h>
+@@ -501,13 +512,14 @@
+         ac_cv_sockaddr_has_sa_len=yes,
+         ac_cv_sockaddr_has_sa_len=no))
+ if test $ac_cv_sockaddr_has_sa_len = yes ; then
+-        AC_DEFINE(HAVE_SOCKADDR_SA_LEN)
++        AC_DEFINE(HAVE_SOCKADDR_SA_LEN, 1, [Define if sockaddr has a sa_len member])
+ fi
+ 
+ dnl check endedness
+ AC_C_BIGENDIAN
+ 
+ AC_MSG_CHECKING([if struct in_addr is a wacky huge structure (some Sun boxes)])
++AH_TEMPLATE([IN_ADDR_DEEPSTRUCT], [Define if struct in_addr is a wacky huge structure])
+ 
+ AC_TRY_COMPILE([#include <netinet/in.h>], struct in_addr i; i._S_un._S_addr;, \
+               AC_DEFINE(IN_ADDR_DEEPSTRUCT) \
+@@ -533,7 +545,7 @@
+         ac_cv_struct_icmp_exists=yes,
+         ac_cv_struct_icmp_exists=no))
+ if test $ac_cv_struct_icmp_exists = yes ; then
+-        AC_DEFINE(HAVE_STRUCT_ICMP)
++        AC_DEFINE(HAVE_STRUCT_ICMP, 1, [Define if struct icmp exists])
+ fi
+ 
+ AC_CACHE_CHECK(if struct ip exists, ac_cv_struct_ip_exists,
+@@ -550,7 +562,7 @@
+         ac_cv_struct_ip_exists=yes,
+         ac_cv_struct_ip_exists=no))
+ if test $ac_cv_struct_ip_exists = yes ; then
+-        AC_DEFINE(HAVE_STRUCT_IP)
++        AC_DEFINE(HAVE_STRUCT_IP, 1, [Define if struct ip exists])
+ fi
+ 
+ AC_CACHE_CHECK(if struct ip has ip_sum member, ac_cv_ip_has_ip_sum,
+@@ -568,7 +580,7 @@
+         ac_cv_ip_has_ip_sum=yes,
+         ac_cv_ip_has_ip_sum=no))
+ if test $ac_cv_ip_has_ip_sum = yes ; then
+-        AC_DEFINE(HAVE_IP_IP_SUM)
++        AC_DEFINE(HAVE_IP_IP_SUM, 1, [Define if struct ip has ip_sum member])
+ fi
+ 
+ 
+@@ -589,7 +601,7 @@
+ extern "C" int usleep (unsigned int);],[
+ usleep (200);],[
+   AC_MSG_RESULT(yes)
+-  AC_DEFINE(NEED_USLEEP_PROTO)],
++  AC_DEFINE(NEED_USLEEP_PROTO, 1, [Define if we need a usleep prototype])],
+   AC_MSG_RESULT(not found))])
+ AC_LANG_POP(C++)
+ 
+@@ -607,7 +619,7 @@
+ char buffer[200];
+ gethostname (buffer, 200);],[
+   AC_MSG_RESULT(yes)
+-  AC_DEFINE(NEED_GETHOSTNAME_PROTO)],
++  AC_DEFINE(NEED_GETHOSTNAME_PROTO, 1, [Define if we need a gethostname prototype])],
+   AC_MSG_RESULT(not found))])
+ AC_LANG_POP(C++)
+ 
+@@ -615,6 +627,8 @@
+ 
+ dnl AC_CHECK_FUNCS(gethostname gettimeofday select socket strdup strstr )
+ 
++NBASEDIR="nbase"
++use_included_nbase=no
+ AC_ARG_WITH(libnbase,
+ [  --with-libnbase=DIR     Look for nbase include/libs in DIR],
+ [  case "$with_libnbase" in
+@@ -624,7 +638,7 @@
+     NBASEDIR="$with_libnbase"
+     ;;
+   esac],
+-NBASEDIR="nbase"
++  use_included_nbase=yes
+ )
+ 
+ LDFLAGS="$LDFLAGS -L$NBASEDIR"
+@@ -634,6 +648,7 @@
+ AC_SUBST(NBASEDIR)
+ AC_SUBST(LIBNBASE_LIBS)
+ 
++use_included_nsock=no
+ NSOCKDIR="nsock"
+ AC_ARG_WITH(libnsock,
+ [  --with-libnsock=DIR     Compile and link to libnsock in DIR],
+@@ -643,7 +658,8 @@
+   *)
+     NSOCKDIR="$with_nsock"
+     ;;
+-  esac]
++  esac],
++    use_included_nsock=yes
+ )
+ 
+ LDFLAGS="$LDFLAGS -L$NSOCKDIR/src/"
+@@ -653,20 +669,11 @@
+ AC_SUBST(NSOCKDIR)
+ AC_SUBST(LIBNSOCK_LIBS)
+ 
+-nmap_cfg_subdirs="$nmap_cfg_subdirs $NSOCKDIR/src"
+-
+ dnl I need to configure nmapfe and libpcap here since the user might
+ dnl have specified special options (such as --prefix )
+ dnl
+ dnl But I only have to configure libpcap if I am going to use it
+ 
+-if test $have_libpcap = yes ; then
+-        nmap_cfg_subdirs="$NBASEDIR $nmap_cfg_subdirs"
+-else
+-        nmap_cfg_subdirs="$NBASEDIR $libpcapdir $nmap_cfg_subdirs"
+-fi
+-
+-
+ if test "${with_nmapfe}" = "yes"; then
+ dnl Check for GTK+
+ AC_PATH_PROG(GTK_CONFIG, gtk-config, no)
+@@ -692,7 +699,7 @@
+                  You need at least version $GTK_MINVERSION.\n Subdir X-windows \
+                  will not be made])
+   else
+-    nmap_cfg_subdirs="$nmap_cfg_subdirs nmapfe"
++    AC_CONFIG_SUBDIRS(nmapfe)
+     dnl Maybe also define the flags to compile and link GTK+
+     dnl GTK_CXXFLAGS=`gtk-config --cflags`
+     dnl GTK_LIBS=`gtk-config --libs`
+@@ -703,7 +710,17 @@
+ fi
+ 
+ dnl all hell broke loose when the variable was named $subdirs
+-AC_CONFIG_SUBDIRS( $nmap_cfg_subdirs )
++if test $have_libpcap != yes ; then
++  AC_CONFIG_SUBDIRS(libpcap-possiblymodified)
++fi
++
++if test "$use_included_nbase" = yes; then
++  AC_CONFIG_SUBDIRS(nbase)
++fi
++
++if test "$use_included_nsock" = "yes"; then
++  AC_CONFIG_SUBDIRS(nsock/src)
++fi
+ 
+ dnl Configure libpcap if we need to since a lot of lamers don't
+ dnl already have it installed ...
+--- /dev/null
++++ nmap-3.77/nbase/acinclude.m4
+@@ -0,0 +1,223 @@
++dnl -----------------------------------------------------------------
++dnl Nbase local macros
++dnl $Id: configlocal.m4,v 1.3 2002/09/08 22:56:01 fyodor Exp $
++dnl -----------------------------------------------------------------
++
++dnl
++dnl check for working getaddrinfo().  This check is from 
++dnl Apache 2.0.40
++dnl
++dnl Note that if the system doesn't have gai_strerror(), we
++dnl can't use getaddrinfo() because we can't get strings
++dnl describing the error codes.
++dnl
++AC_DEFUN([APR_CHECK_WORKING_GETADDRINFO], [
++  AC_CACHE_CHECK(for working getaddrinfo, ac_cv_working_getaddrinfo,[
++  AC_TRY_RUN( [
++#ifdef HAVE_NETDB_H
++#include <netdb.h>
++#endif
++#ifdef HAVE_STRING_H
++#include <string.h>
++#endif
++#ifdef HAVE_SYS_TYPES_H
++#include <sys/types.h>
++#endif
++#ifdef HAVE_SYS_SOCKET_H
++#include <sys/socket.h>
++#endif
++
++void main(void) {
++    struct addrinfo hints, *ai;
++    int error;
++
++    memset(&hints, 0, sizeof(hints));
++    hints.ai_family = AF_UNSPEC;
++    hints.ai_socktype = SOCK_STREAM;
++    error = getaddrinfo("127.0.0.1", NULL, &hints, &ai);
++    if (error) {
++        exit(1);
++    }
++    if (ai->ai_addr->sa_family != AF_INET) {
++        exit(1);
++    }
++    exit(0);
++}
++],[
++  ac_cv_working_getaddrinfo="yes"
++],[
++  ac_cv_working_getaddrinfo="no"
++],[
++  ac_cv_working_getaddrinfo="yes"
++])])
++if test "$ac_cv_working_getaddrinfo" = "yes"; then
++  if test "$ac_cv_func_gai_strerror" != "yes"; then
++    ac_cv_working_getaddrinfo="no"
++  else
++    AC_DEFINE(HAVE_GETADDRINFO, 1, [Define if getaddrinfo exists and works well enough for APR])
++  fi
++fi
++])
++
++dnl
++dnl check for working getnameinfo() -- from Apache 2.0.40
++dnl
++AC_DEFUN([APR_CHECK_WORKING_GETNAMEINFO],[
++  AC_CACHE_CHECK(for working getnameinfo, ac_cv_working_getnameinfo,[
++  AC_TRY_RUN( [
++#ifdef HAVE_NETDB_H
++#include <netdb.h>
++#endif
++#ifdef HAVE_STRING_H
++#include <string.h>
++#endif
++#ifdef HAVE_SYS_TYPES_H
++#include <sys/types.h>
++#endif
++#ifdef HAVE_SYS_SOCKET_H
++#include <sys/socket.h>
++#endif
++#ifdef HAVE_NETINET_IN_H
++#include <netinet/in.h>
++#endif
++
++void main(void) {
++    struct sockaddr_in sa;
++    char hbuf[256];
++    int error;
++
++    sa.sin_family = AF_INET;
++    sa.sin_port = 0;
++    sa.sin_addr.s_addr = inet_addr("127.0.0.1");
++#ifdef SIN6_LEN
++    sa.sin_len = sizeof(sa);
++#endif
++
++    error = getnameinfo((const struct sockaddr *)&sa, sizeof(sa),
++                        hbuf, 256, NULL, 0,
++                        NI_NUMERICHOST);
++    if (error) {
++        exit(1);
++    } else {
++        exit(0);
++    }
++}
++],[
++  ac_cv_working_getnameinfo="yes"
++],[
++  ac_cv_working_getnameinfo="no"
++],[
++  ac_cv_working_getnameinfo="yes"
++])])
++if test "$ac_cv_working_getnameinfo" = "yes"; then
++  AC_DEFINE(HAVE_GETNAMEINFO, 1, [Define if getnameinfo exists])
++fi
++])
++
++AC_DEFUN([APR_CHECK_SOCKADDR_IN6],[
++AC_CACHE_CHECK(for sockaddr_in6, ac_cv_define_sockaddr_in6,[
++AC_TRY_COMPILE([
++#ifdef HAVE_SYS_TYPES_H
++#include <sys/types.h>
++#endif
++#ifdef HAVE_NETINET_IN_H
++#include <netinet/in.h>
++#endif
++],[
++struct sockaddr_in6 sa;
++],[
++    ac_cv_define_sockaddr_in6=yes
++],[
++    ac_cv_define_sockaddr_in6=no
++])
++])
++
++if test "$ac_cv_define_sockaddr_in6" = "yes"; then
++  have_sockaddr_in6=1
++  AC_DEFINE(HAVE_SOCKADDR_IN6, 1, [Define if we have sockaddr_in6])
++else
++  have_sockaddr_in6=0
++fi
++])
++
++AC_DEFUN([CHECK_AF_INET6_DEFINE],[
++AC_CACHE_CHECK(for AF_INET6 definition, ac_cv_define_af_inet6,[
++AC_TRY_COMPILE([
++#ifdef HAVE_SYS_TYPES_H
++#include <sys/types.h>
++#endif
++#ifdef HAVE_NETINET_IN_H
++#include <netinet/in.h>
++#endif
++#ifdef HAVE_SYS_SOCKET_H
++#include <sys/socket.h>
++#endif
++],[
++int af = AF_INET6;
++],[
++    ac_cv_define_af_inet6=yes
++],[
++    ac_cv_define_af_inet6=no
++])
++])
++
++if test "$ac_cv_define_af_inet6" = "yes"; then
++  have_af_inet6=1
++  AC_DEFINE(HAVE_AF_INET6, 1, [Define if we have AF_INET6])
++else
++  have_af_inet6=0
++fi
++])
++
++AC_DEFUN([APR_CHECK_SOCKADDR_STORAGE],[
++AC_CACHE_CHECK(for sockaddr_storage, ac_cv_define_sockaddr_storage,[
++AC_TRY_COMPILE([
++#ifdef HAVE_SYS_TYPES_H
++#include <sys/types.h>
++#endif
++#ifdef HAVE_SYS_SOCKET_H
++#include <sys/socket.h>
++#endif
++#ifdef HAVE_NETINET_IN_H
++#include <netinet/in.h>
++#endif
++],[
++struct sockaddr_storage sa;
++],[
++    ac_cv_define_sockaddr_storage=yes
++],[
++    ac_cv_define_sockaddr_storage=no
++])
++])
++
++if test "$ac_cv_define_sockaddr_storage" = "yes"; then
++  have_sockaddr_storage=1
++  AC_DEFINE(HAVE_SOCKADDR_STORAGE, 1, [Define if we have struct sockaddr_storage])
++else
++  have_sockaddr_storage=0
++fi
++])
++
++AC_DEFUN([AC_C___ATTRIBUTE__], [
++AC_MSG_CHECKING(for __attribute__)
++AC_CACHE_VAL(ac_cv___attribute__, [
++AC_TRY_COMPILE([
++#include <stdlib.h>
++],
++[
++static void foo(void) __attribute__ ((noreturn));
++
++static void
++foo(void)
++{
++  exit(1);
++}
++],
++ac_cv___attribute__=yes,
++ac_cv___attribute__=no)])
++if test "$ac_cv___attribute__" = "yes"; then
++  AC_DEFINE(HAVE___ATTRIBUTE__, 1, [define if your compiler has __attribute__])
++fi
++AC_MSG_RESULT($ac_cv___attribute__)
++])
++
+--- nmap-3.77/nbase/configure.ac~autofoo.patch
++++ nmap-3.77/nbase/configure.ac
+@@ -7,9 +7,6 @@
+ # Require autoconf 2.13
+ AC_PREREQ(2.13)
+ 
+-# Include my own macros
+-sinclude(configlocal.m4)
+-
+ AC_INIT(nbase.h)
+ 
+ AC_ARG_WITH(localdirs,
+@@ -36,6 +33,7 @@
+ 
+ dnl use config.h instad of -D macros
+ AC_CONFIG_HEADER(nbase_config.h)
++AC_CONFIG_AUX_DIR(..)
+ 
+ dnl Checks for programs.
+ AC_PROG_CC
+@@ -46,6 +44,7 @@
+ AC_PROG_RANLIB
+ dnl AC_PROG_INSTALL
+ dnl AC_PATH_PROG(MAKEDEPEND, makedepend)
++AC_PATH_PROG(RANLIB, ranlib)
+ 
+ AC_SUBST(COMPAT_OBJS)
+ AC_SUBST(COMPAT_SRCS)
+@@ -55,6 +54,17 @@
+ 
+ linux=no
+ 
++AH_TEMPLATE([NETBSD], [Define if building for a netbsd host])
++AH_TEMPLATE([LINUX], [Define if building for a linux host])
++AH_TEMPLATE([OPENBSD], [Define if building for an openbsd host])
++AH_TEMPLATE([SOLARIS], [Define if building for a solaris host])
++AH_TEMPLATE([IRIX], [Define if building for an irix host])
++AH_TEMPLATE([BSDI], [Define if building for a bsdi host])
++AH_TEMPLATE([FREEBSD], [Define if building for a freebsd host])
++AH_TEMPLATE([SUNOS], [Define if building for a sunos host])
++AH_TEMPLATE([SPRINTF_RETURNS_STRING], [Define if sprintf() returns char *])
++AH_TEMPLATE([STUPID_SOLARIS_CHECKSUM_BUG], [Define to handle the solaris checksum bug])
++AH_TEMPLATE([PCAP_TIMEOUT_IGNORED], [Does the pcap library obey the timeout])
+ case "$host" in
+   *-netbsd* | *-knetbsd*-gnu)
+     AC_DEFINE(NETBSD)
+@@ -157,7 +167,7 @@
+ dnl equiv to '#define inline' to 'inline', '__inline__', '__inline' or ''
+ AC_C_INLINE
+ if test -n "$sgi_cc"; then
+-   AC_DEFINE(inline, )
++   AC_DEFINE(inline, ,[Define this if we need to define inline ourselves])
+ fi
+ AC_C___ATTRIBUTE__
+ 
+@@ -259,7 +269,7 @@
+ fi
+ 
+ if test "$use_openssl" = "yes"; then
+-  AC_DEFINE(HAVE_OPENSSL)
++  AC_DEFINE(HAVE_OPENSSL, 1, [Define this if we have openssl])
+ fi
+ 
+ 
+@@ -319,8 +329,7 @@
+ fi
+ 
+ if test "$have_ipv6" = "1"; then
+-  AC_DEFINE(HAVE_IPV6)
++  AC_DEFINE(HAVE_IPV6, 1, [Define this if we have ipv6 support])
+ fi
+ 
+ AC_OUTPUT(Makefile)
+-
+--- /dev/null
++++ nmap-3.77/nmapfe/m4/gtk.m4
+@@ -0,0 +1,194 @@
++# Configure paths for GTK+
++# Owen Taylor     97-11-3
++
++dnl AM_PATH_GTK([MINIMUM-VERSION, [ACTION-IF-FOUND [, ACTION-IF-NOT-FOUND [, MODULES]]]])
++dnl Test for GTK, and define GTK_CFLAGS and GTK_LIBS
++dnl
++AC_DEFUN(AM_PATH_GTK,
++[dnl 
++dnl Get the cflags and libraries from the gtk-config script
++dnl
++AC_ARG_WITH(gtk-prefix,[  --with-gtk-prefix=PFX   Prefix where GTK is installed (optional)],
++            gtk_config_prefix="$withval", gtk_config_prefix="")
++AC_ARG_WITH(gtk-exec-prefix,[  --with-gtk-exec-prefix=PFX Exec prefix where GTK is installed (optional)],
++            gtk_config_exec_prefix="$withval", gtk_config_exec_prefix="")
++AC_ARG_ENABLE(gtktest, [  --disable-gtktest       Do not try to compile and run a test GTK program],
++		    , enable_gtktest=yes)
++
++  for module in . $4
++  do
++      case "$module" in
++         gthread) 
++             gtk_config_args="$gtk_config_args gthread"
++         ;;
++      esac
++  done
++
++  if test x$gtk_config_exec_prefix != x ; then
++     gtk_config_args="$gtk_config_args --exec-prefix=$gtk_config_exec_prefix"
++     if test x${GTK_CONFIG+set} != xset ; then
++        GTK_CONFIG=$gtk_config_exec_prefix/bin/gtk-config
++     fi
++  fi
++  if test x$gtk_config_prefix != x ; then
++     gtk_config_args="$gtk_config_args --prefix=$gtk_config_prefix"
++     if test x${GTK_CONFIG+set} != xset ; then
++        GTK_CONFIG=$gtk_config_prefix/bin/gtk-config
++     fi
++  fi
++
++  AC_PATH_PROG(GTK_CONFIG, gtk-config, no)
++  min_gtk_version=ifelse([$1], ,0.99.7,$1)
++  AC_MSG_CHECKING(for GTK - version >= $min_gtk_version)
++  no_gtk=""
++  if test "$GTK_CONFIG" = "no" ; then
++    no_gtk=yes
++  else
++    GTK_CFLAGS=`$GTK_CONFIG $gtk_config_args --cflags`
++    GTK_LIBS=`$GTK_CONFIG $gtk_config_args --libs`
++    gtk_config_major_version=`$GTK_CONFIG $gtk_config_args --version | \
++           sed 's/\([[0-9]]*\).\([[0-9]]*\).\([[0-9]]*\)/\1/'`
++    gtk_config_minor_version=`$GTK_CONFIG $gtk_config_args --version | \
++           sed 's/\([[0-9]]*\).\([[0-9]]*\).\([[0-9]]*\)/\2/'`
++    gtk_config_micro_version=`$GTK_CONFIG $gtk_config_args --version | \
++           sed 's/\([[0-9]]*\).\([[0-9]]*\).\([[0-9]]*\)/\3/'`
++    if test "x$enable_gtktest" = "xyes" ; then
++      ac_save_CFLAGS="$CFLAGS"
++      ac_save_LIBS="$LIBS"
++      CFLAGS="$CFLAGS $GTK_CFLAGS"
++      LIBS="$GTK_LIBS $LIBS"
++dnl
++dnl Now check if the installed GTK is sufficiently new. (Also sanity
++dnl checks the results of gtk-config to some extent
++dnl
++      rm -f conf.gtktest
++      AC_TRY_RUN([
++#include <gtk/gtk.h>
++#include <stdio.h>
++#include <stdlib.h>
++
++int 
++main ()
++{
++  int major, minor, micro;
++  char *tmp_version;
++
++  system ("touch conf.gtktest");
++
++  /* HP/UX 9 (%@#!) writes to sscanf strings */
++  tmp_version = g_strdup("$min_gtk_version");
++  if (sscanf(tmp_version, "%d.%d.%d", &major, &minor, &micro) != 3) {
++     printf("%s, bad version string\n", "$min_gtk_version");
++     exit(1);
++   }
++
++  if ((gtk_major_version != $gtk_config_major_version) ||
++      (gtk_minor_version != $gtk_config_minor_version) ||
++      (gtk_micro_version != $gtk_config_micro_version))
++    {
++      printf("\n*** 'gtk-config --version' returned %d.%d.%d, but GTK+ (%d.%d.%d)\n", 
++             $gtk_config_major_version, $gtk_config_minor_version, $gtk_config_micro_version,
++             gtk_major_version, gtk_minor_version, gtk_micro_version);
++      printf ("*** was found! If gtk-config was correct, then it is best\n");
++      printf ("*** to remove the old version of GTK+. You may also be able to fix the error\n");
++      printf("*** by modifying your LD_LIBRARY_PATH enviroment variable, or by editing\n");
++      printf("*** /etc/ld.so.conf. Make sure you have run ldconfig if that is\n");
++      printf("*** required on your system.\n");
++      printf("*** If gtk-config was wrong, set the environment variable GTK_CONFIG\n");
++      printf("*** to point to the correct copy of gtk-config, and remove the file config.cache\n");
++      printf("*** before re-running configure\n");
++    } 
++#if defined (GTK_MAJOR_VERSION) && defined (GTK_MINOR_VERSION) && defined (GTK_MICRO_VERSION)
++  else if ((gtk_major_version != GTK_MAJOR_VERSION) ||
++	   (gtk_minor_version != GTK_MINOR_VERSION) ||
++           (gtk_micro_version != GTK_MICRO_VERSION))
++    {
++      printf("*** GTK+ header files (version %d.%d.%d) do not match\n",
++	     GTK_MAJOR_VERSION, GTK_MINOR_VERSION, GTK_MICRO_VERSION);
++      printf("*** library (version %d.%d.%d)\n",
++	     gtk_major_version, gtk_minor_version, gtk_micro_version);
++    }
++#endif /* defined (GTK_MAJOR_VERSION) ... */
++  else
++    {
++      if ((gtk_major_version > major) ||
++        ((gtk_major_version == major) && (gtk_minor_version > minor)) ||
++        ((gtk_major_version == major) && (gtk_minor_version == minor) && (gtk_micro_version >= micro)))
++      {
++        return 0;
++       }
++     else
++      {
++        printf("\n*** An old version of GTK+ (%d.%d.%d) was found.\n",
++               gtk_major_version, gtk_minor_version, gtk_micro_version);
++        printf("*** You need a version of GTK+ newer than %d.%d.%d. The latest version of\n",
++	       major, minor, micro);
++        printf("*** GTK+ is always available from ftp://ftp.gtk.org.\n");
++        printf("***\n");
++        printf("*** If you have already installed a sufficiently new version, this error\n");
++        printf("*** probably means that the wrong copy of the gtk-config shell script is\n");
++        printf("*** being found. The easiest way to fix this is to remove the old version\n");
++        printf("*** of GTK+, but you can also set the GTK_CONFIG environment to point to the\n");
++        printf("*** correct copy of gtk-config. (In this case, you will have to\n");
++        printf("*** modify your LD_LIBRARY_PATH enviroment variable, or edit /etc/ld.so.conf\n");
++        printf("*** so that the correct libraries are found at run-time))\n");
++      }
++    }
++  return 1;
++}
++],, no_gtk=yes,[echo $ac_n "cross compiling; assumed OK... $ac_c"])
++       CFLAGS="$ac_save_CFLAGS"
++       LIBS="$ac_save_LIBS"
++     fi
++  fi
++  if test "x$no_gtk" = x ; then
++     AC_MSG_RESULT(yes)
++     ifelse([$2], , :, [$2])     
++  else
++     AC_MSG_RESULT(no)
++     if test "$GTK_CONFIG" = "no" ; then
++       echo "*** The gtk-config script installed by GTK could not be found"
++       echo "*** If GTK was installed in PREFIX, make sure PREFIX/bin is in"
++       echo "*** your path, or set the GTK_CONFIG environment variable to the"
++       echo "*** full path to gtk-config."
++     else
++       if test -f conf.gtktest ; then
++        :
++       else
++          echo "*** Could not run GTK test program, checking why..."
++          CFLAGS="$CFLAGS $GTK_CFLAGS"
++          LIBS="$LIBS $GTK_LIBS"
++          AC_TRY_LINK([
++#include <gtk/gtk.h>
++#include <stdio.h>
++],      [ return ((gtk_major_version) || (gtk_minor_version) || (gtk_micro_version)); ],
++        [ echo "*** The test program compiled, but did not run. This usually means"
++          echo "*** that the run-time linker is not finding GTK or finding the wrong"
++          echo "*** version of GTK. If it is not finding GTK, you'll need to set your"
++          echo "*** LD_LIBRARY_PATH environment variable, or edit /etc/ld.so.conf to point"
++          echo "*** to the installed location  Also, make sure you have run ldconfig if that"
++          echo "*** is required on your system"
++	  echo "***"
++          echo "*** If you have an old version installed, it is best to remove it, although"
++          echo "*** you may also be able to get things to work by modifying LD_LIBRARY_PATH"
++          echo "***"
++          echo "*** If you have a RedHat 5.0 system, you should remove the GTK package that"
++          echo "*** came with the system with the command"
++          echo "***"
++          echo "***    rpm --erase --nodeps gtk gtk-devel" ],
++        [ echo "*** The test program failed to compile or link. See the file config.log for the"
++          echo "*** exact error that occured. This usually means GTK was incorrectly installed"
++          echo "*** or that you have moved GTK since it was installed. In the latter case, you"
++          echo "*** may want to edit the gtk-config script: $GTK_CONFIG" ])
++          CFLAGS="$ac_save_CFLAGS"
++          LIBS="$ac_save_LIBS"
++       fi
++     fi
++     GTK_CFLAGS=""
++     GTK_LIBS=""
++     ifelse([$3], , :, [$3])
++  fi
++  AC_SUBST(GTK_CFLAGS)
++  AC_SUBST(GTK_LIBS)
++  rm -f conf.gtktest
++])
+--- nmap-3.77/nsock/src/configure.ac~autofoo.patch
++++ nmap-3.77/nsock/src/configure.ac
+@@ -137,7 +137,7 @@
+ fi
+ 
+ if test "$use_openssl" = "yes"; then
+-  AC_DEFINE(HAVE_OPENSSL)
++  AC_DEFINE(HAVE_OPENSSL, 1, [Define this if we have openssl])
+ fi
+ 
+ 
+@@ -151,7 +151,7 @@
+                [AC_MSG_RESULT(no); bsd_networking=no]);
+ if test $bsd_networking = yes; then
+ 
+-  AC_DEFINE(BSD_NETWORKING)
++  AC_DEFINE(BSD_NETWORKING, 1, [Define if we have bsd networking])
+   AC_MSG_CHECKING([ip_v in struct ip])
+   AC_TRY_COMPILE([#include <sys/types.h>
+ #include <netinet/in.h>
+@@ -199,7 +199,7 @@
+         ac_cv_sockaddr_has_sa_len=yes,
+         ac_cv_sockaddr_has_sa_len=no))
+ if test $ac_cv_sockaddr_has_sa_len = yes ; then
+-        AC_DEFINE(HAVE_SOCKADDR_SA_LEN)
++        AC_DEFINE(HAVE_SOCKADDR_SA_LEN, 1, [Define if sockaddr has a sa_len member])
+ fi
+ 
+ AC_CACHE_CHECK(if struct icmp exists, ac_cv_struct_icmp_exists,
+@@ -217,7 +217,7 @@
+         ac_cv_struct_icmp_exists=yes,
+         ac_cv_struct_icmp_exists=no))
+ if test $ac_cv_struct_icmp_exists = yes ; then
+-        AC_DEFINE(HAVE_STRUCT_ICMP)
++        AC_DEFINE(HAVE_STRUCT_ICMP, 1, [Define if struct icmp exists])
+ fi
+ 
+ AC_CACHE_CHECK(if struct ip exists, ac_cv_struct_ip_exists,
+@@ -234,7 +234,7 @@
+         ac_cv_struct_ip_exists=yes,
+         ac_cv_struct_ip_exists=no))
+ if test $ac_cv_struct_ip_exists = yes ; then
+-        AC_DEFINE(HAVE_STRUCT_IP)
++        AC_DEFINE(HAVE_STRUCT_IP, 1, [Define if struct ip exists])
+ fi
+ 
+ AC_CACHE_CHECK(if struct ip has ip_sum member, ac_cv_ip_has_ip_sum,
+@@ -252,7 +252,7 @@
+         ac_cv_ip_has_ip_sum=yes,
+         ac_cv_ip_has_ip_sum=no))
+ if test $ac_cv_ip_has_ip_sum = yes ; then
+-        AC_DEFINE(HAVE_IP_IP_SUM)
++        AC_DEFINE(HAVE_IP_IP_SUM, 1, [Define if struct ip has ip_sum member])
+ fi
+ 
+ AC_OUTPUT(Makefile)
