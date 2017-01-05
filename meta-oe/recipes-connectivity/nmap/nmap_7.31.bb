@@ -10,11 +10,12 @@ SRC_URI = "http://nmap.org/dist/${BP}.tar.bz2"
 SRC_URI[md5sum] = "f2f6660142a777862342a58cc54258ea"
 SRC_URI[sha256sum] = "cb9f4e03c0771c709cd47dc8fc6ac3421eadbdd313f0aae52276829290583842"
 
-PR = "r2"
+PR = "r3"
 
 inherit autotools-brokensep pkgconfig python-dir distro_features_check
 
-PACKAGECONFIG ?= "ncat nping ndiff pcap"
+#PACKAGECONFIG ?= "ncat nping ndiff pcap lua"
+PACKAGECONFIG ?= ""
 
 PACKAGECONFIG[pcap] = "--with-pcap=linux, --without-pcap, libpcap, libpcap"
 PACKAGECONFIG[pcre] = "--with-libpcre=${STAGING_LIBDIR}/.., --with-libpcre=included, libpre"
@@ -25,8 +26,9 @@ PACKAGECONFIG[nping] = ",--without-nping,"
 PACKAGECONFIG[ncat] = ",--without-ncat,"
 PACKAGECONFIG[ndiff] = ",--without-ndiff,"
 PACKAGECONFIG[update] = ",--without-nmap-update,"
+PACKAGECONFIG[lua] = "--with-liblua=included,--without-liblua"
 
-EXTRA_OECONF = "--with-libdnet=included --with-liblinear=included --without-subversion --with-liblua=included --without-zenmap"
+EXTRA_OECONF = "--with-libdnet=included --with-liblinear=included --without-subversion --without-zenmap"
 
 do_configure() {
     # strip hard coded python2#
@@ -42,3 +44,9 @@ do_install_append () {
 }
 
 RDEPENDS_${PN} = "python"
+
+PACKAGES =+ "${PN}-db"
+FILES_${PN}-db = "/usr/share/nmap"
+DESCRIPTION_${PN}-db = "Databases for translation of numeric values into friendly descriptions"
+
+
