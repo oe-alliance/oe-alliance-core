@@ -1,0 +1,119 @@
+diff --git a/Makefile.am b/Makefile.am
+index b9687fc..92d17af 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -1,112 +1,60 @@
+ ACLOCAL_AMFLAGS = -I m4
+ 
+ SUBDIRS = \
+-	advhdmi \
+-	aihdcontroler \
+ 	antiscrollbar \
+-	aspectratioswitch \
+-	audiorestart \
+ 	audiosync \
+-	automaticcleanup \
+ 	automaticvolumeadjustment \
+ 	autoresolution \
+ 	autotimer \
+-	babelzapper \
+-	birthdayreminder \
+ 	bonjour \
+ 	cdinfo \
+-	channelselectionshorttitle \
+-	curlytx \
+ 	dreamexplorer \
+-	dreamirc \
+ 	dreammediathek \
+ 	dvdbackup \
+-	easyinfo \
+-	easymedia \
+-	ecasa \
+-	eibox \
+ 	emailclient \
+ 	emission \
+-	eparted \
+ 	epgrefresh \
+-	eurotictv \
+-	eventlist \
+-	eventposition \
+ 	filebrowser \
+ 	flashexpander \
+ 	fritzcall \
+-	fstabeditor \
+ 	ftpbrowser \
+ 	googlemaps \
+-	growlee \
+ 	imdb \
+ 	infobartunerstate \
+ 	internetradio \
+ 	kiddytimer \
+-	letterbox \
+ 	mediadownloader \
+-	merlinepg \
+-	merlinepgcenter \
+ 	merlinmusicplayer \
+-	mosaic \
+ 	moviecut \
+-	movieretitle \
+ 	moviesearch \
+-	movietagger \
+ 	mphelp \
+-	multirc \
+-	ncidclient \
+ 	netcaster \
+ 	ofdb \
+ 	orfat \
+ 	orfteletext \
+-	partnerbox \
+ 	permanentclock \
+ 	pipservicerelation \
+ 	podcast \
+-	porncenter \
+ 	pushservice \
+ 	quickbutton \
+ 	reconstructapsc \
+-	reftopiconname \
+ 	remotetimer \
+-	rsdownloader \
+ 	seriesplugin \
+-	setpasswd \
+ 	shoutcast \
+ 	showclock \
+-	simplerss \
+ 	subsdownloader2 \
+-	svdrp \
+ 	tageditor \
+-	teletext \
+ 	toolkit \
+-	tvcharts \
+-	unwetterinfo \
+-	valixdcontrol \
+-	videocolorspace \
+-	vlcplayer \
+ 	vps \
+ 	weatherplugin \
+ 	weathercomponent \
+ 	weathercomponenthandler \
+-	webadmin \
+-	webbouqueteditor \
+ 	webcamviewer \
+-	werbezapper \
+-	zaphistorybrowser \
+ 	zapstatistic \
+-	zdfmediathek \
+-	oscaminfo \
+-	esame \
+-	schiffe \
+-	sudoku \
+-	vierg \
+-	bmediacenter \
+-	advancedmovieselection
++	zdfmediathek
+ 
+ if DREAMBOX
+-SUBDIRS +=  fancontrol2 letterbox logomanager movielistpreview genuinedreambox
++SUBDIRS +=  fancontrol2 logomanager genuinedreambox
+ endif
+ 
+ if VUSOLO2
