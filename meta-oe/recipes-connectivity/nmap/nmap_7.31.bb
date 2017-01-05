@@ -10,7 +10,7 @@ SRC_URI = "http://nmap.org/dist/${BP}.tar.bz2"
 SRC_URI[md5sum] = "f2f6660142a777862342a58cc54258ea"
 SRC_URI[sha256sum] = "cb9f4e03c0771c709cd47dc8fc6ac3421eadbdd313f0aae52276829290583842"
 
-PR = "r11"
+PR = "r2"
 
 inherit autotools-brokensep pkgconfig python-dir distro_features_check
 
@@ -26,17 +26,7 @@ PACKAGECONFIG[ncat] = ",--without-ncat,"
 PACKAGECONFIG[ndiff] = ",--without-ndiff,"
 PACKAGECONFIG[update] = ",--without-nmap-update,"
 
-EXTRA_OECONF = "--with-libdnet=included --with-liblinear=included --without-subversion --without-liblua --without-zenmap --without-openssl --without-nping --without-ncat --without-ndiff"
-
-PACKAGES = "${PN} ${PN}-dbg ${PN}-doc ${PN}-db"
-
-FILES_${PN} = "${bindir}/nmap ${datadir}/nmap/nmap-payloads ${datadir}/nmap/nmap-mac-prefixes"
-FILES_${PN}-db = "${datadir}/nmap/*"
-
-# append packages if enabled
-FILES_${PN} += "${@bb.utils.contains("PACKAGECONFIG", "ncat", "${bindir}/ncat ${target_datadir}/ncat", "", d)}"
-FILES_${PN} += "${@bb.utils.contains("PACKAGECONFIG", "nping", "${bindir}/nping", "", d)}"
-FILES_${PN} += "${@bb.utils.contains("PACKAGECONFIG", "ndiff", "${bindir}/ndiff ${bindir}/uninstall_ndiff ${libdir}/python${PYTHON_BASEVERSION}/site-packages/ndiff.py*", "", d)}"
+EXTRA_OECONF = "--with-libdnet=included --with-liblinear=included --without-subversion --with-liblua=included --without-zenmap"
 
 do_configure() {
     # strip hard coded python2#
@@ -52,4 +42,3 @@ do_install_append () {
 }
 
 RDEPENDS_${PN} = "python"
-RDEPENDS_${PN}-db = "nmap"
