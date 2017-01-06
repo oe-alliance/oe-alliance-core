@@ -8,7 +8,7 @@ inherit gitpkgv allarch
 SRCREV = "${AUTOREV}"
 PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"
-PR = "r0"
+PR = "r1"
 
 SRC_URI = "git://github.com/OpenSPA/OpenSPA_skins.git;protocol=git"
 
@@ -21,7 +21,7 @@ do_compile_append() {
 }
 
 do_install() {
-   find ${S}/files/Components/ -name "*.py" -exec rm -rf {} \;
+   find ${S}/Components/ -name "*.py" -exec rm -rf {} \;
    install -d ${D}/usr/share/enigma2
    cp -rp ${S}/Spa24HD ${D}/usr/share/enigma2/
    chmod -R a+rX ${D}/usr/share/enigma2/

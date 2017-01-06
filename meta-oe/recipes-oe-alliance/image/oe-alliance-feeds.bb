@@ -9,7 +9,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "${IMAGE_VERSION}"
-PR = "r9"
+PR = "r10"
 
 DEPENDS = "enigma2-plugin-drivers-usbserial"
 RECOMMENDS = "enigma2-plugin-extensions-et-livestream"
@@ -37,6 +37,7 @@ RDEPENDS_${PN} = " \
     enigma2-plugin-extensions-yahooweather \
     enigma2-plugin-extensions-youtube \
     enigma2-plugin-extensions-autobouquets \
+    enigma2-plugin-extensions-iptvplayer \
     ${@bb.utils.contains("GST_VERSION", "1.0", "eplayer5", "eplayer4", d)} \
     ${@bb.utils.contains("TARGET_ARCH", "arm", "exteplayer3 enigma2-plugin-systemplugins-serviceapp" , "", d)} \
     ${@bb.utils.contains("TARGET_ARCH", "mipsel", "exteplayer3 enigma2-plugin-systemplugins-serviceapp" , "", d)} \
