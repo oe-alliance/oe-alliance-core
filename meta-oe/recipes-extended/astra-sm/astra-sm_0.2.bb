@@ -10,6 +10,7 @@ DEPENDS = "libaio"
 SRC_URI = "git://gitlab.com/berdyansk/astra-sm.git;protocol=http \
 	file://version.patch \
 	file://undef_dvb_net.patch \
+	file://gcc_lm_fix.patch \
 	"
 
 S = "${WORKDIR}/git"
