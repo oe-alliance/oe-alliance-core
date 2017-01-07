@@ -44,7 +44,3 @@ IMAGE_CMD_ubi_append = "\
     "
 
 require conf/machine/include/tune-mips32.inc
-
-MACHINE_EXTRA_RRECOMMENDS += " \
-    dags-shutdown \
-    "
