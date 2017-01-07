@@ -30,5 +30,3 @@ IMAGE_CMD_tar_prepend = "\
 
 EXTRA_IMAGEDEPENDS = "\
     dags-initrd-cfe-${MACHINEBUILD}"
-
-require conf/machine/include/tune-cortexa15.inc
