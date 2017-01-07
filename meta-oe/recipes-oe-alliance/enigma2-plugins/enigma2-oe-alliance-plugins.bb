@@ -44,6 +44,7 @@ PROVIDES += " \
     ${@bb.utils.contains('MACHINE', 'spark7162', 'enigma2-plugin-systemplugins-uniontunertype ' , ' ', d)} \
     ${@bb.utils.contains('MACHINE_FEATURES', 'sh4booster', 'enigma2-plugin-systemplugins-sh4boostercontrol' , ' ', d)} \
     ${@bb.utils.contains('MACHINE_BRAND', 'WETEK', 'enigma2-plugin-extensions-rcuselect enigma2-plugin-extensions-rezap' , ' ', d)} \
+    ${@bb.utils.contains('MACHINE_BRAND', 'ODROID', 'enigma2-plugin-extensions-rcuselect enigma2-plugin-extensions-rezap' , ' ', d)} \
      "
 
 DEPENDS = "\
@@ -128,7 +129,7 @@ inherit autotools-brokensep gitpkgv pythonnative
 SRCREV = "${AUTOREV}"
 PV = "${IMAGE_VERSION}+git${SRCPV}"
 PKGV = "${IMAGE_VERSION}+git${GITPKGV}"
-PR = "r0"
+PR = "r2"
 
 SRC_URI = "${OEA_PLUGINS_URI}"
 

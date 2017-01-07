@@ -15,6 +15,7 @@ SRC_URI = "git://github.com/OpenPLi/tuxtxt.git;protocol=git \
 
 SRC_URI_append_wetekplay = " file://0001-add-HBGIC-for-wetek.patch"
 SRC_URI_append_wetekplay2 = " file://0001-add-HBGIC-for-wetek.patch"
+SRC_URI_append_odroidc2 = " file://0001-add-HBGIC-for-wetek.patch"
 
 S = "${WORKDIR}/git/tuxtxt"
 

@@ -9,7 +9,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "${IMAGE_VERSION}"
-PR = "r10"
+PR = "r11"
 
 DEPENDS = "enigma2-plugin-drivers-usbserial"
 RECOMMENDS = "enigma2-plugin-extensions-et-livestream"
@@ -124,6 +124,7 @@ RDEPENDS_${PN} = " \
 
 RDEPENDS_${PN}_remove_wetekplay = "network-usb-drivers-meta"
 RDEPENDS_${PN}_remove_wetekplay2 = "network-usb-drivers-meta"
+RDEPENDS_${PN}_remove_odroidc2 = "network-usb-drivers-meta"
 
 RRECOMMENDS_${PN}_append_vuuno = "enigma2-plugin-extensions-hbbtv"
 RRECOMMENDS_${PN}_append_vuultimo = "enigma2-plugin-extensions-hbbtv"

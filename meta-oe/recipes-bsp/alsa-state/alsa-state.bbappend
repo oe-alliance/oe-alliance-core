@@ -6,4 +6,5 @@ FILESEXTRAPATHS_prepend_vusolose := "${@bb.utils.contains("MACHINE_FEATURES", "v
 FILESEXTRAPATHS_prepend_vuuno4k := "${@bb.utils.contains("MACHINE_FEATURES", "vukodi", "${THISDIR}/${PN}/${MACHINE}:", "${THISDIR}/${PN}:", d)}"
 FILESEXTRAPATHS_prepend_vuultimo4k := "${@bb.utils.contains("MACHINE_FEATURES", "vukodi", "${THISDIR}/${PN}/${MACHINE}:", "${THISDIR}/${PN}:", d)}"
 FILESEXTRAPATHS_prepend_wetekplay2 := "${THISDIR}/${PN}/${MACHINE}:"
+FILESEXTRAPATHS_prepend_odroidc2 := "${THISDIR}/${PN}/${MACHINE}:"
 PR_append = ".1"

@@ -10,7 +10,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "${IMAGE_VERSION}"
-PR = "r0"
+PR = "r2"
 
 OPTIONAL_WIFIDRIVERS = "${@bb.utils.contains("MACHINE_FEATURES", "wifiusblegacy", "enigma2-plugin-drivers-network-usb-rt3070", " \
     enigma2-plugin-drivers-network-usb-ath9k-htc \
@@ -29,6 +29,7 @@ DEPENDS = "enigma2 enigma2-plugins enigma2-oe-alliance-plugins network-usb-drive
 
 DEPENDS_remove_wetekplay = "network-usb-drivers-meta"
 DEPENDS_remove_wetekplay2 = "network-usb-drivers-meta"
+DEPENDS_remove_odroidc2 = "network-usb-drivers-meta"
 
 RDEPENDS_${PN} = "\
     enigma2-plugin-systemplugins-wirelesslan \
@@ -51,3 +52,7 @@ RDEPENDS_${PN} = "\
     ${@bb.utils.contains("MACHINEBUILD", "bre2ze", "enigma2-plugin-drivers-network-usb-mt7601u", "", d)} \
     ${@bb.utils.contains("BRAND_OEM", "xcore", "enigma2-plugin-drivers-network-usb-rt8723bs", "", d)} \
     "
+
+RDEPENDS_${PN}_remove_odroidc2 = "enigma2-plugin-drivers-network-usb-rtl8192cu"
+RDEPENDS_${PN}_remove_odroidc2 = "enigma2-plugin-drivers-network-usb-rtl8192cu-rev2"
+
