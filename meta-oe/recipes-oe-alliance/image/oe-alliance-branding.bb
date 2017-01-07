@@ -49,7 +49,7 @@ EXTRA_OECONF = " \
     --with-mkubifs="${MKUBIFS_ARGS}" \
     --with-ubinize="${UBINIZE_ARGS}" \
     --with-driverdate="${DRIVERSDATE}" \
-    --with-arch="${MACHINE_ARCH}" \
+    --with-arch="${DEFAULTTUNE}" \
     "
 
 do_configure_prepend() {
