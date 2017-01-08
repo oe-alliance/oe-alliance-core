@@ -1,0 +1,17 @@
+#!/bin/sh
+
+if [ -z "$1" ] ; then
+    echo "Usage: $0 [start|stop|restart]"
+    exit 0
+fi
+
+if [ "$1" = "start" ] ; then
+    ulimit -n 65536
+    /usr/bin/astra --pid /var/run/astra.pid /etc/astra/astra.conf &
+elif [ "$1" = "stop" ] ; then
+    kill `cat /var/run/astra.pid`
+elif [ "$1" = "restart" ] ; then
+    $0 stop
+    sleep 1
+    $0 start
+fi
