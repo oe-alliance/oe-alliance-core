@@ -1,4 +1,4 @@
-SRCDATE = "20161213"
+SRCDATE = "20161223"
 
 require dags-initrd-cfe.inc
 
