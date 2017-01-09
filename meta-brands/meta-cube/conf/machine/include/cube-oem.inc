@@ -95,3 +95,6 @@ MACHINE_FEATURES += "3dtv alsa hdmicec switchoff textlcd dvbapi5 usbhost wifiusb
 
 # add support for extra feeds
 PACKAGE_ARCHS += " ${MACHINEBUILD}"
+
+# Add "MACHINEBUILD" override for recipes
+MACHINEOVERRIDES =. "${@['', '${MACHINEBUILD}:']['${MACHINEBUILD}' != '']}"

@@ -40,3 +40,6 @@ BOOTLOGO_FILENAME = "splash.bin"
 
 require conf/machine/include/arm/arch-armv7a.inc
 require conf/machine/include/soc-family.inc
+
+# Add "MACHINEBUILD" override for recipes
+MACHINEOVERRIDES =. "${@['', '${MACHINEBUILD}:']['${MACHINEBUILD}' != '']}"

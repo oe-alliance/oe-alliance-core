@@ -79,3 +79,6 @@ BOOTLOGO_FILENAME = "cfe-bootlogo.bmp"
 
 require conf/machine/include/tune-mips32.inc
 require conf/machine/include/soc-family.inc
+
+# Add "MACHINEBUILD" override for recipes
+MACHINEOVERRIDES =. "${@['', '${MACHINEBUILD}:']['${MACHINEBUILD}' != '']}"

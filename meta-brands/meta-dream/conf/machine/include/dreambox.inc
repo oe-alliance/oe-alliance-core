@@ -50,3 +50,6 @@ PREFERRED_VERSION_nfs-utils ?= "1.2.8"
 DREAMBOX_BUILDIMAGE = "buildimage --arch ${MACHINE} ${EXTRA_BUILDCMD} \
     --erase-block-size ${DREAMBOX_ERASE_BLOCK_SIZE} \
     --sector-size ${DREAMBOX_SECTOR_SIZE}"
+
+# Add "MACHINEBUILD" override for recipes
+MACHINEOVERRIDES =. "${@['', '${MACHINEBUILD}:']['${MACHINEBUILD}' != '']}"

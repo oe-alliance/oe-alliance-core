@@ -45,3 +45,6 @@ MACHINE_EXTRA_RDEPENDS = " \
     enigma2-plugin-systemplugins-rtisys \
     enigma2-plugin-systemplugins-videosettingssetup \
     "
+
+# Add "MACHINEBUILD" override for recipes
+MACHINEOVERRIDES =. "${@['', '${MACHINEBUILD}:']['${MACHINEBUILD}' != '']}"
