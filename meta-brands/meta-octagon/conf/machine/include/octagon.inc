@@ -40,3 +40,6 @@ BOOTLOGO_FILENAME = "splash.bin"
 
 require conf/machine/include/tune-cortexa15.inc
 require conf/machine/include/soc-family.inc
+
+# Add "MACHINEBUILD" override for recipes
+MACHINEOVERRIDES =. "${@['', '${MACHINEBUILD}:']['${MACHINEBUILD}' != '']}"

@@ -52,3 +52,6 @@ OLDEST_KERNEL = "3.14"
 
 MACHINE_FEATURES_BACKFILL_CONSIDERED = "rtc gobject-introspection-data"
 
+# Add "MACHINEBUILD" override for recipes
+MACHINEOVERRIDES =. "${@['', '${MACHINEBUILD}:']['${MACHINEBUILD}' != '']}"
+

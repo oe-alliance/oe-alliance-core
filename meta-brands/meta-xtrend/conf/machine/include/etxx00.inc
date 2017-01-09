@@ -81,3 +81,6 @@ EXTRA_IMAGEDEPENDS += " \
 MACHINE_EXTRA_RDEPENDS_${PN} = " \
     enigma2-plugin-systemplugins-remotecontrolcode \
     "
+
+# Add "MACHINEBUILD" override for recipes
+MACHINEOVERRIDES =. "${@['', '${MACHINEBUILD}:']['${MACHINEBUILD}' != '']}"
