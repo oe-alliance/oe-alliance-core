@@ -1,15 +1,14 @@
-inherit kernel
+inherit kernel machine_kernel_pr
 require recipes-kernel/linux/linux-yocto.inc
 
-FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}-${PV}:"
+KV = "3.14.29"
+MACHINE_KERNEL_PR_append = "0"
 
 KBRANCH ?= "odroidc2-3.14.y"
 SRCREV ?= "6ad167426fbad87ff62af517fc01ad9655a89e18"
 
 KBRANCH_odroidc2 ?= "odroidc2-3.14.y"
 SRCREV_machine_odroidc2 ?= "6ad167426fbad87ff62af517fc01ad9655a89e18"
-
-
 
 #KERNEL_DEVICETREE_odroidc2 = "meson64_odroidc2.dtb"
 
@@ -18,9 +17,8 @@ SRC_URI = "git://github.com/hardkernel/linux.git;branch=${KBRANCH}"
 SRC_URI += " \
 	file://add_uboot.patch \
 	file://0001-compiler-gcc-integrate-the-various-compiler-gcc-345-.patch \
+	file://hardkernel_dvb.patch \
 	file://defconfig"
-
-PV = "3.14.29+git${SRCPV}"
 
 KCONF_BSP_AUDIT_LEVEL = "0"
 

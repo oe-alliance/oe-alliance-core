@@ -1,22 +1,36 @@
-# Copyright (C) 2013 infiniti
-SUMMARY = "STB-FAKE nimsockets module"
-LICENSE = "none"
-LIC_FILES_CHKSUM = "file://Makefile;md5=8a7f149c3705b8a11c5b3c062cc314fe"
+SUMMARY = "Hardware drivers for ${MACHINE}"
+SECTION = "base"
+PRIORITY = "required"
+LICENSE = "CLOSED"
+require conf/license/license-close.inc
 
-PR = "r0"
+KV = "3.14.29"
+SRCDATE = "20161126"
 
-inherit module
+PV = "${KV}+${SRCDATE}"
+PR = "r3"
 
-SRC_URI = "file://stb-nimsockets.c \
-	   file://stb-nimsockets.h \
-	   file://Makefile \
-"
+RDEPENDS_${PN} += "hardkernel-e2-procfs-${MACHINE} firmware-avl6211 firmware-mn88436 firmware-ap6210 firmware-dvb-usb-af9015"
+
+SRC_URI = "file://hardkernel-dvb-modules-${KV}-${SRCDATE}.zip"
 
 S = "${WORKDIR}"
 
-COMPATIBLE_MACHINE = "(odroidc2)"
+inherit module
+
+do_compile() {
+}
 
 do_install() {
-	install -d ${D}${base_libdir}/modules/${KERNEL_VERSION}/extra
-	install -m 0644 ${S}/stb-nimsockets.ko* ${D}${base_libdir}/modules/${KERNEL_VERSION}/extra
+    install -d ${D}${base_libdir}/modules/${KERNEL_VERSION}/extra
+    install -d ${D}/${sysconfdir}/modules-load.d
+    echo "hardkerneldvb" > ${D}/${sysconfdir}/modules-load.d/_${MACHINE}.conf
+    install -m 0755 ${WORKDIR}/hardkerneldvb.ko ${D}${base_libdir}/modules/${KERNEL_VERSION}/extra/
 }
+
+
+FILES_${PN} += "${sysconfdir}/modules-load.d/_${MACHINE}.conf"
+
+do_package_qa() {
+}
+
