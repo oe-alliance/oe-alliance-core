@@ -1,7 +1,9 @@
 inherit kernel machine_kernel_pr
 require recipes-kernel/linux/linux-yocto.inc
 
-KV = "3.14.29"
+FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}-${PV}:"
+
+PV = "3.14.29+git${SRCPV}"
 MACHINE_KERNEL_PR_append = "0"
 
 KBRANCH ?= "odroidc2-3.14.y"
