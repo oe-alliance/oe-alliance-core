@@ -15,6 +15,7 @@ PR = "r1"
 SRC_URI = "https://openspa.webhop.info/drivers/kodi/WetekPlay-Jarvis-Final.tar.gz \
     file://keyboard.xml \
     file://remote.xml \
+    file://9703.patch \
 "
 
 SRC_URI[md5sum] = "6ebfc374bdd63b9c8966eb84711f9e94"
