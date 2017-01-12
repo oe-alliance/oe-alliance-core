@@ -2,7 +2,8 @@ SUMMARY = "Linux kernel for ${MACHINE}"
 LICENSE = "GPLv2"
 SECTION = "kernel"
 
-MACHINE_KERNEL_PR_append = ".6"
+KV = "3.14.28"
+MACHINE_KERNEL_PR_append = ".7"
 
 inherit kernel machine_kernel_pr
 
@@ -11,13 +12,18 @@ SRC_URI[sha256sum] = "bc3a8ac32b7a861dc41e1cda927fa7339313fdc13588120100751b14c4
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-SRC_URI += "http://en3homeftp.net/pub/down/linux-3.14.28.tar.xz \
+SRC_URI += "http://en3homeftp.net/pub/down/linux-${KV}.tar.xz \
 	file://defconfig \
 	file://date-time.patch \
 	file://rtl8712-fix-warnings.patch \
+	file://0001.fix_hwtype.patch \
+	file://0002.recording_issue.patch \
+	file://0001.remove_vtuner_index_check.patch \
+	file://rtl8712_fix_build_error.patch \
+	file://kernel-gcc6.patch \
 	"
 
-S = "${WORKDIR}/linux-${PV}"
+S = "${WORKDIR}/linux"
 B = "${WORKDIR}/build"
 
 export OS = "Linux"

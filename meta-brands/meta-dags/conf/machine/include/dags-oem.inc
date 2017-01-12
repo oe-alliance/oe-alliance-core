@@ -45,7 +45,7 @@ ${@base_contains('MACHINEBUILD', 'purehd', 'PURE HD' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'force2plushv', 'FORCE2+ HV' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'force3uhdplus', 'FORCE3 UHD Plus' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'force3uhd', 'FORCE3 UHD' , '', d)}\
-${@base_contains('MACHINEBUILD', 'fusion4k', 'FUSION 4K' , '', d)}\
+${@base_contains('MACHINEBUILD', 'revo4k', 'REVO 4K' , '', d)}\
 "
 
 MACHINE_BRAND = "\
@@ -90,7 +90,7 @@ ${@base_contains('MACHINEBUILD', 'purehd', 'XSARIUS' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'force2plushv', 'Iqon' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'force3uhdplus', 'Iqon' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'force3uhd', 'Iqon' , '', d)}\
-${@base_contains('MACHINEBUILD', 'fusion4k', 'XSARIUS' , '', d)}\
+${@base_contains('MACHINEBUILD', 'revo4k', 'XSARIUS' , '', d)}\
 "
 
 IMAGEDIR ?= "\
@@ -135,7 +135,7 @@ ${@base_contains('MACHINEBUILD', 'purehd', 'update/purehd/cfe' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'force2plushv', 'update/force2plushv/cfe' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'force3uhdplus', 'update/force3uhdplus' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'force3uhd', 'update/force3uhd' , '', d)}\
-${@base_contains('MACHINEBUILD', 'fusion4k', 'update/fusion4k' , '', d)}\
+${@base_contains('MACHINEBUILD', 'revo4k', 'update/fusion4k' , '', d)}\
 "
 
 MTD_KERNEL = "\
@@ -180,7 +180,7 @@ ${@base_contains('MACHINEBUILD', 'purehd', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'force2plushv', 'mtd2' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'force3uhdplus', 'mmcblk0p1' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'force3uhd', 'mmcblk0p1' , '', d)}\
-${@base_contains('MACHINEBUILD', 'fusion4k', 'mmcblk0p1' , '', d)}\
+${@base_contains('MACHINEBUILD', 'revo4k', 'mmcblk0p1' , '', d)}\
 "
 
 MTD_ROOTFS = "\
@@ -225,7 +225,7 @@ ${@base_contains('MACHINEBUILD', 'purehd', 'mtd0' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'force2plushv', 'mtd0' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'force3uhdplus', 'mmcblk0p4' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'force3uhd', 'mmcblk0p4' , '', d)}\
-${@base_contains('MACHINEBUILD', 'fusion4k', 'mmcblk0p4' , '', d)}\
+${@base_contains('MACHINEBUILD', 'revo4k', 'mmcblk0p4' , '', d)}\
 "
 
 SPLASH1_BMP = "\
@@ -256,7 +256,7 @@ ${@base_contains('MACHINEBUILD', 'purehd', 'splash1_power.bmp' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'force2plushv', 'splash1_power.bmp' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'force3uhdplus', 'splash1_power.bmp' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'force3uhd', 'splash1_power.bmp' , '', d)}\
-${@base_contains('MACHINEBUILD', 'fusion4k', 'splash1_power.bmp' , '', d)}\
+${@base_contains('MACHINEBUILD', 'revo4k', 'splash1_power.bmp' , '', d)}\
 "
 
 MACHINE_DRIVER = "\
@@ -301,7 +301,7 @@ ${@base_contains('MACHINEBUILD', 'purehd', 'dags7362' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'force2plushv', 'dags73625' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'force3uhdplus', 'dags7252-300' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'force3uhd', 'dags7252-200' , '', d)}\
-${@base_contains('MACHINEBUILD', 'fusion4k', 'dags7252-200' , '', d)}\
+${@base_contains('MACHINEBUILD', 'revo4k', 'dags7252-200' , '', d)}\
 "
 
 MACHINE_FEATURES += "3dtv alsa hdmicec switchoff textlcd ci skins1080 \

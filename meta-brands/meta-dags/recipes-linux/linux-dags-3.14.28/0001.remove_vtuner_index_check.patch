@@ -1,0 +1,32 @@
+--- a/drivers/media/dvb-core/dvbdev.c
++++ b/drivers/media/dvb-core/dvbdev.c
+@@ -276,6 +276,7 @@ int dvb_register_device(struct dvb_adapter *adap, struct dvb_device **pdvbdev,
+   		exttunercnt++;
+     	dvb_tunername[exttunercnt] = adap->name;
+ 	}
++#if	0	/* iqon, uhd300-nim */	
+   	if(adap->num >= VTUNER_IDXSTART)
+ 	{
+    		if(dvbdev->type == DVB_DEVICE_FRONTEND)
+@@ -288,6 +289,7 @@ int dvb_register_device(struct dvb_adapter *adap, struct dvb_device **pdvbdev,
+ 
+ 	}
+   	else
++#endif  	
+   	{
+   		if(dvbdev->type == DVB_DEVICE_FRONTEND)
+     	{
+@@ -518,11 +520,13 @@ static char *dvb_devnode(struct device *dev, umode_t *mode)
+ 	return kasprintf(GFP_KERNEL, "dvb/adapter%d/%s%d",
+ 		dvbdev->adapter->num, dnames[dvbdev->type], dvbdev->id);
+ #else
++#if	0	/* iqon, uhd300-nim */
+     if(dvbdev->adapter->num >= VTUNER_IDXSTART)
+     {
+         return kasprintf(GFP_KERNEL, "dvb/adapter%d/%s%d", adapcnt, dnames[dvbdev->type], dvbdev->id);
+     }
+     else
++#endif    
+     {
+         if(dvbdev->type == DVB_DEVICE_FRONTEND)
+         {

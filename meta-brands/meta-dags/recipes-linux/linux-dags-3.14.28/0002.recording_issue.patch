@@ -1,0 +1,150 @@
+--- a/drivers/media/dvb-core/dmxdev.c	2016-10-10 20:33:55.888018941 +0900
++++ b/drivers/media/dvb-core/dmxdev.c	2016-10-10 20:36:15.984024749 +0900
+@@ -80,9 +80,20 @@
+ 			break;
+ 		}
+ 
++	/* @iqon : recording and timeshift stop issue by babel */
++	#if	RINGBUFFER_DO_WAIT
++		ret = wait_event_interruptible(src->queue,
++					       !dvb_ringbuffer_empty(src) ||
++					       (src->error != 0) ||
++					       (src->do_wait != 1));
++		if (src->do_wait != 1)
++			ret = -EINTR;
++	#else
+ 		ret = wait_event_interruptible(src->queue,
+ 					       !dvb_ringbuffer_empty(src) ||
+ 					       (src->error != 0));
++	#endif					       
++		
+ 		if (ret < 0)
+ 			break;
+ 
+@@ -955,6 +966,25 @@
+ 	return ret;
+ }
+ 
++/* @iqon : recording and timeshift stop issue by babel */
++#if	RINGBUFFER_DO_WAIT
++static int dvb_demux_lock_filter(struct dmxdev_filter *dmxdevfilter)
++{
++	int ret;
++
++	dmxdevfilter->buffer.do_wait = 0;
++
++	if (waitqueue_active(&dmxdevfilter->buffer.queue))
++		wake_up(&dmxdevfilter->buffer.queue);
++
++	ret = mutex_lock_interruptible(&dmxdevfilter->mutex);
++
++	dmxdevfilter->buffer.do_wait = 1;
++
++	return ret;
++}
++#endif
++
+ static int dvb_demux_do_ioctl(struct file *file,
+ 			      unsigned int cmd, void *parg)
+ {
+@@ -968,7 +998,12 @@
+ 
+ 	switch (cmd) {
+ 	case DMX_START:
++		/* @iqon : recording and timeshift stop issue by babel */
++		#if	RINGBUFFER_DO_WAIT
++		if (dvb_demux_lock_filter(dmxdevfilter)) {			
++		#else
+ 		if (mutex_lock_interruptible(&dmxdevfilter->mutex)) {
++		#endif
+ 			mutex_unlock(&dmxdev->mutex);
+ 			return -ERESTARTSYS;
+ 		}
+@@ -980,7 +1015,12 @@
+ 		break;
+ 
+ 	case DMX_STOP:
++		/* @iqon : recording and timeshift stop issue by babel */
++		#if	RINGBUFFER_DO_WAIT
++		if (dvb_demux_lock_filter(dmxdevfilter)) {			
++		#else
+ 		if (mutex_lock_interruptible(&dmxdevfilter->mutex)) {
++		#endif
+ 			mutex_unlock(&dmxdev->mutex);
+ 			return -ERESTARTSYS;
+ 		}
+@@ -989,7 +1029,12 @@
+ 		break;
+ 
+ 	case DMX_SET_FILTER:
++		/* @iqon : recording and timeshift stop issue by babel */
++		#if	RINGBUFFER_DO_WAIT
++		if (dvb_demux_lock_filter(dmxdevfilter)) {			
++		#else
+ 		if (mutex_lock_interruptible(&dmxdevfilter->mutex)) {
++		#endif
+ 			mutex_unlock(&dmxdev->mutex);
+ 			return -ERESTARTSYS;
+ 		}
+@@ -998,7 +1043,12 @@
+ 		break;
+ 
+ 	case DMX_SET_PES_FILTER:
++		/* @iqon : recording and timeshift stop issue by babel */
++		#if	RINGBUFFER_DO_WAIT
++		if (dvb_demux_lock_filter(dmxdevfilter)) {			
++		#else
+ 		if (mutex_lock_interruptible(&dmxdevfilter->mutex)) {
++		#endif
+ 			mutex_unlock(&dmxdev->mutex);
+ 			return -ERESTARTSYS;
+ 		}
+@@ -1007,7 +1057,12 @@
+ 		break;
+ 
+ 	case DMX_SET_BUFFER_SIZE:
++		/* @iqon : recording and timeshift stop issue by babel */
++		#if	RINGBUFFER_DO_WAIT
++		if (dvb_demux_lock_filter(dmxdevfilter)) {			
++		#else
+ 		if (mutex_lock_interruptible(&dmxdevfilter->mutex)) {
++		#endif
+ 			mutex_unlock(&dmxdev->mutex);
+ 			return -ERESTARTSYS;
+ 		}
+@@ -1051,7 +1106,12 @@
+ 		break;
+ 
+ 	case DMX_ADD_PID:
++		/* @iqon : recording and timeshift stop issue by babel */
++		#if	RINGBUFFER_DO_WAIT
++		if (dvb_demux_lock_filter(dmxdevfilter)) {			
++		#else
+ 		if (mutex_lock_interruptible(&dmxdevfilter->mutex)) {
++		#endif
+ 			ret = -ERESTARTSYS;
+ 			break;
+ 		}
+@@ -1060,7 +1120,12 @@
+ 		break;
+ 
+ 	case DMX_REMOVE_PID:
++		/* @iqon : recording and timeshift stop issue by babel */
++		#if	RINGBUFFER_DO_WAIT
++		if (dvb_demux_lock_filter(dmxdevfilter)) {			
++		#else
+ 		if (mutex_lock_interruptible(&dmxdevfilter->mutex)) {
++		#endif
+ 			ret = -ERESTARTSYS;
+ 			break;
+ 		}
+@@ -1181,6 +1246,9 @@
+ 
+ 	dprintk("function : %s\n", __func__);
+ 
++	if (dmxdev->exit)
++		return POLLERR;
++
+ 	poll_wait(file, &dmxdev->dvr_buffer.queue, wait);
+ 
+ 	if ((file->f_flags & O_ACCMODE) == O_RDONLY) {
