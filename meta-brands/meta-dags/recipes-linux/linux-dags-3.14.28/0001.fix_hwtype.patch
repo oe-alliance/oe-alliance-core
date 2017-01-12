@@ -1,0 +1,40 @@
+--- a/kernel/params.c	2016-09-01 17:24:25.000000000 +0900
++++ a/kernel/params.c	2016-09-12 18:24:56.808406696 +0900
+@@ -176,6 +176,14 @@
+ 	return skip_spaces(next);
+ }
+ 
++static int hwtypenum = -1;
++
++int get_hwtypenum(void)
++{
++	return hwtypenum;
++}
++EXPORT_SYMBOL(get_hwtypenum);
++
+ /* Args looks like "foo=bar,bar2 baz=fuz wiz". */
+ int parse_args(const char *doing,
+ 	       char *args,
+@@ -198,6 +206,13 @@
+ 		int irq_was_disabled;
+ 
+ 		args = next_arg(args, &param, &val);
++
++                if (!strcmp(param, "hwtypenum"))
++                {
++                        hwtypenum = simple_strtoul(val, NULL, 10);
++                        get_hwtypenum();
++                }
++                
+ 		irq_was_disabled = irqs_disabled();
+ 		ret = parse_one(param, val, doing, params, num,
+ 				min_level, max_level, unknown);
+@@ -225,7 +240,7 @@
+ 	/* All parsed OK. */
+ 	return 0;
+ }
+-
++ 
+ /* Lazy bastard, eh? */
+ #define STANDARD_PARAM_DEF(name, type, format, strtolfn)      		\
+ 	int param_set_##name(const char *val, const struct kernel_param *kp) \

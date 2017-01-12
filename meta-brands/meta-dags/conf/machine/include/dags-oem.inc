@@ -45,7 +45,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'purehd', 'PURE HD' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'force2plushv', 'FORCE2+ HV' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'force3uhdplus', 'FORCE3 UHD Plus' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'force3uhd', 'FORCE3 UHD' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'fusion4k', 'FUSION 4K' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'revo4k', 'REVO 4K' , '', d)}\
 "
 
 MACHINE_BRAND = "\
@@ -90,7 +90,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'purehd', 'XSARIUS' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'force2plushv', 'Iqon' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'force3uhdplus', 'Iqon' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'force3uhd', 'Iqon' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'fusion4k', 'XSARIUS' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'revo4k', 'XSARIUS' , '', d)}\
 "
 
 IMAGEDIR ?= "\
@@ -135,7 +135,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'purehd', 'update/purehd/cfe' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'force2plushv', 'update/force2plushv/cfe' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'force3uhdplus', 'update/force3uhdplus' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'force3uhd', 'update/force3uhd' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'fusion4k', 'update/fusion4k' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'revo4k', 'update/fusion4k' , '', d)}\
 "
 
 MTD_KERNEL = "\
@@ -180,7 +180,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'purehd', 'mtd2' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'force2plushv', 'mtd2' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'force3uhdplus', 'mmcblk0p1' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'force3uhd', 'mmcblk0p1' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'fusion4k', 'mmcblk0p1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'revo4k', 'mmcblk0p1' , '', d)}\
 "
 
 MTD_ROOTFS = "\
@@ -225,7 +225,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'purehd', 'mtd0' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'force2plushv', 'mtd0' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'force3uhdplus', 'mmcblk0p4' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'force3uhd', 'mmcblk0p4' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'fusion4k', 'mmcblk0p4' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'revo4k', 'mmcblk0p4' , '', d)}\
 "
 
 SPLASH1_BMP = "\
@@ -256,7 +256,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'purehd', 'splash1_power.bmp' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'force2plushv', 'splash1_power.bmp' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'force3uhdplus', 'splash1_power.bmp' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'force3uhd', 'splash1_power.bmp' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'fusion4k', 'splash1_power.bmp' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'revo4k', 'splash1_power.bmp' , '', d)}\
 "
 
 MACHINE_DRIVER = "\
@@ -301,7 +301,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'purehd', 'dags7362' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'force2plushv', 'dags73625' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'force3uhdplus', 'dags7252-300' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'force3uhd', 'dags7252-200' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'fusion4k', 'dags7252-200' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'revo4k', 'dags7252-200' , '', d)}\
 "
 
 MACHINE_FEATURES += "3dtv alsa hdmicec switchoff textlcd ci skins1080 \

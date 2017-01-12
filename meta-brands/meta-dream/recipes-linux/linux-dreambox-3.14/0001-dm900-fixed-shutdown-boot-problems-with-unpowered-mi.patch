@@ -1,0 +1,249 @@
+From 2968701ea15ba77c07eac1a8431530ab77a327ed Mon Sep 17 00:00:00 2001
+From: Andreas Monzner <andreas.monzner@dream-property.net>
+Date: Thu, 12 Jan 2017 16:25:49 +0100
+Subject: [PATCH] dm900: fixed shutdown/boot problems with unpowered miniusb
+ port
+
+---
+ arch/arm/configs/dm900_defconfig    |   5 +-
+ drivers/tty/serial/8250/8250_core.c | 140 +++++++++++++++++++++++++++++-------
+ 2 files changed, 118 insertions(+), 27 deletions(-)
+
+diff --git a/arch/arm/configs/dm900_defconfig b/arch/arm/configs/dm900_defconfig
+index d617b98..9fcbb62 100644
+--- a/arch/arm/configs/dm900_defconfig
++++ b/arch/arm/configs/dm900_defconfig
+@@ -1759,7 +1759,6 @@ CONFIG_RTL8192CE=m
+ # CONFIG_RTL8192SE is not set
+ # CONFIG_RTL8192DE is not set
+ # CONFIG_RTL8723AE is not set
+-CONFIG_RTL8188EE=m
+ CONFIG_RTL8192CU=m
+ CONFIG_RTLWIFI=m
+ CONFIG_RTLWIFI_PCI=m
+@@ -1925,11 +1924,11 @@ CONFIG_UNIX98_PTYS=y
+ CONFIG_SERIAL_8250=y
+ CONFIG_SERIAL_8250_DEPRECATED_OPTIONS=y
+ CONFIG_SERIAL_8250_CONSOLE=y
+-CONFIG_SERIAL_8250_PCI=y
++# CONFIG_SERIAL_8250_PCI is not set
+ CONFIG_SERIAL_8250_NR_UARTS=4
+ CONFIG_SERIAL_8250_RUNTIME_UARTS=4
+ # CONFIG_SERIAL_8250_EXTENDED is not set
+-CONFIG_SERIAL_8250_DW=y
++# CONFIG_SERIAL_8250_DW is not set
+ # CONFIG_SERIAL_8250_EM is not set
+ 
+ #
+diff --git a/drivers/tty/serial/8250/8250_core.c b/drivers/tty/serial/8250/8250_core.c
+index 70fde5a..abcdfb3 100644
+--- a/drivers/tty/serial/8250/8250_core.c
++++ b/drivers/tty/serial/8250/8250_core.c
+@@ -158,8 +158,13 @@ static const struct serial8250_config uart_config[] = {
+ 	},
+ 	[PORT_16550A] = {
+ 		.name		= "16550A",
++#ifdef CONFIG_DREAMBOX_DM900
++		.fifo_size	= 32,
++		.tx_loadsz	= 32,
++#else
+ 		.fifo_size	= 16,
+ 		.tx_loadsz	= 16,
++#endif
+ 		.fcr		= UART_FCR_ENABLE_FIFO | UART_FCR_R_TRIG_10,
+ 		.flags		= UART_CAP_FIFO,
+ 	},
+@@ -1407,8 +1412,14 @@ serial8250_rx_chars(struct uart_8250_port *up, unsigned char lsr)
+ 			else if (lsr & UART_LSR_FE)
+ 				flag = TTY_FRAME;
+ 		}
+-		if (uart_handle_sysrq_char(port, ch))
+-			goto ignore_char;
++#ifdef CONFIG_DREAMBOX_DM900
++		/* this caused kernel oops on dm900 boot when the debug mini usb port is not powered */
++		if (serial_index(port) != 0 || (up->ier & (UART_IER_RLSI | UART_IER_RDI)) == (UART_IER_RLSI | UART_IER_RDI))
++#endif
++		{
++			if (uart_handle_sysrq_char(port, ch))
++				goto ignore_char;
++		}
+ 
+ 		uart_insert_char(port, lsr, UART_LSR_OE, ch, flag);
+ 
+@@ -1428,6 +1439,31 @@ void serial8250_tx_chars(struct uart_8250_port *up)
+ 	struct circ_buf *xmit = &port->state->xmit;
+ 	int count;
+ 
++#ifdef CONFIG_DREAMBOX_DM900
++	if (serial_index(port) == 0 && (up->ier & (UART_IER_RLSI | UART_IER_RDI)) != (UART_IER_RLSI | UART_IER_RDI))
++	{
++		if (port->x_char) {
++			port->icount.tx++;
++			port->x_char = 0;
++			return;
++		}
++
++		if (uart_tx_stopped(port)) {
++			serial8250_stop_tx(port);
++			return;
++		}
++
++		while (!uart_circ_empty(xmit)) {
++			xmit->tail = (xmit->tail + 1) & (UART_XMIT_SIZE - 1);
++			port->icount.tx++;
++		}
++
++		__stop_tx(up);
++
++		return;
++	}
++#endif
++
+ 	if (port->x_char) {
+ 		serial_out(up, UART_TX, port->x_char);
+ 		port->icount.tx++;
+@@ -1472,20 +1508,31 @@ unsigned int serial8250_modem_status(struct uart_8250_port *up)
+ 	struct uart_port *port = &up->port;
+ 	unsigned int status = serial_in(up, UART_MSR);
+ 
+-	status |= up->msr_saved_flags;
+-	up->msr_saved_flags = 0;
+-	if (status & UART_MSR_ANY_DELTA && up->ier & UART_IER_MSI &&
+-	    port->state != NULL) {
+-		if (status & UART_MSR_TERI)
+-			port->icount.rng++;
+-		if (status & UART_MSR_DDSR)
+-			port->icount.dsr++;
+-		if (status & UART_MSR_DDCD)
+-			uart_handle_dcd_change(port, status & UART_MSR_DCD);
+-		if (status & UART_MSR_DCTS)
+-			uart_handle_cts_change(port, status & UART_MSR_CTS);
+-
+-		wake_up_interruptible(&port->state->port.delta_msr_wait);
++#ifdef CONFIG_DREAMBOX_DM900
++	if (serial_index(port) == 0) {
++		if (status & 1) {
++			up->ier = status & 0x10 ? (UART_IER_RLSI | UART_IER_RDI | UART_IER_MSI) : UART_IER_MSI;
++			serial_port_out(port, UART_IER, up->ier);
++		}
++	}
++	else
++#endif
++	{
++		status |= up->msr_saved_flags;
++		up->msr_saved_flags = 0;
++		if (status & UART_MSR_ANY_DELTA && up->ier & UART_IER_MSI &&
++		    port->state != NULL) {
++			if (status & UART_MSR_TERI)
++				port->icount.rng++;
++			if (status & UART_MSR_DDSR)
++				port->icount.dsr++;
++			if (status & UART_MSR_DDCD)
++				uart_handle_dcd_change(port, status & UART_MSR_DCD);
++			if (status & UART_MSR_DCTS)
++				uart_handle_cts_change(port, status & UART_MSR_CTS);
++
++			wake_up_interruptible(&port->state->port.delta_msr_wait);
++		}
+ 	}
+ 
+ 	return status;
+@@ -1947,7 +1994,13 @@ static int serial8250_startup(struct uart_port *port)
+ 	unsigned long flags;
+ 	unsigned char lsr, iir;
+ 	int retval;
+-
++#if defined(CONFIG_DREAMBOX_DM900) && !defined(CONFIG_SERIAL_8250_CONSOLE)
++	if (serial_index(port) == 0) {
++		volatile uint32_t *p = ioremap_nocache(0xf0404120, PAGE_SIZE);
++		*p |= 0x200;
++		iounmap(p);
++	}
++#endif
+ 	if (port->type == PORT_8250_CIR)
+ 		return -ENODEV;
+ 
+@@ -2178,6 +2231,16 @@ dont_test_tx_en:
+ 	 * anyway, so we don't enable them here.
+ 	 */
+ 	up->ier = UART_IER_RLSI | UART_IER_RDI;
++
++#ifdef CONFIG_DREAMBOX_DM900
++	if (serial_index(port) == 0) {
++		if (serial_port_in(port, UART_MSR) & 0x10)
++			up->ier |= UART_IER_MSI;
++		else
++			up->ier = UART_IER_MSI;
++	}
++#endif
++
+ 	serial_port_out(port, UART_IER, up->ier);
+ 
+ 	if (port->flags & UPF_FOURPORT) {
+@@ -2381,13 +2444,19 @@ serial8250_do_set_termios(struct uart_port *port, struct ktermios *termios,
+ 	if ((termios->c_cflag & CREAD) == 0)
+ 		port->ignore_status_mask |= UART_LSR_DR;
+ 
+-	/*
+-	 * CTS flow control flag and modem status interrupts
+-	 */
+-	up->ier &= ~UART_IER_MSI;
+-	if (!(up->bugs & UART_BUG_NOMSR) &&
+-			UART_ENABLE_MS(&up->port, termios->c_cflag))
+-		up->ier |= UART_IER_MSI;
++#ifdef CONFIG_DREAMBOX_DM900
++	if (serial_index(port) != 0)
++#endif
++	{
++		/*
++		 * CTS flow control flag and modem status interrupts
++		 */
++		up->ier &= ~UART_IER_MSI;
++		if (!(up->bugs & UART_BUG_NOMSR) &&
++				UART_ENABLE_MS(&up->port, termios->c_cflag))
++			up->ier |= UART_IER_MSI;
++	}
++
+ 	if (up->capabilities & UART_CAP_UUE)
+ 		up->ier |= UART_IER_UUE;
+ 	if (up->capabilities & UART_CAP_RTOIE)
+@@ -2898,6 +2967,20 @@ serial8250_console_write(struct console *co, const char *s, unsigned int count)
+ 	unsigned int ier;
+ 	int locked = 1;
+ 
++#ifdef CONFIG_DREAMBOX_DM900
++	if (serial_index(port) == 0) {
++		if (up->ier & UART_IER_MSI) {
++			if ((up->ier & (UART_IER_RLSI | UART_IER_RDI)) != (UART_IER_RLSI | UART_IER_RDI))
++				return;
++		}
++		else {
++			unsigned int status = serial_in(up, UART_MSR);
++			if (!(status & 0x10))
++				return;
++		}
++	}
++#endif
++
+ 	touch_nmi_watchdog();
+ 
+ 	local_irq_save(flags);
+@@ -2959,6 +3042,15 @@ static int __init serial8250_console_setup(struct console *co, char *options)
+ 	if (co->index >= nr_uarts)
+ 		co->index = 0;
+ 	port = &serial8250_ports[co->index].port;
++
++#ifdef CONFIG_DREAMBOX_DM900
++	if (serial_index(port) == 0) {
++		volatile uint32_t *p = ioremap_nocache(0xf0404120, PAGE_SIZE);
++		*p |= 0x200;
++		iounmap(p);
++	}
++#endif
++
+ 	if (!port->iobase && !port->membase)
+ 		return -ENODEV;
+ 
+-- 
+2.1.4
+
