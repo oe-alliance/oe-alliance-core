@@ -25,6 +25,7 @@ IMAGE_CMD_tar_prepend = "\
     cp ${DEPLOY_DIR_IMAGE}/${MACHINEBUILD}_rescue.bin ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/rescue.bin; \
     cp ${DEPLOY_DIR_IMAGE}/zImage ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/${KERNEL_FILE}; \
     echo ${DISTRO_NAME}-${DISTRO_VERSION}.${BUILD_VERSION} > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/imageversion; \
+    echo "boot emmcflash0.kernel: 'root=/dev/mmcblk0p5 rootwait rw rootflags=data=journal debug coherent_poll=2M'" >> ${DEPLOY_DIR_IMAGE}/STARTUP; \
     cd ${IMAGE_ROOTFS}; \
     tar -cvf ${DEPLOY_DIR_IMAGE}/rootfs.tar -C ${IMAGE_ROOTFS} .; \
     mv ${DEPLOY_DIR_IMAGE}/rootfs.tar ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/rootfs.tar; \
