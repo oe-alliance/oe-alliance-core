@@ -7,12 +7,12 @@ MACHINE_KERNEL_PR_append = ".7"
 
 inherit kernel machine_kernel_pr
 
-SRC_URI[md5sum] = "c94fc213c29459be47175e6959a15827"
-SRC_URI[sha256sum] = "bc3a8ac32b7a861dc41e1cda927fa7339313fdc13588120100751b14c40417e0"
+SRC_URI[md5sum] = "d83e48d38bf83c50f7a175bc6a1fd2ce"
+SRC_URI[sha256sum] = "9c04354eba2861304d09bce015b4d381c65f968ba445465a70a77bee3ee16f45"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-SRC_URI += "http://en3homeftp.net/pub/down/linux-${KV}.tar.xz \
+SRC_URI += "http://en3homeftp.net/pub/src/linux-3.14.28.tar.xz \
 	file://defconfig \
 	file://date-time.patch \
 	file://rtl8712-fix-warnings.patch \
@@ -22,7 +22,7 @@ SRC_URI += "http://en3homeftp.net/pub/down/linux-${KV}.tar.xz \
 	file://kernel-gcc6.patch \
 	"
 
-S = "${WORKDIR}/linux-${KV}"
+S = "${WORKDIR}/linux"
 B = "${WORKDIR}/build"
 
 export OS = "Linux"
