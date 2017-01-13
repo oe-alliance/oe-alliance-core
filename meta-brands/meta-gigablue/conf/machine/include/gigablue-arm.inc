@@ -39,5 +39,5 @@ IMAGE_CMD_tar_prepend = "\
 "
 
 EXTRA_IMAGEDEPENDS = "\
-    gigalue-initrd-cfe-${MACHINEBUILD} \
+    gigablue-initrd-cfe-${MACHINEBUILD} \
 "
