@@ -19,7 +19,6 @@ SRC_URI += "http://en3homeftp.net/pub/down/linux-${KV}.tar.xz \
 	file://0001.fix_hwtype.patch \
 	file://0002.recording_issue.patch \
 	file://0001.remove_vtuner_index_check.patch \
-	file://rtl8712_fix_build_error.patch \
 	file://kernel-gcc6.patch \
 	"
 
