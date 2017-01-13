@@ -6,12 +6,12 @@ MODULE = "linux-3.14.28"
 
 inherit kernel machine_kernel_pr
 
-SRC_URI[md5sum] = "1a62540fdd7f23aa2c1ebf119ca71e91"
-SRC_URI[sha256sum] = "a464515d14dda772047ddba7900858f535057294903341e2c1774009eaf95005"
+SRC_URI[md5sum] = "2a3a0a7e5cd2a1392f1a26790d1cd8bf"
+SRC_URI[sha256sum] = "8284670c28a4dad9e94752b38d37a4368f27ce15e671653a3e2ac83915f37db1"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-SRC_URI += "http://archiv.openmips.com/gigablue-linux-${PV}-20160319.tar.bz2 \
+SRC_URI += "http://archiv.openmips.com/gigablue-linux-${PV}-20170113.tar.bz2 \
 	file://defconfig \
 	file://bcm_genet_disable_warn.patch \
 	file://linux_dvb-core.patch \
@@ -23,6 +23,7 @@ SRC_URI += "http://archiv.openmips.com/gigablue-linux-${PV}-20160319.tar.bz2 \
 	file://0001-Support-TBS-USB-drivers.patch \
 	file://0001-STV-Add-PLS-support.patch \
 	file://0001-STV-Add-SNR-Signal-report-parameters.patch \
+	file://linux_prevent_usb_dma_from_bmem.patch \
 "
 
 S = "${WORKDIR}/linux"
