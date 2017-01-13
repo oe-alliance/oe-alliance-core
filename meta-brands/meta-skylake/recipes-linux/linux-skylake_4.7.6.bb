@@ -2,16 +2,16 @@ SUMMARY = "Linux kernel for ${MACHINE}"
 SECTION = "kernel"
 LICENSE = "GPLv2"
 
-KERNEL_RELEASE = "4.8.3"
+KERNEL_RELEASE = "4.7.6"
 
 inherit kernel machine_kernel_pr
 
-SRC_URI[md5sum] = "ae1c7b3d80d1b17aeb9646822ac724d4"
-SRC_URI[sha256sum] = "1abef66b7df201bf91aa26e2289dbe7104fa66cfd00dc2c5cb7c38b747d96d31"
+SRC_URI[md5sum] = "7704898cdd7284bdf680b73162fdeca4"
+SRC_URI[sha256sum] = "8821d8bde5014cfd0999dc62d1eb655bb47a2f4f6694d565b51037d3d6875098"
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-MACHINE_KERNEL_PR_append = ".1"
+MACHINE_KERNEL_PR_append = ".0"
 
 # By default, kernel.bbclass modifies package names to allow multiple kernels
 # to be installed in parallel. We revert this change and rprovide the versioned
@@ -21,11 +21,8 @@ PKG_kernel-image = "kernel-image"
 RPROVIDES_kernel-base = "kernel-${KERNEL_VERSION}"
 RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
 
-SRC_URI += "http://source.mynonpublic.com/xtrend/linux-${PV}-${ARCH}.tar.gz \
+SRC_URI += "http://downloads.mutant-digital.net/linux-${PV}-${ARCH}.tar.gz \
     file://defconfig \
-    file://0001-genet1-1000mbit.patch \
-    file://bcmgenet_phyaddr.patch \
-    file://noforce_correct_pointer_usage.patch \
     file://0001-Support-TBS-USB-drivers-for-4.6-kernel.patch \
     file://0001-TBS-fixes-for-4.6-kernel.patch \
     file://0001-STV-Add-PLS-support.patch \
@@ -36,11 +33,12 @@ SRC_URI += "http://source.mynonpublic.com/xtrend/linux-${PV}-${ARCH}.tar.gz \
 
 S = "${WORKDIR}/linux-${PV}"
 B = "${WORKDIR}/build"
+
 export OS = "Linux"
 KERNEL_OBJECT_SUFFIX = "ko"
 KERNEL_OUTPUT = "vmlinux"
 KERNEL_IMAGETYPE = "vmlinux"
-KERNEL_IMAGEDEST = "/tmp"
+KERNEL_IMAGEDEST = "/boot"
 
 FILES_kernel-image = "${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}*"
 
@@ -55,7 +53,6 @@ pkg_postinst_kernel-image () {
 		if [ -f /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz ] ; then
 			flash_erase /dev/mtd1 0 0
 			nandwrite -p /dev/mtd1 /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz
-			rm -f /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz
 		fi
 	fi
 	true
@@ -63,4 +60,3 @@ pkg_postinst_kernel-image () {
 
 do_rm_work() {
 }
-

@@ -1,4 +1,4 @@
-KV = "4.0.1"
+KV = "4.7.6"
 SRCDATE = "20170112"
 
 require skylake-dvb-modules.inc
