@@ -17,9 +17,9 @@ ${@bb.utils.contains('MACHINEBUILD', 'gbultraue', 'Ultra UE' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbx1', 'X1' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbx3', 'X3' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbx2', 'X2' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'gbultraueh', 'Ultra UEh' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'gbx3h', 'X3h' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'gbuhdquad', 'UHD QUAD 4k' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbultraueh', 'Ultra UE H' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbx3h', 'X3 H' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbuhdquad', 'UHD QUAD 4K' , '', d)}\
 "
 
 MACHINE_BRAND = "\
@@ -57,7 +57,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'gbx3', 'gigablue/x3' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbx2', 'gigablue/x2' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbultraueh', 'gigablue/ultraueh' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbx3h', 'gigablue/x3h' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'gbuhdquad', 'gigablue/uhdquad' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbuhdquad', 'gigablue/quad4k' , '', d)}\
 "
 
 MTD_KERNEL = "\
