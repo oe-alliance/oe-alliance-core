@@ -22,7 +22,7 @@ SRC_URI += "http://en3homeftp.net/pub/down/linux-${KV}.tar.xz \
 	file://kernel-gcc6.patch \
 	"
 
-S = "${WORKDIR}/linux"
+S = "${WORKDIR}/linux-${KV}"
 B = "${WORKDIR}/build"
 
 export OS = "Linux"
