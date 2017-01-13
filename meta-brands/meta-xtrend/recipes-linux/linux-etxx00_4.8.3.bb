@@ -2,16 +2,16 @@ SUMMARY = "Linux kernel for ${MACHINE}"
 SECTION = "kernel"
 LICENSE = "GPLv2"
 
-KERNEL_RELEASE = "4.0.1"
+KERNEL_RELEASE = "4.8.3"
 
 inherit kernel machine_kernel_pr
 
-SRC_URI[md5sum] = "c274792d088cd7bbfe7fe5a76bd798d8"
-SRC_URI[sha256sum] = "6fd63aedd69b3b3b28554cabf71a9efcf05f10758db3d5b99cfb0580e3cde24c"
+SRC_URI[md5sum] = "ae1c7b3d80d1b17aeb9646822ac724d4"
+SRC_URI[sha256sum] = "1abef66b7df201bf91aa26e2289dbe7104fa66cfd00dc2c5cb7c38b747d96d31"
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-MACHINE_KERNEL_PR_append = ".4"
+MACHINE_KERNEL_PR_append = ".0"
 
 # By default, kernel.bbclass modifies package names to allow multiple kernels
 # to be installed in parallel. We revert this change and rprovide the versioned
@@ -21,19 +21,18 @@ PKG_kernel-image = "kernel-image"
 RPROVIDES_kernel-base = "kernel-${KERNEL_VERSION}"
 RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
 
-SRC_URI += "http://www.et-view.com/img_up/shop_pds/bh190/Img_Xtrend/linux-${PV}.tar.gz \
-	file://defconfig \
-	file://add-dmx-source-timecode.patch \
-	file://iosched-slice_idle-1.patch \
-	file://0001-genet1-1000mbit.patch \
-	file://0001-bcmgenet.patch \
-	file://0001-Support-TBS-USB-drivers.patch \
-	file://0002-STV-Add-PLS-support.patch \
-	file://0003-STV-Add-SNR-Signal-report-parameters.patch \
-	file://0001-stv090x-optimized-TS-sync-control.patch \
-	file://blindscan2.patch \
-	file://bcmgenet_phyaddr.patch \
-	"
+SRC_URI += "http://source.mynonpublic.com/xtrend/linux-${PV}-${ARCH}.tar.gz \
+    file://defconfig \
+    file://0001-genet1-1000mbit.patch \
+    file://bcmgenet_phyaddr.patch \
+    file://noforce_correct_pointer_usage.patch \
+    file://0001-Support-TBS-USB-drivers-for-4.6-kernel.patch \
+    file://0001-TBS-fixes-for-4.6-kernel.patch \
+    file://0001-STV-Add-PLS-support.patch \
+    file://0001-STV-Add-SNR-Signal-report-parameters.patch \
+    file://blindscan2.patch \
+    file://0001-stv090x-optimized-TS-sync-control.patch \
+    "
 
 S = "${WORKDIR}/linux-${PV}"
 B = "${WORKDIR}/build"
@@ -44,7 +43,6 @@ KERNEL_IMAGETYPE = "vmlinux"
 KERNEL_IMAGEDEST = "/tmp"
 
 FILES_kernel-image = "${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}*"
-
 
 kernel_do_install_append() {
 	${STRIP} ${D}${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION}
@@ -65,3 +63,4 @@ pkg_postinst_kernel-image () {
 
 do_rm_work() {
 }
+

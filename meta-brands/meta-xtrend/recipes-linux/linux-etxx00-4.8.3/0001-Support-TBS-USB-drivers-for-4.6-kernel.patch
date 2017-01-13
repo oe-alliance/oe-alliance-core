@@ -1,7 +1,7 @@
-From 35bc9d01ccf09982309f335a81f9f601487b90bb Mon Sep 17 00:00:00 2001
+From 6f6cb195b8f7dbc2d0b4e31a2da4cd58bd69f6bf Mon Sep 17 00:00:00 2001
 From: Athanasios Oikonomou <athoik@gmail.com>
-Date: Sun, 7 Feb 2016 15:35:25 +0200
-Subject: [PATCH 1/3] Support TBS USB drivers
+Date: Sat, 5 Mar 2016 00:29:45 +0200
+Subject: [PATCH] Support TBS USB drivers
 
 This patch add supports for TBS USB drivers based on the following patches:
 
@@ -10,7 +10,7 @@ https://patchwork.linuxtv.org/patch/23243/
 https://patchwork.linuxtv.org/patch/23242/
 
 diff --git a/drivers/media/dvb-core/dvb-usb-ids.h b/drivers/media/dvb-core/dvb-usb-ids.h
-index 12ce19c..408f99b 100644
+index c117fb3..5e0735b 100644
 --- a/drivers/media/dvb-core/dvb-usb-ids.h
 +++ b/drivers/media/dvb-core/dvb-usb-ids.h
 @@ -70,6 +70,7 @@
@@ -21,22 +21,22 @@ index 12ce19c..408f99b 100644
  
  /* Product IDs */
  #define USB_PID_ADSTECH_USB2_COLD			0xa333
-@@ -382,4 +383,10 @@
- #define USB_PID_PCTV_2002E                              0x025c
- #define USB_PID_PCTV_2002E_SE                           0x025d
+@@ -388,4 +389,10 @@
  #define USB_PID_SVEON_STV27                             0xd3af
-+#define USB_PID_TENOW_TBS5910                           0x5910
-+#define USB_PID_TENOW_TBS5920                           0x5920
-+#define USB_PID_TENOW_TBS5921                           0x5921
-+#define USB_PID_TENOW_TBS5925                           0x5925
-+#define USB_PID_TENOW_TBS5928                           0x5928
-+#define USB_PID_TENOW_TBS5980                           0x5980
+ #define USB_PID_TURBOX_DTT_2000                         0xd3a4
+ #define USB_PID_WINTV_SOLOHD                            0x0264
++#define USB_PID_TENOW_TBS5910				0x5910
++#define USB_PID_TENOW_TBS5920				0x5920
++#define USB_PID_TENOW_TBS5921				0x5921
++#define USB_PID_TENOW_TBS5925				0x5925
++#define USB_PID_TENOW_TBS5928				0x5928
++#define USB_PID_TENOW_TBS5980				0x5980
  #endif
 diff --git a/drivers/media/dvb-frontends/cx24116.c b/drivers/media/dvb-frontends/cx24116.c
-index 2916d7c..462265c 100644
+index 8814f36..5ccfeb3 100644
 --- a/drivers/media/dvb-frontends/cx24116.c
 +++ b/drivers/media/dvb-frontends/cx24116.c
-@@ -703,6 +703,9 @@ static int cx24116_read_status(struct dvb_frontend *fe, fe_status_t *status)
+@@ -705,6 +705,9 @@ static int cx24116_read_status(struct dvb_frontend *fe, enum fe_status *status)
  	if (lock & CX24116_HAS_SYNCLOCK)
  		*status |= FE_HAS_SYNC | FE_HAS_LOCK;
  
@@ -46,16 +46,18 @@ index 2916d7c..462265c 100644
  	return 0;
  }
  
-@@ -1111,6 +1114,8 @@ static void cx24116_release(struct dvb_frontend *fe)
+@@ -1113,6 +1116,10 @@ static void cx24116_release(struct dvb_frontend *fe)
  {
  	struct cx24116_state *state = fe->demodulator_priv;
  	dprintk("%s\n", __func__);
++
 +	if (state->config->set_lock_led)
 +		state->config->set_lock_led(fe, 0);
++
  	kfree(state);
  }
  
-@@ -1196,6 +1201,9 @@ static int cx24116_sleep(struct dvb_frontend *fe)
+@@ -1198,6 +1205,9 @@ static int cx24116_sleep(struct dvb_frontend *fe)
  
  	dprintk("%s()\n", __func__);
  
@@ -66,24 +68,24 @@ index 2916d7c..462265c 100644
  	cmd.args[0x00] = CMD_TUNERSLEEP;
  	cmd.args[0x01] = 1;
 diff --git a/drivers/media/dvb-frontends/cx24116.h b/drivers/media/dvb-frontends/cx24116.h
-index 2ec84fa..4ed3b39 100644
+index f6dbabc..7cbb907 100644
 --- a/drivers/media/dvb-frontends/cx24116.h
 +++ b/drivers/media/dvb-frontends/cx24116.h
-@@ -34,6 +34,9 @@ struct cx24116_config {
- 	/* Need to reset device during firmware loading */
- 	int (*reset_device)(struct dvb_frontend *fe);
+@@ -39,6 +39,9 @@ struct cx24116_config {
  
+ 	/* max bytes I2C provider can write at once */
+ 	u16 i2c_wr_max;
++
 +	/* Hook for Lock LED */
 +	void (*set_lock_led)(struct dvb_frontend *fe, int offon);
-+
- 	/* Need to set MPEG parameters */
- 	u8 mpg_clk_pos_pol:0x02;
+ };
  
+ #if IS_REACHABLE(CONFIG_DVB_CX24116)
 diff --git a/drivers/media/dvb-frontends/stv0288.c b/drivers/media/dvb-frontends/stv0288.c
-index 632b251..8ffd6d1 100644
+index c93d9a4..9dcd922 100644
 --- a/drivers/media/dvb-frontends/stv0288.c
 +++ b/drivers/media/dvb-frontends/stv0288.c
-@@ -381,6 +381,9 @@ static int stv0288_read_status(struct dvb_frontend *fe, fe_status_t *status)
+@@ -382,6 +382,9 @@ static int stv0288_read_status(struct dvb_frontend *fe, enum fe_status *status)
  		dprintk("stv0288 has locked\n");
  	}
  
@@ -93,7 +95,7 @@ index 632b251..8ffd6d1 100644
  	return 0;
  }
  
-@@ -415,6 +418,9 @@ static int stv0288_sleep(struct dvb_frontend *fe)
+@@ -416,6 +419,9 @@ static int stv0288_sleep(struct dvb_frontend *fe)
  {
  	struct stv0288_state *state = fe->demodulator_priv;
  
@@ -103,17 +105,19 @@ index 632b251..8ffd6d1 100644
  	stv0288_writeregI(state, 0x41, 0x84);
  	state->initialised = 0;
  
-@@ -532,6 +538,8 @@ static int stv0288_i2c_gate_ctrl(struct dvb_frontend *fe, int enable)
+@@ -533,6 +539,10 @@ static int stv0288_i2c_gate_ctrl(struct dvb_frontend *fe, int enable)
  static void stv0288_release(struct dvb_frontend *fe)
  {
  	struct stv0288_state *state = fe->demodulator_priv;
++
 +	if (state->config->set_lock_led)
 +		state->config->set_lock_led(fe, 0);
++
  	kfree(state);
  }
  
 diff --git a/drivers/media/dvb-frontends/stv0288.h b/drivers/media/dvb-frontends/stv0288.h
-index a0bd931..5be0886 100644
+index b58603c..01d8481 100644
 --- a/drivers/media/dvb-frontends/stv0288.h
 +++ b/drivers/media/dvb-frontends/stv0288.h
 @@ -41,6 +41,9 @@ struct stv0288_config {
@@ -125,12 +129,12 @@ index a0bd931..5be0886 100644
 +	void (*set_lock_led)(struct dvb_frontend *fe, int offon);
  };
  
- #if IS_ENABLED(CONFIG_DVB_STV0288)
+ #if IS_REACHABLE(CONFIG_DVB_STV0288)
 diff --git a/drivers/media/dvb-frontends/stv090x.c b/drivers/media/dvb-frontends/stv090x.c
-index 23e872f..f3452a8 100644
+index 25bdf6e..ce99b9d 100644
 --- a/drivers/media/dvb-frontends/stv090x.c
 +++ b/drivers/media/dvb-frontends/stv090x.c
-@@ -3546,6 +3546,9 @@ static int stv090x_read_status(struct dvb_frontend *fe, enum fe_status *status)
+@@ -3559,6 +3559,9 @@ static int stv090x_read_status(struct dvb_frontend *fe, enum fe_status *status)
  		break;
  	}
  
@@ -140,7 +144,7 @@ index 23e872f..f3452a8 100644
  	return 0;
  }
  
-@@ -3893,6 +3896,9 @@ static int stv090x_sleep(struct dvb_frontend *fe)
+@@ -3907,6 +3910,9 @@ static int stv090x_sleep(struct dvb_frontend *fe)
  	u32 reg;
  	u8 full_standby = 0;
  
@@ -150,7 +154,7 @@ index 23e872f..f3452a8 100644
  	if (stv090x_i2c_gate_ctrl(state, 1) < 0)
  		goto err;
  
-@@ -4124,6 +4130,9 @@ static void stv090x_release(struct dvb_frontend *fe)
+@@ -4138,6 +4144,9 @@ static void stv090x_release(struct dvb_frontend *fe)
  {
  	struct stv090x_state *state = fe->demodulator_priv;
  
@@ -161,68 +165,34 @@ index 23e872f..f3452a8 100644
  	if (state->internal->num_used <= 0) {
  
 diff --git a/drivers/media/dvb-frontends/stv090x.h b/drivers/media/dvb-frontends/stv090x.h
-index 0bd6adc..7842487 100644
+index 012e55e..545f43a 100644
 --- a/drivers/media/dvb-frontends/stv090x.h
 +++ b/drivers/media/dvb-frontends/stv090x.h
-@@ -105,6 +105,9 @@ struct stv090x_config {
- 	/* dir = 0 -> output, dir = 1 -> input/open-drain */
- 	int (*set_gpio)(struct dvb_frontend *fe, u8 gpio, u8 dir, u8 value,
- 			u8 xor_value);
-+
+@@ -89,6 +89,8 @@ struct stv090x_config {
+ 
+ 	bool diseqc_envelope_mode;
+ 
 +	/* Hook for Lock LED */
-+	void (*set_lock_led)(struct dvb_frontend *fe, int offon);
- };
- 
- #if IS_ENABLED(CONFIG_DVB_STV090x)
-diff --git a/drivers/media/dvb-frontends/tda10071.c b/drivers/media/dvb-frontends/tda10071.c
-index 9619be5..4825b70 100644
---- a/drivers/media/dvb-frontends/tda10071.c
-+++ b/drivers/media/dvb-frontends/tda10071.c
-@@ -501,6 +501,9 @@ static int tda10071_read_status(struct dvb_frontend *fe, fe_status_t *status)
- 	if (tmp & 0x08) /* RS or BCH */
- 		*status |= FE_HAS_SYNC | FE_HAS_LOCK;
- 
-+	if (priv->cfg.set_lock_led)
-+		priv->cfg.set_lock_led(fe, *status & FE_HAS_LOCK);
-+
- 	priv->fe_status = *status;
- 
- 	return ret;
-@@ -1169,6 +1172,9 @@ static int tda10071_sleep(struct dvb_frontend *fe)
- 		goto error;
- 	}
- 
-+	if (priv->cfg.set_lock_led)
-+		priv->cfg.set_lock_led(fe, 0);
-+
- 	cmd.args[0] = CMD_SET_SLEEP_MODE;
- 	cmd.args[1] = 0;
- 	cmd.args[2] = 1;
-@@ -1203,6 +1209,8 @@ static int tda10071_get_tune_settings(struct dvb_frontend *fe,
- static void tda10071_release(struct dvb_frontend *fe)
- {
- 	struct tda10071_priv *priv = fe->demodulator_priv;
-+	if (priv->cfg.set_lock_led)
-+		priv->cfg.set_lock_led(fe, 0);
- 	kfree(priv);
- }
- 
++	void (*set_lock_led) (struct dvb_frontend *fe, int offon);
+ 	int (*tuner_init)(struct dvb_frontend *fe);
+ 	int (*tuner_sleep)(struct dvb_frontend *fe);
+ 	int (*tuner_set_mode)(struct dvb_frontend *fe, enum tuner_mode mode);
 diff --git a/drivers/media/dvb-frontends/tda10071.h b/drivers/media/dvb-frontends/tda10071.h
-index 331b5a8..5d89658 100644
+index 8f18402..891e007 100644
 --- a/drivers/media/dvb-frontends/tda10071.h
 +++ b/drivers/media/dvb-frontends/tda10071.h
-@@ -69,6 +69,9 @@ struct tda10071_config {
- 	 * Values:
- 	 */
+@@ -49,6 +49,9 @@ struct tda10071_platform_data {
  	u8 pll_multiplier;
-+
+ 	u8 tuner_i2c_addr;
+ 
 +	/* Hook for Lock LED */
 +	void (*set_lock_led)(struct dvb_frontend *fe, int offon);
++
+ 	struct dvb_frontend* (*get_dvb_frontend)(struct i2c_client *);
  };
  
- 
 diff --git a/drivers/media/usb/dvb-usb/Kconfig b/drivers/media/usb/dvb-usb/Kconfig
-index 10aef21..ff3e38b 100644
+index 128eee6..49c34f9 100644
 --- a/drivers/media/usb/dvb-usb/Kconfig
 +++ b/drivers/media/usb/dvb-usb/Kconfig
 @@ -320,3 +320,23 @@ config DVB_USB_TECHNISAT_USB2
