@@ -19,19 +19,19 @@ index 983db75..a5ad43d 100644
  {
  	int i, num;
 -
-+	char *vu_name = strstr(name, "_gigablue_");
++	char *gb_name = strstr(name, "_gigablue_");
  	mutex_lock(&dvbdev_register_lock);
  
  	for (i = 0; i < DVB_MAX_ADAPTERS; ++i) {
  		num = adapter_nums[i];
 -		if (num >= 0  &&  num < DVB_MAX_ADAPTERS) {
-+		if (num >= vu_name? 0:1  &&  num < DVB_MAX_ADAPTERS) {
++		if (num >= gb_name? 0:1  &&  num < DVB_MAX_ADAPTERS) {
  		/* use the one the driver asked for */
  			if (dvbdev_check_free_adapter_num(num))
  				break;
  		} else {
 -			num = dvbdev_get_free_adapter_num();
-+			num = dvbdev_get_free_adapter_num(vu_name? 0:1);
++			num = dvbdev_get_free_adapter_num(gb_name? 0:1);
  			break;
  		}
  		num = -1;
