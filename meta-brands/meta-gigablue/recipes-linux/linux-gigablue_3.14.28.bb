@@ -6,7 +6,7 @@ MODULE = "linux-3.14.28"
 
 inherit kernel machine_kernel_pr
 
-MACHINE_KERNEL_PR_append = "r0"
+MACHINE_KERNEL_PR_append = "r1"
 
 SRC_URI[md5sum] = "2a3a0a7e5cd2a1392f1a26790d1cd8bf"
 SRC_URI[sha256sum] = "8284670c28a4dad9e94752b38d37a4368f27ce15e671653a3e2ac83915f37db1"
@@ -16,8 +16,6 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 SRC_URI += "http://archiv.openmips.com/gigablue-linux-${PV}-20170113.tar.bz2 \
 	file://defconfig \
 	file://bcm_genet_disable_warn.patch \
-	file://linux_dvb-core.patch \
-	file://linux_dvb_adapter.patch \
 	file://rt2800usb_fix_warn_tx_status_timeout_to_dbg.patch \
 	file://usb_core_hub_msleep.patch \
 	file://rtl8712_fix_build_error.patch \
