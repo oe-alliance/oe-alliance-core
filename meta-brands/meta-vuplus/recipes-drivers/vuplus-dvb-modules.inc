@@ -19,8 +19,6 @@ inherit module
 do_compile() {
 }
 
-FILES_${PN} += "${sysconfdir}/modules-load.d/_vuplus.conf"
-
 do_install() {
     install -d ${D}/lib/modules/${KV}/extra
     for f in *.ko; do
@@ -32,4 +30,4 @@ do_install() {
     done
 }
 
-FILES_${PN} += "${sysconfdir}/modules-load.d/_${MACHINE}.conf"
+FILES_${PN} += "${sysconfdir}/modules-load.d/_${MACHINE}.conf ${sysconfdir}/modules-load.d/_vuplus.conf"
