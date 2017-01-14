@@ -19,7 +19,7 @@ index 983db75..a5ad43d 100644
  {
  	int i, num;
 -
-+	char *vu_name = strstr(name, "_vuplus_");
++	char *vu_name = strstr(name, "_gigablue_");
  	mutex_lock(&dvbdev_register_lock);
  
  	for (i = 0; i < DVB_MAX_ADAPTERS; ++i) {
