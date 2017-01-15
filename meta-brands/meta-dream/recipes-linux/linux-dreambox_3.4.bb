@@ -1,6 +1,6 @@
 inherit kernel machine_kernel_pr
 
-MACHINE_KERNEL_PR_append = ".5"
+MACHINE_KERNEL_PR_append = ".13"
 
 PATCHREV = "e7fe570494f9341822e3f184b1bd3364ee4e0a50"
 PATCHLEVEL = "113"
@@ -26,14 +26,11 @@ SRC_URI[stable-patch.sha256sum] = "d5492eeaadcf12aaad471011066e447907999035c2636
 SRC_URI[dream-patch.md5sum] = "7c8958c638a9cf150ee6e0693518a902"
 SRC_URI[dream-patch.sha256sum] = "7124e4145b5edb8179c679f842cd4349e1d0e7635c369385f246170cad7d6870"
 
-S = "${WORKDIR}/linux-3.4"
+S = "${WORKDIR}/linux-${PV}"
 B = "${WORKDIR}/build"
 
 do_configure_prepend() {
         sed -e "/^SUBLEVEL = /d" -i ${S}/Makefile
-}
-do_compile_append() {
-        gzip < vmlinux > vmlinuz
 }
 
 require linux-dreambox2.inc
@@ -46,22 +43,18 @@ CMDLINE = "${@bb.utils.contains('MACHINE', 'dm520', \
 
 BRCM_PATCHLEVEL = "4.0"
 
-KERNEL_VERSION = "3.4-${BRCM_PATCHLEVEL}-${MACHINE}"
+LINUX_VERSION = "${PV}-${BRCM_PATCHLEVEL}-${MACHINE}"
+KERNEL_IMAGETYPE = "${@bb.utils.contains('MACHINE', 'dm520', 'vmlinux.gz', 'vmlinux.bin', d)}"
+KERNEL_IMAGETYPES = "${@bb.utils.contains('MACHINE', 'dm520', '', 'vmlinux.gz', d)}"
 
-KERNEL_IMAGETYPE = "${@bb.utils.contains('MACHINE', 'dm520', 'vmlinux', 'vmlinux.bin', d)}"
-KERNEL_OUTPUT = "${@bb.utils.contains('MACHINE', 'dm520', '${KERNEL_IMAGETYPE}', 'arch/${ARCH}/boot/${KERNEL_IMAGETYPE}', d)}"
-KERNEL_IMAGE_EXTENSION = "${@bb.utils.contains('KERNEL_IMAGETYPE', 'vmlinux', '.gz', '', d)}"
-
-KERNEL_ALT_IMAGETYPE = "vmlinux"
-KERNEL_EXTRA_IMAGETYPE = "vmlinuz"
-KERNEL_EXTRA_OUTPUT = "vmlinuz"
 KERNEL_ENABLE_CGROUPS = "1"
 
 RDEPENDS_kernel-image = "flash-scripts"
 
 pkg_postinst_kernel-image () {
+#!/bin/sh
 if [ -z "$D" ]; then
-    flash-kernel /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION}${KERNEL_IMAGE_EXTENSION}
+    flash-kernel /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${LINUX_VERSION}
 fi
 }
 

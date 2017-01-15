@@ -74,7 +74,7 @@ do_configure_append() {
 }
 
 do_install_append() {
-    oe_runmake headers_install INSTALL_HDR_PATH=${D}${exec_prefix}/src/linux-${KERNEL_VERSION} ARCH=$ARCH
+    oe_runmake headers_install INSTALL_HDR_PATH=${D}${exec_prefix}/src/linux-${LINUX_VERSION} ARCH=$ARCH
 }
 
 PACKAGES =+ "kernel-headers"
