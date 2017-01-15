@@ -23,7 +23,7 @@ inherit image_types
 # 0                      4MiB     4MiB + 20MiB       4MiB + 20Mib + SDIMG_ROOTFS
 
 # This image depends on the rootfs image
-IMAGE_TYPEDEP_wetek-sdimg = "${SDIMG_ROOTFS_TYPE}"
+IMAGE_TYPEDEP_sdcard = "${SDIMG_ROOTFS_TYPE}"
 
 # Set initramfs extension
 KERNEL_INITRAMFS ?= "-initramfs"
@@ -41,7 +41,7 @@ IMAGE_ROOTFS_ALIGNMENT = "4096"
 SDIMG_ROOTFS_TYPE ?= "ext4"
 SDIMG_ROOTFS = "${IMGDEPLOYDIR}/${IMAGE_NAME}.rootfs.${SDIMG_ROOTFS_TYPE}"
 
-IMAGE_DEPENDS_wetek-sdimg = " \
+IMAGE_DEPENDS_sdcard = " \
 			parted-native \
 			mtools-native \
 			dosfstools-native \
@@ -57,7 +57,7 @@ FATPAYLOAD ?= ""
 
 IMAGEDATESTAMP = "${@time.strftime('%Y.%m.%d',time.gmtime())}"
 
-IMAGE_CMD_wetek-sdimg () {
+IMAGE_CMD_sdcard () {
 
 	# Align partitions
 	BOOT_SPACE_ALIGNED=$(expr ${BOOT_SPACE} + ${IMAGE_ROOTFS_ALIGNMENT} - 1)
