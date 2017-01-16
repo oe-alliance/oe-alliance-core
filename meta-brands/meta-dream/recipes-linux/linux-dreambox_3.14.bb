@@ -1,6 +1,6 @@
 inherit kernel machine_kernel_pr
 
-MACHINE_KERNEL_PR_append = ".19"
+MACHINE_KERNEL_PR_append = ".20"
 
 PATCHREV = "9321e2fc1ab885c955d9134f4c9b5c9b5a4e56b3"
 PATCHLEVEL = "28"
@@ -14,7 +14,6 @@ SRC_URI = " \
     file://0001-DVB-dvb_ringbuffer-add-missing-smp-write-barrier.patch \
     file://0001-dreambox-disable-kernel-wake-timer-support-.-it-is-h.patch \
     file://0001-dm900-update-kernel-config.patch \
-    file://0001-dm900-fixed-shutdown-boot-problems-with-unpowered-mi.patch \
     file://0001-dm900-workarounds-for-boot-and-shutdown-problems-wit.patch \
     file://defconfig \
 "
