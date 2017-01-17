@@ -36,6 +36,7 @@ EXTRA_OECONF = " \
     --with-imagebuild="${BUILD_VERSION}" \
     --with-imagedevbuild="${DEVELOPER_BUILD_VERSION}" \
     --with-imagetype="${DISTRO_TYPE}" \
+    --with-feedsurl=${DISTRO_FEED_URI}
     --with-imagedir="${IMAGEDIR}" \
     --with-imagefs="${IMAGE_FSTYPES}" \
     --with-mtdrootfs="${MTD_ROOTFS}" \
