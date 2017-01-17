@@ -15,6 +15,7 @@ ${@base_contains('MACHINEBUILD', 'zgemmaslc', 'Star LC' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'zgemmah4', 'H4' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'zgemmah5', 'H5' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'zgemmah52s', 'H5.2S' , '', d)}\
+${@base_contains('MACHINEBUILD', 'zgemmah52tc', 'H5.2TC' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'zgemmai55', 'I55' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'novacombo', 'NOVA COMBO' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'novaip', 'NOVA IP' , '', d)}\
@@ -35,6 +36,7 @@ ${@base_contains('MACHINEBUILD', 'zgemmaslc', 'Zgemma' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'zgemmah4', 'Zgemma' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'zgemmah5', 'Zgemma' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'zgemmah52s', 'Zgemma' , '', d)}\
+${@base_contains('MACHINEBUILD', 'zgemmah52tc', 'Zgemma' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'zgemmai55', 'Zgemma' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'novacombo', 'EVO' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'novaip', 'EVO' , '', d)}\
@@ -55,6 +57,7 @@ ${@base_contains('MACHINEBUILD', 'zgemmaslc', 'zgemma/lc' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'zgemmah4', 'zgemma/h4' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'zgemmah5', 'zgemma/h5' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'zgemmah52s', 'zgemma/h5' , '', d)}\
+${@base_contains('MACHINEBUILD', 'zgemmah52tc', 'zgemma/h5' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'zgemmai55', 'zgemma/i55' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'novacombo', 'novacombo' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'novaip', 'novaip' , '', d)}\
@@ -75,6 +78,7 @@ ${@base_contains('MACHINEBUILD', 'zgemmaslc', 'lc' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'zgemmah4', 'h4' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'zgemmah5', 'h5' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'zgemmah52s', 'h5' , '', d)}\
+${@base_contains('MACHINEBUILD', 'zgemmah52tc', 'h5' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'zgemmai55', 'i55' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'novacombo', 'novacombo' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'novaip', 'novaip' , '', d)}\
