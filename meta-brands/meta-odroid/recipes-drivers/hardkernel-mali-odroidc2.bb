@@ -1,4 +1,4 @@
-SUMMARY = "Hardkernel Enigma2 wifi driver for ${MACHINE}"
+SUMMARY = "Hardkernel Mali Video driver for ${MACHINE}"
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "GPLv2"

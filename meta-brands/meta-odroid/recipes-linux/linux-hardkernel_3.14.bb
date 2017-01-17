@@ -19,7 +19,6 @@ SRC_URI = "git://github.com/hardkernel/linux.git;branch=${KBRANCH}"
 SRC_URI += " \
 	file://add_uboot.patch \
 	file://0001-compiler-gcc-integrate-the-various-compiler-gcc-345-.patch \
-	file://hardkernel_dvb.patch \
 	file://defconfig"
 
 KCONF_BSP_AUDIT_LEVEL = "0"
