@@ -16,11 +16,9 @@ SRC_URI = "file://wetek-dvb-modules-${KV}-${SRCDATE}.zip"
 
 S = "${WORKDIR}"
 
-INHIBIT_PACKAGE_STRIP = "1"
+inherit module
 
 do_compile() {
-}
-do_populate_sysroot() {
 }
 
 do_install() {
@@ -30,6 +28,8 @@ do_install() {
     install -m 0755 ${WORKDIR}/wetekdvb.ko ${D}${base_libdir}/modules/${KV}/extra/
 }
 
-FILES_${PN} += "${sysconfdir}/modules-load.d/_${MACHINE}.conf /lib/modules/${KV}/extra"
+FILES_${PN} += "${sysconfdir}/modules-load.d/_${MACHINE}.conf"
 
+do_package_qa() {
+}
 
