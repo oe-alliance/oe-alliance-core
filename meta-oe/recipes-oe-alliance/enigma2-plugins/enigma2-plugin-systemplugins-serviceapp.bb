@@ -20,7 +20,7 @@ CXXFLAGS += " -std=gnu++98"
 PV = "0.5+git${SRCPV}"
 PKGV = "0.5+git${GITPKGV}"
 
-PR = "r1"
+PR = "r2"
 
 EXTRA_OECONF = "\
 	BUILD_SYS=${BUILD_SYS} \
