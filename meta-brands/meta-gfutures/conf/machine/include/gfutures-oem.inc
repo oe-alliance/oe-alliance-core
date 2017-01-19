@@ -16,6 +16,8 @@ ${@base_contains('MACHINEBUILD', 'mutant11', 'HD11' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mutant51', 'HD51' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'ax51', 'HD51' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'bre2ze4k', 'BRE2ZE 4K' , '', d)}\
+${@base_contains('MACHINEBUILD', 'vimastec1000', 'VS1000' , '', d)}\
+${@base_contains('MACHINEBUILD', 'vimastec1500', 'VS1500' , '', d)}\
 "
 
 MACHINE_BRAND = "\
@@ -30,6 +32,8 @@ ${@base_contains('MACHINEBUILD', 'mutant11', 'Mut@nt' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mutant51', 'Mut@nt' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'ax51', 'AX 4K' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'bre2ze4k', 'WWIO' , '', d)}\
+${@base_contains('MACHINEBUILD', 'vimastec1000', 'Vimastec' , '', d)}\
+${@base_contains('MACHINEBUILD', 'vimastec1500', 'Vimastec' , '', d)}\
 "
 
 IMAGEDIR ?= "\
@@ -44,6 +48,8 @@ ${@base_contains('MACHINEBUILD', 'mutant11', 'hd11' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mutant51', 'hd51' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'ax51', 'hd51' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'bre2ze4k', 'bre2ze4k' , '', d)}\
+${@base_contains('MACHINEBUILD', 'vimastec1000', 'vs1000' , '', d)}\
+${@base_contains('MACHINEBUILD', 'vimastec1500', 'vs1500' , '', d)}\
 "
 
 MACHINE_DRIVER ?= "\
@@ -58,6 +64,8 @@ ${@base_contains('MACHINEBUILD', 'mutant11', 'hd11' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'mutant51', 'hd51' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'ax51', 'hd51' , '', d)}\
 ${@base_contains('MACHINEBUILD', 'bre2ze4k', 'bre2ze4k' , '', d)}\
+${@base_contains('MACHINEBUILD', 'vimastec1000', 'vs1000' , '', d)}\
+${@base_contains('MACHINEBUILD', 'vimastec1500', 'vs1500' , '', d)}\
 "
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "\
@@ -84,6 +92,8 @@ DVBMEDIASINK_CONFIG = "--with-wma --with-wmv --with-pcm --with-dts --with-eac3 \
     ${@base_contains('MACHINEBUILD', 'mutant1500', '--with-h265 --with-vb6 --with-vb8 --with-spark' , '', d)} \
     ${@base_contains('MACHINEBUILD', 'mutant11', '--with-h265 --with-vb6 --with-vb8 --with-spark' , '', d)} \
     ${@base_contains('MACHINE', 'hd51', '--with-h265 --with-vb6 --with-vb8 --with-vb9 --with-spark' , '', d)} \
+    ${@base_contains('MACHINE', 'vs1500', '--with-h265 --with-vb6 --with-vb8 --with-vb9 --with-spark' , '', d)} \
+    ${@base_contains('MACHINE', 'vs1000', '--with-h265 --with-vb6 --with-vb8  --with-spark' , '', d)} \
 "
 
 PREFERRED_PROVIDER_virtual/kernel = "linux-gfutures"

@@ -78,6 +78,10 @@ SRC_URI_append_hd1265 = " \
     file://0001-add-vp8-vp9-vp6-spark.patch;patch=1 \
 "
 
+SRC_URI_append_vs1000 = " \
+    file://0001-add-vp8-vp9-vp6-spark.patch;patch=1 \
+"
+
 SRC_URI_append_hd1500 = " \
     file://0001-add-vp8-vp9-vp6-spark.patch;patch=1 \
 "
@@ -92,6 +96,10 @@ SRC_URI_append_hd51 = " \
 "
 
 SRC_URI_append_hd52 = " \
+    file://0001-add-vp8-vp9-vp6-spark.patch;patch=1 \
+"
+
+SRC_URI_append_vs1500 = " \
     file://0001-add-vp8-vp9-vp6-spark.patch;patch=1 \
 "
 
