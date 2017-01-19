@@ -4,7 +4,7 @@ MAINTAINER = "OpenBH"
 require conf/license/license-gplv2.inc
 
 DEPENDS = "enigma2 python-process libcrypto-compat-0.9.7"
-RDEPENDS_enigma2-plugin-vix-core = "ofgwrite python-process libcrypto-compat-0.9.7 python-compression zip procps python-beautifulsoup"
+RDEPENDS_enigma2-plugin-obh-core = "ofgwrite python-process libcrypto-compat-0.9.7 python-compression zip procps python-beautifulsoup"
 
 RCONFLICTS_enigma2-plugin-obh-core = "settings-autorestore"
 RREPLACES_enigma2-plugin-obh-core = "settings-autorestore"
