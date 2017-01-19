@@ -24,9 +24,9 @@ RDEPENDS_${PN} = "\
 
 RRECOMMENDS_${PN} = "\
     enigma2-plugin-extensions-autotimer \
+    enigma2-plugin-extensions-epgimport \
     enigma2-plugin-extensions-epgsearch \
     enigma2-plugin-extensions-imdb \
-    enigma2-plugin-extensions-epgimport \
     enigma2-plugin-systemplugins-crossepg \
     ${@bb.utils.contains("MACHINE_FEATURES", "uianimation", "enigma2-plugin-systemplugins-animationsetup" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "osdanimation", "enigma2-plugin-systemplugins-animationsetup" , "", d)} \
