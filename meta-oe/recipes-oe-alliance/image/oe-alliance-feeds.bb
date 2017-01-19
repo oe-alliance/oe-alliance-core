@@ -83,6 +83,7 @@ RDEPENDS_${PN} = " \
     openresolv \
     openssh \
     openvpn \
+    easy-rsa \
     parted \
     pngquant \
     pcsc-lite \
