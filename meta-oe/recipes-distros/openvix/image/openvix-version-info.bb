@@ -28,4 +28,3 @@ do_install() {
 }
 
 FILES_${PN} = "/etc/image-version"
-

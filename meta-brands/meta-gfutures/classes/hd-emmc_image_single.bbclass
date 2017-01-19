@@ -35,7 +35,11 @@ IMAGE_CMD_hd-emmc () {
     parted -s ${EMMC_IMAGE} unit KiB mkpart storage ext2 ${STORAGE_PARTITION_OFFSET} $(expr ${EMMC_IMAGE_SIZE} \- 1024)
     dd if=/dev/zero of=${WORKDIR}/boot.img bs=1024 count=${BOOT_PARTITION_SIZE}
     mkfs.msdos -S 512 ${WORKDIR}/boot.img
-    echo "boot emmcflash0.kernel1 'root=/dev/mmcblk0p2 rw rootwait hd51_4.boxmode=1'" > ${WORKDIR}/STARTUP_1
+    if [ "${MACHINEBUILD}" = 'bre2ze4k' ]; then
+        echo "boot emmcflash0.kernel1 'root=/dev/mmcblk0p2 rw rootwait usbcore.old_scheme_first=1 ${MACHINE}_4.boxmode=12'" > ${WORKDIR}/STARTUP_1
+    else
+        echo "boot emmcflash0.kernel1 'root=/dev/mmcblk0p2 rw rootwait ${MACHINE}_4.boxmode=12'" > ${WORKDIR}/STARTUP_1
+    fi
     mcopy -i ${WORKDIR}/boot.img -v ${WORKDIR}/STARTUP_1 ::
     dd conv=notrunc if=${WORKDIR}/boot.img of=${EMMC_IMAGE} bs=1024 seek=${BOOT_PARTITION_OFFSET}
     dd conv=notrunc if=${DEPLOY_DIR_IMAGE}/zImage of=${EMMC_IMAGE} bs=1024 seek=${KERNEL_PARTITION_OFFSET}

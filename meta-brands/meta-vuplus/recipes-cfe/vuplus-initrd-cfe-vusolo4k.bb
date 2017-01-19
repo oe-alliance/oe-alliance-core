@@ -1,15 +1,15 @@
-SRCDATE = "20170112"
+SRCDATE = "20160229"
 
 require vuplus-initrd-cfe.inc
 
 inherit deploy
 do_deploy() {
-    if [ -e vmlinuz-initrd-7366c0 ]; then
-    install -m 0755 vmlinuz-initrd-7366c0 ${DEPLOYDIR}/initrd_auto.bin
+    if [ -e vmlinuz-initrd-7366b0 ]; then
+    install -m 0644 vmlinuz-initrd-7366b0 ${DEPLOYDIR}/initrd_auto.bin
     fi
 }
 
 addtask deploy before do_build after do_install
 
-SRC_URI[md5sum] = "b3e6a9df20211076adbe2f33b8bbad87"
-SRC_URI[sha256sum] = "c471b241f7d14ae401bfdd940307739d38b94213286a450078321def04f717a0"
+SRC_URI[md5sum] = "061ee14a4c87f0fca5ca7eae578d2454"
+SRC_URI[sha256sum] = "b2dd96a85454bff1272db6628659aebc18cb7ad5bb001ce130bc9724f4b5ef79"
