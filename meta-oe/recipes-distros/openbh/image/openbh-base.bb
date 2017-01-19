@@ -17,7 +17,6 @@ inherit packagegroup
 DEPENDS = "openbh-version-info"
 
 RDEPENDS_${PN} = "\
-    bash \
     blackhole-base \
     blackholesocker \
     busybox-cron \
