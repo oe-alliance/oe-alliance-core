@@ -3,12 +3,12 @@ DESCRIPTION = "Firmware for the STx7111 CPU Flexible DMA engine (FDMA)"
 
 require stlinux24-sh4-fw.inc 
 
-SRC_URI[md5sum] = "9d3feac1d878de02858c85fdf3ea0ba7"
-SRC_URI[sha256sum] = "bb373f570585573b10a6c46eb09fd8b92bca72e0c4aa8148af90331e939651b8"
+SRC_URI[md5sum] = "e425110da8ea5c80e4d1c2cc398ae9bf"
+SRC_URI[sha256sum] = "d94521bfceeb132a1e2eed898c457b678c9ef6c08f0922b2bdf67861ad301f63"
 
 PR = "${INC_PR}.0"
 
 do_install() {
 	install -d ${D}${base_libdir}/firmware
-	install -m 0644 ${S}/lib/firmware/fdma_STx7105_* ${D}${base_libdir}/firmware
+	install -m 0644 ${S}/lib/firmware/fdma_STx7111_* ${D}${base_libdir}/firmware
 }
