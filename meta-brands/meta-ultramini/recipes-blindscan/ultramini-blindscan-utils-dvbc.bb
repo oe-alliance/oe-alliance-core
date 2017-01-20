@@ -6,7 +6,7 @@ require conf/license/license-close.inc
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-SRC_URI = "http://xpeedlxclass.eu/xpeedc-dvbc-blindscan-${PV}.zip"
+SRC_URI = "http://xpeedlx.info/xpeedc-dvbc-blindscan-${PV}.zip"
 
 PROVIDES += "virtual/blindscan-dvbc"
 RPROVIDES_${PN} += "virtual/blindscan-dvbc"

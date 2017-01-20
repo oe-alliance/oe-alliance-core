@@ -5,9 +5,6 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 inherit kernel machine_kernel_pr
 
-KERNEL_RELEASE = "4.1.21"
-SRCDATE = "20160408"
-
 SRC_URI[md5sum] = "e7ba35d427bfa40d78cd6e23db7872a2"
 SRC_URI[sha256sum] = "88f648e462e9d37c6ed9401b33ee1dd08495e9f66b9c653aefd9fd0a4f5afb26"
 
@@ -23,7 +20,7 @@ PKG_kernel-image = "kernel-image"
 RPROVIDES_kernel-base = "kernel-${KERNEL_VERSION}"
 RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
 
-SRC_URI += "http://source.mynonpublic.com/xtrend/linux-${PV}.tar.xz \
+SRC_URI += "http://xpeedlx.info/linux-${PV}.tar.xz \
     file://defconfig \
     file://0001-Support-TBS-USB-drivers-for-4.1-kernel.patch \
     file://0001-TBS-fixes-for-4.1-kernel.patch \

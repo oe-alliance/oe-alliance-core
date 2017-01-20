@@ -2,7 +2,7 @@ KV = "4.1.21"
 SRCDATE = "20161114"
 GCC = "5.3.0"
 
-SRC_URI = "http://95.211.199.198/gi/et7000mini/${MACHINE_DRIVER}-drivers-${KV}-${GCC}-${SRCDATE}.zip"
+SRC_URI = "http://gi-et.info/et7000mini/${MACHINE_DRIVER}-drivers-${KV}-${GCC}-${SRCDATE}.zip"
 
 require ultramini-dvb-modules.inc
 
