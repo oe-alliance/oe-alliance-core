@@ -7,6 +7,7 @@ MACHINE_NAME = "\
 ${@bb.utils.contains('MACHINEBUILD', 'twinboxlcd', 'TWINBOX LCD' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'twinboxlcdci5', 'TWINBOX LCD' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'mbmicro', 'Premium Micro' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mbmicrov2', 'Premium Micro 2' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'odin2hybrid', 'ODIN2 Hybrid' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'odinplus', 'ODIN2 Plus' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'e4hd', 'E4HD' , '', d)}\
@@ -24,6 +25,7 @@ MACHINE_BRAND = "\
 ${@bb.utils.contains('MACHINEBUILD', 'twinboxlcd', 'RED EAGLE' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'twinboxlcdci5', 'RED EAGLE' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'mbmicro', 'Miraclebox' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mbmicrov2', 'Miraclebox' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'odin2hybrid', 'Opticum' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'odinplus', 'Opticum' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'e4hd', 'AXAS' , '', d)}\
@@ -41,6 +43,7 @@ IMAGEDIR ?= "\
 ${@bb.utils.contains('MACHINEBUILD', 'twinboxlcd', 'redeagle/twinboxlcd' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'twinboxlcdci5', 'redeagle/twinboxlcd' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'mbmicro', 'miraclebox/micro' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mbmicrov2', 'miraclebox/microv2' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'odin2hybrid', 'odin2/hybrid' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'odinplus', 'odinplus' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'e4hd', 'e4hd' , '', d)}\

@@ -28,6 +28,7 @@ RDEPENDS_${PN} = " \
     enigma2-fonts \
     ethtool \
     glibc-gconv-iso8859-15 \
+    glibc-gconv-cp1250 \
     hotplug-e2-helper \
     ${PYTHON_RDEPS} \
     ${@bb.utils.contains("MACHINE_FEATURES", "uianimation", "vuplus-libgles-${MACHINE} libvugles2" , "", d)} \
