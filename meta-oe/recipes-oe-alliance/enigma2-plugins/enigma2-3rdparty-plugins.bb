@@ -11,7 +11,7 @@ DEPENDS = "tslib mpfr gmp"
 SRCREV = "${AUTOREV}"
 PV = "3.4+gitr${SRCPV}"
 PKGV = "3.4+gitr${GITPKGV}"
-PR = "r16"
+PR = "r17"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -32,7 +32,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-bluray_1.6rc1_all.ipk \
     enigma2-plugin-extensions-boblight-enigma2_0.8r8_mips32el.ipk \
     enigma2-plugin-extensions-camofs_9.19_all.ipk \
-    enigma2-plugin-extensions-chefkoch_1.5rc1_all.ipk \
+    enigma2-plugin-extensions-chefkoch_1.5rc2_all.ipk \
     enigma2-plugin-extensions-clevertanken_0.8rc1_all.ipk \
     enigma2-plugin-extensions-csfd_11-55-20160929_all.ipk \
     enigma2-plugin-extensions-customsubservices_0.1.2_all.ipk \
@@ -97,7 +97,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-vhannibalautosettings_1.1_mips32el.ipk \
     enigma2-plugin-extensions-vuplusforum_0.8rc2_all.ipk \
     enigma2-plugin-extensions-webmedia_14.0_r0_all.ipk \
-    enigma2-plugin-extensions-webradiofs_14.80_all.ipk \
+    enigma2-plugin-extensions-webradiofs_14.83_all.ipk \
     enigma2-plugin-extensions-wikipedia_2.3rc1_all.ipk \
     enigma2-plugin-extensions-wwech_1.03_all.ipk \
     enigma2-plugin-extensions-xbmcaddons_8.1_r0_all.ipk \
@@ -144,7 +144,7 @@ THIRDPARTY_MACHINE_PLUGINS_et7x00 = " \
     "
 THIRDPARTY_MACHINE_PLUGINS_et8000 = " \
     enigma2-plugin-extensions-newxtrend-hbbtv_4.0-r0_et8000.ipk \
-    enigma2-plugin-systemplugins-autorebootET8000_1.2_mipsel.ipk \
+    enigma2-plugin-systemplugins-autorebootET8000_1.3_mipsel.ipk \
      "
 THIRDPARTY_MACHINE_PLUGINS_et8500 = " \
     enigma2-plugin-extensions-newxtrend-hbbtv_4.0-r0_et8500.ipk \
