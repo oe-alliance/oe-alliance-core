@@ -11,7 +11,7 @@ PATH=/sbin:/bin:/usr/sbin:/usr/bin
 grep -q 'enable' /proc/stb/fp/wol
 if [ $? -eq 0 ]
 then
-	echo [WOWL] Activaing WOWL...
+	echo [WOWL] Activating WOWL...
 	count=1
 	while [ $count -le 3 ] ; do
 		let count=$count+1
