@@ -11,7 +11,7 @@ DEPENDS = "tslib mpfr gmp"
 SRCREV = "${AUTOREV}"
 PV = "3.4+gitr${SRCPV}"
 PKGV = "3.4+gitr${GITPKGV}"
-PR = "r19"
+PR = "r20"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -82,10 +82,10 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-spinnerselector_2.1rc7_mips32el.ipk \
     enigma2-plugin-extensions-sport1ticker_1.3_all.ipk \
     enigma2-plugin-extensions-sportportal_2013_all.ipk \
-    enigma2-plugin-extensions-sundtekcontrolcenter_20160830-1_all.ipk \
+    enigma2-plugin-extensions-sundtekcontrolcenter_20161213-2_all.ipk \
     enigma2-plugin-extensions-tectimetv_3.1_all.ipk \
     enigma2-plugin-extensions-thetvdb_0.7-20120607-r2_mips32el.ipk \
-    enigma2-plugin-extensions-tmbd_7.7_all.ipk \
+    enigma2-plugin-extensions-tmbd_7.8rc1_all.ipk \
     enigma2-plugin-extensions-translator_1.1rc1_all.ipk \
     enigma2-plugin-extensions-transmission_2.84_all.ipk \
     enigma2-plugin-extensions-tsmedia_11.5_all.ipk \
