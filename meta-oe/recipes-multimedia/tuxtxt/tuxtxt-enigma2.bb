@@ -21,20 +21,9 @@ S = "${WORKDIR}/git/tuxtxt"
 
 PV = "2.0+git${SRCPV}"
 PKGV = "2.0+git${GITPKGV}"
-PR = "r13"
+PR = "r14"
 
 do_configure_prepend() {
-    touch ${S}/NEWS
-    touch ${S}/README
-    touch ${S}/AUTHORS
-    touch ${S}/ChangeLog
-}
-
-do_configure_prepend_openatv () {
-    sed 's/UseTTF 0/UseTTF 1/g' -i ${S}/data/tuxtxt2.conf
-    sed 's/TTFWidthFactor16 28/TTFWidthFactor16 26/g' -i ${S}/data/tuxtxt2.conf
-    sed 's/TTFHeightFactor16 16/TTFHeightFactor16 14/g' -i ${S}/data/tuxtxt2.conf
-    sed 's/TTFShiftY 0/TTFShiftY 2/g' -i ${S}/data/tuxtxt2.conf
     touch ${S}/NEWS
     touch ${S}/README
     touch ${S}/AUTHORS
