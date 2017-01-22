@@ -15,5 +15,5 @@ DEPENDS_append_pn-showiframe = " libamcodec"
 MACHINEOVERRIDES =. "${@['', '${MACHINEBUILD}:']['${MACHINEBUILD}' != '']}"
 
 BBMASK = "meta-vuplus/recipes-graphics/"
-BBMASK .= "meta-vuplus/recipes-webkit/"
+BBMASK += "meta-vuplus/recipes-webkit/"
 
