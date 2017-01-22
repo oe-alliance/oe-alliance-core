@@ -1,0 +1,49 @@
+diff -urN DirectFB-1.7.7.orig/inputdrivers/linux_input/linux_input.c DirectFB-1.7.7/inputdrivers/linux_input/linux_input.c
+--- DirectFB-1.7.7.orig/inputdrivers/linux_input/linux_input.c	2014-07-15 15:54:58.000000000 +0900
++++ DirectFB-1.7.7/inputdrivers/linux_input/linux_input.c	2017-01-11 15:10:36.781213546 +0900
+@@ -1005,6 +1005,27 @@
+                /* Event is dispatched in next round of loop. */
+           }
+ 
++          // DIKS_EXIT / DIKS_TV
++          if ( (devt.type == DIET_KEYPRESS) && ((devt.key_symbol == DIKS_EXIT ) || (devt.key_symbol == DIKS_TV)))
++          {
++        	  DFBInputEvent ldevt = { .type = DIET_UNKNOWN };
++        	  memcpy(&ldevt, &devt, sizeof(DFBInputEvent));
++
++        	  devt.key_symbol = DIKS_STOP;
++        	  flush_xy( data, false );
++        	  dfb_input_dispatch (data->device, &devt);
++        	  flush_xy( data, true );
++        	  devt.type = DIET_KEYRELEASE;
++
++        	  //struct timeval timeout
++        	  devt.timestamp.tv_usec += 10;
++        	  flush_xy( data, false );
++        	  dfb_input_dispatch (data->device, &devt);
++
++        	  devt.timestamp.tv_usec += 50;
++        	  memcpy(&devt, &ldevt, sizeof(DFBInputEvent));
++          }
++
+           /* Flush last event without DIEF_FOLLOW. */
+           if (devt.type != DIET_UNKNOWN) {
+                flush_xy( data, false );
+diff -urN DirectFB-1.7.7.orig/tools/dfbdumpinput.c DirectFB-1.7.7/tools/dfbdumpinput.c
+--- DirectFB-1.7.7.orig/tools/dfbdumpinput.c	2013-12-19 09:16:24.000000000 +0900
++++ DirectFB-1.7.7/tools/dfbdumpinput.c	2017-01-11 15:13:07.221219165 +0900
+@@ -147,6 +147,14 @@
+                                         printf( "mz %d\n", event[0].axisabs );
+                               }
+                               break;
++                         case DIET_KEYPRESS:
++                        	 printf("KEYPRESS:: key_code: %x, key_id: %x, key_symbol: %x\n",
++                        			 event[0].key_code, event[0].key_id, event[0].key_symbol);
++                        	 break;
++                         case DIET_KEYRELEASE:
++                        	 printf("KEYRELEASE:: key_code: %x, key_id: %x, key_symbol: %x\n",
++                        			 event[0].key_code, event[0].key_id, event[0].key_symbol);
++                        	 break;
+                          default:
+                               break;
+ 

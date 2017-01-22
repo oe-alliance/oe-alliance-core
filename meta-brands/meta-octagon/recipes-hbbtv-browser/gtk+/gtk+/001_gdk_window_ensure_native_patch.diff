@@ -1,0 +1,25 @@
+diff --git a/gdk/gdkwindow.c b/gdk/gdkwindow.c
+index 101e5c1..06fe09f 100644
+--- a/gdk/gdkwindow.c
++++ b/gdk/gdkwindow.c
+@@ -1845,10 +1845,19 @@ gdk_window_ensure_native (GdkWindow *window)
+     return FALSE;
+ 
+   private = (GdkWindowObject *) window;
++  if( !private )
++	return FALSE;
+ 
++	
+   impl_window = gdk_window_get_impl_window (private);
+ 
+-  if (gdk_window_is_offscreen (impl_window))
++	
++
++  if( !impl_window )
++	return FALSE;
++
++	
++  if (!impl_window || gdk_window_is_offscreen (impl_window))
+     return FALSE; /* native in offscreens not supported */
+ 
+   if (impl_window == private)

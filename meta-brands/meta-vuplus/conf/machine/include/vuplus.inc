@@ -58,3 +58,6 @@ require conf/machine/include/soc-family.inc
 
 # Add "MACHINEBUILD" override for recipes
 MACHINEOVERRIDES =. "${@['', '${MACHINEBUILD}:']['${MACHINEBUILD}' != '']}"
+
+BBMASK = "meta-octagon/"
+

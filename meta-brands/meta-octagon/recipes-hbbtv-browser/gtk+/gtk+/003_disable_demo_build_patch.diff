@@ -1,0 +1,27 @@
+diff --git a/Makefile.am b/Makefile.am
+index 8e3a2f1..7288db2 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -1,7 +1,7 @@
+ ## Makefile.am for GTK+
+ include $(top_srcdir)/Makefile.decl
+ 
+-SRC_SUBDIRS = gdk gtk modules demos tests perf
++SRC_SUBDIRS = gdk gtk modules tests perf
+ SUBDIRS = po po-properties $(SRC_SUBDIRS) docs m4macros build
+ 
+ # require automake 1.4
+diff --git a/configure.ac b/configure.ac
+index 85606fa..4f3137f 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -1721,9 +1721,6 @@ gail-uninstalled.pc
+ m4macros/Makefile
+ po/Makefile.in
+ po-properties/Makefile.in
+-demos/Makefile
+-demos/gtk-demo/Makefile
+-demos/gtk-demo/geninclude.pl
+ tests/Makefile
+ docs/Makefile
+ docs/reference/Makefile
