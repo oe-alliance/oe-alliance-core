@@ -70,7 +70,6 @@ ${@bb.utils.contains('MACHINEBUILD', 'vimastec1500', 'vs1500' , '', d)}\
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "\
     gfutures-dvb-modules-${MACHINE_DRIVER} \
-    kernel-vmlinux \
     "
 
 DVBPROVIDER = "kernel"
