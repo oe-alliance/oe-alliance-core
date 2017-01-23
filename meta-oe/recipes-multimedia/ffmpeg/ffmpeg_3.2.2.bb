@@ -30,9 +30,21 @@ DEPENDS = "alsa-lib zlib libogg yasm-native"
 
 inherit autotools pkgconfig
 
-PACKAGECONFIG ??= "avdevice avfilter bzlib gpl lzma theora x264 ${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'x11 xv', '', d)}"
+PACKAGECONFIG ??= "avdevice avfilter avcodec avformat swresample swscale postproc \
+                   bzlib gpl lzma theora x264 \
+                   ${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'x11 xv', '', d)}"
+
+# libraries to build in addition to avutil
 PACKAGECONFIG[avdevice] = "--enable-avdevice,--disable-avdevice"
 PACKAGECONFIG[avfilter] = "--enable-avfilter,--disable-avfilter"
+PACKAGECONFIG[avcodec] = "--enable-avcodec,--disable-avcodec"
+PACKAGECONFIG[avformat] = "--enable-avformat,--disable-avformat"
+PACKAGECONFIG[swresample] = "--enable-swresample,--disable-swresample"
+PACKAGECONFIG[swscale] = "--enable-swscale,--disable-swscale"
+PACKAGECONFIG[postproc] = "--enable-postproc,--disable-postproc"
+PACKAGECONFIG[avresample] = "--enable-avresample,--disable-avresample"
+
+# features to support
 PACKAGECONFIG[bzlib] = "--enable-bzlib,--disable-bzlib,bzip2"
 PACKAGECONFIG[gpl] = "--enable-gpl,--disable-gpl"
 PACKAGECONFIG[gsm] = "--enable-libgsm,--disable-libgsm,libgsm"
@@ -51,7 +63,7 @@ PACKAGECONFIG[x264] = "--enable-libx264,--disable-libx264,x264"
 PACKAGECONFIG[xv] = "--enable-outdev=xv,--disable-outdev=xv,libxv"
 
 # Check codecs that require --enable-nonfree
-USE_NONFREE = "${@bb.utils.contains_any('PACKAGECONFIG', [ 'openssl' ], 'yes', '', d)}"
+USE_NONFREE = "${@bb.utils.contains_any('PACKAGECONFIG', [ 'faac', 'openssl' ], 'yes', '', d)}"
 
 EXTRA_OECONF = " \
     --disable-stripping \
@@ -63,6 +75,8 @@ EXTRA_OECONF = " \
     --cross-prefix=${TARGET_PREFIX} \
     \
     --ld="${CCLD}" \
+    --cc="${CC}" \
+    --cxx="${CXX}" \
     --arch=${TARGET_ARCH} \
     --target-os="linux" \
     --enable-cross-compile \
@@ -80,7 +94,18 @@ do_configure() {
     ${S}/configure ${EXTRA_OECONF}
 }
 
-PACKAGES_DYNAMIC += "^lib(av(codec|device|filter|format|util)|swscale).*"
+PACKAGES_DYNAMIC += "^lib(av(codec|device|filter|format|util|resample)|swscale|swresample|postproc).*"
+
+# ffmpeg disables PIC on some platforms (e.g. x86-32)
+INSANE_SKIP_${MLPREFIX}libavcodec = "textrel"
+INSANE_SKIP_${MLPREFIX}libavdevice = "textrel"
+INSANE_SKIP_${MLPREFIX}libavfilter = "textrel"
+INSANE_SKIP_${MLPREFIX}libavformat = "textrel"
+INSANE_SKIP_${MLPREFIX}libavutil = "textrel"
+INSANE_SKIP_${MLPREFIX}libavresample = "textrel"
+INSANE_SKIP_${MLPREFIX}libswscale = "textrel"
+INSANE_SKIP_${MLPREFIX}libswresample = "textrel"
+INSANE_SKIP_${MLPREFIX}libpostproc = "textrel"
 
 python populate_packages_prepend() {
     av_libdir = d.expand('${libdir}')
