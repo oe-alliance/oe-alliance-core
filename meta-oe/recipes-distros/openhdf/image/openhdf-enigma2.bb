@@ -7,11 +7,11 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PV = "1.0"
-PR = "r75"
+PR = "r76"
 
 inherit packagegroup
 
-DEPENDS = "openhdf-feeds openhdf-3rdparty-plugins"
+DEPENDS = "openhdf-feeds"
 
 RRECOMMENDS_${PN} = " \
     openhdf-version-info \
