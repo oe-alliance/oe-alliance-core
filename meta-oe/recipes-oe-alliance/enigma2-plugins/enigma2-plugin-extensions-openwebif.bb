@@ -65,12 +65,14 @@ python populate_packages_prepend() {
 }
 
 INSANE_SKIP_${PN} += "build-deps"
+INSANE_SKIP_${PN}-terminal += "build-deps"
 INSANE_SKIP_${PN}-vxg += "build-deps"
 
-# Required empty packages for build compatibility with OWIF 1.0.x
-# Remove after OWIF branch "Theme" is on 1.1.x
-PACKAGES =+ "${PN}-themes ${PN}-webtv"
+# Required empty packages for build compatibility with distros still using OWIF 0.x.y - 1.0.z
+PACKAGES =+ "${PN}-terminal ${PN}-themes ${PN}-webtv"
+RDEPENDS_${PN}-terminal = "${PN} shellinabox"
 RDEPENDS_${PN}-themes = "${PN}"
 RDEPENDS_${PN}-webtv = "${PN}"
+ALLOW_EMPTY_${PN}-terminal = "1"
 ALLOW_EMPTY_${PN}-themes = "1"
 ALLOW_EMPTY_${PN}-webtv = "1"
