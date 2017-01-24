@@ -1,0 +1,26 @@
+diff --git a/libhttp/server.c b/libhttp/server.c
+index bd06344..18abb38 100644
+--- a/libhttp/server.c
++++ b/libhttp/server.c
+@@ -340,7 +340,7 @@ void initServer(struct Server *server, int localhostOnly, int portMin,
+   struct sockaddr_in6 serverAddr = { 0 };
+   serverAddr.sin6_family         = AF_INET6;
+   serverAddr.sin6_addr           = localhostOnly
+-                                        ? in6addr_loopback : in6addr_any;
++                                        ? in6addr_loopback : in6addr_loopback;
+ 
+   // Linux unlike BSD does not have support for picking a local port range.
+   // So, we have to randomly pick a port from our allowed port range, and then
+diff --git a/shellinabox/shellinaboxd.c b/shellinabox/shellinaboxd.c
+index e3583e8..1ca3f21 100644
+--- a/shellinabox/shellinaboxd.c
++++ b/shellinabox/shellinaboxd.c
+@@ -810,7 +810,6 @@ static void usage(void) {
+           "  -g, --group=GID             switch to this group (default: %s)\n"
+           "  -h, --help                  print this message\n"
+           "      --linkify=[none|normal|aggressive] default is \"normal\"\n"
+-          "      --localhost-only        only listen on 127.0.0.1\n"
+           "      --no-beep               suppress all audio output\n"
+           "  -n, --numeric               do not resolve hostnames\n"
+           "  -m, --messages-origin=ORIGIN allow iframe message passing from origin\n"
+

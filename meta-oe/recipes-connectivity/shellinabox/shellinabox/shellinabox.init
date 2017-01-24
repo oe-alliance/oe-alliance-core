@@ -1,0 +1,51 @@
+#!/bin/sh
+### BEGIN INIT INFO
+# Provides:		shellinaboxd
+# Required-Start:	$remote_fs $syslog $networking
+# Required-Stop:	$remote_fs $syslog
+# Default-Start:	2 3 4 5
+# Default-Stop:		1
+# Short-Description:	Shell In A Box server
+### END INIT INFO
+#
+
+SHELLINABOX_PORT=4200
+SHELLINABOX_ARGS="--user=root --disable-ssl --localhost-only"
+NO_START=0
+
+test ! -r /etc/default/shellinabox || . /etc/default/shellinabox
+
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+DAEMON=/usr/bin/shellinaboxd
+NAME=shellinabox
+DESC="Shell In A Box server"
+PIDFILE=/var/run/shellinabox.pid
+
+set -e
+
+test "$NO_START" = "0" || exit 0
+test -x "$DAEMON" || exit 0
+
+case "$1" in
+	start)
+		echo -n "Starting $DESC: "
+		start-stop-daemon -S -p $PIDFILE -x "$DAEMON" -- --port="$SHELLINABOX_PORT" --background="$PIDFILE" $SHELLINABOX_ARGS
+		echo "$NAME."
+		;;
+	stop)
+		echo -n "Stopping $DESC: "
+		start-stop-daemon -K -x "$DAEMON" -p $PIDFILE
+		echo "$NAME."
+		;;
+	restart|reload)
+		$0 stop
+		$0 start
+		;;
+	*)
+		echo "Usage: $0 {start|stop|restart}"
+		exit 1
+		;;
+esac
+
+exit 0
+

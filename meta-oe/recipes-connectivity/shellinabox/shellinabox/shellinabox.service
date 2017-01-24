@@ -1,0 +1,14 @@
+[Unit]
+Description=Shell In A Box - A Web-based AJAX terminal emulator
+After=network.target
+
+[Service]
+Type=forking
+ExecStartPre=/bin/rm -f /var/run/shellinabox.pid
+ExecStart=/usr/bin/shellinaboxd --user=root --disable-ssl --port=4200 --background=/var/run/shellinabox.pid
+ExecReload=/bin/kill -HUP $MAINPID
+PIDFile=/var/run/shellinabox.pid
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
