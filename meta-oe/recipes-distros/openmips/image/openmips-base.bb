@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=4d92cd373abda3937c2bc47fbc49d
 ALLOW_EMPTY_${PN} = "1"
 
 PV = "${IMAGE_VERSION}"
-PR = "r1"
+PR = "r2"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
@@ -28,6 +28,7 @@ RDEPENDS_${PN} = "\
     ${@bb.utils.contains("TUNE_FEATURES", "armv7a", "glibc-compat", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "", \
     " \
+    enigma2-plugin-extensions-openwebif-terminal \
     enigma2-plugin-extensions-openwebif-themes \
     enigma2-plugin-extensions-openwebif-webtv \
     enigma2-plugin-extensions-openwebif-vxg \
