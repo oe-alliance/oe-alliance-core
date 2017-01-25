@@ -8,9 +8,9 @@ require conf/license/license-gplv2.inc
 
 PV = "${IMAGE_VERSION}"
 PR = "${BUILD_VERSION}"
-PACKAGE_ARCH = "${MACHINE_ARCH}"
+PACKAGE_ARCH = "${MACHINEBUILD}"
 
-URL = "http://openspa.info"
+URL = "https://openspa.info"
 
 S = "${WORKDIR}"
 
@@ -36,6 +36,7 @@ do_install() {
     echo "catalog=${URL}" >> ${D}/etc/image-version
     echo "${MACHINE}" >> ${D}/etc/model
 }
+
 do_install[vardepsexclude] += "DATETIME"
 
 FILES_${PN} = "/etc/model /etc/image-version /etc/oe-git.log /etc/e2-git.log"
