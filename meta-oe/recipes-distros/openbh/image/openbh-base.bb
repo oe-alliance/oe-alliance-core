@@ -8,7 +8,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "${IMAGE_VERSION}"
-PR = "r2"
+PR = "r3"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
@@ -35,5 +35,5 @@ RDEPENDS_${PN} = "\
     openvpn \
     python-imaging \
     rtmpdump \
-	${@bb.utils.contains("TARGET_ARCH", "arm", "glibc-compat", "", d)} \
+    ${@bb.utils.contains("TUNE_FEATURES", "armv", "glibc-compat", "", d)} \
     "
