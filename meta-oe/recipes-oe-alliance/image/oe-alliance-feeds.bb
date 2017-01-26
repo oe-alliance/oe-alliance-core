@@ -85,6 +85,7 @@ RDEPENDS_${PN} = " \
     openssh \
     openvpn \
     easy-rsa \
+    packagegroup-base-samba \
     parted \
     pngquant \
     pcsc-lite \
@@ -104,7 +105,6 @@ RDEPENDS_${PN} = " \
     rsync \
     rtorrent \
     sabnzbd \
-    samba \
     smartmontools \
     smbnetfs \
     sshpass \
