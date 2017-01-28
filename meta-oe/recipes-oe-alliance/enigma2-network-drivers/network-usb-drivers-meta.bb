@@ -33,3 +33,6 @@ DEPENDS = "\
     "
 
 PR = "r23"
+
+do_populate_sysroot[noexec] = "1"
+do_package_qa[noexec] = "1"

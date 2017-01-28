@@ -11,3 +11,6 @@ PV = "1.0"
 PR = "r1"
 
 ALLOW_EMPTY_${PN} = "1"
+
+do_populate_sysroot[noexec] = "1"
+do_package_qa[noexec] = "1"

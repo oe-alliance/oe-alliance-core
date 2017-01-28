@@ -70,3 +70,6 @@ DEPENDS = " \
     enigma2-plugin-settings-gigablue-kabel-bw \
     enigma2-plugin-settings-gigablue-kabeldeutschland \
     "
+
+do_populate_sysroot[noexec] = "1"
+do_package_qa[noexec] = "1"
