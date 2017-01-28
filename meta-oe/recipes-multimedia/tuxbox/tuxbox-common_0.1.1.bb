@@ -2,8 +2,9 @@ SUMMARY = "Tuxbox common files"
 LICENSE = "CLOSED"
 MAINTAINER = "OE-Alliance team"
 require conf/license/license-close.inc
+PACKAGE_ARCH = "all"
 
-inherit gitpkgv allarch
+inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "1.0+git${SRCPV}"
 PKGV = "${GITPKGVTAG}"

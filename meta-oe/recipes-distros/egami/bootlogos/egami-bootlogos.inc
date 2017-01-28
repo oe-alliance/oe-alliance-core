@@ -1,8 +1,7 @@
 require conf/license/license-gplv2.inc
+PACKAGE_ARCH = "all"
 
 RDEPENDS_${PN} += "showiframe"
-
-inherit allarch
 
 INHIBIT_PACKAGE_STRIP = "1"
 

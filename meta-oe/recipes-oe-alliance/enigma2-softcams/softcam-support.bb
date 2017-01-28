@@ -1,9 +1,8 @@
 SUMMARY = "Start, stop and select softcams."
 MAINTAINER = "PLi team"
+PACKAGE_ARCH = "all"
 
 require conf/license/license-gplv2.inc
-
-inherit allarch
 
 PACKAGES = "${PN}"
 

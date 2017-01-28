@@ -1,9 +1,10 @@
 SUMMARY = "Dreamplex FHD skins"
 MAINTAINER = "rossi2000"
+PACKAGE_ARCH = "all"
 
 require conf/license/license-gplv2.inc
 
-inherit gitpkgv allarch
+inherit gitpkgv
 
 EPSM = "enigma2-plugin-skinpacks-dreamplex"
 SRCREV = "${AUTOREV}"

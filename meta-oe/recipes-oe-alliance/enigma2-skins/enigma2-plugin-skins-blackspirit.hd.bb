@@ -1,9 +1,10 @@
 SUMMARY = "BlackSpirit.HD Skin for Enigma2 by DeadEyE"
 MAINTAINER = "DeadEyE"
+PACKAGE_ARCH = "all"
 
 require conf/license/license-gplv2.inc
 
-inherit gitpkgv allarch
+inherit gitpkgv
 
 SRCREV = "${AUTOREV}"
 PV = "0.60rc2+git${SRCPV}"

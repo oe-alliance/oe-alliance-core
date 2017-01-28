@@ -1,5 +1,6 @@
 LICENSE = "CLOSED"
 require conf/license/license-close.inc
+PACKAGE_ARCH = "all"
 
 PV = "1.0+git${SRCPV}"
 PKGV = "${GITPKGVTAG}"
@@ -9,7 +10,7 @@ SRCREV = "${AUTOREV}"
 SRC_URI = "git://github.com/openmips/settings.git;protocol=git"
 S = "${WORKDIR}/git"
 
-inherit gitpkgv allarch
+inherit gitpkgv
 
 FILES_${PN} = "/etc/enigma2/"
 

@@ -5,12 +5,11 @@ PRIORITY = "required"
 MAINTAINER = "OpenPli team"
 PR = "r10"
 require conf/license/license-close.inc
+PACKAGE_ARCH = "all"
 
 SRC_URI = "file://lctimelocales.tar.gz file://locale.alias file://SYS_LC_MESSAGES file://LC_CTYPE"
 
 S = "${WORKDIR}/locales"
-
-inherit allarch
 
 LOCALEDIR = "${libdir}/locale"
 LOCALEDIR2 = "/usr/share/locale"

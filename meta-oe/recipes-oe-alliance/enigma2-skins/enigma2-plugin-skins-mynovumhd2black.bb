@@ -1,9 +1,10 @@
 SUMMARY = "myNOVUM_HD2_Black by Nashu"
 MAINTAINER = "rossi2000"
+PACKAGE_ARCH = "all"
 
 require conf/license/license-gplv2.inc
 
-inherit gitpkgv allarch
+inherit gitpkgv
 
 SRCREV = "${AUTOREV}"
 PV = "19.2+git${SRCPV}"

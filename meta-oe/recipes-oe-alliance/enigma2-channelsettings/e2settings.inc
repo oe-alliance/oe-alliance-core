@@ -1,4 +1,5 @@
 INHIBIT_PACKAGE_STRIP = "1"
+PACKAGE_ARCH = "all"
 
 python do_remove_tarball() {
     import os
@@ -19,5 +20,3 @@ do_install() {
 }
 
 FILES_${PN} = "/"
-
-inherit allarch

@@ -1,11 +1,12 @@
 SUMMARY = "eDreamy Skin for EGAMI"
 MAINTAINER = "mmark and egami team"
+PACKAGE_ARCH = "all"
 
 require conf/license/license-gplv2.inc
 
 RDEPENDS_${EPSM}-edreamy = "enigma2-plugin-systemplugins-weathercomponenthandler enigma2-plugin-skincomponents-weathercomponent enigma2-plugin-extensions-weatherplugin enigma2-plugin-skinscomponents-egskincomponents"
 
-inherit gitpkgv allarch
+inherit gitpkgv
 
 EPSM = "enigma2-plugin-skins.egami"
 SRCREV = "${AUTOREV}"

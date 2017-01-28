@@ -1,9 +1,10 @@
 SUMMARY = "Atemio4you skin for EGAMI"
 MAINTAINER = "mmark and egami team"
+PACKAGE_ARCH = "all"
 
 require conf/license/license-gplv2.inc
 
-inherit gitpkgv allarch
+inherit gitpkgv
 
 EPSM = "enigma2-plugin-skins.egami"
 SRCREV = "${AUTOREV}"

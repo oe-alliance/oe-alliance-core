@@ -1,12 +1,11 @@
 SUMMARY = "enigma2 picons"
+PACKAGE_ARCH = "all"
 
 require conf/license/license-gplv2.inc
 
 DEPENDS = "pngcrush-native"
 
 PACKAGES_DYNAMIC = "enigma2-plugin-picons-*"
-
-inherit allarch
 
 S = "${WORKDIR}/picons"
 

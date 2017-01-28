@@ -1,5 +1,6 @@
 SUMMARY = "Mounts and populates a tmpfs over /media"
 MAINTAINER = "PLi team"
+PACKAGE_ARCH = "all"
 
 require conf/license/license-gplv2.inc
 
@@ -23,5 +24,3 @@ do_install() {
     install -d ${D}${sysconfdir}/rcS.d
     ln -sf ../init.d/volatile-media.sh ${D}${sysconfdir}/rcS.d/S02volatile-media.sh
 }
-
-inherit allarch

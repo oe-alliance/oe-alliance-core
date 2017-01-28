@@ -1,9 +1,10 @@
 SUMMARY = "KravenHD Skin for Enigma2 by Kraven"
 MAINTAINER = "Kraven"
+PACKAGE_ARCH = "all"
 
 require conf/license/license-gplv2.inc
 
-inherit gitpkgv allarch
+inherit gitpkgv
 
 SRCREV = "${AUTOREV}"
 PV = "7.3.0+git${SRCPV}"

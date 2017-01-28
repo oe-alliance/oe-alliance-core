@@ -1,8 +1,7 @@
 SUMMARY = "USB ATSC driver for Hauppauge 955Q WinTV-HVR Tuners"
+PACKAGE_ARCH = "all"
 
 require conf/license/license-gplv2.inc
-
-inherit allarch
 
 RRECOMMENDS_${PN} = " \
     kernel-module-cx231xx \

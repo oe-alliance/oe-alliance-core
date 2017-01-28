@@ -1,9 +1,10 @@
 SUMMARY = "Spa24HD by OpenSPA"
 MAINTAINER = "OpenSPA"
+PACKAGE_ARCH = "all"
 
 require conf/license/license-gplv2.inc
 
-inherit gitpkgv allarch
+inherit gitpkgv
 
 SRCREV = "${AUTOREV}"
 PV = "1.0+git${SRCPV}"

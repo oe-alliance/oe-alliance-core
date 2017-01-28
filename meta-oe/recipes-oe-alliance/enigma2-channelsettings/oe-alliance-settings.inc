@@ -1,8 +1,9 @@
 MAINTAINER = "oe-alliance team"
 LICENSE = "CLOSED"
 require conf/license/license-close.inc
+PACKAGE_ARCH = "all"
 
-inherit gitpkgv allarch
+inherit gitpkgv
 
 SRCREV = "${AUTOREV}"
 PV = "1.0+git${SRCPV}"

@@ -1,9 +1,10 @@
 SUMMARY = "Skins components for EGAMI"
 MAINTAINER = "all"
+PACKAGE_ARCH = "all"
 
 require conf/license/license-gplv2.inc
 
-inherit gitpkgv allarch
+inherit gitpkgv
 
 EPSM = "enigma2-plugin-skinscomponents"
 SRCREV = "${AUTOREV}"

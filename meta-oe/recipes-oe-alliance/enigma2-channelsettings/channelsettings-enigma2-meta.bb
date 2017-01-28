@@ -1,8 +1,7 @@
 SUMMARY = "meta file for settings"
+PACKAGE_ARCH = "all"
 
 require conf/license/license-gplv2.inc
-
-inherit allarch
 
 PV = "2.0"
 PR = "r29"

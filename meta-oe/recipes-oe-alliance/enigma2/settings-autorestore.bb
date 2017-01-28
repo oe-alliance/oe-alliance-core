@@ -4,6 +4,7 @@ SRC_URI = "file://*"
 SUMMARY = "Autorecover settings and install packages at first boot from /media/*/backup"
 PACKAGES = "${PN}"
 MAINTAINER = "MiLo"
+PACKAGE_ARCH = "all"
 
 require conf/license/license-gplv2.inc
 
@@ -31,5 +32,3 @@ pkg_postinst_${PN}() {
         ln -sf ../init.d/autoinstall.sh $D/etc/rcS.d/S99autoinstall
     fi
 }
-
-inherit allarch

@@ -1,9 +1,8 @@
 SUMMARY = "OpenViX Spinner"
 MAINTAINER = "OpenViX"
+PACKAGE_ARCH = "all"
 
 require conf/license/license-gplv2.inc
-
-inherit allarch
 
 RREPLACES_${PN} += "enigma2-spinner"
 RCONFLICTS_${PN} += "enigma2-spinner"

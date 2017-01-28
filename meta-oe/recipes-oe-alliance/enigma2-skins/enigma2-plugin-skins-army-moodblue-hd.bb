@@ -1,9 +1,10 @@
 SUMMARY = "Modification is based on open-source skin from Army. It is adapted to work on OpenPLi, OpenViX, OpenATV images."
 MAINTAINER = "Taykun345/OldSkulRide from OpenPLi/ViX forums"
+PACKAGE_ARCH = "all"
 
 require conf/license/license-gplv2.inc
 
-inherit gitpkgv allarch
+inherit gitpkgv
 
 SRCREV = "${AUTOREV}"
 PV = "1.0+git${SRCPV}"

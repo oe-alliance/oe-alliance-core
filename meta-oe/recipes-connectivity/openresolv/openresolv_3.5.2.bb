@@ -3,6 +3,7 @@ AUTHOR = "Roy Marples <roy@marples.name>"
 HOMEPAGE = "http://roy.marples.name/projects/openresolv"
 LICENSE = "BSD-2-Clause"
 LIC_FILES_CHKSUM = "file://resolvconf.in;beginline=4;endline=26;md5=e962049f535f7385f0f2a0ac9638cd43"
+PACKAGE_ARCH = "all"
 PR = "r0"
 
 SRC_URI = "http://roy.marples.name/downloads/${BPN}/${BP}.tar.bz2 \
@@ -14,8 +15,6 @@ SRC_URI = "http://roy.marples.name/downloads/${BPN}/${BP}.tar.bz2 \
            file://volatiles.99_openresolv"
 SRC_URI[md5sum] = "76337107ff56d7450d4ed622630c5574"
 SRC_URI[sha256sum] = "4a4cf4ef20a1ce207937fb669bbae43f9db36f6298090b5e074c80ed2fe4a996"
-
-inherit allarch
 
 do_configure() {
         echo "SYSCONFDIR=${sysconfdir}" > config.mk

@@ -1,9 +1,10 @@
 SUMMARY = "NOVUM_FHD_Light by Nashu"
 MAINTAINER = "Nashu"
+PACKAGE_ARCH = "all"
 
 require conf/license/license-gplv2.inc
 
-inherit gitpkgv allarch
+inherit gitpkgv
 
 SRCREV = "${AUTOREV}"
 PV = "16.0+git${SRCPV}"

@@ -1,8 +1,7 @@
 SUMMARY = "Meta file for OpenViX Bootlogos"
+PACKAGE_ARCH = "all"
 
 require conf/license/license-gplv2.inc
-
-inherit allarch
 
 DEPENDS = "\
     enigma2-plugin-bootlogos-openvix-v3 \

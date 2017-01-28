@@ -1,9 +1,10 @@
 SUMMARY = "Skin for Enigma2 (HD, FHD, UHD, 4K)"
 MAINTAINER = "Team Kraven"
+PACKAGE_ARCH = "all"
 
 require conf/license/license-gplv2.inc
 
-inherit gitpkgv allarch
+inherit gitpkgv
 
 SRCREV = "${AUTOREV}"
 PV = "3.6.81+git${SRCPV}"
