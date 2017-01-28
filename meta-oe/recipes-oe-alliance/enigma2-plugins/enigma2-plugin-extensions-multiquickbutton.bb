@@ -11,7 +11,7 @@ inherit gitpkgv pythonnative
 
 SRCREV = "${AUTOREV}"
 PV = "2.8.4+git${SRCPV}"
-PKGV = "2.8.4+git${GITPKGV}"
+PKGV = "${GITPKGVTAG}"
 PR = "r9"
 
 SRC_URI = "git://github.com/oe-alliance/e2openplugin-${MODULE}.git;protocol=git \

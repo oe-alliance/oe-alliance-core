@@ -13,7 +13,7 @@ inherit gitpkgv
 
 SRCREV = "${AUTOREV}"
 PV = "2.7.11+git${SRCPV}"
-PKGV = "2.7.11+git${GITPKGV}"
+PKGV = "${GITPKGVTAG}"
 PR = "r3"
 
 SRC_URI = "git://github.com/openmips/MultiQuickButton.git;protocol=git"

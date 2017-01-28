@@ -16,9 +16,8 @@ inherit gitpkgv autotools-brokensep pkgconfig
 # Set PV and PKGV manualy on OE before https://github.com/openembedded/meta-openembedded/commit/22004e5281a913818a94bcd160ad3135a9ecd314
 # Remove this after meta-openembedded update
 #PV = "v0.9.3+git${SRCPV}"
-#PKGV = "v0.9.3+git${GITPKGV}"
 PV = "v0.9.3+git2490+efcde25"
-PKGV = "v0.9.3+git2490+efcde25"
+PKGV = "${GITPKGVTAG}"
 
 S="${WORKDIR}/git"
 

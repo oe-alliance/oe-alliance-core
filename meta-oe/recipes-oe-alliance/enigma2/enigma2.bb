@@ -226,7 +226,7 @@ RDEPENDS_enigma2-plugin-systemplugins-fsblupdater = "python-distutils"
 inherit autotools-brokensep gitpkgv pkgconfig pythonnative
 
 PV = "${IMAGE_VERSION}+git${SRCPV}"
-PKGV = "${IMAGE_VERSION}+git${GITPKGV}"
+PKGV = "${GITPKGVTAG}"
 PR = "r3"
 
 SRC_URI = "${ENIGMA2_URI}"

@@ -11,7 +11,7 @@ S = "${WORKDIR}/git"
 inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
-PKGV = "git${GITPKGV}"
+PKGV = "${GITPKGVTAG}"
 PR = "r1"
 
 inherit allarch distutils-openplugins

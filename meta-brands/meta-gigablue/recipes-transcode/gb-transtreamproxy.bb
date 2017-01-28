@@ -8,7 +8,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "1.0+git${SRCPV}"
-PKGV = "1.0+git${GITPKGV}"
+PKGV = "${GITPKGVTAG}"
 PR = "r2"
 
 PROVIDES += "virtual/transtreamproxy"

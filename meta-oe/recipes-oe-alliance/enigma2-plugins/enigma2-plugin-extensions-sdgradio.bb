@@ -9,13 +9,11 @@ SRC_URI = "git://github.com/satdreamgr/SDGRadio.git;protocol=http"
 
 S = "${WORKDIR}/git"
 
-inherit gitpkgv
+inherit gitpkgv distutils-openplugins
 SRCREV = "${AUTOREV}"
 PV = "1+git${SRCPV}"
-PKGV = "1+git${GITPKGV}"
+PKGV = "${GITPKGVTAG}"
 PR = "r1"
-
-inherit allarch distutils-openplugins
 
 RDEPENDS_${PN} = "python-core rtl-sdr redsea"
 

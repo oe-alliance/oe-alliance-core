@@ -13,7 +13,7 @@ PV = "2.20+git${SRCPV}"
 
 #SRCREV = "${AUTOREV}"
 #PV = "git${SRCPV}"
-#PKGV = "git${GITPKGV}"
+#PKGV = "${GITPKGVTAG}"
 #PR = "r0"
 
 SRC_URI = " \

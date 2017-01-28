@@ -7,7 +7,7 @@ DEPENDS = "freetype libdvdread libfribidi libpng libxml2 zlib"
 inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "0.7.2+git${SRCPV}"
-PKGV = "0.7.2+git${GITPKGV}"
+PKGV = "${GITPKGVTAG}"
 VER ="0.7.2"
 PR = "r1"
 

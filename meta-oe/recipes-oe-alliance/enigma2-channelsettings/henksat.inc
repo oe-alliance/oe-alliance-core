@@ -2,7 +2,7 @@ LICENSE = "CLOSED"
 require conf/license/license-close.inc
 
 PV = "1.0+git${SRCPV}"
-PKGV = "1.0+git${GITPKGV}"
+PKGV = "${GITPKGVTAG}"
 PR = "r1"
 
 SRC_URI = "git://github.com/OpenPLi/HenksatSettings.git;protocol=git"

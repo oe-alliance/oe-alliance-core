@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://COPYRIGHT;md5=ac8a52bd839aac2f67712c967b3ff86a"
 inherit gitpkgv
 SRCREV = "ee7bef8644ad1bac3fce2c04afef13f1ec19166b"
 PV = "2.+git${SRCPV}"
-PKGV = "2.+git${GITPKGV}"
+PKGV = "${GITPKGVTAG}"
 PR = "r6"
 
 SRC_URI = "git://github.com/pornel/pngquant.git \

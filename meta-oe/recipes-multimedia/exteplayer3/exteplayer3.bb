@@ -10,7 +10,7 @@ RDEPENDS_${PN} = "ffmpeg"
 inherit gitpkgv
 
 PV = "30+git${SRCPV}"
-PKGV = "30+git${GITPKGV}"
+PKGV = "${GITPKGVTAG}"
 
 PR = "r0"
 

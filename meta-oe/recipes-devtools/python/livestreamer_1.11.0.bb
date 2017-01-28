@@ -20,7 +20,7 @@ RDEPENDS_${PN} = "python \
 inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "1.11.0+git${SRCPV}"
-PKGV = "1.11.0+git${GITPKGV}"
+PKGV = "${GITPKGVTAG}"
 VER ="1.11.0"
 PR = "r1"
 

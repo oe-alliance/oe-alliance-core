@@ -24,7 +24,7 @@ SRC_URI = " \
 GST_VERSION_FULL ="1.11.1"
 inherit gitpkgv
 PV = "${GST_VERSION_FULL}+git${SRCPV}"
-PKGV = "${GST_VERSION_FULL}+git${GITPKGV}"
+PKGV = "${GITPKGVTAG}"
 
 UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>(\d+(\.\d+)+))"
 

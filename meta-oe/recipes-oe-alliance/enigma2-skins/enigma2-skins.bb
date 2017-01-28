@@ -9,7 +9,7 @@ LIC_FILES_CHKSUM = "file://README;startline=1;endline=6;md5=d41d8cd98f00b204e980
 inherit gitpkgv
 
 PV = "experimental-git${SRCPV}"
-PKGV = "experimental-git${GITPKGV}"
+PKGV = "${GITPKGVTAG}"
 PR = "r5"
 BRANCH = "3.2"
 

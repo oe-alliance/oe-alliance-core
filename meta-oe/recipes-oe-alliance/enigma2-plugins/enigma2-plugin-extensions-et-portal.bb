@@ -8,7 +8,7 @@ require conf/license/license-gplv2.inc
 inherit gitpkgv pythonnative
 SRCREV = "${AUTOREV}"
 PV = "inofficial-3.2.+git${SRCPV}"
-PKGV = "inofficial-3.2.+git${GITPKGV}"
+PKGV = "${GITPKGVTAG}"
 PR = "r2"
 
 

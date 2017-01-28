@@ -11,7 +11,7 @@ inherit gitpkgv
 PACKAGE_ARCH = "${MACHINEBUILD}"
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
-PKGV = "git${GITPKGV}"
+PKGV = "${GITPKGVTAG}"
 PR = "r10"
 
 SRC_URI = "git://github.com/oe-alliance/enigma2-display-skins.git;protocol=git file://skinsnotwanted"

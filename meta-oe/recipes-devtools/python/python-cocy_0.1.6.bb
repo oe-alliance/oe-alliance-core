@@ -12,7 +12,7 @@ SRC_URI = "git://github.com/mnlipp/CoCy.git"
 inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "0.1.6+git${SRCPV}"
-PKGV = "0.1.6+git${GITPKGV}"
+PKGV = "${GITPKGVTAG}"
 PR = "r2"
 
 S = "${WORKDIR}/git"

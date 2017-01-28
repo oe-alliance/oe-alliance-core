@@ -8,7 +8,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=7fbc338309ac38fefcd64b04bb903e34"
 inherit gitpkgv
 
 PV = "0.10.0+git${SRCPV}"
-PKGV = "0.10.0+git${GITPKGV}"
+PKGV = "${GITPKGVTAG}"
 PR = "r2"
 
 SRC_URI = "git://github.com/OpenPLi/gst-plugin-subsink.git;protocol=git"

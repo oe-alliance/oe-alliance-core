@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://usr/share/enigma2/PLi-HD-FullNight/skin.xml;beginline
 inherit gitpkgv allarch
 
 PV = "0.1+git${SRCPV}"
-PKGV = "0.1+git${GITPKGV}"
+PKGV = "${GITPKGVTAG}"
 PR = "r0"
 
 SRCREV = "${AUTOREV}"

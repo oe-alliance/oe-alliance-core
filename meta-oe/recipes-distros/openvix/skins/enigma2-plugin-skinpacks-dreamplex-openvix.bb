@@ -8,7 +8,7 @@ inherit gitpkgv allarch
 EPSM = "enigma2-plugin-skinpacks-dreamplex"
 SRCREV = "${AUTOREV}"
 PV = "${IMAGE_VERSION}+git${SRCPV}"
-PKGV = "${IMAGE_VERSION}+git${GITPKGV}"
+PKGV = "${GITPKGVTAG}"
 PR = "r0"
 
 PACKAGES = "${EPSM}-youplex-blue ${EPSM}-youplex-red ${EPSM}-youplex-green ${EPSM}-youplex-purple ${EPSM}-plex-experience"

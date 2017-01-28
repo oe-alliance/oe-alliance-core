@@ -5,7 +5,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 SRCREV = "${AUTOREV}"
 PV = "1.0+git${SRCPV}"
-PKGV = "1.0+git${GITPKGV}"
+PKGV = "${GITPKGVTAG}"
 PR = "r0"
 
 SRC_URI = " \

@@ -7,7 +7,7 @@ inherit autotools gitpkgv allarch
 
 SRCREV = "${AUTOREV}"
 PV = "1.0+git${SRCPV}"
-PKGV = "1.0+git${GITPKGV}"
+PKGV = "${GITPKGVTAG}"
 PR = "r19"
 
 PACKAGES = "enigma2-skindefault"

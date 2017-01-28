@@ -9,7 +9,7 @@ inherit gitpkgv
 
 SRCREV = "7763d9995c06dc1625ad7d873dde578a8c61d480"
 PV = "1.4.53"
-PKGV = "1.4.53+git${GITPKGV}"
+PKGV = "${GITPKGVTAG}"
 
 SRC_URI = "git://github.com/persianpros/dvbsnoop.git;protocol=git"
 

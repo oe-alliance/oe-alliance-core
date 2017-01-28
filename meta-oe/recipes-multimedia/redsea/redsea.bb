@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=884926124e31c67b8c1bdaa062802dec"
 inherit gitpkgv
 
 PV = "1.0+git${SRCPV}"
-PKGV = "1.0+git${GITPKGV}"
+PKGV = "${GITPKGVTAG}"
 PR = "r0"
 
 SRC_URI = "git://github.com/windytan/redsea.git;protocol=http"

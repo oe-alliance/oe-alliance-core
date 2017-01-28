@@ -14,7 +14,7 @@ inherit gitpkgv
 GSTVERSION = "1.0"
 
 PV = "${GSTVERSION}+git${SRCPV}"
-PKGV = "${GSTVERSION}+git${GITPKGV}"
+PKGV = "${GITPKGVTAG}"
 PR = "r0"
 
 EXTRA_OECONF = "--with-gstversion=${GSTVERSION}"

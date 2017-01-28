@@ -22,7 +22,7 @@ SRC_URI_append_xc7362 = " \
 S = "${WORKDIR}/git/libtuxtxt"
 
 PV = "2.0+git${SRCPV}"
-PKGV = "2.0+git${GITPKGV}"
+PKGV = "${GITPKGVTAG}"
 PR = "r7"
 
 EXTRA_OECONF = "--with-boxtype=generic"

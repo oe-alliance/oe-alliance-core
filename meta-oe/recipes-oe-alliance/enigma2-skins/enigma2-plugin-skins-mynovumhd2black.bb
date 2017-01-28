@@ -7,7 +7,7 @@ inherit gitpkgv allarch
 
 SRCREV = "${AUTOREV}"
 PV = "19.2+git${SRCPV}"
-PKGV = "19.2+git${GITPKGV}"
+PKGV = "${GITPKGVTAG}"
 PR = "r0"
 
 RDEPENDS_${PN} = "enigma2-plugin-skincomponents-novum enigma2-plugin-systemplugins-weathercomponenthandler"

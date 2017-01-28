@@ -8,7 +8,7 @@ require conf/license/license-gplv2.inc
 inherit gitpkgv pythonnative
 SRCREV = "${AUTOREV}"
 PV = "1.1.+git${SRCPV}"
-PKGV = "1.1.+git${GITPKGV}"
+PKGV = "${GITPKGVTAG}"
 PR = "r2"
 
 SRC_URI="git://github.com/betonme/e2openplugin-InfoBarTunerState.git"

@@ -18,7 +18,7 @@ inherit autotools gitpkgv pythonnative pkgconfig
 CXXFLAGS += " -std=gnu++98"
 
 PV = "0.5+git${SRCPV}"
-PKGV = "0.5+git${GITPKGV}"
+PKGV = "${GITPKGVTAG}"
 
 PR = "r2"
 

@@ -8,7 +8,7 @@ require conf/license/license-gplv2.inc
 inherit distutils-base
 
 PV = "1.0"
-PKGV = "1.0"
+PKGV = "${GITPKGVTAG}"
 PR = "r7"
 
 SRC_URI = "file://process.py"

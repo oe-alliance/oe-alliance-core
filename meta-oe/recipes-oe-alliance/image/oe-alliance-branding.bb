@@ -12,7 +12,7 @@ PACKAGES += " ${PN}-src"
 
 SRCREV = "${AUTOREV}"
 PV = "6.0+git${SRCPV}"
-PKGV = "6.0+git${GITPKGV}"
+PKGV = "${GITPKGVTAG}"
 PR = "r${DATE}-${MACHINEBUILD}"
 
 PR[vardepsexclude] += "DATE"

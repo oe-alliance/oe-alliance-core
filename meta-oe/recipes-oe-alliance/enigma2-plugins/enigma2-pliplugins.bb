@@ -17,7 +17,7 @@ RDEPENDS_enigma2-plugin-extensions-ushare = "ushare"
 inherit gitpkgv
 
 PV = "2.0+git${SRCPV}"
-PKGV = "2.0+git${GITPKGV}"
+PKGV = "${GITPKGVTAG}"
 PR = "r3"
 
 SRC_URI = "git://github.com/oe-alliance/openpli-plugins.git;protocol=git"

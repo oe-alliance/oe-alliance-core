@@ -12,5 +12,5 @@ S = "${WORKDIR}/git"
 inherit gitpkgv autotools
 
 PV = "1.0+git${SRCPV}"
-PKGV = "1.0+git${GITPKGV}"
+PKGV = "${GITPKGVTAG}"
 PR = "r0"

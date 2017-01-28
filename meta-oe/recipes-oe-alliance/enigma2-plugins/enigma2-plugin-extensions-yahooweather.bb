@@ -9,7 +9,7 @@ inherit autotools-brokensep gitpkgv
 
 SRCREV = "${AUTOREV}"
 PV = "1.2.+git${SRCPV}"
-PKGV = "1.2.+git${GITPKGV}"
+PKGV = "${GITPKGVTAG}"
 PR = "r0"
 
 

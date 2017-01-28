@@ -10,7 +10,7 @@ inherit gitpkgv allarch
 EPSM = "enigma2-plugin-skins.egami"
 SRCREV = "${AUTOREV}"
 PV = "1.0+git${SRCPV}"
-PKGV = "1.0+git${GITPKGV}"
+PKGV = "${GITPKGVTAG}"
 PR = "r6"
 
 PACKAGES = "${EPSM}-edreamyfhd"

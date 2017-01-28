@@ -20,7 +20,7 @@ SRC_URI_append_odroidc2 = " file://0001-add-HBGIC-for-wetek.patch"
 S = "${WORKDIR}/git/tuxtxt"
 
 PV = "2.0+git${SRCPV}"
-PKGV = "2.0+git${GITPKGV}"
+PKGV = "${GITPKGVTAG}"
 PR = "r15"
 
 do_configure_prepend() {

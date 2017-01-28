@@ -7,7 +7,7 @@ inherit gitpkgv allarch
 
 SRCREV = "${AUTOREV}"
 PV = "3.6.81+git${SRCPV}"
-PKGV = "3.6.81+git${GITPKGV}"
+PKGV = "${GITPKGVTAG}"
 VER="3.6.81"
 
 RDEPENDS_${PN} = "python-requests python-subprocess python-imaging enigma2-plugin-systemplugins-mphelp python-lxml"

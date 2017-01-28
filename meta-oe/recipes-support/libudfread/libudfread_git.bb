@@ -10,7 +10,7 @@ SRCREV="50d41b171c90d299ee3f685bbe6298d15a44eec0"
 inherit gitpkgv autotools-brokensep pkgconfig
 
 PV = "0.0.0+git${SRCPV}"
-PKGV = "0.0.0+git${GITPKGV}"
+PKGV = "${GITPKGVTAG}"
 
 S="${WORKDIR}/git"
 

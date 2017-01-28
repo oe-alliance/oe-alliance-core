@@ -5,7 +5,7 @@ LIC_FILES_CHKSUM = "file://unjffs2.cpp;beginline=19;endline=19;md5=bde85ed4c68e5
 
 inherit gitpkgv
 
-PKGV = "1.0+git${GITPKGV}"
+PKGV = "${GITPKGVTAG}"
 PV = "1.0+git${SRCPV}"
 SRCREV = "${AUTOREV}"
 PR = "r0"

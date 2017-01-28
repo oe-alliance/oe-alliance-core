@@ -7,7 +7,7 @@ inherit gitpkgv allarch
 
 SRCREV = "${AUTOREV}"
 PV = "16.0+git${SRCPV}"
-PKGV = "16.0+git${GITPKGV}"
+PKGV = "${GITPKGVTAG}"
 PR = "r0"
 
 RDEPENDS_${PN} = "enigma2-plugin-skincomponents-novum"

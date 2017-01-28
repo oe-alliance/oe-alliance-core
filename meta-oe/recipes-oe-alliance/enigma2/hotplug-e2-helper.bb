@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://bdpoll.c;startline=9;endline=20;md5=d903287e43d72c0f6
 inherit gitpkgv
 
 PV = "1.0+git${SRCPV}"
-PKGV = "1.0+git${GITPKGV}"
+PKGV = "${GITPKGVTAG}"
 PR = "r2"
 
 SRC_URI = "git://github.com/OpenPLi/${PN}.git;protocol=git"

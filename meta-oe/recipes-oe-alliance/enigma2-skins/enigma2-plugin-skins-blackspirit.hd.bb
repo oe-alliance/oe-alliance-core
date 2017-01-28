@@ -7,7 +7,7 @@ inherit gitpkgv allarch
 
 SRCREV = "${AUTOREV}"
 PV = "0.60rc2+git${SRCPV}"
-PKGV = "0.60rc2+git${GITPKGV}"
+PKGV = "${GITPKGVTAG}"
 VER="0.60rc2"
 
 RDEPENDS_${PN} = "enigma2-plugin-systemplugins-extnumberzap"

@@ -11,7 +11,7 @@ PACKAGES =+ " librtmp1"
 inherit autotools-brokensep gitpkgv
 
 SRCREV = "${AUTOREV}"
-PKGV = "2.48+git${GITPKGV}"
+PKGV = "${GITPKGVTAG}"
 PV = "2.48+git${SRCPV}"
 PR = "r6"
 
