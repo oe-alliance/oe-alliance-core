@@ -11,6 +11,7 @@ SRC_URI = "git://github.com/OpenPLi/tuxtxt.git;protocol=git \
            file://0001-Workaround-for-Gigablue-Quad-receivers.patch \
            file://0002-Use-separate-transparency-for-menu-and-teletext.patch \
            file://acinclude_fix_DVB_API_VERSION_check_for_gcc5.patch \
+           file://tuxtxt.ttf \
 "
 
 SRC_URI_append_wetekplay = " file://0001-add-HBGIC-for-wetek.patch"
@@ -20,7 +21,7 @@ S = "${WORKDIR}/git/tuxtxt"
 
 PV = "2.0+git${SRCPV}"
 PKGV = "2.0+git${GITPKGV}"
-PR = "r13"
+PR = "r14"
 
 do_configure_prepend() {
     touch ${S}/NEWS
@@ -49,6 +50,12 @@ do_configure_prepend_openvix () {
     touch ${S}/README
     touch ${S}/AUTHORS
     touch ${S}/ChangeLog
+}
+
+do_install_append_openatv () {
+    install -d ${D}/usr/share/fonts
+    rm -f ${D}/usr/share/fonts/tuxtxt.ttf
+    cp -f ${WORKDIR}/tuxtxt.ttf ${D}/usr/share/fonts/tuxtxt.ttf
 }
 
 PACKAGES = "${PN}-src ${PN}-dbg ${PN}-dev ${PN}"
