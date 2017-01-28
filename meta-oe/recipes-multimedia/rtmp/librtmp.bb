@@ -29,3 +29,5 @@ do_install() {
     install -d ${D}${libdir}
     oe_runmake DESTDIR=${D} install
 }
+
+INSANE_SKIP_${PN} += "ldflags"

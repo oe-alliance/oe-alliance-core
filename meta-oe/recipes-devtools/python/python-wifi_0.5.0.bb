@@ -2,7 +2,7 @@ SUMMARY = "Provides access to Linux Wireless Extensions"
 HOMEPAGE = "http://pythonwifi.wikispot.org/"
 SECTION = "devel/python"
 LICENSE = "LGPLv2+"
-LICENSE_${PN}-examples = "GPLv2+"
+LICENSE_${PN}-examples = "LGPLv2+"
 LIC_FILES_CHKSUM = "file://README;beginline=56;endline=57;md5=31ebd3ff22b6f3c0160a143e0c4a98a3 \
                     file://examples/iwconfig.py;beginline=1;endline=20;md5=60fd41501905b3e20e9065995edfc0cf \
                     file://pythonwifi/iwlibs.py;beginline=1;endline=22;md5=679475d61cc083a24158bb8b473f0c6f"

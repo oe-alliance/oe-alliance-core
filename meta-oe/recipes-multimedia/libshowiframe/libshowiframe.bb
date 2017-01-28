@@ -25,3 +25,5 @@ do_install() {
 }
 
 FILES_${PN} = "${libdir}"
+
+INSANE_SKIP_${PN} += "ldflags"

@@ -90,3 +90,4 @@ exit 0
 
 }
 
+INSANE_SKIP_${PN} += "ldflags"

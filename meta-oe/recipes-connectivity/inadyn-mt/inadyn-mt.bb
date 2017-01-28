@@ -34,3 +34,5 @@ do_install() {
     install -d ${D}/etc/init.d
     install -m 755 ${WORKDIR}/inadyn-mt.sh ${D}/etc/init.d/inadyn-mt
 }
+
+INSANE_SKIP_${PN} += "ldflags"

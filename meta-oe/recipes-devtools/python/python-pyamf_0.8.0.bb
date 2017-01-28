@@ -13,6 +13,6 @@ SRC_URI[sha256sum] = "0455d68983e3ee49f82721132074877428d58acec52f19697a88c03b5f
 
 S = "${WORKDIR}/PyAMF-${PV}"
 
-inherit distutils
+inherit setuptools distutils
 
 include python-package-split.inc

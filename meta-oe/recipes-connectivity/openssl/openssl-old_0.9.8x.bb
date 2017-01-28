@@ -187,3 +187,5 @@ SRC_URI[sha256sum] = "7ce0c7f2c451070b4497ea7ca6f23eba6cef1a56db2e86e433f65926a7
 EXTRA_OECONF += "no-idea no-mdc2 no-rc5"
 
 PARALLEL_MAKEINST = ""
+
+INSANE_SKIP_${PN} += "ldflags"

@@ -5,7 +5,7 @@ LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=a6067ad950b28336613aed9dd47b1271"
 PR = "r7"
 
-DEPENDS = "libcap openssl"
+DEPENDS = "libcap openssl tcp-wrappers"
 
 SRC_URI = "https://security.appspot.com/downloads/vsftpd-${PV}.tar.gz \
            file://makefile-destdir.patch \
@@ -64,3 +64,5 @@ do_install() {
 
 	install -d ${D}${localstatedir}/share/empty
 }
+
+INSANE_SKIP_${PN} += "ldflags"

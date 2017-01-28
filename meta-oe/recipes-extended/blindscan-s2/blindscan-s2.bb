@@ -20,3 +20,5 @@ do_install () {
 	install -d ${D}/${bindir}
 	install -m 755 ${S}/blindscan-s2 ${D}/${bindir}
 }
+
+INSANE_SKIP_${PN} += "ldflags"

@@ -23,3 +23,5 @@ FILES_${PN} = "${bindir}/autossh"
 
 SRC_URI[md5sum] = "26520eea934f296be0783dabe7fcfd28"
 SRC_URI[sha256sum] = "6fcaba6a409a46bdf832086736bb8f09d245ebce11027f41d39588a95dc7fd1d"
+
+INSANE_SKIP_${PN} += "ldflags"

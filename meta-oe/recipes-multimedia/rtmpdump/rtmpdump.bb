@@ -26,3 +26,5 @@ do_install() {
     install -d ${D}${bindir}
         install rtmpdump ${D}${bindir}/
 }
+
+INSANE_SKIP_${PN} += "ldflags"

@@ -19,3 +19,5 @@ do_install() {
 
 SRC_URI[md5sum] = "dc771ef0114fcad783df180f1ebfa66b"
 SRC_URI[sha256sum] = "0db312b8f5f9caca6c3f2a57a9a7b1d77c4c509d8d84e081c7a53d03e7d815d0"
+
+INSANE_SKIP_${PN} += "ldflags"
