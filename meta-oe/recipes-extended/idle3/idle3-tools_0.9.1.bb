@@ -25,4 +25,4 @@ do_install() {
 SRC_URI[md5sum] = "797d8775b80b7b7b67a1f8b0a5b41f30"
 SRC_URI[sha256sum] = "9778060c7873ad2c9c40db3a7049d8ca22535427b982ff12f5bd519f703f2a02"
 
-INSANE_SKIP_${PN} += "ldflags"
+INSANE_SKIP_${PN} += "already-stripped ldflags"

@@ -29,7 +29,7 @@ FILES_vuplus-blindscan-dvbc-utils = "${bindir}/tda1002x ${bindir}/ssh108* ${bind
 
 FILES_vuplus-blindscan-dvbs-utils-dbg = "${bindir}/.debug/*_blindscan"
 FILES_vuplus-blindscan-dvbc-utils-dbg = "${bindir}/.debug/tda1002x ${bindir}/.debug/ssh108* ${bindir}/.debug/tt2l08* ${bindir}/.debug/bcm3148"
-FILES_${PN}-dev = "${bindir}/release.txt"
+FILES_${PN}-dev = "/usr/bin/release.txt"
 
 do_install() {
 	install -d ${D}/${bindir}/

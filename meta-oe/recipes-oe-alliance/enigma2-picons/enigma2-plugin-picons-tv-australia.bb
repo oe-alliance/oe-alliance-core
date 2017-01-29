@@ -20,10 +20,10 @@ S = "${WORKDIR}/git"
 PACKAGES = "${PN}"
 
 FILES_${PN} = "/picon/* /piconlcd/*"
-FILES_${PN}-dev = "/picondefs /mk_links.py"
 
 do_install() {
-	cp -rp ${S}/* ${D}/
+    cp -rp ${S}/picon ${D}/
+    cp -rp ${S}/piconlcd ${D}/
 }
 
 do_package_qa[noexec] = "1"
