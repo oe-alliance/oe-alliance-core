@@ -15,14 +15,16 @@ inherit pkgconfig
 
 do_install() {
 	install -d ${D}${includedir}
-	cp -a ${S}/include/* ${D}${includedir}/
+	cp -r ${S}/include/* ${D}${includedir}/
 	install -d ${D}${libdir}
-	cp -a ${S}/lib/*.so ${D}${libdir}/
+	cp -r ${S}/lib/*.so ${D}${libdir}/
 	install -d ${D}${libdir}/pkgconfig
-	cp -a ${S}/lib/pkgconfig/*.pc ${D}${libdir}/pkgconfig/
+	cp -r ${S}/lib/pkgconfig/*.pc ${D}${libdir}/pkgconfig/
 }
 
 PACKAGES = "${PN}"
 FILES_${PN} = "/usr/include /usr/lib"
 
 COMPATIBLE_MACHINE = "^(vusolose|vusolo2|vuduo2|vusolo4k|vuuno4k|vuultimo4k)$"
+
+INSANE_SKIP_${PN} += "already-stripped dev-so"

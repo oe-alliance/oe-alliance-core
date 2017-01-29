@@ -1,11 +1,7 @@
 SUMMARY = "openatv meta package for enigma2 picon sets"
-SECTION = "base"
-LICENSE = "proprietary"
-PACKAGE_ARCH = "all"
-
 require conf/license/license-gplv2.inc
+inherit packagegroup
 
-ALLOW_EMPTY_${PN} = "1"
 PV = "1.0"
 PR = "r1"
 

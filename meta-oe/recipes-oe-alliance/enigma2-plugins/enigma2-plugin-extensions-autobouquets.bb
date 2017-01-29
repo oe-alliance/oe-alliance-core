@@ -19,7 +19,7 @@ PV = "1.0+git${SRCPV}"
 PKGV = "${GITPKGVTAG}"
 PR = "r2"
 
-INSANE_SKIP_${PN} += "already-stripped"
+INSANE_SKIP_${PN} += "already-stripped ldflags"
 
 SRC_URI="git://github.com/LraiZer/AutoBouquets.git;branch=${AUTOBOUQUETS_BRANCH}"
 
@@ -89,5 +89,3 @@ rm -rf ${FILES_${PN}} > /dev/null 2>&1
 exit 0
 
 }
-
-INSANE_SKIP_${PN} += "ldflags"

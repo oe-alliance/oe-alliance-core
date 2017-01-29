@@ -18,5 +18,6 @@ do_install () {
     cp -r ${S}/${SETTINGS_FILENAME}/* ${D}/etc/enigma2
 }
 
+do_prepare_recipe_sysroot[noexec] = "1"
 do_populate_sysroot[noexec] = "1"
 do_package_qa[noexec] = "1"

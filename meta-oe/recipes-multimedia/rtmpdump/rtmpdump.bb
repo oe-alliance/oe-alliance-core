@@ -4,6 +4,7 @@ require conf/license/license-gplv2.inc
 
 
 DEPENDS = "openssl zlib"
+RDEPENDS_${PN} = "librtmp"
 
 inherit autotools-brokensep gitpkgv
 

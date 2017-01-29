@@ -87,3 +87,7 @@ python populate_packages_prepend() {
     d.setVar('PACKAGES', ' '.join(piconpackages))
     d.setVar('PKGD', dir)
 }
+
+do_prepare_recipe_sysroot[noexec] = "1"
+do_populate_sysroot[noexec] = "1"
+do_package_qa[noexec] = "1"

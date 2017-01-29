@@ -24,3 +24,5 @@ do_install() {
     install -d ${D}/${bindir}/
     install -m 0755 ${S}/showiframe ${D}/${bindir}/
 }
+
+INSANE_SKIP_${PN} += "ldflags"

@@ -15,7 +15,6 @@ EXTRA_OEMAKE = "'CC=${CC}' 'RANLIB=${RANLIB}' 'AR=${AR}' 'CFLAGS=${CFLAGS} -I${S
 
 do_compile() {
    make -f ${S}/Makefile idle3ctl
-   ${STRIP} ${S}/idle3ctl
 }
 
 do_install() {

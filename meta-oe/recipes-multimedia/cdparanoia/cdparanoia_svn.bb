@@ -1,7 +1,7 @@
 # Copyright (C) 2005, Advanced Micro Devices, Inc.  All Rights Reserved
 SUMMARY = "audio extraction tool for sampling CDs"
 HOMEPAGE = "http://xiph.org/paranoia/"
-LICENSE = "GPLv2"
+LICENSE = "GPLv2+ & LGPLv2.1+"
 LIC_FILES_CHKSUM = "file://COPYING-GPL;md5=1ed9d357695b2e3ef099df37fed63d96 \
                     file://COPYING-LGPL;md5=d370feaa1c9edcdbd29ca27ea3d2304d"
 SECTION = "multimedia"
@@ -23,10 +23,6 @@ PARALLEL_MAKE = ""
 inherit autotools-brokensep pkgconfig
 
 PACKAGES += "libcdparanoia libcdparanoia-dev libcdparanoia-static"
-
-LICENSE_libcdparanoia = "LGPLv2.1"
-LICENSE_libcdparanoia-dev = "LGPLv2.1"
-LICENSE_libcdparanoia-static = "LGPLv2.1"
 
 FILES_${PN} = "${bindir}/*"
 FILES_${PN}-dev = ""

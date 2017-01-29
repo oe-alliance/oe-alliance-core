@@ -4,7 +4,7 @@ from YouTube.com and a few more sites. It requires the Python interpreter \
 (2.6, 2.7, or 3.2+), and it is not platform specific"
 HOMEPAGE = "http://rg3.github.io/youtube-dl/"
 SECTION = "devel/python"
-LICENSE = "Unlicense"
+LICENSE = "LGPLv2.1"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=7246f848faa4e9c9fc0ea91122d6e680"
 DEPENDS = "libxml2 python-html"
 SRCREV = "c3a65c3de0667b8de4af8fdc8c1eb04a1498e104"

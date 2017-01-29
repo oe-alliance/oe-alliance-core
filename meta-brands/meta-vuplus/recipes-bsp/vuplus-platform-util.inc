@@ -30,3 +30,5 @@ inherit update-rc.d
 
 INITSCRIPT_PARAMS = "start 65 S . stop 90 0 ."
 INITSCRIPT_NAME = "vuplus-platform-util"
+
+INSANE_SKIP_${PN} += "already-stripped"
