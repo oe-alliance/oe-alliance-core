@@ -8,7 +8,6 @@ require conf/license/license-gplv2.inc
 inherit distutils-base
 
 PV = "1.0"
-PKGV = "${GITPKGVTAG}"
 PR = "r7"
 
 SRC_URI = "file://process.py"
@@ -22,7 +21,7 @@ FILES_${PN}-src = "${PYTHON_SITEPACKAGES_DIR}/process.py"
 RDEPENDS_{PN}-src = "${PN}"
 
 do_compile() {
-    python -O -m compileall ${WORKDIR}
+    python -O -m compileall ${WORKDIR}/process.py
 }
 
 do_install() {
