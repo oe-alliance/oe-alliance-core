@@ -40,7 +40,7 @@ FILES_${PN} = "\
 FILES_${PN}-src = "\
 	/usr/lib/enigma2/python/Plugins/SystemPlugins/ServiceApp/*.py \
 	/usr/lib/enigma2/python/Plugins/SystemPlugins/ServiceApp/locale/*/LC_MESSAGES/*.mo \
-	/usr/src/debug/enigma2-plugin-systemplugins-serviceapp/0.5+gitAUTOINC+c6b581ee1b-r2/git/src/* \
+	/usr/src/debug/* \
 	"
 
 FILES_${PN}-dbg = "\
