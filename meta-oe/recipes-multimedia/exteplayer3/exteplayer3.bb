@@ -75,3 +75,4 @@ do_install() {
     install -m 0755 ${S}/exteplayer3 ${D}${bindir}
 }
 
+INSANE_SKIP_${PN} += "ldflags"

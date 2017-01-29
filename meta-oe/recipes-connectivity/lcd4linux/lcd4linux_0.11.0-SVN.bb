@@ -9,8 +9,6 @@ PV = "0.11.0-SVN"
 PR = "r2"
 
 EXTRA_OECONF = " \
-    --with-glib-prefix=${STAGING_LIBDIR}/.. \
-    --with-glib-exec-prefix=${STAGING_LIBDIR}/.. \
     --with-ncurses=${STAGING_LIBDIR}/..\
     --without-x\
 "

@@ -147,5 +147,4 @@ python populate_packages_prepend() {
     do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/.*\.py$', 'enigma2-plugin-%s-src', '%s (source files)', recursive=True, match_path=True, prepend=True, extra_depends="enigma2")
 }
 
-do_populate_sysroot[noexec] = "1"
-do_package_qa[noexec] = "1"
+deltask do_populate_sysroot

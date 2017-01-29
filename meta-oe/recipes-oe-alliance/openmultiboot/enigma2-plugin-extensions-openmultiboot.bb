@@ -19,7 +19,7 @@ inherit autotools-brokensep
 
 DEPENDS = "python"
 
-RDEPENDS_${PN} = "kernel-module-nandsim openmultiboot"
+RDEPENDS_${PN} = "kernel-module-nandsim openmultiboot enigma2"
 
 RDEPENDS_${PN}_gb800solo = "kernel-module-block2mtd openmultiboot"
 RDEPENDS_${PN}_dm800 = "kernel-module-block2mtd openmultiboot unjffs2"

@@ -62,6 +62,7 @@ DEPENDS = " \
 	mpeg2dec \
 	mysql5 \
 	python \
+	python-native \
 	samba \
 	sqlite3 \
 	taglib \

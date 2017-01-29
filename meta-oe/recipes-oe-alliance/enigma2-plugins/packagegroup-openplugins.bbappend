@@ -1,3 +1,5 @@
+require conf/license/license-gplv2.inc
+
 DEPENDS = " \
     enigma2-plugin-extensions-addstreamurl \
     enigma2-plugin-extensions-antilogo \

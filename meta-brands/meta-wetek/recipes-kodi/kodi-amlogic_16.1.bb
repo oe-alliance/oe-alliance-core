@@ -5,7 +5,64 @@ LIC_FILES_CHKSUM = "file://LICENSE.GPL;md5=930e2a5f63425d8dd72dbd7391c43c46"
 PROVIDES += "virtual/xbmc"
 RPROVIDES_${PN} += "virtual/xbmc"
 
-DEPENDS = "libamcodec opengl-amlogic libssh libxslt ffmpeg-kodi libusb1 libcec libplist expat yajl gperf-native fribidi mpeg2dec samba fontconfig curl python libass libmodplug libmicrohttpd wavpack libmms cmake-native libsdl-image libsdl-mixer mysql5 sqlite3 libmms faad2 libcdio libpcre boost lzo enca avahi libsamplerate0 bzip2 virtual/libsdl jasper zip-native zlib libtinyxml taglib libbluray libshairport librtmp zlib libnfs libxslt shairplay libsquish virtual/egl jsonschemabuilder-native libdcadec libcrossguid"
+DEPENDS = "libamcodec \
+ opengl-amlogic \
+ libssh \
+ libxslt \
+ ffmpeg-kodi \
+ libusb1 \
+ libcec \
+ libplist \
+ expat \
+ yajl \
+ gperf-native \
+ swig-native \
+ fribidi \
+ mpeg2dec \
+ samba \
+ fontconfig \
+ curl \
+ python \
+ python-native \
+ libass \
+ libmodplug \
+ libmicrohttpd \
+ wavpack \
+ libmms \
+ cmake-native \
+ libsdl-image \
+ libsdl-mixer \
+ mysql5 \
+ sqlite3 \
+ libmms \
+ faad2 \
+ libcdio \
+ libpcre \
+ boost \
+ lzo \
+ enca \
+ avahi \
+ libsamplerate0 \
+ bzip2 \
+ virtual/libsdl \
+ jasper \
+ zip-native \
+ zlib \
+ libtinyxml \
+ taglib \
+ libbluray \
+ libshairport \
+ librtmp \
+ zlib \
+ libnfs \
+ libxslt \
+ shairplay \
+ libsquish \
+ virtual/egl \
+ jsonschemabuilder-native \
+ libdcadec \
+ libcrossguid \
+"
 
 inherit autotools-brokensep autotools lib_package pkgconfig gettext python-dir
 

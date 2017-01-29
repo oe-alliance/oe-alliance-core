@@ -4,7 +4,7 @@ LICENSE = "LGPLv2.1"
 LIC_FILES_CHKSUM = "file://LICENSE.TXT;md5=4fbd65380cdd255951079008b364516c"
 
 DEPENDS += "libxml2 zlib python swig-native curl"
-RDEPENDS_${PN} += "libcurl"
+RDEPENDS_${PN} += "libcurl enigma2"
 
 inherit gitpkgv
 
@@ -28,7 +28,7 @@ CFLAGS_append = " ${@bb.utils.contains('BRAND_OEM', 'skylake', ' -DNO_DVB_POLL' 
 CFLAGS_append = " ${@bb.utils.contains('BRAND_OEM', 'gfutures', ' -DNO_DVB_POLL' , '', d)}"
 CFLAGS_append = " ${@bb.utils.contains('BRAND_OEM', 'formuler', ' -DNO_DVB_POLL' , '', d)}"
 
-INHIBIT_PACKAGE_STRIP = "1"
+INSANE_SKIP_${PN} += "already-stripped ldflags"
 
 SRC_URI = "git://github.com/oe-alliance/e2openplugin-CrossEPG.git;protocol=git"
 

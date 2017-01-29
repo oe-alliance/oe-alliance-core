@@ -17,12 +17,14 @@ DEPENDS = "\
 	expat \
 	yajl \
 	gperf-native \
+	swig-native \
 	fribidi \
 	mpeg2dec \
 	samba \
 	fontconfig \
 	curl \
 	python \
+	python-native \
 	libass \
 	libmodplug \
 	libmicrohttpd \
