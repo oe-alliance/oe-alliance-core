@@ -9,6 +9,7 @@ SRC_URI += " \
             file://setuptweaks-2.patch \
             file://pgettext.patch \
             file://create_unverified_context.patch \
+            file://random.patch \
 "
 
 EXTRA_OECONF += " \
