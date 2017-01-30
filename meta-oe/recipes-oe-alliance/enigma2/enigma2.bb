@@ -237,18 +237,21 @@ SRC_URI_append_azboxhd = " \
     file://e2_pcr.patch \
     file://add_more_timeout.patch \
     file://pic_show.patch \
+    ${@bb.utils.contains("DISTRO_NAME", "openatv", "file://azboxHDe2py.patch", "", d)} \
     "
 SRC_URI_append_azboxme = " \
     file://azboxe2.patch \
     file://e2_pcr.patch \
     file://add_more_timeout.patch \
     file://pic_show.patch \
+    ${@bb.utils.contains("DISTRO_NAME", "openatv", "file://azboxMEe2py.patch", "", d)} \
     "
 SRC_URI_append_azboxminime = " \
     file://azboxe2.patch \
     file://e2_pcr.patch \
     file://add_more_timeout.patch \
     file://pic_show.patch \
+    ${@bb.utils.contains("DISTRO_NAME", "openatv", "file://azboxMEe2py.patch", "", d)} \
     "
 SRC_URI_append_vuduo = " \
     file://duo_VFD.patch \
