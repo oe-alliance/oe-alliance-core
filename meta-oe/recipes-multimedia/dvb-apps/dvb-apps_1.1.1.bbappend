@@ -9,6 +9,6 @@ S = "${WORKDIR}/git"
 
 SRC_URI = " \
             git://github.com/atvcaptain/dvb-apps.git \
-            git://linuxtv.org/git/dtv-scan-tables.git;protocol=http;destsuffix=dvb-apps/initial-scan-tables;name=scantables \
+            git://linuxtv.org/git/dtv-scan-tables.git;protocol=http;destsuffix=git/initial-scan-tables;name=scantables \
             file://util-DVBC_ANNEX_AC.patch \
 "
