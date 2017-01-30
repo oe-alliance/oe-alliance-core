@@ -8,7 +8,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "${IMAGE_VERSION}"
-PR = "r8"
+PR = "r9"
 
 inherit packagegroup
 
@@ -19,6 +19,7 @@ DEPENDS = "openvix-feeds"
 
 RDEPENDS_${PN} = "\
     enigma2-skindefault \
+    oe-alliance-branding \
     openvix-core \
     "
 
