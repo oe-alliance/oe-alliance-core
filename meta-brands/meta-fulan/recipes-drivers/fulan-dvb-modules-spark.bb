@@ -2,4 +2,4 @@ require fulan-dvb-modules.inc
 
 PR = "${INC_PR}"
 
-SRCDATE = "20160611"
+SRCDATE = "20160926"
