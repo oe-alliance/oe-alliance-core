@@ -32,6 +32,7 @@ RDEPENDS_${PN} = " \
     hotplug-e2-helper \
     ${PYTHON_RDEPS} \
     ${@bb.utils.contains("MACHINE_FEATURES", "uianimation", "vuplus-libgles-${MACHINE} libvugles2" , "", d)} \
+    oe-alliance-branding \
     "
 
 RRECOMMENDS_${PN} = " \

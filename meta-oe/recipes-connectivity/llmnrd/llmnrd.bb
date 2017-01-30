@@ -10,8 +10,7 @@ PV = "git${SRCPV}"
 PKGV = "${GITPKGVTAG}"
 PR = "r1"
 
-# SRC_URI = "git://github.com/tklauser/llmnrd.git"
-SRC_URI = "git://github.com/Schimmelreiter/llmnrd.git \
+SRC_URI = "git://github.com/tklauser/llmnrd.git \
     file://llmnrd.sh \
 "
 
