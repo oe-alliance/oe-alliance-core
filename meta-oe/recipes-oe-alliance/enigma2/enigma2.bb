@@ -30,6 +30,7 @@ RDEPENDS_${PN} = " \
     hotplug-e2-helper \
     ${PYTHON_RDEPS} \
     ${@base_contains("MACHINE_FEATURES", "uianimation", "vuplus-libgles-${MACHINE} libvugles2" , "", d)} \
+    oe-alliance-branding \
     "
 
 RRECOMMENDS_${PN} = " \
@@ -215,7 +216,7 @@ inherit autotools-brokensep gitpkgv pkgconfig pythonnative
 
 PV = "5.3+git${SRCPV}"
 PKGV = "5.3+git${GITPKGV}"
-PR = "r3"
+PR = "r4"
 
 SRC_URI = "${ENIGMA2_URI}"
 
