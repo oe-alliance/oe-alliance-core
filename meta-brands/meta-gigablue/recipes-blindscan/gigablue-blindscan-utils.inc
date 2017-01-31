@@ -10,7 +10,7 @@ PV = "4.0"
 
 PR = "r12"
 
-PACKAGES = "gigablue-blindscan-dvbs-utils-${MACHINE} gigablue-blindscan-dvbc-utils-${MACHINE}"
+PACKAGES = "gigablue-blindscan-dvbs-utils-${MACHINE} gigablue-blindscan-dvbc-utils-${MACHINE} gigablue-blindscan-dvbs-utils-${MACHINE}-dbg gigablue-blindscan-dvbc-utils-${MACHINE}-dbg"
 
 PROVIDES += "virtual/blindscan-dvbc virtual/blindscan-dvbs"
 RPROVIDES_gigablue-blindscan-dvbc-utils-${MACHINE} += "virtual/blindscan-dvbc"
@@ -29,6 +29,8 @@ do_install() {
 
 FILES_gigablue-blindscan-dvbc-utils-${MACHINE} = "${bindir}/tda1002x"
 FILES_gigablue-blindscan-dvbs-utils-${MACHINE} = "${bindir}/gigablue_blindscan"
+FILES_gigablue-blindscan-dvbc-utils-${MACHINE}-dbg = "${bindir}/.debug/*_blindscan"
+FILES_gigablue-blindscan-dvbs-utils-${MACHINE}-dbg = "${bindir}/.debug/tda1002x"
 
 INHIBIT_PACKAGE_STRIP = "1"
 
