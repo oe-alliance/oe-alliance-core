@@ -28,6 +28,8 @@ SRC_URI = "file://bootlogo.mvi file://bootlogo.sh \
 
 FILES_${PN} = "/boot /usr/share /usr/bin /etc/init.d"
 
+INSANE_SKIP_${PN} = "already-stripped"
+
 do_install() {
     install -d ${D}/usr/share
     install -m 0644 bootlogo.mvi ${D}/usr/share/bootlogo.mvi
