@@ -107,8 +107,7 @@ MACHINE_FEATURES += "alsa dvbapi5 usbhost switchoff wifi 3dtv hdmicec boxmodel s
 require conf/machine/include/tune-mips32.inc
 require conf/machine/include/soc-family.inc
 
-# add support for extra feeds
-PACKAGE_ARCHS += " ${MACHINEBUILD}"
+OEM_ARCH = "${MACHINEBUILD}"
 
 # Add "MACHINEBUILD" override for recipes
 MACHINEOVERRIDES =. "${@['', '${MACHINEBUILD}:']['${MACHINEBUILD}' != '']}"

@@ -95,8 +95,7 @@ IMAGE_FSTYPES ?= "imgzip256"
 
 MACHINE_FEATURES += "3dtv alsa hdmicec switchoff textlcd dvbapi5 usbhost wifiusblegacy legacykernel"
 
-# add support for extra feeds
-PACKAGE_ARCHS += " ${MACHINEBUILD}"
+OEM_ARCH = "${MACHINEBUILD}"
 
 # Add "MACHINEBUILD" override for recipes
 MACHINEOVERRIDES =. "${@['', '${MACHINEBUILD}:']['${MACHINEBUILD}' != '']}"

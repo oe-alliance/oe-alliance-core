@@ -102,8 +102,7 @@ MACHINE_EXTRA_RDEPENDS_${PN} = " \
     enigma2-plugin-systemplugins-remotecontrolcode \
     "
 
-# add support for extra feeds
-PACKAGE_ARCHS += " ${MACHINEBUILD}"
+OEM_ARCH = "${MACHINEBUILD}"
 
 # Add "MACHINEBUILD" override for recipes
 MACHINEOVERRIDES =. "${@['', '${MACHINEBUILD}:']['${MACHINEBUILD}' != '']}"
