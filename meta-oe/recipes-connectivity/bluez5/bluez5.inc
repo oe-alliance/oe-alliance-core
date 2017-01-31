@@ -75,7 +75,7 @@ ALLOW_EMPTY_libasound-module-bluez = "1"
 PACKAGES =+ "libasound-module-bluez ${PN}-testtools ${PN}-obex ${PN}-noinst-tools"
 
 FILES_libasound-module-bluez = "${libdir}/alsa-lib/lib*.so ${datadir}/alsa"
-FILES_${PN} += "${libdir}/bluetooth/plugins/*.so ${base_libdir}/udev/ ${nonarch_base_libdir}/udev/ ${systemd_unitdir}/ ${datadir}/dbus-1"
+FILES_${PN} += "${libdir}/bluetooth/plugins/*.so ${systemd_unitdir}/ ${datadir}/dbus-1"
 FILES_${PN}-dev += "\
   ${libdir}/bluetooth/plugins/*.la \
   ${libdir}/alsa-lib/*.la \
@@ -91,13 +91,13 @@ FILES_${PN}-testtools = "${libdir}/bluez/test/*"
 
 def get_noinst_tools_paths (d, bb, tools):
     s = list()
-    bindir = d.getVar("bindir", True)
+    bindir = d.getVar("bindir")
     for bdp in tools.split():
         f = os.path.basename(bdp)
         s.append("%s/%s" % (bindir, f))
     return "\n".join(s)
 
-FILES_${PN}-noinst-tools = "${@get_noinst_tools_paths(d, bb, d.getVar('NOINST_TOOLS', True))}"
+FILES_${PN}-noinst-tools = "${@get_noinst_tools_paths(d, bb, d.getVar('NOINST_TOOLS'))}"
 
 RDEPENDS_${PN}-testtools += "python python-dbus python-pygobject"
 
