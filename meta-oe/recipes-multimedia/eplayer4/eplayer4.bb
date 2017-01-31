@@ -21,7 +21,6 @@ FILES_${PN} = "${bindir}/*"
 
 do_compile() {
     make -f Makefile eplayer4
-    ${STRIP} ${S}/eplayer4
 }
 
 do_install() {
