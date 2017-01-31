@@ -19,6 +19,7 @@ S = "${WORKDIR}/git"
 
 FILES_${PN} = "/usr/*"
 
+CONFFILES_${PN} = "/usr/lib/enigma2/python/Plugins/Extensions/SpecialJump/keymap_user.xml"
 
 do_install() {
     cp -rp ${S}/usr ${D}/
