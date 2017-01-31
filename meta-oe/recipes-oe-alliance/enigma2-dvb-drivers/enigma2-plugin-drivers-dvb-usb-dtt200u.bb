@@ -5,7 +5,7 @@ require conf/license/license-gplv2.inc
 
 DVBPROVIDER ?= "kernel"
 
-RDEPENDS_${PN} = " \
+RRECOMMENDS_${PN} = " \
     ${DVBPROVIDER}-module-dvb-usb-dtt200u \
     firmware-dvb-usb-dtt200u-01 \
     firmware-dvb-usb-wt220u-02 \

@@ -5,7 +5,7 @@ require conf/license/license-gplv2.inc
 
 DVBPROVIDER ?= "kernel"
 
-RDEPENDS_${PN} = " \
+RRECOMMENDS_${PN} = " \
     ${DVBPROVIDER}-module-em28xx-dvb \
     ${DVBPROVIDER}-module-tda10071 \
     ${DVBPROVIDER}-module-cxd2820r \

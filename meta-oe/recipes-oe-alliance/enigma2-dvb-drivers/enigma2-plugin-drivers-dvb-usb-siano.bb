@@ -5,7 +5,7 @@ require conf/license/license-gplv2.inc
 
 DVBPROVIDER ?= "kernel"
 
-RDEPENDS_${PN} = " \
+RRECOMMENDS_${PN} = " \
     ${DVBPROVIDER}-module-smsusb \
     ${DVBPROVIDER}-module-smsdvb \
     ${@bb.utils.contains("MACHINE_FEATURES", "legacykernel", \

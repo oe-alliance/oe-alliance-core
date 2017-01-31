@@ -7,7 +7,7 @@ DVBPROVIDER ?= "kernel"
 
 SRC_URI = "file://delock61959_em28xx.conf"
 
-RDEPENDS_${PN} = " \
+RRECOMMENDS_${PN} = " \
 ${DVBPROVIDER}-module-em28xx-dvb \
 ${DVBPROVIDER}-module-tda18271c2dd1 \
 ${DVBPROVIDER}-module-drxk \
