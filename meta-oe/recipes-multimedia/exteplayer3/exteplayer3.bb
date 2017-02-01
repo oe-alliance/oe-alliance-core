@@ -14,7 +14,7 @@ PKGV = "30+git${GITPKGV}"
 
 PR = "r0"
 
-SRCREV = "0df47bb46d751ad315bc032d798616c7612c3f59"
+SRCREV = "0249bd79db20489f66120e4a72f1e3a44a80f267"
 SRC_URI = " \
     git://github.com/samsamsam-iptvplayer/exteplayer3.git;branch=master \
 "
@@ -65,6 +65,7 @@ output/writer/mipsel/mpeg2.c \
 output/writer/mipsel/mpeg4.c \
 output/writer/mipsel/divx3.c \
 output/writer/mipsel/vp.c \
+output/writer/mipsel/wmv.c \
 output/writer/mipsel/vc1.c ", d)}"
 
 do_compile() {
