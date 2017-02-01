@@ -208,7 +208,7 @@ KERNEL_IMAGEDEST = "/tmp"
 KERNEL_OUTPUT = "zImage"
 
 
-FILES_kernel-image = "${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION}"
+#FILES_kernel-image = "${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION}"
 
 kernel_do_install_append() {
     install -d ${D}${KERNEL_IMAGEDEST}

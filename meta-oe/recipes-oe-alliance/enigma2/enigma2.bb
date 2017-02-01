@@ -28,9 +28,11 @@ RDEPENDS_${PN} = " \
     enigma2-fonts \
     ethtool \
     glibc-gconv-iso8859-15 \
+    glibc-gconv-cp1250 \
     hotplug-e2-helper \
     ${PYTHON_RDEPS} \
     ${@bb.utils.contains("MACHINE_FEATURES", "uianimation", "vuplus-libgles-${MACHINE} libvugles2" , "", d)} \
+    oe-alliance-branding \
     "
 
 RRECOMMENDS_${PN} = " \
@@ -226,7 +228,7 @@ inherit autotools-brokensep gitpkgv pkgconfig pythonnative
 
 PV = "${IMAGE_VERSION}+git${SRCPV}"
 PKGV = "${IMAGE_VERSION}+git${GITPKGV}"
-PR = "r3"
+PR = "r4"
 
 SRC_URI = "${ENIGMA2_URI}"
 
@@ -236,18 +238,23 @@ SRC_URI_append_azboxhd = " \
     file://e2_pcr.patch \
     file://add_more_timeout.patch \
     file://pic_show.patch \
+    ${@bb.utils.contains("DISTRO_NAME", "openatv", "file://azboxHDe2py.patch", "", d)} \
     "
 SRC_URI_append_azboxme = " \
     file://azboxe2.patch \
     file://e2_pcr.patch \
     file://add_more_timeout.patch \
     file://pic_show.patch \
+    ${@bb.utils.contains("DISTRO_NAME", "openatv", "file://azboxe2cpp.patch", "", d)} \
+    ${@bb.utils.contains("DISTRO_NAME", "openatv", "file://azboxMEe2py.patch", "", d)} \
     "
 SRC_URI_append_azboxminime = " \
     file://azboxe2.patch \
     file://e2_pcr.patch \
     file://add_more_timeout.patch \
     file://pic_show.patch \
+    ${@bb.utils.contains("DISTRO_NAME", "openatv", "file://azboxe2cpp.patch", "", d)} \
+    ${@bb.utils.contains("DISTRO_NAME", "openatv", "file://azboxMEe2py.patch", "", d)} \
     "
 SRC_URI_append_vuduo = " \
     file://duo_VFD.patch \

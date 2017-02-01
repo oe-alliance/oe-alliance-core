@@ -1,0 +1,84 @@
+--- a/lib/python/Screens/VideoMode.py	Mon Jan 30 19:45:46 2017
++++ b/lib/python/Screens/VideoMode.py	Mon Jan 30 19:45:46 2017
+@@ -16,6 +16,7 @@
+ from Tools.Directories import resolveFilename, SCOPE_PLUGINS
+ from Tools.HardwareInfo import HardwareInfo
+ from Components.AVSwitch import iAVSwitch
++from boxbranding import getBoxType
+ 
+ resolutionlabel = None
+ 
+@@ -697,7 +698,10 @@
+ 		if path.exists("/proc/stb/vmpeg/0/framerate"):
+ 			f = open("/proc/stb/vmpeg/0/framerate", "r")
+ 			try:
+-				video_rate = int(f.read())
++				if getBoxType().startswith('azbox'): #Azbox outputs framerate in HEX
++					video_rate = int(f.read(),16)
++				else:
++					video_rate = int(f.read())
+ 			except:
+ 				video_rate = 50
+ 			f.close()
+--- a/lib/python/Screens/InfoBarGenerics.py	Mon Jan 30 19:45:46 2017
++++ b/lib/python/Screens/InfoBarGenerics.py	Mon Jan 30 19:45:46 2017
+@@ -4247,16 +4247,16 @@
+ 		f = open("/proc/stb/vmpeg/0/yres", "r")
+ 		yresString = f.read()
+ 		f.close()
+-		if getBoxType().startswith('azbox'):
++		try:
++			f = open("/proc/stb/vmpeg/0/framerate", "r")
++			if getBoxType().startswith('azbox'): #Azbox outputs framerate in HEX
++				fpsString = int(f.read(),16)
++			else:
++				fpsString = int(f.read())
++			f.close()
++		except:
++			print"[InfoBarResolutionSelection] Error open /proc/stb/vmpeg/0/framerate !!"
+ 			fpsString = '50000'
+-		else:	
+-			try:
+-				f = open("/proc/stb/vmpeg/0/framerate", "r")
+-				fpsString = f.read()
+-				f.close()
+-			except:
+-				print"[InfoBarResolutionSelection] Error open /proc/stb/vmpeg/0/framerate !!"
+-				fpsString = '50000'
+ 		
+ 		xres = int(xresString, 16)
+ 		yres = int(yresString, 16)
+--- a/lib/python/Components/Converter/ServiceInfo.py	Mon Jan 30 19:45:46 2017
++++ b/lib/python/Components/Converter/ServiceInfo.py	Mon Jan 30 19:45:46 2017
+@@ -1,6 +1,7 @@
+ from Components.Converter.Converter import Converter
+ from enigma import iServiceInformation, iPlayableService
+ from Components.Element import cached
++from boxbranding import getBoxType
+ 
+ from os import path
+ 
+@@ -243,7 +244,10 @@
+ 			if path.exists("/proc/stb/vmpeg/0/framerate"):
+ 				f = open("/proc/stb/vmpeg/0/framerate", "r")
+ 				try:
+-					video_rate = int(f.read())
++					if getBoxType().startswith('azbox'): #Azbox outputs framerate in HEX
++						video_rate = int(f.read(),16)
++					else:
++						video_rate = int(f.read())
+ 				except:
+ 					pass
+ 				f.close()
+@@ -294,7 +298,10 @@
+ 			if path.exists("/proc/stb/vmpeg/0/framerate"):
+ 				f = open("/proc/stb/vmpeg/0/framerate", "r")
+ 				try:
+-					video_rate = f.read()
++					if getBoxType().startswith('azbox'): #Azbox outputs framerate in HEX
++						video_rate = int(f.read(),16)
++					else:
++						video_rate = int(f.read())
+ 				except:
+ 					pass
+ 				f.close()

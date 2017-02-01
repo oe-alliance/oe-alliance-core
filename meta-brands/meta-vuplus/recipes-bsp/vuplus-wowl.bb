@@ -4,7 +4,7 @@ LICENSE = "CLOSED"
 require conf/license/license-close.inc
 
 PV = "1.0"
-PR = "r0"
+PR = "r1"
 SRC_REV = ""
 
 SRC_URI = "\

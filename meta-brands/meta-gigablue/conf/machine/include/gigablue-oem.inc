@@ -187,7 +187,6 @@ MACHINE_EXTRA_RDEPENDS = "\
     enigma2-plugin-systemplugins-vfdcontrol \
     ${@bb.utils.contains('MACHINEBUILD', 'gb800solo', 'mtd-utils-jffs2' , '', d)} \
     ${@bb.utils.contains('MACHINEBUILD', 'gbipbox', 'enigma2-plugin-extensions-gbipboxclient' , '', d)} \
-    ${@bb.utils.contains('MACHINEBUILD', 'gbx2', 'enigma2-plugin-extensions-gbipboxclient' , '', d)} \
 "
 
 include conf/machine/include/autoload-filesystems.inc
@@ -201,7 +200,7 @@ PREFERRED_PROVIDER_virtual/kernel = "linux-gigablue"
 KERNEL_OUTPUT = "${KERNEL_IMAGETYPE}"
 KERNEL_CONSOLE = "ttyS0,115200n8"
 
-MACHINE_FEATURES += "3dtv alsa hdmicec switchoff bootsplash boxmodel skins1080 feature1 feature2 blindscan-tbs"
+MACHINE_FEATURES += "3dtv alsa hdmicec switchoff bootsplash boxmodel skins1080 blindscan-tbs"
 
 BOOTLOGO_FILENAME = "splash.bin"
 
