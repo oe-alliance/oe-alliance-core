@@ -220,7 +220,7 @@ do_shared_workdir_prepend() {
 }
 
 pkg_postinst_kernel-image() {
-    if [ -f ${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION} ]; then
+    if [ -f /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION} ]; then
         IMAGENAME=""
         set -- $(cat /proc/cmdline)
         for x in "$@"; do
@@ -231,9 +231,9 @@ pkg_postinst_kernel-image() {
             esac
         done
         if [ ! -z "${IMAGENAME}" ]; then
-           updateubivolume kernel_${IMAGENAME} ${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION}
+           updateubivolume kernel_${IMAGENAME} /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION}
         fi
-        rm -f ${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION}
+        rm -f /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION}
     fi
     true
 }
