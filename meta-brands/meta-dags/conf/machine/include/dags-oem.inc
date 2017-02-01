@@ -14,6 +14,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'tmtwin', 'TM-Twin-OE' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'tmnanose', 'TM-NANO-SE' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'tmnanoseplus', 'TM-NANO-SE Plus' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'tmnanosem2', 'TM-NANO-SE M2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'tmnanom3', 'TM-NANO M3' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'tmnanosem2plus', 'TM-NANO-SE M2 Plus' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'tmnanosecombo', 'TM-NANO-SE Combo' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'iqonios100hd', 'IOS-100HD' , '', d)}\
@@ -59,6 +60,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'tmtwin', 'Technomate' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'tmnanose', 'Technomate' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'tmnanoseplus', 'Technomate' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'tmnanosem2', 'Technomate' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'tmnanom3', 'Technomate' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'tmnanosem2plus', 'Technomate' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'tmnanosecombo', 'Technomate' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'iqonios100hd', 'Iqon' , '', d)}\
@@ -104,6 +106,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'tmtwin', 'update/tmtwinoe/cfe' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'tmnanose', 'update/tmnanose/cfe' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'tmnanoseplus', 'update/tmnanoseplus/cfe' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'tmnanosem2', 'update/tmnanosem2/cfe' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'tmnanom3', 'update/tmnanom3/cfe' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'tmnanosem2plus', 'update/tmnanoseplus/cfe' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'tmnanosecombo', 'update/tmnanosecombo/cfe' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'iqonios100hd', 'update/ios100/cfe' , '', d)}\
@@ -149,6 +152,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'tmtwin', 'mtd6' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'tmnanose', 'mtd2' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'tmnanoseplus', 'mtd2' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'tmnanosem2', 'mtd2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'tmnanom3', 'mtd2' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'tmnanosem2plus', 'mtd2' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'tmnanosecombo', 'mtd2' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'iqonios100hd', 'mtd6' , '', d)}\
@@ -194,6 +198,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'tmtwin', 'mtd4' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'tmnanose', 'mtd0' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'tmnanoseplus', 'mtd0' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'tmnanosem2', 'mtd0' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'tmnanom3', 'mtd0' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'tmnanosem2plus', 'mtd0' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'tmnanosecombo', 'mtd0' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'iqonios100hd', 'mtd4' , '', d)}\
@@ -234,6 +239,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'tmnano3t', 'splash1.bmp' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'tmnanose', 'splash1_power.bmp' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'tmnanoseplus', 'splash1_power.bmp' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'tmnanosem2', 'splash1_power.bmp' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'tmnanom3', 'splash1_power.bmp' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'tmnanosem2plus', 'splash1_power.bmp' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'tmnanosecombo', 'splash1_power.bmp' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'force1', 'splash1_os2.bmp' , '', d)}\
@@ -270,6 +276,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'tmtwin', 'dags7335' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'tmnanose', 'dags7362' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'tmnanoseplus', 'dags7362' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'tmnanosem2', 'dags7362' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'tmnanom3', 'dags7362' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'tmnanosem2plus', 'dags7362' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'tmnanosecombo', 'dags7362' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'iqonios100hd', 'dags7335' , '', d)}\
@@ -308,6 +315,7 @@ MACHINE_FEATURES += "3dtv alsa hdmicec switchoff textlcd ci skins1080 \
     ${@bb.utils.contains('MACHINEBUILD', 'fusionhd', 'fastscan dvb-c' , '', d)} \
     ${@bb.utils.contains('MACHINEBUILD', 'fusionhdse', 'fastscan dvb-c' , '', d)} \
     ${@bb.utils.contains('MACHINEBUILD', 'purehd', 'fastscan dvb-c' , '', d)} \
+    ${@bb.utils.contains('MACHINEBUILD', 'tmnanom3', 'fastscan dvb-c' , '', d)} \
     ${@bb.utils.contains('MACHINEBUILD', 'force2plushv', 'fastscan dvb-c' , '', d)} \
     ${@bb.utils.contains('MACHINEBUILD', 'tmnanosem2plus', 'fastscan dvb-c' , '', d)} \
 "
