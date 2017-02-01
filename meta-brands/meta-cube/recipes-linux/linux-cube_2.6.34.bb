@@ -211,8 +211,8 @@ KERNEL_OUTPUT = "zImage"
 #FILES_kernel-image = "${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION}"
 
 kernel_do_install_append() {
-    install -d ${D}${KERNEL_IMAGEDEST}
-    install -m 0755 ${KERNEL_OUTPUT_DIR}/${KERNEL_OUTPUT} ${D}${KERNEL_IMAGEDEST}
+    install -d ${D}/${KERNEL_IMAGEDEST}
+    install -m 0755 ${KERNEL_OUTPUT_DIR}/${KERNEL_OUTPUT} ${D}/${KERNEL_IMAGEDEST}
 }
 
 do_shared_workdir_prepend() {
