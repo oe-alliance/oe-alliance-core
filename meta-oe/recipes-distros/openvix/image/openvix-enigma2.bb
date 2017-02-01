@@ -8,7 +8,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "${IMAGE_VERSION}"
-PR = "r9"
+PR = "r10"
 
 inherit packagegroup
 
@@ -28,7 +28,6 @@ RRECOMMENDS_${PN} = "\
     enigma2-plugin-extensions-epgsearch \
     enigma2-plugin-extensions-imdb \
     enigma2-plugin-systemplugins-crossepg \
-    ${@bb.utils.contains("MACHINE_FEATURES", "grautec", "enigma2-plugin-extensions-grautec", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "uianimation", "enigma2-plugin-systemplugins-animationsetup" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "osdanimation", "enigma2-plugin-systemplugins-animationsetup" , "", d)} \
     "
