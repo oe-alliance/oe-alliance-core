@@ -204,7 +204,7 @@ B = "${WORKDIR}/build"
 export OS = "Linux"
 KERNEL_OBJECT_SUFFIX = "ko"
 KERNEL_IMAGETYPE = "zImage"
-KERNEL_IMAGEDEST = "/tmp"
+KERNEL_IMAGEDEST = "tmp"
 KERNEL_OUTPUT = "zImage"
 
 
