@@ -56,7 +56,7 @@ EXTRA_OECONF = "\
 	--enable-offline-web-applications \
 	"
 
-LDFLAGS += "-Wl,--no-keep-memory"
+LDFLAGS += "-Wl,--no-keep-memory -lgthread-2.0"
 
 CXXFLAGS += " -std=gnu++98"
 
