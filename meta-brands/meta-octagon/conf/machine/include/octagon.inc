@@ -34,7 +34,7 @@ PREFERRED_PROVIDER_virtual/kernel = "linux-octagon"
 PREFERRED_PROVIDER_virtual/blindscan-dvbs = "octagon-blindscan-utils"
 PREFERRED_PROVIDER_virtual/blindscan-dvbc = "octagon-blindscan-utils"
 
-MACHINE_FEATURES += "alsa 3dtv switchoff hdmicec omb boxmodel feature2 blindscan-tbs blindscan-dvbc"
+MACHINE_FEATURES += "alsa 3dtv switchoff hdmicec omb blindscan-tbs blindscan-dvbc"
 
 BOOTLOGO_FILENAME = "splash.bin"
 
