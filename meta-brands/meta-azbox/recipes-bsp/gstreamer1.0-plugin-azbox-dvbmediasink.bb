@@ -40,5 +40,3 @@ FILES_${PN}-dbg += "${libdir}/gstreamer-${GSTVERSION}/.debug"
 EXTRA_OECONF = "${DVBMEDIASINK_CONFIG} --with-gstversion=${GSTVERSION} --with-machine=${MACHINE}"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
-
-EXTRA_OECONF = "${DVBMEDIASINK_CONFIG}"
