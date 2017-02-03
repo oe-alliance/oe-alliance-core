@@ -8,8 +8,7 @@ PV = "1.0"
 PR = "${SRCDATE}"
 SRC_URI = "http://archive.vuplus.com/download/build_support/webkit-hbbtv-browser_${MACHINE}_${SRCDATE}.tar.gz"
 
-DEPENDS = "webkit-gtk enigma2-plugin-extensions-webkithbbtv"
-RDEPENDS_${PN} = "webkit-gtk enigma2-plugin-extensions-webkithbbtv"
+RDEPENDS_${PN} = "webkit-gtk"
 
 do_install_append() {
 	install -d ${D}/usr/bin
