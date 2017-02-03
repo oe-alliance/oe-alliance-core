@@ -19,11 +19,15 @@ SRC_URI_append_xc7362 = " \
     file://tuxtxt_clear_screen.patch \
 "
 
+SRC_URI_append_openatv = " \
+    file://libtuxtxt_FHD.patch \
+    "
+
 S = "${WORKDIR}/git/libtuxtxt"
 
 PV = "2.0+git${SRCPV}"
 PKGV = "${GITPKGVTAG}"
-PR = "r7"
+PR = "r8"
 
 EXTRA_OECONF = "--with-boxtype=generic"
 
