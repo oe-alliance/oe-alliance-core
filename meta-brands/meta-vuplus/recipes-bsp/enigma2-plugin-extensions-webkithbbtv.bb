@@ -4,7 +4,7 @@ PRIORITY = "required"
 LICENSE = "CLOSED"
 require conf/license/license-close.inc
 
-RDEPENDS_${PN} = "vuplus-webkithbbtv-dumpait"
+RDEPENDS_${PN} = "vuplus-webkithbbtv-dumpait webkit-hbbtv-browser"
 
 PV = "1.0"
 PR = "20151228.r0"
