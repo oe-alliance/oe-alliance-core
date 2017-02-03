@@ -1,0 +1,44 @@
+diff --git a/data/tuxtxt2.conf b/data/tuxtxt2.conf
+index 024cced..191a68b 100644
+--- a/data/tuxtxt2.conf
++++ b/data/tuxtxt2.conf
+@@ -7,6 +7,8 @@ NationalSubset 5
+ SwapUpDown 0
+ ShowHexPages 0
+ Transparency 0xA
++TTFScreenResX 720
++TTFBold 1
+ TTFWidthFactor16 28
+ TTFHeightFactor16 16
+ TTFShiftX 0
+@@ -20,4 +22,4 @@ UseTTF 0
+ StartX 50
+ EndX 670
+ StartY 30
+-EndY 555
+\ No newline at end of file
++EndY 555
+diff --git a/tuxtxt.c b/tuxtxt.c
+index f550688..c5950e1 100644
+--- a/tuxtxt.c
++++ b/tuxtxt.c
+@@ -519,6 +519,10 @@ int Init()
+ 				renderinfo.showhex = ival & 1;
+ 			else if (1 == sscanf(line, "Transparency %i", &ival))
+ 				renderinfo.trans_mode = ival;
++			else if (1 == sscanf(line, "TTFScreenResX %i", &ival))
++				renderinfo.TTFScreenResX = ival;
++			else if (1 == sscanf(line, "TTFBold %i", &ival))
++				renderinfo.TTFBold = ival;
+ 			else if (1 == sscanf(line, "TTFWidthFactor16 %i", &ival))
+ 				renderinfo.TTFWidthFactor16 = ival;
+ 			else if (1 == sscanf(line, "TTFHeightFactor16 %i", &ival))
+@@ -686,6 +690,8 @@ void CleanUp()
+ 			fprintf(conf, "SwapUpDown %d\n", swapupdown);
+ 			fprintf(conf, "ShowHexPages %d\n", renderinfo.showhex);
+ 			fprintf(conf, "Transparency 0x%X\n", renderinfo.trans_mode);
++			fprintf(conf, "TTFScreenResX %d\n", renderinfo.TTFScreenResX);
++			fprintf(conf, "TTFBold %d\n", renderinfo.TTFBold);
+ 			fprintf(conf, "TTFWidthFactor16 %d\n", renderinfo.TTFWidthFactor16);
+ 			fprintf(conf, "TTFHeightFactor16 %d\n", renderinfo.TTFHeightFactor16);
+ 			fprintf(conf, "TTFShiftX %d\n", renderinfo.TTFShiftX);
