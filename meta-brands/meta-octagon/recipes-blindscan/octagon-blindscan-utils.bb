@@ -13,9 +13,9 @@ PACKAGES = "octagon-blindscan-dvbc-utils octagon-blindscan-dvbc-utils-dbg"
 PROVIDES += "virtual/blindscan-dvbc"
 RPROVIDES_octagon-blindscan-dvbc-utils += "virtual/blindscan-dvbc"
 
-SRC_URI = "http://source.mynonpublic.com/octagon/octagon-dvbc-blindscan-1.0.zip"
+SRC_URI = "http://source.mynonpublic.com/octagon/octagon-dvbc-blindscan-1.1.zip"
 
-PV = "1.0"
+PV = "1.1"
 PR = "r0"
 
 S = "${WORKDIR}/"
@@ -29,5 +29,5 @@ do_install() {
     install -m 0755 "${S}/tda1002x" "${D}/${bindir}"
 }
 
-SRC_URI[md5sum] = "694b40776258ac1c24bb89f097dec4f5"
-SRC_URI[sha256sum] = "a97ef250ba3892ff762f567f2d06a7272169c67b73f197a36445ad5a47b8a2f4"
+SRC_URI[md5sum] = "23cb152a57a99b28f1bb74d95f4c3109"
+SRC_URI[sha256sum] = "d9aac4908e691e4be732a1325bfd3a542c41e8cc83d6447d260668234b240c78"
