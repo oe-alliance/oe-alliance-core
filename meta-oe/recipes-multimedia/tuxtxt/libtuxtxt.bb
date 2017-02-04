@@ -20,7 +20,7 @@ SRC_URI_append_xc7362 = " \
 "
 
 SRC_URI_append_openatv = " \
-    ${@bb.utils.contains("TARGET_ARCH", "sh4", "" , "file://libtuxtxt_FHD.patch", d)} \
+    file://libtuxtxt_FHD.patch \
     "
 
 S = "${WORKDIR}/git/libtuxtxt"

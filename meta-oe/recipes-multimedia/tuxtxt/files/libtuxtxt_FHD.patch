@@ -1,5 +1,5 @@
 diff --git a/tuxtxt_common.h b/tuxtxt_common.h
-index 871e8ce..d99b856 100644
+index 871e8ce..4e3d849 100644
 --- a/tuxtxt_common.h
 +++ b/tuxtxt_common.h
 @@ -4067,6 +4067,11 @@ int tuxtxt_RenderChar(unsigned char *lfb, // pointer to render buffer, min. font
@@ -97,13 +97,12 @@ index 871e8ce..d99b856 100644
  		if ((error = FTC_Manager_Lookup_Face(renderinfo->manager, renderinfo->typettf.font.face_id, &renderinfo->face)))
  		{
  #endif
-@@ -5533,11 +5542,30 @@ int tuxtxt_InitRendering(tstRenderInfo* renderinfo,int setTVFormat)
- 		return 0;
+@@ -5534,10 +5543,30 @@ int tuxtxt_InitRendering(tstRenderInfo* renderinfo,int setTVFormat)
  	}
  
--	/* change to PAL resolution */
+ 	/* change to PAL resolution */
 -	if (renderinfo->var_screeninfo.xres != 720) 
-+	/* change to PAL resolution or, when using TrueType fonts, pick PAL / HD / full-HD based on EndX */
++	/* or, when using TrueType fonts, pick PAL / HD / full-HD based on EndX */
 +	if ((!renderinfo->usettf) || (renderinfo->TTFScreenResX <= 720))
 +	{
 +		if (renderinfo->var_screeninfo.xres != 720) 
@@ -132,16 +131,16 @@ index 871e8ce..d99b856 100644
  	}
  
  	/* set variable screeninfo for double buffering */
-diff --git a/tuxtxt_def.h b/tuxtxt_def.h
-index c62a20d..bed15c0 100644
+diff --git a/tuxtxt_def.h b/ltuxtxt_def.h
+index c62a20d..a2bad55 100644
 --- a/tuxtxt_def.h
 +++ b/tuxtxt_def.h
-@@ -301,6 +301,8 @@ typedef struct
- 	unsigned char axdrcs[12+1+10+1];
- 	struct fb_var_screeninfo var_screeninfo;
- 	struct fb_fix_screeninfo fix_screeninfo;
+@@ -313,6 +313,8 @@ typedef struct
+ 	int prev_100, prev_10, next_10, next_100;
+ 	int showhex, showflof,show39, showl25;
+ 	int fnc_old, saa_old, screen_mode1, screen_mode2,color_mode, trans_mode;
 +	int TTFScreenResX; /* screen resolution (720,1280,1920) when using TTF fonts */
 +	int TTFBold; /* 1 = bold font (historic default) */
- 	int TTFWidthFactor16, TTFHeightFactor16, TTFShiftX, TTFShiftY; /* parameters for adapting to various TTF fonts */
- 	int fontheight, fontwidth, fontwidth_normal, fontwidth_small, fontwidth_topmenumain, fontwidth_topmenusmall, ascender;
- 	int displaywidth;
+ 	signed char clearbbcolor;
+ 	FT_Library      library;
+ 	FTC_Manager     manager;

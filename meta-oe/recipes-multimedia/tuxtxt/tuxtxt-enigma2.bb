@@ -20,7 +20,7 @@ SRC_URI_append_wetekplay2 = " file://0001-add-HBGIC-for-wetek.patch"
 SRC_URI_append_odroidc2 = " file://0001-add-HBGIC-for-wetek.patch"
 
 SRC_URI_append_openatv = " \
-    ${@bb.utils.contains("TARGET_ARCH", "sh4", "" , "file://tuxtxt_FHD.patch", d)} \
+    file://tuxtxt_FHD.patch \
     "
 
 S = "${WORKDIR}/git/tuxtxt"
