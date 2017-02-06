@@ -14,13 +14,14 @@ ICU_LIB = "icu"
 DEPENDS = "zlib enchant libsoup-2.4 curl libxml2 cairo libidn gnutls gtk+ \
            gstreamer1.0 gstreamer1.0-plugins-base flex-native gperf-native sqlite3 ${ICU_LIB}"
 
-PR = "r0"
+PR = "r1"
 
 SRCREV = "${AUTOREV}"
 
 SRC_URI = "git://github.com/NexTVTeam/hbbtv-browser.git;protocol=https; \
   file://bison-2.6.patch \
   file://webkit-gtk-ANGLE-doesn-t-build-with-bison-3.patch \
+  file://webkit-gtk_fixed_crash_error.patch \
 "
 
 inherit autotools lib_package gtk-doc pkgconfig perlnative pythonnative

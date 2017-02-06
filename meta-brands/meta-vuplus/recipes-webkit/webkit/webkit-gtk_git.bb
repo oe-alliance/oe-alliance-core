@@ -14,7 +14,7 @@ ICU_LIB = "icu"
 DEPENDS = "zlib enchant libsoup-2.4 curl libxml2 cairo libidn gnutls geoclue \
            gtk+ gstreamer1.0 gstreamer1.0-plugins-base flex-native gperf-native  sqlite3 ${ICU_LIB}"
 
-PR = "r3"
+PR = "r4"
 PV = "r95199"
 
 BRANCH="vuplus-webkit"
@@ -23,6 +23,7 @@ SRCREV="9eed47d1f873a13759d3fd8ead72739b328d710a"
 SRC_URI = "git://code.vuplus.com:/git/webkit-r95199-base.git;protocol=http;branch=${BRANCH};rev=${SRCREV} \
   file://bison-2.6.patch \
   file://webkit-gtk-ANGLE-doesn-t-build-with-bison-3.patch \
+  file://webkit-gtk_fixed_crash_error.patch \
 "
 
 inherit autotools lib_package gtk-doc pkgconfig perlnative pythonnative
