@@ -11,16 +11,15 @@ LIC_FILES_CHKSUM = "\
 
 ICU_LIB = "icu"
 
-DEPENDS = "zlib enchant libsoup-2.4 curl libxml2 cairo libidn gnutls \
-           gtk+ gstreamer1.0 gstreamer1.0-plugins-base flex-native gperf-native  sqlite3 ${ICU_LIB}"
+DEPENDS = "zlib enchant libsoup-2.4 curl libxml2 cairo libidn gnutls gtk+ \
+           gstreamer1.0 gstreamer1.0-plugins-base flex-native gperf-native sqlite3 ${ICU_LIB}"
 
-PR = "r4"
-PV = "r95199"
+PR = "r0"
 
-BRANCH="vuplus-webkit"
-SRCREV="9eed47d1f873a13759d3fd8ead72739b328d710a"
 
-SRC_URI = "git://code.vuplus.com:/git/webkit-r95199-base.git;protocol=http;branch=${BRANCH};rev=${SRCREV} \
+SRCREV = "${AUTOREV}"
+
+SRC_URI = "git://github.com/NexTVTeam/hbbtv-browser.git;protocol=https; \
     file://0001-bison-3.patch \
     file://0001-fix-build-with-gcc-6.20.patch \
     file://0001-fix-build-issue-with-cglib-2.2.4.patch \
@@ -78,14 +77,11 @@ do_configure_append() {
 
 do_install_append() {
         rmdir ${D}${libexecdir}
-        install -d ${D}/usr/bin
-        install -m 0755 ${WORKDIR}/build/Programs/GtkLauncher ${D}/usr/bin/webkit.launcher
 }
 
-PACKAGES =+ "${PN}-webinspector bjavascriptcore"
-FILES_libjavascriptcore = "${libdir}/libjavascriptcoregtk-1.0.so.*"
-FILES_${PN}-webinspector = "${datadir}/webkitgtk-*/webinspector/"
-FILES_${PN} += "${datadir}/webkitgtk-*/resources/error.html \
-                ${datadir}/webkitgtk-*/images \
-                ${datadir}/glib-2.0/schemas"
-
+FILES_${PN} = "${libdir}/lib*.so.*"
+FILES_${PN}-dev = "${datadir} \
+                   ${includedir} \
+                   ${libdir}/*.la \
+                   ${libdir}/*.so \
+                   ${libdir}/pkgconfig"
