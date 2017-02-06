@@ -74,15 +74,15 @@ DEPENDS = " \
 	"
 
 BRANCH = "Krypton"
-PV = "17.0rc4"
-PR = "r1"
+PV = "17.0"
+PR = "r2"
 
 SRC_URI = "https://github.com/xbmc/xbmc/archive/${PV}-Krypton.tar.gz \
 	file://0001-Krypton-V3D-support.patch \
 	"
 
-SRC_URI[md5sum] = "3348f66f0be89677c9cc4b05549e4e6d"
-SRC_URI[sha256sum] = "0fb082436da543777798f84162f2366654fbcd97388e008bb3359204fe7da797"
+SRC_URI[md5sum] = "86ebb2f148090f12beb1e573dfd55e53"
+SRC_URI[sha256sum] = "4bfffa2493973ae15ab1d922632c09a2583908d6140bc4f58ec8f9314e4f6545"
 
 inherit autotools-brokensep gettext pythonnative
 
