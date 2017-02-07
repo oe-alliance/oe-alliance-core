@@ -29,16 +29,22 @@ EXTRA_OECONF = "\
 	STAGING_LIBDIR=${STAGING_LIBDIR} \
 	"
 
-#do_install_append() {
-#	rm ${D}${libdir}/enigma2/python/Plugins/SystemPlugins/ServiceApp/*.pyc
-#}
+PACKAGES = "${PN} ${PN}-src ${PN}-dbg"
 
 FILES_${PN} = "\
-	${libdir}/enigma2/python/Plugins/SystemPlugins/ServiceApp/*.pyo \
-	${libdir}/enigma2/python/Plugins/SystemPlugins/ServiceApp/serviceapp.so"
+    ${libdir}/enigma2/python/Plugins/SystemPlugins/ServiceApp/*.pyo \
+    ${libdir}/enigma2/python/Plugins/SystemPlugins/ServiceApp/serviceapp.so \
+    ${libdir}/enigma2/python/Plugins/SystemPlugins/ServiceApp/locale/*/*/*.mo \
+    "
 
 FILES_${PN}-src = "\
-	${libdir}/enigma2/python/Plugins/SystemPlugins/ServiceApp/*.py"
+    ${libdir}/enigma2/python/Plugins/SystemPlugins/ServiceApp/*.py \
+    "
 
 FILES_${PN}-dbg = "\
-	${libdir}/enigma2/python/Plugins/SystemPlugins/ServiceApp/serviceapp.la"
+    ${libdir}/enigma2/python/Plugins/SystemPlugins/ServiceApp/serviceapp.la \
+    /usr/src/debug/enigma2-plugin-systemplugins-serviceapp/*/*/*/*/*.cpp \
+    /usr/src/debug/enigma2-plugin-systemplugins-serviceapp/*/*/*/*/*.h \
+    /usr/src/debug/enigma2-plugin-systemplugins-serviceapp/*/*/*/*/*/*.cpp \
+    /usr/src/debug/enigma2-plugin-systemplugins-serviceapp/*/*/*/*/*/*.h \
+    "
