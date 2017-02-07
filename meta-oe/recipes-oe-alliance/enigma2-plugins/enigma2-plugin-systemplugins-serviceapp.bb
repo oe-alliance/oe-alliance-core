@@ -20,7 +20,7 @@ CXXFLAGS += " -std=gnu++98"
 PV = "0.5+git${SRCPV}"
 PKGV = "0.5+git${GITPKGV}"
 
-PR = "r2"
+PR = "r3"
 
 EXTRA_OECONF = "\
 	BUILD_SYS=${BUILD_SYS} \
@@ -45,6 +45,8 @@ FILES_${PN}-dbg = "\
     ${libdir}/enigma2/python/Plugins/SystemPlugins/ServiceApp/serviceapp.la \
     /usr/src/debug/enigma2-plugin-systemplugins-serviceapp/*/*/*/*/*.cpp \
     /usr/src/debug/enigma2-plugin-systemplugins-serviceapp/*/*/*/*/*.h \
+    /usr/src/debug/enigma2-plugin-systemplugins-serviceapp/*/*/*/*/*.c \
     /usr/src/debug/enigma2-plugin-systemplugins-serviceapp/*/*/*/*/*/*.cpp \
     /usr/src/debug/enigma2-plugin-systemplugins-serviceapp/*/*/*/*/*/*.h \
+    /usr/src/debug/enigma2-plugin-systemplugins-serviceapp/*/*/*/*/*/*.c \
     "
