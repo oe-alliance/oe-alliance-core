@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=4d92cd373abda3937c2bc47fbc49d
 inherit packagegroup
 
 PV = "5.2"
-PR = "r2"
+PR = "r3"
 
 ALLOW_EMPTY_${PN} = "1"
 
@@ -33,7 +33,11 @@ RRECOMMENDS_${PN}_openbh = " \
     ${@base_contains("BRAND_OEM", "vuplus", "", "enigma2-plugin-drivers-dvb-usb-a867", d)} \
     enigma2-plugin-drivers-dvb-usb-rtl2832 \
     enigma2-plugin-drivers-dvb-usb-tbs \
-    ${@base_contains("TARGET_ARCH", "sh4", "" , "enigma2-plugin-drivers-dvb-usb-dvbsky enigma2-plugin-drivers-dvb-usb-opticombo", d)} \
+    enigma2-plugin-drivers-dvb-usb-opticombo \
+    enigma2-plugin-drivers-ct2-dvb-usb-geniatech-t230 \
+    enigma2-plugin-drivers-s2-dvb-usb-s960 \
+    enigma2-plugin-drivers-ct2-dvb-usb-t330 \
+    ${@base_contains("TARGET_ARCH", "sh4", "" , "enigma2-plugin-drivers-dvb-usb-dvbsky-classic", d)} \
     ${@base_contains("MACHINE", "vuduo", "enigma2-plugin-drivers-dvb-usb-turbo", "", d)} \
     ${@base_contains("MACHINE", "vuduo2", "enigma2-plugin-drivers-dvb-usb-turbo", "", d)} \
     ${@base_contains("MACHINE", "vusolo", "enigma2-plugin-drivers-dvb-usb-turbo", "", d)} \
