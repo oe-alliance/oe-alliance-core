@@ -4,7 +4,7 @@ MAINTAINER = "OpenViX"
 require conf/license/license-gplv2.inc
 
 DEPENDS = "enigma2 python-process libcrypto-compat-0.9.7"
-RDEPENDS_enigma2-plugin-vix-core = "ofgwrite python-process libcrypto-compat-0.9.7 python-compression zip procps python-beautifulsoup"
+RDEPENDS_enigma2-plugin-vix-core = "ofgwrite python-process libcrypto-compat-0.9.7 python-compression zip procps python-beautifulsoup bzip2"
 
 RCONFLICTS_enigma2-plugin-vix-core = "settings-autorestore"
 RREPLACES_enigma2-plugin-vix-core = "settings-autorestore"
@@ -16,7 +16,7 @@ inherit autotools-brokensep gitpkgv pythonnative
 SRCREV = "${AUTOREV}"
 PV = "${IMAGE_VERSION}+git${SRCPV}"
 PKGV = "${GITPKGVTAG}"
-PR = "r0"
+PR = "r1"
 
 SRC_URI="git://github.com/OpenViX/vix-core.git;protocol=git"
 

@@ -1,5 +1,5 @@
 diff --git a/tuxtxt_common.h b/tuxtxt_common.h
-index 871e8ce..4e3d849 100644
+index 871e8ce..6603529 100644
 --- a/tuxtxt_common.h
 +++ b/tuxtxt_common.h
 @@ -4067,6 +4067,11 @@ int tuxtxt_RenderChar(unsigned char *lfb, // pointer to render buffer, min. font
@@ -58,16 +58,17 @@ index 871e8ce..4e3d849 100644
  			case 4: val = 1; break;
  			}
  			fprintf(f, "%08x\n", val);
-@@ -5393,6 +5400,8 @@ void tuxtxt_SetRenderingDefaults(tstRenderInfo* renderinfo)
+@@ -5393,6 +5400,9 @@ void tuxtxt_SetRenderingDefaults(tstRenderInfo* renderinfo)
  	renderinfo->showflof        = 1;
  	renderinfo->show39          = 1;
  	renderinfo->showl25         = 1;
 +	renderinfo->TTFScreenResX   = 720;
 +	renderinfo->TTFBold         = 1;
++	renderinfo->CleanAlgo       = 0;
  	renderinfo->TTFWidthFactor16  = 28;
  	renderinfo->TTFHeightFactor16 = 15;
  	renderinfo->color_mode   = 10;
-@@ -5476,10 +5485,10 @@ int tuxtxt_InitRendering(tstRenderInfo* renderinfo,int setTVFormat)
+@@ -5476,10 +5486,10 @@ int tuxtxt_InitRendering(tstRenderInfo* renderinfo,int setTVFormat)
  	if (renderinfo->usettf)
  	{
  #if ((defined(FREETYPE_MAJOR)) && (((FREETYPE_MAJOR == 2) && (((FREETYPE_MINOR == 1) && (FREETYPE_PATCH >= 9)) || (FREETYPE_MINOR > 1))) || (FREETYPE_MAJOR > 2)))
@@ -80,7 +81,7 @@ index 871e8ce..4e3d849 100644
  		renderinfo->typettf.font.pix_height = (FT_UShort) renderinfo->fontheight * renderinfo->TTFHeightFactor16 / 16;
  #endif
  	}
-@@ -5500,14 +5509,14 @@ int tuxtxt_InitRendering(tstRenderInfo* renderinfo,int setTVFormat)
+@@ -5500,14 +5510,14 @@ int tuxtxt_InitRendering(tstRenderInfo* renderinfo,int setTVFormat)
  	renderinfo->typettf.flags = FT_LOAD_MONOCHROME;
  	if ((error = FTC_Manager_LookupFace(renderinfo->manager, renderinfo->typettf.face_id, &renderinfo->face)))
  	{
@@ -97,12 +98,12 @@ index 871e8ce..4e3d849 100644
  		if ((error = FTC_Manager_Lookup_Face(renderinfo->manager, renderinfo->typettf.font.face_id, &renderinfo->face)))
  		{
  #endif
-@@ -5534,10 +5543,30 @@ int tuxtxt_InitRendering(tstRenderInfo* renderinfo,int setTVFormat)
+@@ -5534,10 +5544,30 @@ int tuxtxt_InitRendering(tstRenderInfo* renderinfo,int setTVFormat)
  	}
  
  	/* change to PAL resolution */
 -	if (renderinfo->var_screeninfo.xres != 720) 
-+	/* or, when using TrueType fonts, pick PAL / HD / full-HD based on EndX */
++	/* or, when using TrueType fonts, pick PAL / HD / full-HD based on TTFScreenResX */
 +	if ((!renderinfo->usettf) || (renderinfo->TTFScreenResX <= 720))
 +	{
 +		if (renderinfo->var_screeninfo.xres != 720) 
@@ -131,16 +132,17 @@ index 871e8ce..4e3d849 100644
  	}
  
  	/* set variable screeninfo for double buffering */
-diff --git a/tuxtxt_def.h b/ltuxtxt_def.h
-index c62a20d..a2bad55 100644
+diff --git a/tuxtxt_def.h b/tuxtxt_def.h
+index c62a20d..c65ca47 100644
 --- a/tuxtxt_def.h
 +++ b/tuxtxt_def.h
-@@ -313,6 +313,8 @@ typedef struct
+@@ -313,6 +313,9 @@ typedef struct
  	int prev_100, prev_10, next_10, next_100;
  	int showhex, showflof,show39, showl25;
  	int fnc_old, saa_old, screen_mode1, screen_mode2,color_mode, trans_mode;
 +	int TTFScreenResX; /* screen resolution (720,1280,1920) when using TTF fonts */
 +	int TTFBold; /* 1 = bold font (historic default) */
++	int CleanAlgo;
  	signed char clearbbcolor;
  	FT_Library      library;
  	FTC_Manager     manager;

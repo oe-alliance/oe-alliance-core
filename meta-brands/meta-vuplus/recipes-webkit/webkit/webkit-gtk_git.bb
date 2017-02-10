@@ -14,7 +14,7 @@ ICU_LIB = "icu"
 DEPENDS = "zlib enchant libsoup-2.4 curl libxml2 cairo libidn gnutls \
            gtk+ gstreamer1.0 gstreamer1.0-plugins-base flex-native gperf-native  sqlite3 ${ICU_LIB}"
 
-PR = "r3"
+PR = "r4"
 PV = "r95199"
 
 BRANCH="vuplus-webkit"
@@ -24,6 +24,7 @@ SRC_URI = "git://code.vuplus.com:/git/webkit-r95199-base.git;protocol=http;branc
     file://0001-bison-3.patch \
     file://0001-fix-build-with-gcc-6.20.patch \
     file://0001-fix-build-issue-with-cglib-2.2.4.patch \
+    file://webkit-gtk_fixed_crash_error.patch \
 "
 
 inherit autotools lib_package gtk-doc pkgconfig perlnative pythonnative

@@ -15,6 +15,7 @@ RRECOMMENDS_${PN} = " \
     ${DVBSKYPROVIDER}-module-sit2fe \
     ${DVBSKYPROVIDER}-module-si2168 \
     ${DVBSKYPROVIDER}-module-si2157 \
+    ${DVBSKYPROVIDER}-module-ts2020 \
     firmware-dvb-usb-s660 \
     firmware-dvb-fe-ds3000 \
     firmware-dvb-fe-ds3xxx \
@@ -22,6 +23,6 @@ RRECOMMENDS_${PN} = " \
     ", d)}"
 
 PV = "2.0"
-PR = "r7"
+PR = "r8"
 
 ALLOW_EMPTY_${PN} = "1"

@@ -21,7 +21,11 @@ DEPENDS = "\
     enigma2-plugin-drivers-dvb-usb-rtl2832 \
     enigma2-plugin-drivers-dvb-usb-tbs \
     enigma2-plugin-drivers-dvb-usb-tbs5520 \
-    ${@bb.utils.contains("TARGET_ARCH", "sh4", "" , "enigma2-plugin-drivers-dvb-usb-dvbsky enigma2-plugin-drivers-dvb-usb-opticombo", d)} \
+    enigma2-plugin-drivers-dvb-usb-opticombo \
+    enigma2-plugin-drivers-ct2-dvb-usb-geniatech-t230 \
+    enigma2-plugin-drivers-s2-dvb-usb-s960 \
+    enigma2-plugin-drivers-ct2-dvb-usb-t330 \
+    ${@bb.utils.contains("TARGET_ARCH", "sh4", "" , "enigma2-plugin-drivers-dvb-usb-dvbsky-classic", d)} \
     ${@bb.utils.contains("MACHINE", "vuduo", "enigma2-plugin-drivers-dvb-usb-turbo", "", d)} \
     ${@bb.utils.contains("MACHINE", "vuduo2", "enigma2-plugin-drivers-dvb-usb-turbo", "", d)} \
     ${@bb.utils.contains("MACHINE", "vusolo", "enigma2-plugin-drivers-dvb-usb-turbo", "", d)} \
@@ -35,4 +39,4 @@ DEPENDS = "\
     ${@bb.utils.contains("MACHINE", "vuultimo4k", "enigma2-plugin-drivers-dvb-usb-turbo", "", d)} \
     "
 
-PR = "r16"
+PR = "r17"

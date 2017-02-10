@@ -20,7 +20,7 @@ CXXFLAGS += " -std=gnu++98"
 PV = "0.5+git${SRCPV}"
 PKGV = "${GITPKGVTAG}"
 
-PR = "r2"
+PR = "r3"
 
 EXTRA_OECONF = "\
 	BUILD_SYS=${BUILD_SYS} \
@@ -29,19 +29,26 @@ EXTRA_OECONF = "\
 	STAGING_LIBDIR=${STAGING_LIBDIR} \
 	"
 
-#do_install_append() {
-#	rm ${D}${libdir}/enigma2/python/Plugins/SystemPlugins/ServiceApp/*.pyc
-#}
+PACKAGES = "${PN} ${PN}-src ${PN}-dbg"
 
 FILES_${PN} = "\
-	${libdir}/enigma2/python/Plugins/SystemPlugins/ServiceApp/*.pyo \
-	${libdir}/enigma2/python/Plugins/SystemPlugins/ServiceApp/serviceapp.so"
+    ${libdir}/enigma2/python/Plugins/SystemPlugins/ServiceApp/*.pyo \
+    ${libdir}/enigma2/python/Plugins/SystemPlugins/ServiceApp/serviceapp.so \
+    ${libdir}/enigma2/python/Plugins/SystemPlugins/ServiceApp/locale/*/*/*.mo \
+    "
 
 FILES_${PN}-src = "\
-	/usr/lib/enigma2/python/Plugins/SystemPlugins/ServiceApp/*.py \
-	/usr/lib/enigma2/python/Plugins/SystemPlugins/ServiceApp/locale/*/LC_MESSAGES/*.mo \
-	/usr/src/debug/* \
-	"
+    ${libdir}/enigma2/python/Plugins/SystemPlugins/ServiceApp/*.py \
+    ${libdir}/enigma2/python/Plugins/SystemPlugins/ServiceApp/locale/*/LC_MESSAGES/*.mo \
+    /usr/src/debug/* \
+    "
 
 FILES_${PN}-dbg = "\
-	${libdir}/enigma2/python/Plugins/SystemPlugins/ServiceApp/serviceapp.la"
+    ${libdir}/enigma2/python/Plugins/SystemPlugins/ServiceApp/serviceapp.la \
+    /usr/src/debug/enigma2-plugin-systemplugins-serviceapp/*/*/*/*/*.cpp \
+    /usr/src/debug/enigma2-plugin-systemplugins-serviceapp/*/*/*/*/*.h \
+    /usr/src/debug/enigma2-plugin-systemplugins-serviceapp/*/*/*/*/*.c \
+    /usr/src/debug/enigma2-plugin-systemplugins-serviceapp/*/*/*/*/*/*.cpp \
+    /usr/src/debug/enigma2-plugin-systemplugins-serviceapp/*/*/*/*/*/*.h \
+    /usr/src/debug/enigma2-plugin-systemplugins-serviceapp/*/*/*/*/*/*.c \
+    "
