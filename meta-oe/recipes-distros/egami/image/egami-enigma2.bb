@@ -7,7 +7,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "1.0"
-PR = "r3"
+PR = "r4"
 
 inherit packagegroup
 
@@ -17,6 +17,12 @@ RRECOMMENDS_${PN} = "\
     enigma2-skindefault \
     enigma2-plugin-skins-egmega32 \
     enigma2-plugin-skins-odreamyfhd \
+    \
+    enigma2-plugin-drivers-dvb-usb-af9015 \
+    enigma2-plugin-drivers-dvb-usb-as102 \
+    enigma2-plugin-drivers-dvb-usb-it913x \
+    enigma2-plugin-drivers-dvb-usb-af9035 \
+    enigma2-plugin-drivers-dvb-usb-rtl2832 \
     \
     enigma2-plugin-extensions-autotimer \
     enigma2-plugin-extensions-epgsearch \
