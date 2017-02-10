@@ -11,7 +11,7 @@ SRC_URI = "http://www.et-view.com/img_up/shop_pds/bh190/Img_Xtrend/${MACHINE}-dv
 PROVIDES += "virtual/blindscan-dvbc"
 RPROVIDES_${PN} += "virtual/blindscan-dvbc"
 
-PV = "1.3"
+PV = "1.6"
 PR = "r1"
 
 S = "${WORKDIR}"
@@ -26,5 +26,5 @@ do_install() {
 
 INHIBIT_PACKAGE_STRIP = "1"
 
-SRC_URI[md5sum] = "41c62adda4169cbe646c0f24aab43fa1"
-SRC_URI[sha256sum] = "b9b0ed80d3767aa4c22080f777a34d2139f6a8f2529b744f1b6d5dd86189be91"
+SRC_URI[md5sum] = "04475b40f25460cead27285f103a0f50"
+SRC_URI[sha256sum] = "2e0c285ee8768e8a342ca8ba97f3b1238e3ebc2dcb1b71c4803c532c94804478"
