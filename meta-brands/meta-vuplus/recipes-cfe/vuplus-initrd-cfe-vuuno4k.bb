@@ -1,4 +1,4 @@
-SRCDATE = "20161011"
+SRCDATE = "20170209"
 
 require vuplus-initrd-cfe.inc
 
@@ -11,5 +11,5 @@ do_deploy() {
 
 addtask deploy before do_build after do_install
 
-SRC_URI[md5sum] = "4f25e392d807d95c8ddf65b55555a4ab"
-SRC_URI[sha256sum] = "9286713a2d2b6cf65ee5926f2d26ff44089b344f208d801bf9687b38125fb71b"
+SRC_URI[md5sum] = "2b972c86995ad48212a25386966658a4"
+SRC_URI[sha256sum] = "c383a7f67d05655c54822b1f7a89e54601831efdb530ecb6b903320e9539e9fa"
