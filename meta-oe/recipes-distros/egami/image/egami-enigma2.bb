@@ -7,7 +7,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "1.0"
-PR = "r1"
+PR = "r2"
 
 inherit packagegroup
 
@@ -16,6 +16,12 @@ DEPENDS = "enigma2-pliplugins egami-feeds"
 RRECOMMENDS_${PN} = "\
     kernel-module-ftdi-sio \
     kernel-module-pl2303 \
+    \
+    enigma2-plugin-drivers-dvb-usb-af9015 \
+    enigma2-plugin-drivers-dvb-usb-as102 \
+    enigma2-plugin-drivers-dvb-usb-it913x \
+    enigma2-plugin-drivers-dvb-usb-af9035 \
+    enigma2-plugin-drivers-dvb-usb-rtl2832 \
     \
     streamripper \
     \
