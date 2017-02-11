@@ -4,8 +4,8 @@ require vuplus-initrd-cfe.inc
 
 inherit deploy
 do_deploy() {
-    if [ -e vmlinuz-initrd-7366b0 ]; then
-    install -m 0644 vmlinuz-initrd-7366b0 ${DEPLOYDIR}/initrd_auto.bin
+    if [ -e vmlinuz-initrd-7366c0 ]; then
+    install -m 0644 vmlinuz-initrd-7366c0 ${DEPLOYDIR}/initrd_auto.bin
     fi
 }
 
