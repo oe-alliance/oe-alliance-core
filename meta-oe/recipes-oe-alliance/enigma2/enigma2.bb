@@ -228,7 +228,7 @@ inherit autotools-brokensep gitpkgv pkgconfig pythonnative
 
 PV = "${IMAGE_VERSION}+git${SRCPV}"
 PKGV = "${IMAGE_VERSION}+git${GITPKGV}"
-PR = "r4"
+PR = "r5"
 
 SRC_URI = "${ENIGMA2_URI}"
 
@@ -256,12 +256,6 @@ SRC_URI_append_azboxminime = " \
     "
 SRC_URI_append_vuduo = " \
     file://duo_VFD.patch \
-    "
-SRC_URI_append_wetekplay2 = " \
-    file://0001-have-64-bit-action-long-int-update.patch \
-    "
-SRC_URI_append_odroidc2 = " \
-    file://0001-have-64-bit-action-long-int-update.patch \
     "
 
 SRC_URI_append_openatv = " \
