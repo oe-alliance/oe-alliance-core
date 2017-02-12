@@ -1,6 +1,6 @@
 KV = "4.7.6"
-SRCDATE = "20170124"
+SRCDATE = "20170212"
 
 require formuler-dvb-modules.inc
-SRC_URI[md5sum] = "1b7d41f07c5b48c4b0729e42a3f70a32"
-SRC_URI[sha256sum] = "64a2819305543b595abaf0eb3abb7e95358246032b3718095d54addbd3ef2d93"
+SRC_URI[md5sum] = "4abece2edb8100b18c5f37a913b28f98"
+SRC_URI[sha256sum] = "46f84707b145c50c284856d1398a3ab500dff76d6ae1b27162f916bfb37487b1"
