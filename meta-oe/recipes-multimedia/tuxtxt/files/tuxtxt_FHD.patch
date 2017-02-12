@@ -1,17 +1,18 @@
 diff --git a/data/tuxtxt2.conf b/data/tuxtxt2.conf
-index 024cced..191a68b 100644
+index 024cced..cc05338 100644
 --- a/data/tuxtxt2.conf
 +++ b/data/tuxtxt2.conf
-@@ -7,6 +7,8 @@ NationalSubset 5
+@@ -7,6 +7,9 @@ NationalSubset 5
  SwapUpDown 0
  ShowHexPages 0
  Transparency 0xA
 +TTFScreenResX 720
 +TTFBold 1
++CleanAlgo 0
  TTFWidthFactor16 28
  TTFHeightFactor16 16
  TTFShiftX 0
-@@ -20,4 +22,4 @@ UseTTF 0
+@@ -20,4 +23,4 @@ UseTTF 0
  StartX 50
  EndX 670
  StartY 30
@@ -19,111 +20,10 @@ index 024cced..191a68b 100644
 \ No newline at end of file
 +EndY 555
 diff --git a/tuxtxt.c b/tuxtxt.c
-index f550688..eaffa48 100644
+index f550688..c26be33 100644
 --- a/tuxtxt.c
 +++ b/tuxtxt.c
-@@ -209,6 +209,41 @@ int tuxtxt_run_ui(int pid, int demux)
- 		printf("TuxTxt <open %s>: %m", FB_DEV);
- 		return 0;
- 	}
-+
-+	/* save var_screeninfo */
-+	struct fb_var_screeninfo saved_var_screeninfo;
-+	struct fb_fix_screeninfo saved_fix_screeninfo;
-+	if (ioctl(renderinfo.fb, FBIOGET_VSCREENINFO, &saved_var_screeninfo) == -1)
-+	{
-+		perror("TuxTxt <FBIOGET_VSCREENINFO>");
-+		return 0;
-+	}
-+
-+	/* save framebuffer */
-+	unsigned char *my_lfb;
-+	unsigned char *saved_fb;
-+	if (ioctl(renderinfo.fb, FBIOGET_FSCREENINFO, &saved_fix_screeninfo) == -1)
-+	{
-+		perror("TuxTxt <FBIOGET_FSCREENINFO>");
-+		return 0;
-+	}
-+	else
-+	{
-+		my_lfb = (unsigned char*)mmap(0, saved_fix_screeninfo.smem_len, PROT_READ | PROT_WRITE, MAP_SHARED, renderinfo.fb, 0);
-+		if (!my_lfb)
-+		{
-+			perror("TuxTxt <mmap>");
-+			return 0;
-+		}
-+		else
-+		{
-+			saved_fb = malloc(saved_fix_screeninfo.smem_len);
-+			memcpy(saved_fb, my_lfb, saved_fix_screeninfo.smem_len);
-+			msync(saved_fb, saved_fix_screeninfo.smem_len, MS_SYNC);
-+			munmap(my_lfb, saved_fix_screeninfo.smem_len);
-+		}
-+	}
-+
- 	rc[0] = rc[1] =-1;
- 	while(rc_num < 2)
- 	{
-@@ -414,6 +449,58 @@ int tuxtxt_run_ui(int pid, int demux)
- 		tuxtxt_close();
- #endif
- 
-+	/* open Framebuffer again */
-+	if ((renderinfo.fb=open(FB_DEV, O_RDWR)) == -1)
-+	{
-+		printf("TuxTxt <open %s>: %m", FB_DEV);
-+		return 0;
-+	}
-+
-+	if (renderinfo.CleanAlgo == 4) /* 4 = var_screeninfo then framebuffer */
-+	{
-+		/* restore var_screeninfo */
-+		if (ioctl(renderinfo.fb, FBIOPUT_VSCREENINFO, &saved_var_screeninfo) == -1)
-+		{
-+			perror("TuxTxt <FBIOGET_VSCREENINFO>");
-+			return 0;
-+		}
-+	}
-+	
-+	if ((renderinfo.CleanAlgo == 1) || (renderinfo.CleanAlgo == 3) || (renderinfo.CleanAlgo == 4)) /* 1 = framebuffer, 3 = framebuffer then var_screeninfo */
-+	{
-+		/* restore framebuffer */
-+		my_lfb = (unsigned char*)mmap(0, saved_fix_screeninfo.smem_len, PROT_READ | PROT_WRITE, MAP_SHARED, renderinfo.fb, 0);
-+		if (!my_lfb)
-+		{
-+			perror("TuxTxt <mmap>");
-+			return 0;
-+		}
-+		else
-+		{
-+			memcpy(my_lfb, saved_fb, saved_fix_screeninfo.smem_len);
-+			msync(my_lfb, saved_fix_screeninfo.smem_len, MS_SYNC);
-+			munmap(my_lfb, saved_fix_screeninfo.smem_len);
-+			free(saved_fb);
-+		}
-+	}
-+	else
-+	{
-+		free(saved_fb);
-+	}
-+
-+	if ((renderinfo.CleanAlgo == 2) || (renderinfo.CleanAlgo == 3)) /* 2 = var_screeninfo, 3 = framebuffer then var_screeninfo */
-+	{
-+		/* restore var_screeninfo */
-+		if (ioctl(renderinfo.fb, FBIOPUT_VSCREENINFO, &saved_var_screeninfo) == -1)
-+		{
-+			perror("TuxTxt <FBIOGET_VSCREENINFO>");
-+			return 0;
-+		}
-+	}
-+	
-+	/* close Framebuffer again */
-+	close(renderinfo.fb);
-+	
-  	printf("Tuxtxt: plugin ended\n");
- 
- }
-@@ -519,6 +606,12 @@ int Init()
+@@ -519,6 +519,12 @@ int Init()
  				renderinfo.showhex = ival & 1;
  			else if (1 == sscanf(line, "Transparency %i", &ival))
  				renderinfo.trans_mode = ival;
@@ -136,7 +36,7 @@ index f550688..eaffa48 100644
  			else if (1 == sscanf(line, "TTFWidthFactor16 %i", &ival))
  				renderinfo.TTFWidthFactor16 = ival;
  			else if (1 == sscanf(line, "TTFHeightFactor16 %i", &ival))
-@@ -686,6 +779,9 @@ void CleanUp()
+@@ -686,6 +692,9 @@ void CleanUp()
  			fprintf(conf, "SwapUpDown %d\n", swapupdown);
  			fprintf(conf, "ShowHexPages %d\n", renderinfo.showhex);
  			fprintf(conf, "Transparency 0x%X\n", renderinfo.trans_mode);
