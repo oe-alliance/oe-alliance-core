@@ -7,13 +7,13 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PV = "5.6"
-PR = "r16"
+PR = "r17"
 
 inherit packagegroup
 
 DEPENDS = "opendroid-feeds"
 
-RRECOMMENDS_${PN} = "\
+RRECOMMENDS_${PN} = " \
     opendroid-version-info \
     enigma2-skindefault \
     enigma2-plugin-skins-opendroid \
