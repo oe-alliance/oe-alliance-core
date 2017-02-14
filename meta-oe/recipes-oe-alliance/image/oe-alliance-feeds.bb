@@ -69,7 +69,7 @@ RDEPENDS_${PN} = " \
     htop \
     idle3-tools \
     inadyn-mt \
-    iperf \
+    iperf3 \
     joe \
     livestreamer \
     livestreamersrv \

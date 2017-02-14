@@ -24,7 +24,6 @@ RRECOMMENDS_${PN} = "\
     curlftpfs \
     cdfs \
     openssl-old \
-    ${@bb.utils.contains("TARGET_ARCH", "mipsel", "dvb-apps" , "", d)} \
     enigma2-plugin-extensions-sdgradio \
     enigma2-plugin-extensions-enhancedmoviecenter \
     enigma2-plugin-extensions-cooltvguide \

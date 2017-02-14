@@ -15,7 +15,6 @@ inherit packagegroup
 RRECOMMENDS_${PN} = "\
     astra-sm \
     curlftpfs \
-    ${@bb.utils.contains("TARGET_ARCH", "mipsel", "dvb-apps" , "", d)} \
     dvblast \
     enigma2-plugin-skins-gb-fhd \
     enigma2-plugin-skins-pli-hd \
