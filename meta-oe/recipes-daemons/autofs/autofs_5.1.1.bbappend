@@ -23,8 +23,8 @@ do_configure_prepend () {
 do_install_append() {
     echo "/media/autofs  /etc/auto.network  --ghost" > ${D}/etc/auto.master
     rm -f ${D}/etc/auto.smb ${D}/etc/auto.misc ${D}/etc/autofs_ldap_auth.conf
-    sed -i 's/count -lt 15/count -lt 60/' ${D}/etc/init.d/autofs
-    sed -i 's/sleep 20/sleep 1/' ${D}/etc/init.d/autofs
+    [ -e ${D}/etc/init.d/autofs ] && sed -i 's/count -lt 15/count -lt 60/' ${D}/etc/init.d/autofs
+    [ -e ${D}/etc/init.d/autofs ] && sed -i 's/sleep 20/sleep 1/' ${D}/etc/init.d/autofs
     install -d ${D}${sysconfdir}/default/volatiles
     install -m 644 ${WORKDIR}/volatiles.99_autofs ${D}${sysconfdir}/default/volatiles/99_autofs
     install -m 644 ${WORKDIR}/auto.network ${D}/etc/auto.network
