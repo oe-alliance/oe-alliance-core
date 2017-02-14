@@ -3252,7 +3252,7 @@ CONFIG_HAVE_ARCH_KGDB=y
 # CONFIG_UBSAN is not set
 # CONFIG_EARLY_PRINTK is not set
 CONFIG_CMDLINE_BOOL=y
-CONFIG_CMDLINE="ubi.mtd=rootfs rootfstype=ubifs root=ubi0:rootfs bmem=240M@16M bmem=256M@512M console=ttyS0,115200n8"
+CONFIG_CMDLINE="libata.force=3.0G ubi.mtd=rootfs rootfstype=ubifs root=ubi0:rootfs bmem=240M@16M bmem=256M@512M console=ttyS0,115200n8"
 # CONFIG_CMDLINE_OVERRIDE is not set
 # CONFIG_SPINLOCK_TEST is not set
 # CONFIG_SCACHE_DEBUGFS is not set
