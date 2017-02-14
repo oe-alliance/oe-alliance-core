@@ -302,3 +302,6 @@ if type update-rc.d >/dev/null 2>/dev/null; then
 fi
 
 }
+
+inherit binary-compress
+FILES_COMPRESS_dm800se = "${bindir}/smbclient"
