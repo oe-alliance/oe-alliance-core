@@ -19,6 +19,7 @@ DEPENDS = " \
     enigma2-plugins \
     ${DISTRO}-base \
     ${DISTRO}-version-info \
+    enigma2 \
     "
 
 # FIX distro-image.bb ERROR: Taskhash mismatch - part 2  make sure all do_rm_work tasks of build dependencies are finished before starting do_rootfs of distro-image.bb
