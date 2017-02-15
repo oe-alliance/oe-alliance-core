@@ -10,6 +10,7 @@ inherit gitpkgv
 SRC_URI = "git://github.com/OpenPLi/tuxtxt.git;protocol=git \
            file://0001-Workaround-for-Gigablue-Quad-receivers.patch \
            file://0002-Use-separate-transparency-for-menu-and-teletext.patch \
+           file://0003-Write-enigma2-settings-to-tuxtxt2-conf.patch \
            file://acinclude_fix_DVB_API_VERSION_check_for_gcc5.patch \
            ${@bb.utils.contains('DISTRO_FEATURES', 'tuxtxtfhd', ' \
            file://tuxtxt.ttf \
