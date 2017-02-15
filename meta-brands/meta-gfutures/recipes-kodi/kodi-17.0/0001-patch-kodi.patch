@@ -1,77 +1,97 @@
-From f9efc3cda16ca9b9e2e0eab0341d6b93a7c29323 Mon Sep 17 00:00:00 2001
-From: Taejong Yoo <yoo.taejong@gmail.com>
-Date: Tue, 20 Dec 2016 14:58:21 +0900
-Subject: [PATCH 1/3] Jarvis 16.1 V3D support
+From 328588201eba6c5a1dc7eaa7af62eefe7c65dcad Mon Sep 17 00:00:00 2001
+From: tux <tux@tux.com>
+Date: Fri, 24 Feb 2017 19:26:22 +0100
+Subject: [PATCH] patch-kodi
 
 ---
- configure.ac                             |  59 +++++++++--
- m4/xbmc_arch.m4                          |   3 +
- system/playercorefactory.xml             |  12 +++
- tools/Linux/kodi.sh.in                   |  38 ++++++--
- tools/depends/target/ffmpeg/autobuild.sh |  14 +++
- xbmc/GUIInfoManager.cpp                  |   4 +
- xbmc/input/InputManager.cpp              |  12 +++
- xbmc/input/linux/LinuxInputDevices.cpp   |  33 ++++++-
- xbmc/utils/CPUInfo.cpp                   |  33 +++++++
- xbmc/windowing/egl/EGLNativeTypeV3D.cpp  | 161 +++++++++++++++++++++++++++++++
- xbmc/windowing/egl/EGLNativeTypeV3D.h    |  59 +++++++++++
- xbmc/windowing/egl/EGLWrapper.cpp        |   6 ++
- xbmc/windowing/egl/Makefile.in           |   3 +
- xbmc/xbmc.cpp                            |   9 ++
- 14 files changed, 428 insertions(+), 18 deletions(-)
+ configure.ac                                |  66 ++++++++++-
+ lib/libdvd/Makefile.in                      |  14 +--
+ m4/xbmc_arch.m4                             |   4 +
+ project/cmake/scripts/linux/ArchSetup.cmake |   7 +-
+ tools/Linux/kodi.sh.in                      |  37 ++++--
+ tools/depends/configure.ac                  |   8 ++
+ tools/depends/target/ffmpeg/autobuild.sh    |  14 +++
+ tools/depends/target/libdvdcss/Makefile     |   4 +-
+ tools/depends/target/libdvdnav/Makefile     |   4 +-
+ tools/depends/target/libdvdread/Makefile    |   4 +-
+ xbmc/addons/AddonManager.cpp                |   6 +
+ xbmc/input/linux/LinuxInputDevices.cpp      |  33 +++++-
+ xbmc/system_gl.h                            |   5 +-
+ xbmc/utils/CPUInfo.cpp                      |  33 ++++++
+ xbmc/utils/SystemInfo.cpp                   |   2 +
+ xbmc/windowing/egl/EGLNativeTypeV3D.cpp     | 168 ++++++++++++++++++++++++++++
+ xbmc/windowing/egl/EGLNativeTypeV3D.h       | 129 +++++++++++++++++++++
+ xbmc/windowing/egl/EGLWrapper.cpp           |   7 +-
+ xbmc/windowing/egl/Makefile.in              |   3 +
+ 19 files changed, 514 insertions(+), 34 deletions(-)
  create mode 100644 xbmc/windowing/egl/EGLNativeTypeV3D.cpp
  create mode 100644 xbmc/windowing/egl/EGLNativeTypeV3D.h
 
 diff --git a/configure.ac b/configure.ac
-index 5d47a4a..4237a34 100644
+index 0609390..a0bc1ef 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -709,6 +709,24 @@ case $use_platform in
-      CFLAGS="$CFLAGS"
-      CXXFLAGS="$CXXFLAGS"
+@@ -681,6 +681,18 @@ case $use_platform in
+      use_neon=yes
+      use_cpu=cortex-a7
       ;;
 +  v3d)
 +     target_platform=target_v3d
-+     ARCH="mips"
-+     use_arch="mips"
-+     ffmpeg_target_os=linux
-+     use_gles=yes
-+     use_sdl=no
++     use_neon=yes
++     use_cpu="cortex-a15"
++     use_sdl=yes
 +     use_x11=no
++     use_alsa=yes
 +     use_wayland=no
 +     use_pulse=no
 +     use_joystick=no
 +     use_optical_drive=no
-+     USE_STATIC_FFMPEG=1
-+     USE_V3D=1
-+     AC_DEFINE(HAS_EGLGLES, [1], [Define if supporting EGL based GLES Framebuffer])
-+     CFLAGS="$CFLAGS"
-+     CXXFLAGS="$CXXFLAGS"
 +     ;;
  esac
  
+ if test "$target_platform" = "target_raspberry_pi" ; then
+@@ -696,6 +707,18 @@ if test "$target_platform" = "target_raspberry_pi" ; then
+      CXXFLAGS="$CXXFLAGS"
+ fi
+ 
++if test "$target_platform" = "target_v3d" ; then
++     use_arch="arm"
++     use_hardcoded_tables="yes"
++     use_openmax=no
++     CORE_SYSTEM_NAME=linux
++     ARCH="arm"
++     AC_DEFINE(HAS_EGLGLES, [1], [Define if supporting EGL based GLES Framebuffer])
++     USE_V3D=1
++     CFLAGS="$CFLAGS"
++     CXXFLAGS="$CXXFLAGS"
++fi
++
  if test "$host_vendor" = "apple"; then
-@@ -1006,6 +1024,9 @@ if test "$use_gles" = "yes"; then
+   use_avahi=no
+   use_alsa=no
+@@ -951,6 +974,12 @@ if test "$use_gles" = "yes"; then
        AC_MSG_RESULT(== WARNING: OpenGLES support is assumed.)
-       LIBS="$LIBS -lEGL -lGLESv2 -lbcm_host -lvcos -lvchiq_arm -lmmal -lmmal_core -lmmal_util"
+       LIBS="$LIBS -lEGL -lGLESv2 -lbcm_host -lvcos -lvchiq_arm -lmmal -lmmal_core -lmmal_util -lvcsm"
      else
 +      if test "$target_platform" = "target_v3d"; then
-+        AC_CHECK_LIB([v3dplatform],[main],, AC_MSG_ERROR($missing_library))
++        AC_CHECK_LIB([nxpl],[main],, AC_MSG_ERROR($missing_library))
++        AC_CHECK_LIB([nexus],[main],, AC_MSG_ERROR($missing_library))
++        AC_CHECK_LIB([EGL],   [main],, AC_MSG_ERROR($missing_library))
++        AC_CHECK_LIB([GLESv2],[main],, AC_MSG_ERROR($missing_library))
 +      fi
        AC_CHECK_LIB([EGL],   [main],, AC_MSG_ERROR($missing_library))
        AC_CHECK_LIB([GLESv2],[main],, AC_MSG_ERROR($missing_library))
      fi
-@@ -1106,6 +1127,9 @@ if test "$use_mysql" = "yes"; then
+@@ -1039,6 +1068,8 @@ if test "$use_mysql" = "yes"; then
+   AC_CHECK_LIB([mysqlclient], [main],, AC_MSG_ERROR($missing_library))
  fi
- AC_CHECK_LIB([bluetooth],   [hci_devid],, AC_MSG_RESULT([Could not find suitable version of libbluetooth]))
  
 +# check if libatomic is available
 +AC_CHECK_LIB([atomic], [__atomic_add_fetch_8], [LIBS="$LIBS -latomic"],)
-+
+ 
  AC_LANG_PUSH([C++])
  PKG_CHECK_MODULES([TINYXML], [tinyxml >= 2.6.2],
-   [INCLUDES="$INCLUDES $TINYXML_CFLAGS"; LIBS="$LIBS $TINYXML_LIBS"],
-@@ -1122,7 +1146,7 @@ int main() {
+@@ -1056,7 +1087,7 @@ int main() {
    )])
  AC_LANG_POP([C++])
  
@@ -80,7 +100,7 @@ index 5d47a4a..4237a34 100644
    PKG_CHECK_MODULES([UUID], [uuid],, AC_MSG_ERROR(libuuid not found))
  fi
  
-@@ -1652,7 +1676,21 @@ if test "${USE_STATIC_FFMPEG}" = "1"; then
+@@ -1556,7 +1587,21 @@ if test "${USE_STATIC_FFMPEG}" = "1"; then
        pkg_cfg_prefix=${SYSROOT}
    fi
  
@@ -96,14 +116,14 @@ index 5d47a4a..4237a34 100644
 +    AC_MSG_NOTICE("FFmpeg installation forced by user - installing our version")
 +    CFLAGS="$CFLAGS" CXXFLAGS="$CXXFLAGS" LDFLAGS="$LDFLAGS" NM="$NM" AR="$AR" \
 +      AS="$AS" STRIP="$STRIP" CC="$CC" CXX="$CXX" LD="$CCLD" RANLIB="$RANLIB" \
-+      ${ffmpeg_build}/autobuild.sh ${FFMPEG_OPTS} ${PARALLEL_MAKE} --arch=mips
++      ${ffmpeg_build}/autobuild.sh ${FFMPEG_OPTS} ${PARALLEL_MAKE} --arch=generic
 +    export PKG_CONFIG_PATH="${ffmpeg_build}/ffmpeg-install/lib/pkgconfig:$PKG_CONFIG_PATH"
 +
 +  elif test "$cross_compiling" != "yes"; then
      if test "$use_debug" != "yes"; then
        FFMPEG_OPTS="-r"
      fi
-@@ -1685,14 +1723,18 @@ if test "${USE_STATIC_FFMPEG}" = "1"; then
+@@ -1589,14 +1634,18 @@ if test "${USE_STATIC_FFMPEG}" = "1"; then
        if test "$with_ffmpeg" = "yes" || test "$FFMPEG_FOUND" = "false"; then
          # ffmpeg not found with pkg-config, lets install it
          AC_MSG_NOTICE("Installing FFmpeg")
@@ -124,11 +144,11 @@ index 5d47a4a..4237a34 100644
        export PKG_CONFIG_PATH="${ffmpeg_build}/ffmpeg-install/lib/pkgconfig:$PKG_CONFIG_PATH"
  
      elif test "$with_ffmpeg" != "no"; then
-@@ -1705,13 +1747,17 @@ fi
+@@ -1609,13 +1658,17 @@ fi
  
  if test "$FFMPEG_FOUND" != "true"; then
    PKG_CHECK_MODULES([FFMPEG], [$FFMPEG_LIBNAMES],
--    [INCLUDES="$INCLUDES $FFMPEG_CFLAGS"; LIBS="$LIBS $FFMPEG_LIBS"; FFMPEG_FOUND="true"], 
+-    [INCLUDES="$INCLUDES $FFMPEG_CFLAGS"; LIBS="$LIBS $FFMPEG_LIBS"; FFMPEG_FOUND="true"],
 +    [FFMPEG_FOUND="true"],
      [AC_MSG_ERROR("ffmpeg not found")])
 +  FFMPEG_LIBS=$(PKG_CONFIG_SYSROOT_DIR="" ${PKG_CONFIG} --libs libavcodec 2>/dev/null)
@@ -142,59 +162,83 @@ index 5d47a4a..4237a34 100644
 -  FFMPEG_LIBDIR=${pkg_cfg_prefix}$(PKG_CONFIG_SYSROOT_DIR="" ${PKG_CONFIG} --static --variable=libdir libavcodec)
 +  FFMPEG_LIBDIR=$(PKG_CONFIG_SYSROOT_DIR="" ${PKG_CONFIG} --static --variable=libdir libavcodec)
    GNUTLS_ALL_LIBS=$(${PKG_CONFIG} --static --libs-only-l --silence-errors gnutls)
-   VORBISENC_ALL_LIBS=$(${PKG_CONFIG} --static --libs-only-l --silence-errors vorbisenc)
-   DCADEC_ALL_LIBS=$(${PKG_CONFIG} --static --libs-only-l --silence-errors dcadec)
-@@ -2535,6 +2581,7 @@ AC_SUBST(USE_SSE4)
+ 
+   # check if static libs are available
+@@ -2329,6 +2382,7 @@ AC_SUBST(HAVE_SSE4)
  AC_SUBST(USE_MMAL)
  AC_SUBST(USE_X11)
- AC_SUBST(USE_BREAKPAD)
+ AC_SUBST(USE_OPTICAL_DRIVE)
 +AC_SUBST(USE_V3D)
  
  # pushd and popd are not available in other shells besides bash, so implement
  # our own pushd/popd functions
+diff --git a/lib/libdvd/Makefile.in b/lib/libdvd/Makefile.in
+index 5a4508b..8897532 100644
+--- a/lib/libdvd/Makefile.in
++++ b/lib/libdvd/Makefile.in
+@@ -4,16 +4,16 @@ ARCH=@ARCH@
+ CC=@CC@
+ CXX=@CXX@
+ 
+-ifeq (@CROSS_COMPILING@,yes)
+-  DEPENDS_DIR = $(shell grep "^PREFIX=/" @abs_top_srcdir@/tools/depends/Makefile.include | sed 's/PREFIX=//g')
+-  DVDNAV_A = $(DEPENDS_DIR)/lib/libdvdnav.a
+-  DVDREAD_A = $(DEPENDS_DIR)/lib/libdvdread.a
+-  DVDCSS_A = $(DEPENDS_DIR)/lib/libdvdcss.a
+-else
++#ifeq (@CROSS_COMPILING@,yes)
++#  DEPENDS_DIR = $(shell grep "^PREFIX=/" @abs_top_srcdir@/tools/depends/Makefile.include | sed 's/PREFIX=//g')
++#  DVDNAV_A = $(DEPENDS_DIR)/lib/libdvdnav.a
++#  DVDREAD_A = $(DEPENDS_DIR)/lib/libdvdread.a
++#  DVDCSS_A = $(DEPENDS_DIR)/lib/libdvdcss.a
++#else
+   DVDNAV_A = @abs_top_srcdir@/tools/depends/target/libdvdnav/dvdnav-install/lib/libdvdnav.a
+   DVDREAD_A = @abs_top_srcdir@/tools/depends/target/libdvdread/dvdread-install/lib/libdvdread.a
+   DVDCSS_A = @abs_top_srcdir@/tools/depends/target/libdvdcss/dvdcss-install/lib/libdvdcss.a
+-endif
++#endif
+ 
+ SYSDIR = @abs_top_srcdir@/system/players/VideoPlayer
+ SOS = libdvdnav-$(ARCH).so
 diff --git a/m4/xbmc_arch.m4 b/m4/xbmc_arch.m4
-index 0b66a82..446ec27 100644
+index d28f263..78bf56f 100644
 --- a/m4/xbmc_arch.m4
 +++ b/m4/xbmc_arch.m4
-@@ -81,5 +81,8 @@ case $use_platform in
-   raspberry-pi)
-      AC_SUBST(ARCH_DEFINES, "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -D_ARMEL -DTARGET_RASPBERRY_PI")
-      ;;
-+  v3d)
-+     AC_SUBST(ARCH_DEFINES, "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_V3D")
-+     ;;
- esac
- ])
-diff --git a/system/playercorefactory.xml b/system/playercorefactory.xml
-index df0e42f..87cee58 100644
---- a/system/playercorefactory.xml
-+++ b/system/playercorefactory.xml
-@@ -8,8 +8,20 @@
-     <player name="DVDPlayer" /> placeholder for MPlayer
-     <player name="PAPlayer" audio="true" />
-     -->
-+    <player name="E2Player" type="ExternalPlayer" audio="false" video="true">
-+      <filename>kodiext</filename>
-+      <args>-U "{1}" -S "{3}" -P "$PPID"</args>
-+      <filenamemeta>/tmp/kodiextin.json</filenamemeta>
-+      <hidexbmc>true</hidexbmc>
-+      <hideconsole>true</hideconsole>
-+      <warpcursor>none</warpcursor>
-+    </player>
-   </players>
- 
-+  <rules action="prepend">
-+    <rule video="true" player="E2Player" />
-+  </rules>
+@@ -80,4 +80,8 @@ fi
+ if test "$target_platform" = "target_raspberry_pi" ; then
+   AC_SUBST(ARCH_DEFINES, "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -D_ARMEL -DTARGET_RASPBERRY_PI")
+ fi
 +
-   <rules name="system rules">
-     <rule name="mms/udp" protocols="mms|mmsh|udp" player="DVDPlayer" />
-     <rule name="lastfm/shout" protocols="lastfm|shout" player="PAPlayer" />
++if test "$target_platform" = "target_v3d" ; then
++  AC_SUBST(ARCH_DEFINES, "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_V3D")
++fi
+ ])
+diff --git a/project/cmake/scripts/linux/ArchSetup.cmake b/project/cmake/scripts/linux/ArchSetup.cmake
+index c0cc1bf..511c09c 100644
+--- a/project/cmake/scripts/linux/ArchSetup.cmake
++++ b/project/cmake/scripts/linux/ArchSetup.cmake
+@@ -13,10 +13,15 @@ else()
+     set(ARCH i486-linux)
+     set(NEON False)
+     add_options(CXX ALL_BUILDS "-msse")
+-  elseif(CPU MATCHES arm)
++  elseif(CPU MATCHES cortex-a15)
++    set(ARCH arm)
++    set(NEON True)
++    set(NEON_FLAGS "-fPIC -mcpu=cortex-a15 -mfloat-abi=hard -mfpu=neon-vfpv4 -mvectorize-with-neon-quad")
++  elseif(CPU MATCHES arm )
+     set(ARCH arm)
+     set(NEON True)
+     set(NEON_FLAGS "-mfpu=neon -mvectorize-with-neon-quad")
++    endif()
+   elseif(CPU MATCHES aarch64 OR CPU MATCHES arm64)
+     set(ARCH aarch64)
+     set(NEON False)
 diff --git a/tools/Linux/kodi.sh.in b/tools/Linux/kodi.sh.in
-index 9e25f45..4d36920 100644
+index 9fc75dd..7baa5a6 100644
 --- a/tools/Linux/kodi.sh.in
 +++ b/tools/Linux/kodi.sh.in
-@@ -25,9 +25,29 @@ prefix="@prefix@"
+@@ -25,13 +25,32 @@ prefix="@prefix@"
  exec_prefix="@exec_prefix@"
  datarootdir="@datarootdir@"
  LIBDIR="@libdir@"
@@ -203,7 +247,10 @@ index 9e25f45..4d36920 100644
  
 +export KODI_TEMP="/tmp/kodi"
 +CRASHLOG_DIR=${CRASHLOG_DIR:-$KODI_TEMP}
-+
+ 
+ # Workaround for high CPU load with nvidia GFX
+ export __GL_YIELD=USLEEP
+ 
 +check_media_hdd() {
 +    [ -e /proc/mounts ] || return 0
 +
@@ -226,7 +273,7 @@ index 9e25f45..4d36920 100644
  
  # Check for some options used by this script
  while [ "$#" -gt "0" ]
-@@ -155,13 +175,13 @@ do
+@@ -162,13 +181,13 @@ do
    LOOP=0
    "$LIBDIR/${bin_name}/${bin_name}.bin" $SAVED_ARGS
    RET=$?
@@ -247,11 +294,30 @@ index 9e25f45..4d36920 100644
  done
  
  exit $RET
+diff --git a/tools/depends/configure.ac b/tools/depends/configure.ac
+index 3626ea5..519ce1f 100644
+--- a/tools/depends/configure.ac
++++ b/tools/depends/configure.ac
+@@ -408,6 +408,14 @@ case $use_platform in
+      platform_cxxflags="-fPIC -mcpu=cortex-a7 -mfloat-abi=hard -mfpu=neon-vfpv4"
+      platform_ldflags="-lpthread"
+      ;;
++  v3d)
++     target_platform=v3d
++     use_neon=yes
++     use_cpu=cortex-a15
++     platform_cflags="-fPIC -mcpu=cortex-a15 -mfloat-abi=hard -mfpu=neon-vfpv4"
++     platform_cxxflags="-fPIC -mcpu=cortex-a15 -mfloat-abi=hard -mfpu=neon-vfpv4"
++     platform_ldflags="-lpthread"
++     ;;
+ esac
+ 
+ if test "$target_platform" = "raspberry-pi" ; then
 diff --git a/tools/depends/target/ffmpeg/autobuild.sh b/tools/depends/target/ffmpeg/autobuild.sh
-index b9bfd57..7565ef4 100755
+index 5c29762..a3e7806 100755
 --- a/tools/depends/target/ffmpeg/autobuild.sh
 +++ b/tools/depends/target/ffmpeg/autobuild.sh
-@@ -127,6 +127,20 @@ tar --strip-components=1 -xf ../${ARCHIVE}
+@@ -134,6 +134,20 @@ tar --strip-components=1 -xf $MYDIR/${ARCHIVE}
  
  CFLAGS="$CFLAGS" CXXFLAGS="$CXXFLAGS" LDFLAGS="$LDFLAGS" \
  ./configure --prefix=$FFMPEG_PREFIX \
@@ -272,48 +338,90 @@ index b9bfd57..7565ef4 100755
  	--extra-version="kodi-${VERSION}" \
  	--disable-devices \
  	--disable-ffplay \
-diff --git a/xbmc/GUIInfoManager.cpp b/xbmc/GUIInfoManager.cpp
-index c8bcd30..1205fd0 100644
---- a/xbmc/GUIInfoManager.cpp
-+++ b/xbmc/GUIInfoManager.cpp
-@@ -4711,8 +4711,12 @@ std::string CGUIInfoManager::GetSystemHeatInfo(int info)
-     m_lastSysHeatInfoTime = CTimeUtils::GetFrameTime();
- #if defined(TARGET_POSIX)
-     g_cpuInfo.getTemperature(m_cpuTemp);
-+#if defined(TARGET_V3D)
-+    m_gpuTemp = m_cpuTemp;
-+#else
-     m_gpuTemp = GetGPUTemperature();
- #endif
-+#endif
-   }
+diff --git a/tools/depends/target/libdvdcss/Makefile b/tools/depends/target/libdvdcss/Makefile
+index 518ce2b..7e51e79 100644
+--- a/tools/depends/target/libdvdcss/Makefile
++++ b/tools/depends/target/libdvdcss/Makefile
+@@ -3,7 +3,7 @@ include DVDCSS-VERSION
+ DEPS= DVDCSS-VERSION Makefile
  
-   std::string text;
-diff --git a/xbmc/input/InputManager.cpp b/xbmc/input/InputManager.cpp
-index 1e21e7b..546da07 100644
---- a/xbmc/input/InputManager.cpp
-+++ b/xbmc/input/InputManager.cpp
-@@ -620,6 +620,18 @@ bool CInputManager::OnKey(const CKey& key)
-           useKeyboard = true;
-       }
-     }
-+#if defined(TARGET_V3D)
-+    switch(key.GetVKey()) {
-+      case 0x0d:
-+      case 0x80:
-+      case 0x81:
-+      case 0x82:
-+      case 0x83:
-+        if (iWin == WINDOW_DIALOG_KEYBOARD)
-+          useKeyboard = false;
-+        break;
-+    }
-+#endif
-     if (useKeyboard)
-     {
-       // use the virtualkeyboard section of the keymap, and send keyboard-specific or navigation
+ ifeq ($(CROSS_COMPILING), yes)
+-  DEPS += ../../Makefile.include
++#  DEPS += ../../Makefile.include
+ else
+   ROOT_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
+   PREFIX := $(ROOT_DIR)/dvdcss-install
+@@ -19,7 +19,7 @@ RETRIEVE_TOOL := curl -Ls --create-dirs --retry 10 --retry-delay 3
+ ARCHIVE_TOOL := tar --strip-components=1 -xf
+ 
+ # configuration settings
+-config = --prefix=$(PREFIX) --disable-shared --enable-static --with-pic
++config = --build=$(BUILD_SYS) --host=$(HOST_SYS) --prefix=$(PREFIX) --disable-shared --enable-static --with-pic
+ 
+ CLEAN_FILES=$(ARCHIVE) $(PLATFORM)
+ 
+diff --git a/tools/depends/target/libdvdnav/Makefile b/tools/depends/target/libdvdnav/Makefile
+index cd44351..2dd443c 100644
+--- a/tools/depends/target/libdvdnav/Makefile
++++ b/tools/depends/target/libdvdnav/Makefile
+@@ -3,11 +3,11 @@ include DVDNAV-VERSION
+ DEPS = DVDNAV-VERSION Makefile
+ 
+ # configuration settings
+-config = --prefix=$(PREFIX) --disable-shared --enable-static --with-pic
++config = --build=$(BUILD_SYS) --host=$(HOST_SYS) --prefix=$(PREFIX) --disable-shared --enable-static --with-pic
+ EXTRA_CFLAGS = -D_XBMC -DHAVE_DVDCSS_DVDCSS_H
+ 
+ ifeq ($(CROSS_COMPILING), yes)
+-  DEPS += ../../Makefile.include
++#  DEPS += ../../Makefile.include
+ else
+   ROOT_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
+   PREFIX := $(ROOT_DIR)/dvdnav-install
+diff --git a/tools/depends/target/libdvdread/Makefile b/tools/depends/target/libdvdread/Makefile
+index 3652f1b..a1c36f3 100644
+--- a/tools/depends/target/libdvdread/Makefile
++++ b/tools/depends/target/libdvdread/Makefile
+@@ -3,11 +3,11 @@ include DVDREAD-VERSION
+ DEPS = DVDREAD-VERSION Makefile
+ 
+ # configuration settings
+-config = --prefix=$(PREFIX) --disable-shared --enable-static --with-pic
++config = --build=$(BUILD_SYS) --host=$(HOST_SYS) --prefix=$(PREFIX) --disable-shared --enable-static --with-pic
+ EXTRA_CFLAGS = -D_XBMC
+ 
+ ifeq ($(CROSS_COMPILING), yes)
+-  DEPS += ../../Makefile.include
++#  DEPS += ../../Makefile.include
+ else
+   ROOT_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
+   PREFIX := $(ROOT_DIR)/dvdread-install
+diff --git a/xbmc/addons/AddonManager.cpp b/xbmc/addons/AddonManager.cpp
+index 6721f07..4bbab6d 100644
+--- a/xbmc/addons/AddonManager.cpp
++++ b/xbmc/addons/AddonManager.cpp
+@@ -936,6 +936,9 @@ bool CAddonMgr::PlatformSupportsAddon(const cp_plugin_info_t *plugin)
+ #elif defined(TARGET_RASPBERRY_PI)
+     "rbpi",
+     "linux",
++#elif defined(TARGET_V3D)
++    "v3d",
++    "linux",
+ #elif defined(TARGET_FREEBSD)
+     "freebsd",
+     "linux",
+@@ -1028,6 +1031,9 @@ std::string CAddonMgr::GetPlatformLibraryName(cp_cfg_element_t *base) const
+ #elif defined(TARGET_RASPBERRY_PI)
+   libraryName = GetExtValue(base, "@library_rbpi");
+   if (libraryName.empty())
++#elif defined(TARGET_V3D)
++  libraryName = GetExtValue(base, "@library_v3d");
++  if (libraryName.empty())
+ #endif
+   libraryName = GetExtValue(base, "@library_linux");
+ #elif defined(TARGET_WINDOWS) && defined(HAS_DX)
 diff --git a/xbmc/input/linux/LinuxInputDevices.cpp b/xbmc/input/linux/LinuxInputDevices.cpp
-index 9f3e866..ac12d57 100644
+index 3875138..d3084f2 100644
 --- a/xbmc/input/linux/LinuxInputDevices.cpp
 +++ b/xbmc/input/linux/LinuxInputDevices.cpp
 @@ -27,6 +27,8 @@
@@ -325,7 +433,7 @@ index 9f3e866..ac12d57 100644
  #include "system.h"
  #if defined(HAS_LINUX_EVENTS)
  
-@@ -273,6 +275,10 @@ KeyMap keyMap[] = {
+@@ -275,6 +277,10 @@ KeyMap keyMap[] = {
    { 378               , XBMCK_RIGHT       }, // Green
    { 381               , XBMCK_UP          }, // Yellow
    { 366               , XBMCK_DOWN        }, // Blue
@@ -336,7 +444,7 @@ index 9f3e866..ac12d57 100644
  };
  
  typedef enum
-@@ -550,9 +556,17 @@ bool CLinuxInputDevice::KeyEvent(const struct input_event& levt, XBMC_Event& dev
+@@ -552,9 +558,17 @@ bool CLinuxInputDevice::KeyEvent(const struct input_event& levt, XBMC_Event& dev
  
      KeymapEntry entry;
      entry.code = code;
@@ -355,7 +463,7 @@ index 9f3e866..ac12d57 100644
        if (devt.key.keysym.mod & (XBMCKMOD_SHIFT | XBMCKMOD_CAPS)) keyMapValue = entry.shift;
        else if (devt.key.keysym.mod & XBMCKMOD_ALT) keyMapValue = entry.alt;
        else if (devt.key.keysym.mod & XBMCKMOD_META) keyMapValue = entry.altShift;
-@@ -567,6 +581,7 @@ bool CLinuxInputDevice::KeyEvent(const struct input_event& levt, XBMC_Event& dev
+@@ -569,6 +583,7 @@ bool CLinuxInputDevice::KeyEvent(const struct input_event& levt, XBMC_Event& dev
          }
        }
      }
@@ -363,7 +471,7 @@ index 9f3e866..ac12d57 100644
    }
  
    return true;
-@@ -855,6 +870,12 @@ XBMC_Event CLinuxInputDevice::ReadEvent()
+@@ -857,6 +872,12 @@ XBMC_Event CLinuxInputDevice::ReadEvent()
          break;
        }
  
@@ -376,15 +484,15 @@ index 9f3e866..ac12d57 100644
        //printf("read event readlen = %d device name %s m_fileName %s\n", readlen, m_deviceName, m_fileName.c_str());
  
        // sanity check if we realy read the event
-@@ -1094,6 +1115,7 @@ bool CLinuxInputDevices::CheckDevice(const char *device)
-   if (fd < 0)
+@@ -1194,6 +1215,7 @@ bool CLinuxInputDevices::CheckDevice(const char *device)
      return false;
+   }
  
 +#if !defined(TARGET_V3D)
    if (ioctl(fd, EVIOCGRAB, 1) && errno != EINVAL)
    {
      close(fd);
-@@ -1101,6 +1123,7 @@ bool CLinuxInputDevices::CheckDevice(const char *device)
+@@ -1201,6 +1223,7 @@ bool CLinuxInputDevices::CheckDevice(const char *device)
    }
  
    ioctl(fd, EVIOCGRAB, 0);
@@ -392,7 +500,7 @@ index 9f3e866..ac12d57 100644
  
    close(fd);
  
-@@ -1193,6 +1216,7 @@ bool CLinuxInputDevice::Open()
+@@ -1293,6 +1316,7 @@ bool CLinuxInputDevice::Open()
      return false;
    }
  
@@ -400,7 +508,7 @@ index 9f3e866..ac12d57 100644
    /* grab device */
    ret = ioctl(fd, EVIOCGRAB, 1);
    if (ret && errno != EINVAL)
-@@ -1201,6 +1225,7 @@ bool CLinuxInputDevice::Open()
+@@ -1301,6 +1325,7 @@ bool CLinuxInputDevice::Open()
      close(fd);
      return false;
    }
@@ -408,7 +516,7 @@ index 9f3e866..ac12d57 100644
  
    // Set the socket to non-blocking
    int opts = 0;
-@@ -1267,8 +1292,9 @@ bool CLinuxInputDevice::Open()
+@@ -1367,8 +1392,9 @@ bool CLinuxInputDevice::Open()
    return true;
  
  driver_open_device_error:
@@ -419,7 +527,7 @@ index 9f3e866..ac12d57 100644
    if (m_vt_fd >= 0)
    {
      close(m_vt_fd);
-@@ -1342,9 +1368,10 @@ bool CLinuxInputDevice::GetKeymapEntry(KeymapEntry& entry)
+@@ -1442,9 +1468,10 @@ bool CLinuxInputDevice::GetKeymapEntry(KeymapEntry& entry)
   */
  void CLinuxInputDevice::Close()
  {
@@ -431,11 +539,28 @@ index 9f3e866..ac12d57 100644
    if (m_vt_fd >= 0)
      close(m_vt_fd);
  
+diff --git a/xbmc/system_gl.h b/xbmc/system_gl.h
+index 0eae1af..482540e 100644
+--- a/xbmc/system_gl.h
++++ b/xbmc/system_gl.h
+@@ -45,8 +45,11 @@
+   #if defined(TARGET_DARWIN)
+     #include <OpenGLES/ES2/gl.h>
+     #include <OpenGLES/ES2/glext.h>
++  #elif defined(TARGET_V3D)
++    #include <GLES3/gl31.h>
++    #include <GLES2/gl2ext.h>
+   #else
+-    #include <GLES2/gl2.h>
++    #include <GLES3/gl2.h>
+     #include <GLES2/gl2ext.h>
+   #endif
+ #endif
 diff --git a/xbmc/utils/CPUInfo.cpp b/xbmc/utils/CPUInfo.cpp
-index f1d07dd..14b175b 100644
+index 5e2ebbd..a277a82 100644
 --- a/xbmc/utils/CPUInfo.cpp
 +++ b/xbmc/utils/CPUInfo.cpp
-@@ -410,6 +410,30 @@ CCPUInfo::CCPUInfo(void)
+@@ -415,6 +415,30 @@ CCPUInfo::CCPUInfo(void)
            }
          }
        }
@@ -466,7 +591,7 @@ index f1d07dd..14b175b 100644
      }
      fclose(fCPUInfo);
      //  /proc/cpuinfo is not reliable on some Android platforms
-@@ -584,6 +608,15 @@ bool CCPUInfo::getTemperature(CTemperature& temperature)
+@@ -604,6 +628,15 @@ bool CCPUInfo::getTemperature(CTemperature& temperature)
  #if defined(TARGET_DARWIN_OSX)
    value = SMCGetTemperature(SMC_KEY_CPU_TEMP);
    scale = 'c';
@@ -482,12 +607,25 @@ index f1d07dd..14b175b 100644
  #else
    int         ret   = 0;
    FILE        *p    = NULL;
+diff --git a/xbmc/utils/SystemInfo.cpp b/xbmc/utils/SystemInfo.cpp
+index fcc6733..fbc41ca 100644
+--- a/xbmc/utils/SystemInfo.cpp
++++ b/xbmc/utils/SystemInfo.cpp
+@@ -1193,6 +1193,8 @@ std::string CSysInfo::GetUserAgent()
+ 
+ #ifdef TARGET_RASPBERRY_PI
+   result += " HW_RaspberryPi/1.0";
++#elif defined (TARGET_V3D)
++  result += " Broadcom Settopbox";
+ #elif defined (TARGET_DARWIN_IOS)
+   std::string iDevVer;
+   if (iDevStrDigit == std::string::npos)
 diff --git a/xbmc/windowing/egl/EGLNativeTypeV3D.cpp b/xbmc/windowing/egl/EGLNativeTypeV3D.cpp
 new file mode 100644
-index 0000000..c42eadd
+index 0000000..9ff266c
 --- /dev/null
 +++ b/xbmc/windowing/egl/EGLNativeTypeV3D.cpp
-@@ -0,0 +1,161 @@
+@@ -0,0 +1,168 @@
 +/*
 + *      Copyright (C) 2011-2012 Team XBMC
 + *      http://www.xbmc.org
@@ -513,9 +651,6 @@ index 0000000..c42eadd
 +#include "utils/log.h"
 +#include "guilib/gui3d.h"
 +#include "linux/DllBCM.h"
-+#include <v3dplatform.h>
-+
-+extern V3D_PlatformHandle g_v3dPlatformHandle;
 +
 +using namespace std;
 +
@@ -539,11 +674,21 @@ index 0000000..c42eadd
 +
 +bool CEGLNativeTypeV3D::CreateNativeWindow()
 +{
-+  V3D_NativeWindowInfo info;
-+  m_nativeWindow = V3D_CreateNativeWindow(&info);
-+  if (!m_nativeWindow) {
-+    return false;
-+  }
++  NEXUS_Platform_Join();
++  NXPL_RegisterNexusDisplayPlatform(&nxpl_handle, nexus_display);
++  NXPL_NativeWindowInfoEXT win_info;
++
++  NXPL_GetDefaultNativeWindowInfoEXT(&win_info);
++
++  win_info.x = 0;
++  win_info.y = 0;
++  win_info.width = 1280;
++  win_info.height = 720;
++  win_info.stretch = false;
++  win_info.clientID = 0;
++  win_info.zOrder = 0;
++
++  m_nativeWindow = NXPL_CreateNativeWindowEXT(&win_info);
 +  return true;
 +}
 +
@@ -566,7 +711,7 @@ index 0000000..c42eadd
 +
 +bool CEGLNativeTypeV3D::DestroyNativeWindow()
 +{
-+  V3D_DestroyNativeWindow(m_nativeWindow);
++  NXPL_DestroyNativeWindow(m_nativeWindow);
 +  return true;
 +}
 +
@@ -647,14 +792,14 @@ index 0000000..c42eadd
 +
 +bool CEGLNativeTypeV3D::ShowWindow(bool show)
 +{
-+  return V3D_SetVisible(g_v3dPlatformHandle, show);
++	return true;
 +}
 diff --git a/xbmc/windowing/egl/EGLNativeTypeV3D.h b/xbmc/windowing/egl/EGLNativeTypeV3D.h
 new file mode 100644
-index 0000000..2dfee7b
+index 0000000..c3d75fc
 --- /dev/null
 +++ b/xbmc/windowing/egl/EGLNativeTypeV3D.h
-@@ -0,0 +1,59 @@
+@@ -0,0 +1,129 @@
 +#pragma once
 +
 +/*
@@ -681,6 +826,72 @@ index 0000000..2dfee7b
 +
 +#include <vector>
 +#include <string>
++
++#define NEXUS_DISPLAYHANDLE void*
++
++#ifdef __cplusplus
++extern "C" {
++#endif
++
++typedef void *NXPL_PlatformHandle;
++
++typedef enum NEXUS_BlendFactor
++{
++    NEXUS_BlendFactor_eZero
++} NEXUS_BlendFactor;
++
++typedef struct NEXUS_BlendEquation
++{
++    NEXUS_BlendFactor a;
++    NEXUS_BlendFactor b;
++    bool              subtract_cd;
++    NEXUS_BlendFactor c;
++    NEXUS_BlendFactor d;
++    bool              subtract_e;
++    NEXUS_BlendFactor e;
++} NEXUS_BlendEquation;
++
++typedef struct
++{
++   uint32_t             width;
++   uint32_t             height;
++   uint32_t             x;
++   uint32_t             y;
++   bool                 stretch;
++   uint32_t             clientID;
++   uint32_t             zOrder;
++   NEXUS_BlendEquation  colorBlend;
++   NEXUS_BlendEquation  alphaBlend;
++   uint32_t             magic;
++} NXPL_NativeWindowInfoEXT;
++
++/* Register a display for exclusive use. The client application should not use the display until
++ * calling NXPL_UnregisterNexusDisplayPlatform.
++ * It will register its own memory, h/w and display APIs suitable for basic exclusive mode rendering on
++ * a Nexus display.
++ * Fills in the NXPL platform handle, which must be passed back into the unregister function.
++ */
++void NXPL_RegisterNexusDisplayPlatform(NXPL_PlatformHandle *handle, NEXUS_DISPLAYHANDLE display);
++
++/* Unregister a display for exclusive use. The client application can the use the Nexus display again. */
++void NXPL_UnregisterNexusDisplayPlatform(NXPL_PlatformHandle handle);
++
++/* Generate a default NXPL_NativeWindowInfoEXT */
++void NXPL_GetDefaultNativeWindowInfoEXT(NXPL_NativeWindowInfoEXT *info);
++
++/* Create a 'native window' of the given size. This is really just a small structure that holds the size
++ * of the window that EGL will write into. */
++void *NXPL_CreateNativeWindowEXT(const NXPL_NativeWindowInfoEXT *info);
++
++/* Destroy a 'native window' */
++void NXPL_DestroyNativeWindow(void *nativeWin);
++
++int NEXUS_Platform_AuthenticatedJoin(const void *settings);
++#define NEXUS_Platform_Join() NEXUS_Platform_AuthenticatedJoin(NULL)
++
++#ifdef __cplusplus
++}
++#endif
 +
 +class CEGLNativeTypeV3D : public CEGLNativeType
 +{
@@ -713,36 +924,41 @@ index 0000000..2dfee7b
 +private:
 +  RESOLUTION_INFO m_desktopRes;
 +  RESOLUTION_INFO m_desktopResAll[3];
++
++  NXPL_PlatformHandle nxpl_handle = 0;
++  NEXUS_DISPLAYHANDLE  nexus_display = 0;
++
 +};
 diff --git a/xbmc/windowing/egl/EGLWrapper.cpp b/xbmc/windowing/egl/EGLWrapper.cpp
-index 036d4b9..6dd2de8 100644
+index 30f5757..6d215a9 100644
 --- a/xbmc/windowing/egl/EGLWrapper.cpp
 +++ b/xbmc/windowing/egl/EGLWrapper.cpp
-@@ -36,6 +36,9 @@
- #if defined(HAS_IMXVPU)
+@@ -35,7 +35,10 @@
    #include "EGLNativeTypeIMX.h"
  #endif
+ #if defined(TARGET_LINUX) && defined(HAS_LIBAMCODEC)
+-#include "EGLNativeTypeAmlogic.h"
++  #include "EGLNativeTypeAmlogic.h"
++#endif
 +#if defined(TARGET_V3D)
 +  #include "EGLNativeTypeV3D.h"
-+#endif
- #include "EGLNativeTypeAmlogic.h"
+ #endif
  #include "EGLWrapper.h"
  
-@@ -105,6 +108,9 @@ bool CEGLWrapper::Initialize(const std::string &implementation)
- #if defined(HAS_IMXVPU)
-       (nativeGuess = CreateEGLNativeType<CEGLNativeTypeIMX>(implementation)) ||
- #endif
-+#if defined(TARGET_V3D)
-+      (nativeGuess = CreateEGLNativeType<CEGLNativeTypeV3D>(implementation)) ||
-+#endif
+@@ -101,6 +104,8 @@ bool CEGLWrapper::Initialize(const std::string &implementation)
+       (nativeGuess = CreateEGLNativeType<CEGLNativeTypeIMX>(implementation))
+ #elif defined(TARGET_LINUX) && defined(HAS_LIBAMCODEC)
        (nativeGuess = CreateEGLNativeType<CEGLNativeTypeAmlogic>(implementation))
++#elif defined(TARGET_V3D)
++      (nativeGuess = CreateEGLNativeType<CEGLNativeTypeV3D>(implementation))
+ #endif
        )
    {
 diff --git a/xbmc/windowing/egl/Makefile.in b/xbmc/windowing/egl/Makefile.in
-index 32fb168..bbd312b 100644
+index 68f7862..4eed1dc 100644
 --- a/xbmc/windowing/egl/Makefile.in
 +++ b/xbmc/windowing/egl/Makefile.in
-@@ -13,6 +13,9 @@ endif
+@@ -12,6 +12,9 @@ endif
  ifeq (@USE_IMXVPU@,1)
  SRCS+= EGLNativeTypeIMX.cpp
  endif
@@ -751,34 +967,7 @@ index 32fb168..bbd312b 100644
 +endif
  SRCS+= EGLWrapper.cpp
  
- # Wayland specific detail
-diff --git a/xbmc/xbmc.cpp b/xbmc/xbmc.cpp
-index 366e4b5..fc59749 100644
---- a/xbmc/xbmc.cpp
-+++ b/xbmc/xbmc.cpp
-@@ -40,6 +40,11 @@
- #include "main/posix/MessagePrinter.h"
- #endif
- 
-+#if defined(TARGET_V3D)
-+#include <v3dplatform.h>
-+V3D_PlatformHandle g_v3dPlatformHandle;
-+#endif
-+
- extern "C" int XBMC_Run(bool renderGUI)
- {
-   int status = -1;
-@@ -74,6 +79,10 @@ extern "C" int XBMC_Run(bool renderGUI)
-                                        -1);
- #endif
- 
-+#if defined(TARGET_V3D)
-+  V3D_RegisterDisplayPlatform(&g_v3dPlatformHandle, NULL);
-+#endif
-+
- #ifdef TARGET_RASPBERRY_PI
-   if(!g_RBP.Initialize())
-     return false;
+ LIB = windowing_egl.a
 -- 
-1.9.1
+2.7.4
 
