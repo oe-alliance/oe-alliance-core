@@ -24,7 +24,6 @@ RRECOMMENDS_${PN} = "\
     enigma2-skins \
     enigma2-skins-openvix \
     oe-alliance-skins \
-    openbh-picons-meta \
     openssl-old \
     ${@bb.utils.contains("MACHINE_FEATURES", "skins1080", "hd-skins-meta", "", d)} \
     "
