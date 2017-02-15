@@ -6,7 +6,7 @@ MAINTAINER = "Black Hole team"
 require conf/license/license-gplv2.inc
 
 SRC_URI = "file://Ncam_Ci.sh file://StartBhCam file://Delete_all_Crashlogs.sh file://Ifconfig.sh \
-	file://Netstat.sh file://Uptime.sh file://bp_swap"
+	file://openvpn.log file://Netstat.sh file://Uptime.sh file://bp_swap"
 
 PR = "r10"
 
