@@ -279,6 +279,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'tmnano3t', 'dags7356tm' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'tmnano2super', 'dags7356tm' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'tmsingle', 'dags7335' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'tmtwin', 'dags7335' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'tmtwin4k', 'dags7252-200' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'tmnanose', 'dags7362' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'tmnanose', 'dags7362' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'tmnanoseplus', 'dags7362' , '', d)}\
