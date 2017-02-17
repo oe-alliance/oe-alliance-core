@@ -10,7 +10,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "${IMAGE_VERSION}"
-PR = "r2"
+PR = "r3"
 
 DEPENDS = "enigma2 enigma2-locale-meta enigma2-plugins enigma2-oe-alliance-plugins oe-alliance-feeds enigma2-3rdparty-plugins oe-alliance-wifi"
 
@@ -61,12 +61,3 @@ RRECOMMENDS_${PN} = "\
     ${@bb.utils.contains("MACHINE_FEATURES", "minitv", "enigma2-plugin-extensions-minitv" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "fcc", "enigma2-plugin-systemplugins-fastchannelchange" , "", d)} \
     "
-
-GST_BASE_DVD = "${@bb.utils.contains('GST_VERSION', '1.0', ' \
-    gstreamer1.0-plugins-bad-videoparsersbad \
-    gstreamer1.0-plugins-bad-mpegtsmux \
-    ', ' \
-    gst-plugins-bad-videoparsersbad \
-    gst-plugins-bad-mpegtsmux \
-    ', d)}"
-
