@@ -25,4 +25,5 @@ RDEPENDS_${PN} = "\
     packagegroup-base-smbfs-client \
     ${@bb.utils.contains("MACHINE_FEATURES", "dreambox", "", "ofgwrite", d)} \
     ${@bb.utils.contains("TUNE_FEATURES", "armv", "glibc-compat", "", d)} \
+    bash \
     "
