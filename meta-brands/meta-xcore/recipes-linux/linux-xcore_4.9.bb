@@ -24,7 +24,7 @@ PKG_kernel-image = "kernel-image"
 RPROVIDES_kernel-base = "kernel-${KERNEL_VERSION}"
 RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
 
-SRC_URI += "http://source.mynonpublic.com/xcore/${MACHINE}-linux-${PV}-${SRC}.tar.gz \
+SRC_URI += "http://source.mynonpublic.com/xcore/xcore-linux-${PV}-${SRC}.tar.gz \
     file://defconfig \
     file://noforce_correct_pointer_usage.patch \
     file://0001-Support-TBS-USB-drivers-for-4.6-kernel.patch \
@@ -35,32 +35,31 @@ SRC_URI += "http://source.mynonpublic.com/xcore/${MACHINE}-linux-${PV}-${SRC}.ta
     file://0001-stv090x-optimized-TS-sync-control.patch \
     "
 
+SRC_URI_append_xc7439 = " \
+    file://xc7439_scheduled_merge_4.10.patch \
+"
+
 S = "${WORKDIR}/linux-brcmstb-${PV}"
 B = "${WORKDIR}/build"
 
 export OS = "Linux"
 KERNEL_OBJECT_SUFFIX = "ko"
-KERNEL_OUTPUT = "vmlinux"
-KERNEL_IMAGETYPE = "vmlinux"
 KERNEL_IMAGEDEST = "tmp"
 
-FILES_kernel-image = "/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz"
-
-kernel_do_install_append() {
-    ${STRIP} ${D}/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION}
-    gzip -9c ${D}/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION} > ${D}/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz
-    rm ${D}/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION}
-}
+FILES_kernel-image = "${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}*"
 
 pkg_postinst_kernel-image () {
     if [ "x$D" == "x" ]; then
-        if [ -f /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz ] ; then
+        if [ -f /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION} ] ; then
             flash_erase /dev/${MTD_KERNEL} 0 0
-            nandwrite -p /dev/${MTD_KERNEL} /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz
-            rm -f /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz
+            nandwrite -p /dev/${MTD_KERNEL} /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION}
+            rm -f /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION}
         fi
     fi
     true
+}
+
+pkg_postrm_kernel-image () {
 }
 
 do_rm_work() {

@@ -9,7 +9,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "${IMAGE_VERSION}"
-PR = "r12"
+PR = "r14"
 
 DEPENDS = "enigma2-plugin-drivers-usbserial"
 RECOMMENDS = "enigma2-plugin-extensions-et-livestream"
@@ -50,6 +50,7 @@ RDEPENDS_${PN} = " \
     ${@bb.utils.contains("MACHINE_FEATURES", "nextv-hbbtv-browser", " enigma2-plugin-extensions-hbbtv-nextv", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "chromiumos", "enigma2-plugin-extensions-chromium", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "gles", "libmicrohttpd libnfs libshairport libtinyxml mysql5 yajl" , "", d)} \
+    ${@bb.utils.contains("MACHINE_FEATURES", "dvd", "bdremux replex mjpegtools dvdauthor dvd+rw-tools cdrkit cdfs cdtextinfo enigma2-plugin-extensions-cdinfo enigma2-plugin-extensions-dvdburn enigma2-plugin-extensions-dvdplayer ${GST_BASE_DVD}", "", d)} \
     autofs \
     autossh \
     avahi-ui \
@@ -123,6 +124,14 @@ RDEPENDS_${PN} = " \
     wget \
     zeroconf \
     "
+
+GST_BASE_DVD = "${@bb.utils.contains('GST_VERSION', '1.0', ' \
+    gstreamer1.0-plugins-bad-videoparsersbad \
+    gstreamer1.0-plugins-bad-mpegtsmux \
+    ', ' \
+    gst-plugins-bad-videoparsersbad \
+    gst-plugins-bad-mpegtsmux \
+    ', d)}"
 
 RDEPENDS_${PN}_remove_wetekplay = "network-usb-drivers-meta"
 RDEPENDS_${PN}_remove_wetekplay2 = "network-usb-drivers-meta"
