@@ -7,6 +7,8 @@ LIC_FILES_CHKSUM = "file://LICENSE.GPL;md5=930e2a5f63425d8dd72dbd7391c43c46"
 
 PROVIDES += "virtual/kodi"
 RPROVIDES_${PN} += "virtual/kodi"
+PROVIDES += "kodi"
+RPROVIDES_${PN} += "kodi"
 
 DEPENDS = "\
 	vuplus-libgles-${MACHINE} \
@@ -60,9 +62,6 @@ DEPENDS = "\
 	libcrossguid \
 "
 
-PROVIDES += "kodi"
-RPROVIDES_${PN} += "kodi"
-
 RDEPENDS_${PN} = "python"
 RDEPENDS_${PN} += "\
 	python-distutils \
@@ -105,24 +104,24 @@ RDEPENDS_${PN} += "\
 	libnfs \
 	libtinyxml \
 	alsa-lib \
+	alsa-plugins \
 	shairplay \
-"
-
-BRANCH = "jarvis_vuplus"
-SRCREV = "528f9f8abfc045b8cf8edea013aaf19fd02dba09"
-
-PV = "16.1.rc2"
-PR = "${BUILD_PR}_${GLPR}_${SRCREV}"
-
-SRC_URI = "\
-	git://code.vuplus.com/git/xbmc.git;protocol=http;branch=${BRANCH};tag=${SRCREV} \
-	http://archive.vuplus.com/download/build_support/kodi/xbmc-support_${MACHINE}_${GLPR}.tar.gz;name=xbmc-support \
-	file://0001-lib-cximage-6.0-fix-compilation-with-gcc6.patch \
 "
 
 inherit autotools-brokensep autotools lib_package pkgconfig gettext python-dir
 
-S = "${WORKDIR}/git"
+SRCDATE = "20170203"
+PV = "17.0"
+PR = "r0-${SRCDATE}"
+
+SRC_URI = "https://openspa.webhop.info/drivers/kodi/Vuplus-Krypton-Final-${SRCDATE}.tar.gz \
+    http://archive.vuplus.com/download/build_support/kodi/xbmc-support_${MACHINE}_${GLPR}.tar.gz;name=xbmc-support \
+"
+
+SRC_URI[md5sum] = "355783a7e4aa8bed63e57efacecbeb03"
+SRC_URI[sha256sum] = "4640553d1b3f9d7fa1192a74a233e0010031c2d68029b97d2059c3fc2dfa3ce4"
+
+S = "${WORKDIR}/Krypton"
 
 CACHED_CONFIGUREVARS += " \
  ac_cv_path_PYTHON="${STAGING_BINDIR_NATIVE}/python-native/python" \
@@ -132,20 +131,23 @@ EXTRA_OECONF = " \
 	--enable-gles \
 	--enable-libusb \
 	--enable-airplay \
-	--enable-rtmp	\
+	--enable-rtmp \
 	--enable-optimizations \
 	--disable-optical-drive \
+	--enable-external-libraries \
 	--disable-ssh \
 	--disable-x11 \
 	--disable-dbus \
 	--disable-pulse \
 	--disable-gtest \
 	--disable-joystick \
-	--disable-alsa \
+	--enable-alsa \
+	--disable-pulse \
 	--disable-lirc \
 	--disable-libcec \
 	--disable-texturepacker \
 	--disable-debug \
+	--enable-pulse=no \
 "
 
 FULL_OPTIMIZATION_armv7a = "-fexpensive-optimizations -fomit-frame-pointer -O4 -ffast-math"
@@ -159,20 +161,20 @@ export STAGING_INCDIR
 export PYTHON_DIR
 
 do_configure() {
-	cp -av ${WORKDIR}/xbmc-support/gles_init.* ${WORKDIR}/git/xbmc/windowing/egl/
-	sh bootstrap
-	sed -i 's/-V -qversion//' configure
-	oe_runconf
+    cp -av ${WORKDIR}/xbmc-support/gles_init.* ${WORKDIR}/Krypton/xbmc/windowing/egl/
+    sh bootstrap
+    sed -i 's/-V -qversion//' configure
+    oe_runconf
 }
 
 do_compile_prepend() {
-	for i in $(find . -name "Makefile") ; do
-		sed -i -e 's:I/usr/include:I${STAGING_INCDIR}:g' $i
-	done
+    for i in $(find . -name "Makefile") ; do
+        sed -i -e 's:I/usr/include:I${STAGING_INCDIR}:g' $i
+    done
 
-	for i in $(find . -name "*.mak*" -o	-name "Makefile") ; do
-		sed -i -e 's:I/usr/include:I${STAGING_INCDIR}:g' -e 's:-rpath \$(libdir):-rpath ${libdir}:g' $i
-	done
+    for i in $(find . -name "*.mak*" -o	-name "Makefile") ; do
+        sed -i -e 's:I/usr/include:I${STAGING_INCDIR}:g' -e 's:-rpath \$(libdir):-rpath ${libdir}:g' $i
+    done
 }
 
 INSANE_SKIP_${PN} = "rpaths"
@@ -183,9 +185,10 @@ INSANE_SKIP_${PN} = "rpaths"
 #}
 
 do_install_append(){
-	install -d ${D}${bindir}
-	install -m 0755 ${WORKDIR}/xbmc-support/xbmc.helper ${D}${bindir}
-	install -m 0755 ${WORKDIR}/xbmc-support/libxbmc_base.so ${D}${libdir}
+    find ${D} -name "*.cmake" -exec rm -rf {} \;
+    install -d ${D}${bindir}
+    install -m 0755 ${WORKDIR}/xbmc-support/xbmc.helper ${D}${bindir}
+    install -m 0755 ${WORKDIR}/xbmc-support/libxbmc_base.so ${D}${libdir}
 }
 
 do_package_qa(){
@@ -195,8 +198,8 @@ FILES_${PN} = "${libdir}/kodi ${libdir}/xbmc"
 FILES_${PN} += "${bindir}/kodi ${bindir}/xbmc ${bindir}/xbmc.helper"
 FILES_${PN} += "${datadir}/icons ${datadir}/kodi ${datadir}/xbmc"
 FILES_${PN} += "${libdir}/libxbmc_base.so"
-FILES_${PN}-dev = "${includedir}"
 FILES_${PN}-bin = "${bindir}/kodi-standalone ${bindir}/xbmc-standalone ${datadir}/xsessions"
+FILES_${PN}-dev = "${includedir}"
 FILES_${PN}-dbg += "${libdir}/kodi/.debug ${libdir}/kodi/*/.debug ${libdir}/kodi/*/*/.debug ${libdir}/kodi/*/*/*/.debug ${datadir}/applications"
 
 # xbmc uses some kind of dlopen() method for libcec so we need to add it manually
@@ -206,7 +209,16 @@ RRECOMMENDS_${PN}_append = " libcec \
                              python-re \
                              python-netclient \
                              libcurl \
+                             lsb \
+                             os-release \
                              "
-RRECOMMENDS_${PN}_append_libc-glibc = " glibc-charmap-ibm850 glibc-gconv-ibm850"
+RRECOMMENDS_${PN}_append_libc-glibc = " \
+                             glibc-charmap-ibm850 \
+                             glibc-gconv-ibm850 \
+                             glibc-gconv-unicode \
+                             glibc-gconv-utf-32 \
+                             glibc-charmap-utf-8 \
+                             glibc-localedata-en-us \
+                             "
 
 INSANE_SKIP_${PN} = "already-stripped"

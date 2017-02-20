@@ -1,39 +1,29 @@
 DESCRIPTION = "Enigma2 plugin to launch and play media from Kodi"
 SECTION = "base"
-LICENSE = "CLOSED"
-require conf/license/license-close.inc
+LICENSE = "GPLv2"
+LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 
-SRCDATE = "20160331_r0"
-
-PV = "1.0"
-PR = "${SRCDATE}_r0"
+PV = "17.0"
+PR = "r0"
 
 COMPATIBLE_MACHINE = "^(vuduo2|vusolo2|vusolose|vusolo4k|vuultimo4k|vuuno4k)$"
 
 DEPENDS += "enigma2 virtual/kodi"
-RDEPENDS_${PN} += "virtual/kodi"
+RDEPENDS_${PN} += "virtual/kodi vuplus-kodi-${MACHINE}-bin"
 
 RRECOMMENDS_${PN} = "enigma2-plugin-extensions-subssupport"
 
 PROVIDES += "enigma2-plugin-extensions-kodi"
 RPROVIDES_${PN} += "enigma2-plugin-extensions-kodi"
 
-SRC_URI = "http://archive.vuplus.com/download/build_support/kodi/e2xbmc-plugin_${SRCDATE}.tar.gz"
+SRCREV = "5d4ce1dc63d58b7d693db547e347c8e5711c1061"
+SRC_URI = "git://github.com/OpenSPA/kodiext.git;protocol=git;branch=master"
 
-S = "${WORKDIR}/plugin"
+S = "${WORKDIR}/git"
 
-PLUGIN_DIR="${D}${libdir}/enigma2/python/Plugins/Extensions/Kodi"
+FILES_${PN} = "${libdir}/enigma2/python/Plugins/Extensions/Kodi \
+    ${bindir}/kodiext"
 
-do_install() {
-	install -d ${PLUGIN_DIR}
-	install -m 0755 ${S}/*.py ${PLUGIN_DIR}
-	install -m 0755 ${S}/button.png ${PLUGIN_DIR}
-}
+inherit autotools
 
-do_package_qa() {
-}
-
-FILES_${PN}="/"
-
-SRC_URI[md5sum] = "670c29a6d7fe8cb09545e929196b6734"
-SRC_URI[sha256sum] = "58920ae07aa2f935205b1ea2c37389d5176714cef470a29466974dbf7b59750a"
+PACKAGE_ARCH = "${MACHINE}"
