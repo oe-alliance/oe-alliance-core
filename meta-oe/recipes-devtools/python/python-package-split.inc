@@ -1,6 +1,6 @@
 inherit python-dir
 
-PACKAGES =+ " ${PN}-src ${PN}-tests"
+PACKAGES =+ " ${PN}-src ${PN}-test"
 RDEPENDS_{PN}-src = "${PN}"
 
 SSTATE_DUPWHITELIST += "${STAGING_LIBDIR}/python2.7/site-packages/tests/__init__.py ${STAGING_LIBDIR}/python2.7/site-packages/tests/__init__.pyo"
@@ -23,7 +23,7 @@ FILES_${PN}-src = " \
     ${PYTHON_SITEPACKAGES_DIR}/*/*/*/*/*.h \
     "
 
-FILES_${PN}-tests += " \
+FILES_${PN}-test += " \
     ${PYTHON_SITEPACKAGES_DIR}/test \
     ${PYTHON_SITEPACKAGES_DIR}/tests \
     ${PYTHON_SITEPACKAGES_DIR}/Test \
