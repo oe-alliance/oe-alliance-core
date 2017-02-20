@@ -9,7 +9,7 @@ PR = "r0"
 COMPATIBLE_MACHINE = "^(vuduo2|vusolo2|vusolose|vusolo4k|vuultimo4k|vuuno4k)$"
 
 DEPENDS += "enigma2 virtual/kodi"
-RDEPENDS_${PN} += "virtual/kodi vuplus-kodi-${MACHINE}-bin"
+RDEPENDS_${PN} += "virtual/kodi kodi-${MACHINE}-bin"
 
 RRECOMMENDS_${PN} = "enigma2-plugin-extensions-subssupport"
 
