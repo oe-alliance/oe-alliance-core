@@ -78,9 +78,6 @@ ${@base_contains('MACHINEBUILD', 'osmega', 'osmega' , '', d)}\
 KERNEL_FILE = "kernel.bin"
 ROOTFS_FILE = "rootfs.bin"
 
-PREFERRED_VERSION_linux-xcore = "4.9"
-PREFERRED_VERSION_linux-libc-headers = "4.9"
-
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS = "\
     xcore-dvb-modules-${MACHINE_DRIVER} \
     "
