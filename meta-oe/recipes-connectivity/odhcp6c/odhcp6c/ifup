@@ -1,0 +1,8 @@
+#!/bin/sh
+
+[ "x$IFACE" = "xlo" ] && exit 0
+grep -Eq '^iface  *'${IFACE}'  *inet6  *' /etc/network/interfaces && exit 0
+
+odhcp6c -Nnone -d -p /var/run/odhcp6c.${IFACE}.pid ${IFACE}
+exit 0
+
