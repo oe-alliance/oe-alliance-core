@@ -1,4 +1,4 @@
-SUMMARY = "WS Discovery daemon"
+SUMMARY = "WS-Discovery daemon"
 DESCRIPTION = "Anounces a device to Windows via WSD"
 LICENSE = "GPLv2"
 
@@ -21,6 +21,6 @@ do_compile() {
 }
 
 do_install() {
-    install -d ${D}/${bindir}
-    install -m 755 ${S}/wsdd ${D}/${bindir}
+    install -d ${D}/${sbindir}
+    install -m 755 ${S}/wsdd ${D}/${sbindir}
 }
