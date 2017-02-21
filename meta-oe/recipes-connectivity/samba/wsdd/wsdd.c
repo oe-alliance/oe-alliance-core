@@ -1096,9 +1096,10 @@ int main(int argc, char *argv[])
 	struct sigaction act;
 	static const int enable = 1;
 	static const int disable = 0;
-	int conn, i, activity;
+	int conn, i, j, activity;
 	struct pollfd fds[MAX_CLIENTS + 3];
 	char iface[32] = "";
+	char c;
 
 	gethostname(cd_name, sizeof(cd_name));
 	readSmbConf();
@@ -1148,6 +1149,13 @@ int main(int argc, char *argv[])
 			       "            [-4 IPv4 only] [-6 IPv6 only]\n");
 			return(0);
 		}
+	}
+
+	j=0;
+	while (cd_name[j]) {
+		c=cd_name[j];
+		cd_name[j]=toupper(c);
+		j++;
 	}
 
 	if (usesyslog)
