@@ -37,7 +37,6 @@ RDEPENDS_${PN} = "\
     libcrypto-compat-0.9.7 \
     llmnrd \
     modutils-loadscript \
-    ndisc6-rdnssd \
     ntpdate \
     opkg \
     sdparm \
