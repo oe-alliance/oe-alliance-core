@@ -41,6 +41,5 @@ do_install() {
 }
 
 # opkg cares shit ...
-PROVIDES_${PN} += "ndisc6-rdnssd"
-RPROVIDES_${PN} += "ndisc6-rdnssd"
+RREPLACES_${PN} += "ndisc6-rdnssd"
 RCONFLICTS_${PN} += "ndisc6-rdnssd"
