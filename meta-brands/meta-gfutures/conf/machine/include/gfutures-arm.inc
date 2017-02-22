@@ -2,7 +2,7 @@
 IMAGE_CLASSES += "hd-emmc_image_multi"
 
 IMAGE_FSTYPES += "hd-emmc"
-IMAGE_ROOTFS_SIZE ?= "196608"
+IMAGE_ROOTFS_SIZE ?= "294912"
 
 TARGET_ARCH = "arm"
 DEFAULTTUNE = "cortexa15hf-neon-vfpv4"

@@ -77,6 +77,8 @@ DVBSKYPROVIDER = "kernel"
 
 MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS = "\
     kernel-module-cdfs \
+    ${@bb.utils.contains('MACHINE_FEATURES', 'v3d', 'hd-v3ddriver-${MACHINE}', '',d)} \
+    ${@bb.utils.contains('MACHINE_FEATURES', 'qtegls', 'hd-qteglfs-platform', '',d)} \
     "
 
 MACHINE_EXTRA_RRECOMMENDS = " \
@@ -96,6 +98,8 @@ DVBMEDIASINK_CONFIG = "--with-wma --with-wmv --with-pcm --with-dts --with-eac3 \
 "
 
 PREFERRED_PROVIDER_virtual/kernel = "linux-gfutures"
+PREFERRED_PROVIDER_virtual/egl = "hd-v3ddriver-${MACHINE}" 
+PREFERRED_PROVIDER_virtual/libgles2 = "hd-v3ddriver-${MACHINE}"
 
 MACHINE_FEATURES += "3dtv alsa hdmicec switchoff blindscan-tbs"
 
