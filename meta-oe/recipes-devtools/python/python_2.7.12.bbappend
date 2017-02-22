@@ -33,9 +33,12 @@ FILES_${PN}-src += "${libdir}/python${PYTHON_MAJMIN}/*/*.whl"
 FILES_${PN}-src += "${libdir}/python${PYTHON_MAJMIN}/*/*/*.whl"
 FILES_${PN}-src += "${libdir}/python${PYTHON_MAJMIN}/config/*"
 
+FILES_python-sqlite3-tests += "${libdir}/python${PYTHON_MAJMIN}/*/test* ${libdir}/python${PYTHON_MAJMIN}/*/*/test*"
+
 FILES_${PN}-test += " \
     ${libdir}/python${PYTHON_MAJMIN}/*/tests/* \
     ${libdir}/python${PYTHON_MAJMIN}/*/*/tests/* \
     ${libdir}/python${PYTHON_MAJMIN}/*/test/* \
     ${libdir}/python${PYTHON_MAJMIN}/*/*/test/* \
 "
+
