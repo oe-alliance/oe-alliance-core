@@ -8,7 +8,7 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r1"
+PR = "r2"
 
 SRC_URI = "git://git.lede-project.org/project/odhcp6c.git \
            file://ifup \
@@ -41,7 +41,5 @@ do_install() {
 }
 
 # opkg cares shit ...
-PROVIDES_${PN} += "ndisc6-rdnssd"
-RPROVIDES_${PN} += "ndisc6-rdnssd"
-RCONFLICTS_${PN} += "ndisc6-rdnssd"
 RREPLACES_${PN} += "ndisc6-rdnssd"
+RCONFLICTS_${PN} += "ndisc6-rdnssd"
