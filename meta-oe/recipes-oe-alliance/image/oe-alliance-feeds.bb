@@ -9,7 +9,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "${IMAGE_VERSION}"
-PR = "r14"
+PR = "r15"
 
 DEPENDS = "enigma2-plugin-drivers-usbserial"
 RECOMMENDS = "enigma2-plugin-extensions-et-livestream"
@@ -83,6 +83,7 @@ RDEPENDS_${PN} = " \
     net-snmp \
     ntfs-3g \
     ntp \
+    odhcp6c \
     ofgwrite \
     openresolv \
     openssh \
