@@ -1,0 +1,36 @@
+From cb42f72318e284519cf155292f948a93383c09c6 Mon Sep 17 00:00:00 2001
+From: christophecvr <stefansat@telenet.be>
+Date: Fri, 24 Feb 2017 14:34:33 +0100
+Subject: [PATCH] Try-out continu in hls to avoid blocking of main thread.
+
+ Looks like the error self was false,
+ If we just continue it retries,and
+ the media just continues to play ok.
+ The main advantage is that we avoid a 
+ main e2 thread blocked with stb freeze
+ as result. Even if the media would stop,
+ We do not have a frozen stb.
+
+	modified:   ext/hls/m3u8.c
+---
+ ext/hls/m3u8.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/ext/hls/m3u8.c b/ext/hls/m3u8.c
+index e85592e..5feef75 100644
+--- a/ext/hls/m3u8.c
++++ b/ext/hls/m3u8.c
+@@ -365,8 +365,8 @@ gst_m3u8_update_check_consistent_media_seqnums (GstM3U8 * self,
+           }
+         } else if (g_str_equal (f1->uri, f2->uri)) {
+           /* Same URIs but different sequences, this is bad! */
+-          GST_ERROR ("Media sequences inconsistent, ignoring");
+-          return FALSE;
++          GST_ERROR ("Media sequences inconsistent, ignoring, but try anyway");
++          //return FALSE;
+         } else {
+           /* Not same URI, not same sequence but by construction sequence
+            * must be higher in the new one. All good in that case, if it
+-- 
+2.7.4
+

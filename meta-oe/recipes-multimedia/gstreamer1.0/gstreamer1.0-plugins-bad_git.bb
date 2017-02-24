@@ -23,10 +23,11 @@ SRC_URI += "file://configure-allow-to-disable-libssh2.patch \
 			file://0004-rtmp-hls-tsdemux-fix.patch \
 			file://fix-maybe-uninitialized-warnings-when-compiling-with-Os.patch \
 			file://dvbapi5-fix-old-kernel.patch \
+			file://hls-main-thread-block.patch \
 			"
 S = "${WORKDIR}/git"
 
-GST_VERSION_FULL ="1.11.1.1-01"
+GST_VERSION_FULL ="1.11.1.1-02"
 inherit gitpkgv
 PV = "${GST_VERSION_FULL}+git${SRCPV}"
 PKGV = "${GST_VERSION_FULL}+git${GITPKGV}"
