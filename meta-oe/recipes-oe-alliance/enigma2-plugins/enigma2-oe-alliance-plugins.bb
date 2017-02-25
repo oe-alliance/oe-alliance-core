@@ -18,6 +18,7 @@ PROVIDES += " \
     enigma2-plugin-extensions-autotimer \
     enigma2-plugin-extensions-btdevicesmanager \
     enigma2-plugin-systemplugins-blindscan \
+    enigma2-plugin-extensions-channelsimporter \
     enigma2-plugin-extensions-dlnabrowser \
     enigma2-plugin-extensions-dlnaserver \
     enigma2-plugin-systemplugins-firmwareupgrade \
