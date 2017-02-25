@@ -131,7 +131,7 @@ inherit autotools-brokensep gitpkgv pythonnative
 SRCREV = "${AUTOREV}"
 PV = "${IMAGE_VERSION}+git${SRCPV}"
 PKGV = "${IMAGE_VERSION}+git${GITPKGV}"
-PR = "r2"
+PR = "r3"
 
 SRC_URI = "${OEA_PLUGINS_URI}"
 
