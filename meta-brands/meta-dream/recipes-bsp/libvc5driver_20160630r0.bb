@@ -5,4 +5,4 @@ SRC_URI[dm900.sha256sum] = "f566ae2f2afd0a0706b28d86bac688131c60f57319f22a5dc231
 
 PRECOMPILED_ARCH_arm = "dm900"
 
-inherit opendreambox-precompiled-binary2
+inherit opendreambox-precompiled-binary3
