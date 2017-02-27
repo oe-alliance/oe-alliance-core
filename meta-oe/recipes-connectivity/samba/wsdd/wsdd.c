@@ -192,51 +192,24 @@ void daemonize(void)
 void readSmbConf()
 {
 	FILE* fp;
-	char* line = NULL;
-	size_t len = 0;
-	ssize_t read;
-	char* pos, *end;
 
-	fp = fopen("/etc/samba/smb.conf", "r");
-	if (fp == NULL)
-	{
-		printf("Warning: No /etc/samba/smb.conf found\n");
+	fp = popen("testparm -s -l --parameter-name=\"netbios name\" 2>/dev/null", "r");
+	if (fp == NULL) {
+		printf("Failed to run testparm\n" );
 		return;
+	} else {
+		fgets(cd_name, sizeof(cd_name)-1, fp);
+		pclose(fp);
 	}
 
-	while ((read = getline(&line, &len, fp)) != -1)
-	{
-		if ((strstr(line, "workgroup") != NULL || strstr(line, "netbios name") != NULL)
-		 && line[0] != '#' && (pos = strstr(line, "=")) != NULL)
-		{
-			pos++;
-			end = line + strlen(line) - 1;
-			// trailing spaces
-			while(end > pos && (isspace(*end) || *end == '\n' || *end == '\r'))
-				end--;
-			// leading spaces
-			while (pos < end && isspace(*pos))
-				pos++;
-
-			if (end != pos)
-			{
-				if (strstr(line, "workgroup") != NULL)
-				{
-					strncpy(cd_workgroup, pos, end - pos + 1);
-					cd_workgroup[end - pos + 1] = '\0';
-				}
-				else if (strstr(line, "netbios name") != NULL)
-				{
-					strncpy(cd_name, pos, end - pos + 1);
-					cd_name[end - pos + 1] = '\0';
-				}
-			}
-		}
+	fp = popen("testparm -s -l --parameter-name=\"workgroup\" 2>/dev/null", "r");
+	if (fp == NULL) {
+		printf("Failed to run testparm\n" );
+		return;
+	} else {
+		fgets(cd_workgroup, sizeof(cd_workgroup)-1, fp);
+		pclose(fp);
 	}
-
-	fclose(fp);
-	if (line)
-		free(line);
 }
 
 /* Find xml tag value */
