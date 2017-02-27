@@ -31,6 +31,7 @@ RDEPENDS_${PN} = "\
     python-js2py \
     ofgwrite \
     python-gdata \
+    python-service-identity \
     libshowiframe \
     dvbsnoop \
     bash \
