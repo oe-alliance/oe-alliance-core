@@ -1,4 +1,5 @@
 #!/bin/sh
+# shellcheck shell=dash
 # Based on odhcp6c sample script and rdnssd merge-hook
 
 [ -z "$1" ] && echo "Error: should be called from odhcp6c" && exit 1
@@ -7,12 +8,13 @@ IFACE=$1
 STATE=$2
 DEBUG=0
 
+DOMAINS=${DOMAINS:=""}
+
 update_resolv() {
 	sysconfdir='/etc'
 	localstatedir='/var/run/odhcp6c'
 
 	RE_NSV4='^nameserver  *\([0-9]\{1,3\}\.\)\{3,3\}[0-9]\{1,3\} *$'
-	RE_NSV4OR6='^nameserver  *[a-fA-F0-9:\.]\{1,46\}\(%[a-zA-Z0-9]\{1,\}\)\{,1\} *$'
 
 	resolvconf="$sysconfdir/resolv.conf"
 	myresolvconf="$localstatedir/resolv.${IFACE}.conf"
@@ -23,56 +25,60 @@ update_resolv() {
 	count=0
 	while [ -e $lockfile ]; do
 		sleep 1
-		count=$(expr $count + 1)
+		count=$((count + 1))
 		[ $count -ge 30 ] && break
 	done
-	touch $lockfile
+	touch "$lockfile"
 
 	limit=3
-	dns4count=$(grep "$RE_NSV4" $resolvconf | wc -l)
-	[ $dns4count -ge 1 ] && limit=2
-	[ $dns4count -ge 2 ] && limit=1
+	dns4count=$(grep -c "$RE_NSV4" $resolvconf)
+	[ "$dns4count" -ge 1 ] && limit=2
+	[ "$dns4count" -ge 2 ] && limit=1
 
-	set -- $ALL_DOMAINS
+	set -- "$ALL_DOMAINS"
 	DOMAIN="$1"
 	if [ ! "x$DOMAIN" = "x" ]; then
-		echo "domain $DOMAIN" > $myresolvconf
+		echo "domain $DOMAIN" > "$myresolvconf"
 	else
-		echo $(cat $resolvconf | grep "^domain " | head -n 1) > $myresolvconf
+		grep "^domain " $resolvconf | head -n 1 > "$myresolvconf"
 	fi
 
-	rm $myresolvconf.search 2>/dev/null || true
-	touch $myresolvconf.search
+	rm "$myresolvconf.search" 2>/dev/null || true
+	touch "$myresolvconf.search"
 	for domain in $ALL_DOMAINS; do
-		echo "search "$DOMAIN >> $myresolvconf.search
+		echo "search $DOMAIN" >> "$myresolvconf.search"
 	done
-	cat $resolvconf | grep "^search" >> $myresolvconf.search
+	grep "^search" $resolvconf >> "$myresolvconf.search"
 
-	cat $myresolvconf.search | sort | uniq >> $myresolvconf
-	rm $myresolvconf.search 2>/dev/null || true
+	sort "$myresolvconf.search" | uniq >> "$myresolvconf"
+	rm "$myresolvconf.search" 2>/dev/null || true
 
-	cat $resolvconf | egrep -v "^domain|^nameserver|^search|^ *$" >> $myresolvconf
+	grep -E -v "^domain|^nameserver|^search|^ *$" $resolvconf >> "$myresolvconf"
 
 	dnscount=0
 	for dns in $ALL_DNS; do
-		dnscount=$(expr $dnscount + 1)
+		dnscount=$((dnscount + 1))
 		if [ $dnscount -le $limit ]; then
-			/bin/echo -n "nameserver "$dns >> $myresolvconf
-			if [ "${dns:0:4}" = "fe80" ]; then
-				echo "%"$IFACE >> $myresolvconf
-			else
-				echo >> $myresolvconf
-			fi
+			/bin/echo -n "nameserver $dns" >> "$myresolvconf"
+			case $dns in
+			        fe80*)
+					echo "%$IFACE" >> "$myresolvconf"
+		                	;;
+			        *)
+					echo >> "$myresolvconf"
+					;;
+			esac
 		else
 			break
 		fi
 	done
-	grep "$RE_NSV4" $resolvconf | head -n $(expr 4 - $dnscount) >> $myresolvconf
+	grep "$RE_NSV4" $resolvconf | head -n $((4 - dnscount)) >> "$myresolvconf"
 
-	if [ "x$(diff $resolvconf $myresolvconf)" = "x" ]; then
-		rm $myresolvconf
+	#if [ "x$(diff $resolvconf $myresolvconf)" = "x" ]; then
+	if diff "$resolvconf" "$myresolvconf" >/dev/null; then
+		rm "$myresolvconf"
 	else
-		mv -f $myresolvconf $resolvconf
+		mv -f "$myresolvconf" "$resolvconf"
 	fi
 	rm $lockfile
 }
@@ -160,41 +166,41 @@ teardown_interface() {
 read_auto() {
 	# Method auto with option "dhcp" = Use stateless DHCPv6
 
-	DHCP_CONF=$(awk -v par=$IFACE '
+	DHCP_CONF=$(awk -v par="$IFACE" '
 	/^iface/ && $2==par && $3=="inet6" && $4=="auto" {f=1}
 	/^iface/ && $2==par && $3=="inet" {f=0}
 	/^iface/ && $2!=par {f=0}
 	f && /^\s*dhcp/ {print $2; f=0}' /etc/network/interfaces)
-	[ "x$DHCP_CONF" == "x" ] && DHCP_CONF=1
+	[ "x$DHCP_CONF" = "x" ] && DHCP_CONF=1
 }
 
 read_static() {
 	# Method static with option "autoconf" = Perform stateless autoconfiguration
 
-	RA_CONF=$(awk -v par=$IFACE '
+	RA_CONF=$(awk -v par="$IFACE" '
 	/^iface/ && $2==par && $3=="inet6" && $4=="static" {f=1}
 	/^iface/ && $2==par && $3=="inet" {f=0}
 	/^iface/ && $2!=par {f=0}
 	f && /^\s*autoconf/ {print $2; f=0}' /etc/network/interfaces)
-	[ "x$RA_CONF" == "x" ] && RA_CONF=0
+	[ "x$RA_CONF" = "x" ] && RA_CONF=0
 }
 
 read_dhcp() {
 	# Method dhcp with option "autoconf" = Perform stateless autoconfiguration
 
-	RA_CONF=$(awk -v par=$IFACE '
+	RA_CONF=$(awk -v par="$IFACE" '
 	/^iface/ && $2==par && $3=="inet6" && $4=="dhcp" {f=1}
 	/^iface/ && $2==par && $3=="inet" {f=0}
 	/^iface/ && $2!=par {f=0}
 	f && /^\s*autoconf/ {print $2; f=0}' /etc/network/interfaces)
-	[ "x$RA_CONF" == "x" ] && RA_CONF=1
+	[ "x$RA_CONF" = "x" ] && RA_CONF=1
 }
 
 
 get_config() {
 	METHOD=""
-	METHOD=$(grep '^iface [[:space:]]*'${IFACE}' [[:space:]]*inet6' /etc/network/interfaces | awk '{ print $4 }')
-	if [ "x$METHOD" == "x" ]; then
+	METHOD=$(grep "^iface [[:space:]]*${IFACE} [[:space:]]*inet6" /etc/network/interfaces | awk '{ print $4 }')
+	if [ "x$METHOD" = "x" ]; then
 		METHOD="auto"
 		RA_CONF=1
 		DHCP_CONF=1
@@ -205,28 +211,28 @@ get_config() {
 				DHCP_ADDR=0
 				RA_CONF=1
 				read_auto
-				break
+				return
 				;;
 			dhcp)
 				DHCP_ADDR=1
 				DHCP_CONF=1
 				read_dhcp
-				break
+				return
 				;;
 			manual)
 				DHCP_ADDR=0
 				DHCP_CONF=0
 				RA_CONF=0
-				break
+				return
 				;;
 			static)
 				DHCP_ADDR=0
 				DHCP_CONF=0
 				read_static
-				break
+				return
 				;;
 			*)
-				break
+				return
 				;;
 		esac
 	fi
@@ -234,7 +240,7 @@ get_config() {
 
 
 merge_dhcp_ra() {
-	if [ "x$DHCP_CONF" = "x0" -a "x$RA_CONF" = "x0" ]; then
+	if [ "x$DHCP_CONF" = "x0" ] && [ "x$RA_CONF" = "x0" ]; then
 
 		# Neither RA nor DHCPv6
 
@@ -246,7 +252,7 @@ merge_dhcp_ra() {
 
 		ALL_DNS=$RA_DNS
 		ALL_DOMAINS=$RA_DOMAINS
-	elif [ "x$RA_CONF" == "x0" ]; then
+	elif [ "x$RA_CONF" = "x0" ]; then
 
 		# Only DHCP
 
@@ -278,21 +284,26 @@ merge_dhcp_ra() {
 
 	dnscount=0
 	for dns in $ALL_DNS; do
-		dnscount=$(expr $dnscount + 1)
+		dnscount=$((dnscount + 1))
 	done
 
 	if [ $dnscount -gt 1 ]; then
 		NEW_DNS=""
 		for dns in $ALL_DNS; do
-			[ "${dns:0:4}" = "fe80" ] || NEW_DNS="$NEW_DNS $dns"
+			case $dns in
+			        fe80*)
+		                	;;
+			        *)
+					NEW_DNS="$NEW_DNS $dns"
+					;;
+			esac
 		done
 		dnscount=0
 		for dns in $NEW_DNS; do
-			dnscount=$(expr $dnscount + 1)
+			dnscount=$((dnscount + 1))
 		done
 		[ $dnscount -ge 1 ] && ALL_DNS=$NEW_DNS
 	fi
-	ALL_DNS=$(echo $ALL_DNS)
 }
 
 
@@ -347,8 +358,5 @@ case $STATE in
 		[ "x$ALL_DNS" = "x" ] || update_resolv
 		;;
 esac
-
-# user rules
-[ -f /etc/odhcp6c.user ] && . /etc/odhcp6c.user
 
 exit 0

@@ -1,0 +1,345 @@
+--- a/networking/ifupdown.c	2015-10-24 03:29:00.000000000 +0200
++++ b/networking/ifupdown.c	2017-01-27 04:29:11.058532800 +0100
+@@ -359,9 +359,49 @@
+ 
+ #endif /* FEATURE_IFUPDOWN_IPV4 || FEATURE_IFUPDOWN_IPV6 */
+ 
++static int FAST_FUNC static_down(struct interface_defn_t *ifd, execfn *exec)
++{
++	int result=0;
++# if ENABLE_FEATURE_IFUPDOWN_IP
++	result += execute("ip -6 addr flush dev %iface% scope global", ifd, exec);
++	result += execute("ip -4 addr flush dev %iface%", ifd, exec);
++	result += execute("ip link set %iface% down", ifd, exec);
++# else
++	result += execute("ifconfig %iface% down", ifd, exec);
++# endif
++	result += execute("sysctl -e -q -w net.ipv6.conf.%iface%.autoconf=$(sysctl -n net.ipv6.conf.default.autoconf)", ifd, exec);
++	result += execute("sysctl -e -q -w net.ipv6.conf.%iface%.accept_ra=$(sysctl -n net.ipv6.conf.default.accept_ra)", ifd, exec);
++# if ENABLE_FEATURE_IFUPDOWN_IP
++	return ((result == 5) ? 2 : 0);
++# else
++	return ((result == 3) ? 2 : 0);
++# endif
++}
+ 
+ #if ENABLE_FEATURE_IFUPDOWN_IPV6
+ 
++struct dhcp6_client_t {
++	const char *name;
++	const char *startcmd;
++	const char *stopcmd;
++};
++
++static const struct dhcp6_client_t ext_dhcp6_clients[] = {
++	{ "odhcp6c",
++		"odhcp6c -Ntry[[ -P%prefixlen%]] -t120"
++			" -d -p /var/run/odhcp6c.%iface%.pid %iface%",
++		"kill -9 `cat /var/run/odhcp6c.%iface%.pid` 2>/dev/null",
++	},
++};
++
++static const struct dhcp6_client_t ext_rdns6_clients[] = {
++	{ "odhcp6c",
++		"odhcp6c -Nnone[[ -P%prefixlen%]] -t120"
++			" -d -p /var/run/odhcp6c.%iface%.pid %iface%",
++		"kill -9 `cat /var/run/odhcp6c.%iface%.pid` 2>/dev/null",
++	},
++};
++
+ static int FAST_FUNC loopback_up6(struct interface_defn_t *ifd, execfn *exec)
+ {
+ # if ENABLE_FEATURE_IFUPDOWN_IP
+@@ -383,36 +423,222 @@
+ # endif
+ }
+ 
+-static int FAST_FUNC manual_up_down6(struct interface_defn_t *ifd UNUSED_PARAM, execfn *exec UNUSED_PARAM)
++static int FAST_FUNC auto_up6(struct interface_defn_t *ifd, execfn *exec)
+ {
+-	return 1;
++	unsigned i;
++	char ra_cmd[60];
++	int result;
++	int res = 0;
++
++	// Default values as in Debian
++	char *ra="2";		// Accept router advertisements and forward
++
++	if (get_var("accept_ra", 9, ifd)) {
++		ra = get_var("accept_ra", 9, ifd);
++	};
++	sprintf(ra_cmd, "sysctl -e -q -w net.ipv6.conf.%%iface%%.accept_ra=%s", ra);
++
++	result = execute("sysctl -e -q -w net.ipv6.conf.%iface%.autoconf=1", ifd, exec);
++	result += execute(ra_cmd, ifd, exec);
++# if ENABLE_FEATURE_IFUPDOWN_IP
++	result += execute("ip link set[[ mtu %mtu%]][[ addr %hwaddress%]] %iface% up", ifd, exec);
++# else
++	result += execute("ifconfig %iface%[[ media %media%]][[ hw %hwaddress%]][[ mtu %mtu%]] up", ifd, exec);
++# endif
++	for (i = 0; i < ARRAY_SIZE(ext_rdns6_clients); i++) {
++		if (executable_exists(ext_rdns6_clients[i].name)) {
++			res = execute(ext_rdns6_clients[i].startcmd, ifd, exec);
++			if (res) break;
++		}
++	}
++	if (!res)
++		bb_error_msg("no rdns6 clients found");
++	result += res;
++	return ((result >= 3) ? 4 : 0);
+ }
+ 
+-static int FAST_FUNC static_up6(struct interface_defn_t *ifd, execfn *exec)
++static int FAST_FUNC auto_down6(struct interface_defn_t *ifd, execfn *exec)
++{
++	unsigned i;
++	int result;
++	int res;
++	result = execute("sysctl -e -q -w net.ipv6.conf.%iface%.autoconf=$(sysctl -n net.ipv6.conf.default.autoconf)", ifd, exec);
++	result += execute("sysctl -e -q -w net.ipv6.conf.%iface%.accept_ra=$(sysctl -n net.ipv6.conf.default.accept_ra)", ifd, exec);
++	for (i = 0; i < ARRAY_SIZE(ext_rdns6_clients); i++) {
++		if (executable_exists(ext_rdns6_clients[i].name)) {
++			res = execute(ext_rdns6_clients[i].stopcmd, ifd, exec);
++			if (res) break;
++		}
++	}
++	if (!res) bb_error_msg("warning: no rdns6 clients found and stopped");
++	result += res;
++	/* Sleep a bit, otherwise static_down tries to bring down interface too soon,
++	   and it may come back up because udhcpc is still shutting down */
++	usleep(100000);
++	result += static_down(ifd, exec);
++	return ((result == 5) ? 5 : 0);
++}
++
++static int FAST_FUNC manual_up6(struct interface_defn_t *ifd, execfn *exec)
++{
++	int result;
++	result = execute("sysctl -e -q -w net.ipv6.conf.%iface%.autoconf=0", ifd, exec);
++	result += execute("sysctl -e -q -w net.ipv6.conf.%iface%.accept_ra=0", ifd, exec);
++	return ((result == 2) ? 2 : 0);
++}
++
++static int FAST_FUNC manual_down6(struct interface_defn_t *ifd, execfn *exec)
+ {
+ 	int result;
++	result = execute("sysctl -e -q -w net.ipv6.conf.%iface%.autoconf=$(sysctl -n net.ipv6.conf.default.autoconf)", ifd, exec);
++	result += execute("sysctl -e -q -w net.ipv6.conf.%iface%.accept_ra=$(sysctl -n net.ipv6.conf.default.accept_ra)", ifd, exec);
++	return ((result == 2) ? 2 : 0);
++}
++
++static int FAST_FUNC dhcp_up6(struct interface_defn_t *ifd, execfn *exec)
++{
++	char ra_cmd[60];
++	char ac_cmd[60];
++	int result;
++	int res;
++
++	// Default values as in Debian
++	char *ra="1";		// Accept router advertisements
++	char *autoconf="1";	// Perform stateless autoconfiguration (0=off, 1=on)
++
++	if (get_var("accept_ra", 9, ifd)) {
++		ra = get_var("accept_ra", 9, ifd);
++	};
++	if (get_var("autoconf", 8, ifd)) {
++		autoconf = get_var("autoconf", 4, ifd);
++	};
++
++	sprintf(ra_cmd, "sysctl -e -q -w net.ipv6.conf.%%iface%%.accept_ra=%s", ra);
++	sprintf(ac_cmd, "sysctl -e -q -w net.ipv6.conf.%%iface%%.autoconf=%s", autoconf);
++
++	result = execute(ra_cmd, ifd, exec);
++	result += execute(ac_cmd, ifd, exec);
+ # if ENABLE_FEATURE_IFUPDOWN_IP
+-	result = execute("ip addr add %address%/%netmask% dev %iface%[[ label %label%]]", ifd, exec);
+ 	result += execute("ip link set[[ mtu %mtu%]][[ addr %hwaddress%]] %iface% up", ifd, exec);
+-	/* Was: "[[ ip ....%gateway% ]]". Removed extra spaces w/o checking */
+-	result += execute("[[ip route add ::/0 via %gateway%]][[ metric %metric%]]", ifd, exec);
+ # else
+-	result = execute("ifconfig %iface%[[ media %media%]][[ hw %hwaddress%]][[ mtu %mtu%]] up", ifd, exec);
+-	result += execute("ifconfig %iface% add %address%/%netmask%", ifd, exec);
+-	result += execute("[[route -A inet6 add ::/0 gw %gateway%[[ metric %metric%]]]]", ifd, exec);
++	result += execute("ifconfig %iface%[[ media %media%]][[ hw %hwaddress%]][[ mtu %mtu%]] up", ifd, exec);
+ # endif
++	unsigned i;
++	for (i = 0; i < ARRAY_SIZE(ext_dhcp6_clients); i++) {
++		if (executable_exists(ext_dhcp6_clients[i].name)) {
++			res = execute(ext_dhcp6_clients[i].startcmd, ifd, exec);
++			if (res) break;
++		}
++	}
++	if (!res) bb_error_msg("no dhcpv6 clients found");
++	result += res;
++	return ((result == 4) ? 4 : 0);
++}
++
++static int FAST_FUNC dhcp_down6(struct interface_defn_t *ifd, execfn *exec)
++{
++	int result;
++	unsigned i;
++
++	for (i = 0; i < ARRAY_SIZE(ext_dhcp6_clients); i++) {
++		if (executable_exists(ext_dhcp6_clients[i].name)) {
++			result = execute(ext_dhcp6_clients[i].stopcmd, ifd, exec);
++			if (result) break;
++		}
++	}
++	if (!result)
++		bb_error_msg("warning: no dhcpv6 clients found and stopped");
++
++	/* Sleep a bit, otherwise static_down tries to bring down interface too soon,
++	   and it may come back up because udhcpc is still shutting down */
++	usleep(100000);
++	result += static_down(ifd, exec);
+ 	return ((result == 3) ? 3 : 0);
+ }
+ 
+-static int FAST_FUNC static_down6(struct interface_defn_t *ifd, execfn *exec)
++static int FAST_FUNC static_up6(struct interface_defn_t *ifd, execfn *exec)
+ {
++	char autoconf_cmd[60];
++	char ra_cmd[60];
++	int result;
++	int res;
++	unsigned i;
++
++	// Default values as in Debian
++	char *autoconf="0";	// Also enable autoconf
++	char *ra="0";		// Accept router advertisements and forward
++	char *prefix="0";	// Request a prefix through DHCPv6 prefix delegation
++
++	if (get_var("autoconf", 8, ifd)) {
++		autoconf = get_var("autoconf", 8, ifd);
++	};
++	if (get_var("accept_ra", 9, ifd)) {
++		ra = get_var("accept_ra", 9, ifd);
++	};
++
++	sprintf(autoconf_cmd, "sysctl -e -q -w net.ipv6.conf.%%iface%%.autoconf=%s", autoconf);
++	sprintf(ra_cmd, "sysctl -e -q -w net.ipv6.conf.%%iface%%.accept_ra=%s", ra);
++
++	result = execute(autoconf_cmd, ifd, exec);
++	result += execute(ra_cmd, ifd, exec);
+ # if ENABLE_FEATURE_IFUPDOWN_IP
+-	return execute("ip link set %iface% down", ifd, exec);
++	result += execute("ip -6 addr add %address%/%netmask% dev %iface%[[ label %label%]]", ifd, exec);
++	result += execute("ip link set[[ mtu %mtu%]][[ addr %hwaddress%]] %iface% up", ifd, exec);
++	result += execute("[[ip -6 route add ::/0 via %gateway%]][[ metric %metric%]]", ifd, exec);
+ # else
+-	return execute("ifconfig %iface% down", ifd, exec);
++	result += execute("ifconfig %iface%[[ media %media%]][[ hw %hwaddress%]][[ mtu %mtu%]] up", ifd, exec);
++	result += execute("ifconfig %iface% add %address%/%netmask%", ifd, exec);
++	result += execute("[[route -A inet6 add ::/0 gw %gateway%[[ metric %metric%]]]]", ifd, exec);
+ # endif
++	int dhcp=strtol(autoconf, NULL, 10);
++	if (dhcp) {
++		for (i = 0; i < ARRAY_SIZE(ext_rdns6_clients); i++) {
++			if (executable_exists(ext_rdns6_clients[i].name)) {
++				res = execute(ext_rdns6_clients[i].startcmd, ifd, exec);
++				if (res) break;
++			}
++		}
++		if (!res) bb_error_msg("no rdns6 clients found");
++		result += res;
++	} else {
++		result++;
++	}
++	return ((result == 6) ? 6 : 0);
++}
++
++static int FAST_FUNC static_down6(struct interface_defn_t *ifd, execfn *exec)
++{
++	char autoconf_cmd[60];
++	char ra_cmd[60];
++	int result;
++	char *autoconf;
++	unsigned i;
++
++	if (get_var("autoconf", 8, ifd)) {
++		autoconf = get_var("autoconf", 8, ifd);
++	}
++	int dhcp=strtol(autoconf, NULL, 10);
++
++	if (dhcp) {
++		for (i = 0; i < ARRAY_SIZE(ext_rdns6_clients); i++) {
++			if (executable_exists(ext_rdns6_clients[i].name)) {
++				result = execute(ext_rdns6_clients[i].stopcmd, ifd, exec);
++				if (result) break;
++			}
++		}
++		if (!result) bb_error_msg("warning: no rdns6 clients found and stopped");
++	} else {
++		result = 1;
++	}
++
++	/* Sleep a bit, otherwise static_down tries to bring down interface too soon,
++	   and it may come back up because udhcpc is still shutting down */
++	usleep(100000);
++	result += static_down(ifd, exec);
++	return ((result == 3) ? 3 : 0);
+ }
+ 
++
+ # if ENABLE_FEATURE_IFUPDOWN_IP
+ static int FAST_FUNC v4tunnel_up(struct interface_defn_t *ifd, execfn *exec)
+ {
+@@ -427,7 +653,11 @@
+ 
+ static int FAST_FUNC v4tunnel_down(struct interface_defn_t * ifd, execfn * exec)
+ {
+-	return execute("ip tunnel del %iface%", ifd, exec);
++	int result;
++	result = execute("ip tunnel del %iface%", ifd, exec);
++	result += execute("ip -6 addr flush %iface% scope global", ifd, exec);
++	result += execute("ip -6 route flush dev %iface%", ifd, exec);
++	return ((result == 3) ? 3 : 0);
+ }
+ # endif
+ 
+@@ -435,8 +665,10 @@
+ # if ENABLE_FEATURE_IFUPDOWN_IP
+ 	{ "v4tunnel" , v4tunnel_up     , v4tunnel_down   , },
+ # endif
++	{ "auto"     , auto_up6        , auto_down6      , },
++	{ "dhcp"     , dhcp_up6        , dhcp_down6      , },
+ 	{ "static"   , static_up6      , static_down6    , },
+-	{ "manual"   , manual_up_down6 , manual_up_down6 , },
++	{ "manual"   , manual_up6      , manual_down6    , },
+ 	{ "loopback" , loopback_up6    , loopback_down6  , },
+ };
+ 
+@@ -467,7 +699,7 @@
+ {
+ # if ENABLE_FEATURE_IFUPDOWN_IP
+ 	int result;
+-	result = execute("ip addr flush dev %iface%", ifd, exec);
++	result = execute("ip -f inet addr flush dev %iface%", ifd, exec);
+ 	result += execute("ip link set %iface% down", ifd, exec);
+ 	return ((result == 2) ? 2 : 0);
+ # else
+@@ -497,22 +729,6 @@
+ # endif
+ }
+ 
+-static int FAST_FUNC static_down(struct interface_defn_t *ifd, execfn *exec)
+-{
+-	int result;
+-# if ENABLE_FEATURE_IFUPDOWN_IP
+-	result = execute("ip addr flush dev %iface%", ifd, exec);
+-	result += execute("ip link set %iface% down", ifd, exec);
+-# else
+-	/* result = execute("[[route del default gw %gateway% %iface%]]", ifd, exec); */
+-	/* Bringing the interface down deletes the routes in itself.
+-	   Otherwise this fails if we reference 'gateway' when using this from dhcp_down */
+-	result = 1;
+-	result += execute("ifconfig %iface% down", ifd, exec);
+-# endif
+-	return ((result == 2) ? 2 : 0);
+-}
+-
+ # if ENABLE_FEATURE_IFUPDOWN_EXTERNAL_DHCP
+ struct dhcp_client_t {
+ 	const char *name;
+
