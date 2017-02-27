@@ -47,7 +47,7 @@ INITSCRIPT_NAME_${PN}-cron = "${BPN}-cron"
 INITSCRIPT_PARAMS_${PN}-mdev = "start 04 S ."
 FILES_${PN}-cron = "${sysconfdir}/cron ${sysconfdir}/init.d/${BPN}-cron"
 RDEPENDS_${PN}-cron += "${PN}"
-
+RDEPENDS_${PN} += "odhcp6c"
 
 do_install_append() {
     if grep -q "CONFIG_CRONTAB=y" ${WORKDIR}/defconfig; then
