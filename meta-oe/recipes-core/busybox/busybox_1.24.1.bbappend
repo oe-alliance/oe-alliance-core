@@ -1,4 +1,4 @@
-PR .= ".32"
+PR .= ".34"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 SRC_URI += " \
@@ -13,6 +13,7 @@ SRC_URI += " \
             file://inetd.conf \
             file://vi.sh \
             file://0001-Prevent-telnet-connections-from-the-internet-to-the-.patch \
+            file://0002-Extended-network-interfaces-support.patch \
             "
 
 # we do not really depend on mtd-utils, but as mtd-utils replaces 
