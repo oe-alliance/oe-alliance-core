@@ -14,8 +14,8 @@ S = "${WORKDIR}"
 
 SRC_URI_gb800solo = " file://burn.bat"
 SRC_URI = "file://warning.bin \
-    ${@base_contains("MACHINE_FEATURES", "gigabluelcd220", "file://lcdwaitkey220.bin file://lcdwarning220.bin" , "", d)} \
-    ${@base_contains("MACHINE_FEATURES", "gigabluelcd400", "file://lcdwaitkey400.bin file://lcdwarning400.bin" , "", d)} \
+    ${@bb.utils.contains("MACHINE_FEATURES", "gigabluelcd220", "file://lcdwaitkey220.bin file://lcdwarning220.bin" , "", d)} \
+    ${@bb.utils.contains("MACHINE_FEATURES", "gigabluelcd400", "file://lcdwaitkey400.bin file://lcdwarning400.bin" , "", d)} \
 "
 
 ALLOW_EMPTY_${PN} = "1"

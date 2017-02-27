@@ -16,7 +16,7 @@ inherit autotools update-rc.d gettext
 
 do_install_append() {
     install -d ${D}${sysconfdir}/init.d
-    install -m 0755 ${WORKDIR}/init ${D}${sysconfdir}/init.d/transmissiond
+    install -m 0755 ${WORKDIR}/init ${D}${sysconfdir}/init.d/transmission
     install -d ${D}${sysconfdir}/default
     install -m 0755 ${WORKDIR}/config ${D}${sysconfdir}/default/transmission-daemon
     install -d ${D}${localstatedir}/lib/transmission-daemon

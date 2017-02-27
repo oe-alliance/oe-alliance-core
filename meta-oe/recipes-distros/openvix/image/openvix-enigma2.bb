@@ -8,7 +8,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "${IMAGE_VERSION}"
-PR = "r10"
+PR = "r12"
 
 inherit packagegroup
 
@@ -24,12 +24,13 @@ RDEPENDS_${PN} = "\
 
 RRECOMMENDS_${PN} = "\
     enigma2-plugin-extensions-autotimer \
+    enigma2-plugin-extensions-epgimport \
     enigma2-plugin-extensions-epgsearch \
     enigma2-plugin-extensions-imdb \
-    enigma2-plugin-extensions-epgimport \
     enigma2-plugin-systemplugins-crossepg \
-    ${@base_contains("MACHINE_FEATURES", "uianimation", "enigma2-plugin-systemplugins-animationsetup" , "", d)} \
-    ${@base_contains("MACHINE_FEATURES", "osdanimation", "enigma2-plugin-systemplugins-animationsetup" , "", d)} \
+    ${@bb.utils.contains("MACHINE_FEATURES", "uianimation", "enigma2-plugin-systemplugins-animationsetup" , "", d)} \
+    ${@bb.utils.contains("MACHINE_FEATURES", "osdanimation", "enigma2-plugin-systemplugins-animationsetup" , "", d)} \
     "
 
 RRECOMMENDS_${PN}_append_et8500 = " enigma2-plugin-extensions-yahooweather"
+

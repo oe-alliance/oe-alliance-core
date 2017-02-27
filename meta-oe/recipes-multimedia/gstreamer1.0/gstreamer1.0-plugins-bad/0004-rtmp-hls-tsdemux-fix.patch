@@ -1,0 +1,12 @@
+diff --git a/gst/mpegtsdemux/tsdemux.c b/gst/mpegtsdemux/tsdemux.cindex bd196c3..1f29ef0 100644
+--- a/gst/mpegtsdemux/tsdemux.c
++++ b/gst/mpegtsdemux/tsdemux.c
+@@ -1634,7 +1634,7 @@ gst_ts_demux_stream_added (MpegTSBase * base, MpegTSBaseStream * bstream,
+     stream->first_pts = GST_CLOCK_TIME_NONE;
+     stream->raw_pts = -1;
+     stream->raw_dts = -1;
+-    stream->pending_ts = TRUE;
++    stream->pending_ts = program->pcr_pid < 0x1fff;
+     stream->nb_out_buffers = 0;
+     stream->gap_ref_buffers = 0;
+     stream->gap_ref_pts = GST_CLOCK_TIME_NONE;

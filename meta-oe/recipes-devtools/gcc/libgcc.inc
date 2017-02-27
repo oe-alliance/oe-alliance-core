@@ -2,6 +2,17 @@ require libgcc-common.inc
 
 DEPENDS = "virtual/${TARGET_PREFIX}gcc virtual/${TARGET_PREFIX}g++"
 
+do_install_append_class-target () {
+	if [ "${TCLIBC}" != "glibc" ]; then
+		case "${TARGET_OS}" in
+			"linux-musl" | "linux-uclibc" | "linux-*spe") extra_target_os="linux";;
+			"linux-musleabi" | "linux-uclibceabi") extra_target_os="linux-gnueabi";;
+			*) extra_target_os="linux";;
+		esac
+		ln -s ${TARGET_SYS} ${D}${libdir}/${TARGET_ARCH}${TARGET_VENDOR}-$extra_target_os
+	fi
+}
+
 PACKAGES = "\
     ${PN} \
     ${PN}-dev \
@@ -15,20 +26,12 @@ LICENSE_${PN}-dev = "GPL-3.0-with-GCC-exception"
 LICENSE_${PN}-dbg = "GPL-3.0-with-GCC-exception"
 
 
-FILES_${PN} = "${base_libdir}/libgcc*.so.*"
 FILES_${PN}-dev = "\
     ${base_libdir}/libgcc*.so \
-    ${libdir}/${TARGET_SYS}/${BINV}/*crt* \
-    ${libdir}/${TARGET_SYS}/${BINV}/64 \
-    ${libdir}/${TARGET_SYS}/${BINV}/32 \
-    ${libdir}/${TARGET_SYS}/${BINV}/x32 \
-    ${libdir}/${TARGET_SYS}/${BINV}/n32 \
-    ${libdir}/${TARGET_SYS}/${BINV}/libgcc* \
-    ${@base_conditional('TARGET_SYS_NO_EXTENSION', '${TARGET_SYS}', '', '${libdir}/${TARGET_SYS_NO_EXTENSION}', d)} \
-    ${libdir}/${TARGET_SYS}/${BINV}/libgcov.a \
+    ${@base_conditional('BASETARGET_SYS', '${TARGET_SYS}', '', '${libdir}/${BASETARGET_SYS}', d)} \
+    ${libdir}/${TARGET_SYS}/${BINV}* \
+    ${libdir}/${TARGET_ARCH}${TARGET_VENDOR}* \
 "
-
-FILES_${PN}-dbg += "${base_libdir}/.debug/"
 
 LIBGCCBUILDTREENAME = "gcc-build-internal-"
 

@@ -7,11 +7,14 @@ MAINTAINER = "OPENNFR team"
 require conf/license/license-gplv2.inc
 
 PV = "${IMAGE_VERSION}"
-PR = "r${DATETIME}"
+PR = "r${DATE}"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
+
+PR[vardepsexclude] += "DATE"
 
 IMAGE_INSTALL = " \
     opennfr-base \
+    packagegroup-base-smbfs \
     packagegroup-base-smbfs-client \
     packagegroup-base-smbfs-server \
     packagegroup-base-smbfs-utils \
@@ -96,7 +99,7 @@ rootfs_postprocess() {
     # Speedup boot by reducing the host key size. The time it takes grows
     # exponentially by key size, the default is 2k which takes several
     # seconds on most boxes.
-    echo 'DROPBEAR_RSAKEY_ARGS="-s 1024"' >> ${IMAGE_ROOTFS}${sysconfdir}/default/dropbear    
+    echo 'DROPBEAR_RSAKEY_ARGS="-s 1024"' >> ${IMAGE_ROOTFS}${sysconfdir}/default/dropbear
 }
 
 ROOTFS_POSTPROCESS_COMMAND += "rootfs_postprocess; "

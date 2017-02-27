@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=4d92cd373abda3937c2bc47fbc49d
 ALLOW_EMPTY_${PN} = "1"
 
 PV = "1.0"
-PR = "r33"
+PR = "r37"
 
 inherit packagegroup
 
@@ -15,25 +15,40 @@ RDEPENDS_${PN} = "\
     openhdf-enigma2 \
     openhdf-bootlogo \
     openhdf-spinner \
-    ntfs-3g \
     curl \
     hddtemp \
     busybox-cron \
     python-gdata \
     python-requests \
+    python-mutagen \
     python-plistlib \
+    python-imaging \
+    python-service-identity \
     unrar \
     ofgwrite \
-    packagegroup-base-smbfs-client \
     rtmpdump \
-    ${@base_contains("MACHINE_FEATURES", "smallflash", "", \
+    zip \
+    ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "", \
     " \
+    ntfs-3g \
     enigma2-plugin-extensions-openwebif-themes \
     enigma2-plugin-extensions-openwebif-webtv \
     enigma2-plugin-extensions-openwebif-vxg \
+    enigma2-plugin-extensions-openwebif-terminal \
     exteplayer3 \
+    gstplayer \
     ffmpeg \
     enigma2-plugin-systemplugins-serviceapp \
+    zip \
     ", d)} \
-    ${@base_contains("TUNE_FEATURES", "armv7a", "glibc-compat", "", d)} \
+    ${@bb.utils.contains("MACHINE_FEATURES", "dreambox", "", "ofgwrite", d)} \
+    ${@bb.utils.contains("TUNE_FEATURES", "armv", "glibc-compat", "", d)} \
+    ${@bb.utils.contains("MACHINE_FEATURES", "singlecore", "", \
+    " \
+    packagegroup-base-smbfs-server \
+    packagegroup-base-nfs \
+    ", d)} \
+    packagegroup-base-smbfs-client \
+    packagegroup-base-smbfs \
+    bash \
     "

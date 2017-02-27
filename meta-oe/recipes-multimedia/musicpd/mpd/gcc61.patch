@@ -1,0 +1,12 @@
+diff --git a/src/decoder/DecoderBuffer.hxx b/src/decoder/DecoderBuffer.hxx
+index 9cf47d9..db5b30e 100644
+--- a/src/decoder/DecoderBuffer.hxx
++++ b/src/decoder/DecoderBuffer.hxx
+@@ -25,6 +25,7 @@
+ #include "util/ConstBuffer.hxx"
+ 
+ #include <stddef.h>
++#include <stdint.h>
+ 
+ struct Decoder;
+ class InputStream;

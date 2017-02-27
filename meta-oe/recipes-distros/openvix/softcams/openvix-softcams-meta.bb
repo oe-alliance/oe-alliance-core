@@ -5,17 +5,17 @@ require conf/license/license-gplv2.inc
 PROVIDES = "openvix-softcams"
 
 DEPENDS = "\
-    ${@base_contains("TARGET_ARCH", "mipsel", "openvix-softcams-cccam", "", d)} \
-    ${@base_contains("TARGET_ARCH", "mipsel", "openvix-softcams-evocamd", "", d)} \
-    ${@base_contains("TARGET_ARCH", "mipsel", "openvix-softcams-mgcamd135a", "", d)} \
-    ${@base_contains("TARGET_ARCH", "mipsel", "openvix-softcams-mgcamd138", "", d)} \
-    ${@base_contains("TARGET_ARCH", "mipsel", "openvix-softcams-newcs", "", d)} \
-    ${@base_contains("TARGET_ARCH", "mipsel", "openvix-softcams-oscam-mipsel" , "", d)} \
-    ${@base_contains("TARGET_ARCH", "mipsel", "openvix-softcams-oscam-latest-mipsel" , "openvix-softcams-oscam-latest-arm", d)} \
-    ${@base_contains("TARGET_ARCH", "mipsel", "openvix-softcams-oscam-pcscd-mipsel" , "", d)} \
-    ${@base_contains("TARGET_ARCH", "mipsel", "openvix-softcams-oscam-pcscd-latest-mipsel" , "openvix-softcams-oscam-pcscd-latest-arm", d)} \
-    ${@base_contains("TARGET_ARCH", "mipsel", "openvix-softcams-rqcamd", "", d)} \
-    ${@base_contains("TARGET_ARCH", "mipsel", "openvix-softcams-scam", "", d)} \
-    "
+    ${@bb.utils.contains("TARGET_ARCH", "mipsel", "openvix-softcams-cccam", "", d)} \
+    ${@bb.utils.contains("TARGET_ARCH", "mipsel", "openvix-softcams-evocamd", "", d)} \
+    ${@bb.utils.contains("TARGET_ARCH", "mipsel", "openvix-softcams-mgcamd135a", "", d)} \
+    ${@bb.utils.contains("TARGET_ARCH", "mipsel", "openvix-softcams-mgcamd138", "", d)} \
+    ${@bb.utils.contains("TARGET_ARCH", "mipsel", "openvix-softcams-newcs", "", d)} \
+    ${@bb.utils.contains("TARGET_ARCH", "mipsel", "openvix-softcams-oscam-mipsel" , "", d)} \
+    ${@bb.utils.contains("TARGET_ARCH", "mipsel", "openvix-softcams-oscam-latest-mipsel" , "openvix-softcams-oscam-latest-arm", d)} \
+    ${@bb.utils.contains("TARGET_ARCH", "mipsel", "openvix-softcams-oscam-pcscd-mipsel" , "", d)} \
+    ${@bb.utils.contains("TARGET_ARCH", "mipsel", "openvix-softcams-oscam-pcscd-latest-mipsel" , "openvix-softcams-oscam-pcscd-latest-arm", d)} \
+    ${@bb.utils.contains("TARGET_ARCH", "mipsel", "openvix-softcams-rqcamd", "", d)} \
+    ${@bb.utils.contains("TARGET_ARCH", "mipsel", "openvix-softcams-scam", "", d)} \
+    "    
 
 PR = "r11"

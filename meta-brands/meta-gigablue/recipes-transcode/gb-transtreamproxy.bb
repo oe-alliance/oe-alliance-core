@@ -9,14 +9,16 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"
-PR = "r1"
+PR = "r2"
 
 PROVIDES += "virtual/transtreamproxy"
 RPROVIDES_${PN} += "virtual/transtreamproxy"
 DEPENDS += "virtual/inetd"
 RDEPENDS_${PN} += "virtual/inetd"
 
-SRC_URI = "git://github.com/openmips/gb-transtreamproxy.git;protocol=git"
+SRC_URI = "git://github.com/openmips/gb-transtreamproxy.git;protocol=git \
+    file://gcc6.patch \
+    "
 
 inherit autotools
 

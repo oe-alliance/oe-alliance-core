@@ -29,6 +29,10 @@ python gcc_multilib_setup() {
     bb.utils.remove(build_conf_dir, True)
     ml_globs = ('%s/*/t-linux64' % src_conf_dir,
                 '%s/*/linux64.h' % src_conf_dir,
+                '%s/aarch64/t-aarch64' % src_conf_dir,
+                '%s/aarch64/aarch64.h' % src_conf_dir,
+                '%s/aarch64/aarch64-cores.def' % src_conf_dir,
+                '%s/*/linux.h' % src_conf_dir,
                 '%s/linux.h' % src_conf_dir)
 
     # copy the target multilib config files to ${B}
@@ -39,13 +43,14 @@ python gcc_multilib_setup() {
             bb.utils.mkdirhier('%s/%s' % (build_conf_dir, parent_dir))
             bb.utils.copyfile(fn, '%s/%s' % (build_conf_dir, rel_path))
 
+    pn = d.getVar('PN', True)
     multilibs = (d.getVar('MULTILIB_VARIANTS', True) or '').split()
-    if not multilibs:
+    if not multilibs and pn != "nativesdk-gcc":
         return
 
     mlprefix = d.getVar('MLPREFIX', True)
-    pn = d.getVar('PN', True)
-    if ('%sgcc' % mlprefix) != pn and (not pn.startswith('gcc-cross-canadian')):
+
+    if ('%sgcc' % mlprefix) != pn and (not pn.startswith('gcc-cross-canadian')) and pn != "nativesdk-gcc":
         return
 
 
@@ -74,12 +79,15 @@ python gcc_multilib_setup() {
     def write_headers(root, files, libdir32, libdir64, libdirx32, libdirn32):
         def wrap_libdir(libdir):
             if libdir.find('SYSTEMLIBS_DIR') != -1:
-                return libdir
+                return '"%r"'
             else:
                 return '"/%s/"' % libdir
 
         for ml_conf_file in files:
-            with open(root + '/' + ml_conf_file, 'r') as f:
+            fn = root + '/' + ml_conf_file
+            if not os.path.exists(fn):
+                continue
+            with open(fn, 'r') as f:
                 filelines = f.readlines()
 
                 # replace lines like
@@ -122,29 +130,41 @@ python gcc_multilib_setup() {
         'i586'      : ['gcc/config/i386/t-linux64'],
         'i686'      : ['gcc/config/i386/t-linux64'],
         'mips'      : ['gcc/config/mips/t-linux64'],
+        'mips64'    : ['gcc/config/mips/t-linux64'],
         'powerpc'   : ['gcc/config/rs6000/t-linux64'],
         'powerpc64' : ['gcc/config/rs6000/t-linux64'],
+        'aarch64'   : ['gcc/config/aarch64/t-aarch64'],
+        'arm'       : ['gcc/config/aarch64/t-aarch64'],
     }
 
     gcc_header_config_files = {
         'x86_64'    : ['gcc/config/i386/linux64.h'],
         'i586'      : ['gcc/config/i386/linux64.h'],
         'i686'      : ['gcc/config/i386/linux64.h'],
-        'mips'      : ['gcc/config/mips/linux64.h'],
+        'mips'      : ['gcc/config/mips/linux.h', 'gcc/config/mips/linux64.h'],
+        'mips64'    : ['gcc/config/mips/linux.h', 'gcc/config/mips/linux64.h'],
         'powerpc'   : ['gcc/config/rs6000/linux64.h'],
         'powerpc64' : ['gcc/config/rs6000/linux64.h'],
+        'aarch64'   : ['gcc/config/aarch64/aarch64.h'],
+        'arm'       : ['gcc/config/aarch64/aarch64.h'],
     }
-
-    target_arch = (d.getVar('TARGET_ARCH_MULTILIB_ORIGINAL', True) if mlprefix
-                    else d.getVar('TARGET_ARCH', True))
-    if target_arch not in gcc_target_config_files:
-        bb.warn('gcc multilib setup is not supported for TARGET_ARCH=' + target_arch)
-        return
 
     libdir32 = 'SYSTEMLIBS_DIR'
     libdir64 = 'SYSTEMLIBS_DIR'
     libdirx32 = 'SYSTEMLIBS_DIR'
     libdirn32 = 'SYSTEMLIBS_DIR'
+
+
+    target_arch = (d.getVar('TARGET_ARCH_MULTILIB_ORIGINAL', True) if mlprefix
+                    else d.getVar('TARGET_ARCH', True))
+    if pn == "nativesdk-gcc":
+        header_config_files = gcc_header_config_files[d.getVar("SDK_ARCH", True)]
+        write_headers(builddir, header_config_files, libdir32, libdir64, libdirx32, libdirn32)
+        return
+
+    if target_arch not in gcc_target_config_files:
+        bb.warn('gcc multilib setup is not supported for TARGET_ARCH=' + target_arch)
+        return
 
     target_config_files = gcc_target_config_files[target_arch]
     header_config_files = gcc_header_config_files[target_arch]
@@ -193,9 +213,10 @@ python gcc_multilib_setup() {
         # take out '-' mcpu='s and march='s from parameters
         opts = []
         whitelist = (d.getVar("MULTILIB_OPTION_WHITELIST", True) or "").split()
-        for i in tune_parameters['ccargs'].split():
+        for i in d.expand(tune_parameters['ccargs']).split():
             if i in whitelist:
-                opts.append(i)
+                # Need to strip '-' from option
+                opts.append(i[1:])
         options.append(" ".join(opts))
 
         if tune_baselib == 'lib':
@@ -209,5 +230,6 @@ python gcc_multilib_setup() {
 }
 
 gcc_multilib_setup[cleandirs] = "${B}/gcc/config"
+gcc_multilib_setup[vardepsexclude] = "SDK_ARCH"
 
 EXTRACONFFUNCS += "gcc_multilib_setup"

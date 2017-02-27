@@ -23,6 +23,7 @@ COMPATIBLE_MACHINE = "(wetekplay)"
 
 SRC_URI = "http://source.mynonpublic.com/wetek/linux-wetek-3.10.y-master.tar.gz \
     file://defconfig \
+    file://kernel-add-support-for-gcc6.patch \
 "
 
 S = "${WORKDIR}/linux-wetek-3.10.y-master"
@@ -62,3 +63,6 @@ do_install_append () {
 
 do_rm_work() {
 }
+
+# extra tasks
+addtask kernel_link_images after do_compile before do_install

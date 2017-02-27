@@ -14,8 +14,6 @@ URL = "http://www.world-of-satellite.com"
 
 S = "${WORKDIR}"
 
-inherit autotools
-
 PACKAGES = "${PN}"
 
 do_install() {
@@ -30,4 +28,3 @@ do_install() {
 }
 
 FILES_${PN} = "/etc/image-version"
-

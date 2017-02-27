@@ -20,9 +20,14 @@ SRC_URI_wetekplay2 = "file://libamcodec-210755d.tar.gz;md5=d2e7dc15302fa64eef54a
            file://libamcodec.pc \
            file://alsactl.conf \
 "
+SRC_URI_odroidc2 = "file://libamcodec-210755d.tar.gz;md5=d2e7dc15302fa64eef54aa67da5f9f34 \
+           file://libamcodec.pc \
+           file://alsactl.conf \
+"
 
 S_wetekplay = "${WORKDIR}/libamcodec-75f23da/amcodec"
 S_wetekplay2 = "${WORKDIR}/libamcodec-210755d/amcodec"
+S_odroidc2 = "${WORKDIR}/libamcodec-210755d/amcodec"
 
 
 EXTRA_OEMAKE = " \

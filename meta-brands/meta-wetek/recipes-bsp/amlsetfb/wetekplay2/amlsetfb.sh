@@ -93,8 +93,18 @@ ln -sf /sys/class/leds/led-sys/brightness /dev/led0
 ln -sf /sys/class/leds/wetek\:blue\:ethled/brightness /dev/led1
 ln -sf /sys/class/leds/wetek\:blue\:wifiled/brightness /dev/led2
 
+export ROOT=
+# Parse command line options
+for x in $(cat /proc/cmdline); do
+	case $x in
+	root=*)
+		ROOT=${x#root=}
+		;;
+	esac
+done
+
 # only once
-if [ ! -e /etc/.sdpart ] && [ ! -e /dev/system ]; then
+if [ ! -e /etc/.sdpart ] && [ "$ROOT" = "/dev/mmcblk0p2" ]; then
 	parted /dev/mmcblk0 unit MB mkpart primary ext4 1100MB 95%
 	sync ; sync ;
 	umount -f /dev/mmcblk0p3

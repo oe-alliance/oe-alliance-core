@@ -4,11 +4,15 @@ require gcc-configure-common.inc
 EXTRA_OECONF_PATHS = "\
     --with-sysroot=/ \
     --with-build-sysroot=${STAGING_DIR_TARGET} \
-    --with-native-system-header-dir=${STAGING_DIR_TARGET}${target_includedir} \
     --with-gxx-include-dir=${includedir}/c++/${BINV} \
 "
 
 EXTRA_OECONF_append_linuxstdbase = " --enable-clocale=gnu"
+
+# libcc1 requres gcc_cv_objdump when cross build, but gcc_cv_objdump is
+# set in subdir gcc, so subdir libcc1 can't use it, export it here to
+# fix the problem.
+export gcc_cv_objdump = "${TARGET_PREFIX}objdump"
 
 EXTRA_OECONF_GCC_FLOAT = "${@get_gcc_float_setting(bb, d)}"
 
@@ -26,7 +30,7 @@ PACKAGES = "\
 
 FILES_${PN} = "\
     ${bindir}/${TARGET_PREFIX}gcc* \
-    ${libexecdir}/gcc/${TARGET_SYS}/${BINV}/collect2 \
+    ${libexecdir}/gcc/${TARGET_SYS}/${BINV}/collect2* \
     ${libexecdir}/gcc/${TARGET_SYS}/${BINV}/cc* \
     ${libexecdir}/gcc/${TARGET_SYS}/${BINV}/lto* \
     ${libexecdir}/gcc/${TARGET_SYS}/${BINV}/lib*${SOLIBS} \
@@ -38,11 +42,11 @@ FILES_${PN} = "\
     ${gcclibdir}/${TARGET_SYS}/${BINV}/include-fixed \
 "
 INSANE_SKIP_${PN} += "dev-so"
-
-FILES_${PN}-dbg += "\
-    ${libexecdir}/gcc/${TARGET_SYS}/${BINV}/.debug/ \
-    ${libexecdir}/gcc/${TARGET_SYS}/${BINV}/plugin/.debug/ \
+RRECOMMENDS_${PN} += "\
+    libssp \
+    libssp-dev \
 "
+
 FILES_${PN}-dev = "\
     ${gcclibdir}/${TARGET_SYS}/${BINV}/lib*${SOLIBSDEV} \
     ${libexecdir}/gcc/${TARGET_SYS}/${BINV}/lib*${SOLIBSDEV} \
@@ -69,34 +73,49 @@ FILES_g77-symlinks = "\
     ${bindir}/g77 \
     ${bindir}/f77 \
 "
+RRECOMMENDS_g77 = "\
+    libg2c \
+    libg2c-dev \
+"
+
 FILES_gfortran = "\
     ${bindir}/${TARGET_PREFIX}gfortran \
     ${libexecdir}/gcc/${TARGET_SYS}/${BINV}/f951 \
+"
+RRECOMMENDS_gfortran = "\
+    libquadmath \
+    libquadmath-dev \
 "
 FILES_gfortran-symlinks = "\
     ${bindir}/gfortran \
     ${bindir}/f95"
 
 FILES_cpp = "\
-    ${bindir}/${TARGET_PREFIX}cpp \
+    ${bindir}/${TARGET_PREFIX}cpp* \
     ${base_libdir}/cpp \
     ${libexecdir}/gcc/${TARGET_SYS}/${BINV}/cc1"
 FILES_cpp-symlinks = "${bindir}/cpp"
 
-FILES_gcov = "${bindir}/${TARGET_PREFIX}gcov \
-    ${bindir}/${TARGET_PREFIX}gcov-tool \
+FILES_gcov = "${bindir}/${TARGET_PREFIX}gcov* \
+    ${bindir}/${TARGET_PREFIX}gcov-tool* \
 "
 FILES_gcov-symlinks = "${bindir}/gcov \
     ${bindir}/gcov-tool \
 "
 
 FILES_g++ = "\
-    ${bindir}/${TARGET_PREFIX}g++ \
+    ${bindir}/${TARGET_PREFIX}g++* \
     ${libexecdir}/gcc/${TARGET_SYS}/${BINV}/cc1plus \
 "
 FILES_g++-symlinks = "\
     ${bindir}/c++ \
     ${bindir}/g++ \
+"
+RRECOMMENDS_g++ = "\
+    libstdc++ \
+    libstdc++-dev \
+    libatomic \
+    libatomic-dev \
 "
 
 FILES_${PN}-doc = "\
@@ -136,7 +155,7 @@ do_install () {
 	cd ${D}${bindir}
 
 	# We care about g++ not c++
-	rm -f *c++
+	rm -f *c++*
 
 	# We don't care about the gcc-<version> ones for this
 	rm -f *gcc-?.?*
@@ -168,11 +187,40 @@ do_install () {
 	chown -R root:root ${D}
 }
 
+do_install_append () {
+        #
+        # Thefixinc.sh script, run on the gcc's compile phase, looks into sysroot header
+        # files and places the modified files into
+        # {D}${libdir}/gcc/${TARGET_SYS}/${BINV}/include-fixed folder. This makes the
+        # build not deterministic. The following code prunes all those headers
+        # except those under include-fixed/linux, *limits.h and README, yielding
+        # the same include-fixed folders no matter what sysroot
+
+        include_fixed="${D}${libdir}/gcc/${TARGET_SYS}/${BINV}/include-fixed"
+        for f in $(find ${include_fixed} -type f); do
+                case $f in
+                */include-fixed/linux/*)
+                    continue
+                    ;;
+                */include-fixed/*limits.h)
+                    continue
+                    ;;
+                */include-fixed/README)
+                    continue
+                    ;;
+                *)
+                    # remove file and directory if empty
+                    bbdebug 2 "Pruning $f"
+                    rm $f
+                    find $(dirname $f) -maxdepth 0 -empty -exec rmdir {} \;
+                    ;;
+                esac
+        done
+}
+
 # Installing /usr/lib/gcc/* means we'd have two copies, one from gcc-cross
 # and one from here. These can confuse gcc cross where includes use #include_next
 # and builds track file dependencies (e.g. perl and its makedepends code).
 # For determinism we don't install this ever and rely on the copy from gcc-cross.
 # [YOCTO #7287]
-sysroot_stage_dirs_append () {
-	rm -rf $to${libdir}/gcc
-}
+SYSROOT_DIRS_BLACKLIST += "${libdir}/gcc"

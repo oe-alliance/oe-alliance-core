@@ -1,5 +1,5 @@
 SUMMARY = "OpenNFR missing files"
-LICENSE = "GPL2"
+LICENSE = "proprietary"
 
 require conf/license/license-gplv2.inc
 

@@ -3,17 +3,17 @@ RSUGGESTS_${PN} = ""
 PROVIDES =+ " libavcodec53 libavformat53 libav"
 PACKAGES =+ " libavcodec53 libavformat53 libav"
 
-PACKAGECONFIG[avdevice] = "--enable-avdevice,--disable-avdevice"
+PR = "r9"
 
-PR = "r5"
-
-DEPENDS = "libbluray rtmpdump libxml2 openssl librtmp"
+DEPENDS = "libbluray rtmpdump libxml2 openssl librtmp virtual/libsdl"
 RDEPENDS_${PN} = "libbluray rtmpdump libxml2 openssl"
 
 SRC_URI_append = " \
     file://ffmpeg-fix-hls.patch \
     file://ffmpeg-buffer-size.patch \
     file://ffmpeg-aac.patch \
+    file://ffmpeg-fix-mpegts.patch \
+    file://ffmpeg-fix-edit-list-parsing.patch \
 "
 
 EXTRA_FFCONF = " \
@@ -67,6 +67,7 @@ EXTRA_FFCONF = " \
     --enable-decoder=dsd_msbf_planar \
     --enable-decoder=eac3 \
     --enable-decoder=evrc \
+    --enable-decoder=h264 \
     --enable-decoder=iac \
     --enable-decoder=imc \
     --enable-decoder=mace3 \
@@ -240,15 +241,14 @@ EXTRA_FFCONF = " \
     --disable-bsfs \
     --enable-libbluray \
     --enable-protocol=bluray \
-    --enable-librtmp \
     --pkg-config="pkg-config" \
     --disable-debug \
-    --extra-cflags="-ffunction-sections -fdata-sections -fno-aggressive-loop-optimizations" \
-    --extra-ldflags="-Wl,--gc-sections,-lrt" \
+    --extra-cflags="${TARGET_CFLAGS} ${HOST_CC_ARCH}${TOOLCHAIN_OPTIONS} -ffunction-sections -fdata-sections -fno-aggressive-loop-optimizations" \
+    --extra-ldflags="${TARGET_LDFLAGS},--gc-sections -Wl,--print-gc-sections,-lrt" \
     --prefix=${prefix} \
 "
 
-PACKAGECONFIG = "avdevice avfilter openssl"
+PACKAGECONFIG = "avdevice avfilter avcodec avformat swresample swscale openssl bzlib"
 
 FILES_${PN}-dbg += "/usr/share"
 

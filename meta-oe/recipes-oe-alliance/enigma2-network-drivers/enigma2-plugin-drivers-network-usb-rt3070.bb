@@ -4,7 +4,7 @@ PACKAGE_ARCH = "all"
 require conf/license/license-gplv2.inc
 
 RRECOMMENDS_${PN} = " \
-    ${@base_contains("MACHINE_FEATURES", "linuxwifi", "kernel-module-rt2800usb", "rt3070", d)} \
+    ${@bb.utils.contains("MACHINE_FEATURES", "linuxwifi", "kernel-module-rt2800usb", "rt3070", d)} \
     firmware-rt3070"
 
 PV = "1.0"

@@ -14,7 +14,7 @@ SRC_URI[sha256sum] = "ef7fb307582ff243aacff8a13025fe028634aaf650ada309991ae03622
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-KERNEL_CONFIG = "${@base_contains("MACHINE_FEATURES", "dvbproxy", "defconfig_proxy", "defconfig", d)}"
+KERNEL_CONFIG = "${@bb.utils.contains("MACHINE_FEATURES", "dvbproxy", "defconfig_proxy", "defconfig", d)}"
 
 SRC_URI = "http://archive.vuplus.com/download/kernel/stblinux-${KV}.tar.bz2 \
     file://${KERNEL_CONFIG} \
@@ -39,7 +39,8 @@ SRC_URI = "http://archive.vuplus.com/download/kernel/stblinux-${KV}.tar.bz2 \
     file://0001-STV-Add-SNR-Signal-report-parameters.patch \
     file://0001-stv090x-optimized-TS-sync-control.patch \
     file://blindscan2.patch \
-    ${@base_contains("MACHINE_FEATURES", "dvbproxy", "file://linux_dvb_adapter.patch;patch=1;pnum=1", "", d)} \
+    ${@bb.utils.contains("MACHINE_FEATURES", "dvbproxy", "file://linux_dvb_adapter.patch;patch=1;pnum=1", "", d)} \
+    file://kernel-add-support-for-gcc6.patch \
     "
 
 SRC_URI_append_vuduo2 = "file://brcm_s3_wol.patch;patch=1;pnum=1 "
@@ -84,3 +85,6 @@ pkg_postinst_kernel-image () {
 
 do_rm_work() {
 }
+
+# extra tasks
+addtask kernel_link_images after do_compile before do_install

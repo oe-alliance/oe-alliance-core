@@ -11,11 +11,15 @@ inherit autotools-brokensep gitpkgv pythonnative
 PACKAGES += " ${PN}-src"
 
 SRCREV = "${AUTOREV}"
-PV = "5.2+git${SRCPV}"
-PKGV = "5.2+git${GITPKGV}"
-PR = "r${DATETIME}"
+PV = "6.0+git${SRCPV}"
+PKGV = "6.0+git${GITPKGV}"
+PR = "r${DATE}-${MACHINEBUILD}"
 
-SRC_URI="git://github.com/oe-alliance/branding-module.git;protocol=git"
+PR[vardepsexclude] += "DATE"
+
+BRANCH="master"
+
+SRC_URI="git://github.com/oe-alliance/branding-module.git;protocol=git;branch=${BRANCH}"
 
 S = "${WORKDIR}/git"
 

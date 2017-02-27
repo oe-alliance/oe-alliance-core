@@ -6,11 +6,7 @@ MAINTAINER = "Black Hole team"
 require conf/license/license-gplv2.inc
 
 SRC_URI = "file://Ncam_Ci.sh file://StartBhCam file://Delete_all_Crashlogs.sh file://Ifconfig.sh \
-	file://client.confOff file://clientp2p.confOff file://server.confOff \
-	file://serverp2p.conf file://openvpn.log file://ca.crt file://client1.crt file://client1.key \
-	file://client2.crt file://client2.key file://client3.crt file://client3.key file://dh1024.pem \
-	file://delite.key file://server.crt file://server.key \
-	file://Netstat.sh file://Uptime.sh file://bp_swap"
+	file://openvpn.log file://Netstat.sh file://Uptime.sh file://bp_swap"
 
 PR = "r10"
 
@@ -48,14 +44,8 @@ do_install() {
 	done
 	
 	install -d ${D}/etc/openvpn
-	for x in /client.confOff clientp2p.confOff openvpn.log server.confOff serverp2p.conf; do
+	for x in /openvpn.log; do
 		install -m 0644 ${WORKDIR}/$x ${D}/etc/openvpn/$x
-	done
-
-	install -d ${D}/etc/openvpn/keys
-	for x in /ca.crt client1.crt client1.key client2.crt client2.key client3.crt \
-	client3.key dh1024.pem delite.key server.crt server.key; do
-		install -m 0644 ${WORKDIR}/$x ${D}/etc/openvpn/keys/$x
 	done
 	
 	install -d ${D}/etc/init.d

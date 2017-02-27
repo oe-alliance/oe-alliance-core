@@ -7,8 +7,10 @@ MAINTAINER = "openeight team"
 require conf/license/license-gplv2.inc
 
 PV = "${IMAGE_VERSION}"
-PR = "r${DATETIME}"
+PR = "r${DATE}"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
+
+PR[vardepsexclude] += "DATE"
 
 IMAGE_INSTALL = "openeight-base"
 

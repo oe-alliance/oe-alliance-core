@@ -16,7 +16,7 @@ FILES_${PN} = "/"
 S = "${WORKDIR}/git"
 
 DVB-S_LISTS = "satellites.xml"
-DVB-T_LISTS = "terrestrial.xml cables.xml"
+DVB-T_LISTS = "terrestrial.xml cables.xml atsc.xml"
 
 
 do_install() {

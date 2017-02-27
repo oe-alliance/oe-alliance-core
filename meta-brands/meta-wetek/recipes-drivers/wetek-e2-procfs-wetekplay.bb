@@ -14,8 +14,6 @@ SRC_URI = "file://wetek-e2-procfs-${KV}-${SRCDATE}.zip"
 
 S = "${WORKDIR}"
 
-INHIBIT_PACKAGE_STRIP = "1"
-
 inherit module
 
 do_compile() {
@@ -26,4 +24,5 @@ do_install() {
     install -m 0755 ${WORKDIR}/e2-procfs.ko ${D}${base_libdir}/modules/${KV}/extra/
 }
 
-
+do_package_qa() {
+}

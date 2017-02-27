@@ -19,7 +19,6 @@ require conf/machine/include/soc-family.inc
 
 MACHINE_EXTRA_RRECOMMENDS = " \
     gstreamer1.0-plugin-dvbmediasink \
-    ntfs-3g \
     kernel-module-cifs \
     kernel-module-autofs4 \
     kernel-module-hmac \

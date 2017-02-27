@@ -8,9 +8,9 @@ require conf/license/license-gplv2.inc
 
 inherit gitpkgv
 SRCREV = "${AUTOREV}"
-PV = "4.0+git${SRCPV}"
-PKGV = "4.0+git${GITPKGV}"
-VER ="4.0"
+PV = "6.0+git${SRCPV}"
+PKGV = "6.0+git${GITPKGV}"
+VER ="6.0"
 PR = "r0"
 
 SRC_URI="git://github.com/openatv/enigma2-plugin-settings-defaultsat.git"

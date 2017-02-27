@@ -193,7 +193,9 @@ SRC_URI = " \
     file://fix_return_address_warning.patch \
     file://rtl8712-fix-warnings.patch \
     file://rtl8187se-fix-warnings.patch \
+    file://kernel-add-support-for-gcc6.patch \
     file://timeconst_perl5.patch \
+    file://0001-dvb_frontend-backport-multistream-support.patch \
     "
 
 S = "${WORKDIR}/linux-${PV}"
@@ -203,12 +205,14 @@ export OS = "Linux"
 KERNEL_OBJECT_SUFFIX = "ko"
 KERNEL_IMAGETYPE = "zImage"
 KERNEL_IMAGEDEST = "/tmp"
+KERNEL_OUTPUT = "zImage"
 
-FILES_kernel-image = "${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION}"
+
+#FILES_kernel-image = "${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION}"
 
 kernel_do_install_append() {
     install -d ${D}${KERNEL_IMAGEDEST}
-    install -m 0755 ${KERNEL_OUTPUT} ${D}${KERNEL_IMAGEDEST}
+    install -m 0755 ${KERNEL_OUTPUT_DIR}/${KERNEL_OUTPUT} ${D}${KERNEL_IMAGEDEST}
 }
 
 do_shared_workdir_prepend() {
@@ -236,3 +240,5 @@ pkg_postinst_kernel-image() {
 
 do_rm_work() {
 }
+
+

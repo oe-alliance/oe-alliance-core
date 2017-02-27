@@ -1,0 +1,55 @@
+--- a/showiframe.c	2016-12-05 18:03:47.058157000 +0100
++++ b/showiframe.c	2016-12-06 10:18:04.716060000 +0100
+@@ -151,6 +151,7 @@
+ 		size_t pos=0;
+ 		int seq_end_avail = 0;
+ #endif
++		ioctl(fd, VIDEO_SET_FORMAT, VIDEO_FORMAT_16_9);
+ 		int count = 7;
+ 		/* 0x0 0x0 0x1 0xffffffe0 0x10 0x8 0xffffff80 0xffffff80 0x5 0x21 0x0 0x1 0x0 0x1 */
+ 
+@@ -165,14 +166,10 @@
+ 		memset(stuffing, 0, 8192);
+ 		read(f, iframe, s.st_size);
+ #ifndef HAVE_AMLOGIC
+-		if(iframe[0] == 0x00 && iframe[1] == 0x00 && iframe[2] == 0x00 && iframe[3] == 0x01 && (iframe[4] & 0x0f) == 0x07)
+-			ioctl(fd, VIDEO_SET_STREAMTYPE, 1); // set to mpeg4
+-		else
+-			ioctl(fd, VIDEO_SET_STREAMTYPE, 0); // set to mpeg2
+-		c(ioctl(fd, VIDEO_SELECT_SOURCE, VIDEO_SOURCE_MEMORY));
+-		c(ioctl(fd, VIDEO_PLAY));
+-		c(ioctl(fd, VIDEO_CONTINUE));
+-		c(ioctl(fd, VIDEO_CLEAR_BUFFER));
++		ioctl(fd, VIDEO_SELECT_SOURCE, VIDEO_SOURCE_MEMORY);
++		ioctl(fd, VIDEO_PLAY);
++		ioctl(fd, VIDEO_CONTINUE);
++		ioctl(fd, VIDEO_CLEAR_BUFFER);
+ #endif
+ 		while(pos <= (s.st_size-4) && !(seq_end_avail = (!iframe[pos] && !iframe[pos+1] && iframe[pos+2] == 1 && iframe[pos+3] == 0xB7)))
+ 			++pos;
+@@ -192,9 +189,22 @@
+ 			write_all(fd, seq_end, sizeof(seq_end));
+ 		write_all(fd, stuffing, 8192);
+ #ifndef HAVE_AMLOGIC
+-		usleep(150000);
+-		c(ioctl(fd, VIDEO_STOP, 0));
+-		c(ioctl(fd, VIDEO_SELECT_SOURCE, VIDEO_SOURCE_DEMUX));
++		int end = 0;
++		char progress_ch [4];
++		while (!end)
++		{
++			sleep (1);
++			int progress_fd = open("/proc/progress", O_RDONLY);
++			read(progress_fd, progress_ch, 4);
++			close(progress_fd);
++			progress_ch[3] = '\0';
++			if (atoi(progress_ch) >= 95) 
++				end = 1;
++		}
++
++		ioctl(fd, VIDEO_STOP, 0);
++		ioctl(fd, VIDEO_SELECT_SOURCE, VIDEO_SOURCE_DEMUX);
++		close(fd);
+ 	}
+ #else
+ 		do {

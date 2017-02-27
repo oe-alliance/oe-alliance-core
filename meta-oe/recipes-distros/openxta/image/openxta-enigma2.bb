@@ -35,7 +35,7 @@ RRECOMMENDS_${PN} = "\
     enigma2-plugin-systemplugins-skinselector \
     enigma2-plugin-skins-technihd \
     enigma2-plugin-skins-easylitextafhd \
-    ${@base_contains("MACHINE_FEATURES", "3dtv", "enigma2-plugin-systemplugins-osd3dsetup" , "", d)} \
+    ${@bb.utils.contains("MACHINE_FEATURES", "3dtv", "enigma2-plugin-systemplugins-osd3dsetup" , "", d)} \
     "
 
 #RRECOMMENDS_${PN}_append_et4x00 = " enigma2-plugin-extensions-et-webbrowser"

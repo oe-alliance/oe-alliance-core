@@ -7,7 +7,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "1.0"
-PR = "r2"
+PR = "r1"
 
 inherit packagegroup
 
@@ -19,14 +19,23 @@ RDEPENDS_${PN} = "\
 	egami-version-info \
 	egami-base-files \
 	\
-	python-imaging python-compression \
-	rtmpdump \
-	libcrypto-compat-0.9.7 \
-	packagegroup-base-smbfs-client \
 	busybox-cron \
+	bash \
 	ntfs-3g \
 	dosfstools \
-	hddtemp hdparm \
+"
+
+RRECOMMENDS_${PN} = "\
+	streamripper \
+	hddtemp \
+	hdparm \
 	dvbsnoop \
+	minidlna \
 	djmount \
+	python-imaging python-compression \
+	kernel-module-ftdi-sio \
+	kernel-module-pl2303 \
+	${@bb.utils.contains("MACHINE_FEATURES", "boxmodel", "boxmodel", "", d)} \
+	${@bb.utils.contains("MACHINE_FEATURES", "dreambox", "", "ofgwrite", d)} \
+	${@bb.utils.contains("TUNE_FEATURES", "armv7a", "glibc-compat", "", d)} \
 "

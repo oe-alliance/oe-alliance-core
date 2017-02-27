@@ -21,11 +21,11 @@ python populate_packages_prepend() {
     import shutil
     import re
     import tempfile
-    dir = bb.data.getVar('D', d, True)
-    sdir = bb.data.getVar('S', d, True)
-    satnames = bb.data.getVar('PICON_SATNAMES', d, True)
-    pnsuffix = bb.data.getVar('PN_SUFFIX', d, True)
-    resize = bb.data.getVar('RESIZE_COMMAND', d, True)
+    dir = d.getVar('D', True)
+    sdir = d.getVar('S', True)
+    satnames = d.getVar('PICON_SATNAMES', True)
+    pnsuffix = d.getVar('PN_SUFFIX', True)
+    resize = d.getVar('RESIZE_COMMAND', True)
     if not pnsuffix:
         pnsuffix = ''
     piconpackages = []
@@ -62,8 +62,8 @@ python populate_packages_prepend() {
                     os.system("pngcrush -quiet -bit_depth 8 '%s' '%s'" % (fn, dn))
                 files.append("/picon/" + file)
 
-        bb.data.setVar('FILES_' + packagename, " ".join(files), d)
-        bb.data.setVar('DESCRIPTION_' + packagename, "TV picon set", d)
+        d.setVar('FILES_' + packagename, " ".join(files))
+        d.setVar('DESCRIPTION_' + packagename, "TV picon set")
         piconpackages.append(packagename)
         try:
             packagename = createPackageName('radio', sat)
@@ -72,8 +72,8 @@ python populate_packages_prepend() {
                 if file.endswith(".png"):
                     os.system("cp -a \"" + sdir + "/" + sat + "/radio/" + file + "\" " + dir + "/picon/")
                     files.append("/picon/" + file)
-            bb.data.setVar('FILES_' + packagename, " ".join(files), d)
-            bb.data.setVar('DESCRIPTION_' + packagename, "Radio picon set", d)
+            d.setVar('FILES_' + packagename, " ".join(files))
+            d.setVar('DESCRIPTION_' + packagename, "Radio picon set")
             piconpackages.append(packagename)
         except:
             pass
@@ -85,6 +85,6 @@ python populate_packages_prepend() {
         os.rmdir(tmpdir)
     except:
         pass
-    bb.data.setVar('PACKAGES', ' '.join(piconpackages), d)
-    bb.data.setVar('PKGD', dir, d)
+    d.setVar('PACKAGES', ' '.join(piconpackages))
+    d.setVar('PKGD', dir)
 }

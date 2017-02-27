@@ -6,7 +6,7 @@ require conf/license/license-gplv2.inc
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 RRECOMMENDS_${PN} = " \
-    ${@base_contains("MACHINE_FEATURES", "wifiusblegacy", "rt73", "kernel-module-rt73usb", d)} \
+    ${@bb.utils.contains("MACHINE_FEATURES", "wifiusblegacy", "rt73", "kernel-module-rt73usb", d)} \
     firmware-rt73 \
     "
 

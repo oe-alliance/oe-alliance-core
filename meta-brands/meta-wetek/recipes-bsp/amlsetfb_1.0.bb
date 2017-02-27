@@ -16,7 +16,7 @@ SRC_URI = " \
     file://aaa.sh \
 "
 
-COMPATIBLE_MACHINE = "(wetekplay|wetekplay2)"
+COMPATIBLE_MACHINE = "(wetekplay|wetekplay2|odroidc2)"
 
 do_install() {
     install -d ${D}${sysconfdir}/init.d

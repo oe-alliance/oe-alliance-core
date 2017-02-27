@@ -1,0 +1,59 @@
+Index: kernel-source/arch/arm64/Makefile
+===================================================================
+--- kernel-source.orig/arch/arm64/Makefile
++++ kernel-source/arch/arm64/Makefile
+@@ -63,7 +63,7 @@ all:	$(KBUILD_IMAGE) $(KBUILD_DTBS)
+ 
+ boot := arch/arm64/boot
+ 
+-Image Image.gz: vmlinux
++Image Image.gz uImage : vmlinux
+ 	$(Q)$(MAKE) $(build)=$(boot) $(boot)/$@
+
+ zinstall install: vmlinux
+@@ -89,6 +89,7 @@ archclean:
+ define archhelp
+   echo  '* Image.gz      - Compressed kernel image (arch/$(ARCH)/boot/Image.gz)'
+   echo  '  Image         - Uncompressed kernel image (arch/$(ARCH)/boot/Image)'
++  echo  '  uImage        - Uncompressed u-boot image (arch/$(ARCH)/boot/uImage)'
+   echo  '* dtbs          - Build device tree blobs for enabled boards'
+   echo  '  install       - Install uncompressed kernel'
+   echo  '  zinstall      - Install compressed kernel'
+Index: kernel-source/arch/arm64/boot/Makefile
+===================================================================
+--- kernel-source.orig/arch/arm64/boot/Makefile
++++ kernel-source/arch/arm64/boot/Makefile
+@@ -16,7 +16,10 @@
+ 
+ include $(srctree)/arch/arm64/boot/dts/Makefile
+ 
+-targets := Image Image.gz
++targets := Image Image.gz uImage
++ifneq ($(LOADADDR),)
++	UIMAGE_LOADADDR=$(LOADADDR)
++endif
+ 
+ DTB_NAMES := $(subst $\",,$(CONFIG_BUILD_ARM64_APPENDED_DTB_IMAGE_NAMES))
+ ifneq ($(DTB_NAMES),)
+@@ -26,6 +29,19 @@ DTB_LIST := $(dtb-y)
+ endif
+ DTB_OBJS := $(addprefix $(obj)/dts/,$(DTB_LIST))
+ 
++check_for_multiple_loadaddr = \
++if [ $(words $(UIMAGE_LOADADDR)) -ne 1 ]; then \
++	echo 'multiple (or no) load addresses: $(UIMAGE_LOADADDR)'; \
++	echo 'This is incompatable with uImages'; \
++	echo 'Specify LOADADDR on the commandline to the an uImage'; \
++	false; \
++fi
++
++$(obj)/uImage: vmlinux FORCE
++	@$(check_for_multiple_loadaddr)
++	$(call if_changed,uimage)
++	@$(kecho) ' Image $@ is ready'
++
+ $(obj)/Image: vmlinux FORCE
+ 	$(call if_changed,objcopy)
+
+
+ 

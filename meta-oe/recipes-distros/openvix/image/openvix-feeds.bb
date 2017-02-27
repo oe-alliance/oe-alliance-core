@@ -9,16 +9,16 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 PACKAGES = "${PN}"
 
 PV = "${IMAGE_VERSION}"
-PR = "r1"
+PR = "r2"
 
 inherit packagegroup
 
 DEPENDS = "\
-    oe-alliance-skins \
-    enigma2-display-skins \
-    enigma2-skins-openvix \
-    openvix-bootlogos-meta \
-    ${@base_contains("MACHINE_FEATURES", "skins1080", "hd-skins-meta", "", d)} \
-    openvix-softcams-meta \
     enigma2-plugin-extensions-blurayplayer \
+    enigma2-skins-openvix \
+    oe-alliance-skins \
+    openvix-bootlogos-meta \
+    openvix-softcams-meta \
+    ${@bb.utils.contains("MACHINE_FEATURES", "nolcd", "", "enigma2-display-skins", d)} \
+    ${@bb.utils.contains("MACHINE_FEATURES", "skins1080", "hd-skins-meta", "", d)} \
     "

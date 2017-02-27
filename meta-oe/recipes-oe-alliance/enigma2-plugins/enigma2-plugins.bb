@@ -11,11 +11,12 @@ PROVIDES = "${PN} \
 
 inherit autotools-brokensep gitpkgv pythonnative pkgconfig
 
-PV = "2.0+git${SRCPV}"
-PKGV = "2.0+git${GITPKGV}"
-PR = "r10"
+PV = "${IMAGE_VERSION}+git${SRCPV}"
+PKGV = "${IMAGE_VERSION}+git${GITPKGV}"
+PR = "r0"
 
 SRC_URI = "${ENIGMA2_PLUGINS_URI} file://pluginnotwanted.patch"
+SRC_URI_append_openatv = " file://EPGSearch.patch"
 
 EXTRA_OECONF = " \
     BUILD_SYS=${BUILD_SYS} \
@@ -27,8 +28,8 @@ EXTRA_OECONF = " \
     --with-boxtype=${MACHINE} \
     --with-distro=${DISTRO} \
     --with-gstversion=${GST_VERSION} \
-    ${@base_contains('MACHINE_FEATURES', 'tpm', '--with-tpm' , '', d)} \
-    ${@base_contains('DISTRO_FEATURES', 'pli', '--with-pli' , '', d)} \
+    ${@bb.utils.contains('MACHINE_FEATURES', 'tpm', '--with-tpm' , '', d)} \
+    ${@bb.utils.contains('DISTRO_FEATURES', 'pli', '--with-pli' , '', d)} \
 "
 
 RREPLACES_enigma2-plugin-skincomponents-eventlist = "enigma2-plugin-components-eventlist"
@@ -107,20 +108,20 @@ python populate_packages_prepend() {
                     else:
                         rdepends.append(depend)
                 rdepends = ' '.join(rdepends)
-                bb.data.setVar('RDEPENDS_' + full_package, rdepends, d)
+                d.setVar('RDEPENDS_' + full_package, rdepends)
             elif line.startswith('Recommends: '):
-                bb.data.setVar('RRECOMMENDS_' + full_package, line[12:], d)
+                d.setVar('RRECOMMENDS_' + full_package, line[12:])
             elif line.startswith('Description: '):
-                bb.data.setVar('DESCRIPTION_' + full_package, line[13:], d)
+                d.setVar('DESCRIPTION_' + full_package, line[13:])
             elif line.startswith('Replaces: '):
-                bb.data.setVar('RREPLACES_' + full_package, ' '.join(line[10:].split(', ')), d)
+                d.setVar('RREPLACES_' + full_package, ' '.join(line[10:].split(', ')))
             elif line.startswith('Conflicts: '):
-                bb.data.setVar('RCONFLICTS_' + full_package, ' '.join(line[11:].split(', ')), d)
+                d.setVar('RCONFLICTS_' + full_package, ' '.join(line[11:].split(', ')))
             elif line.startswith('Maintainer: '):
-                bb.data.setVar('MAINTAINER_' + full_package, line[12:], d)
+                d.setVar('MAINTAINER_' + full_package, line[12:])
 
-    mydir = bb.data.getVar('D', d, 1) + "/../git/"
-    for package in bb.data.getVar('PACKAGES', d, 1).split():
+    mydir = d.getVar('D', True) + "/../git/"
+    for package in d.getVar('PACKAGES', d, 1).split():
         getControlLines(mydir, d, package.split('-'))
 }
 

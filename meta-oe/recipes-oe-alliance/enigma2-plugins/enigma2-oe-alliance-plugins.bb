@@ -10,7 +10,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=8e37f34d0e40d32ea2bc90ee812c9131"
 PACKAGES_DYNAMIC = "enigma2-plugin-(?!oealliance-).*"
 
 PACKAGES += " \
-    ${@base_contains('MACHINE_BRAND', 'Vu+', 'enigma2-plugin-extensions-hbbtv ' , ' ', d)} \
+    ${@bb.utils.contains('MACHINE_FEATURES', 'operahbbtv', 'enigma2-plugin-extensions-hbbtv ' , ' ', d)} \
     enigma2-plugin-extensions-lcd4linux \
     "
 
@@ -18,6 +18,7 @@ PROVIDES += " \
     enigma2-plugin-extensions-autotimer \
     enigma2-plugin-extensions-btdevicesmanager \
     enigma2-plugin-systemplugins-blindscan \
+    enigma2-plugin-systemplugins-channelsimporter \
     enigma2-plugin-extensions-dlnabrowser \
     enigma2-plugin-extensions-dlnaserver \
     enigma2-plugin-systemplugins-firmwareupgrade \
@@ -32,7 +33,7 @@ PROVIDES += " \
     enigma2-plugin-systemplugins-satipclient \
     enigma2-plugin-systemplugins-terrestrialscan \
     enigma2-plugin-extensions-tunerserver \
-    ${@base_contains('MACHINE_BRAND', 'Vu+', 'enigma2-plugin-extensions-hbbtv ' , ' ', d)} \
+    ${@bb.utils.contains('MACHINE_FEATURES', 'operahbbtv', 'enigma2-plugin-extensions-hbbtv ' , ' ', d)} \
     enigma2-plugin-systemplugins-transcodingsetup \
     enigma2-plugin-systemplugins-micomupgrade \
     enigma2-plugin-systemplugins-multitranscodingsetup \
@@ -40,16 +41,17 @@ PROVIDES += " \
     enigma2-plugin-extensions-fempa \
     enigma2-plugin-extensions-lcd4linux \
     enigma2-plugin-extensions-remotechannelstreamconverter \
-    ${@base_contains('MACHINE_FEATURES', 'legacykernel', '' , 'enigma2-plugin-systemplugins-wirelessaccesspoint', d)} \
-    ${@base_contains('MACHINE', 'spark7162', 'enigma2-plugin-systemplugins-uniontunertype ' , ' ', d)} \
-    ${@base_contains('MACHINE_FEATURES', 'sh4booster', 'enigma2-plugin-systemplugins-sh4boostercontrol' , ' ', d)} \
-    ${@base_contains('MACHINE_BRAND', 'WETEK', 'enigma2-plugin-extensions-rcuselect enigma2-plugin-extensions-rezap' , ' ', d)} \
+    ${@bb.utils.contains('MACHINE_FEATURES', 'legacykernel', '' , 'enigma2-plugin-systemplugins-wirelessaccesspoint', d)} \
+    ${@bb.utils.contains('MACHINE', 'spark7162', 'enigma2-plugin-systemplugins-uniontunertype ' , ' ', d)} \
+    ${@bb.utils.contains('MACHINE_FEATURES', 'sh4booster', 'enigma2-plugin-systemplugins-sh4boostercontrol' , ' ', d)} \
+    ${@bb.utils.contains('MACHINE_BRAND', 'WETEK', 'enigma2-plugin-extensions-rcuselect enigma2-plugin-extensions-rezap' , ' ', d)} \
+    ${@bb.utils.contains('MACHINE_BRAND', 'ODROID', 'enigma2-plugin-extensions-rcuselect enigma2-plugin-extensions-rezap' , ' ', d)} \
      "
 
 DEPENDS = "\
-    ${@base_contains('MACHINE_FEATURES', 'blindscan-dvbc', 'virtual/blindscan-dvbc' , '', d)} \
-    ${@base_contains('MACHINE_FEATURES', 'blindscan-dvbs', 'virtual/blindscan-dvbs' , '', d)} \
-    ${@base_contains('MACHINE_FEATURES', 'transcoding', 'virtual/transtreamproxy' , '', d)} \
+    ${@bb.utils.contains('MACHINE_FEATURES', 'blindscan-dvbc', 'virtual/blindscan-dvbc' , '', d)} \
+    ${@bb.utils.contains('MACHINE_FEATURES', 'blindscan-dvbs', 'virtual/blindscan-dvbs' , '', d)} \
+    ${@bb.utils.contains('MACHINE_FEATURES', 'transcoding', 'virtual/transtreamproxy' , '', d)} \
     python-dnspython python-beautifulsoup python-lxml python-simplejson python-pyamf python-icalendar python-pyusb \
     djmount \
     librtmp \
@@ -58,13 +60,15 @@ DEPENDS = "\
     ppp \
     usbmodeswitch \
     usbmodeswitch-data \
-    wvdial \
-    wvstreams \
     usbutils \
     satipclient \
     bluez-hidd \
-    ${@base_contains('MACHINE_FEATURES', 'legacykernel', '' , 'hostapd bridge-utils', d)} \
+    ${@bb.utils.contains('MACHINE_FEATURES', 'legacykernel', '' , 'hostapd bridge-utils', d)} \
     "
+
+# disable build broken
+#    wvdial wvstreams
+
 
 DESCRIPTION_enigma2-plugin-systemplugins-audioeffect = "Audio Effect setup"
 DESCRIPTION_enigma2-plugin-extensions-btdevicesmanager = "this is bt devices manger to pair e.x keyboard or mouse"
@@ -83,6 +87,7 @@ DESCRIPTION_enigma2-plugin-extensions-streamtv = "iptv player"
 RDEPENDS_enigma2-plugin-extensions-streamtv = "librtmp1"
 DESCRIPTION_enigma2-plugin-systemplugins-tempfancontrol = "Control your internal system fan."
 DESCRIPTION_enigma2-plugin-systemplugins-terrestrialscan = "Selects the strongest transponders where there are duplicates and allows filtering by network id."
+DESCRIPTION_enigma2-plugin-systemplugins-channelsimporter = "Imports a copy of the channel list from a remote receiver and loads it on the local receiver."
 DESCRIPTION_enigma2-plugin-systemplugins-fancontrol = "Control your internal system fan."
 RDEPENDS_enigma2-plugin-systemplugins-fancontrol_et9x00 = "hddtemp"
 DESCRIPTION_enigma2-plugin-systemplugins-remotecontrolcode = "Change Remote Control Code"
@@ -124,9 +129,9 @@ DESCRIPTION_enigma2-plugin-extensions-rezap = "ReZap Sync Tool for Wetek"
 inherit autotools-brokensep gitpkgv pythonnative
 
 SRCREV = "${AUTOREV}"
-PV = "2.0+git${SRCPV}"
-PKGV = "2.0+git${GITPKGV}"
-PR = "r25"
+PV = "${IMAGE_VERSION}+git${SRCPV}"
+PKGV = "${IMAGE_VERSION}+git${GITPKGV}"
+PR = "r3"
 
 SRC_URI = "${OEA_PLUGINS_URI}"
 

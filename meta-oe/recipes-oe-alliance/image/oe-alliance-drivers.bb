@@ -6,8 +6,8 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=4d92cd373abda3937c2bc47fbc49d
 
 inherit packagegroup
 
-PV = "5.2"
-PR = "r4"
+PV = "${IMAGE_VERSION}"
+PR = "r3"
 
 ALLOW_EMPTY_${PN} = "1"
 
@@ -15,6 +15,7 @@ DEPENDS = "enigma2 network-usb-drivers-meta"
 
 DEPENDS_remove_wetekplay = "network-usb-drivers-meta"
 DEPENDS_remove_wetekplay2 = "network-usb-drivers-meta"
+DEPENDS_remove_odroidc2 = "network-usb-drivers-meta"
 
 RDEPENDS_${PN}_gbquad = "enigma2-plugin-drivers-network-usb-smsc75xx"
 RDEPENDS_${PN}_gbquadplus = "enigma2-plugin-drivers-network-usb-smsc75xx"

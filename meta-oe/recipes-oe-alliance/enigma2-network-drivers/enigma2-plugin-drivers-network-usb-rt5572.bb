@@ -4,7 +4,7 @@ PACKAGE_ARCH = "all"
 require conf/license/license-gplv2.inc
 
 RRECOMMENDS_${PN} = " \
-    ${@base_contains("MACHINE_FEATURES", "linuxwifi", "", "rt5572", d)} \
+    ${@bb.utils.contains("MACHINE_FEATURES", "linuxwifi", "", "rt5572", d)} \
     "
 
 PV = "1.0"

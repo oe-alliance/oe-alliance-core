@@ -4,23 +4,23 @@ include conf/machine/include/build-extras.inc
 BRAND_OEM = "blackbox"
 
 MACHINE_NAME = "\
-${@base_contains('MACHINEBUILD', 'sogno8800hd', '8800HD' , '', d)}\
-${@base_contains('MACHINEBUILD', 'uniboxhde', 'HDECO+' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'sogno8800hd', '8800HD' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'uniboxhde', 'HDECO+' , '', d)}\
 "
 
 MACHINE_BRAND = "\
-${@base_contains('MACHINEBUILD', 'sogno8800hd', 'Sogno' , '', d)}\
-${@base_contains('MACHINEBUILD', 'uniboxhde', 'UNiBOX' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'sogno8800hd', 'Sogno' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'uniboxhde', 'UNiBOX' , '', d)}\
 "
 
 IMAGEDIR ?= "\
-${@base_contains('MACHINEBUILD', 'sogno8800hd', 'sogno/8800hd' , '', d)}\
-${@base_contains('MACHINEBUILD', 'uniboxhde', 'unibox/hde' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'sogno8800hd', 'sogno/8800hd' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'uniboxhde', 'unibox/hde' , '', d)}\
 "
 
 MKUBIFS_ARGS = "\
-${@base_contains('MACHINEBUILD', 'sogno8800hd', '-m 2048 -e 126976 -c 4096 -F' , '', d)}\
-${@base_contains('MACHINEBUILD', 'uniboxhde', '-m 2048 -e 126976 -c 8160 -F' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'sogno8800hd', '-m 2048 -e 126976 -c 4096 -F' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'uniboxhde', '-m 2048 -e 126976 -c 8160 -F' , '', d)}\
 "
 
 MTD_ROOTFS = "mtd6"
@@ -66,8 +66,8 @@ UBINIZE_ARGS = "-m 2048 -p 128KiB"
 
 IMAGE_CMD_ubi_append = "\
     mkdir -p ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}; \
-    ${@base_contains("MACHINE_FEATURES", "bootsplash", "cp ${DEPLOY_DIR_IMAGE}/${BOOTLOGO_FILENAME} ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/${BOOTLOGO_FILENAME};" , "", d)} \
-    mv ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.ubi ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/rootfs.bin; \
+    ${@bb.utils.contains("MACHINE_FEATURES", "bootsplash", "cp ${DEPLOY_DIR_IMAGE}/${BOOTLOGO_FILENAME} ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/${BOOTLOGO_FILENAME};" , "", d)} \
+    mv ${IMGDEPLOYDIR}/${IMAGE_NAME}.rootfs.ubi ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/rootfs.bin; \
     gzip -f -9c ${DEPLOY_DIR_IMAGE}/vmlinux-${MACHINE}.bin > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/kernel.bin; \
     echo ${IMAGE_VER_STRING} > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/imageversion; \
     echo "rename this file to 'force' to force an update without confirmation" > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/noforce; \

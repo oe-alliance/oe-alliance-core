@@ -8,7 +8,7 @@ PRECOMPILED_ARCH_dm7020hdv2 = "dm7020hd"
 
 inherit kernel machine_kernel_pr
 
-MACHINE_KERNEL_PR_append = ".1"
+MACHINE_KERNEL_PR_append = ".5"
 
 PATCHREV = "3c7230bc0819495db75407c365f4d1db70008044"
 PATCHLEVEL = "68"
@@ -42,6 +42,9 @@ SRC_URI = " \
     file://dvb-usb-smsdvb_fix_frontend.patch \
     file://0001-it913x-backport-changes-to-3.2-kernel.patch \
     file://defconfig \
+    file://kernel-add-support-for-gcc6.patch \
+    file://misc_latin1_to_utf8_conversions.patch \
+    file://0001-dvb_frontend-backport-multistream-support.patch \
 "
 
 PACKAGES_DYNAMIC = "kernel-*"
@@ -149,7 +152,10 @@ pkg_postrm_kernel () {
 
 CMDLINE_JFFS2 = "root=/dev/mtdblock3 rootfstype=jffs2 rw ${CMDLINE_CONSOLE}"
 CMDLINE_UBI = "ubi.mtd=root root=ubi0:rootfs rootfstype=ubifs rw ${CMDLINE_CONSOLE}"
-CMDLINE = "${@base_contains('IMAGE_FSTYPES', 'ubinfi', '${CMDLINE_UBI}', '${CMDLINE_JFFS2}', d)}"
+CMDLINE = "${@bb.utils.contains('IMAGE_FSTYPES', 'ubinfi', '${CMDLINE_UBI}', '${CMDLINE_JFFS2}', d)}"
 
 do_rm_work() {
 }
+
+# extra tasks
+addtask kernel_link_images after do_compile before do_install
