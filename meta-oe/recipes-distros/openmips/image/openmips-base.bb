@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=4d92cd373abda3937c2bc47fbc49d
 ALLOW_EMPTY_${PN} = "1"
 
 PV = "${IMAGE_VERSION}"
-PR = "r4"
+PR = "r5"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
@@ -34,6 +34,7 @@ RDEPENDS_${PN} = "\
     enigma2-plugin-extensions-openwebif-themes \
     enigma2-plugin-extensions-openwebif-vxg \
     ", d)} \
+    ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "", "iproute2 ", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "singlecore", "", \
     " \
     packagegroup-base-smbfs-server \
