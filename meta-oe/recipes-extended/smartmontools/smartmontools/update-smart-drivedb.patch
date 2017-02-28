@@ -1,0 +1,25 @@
+From 56cede39f06b769b91262e1cfc3b97da4daa0d9f Mon Sep 17 00:00:00 2001
+From: arn354 <arn354@email.de>
+Date: Wed, 22 Feb 2017 16:45:27 +0100
+Subject: [PATCH] Fix downloadlink update-smart-drivedb
+
+---
+ update-smart-drivedb.in | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/update-smart-drivedb.in b/update-smart-drivedb.in
+index ca728e1..b302e35 100644
+--- a/update-smart-drivedb.in
++++ b/update-smart-drivedb.in
+@@ -43,7 +43,7 @@ SMARTCTL="$sbindir/smartctl"
+ #SRCEXPR='http://sourceforge.net/apps/trac/smartmontools/export/HEAD/$location/smartmontools/drivedb.h'
+ 
+ # ViewVC repository browser
+-SRCEXPR='http://smartmontools.svn.sourceforge.net/viewvc/smartmontools/$location/smartmontools/drivedb.h?revision=HEAD'
++SRCEXPR='http://sourceforge.net/p/smartmontools/code/HEAD/tree/$location/smartmontools/drivedb.h?format=raw'
+ 
+ 
+ # Parse options
+-- 
+2.8.1.windows.1
+

@@ -9,9 +9,9 @@ inherit gitpkgv deploy
 DEPENDS = "tslib mpfr gmp"
 
 SRCREV = "${AUTOREV}"
-PV = "3.4+gitr${SRCPV}"
-PKGV = "3.4+gitr${GITPKGV}"
-PR = "r24"
+PV = "${IMAGE_VERSION}+gitr${SRCPV}"
+PKGV = "${IMAGE_VERSION}+gitr${GITPKGV}"
+PR = "r14"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -50,9 +50,9 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-hdmitest_0.4_mipsel.ipk \
     enigma2-plugin-extensions-hetweer_4.0_all.ipk \
     enigma2-plugin-extensions-iptvbouquet_1.0_r0_all.ipk \
-    ${@base_contains("TARGET_ARCH", "sh4", "enigma2-plugin-extensions-isettinge2-3.3.9-oe2.0-all-sh4.ipk" , "", d)} \
-    ${@base_contains("TARGET_ARCH", "mipsel", "enigma2-plugin-extensions-isettinge2-3.3.9-oe2.0-all-mips.ipk" , "", d)} \
-    ${@base_contains("TARGET_ARCH", "arm", "enigma2-plugin-extensions-isettinge2-3.3.9-oe2.0-all-arm.ipk" , "", d)} \
+    ${@bb.utils.contains("TARGET_ARCH", "sh4", "enigma2-plugin-extensions-isettinge2-3.3.9-oe2.0-all-sh4.ipk" , "", d)} \
+    ${@bb.utils.contains("TARGET_ARCH", "mipsel", "enigma2-plugin-extensions-isettinge2-3.3.9-oe2.0-all-mips.ipk" , "", d)} \
+    ${@bb.utils.contains("TARGET_ARCH", "arm", "enigma2-plugin-extensions-isettinge2-3.3.9-oe2.0-all-arm.ipk" , "", d)} \
     enigma2-plugin-extensions-kicker_3.5rc1_all.ipk \
     enigma2-plugin-extensions-kino_1.7rc1_all.ipk \
     enigma2-plugin-extensions-livefootball_6.1_all.ipk \
@@ -61,7 +61,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-moviebrowser_3.7rc1_all.ipk \
     enigma2-plugin-extensions-mp3browser_2.0rc1_all.ipk \
     enigma2-plugin-extensions-netspeedtest_1.0rc1_all.ipk \
-    ${@base_contains('MACHINE_BRAND', 'Vu+', '' , 'enigma2-plugin-extensions-openopera_1.0-r0_mips32el.ipk', d)} \
+    ${@bb.utils.contains('MACHINE_BRAND', 'Vu+', '' , 'enigma2-plugin-extensions-openopera_1.0-r0_mips32el.ipk', d)} \
     enigma2-plugin-extensions-opkg-tools_1.3_mipsel.ipk \
     enigma2-plugin-extensions-oscamstatusview_1.0rc1_all.ipk \
     enigma2-plugin-extensions-piconmanager_2.2-20150329-r0_all.ipk \
@@ -84,7 +84,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-sundtekcontrolcenter_20161213-2_all.ipk \
     enigma2-plugin-extensions-tectimetv_3.1_all.ipk \
     enigma2-plugin-extensions-thetvdb_0.7-20120607-r2_mips32el.ipk \
-    enigma2-plugin-extensions-tmbd_7.8rc1_all.ipk \
+    enigma2-plugin-extensions-tmbd_7.8_all.ipk \
     enigma2-plugin-extensions-translator_1.1rc1_all.ipk \
     enigma2-plugin-extensions-transmission_2.84_all.ipk \
     enigma2-plugin-extensions-tsmedia_11.6_all.ipk \
@@ -134,6 +134,7 @@ THIRDPARTY_MACHINE_PLUGINS_vusolose = " \
 THIRDPARTY_MACHINE_PLUGINS_vuzero = " \
     enigma2-plugin-extensions-sdg-imagedownloader-v0.7-oe-2.0-vu-all.ipk \
     "
+
 THIRDPARTY_MACHINE_PLUGINS_et7x00 = " \
     enigma2-plugin-extensions-newxtrend-hbbtv_4.0-r0_et7x00.ipk \
     "
@@ -144,18 +145,19 @@ THIRDPARTY_MACHINE_PLUGINS_et8000 = " \
 THIRDPARTY_MACHINE_PLUGINS_et8500 = " \
     enigma2-plugin-extensions-newxtrend-hbbtv_4.0-r0_et8500.ipk \
     "
+
 THIRDPARTY_MACHINE_PLUGINS_et10000 = " \
     enigma2-plugin-extensions-newxtrend-hbbtv_4.0-r0_et10000.ipk \
      "
 THIRDPARTY_MACHINE_PLUGINS_ultramini = " \
-    ${@base_contains('MACHINEBUILD', 'et7x00mini', 'enigma2-plugin-extensions-hbbtv-et7x00mini_2.0-r0_et7x00mini.ipk' , '', d)} \
-    ${@base_contains('MACHINEBUILD', 'xpeedlxcc', 'enigma2-plugin-extensions-hbbtv-xpeedc_2.0-r0_xpeedlxcc.ipk' , '', d)} \
-    ${@base_contains('MACHINEBUILD', 'xpeedlxcs2', 'enigma2-plugin-extensions-hbbtv-xpeedlxcs2_2.0-r0_xpeedlxcs2.ipk' , '', d)} \
+    ${@bb.utils.contains('MACHINEBUILD', 'et7x00mini', 'enigma2-plugin-extensions-hbbtv-et7x00mini_2.0-r0_et7x00mini.ipk' , '', d)} \
+    ${@bb.utils.contains('MACHINEBUILD', 'xpeedlxcc', 'enigma2-plugin-extensions-hbbtv-xpeedc_2.0-r0_xpeedlxcc.ipk' , '', d)} \
+    ${@bb.utils.contains('MACHINEBUILD', 'xpeedlxcs2', 'enigma2-plugin-extensions-hbbtv-xpeedlxcs2_2.0-r0_xpeedlxcs2.ipk' , '', d)} \
     "
 
 THIRDPARTY_MACHINE_PLUGINS_g300 = " \
-    ${@base_contains('MACHINEBUILD', 'sf3038', 'enigma2-plugin-extensions-hbbtv-octagon_1.0_mips32el.ipk' , '', d)} \
-    ${@base_contains('MACHINEBUILD', 'mbtwinplus', 'enigma2-plugin-extensions-hbbtv-miracle_1.0_mips32el.ipk' , '', d)} \
+    ${@bb.utils.contains('MACHINEBUILD', 'sf3038', 'enigma2-plugin-extensions-hbbtv-octagon_1.0_mips32el.ipk' , '', d)} \
+    ${@bb.utils.contains('MACHINEBUILD', 'mbtwinplus', 'enigma2-plugin-extensions-hbbtv-miracle_1.0_mips32el.ipk' , '', d)} \
     "
 
 do_install[noexec] = "1"
@@ -164,19 +166,19 @@ do_package_write_ipk[noexec] = "1"
 python populate_packages_prepend () {
     pkg  = ""
     pkgs = ""
-    plugins = bb.data.getVar('THIRDPARTY_PLUGINS', d, 1)
-    if bb.data.getVar('THIRDPARTY_MACHINE_PLUGINS', d, 1) is not None:
-        plugins += bb.data.getVar('THIRDPARTY_MACHINE_PLUGINS', d, 1)
-    if bb.data.getVar('THIRDPARTY_EXTRA_PLUGINS', d, 1) is not None:
-        plugins += bb.data.getVar('THIRDPARTY_EXTRA_PLUGINS', d, 1)
+    plugins = d.getVar('THIRDPARTY_PLUGINS', True)
+    if d.getVar('THIRDPARTY_MACHINE_PLUGINS', True) is not None:
+        plugins += d.getVar('THIRDPARTY_MACHINE_PLUGINS', True)
+    if d.getVar('THIRDPARTY_EXTRA_PLUGINS', True) is not None:
+        plugins += d.getVar('THIRDPARTY_EXTRA_PLUGINS', True)
 
     if plugins is not None:
         for package in plugins.split():
             pkg = package.split('_')[0]
             pkgs += pkg + " "
-            bb.data.setVar('ALLOW_EMPTY_' + pkg, '1', d)
+            d.setVar('ALLOW_EMPTY_' + pkg, '1')
 
-    bb.data.setVar('PACKAGES', pkgs, d)
+    d.setVar('PACKAGES', pkgs)
 }
 
 do_deploy() {

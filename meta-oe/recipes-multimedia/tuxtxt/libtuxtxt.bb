@@ -19,11 +19,15 @@ SRC_URI_append_xc7362 = " \
     file://tuxtxt_clear_screen.patch \
 "
 
+SRC_URI_append = " \
+    ${@bb.utils.contains('DISTRO_FEATURES', 'tuxtxtfhd', 'file://libtuxtxt_FHD.patch', '', d)} \
+    "
+
 S = "${WORKDIR}/git/libtuxtxt"
 
 PV = "2.0+git${SRCPV}"
 PKGV = "2.0+git${GITPKGV}"
-PR = "r7"
+PR = "r9"
 
 EXTRA_OECONF = "--with-boxtype=generic"
 

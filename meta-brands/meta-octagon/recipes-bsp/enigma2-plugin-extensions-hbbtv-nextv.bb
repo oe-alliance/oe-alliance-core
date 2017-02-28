@@ -19,7 +19,7 @@ PR = "r0"
 
 INSANE_SKIP_${PN} += "already-stripped"
 
-SRC_URI = "git://github.com/NexTVTeam/hbbtv-plugin.git;protocol=https;branch=3.4"
+SRC_URI = "git://github.com/NexTVTeam/hbbtv-plugin.git;protocol=https;branch=4.0"
 
 S = "${WORKDIR}/git"
 

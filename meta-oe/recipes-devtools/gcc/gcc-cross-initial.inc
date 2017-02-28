@@ -5,6 +5,9 @@ PACKAGES = ""
 INHIBIT_AUTOTOOLS_DEPS = "1"
 INHIBIT_DEFAULT_DEPS = "1"
 
+# We still need gnu-config-native
+DEPENDS_prepend = "gnu-config-native autoconf-native "
+
 PN = "gcc-cross-initial-${TARGET_ARCH}"
 
 CROSS_TARGET_SYS_DIR_append = ".${PN}"
@@ -19,13 +22,13 @@ EXTRA_OECONF = "\
     --disable-multilib \
     --disable-__cxa_atexit \
     --enable-languages=c \
-    ${OPTSPACE} \
     --program-prefix=${TARGET_PREFIX} \
     --with-sysroot=/not/exist \
     --with-build-sysroot=${GCCCROSS_BUILDSYSROOT} \
     ${EXTRA_OECONF_INITIAL} \
     ${@bb.utils.contains('DISTRO_FEATURES', 'ld-is-gold', '--with-ld=${STAGING_BINDIR_TOOLCHAIN}/${TARGET_PREFIX}ld.bfd', '', d)} \
     ${EXTRA_OECONF_GCC_FLOAT} \
+    ${@get_gcc_ppc_plt_settings(bb, d)} \
 "
 
 EXTRA_OECONF += "--with-native-system-header-dir=${SYSTEMHEADERS}"
@@ -74,7 +77,7 @@ do_install () {
 
 	# gcc-runtime installs libgcc into a special location in staging since it breaks doing a standalone build
 	case ${PN} in
-		*gcc-cross-initial-${TARGET_ARCH}|*gcc-crosssdk-initial-${TARGET_ARCH})
+		*gcc-cross-initial-${TARGET_ARCH}|*gcc-crosssdk-initial-${SDK_SYS})
 			dest=${D}/${includedir}/gcc-build-internal-initial-${TARGET_SYS}
 			hardlinkdir . $dest
 		;;
@@ -94,3 +97,4 @@ sysroot_stage_all() {
 do_populate_sysroot[sstate-inputdirs] = "${SYSROOT_DESTDIR}/${STAGING_DIR_HOST}/ ${SYSROOT_DESTDIR}/${STAGING_DIR_TARGET}/${target_base_libdir}/"
 do_populate_sysroot[sstate-outputdirs] = "${STAGING_DIR_HOST}/ ${STAGING_DIR_TCBOOTSTRAP}/${target_base_libdir}/"
 
+inherit nopackages

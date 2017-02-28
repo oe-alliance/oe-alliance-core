@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=0636e73ff0215e8d672dc4c32c317bb3 \
                     file://COPYING.LIB;md5=55ca817ccb7d5b5b66355690e9abc605 \
                     file://gst/ffmpegcolorspace/utils.c;beginline=1;endline=20;md5=9c83a200b8e597b26ca29df20fc6ecd0"
 
-DEPENDS += "${@base_contains('DISTRO_FEATURES', 'x11', 'virtual/libx11 libxv', '', d)}"
+DEPENDS += "${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'virtual/libx11 libxv', '', d)}"
 DEPENDS += "alsa-lib freetype liboil libogg libvorbis libtheora avahi util-linux tremor orc orc-native pango"
 DEPENDS += "gstreamer"
 
@@ -25,7 +25,7 @@ SRC_URI += " \
         file://gst-plugins-base-tremor.patch \
         file://configure.ac-fix-subparse-plugin.patch \
         file://0035-playbin2-add-custom-user-agent-property.patch \
-        ${@base_contains('MACHINE_BRAND', 'Dreambox', '', 'file://revert-0dfdd9186e143daa568521c4e55c9923e5cbc466.patch', d)} \
+        ${@bb.utils.contains('MACHINE_BRAND', 'Dreambox', '', 'file://revert-0dfdd9186e143daa568521c4e55c9923e5cbc466.patch', d)} \
 "
 
 do_common_update() {

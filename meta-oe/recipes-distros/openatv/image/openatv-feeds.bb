@@ -24,7 +24,8 @@ RRECOMMENDS_${PN} = "\
     curlftpfs \
     cdfs \
     openssl-old \
-    ${@base_contains("TARGET_ARCH", "mipsel", "dvb-apps" , "", d)} \
+    ${@bb.utils.contains("TARGET_ARCH", "mipsel", "dvb-apps" , "", d)} \
+    enigma2-plugin-extensions-sdgradio \
     enigma2-plugin-extensions-enhancedmoviecenter \
     enigma2-plugin-extensions-cooltvguide \
     enigma2-plugin-extensions-bmediacenter \
@@ -34,8 +35,8 @@ RRECOMMENDS_${PN} = "\
     enigma2-plugin-skins-pli-hd \
     enigma2-plugin-extensions-blurayplayer \
     enigma2-plugin-systemplugins-autobouquetsmaker \
-    ${@base_contains("MACHINE_BRAND", "AZBOX", "enigma2-plugin-extensions-azplay enigma2-plugin-extensions-aziptv", "", d)} \
-    ${@base_contains("MACHINE_FEATURES", "skins1080", "hd-skins-meta", "", d)} \
+    ${@bb.utils.contains("MACHINE_BRAND", "AZBOX", "enigma2-plugin-extensions-azplay enigma2-plugin-extensions-aziptv", "", d)} \
+    ${@bb.utils.contains("MACHINE_FEATURES", "skins1080", "hd-skins-meta", "", d)} \
     "
 
 RRECOMMENDS_${PN}_append_gb800solo = "enigma2-plugin-extensions-gbipboxclient"

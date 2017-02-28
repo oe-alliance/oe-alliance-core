@@ -6,8 +6,8 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=4d92cd373abda3937c2bc47fbc49d
 ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
-PV = "5.2"
-PR = "r2"
+PV = "${IMAGE_VERSION}"
+PR = "r1"
 
 inherit packagegroup
 
@@ -19,8 +19,8 @@ RDEPENDS_${PN} = "\
 	enigma2-plugin-skins-novum-hd-slim \
 	enigma2-plugin-skins-novum-fhd-light \
 	enigma2-plugin-skins-army-moodblue-hd \
-	enigma2-plugin-skins-kravenhd \
+	enigma2-plugin-skins-kravenfhd \
+	enigma2-plugin-skins-kravenvb \
 	enigma2-plugin-skins-sevenhd \
-	enigma2-plugin-skins-blackspirit.hd \
 	enigma2-plugin-skins-pli-hd-fullnight \
 	"

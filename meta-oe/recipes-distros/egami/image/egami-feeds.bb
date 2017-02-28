@@ -7,7 +7,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PV = "1.0"
-PR = "r4"
+PR = "r1"
 
 inherit packagegroup
 
@@ -24,8 +24,9 @@ RRECOMMENDS_${PN} = "\
 	enigma2-skins-openvix \
 	enigma2-plugin-skins.egami-egarmymoodblue \
 	enigma2-plugin-skins.egami-edreamy \
-	enigma2-plugin-skins.egami-edreamyfhd \
+	enigma2-plugin-skins.egami-odreamyfhd \
 	enigma2-plugin-skins.egami-a4you \
+	enigma2-plugin-skins-egmega32 \
 	enigma2-plugin-skins-pli-hd \
 	enigma2-plugin-skins-metrix-atv \
 	enigma2-plugin-skins-nobile \
@@ -42,8 +43,11 @@ RRECOMMENDS_${PN} = "\
 	enigma2-plugin-extensions-bmediacenter \
 	enigma2-plugin-extensions-blurayplayer \
 	enigma2-plugin-extensions-openmultiboot openmultiboot \
+	enigma2-plugin-extensions-mediaplayer2 \
 	\
 	python-twisted-web python-gdata python-textutils python-json python-google-api-client python-httplib2 python-youtube-dl-src python-ctypes python-six python-oauth2client python-uritemplate \
 	\
-	${@base_contains("MACHINE_FEATURES", "skins1080", "hd-skins-meta", "", d)} \
+	${@bb.utils.contains("MACHINE_FEATURES", "skins1080", "hd-skins-meta", "", d)} \
+	\
+	libav \
 "

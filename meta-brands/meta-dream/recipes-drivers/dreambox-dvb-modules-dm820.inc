@@ -15,9 +15,9 @@ SRC_URI = " \
 
 S = "${WORKDIR}/dreambox-dvb-modules_${KV}-${MACHINE}-${DRIVERDATE}_${MACHINE}/lib/modules/${DM_LOCALVERSION}/extra"
 
-inherit module
-
 do_compile() {
+}
+do_populate_sysroot() {
 }
 
 do_install() {
@@ -41,5 +41,5 @@ MD5SUM = "${@d.getVarFlag('SRC_URI', 'dm820.md5sum', True)}"
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/dreambox-dvb-modules:"
 
-FILES_${PN} += "${sysconfdir}/modules-load.d/${PN}.conf"
+FILES_${PN} += "${sysconfdir}/modules-load.d/${PN}.conf /lib/modules/${DM_LOCALVERSION}/extra"
 

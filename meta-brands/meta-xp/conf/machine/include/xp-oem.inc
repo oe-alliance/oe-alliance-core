@@ -4,24 +4,24 @@ include conf/machine/include/build-extras.inc
 BRAND_OEM = "xp"
 
 MACHINE_NAME = "\
-${@base_contains('MACHINEBUILD', 'xp1000mk', 'XP1000' , '', d)}\
-${@base_contains('MACHINEBUILD', 'xp1000max', 'XP1000' , '', d)}\
-${@base_contains('MACHINEBUILD', 'sf8', 'SF8' , '', d)}\
-${@base_contains('MACHINEBUILD', 'xp1000plus', 'XP1000 + ' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'xp1000mk', 'XP1000' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'xp1000max', 'XP1000' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'sf8', 'SF8' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'xp1000plus', 'XP1000 + ' , '', d)}\
 "
 
 MACHINE_BRAND = "\
-${@base_contains('MACHINEBUILD', 'xp1000mk', 'MK-Digital' , '', d)}\
-${@base_contains('MACHINEBUILD', 'xp1000max', 'MaxDigital' , '', d)}\
-${@base_contains('MACHINEBUILD', 'sf8', 'Octagon' , '', d)}\
-${@base_contains('MACHINEBUILD', 'xp1000plus', 'Octagon' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'xp1000mk', 'MK-Digital' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'xp1000max', 'MaxDigital' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'sf8', 'Octagon' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'xp1000plus', 'Octagon' , '', d)}\
 "
 
 IMAGEDIR ?= "\
-${@base_contains('MACHINEBUILD', 'xp1000mk', 'xp1000' , '', d)}\
-${@base_contains('MACHINEBUILD', 'xp1000max', 'xp1000' , '', d)}\
-${@base_contains('MACHINEBUILD', 'sf8', 'xp1000' , '', d)}\
-${@base_contains('MACHINEBUILD', 'xp1000plus', 'xp1000' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'xp1000mk', 'xp1000' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'xp1000max', 'xp1000' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'sf8', 'xp1000' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'xp1000plus', 'xp1000' , '', d)}\
 "
 
 MTD_KERNEL = "mtd1"
@@ -73,7 +73,7 @@ IMAGE_CMD_ubi_prepend = " \
 IMAGE_CMD_ubi_append = "\
     mkdir -p ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}; \
     cp ${DEPLOY_DIR_IMAGE}/splash.bin ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/splash.bin; \
-    mv ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.ubi ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/${ROOTFS_FILE}; \
+    mv ${IMGDEPLOYDIR}/${IMAGE_NAME}.rootfs.ubi ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/${ROOTFS_FILE}; \
     gzip -9c ${DEPLOY_DIR_IMAGE}/vmlinux-${MACHINE}.bin > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/${KERNEL_FILE}; \
     echo ${IMAGE_VER_STRING} > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/imageversion; \
     echo "rename this file to 'force' to force an update without confirmation" > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/noforce; \

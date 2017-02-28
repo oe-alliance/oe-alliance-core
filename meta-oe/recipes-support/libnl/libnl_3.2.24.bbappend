@@ -4,6 +4,7 @@ SRC_URI_append_dm800 = " file://tc_ematch-header-files.patch \
                          file://nl80211-header.patch \
                          file://stubs-o32_hard.h \
                          "
+ 
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}_${PV}:"
 

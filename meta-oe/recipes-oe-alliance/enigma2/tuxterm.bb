@@ -17,4 +17,4 @@ inherit autotools
 
 FILES_${PN} = "/"
 
-EXTRA_OECONF = "${@base_contains("MACHINE_FEATURES", "32bpp", "--with-bpp=32" , "--with-bpp=8", d)}"
+EXTRA_OECONF = "${@bb.utils.contains("MACHINE_FEATURES", "32bpp", "--with-bpp=32" , "--with-bpp=8", d)}"

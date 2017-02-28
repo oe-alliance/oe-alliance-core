@@ -2,10 +2,10 @@
 IMAGE_CLASSES += "hd-emmc_image_multi"
 
 IMAGE_FSTYPES += "hd-emmc"
-IMAGE_ROOTFS_SIZE ?= "196608"
+IMAGE_ROOTFS_SIZE ?= "294912"
 
 TARGET_ARCH = "arm"
-DEFAULTTUNE = "armv7ahf-neon"
+DEFAULTTUNE = "cortexa15hf-neon-vfpv4"
 
 PREFERRED_VERSION_linux-gfutures = "4.7.4"
 PREFERRED_VERSION_linux-libc-headers = "4.7"
@@ -28,5 +28,5 @@ IMAGE_CMD_hd-emmc_append = "\
     rm -Rf ${IMAGEDIR}; \
     "
 
-require conf/machine/include/arm/arch-armv7a.inc
+require conf/machine/include/tune-cortexa15.inc
 require conf/machine/include/gfutures-oem.inc

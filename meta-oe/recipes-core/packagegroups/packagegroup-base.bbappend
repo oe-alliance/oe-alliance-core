@@ -1,11 +1,11 @@
 PR .= ".1"
 
 PACKAGES += " \
-            ${@base_contains("DISTRO_FEATURES", "appletalk", "packagegroup-base-appletalk", "", d)} \
-            ${@base_contains("DISTRO_FEATURES", "smbfs", "packagegroup-base-smbfs-client", "", d)} \
-            ${@base_contains("DISTRO_FEATURES", "smbfs", "packagegroup-base-smbfs-server", "", d)} \
-            ${@base_contains("DISTRO_FEATURES", "smbfs", "packagegroup-base-smbfs-utils", "", d)} \
-            ${@base_contains("DISTRO_FEATURES", "smbfs", "packagegroup-base-samba", "", d)} \
+            ${@bb.utils.contains("DISTRO_FEATURES", "appletalk", "packagegroup-base-appletalk", "", d)} \
+            ${@bb.utils.contains("DISTRO_FEATURES", "smbfs", "packagegroup-base-smbfs-client", "", d)} \
+            ${@bb.utils.contains("DISTRO_FEATURES", "smbfs", "packagegroup-base-smbfs-server", "", d)} \
+            ${@bb.utils.contains("DISTRO_FEATURES", "smbfs", "packagegroup-base-smbfs-utils", "", d)} \
+            ${@bb.utils.contains("DISTRO_FEATURES", "smbfs", "packagegroup-base-samba", "", d)} \
             "
 
 RDEPENDS_packagegroup-base := "${@oe_filter_out('packagegroup-base-nfs', '${RDEPENDS_packagegroup-base}', d)}"

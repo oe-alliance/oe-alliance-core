@@ -8,7 +8,7 @@ SRC_URI = "file://ebox-shutdown.sh"
 INITSCRIPT_NAME = "ebox-shutdown"
 INITSCRIPT_PARAMS = "start 39 0 ."
 
-inherit autotools pkgconfig update-rc.d
+inherit pkgconfig update-rc.d
 
 do_install() {
     install -d ${D}/etc/init.d/

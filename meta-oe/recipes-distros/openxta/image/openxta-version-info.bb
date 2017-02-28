@@ -14,8 +14,6 @@ URL = "http://www.xtrend-alliance.com/"
 
 S = "${WORKDIR}"
 
-inherit autotools
-
 PACKAGES = "${PN}"
 
 do_install() {
@@ -39,6 +37,7 @@ do_install() {
     echo "catalog=${URL}" >> ${D}/etc/image-version
     echo "${MACHINE}" > ${D}/etc/model
 }
+do_install[vardepsexclude] += "DATETIME"
 
 FILES_${PN} += "/etc"
 

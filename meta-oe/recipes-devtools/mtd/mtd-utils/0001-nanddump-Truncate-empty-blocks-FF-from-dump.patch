@@ -1,24 +1,6 @@
-From 3972a1528d5eaf058e6710873ed23647c5157a65 Mon Sep 17 00:00:00 2001
-From: Athanasios Oikonomou <athoik@gmail.com>
-Date: Thu, 3 Jul 2014 22:45:37 +0300
-Subject: [PATCH] nanddump: Truncate empty blocks (FF) from dump
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-
-The nanddump get an additional -t option for truncate where the dump read only as long as is to be found FFFFFFFF.
-This allows you to read secondstage from /dev/mtd1 without having to trim with difficulty.
-
-das nanddump kriegt eine zusätzliche -t option für truncate wo beim dumpen nur solange gelesen wird bis man FFFFFFFF findet.
-Damit kann man den secondstage loader aus dem /dev/mtd1 lesen ohne ihn nachher noch mühsam trimmen zu müssen.
-
-https://www.dream-multimedia-tv.de/board/index.php?page=Thread&threadID=18761
-
-diff --git a/nanddump.c b/nanddump.c
-index 4ee7ed4..368acfb 100644
---- a/nanddump.c
-+++ b/nanddump.c
-@@ -52,6 +52,7 @@ static void display_help(int status)
+--- a/nand-utils/nanddump.c	2017-01-10 20:44:46.407606067 +0100
++++ b/nand-utils/nanddump.c	2017-01-10 20:54:52.209794976 +0100
+@@ -52,6 +52,7 @@
  "-p         --prettyprint        Print nice (hexdump)\n"
  "-q         --quiet              Don't display progress and status messages\n"
  "-s addr    --startaddress=addr  Start address\n"
@@ -26,7 +8,7 @@ index 4ee7ed4..368acfb 100644
  "\n"
  "--bb=METHOD, where METHOD can be `padbad', `dumpbad', or `skipbad':\n"
  "    padbad:  dump flash data, substituting 0xFF for any bad blocks\n"
-@@ -87,6 +88,7 @@ static const char		*dumpfile;		// dump file name
+@@ -86,6 +87,7 @@
  static bool			quiet = false;		// suppress diagnostic output
  static bool			canonical = false;	// print nice + ascii
  static bool			forcebinary = false;	// force printing binary to tty
@@ -34,16 +16,16 @@ index 4ee7ed4..368acfb 100644
  
  static enum {
  	padbad,   // dump flash data, substituting 0xFF for any bad blocks
-@@ -101,7 +103,7 @@ static void process_options(int argc, char * const argv[])
+@@ -100,7 +102,7 @@
  
  	for (;;) {
  		int option_index = 0;
--		static const char short_options[] = "hs:f:l:opqnca";
-+		static const char short_options[] = "hs:f:l:opqncat";
+-		static const char short_options[] = "hs:f:l:opqncaV";
++		static const char short_options[] = "hs:f:l:opqncaVt";
  		static const struct option long_options[] = {
- 			{"version", no_argument, 0, 0},
+ 			{"version", no_argument, 0, 'V'},
  			{"bb", required_argument, 0, 0},
-@@ -111,6 +113,7 @@ static void process_options(int argc, char * const argv[])
+@@ -110,6 +112,7 @@
  			{"canonicalprint", no_argument, 0, 'c'},
  			{"file", required_argument, 0, 'f'},
  			{"oob", no_argument, 0, 'o'},
@@ -51,7 +33,7 @@ index 4ee7ed4..368acfb 100644
  			{"prettyprint", no_argument, 0, 'p'},
  			{"startaddress", required_argument, 0, 's'},
  			{"length", required_argument, 0, 'l'},
-@@ -172,8 +175,12 @@ static void process_options(int argc, char * const argv[])
+@@ -171,8 +174,12 @@
  			case 'a':
  				forcebinary = true;
  				break;
@@ -64,7 +46,7 @@ index 4ee7ed4..368acfb 100644
  			case 'p':
  				pretty_print = true;
  				break;
-@@ -205,6 +212,12 @@ static void process_options(int argc, char * const argv[])
+@@ -204,6 +211,12 @@
  		exit(EXIT_FAILURE);
  	}
  
@@ -77,7 +59,7 @@ index 4ee7ed4..368acfb 100644
  	if (forcebinary && pretty_print) {
  		fprintf(stderr, "The forcebinary and pretty print options are\n"
  				"mutually-exclusive. Choose one or the "
-@@ -439,11 +452,24 @@ int main(int argc, char * const argv[])
+@@ -464,13 +477,28 @@
  		}
  
  		/* Write out page data */
@@ -86,11 +68,15 @@ index 4ee7ed4..368acfb 100644
  			for (i = 0; i < bs; i += PRETTY_ROW_SIZE) {
 -				pretty_dump_to_buffer(readbuf + i, PRETTY_ROW_SIZE,
 -						pretty_buf, PRETTY_BUF_LEN, true, canonical, ofs + i);
--				write(ofd, pretty_buf, strlen(pretty_buf));
+-				err = ofd_write(ofd, pretty_buf, strlen(pretty_buf));
+-				if (err)
+-					goto closeall;
 +				if (pretty_print) {
 +					pretty_dump_to_buffer(readbuf + i, 
 +						PRETTY_ROW_SIZE, pretty_buf, PRETTY_BUF_LEN, true,  canonical, ofs + i);
-+					write(ofd, pretty_buf, strlen(pretty_buf));
++					err = write(ofd, pretty_buf, strlen(pretty_buf));
++					if (err)
++						goto closeall;
 +				}
 +				else {  /* truncate at FFFFFFFF */
 +					unsigned int tmp = ((unsigned int*)readbuf)[(i>>2)] & ((unsigned int*)readbuf)[(i>>2)+1] & ((unsigned int*)readbuf)[(i>> 2)+2] & ((unsigned int*)readbuf)[(i>>2)+3];
@@ -100,12 +86,11 @@ index 4ee7ed4..368acfb 100644
 +						goto closeall;
 +					}
 +					else {
-+						write(ofd, readbuf + i, PRETTY_ROW_SIZE);
++						err = write(ofd, readbuf + i, PRETTY_ROW_SIZE);
++						if (err)
++							goto closeall;
 +					}
 +				}
  			}
- 		} else
- 			write(ofd, readbuf, bs);
--- 
-1.7.10.4
-
+ 		} else {
+ 			/* Write requested length if oob is omitted */

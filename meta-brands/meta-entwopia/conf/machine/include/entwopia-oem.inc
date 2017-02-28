@@ -4,30 +4,30 @@ include conf/machine/include/build-extras.inc
 BRAND_OEM = "entwopia"
 
 MACHINE_NAME = "\
-${@base_contains('MACHINEBUILD', 'enfinity', 'ENfinity' , '', d)}\
-${@base_contains('MACHINEBUILD', 'marvel1', 'Marvel 1' , '', d)}\
-${@base_contains('MACHINEBUILD', 'x2plus', 'enfinityX 2plus' , '', d)}\
-${@base_contains('MACHINEBUILD', 'bre2ze', 'BRE2ZE' , '', d)}\
-${@base_contains('MACHINEBUILD', 'evomini', 'ENfinity mini' , '', d)}\
-${@base_contains('MACHINEBUILD', 'evominiplus', 'ENfinity mini+' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'enfinity', 'ENfinity' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'marvel1', 'Marvel 1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'x2plus', 'enfinityX 2plus' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'bre2ze', 'BRE2ZE' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'evomini', 'ENfinity mini' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'evominiplus', 'ENfinity mini+' , '', d)}\
 "
 
 MACHINE_BRAND = "\
-${@base_contains('MACHINEBUILD', 'enfinity', 'EVO' , '', d)}\
-${@base_contains('MACHINEBUILD', 'marvel1', 'VisionNet' , '', d)}\
-${@base_contains('MACHINEBUILD', 'x2plus', 'EVO' , '', d)}\
-${@base_contains('MACHINEBUILD', 'bre2ze', 'WWIO' , '', d)}\
-${@base_contains('MACHINEBUILD', 'evomini', 'EVO' , '', d)}\
-${@base_contains('MACHINEBUILD', 'evominiplus', 'EVO' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'enfinity', 'EVO' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'marvel1', 'VisionNet' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'x2plus', 'EVO' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'bre2ze', 'WWIO' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'evomini', 'EVO' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'evominiplus', 'EVO' , '', d)}\
 "
 
 IMAGEDIR ?= "\
-${@base_contains('MACHINEBUILD', 'enfinity', 'enfinity' , '', d)}\
-${@base_contains('MACHINEBUILD', 'marvel1', 'marvel1' , '', d)}\
-${@base_contains('MACHINEBUILD', 'x2plus', 'x2plus' , '', d)}\
-${@base_contains('MACHINEBUILD', 'bre2ze', 'bre2ze' , '', d)}\
-${@base_contains('MACHINEBUILD', 'evomini', 'mini' , '', d)}\
-${@base_contains('MACHINEBUILD', 'evominiplus', 'miniplus' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'enfinity', 'enfinity' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'marvel1', 'marvel1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'x2plus', 'x2plus' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'bre2ze', 'bre2ze' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'evomini', 'mini' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'evominiplus', 'miniplus' , '', d)}\
 "
 
 MTD_ROOTFS = "mtd0"
@@ -52,7 +52,7 @@ MACHINE_EXTRA_RRECOMMENDS = " \
 include conf/machine/include/autoload-filesystems.inc
 
 DVBMEDIASINK_CONFIG = "--with-wma --with-wmv --with-pcm --with-dts --with-eac3 \
-    ${@base_contains('MACHINE', 'ch625lc', '--with-h265 --with-vb6 --with-vb8 --with-spark' , '', d)} \
+    ${@bb.utils.contains('MACHINE', 'ch625lc', '--with-h265 --with-vb6 --with-vb8 --with-spark' , '', d)} \
 "
 
 TARGET_ARCH = "mipsel"
@@ -79,8 +79,8 @@ IMAGE_CMD_ubi_prepend = " \
 
 IMAGE_CMD_ubi_append = "\
     mkdir -p ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}; \
-    ${@base_contains("MACHINE_FEATURES", "bootsplash", "cp ${DEPLOY_DIR_IMAGE}/${BOOTLOGO_FILENAME} ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/${BOOTLOGO_FILENAME};" , "", d)} \
-    mv ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.ubi ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/rootfs.bin; \
+    ${@bb.utils.contains("MACHINE_FEATURES", "bootsplash", "cp ${DEPLOY_DIR_IMAGE}/${BOOTLOGO_FILENAME} ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/${BOOTLOGO_FILENAME};" , "", d)} \
+    mv ${IMGDEPLOYDIR}/${IMAGE_NAME}.rootfs.ubi ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/rootfs.bin; \
     gzip -9c ${DEPLOY_DIR_IMAGE}/vmlinux-${MACHINE}.bin > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/kernel.bin; \
     echo ${IMAGE_VER_STRING} > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/imageversion; \
     echo "rename this file to 'force' to force an update without confirmation" > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/noforce; \

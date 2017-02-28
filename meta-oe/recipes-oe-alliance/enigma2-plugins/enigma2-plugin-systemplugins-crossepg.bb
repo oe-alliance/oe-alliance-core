@@ -22,11 +22,11 @@ ALLOW_EMPTY_${PN} = "1"
 # Dunno why, but it sometime fails to build in parallel
 PARALLEL_MAKE = ""
 CFLAGS_append = " -I${STAGING_INCDIR}/libxml2/ -I${STAGING_INCDIR}/${PYTHON_DIR}/"
-CFLAGS_append = " ${@base_contains('BRAND_OEM', 'xtrend', ' -DNO_DVB_POLL' , '', d)}"
-CFLAGS_append = " ${@base_contains('BRAND_OEM', 'xp', ' -DNO_DVB_POLL' , '', d)}"
-CFLAGS_append = " ${@base_contains('BRAND_OEM', 'skylake', ' -DNO_DVB_POLL' , '', d)}"
-CFLAGS_append = " ${@base_contains('BRAND_OEM', 'gfutures', ' -DNO_DVB_POLL' , '', d)}"
-CFLAGS_append = " ${@base_contains('BRAND_OEM', 'formuler', ' -DNO_DVB_POLL' , '', d)}"
+CFLAGS_append = " ${@bb.utils.contains('BRAND_OEM', 'xtrend', ' -DNO_DVB_POLL' , '', d)}"
+CFLAGS_append = " ${@bb.utils.contains('BRAND_OEM', 'xp', ' -DNO_DVB_POLL' , '', d)}"
+CFLAGS_append = " ${@bb.utils.contains('BRAND_OEM', 'skylake', ' -DNO_DVB_POLL' , '', d)}"
+CFLAGS_append = " ${@bb.utils.contains('BRAND_OEM', 'gfutures', ' -DNO_DVB_POLL' , '', d)}"
+CFLAGS_append = " ${@bb.utils.contains('BRAND_OEM', 'formuler', ' -DNO_DVB_POLL' , '', d)}"
 
 INHIBIT_PACKAGE_STRIP = "1"
 

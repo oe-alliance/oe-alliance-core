@@ -28,7 +28,7 @@ SRC_URI += " \
     file://0005-FlvDemux-Set-profile-field-in-cap-for-aac-audio.patch \
     file://0006-Matroska-Demux-Handle-TrueHD-audio-codec-id.patch \
     file://rtsp-check-all-protocols.patch \
-    ${@base_contains('MACHINE_FEATURES', 'legacykernel', 'file://v4l-compile-fix-old-kernel.patch', '', d)} \
+    ${@bb.utils.contains('MACHINE_FEATURES', 'legacykernel', 'file://v4l-compile-fix-old-kernel.patch', '', d)} \
     file://add-support-3.12.patch \
     file://mp4-parse-fix-typo.patch \
 "

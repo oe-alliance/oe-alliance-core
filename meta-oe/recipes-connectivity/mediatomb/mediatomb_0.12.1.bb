@@ -21,6 +21,7 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/mediatomb/mediatomb-${PV}.tar.gz \
         "
 
 SRC_URI_append_wetekplay2 = " file://mediatomb_aarch64.patch "
+SRC_URI_append_odroidc2 = " file://mediatomb_aarch64.patch "
 
 S = "${WORKDIR}/mediatomb-${PV}"
 

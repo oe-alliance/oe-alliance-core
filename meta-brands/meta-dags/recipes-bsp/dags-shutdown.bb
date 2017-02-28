@@ -13,7 +13,7 @@ SRC_URI = " \
 INITSCRIPT_NAME = "dags-shutdown"
 INITSCRIPT_PARAMS = "start 89 0 ."
 
-inherit autotools pkgconfig update-rc.d
+inherit pkgconfig update-rc.d
 
 S = "${WORKDIR}"
 

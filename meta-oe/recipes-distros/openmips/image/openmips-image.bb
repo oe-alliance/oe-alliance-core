@@ -2,16 +2,31 @@ SUMMARY = "OpenMips Image"
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "proprietary"
-MAINTAINER = "openmips team"
+MAINTAINER = "openMips team"
 
 require conf/license/license-gplv2.inc
 
 PV = "${IMAGE_VERSION}"
-PR = "r0${DATETIME}"
+PR = "${BUILD_VERSION}"
+PR .= "-r0"
+
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-IMAGE_INSTALL = "openmips-base"
+# FIX distro-image.bb ERROR: Taskhash mismatch - part 1 add packages to build dependencies of distro-image.bb which run on end of build process
+DEPENDS = " \
+    oe-alliance-base \
+    oe-alliance-enigma2 \
+    oe-alliance-wifi \
+    oe-alliance-feeds \
+    enigma2-plugins \
+    ${DISTRO}-base \
+    ${DISTRO}-version-info \
+    "
 
+# FIX distro-image.bb ERROR: Taskhash mismatch - part 2  make sure all do_rm_work tasks of build dependencies are finished before starting do_rootfs of distro-image.bb
+do_rootfs[deptask] = "do_rm_work"
+
+IMAGE_INSTALL = "openmips-base"
 
 export IMAGE_BASENAME = "openmips-image"
 IMAGE_LINGUAS = ""
@@ -20,7 +35,7 @@ IMAGE_FEATURES += "package-management"
 
 inherit image
 
-rootfs_postprocess() {
+image_preprocess() {
     curdir=$PWD
     cd ${IMAGE_ROOTFS}
 
@@ -29,26 +44,11 @@ rootfs_postprocess() {
     ln -s opkg-cl usr/bin/ipkg-cl || true
 
     cd $curdir
+
+    # Speedup boot by reducing the host key size. The time it takes grows
+    # exponentially by key size, the default is 2k which takes several
+    # seconds on most boxes.
+    echo 'DROPBEAR_RSAKEY_ARGS="-s 1024"' >> ${IMAGE_ROOTFS}${sysconfdir}/default/dropbear
 }
 
-ROOTFS_POSTPROCESS_COMMAND += "rootfs_postprocess; "
-
-export NFO = '${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.nfo'
-
-do_generate_nfo() {
-    VER=`grep Version: "${IMAGE_ROOTFS}/usr/lib/ipkg/info/enigma2.control" | cut -b 10-26`
-    echo "Enigma2: ${VER}" > ${NFO}
-    echo "Machine: ${MACHINE}" >> ${NFO}
-    DATE=`date +%Y-%m-%d' '%H':'%M`
-    echo "Date: ${DATE}" >> ${NFO}
-    echo "Issuer: openmips" >> ${NFO}
-    echo "Link: ${DISTRO_FEED_URI}" >> ${NFO}
-    if [ "${DESC}" != "" ]; then
-            echo "Description: ${DESC}" >> ${NFO}
-            echo "${DESC}" >> ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.desc
-    fi
-    MD5SUM=`md5sum ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.nfi | cut -b 1-32`
-    echo "MD5: ${MD5SUM}" >> ${NFO}
-}
-
-addtask generate_nfo after do_rootfs
+IMAGE_PREPROCESS_COMMAND += "image_preprocess; "

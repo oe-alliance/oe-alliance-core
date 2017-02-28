@@ -7,12 +7,12 @@ SRC_URI_prepend_sh4 = " \
 
 EXTRA_OECONF = "\
   --enable-freetype=yes \
-  ${@base_contains("MACHINE_FEATURES", "sdl", "--enable-sdl --disable-imlib2 --disable-mesa", "--disable-sdl", d)} \
+  ${@bb.utils.contains("MACHINE_FEATURES", "sdl", "--enable-sdl --disable-imlib2 --disable-mesa", "--disable-sdl", d)} \
   --enable-zlib \
-  ${@base_contains("TARGET_ARCH", "sh4", "--with-gfxdrivers=stgfx", "--with-gfxdrivers=none", d)} \
+  ${@bb.utils.contains("TARGET_ARCH", "sh4", "--with-gfxdrivers=stgfx", "--with-gfxdrivers=none", d)} \
   --disable-vnc \
   --disable-x11 \
-  ${@base_contains("TARGET_ARCH", "sh4", "--disable-fbdev --disable-devmem --enable-mme --enable-stmfbdev", "", d)} \
+  ${@bb.utils.contains("TARGET_ARCH", "sh4", "--disable-fbdev --disable-devmem --enable-mme --enable-stmfbdev", "", d)} \
 "
 
 FILES_${PN}_append_sh4 += "\

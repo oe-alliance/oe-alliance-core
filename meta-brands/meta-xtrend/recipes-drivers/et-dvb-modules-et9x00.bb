@@ -3,8 +3,6 @@ SRCDATE = "20130524"
 
 SRC_URI = "http://www.et-view.com/img_up/shop_pds/bh190/Img_Xtrend/${MACHINE}-drivers-${KV}-${SRCDATE}.zip"
 
-RDEPENDS_${PN} += "et-fpupdate-${MACHINE}"
-
 require et-dvb-modules.inc
 
 SRC_URI[md5sum] = "4a4b303b3b913f0ee64f52afc4a60be7"

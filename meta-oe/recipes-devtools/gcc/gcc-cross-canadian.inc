@@ -3,7 +3,7 @@ inherit cross-canadian
 SUMMARY = "GNU cc and gcc C compilers (cross-canadian for ${TARGET_ARCH} target)"
 PN = "gcc-cross-canadian-${TRANSLATED_TARGET_ARCH}"
 
-DEPENDS = "virtual/${TARGET_PREFIX}gcc virtual/${HOST_PREFIX}binutils-crosssdk virtual/nativesdk-${HOST_PREFIX}libc-for-gcc nativesdk-gettext"
+DEPENDS = "virtual/${TARGET_PREFIX}gcc virtual/${HOST_PREFIX}gcc-crosssdk virtual/${HOST_PREFIX}binutils-crosssdk virtual/nativesdk-${HOST_PREFIX}libc-for-gcc nativesdk-gettext"
 
 GCCMULTILIB = "--enable-multilib"
 
@@ -84,11 +84,6 @@ FILES_${PN} = "\
 "
 INSANE_SKIP_${PN} += "dev-so"
 
-FILES_${PN}-dbg += " \
-    ${libexecdir}/gcc/${TARGET_SYS}/${BINV}/.debug \
-    ${libexecdir}/gcc/${TARGET_SYS}/${BINV}/plugin/.debug \
-"
-
 FILES_${PN}-doc = "\
     ${infodir} \
     ${mandir} \
@@ -141,6 +136,8 @@ do_install () {
 
 		ln -sf ${BINRELPATH}/${TARGET_PREFIX}$t$suffix $dest$t$suffix
 	done
+	t=real-ld
+	ln -sf ${BINRELPATH}/${TARGET_PREFIX}ld$suffix $dest$t$suffix
 
 	# libquadmath headers need to  be available in the gcc libexec dir
 	install -d ${D}${libdir}/gcc/${TARGET_SYS}/${BINV}/include/
@@ -166,6 +163,10 @@ EXTRA_OECONF += "\
     --with-mpfr=${STAGING_DIR_HOST}${layout_exec_prefix} \
     --with-mpc=${STAGING_DIR_HOST}${layout_exec_prefix} \
 "
+
+EXTRA_OECONF_append_libc-baremetal = " --without-headers"
+EXTRA_OECONF_remove_libc-baremetal = "--with-sysroot=/not/exist"
+EXTRA_OECONF_remove_libc-baremetal = "--with-build-sysroot=${STAGING_DIR_TARGET}"
 
 # gcc 4.7 needs -isystem
 export ARCH_FLAGS_FOR_TARGET = "--sysroot=${STAGING_DIR_TARGET} -isystem=${target_includedir}"

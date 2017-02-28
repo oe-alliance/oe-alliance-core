@@ -4,21 +4,21 @@ include conf/machine/include/build-extras.inc
 BRAND_OEM = "cube"
 
 MACHINE_NAME = "\
-${@base_contains('MACHINEBUILD', 'dcube', 'R2' , '', d)}\
-${@base_contains('MACHINEBUILD', 'ultima', 'Ultima' , '', d)}\
-${@base_contains('MACHINEBUILD', 'mkcube', 'Cube' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'dcube', 'R2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'ultima', 'Ultima' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mkcube', 'Cube' , '', d)}\
 "
 
 MACHINE_BRAND = "\
-${@base_contains('MACHINEBUILD', 'dcube', 'D-Cube' , '', d)}\
-${@base_contains('MACHINEBUILD', 'ultima', 'Stratos' , '', d)}\
-${@base_contains('MACHINEBUILD', 'mkcube', 'MK-Digital' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'dcube', 'D-Cube' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'ultima', 'Stratos' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mkcube', 'MK-Digital' , '', d)}\
 "
 
 IMAGEDIR = "\
-${@base_contains('MACHINEBUILD', 'dcube', 'flash-image-256' , '', d)}\
-${@base_contains('MACHINEBUILD', 'ultima', 'flash-image-256' , '', d)}\
-${@base_contains('MACHINEBUILD', 'mkcube', 'flash-image-256' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'dcube', 'flash-image-256' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'ultima', 'flash-image-256' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mkcube', 'flash-image-256' , '', d)}\
 "
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS = "\
@@ -79,6 +79,8 @@ PREFERRED_PROVIDER_virtual/egl = "opengl"
 
 PREFERRED_VERSION_linux-cube = "2.6.34"
 PREFERRED_VERSION_linux-libc-headers = "3.1"
+OLDEST_KERNEL = "2.6.34"
+GLIBCVERSION = "2.23"
 
 GLIBC_EXTRA_OECONF = "--with-tls --with-__thread"
 

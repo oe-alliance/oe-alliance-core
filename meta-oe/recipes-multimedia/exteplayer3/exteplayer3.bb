@@ -14,7 +14,7 @@ PKGV = "30+git${GITPKGV}"
 
 PR = "r0"
 
-SRCREV = "dda717ba79e8cff117c04e50d3b263c91acc93a9"
+SRCREV = "2c105f22f6fa62f82dc90700136ba1dd7f186ae6"
 SRC_URI = " \
     git://github.com/samsamsam-iptvplayer/exteplayer3.git;branch=master \
 "
@@ -34,7 +34,7 @@ SOURCE_FILES =+ "output/writer/common/pes.c"
 SOURCE_FILES =+ "output/writer/common/misc.c"
 SOURCE_FILES =+ "playback/playback.c"
 
-SOURCE_FILES =+ "${@base_contains("TARGET_ARCH", "sh4", "\
+SOURCE_FILES =+ "${@bb.utils.contains("TARGET_ARCH", "sh4", "\
 output/linuxdvb_sh4.c \
 output/writer/sh4/writer.c \
 output/writer/sh4/aac.c \
@@ -64,6 +64,8 @@ output/writer/mipsel/h263.c \
 output/writer/mipsel/mpeg2.c \
 output/writer/mipsel/mpeg4.c \
 output/writer/mipsel/divx3.c \
+output/writer/mipsel/vp.c \
+output/writer/mipsel/wmv.c \
 output/writer/mipsel/vc1.c ", d)}"
 
 do_compile() {

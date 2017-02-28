@@ -14,7 +14,7 @@ PACKAGES = "enigma2-plugin-extensions-dreamplex"
 PROVIDES = "enigma2-plugin-extensions-dreamplex"
 
 DEPENDS = "python"
-RDEPENDS_${PN} = "${@base_contains("GST_VERSION", "1.0", "gstreamer1.0-plugins-bad-fragmented", "gst-plugins-bad-fragmented", d)} curl mjpegtools python-ctypes libshowiframe0"
+RDEPENDS_${PN} = "${@bb.utils.contains("GST_VERSION", "1.0", "gstreamer1.0-plugins-bad-hls", "gst-plugins-bad-fragmented", d)} curl mjpegtools python-ctypes libshowiframe0"
 
 SRC_URI = "git://github.com/DonDavici/DreamPlex.git;protocol=git"
 

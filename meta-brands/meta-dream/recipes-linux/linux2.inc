@@ -19,7 +19,7 @@ kernel_conf_variable() {
     fi
 }
 
-DEFCONFIG_IN_SRC_URI = "${@base_contains('SRC_URI', 'file://defconfig', 'true', 'false', d)}"
+DEFCONFIG_IN_SRC_URI = "${@bb.utils.contains('SRC_URI', 'file://defconfig', 'true', 'false', d)}"
 
 do_configure_prepend() {
     echo "" > ${S}/.config
@@ -74,7 +74,7 @@ do_configure_append() {
 }
 
 do_install_append() {
-    oe_runmake headers_install INSTALL_HDR_PATH=${D}${exec_prefix}/src/linux-${KERNEL_VERSION} ARCH=$ARCH
+    oe_runmake headers_install INSTALL_HDR_PATH=${D}${exec_prefix}/src/linux-${LINUX_VERSION} ARCH=$ARCH
 }
 
 PACKAGES =+ "kernel-headers"

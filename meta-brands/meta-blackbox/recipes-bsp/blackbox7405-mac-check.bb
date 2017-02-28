@@ -10,7 +10,7 @@ SRC_URI="file://blackbox7405_mac_check \
 	file://blackbox7405-mac-check.sh \
 "
 
-inherit autotools pkgconfig update-rc.d
+inherit pkgconfig update-rc.d
 
 INITSCRIPT_NAME = "${PN}"
 INITSCRIPT_PARAMS = "defaults"

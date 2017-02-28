@@ -29,6 +29,6 @@ RRECOMMENDS_${PN} = "\
     enigma2-plugin-systemplugins-skinselector \
     enigma2-plugin-skins-octagoneightfhd \
     enigma2-plugin-skins-octagoneightsd \
-    ${@base_contains("MACHINE_FEATURES", "3dtv", "enigma2-plugin-systemplugins-osd3dsetup" , "", d)} \
-    ${@base_contains("MACHINE_FEATURES", "boxmodel", "boxmodel", "", d)} \
+    ${@bb.utils.contains("MACHINE_FEATURES", "3dtv", "enigma2-plugin-systemplugins-osd3dsetup" , "", d)} \
+    ${@bb.utils.contains("MACHINE_FEATURES", "boxmodel", "boxmodel", "", d)} \
     "

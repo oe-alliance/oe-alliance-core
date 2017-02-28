@@ -7,12 +7,12 @@ DEPENDS += "gstreamer1.0-plugins-base libid3tag libmad"
 
 inherit gettext
 
+
 PACKAGECONFIG ??= " \
-    ${GSTREAMER_ORC} \
-    a52dec lame mad mpeg2dec \
-    cdio dvdread x264 \
-    amrnb amrwb mad \
-"
+	${GSTREAMER_ORC} \
+    orc a52dec lame mad mpeg2dec \
+    cdio dvdread mad amrnb amrwb mpg123\
+    "
 
 PACKAGECONFIG[a52dec]   = "--enable-a52dec,--disable-a52dec,liba52"
 PACKAGECONFIG[amrnb]    = "--enable-amrnb,--disable-amrnb,opencore-amr"
@@ -23,11 +23,12 @@ PACKAGECONFIG[lame]     = "--enable-lame,--disable-lame,lame"
 PACKAGECONFIG[mad]      = "--enable-mad,--disable-mad,libmad"
 PACKAGECONFIG[mpeg2dec] = "--enable-mpeg2dec,--disable-mpeg2dec,mpeg2dec"
 PACKAGECONFIG[x264]     = "--enable-x264,--disable-x264,x264"
+PACKAGECONFIG[mpg123]   = "--enable-mpg123,--disable-mpg123,mpg123"
 
 EXTRA_OECONF += " \
     --disable-sidplay \
     --disable-twolame \
-"
+    "
 
-FILES_${PN}-amrnb += "${datadir}/gstreamer-1.0/presets/GstAmrnbEnc.prs"
 FILES_${PN}-x264 += "${datadir}/gstreamer-1.0/presets/GstX264Enc.prs"
+FILES_${PN}-amrnb += "${datadir}/gstreamer-1.0/presets/GstAmrnbEnc.prs"

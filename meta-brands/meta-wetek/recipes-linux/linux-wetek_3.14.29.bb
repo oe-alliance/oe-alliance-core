@@ -4,8 +4,8 @@ LICENSE = "GPLv2"
 
 LIC_FILES_CHKSUM = "file://${S}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-SRC_URI[md5sum] = "c13b491e28dccd10dc65f32db7743fd0"
-SRC_URI[sha256sum] = "e4f4c4c82d86abe23fce5d1b212d93d597e50dfaa4249d4792203a989de9c9c4"
+SRC_URI[md5sum] = "a046dea5803c0f935e6ad62f39138857"
+SRC_URI[sha256sum] = "6bc4cf8e0884a7955c6e0b6a4293525664631546f19b9222e4bf472120bd3d85"
 
 inherit kernel machine_kernel_pr
 MACHINE_KERNEL_PR_append = ".0"
@@ -17,8 +17,7 @@ LINUX_VERSION_EXTENSION ?= "amlogic"
 
 COMPATIBLE_MACHINE = "(wetekplay2)"
 
-
-SRC_URI = "http://source.mynonpublic.com/wetek/linux-amlogic-amlogic-3.14.y.tar.gz \
+SRC_URI = "https://github.com/wetek-enigma/linux-amlogic/archive/amlogic-3.14.y.tar.gz \
    file://defconfig \
    file://boot.ini \
    file://uInitrd \

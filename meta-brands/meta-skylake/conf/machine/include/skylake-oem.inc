@@ -4,18 +4,18 @@ include conf/machine/include/build-extras.inc
 BRAND_OEM = "skylake"
 
 MACHINE_NAME = "\
-${@base_contains('MACHINEBUILD', 'mutant2400', 'HD2400' , '', d)}\
-${@base_contains('MACHINEBUILD', 'quadbox2400', 'QuadBox HD2400' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mutant2400', 'HD2400' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'quadbox2400', 'QuadBox HD2400' , '', d)}\
 "
 
 MACHINE_BRAND = "\
-${@base_contains('MACHINEBUILD', 'mutant2400', 'Mut@nt' , '', d)}\
-${@base_contains('MACHINEBUILD', 'quadbox2400', 'AX' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mutant2400', 'Mut@nt' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'quadbox2400', 'AX' , '', d)}\
 "
 
 IMAGEDIR ?= "\
-${@base_contains('MACHINEBUILD', 'mutant2400', 'hd2400' , '', d)}\
-${@base_contains('MACHINEBUILD', 'quadbox2400', 'hd2400' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mutant2400', 'hd2400' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'quadbox2400', 'hd2400' , '', d)}\
 "
 
 MTD_KERNEL = "mtd1"
@@ -59,7 +59,7 @@ IMAGEDIR ?= "${MACHINE}"
 IMAGE_CMD_ubi_append = "\
     mkdir -p ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}; \
     cp ${DEPLOY_DIR_IMAGE}/splash.bin ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/splash.bin; \
-    mv ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.ubi ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/${ROOTFS_FILE}; \
+    mv ${IMGDEPLOYDIR}/${IMAGE_NAME}.rootfs.ubi ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/${ROOTFS_FILE}; \
     gzip -9c ${DEPLOY_DIR_IMAGE}/vmlinux-${MACHINE}.bin > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/${KERNEL_FILE}; \
     echo ${IMAGE_VER_STRING} > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/imageversion; \
     echo "rename this file to 'force' to force an update without confirmation" > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/noforce; \

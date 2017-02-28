@@ -1,0 +1,246 @@
+diff --git a/tuxtxt_common.h b/tuxtxt_common.h
+index 871e8ce..bcafdf1 100644
+--- a/tuxtxt_common.h
++++ b/tuxtxt_common.h
+@@ -23,6 +23,10 @@
+ 
+ #include <linux/input.h>
+ 
++#ifndef FB_DEV
++# define FB_DEV "/dev/fb/0"
++#endif
++
+ const char *ObjectSource[] =
+ {
+ 	"(illegal)",
+@@ -4067,6 +4071,11 @@ int tuxtxt_RenderChar(unsigned char *lfb, // pointer to render buffer, min. font
+ #define PIG "/dev/v4l/video0"
+ #endif
+ 
++#define SCALE_UP_X   renderinfo->var_screeninfo.xres/720
++#define SCALE_UP_Y   renderinfo->var_screeninfo.yres/576
++#define SCALE_DOWN_X 720/renderinfo->var_screeninfo.xres
++#define SCALE_DOWN_Y 576/renderinfo->var_screeninfo.yres
++
+ #define TOPMENUSTARTX TV43STARTX+2
+ #define TOPMENUENDX TVENDX
+ #define TOPMENUSTARTY renderinfo->StartY
+@@ -4079,12 +4088,12 @@ int tuxtxt_RenderChar(unsigned char *lfb, // pointer to render buffer, min. font
+ #define TOPMENUSPC 0
+ #define TOPMENUCHARS (TOPMENUINDENTDEF+12+TOPMENUSPC+4)
+ 
+-#define TV43STARTX (renderinfo->ex - 146) //(renderinfo->StartX + 2 + (40-renderinfo->nofirst)*renderinfo->fontwidth_topmenumain + (40*renderinfo->fontwidth_topmenumain/abx))
+-#define TV169FULLSTARTX (renderinfo->sx+ 8*40) //(renderinfo->sx +(renderinfo->ex +1 - renderinfo->sx)/2)
++#define TV43STARTX (renderinfo->ex - 146*SCALE_UP_X) //(renderinfo->StartX + 2 + (40-renderinfo->nofirst)*renderinfo->fontwidth_topmenumain + (40*renderinfo->fontwidth_topmenumain/abx))
++#define TV169FULLSTARTX (renderinfo->sx+ 8*40*SCALE_UP_X) //(renderinfo->sx +(renderinfo->ex +1 - renderinfo->sx)/2)
+ #define TVENDX renderinfo->ex
+ #define TVENDY (renderinfo->StartY + 25*renderinfo->fontheight)
+-#define TV43WIDTH 144 /* 120 */
+-#define TV43HEIGHT 116 /* 96 */
++#define TV43WIDTH 144*SCALE_UP_X /* 120 */
++#define TV43HEIGHT 116*SCALE_UP_Y /* 96 */
+ #define TV43STARTY (TVENDY - TV43HEIGHT)
+ #define TV169FULLSTARTY renderinfo->sy
+ #define TV169FULLWIDTH  (renderinfo->ex - renderinfo->sx)/2
+@@ -4092,9 +4101,11 @@ int tuxtxt_RenderChar(unsigned char *lfb, // pointer to render buffer, min. font
+ 
+ /* fonts */
+ #define TUXTXTTTF FONTDIR "/tuxtxt.ttf"
++#define TUXTXTTTFNONBOLD FONTDIR "/tuxtxt_nonbold.ttf"
+ #define TUXTXTOTB FONTDIR "/tuxtxt.otb"
+ /* alternative fontdir */
+ #define TUXTXTTTFVAR "/var/tuxtxt/tuxtxt.ttf"
++#define TUXTXTTTFVARNONBOLD "/var/tuxtxt/tuxtxt_nonbold.ttf"
+ #define TUXTXTOTBVAR "/var/tuxtxt/tuxtxt.otb"
+ 
+ int tuxtxt_toptext_getnext(int startpage, int up, int findgroup)
+@@ -4547,10 +4558,10 @@ void tuxtxt_SwitchScreenMode(tstRenderInfo* renderinfo,int newscreenmode)
+ 			int val = 0;
+ 			switch (i)
+ 			{
+-			case 0: val = tx; break;
+-			case 1: val = ty; break;
+-			case 2: val = tw; break;
+-			case 3: val = th; break;
++			case 0: val = tx*SCALE_DOWN_X; break;
++			case 1: val = ty*SCALE_DOWN_Y; break;
++			case 2: val = tw*SCALE_DOWN_X; break;
++			case 3: val = th*SCALE_DOWN_Y; break;
+ 			case 4: val = 1; break;
+ 			}
+ 			fprintf(f, "%08x\n", val);
+@@ -5393,6 +5404,9 @@ void tuxtxt_SetRenderingDefaults(tstRenderInfo* renderinfo)
+ 	renderinfo->showflof        = 1;
+ 	renderinfo->show39          = 1;
+ 	renderinfo->showl25         = 1;
++	renderinfo->TTFScreenResX   = 720;
++	renderinfo->TTFBold         = 1;
++	renderinfo->CleanAlgo       = 0;
+ 	renderinfo->TTFWidthFactor16  = 28;
+ 	renderinfo->TTFHeightFactor16 = 15;
+ 	renderinfo->color_mode   = 10;
+@@ -5476,10 +5490,10 @@ int tuxtxt_InitRendering(tstRenderInfo* renderinfo,int setTVFormat)
+ 	if (renderinfo->usettf)
+ 	{
+ #if ((defined(FREETYPE_MAJOR)) && (((FREETYPE_MAJOR == 2) && (((FREETYPE_MINOR == 1) && (FREETYPE_PATCH >= 9)) || (FREETYPE_MINOR > 1))) || (FREETYPE_MAJOR > 2)))
+-		renderinfo->typettf.face_id = (FTC_FaceID) TUXTXTTTFVAR;
++		renderinfo->typettf.face_id = renderinfo->TTFBold ? (FTC_FaceID) TUXTXTTTFVAR : (FTC_FaceID) TUXTXTTTFVARNONBOLD;
+ 		renderinfo->typettf.height = (FT_UShort) renderinfo->fontheight * renderinfo->TTFHeightFactor16 / 16;
+ #else
+-		renderinfo->typettf.font.face_id = (FTC_FaceID) TUXTXTTTFVAR;
++		renderinfo->typettf.font.face_id = renderinfo->TTFBold ? (FTC_FaceID) TUXTXTTTFVAR : (FTC_FaceID) TUXTXTTTFVARNONBOLD;
+ 		renderinfo->typettf.font.pix_height = (FT_UShort) renderinfo->fontheight * renderinfo->TTFHeightFactor16 / 16;
+ #endif
+ 	}
+@@ -5500,14 +5514,14 @@ int tuxtxt_InitRendering(tstRenderInfo* renderinfo,int setTVFormat)
+ 	renderinfo->typettf.flags = FT_LOAD_MONOCHROME;
+ 	if ((error = FTC_Manager_LookupFace(renderinfo->manager, renderinfo->typettf.face_id, &renderinfo->face)))
+ 	{
+-		renderinfo->typettf.face_id = (renderinfo->usettf ? (FTC_FaceID) TUXTXTTTF : TUXTXTOTB);
++		renderinfo->typettf.face_id = (renderinfo->usettf ? (renderinfo->TTFBold ? (FTC_FaceID) TUXTXTTTF : (FTC_FaceID) TUXTXTTTFNONBOLD) : TUXTXTOTB);
+ 		if ((error = FTC_Manager_LookupFace(renderinfo->manager, renderinfo->typettf.face_id, &renderinfo->face)))
+ 		{
+ #else
+ 	renderinfo->typettf.image_type = ftc_image_mono;
+ 	if ((error = FTC_Manager_Lookup_Face(renderinfo->manager, renderinfo->typettf.font.face_id, &renderinfo->face)))
+ 	{
+-		renderinfo->typettf.font.face_id = (renderinfo->usettf ? (FTC_FaceID) TUXTXTTTF : TUXTXTOTB);
++		renderinfo->typettf.font.face_id = (renderinfo->usettf ? (renderinfo->TTFBold ? (FTC_FaceID) TUXTXTTTF : (FTC_FaceID) TUXTXTTTFNONBOLD) : TUXTXTOTB);
+ 		if ((error = FTC_Manager_Lookup_Face(renderinfo->manager, renderinfo->typettf.font.face_id, &renderinfo->face)))
+ 		{
+ #endif
+@@ -5534,10 +5548,60 @@ int tuxtxt_InitRendering(tstRenderInfo* renderinfo,int setTVFormat)
+ 	}
+ 
+ 	/* change to PAL resolution */
+-	if (renderinfo->var_screeninfo.xres != 720) 
++	/* or, when using TrueType fonts, pick PAL / HD / full-HD based on TTFScreenResX */
++
++	/* first save variable screeninfo */
++	renderinfo->saved_var_screeninfo = renderinfo->var_screeninfo;
++	
++	/* optionally save framebuffer */
++	if ((renderinfo->CleanAlgo == 1) || (renderinfo->CleanAlgo == 3) || (renderinfo->CleanAlgo == 4))
++	{
++		/* save fixed screeninfo */
++		if (ioctl(renderinfo->fb, FBIOGET_FSCREENINFO, &renderinfo->saved_fix_screeninfo) == -1)
++		{
++			perror("TuxTxt <FBIOGET_FSCREENINFO>");
++			FTC_Manager_Done(renderinfo->manager);
++			FT_Done_FreeType(renderinfo->library);
++			return 0;
++		}
++		
++		unsigned char *my_lfb;
++		my_lfb = (unsigned char*)mmap(0, renderinfo->saved_fix_screeninfo.smem_len, PROT_READ | PROT_WRITE, MAP_SHARED, renderinfo->fb, 0);
++		if (!my_lfb)
++		{
++			perror("TuxTxt <mmap>");
++			return 0;
++		}
++		renderinfo->saved_fb = malloc(renderinfo->saved_fix_screeninfo.smem_len);
++		memcpy(renderinfo->saved_fb, my_lfb, renderinfo->saved_fix_screeninfo.smem_len);
++		msync(renderinfo->saved_fb, renderinfo->saved_fix_screeninfo.smem_len, MS_SYNC);
++		munmap(my_lfb, renderinfo->saved_fix_screeninfo.smem_len);
++	}	
++
++	/* now switch resolution */
++	if ((!renderinfo->usettf) || (renderinfo->TTFScreenResX <= 720))
++	{
++		if (renderinfo->var_screeninfo.xres != 720) 
++		{
++			renderinfo->var_screeninfo.xres_virtual = renderinfo->var_screeninfo.xres = 720;
++			renderinfo->var_screeninfo.yres_virtual = renderinfo->var_screeninfo.yres = 576;
++		}
++	}
++	else if (renderinfo->TTFScreenResX <= 1280)
++	{
++		if (renderinfo->var_screeninfo.xres != 1280)
++		{
++			renderinfo->var_screeninfo.xres_virtual = renderinfo->var_screeninfo.xres = 1280;
++			renderinfo->var_screeninfo.yres_virtual = renderinfo->var_screeninfo.yres = 720;
++		}
++	}
++	else
+ 	{
+-		renderinfo->var_screeninfo.xres_virtual = renderinfo->var_screeninfo.xres = 720;
+-		renderinfo->var_screeninfo.yres_virtual = renderinfo->var_screeninfo.yres = 576;
++		if (renderinfo->var_screeninfo.xres != 1920) 
++		{
++			renderinfo->var_screeninfo.xres_virtual = renderinfo->var_screeninfo.xres = 1920;
++			renderinfo->var_screeninfo.yres_virtual = renderinfo->var_screeninfo.yres = 1080;
++		}
+ 	}
+ 
+ 	/* set variable screeninfo for double buffering */
+@@ -5646,6 +5710,53 @@ void tuxtxt_EndRendering(tstRenderInfo* renderinfo)
+ 	/* unmap framebuffer */
+ 	msync(renderinfo->lfb, renderinfo->fix_screeninfo.smem_len, MS_SYNC);
+ 	munmap(renderinfo->lfb, renderinfo->fix_screeninfo.smem_len);
++
++	/* open Framebuffer again */
++	if ((renderinfo->fb=open(FB_DEV, O_RDWR)) == -1)
++	{
++		printf("TuxTxt <open %s>: %m", FB_DEV);
++		return 0;
++	}
++
++	if (renderinfo->CleanAlgo == 4) /* 4 = restore var_screeninfo then framebuffer */
++	{
++		/* restore var_screeninfo */
++		if (ioctl(renderinfo->fb, FBIOPUT_VSCREENINFO, &renderinfo->saved_var_screeninfo) == -1)
++		{
++			perror("TuxTxt <FBIOGET_VSCREENINFO>");
++			return 0;
++		}
++	}
++	
++	if ((renderinfo->CleanAlgo == 1) || (renderinfo->CleanAlgo == 3) || (renderinfo->CleanAlgo == 4)) /* 1 = restore framebuffer, 3 = framebuffer then var_screeninfo */
++	{
++		/* restore framebuffer */
++		unsigned char *my_lfb;
++		my_lfb = (unsigned char*)mmap(0, renderinfo->saved_fix_screeninfo.smem_len, PROT_READ | PROT_WRITE, MAP_SHARED, renderinfo->fb, 0);
++		if (!my_lfb)
++		{
++			perror("TuxTxt <mmap>");
++			return 0;
++		}
++		memcpy(my_lfb, renderinfo->saved_fb, renderinfo->saved_fix_screeninfo.smem_len);
++		msync(my_lfb, renderinfo->saved_fix_screeninfo.smem_len, MS_SYNC);
++		munmap(my_lfb, renderinfo->saved_fix_screeninfo.smem_len);
++		free(renderinfo->saved_fb);
++	}
++
++	if ((renderinfo->CleanAlgo == 2) || (renderinfo->CleanAlgo == 3)) /* 2 = restore var_screeninfo, 3 = framebuffer then var_screeninfo */
++	{
++		/* restore var_screeninfo */
++		if (ioctl(renderinfo->fb, FBIOPUT_VSCREENINFO, &renderinfo->saved_var_screeninfo) == -1)
++		{
++			perror("TuxTxt <FBIOGET_VSCREENINFO>");
++			return 0;
++		}
++	}
++	
++	/* close Framebuffer again */
++	close(renderinfo->fb);
++	
+ 	printf("[TTX] Rendering ended\n");
+ }
+ #endif
+diff --git a/tuxtxt_def.h b/tuxtxt_def.h
+index c62a20d..7ef33fd 100644
+--- a/tuxtxt_def.h
++++ b/tuxtxt_def.h
+@@ -313,6 +313,12 @@ typedef struct
+ 	int prev_100, prev_10, next_10, next_100;
+ 	int showhex, showflof,show39, showl25;
+ 	int fnc_old, saa_old, screen_mode1, screen_mode2,color_mode, trans_mode;
++	struct fb_var_screeninfo saved_var_screeninfo;
++	struct fb_fix_screeninfo saved_fix_screeninfo;
++	unsigned char *saved_fb;
++	int TTFScreenResX; /* screen resolution (720,1280,1920) when using TTF fonts */
++	int TTFBold; /* 1 = bold font (historic default) */
++	int CleanAlgo;
+ 	signed char clearbbcolor;
+ 	FT_Library      library;
+ 	FTC_Manager     manager;

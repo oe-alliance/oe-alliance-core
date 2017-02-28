@@ -14,14 +14,16 @@ ICU_LIB = "icu"
 DEPENDS = "zlib enchant libsoup-2.4 curl libxml2 cairo libidn gnutls gtk+ \
            gstreamer1.0 gstreamer1.0-plugins-base flex-native gperf-native sqlite3 ${ICU_LIB}"
 
-PR = "r1"
+PR = "r0"
+
 
 SRCREV = "${AUTOREV}"
 
 SRC_URI = "git://github.com/NexTVTeam/hbbtv-browser.git;protocol=https; \
-  file://bison-2.6.patch \
-  file://webkit-gtk-ANGLE-doesn-t-build-with-bison-3.patch \
-  file://webkit-gtk_fixed_crash_error.patch \
+    file://0001-bison-3.patch \
+    file://0001-fix-build-with-gcc-6.20.patch \
+    file://0001-fix-build-issue-with-cglib-2.2.4.patch \
+    file://webkit-gtk_fixed_crash_error.patch \
 "
 
 inherit autotools lib_package gtk-doc pkgconfig perlnative pythonnative
@@ -55,6 +57,8 @@ EXTRA_OECONF = "\
 	"
 
 LDFLAGS += "-Wl,--no-keep-memory"
+
+CXXFLAGS += " -std=gnu++98"
 
 EXTRA_AUTORECONF = " -I Source/autotools "
 

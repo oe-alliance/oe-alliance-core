@@ -18,7 +18,7 @@ MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS = "\
     "
 
 MACHINE_EXTRA_RRECOMMENDS = " \
-    ${@base_contains("GST_VERSION", "1.0", "gstreamer1.0-plugin-dvbmediasink", "gst-plugin-dvbmediasink", d)} \
+    ${@bb.utils.contains("GST_VERSION", "1.0", "gstreamer1.0-plugin-dvbmediasink", "gst-plugin-dvbmediasink", d)} \
     "
 
 include conf/machine/include/autoload-filesystems.inc
@@ -26,7 +26,7 @@ include conf/machine/include/autoload-filesystems.inc
 DVBMEDIASINK_CONFIG = "--with-wma --with-wmv --with-pcm --with-dtsdownmix --with-eac3 --with-h265 --with-vb6 --with-vb8 --with-vb9 --with-spark"
 
 TARGET_ARCH = "arm"
-DEFAULTTUNE = "armv7ahf-neon"
+DEFAULTTUNE = "cortexa15hf-neon-vfpv4"
 IMAGE_FSTYPES =+ "tar.bz2"
 
 PREFERRED_PROVIDER_virtual/kernel = "linux-octagon"
@@ -38,7 +38,7 @@ MACHINE_FEATURES += "alsa 3dtv switchoff hdmicec omb blindscan-tbs blindscan-dvb
 
 BOOTLOGO_FILENAME = "splash.bin"
 
-require conf/machine/include/arm/arch-armv7a.inc
+require conf/machine/include/tune-cortexa15.inc
 require conf/machine/include/soc-family.inc
 
 # Add "MACHINEBUILD" override for recipes

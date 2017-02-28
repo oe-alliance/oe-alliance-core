@@ -17,9 +17,6 @@ SRC_URI[vuuno4k.md5sum] = "2a3a0a7e5cd2a1392f1a26790d1cd8bf"
 SRC_URI[vuuno4k.sha256sum] = "8284670c28a4dad9e94752b38d37a4368f27ce15e671653a3e2ac83915f37db1"
 SRC_URI[vuultimo4k.md5sum] = "2a3a0a7e5cd2a1392f1a26790d1cd8bf"
 SRC_URI[vuultimo4k.sha256sum] = "8284670c28a4dad9e94752b38d37a4368f27ce15e671653a3e2ac83915f37db1"
-
-
-
 LIC_FILES_CHKSUM = "file://COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
 SRC_URI += "http://archive.vuplus.com/download/kernel/${KERNELSRC};name=${MACHINE} \
@@ -29,6 +26,7 @@ SRC_URI += "http://archive.vuplus.com/download/kernel/${KERNELSRC};name=${MACHIN
 	file://rt2800usb_fix_warn_tx_status_timeout_to_dbg.patch \
 	file://usb_core_hub_msleep.patch \
 	file://rtl8712_fix_build_error.patch \
+	file://kernel-add-support-for-gcc6.patch \
 	file://0001-Support-TBS-USB-drivers.patch \
 	file://0001-STV-Add-PLS-support.patch \
 	file://0001-STV-Add-SNR-Signal-report-parameters.patch \
@@ -40,7 +38,7 @@ SRC_URI_append_vuuno4k = " file://linux_prevent_usb_dma_from_bmem.patch"
 SRC_URI_append_vusolo4k = " file://linux_rpmb_not_alloc.patch"
 SRC_URI_append_vuultimo4k = " file://bcmsysport_3.14.28-1.12.patch file://linux_prevent_usb_dma_from_bmem.patch"
 
-SRC_URI_append = "${@base_contains("MACHINE_FEATURES", "dvbproxy", " file://linux_dvb_adapter.patch;patch=1;pnum=1", "", d)}"
+SRC_URI_append = "${@bb.utils.contains("MACHINE_FEATURES", "dvbproxy", " file://linux_dvb_adapter.patch;patch=1;pnum=1", "", d)}"
 
 S = "${WORKDIR}/linux"
 B = "${WORKDIR}/build"
@@ -81,3 +79,7 @@ FILESEXTRAPATHS_prepend := "${THISDIR}/linux-vuplus-${KV}:"
 
 do_rm_work() {
 }
+
+# extra tasks
+addtask kernel_link_images after do_compile before do_install
+

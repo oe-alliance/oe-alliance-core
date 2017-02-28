@@ -4,7 +4,7 @@ PACKAGE_ARCH = "all"
 require conf/license/license-gplv2.inc
 
 RRECOMMENDS_${PN} = " \
-    ${@base_contains("MACHINE_FEATURES", "linuxwifi", "kernel-module-rtl8192cu", "rtl8192cu", d)} \
+    ${@bb.utils.contains("MACHINE_FEATURES", "linuxwifi", "kernel-module-rtl8192cu", "rtl8192cu", d)} \
     firmware-rtl8192cu \
     firmware-rtl8192cufw \
     "

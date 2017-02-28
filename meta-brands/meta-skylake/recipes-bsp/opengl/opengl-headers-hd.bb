@@ -9,7 +9,7 @@ SRC_URI = " \
 	file://eglheaders.zip \
 	"
 
-SRC_URI += "${@base_contains('DISTRO_FEATURES', 'x11', '', 'file://no_x11.patch', d)}"
+SRC_URI += "${@bb.utils.contains('DISTRO_FEATURES', 'x11', '', 'file://no_x11.patch', d)}"
 
 S = "${WORKDIR}"
 

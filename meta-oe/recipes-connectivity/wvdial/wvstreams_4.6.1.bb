@@ -14,6 +14,7 @@ SRC_URI = "http://${BPN}.googlecode.com/files/${BP}.tar.gz \
 	  file://wvstreams-4.6.1-gcc.patch \ 
 	  file://wvstreams-4.6.1-gcc47.patch \
 	  file://wvstreams-4.6.1-magic.patch \
+	  file://wvstreams-4.6.1-bool.patch \
           "
 
 SRC_URI[md5sum] = "2760dac31a43d452a19a3147bfde571c"

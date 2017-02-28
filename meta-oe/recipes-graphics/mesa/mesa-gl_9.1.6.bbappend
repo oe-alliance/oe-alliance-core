@@ -4,11 +4,11 @@ SRC_URI += "file://01_gbm_egl.patch \
 FILESEXTRAPATHS_prepend := "${THISDIR}/${P}:"
 
 PACKAGECONFIG = "dri \
-  ${@base_contains('DISTRO_FEATURES', 'x11', 'x11', '', d)} \
-  ${@base_contains('DISTRO_FEATURES', 'wayland', 'egl wayland', '', d)} \
+  ${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'x11', '', d)} \
+  ${@bb.utils.contains('DISTRO_FEATURES', 'wayland', 'egl wayland', '', d)} \
 "
 
-EGL_PLATFORMS = "${@base_contains('DISTRO_FEATURES', 'wayland', 'wayland', '', d)}"
+EGL_PLATFORMS = "${@bb.utils.contains('DISTRO_FEATURES', 'wayland', 'wayland', '', d)}"
 
 do_configure_prepend() {
 	# Don't build or install libEGL.

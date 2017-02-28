@@ -1,0 +1,222 @@
+--- a/lib/python/Screens/VideoMode.py	Mon Jan 30 19:45:46 2017
++++ b/lib/python/Screens/VideoMode.py	Mon Jan 30 19:45:46 2017
+@@ -16,6 +16,8 @@
+ from Tools.Directories import resolveFilename, SCOPE_PLUGINS
+ from Tools.HardwareInfo import HardwareInfo
+ from Components.AVSwitch import iAVSwitch
++from boxbranding import getBoxType
++import NavigationInstance
+ 
+ resolutionlabel = None
+ 
+@@ -673,31 +675,46 @@
+ 		video_width = None
+ 		video_pol = None
+ 		video_rate = None
+-		if path.exists("/proc/stb/vmpeg/0/yres"):
+-			try:
+-				f = open("/proc/stb/vmpeg/0/yres", "r")
+-				video_height = int(f.read(),16)
+-				f.close()
+-			except:
+-				video_height = 0
+-		if path.exists("/proc/stb/vmpeg/0/xres"):
+-			try:
+-				f = open("/proc/stb/vmpeg/0/xres", "r")
+-				video_width = int(f.read(),16)
+-				f.close()
+-			except:
+-				video_width = 0
+-		if path.exists("/proc/stb/vmpeg/0/progressive"):
+-			try:
+-				f = open("/proc/stb/vmpeg/0/progressive", "r")
+-				video_pol = "p" if int(f.read(),16) else "i"
+-				f.close()
+-			except:
+-				video_pol = "i"
++
++		fix_azboxme = refstr = None  # Azbox (mini)ME patch
++		if getBoxType().startswith('azboxm'):
++			if NavigationInstance.instance:
++				refstr = NavigationInstance.instance.getCurrentlyPlayingServiceReference()
++			fix_azboxme = refstr and ':0:/' in refstr.toString()
++		if fix_azboxme: 
++			print "[VideoMode] Azbox (mini)ME should output this upon Media Playback!!"
++#			pass
++		else:
++			print "[VideoMode] Azbox (mini)ME should output this upon live TV!!"
++			if path.exists("/proc/stb/vmpeg/0/yres"):
++				try:
++					f = open("/proc/stb/vmpeg/0/yres", "r")
++					video_height = int(f.read(),16)
++					f.close()
++				except:
++					video_height = 0
++			if path.exists("/proc/stb/vmpeg/0/xres"):
++				try:
++					f = open("/proc/stb/vmpeg/0/xres", "r")
++					video_width = int(f.read(),16)
++					f.close()
++				except:
++					video_width = 0
++			if path.exists("/proc/stb/vmpeg/0/progressive"):
++				try:
++					f = open("/proc/stb/vmpeg/0/progressive", "r")
++					video_pol = "p" if int(f.read(),16) else "i"
++					f.close()
++				except:
++					video_pol = "i"
++
+ 		if path.exists("/proc/stb/vmpeg/0/framerate"):
+ 			f = open("/proc/stb/vmpeg/0/framerate", "r")
+ 			try:
+-				video_rate = int(f.read())
++				if getBoxType().startswith('azbox'): #Azbox outputs framerate in HEX
++					video_rate = int(f.read(),16)
++				else:
++					video_rate = int(f.read())
+ 			except:
+ 				video_rate = 50
+ 			f.close()
+--- a/lib/python/Screens/InfoBarGenerics.py	Mon Jan 30 19:45:46 2017
++++ b/lib/python/Screens/InfoBarGenerics.py	Mon Jan 30 19:45:46 2017
+@@ -4247,16 +4247,16 @@
+ 		f = open("/proc/stb/vmpeg/0/yres", "r")
+ 		yresString = f.read()
+ 		f.close()
+-		if getBoxType().startswith('azbox'):
++		try:
++			f = open("/proc/stb/vmpeg/0/framerate", "r")
++			if getBoxType().startswith('azbox'): #Azbox outputs framerate in HEX
++				fpsString = int(f.read(),16)
++			else:
++				fpsString = int(f.read())
++			f.close()
++		except:
++			print"[InfoBarResolutionSelection] Error open /proc/stb/vmpeg/0/framerate !!"
+ 			fpsString = '50000'
+-		else:	
+-			try:
+-				f = open("/proc/stb/vmpeg/0/framerate", "r")
+-				fpsString = f.read()
+-				f.close()
+-			except:
+-				print"[InfoBarResolutionSelection] Error open /proc/stb/vmpeg/0/framerate !!"
+-				fpsString = '50000'
+ 		
+ 		xres = int(xresString, 16)
+ 		yres = int(yresString, 16)
+--- a/lib/python/Components/Converter/ServiceInfo.py	Mon Jan 30 19:45:46 2017
++++ b/lib/python/Components/Converter/ServiceInfo.py	Mon Jan 30 19:45:46 2017
+@@ -1,6 +1,8 @@
+ from Components.Converter.Converter import Converter
+ from enigma import iServiceInformation, iPlayableService
+ from Components.Element import cached
++from boxbranding import getBoxType
++import NavigationInstance
+ 
+ from os import path
+ 
+@@ -98,9 +100,17 @@
+ 		if not info:
+ 			return False
+ 
++		fix_azboxme = refstr = None # Azbox (mini)ME patch
++		if getBoxType().startswith('azboxm'):
++			if NavigationInstance.instance:
++				refstr = NavigationInstance.instance.getCurrentlyPlayingServiceReference()
++			fix_azboxme = refstr and ':0:/' in refstr.toString()
++
+ 		video_height = None
+ 		video_aspect = None
+-		if path.exists("/proc/stb/vmpeg/0/yres"):
++		if path.exists("/proc/stb/vmpeg/0/yres") and fix_azboxme:
++			pass
++		else:
+ 			f = open("/proc/stb/vmpeg/0/yres", "r")
+ 			try:
+ 				video_height = int(f.read(),16)
+@@ -192,9 +202,17 @@
+ 		if not info:
+ 			return ""
+ 
++		fix_azboxme = refstr = None # Azbox (mini)ME patch
++		if getBoxType().startswith('azboxm'):
++			if NavigationInstance.instance:
++				refstr = NavigationInstance.instance.getCurrentlyPlayingServiceReference()
++			fix_azboxme = refstr and ':0:/' in refstr.toString()
++
+ 		if self.type == self.XRES:
+ 			video_width = None
+-			if path.exists("/proc/stb/vmpeg/0/xres"):
++			if path.exists("/proc/stb/vmpeg/0/xres") and fix_azboxme:
++				pass
++			else:
+ 				f = open("/proc/stb/vmpeg/0/xres", "r")
+ 				try:
+ 					video_width = int(f.read(),16)
+@@ -209,7 +227,9 @@
+ 			return "%d" % video_width
+ 		elif self.type == self.YRES:
+ 			video_height = None
+-			if path.exists("/proc/stb/vmpeg/0/yres"):
++			if path.exists("/proc/stb/vmpeg/0/yres") and fix_azboxme:
++				pass
++			else:
+ 				f = open("/proc/stb/vmpeg/0/yres", "r")
+ 				try:
+ 					video_height = int(f.read(),16)
+@@ -243,7 +263,10 @@
+ 			if path.exists("/proc/stb/vmpeg/0/framerate"):
+ 				f = open("/proc/stb/vmpeg/0/framerate", "r")
+ 				try:
+-					video_rate = int(f.read())
++					if getBoxType().startswith('azbox'): #Azbox outputs framerate in HEX
++						video_rate = int(f.read(),16)
++					else:
++						video_rate = int(f.read())
+ 				except:
+ 					pass
+ 				f.close()
+@@ -265,9 +288,17 @@
+ 		if not info:
+ 			return -1
+ 
++		fix_azboxme = refstr = None # Azbox (mini)ME patch
++		if getBoxType().startswith('azboxm'):
++			if NavigationInstance.instance:
++				refstr = NavigationInstance.instance.getCurrentlyPlayingServiceReference()
++			fix_azboxme = refstr and ':0:/' in refstr.toString()
++
+ 		if self.type == self.XRES:
+ 			video_width = None
+-			if path.exists("/proc/stb/vmpeg/0/xres"):
++			if path.exists("/proc/stb/vmpeg/0/xres") and fix_azboxme:
++				pass
++			else:
+ 				f = open("/proc/stb/vmpeg/0/xres", "r")
+ 				try:
+ 					video_width = int(f.read(),16)
+@@ -279,7 +310,9 @@
+ 			return str(video_width)
+ 		elif self.type == self.YRES:
+ 			video_height = None
+-			if path.exists("/proc/stb/vmpeg/0/yres"):
++			if path.exists("/proc/stb/vmpeg/0/yres") and fix_azboxme:
++				pass
++			else:
+ 				f = open("/proc/stb/vmpeg/0/yres", "r")
+ 				try:
+ 					video_height = int(f.read(),16)
+@@ -294,7 +327,10 @@
+ 			if path.exists("/proc/stb/vmpeg/0/framerate"):
+ 				f = open("/proc/stb/vmpeg/0/framerate", "r")
+ 				try:
+-					video_rate = f.read()
++					if getBoxType().startswith('azbox'): #Azbox outputs framerate in HEX
++						video_rate = int(f.read(),16)
++					else:
++						video_rate = int(f.read())
+ 				except:
+ 					pass
+ 				f.close()
