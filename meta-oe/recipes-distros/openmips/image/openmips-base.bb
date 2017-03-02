@@ -13,6 +13,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 inherit packagegroup
 
 RDEPENDS_${PN} = "\
+    ca-certificates \
     oe-alliance-base \
     openmips-enigma2 \
     openmips-bootlogo \
