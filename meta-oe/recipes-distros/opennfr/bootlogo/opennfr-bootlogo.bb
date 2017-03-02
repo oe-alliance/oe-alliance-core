@@ -1,39 +1,43 @@
-SUMMARY = "OpenNFR bootlogo"
+SUMMARY = "openATV bootlogo"
 SECTION = "base"
 PRIORITY = "required"
-MAINTAINER = "opennfr"
+MAINTAINER = "openATV Team"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 require conf/license/license-gplv2.inc
 
 RDEPENDS_${PN} += "showiframe"
 
-PV = "5.2"
-PR = "r4"
+PV = "${IMAGE_VERSION}"
+PR = "r1"
 
 S = "${WORKDIR}"
 
 INITSCRIPT_NAME = "bootlogo"
-INITSCRIPT_PARAMS = "start 07 S ."
-INITSCRIPT_PARAMS_vuduo2 = "start 70 S . stop 89 0 ."
-INITSCRIPT_PARAMS_vusolo2 = "start 70 S . stop 89 0 ."
-INITSCRIPT_PARAMS_vusolose = "start 70 S . stop 89 0 ."
+INITSCRIPT_PARAMS = "start 06 S ."
+INITSCRIPT_PARAMS_vuduo2 = "start 70 S ."
+INITSCRIPT_PARAMS_vusolo2 = "start 70 S ."
+INITSCRIPT_PARAMS_vusolose = "start 70 S ."
+INITSCRIPT_PARAMS_vusolo4k = "start 70 S ."
+INITSCRIPT_PARAMS_vuuno4k = "start 70 S ."
+INITSCRIPT_PARAMS_vuultimo4k = "start 70 S ."
+PRECOMPILED_ARCH = "${MACHINE}"
+PRECOMPILED_ARCH_dm7020hdv2 = "dm7020hd"
 
 inherit update-rc.d
 
-SRC_URI = "file://splash480.bmp file://splash576.bmp file://bootlogo.mvi file://backdrop.mvi file://bootlogo_wait.mvi file://radio.mvi file://bootlogo.sh \
+SRC_URI = "file://bootlogo.mvi file://radio.mvi file://bootlogo.sh file://splash576.bmp file://splash480.bmp file://splash1280.jpg \
     ${@bb.utils.contains("MACHINE_FEATURES", "gigabluelcd220", "file://lcdsplash220.bin file://lcdwaitkey220.bin file://lcdwarning220.bin" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "gigabluelcd400", "file://lcdsplash400.bin file://lcdwaitkey400.bin file://lcdwarning400.bin" , "", d)} \
 "
-SRC_URI_append_gb800ue = "file://lcdsplash220.bin file://lcdwaitkey220.bin file://lcdwarning220.bin"
-#SRC_URI_append_gbquad = "file://lcdsplash220.bin file://lcdwaitkey220.bin file://lcdwarning220.bin"
-#SRC_URI_append_gb7358 = "file://lcdsplash220.bin file://lcdwaitkey220.bin file://lcdwarning220.bin"
-#SRC_URI_append_gbquadplus = "file://lcdsplash400.bin file://lcdwaitkey400.bin file://lcdwarning400.bin"
+
 SRC_URI_append_vuduo2 = "file://lcdbootlogo.png file://bootlogo.py"
-SRC_URI_append_7100s = "file://lcdsplash220.bin file://lcdwaitkey220.bin file://lcdwarning220.bin file://lcdcomplete220.bin"
-SRC_URI_append_7210s = "file://lcdsplash220.bin file://lcdwaitkey220.bin file://lcdwarning220.bin file://lcdcomplete220.bin"
 SRC_URI_append_dags7356 = "file://splash1.bmp file://splash1_os1.bmp file://splash1_os2.bmp file://splash2.bmp file://splash3.bmp"
 SRC_URI_append_dags7362 = "file://splash1_power.bmp file://splash1_os1.bmp file://splash1_os2.bmp file://splash2.bmp file://splash3.bmp"
+SRC_URI_append_7100s = "file://lcdsplash220.bin file://7100s/lcdwaitkey220.bin file://7100s/lcdwarning220.bin file://7100s/lcdcomplete220.bin"
+SRC_URI_append_7210s = "file://lcdsplash220.bin file://7100s/lcdwaitkey220.bin file://7100s/lcdwarning220.bin file://7100s/lcdcomplete220.bin"
+SRC_URI_append_7105s = "file://lcdsplash220.bin file://7100s/lcdwaitkey220.bin file://7100s/lcdwarning220.bin file://7100s/lcdcomplete220.bin"
+SRC_URI_append_7215s = "file://lcdsplash220.bin file://7100s/lcdwaitkey220.bin file://7100s/lcdwarning220.bin file://7100s/lcdcomplete220.bin"
 
 BINARY_VERSION = "1.3"
 
@@ -57,7 +61,7 @@ SRC_URI[dm500hdv2.sha256sum] = "005b9e99566fdee4d76ec1532273dc3e29a14b723d0bf610
 FILES_${PN} = "/boot /usr/share /etc/init.d"
 
 do_install() {
-    ${@bb.utils.contains("MACHINE_FEATURES", "dreambox", "install -d ${D}/boot", "", d)}
+    ${@bb.utils.contains("MACHINE_FEATURES", "dreamboxv1", "install -d ${D}/boot", "", d)}
     ${@bb.utils.contains("MACHINE_FEATURES", "dreamboxv1", "install -m 0755 ${S}/dreambox-bootlogo_${BINARY_VERSION}_${PRECOMPILED_ARCH}/bootlogo-${PRECOMPILED_ARCH}.elf.gz ${D}/boot/; install -m 0755 ${S}/splash1280.jpg ${D}/boot/bootlogo-${PRECOMPILED_ARCH}.jpg", "", d)}
     install -d ${D}/usr/share
     install -m 0644 bootlogo.mvi ${D}/usr/share/bootlogo.mvi
@@ -66,6 +70,10 @@ do_install() {
     install -m 0644 radio.mvi ${D}/usr/share/enigma2/radio.mvi
     install -d ${D}/${sysconfdir}/init.d
     install -m 0755 bootlogo.sh ${D}/${sysconfdir}/init.d/bootlogo
+    ${@bb.utils.contains("MACHINE_FEATURES", "gigabluelcd400", "install -m 0644 lcdwaitkey400.bin ${D}/usr/share/lcdwaitkey.bin" , "", d)}
+    ${@bb.utils.contains("MACHINE_FEATURES", "gigabluelcd400", "install -m 0644 lcdwarning400.bin ${D}/usr/share/lcdwarning.bin" , "", d)}
+    ${@bb.utils.contains("MACHINE_FEATURES", "gigabluelcd220", "install -m 0644 lcdwaitkey220.bin ${D}/usr/share/lcdwaitkey.bin" , "", d)}
+    ${@bb.utils.contains("MACHINE_FEATURES", "gigabluelcd220", "install -m 0644 lcdwarning220.bin ${D}/usr/share/lcdwarning.bin" , "", d)}
 }
 
 do_install_append_vuduo2() {
@@ -75,27 +83,41 @@ do_install_append_vuduo2() {
 
 do_install_append_7100s() {
     install -d ${D}/usr/share
-    install -m 0644 lcdwaitkey220.bin ${D}/usr/share/lcdwaitkey.bin
-    install -m 0644 lcdwarning220.bin ${D}/usr/share/lcdwarning.bin
-    install -m 0644 lcdcomplete220.bin ${D}/usr/share/lcdcomplete.bin
+    install -m 0644 ${WORKDIR}/7100s/lcdwaitkey220.bin ${D}/usr/share/lcdwaitkey.bin
+    install -m 0644 ${WORKDIR}/7100s/lcdwarning220.bin ${D}/usr/share/lcdwarning.bin
+    install -m 0644 ${WORKDIR}/7100s/lcdcomplete220.bin ${D}/usr/share/lcdcomplete.bin
 }
 
 do_install_append_7210s() {
     install -d ${D}/usr/share
-    install -m 0644 lcdwaitkey220.bin ${D}/usr/share/lcdwaitkey.bin
-    install -m 0644 lcdwarning220.bin ${D}/usr/share/lcdwarning.bin
-    install -m 0644 lcdcomplete220.bin ${D}/usr/share/lcdcomplete.bin
+    install -m 0644 ${WORKDIR}/7100s/lcdwaitkey220.bin ${D}/usr/share/lcdwaitkey.bin
+    install -m 0644 ${WORKDIR}/7100s/lcdwarning220.bin ${D}/usr/share/lcdwarning.bin
+    install -m 0644 ${WORKDIR}/7100s/lcdcomplete220.bin ${D}/usr/share/lcdcomplete.bin
+}
+
+do_install_append_7105s() {
+    install -d ${D}/usr/share
+    install -m 0644 ${WORKDIR}/7100s/lcdwaitkey220.bin ${D}/usr/share/lcdwaitkey.bin
+    install -m 0644 ${WORKDIR}/7100s/lcdwarning220.bin ${D}/usr/share/lcdwarning.bin
+    install -m 0644 ${WORKDIR}/7100s/lcdcomplete220.bin ${D}/usr/share/lcdcomplete.bin
+}
+
+do_install_append_7215s() {
+    install -d ${D}/usr/share
+    install -m 0644 ${WORKDIR}/7100s/lcdwaitkey220.bin ${D}/usr/share/lcdwaitkey.bin
+    install -m 0644 ${WORKDIR}/7100s/lcdwarning220.bin ${D}/usr/share/lcdwarning.bin
+    install -m 0644 ${WORKDIR}/7100s/lcdcomplete220.bin ${D}/usr/share/lcdcomplete.bin
 }
 
 inherit deploy
 do_deploy() {
-    if [ "${MACHINE}" = "vuduo" ] || [ "${MACHINE}" = "vuduo2" ] || [ "${MACHINE}" = "vuuno" ] || [ "${MACHINE}" = "vusolo4k" ] || [ "${MACHINE}" = "vuuno4k" ] || [ "${MACHINE}" = "vuultimo4k" ] || [ "${MACHINE}" = "vusolo" ] || [ "${MACHINE}" = "vusolose" ] || [ "${MACHINE}" = "vuultimo" ] || [ "${MACHINE}" = "vuzero" ] || [ "${BRAND_OEM}" = "dags" ]; then
+    if [ "${MACHINE}" = "vuduo" ] || [ "${MACHINE}" = "vuduo2" ] || [ "${MACHINE}" = "vuuno" ] || [ "${MACHINE}" = "vusolo" ] || [ "${MACHINE}" = "vusolose" ] || [ "${MACHINE}" = "vuultimo" ] || [ "${MACHINE}" = "vuzero" ] || [ "${MACHINE}" = "vusolo4k" ] || [ "${MACHINE}" = "vuuno4k" ]|| [ "${MACHINE}" = "vuultimo4k" ] || [ "${BRAND_OEM}" = "dags" ]; then
         install -m 0644 splash480.bmp ${DEPLOYDIR}/${BOOTLOGO_FILENAME}
     else
         install -m 0644 splash576.bmp ${DEPLOYDIR}/${BOOTLOGO_FILENAME}
     fi
     if [ -e lcdsplash220.bin ]; then
-        install -m 0644 lcdsplash220.bin ${DEPLOYDIR}/lcdsplash220.bin
+    install -m 0644 lcdsplash220.bin ${DEPLOYDIR}/lcdsplash220.bin
     fi
     if [ -e lcdsplash400.bin ]; then
         install -m 0644 lcdsplash400.bin ${DEPLOYDIR}/lcdsplash400.bin
@@ -122,50 +144,42 @@ do_deploy() {
 
 addtask deploy before do_build after do_install
 
-pkg_preinst_${PN}() {
-    if grep dm /etc/hostname > /dev/null ; then
-        if [ -z "$D" ]
-        then
-            if mountpoint -q /boot
-            then
-                mount -o remount,rw,compr=none /boot
-            else
-                mount -t jffs2 -o rw,compr=none mtd:'boot partition' /boot
-            fi
-        fi
-    fi
+pkg_preinst_${PN}_dreamboxv1() {
+	if [ -z "$D" ]
+	then
+		if mountpoint -q /boot
+		then
+			mount -o remount,rw,compr=none /boot
+		else
+			mount -t jffs2 -o rw,compr=none mtd:boot /boot
+		fi
+	fi
 }
 
-pkg_postinst_${PN}() {
-    if grep dm /etc/hostname > /dev/null ; then
-        if [ -z "$D" ]
-        then
-            umount /boot
-        fi
-    fi
+pkg_postinst_${PN}_dreamboxv1() {
+	if [ -z "$D" ]
+	then
+		umount /boot
+	fi
 }
 
-pkg_prerm_${PN}() {
-    if grep dm /etc/hostname > /dev/null ; then
-        if [ -z "$D" ]
-        then
-            if mountpoint -q /boot
-            then
-                mount -o remount,rw,compr=none /boot
-            else
-                mount -t jffs2 -o rw,compr=none mtd:'boot partition' /boot
-            fi
-        fi
-    fi
+pkg_prerm_${PN}_dreamboxv1() {
+	if [ -z "$D" ]
+	then
+		if mountpoint -q /boot
+		then
+			mount -o remount,rw,compr=none /boot
+		else
+			mount -t jffs2 -o rw,compr=none mtd:boot /boot
+		fi
+	fi
 }
 
-pkg_postrm_${PN}() {
-    if grep dm /etc/hostname > /dev/null ; then
-        if [ -z "$D" ]
-        then
-            umount /boot
-        fi
-    fi
+pkg_postrm_${PN}_dreamboxv1() {
+	if [ -z "$D" ]
+	then
+		umount /boot
+	fi
 }
 
 PACKAGE_ARCH := "${MACHINE_ARCH}"
