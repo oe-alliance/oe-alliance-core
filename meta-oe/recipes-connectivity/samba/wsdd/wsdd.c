@@ -193,7 +193,7 @@ void readSmbConf()
 {
 	FILE* fp;
 
-	fp = popen("testparm -s -l --parameter-name=\"netbios name\" 2>/dev/null", "r");
+	fp = popen("testparm -s -l --parameter-name=\"netbios name\" 2>/dev/null | sed ':M;N;$!bM;s#\n##g'", "r");
 	if (fp == NULL) {
 		printf("Failed to run testparm\n" );
 		return;
@@ -202,7 +202,7 @@ void readSmbConf()
 		pclose(fp);
 	}
 
-	fp = popen("testparm -s -l --parameter-name=\"workgroup\" 2>/dev/null", "r");
+	fp = popen("testparm -s -l --parameter-name=\"workgroup\" 2>/dev/null | sed ':M;N;$!bM;s#\n##g'", "r");
 	if (fp == NULL) {
 		printf("Failed to run testparm\n" );
 		return;
