@@ -193,22 +193,26 @@ void readSmbConf()
 {
 	FILE* fp;
 
-	fp = popen("testparm -s -l --parameter-name=\"netbios name\" 2>/dev/null | sed ':M;N;$!bM;s#\n##g'", "r");
+	fp = popen("testparm -s -l --parameter-name=\"netbios name\" 2>/dev/null", "r");
 	if (fp == NULL) {
 		printf("Failed to run testparm\n" );
 		return;
 	} else {
 		fgets(cd_name, sizeof(cd_name)-1, fp);
 		pclose(fp);
+		if (cd_name[strlen(cd_name) - 1] == '\n') cd_name[strlen(cd_name) - 1] = '\0';
+		if (cd_name[strlen(cd_name) - 1] == '\r') cd_name[strlen(cd_name) - 1] = '\0';
 	}
 
-	fp = popen("testparm -s -l --parameter-name=\"workgroup\" 2>/dev/null | sed ':M;N;$!bM;s#\n##g'", "r");
+	fp = popen("testparm -s -l --parameter-name=\"workgroup\" 2>/dev/null", "r");
 	if (fp == NULL) {
 		printf("Failed to run testparm\n" );
 		return;
 	} else {
 		fgets(cd_workgroup, sizeof(cd_workgroup)-1, fp);
 		pclose(fp);
+		if (cd_workgroup[strlen(cd_workgroup) - 1] == '\n') cd_workgroup[strlen(cd_workgroup) - 1] = '\0';
+		if (cd_workgroup[strlen(cd_workgroup) - 1] == '\r') cd_workgroup[strlen(cd_workgroup) - 1] = '\0';
 	}
 }
 
