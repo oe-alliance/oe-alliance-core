@@ -12,7 +12,7 @@ SRC_URI = " \
     "
 
 PR = "r1"
-PV = "1.06"
+PV = "1.08"
 
 S = "${WORKDIR}"
 
