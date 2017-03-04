@@ -19,9 +19,9 @@ RDEPENDS_${PN} = "python \
 
 inherit gitpkgv
 SRCREV = "${AUTOREV}"
-PV = "1.11.0+git${SRCPV}"
-PKGV = "1.11.0+git${GITPKGV}"
-VER ="1.11.0"
+PV = "1.12.2+git${SRCPV}"
+PKGV = "1.12.2+git${GITPKGV}"
+VER ="1.12.2"
 PR = "r1"
 
 SRC_URI = "git://github.com/chrippa/livestreamer.git;protocol=git"
