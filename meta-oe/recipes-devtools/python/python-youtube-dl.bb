@@ -7,8 +7,8 @@ SECTION = "devel/python"
 LICENSE = "Unlicense"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=7246f848faa4e9c9fc0ea91122d6e680"
 DEPENDS = "libxml2 python-html bash-completion"
-SRCREV = "9b92a5917ba32644511d13a8af546d6f41282ffc"
-PV = "2017.02.11"
+SRCREV = "afa4597618462df01b47febcd64c531f8ffdd63a"
+PV = "2017.03.05"
 
 SRC_URI = "git://github.com/rg3/youtube-dl.git;branch=master"
 
@@ -37,4 +37,14 @@ RDEPENDS_${PN} = " \
     python-argparse \
     "
 
-FILES_${PN} += "${sysconfdir}"
+PACKAGES =+ " ${PN}-src"
+RDEPENDS_{PN}-src = "${PN}"
+FILES_${PN}-src = " \
+    ${libdir}/${PYTHON_DIR}/site-packages/*/*.py \
+    ${libdir}/${PYTHON_DIR}/site-packages/*/*/*.py \
+    ${libdir}/${PYTHON_DIR}/site-packages/*/*/*/*.py \
+    ${libdir}/${PYTHON_DIR}/site-packages/*/*/*/*/*.py \
+    ${libdir}/${PYTHON_DIR}/site-packages/youtube_dl-*-py2.7.egg-info/* \
+    ${datadir}/etc/* \
+    ${sysconfdir} \
+    "
