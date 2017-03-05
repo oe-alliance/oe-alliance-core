@@ -17,7 +17,7 @@ DEPENDS = " \
 	boost \
 	bzip2 \
 	curl \
-	dcadec \
+	libdcadec \
 	enca \
 	expat \
 	faad2 \
