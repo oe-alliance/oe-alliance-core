@@ -8,7 +8,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "${IMAGE_VERSION}"
-PR = "r4"
+PR = "r5"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
@@ -20,6 +20,7 @@ RDEPENDS_${PN} = "\
     blackhole-base \
     blackholesocker \
     busybox-cron \
+    ca-certificates \    
     dvbsnoop \
     hddtemp \
     inadyn-mt \
