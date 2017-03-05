@@ -6,13 +6,14 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=4d92cd373abda3937c2bc47fbc49d
 ALLOW_EMPTY_${PN} = "1"
 
 PV = "6.0"
-PR = "r19"
+PR = "r20"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 inherit packagegroup
 
 RDEPENDS_${PN} = "\
+    ca-certificates \
     oe-alliance-base \
     opendroid-enigma2 \
     opendroid-bootlogo \
