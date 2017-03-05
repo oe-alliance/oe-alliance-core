@@ -1,6 +1,22 @@
 diff -Nur a/libopkg/opkg_download.c b/libopkg/opkg_download.c
---- a/libopkg/opkg_download.c	2015-12-02 22:56:43.000000000 +0100
-+++ b/libopkg/opkg_download.c	2016-09-18 03:03:02.756358900 +0200
+--- a/libopkg/opkg_download.c	2016-07-13 18:26:56.000000000 +0200
++++ b/libopkg/opkg_download.c	2017-03-05 16:19:04.339207990 +0100
+@@ -393,13 +393,13 @@
+         pkg_t *old_pkg = pkg_hash_fetch_installed_by_name(pkg->name);
+         if (old_pkg && (pkg_compare_versions(pkg, old_pkg) == 0)) {
+             char *version = pkg_version_str_alloc(old_pkg);
+-            opkg_msg(ERROR,
++            opkg_msg(NOTICE,
+                      "Refusing to load file '%s' as it matches the installed version of %s (%s).\n",
+                      path, old_pkg->name, version);
+             free(version);
+             pkg_deinit(pkg);
+             free(pkg);
+-            return -1;
++            return 0;
+         }
+     }
+ 
 @@ -488,8 +488,8 @@
      }
  
