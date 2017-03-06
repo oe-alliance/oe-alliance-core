@@ -7,8 +7,6 @@ require conf/license/license-close.inc
 DEPENDS = "nextv-dumpait nextv-hbbtv-browser"
 RDEPENDS_${PN} = "nextv-dumpait nextv-hbbtv-browser"
 
-COMPATIBLE_MACHINE = "^(sf4008)$"
-
 inherit gitpkgv
 
 SRCREV = "${AUTOREV}"
