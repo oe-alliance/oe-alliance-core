@@ -141,12 +141,9 @@ EXTRA_OECONF = " \
 	--disable-lirc \
 	--disable-dbus \
 	--disable-gtest \
-	--enable-rtmp \
 	--enable-libusb \
-	--enable-external-libraries \
 	--disable-ssh \
 	--enable-pulse=no \
-	--disable-joystick \
 	--disable-libcec \
 	"
 
@@ -154,7 +151,7 @@ FULL_OPTIMIZATION_armv7a = "-fexpensive-optimizations -fomit-frame-pointer -O3 -
 FULL_OPTIMIZATION_armv7ve = "-fexpensive-optimizations -fomit-frame-pointer -O3 -ffast-math"
 BUILD_OPTIMIZATION = "${FULL_OPTIMIZATION}"
 
-EXTRA_OECONF_append = "LIBTOOL=${STAGING_BINDIR_CROSS}/${HOST_SYS}-libtool"
+EXTRA_OECONF_append = " LIBTOOL=${STAGING_BINDIR_CROSS}/${HOST_SYS}-libtool"
 
 # for python modules
 export HOST_SYS

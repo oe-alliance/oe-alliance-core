@@ -14,7 +14,9 @@ PACKAGES += " ${PN}-src"
 
 DEPENDS = "libdvbsi++"
 
-SRC_URI = "git://github.com/NexTVTeam/dumpait.git;protocol=https"
+SRC_URI = "git://github.com/NexTVTeam/dumpait.git;protocol=https  \
+    file://0001-remove-model-check.patch \
+"
 
 
 S = "${WORKDIR}/git"
