@@ -8,6 +8,7 @@ IMAGEDIR ?= "${MACHINE}"
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS = "\
     octagon-dvb-modules-${MACHINE} \
+    octagon-initrd-${MACHINE} \
     "
 
 DVBPROVIDER = "kernel"
