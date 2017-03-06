@@ -8,7 +8,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "${IMAGE_VERSION}"
-PR = "r4"
+PR = "r5"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
@@ -17,6 +17,7 @@ inherit packagegroup
 DEPENDS = "openvix-version-info"
 
 RDEPENDS_${PN} = "\
+    ca-certificates \
     oe-alliance-base \
     openvix-version-info \
     openvix-enigma2 \
