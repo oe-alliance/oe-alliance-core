@@ -28,6 +28,9 @@ RRECOMMENDS_${PN} = "\
     enigma2-plugin-extensions-webinterface-nfrmod \
     enigma2-plugin-extensions-bmediacenter \
     enigma2-plugin-extensions-mainmenu2 \
+    enigma2-plugin-skincomponents-bmediacenter-ax-blue-skin \
+    enigma2-plugin-skincomponents-mediaportal-ax-bluee-skin \
+    enigma2-plugin-skins-ax-blue-fhd-4nfr \    
     enigma2-plugin-skins-skallihd-fullhd \
     enigma2-plugin-skins-iflat-blassermod \
     enigma2-plugin-skins-fenris-blassermod \
