@@ -14,7 +14,7 @@ RRECOMMENDS_${PN} = "enigma2-plugin-extensions-subssupport"
 PROVIDES += "enigma2-plugin-extensions-kodi"
 RPROVIDES_${PN} += "enigma2-plugin-extensions-kodi"
 
-SRCREV = "ae55836030e94c38557f8e1b3efd5c72f131922a"
+SRCREV = "241a5aabf50aa21ed06c8180e854a65ebec47790"
 SRC_URI = "git://github.com/mx3L/kodiext;protocol=git;branch=master \
         file://0001-add-subtitleSelection-option.patch \
         "
