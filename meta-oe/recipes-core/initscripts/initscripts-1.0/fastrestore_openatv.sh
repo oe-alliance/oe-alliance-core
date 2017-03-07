@@ -97,10 +97,17 @@ echo "Extracting saved settings from $backuplocation/enigma2settingsbackup.tar.g
 spinner $! "Settings "
 echo >>$LOG
 
+SUNDTEK=$(ls -1 /media/hdd/backup/SundtekBackup/*.tar 2>/dev/null | tail -1)
+if [ -n "$SUNDTEK" ]; then
+	echo "Extracting saved Sundtek settings from /media/hdd/backup/SundtekBackup/${SUNDTEK}" >> $LOG
+	(busybox tar -xvf /media/hdd/backup/SundtekBackup/${SUNDTEK} -C $ROOTFS >>$LOG 2>>$LOG) &
+	spinner $! "Sundtek "
+	echo >>$LOG
+fi
+
 echo "Restarting network" >>$LOG
-/etc/init.d/networking restart >>$LOG
-/etc/init.d/autofs restart >>$LOG
-sleep 3
+(/etc/init.d/networking restart >>$LOG ; /etc/init.d/autofs restart >>$LOG ; sleep 3) &
+spinner $! "Network "
 echo >>$LOG
 
 if grep -q "config.skin.primary_skin=MetrixHD/skin.MySkin.xml" ${ROOTFS}etc/enigma2/settings 2>/dev/null; then
@@ -110,7 +117,7 @@ if grep -q "config.skin.primary_skin=MetrixHD/skin.MySkin.xml" ${ROOTFS}etc/enig
 	echo >>$LOG
 fi
 
-if [ $plugins -eq 1 ]; then
+if [ $plugins -eq 1 ] && [ -e ${ROOTFS}tmp/installed-list.txt ]; then
 	echo "Re-installing previous plugins" >> $LOG
 	pkgs=$(<${ROOTFS}tmp/installed-list.txt)
 	(opkg update && opkg install $pkgs >>$LOG 2>>$LOG) &
@@ -140,9 +147,10 @@ echo "Mounting all ..." >>$LOG
 mount -a >>$LOG 2>>$LOG
 mdev -s
 [ -e "${ROOTFS}etc/init.d/hostname.sh" ]  && . ${ROOTFS}etc/init.d/hostname.sh
+[ -e "${ROOTFS}etc/init.d/modload.sh" ]  && . ${ROOTFS}etc/init.d/modload.sh
 echo >>$LOG
 echo "Done.">>$LOG
-echo -n "" >$DEV
+echo -n "OpenATV" >&200
 flock -u 200
 exit 0
 

@@ -1,6 +1,6 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/${P}:"
 
-PR .= ".7"
+PR .= ".8"
 
 RDEPENDS_${PN}_append = " sdparm"
 
