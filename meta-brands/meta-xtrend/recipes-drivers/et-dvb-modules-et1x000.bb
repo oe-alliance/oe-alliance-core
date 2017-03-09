@@ -8,11 +8,11 @@ PV = "${KV}+${SRCDATE}"
 PR = "r0"
 
 KV = "4.1.37"
-GCCREV = "4.9.1"
-SRCDATE = "20170228"
+GCCREV = "6.3.0"
+SRCDATE = "20170309"
 
-SRC_URI[md5sum] = "aeec5c768a3f2fb2458a6747b26ce2c2"
-SRC_URI[sha256sum] = "0e1a6e5b408a1675a5a9c2c0a330d805e251a9934bea0467a2f3d50d9ff3face"
+SRC_URI[md5sum] = "d3cfc9989d24342b984565febf0cc372"
+SRC_URI[sha256sum] = "2ea997712b1fe59a7c5439ee26aa9c5f9981aea9acf39de6d73eb52f268f2c44"
 
 SRC_URI = "http://gi-et.info/${MACHINE}/${MACHINE}-drivers-${KV}-${GCCREV}-${SRCDATE}.zip"
 
