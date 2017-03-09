@@ -9,6 +9,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'sf3038', 'SF3038' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'sf128', 'SF128' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'sf138', 'SF138' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'bre2zet2c', 'BRE2ZE T2/C' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'alphatriple', 'Alpha Triple HD' , '', d)}\
 "
 
 MACHINE_BRAND = "\
@@ -17,6 +18,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'sf3038', 'Octagon' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'sf128', 'Octagon' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'sf138', 'Octagon' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'bre2zet2c', 'WWIO' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'alphatriple', 'SAB' , '', d)}\
 "
 
 IMAGEDIR ?= "\
@@ -25,6 +27,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'sf3038', 'sf3038' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'sf128', 'sf128' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'sf138', 'sf138' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'bre2zet2c', 'bre2ze_t2c' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'alphatriple', 'sab_alpha_triple' , '', d)}\
 "
 
 MACHINE_DRIVER = "\
@@ -33,6 +36,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'sf3038', 'sf3038' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'sf128', 'g100' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'sf138', 'g100' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'bre2zet2c', 'bre2zet2c' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'alphatriple', 'alphatriple' , '', d)}\
 "
 
 MTD_KERNEL = "mtd1"

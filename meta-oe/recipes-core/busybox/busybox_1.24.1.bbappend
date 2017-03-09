@@ -1,4 +1,4 @@
-PR .= ".33"
+PR .= ".34"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 SRC_URI += " \
@@ -13,6 +13,7 @@ SRC_URI += " \
             file://inetd.conf \
             file://vi.sh \
             file://0001-Prevent-telnet-connections-from-the-internet-to-the-.patch \
+            file://0002-Extended-network-interfaces-support.patch \
             "
 
 # we do not really depend on mtd-utils, but as mtd-utils replaces 
@@ -46,7 +47,7 @@ INITSCRIPT_NAME_${PN}-cron = "${BPN}-cron"
 INITSCRIPT_PARAMS_${PN}-mdev = "start 04 S ."
 FILES_${PN}-cron = "${sysconfdir}/cron ${sysconfdir}/init.d/${BPN}-cron"
 RDEPENDS_${PN}-cron += "${PN}"
-
+RDEPENDS_${PN} += "odhcp6c"
 
 do_install_append() {
     if grep -q "CONFIG_CRONTAB=y" ${WORKDIR}/defconfig; then

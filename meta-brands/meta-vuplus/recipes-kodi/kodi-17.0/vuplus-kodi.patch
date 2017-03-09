@@ -1,0 +1,1230 @@
+diff -Nur a/addons/skin.estouchy/xml/Home.xml b/addons/skin.estouchy/xml/Home.xml
+--- a/addons/skin.estouchy/xml/Home.xml	2017-02-01 19:47:32.000000000 +0100
++++ b/addons/skin.estouchy/xml/Home.xml	2017-01-27 16:00:05.000000000 +0100
+@@ -181,7 +181,7 @@
+ 				<content>
+ 					<item>
+ 						<label>13012</label>
+-						<onclick>Shutdown</onclick>
++						<onclick>XBMC.Quit()</onclick>
+ 						<icon>icon_button_shutdown.png</icon>
+ 					</item>
+ 					<item>
+diff -Nur a/addons/skin.estuary/xml/Home.xml b/addons/skin.estuary/xml/Home.xml
+--- a/addons/skin.estuary/xml/Home.xml	2017-02-01 19:47:32.000000000 +0100
++++ b/addons/skin.estuary/xml/Home.xml	2017-01-27 16:01:17.000000000 +0100
+@@ -915,7 +915,7 @@
+ 					<align>justify</align>
+ 					<include content="IconButton">
+ 						<param name="control_id" value="804" />
+-						<param name="onclick" value="ActivateWindow(shutdownmenu)" />
++						<param name="onclick" value="XBMC.Quit()" />
+ 						<param name="icon" value="icons/power.png" />
+ 						<param name="label" value="$LOCALIZE[33060]" />
+ 					</include>
+diff -Nur a/configure.ac b/configure.ac
+--- a/configure.ac	2017-02-01 19:47:32.000000000 +0100
++++ b/configure.ac	2017-02-03 00:03:19.000000000 +0100
+@@ -611,6 +611,19 @@
+      CORE_SYSTEM_NAME=linux
+      ARCH="powerpc64-linux"
+      ;;
++  arm-oe-linux-gnueabi)
++     target_platform=target_vuplus_arm
++     ARCH="arm"
++     use_arch="arm"
++     ffmpeg_target_os=linux
++     use_joystick=no
++     use_gles=yes
++     use_sdl=no
++     use_x11=no
++     use_wayland=no
++     use_optical_drive=no
++     USE_STATIC_FFMPEG=1
++     ;;
+   arm*-*-linux-gnu*|arm*-*-linux-uclibc*)
+      target_platform=target_linux
+      CORE_SYSTEM_NAME=linux
+@@ -647,6 +660,19 @@
+      use_x11=no
+      build_shared_lib=yes
+      ;;
++  mipsel-*-linux*|mipsel*linux)
++     target_platform=target_vuplus
++     ARCH="mips"
++     use_arch="mips"
++     ffmpeg_target_os=linux
++     use_joystick=no
++     use_gles=yes
++     use_sdl=no
++     use_x11=no
++     use_wayland=no
++     use_optical_drive=no
++     USE_STATIC_FFMPEG=1
++     ;;
+   mips*-*-linux-gnu*)
+      target_platform=target_linux
+      CORE_SYSTEM_NAME=linux
+@@ -681,6 +707,42 @@
+      use_neon=yes
+      use_cpu=cortex-a7
+      ;;
++  vuplus)
++     target_platform=target_vuplus
++     ARCH="mips"
++     use_arch="mips"
++     ffmpeg_target_os=linux
++     use_joystick=no
++     use_gles=yes
++     use_sdl=no
++     use_x11=no
++     use_wayland=no
++     use_wayland=no
++     use_optical_drive=no
++     USE_STATIC_FFMPEG=1
++     AC_DEFINE(HAS_EGLGLES, [1], [Define if supporting EGL based GLES Framebuffer])
++     USE_VUPLUS_EGL=1
++     CFLAGS="$CFLAGS"
++     CXXFLAGS="$CXXFLAGS"
++     ;;
++  vuplus-arm)
++     target_platform=target_vuplus_arm
++     ARCH="arm"
++     use_arch="arm"
++     ffmpeg_target_os=linux
++     use_joystick=no
++     use_gles=yes
++     use_sdl=no
++     use_x11=no
++     use_wayland=no
++     use_wayland=no
++     use_optical_drive=no
++     USE_STATIC_FFMPEG=1
++     AC_DEFINE(HAS_EGLGLES, [1], [Define if supporting EGL based GLES Framebuffer])
++     USE_VUPLUS_ARM_EGL=1
++     CFLAGS="$CFLAGS"
++     CXXFLAGS="$CXXFLAGS"
++     ;;
+ esac
+ 
+ if test "$target_platform" = "target_raspberry_pi" ; then
+@@ -1056,7 +1118,7 @@
+   )])
+ AC_LANG_POP([C++])
+ 
+-if test "${target_platform}" = "target_linux" || test "${target_platform}" = "target_raspberry_pi" || test "${target_platform}" = "target_android"; then
++if test "${target_platform}" = "target_linux" || test "${target_platform}" = "target_raspberry_pi" || test "${target_platform}" = "target_android" || test "${target_platform}" = "target_vuplus" || test "${target_platform}" = "target_vuplus_arm"; then
+   PKG_CHECK_MODULES([UUID], [uuid],, AC_MSG_ERROR(libuuid not found))
+ fi
+ 
+@@ -1556,7 +1579,21 @@ if test "${USE_STATIC_FFMPEG}" = "1"; then
+       pkg_cfg_prefix=${SYSROOT}
+   fi
+ 
+-  if test "$cross_compiling" != "yes"; then
++  if test "${target_platform}" = "target_vuplus" || test "${target_platform}" = "target_vuplus_arm"; then
++    # always build our ffmpeg
++    if test "$use_debug" != "yes"; then
++      FFMPEG_OPTS="-r"
++    fi
++    if test "$use_optimizations" != "yes"; then
++      FFMPEG_OPTS="${FFMPEG_OPTS} --disable-optimizations"
++    fi
++    AC_MSG_NOTICE("FFmpeg installation forced by user - installing our version")
++    CFLAGS="$CFLAGS" CXXFLAGS="$CXXFLAGS" LDFLAGS="$LDFLAGS" NM="$NM" AR="$AR" \
++      AS="$AS" STRIP="$STRIP" CC="$CC" CXX="$CXX" LD="$CCLD" RANLIB="$RANLIB" \
++      ${ffmpeg_build}/autobuild.sh ${FFMPEG_OPTS} ${PARALLEL_MAKE} --arch=generic
++    export PKG_CONFIG_PATH="${ffmpeg_build}/ffmpeg-install/lib/pkgconfig:$PKG_CONFIG_PATH"
++
++  elif test "$cross_compiling" != "yes"; then
+     if test "$use_debug" != "yes"; then
+       FFMPEG_OPTS="-r"
+     fi
+@@ -1589,14 +1626,18 @@ if test "${USE_STATIC_FFMPEG}" = "1"; then
+       if test "$with_ffmpeg" = "yes" || test "$FFMPEG_FOUND" = "false"; then
+         # ffmpeg not found with pkg-config, lets install it
+         AC_MSG_NOTICE("Installing FFmpeg")
+-        CFLAGS="$CFLAGS" CXXFLAGS="$CXXFLAGS" ${ffmpeg_build}/autobuild.sh ${FFMPEG_OPTS}
++        CFLAGS="$CFLAGS" CXXFLAGS="$CXXFLAGS" LDFLAGS="$LDFLAGS" NM="$NM" AR="$AR" \
++          AS="$AS" STRIP="$STRIP" CC="$CC" CXX="$CXX" LD="$CCLD" RANLIB="$RANLIB" \
++          ${ffmpeg_build}/autobuild.sh ${FFMPEG_OPTS}
+         export PKG_CONFIG_PATH="${ffmpeg_build}/ffmpeg-install/lib/pkgconfig:$PKG_CONFIG_PATH"
+       fi
+ 
+     elif test "$with_ffmpeg" = "force"; then
+       # always build our ffmpeg
+       AC_MSG_NOTICE("FFmpeg installation forced by user - installing our version")
+-      CFLAGS="$CFLAGS" CXXFLAGS="$CXXFLAGS" ${ffmpeg_build}/autobuild.sh ${FFMPEG_OPTS}
++      CFLAGS="$CFLAGS" CXXFLAGS="$CXXFLAGS" LDFLAGS="$LDFLAGS" NM="$NM" AR="$AR" \
++        AS="$AS" STRIP="$STRIP" CC="$CC" CXX="$CXX" LD="$CCLD" RANLIB="$RANLIB" \
++        ${ffmpeg_build}/autobuild.sh ${FFMPEG_OPTS}
+       export PKG_CONFIG_PATH="${ffmpeg_build}/ffmpeg-install/lib/pkgconfig:$PKG_CONFIG_PATH"
+ 
+     elif test "$with_ffmpeg" != "no"; then
+@@ -1609,13 +1650,17 @@ fi
+ 
+ if test "$FFMPEG_FOUND" != "true"; then
+   PKG_CHECK_MODULES([FFMPEG], [$FFMPEG_LIBNAMES],
+-    [INCLUDES="$INCLUDES $FFMPEG_CFLAGS"; LIBS="$LIBS $FFMPEG_LIBS"; FFMPEG_FOUND="true"],
++    [FFMPEG_FOUND="true"],
+     [AC_MSG_ERROR("ffmpeg not found")])
++  FFMPEG_LIBS=$(PKG_CONFIG_SYSROOT_DIR="" ${PKG_CONFIG} --libs libavcodec 2>/dev/null)
++  FFMPEG_CFLAGS=$(PKG_CONFIG_SYSROOT_DIR="" ${PKG_CONFIG} --cflags libavcodec 2>/dev/null)
++  INCLUDES="$INCLUDES $FFMPEG_CFLAGS"
++  LIBS="$LIBS $FFMPEG_LIBS"
+ fi
+ 
+ if test "${USE_STATIC_FFMPEG}" = "1"; then
+   # get the libdir for static linking
+-  FFMPEG_LIBDIR=${pkg_cfg_prefix}$(PKG_CONFIG_SYSROOT_DIR="" ${PKG_CONFIG} --static --variable=libdir libavcodec)
++  FFMPEG_LIBDIR=$(PKG_CONFIG_SYSROOT_DIR="" ${PKG_CONFIG} --static --variable=libdir libavcodec)
+   GNUTLS_ALL_LIBS=$(${PKG_CONFIG} --static --libs-only-l --silence-errors gnutls)
+ 
+   # check if static libs are available
+@@ -2328,6 +2408,8 @@
+ AC_SUBST(HAVE_SSE4)
+ AC_SUBST(USE_MMAL)
+ AC_SUBST(USE_X11)
++AC_SUBST(USE_VUPLUS_EGL)
++AC_SUBST(USE_VUPLUS_ARM_EGL)
+ AC_SUBST(USE_OPTICAL_DRIVE)
+ 
+ # pushd and popd are not available in other shells besides bash, so implement
+diff -Nur a/lib/libdvd/Makefile.in b/lib/libdvd/Makefile.in
+--- a/lib/libdvd/Makefile.in	2017-02-01 19:47:32.000000000 +0100
++++ b/lib/libdvd/Makefile.in	2017-01-05 20:20:18.000000000 +0100
+@@ -4,16 +4,16 @@
+ CC=@CC@
+ CXX=@CXX@
+ 
+-ifeq (@CROSS_COMPILING@,yes)
+-  DEPENDS_DIR = $(shell grep "^PREFIX=/" @abs_top_srcdir@/tools/depends/Makefile.include | sed 's/PREFIX=//g')
+-  DVDNAV_A = $(DEPENDS_DIR)/lib/libdvdnav.a
+-  DVDREAD_A = $(DEPENDS_DIR)/lib/libdvdread.a
+-  DVDCSS_A = $(DEPENDS_DIR)/lib/libdvdcss.a
+-else
++#ifeq (@CROSS_COMPILING@,yes)
++#  DEPENDS_DIR = $(shell grep "^PREFIX=/" @abs_top_srcdir@/tools/depends/Makefile.include | sed 's/PREFIX=//g')
++#  DVDNAV_A = $(DEPENDS_DIR)/lib/libdvdnav.a
++#  DVDREAD_A = $(DEPENDS_DIR)/lib/libdvdread.a
++#  DVDCSS_A = $(DEPENDS_DIR)/lib/libdvdcss.a
++#else
+   DVDNAV_A = @abs_top_srcdir@/tools/depends/target/libdvdnav/dvdnav-install/lib/libdvdnav.a
+   DVDREAD_A = @abs_top_srcdir@/tools/depends/target/libdvdread/dvdread-install/lib/libdvdread.a
+   DVDCSS_A = @abs_top_srcdir@/tools/depends/target/libdvdcss/dvdcss-install/lib/libdvdcss.a
+-endif
++#endif
+ 
+ SYSDIR = @abs_top_srcdir@/system/players/VideoPlayer
+ SOS = libdvdnav-$(ARCH).so
+diff -Nur a/m4/xbmc_arch.m4 b/m4/xbmc_arch.m4
+--- a/m4/xbmc_arch.m4	2017-02-01 19:47:32.000000000 +0100
++++ b/m4/xbmc_arch.m4	2016-12-24 01:44:36.000000000 +0100
+@@ -26,6 +26,9 @@
+   arm*-*-linux-gnu*|arm*-*-linux-uclibc*)
+      AC_SUBST(NATIVE_ARCH_DEFINES, "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX")
+      ;;
++  mipsel-*-linux*)
++     AC_SUBST(ARCH_DEFINES, "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -D_MIPSEL")
++     ;;
+   *)
+      AC_MSG_ERROR(unsupported native build platform: $build)
+ esac
+@@ -80,4 +83,13 @@
+ if test "$target_platform" = "target_raspberry_pi" ; then
+   AC_SUBST(ARCH_DEFINES, "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -D_ARMEL -DTARGET_RASPBERRY_PI")
+ fi
++
++case $use_platform in
++  vuplus)
++     AC_SUBST(ARCH_DEFINES, "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -D_MIPSEL -DTARGET_VUPLUS")
++     ;;
++  vuplus-arm)
++     AC_SUBST(ARCH_DEFINES, "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_VUPLUS_ARM")
++     ;;
++esac
+ ])
+diff -Nur a/Makefile.in b/Makefile.in
+--- a/Makefile.in	2017-02-01 19:47:32.000000000 +0100
++++ b/Makefile.in	2016-12-24 01:37:52.000000000 +0100
+@@ -273,9 +273,12 @@
+              xbmc/video/test/videoTest.a \
+              xbmc/threads/test/threadTest.a \
+              xbmc/interfaces/python/test/pythonSwigTest.a \
+-             xbmc/cores/AudioEngine/Sinks/test/AESinkTest.a \
+              xbmc/test/xbmc-test.a
+ 
++ifeq ($(or $(findstring mips,@ARCH@)),)
++CHECK_LIBS+=xbmc/cores/AudioEngine/Sinks/test/AESinkTest.a
++endif
++
+ ifeq (@HAVE_SSE4@,1)
+ LIBSSE4+=sse4
+ sse4 : force
+@@ -419,6 +422,10 @@
+ endif
+ endif # USE_ANDROID
+ 
++ifeq ($(findstring @ARCH@,arm,mips), @ARCH@)
++VUPLUS_SUPPORT=$(shell cd ../xbmc-support; pwd)
++VUPLUS_EXTLIBS= xbmc/windowing/egl/gles_init.a -ldvb_base -lnxpl -ldvb_client -L$(VUPLUS_SUPPORT) -lxbmc_base
++endif
+ 
+ OBJSXBMC =$(DIRECTORY_ARCHIVES)
+ OBJSXBMC:=$(filter-out $(DYNOBJSXBMC), $(OBJSXBMC))
+@@ -446,7 +453,7 @@
+ ifeq ($(findstring osx,@ARCH@), osx)
+ 	$(SILENT_LD) $(CXX) $(LDFLAGS) -o @APP_NAME_LC@.bin $(MAINOBJS) -Wl,-all_load,-ObjC $(MAINOBJS) $(DYNOBJSXBMC) $(NWAOBJSXBMC) $(OBJSXBMC) $(LIBS) -rdynamic
+ else
+-	$(SILENT_LD) $(CXX) $(CXXFLAGS) $(LDFLAGS) -o @APP_NAME_LC@.bin $(MAINOBJS) -Wl,--start-group $(MAINOBJS) $(DYNOBJSXBMC) $(OBJSXBMC) -Wl,--end-group $(NWAOBJSXBMC) $(LIBS) -rdynamic
++	$(SILENT_LD) $(CXX) $(CXXFLAGS) $(LDFLAGS) -o @APP_NAME_LC@.bin $(MAINOBJS) -Wl,--start-group $(MAINOBJS) $(DYNOBJSXBMC) $(OBJSXBMC) -Wl,--end-group $(NWAOBJSXBMC) $(LIBS) -rdynamic $(VUPLUS_EXTLIBS)
+ endif
+ 
+ @APP_NAME_LC@-xrandr: xbmc-xrandr.c
+diff -Nur a/system/playercorefactory.xml b/system/playercorefactory.xml
+--- a/system/playercorefactory.xml	2017-02-01 19:47:32.000000000 +0100
++++ b/system/playercorefactory.xml	2017-01-10 21:26:57.000000000 +0100
+@@ -8,8 +8,31 @@
+     <player name="VideoPlayer" /> placeholder for MPlayer
+     <player name="PAPlayer" audio="true" />
+     -->
++    <!-- <player name="E2Player" type="ExternalPlayer" audio="false" video="true">
++      <filename>xbmc.helper</filename>
++      <args>--url="{1}" --owner="$PPID"</args>
++      <hidexbmc>true</hidexbmc>
++      <hideconsole>true</hideconsole>
++      <warpcursor>none</warpcursor>
++    </player>
++    -->
++    <player name="E2Player" type="ExternalPlayer" audio="false" video="true">
++      <filename>kodiext</filename>
++      <args>-U "{1}" -S "{3}" -P "$PPID"</args>
++      <filenamemeta>/tmp/kodiextin.json</filenamemeta>
++      <hidexbmc>true</hidexbmc>
++      <hideconsole>true</hideconsole>
++      <warpcursor>none</warpcursor>
++    </player>
+   </players>
+ 
++  <rules action="prepend">
++    <!-- Video Files -->
++    <rule name="video" video="true" player="E2Player" />
++    <!-- Audio Files -->
++    <rule name="audio" audio="true" player="PAPlayer" />
++  </rules>
++
+   <rules name="system rules">
+     <rule name="mms/udp" protocols="mms|mmsh|udp" player="VideoPlayer" />
+     <rule name="lastfm/shout" protocols="lastfm|shout" player="PAPlayer" />
+@@ -36,5 +59,6 @@
+ 
+     <!-- pvr radio channels should be played by VideoPlayer because they need buffering -->
+     <rule name="radio" filetypes="pvr" filename=".*/radio/.*" player="VideoPlayer" />
++    <rule name="dgb" filetypes="*" player="E2Player"/>
+   </rules>
+ </playercorefactory>
+diff -Nur a/system/settings/settings.xml b/system/settings/settings.xml
+--- a/system/settings/settings.xml	2017-02-01 19:47:32.000000000 +0100
++++ b/system/settings/settings.xml	2017-01-10 00:10:56.000000000 +0100
+@@ -581,11 +581,6 @@
+     </category>
+     <category id="pictures" label="14217" help="38105">
+       <group id="1" label="108">
+-        <setting id="pictures.usetags" type="boolean" label="38207" help="38208">
+-          <level>1</level>
+-          <default>true</default>
+-          <control type="toggle" />
+-        </setting>
+         <setting id="slideshow.staytime" type="integer" label="12378" help="36312">
+           <level>0</level>
+           <default>5</default>
+@@ -670,24 +665,13 @@
+           <control type="spinner" format="integer" delayed="true"/>
+         </setting>
+         <setting id="subtitles.font" type="string" label="14089" help="36185">
+-          <level>1</level>
++          <level>3</level>
+           <default>arial.ttf</default>
+           <constraints>
+             <options>fonts</options>
+           </constraints>
+           <control type="list" format="string" />
+         </setting>
+-        <setting id="subtitles.charset" type="string" parent="subtitles.font" label="735" help="36189">
+-          <level>1</level>
+-          <default>DEFAULT</default>
+-          <constraints>
+-            <options>charsets</options>
+-          </constraints>
+-          <dependencies>
+-            <dependency type="enable" on="property" name="IsUsingTTFSubtitles" setting="subtitles.font" />
+-          </dependencies>
+-          <control type="list" format="string" />
+-        </setting>
+         <setting id="subtitles.height" type="integer" parent="subtitles.font" label="289" help="36186">
+           <level>3</level>
+           <default>28</default>
+@@ -737,6 +721,17 @@
+           </dependencies>
+           <control type="list" format="string" />
+         </setting>
++        <setting id="subtitles.charset" type="string" parent="subtitles.font" label="735" help="36189">
++          <level>3</level>
++          <default>DEFAULT</default>
++          <constraints>
++            <options>charsets</options>
++          </constraints>
++          <dependencies>
++            <dependency type="enable" on="property" name="IsUsingTTFSubtitles" setting="subtitles.font" />
++          </dependencies>
++          <control type="list" format="string" />
++        </setting>
+         <setting id="subtitles.overrideassfonts" type="boolean" label="21368" help="36190">
+           <level>3</level>
+           <default>false</default>
+@@ -2310,27 +2305,16 @@
+           <constraints>
+             <options>
+               <option label="34101">1</option> <!-- AE_CH_LAYOUT_2_0 -->
+-              <option label="34102">2</option> <!-- AE_CH_LAYOUT_2_1 -->
+-              <option label="34103">3</option> <!-- AE_CH_LAYOUT_3_0 -->
+-              <option label="34104">4</option> <!-- AE_CH_LAYOUT_3_1 -->
+-              <option label="34105">5</option> <!-- AE_CH_LAYOUT_4_0 -->
+-              <option label="34106">6</option> <!-- AE_CH_LAYOUT_4_1 -->
+-              <option label="34107">7</option> <!-- AE_CH_LAYOUT_5_0 -->
+-              <option label="34108">8</option> <!-- AE_CH_LAYOUT_5_1 -->
+-              <option label="34109">9</option> <!-- AE_CH_LAYOUT_7_0 -->
+-              <option label="34110">10</option> <!-- AE_CH_LAYOUT_7_1 -->
+             </options>
+           </constraints>
+           <control type="list" format="string" />
+         </setting>
+         <setting id="audiooutput.config" type="integer" label="337" help="36361">
+           <level>2</level>
+-          <default>2</default>
++          <default>1</default>
+           <constraints>
+             <options>
+               <option label="338">1</option>
+-              <option label="339">2</option>
+-              <option label="420">3</option>
+             </options>
+           </constraints>
+           <control type="list" format="integer" />
+@@ -2361,9 +2345,11 @@
+         <setting id="audiooutput.processquality" type="integer" label="13505" help="36169">
+           <requirement>HAS_AE_QUALITY_LEVELS</requirement>
+           <level>2</level>
+-          <default>30</default> <!-- AE_QUALITY_MID -->
++          <default>20</default> <!-- AE_QUALITY_MID -->
+           <constraints>
+-            <options>aequalitylevels</options>
++            <options>
++              <option label="13506">20</option>
++            </options>
+           </constraints>
+           <control type="list" format="string" />
+         </setting>
+@@ -2379,7 +2365,7 @@
+         </setting>
+         <setting id="audiooutput.samplerate" type="integer" label="458" help="36523">
+           <level>2</level>
+-          <default>48000</default>
++          <default>44100</default>
+           <dependencies>
+             <dependency type="visible">
+               <and>
+@@ -2391,10 +2377,6 @@
+           <constraints>
+             <options>
+               <option label="34124">44100</option>
+-              <option label="34125">48000</option>
+-              <option label="34126">88200</option>
+-              <option label="34127">96000</option>
+-              <option label="34128">192000</option>
+             </options>
+           </constraints>
+           <control type="list" format="integer" />
+diff -Nur a/tools/depends/configure.ac b/tools/depends/configure.ac
+--- a/tools/depends/configure.ac	2017-02-01 19:47:32.000000000 +0100
++++ b/tools/depends/configure.ac	2016-12-24 01:57:41.000000000 +0100
+@@ -186,6 +186,14 @@
+     #android builds are always cross
+     cross_compiling="yes"
+   ;;
++  mipsel-*-linux*)
++    use_cpu=$host_cpu
++    use_toolchain="${use_toolchain:-/usr}"
++    platform_cflags="-Os -fPIC -DPIC"
++    platform_ldflags="-Wl,-rpath-link=$prefix/$deps_dir/lib"
++    platform_cxxflags="$platform_cflags"
++    platform_os="linux"
++  ;;
+   arm*-*-linux-gnu*|arm*-*-linux-uclibc*)
+     if test "$use_platform" = "auto"; then
+       if test "x$use_cpu" = "xauto"; then
+diff -Nur a/tools/depends/native/JsonSchemaBuilder/Makefile b/tools/depends/native/JsonSchemaBuilder/Makefile
+--- a/tools/depends/native/JsonSchemaBuilder/Makefile	2017-02-01 19:47:32.000000000 +0100
++++ b/tools/depends/native/JsonSchemaBuilder/Makefile	2016-12-24 01:58:35.000000000 +0100
+@@ -1,4 +1,9 @@
+ ROOT_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
++
++LD=ld
++CC=gcc
++CXX=g++
++
+ -include ../../Makefile.include
+ 
+ ifeq ($(NATIVEPREFIX),)
+@@ -19,6 +24,8 @@
+ APP=$(SOURCE)/JsonSchemaBuilder
+ APPBIN=$(PREFIX)/bin/JsonSchemaBuilder
+ 
++.PHONY:$(PLATFORM)
++
+ all: .installed-$(PLATFORM)
+ 
+ $(PLATFORM):
+diff -Nur a/tools/depends/target/libdvdcss/Makefile b/tools/depends/target/libdvdcss/Makefile
+--- a/tools/depends/target/libdvdcss/Makefile	2017-02-01 19:47:32.000000000 +0100
++++ b/tools/depends/target/libdvdcss/Makefile	2017-01-05 20:22:15.000000000 +0100
+@@ -3,7 +3,7 @@
+ DEPS= DVDCSS-VERSION Makefile
+ 
+ ifeq ($(CROSS_COMPILING), yes)
+-  DEPS += ../../Makefile.include
++#  DEPS += ../../Makefile.include
+ else
+   ROOT_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
+   PREFIX := $(ROOT_DIR)/dvdcss-install
+@@ -19,7 +19,7 @@
+ ARCHIVE_TOOL := tar --strip-components=1 -xf
+ 
+ # configuration settings
+-config = --prefix=$(PREFIX) --disable-shared --enable-static --with-pic
++config = --build=$(BUILD_SYS) --host=$(HOST_SYS) --prefix=$(PREFIX) --disable-shared --enable-static --with-pic
+ 
+ CLEAN_FILES=$(ARCHIVE) $(PLATFORM)
+ 
+diff -Nur a/tools/depends/target/libdvdnav/Makefile b/tools/depends/target/libdvdnav/Makefile
+--- a/tools/depends/target/libdvdnav/Makefile	2017-02-01 19:47:32.000000000 +0100
++++ b/tools/depends/target/libdvdnav/Makefile	2017-01-05 20:22:45.000000000 +0100
+@@ -3,11 +3,11 @@
+ DEPS = DVDNAV-VERSION Makefile
+ 
+ # configuration settings
+-config = --prefix=$(PREFIX) --disable-shared --enable-static --with-pic
++config = --build=$(BUILD_SYS) --host=$(HOST_SYS) --prefix=$(PREFIX) --disable-shared --enable-static --with-pic
+ EXTRA_CFLAGS = -D_XBMC -DHAVE_DVDCSS_DVDCSS_H
+ 
+ ifeq ($(CROSS_COMPILING), yes)
+-  DEPS += ../../Makefile.include
++#  DEPS += ../../Makefile.include
+ else
+   ROOT_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
+   PREFIX := $(ROOT_DIR)/dvdnav-install
+diff -Nur a/tools/depends/target/libdvdread/Makefile b/tools/depends/target/libdvdread/Makefile
+--- a/tools/depends/target/libdvdread/Makefile	2017-02-01 19:47:32.000000000 +0100
++++ b/tools/depends/target/libdvdread/Makefile	2017-01-05 20:23:15.000000000 +0100
+@@ -3,11 +3,11 @@
+ DEPS = DVDREAD-VERSION Makefile
+ 
+ # configuration settings
+-config = --prefix=$(PREFIX) --disable-shared --enable-static --with-pic
++config = --build=$(BUILD_SYS) --host=$(HOST_SYS) --prefix=$(PREFIX) --disable-shared --enable-static --with-pic
+ EXTRA_CFLAGS = -D_XBMC
+ 
+ ifeq ($(CROSS_COMPILING), yes)
+-  DEPS += ../../Makefile.include
++#  DEPS += ../../Makefile.include
+ else
+   ROOT_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
+   PREFIX := $(ROOT_DIR)/dvdread-install
+diff -Nur a/tools/Linux/kodi.sh.in b/tools/Linux/kodi.sh.in
+--- a/tools/Linux/kodi.sh.in	2017-02-01 19:47:32.000000000 +0100
++++ b/tools/Linux/kodi.sh.in	2016-12-25 15:10:03.000000000 +0100
+@@ -25,7 +25,23 @@
+ exec_prefix="@exec_prefix@"
+ datarootdir="@datarootdir@"
+ LIBDIR="@libdir@"
+-CRASHLOG_DIR=${CRASHLOG_DIR:-$HOME}
++
++HDD_MOUNT_POINT="$(grep '/media/hdd' /proc/mounts)"
++if [ "$HDD_MOUNT_POINT" != "" ]; then
++    export HOME="/media/hdd"
++else
++    export HOME="/home/root"
++fi
++ 
++export KODI_TEMP="/tmp/kodi"
++CRASHLOG_DIR=${CRASHLOG_DIR:-$KODI_TEMP}
++
++echo "-----------------+ XBMC ENVIRONMENTS +"
++echo "  + CRASHLOG_DIR    : "$CRASHLOG_DIR
++echo "  + HOME            : "$HOME
++echo "  + HDD_MOUNT_POINT : "$HDD_MOUNT_POINT
++echo ""
++
+ USERDATA_DIR="${HOME}/.${bin_name}"
+ 
+ 
+@@ -161,14 +177,14 @@
+ do
+   LOOP=0
+   "$LIBDIR/${bin_name}/${bin_name}.bin" $SAVED_ARGS
+-  RET=$?
+-  if [ $(( $RET == 65 )) = "1" ]
+-  then # User requested to restart app
+-    LOOP=1
+-  elif [ $(( ($RET >= 131 && $RET <= 136) || $RET == 139 )) = "1" ]
+-  then # Crashed with core dump
+-    print_crash_report
+-  fi
++#  RET=$?
++#  if [ $(( $RET == 65 )) = "1" ]
++#  then # User requested to restart app
++#    LOOP=1
++#  elif [ $(( ($RET >= 131 && $RET <= 136) || $RET == 139 )) = "1" ]
++#  then # Crashed with core dump
++#    print_crash_report
++#  fi
+ done
+ 
+ exit $RET
+diff -Nur a/xbmc/addons/kodi-addon-dev-kit/include/kodi/libXBMC_addon.h b/xbmc/addons/kodi-addon-dev-kit/include/kodi/libXBMC_addon.h
+--- a/xbmc/addons/kodi-addon-dev-kit/include/kodi/libXBMC_addon.h	2017-02-01 19:47:32.000000000 +0100
++++ b/xbmc/addons/kodi-addon-dev-kit/include/kodi/libXBMC_addon.h	2016-12-24 01:40:39.000000000 +0100
+@@ -78,7 +78,11 @@
+ #elif defined(__aarch64__)
+ #define ADDON_HELPER_ARCH       "aarch64"
+ #elif defined(__mips__)
++//#if defined(TARGET_VUPLUS) || defined(TARGET_VUPLUS_ARM)
++//#define ADDON_HELPER_ARCH       "mipsel-oe-linux"
++//#else
+ #define ADDON_HELPER_ARCH       "mips"
++//#endif
+ #else
+ #define ADDON_HELPER_ARCH       "i486-linux"
+ #endif
+diff -Nur a/xbmc/cores/DllLoader/ldt_keeper.h b/xbmc/cores/DllLoader/ldt_keeper.h
+--- a/xbmc/cores/DllLoader/ldt_keeper.h	2017-02-01 19:47:32.000000000 +0100
++++ b/xbmc/cores/DllLoader/ldt_keeper.h	2016-12-24 02:05:30.000000000 +0100
+@@ -32,9 +32,12 @@
+   int fd;
+ } ldt_fs_t;
+ 
++#if !defined(__mips__)
+ void      Setup_FS_Segment(void);
+ ldt_fs_t* Setup_LDT_Keeper(void);
+ void      Restore_LDT_Keeper(ldt_fs_t* ldt_fs);
++#endif /*!defined(__mips__)*/
++
+ #ifdef __cplusplus
+ }
+ #endif
+diff -Nur a/xbmc/cores/VideoPlayer/DVDCodecs/Video/OpenMaxVideo.cpp b/xbmc/cores/VideoPlayer/DVDCodecs/Video/OpenMaxVideo.cpp
+--- a/xbmc/cores/VideoPlayer/DVDCodecs/Video/OpenMaxVideo.cpp	2017-02-01 19:47:32.000000000 +0100
++++ b/xbmc/cores/VideoPlayer/DVDCodecs/Video/OpenMaxVideo.cpp	2017-01-16 23:25:27.000000000 +0100
+@@ -68,8 +68,10 @@
+ #define OMX_VC1_DECODER         "OMX.Nvidia.vc1.decode"
+ 
+ // EGL extension functions
++#ifndef EGL_EGLEXT_PROTOTYPES
+ static PFNEGLCREATEIMAGEKHRPROC eglCreateImageKHR;
+ static PFNEGLDESTROYIMAGEKHRPROC eglDestroyImageKHR;
++#endif
+ 
+ #if defined(EGL_KHR_reusable_sync)
+ static PFNEGLCREATESYNCKHRPROC eglCreateSyncKHR;
+@@ -77,6 +79,7 @@
+ static PFNEGLCLIENTWAITSYNCKHRPROC eglClientWaitSyncKHR;
+ #endif
+ 
++#ifndef EGL_EGLEXT_PROTOTYPES
+ #define GETEXTENSION(type, ext) \
+ do \
+ { \
+@@ -86,6 +89,7 @@
+         CLog::Log(LOGERROR, "%s::%s - ERROR getting proc addr of " #ext "\n", CLASSNAME, __func__); \
+     } \
+ } while (0);
++#endif
+ 
+ #define OMX_INIT_STRUCTURE(a) \
+   memset(&(a), 0, sizeof(a)); \
+@@ -718,10 +722,12 @@
+   EGLDisplay eglDisplay = eglGetCurrentDisplay();
+   EGLContext eglContext = eglGetCurrentContext();
+ 
++#ifndef EGL_EGLEXT_PROTOTYPES
+   if (!eglDestroyImageKHR)
+   {
+     GETEXTENSION(PFNEGLDESTROYIMAGEKHRPROC, eglDestroyImageKHR);
+   }
++#endif
+ 
+   DeleteImageInfo *deleteInfo = (DeleteImageInfo*)userdata;
+ 
+@@ -784,6 +790,7 @@
+ {
+   OMX_ERRORTYPE omx_err;
+ 
++#ifndef EGL_EGLEXT_PROTOTYPES
+   if (!eglCreateImageKHR)
+   {
+     GETEXTENSION(PFNEGLCREATEIMAGEKHRPROC,  eglCreateImageKHR);
+@@ -793,6 +800,7 @@
+     GETEXTENSION(PFNEGLCLIENTWAITSYNCKHRPROC, eglClientWaitSyncKHR);
+ #endif
+   }
++#endif
+ 
+   EGLint attrib = EGL_NONE;
+   OpenMaxVideoBuffer *egl_buffer;
+@@ -1213,7 +1221,9 @@
+   // add egl resources to deletion info
+   //! @todo delete from constructor!
+   deleteInfo->egl_image = egl_image;
++#if defined(EGL_KHR_reusable_sync)
+   deleteInfo->egl_sync = eglSync;
++#endif
+   deleteInfo->texture_id = texture_id;
+ 
+   if ( g_application.IsCurrentThread() )
+diff -Nur a/xbmc/filesystem/FileCache.h b/xbmc/filesystem/FileCache.h
+--- a/xbmc/filesystem/FileCache.h	2017-02-01 19:47:32.000000000 +0100
++++ b/xbmc/filesystem/FileCache.h	2017-01-16 23:18:18.000000000 +0100
+@@ -24,7 +24,6 @@
+ #include "threads/CriticalSection.h"
+ #include "File.h"
+ #include "threads/Thread.h"
+-#include <atomic>
+ 
+ namespace XFILE
+ {
+@@ -78,7 +77,7 @@
+     unsigned     m_writeRate;
+     unsigned     m_writeRateActual;
+     int64_t      m_forwardCacheSize;
+-    std::atomic<int64_t> m_fileSize;
++    int64_t      m_fileSize;
+     unsigned int m_flags;
+     CCriticalSection m_sync;
+   };
+diff -Nur a/xbmc/input/InputManager.cpp b/xbmc/input/InputManager.cpp
+--- a/xbmc/input/InputManager.cpp	2017-02-01 19:47:32.000000000 +0100
++++ b/xbmc/input/InputManager.cpp	2016-12-24 02:10:50.000000000 +0100
+@@ -511,6 +511,18 @@
+           useKeyboard = true;
+       }
+     }
++#if defined(TARGET_VUPLUS) || defined(TARGET_VUPLUS_ARM)
++    switch(key.GetVKey()) {
++      case 0x0d:
++      case 0x80:
++      case 0x81:
++      case 0x82:
++      case 0x83:
++        if (iWin == WINDOW_DIALOG_KEYBOARD)
++          useKeyboard = false;
++        break;
++    }
++#endif
+     if (useKeyboard)
+     {
+       // use the virtualkeyboard section of the keymap, and send keyboard-specific or navigation
+diff -Nur a/xbmc/input/linux/LinuxInputDevices.cpp b/xbmc/input/linux/LinuxInputDevices.cpp
+--- a/xbmc/input/linux/LinuxInputDevices.cpp	2017-02-01 19:47:32.000000000 +0100
++++ b/xbmc/input/linux/LinuxInputDevices.cpp	2016-12-25 13:37:17.000000000 +0100
+@@ -27,6 +27,8 @@
+  *  <http://www.gnu.org/licenses/>.
+  *
+  */
++#define VKEY_ENABLE (0)
++
+ #include "system.h"
+ #if defined(HAS_LINUX_EVENTS)
+ 
+@@ -275,6 +277,26 @@
+   { 378               , XBMCK_RIGHT       }, // Green
+   { 381               , XBMCK_UP          }, // Yellow
+   { 366               , XBMCK_DOWN        }, // Blue
++#if defined(TARGET_VUPLUS) || defined(TARGET_VUPLUS_ARM)
++  { KEY_OK            , XBMCK_RETURN      }, // Ok
++  { KEY_EXIT          , XBMCK_ESCAPE      }, // EXIT
++  { 139               , XBMCK_MENU        }, // Menu
++  { 358               , XBMCK_e           }, // EPG
++  { 370               , XBMCK_l           }, // Subtitle
++  { 377               , XBMCK_z           }, // TV
++  { 385               , XBMCK_j           }, // Radio
++  { 388               , XBMCK_y           }, // Teletext
++  { 392               , XBMCK_o           }, // Audio
++  { 393               , XBMCK_x           }, // Unknown
++  { 398               , XBMCK_F1          }, // Red
++  { 399               , XBMCK_F2          }, // Green
++  { 400               , XBMCK_F3          }, // Yellow
++  { 401               , XBMCK_F4          }, // Blue
++  { 402               , XBMCK_PAGEUP      }, // PageUP
++  { 403               , XBMCK_PAGEDOWN    }, // PageDown
++  { 407               , XBMCK_MEDIA_NEXT_TRACK }, // Next
++  { 412               , XBMCK_MEDIA_PREV_TRACK }, // Prev
++#endif
+ };
+ 
+ typedef enum
+@@ -552,6 +574,15 @@
+ 
+     KeymapEntry entry;
+     entry.code = code;
++
++    int keyMapValue;
++#if defined(TARGET_VUPLUS) || defined(TARGET_VUPLUS_ARM)
++    if (devt.key.keysym.mod & (XBMCKMOD_SHIFT | XBMCKMOD_CAPS)) keyMapValue = entry.shift;
++    else if (devt.key.keysym.mod & XBMCKMOD_ALT) keyMapValue = entry.alt;
++    else if (devt.key.keysym.mod & XBMCKMOD_META) keyMapValue = entry.altShift;
++    else keyMapValue = entry.base;
++    devt.key.keysym.unicode = devt.key.keysym.sym;
++#else
+     if (GetKeymapEntry(entry))
+     {
+       int keyMapValue;
+@@ -569,6 +600,7 @@
+         }
+       }
+     }
++#endif
+   }
+ 
+   return true;
+@@ -857,6 +889,12 @@
+         break;
+       }
+ 
++#if defined(TARGET_VUPLUS) || defined(TARGET_VUPLUS_ARM)
++      if (access("/tmp/playing.lock", F_OK) == 0) {
++       break;
++      }
++#endif
++
+       //printf("read event readlen = %d device name %s m_fileName %s\n", readlen, m_deviceName, m_fileName.c_str());
+ 
+       // sanity check if we realy read the event
+@@ -1194,6 +1232,7 @@
+     return false;
+   }
+ 
++#if !defined(TARGET_VUPLUS) && !defined(TARGET_VUPLUS_ARM) && !VKEY_ENABLE
+   if (ioctl(fd, EVIOCGRAB, 1) && errno != EINVAL)
+   {
+     close(fd);
+@@ -1201,6 +1240,7 @@
+   }
+ 
+   ioctl(fd, EVIOCGRAB, 0);
++#endif
+ 
+   close(fd);
+ 
+@@ -1293,6 +1333,7 @@
+     return false;
+   }
+ 
++#if !defined(TARGET_VUPLUS) && !defined(TARGET_VUPLUS_ARM) && !VKEY_ENABLE
+   /* grab device */
+   ret = ioctl(fd, EVIOCGRAB, 1);
+   if (ret && errno != EINVAL)
+@@ -1301,6 +1342,7 @@
+     close(fd);
+     return false;
+   }
++#endif
+ 
+   // Set the socket to non-blocking
+   int opts = 0;
+@@ -1368,7 +1410,9 @@
+ 
+ driver_open_device_error:
+ 
++#if !defined(TARGET_VUPLUS) && !defined(TARGET_VUPLUS_ARM) && !VKEY_ENABLE
+   ioctl(fd, EVIOCGRAB, 0);
++#endif
+   if (m_vt_fd >= 0)
+   {
+     close(m_vt_fd);
+@@ -1442,8 +1486,10 @@
+  */
+ void CLinuxInputDevice::Close()
+ {
++#if !defined(TARGET_VUPLUS) && !defined(TARGET_VUPLUS_ARM) && !VKEY_ENABLE
+   /* release device */
+   ioctl(m_fd, EVIOCGRAB, 0);
++#endif
+ 
+   if (m_vt_fd >= 0)
+     close(m_vt_fd);
+diff -Nur a/xbmc/platform/xbmc.cpp b/xbmc/platform/xbmc.cpp
+--- a/xbmc/platform/xbmc.cpp	2017-02-01 19:47:32.000000000 +0100
++++ b/xbmc/platform/xbmc.cpp	2016-12-24 02:22:55.000000000 +0100
+@@ -117,5 +117,9 @@
+   g_RBP.Deinitialize();
+ #endif
+ 
++#if defined(TARGET_VUPLUS) || defined(TARGET_VUPLUS_ARM)
++  system("xbmc.helper --stop");
++#endif
++
+   return status;
+ }
+diff -Nur a/xbmc/utils/CPUInfo.cpp b/xbmc/utils/CPUInfo.cpp
+--- a/xbmc/utils/CPUInfo.cpp	2017-02-01 19:47:32.000000000 +0100
++++ b/xbmc/utils/CPUInfo.cpp	2016-12-24 02:18:11.000000000 +0100
+@@ -273,7 +273,11 @@
+   if (m_fProcTemperature == NULL)   
+     m_fProcTemperature = fopen("/sys/class/thermal/thermal_zone0/temp", "r");  // On Raspberry PIs
+ 
++#if defined(TARGET_VUPLUS) || defined(TARGET_VUPLUS_ARM)
++  m_fCPUFreq = fopen ("/sys/devices/platform/brcmstb/cpu_khz", "r");
++#else
+   m_fCPUFreq = fopen ("/sys/devices/system/cpu/cpu0/cpufreq/scaling_cur_freq", "r");
++#endif
+   if (!m_fCPUFreq)
+   {
+     m_cpuInfoForFreq = true;
+@@ -325,6 +329,29 @@
+           StringUtils::Trim(m_cores[nCurrId].m_strModel);
+         }
+       }
++#if defined(TARGET_VUPLUS) || defined(TARGET_VUPLUS_ARM)
++      else if (strncmp(buffer, "system type", strlen("system type"))==0)
++      {
++        char *needle = strstr(buffer, ":");
++        if (needle && strlen(needle)>3)
++        {
++          needle+=2;
++          m_cpuModel = needle;
++          m_cores[nCurrId].m_strModel = m_cpuModel;
++          StringUtils::Trim(m_cores[nCurrId].m_strModel);
++        }
++      }
++      else if (strncmp(buffer, "cpu model", strlen("cpu model"))==0)
++      {
++        char *needle = strstr(buffer, ":");
++        if (needle && strlen(needle)>3)
++        {
++          needle+=2;
++          m_cores[nCurrId].m_strVendor = needle;
++          StringUtils::Trim(m_cores[nCurrId].m_strVendor);
++        }
++      }
++#endif
+       else if (strncmp(buffer, "BogoMIPS", strlen("BogoMIPS"))==0)
+       {
+         char *needle = strstr(buffer, ":");
+diff -Nur a/xbmc/windowing/egl/EGLNativeTypeVuplus.cpp b/xbmc/windowing/egl/EGLNativeTypeVuplus.cpp
+--- a/xbmc/windowing/egl/EGLNativeTypeVuplus.cpp	1970-01-01 01:00:00.000000000 +0100
++++ b/xbmc/windowing/egl/EGLNativeTypeVuplus.cpp	2016-12-24 02:18:28.000000000 +0100
+@@ -0,0 +1,177 @@
++/*
++ *      Copyright (C) 2011-2012 Team XBMC
++ *      http://www.xbmc.org
++ *
++ *  This Program is free software; you can redistribute it and/or modify
++ *  it under the terms of the GNU General Public License as published by
++ *  the Free Software Foundation; either version 2, or (at your option)
++ *  any later version.
++ *
++ *  This Program is distributed in the hope that it will be useful,
++ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++ *  GNU General Public License for more details.
++ *
++ *  You should have received a copy of the GNU General Public License
++ *  along with XBMC; see the file COPYING.  If not, see
++ *  <http://www.gnu.org/licenses/>.
++ *
++ */
++#include "system.h"
++#include "EGLNativeTypeVuplus.h"
++#include "utils/StringUtils.h"
++#include "utils/log.h"
++#include "guilib/gui3d.h"
++#include "linux/DllBCM.h"
++
++#include <stdio.h>
++#include <malloc.h>
++#include <assert.h>
++#include <stdio.h>
++#include <stdlib.h>
++#include <string.h>
++
++#include "gles_init.h"
++
++using namespace std;
++
++bool CEGLNativeTypeVuplus::CheckCompatibility()
++{
++  return true;
++}
++
++void CEGLNativeTypeVuplus::Initialize()
++{
++}
++
++void CEGLNativeTypeVuplus::Destroy()
++{
++}
++
++bool CEGLNativeTypeVuplus::CreateNativeDisplay()
++{
++  GLES_Native_Init();
++  return GLES_Native_CreateNativeDisplay(&m_nativeDisplay);
++}
++
++bool CEGLNativeTypeVuplus::CreateNativeWindow()
++{
++  m_nativeWindow = GLES_Native_CreateNativeWindow();
++  if (!m_nativeWindow) {
++	  return false;
++  }
++  return true;
++}
++
++bool CEGLNativeTypeVuplus::GetNativeDisplay(XBNativeDisplayType **nativeDisplay) const
++{
++  *nativeDisplay = (XBNativeDisplayType*) &m_nativeDisplay;
++  return true;
++}
++
++bool CEGLNativeTypeVuplus::GetNativeWindow(XBNativeDisplayType **nativeWindow) const
++{
++  *nativeWindow = (XBNativeWindowType*) &m_nativeWindow;
++  return true;
++}  
++
++bool CEGLNativeTypeVuplus::DestroyNativeDisplay()
++{
++  GLES_Native_DestroyNativeDisplay();
++  return true;
++}
++
++bool CEGLNativeTypeVuplus::DestroyNativeWindow()
++{
++  GLES_Native_DestroyNativeWindow();
++  return true;
++}
++
++bool CEGLNativeTypeVuplus::GetNativeResolution(RESOLUTION_INFO *res) const
++{
++  *res = m_desktopRes;
++  return true;
++}
++
++bool CEGLNativeTypeVuplus::SetNativeResolution(const RESOLUTION_INFO &res)
++{
++  m_desktopRes = res;
++  return true;
++}
++
++bool CEGLNativeTypeVuplus::ProbeResolutions(std::vector<RESOLUTION_INFO> &resolutions)
++{
++  resolutions.clear();
++
++  m_desktopResAll[0].iScreen      = 0;
++  m_desktopResAll[0].bFullScreen  = true;
++  m_desktopResAll[0].iWidth       = 1280;
++  m_desktopResAll[0].iHeight      = 720;
++  m_desktopResAll[0].iScreenWidth = 1280;
++  m_desktopResAll[0].iScreenHeight= 720;
++  m_desktopResAll[0].dwFlags      =  D3DPRESENTFLAG_PROGRESSIVE;
++  m_desktopResAll[0].fRefreshRate = 50;
++  m_desktopResAll[0].strMode = StringUtils::Format("%dx%d", 1280, 720);
++  m_desktopResAll[0].strMode = StringUtils::Format("%s @ %.2f%s - Full Screen", m_desktopRes.strMode.c_str(), (float)50,m_desktopRes.dwFlags & D3DPRESENTFLAG_INTERLACED ? "i" : "");
++
++  m_desktopResAll[0].iSubtitles   = (int)(0.965 * m_desktopResAll[0].iHeight);
++
++  CLog::Log(LOGDEBUG, "EGL initial desktop resolution %s\n", m_desktopResAll[0].strMode.c_str());
++
++  resolutions.push_back(m_desktopResAll[0]);
++
++  m_desktopResAll[1].iScreen      = 0;
++  m_desktopResAll[1].bFullScreen  = true;
++  m_desktopResAll[1].iWidth       = 1280;
++  m_desktopResAll[1].iHeight      = 720;
++  m_desktopResAll[1].iScreenWidth = 1280;
++  m_desktopResAll[1].iScreenHeight= 720;
++  m_desktopResAll[1].dwFlags      =  D3DPRESENTFLAG_PROGRESSIVE;
++
++  m_desktopResAll[1].dwFlags      |=  D3DPRESENTFLAG_MODE3DSBS;
++  m_desktopResAll[1].fRefreshRate = 50;
++  m_desktopResAll[1].strMode = StringUtils::Format("%dx%d", 1280, 720);
++  m_desktopResAll[1].strMode = StringUtils::Format("%s @ %.2f%s - Full Screen 3DSBS", m_desktopResAll[1].strMode.c_str(), (float)50,m_desktopResAll[1].dwFlags & D3DPRESENTFLAG_INTERLACED ? "i" : "");
++
++  m_desktopResAll[1].iSubtitles   = (int)(0.965 * m_desktopResAll[1].iHeight);
++
++  CLog::Log(LOGDEBUG, "EGL initial desktop resolution %s\n", m_desktopResAll[1].strMode.c_str());
++
++  resolutions.push_back(m_desktopResAll[1]);
++
++  m_desktopResAll[2].iScreen      = 0;
++  m_desktopResAll[2].bFullScreen  = true;
++  m_desktopResAll[2].iWidth       = 1280;
++  m_desktopResAll[2].iHeight      = 720;
++  m_desktopResAll[2].iScreenWidth = 1280;
++  m_desktopResAll[2].iScreenHeight= 720;
++  m_desktopResAll[2].dwFlags      =  D3DPRESENTFLAG_PROGRESSIVE;
++
++  m_desktopResAll[2].dwFlags      |=  D3DPRESENTFLAG_MODE3DTB;
++  m_desktopResAll[2].fRefreshRate = 50;
++  m_desktopResAll[2].strMode = StringUtils::Format("%dx%d", 1280, 720);
++  m_desktopResAll[2].strMode = StringUtils::Format("%s @ %.2f%s - Full Screen 3DTB", m_desktopResAll[2].strMode.c_str(), (float)50,m_desktopResAll[2].dwFlags & D3DPRESENTFLAG_INTERLACED ? "i" : "");
++
++  m_desktopResAll[2].iSubtitles   = (int)(0.965 * m_desktopResAll[2].iHeight);
++
++  CLog::Log(LOGDEBUG, "EGL initial desktop resolution %s\n", m_desktopResAll[2].strMode.c_str());
++
++  resolutions.push_back(m_desktopResAll[2]);
++
++  m_desktopRes = m_desktopResAll[0];
++
++  return true;
++}
++
++bool CEGLNativeTypeVuplus::GetPreferredResolution(RESOLUTION_INFO *res) const
++{
++  *res = m_desktopResAll[0];
++  return true;
++}
++
++bool CEGLNativeTypeVuplus::ShowWindow(bool show)
++{
++  return false;
++}
++
++
+diff -Nur a/xbmc/windowing/egl/EGLNativeTypeVuplus.h b/xbmc/windowing/egl/EGLNativeTypeVuplus.h
+--- a/xbmc/windowing/egl/EGLNativeTypeVuplus.h	1970-01-01 01:00:00.000000000 +0100
++++ b/xbmc/windowing/egl/EGLNativeTypeVuplus.h	2016-12-24 02:19:01.000000000 +0100
+@@ -0,0 +1,60 @@
++#pragma once
++
++/*
++ *      Copyright (C) 2011-2012 Team XBMC
++ *      http://www.xbmc.org
++ *
++ *  This Program is free software; you can redistribute it and/or modify
++ *  it under the terms of the GNU General Public License as published by
++ *  the Free Software Foundation; either version 2, or (at your option)
++ *  any later version.
++ *
++ *  This Program is distributed in the hope that it will be useful,
++ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++ *  GNU General Public License for more details.
++ *
++ *  You should have received a copy of the GNU General Public License
++ *  along with XBMC; see the file COPYING.  If not, see
++ *  <http://www.gnu.org/licenses/>.
++ *
++ */
++
++#include "EGLNativeType.h"
++
++#include <vector>
++#include <string>
++
++class CEGLNativeTypeVuplus : public CEGLNativeType
++{
++public:
++  CEGLNativeTypeVuplus()
++  {
++	  m_nativeWindow = 0;
++	  m_nativeDisplay = 0;
++  };
++  virtual ~CEGLNativeTypeVuplus() {};
++  virtual std::string GetNativeName() const { return "vuplus"; };
++  virtual bool  CheckCompatibility();
++  virtual void  Initialize();
++  virtual void  Destroy();
++  virtual int   GetQuirks() { return EGL_QUIRK_NONE; };
++
++  virtual bool  CreateNativeDisplay();
++  virtual bool  CreateNativeWindow();
++  virtual bool  GetNativeDisplay(XBNativeDisplayType **nativeDisplay) const;
++  virtual bool  GetNativeWindow(XBNativeWindowType **nativeWindow) const;
++
++  virtual bool  DestroyNativeWindow();
++  virtual bool  DestroyNativeDisplay();
++
++  virtual bool  GetNativeResolution(RESOLUTION_INFO *res) const;
++  virtual bool  SetNativeResolution(const RESOLUTION_INFO &res);
++  virtual bool  ProbeResolutions(std::vector<RESOLUTION_INFO> &resolutions);
++  virtual bool  GetPreferredResolution(RESOLUTION_INFO *res) const;
++
++  virtual bool  ShowWindow(bool show);
++private:
++  RESOLUTION_INFO m_desktopRes;
++  RESOLUTION_INFO m_desktopResAll[3];
++};
+diff -Nur a/xbmc/windowing/egl/EGLWrapper.cpp b/xbmc/windowing/egl/EGLWrapper.cpp
+--- a/xbmc/windowing/egl/EGLWrapper.cpp	2017-02-01 19:47:32.000000000 +0100
++++ b/xbmc/windowing/egl/EGLWrapper.cpp	2016-12-24 02:21:33.000000000 +0100
+@@ -34,6 +34,9 @@
+ #if defined(HAS_IMXVPU)
+   #include "EGLNativeTypeIMX.h"
+ #endif
++#if defined(TARGET_VUPLUS) || defined(TARGET_VUPLUS_ARM)
++  #include "EGLNativeTypeVuplus.h"
++#endif
+ #if defined(TARGET_LINUX) && defined(HAS_LIBAMCODEC)
+ #include "EGLNativeTypeAmlogic.h"
+ #endif
+@@ -99,6 +102,8 @@
+       (nativeGuess = CreateEGLNativeType<CEGLNativeTypeRaspberryPI>(implementation))
+ #elif defined(HAS_IMXVPU)
+       (nativeGuess = CreateEGLNativeType<CEGLNativeTypeIMX>(implementation))
++#elif defined(TARGET_VUPLUS) || defined(TARGET_VUPLUS_ARM)
++      (nativeGuess = CreateEGLNativeType<CEGLNativeTypeVuplus>(implementation))
+ #elif defined(TARGET_LINUX) && defined(HAS_LIBAMCODEC)
+       (nativeGuess = CreateEGLNativeType<CEGLNativeTypeAmlogic>(implementation))
+ #endif
+diff -Nur a/xbmc/windowing/egl/Makefile.in b/xbmc/windowing/egl/Makefile.in
+--- a/xbmc/windowing/egl/Makefile.in	2017-02-01 19:47:32.000000000 +0100
++++ b/xbmc/windowing/egl/Makefile.in	2016-12-24 02:22:26.000000000 +0100
+@@ -13,6 +13,12 @@
+ SRCS+= EGLNativeTypeIMX.cpp
+ endif
+ SRCS+= EGLWrapper.cpp
++ifeq (@USE_VUPLUS_EGL@,1)
++SRCS+= EGLNativeTypeVuplus.cpp
++endif
++ifeq (@USE_VUPLUS_ARM_EGL@,1)
++SRCS+= EGLNativeTypeVuplus.cpp
++endif
+ 
+ LIB = windowing_egl.a
+ 
+diff --git a/tools/depends/target/ffmpeg/autobuild.sh b/tools/depends/target/ffmpeg/autobuild.sh
+index 5c29762..a3e7806 100755
+--- a/tools/depends/target/ffmpeg/autobuild.sh
++++ b/tools/depends/target/ffmpeg/autobuild.sh
+@@ -134,6 +134,20 @@ tar --strip-components=1 -xf $MYDIR/${ARCHIVE}
+ 
+ CFLAGS="$CFLAGS" CXXFLAGS="$CXXFLAGS" LDFLAGS="$LDFLAGS" \
+ ./configure --prefix=$FFMPEG_PREFIX \
++	--bindir="$FFMPEG_PREFIX/bin" \
++	--libdir="$FFMPEG_PREFIX/lib" \
++	--incdir="$FFMPEG_PREFIX/include" \
++	--pkgconfigdir="$FFMPEG_PREFIX/lib/pkgconfig" \
++	--target-os=linux \
++	--enable-cross-compile \
++	--nm="$NM" \
++	--ar="$AR" \
++	--as="$AS" \
++	--strip="$STRIP" \
++	--cc="$CC" \
++	--cxx="$CXX" \
++	--ld="$CCLD" \
++	--ranlib="$RANLIB" \
+ 	--extra-version="kodi-${VERSION}" \
+ 	--disable-devices \
+ 	--disable-ffplay \

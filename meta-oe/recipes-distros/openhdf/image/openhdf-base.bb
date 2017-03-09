@@ -6,12 +6,13 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=4d92cd373abda3937c2bc47fbc49d
 ALLOW_EMPTY_${PN} = "1"
 
 PV = "1.0"
-PR = "r36"
+PR = "r38"
 
 inherit packagegroup
 
 RDEPENDS_${PN} = "\
     oe-alliance-base \
+    ca-certificates \
     openhdf-enigma2 \
     openhdf-bootlogo \
     openhdf-spinner \
@@ -23,6 +24,7 @@ RDEPENDS_${PN} = "\
     python-mutagen \
     python-plistlib \
     python-imaging \
+    python-service-identity \
     unrar \
     ofgwrite \
     rtmpdump \

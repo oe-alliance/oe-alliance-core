@@ -1,6 +1,6 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
-PR .= ".2"
+PR .= ".3"
 
 SRC_URI += " \
             file://04-default-is-optimized.patch \
@@ -21,11 +21,25 @@ EXTRA_OECONF += " \
     ac_cv_sizeof_off_t=8 \
 "
 
-PACKAGES =+ "${PN}-src"
+PACKAGES =+ "${PN}-src ${PN}-test"
 RDEPENDS_{PN}-src = "${PN}"
 FILES_${PN}-src += "${libdir}/python${PYTHON_MAJMIN}/*.py"
 FILES_${PN}-src += "${libdir}/python${PYTHON_MAJMIN}/*/*.py"
 FILES_${PN}-src += "${libdir}/python${PYTHON_MAJMIN}/*/*/*.py"
+FILES_${PN}-src += "${libdir}/python${PYTHON_MAJMIN}/*.exe"
+FILES_${PN}-src += "${libdir}/python${PYTHON_MAJMIN}/*/*.exe"
+FILES_${PN}-src += "${libdir}/python${PYTHON_MAJMIN}/*/*/*.exe"
+FILES_${PN}-src += "${libdir}/python${PYTHON_MAJMIN}/*.whl"
+FILES_${PN}-src += "${libdir}/python${PYTHON_MAJMIN}/*/*.whl"
+FILES_${PN}-src += "${libdir}/python${PYTHON_MAJMIN}/*/*/*.whl"
+FILES_${PN}-src += "${libdir}/python${PYTHON_MAJMIN}/config/*"
 
-# some additional tests
-FILES_${PN}-tests += "${libdir}/python${PYTHON_MAJMIN}/*/test* ${libdir}/python${PYTHON_MAJMIN}/*/*/test*"
+FILES_${PN}-sqlite3-tests += "${libdir}/python${PYTHON_MAJMIN}/*/test* ${libdir}/python${PYTHON_MAJMIN}/*/*/test*"
+
+FILES_${PN}-test += " \
+    ${libdir}/python${PYTHON_MAJMIN}/*/tests/* \
+    ${libdir}/python${PYTHON_MAJMIN}/*/*/tests/* \
+    ${libdir}/python${PYTHON_MAJMIN}/*/test/* \
+    ${libdir}/python${PYTHON_MAJMIN}/*/*/test/* \
+"
+

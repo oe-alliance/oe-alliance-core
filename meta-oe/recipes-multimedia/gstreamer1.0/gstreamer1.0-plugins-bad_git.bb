@@ -8,7 +8,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=73a5855a8119deb017f5f13cf327095d \
 
 UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>(\d+(\.\d+)+))"
 
-SRCREV_base = "ce9c82af471db588ef5d47a38bdb1581a641e542"
+SRCREV_base = "4af642a6f890ac376e140c7e0104f869ff445918"
 SRCREV_common = "93ae13f2c3c58a4c2b7c111817b720a272d504d7"
 SRCREV_FORMAT = "base"
 
@@ -23,10 +23,11 @@ SRC_URI += "file://configure-allow-to-disable-libssh2.patch \
 			file://0004-rtmp-hls-tsdemux-fix.patch \
 			file://fix-maybe-uninitialized-warnings-when-compiling-with-Os.patch \
 			file://dvbapi5-fix-old-kernel.patch \
+			file://hls-main-thread-block.patch \
 			"
 S = "${WORKDIR}/git"
 
-GST_VERSION_FULL ="1.11.1"
+GST_VERSION_FULL ="1.11.2.1-02"
 inherit gitpkgv
 PV = "${GST_VERSION_FULL}+git${SRCPV}"
 PKGV = "${GITPKGVTAG}"

@@ -1,4 +1,4 @@
-PR .= ".1"
+PR .= ".2"
 
 SRC_URI += "file://sanity-check-provides.patch \
     file://0001-reuse-the-installed_files-list-when-possible.patch \

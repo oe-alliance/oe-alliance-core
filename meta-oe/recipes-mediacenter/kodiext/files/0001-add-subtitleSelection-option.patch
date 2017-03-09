@@ -1,0 +1,122 @@
+From fa2dd58c1ea4f6d409c0ec748c93e860408c1549 Mon Sep 17 00:00:00 2001
+From: openspa <openspateam@gmail.com>
+Date: Sat, 24 Jan 2016 18:40:19 +0100
+Subject: [PATCH] add subtitleSelection option
+
+---
+ src/plugin/keymap.xml | 45 ++++++++++++++++++++++++++++++++++-----------
+ src/plugin/plugin.py  | 16 ++++++++++++----
+ 2 files changed, 46 insertions(+), 15 deletions(-)
+
+diff --git a/src/plugin/keymap.xml b/src/plugin/keymap.xml
+index 48696e5..da7e40e 100644
+--- a/src/plugin/keymap.xml
++++ b/src/plugin/keymap.xml
+@@ -1,16 +1,39 @@
+ <keymap>
+ 
+-<map context="KodiPlayerActions">
+-    <key id="KEY_INFO" mapto="infoPressed" flags="m" />
+-    <key id="KEY_MENU" mapto="menuPressed" flags="m" />
+-    <key id="KEY_PREVIOUS" mapto="prevPressed" flags="m" />
+-    <key id="KEY_NEXT" mapto = "nextPressed" flags="m" />
+-</map>
+-
+-<map context="InfoBarAspectChangeActions">
+-    <key id="KEY_ZOOM" mapto="aspectChange" flags="m" />
+-    <key id="KEY_5" mapto="aspectChange" flags="m" />
+-</map>
++	<map context="KodiPlayerActions">
++		<key id="KEY_INFO" mapto="infoPressed" flags="m" />
++		<key id="KEY_MENU" mapto="menuPressed" flags="m" />
++		<key id="KEY_PREVIOUS" mapto="prevPressed" flags="m" />
++		<key id="KEY_NEXT" mapto = "nextPressed" flags="m" />
++	</map>
++
++	<map context="OkCancelActions">
++		<key id="KEY_STOP" mapto="cancel" flags="m" />
++		<key id="KEY_EXIT" mapto="cancel" flags="m" />
++		<key id="KEY_OK" mapto="ok" flags="m" />
++	</map>
++
++	<map context="InfobarSeekActions">
++		<key id="KEY_LEFT" mapto="seekBackManual" flags="m" />
++		<key id="KEY_RIGHT" mapto="seekFwdManual" flags="m" />
++
++		<key id="KEY_PLAYPAUSE" mapto="playpauseService" flags="m" />
++		<key id="KEY_PAUSE" mapto="pauseService" flags="m" />
++		<key id="KEY_PLAY" mapto="unPauseService" flags="m" />
++		<key id="KEY_REWIND" mapto="seekBack" flags="b" />
++		<key id="KEY_FASTFORWARD" mapto="seekFwd" flags="b" />
++		<key id="KEY_OK" mapto="okButton" flags="m" />
++	</map>
++
++	<map context="SubtitlesActions">
++		<key id="KEY_SUBTITLE" mapto="subtitles" flags="m" />
++		<key id="KEY_BLUE" mapto="subtitles" flags="m" />
++	</map>
++
++	<map context="InfoBarAspectChangeActions">
++		<key id="KEY_ZOOM" mapto="aspectChange" flags="m" />
++		<key id="KEY_5" mapto="aspectChange" flags="m" />
++	</map>
+ 
+ </keymap>
+ 
+diff --git a/src/plugin/plugin.py b/src/plugin/plugin.py
+index c566a71..9073c47 100644
+--- a/src/plugin/plugin.py
++++ b/src/plugin/plugin.py
+@@ -176,7 +176,6 @@ class KodiVideoPlayer(InfoBarBase, SubsSupportStatus, SubsSupport, InfoBarShowHi
+                     type=MessageBox.TYPE_INFO, enable_input=False)
+             self.__timer.start(500, True)
+ 
+-
+     def __seekToPosition(self):
+         if getPlayPositionInSeconds(self.session) is None:
+             self.__timer.start(500, True)
+@@ -202,6 +201,10 @@ class KodiVideoPlayer(InfoBarBase, SubsSupportStatus, SubsSupport, InfoBarShowHi
+     def audioSelection(self):
+         self.session.openWithCallback(self.audioSelected, MyAudioSelection, infobar=self)
+ 
++    def subtitleSelection(self):
++        from Screens.AudioSelection import SubtitleSelection
++        self.session.open(SubtitleSelection, self)
++
+     def showAspectChanged(self):
+         self.statusScreen.setStatus(self.getAspectStr(), "#00ff00")
+ 
+@@ -253,7 +256,6 @@ class Meta(object):
+             startTime = playerOptions.get("startTime", 0)
+         return startTime
+ 
+-
+ class E2KodiExtRequestHandler(KodiExtRequestHandler):
+ 
+     def handle_request(self, opcode, status, data):
+@@ -399,7 +401,7 @@ class E2KodiExtServer(UDSServer):
+         self.subtitles = []
+ 
+ class KodiLauncher(Screen):
+-    skin = """<screen position="fill" backgroundColor="#00000000" flags="wfNoBorder" title=" "></screen>"""
++    skin = """<screen position="fill" size="1280,720" backgroundColor="#00000000" flags="wfNoBorder" title=" "></screen>"""
+ 
+     def __init__(self, session):
+         Screen.__init__(self, session)
+@@ -446,6 +448,13 @@ class KodiLauncher(Screen):
+         FBUnlock()
+         if self.previousService:
+             self.session.nav.playService(self.previousService)
++        try:
++            if os.path.exists('/media/hdd/.kodi/'):
++                os.system ('rm -rf /media/hdd/kodi_crashlog*.log')
++            else:
++                os.system ('rm -rf /tmp/kodi/kodi_crashlog*.log')
++        except:
++            pass
+         self.close()
+ 
+ def autoStart(reason, **kwargs):
+-- 
+2.11.1.windows.1
+

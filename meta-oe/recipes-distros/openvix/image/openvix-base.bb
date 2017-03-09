@@ -8,7 +8,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "${IMAGE_VERSION}"
-PR = "r3"
+PR = "r5"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
@@ -17,11 +17,13 @@ inherit packagegroup
 DEPENDS = "openvix-version-info"
 
 RDEPENDS_${PN} = "\
+    ca-certificates \
     oe-alliance-base \
     openvix-version-info \
     openvix-enigma2 \
     openvix-bootlogo \
     openvix-spinner \
     ${@bb.utils.contains("TUNE_FEATURES", "armv", "glibc-compat", "", d)} \
+    python-service-identity \
     "
 

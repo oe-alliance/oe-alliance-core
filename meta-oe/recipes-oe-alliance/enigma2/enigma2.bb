@@ -88,6 +88,7 @@ GST_BASE_RDEPS = "${@bb.utils.contains('GST_VERSION', '1.0', ' \
     gstreamer1.0-plugins-base-subparse \
     gstreamer1.0-plugins-base-typefindfunctions \
     gstreamer1.0-plugins-base-vorbis \
+	gstreamer1.0-plugins-base-rawparse \
     ', ' \
     gst-plugins-base-alsa \
     gst-plugins-base-app \

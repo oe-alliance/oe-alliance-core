@@ -19,7 +19,7 @@ KERNEL_PARTITION_OFFSET = "$(expr ${BOOT_PARTITION_OFFSET} \+ ${BOOT_PARTITION_S
 KERNEL_PARTITION_SIZE = "8192"
 
 ROOTFS_PARTITION_OFFSET = "$(expr ${KERNEL_PARTITION_OFFSET} \+ ${KERNEL_PARTITION_SIZE})"
-ROOTFS_PARTITION_SIZE = "1048576"
+ROOTFS_PARTITION_SIZE = "819200"
 
 SECOND_KERNEL_PARTITION_OFFSET = "$(expr ${ROOTFS_PARTITION_OFFSET} \+ ${ROOTFS_PARTITION_SIZE})"
 
@@ -32,6 +32,8 @@ THRID_ROOTFS_PARTITION_OFFSET = "$(expr ${THRID_KERNEL_PARTITION_OFFSET} \+ ${KE
 FOURTH_KERNEL_PARTITION_OFFSET = "$(expr ${THRID_ROOTFS_PARTITION_OFFSET} \+ ${ROOTFS_PARTITION_SIZE})"
 
 FOURTH_ROOTFS_PARTITION_OFFSET = "$(expr ${FOURTH_KERNEL_PARTITION_OFFSET} \+ ${KERNEL_PARTITION_SIZE})"
+
+SWAP_PARTITION_OFFSET = "$(expr ${FOURTH_ROOTFS_PARTITION_OFFSET} \+ ${ROOTFS_PARTITION_SIZE})"
 
 EMMC_IMAGE = "${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.emmc.img"
 EMMC_IMAGE_SIZE = "3817472"
@@ -47,22 +49,15 @@ IMAGE_CMD_hd-emmc () {
     parted -s ${EMMC_IMAGE} unit KiB mkpart kernel3 ${THRID_KERNEL_PARTITION_OFFSET} $(expr ${THRID_KERNEL_PARTITION_OFFSET} \+ ${KERNEL_PARTITION_SIZE})
     parted -s ${EMMC_IMAGE} unit KiB mkpart rootfs3 ext2 ${THRID_ROOTFS_PARTITION_OFFSET} $(expr ${THRID_ROOTFS_PARTITION_OFFSET} \+ ${ROOTFS_PARTITION_SIZE})
     parted -s ${EMMC_IMAGE} unit KiB mkpart kernel4 ${FOURTH_KERNEL_PARTITION_OFFSET} $(expr ${FOURTH_KERNEL_PARTITION_OFFSET} \+ ${KERNEL_PARTITION_SIZE})
-    parted -s ${EMMC_IMAGE} unit KiB mkpart rootfs4 ext2 ${FOURTH_ROOTFS_PARTITION_OFFSET} $(expr ${EMMC_IMAGE_SIZE} \- 1024)
+    parted -s ${EMMC_IMAGE} unit KiB mkpart rootfs4 ext2 ${FOURTH_ROOTFS_PARTITION_OFFSET} $(expr ${FOURTH_ROOTFS_PARTITION_OFFSET} \+ ${ROOTFS_PARTITION_SIZE})
+    parted -s ${EMMC_IMAGE} unit KiB mkpart swap linux-swap ${SWAP_PARTITION_OFFSET} $(expr ${EMMC_IMAGE_SIZE} \- 1024)
     dd if=/dev/zero of=${WORKDIR}/boot.img bs=1024 count=${BOOT_PARTITION_SIZE}
     mkfs.msdos -S 512 ${WORKDIR}/boot.img
-    if [ "${MACHINEBUILD}" = 'bre2ze4k' ]; then
-        echo "boot emmcflash0.kernel1 'root=/dev/mmcblk0p3 rw rootwait usbcore.old_scheme_first=1 ${MACHINE}_4.boxmode=12'" > ${WORKDIR}/STARTUP
-        echo "boot emmcflash0.kernel1 'root=/dev/mmcblk0p3 rw rootwait usbcore.old_scheme_first=1 ${MACHINE}_4.boxmode=12'" > ${WORKDIR}/STARTUP_1
-        echo "boot emmcflash0.kernel2 'root=/dev/mmcblk0p5 rw rootwait usbcore.old_scheme_first=1 ${MACHINE}_4.boxmode=12'" > ${WORKDIR}/STARTUP_2
-        echo "boot emmcflash0.kernel3 'root=/dev/mmcblk0p7 rw rootwait usbcore.old_scheme_first=1 ${MACHINE}_4.boxmode=12'" > ${WORKDIR}/STARTUP_3
-        echo "boot emmcflash0.kernel4 'root=/dev/mmcblk0p9 rw rootwait usbcore.old_scheme_first=1 ${MACHINE}_4.boxmode=12'" > ${WORKDIR}/STARTUP_4
-    else
-        echo "boot emmcflash0.kernel1 'root=/dev/mmcblk0p3 rw rootwait ${MACHINE}_4.boxmode=12'" > ${WORKDIR}/STARTUP
-        echo "boot emmcflash0.kernel1 'root=/dev/mmcblk0p3 rw rootwait ${MACHINE}_4.boxmode=12'" > ${WORKDIR}/STARTUP_1
-        echo "boot emmcflash0.kernel2 'root=/dev/mmcblk0p5 rw rootwait ${MACHINE}_4.boxmode=12'" > ${WORKDIR}/STARTUP_2
-        echo "boot emmcflash0.kernel3 'root=/dev/mmcblk0p7 rw rootwait ${MACHINE}_4.boxmode=12'" > ${WORKDIR}/STARTUP_3
-        echo "boot emmcflash0.kernel4 'root=/dev/mmcblk0p9 rw rootwait ${MACHINE}_4.boxmode=12'" > ${WORKDIR}/STARTUP_4
-    fi
+    echo "boot emmcflash0.kernel1 'root=/dev/mmcblk0p3 rw rootwait ${MACHINE}_4.boxmode=12'" > ${WORKDIR}/STARTUP
+    echo "boot emmcflash0.kernel1 'root=/dev/mmcblk0p3 rw rootwait ${MACHINE}_4.boxmode=12'" > ${WORKDIR}/STARTUP_1
+    echo "boot emmcflash0.kernel2 'root=/dev/mmcblk0p5 rw rootwait ${MACHINE}_4.boxmode=12'" > ${WORKDIR}/STARTUP_2
+    echo "boot emmcflash0.kernel3 'root=/dev/mmcblk0p7 rw rootwait ${MACHINE}_4.boxmode=12'" > ${WORKDIR}/STARTUP_3
+    echo "boot emmcflash0.kernel4 'root=/dev/mmcblk0p9 rw rootwait ${MACHINE}_4.boxmode=12'" > ${WORKDIR}/STARTUP_4
     mcopy -i ${WORKDIR}/boot.img -v ${WORKDIR}/STARTUP ::
     mcopy -i ${WORKDIR}/boot.img -v ${WORKDIR}/STARTUP_1 ::
     mcopy -i ${WORKDIR}/boot.img -v ${WORKDIR}/STARTUP_2 ::

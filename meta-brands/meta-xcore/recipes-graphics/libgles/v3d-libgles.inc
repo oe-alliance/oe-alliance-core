@@ -7,6 +7,8 @@ require conf/license/license-close.inc
 
 PR = "r0"
 
+PROVIDES = "virtual/libgles2 virtual/egl"
+
 SRC_URI = "file://libgles-${MACHINE}.tar.gz"
 
 S = "${WORKDIR}/libgles-${MACHINE}"

@@ -6,11 +6,12 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=4d92cd373abda3937c2bc47fbc49d
 ALLOW_EMPTY_${PN} = "1"
 
 PV = "7.0"
-PR = "r0"
+PR = "r3"
 
 inherit packagegroup
 
 RDEPENDS_${PN} = " \
+    ca-certificates \
     oe-alliance-base \
     openspa-enigma2 \
     openspa-bootlogo \
@@ -19,8 +20,11 @@ RDEPENDS_${PN} = " \
     ntfs-3g \
     hddtemp \
     busybox-cron \
+    python-beautifulsoup \
+    python-html \
     python-imaging \
     python-importlib \
+    python-service-identity \
     rtmpdump \
     packagegroup-base-smbfs-client \
     ${@bb.utils.contains("MACHINE_FEATURES", "dreamboxv1", "", "ofgwrite", d)} \

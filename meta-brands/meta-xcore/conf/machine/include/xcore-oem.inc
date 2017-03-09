@@ -78,9 +78,6 @@ ${@bb.utils.contains('MACHINEBUILD', 'osmega', 'osmega' , '', d)}\
 KERNEL_FILE = "kernel.bin"
 ROOTFS_FILE = "rootfs.bin"
 
-PREFERRED_VERSION_linux-xcore = "4.9"
-PREFERRED_VERSION_linux-libc-headers = "4.9"
-
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS = "\
     xcore-dvb-modules-${MACHINE_DRIVER} \
     "
@@ -90,6 +87,7 @@ DVBSKYPROVIDER = "kernel"
 
 MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS += " \
     kernel-module-cdfs \
+    ${@bb.utils.contains('MACHINE_FEATURES', 'v3d', 'v3d-libgles-${MACHINE}', '',d)} \
     "
 
 MACHINE_EXTRA_RRECOMMENDS += " \
@@ -109,6 +107,9 @@ PREFERRED_PROVIDER_virtual/blindscan-dvbs = "xcore-blindscan-utils"
 PREFERRED_PROVIDER_virtual/blindscan-dvbc = "xcore-blindscan-utils"
 
 PREFERRED_PROVIDER_virtual/kernel = "linux-xcore"
+PREFERRED_PROVIDER_virtual/egl = "v3d-libgles-${MACHINE}" 
+PREFERRED_PROVIDER_virtual/libgles2 = "v3d-libgles-${MACHINE}"
+PREFERRED_PROVIDER_virtual/kodi = "stb-kodi-${MACHINE}"
 
 MACHINE_FEATURES += "alsa 3dtv switchoff hdmicec bootsplash omb boxmodel"
 

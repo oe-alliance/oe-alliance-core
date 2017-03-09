@@ -3,29 +3,14 @@ MAINTAINER = "OpenViX"
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "proprietary"
+PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 require conf/license/license-gplv2.inc
 
+PR_NUM = "${@bb.utils.contains("DISTRO_TYPE", "release", "${BUILD_VERSION}.000", "${BUILD_VERSION}.${DEVELOPER_BUILD_VERSION}", d)}"
+
 PV = "${IMAGE_VERSION}"
-PR = "r${DATE}"
-PACKAGE_ARCH = "${MACHINE_ARCH}"
-
-# FIX distro-image.bb ERROR: Taskhash mismatch - part 1 add packages to build dependencies of distro-image.bb which run on end of build process
-DEPENDS = " \
-    oe-alliance-base \
-    oe-alliance-enigma2 \
-    oe-alliance-wifi \
-    oe-alliance-feeds \
-    enigma2-plugins \
-    ${DISTRO}-base \
-    ${DISTRO}-version-info \
-    enigma2 \
-    "
-
-# FIX distro-image.bb ERROR: Taskhash mismatch - part 2  make sure all do_rm_work tasks of build dependencies are finished before starting do_rootfs of distro-image.bb
-do_rootfs[deptask] = "do_rm_work"
-
-PR[vardepsexclude] += "DATE"
+PR = "r${PR_NUM}"
 
 IMAGE_INSTALL = "openvix-base"
 

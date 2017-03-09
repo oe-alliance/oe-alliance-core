@@ -192,51 +192,28 @@ void daemonize(void)
 void readSmbConf()
 {
 	FILE* fp;
-	char* line = NULL;
-	size_t len = 0;
-	ssize_t read;
-	char* pos, *end;
 
-	fp = fopen("/etc/samba/smb.conf", "r");
-	if (fp == NULL)
-	{
-		printf("Warning: No /etc/samba/smb.conf found\n");
+	fp = popen("testparm -s -l --parameter-name=\"netbios name\" 2>/dev/null", "r");
+	if (fp == NULL) {
+		printf("Failed to run testparm\n" );
 		return;
+	} else {
+		fgets(cd_name, sizeof(cd_name)-1, fp);
+		pclose(fp);
+		if (cd_name[strlen(cd_name) - 1] == '\n') cd_name[strlen(cd_name) - 1] = '\0';
+		if (cd_name[strlen(cd_name) - 1] == '\r') cd_name[strlen(cd_name) - 1] = '\0';
 	}
 
-	while ((read = getline(&line, &len, fp)) != -1)
-	{
-		if ((strstr(line, "workgroup") != NULL || strstr(line, "netbios name") != NULL)
-		 && line[0] != '#' && (pos = strstr(line, "=")) != NULL)
-		{
-			pos++;
-			end = line + strlen(line) - 1;
-			// trailing spaces
-			while(end > pos && (isspace(*end) || *end == '\n' || *end == '\r'))
-				end--;
-			// leading spaces
-			while (pos < end && isspace(*pos))
-				pos++;
-
-			if (end != pos)
-			{
-				if (strstr(line, "workgroup") != NULL)
-				{
-					strncpy(cd_workgroup, pos, end - pos + 1);
-					cd_workgroup[end - pos + 1] = '\0';
-				}
-				else if (strstr(line, "netbios name") != NULL)
-				{
-					strncpy(cd_name, pos, end - pos + 1);
-					cd_name[end - pos + 1] = '\0';
-				}
-			}
-		}
+	fp = popen("testparm -s -l --parameter-name=\"workgroup\" 2>/dev/null", "r");
+	if (fp == NULL) {
+		printf("Failed to run testparm\n" );
+		return;
+	} else {
+		fgets(cd_workgroup, sizeof(cd_workgroup)-1, fp);
+		pclose(fp);
+		if (cd_workgroup[strlen(cd_workgroup) - 1] == '\n') cd_workgroup[strlen(cd_workgroup) - 1] = '\0';
+		if (cd_workgroup[strlen(cd_workgroup) - 1] == '\r') cd_workgroup[strlen(cd_workgroup) - 1] = '\0';
 	}
-
-	fclose(fp);
-	if (line)
-		free(line);
 }
 
 /* Find xml tag value */
@@ -1030,6 +1007,54 @@ void netlink_recv(int socket, char* iface_str)
 	}
 }
 
+int readMachineID(char* uuid_str)
+{
+	FILE *fp;
+	int c, i = 0;
+	uuid_t uuid;
+
+	fp = fopen("/etc/machine-id", "r");
+	if (fp != NULL)
+	{
+		while (i < 36 && (c = getc(fp)) != EOF && (isdigit(c) || (islower(c) && isxdigit(c))))
+		{
+			if (i == 8 || i == 13 || i == 18 || i == 23)
+				uuid_str[i++] = '-';
+			uuid_str[i++] = c;
+		}
+		fclose(fp);
+
+		if (i == 36)
+		{
+			uuid_str[i] = '\0';
+		} else
+		{
+			wsdd_log(LOG_ERR, "/etc/machine-id contains no valid id");
+			uuid_str[0] = '\0';
+			return -1;
+		}
+	}
+	else
+	{
+		fp = fopen("/etc/machine-id", "w");
+		if (fp == NULL)
+		{
+			wsdd_log(LOG_ERR, "Cannot read and create /etc/machine-id");
+			return -1;
+		}
+		uuid_generate_random(uuid);
+		uuid_unparse_lower(uuid, uuid_str);
+		fwrite(uuid_str, 8, 1, fp);
+		fwrite(uuid_str + 9, 4, 1, fp);
+		fwrite(uuid_str + 14, 4, 1, fp);
+		fwrite(uuid_str + 19, 4, 1, fp);
+		fwrite(uuid_str + 24, 12, 1, fp);
+		fputc('\n', fp);
+		fclose(fp);
+	}
+	return 0;
+}
+
 static void sigterm_handler(int sig, siginfo_t *siginfo, void *context)
 {
 	terminate = 1;
@@ -1048,9 +1073,10 @@ int main(int argc, char *argv[])
 	struct sigaction act;
 	static const int enable = 1;
 	static const int disable = 0;
-	int conn, i, activity;
+	int conn, i, j, activity;
 	struct pollfd fds[MAX_CLIENTS + 3];
 	char iface[32] = "";
+	char c;
 
 	gethostname(cd_name, sizeof(cd_name));
 	readSmbConf();
@@ -1102,6 +1128,13 @@ int main(int argc, char *argv[])
 		}
 	}
 
+	j=0;
+	while (cd_name[j]) {
+		c=cd_name[j];
+		cd_name[j]=toupper(c);
+		j++;
+	}
+
 	if (usesyslog)
 		openlog("wsdd", LOG_PID, LOG_DAEMON);
 
@@ -1128,8 +1161,8 @@ int main(int argc, char *argv[])
 
 	/* Generate UUIDs */
 	instance_id = time(NULL);
-	uuid_generate_time(uuid);
-	uuid_unparse(uuid, uuid_str);
+	if (readMachineID(uuid_str) < 0)
+		return EXIT_FAILURE;
 	sprintf(endpoint, "urn:uuid:%s", uuid_str);
 	uuid_generate_time(uuid);
 	uuid_unparse(uuid, uuid_str);

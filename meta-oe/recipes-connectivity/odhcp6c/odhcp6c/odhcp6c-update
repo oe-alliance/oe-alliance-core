@@ -1,0 +1,362 @@
+#!/bin/sh
+# shellcheck shell=dash
+# Based on odhcp6c sample script and rdnssd merge-hook
+
+[ -z "$1" ] && echo "Error: should be called from odhcp6c" && exit 1
+
+IFACE=$1
+STATE=$2
+DEBUG=0
+
+DOMAINS=${DOMAINS:=""}
+
+update_resolv() {
+	sysconfdir='/etc'
+	localstatedir='/var/run/odhcp6c'
+
+	RE_NSV4='^nameserver  *\([0-9]\{1,3\}\.\)\{3,3\}[0-9]\{1,3\} *$'
+
+	resolvconf="$sysconfdir/resolv.conf"
+	myresolvconf="$localstatedir/resolv.${IFACE}.conf"
+	lockfile="$localstatedir/resolv.lock"
+
+	mkdir -p $localstatedir
+
+	count=0
+	while [ -e $lockfile ]; do
+		sleep 1
+		count=$((count + 1))
+		[ $count -ge 30 ] && break
+	done
+	touch "$lockfile"
+
+	limit=3
+	dns4count=$(grep -c "$RE_NSV4" $resolvconf)
+	[ "$dns4count" -ge 1 ] && limit=2
+	[ "$dns4count" -ge 2 ] && limit=1
+
+	set -- "$ALL_DOMAINS"
+	DOMAIN="$1"
+	if [ ! "x$DOMAIN" = "x" ]; then
+		echo "domain $DOMAIN" > "$myresolvconf"
+	else
+		grep "^domain " $resolvconf | head -n 1 > "$myresolvconf"
+	fi
+
+	rm "$myresolvconf.search" 2>/dev/null || true
+	touch "$myresolvconf.search"
+	for domain in $ALL_DOMAINS; do
+		echo "search $DOMAIN" >> "$myresolvconf.search"
+	done
+	grep "^search" $resolvconf >> "$myresolvconf.search"
+
+	sort "$myresolvconf.search" | uniq >> "$myresolvconf"
+	rm "$myresolvconf.search" 2>/dev/null || true
+
+	grep -E -v "^domain|^nameserver|^search|^ *$" $resolvconf >> "$myresolvconf"
+
+	dnscount=0
+	for dns in $ALL_DNS; do
+		dnscount=$((dnscount + 1))
+		if [ $dnscount -le $limit ]; then
+			/bin/echo -n "nameserver $dns" >> "$myresolvconf"
+			case $dns in
+			        fe80*)
+					echo "%$IFACE" >> "$myresolvconf"
+		                	;;
+			        *)
+					echo >> "$myresolvconf"
+					;;
+			esac
+		else
+			break
+		fi
+	done
+	grep "$RE_NSV4" $resolvconf | head -n $((4 - dnscount)) >> "$myresolvconf"
+
+	#if [ "x$(diff $resolvconf $myresolvconf)" = "x" ]; then
+	if diff "$resolvconf" "$myresolvconf" >/dev/null; then
+		rm "$myresolvconf"
+	else
+		mv -f "$myresolvconf" "$resolvconf"
+	fi
+	rm $lockfile
+}
+
+setup_interface () {
+	local device="$1"
+
+	local prefixpart=""
+	for entry in $PREFIXES; do
+		local addr="${entry%%,*}"
+                entry="${entry#*,}"
+                local preferred="${entry%%,*}"
+                entry="${entry#*,}"
+                local valid="${entry%%,*}"
+                entry="${entry#*,}"
+		[ "$entry" = "$valid" ] && entry=
+
+		local class=""
+		local excluded=""
+
+		while [ -n "$entry" ]; do
+			local key="${entry%%=*}"
+			entry="${entry#*=}"
+			local val="${entry%%,*}"
+			entry="${entry#*,}"
+			[ "$entry" = "$val" ] && entry=
+
+			if [ "$key" = "class" ]; then
+				class=", \"class\": $val"
+			elif [ "$key" = "excluded" ]; then
+				excluded=", \"excluded\": \"$val\""
+			fi
+		done
+
+		local prefix="{\"address\": \"$addr\", \"preferred\": $preferred, \"valid\": $valid $class $excluded}"
+		
+		if [ -z "$prefixpart" ]; then
+			prefixpart="$prefix"
+		else
+			prefixpart="$prefixpart, $prefix"
+		fi
+
+		# TODO: delete this somehow when the prefix disappears
+		#ip -6 route add unreachable "$addr"
+	done
+
+	# Merge addresses
+	for entry in $RA_ADDRESSES; do
+		local duplicate=0
+		local addr="${entry%%/*}"
+		for dentry in $ADDRESSES; do
+			local daddr="${dentry%%/*}"
+			[ "$addr" = "$daddr" ] && duplicate=1
+		done
+		[ "$duplicate" = "0" ] && ADDRESSES="$ADDRESSES $entry"
+	done
+
+	realip=$(readlink /sbin/ip)
+
+	for entry in $ADDRESSES; do
+		local addr="${entry%%,*}"
+		entry="${entry#*,}"
+		local preferred="${entry%%,*}"
+		entry="${entry#*,}"
+		local valid="${entry%%,*}"
+
+		if [ "x$realip" = "x/sbin/ip.iproute2" ]; then
+			ip -6 address replace "$addr" dev "$device" preferred_lft "$preferred" valid_lft "$valid"
+		else
+			# Busybox ip does not understand lifetimes
+			ip -6 address replace "$addr" dev "$device"
+		fi
+	done
+}
+
+teardown_interface() {
+	local device="$1"
+	OLDADDRS=$(ip -6 addr show scope global dev "$device" | grep ' *inet6 *.*/128 *scope' | awk '{ print $2 }')
+	for oldaddr in $OLDADDRS; do
+		ip -6 addr delete "$oldaddr" dev "$device"
+	done
+#	ip -6 route replace ff00::/8 dev "$device" metric 256
+}
+
+read_auto() {
+	# Method auto with option "dhcp" = Use stateless DHCPv6
+
+	DHCP_CONF=$(awk -v par="$IFACE" '
+	/^iface/ && $2==par && $3=="inet6" && $4=="auto" {f=1}
+	/^iface/ && $2==par && $3=="inet" {f=0}
+	/^iface/ && $2!=par {f=0}
+	f && /^\s*dhcp/ {print $2; f=0}' /etc/network/interfaces)
+	[ "x$DHCP_CONF" = "x" ] && DHCP_CONF=1
+}
+
+read_static() {
+	# Method static with option "autoconf" = Perform stateless autoconfiguration
+
+	RA_CONF=$(awk -v par="$IFACE" '
+	/^iface/ && $2==par && $3=="inet6" && $4=="static" {f=1}
+	/^iface/ && $2==par && $3=="inet" {f=0}
+	/^iface/ && $2!=par {f=0}
+	f && /^\s*autoconf/ {print $2; f=0}' /etc/network/interfaces)
+	[ "x$RA_CONF" = "x" ] && RA_CONF=0
+}
+
+read_dhcp() {
+	# Method dhcp with option "autoconf" = Perform stateless autoconfiguration
+
+	RA_CONF=$(awk -v par="$IFACE" '
+	/^iface/ && $2==par && $3=="inet6" && $4=="dhcp" {f=1}
+	/^iface/ && $2==par && $3=="inet" {f=0}
+	/^iface/ && $2!=par {f=0}
+	f && /^\s*autoconf/ {print $2; f=0}' /etc/network/interfaces)
+	[ "x$RA_CONF" = "x" ] && RA_CONF=1
+}
+
+
+get_config() {
+	METHOD=""
+	METHOD=$(grep "^iface [[:space:]]*${IFACE} [[:space:]]*inet6" /etc/network/interfaces | awk '{ print $4 }')
+	if [ "x$METHOD" = "x" ]; then
+		METHOD="auto"
+		RA_CONF=1
+		DHCP_CONF=1
+		DHCP_ADDR=0
+	else
+		case $METHOD in
+			auto)
+				DHCP_ADDR=0
+				RA_CONF=1
+				read_auto
+				return
+				;;
+			dhcp)
+				DHCP_ADDR=1
+				DHCP_CONF=1
+				read_dhcp
+				return
+				;;
+			manual)
+				DHCP_ADDR=0
+				DHCP_CONF=0
+				RA_CONF=0
+				return
+				;;
+			static)
+				DHCP_ADDR=0
+				DHCP_CONF=0
+				read_static
+				return
+				;;
+			*)
+				return
+				;;
+		esac
+	fi
+}
+
+
+merge_dhcp_ra() {
+	if [ "x$DHCP_CONF" = "x0" ] && [ "x$RA_CONF" = "x0" ]; then
+
+		# Neither RA nor DHCPv6
+
+		ALL_DNS=""
+		ALL_DOMAINS=""
+	elif [ "x$DHCP_CONF" = "x0" ]; then
+
+		# Only RA
+
+		ALL_DNS=$RA_DNS
+		ALL_DOMAINS=$RA_DOMAINS
+	elif [ "x$RA_CONF" = "x0" ]; then
+
+		# Only DHCP
+
+		ALL_DNS=$RDNSS
+		ALL_DOMAINS=$DOMAINS
+	else
+
+		# RA and DHCP - Merge RA and DHCPv6
+
+		for dns in $RDNSS; do
+			local duplicate=0
+			for radns in $RA_DNS; do
+				[ "$radns" = "$dns" ] && duplicate=1
+			done
+			[ "$duplicate" = 0 ] && RA_DNS="$RA_DNS $dns"
+		done
+
+		for domain in $DOMAINS; do
+			local duplicate=0
+			for radomain in $RA_DOMAINS; do
+				[ "$radomain" = "$domain" ] && duplicate=1
+			done
+			[ "$duplicate" = 0 ] && RA_DOMAINS="$RA_DOMAINS $domain"
+		done
+
+		ALL_DNS=$RA_DNS
+		ALL_DOMAINS=$RA_DOMAINS
+	fi
+
+	dnscount=0
+	for dns in $ALL_DNS; do
+		dnscount=$((dnscount + 1))
+	done
+
+	if [ $dnscount -gt 1 ]; then
+		NEW_DNS=""
+		for dns in $ALL_DNS; do
+			case $dns in
+			        fe80*)
+		                	;;
+			        *)
+					NEW_DNS="$NEW_DNS $dns"
+					;;
+			esac
+		done
+		dnscount=0
+		for dns in $NEW_DNS; do
+			dnscount=$((dnscount + 1))
+		done
+		[ $dnscount -ge 1 ] && ALL_DNS=$NEW_DNS
+	fi
+}
+
+
+
+
+DHCP_ADDR=0
+DHCP_CONF=0
+RA_CONF=0
+
+ALL_DNS=""
+ALL_DOMAINS=""
+
+get_config
+merge_dhcp_ra
+
+if [ "x$DEBUG" = "x1" ]; then
+	echo
+	echo New advertisement:
+	echo "State:         $STATE"
+	echo "DHCP Domains:  $DOMAINS"
+	echo "DHCP DNSS:     $RDNSS"
+	echo "RA Domains:    $RA_DOMAINS"
+	echo "RA DNS:        $RA_DNS"
+	echo "Joint domains: $ALL_DOMAINS"
+	echo "Joint DNSS:    $ALL_DNS"
+	echo
+	echo "RA Routes:     $RA_ROUTES"
+	echo "RA Adresses:   $RA_ADDRESSES"
+	echo "DHCP Adresses: $ADDRESSES"
+fi
+
+case $STATE in
+	bound)
+		if [ "x$DHCP_ADDR" = "x1" ]; then
+			teardown_interface "$IFACE"
+			setup_interface "$IFACE"
+		fi
+		[ "x$ALL_DNS" = "x" ] || update_resolv
+		;;
+	informed|updated|rebound|ra-updated)
+		if [ "x$DHCP_ADDR" = "x1" ]; then
+			teardown_interface "$IFACE"
+			setup_interface "$IFACE"
+		fi
+		[ "x$ALL_DNS" = "x" ] || update_resolv
+		;;
+	stopped|unbound)
+		[ "x$DHCP_ADDR" = "x1" ] && teardown_interface "$IFACE"
+		;;
+	started)
+		[ "x$DHCP_ADDR" = "x1" ] && teardown_interface "$IFACE"
+		[ "x$ALL_DNS" = "x" ] || update_resolv
+		;;
+esac
+
+exit 0

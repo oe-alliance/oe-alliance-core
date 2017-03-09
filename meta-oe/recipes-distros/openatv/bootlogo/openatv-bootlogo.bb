@@ -9,7 +9,7 @@ require conf/license/license-gplv2.inc
 RDEPENDS_${PN} += "showiframe"
 
 PV = "${IMAGE_VERSION}"
-PR = "r1"
+PR = "r1.1"
 
 S = "${WORKDIR}"
 
@@ -26,7 +26,7 @@ PRECOMPILED_ARCH_dm7020hdv2 = "dm7020hd"
 
 inherit update-rc.d
 
-SRC_URI = "file://bootlogo.mvi file://radio.mvi file://bootlogo.sh file://splash576.bmp file://splash480.bmp file://splash1280.jpg \
+SRC_URI = "file://bootlogo.mvi file://restore.mvi file://radio.mvi file://bootlogo.sh file://splash576.bmp file://splash480.bmp file://splash1280.jpg \
     ${@bb.utils.contains("MACHINE_FEATURES", "gigabluelcd220", "file://lcdsplash220.bin file://lcdwaitkey220.bin file://lcdwarning220.bin" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "gigabluelcd400", "file://lcdsplash400.bin file://lcdwaitkey400.bin file://lcdwarning400.bin" , "", d)} \
 "
@@ -65,6 +65,7 @@ do_install() {
     ${@bb.utils.contains("MACHINE_FEATURES", "dreamboxv1", "install -m 0755 ${S}/dreambox-bootlogo_${BINARY_VERSION}_${PRECOMPILED_ARCH}/bootlogo-${PRECOMPILED_ARCH}.elf.gz ${D}/boot/; install -m 0755 ${S}/splash1280.jpg ${D}/boot/bootlogo-${PRECOMPILED_ARCH}.jpg", "", d)}
     install -d ${D}/usr/share
     install -m 0644 bootlogo.mvi ${D}/usr/share/bootlogo.mvi
+    install -m 0644 restore.mvi ${D}/usr/share/restore.mvi
     ln -sf /usr/share/bootlogo.mvi ${D}/usr/share/backdrop.mvi
     install -d ${D}/usr/share/enigma2
     install -m 0644 radio.mvi ${D}/usr/share/enigma2/radio.mvi

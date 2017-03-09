@@ -4,7 +4,7 @@ LIC_FILES_CHKSUM = "file://../COPYING;md5=d32239bcb673463ab874e80d47fae504"
 SECTION = "console/network"
 DEPENDS = "readline virtual/libiconv zlib popt libpam libtalloc attr avahi"
 
-PR = "r6"
+PR = "r7"
 
 inherit autotools-brokensep update-rc.d
 
@@ -153,6 +153,7 @@ FILES_${PN}-base       = "${sbindir}/samba_multicall ${sbindir}/smbd ${sbindir}/
                           ${sysconfdir}/samba/smb.conf ${sysconfdir}/samba/private \
                           ${libdir}/samba/*.dat ${base_libdir}/security/pam_smbpass.so \
                           ${sysconfdir}/pam.d/samba"
+RRECOMMENDS_${PN}-base+= "wsdd"
 FILES_${PN}-base-vfs  += "${libdir}/vfs"
 FILES_${PN}-base-dbg  += "${base_libdir}/security/.debug/pam_smbpass.so"
 

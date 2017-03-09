@@ -3,12 +3,13 @@ LICENSE = "GPLv2"
 SECTION = "kernel"
 
 KV = "3.14.28"
-MACHINE_KERNEL_PR_append = ".7"
+MACHINE_KERNEL_PR_append = ".8"
 
 inherit kernel machine_kernel_pr
 
 SRC_URI[md5sum] = "d83e48d38bf83c50f7a175bc6a1fd2ce"
 SRC_URI[sha256sum] = "9c04354eba2861304d09bce015b4d381c65f968ba445465a70a77bee3ee16f45"
+
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
@@ -46,6 +47,11 @@ pkg_postinst_kernel-image () {
         rm -f /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}
         true
 }
+
+pkg_postrm_kernel-image () {
+}
+
+FILESEXTRAPATHS_prepend := "${THISDIR}/linux-dags-${KV}:"
 
 do_rm_work() {
 }
