@@ -1,9 +1,15 @@
 # Default values for transmission daemon
 # please fill in and enable service.
+# Username and password for the RPC interface
+USER="root"
+PASSWORD="enigma2"
+RPC_PORT=9091
+
+# Various directories
+#DIRECTORY="/media/hdd/transmission"
+#DOWNLOAD_DIR="${DIRECTORY}/download"
+#CONFIG_DIR="${DIRECTORY}/config"
+
 # Set DAEMON_USER to run under different credentials
-DAEMON_ENABLED="YES"
 DAEMON_USER=""
 DAEMON_GROUP=""
-DOWNLOAD_DIR="/media/hdd/torrents/"
-CONFIG_DIR="/var/lib/transmission-daemon"
-
