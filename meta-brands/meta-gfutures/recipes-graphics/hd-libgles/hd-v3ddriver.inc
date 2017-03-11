@@ -4,13 +4,11 @@ PRIORITY = "required"
 LICENSE = "CLOSED"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-PR = "r0"
-
 PROVIDES = "virtual/libgles2 virtual/egl"
 DEPENDS = "hd-v3ddriver-headers"
 
 PV = "${SRCDATE}"
-PR = "r1"
+PR = "r2"
 
 SRC_URI = "http://downloads.mutant-digital.net/v3ddriver/${MACHINE}-v3ddriver-${SRCDATE}.zip"
 
