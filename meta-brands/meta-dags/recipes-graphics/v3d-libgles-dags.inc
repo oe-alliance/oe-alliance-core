@@ -21,8 +21,8 @@ do_compile() {
 
 do_install() {
 	install -d ${D}${libdir}
-	install -m 0755 ${S}/lib/libnxpl.so ${D}${libdir}/
-	install -m 0755 ${S}/lib/libv3ddriver.so ${D}${libdir}/
+	install -m 0755 ${S}/usr/lib/libnxpl.so ${D}${libdir}/
+	install -m 0755 ${S}/usr/lib/libv3ddriver.so ${D}${libdir}/
 	ln -s libv3ddriver.so ${D}${libdir}/libEGL.so
 	ln -s libv3ddriver.so ${D}${libdir}/libGLESv2.so
 	for d in EGL GLES GLES2 KHR VG; do
