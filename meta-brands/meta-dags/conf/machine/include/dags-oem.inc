@@ -141,7 +141,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'purehd', 'update/purehd/cfe' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'force2plushv', 'update/force2plushv/cfe' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'force3uhdplus', 'update/force3uhdplus' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'force3uhd', 'update/force3uhd' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'revo4k', 'update/fusion4k' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'revo4k', 'update/revo4k' , '', d)}\
 "
 
 MTD_KERNEL = "\
