@@ -17,6 +17,11 @@ SRC_URI += "http://en3homeftp.net/pub/src/linux-3.14.28.tar.xz \
 	file://defconfig \
 	file://date-time.patch \
 	file://0001.remove_vtuner_index_check.patch \
+	file://0001-Support-TBS-USB-drivers.patch \
+	file://0001-STV-Add-PLS-support.patch \
+	file://0001-STV-Add-SNR-Signal-report-parameters.patch \
+	file://0001-stv090x-optimized-TS-sync-control.patch \
+	file://blindscan2.patch \
 	"
 
 S = "${WORKDIR}/linux"
