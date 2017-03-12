@@ -6,7 +6,7 @@
 BOOTLOGO=/usr/share/bootlogo.mvi
 BOOTVIDEO=/usr/share/bootvideo.mp4
 
-if [ -f ${BOOTVIDEO} ] && [ ! "$(grep config.usage.show_bootvideo /etc/enigma2/settings)" == "config.usage.show_bootvideo=false" ]; then
+if [ -f ${BOOTVIDEO} ] && [ "$(grep config.usage.show_bootvideo /etc/enigma2/settings)" == "config.usage.show_bootvideo=true" ]; then
 	[ -f /etc/enigma2/bootvideo.mp4 ] && BOOTVIDEO=/etc/enigma2/bootvideo.mp4
 	echo "1" > /proc/stb/lcd/mode
 	echo 15 > /proc/stb/avs/0/volume
