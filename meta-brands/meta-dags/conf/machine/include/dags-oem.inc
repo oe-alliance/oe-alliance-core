@@ -340,6 +340,7 @@ MACHINE_ESSENTIAL_EXTRA_RDEPENDS = " \
 
 MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS = "\
     kernel-module-cdfs \
+    ${@bb.utils.contains('MACHINE_FEATURES', 'v3d', 'v3d-libgles-${MACHINE}', '',d)} \
     "
 
 MACHINE_EXTRA_RRECOMMENDS += " \
@@ -359,6 +360,10 @@ PREFERRED_PROVIDER_virtual/kernel = "linux-dags"
 PREFERRED_PROVIDER_virtual/blindscan-dvbs = "vuplus-blindscan-utils"
 PREFERRED_PROVIDER_virtual/blindscan-dvbc = "vuplus-blindscan-utils"
 PREFERRED_PROVIDER_virtual/transtreamproxy = "vuplus-transtreamproxy"
+
+PREFERRED_PROVIDER_virtual/egl = "v3d-libgles-${MACHINE}" 
+PREFERRED_PROVIDER_virtual/libgles2 = "v3d-libgles-${MACHINE}"
+PREFERRED_PROVIDER_virtual/kodi = "stb-kodi-${MACHINE}"
 
 require conf/machine/include/soc-family.inc
 
