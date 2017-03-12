@@ -17,6 +17,7 @@ require conf/machine/include/tune-cortexa15.inc
 
 MACHINE_EXTRA_RRECOMMENDS = " \
     gstreamer1.0-plugin-dvbmediasink \
+    gstreamer1.0-libav \
     ntfs-3g \
     kernel-module-cifs \
     kernel-module-autofs4 \
