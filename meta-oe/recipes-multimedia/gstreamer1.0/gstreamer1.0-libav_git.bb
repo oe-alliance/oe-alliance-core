@@ -21,7 +21,7 @@ SRC_URI = " \
     file://0001-Disable-yasm-for-libav-when-disable-yasm.patch \
  "
 
-GST_VERSION_FULL ="1.11.2.1-01"
+GST_VERSION_FULL ="1.11.2.1-02"
 inherit gitpkgv
 PV = "${GST_VERSION_FULL}+git${SRCPV}"
 PKGV = "${GST_VERSION_FULL}+git${GITPKGV}"
@@ -34,7 +34,8 @@ SRCREV_ffmpeg = "d4b731e271ba944ade8f6a128271479529507de9"
 SRCREV_FORMAT = "base"
 
 LIBAV_INCLUDED_EXLUCED = "--disable-everything \
-						--enable-decoder=wmalossless --enable-decoder=wmapro --enable-decoder=wmav1 --enable-decoder=wmav2 --enable-decoder=wmavoice"
+						--enable-decoder=wmalossless --enable-decoder=wmapro --enable-decoder=wmav1 --enable-decoder=wmav2 --enable-decoder=wmavoice \
+						--enable-decoder=truehd --enable-decoder=dca --enable-decoder=mlp"
 
 
 SRC_URI_append_sh4 = " \
