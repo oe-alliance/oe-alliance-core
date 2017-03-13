@@ -17,7 +17,9 @@ PR = "r0"
 
 INSANE_SKIP_${PN} += "already-stripped"
 
-SRC_URI = "git://github.com/NexTVTeam/hbbtv-plugin.git;protocol=https;branch=4.0"
+SRC_URI = "git://github.com/NexTVTeam/hbbtv-plugin.git;protocol=https;branch=4.0 \
+    file://0001-add-extra-check-for-dst_apply.patch \
+"
 
 S = "${WORKDIR}/git"
 
