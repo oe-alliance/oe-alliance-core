@@ -272,6 +272,9 @@ SRC_URI_append_wetekplay2 = " \
 SRC_URI_append_odroidc2 = " \
     ${@bb.utils.contains("DISTRO_NAME", "openatv", "file://0001-have-64-bit-action-long-int-update.patch", "", d)} \
     "
+SRC_URI_append_aarch64 = " \
+  ${@bb.utils.contains("DISTRO_NAME", "openvix", "file://0001-have-64-bit-action-long-int-update.patch", "", d)} \
+    "
 
 SRC_URI_append_openhdf = " \
     file://tuxbox_fix_DVB_API_VERSION_check_for_gcc5.patch \
