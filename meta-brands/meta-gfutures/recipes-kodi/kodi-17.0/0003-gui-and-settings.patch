@@ -1,3 +1,27 @@
+diff -Nur a/addons/skin.estouchy/xml/Home.xml b/addons/skin.estouchy/xml/Home.xml
+--- a/addons/skin.estouchy/xml/Home.xml	2017-02-01 19:47:32.000000000 +0100
++++ b/addons/skin.estouchy/xml/Home.xml	2017-01-27 16:00:05.000000000 +0100
+@@ -181,7 +181,7 @@
+ 				<content>
+ 					<item>
+ 						<label>13012</label>
+-						<onclick>Shutdown</onclick>
++						<onclick>XBMC.Quit()</onclick>
+ 						<icon>icon_button_shutdown.png</icon>
+ 					</item>
+ 					<item>
+diff -Nur a/addons/skin.estuary/xml/Home.xml b/addons/skin.estuary/xml/Home.xml
+--- a/addons/skin.estuary/xml/Home.xml	2017-02-01 19:47:32.000000000 +0100
++++ b/addons/skin.estuary/xml/Home.xml	2017-01-27 16:01:17.000000000 +0100
+@@ -915,7 +915,7 @@
+ 					<align>justify</align>
+ 					<include content="IconButton">
+ 						<param name="control_id" value="804" />
+-						<param name="onclick" value="ActivateWindow(shutdownmenu)" />
++						<param name="onclick" value="XBMC.Quit()" />
+ 						<param name="icon" value="icons/power.png" />
+ 						<param name="label" value="$LOCALIZE[33060]" />
+ 					</include>
 diff --git a/lib/libdvd/Makefile.in b/lib/libdvd/Makefile.in
 index 5a4508b..8897532 100644
 --- a/lib/libdvd/Makefile.in

@@ -1,31 +1,3 @@
-From 267e56b5ffc363c912cdb78de907930bdc869030 Mon Sep 17 00:00:00 2001
-From: Taejong Yoo <yoo.taejong@gmail.com>
-Date: Tue, 20 Dec 2016 21:44:22 +0900
-Subject: [PATCH 1/2] Krypton V3D support
-
----
- configure.ac                             |  58 +++++++++--
- lib/libdvd/Makefile.in                   |  14 +--
- m4/xbmc_arch.m4                          |   4 +
- system/playercorefactory.xml             |  12 +++
- tools/Linux/kodi.sh.in                   |  37 +++++--
- tools/depends/target/ffmpeg/autobuild.sh |  14 +++
- tools/depends/target/libdvdcss/Makefile  |   4 +-
- tools/depends/target/libdvdnav/Makefile  |   4 +-
- tools/depends/target/libdvdread/Makefile |   4 +-
- xbmc/GUIInfoManager.cpp                  |   4 +
- xbmc/input/InputManager.cpp              |  12 +++
- xbmc/input/linux/LinuxInputDevices.cpp   |  33 ++++++-
- xbmc/platform/xbmc.cpp                   |   9 ++
- xbmc/utils/CPUInfo.cpp                   |  33 +++++++
- xbmc/windowing/egl/EGLNativeTypeV3D.cpp  | 161 +++++++++++++++++++++++++++++++
- xbmc/windowing/egl/EGLNativeTypeV3D.h    |  59 +++++++++++
- xbmc/windowing/egl/EGLWrapper.cpp        |   7 +-
- xbmc/windowing/egl/Makefile.in           |   3 +
- 18 files changed, 440 insertions(+), 32 deletions(-)
- create mode 100644 xbmc/windowing/egl/EGLNativeTypeV3D.cpp
- create mode 100644 xbmc/windowing/egl/EGLNativeTypeV3D.h
-
 diff --git a/configure.ac b/configure.ac
 index d2186cb..1ada4ed 100644
 --- a/configure.ac
@@ -872,6 +844,27 @@ index 68f7862..4eed1dc 100644
  SRCS+= EGLWrapper.cpp
  
  LIB = windowing_egl.a
--- 
-1.9.1
-
+diff -Nur a/addons/skin.estouchy/xml/Home.xml b/addons/skin.estouchy/xml/Home.xml
+--- a/addons/skin.estouchy/xml/Home.xml	2017-02-01 19:47:32.000000000 +0100
++++ b/addons/skin.estouchy/xml/Home.xml	2017-01-27 16:00:05.000000000 +0100
+@@ -181,7 +181,7 @@
+ 				<content>
+ 					<item>
+ 						<label>13012</label>
+-						<onclick>Shutdown</onclick>
++						<onclick>XBMC.Quit()</onclick>
+ 						<icon>icon_button_shutdown.png</icon>
+ 					</item>
+ 					<item>
+diff -Nur a/addons/skin.estuary/xml/Home.xml b/addons/skin.estuary/xml/Home.xml
+--- a/addons/skin.estuary/xml/Home.xml	2017-02-01 19:47:32.000000000 +0100
++++ b/addons/skin.estuary/xml/Home.xml	2017-01-27 16:01:17.000000000 +0100
+@@ -915,7 +915,7 @@
+ 					<align>justify</align>
+ 					<include content="IconButton">
+ 						<param name="control_id" value="804" />
+-						<param name="onclick" value="ActivateWindow(shutdownmenu)" />
++						<param name="onclick" value="XBMC.Quit()" />
+ 						<param name="icon" value="icons/power.png" />
+ 						<param name="label" value="$LOCALIZE[33060]" />
+ 					</include>
