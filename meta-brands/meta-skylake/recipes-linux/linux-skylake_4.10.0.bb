@@ -2,14 +2,12 @@ SUMMARY = "Linux kernel for ${MACHINE}"
 SECTION = "kernel"
 LICENSE = "GPLv2"
 
-KERNEL_RELEASE = "4.7.6"
+KERNEL_RELEASE = "4.10.0"
 
 inherit kernel machine_kernel_pr
 
-SRC_URI[mips.md5sum] = "7704898cdd7284bdf680b73162fdeca4"
-SRC_URI[mips.sha256sum] = "8821d8bde5014cfd0999dc62d1eb655bb47a2f4f6694d565b51037d3d6875098"
-#SRC_URI[arm.md5sum] = "ab37f1c0c601a6bfd2d35dc356b40f0e"
-#SRC_URI[arm.sha256sum] = "1433e9983866903cb25a2a4d846c84b3e420b3410d56dde4c2b2bf92a8dcdba9"
+SRC_URI[md5sum] = "1bca7dc4f68196efe7cf8af085841851"
+SRC_URI[sha256sum] = "0b53d7cf932da13e4dc81856c4041e409b4c44fbc533ab5c99dcf22ff2b79a63"
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
@@ -23,8 +21,9 @@ PKG_kernel-image = "kernel-image"
 RPROVIDES_kernel-base = "kernel-${KERNEL_VERSION}"
 RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
 
-SRC_URI += "http://source.mynonpublic.com/gfutures/linux-${PV}-${ARCH}.tar.gz;name=${ARCH} \
+SRC_URI += "http://source.mynonpublic.com/gfutures/linux-${PV}-${ARCH}.tar.gz \
     file://defconfig \
+    file://TBS-fixes-for-4.10-kernel.patch \
     file://0001-Support-TBS-USB-drivers-for-4.6-kernel.patch \
     file://0001-TBS-fixes-for-4.6-kernel.patch \
     file://0001-STV-Add-PLS-support.patch \
@@ -33,33 +32,24 @@ SRC_URI += "http://source.mynonpublic.com/gfutures/linux-${PV}-${ARCH}.tar.gz;na
     file://0001-stv090x-optimized-TS-sync-control.patch \
     "
 
-SRC_URI_append_arm = " \
-    file://findkerneldevice.py \
-    file://reserve_dvb_adapter_0.patch \
-    file://blacklist_mmc0.patch \
-    "
-
 S = "${WORKDIR}/linux-${PV}"
 B = "${WORKDIR}/build"
 
 export OS = "Linux"
 KERNEL_OBJECT_SUFFIX = "ko"
+KERNEL_OUTPUT = "vmlinux"
+KERNEL_IMAGETYPE = "vmlinux"
+KERNEL_IMAGEDEST = "/boot"
 
-# Linux MIPS Models
+FILES_kernel-image = "${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}*"
 
-KERNEL_OUTPUT_mips = "vmlinux"
-KERNEL_IMAGETYPE_mips = "vmlinux"
-KERNEL_IMAGEDEST_mips = "/boot"
-
-FILES_kernel-image_mips = "${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}*"
-
-kernel_do_install_append_mips() {
+kernel_do_install_append() {
 	${STRIP} ${D}${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION}
 	gzip -9c ${D}${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION} > ${D}${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz
 	rm ${D}${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION}
 }
 
-pkg_postinst_kernel-image_mips () {
+pkg_postinst_kernel-image () {
 	if [ "x$D" == "x" ]; then
 		if [ -f /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz ] ; then
 			flash_erase /dev/mtd1 0 0
@@ -67,30 +57,6 @@ pkg_postinst_kernel-image_mips () {
 		fi
 	fi
 	true
-}
-
-# Linux ARM Models
-
-KERNEL_OUTPUT_arm = "arch/${ARCH}/boot/${KERNEL_IMAGETYPE}"
-KERNEL_IMAGETYPE_arm = "zImage"
-KERNEL_IMAGEDEST_arm = "tmp"
-
-FILES_kernel-image_arm = "/${KERNEL_IMAGEDEST}/zImage /${KERNEL_IMAGEDEST}/findkerneldevice.py"
-
-kernel_do_install_append_arm() {
-        install -d ${D}/${KERNEL_IMAGEDEST}
-        install -m 0755 ${KERNEL_OUTPUT} ${D}/${KERNEL_IMAGEDEST}
-        install -m 0755 ${WORKDIR}/findkerneldevice.py ${D}/${KERNEL_IMAGEDEST}
-}
-
-pkg_postinst_kernel-image_arm () {
-    if [ "x$D" == "x" ]; then
-        if [ -f /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE} ] ; then
-            python /${KERNEL_IMAGEDEST}/findkerneldevice.py
-            dd if=/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE} of=/dev/kernel
-        fi
-    fi
-    true
 }
 
 do_rm_work() {

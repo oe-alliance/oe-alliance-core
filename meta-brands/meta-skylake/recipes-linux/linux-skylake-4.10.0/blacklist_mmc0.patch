@@ -1,8 +1,12 @@
+---
+ drivers/mmc/host/sdhci-brcmstb.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
 diff --git a/drivers/mmc/host/sdhci-brcmstb.c b/drivers/mmc/host/sdhci-brcmstb.c
-index dea8398..6a1e8f1 100644
+index 942b42b..b678310 100644
 --- a/drivers/mmc/host/sdhci-brcmstb.c
 +++ b/drivers/mmc/host/sdhci-brcmstb.c
-@@ -147,6 +147,10 @@ static int sdhci_brcmstb_probe(struct platform_device *pdev)
+@@ -71,6 +71,10 @@ static int sdhci_brcmstb_probe(struct platform_device *pdev)
  	struct clk *clk;
  	int res;
  
@@ -10,6 +14,8 @@ index dea8398..6a1e8f1 100644
 +		return -ENODEV;
 +	}
 +
- 	clk = of_clk_get_by_name(dn, "sw_sdio");
+ 	clk = devm_clk_get(&pdev->dev, NULL);
  	if (IS_ERR(clk)) {
  		dev_err(&pdev->dev, "Clock not found in Device Tree\n");
+-- 
+2.7.4
