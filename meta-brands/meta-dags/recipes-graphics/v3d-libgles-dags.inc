@@ -21,11 +21,14 @@ do_compile() {
 
 do_install() {
 	install -d ${D}${libdir}
-	install -m 0755 ${S}/usr/lib/libnxpl.so ${D}${libdir}/
-	install -m 0755 ${S}/usr/lib/libv3ddriver.so ${D}${libdir}/
+	install -m 0755 ${S}/lib/libnxpl.so ${D}${libdir}/
+	install -m 0755 ${S}/lib/libnexus.so ${D}${libdir}/
+	install -m 0755 ${S}/lib/libv3ddriver.so ${D}${libdir}/
 	ln -s libv3ddriver.so ${D}${libdir}/libEGL.so
 	ln -s libv3ddriver.so ${D}${libdir}/libGLESv2.so
-	for d in EGL GLES GLES2 KHR VG; do
+	install -d ${D}/${includedir}
+	install -m 0644 ${S}/include/v3dplatform.h ${D}${includedir}/
+	for d in CL EGL GLES GLES2 GLES3 KHR; do
 		install -d ${D}${includedir}/$d
 		for f in ${S}/include/$d/*.h; do
 			install -m 0644 $f ${D}${includedir}/$d/
@@ -36,7 +39,7 @@ do_install() {
 FILES_${PN} = "/usr/lib/*"
 FILES_${PN}-dev = "/usr/include/*"
 
-RPROVIDES_${PN} = "libnxpl.so libv3ddriver.so libGLESv2.so libEGL.so"
+RPROVIDES_${PN} = "libnxpl.so libnexus.so libv3ddriver.so libGLESv2.so libEGL.so"
 
 INSANE_SKIP_${PN} += "already-stripped dev-so"
 
