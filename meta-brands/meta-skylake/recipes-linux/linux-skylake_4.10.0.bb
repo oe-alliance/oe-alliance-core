@@ -11,7 +11,7 @@ SRC_URI[sha256sum] = "0b53d7cf932da13e4dc81856c4041e409b4c44fbc533ab5c99dcf22ff2
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-MACHINE_KERNEL_PR_append = ".0"
+MACHINE_KERNEL_PR_append = ".1"
 
 # By default, kernel.bbclass modifies package names to allow multiple kernels
 # to be installed in parallel. We revert this change and rprovide the versioned
@@ -49,6 +49,7 @@ kernel_do_install_append() {
 	rm ${D}${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION}
 }
 
+
 pkg_postinst_kernel-image () {
 	if [ "x$D" == "x" ]; then
 		if [ -f /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz ] ; then
@@ -58,6 +59,7 @@ pkg_postinst_kernel-image () {
 	fi
 	true
 }
+
 
 do_rm_work() {
 }
