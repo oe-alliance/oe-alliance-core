@@ -12,7 +12,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'sezam5000hd', '5000-HD' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'sezammarvel', 'Marvel' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'xpeedlx', 'LX-x' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'xpeedlx3', 'LX-3' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'xpeedlxpro', 'Xpeed LX Pro' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'evoslim', 'Slim' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'mbmini', 'Premium Mini' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'mbminiplus', 'Premium Mini Plus' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'mbhybrid', 'Premium Hybrid' , '', d)}\
@@ -38,7 +38,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'sezam5000hd', 'Sezam' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'sezammarvel', 'Sezam' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'xpeedlx', 'GI' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'xpeedlx3', 'GI' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'xpeedlxpro', 'GI' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'evoslim', 'EVO' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'mbmini', 'Miraclebox' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'mbminiplus', 'Miraclebox' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'mbhybrid', 'Miraclebox' , '', d)}\
@@ -64,7 +64,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'sezam5000hd', 'hdx' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'sezammarvel', 'hdp' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'xpeedlx', 'xpeedlx' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'xpeedlx3', 'xpeedlx3' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'xpeedlxpro', 'xpeedlxpro' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'evoslim', 'xpeedlxpro' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'mbmini', 'miraclebox/mini' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'mbminiplus', 'miraclebox/miniplus' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'mbhybrid', 'miraclebox/minihybrid' , '', d)}\
@@ -90,7 +90,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'sezam5000hd', 'mtd1' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'sezammarvel', 'mtd2' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'xpeedlx', 'mtd2' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'xpeedlx3', 'mtd2' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'xpeedlxpro', 'mtd2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'evoslim', 'mtd2' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'mbmini', 'mtd2' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'mbminiplus', 'mtd2' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'mbhybrid', 'mtd2' , '', d)}\
@@ -116,7 +116,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'sezam5000hd', 'mtd2' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'sezammarvel', 'mtd0' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'xpeedlx', 'mtd0' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'xpeedlx3', 'mtd0' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'xpeedlxpro', 'mtd0' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'evoslim', 'mtd0' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'mbmini', 'mtd0' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'mbminiplus', 'mtd0' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'mbhybrid', 'mtd0' , '', d)}\
@@ -142,7 +142,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'sezam5000hd', 'inihdx' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'sezammarvel', 'ini-900' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'xpeedlx', 'inihde' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'xpeedlx3', 'ini-900' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'xpeedlxpro', 'yhgd5034' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'evoslim', 'yhgd5034' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'mbmini', 'inihde' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'mbminiplus', 'inihde2sv' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'mbhybrid', 'inihde2sv' , '', d)}\
