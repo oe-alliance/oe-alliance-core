@@ -25,7 +25,6 @@ ROOTFS_FILE = "rootfs.bin"
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS = "\
     skylake-dvb-modules-${MACHINE} \
-    kernel-vmlinux \
     "
 
 DVBPROVIDER = "kernel"

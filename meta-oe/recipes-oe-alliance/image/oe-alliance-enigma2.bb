@@ -23,10 +23,6 @@ RDEPENDS_${PN} = "\
     tuxbox-common \
     mtd-utils \
     ${@bb.utils.contains('MACHINE', 'dm800', '', 'mtd-utils-ubifs', d)} \
-    ${@bb.utils.contains('MACHINE', 'vusolo4k', 'bzip2', '', d)} \
-    ${@bb.utils.contains('MACHINE', 'vuuno4k', 'bzip2', '', d)} \
-    ${@bb.utils.contains('MACHINE', 'vuultimo4k', 'bzip2', '', d)} \
-    ${@bb.utils.contains('MACHINE', 'sf4008', 'bzip2', '', d)} \
     ${@bb.utils.contains('MACHINE_FEATURES', 'emmc', 'bzip2', '', d)} \
     procps \
     parted \
