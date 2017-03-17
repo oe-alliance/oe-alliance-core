@@ -22,6 +22,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'novaip', 'NOVA IP' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'novatwin', 'NOVA TWIN' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah3ac', 'H3 AC' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah5ac', 'H5 AC' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'zgemmah32tc', 'H3.2TC' , '', d)}\
 "
 
 MACHINE_BRAND = "\
@@ -43,6 +44,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'novaip', 'EVO' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'novatwin', 'EVO' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah3ac', 'Zgemma' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah5ac', 'Zgemma' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'zgemmah32tc', 'Zgemma' , '', d)}\
 "
 
 IMAGEDIR ?= "\
@@ -64,6 +66,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'novaip', 'novaip' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'novatwin', 'novatwin' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah3ac', 'zgemma/h3' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah5ac', 'zgemma/h5' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'zgemmah32tc', 'zgemma/h3' , '', d)}\
 "
 
 MACHINE_DRIVER = "\
@@ -85,6 +88,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'novaip', 'novaip' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'novatwin', 'novatwin' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah3ac', 'h3' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah5ac', 'h5' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'zgemmah32tc', 'h3' , '', d)}\
 "
 
 MTD_KERNEL = "mtd1"
