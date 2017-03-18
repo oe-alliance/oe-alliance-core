@@ -25,6 +25,10 @@ RDEPENDS_${PN} = "\
     packagegroup-base-smbfs-utils \
     hddtemp \
     busybox-cron \
+    exteplayer3 \
+    gstplayer \
+    ffmpeg \
+    enigma2-plugin-systemplugins-serviceapp \   
     python-imaging \
     python-requests \
     python-cfscrape \
