@@ -11,17 +11,15 @@ diff --git a/drivers/mtd/nand/brcmstb_nand.c b/drivers/mtd/nand/brcmstb_nand.c
 index b32a2c1..cf52d64 100644
 --- a/drivers/mtd/nand/brcmstb_nand.c
 +++ b/drivers/mtd/nand/brcmstb_nand.c
-@@ -1617,9 +1617,6 @@ static int brcmstb_nand_probe(struct platform_device *pdev)
  	chip->read_buf = brcmstb_nand_read_buf;
  
  	chip->ecc.mode = NAND_ECC_HW;
 -	chip->ecc.size = 512;
 -	chip->ecc.strength = 2;
--	chip->ecc.layout = &brcmstb_nand_dummy_layout;
  	chip->ecc.read_page = brcmstb_nand_read_page;
  	chip->ecc.read_subpage = brcmstb_nand_read_subpage;
  	chip->ecc.write_page = brcmstb_nand_write_page;
-@@ -1632,23 +1629,32 @@ static int brcmstb_nand_probe(struct platform_device *pdev)
+@@ -1675,22 +1673,31 @@ static int brcmstb_nand_probe(struct platform_device *pdev)
  
  	chip->controller = &ctrl.controller;
  
@@ -52,21 +50,19 @@ index b32a2c1..cf52d64 100644
 +	chip->ecc.size = host->hwcfg.sector_size_1k ? 1024 : 512;
 +	/* only use our internal HW threshold */
 +	mtd->bitflip_threshold = 1;
- 
- 	chip->ecc.layout = brcmstb_choose_ecc_layout(host);
--	if (!chip->ecc.layout) {
--		ret = -ENXIO;
--		goto out;
--	}
-+	if (!chip->ecc.layout)
-+		return -ENXIO;
 +
 +	if (nand_scan_tail(mtd) || chip->scan_bbt(mtd))
 +		return -ENXIO;
-+
- 	/* Update ecclayout info after nand_scan_tail() */
- 	mtd->oobavail = chip->ecc.layout->oobavail;
- 	mtd->ecclayout = chip->ecc.layout;
+ 
+ 	ret = brcmstb_choose_ecc_layout(host);
+-	if (ret) {
+-		goto out;
+-	}
++	if (ret)
++		return -ENXIO;
+ 
+ #if LINUX_VERSION_CODE >= KERNEL_VERSION(3, 0, 0)
+ 	mtd_device_parse_register(mtd, part_probe_types, NULL,
 -- 
 1.9.1
 
