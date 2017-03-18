@@ -128,6 +128,7 @@ require conf/machine/include/soc-family.inc
 DVBMEDIASINK_CONFIG = "--with-wma --with-wmv --with-pcm --with-dts --with-eac3 \
     ${@bb.utils.contains('MACHINE', 'h5', '--with-h265 --with-vb6 --with-vb8 --with-spark' , '', d)} \
     ${@bb.utils.contains('MACHINE', 'h6', '--with-h265 --with-vb6 --with-vb8 --with-spark' , '', d)} \
+    ${@bb.utils.contains('MACHINE', 'h7', '--with-h265 --with-vb6 --with-vb8 --with-vb9 --with-spark' , '', d)} \
     "
 
 PREFERRED_PROVIDER_virtual/kernel = "linux-airdigital"

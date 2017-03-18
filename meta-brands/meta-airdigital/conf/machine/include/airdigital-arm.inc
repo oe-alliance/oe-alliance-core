@@ -10,7 +10,7 @@ DEFAULTTUNE = "cortexa15hf-neon-vfpv4"
 PREFERRED_VERSION_linux-airdigital = "4.10.0"
 PREFERRED_VERSION_linux-libc-headers = "4.10"
 
-IMAGE_CMD_hd-emmc_append = "\
+IMAGE_CMD_airdigital-emmc_append = "\
     mkdir -p ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}; \
     mv ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.emmc.img ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/disk.img; \
     cd ${IMAGE_ROOTFS}; \
