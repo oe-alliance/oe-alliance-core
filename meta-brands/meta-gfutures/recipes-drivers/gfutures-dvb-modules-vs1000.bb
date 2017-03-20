@@ -1,5 +1,5 @@
-KV = "4.7.6"
-SRCDATE = "20170112"
+KV = "4.10.0"
+SRCDATE = "20170309"
 
 require gfutures-dvb-modules.inc
 
