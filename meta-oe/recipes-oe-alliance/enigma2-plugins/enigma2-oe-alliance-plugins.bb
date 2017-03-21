@@ -65,11 +65,8 @@ DEPENDS = "\
     satipclient \
     bluez-hidd \
     ${@bb.utils.contains('MACHINE_FEATURES', 'legacykernel', '' , 'hostapd bridge-utils', d)} \
+    wvdial wvstreams \
     "
-
-# disable build broken
-#    wvdial wvstreams
-
 
 DESCRIPTION_enigma2-plugin-systemplugins-audioeffect = "Audio Effect setup"
 DESCRIPTION_enigma2-plugin-extensions-btdevicesmanager = "this is bt devices manger to pair e.x keyboard or mouse"
@@ -133,7 +130,7 @@ inherit autotools-brokensep gitpkgv pythonnative
 SRCREV = "${AUTOREV}"
 PV = "${IMAGE_VERSION}+git${SRCPV}"
 PKGV = "${IMAGE_VERSION}+git${GITPKGV}"
-PR = "r4"
+PR = "r5"
 
 SRC_URI = "${OEA_PLUGINS_URI}"
 
