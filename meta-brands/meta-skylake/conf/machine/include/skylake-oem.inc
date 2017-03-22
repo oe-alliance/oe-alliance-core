@@ -32,6 +32,7 @@ DVBSKYPROVIDER = "kernel"
 
 MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS = "\
     kernel-module-cdfs \
+    ${@bb.utils.contains('MACHINE_FEATURES', 'v3d-nxpl', 'skylake-v3ddriver-${MACHINE}', '',d)} \
     "
 
 MACHINE_EXTRA_RRECOMMENDS = " \
@@ -46,6 +47,9 @@ TARGET_ARCH = "mipsel"
 DEFAULTTUNE = "mips32el"
 
 PREFERRED_PROVIDER_virtual/kernel = "linux-skylake"
+PREFERRED_PROVIDER_virtual/egl = "skylake-v3ddriver-${MACHINE}" 
+PREFERRED_PROVIDER_virtual/libgles2 = "skylake-v3ddriver-${MACHINE}"
+PREFERRED_PROVIDER_virtual/kodi = "stb-kodi-${MACHINE}"
 
 KERNEL_IMAGETYPE = "vmlinux"
 KERNEL_OUTPUT = "${KERNEL_IMAGETYPE}"
