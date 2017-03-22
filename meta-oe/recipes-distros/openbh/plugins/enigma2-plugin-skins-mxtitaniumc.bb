@@ -1,4 +1,4 @@
-SUMMARY = "Enigma2 Skin MX_TITANIUM"
+SUMMARY = "Enigma2 Skin MX_TITANIUM_C"
 MAINTAINER = "BlackHole team"
 SECTION = "base"
 PRIORITY = "required"
