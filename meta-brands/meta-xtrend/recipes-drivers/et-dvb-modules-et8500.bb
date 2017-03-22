@@ -6,5 +6,5 @@ SRC_URI = "http://www.et-view.com/img_up/shop_pds/bh190/Img_Xtrend/${MACHINE}-dr
 
 require et-dvb-modules.inc
 
-SRC_URI[md5sum] = "d5f3d995129cdb63ac733aa46c2c23ba"
-SRC_URI[sha256sum] = "d5933be0da1883c0033eac91d0575541d66e7bd47f37b1ff0002bebe6affcdd8"
+SRC_URI[md5sum] = "f5132bb0ae5c32b28bec8163c3651877"
+SRC_URI[sha256sum] = "4e461df99b05eeb078a07a36abdc7d143c573e8dbcca15d70a1c124bdc22e862"
