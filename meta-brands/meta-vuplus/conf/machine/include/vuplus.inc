@@ -19,7 +19,6 @@ MACHINE_EXTRA_RRECOMMENDS = " \
     vuplus-shutdown \
     gstreamer1.0-plugin-dvbmediasink \
     gstreamer1.0-libav \
-    gstreamer1.0-plugins-bad-dtsdec \
     "
 
 include conf/machine/include/autoload-filesystems.inc

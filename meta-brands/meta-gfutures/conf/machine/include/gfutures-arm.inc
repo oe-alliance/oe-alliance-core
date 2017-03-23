@@ -7,8 +7,8 @@ IMAGE_ROOTFS_SIZE ?= "294912"
 TARGET_ARCH = "arm"
 DEFAULTTUNE = "cortexa15hf-neon-vfpv4"
 
-PREFERRED_VERSION_linux-gfutures = "4.7.4"
-PREFERRED_VERSION_linux-libc-headers = "4.7"
+PREFERRED_VERSION_linux-gfutures = "4.10.0"
+PREFERRED_VERSION_linux-libc-headers = "4.10"
 
 IMAGE_CMD_hd-emmc_append = "\
     mkdir -p ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}; \

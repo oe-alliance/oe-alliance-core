@@ -19,6 +19,7 @@ DEPENDS = " \
     ${@bb.utils.contains("DISTRO_NAME", "openspa", "avahi libudfread", "", d)} \
     ${@bb.utils.contains("DISTRO_NAME", "opendroid", "avahi libudfread", "", d)} \
     ${@bb.utils.contains("DISTRO_NAME", "opendhdf", "avahi libudfread", "", d)} \
+    ${@bb.utils.contains("DISTRO_NAME", "openeight", "avahi libudfread", "", d)} \
     python python-imaging python-twisted python-wifi \
     swig-native \
     tuxtxt-enigma2 \
@@ -271,6 +272,9 @@ SRC_URI_append_wetekplay2 = " \
 
 SRC_URI_append_odroidc2 = " \
     ${@bb.utils.contains("DISTRO_NAME", "openatv", "file://0001-have-64-bit-action-long-int-update.patch", "", d)} \
+    "
+SRC_URI_append_aarch64 = " \
+  ${@bb.utils.contains("DISTRO_NAME", "openvix", "file://0001-have-64-bit-action-long-int-update.patch", "", d)} \
     "
 
 SRC_URI_append_openhdf = " \

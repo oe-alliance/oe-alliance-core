@@ -1,6 +1,6 @@
 inherit kernel machine_kernel_pr
 
-MACHINE_KERNEL_PR_append = ".21"
+MACHINE_KERNEL_PR_append = ".22"
 
 PATCHREV = "9321e2fc1ab885c955d9134f4c9b5c9b5a4e56b3"
 PATCHLEVEL = "28"
@@ -17,6 +17,11 @@ SRC_URI = " \
     file://0001-dm900-workarounds-for-boot-and-shutdown-problems-wit.patch \
     file://0001-cifs-Allow-directIO-read-write-during-cache-strict.patch \
     file://defconfig \
+    file://0001-Support-TBS-USB-drivers.patch \
+    file://0001-STV-Add-PLS-support.patch \
+    file://0001-STV-Add-SNR-Signal-report-parameters.patch \
+    file://0001-stv090x-optimized-TS-sync-control.patch \
+    file://blindscan2.patch \
 "
 
 SRC_URI[kernel.md5sum] = "b621207b3f6ecbb67db18b13258f8ea8"

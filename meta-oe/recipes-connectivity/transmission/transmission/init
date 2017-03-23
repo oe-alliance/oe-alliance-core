@@ -1,75 +1,71 @@
 #!/bin/sh
+### BEGIN INIT INFO
+# Provides:          transmission-daemon
+# Required-Start:    networking
+# Required-Stop:     networking
+# Default-Start:     2 3 5
+# Default-Stop:      0 1 6
+# Short-Description: Start the transmission BitTorrent daemon client.
+### END INIT INFO
 
-# ----- CONFIGURATION -----
-
-LINE="--------------------------------------"
-TRANSMISSION_ON=0
-NAME="transmission-daemon"
-DAEMON="/usr/bin/transmission-daemon"
-DIRECTORY="/hdd/transmission"
+DIRECTORY="/media/hdd/transmission"
+DOWNLOAD_DIR="${DIRECTORY}/download"
+CONFIG_DIR="${DIRECTORY}/config"
+WATCH_DIR="${DIRECTORY}/watch"
 RPC_PORT=9091
-DOWNLOAD_DIR="/hdd/transmission/download"
-CONFIG_DIR="/hdd/transmission/config"
-WATCH_DIR="/hdd/transmission/watch"
 USER="root"
-PASSWORD="dreambox"
-ARGS="-c $WATCH_DIR -g $CONFIG_DIR -a *.*.*.* -w $DOWNLOAD_DIR -p $RPC_PORT -t -u $USER -v $PASSWORD"
-INET_ADDR=`awk '/address/{print$2}' /etc/network/interfaces`
+PASSWORD="enigma2"
+ALLOWED="*.*.*.*,*:*:*:*:*:*:*:*"
+[ -f /etc/default/transmission-daemon ] && . /etc/default/transmission-daemon
+NAME="transmission-daemon"
+DAEMON="/bin/nice -n 9 /usr/bin/transmission-daemon"
+ARGS="-c $WATCH_DIR -g $CONFIG_DIR -r :: -a $ALLOWED -w $DOWNLOAD_DIR -p $RPC_PORT -t -u $USER -v $PASSWORD"
+
+[ -z "$DAEMON_USER" ] || SSDOPTIONS="--chuid $DAEMON_USER:$DAEMON_GROUP"
+
 PATH=/usr/sbin:/usr/bin:/sbin:/bin
-TRANSMISSION_WEB_HOME="/usr/share/transmission/web/"
 
-# ----- END OF CONFIGURATION -----
-
-if [ ! -d $DIRECTORY ] ; then mkdir $DIRECTORY; fi
-if [ ! -d $DOWNLOAD_DIR ] ; then mkdir $DOWNLOAD_DIR; fi
-if [ ! -d $CONFIG_DIR ] ; then mkdir $CONFIG_DIR; fi
-if [ ! -d $WATCH_DIR ] ; then mkdir $WATCH_DIR; fi
+if [ ! -d $DOWNLOAD_DIR ] ; then mkdir -p $DOWNLOAD_DIR; fi
+if [ ! -d $CONFIG_DIR ] ; then mkdir -p $CONFIG_DIR; fi
+if [ ! -d $WATCH_DIR ] ; then mkdir -p $WATCH_DIR; fi
 
 
 case $1 in
 	start)
-		echo -n "starting $NAME... "
-		echo
-		start-stop-daemon -S -b -n $NAME -a $DAEMON -- $ARGS 
-		sleep 2
-		echo
-		echo $LINE
-		echo "Transmission Started !!!"
-		echo "Open your browser at http://ip-from-box:9091"
-		echo $LINE
-		echo
-	;;
-        stop)
-		echo
-		echo -n "stopping $NAME... "
-		killall $NAME
-		echo "done."
-	;;
+		echo  "Starting $NAME"
+		start-stop-daemon $SSDOPTIONS -S -b -n $NAME -a $DAEMON -- $ARGS
+		;;
+	stop)
+		echo  "Stopping $NAME"
+		start-stop-daemon --stop --quiet --exec /usr/bin/transmission-daemon
+		;;
 	restart)
+		echo -n "Stopping $NAME"
+		start-stop-daemon --stop --quiet --exec /usr/bin/transmission-daemon
+		for i in 1 2 3 ; do
+			sleep 1
+			echo -n "."
+		done
 		echo
-		echo -n "restarting $NAME... "
-		$0 stop
-		sleep 5
-		$0 start
-		echo
-	;;
+		echo  "Restarting $NAME"
+		start-stop-daemon $SSDOPTIONS -S -b -n $NAME -a $DAEMON -- $ARGS
+		;;
         autostart | enable)
 		echo
-        	update-rc.d transmissiond defaults 99
+        	update-rc.d transmission-daemon defaults 60
 		sleep 2
 		echo
-	;;
+		;;
         noautostart | disable)
 		echo
-        	update-rc.d -f transmissiond remove
+        	update-rc.d -f transmission-daemon remove
 		sleep 2
 		echo
-	;;
+		;;
 
 	*)
-	echo " "
-	echo "Options: $0 {start|restart|stop|enable|disable}"
-	echo " "
+		echo "Usage: $0 {start|restart|stop|enable|disable}"
+		exit 1
 esac
 
 exit 0

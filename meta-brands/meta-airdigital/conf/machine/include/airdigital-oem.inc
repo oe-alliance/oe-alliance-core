@@ -22,6 +22,10 @@ ${@bb.utils.contains('MACHINEBUILD', 'novaip', 'NOVA IP' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'novatwin', 'NOVA TWIN' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah3ac', 'H3 AC' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah5ac', 'H5 AC' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'zgemmah32tc', 'H3.2TC' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'zgemmah7', 'H7' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'zgemmah52splus', 'H5.2S PLUS' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'zgemmah2splus', 'H.2S PLUS' , '', d)}\
 "
 
 MACHINE_BRAND = "\
@@ -43,6 +47,10 @@ ${@bb.utils.contains('MACHINEBUILD', 'novaip', 'EVO' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'novatwin', 'EVO' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah3ac', 'Zgemma' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah5ac', 'Zgemma' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'zgemmah32tc', 'Zgemma' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'zgemmah7', 'Zgemma' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'zgemmah52splus', 'Zgemma' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'zgemmah2splus', 'Zgemma' , '', d)}\
 "
 
 IMAGEDIR ?= "\
@@ -64,6 +72,10 @@ ${@bb.utils.contains('MACHINEBUILD', 'novaip', 'novaip' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'novatwin', 'novatwin' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah3ac', 'zgemma/h3' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah5ac', 'zgemma/h5' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'zgemmah32tc', 'zgemma/h3' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'zgemmah7', 'zgemma/h7' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'zgemmah52splus', 'zgemma/h5' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'zgemmah2splus', 'zgemma/h3' , '', d)}\
 "
 
 MACHINE_DRIVER = "\
@@ -85,12 +97,11 @@ ${@bb.utils.contains('MACHINEBUILD', 'novaip', 'novaip' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'novatwin', 'novatwin' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah3ac', 'h3' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah5ac', 'h5' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'zgemmah32tc', 'h3' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'zgemmah7', 'h7' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'zgemmah52splus', 'h5' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'zgemmah2splus', 'h3' , '', d)}\
 "
-
-MTD_KERNEL = "mtd1"
-MTD_ROOTFS = "mtd2"
-KERNEL_FILE = "kernel.bin"
-ROOTFS_FILE = "rootfs.bin"
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS = "\
     airdigital-dvb-modules-${MACHINE_DRIVER} \
@@ -101,64 +112,33 @@ DVBSKYPROVIDER = "kernel"
 
 MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS = "\
     kernel-module-cdfs \
+    ${@bb.utils.contains('MACHINE_FEATURES', 'v3d', 'airdigital-v3ddriver-${MACHINE}', '',d)} \
+    ${@bb.utils.contains('MACHINE_FEATURES', 'qtegls', 'airdigital-qteglfs-platform', '',d)} \
+    ${@bb.utils.contains('MACHINE_FEATURES', 'swap', 'airdigital-swapcreate', '',d)} \
     "
 
 MACHINE_EXTRA_RRECOMMENDS = " \
     gstreamer1.0-plugin-dvbmediasink \
+    gstreamer1.0-libav \
     "
 
 include conf/machine/include/autoload-filesystems.inc
+require conf/machine/include/soc-family.inc
 
 DVBMEDIASINK_CONFIG = "--with-wma --with-wmv --with-pcm --with-dts --with-eac3 \
     ${@bb.utils.contains('MACHINE', 'h5', '--with-h265 --with-vb6 --with-vb8 --with-spark' , '', d)} \
     ${@bb.utils.contains('MACHINE', 'h6', '--with-h265 --with-vb6 --with-vb8 --with-spark' , '', d)} \
+    ${@bb.utils.contains('MACHINE', 'h7', '--with-h265 --with-vb6 --with-vb8 --with-vb9 --with-spark' , '', d)} \
     "
-
-TARGET_ARCH = "mipsel"
-DEFAULTTUNE = "mips32el"
 
 PREFERRED_PROVIDER_virtual/kernel = "linux-airdigital"
+PREFERRED_PROVIDER_virtual/egl = "airdigital-v3ddriver-${MACHINE}" 
+PREFERRED_PROVIDER_virtual/libgles2 = "airdigital-v3ddriver-${MACHINE}"
+PREFERRED_PROVIDER_virtual/kodi = "stb-kodi-${MACHINE}"
 
-KERNEL_IMAGETYPE = "vmlinux"
-KERNEL_OUTPUT = "${KERNEL_IMAGETYPE}"
-KERNEL_CONSOLE = "ttyS0,115200n8"
-
-IMAGE_FSTYPES ?= "ubi"
-
-IMAGE_CMD_ubi_prepend = " \
-    rm -rf ${IMAGE_ROOTFS}/boot/*; \
-    rm -rf ${IMAGE_ROOTFS}/tmp/*; \
-    "
-
-IMAGE_CMD_ubi_append = "\
-    mkdir -p ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}; \
-    cp ${DEPLOY_DIR_IMAGE}/splash.bin ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/splash.bin; \
-    mv ${IMGDEPLOYDIR}/${IMAGE_NAME}.rootfs.ubi ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/${ROOTFS_FILE}; \
-    gzip -9c ${DEPLOY_DIR_IMAGE}/vmlinux-${MACHINE}.bin > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/${KERNEL_FILE}; \
-    echo ${IMAGE_VER_STRING} > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/imageversion; \
-    ${@bb.utils.contains('MACHINE', 'i55', \
-    'echo "dont change this file" > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/force;' , \
-    'echo "rename this file to force to force an update without confirmation" > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/noforce;', d)} \
-    cd ${DEPLOY_DIR_IMAGE}; \
-    zip ${IMAGE_NAME}_usb.zip ${IMAGEDIR}/*; \
-    rm -f ${DEPLOY_DIR_IMAGE}/*.ubi; \
-    rm -f ${DEPLOY_DIR_IMAGE}/*.ubifs; \
-    rm -f ${DEPLOY_DIR_IMAGE}/*.manifest; \
-    rm -f ${DEPLOY_DIR_IMAGE}/.ubifs; \
-    rm -f ${DEPLOY_DIR_IMAGE}/.manifest; \
-    rm -Rf ${IMAGEDIR}; \
-    "
-
-
-MACHINE_FEATURES += "3dtv alsa hdmicec switchoff bootsplash omb boxmodel feature1 blindscan-tbs"
-
-BOOTLOGO_FILENAME = "splash.bin"
-
-require conf/machine/include/tune-mips32.inc
-require conf/machine/include/soc-family.inc
+MACHINE_FEATURES += "3dtv alsa hdmicec switchoff blindscan-tbs linuxwifi"
 
 OEM_ARCH = "${MACHINEBUILD}"
 
 # Add "MACHINEBUILD" override for recipes
 MACHINEOVERRIDES =. "${@['', '${MACHINEBUILD}:']['${MACHINEBUILD}' != '']}"
-
