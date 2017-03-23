@@ -144,5 +144,4 @@ RRECOMMENDS_${PN}_append_vusolo2 = "enigma2-plugin-extensions-hbbtv"
 RRECOMMENDS_${PN}_append_vuduo = "enigma2-plugin-extensions-hbbtv"
 RRECOMMENDS_${PN}_append_vuduo2 = "enigma2-plugin-extensions-hbbtv"
 RRECOMMENDS_${PN}_append_vuzero = "enigma2-plugin-extensions-hbbtv"
-RRECOMMENDS_${PN}_append_hd2400 = "opengl-hd"
-RRECOMMENDS_${PN}_append_formuler1 = "opengl-hd"
+
