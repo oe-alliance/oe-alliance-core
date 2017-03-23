@@ -14,6 +14,8 @@ PR = "r${PR_NUM}"
 
 IMAGE_INSTALL = "openvix-base"
 
+DEPENDS = "zip-native"
+
 export IMAGE_BASENAME = "openvix-image"
 IMAGE_LINGUAS = ""
 

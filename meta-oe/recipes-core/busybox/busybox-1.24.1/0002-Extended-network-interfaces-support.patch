@@ -50,14 +50,13 @@
  static int FAST_FUNC loopback_up6(struct interface_defn_t *ifd, execfn *exec)
  {
  # if ENABLE_FEATURE_IFUPDOWN_IP
-@@ -383,36 +423,222 @@
+@@ -383,34 +423,219 @@
  # endif
  }
  
 -static int FAST_FUNC manual_up_down6(struct interface_defn_t *ifd UNUSED_PARAM, execfn *exec UNUSED_PARAM)
 +static int FAST_FUNC auto_up6(struct interface_defn_t *ifd, execfn *exec)
- {
--	return 1;
++{
 +	unsigned i;
 +	char ra_cmd[60];
 +	int result;
@@ -88,11 +87,11 @@
 +		bb_error_msg("no rdns6 clients found");
 +	result += res;
 +	return ((result >= 3) ? 4 : 0);
- }
- 
--static int FAST_FUNC static_up6(struct interface_defn_t *ifd, execfn *exec)
++}
++
 +static int FAST_FUNC auto_down6(struct interface_defn_t *ifd, execfn *exec)
-+{
+ {
+-	return 1;
 +	unsigned i;
 +	int result;
 +	int res;
@@ -111,19 +110,20 @@
 +	usleep(100000);
 +	result += static_down(ifd, exec);
 +	return ((result == 5) ? 5 : 0);
-+}
-+
+ }
+ 
+-static int FAST_FUNC static_up6(struct interface_defn_t *ifd, execfn *exec)
 +static int FAST_FUNC manual_up6(struct interface_defn_t *ifd, execfn *exec)
-+{
-+	int result;
+ {
+ 	int result;
 +	result = execute("sysctl -e -q -w net.ipv6.conf.%iface%.autoconf=0", ifd, exec);
 +	result += execute("sysctl -e -q -w net.ipv6.conf.%iface%.accept_ra=0", ifd, exec);
 +	return ((result == 2) ? 2 : 0);
 +}
 +
 +static int FAST_FUNC manual_down6(struct interface_defn_t *ifd, execfn *exec)
- {
- 	int result;
++{
++	int result;
 +	result = execute("sysctl -e -q -w net.ipv6.conf.%iface%.autoconf=$(sysctl -n net.ipv6.conf.default.autoconf)", ifd, exec);
 +	result += execute("sysctl -e -q -w net.ipv6.conf.%iface%.accept_ra=$(sysctl -n net.ipv6.conf.default.accept_ra)", ifd, exec);
 +	return ((result == 2) ? 2 : 0);
@@ -155,14 +155,15 @@
  # if ENABLE_FEATURE_IFUPDOWN_IP
 -	result = execute("ip addr add %address%/%netmask% dev %iface%[[ label %label%]]", ifd, exec);
  	result += execute("ip link set[[ mtu %mtu%]][[ addr %hwaddress%]] %iface% up", ifd, exec);
--	/* Was: "[[ ip ....%gateway% ]]". Removed extra spaces w/o checking */
--	result += execute("[[ip route add ::/0 via %gateway%]][[ metric %metric%]]", ifd, exec);
+-	/* Reportedly, IPv6 needs "dev %iface%", but IPv4 does not: */
+-	result += execute("[[ip route add ::/0 via %gateway% dev %iface%]][[ metric %metric%]]", ifd, exec);
  # else
 -	result = execute("ifconfig %iface%[[ media %media%]][[ hw %hwaddress%]][[ mtu %mtu%]] up", ifd, exec);
 -	result += execute("ifconfig %iface% add %address%/%netmask%", ifd, exec);
 -	result += execute("[[route -A inet6 add ::/0 gw %gateway%[[ metric %metric%]]]]", ifd, exec);
 +	result += execute("ifconfig %iface%[[ media %media%]][[ hw %hwaddress%]][[ mtu %mtu%]] up", ifd, exec);
  # endif
+-	return ((result == 3) ? 3 : 0);
 +	unsigned i;
 +	for (i = 0; i < ARRAY_SIZE(ext_dhcp6_clients); i++) {
 +		if (executable_exists(ext_dhcp6_clients[i].name)) {
@@ -173,10 +174,11 @@
 +	if (!res) bb_error_msg("no dhcpv6 clients found");
 +	result += res;
 +	return ((result == 4) ? 4 : 0);
-+}
-+
+ }
+ 
+-static int FAST_FUNC static_down6(struct interface_defn_t *ifd, execfn *exec)
 +static int FAST_FUNC dhcp_down6(struct interface_defn_t *ifd, execfn *exec)
-+{
+ {
 +	int result;
 +	unsigned i;
 +
@@ -193,12 +195,11 @@
 +	   and it may come back up because udhcpc is still shutting down */
 +	usleep(100000);
 +	result += static_down(ifd, exec);
- 	return ((result == 3) ? 3 : 0);
- }
- 
--static int FAST_FUNC static_down6(struct interface_defn_t *ifd, execfn *exec)
++	return ((result == 3) ? 3 : 0);
++}
++
 +static int FAST_FUNC static_up6(struct interface_defn_t *ifd, execfn *exec)
- {
++ {
 +	char autoconf_cmd[60];
 +	char ra_cmd[60];
 +	int result;
@@ -281,11 +282,8 @@
 +	return ((result == 3) ? 3 : 0);
  }
  
-+
  # if ENABLE_FEATURE_IFUPDOWN_IP
- static int FAST_FUNC v4tunnel_up(struct interface_defn_t *ifd, execfn *exec)
- {
-@@ -427,7 +653,11 @@
+@@ -428,7 +653,11 @@
  
  static int FAST_FUNC v4tunnel_down(struct interface_defn_t * ifd, execfn * exec)
  {
@@ -298,7 +296,7 @@
  }
  # endif
  
-@@ -435,8 +665,10 @@
+@@ -436,8 +665,10 @@
  # if ENABLE_FEATURE_IFUPDOWN_IP
  	{ "v4tunnel" , v4tunnel_up     , v4tunnel_down   , },
  # endif
@@ -310,7 +308,7 @@
  	{ "loopback" , loopback_up6    , loopback_down6  , },
  };
  
-@@ -467,7 +699,7 @@
+@@ -468,7 +699,7 @@
  {
  # if ENABLE_FEATURE_IFUPDOWN_IP
  	int result;
@@ -319,7 +317,7 @@
  	result += execute("ip link set %iface% down", ifd, exec);
  	return ((result == 2) ? 2 : 0);
  # else
-@@ -497,22 +729,6 @@
+@@ -498,22 +729,6 @@
  # endif
  }
  
@@ -342,4 +340,3 @@
  # if ENABLE_FEATURE_IFUPDOWN_EXTERNAL_DHCP
  struct dhcp_client_t {
  	const char *name;
-

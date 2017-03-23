@@ -6,7 +6,7 @@ RDEPENDS_${PN} = "${@bb.utils.contains("GST_VERSION", "1.0", "gstreamer1.0-plugi
 
 require conf/license/license-gplv2.inc
 
-inherit gitpkgv pythonnative
+inherit gitpkgv pythonnative gettext
 SRCREV = "${AUTOREV}"
 PV = "4.0.+git${SRCPV}"
 PKGV = "${GITPKGVTAG}"

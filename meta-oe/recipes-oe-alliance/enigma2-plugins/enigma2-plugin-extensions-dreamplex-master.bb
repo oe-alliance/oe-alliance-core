@@ -3,7 +3,7 @@ MAINTAINER = "Don Davici"
 
 require conf/license/license-gplv2.inc
 
-inherit autotools-brokensep gitpkgv pythonnative
+inherit autotools-brokensep gitpkgv pythonnative gettext
 
 SRCREV = "${AUTOREV}"
 PV = "2.1.3+git${SRCPV}"

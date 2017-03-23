@@ -11,6 +11,7 @@ SRC_URI = "http://www.jspenguin.org/software/${PN}/${PN}-${PV}.tar.gz \
     file://defaultdevicesr0.patch \
     "
 
+inherit pkgconfig
 
 do_install() {
     install -d ${D}/usr/bin

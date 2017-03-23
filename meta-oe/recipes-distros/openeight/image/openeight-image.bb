@@ -10,6 +10,8 @@ PV = "${IMAGE_VERSION}"
 PR = "r${DATE}"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
+DEPENDS = "zip-native"
+
 PR[vardepsexclude] += "DATE"
 
 IMAGE_INSTALL = "openeight-base"

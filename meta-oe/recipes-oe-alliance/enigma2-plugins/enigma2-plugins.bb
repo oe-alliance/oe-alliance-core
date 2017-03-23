@@ -9,7 +9,7 @@ PROVIDES = "${PN} \
     enigma2-plugin-extensions-fancontrol2 \
     "
 
-inherit autotools-brokensep gitpkgv pythonnative pkgconfig
+inherit autotools-brokensep gitpkgv pythonnative pkgconfig gettext
 
 PV = "${IMAGE_VERSION}+git${SRCPV}"
 PKGV = "${GITPKGVTAG}"

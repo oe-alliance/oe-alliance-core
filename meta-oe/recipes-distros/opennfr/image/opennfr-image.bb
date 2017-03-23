@@ -12,6 +12,8 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PR[vardepsexclude] += "DATE"
 
+DEPENDS = "zip-native"
+
 IMAGE_INSTALL = " \
     opennfr-base \
     packagegroup-base-smbfs \

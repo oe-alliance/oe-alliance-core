@@ -5,7 +5,7 @@ PRIORITY = "optional"
 
 require conf/license/license-gplv2.inc
 
-inherit gitpkgv
+inherit gitpkgv gettext
 SRCREV = "${AUTOREV}"
 PV = "0.2.+git${SRCPV}"
 PKGV = "${GITPKGVTAG}"

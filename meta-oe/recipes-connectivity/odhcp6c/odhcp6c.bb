@@ -2,6 +2,7 @@ SUMMARY = "Openwrt DHCPv6 Client"
 HOMEPAGE = "https://git.lede-project.org/?p=project/odhcp6c.git;a=summary"
 LICENSE = "GPLv2"
 require conf/license/license-gplv2.inc
+DEPENDS = "cmake-native"
 
 inherit gitpkgv
 

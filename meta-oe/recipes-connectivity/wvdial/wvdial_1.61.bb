@@ -7,6 +7,8 @@ LIC_FILES_CHKSUM = "file://COPYING.LIB;md5=55ca817ccb7d5b5b66355690e9abc605"
 DEPENDS = "wvstreams"
 RDEPENDS_${PN} = "ppp"
 
+inherit pkgconfig
+
 SRC_URI = "http://${BPN}.googlecode.com/files/${BP}.tar.bz2 \
            file://typo_pon.wvdial.1.patch \
           "

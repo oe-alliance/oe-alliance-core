@@ -9,7 +9,7 @@ INC_PR = "r3"
 
 SRC_URI = "http://downloads.xiph.org/releases/theora/libtheora-${PV}.tar.bz2" 
 
-inherit autotools
+inherit autotools pkgconfig
 
 EXTRA_OECONF = "--disable-examples"
 

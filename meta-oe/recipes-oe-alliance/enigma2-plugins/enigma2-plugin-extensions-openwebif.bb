@@ -22,7 +22,7 @@ RDEPENDS_${PN} = "\
 	oe-alliance-branding \
 	"
 
-inherit gitpkgv distutils-openplugins
+inherit gitpkgv distutils-openplugins gettext
 
 DISTUTILS_INSTALL_ARGS = "--root=${D} --install-lib=/usr/lib/enigma2/python/Plugins"
 

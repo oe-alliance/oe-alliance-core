@@ -15,7 +15,7 @@ DESCRIPTION_enigma2-plugin-extensions-ushare = "UPnP media server"
 RDEPENDS_enigma2-plugin-extensions-ushare = "ushare enigma2"
 RDEPENDS_enigma2-plugin-pli-softcamsetup = "enigma2"
 
-inherit gitpkgv
+inherit gitpkgv gettext
 
 PV = "2.0+git${SRCPV}"
 PKGV = "${GITPKGVTAG}"

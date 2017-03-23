@@ -4,7 +4,7 @@ LICENSE = "GPLv2"
 
 DEPENDS = "alsa-lib openssl"
 
-inherit gitpkgv
+inherit gitpkgv pkgconfig
 
 PV = "1.0+git${SRCPV}"
 PKGV = "${GITPKGVTAG}"

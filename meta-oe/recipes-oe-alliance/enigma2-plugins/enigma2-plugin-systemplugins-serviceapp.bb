@@ -13,7 +13,7 @@ SRC_URI = "git://github.com/mx3L/serviceapp.git;branch=master"
 
 S = "${WORKDIR}/git"
 
-inherit autotools gitpkgv pythonnative pkgconfig
+inherit autotools gitpkgv pythonnative pkgconfig gettext
 
 CXXFLAGS += " -std=gnu++98"
 

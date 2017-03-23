@@ -14,7 +14,7 @@ S = "${WORKDIR}/ushare-${PV}"
 
 PR = "r3"
 
-inherit autotools-brokensep update-rc.d
+inherit autotools-brokensep pkgconfig update-rc.d
 
 # the configure script is hand-crafted, it rejects some of the usual
 # configure arguments

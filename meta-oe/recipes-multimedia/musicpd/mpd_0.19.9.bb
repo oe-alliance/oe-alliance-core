@@ -21,7 +21,7 @@ SRC_URI = "git://git.musicpd.org/master/mpd.git;protocol=git \
 
 S = "${WORKDIR}/git"
 
-inherit autotools update-rc.d
+inherit autotools pkgconfig update-rc.d
 INITSCRIPT_NAME = "mpd"
 
 # Setting --enable-mpd-{mad,id3tag} causes local caches of the libraries to
