@@ -1,1 +1,0 @@
-DEPENDS += " python-setuptools-native"
