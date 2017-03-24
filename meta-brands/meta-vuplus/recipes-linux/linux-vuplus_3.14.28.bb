@@ -4,7 +4,7 @@ SECTION = "kernel"
 
 MODULE = "linux-3.14.28"
 
-MACHINE_KERNEL_PR_append = ".7"
+MACHINE_KERNEL_PR_append = ".8"
 
 inherit kernel machine_kernel_pr
 
