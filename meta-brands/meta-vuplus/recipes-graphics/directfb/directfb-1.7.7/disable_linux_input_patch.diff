@@ -1,0 +1,15 @@
+diff --git a/inputdrivers/linux_input/linux_input.c b/inputdrivers/linux_input/linux_input.c
+index 2d5d8fe..dd419f9 100644
+--- a/inputdrivers/linux_input/linux_input.c
++++ b/inputdrivers/linux_input/linux_input.c
+@@ -1911,8 +1911,10 @@ driver_open_device( CoreInputDevice  *device,
+           goto driver_open_device_error;
+      }
+ 
++if (getenv("DISABLE_LINUX_INPUT") == 0) {
+      /* start input thread */
+      data->thread = direct_thread_create( DTT_INPUT, linux_input_EventThread, data, "Linux Input" );
++}
+ 
+      /* set private data pointer */
+      *driver_data = data;
