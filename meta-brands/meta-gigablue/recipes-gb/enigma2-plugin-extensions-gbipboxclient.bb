@@ -6,7 +6,7 @@ PACKAGE_ARCH = "all"
 
 require conf/license/license-gplv2.inc
 
-inherit gitpkgv pythonnative
+inherit gitpkgv pythonnative autotools-brokensep gettext 
 
 SRCREV = "${AUTOREV}"
 PV = "1.0+git${SRCPV}"
@@ -17,8 +17,6 @@ PR = "r0"
 SRC_URI="git://github.com/openmips/gbremote-client.git"
 
 S = "${WORKDIR}/git"
-
-inherit autotools-brokensep
 
 DEPENDS = "python"
 
