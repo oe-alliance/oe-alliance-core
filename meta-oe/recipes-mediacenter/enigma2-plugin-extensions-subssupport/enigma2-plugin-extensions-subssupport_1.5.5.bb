@@ -15,7 +15,7 @@ S = "${WORKDIR}/git"
 FILES_${PN} = "${libdir}/enigma2/python/Plugins/Extensions/SubsSupport \
 ${localstatedir}/lib/subssupport"
 
-inherit autotools-brokensep
+inherit autotools-brokensep gettext
 
 do_install_append() {
     install -d ${D}${localstatedir}/lib/subssupport
