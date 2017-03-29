@@ -12,8 +12,6 @@ PR .= "-r0"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-DEPENDS = "zip-native"
-
 do_rootfs[deptask] = "do_rm_work"
 
 IMAGE_INSTALL = "openmips-base"

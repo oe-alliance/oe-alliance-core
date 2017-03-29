@@ -10,8 +10,6 @@ PR_NUM = "${@bb.utils.contains("DISTRO_TYPE", "release", "${BUILD_VERSION}.000",
 PV = "${IMAGE_VERSION}"
 PR = "r${PR_NUM}"
 
-DEPENDS = "zip-native"
-
 IMAGE_INSTALL = "opendroid-base \
     ${@bb.utils.contains("MACHINE_FEATURES", "singlecore", "", \
     " \

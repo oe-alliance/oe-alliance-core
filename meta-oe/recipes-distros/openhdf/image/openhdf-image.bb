@@ -12,8 +12,6 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PR[vardepsexclude] += "DATE"
 
-DEPENDS = "zip-native"
-
 IMAGE_INSTALL = "openhdf-base \
     ${@bb.utils.contains("MACHINE_FEATURES", "dvbc-only", "", "enigma2-plugin-settings-defaultsat", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "singlecore", "", \

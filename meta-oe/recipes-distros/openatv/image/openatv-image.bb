@@ -10,8 +10,6 @@ PV = "${IMAGE_VERSION}"
 PR = "${BUILD_VERSION}"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-DEPENDS = "zip-native"
-
 do_rootfs[deptask] = "do_rm_work"
 
 IMAGE_INSTALL = "openatv-base \
