@@ -32,18 +32,12 @@ inherit image
 
 
 rootfs_postprocess() {
-    curdir=$PWD
-
     if [ -f ~/bin/parser.sh ]; then
         cp ~/bin/parser.sh .
         ./parser.sh ${MACHINEBUILD} ${IMAGE_ROOTFS}
         rm -rf parser.sh
     fi
     cd ${IMAGE_ROOTFS}
-
-    # because we're so used to it
-    ln -s opkg usr/bin/ipkg || true
-    ln -s opkg-cl usr/bin/ipkg-cl || true
     ln -s usr/lib/enigma2/spinner usr/lib/enigma2/skin_default/spinner || true
 
     echo ${DEPLOY_DIR_IMAGE} > /tmp/DEPLOY_DIR_IMAGE

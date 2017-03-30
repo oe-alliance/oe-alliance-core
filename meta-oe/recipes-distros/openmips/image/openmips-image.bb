@@ -24,15 +24,6 @@ IMAGE_FEATURES += "package-management"
 inherit image
 
 image_preprocess() {
-    curdir=$PWD
-    cd ${IMAGE_ROOTFS}
-
-    # because we're so used to it
-    ln -s opkg usr/bin/ipkg || true
-    ln -s opkg-cl usr/bin/ipkg-cl || true
-
-    cd $curdir
-
     # Speedup boot by reducing the host key size. The time it takes grows
     # exponentially by key size, the default is 2k which takes several
     # seconds on most boxes.

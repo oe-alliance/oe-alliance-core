@@ -30,12 +30,6 @@ inherit image
 
 
 rootfs_postprocess() {
-    curdir=$PWD
-    cd ${IMAGE_ROOTFS}
-    # because we're so used to it
-    ln -s opkg usr/bin/ipkg || true
-    ln -s opkg-cl usr/bin/ipkg-cl || true
-    cd $curdir
     cd ${IMAGE_ROOTFS}/var/lib/opkg/lists
     rm -rf ${IMAGE_ROOTFS}/var/lib/opkg/lists/oe
     rm -rf ${IMAGE_ROOTFS}/var/lib/opkg/lists/oe-3rdparty
@@ -44,19 +38,16 @@ rootfs_postprocess() {
     rm -rf ${IMAGE_ROOTFS}/var/lib/opkg/lists/oe-${MACHINE}_3rdparty
     rm -rf ${IMAGE_ROOTFS}/var/lib/opkg/lists/oe-mips32el
     rm -rf ${IMAGE_ROOTFS}/var/lib/opkg/lists/oe-${MACHINEBUILD}
-    cd $curdir
     cd ${IMAGE_ROOTFS}/usr/lib/python2.7/site-packages/twisted/web
     rm -rf ${IMAGE_ROOTFS}/usr/lib/python2.7/site-packages/twisted/web/client.pyo
     rm -rf ${IMAGE_ROOTFS}/usr/lib/python2.7/site-packages/twisted/web/client.py
     mv ${IMAGE_ROOTFS}/usr/lib/python2.7/site-packages/twisted/web/client-neu.py ${IMAGE_ROOTFS}/usr/lib/python2.7/site-packages/twisted/web/client.py
     rm -rf ${IMAGE_ROOTFS}/usr/lib/python2.7/site-packages/twisted/web/client-neu.py
-    cd $curdir
     cd ${IMAGE_ROOTFS}/usr/lib/python2.7
     rm -rf ${IMAGE_ROOTFS}/usr/lib/python2.7/argparse.pyo
     rm -rf ${IMAGE_ROOTFS}/usr/lib/python2.7/argparse.py
     mv ${IMAGE_ROOTFS}/usr/lib/python2.7/argparse-neu.py ${IMAGE_ROOTFS}/usr/lib/python2.7/argparse.py
     rm -rf ${IMAGE_ROOTFS}/usr/lib/python2.7/argparse-neu.py
-    cd $curdir
     #cd ${IMAGE_ROOTFS}/bin
     #if [ "${TARGET_ARCH}" = "arm" ]; then
     #rm -rf ${IMAGE_ROOTFS}/bin/sh
