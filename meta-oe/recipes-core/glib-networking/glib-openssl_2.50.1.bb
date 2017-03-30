@@ -11,6 +11,7 @@ DEPENDS = "glib-2.0 intltool-native openssl"
 
 SRC_URI_append = " \
     file://Find_CA_bundle_file_in_configure.patch \
+    file://OpenSSL_Support_SNI_TLS_Extension.patch \
 "
 
 SRC_URI[archive.md5sum] = "de9f89e0e7d9aa973e6edffe78b82ce8"
