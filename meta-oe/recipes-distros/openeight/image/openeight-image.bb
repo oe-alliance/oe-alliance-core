@@ -21,11 +21,6 @@ IMAGE_FEATURES += "package-management"
 
 inherit image
 
-rootfs_postprocess() {
-}
-
-ROOTFS_POSTPROCESS_COMMAND += "rootfs_postprocess; "
-
 export NFO = '${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.nfo'
 
 do_generate_nfo() {
