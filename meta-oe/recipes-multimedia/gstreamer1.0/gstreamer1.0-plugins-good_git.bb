@@ -24,7 +24,7 @@ S = "${WORKDIR}/git"
 GST_VERSION_FULL ="1.11.2.1-01"
 inherit gitpkgv
 PV = "${GST_VERSION_FULL}+git${SRCPV}"
-PKGV = "${GITPKGVTAG}"
+PKGV = "${GST_VERSION_FULL}+git${GITPKGV}"
 
 CFLAGS_append += " -Wno-maybe-uninitialized -Wno-uninitialized "
 

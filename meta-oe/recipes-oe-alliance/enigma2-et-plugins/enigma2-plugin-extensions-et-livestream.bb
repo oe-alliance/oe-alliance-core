@@ -11,7 +11,7 @@ S = "${WORKDIR}/git"
 inherit gitpkgv
 
 PV = "1.0+git${SRCPV}"
-PKGV = "${GITPKGVTAG}"
+PKGV = "1.0+git${GITPKGV}"
 PR = "r1"
 
 RDEPENDS_${PN} = "${@bb.utils.contains("GST_VERSION", "1.0", "gstreamer1.0-plugins-ugly-asf gstreamer1.0-plugins-bad-mms gstreamer1.0-plugins-good-rtsp gstreamer1.0-plugins-good-flv gstreamer1.0-plugins-bad-rtmp gst-plugin-libxt", "gst-plugins-ugly-asf gst-plugins-bad-mms gst-plugins-good-rtsp gst-plugins-good-flv gst-plugins-bad-rtmp gst-plugin-libxt", d)}"

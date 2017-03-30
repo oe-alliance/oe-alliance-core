@@ -8,7 +8,7 @@ RDEPENDS_${PN} = "python-xmlrpc python-compression python-codecs python-zlib pyt
 SRCREV = "${AUTOREV}"
 inherit gitpkgv
 PV = "0.74+git${SRCPV}"
-PKGV = "${GITPKGVTAG}"
+PKGV = "0.74+git${GITPKGV}"
 
 SRC_URI = "git://github.com/mx3L/mediaplayer2;protocol=git;branch=master"
 

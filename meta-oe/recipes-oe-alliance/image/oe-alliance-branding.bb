@@ -11,8 +11,8 @@ inherit autotools-brokensep gitpkgv pythonnative
 PACKAGES += " ${PN}-src"
 
 SRCREV = "${AUTOREV}"
-PV = "6.0+git${SRCPV}"
-PKGV = "${GITPKGVTAG}"
+PV = "${IMAGE_VERSION}+git${SRCPV}"
+PKGV = "${IMAGE_VERSION}+git${GITPKGV}"
 PR = "r${DATE}-${MACHINEBUILD}"
 
 PR[vardepsexclude] += "DATE"

@@ -10,7 +10,7 @@ require conf/license/license-gplv2.inc
 inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "2.1+git${SRCPV}"
-PKGV = "${GITPKGVTAG}"
+PKGV = "2.1+git${GITPKGV}"
 VER ="2.1"
 PR = "r1"
 SRC_URI="git://github.com/carlo0815/Smoke-Light-HD.git"

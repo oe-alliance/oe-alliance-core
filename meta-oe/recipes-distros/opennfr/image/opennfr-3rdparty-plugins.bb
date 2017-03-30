@@ -8,7 +8,7 @@ inherit gitpkgv deploy
 
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
-PKGV = "${GITPKGVTAG}"
+PKGV = "git${GITPKGV}"
 PR = "r39"
 SRC_URI="git://github.com/carlo0815/3rdparty-plugins.git;protocol=git;branch=4.4"
 

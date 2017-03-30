@@ -8,7 +8,7 @@ inherit gitpkgv autotools deploy
 
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
-PKGV = "${GITPKGVTAG}"
+PKGV = "git${GITPKGV}"
 PR = "r0"
 SRC_URI="git://github.com/openmips/openMips-3rdpart.git;protocol=git"
 

@@ -10,7 +10,7 @@ SRCREV_pn-${PN} ?= "${AUTOREV}"
 inherit gitpkgv pkgconfig
 
 PV = "git${SRCPV}"
-PKGV = "${GITPKGVTAG}"
+PKGV = "git${GITPKGV}"
 PR = "r12"
 
 SRC_URI = "git://github.com/OpenAZBox/AZPlay.git;protocol=git"

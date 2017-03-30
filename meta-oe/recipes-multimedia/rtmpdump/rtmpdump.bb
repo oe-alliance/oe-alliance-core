@@ -9,7 +9,7 @@ RDEPENDS_${PN} = "librtmp"
 inherit autotools-brokensep gitpkgv
 
 SRCREV = "${AUTOREV}"
-PKGV = "${GITPKGVTAG}"
+PKGV = "2.48+git${GITPKGV}"
 PV = "2.48+git${SRCPV}"
 PR = "r6"
 

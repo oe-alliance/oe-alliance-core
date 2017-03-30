@@ -11,7 +11,7 @@ inherit gitpkgv pythonnative gettext
 
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
-PKGV = "${GITPKGVTAG}"
+PKGV = "git${GITPKGV}"
 
 SRC_URI = "git://github.com/Taapat/enigma2-plugin-youtube.git;protocol=git"
 

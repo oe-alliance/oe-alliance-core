@@ -9,7 +9,7 @@ inherit autotools-brokensep gitpkgv pythonnative gettext
 
 SRCREV = "${AUTOREV}"
 PV = "2.1+git${SRCPV}"
-PKGV = "${GITPKGVTAG}"
+PKGV = "2.1+git${GITPKGV}"
 PR = "r1"
 
 SRC_URI = "git://github.com/oe-alliance/AutoBouquetsMaker.git;protocol=git"

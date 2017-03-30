@@ -10,7 +10,7 @@ inherit gitpkgv pythonnative
 
 SRCREV = "${AUTOREV}"
 PV = "2.0+git${SRCPV}"
-PKGV = "${GITPKGVTAG}"
+PKGV = "2.0+git${GITPKGV}"
 VER ="2.0"
 PR = "r0"
 

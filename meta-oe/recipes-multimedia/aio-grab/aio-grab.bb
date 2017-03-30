@@ -8,7 +8,7 @@ DEPENDS = "jpeg libpng zlib"
 inherit gitpkgv
 
 PV = "1.0+git${SRCPV}"
-PKGV = "${GITPKGVTAG}"
+PKGV = "1.0+git${GITPKGV}"
 PR = "r2"
 
 SRC_URI="git://github.com/oe-alliance/aio-grab.git;protocol=git"

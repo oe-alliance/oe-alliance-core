@@ -7,7 +7,7 @@ inherit autotools gitpkgv
 
 SRCREV = "${AUTOREV}"
 PV = "1.0+git${SRCPV}"
-PKGV = "${GITPKGVTAG}"
+PKGV = "1.0+git${GITPKGV}"
 
 SRC_URI = " \
     git://github.com/Duckbox-Developers/apps.git;protocol=git \

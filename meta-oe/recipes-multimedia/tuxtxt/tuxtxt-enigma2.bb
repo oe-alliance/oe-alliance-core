@@ -29,7 +29,7 @@ SRC_URI_append = " \
 S = "${WORKDIR}/git/tuxtxt"
 
 PV = "2.0+git${SRCPV}"
-PKGV = "${GITPKGVTAG}"
+PKGV = "2.0+git${GITPKGV}"
 PR = "r18"
 
 do_configure_prepend() {

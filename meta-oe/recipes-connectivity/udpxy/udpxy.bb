@@ -9,7 +9,7 @@ require conf/license/license-gplv2.inc
 inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "0.23+git${SRCPV}"
-PKGV = "${GITPKGVTAG}"
+PKGV = "0.23+git${GITPKGV}"
 PR = "r1"
 
 inherit autotools-brokensep pkgconfig

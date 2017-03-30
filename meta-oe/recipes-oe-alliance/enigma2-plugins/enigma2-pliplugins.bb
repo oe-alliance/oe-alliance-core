@@ -18,7 +18,7 @@ RDEPENDS_enigma2-plugin-pli-softcamsetup = "enigma2"
 inherit gitpkgv gettext
 
 PV = "2.0+git${SRCPV}"
-PKGV = "${GITPKGVTAG}"
+PKGV = "2.0+git${GITPKGV}"
 PR = "r3"
 
 SRC_URI = "git://github.com/oe-alliance/openpli-plugins.git;protocol=git"

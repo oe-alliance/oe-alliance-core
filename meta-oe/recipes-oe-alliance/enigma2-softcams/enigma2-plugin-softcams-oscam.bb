@@ -10,7 +10,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 BRANCH = "master"
 SRCREV = "99553b60dacce7d245fc9f46ed31cf42d68dd161"
 PV = "svn8631"
-PKGV = "${GITPKGVTAG}"
+PKGV = "svn8631"
 SRC_URI = "git://git.cuci.nl/oscam;protocol=git;branch=${BRANCH};tag=${SRCREV}"
 PR = "r0"
 

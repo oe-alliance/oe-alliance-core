@@ -10,7 +10,7 @@ RDEPENDS_${PN} = "\
 
 inherit distutils-openplugins gitpkgv
 PV = "1.0+git${SRCPV}"
-PKGV = "${GITPKGVTAG}"
+PKGV = "1.0+git${GITPKGV}"
 
 DEPENDS += "enigma2"
 

@@ -10,7 +10,7 @@ require conf/license/license-gplv2.inc
 
 SRCREV = "${AUTOREV}"
 PV = "1.53+git${SRCPV}"
-PKGV = "${GITPKGVTAG}"
+PKGV = "1.53+git${GITPKGV}"
 VER ="1.53"
 PR = "r0"
 

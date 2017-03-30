@@ -10,7 +10,7 @@ S = "${WORKDIR}/git"
 inherit gitpkgv
 
 PV = "0.10.0+git${SRCPV}"
-PKGV = "${GITPKGVTAG}"
+PKGV = "0.10.0+git${GITPKGV}"
 PR = "r0"
 
 FILES_${PN} = "${libdir}/gstreamer-0.10/"

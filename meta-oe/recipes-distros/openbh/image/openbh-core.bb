@@ -15,7 +15,7 @@ RPROVIDES_enigma2-plugin-obh-core += "openbh-core"
 inherit autotools-brokensep gitpkgv pythonnative
 SRCREV = "${AUTOREV}"
 PV = "${IMAGE_VERSION}+git${SRCPV}"
-PKGV = "${GITPKGVTAG}"
+PKGV = "${IMAGE_VERSION}+git${GITPKGV}"
 PR = "r1"
 
 SRC_URI="git://github.com/BlackHole/obh-core.git;protocol=git"

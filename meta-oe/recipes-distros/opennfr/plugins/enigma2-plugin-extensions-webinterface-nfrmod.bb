@@ -11,7 +11,7 @@ RREPLACES_${PN} = "settings-autorestore"
 inherit autotools-brokensep gitpkgv pythonnative
 SRCREV = "${AUTOREV}"
 PV = "3.0+git${SRCPV}"
-PKGV = "${GITPKGVTAG}"
+PKGV = "3.0+git${GITPKGV}"
 PR = "r1"
 
 SRC_URI="git://github.com/carlo0815/enigma2-plugins.git;protocol=git"

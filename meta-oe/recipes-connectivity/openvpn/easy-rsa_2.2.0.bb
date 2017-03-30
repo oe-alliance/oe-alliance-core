@@ -10,7 +10,7 @@ RDEPENDS_{PN} = "openssl"
 inherit autotools
 
 PV = "2.2.0"
-PKGV = "${GITPKGVTAG}"
+PKGV = "2.2.0"
 #PR = "r2"
 PACKAGE_ARCH = "all"
 

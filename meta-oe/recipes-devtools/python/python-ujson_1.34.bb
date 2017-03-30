@@ -8,7 +8,7 @@ LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=cbb7d7d409df43b6a129e9c06d33f931"
 inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "1.34+git${SRCPV}"
-PKGV = "${GITPKGVTAG}"
+PKGV = "1.34+git${GITPKGV}"
 VER ="1.34"
 PR = "r0"
 

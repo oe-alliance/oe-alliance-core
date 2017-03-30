@@ -9,7 +9,7 @@ inherit gitpkgv
 EPSM = "enigma2-plugin-skins.egami"
 SRCREV = "${AUTOREV}"
 PV = "1.0+git${SRCPV}"
-PKGV = "${GITPKGVTAG}"
+PKGV = "1.0+git${GITPKGV}"
 PR = "r3"
 
 PACKAGES = "${EPSM}-a4you"

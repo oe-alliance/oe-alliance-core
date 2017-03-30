@@ -30,7 +30,7 @@ S = "${WORKDIR}/git"
 GST_VERSION_FULL ="1.11.2.1-02"
 inherit gitpkgv
 PV = "${GST_VERSION_FULL}+git${SRCPV}"
-PKGV = "${GITPKGVTAG}"
+PKGV = "${GST_VERSION_FULL}+git${GITPKGV}"
 
 
 EXTRA_OECONF += " \

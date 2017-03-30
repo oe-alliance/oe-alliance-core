@@ -129,7 +129,7 @@ inherit autotools-brokensep gitpkgv pythonnative gettext
 
 SRCREV = "${AUTOREV}"
 PV = "${IMAGE_VERSION}+git${SRCPV}"
-PKGV = "${GITPKGVTAG}"
+PKGV = "${IMAGE_VERSION}+git${GITPKGV}"
 PR = "r3"
 
 SRC_URI = "${OEA_PLUGINS_URI}"

@@ -10,7 +10,7 @@ inherit gitpkgv pythonnative autotools-brokensep gettext
 
 SRCREV = "${AUTOREV}"
 PV = "1.0+git${SRCPV}"
-PKGV = "${GITPKGVTAG}"
+PKGV = "1.0+git${GITPKGV}"
 VER ="1.0"
 PR = "r0"
 

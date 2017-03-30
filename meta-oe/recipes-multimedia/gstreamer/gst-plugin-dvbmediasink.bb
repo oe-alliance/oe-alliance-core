@@ -24,7 +24,7 @@ S = "${WORKDIR}/git"
 inherit gitpkgv
 
 PV = "0.10.0+git${SRCPV}"
-PKGV = "${GITPKGVTAG}"
+PKGV = "0.10.0+git${GITPKGV}"
 PR = "r22"
 
 inherit autotools pkgconfig

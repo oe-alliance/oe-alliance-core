@@ -8,7 +8,7 @@ SRCREV_pn-${PN} ?= "${AUTOREV}"
 inherit gitpkgv pkgconfig
 
 PV = "git${SRCPV}"
-PKGV = "${GITPKGVTAG}"
+PKGV = "git${GITPKGV}"
 PR = "r16"
 
 SRC_URI = "git://github.com/OpenAZBox/RTi-SYS.git;protocol=git \

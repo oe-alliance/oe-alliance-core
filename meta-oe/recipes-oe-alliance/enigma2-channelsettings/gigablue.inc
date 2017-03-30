@@ -3,7 +3,7 @@ require conf/license/license-close.inc
 PACKAGE_ARCH = "all"
 
 PV = "1.0+git${SRCPV}"
-PKGV = "${GITPKGVTAG}"
+PKGV = "1.0+git${GITPKGV}"
 PR = "r1"
 SRCREV = "${AUTOREV}"
 

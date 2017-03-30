@@ -11,7 +11,7 @@ require conf/license/license-gplv2.inc
 inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "12.6+git${SRCPV}"
-PKGV = "${GITPKGVTAG}"
+PKGV = "12.6+git${GITPKGV}"
 PR = "r0"
 
 SRC_URI="git://github.com/opendroid-Team/dFlash.git"

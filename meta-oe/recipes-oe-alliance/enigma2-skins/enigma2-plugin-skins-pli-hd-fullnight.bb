@@ -7,7 +7,7 @@ PACKAGE_ARCH = "all"
 inherit gitpkgv
 
 PV = "0.1+git${SRCPV}"
-PKGV = "${GITPKGVTAG}"
+PKGV = "0.1+git${GITPKGV}"
 PR = "r0"
 
 SRCREV = "${AUTOREV}"

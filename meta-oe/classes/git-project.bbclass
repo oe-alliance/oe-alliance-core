@@ -4,4 +4,4 @@ inherit gitpkgv
 
 VERSION := "${PV}"
 PV = "${VERSION}+git${SRCPV}"
-PKGV = "${GITPKGVTAG}"
+PKGV = "${VERSION}+git${GITPKGV}"
