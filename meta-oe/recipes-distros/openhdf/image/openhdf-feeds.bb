@@ -6,21 +6,17 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=4d92cd373abda3937c2bc47fbc49d
 ALLOW_EMPTY_${PN} = "1"
 
 PV = "1.0"
-PR = "r19"
+PR = "r18"
 
 inherit packagegroup
 
 RRECOMMENDS_${PN} = "\
     enigma2-skins \
-    oe-alliance-skins \
     cdfs \
-    enigma2-display-skins \
     enigma2-plugin-extensions-project-valerie \
     enigma2-plugin-extensions-epgimport \
     enigma2-plugin-systemplugins-crossepg \
     enigma2-plugin-skins-xionhdf \
     enigma2-plugin-skins-army-mod \
     enigma2-plugin-skins-nblack51-hdfmod \
-    enigma2-plugin-skins-ax-blue-fhd-4atv \
-    enigma2-plugin-extensions-blurayplayer \
     "
