@@ -10,7 +10,7 @@ KERNEL_CONSOLE = "ttyS0,115200n8"
 TARGET_ARCH = "mipsel"
 DEFAULTTUNE = "mips32el"
 
-PREFERRED_VERSION_linux-gfutures = "4.10.0"
+PREFERRED_VERSION_linux-gfutures = "4.10.6"
 PREFERRED_VERSION_linux-libc-headers = "4.10"
 
 IMAGE_FSTYPES ?= "ubi"
