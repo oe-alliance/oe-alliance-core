@@ -86,11 +86,6 @@ rootfs_postprocess() {
         fi
     done
     
-
-    # Speedup boot by reducing the host key size. The time it takes grows
-    # exponentially by key size, the default is 2k which takes several
-    # seconds on most boxes.
-    echo 'DROPBEAR_RSAKEY_ARGS="-s 1024"' >> ${IMAGE_ROOTFS}${sysconfdir}/default/dropbear
 }
 
 ROOTFS_POSTPROCESS_COMMAND += "rootfs_postprocess; "
