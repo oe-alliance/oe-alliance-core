@@ -20,13 +20,13 @@ S="${WORKDIR}/git"
 # Just a quick hack to "compile" it
 do_compile() {
     python -O -m compileall ${S}
-    pushd ${S}
+    cd ${S}
     for f in $(find ./po -name *.po ); do
         l=$(echo ${f%} | sed 's/\.po//' | sed 's/.*po\///')
         mkdir -p ${S}/src/locale/${l%}/LC_MESSAGES
         msgfmt -o ${S}/src/locale/${l%}/LC_MESSAGES/YouTube.mo ./po/$l.po
     done
-    popd
+    cd -
 }
 
 PLUGINPATH = "/usr/lib/enigma2/python/Plugins/Extensions/${MODULE}"
