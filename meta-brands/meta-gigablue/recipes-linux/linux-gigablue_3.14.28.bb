@@ -6,14 +6,14 @@ MODULE = "linux-3.14.28"
 
 inherit kernel machine_kernel_pr
 
-MACHINE_KERNEL_PR_append = "r1"
+MACHINE_KERNEL_PR_append = "r2"
 
-SRC_URI[md5sum] = "2a3a0a7e5cd2a1392f1a26790d1cd8bf"
-SRC_URI[sha256sum] = "8284670c28a4dad9e94752b38d37a4368f27ce15e671653a3e2ac83915f37db1"
+SRC_URI[md5sum] = "c1e96f702ca737630f5acb0dce2388e7"
+SRC_URI[sha256sum] = "72928012a7dbacbf95a371d9faa6800a20afd6b106958298cfc41028878aac4e"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-SRC_URI += "http://archiv.openmips.com/gigablue-linux-${PV}-20170113.tar.bz2 \
+SRC_URI += "http://archiv.openmips.com/gigablue-linux-${PV}-20170331.tar.gz \
 	file://defconfig \
 	file://bcm_genet_disable_warn.patch \
 	file://rt2800usb_fix_warn_tx_status_timeout_to_dbg.patch \
@@ -26,7 +26,7 @@ SRC_URI += "http://archiv.openmips.com/gigablue-linux-${PV}-20170113.tar.bz2 \
 	file://linux_prevent_usb_dma_from_bmem.patch \
 "
 
-S = "${WORKDIR}/linux"
+S = "${WORKDIR}/linux-${PV}"
 B = "${WORKDIR}/build"
 
 export OS = "Linux"

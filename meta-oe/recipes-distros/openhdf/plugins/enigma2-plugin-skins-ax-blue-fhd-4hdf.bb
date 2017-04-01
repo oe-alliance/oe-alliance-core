@@ -16,10 +16,6 @@ FILES_${PN} = "/usr/*"
 
 S = "${WORKDIR}/git"
 
-do_compile_append() {
-python -O -m compileall ${S}
-}
-
 do_install() {
     install -d ${D}/usr/share/enigma2
     cp -rp ${S}/usr ${D}/
