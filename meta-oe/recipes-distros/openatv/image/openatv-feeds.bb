@@ -7,7 +7,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PV = "1.0"
-PR = "r26"
+PR = "r27"
 
 inherit packagegroup
 
@@ -30,6 +30,7 @@ RRECOMMENDS_${PN} = "\
     enigma2-plugin-extensions-cooltvguide \
     enigma2-plugin-extensions-bmediacenter \
     enigma2-plugin-skins-dmcconcinnityhd \
+    enigma2-plugin-skins-ax-blue-fhd-4atv \
     enigma2-plugin-settings-defaultsat \
     enigma2-plugin-extensions-specialjump \
     enigma2-plugin-skins-pli-hd \
