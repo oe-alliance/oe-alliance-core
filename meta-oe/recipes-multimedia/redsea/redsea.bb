@@ -19,4 +19,4 @@ DEPENDS = "liquid-dsp"
 
 inherit autotools-brokensep
 
-EXTRA_OECONF += "--disable-tmc"
+EXTRA_OECONF += "--disable-tmc --without-sndfile"
