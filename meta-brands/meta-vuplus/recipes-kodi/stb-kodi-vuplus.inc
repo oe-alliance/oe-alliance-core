@@ -1,7 +1,3 @@
-SRC_URI_append += " \
-    file://vuplus-kodi.patch \
-"
-
 do_configure_prepend() {
     cp -av ${WORKDIR}/xbmc-support/gles_init.* ${S}/xbmc/windowing/egl/
 }
