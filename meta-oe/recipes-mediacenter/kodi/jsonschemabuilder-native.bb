@@ -3,16 +3,14 @@ SUMMARY = "Kodi Media Center"
 LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://JsonSchemaBuilder.cpp;beginline=2;endline=18;md5=1f67721215c03f66545390f6e45b99c7"
 
-BRANCH = "Jarvis"
-PV = "16.1"
+SRCREV = "b587e98911fcedc4b800cd923a882c7aeeaa2146"
 
-SRC_URI = "https://github.com/xbmc/xbmc/archive/16.1-Jarvis.tar.gz"
-SRC_URI[md5sum] = "79358ad5f77f42c5498a9412d5a78dd5"
-SRC_URI[sha256sum] = "7d82c8aff2715c83deecdf10c566e26105bec0473af530a1356d4c747ebdfd10"
+PV = "16.0+gitr${SRCPV}"
+SRC_URI = "git://github.com/xbmc/xbmc.git;branch=Jarvis"
 
 inherit autotools-brokensep gettext native
 
-S = "${WORKDIR}/xbmc-${PV}-${BRANCH}/tools/depends/native/JsonSchemaBuilder/src"
+S = "${WORKDIR}/git/tools/depends/native/JsonSchemaBuilder/src"
 
 do_compile_prepend() {
     for i in $(find . -name "Makefile") ; do

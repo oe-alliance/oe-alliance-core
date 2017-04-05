@@ -1,0 +1,24 @@
+From 372b69bbf875b794557e5a0e9e98ebce70153592 Mon Sep 17 00:00:00 2001
+From: tux <tux@tux.com>
+Date: Fri, 24 Mar 2017 11:41:37 +0100
+Subject: [PATCH] change filename
+
+---
+ project/cmake/KodiConfig.cmake.in | 3 +-
+ 1 file changed, 2 insertion(+), 1 deletion(-)
+
+diff --git a/project/cmake/KodiConfig.cmake.in b/project/cmake/KodiConfig.cmake.in
+index c02a680..eb7d5be 100644
+--- a/project/cmake/KodiConfig.cmake.in
++++ b/project/cmake/KodiConfig.cmake.in
+@@ -31,4 +31,4 @@ if(NOT CORE_SYSTEM_NAME)
+   endif()
+ endif()
+ 
+-include(AddonHelpers)
++
++
+\ No newline at end of file
+-- 
+2.7.4
+
