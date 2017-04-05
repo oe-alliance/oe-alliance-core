@@ -12,6 +12,7 @@ RRECOMMENDS_${PN} = " \
     ${DVBPROVIDER}-module-e4000 \
     ${DVBPROVIDER}-module-r820t \
     ${DVBPROVIDER}-module-mt2266 \
+    ${DVBPROVIDER}-module-fc0012 \
     ${DVBPROVIDER}-module-fc0013 \
     firmware-dvb-usb-af9035-01 \
     firmware-dvb-usb-af9035-02 \
@@ -19,6 +20,6 @@ RRECOMMENDS_${PN} = " \
     "
 
 PV = "1.0"
-PR = "r2"
+PR = "r3"
 
 ALLOW_EMPTY_${PN} = "1"
