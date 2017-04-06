@@ -9,7 +9,7 @@ PR = "r0-${SRCDATE}"
 
 PROVIDES = "virtual/libgles2 virtual/egl"
 
-SRC_URI = "http://source.mynonpublic.com/xcore/xcore-libgles-${MACHINE}-${SRCDATE}.zip"
+SRC_URI = "http://source.mynonpublic.com/xcore/xcore-libgles-${MACHINE}-${SRCDATE}.tar.gz"
 
 S = "${WORKDIR}/libgles-${MACHINE}"
 
