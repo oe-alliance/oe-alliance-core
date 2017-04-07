@@ -2,18 +2,18 @@ SUMMARY = "Linux kernel for ${MACHINE}"
 SECTION = "kernel"
 LICENSE = "GPLv2"
 
-KERNEL_RELEASE = "4.10.0"
+KERNEL_RELEASE = "4.10.6"
 
 inherit kernel machine_kernel_pr
 
-SRC_URI[mips.md5sum] = "1bca7dc4f68196efe7cf8af085841851"
-SRC_URI[mips.sha256sum] = "0b53d7cf932da13e4dc81856c4041e409b4c44fbc533ab5c99dcf22ff2b79a63"
-SRC_URI[arm.md5sum] = "3826019f1a8d60b12937e27192501af2"
-SRC_URI[arm.sha256sum] = "bf4d8196d185d1b4973f5c9053f506e65883869b92d05940fe7091574a8ecdf7"
+SRC_URI[mips.md5sum] = "e5d32dd03b742e6101fde917dcba837d"
+SRC_URI[mips.sha256sum] = "2997b825996beabc25d2428d37d680f56e4fa971500eabd2033a6fc13cf5765e"
+SRC_URI[arm.md5sum] = "c8d81a7efa0688f995c74dfd9bc52752"
+SRC_URI[arm.sha256sum] = "ec9f9e86aaacd2add09591ff2f83ac7947bfe6265fcb6f24a45d9d4a75c3c037"
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-MACHINE_KERNEL_PR_append = ".2"
+MACHINE_KERNEL_PR_append = ".6"
 
 # By default, kernel.bbclass modifies package names to allow multiple kernels
 # to be installed in parallel. We revert this change and rprovide the versioned
