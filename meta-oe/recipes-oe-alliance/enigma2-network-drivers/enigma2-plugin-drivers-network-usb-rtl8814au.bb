@@ -1,0 +1,13 @@
+SUMMARY = "WiFi devices for Realtek 8814AU chipsets."
+PACKAGE_ARCH = "all"
+
+require conf/license/license-gplv2.inc
+
+RRECOMMENDS_${PN} = " \
+        rt8814au \
+"
+
+PV = "1.0"
+PR = "r1"
+
+ALLOW_EMPTY_${PN} = "1"
