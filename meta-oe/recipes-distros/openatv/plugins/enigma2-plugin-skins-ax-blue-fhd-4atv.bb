@@ -6,9 +6,9 @@ require conf/license/license-gplv2.inc
 inherit gitpkgv allarch
 
 SRCREV = "${AUTOREV}"
-PV = "2.5+git${SRCPV}"
-PKGV = "2.5+git${GITPKGV}"
-VER="2.5"
+PV = "2.7+git${SRCPV}"
+PKGV = "2.7+git${GITPKGV}"
+VER="2.7"
 
 SRC_URI="git://github.com/stein17/AX-Blue-FHD-4ATV.git;protocol=git"
 
