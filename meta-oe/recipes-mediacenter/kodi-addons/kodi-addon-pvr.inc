@@ -1,7 +1,10 @@
-DEPENDS = " \
+DEPENDS += " \
             zip-native \
             p8platform \
             kodi-platform \
+            libtinyxml2 \
+            jsoncpp \
+            jsonrpc \
           "
 
 PACKAGE_ARCH = "${MACHINE}"
@@ -43,7 +46,7 @@ do_install_append() {
 }
 
 # Doesn't get added automagically, dlopen()?
-RDEPENDS_${PN} = "libkodiplatform"
+RDEPENDS_${PN} += "libkodiplatform"
 
 INSANE_SKIP_${PN} = "dev-so"
 FILES_${PN} += "${datadir}/kodi"
