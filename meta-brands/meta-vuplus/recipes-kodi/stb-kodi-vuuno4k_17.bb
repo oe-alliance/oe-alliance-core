@@ -1,7 +1,7 @@
 GLPR = "20161206_r1"
 
 require stb-kodi-vuplus.inc
-require recipes-mediacenter/kodi/kodi_${PV}.bb
+require recipes-mediacenter/kodi/stb-kodi_${PV}.bb
 
 PROVIDES += "virtual/kodi"
 RPROVIDES_${PN} += "virtual/kodi"

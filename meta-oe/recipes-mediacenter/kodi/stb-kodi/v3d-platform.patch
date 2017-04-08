@@ -1,4 +1,4 @@
-From 5871c2ba33962ffdb09a000cf6510a98a8857366 Mon Sep 17 00:00:00 2001
+From 6322bb87a5802dae194f4821c0a0ed2c9a477ff7 Mon Sep 17 00:00:00 2001
 From: captain <openatv@gmail.com>
 Date: Sat, 25 Mar 2017 09:49:08 +0100
 Subject: [PATCH] v3d-platform
@@ -9,7 +9,7 @@ Subject: [PATCH] v3d-platform
  m4/xbmc_arch.m4                              |  16 +++
  project/cmake/scripts/linux/ArchSetup.cmake  |   6 +-
  tools/depends/configure.ac                   |  56 ++++++++
- tools/depends/target/ffmpeg/autobuild.sh     |  14 ++
+ tools/depends/target/ffmpeg/autobuild.sh     |  16 ++-
  xbmc/addons/AddonManager.cpp                 |   6 +
  xbmc/platform/xbmc.cpp                       |   9 ++
  xbmc/system_gl.h                             |   3 +
@@ -26,7 +26,7 @@ Subject: [PATCH] v3d-platform
  xbmc/windowing/egl/EGLNativeTypeVuplus.h     |  60 ++++++++
  xbmc/windowing/egl/EGLWrapper.cpp            |  20 +++
  xbmc/windowing/egl/Makefile.in               |  12 ++
- 22 files changed, 1430 insertions(+), 9 deletions(-)
+ 22 files changed, 1431 insertions(+), 10 deletions(-)
  create mode 100644 xbmc/utils/DreamboxUtils.cpp
  create mode 100644 xbmc/utils/DreamboxUtils.h
  create mode 100644 xbmc/windowing/egl/EGLNativeTypeDreambox.cpp
@@ -364,9 +364,18 @@ index 3626ea5204..1daf9ac3fd 100644
  
  if test "$target_platform" = "raspberry-pi" ; then
 diff --git a/tools/depends/target/ffmpeg/autobuild.sh b/tools/depends/target/ffmpeg/autobuild.sh
-index 5c2976278e..a3e780617c 100755
+index 5c2976278e..375ff92c22 100755
 --- a/tools/depends/target/ffmpeg/autobuild.sh
 +++ b/tools/depends/target/ffmpeg/autobuild.sh
+@@ -116,7 +116,7 @@ then
+ fi
+ 
+ [ -f ${ARCHIVE} ] ||
+-  curl -Ls --create-dirs -f -o ${ARCHIVE} ${BASE_URL}/${VERSION}.tar.gz ||
++  wget -O ${ARCHIVE} ${BASE_URL}/${VERSION}.tar.gz ||
+   { echo "error fetching ${BASE_URL}/${VERSION}.tar.gz" ; exit 3; }
+ [ $downloadonly ] && exit 0
+ 
 @@ -134,6 +134,20 @@ tar --strip-components=1 -xf $MYDIR/${ARCHIVE}
  
  CFLAGS="$CFLAGS" CXXFLAGS="$CXXFLAGS" LDFLAGS="$LDFLAGS" \
