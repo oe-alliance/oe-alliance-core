@@ -5,7 +5,7 @@ LICENSE="CLOSED"
 
 SRCREV_pn-${PN} ?= "${AUTOREV}"
 
-inherit gitpkgv pkgconfig
+inherit gitpkgv
 
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
@@ -42,3 +42,5 @@ PACKAGES = "\
     "
 
 PROVIDES="${PACKAGES}"
+
+do_package_qa[noexec] = "1"
