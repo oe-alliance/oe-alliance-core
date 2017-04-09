@@ -4,7 +4,7 @@ PRIORITY = "optional"
 LICENSE = "CLOSED"
 require conf/license/license-close.inc
 
-DEPENDS = "tslib mpfr gmp libcrypto0.9.8 ${@bb.utils.contains("GST_VERSION", "1.0", "gstreamer1.0", "gstreamer", d)}"
+DEPENDS = "sshpass-native tslib mpfr gmp libcrypto0.9.8 ${@bb.utils.contains("GST_VERSION", "1.0", "gstreamer1.0", "gstreamer", d)}"
 RDEPENDS_${PN} = "libsysfs2 libgmp10 libmpfr4 vuplus-opera-dumpait libcrypto0.9.8"
 
 SRC_DATE = "20151222_0"
