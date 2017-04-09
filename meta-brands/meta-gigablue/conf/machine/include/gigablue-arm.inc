@@ -34,7 +34,7 @@ IMAGE_CMD_tar_prepend = "\
     rm -f ${DEPLOY_DIR_IMAGE}/.tar.bz2; \
     rm -f ${DEPLOY_DIR_IMAGE}/*.manifest; \
     rm -f ${DEPLOY_DIR_IMAGE}/.manifest; \
-    rm -Rf gigablue; \
+    rm -Rf upgrade; \
 "
 
 EXTRA_IMAGEDEPENDS = "\
