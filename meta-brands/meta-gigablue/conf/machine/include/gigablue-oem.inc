@@ -175,7 +175,7 @@ MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS = " \
 
 MACHINE_EXTRA_RRECOMMENDS = " \
     gstreamer1.0-plugin-dvbmediasink \
-	gstreamer1.0-libav \
+    gstreamer1.0-libav \
     gigablue-cfe \
     ${@bb.utils.contains('DISTRO_FEATURES', 'audioeffect', 'enigma2-plugin-systemplugins-audioeffect' , '', d)} \
     "
@@ -201,7 +201,7 @@ PREFERRED_PROVIDER_virtual/kernel = "linux-gigablue"
 KERNEL_OUTPUT = "${KERNEL_IMAGETYPE}"
 KERNEL_CONSOLE = "ttyS0,115200n8"
 
-MACHINE_FEATURES += "3dtv alsa hdmicec switchoff bootsplash skins1080 blindscan-tbs"
+MACHINE_FEATURES += "3dtv alsa hdmicec switchoff bootsplash skins1080 blindscan-tbs omb"
 
 BOOTLOGO_FILENAME = "splash.bin"
 
