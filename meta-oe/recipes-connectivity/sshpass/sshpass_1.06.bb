@@ -2,7 +2,7 @@ SUMMARY = "sshpass"
 LICENSE = "GPLv2+"
 PR = "r1"
 
-LIC_FILES_CHKSUM = "file://main.c;beginline=1;endline=19;md5=bb3cd21c281c2ac32d4cb77974a88ae2"
+LIC_FILES_CHKSUM = "file://main.c;beginline=1;endline=19;md5=5f0246a83a3118d9161abc9611abea7b"
 
 SRC_URI = "http://downloads.sourceforge.net/project/sshpass/sshpass/${PV}/sshpass-${PV}.tar.gz"
 
