@@ -76,7 +76,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'gbx3', 'mtd2' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbx2', 'mtd2' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbultraueh', 'mtd2' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbx3h', 'mtd2' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'gbquad4k', 'mmcblk0p1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbquad4k', 'mmcblk0p3' , '', d)}\
 "
 
 MTD_ROOTFS = "\
@@ -156,7 +156,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'gbquad4k', 'rootfs.tar.bz2' , '', d)}\
 "
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS = " \
-    gigablue-dvb-modules-${MACHINE_DRIVER} \
+    ${@bb.utils.contains("MACHINE_FEATURES", "nexusplatform", "gigablue-platform-util-${MACHINE}", "gigablue-dvb-modules-${MACHINE_DRIVER}", d)} \
     gigablue-ddbootup \
     "
 
@@ -201,7 +201,7 @@ PREFERRED_PROVIDER_virtual/kernel = "linux-gigablue"
 KERNEL_OUTPUT = "${KERNEL_IMAGETYPE}"
 KERNEL_CONSOLE = "ttyS0,115200n8"
 
-MACHINE_FEATURES += "3dtv alsa hdmicec switchoff bootsplash boxmodel skins1080 blindscan-tbs"
+MACHINE_FEATURES += "3dtv alsa hdmicec switchoff bootsplash skins1080 blindscan-tbs"
 
 BOOTLOGO_FILENAME = "splash.bin"
 

@@ -52,7 +52,7 @@ kernel_do_compile() {
 
 pkg_postinst_kernel-image () {
         if [ -d /proc/stb ] ; then
-                dd if=/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE} of=/dev/mmcblk0p1
+                dd if=/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE} of=/dev/mmcblk0p3
         fi
         rm -f /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}
         true

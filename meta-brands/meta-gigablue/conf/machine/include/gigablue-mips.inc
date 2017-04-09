@@ -5,7 +5,7 @@ DEFAULTTUNE = "mips32el"
 KERNEL_IMAGETYPE = "vmlinux"
 
 
-MACHINE_FEATURES += " feature1 feature2"
+MACHINE_FEATURES += " boxmodel feature1 feature2"
 
 DVBMEDIASINK_CONFIG = "--with-wmv \
     ${@bb.utils.contains('MACHINE', 'gb7356', '--with-wma --with-pcm --with-dts --with-eac3 --with-amr' , '', d)} \
