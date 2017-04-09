@@ -15,7 +15,7 @@ case "$1" in
 	mknod -m a=rw /dev/brcm0 c 30 0
 
 	export PATH=.:$PATH
-	cd /usr/share/platform
+	cd /home/root
 	nexus dvb_init &
     fi 
 
