@@ -67,6 +67,8 @@ DEPENDS = " \
             libbluray \
             nfs-utils \
             libupnp \
+            libshairport \
+            libnfs \
           "
 
 PROVIDES = "xbmc"
@@ -193,6 +195,7 @@ RRECOMMENDS_${PN}_append = " \
    python-shell \
    python-sqlite3 \
    python-compression \
+   python-profile \
    libcurl \
    lsb \
    os-release \
