@@ -9,4 +9,4 @@ PR = "r3"
 SRCREV = "8bf413af5673ca77dee4b077562176eddc15e668"
 SRC_URI_append = ";branch=gst_1.0"
 
-inherit autotools opendreambox-git
+inherit autotools pkgconfig opendreambox-git
