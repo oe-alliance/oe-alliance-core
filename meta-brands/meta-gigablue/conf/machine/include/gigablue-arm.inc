@@ -22,7 +22,7 @@ IMAGE_CMD_tar_prepend = "\
     cp ${DEPLOY_DIR_IMAGE}/${MACHINEBUILD}_upgrade-initrd ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/upgrade-initrd; \
     cp ${DEPLOY_DIR_IMAGE}/zImage ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/${KERNEL_FILE}; \
     echo ${DISTRO_NAME}-${DISTRO_VERSION}.${BUILD_VERSION} > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/imageversion; \
-    echo "boot usbdisk0:upgrade/upgrade-initrd 'brcm_cma=762M@0x10000000 brcm_cma=1020M@0x80000000'" >> ${DEPLOY_DIR_IMAGE}/burn.bat; \
+    echo "boot usbdisk0:upgrade/upgrade-initrd 'brcm_cma=762M@0x10000000 brcm_cma=1020M@0x80000000'" > ${DEPLOY_DIR_IMAGE}/burn.bat; \
     cd ${IMAGE_ROOTFS}; \
     tar -cvf ${DEPLOY_DIR_IMAGE}/rootfs.tar -C ${IMAGE_ROOTFS} .; \
     mv ${DEPLOY_DIR_IMAGE}/rootfs.tar ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/rootfs.tar; \
