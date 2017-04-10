@@ -9,6 +9,9 @@ PV = "1.0"
 PR = "${SRCDATE}"
 SRC_URI = "http://code.vuplus.com/download/chromium/chromium-vuplus_${MACHINE}_${SRCDATE}.tar.gz"
 
+# Added very old NSS version need only for vuplus
+PREFERRED_VERSION_nss = "3.17.3"
+
 DEPENDS = "nss"
 RDEPENDS_${PN} = "nspr nss libxslt libcurl libudev"
 
