@@ -52,10 +52,10 @@ do_install() {
 	install -m 0755 ${WORKDIR}/bp_swap ${D}/etc/init.d/bp_swap
 	
 	install -d ${D}/etc/rc3.d
-#	ln -sf /etc/init.d/openvpn ${D}/etc/rc3.d/S40openvpn
+#	ln -sf /etc/init.d/openvpn ${D}/etc/rc3.d/S20openvpn
 	ln -sf /etc/init.d/bp_swap ${D}/etc/rc3.d/S40bp_swap
 
 	install -d ${D}/etc/rc4.d
-	ln -s /etc/init.d/openvpn ${D}/etc/rc4.d/K40openvpn
+	ln -s /etc/init.d/openvpn ${D}/etc/rc4.d/S20openvpn
 
 }
