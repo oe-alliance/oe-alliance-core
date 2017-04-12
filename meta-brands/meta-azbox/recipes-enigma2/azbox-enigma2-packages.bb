@@ -18,7 +18,7 @@ SRC_URI = "git://github.com/OpenAZBox/RTi-SYS.git;protocol=git \
 S = "${WORKDIR}"
 
 do_compile() {
-    python -O -m compileall ${S}
+    python -O -m compileall ${S}/git
 }
 
 do_install() {
@@ -29,7 +29,7 @@ do_install() {
 
     install -d  ${D}/usr/lib/enigma2/python/Plugins/SystemPlugins/VideoSettingsSetup
 
-    install -m 0644 ${S}/VideoSettingsSetup/*.pyo \
+    install -m 0644 ${S}/VideoSettingsSetup/* \
     ${D}/usr/lib/enigma2/python/Plugins/SystemPlugins/VideoSettingsSetup
 }
 

@@ -3,13 +3,13 @@ SECTION = "kernel"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${KV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
+MACHINE_KERNEL_PR_append = ".4"
+
 KERNEL_IMAGE_MAXSIZE_azboxhd = "6815744"
 #KERNEL_IMAGE_MAXSIZE_azboxme = "6815744"
 #KERNEL_IMAGE_MAXSIZE_azboxminime = "6815744"
 
-DEPENDS = "genromfs-native gcc"
-DEPENDS_azboxhd = "genromfs-native azbox-hd-buildimage gcc"
-DEPENDS_azboxminime = "genromfs-native azbox-minime-packer gcc"
+DEPENDS = "genromfs-native virtual/${TARGET_PREFIX}gcc"
 
 inherit kernel machine_kernel_pr
 
@@ -17,22 +17,21 @@ PKG_kernel-base = "kernel-base"
 PKG_kernel-image = "kernel-image"
 RPROVIDES_kernel-base = "kernel-${KERNEL_VERSION}"
 RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
-#FILES_kernel-image = "${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KV}-opensat"
 ALLOW_EMPTY_kernel-dev = "1"
 
 export OS = "Linux"
 KERNEL_OBJECT_SUFFIX = "ko"
 KERNEL_IMAGETYPE = "zbimage-linux-xload"
-KERNEL_IMAGEDEST = "/tmp"
+KERNEL_IMAGEDEST = "tmp"
 
 S = "${WORKDIR}/linux-${KV}"
 B = "${WORKDIR}/build"
 
 CFLAGS_prepend = "-I${WORKDIR} "
-EXTRA_OEMAKE = "CONFIG_INITRAMFS_SOURCE=${STAGING_KERNEL_DIR}/initramfs"
+EXTRA_OEMAKE =+ " CONFIG_INITRAMFS_SOURCE=${STAGING_KERNEL_DIR}/initramfs"
 
 do_configure_prepend() {
-    sed -i "s#usr/initramfs_default_node_list#\$(srctree)/usr/initramfs_default_node_list#" ${STAGING_KERNEL_DIR}/usr/Makefile
+    sed -i "s#:= usr/initramfs_default_node_list#:= \$(srctree)/usr/initramfs_default_node_list#" ${STAGING_KERNEL_DIR}/usr/Makefile
     sed -i "s#\$(srctree)/arch/mips/boot/#\$(obj)/#" ${STAGING_KERNEL_DIR}/arch/mips/boot/Makefile
 }
 
@@ -44,8 +43,7 @@ kernel_do_compile_prepend() {
 
 kernel_do_compile() {
     unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS MACHINE
-    oe_runmake ${KERNEL_IMAGETYPE} CC="${KERNEL_CC}" LD="${KERNEL_LD}" AR="${AR}" OBJDUMP="${OBJDUMP}" NM="${NM}" CONFIG_INITRAMFS_SOURCE="${STAGING_KERNEL_DIR}/initramfs"
-    oe_runmake modules CC="${KERNEL_CC}" LD="${KERNEL_LD}" AR="${AR}" OBJDUMP="${OBJDUMP}" CONFIG_INITRAMFS_SOURCE="${STAGING_KERNEL_DIR}/initramfs"
+    oe_runmake ${KERNEL_IMAGETYPE} CC="${KERNEL_CC}" LD="${KERNEL_LD}" ${KERNEL_EXTRA_ARGS}
 }
 
 kernel_do_compile_append() {

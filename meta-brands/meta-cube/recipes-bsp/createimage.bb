@@ -11,8 +11,6 @@ LIC_FILES_CHKSUM = "file://createimage.c;firstline=2;endline=13;md5=c93a0d6160b7
 
 SRC_URI = "file://createimage.c"
 
-inherit native
-
 S = "${WORKDIR}"
 
 do_compile() {
@@ -23,3 +21,5 @@ do_install() {
     install -d ${D}/${bindir}/
     install -m 0755 ${S}/createimage_${MACHINE} ${D}/${bindir}/
 }
+
+BBCLASSEXTEND = "native"
