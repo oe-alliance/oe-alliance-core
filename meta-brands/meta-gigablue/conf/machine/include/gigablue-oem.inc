@@ -57,7 +57,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'gbx3', 'gigablue/x3' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbx2', 'gigablue/x2' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbultraueh', 'gigablue/ultraueh' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbx3h', 'gigablue/x3h' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'gbquad4k', 'upgrade' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbquad4k', 'gigablue/quad4k' , '', d)}\
 "
 
 MTD_KERNEL = "\

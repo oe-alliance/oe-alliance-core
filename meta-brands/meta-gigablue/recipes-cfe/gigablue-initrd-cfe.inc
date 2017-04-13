@@ -18,9 +18,6 @@ do_deploy() {
     if [ -e rescue.bin  ]; then
     install -m 0644 rescue.bin  ${DEPLOYDIR}/${MACHINEBUILD}_rescue.bin
     fi
-    if [ -e upgrade-initrd  ]; then
-    install -m 0644 upgrade-initrd  ${DEPLOYDIR}/${MACHINEBUILD}_upgrade-initrd
-    fi
 }
 
 SRC_URI = "http://archiv.openmips.com/beta/initrd_${MACHINEBUILD}_${SRCDATE}.zip"
