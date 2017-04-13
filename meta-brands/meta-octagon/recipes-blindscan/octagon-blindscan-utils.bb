@@ -31,3 +31,7 @@ do_install() {
 
 SRC_URI[md5sum] = "23cb152a57a99b28f1bb74d95f4c3109"
 SRC_URI[sha256sum] = "d9aac4908e691e4be732a1325bfd3a542c41e8cc83d6447d260668234b240c78"
+
+INHIBIT_PACKAGE_STRIP = "1"
+do_compile[noexec] = "1"
+deltask do_populate_sysroot

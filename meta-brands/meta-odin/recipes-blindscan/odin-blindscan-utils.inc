@@ -27,5 +27,5 @@ FILES_odin-blindscan-dvbc-utils-${MACHINE} = "${bindir}/tda1002x"
 FILES_odin-blindscan-dvbs-utils-${MACHINE} = "${bindir}/odin_blindscan"
 
 INHIBIT_PACKAGE_STRIP = "1"
-
-PACKAGE_ARCH := "${MACHINE_ARCH}"
+do_compile[noexec] = "1"
+deltask do_populate_sysroot
