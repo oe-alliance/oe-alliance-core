@@ -32,6 +32,7 @@ FILES_gigablue-blindscan-dvbs-utils-${MACHINE} = "${bindir}/gigablue_blindscan"
 FILES_gigablue-blindscan-dvbc-utils-${MACHINE}-dbg = "${bindir}/.debug/*_blindscan"
 FILES_gigablue-blindscan-dvbs-utils-${MACHINE}-dbg = "${bindir}/.debug/tda1002x"
 
+do_prepare_recipe_sysroot[noexec] = "1"
 INHIBIT_PACKAGE_STRIP = "1"
 do_compile[noexec] = "1"
 deltask do_populate_sysroot
