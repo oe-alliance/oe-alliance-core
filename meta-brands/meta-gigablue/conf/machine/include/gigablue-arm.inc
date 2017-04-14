@@ -27,7 +27,6 @@ IMAGE_CMD_tar_prepend = "\
     bzip2 ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/rootfs.tar; \
     cd ${DEPLOY_DIR_IMAGE}; \
     zip ${IMAGE_NAME}_usb.zip ${IMAGEDIR}/*; \
-    zip ${IMAGE_NAME}_usb.zip burn.bat; \
     rm -f ${DEPLOY_DIR_IMAGE}/*.rootfs.tar.bz2; \
     rm -f ${DEPLOY_DIR_IMAGE}/.tar.bz2; \
     rm -f ${DEPLOY_DIR_IMAGE}/*.manifest; \
