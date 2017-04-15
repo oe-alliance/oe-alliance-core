@@ -18,6 +18,7 @@ DVBSKYPROVIDER = "kernel"
 
 MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS = "\
     kernel-module-cdfs \
+    ${@bb.utils.contains('MACHINE_FEATURES', 'v3d', 'ax-v3ddriver-${MACHINE}', '',d)} \
     "
 
 MACHINE_EXTRA_RRECOMMENDS = " \
@@ -34,6 +35,9 @@ TARGET_ARCH = "mipsel"
 DEFAULTTUNE = "mips32el"
 
 PREFERRED_PROVIDER_virtual/kernel = "linux-ax"
+PREFERRED_PROVIDER_virtual/egl = "ax-v3ddriver-${MACHINE}" 
+PREFERRED_PROVIDER_virtual/libgles2 = "ax-v3ddriver-${MACHINE}"
+PREFERRED_PROVIDER_virtual/kodi = "stb-kodi-${MACHINE}"
 
 KERNEL_IMAGETYPE = "vmlinux"
 KERNEL_OUTPUT = "${KERNEL_IMAGETYPE}"

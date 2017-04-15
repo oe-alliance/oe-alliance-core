@@ -9,7 +9,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "${IMAGE_VERSION}"
-PR = "r17"
+PR = "r18"
 
 DEPENDS = "enigma2-plugin-drivers-usbserial"
 RECOMMENDS = "enigma2-plugin-extensions-et-livestream"
@@ -70,6 +70,7 @@ RDEPENDS_${PN} = " \
     inadyn-mt \
     iperf3 \
     joe \
+    lighttpd \
     livestreamer \
     livestreamersrv \
     llmnr-query \

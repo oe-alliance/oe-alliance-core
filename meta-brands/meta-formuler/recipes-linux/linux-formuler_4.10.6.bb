@@ -1,13 +1,13 @@
-DESCRIPTION = "Linux kernel for ${MACHINE}"
+SUMMARY = "Linux kernel for ${MACHINE}"
 SECTION = "kernel"
 LICENSE = "GPLv2"
 
-KERNEL_RELEASE = "4.7.6"
+KERNEL_RELEASE = "4.10.6"
 
 inherit kernel machine_kernel_pr
 
-SRC_URI[md5sum] = "7704898cdd7284bdf680b73162fdeca4"
-SRC_URI[sha256sum] = "8821d8bde5014cfd0999dc62d1eb655bb47a2f4f6694d565b51037d3d6875098"
+SRC_URI[md5sum] = "e5d32dd03b742e6101fde917dcba837d"
+SRC_URI[sha256sum] = "2997b825996beabc25d2428d37d680f56e4fa971500eabd2033a6fc13cf5765e"
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
@@ -24,7 +24,7 @@ RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
 SRC_URI += "http://source.mynonpublic.com/formuler/linux-${PV}-${ARCH}.tar.gz \
     file://defconfig \
     file://formuler_partition_layout.patch \
-    file://sdio-pinmux.patch \
+    file://TBS-fixes-for-4.10-kernel.patch \
     file://0001-Support-TBS-USB-drivers-for-4.6-kernel.patch \
     file://0001-TBS-fixes-for-4.6-kernel.patch \
     file://0001-STV-Add-PLS-support.patch \
@@ -49,6 +49,7 @@ kernel_do_install_append() {
 	gzip -9c ${D}/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION} > ${D}/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz
 	rm ${D}/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION}
 }
+
 
 pkg_postinst_kernel-image () {
 	if [ "x$D" == "x" ]; then
