@@ -11,7 +11,7 @@ SRC_URI[sha256sum] = "2997b825996beabc25d2428d37d680f56e4fa971500eabd2033a6fc13c
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-MACHINE_KERNEL_PR_append = ".0"
+MACHINE_KERNEL_PR_append = ".1"
 
 # By default, kernel.bbclass modifies package names to allow multiple kernels
 # to be installed in parallel. We revert this change and rprovide the versioned
@@ -24,6 +24,7 @@ RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
 SRC_URI += "http://source.mynonpublic.com/formuler/linux-${PV}-${ARCH}.tar.gz \
     file://defconfig \
     file://formuler_partition_layout.patch \
+    file://sdio-pinmux.patch \
     file://TBS-fixes-for-4.10-kernel.patch \
     file://0001-Support-TBS-USB-drivers-for-4.6-kernel.patch \
     file://0001-TBS-fixes-for-4.6-kernel.patch \
