@@ -5,7 +5,7 @@ KV = "3.12.4"
 
 inherit kernel machine_kernel_pr
 
-MACHINE_KERNEL_PR_append = ".1"
+MACHINE_KERNEL_PR_append = ".2"
 
 SRCDATE = "16092014"
 SRCDATE_ebox7358 = "17072014"
