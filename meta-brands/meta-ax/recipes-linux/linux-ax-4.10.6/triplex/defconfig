@@ -1,6 +1,6 @@
 #
 # Automatically generated file; DO NOT EDIT.
-# Linux/mips 4.10.0 Kernel Configuration
+# Linux/mips 4.10.6 Kernel Configuration
 #
 CONFIG_MIPS=y
 
@@ -3307,7 +3307,7 @@ CONFIG_HAVE_ARCH_KGDB=y
 # CONFIG_UBSAN is not set
 # CONFIG_EARLY_PRINTK is not set
 CONFIG_CMDLINE_BOOL=y
-CONFIG_CMDLINE="libata.force=1:3.0G,2:3.0G,3:3.0G ubi.mtd=rootfs rootfstype=ubifs root=ubi0:rootfs bmem=240M@16M bmem=256M@512M console=null"
+CONFIG_CMDLINE="libata.force=1:3.0G,2:3.0G,3:3.0G ubi.mtd=rootfs rootfstype=ubifs root=ubi0:rootfs bmem=240M@16M bmem=450M@512M console=null"
 # CONFIG_CMDLINE_OVERRIDE is not set
 # CONFIG_SPINLOCK_TEST is not set
 # CONFIG_SCACHE_DEBUGFS is not set
