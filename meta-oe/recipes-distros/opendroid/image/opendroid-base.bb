@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=4d92cd373abda3937c2bc47fbc49d
 ALLOW_EMPTY_${PN} = "1"
 
 PV = "6.0"
-PR = "r21"
+PR = "r22"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
@@ -22,7 +22,6 @@ RDEPENDS_${PN} = "\
     hddtemp \
     busybox-cron \
     exteplayer3 \
-    gstplayer \
     ffmpeg \
     enigma2-plugin-systemplugins-serviceapp \   
     python-imaging \
