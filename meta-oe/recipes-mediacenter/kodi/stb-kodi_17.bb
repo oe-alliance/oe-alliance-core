@@ -5,7 +5,7 @@ FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://LICENSE.GPL;md5=930e2a5f63425d8dd72dbd7391c43c46"
 
-PR = "r11"
+PR = "r12"
 
 DEFAULT_PREFERENCE = "-1"
 
@@ -56,6 +56,7 @@ DEPENDS = " \
             mpeg2dec \
             python \
             samba \
+            mysql5 \
             sqlite3 \
             taglib \
             virtual/egl \
@@ -104,7 +105,7 @@ ACCEL ?= ""
 ACCEL_x86 = "vaapi vdpau"
 ACCEL_x86-64 = "vaapi vdpau"
 
-PACKAGECONFIG ??= "${ACCEL} \
+PACKAGECONFIG ??= "${ACCEL} mysql \
                    ${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'x11', '', d)} \
                    ${@bb.utils.contains('DISTRO_FEATURES', 'opengl', 'opengl', 'openglesv2', d)}"
 
