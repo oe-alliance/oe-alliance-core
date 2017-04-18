@@ -10,11 +10,11 @@ case "$1" in
     echo -n "Starting  gigablue-platform-util"
     if [ ! -e /dev/brcm0 ]; then
 	DRV_PATH=/lib/modules/3.14.28-1.12/extra
-	insmod $DRV_PATH/dvb_base.ko
 
 	mknod -m a=rw /dev/brcm0 c 30 0
 
 	export PATH=.:$PATH
+	export B_REFSW_BOXMODE=5
 	cd /home/root
 	nexus dvb_init &
     fi 
@@ -28,6 +28,9 @@ case "$1" in
   stop)
     ;;
   restart)
+    $0 stop
+    sleep 1
+    $1 start
     ;;
   *)
     echo "Usage: /etc/init.d/gigablue-platform-util {start|stop|restart}"
