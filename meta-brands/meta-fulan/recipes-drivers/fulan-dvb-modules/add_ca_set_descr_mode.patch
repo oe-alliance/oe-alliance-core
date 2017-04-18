@@ -1,0 +1,103 @@
+diff --git a/include/pti_public.h b/include/pti_public.h
+index cb2a1040..78ac26e3 100755
+--- a/include/pti_public.h
++++ b/include/pti_public.h
+@@ -10,7 +10,7 @@
+ 	#define NUMBER_OF_DESCRAMBLERS 4
+ #else
+ 	/*quack: 6 is the max for HDBOX maybe other values have to be chosen for other boxes*/
+-	#define NUMBER_OF_DESCRAMBLERS 6
++	#define NUMBER_OF_DESCRAMBLERS 9
+ #endif
+ 
+ struct PtiSession
+@@ -30,6 +30,7 @@ struct PtiSession
+ 	int		descramblers[NUMBER_OF_DESCRAMBLERS];
+ 	int		descramblerindex[32];
+ 	int		source;
++	int		algo[NUMBER_OF_DESCRAMBLERS];
+ };
+ 
+ typedef enum
+diff --git a/player2_191/linux/drivers/media/dvb/stm/dvb/dvb_ca.c b/player2_191/linux/drivers/media/dvb/stm/dvb/dvb_ca.c
+index 9cece242..196325e9 100644
+--- a/player2_191/linux/drivers/media/dvb/stm/dvb/dvb_ca.c
++++ b/player2_191/linux/drivers/media/dvb/stm/dvb/dvb_ca.c
+@@ -215,6 +215,32 @@ static int CaIoctl(struct inode *Inode,
+ 			return 0;
+ 			break;
+ 		}
++		case CA_SET_DESCR_MODE:
++		{
++			ca_descr_mode_t *descr_mode = (ca_descr_mode_t*) Parameter;
++			dprintk("CA_SET_DESCR_MODE\n");
++			if (descr_mode->index >= 16)
++				return -EINVAL;
++			if (descr_mode->algo > 2)
++				return -EINVAL;
++			dprintk("index = %d algo = %d\n", descr_mode->index, descr_mode->algo);
++			if(descr_mode->index < 0 || descr_mode->index >= NUMBER_OF_DESCRAMBLERS){
++				printk("Error descrambler %d not supported! needs to be in range 0 - %d\n", descr_mode->index, NUMBER_OF_DESCRAMBLERS-1);
++				return -1;
++			}
++			if (&Context->DvbContext->Lock != NULL)
++				mutex_lock (&Context->DvbContext->Lock);
++			if (pSession->algo[descr_mode->index] != descr_mode->algo) {
++				printk("Session = %d index = %d new algo = %d\n",pSession->session, descr_mode->index, descr_mode->algo);
++				if (pti_hal_descrambler_set_mode(pSession->session, pSession->descramblers[descr_mode->index], descr_mode->algo) != 0)
++					printk("Error while setting descrambler mode\n");
++				else pSession->algo[descr_mode->index] = descr_mode->algo;
++			}
++			if (&Context->DvbContext->Lock != NULL)
++				mutex_unlock (&Context->DvbContext->Lock);
++			return 0;
++			break;
++		}
+ 		case CA_SET_DESCR:
+ 		{
+ 			ca_descr_t *descr = (ca_descr_t *) Parameter;
+diff --git a/pti/pti_hal.h b/pti/pti_hal.h
+index 305f5d64..fadafe2a 100644
+--- a/pti/pti_hal.h
++++ b/pti/pti_hal.h
+@@ -6,6 +6,7 @@
+ 
+ extern int pti_hal_descrambler_set(int session_handle, int descrambler_handle, u8 *Data, int parity);
+ extern int pti_hal_descrambler_set_aes(int session_handle, int descrambler_handle, u8 *Data, int parity, int data_type);
++extern int pti_hal_descrambler_set_mode(int session_handle, int descrambler_handle, enum ca_descr_algo algo);
+ extern int pti_hal_descrambler_link(int session_handle, int descrambler_handle, int slot_handle);
+ extern int pti_hal_get_new_slot_handle(int session_handle, int dvb_type,
+ 				       int dvb_pes_type, struct dvb_demux *demux,
+diff --git a/pti/pti_main.c b/pti/pti_main.c
+index 3590118f..2d5bfc6c 100644
+--- a/pti/pti_main.c
++++ b/pti/pti_main.c
+@@ -44,6 +44,7 @@ struct StreamContext_s;
+ 
+ #include <linux/dvb/frontend.h>
+ #include <linux/dvb/dmx.h>
++#include <linux/dvb/ca.h>
+ 
+ #include "pti.h"
+ 
+@@ -874,6 +875,12 @@ int pti_hal_descrambler_set ( int session_handle, int descrambler_handle,
+         return 0;
+ }
+ 
++int pti_hal_descrambler_set_mode ( int session_handle, int descrambler_handle,
++			      enum ca_descr_algo algo )
++{
++        return 0;
++}
++
+ int pti_hal_descrambler_unlink ( int session_handle, int descrambler_handle )
+ {
+         return 0;
+@@ -1112,6 +1119,7 @@ EXPORT_SYMBOL(paceSwtsByPti);
+ 
+ EXPORT_SYMBOL(pti_hal_descrambler_set);
+ EXPORT_SYMBOL(pti_hal_descrambler_set_aes);
++EXPORT_SYMBOL(pti_hal_descrambler_set_mode);
+ EXPORT_SYMBOL(pti_hal_descrambler_unlink);
+ EXPORT_SYMBOL(pti_hal_descrambler_link);
+ EXPORT_SYMBOL(pti_hal_get_new_descrambler);

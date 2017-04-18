@@ -1,8 +1,8 @@
 diff --git a/player2_191/linux/drivers/media/dvb/stm/dvb/e2_proc/e2_proc_video.c b/player2_191/linux/drivers/media/dvb/stm/dvb/e2_proc/e2_proc_video.c
-index f6056c6..6c4bd7b 100644
+index 9f8a19d..82beca6 100644
 --- a/player2_191/linux/drivers/media/dvb/stm/dvb/e2_proc/e2_proc_video.c
 +++ b/player2_191/linux/drivers/media/dvb/stm/dvb/e2_proc/e2_proc_video.c
-@@ -143,7 +143,7 @@ static struct Modes
+@@ -148,7 +148,7 @@ static struct Modes
  {
  
  	{
@@ -11,7 +11,7 @@ index f6056c6..6c4bd7b 100644
  		FB_VMODE_NONINTERLACED | FB_VMODE_CONUPDATE
  	},
  	{
-@@ -164,7 +164,7 @@ static struct Modes
+@@ -169,7 +169,7 @@ static struct Modes
  	},
  
  	{
@@ -20,25 +20,25 @@ index f6056c6..6c4bd7b 100644
  		FB_SYNC_HOR_HIGH_ACT | FB_SYNC_VERT_HIGH_ACT, FB_VMODE_NONINTERLACED | FB_VMODE_CONUPDATE
  	},
  	{
-@@ -182,7 +182,7 @@ static struct Modes
+@@ -187,7 +187,7 @@ static struct Modes
  	},
  
  	{
--		16, "1080p60", 1920, 1080, 1920, 1080, 16, 6734, 148,  88, 36, 4, 44, 5,
-+		16, "1080p", 1920, 1080, 1920, 1080, 16, 6734, 148,  88, 36, 4, 44, 5,
+-		16, "1080p60", 1920, 1080, 1920, 1080, 16, 6734, 148, 88, 36, 4, 44, 5,
++		16, "1080p", 1920, 1080, 1920, 1080, 16, 6734, 148, 88, 36, 4, 44, 5,
  		FB_SYNC_HOR_HIGH_ACT | FB_SYNC_VERT_HIGH_ACT, FB_VMODE_CONUPDATE
  	},
  	{
-@@ -216,7 +216,7 @@ static struct Modes
+@@ -221,7 +221,7 @@ static struct Modes
  	},
  
  	{
--		8, "1080i60", 1920, 1080, 1920, 1080, 16, 13468, 148,  88, 35, 5, 44, 5,
-+		8, "1080i", 1920, 1080, 1920, 1080, 16, 13468, 148,  88, 35, 5, 44, 5,
+-		8, "1080i60", 1920, 1080, 1920, 1080, 16, 13468, 148, 88, 35, 5, 44, 5,
++		8, "1080i", 1920, 1080, 1920, 1080, 16, 13468, 148, 88, 35, 5, 44, 5,
  		FB_SYNC_HOR_HIGH_ACT | FB_SYNC_VERT_HIGH_ACT, FB_VMODE_INTERLACED | FB_VMODE_CONUPDATE
  	},
  	{
-@@ -229,7 +229,7 @@ static struct Modes
+@@ -234,7 +234,7 @@ static struct Modes
  	},
  
  	{
@@ -47,7 +47,7 @@ index f6056c6..6c4bd7b 100644
  		FB_SYNC_HOR_HIGH_ACT | FB_SYNC_VERT_HIGH_ACT, FB_VMODE_NONINTERLACED | FB_VMODE_CONUPDATE
  	},
  	{
-@@ -242,24 +242,24 @@ static struct Modes
+@@ -247,24 +247,24 @@ static struct Modes
  	 */
  #ifdef alter_tobak
  	{
@@ -76,15 +76,3 @@ index f6056c6..6c4bd7b 100644
  		FB_VMODE_INTERLACED | FB_VMODE_CONUPDATE
  	},
  #endif
-@@ -1390,9 +1390,9 @@ int proc_video_videomode_choices_read(char* page, char** start, off_t off, int c
- #endif
- #if 0
- #if defined(UFS912) || defined(SPARK) || defined (SPARK7162) || defined(ATEVIO7500) || defined(HS7110) || defined(HS7810A) || defined(HS7119) || defined(HS7819) || defined(ATEMIO520) || defined(ATEMIO530) || defined(UFS913) || defined(VITAMIN_HD5000) || defined(SAGEMCOM88)
--	len = sprintf(page, "pal 1080i50 720p50 576p50 576i50 1080i60 720p60 1080p24 1080p25 1080p30 1080p50 1080p59 1080p60 PC\n");
-+	len = sprintf(page, "pal 1080i50 720p50 576p50 576i 1080i 720p 1080p24 1080p25 1080p30 1080p50 1080p59 1080p PC\n");
- #else
--	len = sprintf(page, "pal 1080i50 720p50 576p50 576i50 1080i60 720p60 1080p24 1080p25 1080p30 PC\n");
-+	len = sprintf(page, "pal 1080i50 720p50 576p50 576i 1080i 720p 1080p24 1080p25 1080p30 PC\n");
- #endif
- #else
- 	/* BPanther: shows real resolution support by player (receiver independent) */
