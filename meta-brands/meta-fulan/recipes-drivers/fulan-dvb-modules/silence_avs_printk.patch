@@ -1,0 +1,44 @@
+diff --git a/player2_191/linux/drivers/media/dvb/stm/dvb/e2_proc/e2_proc_avs.c b/player2_191/linux/drivers/media/dvb/stm/dvb/e2_proc/e2_proc_avs.c
+index 8f6d3b8..f446b5c 100644
+--- a/player2_191/linux/drivers/media/dvb/stm/dvb/e2_proc/e2_proc_avs.c
++++ b/player2_191/linux/drivers/media/dvb/stm/dvb/e2_proc/e2_proc_avs.c
+@@ -706,7 +706,9 @@ int proc_video_hdmi_colorspace_write(struct file *file, const char __user *buf,
+ 	char *page;
+ 	char *myString;
+ 	ssize_t ret = -ENOMEM;
++#ifdef VERY_VERBOSE
+ 	printk("%s %ld - ", __FUNCTION__, count);
++#endif
+ 	page = (char *)__get_free_page(GFP_KERNEL);
+ 	if (page)
+ 	{
+@@ -721,7 +723,9 @@ int proc_video_hdmi_colorspace_write(struct file *file, const char __user *buf,
+ 		myString = (char *) kmalloc(count + 1, GFP_KERNEL);
+ 		strncpy(myString, page, count);
+ 		myString[count] = '\0';
++#ifdef VERY_VERBOSE
+ 		printk("%s\n", myString);
++#endif
+ 		//sscanf(myString, "%d", &alpha);
+ 		//0rgb 1yuv 2422
+ 		if (strncmp("hdmi_rgb", page, count - 1) == 0)
+@@ -769,7 +773,9 @@ int proc_video_hdmi_colorspace_read(char *page, char **start, off_t off, int cou
+ 	struct stmfb_info *info = stmfb_get_fbinfo_ptr();
+ 	struct stmfbio_output_configuration outputConfig;
+ 	int len = 0;
++#ifdef VERY_VERBOSE
+ 	printk("%s %d\n", __FUNCTION__, count);
++#endif
+ 	outputConfig.outputid = 1;
+ 	stmfb_get_output_configuration(&outputConfig, info);
+ 	if (outputConfig.hdmi_config & STMFBIO_OUTPUT_HDMI_422)
+@@ -784,7 +790,9 @@ int proc_video_hdmi_colorspace_read(char *page, char **start, off_t off, int cou
+ int proc_video_hdmi_colorspace_choices_read(char *page, char **start, off_t off, int count, int *eof, void *data_unused)
+ {
+ 	int len = 0;
++#ifdef VERY_VERBOSE
+ 	printk("%s\n", __FUNCTION__);
++#endif
+ 	len = sprintf(page, "hdmi_rgb hdmi_yuv hdmi_422\n");
+ 	return len;
+ }

@@ -1,8 +1,8 @@
 diff --git a/e2_proc/e2_proc_main.c b/e2_proc/e2_proc_main.c
-index ffb0c1d..0f02fea 100644
+index 81881d4..4e33b90 100644
 --- a/e2_proc/e2_proc_main.c
 +++ b/e2_proc/e2_proc_main.c
-@@ -114,6 +114,8 @@
+@@ -118,6 +118,8 @@
   *  |           |
   *  |           --------- led0_pattern
   *  |           |
@@ -11,7 +11,7 @@ index ffb0c1d..0f02fea 100644
   *  |           --------- led_pattern_speed
   *  |           |
   *  |           |
-@@ -200,6 +202,10 @@
+@@ -206,6 +208,10 @@
   *  |           --------- dst_width   |
   *  |           |                     |
   *  |           --------- dst_height /
@@ -22,7 +22,7 @@ index ffb0c1d..0f02fea 100644
   *
   */
  
-@@ -549,6 +555,10 @@ struct ProcStructure_s e2Proc[] =
+@@ -602,6 +608,10 @@ struct ProcStructure_s e2Proc[] =
  {
  	{cProcEntry, "progress"                                                         , NULL, NULL, NULL, NULL, ""},
  
@@ -33,7 +33,7 @@ index ffb0c1d..0f02fea 100644
  	{cProcEntry, "bus/nim_sockets"                                                  , NULL, NULL, NULL, NULL, ""},
  	{cProcDir  , "stb"                                                              , NULL, NULL, NULL, NULL, ""},
  	{cProcDir  , "stb/audio"                                                        , NULL, NULL, NULL, NULL, ""},
-@@ -608,11 +618,35 @@ struct ProcStructure_s e2Proc[] =
+@@ -663,11 +673,35 @@ struct ProcStructure_s e2Proc[] =
  	{cProcEntry, "stb/fp/lnb_sense1"                                                , NULL, NULL, NULL, NULL, ""},
  	{cProcEntry, "stb/fp/lnb_sense2"                                                , NULL, NULL, NULL, NULL, ""},
  	{cProcEntry, "stb/fp/led0_pattern"                                              , NULL, NULL, default_write_proc, NULL, ""},
@@ -82,7 +82,7 @@ index 52b07a8..af25f70 100644
  
      obj-m += aotom.o
 diff --git a/frontcontroller/aotom_spark/aotom_main.c b/frontcontroller/aotom_spark/aotom_main.c
-index 4c5d82b..d630806 100644
+index a9ae1c2..8a02395 100644
 --- a/frontcontroller/aotom_spark/aotom_main.c
 +++ b/frontcontroller/aotom_spark/aotom_main.c
 @@ -5,6 +5,7 @@
@@ -93,7 +93,7 @@ index 4c5d82b..d630806 100644
   *
   * This program is free software; you can redistribute it and/or modify
   * it under the terms of the GNU General Public License as published by
-@@ -51,6 +52,7 @@
+@@ -53,6 +54,7 @@
  #include <linux/rtc.h>
  #include <linux/platform_device.h>
  
@@ -101,15 +101,25 @@ index 4c5d82b..d630806 100644
  #include "aotom_main.h"
  
  static short paramDebug = 0;
-@@ -77,6 +79,7 @@ typedef struct
- 	int state;
- 	int period;
- 	int stop;
-+	int enable;
- 	struct task_struct *led_task;
- 	struct semaphore led_sem;
- } tLedState;
-@@ -113,7 +116,8 @@ static struct task_struct *draw_task = 0;
+@@ -74,16 +76,7 @@ static int open_count = 0;
+ 
+ #define FRONTPANEL_MINOR_VFD    0
+ 
+-typedef struct
+-{
+-	int state;
+-	int period;
+-	int stop;
+-	struct task_struct *led_task;
+-	struct semaphore led_sem;
+-} tLedState;
+-
+-static tLedState led_state[LED_COUNT + 1];
++tLedState led_state[LED_COUNT + 1];
+ static int led_count = LED_COUNT;
+ 
+ static struct semaphore write_sem;
+@@ -115,7 +108,8 @@ static struct task_struct *draw_task = 0;
  #define DRAW_THREAD_STATUS_INIT     2
  static int draw_thread_status = DRAW_THREAD_STATUS_STOPPED;
  
@@ -117,9 +127,9 @@ index 4c5d82b..d630806 100644
 +int aotomSetIcon(int which, int on);
 +int aotomSetLed(int which, int on);
  
- static void clear_display(void)
- {
-@@ -353,7 +357,7 @@ int vfd_init_func(void)
+ int vfdlen_open(struct inode *inode, struct  file *file) {
+   return single_open(file, vfdlen_show, NULL);
+@@ -372,7 +366,7 @@ int vfd_init_func(void)
  	return 0;
  }
  
@@ -128,7 +138,7 @@ index 4c5d82b..d630806 100644
  {
  	int  res = 0;
  	dprintk(5, "%s > %d, %d\n", __func__, which, on);
-@@ -372,8 +376,77 @@ static int aotomSetIcon(int which, int on)
+@@ -391,8 +385,77 @@ static int aotomSetIcon(int which, int on)
  	return res;
  }
  
@@ -207,7 +217,16 @@ index 4c5d82b..d630806 100644
  
  static ssize_t AOTOMdev_write(struct file *filp, const char *buff, size_t len, loff_t *off)
  {
-@@ -939,6 +1012,11 @@ static struct platform_driver aotom_rtc_driver =
+@@ -424,7 +487,7 @@ static ssize_t AOTOMdev_write(struct file *filp, const char *buff, size_t len, l
+ 	return len;
+ }
+ 
+-static void flashLED(int led, int ms)
++void flashLED(int led, int ms)
+ {
+ 	if (!led_state[led].led_task || (ms < 1 && led < LED_COUNT - 1))
+ 		return;
+@@ -958,6 +1021,11 @@ static struct platform_driver aotom_rtc_driver =
  	},
  };
  
@@ -219,7 +238,7 @@ index 4c5d82b..d630806 100644
  static int __init aotom_init_module(void)
  {
  	int i;
-@@ -954,6 +1032,8 @@ static int __init aotom_init_module(void)
+@@ -973,6 +1041,8 @@ static int __init aotom_init_module(void)
  		return -1;
  	if (register_chrdev(VFD_MAJOR, "VFD", &vfd_fops))
  		printk("unable to get major %d for VFD\n", VFD_MAJOR);
@@ -228,7 +247,7 @@ index 4c5d82b..d630806 100644
  	sema_init(&write_sem, 1);
  	sema_init(&draw_thread_sem, 1);
  	for (i = 0; i < LED_COUNT; i++)
-@@ -961,6 +1041,7 @@ static int __init aotom_init_module(void)
+@@ -980,6 +1050,7 @@ static int __init aotom_init_module(void)
  		led_state[i].state = LED_OFF;
  		led_state[i].period = 0;
  		led_state[i].stop = 1;
@@ -236,15 +255,15 @@ index 4c5d82b..d630806 100644
  		sema_init(&led_state[i].led_sem, 0);
  		led_state[i].led_task = kthread_run(led_thread, (void *) i, "led_thread");
  	}
-@@ -981,6 +1062,7 @@ static int __init aotom_init_module(void)
+@@ -1000,6 +1071,7 @@ static int __init aotom_init_module(void)
  		rtc_pdev = platform_device_register_simple(RTC_NAME, -1, NULL, 0);
  	if (IS_ERR(rtc_pdev))
  		printk(KERN_ERR "%s platform_device_register_simple failed: %ld\n", __func__, PTR_ERR(rtc_pdev));
 +	create_proc_fp();
  	dprintk(5, "%s <\n", __func__);
+ 	proc_create("vfdlen", 0, NULL, &vfdlen_fops);
  	return 0;
- }
-@@ -1013,9 +1095,15 @@ static void __exit aotom_cleanup_module(void)
+@@ -1033,10 +1105,16 @@ static void __exit aotom_cleanup_module(void)
  		msleep(1);
  	dprintk(5, "[BTN] unloading ...\n");
  	button_dev_exit();
@@ -253,6 +272,7 @@ index 4c5d82b..d630806 100644
 +	class_destroy(vfd_class);
  	unregister_chrdev(VFD_MAJOR, "VFD");
  	YWPANEL_VFD_Term();
+ 	remove_proc_entry("vfdlen", NULL);
  	printk("Fulan front panel module unloading\n");
 +
 +	remove_proc_fp();
@@ -260,12 +280,41 @@ index 4c5d82b..d630806 100644
  }
  
  module_init(aotom_init_module);
+diff --git a/frontcontroller/aotom_spark/aotom_main.h b/frontcontroller/aotom_spark/aotom_main.h
+index f57628d..f15f1a2 100644
+--- a/frontcontroller/aotom_spark/aotom_main.h
++++ b/frontcontroller/aotom_spark/aotom_main.h
+@@ -225,6 +225,16 @@ typedef struct YWPANEL_I2CData_s
+ 
+ } YWPANEL_I2CData_t;
+ 
++typedef struct
++{
++	int state;
++	int period;
++	int stop;
++	int enable;
++	struct task_struct *led_task;
++	struct semaphore led_sem;
++} tLedState;
++
+ typedef enum YWPANEL_DataType_e
+ {
+ 	YWPANEL_DATATYPE_LBD = 0x01,
+@@ -630,6 +640,7 @@ extern u8(*YWPANEL_VFD_ScanKeyboard)(void);
+ extern int (*YWPANEL_VFD_ShowString)(char *);
+ 
+ extern int YWPANEL_width;
++extern tLedState led_state[LED_COUNT + 1];
+ 
+ YWPANEL_VFDSTATE_t YWPANEL_FP_GetVFDStatus(void);
+ int YWPANEL_FP_SetVFDStatus(YWPANEL_VFDSTATE_t state);
 diff --git a/frontcontroller/aotom_spark/aotom_procfs.c b/frontcontroller/aotom_spark/aotom_procfs.c
 new file mode 100644
-index 0000000..83fd4e4
+index 0000000..931caab
 --- /dev/null
 +++ b/frontcontroller/aotom_spark/aotom_procfs.c
-@@ -0,0 +1,752 @@
+@@ -0,0 +1,760 @@
 +/*
 + * aotom_procfs.c
 + *
@@ -367,6 +416,7 @@ index 0000000..83fd4e4
 +extern int aotomWriteText(char *buf, size_t len);
 +extern int aotomSetBrightness(int level);
 +extern int aotomGetVersion();
++extern void flashLED(int led, int ms);
 +
 +static int rtc_offset = 0;
 +static u32 wakeup_time = 0;
@@ -415,6 +465,12 @@ index 0000000..83fd4e4
 +				strncat(myString, page, count);
 +				aotomWriteText(myString, (count+6) < 8 ? (count+6) : 8);
 +				kfree(myString);
++			}
++			if (aotomGetVersion() == YWPANEL_FP_DISPTYPE_VFD) {
++				if ((progress > 0) && (progress <= 98) && (led_state[LED_SPINNER].period == 0))
++					flashLED(LED_SPINNER, 200); // start spinner
++				if ((progress > 98) && (led_state[LED_SPINNER].period > 0))
++					flashLED(LED_SPINNER, 0); // stop spinner
 +			}
 +		}
 +		else {
@@ -978,6 +1034,7 @@ index 0000000..83fd4e4
 +  { "stb/fp/rtc_offset", aotom_read_rtc_offset, aotom_write_rtc_offset },
 +  { "stb/fp/aotom", NULL, aotom_write },
 +  { "stb/fp/led0_pattern", NULL, led0_pattern_write },
++  { "stb/fp/led1_pattern", NULL, led1_pattern_write },
 +  { "stb/fp/wakeup_time", wakeup_time_read, wakeup_time_write },
 +  { "stb/fp/was_timer_wakeup", was_timer_wakeup_read, null_write },
 +  { "stb/fp/version", fp_version_read, NULL },
