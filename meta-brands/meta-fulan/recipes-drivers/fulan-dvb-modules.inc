@@ -28,7 +28,6 @@ SRC_URI = " \
     file://aotom_spark_procfs.patch;patch=1 \
     file://silence_avs_printk.patch;patch=1 \
     file://fix_videomode_names.patch;patch=1 \
-    file://revert_disable_video_free_on_release.patch;patch=1 \
     file://ddbootup \
     file://sh4booster \
     file://modules.conf \
