@@ -27,6 +27,7 @@ DEPENDS = "\
     enigma2-plugin-drivers-ct2-dvb-usb-geniatech-t230 \
     enigma2-plugin-drivers-s2-dvb-usb-s960 \
     enigma2-plugin-drivers-ct2-dvb-usb-t330 \
+    enigma2-plugin-drivers-ct2-dvb-usb-pctv292e \
     ${@bb.utils.contains("TARGET_ARCH", "sh4", "" , "enigma2-plugin-drivers-dvb-usb-dvbsky-classic", d)} \
     ${@bb.utils.contains("MACHINE", "vuduo", "enigma2-plugin-drivers-dvb-usb-turbo", "", d)} \
     ${@bb.utils.contains("MACHINE", "vuduo2", "enigma2-plugin-drivers-dvb-usb-turbo", "", d)} \
@@ -41,4 +42,4 @@ DEPENDS = "\
     ${@bb.utils.contains("MACHINE", "vuultimo4k", "enigma2-plugin-drivers-dvb-usb-turbo", "", d)} \
     "
 
-PR = "r17"
+PR = "r18"
