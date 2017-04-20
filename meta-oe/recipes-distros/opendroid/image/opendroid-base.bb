@@ -5,8 +5,8 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=4d92cd373abda3937c2bc47fbc49d
 
 ALLOW_EMPTY_${PN} = "1"
 
-PV = "6.0"
-PR = "r22"
+PV = "6.2"
+PR = "r23"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
