@@ -10,7 +10,7 @@ KERNEL_FILE = "kernel.bin"
 ROOTFS_FILE = "rootfs.bin"
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS = "\
-    formuler-dvb-modules-${MACHINE} \
+    ${@bb.utils.contains('MACHINE_FEATURES', 'al-driver', 'formuler-dvb-modules-al-${MACHINE}', 'formuler-dvb-modules-${MACHINE}',d)} \
     ${@bb.utils.contains('MACHINE_FEATURES', 'v3d', 'formuler-v3ddriver-${MACHINE}', '',d)} \
     "
 

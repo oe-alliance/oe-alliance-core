@@ -9,7 +9,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "${IMAGE_VERSION}"
-PR = "r18"
+PR = "r19"
 
 DEPENDS = "enigma2-plugin-drivers-usbserial"
 RECOMMENDS = "enigma2-plugin-extensions-et-livestream"
@@ -32,6 +32,7 @@ RDEPENDS_${PN} = " \
     enigma2-plugin-extensions-openairplay \
     enigma2-plugin-extensions-mediatomb \
     enigma2-plugin-extensions-dreamplex \
+    enigma2-plugin-extensions-enigmalight \
     enigma2-plugin-extensions-et-portal \
     enigma2-plugin-extensions-moviearchiver \
     enigma2-plugin-extensions-yahooweather \
