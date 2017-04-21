@@ -10,6 +10,11 @@ PR = "r4"
 
 DEPENDS = "libusb python-native"
 
+do_populate_sysroot[noexec] = "1"
+
+do_package_qa() {
+}
+
 SRC_URI="git://github.com/rossi2000/enigmalight.git;protocol=git"
 
 S = "${WORKDIR}/git/build"
@@ -30,7 +35,7 @@ do_install() {
 }
 
 do_compile_append() {
-    python -O -m compileall ${WORKDIR}
+    python -O -m compileall ${S}
 }
 
 python populate_packages_prepend () {
