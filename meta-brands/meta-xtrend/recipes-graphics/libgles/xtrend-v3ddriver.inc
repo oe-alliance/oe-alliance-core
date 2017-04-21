@@ -5,7 +5,7 @@ LICENSE = "CLOSED"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PROVIDES = "virtual/libgles2 virtual/egl"
-DEPENDS = "hd-v3ddriver-headers"
+DEPENDS = "xtrend-v3ddriver-headers"
 
 PV = "${SRCDATE}"
 PR = "r2"
