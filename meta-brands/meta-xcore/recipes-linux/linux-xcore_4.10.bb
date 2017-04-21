@@ -14,7 +14,7 @@ SRC_URI[sha256sum] = "550750068fc63cf69334f5d3178f844e76b4ba979e51fb7471ac5b149d
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-brcmstb-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-MACHINE_KERNEL_PR_append = ".4"
+MACHINE_KERNEL_PR_append = ".5"
 
 # By default, kernel.bbclass modifies package names to allow multiple kernels
 # to be installed in parallel. We revert this change and rprovide the versioned
@@ -34,6 +34,7 @@ SRC_URI += "http://source.mynonpublic.com/xcore/xcore-linux-${PV}-${SRC}.tar.gz 
     file://0001-STV-Add-SNR-Signal-report-parameters.patch \
     file://blindscan2.patch \
     file://0001-stv090x-optimized-TS-sync-control.patch \
+    file://linux-4.10-xc7346-lowmem.patch \
     "
 
 S = "${WORKDIR}/linux-brcmstb-${PV}"
