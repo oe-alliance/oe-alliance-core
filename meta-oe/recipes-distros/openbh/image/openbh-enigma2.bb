@@ -36,5 +36,6 @@ RRECOMMENDS_${PN} = " \
     ${@bb.utils.contains("MACHINE_FEATURES", "uianimation", "enigma2-plugin-systemplugins-animationsetup" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "omb", "enigma2-plugin-extensions-openmultiboot", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "omb", "openmultiboot", "", d)} \
+    ${@base_contains("TARGET_ARCH", "arm", "glibc-compat", "", d)} \
     "
 
