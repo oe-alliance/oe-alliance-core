@@ -1,0 +1,35 @@
+From d0942f12099ec17c9f196038a829321a1639d9a6 Mon Sep 17 00:00:00 2001
+From: GF <support@gfutures.net>
+Date: Thu, 20 Apr 2017 20:30:27 +0200
+Subject: [PATCH] revert 5de4e1ea9a731cad195ce5152705c21daef3bbba
+
+---
+ drivers/usb/host/xhci-plat.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/usb/host/xhci-plat.c b/drivers/usb/host/xhci-plat.c
+index 9715200..cea3ea5 100644
+--- a/drivers/usb/host/xhci-plat.c
++++ b/drivers/usb/host/xhci-plat.c
+@@ -232,6 +232,9 @@ static int xhci_plat_probe(struct platform_device *pdev)
+ 	if (device_property_read_bool(&pdev->dev, "usb3-lpm-capable"))
+ 		xhci->quirks |= XHCI_LPM_SUPPORT;
+ 
++	if (HCC_MAX_PSA(xhci->hcc_params) >= 4)
++		xhci->shared_hcd->can_do_streams = 1;
++
+ 	hcd->usb_phy = devm_usb_get_phy_by_phandle(&pdev->dev, "usb-phy", 0);
+ 	if (IS_ERR(hcd->usb_phy)) {
+ 		ret = PTR_ERR(hcd->usb_phy);
+@@ -248,9 +251,6 @@ static int xhci_plat_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		goto disable_usb_phy;
+ 
+-	if (HCC_MAX_PSA(xhci->hcc_params) >= 4)
+-		xhci->shared_hcd->can_do_streams = 1;
+-
+ 	ret = usb_add_hcd(xhci->shared_hcd, irq, IRQF_SHARED);
+ 	if (ret)
+ 		goto dealloc_usb2_hcd;
+-- 
+2.7.4
