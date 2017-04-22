@@ -8,7 +8,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "${IMAGE_VERSION}"
-PR = "r10"
+PR = "r11"
 
 inherit packagegroup
 
@@ -36,6 +36,6 @@ RRECOMMENDS_${PN} = " \
     ${@bb.utils.contains("MACHINE_FEATURES", "uianimation", "enigma2-plugin-systemplugins-animationsetup" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "omb", "enigma2-plugin-extensions-openmultiboot", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "omb", "openmultiboot", "", d)} \
-    ${@base_contains("TARGET_ARCH", "arm", "glibc-compat", "", d)} \
+    ${@bb.utils.contains("TARGET_ARCH", "arm", "glibc-compat", "", d)} \
     "
 
