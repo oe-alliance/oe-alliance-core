@@ -17,12 +17,12 @@ S = "${WORKDIR}/git"
 
 inherit autotools gitpkgv pythonnative pkgconfig gettext
 
-CXXFLAGS += " -std=gnu++98"
+CXXFLAGS += "${@bb.utils.contains('DISTRO_FEATURES', 'libsigc2', '', ' -std=gnu++98', d)}"
 
 PV = "0.5+git${SRCPV}"
 PKGV = "0.5+git${GITPKGV}"
 
-PR = "r4"
+PR = "r5"
 
 EXTRA_OECONF = "\
 	BUILD_SYS=${BUILD_SYS} \
