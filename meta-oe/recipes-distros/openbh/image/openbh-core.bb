@@ -3,7 +3,7 @@ MAINTAINER = "OpenBH"
 
 require conf/license/license-gplv2.inc
 
-DEPENDS = "enigma2 python-process libcrypto-compat-0.9.7"
+DEPENDS = "enigma2 python-process libcrypto-compat-0.9.7 gettext-native"
 RDEPENDS_enigma2-plugin-obh-core = "ofgwrite python-process libcrypto-compat-0.9.7 python-compression zip procps python-beautifulsoup"
 
 RCONFLICTS_enigma2-plugin-obh-core = "settings-autorestore"
@@ -16,7 +16,7 @@ inherit autotools-brokensep gitpkgv pythonnative
 SRCREV = "${AUTOREV}"
 PV = "${IMAGE_VERSION}+git${SRCPV}"
 PKGV = "${IMAGE_VERSION}+git${GITPKGV}"
-PR = "r1"
+PR = "r2"
 
 SRC_URI="git://github.com/BlackHole/obh-core.git;protocol=git"
 
