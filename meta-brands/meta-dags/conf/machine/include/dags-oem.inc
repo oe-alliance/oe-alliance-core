@@ -44,6 +44,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'mediabox', 'MediaBox HD LX' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'fusionhd', 'FUSION HD' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'fusionhdse', 'FUSION HD SE' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'purehd', 'PURE HD' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'purehdse', 'PURE HD SE' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'force2plushv', 'FORCE2+ HV' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'force3uhdplus', 'FORCE3 UHD Plus' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'force3uhd', 'FORCE3 UHD' , '', d)}\
@@ -93,6 +94,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'mediabox', 'Jepssen' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'fusionhd', 'XSARIUS' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'fusionhdse', 'XSARIUS' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'purehd', 'XSARIUS' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'purehdse', 'XSARIUS' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'force2plushv', 'Iqon' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'force3uhdplus', 'Iqon' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'force3uhd', 'Iqon' , '', d)}\
@@ -142,6 +144,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'mediabox', 'update/mediabox/cfe' , '', d)}
 ${@bb.utils.contains('MACHINEBUILD', 'fusionhd', 'update/fusionhd/cfe' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'fusionhdse', 'update/fusionhdse/cfe' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'purehd', 'update/purehd/cfe' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'purehdse', 'update/purehdse/cfe' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'force2plushv', 'update/force2plushv/cfe' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'force3uhdplus', 'update/force3uhdplus' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'force3uhd', 'update/force3uhd' , '', d)}\
@@ -191,6 +194,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'mediabox', 'mtd6' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'fusionhd', 'mtd2' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'fusionhdse', 'mtd2' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'purehd', 'mtd2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'purehdse', 'mtd2' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'force2plushv', 'mtd2' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'force3uhdplus', 'mmcblk0p1' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'force3uhd', 'mmcblk0p1' , '', d)}\
@@ -240,6 +244,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'mediabox', 'mtd4' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'fusionhd', 'mtd0' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'fusionhdse', 'mtd0' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'purehd', 'mtd0' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'purehdse', 'mtd0' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'force2plushv', 'mtd0' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'force3uhdplus', 'mmcblk0p4' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'force3uhd', 'mmcblk0p4' , '', d)}\
@@ -274,6 +279,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'optimussos', 'splash1_os1.bmp' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'fusionhd', 'splash1_power.bmp' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'fusionhdse', 'splash1_power.bmp' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'purehd', 'splash1_power.bmp' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'purehdse', 'splash1_power.bmp' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'force2plushv', 'splash1_power.bmp' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'force3uhdplus', 'splash1_power.bmp' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'force3uhd', 'splash1_power.bmp' , '', d)}\
@@ -324,6 +330,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'mediabox', 'dags7335' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'fusionhd', 'dags7362' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'fusionhdse', 'dags7362' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'purehd', 'dags7362' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'purehdse', 'dags73625' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'force2plushv', 'dags73625' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'force3uhdplus', 'dags7252-300' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'force3uhd', 'dags7252-200' , '', d)}\
@@ -336,6 +343,7 @@ MACHINE_FEATURES += "3dtv alsa hdmicec switchoff textlcd ci skins1080 \
     ${@bb.utils.contains('MACHINEBUILD', 'fusionhd', 'fastscan dvb-c' , '', d)} \
     ${@bb.utils.contains('MACHINEBUILD', 'fusionhdse', 'fastscan dvb-c' , '', d)} \
     ${@bb.utils.contains('MACHINEBUILD', 'purehd', 'fastscan dvb-c' , '', d)} \
+    ${@bb.utils.contains('MACHINEBUILD', 'purehdse', 'fastscan dvb-c' , '', d)} \
     ${@bb.utils.contains('MACHINEBUILD', 'tmnanom3', 'fastscan dvb-c' , '', d)} \
     ${@bb.utils.contains('MACHINEBUILD', 'force2plushv', 'fastscan dvb-c' , '', d)} \
     ${@bb.utils.contains('MACHINEBUILD', 'tmnanosem2plus', 'fastscan dvb-c' , '', d)} \
