@@ -20,7 +20,7 @@ FILES_${PN}-src = "${PYTHON_SITEPACKAGES_DIR}/sitecustomize.py"
 RDEPENDS_{PN}-src = "${PN}"
 
 do_compile() {
-    python -O -m compileall ${WORKDIR}
+    python -O -m compileall ${WORKDIR}/sitecustomize.py
 }
 
 do_install() {

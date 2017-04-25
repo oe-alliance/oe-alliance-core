@@ -30,7 +30,7 @@ do_install() {
 }
 
 do_compile_append() {
-    python -O -m compileall ${WORKDIR}
+    python -O -m compileall ${S}
 }
 
 python populate_packages_prepend () {
