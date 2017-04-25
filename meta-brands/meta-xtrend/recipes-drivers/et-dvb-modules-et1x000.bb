@@ -9,10 +9,10 @@ PR = "r0"
 
 KV = "4.1.37"
 GCCREV = "6.3.0"
-SRCDATE = "20170309"
+SRCDATE = "20170424"
 
-SRC_URI[md5sum] = "d3cfc9989d24342b984565febf0cc372"
-SRC_URI[sha256sum] = "2ea997712b1fe59a7c5439ee26aa9c5f9981aea9acf39de6d73eb52f268f2c44"
+SRC_URI[md5sum] = "36fe5fcfed5f2e0300ba9308eebaf526"
+SRC_URI[sha256sum] = "25988bbc380af7a49ed496b2c7763335f64f366a578275c9753870a163f5f697"
 
 SRC_URI = "http://gi-et.info/${MACHINE}/${MACHINE}-drivers-${KV}-${GCCREV}-${SRCDATE}.zip"
 

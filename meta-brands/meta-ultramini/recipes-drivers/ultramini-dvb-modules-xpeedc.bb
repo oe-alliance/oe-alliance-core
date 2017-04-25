@@ -1,9 +1,9 @@
 KV = "4.1.21"
-SRCDATE = "20170318"
+SRCDATE = "20170424"
 GCC = "6.3.0"
 
 SRC_URI = "http://xpeedlx.info/${MACHINE_DRIVER}-drivers-${KV}-${GCC}-${SRCDATE}.zip"
 require ultramini-dvb-modules.inc
 
-SRC_URI[md5sum] = "8b592f008320f9ccc6152ee4444bfe84"
-SRC_URI[sha256sum] = "72fe0a8451b6dcc09d2345cd1fb4810e4002dfbb72e496c14f5d7bf336bb178c"
+SRC_URI[md5sum] = "036d57fc2083cc4c5c0fb4046d45da52"
+SRC_URI[sha256sum] = "b54e83363ee5c03b18cc7c4a13bbe1d9b49c07835f1866c91a2ff31b5416c2e6"
