@@ -6,7 +6,7 @@ inherit autotools-brokensep gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "0.2+git${SRCPV}"
 PKGV = "0.2+git${GITPKGV}"
-PR = "r4"
+PR = "r5"
 
 DEPENDS = "libusb python-native"
 
@@ -22,11 +22,19 @@ do_install() {
     install -d ${D}/usr/bin
     install -m 0755 ${S}/src/enigmalight ${D}/usr/bin/
     install -d ${D}/home/elight-addons
-    rm ${WORKDIR}/git/elight-addons/usr/bin/elighttalk
+    if [ -d ${WORKDIR}/git/elight-addons/usr/bin/elighttalk ]; then
+        rm ${WORKDIR}/git/elight-addons/usr/bin/elighttalk
+    fi
     cp -aRf ${WORKDIR}/git/elight-addons/* ${D}/home/elight-addons
     install -m 0755 ${S}/src/elighttalk ${D}/home/elight-addons/usr/bin/elighttalk
     install -d ${D}/usr/lib/enigma2/python/Plugins/Extensions/EnigmaLight
     cp -aRf ${S}/python/plugin/EnigmaLight/* ${D}/usr/lib/enigma2/python/Plugins/Extensions/EnigmaLight
+}
+
+do_install_append_arm() {
+    if [ -d ${WORKDIR}/git/elight-addons/prefix ]; then
+        rm ${WORKDIR}/git/elight-addons/prefix
+    fi
 }
 
 do_compile_append() {
