@@ -6,7 +6,7 @@ require conf/license/license-close.inc
 
 PACKAGE_ARCH = "${MACHINEBUILD}"
 
-SRCDATE = "20170425"
+SRCDATE = "20170420"
 KV = "4.2.1"
 PV = "${KV}+${SRCDATE}"
 PR = "r2"
