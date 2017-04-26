@@ -1,58 +1,40 @@
-SUMMARY = "Enigmalight An Ambilight clone for broadcom based linux receivers."
+DESCRIPTION = "An Ambilight clone for broadcom based linux receivers."
+HOMEPAGE = "https://github.com/Dima73/enigmalight"
 LICENSE = "GPLv3"
-LIC_FILES_CHKSUM = "file://../LICENSE;md5=784d7dc7357bd924e8d5642892bf1b6b"
+LIC_FILES_CHKSUM = "file://README;md5=93285fcad54271879db50c1fbf22d98b"
 
-inherit autotools-brokensep gitpkgv
+inherit autotools gitpkgv
 SRCREV = "${AUTOREV}"
-PV = "0.2+git${SRCPV}"
-PKGV = "0.2+git${GITPKGV}"
-PR = "r5"
+PV = "0.3+git${SRCPV}"
+PKGV = "0.3+git${GITPKGV}"
+PR = "r1"
 
-DEPENDS = "libusb python-native"
+DEPENDS = "libusb1"
 
 do_populate_sysroot[noexec] = "1"
 
 do_package_qa() {
 }
 
-SRC_URI="git://github.com/rossi2000/enigmalight.git;protocol=git"
+SRC_URI = "git://github.com/Dima73/enigmalight.git;protocol=git"
 
 S = "${WORKDIR}/git/build"
 
-OE_EXTRACONF = "\
-    ${@base_contains('TARGET_FPU', 'soft', 'CPPFLAGS=-msoft-float', 'CPPFLAGS=-mhard-float', d)} \
-    "
+do_configure() {
+    cd ${S}
+    oe_runconf
+}
+
+do_compile() {
+    cd ${S}
+    oe_runmake
+}
 
 do_install() {
-    install -d ${D}/usr/bin
-    install -m 0755 ${S}/src/enigmalight ${D}/usr/bin/
-    install -d ${D}/home/elight-addons
-    if [ -d ${WORKDIR}/git/elight-addons/usr/bin/elighttalk ]; then
-        rm ${WORKDIR}/git/elight-addons/usr/bin/elighttalk
-    fi
-    cp -aRf ${WORKDIR}/git/elight-addons/* ${D}/home/elight-addons
-    install -m 0755 ${S}/src/elighttalk ${D}/home/elight-addons/usr/bin/elighttalk
-    install -d ${D}/usr/lib/enigma2/python/Plugins/Extensions/EnigmaLight
-    cp -aRf ${S}/python/plugin/EnigmaLight/* ${D}/usr/lib/enigma2/python/Plugins/Extensions/EnigmaLight
+    cd ${S}
+    oe_runmake DESTDIR=${D} install
+    install -d ${D}${libdir}/enigma2/python/Plugins/Extensions
+    cp -R ${S}/python/plugin/EnigmaLight ${D}${libdir}/enigma2/python/Plugins/Extensions
 }
 
-do_install_append_arm() {
-    if [ -d ${WORKDIR}/git/elight-addons/prefix ]; then
-        rm ${WORKDIR}/git/elight-addons/prefix
-    fi
-}
-
-do_compile_append() {
-    python -O -m compileall ${S}
-}
-
-python populate_packages_prepend () {
-    enigma2_plugindir = bb.data.expand('${libdir}/enigma2/python/Plugins', d)
-    do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/[a-zA-Z0-9_]+.*$', 'enigma2-plugin-%s', 'Enigma2 Plugin: %s', recursive=True, match_path=True, prepend=True)
-    do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/.*\.py$', 'enigma2-plugin-%s-src', 'Enigma2 Plugin: %s', recursive=True, match_path=True, prepend=True)
-    do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/(.*/)?\.debug/.*$', 'enigma2-plugin-%s-dbg', 'Enigma2 Plugin: %s', recursive=True, match_path=True, prepend=True)
-    do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/.*\.la$', 'enigma2-plugin-%s-dev', '%s (development)', recursive=True, match_path=True, prepend=True)
-    do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/.*\.a$', 'enigma2-plugin-%s-staticdev', '%s (static development)', recursive=True, match_path=True, prepend=True)
-}
-
-FILES_${PN} = "/"
+FILES_${PN} += "${libdir}/enigma2/python/Plugins/Extensions/EnigmaLight/"
