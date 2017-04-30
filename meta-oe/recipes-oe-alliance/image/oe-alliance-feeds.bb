@@ -9,7 +9,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "${IMAGE_VERSION}"
-PR = "r21"
+PR = "r22"
 
 DEPENDS = "enigma2-plugin-drivers-usbserial"
 RECOMMENDS = "enigma2-plugin-extensions-et-livestream"
@@ -83,7 +83,7 @@ RDEPENDS_${PN} = " \
     net-snmp \
     ntfs-3g \
     ntp \
-    nodejs \
+    ${@bb.utils.contains("TARGET_ARCH", "sh4", "" , "nodejs", d)} \
     odhcp6c \
     ofgwrite \
     openresolv \
