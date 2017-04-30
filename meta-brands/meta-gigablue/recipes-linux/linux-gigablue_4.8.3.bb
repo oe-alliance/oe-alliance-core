@@ -6,8 +6,8 @@ inherit kernel machine_kernel_pr
 
 KERNEL_RELEASE = "4.8.3"
 
-SRC_URI[md5sum] = "3963290126823ff6fafe70736d9e90f5"
-SRC_URI[sha256sum] = "d4cc2d64ece177184dd99cb78dcd9133372781d8f8d909e53781ad74958792a0"
+SRC_URI[md5sum] = "39e7cdac18f40870e5f3de0e94bbac1f"
+SRC_URI[sha256sum] = "db6dbddb0f3fe757c1bcc4685b56f3aaf83c7c07ecd9e4c6a994226406b82a0d"
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
@@ -21,7 +21,7 @@ PKG_kernel-image = "kernel-image"
 RPROVIDES_kernel-base = "kernel-${KERNEL_VERSION}"
 RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
 
-SRC_URI += "http://archiv.openmips.com/gigablue-linux-${PV}-mips-20161205.tgz \
+SRC_URI += "http://archiv.openmips.com/gigablue-linux-${PV}-mips-20170302.tgz \
     file://defconfig \
     file://0001-genet1-1000mbit.patch \
     file://bcmgenet_phyaddr.patch \
@@ -54,10 +54,10 @@ kernel_do_install_append() {
 
 pkg_postinst_kernel-image () {
     if [ "x$D" == "x" ]; then
-        if [ -f /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz ] ; then
+        if [ -f ${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz ] ; then
             flash_erase /dev/${MTD_KERNEL} 0 0
-            nandwrite -p /dev/${MTD_KERNEL} /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz
-            rm -f /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz
+            nandwrite -p /dev/${MTD_KERNEL} ${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz
+            rm -f ${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz
         fi
     fi
     true
