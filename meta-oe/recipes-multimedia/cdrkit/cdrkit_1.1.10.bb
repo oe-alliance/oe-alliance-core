@@ -1,9 +1,9 @@
 SUMMARY = "A set of tools for CD recording"
 HOMEPAGE = "http://www.cdrkit.org"
-DEPENDS = "libcap bzip2"
+DEPENDS = "libcap bzip2 zlib"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=b30d3b2750b668133fc17b401e1b98f8"
-PR = "r1"
+PR = "r1a"
 
 SRC_URI = " \
     http://cdrkit.org/releases/${P}.tar.gz;name=archive \
