@@ -6,8 +6,8 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=4d92cd373abda3937c2bc47fbc49d
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 ALLOW_EMPTY_${PN} = "1"
 
-PV = "7.0"
-PR = "r1"
+PV = "8.0"
+PR = "r0"
 
 inherit packagegroup
 
@@ -20,8 +20,8 @@ RRECOMMENDS_${PN} = "\
     curlftpfs \
     cdfs \
     openssl-old \
-    ${@bb.utils.contains("TARGET_ARCH", "mipsel", "dvb-apps" , "", d)} \
     enigma2-plugin-extensions-cooltvguide \
+    enigma2-plugin-extensions-bmediacenter \
     enigma2-plugin-extensions-enhancedmoviecenter \
     enigma2-plugin-extensions-blurayplayer \
     ${@bb.utils.contains("MACHINE_BRAND", "AZBOX", "enigma2-plugin-extensions-azplay enigma2-plugin-extensions-aziptv", "", d)} \
@@ -31,5 +31,5 @@ RRECOMMENDS_${PN}_append_gb800solo = "enigma2-plugin-extensions-gbipboxclient"
 RRECOMMENDS_${PN}_append_gb7325 = "enigma2-plugin-extensions-gbipboxclient"
 RRECOMMENDS_${PN}_append_gb7358 = "enigma2-plugin-extensions-gbipboxclient"
 RRECOMMENDS_${PN}_append_gb7362 = "enigma2-plugin-extensions-gbipboxclient"
-RRECOMMENDS_${PN}_append_gbquad = "enigma2-plugin-extensions-gbipboxclient"
-RRECOMMENDS_${PN}_append_gbquadplus = "enigma2-plugin-extensions-gbipboxclient"
+RRECOMMENDS_${PN}_append_gb73625 = "enigma2-plugin-extensions-gbipboxclient"
+RRECOMMENDS_${PN}_append_gb7356 = "enigma2-plugin-extensions-gbipboxclient"

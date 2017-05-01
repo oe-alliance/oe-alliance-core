@@ -5,8 +5,8 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=4d92cd373abda3937c2bc47fbc49d
 
 ALLOW_EMPTY_${PN} = "1"
 
-PV = "7.0"
-PR = "r3"
+PV = "8.0"
+PR = "r0"
 
 inherit packagegroup
 
@@ -17,6 +17,7 @@ RDEPENDS_${PN} = " \
     openspa-bootlogo \
     openspa-spinner \
     openssh-sftp-server \
+    ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "", "iproute2 ", d)} \
     ntfs-3g \
     hddtemp \
     busybox-cron \
