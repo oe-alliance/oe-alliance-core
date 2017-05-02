@@ -3,18 +3,18 @@ SECTION = "kernel"
 LICENSE = "GPLv2"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 PR = "r0"
-SRC = "20170220"
+SRC = "20170501"
 
-KERNEL_RELEASE = "4.10"
+KERNEL_RELEASE = "4.11"
 
 inherit kernel machine_kernel_pr
 
-SRC_URI[md5sum] = "3091aea85541be1ebce31ced558caab5"
-SRC_URI[sha256sum] = "550750068fc63cf69334f5d3178f844e76b4ba979e51fb7471ac5b149d43b3a7"
+SRC_URI[md5sum] = "314b8c61217557f05ea2678313af8a9e"
+SRC_URI[sha256sum] = "b3131a4de50892127eecbeaf869ac5d31e8602473b9cd214c515050ea6825f6e"
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-brcmstb-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-MACHINE_KERNEL_PR_append = ".5"
+MACHINE_KERNEL_PR_append = ".6"
 
 # By default, kernel.bbclass modifies package names to allow multiple kernels
 # to be installed in parallel. We revert this change and rprovide the versioned
@@ -27,14 +27,13 @@ RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
 SRC_URI += "http://source.mynonpublic.com/xcore/xcore-linux-${PV}-${SRC}.tar.gz \
     file://defconfig \
     file://noforce_correct_pointer_usage.patch \
-    file://TBS-fixes-for-4.10-kernel.patch \
+    file://TBS-fixes-for-4.11-kernel.patch \
     file://0001-Support-TBS-USB-drivers-for-4.6-kernel.patch \
     file://0001-TBS-fixes-for-4.6-kernel.patch \
     file://0001-STV-Add-PLS-support.patch \
     file://0001-STV-Add-SNR-Signal-report-parameters.patch \
     file://blindscan2.patch \
     file://0001-stv090x-optimized-TS-sync-control.patch \
-    file://linux-4.10-xc7346-lowmem.patch \
     "
 
 S = "${WORKDIR}/linux-brcmstb-${PV}"

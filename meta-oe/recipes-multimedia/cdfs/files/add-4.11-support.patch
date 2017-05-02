@@ -1,0 +1,14 @@
+diff --git a/daemon.c b/daemon.c
+index dfe31f9f12a4..27035dd95e6d 100644
+--- a/daemon.c
++++ b/daemon.c
+@@ -29,6 +29,9 @@
+ 
+ #include "cdfs.h"
+ #include <linux/sched.h>
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4, 11, 0))
++#include <linux/sched/signal.h>
++#endif
+ #include <linux/wait.h>
+ 
+ #ifndef PAGE_CACHE_SHIFT
