@@ -1,0 +1,14 @@
+diff --git a/include/osdep_service.h b/include/osdep_service.h
+index 2e39bc8..2e1ffbb 100644
+--- a/include/osdep_service.h
++++ b/include/osdep_service.h
+@@ -53,6 +53,9 @@
+ #include <linux/semaphore.h>
+ #include <linux/sem.h>
+ #include <linux/sched.h>
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4, 11, 0))
++	#include <linux/sched/signal.h>
++#endif
+ #include <linux/etherdevice.h>
+ #include <linux/wireless.h>
+ #include <net/iw_handler.h>

@@ -8,7 +8,9 @@ inherit module
 
 PR = "r0"
 
-SRC_URI = "http://source.mynonpublic.com/rtl8812AU-rtl8821AU-driver-5.1.5-20170406.zip"
+SRC_URI = "http://source.mynonpublic.com/rtl8812AU-rtl8821AU-driver-5.1.5-20170406.zip \
+    file://0001-add-support-kernel-4.11.patch \
+"
 
 EXTRA_OEMAKE = "LINUX_SRC=${STAGING_KERNEL_DIR} KDIR=${STAGING_KERNEL_DIR}"
 

@@ -1,13 +1,24 @@
 diff --git a/drivers/media/dvb-core/dvb-usb-ids.h b/drivers/media/dvb-core/dvb-usb-ids.h
-index 779f4224b63e..ae6005436639 100644
+index e200aa6f2d2f..74bd70030779 100644
 --- a/drivers/media/dvb-core/dvb-usb-ids.h
 +++ b/drivers/media/dvb-core/dvb-usb-ids.h
-@@ -411,6 +411,6 @@
+@@ -78,8 +78,8 @@
+ #define USB_VID_774				0x7a69
+ #define USB_VID_EVOLUTEPC			0x1e59
+ #define USB_VID_AZUREWAVE			0x13d3
+-#define USB_VID_TECHNISAT			0x14f7
+ #define USB_VID_HAMA				0x147f
++#define USB_VID_TECHNISAT			0x14f7
+ 
+ /* Product IDs */
+ #define USB_PID_ADSTECH_USB2_COLD			0xa333
+@@ -413,7 +413,7 @@
  #define USB_PID_PCTV_2002E_SE                           0x025d
  #define USB_PID_SVEON_STV27                             0xd3af
  #define USB_PID_TURBOX_DTT_2000                         0xd3a4
 -#define USB_PID_WINTV_SOLOHD                            0x0264
- #define USB_PID_EVOLVEO_XTRATV_STICK                   0xa115
+ #define USB_PID_EVOLVEO_XTRATV_STICK			0xa115
+ #define USB_PID_HAMA_DVBT_HYBRID			0x2758
 +#define USB_PID_WINTV_SOLOHD                            0x0264
  #endif
 diff --git a/drivers/media/dvb-frontends/stv090x.c b/drivers/media/dvb-frontends/stv090x.c
