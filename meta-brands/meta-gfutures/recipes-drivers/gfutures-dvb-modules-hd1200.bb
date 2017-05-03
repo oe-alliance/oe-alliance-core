@@ -1,6 +1,6 @@
-KV = "4.10.6"
-SRCDATE = "20170329"
+KV = "4.10.12"
+SRCDATE = "20170427"
 
 require gfutures-dvb-modules.inc
-SRC_URI[md5sum] = "d865f491158d4623eeee5e2b04e7988c"
-SRC_URI[sha256sum] = "5fe03df28cee5c0f5b55dc58bbd5fe9939f75048126399866b817a6d6ec5d9d0"
+SRC_URI[md5sum] = "3e1a7f027f9fedddf0724f3163c625a2"
+SRC_URI[sha256sum] = "9f9e22dbe2a38ba7ee0eb2cc368cb66406505accaae6fe136f1f14393dd5661a"

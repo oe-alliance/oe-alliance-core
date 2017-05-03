@@ -2,18 +2,18 @@ SUMMARY = "Linux kernel for ${MACHINE}"
 SECTION = "kernel"
 LICENSE = "GPLv2"
 
-KERNEL_RELEASE = "4.10.6"
+KERNEL_RELEASE = "4.10.12"
 
 inherit kernel machine_kernel_pr
 
-SRC_URI[mips.md5sum] = "e5d32dd03b742e6101fde917dcba837d"
-SRC_URI[mips.sha256sum] = "2997b825996beabc25d2428d37d680f56e4fa971500eabd2033a6fc13cf5765e"
-SRC_URI[arm.md5sum] = "c8d81a7efa0688f995c74dfd9bc52752"
-SRC_URI[arm.sha256sum] = "ec9f9e86aaacd2add09591ff2f83ac7947bfe6265fcb6f24a45d9d4a75c3c037"
+SRC_URI[mips.md5sum] = "3c42df14db9d12041802f4c8fec88e17"
+SRC_URI[mips.sha256sum] = "738896d2682211d2079eeaa1c7b8bdd0fe75eb90cd12dff2fc5aeb3cc02562bc"
+SRC_URI[arm.md5sum] = "bda1c09ed92a805cedc6770c0dd40e81"
+SRC_URI[arm.sha256sum] = "67a3ac98727595a399d5c399d3b66a7fadbe8136ac517e08decba5ea6964674a"
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-MACHINE_KERNEL_PR_append = ".4"
+MACHINE_KERNEL_PR_append = ".5"
 
 # By default, kernel.bbclass modifies package names to allow multiple kernels
 # to be installed in parallel. We revert this change and rprovide the versioned
@@ -32,7 +32,6 @@ SRC_URI += "http://source.mynonpublic.com/gfutures/linux-${PV}-${ARCH}.tar.gz;na
     file://0001-STV-Add-SNR-Signal-report-parameters.patch \
     file://blindscan2.patch \
     file://0001-stv090x-optimized-TS-sync-control.patch \
-    file://0001-revert-xhci-plat.patch \
     "
 
 SRC_URI_append_arm = " \
