@@ -5,6 +5,7 @@ PR_append = ".3"
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 FILESEXTRAPATHS_prepend := "${THISDIR}/${DISTRO_NAME}:"
 FILESEXTRAPATHS_prepend := "${THISDIR}/${MACHINE}:"
+FILESEXTRAPATHS_prepend := "${THISDIR}/${MACHINEBUILD}:"
 
 hostname = "${MACHINEBUILD}"
 
