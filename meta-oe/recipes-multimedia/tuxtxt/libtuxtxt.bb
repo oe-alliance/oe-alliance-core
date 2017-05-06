@@ -9,6 +9,7 @@ inherit gitpkgv
 SRC_URI = "git://github.com/OpenPLi/tuxtxt.git;protocol=git \
     file://tuxtxt_getPressedKey.patch \
     file://acinclude_fix_DVB_API_VERSION_check_for_gcc5.patch \
+    file://0001-fix-secfault-w-use-wrong-line_length.patch \
 "
 
 SRC_URI_append_sh4 = " \
@@ -27,7 +28,7 @@ S = "${WORKDIR}/git/libtuxtxt"
 
 PV = "2.0+git${SRCPV}"
 PKGV = "2.0+git${GITPKGV}"
-PR = "r9"
+PR = "r10"
 
 EXTRA_OECONF = "--with-boxtype=generic"
 
