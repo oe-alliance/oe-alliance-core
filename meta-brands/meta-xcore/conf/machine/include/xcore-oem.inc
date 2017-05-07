@@ -8,7 +8,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'spycat', 'SpyCat' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'spycatmini', 'SpyCat mini' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'spycatminiplus', 'SpyCat mini +' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'spycat4k', 'SpyCat 4K' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'spycat4kcombo', 'SpyCat 4K' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'spycat4kcombo', 'SpyCat 4K Combo' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'spycat4kmini', 'SpyCat 4K mini' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'vp7358ci', '7358ci' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'bcm7358', '7358' , '', d)}\
