@@ -58,24 +58,24 @@
 +                                    "coredisplay-video", "gfx-memory", "BPA2_Region0", "LMI_VID", NULL };
 +
 +/*
-+0x40000000 - 0x403FFFFF - cocpu 1 ram (4mb)
-+0x40400000 - 0x407FFFFF - cocpu 2 ram (4mb)
-+0x40800000 - 0x47FFFFFF - linux   (120mb)
-+0x48000000 - 0x49FFFFFF - bigphys ( 32mb)
-+0x4A000000 - 0x4FFFFFFF - lmi_io  ( 96mb)
-+*/
-+static struct bpa2_partition_desc bpa2_parts_table[] = {
++ 0x40000000 - 0x403FFFFF - cocpu 1 ram (4mb)
++ 0x40400000 - 0x407FFFFF - cocpu 2 ram (4mb)
++ 0x40800000 - 0x498FFFFF - linux   (145mb)
++ 0x49900000 - 0x4B1FFFFF - bigphys ( 25mb)
++ 0x4B200000 - 0x4FFFFFFF - lmi_io  ( 78mb)
++ */
++ static struct bpa2_partition_desc bpa2_parts_table[] = {
 +    {
 + 	    .name  = "bigphysarea",
-+ 	    .start = 0x48000000,
-+ 	    .size  = 0x02000000, /* 32 Mb */
++	    .start = 0x49900000,
++	    .size  = 0x01900000, /* 25 Mb */
 + 	    .flags = 0,
 + 	    .aka   = NULL
 +    },
 +    {
 + 	    .name  = "LMI_IO",
-+ 	    .start = 0x4A000000,
-+ 	    .size  = 0x06000000, /* 96 Mb */
++  	    .start = 0x4B200000,
++  	    .size  = 0x04e00000, /* 78 Mb */
 + 	    .flags = 0,
 + 	    .aka   = LMI_IO_partalias
 +    },

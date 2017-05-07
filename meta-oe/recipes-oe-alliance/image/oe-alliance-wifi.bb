@@ -44,13 +44,12 @@ RDEPENDS_${PN} = "\
     ${@bb.utils.contains("DISTRO_FEATURES", "wifi-extra", "${OPTIONAL_WIFIDRIVERS}", "", d)} \
     ${@bb.utils.contains("DISTRO_NAME", "openatv", "enigma2-plugin-drivers-network-usb-rtl8192cu", "", d)} \
     ${@bb.utils.contains("DISTRO_NAME", "openvix", "enigma2-plugin-drivers-network-usb-rtl8192cu-rev2", "", d)} \
-    ${@bb.utils.contains("DISTRO_NAME", "axassupport", "enigma2-plugin-drivers-network-usb-rtl8192cu", "", d)} \
-    ${@bb.utils.contains("DISTRO_NAME", "openxta", "enigma2-plugin-drivers-network-usb-rtl8192cu", "", d)} \
     ${@bb.utils.contains("DISTRO_NAME", "opennfr", "enigma2-plugin-drivers-network-usb-rtl8192cu", "", d)} \
-    ${@bb.utils.contains("DISTRO_NAME", "odinsupport", "enigma2-plugin-drivers-network-usb-rtl8192cu", "", d)} \
     ${@bb.utils.contains("DISTRO_NAME", "openeight", "enigma2-plugin-drivers-network-usb-rtl8192cu", "", d)} \
     ${@bb.utils.contains("MACHINEBUILD", "bre2ze", "enigma2-plugin-drivers-network-usb-mt7601u", "", d)} \
     ${@bb.utils.contains("BRAND_OEM", "xcore", "enigma2-plugin-drivers-network-usb-rt8723bs", "", d)} \
+    ${@bb.utils.contains("MACHINEBUILD", "spycat4k", "enigma2-plugin-drivers-network-usb-qca9377", "", d)} \
+    ${@bb.utils.contains("MACHINEBUILD", "spycat4kcombo", "enigma2-plugin-drivers-network-usb-qca9377", "", d)} \
     "
 
 RDEPENDS_${PN}_remove_odroidc2 = "enigma2-plugin-drivers-network-usb-rtl8192cu"

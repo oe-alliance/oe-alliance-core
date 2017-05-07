@@ -1,0 +1,3257 @@
+diff --git a/CORE/EPPING/src/epping_txrx.c b/CORE/EPPING/src/epping_txrx.c
+index 0d477d675649..bb01af4f0516 100644
+--- a/CORE/EPPING/src/epping_txrx.c
++++ b/CORE/EPPING/src/epping_txrx.c
+@@ -354,8 +354,11 @@ epping_adapter_t *epping_add_adapter(epping_context_t *pEpping_ctx,
+ {
+    struct net_device *dev;
+    epping_adapter_t *pAdapter;
+-
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))
+    dev = alloc_netdev(sizeof(epping_adapter_t), "wifi%d", ether_setup);
++#else
++   dev = alloc_netdev(sizeof(epping_adapter_t), "wifi%d", NET_NAME_UNKNOWN, ether_setup);
++#endif
+    if (dev == NULL) {
+       EPPING_LOG(VOS_TRACE_LEVEL_FATAL,
+          "%s: Cannot allocate epping_adapter_t\n", __func__);
+diff --git a/CORE/HDD/inc/wlan_hdd_cfg80211.h b/CORE/HDD/inc/wlan_hdd_cfg80211.h
+index db1768d36fb0..acbe931d9113 100644
+--- a/CORE/HDD/inc/wlan_hdd_cfg80211.h
++++ b/CORE/HDD/inc/wlan_hdd_cfg80211.h
+@@ -838,8 +838,13 @@ void hdd_select_cbmode( hdd_adapter_t *pAdapter,v_U8_t operationChannel);
+ 
+ v_U8_t* wlan_hdd_cfg80211_get_ie_ptr(v_U8_t *pIes, int length, v_U8_t eid);
+ 
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))
+ int wlan_hdd_cfg80211_del_station(struct wiphy *wiphy,
+                                          struct net_device *dev, u8 *mac);
++#else
++int wlan_hdd_cfg80211_del_station(struct wiphy *wiphy,
++                                  struct net_device *dev, struct station_del_parameters *params);
++#endif
+ 
+ #if defined(QCA_WIFI_2_0) && defined(QCA_WIFI_FTM) \
+     && !defined(QCA_WIFI_ISOC) && defined(CONFIG_NL80211_TESTMODE)
+@@ -858,9 +863,16 @@ int wlan_hdd_send_avoid_freq_event(hdd_context_t *pHddCtx,
+ #endif
+ 
+ #ifdef FEATURE_WLAN_EXTSCAN
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))
++void wlan_hdd_cfg80211_extscan_callback(void *ctx,
++                                      const tANI_U16 evType,
++                                      void *pMsg);
++#else
+ void wlan_hdd_cfg80211_extscan_callback(void *ctx,
+                                       const tANI_U16 evType,
++                                      void *pAdter,
+                                       void *pMsg);
++#endif //#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))
+ #endif /* FEATURE_WLAN_EXTSCAN */
+ 
+ struct cfg80211_bss* wlan_hdd_cfg80211_update_bss_list(
+diff --git a/CORE/HDD/inc/wlan_hdd_includes.h b/CORE/HDD/inc/wlan_hdd_includes.h
+index 239e7920b911..65a06555fe89 100644
+--- a/CORE/HDD/inc/wlan_hdd_includes.h
++++ b/CORE/HDD/inc/wlan_hdd_includes.h
+@@ -70,4 +70,11 @@
+ #include "wlan_hdd_oemdata.h"
+ #endif
+ 
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4, 7, 0))
++#define ieee80211_band nl80211_band
++#define IEEE80211_BAND_2GHZ NL80211_BAND_2GHZ
++#define IEEE80211_BAND_5GHZ NL80211_BAND_5GHZ
++#define IEEE80211_NUM_BANDS NUM_NL80211_BANDS
++#endif
++
+ #endif    // end #if !defined( HDD_INCLUDES_H__ )
+diff --git a/CORE/HDD/inc/wlan_hdd_p2p.h b/CORE/HDD/inc/wlan_hdd_p2p.h
+index 8f3519254d5f..5ead2969b0b9 100644
+--- a/CORE/HDD/inc/wlan_hdd_p2p.h
++++ b/CORE/HDD/inc/wlan_hdd_p2p.h
+@@ -137,7 +137,11 @@ void hdd_sendActionCnf( hdd_adapter_t *pAdapter, tANI_BOOLEAN actionSendSuccess
+ int wlan_hdd_check_remain_on_channel(hdd_adapter_t *pAdapter);
+ void wlan_hdd_cancel_existing_remain_on_channel(hdd_adapter_t *pAdapter);
+ 
+-#if (LINUX_VERSION_CODE >= KERNEL_VERSION(3,6,0))
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(3,14,0))
++int wlan_hdd_mgmt_tx(struct wiphy *wiphy, struct wireless_dev *wdev,
++                     struct cfg80211_mgmt_tx_params *params,
++                     u64 *cookie );
++#elif (LINUX_VERSION_CODE >= KERNEL_VERSION(3,6,0))
+ int wlan_hdd_mgmt_tx( struct wiphy *wiphy, struct wireless_dev *wdev,
+                      struct ieee80211_channel *chan, bool offchan,
+ #if (LINUX_VERSION_CODE < KERNEL_VERSION(3,8,0))
+@@ -162,8 +166,13 @@ int wlan_hdd_mgmt_tx( struct wiphy *wiphy, struct net_device *dev,
+                      const u8 *buf, size_t len, u64 *cookie );
+ #endif
+ 
+-
+-#if (LINUX_VERSION_CODE >= KERNEL_VERSION(3,7,0))
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4,1,0))
++struct wireless_dev* wlan_hdd_add_virtual_intf(
++                  struct wiphy *wiphy, const char *name,
++                  unsigned char name_assign_type,
++                  enum nl80211_iftype type,
++                  u32 *flags, struct vif_params *params );
++#elif (LINUX_VERSION_CODE >= KERNEL_VERSION(3,7,0))
+ struct wireless_dev* wlan_hdd_add_virtual_intf(
+                   struct wiphy *wiphy, const char *name,
+                   enum nl80211_iftype type,
+diff --git a/CORE/HDD/inc/wlan_hdd_wmm.h b/CORE/HDD/inc/wlan_hdd_wmm.h
+index 4326d2f924ed..42f04077c0bb 100644
+--- a/CORE/HDD/inc/wlan_hdd_wmm.h
++++ b/CORE/HDD/inc/wlan_hdd_wmm.h
+@@ -266,9 +266,15 @@ v_U16_t hdd_wmm_select_queue(struct net_device * dev, struct sk_buff *skb);
+   @return         : Qdisc queue index
+   ===========================================================================*/
+ 
+-v_U16_t hdd_hostapd_select_queue(struct net_device * dev, struct sk_buff *skb);
+-
+-
++v_U16_t hdd_hostapd_select_queue(struct net_device * dev,
++				 struct sk_buff *skb
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(3,13,0))
++				 , void *accel_priv
++#endif
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(3,14,0))
++				 , select_queue_fallback_t fallback
++#endif
++				 );
+ 
+ /**============================================================================
+   @brief hdd_wmm_classify_pkt() - Function which will classify an OS packet
+diff --git a/CORE/HDD/src/wlan_hdd_assoc.c b/CORE/HDD/src/wlan_hdd_assoc.c
+index b60283e04d45..25f8570258bc 100644
+--- a/CORE/HDD/src/wlan_hdd_assoc.c
++++ b/CORE/HDD/src/wlan_hdd_assoc.c
+@@ -67,6 +67,9 @@
+ #ifdef IPA_OFFLOAD
+ #include <wlan_hdd_ipa.h>
+ #endif
++
++#include <compat-qcacld.h>
++
+ v_BOOL_t mibIsDot11DesiredBssTypeInfrastructure( hdd_adapter_t *pAdapter );
+ 
+ struct ether_addr
+@@ -979,11 +982,19 @@ static eHalStatus hdd_DisConnectHandler( hdd_adapter_t *pAdapter, tCsrRoamInfo *
+             /* To avoid wpa_supplicant sending "HANGED" CMD to ICS UI */
+             if( eCSR_ROAM_LOSTLINK == roamStatus )
+             {
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 2, 0)
++                cfg80211_disconnected(dev, pRoamInfo->reasonCode, NULL, 0, true, GFP_KERNEL);
++#else
+                 cfg80211_disconnected(dev, pRoamInfo->reasonCode, NULL, 0, GFP_KERNEL);
++#endif
+             }
+             else
+             {
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 2, 0)
++                cfg80211_disconnected(dev, WLAN_REASON_UNSPECIFIED, NULL, 0, true, GFP_KERNEL);
++#else
+                 cfg80211_disconnected(dev, WLAN_REASON_UNSPECIFIED, NULL, 0, GFP_KERNEL);
++#endif
+             }
+ 
+             //If the Device Mode is Station
+@@ -1881,6 +1892,10 @@ static void hdd_RoamIbssIndicationHandler( hdd_adapter_t *pAdapter,
+                                            eRoamCmdStatus roamStatus,
+                                            eCsrRoamResult roamResult )
+ {
++
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4,1,0))
++    struct ieee80211_channel *chan;
++#endif
+    hddLog(VOS_TRACE_LEVEL_INFO, "%s: %s: id %d, status %d, result %d",
+           __func__, pAdapter->dev->name, roamId, roamStatus, roamResult);
+ 
+@@ -1934,7 +1949,12 @@ static void hdd_RoamIbssIndicationHandler( hdd_adapter_t *pAdapter,
+                return;
+             }
+ 
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))
+             cfg80211_ibss_joined(pAdapter->dev, bss->bssid, GFP_KERNEL);
++#else
++            chan = ieee80211_get_channel(pAdapter->wdev.wiphy, (int) pRoamInfo->pBssDesc->channelId);
++            cfg80211_ibss_joined(pAdapter->dev, bss->bssid, chan, GFP_KERNEL);
++#endif
+             cfg80211_put_bss(
+ #if (LINUX_VERSION_CODE >= KERNEL_VERSION(3,9,0))
+                              pHddCtx->wiphy,
+diff --git a/CORE/HDD/src/wlan_hdd_cfg80211.c b/CORE/HDD/src/wlan_hdd_cfg80211.c
+index fb0f926ee88e..862ea2775d1b 100644
+--- a/CORE/HDD/src/wlan_hdd_cfg80211.c
++++ b/CORE/HDD/src/wlan_hdd_cfg80211.c
+@@ -110,6 +110,8 @@
+ #endif
+ #include "wlan_hdd_mdns_offload.h"
+ 
++#include <compat-qcacld.h>
++
+ #define g_mode_rates_size (12)
+ #define a_mode_rates_size (8)
+ #define FREQ_BASE_80211G          (2407)
+@@ -810,7 +812,14 @@ int wlan_hdd_send_avoid_freq_event(hdd_context_t *pHddCtx,
+         return -1;
+     }
+ 
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))
++    vendor_event = cfg80211_vendor_event_alloc(pHddCtx->wiphy,
++#else
++    struct wil6210_priv *wil = wiphy_to_wil(pHddCtx->wiphy);
++    struct wireless_dev *wdev = wil->wdev;
+     vendor_event = cfg80211_vendor_event_alloc(pHddCtx->wiphy,
++			      wdev,
++#endif
+                               sizeof(tHddAvoidFreqList),
+                               QCA_NL80211_VENDOR_SUBCMD_AVOID_FREQUENCY_INDEX,
+                               GFP_KERNEL);
+@@ -885,7 +894,11 @@ static void wlan_hdd_cfg80211_nan_callback(void* ctx, tSirNanEvent* msg)
+         return;
+     }
+ 
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))
+     vendor_event = cfg80211_vendor_event_alloc(pHddCtx->wiphy,
++#else
++    vendor_event = cfg80211_vendor_event_alloc(pHddCtx->wiphy, NULL,
++#endif
+                                    data->event_data_len +
+                                    NLMSG_HDRLEN,
+                                    QCA_NL80211_VENDOR_SUBCMD_NAN_INDEX,
+@@ -1127,6 +1140,10 @@ static void wlan_hdd_cfg80211_stats_ext_callback(void* ctx, tStatsExtEvent* msg)
+     int ret_val;
+     tStatsExtEvent *data = msg;
+     hdd_adapter_t *pAdapter = NULL;
++#if (LINUX_VERSION_CODE > KERNEL_VERSION(4,1,0))
++    struct net_device *dev;
++    struct wireless_dev *wdev;
++#endif
+ 
+     status = wlan_hdd_validate_context(pHddCtx);
+ 
+@@ -1147,8 +1164,13 @@ static void wlan_hdd_cfg80211_stats_ext_callback(void* ctx, tStatsExtEvent* msg)
+         return;
+     }
+ 
+-
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))
+     vendor_event = cfg80211_vendor_event_alloc(pHddCtx->wiphy,
++#else
++    dev = pAdapter->dev;
++    wdev = dev->ieee80211_ptr;
++    vendor_event = cfg80211_vendor_event_alloc(pHddCtx->wiphy, wdev,
++#endif
+                                                data->event_data_len +
+                                                sizeof(tANI_U32) +
+                                                NLMSG_HDRLEN + NLMSG_HDRLEN,
+@@ -2429,6 +2451,10 @@ static void hdd_link_layer_process_peer_stats(hdd_adapter_t *pAdapter,
+     int status, i, j;
+     struct nlattr *peers;
+     int numRate;
++#if (LINUX_VERSION_CODE > KERNEL_VERSION(4,1,0))
++    struct net_device *dev = pAdapter->dev;
++    struct wireless_dev *wdev = dev->ieee80211_ptr;
++#endif
+ 
+     pWifiPeerStat = pData;
+ 
+@@ -2507,7 +2533,11 @@ static void hdd_link_layer_process_peer_stats(hdd_adapter_t *pAdapter,
+      * that number of rates shall not exceed beyond 50 with
+      * the sizeof (tSirWifiRateStat) being 32.
+      */
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))
+     vendor_event = cfg80211_vendor_event_alloc(pHddCtx->wiphy,
++#else
++    vendor_event = cfg80211_vendor_event_alloc(pHddCtx->wiphy, wdev,
++#endif
+                              LL_STATS_EVENT_BUF_SIZE +
+                              NLMSG_HDRLEN,
+                              QCA_NL80211_VENDOR_SUBCMD_LL_PEER_INFO_STATS_INDEX,
+@@ -2592,6 +2622,10 @@ static void hdd_link_layer_process_iface_stats(hdd_adapter_t *pAdapter,
+     hdd_context_t *pHddCtx = WLAN_HDD_GET_CTX(pAdapter);
+     int status;
+     int i;
++#if (LINUX_VERSION_CODE > KERNEL_VERSION(4,1,0))
++    struct net_device *dev = pAdapter->dev;
++    struct wireless_dev *wdev = dev->ieee80211_ptr;
++#endif
+ 
+     pWifiIfaceStat = pData;
+ 
+@@ -2610,7 +2644,11 @@ static void hdd_link_layer_process_iface_stats(hdd_adapter_t *pAdapter,
+      * a call on the limit based on the data requirements on
+      * interface statistics.
+      */
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))
+     vendor_event = cfg80211_vendor_event_alloc(pHddCtx->wiphy,
++#else
++    vendor_event = cfg80211_vendor_event_alloc(pHddCtx->wiphy,wdev,
++#endif
+                                  LL_STATS_EVENT_BUF_SIZE +
+                                  NLMSG_HDRLEN,
+                                  QCA_NL80211_VENDOR_SUBCMD_LL_IFACE_STATS_INDEX,
+@@ -2737,6 +2775,10 @@ static void hdd_link_layer_process_radio_stats(hdd_adapter_t *pAdapter,
+     tpSirWifiChannelStats pWifiChannelStats;
+     struct sk_buff *vendor_event;
+     hdd_context_t *pHddCtx = WLAN_HDD_GET_CTX(pAdapter);
++#if (LINUX_VERSION_CODE > KERNEL_VERSION(4,1,0))
++    struct net_device *dev = pAdapter->dev;
++    struct wireless_dev *wdev = dev->ieee80211_ptr;
++#endif
+ 
+     pWifiRadioStat = pData;
+ 
+@@ -2777,7 +2819,11 @@ static void hdd_link_layer_process_radio_stats(hdd_adapter_t *pAdapter,
+      * sizeof (tSirWifiChannelStats) being 24 bytes.
+      */
+ 
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))
+     vendor_event = cfg80211_vendor_event_alloc(pHddCtx->wiphy,
++#else
++    vendor_event = cfg80211_vendor_event_alloc(pHddCtx->wiphy, wdev,
++#endif
+                                  LL_STATS_EVENT_BUF_SIZE + NLMSG_HDRLEN,
+                                  QCA_NL80211_VENDOR_SUBCMD_LL_RADIO_STATS_INDEX,
+                                  GFP_KERNEL);
+@@ -3552,6 +3598,15 @@ int wlan_hdd_cfg80211_update_band(struct wiphy *wiphy, eCsrBand eBand)
+     }
+     return 0;
+ }
++
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(3,11,0))
++static const struct wiphy_wowlan_support cfg80211_wowlan_support={
++    .flags = WIPHY_WOWLAN_MAGIC_PKT,
++    .n_patterns = WOWL_MAX_PTRNS_ALLOWED,
++    .pattern_min_len = 1,
++    .pattern_max_len = WOWL_PTRN_MAX_SIZE,
++};
++#endif
+ /*
+  * FUNCTION: wlan_hdd_cfg80211_init
+  * This function is called by hdd_wlan_startup()
+@@ -3581,7 +3636,11 @@ int wlan_hdd_cfg80211_init(struct device *dev,
+ 
+     /* This will disable updating of NL channels from passive to
+      * active if a beacon is received on passive channel. */
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(3,14,0))
++    wiphy->regulatory_flags |= REGULATORY_DISABLE_BEACON_HINTS;
++#else
+     wiphy->flags |=   WIPHY_FLAG_DISABLE_BEACON_HINTS;
++#endif
+ 
+ 
+ #if (LINUX_VERSION_CODE >= KERNEL_VERSION(3,4,0))
+@@ -3592,13 +3651,22 @@ int wlan_hdd_cfg80211_init(struct device *dev,
+                  |  WIPHY_FLAG_4ADDR_STATION
+ #endif
+                     | WIPHY_FLAG_OFFCHAN_TX;
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(3,14,0))
++    wiphy->regulatory_flags |= REGULATORY_COUNTRY_IE_IGNORE;
++#else
+     wiphy->country_ie_pref = NL80211_COUNTRY_IE_IGNORE_CORE;
+ #endif
++#endif
++
+ 
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(3,11,0))
++    wiphy->wowlan = &cfg80211_wowlan_support;
++#else
+     wiphy->wowlan.flags = WIPHY_WOWLAN_MAGIC_PKT;
+     wiphy->wowlan.n_patterns = WOWL_MAX_PTRNS_ALLOWED;
+     wiphy->wowlan.pattern_min_len = 1;
+     wiphy->wowlan.pattern_max_len = WOWL_PTRN_MAX_SIZE;
++#endif
+ 
+ #if  defined (WLAN_FEATURE_VOWIFI_11R) || defined (FEATURE_WLAN_ESE) || defined(FEATURE_WLAN_LFR)
+     if (pCfg->isFastTransitionEnabled
+@@ -3750,9 +3818,9 @@ int wlan_hdd_cfg80211_init(struct device *dev,
+         wiphy->flags |= WIPHY_FLAG_DFS_OFFLOAD;
+     }
+ #endif
+-
++#if 0
+     wiphy->max_ap_assoc_sta = pCfg->maxNumberOfPeers;
+-
++#endif
+ #ifdef QCA_HT_2040_COEX
+     if (pCfg->ht2040CoexEnabled)
+         wiphy->features |= NL80211_FEATURE_AP_MODE_CHAN_WIDTH_CHANGE;
+@@ -3787,7 +3855,9 @@ int wlan_hdd_cfg80211_init(struct device *dev,
+ void wlan_hdd_update_wiphy(struct wiphy *wiphy,
+                            hdd_config_t *pCfg)
+ {
++#if 0
+     wiphy->max_ap_assoc_sta = pCfg->maxNumberOfPeers;
++#endif
+ }
+ 
+ /* In this function we are registering wiphy. */
+@@ -3864,7 +3934,11 @@ void wlan_hdd_cfg80211_update_reg_info(struct wiphy *wiphy)
+           struct ieee80211_supported_band *band = wiphy->bands[IEEE80211_BAND_5GHZ];
+           // Mark UNII -1 band channel as passive
+           if (WLAN_HDD_CHANNEL_IN_UNII_1_BAND(band->channels[j].center_freq))
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(3,14,0))
++             band->channels[j].flags |= IEEE80211_CHAN_NO_IR;
++#else
+              band->channels[j].flags |= IEEE80211_CHAN_PASSIVE_SCAN;
++#endif
+        }
+     }
+ }
+@@ -6635,8 +6709,13 @@ static int wlan_hdd_cfg80211_change_iface(struct wiphy *wiphy,
+ }
+ 
+ #ifdef FEATURE_WLAN_TDLS
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))
+ static int wlan_hdd_tdls_add_station(struct wiphy *wiphy,
+           struct net_device *dev, u8 *mac, bool update, tCsrStaParams *StaParams)
++#else
++static int wlan_hdd_tdls_add_station(struct wiphy *wiphy,
++          struct net_device *dev, const u8 *mac, bool update, tCsrStaParams *StaParams)
++#endif
+ {
+     hdd_adapter_t *pAdapter = WLAN_HDD_GET_PRIV_PTR(dev);
+     hdd_context_t *pHddCtx = wiphy_priv(wiphy);
+@@ -6662,8 +6741,11 @@ static int wlan_hdd_tdls_add_station(struct wiphy *wiphy,
+                     __func__, MAC_ADDR_ARRAY(mac));
+         return -ENOTSUPP;
+     }
+-
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))
+     pTdlsPeer = wlan_hdd_tdls_get_peer(pAdapter, mac);
++#else
++    pTdlsPeer = wlan_hdd_tdls_get_peer(pAdapter, (u8 *)mac);
++#endif
+ 
+     if ( NULL == pTdlsPeer ) {
+         VOS_TRACE( VOS_MODULE_ID_HDD, TDLS_LOG_LEVEL,
+@@ -6697,7 +6779,7 @@ static int wlan_hdd_tdls_add_station(struct wiphy *wiphy,
+     }
+ 
+     /* when others are on-going, we want to change link_status to idle */
+-    if (NULL != wlan_hdd_tdls_is_progress(pHddCtx, mac, TRUE))
++    if (NULL != wlan_hdd_tdls_is_progress(pHddCtx, (u8 *)mac, TRUE))
+     {
+         VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_ERROR,
+                    "%s: " MAC_ADDRESS_STR
+@@ -6723,7 +6805,7 @@ static int wlan_hdd_tdls_add_station(struct wiphy *wiphy,
+     else
+     {
+         hddTdlsPeer_t *pTdlsPeer;
+-        pTdlsPeer = wlan_hdd_tdls_find_peer(pAdapter, mac, TRUE);
++        pTdlsPeer = wlan_hdd_tdls_find_peer(pAdapter, (u8 *)mac, TRUE);
+         if (pTdlsPeer && TDLS_IS_CONNECTED(pTdlsPeer))
+         {
+             VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_ERROR,
+@@ -6733,7 +6815,7 @@ static int wlan_hdd_tdls_add_station(struct wiphy *wiphy,
+         }
+     }
+     if (0 == update)
+-        wlan_hdd_tdls_set_link_status(pAdapter, mac, eTDLS_LINK_CONNECTING);
++        wlan_hdd_tdls_set_link_status(pAdapter, (u8 *)mac, eTDLS_LINK_CONNECTING);
+ 
+     /* debug code */
+     if (NULL != StaParams)
+@@ -6779,12 +6861,12 @@ static int wlan_hdd_tdls_add_station(struct wiphy *wiphy,
+     if (!update)
+     {
+         status = sme_AddTdlsPeerSta(WLAN_HDD_GET_HAL_CTX(pAdapter),
+-                pAdapter->sessionId, mac);
++                pAdapter->sessionId, (u8 *)mac);
+     }
+     else
+     {
+         status = sme_ChangeTdlsPeerSta(WLAN_HDD_GET_HAL_CTX(pAdapter),
+-                                       pAdapter->sessionId, mac, StaParams);
++                                       pAdapter->sessionId, (u8 *)mac, StaParams);
+     }
+ 
+      ret = wait_for_completion_interruptible_timeout(&pAdapter->tdls_add_station_comp,
+@@ -6808,16 +6890,26 @@ static int wlan_hdd_tdls_add_station(struct wiphy *wiphy,
+     return 0;
+ 
+ error:
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))
+     wlan_hdd_tdls_set_link_status(pAdapter, mac, eTDLS_LINK_IDLE);
++#else
++    wlan_hdd_tdls_set_link_status(pAdapter, (u8 *) mac, eTDLS_LINK_IDLE);
++#endif
+     return -EPERM;
+ 
+ }
+ #endif
+-
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))
+ static int wlan_hdd_change_station(struct wiphy *wiphy,
+                                          struct net_device *dev,
+                                          u8 *mac,
+                                          struct station_parameters *params)
++#else
++static int wlan_hdd_change_station(struct wiphy *wiphy,
++                                         struct net_device *dev,
++                                         const u8 *mac,
++                                         struct station_parameters *params)
++#endif
+ {
+     VOS_STATUS status = VOS_STATUS_SUCCESS;
+     hdd_adapter_t *pAdapter = WLAN_HDD_GET_PRIV_PTR( dev );
+@@ -6954,8 +7046,11 @@ static int wlan_hdd_change_station(struct wiphy *wiphy,
+                     isOffChannelSupported = 1;
+                 }
+             }
+-
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))
+             status = wlan_hdd_tdls_set_peer_caps(pAdapter, mac,
++#else
++            status = wlan_hdd_tdls_set_peer_caps(pAdapter, (u8 *)mac,
++#endif
+                                                   &StaParams, isBufSta,
+                                                   isOffChannelSupported);
+             if (VOS_STATUS_SUCCESS != status) {
+@@ -7107,7 +7202,7 @@ static int __wlan_hdd_cfg80211_add_key( struct wiphy *wiphy,
+             {
+                 vos_mem_zero(&setKey,sizeof(tCsrRoamSetKey));
+                 wlan_hdd_cfg80211_set_key_wapi(pAdapter, key_index, mac_addr,
+-                        params->key, params->key_len);
++                        (u8 *)params->key, params->key_len);
+                 return 0;
+             }
+ #endif
+@@ -7794,7 +7889,11 @@ static struct cfg80211_bss* wlan_hdd_cfg80211_inform_bss(
+         freq = ieee80211_channel_to_frequency(chan_no, IEEE80211_BAND_5GHZ);
+     }
+ 
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4, 11, 0))
++    chan = ieee80211_get_channel(wiphy, freq);
++#else
+     chan = __ieee80211_get_channel(wiphy, freq);
++#endif
+ 
+     if (!chan) {
+        hddLog(VOS_TRACE_LEVEL_ERROR, "%s chan pointer is NULL", __func__);
+@@ -7808,12 +7907,16 @@ static struct cfg80211_bss* wlan_hdd_cfg80211_inform_bss(
+     {
+         rssi = (VOS_MIN ((pBssDesc->rssi + pBssDesc->sinr), 0))*100;
+ 
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))
+         return (cfg80211_inform_bss(wiphy, chan, pBssDesc->bssId,
++#else
++        return (cfg80211_inform_bss(wiphy, chan, CFG80211_BSS_FTYPE_UNKNOWN, pBssDesc->bssId,
++#endif
+                 le64_to_cpu(*(__le64 *)pBssDesc->timeStamp),
+                 pBssDesc->capabilityInfo,
+                 pBssDesc->beaconInterval, ie, ie_length,
+                 rssi, GFP_KERNEL ));
+-}
++    }
+     else
+     {
+         return bss;
+@@ -7857,7 +7960,11 @@ struct cfg80211_bss* wlan_hdd_cfg80211_update_bss_list(
+         freq = ieee80211_channel_to_frequency(chan_no, IEEE80211_BAND_5GHZ);
+     }
+ 
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4, 11, 0))
++    chan = ieee80211_get_channel(wiphy, freq);
++#else
+     chan = __ieee80211_get_channel(wiphy, freq);
++#endif
+ 
+     if (!chan) {
+        hddLog(VOS_TRACE_LEVEL_ERROR, "%s chan pointer is NULL", __func__);
+@@ -8008,7 +8115,11 @@ wlan_hdd_cfg80211_inform_bss_frame( hdd_adapter_t *pAdapter,
+         kfree(mgmt);
+         return NULL;
+     }
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4, 11, 0))
++    chan = ieee80211_get_channel(wiphy, freq);
++#else
+     chan = __ieee80211_get_channel(wiphy, freq);
++#endif
+     /*when the band is changed on the fly using the GUI, three things are done
+      * 1. scan abort 2.flush scan results from cache 3.update the band with the new band user specified(refer to the hdd_setBand_helper function)
+      * as part of the scan abort, message willbe queued to PE and we proceed with flushing and changinh the band.
+@@ -8452,7 +8563,16 @@ static eHalStatus hdd_cfg80211_scan_done_callback(tHalHandle halHandle,
+     {
+          aborted = true;
+     }
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4, 8, 0))
++{
++    struct cfg80211_scan_info info = {
++        .aborted = aborted
++    };
++    cfg80211_scan_done(req, &info);
++}
++#else
+     cfg80211_scan_done(req, aborted);
++#endif
+ 
+     complete(&pScanInfo->abortscan_event_var);
+ 
+@@ -9450,6 +9570,7 @@ static int wlan_hdd_cfg80211_set_cipher( hdd_adapter_t *pAdapter,
+  * FUNCTION: wlan_hdd_cfg80211_set_ie
+  * This function is used to parse WPA/RSN IE's.
+  */
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))
+ int wlan_hdd_cfg80211_set_ie( hdd_adapter_t *pAdapter,
+                               u8 *ie,
+                               size_t ie_len
+@@ -9457,6 +9578,16 @@ int wlan_hdd_cfg80211_set_ie( hdd_adapter_t *pAdapter,
+ {
+     hdd_wext_state_t *pWextState = WLAN_HDD_GET_WEXT_STATE_PTR(pAdapter);
+     u8 *genie = ie;
++#else
++int wlan_hdd_cfg80211_set_ie( hdd_adapter_t *pAdapter,
++                              const u8 *ie,
++                              size_t ie_len
++                              )
++{
++    hdd_wext_state_t *pWextState = WLAN_HDD_GET_WEXT_STATE_PTR(pAdapter);
++    const u8 *genie = ie;
++#endif
++
+     v_U16_t remLen = ie_len;
+ #ifdef FEATURE_WLAN_WAPI
+     v_U32_t akmsuite[MAX_NUM_AKM_SUITES];
+@@ -10318,21 +10449,35 @@ static int wlan_hdd_cfg80211_set_privacy_ibss(
+ 
+     if (params->ie_len && ( NULL != params->ie) )
+     {
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))
+         if (wlan_hdd_cfg80211_get_ie_ptr (params->ie,
+                             params->ie_len, WLAN_EID_RSN ))
++#else
++        if (wlan_hdd_cfg80211_get_ie_ptr ((v_U8_t *)params->ie,
++                            params->ie_len, WLAN_EID_RSN ))
++#endif
+         {
+             pWextState->wpaVersion = IW_AUTH_WPA_VERSION_WPA2;
+             encryptionType = eCSR_ENCRYPT_TYPE_AES;
+         }
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))
+         else if ( hdd_isWPAIEPresent (params->ie, params->ie_len ))
++#else
++        else if ( hdd_isWPAIEPresent ((u8 *)params->ie, params->ie_len ))
++#endif
+         {
+             tDot11fIEWPA dot11WPAIE;
+             tHalHandle halHandle = WLAN_HDD_GET_HAL_CTX(pAdapter);
+             u8 *ie;
+ 
+             memset(&dot11WPAIE, 0, sizeof(dot11WPAIE));
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))
+             ie = wlan_hdd_cfg80211_get_ie_ptr (params->ie,
+                                      params->ie_len, DOT11F_EID_WPA);
++#else
++            ie = wlan_hdd_cfg80211_get_ie_ptr ((v_U8_t *)params->ie,
++                                     params->ie_len, DOT11F_EID_WPA);
++#endif
+             if ( NULL != ie )
+             {
+                 pWextState->wpaVersion = IW_AUTH_WPA_VERSION_WPA;
+@@ -10582,7 +10727,11 @@ static int __wlan_hdd_cfg80211_join_ibss(struct wiphy *wiphy,
+         pHddCtx->cfg_ini->isCoalesingInIBSSAllowed == 0 &&
+         alloc_bssid == VOS_TRUE)
+     {
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))
+         vos_mem_free(params->bssid);
++#else
++	vos_mem_free((u8 *)params->bssid);
++#endif
+     }
+    return 0;
+ }
+@@ -11108,7 +11257,11 @@ static int __wlan_hdd_cfg80211_get_station(struct wiphy *wiphy,
+     }
+ 
+     wlan_hdd_get_rssi(pAdapter, &sinfo->signal);
++#if LINUX_VERSION_CODE < KERNEL_VERSION(4, 0, 0)
+     sinfo->filled |= STATION_INFO_SIGNAL;
++#else
++    sinfo->filled |= BIT(NL80211_STA_INFO_SIGNAL);
++#endif
+ 
+     wlan_hdd_get_station_stats(pAdapter);
+     rate_flags = pAdapter->hdd_stats.ClassA_stat.tx_rate_flags;
+@@ -11407,12 +11560,20 @@ static int __wlan_hdd_cfg80211_get_station(struct wiphy *wiphy,
+             if (rate_flags & eHAL_TX_RATE_VHT80)
+             {
+                 sinfo->txrate.flags |= RATE_INFO_FLAGS_VHT_MCS;
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))  //this could be a bug
+                 sinfo->txrate.flags |= RATE_INFO_FLAGS_80_MHZ_WIDTH;
++#else
++                sinfo->txrate.flags |= RATE_INFO_BW_80;
++#endif
+             }
+             else if (rate_flags & eHAL_TX_RATE_VHT40)
+             {
+                 sinfo->txrate.flags |= RATE_INFO_FLAGS_VHT_MCS;
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))  //this could be a bug
+                 sinfo->txrate.flags |= RATE_INFO_FLAGS_40_MHZ_WIDTH;
++#else
++                sinfo->txrate.flags |= RATE_INFO_BW_40;
++#endif
+             }
+             else if (rate_flags & eHAL_TX_RATE_VHT20)
+             {
+@@ -11426,7 +11587,11 @@ static int __wlan_hdd_cfg80211_get_station(struct wiphy *wiphy,
+                 sinfo->txrate.flags |= RATE_INFO_FLAGS_MCS;
+                 if (rate_flags & eHAL_TX_RATE_HT40)
+                 {
+-                    sinfo->txrate.flags |= RATE_INFO_FLAGS_40_MHZ_WIDTH;
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))  //this could be a bug
++                sinfo->txrate.flags |= RATE_INFO_FLAGS_40_MHZ_WIDTH;
++#else
++                sinfo->txrate.flags |= RATE_INFO_BW_40;
++#endif
+                 }
+             }
+             if (rate_flags & eHAL_TX_RATE_SGI)
+@@ -11476,12 +11641,20 @@ static int __wlan_hdd_cfg80211_get_station(struct wiphy *wiphy,
+             }
+             if (rate_flags & eHAL_TX_RATE_HT40)
+             {
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))  //this could be a bug
+                 sinfo->txrate.flags |= RATE_INFO_FLAGS_40_MHZ_WIDTH;
++#else
++                sinfo->txrate.flags |= RATE_INFO_BW_40;
++#endif
+             }
+ #ifdef WLAN_FEATURE_11AC
+             else if (rate_flags & eHAL_TX_RATE_VHT80)
+             {
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))  //this could be a bug
+                 sinfo->txrate.flags |= RATE_INFO_FLAGS_80_MHZ_WIDTH;
++#else
++                sinfo->txrate.flags |= RATE_INFO_BW_80;
++#endif
+             }
+ #endif /* WLAN_FEATURE_11AC */
+ #ifdef LINKSPEED_DEBUG_ENABLED
+@@ -11491,11 +11664,18 @@ static int __wlan_hdd_cfg80211_get_station(struct wiphy *wiphy,
+ #endif //LINKSPEED_DEBUG_ENABLED
+         }
+     }
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))  //this could be a bug
+     sinfo->filled |= STATION_INFO_TX_BITRATE;
++#else
++    sinfo->filled |= NL80211_STA_INFO_TX_BITRATE;
++#endif
+ 
+     sinfo->tx_bytes = pAdapter->stats.tx_bytes;
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))
+     sinfo->filled |= STATION_INFO_TX_BYTES;
+-
++#else
++    sinfo->filled |= NL80211_STA_INFO_TX_BYTES;
++#endif
+     sinfo->tx_packets =
+        pAdapter->hdd_stats.summary_stat.tx_frm_cnt[0] +
+        pAdapter->hdd_stats.summary_stat.tx_frm_cnt[1] +
+@@ -11514,32 +11694,49 @@ static int __wlan_hdd_cfg80211_get_station(struct wiphy *wiphy,
+        pAdapter->hdd_stats.summary_stat.fail_cnt[2] +
+        pAdapter->hdd_stats.summary_stat.fail_cnt[3];
+ 
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))
+     sinfo->filled |=
+        STATION_INFO_TX_PACKETS |
+        STATION_INFO_TX_RETRIES |
+        STATION_INFO_TX_FAILED;
+-
++#else
++    sinfo->filled |=
++       NL80211_STA_INFO_TX_PACKETS |
++       NL80211_STA_INFO_TX_RETRIES |
++       NL80211_STA_INFO_TX_FAILED;
++#endif
+     sinfo->rx_bytes = pAdapter->stats.rx_bytes;
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))
+     sinfo->filled |= STATION_INFO_RX_BYTES;
+-
++#else
++    sinfo->filled |= NL80211_STA_INFO_RX_BYTES;
++#endif
+     sinfo->rx_packets = pAdapter->stats.rx_packets;
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))
+     sinfo->filled |= STATION_INFO_RX_PACKETS;
+-
++#else
++    sinfo->filled |= NL80211_STA_INFO_RX_PACKETS;
++#endif
+     MTRACE(vos_trace(VOS_MODULE_ID_HDD,
+                      TRACE_CODE_HDD_CFG80211_GET_STA,
+                      pAdapter->sessionId, maxRate));
+        EXIT();
+        return 0;
+ }
+-
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))
+ static int wlan_hdd_cfg80211_get_station(struct wiphy *wiphy,
+                                          struct net_device *dev,
+                                          u8* mac, struct station_info *sinfo)
++#else
++static int wlan_hdd_cfg80211_get_station(struct wiphy *wiphy,
++                                         struct net_device *dev,
++                                         const u8* mac, struct station_info *sinfo)
++#endif
+ {
+     int ret;
+ 
+     vos_ssr_protect(__func__);
+-    ret = __wlan_hdd_cfg80211_get_station(wiphy, dev, mac, sinfo);
++    ret = __wlan_hdd_cfg80211_get_station(wiphy, dev, (u8 *)mac, sinfo);
+     vos_ssr_unprotect(__func__);
+ 
+     return ret;
+@@ -11780,21 +11977,32 @@ static int __wlan_hdd_cfg80211_del_station(struct wiphy *wiphy,
+ 
+     return 0;
+ }
+-
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))
+ int wlan_hdd_cfg80211_del_station(struct wiphy *wiphy,
+                                   struct net_device *dev, u8 *mac)
+ {
++#else
++int wlan_hdd_cfg80211_del_station(struct wiphy *wiphy,
++                                  struct net_device *dev, struct station_del_parameters *params)
++{
++    const u8 *mac = params->mac;
++#endif
++
+     int ret;
+ 
+     vos_ssr_protect(__func__);
+-    ret = __wlan_hdd_cfg80211_del_station(wiphy, dev, mac);
++    ret = __wlan_hdd_cfg80211_del_station(wiphy, dev, (u8 *)mac);
+     vos_ssr_unprotect(__func__);
+ 
+     return ret;
+ }
+-
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))
+ static int __wlan_hdd_cfg80211_add_station(struct wiphy *wiphy,
+           struct net_device *dev, u8 *mac, struct station_parameters *params)
++#else
++static int __wlan_hdd_cfg80211_add_station(struct wiphy *wiphy,
++          struct net_device *dev, const u8 *mac, struct station_parameters *params)
++#endif
+ {
+     int status = -EPERM;
+ #ifdef FEATURE_WLAN_TDLS
+@@ -11839,14 +12047,19 @@ static int __wlan_hdd_cfg80211_add_station(struct wiphy *wiphy,
+ #endif
+     return status;
+ }
+-
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))
+ static int wlan_hdd_cfg80211_add_station(struct wiphy *wiphy,
+           struct net_device *dev, u8 *mac, struct station_parameters *params)
++#else
++int wlan_hdd_cfg80211_add_station(struct wiphy *wiphy, struct net_device *dev,
++			       const u8 *mac,
++			       struct station_parameters *params)
++#endif
+ {
+     int ret;
+ 
+     vos_ssr_protect(__func__);
+-    ret = __wlan_hdd_cfg80211_add_station(wiphy, dev, mac, params);
++    ret = __wlan_hdd_cfg80211_add_station(wiphy, dev, (u8 *)mac, params);
+     vos_ssr_unprotect(__func__);
+ 
+     return ret;
+@@ -11895,8 +12108,11 @@ static int __wlan_hdd_cfg80211_set_pmksa(struct wiphy *wiphy, struct net_device
+     pHddStaCtx = WLAN_HDD_GET_STATION_CTX_PTR(pAdapter);
+ 
+     for (j = 0; j < pHddStaCtx->PMKIDCacheIndex; j++) {
+-        if (vos_mem_compare(pHddStaCtx->PMKIDCache[j].BSSID,
+-                    pmksa->bssid, VOS_MAC_ADDR_SIZE)) {
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))
++        if (vos_mem_compare(pHddStaCtx->PMKIDCache[j].BSSID,pmksa->bssid, VOS_MAC_ADDR_SIZE)) {
++#else
++          if (vos_mem_compare(pHddStaCtx->PMKIDCache[j].BSSID, (u8 *)pmksa->bssid, VOS_MAC_ADDR_SIZE)) {
++#endif
+             /* BSSID matched previous entry. Overwrite it. */
+             BSSIDMatched = 1;
+             vos_mem_copy(pHddStaCtx->PMKIDCache[j].BSSID,
+@@ -11907,7 +12123,11 @@ static int __wlan_hdd_cfg80211_set_pmksa(struct wiphy *wiphy, struct net_device
+             hddLog(VOS_TRACE_LEVEL_DEBUG, FL("Reusing cache entry %d"), j);
+             hddLog(VOS_TRACE_LEVEL_INFO, MAC_ADDRESS_STR,
+                MAC_ADDR_ARRAY(pmksa->bssid));
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))
+             dump_pmkid(halHandle, pmksa->pmkid);
++#else
++            dump_pmkid(halHandle, (u8 *)pmksa->pmkid);
++#endif
+             break;
+         }
+     }
+@@ -11926,7 +12146,11 @@ static int __wlan_hdd_cfg80211_set_pmksa(struct wiphy *wiphy, struct net_device
+                FL("Adding a new cache entry %d"), pHddStaCtx->PMKIDCacheIndex);
+         hddLog(VOS_TRACE_LEVEL_INFO, MAC_ADDRESS_STR,
+                MAC_ADDR_ARRAY(pmksa->bssid));
+-        dump_pmkid(halHandle, pmksa->pmkid);
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))
++            dump_pmkid(halHandle, pmksa->pmkid);
++#else
++            dump_pmkid(halHandle, (u8 *)pmksa->pmkid);
++#endif
+         /* Increment the HDD Local Cache index */
+         if (pHddStaCtx->PMKIDCacheIndex <= (MAX_PMKSAIDS_IN_CACHE - 1))
+             pHddStaCtx->PMKIDCacheIndex++;
+@@ -12012,9 +12236,11 @@ static int __wlan_hdd_cfg80211_del_pmksa(struct wiphy *wiphy, struct net_device
+      * and delete the matched one
+      */
+     for (j = 0; j < pHddStaCtx->PMKIDCacheIndex; j++) {
+-          if (vos_mem_compare(pHddStaCtx->PMKIDCache[j].BSSID,
+-                             pmksa->bssid,
+-                             VOS_MAC_ADDR_SIZE)) {
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))
++          if (vos_mem_compare(pHddStaCtx->PMKIDCache[j].BSSID, pmksa->bssid, VOS_MAC_ADDR_SIZE)) {
++#else
++          if (vos_mem_compare(pHddStaCtx->PMKIDCache[j].BSSID, (u8 *)pmksa->bssid, VOS_MAC_ADDR_SIZE)) {
++#endif
+              /* BSSID matched entry */
+              BSSIDMatched = 1;
+ 
+@@ -12039,9 +12265,14 @@ static int __wlan_hdd_cfg80211_del_pmksa(struct wiphy *wiphy, struct net_device
+              pHddStaCtx->PMKIDCacheIndex--;
+ 
+              /* Delete the last PMKID cache in CSR */
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))
+              if (eHAL_STATUS_SUCCESS !=
+-                 sme_RoamDelPMKIDfromCache(halHandle,
+-                                           pAdapter->sessionId, pmksa->bssid))
++                 sme_RoamDelPMKIDfromCache(halHandle, pAdapter->sessionId, pmksa->bssid))
++#else
++             if (eHAL_STATUS_SUCCESS !=
++                 sme_RoamDelPMKIDfromCache(halHandle, pAdapter->sessionId, (u8 *)pmksa->bssid))
++
++#endif
+              {
+                 hddLog(LOGE, FL("Cannot delete PMKSA %d CONTENT"),
+                              pHddStaCtx->PMKIDCacheIndex);
+@@ -12050,7 +12281,11 @@ static int __wlan_hdd_cfg80211_del_pmksa(struct wiphy *wiphy, struct net_device
+ 
+              hddLog(VOS_TRACE_LEVEL_INFO, MAC_ADDRESS_STR,
+                MAC_ADDR_ARRAY(pmksa->bssid));
+-             dump_pmkid(halHandle,pmksa->pmkid);
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))
++            dump_pmkid(halHandle, pmksa->pmkid);
++#else
++            dump_pmkid(halHandle, (u8 *)pmksa->pmkid);
++#endif
+ 
+              break;
+           }
+@@ -12061,7 +12296,11 @@ static int __wlan_hdd_cfg80211_del_pmksa(struct wiphy *wiphy, struct net_device
+        hddLog(VOS_TRACE_LEVEL_DEBUG,
+               FL("No such PMKSA entry exists "MAC_ADDRESS_STR),
+               MAC_ADDR_ARRAY(pmksa->bssid));
+-       dump_pmkid(halHandle, pmksa->pmkid);
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))
++            dump_pmkid(halHandle, pmksa->pmkid);
++#else
++            dump_pmkid(halHandle, (u8 *)pmksa->pmkid);
++#endif
+        return -EINVAL;
+     }
+     return status;
+@@ -12479,7 +12718,7 @@ static int __wlan_hdd_cfg80211_sched_scan_start(struct wiphy *wiphy,
+         /*Copying list of valid channel into request */
+         memcpy(pPnoRequest->aNetworks[i].aChannels, valid_ch, num_ch);
+         pPnoRequest->aNetworks[i].ucChannelCount = num_ch;
+-#if (LINUX_VERSION_CODE >= KERNEL_VERSION(3,10,0)) && defined (QCA_WIFI_2_0)
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(3,10,0)) && defined (QCA_WIFI_2_0) && 0
+         pPnoRequest->aNetworks[i].rssiThreshold =
+                                     request->match_sets[i].rssi_thold;
+ #else
+@@ -12515,7 +12754,11 @@ static int __wlan_hdd_cfg80211_sched_scan_start(struct wiphy *wiphy,
+         pPnoRequest->scanTimers.ucScanTimersCount =
+                                                HDD_PNO_SCAN_TIMERS_SET_MULTIPLE;
+ 
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4, 4, 0))
++    tempInterval = (request->scan_plans[0].interval)/1000;
++#else
+     tempInterval = (request->interval)/1000;
++#endif
+     VOS_TRACE(VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_INFO,
+               "Base scan interval = %d PNOScanTimerRepeatValue = %d",
+               tempInterval, pHddCtx->cfg_ini->configPNOScanTimerRepeatValue);
+@@ -12691,13 +12934,27 @@ static int wlan_hdd_cfg80211_sched_scan_stop(struct wiphy *wiphy,
+ 
+ #ifdef FEATURE_WLAN_TDLS
+ #if TDLS_MGMT_VERSION2
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))
+ static int wlan_hdd_cfg80211_tdls_mgmt(struct wiphy *wiphy, struct net_device *dev,
+                      u8 *peer, u8 action_code,  u8 dialog_token,
+                       u16 status_code, u32 peer_capability, const u8 *buf, size_t len)
+ #else
++int wlan_hdd_cfg80211_tdls_mgmt(struct wiphy *wiphy, struct net_device *dev,
++			     const u8 *peer, u8 action_code,  u8 dialog_token,
++			     u16 status_code, u32 peer_capability,
++			     bool initiator, const u8 *buf, size_t len)
++#endif //#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))
++#else
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))
+ static int wlan_hdd_cfg80211_tdls_mgmt(struct wiphy *wiphy, struct net_device *dev,
+                      u8 *peer, u8 action_code,  u8 dialog_token,
+                      u16 status_code, const u8 *buf, size_t len)
++#else
++int wlan_hdd_cfg80211_tdls_mgmt(struct wiphy *wiphy, struct net_device *dev,
++			     const u8 *peer, u8 action_code,  u8 dialog_token,
++			     u16 status_code, u32 peer_capability,
++			     bool initiator, const u8 *buf, size_t len)
++#endif //(LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))
+ #endif
+ {
+ 
+@@ -12710,8 +12967,10 @@ static int wlan_hdd_cfg80211_tdls_mgmt(struct wiphy *wiphy, struct net_device *d
+     long rc;
+     tANI_U16 numCurrTdlsPeers;
+ #if !(TDLS_MGMT_VERSION2)
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))
+     u32 peer_capability;
+     peer_capability = 0;
++#endif  //(LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))
+ #endif
+ 
+     MTRACE(vos_trace(VOS_MODULE_ID_HDD,
+@@ -12766,7 +13025,7 @@ static int wlan_hdd_cfg80211_tdls_mgmt(struct wiphy *wiphy, struct net_device *d
+ 
+     if (WLAN_IS_TDLS_SETUP_ACTION(action_code))
+     {
+-        if (NULL != wlan_hdd_tdls_is_progress(pHddCtx, peer, TRUE))
++        if (NULL != wlan_hdd_tdls_is_progress(pHddCtx, (u8 *)peer, TRUE))
+         {
+             VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_ERROR,
+                        "%s: " MAC_ADDRESS_STR
+@@ -12813,7 +13072,7 @@ static int wlan_hdd_cfg80211_tdls_mgmt(struct wiphy *wiphy, struct net_device *d
+         else
+         {
+             hddTdlsPeer_t *pTdlsPeer;
+-            pTdlsPeer = wlan_hdd_tdls_find_peer(pAdapter, peer, TRUE);
++            pTdlsPeer = wlan_hdd_tdls_find_peer(pAdapter, (u8 *)peer, TRUE);
+             if (pTdlsPeer && TDLS_IS_CONNECTED(pTdlsPeer))
+             {
+                 VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_ERROR,
+@@ -12838,7 +13097,7 @@ static int wlan_hdd_cfg80211_tdls_mgmt(struct wiphy *wiphy, struct net_device *d
+     {
+ 
+        hddTdlsPeer_t *pTdlsPeer;
+-       pTdlsPeer = wlan_hdd_tdls_find_peer(pAdapter, peerMac, TRUE);
++       pTdlsPeer = wlan_hdd_tdls_find_peer(pAdapter, (u8 *)peerMac, TRUE);
+ 
+        if(pTdlsPeer && TDLS_IS_CONNECTED(pTdlsPeer))
+             responder = pTdlsPeer->is_responder;
+@@ -13006,7 +13265,7 @@ static int __wlan_hdd_cfg80211_tdls_oper(struct wiphy *wiphy,
+                 long ret;
+                 tCsrTdlsLinkEstablishParams tdlsLinkEstablishParams;
+ 
+-                pTdlsPeer = wlan_hdd_tdls_find_peer(pAdapter, peer, TRUE);
++                pTdlsPeer = wlan_hdd_tdls_find_peer(pAdapter, (u8 *)peer, TRUE);
+ 
+                 if (NULL == pTdlsPeer)
+                 {
+@@ -13188,7 +13447,7 @@ static int __wlan_hdd_cfg80211_tdls_oper(struct wiphy *wiphy,
+             break;
+         case NL80211_TDLS_DISABLE_LINK:
+             {
+-                pTdlsPeer = wlan_hdd_tdls_find_peer(pAdapter, peer, TRUE);
++                pTdlsPeer = wlan_hdd_tdls_find_peer(pAdapter, (u8 *)peer, TRUE);
+ 
+                 if ( NULL == pTdlsPeer ) {
+                     VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_ERROR,
+@@ -13247,7 +13506,7 @@ static int __wlan_hdd_cfg80211_tdls_oper(struct wiphy *wiphy,
+                 }
+ 
+ 
+-                pTdlsPeer = wlan_hdd_tdls_find_peer(pAdapter, peer, TRUE);
++                pTdlsPeer = wlan_hdd_tdls_find_peer(pAdapter, (u8 *)peer, TRUE);
+ 
+                 if ( NULL == pTdlsPeer ) {
+                     VOS_TRACE(VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_ERROR,
+@@ -13289,7 +13548,11 @@ static int __wlan_hdd_cfg80211_tdls_oper(struct wiphy *wiphy,
+                 /* To cater the requirement of establishing the TDLS link
+                  * irrespective of the data traffic , get an entry of TDLS peer.
+                  */
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))
+                 pTdlsPeer = wlan_hdd_tdls_get_peer(pAdapter, peer);
++#else
++                pTdlsPeer = wlan_hdd_tdls_get_peer(pAdapter, (u8 *)peer);
++#endif
+ 
+                 if (pTdlsPeer == NULL) {
+                     VOS_TRACE(VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_ERROR,
+@@ -13321,16 +13584,22 @@ static int __wlan_hdd_cfg80211_tdls_oper(struct wiphy *wiphy,
+     }
+     return 0;
+ }
+-
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))
+ static int wlan_hdd_cfg80211_tdls_oper(struct wiphy *wiphy,
+                                        struct net_device *dev,
+                                        u8 *peer,
+                                        enum nl80211_tdls_operation oper)
++#else
++static int wlan_hdd_cfg80211_tdls_oper(struct wiphy *wiphy,
++                                       struct net_device *dev,
++                                       const u8 *peer,
++                                       enum nl80211_tdls_operation oper)
++#endif
+ {
+     int ret;
+ 
+     vos_ssr_protect(__func__);
+-    ret = __wlan_hdd_cfg80211_tdls_oper(wiphy, dev, peer, oper);
++    ret = __wlan_hdd_cfg80211_tdls_oper(wiphy, dev, (u8 *)peer, oper);
+     vos_ssr_unprotect(__func__);
+ 
+     return ret;
+@@ -13346,8 +13615,12 @@ int wlan_hdd_cfg80211_send_tdls_discover_req(struct wiphy *wiphy,
+     return wlan_hdd_cfg80211_tdls_mgmt(wiphy, dev, peer,
+                             WLAN_TDLS_DISCOVERY_REQUEST, 1, 0, 0, NULL, 0);
+ #else
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))
+     return wlan_hdd_cfg80211_tdls_mgmt(wiphy, dev, peer,
+                             WLAN_TDLS_DISCOVERY_REQUEST, 1, 0, NULL, 0);
++#else
++    return wlan_hdd_cfg80211_tdls_mgmt(wiphy, dev, peer, WLAN_TDLS_DISCOVERY_REQUEST, 1, 0, 0,1, NULL, 0);
++#endif //#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))
+ #endif
+ }
+ #endif
+@@ -13802,7 +14075,12 @@ static int __wlan_hdd_cfg80211_testmode(struct wiphy *wiphy,
+    return err;
+ }
+ 
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(3,12,0))
++static int wlan_hdd_cfg80211_testmode(struct wiphy *wiphy, struct wireless_dev *wdev,
++                                      void *data, int len)
++#else
+ static int wlan_hdd_cfg80211_testmode(struct wiphy *wiphy, void *data, int len)
++#endif
+ {
+    int ret;
+ 
+@@ -14415,14 +14693,23 @@ int wlan_hdd_cfg80211_set_ap_channel_width(struct wiphy *wiphy,
+ #endif
+ 
+ #ifdef FEATURE_WLAN_EXTSCAN
+-
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))
+ static void wlan_hdd_cfg80211_extscan_get_capabilities_ind(void *ctx,
+                                                            void *pMsg)
++#else
++static void wlan_hdd_cfg80211_extscan_get_capabilities_ind(void *ctx,
++                                                           hdd_adapter_t *pAdapter,
++                                                           void *pMsg)
++#endif //#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))
+ {
+     hdd_context_t *pHddCtx  = (hdd_context_t *)ctx;
+     struct sk_buff *skb     = NULL;
+     tpSirExtScanCapabilitiesEvent pData =
+                     (tpSirExtScanCapabilitiesEvent) pMsg;
++#if (LINUX_VERSION_CODE > KERNEL_VERSION(4,1,0))
++    struct net_device *dev = pAdapter->dev;
++    struct wireless_dev *wdev = dev->ieee80211_ptr;
++#endif
+ 
+     ENTER();
+ 
+@@ -14431,8 +14718,11 @@ static void wlan_hdd_cfg80211_extscan_get_capabilities_ind(void *ctx,
+                                          "or pData(%p) is null"), pData);
+         return;
+     }
+-
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))
+     skb = cfg80211_vendor_event_alloc(pHddCtx->wiphy,
++#else
++    skb = cfg80211_vendor_event_alloc(pHddCtx->wiphy, wdev,
++#endif
+                       EXTSCAN_EVENT_BUF_SIZE + NLMSG_HDRLEN,
+                       QCA_NL80211_VENDOR_SUBCMD_EXTSCAN_GET_CAPABILITIES_INDEX,
+                       GFP_KERNEL);
+@@ -14495,13 +14785,19 @@ nla_put_failure:
+     kfree_skb(skb);
+     return;
+ }
+-
+-
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))
+ static void wlan_hdd_cfg80211_extscan_start_rsp(void *ctx, void *pMsg)
++#else
++static void wlan_hdd_cfg80211_extscan_start_rsp(void *ctx, hdd_adapter_t *pAdapter, void *pMsg)
++#endif //#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))
+ {
+     tpSirExtScanStartRspParams pData = (tpSirExtScanStartRspParams) pMsg;
+     hdd_context_t *pHddCtx         = (hdd_context_t *)ctx;
+     struct sk_buff *skb            = NULL;
++#if (LINUX_VERSION_CODE > KERNEL_VERSION(4,1,0))
++    struct net_device *dev = pAdapter->dev;
++    struct wireless_dev *wdev = dev->ieee80211_ptr;
++#endif
+ 
+     ENTER();
+ 
+@@ -14510,8 +14806,11 @@ static void wlan_hdd_cfg80211_extscan_start_rsp(void *ctx, void *pMsg)
+                                          "or pData(%p) is null"), pData);
+         return;
+     }
+-
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))
+     skb = cfg80211_vendor_event_alloc(pHddCtx->wiphy,
++#else
++    skb = cfg80211_vendor_event_alloc(pHddCtx->wiphy, wdev,
++#endif //#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))
+                                  EXTSCAN_EVENT_BUF_SIZE + NLMSG_HDRLEN,
+                                  QCA_NL80211_VENDOR_SUBCMD_EXTSCAN_START_INDEX,
+                                  GFP_KERNEL);
+@@ -14538,12 +14837,19 @@ nla_put_failure:
+     return;
+ }
+ 
+-
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))
+ static void wlan_hdd_cfg80211_extscan_stop_rsp(void *ctx, void *pMsg)
++#else
++static void wlan_hdd_cfg80211_extscan_stop_rsp(void *ctx, hdd_adapter_t *pAdapter, void *pMsg)
++#endif //#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))
+ {
+     tpSirExtScanStopRspParams pData = (tpSirExtScanStopRspParams) pMsg;
+     hdd_context_t *pHddCtx        = (hdd_context_t *)ctx;
+     struct sk_buff *skb           = NULL;
++#if (LINUX_VERSION_CODE > KERNEL_VERSION(4,1,0))
++    struct net_device *dev = pAdapter->dev;
++    struct wireless_dev *wdev = dev->ieee80211_ptr;
++#endif
+ 
+     if (wlan_hdd_validate_context(pHddCtx) || !pData) {
+         hddLog(VOS_TRACE_LEVEL_ERROR, FL("HDD context is not valid "
+@@ -14551,7 +14857,11 @@ static void wlan_hdd_cfg80211_extscan_stop_rsp(void *ctx, void *pMsg)
+         return;
+     }
+ 
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))
+     skb = cfg80211_vendor_event_alloc(pHddCtx->wiphy,
++#else
++    skb = cfg80211_vendor_event_alloc(pHddCtx->wiphy, wdev,
++#endif //#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))
+                                  EXTSCAN_EVENT_BUF_SIZE + NLMSG_HDRLEN,
+                                  QCA_NL80211_VENDOR_SUBCMD_EXTSCAN_STOP_INDEX,
+                                  GFP_KERNEL);
+@@ -14578,14 +14888,22 @@ nla_put_failure:
+     return;
+ }
+ 
+-
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))
+ static void wlan_hdd_cfg80211_extscan_set_bss_hotlist_rsp(void *ctx,
+                                                         void *pMsg)
++#else
++static void wlan_hdd_cfg80211_extscan_set_bss_hotlist_rsp(void *ctx, hdd_adapter_t *pAdapter,
++                                                        void *pMsg)
++#endif
+ {
+     hdd_context_t *pHddCtx    = (hdd_context_t *)ctx;
+     struct sk_buff *skb       = NULL;
+     tpSirExtScanSetBssidHotListRspParams pData =
+                     (tpSirExtScanSetBssidHotListRspParams) pMsg;
++#if (LINUX_VERSION_CODE > KERNEL_VERSION(4,1,0))
++    struct net_device *dev = pAdapter->dev;
++    struct wireless_dev *wdev = dev->ieee80211_ptr;
++#endif
+ 
+     ENTER();
+ 
+@@ -14594,7 +14912,11 @@ static void wlan_hdd_cfg80211_extscan_set_bss_hotlist_rsp(void *ctx,
+                                          "or pData(%p) is null"), pData);
+         return;
+     }
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))
+     skb = cfg80211_vendor_event_alloc(pHddCtx->wiphy,
++#else
++        skb = cfg80211_vendor_event_alloc(pHddCtx->wiphy,wdev,
++#endif
+                      EXTSCAN_EVENT_BUF_SIZE + NLMSG_HDRLEN,
+                      QCA_NL80211_VENDOR_SUBCMD_EXTSCAN_SET_BSSID_HOTLIST_INDEX,
+                      GFP_KERNEL);
+@@ -14622,13 +14944,22 @@ nla_put_failure:
+     return;
+ }
+ 
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))
+ static void wlan_hdd_cfg80211_extscan_reset_bss_hotlist_rsp(void *ctx,
+                                                           void *pMsg)
++#else
++static void wlan_hdd_cfg80211_extscan_reset_bss_hotlist_rsp(void *ctx,hdd_adapter_t *pAdapter,
++                                                          void *pMsg)
++#endif
+ {
+     hdd_context_t *pHddCtx  = (hdd_context_t *)ctx;
+     struct sk_buff *skb     = NULL;
+     tpSirExtScanResetBssidHotlistRspParams pData =
+                     (tpSirExtScanResetBssidHotlistRspParams) pMsg;
++#if (LINUX_VERSION_CODE > KERNEL_VERSION(4,1,0))
++    struct net_device *dev = pAdapter->dev;
++    struct wireless_dev *wdev = dev->ieee80211_ptr;
++#endif
+ 
+     ENTER();
+ 
+@@ -14638,7 +14969,11 @@ static void wlan_hdd_cfg80211_extscan_reset_bss_hotlist_rsp(void *ctx,
+         return;
+     }
+ 
+-    skb = cfg80211_vendor_event_alloc(pHddCtx->wiphy,
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))
++        skb = cfg80211_vendor_event_alloc(pHddCtx->wiphy,
++#else
++        skb = cfg80211_vendor_event_alloc(pHddCtx->wiphy,wdev,
++#endif
+                    EXTSCAN_EVENT_BUF_SIZE + NLMSG_HDRLEN,
+                    QCA_NL80211_VENDOR_SUBCMD_EXTSCAN_RESET_BSSID_HOTLIST_INDEX,
+                    GFP_KERNEL);
+@@ -14665,14 +15000,22 @@ nla_put_failure:
+     return;
+ }
+ 
+-
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))
+ static void wlan_hdd_cfg80211_extscan_set_signf_wifi_change_rsp(void *ctx,
+                                                               void *pMsg)
++#else
++static void wlan_hdd_cfg80211_extscan_set_signf_wifi_change_rsp(void *ctx,hdd_adapter_t *pAdapter,
++                                                              void *pMsg)
++#endif
+ {
+     hdd_context_t *pHddCtx  = (hdd_context_t *)ctx;
+     struct sk_buff *skb     = NULL;
+     tpSirExtScanSetSignificantChangeRspParams pData =
+                     (tpSirExtScanSetSignificantChangeRspParams) pMsg;
++#if (LINUX_VERSION_CODE > KERNEL_VERSION(4,1,0))
++    struct net_device *dev = pAdapter->dev;
++    struct wireless_dev *wdev = dev->ieee80211_ptr;
++#endif
+ 
+     ENTER();
+ 
+@@ -14682,7 +15025,11 @@ static void wlan_hdd_cfg80211_extscan_set_signf_wifi_change_rsp(void *ctx,
+         return;
+     }
+ 
+-    skb = cfg80211_vendor_event_alloc(pHddCtx->wiphy,
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))
++        skb = cfg80211_vendor_event_alloc(pHddCtx->wiphy,
++#else
++        skb = cfg80211_vendor_event_alloc(pHddCtx->wiphy,wdev,
++#endif
+                 EXTSCAN_EVENT_BUF_SIZE + NLMSG_HDRLEN,
+                 QCA_NL80211_VENDOR_SUBCMD_EXTSCAN_SET_SIGNIFICANT_CHANGE_INDEX,
+                 GFP_KERNEL);
+@@ -14710,14 +15057,22 @@ nla_put_failure:
+     return;
+ }
+ 
+-
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))
+ static void wlan_hdd_cfg80211_extscan_reset_signf_wifi_change_rsp(void *ctx,
+                                                                 void *pMsg)
++#else
++static void wlan_hdd_cfg80211_extscan_reset_signf_wifi_change_rsp(void *ctx, hdd_adapter_t *pAdapter,
++                                                                void *pMsg)
++#endif
+ {
+     hdd_context_t *pHddCtx  = (hdd_context_t *)ctx;
+     struct sk_buff *skb     = NULL;
+     tpSirExtScanResetSignificantChangeRspParams pData =
+                     (tpSirExtScanResetSignificantChangeRspParams) pMsg;
++#if (LINUX_VERSION_CODE > KERNEL_VERSION(4,1,0))
++    struct net_device *dev = pAdapter->dev;
++    struct wireless_dev *wdev = dev->ieee80211_ptr;
++#endif
+ 
+     ENTER();
+ 
+@@ -14727,7 +15082,11 @@ static void wlan_hdd_cfg80211_extscan_reset_signf_wifi_change_rsp(void *ctx,
+         return;
+     }
+ 
+-    skb = cfg80211_vendor_event_alloc(pHddCtx->wiphy,
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))
++        skb = cfg80211_vendor_event_alloc(pHddCtx->wiphy,
++#else
++        skb = cfg80211_vendor_event_alloc(pHddCtx->wiphy,wdev,
++#endif
+               EXTSCAN_EVENT_BUF_SIZE + NLMSG_HDRLEN,
+               QCA_NL80211_VENDOR_SUBCMD_EXTSCAN_RESET_SIGNIFICANT_CHANGE_INDEX,
+               GFP_KERNEL);
+@@ -14755,13 +15114,29 @@ nla_put_failure:
+     return;
+ }
+ 
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4, 7, 0))
++static inline int nla_put_u64(struct sk_buff *skb, int attrtype, u64 value)
++{
++    return nla_put(skb, attrtype, sizeof(u64), &value);
++}
++#endif
++
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))
+ static void wlan_hdd_cfg80211_extscan_cached_results_ind(void *ctx,
+                                                        void *pMsg)
++#else
++static void wlan_hdd_cfg80211_extscan_cached_results_ind(void *ctx, hdd_adapter_t *pAdapter,
++                                                       void *pMsg)
++#endif
+ {
+     hdd_context_t *pHddCtx = (hdd_context_t *)ctx;
+     struct sk_buff *skb    = NULL;
+     tANI_U32 i;
+     tpSirWifiScanResultEvent pData = (tpSirWifiScanResultEvent) pMsg;
++#if (LINUX_VERSION_CODE > KERNEL_VERSION(4,1,0))
++    struct net_device *dev = pAdapter->dev;
++    struct wireless_dev *wdev = dev->ieee80211_ptr;
++#endif
+ 
+     ENTER();
+ 
+@@ -14771,7 +15146,11 @@ static void wlan_hdd_cfg80211_extscan_cached_results_ind(void *ctx,
+         return;
+     }
+ 
+-    skb = cfg80211_vendor_event_alloc(pHddCtx->wiphy,
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))
++        skb = cfg80211_vendor_event_alloc(pHddCtx->wiphy,
++#else
++        skb = cfg80211_vendor_event_alloc(pHddCtx->wiphy,wdev,
++#endif
+                     EXTSCAN_EVENT_BUF_SIZE + NLMSG_HDRLEN,
+                     QCA_NL80211_VENDOR_SUBCMD_EXTSCAN_GET_CACHED_RESULTS_INDEX,
+                     GFP_KERNEL);
+@@ -14890,13 +15269,22 @@ fail:
+     return;
+ 
+ }
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))
+ static void wlan_hdd_cfg80211_extscan_hotlist_match_ind(void *ctx,
+                                                       void *pMsg)
++#else
++static void wlan_hdd_cfg80211_extscan_hotlist_match_ind(void *ctx, hdd_adapter_t *pAdapter,
++                                                      void *pMsg)
++#endif
+ {
+     tpSirWifiScanResultEvent pData = (tpSirWifiScanResultEvent) pMsg;
+     hdd_context_t *pHddCtx         = (hdd_context_t *)ctx;
+     struct sk_buff *skb            = NULL;
+     tANI_U32 i;
++#if (LINUX_VERSION_CODE > KERNEL_VERSION(4,1,0))
++    struct net_device *dev = pAdapter->dev;
++    struct wireless_dev *wdev = dev->ieee80211_ptr;
++#endif
+ 
+     ENTER();
+ 
+@@ -14906,7 +15294,11 @@ static void wlan_hdd_cfg80211_extscan_hotlist_match_ind(void *ctx,
+         return;
+     }
+ 
+-    skb = cfg80211_vendor_event_alloc(pHddCtx->wiphy,
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))
++        skb = cfg80211_vendor_event_alloc(pHddCtx->wiphy,
++#else
++        skb = cfg80211_vendor_event_alloc(pHddCtx->wiphy,wdev,
++#endif
+                       EXTSCAN_EVENT_BUF_SIZE + NLMSG_HDRLEN,
+                       QCA_NL80211_VENDOR_SUBCMD_EXTSCAN_HOTLIST_AP_FOUND_INDEX,
+                       GFP_KERNEL);
+@@ -15005,14 +15397,24 @@ fail:
+ 
+ }
+ 
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))
+ static void wlan_hdd_cfg80211_extscan_signif_wifi_change_results_ind(void *ctx,
+                                                                    void *pMsg)
++#else
++static void wlan_hdd_cfg80211_extscan_signif_wifi_change_results_ind(void *ctx, hdd_adapter_t *pAdapter,
++                                                                   void *pMsg)
++#endif
++
+ {
+     hdd_context_t *pHddCtx  = (hdd_context_t *)ctx;
+     struct sk_buff *skb     = NULL;
+     tANI_U32 i, j;
+     tpSirWifiSignificantChangeEvent pData =
+                                      (tpSirWifiSignificantChangeEvent) pMsg;
++#if (LINUX_VERSION_CODE > KERNEL_VERSION(4,1,0))
++    struct net_device *dev = pAdapter->dev;
++    struct wireless_dev *wdev = dev->ieee80211_ptr;
++#endif
+     ENTER();
+ 
+     if (wlan_hdd_validate_context(pHddCtx) || !pData) {
+@@ -15021,7 +15423,11 @@ static void wlan_hdd_cfg80211_extscan_signif_wifi_change_results_ind(void *ctx,
+         return;
+     }
+ 
+-    skb = cfg80211_vendor_event_alloc(pHddCtx->wiphy,
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))
++        skb = cfg80211_vendor_event_alloc(pHddCtx->wiphy,
++#else
++        skb = cfg80211_vendor_event_alloc(pHddCtx->wiphy,wdev,
++#endif
+                     EXTSCAN_EVENT_BUF_SIZE + NLMSG_HDRLEN,
+                     QCA_NL80211_VENDOR_SUBCMD_EXTSCAN_SIGNIFICANT_CHANGE_INDEX,
+                     GFP_KERNEL);
+@@ -15103,14 +15509,22 @@ fail:
+     return;
+ 
+ }
+-
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))
+ static void wlan_hdd_cfg80211_extscan_full_scan_result_event(void *ctx,
+                                                            void *pMsg)
++#else
++static void wlan_hdd_cfg80211_extscan_full_scan_result_event(void *ctx, hdd_adapter_t *pAdapter,
++                                                           void *pMsg)
++#endif
+ {
+     hdd_context_t *pHddCtx  = (hdd_context_t *)ctx;
+     struct sk_buff *skb     = NULL;
+     tpSirWifiFullScanResultEvent pData =
+                     (tpSirWifiFullScanResultEvent) pMsg;
++#if (LINUX_VERSION_CODE > KERNEL_VERSION(4,1,0))
++    struct net_device *dev = pAdapter->dev;
++    struct wireless_dev *wdev = dev->ieee80211_ptr;
++#endif
+ 
+     ENTER();
+ 
+@@ -15120,7 +15534,11 @@ static void wlan_hdd_cfg80211_extscan_full_scan_result_event(void *ctx,
+         return;
+     }
+ 
+-    skb = cfg80211_vendor_event_alloc(pHddCtx->wiphy,
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))
++        skb = cfg80211_vendor_event_alloc(pHddCtx->wiphy,
++#else
++        skb = cfg80211_vendor_event_alloc(pHddCtx->wiphy,wdev,
++#endif
+                   EXTSCAN_EVENT_BUF_SIZE + NLMSG_HDRLEN,
+                   QCA_NL80211_VENDOR_SUBCMD_EXTSCAN_FULL_SCAN_RESULT_INDEX,
+                   GFP_KERNEL);
+@@ -15199,14 +15617,22 @@ nla_put_failure:
+     kfree_skb(skb);
+     return;
+ }
+-
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))
+ static void wlan_hdd_cfg80211_extscan_scan_res_available_event(void *ctx,
+                                                              void *pMsg)
++#else
++static void wlan_hdd_cfg80211_extscan_scan_res_available_event(void *ctx,hdd_adapter_t *pAdapter,
++                                                             void *pMsg)
++#endif
+ {
+     hdd_context_t *pHddCtx  = (hdd_context_t *)ctx;
+     struct sk_buff *skb     = NULL;
+     tpSirExtScanResultsAvailableIndParams pData =
+                     (tpSirExtScanResultsAvailableIndParams) pMsg;
++#if (LINUX_VERSION_CODE > KERNEL_VERSION(4,1,0))
++    struct net_device *dev = pAdapter->dev;
++    struct wireless_dev *wdev = dev->ieee80211_ptr;
++#endif
+ 
+     ENTER();
+ 
+@@ -15216,7 +15642,11 @@ static void wlan_hdd_cfg80211_extscan_scan_res_available_event(void *ctx,
+         return;
+     }
+ 
+-    skb = cfg80211_vendor_event_alloc(pHddCtx->wiphy,
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))
++        skb = cfg80211_vendor_event_alloc(pHddCtx->wiphy,
++#else
++        skb = cfg80211_vendor_event_alloc(pHddCtx->wiphy,wdev,
++#endif
+                 EXTSCAN_EVENT_BUF_SIZE + NLMSG_HDRLEN,
+                 QCA_NL80211_VENDOR_SUBCMD_EXTSCAN_SCAN_RESULTS_AVAILABLE_INDEX,
+                 GFP_KERNEL);
+@@ -15247,13 +15677,22 @@ nla_put_failure:
+     return;
+ }
+ 
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))
+ static void wlan_hdd_cfg80211_extscan_scan_progress_event(void *ctx,
+                                                           void *pMsg)
++#else
++static void wlan_hdd_cfg80211_extscan_scan_progress_event(void *ctx, hdd_adapter_t *pAdapter,
++                                                          void *pMsg)
++#endif
+ {
+     hdd_context_t *pHddCtx  = (hdd_context_t *)ctx;
+     struct sk_buff *skb     = NULL;
+     tpSirExtScanOnScanEventIndParams pData =
+                                    (tpSirExtScanOnScanEventIndParams) pMsg;
++#if (LINUX_VERSION_CODE > KERNEL_VERSION(4,1,0))
++    struct net_device *dev = pAdapter->dev;
++    struct wireless_dev *wdev = dev->ieee80211_ptr;
++#endif
+ 
+     ENTER();
+ 
+@@ -15263,7 +15702,11 @@ static void wlan_hdd_cfg80211_extscan_scan_progress_event(void *ctx,
+         return;
+     }
+ 
+-    skb = cfg80211_vendor_event_alloc(pHddCtx->wiphy,
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))
++        skb = cfg80211_vendor_event_alloc(pHddCtx->wiphy,
++#else
++        skb = cfg80211_vendor_event_alloc(pHddCtx->wiphy,wdev,
++#endif
+                             EXTSCAN_EVENT_BUF_SIZE + NLMSG_HDRLEN,
+                             QCA_NL80211_VENDOR_SUBCMD_EXTSCAN_SCAN_EVENT_INDEX,
+                             GFP_KERNEL);
+@@ -15293,11 +15736,18 @@ nla_put_failure:
+     return;
+ }
+ 
+-
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))
+ void wlan_hdd_cfg80211_extscan_callback(void *ctx, const tANI_U16 evType,
+                                       void *pMsg)
++#else
++void wlan_hdd_cfg80211_extscan_callback(void *ctx, const tANI_U16 evType, void *pAdter,
++                                      void *pMsg)
++#endif //#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))
+ {
+     hdd_context_t *pHddCtx = (hdd_context_t *)ctx;
++#if (LINUX_VERSION_CODE > KERNEL_VERSION(4,1,0))
++    hdd_adapter_t *pAdapter = pAdter;
++#endif
+ 
+     if (wlan_hdd_validate_context(pHddCtx)) {
+         hddLog(VOS_TRACE_LEVEL_ERROR, FL("HDD context is invalid"
+@@ -15309,11 +15759,19 @@ void wlan_hdd_cfg80211_extscan_callback(void *ctx, const tANI_U16 evType,
+ 
+     switch (evType) {
+     case eSIR_EXTSCAN_START_RSP:
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))
+             wlan_hdd_cfg80211_extscan_start_rsp(ctx, pMsg);
++#else
++	    wlan_hdd_cfg80211_extscan_start_rsp(ctx, pAdapter, pMsg);
++#endif
+             break;
+ 
+     case eSIR_EXTSCAN_STOP_RSP:
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))
+             wlan_hdd_cfg80211_extscan_stop_rsp(ctx, pMsg);
++#else
++            wlan_hdd_cfg80211_extscan_stop_rsp(ctx, pAdapter, pMsg);
++#endif
+             break;
+ 
+     case eSIR_EXTSCAN_CACHED_RESULTS_RSP:
+@@ -15324,48 +15782,93 @@ void wlan_hdd_cfg80211_extscan_callback(void *ctx, const tANI_U16 evType,
+             break;
+ 
+     case eSIR_EXTSCAN_SET_BSSID_HOTLIST_RSP:
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))
+             wlan_hdd_cfg80211_extscan_set_bss_hotlist_rsp(ctx, pMsg);
++#else
++            wlan_hdd_cfg80211_extscan_set_bss_hotlist_rsp(ctx, pAdapter, pMsg);
++#endif
+             break;
+ 
+     case eSIR_EXTSCAN_RESET_BSSID_HOTLIST_RSP:
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))
+             wlan_hdd_cfg80211_extscan_reset_bss_hotlist_rsp(ctx, pMsg);
++#else
++            wlan_hdd_cfg80211_extscan_reset_bss_hotlist_rsp(ctx,pAdapter, pMsg);
++#endif
+             break;
+ 
+     case eSIR_EXTSCAN_SET_SIGNIFICANT_WIFI_CHANGE_RSP:
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))
+             wlan_hdd_cfg80211_extscan_set_signf_wifi_change_rsp(ctx, pMsg);
++#else
++            wlan_hdd_cfg80211_extscan_set_signf_wifi_change_rsp(ctx, pAdapter, pMsg);
++#endif
+             break;
+ 
+     case eSIR_EXTSCAN_RESET_SIGNIFICANT_WIFI_CHANGE_RSP:
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))
+             wlan_hdd_cfg80211_extscan_reset_signf_wifi_change_rsp(ctx, pMsg);
++#else
++            wlan_hdd_cfg80211_extscan_reset_signf_wifi_change_rsp(ctx,pAdapter, pMsg);
++#endif
+             break;
+ 
+     case eSIR_EXTSCAN_GET_CAPABILITIES_IND:
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))
+             wlan_hdd_cfg80211_extscan_get_capabilities_ind(ctx, pMsg);
++#else
++	    wlan_hdd_cfg80211_extscan_get_capabilities_ind(ctx, pAdapter, pMsg);
++#endif //#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))
+             break;
+ 
+     case eSIR_EXTSCAN_HOTLIST_MATCH_IND:
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))
+             wlan_hdd_cfg80211_extscan_hotlist_match_ind(ctx, pMsg);
++#else
++            wlan_hdd_cfg80211_extscan_hotlist_match_ind(ctx, pAdapter, pMsg);
++#endif
+             break;
+ 
+     case eSIR_EXTSCAN_SIGNIFICANT_WIFI_CHANGE_RESULTS_IND:
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))
+             wlan_hdd_cfg80211_extscan_signif_wifi_change_results_ind(ctx,
+                                                                      pMsg);
++#else
++            wlan_hdd_cfg80211_extscan_signif_wifi_change_results_ind(ctx, pAdapter,
++                                                                     pMsg);
++#endif
+             break;
+ 
+     case eSIR_EXTSCAN_CACHED_RESULTS_IND:
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))
+             wlan_hdd_cfg80211_extscan_cached_results_ind(ctx, pMsg);
++#else
++            wlan_hdd_cfg80211_extscan_cached_results_ind(ctx, pAdapter, pMsg);
++#endif
+             break;
+ 
+     case eSIR_EXTSCAN_SCAN_RES_AVAILABLE_IND:
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))
+             wlan_hdd_cfg80211_extscan_scan_res_available_event(ctx, pMsg);
++#else
++           wlan_hdd_cfg80211_extscan_scan_res_available_event(ctx, pAdapter,  pMsg);
++#endif
+             break;
+ 
+     case eSIR_EXTSCAN_FULL_SCAN_RESULT_IND:
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))
+             wlan_hdd_cfg80211_extscan_full_scan_result_event(ctx, pMsg);
++#else
++            wlan_hdd_cfg80211_extscan_full_scan_result_event(ctx, pAdapter, pMsg);
++#endif
+             break;
+ 
+     case eSIR_EXTSCAN_SCAN_PROGRESS_EVENT_IND:
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))
+             wlan_hdd_cfg80211_extscan_scan_progress_event(ctx, pMsg);
++#else
++            wlan_hdd_cfg80211_extscan_scan_progress_event(ctx, pAdapter, pMsg);
++#endif
+             break;
+ 
+     default:
+diff --git a/CORE/HDD/src/wlan_hdd_early_suspend.c b/CORE/HDD/src/wlan_hdd_early_suspend.c
+index ac434fad2d99..3f56aea64593 100644
+--- a/CORE/HDD/src/wlan_hdd_early_suspend.c
++++ b/CORE/HDD/src/wlan_hdd_early_suspend.c
+@@ -79,6 +79,8 @@
+ #include <wlan_hdd_cfg80211.h>
+ #include <net/addrconf.h>
+ 
++#include <compat-qcacld.h>
++
+ /**-----------------------------------------------------------------------------
+ *   Preprocessor definitions and constants
+ * ----------------------------------------------------------------------------*/
+@@ -1901,7 +1903,11 @@ VOS_STATUS hdd_wlan_shutdown(void)
+    /* Wait for TLshim RX to exit */
+    hddLog(VOS_TRACE_LEVEL_FATAL, "%s: Shutting down TLshim RX thread",
+           __func__);
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 10, 0)
++    /* TODO */
++#else
+    unregister_hotcpu_notifier(vosSchedContext->cpuHotPlugNotifier);
++#endif
+    set_bit(RX_SHUTDOWN_EVENT_MASK, &vosSchedContext->tlshimRxEvtFlg);
+    set_bit(RX_POST_EVENT_MASK, &vosSchedContext->tlshimRxEvtFlg);
+    wake_up_interruptible(&vosSchedContext->tlshimRxWaitQueue);
+diff --git a/CORE/HDD/src/wlan_hdd_hostapd.c b/CORE/HDD/src/wlan_hdd_hostapd.c
+index a56254e85c7b..8fbfd2f583da 100644
+--- a/CORE/HDD/src/wlan_hdd_hostapd.c
++++ b/CORE/HDD/src/wlan_hdd_hostapd.c
+@@ -707,8 +707,12 @@ VOS_STATUS hdd_hostapd_SAPEventCB( tpSap_Event pSapEvent, v_PVOID_t usrDataForCa
+     v_BOOL_t bWPSState;
+     v_BOOL_t bAuthRequired = TRUE;
+     tpSap_AssocMacAddr pAssocStasArray = NULL;
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))
+     char unknownSTAEvent[IW_CUSTOM_MAX+1];
+     char maxAssocExceededEvent[IW_CUSTOM_MAX+1];
++#else
++    char maxAssocExceeded_unknownSTAEvent[IW_CUSTOM_MAX+1];  //combined to avoid not stack memory compiler error
++#endif
+     v_BYTE_t we_custom_start_event[64];
+     char *startBssEvent;
+     hdd_context_t *pHddCtx;
+@@ -1163,7 +1167,7 @@ VOS_STATUS hdd_hostapd_SAPEventCB( tpSap_Event pSapEvent, v_PVOID_t usrDataForCa
+                   staInfo.assoc_req_ies =
+                      (const u8 *)&pSapEvent->sapevt.sapStationAssocReassocCompleteEvent.ies[0];
+                   staInfo.assoc_req_ies_len = iesLen;
+-#if (LINUX_VERSION_CODE >= KERNEL_VERSION(3,0,31))
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(3,0,31)) && (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))
+                   staInfo.filled |= STATION_INFO_ASSOC_REQ_IES;
+ #endif
+                   cfg80211_new_sta(dev,
+@@ -1383,7 +1387,11 @@ VOS_STATUS hdd_hostapd_SAPEventCB( tpSap_Event pSapEvent, v_PVOID_t usrDataForCa
+                                 TRUE : FALSE );
+            return VOS_STATUS_SUCCESS;
+         case eSAP_UNKNOWN_STA_JOIN:
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))
+             snprintf(unknownSTAEvent, IW_CUSTOM_MAX, "JOIN_UNKNOWN_STA-%02x:%02x:%02x:%02x:%02x:%02x",
++#else
++            snprintf(maxAssocExceeded_unknownSTAEvent, IW_CUSTOM_MAX, "JOIN_UNKNOWN_STA-%02x:%02x:%02x:%02x:%02x:%02x",
++#endif
+                 pSapEvent->sapevt.sapUnknownSTAJoin.macaddr.bytes[0],
+                 pSapEvent->sapevt.sapUnknownSTAJoin.macaddr.bytes[1],
+                 pSapEvent->sapevt.sapUnknownSTAJoin.macaddr.bytes[2],
+@@ -1391,14 +1399,25 @@ VOS_STATUS hdd_hostapd_SAPEventCB( tpSap_Event pSapEvent, v_PVOID_t usrDataForCa
+                 pSapEvent->sapevt.sapUnknownSTAJoin.macaddr.bytes[4],
+                 pSapEvent->sapevt.sapUnknownSTAJoin.macaddr.bytes[5]);
+             we_event = IWEVCUSTOM; /* Discovered a new node (AP mode). */
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))
+             wrqu.data.pointer = unknownSTAEvent;
+             wrqu.data.length = strlen(unknownSTAEvent);
+             we_custom_event_generic = (v_BYTE_t *)unknownSTAEvent;
+             hddLog(LOGE,"%s", unknownSTAEvent);
++#else
++            wrqu.data.pointer = maxAssocExceeded_unknownSTAEvent;
++            wrqu.data.length = strlen(maxAssocExceeded_unknownSTAEvent);
++            we_custom_event_generic = (v_BYTE_t *)maxAssocExceeded_unknownSTAEvent;//unknownSTAEvent;
++            hddLog(LOGE,"%s", maxAssocExceeded_unknownSTAEvent);
++#endif
+             break;
+ 
+         case eSAP_MAX_ASSOC_EXCEEDED:
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))
+             snprintf(maxAssocExceededEvent, IW_CUSTOM_MAX, "Peer %02x:%02x:%02x:%02x:%02x:%02x denied"
++#else
++            snprintf(maxAssocExceeded_unknownSTAEvent, IW_CUSTOM_MAX, "Peer %02x:%02x:%02x:%02x:%02x:%02x denied"
++#endif
+                     " assoc due to Maximum Mobile Hotspot connections reached. Please disconnect"
+                     " one or more devices to enable the new device connection",
+                     pSapEvent->sapevt.sapMaxAssocExceeded.macaddr.bytes[0],
+@@ -1408,10 +1427,17 @@ VOS_STATUS hdd_hostapd_SAPEventCB( tpSap_Event pSapEvent, v_PVOID_t usrDataForCa
+                     pSapEvent->sapevt.sapMaxAssocExceeded.macaddr.bytes[4],
+                     pSapEvent->sapevt.sapMaxAssocExceeded.macaddr.bytes[5]);
+             we_event = IWEVCUSTOM; /* Discovered a new node (AP mode). */
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))
+             wrqu.data.pointer = maxAssocExceededEvent;
+             wrqu.data.length = strlen(maxAssocExceededEvent);
+             we_custom_event_generic = (v_BYTE_t *)maxAssocExceededEvent;
+             hddLog(LOG1,"%s", maxAssocExceededEvent);
++#else
++            wrqu.data.pointer = maxAssocExceeded_unknownSTAEvent;
++            wrqu.data.length = strlen(maxAssocExceeded_unknownSTAEvent);
++            we_custom_event_generic = (v_BYTE_t *)maxAssocExceeded_unknownSTAEvent;
++            hddLog(LOG1,"%s", maxAssocExceeded_unknownSTAEvent);
++#endif
+             break;
+         case eSAP_STA_ASSOC_IND:
+             return VOS_STATUS_SUCCESS;
+@@ -5319,11 +5345,13 @@ static const iw_handler hostapd_private[] = {
+ };
+ const struct iw_handler_def hostapd_handler_def = {
+    .num_standard     = sizeof(hostapd_handler) / sizeof(hostapd_handler[0]),
++#ifdef CONFIG_WEXT_PRIV
+    .num_private      = sizeof(hostapd_private) / sizeof(hostapd_private[0]),
+    .num_private_args = sizeof(hostapd_private_args) / sizeof(hostapd_private_args[0]),
+-   .standard         = (iw_handler *)hostapd_handler,
+    .private          = (iw_handler *)hostapd_private,
+    .private_args     = hostapd_private_args,
++#endif
++   .standard         = (iw_handler *)hostapd_handler,
+    .get_wireless_stats = NULL,
+ };
+ 
+@@ -5353,7 +5381,9 @@ void hdd_set_ap_ops( struct net_device *pWlanHostapdDev )
+ VOS_STATUS hdd_init_ap_mode( hdd_adapter_t *pAdapter )
+ {
+     hdd_hostapd_state_t * phostapdBuf;
++#ifdef CONFIG_WIRELESS_EXT
+     struct net_device *dev = pAdapter->dev;
++#endif
+     hdd_context_t *pHddCtx = WLAN_HDD_GET_CTX(pAdapter);
+     VOS_STATUS status;
+ #ifdef WLAN_FEATURE_MBSSID
+@@ -5438,8 +5468,10 @@ VOS_STATUS hdd_init_ap_mode( hdd_adapter_t *pAdapter )
+ 
+     sema_init(&(WLAN_HDD_GET_AP_CTX_PTR(pAdapter))->semWpsPBCOverlapInd, 1);
+ 
++#ifdef CONFIG_WIRELESS_EXT
+      // Register as a wireless device
+     dev->wireless_handlers = (struct iw_handler_def *)& hostapd_handler_def;
++#endif
+ 
+     //Initialize the data path module
+     status = hdd_softap_init_tx_rx(pAdapter);
+@@ -5491,8 +5523,11 @@ hdd_adapter_t* hdd_wlan_create_ap_dev( hdd_context_t *pHddCtx, tSirMacAddr macAd
+ 
+    hddLog(VOS_TRACE_LEVEL_DEBUG, "%s: iface_name = %s", __func__, iface_name);
+ 
+-   pWlanHostapdDev = alloc_netdev_mq(sizeof(hdd_adapter_t), iface_name, ether_setup, NUM_TX_QUEUES);
+-
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))
++    pWlanHostapdDev = alloc_netdev_mq(sizeof(hdd_adapter_t), iface_name, ether_setup, NUM_TX_QUEUES);
++#else
++    pWlanHostapdDev = alloc_netdev_mq(sizeof(hdd_adapter_t), iface_name, NET_NAME_UNKNOWN, ether_setup, NUM_TX_QUEUES);
++#endif
+     if (pWlanHostapdDev != NULL)
+     {
+         pHostapdAdapter = netdev_priv(pWlanHostapdDev);
+@@ -5597,6 +5632,7 @@ VOS_STATUS hdd_unregister_hostapd(hdd_adapter_t *pAdapter)
+ 
+    hdd_softap_deinit_tx_rx(pAdapter);
+ 
++#ifdef CONFIG_WIRELESS_EXT
+    /* if we are being called during driver unload, then the dev has already
+       been invalidated.  if we are being called at other times, then we can
+       detach the wireless device handlers */
+@@ -5604,6 +5640,7 @@ VOS_STATUS hdd_unregister_hostapd(hdd_adapter_t *pAdapter)
+    {
+       pAdapter->dev->wireless_handlers = NULL;
+    }
++#endif
+ 
+ #ifdef WLAN_FEATURE_MBSSID
+    status = WLANSAP_Stop(sapContext);
+diff --git a/CORE/HDD/src/wlan_hdd_main.c b/CORE/HDD/src/wlan_hdd_main.c
+index 7d6bc50fac6f..fdc01e40db2f 100644
+--- a/CORE/HDD/src/wlan_hdd_main.c
++++ b/CORE/HDD/src/wlan_hdd_main.c
+@@ -149,6 +149,8 @@ void hdd_ch_avoid_cb(void *hdd_context,void *indi_param);
+ 
+ #include "wlan_hdd_tsf.h"
+ 
++#include <compat-qcacld.h>
++
+ #if defined(LINUX_QCMBR)
+ #define SIOCIOCTLTX99 (SIOCDEVPRIVATE+13)
+ #endif
+@@ -268,8 +270,13 @@ static void wlan_hdd_restart_deinit(hdd_context_t *pHddCtx);
+ void wlan_hdd_restart_timer_cb(v_PVOID_t usrDataForCallback);
+ void hdd_set_wlan_suspend_mode(bool suspend);
+ 
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(3, 14, 0))
++v_U16_t hdd_select_queue(struct net_device *dev,
++    struct sk_buff *skb, void *accel_priv, select_queue_fallback_t fallback);
++#else
+ v_U16_t hdd_select_queue(struct net_device *dev,
+     struct sk_buff *skb);
++#endif
+ 
+ #ifdef WLAN_FEATURE_PACKET_FILTERING
+ static void hdd_set_multicast_list(struct net_device *dev);
+@@ -2639,7 +2646,9 @@ hdd_sendactionframe(hdd_adapter_t *pAdapter, const tANI_U8 *bssid,
+    int ret = 0;
+    tpSirMacVendorSpecificFrameHdr pVendorSpecific =
+                    (tpSirMacVendorSpecificFrameHdr) payload;
+-
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(3,14,0))
++   struct cfg80211_mgmt_tx_params params;
++#endif
+    pHddStaCtx = WLAN_HDD_GET_STATION_CTX_PTR(pAdapter);
+    pHddCtx = WLAN_HDD_GET_CTX(pAdapter);
+ 
+@@ -2717,6 +2726,16 @@ hdd_sendactionframe(hdd_adapter_t *pAdapter, const tANI_U8 *bssid,
+    vos_mem_copy(hdr->addr3, bssid, VOS_MAC_ADDR_SIZE);
+    vos_mem_copy(hdr + 1, payload, payload_len);
+ 
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(3,14,0))
++   params.chan = &chan;
++   params.offchan = 0;
++   params.wait = dwell_time;
++   params.buf = frame;
++   params.len = frame_len;
++   params.no_cck = 1;
++   params.dont_wait_for_ack = 1;
++   ret = wlan_hdd_mgmt_tx(NULL, &(pAdapter->wdev), &params, &cookie );
++#else
+    ret = wlan_hdd_mgmt_tx(NULL,
+ #if (LINUX_VERSION_CODE >= KERNEL_VERSION(3,6,0))
+                          &(pAdapter->wdev),
+@@ -2728,6 +2747,7 @@ hdd_sendactionframe(hdd_adapter_t *pAdapter, const tANI_U8 *bssid,
+                          NL80211_CHAN_HT20, 1,
+ #endif
+                          dwell_time, frame, frame_len, 1, 1, &cookie );
++#endif /* KERNEL_VERSION(3,14,0)) */
+    vos_mem_free(frame);
+  exit:
+    return ret;
+@@ -7927,7 +7947,11 @@ static hdd_adapter_t* hdd_alloc_station_adapter( hdd_context_t *pHddCtx, tSirMac
+    /*
+     * cfg80211 initialization and registration....
+     */
+-   pWlanDev = alloc_netdev_mq(sizeof( hdd_adapter_t ), name, ether_setup, NUM_TX_QUEUES);
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))
++   pWlanDev = alloc_netdev_mq(sizeof(hdd_adapter_t), name, ether_setup, NUM_TX_QUEUES);
++#else
++   pWlanDev = alloc_netdev_mq(sizeof(hdd_adapter_t), name, NET_NAME_UNKNOWN, ether_setup, NUM_TX_QUEUES);
++#endif
+ 
+    if(pWlanDev != NULL)
+    {
+@@ -9558,8 +9582,13 @@ VOS_STATUS hdd_start_all_adapters( hdd_context_t *pHddCtx )
+                pAdapter->sessionCtx.station.hdd_ReassocScenario = VOS_FALSE;
+ 
+                /* indicate disconnected event to nl80211 */
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 2, 0)
++               cfg80211_disconnected(pAdapter->dev, WLAN_REASON_UNSPECIFIED,
++                                     NULL, 0, true, GFP_KERNEL);
++#else
+                cfg80211_disconnected(pAdapter->dev, WLAN_REASON_UNSPECIFIED,
+                                      NULL, 0, GFP_KERNEL);
++#endif
+             }
+             else if (eConnectionState_Connecting == connState)
+             {
+@@ -10278,8 +10307,13 @@ static void hdd_set_multicast_list(struct net_device *dev)
+   \return - ac, Queue Index/access category corresponding to UP in IP header
+ 
+   --------------------------------------------------------------------------*/
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(3, 14, 0))
++v_U16_t hdd_select_queue(struct net_device *dev,
++    struct sk_buff *skb, void *accel_priv, select_queue_fallback_t fallback)
++#else
+ v_U16_t hdd_select_queue(struct net_device *dev,
+     struct sk_buff *skb)
++#endif
+ {
+    return hdd_wmm_select_queue(dev, skb);
+ }
+@@ -11153,6 +11187,24 @@ boolean hdd_is_5g_supported(hdd_context_t * pHddCtx)
+ #define WOW_MAX_PATTERN_SIZE     64
+ #endif
+ 
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(3, 11, 0))
++static const struct wiphy_wowlan_support ath6kl_wowlan_support = {
++    .flags = WIPHY_WOWLAN_ANY |
++             WIPHY_WOWLAN_MAGIC_PKT |
++             WIPHY_WOWLAN_DISCONNECT |
++             WIPHY_WOWLAN_SUPPORTS_GTK_REKEY |
++             WIPHY_WOWLAN_GTK_REKEY_FAILURE |
++             WIPHY_WOWLAN_EAP_IDENTITY_REQ |
++             WIPHY_WOWLAN_4WAY_HANDSHAKE |
++             WIPHY_WOWLAN_RFKILL_RELEASE,
++
++    .n_patterns = (WOW_MAX_FILTER_LISTS *
++                   WOW_MAX_FILTERS_PER_LIST),
++    .pattern_min_len = WOW_MIN_PATTERN_SIZE,
++    .pattern_max_len = WOW_MAX_PATTERN_SIZE,
++};
++#endif
++
+ static VOS_STATUS wlan_hdd_reg_init(hdd_context_t *hdd_ctx)
+ {
+    struct wiphy *wiphy;
+@@ -11177,6 +11229,9 @@ static VOS_STATUS wlan_hdd_reg_init(hdd_context_t *hdd_ctx)
+ #endif
+ 
+ #ifdef QCA_WIFI_2_0
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(3, 11, 0))
++    wiphy->wowlan = &ath6kl_wowlan_support;
++#else
+     wiphy->wowlan.flags = WIPHY_WOWLAN_ANY |
+                           WIPHY_WOWLAN_MAGIC_PKT |
+                           WIPHY_WOWLAN_DISCONNECT |
+@@ -11191,6 +11246,7 @@ static VOS_STATUS wlan_hdd_reg_init(hdd_context_t *hdd_ctx)
+     wiphy->wowlan.pattern_min_len = WOW_MIN_PATTERN_SIZE;
+     wiphy->wowlan.pattern_max_len = WOW_MAX_PATTERN_SIZE;
+ #endif
++#endif
+ 
+    /* registration of wiphy dev with cfg80211 */
+    if (0 > wlan_hdd_cfg80211_register(wiphy))
+diff --git a/CORE/HDD/src/wlan_hdd_p2p.c b/CORE/HDD/src/wlan_hdd_p2p.c
+index 5f3ddf2ac536..072d183da9e3 100644
+--- a/CORE/HDD/src/wlan_hdd_p2p.c
++++ b/CORE/HDD/src/wlan_hdd_p2p.c
+@@ -54,6 +54,8 @@
+ #include "vos_trace.h"
+ #include "vos_sched.h"
+ 
++#include <compat-qcacld.h>
++
+ //Ms to Micro Sec
+ #define MS_TO_MUS(x)   ((x)*1000);
+ 
+@@ -1105,7 +1107,17 @@ void hdd_remainChanReadyHandler( hdd_adapter_t *pAdapter )
+         if(pRemainChanCtx->action_pkt_buff.frame_length != 0)
+         {
+ 
+-#if (LINUX_VERSION_CODE >= KERNEL_VERSION(3,6,0))
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4,1,0))
++          cfg80211_rx_mgmt( pAdapter->dev->ieee80211_ptr, pRemainChanCtx->action_pkt_buff.freq, 0,
++                      pRemainChanCtx->action_pkt_buff.frame_ptr,
++                      pRemainChanCtx->action_pkt_buff.frame_length,
++                      0);
++#elif (LINUX_VERSION_CODE >= KERNEL_VERSION(3,12,0))
++          cfg80211_rx_mgmt( pAdapter->dev->ieee80211_ptr, pRemainChanCtx->action_pkt_buff.freq, 0,
++                      pRemainChanCtx->action_pkt_buff.frame_ptr,
++                      pRemainChanCtx->action_pkt_buff.frame_length,
++                      0, GFP_ATOMIC );
++#elif (LINUX_VERSION_CODE >= KERNEL_VERSION(3,6,0))
+           cfg80211_rx_mgmt( pAdapter->dev->ieee80211_ptr,pRemainChanCtx->action_pkt_buff.freq, 0,
+                       pRemainChanCtx->action_pkt_buff.frame_ptr,
+                       pRemainChanCtx->action_pkt_buff.frame_length,
+@@ -1701,7 +1713,11 @@ err_rem_channel:
+     return 0;
+ }
+ 
+-#if (LINUX_VERSION_CODE >= KERNEL_VERSION(3,6,0))
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(3,14,0))
++int wlan_hdd_mgmt_tx(struct wiphy *wiphy, struct wireless_dev *wdev,
++                     struct cfg80211_mgmt_tx_params *params,
++                     u64 *cookie )
++#elif (LINUX_VERSION_CODE >= KERNEL_VERSION(3,6,0))
+ int wlan_hdd_mgmt_tx(struct wiphy *wiphy, struct wireless_dev *wdev,
+                      struct ieee80211_channel *chan, bool offchan,
+ #if (LINUX_VERSION_CODE < KERNEL_VERSION(3,8,0))
+@@ -1729,7 +1745,11 @@ int wlan_hdd_mgmt_tx(struct wiphy *wiphy, struct net_device *dev,
+     int ret;
+ 
+     vos_ssr_protect(__func__);
+-#if (LINUX_VERSION_CODE >= KERNEL_VERSION(3,6,0))
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(3,14,0))
++    ret = __wlan_hdd_mgmt_tx(wiphy, wdev, params->chan, params->offchan,
++                             params->wait, params->buf, params->len, params->no_cck,
++                             params->dont_wait_for_ack, cookie);
++#elif (LINUX_VERSION_CODE >= KERNEL_VERSION(3,6,0))
+     ret = __wlan_hdd_mgmt_tx(wiphy, wdev, chan, offchan,
+ #if (LINUX_VERSION_CODE < KERNEL_VERSION(3,8,0))
+                              channel_type, channel_type_valid,
+@@ -2203,7 +2223,21 @@ struct net_device* __wlan_hdd_add_virtual_intf(
+ #endif
+ }
+ 
+-#if (LINUX_VERSION_CODE >= KERNEL_VERSION(3,7,0))
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4,1,0))
++struct wireless_dev* wlan_hdd_add_virtual_intf(
++                  struct wiphy *wiphy, const char *name,
++                  unsigned char name_assign_type,
++                  enum nl80211_iftype type,
++                  u32 *flags, struct vif_params *params )
++{
++    struct wireless_dev* wdev;
++
++    vos_ssr_protect(__func__);
++    wdev = __wlan_hdd_add_virtual_intf(wiphy, name, type, flags, params);
++    vos_ssr_unprotect(__func__);
++    return wdev;
++}
++#elif (LINUX_VERSION_CODE >= KERNEL_VERSION(3,7,0))
+ struct wireless_dev* wlan_hdd_add_virtual_intf(
+                   struct wiphy *wiphy, const char *name,
+                   enum nl80211_iftype type,
+@@ -2644,7 +2678,15 @@ void hdd_indicateMgmtFrame( hdd_adapter_t *pAdapter,
+     //Indicate Frame Over Normal Interface
+     hddLog( LOG1, FL("Indicate Frame over NL80211 Interface"));
+ 
+-#if (LINUX_VERSION_CODE >= KERNEL_VERSION(3,6,0))
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4,1,0))
++    cfg80211_rx_mgmt( pAdapter->dev->ieee80211_ptr, freq, 0,
++                      pbFrames, nFrameLength,
++                      0 );
++#elif (LINUX_VERSION_CODE >= KERNEL_VERSION(3,12,0))
++    cfg80211_rx_mgmt( pAdapter->dev->ieee80211_ptr, freq, 0,
++                      pbFrames, nFrameLength,
++                      0, GFP_ATOMIC );
++#elif (LINUX_VERSION_CODE >= KERNEL_VERSION(3,6,0))
+     cfg80211_rx_mgmt( pAdapter->dev->ieee80211_ptr, freq, 0,
+                       pbFrames, nFrameLength,
+                       GFP_ATOMIC );
+diff --git a/CORE/HDD/src/wlan_hdd_softap_tx_rx.c b/CORE/HDD/src/wlan_hdd_softap_tx_rx.c
+index 8041429b1fd4..fcd9654faf63 100644
+--- a/CORE/HDD/src/wlan_hdd_softap_tx_rx.c
++++ b/CORE/HDD/src/wlan_hdd_softap_tx_rx.c
+@@ -451,7 +451,11 @@ int hdd_softap_hard_start_xmit(struct sk_buff *skb, struct net_device *dev)
+          goto xmit_done;
+       }
+    }
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4, 7, 0))
++    netif_trans_update(dev);
++#else
+    dev->trans_start = jiffies;
++#endif
+ 
+    VOS_TRACE( VOS_MODULE_ID_HDD_SAP_DATA, VOS_TRACE_LEVEL_INFO_LOW,
+               "%s: exit", __func__);
+@@ -712,7 +716,11 @@ int hdd_softap_hard_start_xmit(struct sk_buff *skb, struct net_device *dev)
+         goto drop_pkt;
+    }
+ 
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4, 7, 0))
++    netif_trans_update(dev);
++#else
+    dev->trans_start = jiffies;
++#endif
+ 
+    VOS_TRACE( VOS_MODULE_ID_HDD_SAP_DATA, VOS_TRACE_LEVEL_INFO_LOW, "%s: exit", __func__);
+ 
+@@ -1834,7 +1842,9 @@ VOS_STATUS hdd_softap_rx_packet_cbk(v_VOID_t *vosContext,
+       ++pAdapter->hdd_stats.hddTxRxStats.rxRefused;
+    }
+ 
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(4, 11, 0))
+    pAdapter->dev->last_rx = jiffies;
++#endif
+ 
+    return VOS_STATUS_SUCCESS;
+ }
+diff --git a/CORE/HDD/src/wlan_hdd_tx_rx.c b/CORE/HDD/src/wlan_hdd_tx_rx.c
+index b5fc4361cf77..1c0ebe24e47e 100644
+--- a/CORE/HDD/src/wlan_hdd_tx_rx.c
++++ b/CORE/HDD/src/wlan_hdd_tx_rx.c
+@@ -491,7 +491,11 @@ int hdd_mon_hard_start_xmit(struct sk_buff *skb, struct net_device *dev)
+       goto fail;
+ 
+    /* Update the trans_start for this netdev */
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4, 7, 0))
++    netif_trans_update(dev);
++#else
+    dev->trans_start = jiffies;
++#endif
+    /*
+     * fix up the pointers accounting for the radiotap
+     * header still being in there.
+@@ -549,7 +553,12 @@ int hdd_mon_hard_start_xmit(struct sk_buff *skb, struct net_device *dev)
+ 
+       skb->protocol = htons(HDD_ETHERTYPE_802_1_X);
+ 
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(3, 14, 0))
++      hdd_hostapd_select_queue(pPgBkAdapter->dev, skb,
++                               NULL, NULL);
++#else
+       hdd_hostapd_select_queue(pPgBkAdapter->dev, skb);
++#endif
+       return hdd_softap_hard_start_xmit( skb, pPgBkAdapter->dev );
+    }
+    else
+@@ -1125,7 +1134,11 @@ int hdd_hard_start_xmit(struct sk_buff *skb, struct net_device *dev)
+ 	goto drop_pkt;
+    }
+ 
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4, 7, 0))
++    netif_trans_update(dev);
++#else
+    dev->trans_start = jiffies;
++#endif
+ 
+    return NETDEV_TX_OK;
+ 
+@@ -2167,7 +2180,9 @@ VOS_STATUS hdd_rx_packet_cbk(v_VOID_t *vosContext,
+ #ifdef QCA_PKT_PROTO_TRACE
+    v_U8_t proto_type;
+ #endif /* QCA_PKT_PROTO_TRACE */
++#if 0
+    hdd_station_ctx_t *pHddStaCtx = NULL;
++#endif
+ 
+    //Sanity check on inputs
+    if ((NULL == vosContext) || (NULL == rxBuf))
+@@ -2200,6 +2215,7 @@ VOS_STATUS hdd_rx_packet_cbk(v_VOID_t *vosContext,
+        return eHAL_STATUS_FAILURE;
+    }
+ 
++#if 0
+    pHddStaCtx = WLAN_HDD_GET_STATION_CTX_PTR(pAdapter);
+    if ((pHddStaCtx->conn_info.proxyARPService) &&
+          cfg80211_is_gratuitous_arp_unsolicited_na(skb))
+@@ -2210,6 +2226,7 @@ VOS_STATUS hdd_rx_packet_cbk(v_VOID_t *vosContext,
+         kfree_skb(skb);
+         return VOS_STATUS_SUCCESS;
+    }
++#endif
+ 
+ #ifdef FEATURE_WLAN_TDLS
+ #ifndef QCA_WIFI_2_0
+@@ -2279,7 +2296,9 @@ VOS_STATUS hdd_rx_packet_cbk(v_VOID_t *vosContext,
+        ++pAdapter->hdd_stats.hddTxRxStats.rxRefused;
+    }
+ 
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(4, 11, 0))
+    pAdapter->dev->last_rx = jiffies;
++#endif
+ 
+    return VOS_STATUS_SUCCESS;
+ }
+diff --git a/CORE/HDD/src/wlan_hdd_wext.c b/CORE/HDD/src/wlan_hdd_wext.c
+index f04bb6abed08..0a7eb8ffc423 100644
+--- a/CORE/HDD/src/wlan_hdd_wext.c
++++ b/CORE/HDD/src/wlan_hdd_wext.c
+@@ -117,6 +117,8 @@
+ 
+ #include "wlan_hdd_tsf.h"
+ 
++#include <compat-qcacld.h>
++
+ #ifdef FEATURE_OEM_DATA_SUPPORT
+ #define MAX_OEM_DATA_RSP_LEN            2047
+ #endif
+@@ -10919,12 +10921,14 @@ static const struct iw_priv_args we_private_args[] = {
+ 
+ const struct iw_handler_def we_handler_def = {
+    .num_standard     = sizeof(we_handler) / sizeof(we_handler[0]),
++   .standard         = (iw_handler *)we_handler,
++#ifdef CONFIG_WEXT_PRIV
+    .num_private      = sizeof(we_private) / sizeof(we_private[0]),
+    .num_private_args = sizeof(we_private_args) / sizeof(we_private_args[0]),
+ 
+-   .standard         = (iw_handler *)we_handler,
+    .private          = (iw_handler *)we_private,
+    .private_args     = we_private_args,
++#endif
+    .get_wireless_stats = get_wireless_stats,
+ };
+ 
+@@ -11180,8 +11184,10 @@ int hdd_register_wext(struct net_device *dev)
+         return eHAL_STATUS_FAILURE;
+     }
+ 
++#ifdef CONFIG_WIRELESS_EXT
+     // Register as a wireless device
+     dev->wireless_handlers = (struct iw_handler_def *)&we_handler_def;
++#endif
+ 
+     EXIT();
+     return 0;
+@@ -11205,6 +11211,8 @@ int hdd_UnregisterWext(struct net_device *dev)
+ 
+    EXIT();
+ #endif
++#ifdef CONFIG_WIRELESS_EXT
+    dev->wireless_handlers = NULL;
++#endif
+    return 0;
+ }
+diff --git a/CORE/HDD/src/wlan_hdd_wmm.c b/CORE/HDD/src/wlan_hdd_wmm.c
+index 1318ebff1ebc..495b46173552 100644
+--- a/CORE/HDD/src/wlan_hdd_wmm.c
++++ b/CORE/HDD/src/wlan_hdd_wmm.c
+@@ -838,7 +838,7 @@ static eHalStatus hdd_wmm_sme_callback (tHalHandle hHal,
+       VOS_TRACE( VOS_MODULE_ID_HDD, WMM_TRACE_LEVEL_ERROR,
+                  "%s: Setup failed, not a QoS AP",
+                  __func__);
+-      if (!HDD_WMM_HANDLE_IMPLICIT == pQosContext->handle)
++      if (HDD_WMM_HANDLE_IMPLICIT != pQosContext->handle)
+       {
+          VOS_TRACE(VOS_MODULE_ID_HDD, WMM_TRACE_LEVEL_INFO,
+                    "%s: Explicit Qos, notifying userspace",
+@@ -1865,7 +1865,13 @@ v_VOID_t hdd_wmm_classify_pkt ( hdd_adapter_t* pAdapter,
+ 
+   @return         : Qdisc queue index
+   ===========================================================================*/
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(3, 14, 0))
++v_U16_t hdd_hostapd_select_queue(struct net_device * dev, struct sk_buff *skb,
++                                 void *accel_priv, select_queue_fallback_t fallback)
++
++#else
+ v_U16_t hdd_hostapd_select_queue(struct net_device * dev, struct sk_buff *skb)
++#endif
+ {
+    WLANTL_ACEnumType ac;
+    sme_QosWmmUpType up = SME_QOS_WMM_UP_BE;
+diff --git a/CORE/SERVICES/COMMON/adf/linux/adf_nbuf_pvt.h b/CORE/SERVICES/COMMON/adf/linux/adf_nbuf_pvt.h
+index fa168f4d40b6..587f78a0074e 100644
+--- a/CORE/SERVICES/COMMON/adf/linux/adf_nbuf_pvt.h
++++ b/CORE/SERVICES/COMMON/adf/linux/adf_nbuf_pvt.h
+@@ -36,7 +36,11 @@
+ #include <linux/netdevice.h>
+ #include <linux/dma-mapping.h>
+ #include <asm/types.h>
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4, 2, 0))
++#include <linux/scatterlist.h>
++#else
+ #include <asm/scatterlist.h>
++#endif
+ #include <adf_os_types.h>
+ 
+ #define __ADF_NBUF_NULL   NULL
+diff --git a/CORE/SERVICES/COMMON/compat-qcacld.h b/CORE/SERVICES/COMMON/compat-qcacld.h
+new file mode 100644
+index 000000000000..37ee27f36f78
+--- /dev/null
++++ b/CORE/SERVICES/COMMON/compat-qcacld.h
+@@ -0,0 +1,19 @@
++/*
++ * Compatibility header created in order to build the module for several
++ * version of the kernel.
++ * Originally, CodeAurora release targets kernel 3.10 only.
++ * This has been tested against a 3.14 kernel.
++ */
++#include <linux/version.h>
++
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(3,11,0))
++#define cfg80211_send_unprot_disassoc(_dev, _buf, _len) cfg80211_rx_unprot_mlme_mgmt(_dev, _buf, _len)
++#define cfg80211_send_unprot_deauth(_dev, _buf, _len) cfg80211_rx_unprot_mlme_mgmt(_dev, _buf, _len)
++#endif
++
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(3,13,0))
++#define INIT_COMPLETION(var) reinit_completion(&var)
++#endif
++
++#define WIPHY_FLAG_DFS_OFFLOAD BIT(22)
++
+diff --git a/CORE/SERVICES/COMMON/osdep_adf.h b/CORE/SERVICES/COMMON/osdep_adf.h
+index 708b6f89fa03..c44c0b3ab090 100644
+--- a/CORE/SERVICES/COMMON/osdep_adf.h
++++ b/CORE/SERVICES/COMMON/osdep_adf.h
+@@ -160,9 +160,16 @@ static inline void spin_unlock_dpc(spinlock_t *lock)
+ typedef unsigned long TQUEUE_ARG;
+ #define mark_bh(a)
+ 
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))
+ #define ATH_SYSCTL_DECL(f, ctl, write, filp, buffer, lenp, ppos) \
+     f(ctl_table *ctl, int write, void *buffer,                   \
+         size_t *lenp, loff_t *ppos)
++#else
++#define ATH_SYSCTL_DECL(f, ctl, write, filp, buffer, lenp, ppos) \
++    f(struct ctl_table *ctl, int write, void *buffer,                   \
++        size_t *lenp, loff_t *ppos)
++#endif
++
+ #define ATH_SYSCTL_PROC_DOINTVEC(ctl, write, filp, buffer, lenp, ppos) \
+     proc_dointvec(ctl, write, buffer, lenp, ppos)
+ #define ATH_SYSCTL_PROC_DOSTRING(ctl, write, filp, buffer, lenp, ppos) \
+diff --git a/CORE/SERVICES/HIF/sdio/linux/if_ath_sdio.c b/CORE/SERVICES/HIF/sdio/linux/if_ath_sdio.c
+index 851b8228dabd..c99020e8299b 100644
+--- a/CORE/SERVICES/HIF/sdio/linux/if_ath_sdio.c
++++ b/CORE/SERVICES/HIF/sdio/linux/if_ath_sdio.c
+@@ -157,7 +157,7 @@ ath_hif_sdio_probe(void *context, void *hif_handle)
+ 
+     ol_sc->hif_hdl = hif_handle;
+ 
+-#ifndef TARGET_DUMP_FOR_NON_QC_PLATFORM
++#if 0 /* ndef TARGET_DUMP_FOR_NON_QC_PLATFORM */
+     ol_sc->ramdump_base = ioremap(RAMDUMP_ADDR, RAMDUMP_SIZE);
+     ol_sc->ramdump_size = RAMDUMP_SIZE;
+     if (ol_sc->ramdump_base == NULL) {
+diff --git a/CORE/SERVICES/WMA/wma.c b/CORE/SERVICES/WMA/wma.c
+index dcee49e07268..6b5f8c22cace 100644
+--- a/CORE/SERVICES/WMA/wma.c
++++ b/CORE/SERVICES/WMA/wma.c
+@@ -2165,8 +2165,12 @@ static int wma_extscan_start_stop_event_handler(void *handle,
+ 		vos_mem_free(extscan_ind);
+ 		return -EINVAL;
+ 	}
+-	pMac->sme.pExtScanIndCb(pMac->hHdd,
+-				event_type, extscan_ind);
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))
++	pMac->sme.pExtScanIndCb(pMac->hHdd, event_type, extscan_ind);
++#else
++	pMac->sme.pExtScanIndCb(pMac->hHdd, event_type, NULL,extscan_ind);
++#endif
++
+ 	WMA_LOGD("%s: sending event to umac for requestid %x"
+ 		"with status %d", __func__,
+ 		extscan_ind->requestId, extscan_ind->status);
+@@ -2220,9 +2224,11 @@ static int wma_extscan_operations_event_handler(void *handle,
+ 		vos_mem_free(oprn_ind);
+ 		return -EINVAL;
+ 	}
+-	pMac->sme.pExtScanIndCb(pMac->hHdd,
+-				eSIR_EXTSCAN_SCAN_PROGRESS_EVENT_IND,
+-				oprn_ind);
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))
++	pMac->sme.pExtScanIndCb(pMac->hHdd,eSIR_EXTSCAN_SCAN_PROGRESS_EVENT_IND, oprn_ind);
++#else
++	pMac->sme.pExtScanIndCb(pMac->hHdd, eSIR_EXTSCAN_SCAN_PROGRESS_EVENT_IND, NULL, oprn_ind);
++#endif
+ 	WMA_LOGD("%s: sending scan progress event to hdd",
+ 		__func__);
+ 	vos_mem_free(oprn_ind);
+@@ -2262,9 +2268,11 @@ static int wma_extscan_table_usage_event_handler (void *handle,
+ 	tbl_usg_ind->requestId = event->request_id;
+ 	tbl_usg_ind->numResultsAvailable = event->maximum_entries;
+ 
+-	pMac->sme.pExtScanIndCb(pMac->hHdd,
+-				eSIR_EXTSCAN_SCAN_RES_AVAILABLE_IND,
+-				tbl_usg_ind);
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))
++	pMac->sme.pExtScanIndCb(pMac->hHdd, eSIR_EXTSCAN_SCAN_RES_AVAILABLE_IND, tbl_usg_ind);
++#else
++	pMac->sme.pExtScanIndCb(pMac->hHdd, eSIR_EXTSCAN_SCAN_RES_AVAILABLE_IND, NULL, tbl_usg_ind);
++#endif
+ 	WMA_LOGD("%s: sending scan_res available event to hdd",
+ 		__func__);
+ 	vos_mem_free(tbl_usg_ind);
+@@ -2323,9 +2331,11 @@ static int wma_extscan_capabilities_event_handler (void *handle,
+ 		dest_capab->maxHotlistAPs,
+ 		dest_capab->scanCacheSize);
+ 
+-	pMac->sme.pExtScanIndCb(pMac->hHdd,
+-				eSIR_EXTSCAN_GET_CAPABILITIES_IND,
+-				dest_capab);
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))
++	pMac->sme.pExtScanIndCb(pMac->hHdd, eSIR_EXTSCAN_GET_CAPABILITIES_IND, dest_capab);
++#else
++	pMac->sme.pExtScanIndCb(pMac->hHdd, eSIR_EXTSCAN_GET_CAPABILITIES_IND, NULL, dest_capab);
++#endif
+ 	WMA_LOGD("%s: sending capabilities event to hdd", __func__);
+ 	vos_mem_free(dest_capab);
+ 	return 0;
+@@ -2398,9 +2408,11 @@ static int wma_extscan_hotlist_match_event_handler(void *handle,
+ 		dest_ap++;
+ 		src_hotlist++;
+ 	}
+-	pMac->sme.pExtScanIndCb(pMac->hHdd,
+-				eSIR_EXTSCAN_HOTLIST_MATCH_IND,
+-				dest_hotlist);
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))
++	pMac->sme.pExtScanIndCb(pMac->hHdd, eSIR_EXTSCAN_HOTLIST_MATCH_IND, dest_hotlist);
++#else
++	pMac->sme.pExtScanIndCb(pMac->hHdd, eSIR_EXTSCAN_HOTLIST_MATCH_IND, NULL, dest_hotlist);
++#endif
+ 	WMA_LOGD("%s: sending hotlist match event to hdd", __func__);
+ 	vos_mem_free(dest_hotlist);
+ 	return 0;
+@@ -2478,9 +2490,11 @@ static int wma_extscan_cached_results_event_handler(void *handle,
+ 		dest_ap++;
+ 		src_hotlist++;
+ 	}
+-	pMac->sme.pExtScanIndCb(pMac->hHdd,
+-				eSIR_EXTSCAN_CACHED_RESULTS_IND,
+-				dest_cachelist);
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))
++	pMac->sme.pExtScanIndCb(pMac->hHdd, eSIR_EXTSCAN_CACHED_RESULTS_IND, dest_cachelist);
++#else
++        pMac->sme.pExtScanIndCb(pMac->hHdd, eSIR_EXTSCAN_CACHED_RESULTS_IND, NULL, dest_cachelist);
++#endif
+ 	WMA_LOGD("%s: sending cached results event", __func__);
+ 	vos_mem_free(dest_cachelist);
+ 	return 0;
+@@ -2565,9 +2579,11 @@ static int wma_extscan_change_results_event_handler(void *handle,
+ 	dest_chglist->moreData = moredata;
+ 	dest_chglist->numResults = event->total_entries;
+ 
+-	pMac->sme.pExtScanIndCb(pMac->hHdd,
+-				eSIR_EXTSCAN_SIGNIFICANT_WIFI_CHANGE_RESULTS_IND,
+-				dest_chglist);
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))
++	pMac->sme.pExtScanIndCb(pMac->hHdd, eSIR_EXTSCAN_SIGNIFICANT_WIFI_CHANGE_RESULTS_IND, dest_chglist);
++#else
++	pMac->sme.pExtScanIndCb(pMac->hHdd, eSIR_EXTSCAN_SIGNIFICANT_WIFI_CHANGE_RESULTS_IND, NULL, dest_chglist);
++#endif
+ 	WMA_LOGD("%s: sending change monitor results", __func__);
+ 	vos_mem_free(dest_chglist);
+ 	return 0;
+diff --git a/CORE/SME/inc/smeInternal.h b/CORE/SME/inc/smeInternal.h
+index af823d4a6f35..8b55e3959117 100644
+--- a/CORE/SME/inc/smeInternal.h
++++ b/CORE/SME/inc/smeInternal.h
+@@ -44,6 +44,7 @@
+ /*--------------------------------------------------------------------------
+   Include Files
+   ------------------------------------------------------------------------*/
++#include <linux/version.h>
+ #include "vos_status.h"
+ #include "vos_lock.h"
+ #include "vos_trace.h"
+@@ -177,7 +178,11 @@ typedef struct tagSmeStruct
+     void (*pget_rssi_ind_cb) (struct sir_rssi_resp *param, void *pcontext);
+     void *pget_rssi_cb_context;
+ #ifdef FEATURE_WLAN_EXTSCAN
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))
+     void (*pExtScanIndCb) (void *, const tANI_U16, void *);
++#else
++    void (*pExtScanIndCb) (void *, const tANI_U16, void *, void *);
++#endif //#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))
+ #endif /* FEATURE_WLAN_EXTSCAN */
+ #ifdef WLAN_FEATURE_NAN
+     void (*nanCallback) (void*, tSirNanEvent*);
+diff --git a/CORE/SME/inc/sme_Api.h b/CORE/SME/inc/sme_Api.h
+index 0888ef2fbe67..e2db8ffb1898 100644
+--- a/CORE/SME/inc/sme_Api.h
++++ b/CORE/SME/inc/sme_Api.h
+@@ -3931,9 +3931,13 @@ eHalStatus sme_getCachedResults (tHalHandle hHal,
+     \param  pExtScanIndCb
+     \- return void
+     -------------------------------------------------------------------------*/
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))
+ eHalStatus sme_ExtScanRegisterCallback (tHalHandle hHal,
+                         void (*pExtScanIndCb)(void *, const tANI_U16, void *));
+-
++#else
++eHalStatus sme_ExtScanRegisterCallback (tHalHandle hHal,
++                        void (*pExtScanIndCb)(void *, const tANI_U16, void *, void *));
++#endif //#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))
+ #endif /* FEATURE_WLAN_EXTSCAN */
+ 
+ #ifdef WLAN_FEATURE_ROAM_SCAN_OFFLOAD
+diff --git a/CORE/SME/src/sme_common/sme_Api.c b/CORE/SME/src/sme_common/sme_Api.c
+index 7d2b9dbf3fa5..55fe0abaf878 100644
+--- a/CORE/SME/src/sme_common/sme_Api.c
++++ b/CORE/SME/src/sme_common/sme_Api.c
+@@ -13919,9 +13919,13 @@ eHalStatus sme_getCachedResults (tHalHandle hHal,
+     }
+     return status;
+ }
+-
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0))
+ eHalStatus sme_ExtScanRegisterCallback (tHalHandle hHal,
+                          void (*pExtScanIndCb)(void *, const tANI_U16, void *))
++#else
++eHalStatus sme_ExtScanRegisterCallback (tHalHandle hHal,
++                         void (*pExtScanIndCb)(void *, const tANI_U16, void *, void *))
++#endif //#if (LINUX_VERSION_CODE > KERNEL_VERSION(4,1,0))
+ {
+     eHalStatus status    = eHAL_STATUS_SUCCESS;
+     tpAniSirGlobal pMac  = PMAC_STRUCT(hHal);
+diff --git a/CORE/SVC/src/logging/wlan_logging_sock_svc.c b/CORE/SVC/src/logging/wlan_logging_sock_svc.c
+index 7157e5ddd538..10ef25ab1220 100644
+--- a/CORE/SVC/src/logging/wlan_logging_sock_svc.c
++++ b/CORE/SVC/src/logging/wlan_logging_sock_svc.c
+@@ -41,6 +41,8 @@
+ #include <vos_trace.h>
+ #include <kthread.h>
+ 
++#include <compat-qcacld.h>
++
+ #define LOGGING_TRACE(level, args...) \
+ 		VOS_TRACE(VOS_MODULE_ID_HDD, level, ## args)
+ 
+diff --git a/CORE/UTILS/PKTLOG/linux_ac.c b/CORE/UTILS/PKTLOG/linux_ac.c
+index 96a131e69582..1a2ac443041d 100644
+--- a/CORE/UTILS/PKTLOG/linux_ac.c
++++ b/CORE/UTILS/PKTLOG/linux_ac.c
+@@ -576,7 +576,10 @@ pktlog_read(struct file *file, char *buf, size_t nbytes, loff_t *ppos)
+ 	int rem_len;
+ 	int start_offset, end_offset;
+ 	int fold_offset, ppos_data, cur_rd_offset;
+-#if LINUX_VERSION_CODE >= KERNEL_VERSION(3,10,0)
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(3,19,0)  //KERNEL_VERSION(4,1,0)
++	struct ath_pktlog_info *pl_info = (struct ath_pktlog_info *)
++					  PDE_DATA(file->f_path.dentry->d_inode);
++#elif LINUX_VERSION_CODE >= KERNEL_VERSION(3,10,0)
+ 	struct ath_pktlog_info *pl_info = (struct ath_pktlog_info *)
+ 					  PDE_DATA(file->f_dentry->d_inode);
+ #else
+@@ -754,8 +757,25 @@ static void pktlog_vclose(struct vm_area_struct *vma)
+ }
+ 
+ #if LINUX_VERSION_CODE > KERNEL_VERSION(2,6,25)
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 11, 0)
++int pktlog_fault(struct vm_fault *vmf)
++#else
+ int pktlog_fault(struct vm_area_struct *vma, struct vm_fault *vmf)
++#endif
+ {
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 11, 0)
++	struct vm_area_struct *vma = vmf->vma;
++#endif
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 10, 0)
++	if (vmf->address == 0UL)
++		return VM_FAULT_NOPAGE;
++
++	if (vmf->pgoff > vma->vm_end)
++		return VM_FAULT_SIGBUS;
++
++	get_page(virt_to_page((void *)vmf->address));
++	vmf->page = virt_to_page((void *)vmf->address);
++#else
+ 	unsigned long address = (unsigned long)vmf->virtual_address;
+ 
+ 	if (address == 0UL)
+@@ -766,7 +786,12 @@ int pktlog_fault(struct vm_area_struct *vma, struct vm_fault *vmf)
+ 
+ 	get_page(virt_to_page((void *)address));
+ 	vmf->page = virt_to_page((void *)address);
++#endif
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4, 6, 0))
++	return 0;
++#else
+ 	return VM_FAULT_MINOR;
++#endif
+ }
+ #else
+ #if LINUX_VERSION_CODE >= KERNEL_VERSION(2,6,0)
+@@ -817,7 +842,10 @@ static struct vm_operations_struct pktlog_vmops = {
+ 
+ static int pktlog_mmap(struct file *file, struct vm_area_struct *vma)
+ {
+-#if LINUX_VERSION_CODE >= KERNEL_VERSION(3,10,0)
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(3,19,0)  //KERNEL_VERSION(4,1,0)
++	struct ath_pktlog_info *pl_info = (struct ath_pktlog_info *)
++					  PDE_DATA(file->f_path.dentry->d_inode);
++#elif LINUX_VERSION_CODE >= KERNEL_VERSION(3,10,0)
+ 	struct ath_pktlog_info *pl_info = (struct ath_pktlog_info *)
+ 					  PDE_DATA(file->f_dentry->d_inode);
+ #else
+diff --git a/CORE/VOSS/inc/vos_memory.h b/CORE/VOSS/inc/vos_memory.h
+index bb13165fb642..6c0e83867ac4 100644
+--- a/CORE/VOSS/inc/vos_memory.h
++++ b/CORE/VOSS/inc/vos_memory.h
+@@ -211,7 +211,7 @@ v_VOID_t vos_mem_move( v_VOID_t *pDst, const v_VOID_t *pSrc, v_SIZE_t numBytes )
+                        locations are equal or not equal.
+ 
+   -------------------------------------------------------------------------------*/
+-v_BOOL_t vos_mem_compare( v_VOID_t *pMemory1, v_VOID_t *pMemory2, v_U32_t numBytes );
++v_BOOL_t vos_mem_compare( const v_VOID_t *pMemory1, const v_VOID_t *pMemory2, v_U32_t numBytes );
+ 
+ 
+ /** ---------------------------------------------------------------------------
+diff --git a/CORE/VOSS/src/vos_event.c b/CORE/VOSS/src/vos_event.c
+index 7539a84f99d3..cc6f97bc2774 100644
+--- a/CORE/VOSS/src/vos_event.c
++++ b/CORE/VOSS/src/vos_event.c
+@@ -48,6 +48,8 @@
+ #include "vos_event.h"
+ #include "vos_trace.h"
+ 
++#include <compat-qcacld.h>
++
+ /*----------------------------------------------------------------------------
+  * Preprocessor Definitions and Constants
+  * -------------------------------------------------------------------------*/
+diff --git a/CORE/VOSS/src/vos_memory.c b/CORE/VOSS/src/vos_memory.c
+index 6cb35915056b..d4455673b03b 100644
+--- a/CORE/VOSS/src/vos_memory.c
++++ b/CORE/VOSS/src/vos_memory.c
+@@ -557,7 +557,7 @@ v_VOID_t vos_mem_move( v_VOID_t *pDst, const v_VOID_t *pSrc, v_SIZE_t numBytes )
+    memmove(pDst, pSrc, numBytes);
+ }
+ 
+-v_BOOL_t vos_mem_compare( v_VOID_t *pMemory1, v_VOID_t *pMemory2, v_U32_t numBytes )
++v_BOOL_t vos_mem_compare( const v_VOID_t *pMemory1, const v_VOID_t *pMemory2, v_U32_t numBytes )
+ {
+    if (0 == numBytes)
+    {
+diff --git a/CORE/VOSS/src/vos_nvitem.c b/CORE/VOSS/src/vos_nvitem.c
+index da6c179efe24..a6b25a701215 100644
+--- a/CORE/VOSS/src/vos_nvitem.c
++++ b/CORE/VOSS/src/vos_nvitem.c
+@@ -54,6 +54,8 @@
+ #include "regdomain.h"
+ #include "regdomain_common.h"
+ 
++#include <compat-qcacld.h>
++
+ #if (LINUX_VERSION_CODE < KERNEL_VERSION(3,9,0))
+ #define IEEE80211_CHAN_NO_80MHZ		1<<7
+ #endif
+@@ -832,6 +834,12 @@ vos_reg_apply_beaconing_flags(struct wiphy *wiphy,
+              * default during init, prior to calling our
+              * regulatory_hint().
+              */
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(3,14,0))
++            if (!(reg_rule->flags &
++                     NL80211_RRF_PASSIVE_SCAN))
++               ch->flags &=
++                  ~IEEE80211_CHAN_NO_IR;
++#else
+             if (!(reg_rule->flags &
+                      NL80211_RRF_NO_IBSS))
+                ch->flags &=
+@@ -840,10 +848,15 @@ vos_reg_apply_beaconing_flags(struct wiphy *wiphy,
+                      NL80211_RRF_PASSIVE_SCAN))
+                ch->flags &=
+                   ~IEEE80211_CHAN_PASSIVE_SCAN;
++#endif
+          } else {
+             if (ch->beacon_found)
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(3,14,0))
++               ch->flags &= ~IEEE80211_CHAN_NO_IR;
++#else
+                ch->flags &= ~(IEEE80211_CHAN_NO_IBSS |
+                      IEEE80211_CHAN_PASSIVE_SCAN);
++#endif
+          }
+       }
+    }
+@@ -867,12 +880,21 @@ vos_reg_apply_active_scan_flags(struct wiphy *wiphy,
+     * on these channels. This is only done for specific regulatory SKUs
+     */
+    if (initiator != NL80211_REGDOM_SET_BY_COUNTRY_IE) {
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(3,14,0))
++      ch = &sband->channels[11]; /* CH 12 */
++      if (ch->flags & IEEE80211_CHAN_NO_IR)
++         ch->flags &= ~IEEE80211_CHAN_NO_IR;
++      ch = &sband->channels[12]; /* CH 13 */
++      if (ch->flags & IEEE80211_CHAN_NO_IR)
++         ch->flags &= ~IEEE80211_CHAN_NO_IR;
++#else
+       ch = &sband->channels[11]; /* CH 12 */
+       if (ch->flags & IEEE80211_CHAN_PASSIVE_SCAN)
+          ch->flags &= ~IEEE80211_CHAN_PASSIVE_SCAN;
+       ch = &sband->channels[12]; /* CH 13 */
+       if (ch->flags & IEEE80211_CHAN_PASSIVE_SCAN)
+          ch->flags &= ~IEEE80211_CHAN_PASSIVE_SCAN;
++#endif
+       return;
+    }
+ 
+@@ -892,9 +914,15 @@ vos_reg_apply_active_scan_flags(struct wiphy *wiphy,
+ #endif
+ 
+    if (!IS_ERR(reg_rule)) {
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(3,14,0))
++      if (!(reg_rule->flags & NL80211_RRF_PASSIVE_SCAN))
++         if (ch->flags & IEEE80211_CHAN_NO_IR)
++            ch->flags &= ~IEEE80211_CHAN_NO_IR;
++#else
+       if (!(reg_rule->flags & NL80211_RRF_PASSIVE_SCAN))
+          if (ch->flags & IEEE80211_CHAN_PASSIVE_SCAN)
+             ch->flags &= ~IEEE80211_CHAN_PASSIVE_SCAN;
++#endif
+    }
+ 
+    ch = &sband->channels[12]; /* CH 13 */
+@@ -906,8 +934,13 @@ vos_reg_apply_active_scan_flags(struct wiphy *wiphy,
+ #endif
+    if (!IS_ERR(reg_rule)) {
+       if (!(reg_rule->flags & NL80211_RRF_PASSIVE_SCAN))
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(3,14,0))
++         if (ch->flags & IEEE80211_CHAN_NO_IR)
++            ch->flags &= ~IEEE80211_CHAN_NO_IR;
++#else
+          if (ch->flags & IEEE80211_CHAN_PASSIVE_SCAN)
+             ch->flags &= ~IEEE80211_CHAN_PASSIVE_SCAN;
++#endif
+    }
+ }
+ 
+@@ -938,9 +971,14 @@ static void vos_reg_apply_radar_flags(struct wiphy *wiphy)
+        *   do not allow AP mode
+        */
+       if (!(ch->flags & IEEE80211_CHAN_DISABLED))
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(3,14,0))
++         ch->flags |= IEEE80211_CHAN_RADAR |
++            IEEE80211_CHAN_NO_IR;
++#else
+          ch->flags |= IEEE80211_CHAN_RADAR |
+             IEEE80211_CHAN_NO_IBSS |
+             IEEE80211_CHAN_PASSIVE_SCAN;
++#endif
+    }
+ }
+ 
+@@ -972,17 +1010,29 @@ static int regd_init_wiphy(hdd_context_t *pHddCtx, struct regulatory *reg,
+ 
+    if  (pHddCtx->cfg_ini->fRegChangeDefCountry) {
+        regd = vos_custom_world_regdomain();
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(3,14,0))
++       wiphy->regulatory_flags |= REGULATORY_CUSTOM_REG;
++#else
+        wiphy->flags |= WIPHY_FLAG_CUSTOM_REGULATORY;
++#endif
+    }
+    else if (is_world_regd(reg->reg_domain))
+    {
+        regd = vos_world_regdomain(reg);
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(3,14,0))
++       wiphy->regulatory_flags |= REGULATORY_CUSTOM_REG;
++#else
+        wiphy->flags |= WIPHY_FLAG_CUSTOM_REGULATORY;
++#endif
+    }
+    else
+    {
+        regd = vos_default_world_regdomain();
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(3,14,0))
++       wiphy->regulatory_flags |= REGULATORY_STRICT_REG;
++#else
+        wiphy->flags |= WIPHY_FLAG_STRICT_REGULATORY;
++#endif
+    }
+    wiphy_apply_custom_regulatory(wiphy, regd);
+    vos_reg_apply_radar_flags(wiphy);
+@@ -1958,11 +2008,13 @@ VOS_STATUS vos_nv_getRegDomainFromCountryCode( v_REGDOMAIN_t *pRegDomain,
+         }
+         else if (COUNTRY_IE == source || COUNTRY_USER == source)
+         {
++#if 0 /* silex removed temporary */
+ #if (LINUX_VERSION_CODE >= KERNEL_VERSION(3,9,0))
+             regulatory_hint_user(country_code,NL80211_USER_REG_HINT_USER);
+ #else
+             regulatory_hint_user(country_code);
+ #endif
++#endif
+             *pRegDomain = temp_reg_domain;
+         }
+         else if (COUNTRY_INIT == source)
+@@ -2070,16 +2122,25 @@ static int create_linux_regulatory_entry(struct wiphy *wiphy,
+             if (0 == err)
+ #endif
+             {
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(3,14,0))
++                if  (wiphy->regulatory_flags & REGULATORY_CUSTOM_REG) {
++#else
+                 if  (wiphy->flags & WIPHY_FLAG_CUSTOM_REGULATORY) {
++#endif
+ 
+                     if (!(reg_rule->flags & NL80211_RRF_PASSIVE_SCAN))
+                     {
+                         VOS_TRACE(VOS_MODULE_ID_VOSS, VOS_TRACE_LEVEL_INFO,
+                                   "%s: Remove passive scan restriction for %u",
+                                   __func__, wiphy->bands[i]->channels[j].center_freq);
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(3,14,0))
++                        wiphy->bands[i]->channels[j].flags &= ~IEEE80211_CHAN_NO_IR;
++#else
+                         wiphy->bands[i]->channels[j].flags &= ~IEEE80211_CHAN_PASSIVE_SCAN;
++#endif
+                     }
+ 
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(3,14,0))
+                     if (!(reg_rule->flags & NL80211_RRF_NO_IBSS))
+                     {
+                         VOS_TRACE(VOS_MODULE_ID_VOSS, VOS_TRACE_LEVEL_INFO,
+@@ -2087,6 +2148,7 @@ static int create_linux_regulatory_entry(struct wiphy *wiphy,
+                                   __func__, wiphy->bands[i]->channels[j].center_freq);
+                         wiphy->bands[i]->channels[j].flags &= ~IEEE80211_CHAN_NO_IBSS;
+                     }
++#endif
+ 
+                     wiphy->bands[i]->channels[j].max_power =
+                         (int) MBM_TO_DBM(reg_rule->power_rule.max_eirp);
+@@ -2109,7 +2171,11 @@ static int create_linux_regulatory_entry(struct wiphy *wiphy,
+ 
+             /* nv cannot distinguish between DFS and passive channels */
+             else if (wiphy->bands[i]->channels[j].flags &
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(3,14,0))
++                    (IEEE80211_CHAN_RADAR | IEEE80211_CHAN_NO_IR))
++#else
+                     (IEEE80211_CHAN_RADAR | IEEE80211_CHAN_PASSIVE_SCAN))
++#endif
+             {
+                 pnvEFSTable->halnv.tables.regDomains[temp_reg_domain].channels[k].enabled =
+                     NV_CHANNEL_DFS;
+@@ -2382,7 +2448,11 @@ int wlan_hdd_linux_reg_notifier(struct wiphy *wiphy,
+                   ((request->alpha2[0]== 'U'&& request->alpha2[1]=='S') &&
+                                 pHddCtx->nEnableStrictRegulatoryForFCC))
+              {
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(3,14,0))
++                 wiphy->bands[IEEE80211_BAND_5GHZ]->channels[j].flags |= IEEE80211_CHAN_NO_IR;
++#else
+                  wiphy->bands[IEEE80211_BAND_5GHZ]->channels[j].flags |= IEEE80211_CHAN_PASSIVE_SCAN;
++#endif
+              }
+           }
+        }
+@@ -2484,18 +2554,30 @@ VOS_STATUS vos_init_wiphy_from_nv_bin(void)
+         /* default country is world roaming */
+ 
+         reg_domain = REGDOMAIN_WORLD;
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(3,14,0))
++       wiphy->regulatory_flags |= REGULATORY_CUSTOM_REG;
++#else
+         wiphy->flags |= WIPHY_FLAG_CUSTOM_REGULATORY;
++#endif
+     }
+     else if (REGDOMAIN_WORLD ==
+ 	     pnvEFSTable->halnv.tables.defaultCountryTable.regDomain) {
+ 
+         reg_domain = pnvEFSTable->halnv.tables.defaultCountryTable.regDomain;
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(3,14,0))
++       wiphy->regulatory_flags |= REGULATORY_CUSTOM_REG;
++#else
+         wiphy->flags |= WIPHY_FLAG_CUSTOM_REGULATORY;
++#endif
+     }
+     else {
+ 
+         reg_domain = pnvEFSTable->halnv.tables.defaultCountryTable.regDomain;
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(3,14,0))
++        wiphy->regulatory_flags |= REGULATORY_STRICT_REG;
++#else
+         wiphy->flags |= WIPHY_FLAG_STRICT_REGULATORY;
++#endif
+     }
+     m = 0;
+     for (i = 0; i < IEEE80211_NUM_BANDS; i++)
+@@ -2522,7 +2604,11 @@ VOS_STATUS vos_init_wiphy_from_nv_bin(void)
+             else if (pnvEFSTable->halnv.tables.regDomains[reg_domain].channels[k].enabled ==
+                      NV_CHANNEL_DFS) {
+ 
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(3,14,0))
++                wiphy->bands[i]->channels[j].flags |= IEEE80211_CHAN_NO_IR;
++#else
+                 wiphy->bands[i]->channels[j].flags |= IEEE80211_CHAN_PASSIVE_SCAN;
++#endif
+ 
+                 wiphy->bands[i]->channels[j].max_power =
+                     (pnvEFSTable->halnv.tables.regDomains[reg_domain].channels[k].pwrLimit)*100;
+@@ -2944,14 +3030,24 @@ int wlan_hdd_crda_reg_notifier(struct wiphy *wiphy,
+                  {
+                      wiphy->bands[i]->channels[j].flags &= ~(IEEE80211_CHAN_DISABLED
+                                                              |IEEE80211_CHAN_RADAR);
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(3,14,0))
++                     wiphy->bands[i]->channels[j].flags |= IEEE80211_CHAN_NO_IR;
++#else
+                      wiphy->bands[i]->channels[j].flags |= IEEE80211_CHAN_PASSIVE_SCAN;
++#endif
+                  }
+                  else
+                  {
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(3,14,0))
++                     wiphy->bands[i]->channels[j].flags &= ~(IEEE80211_CHAN_DISABLED
++                                                             |IEEE80211_CHAN_NO_IR
++                                                             |IEEE80211_CHAN_RADAR);
++#else
+                      wiphy->bands[i]->channels[j].flags &= ~(IEEE80211_CHAN_DISABLED
+                                                              |IEEE80211_CHAN_PASSIVE_SCAN
+                                                              |IEEE80211_CHAN_NO_IBSS
+                                                              |IEEE80211_CHAN_RADAR);
++#endif
+                  }
+              }
+          }
+@@ -2980,7 +3076,11 @@ int wlan_hdd_crda_reg_notifier(struct wiphy *wiphy,
+                      ((domainIdCurrent == REGDOMAIN_FCC) &&
+                                        pHddCtx->nEnableStrictRegulatoryForFCC))
+                  {
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(3,14,0))
++                     wiphy->bands[IEEE80211_BAND_5GHZ]->channels[j].flags |= IEEE80211_CHAN_NO_IR;
++#else
+                      wiphy->bands[IEEE80211_BAND_5GHZ]->channels[j].flags |= IEEE80211_CHAN_PASSIVE_SCAN;
++#endif
+                  }
+                  else if ((wiphy->bands[IEEE80211_BAND_5GHZ]->channels[j].center_freq == 5180 ||
+                            wiphy->bands[IEEE80211_BAND_5GHZ]->channels[j].center_freq == 5200 ||
+@@ -2989,7 +3089,11 @@ int wlan_hdd_crda_reg_notifier(struct wiphy *wiphy,
+                           ((domainIdCurrent != REGDOMAIN_FCC) ||
+                                       !pHddCtx->nEnableStrictRegulatoryForFCC))
+                  {
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(3,14,0))
++                     wiphy->bands[IEEE80211_BAND_5GHZ]->channels[j].flags &= ~IEEE80211_CHAN_NO_IR;
++#else
+                      wiphy->bands[IEEE80211_BAND_5GHZ]->channels[j].flags &= ~IEEE80211_CHAN_PASSIVE_SCAN;
++#endif
+                  }
+              }
+          }
+diff --git a/CORE/VOSS/src/vos_sched.c b/CORE/VOSS/src/vos_sched.c
+index cabaef82bacc..c1b40aeda7c0 100644
+--- a/CORE/VOSS/src/vos_sched.c
++++ b/CORE/VOSS/src/vos_sched.c
+@@ -67,6 +67,9 @@
+ #include <net/cnss.h>
+ #endif
+ #endif
++
++#include <compat-qcacld.h>
++
+ /*---------------------------------------------------------------------------
+  * Preprocessor Definitions and Constants
+  * ------------------------------------------------------------------------*/
+@@ -276,7 +279,11 @@ vos_sched_open
+        return VOS_STATUS_E_FAILURE;
+   }
+   spin_unlock_bh(&pSchedContext->VosTlshimPktFreeQLock);
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 10, 0)
++  /* TODO */
++#else
+   register_hotcpu_notifier(&vos_cpu_hotplug_notifier);
++#endif
+   pSchedContext->cpuHotPlugNotifier = &vos_cpu_hotplug_notifier;
+ #endif
+ 
+@@ -402,7 +409,11 @@ MC_THREAD_START_FAILURE:
+ 
+ 
+ #ifdef QCA_CONFIG_SMP
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 10, 0)
++  /* TODO */
++#else
+   unregister_hotcpu_notifier(&vos_cpu_hotplug_notifier);
++#endif
+   vos_free_tlshim_pkt_freeq(gpVosSchedContext);
+ #endif
+ 
+@@ -1698,8 +1709,12 @@ VOS_STATUS vos_sched_close ( v_PVOID_t pVosContext )
+     gpVosSchedContext->TlshimRxThread = NULL;
+     vos_drop_rxpkt_by_staid(gpVosSchedContext, WLAN_MAX_STA_COUNT);
+     vos_free_tlshim_pkt_freeq(gpVosSchedContext);
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 10, 0)
++    /* TODO */
++#else
+     unregister_hotcpu_notifier(&vos_cpu_hotplug_notifier);
+ #endif
++#endif
+     return VOS_STATUS_SUCCESS;
+ } /* vox_sched_close() */
+ 
+diff --git a/CORE/VOSS/src/vos_threads.c b/CORE/VOSS/src/vos_threads.c
+index afbc9e9888da..4c6101a0136a 100644
+--- a/CORE/VOSS/src/vos_threads.c
++++ b/CORE/VOSS/src/vos_threads.c
+@@ -42,6 +42,10 @@
+ #include <vos_trace.h>
+ #include <linux/jiffies.h>
+ #include <linux/sched.h>
++#include <linux/version.h>
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4, 11, 0))
++#include <linux/sched/signal.h>
++#endif
+ #include <linux/delay.h>
+ #include <linux/interrupt.h>
+ 
+diff --git a/CORE/VOSS/src/vos_utils.c b/CORE/VOSS/src/vos_utils.c
+index e9a13d27eefd..bdb540054c18 100644
+--- a/CORE/VOSS/src/vos_utils.c
++++ b/CORE/VOSS/src/vos_utils.c
+@@ -68,12 +68,15 @@
+ #include <linux/ieee80211.h>
+ #include <crypto/hash.h>
+ #include <crypto/aes.h>
++#include <crypto/skcipher.h>
+ #include <wcnss_api.h>
+ #ifdef CONFIG_CNSS
+ #include <linux/qcomwlan_secif.h>
+ #endif
+ #include <errno.h>
+ 
++#include <compat-qcacld.h>
++
+ #include "ieee80211_common.h"
+ #include "sirDebug.h"
+ /*----------------------------------------------------------------------------
+@@ -1030,7 +1033,15 @@ VOS_STATUS vos_encrypt_AES(v_U32_t cryptHandle, /* Handle */
+ 
+ #if !defined(QCA_WIFI_ISOC) && !defined(CONFIG_CNSS) && \
+ (defined(HIF_USB) || defined(HIF_SDIO))
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4, 8, 0))
++{
++    struct crypto_skcipher *tmp_tfm;
++    tmp_tfm = crypto_alloc_skcipher( "cbc(aes)", 0, 0);
++    tfm->base = tmp_tfm->base;
++}
++#else
+     tfm =  crypto_alloc_ablkcipher( "cbc(aes)", 0, 0);
++#endif
+ #else
+     tfm =  wcnss_wlan_crypto_alloc_ablkcipher( "cbc(aes)", 0, 0);
+ #endif
+@@ -1141,7 +1152,15 @@ VOS_STATUS vos_decrypt_AES(v_U32_t cryptHandle, /* Handle */
+ 
+ #if !defined(QCA_WIFI_ISOC) && !defined(CONFIG_CNSS) && \
+ (defined(HIF_USB) || defined(HIF_SDIO))
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4, 8, 0))
++{
++    struct crypto_skcipher *tmp_tfm;
++    tmp_tfm = crypto_alloc_skcipher( "cbc(aes)", 0, 0);
++    tfm->base = tmp_tfm->base;
++}
++#else
+     tfm =  crypto_alloc_ablkcipher( "cbc(aes)", 0, 0);
++#endif
+ #else
+     tfm =  wcnss_wlan_crypto_alloc_ablkcipher( "cbc(aes)", 0, 0);
+ #endif
+diff --git a/Kbuild b/Kbuild
+index c696869938ea..938984177c64 100644
+--- a/Kbuild
++++ b/Kbuild
+@@ -25,6 +25,8 @@ ifeq ($(KERNEL_BUILD),1)
+ 	MODNAME := wlan
+ 	WLAN_ROOT := drivers/staging/qcacld-2.0
+ 	WLAN_OPEN_SOURCE := 1
++	CONFIG_QCA_WIFI_2_0 := 1
++	CONFIG_QCA_WIFI_ISOC := 0
+ endif
+ 
+ ifeq ($(KERNEL_BUILD), 0)
+@@ -1041,7 +1043,6 @@ CDEFINES :=	-DANI_LITTLE_BYTE_ENDIAN \
+ 		-DWLAN_PERF \
+ 		-DPTT_SOCK_SVC_ENABLE \
+ 		-Wall\
+-		-Werror\
+ 		-D__linux__ \
+ 		-DHAL_SELF_STA_PER_BSS=1 \
+ 		-DWLAN_FEATURE_VOWIFI_11R \
+diff --git a/Kconfig b/Kconfig
+index 2c4023a34138..87af04f623ad 100644
+--- a/Kconfig
++++ b/Kconfig
+@@ -1,25 +1,16 @@
+-comment "Qualcomm Atheros Prima WLAN module"
++comment "Qualcomm Atheros CLD WLAN module"
+ 
+-config PRIMA_WLAN
+-
+-	tristate "Qualcomm Atheros Prima WLAN module"
++config QCA_CLD_WLAN
++	tristate "Qualcomm Atheros CLD WLAN module"
+ 	default n
+ 	help
+-	Add support for the Qualcomm Atheros Prima WLAN module
++	Add support for the Qualcomm Atheros CLD WLAN module
+ 
+-config PRONTO_WLAN
++if QCA_CLD_WLAN != n
+ 
+-	tristate "Qualcomm Atheros Pronto WLAN module"
++config CLD_HL_SDIO_CORE
++	bool "Enable the SDIO support"
+ 	default n
+-	help
+-	Add support for the Qualcomm Atheros Pronto WLAN module
+-
+-
+-#	depends on WLAN
+-#	depends on CFG80211
+-#        depends on WCNSS_CORE
+-
+-if PRIMA_WLAN != n || PRONTO_WLAN != n
+ 
+ config PRIMA_WLAN_BTAMP
+ 	bool "Enable the Prima WLAN BT-AMP feature"
+@@ -45,19 +36,23 @@ config WLAN_FEATURE_LPSS
+ 	bool "Enable the WLAN LPSS feature"
+ 	default n
+ 
++config QCOM_TDLS
++	bool "Enable TDLS feature"
++	default n
++
+ config QCOM_VOWIFI_11R
+ 	bool "Enable Fast Transition (11r) feature"
+ 	default n
+ 
+-config CONFIG_ENABLE_LINUX_REG
++config ENABLE_LINUX_REG
+ 	bool "Enable linux regulatory feature"
+ 	default n
+ 
+-config CONFIG_FEATURE_NAN
++config FEATURE_NAN
+ 	bool "Enable NAN feature"
+ 	default n
+ 
+-config CONFIG_WLAN_SYNC_TSF
++config WLAN_SYNC_TSF
+ 	bool "Enable QCOM sync multi devices tsf feature"
+ 	default n
+ 
+diff --git a/Makefile b/Makefile
+index c05b00f26c57..d0cced6fc382 100644
+--- a/Makefile
++++ b/Makefile
+@@ -18,6 +18,20 @@ KBUILD_OPTIONS += $(WLAN_SELECT)
+ KBUILD_OPTIONS += WLAN_OPEN_SOURCE=$(WLAN_OPEN_SOURCE)
+ KBUILD_OPTIONS += $(KBUILD_EXTRA) # Extra config if any
+ 
++#
++KBUILD_OPTIONS += CONFIG_QCA_CLD_WLAN=m
++KBUILD_OPTIONS += CONFIG_CLD_HL_SDIO_CORE=y
++KBUILD_OPTIONS += CONFIG_PRIMA_WLAN_LFR=y
++KBUILD_OPTIONS += CONFIG_PRIMA_WLAN_OKC=y
++KBUILD_OPTIONS += CONFIG_WLAN_FEATURE_11W=y
++KBUILD_OPTIONS += CONFIG_QCOM_TDLS=y
++KBUILD_OPTIONS += CONFIG_QCOM_VOWIFI_11R=y
++KBUILD_OPTIONS += CONFIG_ENABLE_LINUX_REG=y
++KBUILD_OPTIONS += CONFIG_FEATURE_NAN=y
++KBUILD_OPTIONS += CONFIG_WLAN_SYNC_TSF=y
++KBUILD_OPTIONS += CONFIG_WLAN_UDP_RESPONSE_OFFLOAD=y
++KBUILD_OPTIONS += CONFIG_WLAN_WOW_PULSE=y
++
+ all:
+ 	$(MAKE) -C $(KERNEL_SRC) M=$(shell pwd) modules $(KBUILD_OPTIONS)
+ 
