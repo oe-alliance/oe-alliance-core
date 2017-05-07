@@ -7,7 +7,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 ALLOW_EMPTY_${PN} = "1"
 
 PV = "7.0"
-PR = "r2"
+PR = "r3"
 
 inherit packagegroup
 
@@ -18,6 +18,7 @@ RRECOMMENDS_${PN} = " \
     ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "", "enigma2-plugin-drivers-usbserial", d)} \
     enigma2-plugin-extensions-autotimer \
     enigma2-plugin-extensions-epgsearch \
+    enigma2-plugin-extensions-volume-adjust \
     enigma2-plugin-systemplugins-videotune \
     ${@bb.utils.contains("MACHINE_FEATURES", "videoenhancement", "", "enigma2-plugin-systemplugins-videoenhancement", d)} \
     enigma2-plugin-systemplugins-softwaremanager \
