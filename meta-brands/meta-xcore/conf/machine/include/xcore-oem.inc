@@ -78,7 +78,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'spycat', 'spycat' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'spycatmini', 'spycatmini' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'spycatminiplus', 'spycatminiplus' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'spycat4k', 'spycat4k' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'spycat4kcombo', 'spycat4k' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'spycat4kcombo', 'spycat4kcombo' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'spycat4kmini', 'spycat4kmini' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'vp7358ci', 'vp7358ci' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'bcm7358', 'bcm7358' , '', d)}\
