@@ -14,7 +14,7 @@ PKGV = "2.1+git${GITPKGV}"
 VER ="2.1"
 PR = "r1"
 
-SRC_URI="git://github.com/n3wb13/BMediacenter-AX--Blue-Skin.git"
+SRC_URI="git://github.com/stein17/BMediacenter-AX--Blue-Skin.git"
 
 S = "${WORKDIR}/git"
 
