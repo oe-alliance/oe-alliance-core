@@ -11,6 +11,8 @@ PV = "0.10.0+git${SRCPV}"
 PKGV = "0.10.0+git${GITPKGV}"
 PR = "r2"
 
+DEPENDS = "glib-2.0-native gstreamer"
+
 SRC_URI = "git://github.com/OpenPLi/gst-plugin-subsink.git;protocol=git"
 
 S = "${WORKDIR}/git"
