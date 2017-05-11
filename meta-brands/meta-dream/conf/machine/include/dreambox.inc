@@ -30,6 +30,7 @@ MACHINE_EXTRA_RRECOMMENDS = " \
     kernel-module-exportfs \
     kernel-module-snd-oss \
     kernel-module-snd-pcm-oss \
+    ${@bb.utils.contains('MACHINE_FEATURES', 'v3d', 'libvc5dream', '',d)} \
     "
     
 MACHINE_FEATURES += "dreambox alsa usbhost 3dtv switchoff tpm blindscan-dvbs boxmodel feature1 feature2"
@@ -38,6 +39,7 @@ MACHINEOVERRIDES .= ":dreambox"
 
 PREFERRED_PROVIDER_virtual/bootloader = "dreambox-secondstage-${MACHINE}"
 PREFERRED_PROVIDER_virtual/kernel = "linux-dreambox"
+PREFERRED_PROVIDER_virtual/kodi = "stb-kodi-${MACHINE}"
 
 PREFERRED_PROVIDER_virtual/blindscan-dvbs = "dreambox-blindscan-utils"
 PREFERRED_PROVIDER_virtual/blindscan-dvbc = "dreambox-blindscan-utils"

@@ -118,11 +118,11 @@ do_configure_prepend() {
         DRIVERSDATE=`grep "SRCDATE = " ${OEA-META-PROTEK-BASE}/recipes-drivers/protek-dvb-modules-${MACHINE}.bb | cut -b 12-19`
     elif [ "${BRAND_OEM}" = "dreambox" ]; then
         if [ "${MACHINE}" = "dm7080" ]; then
-            DRIVERSDATE="20170204"
+            DRIVERSDATE="20170425"
         elif [ "${MACHINE}" = "dm820" ]; then
-            DRIVERSDATE="20170204"
+            DRIVERSDATE="20170425"
         elif [ "${MACHINE}" = "dm520" ]; then
-            DRIVERSDATE="20170203"
+            DRIVERSDATE="20170425"
         elif [ "${MACHINE}" = "dm800" ]; then
             DRIVERSDATE="20131228"
         elif [ "${MACHINE}" = "dm8000" ]; then
@@ -134,7 +134,7 @@ do_configure_prepend() {
         elif [ "${MACHINE}" = "dm800sev2" ]; then
             DRIVERSDATE="20151201"
         elif [ "${MACHINE}" = "dm900" ]; then
-            DRIVERSDATE="20170203"
+            DRIVERSDATE="20170510"
         else
             DRIVERSDATE="20150618"
         fi
