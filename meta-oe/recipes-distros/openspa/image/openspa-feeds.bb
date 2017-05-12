@@ -7,7 +7,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 ALLOW_EMPTY_${PN} = "1"
 
 PV = "7.0"
-PR = "r1"
+PR = "r2"
 
 inherit packagegroup
 
@@ -17,6 +17,7 @@ RRECOMMENDS_${PN} = "\
     enigma2-display-skins \
     enigma2-plugin-extensions-epgimport \
     enigma2-plugin-systemplugins-crossepg \
+    enigma2-plugin-systemplugins-devicemanager \
     curlftpfs \
     cdfs \
     openssl-old \
