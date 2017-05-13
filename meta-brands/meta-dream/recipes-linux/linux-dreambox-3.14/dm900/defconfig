@@ -1218,8 +1218,11 @@ CONFIG_MTD_M25P80=y
 # Disk-On-Chip Device Drivers
 #
 # CONFIG_MTD_DOCG3 is not set
-# CONFIG_MTD_NAND is not set
+CONFIG_MTD_NAND_ECC=y
+CONFIG_MTD_NAND_IDS=y
+CONFIG_MTD_NAND=y
 # CONFIG_MTD_ONENAND is not set
+CONFIG_MTD_NAND_NANDSIM=m
 
 #
 # LPDDR flash memory drivers
