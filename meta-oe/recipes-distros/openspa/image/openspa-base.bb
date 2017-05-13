@@ -15,7 +15,6 @@ RDEPENDS_${PN} = " \
     oe-alliance-base \
     openspa-enigma2 \
     openspa-bootlogo \
-    openspa-spinner \
     openssh-sftp-server \
     ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "", "iproute2 ", d)} \
     ntfs-3g \
@@ -26,6 +25,7 @@ RDEPENDS_${PN} = " \
     python-imaging \
     python-importlib \
     python-service-identity \
+    streamproxy \
     rtmpdump \
     packagegroup-base-smbfs-client \
     ${@bb.utils.contains("MACHINE_FEATURES", "dreamboxv1", "", "ofgwrite", d)} \

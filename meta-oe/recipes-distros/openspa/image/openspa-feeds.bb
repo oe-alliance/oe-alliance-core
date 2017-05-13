@@ -17,6 +17,7 @@ RRECOMMENDS_${PN} = "\
     enigma2-display-skins \
     enigma2-plugin-extensions-epgimport \
     enigma2-plugin-systemplugins-crossepg \
+    enigma2-plugin-systemplugins-devicemanager \
     curlftpfs \
     cdfs \
     openssl-old \

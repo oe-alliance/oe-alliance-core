@@ -1,0 +1,53 @@
+From dd9cca9ed65829bdf8f31b2ba064b2af81d02297 Mon Sep 17 00:00:00 2001
+From: Athanasios Oikonomou <athoik@gmail.com>
+Date: Fri, 12 May 2017 18:06:41 +0300
+Subject: [PATCH] NetworkInformationSection: store network_id from NIT section
+
+
+diff --git a/include/dvbsi++/network_information_section.h b/include/dvbsi++/network_information_section.h
+index 22fa919..2412612 100644
+--- a/include/dvbsi++/network_information_section.h
++++ b/include/dvbsi++/network_information_section.h
+@@ -37,6 +37,7 @@ typedef TransportStreamInfoList::const_iterator TransportStreamInfoConstIterator
+ class NetworkInformationSection : public LongCrcSection, public DescriptorContainer
+ {
+ 	protected:
++		unsigned networkId				: 16;
+ 		unsigned networkDescriptorsLength		: 12;
+ 		unsigned transportStreamLoopLength		: 12;
+ 		TransportStreamInfoList tsInfo;
+@@ -49,6 +50,7 @@ class NetworkInformationSection : public LongCrcSection, public DescriptorContai
+ 		static const enum TableId TID = TID_NIT_ACTUAL;
+ 		static const uint32_t TIMEOUT = 12000;
+ 
++		uint16_t getNetworkId(void) const;
+ 		const TransportStreamInfoList *getTsInfo(void) const;
+ };
+ 
+diff --git a/src/network_information_section.cpp b/src/network_information_section.cpp
+index 778cfb5..8016695 100644
+--- a/src/network_information_section.cpp
++++ b/src/network_information_section.cpp
+@@ -35,6 +35,7 @@ uint16_t TransportStreamInfo::getOriginalNetworkId(void) const
+ 
+ NetworkInformationSection::NetworkInformationSection(const uint8_t * const buffer) : LongCrcSection(buffer)
+ {
++	networkId = UINT16(&buffer[3]);
+ 	networkDescriptorsLength = sectionLength > 9 ? DVB_LENGTH(&buffer[8]) : 0;
+ 	
+ 	uint16_t pos = 10;
+@@ -68,6 +69,11 @@ NetworkInformationSection::~NetworkInformationSection(void)
+ 		delete *i;
+ }
+ 
++uint16_t NetworkInformationSection::getNetworkId(void) const
++{
++	return networkId;
++}
++
+ const TransportStreamInfoList *NetworkInformationSection::getTsInfo(void) const
+ {
+ 	return &tsInfo;
+-- 
+2.1.4
+
