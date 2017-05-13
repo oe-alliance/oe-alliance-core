@@ -17,7 +17,6 @@ RDEPENDS_${PN} = "\
     opennfr-version-info \
     opennfr-base-files \
     opennfr-settings \   
-    opennfr-missing \ 
     openssh-sftp-server \
     ntfs-3g \
     packagegroup-base-smbfs-client \
