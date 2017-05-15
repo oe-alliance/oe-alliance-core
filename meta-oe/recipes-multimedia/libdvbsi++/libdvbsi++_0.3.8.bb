@@ -9,7 +9,7 @@ SRCREV = "ff57e585c47fd62b484d0a8f96fe4f020f5840e3"
 SRC_URI = "git://git.opendreambox.org/git/obi/libdvbsi++.git \
 	file://fix_section_len_check.patch \
 	"
-PR = "r1"
+PR = "r3"
 
 SRC_URI_append_sh4 = " \
     file://libdvbsi++-fix-unaligned-access-on-SuperH.patch \
