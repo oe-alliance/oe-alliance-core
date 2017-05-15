@@ -10,7 +10,7 @@ PV = "${IMAGE_VERSION}"
 PR = "${BUILD_VERSION}"
 PACKAGE_ARCH = "${MACHINEBUILD}"
 
-URL = "http://www.droidsat.org"
+URL = "https://www.droidsat.org"
 
 S = "${WORKDIR}"
 
