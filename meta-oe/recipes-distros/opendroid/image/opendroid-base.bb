@@ -21,10 +21,6 @@ RDEPENDS_${PN} = "\
     ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "", "ntfs-3g ", d)} \
     hddtemp \
     busybox-cron \
-    exteplayer3 \
-    gstplayer \
-    ffmpeg \
-    enigma2-plugin-systemplugins-serviceapp \   
     python-imaging \
     rtmpdump \
     packagegroup-base-smbfs-client \
