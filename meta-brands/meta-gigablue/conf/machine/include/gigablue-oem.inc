@@ -19,7 +19,8 @@ ${@bb.utils.contains('MACHINEBUILD', 'gbx3', 'X3' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbx2', 'X2' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbultraueh', 'Ultra UE H' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbx3h', 'X3 H' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'gbquad4k', 'QUAD 4K' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbquad4k', 'UHD QUAD 4K' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbue4k', 'UHD UE 4K' , '', d)}\
 "
 
 MACHINE_BRAND = "\
@@ -39,6 +40,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'gbx2', 'GigaBlue' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbultraueh', 'GigaBlue' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbx3h', 'GigaBlue' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbquad4k', 'GigaBlue' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbue4k', 'GigaBlue' , '', d)}\
 "
 
 IMAGEDIR ?= "\
@@ -58,6 +60,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'gbx2', 'gigablue/x2' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbultraueh', 'gigablue/ultraueh' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbx3h', 'gigablue/x3h' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbquad4k', 'gigablue/quad4k' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbue4k', 'gigablue/ue4k' , '', d)}\
 "
 
 MTD_KERNEL = "\
@@ -77,6 +80,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'gbx2', 'mtd2' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbultraueh', 'mtd2' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbx3h', 'mtd2' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbquad4k', 'mmcblk0p3' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbue4k', 'mmcblk0p3' , '', d)}\
 "
 
 MTD_ROOTFS = "\
@@ -96,6 +100,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'gbx2', 'mtd0' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbultraueh', 'mtd0' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbx3h', 'mtd0' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbquad4k', 'mmcblk0p4' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbue4k', 'mmcblk0p4' , '', d)}\
 "
 
 MACHINE_DRIVER = "\
@@ -115,6 +120,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'gbx2', 'gb73625' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbultraueh', 'gb73625' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbx3h', 'gb73625' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbquad4k', 'gb7252' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbue4k', 'gb7252' , '', d)}\
 "
 
 KERNEL_FILE = "\
@@ -134,6 +140,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'gbx2', 'kernel.bin' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbultraueh', 'kernel.bin' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbx3h', 'kernel.bin' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbquad4k', 'kernel.bin' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbue4k', 'kernel.bin' , '', d)}\
 "
 
 ROOTFS_FILE = "\
@@ -153,10 +160,11 @@ ${@bb.utils.contains('MACHINEBUILD', 'gbx2', 'rootfs.bin' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbultraueh', 'rootfs.bin' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbx3h', 'rootfs.bin' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbquad4k', 'rootfs.tar.bz2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbue4k', 'rootfs.tar.bz2' , '', d)}\
 "
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS = " \
-    ${@bb.utils.contains("MACHINE_FEATURES", "nexusplatform", "gigablue-platform-util-${MACHINE}", "gigablue-dvb-modules-${MACHINE_DRIVER}", d)} \
+    ${@bb.utils.contains("MACHINE_FEATURES", "nexusplatform", "gigablue-platform-util-${MACHINEBUILD}", "gigablue-dvb-modules-${MACHINE_DRIVER}", d)} \
     gigablue-ddbootup \
     "
 
@@ -193,8 +201,6 @@ MACHINE_EXTRA_RDEPENDS = "\
 
 include conf/machine/include/autoload-filesystems.inc
 
-PREFERRED_PROVIDER_virtual/blindscan-dvbc = "gigablue-blindscan-utils"
-PREFERRED_PROVIDER_virtual/blindscan-dvbs = "gigablue-blindscan-utils"
 PREFERRED_PROVIDER_virtual/transtreamproxy = "gb-transtreamproxy"
 
 PREFERRED_PROVIDER_virtual/kernel = "linux-gigablue"
