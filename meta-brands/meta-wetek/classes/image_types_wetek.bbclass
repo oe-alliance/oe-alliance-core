@@ -45,6 +45,7 @@ IMAGE_DEPENDS_sdcard = " \
 			parted-native \
 			mtools-native \
 			dosfstools-native \
+			e2fsprogs-native \
 			virtual/kernel \
 			${@bb.utils.contains("KERNEL_IMAGETYPE", "uImage", "u-boot", "",d)} \
 			"
@@ -76,7 +77,8 @@ IMAGE_CMD_sdcard () {
 	# Create partition table
 	parted -s ${SDIMG} mklabel msdos
 	# Create boot partition and mark it as bootable
-	parted -s ${SDIMG} unit KiB mkpart primary fat32 ${IMAGE_ROOTFS_ALIGNMENT} $(expr ${BOOT_SPACE_ALIGNED} \+ ${IMAGE_ROOTFS_ALIGNMENT})
+	parted -s ${SDIMG} unit KiB mkpart primary fat16 ${IMAGE_ROOTFS_ALIGNMENT} $(expr ${BOOT_SPACE_ALIGNED} \+ ${IMAGE_ROOTFS_ALIGNMENT})
+#	parted -s ${SDIMG} unit KiB mkpart primary fat32 ${IMAGE_ROOTFS_ALIGNMENT} $(expr ${BOOT_SPACE_ALIGNED} \+ ${IMAGE_ROOTFS_ALIGNMENT})
 	parted -s ${SDIMG} set 1 boot on
 	# Create rootfs partition to the end of disk
 	parted -s ${SDIMG} -- unit KiB mkpart primary ext2 $(expr ${BOOT_SPACE_ALIGNED} \+ ${IMAGE_ROOTFS_ALIGNMENT}) -1s
@@ -116,6 +118,7 @@ IMAGE_CMD_sdcard () {
 	### try adjusting
 	tune2fs -o ^acl ${SDIMG_ROOTFS}
 	tune2fs -o  ^user_xattr ${SDIMG_ROOTFS}
+	tune2fs -L  ROOTfs ${SDIMG_ROOTFS}
 	#tune2fs -E mount_opts=auto_da_alloc ${SDIMG_ROOTFS} 
 	#tune2fs -e remount-ro ${SDIMG_ROOTFS}
 	tune2fs -E  mount_opts=noatime  ${SDIMG_ROOTFS}

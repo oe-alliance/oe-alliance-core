@@ -109,7 +109,7 @@ GST_GOOD_RDEPS = "${@bb.utils.contains('GST_VERSION', '1.0', ' \
     gstreamer1.0-plugins-good-rtp \
     gstreamer1.0-plugins-good-rtpmanager \
     gstreamer1.0-plugins-good-rtsp \
-    gstreamer1.0-plugins-good-souphttpsrc \
+    gstreamer1.0-plugins-good-soup \
     gstreamer1.0-plugins-good-udp \
     gstreamer1.0-plugins-good-wavparse \
     gstreamer1.0-plugins-good-wavpack \
