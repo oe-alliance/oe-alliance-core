@@ -36,15 +36,6 @@ rootfs_postprocess() {
     ln -s opkg usr/bin/ipkg || true
     ln -s opkg-cl usr/bin/ipkg-cl || true
     cd $curdir
-    cd ${IMAGE_ROOTFS}/var/lib/opkg/lists
-    rm -rf ${IMAGE_ROOTFS}/var/lib/opkg/lists/oe
-    rm -rf ${IMAGE_ROOTFS}/var/lib/opkg/lists/oe-3rdparty
-    rm -rf ${IMAGE_ROOTFS}/var/lib/opkg/lists/oe-all
-    rm -rf ${IMAGE_ROOTFS}/var/lib/opkg/lists/oe-${MACHINE}
-    rm -rf ${IMAGE_ROOTFS}/var/lib/opkg/lists/oe-${MACHINE}_3rdparty
-    rm -rf ${IMAGE_ROOTFS}/var/lib/opkg/lists/oe-mips32el
-    rm -rf ${IMAGE_ROOTFS}/var/lib/opkg/lists/oe-${MACHINEBUILD}
-    cd $curdir
     set -x
 
     ipkgarchs="${ALL_MULTILIB_PACKAGE_ARCHS} ${SDK_PACKAGE_ARCHS}"
