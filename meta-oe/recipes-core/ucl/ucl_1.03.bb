@@ -4,7 +4,7 @@ LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=dfeaf3dc4beef4f5a7bdbc35b197f39e"
 
 SRC_URI = " \
-    http://www.oberhumer.com/opensource/ucl/download/ucl-1.03.tar.gz \
+    http://distro.ibiblio.org/slitaz/sources/packages/u/ucl-1.03.tar.gz \
     file://0001-configure.ac-Fix-with-current-autoconf.patch \
     file://0002-acinclude.m4-Provide-missing-macros.patch"
 
