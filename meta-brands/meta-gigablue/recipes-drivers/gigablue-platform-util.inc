@@ -5,6 +5,9 @@ LICENSE = "CLOSED"
 PACKAGE_ARCH := "${MACHINEBUILD}"
 require conf/license/license-close.inc
 
+PV = "${KV}+${SRCDATE}"
+PR = "r0"
+
 INHIBIT_PACKAGE_STRIP = "1"
 
 SRC_URI = " \
