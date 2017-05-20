@@ -6,9 +6,10 @@ PACKAGE_ARCH := "${MACHINEBUILD}"
 require conf/license/license-close.inc
 
 PV = "${KV}+${SRCDATE}"
-PR = "r0"
+PR = "r1"
 
 INHIBIT_PACKAGE_STRIP = "1"
+INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
 
 SRC_URI = " \
     http://archiv.openmips.com/beta/platform-util-${MACHINEBUILD}-${SRCDATE}.zip \
@@ -26,8 +27,10 @@ do_install() {
 
 do_package_qa() {
 }
+do_populate_sysroot() {
+}
 
-FILES_${PN}="/"
+FILES_${PN}="/home/root /etc/init.d"
 
 inherit update-rc.d
 
