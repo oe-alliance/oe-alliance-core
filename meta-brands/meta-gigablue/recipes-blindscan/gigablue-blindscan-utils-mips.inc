@@ -10,7 +10,7 @@ PV = "4.0"
 
 PR = "r12"
 
-PACKAGES = "gigablue-blindscan-dvbs-utils-mips-${MACHINE} gigablue-blindscan-dvbc-utils-mips${MACHINE}"
+PACKAGES = "gigablue-blindscan-dvbs-utils-mips-${MACHINE} gigablue-blindscan-dvbc-utils-mips-${MACHINE}"
 
 PROVIDES += "virtual/blindscan-dvbc virtual/blindscan-dvbs"
 RPROVIDES_gigablue-blindscan-dvbc-utils-mips-${MACHINE} += "virtual/blindscan-dvbc"
