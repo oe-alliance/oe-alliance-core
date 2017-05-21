@@ -7,7 +7,6 @@ require conf/license/license-close.inc
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PV = "4.0"
-
 PR = "r12"
 
 PACKAGES = "gigablue-blindscan-dvbs-utils-mips-${MACHINE} gigablue-blindscan-dvbc-utils-mips-${MACHINE} gigablue-blindscan-dvbs-utils-mips-${MACHINE}-dbg gigablue-blindscan-dvbc-utils-mips-${MACHINE}-dbg"
