@@ -9,6 +9,7 @@ if [ -d /home/root/platform ]; then
     rm -rf /usr/share/platform
   fi
   mv -f /home/root/platform /usr/share/
+  chmod +x /usr/share/platform/*
   sync
 fi
 
