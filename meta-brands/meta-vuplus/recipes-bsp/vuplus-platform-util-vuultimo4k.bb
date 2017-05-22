@@ -3,10 +3,10 @@ require vuplus-platform-util.inc
 COMPATIBLE_MACHINE = "^(vuultimo4k)$"
 
 PV="16.1"
-SRCDATE = "20170220"
+SRCDATE = "20170522"
 SRCDATE_PR = "r0"
 
 S="${WORKDIR}/platform-util-vuultimo4k"
 
-SRC_URI[md5sum] = "821a28f3e9d9dbff9e1ba27d90731339"
-SRC_URI[sha256sum] = "355f69ed447c8010c9d2d42a36ed7ed2a635c5224ec3e32b60790b47be0dac19"
+SRC_URI[md5sum] = "82b86a8d2ee41c5176e3c4f6716fa564"
+SRC_URI[sha256sum] = "3d781f7d3e3f2f520c574016bc0ac304cba4a24703acc6dff6b2a2810bb128ec"
