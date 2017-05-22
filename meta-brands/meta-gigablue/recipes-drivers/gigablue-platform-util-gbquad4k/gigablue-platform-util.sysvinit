@@ -3,6 +3,15 @@
 if [ -e /sys/class/net/sys0 ]; then
   ifconfig sys0 up
 fi
+
+if [ -d /home/root/platform ]; then
+  if [ -d /usr/share/platform ]; then
+    rm -rf /usr/share/platform
+  fi
+  mv -f /home/root/platform /usr/share/
+  sync
+fi
+
 case "$1" in
   start)
     # first boot?
@@ -15,7 +24,7 @@ case "$1" in
 
 	export PATH=.:$PATH
 	export B_REFSW_BOXMODE=5
-	cd /home/root
+	cd /usr/share/platform
 	nexus dvb_init &
     fi 
 
