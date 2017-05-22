@@ -24,7 +24,7 @@ case "$1" in
 
 	export PATH=.:$PATH
 	export B_REFSW_BOXMODE=5
-	cd /home/root
+	cd /usr/share/platform
 	nexus dvb_init &
     fi 
 
