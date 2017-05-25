@@ -164,7 +164,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'gbue4k', 'rootfs.tar.bz2' , '', d)}\
 "
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS = " \
-    ${@bb.utils.contains("MACHINE_FEATURES", "nexusplatform", "gigablue-platform-util-${MACHINEBUILD}", "gigablue-dvb-modules-${MACHINE_DRIVER}", d)} \
+    ${@bb.utils.contains("MACHINE_FEATURES", "nexusplatform", "gigablue-platform-util-${MACHINE_DRIVER}", "gigablue-dvb-modules-${MACHINE_DRIVER}", d)} \
     gigablue-ddbootup \
     "
 
