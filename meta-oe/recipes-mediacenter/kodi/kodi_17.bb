@@ -89,6 +89,7 @@ SRC_URI = "git://github.com/xbmc/xbmc.git;branch=Krypton \
            file://v3d-platform.patch \
            file://brcmstb-settings.patch \
            file://e2player.patch \
+           file://ffmpeg-autobuild.patch \
 "
 
 SRC_URI_append_libc-musl = " \
