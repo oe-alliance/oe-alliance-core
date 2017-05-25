@@ -1,0 +1,11 @@
+--- git/tools/depends/target/ffmpeg/autobuild.sh.orig	2017-05-01 17:26:31.943468428 +0100
++++ git/tools/depends/target/ffmpeg/autobuild.sh	2017-05-01 18:33:02.162813127 +0100
+@@ -116,7 +116,7 @@
+ fi
+ 
+ [ -f ${ARCHIVE} ] ||
+-  curl -Ls --create-dirs -f -o ${ARCHIVE} ${BASE_URL}/${VERSION}.tar.gz ||
++  curl -k -Ls --create-dirs -f -o ${ARCHIVE} ${BASE_URL}/${VERSION}.tar.gz ||
+   { echo "error fetching ${BASE_URL}/${VERSION}.tar.gz" ; exit 3; }
+ [ $downloadonly ] && exit 0
+ 

@@ -3,7 +3,7 @@ SECTION = "base"
 PRIORITY = "required"
 MAINTAINER = "Gigablue"
 LICENSE = "proprietary"
-PACKAGE_ARCH := "${MACHINEBUILD}"
+PACKAGE_ARCH := "${MACHINE}"
 
 require conf/license/license-gplv2.inc
 
@@ -13,14 +13,14 @@ ALLOW_EMPTY_${PN} = "1"
 inherit deploy
 do_deploy() {
     if [ -e boot.bin  ]; then
-    install -m 0644 boot.bin  ${DEPLOYDIR}/${MACHINEBUILD}_boot.bin
+    install -m 0644 boot.bin  ${DEPLOYDIR}/${MACHINE}_boot.bin
     fi
     if [ -e rescue.bin  ]; then
-    install -m 0644 rescue.bin  ${DEPLOYDIR}/${MACHINEBUILD}_rescue.bin
+    install -m 0644 rescue.bin  ${DEPLOYDIR}/${MACHINE}_rescue.bin
     fi
 }
 
-SRC_URI = "http://archiv.openmips.com/beta/initrd_${MACHINEBUILD}_${SRCDATE}.zip"
+SRC_URI = "http://archiv.openmips.com/beta/initrd_${MACHINE}_${SRCDATE}.zip"
 
 S = "${WORKDIR}"
 

@@ -1,8 +1,8 @@
-SUMMARY = "Platform Util drivers for ${MACHINEBUILD}"
+SUMMARY = "Platform Util drivers for ${MACHINE}"
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "CLOSED"
-PACKAGE_ARCH := "${MACHINEBUILD}"
+PACKAGE_ARCH := "${MACHINE}"
 require conf/license/license-close.inc
 
 PV = "${KV}+${SRCDATE}"
@@ -12,7 +12,7 @@ INHIBIT_PACKAGE_STRIP = "1"
 INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
 
 SRC_URI = " \
-    http://archiv.openmips.com/beta/platform-util-${MACHINEBUILD}-${SRCDATE}.zip \
+    http://archiv.openmips.com/beta/platform-util-${MACHINE}-${SRCDATE}.zip \
     file://${INITSCRIPT_NAME}.sysvinit \
 "
 
