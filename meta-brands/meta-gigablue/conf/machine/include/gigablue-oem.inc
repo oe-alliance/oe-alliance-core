@@ -194,6 +194,7 @@ EXTRA_IMAGEDEPENDS += "\
 
 MACHINE_EXTRA_RDEPENDS = "\
     enigma2-plugin-systemplugins-vfdcontrol \
+    ${@bb.utils.contains('MACHINE', 'gb7252', 'enigma2-plugin-systemplugins-remotecontrolcode' , '', d)} \
     ${@bb.utils.contains('MACHINEBUILD', 'gb800solo', 'mtd-utils-jffs2' , '', d)} \
     ${@bb.utils.contains('MACHINEBUILD', 'gbipbox', 'enigma2-plugin-extensions-gbipboxclient' , '', d)} \
     ${@bb.utils.contains('MACHINEBUILD', 'gbquad4k', 'enigma2-plugin-systemplugins-remotecontrolcode' , '', d)} \
