@@ -199,6 +199,7 @@ RRECOMMENDS_${PN}_append = " \
    python-sqlite3 \
    python-compression \
    python-profile \
+   python-mmap \
    libcurl \
    lsb \
    os-release \
