@@ -10,11 +10,10 @@ ALLOW_EMPTY_${PN} = "1"
 RDEPENDS_${PN} = " \
     kodi-addon-pvr-hts \
     kodi-addon-pvr-iptvsimple \
-    kodi-addon-pvr-mythtv \
     kodi-addon-pvr-nextpvr \
     "
 
-
+#   kodi-addon-pvr-mythtv \
 #   kodi-addon-pvr-dvblink \
 #   kodi-addon-pvr-mediaportal.tvserver \
 #   kodi-addon-pvr-vbox \
