@@ -30,7 +30,7 @@ RDEPENDS_${PN} = " \
     enigma2-plugin-extensions-tuxcom \
     enigma2-plugin-security-firewall \
     enigma2-plugin-extensions-enigmalight \
-    enigma2-plugin-extensions-openairplay \
+    ${@bb.utils.contains("DISTRO_FEATURES", "directfb", "enigma2-plugin-extensions-openairplay", "", d)} \
     enigma2-plugin-extensions-mediatomb \
     enigma2-plugin-extensions-dreamplex \
     enigma2-plugin-extensions-et-portal \
@@ -53,7 +53,7 @@ RDEPENDS_${PN} = " \
     ${@bb.utils.contains("MACHINE_FEATURES", "dvd", "bdremux replex mjpegtools dvdauthor dvd+rw-tools cdrkit cdfs cdtextinfo enigma2-plugin-extensions-cdinfo enigma2-plugin-extensions-dvdburn enigma2-plugin-extensions-dvdplayer ${GST_BASE_DVD}", "", d)} \
     autofs \
     autossh \
-    avahi-ui \
+    ${@bb.utils.contains("DISTRO_FEATURES", "directfb", "avahi-ui", "", d)} \
     astra-sm \
     binutils \
     ctorrent \
