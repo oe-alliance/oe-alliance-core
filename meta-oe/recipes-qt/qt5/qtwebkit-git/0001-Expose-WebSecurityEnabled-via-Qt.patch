@@ -1,0 +1,49 @@
+From e1f1de4424e49f9f1787b822d9ece53a1eab3101 Mon Sep 17 00:00:00 2001
+From: Stephan Reichholf <reichi@opendreambox.org>
+Date: Tue, 17 May 2016 13:52:16 +0200
+Subject: [PATCH 1/5] Expose WebSecurityEnabled via Qt
+
+Change-Id: I88bfba8ef7e7dc2c97a72a944b9192e8586a3f8a
+---
+ Source/WebKit/qt/Api/qwebsettings.cpp | 4 ++++
+ Source/WebKit/qt/Api/qwebsettings.h   | 1 +
+ 2 files changed, 5 insertions(+)
+
+diff --git a/Source/WebKit/qt/Api/qwebsettings.cpp b/Source/WebKit/qt/Api/qwebsettings.cpp
+index 363f58f..a06854b 100644
+--- a/Source/WebKit/qt/Api/qwebsettings.cpp
++++ b/Source/WebKit/qt/Api/qwebsettings.cpp
+@@ -310,6 +310,9 @@ void QWebSettingsPrivate::apply()
+         settings->setNeedsSiteSpecificQuirks(value);
+ 
+         settings->setUsesPageCache(WebCore::pageCache()->capacity());
++
++        value = attributes.value(QWebSettings::WebSecurityEnabled, global->attributes.value(QWebSettings::WebSecurityEnabled));
++        settings->setWebSecurityEnabled(value);
+     } else {
+         QList<QWebSettingsPrivate*> settings = *::allSettings();
+         for (int i = 0; i < settings.count(); ++i)
+@@ -587,6 +590,7 @@ QWebSettings::QWebSettings()
+     d->attributes.insert(QWebSettings::CaretBrowsingEnabled, false);
+     d->attributes.insert(QWebSettings::NotificationsEnabled, true);
+     d->attributes.insert(QWebSettings::Accelerated2dCanvasEnabled, false);
++    d->attributes.insert(QWebSettings::WebSecurityEnabled, true);
+     d->offlineStorageDefaultQuota = 5 * 1024 * 1024;
+     d->defaultTextEncoding = QLatin1String("iso-8859-1");
+     d->thirdPartyCookiePolicy = AlwaysAllowThirdPartyCookies;
+diff --git a/Source/WebKit/qt/Api/qwebsettings.h b/Source/WebKit/qt/Api/qwebsettings.h
+index 0104846..be116f6 100644
+--- a/Source/WebKit/qt/Api/qwebsettings.h
++++ b/Source/WebKit/qt/Api/qwebsettings.h
+@@ -88,6 +88,7 @@ public:
+         NotificationsEnabled,
+         WebAudioEnabled,
+-        Accelerated2dCanvasEnabled
++        Accelerated2dCanvasEnabled,
++        WebSecurityEnabled
+     };
+     enum WebGraphic {
+         MissingImageGraphic,
+-- 
+2.7.4
+

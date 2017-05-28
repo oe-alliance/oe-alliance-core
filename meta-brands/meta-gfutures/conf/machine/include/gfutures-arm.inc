@@ -1,6 +1,9 @@
 #IMAGE_CLASSES += "hd-emmc_image_single"
 IMAGE_CLASSES += "hd-emmc_image_multi"
 
+MACHINE_FEATURES += " qthbbtv"
+DISTRO_FEATURES_remove = "directfb gtk-directfb"
+
 IMAGE_FSTYPES += "hd-emmc"
 IMAGE_ROOTFS_SIZE ?= "294912"
 
