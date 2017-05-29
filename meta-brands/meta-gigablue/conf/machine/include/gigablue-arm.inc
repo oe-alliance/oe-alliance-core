@@ -20,8 +20,8 @@ GLIBC_EXTRA_OECONF = "--with-tls --with-__thread"
 IMAGE_CMD_tar_prepend = "\
     mkdir -p ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}; \
     ${@bb.utils.contains("MACHINE_FEATURES", "bootsplash", "cp ${DEPLOY_DIR_IMAGE}/${BOOTLOGO_FILENAME} ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/${BOOTLOGO_FILENAME};" , "", d)} \
-    cp ${DEPLOY_DIR_IMAGE}/${MACHINEBUILD}_boot.bin ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/boot.bin; \
-    cp ${DEPLOY_DIR_IMAGE}/${MACHINEBUILD}_rescue.bin ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/rescue.bin; \
+    cp ${DEPLOY_DIR_IMAGE}/${MACHINE}_boot.bin ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/boot.bin; \
+    cp ${DEPLOY_DIR_IMAGE}/${MACHINE}_rescue.bin ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/rescue.bin; \
     cp ${DEPLOY_DIR_IMAGE}/zImage ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/${KERNEL_FILE}; \
     echo ${DISTRO_NAME}-${DISTRO_VERSION}.${BUILD_VERSION} > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/imageversion; \
     cd ${IMAGE_ROOTFS}; \
@@ -38,5 +38,5 @@ IMAGE_CMD_tar_prepend = "\
 "
 
 EXTRA_IMAGEDEPENDS = "\
-    gigablue-initrd-cfe-${MACHINEBUILD} \
+    gigablue-initrd-cfe-${MACHINE_DRIVER} \
 "

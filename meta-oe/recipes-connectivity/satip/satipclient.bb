@@ -13,6 +13,12 @@ SRC_URI = " \
     file://satipclient.sh \
 "
 
+SRC_URI_arm = " \
+    git://github.com/oe-alliance/satip-client.git;protocol=git;branch=mis \
+    file://satipclient.sh \
+    file://0001-auto-detect-and-avoid-ioctl-conflicts.patch \
+"
+
 S = "${WORKDIR}/git"
 
 inherit gitpkgv autotools update-rc.d
