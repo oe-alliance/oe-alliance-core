@@ -65,6 +65,7 @@ RDEPENDS_${PN} = " \
     dvdfs \
     exfat-utils \
     fuse-exfat \
+    gptfdisk \
     hddtemp \
     hdparm \
     htop \
