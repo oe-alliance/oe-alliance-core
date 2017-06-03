@@ -27,7 +27,8 @@ do_install() {
 FILES_gigablue-blindscan-dvbc-utils-${MACHINE} = "${bindir}/tda1002x"
 FILES_gigablue-blindscan-dvbs-utils-${MACHINE} = "${bindir}/gigablue_blindscan"
 
+do_prepare_recipe_sysroot[noexec] = "1"
 INHIBIT_PACKAGE_STRIP = "1"
 INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
-
-INSANE_SKIP_${PN} += "already-stripped"
+do_compile[noexec] = "1"
+deltask do_populate_sysroot
