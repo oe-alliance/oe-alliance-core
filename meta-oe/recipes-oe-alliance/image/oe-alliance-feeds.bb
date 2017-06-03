@@ -9,7 +9,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "${IMAGE_VERSION}"
-PR = "r23"
+PR = "r24"
 
 DEPENDS = "enigma2-plugin-drivers-usbserial enigma2-plugin-systemplugins-plexdvrapi"
 RECOMMENDS = "enigma2-plugin-extensions-et-livestream"
@@ -105,6 +105,7 @@ RDEPENDS_${PN} = " \
     python-cfscrape \
     python-cocy \
     python-futures \
+    python-fuzzywuzzy \
     python-ipaddress \
     python-js2py \
     python-mechanize \
