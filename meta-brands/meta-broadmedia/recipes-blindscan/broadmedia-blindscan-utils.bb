@@ -8,7 +8,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 LICENSE = "CLOSED"
 require conf/license/license-close.inc
 
-PACKAGES = "broadmedia-blindscan-dvbc-utils broadmedia-blindscan-dvbc-utils-dbg"
+PACKAGES = "broadmedia-blindscan-dvbc-utils"
 
 PROVIDES += "virtual/blindscan-dvbc"
 RPROVIDES_broadmedia-blindscan-dvbc-utils += "virtual/blindscan-dvbc"
@@ -16,13 +16,11 @@ RPROVIDES_broadmedia-blindscan-dvbc-utils += "virtual/blindscan-dvbc"
 SRC_URI = "http://source.mynonpublic.com/broadmedia/broadmedia-dvbc-blindscan-1.1.zip"
 
 PV = "1.1"
-PR = "r0"
+PR = "r1"
 
 S = "${WORKDIR}/"
 
 FILES_broadmedia-blindscan-dvbc-utils = "${bindir}/tda1002x"
-FILES_broadmedia-blindscan-dvbc-utils-dbg = "${bindir}/.debug/tda1002x"
-
 
 do_install() {
     install -d ${D}/${bindir}/
@@ -34,5 +32,6 @@ SRC_URI[sha256sum] = "2e0c285ee8768e8a342ca8ba97f3b1238e3ebc2dcb1b71c4803c532c94
 
 do_prepare_recipe_sysroot[noexec] = "1"
 INHIBIT_PACKAGE_STRIP = "1"
+INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
 do_compile[noexec] = "1"
 deltask do_populate_sysroot

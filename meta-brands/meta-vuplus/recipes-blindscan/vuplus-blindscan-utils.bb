@@ -8,7 +8,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 LICENSE = "CLOSED"
 require conf/license/license-close.inc
 
-PACKAGES = "vuplus-blindscan-dvbs-utils vuplus-blindscan-dvbs-utils-dbg vuplus-blindscan-dvbc-utils vuplus-blindscan-dvbc-utils-dbg"
+PACKAGES = "vuplus-blindscan-dvbs-utils vuplus-blindscan-dvbc-utils"
 
 PROVIDES += "virtual/blindscan-dvbs virtual/blindscan-dvbc"
 RPROVIDES_vuplus-blindscan-dvbs-utils += "virtual/blindscan-dvbs"
@@ -19,15 +19,13 @@ SRC_URI_arm = "http://archive.vuplus.com/download/utils/vuplus-blindscan-utils-$
 
 PV = "4.3"
 PV_arm = "4.7"
-PR = "r10"
+PR = "r11"
 
 S = "${WORKDIR}/blindscan-utils"
 
 FILES_vuplus-blindscan-dvbs-utils = "${bindir}/*_blindscan"
 FILES_vuplus-blindscan-dvbc-utils = "${bindir}/tda1002x ${bindir}/ssh108* ${bindir}/tt3l10* ${bindir}/tt2l08* ${bindir}/bcm3148"
 
-FILES_vuplus-blindscan-dvbs-utils-dbg = "${bindir}/.debug/*_blindscan"
-FILES_vuplus-blindscan-dvbc-utils-dbg = "${bindir}/.debug/tda1002x ${bindir}/.debug/ssh108* ${bindir}/.debug/tt2l08* ${bindir}/.debug/bcm3148"
 FILES_${PN}-dev = "/usr/bin/release.txt"
 
 do_install() {
@@ -45,5 +43,6 @@ SRC_URI[arm.sha256sum] = "27c30a9e332032b525af5a506e1337d5f2e68124035f6907a440b1
 
 do_prepare_recipe_sysroot[noexec] = "1"
 INHIBIT_PACKAGE_STRIP = "1"
+INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
 do_compile[noexec] = "1"
 deltask do_populate_sysroot
