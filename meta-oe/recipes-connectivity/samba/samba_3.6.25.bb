@@ -298,23 +298,3 @@ if [ -z "$D" ]; then
 	fi
 fi
 }
-
-<<<<<<< HEAD
-pkg_postinst_${PN}server() {
-#!/bin/sh
-if type update-rc.d >/dev/null 2>/dev/null; then
-	cp -a $D/etc/init.d/upgrade $D/etc/init.d/samba-upgrade
-	if [ -n "$D" ]; then
-		OPT="-f -r $D"
-	else
-		OPT="-f"
-	fi
-	update-rc.d $OPT samba-upgrade defaults
-	echo "Samba upgrade will be performed on next system boot!"
-fi
-
-}
-=======
-inherit binary-compress
-FILES_COMPRESS_dm800se = "${bindir}/smbclient"
->>>>>>> 70a2be6... [samba] Maintenance release
