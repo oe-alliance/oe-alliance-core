@@ -27,7 +27,6 @@ ${@bb.utils.contains('MACHINEBUILD', 'beyonwizt2', 'T2' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'beyonwizt3', 'T3' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'beyonwizt4', 'T4' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'bwidowx', 'Black Widow-X' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'bwidowx2', 'Black Widow-X2' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'opticumtt', 'Twin' , '', d)}\
 "
 
@@ -53,7 +52,6 @@ ${@bb.utils.contains('MACHINEBUILD', 'beyonwizt2', 'Beyonwiz' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'beyonwizt3', 'Beyonwiz' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'beyonwizt4', 'Beyonwiz' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'bwidowx', 'SPACE' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'bwidowx2', 'SPACE' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'opticumtt', 'Opticum' , '', d)}\
 "
 
@@ -79,7 +77,6 @@ ${@bb.utils.contains('MACHINEBUILD', 'beyonwizt2', 'beyonwiz/hde2' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'beyonwizt3', 'beyonwiz/hdx' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'beyonwizt4', 'beyonwiz/hdp' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'bwidowx', 'bwidowx' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'bwidowx2', 'bwidowx2' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'opticumtt', 'opticum/tt' , '', d)}\
 "
 
@@ -105,7 +102,6 @@ ${@bb.utils.contains('MACHINEBUILD', 'beyonwizt2', 'mtd2' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'beyonwizt3', 'mtd1' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'beyonwizt4', 'mtd2' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'bwidowx', 'mtd2' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'bwidowx2', 'mtd2' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'opticumtt', 'mtd2' , '', d)}\
 "
 
@@ -131,7 +127,6 @@ ${@bb.utils.contains('MACHINEBUILD', 'beyonwizt2', 'mtd0' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'beyonwizt3', 'mtd2' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'beyonwizt4', 'mtd0' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'bwidowx', 'mtd0' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'bwidowx2', 'mtd0' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'opticumtt', 'mtd0' , '', d)}\
 "
 
@@ -157,7 +152,6 @@ ${@bb.utils.contains('MACHINEBUILD', 'beyonwizt2', 'inihde2au' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'beyonwizt3', 'inihdx' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'beyonwizt4', 'ini-840t4' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'bwidowx', 'yhgd2580-7358' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'bwidowx2', 'yhgd2580-7362' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'opticumtt', 'ini-435oc' , '', d)}\
 "
 
