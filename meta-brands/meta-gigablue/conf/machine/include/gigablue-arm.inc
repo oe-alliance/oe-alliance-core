@@ -39,4 +39,5 @@ IMAGE_CMD_tar_prepend = "\
 
 EXTRA_IMAGEDEPENDS = "\
     gigablue-initrd-cfe-${MACHINEBUILD} \
+    enigma2-plugin-systemplugins-remotecontrolcode \
 "

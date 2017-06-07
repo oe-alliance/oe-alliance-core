@@ -5,7 +5,11 @@ LICENSE = "CLOSED"
 PACKAGE_ARCH := "${MACHINEBUILD}"
 require conf/license/license-close.inc
 
+PV = "${KV}+${SRCDATE}"
+PR = "r2"
+
 INHIBIT_PACKAGE_STRIP = "1"
+INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
 
 SRC_URI = " \
     http://archiv.openmips.com/beta/platform-util-${MACHINEBUILD}-${SRCDATE}.zip \
@@ -15,16 +19,18 @@ SRC_URI = " \
 S="${WORKDIR}/platform"
 
 do_install() {
-    install -d ${D}/home/root
-    install -m 0755 ${S}/* ${D}/home/root
+    install -d ${D}/home/root/platform
+    install -m 0755 ${S}/* ${D}/home/root/platform
     install -d ${D}/etc/init.d
     install -m 0755 ${WORKDIR}/${INITSCRIPT_NAME}.sysvinit ${D}/etc/init.d/${INITSCRIPT_NAME}
 }
 
 do_package_qa() {
 }
+do_populate_sysroot() {
+}
 
-FILES_${PN}="/"
+FILES_${PN}="/home/root/platform /etc/init.d"
 
 inherit update-rc.d
 
