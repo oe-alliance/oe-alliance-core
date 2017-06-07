@@ -84,7 +84,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-thetvdb_0.7-20120607-r2_mips32el.ipk \
     enigma2-plugin-extensions-tmbd_7.8_all.ipk \
     enigma2-plugin-extensions-translator_1.1rc1_all.ipk \
-    enigma2-plugin-extensions-transmission_2.84_all.ipk \
+    enigma2-plugin-extensions-transmission_2.92_all.ipk \
     enigma2-plugin-extensions-tsmedia_11.6_all.ipk \
     enigma2-plugin-extensions-tstube_1.2_all.ipk \
     enigma2-plugin-extensions-tvspielfilm_6.5rc3_all.ipk \
