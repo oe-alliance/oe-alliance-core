@@ -20,7 +20,6 @@ S = "${WORKDIR}/git"
 
 DEPENDS = "python"
 
-RDEPENDS_${PN} = "cifs"
 RCONFLICTS_${PN} = "enigma2-plugin-systemplugins-gbipboxclient"
 RREPLACES_${PN} = "enigma2-plugin-systemplugins-gbipboxclient"
 
