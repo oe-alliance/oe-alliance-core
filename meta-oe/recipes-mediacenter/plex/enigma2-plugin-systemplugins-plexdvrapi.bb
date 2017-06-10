@@ -9,7 +9,7 @@ inherit autotools-brokensep gitpkgv pythonnative gettext
 SRCREV = "${AUTOREV}"
 PV = "1.2+git${SRCPV}"
 PKGV = "1.2+git${GITPKGV}"
-PR = "r1"
+PR = "r2"
 
 SRC_URI = "git://github.com/OpenViX/PlexDVRAPI.git;protocol=git"
 
@@ -48,8 +48,10 @@ pkg_postinst_${PN} () {
 if [ ! -d /www ]; then
     mkdir /www
 fi
+}
 
 pkg_postrm_${PN} () {
 if [ -d /www ]; then
     rm -rf /www
 fi
+}
