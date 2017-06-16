@@ -1,6 +1,8 @@
-SRCDATE = "20170516"
+SRCDATE = "20170522"
 
-SRC_URI[md5sum] = "4105d094c09c21e2dc64627014653830"
-SRC_URI[sha256sum] = "ce3e4201decd9d7936704dde440b46ead60b5de4124d4e22940fd47c130ae0e6"
+SRC_URI[md5sum] = "8f21335991e83bdbea2d499b6710477a"
+SRC_URI[sha256sum] = "0e5d55a78b9b8b5dbcaa5462f12d1eb9337ecfd7aa36e42cc564170e7947b3fe"
 
-require gigablue-blindscan-utils-arm.inc
+SRC_URI = "http://archiv.openmips.com/beta/gigablue-blindscan-utils-arm-${SRCDATE}.zip"
+
+require gigablue-blindscan-utils.inc

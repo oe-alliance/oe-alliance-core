@@ -1,0 +1,50 @@
+#!/bin/sh
+
+if [ -e /sys/class/net/sys0 ]; then
+  ifconfig sys0 up
+fi
+
+if [ -d /home/root/platform ]; then
+  if [ -d /usr/share/platform ]; then
+    rm -rf /usr/share/platform
+  fi
+  mv -f /home/root/platform /usr/share/
+  chmod +x /usr/share/platform/*
+  sync
+fi
+
+case "$1" in
+  start)
+    # first boot?
+    [ -f /etc/dropbear/dropbear_rsa_host_key ]
+    echo -n "Starting  gigablue-platform-util"
+    if [ ! -e /dev/brcm0 ]; then
+	DRV_PATH=/lib/modules/3.14.28-1.12/extra
+
+	mknod -m a=rw /dev/brcm0 c 30 0
+
+	export PATH=.:$PATH
+	export B_REFSW_BOXMODE=5
+	cd /usr/share/platform
+	nexus dvb_init &
+    fi 
+
+    while [ ! -e /proc/stb/info/chipset ]; do
+        usleep 100000
+    done
+
+    echo "."
+    ;;
+  stop)
+    ;;
+  restart)
+    $0 stop
+    sleep 1
+    $1 start
+    ;;
+  *)
+    echo "Usage: /etc/init.d/gigablue-platform-util {start|stop|restart}"
+    exit 1
+esac
+
+exit 0

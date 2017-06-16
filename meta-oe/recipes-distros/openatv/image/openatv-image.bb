@@ -14,7 +14,7 @@ do_rootfs[deptask] = "do_rm_work"
 
 IMAGE_INSTALL = "openatv-base \
     ${@bb.utils.contains("MACHINE_FEATURES", "dvbc-only", "", "enigma2-plugin-settings-defaultsat", d)} \
-    ${@bb.utils.contains("MACHINE_FEATURES", "singlecore", "", \
+    ${@bb.utils.contains("MACHINE_FEATURES", "no-cl-svr", "", \
     " \
     packagegroup-base-smbfs-client \
     packagegroup-base-smbfs-server \

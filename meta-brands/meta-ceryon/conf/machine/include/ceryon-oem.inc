@@ -19,6 +19,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'sf228', 'SF228 E2 HD LCD TWIN' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'sf238', 'SF228 E2 HD LCD TWIN' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', '9910lx', '9910LX' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', '9911lx', '9911LX' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'bcm7252', '8100S' , '', d)}\
 "
 
 MACHINE_BRAND = "\
@@ -37,6 +38,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'sf228', 'OCTAGON' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'sf238', 'OCTAGON' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', '9910lx', 'Protek' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', '9911lx', 'Protek' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'bcm7252', 'Broadcom' , '', d)}\
 "
 
 IMAGEDIR ?= "\
@@ -55,12 +57,84 @@ ${@bb.utils.contains('MACHINEBUILD', 'sf228', 'sf228' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'sf238', 'sf228' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', '9910lx', '9910lx' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', '9911lx', '9911lx' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'bcm7252', '8100s' , '', d)}\
 "
 
-MTD_KERNEL = "mtd1"
-MTD_ROOTFS = "mtd2"
-KERNEL_FILE = "kernel.bin"
-ROOTFS_FILE = "rootfs.bin"
+MTD_KERNEL ?= "\
+${@bb.utils.contains('MACHINEBUILD', 'twinboxlcd', 'mtd1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'twinboxlcdci5', 'mtd1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mbmicro', 'mtd1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mbmicrov2', 'mtd1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'odin2hybrid', 'mtd1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'odinplus', 'mtd1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'e4hd', 'mtd1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'e4hdhybrid', 'mtd1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'e4hdcombo', 'mtd1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'singleboxlcd', 'mtd1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'sf208', 'mtd1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'sf228', 'mtd1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'sf238', 'mtd1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', '9910lx', 'mtd1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', '9911lx', 'mtd1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'bcm7252', 'mmcblk0p3' , '', d)}\
+"
+
+MTD_ROOTFS ?= "\
+${@bb.utils.contains('MACHINEBUILD', 'twinboxlcd', 'mtd2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'twinboxlcdci5', 'mtd2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mbmicro', 'mtd2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mbmicrov2', 'mtd2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'odin2hybrid', 'mtd2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'odinplus', 'mtd2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'e4hd', 'mtd2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'e4hdhybrid', 'mtd2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'e4hdcombo', 'mtd2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'singleboxlcd', 'mtd2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'sf208', 'mtd2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'sf228', 'mtd2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'sf238', 'mtd2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', '9910lx', 'mtd2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', '9911lx', 'mtd2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'bcm7252', 'mmcblk0p4' , '', d)}\
+"
+
+KERNEL_FILE ?= "\
+${@bb.utils.contains('MACHINEBUILD', 'twinboxlcd', 'kernel.bin' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'twinboxlcdci5', 'kernel.bin' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mbmicro', 'kernel.bin' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mbmicrov2', 'kernel.bin' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'odin2hybrid', 'kernel.bin' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'odinplus', 'kernel.bin' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'e4hd', 'kernel.bin' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'e4hdhybrid', 'kernel.bin' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'e4hdcombo', 'kernel.bin' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'singleboxlcd', 'kernel.bin' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'sf208', 'kernel.bin' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'sf228', 'kernel.bin' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'sf238', 'kernel.bin' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', '9910lx', 'kernel.bin' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', '9911lx', 'kernel.bin' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'bcm7252', 'kernel.bin' , '', d)}\
+"
+
+ROOTFS_FILE ?= "\
+${@bb.utils.contains('MACHINEBUILD', 'twinboxlcd', 'rootfs.bin' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'twinboxlcdci5', 'rootfs.bin' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mbmicro', 'rootfs.bin' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mbmicrov2', 'rootfs.bin' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'odin2hybrid', 'rootfs.bin' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'odinplus', 'rootfs.bin' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'e4hd', 'rootfs.bin' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'e4hdhybrid', 'rootfs.bin' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'e4hdcombo', 'rootfs.bin' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'singleboxlcd', 'rootfs.bin' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'sf208', 'rootfs.bin' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'sf228', 'rootfs.bin' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'sf238', 'rootfs.bin' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', '9910lx', 'rootfs.bin' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', '9911lx', 'rootfs.bin' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'bcm7252', 'rootfs.tar.bz2' , '', d)}\
+"
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS = "\
     ceryon-dvb-modules-${MACHINE} \
@@ -85,54 +159,16 @@ DVBMEDIASINK_CONFIG = "--with-wma --with-wmv --with-pcm --with-dts --with-eac3 \
     ${@bb.utils.contains('MACHINE', '7105s', '--with-h265 --with-vb6 --with-vb8 --with-spark' , '', d)} \
     ${@bb.utils.contains('MACHINE', '7215s', '--with-h265 --with-vb6 --with-vb8 --with-spark' , '', d)} \
     ${@bb.utils.contains('MACHINE', '7225s', '--with-h265 --with-vb6 --with-vb8 --with-spark' , '', d)} \
+    ${@bb.utils.contains('MACHINE', '8100s', '--with-h265 --with-vb6 --with-vb8 --with-vb9 --with-spark' , '', d)} \
 "
-TARGET_ARCH = "mipsel"
-DEFAULTTUNE = "mips32el"
 
 PREFERRED_PROVIDER_virtual/blindscan-dvbs = "ceryon-blindscan-utils"
 PREFERRED_PROVIDER_virtual/blindscan-dvbc = "ceryon-blindscan-utils"
 
 PREFERRED_PROVIDER_virtual/kernel = "linux-ceryon"
 
-PREFERRED_VERSION_linux-ceryon = "4.0.1"
-PREFERRED_VERSION_linux-libc-headers = "4.0"
 
-KERNEL_IMAGETYPE = "vmlinux"
-KERNEL_OUTPUT = "${KERNEL_IMAGETYPE}"
-KERNEL_CONSOLE = "ttyS0,115200n8"
-
-IMAGE_FSTYPES ?= "ubi"
-
-UBI_VOLNAME = "rootfs"
-MKUBIFS_ARGS = "-m 2048 -e 126976 -c 4096"
-UBINIZE_ARGS = "-m 2048 -p 128KiB"
-
-IMAGE_CMD_ubi_prepend = " \
-    rm -rf ${IMAGE_ROOTFS}/boot/*; \
-    rm -rf ${IMAGE_ROOTFS}/tmp/*; \
-    "
-
-IMAGE_CMD_ubi_append = "\
-    mkdir -p ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}; \
-    ${@bb.utils.contains("MACHINE_FEATURES", "lcd220", "cp ${DEPLOY_DIR_IMAGE}/lcdsplash220.bin ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/lcdsplash.bin;" , "", d)} \
-    ${@bb.utils.contains("MACHINE_FEATURES", "lcd220", "cp ${DEPLOY_DIR_IMAGE}/lcdwarning220.bin ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/lcdwarning.bin;" , "", d)} \
-    ${@bb.utils.contains("MACHINE_FEATURES", "lcd220", "cp ${DEPLOY_DIR_IMAGE}/lcdwaitkey220.bin ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/lcdwaitkey.bin;" , "", d)} \
-    cp ${DEPLOY_DIR_IMAGE}/splash.bin ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/splash.bin; \
-    mv ${IMGDEPLOYDIR}/${IMAGE_NAME}.rootfs.ubi ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/${ROOTFS_FILE}; \
-    gzip -9c ${DEPLOY_DIR_IMAGE}/vmlinux-${MACHINE}.bin > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/${KERNEL_FILE}; \
-    echo ${IMAGE_VER_STRING} > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/imageversion; \
-    echo "rename this file to 'force' to force an update without confirmation" > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/noforce; \
-    cd ${DEPLOY_DIR_IMAGE}; \
-    zip ${IMAGE_NAME}_usb.zip ${IMAGEDIR}/*; \
-    rm -f ${DEPLOY_DIR_IMAGE}/*.ubi; \
-    rm -f ${DEPLOY_DIR_IMAGE}/*.ubifs; \
-    rm -f ${DEPLOY_DIR_IMAGE}/*.manifest; \
-    rm -f ${DEPLOY_DIR_IMAGE}/.ubifs; \
-    rm -f ${DEPLOY_DIR_IMAGE}/.manifest; \
-    rm -Rf ${IMAGEDIR}; \
-    "
-
-MACHINE_FEATURES += "3dtv alsa hdmicec switchoff bootsplash omb videoenhancement directfb skins1080 feature1 feature2 blindscan-dvbs blindscan-dvbc blindscan-tbs \
+MACHINE_FEATURES += "3dtv alsa hdmicec switchoff bootsplash omb videoenhancement directfb skins1080 blindscan-tbs \
     ${@bb.utils.contains('MACHINEBUILD', 'e4hdhybrid', 'dvb-c dvb-c-only' , '', d)} \
     ${@bb.utils.contains('MACHINEBUILD', 'e4hdcombo', 'dvb-c' , '', d)} \
     ${@bb.utils.contains('MACHINEBUILD', '9911lx', 'dvb-c' , '', d)} \
@@ -140,7 +176,6 @@ MACHINE_FEATURES += "3dtv alsa hdmicec switchoff bootsplash omb videoenhancement
 
 BOOTLOGO_FILENAME = "splash.bin"
 
-require conf/machine/include/tune-mips32.inc
 require conf/machine/include/soc-family.inc
 
 OEM_ARCH = "${MACHINEBUILD}"

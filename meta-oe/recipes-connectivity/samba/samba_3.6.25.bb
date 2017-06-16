@@ -4,7 +4,7 @@ LIC_FILES_CHKSUM = "file://../COPYING;md5=d32239bcb673463ab874e80d47fae504"
 SECTION = "console/network"
 DEPENDS = "readline virtual/libiconv zlib popt libpam libtalloc attr avahi"
 
-PR = "r7"
+PR = "r8"
 
 inherit autotools-brokensep update-rc.d
 
@@ -16,6 +16,18 @@ ${SAMBA_MIRROR}    http://www.mirrorservice.org/sites/ftp.samba.org \n \
 "
 
 SRC_URI = "${SAMBA_MIRROR}/stable/samba-${PV}.tar.gz \
+           file://011-patch-cve-2015-5296.patch;patchdir=.. \
+           file://012-patch-cve-2015-5299.patch;patchdir=.. \
+           file://015-patch-cve-2015-7560.patch;patchdir=.. \
+           file://020-CVE-preparation-v3-6.patch;patchdir=.. \
+           file://021-CVE-preparation-v3-6-addition.patch;patchdir=.. \
+           file://022-CVE-2015-5370-v3-6.patch;patchdir=.. \
+           file://023-CVE-2016-2110-v3-6.patch;patchdir=.. \
+           file://024-CVE-2016-2111-v3-6.patch;patchdir=.. \
+           file://025-CVE-2016-2112-v3-6.patch;patchdir=.. \
+           file://026-CVE-2016-2115-v3-6.patch;patchdir=.. \
+           file://027-CVE-2016-2118-v3-6.patch;patchdir=.. \
+           file://028-CVE-2017-7494-v3-6.patch;patchdir=.. \
            file://100-configure_fixes.patch;patchdir=.. \
            file://110-multicall.patch;patchdir=.. \
            file://111-owrt_smbpasswd.patch;patchdir=.. \
@@ -36,11 +48,19 @@ SRC_URI = "${SAMBA_MIRROR}/stable/samba-${PV}.tar.gz \
            file://330-librpc_default_print.patch;patchdir=.. \
            file://smb.conf \
            file://init.samba \
-           file://upgrade \
            file://pam.samba \
            file://users.map \
            file://smbpasswd \
 "
+
+# Intentionally left out this patch:
+#           file://010-patch-cve-2015-5252.patch;patchdir=.. 
+#
+# Including it would force us to allow "wide links", which opens a bigger security hole than the one which
+# we would close.
+
+
+
 
 SRC_URI[md5sum] = "76da2fa64edd94a0188531e7ecb27c4e"
 SRC_URI[sha256sum] = "8f2c8a7f2bd89b0dfd228ed917815852f7c625b2bc0936304ac3ed63aaf83751"
@@ -145,7 +165,7 @@ EXTRA_OECONF="--exec-prefix=/usr \
               vfsfileid_cv_statfs=yes \
 "
 
-PACKAGES =+ "smbfs smbfs-doc ${PN}-base smbclient ${PN}-base-vfs ${PN}-base-dbg ${PN}-advanced ${PN}server winbind libwinbind libnss-winbind swat libsmbclient"
+PACKAGES =+ "smbfs smbfs-doc ${PN}-base smbclient ${PN}-base-dbg ${PN}-advanced winbind swat libsmbclient"
 PACKAGECONFIG[talloc] = "--enable-external-libtalloc --with-libtalloc, --disable-external-libtalloc --without-libtalloc, talloc"
 
 FILES_${PN}-base       = "${sbindir}/samba_multicall ${sbindir}/smbd ${sbindir}/nmbd \
@@ -154,7 +174,6 @@ FILES_${PN}-base       = "${sbindir}/samba_multicall ${sbindir}/smbd ${sbindir}/
                           ${libdir}/samba/*.dat ${base_libdir}/security/pam_smbpass.so \
                           ${sysconfdir}/pam.d/samba"
 RRECOMMENDS_${PN}-base+= "wsdd"
-FILES_${PN}-base-vfs  += "${libdir}/vfs"
 FILES_${PN}-base-dbg  += "${base_libdir}/security/.debug/pam_smbpass.so"
 
 FILES_smbclient        = "${bindir}/smbclient"
@@ -165,16 +184,6 @@ FILES_swat             = "${sbindir}/swat ${datadir}/swat ${libdir}/samba/*.msg"
 
 FILES_winbind         += "${bindir}/ntlm_auth"
 FILES_${PN}-advanced   = "${bindir}/net ${bindir}/profiles ${bindir}/rpcclient ${bindir}/smbcacls ${bindir}/smbcquotas ${bindir}/smbget ${bindir}/smbtar ${libdir}/pdb ${libdir}/rpc/*"
-FILES_libpopt          = ""
-FILES_libwinbind       = ""
-FILES_libnss-winbind   = ""
-FILES_${PN}server      = "${sysconfdir}/init.d/upgrade"
-
-ALLOW_EMPTY_libpopt         = "1"
-ALLOW_EMPTY_${PN}-base-vfs  = "1"
-ALLOW_EMPTY_libwinbind      = "1"
-ALLOW_EMPTY_libnss-winbind  = "1"
-ALLOW_EMPTY_${PN}server     = "1"
 
 CFLAGS      += '-fPIC -DHAVE_IPV6=1 -DMAX_DEBUG_LEVEL=-1 -ffunction-sections -fdata-sections -ltalloc'
 LDFLAGS     += "-Wl,--gc-sections"
@@ -198,6 +207,8 @@ do_configure() {
 }
 
 do_compile () {
+#    sed -i 's/Globals\.bUnixExtensions = True;/Globals.bUnixExtensions = False;/' ${S}/param/loadparm.c
+    sed -i 's/Globals\.minprotocol = PROTOCOL_CORE;/Globals.minprotocol = PROTOCOL_NT1;/' ${S}/param/loadparm.c
     sed -i 's/Globals\.maxprotocol = PROTOCOL_NT1;/Globals.maxprotocol = PROTOCOL_SMB2;/' ${S}/param/loadparm.c
     base_do_compile
 }
@@ -216,7 +227,6 @@ do_install_append() {
     ln -sf ../sbin/samba_multicall ${D}${bindir}/smbpasswd
     
     install -D -m 755 ${WORKDIR}/init.samba ${D}${sysconfdir}/init.d/samba
-    install -D -m 755 ${WORKDIR}/upgrade ${D}${sysconfdir}/init.d/upgrade
     install -D -m 644 ${WORKDIR}/smb.conf ${D}${sysconfdir}/samba/smb.conf
     install -D -m 600 ${WORKDIR}/users.map ${D}${sysconfdir}/samba/private/users.map
     install -D -m 600 ${WORKDIR}/smbpasswd ${D}${sysconfdir}/samba/private/smbpasswd
@@ -287,21 +297,6 @@ if [ -z "$D" ]; then
 		smbpasswd -Ln kids >/dev/null
 	fi
 fi
-}
-
-pkg_postinst_${PN}server() {
-#!/bin/sh
-if type update-rc.d >/dev/null 2>/dev/null; then
-	cp -a $D/etc/init.d/upgrade $D/etc/init.d/samba-upgrade
-	if [ -n "$D" ]; then
-		OPT="-f -r $D"
-	else
-		OPT="-f"
-	fi
-	update-rc.d $OPT samba-upgrade defaults
-	echo "Samba upgrade will be performed on next system boot!"
-fi
-
 }
 
 inherit binary-compress

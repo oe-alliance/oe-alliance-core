@@ -169,6 +169,10 @@ case $ACTION in
 					DEVICETYPE="mmc1"
 				elif [ "$MODEL1" == "SD	            " ]; then
 					DEVICETYPE="mmc1"
+				elif [ "$MODEL1" == "SD              " ]; then
+					DEVICETYPE="mmc1"
+				elif [ "$MODEL1" == "SD" ]; then
+					DEVICETYPE="mmc1"
 				else
 					#echo "[mdev-mount.sh] USB device found" >> $LOG
 					if [ $PARTNUM -eq "1" -o $PARTNUM -eq "5" ] ; then

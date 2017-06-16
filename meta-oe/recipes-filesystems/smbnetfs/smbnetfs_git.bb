@@ -14,7 +14,7 @@ inherit autotools gitpkgv pkgconfig
 
 PKGV = "${GITPKGVTAG}"
 
-SRCREV = "ace1c519d45fe488b9b7e6cc77a2bcadb6c83464"
+SRCREV = "d43181e5160de6bb9433e449f159a97c9bff2dc3"
 
 SRC_URI = "git://smbnetfs.git.sourceforge.net/gitroot/smbnetfs/smbnetfs;branch=master \
            file://configure.patch"
