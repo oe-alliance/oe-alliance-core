@@ -1,6 +1,6 @@
 require libgcc-common.inc
 
-DEPENDS = "virtual/${TARGET_PREFIX}gcc-initial"
+DEPENDS = "linux-libc-headers virtual/${TARGET_PREFIX}gcc-initial"
 
 LICENSE = "GPL-3.0-with-GCC-exception"
 
@@ -12,8 +12,6 @@ PACKAGES = ""
 
 EXTRA_OECONF += "--disable-shared"
 
-LIBGCCBUILDTREENAME = "gcc-build-internal-initial-"
-
-do_populate_sysroot[sstate-outputdirs] = "${STAGING_DIR_TCBOOTSTRAP}/"
+COMPILERINITIAL = "-initial"
 
 inherit nopackages
