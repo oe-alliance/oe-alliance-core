@@ -303,5 +303,5 @@ fi
 inherit binary-compress
 FILES_COMPRESS_dm800se = "${bindir}/smbclient ${bindir}/smbpasswd ${bindir}/testparm \
                           ${bindir}/smbcontrol ${bindir}/smbstatus \
-                          ${sbindir}/nmbd ${sbindir}/smbd
+                          ${sbindir}/nmbd ${sbindir}/smbd \
                          "
