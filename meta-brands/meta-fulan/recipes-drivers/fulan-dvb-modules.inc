@@ -19,6 +19,8 @@ PACKAGES = "${PN} ${PN}-dev"
 INC_PR = "r43"
 PV = "${KV}+${SRCDATE}"
 
+KERNEL_MODULE_PACKAGE_SUFFIX = ""
+
 PTI_NP_PATH ?= "/data/pti_np"
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/fulan-dvb-modules:"

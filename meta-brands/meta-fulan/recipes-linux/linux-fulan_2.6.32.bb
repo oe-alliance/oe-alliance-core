@@ -1,27 +1,26 @@
-DESCRIPTION = "Linux kernel from stlinux"
-LICENSE = "GPLv2"
+SUMMARY = "Linux kernel for ${MACHINE}"
 SECTION = "kernel"
+LICENSE = "GPLv2"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
-LIC_FILES_CHKSUM = "file://COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
+
 KV = "2.6.32"
+SRCDATE = "20160701"
 
-MACHINE_KERNEL_PR_append = ".7"
+LIC_FILES_CHKSUM = "file://COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-DEPENDS_spark7162 += " \
-           stlinux24-sh4-stx7105-fdma-firmware \
-"
-
-DEPENDS_spark += " \
-           stlinux24-sh4-stx7111-fdma-firmware \
-"
+MACHINE_KERNEL_PR_append = ".8"
 
 inherit kernel machine_kernel_pr
 
-SRCDATE = "20160701"
+DEPENDS_append_spark7162 = " \
+  stlinux24-sh4-stx7105-fdma-firmware \
+  "
 
-STM_PATCH_STR = "0217"
-LINUX_VERSION = "2.6.32.71"
-SRCREV = "3ec500f4212f9e4b4d2537c8be5ea32ebf68c43b"
+DEPENDS_append_spark = " \
+  stlinux24-sh4-stx7111-fdma-firmware \
+  "
+
+KERNEL_MODULE_PACKAGE_SUFFIX = ""
 
 # By default, kernel.bbclass modifies package names to allow multiple kernels
 # to be installed in parallel. We revert this change and rprovide the versioned
@@ -30,6 +29,10 @@ PKG_kernel-base = "kernel-base"
 PKG_kernel-image = "kernel-image"
 RPROVIDES_kernel-base = "kernel-${KERNEL_VERSION}"
 RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
+
+STM_PATCH_STR = "0217"
+LINUX_VERSION = "2.6.32.71"
+SRCREV = "3ec500f4212f9e4b4d2537c8be5ea32ebf68c43b"
 
 SRC_URI = "git://github.com/Duckbox-Developers/linux-sh4-2.6.32.71.git;protocol=git;branch=stmicro \
     file://linux-kbuild-generate-modules-builtin_stm24_${STM_PATCH_STR}.patch \
@@ -74,16 +77,22 @@ SRC_URI_append_spark = " \
 
 S = "${WORKDIR}/git"
 B = "${WORKDIR}/build"
-PARALLEL_MAKEINST = ""
 
 export OS = "Linux"
 KERNEL_OBJECT_SUFFIX = "ko"
 KERNEL_IMAGETYPE = "uImage"
 KERNEL_IMAGEDEST = "tmp"
-
-FILES_kernel-image = "/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}"
-
 KEEPUIMAGE = "yes"
+PARALLEL_MAKEINST = ""
+
+# bitbake.conf only prepends PARALLEL make in tasks called do_compile, which isn't the case for compile_modules
+# So explicitly enable it for that in here
+EXTRA_OEMAKE_prepend = " ${PARALLEL_MAKE} "
+
+PACKAGES =+ "kernel-headers"
+FILES_kernel-headers = "${exec_prefix}/src/linux*"
+FILES_kernel-dev += "${includedir}/linux"
+FILES_kernel-image = "/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}"
 
 do_configure_prepend() {
     oe_machinstall -m 0644 ${WORKDIR}/defconfig ${B}/.config
@@ -126,17 +135,8 @@ do_install_append() {
 # hack to override kernel.bbclass...
 # uimages are already built in kernel compile
 do_uboot_mkimage() {
-	:
+    :
 }
-
-FILES_kernel-dev += "${includedir}/linux"
-
-# bitbake.conf only prepends PARALLEL make in tasks called do_compile, which isn't the case for compile_modules
-# So explicitly enable it for that in here
-EXTRA_OEMAKE = "${PARALLEL_MAKE} "
-
-PACKAGES =+ "kernel-headers"
-FILES_kernel-headers = "${exec_prefix}/src/linux*"
 
 pkg_postinst_kernel-image() {
     if [ "x$D" == "x" ]; then
@@ -154,4 +154,3 @@ do_rm_work() {
 
 # extra tasks
 addtask kernel_link_images after do_compile before do_install
-

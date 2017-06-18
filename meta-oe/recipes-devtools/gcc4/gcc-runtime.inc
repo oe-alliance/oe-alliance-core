@@ -17,14 +17,7 @@ EXTRA_OECONF_PATHS = "\
 EXTRA_OECONF_append_linuxstdbase = " --enable-clocale=gnu"
 
 RUNTIMELIBITM = "libitm"
-RUNTIMELIBITM_mips = ""
-RUNTIMELIBITM_mipsel = ""
-RUNTIMELIBITM_mips64 = ""
-RUNTIMELIBITM_mips64el = ""
-RUNTIMELIBITM_mipsisa32r6 = ""
-RUNTIMELIBITM_mipsisa32r6el = ""
-RUNTIMELIBITM_mipsisa64r6 = ""
-RUNTIMELIBITM_mipsisa64r6el = ""
+RUNTIMELIBITM_mipsarch = ""
 RUNTIMELIBITM_nios2 = ""
 RUNTIMELIBITM_microblaze = ""
 
@@ -39,33 +32,31 @@ RUNTIMETARGET = "libssp libstdc++-v3 libgomp libatomic ${RUNTIMELIBITM} \
 
 do_configure () {
 	export CXX="${CXX} -nostdinc++ -nostdlib++"
-	mtarget=`echo ${TARGET_SYS} | sed -e s#-${SDKPKGSUFFIX}##`
-	target=`echo ${TARGET_SYS} | sed -e s#-${SDKPKGSUFFIX}##`
-	hardlinkdir ${STAGING_INCDIR_NATIVE}/gcc-build-internal-$mtarget ${B}
+
 	for d in libgcc ${RUNTIMETARGET}; do
 		echo "Configuring $d"
-		rm -rf ${B}/$target/$d/
-		mkdir -p ${B}/$target/$d/
-		cd ${B}/$target/$d/
+		rm -rf ${B}/${TARGET_SYS}/$d/
+		mkdir -p ${B}/${TARGET_SYS}/$d/
+		cd ${B}/${TARGET_SYS}/$d/
 		chmod a+x ${S}/$d/configure
-		relpath=${@os.path.relpath("${S}/$d", "${B}/$target/$d")}
+		relpath=${@os.path.relpath("${S}/$d", "${B}/${TARGET_SYS}/$d")}
 		$relpath/configure ${CONFIGUREOPTS} ${EXTRA_OECONF}
 	done
 }
+EXTRACONFFUNCS += "extract_stashed_builddir"
+do_configure[depends] += "${COMPILERDEP}"
 
 do_compile () {
-	target=`echo ${TARGET_SYS} | sed -e s#-${SDKPKGSUFFIX}##`
 	for d in libgcc ${RUNTIMETARGET}; do
-		cd ${B}/$target/$d/
-		oe_runmake MULTIBUILDTOP=${B}/$target/$d/
+		cd ${B}/${TARGET_SYS}/$d/
+		oe_runmake MULTIBUILDTOP=${B}/${TARGET_SYS}/$d/
 	done
 }
 
 do_install () {
-	target=`echo ${TARGET_SYS} | sed -e s#-${SDKPKGSUFFIX}##`
 	for d in ${RUNTIMETARGET}; do
-		cd ${B}/$target/$d/
-		oe_runmake 'DESTDIR=${D}' MULTIBUILDTOP=${B}/$target/$d/ install
+		cd ${B}/${TARGET_SYS}/$d/
+		oe_runmake 'DESTDIR=${D}' MULTIBUILDTOP=${B}/${TARGET_SYS}/$d/ install
 	done
 	rm -rf ${D}${infodir}/libgomp.info ${D}${infodir}/dir
 	rm -rf ${D}${infodir}/libitm.info ${D}${infodir}/dir
