@@ -2,7 +2,7 @@ LICENSE = "CLOSED"
 require conf/license/license-close.inc
 
 SUMMARY = "Firmware for drxk dvb-c/dvb-t dvb frontend"
-PACKAGE_ARCH = "all"
+inherit allarch
 
 SRC_URI = "file://drxk_a3.tar.gz"
 

@@ -1,5 +1,5 @@
 SUMMARY = "ASIX AX8817X based USB 2.0 Ethernet Devices"
-PACKAGE_ARCH = "all"
+inherit allarch
 
 require conf/license/license-gplv2.inc
 

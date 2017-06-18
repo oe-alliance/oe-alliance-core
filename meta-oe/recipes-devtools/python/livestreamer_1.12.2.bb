@@ -3,7 +3,7 @@ DESCRIPTION = "Livestreamer is CLI program that extracts streams \
 HOMEPAGE = "http://livestreamer.tanuki.se/en/latest/"
 SECTION = "devel/python"
 LICENSE = "BSD"
-PACKAGE_ARCH = "all"
+inherit allarch
 require conf/license/license-gplv2.inc
 
 RDEPENDS_${PN} = "python \

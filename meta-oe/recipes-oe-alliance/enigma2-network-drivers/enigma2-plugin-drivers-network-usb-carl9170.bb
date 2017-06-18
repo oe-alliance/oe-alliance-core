@@ -1,5 +1,5 @@
 SUMMARY = "WiFi devices for Atheros AR9170 devices."
-PACKAGE_ARCH = "all"
+inherit allarch
 
 require conf/license/license-gplv2.inc
 

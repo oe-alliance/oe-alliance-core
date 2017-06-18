@@ -1,6 +1,6 @@
 SUMMARY = "Dreamplex FHD skins"
 MAINTAINER = "rossi2000"
-PACKAGE_ARCH = "all"
+inherit allarch
 
 require conf/license/license-gplv2.inc
 

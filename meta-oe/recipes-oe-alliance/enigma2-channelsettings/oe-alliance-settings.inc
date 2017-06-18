@@ -1,7 +1,7 @@
 MAINTAINER = "oe-alliance team"
 LICENSE = "CLOSED"
 require conf/license/license-close.inc
-PACKAGE_ARCH = "all"
+inherit allarch
 
 inherit gitpkgv
 

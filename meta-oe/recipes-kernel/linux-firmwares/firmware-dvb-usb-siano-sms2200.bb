@@ -8,7 +8,7 @@ S = "${WORKDIR}"
 PACKAGES = "${PN}"
 FILES_${PN} += "${base_libdir}/firmware"
 
-PACKAGE_ARCH = "all"
+inherit allarch
 
 SUMMARY = "Firmware for dvb-usb-sms2200 isdbt_rio.inp"
 

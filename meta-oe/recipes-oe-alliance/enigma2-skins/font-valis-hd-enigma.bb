@@ -1,7 +1,7 @@
 SUMMARY = "Valis hd fonts"
 MAINTAINER = "valis"
 require conf/license/license-gplv2.inc
-PACKAGE_ARCH = "all"
+inherit allarch
 
 PV = "2010.05.14"
 PR = "r4"

@@ -17,4 +17,4 @@ PACKAGES = "${PN}"
 FILES_${PN} += "${base_libdir}/firmware"
 RDEPENDS_${PN} = "firmware-rt2870"
 
-PACKAGE_ARCH = "all"
+inherit allarch

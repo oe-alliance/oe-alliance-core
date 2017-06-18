@@ -2,7 +2,7 @@ SUMMARY = "opendroid-spinner"
 MAINTAINER = "OpenDroid Team"
 SECTION = "base"
 LICENSE = "proprietary"
-PACKAGE_ARCH = "all"
+inherit allarch
 
 require conf/license/license-gplv2.inc
 

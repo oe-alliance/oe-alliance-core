@@ -1,5 +1,5 @@
 SUMMARY = "new universal rt18xxx kernel driver"
-PACKAGE_ARCH = "all"
+inherit allarch
 
 require conf/license/license-gplv2.inc
 

@@ -4,7 +4,7 @@ MAINTAINER = "HDFreaks"
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "proprietary"
-PACKAGE_ARCH = "all"
+inherit allarch
 
 DEPENDS = "enigma2"
 

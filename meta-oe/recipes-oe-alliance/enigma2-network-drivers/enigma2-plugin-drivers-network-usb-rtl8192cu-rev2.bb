@@ -1,5 +1,5 @@
 SUMMARY = "rt8192cu Proprietary alternative kernel driver"
-PACKAGE_ARCH = "all"
+inherit allarch
 
 require conf/license/license-gplv2.inc
 

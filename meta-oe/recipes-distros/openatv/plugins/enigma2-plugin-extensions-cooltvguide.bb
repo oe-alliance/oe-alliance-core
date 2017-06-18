@@ -2,7 +2,7 @@ SUMMARY = "CoolTVGuide MultiEPG"
 MAINTAINER = "Coolman <coolman@uni.de>"
 SECTION = "base"
 LICENSE = "proprietary"
-PACKAGE_ARCH = "all"
+inherit allarch
 
 require conf/license/license-gplv2.inc
 

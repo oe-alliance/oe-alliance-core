@@ -1,5 +1,5 @@
 SUMMARY = "WiFi devices for QCA9377 chipsets."
-PACKAGE_ARCH = "all"
+inherit allarch
 
 require conf/license/license-gplv2.inc
 

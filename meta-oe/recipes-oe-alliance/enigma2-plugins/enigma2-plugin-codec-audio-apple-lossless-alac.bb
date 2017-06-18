@@ -1,5 +1,5 @@
 SUMMARY = "Apple Lossless Audio Codec (ALAC)"
-PACKAGE_ARCH = "all"
+inherit allarch
 
 require conf/license/license-gplv2.inc
 

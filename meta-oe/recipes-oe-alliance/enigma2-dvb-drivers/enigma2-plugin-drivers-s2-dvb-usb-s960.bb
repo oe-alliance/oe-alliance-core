@@ -1,5 +1,5 @@
 SUMMARY = "OPTI-Combo DVB-T2/C USB Stick"
-PACKAGE_ARCH = "all"
+inherit allarch
 
 require conf/license/license-gplv2.inc
 

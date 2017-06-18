@@ -1,5 +1,5 @@
 SUMMARY = "Meta file for OpenViX Bootlogos"
-PACKAGE_ARCH = "all"
+inherit allarch
 
 require conf/license/license-gplv2.inc
 

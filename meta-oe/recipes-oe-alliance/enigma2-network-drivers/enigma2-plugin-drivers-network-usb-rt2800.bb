@@ -1,5 +1,5 @@
 SUMMARY = "WiFi devices based on Ralink 802.11n USB chipsets."
-PACKAGE_ARCH = "all"
+inherit allarch
 
 require conf/license/license-gplv2.inc
 

@@ -1,7 +1,7 @@
 SUMMARY = "font-valis-enigma"
 MAINTAINER = "valis"
 require conf/license/license-gplv2.inc
-PACKAGE_ARCH = "all"
+inherit allarch
 
 PV = "2009.11.12"
 PR = "r3"

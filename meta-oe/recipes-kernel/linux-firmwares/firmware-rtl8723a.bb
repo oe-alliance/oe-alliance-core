@@ -11,7 +11,7 @@ S = "${WORKDIR}"
 PACKAGES = "${PN}"
 FILES_${PN} += "${base_libdir}/firmware"
 
-PACKAGE_ARCH = "all"
+inherit allarch
 
 SUMMARY = "Firmware for rtl8723a"
 

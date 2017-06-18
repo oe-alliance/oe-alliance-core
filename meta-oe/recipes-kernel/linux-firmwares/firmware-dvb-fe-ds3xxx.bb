@@ -2,7 +2,7 @@ LICENSE = "CLOSED"
 require conf/license/license-close.inc
 
 SUMMARY = "Firmware for ds3xxx dvb frontend"
-PACKAGE_ARCH = "all"
+inherit allarch
 
 SRC_URI = "file://fw-ds3xxx.tar.gz"
 

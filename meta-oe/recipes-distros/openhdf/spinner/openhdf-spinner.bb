@@ -2,7 +2,7 @@ SUMMARY = "openhdf-spinner"
 MAINTAINER = "HDFreaks"
 SECTION = "base"
 LICENSE = "proprietary"
-PACKAGE_ARCH = "all"
+inherit allarch
 
 require conf/license/license-gplv2.inc
 

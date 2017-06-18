@@ -1,5 +1,5 @@
 SUMMARY = "enigma2 picons"
-PACKAGE_ARCH = "all"
+inherit allarch
 
 require conf/license/license-gplv2.inc
 

@@ -31,7 +31,7 @@ PV = "1+git${SRCPV}"
 PKGV = "1+git${GITPKGV}"
 PR = "r1"
 
-PACKAGE_ARCH = "all"
+inherit allarch
 
 SRC_URI = "git://github.com/oe-alliance/e2openplugin-${MODULE}.git;protocol=git;branch=${BRANCH}"
 

@@ -2,7 +2,7 @@ SUMMARY = "Firmware files for avl6882"
 LICENSE = "CLOSED"
 require conf/license/license-close.inc
 
-PACKAGE_ARCH = "all"
+inherit allarch
 
 PR = "r0"
 
