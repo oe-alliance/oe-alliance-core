@@ -9,7 +9,6 @@ require conf/machine/include/tune-cortexa15.inc
 PREFERRED_VERSION_linux-ceryon = "3.14.28"
 PREFERRED_VERSION_linux-libc-headers = "3.13"
 #PREFERRED_VERSION_directfb = "1.7.7"
-PREFERRED_VERSION_libtalloc = "2.0.1"
 PREFERRED_VERSION_flex = "2.5.39"
 
 
