@@ -2,6 +2,7 @@ MODULE = "OpenWebif"
 DESCRIPTION = "Control your receiver with a browser"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://README;firstline=10;lastline=12;md5=9c14f792d0aeb54e15490a28c89087f7"
+PACKAGE_ARCH = "all"
 
 # BRANCH="branding"
 
@@ -30,8 +31,6 @@ SRCREV = "${AUTOREV}"
 PV = "1+git${SRCPV}"
 PKGV = "1+git${GITPKGV}"
 PR = "r1"
-
-inherit allarch
 
 SRC_URI = "git://github.com/oe-alliance/e2openplugin-${MODULE}.git;protocol=git;branch=${BRANCH}"
 

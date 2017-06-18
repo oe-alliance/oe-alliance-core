@@ -4,7 +4,7 @@ HOMEPAGE = "https://gitlab.com/iptvplayer-for-e2/"
 SECTION = "multimedia"
 LICENSE = "GPLv2"
 require conf/license/license-gplv2.inc
-inherit allarch
+PACKAGE_ARCH = "all"
 
 SRC_URI = "git://gitlab.com/iptvplayer-for-e2/iptvplayer-for-e2.git;protocol=http"
 S = "${WORKDIR}/git"
@@ -15,7 +15,7 @@ PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
 PR = "r1"
 
-inherit distutils-openplugins
+inherit distutils-openplugins gettext
 
 RDEPENDS_${PN} = " \
         python-compression \
