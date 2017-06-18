@@ -21,7 +21,6 @@ RDEPENDS_${PN} = "\
     ntfs-3g \
     packagegroup-base-smbfs-client \
     packagegroup-base-smbfs-server \
-    packagegroup-base-smbfs-utils \
     hddtemp \
     busybox-cron \
     exteplayer3 \

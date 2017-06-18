@@ -17,7 +17,6 @@ IMAGE_INSTALL = "openspa-base \
     " \
     packagegroup-base-smbfs-client \
     packagegroup-base-smbfs-server \
-    packagegroup-base-smbfs \
     packagegroup-base-nfs \
     ", d)} \
     "

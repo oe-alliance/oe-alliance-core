@@ -17,7 +17,6 @@ IMAGE_INSTALL = "openhdf-base \
     ${@bb.utils.contains("MACHINE_FEATURES", "singlecore", "", \
     " \
     packagegroup-base-smbfs-client \
-    packagegroup-base-smbfs-utils \
     packagegroup-base-smbfs-server \
     packagegroup-base-nfs \
     ", d)} \

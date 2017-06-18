@@ -16,7 +16,6 @@ IMAGE_INSTALL = "openbh-base \
     " \
     packagegroup-base-smbfs-client \
     packagegroup-base-smbfs-server \
-    packagegroup-base-smbfs-utils \
     packagegroup-base-nfs \
     dvb-usb-drivers-meta \
     ", d)} \

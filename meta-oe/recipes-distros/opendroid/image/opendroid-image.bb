@@ -17,7 +17,6 @@ IMAGE_INSTALL = "opendroid-base \
     " \
     packagegroup-base-smbfs-client \
     packagegroup-base-smbfs-server \
-    packagegroup-base-smbfs-utils \
     packagegroup-base-nfs \
     ", d)} \
     "
