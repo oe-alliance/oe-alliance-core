@@ -302,15 +302,15 @@ fi
 
 inherit binary-compress
 
-FILES_COMPRESS_dm800se = "${bindir}/smbclient ${bindir}/smbpasswd ${bindir}/testparm \
+FILES_COMPRESS_dm800se = "${bindir}/smbclient ${bindir}/testparm \
                           ${bindir}/smbcontrol ${bindir}/smbstatus \
-                          ${sbindir}/nmbd ${sbindir}/smbd \
+                          ${sbindir}/samba_multicall
                          "
-FILES_COMPRESS_dm500hd = "${bindir}/smbclient ${bindir}/smbpasswd ${bindir}/testparm \
+FILES_COMPRESS_dm500hd = "${bindir}/smbclient ${bindir}/testparm \
                           ${bindir}/smbcontrol ${bindir}/smbstatus \
-                          ${sbindir}/nmbd ${sbindir}/smbd \
+                          ${sbindir}/samba_multicall
                          "
-FILES_COMPRESS_dm800 = "${bindir}/smbclient ${bindir}/smbpasswd ${bindir}/testparm \
+FILES_COMPRESS_dm800 = "${bindir}/smbclient ${bindir}/testparm \
                           ${bindir}/smbcontrol ${bindir}/smbstatus \
-                          ${sbindir}/nmbd ${sbindir}/smbd \
+                          ${sbindir}/samba_multicall
                          "
