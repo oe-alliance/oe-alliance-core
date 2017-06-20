@@ -12,6 +12,8 @@ SRC_URI = "http://rtorrent.net/downloads/${PN}-${PV}.tar.gz \
 
 inherit autotools pkgconfig
 
+CXXFLAGS_append_sh4 = " -std=c++11"
+
 SRC_URI[md5sum] = "72c3e9ab859bda7cc8aa96c0b508b09f"
 SRC_URI[sha256sum] = "5c8f8c780bee376afce3c1cde2f5ecb928f40bac23b2b8171deed5cf3c888c3d"
 

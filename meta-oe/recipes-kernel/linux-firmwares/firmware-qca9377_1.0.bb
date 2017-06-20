@@ -1,5 +1,5 @@
 SUMMARY = "Firmware for QCA9377"
-PACKAGE_ARCH = "all"
+inherit allarch
 
 LIC_FILES_CHKSUM = "file://LICENSE.qca_firmware;md5=2a397c0e988f4c52d3d526133b617c8d"
 LICENSE = "Proprietary"

@@ -4,7 +4,7 @@ LIC_FILES_CHKSUM = "file://../COPYING;md5=d32239bcb673463ab874e80d47fae504"
 SECTION = "console/network"
 DEPENDS = "readline virtual/libiconv zlib popt libpam libtalloc attr avahi"
 
-PR = "r8"
+PR = "r9"
 
 inherit autotools-brokensep update-rc.d
 
@@ -169,7 +169,8 @@ PACKAGES =+ "smbfs smbfs-doc ${PN}-base smbclient ${PN}-base-dbg ${PN}-advanced 
 PACKAGECONFIG[talloc] = "--enable-external-libtalloc --with-libtalloc, --disable-external-libtalloc --without-libtalloc, talloc"
 
 FILES_${PN}-base       = "${sbindir}/samba_multicall ${sbindir}/smbd ${sbindir}/nmbd \
-                          ${bindir}/smbpasswd ${sysconfdir}/init.d/samba \
+                          ${bindir}/smbpasswd ${bindir}/smbstatus ${bindir}/smbcontrol ${bindir}/testparm \
+                          ${sysconfdir}/init.d/samba \
                           ${sysconfdir}/samba/smb.conf ${sysconfdir}/samba/private \
                           ${libdir}/samba/*.dat ${base_libdir}/security/pam_smbpass.so \
                           ${sysconfdir}/pam.d/samba"
@@ -300,4 +301,16 @@ fi
 }
 
 inherit binary-compress
-FILES_COMPRESS_dm800se = "${bindir}/smbclient"
+
+FILES_COMPRESS_dm800se = "${bindir}/smbclient ${bindir}/testparm \
+                          ${bindir}/smbcontrol ${bindir}/smbstatus \
+                          ${sbindir}/samba_multicall
+                         "
+FILES_COMPRESS_dm500hd = "${bindir}/smbclient ${bindir}/testparm \
+                          ${bindir}/smbcontrol ${bindir}/smbstatus \
+                          ${sbindir}/samba_multicall
+                         "
+FILES_COMPRESS_dm800 = "${bindir}/smbclient ${bindir}/testparm \
+                          ${bindir}/smbcontrol ${bindir}/smbstatus \
+                          ${sbindir}/samba_multicall
+                         "

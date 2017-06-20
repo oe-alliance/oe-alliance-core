@@ -1,6 +1,6 @@
 SUMMARY = "eDreamy FULL HD Skin for EGAMI"
 MAINTAINER = "mmark and egami team"
-PACKAGE_ARCH = "all"
+inherit allarch
 
 require conf/license/license-gplv2.inc
 

@@ -2,7 +2,7 @@ SUMMARY = "Compatibility for packages that link to hardfloat ld-linux lib to emu
 
 require conf/license/license-gplv2.inc
 
-PACKAGE_ARCH = "all"
+inherit allarch
 RDEPENDS_${PN} = "glibc"
 PR = "r3"
 

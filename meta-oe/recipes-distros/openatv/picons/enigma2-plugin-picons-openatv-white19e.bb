@@ -2,7 +2,7 @@ SUMMARY = "plugin-picons-openatv-white19E"
 MAINTAINER = "ATV Team"
 SECTION = "base"
 LICENSE = "proprietary"
-PACKAGE_ARCH = "all"
+inherit allarch
 
 require conf/license/license-gplv2.inc
 

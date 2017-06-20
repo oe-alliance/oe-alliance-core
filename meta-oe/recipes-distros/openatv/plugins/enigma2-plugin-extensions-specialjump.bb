@@ -2,7 +2,7 @@ SUMMARY = "SpecialJump - Fast manual skipping of commercials, and more..."
 MAINTAINER = "www.opena.tv Fischreiher"
 SECTION = "base"
 LICENSE = "proprietary"
-PACKAGE_ARCH = "all"
+inherit allarch
 
 require conf/license/license-gplv2.inc
 

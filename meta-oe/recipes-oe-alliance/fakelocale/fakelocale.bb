@@ -5,7 +5,7 @@ PRIORITY = "required"
 MAINTAINER = "OpenPli team"
 PR = "r10"
 require conf/license/license-close.inc
-PACKAGE_ARCH = "all"
+inherit allarch
 
 SRC_URI = "file://lctimelocales.tar.gz file://locale.alias file://SYS_LC_MESSAGES file://LC_CTYPE"
 

@@ -1,5 +1,5 @@
 SUMMARY = "SMSC75XX USB 2.0 Gigabit Ethernet Devices"
-PACKAGE_ARCH = "all"
+inherit allarch
 
 require conf/license/license-gplv2.inc
 

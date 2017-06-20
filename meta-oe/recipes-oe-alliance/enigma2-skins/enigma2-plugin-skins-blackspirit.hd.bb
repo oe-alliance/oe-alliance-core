@@ -1,6 +1,6 @@
 SUMMARY = "BlackSpirit.HD Skin for Enigma2 by DeadEyE"
 MAINTAINER = "DeadEyE"
-PACKAGE_ARCH = "all"
+inherit allarch
 
 require conf/license/license-gplv2.inc
 

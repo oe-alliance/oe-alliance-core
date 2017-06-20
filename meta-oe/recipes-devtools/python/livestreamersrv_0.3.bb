@@ -2,7 +2,7 @@ DESCRIPTION = "Livestreamersrv is a helper deamon for livestreamer"
 SECTION = "devel/python"
 MAINTAINER = "SatDreamGR"
 HOMEPAGE = "www.satdreamgr.com"
-PACKAGE_ARCH = "all"
+inherit allarch
 
 LICENSE = "GPLv2+"
 require conf/license/license-gplv2.inc

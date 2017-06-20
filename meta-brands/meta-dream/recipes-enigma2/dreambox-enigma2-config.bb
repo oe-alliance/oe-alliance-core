@@ -10,7 +10,7 @@ SRC_URI = "file://skin_box.xml"
 
 PACKAGES = "${PN}"
 FILES_${PN} = "/usr/share/enigma2"
-PACKAGE_ARCH = "all"
+inherit allarch
 S = "${WORKDIR}"
 
 do_install() {

@@ -1,5 +1,5 @@
 SUMMARY = "USB DVB driver for pctv452e chipsets"
-PACKAGE_ARCH = "all"
+inherit allarch
 
 require conf/license/license-gplv2.inc
 

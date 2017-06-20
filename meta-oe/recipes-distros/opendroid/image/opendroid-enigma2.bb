@@ -7,7 +7,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PV = "6.2"
-PR = "r23"
+PR = "r24"
 
 inherit packagegroup
 
@@ -26,6 +26,11 @@ RRECOMMENDS_${PN} = " \
     enigma2-plugin-extensions-vhannibal-autosettings \
     enigma2-plugin-extensions-cutlisteditor \
     enigma2-plugin-systemplugins-videotune \
+    enigma2-plugin-drivers-dvb-usb-af9015 \
+    enigma2-plugin-drivers-dvb-usb-as102 \
+    enigma2-plugin-drivers-dvb-usb-it913x \
+    enigma2-plugin-drivers-dvb-usb-af9035 \
+    enigma2-plugin-drivers-dvb-usb-rtl2832 \
     ${@bb.utils.contains("MACHINE_FEATURES", "videoenhancement", "", "enigma2-plugin-systemplugins-videoenhancement", d)} \
     enigma2-plugin-systemplugins-softwaremanager \
     enigma2-plugin-systemplugins-hotplug \

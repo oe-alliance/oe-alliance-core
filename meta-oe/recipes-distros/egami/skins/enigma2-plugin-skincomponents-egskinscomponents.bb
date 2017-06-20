@@ -1,6 +1,6 @@
 SUMMARY = "Skins components for EGAMI"
 MAINTAINER = "all"
-PACKAGE_ARCH = "all"
+inherit allarch
 
 require conf/license/license-gplv2.inc
 

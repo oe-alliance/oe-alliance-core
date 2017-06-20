@@ -14,7 +14,7 @@ do_install() {
 }
 
 FILES_${PN} = "${base_libdir}/firmware/"
-PACKAGE_ARCH = "all"
+inherit allarch
 
 SRC_URI[md5sum] = "d4c690c93b470bc9a681297c2adc6281"
 SRC_URI[sha256sum] = "481f113c505ed186049287bd8e9ad8fcb8dbbb32f3bb718f04e4dc148b63c8e4"

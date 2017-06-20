@@ -12,7 +12,7 @@ inherit autotools
 PV = "2.2.0"
 PKGV = "2.2.0"
 #PR = "r2"
-PACKAGE_ARCH = "all"
+inherit allarch
 
 SRC_URI="http://swupdate.openvpn.org/community/releases/easy-rsa-${PV}_master.tar.gz"
 

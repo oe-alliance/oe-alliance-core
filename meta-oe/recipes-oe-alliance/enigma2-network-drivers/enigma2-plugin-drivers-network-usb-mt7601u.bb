@@ -1,5 +1,5 @@
 SUMMARY = "mediatek 7601u"
-PACKAGE_ARCH = "all"
+inherit allarch
 
 require conf/license/license-gplv2.inc
 

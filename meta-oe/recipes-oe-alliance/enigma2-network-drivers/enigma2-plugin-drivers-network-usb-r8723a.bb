@@ -1,5 +1,5 @@
 SUMMARY = "WiFi devices for Realtek RTL8723a chipsets."
-PACKAGE_ARCH = "all"
+inherit allarch
 
 require conf/license/license-gplv2.inc
 

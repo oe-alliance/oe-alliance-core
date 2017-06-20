@@ -1,7 +1,7 @@
 SUMMARY = "openhdf meta package for enigma2 picon sets"
 SECTION = "base"
 LICENSE = "proprietary"
-PACKAGE_ARCH = "all"
+inherit allarch
 
 require conf/license/license-gplv2.inc
 

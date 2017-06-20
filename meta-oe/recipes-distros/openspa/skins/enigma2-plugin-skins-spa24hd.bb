@@ -1,6 +1,6 @@
 SUMMARY = "Spa24HD by OpenSPA"
 MAINTAINER = "OpenSPA"
-PACKAGE_ARCH = "all"
+inherit allarch
 
 require conf/license/license-gplv2.inc
 

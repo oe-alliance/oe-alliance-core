@@ -1,5 +1,5 @@
 SUMMARY = "USB DVB driver for DW210x/DW310x chipset"
-PACKAGE_ARCH = "all"
+inherit allarch
 
 require conf/license/license-gplv2.inc
 

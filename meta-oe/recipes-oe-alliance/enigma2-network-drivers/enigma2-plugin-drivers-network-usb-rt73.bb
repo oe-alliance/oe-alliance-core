@@ -1,5 +1,5 @@
 SUMMARY = "Driver for Ralink USB devices RT2571W, RT2573 & RT2671"
-PACKAGE_ARCH = "all"
+inherit allarch
 
 require conf/license/license-gplv2.inc
 

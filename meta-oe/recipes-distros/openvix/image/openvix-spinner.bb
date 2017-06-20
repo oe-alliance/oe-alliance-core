@@ -1,6 +1,6 @@
 SUMMARY = "OpenViX Spinner"
 MAINTAINER = "OpenViX"
-PACKAGE_ARCH = "all"
+inherit allarch
 
 require conf/license/license-gplv2.inc
 

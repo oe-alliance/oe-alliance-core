@@ -2,7 +2,7 @@ SUMMARY = "Enigma2 Web Manager Package"
 MAINTAINER = "SystemPlugins & Extensions"
 SECTION = "base"
 PRIORITY = "required"
-PACKAGE_ARCH = "all"
+inherit allarch
 
 require conf/license/license-gplv2.inc
 

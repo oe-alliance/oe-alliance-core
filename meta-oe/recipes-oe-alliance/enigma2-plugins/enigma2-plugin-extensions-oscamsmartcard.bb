@@ -2,7 +2,7 @@ SUMMARY = "OscamSmartcard"
 MAINTAINER = "undertaker"
 SECTION = "base"
 LICENSE = "GPLv2"
-PACKAGE_ARCH = "all"
+inherit allarch
 
 require conf/license/license-gplv2.inc
 

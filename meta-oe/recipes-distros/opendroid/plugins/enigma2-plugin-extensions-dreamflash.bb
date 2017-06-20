@@ -3,7 +3,7 @@ MAINTAINER = "gutemine <gutemine@unknown.com>"
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "proprietary"
-PACKAGE_ARCH = "all"
+inherit allarch
 DEPENDS = "enigma2"
 
 require conf/license/license-gplv2.inc

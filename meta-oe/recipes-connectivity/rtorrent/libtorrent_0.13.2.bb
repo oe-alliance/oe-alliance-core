@@ -11,6 +11,8 @@ SRC_URI = "http://rtorrent.net/downloads/${PN}-${PV}.tar.gz"
 
 EXTRA_OECONF = " --enable-aligned --without-kqueue"
 
+CXXFLAGS_append_sh4 = " -std=c++11"
+
 inherit autotools pkgconfig
 
 SRC_URI[md5sum] = "96c0b81501357df402ab592f59ecaeab"

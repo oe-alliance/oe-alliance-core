@@ -1,5 +1,5 @@
 SUMMARY = "meta file for enigma2 bootlogo packages"
-PACKAGE_ARCH = "all"
+inherit allarch
 
 require conf/license/license-gplv2.inc
 

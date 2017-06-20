@@ -15,10 +15,8 @@ do_rootfs[deptask] = "do_rm_work"
 IMAGE_INSTALL = "egami-base \
     ${@bb.utils.contains("MACHINE_FEATURES", "singlecore", "", \
     " \
-    packagegroup-base-smbfs \
     packagegroup-base-smbfs-client \
     packagegroup-base-smbfs-server \
-    packagegroup-base-smbfs-utils \
     packagegroup-base-nfs \
     ", d)} \
     "

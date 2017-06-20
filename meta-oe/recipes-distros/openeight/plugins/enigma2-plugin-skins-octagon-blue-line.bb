@@ -3,7 +3,7 @@ MAINTAINER = "stein17"
 SECTION = "base"
 PRIORITY = "optional"
 LICENSE = "open"
-PACKAGE_ARCH = "all"
+inherit allarch
 
 require conf/license/license-gplv2.inc
 

@@ -15,7 +15,7 @@ PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
 PR = "r1"
 
-inherit distutils-openplugins
+inherit distutils-openplugins gettext
 
 RDEPENDS_${PN} = " \
         python-compression \

@@ -1,7 +1,7 @@
 SUMMARY = "Firmware for mt7601u"
 LICENSE = "CLOSED"
 require conf/license/license-close.inc
-PACKAGE_ARCH = "all"
+inherit allarch
 PR = "r00"
 SRC_URI = "file://firmware-mt7601u.zip"
 

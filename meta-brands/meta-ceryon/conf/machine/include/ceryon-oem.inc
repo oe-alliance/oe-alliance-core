@@ -57,7 +57,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'sf228', 'sf228' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'sf238', 'sf228' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', '9910lx', '9910lx' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', '9911lx', '9911lx' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'bcm7252', '8100s' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'bcm7252', '8100S' , '', d)}\
 "
 
 MTD_KERNEL ?= "\
@@ -76,7 +76,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'sf228', 'mtd1' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'sf238', 'mtd1' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', '9910lx', 'mtd1' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', '9911lx', 'mtd1' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'bcm7252', 'mmcblk0p3' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'bcm7252', 'mmcblk0p1' , '', d)}\
 "
 
 MTD_ROOTFS ?= "\
@@ -95,7 +95,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'sf228', 'mtd2' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'sf238', 'mtd2' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', '9910lx', 'mtd2' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', '9911lx', 'mtd2' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'bcm7252', 'mmcblk0p4' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'bcm7252', 'mmcblk0p7' , '', d)}\
 "
 
 KERNEL_FILE ?= "\

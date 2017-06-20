@@ -1,5 +1,5 @@
 DESCRIPTION = "USB DVB driver for TBS Tuners"
-PACKAGE_ARCH = "all"
+inherit allarch
 
 require conf/license/license-gplv2.inc
 

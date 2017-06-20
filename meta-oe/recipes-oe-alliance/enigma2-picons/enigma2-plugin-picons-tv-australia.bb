@@ -2,7 +2,7 @@ SUMMARY = "Australia Picons"
 SECTION = "base"
 PRIORITY = "required"
 MAINTAINER = "Beyonwiz"
-PACKAGE_ARCH = "all"
+inherit allarch
 
 require conf/license/license-gplv2.inc
 

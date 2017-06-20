@@ -1,6 +1,6 @@
 SUMMARY = "Rytec's sources and channels for the EPG importer"
 MAINTAINER = "oe-alliance"
-PACKAGE_ARCH = "all"
+inherit allarch
 LICENSE = "WTFPL"
 
 require conf/license/license-gplv2.inc

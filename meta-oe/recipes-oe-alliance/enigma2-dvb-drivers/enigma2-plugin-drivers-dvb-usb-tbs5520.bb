@@ -1,5 +1,5 @@
 DESCRIPTION = "USB DVB driver for TBS 5520 Tuner"
-PACKAGE_ARCH = "all"
+inherit allarch
 
 require conf/license/license-gplv2.inc
 

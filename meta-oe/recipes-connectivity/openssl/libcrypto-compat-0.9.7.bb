@@ -2,7 +2,7 @@ SUMMARY = "Compatibility for packages that link to libcrypto or libssl 0.9.7"
 
 require conf/license/license-gplv2.inc
 
-PACKAGE_ARCH = "all"
+inherit allarch
 RDEPENDS_${PN} = "libcrypto libssl"
 PV = "1.0"
 PR = "r10"
