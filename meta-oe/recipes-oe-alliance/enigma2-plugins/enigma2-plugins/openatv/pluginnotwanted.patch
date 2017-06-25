@@ -1,5 +1,5 @@
 diff --git a/Makefile.am b/Makefile.am
-index b9687fc..6d05856 100644
+index b9687fc..a30c8b3 100644
 --- a/Makefile.am
 +++ b/Makefile.am
 @@ -21,7 +21,6 @@ SUBDIRS = \
@@ -24,3 +24,11 @@ index b9687fc..6d05856 100644
  	reconstructapsc \
  	reftopiconname \
  	remotetimer \
+@@ -131,7 +128,6 @@ SUBDIRS += \
+ 	mytube \
+ 	yttrailer \
+ 	webinterface \
+-	menusort \
+ 	pluginhider \
+ 	pluginsort 
+ endif
