@@ -9,7 +9,7 @@ inherit autotools-brokensep gitpkgv pythonnative gettext
 SRCREV = "${AUTOREV}"
 PV = "1.2+git${SRCPV}"
 PKGV = "1.2+git${GITPKGV}"
-PR = "r2"
+PR = "r3"
 
 SRC_URI = "git://github.com/OpenViX/PlexDVRAPI.git;protocol=git"
 
@@ -44,14 +44,3 @@ python populate_packages_prepend() {
     do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/.*\/.*\.po$', 'enigma2-plugin-%s-po', '%s (translations)', recursive=True, match_path=True, prepend=True)
 }
 
-pkg_postinst_${PN} () {
-if [ ! -d /www ]; then
-    mkdir /www
-fi
-}
-
-pkg_postrm_${PN} () {
-if [ -d /www ]; then
-    rm -rf /www
-fi
-}
