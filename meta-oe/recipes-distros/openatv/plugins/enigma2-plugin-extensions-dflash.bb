@@ -3,7 +3,7 @@ MAINTAINER = "gutemine <gutemine@oozoon.de>"
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "proprietary"
-inherit allarch
+
 RDEPENDS_${PN} = "dreambox-buildimage"
 
 require conf/license/license-gplv2.inc

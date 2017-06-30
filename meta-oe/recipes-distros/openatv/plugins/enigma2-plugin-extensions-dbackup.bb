@@ -3,7 +3,6 @@ MAINTAINER = "gutemine <gutemine@oozoon.de>"
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "proprietary"
-inherit allarch
 
 require conf/license/license-gplv2.inc
 
