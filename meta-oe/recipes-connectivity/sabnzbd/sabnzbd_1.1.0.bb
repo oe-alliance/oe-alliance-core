@@ -20,8 +20,8 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/project/sabnzbdplus/sabnzbdplus/${PV}/SABnzbd-$
     file://init-functions \
     "
 
-SRC_URI[md5sum] = "632ba65889eb4f76857886add36dfaaf"
-SRC_URI[sha256sum] = "9ced2f4b9486674e8b0a920769710b16e7d96a9981d5aa47b6584f2c3a1e0b62"
+SRC_URI[md5sum] = "03cec705efb742ab9a1d8d6dedbcee2f"
+SRC_URI[sha256sum] = "3e86a897dea1c276c54ee38667a980f644f16d57df75612fe9eefa84b339ce9a"
 
 S = "${WORKDIR}/SABnzbd-${PV}"
 
