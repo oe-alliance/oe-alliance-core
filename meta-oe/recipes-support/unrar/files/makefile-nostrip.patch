@@ -1,13 +1,18 @@
-Index: unrar/makefile.unix
-===================================================================
---- unrar.orig/makefile.unix	2010-03-30 17:26:26.000000000 +0200
-+++ unrar/makefile.unix	2011-01-09 10:04:56.992152378 +0100
-@@ -9,7 +9,7 @@
- #CXX=g++
- #CXXFLAGS=-O2
- DEFINES=-D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE
+--- a/makefile	2017-06-13 13:04:50.000000000 +0200
++++ b/makefile	2017-06-30 16:16:34.000000000 +0200
+@@ -2,12 +2,12 @@
+ # Makefile for UNIX - unrar
+ 
+ # Linux using GCC
+-CXX=c++
++#CXX=c++
+ CXXFLAGS=-O2
+ LIBFLAGS=-fPIC
+ DEFINES=-D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DRAR_SMP
 -STRIP=strip
-+STRIP=echo
+-AR=ar
++#STRIP=strip
++#AR=ar
+ LDFLAGS=-pthread
  DESTDIR=/usr
  
- # Linux using LCC
