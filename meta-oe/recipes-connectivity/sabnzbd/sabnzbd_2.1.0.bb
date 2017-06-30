@@ -1,6 +1,6 @@
 MAINTAINER = "team@sabnzbd.org"
 LICENSE = "GPLv2+"
-LIC_FILES_CHKSUM = "file://COPYRIGHT.txt;md5=7c333056bf8b3834c43ccf2505d10690"
+LIC_FILES_CHKSUM = "file://COPYRIGHT.txt;md5=11d738004e69db5356c633936aa54836"
 
 PR = "r1"
 
@@ -11,19 +11,16 @@ RDEPENDS_${PN} = "\
     "
 RRECOMMENDS_${PN} = "par2cmdline unrar"
 
-# Beta URI
-# SRC_URI = "${SOURCEFORGE_MIRROR}/project/sabnzbdplus/sabnzbdplus-beta/${PV}/SABnzbd-${PV}-src.tar.gz
-
-SRC_URI = "${SOURCEFORGE_MIRROR}/project/sabnzbdplus/sabnzbdplus/${PV}/SABnzbd-${PV}-src.tar.gz \
+SRC_URI = "http://github.com/sabnzbd/sabnzbd/archive/${PV}.tar.gz \
     file://sabnzbd \
     file://sabnzbd.conf \
     file://init-functions \
     "
 
-SRC_URI[md5sum] = "03cec705efb742ab9a1d8d6dedbcee2f"
-SRC_URI[sha256sum] = "3e86a897dea1c276c54ee38667a980f644f16d57df75612fe9eefa84b339ce9a"
+SRC_URI[md5sum] = "cd238e86aa3539fb8c77a3d7a4bf037c"
+SRC_URI[sha256sum] = "0880f1ca1de93d627836633ee3433967711c8b0db88cfa504935ca9d48e959df"
 
-S = "${WORKDIR}/SABnzbd-${PV}"
+S = "${WORKDIR}/sabnzbd-${PV}"
 
 INSTALLDIR = "/usr/lib/${PN}"
 
