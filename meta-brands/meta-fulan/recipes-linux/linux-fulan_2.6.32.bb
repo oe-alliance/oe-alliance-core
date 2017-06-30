@@ -20,8 +20,6 @@ DEPENDS_append_spark = " \
   stlinux24-sh4-stx7111-fdma-firmware \
   "
 
-KERNEL_MODULE_PACKAGE_SUFFIX = ""
-
 # By default, kernel.bbclass modifies package names to allow multiple kernels
 # to be installed in parallel. We revert this change and rprovide the versioned
 # package names instead, to allow only one kernel to be installed.

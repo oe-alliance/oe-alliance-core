@@ -1,0 +1,320 @@
+--- a/daemons/lircd.c	2011-03-26 00:28:18.000000000 +0200
++++ b/daemons/lircd.c	2014-09-10 18:15:06.755028036 +0300
+@@ -97,10 +97,14 @@
+ static int repeat_fd = -1;
+ static char *repeat_message = NULL;
+ static __u32 repeat_max = REPEAT_MAX_DEFAULT;
++static int repeat_delay = 500;
++static int repeat_period = 100;
+ 
+ extern struct hardware hw;
+ 
+ char *progname = "lircd";
++char *uinputname = "remote control";
++
+ const char *configfile = NULL;
+ #ifndef USE_SYSLOG
+ char *logfile = LOGFILE;
+@@ -146,6 +150,7 @@
+ 
+ static void log_enable(int enabled);
+ static int log_enabled = 1;
++static void setup_repeatrate_uinputfd(int source);
+ 
+ #ifndef USE_SYSLOG
+ #define HOSTNAME_LEN 128
+@@ -405,6 +410,39 @@
+ 	}
+ }
+ 
++/**
++ * @brief Set the repeat rate for a given input device
++ * @details For some applications we need to define a
++ *  repeate rate otherwise the remote control get unusable
++ *
++ * @param source file descripter of the input device
++ * @return 0 on succcess and any value in case of an error
++ */
++static void setup_repeatrate_uinputfd(int source)
++{
++
++    int res = 0;
++    struct input_event ie;
++    ie.type = EV_REP;
++    ie.code = REP_DELAY;
++    ie.value = repeat_delay;
++    if (-1 == write(source, &ie, sizeof(ie)))
++    {   res = 1;
++        logprintf(LOG_ERR, "REP_DELAY: %s", strerror(errno));
++    }
++    ie.code = REP_PERIOD;
++    ie.value = repeat_period;
++    if (-1 == write(source, &ie, sizeof(ie)))
++    {
++        res = 2;
++        logprintf(LOG_ERR, "REP_PERIOD: %s", strerror(errno));
++    }
++    if( 0 == res )
++    {
++        logprintf(LOG_INFO, "Repeat rate set to delay: %d period: %d", repeat_delay, repeat_period);
++    }
++}
++
+ int setup_uinputfd(const char *name)
+ {
+ #if defined(__linux__)
+@@ -432,10 +470,21 @@
+ 		goto setup_error;
+ 	}
+ 
+-	for (key = KEY_RESERVED; key <= KEY_UNKNOWN; key++) {
+-		if (ioctl(fd, UI_SET_KEYBIT, key) != 0) {
+-			goto setup_error;
++	/* register only the used keycodes, but all of them */
++	struct ir_remote *remote;
++	struct ir_ncode *codes;
++	int ret;
++	linux_input_code input_code;
++	remote = remotes;
++	while (remote) {
++		codes = remote->codes;
++		while (codes->name != NULL) {
++			ret = get_input_code(codes->name, &input_code);
++			if (ret != -1)
++				ioctl(fd, UI_SET_KEYBIT, input_code);
++			codes++;
+ 		}
++		remote = remote->next;
+ 	}
+ 
+ 	if (ioctl(fd, UI_DEV_CREATE) != 0) {
+@@ -933,7 +982,8 @@
+ 	nolinger(sockfd);
+ 
+ 	if (useuinput) {
+-		uinputfd = setup_uinputfd(progname);
++		uinputfd = setup_uinputfd(uinputname);
++		setup_repeatrate_uinputfd(uinputfd);
+ 	}
+ 	if (listen_tcpip) {
+ 		int enable = 1;
+@@ -1792,21 +1842,11 @@
+ 			memset(&event, 0, sizeof(event));
+ 			event.type = EV_KEY;
+ 			event.code = input_code;
+-			event.value = release ? 0 : (reps > 0 ? 2 : 1);
++			event.value = release ? 0 : 1;
+ 			if (write(uinputfd, &event, sizeof(event)) != sizeof(event)) {
+ 				logprintf(LOG_ERR, "writing to uinput failed");
+ 				logperror(LOG_ERR, NULL);
+ 			}
+-
+-			/* Need to write sync event */
+-			memset(&event, 0, sizeof(event));
+-			event.type = EV_SYN;
+-			event.code = SYN_REPORT;
+-			event.value = 0;
+-			if (write(uinputfd, &event, sizeof(event)) != sizeof(event)) {
+-				logprintf(LOG_ERR, "writing EV_SYN to uinput failed");
+-				logperror(LOG_ERR, NULL);
+-			}
+ 		}
+ 	}
+ #endif
+@@ -2013,6 +2053,18 @@
+ 	}
+ }
+ 
++void pNotification(int iconOn)
++{
++	struct aotom_ioctl_data vfd_data;
++	int ioctl_fd = -1;
++
++	ioctl_fd = open("/dev/vfd", O_RDONLY);
++	vfd_data.u.icon.on = iconOn;
++	vfd_data.u.icon.icon_nr = 35;
++	ioctl(ioctl_fd, VFDICONDISPLAYONOFF, &vfd_data);
++	close(ioctl_fd);
++}
++
+ void loop()
+ {
+ 	char *message;
+@@ -2029,6 +2081,8 @@
+ 			const char *button_name;
+ 			int reps;
+ 
++			pNotification(1);
++
+ 			if (hw.ioctl_func && (hw.features & LIRC_CAN_NOTIFY_DECODE)) {
+ 				hw.ioctl_func(LIRC_NOTIFY_DECODE, NULL);
+ 			}
+@@ -2036,6 +2090,8 @@
+ 			get_release_data(&remote_name, &button_name, &reps);
+ 
+ 			input_message(message, remote_name, button_name, reps, 0);
++
++			pNotification(0);
+ 		}
+ 	}
+ }
+@@ -2074,9 +2130,11 @@
+ 			{"uinput", no_argument, NULL, 'u'},
+ #                       endif
+ 			{"repeat-max", required_argument, NULL, 'R'},
++			{"repeat-delay", required_argument, NULL, 'Y'},
++			{"repeat-period", required_argument, NULL, 'O'},
+ 			{0, 0, 0, 0}
+ 		};
+-		c = getopt_long(argc, argv, "hvnp:H:d:o:P:l::c:r::aR:"
++		c = getopt_long(argc, argv, "hvnp:H:d:o:P:l::c:r::aR:Y:O:"
+ #                               if defined(__linux__)
+ 				"u"
+ #                               endif
+@@ -2114,6 +2172,8 @@
+ 			printf("\t -u --uinput\t\tgenerate Linux input events\n");
+ #                       endif
+ 			printf("\t -R --repeat-max=limit\t\tallow at most this many repeats\n");
++			printf("\t -Y --repeat-delay=value\t\trepeat rate initial delay in ms\n");
++			printf("\t -O --repeat-period=value\t\trepeat period in ms\n");
+ 			return (EXIT_SUCCESS);
+ 		case 'v':
+ 			printf("%s %s\n", progname, VERSION);
+@@ -2206,6 +2266,12 @@
+ 		case 'R':
+ 			repeat_max = atoi(optarg);
+ 			break;
++		case 'Y':
++			repeat_delay = atoi(optarg);
++			break;
++		case 'O':
++			repeat_period = atoi(optarg);
++			break;
+ 		default:
+ 			printf("Usage: %s [options] [config-file]\n", progname);
+ 			return (EXIT_FAILURE);
+@@ -2233,6 +2299,9 @@
+ 
+ 	signal(SIGPIPE, SIG_IGN);
+ 
++	remotes = NULL;
++	config();		/* read config file */
++
+ 	start_server(permission, nodaemon);
+ 
+ 	act.sa_handler = sigterm;
+@@ -2246,9 +2315,6 @@
+ 	act.sa_flags = SA_RESTART;	/* don't fiddle with EINTR */
+ 	sigaction(SIGALRM, &act, NULL);
+ 
+-	remotes = NULL;
+-	config();		/* read config file */
+-
+ 	act.sa_handler = sighup;
+ 	sigemptyset(&act.sa_mask);
+ 	act.sa_flags = SA_RESTART;	/* don't fiddle with EINTR */
+--- a/daemons/lircd.h	2011-03-26 00:28:18.000000000 +0200
++++ b/daemons/lircd.h	2014-09-09 21:45:26.050203777 +0300
+@@ -86,4 +86,44 @@
+ 	int (*function) (int fd, char *message, char *arguments);
+ };
+ 
++#define VFDICONDISPLAYONOFF		0xc0425a0a
++
++struct set_mode_s {
++	int compat;
++};
++
++struct set_brightness_s {
++	int level;
++};
++
++struct set_icon_s {
++	int icon_nr;
++	int on;
++};
++
++struct set_led_s {
++	int led_nr;
++	int on;
++};
++
++struct set_standby_s {
++	char time[5];
++};
++
++struct set_time_s {
++	char time[5];
++};
++
++struct aotom_ioctl_data {
++	union
++	{
++		struct set_icon_s icon;
++		struct set_led_s led;
++		struct set_brightness_s brightness;
++		struct set_mode_s mode;
++		struct set_standby_s standby;
++		struct set_time_s time;
++	} u;
++};
++
+ #endif /* _LIRCD_H */
+--- a/daemons/ir_remote.c	2011-03-25 15:28:18.000000000 -0700
++++ b/daemons/ir_remote.c	2012-01-05 05:59:30.000000000 -0800
+@@ -506,9 +506,17 @@
+ 	lirc_t min_remaining_gap, max_remaining_gap;
+ 	struct ir_remote *scan;
+ 	struct ir_ncode *scan_ncode;
++	int try_last_remote = 1;
+ 
+ 	/* use remotes carefully, it may be changed on SIGHUP */
+-	decoding = remote = remotes;
++	if (last_remote == NULL) {
++		decoding = remote = remotes;
++		try_last_remote = 0;
++	} else {
++		decoding = remote = last_remote;
++		try_last_remote = 1;
++	}
++	
+ 	while (remote) {
+ 		LOGPRINTF(1, "trying \"%s\" remote", remote->name);
+ 
+@@ -556,6 +564,11 @@
+ 			}
+ 		} else {
+ 			LOGPRINTF(1, "failed \"%s\" remote", remote->name);
++			if (try_last_remote == 1) {
++				try_last_remote = 0;
++				decoding = remote = remotes;
++				continue;
++			}
+ 		}
+ 		remote->toggle_mask_state = 0;
+ 		remote = remote->next;
+--- a/daemons/input_map.inc.orig	2014-09-23 22:26:38.725458302 +0300
++++ b/daemons/input_map.inc	2014-09-23 22:28:00.513863863 +0300
+@@ -332,7 +332,7 @@
+ {"KEY_STOPCD", 166},
+ {"KEY_SUBTITLE", 0x172},
+ {"KEY_SUSPEND", 205},
+-{"KEY_SWITCHVIDEOMODE", 227},
++{"KEY_VMODE", 227},
+ {"KEY_SYSRQ", 99},
+ {"KEY_T", 20},
+ {"KEY_TAB", 15},
+@@ -446,3 +446,13 @@
+ {"BTN_X", 0x133},
+ {"BTN_Y", 0x134},
+ {"BTN_Z", 0x135},
++{"KEY_TVSAT", 512},
++{"KEY_PICASA", 513},
++{"KEY_SHOUTCAST", 514},
++{"KEY_YOUTUBE", 515},
++{"KEY_SPARK", 516},
++{"KEY_RECALL", 517},
++{"KEY_PLAYMODE", 518},
++{"KEY_USB", 519},
++{"KEY_PORTAL", 520},
++{"KEY_FAST", 521},
