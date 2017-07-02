@@ -1,0 +1,26 @@
+# Users that are not allowed to login via ftp
+adm
+avahi
+backup
+bin
+daemon
+games
+gnats
+halt
+irc
+list
+lp
+mail
+man
+messagebus
+news
+nobody
+operator
+proxy
+rpc
+rpcuser
+shutdown
+sync
+sys
+uucp
+www-data
