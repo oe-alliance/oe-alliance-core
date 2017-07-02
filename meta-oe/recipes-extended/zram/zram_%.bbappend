@@ -4,7 +4,9 @@ RDEPENDS_${PN} = ""
 # that zram is a module.
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
-# We don't have systemd
 do_install_append() {
-	rm -rf ${D}${systemd_unitdir}/system
+        # Remove systemd related configuration file
+        if ${@bb.utils.contains('DISTRO_FEATURES','systemd','false','true',d)}; then
+		rm -rf ${D}${systemd_unitdir}/system
+        fi
 }
