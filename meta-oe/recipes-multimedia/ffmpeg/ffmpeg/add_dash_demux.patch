@@ -68,7 +68,7 @@ diff -uNr ffmpeg-3.3/libavformat/allformats.c ffmpeg-3.3_dash_demux/libavformat/
 diff -uNr ffmpeg-3.3/libavformat/dashdec.c ffmpeg-3.3_dash_demux/libavformat/dashdec.c
 --- ffmpeg-3.3/libavformat/dashdec.c	1970-01-01 01:00:00.000000000 +0100
 +++ ffmpeg-3.3_dash_demux/libavformat/dashdec.c	2017-01-31 23:49:16.481109867 +0100
-@@ -0,0 +1,1803 @@
+@@ -0,0 +1,2006 @@
 +/*
 + * Dynamic Adaptive Streaming over HTTP demux
 + * Copyright (c) 2017 samsamsam@o2.pl based on HLS demux
@@ -269,6 +269,7 @@ diff -uNr ffmpeg-3.3/libavformat/dashdec.c ffmpeg-3.3_dash_demux/libavformat/das
 +
 +    int64_t first_seq_no;
 +    int64_t last_seq_no;
++    int64_t start_number; /* used in case when we have dynamic list of segment to know which segments are new one*/
 +    
 +    int64_t segmentDuration;
 +    int64_t segmentTimescalce;
@@ -288,6 +289,7 @@ diff -uNr ffmpeg-3.3/libavformat/dashdec.c ffmpeg-3.3_dash_demux/libavformat/das
 +    int fix_multiple_stsd_order;
 +
 +    int64_t cur_timestamp;
++    int is_restart_needed;
 +};
 +
 +typedef struct DASHContext {
@@ -954,6 +956,7 @@ diff -uNr ffmpeg-3.3/libavformat/dashdec.c ffmpeg-3.3_dash_demux/libavformat/das
 +                                xmlNodePtr segmentUrlNode = NULL;
 +                                xmlChar *duration_val        = xmlGetProp(representationSegmentListNode, "duration");
 +                                xmlChar *timescale_val       = xmlGetProp(representationSegmentListNode, "timescale");
++                                xmlChar *startNumber_val     = xmlGetProp(representationSegmentListNode, "startNumber");
 +                                
 +                                if (duration_val) {
 +                                    rep->segmentDuration = (int64_t) atoll((const char *)duration_val);
@@ -963,6 +966,11 @@ diff -uNr ffmpeg-3.3/libavformat/dashdec.c ffmpeg-3.3_dash_demux/libavformat/das
 +                                if (timescale_val) {
 +                                    rep->segmentTimescalce = (int64_t) atoll((const char *)timescale_val);
 +                                    xmlFree(timescale_val);
++                                }
++                                
++                                if (startNumber_val) {
++                                    rep->start_number = (int64_t) atoll((const char *)startNumber_val);
++                                    xmlFree(startNumber_val);
 +                                }
 +                                
 +                                segmentUrlNode = xmlFirstElementChild(representationSegmentListNode);
@@ -1060,55 +1068,7 @@ diff -uNr ffmpeg-3.3/libavformat/dashdec.c ffmpeg-3.3_dash_demux/libavformat/das
 +
 +/////////////////////////////////////////////////////////////////////////////
 +/////////////////////////////////////////////////////////////////////////////
-+
-+static int64_t calc_cur_seg_no(struct representation *pls)
-+{
-+    DASHContext *c = pls->parent->priv_data;
-+    int64_t num = 0;
-+    if (c->is_live) {
-+        num = pls->first_seq_no + (((GetCurrentTimeInSec() - c->availabilityStartTimeSec) - c->presentationDelaySec) * pls->segmentTimescalce) / pls->segmentDuration;
-+    } else {
-+        num = pls->first_seq_no;
-+    }
-+    return num;
-+}
-+
-+static int64_t calc_min_seg_no(struct representation *pls)
-+{
-+    DASHContext *c = pls->parent->priv_data;
-+    int64_t num = 0;
-+    if (c->is_live) { 
-+        num = pls->first_seq_no + (((GetCurrentTimeInSec() - c->availabilityStartTimeSec) - c->timeShiftBufferDepthSec) * pls->segmentTimescalce)  / pls->segmentDuration;
-+    } else {
-+        num = pls->first_seq_no;
-+    }
-+    return num;
-+}
-+
-+static int64_t calc_max_seg_no(struct representation *pls)
-+{
-+    DASHContext *c = pls->parent->priv_data;
-+    int64_t num = 0;
-+    if (c->is_live) { 
-+        num = pls->first_seq_no + (((GetCurrentTimeInSec() - c->availabilityStartTimeSec)) * pls->segmentTimescalce)  / pls->segmentDuration;
-+    } else {
-+        if (pls->n_segments) {
-+            num = pls->first_seq_no + pls->n_segments - 1;
-+        } else if (pls->n_timelines) {
-+            int i = 0;
-+            num = pls->first_seq_no + pls->n_timelines - 1;
-+            for (i=0; i<pls->n_timelines; ++i) {
-+                num += pls->timelines[i]->r;
-+            }
-+        }
-+        else {
-+            num = pls->first_seq_no + (c->mediaPresentationDurationSec * pls->segmentTimescalce) / pls->segmentDuration;
-+        }
-+    }
-+    return num;
-+}
-+
-+static int64_t get_segment_start_time(struct representation *pls, int64_t cur_seq_no)
++static int64_t get_segment_start_time_based_on_timeline(struct representation *pls, int64_t cur_seq_no)
 +{
 +    int64_t startTime = 0;
 +    if (pls->n_timelines) {
@@ -1140,13 +1100,217 @@ diff -uNr ffmpeg-3.3/libavformat/dashdec.c ffmpeg-3.3_dash_demux/libavformat/das
 +    return startTime;
 +}
 +
++static int64_t calc_next_seg_no_from_timelines(struct representation *pls, int64_t currentTime)
++{
++    int64_t i = 0;
++    int64_t j = 0;
++    int64_t num = 0;
++    int64_t startTime = 0;
++    
++    for (i=0; i<pls->n_timelines; ++i) {
++        if (pls->timelines[i]->t > 0) {
++            startTime = pls->timelines[i]->t;
++        }
++        
++        if (startTime > currentTime)
++            goto finish;
++        
++        startTime += pls->timelines[i]->d;
++        
++        for (j = 0; j < pls->timelines[i]->r; ++j) {
++            num += 1;
++            if (startTime > currentTime)
++                goto finish;
++            startTime += pls->timelines[i]->d;
++        }
++        num += 1;
++    }
++    
++    return -1;
++    
++finish:
++    return num;
++}
++
++static int64_t calc_max_seg_no(struct representation *pls, DASHContext *c);
++
++static void move_timelines(struct representation *rep_src, struct representation *rep_dest, DASHContext *c)
++{
++    if (rep_dest != NULL && rep_src != NULL) {
++        free_timelines_list(rep_dest);
++        rep_dest->timelines    = rep_src->timelines;
++        rep_dest->n_timelines  = rep_src->n_timelines;
++        rep_dest->first_seq_no = rep_src->first_seq_no;
++        
++        rep_dest->last_seq_no = calc_max_seg_no(rep_dest, c);
++        
++        rep_src->timelines = NULL;
++        rep_src->n_timelines = 0;
++        rep_dest->cur_seq_no = rep_src->cur_seq_no;
++    }
++}
++
++static void move_segments(struct representation *rep_src, struct representation *rep_dest, DASHContext *c)
++{
++    if (rep_dest != NULL && rep_src != NULL) {
++
++        free_segment_list(rep_dest);
++        
++        if (rep_src->start_number > (rep_dest->start_number + rep_dest->n_segments))
++            rep_dest->cur_seq_no = 0;
++        else
++            rep_dest->cur_seq_no += rep_src->start_number - rep_dest->start_number;
++        
++        rep_dest->segments    = rep_src->segments;
++        rep_dest->n_segments  = rep_src->n_segments;
++        
++        rep_dest->last_seq_no = calc_max_seg_no(rep_dest, c);
++        
++        rep_src->segments = NULL;
++        rep_src->n_segments = 0;
++    }
++}
++
++static int refresh_manifest(AVFormatContext *s)
++{
++    int ret = 0;
++    DASHContext *c = s->priv_data;
++    
++    // save current context 
++    struct representation *cur_video =  c->cur_video;
++    struct representation *cur_audio =  c->cur_audio;
++    char *base_url = c->base_url;
++    
++    c->base_url = NULL;
++    c->cur_video = NULL;
++    c->cur_audio = NULL;
++    
++    ret = parse_mainifest(s, s->filename, NULL);
++    if (ret != 0)
++        goto finish;
++    
++    if (cur_video && cur_video->timelines || cur_audio && cur_audio->timelines)
++    {
++        // calc current time 
++        int64_t currentVideoTime = 0;
++        int64_t currentAudioTime = 0;
++        
++        if (cur_video && cur_video->timelines)
++            currentVideoTime = get_segment_start_time_based_on_timeline(cur_video, cur_video->cur_seq_no) / cur_video->segmentTimescalce;
++        
++        if (cur_audio && cur_audio->timelines)
++            currentAudioTime = get_segment_start_time_based_on_timeline(cur_audio, cur_audio->cur_seq_no) / cur_audio->segmentTimescalce;
++        
++        // update segments
++        if (cur_video && cur_video->timelines) {
++            c->cur_video->cur_seq_no = calc_next_seg_no_from_timelines(c->cur_video, currentVideoTime * cur_video->segmentTimescalce - 1);
++            if (c->cur_video->cur_seq_no >= 0)
++                move_timelines(c->cur_video, cur_video, c);
++        }
++        
++        if (cur_audio && cur_audio->timelines) {
++            c->cur_audio->cur_seq_no = calc_next_seg_no_from_timelines(c->cur_audio, currentAudioTime * cur_audio->segmentTimescalce - 1);
++            if (c->cur_audio->cur_seq_no >= 0)
++                move_timelines(c->cur_audio, cur_audio, c);
++        }
++    }
++    
++    if (cur_video && cur_video->segments) {
++        move_segments(c->cur_video, cur_video, c);
++    }
++    
++    if (cur_audio && cur_audio->segments) {
++        move_segments(c->cur_audio, cur_audio, c);
++    }
++    
++finish:
++    // restore context
++    if (c->base_url)
++        av_free(base_url);
++    else
++        c->base_url  = base_url;
++    
++    if (c->cur_audio)
++        free_representation(c->cur_audio);
++    
++    if (c->cur_video)
++        free_representation(c->cur_video);
++    
++    c->cur_audio = cur_audio;
++    c->cur_video = cur_video;
++    
++    return ret;
++}
++
++
++static int64_t calc_cur_seg_no(struct representation *pls, DASHContext *c)
++{
++    int64_t num = 0;
++    if (c->is_live) {
++        if (pls->n_segments) {
++            // handle segment number here
++            num = pls->first_seq_no;
++        } else if (pls->n_timelines) {
++            int64_t startTimeOffset = get_segment_start_time_based_on_timeline(pls, 0xFFFFFFFF) - pls->timelines[pls->first_seq_no]->t; // total duration of playlist
++            if (startTimeOffset < 60*pls->segmentTimescalce)
++                startTimeOffset = 0;
++            else
++                startTimeOffset = startTimeOffset - 60*pls->segmentTimescalce;
++            
++            num = calc_next_seg_no_from_timelines(pls, pls->timelines[pls->first_seq_no]->t + startTimeOffset);
++            if (num == -1)
++                num = pls->first_seq_no;
++        }
++        else {
++        num = pls->first_seq_no + (((GetCurrentTimeInSec() - c->availabilityStartTimeSec) - c->presentationDelaySec) * pls->segmentTimescalce) / pls->segmentDuration;
++        }
++    } else {
++        num = pls->first_seq_no;
++    }
++    return num;
++}
++
++static int64_t calc_min_seg_no(struct representation *pls, DASHContext *c)
++{
++    int64_t num = 0;
++    if (c->is_live && pls->segmentDuration) { 
++        num = pls->first_seq_no + (((GetCurrentTimeInSec() - c->availabilityStartTimeSec) - c->timeShiftBufferDepthSec) * pls->segmentTimescalce)  / pls->segmentDuration;
++    } else {
++        num = pls->first_seq_no;
++    }
++    return num;
++}
++
++static int64_t calc_max_seg_no(struct representation *pls, DASHContext *c)
++{
++    int64_t num = 0;
++
++        if (pls->n_segments) {
++            num = pls->first_seq_no + pls->n_segments - 1;
++        } else if (pls->n_timelines) {
++            int i = 0;
++            num = pls->first_seq_no + pls->n_timelines - 1;
++            for (i=0; i<pls->n_timelines; ++i) {
++                num += pls->timelines[i]->r;
++            }
++        }
++    else if (c->is_live) {
++        num = pls->first_seq_no + (((GetCurrentTimeInSec() - c->availabilityStartTimeSec)) * pls->segmentTimescalce)  / pls->segmentDuration;
++    }
++        else {
++            num = pls->first_seq_no + (c->mediaPresentationDurationSec * pls->segmentTimescalce) / pls->segmentDuration;
++        }
++            
++    return num;
++}
++
 +static struct segment *get_current_segment(struct representation *pls)
 +{
 +    char *tmp_str = NULL;
 +    struct segment *seg = NULL;
 +    DASHContext *c = pls->parent->priv_data;
 +    
-+    if (pls->n_segments > 0) {
++    while (!ff_check_interrupt(c->interrupt_callback) && pls->n_segments > 0) {
 +        if (pls->cur_seq_no < pls->n_segments) {
 +            struct segment *seg_ptr = pls->segments[pls->cur_seq_no];
 +            seg = av_mallocz(sizeof(struct segment));
@@ -1154,20 +1318,30 @@ diff -uNr ffmpeg-3.3/libavformat/dashdec.c ffmpeg-3.3_dash_demux/libavformat/das
 +            seg->size = seg_ptr->size;
 +            seg->url_offset = seg_ptr->url_offset;
 +            return seg;
-+        }
++        } else if (c->is_live) {
++            sleep(2);
++            refresh_manifest(pls->parent);
++        } else
++            break;
 +    }
 +    
 +    if (c->is_live) {
-+        while (1) {
-+            int64_t min_seq_no = calc_min_seg_no(pls);
-+            int64_t max_seq_no = calc_max_seg_no(pls);
++        while (!ff_check_interrupt(c->interrupt_callback)) {
++            int64_t min_seq_no = calc_min_seg_no(pls, c);
++            int64_t max_seq_no = calc_max_seg_no(pls, c);
 +            
 +            if (pls->cur_seq_no <= min_seq_no) {
 +                av_log(pls->parent, AV_LOG_VERBOSE, "%s to old segment: cur[%"PRId64"] min[%"PRId64"] max[%"PRId64"], playlist %d\n", __FUNCTION__, (int64_t)pls->cur_seq_no, min_seq_no, max_seq_no, (int)pls->rep_idx);
-+                pls->cur_seq_no = calc_cur_seg_no(pls);
++                if (c->is_live && (pls->timelines || pls->segments)) {
++                    refresh_manifest(pls->parent);
++                }
++                pls->cur_seq_no = calc_cur_seg_no(pls, c);
 +            } else if (pls->cur_seq_no > max_seq_no) {
 +                av_log(pls->parent, AV_LOG_VERBOSE, "%s wait for new segment: min[%"PRId64"] max[%"PRId64"], playlist %d\n", __FUNCTION__, min_seq_no, max_seq_no, (int)pls->rep_idx);
 +                sleep(2);
++                if (c->is_live && (pls->timelines || pls->segments)) {
++                    refresh_manifest(pls->parent);
++                }
 +                continue;
 +            }
 +            break;
@@ -1179,12 +1353,12 @@ diff -uNr ffmpeg-3.3/libavformat/dashdec.c ffmpeg-3.3_dash_demux/libavformat/das
 +    
 +    if (seg) {
 +        if (pls->tmp_url_type != TMP_URL_TYPE_UNSPECIFIED) {
-+            int64_t tmp_val = pls->tmp_url_type == TMP_URL_TYPE_NUMBER ? pls->cur_seq_no : get_segment_start_time(pls, pls->cur_seq_no);
++            int64_t tmp_val = pls->tmp_url_type == TMP_URL_TYPE_NUMBER ? pls->cur_seq_no : get_segment_start_time_based_on_timeline(pls, pls->cur_seq_no);
 +            tmp_str = av_mallocz(MAX_URL_SIZE);
 +            snprintf(tmp_str, MAX_URL_SIZE-1, pls->url_template, (int64_t)tmp_val);
 +            seg->url = av_strdup(tmp_str);
 +        } else {
-+            av_log(pls->parent, AV_LOG_ERROR, "Unable to unable to resolve template url '%s'\n", pls->url_template);
++            av_log(pls->parent, AV_LOG_ERROR, "Unable to resolve template url '%s'\n", pls->url_template);
 +            seg->url = av_strdup(pls->url_template);
 +        }
 +        seg->size = -1;
@@ -1213,8 +1387,10 @@ diff -uNr ffmpeg-3.3/libavformat/dashdec.c ffmpeg-3.3_dash_demux/libavformat/das
 +        ret = avio_read(pls->input, buf, buf_size);
 +        if (ret != buf_size)
 +            av_log(NULL, AV_LOG_ERROR, "Could not read complete segment.\n");
-+    } else
++    } else if (buf_size > 0)
 +        ret = avio_read(pls->input, buf, buf_size);
++    else
++        ret = AVERROR_EOF;
 +
 +    if (ret > 0)
 +        pls->cur_seg_offset += ret;
@@ -1414,7 +1590,13 @@ diff -uNr ffmpeg-3.3/libavformat/dashdec.c ffmpeg-3.3_dash_demux/libavformat/das
 +            }
 +            av_log(v->parent, AV_LOG_WARNING, "Failed to open segment of playlist %d\n",
 +                   v->rep_idx);
++            if (c->is_live && (v->timelines || v->segments)) {
++                // refresh_manifest(v->parent);
++                sleep(1);
++            }
++            else {
 +            v->cur_seq_no += 1;
++            }
 +            goto restart;
 +        }
 +    }
@@ -1438,14 +1620,19 @@ diff -uNr ffmpeg-3.3/libavformat/dashdec.c ffmpeg-3.3_dash_demux/libavformat/das
 +    }
 +    
 +    ret = read_from_url(v, v->cur_seg, buf, buf_size, READ_NORMAL);
-+
 +    if (ret > 0)
 +        goto end;
 +    
-+    ff_format_io_close(v->parent, &v->input);
++    /* This is needed to free indexes from previously processed segments.
++     * Maybe we should restart context every few segments?
++     */
++    if (!v->is_restart_needed)
 +    v->cur_seq_no += 1;
++    v->is_restart_needed = 1;
 +
-+    goto restart;
++    // ff_format_io_close(v->parent, &v->input);
++    // v->cur_seq_no += 1;
++    // goto restart;
 +end:
 +    return ret;
 +}
@@ -1574,8 +1761,8 @@ diff -uNr ffmpeg-3.3/libavformat/dashdec.c ffmpeg-3.3_dash_demux/libavformat/das
 +    int i;
 +    
 +    pls->parent = s;
-+    pls->cur_seq_no  = calc_cur_seg_no(pls);
-+    pls->last_seq_no = calc_max_seg_no(pls);
++    pls->cur_seq_no  = calc_cur_seg_no(pls, s->priv_data);
++    pls->last_seq_no = calc_max_seg_no(pls, s->priv_data);
 +
 +
 +    ret = reopen_demux_for_component(s, pls);
@@ -1694,16 +1881,16 @@ diff -uNr ffmpeg-3.3/libavformat/dashdec.c ffmpeg-3.3_dash_demux/libavformat/das
 +        cur = c->cur_audio;
 +    } else if (!c->cur_audio && c->cur_video) {
 +        cur = c->cur_video;
-+    }
-+    
-+    else if (c->cur_video->cur_timestamp < c->cur_audio->cur_timestamp) {
-+        cur = c->cur_video;
-+    } else {
++    } else if (c->cur_video->cur_timestamp > c->cur_audio->cur_timestamp) {
 +        cur = c->cur_audio;
++    } else {
++        cur = c->cur_video;
 +    }
 +
 +    if (cur->ctx) {
++        while (!ff_check_interrupt(c->interrupt_callback) && ret == 0) {
 +        ret = av_read_frame(cur->ctx, &cur->pkt);
++            
 +        if (0 == ret) {
 +            /* If we got a packet, return it */
 +            *pkt = cur->pkt;
@@ -1711,8 +1898,25 @@ diff -uNr ffmpeg-3.3/libavformat/dashdec.c ffmpeg-3.3_dash_demux/libavformat/das
 +            pkt->stream_index = cur->stream_index;
 +            reset_packet(&cur->pkt);
 +            return 0;
-+        } else {
++            } 
++            
 +            reset_packet(&cur->pkt);
++            
++            if (cur->is_restart_needed) {
++                while (!ff_check_interrupt(c->interrupt_callback)) {
++                    cur->cur_seg_offset = 0;
++                    cur->init_sec_buf_read_offset = 0;
++                    if (cur->input)
++                        ff_format_io_close(cur->parent, &cur->input);
++                    ret = reopen_demux_for_component(s, cur);
++                    if (c->is_live && ret != 0) {
++                        sleep(2);
++                        continue;
++                    }
++                    break;
++                }
++                cur->is_restart_needed = 0;
++            }
 +        }
 +    }
 +    
@@ -1743,7 +1947,6 @@ diff -uNr ffmpeg-3.3/libavformat/dashdec.c ffmpeg-3.3_dash_demux/libavformat/das
 +    int ret = 0;
 +    
 +    av_log(pls->parent, AV_LOG_VERBOSE, "DASH seek pos[%"PRId64"ms], playlist %d\n", seekPosMSec, pls->rep_idx);
-+           
 +    // single segment mode
 +    if (pls->n_segments == 1) {
 +        pls->cur_timestamp = 0;
