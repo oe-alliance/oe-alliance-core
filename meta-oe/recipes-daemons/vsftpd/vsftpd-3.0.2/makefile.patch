@@ -1,8 +1,0 @@
---- a/Makefile	2016-02-21 18:04:45.591122379 +0100
-+++ b/Makefile	2016-02-21 18:05:03.363122074 +0100
-@@ -1,5 +1,4 @@
- # Makefile for systems with GNU tools
--CC 	=	gcc
- INSTALL	=	install
- IFLAGS  = -idirafter dummyinc
- #CFLAGS = -g

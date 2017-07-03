@@ -30,6 +30,7 @@ RRECOMMENDS_${PN} = "\
     enigma2-plugin-extensions-bmediacenter \
     enigma2-plugin-skins-dmcconcinnityhd \
     enigma2-plugin-skins-ax-blue-fhd-4atv \
+    enigma2-plugin-skins-blue-line-oe-4atv \
     enigma2-plugin-skincomponents-bmediacenter-ax-blue-skin \
     enigma2-plugin-skincomponents-mediaportal-ax-blue-skin \
     enigma2-plugin-skincomponents-mediaportal-blue-line-skin \ 
