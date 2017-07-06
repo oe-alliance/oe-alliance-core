@@ -1,0 +1,480 @@
+diff --git a/CORE/HDD/inc/wlan_hdd_p2p.h b/CORE/HDD/inc/wlan_hdd_p2p.h
+index 5ead2969b0b9..318a236fc60d 100644
+--- a/CORE/HDD/inc/wlan_hdd_p2p.h
++++ b/CORE/HDD/inc/wlan_hdd_p2p.h
+@@ -166,7 +166,13 @@ int wlan_hdd_mgmt_tx( struct wiphy *wiphy, struct net_device *dev,
+                      const u8 *buf, size_t len, u64 *cookie );
+ #endif
+ 
+-#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4,1,0))
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4, 12, 0))
++struct wireless_dev* wlan_hdd_add_virtual_intf(
++                  struct wiphy *wiphy, const char *name,
++                  unsigned char name_assign_type,
++                  enum nl80211_iftype type,
++                  struct vif_params *params );
++#elif (LINUX_VERSION_CODE >= KERNEL_VERSION(4,1,0))
+ struct wireless_dev* wlan_hdd_add_virtual_intf(
+                   struct wiphy *wiphy, const char *name,
+                   unsigned char name_assign_type,
+diff --git a/CORE/HDD/src/wlan_hdd_assoc.c b/CORE/HDD/src/wlan_hdd_assoc.c
+index 25f8570258bc..546f6e33ddd1 100644
+--- a/CORE/HDD/src/wlan_hdd_assoc.c
++++ b/CORE/HDD/src/wlan_hdd_assoc.c
+@@ -1352,9 +1352,23 @@ static void hdd_SendReAssocEvent(struct net_device *dev, hdd_adapter_t *pAdapter
+     memset(rspRsnIe + len, 0, IW_GENERIC_IE_MAX - len);
+ 
+     chan = ieee80211_get_channel(pAdapter->wdev.wiphy, (int) pCsrRoamInfo->pBssDesc->channelId);
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4, 12, 0))
++{
++    struct cfg80211_roam_info roam_info = {
++            .channel = chan,
++            .bssid = pCsrRoamInfo->bssid,
++            .req_ie = reqRsnIe,
++            .req_ie_len = reqRsnLength,
++            .resp_ie = rspRsnIe,
++            .resp_ie_len = rspRsnLength,
++    };
++    cfg80211_roamed(dev, &roam_info, GFP_KERNEL);
++}
++#else
+     cfg80211_roamed(dev,chan,pCsrRoamInfo->bssid,
+                     reqRsnIe, reqRsnLength,
+                     rspRsnIe, rspRsnLength,GFP_KERNEL);
++#endif
+ done:
+     kfree(rspRsnIe);
+ }
+@@ -1585,9 +1599,23 @@ static eHalStatus hdd_AssociationCompletionHandler( hdd_adapter_t *pAdapter, tCs
+                                          (int)pRoamInfo->pBssDesc->channelId);
+                     hddLog(LOG1, "assocReqlen %d assocRsplen %d", assocReqlen,
+                                          assocRsplen);
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4, 12, 0))
++{
++                    struct cfg80211_roam_info roam_info = {
++                            .channel = chan,
++                            .bssid = pRoamInfo->bssid,
++                            .req_ie = pFTAssocReq,
++                            .req_ie_len = assocReqlen,
++                            .resp_ie = pFTAssocRsp,
++                            .resp_ie_len = assocRsplen,
++                    };
++                    cfg80211_roamed(dev, &roam_info, GFP_KERNEL);
++}
++#else
+                     cfg80211_roamed(dev,chan, pRoamInfo->bssid,
+                                     pFTAssocReq, assocReqlen, pFTAssocRsp, assocRsplen,
+                                     GFP_KERNEL);
++#endif
+                     if (sme_GetFTPTKState(WLAN_HDD_GET_HAL_CTX(pAdapter)))
+                     {
+                         sme_SetFTPTKState(WLAN_HDD_GET_HAL_CTX(pAdapter), FALSE);
+diff --git a/CORE/HDD/src/wlan_hdd_cfg80211.c b/CORE/HDD/src/wlan_hdd_cfg80211.c
+index 862ea2775d1b..e119407ab720 100644
+--- a/CORE/HDD/src/wlan_hdd_cfg80211.c
++++ b/CORE/HDD/src/wlan_hdd_cfg80211.c
+@@ -1237,7 +1237,11 @@ static int wlan_hdd_cfg80211_extscan_get_capabilities(struct wiphy *wiphy,
+     ENTER();
+     if (nla_parse(tb, QCA_WLAN_VENDOR_ATTR_EXTSCAN_SUBCMD_CONFIG_PARAM_MAX,
+                     data, data_len,
+-                    wlan_hdd_extscan_config_policy)) {
++                    wlan_hdd_extscan_config_policy
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4, 12, 0))
++                    , NULL
++#endif
++                    )) {
+         hddLog(VOS_TRACE_LEVEL_ERROR, FL("Invalid ATTR"));
+         return -EINVAL;
+     }
+@@ -1292,7 +1296,11 @@ static int wlan_hdd_cfg80211_extscan_get_cached_results(struct wiphy *wiphy,
+ 
+     if (nla_parse(tb, QCA_WLAN_VENDOR_ATTR_EXTSCAN_SUBCMD_CONFIG_PARAM_MAX,
+                     data, data_len,
+-                    wlan_hdd_extscan_config_policy)) {
++                    wlan_hdd_extscan_config_policy
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4, 12, 0))
++                    , NULL
++#endif
++                    )) {
+         hddLog(VOS_TRACE_LEVEL_ERROR, FL("Invalid ATTR"));
+         return -EINVAL;
+     }
+@@ -1360,7 +1368,11 @@ static int wlan_hdd_cfg80211_extscan_set_bssid_hotlist(struct wiphy *wiphy,
+ 
+     if (nla_parse(tb, QCA_WLAN_VENDOR_ATTR_EXTSCAN_SUBCMD_CONFIG_PARAM_MAX,
+                     data, data_len,
+-                    wlan_hdd_extscan_config_policy)) {
++                    wlan_hdd_extscan_config_policy
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4, 12, 0))
++                    , NULL
++#endif
++                    )) {
+         hddLog(VOS_TRACE_LEVEL_ERROR, FL("Invalid ATTR"));
+         return -EINVAL;
+     }
+@@ -1398,7 +1410,11 @@ static int wlan_hdd_cfg80211_extscan_set_bssid_hotlist(struct wiphy *wiphy,
+                 tb[QCA_WLAN_VENDOR_ATTR_EXTSCAN_AP_THRESHOLD_PARAM], rem) {
+         if (nla_parse(tb2, QCA_WLAN_VENDOR_ATTR_EXTSCAN_SUBCMD_CONFIG_PARAM_MAX,
+                 nla_data(apTh), nla_len(apTh),
+-                wlan_hdd_extscan_config_policy)) {
++                wlan_hdd_extscan_config_policy
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4, 12, 0))
++                , NULL
++#endif
++                )) {
+             hddLog(VOS_TRACE_LEVEL_ERROR, FL("nla_parse failed"));
+             goto fail;
+         }
+@@ -1481,7 +1497,11 @@ static int wlan_hdd_cfg80211_extscan_set_significant_change(
+ 
+     if (nla_parse(tb, QCA_WLAN_VENDOR_ATTR_EXTSCAN_SUBCMD_CONFIG_PARAM_MAX,
+                     data, data_len,
+-                    wlan_hdd_extscan_config_policy)) {
++                    wlan_hdd_extscan_config_policy
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4, 12, 0))
++                    , NULL
++#endif
++                    )) {
+         hddLog(VOS_TRACE_LEVEL_ERROR, FL("Invalid ATTR"));
+         return -EINVAL;
+     }
+@@ -1553,7 +1573,11 @@ static int wlan_hdd_cfg80211_extscan_set_significant_change(
+         if (nla_parse(tb2,
+                 QCA_WLAN_VENDOR_ATTR_EXTSCAN_SUBCMD_CONFIG_PARAM_MAX,
+                 nla_data(apTh), nla_len(apTh),
+-                wlan_hdd_extscan_config_policy)) {
++                wlan_hdd_extscan_config_policy
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4, 12, 0))
++                , NULL
++#endif
++                )) {
+             hddLog(VOS_TRACE_LEVEL_ERROR, FL("nla_parse failed"));
+             goto fail;
+         }
+@@ -1634,7 +1658,11 @@ static int wlan_hdd_cfg80211_extscan_get_valid_channels(struct wiphy *wiphy,
+ 
+     if (nla_parse(tb, QCA_WLAN_VENDOR_ATTR_EXTSCAN_SUBCMD_CONFIG_PARAM_MAX,
+                   data, data_len,
+-                  wlan_hdd_extscan_config_policy)) {
++                  wlan_hdd_extscan_config_policy
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4, 12, 0))
++                  , NULL
++#endif
++                  )) {
+         hddLog(VOS_TRACE_LEVEL_ERROR, FL("Invalid ATTR"));
+         return -EINVAL;
+     }
+@@ -1714,7 +1742,11 @@ static int wlan_hdd_cfg80211_extscan_start(struct wiphy *wiphy,
+ 
+     if (nla_parse(tb, QCA_WLAN_VENDOR_ATTR_EXTSCAN_SUBCMD_CONFIG_PARAM_MAX,
+                     data, data_len,
+-                    wlan_hdd_extscan_config_policy)) {
++                    wlan_hdd_extscan_config_policy
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4, 12, 0))
++                    , NULL
++#endif
++                    )) {
+         hddLog(VOS_TRACE_LEVEL_ERROR, FL("Invalid ATTR"));
+         return -EINVAL;
+     }
+@@ -1792,7 +1824,11 @@ static int wlan_hdd_cfg80211_extscan_start(struct wiphy *wiphy,
+                 tb[QCA_WLAN_VENDOR_ATTR_EXTSCAN_BUCKET_SPEC], rem1) {
+         if (nla_parse(bucket,
+             QCA_WLAN_VENDOR_ATTR_EXTSCAN_SUBCMD_CONFIG_PARAM_MAX,
+-            nla_data(buckets), nla_len(buckets), NULL)) { //policy
++            nla_data(buckets), nla_len(buckets), NULL
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4, 12, 0))
++            , NULL
++#endif
++            )) { //policy
+             hddLog(VOS_TRACE_LEVEL_ERROR, FL("nla_parse failed"));
+             goto fail;
+         }
+@@ -1858,7 +1894,11 @@ static int wlan_hdd_cfg80211_extscan_start(struct wiphy *wiphy,
+             if (nla_parse(channel,
+                 QCA_WLAN_VENDOR_ATTR_EXTSCAN_SUBCMD_CONFIG_PARAM_MAX,
+                 nla_data(channels), nla_len(channels),
+-                wlan_hdd_extscan_config_policy)) {
++                wlan_hdd_extscan_config_policy
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4, 12, 0))
++                , NULL
++#endif
++                )) {
+                 hddLog(VOS_TRACE_LEVEL_ERROR, FL("nla_parse failed"));
+                 goto fail;
+             }
+@@ -1929,7 +1969,11 @@ static int wlan_hdd_cfg80211_extscan_stop(struct wiphy *wiphy,
+ 
+     if (nla_parse(tb, QCA_WLAN_VENDOR_ATTR_EXTSCAN_SUBCMD_CONFIG_PARAM_MAX,
+                     data, data_len,
+-                    wlan_hdd_extscan_config_policy)) {
++                    wlan_hdd_extscan_config_policy
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4, 12, 0))
++                    , NULL
++#endif
++                    )) {
+         hddLog(VOS_TRACE_LEVEL_ERROR, FL("Invalid ATTR"));
+         return -EINVAL;
+     }
+@@ -1984,7 +2028,11 @@ static int wlan_hdd_cfg80211_extscan_reset_bssid_hotlist(struct wiphy *wiphy,
+ 
+     if (nla_parse(tb, QCA_WLAN_VENDOR_ATTR_EXTSCAN_SUBCMD_CONFIG_PARAM_MAX,
+                     data, data_len,
+-                    wlan_hdd_extscan_config_policy)) {
++                    wlan_hdd_extscan_config_policy
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4, 12, 0))
++                    , NULL
++#endif
++                    )) {
+         hddLog(VOS_TRACE_LEVEL_ERROR, FL("Invalid ATTR"));
+         return -EINVAL;
+     }
+@@ -2040,7 +2088,11 @@ static int wlan_hdd_cfg80211_extscan_reset_significant_change(
+ 
+     if (nla_parse(tb, QCA_WLAN_VENDOR_ATTR_EXTSCAN_SUBCMD_CONFIG_PARAM_MAX,
+                     data, data_len,
+-                    wlan_hdd_extscan_config_policy)) {
++                    wlan_hdd_extscan_config_policy
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4, 12, 0))
++                    , NULL
++#endif
++                    )) {
+         hddLog(VOS_TRACE_LEVEL_ERROR, FL("Invalid ATTR"));
+         return -EINVAL;
+     }
+@@ -3083,7 +3135,11 @@ static int wlan_hdd_cfg80211_ll_stats_set(struct wiphy *wiphy,
+ 
+     if (nla_parse(tb_vendor, QCA_WLAN_VENDOR_ATTR_LL_STATS_SET_MAX,
+                   (struct nlattr *)data,
+-                  data_len, qca_wlan_vendor_ll_set_policy))
++                  data_len, qca_wlan_vendor_ll_set_policy
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4, 12, 0))
++                  , NULL
++#endif
++                  ))
+     {
+         hddLog(VOS_TRACE_LEVEL_ERROR, FL("maximum attribute not present"));
+         return -EINVAL;
+@@ -3189,7 +3245,11 @@ static int wlan_hdd_cfg80211_ll_stats_get(struct wiphy *wiphy,
+ 
+     if (nla_parse(tb_vendor, QCA_WLAN_VENDOR_ATTR_LL_STATS_GET_MAX,
+                   (struct nlattr *)data,
+-                  data_len, qca_wlan_vendor_ll_get_policy))
++                  data_len, qca_wlan_vendor_ll_get_policy
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4, 12, 0))
++                  , NULL
++#endif
++                  ))
+     {
+         hddLog(VOS_TRACE_LEVEL_ERROR, FL("max attribute not present"));
+         return -EINVAL;
+@@ -3280,7 +3340,11 @@ static int wlan_hdd_cfg80211_ll_stats_clear(struct wiphy *wiphy,
+ 
+     if (nla_parse(tb_vendor, QCA_WLAN_VENDOR_ATTR_LL_STATS_CLR_MAX,
+                   (struct nlattr *)data,
+-                  data_len, qca_wlan_vendor_ll_clr_policy))
++                  data_len, qca_wlan_vendor_ll_clr_policy
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4, 12, 0))
++                  , NULL
++#endif
++                  ))
+     {
+         hddLog(VOS_TRACE_LEVEL_ERROR, FL("STATS_CLR_MAX is not present"));
+         return -EINVAL;
+@@ -3688,7 +3752,11 @@ int wlan_hdd_cfg80211_init(struct device *dev,
+ #ifdef FEATURE_WLAN_SCAN_PNO
+     if (pCfg->configPNOScanSupport)
+     {
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4, 12, 0))
++        wiphy->max_sched_scan_reqs = 1;
++#else
+         wiphy->flags |= WIPHY_FLAG_SUPPORTS_SCHED_SCAN;
++#endif
+         wiphy->max_sched_scan_ssids = SIR_PNO_MAX_SUPP_NETWORKS;
+         wiphy->max_match_sets       = SIR_PNO_MAX_SUPP_NETWORKS;
+         wiphy->max_sched_scan_ie_len = SIR_MAC_MAX_IE_LENGTH;
+@@ -3897,7 +3965,11 @@ void wlan_hdd_cfg80211_update_wiphy_caps(struct wiphy *wiphy)
+     * control comes here. Here just we need to clear it if firmware doesn't
+     * have PNO support. */
+    if (!pCfg->PnoOffload) {
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4, 12, 0))
++       wiphy->max_sched_scan_reqs = 0;
++#else
+        wiphy->flags &= ~WIPHY_FLAG_SUPPORTS_SCHED_SCAN;
++#endif
+        wiphy->max_sched_scan_ssids = 0;
+        wiphy->max_match_sets = 0;
+        wiphy->max_sched_scan_ie_len = 0;
+@@ -6693,13 +6765,23 @@ done:
+  * FUNCTION: wlan_hdd_cfg80211_change_iface
+  * wrapper function to protect the actual implementation from SSR.
+  */
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4, 12, 0))
++static int wlan_hdd_cfg80211_change_iface(struct wiphy *wiphy,
++                                          struct net_device *ndev,
++                                          enum nl80211_iftype type,
++                                          struct vif_params *params)
++#else
+ static int wlan_hdd_cfg80211_change_iface(struct wiphy *wiphy,
+                                           struct net_device *ndev,
+                                           enum nl80211_iftype type,
+                                           u32 *flags,
+                                           struct vif_params *params)
++#endif
+ {
+     int ret;
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4, 12, 0))
++    u32 *flags = NULL;
++#endif
+ 
+     vos_ssr_protect(__func__);
+     ret = __wlan_hdd_cfg80211_change_iface(wiphy, ndev, type, flags, params);
+@@ -12510,7 +12592,11 @@ void hdd_cfg80211_sched_scan_done_callback(void *callbackContext,
+     if (0 > ret)
+         hddLog(VOS_TRACE_LEVEL_INFO, "%s: NO SCAN result", __func__);
+ 
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4, 12, 0))
++    cfg80211_sched_scan_results(pHddCtx->wiphy, 0);
++#else
+     cfg80211_sched_scan_results(pHddCtx->wiphy);
++#endif
+     VOS_TRACE(VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_INFO,
+             "%s: cfg80211 scan result database updated", __func__);
+ }
+@@ -12918,8 +13004,13 @@ static int __wlan_hdd_cfg80211_sched_scan_stop(struct wiphy *wiphy,
+  * FUNCTION: wlan_hdd_cfg80211_sched_scan_stop
+  * NL interface to disable PNO
+  */
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4, 12, 0))
++static int wlan_hdd_cfg80211_sched_scan_stop(struct wiphy *wiphy,
++          struct net_device *dev, u64 reqid)
++#else
+ static int wlan_hdd_cfg80211_sched_scan_stop(struct wiphy *wiphy,
+           struct net_device *dev)
++#endif
+ {
+     int ret;
+ 
+@@ -13990,7 +14081,11 @@ static int __wlan_hdd_cfg80211_testmode(struct wiphy *wiphy,
+     eHalStatus smeStatus;
+ #endif /* FEATURE_WLAN_LPHB */
+ 
+-    err = nla_parse(tb, WLAN_HDD_TM_ATTR_MAX, data, len, wlan_hdd_tm_policy);
++    err = nla_parse(tb, WLAN_HDD_TM_ATTR_MAX, data, len, wlan_hdd_tm_policy
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4, 12, 0))
++                    , NULL
++#endif
++    );
+     if (err) {
+         hddLog(LOGE, FL("Testmode INV ATTR"));
+         return err;
+@@ -14354,7 +14449,11 @@ int __wlan_hdd_cfg80211_resume_wlan(struct wiphy *wiphy)
+                  * process the connect request to AP
+                  */
+                 hdd_prevent_suspend_timeout(2000);
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4, 12, 0))
++                cfg80211_sched_scan_results(pHddCtx->wiphy, 0);
++#else
+                 cfg80211_sched_scan_results(pHddCtx->wiphy);
++#endif
+             }
+ 
+             hddLog(LOG1, FL("cfg80211 scan result database updated"));
+diff --git a/CORE/HDD/src/wlan_hdd_p2p.c b/CORE/HDD/src/wlan_hdd_p2p.c
+index 072d183da9e3..0372bbb4ecd0 100644
+--- a/CORE/HDD/src/wlan_hdd_p2p.c
++++ b/CORE/HDD/src/wlan_hdd_p2p.c
+@@ -2223,7 +2223,21 @@ struct net_device* __wlan_hdd_add_virtual_intf(
+ #endif
+ }
+ 
+-#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4,1,0))
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4, 12, 0))
++struct wireless_dev* wlan_hdd_add_virtual_intf(
++                  struct wiphy *wiphy, const char *name,
++                  unsigned char name_assign_type,
++                  enum nl80211_iftype type,
++                  struct vif_params *params )
++{
++    struct wireless_dev* wdev;
++
++    vos_ssr_protect(__func__);
++    wdev = __wlan_hdd_add_virtual_intf(wiphy, name, type, NULL, params);
++    vos_ssr_unprotect(__func__);
++    return wdev;
++}
++#elif (LINUX_VERSION_CODE >= KERNEL_VERSION(4,1,0))
+ struct wireless_dev* wlan_hdd_add_virtual_intf(
+                   struct wiphy *wiphy, const char *name,
+                   unsigned char name_assign_type,
+diff --git a/CORE/MAC/inc/macTrace.h b/CORE/MAC/inc/macTrace.h
+index 6a125faa5f6e..d2cec71829c7 100644
+--- a/CORE/MAC/inc/macTrace.h
++++ b/CORE/MAC/inc/macTrace.h
+@@ -45,8 +45,6 @@
+ #include "aniGlobal.h"
+ 
+ 
+-#ifdef TRACE_RECORD
+-
+ #define MAC_TRACE_GET_MODULE_ID(data) ((data >> 8) & 0xff)
+ #define MAC_TRACE_GET_MSG_ID(data)       (data & 0xffff)
+ 
+@@ -81,5 +79,3 @@ tANI_U8* macTraceGetLimMlmState(tANI_U16 mlmState);
+ tANI_U8* macTraceGetTLState(tANI_U16 tlState);
+ 
+ #endif
+-
+-#endif
+diff --git a/CORE/SYS/legacy/src/utils/src/macTrace.c b/CORE/SYS/legacy/src/utils/src/macTrace.c
+index d12d6c623d7d..8ffe27c78155 100644
+--- a/CORE/SYS/legacy/src/utils/src/macTrace.c
++++ b/CORE/SYS/legacy/src/utils/src/macTrace.c
+@@ -53,8 +53,6 @@
+ #include "vos_memory.h"
+ #include "vos_trace.h"
+ 
+-#ifdef TRACE_RECORD
+-
+ /* ---------------------------------------------------------------------------
+     \fn macTraceGetHDDWlanConnState
+     \function to get string equivalent of a value
+@@ -978,4 +976,3 @@ tANI_U8* macTraceMsgString(tpAniSirGlobal pMac, tANI_U32 msgType)
+                 return ((tANI_U8*)"Unknown MsgType");
+     }
+ }
+-#endif
+diff --git a/CORE/UTILS/FWLOG/dbglog_host.c b/CORE/UTILS/FWLOG/dbglog_host.c
+index 25999149d091..7abdd84d9cb0 100644
+--- a/CORE/UTILS/FWLOG/dbglog_host.c
++++ b/CORE/UTILS/FWLOG/dbglog_host.c
+@@ -53,8 +53,6 @@
+ #include <a_debug.h>
+ #define FWLOG_DEBUG   ATH_DEBUG_MAKE_MODULE_MASK(0)
+ 
+-#if defined(DEBUG)
+-
+ static bool appstarted = FALSE;
+ static bool senddriverstatus = FALSE;
+ static bool kd_nl_init = FALSE;
+@@ -72,7 +70,6 @@ ATH_DEBUG_INSTANTIATE_MODULE_VAR(fwlog,
+                                  ATH_DEBUG_MASK_DEFAULTS | ATH_DEBUG_INFO | ATH_DEBUG_ERR,
+                                  ATH_DEBUG_DESCRIPTION_COUNT(g_fwlogDebugDescription),
+                                  g_fwlogDebugDescription);
+-#endif
+ 
+ module_dbg_print mod_print[WLAN_MODULE_ID_MAX];
+ 
+diff --git a/Kbuild b/Kbuild
+index 938984177c64..dc8748e9bde3 100644
+--- a/Kbuild
++++ b/Kbuild
+@@ -116,7 +116,7 @@ CONFIG_QCOM_ESE_UPLOAD := n
+ # Feature flags which are not (currently) configurable via Kconfig
+ 
+ #Whether to build debug version
+-BUILD_DEBUG_VERSION := 1
++BUILD_DEBUG_VERSION ?= 0
+ 
+ #Enable this flag to build driver in diag version
+ BUILD_DIAG_VERSION := 1
