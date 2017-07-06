@@ -6,15 +6,13 @@ LIC_FILES_CHKSUM = "file://ifcfg-wlan0;md5=a84acae65af4b2d44d5035aa9f63cd85"
 
 inherit module
 
-PR = "r0"
+PR = "r1"
 
-SRC_URI = "http://source.mynonpublic.com/rtl8812AU-rtl8821AU-driver-5.1.5-20170406.zip \
-    file://0001-add-linux-kernel-4.11-support.patch \
-"
+SRC_URI = "http://source.mynonpublic.com/rtl8812AU-driver-5.1.5-20170706.zip"
 
 EXTRA_OEMAKE = "LINUX_SRC=${STAGING_KERNEL_DIR} KDIR=${STAGING_KERNEL_DIR}"
 
-S = "${WORKDIR}/rtl8812AU-rtl8821AU-driver-${PV}"
+S = "${WORKDIR}/rtl8812AU"
 
 do_compile () {
     unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS CC LD CPP
@@ -40,5 +38,5 @@ do_install() {
 do_package_qa() {
 }
 
-SRC_URI[md5sum] = "317810f0b78b57b1fa3e16f0e8b62f68"
-SRC_URI[sha256sum] = "267be7201abfe594332d79a70aac7ad499708248a9efac9bdae2fb5f4154d613"
+SRC_URI[md5sum] = "fb800a4488ebc75094a1d232b6e787d5"
+SRC_URI[sha256sum] = "4f87c1e976b104cbfa4c38c85363df450ae32ef16dff83083a158516f8dd2939"
