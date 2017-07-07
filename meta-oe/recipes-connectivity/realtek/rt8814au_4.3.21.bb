@@ -8,7 +8,7 @@ inherit module
 
 PR = "r1"
 
-SRC_URI = "http://source.mynonpublic.com/rtl8814AU-driver-4.3.21-20170706.zip"
+SRC_URI = "http://source.mynonpublic.com/rtl8814AU-driver-4.3.21-20170707.zip"
 
 EXTRA_OEMAKE = "LINUX_SRC=${STAGING_KERNEL_DIR} KDIR=${STAGING_KERNEL_DIR}"
 
@@ -38,5 +38,5 @@ do_install() {
 do_package_qa() {
 }
 
-SRC_URI[md5sum] = "90cb79095765dcf101487e7d2ff99c5d"
-SRC_URI[sha256sum] = "30f9c2094c088c06323707aa12b7e78405bf033e5aea5ce4021e08b5cd49ae5a"
+SRC_URI[md5sum] = "538691f32b98a62c99c32ad80d2d8430"
+SRC_URI[sha256sum] = "e7414ed9495f72ece75435f23f79468a00a8e2697c95916a09a140c5148027c2"
