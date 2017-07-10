@@ -9,11 +9,15 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 RCONFLICTS_${PN} = "lirc"
 RREPLACES_${PN} = "lirc"
 
-PR = "r6"
+PR = "r7"
 
 SRC_URI = "http://prdownloads.sourceforge.net/lirc/lirc-${PV}.tar.bz2 \
-    file://stlirc.patch;patch=1 \
+    file://lirc-0.9.0-neutrino-uinput-hack.diff;patch=1 \
+    file://lirc-0.9.0-try_first_last_remote.diff;patch=1 \
+    file://lirc-0.9.0-uinput-repeat-fix.diff;patch=1 \
     file://fix-libusb-config.patch;patch=1 \
+    file://lirc-0.9.0-repeat_and_delay_hack.patch \
+    file://lirc-0.9.0-rename_input_device.patch \
     file://lircd.init \
     file://lircd_amiko8900.conf \
     file://lircd_amikoalien.conf \
