@@ -4,7 +4,7 @@ SECTION = "kernel/modules"
 LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=8ca43cbc842c2336e835926c2166c28b"
 
-MACHINE_KERNEL_PR_append = ".5"
+MACHINE_KERNEL_PR_append = ".6"
 
 SRC_URI = " \
         http://users.elis.ugent.be/~mronsse/cdfs/download/${P}.tar.bz2 \
@@ -21,6 +21,7 @@ SRC_URI = " \
         file://add-4.2-support.patch \
         file://add-4.6-support.patch \
         file://add-4.11-support.patch \
+        file://add-4.12-support.patch \
 "
 SRC_URI[md5sum] = "ac64c014a90e3c488394832ea29605b3"
 SRC_URI[sha256sum] = "d034f6c6d9578fe2addfaeceaa101584a4a1fc9f27d825c340baebd345d8d724"

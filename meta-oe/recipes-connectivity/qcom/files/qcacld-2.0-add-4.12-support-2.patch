@@ -1,0 +1,27 @@
+diff --git a/CORE/HDD/src/wlan_hdd_hostapd.c b/CORE/HDD/src/wlan_hdd_hostapd.c
+index 8fbfd2f583da..ba622034e47f 100644
+--- a/CORE/HDD/src/wlan_hdd_hostapd.c
++++ b/CORE/HDD/src/wlan_hdd_hostapd.c
+@@ -5565,7 +5565,7 @@ hdd_adapter_t* hdd_wlan_create_ap_dev( hdd_context_t *pHddCtx, tSirMacAddr macAd
+         vos_mem_copy(pHostapdAdapter->macAddressCurrent.bytes, (void *)macAddr, sizeof(tSirMacAddr));
+ 
+         pHostapdAdapter->offloads_configured = FALSE;
+-        pWlanHostapdDev->destructor = free_netdev;
++        pWlanHostapdDev->needs_free_netdev = true;
+         pWlanHostapdDev->ieee80211_ptr = &pHostapdAdapter->wdev ;
+         pHostapdAdapter->wdev.wiphy = pHddCtx->wiphy;
+         pHostapdAdapter->wdev.netdev =  pWlanHostapdDev;
+diff --git a/CORE/HDD/src/wlan_hdd_main.c b/CORE/HDD/src/wlan_hdd_main.c
+index fdc01e40db2f..067058fc7963 100644
+--- a/CORE/HDD/src/wlan_hdd_main.c
++++ b/CORE/HDD/src/wlan_hdd_main.c
+@@ -8030,7 +8030,7 @@ static hdd_adapter_t* hdd_alloc_station_adapter( hdd_context_t *pHddCtx, tSirMac
+ #endif
+       hdd_set_station_ops( pAdapter->dev );
+ 
+-      pWlanDev->destructor = free_netdev;
++      pWlanDev->needs_free_netdev = true;
+       pWlanDev->ieee80211_ptr = &pAdapter->wdev ;
+       pAdapter->wdev.wiphy = pHddCtx->wiphy;
+       pAdapter->wdev.netdev =  pWlanDev;
+
