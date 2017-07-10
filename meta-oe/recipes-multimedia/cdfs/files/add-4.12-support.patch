@@ -1,0 +1,16 @@
+diff --git a/root.c b/root.c
+index 941ac3eadda1..8417f827fddb 100644
+--- a/root.c
++++ b/root.c
+@@ -561,7 +561,11 @@ static void cdfs_read_inode(struct inode *i) {
+ 
+   if (i->i_ino <= 2) {                               /* . and .. */
+     i->i_size  = 0;                      /* Uuugh ?? */
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(4,12,0)
++    i->i_mtime = i->i_atime = i->i_ctime = current_time(i);
++#else
+     i->i_mtime = i->i_atime = i->i_ctime = CURRENT_TIME;
++#endif
+     i->i_mode  = S_IFDIR | S_IRUSR | S_IXUSR | S_IRGRP |  S_IXGRP | S_IROTH | S_IXOTH;
+     i->i_fop   = &cdfs_dir_operations;
+   } else {                                          /* file */

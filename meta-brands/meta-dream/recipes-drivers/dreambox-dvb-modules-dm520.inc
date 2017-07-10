@@ -1,7 +1,6 @@
 SUMMARY = "Hardware drivers for Dreambox"
 SECTION = "base"
 LICENSE = "CLOSED"
-DEPENDS = "virtual/kernel virtual/${TARGET_PREFIX}gcc"
 PRIORITY = "required"
 INC_PR = "r0"
 require conf/license/license-close.inc
@@ -11,12 +10,6 @@ DREAMBOX_DVB_MODULES_MIRROR ?= "http://dreamboxupdate.com/download/opendreambox/
 SRC_URI = "${DREAMBOX_DVB_MODULES_MIRROR}/dreambox-dvb-modules_${KV}-${MACHINE}-${DRIVERDATE}_${MACHINE}.tar.xz;name=${MACHINE}"
 
 S = "${WORKDIR}/dreambox-dvb-modules_${KV}-${MACHINE}-${DRIVERDATE}_${MACHINE}"
-
-inherit module-base
-
-addtask make_scripts after do_patch before do_compile
-do_make_scripts[lockfiles] = "${TMPDIR}/kernel-scripts.lock"
-do_make_scripts[depends] += "virtual/kernel:do_shared_workdir"
 
 INHIBIT_PACKAGE_STRIP = "1"
 INHIBIT_SYSROOT_STRIP = "1"

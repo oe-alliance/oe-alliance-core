@@ -10,13 +10,13 @@ LIC_FILES_CHKSUM = "file://${WORKDIR}/COPYING;md5=751419260aa954499f7abaabaa882b
 RDEPENDS_${PN} = "stinit"
 
 KV = "2.6.32.71-stm24-0217"
-SRCREV = "6b0f816e19964747422b6c2ad32e1809c186bebf"
+SRCREV = "79e3d756e48915148bf32bc82ed77c9442824df4"
 
 inherit module
 
 PACKAGES = "${PN} ${PN}-dev"
 
-INC_PR = "r44"
+INC_PR = "r46"
 PV = "${KV}+${SRCDATE}"
 
 PTI_NP_PATH ?= "/data/pti_np"
@@ -26,9 +26,6 @@ FILESEXTRAPATHS_prepend := "${THISDIR}/fulan-dvb-modules:"
 SRC_URI = " \
     git://github.com/Duckbox-Developers/driver.git;protocol=git \
     file://aotom_spark_procfs.patch;patch=1 \
-    file://aotom_disable_led1_pattern.patch;patch=1 \
-    file://silence_avs_printk.patch;patch=1 \
-    file://fix_videomode_names.patch;patch=1 \
     file://ddbootup \
     file://sh4booster \
     file://modules.conf \
@@ -129,6 +126,7 @@ do_install() {
     install -m 644 include/player2/PNGDecode_interface.h ${D}/${includedir}
     install -m 644 include/player2/RLEDecode_interface.h ${D}/${includedir}
     install -m 644 frontcontroller/aotom_spark/aotom_main.h ${D}/${includedir}
+ 
 
     #install modutils config
     install -d ${D}/${sysconfdir}/modules-load.d
