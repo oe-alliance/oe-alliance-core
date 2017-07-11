@@ -1,4 +1,4 @@
-PR .= ".2"
+PR .= ".3"
 
 PACKAGES += " \
             ${@bb.utils.contains("DISTRO_FEATURES", "appletalk", "packagegroup-base-appletalk", "", d)} \
@@ -28,7 +28,7 @@ RDEPENDS_packagegroup-base-smbfs-utils = "\
     samba \
     "
 
-RRRECOMMENDS_packagegroup-base-samba = "\
+RRECOMMENDS_packagegroup-base-samba = "\
     packagegroup-base-smbfs \
     packagegroup-base-smbfs-client \
     packagegroup-base-smbfs-server \
@@ -36,7 +36,7 @@ RRRECOMMENDS_packagegroup-base-samba = "\
     samba-advanced \
     "
 
-RRRECOMMENDS_packagegroup-base-appletalk = "\
+RRECOMMENDS_packagegroup-base-appletalk = "\
     kernel-module-appletalk \
     kernel-module-llc \
     kernel-module-psnap"
