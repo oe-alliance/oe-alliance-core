@@ -20,8 +20,8 @@ index 30d9c03..c1c88aa 100644
                   owner ? owner->name : "<NULL>");
  
          if (!owner || (owner == old_pkg) || obs)
--            file_hash_set_file_owner(new_file, new_pkg);
-+            file_hash_set_file_owner_with_old(new_file, new_pkg, old_pkg);
+-            file_hash_set_file_owner(new_file->path, new_pkg);
++            file_hash_set_file_owner_with_old(new_file->path, new_pkg, old_pkg);
      }
  
      if (old_pkg) {

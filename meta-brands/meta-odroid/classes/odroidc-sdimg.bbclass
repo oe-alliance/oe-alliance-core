@@ -41,13 +41,9 @@ IMAGE_ROOTFS_ALIGNMENT = "4096"
 SDIMG_ROOTFS_TYPE ?= "ext4"
 SDIMG_ROOTFS = "${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.${SDIMG_ROOTFS_TYPE}"
 
-IMAGE_DEPENDS_odroidc-sdimg = " \
-			parted-native \
-			mtools-native \
-			dosfstools-native \
-			virtual/kernel \
-			${@base_contains("KERNEL_IMAGETYPE", "uImage", "u-boot", "",d)} \
-			"
+do_image_odroidc-sdimg[depends] += "parted-native:do_populate_sysroot dosfstools-native:do_populate_sysroot mtools-native:do_populate_sysroot virtual/kernel:do_populate_sysroot ${@base_contains("KERNEL_IMAGETYPE", "uImage:do_populate_sysroot", "u-boot:do_populate_sysroot", "",d)}"
+
+
 # Amlogic Boot magic
 BL1_SUFFIX ?= "bin.hardkernel"
 BL1_SYMLINK ?= "bl1-${MACHINE}.${BL1_SUFFIX}"
