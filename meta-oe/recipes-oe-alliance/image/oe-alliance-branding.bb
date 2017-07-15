@@ -87,7 +87,7 @@ do_configure_prepend() {
     elif [ "${MACHINE}" = "blackbox7405" ]; then
         DRIVERSDATE=`grep "SRCDATE = " ${OEA-META-BLACKBOX-BASE}/recipes-drivers/blackbox-dvb-modules-blackbox7405.bb | cut -b 12-19`
     elif [ "${BRAND_OEM}" = "formuler" ]; then
-        if [ "${MACHINE}" = "formuler1" -o "${MACHINE}" = "formuler3" -o "${MACHINE}" = "formuler4"]; then
+        if [ "${MACHINE}" = "formuler1"] || [ "${MACHINE}" = "formuler3" ] || [ "${MACHINE}" = "formuler4"]; then
             DRIVERSDATE=`grep "SRCDATE = " ${OEA-META-FORMULER-BASE}/recipes-drivers/formuler-dvb-modules-${MACHINE}.bb | cut -b 12-19`
         else
             DRIVERSDATE=`grep "SRCDATE = " ${OEA-META-FORMULER-BASE}/recipes-drivers/formuler-dvb-modules-al-${MACHINE}.bb | cut -b 12-19`
