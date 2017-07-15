@@ -21,8 +21,8 @@ S = "${WORKDIR}/git"
 FILES_${PN} = "/tmp /usr/*"
 
 do_install() {
-	install -d ${D}/tmp/nfr
-	install -d ${D}/tmp/octagon
+	install -d ${D}/tmp/nfr/
+	install -d ${D}/tmp/octagon/
 	cp -rp ${S}/tmp/nfr/* ${D}/tmp/nfr/
 	cp -rp ${S}/tmp/nfr/* ${D}/tmp/octagon/
 	cp -rp ${S}/usr ${D}/
