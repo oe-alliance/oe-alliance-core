@@ -203,7 +203,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'force3uhdplus', 'mmcblk0p1' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'force3uhd', 'mmcblk0p1' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'revo4k', 'mmcblk0p1' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'galaxy4k', 'mmcblk0p1' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'rm4ksuper', 'mmcblk0p1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'tm4ksuper', 'mmcblk0p1' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'valalinux', 'mtd2' , '', d)}\
 "
 
