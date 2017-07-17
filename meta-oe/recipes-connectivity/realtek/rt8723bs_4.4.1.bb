@@ -4,7 +4,7 @@ SECTION = "kernel/modules"
 LICENSE = "GPLv2"
 require conf/license/license-gplv2.inc
 
-PR = "r0"
+PR = "r1"
 
 SRC_URI = "https://github.com/anthonywong/rtl8723bs/archive/v${PV}.tar.gz \
     file://rt8723bs-makefile.patch \
@@ -12,6 +12,7 @@ SRC_URI = "https://github.com/anthonywong/rtl8723bs/archive/v${PV}.tar.gz \
     file://rt8723bs-gcc5.patch \
     file://rt8723bs-add-4.8-support.patch \
     file://rt8723bs-add-4.11-support.patch \
+    file://rt8723bs-add-4.12-support.patch \
     "
 
 SRC_URI_append_sh4 = "file://rt8723bs_sh4.patch;patch=1 \
