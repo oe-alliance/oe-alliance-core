@@ -15,7 +15,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'beyonwizu4', 'Beyonwiz' , '', d)}\
 
 IMAGEDIR ?= "\
 ${@bb.utils.contains('MACHINEBUILD', 'gi11000', 'et1x000' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'beyonwizu4', 'et1x000' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'beyonwizu4', 'et13000' , '', d)}\
 "
 
 MTD_ROOTFS = "mmcblk0p4"
