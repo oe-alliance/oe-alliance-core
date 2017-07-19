@@ -5,14 +5,17 @@ BRAND_OEM = "xtrend"
 
 MACHINE_NAME = "\
 ${@bb.utils.contains('MACHINEBUILD', 'gi11000', 'ET11000' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'beyonwizu4', 'U4' , '', d)}\
 "
 
 MACHINE_BRAND = "\
 ${@bb.utils.contains('MACHINEBUILD', 'gi11000', 'Galaxy Innovations' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'beyonwizu4', 'Beyonwiz' , '', d)}\
 "
 
 IMAGEDIR ?= "\
 ${@bb.utils.contains('MACHINEBUILD', 'gi11000', 'et1x000' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'beyonwizu4', 'et1x000' , '', d)}\
 "
 
 MTD_ROOTFS = "mmcblk0p4"
@@ -42,7 +45,7 @@ MACHINE_EXTRA_RDEPENDS += "\
     ${@bb.utils.contains('MACHINEBUILD', 'gi11000', ' enigma2-plugin-systemplugins-vfdcontrol' , '', d)} \
     "
 
-MACHINE_EXTRA_RRECOMMENDS = " \
+MACHINE_EXTRA_RRECOMMENDS += " \
     ${@bb.utils.contains("GST_VERSION", "1.0", "gstreamer1.0-plugin-dvbmediasink", "gst-plugin-dvbmediasink", d)} \
     "
 
