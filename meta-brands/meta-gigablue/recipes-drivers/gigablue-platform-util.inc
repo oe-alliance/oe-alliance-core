@@ -6,7 +6,7 @@ PACKAGE_ARCH := "${MACHINE}"
 require conf/license/license-close.inc
 
 PV = "${KV}+${SRCDATE}"
-PR = "r2"
+PR = "r3"
 
 INHIBIT_PACKAGE_STRIP = "1"
 INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
@@ -34,7 +34,7 @@ FILES_${PN}="/home/root/platform /etc/init.d"
 
 inherit update-rc.d
 
-INITSCRIPT_PARAMS = "start 65 S . stop 90 0 ."
+INITSCRIPT_PARAMS = "start 38 S . stop 90 0 ."
 INITSCRIPT_NAME = "gigablue-platform-util"
 
 INSANE_SKIP_${PN} += "already-stripped"

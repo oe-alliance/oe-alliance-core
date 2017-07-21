@@ -87,7 +87,7 @@ do_configure_prepend() {
     elif [ "${MACHINE}" = "blackbox7405" ]; then
         DRIVERSDATE=`grep "SRCDATE = " ${OEA-META-BLACKBOX-BASE}/recipes-drivers/blackbox-dvb-modules-blackbox7405.bb | cut -b 12-19`
     elif [ "${BRAND_OEM}" = "formuler" ]; then
-        if [ "${MACHINE}" = "formuler1" -o "${MACHINE}" = "formuler3" -o "${MACHINE}" = "formuler4"]; then
+        if [ "${MACHINE}" = "formuler1"] || [ "${MACHINE}" = "formuler3" ] || [ "${MACHINE}" = "formuler4"]; then
             DRIVERSDATE=`grep "SRCDATE = " ${OEA-META-FORMULER-BASE}/recipes-drivers/formuler-dvb-modules-${MACHINE}.bb | cut -b 12-19`
         else
             DRIVERSDATE=`grep "SRCDATE = " ${OEA-META-FORMULER-BASE}/recipes-drivers/formuler-dvb-modules-al-${MACHINE}.bb | cut -b 12-19`
@@ -118,9 +118,9 @@ do_configure_prepend() {
         DRIVERSDATE=`grep "SRCDATE = " ${OEA-META-PROTEK-BASE}/recipes-drivers/protek-dvb-modules-${MACHINE}.bb | cut -b 12-19`
     elif [ "${BRAND_OEM}" = "dreambox" ]; then
         if [ "${MACHINE}" = "dm7080" ]; then
-            DRIVERSDATE="20170520"
+            DRIVERSDATE="20170711"
         elif [ "${MACHINE}" = "dm820" ]; then
-            DRIVERSDATE="20170520"
+            DRIVERSDATE="20170711"
         elif [ "${MACHINE}" = "dm520" ]; then
             DRIVERSDATE="20170425"
         elif [ "${MACHINE}" = "dm800" ]; then
@@ -128,13 +128,13 @@ do_configure_prepend() {
         elif [ "${MACHINE}" = "dm8000" ]; then
             DRIVERSDATE="20140604"
         elif [ "${MACHINE}" = "dm7020hd" -o "${MACHINE}" = "dm7020hdv2"]; then
-            DRIVERSDATE="20160701"
+            DRIVERSDATE="20161019"
         elif [ "${MACHINE}" = "dm800se" ]; then
             DRIVERSDATE="20151201"
         elif [ "${MACHINE}" = "dm800sev2" ]; then
             DRIVERSDATE="20151201"
         elif [ "${MACHINE}" = "dm900" ]; then
-            DRIVERSDATE="20170520"
+            DRIVERSDATE="20170717"
         else
             DRIVERSDATE="20150618"
         fi

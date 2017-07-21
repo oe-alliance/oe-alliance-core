@@ -68,7 +68,7 @@ pkg_postinst_kernel-image () {
 pkg_postrm_kernel-image () {
 }
 
-FILESEXTRAPATHS_prepend := "${THISDIR}/linux-octagon-${KV}:"
+FILESEXTRAPATHS_prepend := "${THISDIR}/linux-etxx00-${KV}:"
 
 do_rm_work() {
 }
