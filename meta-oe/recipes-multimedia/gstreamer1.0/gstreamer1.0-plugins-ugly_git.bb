@@ -8,7 +8,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=a6f89e2100d9b6cdffcea4f398e37343 \
 
 UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>(\d+(\.\d+)+))"
 
-SRCREV_base = "121e8e62106b6b791744dbbfec866f7c811db126"
+SRCREV_base = "3b99cf6c54415d7a2f89faf4326339983d643a5f"
 SRCREV_common = "29046b89d80bbca22eb222c18820fb40a4ac5bde"
 SRCREV_FORMAT = "base"
 

@@ -2,14 +2,14 @@ SUMMARY = "Linux kernel for ${MACHINE}"
 SECTION = "kernel"
 LICENSE = "GPLv2"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
-SRC = "20170227"
+SRC = "20170627"
 
 inherit kernel machine_kernel_pr
 
-KERNEL_RELEASE = "4.1.37"
+KERNEL_RELEASE = "4.1.20"
 
-SRC_URI[md5sum] = "2ab946924c0b740200bb20f8c49692f0"
-SRC_URI[sha256sum] = "a13bc69ec376b568235964103ccb9217efe559b2ebca859f69985f89b91f724a"
+SRC_URI[md5sum] = "ffdca937dbba15d996939b77208b9491"
+SRC_URI[sha256sum] = "809667b243f02ff8547ddf21879c412af4fc4bbfbcce1fc3eb150376bf4eb433"
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
@@ -23,7 +23,7 @@ PKG_kernel-image = "kernel-image"
 RPROVIDES_kernel-base = "kernel-${KERNEL_VERSION}"
 RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
 
-SRC_URI += "http://gi-et.info/et1x000/linux-${PV}-${SRC}.tar.xz \
+SRC_URI += "http://source.mynonpublic.com/xtrend/linux-${PV}-${SRC}.tar.xz \
     file://defconfig \
     file://0001-Support-TBS-USB-drivers-for-4.1-kernel.patch \
     file://0001-TBS-fixes-for-4.1-kernel.patch \

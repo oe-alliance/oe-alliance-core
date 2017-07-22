@@ -1,5 +1,7 @@
 SRCDATE = "20170302"
 
+SRC_URI = "http://gi-et.info/${MACHINE}/vmlinuz-initrd-${MACHINE}-${SRCDATE}.zip"
+
 require et-initrd.inc
 
 inherit deploy
