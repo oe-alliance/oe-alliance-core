@@ -5,13 +5,15 @@ CAF_MIRROR = "https://www.codeaurora.org/cgit/external/wlan"
 
 inherit module
 
-PR = "r1"
+PR = "r2"
 
 SRC_URI = "${CAF_MIRROR}/qcacld-2.0/snapshot/qcacld-2.0-${PV}.tar.gz \
     file://qcacld-2.0-add-4.11-support.patch \
-    file://qcacld-2.0-add-4.12-support.patch \
-    file://qcacld-2.0-add-4.12-support-2.patch \
 "
+
+#file://qcacld-2.0-add-4.12-support.patch
+#file://qcacld-2.0-add-4.12-support-2.patch
+
 
 S = "${WORKDIR}/qcacld-2.0-${PV}"
 
