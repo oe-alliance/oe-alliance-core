@@ -15,6 +15,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
 SRC_URI += "http://archiv.openmips.com/gigablue-linux-${PV}-20170331.tar.gz \
 	file://defconfig \
+	file://linux_dvb_adapter.patch \
 	file://bcm_genet_disable_warn.patch \
 	file://rt2800usb_fix_warn_tx_status_timeout_to_dbg.patch \
 	file://usb_core_hub_msleep.patch \
