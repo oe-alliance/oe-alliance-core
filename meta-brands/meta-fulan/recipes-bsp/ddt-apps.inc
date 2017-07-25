@@ -5,7 +5,7 @@ DEPENDS = "fulan-dvb-modules-${MACHINE}"
 
 inherit autotools gitpkgv
 
-SRCREV = "${AUTOREV}"
+SRCREV = "36c86d7c069c75d258cde0a0756c669e0294cd54"
 PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"
 
