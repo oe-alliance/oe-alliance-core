@@ -78,7 +78,6 @@ RDEPENDS_enigma2-plugin-extensions-dlnabrowser = "djmount fuse-utils libfuse2 li
 DESCRIPTION_enigma2-plugin-extensions-dlnaserver = "this is dlna server using minidlna"
 RDEPENDS_enigma2-plugin-extensions-dlnaserver = "minidlna"
 DESCRIPTION_enigma2-plugin-systemplugins-firmwareupgrade = "Upgrade your system Firmware"
-RDEPENDS_enigma2-plugin-systemplugins-firmwareupgrade_vuduo2 = "vuplus-checkvfd"
 DESCRIPTION_enigma2-plugin-systemplugins-fpgaupgrade = "Upgrade your system FPGA"
 DESCRIPTION_enigma2-plugin-systemplugins-vfdcontrol = "vfd controller"
 DESCRIPTION_enigma2-plugin-extensions-streamtv = "iptv player"
