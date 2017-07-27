@@ -2,14 +2,14 @@ SUMMARY = "Linux kernel for ${MACHINE}"
 SECTION = "kernel"
 LICENSE = "GPLv2"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
-SRC = "20170627"
+SRC = "20170724"
 
 inherit kernel machine_kernel_pr
 
-KERNEL_RELEASE = "4.1.20"
+KERNEL_RELEASE = "4.9.9"
 
-SRC_URI[md5sum] = "ffdca937dbba15d996939b77208b9491"
-SRC_URI[sha256sum] = "809667b243f02ff8547ddf21879c412af4fc4bbfbcce1fc3eb150376bf4eb433"
+SRC_URI[md5sum] = "c0d1dead9d8f748593fe3cd03372f8af"
+SRC_URI[sha256sum] = "09cd421adebda3b7e51ae266a8dfe419085c8a83afcc27593c632ef42107b235"
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
@@ -25,8 +25,8 @@ RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
 
 SRC_URI += "http://source.mynonpublic.com/xtrend/linux-${PV}-${SRC}.tar.xz \
     file://defconfig \
-    file://0001-Support-TBS-USB-drivers-for-4.1-kernel.patch \
-    file://0001-TBS-fixes-for-4.1-kernel.patch \
+    file://0001-Support-TBS-USB-drivers-for-4.6-kernel.patch \
+    file://0001-TBS-fixes-for-4.6-kernel.patch \
     file://0001-STV-Add-PLS-support.patch \
     file://0001-STV-Add-SNR-Signal-report-parameters.patch \
     file://blindscan2.patch \
