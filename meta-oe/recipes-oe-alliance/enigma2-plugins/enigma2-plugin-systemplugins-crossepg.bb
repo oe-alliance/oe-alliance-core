@@ -9,9 +9,9 @@ RDEPENDS_${PN} += "libcurl"
 inherit gitpkgv
 
 SRCREV = "${AUTOREV}"
-PV = "0.8.2+gitr${SRCPV}"
-PKGV = "0.8.2+gitr${GITPKGV}"
-PR = "r6"
+PV = "0.8.3+gitr${SRCPV}"
+PKGV = "0.8.3+gitr${GITPKGV}"
+PR = "r7"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
