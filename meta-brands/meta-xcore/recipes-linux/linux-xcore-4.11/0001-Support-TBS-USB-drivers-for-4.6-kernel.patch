@@ -22,9 +22,9 @@ index c117fb3..5e0735b 100644
  /* Product IDs */
  #define USB_PID_ADSTECH_USB2_COLD			0xa333
 @@ -388,4 +389,10 @@
- #define USB_PID_PCTV_2002E_SE                           0x025d
  #define USB_PID_SVEON_STV27                             0xd3af
  #define USB_PID_TURBOX_DTT_2000                         0xd3a4
+ #define USB_PID_WINTV_SOLOHD                            0x0264
 +#define USB_PID_TENOW_TBS5910				0x5910
 +#define USB_PID_TENOW_TBS5920				0x5920
 +#define USB_PID_TENOW_TBS5921				0x5921
@@ -182,14 +182,14 @@ index 8f18402..891e007 100644
 --- a/drivers/media/dvb-frontends/tda10071.h
 +++ b/drivers/media/dvb-frontends/tda10071.h
 @@ -49,6 +49,9 @@ struct tda10071_platform_data {
- 	 */
+ 	u8 pll_multiplier;
  	u8 tuner_i2c_addr;
  
 +	/* Hook for Lock LED */
 +	void (*set_lock_led)(struct dvb_frontend *fe, int offon);
 +
- 	/* Max bytes I2C provider can write at once.
- 	 * Note: Buffer is taken from the stack currently!
+ 	struct dvb_frontend* (*get_dvb_frontend)(struct i2c_client *);
+ };
  
 diff --git a/drivers/media/usb/dvb-usb/Kconfig b/drivers/media/usb/dvb-usb/Kconfig
 index 128eee6..49c34f9 100644
