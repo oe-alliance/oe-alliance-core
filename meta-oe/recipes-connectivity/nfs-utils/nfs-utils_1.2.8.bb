@@ -33,7 +33,9 @@ SRC_URI = "${KERNELORG_MIRROR}/linux/utils/nfs-utils/${PV}/nfs-utils-${PV}.tar.b
            file://nfs-utils.conf \
            file://nfs-server.service \
            file://nfs-mountd.service \
-           file://nfs-statd.service "
+           file://nfs-statd.service \
+           file://0001-include-stdint.h-for-UINT16_MAX-definition.patch \
+		   "
 
 SRC_URI[md5sum] = "6e7d97de51e428a0b8698c16ca23db77"
 SRC_URI[sha256sum] = "1cc8f02a633eddbf0a1d93421f331479c4cdab4c5ab33b8bf8c7c369f9156ac6"

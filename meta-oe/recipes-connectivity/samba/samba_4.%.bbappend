@@ -54,13 +54,25 @@ INITSCRIPT_PARAMS_${PN}-base = "defaults"
 DEPENDS_remove = "perl"
 RDEPENDS_${PN}_remove = "perl"
 
-PACKAGES =+ "libmessages-util-samba4 libwinbind-client-samba4 libtalloc-report-samba4"
+PACKAGES =+ "libmessages-util-samba4 libwinbind-client-samba4 libtalloc-report-samba4 ${PN}-advanced"
 RDEPENDS_${PN}-base_append = "${BPN}-common libmessages-util-samba4 libwinbind-client-samba4 libtalloc-report-samba4"
 # libmessages-util-samba4
 FILES_${PN}-base      += "${bindir}/smbpasswd ${bindir}/testparm \
                           ${bindir}/smbcontrol ${bindir}/smbstatus \
                           ${sysconfdir}/init.d/samba"
 FILES_${BPN}-common   += "${sysconfdir}/pam.d/samba"
+
+FILES_smbclient = "${bindir}/smbclient"
+
+FILES_${PN}-advanced = "${bindir}/cifsdd \
+                   ${bindir}/rpcclient \
+                   ${bindir}/smbcacls \
+                   ${bindir}/smbcquotas \
+                   ${bindir}/smbget \
+                   ${bindir}/smbspool \
+                   ${bindir}/smbtar \
+                   ${bindir}/smbtree \
+                   ${libdir}/samba/smbspool_krb5_wrapper"
 
 CONFFILES_${BPN}-common = "${sysconfdir}/pam.d/samba ${sysconfdir}/samba/smb.conf ${sysconfdir}/samba/private/users.map ${sysconfdir}/samba/private/smbpasswd"
 

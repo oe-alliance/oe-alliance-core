@@ -30,7 +30,7 @@ do_compile_append() {
 
 do_install() {
     install -d ${D}/usr/lib/enigma2/python/Plugins/Extensions/DreamPlex/skins/
-    cp -rp ${S} ${D}/usr/lib/enigma2/python/Plugins/Extensions/DreamPlex/skins/
+    cp -rp ${S}/* ${D}/usr/lib/enigma2/python/Plugins/Extensions/DreamPlex/skins/
     chmod -R a+rX ${D}/usr/lib/enigma2/python/Plugins/Extensions/DreamPlex/skins/
 }
 
