@@ -5,7 +5,7 @@ SECTION = "multimedia"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING.GPLv2;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 
-inherit gitpkgv
+inherit gitpkgv pythonnative
 SRCREV = "${AUTOREV}"
 PV = "1+git${SRCPV}"
 PKGV = "1+git${GITPKGV}"
@@ -17,6 +17,6 @@ S = "${WORKDIR}/git"
 
 inherit distutils-openplugins
 
-DEPENDS = "libbluray libudfread"
+DEPENDS = "python libbluray libudfread"
 
 FILES_${PN}-dbg += "/usr/lib/enigma2/python/Plugins/Extensions/BlurayPlayer/.debug"
