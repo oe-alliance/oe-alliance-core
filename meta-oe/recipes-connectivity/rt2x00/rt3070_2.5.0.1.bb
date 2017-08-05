@@ -7,7 +7,7 @@ PR = "r3"
 
 inherit module
 
-SRC_URI = "http://archiv.openmips.com/RT3070_RT3370_RT5370_RT5372.tar.gz"
+SRC_URI = "http://impex-sat.de/gigablue/wlan/RT3070_RT3370_RT5370_RT5372.tar.gz"
 
 EXTRA_OEMAKE = "LINUX_SRC=${STAGING_KERNEL_DIR} KDIR=${STAGING_KERNEL_DIR}"
 
