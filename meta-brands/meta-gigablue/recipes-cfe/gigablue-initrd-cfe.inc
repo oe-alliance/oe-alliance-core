@@ -20,7 +20,7 @@ do_deploy() {
     fi
 }
 
-SRC_URI = "http://archiv.openmips.com/beta/initrd_${MACHINE}_${SRCDATE}.zip"
+SRC_URI = "http://impex-sat.de/gigablue/initrd/initrd_${MACHINE}_${SRCDATE}.zip"
 
 S = "${WORKDIR}"
 
