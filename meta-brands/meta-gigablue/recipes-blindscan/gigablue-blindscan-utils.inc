@@ -17,7 +17,7 @@ RPROVIDES_gigablue-blindscan-dvbc-utils-${MACHINE} += "virtual/blindscan-dvbc"
 RPROVIDES_gigablue-blindscan-dvbs-utils-${MACHINE} += "virtual/blindscan-dvbs"
 
 DOWNLOADMACHINE ?= "${MACHINE}"
-SRC_URI = "http://archiv.openmips.com/gigablue-blindscan-utils-${SRCDATE}.tgz"
+SRC_URI = "http://impex-sat.de/gigablue/blindscan/gigablue-blindscan-utils-${SRCDATE}.tgz"
 
 S = "${WORKDIR}/blindscan-utils"
 
