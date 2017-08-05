@@ -13,7 +13,7 @@ SRC_URI[sha256sum] = "72928012a7dbacbf95a371d9faa6800a20afd6b106958298cfc4102887
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-SRC_URI += "http://archiv.openmips.com/gigablue-linux-${PV}-20170331.tar.gz \
+SRC_URI += "http://impex-sat.de/gigablue/linux/gigablue-linux-${PV}-20170331.tar.gz \
 	file://defconfig \
 	file://linux_dvb_adapter.patch \
 	file://bcm_genet_disable_warn.patch \
