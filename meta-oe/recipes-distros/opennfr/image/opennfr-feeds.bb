@@ -30,13 +30,14 @@ RRECOMMENDS_${PN} = "\
     enigma2-plugin-extensions-mainmenu2 \
     enigma2-plugin-skincomponents-bmediacenter-ax-blue-skin \
     enigma2-plugin-skincomponents-mediaportal-ax-bluee-skin \
-    enigma2-plugin-skins-ax-blue-fhd-4nfr \
+    enigma2-plugin-opennfrskins-ax-blue-fhd-4nfr \
     enigma2-plugin-skincomponents-mediaportal-blue-line-skin \
-    enigma2-plugin-skins-blue-line-oct-4nfr \
-    enigma2-plugin-skins-skallihd-fullhd \
-    enigma2-plugin-skins-iflat-blassermod \
-    enigma2-plugin-skins-fenris-blassermod \
-    enigma2-plugin-skins-prime-nfrstyle \
-    enigma2-plugin-skins-smoke-light-hd \
+    enigma2-plugin-opennfrskins-blue-line-oct-4nfr \
+    enigma2-plugin-opennfrskins-skallihd-fullhd \
+    enigma2-plugin-opennfrskins-iflat-blassermod \
+    enigma2-plugin-opennfrskins-fenris-blassermod \
+    enigma2-plugin-opennfrskins-bundesliga-hd-opennfr-mod \
+    enigma2-plugin-opennfrskins-prime-nfrstyle \
+    enigma2-plugin-opennfrskins-smoke-light-hd \
     enigma2-plugin-extensions-vmc \
 " 
