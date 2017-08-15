@@ -3,7 +3,7 @@ MAINTAINER = "opennfr"
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "proprietary"
-inherit allarch
+PACKAGE_ARCH = "all"
 
 require conf/license/license-gplv2.inc
 

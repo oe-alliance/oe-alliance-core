@@ -1,9 +1,9 @@
-SUMMARY = "Skin Full HD for NFR Images by stein17"
+SUMMARY = "Enigma2 Skin OpenNFRMod-Bundesliga HD"
 MAINTAINER = "opennfr"
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "proprietary"
-inherit allarch
+PACKAGE_ARCH = "all"
 
 require conf/license/license-gplv2.inc
 
@@ -11,10 +11,10 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "2.1+git${SRCPV}"
 PKGV = "2.1+git${GITPKGV}"
-VER ="2.1"
+VER ="1.0"
 PR = "r1"
 
-SRC_URI="git://github.com/stein17/AX-Blue-FHD-4NFR.git"
+SRC_URI="git://github.com/carlo0815/bundesliga-hd-opennfr-mod.git"
 
 S = "${WORKDIR}/git"
 

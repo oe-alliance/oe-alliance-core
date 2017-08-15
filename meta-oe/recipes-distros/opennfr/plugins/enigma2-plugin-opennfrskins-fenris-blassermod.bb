@@ -1,9 +1,9 @@
-SUMMARY = "Enigma2 Skin OpenNFR-iFlat-Blassermod"
+SUMMARY = "Enigma2 Skin OpenNFR-Fenris-Blassermod"
 MAINTAINER = "opennfr"
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "proprietary"
-inherit allarch
+PACKAGE_ARCH = "all"
 
 require conf/license/license-gplv2.inc
 
@@ -14,7 +14,7 @@ PKGV = "2.1+git${GITPKGV}"
 VER ="2.1"
 PR = "r1"
 
-SRC_URI="git://github.com/carlo0815/Iflat_Blasser_mod.git"
+SRC_URI="git://github.com/carlo0815/fenris_Blasser_mod.git"
 
 S = "${WORKDIR}/git"
 
