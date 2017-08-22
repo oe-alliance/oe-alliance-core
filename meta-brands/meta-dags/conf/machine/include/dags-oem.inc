@@ -322,8 +322,8 @@ ${@bb.utils.contains('MACHINEBUILD', 'force2plus', 'dags7362' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'force2nano', 'dags7362' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'force2se', 'dags7362' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'megaforce2', 'dags7362' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'worldvisionf1', 'dags7356' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'worldvisionf1plus', 'dags7356' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'worldvisionf1', 'dags7356f1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'worldvisionf1plus', 'dags7356f1' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'roxxs200hd', 'dags7335ci' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'mediaart200hd', 'dags7335ci' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'optimussos1plus', 'dags7356' , '', d)}\

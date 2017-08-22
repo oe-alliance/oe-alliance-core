@@ -12,7 +12,7 @@ INHIBIT_PACKAGE_STRIP = "1"
 INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
 
 SRC_URI = " \
-    http://archiv.openmips.com/beta/platform-util-${MACHINE}-${SRCDATE}.zip \
+    http://impex-sat.de/gigablue/drivers/platform-util-${MACHINE}-${SRCDATE}.zip \
     file://${INITSCRIPT_NAME}.sysvinit \
 "
 

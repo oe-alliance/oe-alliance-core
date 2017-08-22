@@ -10,6 +10,8 @@ PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"
 VER="1.0"
 
+RDEPENDS_${PN} = "enigma2-plugin-systemplugins-weathercomponenthandler"
+
 SRC_URI="git://github.com/stein17/Blue-Line-OE-4ATV.git;protocol=git"
 
 FILES_${PN} = "/"

@@ -7,7 +7,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PV = "1.0"
-PR = "r80"
+PR = "r81"
 
 inherit packagegroup
 
@@ -29,6 +29,7 @@ RRECOMMENDS_${PN} = " \
     enigma2-plugin-extensions-volume-adjust \
     enigma2-plugin-systemplugins-devicemanager \
     enigma2-plugin-systemplugins-videotune \
+    enigma2-plugin-extensions-atilehd \
     enigma2-plugin-systemplugins-softwaremanager \
     enigma2-plugin-systemplugins-hotplug \
     enigma2-plugin-systemplugins-positionersetup \

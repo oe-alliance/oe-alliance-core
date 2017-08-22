@@ -7,27 +7,9 @@ inherit allarch
 require conf/license/license-gplv2.inc
 
 PV = "6.2"
-PR = "r18"
+PR = "r20"
 
-SRC_URI="file://wait1.png \
-    file://wait2.png \
-    file://wait3.png \
-    file://wait4.png \
-    file://wait5.png \
-    file://wait6.png \
-    file://wait7.png \
-    file://wait8.png \
-    file://wait9.png \
-    file://wait10.png \
-    file://wait11.png \
-    file://wait12.png \
-    file://wait13.png \
-    file://wait14.png \
-    file://wait15.png \
-    file://wait16.png \
-    file://wait17.png \
-    file://wait18.png \
-	"
+SRC_URI="file://wait*.png" 
         
 S = "${WORKDIR}"        
 
