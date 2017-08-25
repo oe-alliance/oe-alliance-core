@@ -1,5 +1,5 @@
 diff --git a/os_dep/linux/ioctl_cfg80211.c b/os_dep/linux/ioctl_cfg80211.c
-index 66b0870bec77..d59e3433606b 100644
+index 66b0870bec77..8180ed96f85c 100644
 --- a/os_dep/linux/ioctl_cfg80211.c
 +++ b/os_dep/linux/ioctl_cfg80211.c
 @@ -800,6 +800,19 @@ check_bss:
@@ -48,16 +48,20 @@ index 66b0870bec77..d59e3433606b 100644
  {
  	enum nl80211_iftype old_type;
  	NDIS_802_11_NETWORK_INFRASTRUCTURE networkType;
-@@ -3951,7 +3972,7 @@ static int rtw_cfg80211_add_monitor_if(_adapter *padapter, char *name, struct ne
+@@ -3951,7 +3972,12 @@ static int rtw_cfg80211_add_monitor_if(_adapter *padapter, char *name, struct ne
  	mon_ndev->type = ARPHRD_IEEE80211_RADIOTAP;
  	strncpy(mon_ndev->name, name, IFNAMSIZ);
  	mon_ndev->name[IFNAMSIZ - 1] = 0;
--	mon_ndev->destructor = rtw_ndev_destructor;
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4, 12, 0))
++	mon_ndev->needs_free_netdev = true;
 +	mon_ndev->priv_destructor = rtw_ndev_destructor;
++#else
+ 	mon_ndev->destructor = rtw_ndev_destructor;
++#endif
  	
  #if (LINUX_VERSION_CODE>=KERNEL_VERSION(2,6,29))
  	mon_ndev->netdev_ops = &rtw_cfg80211_monitor_if_ops;
-@@ -4018,7 +4039,11 @@ static int
+@@ -4018,7 +4044,11 @@ static int
  	#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4, 1, 0))
  		unsigned char name_assign_type,
  	#endif
@@ -70,7 +74,7 @@ index 66b0870bec77..d59e3433606b 100644
  {
  	int ret = 0;
  	struct net_device* ndev = NULL;
-@@ -6524,7 +6549,11 @@ static void rtw_cfg80211_preinit_wiphy(_adapter *adapter, struct wiphy *wiphy)
+@@ -6524,7 +6554,11 @@ static void rtw_cfg80211_preinit_wiphy(_adapter *adapter, struct wiphy *wiphy)
  #endif
  
  #if defined(CONFIG_PM) && (LINUX_VERSION_CODE >= KERNEL_VERSION(3, 0, 0))
@@ -82,6 +86,20 @@ index 66b0870bec77..d59e3433606b 100644
  #ifdef CONFIG_PNO_SUPPORT
  	wiphy->max_sched_scan_ssids = MAX_PNO_LIST_COUNT;
  #endif
+diff --git a/os_dep/linux/os_intfs.c b/os_dep/linux/os_intfs.c
+index ff20062396be..0dbe51f53d5b 100644
+--- a/os_dep/linux/os_intfs.c
++++ b/os_dep/linux/os_intfs.c
+@@ -3093,7 +3093,9 @@ void rtw_ndev_destructor(struct net_device *ndev)
+ 	if (ndev->ieee80211_ptr)
+ 		rtw_mfree((u8 *)ndev->ieee80211_ptr, sizeof(struct wireless_dev));
+ #endif
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(4, 12, 0))
+ 	free_netdev(ndev);
++#endif
+ }
+ 
+ #ifdef CONFIG_ARP_KEEP_ALIVE
 -- 
-2.13.3
+2.14.1
 
