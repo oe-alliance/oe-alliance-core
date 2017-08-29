@@ -1,5 +1,5 @@
 diff --git a/os_dep/linux/ioctl_cfg80211.c b/os_dep/linux/ioctl_cfg80211.c
-index 66b0870bec77..8180ed96f85c 100644
+index 66b0870bec77..72bcb9f383e0 100644
 --- a/os_dep/linux/ioctl_cfg80211.c
 +++ b/os_dep/linux/ioctl_cfg80211.c
 @@ -800,6 +800,19 @@ check_bss:
@@ -16,7 +16,7 @@ index 66b0870bec77..8180ed96f85c 100644
 +			.resp_ie = pmlmepriv->assoc_rsp+sizeof(struct rtw_ieee80211_hdr_3addr)+6,
 +			.resp_ie_len = pmlmepriv->assoc_rsp_len-sizeof(struct rtw_ieee80211_hdr_3addr)-6,
 +		};
-+		cfg80211_roamed(padapter->pnetdev, &roam_info, GFP_KERNEL);
++		cfg80211_roamed(padapter->pnetdev, &roam_info, GFP_ATOMIC);
 +		}
 +#else
  		cfg80211_roamed(padapter->pnetdev
