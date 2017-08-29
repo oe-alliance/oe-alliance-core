@@ -1,5 +1,5 @@
 MODULE = "YouTube"
-DESCRIPTION = "Enigma2 plugin to manage your youtube account and wach videos"
+DESCRIPTION = "Enigma2 plugin to manage your youtube account and watch videos"
 MAINTAINER = "Taapat"
 
 require conf/license/license-gplv2.inc
