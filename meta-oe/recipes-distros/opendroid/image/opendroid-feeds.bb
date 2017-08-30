@@ -7,13 +7,14 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PV = "6.4"
-PR = "r13"
+PR = "r14"
 
 inherit packagegroup
 
 RRECOMMENDS_${PN} = "\
     oe-alliance-skins \
     enigma2-skins \
+    enigma2-display-skins \
     cdfs \
     enigma2-plugin-extensions-epgimport \
     enigma2-plugin-extensions-vhannibal-autosettings \
