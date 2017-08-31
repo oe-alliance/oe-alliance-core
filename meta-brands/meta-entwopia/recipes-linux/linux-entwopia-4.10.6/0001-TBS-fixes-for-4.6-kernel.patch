@@ -1,0 +1,55 @@
+From 1553b610994b399f4d42772f4a9565a4ce2a1245 Mon Sep 17 00:00:00 2001
+From: Athanasios Oikonomou <athoik@gmail.com>
+Date: Sat, 5 Mar 2016 01:34:21 +0200
+Subject: [PATCH] TBS: fixes for 4.3 kernel
+
+Change fe_sec_voltage_t to enum fe_sec_voltage.
+
+Remove TBS5921 because it uses tda10071_config that is unavailable.
+Driver should use I2C platform data now in order to load tda10071.
+More info: https://patchwork.linuxtv.org/patch/30472/
+
+diff --git a/drivers/media/usb/dvb-usb/tbs-usb.c b/drivers/media/usb/dvb-usb/tbs-usb.c
+index f142be3..98347c9 100644
+--- a/drivers/media/usb/dvb-usb/tbs-usb.c
++++ b/drivers/media/usb/dvb-usb/tbs-usb.c
+@@ -339,7 +339,7 @@ static int tbsusb_set_pin(struct dvb_frontend *fe, u8 *what)
+ }
+ 
+ static int tbsusb_set_voltage(struct dvb_frontend *fe,
+-						fe_sec_voltage_t voltage)
++						enum fe_sec_voltage voltage)
+ {
+ 	static u8 command_13v[2] = {0x03, 0x00};
+ 	static u8 command_18v[2] = {0x03, 0x01};
+@@ -787,17 +787,6 @@ static const struct stv090x_config stv0900_config = {
+ 	.set_lock_led		= tbsusb_led_ctrl,
+ };
+ 
+-static const struct tda10071_config tda10071_config = {
+-	.demod_i2c_addr = 0x55, /* (0xaa >> 1) */
+-	.tuner_i2c_addr = 0x14,
+-	.i2c_wr_max     = 64,
+-	.ts_mode        = TDA10071_TS_PARALLEL,
+-	.spec_inv       = 0,
+-	.xtal           = 40444000, /* 40.444 MHz */
+-	.pll_multiplier = 20,
+-	.set_lock_led   = tbsusb_led_ctrl,
+-};
+-
+ static const struct cx24116_config cx24116_config = {
+ 	.demod_address   = 0x55,
+ 	.mpg_clk_pos_pol = 0x01,
+@@ -840,9 +829,6 @@ static int tbsusb_frontend_attach(struct dvb_usb_adapter *d)
+ 		d->fe_adap[0].fe = dvb_attach(stv0288_attach, &stv0288_config,
+ 				&d->dev->i2c_adap);
+ 		break;
+-	case USB_PID_TENOW_TBS5921:
+-		d->fe_adap[0].fe = dvb_attach(tda10071_attach, &tda10071_config,
+-				&d->dev->i2c_adap);
+ 	}
+ 
+ 	if (!d->fe_adap[0].fe)
+-- 
+2.1.4
+

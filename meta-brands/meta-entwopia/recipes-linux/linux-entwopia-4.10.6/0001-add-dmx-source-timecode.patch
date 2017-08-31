@@ -1,0 +1,14 @@
+diff --git a/include/uapi/linux/dvb/dmx.h b/include/uapi/linux/dvb/dmx.h
+index b2a9ad8..e791d4c 100644
+--- a/include/uapi/linux/dvb/dmx.h
++++ b/include/uapi/linux/dvb/dmx.h
+@@ -133,6 +133,9 @@ typedef enum {
+ 	DMX_SOURCE_DVR3
+ } dmx_source_t;
+ 
++/* feature flag, add to DMX_SET_SOURCE argument to enable TS timecodes */
++#define DMX_SOURCE_TIMECODE 0x80
++
+ struct dmx_stc {
+ 	unsigned int num;	/* input : which STC? 0..N */
+ 	unsigned int base;	/* output: divisor for stc to get 90 kHz clock */
