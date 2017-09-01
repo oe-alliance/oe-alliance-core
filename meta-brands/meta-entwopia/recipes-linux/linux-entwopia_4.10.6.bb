@@ -24,7 +24,7 @@ RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
 
 SRC_URI += "http://source.mynonpublic.com/entwopia/${MACHINE}/${MACHINE}-linux-${PV}-base-${SRCDATE}.tgz \
     file://defconfig \
-    file://add-dmx-source-timecode.patch \
+    file://0001-add-dmx-source-timecode.patch \
     file://0002-nand-ecc-strength-and-bitflip.patch \
     file://TBS-fixes-for-4.10-kernel.patch \
     file://0001-Support-TBS-USB-drivers-for-4.6-kernel.patch \
