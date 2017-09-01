@@ -87,7 +87,7 @@ do_configure_prepend() {
     elif [ "${MACHINE}" = "blackbox7405" ]; then
         DRIVERSDATE=`grep "SRCDATE = " ${OEA-META-BLACKBOX-BASE}/recipes-drivers/blackbox-dvb-modules-blackbox7405.bb | cut -b 12-19`
     elif [ "${BRAND_OEM}" = "formuler" ]; then
-        if [ "${MACHINE}" = "formuler1"] || [ "${MACHINE}" = "formuler3" ] || [ "${MACHINE}" = "formuler4" ]; then
+        if [ "${MACHINE}" = "formuler1" ] || [ "${MACHINE}" = "formuler3" ] || [ "${MACHINE}" = "formuler4" ]; then
             DRIVERSDATE=`grep "SRCDATE = " ${OEA-META-FORMULER-BASE}/recipes-drivers/formuler-dvb-modules-${MACHINE}.bb | cut -b 12-19`
         else
             DRIVERSDATE=`grep "SRCDATE = " ${OEA-META-FORMULER-BASE}/recipes-drivers/formuler-dvb-modules-al-${MACHINE}.bb | cut -b 12-19`
@@ -127,7 +127,7 @@ do_configure_prepend() {
             DRIVERSDATE="20131228"
         elif [ "${MACHINE}" = "dm8000" ]; then
             DRIVERSDATE="20140604"
-        elif [ "${MACHINE}" = "dm7020hd" -o "${MACHINE}" = "dm7020hdv2"]; then
+        elif [ "${MACHINE}" = "dm7020hd" -o "${MACHINE}" = "dm7020hdv2" ]; then
             DRIVERSDATE="20161019"
         elif [ "${MACHINE}" = "dm800se" ]; then
             DRIVERSDATE="20151201"
