@@ -12,7 +12,7 @@ SRC_URI[sha256sum] = "a147b639445206ce85a56e155667ada38db1512e1c78fe9d4fd6d4be6f
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}-base/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-MACHINE_KERNEL_PR_append = ".1"
+MACHINE_KERNEL_PR_append = ".2"
 
 # By default, kernel.bbclass modifies package names to allow multiple kernels
 # to be installed in parallel. We revert this change and rprovide the versioned
@@ -34,6 +34,7 @@ SRC_URI += "http://source.mynonpublic.com/entwopia/${MACHINE}/${MACHINE}-linux-$
     file://blindscan2.patch \
     file://0001-stv090x-optimized-TS-sync-control.patch \
     file://0001-revert-xhci-plat.patch \
+    file://noforce_correct_pointer_usage.patch \
     "
 
 S = "${WORKDIR}/linux-${PV}-base"
