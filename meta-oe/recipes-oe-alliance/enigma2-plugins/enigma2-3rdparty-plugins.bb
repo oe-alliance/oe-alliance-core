@@ -11,7 +11,7 @@ DEPENDS = "tslib mpfr gmp"
 SRCREV = "${AUTOREV}"
 PV = "${IMAGE_VERSION}+gitr${SRCPV}"
 PKGV = "${IMAGE_VERSION}+gitr${GITPKGV}"
-PR = "r20"
+PR = "r21"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -61,7 +61,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-mp3browser_2.0rc1_all.ipk \
     enigma2-plugin-extensions-netspeedtest_1.0rc1_all.ipk \
     ${@bb.utils.contains('MACHINE_BRAND', 'Vu+', '' , 'enigma2-plugin-extensions-openopera_1.0-r0_mips32el.ipk', d)} \
-    enigma2-plugin-extensions-opkg-tools_1.4_all.ipk \
+    enigma2-plugin-extensions-opkg-tools_1.3_mipsel.ipk \
     enigma2-plugin-extensions-oscamstatusview_1.0rc1_all.ipk \
     enigma2-plugin-extensions-piconmanager_2.2-20150329-r0_all.ipk \
     enigma2-plugin-extensions-piconsupdater_0.3.6_mips32el.ipk \
