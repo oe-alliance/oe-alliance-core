@@ -5,7 +5,7 @@ FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://LICENSE.GPL;md5=930e2a5f63425d8dd72dbd7391c43c46"
 
-PR = "r0"
+PR = "r1"
 
 DEFAULT_PREFERENCE = "-1"
 
@@ -70,7 +70,7 @@ DEPENDS = " \
             libupnp \
             libshairport \
             libnfs \
-            alsa-lib \
+            alsa-conf \
             alsa-plugins \
           "
 
