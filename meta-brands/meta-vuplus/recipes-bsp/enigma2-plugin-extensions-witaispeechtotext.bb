@@ -4,7 +4,7 @@ LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://${COREBASE}/meta/files/common-licenses/GPL-2.0;md5=801f80980d171dd6425610833a22dbe6"
 
 DEPENDS = "python-native"
-RDEPENDS_${PN} = "python-requests enigma2-plugin-systemplugins-bluetoothsetup"
+RDEPENDS_${PN} = "python-requests bluetoothsetup-${MACHINE}"
 
 SRCDATE="20170327"
 SRCDATE_PR = "r0"
