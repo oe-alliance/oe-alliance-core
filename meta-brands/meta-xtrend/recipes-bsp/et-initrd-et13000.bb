@@ -1,4 +1,4 @@
-SRCDATE = "20170628"
+SRCDATE = "20170906"
 
 SRC_URI = "http://source.mynonpublic.com/xtrend/vmlinuz-initrd-${MACHINE}-${SRCDATE}.zip"
 
@@ -11,5 +11,5 @@ do_deploy() {
     fi
 }
 
-SRC_URI[md5sum] = "a9fa986e6737aad776fc3914023c9ad6"
-SRC_URI[sha256sum] = "1406253166e96ac50a8e8a9592e3fa1223573d0b8eae7707819d86a609eae9df"
+SRC_URI[md5sum] = "0c32eae195397157ad53a20bc58780b3"
+SRC_URI[sha256sum] = "49a8c0127800fbedbe1d2d4f29cbcda527c4a385cd157f6c2f530215b7174829"
