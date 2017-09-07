@@ -1,6 +1,6 @@
 #
 # Automatically generated file; DO NOT EDIT.
-# Linux/mips 4.12.8 Kernel Configuration
+# Linux/mips 4.12.0 Kernel Configuration
 #
 CONFIG_MIPS=y
 
@@ -70,8 +70,8 @@ CONFIG_BMIPS_GENERIC=y
 # CONFIG_DT_NETGEAR_CVG834G is not set
 # CONFIG_DT_SFR_NEUFBOX4_SERCOMM is not set
 # CONFIG_DT_SFR_NEUFBOX6_SERCOMM is not set
-CONFIG_DT_XC7346=y
-# CONFIG_DT_XC7362 is not set
+# CONFIG_DT_XC7346 is not set
+CONFIG_DT_XC7362=y
 CONFIG_OF_CFE=y
 CONFIG_RWSEM_GENERIC_SPINLOCK=y
 CONFIG_GENERIC_HWEIGHT=y
