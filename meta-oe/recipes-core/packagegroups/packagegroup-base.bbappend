@@ -1,4 +1,4 @@
-PR .= ".3"
+PR .= ".4"
 
 PACKAGES += " \
             ${@bb.utils.contains("DISTRO_FEATURES", "appletalk", "packagegroup-base-appletalk", "", d)} \
@@ -33,7 +33,6 @@ RRECOMMENDS_packagegroup-base-samba = "\
     packagegroup-base-smbfs-client \
     packagegroup-base-smbfs-server \
     packagegroup-base-smbfs-utils \
-    samba-advanced \
     "
 
 RRECOMMENDS_packagegroup-base-appletalk = "\
