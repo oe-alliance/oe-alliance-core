@@ -8,7 +8,7 @@ PACKAGE_ARCH = "${MACHINEBUILD}"
 require conf/license/license-close.inc
 
 PV = "${IMAGE_VERSION}"
-PR = "r0"
+PR = "r1"
 
 S = "${WORKDIR}"
 
@@ -18,11 +18,11 @@ INITSCRIPT_PARAMS = "start 99 S ."
 # Do not update-rc.d as update is done in postinst
 # inherit update-rc.d
 
+SRC_URI[md5sum] = "f490df8a6b25052e1951811e0f01ca0f"
+SRC_URI[sha256sum] = "71c3815f12427671719822ca9959db14b8809b8c52a0d0c41ee8989cceb43d05"
+
 SRC_URI = " \
-    file://hubFwUpdaterCLI.sh \
-    file://hubFwUpdaterCLI \
-    file://GLHubIsp.ini \
-    file://FW9303.rom \
+    file://gigablue-hubfwupdatercli.zip \
 "
 
 FILES_${PN} = "/usr/bin/hubFwUpdaterCLI /etc/init.d"
