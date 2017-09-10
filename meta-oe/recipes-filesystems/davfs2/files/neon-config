@@ -1,0 +1,67 @@
+#! /bin/sh
+
+prefix=/usr
+exec_prefix=/usr
+includedir=/usr/include
+libdir=/usr/lib
+
+support()
+{
+    if test "$1" = "yes"; then
+	exit 0
+    else
+	exit 1
+    fi
+}
+
+while test $# -gt 0; do
+    case "$1" in
+    -*=*) optarg=`echo "$1" | sed 's/[-_a-zA-Z0-9]*=//'` ;;
+    *) optarg= ;;
+    esac
+
+    case "$1" in
+    --prefix=*)
+	prefix=$optarg
+	;;
+
+    --prefix)
+	echo $prefix
+	;;
+
+    --version)
+	echo neon $(pkg-config --modversion neon)
+	exit 0
+	;;
+
+    --cflags)
+	pkg-config --cflags neon
+       	;;
+
+    --libs)
+	echo -Wl,-O1  -Wl,--as-needed $(pkg-config --libs neon)
+	;;
+
+    --la-file)
+	echo ${libdir}/libneon.la
+	;;
+
+    --support)
+	shift
+
+	case "$1" in
+	ssl|SSL) support yes ;;
+	zlib|ZLIB) support yes ;;
+	ipv6|IPV6) support yes ;;
+	dav|DAV) support yes ;;
+	lfs|LFS) support yes ;;
+	i18n|I18N) support yes ;;
+	ts_ssl|TS_SSL) support no ;;
+	*) support no ;;
+	esac
+	;;
+    esac
+    shift
+done
+
+exit 0
