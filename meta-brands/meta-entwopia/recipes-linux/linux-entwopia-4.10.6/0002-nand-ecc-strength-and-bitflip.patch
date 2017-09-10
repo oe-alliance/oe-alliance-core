@@ -1,0 +1,68 @@
+From 86790c837b1e564b8d94e4eec1041ae85f7e1b22 Mon Sep 17 00:00:00 2001
+From:  star <star@zgemma.org>
+Date: Thu, 17 Dec 2015 17:19:28 +0100
+Subject: [PATCH 3/3] nand: ecc strength and bitflip
+
+---
+ drivers/mtd/nand/brcmstb_nand.c | 38 ++++++++++++++++++++++----------------
+ 1 file changed, 22 insertions(+), 16 deletions(-)
+
+diff --git a/drivers/mtd/nand/brcmstb_nand.c b/drivers/mtd/nand/brcmstb_nand.c
+index b32a2c1..cf52d64 100644
+--- a/drivers/mtd/nand/brcmstb_nand.c
++++ b/drivers/mtd/nand/brcmstb_nand.c
+ 	chip->read_buf = brcmstb_nand_read_buf;
+ 
+ 	chip->ecc.mode = NAND_ECC_HW;
+-	chip->ecc.size = 512;
+-	chip->ecc.strength = 2;
+ 	chip->ecc.read_page = brcmstb_nand_read_page;
+ 	chip->ecc.read_subpage = brcmstb_nand_read_subpage;
+ 	chip->ecc.write_page = brcmstb_nand_write_page;
+@@ -1675,22 +1673,31 @@ static int brcmstb_nand_probe(struct platform_device *pdev)
+ 
+ 	chip->controller = &ctrl.controller;
+ 
+-	if (brcmstb_check_exceptions(mtd) && nand_scan_ident(mtd, 1, NULL)) {
+-		ret = -ENXIO;
+-		goto out;
+-	}
++	if (brcmstb_check_exceptions(mtd) && nand_scan_ident(mtd, 1, NULL))
++		return -ENXIO;
++
+ 	chip->options |= NAND_NO_SUBPAGE_WRITE | NAND_SKIP_BBTSCAN;
+ 	chip->bbt_options |= NAND_BBT_USE_FLASH | NAND_BBT_NO_OOB;
+-	if (nand_scan_tail(mtd) || brcmstb_nand_setup_dev(host) ||
+-			chip->scan_bbt(mtd)) {
+-		ret = -ENXIO;
+-		goto out;
+-	}
++
++	if (brcmstb_nand_setup_dev(host))
++		return -ENXIO;
++
++	/* nand_scan_tail() needs this to be set up */
++	if (is_hamming_ecc(&host->hwcfg))
++		chip->ecc.strength = 1;
++	else
++		chip->ecc.strength = host->hwcfg.ecc_level
++				<< host->hwcfg.sector_size_1k;
++	chip->ecc.size = host->hwcfg.sector_size_1k ? 1024 : 512;
++	/* only use our internal HW threshold */
++	mtd->bitflip_threshold = 1;
++
++	if (nand_scan_tail(mtd) || chip->scan_bbt(mtd))
++		return -ENXIO;
+ 
+ 	ret = brcmstb_choose_ecc_layout(host);
+-	if (ret) {
+-		goto out;
+-	}
++	if (ret)
++		return -ENXIO;
+ 
+ #if LINUX_VERSION_CODE >= KERNEL_VERSION(3, 0, 0)
+ 	mtd_device_parse_register(mtd, part_probe_types, NULL,
+-- 
+1.9.1
+

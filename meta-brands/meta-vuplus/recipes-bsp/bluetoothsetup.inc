@@ -1,12 +1,16 @@
 DESCRIPTION = "Vuplus bluetooth plugin"
 
 LICENSE = "CLOSED"
+require conf/license/license-close.inc
 
 DEPENDS = "python-native"
 RDEPENDS_${PN} = "vuplus-bluetooth-util"
 
-SRCDATE="20170727"
-SRCDATE_PR = "r3"
+PROVIDES += "enigma2-plugin-systemplugins-bluetoothsetup"
+RPROVIDES_${PN} += "enigma2-plugin-systemplugins-bluetoothsetup"
+
+RREPLACES_${PN} = "enigma2-plugin-systemplugins-bluetoothsetup"
+
 PR="${SRCDATE}.${SRCDATE_PR}"
 
 SRC_URI = " \
@@ -34,5 +38,3 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 INSANE_SKIP_${PN} = "already-stripped"
 
-SRC_URI[md5sum] = "064e1d783aba20cf3319f133269b8d70"
-SRC_URI[sha256sum] = "3212e1208a556a6d222aa94d67e783fa170a68c724968eadf20f40171ef7e83b"

@@ -3150,7 +3150,7 @@ CONFIG_SUNRPC=y
 # CONFIG_CEPH_FS is not set
 # CONFIG_CIFS is not set
 # CONFIG_NCP_FS is not set
-# CONFIG_CODA_FS is not set
+CONFIG_CODA_FS=m
 # CONFIG_AFS_FS is not set
 CONFIG_NLS=y
 CONFIG_NLS_DEFAULT="iso8859-1"
