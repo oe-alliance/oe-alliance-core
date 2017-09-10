@@ -9,7 +9,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "${IMAGE_VERSION}"
-PR = "r27"
+PR = "r28"
 
 DEPENDS = "enigma2-plugin-drivers-usbserial enigma2-plugin-systemplugins-plexdvrapi"
 RECOMMENDS = "enigma2-plugin-extensions-et-livestream"
@@ -59,6 +59,7 @@ RDEPENDS_${PN} = " \
     binutils \
     ctorrent \
     cups \
+    davfs2 \
     djmount \
     dosfstools \
     dvblast \
