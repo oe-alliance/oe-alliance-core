@@ -39,5 +39,5 @@ do_compile () {
 do_install () {
         mkdir -p ${D}${bindir}
         install -m 755 ${WORKDIR}/build/${bindir}/mergerfs ${D}${bindir}
-        install -m 755 ${WORKDIR}/build/${bindir}/mount.mergerfs ${D}${bindir}
+        ln -s mergerfs ${D}${bindir}/mount.mergerfs
 }
