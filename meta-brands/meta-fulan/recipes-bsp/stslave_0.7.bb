@@ -1,10 +1,10 @@
 inherit src_rpm
 
-STLINUX_SH_UPD_SRPMS = "http://ftp.stlinux.com/pub/stlinux/2.4/updates/SRPMS"
-STLINUX_STSLAVE = "stlinux24-target-stslave-${PV}-24.src.rpm"
+STLINUX_SH_UPD_SRPMS = "http://archive.stlinux.com/stlinux/2.4/updates/SRPMS"
+STLINUX_STSLAVE = "stlinux24-target-stslave-${PV}-29.src.rpm"
 
-SRC_URI[md5sum] = "6a4d3fa8f1b88715a3494ac1afe20ee5"
-SRC_URI[sha256sum] = "4a4f0c86626c14ab76651759501a2a7fe4f038eafe8e6e8eaa0c097a1b190d63"
+SRC_URI[md5sum] = "5c9da7b5a3c25aafb31b4f4ed8581b19"
+SRC_URI[sha256sum] = "8165d5c591454ca7f10780d228d29b08fceb2885f9289627640413586403e002"
 
 SRC_URI = "${STLINUX_SH_UPD_SRPMS}/${STLINUX_STSLAVE} \
 "
