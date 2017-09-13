@@ -1,0 +1,95 @@
+diff -Nur kernel-source/drivers/soc/brcmstb/memory.c kernel-source-meminfo/drivers/soc/brcmstb/memory.c
+--- kernel-source/drivers/soc/brcmstb/memory.c	2016-10-24 11:30:57.000000000 +0900
++++ kernel-source-meminfo/drivers/soc/brcmstb/memory.c	2017-09-13 19:09:49.006810334 +0900
+@@ -803,3 +803,67 @@
+ 	return 0;
+ }
+ EXPORT_SYMBOL(brcmstb_memory_kva_unmap);
++
++u64 brcmstb_memory_memc_size(int memc)
++{
++	const void *fdt = initial_boot_params;
++	const int mem_offset = fdt_path_offset(fdt, "/memory");
++	int addr_cells = 1, size_cells = 1;
++	const struct fdt_property *prop;
++	int proplen, cellslen;
++	u64 memc_size = 0;
++	int i;
++
++	/* Get root size and address cells if specified */
++	prop = fdt_get_property(fdt, 0, "#size-cells", &proplen);
++	if (prop)
++		size_cells = DT_PROP_DATA_TO_U32(prop->data, 0);
++
++	prop = fdt_get_property(fdt, 0, "#address-cells", &proplen);
++	if (prop)
++		addr_cells = DT_PROP_DATA_TO_U32(prop->data, 0);
++
++	if (mem_offset < 0)
++		return -1;
++
++	prop = fdt_get_property(fdt, mem_offset, "reg", &proplen);
++	cellslen = (int)sizeof(u32) * (addr_cells + size_cells);
++	if ((proplen % cellslen) != 0)
++		return -1;
++
++	for (i = 0; i < proplen / cellslen; ++i) {
++		u64 addr = 0;
++		u64 size = 0;
++		int memc_idx;
++		int j;
++
++		for (j = 0; j < addr_cells; ++j) {
++			int offset = (cellslen * i) + (sizeof(u32) * j);
++
++			addr |= (u64)DT_PROP_DATA_TO_U32(prop->data, offset) <<
++				((addr_cells - j - 1) * 32);
++		}
++		for (j = 0; j < size_cells; ++j) {
++			int offset = (cellslen * i) +
++				(sizeof(u32) * (j + addr_cells));
++
++			size |= (u64)DT_PROP_DATA_TO_U32(prop->data, offset) <<
++				((size_cells - j - 1) * 32);
++		}
++
++		if ((phys_addr_t)addr != addr) {
++			pr_err("phys_addr_t is smaller than provided address 0x%llx!\n",
++					addr);
++			return -1;
++		}
++
++		memc_idx = brcmstb_memory_phys_addr_to_memc((phys_addr_t)addr);
++		if (memc_idx == memc)
++			memc_size += size;
++	}
++
++	return memc_size;
++
++}
++EXPORT_SYMBOL(brcmstb_memory_memc_size);
++
+diff -Nur kernel-source/fs/proc/meminfo.c kernel-source-meminfo/fs/proc/meminfo.c
+--- kernel-source/fs/proc/meminfo.c	2016-10-10 10:05:49.000000000 +0900
++++ kernel-source-meminfo/fs/proc/meminfo.c	2017-09-13 19:13:28.854817972 +0900
+@@ -23,6 +23,7 @@
+ {
+ }
+ 
++extern u64 brcmstb_memory_memc_size(int memc);
+ static int meminfo_proc_show(struct seq_file *m, void *v)
+ {
+ 	struct sysinfo i;
+@@ -146,7 +147,11 @@
+ 		"CmaFree:        %8lu kB\n"
+ #endif
+ 		,
++#if 0
+ 		K(i.totalram),
++#else
++		((unsigned long)brcmstb_memory_memc_size(0)>>10),
++#endif
+ 		K(i.freeram),
+ 		K(available),
+ 		K(i.bufferram),
+
