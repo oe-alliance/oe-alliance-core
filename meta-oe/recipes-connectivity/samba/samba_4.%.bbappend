@@ -1,10 +1,21 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/${P}:"
-#FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
 # Remove acl, cups etc. support.
 PACKAGECONFIG_remove = "acl cups"
 
 PR="r0"
+
+SAMBA4_AUTH_MODULES="auth_wbc,auth_server,auth_netlogond,auth_script,auth_samba4"
+SAMBA4_IDMAP_MODULES="idmap_ad,idmap_rid,idmap_adex,idmap_hash,idmap_tdb2"
+SAMBA4_PDB_MODULES="${@bb.utils.contains('PACKAGECONFIG', 'ldap', 'pdb_ldap,', '', d)}pdb_ads,pdb_wbc_sam,pdb_samba4"
+SAMBA4_VFS_MODULES=""
+SAMBA4_MODULES="${SAMBA4_AUTH_MODULES},${SAMBA4_IDMAP_MODULES},${SAMBA4_PDB_MODULES}"
+
+SAMBA4_AUTH_MODULES_STATIC="auth_sam,auth_unix"
+SAMBA4_IDMAP_MODULES_STATIC=""
+SAMBA4_PDB_MODULES_STATIC="pdb_smbpasswd,pdb_tdbsam"
+SAMBA4_VFS_MODULES_STATIC="vfs_default,vfs_aio_pthread"
+SAMBA4_MODULES_STATIC="${SAMBA4_AUTH_MODULES_STATIC},${SAMBA4_PDB_MODULES_STATIC},${SAMBA4_VFS_MODULES_STATIC}"
 
 EXTRA_OECONF += " \
                  --without-cluster-support \
@@ -12,13 +23,11 @@ EXTRA_OECONF += " \
                  --with-sockets-dir=${localstatedir}/run \
                  --with-logfilebase=${localstatedir}/log \
                  --nopyc \
+                 --with-static-modules=${SAMBA4_MODULES_STATIC} \
                 "
-
-EXTRA_OECONF_remove = " \
-                       --with-cluster-support \
-                       --with-profiling-data \
-                       --with-sockets-dir=${localstatedir}/run/samba \
-                      "
+EXTRA_OECONF_remove = "--with-cluster-support"
+EXTRA_OECONF_remove = "--with-profiling-data"
+EXTRA_OECONF_remove = "--with-sockets-dir=${localstatedir}/run/samba"
 
 # Remove unused, add own config, init script
 SRC_URI += " \
@@ -30,7 +39,6 @@ SRC_URI += " \
            "
 
 do_install_append() {
-#	rm -fR ${D}/var
 	rm -fR ${D}/run
 	rm -fR ${D}${libdir}/tmpfiles.d
 	rm -fR ${D}${sysconfdir}/sysconfig
@@ -54,9 +62,8 @@ INITSCRIPT_PARAMS_${PN}-base = "defaults"
 DEPENDS_remove = "perl"
 RDEPENDS_${PN}_remove = "perl"
 
-PACKAGES =+ "libmessages-util-samba4 libwinbind-client-samba4 libtalloc-report-samba4"
-RDEPENDS_${PN}-base_append = "${BPN}-common libmessages-util-samba4 libwinbind-client-samba4 libtalloc-report-samba4"
-# libmessages-util-samba4
+RDEPENDS_${PN}-base_append = "${BPN}-common"
+
 FILES_${PN}-base      += "${bindir}/smbpasswd ${bindir}/testparm \
                           ${bindir}/smbcontrol ${bindir}/smbstatus \
                           ${sysconfdir}/init.d/samba"
@@ -64,21 +71,11 @@ FILES_${BPN}-common   += "${sysconfdir}/pam.d/samba"
 
 CONFFILES_${BPN}-common = "${sysconfdir}/pam.d/samba ${sysconfdir}/samba/smb.conf ${sysconfdir}/samba/private/users.map ${sysconfdir}/samba/private/smbpasswd"
 
-RRECOMMENDS_${PN}-base+= "wsdd"
+RRECOMMENDS_${PN}-base+= "pam-smbpass wsdd"
 
-
-pkg_prerm_${BPN}-common_prepend() {
-#!/bin/sh
-grep -v 'pam_smbpass.so' $D/etc/pam.d/common-password > $D/tmp/common-password
-mv $D/tmp/common-password $D/etc/pam.d/common-password
-}
 
 pkg_postinst_${BPN}-common_prepend() {
 #!/bin/sh
-
-grep -v 'pam_smbpass.so' $D/etc/pam.d/common-password > $D/tmp/common-password
-mv $D/tmp/common-password $D/etc/pam.d/common-password
-echo -e "password\toptional\t\t\tpam_smbpass.so nullok use_authtok use_first_pass" >> $D/etc/pam.d/common-password
 
 if [ -n "$D" ]; then
         grep -qE '^kids:' $D/etc/passwd
@@ -122,3 +119,4 @@ FILES_COMPRESS_dm800 = "${bindir}/smbclient ${bindir}/smbpasswd ${bindir}/testpa
                           ${bindir}/smbcontrol ${bindir}/smbstatus \
                           ${sbindir}/nmbd ${sbindir}/smbd \
                          "
+
