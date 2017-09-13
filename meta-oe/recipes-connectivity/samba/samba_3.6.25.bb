@@ -1,10 +1,16 @@
 require samba36.inc
 
-PR = "r9"
+PR = "r10"
 
 inherit update-rc.d
 
 SRC_URI += "file://smb.conf \
+           file://smb-user.conf \
+           file://smb-branding.conf \
+           file://smb-global.conf \
+           file://smb-insecure.conf \
+           file://smb-secure.conf \
+           file://smb-shares.conf \
            file://init.samba \
            file://pam.samba \
            file://users.map \
@@ -17,7 +23,7 @@ PACKAGECONFIG[talloc] = "--enable-external-libtalloc --with-libtalloc, --disable
 FILES_${PN}-base       = "${sbindir}/samba_multicall ${sbindir}/smbd ${sbindir}/nmbd \
                           ${bindir}/smbpasswd ${bindir}/smbstatus ${bindir}/smbcontrol ${bindir}/testparm \
                           ${sysconfdir}/init.d/samba \
-                          ${sysconfdir}/samba/smb.conf ${sysconfdir}/samba/private \
+                          ${sysconfdir}/samba \
                           ${libdir}/samba/*.dat ${base_libdir}/security/pam_smbpass.so \
                           ${sysconfdir}/pam.d/samba"
 RRECOMMENDS_${PN}-base+= "wsdd"
@@ -35,7 +41,7 @@ FILES_${PN}-advanced   = "${bindir}/net ${bindir}/profiles ${bindir}/rpcclient $
 INITSCRIPT_PACKAGES = "${PN}-base"
 INITSCRIPT_NAME_${PN}-base = "samba"
 INITSCRIPT_PARAMS = "defaults"
-CONFFILES_${PN}-base = "${sysconfdir}/samba/smb.conf ${sysconfdir}/samba/private/users.map ${sysconfdir}/samba/private/smbpasswd"
+CONFFILES_${PN}-base = "${sysconfdir}/samba/smb-user.conf ${sysconfdir}/samba/private/users.map ${sysconfdir}/samba/private/smbpasswd"
 
 PACKAGECONFIG ??= ""
 
@@ -49,11 +55,21 @@ do_install_append() {
     ln -sf ./samba_multicall ${D}${sbindir}/smbd
     ln -sf ./samba_multicall ${D}${sbindir}/nmbd
     ln -sf ../sbin/samba_multicall ${D}${bindir}/smbpasswd
+
+    install -d ${D}${sysconfdir}/samba
+    install -d ${D}${sysconfdir}/samba/distro
+    install -d ${D}${sysconfdir}/samba/private
     
     install -D -m 755 ${WORKDIR}/init.samba ${D}${sysconfdir}/init.d/samba
-    install -D -m 644 ${WORKDIR}/smb.conf ${D}${sysconfdir}/samba/smb.conf
-    install -D -m 600 ${WORKDIR}/users.map ${D}${sysconfdir}/samba/private/users.map
-    install -D -m 600 ${WORKDIR}/smbpasswd ${D}${sysconfdir}/samba/private/smbpasswd
+    install -m 644 ${WORKDIR}/smb.conf ${D}${sysconfdir}/samba
+    install -m 644 ${WORKDIR}/smb-user.conf ${D}${sysconfdir}/samba
+    install -m 644 ${WORKDIR}/smb-branding.conf ${D}${sysconfdir}/samba/distro
+    install -m 644 ${WORKDIR}/smb-global.conf ${D}${sysconfdir}/samba/distro
+    install -m 644 ${WORKDIR}/smb-insecure.conf ${D}${sysconfdir}/samba/distro
+    install -m 644 ${WORKDIR}/smb-secure.conf ${D}${sysconfdir}/samba/distro
+    install -m 644 ${WORKDIR}/smb-shares.conf ${D}${sysconfdir}/samba/distro
+    install -m 600 ${WORKDIR}/users.map ${D}${sysconfdir}/samba/private/users.map
+    install -m 600 ${WORKDIR}/smbpasswd ${D}${sysconfdir}/samba/private/smbpasswd
     install -D -m 644 ${WORKDIR}/pam.samba ${D}${sysconfdir}/pam.d/samba
 
     rmdir --ignore-fail-on-non-empty ${D}${base_sbindir} || true

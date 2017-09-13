@@ -3,7 +3,7 @@ FILESEXTRAPATHS_prepend := "${THISDIR}/${P}:"
 # Remove acl, cups etc. support.
 PACKAGECONFIG_remove = "acl cups"
 
-PR="r0"
+PR="r1"
 
 SAMBA4_AUTH_MODULES="auth_wbc,auth_server,auth_netlogond,auth_script,auth_samba4"
 SAMBA4_IDMAP_MODULES="idmap_ad,idmap_rid,idmap_adex,idmap_hash,idmap_tdb2"
@@ -32,6 +32,12 @@ EXTRA_OECONF_remove = "--with-sockets-dir=${localstatedir}/run/samba"
 # Remove unused, add own config, init script
 SRC_URI += " \
            file://smb.conf \
+           file://smb-user.conf \
+           file://smb-branding.conf \
+           file://smb-global.conf \
+           file://smb-insecure.conf \
+           file://smb-secure.conf \
+           file://smb-shares.conf \
            file://init.samba \
            file://pam.samba \
            file://users.map \
@@ -45,8 +51,15 @@ do_install_append() {
 	install -d ${D}${sysconfdir}/pam.d
         install -m 644 ${WORKDIR}/pam.samba ${D}${sysconfdir}/pam.d/samba
 	install -d ${D}${sysconfdir}/samba
+        install -d ${D}${sysconfdir}/samba/distro
 	install -d ${D}${sysconfdir}/samba/private
 	install -m 644 ${WORKDIR}/smb.conf ${D}${sysconfdir}/samba
+        install -m 644 ${WORKDIR}/smb-user.conf ${D}${sysconfdir}/samba
+        install -m 644 ${WORKDIR}/smb-branding.conf ${D}${sysconfdir}/samba/distro
+        install -m 644 ${WORKDIR}/smb-global.conf ${D}${sysconfdir}/samba/distro
+        install -m 644 ${WORKDIR}/smb-insecure.conf ${D}${sysconfdir}/samba/distro
+        install -m 644 ${WORKDIR}/smb-secure.conf ${D}${sysconfdir}/samba/distro
+        install -m 644 ${WORKDIR}/smb-shares.conf ${D}${sysconfdir}/samba/distro
 	install -m 644 ${WORKDIR}/smbpasswd ${D}${sysconfdir}/samba/private
 	install -m 644 ${WORKDIR}/users.map ${D}${sysconfdir}/samba/private
 	install -d ${D}${sysconfdir}/init.d
@@ -67,9 +80,9 @@ RDEPENDS_${PN}-base_append = "${BPN}-common"
 FILES_${PN}-base      += "${bindir}/smbpasswd ${bindir}/testparm \
                           ${bindir}/smbcontrol ${bindir}/smbstatus \
                           ${sysconfdir}/init.d/samba"
-FILES_${BPN}-common   += "${sysconfdir}/pam.d/samba"
+FILES_${BPN}-common   += "${sysconfdir}/pam.d/samba ${sysconfdir}/samba"
 
-CONFFILES_${BPN}-common = "${sysconfdir}/pam.d/samba ${sysconfdir}/samba/smb.conf ${sysconfdir}/samba/private/users.map ${sysconfdir}/samba/private/smbpasswd"
+CONFFILES_${BPN}-common = "${sysconfdir}/pam.d/samba ${sysconfdir}/samba/smb-user.conf ${sysconfdir}/samba/private/users.map ${sysconfdir}/samba/private/smbpasswd"
 
 RRECOMMENDS_${PN}-base+= "pam-smbpass wsdd"
 
