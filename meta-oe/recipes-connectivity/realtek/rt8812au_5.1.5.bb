@@ -6,9 +6,9 @@ LIC_FILES_CHKSUM = "file://ifcfg-wlan0;md5=a84acae65af4b2d44d5035aa9f63cd85"
 
 inherit module
 
-PR = "r1"
+PR = "r2"
 
-SRC_URI = "http://source.mynonpublic.com/rtl8812AU-driver-5.1.5-20170707.zip"
+SRC_URI = "http://source.mynonpublic.com/rtl8812AU-driver-5.1.5-20170914.zip"
 
 EXTRA_OEMAKE = "LINUX_SRC=${STAGING_KERNEL_DIR} KDIR=${STAGING_KERNEL_DIR}"
 
@@ -38,5 +38,5 @@ do_install() {
 do_package_qa() {
 }
 
-SRC_URI[md5sum] = "44f36780bc297f8aec9c70a46320bec7"
-SRC_URI[sha256sum] = "ac0bf5d3aa7bb0dffe876707c4bac923684372ec90e7ebf9a4f6bc3886839a71"
+SRC_URI[md5sum] = "5bb6be1683428b09bd3e4deb1e2c7622"
+SRC_URI[sha256sum] = "f3ac257ea4cdadfc9da8e275bfc19b3bd720f17d72cf5d23231ba7fb73bc28b3"
