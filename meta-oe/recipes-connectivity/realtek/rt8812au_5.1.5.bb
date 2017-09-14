@@ -8,7 +8,9 @@ inherit module
 
 PR = "r1"
 
-SRC_URI = "http://source.mynonpublic.com/rtl8812AU-driver-5.1.5-20170707.zip"
+SRC_URI = "http://source.mynonpublic.com/rtl8812AU-driver-5.1.5-20170707.zip \
+        file://0001-add-support-for-more-vendor-id.patch \
+"
 
 EXTRA_OEMAKE = "LINUX_SRC=${STAGING_KERNEL_DIR} KDIR=${STAGING_KERNEL_DIR}"
 
