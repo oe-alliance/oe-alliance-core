@@ -119,7 +119,7 @@ RDEPENDS_${PN} = " \
     python-singledispatch \
     python-levenshtein \
     python-pyexecjs \
-    rclone \
+    ${@bb.utils.contains("DEFAULTTUNE", "sh4", "" , "rclone", d)} \
     rsync \
     rtorrent \
     sabnzbd \
