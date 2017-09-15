@@ -1,36 +1,40 @@
-From 6322bb87a5802dae194f4821c0a0ed2c9a477ff7 Mon Sep 17 00:00:00 2001
+From d2ad89493520efcf2b676c1bdd22c0e89ad7379f Mon Sep 17 00:00:00 2001
 From: captain <openatv@gmail.com>
-Date: Sat, 25 Mar 2017 09:49:08 +0100
+Date: Fri, 15 Sep 2017 16:53:30 +0200
 Subject: [PATCH] v3d-platform
 
 ---
  Makefile.in                                  |   8 +-
- configure.ac                                 | 113 ++++++++++++++-
- m4/xbmc_arch.m4                              |  16 +++
+ configure.ac                                 | 125 ++++++++++++++-
+ m4/xbmc_arch.m4                              |  20 +++
  project/cmake/scripts/linux/ArchSetup.cmake  |   6 +-
- tools/depends/configure.ac                   |  56 ++++++++
- tools/depends/target/ffmpeg/autobuild.sh     |  16 ++-
+ tools/depends/configure.ac                   |  64 ++++++++
+ tools/depends/target/ffmpeg/autobuild.sh     |  16 +-
  xbmc/addons/AddonManager.cpp                 |   6 +
  xbmc/platform/xbmc.cpp                       |   9 ++
  xbmc/system_gl.h                             |   3 +
- xbmc/utils/DreamboxUtils.cpp                 | 102 +++++++++++++
- xbmc/utils/DreamboxUtils.h                   |  24 ++++
+ xbmc/utils/DreamboxUtils.cpp                 | 102 ++++++++++++
+ xbmc/utils/DreamboxUtils.h                   |  24 +++
  xbmc/utils/Makefile.in                       |   4 +
- xbmc/windowing/egl/EGLNativeTypeDreambox.cpp | 191 ++++++++++++++++++++++++
- xbmc/windowing/egl/EGLNativeTypeDreambox.h   |  61 ++++++++
- xbmc/windowing/egl/EGLNativeTypeV3D.cpp      | 161 +++++++++++++++++++++
- xbmc/windowing/egl/EGLNativeTypeV3D.h        |  59 ++++++++
- xbmc/windowing/egl/EGLNativeTypeV3DNXPL.cpp  | 208 +++++++++++++++++++++++++++
- xbmc/windowing/egl/EGLNativeTypeV3DNXPL.h    | 129 +++++++++++++++++
- xbmc/windowing/egl/EGLNativeTypeVuplus.cpp   | 177 +++++++++++++++++++++++
- xbmc/windowing/egl/EGLNativeTypeVuplus.h     |  60 ++++++++
- xbmc/windowing/egl/EGLWrapper.cpp            |  20 +++
- xbmc/windowing/egl/Makefile.in               |  12 ++
- 22 files changed, 1431 insertions(+), 10 deletions(-)
+ xbmc/windowing/egl/EGLNativeTypeDreambox.cpp | 191 ++++++++++++++++++++++
+ xbmc/windowing/egl/EGLNativeTypeDreambox.h   |  61 +++++++
+ xbmc/windowing/egl/EGLNativeTypeNexTV.cpp    | 229 +++++++++++++++++++++++++++
+ xbmc/windowing/egl/EGLNativeTypeNexTV.h      | 196 +++++++++++++++++++++++
+ xbmc/windowing/egl/EGLNativeTypeV3D.cpp      | 161 +++++++++++++++++++
+ xbmc/windowing/egl/EGLNativeTypeV3D.h        |  59 +++++++
+ xbmc/windowing/egl/EGLNativeTypeV3DNXPL.cpp  | 208 ++++++++++++++++++++++++
+ xbmc/windowing/egl/EGLNativeTypeV3DNXPL.h    | 129 +++++++++++++++
+ xbmc/windowing/egl/EGLNativeTypeVuplus.cpp   | 177 +++++++++++++++++++++
+ xbmc/windowing/egl/EGLNativeTypeVuplus.h     |  60 +++++++
+ xbmc/windowing/egl/EGLWrapper.cpp            |  25 +++
+ xbmc/windowing/egl/Makefile.in               |  15 ++
+ 24 files changed, 1888 insertions(+), 10 deletions(-)
  create mode 100644 xbmc/utils/DreamboxUtils.cpp
  create mode 100644 xbmc/utils/DreamboxUtils.h
  create mode 100644 xbmc/windowing/egl/EGLNativeTypeDreambox.cpp
  create mode 100644 xbmc/windowing/egl/EGLNativeTypeDreambox.h
+ create mode 100644 xbmc/windowing/egl/EGLNativeTypeNexTV.cpp
+ create mode 100644 xbmc/windowing/egl/EGLNativeTypeNexTV.h
  create mode 100644 xbmc/windowing/egl/EGLNativeTypeV3D.cpp
  create mode 100644 xbmc/windowing/egl/EGLNativeTypeV3D.h
  create mode 100644 xbmc/windowing/egl/EGLNativeTypeV3DNXPL.cpp
@@ -65,10 +69,10 @@ index 3c5de7c367..1ef8af4043 100644
  
  @APP_NAME_LC@-xrandr: xbmc-xrandr.c
 diff --git a/configure.ac b/configure.ac
-index 9bd8d6ec09..a8555c89c8 100644
+index 5bfd1ea739..12792c17ee 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -681,6 +681,55 @@ case $use_platform in
+@@ -681,6 +681,61 @@ case $use_platform in
       use_neon=yes
       use_cpu=cortex-a7
       ;;
@@ -121,10 +125,16 @@ index 9bd8d6ec09..a8555c89c8 100644
 +     use_gles=yes
 +     use_sdl=no
 +     ;;
++  nextv-cortexa15)
++     USE_NEXTV=1
++     target_platform=target_v3d
++     target_videoplatform=target_nextv
++     use_cpu=cortex-a15
++     ;;
  esac
  
  if test "$target_platform" = "target_raspberry_pi" ; then
-@@ -696,6 +745,13 @@ if test "$target_platform" = "target_raspberry_pi" ; then
+@@ -696,6 +751,13 @@ if test "$target_platform" = "target_raspberry_pi" ; then
       CXXFLAGS="$CXXFLAGS"
  fi
  
@@ -138,7 +148,7 @@ index 9bd8d6ec09..a8555c89c8 100644
  if test "$host_vendor" = "apple"; then
    use_avahi=no
    use_alsa=no
-@@ -819,6 +875,15 @@ elif test "$use_arch" = "arm"; then
+@@ -819,6 +881,15 @@ elif test "$use_arch" = "arm"; then
        [ CFLAGS="$SAVE_CFLAGS -Wa,-march=armv6 -mtune=cortex-a8 -mthumb-interwork"
          CXXFLAGS="$CXXFLAGS -Wa,-march=armv6 -mtune=cortex-a8 -mthumb-interwork"
          use_cpu=cortex-a8])
@@ -154,7 +164,7 @@ index 9bd8d6ec09..a8555c89c8 100644
    else
      if test "$use_neon" = "yes"; then
        CFLAGS="$CFLAGS -mfpu=neon -mvectorize-with-neon-quad"
-@@ -912,6 +977,9 @@ if test "x$have_builtin_sync_val_compare_and_swap" = "xyes"; then
+@@ -912,6 +983,9 @@ if test "x$have_builtin_sync_val_compare_and_swap" = "xyes"; then
          [Define to 1 if your compiler supports the __sync_val_compare_and_swap() intrinsic.])
  fi
  
@@ -164,7 +174,7 @@ index 9bd8d6ec09..a8555c89c8 100644
  # Check for u16string/u32string declarations
  AC_LANG_PUSH([C++])
  AC_CHECK_TYPES([std::u16string, std::u32string], [], [], [[#include <string>]])
-@@ -944,16 +1012,30 @@ if test "$use_gles" = "yes"; then
+@@ -944,16 +1018,35 @@ if test "$use_gles" = "yes"; then
      AC_DEFINE([HAVE_LIBEGL],[1],["Define to 1 if you have the `EGL' library (-lEGL)."])
      AC_DEFINE([HAVE_LIBGLESV2],[1],["Define to 1 if you have the `GLESv2' library (-lGLESv2)."])
      AC_MSG_RESULT(== WARNING: OpenGLES support is assumed.)
@@ -192,6 +202,11 @@ index 9bd8d6ec09..a8555c89c8 100644
 +      AC_DEFINE(HAS_EGLGLES, [1], [Define if supporting EGL based GLES Framebuffer])
 +      AC_MSG_RESULT(== WARNING: OpenGLES xcore support is assumed.)
 +      LIBS="$LIBS -lEGL -lGLESv2 -lv3dplatform"
++  elif test "$target_videoplatform" = "target_nextv" ; then
++      AC_DEFINE([HAVE_LIBEGL],[1],["Define to 1 if you have the `EGL' library (-lEGL)."])
++      AC_DEFINE([HAVE_LIBGLESV2],[1],["Define to 1 if you have the `GLESv2' library (-lGLESv2)."])
++      AC_MSG_RESULT(== WARNING: OpenGLES nextv support is assumed.)
++      LIBS="$LIBS -lEGL -lGLESv2 -lnexus -lv3ddriver -lnxpl -lnxclient"
 +  else
        AC_CHECK_LIB([EGL],   [main],, AC_MSG_ERROR($missing_library))
        AC_CHECK_LIB([GLESv2],[main],, AC_MSG_ERROR($missing_library))
@@ -199,7 +214,7 @@ index 9bd8d6ec09..a8555c89c8 100644
    fi
  else
    if test "$use_gl" = "yes"; then
-@@ -1056,7 +1138,7 @@ int main() {
+@@ -1056,7 +1149,7 @@ int main() {
    )])
  AC_LANG_POP([C++])
  
@@ -208,7 +223,7 @@ index 9bd8d6ec09..a8555c89c8 100644
    PKG_CHECK_MODULES([UUID], [uuid],, AC_MSG_ERROR(libuuid not found))
  fi
  
-@@ -1556,7 +1638,14 @@ if test "${USE_STATIC_FFMPEG}" = "1"; then
+@@ -1556,7 +1649,14 @@ if test "${USE_STATIC_FFMPEG}" = "1"; then
        pkg_cfg_prefix=${SYSROOT}
    fi
  
@@ -224,7 +239,7 @@ index 9bd8d6ec09..a8555c89c8 100644
      if test "$use_debug" != "yes"; then
        FFMPEG_OPTS="-r"
      fi
-@@ -1611,11 +1700,17 @@ if test "$FFMPEG_FOUND" != "true"; then
+@@ -1611,11 +1711,17 @@ if test "$FFMPEG_FOUND" != "true"; then
    PKG_CHECK_MODULES([FFMPEG], [$FFMPEG_LIBNAMES],
      [INCLUDES="$INCLUDES $FFMPEG_CFLAGS"; LIBS="$LIBS $FFMPEG_LIBS"; FFMPEG_FOUND="true"],
      [AC_MSG_ERROR("ffmpeg not found")])
@@ -243,7 +258,7 @@ index 9bd8d6ec09..a8555c89c8 100644
    GNUTLS_ALL_LIBS=$(${PKG_CONFIG} --static --libs-only-l --silence-errors gnutls)
  
    # check if static libs are available
-@@ -2330,6 +2425,10 @@ AC_SUBST(HAVE_SSE4)
+@@ -2330,6 +2436,11 @@ AC_SUBST(HAVE_SSE4)
  AC_SUBST(USE_MMAL)
  AC_SUBST(USE_X11)
  AC_SUBST(USE_OPTICAL_DRIVE)
@@ -251,14 +266,15 @@ index 9bd8d6ec09..a8555c89c8 100644
 +AC_SUBST(USE_DREAMBOX)
 +AC_SUBST(USE_XCORE)
 +AC_SUBST(USE_VUPLUS)
++AC_SUBST(USE_NEXTV)
  
  # pushd and popd are not available in other shells besides bash, so implement
  # our own pushd/popd functions
 diff --git a/m4/xbmc_arch.m4 b/m4/xbmc_arch.m4
-index d28f263002..6b917d86e8 100644
+index d28f263002..6834535fa2 100644
 --- a/m4/xbmc_arch.m4
 +++ b/m4/xbmc_arch.m4
-@@ -80,4 +80,20 @@ fi
+@@ -80,4 +80,24 @@ fi
  if test "$target_platform" = "target_raspberry_pi" ; then
    AC_SUBST(ARCH_DEFINES, "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -D_ARMEL -DTARGET_RASPBERRY_PI")
  fi
@@ -277,6 +293,10 @@ index d28f263002..6b917d86e8 100644
 +
 +if test "$target_videoplatform" = "target_vuplus" ; then
 +  AC_SUBST(ARCH_DEFINES, "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_V3D -DTARGET_VUPLUS")
++fi
++
++if test "$target_videoplatform" = "target_nextv" ; then
++  AC_SUBST(ARCH_DEFINES, "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_V3D -DTARGET_NEXTV")
 +fi
  ])
 diff --git a/project/cmake/scripts/linux/ArchSetup.cmake b/project/cmake/scripts/linux/ArchSetup.cmake
@@ -297,10 +317,10 @@ index c0cc1bf283..716c08cf01 100644
      set(NEON True)
      set(NEON_FLAGS "-mfpu=neon -mvectorize-with-neon-quad")
 diff --git a/tools/depends/configure.ac b/tools/depends/configure.ac
-index 3626ea5204..1daf9ac3fd 100644
+index 3626ea5204..8d6d937b9f 100644
 --- a/tools/depends/configure.ac
 +++ b/tools/depends/configure.ac
-@@ -408,6 +408,62 @@ case $use_platform in
+@@ -408,6 +408,70 @@ case $use_platform in
       platform_cxxflags="-fPIC -mcpu=cortex-a7 -mfloat-abi=hard -mfpu=neon-vfpv4"
       platform_ldflags="-lpthread"
       ;;
@@ -360,11 +380,19 @@ index 3626ea5204..1daf9ac3fd 100644
 +    platform_cxxflags="$platform_cflags"
 +    platform_os="linux"
 +  ;;
++  nextv-cortexa15)
++    target_platform=v3d
++    use_neon=yes
++    use_cpu=cortex-a15
++    platform_cflags="-fPIC -mcpu=cortex-a15 -mfloat-abi=hard -mfpu=neon-vfpv4"
++    platform_cxxflags="-fPIC -mcpu=cortex-a15 -mfloat-abi=hard -mfpu=neon-vfpv4"
++    platform_ldflags="-lpthread"
++  ;;
  esac
  
  if test "$target_platform" = "raspberry-pi" ; then
 diff --git a/tools/depends/target/ffmpeg/autobuild.sh b/tools/depends/target/ffmpeg/autobuild.sh
-index 5c2976278e..375ff92c22 100755
+index 5c2976278e..3ba3526c33 100755
 --- a/tools/depends/target/ffmpeg/autobuild.sh
 +++ b/tools/depends/target/ffmpeg/autobuild.sh
 @@ -116,7 +116,7 @@ then
@@ -372,7 +400,7 @@ index 5c2976278e..375ff92c22 100755
  
  [ -f ${ARCHIVE} ] ||
 -  curl -Ls --create-dirs -f -o ${ARCHIVE} ${BASE_URL}/${VERSION}.tar.gz ||
-+  wget -O ${ARCHIVE} ${BASE_URL}/${VERSION}.tar.gz ||
++  curl -k -Ls --create-dirs -f -o ${ARCHIVE} ${BASE_URL}/${VERSION}.tar.gz ||
    { echo "error fetching ${BASE_URL}/${VERSION}.tar.gz" ; exit 3; }
  [ $downloadonly ] && exit 0
  
@@ -878,6 +906,443 @@ index 0000000000..eb032063e7
 +private:
 +  void SetFramebufferResolution(const RESOLUTION_INFO &res) const;
 +  void SetFramebufferResolution(int width, int height) const;
++};
+diff --git a/xbmc/windowing/egl/EGLNativeTypeNexTV.cpp b/xbmc/windowing/egl/EGLNativeTypeNexTV.cpp
+new file mode 100644
+index 0000000000..da975a7359
+--- /dev/null
++++ b/xbmc/windowing/egl/EGLNativeTypeNexTV.cpp
+@@ -0,0 +1,229 @@
++/*
++ *      Copyright (C) 2011-2012 Team XBMC
++ *      http://www.xbmc.org
++ *
++ *  This Program is free software; you can redistribute it and/or modify
++ *  it under the terms of the GNU General Public License as published by
++ *  the Free Software Foundation; either version 2, or (at your option)
++ *  any later version.
++ *
++ *  This Program is distributed in the hope that it will be useful,
++ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++ *  GNU General Public License for more details.
++ *
++ *  You should have received a copy of the GNU General Public License
++ *  along with XBMC; see the file COPYING.  If not, see
++ *  <http://www.gnu.org/licenses/>.
++ *
++ */
++#include "system.h"
++#include "EGLNativeTypeNexTV.h"
++#include "utils/StringUtils.h"
++#include "utils/SysfsUtils.h"
++#include "utils/log.h"
++#include "guilib/gui3d.h"
++#include "linux/DllBCM.h"
++
++#include <stdio.h>
++#include <stdlib.h>
++#include <linux/fb.h>
++#include <sys/ioctl.h>
++#include <EGL/egl.h>
++
++CEGLNativeTypeNexTV::CEGLNativeTypeNexTV()
++{
++  m_nativeDisplay = NULL;
++  m_nativeWindow = NULL;
++}
++
++CEGLNativeTypeNexTV::~CEGLNativeTypeNexTV()
++{
++}  
++
++bool CEGLNativeTypeNexTV::CheckCompatibility()
++{
++  return true;
++}
++
++void CEGLNativeTypeNexTV::Initialize()
++{
++}
++
++void CEGLNativeTypeNexTV::Destroy()
++{
++}
++
++bool CEGLNativeTypeNexTV::CreateNativeDisplay()
++{
++  m_nativeDisplay = EGL_DEFAULT_DISPLAY;
++  return true;
++}
++
++bool CEGLNativeTypeNexTV::CreateNativeWindow()
++{
++  NxClient_Join(NULL);
++
++  NXPL_RegisterNexusDisplayPlatform(&nxpl_handle, nexus_display);
++  NXPL_NativeWindowInfoEXT nativeWindow;
++
++  NXPL_GetDefaultNativeWindowInfoEXT(&nativeWindow);
++
++  nativeWindow.x = 0;
++  nativeWindow.y = 0;
++  nativeWindow.width = 1280;
++  nativeWindow.height = 720;
++  nativeWindow.stretch = false;
++  nativeWindow.clientID = 0;
++  nativeWindow.zOrder = 0;
++
++  m_nativeWindow = NXPL_CreateNativeWindowEXT(&nativeWindow);
++  if (!m_nativeWindow)
++    return false;
++  return true;
++}
++
++bool CEGLNativeTypeNexTV::GetNativeDisplay(XBNativeDisplayType **nativeDisplay) const
++{
++  if (!nativeDisplay)	return false;
++  *nativeDisplay = (XBNativeDisplayType*) &m_nativeDisplay;
++  return true;
++}
++
++bool CEGLNativeTypeNexTV::GetNativeWindow(XBNativeDisplayType **nativeWindow) const
++{
++  if (!nativeWindow)	return false;
++  *nativeWindow = (XBNativeWindowType*) &m_nativeWindow;
++  return true;
++}
++
++bool CEGLNativeTypeNexTV::DestroyNativeDisplay()
++{
++    m_nativeDisplay = NULL;
++    return true;
++}
++
++bool CEGLNativeTypeNexTV::DestroyNativeWindow()
++{
++  NXPL_DestroyNativeWindow(m_nativeWindow);
++
++  NXPL_UnregisterNexusDisplayPlatform(nxpl_handle);
++  NxClient_Uninit();
++
++  return true;
++}
++
++bool CEGLNativeTypeNexTV::GetNativeResolution(RESOLUTION_INFO *res) const
++{
++  *res = m_desktopRes;
++  return true;
++}
++
++bool CEGLNativeTypeNexTV::SetNativeResolution(const RESOLUTION_INFO &res)
++{
++  m_desktopRes = res;
++  return SetDisplayResolution();
++}
++
++bool CEGLNativeTypeNexTV::ProbeResolutions(std::vector<RESOLUTION_INFO> &resolutions)
++{
++  resolutions.clear();
++
++  m_desktopResAll[0].iScreen      = 0;
++  m_desktopResAll[0].bFullScreen  = true;
++  m_desktopResAll[0].iWidth       = 1280;
++  m_desktopResAll[0].iHeight      = 720;
++  m_desktopResAll[0].iScreenWidth = 1280;
++  m_desktopResAll[0].iScreenHeight= 720;
++  m_desktopResAll[0].dwFlags      = D3DPRESENTFLAG_PROGRESSIVE;
++  m_desktopResAll[0].fRefreshRate = 50;
++  m_desktopResAll[0].fPixelRatio   = 1.0f;
++  m_desktopResAll[0].strMode = StringUtils::Format("%dx%d", 1280, 720);
++  m_desktopResAll[0].strMode = StringUtils::Format("%s @ %.2f%s - Full Screen", m_desktopResAll[0].strMode.c_str(), (float)50, m_desktopResAll[0].dwFlags & D3DPRESENTFLAG_INTERLACED ? "i" : "");
++  m_desktopResAll[0].iSubtitles   = static_cast<int>(0.965 * m_desktopResAll[0].iHeight);
++
++  CLog::Log(LOGDEBUG, "EGL initial desktop resolution %s\n", m_desktopResAll[0].strMode.c_str());
++
++  resolutions.push_back(m_desktopResAll[0]);
++
++  m_desktopResAll[1].iScreen      = 0;
++  m_desktopResAll[1].bFullScreen  = true;
++  m_desktopResAll[1].iWidth       = 1280;
++  m_desktopResAll[1].iHeight      = 720;
++  m_desktopResAll[1].iScreenWidth = 1280;
++  m_desktopResAll[1].iScreenHeight= 720;
++  m_desktopResAll[1].dwFlags      = D3DPRESENTFLAG_PROGRESSIVE | D3DPRESENTFLAG_MODE3DSBS;
++  m_desktopResAll[1].fRefreshRate = 50;
++  m_desktopResAll[1].fPixelRatio   = 1.0f;
++  m_desktopResAll[1].strMode = StringUtils::Format("%dx%d", 1280, 720);
++  m_desktopResAll[1].strMode = StringUtils::Format("%s @ %.2f%s - Full Screen 3DSBS", m_desktopResAll[1].strMode.c_str(), (float)50, m_desktopResAll[1].dwFlags & D3DPRESENTFLAG_INTERLACED ? "i" : "");
++  m_desktopResAll[1].iSubtitles   = static_cast<int>(0.965 * m_desktopResAll[1].iHeight);
++
++  CLog::Log(LOGDEBUG, "EGL initial desktop resolution %s\n", m_desktopResAll[1].strMode.c_str());
++
++  resolutions.push_back(m_desktopResAll[1]);
++
++  m_desktopResAll[2].iScreen      = 0;
++  m_desktopResAll[2].bFullScreen  = true;
++  m_desktopResAll[2].iWidth       = 1280;
++  m_desktopResAll[2].iHeight      = 720;
++  m_desktopResAll[2].iScreenWidth = 1280;
++  m_desktopResAll[2].iScreenHeight= 720;
++  m_desktopResAll[2].dwFlags      = D3DPRESENTFLAG_PROGRESSIVE | D3DPRESENTFLAG_MODE3DTB;
++  m_desktopResAll[2].fRefreshRate = 50;
++  m_desktopResAll[2].fPixelRatio   = 1.0f;
++  m_desktopResAll[2].strMode = StringUtils::Format("%dx%d", 1280, 720);
++  m_desktopResAll[2].strMode = StringUtils::Format("%s @ %.2f%s - Full Screen 3DTB", m_desktopResAll[2].strMode.c_str(), (float)50, m_desktopResAll[2].dwFlags & D3DPRESENTFLAG_INTERLACED ? "i" : "");
++  m_desktopResAll[2].iSubtitles   = static_cast<int>(0.965 * m_desktopResAll[2].iHeight);
++
++  CLog::Log(LOGDEBUG, "EGL initial desktop resolution %s\n", m_desktopResAll[2].strMode.c_str());
++
++  resolutions.push_back(m_desktopResAll[2]);
++
++  m_desktopResAll[3].iScreen      = 0;
++  m_desktopResAll[3].bFullScreen  = true;
++  m_desktopResAll[3].iWidth       = 1280;
++  m_desktopResAll[3].iHeight      = 720;
++  m_desktopResAll[3].iScreenWidth = 1920;
++  m_desktopResAll[3].iScreenHeight= 1080;
++  m_desktopResAll[3].dwFlags      = D3DPRESENTFLAG_PROGRESSIVE;
++  m_desktopResAll[3].fRefreshRate = 50;
++  m_desktopResAll[3].fPixelRatio   = 1.0f;
++  m_desktopResAll[3].strMode = StringUtils::Format("%dx%d", 1920, 1080);
++  m_desktopResAll[3].strMode = StringUtils::Format("%s @ %.2f%s - Full Screen", m_desktopResAll[3].strMode.c_str(), (float)50, m_desktopResAll[3].dwFlags & D3DPRESENTFLAG_INTERLACED ? "i" : "");
++  m_desktopResAll[3].iSubtitles   = static_cast<int>(0.965 * m_desktopResAll[3].iHeight);
++
++  CLog::Log(LOGDEBUG, "EGL initial desktop resolution %s\n", m_desktopResAll[3].strMode.c_str());
++
++  resolutions.push_back(m_desktopResAll[3]);
++
++  m_desktopRes = m_desktopResAll[0];
++
++  return true;
++}
++
++bool CEGLNativeTypeNexTV::GetPreferredResolution(RESOLUTION_INFO *res) const
++{
++  *res = m_desktopResAll[0];
++  return true;
++}
++
++bool CEGLNativeTypeNexTV::ShowWindow(bool show)
++{
++  NXPL_ShowNativeWindowEXT(m_nativeWindow, show);
++  return true;
++}
++
++bool CEGLNativeTypeNexTV::SetDisplayResolution()
++{
++	NXPL_NativeWindowInfoEXT nativeWindow;
++
++	NXPL_GetDefaultNativeWindowInfoEXT(&nativeWindow);
++	nativeWindow.x = nativeWindow.y = 0;
++	nativeWindow.width = m_desktopRes.iWidth;
++	nativeWindow.height = m_desktopRes.iHeight;
++	
++	NXPL_UpdateNativeWindowEXT(m_nativeWindow, &nativeWindow);
++
++	return true;
++}
+diff --git a/xbmc/windowing/egl/EGLNativeTypeNexTV.h b/xbmc/windowing/egl/EGLNativeTypeNexTV.h
+new file mode 100644
+index 0000000000..4151347862
+--- /dev/null
++++ b/xbmc/windowing/egl/EGLNativeTypeNexTV.h
+@@ -0,0 +1,196 @@
++#pragma once
++
++/*
++ *      Copyright (C) 2011-2012 Team XBMC
++ *      http://www.xbmc.org
++ *
++ *  This Program is free software; you can redistribute it and/or modify
++ *  it under the terms of the GNU General Public License as published by
++ *  the Free Software Foundation; either version 2, or (at your option)
++ *  any later version.
++ *
++ *  This Program is distributed in the hope that it will be useful,
++ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++ *  GNU General Public License for more details.
++ *
++ *  You should have received a copy of the GNU General Public License
++ *  along with XBMC; see the file COPYING.  If not, see
++ *  <http://www.gnu.org/licenses/>.
++ *
++ */
++
++#include "EGLNativeType.h"
++
++#include <vector>
++#include <string>
++
++#define NEXUS_DISPLAYHANDLE void*
++
++#ifdef __cplusplus
++extern "C" {
++#endif
++
++typedef void *NXPL_PlatformHandle;
++
++typedef enum NEXUS_BlendFactor
++{
++    NEXUS_BlendFactor_eZero
++} NEXUS_BlendFactor;
++
++typedef struct NEXUS_BlendEquation
++{
++    NEXUS_BlendFactor a;
++    NEXUS_BlendFactor b;
++    bool              subtract_cd;
++    NEXUS_BlendFactor c;
++    NEXUS_BlendFactor d;
++    bool              subtract_e;
++    NEXUS_BlendFactor e;
++} NEXUS_BlendEquation;
++
++typedef struct
++{
++   uint32_t             width;
++   uint32_t             height;
++   uint32_t             x;
++   uint32_t             y;
++   bool                 stretch;
++   uint32_t             clientID;
++   uint32_t             zOrder;
++   NEXUS_BlendEquation  colorBlend;
++   NEXUS_BlendEquation  alphaBlend;
++   uint32_t             magic;
++} NXPL_NativeWindowInfoEXT;
++
++/* FOR NXCLINET */
++typedef unsigned NEXUS_Error;
++
++#define NXCLIENT_MAX_NAME 32
++
++/***************************************************************************
++Summary:
++Autheticated ID for client/server communication.
++
++Description:
++For non-secure environments, the certificate could be a simple ID.
++For secure environments, this should use encrypted using standard public-key cryptography.
++***************************************************************************/
++typedef struct NEXUS_Certificate
++{
++    unsigned char data[256];
++    unsigned length;
++} NEXUS_Certificate;
++
++/**
++Summary:
++Client modes
++
++See nexus/docs/Nexus_MultiProcess.pdf for full discussion of process isolation and multi-process application design.
++**/
++typedef enum NEXUS_ClientMode
++{
++    NEXUS_ClientMode_eUnprotected, /* deprecated */
++    NEXUS_ClientMode_eVerified,    /* verify handle value, but not owner. unsynchronized caller may compromise nexus settings. */
++    NEXUS_ClientMode_eProtected,   /* full handle verification. access to full API. if client crashes, server is protected. */
++    NEXUS_ClientMode_eUntrusted,   /* full handle verification. access to limited API. see nexus/build/common/tools/nexus_untrusted_api.txt. if client crashes, server is protected. */
++    NEXUS_ClientMode_eMax
++} NEXUS_ClientMode;
++
++/**
++Summary:
++Join with Nexus server application (using app ipc) and Nexus driver (using Nexus multiprocess)
++
++Description:
++This dynamically registers a client with both nexus and the server app.
++NxClient_Join can be called from multiple processes, or multiple times from the same process.
++
++NxClient_Join is reference counted within the same process. You must call NxClient_Uninit an equal
++number of times to detach from nexus and the server app.
++**/
++typedef struct NxClient_JoinSettings
++{
++    char name[NXCLIENT_MAX_NAME];
++    bool tunnelCapable; /* deprecated */
++    unsigned timeout; /* in seconds. if unable to join, try again for this number of seconds. defaults to 0. */
++    unsigned session; /* set index to choose which session in a multi-session server configuration */
++    bool ignoreStandbyRequest; /* deprecated. see NxClient_RegisterAcknowledgeStandby() instead. */
++    NEXUS_ClientMode mode; /* requested client mode. server may reject the request. */
++    NEXUS_Certificate certificate; /* allows NEXUS_ClientMode_eProtected (aka trusted) status if server requires */
++} NxClient_JoinSettings;
++
++extern void NxClient_GetDefaultJoinSettings(NxClient_JoinSettings *pSettings);
++
++extern NEXUS_Error NxClient_Join(const NxClient_JoinSettings *pSettings);
++
++extern void NxClient_Uninit(void);
++
++
++/* Register a display for exclusive use. The client application should not use the display until
++ * calling NXPL_UnregisterNexusDisplayPlatform.
++ * It will register its own memory, h/w and display APIs suitable for basic exclusive mode rendering on
++ * a Nexus display.
++ * Fills in the NXPL platform handle, which must be passed back into the unregister function.
++ */
++void NXPL_RegisterNexusDisplayPlatform(NXPL_PlatformHandle *handle, NEXUS_DISPLAYHANDLE display);
++
++/* Unregister a display for exclusive use. The client application can the use the Nexus display again. */
++void NXPL_UnregisterNexusDisplayPlatform(NXPL_PlatformHandle handle);
++
++/* Generate a default NXPL_NativeWindowInfoEXT */
++void NXPL_GetDefaultNativeWindowInfoEXT(NXPL_NativeWindowInfoEXT *info);
++
++/* Create a 'native window' of the given size. This is really just a small structure that holds the size
++ * of the window that EGL will write into. */
++void *NXPL_CreateNativeWindowEXT(const NXPL_NativeWindowInfoEXT *info);
++
++/* Destroy a 'native window' */
++void NXPL_DestroyNativeWindow(void *nativeWin);
++
++/* Show/hide a 'native window' */
++void NXPL_ShowNativeWindowEXT(void *native,bool show);
++
++/* Update a 'native window' */
++void NXPL_UpdateNativeWindowEXT(void *native, NXPL_NativeWindowInfoEXT * nativeWindow);
++
++int NEXUS_Platform_AuthenticatedJoin(const void *settings);
++#define NEXUS_Platform_Join() NEXUS_Platform_AuthenticatedJoin(NULL)
++
++#ifdef __cplusplus
++}
++#endif
++
++class CEGLNativeTypeNexTV : public CEGLNativeType
++{
++public:
++  CEGLNativeTypeNexTV();
++  virtual ~CEGLNativeTypeNexTV();
++  virtual std::string GetNativeName() const { return "NexTV"; };
++  virtual bool  CheckCompatibility();
++  virtual void  Initialize();
++  virtual void  Destroy();
++  virtual int   GetQuirks() { return EGL_QUIRK_NONE; };
++
++  virtual bool  CreateNativeDisplay();
++  virtual bool  CreateNativeWindow();
++  virtual bool  GetNativeDisplay(XBNativeDisplayType **nativeDisplay) const;
++  virtual bool  GetNativeWindow(XBNativeWindowType **nativeWindow) const;
++
++  virtual bool  DestroyNativeWindow();
++  virtual bool  DestroyNativeDisplay();
++
++  virtual bool  GetNativeResolution(RESOLUTION_INFO *res) const;
++  virtual bool  SetNativeResolution(const RESOLUTION_INFO &res);
++  virtual bool  ProbeResolutions(std::vector<RESOLUTION_INFO> &resolutions);
++  virtual bool  GetPreferredResolution(RESOLUTION_INFO *res) const;
++
++  virtual bool  ShowWindow(bool show);
++private:
++  RESOLUTION_INFO m_desktopRes;
++  RESOLUTION_INFO m_desktopResAll[4];
++
++  NXPL_PlatformHandle nxpl_handle = 0;
++  NEXUS_DISPLAYHANDLE  nexus_display = 0;
++
++  bool SetDisplayResolution();
 +};
 diff --git a/xbmc/windowing/egl/EGLNativeTypeV3D.cpp b/xbmc/windowing/egl/EGLNativeTypeV3D.cpp
 new file mode 100644
@@ -1711,10 +2176,10 @@ index 0000000000..9f0ff93dea
 +  RESOLUTION_INFO m_desktopResAll[3];
 +};
 diff --git a/xbmc/windowing/egl/EGLWrapper.cpp b/xbmc/windowing/egl/EGLWrapper.cpp
-index 30f57577d6..b444573e25 100644
+index 30f57577d6..9bd8f61242 100644
 --- a/xbmc/windowing/egl/EGLWrapper.cpp
 +++ b/xbmc/windowing/egl/EGLWrapper.cpp
-@@ -37,6 +37,18 @@
+@@ -37,6 +37,21 @@
  #if defined(TARGET_LINUX) && defined(HAS_LIBAMCODEC)
  #include "EGLNativeTypeAmlogic.h"
  #endif
@@ -1730,10 +2195,13 @@ index 30f57577d6..b444573e25 100644
 +#if defined(TARGET_VUPLUS)
 +  #include "EGLNativeTypeVuplus.h"
 +#endif
++#if defined(TARGET_NEXTV)
++  #include "EGLNativeTypeNexTV.h"
++#endif
  #include "EGLWrapper.h"
  
  #define CheckError() m_result = eglGetError(); if(m_result != EGL_SUCCESS) CLog::Log(LOGERROR, "EGL error in %s: %x",__FUNCTION__, m_result);
-@@ -101,6 +113,14 @@ bool CEGLWrapper::Initialize(const std::string &implementation)
+@@ -101,6 +116,16 @@ bool CEGLWrapper::Initialize(const std::string &implementation)
        (nativeGuess = CreateEGLNativeType<CEGLNativeTypeIMX>(implementation))
  #elif defined(TARGET_LINUX) && defined(HAS_LIBAMCODEC)
        (nativeGuess = CreateEGLNativeType<CEGLNativeTypeAmlogic>(implementation))
@@ -1745,14 +2213,16 @@ index 30f57577d6..b444573e25 100644
 +      (nativeGuess = CreateEGLNativeType<CEGLNativeTypeV3D>(implementation))
 +#elif defined(TARGET_VUPLUS)
 +      (nativeGuess = CreateEGLNativeType<CEGLNativeTypeVuplus>(implementation))
++#elif defined(TARGET_NEXTV)
++      (nativeGuess = CreateEGLNativeType<CEGLNativeTypeNexTV>(implementation))
  #endif
        )
    {
 diff --git a/xbmc/windowing/egl/Makefile.in b/xbmc/windowing/egl/Makefile.in
-index 68f7862dfe..d1f1576102 100644
+index 68f7862dfe..7135eb5b46 100644
 --- a/xbmc/windowing/egl/Makefile.in
 +++ b/xbmc/windowing/egl/Makefile.in
-@@ -12,6 +12,18 @@ endif
+@@ -12,6 +12,21 @@ endif
  ifeq (@USE_IMXVPU@,1)
  SRCS+= EGLNativeTypeIMX.cpp
  endif
@@ -1767,6 +2237,9 @@ index 68f7862dfe..d1f1576102 100644
 +endif
 +ifeq (@USE_VUPLUS@,1)
 +SRCS+= EGLNativeTypeVuplus.cpp
++endif
++ifeq (@USE_NEXTV@,1)
++SRCS+= EGLNativeTypeNexTV.cpp
 +endif
  SRCS+= EGLWrapper.cpp
  
