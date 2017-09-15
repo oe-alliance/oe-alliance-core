@@ -1,0 +1,18 @@
+#!/bin/sh
+
+case "$1" in
+  start)
+    echo -n "Starting  platform-util"
+    start-stop-daemon --start --quiet --exec /usr/bin/nxserver --
+    echo "."
+    ;;
+  stop)
+    ;;
+  restart)
+    ;;
+  *)
+    echo "Usage: /etc/init.d/platform-util {start|stop|restart}"
+    exit 1
+esac
+
+exit 0

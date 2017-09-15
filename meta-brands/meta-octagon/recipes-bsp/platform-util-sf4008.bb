@@ -1,0 +1,8 @@
+SRCDATE = "20170911"
+SRCDATE_PR = "r0"
+PV="16.2"
+
+require platform-util.inc
+
+SRC_URI[md5sum] = "fa0d0c353d49f14ef2e3705972558ac9"
+SRC_URI[sha256sum] = "51b909ce2e9530731f11a45013fcb8084091955a366df992ce745d627b969fe4"
