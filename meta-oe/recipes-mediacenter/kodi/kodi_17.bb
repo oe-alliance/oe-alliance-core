@@ -76,8 +76,8 @@ DEPENDS = " \
 
 PROVIDES = "xbmc"
 
-SRCREV = "147cec4077415c93d3d84fb82cb6b695b5a9094c"
-PV = "17.3+gitr${SRCPV}"
+SRCREV = "7fc6da0c87414d2ba20055e084adc10546a15b7c"
+PV = "17.4+gitr${SRCPV}"
 SRC_URI = "git://github.com/xbmc/xbmc.git;branch=Krypton \
            file://0003-configure-don-t-try-to-run-stuff-to-find-tinyxml.patch \
            file://0006-Disable-DVD-support.patch \
@@ -89,7 +89,6 @@ SRC_URI = "git://github.com/xbmc/xbmc.git;branch=Krypton \
            file://v3d-platform.patch \
            file://brcmstb-settings.patch \
            file://e2player.patch \
-           file://ffmpeg-autobuild.patch \
 "
 
 SRC_URI_append_libc-musl = " \
