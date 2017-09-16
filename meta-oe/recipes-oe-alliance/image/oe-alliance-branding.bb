@@ -199,7 +199,12 @@ do_install_append() {
         install -m 0644 ${S}/BoxBranding/boxes/dm520.png ${D}/usr/share/enigma2/dm520.png
         ln -sf /usr/share/enigma2/dm520.png ${D}/usr/lib/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes/dm520.png
         install -m 0644 ${S}/BoxBranding/boxes/dm525.png ${D}/usr/share/enigma2/dm525.png
-        ln -sf /usr/share/enigma2/dm525.png ${D}/usr/lib/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes/dm525.png 
+        ln -sf /usr/share/enigma2/dm525.png ${D}/usr/lib/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes/dm525.png
+    elif [ ${MACHINEBUILD} = "dm900" ]; then
+        install -m 0644 ${S}/BoxBranding/boxes/dm900.png ${D}/usr/share/enigma2/dm900.png
+        ln -sf /usr/share/enigma2/dm900.png ${D}/usr/lib/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes/dm900.png
+        install -m 0644 ${S}/BoxBranding/boxes/dm920.png ${D}/usr/share/enigma2/dm920.png
+        ln -sf /usr/share/enigma2/dm920.png ${D}/usr/lib/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes/dm920.png
     else
         install -m 0644 ${S}/BoxBranding/boxes/${MACHINEBUILD}.png ${D}/usr/share/enigma2/${MACHINEBUILD}.png
         ln -sf /usr/share/enigma2/${MACHINEBUILD}.png ${D}/usr/lib/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes/${MACHINEBUILD}.png
