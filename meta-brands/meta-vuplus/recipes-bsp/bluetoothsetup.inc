@@ -4,7 +4,7 @@ LICENSE = "CLOSED"
 require conf/license/license-close.inc
 
 DEPENDS = "python-native"
-RDEPENDS_${PN} = "vuplus-bluetooth-util"
+RDEPENDS_${PN} = "vuplus-bluetooth-util libusb-compat"
 
 PROVIDES += "enigma2-plugin-systemplugins-bluetoothsetup"
 RPROVIDES_${PN} += "enigma2-plugin-systemplugins-bluetoothsetup"
