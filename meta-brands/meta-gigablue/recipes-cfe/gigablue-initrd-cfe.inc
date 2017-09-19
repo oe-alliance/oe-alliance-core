@@ -10,6 +10,13 @@ require conf/license/license-gplv2.inc
 PR = "r2"
 ALLOW_EMPTY_${PN} = "1"
 
+do_install() {
+    install -d ${D}/usr/share
+    install -m 0644 ${WORKDIR}/gpt.bin ${D}/usr/share/gpt.bin
+}
+
+FILES_${PN} = "/usr/share"
+
 inherit deploy
 do_deploy() {
     if [ -e boot.bin  ]; then

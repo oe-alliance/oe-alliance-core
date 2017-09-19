@@ -38,6 +38,3 @@ IMAGE_CMD_tar_prepend = "\
     rm -Rf gigablue; \
 "
 
-EXTRA_IMAGEDEPENDS = "\
-    gigablue-initrd-cfe-${MACHINE_DRIVER} \
-"

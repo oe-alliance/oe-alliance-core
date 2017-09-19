@@ -187,6 +187,7 @@ MACHINE_EXTRA_RRECOMMENDS = " \
     gstreamer1.0-libav \
     gigablue-cfe \
     ${@bb.utils.contains('DISTRO_FEATURES', 'audioeffect', 'enigma2-plugin-systemplugins-audioeffect' , '', d)} \
+	${@bb.utils.contains('MACHINE', 'gb7252', 'gigablue-initrd-cfe-${MACHINE_DRIVER}' , '', d)} \
     "
 
 EXTRA_IMAGEDEPENDS += "\
@@ -198,7 +199,6 @@ MACHINE_EXTRA_RDEPENDS = "\
     ${@bb.utils.contains('MACHINE', 'gb7252', 'enigma2-plugin-systemplugins-remotecontrolcode' , '', d)} \
     ${@bb.utils.contains('MACHINEBUILD', 'gb800solo', 'mtd-utils-jffs2' , '', d)} \
     ${@bb.utils.contains('MACHINEBUILD', 'gbipbox', 'enigma2-plugin-extensions-gbipboxclient' , '', d)} \
-    ${@bb.utils.contains('MACHINEBUILD', 'gbquad4k', 'enigma2-plugin-systemplugins-remotecontrolcode' , '', d)} \
 "
 
 include conf/machine/include/autoload-filesystems.inc
