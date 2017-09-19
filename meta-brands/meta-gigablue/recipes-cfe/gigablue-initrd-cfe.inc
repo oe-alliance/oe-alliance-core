@@ -7,13 +7,16 @@ PACKAGE_ARCH := "${MACHINE}"
 
 require conf/license/license-gplv2.inc
 
-PR = "r1"
+PR = "r2"
 ALLOW_EMPTY_${PN} = "1"
 
 inherit deploy
 do_deploy() {
     if [ -e boot.bin  ]; then
     install -m 0644 boot.bin  ${DEPLOYDIR}/${MACHINE}_boot.bin
+    fi
+    if [ -e gpt.bin  ]; then
+    install -m 0644 gpt.bin  ${DEPLOYDIR}/${MACHINE}_gpt.bin
     fi
     if [ -e rescue.bin  ]; then
     install -m 0644 rescue.bin  ${DEPLOYDIR}/${MACHINE}_rescue.bin
