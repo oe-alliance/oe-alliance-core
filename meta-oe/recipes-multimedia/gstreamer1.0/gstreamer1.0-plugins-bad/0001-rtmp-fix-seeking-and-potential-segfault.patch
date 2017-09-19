@@ -10,10 +10,10 @@ diff --git a/ext/rtmp/gstrtmpsrc.c b/ext/rtmp/gstrtmpsrc.c
 index b9ecfcf..8b4bf22 100644
 --- a/ext/rtmp/gstrtmpsrc.c
 +++ b/ext/rtmp/gstrtmpsrc.c
-@@ -86,7 +86,6 @@ static void gst_rtmp_src_get_property (GObject * object, guint prop_id,
-     GValue * value, GParamSpec * pspec);
+@@ -89,7 +89,6 @@
  static void gst_rtmp_src_finalize (GObject * object);
  
+ static gboolean gst_rtmp_src_connect (GstRTMPSrc * src);
 -static gboolean gst_rtmp_src_unlock (GstBaseSrc * src);
  static gboolean gst_rtmp_src_stop (GstBaseSrc * src);
  static gboolean gst_rtmp_src_start (GstBaseSrc * src);

@@ -8,8 +8,8 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=c54ce9345727175ff66d17b67ff51f58 \
 
 UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>(\d+(\.\d+)+))"
 
-SRCREV_base = "88fea7c5119afe6a2a706fda9a29156b1202227d"
-SRCREV_common = "29046b89d80bbca22eb222c18820fb40a4ac5bde"
+SRCREV_base = "7b1056b9467673d004ea7dd63ad91461b8f616fa"
+SRCREV_common = "3f4aa969cbe39584a649d98d4cf321d78bd73092"
 SRCREV_FORMAT = "base"
 
 SRC_URI = "git://anongit.freedesktop.org/gstreamer/gst-plugins-base;branch=master;name=base \

@@ -9,8 +9,8 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=6762ed442b3822387a51c92d928ead0d \
 
 UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>(\d+(\.\d+)+))"
 
-SRCREV_base = "ea62c96b94272c974b2a92e6e4d2e759f14f3894"
-SRCREV_common = "29046b89d80bbca22eb222c18820fb40a4ac5bde"
+SRCREV_base = "f649f0a44f42fda56c8eb912b7ffca0f1178b905"
+SRCREV_common = "3f4aa969cbe39584a649d98d4cf321d78bd73092"
 SRCREV_FORMAT = "base"
 
 SRC_URI = "git://anongit.freedesktop.org/gstreamer/gstreamer;branch=master;name=base \

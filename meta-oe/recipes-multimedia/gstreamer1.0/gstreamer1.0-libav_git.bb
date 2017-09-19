@@ -28,9 +28,9 @@ PKGV = "${GST_VERSION_FULL}+git${GITPKGV}"
 
 UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>(\d+(\.\d+)+))"
 
-SRCREV_base = "4284d791bc2c3ae716e4f99cedd870de9f575aec"
-SRCREV_common = "29046b89d80bbca22eb222c18820fb40a4ac5bde"
-SRCREV_ffmpeg = "20f5e2c17785ef84db565e658420faf6f8ca0807"
+SRCREV_base = "e6773f6932d5e09568bcb72c65c4b75e78635eb5"
+SRCREV_common = "3f4aa969cbe39584a649d98d4cf321d78bd73092"
+SRCREV_ffmpeg = "9f7042f9cd0f4911bc5cebfcb4489bbd77826841"
 SRCREV_FORMAT = "base"
 
 LIBAV_INCLUDED_EXLUCED = "--disable-everything \
