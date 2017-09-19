@@ -79,8 +79,8 @@ ${@bb.utils.contains('MACHINEBUILD', 'gbx3', 'mtd2' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbx2', 'mtd2' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbultraueh', 'mtd2' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbx3h', 'mtd2' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'gbquad4k', 'mmcblk0p3' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'gbue4k', 'mmcblk0p3' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbquad4k', 'mmcblk0p4' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbue4k', 'mmcblk0p4' , '', d)}\
 "
 
 MTD_ROOTFS = "\
@@ -99,8 +99,8 @@ ${@bb.utils.contains('MACHINEBUILD', 'gbx3', 'mtd0' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbx2', 'mtd0' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbultraueh', 'mtd0' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbx3h', 'mtd0' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'gbquad4k', 'mmcblk0p4' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'gbue4k', 'mmcblk0p4' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbquad4k', 'mmcblk0p5' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbue4k', 'mmcblk0p5' , '', d)}\
 "
 
 MACHINE_DRIVER = "\
