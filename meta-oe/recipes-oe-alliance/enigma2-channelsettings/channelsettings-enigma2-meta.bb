@@ -4,7 +4,7 @@ inherit packagegroup
 require conf/license/license-gplv2.inc
 
 PV = "2.0"
-PR = "r30"
+PR = "r31"
 
 DEPENDS = " \
     enigma2-plugin-settings-henksat-19e \
@@ -14,7 +14,6 @@ DEPENDS = " \
     enigma2-plugin-settings-henksat-19e-23e-28e \
     enigma2-plugin-settings-henksat-13e-19e-23e-28e \
     enigma2-plugin-settings-henksat-wavefrontier \
-    enigma2-plugin-settings-henksat-rotating \
     enigma2-plugin-settings-henksat-13e-19e-23e-28e-4.8e-0.8w \
     enigma2-plugin-settings-henksat-13e-19e-23e-28e-42e-7e \
     enigma2-plugin-settings-henksat-ziggo \
