@@ -179,6 +179,7 @@ MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS = " \
     kernel-module-cifs \
     kernel-module-autofs4 \
     ${@bb.utils.contains('MACHINEBUILD', 'gbquad', 'kernel-module-smsc75xx' , '', d)} \
+    ${@bb.utils.contains('MACHINE_FEATURES', 'swap', 'gigablue-swapcreate', '',d)} \
     "
 
 MACHINE_EXTRA_RRECOMMENDS = " \
