@@ -3,7 +3,7 @@ FILESEXTRAPATHS_prepend := "${THISDIR}/${P}:"
 # Remove acl, cups etc. support.
 PACKAGECONFIG_remove = "acl cups"
 
-PR="r1"
+PR="r2"
 
 SAMBA4_AUTH_MODULES="auth_wbc,auth_server,auth_netlogond,auth_script,auth_samba4"
 SAMBA4_IDMAP_MODULES="idmap_ad,idmap_rid,idmap_adex,idmap_hash,idmap_tdb2"
@@ -38,6 +38,7 @@ SRC_URI += " \
            file://smb-insecure.conf \
            file://smb-secure.conf \
            file://smb-shares.conf \
+           file://smb-vmc.samba \
            file://init.samba \
            file://pam.samba \
            file://users.map \
@@ -60,6 +61,7 @@ do_install_append() {
         install -m 644 ${WORKDIR}/smb-insecure.conf ${D}${sysconfdir}/samba/distro
         install -m 644 ${WORKDIR}/smb-secure.conf ${D}${sysconfdir}/samba/distro
         install -m 644 ${WORKDIR}/smb-shares.conf ${D}${sysconfdir}/samba/distro
+        install -m 644 ${WORKDIR}/smb-vmc.samba ${D}${sysconfdir}/samba/distro
 	install -m 644 ${WORKDIR}/smbpasswd ${D}${sysconfdir}/samba/private
 	install -m 644 ${WORKDIR}/users.map ${D}${sysconfdir}/samba/private
 	install -d ${D}${sysconfdir}/init.d
@@ -116,7 +118,21 @@ if [ -z "$D" ]; then
                 smbpasswd -Ln kids >/dev/null
         fi
 fi
+
+if [ -e $D/etc/samba/distro/smb-vmc.vmc ]; then
+	rm $D/etc/samba/distro/smb-vmc.conf 2/dev/null || true
+	ln -s smb-vmc.vmc $D/etc/samba/distro/smb-vmc.conf
+else
+	rm $D/etc/samba/distro/smb-vmc.conf 2/dev/null || true
+	ln -s smb-vmc.samba $D/etc/samba/distro/smb-vmc.conf
+fi
 }
+
+pkg_postrm_${BPN}-common_prepend() {
+#!/bin/sh
+rm $D/etc/samba/distro/smb-vmc.conf 2/dev/null || true
+}
+
 
 inherit binary-compress
 
