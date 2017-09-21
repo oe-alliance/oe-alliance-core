@@ -7,6 +7,17 @@ LOG=/home/root/FastRestore.log
 #ROOTFS=/tmp/
 #LOG=/dev/tty
 
+restoreUserDB() {
+	$(python - <<END
+import sys
+#sys.path.append('/usr/lib/enigma2/python')
+sys.path.append('/usr/lib/enigma2/python/Plugins/SystemPlugins/SoftwareManager')
+from ShellCompatibleFunctions import restoreUserDB
+restoreUserDB()
+END
+	)
+}
+
 get_restore_mode() {
 	settings=0
 	plugins=0
@@ -96,6 +107,8 @@ echo "Extracting saved settings from $backuplocation/enigma2settingsbackup.tar.g
 (busybox tar -xzvf $backuplocation/enigma2settingsbackup.tar.gz --exclude=etc/passwd --exclude=etc/shadow --exclude=etc/group -C $ROOTFS >>$LOG 2>>$LOG ; chown -R root:root /home/root /etc/auto.network /etc/default/dropbear /etc/dropbear >>$LOG 2>>$LOG ; chmod 600 /etc/auto.network /etc/dropbear/* /home/root/.ssh/* >>$LOG 2>>$LOG ; chmod 700 /home/root /home/root/.ssh >>$LOG 2>>$LOG) &
 spinner $! "Settings "
 echo >>$LOG
+
+restoreUserDB
 
 SUNDTEK=$(ls -1 /media/hdd/backup/SundtekBackup/*.tar 2>/dev/null | tail -1)
 if [ -n "$SUNDTEK" ]; then
