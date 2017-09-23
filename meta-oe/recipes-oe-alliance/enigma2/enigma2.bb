@@ -215,8 +215,6 @@ DESCRIPTION_append_enigma2-plugin-systemplugins-networkwizard = "provides easy s
 # Note that these tools lack recipes
 RDEPENDS_enigma2-plugin-extensions-dvdburn = "dvd+rw-tools dvdauthor mjpegtools cdrkit python-imaging ${DEMUXTOOL}"
 RDEPENDS_enigma2-plugin-systemplugins-hotplug = "hotplug-e2-helper"
-CONFFILES_enigma2-plugin-extensions-openxtareader = "/usr/lib/enigma2/python/Plugins/Extensions/OpenXtaReader/db/favoriten"
-RDEPENDS_enigma2-plugin-extensions-openxtareader = "python-lxml"
 RDEPENDS_enigma2-plugin-systemplugins-fsblupdater = "python-distutils"
 
 inherit autotools-brokensep gitpkgv pkgconfig pythonnative
@@ -253,10 +251,6 @@ SRC_URI_append_vuduo = " \
     file://duo_VFD.patch \
     "
 
-SRC_URI_append_openatv = " \
-    file://tuxbox_fix_DVB_API_VERSION_check_for_gcc5.patch \
-    "
-
 SRC_URI_append_wetekplay2 = " \
     ${@bb.utils.contains("DISTRO_NAME", "openatv", "file://0001-have-64-bit-action-long-int-update.patch", "", d)} \
     "
@@ -278,9 +272,6 @@ SRC_URI_append_opendroid = " \
     file://tuxbox_fix_DVB_API_VERSION_check_for_gcc5.patch \
     "
 SRC_URI_append_egami = " \
-    file://tuxbox_fix_DVB_API_VERSION_check_for_gcc5.patch \
-    "
-SRC_URI_append_openxta = " \
     file://tuxbox_fix_DVB_API_VERSION_check_for_gcc5.patch \
     "
 

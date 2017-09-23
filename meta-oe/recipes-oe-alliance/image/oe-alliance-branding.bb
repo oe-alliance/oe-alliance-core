@@ -211,9 +211,6 @@ do_install_append() {
         install -m 0644 ${S}/BoxBranding/boxes/${MACHINEBUILD}.png ${D}/usr/share/enigma2/${MACHINEBUILD}.png
         ln -sf /usr/share/enigma2/${MACHINEBUILD}.png ${D}/usr/lib/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes/${MACHINEBUILD}.png
     fi
-    if [ ${DISTRO} = "openxta" ]; then
-        rm -f ${D}/usr/lib/enigma2/python/Components/RcModel.py*
-    fi
     ln -sf /usr/share/enigma2/rc_models ${D}/usr/lib/enigma2/python/Plugins/Extensions/OpenWebif/public/static/remotes
 }
 
