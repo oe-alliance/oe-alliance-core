@@ -18,7 +18,6 @@ RRECOMMENDS_${PN} = " \
     enigma2-skindefault \
     enigma2-plugin-skins-opd-blue-line \
     enigma2-plugin-extensions-atilehd \
-    enigma2-plugin-extensions-extrapanel \
     enigma2-plugin-extensions-autotimer \
     enigma2-plugin-extensions-weatherplugin-opd \
     enigma2-plugin-extensions-epgsearch \
