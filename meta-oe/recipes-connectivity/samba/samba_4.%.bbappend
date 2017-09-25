@@ -3,7 +3,7 @@ FILESEXTRAPATHS_prepend := "${THISDIR}/${P}:"
 # Remove acl, cups etc. support.
 PACKAGECONFIG_remove = "acl cups"
 
-PR="r2"
+PR="r3"
 
 SAMBA4_AUTH_MODULES="auth_wbc,auth_server,auth_netlogond,auth_script,auth_samba4"
 SAMBA4_IDMAP_MODULES="idmap_ad,idmap_rid,idmap_adex,idmap_hash,idmap_tdb2"
@@ -120,17 +120,17 @@ if [ -z "$D" ]; then
 fi
 
 if [ -e $D/etc/samba/distro/smb-vmc.vmc ]; then
-	rm $D/etc/samba/distro/smb-vmc.conf 2/dev/null || true
+	rm $D/etc/samba/distro/smb-vmc.conf 2>/dev/null || true
 	ln -s smb-vmc.vmc $D/etc/samba/distro/smb-vmc.conf
 else
-	rm $D/etc/samba/distro/smb-vmc.conf 2/dev/null || true
+	rm $D/etc/samba/distro/smb-vmc.conf 2>/dev/null || true
 	ln -s smb-vmc.samba $D/etc/samba/distro/smb-vmc.conf
 fi
 }
 
 pkg_postrm_${BPN}-common_prepend() {
 #!/bin/sh
-rm $D/etc/samba/distro/smb-vmc.conf 2/dev/null || true
+rm $D/etc/samba/distro/smb-vmc.conf 2>/dev/null || true
 }
 
 
