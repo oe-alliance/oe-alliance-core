@@ -17,7 +17,6 @@ DVBPROVIDER = "kernel"
 
 MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS = "\
     kernel-module-cdfs \
-    ${@bb.utils.contains('MACHINE_FEATURES', 'v3d', 'xtrend-v3ddriver-${MACHINE}', '',d)} \
     "
 
 MACHINE_EXTRA_RRECOMMENDS = " \
