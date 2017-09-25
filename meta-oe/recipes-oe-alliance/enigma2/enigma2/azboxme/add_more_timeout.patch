@@ -4,12 +4,12 @@ diff -Naur a/lib/dvb/pmt.cpp b/lib/dvb/pmt.cpp
 @@ -217,7 +217,7 @@
  		}
  		if (pmtpid == -1) {
- 			eDebug("no PAT entry found.. start delay");
+ 			eDebug("[eDVBServicePMTHandler] no PAT entry found.. start delay");
 -			m_no_pat_entry_delay->start(1000, true);
 +			m_no_pat_entry_delay->start(10000, true);
  		}
  		else {
- 			eDebug("use pmtpid %04x for service_id %04x", pmtpid, m_reference.getServiceID().get());
+ 			eDebug("[eDVBServicePMTHandler] use pmtpid %04x for service_id %04x", pmtpid, m_reference.getServiceID().get());
 diff -Naur a/lib/dvb/specs.h b/lib/dvb/specs.h
 --- a/lib/dvb/specs.h	2013-05-23 20:26:40.000000000 +0200
 +++ b/lib/dvb/specs.h	2013-05-23 20:35:55.000000000 +0200
