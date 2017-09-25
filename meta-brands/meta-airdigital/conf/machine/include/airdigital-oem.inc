@@ -116,7 +116,6 @@ DVBSKYPROVIDER = "kernel"
 
 MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS = "\
     kernel-module-cdfs \
-    ${@bb.utils.contains('MACHINE_FEATURES', 'v3d', 'airdigital-v3ddriver-${MACHINE}', '',d)} \
     ${@bb.utils.contains('MACHINE_FEATURES', 'qtegls', 'airdigital-qteglfs-platform', '',d)} \
     ${@bb.utils.contains('MACHINE_FEATURES', 'swap', 'airdigital-swapcreate', '',d)} \
     "
