@@ -1,8 +1,8 @@
-SRCDATE = "20170920"
+SRCDATE = "20170925"
 
 require nextv-v3ddriver.inc
 
-SRC_URI[md5sum] = "90a79d50429c98fffa3c691c6e442e22"
-SRC_URI[sha256sum] = "b2d245d1ebd7e12cfdeecc3d412452761970759d5c94f6f41f81d428f5d5d9f7"
+SRC_URI[md5sum] = "1b75427f44932410fa6de43ecf0bbd15"
+SRC_URI[sha256sum] = "5c33898ee6060ab07cdae678fde1b077bb85a3b6b850cec4ffbcb03e569894ce"
 
 COMPATIBLE_MACHINE = "sf4008"
