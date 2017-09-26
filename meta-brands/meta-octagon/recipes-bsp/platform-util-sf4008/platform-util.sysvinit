@@ -4,11 +4,12 @@ case "$1" in
   start)
     echo -n "Starting  platform-util"
     start-stop-daemon --start --quiet --exec /usr/bin/nxserver --
+
     while [ ! -c /dev/fb0 ]; do
         usleep 100000
     done
     
-    usleep 200000
+    usleep 2000000
     
     echo "."
     ;;
