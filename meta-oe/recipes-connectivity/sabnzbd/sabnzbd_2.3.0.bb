@@ -17,8 +17,8 @@ SRC_URI = "http://github.com/sabnzbd/sabnzbd/archive/${PV}.tar.gz \
     file://init-functions \
     "
 
-SRC_URI[md5sum] = "cd238e86aa3539fb8c77a3d7a4bf037c"
-SRC_URI[sha256sum] = "0880f1ca1de93d627836633ee3433967711c8b0db88cfa504935ca9d48e959df"
+SRC_URI[md5sum] = "bd63185a90a701385a9dd1b5924f940a"
+SRC_URI[sha256sum] = "712ee40770ed35095d2c0b8169cb8176c496b58afb0ea5ebbc2ae111be9d0276"
 
 S = "${WORKDIR}/sabnzbd-${PV}"
 
@@ -27,6 +27,7 @@ INSTALLDIR = "/usr/lib/${PN}"
 PACKAGES = "${PN}-doc ${PN}-src ${PN}"
 
 FILES_${PN}-src = "${INSTALLDIR}/*/*.py ${INSTALLDIR}/*/*/*.py"
+RDEPENDS_${PN}-src = "python"
 FILES_${PN}-doc = "${INSTALLDIR}/*.txt ${INSTALLDIR}/licenses ${INSTALLDIR}/interfaces/*/licenses"
 FILES_${PN} = "${INSTALLDIR} /etc/init.d/sabnzbd /etc/init.d/init-functions /etc/enigma2/sabnzbd.conf"
 
