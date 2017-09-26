@@ -7,8 +7,8 @@ PR = "r0"
 
 SRC_URI = "https://files.pythonhosted.org/packages/source/s/sabyenc/sabyenc-${PV}.tar.gz"
 
-SRC_URI[md5sum] = "56b22cb1e26fda8a5fd40ce4b2ae865c"
-SRC_URI[sha256sum] = "05a848ebf7e37775171f85d2b01e131af7384a35fedece73079ca52a2d687eaf"
+SRC_URI[md5sum] = "7163fa97ff1c367899728e3c23805d14"
+SRC_URI[sha256sum] = "0381c9e2755be00d8a88635415e212a6ee0a03a02c3e576274278a005c689052"
 
 S = "${WORKDIR}/sabyenc-${PV}"
 
