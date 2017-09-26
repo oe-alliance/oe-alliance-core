@@ -1,7 +1,7 @@
 SUMMARY = "sabyenc - yEnc Module for Python modified for SABnzbd"
 SECTION = "devel/python"
 LICENSE = "BSD"
-LIC_FILES_CHKSUM = "file://PKG-INFO;md5=921c00bb1b9a4ae722e356f1f7ac1258"
+LIC_FILES_CHKSUM = "file://PKG-INFO;md5=a38453d7b2ad2ce4cc0f83cc390ee0de"
 
 PR = "r0"
 
