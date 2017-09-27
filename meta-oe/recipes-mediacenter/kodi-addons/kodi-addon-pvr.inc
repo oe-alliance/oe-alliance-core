@@ -11,10 +11,12 @@ PACKAGE_ARCH = "${MACHINE}"
 
 SRCREV_FORMAT = "pvr${KODIADDONPLUGIN}"
 
-PV = "2.2.13+gitr${SRCPV}"
+PV = "2.2.13+git${SRCPV}"
+PKGV = "2.2.13+git${GITPKGV}"
+
 SRC_URI = "git://github.com/kodi-pvr/pvr.${KODIADDONPLUGIN}.git;destsuffix=pvr.${KODIADDONPLUGIN};name=pvr${KODIADDONPLUGIN}"
 
-inherit cmake pkgconfig gettext
+inherit cmake pkgconfig gettext gitpkgv
 
 S = "${WORKDIR}/pvr.${KODIADDONPLUGIN}"
 
