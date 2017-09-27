@@ -32,3 +32,15 @@ do_configure_prepend() {
 	${S}/autogen.sh --noconfigure
 }
 
+
+PACKAGESPLITFUNCS_append = " handle_mpg_rename "
+
+python handle_mpg_rename () {
+    d.setVar('RPROVIDES_gstreamer1.0-plugins-good-lame', 'gstreamer1.0-plugins-ugly-lame')
+    d.setVar('RREPLACES_gstreamer1.0-plugins-good-lame', 'gstreamer1.0-plugins-ugly-lame')
+    d.setVar('RCONFLICTS_gstreamer1.0-plugins-good-lame', 'gstreamer1.0-plugins-ugly-lame')
+
+    d.setVar('RPROVIDES_gstreamer1.0-plugins-good-mpg123', 'gstreamer1.0-plugins-ugly-mpg123')
+    d.setVar('RREPLACES_gstreamer1.0-plugins-good-mpg123', 'gstreamer1.0-plugins-ugly-mpg123')
+    d.setVar('RCONFLICTS_gstreamer1.0-plugins-good-mpg123', 'gstreamer1.0-plugins-ugly-mpg123')
+}

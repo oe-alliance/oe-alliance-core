@@ -26,16 +26,3 @@ PKGV = "${GST_VERSION_FULL}+git${GITPKGV}"
 do_configure_prepend() {
 	${S}/autogen.sh --noconfigure
 }
-
-
-# In 1.7.2, the mpg123 plugin was moved from -bad to -ugly
-# https://cgit.freedesktop.org/gstreamer/gst-plugins-bad/commit/?id=08d8aefcdaaf89ecb6dd53ec1e4f95cd42d01664
-# https://cgit.freedesktop.org/gstreamer/gst-plugins-ugly/commit/?id=43bd45ba991ef3247957ca37cdcb52f4b8c0acb1
-
-PACKAGESPLITFUNCS_append = " handle_mpg123_rename "
-
-python handle_mpg123_rename () {
-    d.setVar('RPROVIDES_gstreamer1.0-plugins-ugly-mpg123', 'gstreamer1.0-plugins-bad-mpg123')
-    d.setVar('RREPLACES_gstreamer1.0-plugins-ugly-mpg123', 'gstreamer1.0-plugins-bad-mpg123')
-    d.setVar('RCONFLICTS_gstreamer1.0-plugins-ugly-mpg123', 'gstreamer1.0-plugins-bad-mpg123')
-}
