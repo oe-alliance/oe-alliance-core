@@ -7,7 +7,7 @@ MAINTAINER = "OPENNFR team"
 require conf/license/license-gplv2.inc
 
 PV = "${IMAGE_VERSION}"
-PR = "r${DATE}"
+PR = "${BUILD_VERSION}"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PR[vardepsexclude] += "DATE"

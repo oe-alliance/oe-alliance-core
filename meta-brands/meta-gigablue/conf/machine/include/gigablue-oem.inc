@@ -79,8 +79,8 @@ ${@bb.utils.contains('MACHINEBUILD', 'gbx3', 'mtd2' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbx2', 'mtd2' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbultraueh', 'mtd2' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbx3h', 'mtd2' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'gbquad4k', 'mmcblk0p3' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'gbue4k', 'mmcblk0p3' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbquad4k', 'mmcblk0p4' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbue4k', 'mmcblk0p4' , '', d)}\
 "
 
 MTD_ROOTFS = "\
@@ -99,8 +99,8 @@ ${@bb.utils.contains('MACHINEBUILD', 'gbx3', 'mtd0' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbx2', 'mtd0' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbultraueh', 'mtd0' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbx3h', 'mtd0' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'gbquad4k', 'mmcblk0p4' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'gbue4k', 'mmcblk0p4' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbquad4k', 'mmcblk0p5' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbue4k', 'mmcblk0p5' , '', d)}\
 "
 
 MACHINE_DRIVER = "\
@@ -179,6 +179,7 @@ MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS = " \
     kernel-module-cifs \
     kernel-module-autofs4 \
     ${@bb.utils.contains('MACHINEBUILD', 'gbquad', 'kernel-module-smsc75xx' , '', d)} \
+    ${@bb.utils.contains('MACHINE_FEATURES', 'swap', 'gigablue-swapcreate', '',d)} \
     "
 
 MACHINE_EXTRA_RRECOMMENDS = " \
@@ -186,6 +187,7 @@ MACHINE_EXTRA_RRECOMMENDS = " \
     gstreamer1.0-libav \
     gigablue-cfe \
     ${@bb.utils.contains('DISTRO_FEATURES', 'audioeffect', 'enigma2-plugin-systemplugins-audioeffect' , '', d)} \
+	${@bb.utils.contains('MACHINE', 'gb7252', 'gigablue-initrd-cfe-${MACHINE_DRIVER}' , '', d)} \
     "
 
 EXTRA_IMAGEDEPENDS += "\
@@ -197,7 +199,6 @@ MACHINE_EXTRA_RDEPENDS = "\
     ${@bb.utils.contains('MACHINE', 'gb7252', 'enigma2-plugin-systemplugins-remotecontrolcode' , '', d)} \
     ${@bb.utils.contains('MACHINEBUILD', 'gb800solo', 'mtd-utils-jffs2' , '', d)} \
     ${@bb.utils.contains('MACHINEBUILD', 'gbipbox', 'enigma2-plugin-extensions-gbipboxclient' , '', d)} \
-    ${@bb.utils.contains('MACHINEBUILD', 'gbquad4k', 'enigma2-plugin-systemplugins-remotecontrolcode' , '', d)} \
 "
 
 include conf/machine/include/autoload-filesystems.inc

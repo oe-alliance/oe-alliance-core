@@ -11,7 +11,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "${IMAGE_VERSION}"
-PR = "r5"
+PR = "r6"
 
 RDEPENDS_${PN} = "\
     oe-alliance-enigma2 \
@@ -39,6 +39,7 @@ RDEPENDS_${PN} = "\
     modutils-loadscript \
     ntpdate \
     opkg \
+    rc-local \
     sdparm \
     packagegroup-base \
     packagegroup-core-boot \

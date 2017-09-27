@@ -37,14 +37,6 @@ MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS = "\
     kernel-module-cdfs \
     "
 
-EXTRA_IMAGEDEPENDS += "\
-    ${@bb.utils.contains('MACHINEBUILD', 'gi11000', ' enigma2-plugin-systemplugins-vfdcontrol' , '', d)} \
-    "
-
-MACHINE_EXTRA_RDEPENDS += "\
-    ${@bb.utils.contains('MACHINEBUILD', 'gi11000', ' enigma2-plugin-systemplugins-vfdcontrol' , '', d)} \
-    "
-
 MACHINE_EXTRA_RRECOMMENDS += " \
     ${@bb.utils.contains("GST_VERSION", "1.0", "gstreamer1.0-plugin-dvbmediasink", "gst-plugin-dvbmediasink", d)} \
     "
@@ -63,7 +55,7 @@ PREFERRED_PROVIDER_virtual/blindscan-dvbs = "et-blindscan-utils-${MACHINE}"
 PREFERRED_PROVIDER_virtual/blindscan-dvbc = "et-blindscan-utils-${MACHINE}"
 
 MACHINE_FEATURES += "alsa 3dtv switchoff hdmicec omb  \
-    ${@bb.utils.contains('MACHINEBUILD', 'beyonwizu4', 'dvb-c dvb-c-only' , 'blindscan-tbs', d)} \
+    ${@bb.utils.contains('MACHINEBUILD', 'beyonwizu4', 'dvbc-only' , 'blindscan-tbs', d)} \
 "
 
 BOOTLOGO_FILENAME = "splash.bin"

@@ -4,7 +4,7 @@ inherit packagegroup
 require conf/license/license-gplv2.inc
 
 PV = "2.0"
-PR = "r30"
+PR = "r31"
 
 DEPENDS = " \
     enigma2-plugin-settings-henksat-19e \
@@ -21,7 +21,6 @@ DEPENDS = " \
     enigma2-plugin-settings-hans-19e-23e \
     enigma2-plugin-settings-hans-19e-23e-28e \
     enigma2-plugin-settings-hans-9e-13e-19e-23e-28e \
-    enigma2-plugin-settings-hans-9e-13e-19e-23e-28e-rotating \
     \
     enigma2-plugin-settings-malimali.3e.7e.9e.13e.16e.19e \
     enigma2-plugin-settings-malimali.9e.13e.19e \

@@ -10,6 +10,9 @@ ${@bb.utils.contains('MACHINEBUILD', 'x2plus', 'enfinityX 2plus' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'bre2ze', 'BRE2ZE' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'evomini', 'ENfinity mini' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'evominiplus', 'ENfinity mini+' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'vipert2c', 'Viper T2/C' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'vipercombo', 'Viper Combo' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'vipercombohdd', 'Viper Combo HDD' , '', d)}\
 "
 
 MACHINE_BRAND = "\
@@ -19,6 +22,9 @@ ${@bb.utils.contains('MACHINEBUILD', 'x2plus', 'EVO' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'bre2ze', 'WWIO' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'evomini', 'EVO' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'evominiplus', 'EVO' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'vipert2c', 'AMIKO' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'vipercombo', 'AMIKO' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'vipercombohdd', 'AMIKO' , '', d)}\
 "
 
 IMAGEDIR ?= "\
@@ -28,6 +34,9 @@ ${@bb.utils.contains('MACHINEBUILD', 'x2plus', 'x2plus' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'bre2ze', 'bre2ze' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'evomini', 'mini' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'evominiplus', 'miniplus' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'vipert2c', 'vipert2c' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'vipercombo', 'vipercombo' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'vipercombohdd', 'vipercombohdd' , '', d)}\
 "
 
 MTD_ROOTFS = "mtd0"
@@ -53,6 +62,9 @@ include conf/machine/include/autoload-filesystems.inc
 
 DVBMEDIASINK_CONFIG = "--with-wma --with-wmv --with-pcm --with-dts --with-eac3 \
     ${@bb.utils.contains('MACHINE', 'ch625lc', '--with-h265 --with-vb6 --with-vb8 --with-spark' , '', d)} \
+    ${@bb.utils.contains('MACHINE', 'yh625tc', '--with-h265 --with-vb6 --with-vb8 --with-spark' , '', d)} \
+    ${@bb.utils.contains('MACHINE', 'yh625dt', '--with-h265 --with-vb6 --with-vb8 --with-spark' , '', d)} \
+    ${@bb.utils.contains('MACHINE', 'ch625dt', '--with-h265 --with-vb6 --with-vb8 --with-spark' , '', d)} \
 "
 
 TARGET_ARCH = "mipsel"
@@ -83,7 +95,9 @@ IMAGE_CMD_ubi_append = "\
     mv ${IMGDEPLOYDIR}/${IMAGE_NAME}.rootfs.ubi ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/rootfs.bin; \
     gzip -9c ${DEPLOY_DIR_IMAGE}/vmlinux-${MACHINE}.bin > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/kernel.bin; \
     echo ${IMAGE_VER_STRING} > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/imageversion; \
-    echo "rename this file to 'force' to force an update without confirmation" > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/noforce; \
+    ${@bb.utils.contains('MACHINE', 'yh625tc', \
+    'echo "dont change this file" > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/force;' , \
+    'echo "rename this file to force to force an update without confirmation" > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/noforce;', d)} \
     cd ${DEPLOY_DIR_IMAGE}; \
     zip ${IMAGE_NAME}_usb.zip ${IMAGEDIR}/*; \
     rm -f ${DEPLOY_DIR_IMAGE}/*.ubi; \

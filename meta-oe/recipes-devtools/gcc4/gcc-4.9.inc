@@ -2,11 +2,12 @@ require gcc-common.inc
 
 # Third digit in PV should be incremented after a minor release
 
-PV = "4.9.2"
+PV = "4.9.4"
+PR = "r0"
 
 # BINV should be incremented to a revision after a minor gcc release
 
-BINV = "4.9.2"
+BINV = "4.9.4"
 
 FILESEXTRAPATHS =. "${FILE_DIRNAME}/gcc-4.9:"
 
@@ -25,7 +26,6 @@ LIC_FILES_CHKSUM = "\
 
 SRC_URI = "\
     ${GNU_MIRROR}/gcc/gcc-${PV}/gcc-${PV}.tar.bz2 \
-    file://0001-gcc-4.3.1-ARCH_FLAGS_FOR_TARGET.patch \
     file://0002-uclibc-conf.patch \
     file://0003-gcc-uclibc-locale-ctype_touplow_t.patch \
     file://0004-uclibc-locale.patch \
@@ -47,7 +47,6 @@ SRC_URI = "\
     file://0021-gcc-disable-MASK_RELAX_PIC_CALLS-bit.patch \
     file://0022-COLLECT_GCC_OPTIONS.patch \
     file://0023-Use-the-defaults.h-in-B-instead-of-S-and-t-oe-in-B.patch \
-    file://0024-PR-target-32219.patch \
     file://0025-fortran-cross-compile-hack.patch \
     file://0026-libgcc-sjlj-check.patch \
     file://0027-cpp-honor-sysroot.patch \
@@ -57,7 +56,6 @@ SRC_URI = "\
     file://0031-Disable-sdt.patch \
     file://0032-libtool.patch \
     file://0033-gcc-armv4-pass-fix-v4bx-to-linker-to-support-EABI.patch \
-    file://0034-Use-the-multilib-config-files-from-B-instead-of-usin.patch \
     file://0040-fix-g++-sysroot.patch \
     file://0041-libtool-avoid-libdir.patch \
     file://0043-cpp.patch \
@@ -77,11 +75,10 @@ SRC_URI = "\
     file://0059-gcc-PR-rtl-optimization-63348.patch \
     file://0060-Only-allow-e500-double-in-SPE_SIMD_REGNO_P-registers.patch \
     file://0061-target-gcc-includedir.patch \
-    file://0062-gcc-var-tracking.c-backport-from-gcc-trunk-r212178.patch \
     file://0063-Use-SYSTEMLIBS_DIR-replacement-instead-of-hardcoding.patch \
 "
-SRC_URI[md5sum] = "4df8ee253b7f3863ad0b86359cd39c43"
-SRC_URI[sha256sum] = "2020c98295856aa13fda0f2f3a4794490757fc24bcca918d52cc8b4917b972dd"
+SRC_URI[md5sum] = "87c24a4090c1577ba817ec6882602491"
+SRC_URI[sha256sum] = "6c11d292cd01b294f9f84c9a59c230d80e9e4a47e5c6355f046bb36d4f358092"
 
 S = "${TMPDIR}/work-shared/gcc-${PV}-${PR}/gcc-${PV}"
 B = "${WORKDIR}/gcc-${PV}/build.${HOST_SYS}.${TARGET_SYS}"
@@ -96,7 +93,6 @@ EXTRA_OECONF_BASE = "\
     ${LTO} \
     --enable-libssp \
     --disable-bootstrap \
-    --disable-libmudflap \
     --with-system-zlib \
     --with-linker-hash-style=${LINKER_HASH_STYLE} \
     --enable-linker-build-id \
@@ -107,7 +103,6 @@ EXTRA_OECONF_BASE = "\
 "
 
 EXTRA_OECONF_INITIAL = "\
-    --disable-libmudflap \
     --disable-libgomp \
     --disable-libssp \
     --disable-libquadmath \
@@ -117,20 +112,10 @@ EXTRA_OECONF_INITIAL = "\
     --enable-decimal-float=no \
 "
 
-EXTRA_OECONF_INTERMEDIATE = "\
-    --disable-libmudflap \
-    --disable-libgomp \
-    --disable-libquadmath \
-    --with-system-zlib \
-    --disable-lto \
-    --disable-plugin \
-    --disable-libssp \
-"
-
 EXTRA_OECONF_append_libc-uclibc = " --disable-decimal-float "
 
-EXTRA_OECONF_PATHS = "\
-    --with-gxx-include-dir=/not/exist{target_includedir}/c++/${BINV} \
-    --with-sysroot=/not/exist \
+EXTRA_OECONF_PATHS = "\ 
+    --with-gxx-include-dir=${STAGING_DIR_TARGET}${target_includedir}/c++/${BINV} \ 
+    --with-sysroot=${STAGING_DIR_TARGET} \ 
     --with-build-sysroot=${STAGING_DIR_TARGET} \
 "

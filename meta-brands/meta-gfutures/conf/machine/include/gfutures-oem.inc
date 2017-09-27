@@ -81,7 +81,6 @@ DVBSKYPROVIDER = "kernel"
 
 MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS = "\
     kernel-module-cdfs \
-    ${@bb.utils.contains('MACHINE_FEATURES', 'v3d', 'hd-v3ddriver-${MACHINE}', '',d)} \
     ${@bb.utils.contains('MACHINE_FEATURES', 'qtegls', 'hd-qteglfs-platform', '',d)} \
     ${@bb.utils.contains('MACHINE_FEATURES', 'swap', 'hd-swapcreate', '',d)} \
     "

@@ -9,7 +9,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "${IMAGE_VERSION}"
-PR = "r27"
+PR = "r29"
 
 DEPENDS = "enigma2-plugin-drivers-usbserial enigma2-plugin-systemplugins-plexdvrapi"
 RECOMMENDS = "enigma2-plugin-extensions-et-livestream"
@@ -59,6 +59,7 @@ RDEPENDS_${PN} = " \
     binutils \
     ctorrent \
     cups \
+    davfs2 \
     djmount \
     dosfstools \
     dvblast \
@@ -79,6 +80,7 @@ RDEPENDS_${PN} = " \
     livestreamersrv \
     llmnr-query \
     mc \
+    mergerfs \
     minidlna \
     mpd \
     mtd-utils \
@@ -117,6 +119,7 @@ RDEPENDS_${PN} = " \
     python-singledispatch \
     python-levenshtein \
     python-pyexecjs \
+    ${@bb.utils.contains("DEFAULTTUNE", "sh4", "" , "rclone", d)} \
     rsync \
     rtorrent \
     sabnzbd \

@@ -169,7 +169,7 @@ PREFERRED_PROVIDER_virtual/kernel = "linux-ceryon"
 
 
 MACHINE_FEATURES += "3dtv alsa hdmicec switchoff bootsplash omb videoenhancement directfb skins1080 blindscan-tbs \
-    ${@bb.utils.contains('MACHINEBUILD', 'e4hdhybrid', 'dvb-c dvb-c-only' , '', d)} \
+    ${@bb.utils.contains('MACHINEBUILD', 'e4hdhybrid', 'dvb-c dvbc-only' , '', d)} \
     ${@bb.utils.contains('MACHINEBUILD', 'e4hdcombo', 'dvb-c' , '', d)} \
     ${@bb.utils.contains('MACHINEBUILD', '9911lx', 'dvb-c' , '', d)} \
 "

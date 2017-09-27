@@ -10,7 +10,6 @@ Signed-off-by: Alexander Kanavin <alex.kanavin@gmail.com>
 	modified:   gst-libs/gst/allocators/Makefile.am
 	modified:   gst-libs/gst/app/Makefile.am
 	modified:   gst-libs/gst/audio/Makefile.am
-	modified:   gst-libs/gst/fft/Makefile.am
 	modified:   gst-libs/gst/pbutils/Makefile.am
 	modified:   gst-libs/gst/riff/Makefile.am
 	modified:   gst-libs/gst/rtp/Makefile.am
@@ -22,7 +21,6 @@ Signed-off-by: Alexander Kanavin <alex.kanavin@gmail.com>
  gst-libs/gst/allocators/Makefile.am | 2 +-
  gst-libs/gst/app/Makefile.am        | 2 +-
  gst-libs/gst/audio/Makefile.am      | 2 +-
- gst-libs/gst/fft/Makefile.am        | 2 +-
  gst-libs/gst/pbutils/Makefile.am    | 2 +-
  gst-libs/gst/riff/Makefile.am       | 2 +-
  gst-libs/gst/rtp/Makefile.am        | 2 +-
@@ -71,19 +69,6 @@ index 41f9c4d..c39c529 100644
  		--pkg gstreamer-@GST_API_VERSION@ \
  		--pkg gstreamer-base-@GST_API_VERSION@ \
  		--pkg-export gstreamer-audio-@GST_API_VERSION@ \
-diff --git a/gst-libs/gst/fft/Makefile.am b/gst-libs/gst/fft/Makefile.am
-index 0d70422..2ded9ee 100644
---- a/gst-libs/gst/fft/Makefile.am
-+++ b/gst-libs/gst/fft/Makefile.am
-@@ -66,7 +66,7 @@ GstFft-@GST_API_VERSION@.gir: $(INTROSPECTION_SCANNER) libgstfft-@GST_API_VERSIO
- 		--add-include-path=`PKG_CONFIG_PATH="$(GST_PKG_CONFIG_PATH)" $(PKG_CONFIG) --variable=girdir gstreamer-@GST_API_VERSION@` \
- 		--library=libgstfft-@GST_API_VERSION@.la \
- 		--include=Gst-@GST_API_VERSION@ \
--		--libtool="$(top_builddir)/libtool" \
-+		--libtool="$(LIBTOOL)" \
- 		--pkg gstreamer-@GST_API_VERSION@ \
- 		--pkg-export gstreamer-fft-@GST_API_VERSION@ \
- 		--output $@ \
 diff --git a/gst-libs/gst/pbutils/Makefile.am b/gst-libs/gst/pbutils/Makefile.am
 index c5a25ca..44be19b 100644
 --- a/gst-libs/gst/pbutils/Makefile.am

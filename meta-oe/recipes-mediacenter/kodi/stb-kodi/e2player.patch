@@ -1,14 +1,14 @@
-From 045a3b23ca0f392207c7f726ce486928223c563f Mon Sep 17 00:00:00 2001
-From: GF <support@gfutures.net>
-Date: Fri, 24 Feb 2017 10:52:26 +0100
-Subject: e2player
+From a2330cc652771ab73e4cd30551e22c7e352efd2e Mon Sep 17 00:00:00 2001
+From: captain <openatv@gmail.com>
+Date: Fri, 15 Sep 2017 17:00:37 +0200
+Subject: [PATCH] e2player
 
 ---
  system/playercorefactory.xml | 12 ++++++++++++
  1 file changed, 12 insertions(+)
 
 diff --git a/system/playercorefactory.xml b/system/playercorefactory.xml
-index be6b721..862b584 100644
+index be6b7219ab..862b58463b 100644
 --- a/system/playercorefactory.xml
 +++ b/system/playercorefactory.xml
 @@ -8,8 +8,20 @@
@@ -33,5 +33,5 @@ index be6b721..862b584 100644
      <rule name="mms/udp" protocols="mms|mmsh|udp" player="VideoPlayer" />
      <rule name="lastfm/shout" protocols="lastfm|shout" player="PAPlayer" />
 -- 
-2.7.4
+2.12.0.windows.1
 

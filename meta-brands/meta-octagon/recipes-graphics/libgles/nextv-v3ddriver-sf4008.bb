@@ -1,0 +1,8 @@
+SRCDATE = "20170926"
+
+require nextv-v3ddriver.inc
+
+SRC_URI[md5sum] = "f6fc6111c44e50f7e1d56514c0e2f830"
+SRC_URI[sha256sum] = "e033efaba589b81420b1b2f9b341414eba1459ae9d5849e12ff1c73a72d354a4"
+
+COMPATIBLE_MACHINE = "sf4008"
