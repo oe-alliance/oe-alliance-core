@@ -12,7 +12,7 @@ SRC_URI = "file://qthbbtv-105.zip"
 PV = "1.0"
 PR = "${SRCDATE}"
 
-RDEPENDS_${PN}  = "qtwebkit"
+RDEPENDS_${PN}  = "qtwebkit virtual/libgles2"
 
 S = "${WORKDIR}/files"
 
