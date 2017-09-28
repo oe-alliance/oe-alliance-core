@@ -5,9 +5,9 @@ LICENSE = "CLOSED"
 require conf/license/license-close.inc
 PACKAGE_ARCH := "${MACHINE_ARCH}"
 
-SRCDATE = "20170928"
+SRCDATE = "20170626"
 
-SRC_URI = "file://qthbbtv-106.zip"
+SRC_URI = "file://qthbbtv-105.zip"
 
 PV = "1.0"
 PR = "${SRCDATE}"
