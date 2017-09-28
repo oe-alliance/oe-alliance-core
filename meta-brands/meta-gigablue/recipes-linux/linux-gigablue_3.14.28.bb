@@ -25,6 +25,7 @@ SRC_URI += "http://impex-sat.de/gigablue/linux/gigablue-linux-${PV}-20170331.tar
 	file://0001-STV-Add-PLS-support.patch \
 	file://0001-STV-Add-SNR-Signal-report-parameters.patch \
 	file://linux_prevent_usb_dma_from_bmem.patch \
+    file://genksyms_fix_typeof_handling.patch \
 "
 
 S = "${WORKDIR}/linux-${PV}"
