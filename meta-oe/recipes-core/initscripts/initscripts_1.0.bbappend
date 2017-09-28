@@ -18,6 +18,10 @@ do_install_append() {
 
     if [ "x${DISTRO}" = "xopenatv" ]; then
         install -m 0755    ${WORKDIR}/fastrestore_openatv.sh	${D}${sysconfdir}/init.d/fastrestore
-        ln -sf        ../init.d/fastrestore      ${D}${sysconfdir}/rcS.d/S41fastrestore
+        if [ "x${BRAND_OEM}" = "xvuplus" ]; then
+            ln -sf        ../init.d/fastrestore      ${D}${sysconfdir}/rcS.d/S66fastrestore
+	else
+            ln -sf        ../init.d/fastrestore      ${D}${sysconfdir}/rcS.d/S56fastrestore
+	fi
     fi
 }
