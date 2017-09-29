@@ -16,6 +16,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 SRC_URI += "http://source.mynonpublic.com/ceryon/ceryon-linux-${PV}-20170524.tgz \
 	file://defconfig \
 	file://bcm_genet_disable_warn.patch \
+    file://genksyms_fix_typeof_handling.patch \
 "
 
 S = "${WORKDIR}/linux"

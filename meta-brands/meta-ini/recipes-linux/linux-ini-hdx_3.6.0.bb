@@ -51,6 +51,7 @@ SRC_URI += "http://source.mynonpublic.com/ini/bcm7413-linux-${KV}-${SRCDATE}.tar
     file://kernel-add-support-for-gcc6.patch \
     file://dvb_frontend-Multistream-support-3.6.patch \
     file://timeconst_perl5.patch \
+    file://genksyms_fix_typeof_handling.patch \
     "
 
 S = "${WORKDIR}/linux-${PV}"
