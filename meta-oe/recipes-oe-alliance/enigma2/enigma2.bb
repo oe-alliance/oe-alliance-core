@@ -163,7 +163,6 @@ GST_UGLY_RDEPS = "${@bb.utils.contains('GST_VERSION', '1.0', ' \
     gstreamer1.0-plugins-ugly-asf \
     gstreamer1.0-plugins-ugly-cdio \
     gstreamer1.0-plugins-ugly-dvdsub \
-    gstreamer1.0-plugins-ugly-mad \
     ', ' \
     gst-plugins-ugly-amrnb \
     gst-plugins-ugly-amrwbdec \
@@ -221,7 +220,6 @@ inherit autotools-brokensep gitpkgv pkgconfig pythonnative
 
 PV = "${IMAGE_VERSION}+git${SRCPV}"
 PKGV = "${IMAGE_VERSION}+git${GITPKGV}"
-PR = "r4"
 
 SRC_URI = "${ENIGMA2_URI}"
 
