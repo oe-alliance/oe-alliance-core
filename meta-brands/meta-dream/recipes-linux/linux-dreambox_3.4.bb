@@ -25,6 +25,11 @@ S = "${WORKDIR}/linux-${PV}"
 B = "${WORKDIR}/build"
 
 do_configure_prepend() {
+    rm -rf ${STAGING_KERNEL_DIR}/.config
+    rm -rf ${STAGING_KERNEL_DIR}/.config.old
+}
+
+do_configure_prepend() {
         sed -e "/^SUBLEVEL = /d" -i ${S}/Makefile
 }
 
