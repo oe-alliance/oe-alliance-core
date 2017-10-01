@@ -58,3 +58,7 @@ do_install_append () {
 RDEPENDS_${PN} = "python"
 RDEPENDS_${PN}-db = "nmap"
 
+
+inherit binary-compress
+
+FILES_COMPRESS = "${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "${bindir}/nmap", "", d)}"
