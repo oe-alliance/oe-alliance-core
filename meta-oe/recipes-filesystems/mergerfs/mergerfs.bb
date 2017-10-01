@@ -26,6 +26,7 @@ do_compile () {
     export AUTOMAKE_DIR="$(automake --print-libdir)"
     export ACLOCAL_FLAGS="--system-acdir=${ACLOCALDIR}/ ${ACLOCALEXTRAPATH}"
 
+    sed -i -e "s:/usr/include:${STAGING_INCDIR}:g" ${S}/Makefile
     cd ${S}/libfuse
     autoreconf -f -i
     autoconf
