@@ -27,11 +27,9 @@ B = "${WORKDIR}/build"
 do_configure_prepend() {
     rm -rf ${STAGING_KERNEL_DIR}/.config
     rm -rf ${STAGING_KERNEL_DIR}/.config.old
+    sed -e "/^SUBLEVEL = /d" -i ${S}/Makefile
 }
 
-do_configure_prepend() {
-        sed -e "/^SUBLEVEL = /d" -i ${S}/Makefile
-}
 
 require linux-dreambox2.inc
 require linux-extra-image.inc
