@@ -38,7 +38,7 @@ do_install_append() {
 FILES_${PN} = "/usr/lib/*"
 FILES_${PN}-dev = "/usr/include/*"
 
-RPROVIDES_${PN} = "libv3dplatform.so libv3ddriver.so libGLESv2.so libEGL.so"
+RPROVIDES_${PN} = "virtual/libgles2 virtual/egl libv3dplatform.so libv3ddriver.so libGLESv2.so libEGL.so"
 
 INSANE_SKIP_${PN} += "already-stripped dev-so"
 
