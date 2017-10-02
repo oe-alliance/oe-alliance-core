@@ -24,17 +24,25 @@ S = "${WORKDIR}/git"
 
 FILES_enigma2-plugin-skins-metrix-atv-fhd-icons = "/usr/share/enigma2/MetrixHD/FHD"
 FILES_enigma2-plugin-skins-metrix-atv-uhd-icons = "/usr/share/enigma2/MetrixHD/UHD"
-FILES_${PN}-src = "/usr/lib/enigma2/python/Plugins/Extensions/MyMetrixLite/locale/MyMetrixLite.pot \
+FILES_${PN}-src = "\
+    /usr/lib/enigma2/python/Components/Converter/*.py \
+    /usr/lib/enigma2/python/Components/Renderer/*.py \
+    /usr/lib/enigma2/python/Plugins/Extensions/MyMetrixLite/*.py \
+    /usr/lib/enigma2/python/Plugins/Extensions/MyMetrixLite/locale/MyMetrixLite.pot \
     /usr/lib/enigma2/python/Plugins/Extensions/MyMetrixLite/locale/*/LC_MESSAGES/MyMetrixLite.po \
-"
+    "
 FILES_${PN} = "/usr"
 
+do_compile() {
+    python -O -m compileall ${S}/usr/lib
+}
+
 do_install() {
-    cp -rp ${S}/usr ${D}/
+    cp -r --preserve=mode,links ${S}/usr ${D}/
 }
 
 do_populate_sysroot[noexec] = "1"
-do_package_qa[noexec] = "1"
+#do_package_qa[noexec] = "1"
 
 pkg_preinst_${PN}() {
 #!/bin/sh
