@@ -15,3 +15,5 @@ S = "${WORKDIR}/backports.lzma-${PV}"
 inherit setuptools
 
 SRC_URI[md5sum] = "49b626f282be13acfc0fe2bc24732b3d"
+
+include python-package-split.inc
