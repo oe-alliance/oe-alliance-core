@@ -10,7 +10,7 @@ RREPLACES_${PN} = "enigma2-plugin-extensions-serviceapp"
 
 SRCREV = "${AUTOREV}"
 SRC_URI = " \
-    ${@bb.utils.contains('DISTRO_FEATURES', 'libsigc2', 'git://github.com/mx3L/serviceapp.git;branch=develop', 'git://github.com/mx3L/serviceapp.git;branch=master', d)} \
+    git://github.com/mx3L/serviceapp.git;branch=master \
     "
 
 S = "${WORKDIR}/git"
@@ -22,7 +22,7 @@ CXXFLAGS += " -std=gnu++98"
 PV = "0.5+git${SRCPV}"
 PKGV = "0.5+git${GITPKGV}"
 
-PR = "r3"
+PR = "r4"
 
 EXTRA_OECONF = "\
 	BUILD_SYS=${BUILD_SYS} \
