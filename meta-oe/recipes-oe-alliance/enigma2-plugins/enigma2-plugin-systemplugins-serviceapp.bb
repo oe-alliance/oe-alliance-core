@@ -11,6 +11,7 @@ RREPLACES_${PN} = "enigma2-plugin-extensions-serviceapp"
 SRCREV = "${AUTOREV}"
 SRC_URI = " \
     git://github.com/mx3L/serviceapp.git;branch=master \
+    file://0001-serviceapp-add-setQpipMode-function-recently-added-f.patch \
     "
 
 S = "${WORKDIR}/git"

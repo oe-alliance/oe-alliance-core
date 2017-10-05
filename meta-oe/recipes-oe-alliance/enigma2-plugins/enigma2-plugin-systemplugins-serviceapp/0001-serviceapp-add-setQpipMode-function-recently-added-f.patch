@@ -1,0 +1,38 @@
+From f969ed2f2c1caa4b9294ad618c7cfe8de30ae7db Mon Sep 17 00:00:00 2001
+From: Athanasios Oikonomou <athoik@gmail.com>
+Date: Sat, 26 Aug 2017 12:51:30 +0300
+Subject: [PATCH] serviceapp: add setQpipMode function recently added for quad
+ pip to allow build
+
+---
+ configure.ac                | 1 +
+ src/serviceapp/serviceapp.h | 1 +
+ 2 files changed, 2 insertions(+)
+
+diff --git a/configure.ac b/configure.ac
+index 870f895..c5bff3e 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -60,6 +60,7 @@ AC_LINK_IFELSE(
+     SWIG_VOID(RESULT) stream(ePtr<iStreamableService> &SWIG_OUTPUT){};
+     SWIG_VOID(RESULT) streamed(ePtr<iStreamedService> &SWIG_OUTPUT){};
+     SWIG_VOID(RESULT) keys(ePtr<iServiceKeys> &SWIG_OUTPUT){};
++    void setQpipMode(bool value, bool audio){};
+ };],[MyPlayableService service;])
+     ],[
+         AC_MSG_RESULT([yes])
+diff --git a/src/serviceapp/serviceapp.h b/src/serviceapp/serviceapp.h
+index a45f103..ee708f9 100644
+--- a/src/serviceapp/serviceapp.h
++++ b/src/serviceapp/serviceapp.h
+@@ -113,6 +113,7 @@ public:
+ 	RESULT stream(ePtr<iStreamableService> &ptr){ ptr=0; return -1;};
+ 	RESULT streamed(ePtr<iStreamedService> &ptr){ ptr=0; return -1;};
+ 	RESULT keys(ePtr<iServiceKeys> &ptr){ ptr=0; return -1;};
++	void setQpipMode(bool value, bool audio){};
+ 
+ 	// iPausableService
+ 	RESULT pause();
+-- 
+2.12.0.windows.1
+
