@@ -1,4 +1,4 @@
-PR .= ".4"
+PR .= ".5"
 
 PACKAGES += " \
             ${@bb.utils.contains("DISTRO_FEATURES", "appletalk", "packagegroup-base-appletalk", "", d)} \
@@ -46,3 +46,6 @@ RDEPENDS_packagegroup-base-appletalk = "\
 RDEPENDS_packagegroup-base-nfs += "\
     nfs-utils \
     nfs-utils-client"
+
+RDEPENDS_packagegroup-base-zeroconf += "\
+    libnss-llmnr"
