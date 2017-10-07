@@ -1,11 +1,15 @@
 PACKAGE_ARCH = "${MACHINEBUILD}"
 
-PR_append = ".4"
+PR_append = ".5"
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 FILESEXTRAPATHS_prepend := "${THISDIR}/${DISTRO_NAME}:"
 FILESEXTRAPATHS_prepend := "${THISDIR}/${MACHINE}:"
 FILESEXTRAPATHS_prepend := "${THISDIR}/${MACHINEBUILD}:"
+
+SRC_URI += "file://editor.sh"
+SRC_URI += "file://locale.sh"
+SRC_URI += "file://terminfo.sh"
 
 hostname = "${MACHINEBUILD}"
 
@@ -18,6 +22,10 @@ do_install_append() {
     rm -rf ${D}/media/*
     rm -fr ${D}/tmp
     mkdir ${D}/media/net
+    install -d ${D}${sysconfdir}/profile.d
+    install -m 0644 ${WORKDIR}/editor.sh   ${D}${sysconfdir}/profile.d/editor.sh
+    install -m 0644 ${WORKDIR}/locale.sh   ${D}${sysconfdir}/profile.d/locale.sh
+    install -m 0644 ${WORKDIR}/terminfo.sh ${D}${sysconfdir}/profile.d/terminfo.sh
 }
 
 # For Classic Dreambox Inject the /boot partition into /etc/fstab. At image creation time,
@@ -33,3 +41,5 @@ if [ -z "$D" ]; then
 	fi
 fi
 }
+
+CONFFILES_${PN} += "${sysconfdir}/profile.d/locale.sh"
