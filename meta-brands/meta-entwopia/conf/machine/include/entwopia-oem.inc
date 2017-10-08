@@ -39,8 +39,30 @@ ${@bb.utils.contains('MACHINEBUILD', 'vipercombo', 'vipercombo' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'vipercombohdd', 'vipercombohdd' , '', d)}\
 "
 
-MTD_ROOTFS = "mtd0"
-MTD_KERNEL = "mtd2"
+MTD_KERNEL ?= "\
+${@bb.utils.contains('MACHINEBUILD', 'enfinity', 'mtd2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'marvel1', 'mtd2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'x2plus', 'mtd2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'bre2ze', 'mtd2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'evomini', 'mtd2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'evominiplus', 'mtd2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'vipert2c', 'mtd2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'vipercombo', 'mtd2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'vipercombohdd', 'mtd2' , '', d)}\
+"
+
+MTD_ROOTFS ?= "\
+${@bb.utils.contains('MACHINEBUILD', 'enfinity', 'mtd0' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'marvel1', 'mtd0' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'x2plus', 'mtd0' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'bre2ze', 'mtd0' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'evomini', 'mtd0' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'evominiplus', 'mtd0' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'vipert2c', 'mtd0' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'vipercombo', 'mtd0' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'vipercombohdd', 'mtd0' , '', d)}\
+"
+
 KERNEL_FILE = "kernel.bin"
 ROOTFS_FILE = "rootfs.bin"
 
