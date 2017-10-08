@@ -7,6 +7,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=a23a74b3f4caf9616230789d94217acb"
 inherit gitpkgv distutils-openplugins
 
 SRCREV = "${AUTOREV}"
+PV = "git${SRCPV}"
 PKGV = "${GITPKGVTAG}"
 PR = "r0"
 
