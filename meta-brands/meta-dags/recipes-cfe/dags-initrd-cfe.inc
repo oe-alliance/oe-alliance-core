@@ -10,6 +10,8 @@ require conf/license/license-gplv2.inc
 PR = "r1"
 ALLOW_EMPTY_${PN} = "1"
 
+DOWNLOADNAME ?= "${MACHINEBUILD}"
+
 inherit deploy
 do_deploy() {
     if [ -e vmlinuz-initrd-7439b0  ]; then
@@ -17,7 +19,7 @@ do_deploy() {
     fi
 }
 
-SRC_URI = "http://en3homeftp.net/pub/down/vmlinuz-initrd_${MACHINEBUILD}_${SRCDATE}.tar.gz"
+SRC_URI = "http://en3homeftp.net/pub/down/vmlinuz-initrd_${DOWNLOADNAME}_${SRCDATE}.tar.gz"
 
 S = "${WORKDIR}"
 

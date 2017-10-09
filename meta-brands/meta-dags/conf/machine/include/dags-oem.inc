@@ -52,6 +52,8 @@ ${@bb.utils.contains('MACHINEBUILD', 'revo4k', 'REVO 4K' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'galaxy4k', 'GALAXY 4K' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'tm4ksuper', 'TM 4K super' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'valalinux', 'Linux' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'lunix34k', 'LUNIX3 4K' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'lunix', 'LUNIX' , '', d)}\
 "
 
 MACHINE_BRAND = "\
@@ -103,6 +105,8 @@ ${@bb.utils.contains('MACHINEBUILD', 'revo4k', 'XSARIUS' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'galaxy4k', 'XSARIUS' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'tm4ksuper', 'Technomate' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'valalinux', 'VALA' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'lunix34k', 'qviart' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'lunix', 'qviart' , '', d)}\
 "
 
 IMAGEDIR ?= "\
@@ -154,6 +158,8 @@ ${@bb.utils.contains('MACHINEBUILD', 'revo4k', 'update/revo4k' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'galaxy4k', 'update/galaxy4k' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'tm4ksuper', 'update/tm4ksuper' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'valalinux', 'update/valalinux/cfe' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'lunix34k', 'update/lunix3-4k' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'lunix', 'update/lunix/cfe' , '', d)}\
 "
 
 MTD_KERNEL = "\
@@ -205,6 +211,8 @@ ${@bb.utils.contains('MACHINEBUILD', 'revo4k', 'mmcblk0p1' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'galaxy4k', 'mmcblk0p1' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'tm4ksuper', 'mmcblk0p1' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'valalinux', 'mtd2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'lunix34k', 'mmcblk0p1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'lunix', 'mtd2' , '', d)}\
 "
 
 MTD_ROOTFS = "\
@@ -256,6 +264,8 @@ ${@bb.utils.contains('MACHINEBUILD', 'revo4k', 'mmcblk0p4' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'galaxy4k', 'mmcblk0p4' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'tm4ksuper', 'mmcblk0p4' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'valalinux', 'mtd0' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'lunix34k', 'mmcblk0p4' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'lunix', 'mtd0' , '', d)}\
 "
 
 SPLASH1_BMP = "\
@@ -293,6 +303,8 @@ ${@bb.utils.contains('MACHINEBUILD', 'tmtwin4k', 'splash1_power.bmp' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'galaxy4k', 'splash1_power.bmp' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'tm4ksuper', 'splash1_power.bmp' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'valalinux', 'splash1_power.bmp' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'lunix34k', 'splash1_power.bmp' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'lunix', 'splash1_power.bmp' , '', d)}\
 "
 
 MACHINE_DRIVER = "\
@@ -344,6 +356,8 @@ ${@bb.utils.contains('MACHINEBUILD', 'revo4k', 'dags7252-200' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'galaxy4k', 'dags7252-300' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'tm4ksuper', 'dags7252-300' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'valalinux', 'dags7362' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'lunix34k', 'dags7252-300' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'lunix', 'dags73625' , '', d)}\
 "
 
 MACHINE_FEATURES += "3dtv alsa hdmicec switchoff textlcd ci skins1080 \
@@ -359,6 +373,8 @@ MACHINE_FEATURES += "3dtv alsa hdmicec switchoff textlcd ci skins1080 \
     ${@bb.utils.contains('MACHINEBUILD', 'galaxy4k', 'fastscan dvb-c' , '', d)} \
     ${@bb.utils.contains('MACHINEBUILD', 'tm4ksuper', 'fastscan dvb-c' , '', d)} \
     ${@bb.utils.contains('MACHINEBUILD', 'valalinux', 'fastscan dvb-c' , '', d)} \
+    ${@bb.utils.contains('MACHINEBUILD', 'lunix34k', 'fastscan dvb-c' , '', d)} \
+    ${@bb.utils.contains('MACHINEBUILD', 'lunix', 'fastscan dvb-c' , '', d)} \
 "
 
 BOOTLOGO_FILENAME = "splash.bmp"
