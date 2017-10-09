@@ -1,4 +1,4 @@
-PR .= ".35"
+PR .= ".36"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 SRC_URI += " \
@@ -33,7 +33,7 @@ INITSCRIPT_NAME_${PN}-cron = "crond.${BPN}"
 CONFFILES_${PN}-cron = "${sysconfdir}/cron"
 FILES_${PN}-cron = "${sysconfdir}/cron ${sysconfdir}/init.d/crond.${BPN}"
 RDEPENDS_${PN}-cron += "${PN}"
-PROVIDES += "virtual/cron"
+PROVIDES_${PN}-cron += "virtual/cron"
 RPROVIDES_${PN}-cron += "virtual/cron"
 RCONFLICTS_${PN}-cron += "cronie"
 
