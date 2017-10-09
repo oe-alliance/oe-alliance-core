@@ -22,7 +22,7 @@ RDEPENDS_${PN} = "\
     ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "", "iproute2 ", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "", "ntfs-3g ", d)} \
     hddtemp \
-    busybox-cron \
+    virtual/cron \
     python-imaging \
     python-service-identity \
     rtmpdump \
