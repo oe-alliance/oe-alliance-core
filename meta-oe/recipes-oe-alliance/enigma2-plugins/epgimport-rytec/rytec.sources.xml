@@ -29,76 +29,6 @@ The description must be unique for each source, and is displayed on the UI.
     <url>http://91.121.106.172/~rytecepg/epg_data/rytec.channels.xml.gz</url>
     <url>http://www.vuplus-community.net/rytec/rytec.channels.xml.gz</url>
 </channel>
-<channel name="VirginUK.channels.xml.gz">
-    <url>http://www.xmltvepg.nl/VirginUK.channels.xml.gz</url>
-    <url>http://rytecepg.ipservers.eu/epg_data/VirginUK.channels.xml.gz</url>
-    <url>http://rytecepg.wanwizard.eu/VirginUK.channels.xml.gz</url>
-    <url>http://91.121.106.172/~rytecepg/epg_data/VirginUK.channels.xml.gz</url>
-    <url>http://www.vuplus-community.net/rytec/VirginUK.channels.xml.gz</url>
-</channel>
-<channel name="telenet.channels.xml.gz">
-    <url>http://www.xmltvepg.nl/telenet.channels.xml.gz</url>
-    <url>http://rytecepg.ipservers.eu/epg_data/telenet.channels.xml.gz</url>
-    <url>http://rytecepg.wanwizard.eu/telenet.channels.xml.gz</url>
-    <url>http://91.121.106.172/~rytecepg/epg_data/telenet.channels.xml.gz</url>
-    <url>http://www.vuplus-community.net/rytec/telenet.channels.xml.gz</url>
-</channel>
-<channel name="rytec.channels-denmark.xml.gz">
-    <url>http://www.xmltvepg.nl/rytec.channels-denmark.xml.gz</url>
-    <url>http://rytecepg.ipservers.eu/epg_data/rytec.channels-denmark.xml.gz</url>
-    <url>http://rytecepg.wanwizard.eu/rytec.channels-denmark.xml.gz</url>
-    <url>http://91.121.106.172/~rytecepg/epg_data/rytec.channels-denmark.xml.gz</url>
-    <url>http://www.vuplus-community.net/rytec/rytec.channels-denmark.xml.gz</url>
-</channel>
-<channel name="rytec.channels-denmark.xml.gz">
-    <url>http://www.xmltvepg.nl/rytec.channels-denmark.xml.gz</url>
-    <url>http://rytecepg.ipservers.eu/epg_data/rytec.channels-denmark.xml.gz</url>
-    <url>http://rytecepg.wanwizard.eu/rytec.channels-denmark.xml.gz</url>
-    <url>http://91.121.106.172/~rytecepg/epg_data/rytec.channels-denmark.xml.gz</url>
-    <url>http://www.vuplus-community.net/rytec/rytec.channels-denmark.xml.gz</url>
-</channel>
-<channel name="rytec.channels-finland.xml.gz">
-    <url>http://www.xmltvepg.nl/rytec.channels-finland.xml.gz</url>
-    <url>http://rytecepg.ipservers.eu/epg_data/rytec.channels-finland.xml.gz</url>
-    <url>http://rytecepg.wanwizard.eu/rytec.channels-finland.xml.gz</url>
-    <url>http://91.121.106.172/~rytecepg/epg_data/rytec.channels-finland.xml.gz</url>
-    <url>http://www.vuplus-community.net/rytec/rytec.channels-finland.xml.gz</url>
-</channel>
-<channel name="rytec.channels-finland.xml.gz">
-    <url>http://www.xmltvepg.nl/rytec.channels-finland.xml.gz</url>
-    <url>http://rytecepg.ipservers.eu/epg_data/rytec.channels-finland.xml.gz</url>
-    <url>http://rytecepg.wanwizard.eu/rytec.channels-finland.xml.gz</url>
-    <url>http://91.121.106.172/~rytecepg/epg_data/rytec.channels-finland.xml.gz</url>
-    <url>http://www.vuplus-community.net/rytec/rytec.channels-finland.xml.gz</url>
-</channel>
-<channel name="rytec.channels-norway.xml.gz">
-    <url>http://www.xmltvepg.nl/rytec.channels-norway.xml.gz</url>
-    <url>http://rytecepg.ipservers.eu/epg_data/rytec.channels-norway.xml.gz</url>
-    <url>http://rytecepg.wanwizard.eu/rytec.channels-norway.xml.gz</url>
-    <url>http://91.121.106.172/~rytecepg/epg_data/rytec.channels-norway.xml.gz</url>
-    <url>http://www.vuplus-community.net/rytec/rytec.channels-norway.xml.gz</url>
-</channel>
-<channel name="rytec.channels-norway.xml.gz">
-    <url>http://www.xmltvepg.nl/rytec.channels-norway.xml.gz</url>
-    <url>http://rytecepg.ipservers.eu/epg_data/rytec.channels-norway.xml.gz</url>
-    <url>http://rytecepg.wanwizard.eu/rytec.channels-norway.xml.gz</url>
-    <url>http://91.121.106.172/~rytecepg/epg_data/rytec.channels-norway.xml.gz</url>
-    <url>http://www.vuplus-community.net/rytec/rytec.channels-norway.xml.gz</url>
-</channel>
-<channel name="rytec.channels-sweden.xml.gz">
-    <url>http://www.xmltvepg.nl/rytec.channels-sweden.xml.gz</url>
-    <url>http://rytecepg.ipservers.eu/epg_data/rytec.channels-sweden.xml.gz</url>
-    <url>http://rytecepg.wanwizard.eu/rytec.channels-sweden.xml.gz</url>
-    <url>http://91.121.106.172/~rytecepg/epg_data/rytec.channels-sweden.xml.gz</url>
-    <url>http://www.vuplus-community.net/rytec/rytec.channels-sweden.xml.gz</url>
-</channel>
-<channel name="rytec.channels-sweden.xml.gz">
-    <url>http://www.xmltvepg.nl/rytec.channels-sweden.xml.gz</url>
-    <url>http://rytecepg.ipservers.eu/epg_data/rytec.channels-sweden.xml.gz</url>
-    <url>http://rytecepg.wanwizard.eu/rytec.channels-sweden.xml.gz</url>
-    <url>http://91.121.106.172/~rytecepg/epg_data/rytec.channels-sweden.xml.gz</url>
-    <url>http://www.vuplus-community.net/rytec/rytec.channels-sweden.xml.gz</url>
-</channel>
 <channel name="rytec.channels-slovenia.xml.gz">
     <url>http://www.xmltvepg.nl/rytec.channels-slovenia.xml.gz</url>
     <url>http://rytecepg.ipservers.eu/epg_data/rytec.channels-slovenia.xml.gz</url>
@@ -133,76 +63,6 @@ The description must be unique for each source, and is displayed on the UI.
     <url>http://rytecepg.wanwizard.eu/Horizons.channels.xml.gz</url>
     <url>http://91.121.106.172/~rytecepg/epg_data/Horizons.channels.xml.gz</url>
     <url>http://www.vuplus-community.net/rytec/Horizons.channels.xml.gz</url>
-</channel>
-<channel name="VirginUK.channels.xml.xz">
-    <url>http://www.xmltvepg.nl/VirginUK.channels.xml.xz</url>
-    <url>http://rytecepg.ipservers.eu/epg_data/VirginUK.channels.xml.xz</url>
-    <url>http://rytecepg.wanwizard.eu/VirginUK.channels.xml.xz</url>
-    <url>http://91.121.106.172/~rytecepg/epg_data/VirginUK.channels.xml.xz</url>
-    <url>http://www.vuplus-community.net/rytec/VirginUK.channels.xml.xz</url>
-</channel>
-<channel name="telenet.channels.xml.xz">
-    <url>http://www.xmltvepg.nl/telenet.channels.xml.xz</url>
-    <url>http://rytecepg.ipservers.eu/epg_data/telenet.channels.xml.xz</url>
-    <url>http://rytecepg.wanwizard.eu/telenet.channels.xml.xz</url>
-    <url>http://91.121.106.172/~rytecepg/epg_data/telenet.channels.xml.xz</url>
-    <url>http://www.vuplus-community.net/rytec/telenet.channels.xml.xz</url>
-</channel>
-<channel name="rytec.channels-denmark.xml.xz">
-    <url>http://www.xmltvepg.nl/rytec.channels-denmark.xml.xz</url>
-    <url>http://rytecepg.ipservers.eu/epg_data/rytec.channels-denmark.xml.xz</url>
-    <url>http://rytecepg.wanwizard.eu/rytec.channels-denmark.xml.xz</url>
-    <url>http://91.121.106.172/~rytecepg/epg_data/rytec.channels-denmark.xml.xz</url>
-    <url>http://www.vuplus-community.net/rytec/rytec.channels-denmark.xml.xz</url>
-</channel>
-<channel name="rytec.channels-denmark.xml.xz">
-    <url>http://www.xmltvepg.nl/rytec.channels-denmark.xml.xz</url>
-    <url>http://rytecepg.ipservers.eu/epg_data/rytec.channels-denmark.xml.xz</url>
-    <url>http://rytecepg.wanwizard.eu/rytec.channels-denmark.xml.xz</url>
-    <url>http://91.121.106.172/~rytecepg/epg_data/rytec.channels-denmark.xml.xz</url>
-    <url>http://www.vuplus-community.net/rytec/rytec.channels-denmark.xml.xz</url>
-</channel>
-<channel name="rytec.channels-finland.xml.xz">
-    <url>http://www.xmltvepg.nl/rytec.channels-finland.xml.xz</url>
-    <url>http://rytecepg.ipservers.eu/epg_data/rytec.channels-finland.xml.xz</url>
-    <url>http://rytecepg.wanwizard.eu/rytec.channels-finland.xml.xz</url>
-    <url>http://91.121.106.172/~rytecepg/epg_data/rytec.channels-finland.xml.xz</url>
-    <url>http://www.vuplus-community.net/rytec/rytec.channels-finland.xml.xz</url>
-</channel>
-<channel name="rytec.channels-finland.xml.xz">
-    <url>http://www.xmltvepg.nl/rytec.channels-finland.xml.xz</url>
-    <url>http://rytecepg.ipservers.eu/epg_data/rytec.channels-finland.xml.xz</url>
-    <url>http://rytecepg.wanwizard.eu/rytec.channels-finland.xml.xz</url>
-    <url>http://91.121.106.172/~rytecepg/epg_data/rytec.channels-finland.xml.xz</url>
-    <url>http://www.vuplus-community.net/rytec/rytec.channels-finland.xml.xz</url>
-</channel>
-<channel name="rytec.channels-norway.xml.xz">
-    <url>http://www.xmltvepg.nl/rytec.channels-norway.xml.xz</url>
-    <url>http://rytecepg.ipservers.eu/epg_data/rytec.channels-norway.xml.xz</url>
-    <url>http://rytecepg.wanwizard.eu/rytec.channels-norway.xml.xz</url>
-    <url>http://91.121.106.172/~rytecepg/epg_data/rytec.channels-norway.xml.xz</url>
-    <url>http://www.vuplus-community.net/rytec/rytec.channels-norway.xml.xz</url>
-</channel>
-<channel name="rytec.channels-norway.xml.xz">
-    <url>http://www.xmltvepg.nl/rytec.channels-norway.xml.xz</url>
-    <url>http://rytecepg.ipservers.eu/epg_data/rytec.channels-norway.xml.xz</url>
-    <url>http://rytecepg.wanwizard.eu/rytec.channels-norway.xml.xz</url>
-    <url>http://91.121.106.172/~rytecepg/epg_data/rytec.channels-norway.xml.xz</url>
-    <url>http://www.vuplus-community.net/rytec/rytec.channels-norway.xml.xz</url>
-</channel>
-<channel name="rytec.channels-sweden.xml.xz">
-    <url>http://www.xmltvepg.nl/rytec.channels-sweden.xml.xz</url>
-    <url>http://rytecepg.ipservers.eu/epg_data/rytec.channels-sweden.xml.xz</url>
-    <url>http://rytecepg.wanwizard.eu/rytec.channels-sweden.xml.xz</url>
-    <url>http://91.121.106.172/~rytecepg/epg_data/rytec.channels-sweden.xml.xz</url>
-    <url>http://www.vuplus-community.net/rytec/rytec.channels-sweden.xml.xz</url>
-</channel>
-<channel name="rytec.channels-sweden.xml.xz">
-    <url>http://www.xmltvepg.nl/rytec.channels-sweden.xml.xz</url>
-    <url>http://rytecepg.ipservers.eu/epg_data/rytec.channels-sweden.xml.xz</url>
-    <url>http://rytecepg.wanwizard.eu/rytec.channels-sweden.xml.xz</url>
-    <url>http://91.121.106.172/~rytecepg/epg_data/rytec.channels-sweden.xml.xz</url>
-    <url>http://www.vuplus-community.net/rytec/rytec.channels-sweden.xml.xz</url>
 </channel>
 <channel name="rytec.channels-slovenia.xml.xz">
     <url>http://www.xmltvepg.nl/rytec.channels-slovenia.xml.xz</url>
@@ -241,10 +101,694 @@ The description must be unique for each source, and is displayed on the UI.
 </channel>
 </mappings>
 
+
+<sourcecat sourcecatname="(New) Rytec General XMLTV (xz version)">
+<source type="gen_xmltv" channels="rytec.channels.xml.xz">
+	<description>News Channels (xz)</description>
+	<url>http://www.xmltvepg.nl/rytecNWS.xz</url>	
+	<url>http://rytecepg.ipservers.eu/epg_data/rytecNWS.xz</url>
+	<url>http://rytecepg.wanwizard.eu/rytecNWS.xz</url>
+	<url>http://91.121.106.172/~rytecepg/epg_data/rytecNWS.xz</url>
+	<url>http://www.vuplus-community.net/rytec/rytecNWS.xz</url>     
+</source>
+<source type="gen_xmltv" channels="rytec.channels.xml.xz">
+	<description>Erotic (xz)</description>
+	<url>http://www.xmltvepg.nl/rytecERO.xz</url>	
+	<url>http://rytecepg.ipservers.eu/epg_data/rytecERO.xz</url>
+	<url>http://rytecepg.wanwizard.eu/rytecERO.xz</url>
+	<url>http://91.121.106.172/~rytecepg/epg_data/rytecERO.xz</url>
+	<url>http://www.vuplus-community.net/rytec/rytecERO.xz</url>
+</source>
+<source type="gen_xmltv" channels="rytec.channels.xml.xz">
+	<description>AFN (xz)</description>
+	<url>http://www.xmltvepg.nl/rytecAFN.xz</url>	
+	<url>http://rytecepg.ipservers.eu/epg_data/rytecAFN.xz</url>
+	<url>http://rytecepg.wanwizard.eu/rytecAFN.xz</url>
+	<url>http://91.121.106.172/~rytecepg/epg_data/rytecAFN.xz</url>
+	<url>http://www.vuplus-community.net/rytec/rytecAFN.xz</url>
+</source>
+<source type="gen_xmltv" channels="rytec.channels.xml.xz">
+	<description>Rytec IPTV XMLTV (xz)</description>
+	<url>http://www.xmltvepg.nl/rytecIPTV.xz</url>	
+	<url>http://rytecepg.ipservers.eu/epg_data/rytecIPTV.xz</url>
+	<url>http://rytecepg.wanwizard.eu/rytecIPTV.xz</url>
+	<url>http://91.121.106.172/~rytecepg/epg_data/rytecIPTV.xz</url>
+	<url>http://www.vuplus-community.net/rytec/rytecIPTV.xz</url>
+</source>
+<source type="gen_xmltv" channels="rytec.channels.xml.xz">
+	<description>Rytec Miscellaneous XMLTV (xz)</description>
+	<url>http://www.xmltvepg.nl/rytecMisc.xz</url>	
+	<url>http://rytecepg.ipservers.eu/epg_data/rytecMisc.xz</url>
+	<url>http://rytecepg.wanwizard.eu/rytecMisc.xz</url>
+	<url>http://91.121.106.172/~rytecepg/epg_data/rytecMisc.xz</url>
+	<url>http://www.vuplus-community.net/rytec/rytecMisc.xz</url>
+</source>
+</sourcecat>
+
+<sourcecat sourcecatname="(New) Rytec Belgie/Belgique/Nederland/France XMLTV (xz version)">
+<source type="gen_xmltv" channels="rytec.channels.xml.xz">
+  <description>Nederland - Basis (xz)</description>
+	<url>http://www.xmltvepg.nl/rytecNL_Basic.xz</url>	
+	<url>http://rytecepg.ipservers.eu/epg_data/rytecNL_Basic.xz</url>
+	<url>http://rytecepg.wanwizard.eu/rytecNL_Basic.xz</url>
+	<url>http://91.121.106.172/~rytecepg/epg_data/rytecNL_Basic.xz</url>
+	<url>http://www.vuplus-community.net/rytec/rytecNL_Basic.xz</url>   
+</source>
+<source type="gen_xmltv" channels="rytec.channels.xml.xz">
+	<description>Vlaanderen - Basis (xz)</description>
+	<url>http://www.xmltvepg.nl/rytecBE_VL_Basic.xz</url>	
+	<url>http://rytecepg.ipservers.eu/epg_data/rytecBE_VL_Basic.xz</url>
+	<url>http://rytecepg.wanwizard.eu/rytecBE_VL_Basic.xz</url>
+	<url>http://91.121.106.172/~rytecepg/epg_data/rytecBE_VL_Basic.xz</url>
+	<url>http://www.vuplus-community.net/rytec/rytecBE_VL_Basic.xz</url>     
+</source>
+<source type="gen_xmltv" channels="rytec.channels.xml.xz">
+  <description>Vlaanderen/Nederland - Gemeenschappelijk (xz)</description>
+	<url>http://www.xmltvepg.nl/rytecBE_NL_Common.xz</url>	
+	<url>http://rytecepg.ipservers.eu/epg_data/rytecBE_NL_Common.xz</url>
+	<url>http://rytecepg.wanwizard.eu/rytecBE_NL_Common.xz</url>
+	<url>http://91.121.106.172/~rytecepg/epg_data/rytecBE_NL_Common.xz</url>
+	<url>http://www.vuplus-community.net/rytec/rytecBE_NL_Common.xz</url>    
+</source>
+<source type="gen_xmltv" channels="rytec.channels.xml.xz">
+  <description>Nederland - Sport/Movies (xz)</description>
+	<url>http://www.xmltvepg.nl/rytecNL_Extra.xz</url>	
+	<url>http://rytecepg.ipservers.eu/epg_data/rytecNL_Extra.xz</url>
+	<url>http://rytecepg.wanwizard.eu/rytecNL_Extra.xz</url>
+	<url>http://91.121.106.172/~rytecepg/epg_data/rytecNL_Extra.xz</url>
+	<url>http://www.vuplus-community.net/rytec/rytecNL_Extra.xz</url>    
+</source>
+<source type="gen_xmltv" channels="rytec.channels.xml.xz">
+	<description>Wallonie - Telesat Base (xz)</description>
+	<url>http://www.xmltvepg.nl/rytecBE_FR_Basic.xz</url>	
+	<url>http://rytecepg.ipservers.eu/epg_data/rytecBE_FR_Basic.xz</url>
+	<url>http://rytecepg.wanwizard.eu/rytecBE_FR_Basic.xz</url>
+	<url>http://91.121.106.172/~rytecepg/epg_data/rytecBE_FR_Basic.xz</url>
+	<url>http://www.vuplus-community.net/rytec/rytecBE_FR_Basic.xz</url>        
+</source>
+<source type="gen_xmltv" channels="rytec.channels.xml.xz">
+  <description>France - TNT (xz)</description>
+	<url>http://www.xmltvepg.nl/rytecTNT_Basic.xz</url>	
+	<url>http://rytecepg.ipservers.eu/epg_data/rytecTNT_Basic.xz</url>
+	<url>http://rytecepg.wanwizard.eu/rytecTNT_Basic.xz</url>
+	<url>http://91.121.106.172/~rytecepg/epg_data/rytecTNT_Basic.xz</url>
+	<url>http://www.vuplus-community.net/rytec/rytecTNT_Basic.xz</url>       
+</source>
+<source type="gen_xmltv" channels="rytec.channels.xml.xz">
+  <description>France/Wallonie - Commun (xz)</description>
+	<url>http://www.xmltvepg.nl/rytecBE_FR_Common.xz</url>	
+	<url>http://rytecepg.ipservers.eu/epg_data/rytecBE_FR_Common.xz</url>
+	<url>http://rytecepg.wanwizard.eu/rytecBE_FR_Common.xz</url>
+	<url>http://91.121.106.172/~rytecepg/epg_data/rytecBE_FR_Common.xz</url>
+	<url>http://www.vuplus-community.net/rytec/rytecBE_FR_Common.xz</url>  
+</source>  
+<source type="gen_xmltv" channels="rytec.channels.xml.xz">
+  <description>France - Mixte (xz)</description>
+	<url>http://www.xmltvepg.nl/rytecFR_Mixte.xz</url>	
+	<url>http://rytecepg.ipservers.eu/epg_data/rytecFR_Mixte.xz</url>
+	<url>http://rytecepg.wanwizard.eu/rytecFR_Mixte.xz</url>
+	<url>http://91.121.106.172/~rytecepg/epg_data/rytecFR_Mixte.xz</url>
+	<url>http://www.vuplus-community.net/rytec/rytecFR_Mixte.xz</url>  
+</source>  
+<source type="gen_xmltv" channels="rytec.channels.xml.xz">
+  <description>France - Sport/Cinema (xz)</description>
+	<url>http://www.xmltvepg.nl/rytecFR_SportMovies.xz</url>	
+	<url>http://rytecepg.ipservers.eu/epg_data/rytecFR_SportMovies.xz</url>
+	<url>http://rytecepg.wanwizard.eu/rytecFR_SportMovies.xz</url>
+	<url>http://91.121.106.172/~rytecepg/epg_data/rytecFR_SportMovies.xz</url>
+	<url>http://www.vuplus-community.net/rytec/rytecFR_SportMovies.xz</url>   
+</source>
+</sourcecat>
+
+<sourcecat sourcecatname="(New) Rytec Bulgariya XMLTV (xz version)">
+<source type="gen_xmltv" channels="rytec.channels.xml.xz">
+	<description>Bulgariya (xz)</description>
+	<url>http://www.xmltvepg.nl/rytecBG.xz</url>
+	<url>http://rytecepg.ipservers.eu/epg_data/rytecBG.xz</url>
+	<url>http://rytecepg.wanwizard.eu/rytecBG.xz</url>
+	<url>http://91.121.106.172/~rytecepg/epg_data/rytecBG.xz</url>
+	<url>http://www.vuplus-community.net/rytec/rytecBG.xz</url>
+</source>
+</sourcecat>
+
+<sourcecat sourcecatname="(New) Rytec Ceska/Slovensko XMLTV (xz version)">
+<source type="gen_xmltv" channels="rytec.channels.xml.xz">
+	<description>Slovensko - Bazicky (xz)</description>
+	<url>http://www.xmltvepg.nl/rytecSK_Basic.xz</url>	
+	<url>http://rytecepg.ipservers.eu/epg_data/rytecSK_Basic.xz</url>
+	<url>http://rytecepg.wanwizard.eu/rytecSK_Basic.xz</url>
+	<url>http://91.121.106.172/~rytecepg/epg_data/rytecSK_Basic.xz</url>
+	<url>http://www.vuplus-community.net/rytec/rytecSK_Basic.xz</url>
+</source>
+<source type="gen_xmltv" channels="rytec.channels.xml.xz">
+	<description>Ceska - Bazicky (xz)</description>
+	<url>http://www.xmltvepg.nl/rytecCZ_Basic.xz</url>	
+	<url>http://rytecepg.ipservers.eu/epg_data/rytecCZ_Basic.xz</url>
+	<url>http://rytecepg.wanwizard.eu/rytecCZ_Basic.xz</url>
+	<url>http://91.121.106.172/~rytecepg/epg_data/rytecCZ_Basic.xz</url>
+	<url>http://www.vuplus-community.net/rytec/rytecCZ_Basic.xz</url>
+</source>
+<source type="gen_xmltv" channels="rytec.channels.xml.xz">
+	<description>Ceska/Slovensko - Rozdeleny (xz)</description>
+	<url>http://www.xmltvepg.nl/rytecCZ_SK_Common.xz</url>	
+	<url>http://rytecepg.ipservers.eu/epg_data/rytecCZ_SK_Common.xz</url>
+	<url>http://rytecepg.wanwizard.eu/rytecCZ_SK_Common.xz</url>
+	<url>http://91.121.106.172/~rytecepg/epg_data/rytecCZ_SK_Common.xz</url>
+	<url>http://www.vuplus-community.net/rytec/rytecCZ_SK_Common.xz</url>
+</source>
+<source type="gen_xmltv" channels="rytec.channels.xml.xz">
+	<description>Ceska/Slovensko - Sportove/Filmy (xz)</description>
+	<url>http://www.xmltvepg.nl/rytecCZ_SK_SportMovies.xz</url>	
+	<url>http://rytecepg.ipservers.eu/epg_data/rytecCZ_SK_SportMovies.xz</url>
+	<url>http://rytecepg.wanwizard.eu/rytecCZ_SK_SportMovies.xz</url>
+	<url>http://91.121.106.172/~rytecepg/epg_data/rytecCZ_SK_SportMovies.xz</url>
+	<url>http://www.vuplus-community.net/rytec/rytecCZ_SK_SportMovies.xz</url>
+</source>
+</sourcecat>
+
+<sourcecat sourcecatname="(New) Rytec Danmark XMLTV (xz version)">
+<source type="gen_xmltv" channels="rytec.channels.xml.xz">
+	<description>Danmark - Grundleggende (xz)</description>
+	<url>http://www.xmltvepg.nl/rytecDK_Basic.xz</url>	
+	<url>http://rytecepg.ipservers.eu/epg_data/rytecDK_Basic.xz</url>
+	<url>http://rytecepg.wanwizard.eu/rytecDK_Basic.xz</url>
+	<url>http://91.121.106.172/~rytecepg/epg_data/rytecDK_Basic.xz</url>
+	<url>http://www.vuplus-community.net/rytec/rytecDK_Basic.xz</url>
+</source>
+<source type="gen_xmltv" channels="rytec.channels.xml.xz">
+	<description>Danmark - Delt (xz)</description>
+	<url>http://www.xmltvepg.nl/rytecDK_Misc.xz</url>	
+	<url>http://rytecepg.ipservers.eu/epg_data/rytecDK_Misc.xz</url>
+	<url>http://rytecepg.wanwizard.eu/rytecDK_Misc.xz</url>
+	<url>http://91.121.106.172/~rytecepg/epg_data/rytecDK_Misc.xz</url>
+	<url>http://www.vuplus-community.net/rytec/rytecDK_Misc.xz</url>
+</source>
+<source type="gen_xmltv" channels="rytec.channels.xml.xz">
+	<description>Danmark - Sport/Movies (xz)</description>
+	<url>http://www.xmltvepg.nl/rytecDK_SportMovies.xz</url>	
+	<url>http://rytecepg.ipservers.eu/epg_data/rytecDK_SportMovies.xz</url>
+	<url>http://rytecepg.wanwizard.eu/rytecDK_SportMovies.xz</url>
+	<url>http://91.121.106.172/~rytecepg/epg_data/rytecDK_SportMovies.xz</url>
+	<url>http://www.vuplus-community.net/rytec/rytecDK_SportMovies.xz</url>
+</source>
+</sourcecat>
+
+<sourcecat sourcecatname="(New) Rytec Deutschland/Osterreich/Switzerland XMLTV (xz version)">
+<source type="gen_xmltv" channels="rytec.channels.xml.xz">
+	<description>Deutschland - Basis  (xz)</description>
+	<url>http://www.xmltvepg.nl/rytecDE_Basic.xz</url>	
+	<url>http://rytecepg.ipservers.eu/epg_data/rytecDE_Basic.xz</url>
+	<url>http://rytecepg.wanwizard.eu/rytecDE_Basic.xz</url>
+	<url>http://91.121.106.172/~rytecepg/epg_data/rytecDE_Basic.xz</url>
+	<url>http://www.vuplus-community.net/rytec/rytecDE_Basic.xz</url>     
+</source>
+<source type="gen_xmltv" channels="rytec.channels.xml.xz">
+	<description>Osterreich - Basis  (xz)</description>
+	<url>http://www.xmltvepg.nl/rytecAT_Basic.xz</url>	
+	<url>http://rytecepg.ipservers.eu/epg_data/rytecAT_Basic.xz</url>
+	<url>http://rytecepg.wanwizard.eu/rytecAT_Basic.xz</url>
+	<url>http://91.121.106.172/~rytecepg/epg_data/rytecAT_Basic.xz</url>
+	<url>http://www.vuplus-community.net/rytec/rytecAT_Basic.xz</url>         
+</source>
+<source type="gen_xmltv" channels="rytec.channels.xml.xz">
+	<description>Switzerland - Basis  (xz)</description>
+	<url>http://www.xmltvepg.nl/rytecCH_Basic.xz</url>	
+	<url>http://rytecepg.ipservers.eu/epg_data/rytecCH_Basic.xz</url>
+	<url>http://rytecepg.wanwizard.eu/rytecCH_Basic.xz</url>
+	<url>http://91.121.106.172/~rytecepg/epg_data/rytecCH_Basic.xz</url>
+	<url>http://www.vuplus-community.net/rytec/rytecCH_Basic.xz</url>     
+</source>
+<source type="gen_xmltv" channels="rytec.channels.xml.xz">
+	<description>Deutschland/Osterreich/Switzerland - Gemeinsam  (xz)</description>
+	<url>http://www.xmltvepg.nl/rytecDE_Common.xz</url>	
+	<url>http://rytecepg.ipservers.eu/epg_data/rytecDE_Common.xz</url>
+	<url>http://rytecepg.wanwizard.eu/rytecDE_Common.xz</url>
+	<url>http://91.121.106.172/~rytecepg/epg_data/rytecDE_Common.xz</url>
+	<url>http://www.vuplus-community.net/rytec/rytecDE_Common.xz</url>    
+</source>
+<source type="gen_xmltv" channels="rytec.channels.xml.xz">
+	<description>Deutschland/Osterreich/Switzerland - Sports/Film  (xz)</description>
+	<url>http://www.xmltvepg.nl/rytecDE_SportMovies.xz</url>	
+	<url>http://rytecepg.ipservers.eu/epg_data/rytecDE_SportMovies.xz</url>
+	<url>http://rytecepg.wanwizard.eu/rytecDE_SportMovies.xz</url>
+	<url>http://91.121.106.172/~rytecepg/epg_data/rytecDE_SportMovies.xz</url>
+	<url>http://www.vuplus-community.net/rytec/rytecDE_SportMovies.xz</url>       
+</source>
+</sourcecat>
+
+<sourcecat sourcecatname="(New) Rytec Ellada XMLTV (xz version)">
+<source type="gen_xmltv" channels="rytec.channels.xml.xz">
+	<description>Ellada - Genikos (xz)</description>
+	<url>http://www.xmltvepg.nl/rytecGR_Basic.xz</url>	
+	<url>http://rytecepg.ipservers.eu/epg_data/rytecGR_Basic.xz</url>
+	<url>http://rytecepg.wanwizard.eu/rytecGR_Basic.xz</url>
+	<url>http://91.121.106.172/~rytecepg/epg_data/rytecGR_Basic.xz</url>
+	<url>http://www.vuplus-community.net/rytec/rytecGR_Basic.xz</url>
+</source>
+<source type="gen_xmltv" channels="rytec.channels.xml.xz">
+	<description>Ellada - Athlitismos/Kinimatografou (xz)</description>
+	<url>http://www.xmltvepg.nl/rytecGR_SportMovies.xz</url>	
+	<url>http://rytecepg.ipservers.eu/epg_data/rytecGR_SportMovies.xz</url>
+	<url>http://rytecepg.wanwizard.eu/rytecGR_SportMovies.xz</url>
+	<url>http://91.121.106.172/~rytecepg/epg_data/rytecGR_SportMovies.xz</url>
+	<url>http://www.vuplus-community.net/rytec/rytecGR_SportMovies.xz</url>
+</source>
+</sourcecat>
+
+<sourcecat sourcecatname="(New) Rytec Espana XMLTV (xz version)">
+<source type="gen_xmltv" channels="rytec.channels.xml.xz">
+	<description>Espana - Basic (xz)</description>
+	<url>http://www.xmltvepg.nl/rytecES_Basic.xz</url>	
+	<url>http://rytecepg.ipservers.eu/epg_data/rytecES_Basic.xz</url>
+	<url>http://rytecepg.wanwizard.eu/rytecES_Basic.xz</url>
+	<url>http://91.121.106.172/~rytecepg/epg_data/rytecES_Basic.xz</url>
+	<url>http://www.vuplus-community.net/rytec/rytecES_Basic.xz</url>
+</source>
+<source type="gen_xmltv" channels="rytec.channels.xml.xz">
+	<description>Espana - Adicional (xz)</description>
+	<url>http://www.xmltvepg.nl/rytecES_Misc.xz</url>	
+	<url>http://rytecepg.ipservers.eu/epg_data/rytecES_Misc.xz</url>
+	<url>http://rytecepg.wanwizard.eu/rytecES_Misc.xz</url>
+	<url>http://91.121.106.172/~rytecepg/epg_data/rytecES_Misc.xz</url>
+	<url>http://www.vuplus-community.net/rytec/rytecES_Misc.xz</url>
+</source>
+<source type="gen_xmltv" channels="rytec.channels.xml.xz">
+	<description>Espana - Deportes/Pelicula (xz)</description>
+	<url>http://www.xmltvepg.nl/rytecES_SportMovies.xz</url>	
+	<url>http://rytecepg.ipservers.eu/epg_data/rytecES_SportMovies.xz</url>
+	<url>http://rytecepg.wanwizard.eu/rytecES_SportMovies.xz</url>
+	<url>http://91.121.106.172/~rytecepg/epg_data/rytecES_SportMovies.xz</url>
+	<url>http://www.vuplus-community.net/rytec/rytecES_SportMovies.xz</url>
+</source>
+</sourcecat>
+
+<sourcecat sourcecatname="(New) Rytec Italia XMLTV (xz version)">
+<source type="gen_xmltv" channels="rytec.channels.xml.xz">
+	<description>Italia - Basis (xz)</description>
+	<url>http://www.xmltvepg.nl/rytecIT_Basic.xz</url>	
+	<url>http://rytecepg.ipservers.eu/epg_data/rytecIT_Basic.xz</url>
+	<url>http://rytecepg.wanwizard.eu/rytecIT_Basic.xz</url>
+	<url>http://91.121.106.172/~rytecepg/epg_data/rytecIT_Basic.xz</url>
+	<url>http://www.vuplus-community.net/rytec/rytecIT_Basic.xz</url>     
+</source>
+<source type="gen_xmltv" channels="rytec.channels.xml.xz">
+	<description>Italia - Sky (xz)</description>
+	<url>http://www.xmltvepg.nl/rytecIT_Sky.xz</url>	
+	<url>http://rytecepg.ipservers.eu/epg_data/rytecIT_Sky.xz</url>
+	<url>http://rytecepg.wanwizard.eu/rytecIT_Sky.xz</url>
+	<url>http://91.121.106.172/~rytecepg/epg_data/rytecIT_Sky.xz</url>
+	<url>http://www.vuplus-community.net/rytec/rytecIT_Sky.xz</url>    
+</source>
+<source type="gen_xmltv" channels="rytec.channels.xml.xz">
+	<description>Italia - Sports/Film/Premium (xz)</description>
+	<url>http://www.xmltvepg.nl/rytecIT_SportMovies.xz</url>	
+	<url>http://rytecepg.ipservers.eu/epg_data/rytecIT_SportMovies.xz</url>
+	<url>http://rytecepg.wanwizard.eu/rytecIT_SportMovies.xz</url>
+	<url>http://91.121.106.172/~rytecepg/epg_data/rytecIT_SportMovies.xz</url>
+	<url>http://www.vuplus-community.net/rytec/rytecIT_SportMovies.xz</url>       
+</source>
+</sourcecat>
+
+<sourcecat sourcecatname="(New) Rytec Poland XMLTV (xz version)">
+<source type="gen_xmltv" channels="rytec.channels.xml.xz">
+	<description>Polska - Podstawowy (xz)</description>
+	<url>http://www.xmltvepg.nl/rytecPL_Basic.xz</url>	
+	<url>http://rytecepg.ipservers.eu/epg_data/rytecPL_Basic.xz</url>
+	<url>http://rytecepg.wanwizard.eu/rytecPL_Basic.xz</url>
+	<url>http://91.121.106.172/~rytecepg/epg_data/rytecPL_Basic.xz</url>
+	<url>http://www.vuplus-community.net/rytec/rytecPL_Basic.xz</url>
+</source>
+<source type="gen_xmltv" channels="rytec.channels.xml.xz">
+	<description>Polska - Dodatkowy (xz)</description>
+	<url>http://www.xmltvepg.nl/rytecPL_Misc.xz</url>	
+	<url>http://rytecepg.ipservers.eu/epg_data/rytecPL_Misc.xz</url>
+	<url>http://rytecepg.wanwizard.eu/rytecPL_Misc.xz</url>
+	<url>http://91.121.106.172/~rytecepg/epg_data/rrytecPL_Misc.xz</url>
+	<url>http://www.vuplus-community.net/rytec/rytecPL_Misc.xz</url>
+</source>
+<source type="gen_xmltv" channels="rytec.channels.xml.xz">
+	<description>Polska - Sport/Kino (xz)</description>
+	<url>http://www.xmltvepg.nl/rytecPL_SportMovies.xz</url>	
+	<url>http://rytecepg.ipservers.eu/epg_data/rytecPL_SportMovies.xz</url>
+	<url>http://rytecepg.wanwizard.eu/rytecPL_SportMovies.xz</url>
+	<url>http://91.121.106.172/~rytecepg/epg_data/rytecPL_SportMovies.xz</url>
+	<url>http://www.vuplus-community.net/rytec/rytecPL_SportMovies.xz</url>
+</source>
+</sourcecat>
+
+<sourcecat sourcecatname="(New) Rytec Portugal XMLTV (xz version)">
+<source type="gen_xmltv" channels="rytec.channels.xml.xz">
+	<description>Portugal (xz)</description>
+	<url>http://www.xmltvepg.nl/rytecPT.xz</url>	
+	<url>http://rytecepg.ipservers.eu/epg_data/rytecPT.xz</url>
+	<url>http://rytecepg.wanwizard.eu/rytecPT.xz</url>
+	<url>http://91.121.106.172/~rytecepg/epg_data/rytecPT.xz</url>
+	<url>http://www.vuplus-community.net/rytec/rytecPT.xz</url>
+</source>
+</sourcecat>
+
+<sourcecat sourcecatname="(New) Rytec Magyarorszag XMLTV (xz version)">
+<source type="gen_xmltv" channels="rytec.channels.xml.xz">
+	<description>Magyarorszag - Basic (xz)</description>
+	<url>http://www.xmltvepg.nl/rytecHU_Basic.xz</url>	
+	<url>http://rytecepg.ipservers.eu/epg_data/rytecHU_Basic.xz</url>
+	<url>http://rytecepg.wanwizard.eu/rytecHU_Basic.xz</url>
+	<url>http://91.121.106.172/~rytecepg/epg_data/rytecHU_Basic.xz</url>
+	<url>http://www.vuplus-community.net/rytec/rytecHU_Basic.xz</url>
+</source>
+<source type="gen_xmltv" channels="rytec.channels.xml.xz">
+	<description>Magyarorszag - Sport/Film (xz)</description>
+	<url>http://www.xmltvepg.nl/rytecHU_SportMovies.xz</url>	
+	<url>http://rytecepg.ipservers.eu/epg_data/rytecHU_SportMovies.xz</url>
+	<url>http://rytecepg.wanwizard.eu/rytecHU_SportMovies.xz</url>
+	<url>http://91.121.106.172/~rytecepg/epg_data/rytecHU_SportMovies.xz</url>
+	<url>http://www.vuplus-community.net/rytec/rytecHU_SportMovies.xz</url>
+</source>
+</sourcecat>
+
+<sourcecat sourcecatname="(New) Rytec Norge XMLTV (xz version)">
+<source type="gen_xmltv" channels="rytec.channels.xml.xz">
+	<description>Norge - Basic (xz)</description>
+	<url>http://www.xmltvepg.nl/rytecNO_Basic.xz</url>	
+	<url>http://rytecepg.ipservers.eu/epg_data/rytecNO_Basic.xz</url>
+	<url>http://rytecepg.wanwizard.eu/rytecNO_Basic.xz</url>
+	<url>http://91.121.106.172/~rytecepg/epg_data/rytecNO_Basic.xz</url>
+	<url>http://www.vuplus-community.net/rytec/rytecNO_Basic.xz</url>
+</source>
+<source type="gen_xmltv" channels="rytec.channels.xml.xz">
+	<description>Norge - Delt (xz)</description>
+	<url>http://www.xmltvepg.nl/rytecNO_Misc.xz</url>	
+	<url>http://rytecepg.ipservers.eu/epg_data/rytecNO_Misc.xz</url>
+	<url>http://rytecepg.wanwizard.eu/rytecNO_Misc.xz</url>
+	<url>http://91.121.106.172/~rytecepg/epg_data/rytecNO_Misc.xz</url>
+	<url>http://www.vuplus-community.net/rytec/rytecNO_Misc.xz</url>
+</source>
+<source type="gen_xmltv" channels="rytec.channels.xml.xz">
+	<description>Norge - Sport/Movies (xz)</description>
+	<url>http://www.xmltvepg.nl/rytecNO_SportMovies.xz</url>	
+	<url>http://rytecepg.ipservers.eu/epg_data/rytecNO_SportMovies.xz</url>
+	<url>http://rytecepg.wanwizard.eu/rytecNO_SportMovies.xz</url>
+	<url>http://91.121.106.172/~rytecepg/epg_data/rytecNO_SportMovies.xz</url>
+	<url>http://www.vuplus-community.net/rytec/rytecNO_SportMovies.xz</url>
+</source>
+</sourcecat>
+
+<sourcecat sourcecatname="(New) Rytec Romania XMLTV( xz version)">
+<source type="gen_xmltv" channels="rytec.channels.xml.xz">
+	<description>Romania - Baza (xz)</description>
+	<url>http://www.xmltvepg.nl/rytecRO_Basic.xz</url>	
+	<url>http://rytecepg.ipservers.eu/epg_data/rytecRO_Basic.xz</url>
+	<url>http://rytecepg.wanwizard.eu/rytecRO_Basic.xz</url>
+	<url>http://91.121.106.172/~rytecepg/epg_data/rytecRO_Basic.xz</url>
+	<url>http://www.vuplus-community.net/rytec/rytecRO_Basic.xz</url>
+</source>
+<source type="gen_xmltv" channels="rytec.channels.xml.xz">
+	<description>Romania - Sport/Film (xz)</description>
+	<url>http://www.xmltvepg.nl/rytecRO_SportMovies.xz</url>	
+	<url>http://rytecepg.ipservers.eu/epg_data/rytecRO_SportMovies.xz</url>
+	<url>http://rytecepg.wanwizard.eu/rytecRO_SportMovies.xz</url>
+	<url>http://91.121.106.172/~rytecepg/epg_data/rytecRO_SportMovies.xz</url>
+	<url>http://www.vuplus-community.net/rytec/rytecRO_SportMovies.xz</url>
+</source>
+</sourcecat>
+
+<sourcecat sourcecatname="(New) Rytec Serbia/Croatia/Montenegro XMLTV (xz version)">
+<source type="gen_xmltv" channels="rytec.channels.xml.xz">
+	<description>Srbija/Hrvatska/Crna Gora - Osnovni (xz)</description>
+	<url>http://www.xmltvepg.nl/rytecSRB_HRV_Basic.xz</url>
+	<url>http://rytecepg.ipservers.eu/epg_data/rytecSRB_HRV_Basic.xz</url>
+	<url>http://rytecepg.wanwizard.eu/rytecSRB_HRV_Basic.xz</url>
+	<url>http://91.121.106.172/~rytecepg/epg_data/rytecSRB_HRV_Basic.xz</url>
+	<url>http://www.vuplus-community.net/rytec/rytecSRB_HRV_Basic.xz</url>
+</source>
+<source type="gen_xmltv" channels="rytec.channels.xml.xz">
+	<description>Srbija/Hrvatska/Crna Gora - Dodatni (xz)</description>
+	<url>http://www.xmltvepg.nl/rytecSRB_HRV_Misc.xz</url>
+	<url>http://rytecepg.ipservers.eu/epg_data/rytecSRB_HRV_Misc.xz</url>
+	<url>http://rytecepg.wanwizard.eu/rytecSRB_HRV_Misc.xz</url>
+	<url>http://91.121.106.172/~rytecepg/epg_data/rytecSRB_HRV_Misc.xz</url>
+	<url>http://www.vuplus-community.net/rytec/rytecSRB_HRV_Misc.xz</url>
+</source>
+<source type="gen_xmltv" channels="rytec.channels.xml.xz">
+	<description>Srbija/Hrvatska/Crna Gora - Sport/Film (xz)</description>
+	<url>http://www.xmltvepg.nl/rytecExYu_SportMovies.xz</url>
+	<url>http://rytecepg.ipservers.eu/epg_data/rytecExYu_SportMovies.xz</url>
+	<url>http://rytecepg.wanwizard.eu/rytecExYu_SportMovies.xz</url>
+	<url>http://91.121.106.172/~rytecepg/epg_data/rytecExYu_SportMovies.xz</url>
+	<url>http://www.vuplus-community.net/rytec/rytecExYu_SportMovies.xz</url>
+</source>
+</sourcecat>
+
+<sourcecat sourcecatname="(New) Rytec Slovenia XMLTV (xz version)">
+<source type="gen_xmltv" channels="rytec.channels-slovenia.xml.xz">
+	<description>Slovenija - Podlaga (xz)</description>
+	<url>http://www.xmltvepg.nl/rytecSVN_Basic.xz</url>	
+	<url>http://rytecepg.ipservers.eu/epg_data/rytecSVN_Basic.xz</url>
+	<url>http://rytecepg.wanwizard.eu/rytecSVN_Basic.xz</url>
+	<url>http://91.121.106.172/~rytecepg/epg_data/rytecSVN_Basic.xz</url>
+	<url>http://www.vuplus-community.net/rytec/rytecSVN_Basic.xz</url>
+</source>
+<source type="gen_xmltv" channels="rytec.channels-slovenia.xml.xz">
+	<description>Slovenija - Dodatni (xz)</description>
+	<url>http://www.xmltvepg.nl/rytecSVN_Misc.xz</url>	
+	<url>http://rytecepg.ipservers.eu/epg_data/rytecSVN_Misc.xz</url>
+	<url>http://rytecepg.wanwizard.eu/rytecSVN_Misc.xz</url>
+	<url>http://91.121.106.172/~rytecepg/epg_data/rytecSVN_Misc.xz</url>
+	<url>http://www.vuplus-community.net/rytec/rytecSVN_Misc.xz</url>
+</source>
+<source type="gen_xmltv" channels="rytec.channels-slovenia.xml.xz">
+	<description>Slovenija - Sport/Film (xz)</description>
+	<url>http://www.xmltvepg.nl/rytecExYu_SportMovies.xz</url>
+	<url>http://rytecepg.ipservers.eu/epg_data/rytecExYu_SportMovies.xz</url>
+	<url>http://rytecepg.wanwizard.eu/rytecExYu_SportMovies.xz</url>
+	<url>http://91.121.106.172/~rytecepg/epg_data/rytecExYu_SportMovies.xz</url>
+	<url>http://www.vuplus-community.net/rytec/rytecExYu_SportMovies.xz</url>
+</source>
+</sourcecat>
+
+<sourcecat sourcecatname="(New) Rytec Sverige XMLTV (xz version)">
+<source type="gen_xmltv" channels="rytec.channels.xml.xz">
+	<description>Sverige - Grundlaggande (xz)</description>
+	<url>http://www.xmltvepg.nl/rytecSE_Basic.xz</url>	
+	<url>http://rytecepg.ipservers.eu/epg_data/rytecSE_Basic.xz</url>
+	<url>http://rytecepg.wanwizard.eu/rytecSE_Basic.xz</url>
+	<url>http://91.121.106.172/~rytecepg/epg_data/rytecSE_Basic.xz</url>
+	<url>http://www.vuplus-community.net/rytec/rytecSE_Basic.xz</url>
+</source>
+<source type="gen_xmltv" channels="rytec.channels.xml.xz">
+	<description>Sverige - Diverse (xz)</description>
+	<url>http://www.xmltvepg.nl/rytecSE_Misc.xz</url>	
+	<url>http://rytecepg.ipservers.eu/epg_data/rytecSE_Misc.xz</url>
+	<url>http://rytecepg.wanwizard.eu/rytecSE_Misc.xz</url>
+	<url>http://91.121.106.172/~rytecepg/epg_data/rytecSE_Misc.xz</url>
+	<url>http://www.vuplus-community.net/rytec/rytecSE_Misc.xz</url>
+</source>
+<source type="gen_xmltv" channels="rytec.channels.xml.xz">
+	<description>Sverige - Sport/Filmer (xz)</description>
+	<url>http://www.xmltvepg.nl/rytecSE_SportMovies.xz</url>	
+	<url>http://rytecepg.ipservers.eu/epg_data/rytecSE_SportMovies.xz</url>
+	<url>http://rytecepg.wanwizard.eu/rytecSE_SportMovies.xz</url>
+	<url>http://91.121.106.172/~rytecepg/epg_data/rytecSE_SportMovies.xz</url>
+	<url>http://www.vuplus-community.net/rytec/rytecSE_SportMovies.xz</url>
+</source>
+</sourcecat>
+
+<sourcecat sourcecatname="(New) Rytec Suomi XMLTV (xz version)">
+<source type="gen_xmltv" channels="rytec.channels.xml.xz">
+	<description>Suomi - Perustiedot (xz)</description>
+	<url>http://www.xmltvepg.nl/rytecFI_Basic.xz</url>	
+	<url>http://rytecepg.ipservers.eu/epg_data/rytecFI_Basic.xz</url>
+	<url>http://rytecepg.wanwizard.eu/rytecFI_Basic.xz</url>
+	<url>http://91.121.106.172/~rytecepg/epg_data/rytecFI_Basic.xz</url>
+	<url>http://www.vuplus-community.net/rytec/rytecFI_Basic.xz</url>
+</source>
+<source type="gen_xmltv" channels="rytec.channels.xml.xz">
+	<description>Suomi - Yhteinen (xz)</description>
+	<url>http://www.xmltvepg.nl/rytecFI_Misc.xz</url>	
+	<url>http://rytecepg.ipservers.eu/epg_data/rytecFI_Misc.xz</url>
+	<url>http://rytecepg.wanwizard.eu/rytecFI_Misc.xz</url>
+	<url>http://91.121.106.172/~rytecepg/epg_data/rytecFI_Misc.xz</url>
+	<url>http://www.vuplus-community.net/rytec/rytecFI_Misc.xz</url>
+</source>
+<source type="gen_xmltv" channels="rytec.channels.xml.xz">
+	<description>Suomi - Sport/Movies (xz)</description>
+	<url>http://www.xmltvepg.nl/rytecFI_SportMovies.xz</url>	
+	<url>http://rytecepg.ipservers.eu/epg_data/rytecFI_SportMovies.xz</url>
+	<url>http://rytecepg.wanwizard.eu/rytecFI_SportMovies.xz</url>
+	<url>http://91.121.106.172/~rytecepg/epg_data/rytecFI_SportMovies.xz</url>
+	<url>http://www.vuplus-community.net/rytec/rytecFI_SportMovies.xz</url>
+</source>
+</sourcecat>
+
+<sourcecat sourcecatname="(New) Rytec Csat Africa XMLTV (xz version)">
+<source type="gen_xmltv" channels="Horizons.channels.xml.xz">
+	<description>Csat Africa - Base (xz)</description>
+	<url>http://www.xmltvepg.nl/rytecSEN_Basic.xz</url>	
+	<url>http://rytecepg.ipservers.eu/epg_data/rytecSEN_Basic.xz</url>
+	<url>http://rytecepg.wanwizard.eu/rytecSEN_Basic.xz</url>
+	<url>http://91.121.106.172/~rytecepg/epg_data/rytecSEN_Basic.xz</url>
+	<url>http://www.vuplus-community.net/rytec/rytecSEN_Basic.xz</url>
+</source>
+<source type="gen_xmltv" channels="Horizons.channels.xml.xz">
+	<description>Csat Africa - Sport/Cinema (xz)</description>
+	<url>http://www.xmltvepg.nl/rytecFRO_SportMovies.xz</url>	
+	<url>http://rytecepg.ipservers.eu/epg_data/rytecFRO_SportMovies.xz</url>
+	<url>http://rytecepg.wanwizard.eu/rytecFRO_SportMovies.xz</url>
+	<url>http://91.121.106.172/~rytecepg/epg_data/rytecFRO_SportMovies.xz</url>
+	<url>http://www.vuplus-community.net/rytec/rytecFRO_SportMovies.xz</url>
+</source>
+</sourcecat>
+
+<sourcecat sourcecatname="(New) Rytec Reunion XMLTV (xz version)">
+<source type="gen_xmltv" channels="Reunion.channels.xml.xz">
+	<description>Reunion - Base</description>
+	<url>http://www.xmltvepg.nl/rytecREU_Basic.xz (xz)</url>	
+	<url>http://rytecepg.ipservers.eu/epg_data/rytecREU_Basic.xz</url>
+	<url>http://rytecepg.wanwizard.eu/rytecREU_Basic.xz</url>
+	<url>http://91.121.106.172/~rytecepg/epg_data/rytecREU_Basic.xz</url>
+	<url>http://www.vuplus-community.net/rytec/rytecREU_Basic.xz</url>
+</source>
+<source type="gen_xmltv" channels="Reunion.channels.xml.xz">
+	<description>Reunion - Sport/Cinema (xz)</description>
+	<url>http://www.xmltvepg.nl/rytecFRO_SportMovies.xz</url>	
+	<url>http://rytecepg.ipservers.eu/epg_data/rytecFRO_SportMovies.xz</url>
+	<url>http://rytecepg.wanwizard.eu/rytecFRO_SportMovies.xz</url>
+	<url>http://91.121.106.172/~rytecepg/epg_data/rytecFRO_SportMovies.xz</url>
+	<url>http://www.vuplus-community.net/rytec/rytecFRO_SportMovies.xz</url>
+</source>
+</sourcecat>
+
+<sourcecat sourcecatname="(New) Rytec Csat Carabean XMLTV (xz version)">
+<source type="gen_xmltv" channels="CsatCarabean.channels.xml.xz">
+	<description>Caraibes - Base (xz)</description>
+	<url>http://www.xmltvepg.nl/rytecMTQ_Basic.xz</url>	
+	<url>http://rytecepg.ipservers.eu/epg_data/rytecMTQ_Basic.xz</url>
+	<url>http://rytecepg.wanwizard.eu/rytecMTQ_Basic.xz</url>
+	<url>http://91.121.106.172/~rytecepg/epg_data/rytecMTQ_Basic.xz</url>
+	<url>http://www.vuplus-community.net/rytec/rytecMTQ_Basic.xz</url>
+</source>
+<source type="gen_xmltv" channels="CsatCarabean.channels.xml.xz">
+	<description>Caraibes - Sport/Cinema (xz)</description>
+	<url>http://www.xmltvepg.nl/rytecFRO_SportMovies.xz</url>	
+	<url>http://rytecepg.ipservers.eu/epg_data/rytecFRO_SportMovies.xz</url>
+	<url>http://rytecepg.wanwizard.eu/rytecFRO_SportMovies.xz</url>
+	<url>http://91.121.106.172/~rytecepg/epg_data/rytecFRO_SportMovies.xz</url>
+	<url>http://www.vuplus-community.net/rytec/rytecFRO_SportMovies.xz</url>
+</source>
+</sourcecat>
+
+<sourcecat sourcecatname="(New) Rytec New Caledonia XMLTV (xz version)">
+<source type="gen_xmltv" channels="NewCaledonia.channels.xml.xz">
+	<description>Nouvelle Caledonie - Base (xz)</description>
+	<url>http://www.xmltvepg.nl/rytecNCL_Basic.xz</url>	
+	<url>http://rytecepg.ipservers.eu/epg_data/rytecNCL_Basic.xz</url>
+	<url>http://rytecepg.wanwizard.eu/rytecNCL_Basic.xz</url>
+	<url>http://91.121.106.172/~rytecepg/epg_data/rytecNCL_Basic.xz</url>
+	<url>http://www.vuplus-community.net/rytec/rytecNCL_Basic.xz</url>
+</source>
+<source type="gen_xmltv" channels="NewCaledonia.channels.xml.xz">
+	<description>Nouvelle Caledonie - Sport/Cinema (xz)</description>
+	<url>http://www.xmltvepg.nl/rytecFRO_SportMovies.xz</url>	
+	<url>http://rytecepg.ipservers.eu/epg_data/rytecFRO_SportMovies.xz</url>
+	<url>http://rytecepg.wanwizard.eu/rytecFRO_SportMovies.xz</url>
+	<url>http://91.121.106.172/~rytecepg/epg_data/rytecFRO_SportMovies.xz</url>
+	<url>http://www.vuplus-community.net/rytec/rytecFRO_SportMovies.xz</url>
+</source>
+</sourcecat>
+
+<sourcecat sourcecatname="(New) Rytec UK Sat/Virgin XMLTV (xz version)">
+<source type="gen_xmltv" channels="rytec.channels.xml.xz">
+	<description>UK - Freeview (xz)</description>
+	<url>http://www.xmltvepg.nl/rytecUK_Basic.xz</url>	
+	<url>http://rytecepg.ipservers.eu/epg_data/rytecUK_Basic.xz</url>
+	<url>http://rytecepg.wanwizard.eu/rytecUK_Basic.xz</url>
+	<url>http://91.121.106.172/~rytecepg/epg_data/rytecUK_Basic.xz</url>
+	<url>http://www.vuplus-community.net/rytec/rytecUK_Basic.xz</url>     
+</source>
+<source type="gen_xmltv" channels="rytec.channels.xml.xz">
+	<description>UK - FTA (xz)</description>
+	<url>http://www.xmltvepg.nl/rytecUK_FTA.xz</url>	
+	<url>http://rytecepg.ipservers.eu/epg_data/rytecUK_FTA.xz</url>
+	<url>http://rytecepg.wanwizard.eu/rytecUK_FTA.xz</url>
+	<url>http://91.121.106.172/~rytecepg/epg_data/rytecUK_FTA.xz</url>
+	<url>http://www.vuplus-community.net/rytec/rytecUK_FTA.xz</url>         
+</source>
+<source type="gen_xmltv" channels="rytec.channels.xml.xz">
+	<description>UK - International (xz)</description>
+	<url>http://www.xmltvepg.nl/rytecUK_int.xz</url>	
+	<url>http://rytecepg.ipservers.eu/epg_data/rytecUK_int.xz</url>
+	<url>http://rytecepg.wanwizard.eu/rytecUK_int.xz</url>
+	<url>http://91.121.106.172/~rytecepg/epg_data/rytecUK_int.xz</url>
+	<url>http://www.vuplus-community.net/rytec/rytecUK_int.xz</url>     
+</source>
+<source type="gen_xmltv" channels="rytec.channels.xml.xz">
+	<description>UK - Sky Live (xz)</description>
+	<url>http://www.xmltvepg.nl/rytecUK_SkyLive.xz</url>	
+	<url>http://rytecepg.ipservers.eu/epg_data/rytecUK_SkyLive.xz</url>
+	<url>http://rytecepg.wanwizard.eu/rytecUK_SkyLive.xz</url>
+	<url>http://91.121.106.172/~rytecepg/epg_data/rytecUK_SkyLive.xz</url>
+	<url>http://www.vuplus-community.net/rytec/rytecUK_SkyLive.xz</url>    
+</source>
+<source type="gen_xmltv" channels="rytec.channels.xml.xz">
+	<description>UK - Sky Dead (xz)</description>
+	<url>http://www.xmltvepg.nl/rytecUK_SkyDead.xz</url>	
+	<url>http://rytecepg.ipservers.eu/epg_data/rytecUK_SkyDead.xz</url>
+	<url>http://rytecepg.wanwizard.eu/rytecUK_SkyDead.xz</url>
+	<url>http://91.121.106.172/~rytecepg/epg_data/rytecUK_SkyDead.xz</url>
+	<url>http://www.vuplus-community.net/rytec/rytecUK_SkyDead.xz</url>       
+</source>
+<source type="gen_xmltv" channels="rytec.channels.xml.xz">
+	<description>UK - Sports/Movies (xz)</description>
+	<url>http://www.xmltvepg.nl/rytecUK_SportMovies.xz</url>	
+	<url>http://rytecepg.ipservers.eu/epg_data/rytecUK_SportMovies.xz</url>
+	<url>http://rytecepg.wanwizard.eu/rytecUK_SportMovies.xz</url>
+	<url>http://91.121.106.172/~rytecepg/epg_data/rytecUK_SportMovies.xz</url>
+	<url>http://www.vuplus-community.net/rytec/rytecUK_SportMovies.xz</url>       
+</source>
+</sourcecat>
+
+<sourcecat sourcecatname="LatinMunic XMLTV">
+<source type="gen_xmltv" channels="http://epg.tododream.com/rytec.channels.xml.gz">
+	<description>LatinMunic XMLTV Astra</description>
+	<url>http://epg.tododream.com/latinmunich_xmltv-movistar-spain_todo.gz</url>
+</source>
+<source type="gen_xmltv" channels="http://epg.tododream.com/hispasat.channels.xml.gz">
+	<description>LatinMunic XMLTV Hispasat</description>
+	<url>http://epg.tododream.com/latinmunich_xmltv-movistar-spain_todo.gz</url>
+</source>
+<source type="gen_xmltv" channels="http://epg.tododream.com/tdt.channels.xml.gz">
+	<description>LatinMunic XMLTV TDT</description>
+	<url>http://epg.tododream.com/latinmunich_xmltv-movistar-spain_todo.gz</url>
+</source>
+<source type="gen_xmltv" channels="http://epg.tododream.com/todo.channels.xml.gz">
+	<description>LatinMunic XMLTV Astra + Hispasat + TDT</description>
+	<url>http://epg.tododream.com/latinmunich_xmltv-movistar-spain_todo.gz</url>
+</source>
+</sourcecat>
+
+<sourcecat sourcecatname="Russian XMLTV">
+<source type="gen_xmltv" channels="http://epg.in.ua/epg/ls.channels.xml.gz">
+	<description>Linuxsat ExUSSR XMLTV</description>
+	<url>http://epg.in.ua/epg/tvprogram_ua_ru.gz</url>
+</source>
+<source type="gen_xmltv" channels="http://www.epg-sat.de/epg/epgsat.channels.xml.gz">
+   <description>Epg-Sat.de (Russian)/ by Taljaka (XML)</description>
+   <url>http://www.epg-sat.de/epg/xmltv-ru.xml.gz</url>
+</source>
+<source type="epg.dat" channels="http://www.epg-sat.de/epg/epgsat.channels.xml.gz">
+   <description>Epg-Sat.de (Russian)/ SAT/IPTV small (EPG.DAT)</description>
+   <url>http://epg-sat.de/epg/epg.datallru.gz</url>
+</source>
+<source type="epg.dat" channels="http://www.epg-sat.de/epg/epgsat.channels.xml.gz">
+   <description>Epg-Sat.de (Russian)/ SAT/IPTV big (EPG.DAT)</description>
+   <url>http://epg-sat.de/epg/epg.datfull.gz</url>
+</source>
+</sourcecat>
+
 <sourcecat sourcecatname="(EOL 1-1-2018) Rytec General XMLTV">
 <source type="gen_xmltv" channels="rytec.channels.xml.gz">
 	<description>News Channels</description>
-	<url>http://www.xmltvepg.nl/epg_data/rytecNWS.gz</url>	
+	<url>http://www.xmltvepg.nl/rytecNWS.gz</url>	
 	<url>http://rytecepg.ipservers.eu/epg_data/rytecNWS.gz</url>
 	<url>http://rytecepg.wanwizard.eu/rytecNWS.gz</url>
 	<url>http://91.121.106.172/~rytecepg/epg_data/rytecNWS.gz</url>
@@ -403,49 +947,6 @@ The description must be unique for each source, and is displayed on the UI.
 </source>
 </sourcecat>
 
-<sourcecat sourcecatname="(EOL 1-1-2018) Rytec Belgie-Telenet XMLTV">
-<source type="gen_xmltv" channels="telenet.channels.xml.gz">
-	<description>Vlaanderen(TN) - Basis</description>
-	<url>http://www.xmltvepg.nl/rytecBE_VL_Basic.gz</url>	
-	<url>http://rytecepg.ipservers.eu/epg_data/rytecBE_VL_Basic.gz</url>
-	<url>http://rytecepg.wanwizard.eu/rytecBE_VL_Basic.gz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/rytecBE_VL_Basic.gz</url>
-	<url>http://www.vuplus-community.net/rytec/rytecBE_VL_Basic.gz</url>     
-</source>
-<source type="gen_xmltv" channels="telenet.channels.xml.gz">
-  <description>Vlaanderen(TN) - Gemeenschappelijk</description>
-	<url>http://www.xmltvepg.nl/rytecBE_NL_Common.gz</url>	
-	<url>http://rytecepg.ipservers.eu/epg_data/rytecBE_NL_Common.gz</url>
-	<url>http://rytecepg.wanwizard.eu/rytecBE_NL_Common.gz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/rytecBE_NL_Common.gz</url>
-	<url>http://www.vuplus-community.net/rytec/rytecBE_NL_Common.gz</url>    
-</source>
-<source type="gen_xmltv" channels="telenet.channels.xml.gz">
-	<description>Wallonie(TN) - Base</description>
-	<url>http://www.xmltvepg.nl/rytecBE_FR_Basic.gz</url>	
-	<url>http://rytecepg.ipservers.eu/epg_data/rytecBE_FR_Basic.gz</url>
-	<url>http://rytecepg.wanwizard.eu/rytecBE_FR_Basic.gz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/rytecBE_FR_Basic.gz</url>
-	<url>http://www.vuplus-community.net/rytec/rytecBE_FR_Basic.gz</url>        
-</source>
-<source type="gen_xmltv" channels="telenet.channels.xml.gz">
-  <description>France(TN) - TNT</description>
-	<url>http://www.xmltvepg.nl/rytecTNT_Basic.gz</url>	
-	<url>http://rytecepg.ipservers.eu/epg_data/rytecTNT_Basic.gz</url>
-	<url>http://rytecepg.wanwizard.eu/rytecTNT_Basic.gz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/rytecTNT_Basic.gz</url>
-	<url>http://www.vuplus-community.net/rytec/rytecTNT_Basic.gz</url>
-</source>	
-<source type="gen_xmltv" channels="telenet.channels.xml.gz">
-	<description>Erotic(TN)</description>
-	<url>http://www.xmltvepg.nl/rytecxmltverotic.gz</url>	
-	<url>http://rytecepg.ipservers.eu/epg_data/rytecxmltverotic.gz</url>
-	<url>http://rytecepg.wanwizard.eu/rytecxmltverotic.gz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/rytecxmltverotic.gz</url>
-	<url>http://www.vuplus-community.net/rytec/rytecxmltverotic.gz</url>
-</source>	
-</sourcecat>
-
 <sourcecat sourcecatname="(EOL 1-1-2018) Rytec Bulgariya XMLTV">
 <source type="gen_xmltv" channels="rytec.channels.xml.gz">
 	<description>Bulgariya</description>
@@ -493,7 +994,7 @@ The description must be unique for each source, and is displayed on the UI.
 </sourcecat>
 
 <sourcecat sourcecatname="(EOL 1-1-2018) Rytec Danmark XMLTV">
-<source type="gen_xmltv" channels="rytec.channels-denmark.xml.gz">
+<source type="gen_xmltv" channels="rytec.channels.xml.gz">
 	<description>Danmark - Grundleggende</description>
 	<url>http://www.xmltvepg.nl/rytecDK_Basic.gz</url>	
 	<url>http://rytecepg.ipservers.eu/epg_data/rytecDK_Basic.gz</url>
@@ -501,7 +1002,7 @@ The description must be unique for each source, and is displayed on the UI.
 	<url>http://91.121.106.172/~rytecepg/epg_data/rytecDK_Basic.gz</url>
 	<url>http://www.vuplus-community.net/rytec/rytecDK_Basic.gz</url>
 </source>
-<source type="gen_xmltv" channels="rytec.channels-denmark.xml.gz">
+<source type="gen_xmltv" channels="rytec.channels.xml.gz">
 	<description>Danmark - Delt</description>
 	<url>http://www.xmltvepg.nl/rytecDK_Misc.gz</url>	
 	<url>http://rytecepg.ipservers.eu/epg_data/rytecDK_Misc.gz</url>
@@ -509,13 +1010,13 @@ The description must be unique for each source, and is displayed on the UI.
 	<url>http://91.121.106.172/~rytecepg/epg_data/rytecDK_Misc.gz</url>
 	<url>http://www.vuplus-community.net/rytec/rytecDK_Misc.gz</url>
 </source>
-<source type="gen_xmltv" channels="rytec.channels-denmark.xml.gz">
+<source type="gen_xmltv" channels="rytec.channels.xml.gz">
 	<description>Danmark - Sport/Movies</description>
-	<url>http://www.xmltvepg.nl/rytecNordic_SportMovies.gz</url>	
-	<url>http://rytecepg.ipservers.eu/epg_data/rytecNordic_SportMovies.gz</url>
-	<url>http://rytecepg.wanwizard.eu/rytecNordic_SportMovies.gz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/rytecNordic_SportMovies.gz</url>
-	<url>http://www.vuplus-community.net/rytec/rytecNordic_SportMovies.gz</url>
+	<url>http://www.xmltvepg.nl/rytecDK_SportMovies.gz</url>	
+	<url>http://rytecepg.ipservers.eu/epg_data/rytecDK_SportMovies.gz</url>
+	<url>http://rytecepg.wanwizard.eu/rytecDK_SportMovies.gz</url>
+	<url>http://91.121.106.172/~rytecepg/epg_data/rytecDK_SportMovies.gz</url>
+	<url>http://www.vuplus-community.net/rytec/rytecDK_SportMovies.gz</url>
 </source>
 </sourcecat>
 
@@ -612,7 +1113,7 @@ The description must be unique for each source, and is displayed on the UI.
 </sourcecat>
 
 <sourcecat sourcecatname="(EOL 1-1-2018) Rytec Norge XMLTV">
-<source type="gen_xmltv" channels="rytec.channels-norway.xml.gz">
+<source type="gen_xmltv" channels="rytec.channels.xml.gz">
 	<description>Norge - Basic</description>
 	<url>http://www.xmltvepg.nl/rytecNO_Basic.gz</url>	
 	<url>http://rytecepg.ipservers.eu/epg_data/rytecNO_Basic.gz</url>
@@ -620,7 +1121,7 @@ The description must be unique for each source, and is displayed on the UI.
 	<url>http://91.121.106.172/~rytecepg/epg_data/rytecNO_Basic.gz</url>
 	<url>http://www.vuplus-community.net/rytec/rytecNO_Basic.gz</url>
 </source>
-<source type="gen_xmltv" channels="rytec.channels-norway.xml.gz">
+<source type="gen_xmltv" channels="rytec.channels.xml.gz">
 	<description>Norge - Delt</description>
 	<url>http://www.xmltvepg.nl/rytecNO_Misc.gz</url>	
 	<url>http://rytecepg.ipservers.eu/epg_data/rytecNO_Misc.gz</url>
@@ -628,13 +1129,13 @@ The description must be unique for each source, and is displayed on the UI.
 	<url>http://91.121.106.172/~rytecepg/epg_data/rytecNO_Misc.gz</url>
 	<url>http://www.vuplus-community.net/rytec/rytecNO_Misc.gz</url>
 </source>
-<source type="gen_xmltv" channels="rytec.channels-norway.xml.gz">
+<source type="gen_xmltv" channels="rytec.channels.xml.gz">
 	<description>Norge - Sport/Movies</description>
-	<url>http://www.xmltvepg.nl/rytecNordic_SportMovies.gz</url>	
-	<url>http://rytecepg.ipservers.eu/epg_data/rytecNordic_SportMovies.gz</url>
-	<url>http://rytecepg.wanwizard.eu/rytecNordic_SportMovies.gz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/rytecNordic_SportMovies.gz</url>
-	<url>http://www.vuplus-community.net/rytec/rytecNordic_SportMovies.gz</url>
+	<url>http://www.xmltvepg.nl/rytecNO_SportMovies.gz</url>	
+	<url>http://rytecepg.ipservers.eu/epg_data/rytecNO_SportMovies.gz</url>
+	<url>http://rytecepg.wanwizard.eu/rytecNO_SportMovies.gz</url>
+	<url>http://91.121.106.172/~rytecepg/epg_data/rytecNO_SportMovies.gz</url>
+	<url>http://www.vuplus-community.net/rytec/rytecNO_SportMovies.gz</url>
 </source>
 </sourcecat>
 
@@ -696,7 +1197,7 @@ The description must be unique for each source, and is displayed on the UI.
 </sourcecat>
 
 <sourcecat sourcecatname="(EOL 1-1-2018) Rytec Sverige XMLTV">
-<source type="gen_xmltv" channels="rytec.channels-sweden.xml.gz">
+<source type="gen_xmltv" channels="rytec.channels.xml.gz">
 	<description>Sverige - Grundlaggande</description>
 	<url>http://www.xmltvepg.nl/rytecSE_Basic.gz</url>	
 	<url>http://rytecepg.ipservers.eu/epg_data/rytecSE_Basic.gz</url>
@@ -704,7 +1205,7 @@ The description must be unique for each source, and is displayed on the UI.
 	<url>http://91.121.106.172/~rytecepg/epg_data/rytecSE_Basic.gz</url>
 	<url>http://www.vuplus-community.net/rytec/rytecSE_Basic.gz</url>
 </source>
-<source type="gen_xmltv" channels="rytec.channels-sweden.xml.gz">
+<source type="gen_xmltv" channels="rytec.channels.xml.gz">
 	<description>Sverige - Diverse</description>
 	<url>http://www.xmltvepg.nl/rytecSE_Misc.gz</url>	
 	<url>http://rytecepg.ipservers.eu/epg_data/rytecSE_Misc.gz</url>
@@ -712,13 +1213,13 @@ The description must be unique for each source, and is displayed on the UI.
 	<url>http://91.121.106.172/~rytecepg/epg_data/rytecSE_Misc.gz</url>
 	<url>http://www.vuplus-community.net/rytec/rytecSE_Misc.gz</url>
 </source>
-<source type="gen_xmltv" channels="rytec.channels-sweden.xml.gz">
+<source type="gen_xmltv" channels="rytec.channels.xml.gz">
 	<description>Sverige - Sport/Filmer</description>
-	<url>http://www.xmltvepg.nl/rytecNordic_SportMovies.gz</url>	
-	<url>http://rytecepg.ipservers.eu/epg_data/rytecNordic_SportMovies.gz</url>
-	<url>http://rytecepg.wanwizard.eu/rytecNordic_SportMovies.gz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/rytecNordic_SportMovies.gz</url>
-	<url>http://www.vuplus-community.net/rytec/rytecNordic_SportMovies.gz</url>
+	<url>http://www.xmltvepg.nl/rytecSE_SportMovies.gz</url>	
+	<url>http://rytecepg.ipservers.eu/epg_data/rytecSE_SportMovies.gz</url>
+	<url>http://rytecepg.wanwizard.eu/rytecSE_SportMovies.gz</url>
+	<url>http://91.121.106.172/~rytecepg/epg_data/rytecSE_SportMovies.gz</url>
+	<url>http://www.vuplus-community.net/rytec/rytecSE_SportMovies.gz</url>
 </source>
 </sourcecat>
 
@@ -777,7 +1278,7 @@ The description must be unique for each source, and is displayed on the UI.
 </sourcecat>
 
 <sourcecat sourcecatname="(EOL 1-1-2018) Rytec Suomi XMLTV">
-<source type="gen_xmltv" channels="rytec.channels-finland.xml.gz">
+<source type="gen_xmltv" channels="rytec.channels.xml.gz">
 	<description>Suomi - Perustiedot</description>
 	<url>http://www.xmltvepg.nl/rytecFI_Basic.gz</url>	
 	<url>http://rytecepg.ipservers.eu/epg_data/rytecFI_Basic.gz</url>
@@ -785,7 +1286,7 @@ The description must be unique for each source, and is displayed on the UI.
 	<url>http://91.121.106.172/~rytecepg/epg_data/rytecFI_Basic.gz</url>
 	<url>http://www.vuplus-community.net/rytec/rytecFI_Basic.gz</url>
 </source>
-<source type="gen_xmltv" channels="rytec.channels-finland.xml.gz">
+<source type="gen_xmltv" channels="rytec.channels.xml.gz">
 	<description>Suomi - Yhteinen</description>
 	<url>http://www.xmltvepg.nl/rytecFI_Misc.gz</url>	
 	<url>http://rytecepg.ipservers.eu/epg_data/rytecFI_Misc.gz</url>
@@ -793,13 +1294,13 @@ The description must be unique for each source, and is displayed on the UI.
 	<url>http://91.121.106.172/~rytecepg/epg_data/rytecFI_Misc.gz</url>
 	<url>http://www.vuplus-community.net/rytec/rytecFI_Misc.gz</url>
 </source>
-<source type="gen_xmltv" channels="rytec.channels-finland.xml.gz">
+<source type="gen_xmltv" channels="rytec.channels.xml.gz">
 	<description>Suomi - Sport/Movies</description>
-	<url>http://www.xmltvepg.nl/rytecNordic_SportMovies.gz</url>	
-	<url>http://rytecepg.ipservers.eu/epg_data/rytecNordic_SportMovies.gz</url>
-	<url>http://rytecepg.wanwizard.eu/rytecNordic_SportMovies.gz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/rytecNordic_SportMovies.gz</url>
-	<url>http://www.vuplus-community.net/rytec/rytecNordic_SportMovies.gz</url>
+	<url>http://www.xmltvepg.nl/rytecFI_SportMovies.gz</url>	
+	<url>http://rytecepg.ipservers.eu/epg_data/rytecFI_SportMovies.gz</url>
+	<url>http://rytecepg.wanwizard.eu/rytecFI_SportMovies.gz</url>
+	<url>http://91.121.106.172/~rytecepg/epg_data/rytecFI_SportMovies.gz</url>
+	<url>http://www.vuplus-community.net/rytec/rytecFI_SportMovies.gz</url>
 </source>
 </sourcecat>
 
@@ -879,7 +1380,7 @@ The description must be unique for each source, and is displayed on the UI.
 </source>
 </sourcecat>
 
-<sourcecat sourcecatname="(EOL 1-1-2018) Rytec UK Satellite XMLTV">
+<sourcecat sourcecatname="(EOL 1-1-2018) Rytec UK Sat/Virgin XMLTV">
 <source type="gen_xmltv" channels="rytec.channels.xml.gz">
 	<description>UK - Freeview</description>
 	<url>http://www.xmltvepg.nl/rytecUK_Basic.gz</url>	
@@ -905,7 +1406,7 @@ The description must be unique for each source, and is displayed on the UI.
 	<url>http://www.vuplus-community.net/rytec/rytecUK_int.gz</url>     
 </source>
 <source type="gen_xmltv" channels="rytec.channels.xml.gz">
-	<description>UK - Sky Live</description>
+	<description>UK - Sky 1 (Sat Live)</description>
 	<url>http://www.xmltvepg.nl/rytecUK_SkyLive.gz</url>	
 	<url>http://rytecepg.ipservers.eu/epg_data/rytecUK_SkyLive.gz</url>
 	<url>http://rytecepg.wanwizard.eu/rytecUK_SkyLive.gz</url>
@@ -913,7 +1414,7 @@ The description must be unique for each source, and is displayed on the UI.
 	<url>http://www.vuplus-community.net/rytec/rytecUK_SkyLive.gz</url>    
 </source>
 <source type="gen_xmltv" channels="rytec.channels.xml.gz">
-	<description>UK - Sky Dead</description>
+	<description>UK - Sky 2 (Sat Dead)</description>
 	<url>http://www.xmltvepg.nl/rytecUK_SkyDead.gz</url>	
 	<url>http://rytecepg.ipservers.eu/epg_data/rytecUK_SkyDead.gz</url>
 	<url>http://rytecepg.wanwizard.eu/rytecUK_SkyDead.gz</url>
@@ -928,1015 +1429,15 @@ The description must be unique for each source, and is displayed on the UI.
 	<url>http://91.121.106.172/~rytecepg/epg_data/rytecUK_SportMovies.gz</url>
 	<url>http://www.vuplus-community.net/rytec/rytecUK_SportMovies.gz</url>       
 </source>
-
-
 </sourcecat>
 
-<sourcecat sourcecatname="(EOL 1-1-2018) Rytec UK/Ireland Virgin XMLTV">
-<source type="gen_xmltv" channels="VirginUK.channels.xml.gz">
-	<description>UK/Ireland Virgin - Freeview</description>
-	<url>http://www.xmltvepg.nl/rytecUK_Basic.gz</url>	
-	<url>http://rytecepg.ipservers.eu/epg_data/rytecUK_Basic.gz</url>
-	<url>http://rytecepg.wanwizard.eu/rytecUK_Basic.gz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/rytecUK_Basic.gz</url>
-	<url>http://www.vuplus-community.net/rytec/rytecUK_Basic.gz</url>     
-</source>
-<source type="gen_xmltv" channels="VirginUK.channels.xml.gz">
-	<description>UK/Ireland Virgin - FTA</description>
-	<url>http://www.xmltvepg.nl/rytecUK_FTA.gz</url>	
-	<url>http://rytecepg.ipservers.eu/epg_data/rytecUK_FTA.gz</url>
-	<url>http://rytecepg.wanwizard.eu/rytecUK_FTA.gz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/rytecUK_FTA.gz</url>
-	<url>http://www.vuplus-community.net/rytec/rytecUK_FTA.gz</url>         
-</source>
-<source type="gen_xmltv" channels="VirginUK.channels.xml.gz">
-	<description>UK/Ireland Virgin - International</description>
-	<url>http://www.xmltvepg.nl/rytecUK_int.gz</url>	
-	<url>http://rytecepg.ipservers.eu/epg_data/rytecUK_int.gz</url>
-	<url>http://rytecepg.wanwizard.eu/rytecUK_int.gz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/rytecUK_int.gz</url>
-	<url>http://www.vuplus-community.net/rytec/rytecUK_int.gz</url>     
-</source>
-<source type="gen_xmltv" channels="VirginUK.channels.xml.gz">
-	<description>UK/Ireland Virgin - Sky Live</description>
-	<url>http://www.xmltvepg.nl/rytecUK_SkyLive.gz</url>	
-	<url>http://rytecepg.ipservers.eu/epg_data/rytecUK_SkyLive.gz</url>
-	<url>http://rytecepg.wanwizard.eu/rytecUK_SkyLive.gz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/rytecUK_SkyLive.gz</url>
-	<url>http://www.vuplus-community.net/rytec/rytecUK_SkyLive.gz</url>    
-</source>
-<source type="gen_xmltv" channels="VirginUK.channels.xml.gz">
-	<description>UK/Ireland Virgin - Sky Dead</description>
-	<url>http://www.xmltvepg.nl/rytecUK_SkyDead.gz</url>	
-	<url>http://rytecepg.ipservers.eu/epg_data/rytecUK_SkyDead.gz</url>
-	<url>http://rytecepg.wanwizard.eu/rytecUK_SkyDead.gz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/rytecUK_SkyDead.gz</url>
-	<url>http://www.vuplus-community.net/rytec/rytecUK_SkyDead.gz</url>       
-</source>
-<source type="gen_xmltv" channels="VirginUK.channels.xml.gz">
-	<description>UK/Ireland Virgin - Sports/Movies</description>
-	<url>http://www.xmltvepg.nl/rytecUK_SportMovies.gz</url>	
-	<url>http://rytecepg.ipservers.eu/epg_data/rytecUK_SportMovies.gz</url>
-	<url>http://rytecepg.wanwizard.eu/rytecUK_SportMovies.gz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/rytecUK_SportMovies.gz</url>
-	<url>http://www.vuplus-community.net/rytec/rytecUK_SportMovies.gz</url>       
-</source>
-</sourcecat>
-
-<sourcecat sourcecatname="LatinMunic XMLTV">
-<source type="gen_xmltv" channels="http://epg.tododream.com/rytec.channels.xml.gz">
-	<description>LatinMunic XMLTV Astra</description>
-	<url>http://epg.tododream.com/latinmunich_xmltv-movistar-spain_todo.gz</url>
-</source>
-<source type="gen_xmltv" channels="http://epg.tododream.com/hispasat.channels.xml.gz">
-	<description>LatinMunic XMLTV Hispasat</description>
-	<url>http://epg.tododream.com/latinmunich_xmltv-movistar-spain_todo.gz</url>
-</source>
-<source type="gen_xmltv" channels="http://epg.tododream.com/tdt.channels.xml.gz">
-	<description>LatinMunic XMLTV TDT</description>
-	<url>http://epg.tododream.com/latinmunich_xmltv-movistar-spain_todo.gz</url>
-</source>
-<source type="gen_xmltv" channels="http://epg.tododream.com/todo.channels.xml.gz">
-	<description>LatinMunic XMLTV Astra + Hispasat + TDT</description>
-	<url>http://epg.tododream.com/latinmunich_xmltv-movistar-spain_todo.gz</url>
-</source>
-</sourcecat>
-
-<sourcecat sourcecatname="Russian XMLTV">
-<source type="gen_xmltv" channels="http://epg.in.ua/epg/ls.channels.xml.gz">
-	<description>Linuxsat ExUSSR XMLTV</description>
-	<url>http://epg.in.ua/epg/tvprogram_ua_ru.gz</url>
-</source>
-<source type="gen_xmltv" channels="http://www.epg-sat.de/epg/epgsat.channels.xml.gz">
-   <description>Epg-Sat.de (Russian)/ by Taljaka (XML)</description>
-   <url>http://www.epg-sat.de/epg/xmltv-ru.xml.gz</url>
-</source>
-<source type="epg.dat" channels="http://www.epg-sat.de/epg/epgsat.channels.xml.gz">
-   <description>Epg-Sat.de (Russian)/ SAT/IPTV small (EPG.DAT)</description>
-   <url>http://epg-sat.de/epg/epg.datallru.gz</url>
-</source>
-<source type="epg.dat" channels="http://www.epg-sat.de/epg/epgsat.channels.xml.gz">
-   <description>Epg-Sat.de (Russian)/ SAT/IPTV big (EPG.DAT)</description>
-   <url>http://epg-sat.de/epg/epg.datfull.gz</url>
-</source>
-</sourcecat>
-
-<sourcecat sourcecatname="(New) Rytec General XMLTV (xz version)">
-<source type="gen_xmltv" channels="rytec.channels.xml.xz">
-	<description>News Channels (xz)</description>
-	<url>http://www.xmltvepg.nl/epg_data/rytecNWS.xz</url>	
-	<url>http://rytecepg.ipservers.eu/epg_data/rytecNWS.xz</url>
-	<url>http://rytecepg.wanwizard.eu/rytecNWS.xz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/rytecNWS.xz</url>
-	<url>http://www.vuplus-community.net/rytec/rytecNWS.xz</url>     
-</source>
-<source type="gen_xmltv" channels="rytec.channels.xml.xz">
-	<description>Erotic (xz)</description>
-	<url>http://www.xmltvepg.nl/rytecERO.xz</url>	
-	<url>http://rytecepg.ipservers.eu/epg_data/rytecERO.xz</url>
-	<url>http://rytecepg.wanwizard.eu/rytecERO.xz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/rytecERO.xz</url>
-	<url>http://www.vuplus-community.net/rytec/rytecERO.xz</url>
-</source>
-<source type="gen_xmltv" channels="rytec.channels.xml.xz">
-	<description>AFN (xz)</description>
-	<url>http://www.xmltvepg.nl/rytecAFN.xz</url>	
-	<url>http://rytecepg.ipservers.eu/epg_data/rytecAFN.xz</url>
-	<url>http://rytecepg.wanwizard.eu/rytecAFN.xz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/rytecAFN.xz</url>
-	<url>http://www.vuplus-community.net/rytec/rytecAFN.xz</url>
-</source>
-<source type="gen_xmltv" channels="rytec.channels.xml.xz">
-	<description>Rytec IPTV XMLTV (xz)</description>
-	<url>http://www.xmltvepg.nl/rytecIPTV.xz</url>	
-	<url>http://rytecepg.ipservers.eu/epg_data/rytecIPTV.xz</url>
-	<url>http://rytecepg.wanwizard.eu/rytecIPTV.xz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/rytecIPTV.xz</url>
-	<url>http://www.vuplus-community.net/rytec/rytecIPTV.xz</url>
-</source>
-<source type="gen_xmltv" channels="rytec.channels.xml.xz">
-	<description>Rytec Miscellaneous XMLTV (xz)</description>
-	<url>http://www.xmltvepg.nl/rytecMisc.xz</url>	
-	<url>http://rytecepg.ipservers.eu/epg_data/rytecMisc.xz</url>
-	<url>http://rytecepg.wanwizard.eu/rytecMisc.xz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/rytecMisc.xz</url>
-	<url>http://www.vuplus-community.net/rytec/rytecMisc.xz</url>
-</source>
-</sourcecat>
-
-<sourcecat sourcecatname="(New) Rytec Belgie/Belgique/Nederland/France XMLTV (xz version)">
-<source type="gen_xmltv" channels="rytec.channels.xml.xz">
-  <description>Nederland - Basis (xz)</description>
-	<url>http://www.xmltvepg.nl/rytecNL_Basic.xz</url>	
-	<url>http://rytecepg.ipservers.eu/epg_data/rytecNL_Basic.xz</url>
-	<url>http://rytecepg.wanwizard.eu/rytecNL_Basic.xz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/rytecNL_Basic.xz</url>
-	<url>http://www.vuplus-community.net/rytec/rytecNL_Basic.xz</url>   
-</source>
-<source type="gen_xmltv" channels="rytec.channels.xml.xz">
-	<description>Vlaanderen - Basis (xz)</description>
-	<url>http://www.xmltvepg.nl/rytecBE_VL_Basic.xz</url>	
-	<url>http://rytecepg.ipservers.eu/epg_data/rytecBE_VL_Basic.xz</url>
-	<url>http://rytecepg.wanwizard.eu/rytecBE_VL_Basic.xz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/rytecBE_VL_Basic.xz</url>
-	<url>http://www.vuplus-community.net/rytec/rytecBE_VL_Basic.xz</url>     
-</source>
-<source type="gen_xmltv" channels="rytec.channels.xml.xz">
-  <description>Vlaanderen/Nederland - Gemeenschappelijk (xz)</description>
-	<url>http://www.xmltvepg.nl/rytecBE_NL_Common.xz</url>	
-	<url>http://rytecepg.ipservers.eu/epg_data/rytecBE_NL_Common.xz</url>
-	<url>http://rytecepg.wanwizard.eu/rytecBE_NL_Common.xz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/rytecBE_NL_Common.xz</url>
-	<url>http://www.vuplus-community.net/rytec/rytecBE_NL_Common.xz</url>    
-</source>
-<source type="gen_xmltv" channels="rytec.channels.xml.xz">
-  <description>Nederland - Sport/Movies (xz)</description>
-	<url>http://www.xmltvepg.nl/rytecNL_Extra.xz</url>	
-	<url>http://rytecepg.ipservers.eu/epg_data/rytecNL_Extra.xz</url>
-	<url>http://rytecepg.wanwizard.eu/rytecNL_Extra.xz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/rytecNL_Extra.xz</url>
-	<url>http://www.vuplus-community.net/rytec/rytecNL_Extra.xz</url>    
-</source>
-<source type="gen_xmltv" channels="rytec.channels.xml.xz">
-	<description>Wallonie - Telesat Base (xz)</description>
-	<url>http://www.xmltvepg.nl/rytecBE_FR_Basic.xz</url>	
-	<url>http://rytecepg.ipservers.eu/epg_data/rytecBE_FR_Basic.xz</url>
-	<url>http://rytecepg.wanwizard.eu/rytecBE_FR_Basic.xz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/rytecBE_FR_Basic.xz</url>
-	<url>http://www.vuplus-community.net/rytec/rytecBE_FR_Basic.xz</url>        
-</source>
-<source type="gen_xmltv" channels="rytec.channels.xml.xz">
-  <description>France - TNT (xz)</description>
-	<url>http://www.xmltvepg.nl/rytecTNT_Basic.xz</url>	
-	<url>http://rytecepg.ipservers.eu/epg_data/rytecTNT_Basic.xz</url>
-	<url>http://rytecepg.wanwizard.eu/rytecTNT_Basic.xz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/rytecTNT_Basic.xz</url>
-	<url>http://www.vuplus-community.net/rytec/rytecTNT_Basic.xz</url>       
-</source>
-<source type="gen_xmltv" channels="rytec.channels.xml.xz">
-  <description>France/Wallonie - Commun (xz)</description>
-	<url>http://www.xmltvepg.nl/rytecBE_FR_Common.xz</url>	
-	<url>http://rytecepg.ipservers.eu/epg_data/rytecBE_FR_Common.xz</url>
-	<url>http://rytecepg.wanwizard.eu/rytecBE_FR_Common.xz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/rytecBE_FR_Common.xz</url>
-	<url>http://www.vuplus-community.net/rytec/rytecBE_FR_Common.xz</url>  
-</source>  
-<source type="gen_xmltv" channels="rytec.channels.xml.xz">
-  <description>France - Mixte (xz)</description>
-	<url>http://www.xmltvepg.nl/rytecFR_Mixte.xz</url>	
-	<url>http://rytecepg.ipservers.eu/epg_data/rytecFR_Mixte.xz</url>
-	<url>http://rytecepg.wanwizard.eu/rytecFR_Mixte.xz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/rytecFR_Mixte.xz</url>
-	<url>http://www.vuplus-community.net/rytec/rytecFR_Mixte.xz</url>  
-</source>  
-<source type="gen_xmltv" channels="rytec.channels.xml.xz">
-  <description>France - Sport/Cinema (xz)</description>
-	<url>http://www.xmltvepg.nl/rytecFR_SportMovies.xz</url>	
-	<url>http://rytecepg.ipservers.eu/epg_data/rytecFR_SportMovies.xz</url>
-	<url>http://rytecepg.wanwizard.eu/rytecFR_SportMovies.xz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/rytecFR_SportMovies.xz</url>
-	<url>http://www.vuplus-community.net/rytec/rytecFR_SportMovies.xz</url>   
-</source>
-</sourcecat>
-
-<sourcecat sourcecatname="(New) Rytec Bulgariya XMLTV (xz version)">
-<source type="gen_xmltv" channels="rytec.channels.xml.xz">
-	<description>Bŭlgariya (xz)</description>
-	<url>http://www.xmltvepg.nl/rytecBG.xz</url>
-	<url>http://rytecepg.ipservers.eu/epg_data/rytecBG.xz</url>
-	<url>http://rytecepg.wanwizard.eu/rytecBG.xz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/rytecBG.xz</url>
-	<url>http://www.vuplus-community.net/rytec/rytecBG.xz</url>
-</source>
-</sourcecat>
-
-<sourcecat sourcecatname="(New 1-10-17) Rytec Ceska/Slovensko XMLTV (xz version)">
-<source type="gen_xmltv" channels="rytec.channels.xml.xz">
-	<description>Slovensko - Bazicky (xz)</description>
-	<url>http://www.xmltvepg.nl/rytecSK_Basic.xz</url>	
-	<url>http://rytecepg.ipservers.eu/epg_data/rytecSK_Basic.xz</url>
-	<url>http://rytecepg.wanwizard.eu/rytecSK_Basic.xz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/rytecSK_Basic.xz</url>
-	<url>http://www.vuplus-community.net/rytec/rytecSK_Basic.xz</url>
-</source>
-<source type="gen_xmltv" channels="rytec.channels.xml.xz">
-	<description>Ceska - Bazicky (xz)</description>
-	<url>http://www.xmltvepg.nl/rytecCZ_Basic.xz</url>	
-	<url>http://rytecepg.ipservers.eu/epg_data/rytecCZ_Basic.xz</url>
-	<url>http://rytecepg.wanwizard.eu/rytecCZ_Basic.xz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/rytecCZ_Basic.xz</url>
-	<url>http://www.vuplus-community.net/rytec/rytecCZ_Basic.xz</url>
-</source>
-<source type="gen_xmltv" channels="rytec.channels.xml.xz">
-	<description>Ceska/Slovensko - Rozdeleny (xz)</description>
-	<url>http://www.xmltvepg.nl/rytecCZ_SK_Common.xz</url>	
-	<url>http://rytecepg.ipservers.eu/epg_data/rytecCZ_SK_Common.xz</url>
-	<url>http://rytecepg.wanwizard.eu/rytecCZ_SK_Common.xz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/rytecCZ_SK_Common.xz</url>
-	<url>http://www.vuplus-community.net/rytec/rytecCZ_SK_Common.xz</url>
-</source>
-<source type="gen_xmltv" channels="rytec.channels.xml.xz">
-	<description>Ceska/Slovensko - Sportove/Filmy (xz)</description>
-	<url>http://www.xmltvepg.nl/rytecCZ_SK_SportMovies.xz</url>	
-	<url>http://rytecepg.ipservers.eu/epg_data/rytecCZ_SK_SportMovies.xz</url>
-	<url>http://rytecepg.wanwizard.eu/rytecCZ_SK_SportMovies.xz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/rytecCZ_SK_SportMovies.xz</url>
-	<url>http://www.vuplus-community.net/rytec/rytecCZ_SK_SportMovies.xz</url>
-</source>
-</sourcecat>
-
-<sourcecat sourcecatname="(New) Rytec Belgie-Telenet XMLTV (xz version)">
-<source type="gen_xmltv" channels="telenet.channels.xml.xz">
-	<description>Vlaanderen(TN) - Basis (xz)</description>
-	<url>http://www.xmltvepg.nl/rytecBE_VL_Basic.xz</url>	
-	<url>http://rytecepg.ipservers.eu/epg_data/rytecBE_VL_Basic.xz</url>
-	<url>http://rytecepg.wanwizard.eu/rytecBE_VL_Basic.xz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/rytecBE_VL_Basic.xz</url>
-	<url>http://www.vuplus-community.net/rytec/rytecBE_VL_Basic.xz</url>     
-</source>
-<source type="gen_xmltv" channels="telenet.channels.xml.xz">
-  <description>Vlaanderen(TN) - Gemeenschappelijk (xz)</description>
-	<url>http://www.xmltvepg.nl/rytecBE_NL_Common.xz</url>	
-	<url>http://rytecepg.ipservers.eu/epg_data/rytecBE_NL_Common.xz</url>
-	<url>http://rytecepg.wanwizard.eu/rytecBE_NL_Common.xz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/rytecBE_NL_Common.xz</url>
-	<url>http://www.vuplus-community.net/rytec/rytecBE_NL_Common.xz</url>    
-</source>
-<source type="gen_xmltv" channels="telenet.channels.xml.xz">
-	<description>Wallonie(TN) - Base (xz)</description>
-	<url>http://www.xmltvepg.nl/rytecBE_FR_Basic.xz</url>	
-	<url>http://rytecepg.ipservers.eu/epg_data/rytecBE_FR_Basic.xz</url>
-	<url>http://rytecepg.wanwizard.eu/rytecBE_FR_Basic.xz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/rytecBE_FR_Basic.xz</url>
-	<url>http://www.vuplus-community.net/rytec/rytecBE_FR_Basic.xz</url>        
-</source>
-<source type="gen_xmltv" channels="telenet.channels.xml.xz">
-  <description>France(TN) - TNT (xz)</description>
-	<url>http://www.xmltvepg.nl/rytecTNT_Basic.xz</url>	
-	<url>http://rytecepg.ipservers.eu/epg_data/rytecTNT_Basic.xz</url>
-	<url>http://rytecepg.wanwizard.eu/rytecTNT_Basic.xz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/rytecTNT_Basic.xz</url>
-	<url>http://www.vuplus-community.net/rytec/rytecTNT_Basic.xz</url>
-</source>	
-<source type="gen_xmltv" channels="telenet.channels.xml.xz">
-	<description>Erotic(TN) Telenet (xz)</description>
-	<url>http://www.xmltvepg.nl/rytecxmltverotic.xz</url>	
-	<url>http://rytecepg.ipservers.eu/epg_data/rytecxmltverotic.xz</url>
-	<url>http://rytecepg.wanwizard.eu/rytecxmltverotic.xz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/rytecxmltverotic.xz</url>
-	<url>http://www.vuplus-community.net/rytec/rytecxmltverotic.xz</url>
-</source>	
-
-</sourcecat>
-
-<sourcecat sourcecatname="(New) Rytec Danmark XMLTV (xz version)">
-<source type="gen_xmltv" channels="rytec.channels-denmark.xml.xz">
-	<description>Danmark - Grundleggende (xz)</description>
-	<url>http://www.xmltvepg.nl/rytecDK_Basic.xz</url>	
-	<url>http://rytecepg.ipservers.eu/epg_data/rytecDK_Basic.xz</url>
-	<url>http://rytecepg.wanwizard.eu/rytecDK_Basic.xz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/rytecDK_Basic.xz</url>
-	<url>http://www.vuplus-community.net/rytec/rytecDK_Basic.xz</url>
-</source>
-<source type="gen_xmltv" channels="rytec.channels-denmark.xml.xz">
-	<description>Danmark - Delt (xz)</description>
-	<url>http://www.xmltvepg.nl/rytecDK_Misc.xz</url>	
-	<url>http://rytecepg.ipservers.eu/epg_data/rytecDK_Misc.xz</url>
-	<url>http://rytecepg.wanwizard.eu/rytecDK_Misc.xz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/rytecDK_Misc.xz</url>
-	<url>http://www.vuplus-community.net/rytec/rytecDK_Misc.xz</url>
-</source>
-<source type="gen_xmltv" channels="rytec.channels-denmark.xml.xz">
-	<description>Danmark - Sport/Movies (xz)</description>
-	<url>http://www.xmltvepg.nl/rytecNordic_SportMovies.xz</url>	
-	<url>http://rytecepg.ipservers.eu/epg_data/rytecNordic_SportMovies.xz</url>
-	<url>http://rytecepg.wanwizard.eu/rytecNordic_SportMovies.xz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/rytecNordic_SportMovies.xz</url>
-	<url>http://www.vuplus-community.net/rytec/rytecNordic_SportMovies.xz</url>
-</source>
-</sourcecat>
-
-<sourcecat sourcecatname="(New) Rytec Deutschland/Osterreich/Switzerland XMLTV (xz version)">
-<source type="gen_xmltv" channels="rytec.channels.xml.xz">
-	<description>Deutschland - Basis  (xz)</description>
-	<url>http://www.xmltvepg.nl/rytecDE_Basic.xz</url>	
-	<url>http://rytecepg.ipservers.eu/epg_data/rytecDE_Basic.xz</url>
-	<url>http://rytecepg.wanwizard.eu/rytecDE_Basic.xz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/rytecDE_Basic.xz</url>
-	<url>http://www.vuplus-community.net/rytec/rytecDE_Basic.xz</url>     
-</source>
-<source type="gen_xmltv" channels="rytec.channels.xml.xz">
-	<description>Osterreich - Basis  (xz)</description>
-	<url>http://www.xmltvepg.nl/rytecAT_Basic.xz</url>	
-	<url>http://rytecepg.ipservers.eu/epg_data/rytecAT_Basic.xz</url>
-	<url>http://rytecepg.wanwizard.eu/rytecAT_Basic.xz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/rytecAT_Basic.xz</url>
-	<url>http://www.vuplus-community.net/rytec/rytecAT_Basic.xz</url>         
-</source>
-<source type="gen_xmltv" channels="rytec.channels.xml.xz">
-	<description>Switzerland - Basis  (xz)</description>
-	<url>http://www.xmltvepg.nl/rytecCH_Basic.xz</url>	
-	<url>http://rytecepg.ipservers.eu/epg_data/rytecCH_Basic.xz</url>
-	<url>http://rytecepg.wanwizard.eu/rytecCH_Basic.xz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/rytecCH_Basic.xz</url>
-	<url>http://www.vuplus-community.net/rytec/rytecCH_Basic.xz</url>     
-</source>
-<source type="gen_xmltv" channels="rytec.channels.xml.xz">
-	<description>Deutschland/Osterreich/Switzerland - Gemeinsam  (xz)</description>
-	<url>http://www.xmltvepg.nl/rytecDE_Common.xz</url>	
-	<url>http://rytecepg.ipservers.eu/epg_data/rytecDE_Common.xz</url>
-	<url>http://rytecepg.wanwizard.eu/rytecDE_Common.xz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/rytecDE_Common.xz</url>
-	<url>http://www.vuplus-community.net/rytec/rytecDE_Common.xz</url>    
-</source>
-<source type="gen_xmltv" channels="rytec.channels.xml.xz">
-	<description>Deutschland/Osterreich/Switzerland - Sports/Film  (xz)</description>
-	<url>http://www.xmltvepg.nl/rytecDE_SportMovies.xz</url>	
-	<url>http://rytecepg.ipservers.eu/epg_data/rytecDE_SportMovies.xz</url>
-	<url>http://rytecepg.wanwizard.eu/rytecDE_SportMovies.xz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/rytecDE_SportMovies.xz</url>
-	<url>http://www.vuplus-community.net/rytec/rytecDE_SportMovies.xz</url>       
-</source>
-</sourcecat>
-
-<sourcecat sourcecatname="(New 1-10-17) Rytec Ellada XMLTV (xz version)">
-<source type="gen_xmltv" channels="rytec.channels.xml.xz">
-	<description>Ellada - Genikos (xz)</description>
-	<url>http://www.xmltvepg.nl/rytecGR_Basic.xz</url>	
-	<url>http://rytecepg.ipservers.eu/epg_data/rytecGR_Basic.xz</url>
-	<url>http://rytecepg.wanwizard.eu/rytecGR_Basic.xz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/rytecGR_Basic.xz</url>
-	<url>http://www.vuplus-community.net/rytec/rytecGR_Basic.xz</url>
-</source>
-<source type="gen_xmltv" channels="rytec.channels.xml.xz">
-	<description>Ellada - Athlitismos/Kinimatografou (xz)</description>
-	<url>http://www.xmltvepg.nl/rytecGR_SportMovies.xz</url>	
-	<url>http://rytecepg.ipservers.eu/epg_data/rytecGR_SportMovies.xz</url>
-	<url>http://rytecepg.wanwizard.eu/rytecGR_SportMovies.xz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/rytecGR_SportMovies.xz</url>
-	<url>http://www.vuplus-community.net/rytec/rytecGR_SportMovies.xz</url>
-</source>
-</sourcecat>
-
-<sourcecat sourcecatname="(New 1-10-17) Rytec Espana XMLTV (xz version)">
-<source type="gen_xmltv" channels="rytec.channels.xml.xz">
-	<description>Espana - Basic (xz)</description>
-	<url>http://www.xmltvepg.nl/rytecES_Basic.xz</url>	
-	<url>http://rytecepg.ipservers.eu/epg_data/rytecES_Basic.xz</url>
-	<url>http://rytecepg.wanwizard.eu/rytecES_Basic.xz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/rytecES_Basic.xz</url>
-	<url>http://www.vuplus-community.net/rytec/rytecES_Basic.xz</url>
-</source>
-<source type="gen_xmltv" channels="rytec.channels.xml.xz">
-	<description>Espana - Adicional (xz)</description>
-	<url>http://www.xmltvepg.nl/rytecES_Misc.xz</url>	
-	<url>http://rytecepg.ipservers.eu/epg_data/rytecES_Misc.xz</url>
-	<url>http://rytecepg.wanwizard.eu/rytecES_Misc.xz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/rytecES_Misc.xz</url>
-	<url>http://www.vuplus-community.net/rytec/rytecES_Misc.xz</url>
-</source>
-<source type="gen_xmltv" channels="rytec.channels.xml.xz">
-	<description>Espana - Deportes/Pelicula (xz)</description>
-	<url>http://www.xmltvepg.nl/rytecES_SportMovies.xz</url>	
-	<url>http://rytecepg.ipservers.eu/epg_data/rytecES_SportMovies.xz</url>
-	<url>http://rytecepg.wanwizard.eu/rytecES_SportMovies.xz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/rytecES_SportMovies.xz</url>
-	<url>http://www.vuplus-community.net/rytec/rytecES_SportMovies.xz</url>
-</source>
-</sourcecat>
-
-<sourcecat sourcecatname="(New) Rytec Italia XMLTV (xz version)">
-<source type="gen_xmltv" channels="rytec.channels.xml.xz">
-	<description>Italia - Basis (xz)</description>
-	<url>http://www.xmltvepg.nl/rytecIT_Basic.xz</url>	
-	<url>http://rytecepg.ipservers.eu/epg_data/rytecIT_Basic.xz</url>
-	<url>http://rytecepg.wanwizard.eu/rytecIT_Basic.xz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/rytecIT_Basic.xz</url>
-	<url>http://www.vuplus-community.net/rytec/rytecIT_Basic.xz</url>     
-</source>
-<source type="gen_xmltv" channels="rytec.channels.xml.xz">
-	<description>Italia - Sky (xz)</description>
-	<url>http://www.xmltvepg.nl/rytecIT_Sky.xz</url>	
-	<url>http://rytecepg.ipservers.eu/epg_data/rytecIT_Sky.xz</url>
-	<url>http://rytecepg.wanwizard.eu/rytecIT_Sky.xz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/rytecIT_Sky.xz</url>
-	<url>http://www.vuplus-community.net/rytec/rytecIT_Sky.xz</url>    
-</source>
-<source type="gen_xmltv" channels="rytec.channels.xml.xz">
-	<description>Italia - Sports/Film/Premium (xz)</description>
-	<url>http://www.xmltvepg.nl/rytecIT_SportMovies.xz</url>	
-	<url>http://rytecepg.ipservers.eu/epg_data/rytecIT_SportMovies.xz</url>
-	<url>http://rytecepg.wanwizard.eu/rytecIT_SportMovies.xz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/rytecIT_SportMovies.xz</url>
-	<url>http://www.vuplus-community.net/rytec/rytecIT_SportMovies.xz</url>       
-</source>
-</sourcecat>
-
-<sourcecat sourcecatname="(New) Rytec Poland XMLTV (xz version)">
-<source type="gen_xmltv" channels="rytec.channels.xml.xz">
-	<description>Polska - Podstawowy (xz)</description>
-	<url>http://www.xmltvepg.nl/rytecPL_Basic.xz</url>	
-	<url>http://rytecepg.ipservers.eu/epg_data/rytecPL_Basic.xz</url>
-	<url>http://rytecepg.wanwizard.eu/rytecPL_Basic.xz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/rytecPL_Basic.xz</url>
-	<url>http://www.vuplus-community.net/rytec/rytecPL_Basic.xz</url>
-</source>
-<source type="gen_xmltv" channels="rytec.channels.xml.xz">
-	<description>Polska - Dodatkowy (xz)</description>
-	<url>http://www.xmltvepg.nl/rytecPL_Misc.xz</url>	
-	<url>http://rytecepg.ipservers.eu/epg_data/rytecPL_Misc.xz</url>
-	<url>http://rytecepg.wanwizard.eu/rytecPL_Misc.xz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/rrytecPL_Misc.xz</url>
-	<url>http://www.vuplus-community.net/rytec/rytecPL_Misc.xz</url>
-</source>
-<source type="gen_xmltv" channels="rytec.channels.xml.xz">
-	<description>Polska - Sport/Kino (xz)</description>
-	<url>http://www.xmltvepg.nl/rytecPL_SportMovies.xz</url>	
-	<url>http://rytecepg.ipservers.eu/epg_data/rytecPL_SportMovies.xz</url>
-	<url>http://rytecepg.wanwizard.eu/rytecPL_SportMovies.xz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/rytecPL_SportMovies.xz</url>
-	<url>http://www.vuplus-community.net/rytec/rytecPL_SportMovies.xz</url>
-</source>
-</sourcecat>
-
-<sourcecat sourcecatname="(New 1-10-17) Rytec Portugal XMLTV (xz version)">
-<source type="gen_xmltv" channels="rytec.channels.xml.xz">
-	<description>Portugal (xz)</description>
-	<url>http://www.xmltvepg.nl/rytecPT.xz</url>	
-	<url>http://rytecepg.ipservers.eu/epg_data/rytecPT.xz</url>
-	<url>http://rytecepg.wanwizard.eu/rytecPT.xz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/rytecPT.xz</url>
-	<url>http://www.vuplus-community.net/rytec/rytecPT.xz</url>
-</source>
-</sourcecat>
-
-<sourcecat sourcecatname="(New 1-10-17) Rytec Magyarorszag XMLTV (xz version)">
-<source type="gen_xmltv" channels="rytec.channels.xml.xz">
-	<description>Magyarorszag - Basic (xz)</description>
-	<url>http://www.xmltvepg.nl/rytecHU_Basic.xz</url>	
-	<url>http://rytecepg.ipservers.eu/epg_data/rytecHU_Basic.xz</url>
-	<url>http://rytecepg.wanwizard.eu/rytecHU_Basic.xz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/rytecHU_Basic.xz</url>
-	<url>http://www.vuplus-community.net/rytec/rytecHU_Basic.xz</url>
-</source>
-<source type="gen_xmltv" channels="rytec.channels.xml.xz">
-	<description>Magyarorszag - Sport/Film (xz)</description>
-	<url>http://www.xmltvepg.nl/rytecHU_SportMovies.xz</url>	
-	<url>http://rytecepg.ipservers.eu/epg_data/rytecHU_SportMovies.xz</url>
-	<url>http://rytecepg.wanwizard.eu/rytecHU_SportMovies.xz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/rytecHU_SportMovies.xz</url>
-	<url>http://www.vuplus-community.net/rytec/rytecHU_SportMovies.xz</url>
-</source>
-</sourcecat>
-
-<sourcecat sourcecatname="(New) Rytec Norge XMLTV (xz version)">
-<source type="gen_xmltv" channels="rytec.channels-norway.xml.xz">
-	<description>Norge - Basic (xz)</description>
-	<url>http://www.xmltvepg.nl/rytecNO_Basic.xz</url>	
-	<url>http://rytecepg.ipservers.eu/epg_data/rytecNO_Basic.xz</url>
-	<url>http://rytecepg.wanwizard.eu/rytecNO_Basic.xz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/rytecNO_Basic.xz</url>
-	<url>http://www.vuplus-community.net/rytec/rytecNO_Basic.xz</url>
-</source>
-<source type="gen_xmltv" channels="rytec.channels-norway.xml.xz">
-	<description>Norge - Delt (xz)</description>
-	<url>http://www.xmltvepg.nl/rytecNO_Misc.xz</url>	
-	<url>http://rytecepg.ipservers.eu/epg_data/rytecNO_Misc.xz</url>
-	<url>http://rytecepg.wanwizard.eu/rytecNO_Misc.xz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/rytecNO_Misc.xz</url>
-	<url>http://www.vuplus-community.net/rytec/rytecNO_Misc.xz</url>
-</source>
-<source type="gen_xmltv" channels="rytec.channels-norway.xml.xz">
-	<description>Norge - Sport/Movies (xz)</description>
-	<url>http://www.xmltvepg.nl/rytecNordic_SportMovies.xz</url>	
-	<url>http://rytecepg.ipservers.eu/epg_data/rytecNordic_SportMovies.xz</url>
-	<url>http://rytecepg.wanwizard.eu/rytecNordic_SportMovies.xz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/rytecNordic_SportMovies.xz</url>
-	<url>http://www.vuplus-community.net/rytec/rytecNordic_SportMovies.xz</url>
-</source>
-</sourcecat>
-
-<sourcecat sourcecatname="(New 1-10-17) Rytec Romania XMLTV( xz version)">
-<source type="gen_xmltv" channels="rytec.channels.xml.xz">
-	<description>Romania - Baza (xz)</description>
-	<url>http://www.xmltvepg.nl/rytecRO_Basic.xz</url>	
-	<url>http://rytecepg.ipservers.eu/epg_data/rytecRO_Basic.xz</url>
-	<url>http://rytecepg.wanwizard.eu/rytecRO_Basic.xz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/rytecRO_Basic.xz</url>
-	<url>http://www.vuplus-community.net/rytec/rytecRO_Basic.xz</url>
-</source>
-<source type="gen_xmltv" channels="rytec.channels.xml.xz">
-	<description>Romania - Sport/Film (xz)</description>
-	<url>http://www.xmltvepg.nl/rytecRO_SportMovies.xz</url>	
-	<url>http://rytecepg.ipservers.eu/epg_data/rytecRO_SportMovies.xz</url>
-	<url>http://rytecepg.wanwizard.eu/rytecRO_SportMovies.xz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/rytecRO_SportMovies.xz</url>
-	<url>http://www.vuplus-community.net/rytec/rytecRO_SportMovies.xz</url>
-</source>
-</sourcecat>
-
-<sourcecat sourcecatname="(New) Rytec Serbia/Croatia/Montenegro XMLTV (xz version)">
-<source type="gen_xmltv" channels="rytec.channels.xml.xz">
-	<description>Srbija/Hrvatska/Crna Gora - Osnovni (xz)</description>
-	<url>http://www.xmltvepg.nl/rytecSRB_HRV_Basic.xz</url>
-	<url>http://rytecepg.ipservers.eu/epg_data/rytecSRB_HRV_Basic.xz</url>
-	<url>http://rytecepg.wanwizard.eu/rytecSRB_HRV_Basic.xz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/rytecSRB_HRV_Basic.xz</url>
-	<url>http://www.vuplus-community.net/rytec/rytecSRB_HRV_Basic.xz</url>
-</source>
-<source type="gen_xmltv" channels="rytec.channels.xml.xz">
-	<description>Srbija/Hrvatska/Crna Gora - Dodatni (xz)</description>
-	<url>http://www.xmltvepg.nl/rytecSRB_HRV_Misc.xz</url>
-	<url>http://rytecepg.ipservers.eu/epg_data/rytecSRB_HRV_Misc.xz</url>
-	<url>http://rytecepg.wanwizard.eu/rytecSRB_HRV_Misc.xz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/rytecSRB_HRV_Misc.xz</url>
-	<url>http://www.vuplus-community.net/rytec/rytecSRB_HRV_Misc.xz</url>
-</source>
-<source type="gen_xmltv" channels="rytec.channels.xml.xz">
-	<description>Srbija/Hrvatska/Crna Gora - Sport/Film (xz)</description>
-	<url>http://www.xmltvepg.nl/rytecExYu_SportMovies.xz</url>
-	<url>http://rytecepg.ipservers.eu/epg_data/rytecExYu_SportMovies.xz</url>
-	<url>http://rytecepg.wanwizard.eu/rytecExYu_SportMovies.xz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/rytecExYu_SportMovies.xz</url>
-	<url>http://www.vuplus-community.net/rytec/rytecExYu_SportMovies.xz</url>
-</source>
-</sourcecat>
-
-<sourcecat sourcecatname="(New) Rytec Slovenia XMLTV (xz version)">
-<source type="gen_xmltv" channels="rytec.channels-slovenia.xml.xz">
-	<description>Slovenija - Podlaga (xz)</description>
-	<url>http://www.xmltvepg.nl/rytecSVN_Basic.xz</url>	
-	<url>http://rytecepg.ipservers.eu/epg_data/rytecSVN_Basic.xz</url>
-	<url>http://rytecepg.wanwizard.eu/rytecSVN_Basic.xz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/rytecSVN_Basic.xz</url>
-	<url>http://www.vuplus-community.net/rytec/rytecSVN_Basic.xz</url>
-</source>
-<source type="gen_xmltv" channels="rytec.channels-slovenia.xml.xz">
-	<description>Slovenija - Dodatni (xz)</description>
-	<url>http://www.xmltvepg.nl/rytecSVN_Misc.xz</url>	
-	<url>http://rytecepg.ipservers.eu/epg_data/rytecSVN_Misc.xz</url>
-	<url>http://rytecepg.wanwizard.eu/rytecSVN_Misc.xz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/rytecSVN_Misc.xz</url>
-	<url>http://www.vuplus-community.net/rytec/rytecSVN_Misc.xz</url>
-</source>
-<source type="gen_xmltv" channels="rytec.channels-slovenia.xml.xz">
-	<description>Slovenija - Sport/Film (xz)</description>
-	<url>http://www.xmltvepg.nl/rytecExYu_SportMovies.xz</url>
-	<url>http://rytecepg.ipservers.eu/epg_data/rytecExYu_SportMovies.xz</url>
-	<url>http://rytecepg.wanwizard.eu/rytecExYu_SportMovies.xz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/rytecExYu_SportMovies.xz</url>
-	<url>http://www.vuplus-community.net/rytec/rytecExYu_SportMovies.xz</url>
-</source>
-</sourcecat>
-
-<sourcecat sourcecatname="(New) Rytec Sverige XMLTV (xz version)">
-<source type="gen_xmltv" channels="rytec.channels-sweden.xml.xz">
-	<description>Sverige - Grundlaggande (xz)</description>
-	<url>http://www.xmltvepg.nl/rytecSE_Basic.xz</url>	
-	<url>http://rytecepg.ipservers.eu/epg_data/rytecSE_Basic.xz</url>
-	<url>http://rytecepg.wanwizard.eu/rytecSE_Basic.xz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/rytecSE_Basic.xz</url>
-	<url>http://www.vuplus-community.net/rytec/rytecSE_Basic.xz</url>
-</source>
-<source type="gen_xmltv" channels="rytec.channels-sweden.xml.xz">
-	<description>Sverige - Diverse (xz)</description>
-	<url>http://www.xmltvepg.nl/rytecSE_Misc.xz</url>	
-	<url>http://rytecepg.ipservers.eu/epg_data/rytecSE_Misc.xz</url>
-	<url>http://rytecepg.wanwizard.eu/rytecSE_Misc.xz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/rytecSE_Misc.xz</url>
-	<url>http://www.vuplus-community.net/rytec/rytecSE_Misc.xz</url>
-</source>
-<source type="gen_xmltv" channels="rytec.channels-sweden.xml.xz">
-	<description>Sverige - Sport/Filmer (xz)</description>
-	<url>http://www.xmltvepg.nl/rytecNordic_SportMovies.xz</url>	
-	<url>http://rytecepg.ipservers.eu/epg_data/rytecNordic_SportMovies.xz</url>
-	<url>http://rytecepg.wanwizard.eu/rytecNordic_SportMovies.xz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/rytecNordic_SportMovies.xz</url>
-	<url>http://www.vuplus-community.net/rytec/rytecNordic_SportMovies.xz</url>
-</source>
-</sourcecat>
-
-<sourcecat sourcecatname="(New) Rytec Suomi XMLTV (xz version)">
-<source type="gen_xmltv" channels="rytec.channels-finland.xml.xz">
-	<description>Suomi - Perustiedot (xz)</description>
-	<url>http://www.xmltvepg.nl/rytecFI_Basic.xz</url>	
-	<url>http://rytecepg.ipservers.eu/epg_data/rytecFI_Basic.xz</url>
-	<url>http://rytecepg.wanwizard.eu/rytecFI_Basic.xz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/rytecFI_Basic.xz</url>
-	<url>http://www.vuplus-community.net/rytec/rytecFI_Basic.xz</url>
-</source>
-<source type="gen_xmltv" channels="rytec.channels-finland.xml.xz">
-	<description>Suomi - Yhteinen (xz)</description>
-	<url>http://www.xmltvepg.nl/rytecFI_Misc.xz</url>	
-	<url>http://rytecepg.ipservers.eu/epg_data/rytecFI_Misc.xz</url>
-	<url>http://rytecepg.wanwizard.eu/rytecFI_Misc.xz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/rytecFI_Misc.xz</url>
-	<url>http://www.vuplus-community.net/rytec/rytecFI_Misc.xz</url>
-</source>
-<source type="gen_xmltv" channels="rytec.channels-finland.xml.xz">
-	<description>Suomi - Sport/Movies (xz)</description>
-	<url>http://www.xmltvepg.nl/rytecNordic_SportMovies.xz</url>	
-	<url>http://rytecepg.ipservers.eu/epg_data/rytecNordic_SportMovies.xz</url>
-	<url>http://rytecepg.wanwizard.eu/rytecNordic_SportMovies.xz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/rytecNordic_SportMovies.xz</url>
-	<url>http://www.vuplus-community.net/rytec/rytecNordic_SportMovies.xz</url>
-</source>
-</sourcecat>
-
-<sourcecat sourcecatname="(New 1-10-17) Rytec Csat Africa XMLTV (xz version)">
-<source type="gen_xmltv" channels="Horizons.channels.xml.xz">
-	<description>Csat Africa - Base (xz)</description>
-	<url>http://www.xmltvepg.nl/rytecSEN_Basic.xz</url>	
-	<url>http://rytecepg.ipservers.eu/epg_data/rytecSEN_Basic.xz</url>
-	<url>http://rytecepg.wanwizard.eu/rytecSEN_Basic.xz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/rytecSEN_Basic.xz</url>
-	<url>http://www.vuplus-community.net/rytec/rytecSEN_Basic.xz</url>
-</source>
-<source type="gen_xmltv" channels="Horizons.channels.xml.xz">
-	<description>Csat Africa - Sport/Cinema (xz)</description>
-	<url>http://www.xmltvepg.nl/rytecFRO_SportMovies.xz</url>	
-	<url>http://rytecepg.ipservers.eu/epg_data/rytecFRO_SportMovies.xz</url>
-	<url>http://rytecepg.wanwizard.eu/rytecFRO_SportMovies.xz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/rytecFRO_SportMovies.xz</url>
-	<url>http://www.vuplus-community.net/rytec/rytecFRO_SportMovies.xz</url>
-</source>
-</sourcecat>
-
-<sourcecat sourcecatname="(New 1-10-17) Rytec Reunion XMLTV (xz version)">
-<source type="gen_xmltv" channels="Reunion.channels.xml.xz">
-	<description>Reunion - Base</description>
-	<url>http://www.xmltvepg.nl/rytecREU_Basic.xz (xz)</url>	
-	<url>http://rytecepg.ipservers.eu/epg_data/rytecREU_Basic.xz</url>
-	<url>http://rytecepg.wanwizard.eu/rytecREU_Basic.xz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/rytecREU_Basic.xz</url>
-	<url>http://www.vuplus-community.net/rytec/rytecREU_Basic.xz</url>
-</source>
-<source type="gen_xmltv" channels="Reunion.channels.xml.xz">
-	<description>Reunion - Sport/Cinema (xz)</description>
-	<url>http://www.xmltvepg.nl/rytecFRO_SportMovies.xz</url>	
-	<url>http://rytecepg.ipservers.eu/epg_data/rytecFRO_SportMovies.xz</url>
-	<url>http://rytecepg.wanwizard.eu/rytecFRO_SportMovies.xz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/rytecFRO_SportMovies.xz</url>
-	<url>http://www.vuplus-community.net/rytec/rytecFRO_SportMovies.xz</url>
-</source>
-</sourcecat>
-
-<sourcecat sourcecatname="(New 1-10-17) Rytec Csat Carabean XMLTV (xz version)">
-<source type="gen_xmltv" channels="CsatCarabean.channels.xml.xz">
-	<description>Caraibes - Base (xz)</description>
-	<url>http://www.xmltvepg.nl/rytecMTQ_Basic.xz</url>	
-	<url>http://rytecepg.ipservers.eu/epg_data/rytecMTQ_Basic.xz</url>
-	<url>http://rytecepg.wanwizard.eu/rytecMTQ_Basic.xz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/rytecMTQ_Basic.xz</url>
-	<url>http://www.vuplus-community.net/rytec/rytecMTQ_Basic.xz</url>
-</source>
-<source type="gen_xmltv" channels="CsatCarabean.channels.xml.xz">
-	<description>Caraibes - Sport/Cinema (xz)</description>
-	<url>http://www.xmltvepg.nl/rytecFRO_SportMovies.xz</url>	
-	<url>http://rytecepg.ipservers.eu/epg_data/rytecFRO_SportMovies.xz</url>
-	<url>http://rytecepg.wanwizard.eu/rytecFRO_SportMovies.xz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/rytecFRO_SportMovies.xz</url>
-	<url>http://www.vuplus-community.net/rytec/rytecFRO_SportMovies.xz</url>
-</source>
-</sourcecat>
-
-<sourcecat sourcecatname="(New 1-10-17) Rytec New Caledonia XMLTV (xz version)">
-<source type="gen_xmltv" channels="NewCaledonia.channels.xml.xz">
-	<description>Nouvelle Caledonie - Base (xz)</description>
-	<url>http://www.xmltvepg.nl/rytecNCL_Basic.xz</url>	
-	<url>http://rytecepg.ipservers.eu/epg_data/rytecNCL_Basic.xz</url>
-	<url>http://rytecepg.wanwizard.eu/rytecNCL_Basic.xz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/rytecNCL_Basic.xz</url>
-	<url>http://www.vuplus-community.net/rytec/rytecNCL_Basic.xz</url>
-</source>
-<source type="gen_xmltv" channels="NewCaledonia.channels.xml.xz">
-	<description>Nouvelle Caledonie - Sport/Cinema (xz)</description>
-	<url>http://www.xmltvepg.nl/rytecFRO_SportMovies.xz</url>	
-	<url>http://rytecepg.ipservers.eu/epg_data/rytecFRO_SportMovies.xz</url>
-	<url>http://rytecepg.wanwizard.eu/rytecFRO_SportMovies.xz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/rytecFRO_SportMovies.xz</url>
-	<url>http://www.vuplus-community.net/rytec/rytecFRO_SportMovies.xz</url>
-</source>
-</sourcecat>
-
-<sourcecat sourcecatname="(New) Rytec UK Satellite XMLTV (xz version)">
-<source type="gen_xmltv" channels="rytec.channels.xml.xz">
-	<description>UK - Freeview (xz)</description>
-	<url>http://www.xmltvepg.nl/rytecUK_Basic.xz</url>	
-	<url>http://rytecepg.ipservers.eu/epg_data/rytecUK_Basic.xz</url>
-	<url>http://rytecepg.wanwizard.eu/rytecUK_Basic.xz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/rytecUK_Basic.xz</url>
-	<url>http://www.vuplus-community.net/rytec/rytecUK_Basic.xz</url>     
-</source>
-<source type="gen_xmltv" channels="rytec.channels.xml.xz">
-	<description>UK - FTA (xz)</description>
-	<url>http://www.xmltvepg.nl/rytecUK_FTA.xz</url>	
-	<url>http://rytecepg.ipservers.eu/epg_data/rytecUK_FTA.xz</url>
-	<url>http://rytecepg.wanwizard.eu/rytecUK_FTA.xz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/rytecUK_FTA.xz</url>
-	<url>http://www.vuplus-community.net/rytec/rytecUK_FTA.xz</url>         
-</source>
-<source type="gen_xmltv" channels="rytec.channels.xml.xz">
-	<description>UK - International (xz)</description>
-	<url>http://www.xmltvepg.nl/rytecUK_int.xz</url>	
-	<url>http://rytecepg.ipservers.eu/epg_data/rytecUK_int.xz</url>
-	<url>http://rytecepg.wanwizard.eu/rytecUK_int.xz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/rytecUK_int.xz</url>
-	<url>http://www.vuplus-community.net/rytec/rytecUK_int.xz</url>     
-</source>
-<source type="gen_xmltv" channels="rytec.channels.xml.xz">
-	<description>UK - Sky Live (xz)</description>
-	<url>http://www.xmltvepg.nl/rytecUK_SkyLive.xz</url>	
-	<url>http://rytecepg.ipservers.eu/epg_data/rytecUK_SkyLive.xz</url>
-	<url>http://rytecepg.wanwizard.eu/rytecUK_SkyLive.xz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/rytecUK_SkyLive.xz</url>
-	<url>http://www.vuplus-community.net/rytec/rytecUK_SkyLive.xz</url>    
-</source>
-<source type="gen_xmltv" channels="rytec.channels.xml.xz">
-	<description>UK - Sky Dead (xz)</description>
-	<url>http://www.xmltvepg.nl/rytecUK_SkyDead.xz</url>	
-	<url>http://rytecepg.ipservers.eu/epg_data/rytecUK_SkyDead.xz</url>
-	<url>http://rytecepg.wanwizard.eu/rytecUK_SkyDead.xz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/rytecUK_SkyDead.xz</url>
-	<url>http://www.vuplus-community.net/rytec/rytecUK_SkyDead.xz</url>       
-</source>
-<source type="gen_xmltv" channels="rytec.channels.xml.xz">
-	<description>UK - Sports/Movies (xz)</description>
-	<url>http://www.xmltvepg.nl/rytecUK_SportMovies.xz</url>	
-	<url>http://rytecepg.ipservers.eu/epg_data/rytecUK_SportMovies.xz</url>
-	<url>http://rytecepg.wanwizard.eu/rytecUK_SportMovies.xz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/rytecUK_SportMovies.xz</url>
-	<url>http://www.vuplus-community.net/rytec/rytecUK_SportMovies.xz</url>       
-</source>
-</sourcecat>
-
-<sourcecat sourcecatname="(New) Rytec UK/Ireland Virgin XMLTV (xz version)">
-<source type="gen_xmltv" channels="VirginUK.channels.xml.xz">
-	<description>UK/Ireland Virgin - Freeview (xz)</description>
-	<url>http://www.xmltvepg.nl/rytecUK_Basic.xz</url>	
-	<url>http://rytecepg.ipservers.eu/epg_data/rytecUK_Basic.xz</url>
-	<url>http://rytecepg.wanwizard.eu/rytecUK_Basic.xz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/rytecUK_Basic.xz</url>
-	<url>http://www.vuplus-community.net/rytec/rytecUK_Basic.xz</url>     
-</source>
-<source type="gen_xmltv" channels="VirginUK.channels.xml.xz">
-	<description>UK/Ireland Virgin - FTA (xz)</description>
-	<url>http://www.xmltvepg.nl/rytecUK_FTA.xz</url>	
-	<url>http://rytecepg.ipservers.eu/epg_data/rytecUK_FTA.xz</url>
-	<url>http://rytecepg.wanwizard.eu/rytecUK_FTA.xz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/rytecUK_FTA.xz</url>
-	<url>http://www.vuplus-community.net/rytec/rytecUK_FTA.xz</url>         
-</source>
-<source type="gen_xmltv" channels="VirginUK.channels.xml.xz">
-	<description>UK/Ireland Virgin - International (xz)</description>
-	<url>http://www.xmltvepg.nl/rytecUK_int.xz</url>	
-	<url>http://rytecepg.ipservers.eu/epg_data/rytecUK_int.xz</url>
-	<url>http://rytecepg.wanwizard.eu/rytecUK_int.xz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/rytecUK_int.xz</url>
-	<url>http://www.vuplus-community.net/rytec/rytecUK_int.xz</url>     
-</source>
-<source type="gen_xmltv" channels="VirginUK.channels.xml.xz">
-	<description>UK/Ireland Virgin - Sky Live (xz)</description>
-	<url>http://www.xmltvepg.nl/rytecUK_SkyLive.xz</url>	
-	<url>http://rytecepg.ipservers.eu/epg_data/rytecUK_SkyLive.xz</url>
-	<url>http://rytecepg.wanwizard.eu/rytecUK_SkyLive.xz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/rytecUK_SkyLive.xz</url>
-	<url>http://www.vuplus-community.net/rytec/rytecUK_SkyLive.xz</url>    
-</source>
-<source type="gen_xmltv" channels="VirginUK.channels.xml.xz">
-	<description>UK/Ireland Virgin - Sky Dead (xz)</description>
-	<url>http://www.xmltvepg.nl/rytecUK_SkyDead.xz</url>	
-	<url>http://rytecepg.ipservers.eu/epg_data/rytecUK_SkyDead.xz</url>
-	<url>http://rytecepg.wanwizard.eu/rytecUK_SkyDead.xz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/rytecUK_SkyDead.xz</url>
-	<url>http://www.vuplus-community.net/rytec/rytecUK_SkyDead.xz</url>       
-</source>
-<source type="gen_xmltv" channels="VirginUK.channels.xml.xz">
-	<description>UK/Ireland Virgin - Sports/Movies (xz)</description>
-	<url>http://www.xmltvepg.nl/rytecUK_SportMovies.xz</url>	
-	<url>http://rytecepg.ipservers.eu/epg_data/rytecUK_SportMovies.xz</url>
-	<url>http://rytecepg.wanwizard.eu/rytecUK_SportMovies.xz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/rytecUK_SportMovies.xz</url>
-	<url>http://www.vuplus-community.net/rytec/rytecUK_SportMovies.xz</url>       
-</source>
-</sourcecat>
 
 </sources>
 
 <!--
 
-<sourcecat sourcecatname="Rytec EPG.DAT">
-<source type="epg.dat" channels="rytec.channels.xml.gz">
-	<description>Benelux</description>
-	<url>http://www.xmltvepg.nl/benl/epg.dat.gz</url>	
-	<url>http://rytecepg.ipservers.eu/epg_data/benl/epg.dat.gz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/benl/epg.dat.gz</url>
-	<url>http://www.vuplus-community.net/rytec/benl/epg.dat.gz</url>
-</source>
-<source type="epg.dat" channels="rytec.channels.xml.gz">
-	<description>Bulgaria</description>
-	<url>http://www.xmltvepg.nl/bulsat/epg.dat.gz</url>
-	<url>http://rytecepg.ipservers.eu/epg_data/bulsat/epg.dat.gz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/bulsat/epg.dat.gz</url>
-	<url>http://www.vuplus-community.net/rytec/bulsat/epg.dat.gz</url>
-</source>
-<source type="epg.dat" channels="rytec.channels-denmark.xml.gz">
-	<description>Denmark</description>
-	<url>http://www.xmltvepg.nl/denmark/epg.dat.gz</url>	
-	<url>http://rytecepg.ipservers.eu/epg_data/denmark/epg.dat.gz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/denmark/epg.dat.gz</url>
-	<url>http://www.vuplus-community.net/rytec/denmark/epg.dat.gz</url>
-</source>
-<source type="epg.dat" channels="rytec.channels.xml.gz">
-	<description>Erotic</description>
-	<url>http://www.xmltvepg.nl/erotic/epg.dat.gz</url>	
-	<url>http://rytecepg.ipservers.eu/epg_data/erotic/epg.dat.gz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/erotic/epg.dat.gz</url>
-	<url>http://www.vuplus-community.net/rytec/erotic/epg.dat.gz</url>
-</source>
-<source type="epg.dat" channels="rytec.channels-finland.xml.gz">
-	<description>Finland</description>
-	<url>http://www.xmltvepg.nl/finland/epg.dat.gz</url>	
-	<url>http://rytecepg.ipservers.eu/epg_data/finland/epg.dat.gz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/finland/epg.dat.gz</url>
-	<url>http://www.vuplus-community.net/rytec/finland/epg.dat.gz</url>
-</source>
-<source type="epg.dat" channels="rytec.channels.xml.gz">
-	<description>France</description>
-	<url>http://www.xmltvepg.nl/csat/epg.dat.gz</url>	
-	<url>http://rytecepg.ipservers.eu/epg_data/csat/epg.dat.gz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/csat/epg.dat.gz</url>
-	<url>http://www.vuplus-community.net/rytec/csat/epg.dat.gz</url>
-</source>
-<source type="epg.dat" channels="rytec.channels.xml.gz">
-	<description>Germany/Austria/Swiss</description>
-	<url>http://www.xmltvepg.nl/germany/epg.dat.gz</url>	
-	<url>http://rytecepg.ipservers.eu/epg_data/germany/epg.dat.gz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/germany/epg.dat.gz</url>
-	<url>http://www.vuplus-community.net/rytec/germany/epg.dat.gz</url>
-</source>
-<source type="epg.dat" channels="rytec.channels.xml.gz">
-	<description>Greece</description>
-	<url>http://www.xmltvepg.nl/nova/epg.dat.gz</url>	
-	<url>http://rytecepg.ipservers.eu/epg_data/nova/epg.dat.gz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/nova/epg.dat.gz</url>
-	<url>http://www.vuplus-community.net/rytec/nova/epg.dat.gz</url>
-</source>
-<source type="epg.dat" channels="rytec.channels-greece-en.xml.gz">
-	<description>Greece in English</description>
-	<url>http://www.xmltvepg.nl/nova_en/epg.dat.gz</url>	
-	<url>http://rytecepg.ipservers.eu/epg_data/nova_en/epg.dat.gz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/nova_en/epg.dat.gz</url>
-	<url>http://www.vuplus-community.net/rytec/nova_en/epg.dat.gz</url>
-</source>
-<source type="epg.dat" channels="rytec.channels.xml.gz">
-	<description>Hungary</description>
-	<url>http://www.xmltvepg.nl/magyar/epg.dat.gz</url>	
-	<url>http://rytecepg.ipservers.eu/epg_data/magyar/epg.dat.gz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/magyar/epg.dat.gz</url>
-	<url>http://www.vuplus-community.net/rytec/magyar/epg.dat.gz</url>
-</source>
-<source type="epg.dat" channels="rytec.channels.xml.gz">
-	<description>Israel</description>
-	<url>http://www.xmltvepg.nl/osn_jsc/epg.dat.gz</url>	
-	<url>http://rytecepg.ipservers.eu/epg_data/osn_jsc/epg.dat.gz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/osn_jsc/epg.dat.gz</url>
-	<url>http://www.vuplus-community.net/rytec/osn_jsc/epg.dat.gz</url>
-</source>
-<source type="epg.dat" channels="rytec.channels.xml.gz">
-	<description>Italy</description>
-	<url>http://www.xmltvepg.nl/skyit/epg.dat.gz</url>	
-	<url>http://rytecepg.ipservers.eu/epg_data/skyit/epg.dat.gz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/skyit/epg.dat.gz</url>
-	<url>http://www.vuplus-community.net/rytec/skyit/epg.dat.gz</url>
-</source>
-<source type="epg.dat" channels="rytec.channels-norway.xml.gz">
-	<description>Norway</description>
-	<url>http://www.xmltvepg.nl/norway/epg.dat.gz</url>	
-	<url>http://rytecepg.ipservers.eu/epg_data/norway/epg.dat.gz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/norway/epg.dat.gz</url>
-	<url>http://www.vuplus-community.net/rytec/norway/epg.dat.gz</url>
-</source>
-<source type="epg.dat" channels="rytec.channels.xml.gz">
-	<description>Middle East</description>
-	<url>http://www.xmltvepg.nl/osn_jsc/epg.dat.gz</url>	
-	<url>http://rytecepg.ipservers.eu/epg_data/osn_jsc/epg.dat.gz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/osn_jsc/epg.dat.gz</url>
-	<url>http://www.vuplus-community.net/rytec/osn_jsc/epg.dat.gz</url>
-</source>
-<source type="epg.dat" channels="rytec.channels.xml.gz">
-	<description>Poland</description>
-	<url>http://www.xmltvepg.nl/polen/epg.dat.gz</url>	
-	<url>http://rytecepg.ipservers.eu/epg_data/polen/epg.dat.gz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/polen/epg.dat.gz</url>
-	<url>http://www.vuplus-community.net/rytec/polen/epg.dat.gz</url>
-</source>
-<source type="epg.dat" channels="rytec.channels.xml.gz">
-	<description>Serbia/Croatia/Montenegro</description>
-	<url>http://www.xmltvepg.nl/exyu/epg.dat.gz</url>
-	<url>http://rytecepg.ipservers.eu/epg_data/exyu/epg.dat.gz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/exyu/epg.dat.gz</url>
-	<url>http://www.vuplus-community.net/rytec/exyu/epg.dat.gz</url>
-</source>
-<source type="epg.dat" channels="rytec.channels.xml.gz">
-	<description>Slovak/Czech</description>
-	<url>http://www.xmltvepg.nl/skylink/epg.dat.gz</url>	
-	<url>http://rytecepg.ipservers.eu/epg_data/skylink/epg.dat.gz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/skylink/epg.dat.gz</url>
-	<url>http://www.vuplus-community.net/rytec/skylink/epg.dat.gz</url>
-</source>
-<source type="epg.dat" channels="rytec.channels-slovenia.xml.gz">
-	<description>Slovenia</description>
-	<url>http://www.xmltvepg.nl/exyu_slovenia/epg.dat.gz</url>	
-	<url>http://rytecepg.ipservers.eu/epg_data/exyu_slovenia/epg.dat.gz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/exyu_slovenia/epg.dat.gz</url>
-	<url>http://www.vuplus-community.net/rytec/exyu_slovenia/epg.dat.gz</url>
-</source>
-<source type="epg.dat" channels="rytec.channels.xml.gz">
-	<description>Spain</description>
-	<url>http://www.xmltvepg.nl/dplus/epg.dat.gz</url>	
-	<url>http://rytecepg.ipservers.eu/epg_data/dplus/epg.dat.gz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/dplus/epg.dat.gz</url>
-	<url>http://www.vuplus-community.net/rytec/dplus/epg.dat.gz</url>
-</source>
-<source type="epg.dat" channels="rytec.channels-sweden.xml.gz">
-	<description>Sweden</description>
-	<url>http://www.xmltvepg.nl/sweden/epg.dat.gz</url>	
-	<url>http://rytecepg.ipservers.eu/epg_data/sweden/epg.dat.gz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/sweden/epg.dat.gz</url>
-	<url>http://www.vuplus-community.net/rytec/sweden/epg.dat.gz</url>
-</source>
-<source type="epg.dat" channels="rytec.channels.xml.gz">
-	<description>UK Sat</description>
-	<url>http://www.xmltvepg.nl/uk/epg.dat.gz</url>	
-	<url>http://rytecepg.ipservers.eu/epg_data/uk/epg.dat.gz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/uk/epg.dat.gz</url>
-	<url>http://www.vuplus-community.net/rytec/uk/epg.dat.gz</url>
-</source>
 
 
-</sourcecat>
-
-<sourcecat sourcecatname="Rytec Middle East XMLTV">
-<source type="gen_xmltv" channels="rytec.channels.xml.gz">
-	<description>Middle East</description>
-	<url>http://www.xmltvepg.nl/rytecArabic.gz</url>	
-	<url>http://rytecepg.ipservers.eu/epg_data/rytecArabic.gz</url>
-	<url>http://rytecepg.wanwizard.eu/rytecArabic.gz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/rytecArabic.gz</url>
-	<url>http://www.vuplus-community.net/rytec/rytecArabic.gz</url>
-</source>
-</sourcecat>
-'<sourcecat sourcecatname="Rytec Israel XMLTV">
-<source type="gen_xmltv" channels="rytec.channels.xml.gz">
-	<description>Israel</description>
-	<url>http://www.xmltvepg.nl/rytecISR.gz</url>	
-	<url>http://rytecepg.ipservers.eu/epg_data/ISR.gz</url>
-	<url>http://rytecepg.wanwizard.eu/rytecISR.gz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/rytecISR.gz</url>
-	<url>http://www.vuplus-community.net/rytec/rytecISR.gz</url>
-</source>
-</sourcecat>
 <sourcecat sourcecatname="Turkey XMLTV">
 
 <channel name="digiturk.channels.xml.gz">
@@ -1956,16 +1457,7 @@ The description must be unique for each source, and is displayed on the UI.
 </source>
 </sourcecat>
 
-<sourcecat sourcecatname="Rytec Middle East XMLTV (xz version)">
-<source type="gen_xmltv" channels="rytec.channels.xml.xz">
-	<description>Middle East (xz)</description>
-	<url>http://www.xmltvepg.nl/rytecArabic.xz</url>	
-	<url>http://rytecepg.ipservers.eu/epg_data/rytecArabic.xz</url>
-	<url>http://rytecepg.wanwizard.eu/rytecArabic.xz</url>
-	<url>http://91.121.106.172/~rytecepg/epg_data/rytecArabic.xz</url>
-	<url>http://www.vuplus-community.net/rytec/rytecArabic.xz</url>
-</source>
+
 </sourcecat>
 
 -->
-
