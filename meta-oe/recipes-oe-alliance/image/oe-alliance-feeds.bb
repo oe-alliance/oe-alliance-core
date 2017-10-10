@@ -96,6 +96,7 @@ RDEPENDS_${PN} = " \
     openssh \
     openvpn \
     easy-rsa \
+    p7zip \
     packagegroup-base-samba \
     parted \
     pngquant \
