@@ -6,7 +6,7 @@ MODULE = "linux-3.14.28"
 
 inherit kernel machine_kernel_pr
 
-MACHINE_KERNEL_PR_append = "r2"
+MACHINE_KERNEL_PR_append = "r3"
 
 SRC_URI[md5sum] = "c1e96f702ca737630f5acb0dce2388e7"
 SRC_URI[sha256sum] = "72928012a7dbacbf95a371d9faa6800a20afd6b106958298cfc41028878aac4e"
@@ -25,7 +25,8 @@ SRC_URI += "http://impex-sat.de/gigablue/linux/gigablue-linux-${PV}-20170331.tar
 	file://0001-STV-Add-PLS-support.patch \
 	file://0001-STV-Add-SNR-Signal-report-parameters.patch \
 	file://linux_prevent_usb_dma_from_bmem.patch \
-    file://genksyms_fix_typeof_handling.patch \
+	file://genksyms_fix_typeof_handling.patch \
+	file://findkerneldevice.py \
 "
 
 S = "${WORKDIR}/linux-${PV}"
@@ -37,11 +38,12 @@ KERNEL_OBJECT_SUFFIX = "ko"
 KERNEL_IMAGEDEST = "tmp"
 KERNEL_OUTPUT = "arch/${ARCH}/boot/${KERNEL_IMAGETYPE}"
 
-FILES_kernel-image = "/${KERNEL_IMAGEDEST}/zImage"
+FILES_kernel-image = "/${KERNEL_IMAGEDEST}/zImage /${KERNEL_IMAGEDEST}/findkerneldevice.py"
 
 kernel_do_install_append() {
         install -d ${D}/${KERNEL_IMAGEDEST}
         install -m 0755 ${KERNEL_OUTPUT} ${D}/${KERNEL_IMAGEDEST}
+        install -m 0755 ${WORKDIR}/findkerneldevice.py ${D}/${KERNEL_IMAGEDEST}
 }
 
 kernel_do_compile() {
@@ -53,11 +55,14 @@ kernel_do_compile() {
 }
 
 pkg_postinst_kernel-image () {
-        if [ -d /proc/stb ] ; then
-                dd if=/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE} of=/dev/mmcblk0p3
+    if [ "x$D" == "x" ]; then
+        if [ -f /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE} ] ; then
+            python /${KERNEL_IMAGEDEST}/findkerneldevice.py
+            dd if=/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE} of=/dev/kernel
         fi
-        rm -f /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}
-        true
+    fi
+    rm -f /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}
+    true
 }
 
 pkg_postrm_kernel-image () {
