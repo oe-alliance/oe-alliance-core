@@ -1,5 +1,5 @@
 KV = "4.10.6"
-SRCDATE = "20170909"
+SRCDATE = "20171009"
 
 require airdigital-dvb-modules.inc
 
