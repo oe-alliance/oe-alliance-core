@@ -1,9 +1,9 @@
 require recovery.inc
 
-SRCREV = "44b55bfa99973ad362e58c4d21e5eef0e1f2db85"
+SRCREV = "22639116d31bdfada7907281cd64735bf4174599"
 
 inherit opendreambox-git
 
 BRANCH = "master"
 
-COMPATIBLE_MACHINE = "^(dm520|dm820|dm900|dm7080)$"
+COMPATIBLE_MACHINE = "^(dm520|dm820|dm900|dm920|dm7080)$"
