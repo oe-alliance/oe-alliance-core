@@ -7,14 +7,13 @@ require conf/license/license-close.inc
 PV = "${KV}+${SRCDATE}"
 PR = "r0"
 
-KV = "4.1.37"
-GCCREV = "6.3.0"
-SRCDATE = "20170918"
+KV = "4.9.9"
+SRCDATE = "20171010"
 
-SRC_URI[md5sum] = "665818a65559cb09fbb4cf007b8a253f"
-SRC_URI[sha256sum] = "db0c50fa38ef73fac52a7457bef062fdba2aa51b0af311ec08e6efb631926804"
+SRC_URI[md5sum] = "b834e20bc4896f05a389a557dc430806"
+SRC_URI[sha256sum] = "2115cd951103c2d04a8d7920149f6200227d2f2fd02741238e76a9cddf579fec"
 
-SRC_URI = "http://gi-et.info/${MACHINE}/${MACHINE_DRIVER}-drivers-${KV}-${GCCREV}-${SRCDATE}.zip"
+SRC_URI = "http://source.mynonpublic.com/xtrend/${MACHINE_DRIVER}-drivers-${KV}-${SRCDATE}.zip"
 
 S = "${WORKDIR}"
 

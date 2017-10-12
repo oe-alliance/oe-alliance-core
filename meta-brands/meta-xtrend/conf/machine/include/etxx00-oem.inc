@@ -18,6 +18,11 @@ ${@bb.utils.contains('MACHINEBUILD', 'gi11000', 'et1x000' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'beyonwizu4', 'beyonwiz/u4' , '', d)}\
 "
 
+MACHINE_DRIVER = "\
+${@bb.utils.contains('MACHINEBUILD', 'gi11000', 'et1x000' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'beyonwizu4', 'beyonwizu4' , '', d)}\
+"
+
 MTD_ROOTFS = "mmcblk0p4"
 MTD_KERNEL = "mmcblk0p3"
 KERNEL_FILE = "kernel.bin"
@@ -26,7 +31,7 @@ ROOTFS_FILE = "rootfs.tar.bz2"
 IMAGEDIR ?= "${MACHINE}"
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS = "\
-    et-dvb-modules-${MACHINE} \
+    et-dvb-modules-${MACHINE_DRIVER} \
     et-initrd-${MACHINE} \
     "
 
