@@ -1,14 +1,14 @@
-From 5c75e501d34b4cfe7d345105b1b48d7c526f0e97 Mon Sep 17 00:00:00 2001
+From 0d3b277d19137c4a0fdadfd1381f1c66515d1b0c Mon Sep 17 00:00:00 2001
 From: Athanasios Oikonomou <athoik@gmail.com>
 Date: Mon, 8 Feb 2016 22:14:31 +0200
 Subject: [PATCH] STV: Add SNR/Signal report parameters
 
 
 diff --git a/drivers/media/dvb-frontends/stv090x.c b/drivers/media/dvb-frontends/stv090x.c
-index 416b749..9639500 100644
+index 264c4b8..12fd3d0 100644
 --- a/drivers/media/dvb-frontends/stv090x.c
 +++ b/drivers/media/dvb-frontends/stv090x.c
-@@ -38,6 +38,18 @@
+@@ -41,6 +41,18 @@
  static unsigned int verbose;
  module_param(verbose, int, 0644);
  
@@ -27,7 +27,7 @@ index 416b749..9639500 100644
  /* internal params node */
  struct stv090x_dev {
  	/* pointer for internal params, one for each pair of demods */
-@@ -3670,7 +3682,10 @@ static int stv090x_read_signal_strength(struct dvb_frontend *fe, u16 *strength)
+@@ -3693,7 +3705,10 @@ static int stv090x_read_signal_strength(struct dvb_frontend *fe, u16 *strength)
  		str = 0;
  	else if (agc < stv090x_rf_tab[ARRAY_SIZE(stv090x_rf_tab) - 1].read)
  		str = -100;
@@ -39,7 +39,7 @@ index 416b749..9639500 100644
  
  	return 0;
  }
-@@ -3681,8 +3696,7 @@ static int stv090x_read_cnr(struct dvb_frontend *fe, u16 *cnr)
+@@ -3704,8 +3719,7 @@ static int stv090x_read_cnr(struct dvb_frontend *fe, u16 *cnr)
  	u32 reg_0, reg_1, reg, i;
  	s32 val_0, val_1, val = 0;
  	u8 lock_f;
@@ -49,7 +49,7 @@ index 416b749..9639500 100644
  
  	switch (state->delsys) {
  	case STV090x_DVBS2:
-@@ -3699,10 +3713,14 @@ static int stv090x_read_cnr(struct dvb_frontend *fe, u16 *cnr)
+@@ -3722,10 +3736,14 @@ static int stv090x_read_cnr(struct dvb_frontend *fe, u16 *cnr)
  				msleep(1);
  			}
  			val /= 16;
@@ -68,7 +68,7 @@ index 416b749..9639500 100644
  		}
  		break;
  
-@@ -3721,10 +3739,14 @@ static int stv090x_read_cnr(struct dvb_frontend *fe, u16 *cnr)
+@@ -3744,10 +3762,14 @@ static int stv090x_read_cnr(struct dvb_frontend *fe, u16 *cnr)
  				msleep(1);
  			}
  			val /= 16;
