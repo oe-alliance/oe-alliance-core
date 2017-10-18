@@ -535,7 +535,7 @@ CONFIG_PREVENT_FIRMWARE_BUILD=y
 CONFIG_FW_LOADER=y
 CONFIG_FIRMWARE_IN_KERNEL=y
 CONFIG_EXTRA_FIRMWARE="fdma_STx7105_0.elf fdma_STx7105_1.elf"
-CONFIG_EXTRA_FIRMWARE_DIR="/home/ziggy/E2/atv61/build-enviroment/builds/openatv/release/spark7162/tmp/work/spark7162-oe-linux/linux-fulan/2.6.32-r14.8/recipe-sysroot/lib/firmware"
+CONFIG_EXTRA_FIRMWARE_DIR="../integrated_firmware/"
 # CONFIG_SYS_HYPERVISOR is not set
 # CONFIG_CONNECTOR is not set
 CONFIG_MTD=y
