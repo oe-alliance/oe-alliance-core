@@ -19,7 +19,7 @@ DEPENDS = "openbh-version-info"
 RDEPENDS_${PN} = "\
     blackhole-base \
     blackholesocker \
-    busybox-cron \
+    virtual/cron \
     ca-certificates \    
     dvbsnoop \
     hddtemp \

@@ -11,6 +11,7 @@ SRC_URI = " \
     http://dreamboxupdate.com/download/kernel-patches/linux-dreambox-${PV}-${PATCHREV}.patch.xz;apply=yes;name=dream-patch \
     file://dvb_frontend-Multistream-support-3.4.patch \
     file://kernel-add-support-for-gcc6.patch \
+    file://genksyms_fix_typeof_handling.patch \
     file://defconfig \
 "
 SRC_URI[kernel.md5sum] = "967f72983655e2479f951195953e8480"
@@ -24,8 +25,11 @@ S = "${WORKDIR}/linux-${PV}"
 B = "${WORKDIR}/build"
 
 do_configure_prepend() {
-        sed -e "/^SUBLEVEL = /d" -i ${S}/Makefile
+    rm -rf ${STAGING_KERNEL_DIR}/.config
+    rm -rf ${STAGING_KERNEL_DIR}/.config.old
+    sed -e "/^SUBLEVEL = /d" -i ${S}/Makefile
 }
+
 
 require linux-dreambox2.inc
 require linux-extra-image.inc

@@ -5,7 +5,7 @@ KV = "3.12.4"
 
 inherit kernel machine_kernel_pr
 
-MACHINE_KERNEL_PR_append = ".2"
+MACHINE_KERNEL_PR_append = ".6"
 
 SRCDATE = "16092014"
 SRCDATE_ebox7358 = "17072014"
@@ -32,6 +32,7 @@ SRC_URI = "http://source.mynonpublic.com/ebox/${MACHINE}-linux-${KV}_${SRCDATE}.
     file://0001-STV-Add-SNR-Signal-report-parameters.patch \
     file://0001-stv090x-optimized-TS-sync-control.patch \
     file://blindscan2.patch \
+    file://genksyms_fix_typeof_handling.patch \
     "
 
 S = "${WORKDIR}/linux-${KV}"

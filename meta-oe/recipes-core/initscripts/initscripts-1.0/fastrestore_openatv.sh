@@ -10,10 +10,47 @@ LOG=/home/root/FastRestore.log
 restoreUserDB() {
 	$(python - <<END
 import sys
-#sys.path.append('/usr/lib/enigma2/python')
 sys.path.append('/usr/lib/enigma2/python/Plugins/SystemPlugins/SoftwareManager')
 from ShellCompatibleFunctions import restoreUserDB
 restoreUserDB()
+END
+	)
+}
+
+get_blacklist() {
+	BLACKLIST=$(python - <<END
+import sys
+sys.path.append('/usr/lib/enigma2/python/Plugins/SystemPlugins/SoftwareManager')
+import ShellCompatibleFunctions
+TMPLIST=ShellCompatibleFunctions.BLACKLISTED
+TMPLIST.insert(0, "")
+print " --exclude=".join(TMPLIST)
+END
+	)
+}
+
+get_backupset() {
+	backuplocation=$(python - <<END
+import sys
+sys.path.append('/usr/lib/enigma2/python')
+from boxbranding import getBoxType, getMachineBrand, getMachineName, getImageDistro
+boxtype = getBoxType()
+distro = getImageDistro()
+if boxtype in ('maram9', 'classm', 'axodin', 'axodinc', 'starsatlx', 'genius', 'evo', 'galaxym6') and not path.exists("/media/hdd/backup_%s_%s" % (distro, boxtype)):
+	backuplocation = '/media/backup/backup_'
+else:
+	backuplocation = '/media/hdd/backup_'
+print backuplocation+distro+"_"+boxtype
+END
+	)
+}
+
+get_rightset() {
+	RIGHTSET=$(python - <<END
+import sys
+sys.path.append('/usr/lib/enigma2/python/Plugins/SystemPlugins/SoftwareManager')
+import ShellCompatibleFunctions
+print ShellCompatibleFunctions.MANDATORY_RIGHTS
 END
 	)
 }
@@ -68,22 +105,6 @@ spinner() {
 	done
 }
 
-get_backupset() {
-	backuplocation=$(python - <<END
-import sys
-sys.path.append('/usr/lib/enigma2/python')
-from boxbranding import getBoxType, getMachineBrand, getMachineName, getImageDistro
-boxtype = getBoxType()
-distro = getImageDistro()
-if boxtype in ('maram9', 'classm', 'axodin', 'axodinc', 'starsatlx', 'genius', 'evo', 'galaxym6') and not path.exists("/media/hdd/backup_%s_%s" % (distro, boxtype)):
-	backuplocation = '/media/backup/backup_'
-else:
-	backuplocation = '/media/hdd/backup_'
-print backuplocation+distro+"_"+boxtype
-END
-	)
-}
-
 restore_mymetrix() {
 	python - <<END
 print "Not supported yet!"
@@ -104,19 +125,9 @@ get_backupset
 [ "x$LOG" != "x/dev/tty" ] && rm $LOG
 touch $LOG
 echo "Extracting saved settings from $backuplocation/enigma2settingsbackup.tar.gz" >> $LOG
-(busybox tar -xzvf $backuplocation/enigma2settingsbackup.tar.gz --exclude=etc/passwd --exclude=etc/shadow --exclude=etc/group -C $ROOTFS >>$LOG 2>>$LOG ; chown -R root:root /home/root /etc/auto.network /etc/default/dropbear /etc/dropbear >>$LOG 2>>$LOG ; chmod 600 /etc/auto.network /etc/dropbear/* /home/root/.ssh/* >>$LOG 2>>$LOG ; chmod 700 /home/root /home/root/.ssh >>$LOG 2>>$LOG) &
+(get_rightset ; get_blacklist ; busybox tar -C $ROOTFS -xzvf $backuplocation/enigma2settingsbackup.tar.gz ${BLACKLIST} >>$LOG 2>>$LOG ; eval ${RIGHTSET} >>$LOG 2>>$LOG ; restoreUserDB) &
 spinner $! "Settings "
 echo >>$LOG
-
-restoreUserDB
-
-SUNDTEK=$(ls -1 /media/hdd/backup/SundtekBackup/*.tar 2>/dev/null | tail -1)
-if [ -n "$SUNDTEK" ]; then
-	echo "Extracting saved Sundtek settings from /media/hdd/backup/SundtekBackup/${SUNDTEK}" >> $LOG
-	(busybox tar -xvf /media/hdd/backup/SundtekBackup/${SUNDTEK} -C $ROOTFS >>$LOG 2>>$LOG) &
-	spinner $! "Sundtek "
-	echo >>$LOG
-fi
 
 echo "Restarting network" >>$LOG
 (/etc/init.d/networking restart >>$LOG ; /etc/init.d/autofs restart >>$LOG ; sleep 3) &
@@ -159,8 +170,9 @@ done
 echo "Mounting all ..." >>$LOG
 mount -a >>$LOG 2>>$LOG
 mdev -s
-[ -e "${ROOTFS}etc/init.d/hostname.sh" ]  && . ${ROOTFS}etc/init.d/hostname.sh
-[ -e "${ROOTFS}etc/init.d/modload.sh" ]  && . ${ROOTFS}etc/init.d/modload.sh
+[ -e "${ROOTFS}etc/init.d/hostname.sh" ] && ${ROOTFS}etc/init.d/hostname.sh
+[ -e "${ROOTFS}etc/init.d/modload.sh" ] && ${ROOTFS}etc/init.d/modload.sh
+[ -e "${ROOTFS}etc/init.d/vuplus-platform-util" ] && [ -e "${ROOTFS}etc/init.d/softcam" ] && ${ROOTFS}etc/init.d/softcam restart
 echo >>$LOG
 echo "Done.">>$LOG
 echo -n "OpenATV" >&200

@@ -22,6 +22,7 @@ SRC_URI += "http://en3homeftp.net/pub/src/linux-3.14.28.tar.xz \
 	file://0001-STV-Add-SNR-Signal-report-parameters.patch \
 	file://0001-stv090x-optimized-TS-sync-control.patch \
 	file://blindscan2.patch \
+    file://genksyms_fix_typeof_handling.patch \
 	"
 
 S = "${WORKDIR}/linux"

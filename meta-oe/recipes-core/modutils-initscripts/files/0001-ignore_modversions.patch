@@ -1,0 +1,11 @@
+--- a/modutils.sh	2017-09-20 08:58:00.000000000 +0200
++++ b/modutils.sh	2017-10-19 02:54:49.626508993 +0200
+@@ -11,7 +11,7 @@
+ # Description:       Load the modules listed in /etc/modules.
+ ### END INIT INFO
+ 
+-LOAD_MODULE=modprobe
++LOAD_MODULE="modprobe --force-modversion"
+ [ -f /proc/modules ] || exit 0
+ [ -f /etc/modules ] || [ -d /etc/modules-load.d ] || exit 0
+ [ -e /sbin/modprobe ] || LOAD_MODULE=insmod

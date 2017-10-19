@@ -1,46 +1,34 @@
-require conf/machine/include/ceryon-oem.inc
+IMAGE_CLASSES += "ceryon-emmc_image_multi"
+
+MACHINE_FEATURES += "qthbbtv"
+DISTRO_FEATURES_remove = "directfb gtk-directfb"
+
+IMAGE_FSTYPES += "ceryon-emmc"
+IMAGE_ROOTFS_SIZE ?= "294912"
 
 TARGET_ARCH = "arm"
 DEFAULTTUNE = "cortexa15hf-neon-vfpv4"
-IMAGE_FSTYPES =+ "tar.bz2"
 
-require conf/machine/include/tune-cortexa15.inc
+PREFERRED_VERSION_linux-ceryon= "4.10.12"
+PREFERRED_VERSION_linux-libc-headers = "4.10"
 
-PREFERRED_VERSION_linux-ceryon = "3.14.28"
-PREFERRED_VERSION_linux-libc-headers = "3.13"
-#PREFERRED_VERSION_directfb = "1.7.7"
-PREFERRED_VERSION_flex = "2.5.39"
-
-
-MACHINE_FEATURES += " mmc emmc omb"
-
-GLIBC_EXTRA_OECONF = "--with-tls --with-__thread"
-
-IMAGE_CMD_tar_prepend = "\
+IMAGE_CMD_ceryon-emmc_append = "\
     mkdir -p ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}; \
-    ${@bb.utils.contains("MACHINE_FEATURES", "lcd220", "cp ${DEPLOY_DIR_IMAGE}/lcdsplash220.bin ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/lcdsplash.bin;" , "", d)} \
-    ${@bb.utils.contains("MACHINE_FEATURES", "lcd220", "cp ${DEPLOY_DIR_IMAGE}/lcdwarning220.bin ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/lcdwarning.bin;" , "", d)} \
-    ${@bb.utils.contains("MACHINE_FEATURES", "lcd220", "cp ${DEPLOY_DIR_IMAGE}/lcdwaitkey220.bin ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/lcdwaitkey.bin;" , "", d)} \
-    ${@bb.utils.contains("MACHINE_FEATURES", "bootsplash", "cp ${DEPLOY_DIR_IMAGE}/${BOOTLOGO_FILENAME} ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/${BOOTLOGO_FILENAME};" , "", d)} \
-    cp ${DEPLOY_DIR_IMAGE}/${MACHINE}_initrd_kernel.bin ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/initrd_kernel.bin; \
-    cp ${DEPLOY_DIR_IMAGE}/zImage ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/${KERNEL_FILE}; \
-    echo ${DISTRO_NAME}-${DISTRO_VERSION}.${BUILD_VERSION} > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/imageversion; \
-    echo "rename this file to 'force' to force an update without confirmation" > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/noforce; \
+    mv ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.emmc.img ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/disk.img; \
     cd ${IMAGE_ROOTFS}; \
     tar -cvf ${DEPLOY_DIR_IMAGE}/rootfs.tar -C ${IMAGE_ROOTFS} .; \
     mv ${DEPLOY_DIR_IMAGE}/rootfs.tar ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/rootfs.tar; \
     bzip2 ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/rootfs.tar; \
+    cp ${DEPLOY_DIR_IMAGE}/zImage ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/${KERNEL_FILE}; \
+    echo ${IMAGE_VER_STRING} > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/imageversion; \
     cd ${DEPLOY_DIR_IMAGE}; \
     zip ${IMAGE_NAME}_usb.zip ${IMAGEDIR}/*; \
-    rm -f ${DEPLOY_DIR_IMAGE}/*.rootfs.tar.bz2; \
-    rm -f ${DEPLOY_DIR_IMAGE}/.tar.bz2; \
+    rm -f ${DEPLOY_DIR_IMAGE}/*.ext4; \
     rm -f ${DEPLOY_DIR_IMAGE}/*.manifest; \
+    rm -f ${DEPLOY_DIR_IMAGE}/.ext4; \
     rm -f ${DEPLOY_DIR_IMAGE}/.manifest; \
     rm -Rf ${IMAGEDIR}; \
-"
+    "
 
-EXTRA_IMAGEDEPENDS = "\
-    ceryon-initrd-cfe-${MACHINE}"
-
-BBMASK = "meta-vuplus/recipes-graphics/"
-BBMASK += "meta-vuplus/recipes-webkit/"
+require conf/machine/include/tune-cortexa15.inc
+require conf/machine/include/ceryon-oem.inc

@@ -14,6 +14,8 @@ SRC_URI =+ "file://0001-set-iptv-download-timeout-0-to-disable-ifdsrc.patch \
 
 S = "${WORKDIR}/git/"
 
+inherit pkgconfig
+
 do_compile() {
     cd ${S}/gstplayer/gst-1.0
     ${CC} *.c ../common/*.c -I../common/ `pkg-config --cflags --libs gstreamer-1.0 gstreamer-pbutils-1.0` -o gstplayer_gst-1.0

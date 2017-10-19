@@ -72,7 +72,7 @@ PREFERRED_PROVIDER_virtual/kernel = "linux-ebox"
 PREFERRED_VERSION_linux-ebox = "3.12.4"
 PREFERRED_VERSION_linux-libc-headers = "3.12.4"
 
-GCCVERSION = "5.4%"
+GCCVERSION = "4.9%"
 
 KERNEL_IMAGETYPE = "vmlinux"
 KERNEL_OUTPUT = "${KERNEL_IMAGETYPE}"
@@ -104,7 +104,7 @@ IMAGE_CMD_ubi_append = "\
     rm -Rf ${IMAGEDIR}; \
     "
 
-MACHINE_FEATURES += "alsa dvbapi5 usbhost switchoff wifi 3dtv hdmicec boxmodel singlecore no-cl-svr omb feature1 feature2 blindscan-tbs"
+MACHINE_FEATURES += "alsa dvbapi5 usbhost switchoff wifi 3dtv hdmicec singlecore no-cl-svr omb blindscan-tbs"
 
 require conf/machine/include/tune-mips32.inc
 require conf/machine/include/soc-family.inc

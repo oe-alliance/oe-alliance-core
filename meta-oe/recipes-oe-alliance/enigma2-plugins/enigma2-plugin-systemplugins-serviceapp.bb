@@ -10,16 +10,15 @@ RREPLACES_${PN} = "enigma2-plugin-extensions-serviceapp"
 
 SRCREV = "${AUTOREV}"
 SRC_URI = " \
-    ${@bb.utils.contains('DISTRO_FEATURES', 'libsigc2', 'git://github.com/mx3L/serviceapp.git;branch=develop', 'git://github.com/mx3L/serviceapp.git;branch=master', d)} \
+    git://github.com/mx3L/serviceapp.git;branch=master \
+    file://0001-serviceapp-add-setQpipMode-function-recently-added-f.patch \
     "
 
 S = "${WORKDIR}/git"
 
 inherit autotools gitpkgv pythonnative pkgconfig gettext
 
-CXXFLAGS += "${@bb.utils.contains('DISTRO_FEATURES', 'libsigc2', '', ' -std=gnu++98', d)}"
-
-CXXFLAGS_append_sh4 = " -std=c++11"
+CXXFLAGS_append = " -std=c++11"
 
 PV = "0.5+git${SRCPV}"
 PKGV = "0.5+git${GITPKGV}"

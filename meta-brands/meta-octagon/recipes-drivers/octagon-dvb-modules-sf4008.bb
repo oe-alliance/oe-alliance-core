@@ -1,7 +1,7 @@
 KV = "4.1.37"
 GCCREV = "6.3.0"
-SRCDATE = "20170926"
+SRCDATE = "20170930"
 
 require octagon-dvb-modules.inc
-SRC_URI[md5sum] = "76910a32b590123f8e71420de6121c2d"
-SRC_URI[sha256sum] = "e9b1997499fb5e8946ab9bb7abdd657e816a8a6a7d7aa021f6a70d51d2e2ff65"
+SRC_URI[md5sum] = "0f696e7b916e8a3afce48acb4aae6991"
+SRC_URI[sha256sum] = "b2a3eed3df83f24826916278fbf2c208b784d2d4ec690c82901a307c28db4ee0"

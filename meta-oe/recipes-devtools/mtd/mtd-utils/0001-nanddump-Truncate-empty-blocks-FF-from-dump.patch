@@ -74,7 +74,7 @@
 +				if (pretty_print) {
 +					pretty_dump_to_buffer(readbuf + i, 
 +						PRETTY_ROW_SIZE, pretty_buf, PRETTY_BUF_LEN, true,  canonical, ofs + i);
-+					err = write(ofd, pretty_buf, strlen(pretty_buf));
++					err = ofd_write(ofd, pretty_buf, strlen(pretty_buf));
 +					if (err)
 +						goto closeall;
 +				}
@@ -86,7 +86,7 @@
 +						goto closeall;
 +					}
 +					else {
-+						err = write(ofd, readbuf + i, PRETTY_ROW_SIZE);
++						err = ofd_write(ofd, readbuf + i, PRETTY_ROW_SIZE);
 +						if (err)
 +							goto closeall;
 +					}

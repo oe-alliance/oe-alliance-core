@@ -13,7 +13,7 @@ SRC_URI[sha256sum] = "018d9792c6ba00400d7779568bc096cd1df2edb8d57501d3477c473465
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-MACHINE_KERNEL_PR_append = ".2"
+MACHINE_KERNEL_PR_append = ".3"
 
 SRC_URI = "http://impex-sat.de/gigablue/linux/gigablue-linux-${PV}-${SRCDATE}.tgz \
     file://defconfig \
@@ -47,6 +47,7 @@ SRC_URI = "http://impex-sat.de/gigablue/linux/gigablue-linux-${PV}-${SRCDATE}.tg
     file://0001-STV-Add-SNR-Signal-report-parameters.patch \
     file://0001-stv090x-optimized-TS-sync-control.patch \
     file://blindscan2.patch \
+    file://genksyms_fix_typeof_handling.patch \
         "
 
 S = "${WORKDIR}/linux-${KV}"

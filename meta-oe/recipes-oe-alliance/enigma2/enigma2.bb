@@ -163,7 +163,6 @@ GST_UGLY_RDEPS = "${@bb.utils.contains('GST_VERSION', '1.0', ' \
     gstreamer1.0-plugins-ugly-asf \
     gstreamer1.0-plugins-ugly-cdio \
     gstreamer1.0-plugins-ugly-dvdsub \
-    gstreamer1.0-plugins-ugly-mad \
     ', ' \
     gst-plugins-ugly-amrnb \
     gst-plugins-ugly-amrwbdec \
@@ -221,7 +220,6 @@ inherit autotools-brokensep gitpkgv pkgconfig pythonnative
 
 PV = "${IMAGE_VERSION}+git${SRCPV}"
 PKGV = "${IMAGE_VERSION}+git${GITPKGV}"
-PR = "r4"
 
 SRC_URI = "${ENIGMA2_URI}"
 
@@ -385,3 +383,7 @@ python populate_packages_prepend() {
     enigma2_podir = bb.data.expand('${datadir}/enigma2/po', d)
     do_split_packages(d, enigma2_podir, '^(\w+)/[a-zA-Z0-9_/]+.*$', 'enigma2-locale-%s', '%s', recursive=True, match_path=True, prepend=True, extra_depends="enigma2")
 }
+
+inherit binary-compress
+
+FILES_COMPRESS_openatv = "${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "${bindir}/enigma2", "", d)}"

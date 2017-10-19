@@ -20,6 +20,7 @@ SRC_URI += "http://source.mynonpublic.com/linux-azbox-${KV}-new-2.tar.bz2;name=a
     file://kernel-add-support-for-gcc6.patch \
     file://dvb_frontend-Multistream-support-3.3.patch \
     file://timeconst_perl5.patch \
+    file://genksyms_fix_typeof_handling.patch \
     "
 
 SRC_URI_append_azboxhd += "http://source.mynonpublic.com/azbox/initramfs-${MACHINE}-oe-core-${KV}-${SRCDATE}.tar.bz2;name=azbox-initrd-${MACHINE} \

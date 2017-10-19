@@ -1,4 +1,4 @@
-PR .= ".34"
+PR .= ".36"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 SRC_URI += " \
@@ -20,6 +20,23 @@ SRC_URI += " \
 # include/mtd/* we cannot build in parallel with mtd-utils
 DEPENDS += "mtd-utils"
 
+INITSCRIPT_PARAMS_${PN}-mdev = "start 04 S ."
+
+RDEPENDS_${PN} += "odhcp6c"
+
+RRECOMMENDS_${PN} += "${PN}-inetd"
+RRECOMMENDS_${PN} += "${PN}-telnetd"
+
+PACKAGES =+ "${PN}-cron"
+INITSCRIPT_PACKAGES += "${PN}-cron"
+INITSCRIPT_NAME_${PN}-cron = "crond.${BPN}"
+CONFFILES_${PN}-cron = "${sysconfdir}/cron"
+FILES_${PN}-cron = "${sysconfdir}/cron ${sysconfdir}/init.d/crond.${BPN}"
+RDEPENDS_${PN}-cron += "${PN}"
+PROVIDES_${PN}-cron += "virtual/cron"
+RPROVIDES_${PN}-cron += "virtual/cron"
+RCONFLICTS_${PN}-cron += "cronie"
+
 PACKAGES =+ "${PN}-inetd"
 INITSCRIPT_PACKAGES += "${PN}-inetd"
 INITSCRIPT_NAME_${PN}-inetd = "inetd.${BPN}" 
@@ -38,18 +55,10 @@ RDEPENDS_${PN}-telnetd += "${PN}"
 PROVIDES += "virtual/telnetd"
 RPROVIDES_${PN}-telnetd += "virtual/telnetd"
 
-RRECOMMENDS_${PN} += "${PN}-inetd"
-RRECOMMENDS_${PN} += "${PN}-telnetd"
-
-PACKAGES =+ "${PN}-cron"
-INITSCRIPT_PACKAGES += "${PN}-cron"
-INITSCRIPT_NAME_${PN}-cron = "${BPN}-cron"
-INITSCRIPT_PARAMS_${PN}-mdev = "start 04 S ."
-FILES_${PN}-cron = "${sysconfdir}/cron ${sysconfdir}/init.d/${BPN}-cron"
-RDEPENDS_${PN}-cron += "${PN}"
-RDEPENDS_${PN} += "odhcp6c"
-
 do_install_append() {
+    if grep "CONFIG_CROND=y" ${B}/.config; then
+       mv ${D}${sysconfdir}/init.d/${BPN}-cron ${D}${sysconfdir}/init.d/crond.${BPN}
+    fi
     if grep -q "CONFIG_CRONTAB=y" ${WORKDIR}/defconfig; then
         install -d ${D}${sysconfdir}/cron/crontabs
     fi

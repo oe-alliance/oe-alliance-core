@@ -30,9 +30,15 @@ do_install_append() {
 	ln -s libv3ddriver.so ${D}${libdir}/libGLESv2.so
 }
 
+do_install_append_sf5008() {
+	install -d ${D}${libdir}
+	install -m 0755 ${S}/libnxclient_local.so ${D}${libdir}/
+}
+
 FILES_${PN} = "/usr/lib/*"
 FILES_${PN}-dev = "/usr/include/*"
 
-RPROVIDES_${PN} = "libnxpl.so libnexus.so libv3ddriver.so libnxclient.so libGLESv2.so libEGL.so"
+RPROVIDES_${PN} = "virtual/libgles2 virtual/egl libnxpl.so libnexus.so libv3ddriver.so libnxclient.so libGLESv2.so libEGL.so"
+RPROVIDES_${PN}_sf5008 += "libnxclient_local.so"
 
 INSANE_SKIP_${PN} += "already-stripped dev-so"

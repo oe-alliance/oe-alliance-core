@@ -19,3 +19,5 @@ RPROVIDES_${PN} = "recovery-ui"
 INITSCRIPT_NAME = "recovery-ui"
 
 PRECOMPILED_NAME = "recovery-ui"
+
+PRECOMPILED_ARCH_dm920 = "dm900"

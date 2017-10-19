@@ -12,7 +12,7 @@ SRCDATE_yh62tc = "20170821"
 
 inherit kernel machine_kernel_pr
 
-MACHINE_KERNEL_PR_append = ".2"
+MACHINE_KERNEL_PR_append = ".4"
 
 SRC_URI[jj7362.md5sum] = "8e0385481057a214f0635c8b947dbb7d"
 SRC_URI[jj7362.sha256sum] = "6c782f1003a48c508832660b1053d68f3c616f5b1ece373d06125a0e7f47d23a"
@@ -62,6 +62,7 @@ SRC_URI += "http://source.mynonpublic.com/tripledot/${MACHINE}-linux-${PV}-base-
 	file://0001-STV-Add-SNR-Signal-report-parameters.patch \
 	file://0001-stv090x-optimized-TS-sync-control.patch \
 	file://blindscan2.patch \
+	file://genksyms_fix_typeof_handling.patch \
 	"
 
 S = "${WORKDIR}/linux-${PV}-base"

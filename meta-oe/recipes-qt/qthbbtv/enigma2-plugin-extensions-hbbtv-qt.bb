@@ -5,14 +5,14 @@ LICENSE = "CLOSED"
 require conf/license/license-close.inc
 PACKAGE_ARCH := "${MACHINE_ARCH}"
 
-SRCDATE = "20170626"
+SRCDATE = "20170928"
 
-SRC_URI = "file://qthbbtv-105.zip"
+SRC_URI = "file://qthbbtv-106.zip"
 
-PV = "1.0"
+PV = "1.1"
 PR = "${SRCDATE}"
 
-RDEPENDS_${PN}  = "qtwebkit"
+RDEPENDS_${PN}  = "qtwebkit virtual/libgles2"
 
 S = "${WORKDIR}/files"
 

@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://src/util/XMLUtils.cpp;beginline=2;endline=18;md5=dae8
 
 DEPENDS = "libtinyxml virtual/kodi"
 
-PV = "17.1.0"
+PV = "17.2.0"
 
 SRCREV = "c8188d82678fec6b784597db69a68e74ff4986b5"
 SRC_URI = "git://github.com/xbmc/kodi-platform.git \
@@ -21,8 +21,8 @@ inherit cmake pkgconfig
 EXTRA_OECMAKE = " -DCMAKE_INSTALL_PREFIX_TOOLCHAIN=${STAGING_DIR_TARGET} \
                   -DCMAKE_INSTALL_LIBDIR=${libdir} \
                   -DCMAKE_INSTALL_LIBDIR_NOARCH=${libdir} \
-                  -DCMAKE_MODULE_PATH=${STAGING_DIR_HOST}${libdir}/kodi \
-                  -DKODI_INCLUDE_DIR=${STAGING_INCDIR_HOST}/usr/include/kodi \
+                  -DCMAKE_MODULE_PATH=${STAGING_LIBDIR}/kodi \
+                  -DKODI_INCLUDE_DIR=${STAGING_INCDIR}/kodi \
                 "
 
 do_compile_prepend() {
@@ -37,4 +37,7 @@ RPROVIDES_${PN} += "libkodiplatform"
 FILES_${PN}-dev += "${libdir}/*platform"
 
 do_qa_staging() {
+}
+
+do_rm_work() {
 }
