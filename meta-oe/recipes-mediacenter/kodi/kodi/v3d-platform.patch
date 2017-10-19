@@ -695,7 +695,7 @@ index 0000000000..9ffc351bfd
 +{
 +  std::string name;
 +  SysfsUtils::GetString("/proc/stb/info/model", name);
-+  return name == "dm820" || name == "dm900" || name == "dm7080";
++  return name == "dm820" || name == "dm900" || name == "dm920" || name == "dm7080";
 +}
 +
 +void CEGLNativeTypeDreambox::Initialize()
