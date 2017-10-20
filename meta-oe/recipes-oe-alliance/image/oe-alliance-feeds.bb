@@ -125,12 +125,14 @@ RDEPENDS_${PN} = " \
     rsync \
     rtorrent \
     sabnzbd \
+    screen \
     smartmontools \
     smbnetfs \
     sshpass \
     streamproxy \
     strongswan \
     tcpdump \
+    tmux \
     transmission \
     ushare \
     vim \
