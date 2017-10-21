@@ -198,8 +198,6 @@ MACHINE_FEATURES += "3dtv alsa hdmicec switchoff videoenhancement skins1080 blin
 
 BOOTLOGO_FILENAME = "splash.bin"
 
-require conf/machine/include/soc-family.inc
-
 OEM_ARCH = "${MACHINEBUILD}"
 
 # Add "MACHINEBUILD" override for recipes
