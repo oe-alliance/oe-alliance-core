@@ -1,0 +1,12 @@
+diff --git a/Makefile b/Makefile
+index e1b1a41..d19df68 100644
+--- a/Makefile
++++ b/Makefile
+@@ -37,4 +37,7 @@ uninstall:
+ dist:
+ 	git archive --format=tar --prefix=bitstream-$(VERSION)/ master | bzip2 -9 > bitstream-$(VERSION).tar.bz2
+ 
++clean:
++	@echo "NOTHING TO CLEAN..."
++
+ .PHONY: install uninstall distcheck

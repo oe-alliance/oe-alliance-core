@@ -10,8 +10,11 @@ inherit gitpkgv
 PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"
 
-SRCREV = "67756eff2493173a15a88772837b6f1455b10f02"
-SRC_URI = "git://code.videolan.org/videolan/bitstream.git;protocol=http"
+SRCREV = "e9408996e7557e4a6b9f8e2e7ea1b1cb959bf837"
+SRC_URI = "git://code.videolan.org/videolan/bitstream.git;protocol=http \
+    file://makefile_clean.patch \
+"
+
 S = "${WORKDIR}/git"
 
 inherit autotools-brokensep pkgconfig

@@ -141,10 +141,10 @@ ${@bb.utils.contains('MACHINEBUILD', 'twinboxlcd', '7100s' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'twinboxlcdci5', '7105s' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'mbmicro', '7000s' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'mbmicrov2', '7005s' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'odin2hybrid', '7000s' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'odin2hybrid', '7300s' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'odinplus', '7400s' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'e4hd', '7000s' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'e4hdhybrid', '7300s' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'e4hdhybrid', '7000s' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'e4hdcombo', '7225s' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'singleboxlcd', '7100s' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'sf208', '7210s' , '', d)}\
@@ -197,8 +197,6 @@ MACHINE_FEATURES += "3dtv alsa hdmicec switchoff videoenhancement skins1080 blin
 "
 
 BOOTLOGO_FILENAME = "splash.bin"
-
-require conf/machine/include/soc-family.inc
 
 OEM_ARCH = "${MACHINEBUILD}"
 
