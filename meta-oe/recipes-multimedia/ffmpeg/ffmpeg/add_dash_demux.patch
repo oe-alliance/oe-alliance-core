@@ -1,60 +1,42 @@
-diff -uNr ffmpeg-3.3/configure ffmpeg-3.3_dash_demux/configure
---- ffmpeg-3.3/configure	Tue Apr 18 15:25:53 2017
-+++ ffmpeg-3.3_dash_demux/configure	Tue Apr 18 15:25:53 2017
-@@ -290,10 +290,11 @@
-                            Windows if openssl and gnutls are not used [autodetect]
-   --disable-sdl2           disable sdl2 [autodetect]
-   --disable-securetransport disable Secure Transport, needed for TLS support
+diff -uNr ffmpeg-3.3_orig/configure ffmpeg-3.3_dash_demux/configure
+--- ffmpeg-3.3_orig/configure	2016-12-06 00:28:58.000000000 +0100
++++ ffmpeg-3.3_dash_demux/configure	2017-10-22 14:30:41.170550486 +0200
+@@ -294,6 +294,7 @@
                             on OSX if openssl and gnutls are not used [autodetect]
+   --enable-x11grab         enable X11 grabbing (legacy) [no]
    --disable-xlib           disable xlib [autodetect]
 +  --disable-xml2           disable XML parsing using the C library libxml2 [autodetect]
    --disable-zlib           disable zlib [autodetect]
  
    The following libraries provide various hardware acceleration features:
-   --disable-audiotoolbox   disable Apple AudioToolbox code [autodetect]
-   --disable-cuda           disable dynamically linked Nvidia CUDA code [autodetect]
-@@ -1479,10 +1480,11 @@
-     schannel
-     sdl
-     sdl2
-     securetransport
+@@ -1557,6 +1558,7 @@
+     videotoolbox
+     x11grab
      xlib
 +    xml2
      zlib
  "
  
- EXTERNAL_LIBRARY_GPL_LIST="
-     avisynth
-@@ -2900,10 +2902,11 @@
- avi_demuxer_select="iso_media riffdec exif"
- avi_muxer_select="riffenc"
+@@ -2853,6 +2855,7 @@
+ avisynth_demuxer_select="riffdec"
  caf_demuxer_select="iso_media riffdec"
- caf_muxer_select="iso_media"
  dash_muxer_select="mp4_muxer"
 +dash_demuxer_select="xml2"
  dirac_demuxer_select="dirac_parser"
  dts_demuxer_select="dca_parser"
  dtshd_demuxer_select="dca_parser"
- dv_demuxer_select="dvprofile"
- dv_muxer_select="dvprofile"
-@@ -5706,10 +5709,11 @@
-     check_builtin sem_timedwait semaphore.h "sem_t *s; sem_init(s,0,0); sem_timedwait(s,0); sem_destroy(s)"
- 
+@@ -5637,6 +5640,7 @@
  disabled  zlib || check_lib  zlib.h      zlibVersion    -lz    || disable  zlib
  disabled bzlib || check_lib bzlib.h BZ2_bzlibVersion    -lbz2  || disable bzlib
  disabled  lzma || check_lib  lzma.h lzma_version_number -llzma || disable lzma
 +disabled  xml2 || check_lib libxml/xmlversion.h xmlCheckVersion -lxml2 || disable xml2
- 
+
  check_lib math.h sin -lm && LIBM="-lm"
  disabled crystalhd || check_lib "stdint.h libcrystalhd/libcrystalhd_if.h" DtsCrystalHDVersion -lcrystalhd || disable crystalhd
- 
- atan2f_args=2
-diff -uNr ffmpeg-3.3/libavformat/allformats.c ffmpeg-3.3_dash_demux/libavformat/allformats.c
---- ffmpeg-3.3/libavformat/allformats.c	2016-12-06 00:28:54.000000000 +0100
-+++ ffmpeg-3.3_dash_demux/libavformat/allformats.c	2017-01-31 23:46:22.850211062 +0100
-@@ -94,11 +94,11 @@
-     REGISTER_DEMUXER (CDG,              cdg);
-     REGISTER_DEMUXER (CDXL,             cdxl);
+diff -uNr ffmpeg-3.3_orig/libavformat/allformats.c ffmpeg-3.3_dash_demux/libavformat/allformats.c
+--- ffmpeg-3.3_orig/libavformat/allformats.c	2016-12-06 00:28:54.000000000 +0100
++++ ffmpeg-3.3_dash_demux/libavformat/allformats.c	2017-10-22 14:30:41.170550486 +0200
+@@ -100,7 +100,7 @@
      REGISTER_DEMUXER (CINE,             cine);
      REGISTER_DEMUXER (CONCAT,           concat);
      REGISTER_MUXER   (CRC,              crc);
@@ -63,12 +45,10 @@ diff -uNr ffmpeg-3.3/libavformat/allformats.c ffmpeg-3.3_dash_demux/libavformat/
      REGISTER_MUXDEMUX(DATA,             data);
      REGISTER_MUXDEMUX(DAUD,             daud);
      REGISTER_DEMUXER (DCSTR,            dcstr);
-     REGISTER_DEMUXER (DFA,              dfa);
-     REGISTER_MUXDEMUX(DIRAC,            dirac);
-diff -uNr ffmpeg-3.3/libavformat/dashdec.c ffmpeg-3.3_dash_demux/libavformat/dashdec.c
---- ffmpeg-3.3/libavformat/dashdec.c	1970-01-01 01:00:00.000000000 +0100
-+++ ffmpeg-3.3_dash_demux/libavformat/dashdec.c	2017-01-31 23:49:16.481109867 +0100
-@@ -0,0 +1,2006 @@
+diff -uNr ffmpeg-3.3_orig/libavformat/dashdec.c ffmpeg-3.3_dash_demux/libavformat/dashdec.c
+--- ffmpeg-3.3_orig/libavformat/dashdec.c	1970-01-01 01:00:00.000000000 +0100
++++ ffmpeg-3.3_dash_demux/libavformat/dashdec.c	2017-10-22 16:09:40.837356820 +0200
+@@ -0,0 +1,2065 @@
 +/*
 + * Dynamic Adaptive Streaming over HTTP demux
 + * Copyright (c) 2017 samsamsam@o2.pl based on HLS demux
@@ -90,7 +70,7 @@ diff -uNr ffmpeg-3.3/libavformat/dashdec.c ffmpeg-3.3_dash_demux/libavformat/das
 + * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 + */
 + 
-+ /* Code prepared for ffmpeg 2.8.9 and then ported to ffmpeg 3.2.2
++ /* Code prepared for ffmpeg 2.8.9 and then ported to ffmpeg 3.3
 +  * At now it allow to play one selected representation for audio and video components.
 +  * 
 +  */
@@ -117,6 +97,7 @@ diff -uNr ffmpeg-3.3/libavformat/dashdec.c ffmpeg-3.3_dash_demux/libavformat/das
 +/////////////////////////////////////////////////////////////////////////////
 +#include <time.h>
 +#include <unistd.h>
++#include <string.h>
 +
 +static struct tm* ResolveUTCDateTime(const char *dateTimeString)
 +{
@@ -248,6 +229,8 @@ diff -uNr ffmpeg-3.3/libavformat/dashdec.c ffmpeg-3.3_dash_demux/libavformat/das
 + */
 +struct representation {
 +    char *url_template;
++    char *url_template_pattern;
++    char *url_template_format;
 +    enum TemUrlType tmp_url_type;
 +    AVIOContext pb;
 +    AVIOContext *input;
@@ -384,6 +367,8 @@ diff -uNr ffmpeg-3.3/libavformat/dashdec.c ffmpeg-3.3_dash_demux/libavformat/das
 +        avformat_close_input(&pls->ctx);
 +    }
 +    
++    av_free(pls->url_template_pattern);
++    av_free(pls->url_template_format);
 +    av_free(pls->url_template);
 +    av_free(pls);
 +}
@@ -535,50 +520,61 @@ diff -uNr ffmpeg-3.3/libavformat/dashdec.c ffmpeg-3.3_dash_demux/libavformat/das
 +    return ret;
 +}
 +
-+static char *repl_template_str(const char * url, const char *marker)
++static int get_repl_pattern_and_format(const char *i_url, const char *i_marker, char **o_pattern, char **o_format)
 +{
-+    char *prefix = NULL;
-+    char *start = 0;
-+    char *end   = NULL;
-+    char *tmp_url = NULL;
-+    char *new_url = NULL;
-+    int marker_len;
++    int ret = -1;
 +    
-+    prefix = av_strdup(marker);
-+    marker_len = strlen(prefix)-1;
-+    prefix[marker_len] = '\0';
-+    
-+    start = strstr(url, prefix);
-+    if (!start)
-+        goto finish;
-+    end = strchr(start+1, '$');
-+    if (!end)
-+        goto finish;
++    if (NULL != strstr(i_url, i_marker)) {
++        *o_pattern = av_strdup(i_marker);
++        *o_format = av_strdup("%"PRId64);
++        ret = 0;
++    } else {
++        char *prefix = NULL;
++        char *start  = NULL;
++        char *end    = NULL;
++        int marker_len = 0;
++        int format_len = 0;
++        
++        prefix = av_strdup(i_marker);
++        marker_len = strlen(prefix)-1;
++        prefix[marker_len] = '\0';
++        
++        start = strstr(i_url, prefix);
++        if (!start)
++            goto finish;
++        end = strchr(start+1, '$');
++        if (!end)
++            goto finish;
 +
-+    if (start[marker_len] != '%')
-+        goto finish;
++        if (start[marker_len] != '%')
++            goto finish;
 +
-+    if (end[-1] != 'd')
-+        goto finish;
-+    
-+    tmp_url = av_mallocz(MAX_URL_SIZE);
-+    strncpy(tmp_url, url, start - url);
-+    strncat(tmp_url, start + marker_len, end - start - marker_len -1);
-+    strcat(tmp_url, PRId64);
-+    strcat(tmp_url, end+1);
++        if (end[-1] != 'd')
++            goto finish;
++        
++        format_len = end - start - marker_len - 1 + strlen(PRId64);
++        *o_format = av_mallocz(format_len+1);
++        strncpy(*o_format, start + marker_len, end - start - marker_len -1);
++        strcat(*o_format, PRId64);
++        
++        *o_pattern = av_mallocz(end - start + 2);
++        strncpy(*o_pattern, start, end - start + 1);
++        
++        ret = 0;
 +finish:
-+    av_free(prefix);
-+    new_url = repl_str(tmp_url ? tmp_url : url, marker, "%"PRId64);
-+    av_free(tmp_url);
-+    return new_url;
++        free(prefix);
++    }
++    
++    return ret;
 +}
 +
 +static char * get_content_url(xmlNodePtr *baseUrlNodes, int n_baseUrlNodes, xmlChar *rep_id_val, xmlChar *rep_bandwidth_val, xmlChar *val)
 +{
 +    char *tmp_str = av_mallocz(MAX_URL_SIZE);
 +    char *url = NULL;
-+    int i;
-+    for (i = 0; i < n_baseUrlNodes; ++i) {
++    int i = 0;
++    
++    for (; i < n_baseUrlNodes; ++i) {
 +        if (baseUrlNodes[i] && baseUrlNodes[i]->children && baseUrlNodes[i]->children->type == XML_TEXT_NODE) {
 +            xmlChar *text = xmlNodeGetContent(baseUrlNodes[i]->children);
 +            if (text) {
@@ -591,6 +587,8 @@ diff -uNr ffmpeg-3.3/libavformat/dashdec.c ffmpeg-3.3_dash_demux/libavformat/das
 +        }
 +    }
 +    
++    url = tmp_str;
++    
 +    if (val)
 +        strcat(tmp_str, (const char*)val);
 +        
@@ -600,8 +598,27 @@ diff -uNr ffmpeg-3.3/libavformat/dashdec.c ffmpeg-3.3_dash_demux/libavformat/das
 +        tmp_str = url;
 +    }
 +        
-+    if (rep_bandwidth_val && tmp_str)
-+        url = repl_str(tmp_str, "$Bandwidth$", (const char*)rep_bandwidth_val);
++    if (rep_bandwidth_val && tmp_str){
++        char *pFormat = NULL;
++        char *pPattern = NULL;
++        
++        if (0 == get_repl_pattern_and_format(tmp_str, "$Bandwidth$", &pPattern, &pFormat)) {
++            int64_t val = (int64_t)atoll((const char *)rep_bandwidth_val);
++            int size = snprintf(NULL, 0, pFormat, val); // calc needed buffer size
++            if (val > 0) {
++                char *tmp_val = av_mallocz(size + 1);
++                snprintf(tmp_val, size+1, pFormat, val);
++                
++                url = repl_str(tmp_str, pPattern, tmp_val);
++                av_free(tmp_val);
++                
++                av_free(tmp_str);
++                tmp_str = NULL;
++            }
++            av_free(pFormat);
++            av_free(pPattern);
++        }
++    }
 +    
 +    if (tmp_str != url)
 +        av_free(tmp_str);
@@ -661,6 +678,42 @@ diff -uNr ffmpeg-3.3/libavformat/dashdec.c ffmpeg-3.3_dash_demux/libavformat/das
 +    return type;
 +}
 +
++static void fill_timelines(struct representation *rep, xmlNodePtr *nodes, const int n_nodes)
++{
++    int i = 0;
++    for (; i < n_nodes; ++i) {
++        if (nodes[i]) {
++            xmlNodePtr segmentTimelineNode = findChildNodeByName(nodes[i], "SegmentTimeline");
++            if (segmentTimelineNode) {
++                segmentTimelineNode = xmlFirstElementChild(segmentTimelineNode);
++                while (segmentTimelineNode) {
++                    if (!xmlStrcmp(segmentTimelineNode->name, (const xmlChar *)"S")) {
++                        struct timeline *tml = av_mallocz(sizeof(struct timeline));
++                        xmlAttrPtr attr = segmentTimelineNode->properties;
++                        while(attr) {
++                            xmlChar *val = xmlGetProp(segmentTimelineNode, attr->name);
++                            
++                            if (!xmlStrcmp(attr->name, (const xmlChar *)"t"))
++                                tml->t = (int64_t)atoll((const char *)val);
++                            else if (!xmlStrcmp(attr->name, (const xmlChar *)"r"))
++                                tml->r =(int32_t) atoi((const char *)val);
++                            else if (!xmlStrcmp(attr->name, (const xmlChar *)"d"))
++                                tml->d = (int64_t)atoll((const char *)val);
++                            attr = attr->next;
++                            xmlFree(val);
++                        }
++                        
++                        dynarray_add(&rep->timelines, &rep->n_timelines, tml);
++                    }
++                    segmentTimelineNode = xmlNextElementSibling(segmentTimelineNode);
++                }
++                return;
++            }
++        }
++    }
++    return;
++}
++
 +static int parse_mainifest(AVFormatContext *s, const char *url, AVIOContext *in)
 +{
 +    DASHContext *c = s->priv_data;
@@ -712,11 +765,12 @@ diff -uNr ffmpeg-3.3/libavformat/dashdec.c ffmpeg-3.3_dash_demux/libavformat/das
 +        xmlNodePtr root_element = NULL;
 +        xmlNodePtr node = NULL;
 +        xmlNodePtr periodNode = NULL;
++        xmlNodePtr periodSegmentListNode = NULL;
 +        xmlNodePtr mpdBaseUrlNode = NULL;
 +        xmlNodePtr periodBaseUrlNode = NULL;
 +        xmlNodePtr adaptionSetNode = NULL;
 +        xmlAttrPtr attr = NULL;
-+        xmlChar * val  = NULL;
++        xmlChar *val  = NULL;
 +        uint32_t perdiodDurationSec = 0;
 +        uint32_t perdiodStartSec = 0;
 +        
@@ -820,10 +874,13 @@ diff -uNr ffmpeg-3.3/libavformat/dashdec.c ffmpeg-3.3_dash_demux/libavformat/das
 +        while (adaptionSetNode) {
 +            if (!xmlStrcmp(adaptionSetNode->name, (const xmlChar *)"BaseURL")) {
 +                periodBaseUrlNode = adaptionSetNode;
++            } else if (!xmlStrcmp(adaptionSetNode->name, (const xmlChar *)"SegmentList")) {
++                periodSegmentListNode = adaptionSetNode;
 +            } else if (!xmlStrcmp(adaptionSetNode->name, (const xmlChar *)"AdaptationSet")) {
 +                xmlNodePtr segmentTemplateNode = NULL;
 +                xmlNodePtr contentComponentNode = NULL;
 +                xmlNodePtr adaptionSetBaseUrlNode = NULL;
++                xmlNodePtr adaptionSetSegmentListNode = NULL;
 +                
 +                node = xmlFirstElementChild(adaptionSetNode);
 +                while (node) {
@@ -833,6 +890,8 @@ diff -uNr ffmpeg-3.3/libavformat/dashdec.c ffmpeg-3.3_dash_demux/libavformat/das
 +                        contentComponentNode = node;
 +                    } else if (!xmlStrcmp(node->name, (const xmlChar *)"BaseURL")) {
 +                        adaptionSetBaseUrlNode = node;
++                    } else if (!xmlStrcmp(node->name, (const xmlChar *)"SegmentList")) {
++                        adaptionSetSegmentListNode = node;
 +                    } else if (!xmlStrcmp(node->name, (const xmlChar *)"Representation")) {
 +                        xmlNodePtr representationNode = node;
 +                        xmlChar *rep_id_val = xmlGetProp(representationNode, "id");
@@ -862,7 +921,6 @@ diff -uNr ffmpeg-3.3/libavformat/dashdec.c ffmpeg-3.3_dash_demux/libavformat/das
 +                            xmlNodePtr representationSegmentListNode = findChildNodeByName(representationNode, "SegmentList");
 +                            reset_packet(&rep->pkt);
 +                            if (representationSegmentTemplateNode || segmentTemplateNode) {
-+                                xmlNodePtr segmentTimelineNode = NULL;
 +                                
 +                                xmlNodePtr segmentTemplatesTab[2] = {representationSegmentTemplateNode, segmentTemplateNode};
 +                                xmlChar *duration_val        = get_val_from_nodes_tab(segmentTemplatesTab,  2, "duration");
@@ -882,21 +940,20 @@ diff -uNr ffmpeg-3.3/libavformat/dashdec.c ffmpeg-3.3_dash_demux/libavformat/das
 +                                }
 +                                
 +                                if (media_val) {
-+                                    char * tmp_str = get_content_url(baseUrlNodes, 4, rep_id_val, rep_bandwidth_val, media_val);
++                                    char *tmp_str = get_content_url(baseUrlNodes, 4, rep_id_val, rep_bandwidth_val, media_val);
++                                    rep->tmp_url_type = TMP_URL_TYPE_UNSPECIFIED;
 +                                    if (tmp_str) {
-+                                        if (strstr(tmp_str, "$Number")) {
-+                                            rep->url_template = repl_template_str(tmp_str, "$Number$");
++                                        rep->url_template = tmp_str;
++                                        
++                                        if (strstr(tmp_str, "$Number") && 
++                                            0 == get_repl_pattern_and_format(tmp_str, "$Number$", &(rep->url_template_pattern), &(rep->url_template_format))) {
 +                                            //  A URL template is provided from which clients build a chunk list where the chunk URLs include chunk numbers (like index numbers).
 +                                            rep->tmp_url_type = TMP_URL_TYPE_NUMBER; // (Chunk) Number-Based.
-+                                        } else if (strstr(tmp_str, "$Time")) {
-+                                            rep->url_template = repl_template_str(tmp_str, "$Time$");
++                                        } else if (strstr(tmp_str, "$Time") &&
++                                                   0 == get_repl_pattern_and_format(tmp_str, "$Time$", &(rep->url_template_pattern), &(rep->url_template_format))) {
 +                                            // A URL template is provided from which clients build a chunk list where the chunk URLs include chunk start times.
 +                                            rep->tmp_url_type = TMP_URL_TYPE_TIME; // (CTime-Based.
-+                                        } else {
-+                                            rep->url_template = tmp_str;
-+                                            tmp_str = NULL;
-+                                        }
-+                                        av_free(tmp_str);
++                                        } 
 +                                    }
 +                                    xmlFree(media_val);
 +                                }
@@ -916,47 +973,21 @@ diff -uNr ffmpeg-3.3/libavformat/dashdec.c ffmpeg-3.3_dash_demux/libavformat/das
 +                                    xmlFree(startNumber_val);
 +                                }
 +                                
-+                                segmentTimelineNode = findChildNodeByName(representationSegmentTemplateNode, "SegmentTimeline");
-+                                if (!segmentTimelineNode) 
-+                                    segmentTimelineNode = findChildNodeByName(segmentTemplateNode, "SegmentTimeline");
-+                                
-+                                if (segmentTimelineNode) {
-+                                    segmentTimelineNode = xmlFirstElementChild(segmentTimelineNode);
-+                                    while (segmentTimelineNode) {
-+                                        if (!xmlStrcmp(segmentTimelineNode->name, (const xmlChar *)"S")) {
-+                                            struct timeline *tml = av_mallocz(sizeof(struct timeline));
-+                                            attr = segmentTimelineNode->properties;
-+                                            while(attr) {
-+                                                val = xmlGetProp(segmentTimelineNode, attr->name);
-+                                                
-+                                                if (!xmlStrcmp(attr->name, (const xmlChar *)"t"))
-+                                                    tml->t = (int64_t)atoll((const char *)val);
-+                                                else if (!xmlStrcmp(attr->name, (const xmlChar *)"r"))
-+                                                    tml->r =(int32_t) atoi((const char *)val);
-+                                                else if (!xmlStrcmp(attr->name, (const xmlChar *)"d"))
-+                                                    tml->d = (int64_t)atoll((const char *)val);
-+                                                attr = attr->next;
-+                                                xmlFree(val);
-+                                            }
-+                                            
-+                                            dynarray_add(&rep->timelines, &rep->n_timelines, tml);
-+                                        }
-+                                        segmentTimelineNode = xmlNextElementSibling(segmentTimelineNode);
-+                                    }
-+                                }
++                                fill_timelines(rep, segmentTemplatesTab, 2);
 +                            } else if (representationBaseUrlNode && !representationSegmentListNode) {
 +                                xmlNodePtr baseUrlNodes[4] = {mpdBaseUrlNode, periodBaseUrlNode, adaptionSetBaseUrlNode, representationBaseUrlNode};
 +                                struct segment *seg = av_mallocz(sizeof(struct segment));
 +                                seg->url = get_content_url(baseUrlNodes, 4, rep_id_val, rep_bandwidth_val, NULL);
 +                                seg->size = -1;
 +                                dynarray_add(&rep->segments, &rep->n_segments, seg);
-+                            } else if (!representationBaseUrlNode && representationSegmentListNode) {
++                            } else if (representationSegmentListNode) {
 +                               // TODO: https://www.brendanlong.com/the-structure-of-an-mpeg-dash-mpd.html
 +                               // http://www-itec.uni-klu.ac.at/dash/ddash/mpdGenerator.php?segmentlength=15&type=full
 +                                xmlNodePtr segmentUrlNode = NULL;
-+                                xmlChar *duration_val        = xmlGetProp(representationSegmentListNode, "duration");
-+                                xmlChar *timescale_val       = xmlGetProp(representationSegmentListNode, "timescale");
-+                                xmlChar *startNumber_val     = xmlGetProp(representationSegmentListNode, "startNumber");
++                                xmlNodePtr segmentListTab[3] = {representationSegmentListNode, adaptionSetSegmentListNode, periodSegmentListNode};
++                                xmlChar *duration_val        = get_val_from_nodes_tab(segmentListTab,  3, "duration");
++                                xmlChar *startNumber_val     = get_val_from_nodes_tab(segmentListTab,  3, "startNumber");
++                                xmlChar *timescale_val       = get_val_from_nodes_tab(segmentListTab,  3, "timescale");
 +                                
 +                                if (duration_val) {
 +                                    rep->segmentDuration = (int64_t) atoll((const char *)duration_val);
@@ -997,6 +1028,8 @@ diff -uNr ffmpeg-3.3/libavformat/dashdec.c ffmpeg-3.3_dash_demux/libavformat/das
 +                                    }
 +                                    segmentUrlNode = xmlNextElementSibling(segmentUrlNode);
 +                                }
++                                
++                                fill_timelines(rep, segmentListTab, 2);
 +                            } else {
 +                                free_representation(rep);
 +                                rep = NULL;
@@ -1156,13 +1189,14 @@ diff -uNr ffmpeg-3.3/libavformat/dashdec.c ffmpeg-3.3_dash_demux/libavformat/das
 +
 +        free_segment_list(rep_dest);
 +        
-+        if (rep_src->start_number > (rep_dest->start_number + rep_dest->n_segments))
++        if (rep_src->start_number > (rep_dest->start_number + rep_dest->cur_seq_no))
 +            rep_dest->cur_seq_no = 0;
 +        else
-+            rep_dest->cur_seq_no += rep_src->start_number - rep_dest->start_number;
++            rep_dest->cur_seq_no = rep_src->n_segments - ((rep_src->start_number + rep_src->n_segments) - (rep_dest->start_number + rep_dest->cur_seq_no));
 +        
 +        rep_dest->segments    = rep_src->segments;
 +        rep_dest->n_segments  = rep_src->n_segments;
++        rep_dest->start_number = rep_src->start_number;
 +        
 +        rep_dest->last_seq_no = calc_max_seg_no(rep_dest, c);
 +        
@@ -1262,7 +1296,7 @@ diff -uNr ffmpeg-3.3/libavformat/dashdec.c ffmpeg-3.3_dash_demux/libavformat/das
 +                num = pls->first_seq_no;
 +        }
 +        else {
-+        num = pls->first_seq_no + (((GetCurrentTimeInSec() - c->availabilityStartTimeSec) - c->presentationDelaySec) * pls->segmentTimescalce) / pls->segmentDuration;
++            num = pls->first_seq_no + (((GetCurrentTimeInSec() - c->availabilityStartTimeSec) - c->presentationDelaySec) * pls->segmentTimescalce) / pls->segmentDuration;
 +        }
 +    } else {
 +        num = pls->first_seq_no;
@@ -1285,28 +1319,27 @@ diff -uNr ffmpeg-3.3/libavformat/dashdec.c ffmpeg-3.3_dash_demux/libavformat/das
 +{
 +    int64_t num = 0;
 +
-+        if (pls->n_segments) {
-+            num = pls->first_seq_no + pls->n_segments - 1;
-+        } else if (pls->n_timelines) {
-+            int i = 0;
-+            num = pls->first_seq_no + pls->n_timelines - 1;
-+            for (i=0; i<pls->n_timelines; ++i) {
-+                num += pls->timelines[i]->r;
-+            }
++    if (pls->n_segments) {
++        num = pls->first_seq_no + pls->n_segments - 1;
++    } else if (pls->n_timelines) {
++        int i = 0;
++        num = pls->first_seq_no + pls->n_timelines - 1;
++        for (i=0; i<pls->n_timelines; ++i) {
++            num += pls->timelines[i]->r;
 +        }
++    }
 +    else if (c->is_live) {
 +        num = pls->first_seq_no + (((GetCurrentTimeInSec() - c->availabilityStartTimeSec)) * pls->segmentTimescalce)  / pls->segmentDuration;
 +    }
-+        else {
-+            num = pls->first_seq_no + (c->mediaPresentationDurationSec * pls->segmentTimescalce) / pls->segmentDuration;
-+        }
-+            
++    else {
++        num = pls->first_seq_no + (c->mediaPresentationDurationSec * pls->segmentTimescalce) / pls->segmentDuration;
++    }
++
 +    return num;
 +}
 +
 +static struct segment *get_current_segment(struct representation *pls)
 +{
-+    char *tmp_str = NULL;
 +    struct segment *seg = NULL;
 +    DASHContext *c = pls->parent->priv_data;
 +    
@@ -1353,18 +1386,24 @@ diff -uNr ffmpeg-3.3/libavformat/dashdec.c ffmpeg-3.3_dash_demux/libavformat/das
 +    
 +    if (seg) {
 +        if (pls->tmp_url_type != TMP_URL_TYPE_UNSPECIFIED) {
-+            int64_t tmp_val = pls->tmp_url_type == TMP_URL_TYPE_NUMBER ? pls->cur_seq_no : get_segment_start_time_based_on_timeline(pls, pls->cur_seq_no);
-+            tmp_str = av_mallocz(MAX_URL_SIZE);
-+            snprintf(tmp_str, MAX_URL_SIZE-1, pls->url_template, (int64_t)tmp_val);
-+            seg->url = av_strdup(tmp_str);
-+        } else {
++            int64_t val = pls->tmp_url_type == TMP_URL_TYPE_NUMBER ? pls->cur_seq_no : get_segment_start_time_based_on_timeline(pls, pls->cur_seq_no);
++            int size = snprintf(NULL, 0, pls->url_template_format, val); // calc needed buffer size
++            
++            if (size > 0) {
++                char *tmp_val = av_mallocz(size + 1);
++                snprintf(tmp_val, size+1, pls->url_template_format, val);
++                seg->url = repl_str(pls->url_template, pls->url_template_pattern, tmp_val);
++                av_free(tmp_val);
++            }
++        } 
++        
++        if (!seg->url) {
 +            av_log(pls->parent, AV_LOG_ERROR, "Unable to resolve template url '%s'\n", pls->url_template);
 +            seg->url = av_strdup(pls->url_template);
 +        }
 +        seg->size = -1;
 +    }
 +    
-+    av_free(tmp_str);
 +    return seg;
 +}
 +
@@ -1386,7 +1425,7 @@ diff -uNr ffmpeg-3.3/libavformat/dashdec.c ffmpeg-3.3_dash_demux/libavformat/das
 +    if (mode == READ_COMPLETE) {
 +        ret = avio_read(pls->input, buf, buf_size);
 +        if (ret != buf_size)
-+            av_log(NULL, AV_LOG_ERROR, "Could not read complete segment.\n");
++            av_log(NULL, AV_LOG_ERROR, "Could not read complete segment buf_size[%d] ret[%d].\n", buf_size, ret);
 +    } else if (buf_size > 0)
 +        ret = avio_read(pls->input, buf, buf_size);
 +    else
@@ -1428,7 +1467,7 @@ diff -uNr ffmpeg-3.3/libavformat/dashdec.c ffmpeg-3.3_dash_demux/libavformat/das
 +    if (ret < 0) {
 +        goto cleanup;
 +    }
-+
++    
 +    /* Seek to the requested position. If this was a HTTP request, the offset
 +     * should already be where want it to, but this allows e.g. local testing
 +     * without a HTTP server. */
@@ -1595,7 +1634,7 @@ diff -uNr ffmpeg-3.3/libavformat/dashdec.c ffmpeg-3.3_dash_demux/libavformat/das
 +                sleep(1);
 +            }
 +            else {
-+            v->cur_seq_no += 1;
++                v->cur_seq_no += 1;
 +            }
 +            goto restart;
 +        }
@@ -1627,9 +1666,9 @@ diff -uNr ffmpeg-3.3/libavformat/dashdec.c ffmpeg-3.3_dash_demux/libavformat/das
 +     * Maybe we should restart context every few segments?
 +     */
 +    if (!v->is_restart_needed)
-+    v->cur_seq_no += 1;
++        v->cur_seq_no += 1;
 +    v->is_restart_needed = 1;
-+
++    
 +    // ff_format_io_close(v->parent, &v->input);
 +    // v->cur_seq_no += 1;
 +    // goto restart;
@@ -1663,7 +1702,7 @@ diff -uNr ffmpeg-3.3/libavformat/dashdec.c ffmpeg-3.3_dash_demux/libavformat/das
 +                          int flags, AVDictionary **opts)
 +{
 +    av_log(s, AV_LOG_ERROR,
-+           "A HDS playlist item '%s' referred to an external file '%s'. "
++           "A DASH playlist item '%s' referred to an external file '%s'. "
 +           "Opening this file was forbidden for security reasons\n",
 +           s->filename, url);
 +    return AVERROR(EPERM);
@@ -1889,15 +1928,15 @@ diff -uNr ffmpeg-3.3/libavformat/dashdec.c ffmpeg-3.3_dash_demux/libavformat/das
 +
 +    if (cur->ctx) {
 +        while (!ff_check_interrupt(c->interrupt_callback) && ret == 0) {
-+        ret = av_read_frame(cur->ctx, &cur->pkt);
++            ret = av_read_frame(cur->ctx, &cur->pkt);
 +            
-+        if (0 == ret) {
-+            /* If we got a packet, return it */
-+            *pkt = cur->pkt;
-+            cur->cur_timestamp = av_rescale(pkt->pts, (int64_t)cur->ctx->streams[0]->time_base.num * 90000, cur->ctx->streams[0]->time_base.den);
-+            pkt->stream_index = cur->stream_index;
-+            reset_packet(&cur->pkt);
-+            return 0;
++            if (0 == ret) {
++                /* If we got a packet, return it */
++                *pkt = cur->pkt;
++                cur->cur_timestamp = av_rescale(pkt->pts, (int64_t)cur->ctx->streams[0]->time_base.num * 90000, cur->ctx->streams[0]->time_base.den);
++                pkt->stream_index = cur->stream_index;
++                reset_packet(&cur->pkt);
++                return 0;
 +            } 
 +            
 +            reset_packet(&cur->pkt);
@@ -2075,18 +2114,14 @@ diff -uNr ffmpeg-3.3/libavformat/dashdec.c ffmpeg-3.3_dash_demux/libavformat/das
 +    .read_seek      = dash_read_seek,
 +    .flags          = AVFMT_NO_BYTE_SEEK,
 +};
-diff -uNr ffmpeg-3.3/libavformat/Makefile ffmpeg-3.3_dash_demux/libavformat/Makefile
---- ffmpeg-3.3/libavformat/Makefile	2016-12-06 00:28:54.000000000 +0100
-+++ ffmpeg-3.3_dash_demux/libavformat/Makefile	2017-01-31 23:46:22.854211062 +0100
-@@ -132,10 +132,11 @@
- OBJS-$(CONFIG_CONCAT_DEMUXER)            += concatdec.o
- OBJS-$(CONFIG_CRC_MUXER)                 += crcenc.o
+diff -uNr ffmpeg-3.3_orig/libavformat/Makefile ffmpeg-3.3_dash_demux/libavformat/Makefile
+--- ffmpeg-3.3_orig/libavformat/Makefile	2016-12-06 00:28:54.000000000 +0100
++++ ffmpeg-3.3_dash_demux/libavformat/Makefile	2017-10-22 14:30:41.170550487 +0200
+@@ -134,6 +134,7 @@
  OBJS-$(CONFIG_DATA_DEMUXER)              += rawdec.o
- OBJS-$(CONFIG_DATA_MUXER)                += rawenc.o
+ OBJS-$(CONFIG_DATA_MUXER)                += rawdec.o
  OBJS-$(CONFIG_DASH_MUXER)                += dashenc.o
 +OBJS-$(CONFIG_DASH_DEMUXER)              += dashdec.o
  OBJS-$(CONFIG_DAUD_DEMUXER)              += dauddec.o
  OBJS-$(CONFIG_DAUD_MUXER)                += daudenc.o
  OBJS-$(CONFIG_DCSTR_DEMUXER)             += dcstr.o
- OBJS-$(CONFIG_DFA_DEMUXER)               += dfa.o
- OBJS-$(CONFIG_DIRAC_DEMUXER)             += diracdec.o rawdec.o
