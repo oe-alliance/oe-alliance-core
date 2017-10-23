@@ -4,14 +4,14 @@ LICENSE = "LGPLv2.1"
 LIC_FILES_CHKSUM = "file://LICENSE.TXT;md5=4fbd65380cdd255951079008b364516c"
 
 DEPENDS += "libxml2 zlib python swig-native curl"
-RDEPENDS_${PN} += "libcurl enigma2"
+RDEPENDS_${PN} += "libcurl enigma2 python-compression python-lzma xz"
 
 inherit gitpkgv
 
 SRCREV = "${AUTOREV}"
-PV = "0.8.2+gitr${SRCPV}"
-PKGV = "0.8.2+gitr${GITPKGV}"
-PR = "r6"
+PV = "0.8.4+gitr${SRCPV}"
+PKGV = "0.8.4+gitr${GITPKGV}"
+PR = "r8"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 

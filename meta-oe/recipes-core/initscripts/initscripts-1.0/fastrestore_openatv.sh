@@ -105,12 +105,6 @@ spinner() {
 	done
 }
 
-restore_mymetrix() {
-	python - <<END
-print "Not supported yet!"
-END
-}
-
 get_restore_mode
 
 [ $fast -eq 1 ] || exit 0
@@ -125,7 +119,7 @@ get_backupset
 [ "x$LOG" != "x/dev/tty" ] && rm $LOG
 touch $LOG
 echo "Extracting saved settings from $backuplocation/enigma2settingsbackup.tar.gz" >> $LOG
-(get_rightset ; get_blacklist ; busybox tar -C $ROOTFS -xzvf $backuplocation/enigma2settingsbackup.tar.gz ${BLACKLIST} >>$LOG 2>>$LOG ; eval ${RIGHTSET} >>$LOG 2>>$LOG ; restoreUserDB) &
+(get_rightset ; get_blacklist ; busybox tar -C $ROOTFS -xzvf $backuplocation/enigma2settingsbackup.tar.gz ${BLACKLIST} >>$LOG 2>>$LOG ; eval ${RIGHTSET} >>$LOG 2>>$LOG ; restoreUserDB ; touch /tmp/restore_skins ) &
 spinner $! "Settings "
 echo >>$LOG
 
@@ -133,13 +127,6 @@ echo "Restarting network" >>$LOG
 (/etc/init.d/networking restart >>$LOG ; /etc/init.d/autofs restart >>$LOG ; sleep 3) &
 spinner $! "Network "
 echo >>$LOG
-
-if grep -q "config.skin.primary_skin=MetrixHD/skin.MySkin.xml" ${ROOTFS}etc/enigma2/settings 2>/dev/null; then
-	echo "Restoring MyMetrix Skin settings ..." >>$LOG
-	(restore_mymetrix >>$LOG) &
-	spinner $! "MyMetrix "
-	echo >>$LOG
-fi
 
 if [ $plugins -eq 1 ] && [ -e ${ROOTFS}tmp/installed-list.txt ]; then
 	echo "Re-installing previous plugins" >> $LOG
@@ -172,10 +159,9 @@ mount -a >>$LOG 2>>$LOG
 mdev -s
 [ -e "${ROOTFS}etc/init.d/hostname.sh" ] && ${ROOTFS}etc/init.d/hostname.sh
 [ -e "${ROOTFS}etc/init.d/modload.sh" ] && ${ROOTFS}etc/init.d/modload.sh
-[ -e "${ROOTFS}etc/init.d/vuplus-platform-util" ] && [ -e "${ROOTFS}etc/init.d/softcam" ] && ${ROOTFS}etc/init.d/softcam restart
+[ -e "${ROOTFS}etc/init.d/softcam" ] && ${ROOTFS}etc/init.d/softcam restart
 echo >>$LOG
 echo "Done.">>$LOG
 echo -n "OpenATV" >&200
 flock -u 200
 exit 0
-
