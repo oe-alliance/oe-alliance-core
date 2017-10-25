@@ -49,3 +49,7 @@ FILES_libwvstreams-extras     = "${libdir}/libwvbase.so.* ${libdir}/libwvstreams
 FILES_libwvstreams-extras-dbg = "${libdir}/.debug/libwvbase.so.* ${libdir}/.debug/libwvstreams.so.*"
 
 FILES_${PN}-valgrind = "${libdir}/valgrind/wvstreams.supp"
+
+PACKAGES =+ "${PN}-testrun"
+FILES_${PN}-testrun = "${bindir}/wvtestrun"
+RDEPENDS_${PN}-testrun_prepend = "${PN} perl "
