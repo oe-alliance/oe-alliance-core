@@ -5,9 +5,7 @@ PRIORITY = "optional"
 LICENSE = "LGPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=6e29c688d912da12b66b73e32b03d812"
 
-PR = "r1"
-
-DEPENDS = "libcdio virtual/gettext"
+DEPENDS = "libcdio gettext-native"
 
 SRC_URI = "http://downloads.sourceforge.net/${PN}/${P}.tar.bz2"
 
