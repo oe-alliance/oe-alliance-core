@@ -55,6 +55,10 @@ EXTRA_OECONF += "ac_cv_path_KRB5_CONFIG=no \
 LDFLAGS += "-lpthread -L${STAGING_LIBDIR}"
 
 do_install_append() {
+    perl -i -pe 's:#!.+/perl$:#!/usr/bin/perl:g' ${D}${bindir}/apple_dump
+    perl -i -pe 's:#!.+/perl$:#!/usr/bin/perl:g' ${D}${bindir}/asip-status.pl
+    perl -i -pe 's:#!.+/perl$:#!/usr/bin/perl:g' ${D}${bindir}/cnid2_create
+    perl -i -pe 's:#!.+/perl$:#!/usr/bin/perl:g' ${D}${bindir}/macusers
     install -D -m 0755 ${WORKDIR}/init ${D}${sysconfdir}/init.d/atalk
     install -D -m 0644 ${WORKDIR}/netatalk.conf ${D}${sysconfdir}/netatalk/netatalk.conf
     install -D -m 0644 ${WORKDIR}/AppleVolumes.default ${D}${sysconfdir}/netatalk/AppleVolumes.default
