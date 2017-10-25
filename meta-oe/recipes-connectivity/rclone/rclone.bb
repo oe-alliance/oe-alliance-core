@@ -34,13 +34,13 @@ SRC_URI = "git://${GO_IMPORT}.git;protocol=https;destsuffix=${PN}-${PV}/src/${GO
            file://COPYING"
 
 do_configure() {
-    cd ./src/${GO_IMPORT}
+    cd ${S}/src/${GO_IMPORT}
     export GOPATH=${WORKDIR}/${PN}-${PV}
     go get
 }
 
 do_compile() {
-    cd ./src/${GO_IMPORT}
+    cd ${S}/src/${GO_IMPORT}
     export GOPATH=${WORKDIR}/${PN}-${PV}
     go build
 }
