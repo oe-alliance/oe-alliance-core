@@ -2,7 +2,7 @@ DESCRIPTION = "A Linux file system driver that allows you to mount a WebDAV serv
 SECTION = "network"
 PRIORITY = "optional"
 HOMEPAGE = "http://dav.sourceforge.net"
-DEPENDS = "virtual/gettext neon"
+DEPENDS = "gettext-native neon"
 RRECOMMENDS_${PN} = "kernel-module-coda"
 LICENSE = "GPLv3"
 LIC_FILES_CHKSUM = "file://COPYING;md5=8f0e2cd40e05189ec81232da84bd6e1a"
