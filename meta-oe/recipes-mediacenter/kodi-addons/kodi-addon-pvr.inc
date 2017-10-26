@@ -53,7 +53,7 @@ do_install_append() {
 # Doesn't get added automagically, dlopen()?
 RDEPENDS_${PN} += "libkodiplatform"
 
-INSANE_SKIP_${PN} = "dev-so"
+INSANE_SKIP_${PN} = "dev-so file-rdeps"
 FILES_${PN} += "${datadir}/kodi"
 FILES_${PN}-dbg += "${datadir}/kodi/addons/*/.debug/"
 
