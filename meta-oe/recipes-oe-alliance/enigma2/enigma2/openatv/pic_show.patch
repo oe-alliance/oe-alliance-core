@@ -24,14 +24,14 @@ diff -Naur a/lib/dvb/decoder.cpp b/lib/dvb/decoder.cpp
  	eDebug("Video Device: %s", filename);
  	if (demux)
 @@ -1257,7 +1255,7 @@
- 				else
- 					streamtype = VIDEO_STREAMTYPE_MPEG2;
- 
+ 				if (ioctl(m_video_clip_fd, VIDEO_SELECT_SOURCE, 0xff) < 0)
+ 					eDebug("[eTSMPEGDecoder] VIDEO_SELECT_SOURCE MEMORY failed: %m");
+ #else
 -				if (ioctl(m_video_clip_fd, VIDEO_SELECT_SOURCE, VIDEO_SOURCE_MEMORY) < 0)
 +				if (ioctl(m_video_clip_fd, VIDEO_SELECT_SOURCE, 2) < 0)
  					eDebug("[eTSMPEGDecoder] VIDEO_SELECT_SOURCE MEMORY failed: %m");
+ #endif
  #if not defined(__sh__)
- 				if (ioctl(m_video_clip_fd, VIDEO_SET_STREAMTYPE, streamtype) < 0)
 @@ -1304,9 +1302,7 @@
  	if (m_video_clip_fd >= 0)
  	{
