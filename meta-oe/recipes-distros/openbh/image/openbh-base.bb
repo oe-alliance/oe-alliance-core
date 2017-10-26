@@ -8,7 +8,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "${IMAGE_VERSION}"
-PR = "r5"
+PR = "r6"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
@@ -17,6 +17,7 @@ inherit packagegroup
 DEPENDS = "openbh-version-info"
 
 RDEPENDS_${PN} = "\
+    bash \
     blackhole-base \
     blackholesocker \
     virtual/cron \
@@ -35,7 +36,7 @@ RDEPENDS_${PN} = "\
     openssh-sftp-server \
     openvpn \
     python-imaging \
+    python-service-identity \
     rtmpdump \
     ${@bb.utils.contains("TUNE_FEATURES", "armv", "glibc-compat", "", d)} \
-    python-service-identity \
     "
