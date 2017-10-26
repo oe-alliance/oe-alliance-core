@@ -1,5 +1,3 @@
-PR .= ".1"
-
 FILESEXTRAPATHS_prepend := "${THISDIR}/${P}:"
 
 DEPENDS += "openssl"
@@ -10,7 +8,6 @@ SRC_URI += " \
         file://ifupdown.sh \
         file://wpa_action \
         file://wpa_action.8 \
-        file://key-replay-cve-multiple.patch \
 "
 
 do_configure_append() {
