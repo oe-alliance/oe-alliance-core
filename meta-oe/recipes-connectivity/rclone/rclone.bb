@@ -18,14 +18,15 @@ The local filesystem"
 HOMEPAGE = "https://rclone.org/"
 
 DEPENDS = "go-cross-${TARGET_ARCH}"
+RDEPENDS_${PN} += "bash"
 
 # Don't use gitpkgv here ...
 inherit go
 
 # ... because shitquake fails to eval nested variables like PV="git${PKGV}" later ...
-# ... so keep PV updated manually
-PV = "1.37-git1532+d6eb625"
-SRCREV="d6eb62581578e5b689ece20fc2901c361d4535ef"
+# ... so keep PV updated manually (git rev-list --count <revision>)
+PV = "1.38-git1575+d96e45b"
+SRCREV = "d96e45ba5b060c472cb5f8a4769060f14eadf63a"
 
 GO_IMPORT = "github.com/ncw/rclone"
 
@@ -33,19 +34,8 @@ SRC_URI = "git://${GO_IMPORT}.git;protocol=https;destsuffix=${PN}-${PV}/src/${GO
            file://rclonefs \
            file://COPYING"
 
-do_configure() {
-    cd ${S}/src/${GO_IMPORT}
-    export GOPATH=${WORKDIR}/${PN}-${PV}
-    go get
-}
-
-do_compile() {
-    cd ${S}/src/${GO_IMPORT}
-    export GOPATH=${WORKDIR}/${PN}-${PV}
-    go build
-}
-
 do_install_append() {
+    rm -rf ${D}/usr/lib
     install -m 755 ${WORKDIR}/rclonefs ${D}${bindir}
     ln -s rclone ${D}${bindir}/mount.rclone
 }
