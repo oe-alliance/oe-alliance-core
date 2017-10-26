@@ -3,7 +3,7 @@ FILESEXTRAPATHS_prepend := "${THISDIR}/${P}:"
 # Remove acl, cups etc. support.
 PACKAGECONFIG_remove = "acl cups"
 
-PR="r3"
+PR="r0"
 
 SAMBA4_AUTH_MODULES="auth_wbc,auth_server,auth_netlogond,auth_script,auth_samba4"
 SAMBA4_IDMAP_MODULES="idmap_ad,idmap_rid,idmap_adex,idmap_hash,idmap_tdb2"
@@ -18,14 +18,13 @@ SAMBA4_VFS_MODULES_STATIC="vfs_default,vfs_aio_pthread"
 SAMBA4_MODULES_STATIC="${SAMBA4_AUTH_MODULES_STATIC},${SAMBA4_PDB_MODULES_STATIC},${SAMBA4_VFS_MODULES_STATIC}"
 
 EXTRA_OECONF += " \
-                 --without-cluster-support \
                  --without-profiling-data \
                  --with-sockets-dir=${localstatedir}/run \
                  --with-logfilebase=${localstatedir}/log \
                  --nopyc \
                  --with-static-modules=${SAMBA4_MODULES_STATIC} \
                 "
-EXTRA_OECONF_remove = "--with-cluster-support"
+#EXTRA_OECONF_remove = "--with-cluster-support"
 EXTRA_OECONF_remove = "--with-profiling-data"
 EXTRA_OECONF_remove = "--with-sockets-dir=${localstatedir}/run/samba"
 
@@ -45,7 +44,12 @@ SRC_URI += " \
            file://smbpasswd \
            "
 
+do_install_prepend() {
+	mkdir -p ${D}${sysconfdir}/sudoers.d
+}
+
 do_install_append() {
+	rm -fR ${D}${sysconfdir}/sudoers.d
 	rm -fR ${D}/run
 	rm -fR ${D}${libdir}/tmpfiles.d
 	rm -fR ${D}${sysconfdir}/sysconfig
@@ -132,20 +136,3 @@ pkg_postrm_${BPN}-common_prepend() {
 #!/bin/sh
 rm $D/etc/samba/distro/smb-vmc.conf 2>/dev/null || true
 }
-
-
-inherit binary-compress
-
-FILES_COMPRESS_dm800se = "${bindir}/smbclient ${bindir}/smbpasswd ${bindir}/testparm \
-                          ${bindir}/smbcontrol ${bindir}/smbstatus \
-                          ${sbindir}/nmbd ${sbindir}/smbd \
-                         "
-FILES_COMPRESS_dm500hd = "${bindir}/smbclient ${bindir}/smbpasswd ${bindir}/testparm \
-                          ${bindir}/smbcontrol ${bindir}/smbstatus \
-                          ${sbindir}/nmbd ${sbindir}/smbd \
-                         "
-FILES_COMPRESS_dm800 = "${bindir}/smbclient ${bindir}/smbpasswd ${bindir}/testparm \
-                          ${bindir}/smbcontrol ${bindir}/smbstatus \
-                          ${sbindir}/nmbd ${sbindir}/smbd \
-                         "
-
