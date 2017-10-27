@@ -2,14 +2,17 @@ DESCRIPTION = "QuadPiP plugin for VU+ UHD receivers"
 
 require conf/license/license-gplv2.inc
 
-S = "${WORKDIR}/git"
 SRC_URI = "git://github.com/OpenPLi/enigma2-plugin-systemplugins-quadpip.git;protocol=http"
 
-inherit allarch
+S = "${WORKDIR}/git"
+
 inherit gitpkgv
+
+SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
 DST = "/usr/lib/enigma2/python/Plugins/SystemPlugins/QuadPiP"
+PR = "r2"
 
 FILES_${PN} = "${DST}/*"
 PACKAGES = "${PN}"
