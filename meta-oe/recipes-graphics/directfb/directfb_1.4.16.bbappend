@@ -1,5 +1,4 @@
 PACKAGE_ARCH = "${MACHINE_ARCH}"
-PR .= ".5"
 
 EXTRA_OECONF = "\
   --enable-freetype=yes \

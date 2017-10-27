@@ -1,4 +1,3 @@
-PR .= ".1"
 
 PACKAGES =+ "util-linux-flock"
 FILES_util-linux-flock = "${base_sbindir}/flock.${BPN}"

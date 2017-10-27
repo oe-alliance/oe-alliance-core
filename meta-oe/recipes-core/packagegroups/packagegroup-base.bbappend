@@ -1,4 +1,3 @@
-PR .= ".5"
 
 PACKAGES += " \
             ${@bb.utils.contains("DISTRO_FEATURES", "appletalk", "packagegroup-base-appletalk", "", d)} \

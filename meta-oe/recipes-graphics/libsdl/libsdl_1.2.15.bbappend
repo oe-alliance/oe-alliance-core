@@ -21,7 +21,6 @@ SRC_URI_append = " \
            file://Add_key_symbols.patch \
 "
 
-PR .= ".6"
 
 do_qa_staging() {
 }

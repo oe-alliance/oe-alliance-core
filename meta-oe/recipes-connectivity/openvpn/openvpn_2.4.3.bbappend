@@ -1,4 +1,3 @@
-PR .= ".1"
 inherit update-rc.d
 
 INITSCRIPT_PACKAGES = "${PN}"

@@ -1,4 +1,3 @@
-PR .= ".3"
 
 PACKAGECONFIG ??= ""
 
