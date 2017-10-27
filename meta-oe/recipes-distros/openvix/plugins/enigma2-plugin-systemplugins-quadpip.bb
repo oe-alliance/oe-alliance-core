@@ -1,6 +1,6 @@
 DESCRIPTION = "QuadPiP plugin for VU+ UHD receivers"
 
-require conf/license/openpli-gplv2.inc
+require conf/license/license-gplv2.inc
 
 S = "${WORKDIR}/git"
 SRC_URI = "git://github.com/OpenPLi/enigma2-plugin-systemplugins-quadpip.git;protocol=http"
