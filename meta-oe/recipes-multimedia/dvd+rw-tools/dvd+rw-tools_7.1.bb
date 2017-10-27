@@ -1,7 +1,6 @@
 SUMMARY = "tools to write DVDs"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=8ca43cbc842c2336e835926c2166c28b"
-PR = "r4"
 DEPENDS += "m4-native"
 RDEPENDS_${PN} += "cdrkit"
 SRC_URI = "http://fy.chalmers.se/~appro/linux/DVD+RW/tools/dvd+rw-tools-${PV}.tar.gz \

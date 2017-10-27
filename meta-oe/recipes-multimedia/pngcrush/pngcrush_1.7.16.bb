@@ -5,7 +5,6 @@ HOMEPAGE = "http://pmt.sourceforge.net/pngcrush"
 
 LIC_FILES_CHKSUM = "file://pngcrush.c;beginline=66;endline=107;md5=61856b3db001e662b4a4fd8b376e3e69"
 
-PR = "r1"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/pmt/pngcrush-${PV}.tar.gz;name=src"
 

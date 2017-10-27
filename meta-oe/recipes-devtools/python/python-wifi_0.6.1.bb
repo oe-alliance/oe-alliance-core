@@ -8,7 +8,6 @@ LIC_FILES_CHKSUM = "file://README;beginline=56;endline=57;md5=68b329da9893e34099
                     file://pythonwifi/iwlibs.py;beginline=1;endline=22;md5=aa48daae5660dfd2bb23b2cafe2789e1"
 
 RDEPENDS_${PN} = "python-ctypes python-datetime"
-PR = "r0"
 
 SRC_URI = "https://pypi.python.org/packages/bc/ab/c49f97516f78c2b0cacb4f45873abc4ca9872942a9c4c19ded8052c8edda/python-wifi-0.6.1.tar.bz2"
 SRC_URI[md5sum] = "033227169230286a63b9c059e7465c77"

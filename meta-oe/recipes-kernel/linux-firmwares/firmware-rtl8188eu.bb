@@ -1,6 +1,5 @@
 LICENSE = "CLOSED"
 require conf/license/license-close.inc
-PR = "r1"
 SRC_URI = "file://rtl8188eufw.bin"
 
 S = "${WORKDIR}"

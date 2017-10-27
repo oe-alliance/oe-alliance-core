@@ -4,7 +4,6 @@ require conf/license/license-close.inc
 
 inherit allarch
 
-PR = "r00"
 
 SRC_URI = "file://firmware-mn88436.zip"
 

@@ -4,7 +4,6 @@ LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://license.txt;md5=fc9c335ec05a5f36764ef9ce7a79daa1"
 
 HOMEPAGE = "http://www.rarlab.com/"
-PR = "r0"
 
 SRC_URI = "http://www.rarlab.com/rar/unrarsrc-${PV}.tar.gz \
         file://makefile-nostrip.patch"

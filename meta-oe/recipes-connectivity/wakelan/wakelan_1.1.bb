@@ -1,6 +1,5 @@
 SUMMARY = "Wakelan sends a magic packet to wake up remote PC's"
 LICENSE = "GPLv2+"
-PR = "r3"
 LIC_FILES_CHKSUM = "file://COPYING;md5=0636e73ff0215e8d672dc4c32c317bb3"
 
 SRC_URI = "http://www.ibiblio.org/pub/Linux/system/network/misc/${PN}-${PV}.tar.gz"

@@ -4,7 +4,6 @@ DEFAULT_PREFERENCE = "-1"
 
 LIC_FILES_CHKSUM = "file://docs/license.html;md5=f69a4626e9efc40fa0d3cc3b02c9eacf"
 
-PR = "${INC_PR}.0"
 SRCREV = "5a925cc5504575c22dbb7d29842d7fc5babcb5c7"
 PV = "9.1.3+git${SRCPV}"
 

@@ -6,7 +6,6 @@ LIC_FILES_CHKSUM = "file://Makefile;md5=6325fabe3996c2783285cc021ee13c96"
 
 inherit module
 
-PR = "r17"
 
 MACHINE_KERNEL_PR_append = ".0"
 

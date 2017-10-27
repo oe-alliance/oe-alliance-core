@@ -12,7 +12,6 @@ SRC_URI = "http://ushare.geexbox.org/releases/ushare-${PV}.tar.bz2 \
 
 S = "${WORKDIR}/ushare-${PV}"
 
-PR = "r3"
 
 inherit autotools-brokensep pkgconfig update-rc.d
 

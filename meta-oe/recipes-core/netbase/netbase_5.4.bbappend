@@ -1,6 +1,5 @@
 SRC_URI += " file://hwmac"
 
-PR = "r1"
 
 do_install_append() {
     install -d ${D}${sysconfdir}/network/if-pre-up.d/

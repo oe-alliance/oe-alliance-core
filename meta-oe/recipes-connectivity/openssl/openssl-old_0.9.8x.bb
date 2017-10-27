@@ -155,7 +155,6 @@ do_install () {
 	rm -rf ${D}${libdir}/engines
 }
 
-PR = "${INC_PR}.0"
 
 LIC_FILES_CHKSUM = "file://LICENSE;md5=f9a8f968107345e0b75aa8c2ecaa7ec8"
 

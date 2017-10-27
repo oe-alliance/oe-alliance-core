@@ -8,7 +8,6 @@ HOMEPAGE = "https://pypi.python.org/pypi/biplist"
 SRCNAME = "biplist"
 DEPENDS = "python"
 LICENSE = "BSD"
-PR = "r1"
 
 require conf/license/license-gplv2.inc
 

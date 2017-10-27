@@ -28,7 +28,6 @@ S = "${WORKDIR}/git/libtuxtxt"
 
 PV = "2.0+git${SRCPV}"
 PKGV = "2.0+git${GITPKGV}"
-PR = "r10"
 
 EXTRA_OECONF = "--with-boxtype=generic"
 

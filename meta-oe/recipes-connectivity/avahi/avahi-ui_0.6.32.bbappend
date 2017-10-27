@@ -1,4 +1,3 @@
-PR = "r2"
 
 AVAHI_GTK_append = " --enable-python"
 

@@ -8,7 +8,6 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PKGV = "3.x+git${GITPKGV}"
 PV = "3.x+git${SRCPV}"
-PR = "r2"
 
 SRC_URI = "git://github.com/oe-alliance/ofgwrite.git"
 

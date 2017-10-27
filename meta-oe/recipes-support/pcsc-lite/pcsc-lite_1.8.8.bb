@@ -7,7 +7,6 @@ RDEPENDS_${PN} = "libusb1 python"
 RRECOMMENDS_${PN} = "ccid"
 
 PACKAGES =+ "${PN}-lib"
-PR = "r4"
 
 SRC_URI = "http://alioth.debian.org/frs/download.php/file/3862/pcsc-lite-1.8.8.tar.bz2 \
     file://pcscd.init"

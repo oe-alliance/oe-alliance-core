@@ -4,7 +4,6 @@ require conf/license/license-close.inc
 
 inherit allarch
 
-PR = "r0"
 
 SRC_URI = "file://dvb-demod-avl6882.zip"
 

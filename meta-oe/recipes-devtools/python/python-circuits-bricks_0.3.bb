@@ -6,7 +6,6 @@ LIC_FILES_CHKSUM = "file://README;md5=85280f2861fb3a0e5ff5e5873bf947a3"
 
 SRC_URI = "https://pypi.python.org/packages/source/c/circuits-bricks/circuits-bricks-${PV}.tar.gz"
 
-PR = "r12"
 
 S = "${WORKDIR}/circuits-bricks-${PV}"
 

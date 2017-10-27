@@ -8,7 +8,6 @@ inherit gitpkgv
 SRCREV = "ee7bef8644ad1bac3fce2c04afef13f1ec19166b"
 PV = "2.+git${SRCPV}"
 PKGV = "2.+git${GITPKGV}"
-PR = "r6"
 
 SRC_URI = "git://github.com/pornel/pngquant.git \
            file://readonly.patch \

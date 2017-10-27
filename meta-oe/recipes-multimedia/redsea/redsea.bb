@@ -8,7 +8,6 @@ inherit gitpkgv
 
 PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"
-PR = "r0"
 
 SRC_URI = "git://github.com/windytan/redsea.git;protocol=http"
 SRCREV = "199854df8c6c2544ed5f4e0ede75323be5697501"

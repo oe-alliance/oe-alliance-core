@@ -6,7 +6,6 @@ require stlinux24-sh4-fw.inc
 SRC_URI[md5sum] = "e425110da8ea5c80e4d1c2cc398ae9bf"
 SRC_URI[sha256sum] = "d94521bfceeb132a1e2eed898c457b678c9ef6c08f0922b2bdf67861ad301f63"
 
-PR = "${INC_PR}.0"
 
 do_install() {
 	install -d ${D}${base_libdir}/firmware

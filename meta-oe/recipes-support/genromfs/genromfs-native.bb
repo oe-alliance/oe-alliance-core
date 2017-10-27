@@ -4,7 +4,6 @@ LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=0c56db0143f4f80c369ee3af7425af6e"
 
 PV = "0.5.7+git${SRCREV}"
-PR = "2"
 
 inherit native
 

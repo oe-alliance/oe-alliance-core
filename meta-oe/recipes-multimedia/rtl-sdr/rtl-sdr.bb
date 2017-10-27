@@ -8,7 +8,6 @@ inherit gitpkgv
 
 PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"
-PR = "r0"
 
 SRC_URI = "git://git.osmocom.org/rtl-sdr.git;protocol=git"
 SRCREV = "${AUTOREV}"

@@ -6,7 +6,6 @@ LIC_FILES_CHKSUM = "file://ifcfg-wlan0;md5=a84acae65af4b2d44d5035aa9f63cd85"
 
 inherit module
 
-PR = "r1"
 
 MACHINE_KERNEL_PR_append = ".0"
 

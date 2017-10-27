@@ -3,7 +3,6 @@ FILESEXTRAPATHS_prepend := "${THISDIR}/${P}:"
 # Remove acl, cups etc. support.
 PACKAGECONFIG_remove = "acl cups"
 
-PR="r0"
 
 SAMBA4_AUTH_MODULES="auth_wbc,auth_server,auth_netlogond,auth_script,auth_samba4"
 SAMBA4_IDMAP_MODULES="idmap_ad,idmap_rid,idmap_adex,idmap_hash,idmap_tdb2"

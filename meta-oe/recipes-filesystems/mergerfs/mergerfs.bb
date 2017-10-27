@@ -13,7 +13,6 @@ inherit autotools gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r0"
 
 SRC_URI = "git://github.com/trapexit/mergerfs.git"
 

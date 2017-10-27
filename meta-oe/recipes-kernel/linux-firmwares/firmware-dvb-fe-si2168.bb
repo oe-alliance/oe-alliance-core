@@ -1,6 +1,5 @@
 LICENSE = "CLOSED"
 require conf/license/license-close.inc
-PR = "r2"
 SRC_URI = "file://firmware-si2158.zip"
 
 S = "${WORKDIR}"

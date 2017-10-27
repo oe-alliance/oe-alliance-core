@@ -9,7 +9,6 @@ inherit distutils-base
 
 PV = "1.0"
 PKGV = "1.0"
-PR = "r7"
 
 SRC_URI = "file://process.py"
 

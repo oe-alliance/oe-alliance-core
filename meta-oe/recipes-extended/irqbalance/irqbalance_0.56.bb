@@ -3,7 +3,6 @@ HOMEPAGE = "http://irqbalance.org/"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f"
 DEPENDS = "glib-2.0"
-PR = "r1"
 
 SRC_URI = "http://irqbalance.org/releases/${BP}.tar.bz2"
 SRC_URI[md5sum] = "cd0c4d3b2bb84778a04fc594ad83949a"

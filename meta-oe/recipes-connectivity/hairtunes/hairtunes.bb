@@ -8,7 +8,6 @@ inherit gitpkgv pkgconfig
 
 PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"
-PR = "r0"
 SRCREV ?= "${AUTOREV}"
 
 require conf/license/license-gplv2.inc

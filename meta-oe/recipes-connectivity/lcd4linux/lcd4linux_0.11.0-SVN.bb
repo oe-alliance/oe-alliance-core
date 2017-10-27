@@ -6,7 +6,6 @@ DEPENDS = "virtual/libusb0 ncurses readline jpeg dbus-glib sqlite3"
 RDEPENDS_${PN} = "jpeg"
 
 PV = "0.11.0-SVN"
-PR = "r2"
 
 EXTRA_OECONF = " \
     --with-ncurses=${STAGING_LIBDIR}/..\

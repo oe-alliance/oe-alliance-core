@@ -6,7 +6,6 @@ LIC_FILES_CHKSUM = "file://README.md;md5=7967f55fbefa3330942afef996a272db"
 
 inherit module
 
-PR = "r1"
 
 MACHINE_KERNEL_PR_append = ".0"
 

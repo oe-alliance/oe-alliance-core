@@ -10,7 +10,6 @@ LIC_FILES_CHKSUM = "file://include/GL/glu.h;endline=29;md5=6b79c570f644363b35645
 
 # Epoch as this used to be part of mesa
 PE = "2"
-PR = "0"
 
 SRC_URI = "ftp://ftp.freedesktop.org/pub/mesa/glu/glu-${PV}.tar.bz2"
 

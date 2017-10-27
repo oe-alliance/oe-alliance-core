@@ -2,7 +2,6 @@ require samba36.inc
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/samba-${PV}:"
 
-PR = "r0"
 
 FILES_${PN}       = "${base_libdir}/security/pam_smbpass.so"
 

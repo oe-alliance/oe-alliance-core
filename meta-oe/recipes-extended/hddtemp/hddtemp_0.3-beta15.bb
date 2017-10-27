@@ -2,7 +2,6 @@ SUMMARY = "Hard disk temperature monitor daemon"
 SECTION = "console/network"
 LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://GPL-2;md5=eb723b61539feef013de476e68b5c50a"
-PR = "r1"
 
 SRC_URI = "http://download.savannah.nongnu.org/releases/${PN}/${PN}-${PV}.tar.bz2;name=tar \
            http://download.savannah.nongnu.org/releases/${PN}/hddtemp.db;name=db \

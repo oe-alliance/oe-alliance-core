@@ -1,6 +1,5 @@
 LICENSE = "CLOSED"
 require conf/license/license-close.inc
-PR = "r02"
 SRC_URI = "file://dvb-usb-af9035-02.fw-30092013.tar.gz"
 
 S = "${WORKDIR}"

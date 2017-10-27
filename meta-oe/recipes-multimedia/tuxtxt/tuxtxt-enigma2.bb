@@ -30,7 +30,6 @@ S = "${WORKDIR}/git/tuxtxt"
 
 PV = "2.0+git${SRCPV}"
 PKGV = "2.0+git${GITPKGV}"
-PR = "r18"
 
 do_configure_prepend() {
     touch ${S}/NEWS

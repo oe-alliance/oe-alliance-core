@@ -1,5 +1,4 @@
 SECTION = "net"
-PR = "4"
 
 require conf/license/license-gplv2.inc
 

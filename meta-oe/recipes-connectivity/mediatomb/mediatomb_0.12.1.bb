@@ -3,7 +3,6 @@ HOMEPAGE = "http://mediatomb.org/"
 LICENSE = "GPLv2"
 DEPENDS = "expat ffmpeg sqlite3 libexif js zlib file id3lib curl"
 PV = "0.12.1"
-PR = "r7"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=0b609ee7722218aa600220f779cb5035"
 

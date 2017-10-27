@@ -9,7 +9,6 @@ inherit gitpkgv
 
 PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"
-PR = "r0"
 
 SRC_URI = "git://github.com/jgaeddert/liquid-dsp.git;protocol=http"
 SRCREV = "8c1978fa4f5662b8849fe712be716958f29cec0e"

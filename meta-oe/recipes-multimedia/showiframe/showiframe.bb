@@ -6,7 +6,6 @@ LIC_FILES_CHKSUM = "file://showiframe.c;firstline=1;endline=1;md5=d67f9281bc4bfe
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PV = "1.4"
-PR = "r5"
 
 SRC_URI = "file://showiframe.c"
 

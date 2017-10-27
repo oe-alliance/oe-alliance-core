@@ -1,7 +1,6 @@
 SUMMARY = "Driver for Realtek USB wireless devices"
 HOMEPAGE = "http://www.realtek.com/"
 LICENSE = "GPLv2"
-PR = "r4"
 LIC_FILES_CHKSUM = "file://os_dep/linux/os_intfs.c;endline=19;md5=72c75de415f1e8a42587d170459677e2"
 
 SRC_URI = " \

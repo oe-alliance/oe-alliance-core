@@ -5,7 +5,6 @@ HOMEPAGE = "https://pypi.python.org/pypi/cfscrape"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://PKG-INFO;md5=879c38f03989886f224a4f30c989b15a"
 
-PR = "r0"
 
 RDEPENDS_${PN} += "python-js2py"
 

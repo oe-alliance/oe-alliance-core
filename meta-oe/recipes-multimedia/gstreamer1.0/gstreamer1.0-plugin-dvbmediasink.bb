@@ -17,7 +17,6 @@ inherit gitpkgv
 
 PV = "${GSTVERSION}+git${SRCPV}"
 PKGV = "${GSTVERSION}+git${GITPKGV}"
-PR = "r14"
 
 # added to have al m4 macro's into build when using bitbake with -b option.
 # Then proceeding to full image build or at least package build with recipes parsing is not needed.

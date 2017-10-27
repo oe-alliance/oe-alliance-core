@@ -5,7 +5,6 @@ MAINTAINER = "Jari Sundell <sundell.software@gmail.com>"
 LICENSE = "GPLv2"
 SECTION = "libs/network"
 DEPENDS = "cppunit libtorrent curl ncurses gnutls libgpg-error"
-PR = "r0"
 
 SRC_URI = "http://rtorrent.net/downloads/${PN}-${PV}.tar.gz \
     file://autoconf-cross-fix.patch"

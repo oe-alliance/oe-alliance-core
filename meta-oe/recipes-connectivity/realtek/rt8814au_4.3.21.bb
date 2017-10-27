@@ -6,7 +6,6 @@ LIC_FILES_CHKSUM = "file://ifcfg-wlan0;md5=a84acae65af4b2d44d5035aa9f63cd85"
 
 inherit module
 
-PR = "r1"
 
 SRC_URI = "http://source.mynonpublic.com/rtl8814AU-driver-4.3.21-20170707.zip"
 

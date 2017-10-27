@@ -5,7 +5,6 @@ PRIORITY = "optional"
 LICENSE = "libgsm"
 LIC_FILES_CHKSUM = "file://COPYRIGHT;md5=97e265fa1fd10a668bd99c4945fb9200"
 
-PR = "r1"
 
 SRC_URI = "http://user.cs.tu-berlin.de/~jutta/gsm/gsm-${PV}.tar.gz \
     file://01_makefile.patch;patch=1 \

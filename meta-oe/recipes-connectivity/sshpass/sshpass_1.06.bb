@@ -1,6 +1,5 @@
 SUMMARY = "sshpass"
 LICENSE = "GPLv2+"
-PR = "r1"
 
 LIC_FILES_CHKSUM = "file://main.c;beginline=1;endline=19;md5=5f0246a83a3118d9161abc9611abea7b"
 

@@ -3,7 +3,6 @@ SECTION = "devel/python"
 LICENSE = "BSD"
 LIC_FILES_CHKSUM = "file://PKG-INFO;md5=9e0380ea0f5b7c92687a86ca88562064"
 
-PR = "r0"
 
 SRC_URI = "http://pypi.python.org/packages/source/a/attr/attr-${PV}.tar.gz"
 

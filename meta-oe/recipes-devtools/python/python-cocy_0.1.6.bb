@@ -13,7 +13,6 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "0.1.6+git${SRCPV}"
 PKGV = "0.1.6+git${GITPKGV}"
-PR = "r2"
 
 S = "${WORKDIR}/git"
 

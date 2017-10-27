@@ -10,7 +10,6 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=55ca817ccb7d5b5b66355690e9abc605 \
 DEPENDS = "glib-2.0 libxml2 bison-native flex-native"
 
 SRCREV = "${AUTOREV}"
-PR = "r12"
 GIT_PV = ""
 
 RRECOMMENDS_${PN}_qemux86    += "kernel-module-snd-ens1370 kernel-module-snd-rawmidi"

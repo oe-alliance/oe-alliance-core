@@ -9,7 +9,6 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r3"
 
 SRC_URI = "git://git.lede-project.org/project/odhcp6c.git;protocol=https \
            file://ifup \

@@ -2,7 +2,6 @@ DESCRIPTION = "dcadec is a free DTS Coherent Acoustics decoder with support for 
 LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING.LGPLv2.1;md5=4fbd65380cdd255951079008b364516c"
 
-PR = "r0"
 inherit autotools pkgconfig
 
 SRC_URI = "git://github.com/foo86/dcadec.git;protocol=http"

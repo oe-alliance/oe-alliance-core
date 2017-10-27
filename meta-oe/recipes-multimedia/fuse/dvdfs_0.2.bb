@@ -4,7 +4,6 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f"
 
 HOMEPAGE = "http://www.jspenguin.org/software/dvdfs/"
 DEPENDS = "fuse libdvdread"
-PR = "r1"
 
 SRC_URI = "http://www.jspenguin.org/software/${PN}/${PN}-${PV}.tar.gz \
     file://crosscompile.patch \

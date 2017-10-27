@@ -3,7 +3,6 @@ SECTION = "kernel/modules"
 LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://os/linux/rt_linux.c;endline=25;md5=21ed2a5918a3062a6c0323ef549f0803"
 
-PR = "r5"
 
 inherit module
 

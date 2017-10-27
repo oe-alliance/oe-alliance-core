@@ -1,6 +1,5 @@
 SUMMARY = "autossh"
 LICENSE = "GPLv2+"
-PR = "r1"
 
 LIC_FILES_CHKSUM = "file://autossh.c;beginline=1;endline=24;md5=755a81ffe573faf6c18d1f1061d097c4"
 

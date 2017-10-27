@@ -6,7 +6,6 @@ PRIORITY = "optional"
 LICENSE = "GPLv2"
 DEPENDS = "glib-2.0 fuse curl"
 RDEPENDS_${PN} += " libcurl "
-PR = "r3"
 
 require conf/license/license-gplv2.inc
 

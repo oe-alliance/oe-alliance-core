@@ -2,7 +2,6 @@ SUMMARY = "A library for loose coupling of C++ method calls"
 SECTION = "libs"
 LICENSE = "LGPLv2.1"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d8045f3b8f929c1cb29a1e3fd737b499"
-PR = "r2"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/libsigc/libsigc++-${PV}.tar.gz \
            file://autofoo.patch \

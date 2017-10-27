@@ -5,7 +5,6 @@ SECTION = "console/utils"
 LICENSE = "GPLv2+"
 require conf/license/license-gplv2.inc
 RDEPENDS_${PN} = "alsa-utils-amixer"
-PR = "r2"
 
 SRC_URI = " file://alsa-mixer-conf"
 

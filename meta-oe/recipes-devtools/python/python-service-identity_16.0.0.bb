@@ -3,7 +3,6 @@ SECTION = "devel/python"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=8a0f079f4e6a215d6bd6f9d97cab4d5f"
 
-PR = "r0"
 
 RDEPENDS_${PN} = "python-attr python-attrs python-pyasn1 python-pyasn1-modules python-pyopenssl"
 

@@ -5,7 +5,6 @@ PRIORITY = "optional"
 LICENSE = "MIT"
 RDEPENDS_${PN} = "python-simplejson"
 PV = "0.7+hg${SRCREV}"
-PR = "r1"
 
 SRC_URI = "hg://bitbucket.org/blueluna;protocol=http;module=transmissionrpc;rev=${SRCREV}"
 

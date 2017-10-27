@@ -12,7 +12,6 @@ inherit gitpkgv
 PV = "35+gitr${SRCPV}"
 PKGV = "35+gitr${GITPKGV}"
 
-PR = "r0"
 
 SRCREV = "74c7263cd7ed3a8074cafecb801d81d50379f5cd"
 SRC_URI = " \

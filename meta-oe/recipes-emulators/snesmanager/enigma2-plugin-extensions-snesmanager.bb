@@ -13,7 +13,6 @@ SRCREV = "${AUTOREV}"
 PV = "0.1+git${SRCPV}"
 PKGV = "0.1+git${GITPKGV}"
 VER ="0.1"
-PR = "r0"
 
 SRC_URI="git://github.com/emulatorE2/snes_manager.git"
 

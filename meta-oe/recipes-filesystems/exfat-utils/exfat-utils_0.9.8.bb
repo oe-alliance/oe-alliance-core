@@ -1,4 +1,3 @@
-PR = "r1"
 
 # DEPENDS = "fuse"
 # RDEPENDS_${PN} = "fuse"

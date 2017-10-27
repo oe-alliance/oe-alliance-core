@@ -7,7 +7,6 @@ inherit bluetooth
 
 DEPENDS = "glib-2.0 ${BLUEZ}"
 
-PR = "r5"
 
 SRC_URI[md5sum] = "9b8203723ead15813ca731f10ba640aa"
 SRC_URI[sha256sum] = "1889fe89b1ec8e725d3404f3d8125d5e824a4cc0ab05891ef1b755a61a1cea46"

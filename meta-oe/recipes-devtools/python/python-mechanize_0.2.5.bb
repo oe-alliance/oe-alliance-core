@@ -6,7 +6,6 @@ LIC_FILES_CHKSUM = "file://COPYING.txt;md5=a7939d3efc8493ae7054e3d2c4644b28"
 
 include python-package-split.inc
 
-PR = "r4"
 
 RDEPENDS_${PN} = "python-core python-robotparser"
 

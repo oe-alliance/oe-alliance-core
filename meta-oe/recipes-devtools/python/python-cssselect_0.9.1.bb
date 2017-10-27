@@ -4,7 +4,6 @@ SECTION = "devel/python"
 LICENSE = "BSD"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=952026b3fd2f625f2a3c0aa21da2493d"
 
-PR = "r1"
 
 SRC_URI = "https://pypi.python.org/packages/source/c/cssselect/cssselect-${PV}.tar.gz"
 

@@ -2,7 +2,6 @@ SECTION = "x11/wm"
 DESCRIPTION = "Matchbox window manager"
 LICENSE = "GPLv2.0+"
 DEPENDS = "libmatchbox virtual/libx11 libxext libxcomposite libxfixes libxcursor xdamage libxrender startup-notification expat"
-PR = "r5"
 
 SRC_URI = "http://downloads.yoctoproject.org/releases/matchbox/matchbox-window-manager/${PV}/matchbox-window-manager-${PV}.tar.bz2 \
            file://configure_fix.patch \

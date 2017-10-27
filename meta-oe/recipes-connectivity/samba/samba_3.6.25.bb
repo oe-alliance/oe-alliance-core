@@ -1,6 +1,5 @@
 require samba36.inc
 
-PR = "r11"
 
 inherit update-rc.d
 

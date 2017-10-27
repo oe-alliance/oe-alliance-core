@@ -7,7 +7,6 @@ LIC_FILES_CHKSUM = "file://COPYING-GPL;md5=1ed9d357695b2e3ef099df37fed63d96 \
 SECTION = "multimedia"
 SRCREV = "17289"
 PV = "10.2+svnr${SRCPV}"
-PR = "r4"
 
 SRC_URI = "svn://svn.xiph.org/trunk;module=cdparanoia;protocol=http \
      file://fixes10.patch \

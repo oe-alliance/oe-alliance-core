@@ -3,7 +3,6 @@ SECTION = "devel/python"
 LICENSE = "BSD"
 LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=425e62320d430219736139b134db2fc4"
 
-PR = "r0"
 
 SRC_URI = "http://pypi.python.org/packages/source/p/pyasn1-modules/pyasn1-modules-${PV}.tar.gz"
 

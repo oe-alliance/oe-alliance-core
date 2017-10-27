@@ -1,6 +1,5 @@
 require recipes-kernel/linux-libc-headers/linux-libc-headers.inc
 
-PR = "1"
 
 SRC_URI += " \
         file://dvb_frontend-Multistream-support-3.2.patch \

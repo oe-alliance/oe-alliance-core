@@ -6,7 +6,6 @@ LIC_FILES_CHKSUM = "file://hal/hal_init.c;beginline=1;endline=19;md5=f8d10a6bd2f
 
 RREPLACES_${PN} = "kernel-module-rtl8192cu"
 
-PR = "r3"
 
 inherit module
 

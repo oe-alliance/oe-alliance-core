@@ -1,5 +1,4 @@
 SECTION = "net"
-PR = "r5"
 LICENSE = "GPLv2"
 
 DEPENDS = "cups db openssl"

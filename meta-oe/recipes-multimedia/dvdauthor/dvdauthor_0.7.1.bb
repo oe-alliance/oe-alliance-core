@@ -9,7 +9,6 @@ SRCREV = "${AUTOREV}"
 PV = "0.7.2+git${SRCPV}"
 PKGV = "0.7.2+git${GITPKGV}"
 VER ="0.7.2"
-PR = "r1"
 
 SRC_URI="git://github.com/atvcaptain/dvdauthor.git"
 

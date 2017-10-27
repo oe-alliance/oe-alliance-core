@@ -8,7 +8,6 @@ inherit gitpkgv
 PKGV = "1.0+git${GITPKGV}"
 PV = "1.0+git${SRCPV}"
 SRCREV = "${AUTOREV}"
-PR = "r0"
 
 SRC_URI = "git://github.com/athoik/unjffs2.git"
 

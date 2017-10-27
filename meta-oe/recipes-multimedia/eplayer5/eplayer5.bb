@@ -9,7 +9,6 @@ DEPENDS = "gstreamer1.0 gstreamer1.0-plugins-base glib-2.0 libxml2"
 require conf/license/license-gplv2.inc
 
 PV = "1.0"
-PR = "r0"
 
 inherit pkgconfig
 

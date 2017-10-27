@@ -4,7 +4,6 @@ SECTION = "devel/python"
 LICENSE = "BSD"
 LIC_FILES_CHKSUM = "file://LICENSE.rst;md5=8ff644958c37784425f321ace93fb329"
 
-PR = "r19"
 
 DEPENDS_${PN} = "python-pytz python-dateutil"
 RDEPENDS_${PN} = "python-pytz python-dateutil"

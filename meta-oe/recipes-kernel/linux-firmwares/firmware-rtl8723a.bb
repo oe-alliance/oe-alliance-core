@@ -1,6 +1,5 @@
 LICENSE = "CLOSED"
 require conf/license/license-close.inc
-PR = "r0"
 SRC_URI = " \
     file://rtl8723a_fw.zip \
     file://rtl8723aufw_B_NoBT.zip \

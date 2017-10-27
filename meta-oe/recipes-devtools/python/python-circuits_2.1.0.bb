@@ -4,7 +4,6 @@ SECTION = "devel/python"
 LICENSE = "BSD"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=0ec3fb8507687392bdc4b37c93697d04"
 
-PR = "r3"
 
 SRC_URI = "https://bitbucket.org/prologic/circuits/get/42e62ab9f8dd.zip"
 

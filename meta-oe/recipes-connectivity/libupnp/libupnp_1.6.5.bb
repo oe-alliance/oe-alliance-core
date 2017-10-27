@@ -4,7 +4,6 @@ LICENSE = "BSD"
 
 LIC_FILES_CHKSUM = "file://upnp/LICENSE;md5=b3190d5244e08e78e4c8ee78544f4863"
 
-PR = "r1"
 
 LEAD_SONAME = "libupnp"
 SRC_URI = "${SOURCEFORGE_MIRROR}/pupnp/${P}.tar.bz2"

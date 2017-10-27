@@ -1,7 +1,6 @@
 DESCRIPTION = "Firmware for TBS 5980"
 LICENSE = "CLOSED"
 
-PR = "r1"
 SRC_URI = "file://dvb-usb-tbsqbox-id5980.zip"
 
 S = "${WORKDIR}"

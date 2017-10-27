@@ -3,7 +3,6 @@ DEPENDS = "directfb"
 SECTION = "libs"
 LICENSE = "GPL"
 
-PR = "r1"
 
 SRC_URI = " \
     http://www.directfb.org/downloads/Extras/DirectFB-examples-${PV}.tar.gz \

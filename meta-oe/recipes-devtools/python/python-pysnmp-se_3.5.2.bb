@@ -5,7 +5,6 @@ RDEPENDS_${PN} = "python-core"
 LICENSE = "BSD"
 LIC_FILES_CHKSUM = "file://README;beginline=13;endline=14;md5=fe0c3d0cab1e25fcec2777b0a8b8e4bf"
 
-PR = "r1"
 
 SRCNAME = "pysnmp-se"
 SRC_URI = "http://downloads.sourceforge.net/twistedsnmp/${SRCNAME}-${PV}.tar.gz"

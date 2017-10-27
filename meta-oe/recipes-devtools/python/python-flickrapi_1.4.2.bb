@@ -4,7 +4,6 @@ SECTION = "devel/python"
 PRIORITY = "optional"
 LICENSE = "PSF"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=d54e175a4083eea51ac31acaff818df5"
-PR = "r2"
 # NOTE: requires python-misc for webbrowser and subprocess as missing dependency of the webbrowser
 RDEPENDS_${PN} = "\
   python-core \

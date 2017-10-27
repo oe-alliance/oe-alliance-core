@@ -12,4 +12,3 @@ do_install_append() {
 # add /etc/default/dropbear as configuration file
 CONFFILES_${PN} = "/etc/default/dropbear"
 
-PR = "r1"

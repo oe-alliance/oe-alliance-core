@@ -4,7 +4,6 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=1373274bc8d8001edc54933919f36f68"
 
 DEPENDS = "util-linux"
 
-PR = "r0"
 inherit autotools pkgconfig
 
 SRC_URI = "\

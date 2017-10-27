@@ -4,7 +4,6 @@ require conf/license/license-gplv2.inc
 LICENSE = "GPLv3"
 
 PV="20120930"
-PR = "r3"
 
 SRC_URI[md5sum] = "09191733fe39d65213dad68f8f385eac"
 SRC_URI[sha256sum] = "0d82f8692d11b3f6614ac875b4096725692b79b9f4fe500fbe8497b601202694"

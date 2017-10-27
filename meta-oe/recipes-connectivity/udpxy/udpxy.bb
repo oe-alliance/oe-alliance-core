@@ -10,7 +10,6 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "0.23+git${SRCPV}"
 PKGV = "0.23+git${GITPKGV}"
-PR = "r1"
 
 inherit autotools-brokensep pkgconfig
 

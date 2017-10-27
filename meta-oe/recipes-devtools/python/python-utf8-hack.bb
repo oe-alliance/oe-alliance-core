@@ -3,7 +3,6 @@ SECTION = "devel/python"
 DEPENDS = "python"
 PRIORITY = "optional"
 PV = "0.2"
-PR = "r2"
 
 require conf/license/license-gplv2.inc
 

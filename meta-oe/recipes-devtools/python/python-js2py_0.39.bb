@@ -5,7 +5,6 @@ HOMEPAGE = "https://pypi.python.org/pypi/Js2Py"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://PKG-INFO;md5=0e657c467f9c43e1e317b1ff5bef6c80"
 
-PR = "r0"
 
 SRC_URI = "http://pypi.python.org/packages/52/f8/e0d81d2a1db4025fa6dfa2e0a63f7234d958e11a0497e58c2ff15394c5cb/Js2Py-${PV}.tar.gz"
 

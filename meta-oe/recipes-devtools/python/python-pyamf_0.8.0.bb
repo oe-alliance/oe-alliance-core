@@ -4,7 +4,6 @@ SECTION = "devel/python"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=d8bf5ff31155bfe951a02be0c29215d3"
 
-PR = "r3"
 
 SRC_URI = "http://pypi.python.org/packages/source/P/PyAMF/PyAMF-${PV}.tar.gz"
 

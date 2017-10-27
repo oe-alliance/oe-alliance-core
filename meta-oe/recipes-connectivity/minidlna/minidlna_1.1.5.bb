@@ -8,7 +8,6 @@ DEPENDS = "libexif libjpeg-turbo libid3tag flac libvorbis sqlite3 ffmpeg util-li
 # NLS causes autoconfigure problems - we don't need the extra languages anyway, so disable nls
 EXTRA_OECONF_append = " --disable-nls "
 
-PR = "r1"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/project/minidlna/minidlna/${PV}/minidlna-${PV}.tar.gz \
 		file://0001_default_sqlite_caches.diff \

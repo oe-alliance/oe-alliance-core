@@ -5,7 +5,6 @@ DEPENDS = "python"
 LICENSE = "LGPLv2+"
 LIC_FILES_CHKSUM = " file://COPYING;md5=24b9569831c46d4818450b55282476b4"
 
-PR = "r0"
 
 SRC_URI = "http://pypi.python.org/packages/source/p/python-Levenshtein/python-Levenshtein-${PV}.tar.gz"
 

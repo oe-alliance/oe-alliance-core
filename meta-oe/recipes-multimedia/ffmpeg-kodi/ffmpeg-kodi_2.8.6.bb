@@ -7,7 +7,6 @@ LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://LICENSE.md;md5=5c6d1ed56d15ca87ddec48d0c3a2051d"
 
 PV = "2.8.6"
-PR = "r2"
 
 inherit autotools pkgconfig
 

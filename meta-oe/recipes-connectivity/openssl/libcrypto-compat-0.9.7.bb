@@ -5,7 +5,6 @@ require conf/license/license-gplv2.inc
 inherit allarch
 RDEPENDS_${PN} = "libcrypto libssl"
 PV = "1.0"
-PR = "r10"
 
 RREPLACES_${PN} = "libcrypto-compat"
 RCONFLICTS_${PN} = "libcrypto-compat"

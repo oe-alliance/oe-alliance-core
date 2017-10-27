@@ -1,6 +1,5 @@
 require schroedinger.inc
 
-PR = "${INC_PR}.0"
 
 inherit autotools
 

@@ -4,7 +4,6 @@ SECTION = "devel/python"
 LICENSE = "BSD"
 LIC_FILES_CHKSUM = "file://COPYING.txt;md5=83e365dc17176bd72ba7d08ca0555efa"
 
-PR = "r0"
 
 SRC_URI = "http://www.crummy.com/software/BeautifulSoup/bs4/download/4.3/beautifulsoup4-${PV}.tar.gz"
 

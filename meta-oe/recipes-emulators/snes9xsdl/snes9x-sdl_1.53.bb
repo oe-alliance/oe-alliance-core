@@ -15,7 +15,6 @@ SRCREV = "${AUTOREV}"
 PV = "1.53+git${SRCPV}"
 PKGV = "1.53+git${GITPKGV}"
 VER ="1.53"
-PR = "r0"
 
 S = "${WORKDIR}/git/sdl"
 

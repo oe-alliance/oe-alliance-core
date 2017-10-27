@@ -5,7 +5,6 @@ LICENSE = "GPLv2"
 
 LIC_FILES_CHKSUM = "file://os_dep/linux/os_intfs.c;endline=19;md5=f8d10a6bd2fdfa240c0634a7c660c57f"
 
-PR = "r10"
 
 inherit module
 

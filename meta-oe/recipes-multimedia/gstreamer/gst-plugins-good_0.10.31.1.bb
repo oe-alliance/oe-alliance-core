@@ -9,7 +9,6 @@ DEPENDS += "cdparanoia cairo jpeg libpng zlib libid3tag flac speex libsoup-2.4"
 DEPENDS += "gst-plugins-base"
 
 SRCREV = "${AUTOREV}"
-PR = "r22"
 GIT_PV = ""
 
 EXTRA_OECONF = "--enable-orc --disable-esd --disable-aalib --disable-shout2 --disable-libcaca --disable-hal"

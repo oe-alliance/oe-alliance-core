@@ -5,7 +5,6 @@ RDEPENDS_${PN} = "python-pysnmp-se"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://license.txt;md5=c6f330cac7a286df5a2a7617fdda815f"
 
-PR = "r1"
 
 SRCNAME = "TwistedSNMP"
 SRC_URI = "${SOURCEFORGE_MIRROR}/${PN}/${SRCNAME}-${PV}.tar.gz"

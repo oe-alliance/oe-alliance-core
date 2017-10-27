@@ -14,7 +14,6 @@ S = "${WORKDIR}/git/"
 
 inherit gitpkgv
 SRCREV = "${AUTOREV}"
-PR = "r0"
 
 do_install_append() {
 	install -d ${D}${sbindir}
