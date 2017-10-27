@@ -13,7 +13,7 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "1+git${SRCPV}"
 PKGV = "1+git${GITPKGV}"
-PR = "r1"
+PR = "r0"
 
 inherit allarch distutils-openplugins
 

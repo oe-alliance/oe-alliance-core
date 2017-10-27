@@ -8,7 +8,7 @@ inherit gitpkgv pythonnative gettext
 
 PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"
-PR = "r36"
+PR = "r0"
 
 SRC_URI = "git://github.com/oe-alliance/XMLTV-Import.git;protocol=git"
 

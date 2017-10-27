@@ -4,7 +4,7 @@ require conf/license/license-gplv2.inc
 inherit allarch
 
 PV = "2009.11.12"
-PR = "r3"
+PR = "r0"
 
 S = "${WORKDIR}"
 

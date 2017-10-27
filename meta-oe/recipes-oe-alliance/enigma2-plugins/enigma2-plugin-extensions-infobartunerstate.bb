@@ -9,7 +9,7 @@ inherit gitpkgv pythonnative
 SRCREV = "${AUTOREV}"
 PV = "1.1.+git${SRCPV}"
 PKGV = "1.1.+git${GITPKGV}"
-PR = "r2"
+PR = "r0"
 
 SRC_URI="git://github.com/betonme/e2openplugin-InfoBarTunerState.git"
 

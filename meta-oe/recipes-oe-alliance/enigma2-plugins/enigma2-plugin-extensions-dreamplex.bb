@@ -8,7 +8,7 @@ inherit autotools-brokensep gitpkgv pythonnative gettext
 SRCREV = "${AUTOREV}"
 PV = "2.1.3+git${SRCPV}"
 PKGV = "2.1.3+git${GITPKGV}"
-PR = "r3"
+PR = "r0"
 
 DEPENDS = "python"
 RDEPENDS_${PN} = "${@bb.utils.contains("GST_VERSION", "1.0", "gstreamer1.0-plugins-bad-hls", "gst-plugins-bad-fragmented", d)} curl mjpegtools python-ctypes libshowiframe0"

@@ -9,7 +9,7 @@ inherit gitpkgv
 
 PV = "0.10.0+git${SRCPV}"
 PKGV = "0.10.0+git${GITPKGV}"
-PR = "r2"
+PR = "r0"
 
 DEPENDS = "glib-2.0-native gstreamer"
 

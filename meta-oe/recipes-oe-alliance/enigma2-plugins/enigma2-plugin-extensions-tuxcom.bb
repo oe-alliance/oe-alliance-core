@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://tuxcom.c;beginline=8;endline=22;md5=8cfd78763de33face
 DEPENDS = "freetype"
 
 PV = "1.13+git${SRCPV}"
-PR = "r4"
+PR = "r0"
 
 SRC_URI = "git://github.com/sklnet/tuxcom.git;protocol=git \
     file://add_advanced_rc.diff"

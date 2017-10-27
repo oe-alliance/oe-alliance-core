@@ -23,7 +23,7 @@ CXXFLAGS_append = " -std=c++11"
 PV = "0.5+git${SRCPV}"
 PKGV = "0.5+git${GITPKGV}"
 
-PR = "r5"
+PR = "r0"
 
 EXTRA_OECONF = "\
 	BUILD_SYS=${BUILD_SYS} \

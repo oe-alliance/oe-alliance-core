@@ -2,7 +2,7 @@ CAMNAME = "scam"
 SUMMARY = "${CAMNAME} ${PV} softcam"
 RDEPENDS_${PN} = "libcrypto-compat-0.9.7"
 
-PR = "r2"
+PR = "r0"
 
 SRC_URI = "http://downloads.pli-images.org/softcams/scam_v${PV}.zip"
 

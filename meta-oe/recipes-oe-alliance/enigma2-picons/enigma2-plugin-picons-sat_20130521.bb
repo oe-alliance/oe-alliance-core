@@ -6,7 +6,7 @@
 # So we can safely list all SATNAMES here, and create all their piconsets
 # from the same bb file.
 
-PR = "r2"
+PR = "r0"
 
 SRC_URI = "http://downloads.pli-images.org/picons/picons-sat-${PV}.tar.gz"
 

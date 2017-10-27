@@ -2,7 +2,7 @@ require conf/license/license-gplv2.inc
 
 PN = "tuxbox-links"
 PV = "1.0"
-PR = "r10"
+PR = "r0"
 
 do_install () {
     install -d ${D}/var

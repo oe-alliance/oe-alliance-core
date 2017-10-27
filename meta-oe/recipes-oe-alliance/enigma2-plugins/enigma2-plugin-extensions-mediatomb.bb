@@ -5,7 +5,7 @@ LICENSE = "proprietary"
 require conf/license/license-gplv2.inc
 
 PV = "0.12.1"
-PR = "r1"
+PR = "r0"
 
 S = "${WORKDIR}"
 

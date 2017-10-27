@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=7968df00b3e6be507316ed9cfc8be290"
 
 PN = "tuxterm"
 PV = "0.2+git${SRCPV}"
-PR = "r1"
+PR = "r0"
 
 SRC_URI = "git://github.com/sklnet/tuxterm.git;protocol=git"
 

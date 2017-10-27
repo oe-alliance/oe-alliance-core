@@ -1,6 +1,6 @@
 SUMMARY = "newcs ${PV} cardserver"
 
-PR = "r4"
+PR = "r0"
 
 SRC_URI = "http://downloads.pli-images.org/softcams/newcs-${PV}.zip\
     http://downloads.pli-images.org/softcams/newcs.xml;name=xml"

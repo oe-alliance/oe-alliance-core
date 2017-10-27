@@ -1,7 +1,7 @@
 CAMNAME = "evocamd"
 SUMMARY = "evocamd ${PV} softcam"
 
-PR = "r1"
+PR = "r0"
 
 SRC_URI = "http://downloads.pli-images.org/softcams/evocamd-${PV}.zip"
 

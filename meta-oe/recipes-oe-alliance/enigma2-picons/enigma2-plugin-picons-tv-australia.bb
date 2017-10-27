@@ -11,7 +11,7 @@ SRCREV = "${AUTOREV}"
 PV = "3.0+git${SRCPV}"
 PKGV = "3.0+git${GITPKGV}"
 VER ="3.0"
-PR = "r5"
+PR = "r0"
 
 SRC_URI="git://bitbucket.org/beyonwiz/picons-australia.git;protocol=https;branch=master"
 

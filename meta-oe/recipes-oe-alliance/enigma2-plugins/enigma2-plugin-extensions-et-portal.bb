@@ -9,7 +9,7 @@ inherit gitpkgv pythonnative gettext
 SRCREV = "${AUTOREV}"
 PV = "inofficial-3.2.+git${SRCPV}"
 PKGV = "inofficial-3.2.+git${GITPKGV}"
-PR = "r2"
+PR = "r0"
 
 
 SRC_URI="git://github.com/e2plugins/etportal-inofficial.git"

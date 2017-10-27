@@ -7,7 +7,7 @@ inherit autotools gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "0.3+git${SRCPV}"
 PKGV = "0.3+git${GITPKGV}"
-PR = "r2"
+PR = "r0"
 
 DEPENDS = "libusb1"
 RRECOMMENDS_${PN} = "kernel-module-cdc-acm kernel-module-ftdi-sio"

@@ -22,4 +22,4 @@ DEPENDS_sh4 = "\
     enigma2-plugin-softcams-oscam \
     "
 
-PR = "r2"
+PR = "r0"

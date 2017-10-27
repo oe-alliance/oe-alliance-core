@@ -9,7 +9,7 @@ inherit autotools gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"
-PR = "r19"
+PR = "r0"
 
 PACKAGES = "enigma2-skindefault"
 PROVIDES = "enigma2-skindefault"

@@ -8,7 +8,7 @@ RRECOMMENDS_${PN} = " \
     firmware-rt3070"
 
 PV = "1.0"
-PR = "r3"
+PR = "r0"
 
 ALLOW_EMPTY_${PN} = "1"
 

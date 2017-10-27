@@ -9,7 +9,7 @@ inherit gitpkgv gettext
 SRCREV = "${AUTOREV}"
 PV = "0.2.+git${SRCPV}"
 PKGV = "0.2.+git${GITPKGV}"
-PR = "r2"
+PR = "r0"
 
 
 SRC_URI="git://github.com/MovieArchiver/enigma2-plugin-extensions-moviearchiver.git"

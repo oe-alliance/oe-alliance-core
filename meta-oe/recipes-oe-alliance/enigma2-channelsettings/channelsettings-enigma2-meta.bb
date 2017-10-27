@@ -4,7 +4,7 @@ inherit packagegroup
 require conf/license/license-gplv2.inc
 
 PV = "2.0"
-PR = "r31"
+PR = "r0"
 
 DEPENDS = " \
     enigma2-plugin-settings-henksat-19e \

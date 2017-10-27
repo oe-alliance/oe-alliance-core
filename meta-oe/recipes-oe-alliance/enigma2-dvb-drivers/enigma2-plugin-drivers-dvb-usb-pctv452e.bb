@@ -10,6 +10,6 @@ RRECOMMENDS_${PN} = " \
     "
 
 PV = "1.0"
-PR = "r1"
+PR = "r0"
 
 ALLOW_EMPTY_${PN} = "1"

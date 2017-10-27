@@ -3,7 +3,7 @@ CAMNAME = "mgcamd"
 
 RDEPENDS_${PN} = "libcrypto-compat-0.9.7"
 
-PR = "r5"
+PR = "r0"
 
 SRC_URI = "http://downloads.pli-images.org/softcams/mgcamd${PV}.zip \
     http://downloads.pli-images.org/softcams/newcamd.conf;name=conf"

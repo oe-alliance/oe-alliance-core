@@ -3,7 +3,7 @@
 require conf/license/license-gplv2.inc
 inherit packagegroup
 
-PR = "r7"
+PR = "r0"
 
 DEPENDS = " \
     enigma2-plugin-picons-sat \

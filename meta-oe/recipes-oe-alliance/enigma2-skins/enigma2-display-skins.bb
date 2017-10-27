@@ -12,7 +12,7 @@ PACKAGE_ARCH = "${MACHINEBUILD}"
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r11"
+PR = "r0"
 
 SRC_URI = "git://github.com/oe-alliance/enigma2-display-skins.git;protocol=git file://skinsnotwanted"
 

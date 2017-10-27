@@ -3,7 +3,7 @@ LICENSE = "CLOSED"
 SECTION = "base"
 PRIORITY = "required"
 MAINTAINER = "OpenPli team"
-PR = "r10"
+PR = "r0"
 require conf/license/license-close.inc
 inherit allarch
 

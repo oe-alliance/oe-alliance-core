@@ -16,7 +16,7 @@ firmware-dvb-fe-drxk-delock \
 "
 
 PV = "1.0"
-PR = "r1"
+PR = "r0"
 
 
 PACKAGES = "${PN}"

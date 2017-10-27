@@ -7,7 +7,7 @@ require conf/license/license-gplv2.inc
 PACKAGES = "${PN}"
 
 PV = "1.0"
-PR = "r1"
+PR = "r0"
 
 INITSCRIPT_NAME = "softcam"
 INITSCRIPT_PARAMS = "defaults 50"

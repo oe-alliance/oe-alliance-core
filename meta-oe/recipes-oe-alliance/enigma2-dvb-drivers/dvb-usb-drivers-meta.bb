@@ -44,4 +44,4 @@ DEPENDS = "\
     ${@bb.utils.contains("MACHINE", "dags7356", "enigma2-plugin-drivers-dvb-edicombo", "", d)} \
     "
 
-PR = "r19"
+PR = "r0"

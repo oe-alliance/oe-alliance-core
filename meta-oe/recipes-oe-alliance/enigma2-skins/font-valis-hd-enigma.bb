@@ -4,7 +4,7 @@ require conf/license/license-gplv2.inc
 inherit allarch
 
 PV = "2010.05.14"
-PR = "r4"
+PR = "r0"
 
 PACKAGES = "font-valis-hd"
 PROVIDES = "font-valis-hd"

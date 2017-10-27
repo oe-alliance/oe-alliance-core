@@ -46,6 +46,6 @@ RRECOMMENDS_${PN} = "\
     enigma2-locale-zh \
     "
 
-PR = "r00"
+PR = "r0"
 
 ALLOW_EMPTY_${PN} = "1"

@@ -5,6 +5,6 @@ RRECOMMENDS_${PN} = "kernel-module-belkin-sa kernel-module-keyspan"
 require conf/license/license-gplv2.inc
 
 PV = "1.0"
-PR = "r1"
+PR = "r0"
 
 ALLOW_EMPTY_${PN} = "1"

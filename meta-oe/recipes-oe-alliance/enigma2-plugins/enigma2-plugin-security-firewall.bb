@@ -8,7 +8,7 @@ RRECOMMENDS_${PN} = "iptables kernel-module-ip-tables kernel-module-ip-conntrack
 SRC_URI = "file://firewall.sh file://firewall.users"
 
 PV = "1.0"
-PR = "r1"
+PR = "r0"
 
 S = "${WORKDIR}"
 
