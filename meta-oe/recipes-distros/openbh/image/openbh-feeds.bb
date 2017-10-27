@@ -9,7 +9,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 PACKAGES = "${PN}"
 
 PV = "${IMAGE_VERSION}"
-PR = "r3"
+PR = "r4"
 
 inherit packagegroup
 
@@ -19,7 +19,6 @@ RRECOMMENDS_${PN} = "\
     enigma2-display-skins \
     enigma2-pliplugins \
     enigma2-plugin-extensions-blurayplayer \
-    enigma2-plugin-systemplugins-quadpip \
     enigma2-plugin-extensions-epgimport \
     enigma2-plugin-systemplugins-crossepg \
     enigma2-skins \
@@ -27,4 +26,5 @@ RRECOMMENDS_${PN} = "\
     oe-alliance-skins \
     openssl-old \
     ${@bb.utils.contains("MACHINE_FEATURES", "skins1080", "hd-skins-meta", "", d)} \
+    ${@bb.utils.contains("MACHINE_FEATURES", "quadpip", "enigma2-plugin-systemplugins-quadpip", "", d)} \
     "
