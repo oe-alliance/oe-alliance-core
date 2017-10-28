@@ -1,5 +1,6 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/${P}:"
 
+INSANE_SKIP_${PN} = "file-rdeps"
 
 RDEPENDS_${PN}_append = " sdparm"
 
@@ -19,8 +20,8 @@ do_install_append() {
         install -m 0755    ${WORKDIR}/fastrestore_openatv.sh	${D}${sysconfdir}/init.d/fastrestore
         if [ "x${BRAND_OEM}" = "xvuplus" ]; then
             ln -sf        ../init.d/fastrestore      ${D}${sysconfdir}/rcS.d/S66fastrestore
-	else
+        else
             ln -sf        ../init.d/fastrestore      ${D}${sysconfdir}/rcS.d/S56fastrestore
-	fi
+        fi
     fi
 }
