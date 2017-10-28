@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = " file://COPYING;md5=24b9569831c46d4818450b55282476b4"
 
 PR = "r0"
 
-SRC_URI = "http://pypi.python.org/packages/source/p/python-Levenshtein/python-Levenshtein-${PV}.tar.gz"
+SRC_URI = "https://pypi.python.org/packages/source/p/python-Levenshtein/python-Levenshtein-${PV}.tar.gz"
 
 SRC_URI[md5sum] = "e8cde197d6d304bbdc3adae66fec99fb"
 SRC_URI[sha256sum] = "033a11de5e3d19ea25c9302d11224e1a1898fe5abd23c61c7c360c25195e3eb1"
