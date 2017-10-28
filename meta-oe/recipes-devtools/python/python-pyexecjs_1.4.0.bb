@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=70f9df77ea55ba7d1f19e18f62cf5bb6"
 
 PR = "r0"
 
-SRC_URI = "http://pypi.python.org/packages/b6/56/affb227598d7e42b28e7be24fe9240a84f3aa0cfd65a2abdbfdfd3d2f7c6/PyExecJS-${PV}.zip"
+SRC_URI = "https://pypi.python.org/packages/b6/56/affb227598d7e42b28e7be24fe9240a84f3aa0cfd65a2abdbfdfd3d2f7c6/PyExecJS-${PV}.zip"
 
 S = "${WORKDIR}/PyExecJS-${PV}"
 
