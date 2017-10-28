@@ -17,7 +17,7 @@ RDEPENDS_${PN} = "\
   python-xml \
 "
 
-SRC_URI = "http://pypi.python.org/packages/source/f/flickrapi/flickrapi-${PV}.zip"
+SRC_URI = "https://pypi.python.org/packages/source/f/flickrapi/flickrapi-${PV}.zip"
 SRC_URI[md5sum] = "90dca08a45968b18da0894887f3e59b3"
 SRC_URI[sha256sum] = "ac9304f571175b8af4fc2ee17d3e110847b526640665ca53d97bbf9df98329bc"
 
