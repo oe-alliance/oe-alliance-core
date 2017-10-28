@@ -9,7 +9,7 @@ PR = "r19"
 DEPENDS_${PN} = "python-pytz python-dateutil"
 RDEPENDS_${PN} = "python-pytz python-dateutil"
 
-SRC_URI = "http://pypi.python.org/packages/source/i/icalendar/icalendar-${PV}.tar.gz"
+SRC_URI = "https://pypi.python.org/packages/source/i/icalendar/icalendar-${PV}.tar.gz"
 
 SRC_URI[md5sum] = "f787789421382a09b3047069dbc6d265"
 SRC_URI[sha256sum] = "2fc1094896b9dcdfc87b5c07ec4a4dd3b65b70c1650e91884eff96ccb9e89ea9"
