@@ -8,7 +8,7 @@ LIC_FILES_CHKSUM = "file://PKG-INFO;md5=879c38f03989886f224a4f30c989b15a"
 
 RDEPENDS_${PN} += "python-js2py"
 
-SRC_URI = "http://pypi.python.org/packages/53/37/4f1c4fbe5d7637a6f1c8c13738a64f3c0fc28068c1b61f1391863755134a/cfscrape-${PV}.tar.gz"
+SRC_URI = "https://pypi.python.org/packages/53/37/4f1c4fbe5d7637a6f1c8c13738a64f3c0fc28068c1b61f1391863755134a/cfscrape-${PV}.tar.gz"
 
 S = "${WORKDIR}/cfscrape-${PV}"
 
