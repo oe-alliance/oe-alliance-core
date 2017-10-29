@@ -1,12 +1,14 @@
 SUMMARY = "ushare is a UPnP media server"
 LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=59530bdf33659b29e73d4adb9f9f6552"
+PR = "r1"
 
 HOMEPAGE = "http://ushare.geexbox.org/"
-DEPENDS = "libupnp virtual/libiconv virtual/libintl gettext"
+DEPENDS = "libupnp1.6 virtual/libiconv virtual/libintl gettext"
 SRC_URI = "http://ushare.geexbox.org/releases/ushare-${PV}.tar.bz2 \
         file://remove-lsb-dependency.patch \
         file://0002-ushare-fix-building-with-gcc-5.x.patch \
+        file://0001-update-for-libupnp-1.6.19-or-newer.patch \
         file://ushare.conf \
         file://init"
 

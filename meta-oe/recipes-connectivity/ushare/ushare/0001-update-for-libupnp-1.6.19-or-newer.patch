@@ -1,0 +1,25 @@
+From 71ccb3b2af9b0391ee9b8c38e4ff7c16b3cfc27a Mon Sep 17 00:00:00 2001
+From: captain <openatv@gmail.com>
+Date: Sun, 29 Oct 2017 16:16:14 +0100
+Subject: [PATCH] update for libupnp 1.6.19 or newer
+
+---
+ src/ushare.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/ushare.c b/src/ushare.c
+index 717e862..0be1c15 100644
+--- a/src/ushare.c
++++ b/src/ushare.c
+@@ -188,7 +188,7 @@ handle_action_request (struct Upnp_Action_Request *request)
+   if (strcmp (request->DevUDN + 5, ut->udn))
+     return;
+ 
+-  ip = request->CtrlPtIPAddr.s_addr;
++  ip = ((struct in_addr*)&request->CtrlPtIPAddr)->s_addr;
+   ip = ntohl (ip);
+   sprintf (val, "%d.%d.%d.%d",
+            (ip >> 24) & 0xFF, (ip >> 16) & 0xFF, (ip >> 8) & 0xFF, ip & 0xFF);
+-- 
+2.12.0.windows.1
+
