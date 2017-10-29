@@ -7,6 +7,7 @@ LIC_FILES_CHKSUM = "file://README;md5=b0c7b851d6d40e5194e73ca66db0e257"
 
 inherit gitpkgv
 
+SRCREV = "${AUTOREV}"
 PV = "1+git${SRCPV}"
 PKGV = "1+git${GITPKGV}"
 
