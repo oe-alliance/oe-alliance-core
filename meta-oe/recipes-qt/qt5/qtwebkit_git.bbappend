@@ -10,3 +10,5 @@ SRC_URI_append_dm900 += " \
 "
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/qtwebkit-git:"
+
+INSANE_SKIP_${PN} += "file-rdeps ldflags"
