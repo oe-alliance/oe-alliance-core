@@ -4,7 +4,7 @@ IMAGE_CLASSES += "hd-emmc_image_multi"
 MACHINE_FEATURES += "qthbbtv"
 DISTRO_FEATURES_remove = "directfb gtk-directfb"
 
-IMAGE_FSTYPES += "hd-emmc"
+IMAGE_FSTYPES += "hdemmc"
 IMAGE_ROOTFS_SIZE ?= "294912"
 
 TARGET_ARCH = "arm"
@@ -13,7 +13,7 @@ DEFAULTTUNE = "cortexa15hf-neon-vfpv4"
 PREFERRED_VERSION_linux-gfutures = "4.10.12"
 PREFERRED_VERSION_linux-libc-headers = "4.10"
 
-IMAGE_CMD_hd-emmc_append = "\
+IMAGE_CMD_hdemmc_append = "\
     mkdir -p ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}; \
     mv ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.emmc.img ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/disk.img; \
     cd ${IMAGE_ROOTFS}; \

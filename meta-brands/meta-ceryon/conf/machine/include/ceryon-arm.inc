@@ -1,9 +1,9 @@
-IMAGE_CLASSES += "ceryon-emmc_image_multi"
+IMAGE_CLASSES += "ceryonemmc_image_multi"
 
 MACHINE_FEATURES += "qthbbtv"
 DISTRO_FEATURES_remove = "directfb gtk-directfb"
 
-IMAGE_FSTYPES += "ceryon-emmc"
+IMAGE_FSTYPES += "ceryonemmc"
 IMAGE_ROOTFS_SIZE ?= "294912"
 
 TARGET_ARCH = "arm"
@@ -12,7 +12,7 @@ DEFAULTTUNE = "cortexa15hf-neon-vfpv4"
 PREFERRED_VERSION_linux-ceryon= "4.10.12"
 PREFERRED_VERSION_linux-libc-headers = "4.10"
 
-IMAGE_CMD_ceryon-emmc_append = "\
+IMAGE_CMD_ceryonemmc_append = "\
     mkdir -p ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}; \
     ${@bb.utils.contains("MACHINE_FEATURES", "lcd220", "cp ${DEPLOY_DIR_IMAGE}/lcdwarning220.bin ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/lcdflashing.bmp;" , "", d)} \
     mv ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.emmc.img ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/disk.img; \

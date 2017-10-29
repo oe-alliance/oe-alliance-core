@@ -46,8 +46,8 @@ UBI_VOLNAME = "rootfs"
 # image name in the zipfile, can be overridden by an image
 ZIPFILE_IMAGE_NAME ?= "firmware.img"
 
-IMAGE_DEPENDS_imgzip256 = "createimage-${MACHINE}-native mtd-utils-native"
-IMAGE_DEPENDS_imgzip1024 = "createimage-${MACHINE}-native mtd-utils-native"
+do_image_imgzip256[depends] = "createimage-${MACHINE}-native:do_populate_sysroot mtd-utils-native:do_populate_sysroot"
+do_image_imgzip1024[depends] = "createimage-${MACHINE}-native:do_populate_sysroot mtd-utils-native:do_populate_sysroot"
 
 IMAGE_CMD_imgzip256 = " \
     mkfs.ubifs -r ${IMAGE_ROOTFS} -o ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs_256.ubifs -m 2048 -e 126976 -c 4096; \

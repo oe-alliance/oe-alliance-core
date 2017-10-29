@@ -1,8 +1,8 @@
 inherit image_types
 
-IMAGE_TYPEDEP_hd-emmc = "ext4"
+IMAGE_TYPEDEP_airdigitalemmc = "ext4"
 
-do_image_hd-emmc[depends] += "parted-native:do_populate_sysroot dosfstools-native:do_populate_sysroot mtools-native:do_populate_sysroot virtual/kernel:do_populate_sysroot"
+do_image_airdigitalemmc[depends] += "parted-native:do_populate_sysroot dosfstools-native:do_populate_sysroot mtools-native:do_populate_sysroot virtual/kernel:do_populate_sysroot"
 
 GPT_OFFSET = "0"
 GPT_SIZE = "1024"
@@ -21,7 +21,7 @@ STORAGE_PARTITION_OFFSET = "$(expr ${ROOTFS_PARTITION_OFFSET} \+ ${ROOTFS_PARTIT
 EMMC_IMAGE = "${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.emmc.img"
 EMMC_IMAGE_SIZE = "3817472"
 
-IMAGE_CMD_hd-emmc () {
+IMAGE_CMD_airdigitalemmc () {
     dd if=/dev/zero of=${EMMC_IMAGE} bs=1024 count=0 seek=${EMMC_IMAGE_SIZE}
     parted -s ${EMMC_IMAGE} mklabel gpt
     parted -s ${EMMC_IMAGE} unit KiB mkpart boot fat16 ${BOOT_PARTITION_OFFSET} $(expr ${BOOT_PARTITION_OFFSET} \+ ${BOOT_PARTITION_SIZE})
