@@ -1,0 +1,18 @@
+#
+# Description: Transition from libupnp3 to libupnp6
+# Bug-Debian: http://bugs.debian.org/656832
+# Author: Nick Leverton <nick@leverton.org>
+# Last-Update: 2012-02-22
+#
+Index: djmount/djmount/upnp_util.h
+===================================================================
+--- djmount.orig/djmount/upnp_util.h	2012-02-22 03:34:37.459476269 +0100
++++ djmount/djmount/upnp_util.h	2012-02-22 03:48:14.184514680 +0100
+@@ -28,6 +28,7 @@
+ 
+ 
+ #include <upnp/upnptools.h>
++#include <upnp/upnp.h>
+ 
+ 
+ #ifdef __cplusplus

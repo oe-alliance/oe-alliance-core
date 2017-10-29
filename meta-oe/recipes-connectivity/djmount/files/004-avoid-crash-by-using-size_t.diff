@@ -1,0 +1,18 @@
+Description: Avoid crash by using size_t instead of unsigned int
+Author: Bernhard Übelacker <bernhardu@vr-web.de>
+        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+Bug-Debian: https://bugs.debian.org/701680
+Last-Update: 2014-12-21
+Index: djmount/djmount/file_buffer.c
+===================================================================
+--- djmount.orig/djmount/file_buffer.c
++++ djmount/djmount/file_buffer.c
+@@ -212,7 +212,7 @@ FileBuffer_Read (FileBuffer* file, char*
+ 		 * to return the exact number of bytes requested.
+ 		 */
+ 		do {
+-			unsigned int read_size = size - n;
++			size_t read_size = size - n;
+ 			if (n > 0) {
+ 				Log_Printf (LOG_DEBUG, 
+ 					    "UpnpReadHttpGet loop ! url '%s' "
