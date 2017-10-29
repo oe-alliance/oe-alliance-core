@@ -20,7 +20,7 @@ PR = "r1"
 
 PACKAGES = "${PN}"
 
-pkg_postinst() {
+pkg_postinst_${PN} () {
 #!/bin/sh
 if [ -f ${D}/lib/firmware/dvb-demod-drxk-01.fw ]; then
   rm ${D}/lib/firmware/dvb-demod-drxk-01.fw
@@ -30,7 +30,7 @@ echo "options em28xx cards=89 usb_xfer_mode=0" > ${D}/etc/modprobe.d/em28xx.conf
 chmod 0644 ${D}/etc/modprobe.d/em28xx.conf
 }
 
-pkg_postrm() {
+pkg_postrm_${PN} () {
 #!/bin/sh
 if [ -f /lib/firmware/dvb-demod-drxk-01.fw ]; then
   rm /lib/firmware/dvb-demod-drxk-01.fw
