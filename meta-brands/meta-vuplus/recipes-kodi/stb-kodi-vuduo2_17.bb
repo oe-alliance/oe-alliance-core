@@ -10,6 +10,8 @@ RPROVIDES_${PN} += "kodi"
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
+INSANE_SKIP_${PN} += "file-rdeps ldflags"
+
 SRC_URI_append += " \
     http://archive.vuplus.com/download/build_support/kodi/xbmc-support_${MACHINE}_${GLPR}.tar.gz;name=xbmc-support \
 "

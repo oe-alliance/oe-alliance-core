@@ -9,3 +9,5 @@ do_install_append(){
 }
 
 FILES_${PN}_append = "${bindir}/xbmc.helper ${libdir}/libxbmc_base.so"
+
+INSANE_SKIP_${PN} += "file-rdeps"
