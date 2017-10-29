@@ -22,7 +22,7 @@ RDEPENDS_${PN} = "\
     tuxbox-links \
     tuxbox-common \
     mtd-utils \
-    mtd-utils-ubifs
+    mtd-utils-ubifs \
     ${@bb.utils.contains('MACHINE_FEATURES', 'emmc', 'bzip2', '', d)} \
     procps \
     parted \
