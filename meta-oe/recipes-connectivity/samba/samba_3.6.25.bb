@@ -159,7 +159,4 @@ FILES_COMPRESS_dm500hd = "${bindir}/smbclient ${bindir}/testparm \
                           ${bindir}/smbcontrol ${bindir}/smbstatus \
                           ${sbindir}/samba_multicall \
                          "
-FILES_COMPRESS_dm800 = "${bindir}/smbclient ${bindir}/testparm \
-                          ${bindir}/smbcontrol ${bindir}/smbstatus \
-                          ${sbindir}/samba_multicall \
-                         "
+
