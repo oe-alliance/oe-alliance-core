@@ -11,3 +11,5 @@ inherit opendreambox-precompiled-binary3 update-rc.d
 INITSCRIPT_NAME = "${PN}"
 INHIBIT_PACKAGE_STRIP = "1"
 INITSCRIPT_PARAMS = "start 60 S ."
+
+INSANE_SKIP_${PN} += "file-rdeps"
