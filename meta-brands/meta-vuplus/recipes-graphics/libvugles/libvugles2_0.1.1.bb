@@ -27,4 +27,4 @@ FILES_${PN} = "/usr/include /usr/lib"
 
 COMPATIBLE_MACHINE = "^(vusolose|vusolo2|vuduo2|vusolo4k|vuuno4k|vuultimo4k)$"
 
-INSANE_SKIP_${PN} += "already-stripped dev-so"
+INSANE_SKIP_${PN} += "already-stripped dev-so file-rdeps"
