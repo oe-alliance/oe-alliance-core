@@ -1,0 +1,12 @@
+diff --git a/Source/WebCore/css/maketokenizer b/Source/WebCore/css/maketokenizer
+index d2a786f..1aa17b5 100644
+--- a/Source/WebCore/css/maketokenizer
++++ b/Source/WebCore/css/maketokenizer
+@@ -112,6 +112,7 @@ while (<>) {
+ # Skip past initialization code, down to main loop.
+ while (<>) {
+     last if /while \( 1 \)/;
++    last if /while \( ..CONSTCOND..1 \)/;
+ }
+ 
+ # Dump the main loop, skipping over labels we don't use.

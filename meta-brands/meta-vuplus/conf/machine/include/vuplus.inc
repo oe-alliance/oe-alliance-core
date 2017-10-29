@@ -24,6 +24,7 @@ MACHINE_EXTRA_RRECOMMENDS = " \
 include conf/machine/include/autoload-filesystems.inc
 
 PREFERRED_VERSION_nfs-utils ?= "1.2.8"
+PREFERRED_VERSION_icu_arm = "58.2"
 
 PREFERRED_PROVIDER_virtual/kernel = "linux-vuplus"
 PREFERRED_PROVIDER_virtual/blindscan-dvbc = "vuplus-blindscan-utils"
