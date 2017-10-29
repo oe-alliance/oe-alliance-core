@@ -74,10 +74,10 @@ DEPENDS = " \
 
 PROVIDES = "xbmc"
 
-SRCREV = "7fc6da0c87414d2ba20055e084adc10546a15b7c"
+SRCREV = "f8f2dca17b40247c8cf9fffbc986cd31434278ae"
 
-PV = "17.4+git${SRCPV}"
-PKGV = "17.4+git${GITPKGV}"
+PV = "17.5+git${SRCPV}"
+PKGV = "17.5+git${GITPKGV}"
 
 SRC_URI = "git://github.com/xbmc/xbmc.git;branch=Krypton \
            file://0003-configure-don-t-try-to-run-stuff-to-find-tinyxml.patch \
