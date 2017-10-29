@@ -1,5 +1,5 @@
-#IMAGE_CLASSES += "hd-emmc_image_single"
-IMAGE_CLASSES += "hd-emmc_image_multi"
+#IMAGE_CLASSES += "hdemmc_image_single"
+IMAGE_CLASSES += "hdemmc_image_multi"
 
 MACHINE_FEATURES += "qthbbtv"
 DISTRO_FEATURES_remove = "directfb gtk-directfb"
