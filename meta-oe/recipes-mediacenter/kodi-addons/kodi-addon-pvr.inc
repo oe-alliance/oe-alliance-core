@@ -31,6 +31,7 @@ EXTRA_OECMAKE = " \
     -DCMAKE_PREFIX_PATH=${STAGING_DIR_HOST}${prefix} \
     -DJSONCPP_INCLUDE_DIRS=${STAGING_INCDIR}/json \
     -DPACKAGE_ZIP=1 \
+    -DXLOCALE_NOT_USED=1 \
 "
 
 do_compile_prepend() {
