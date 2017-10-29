@@ -186,7 +186,7 @@ DEFAULTTUNE = "mips32el"
 GLIBC_EXTRA_OECONF = "--with-tls"
 DVBMEDIASINK_CONFIG = "--with-wma --with-wmv --with-pcm --with-dts"
 
-PREFERRED_VERSION_nfs-utils ?= "1.2.8"
+
 
 PREFERRED_PROVIDER_virtual/blindscan-dvbs = "ini-blindscan-utils"
 PREFERRED_PROVIDER_virtual/blindscan-dvbc = "ini-blindscan-utils"

@@ -49,7 +49,7 @@ PREFERRED_PROVIDER_virtual/blindscan-dvbc = "dreambox-blindscan-utils"
 
 PREFERRED_VERSION_linux-dreambox ?= "3.14"
 PREFERRED_VERSION_linux-libc-headers = "3.14"
-PREFERRED_VERSION_nfs-utils ?= "1.2.8"
+
 TARGET_ARCH = "arm"
 DEFAULTTUNE = "cortexa15hf-neon-vfpv4"
 OLDEST_KERNEL = "3.14"

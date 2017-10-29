@@ -121,7 +121,7 @@ PREFERRED_PROVIDER_virtual/kernel = "linux-odin"
 PREFERRED_PROVIDER_virtual/blindscan-dvbc = "odin-blindscan-utils-${MACHINE}"
 PREFERRED_PROVIDER_virtual/blindscan-dvbs = "odin-blindscan-utils-${MACHINE}"
 
-PREFERRED_VERSION_nfs-utils ?= "1.2.8"
+
 
 KERNEL_IMAGETYPE = "vmlinux"
 KERNEL_OUTPUT = "${KERNEL_IMAGETYPE}"
