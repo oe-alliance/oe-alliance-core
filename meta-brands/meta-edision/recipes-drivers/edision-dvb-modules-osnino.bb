@@ -1,6 +1,6 @@
 KV = "4.8.17"
-SRCDATE = "20171024"
+SRCDATE = "20171027"
 
 require edision-dvb-modules.inc
-SRC_URI[md5sum] = "04f1a2d5995c0c1e2271ee5813b46fa7"
-SRC_URI[sha256sum] = "4a815dc3e2829d3e39301f9993daf1ec45a70019f0ef04a67153444d9a4b066c"
+SRC_URI[md5sum] = "42bed4babfd6ed54291f51a86c5dc580"
+SRC_URI[sha256sum] = "5426f16b9e47cc6822483b0a11db74bdfdbdb824f3985b681aa81417ad937f24"

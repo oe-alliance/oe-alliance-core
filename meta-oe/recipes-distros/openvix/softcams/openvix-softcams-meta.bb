@@ -14,8 +14,9 @@ DEPENDS = "\
     ${@bb.utils.contains("TARGET_ARCH", "mipsel", "openvix-softcams-oscam-latest-mipsel" , "openvix-softcams-oscam-latest-arm", d)} \
     ${@bb.utils.contains("TARGET_ARCH", "mipsel", "openvix-softcams-oscam-pcscd-mipsel" , "", d)} \
     ${@bb.utils.contains("TARGET_ARCH", "mipsel", "openvix-softcams-oscam-pcscd-latest-mipsel" , "openvix-softcams-oscam-pcscd-latest-arm", d)} \
+    ${@bb.utils.contains("TARGET_ARCH", "mipsel", "openvix-softcams-oscam-emu-mipsel" , "openvix-softcams-oscam-emu-arm", d)} \
     ${@bb.utils.contains("TARGET_ARCH", "mipsel", "openvix-softcams-rqcamd", "", d)} \
     ${@bb.utils.contains("TARGET_ARCH", "mipsel", "openvix-softcams-scam", "", d)} \
-    "    
+    "
 
-PR = "r11"
+PR = "r12"
