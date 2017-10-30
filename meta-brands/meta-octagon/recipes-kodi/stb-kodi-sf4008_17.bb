@@ -9,3 +9,5 @@ EXTRA_OECONF += " \
     --with-platform=nextv-cortexa15 \
     --with-ffmpeg=v3d \
 "
+
+INSANE_SKIP_${PN} += "file-rdeps"
