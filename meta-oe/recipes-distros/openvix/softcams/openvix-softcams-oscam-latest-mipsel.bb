@@ -6,9 +6,9 @@ LICENSE = "GPLv3"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 
 PV = "1.20+svn${SRCPV}"
-SRCREV = "11384"
-SRC_URI = "svn://www.streamboard.tv/svn/oscam;protocol=http;module=trunk;scmdata=keep;rev=${SRCREV}"
-PR = "r1"
+SRCREV = "11391"
+SRC_URI = "svn://www.oscam.cc/svn/oscam-mirror;protocol=http;module=trunk;scmdata=keep;rev=${SRCREV}"
+PR = "r2"
 
 PACKAGES = "enigma2-plugin-softcams-oscam-latest"
 
