@@ -7,6 +7,13 @@ LOG=/home/root/FastRestore.log
 #ROOTFS=/tmp/
 #LOG=/dev/tty
 
+panic() {
+	rm /media/*/images/config/noplugins 2>/dev/null || true
+	rm /media/*/images/config/settings 2>/dev/null || true
+	rm /media/*/images/config/plugins 2>/dev/null || true
+	exit 0
+}
+
 restoreUserDB() {
 	$(python - <<END
 import sys
@@ -58,12 +65,20 @@ END
 get_restore_mode() {
 	settings=0
 	plugins=0
+
+	# Default to turbo
+	slow=0
 	fast=0
-	turbo=0
+	turbo=1
 
 	for i in hdd usb backup; do
 		[ -e /media/${i}/images/config/settings ] && settings=1
-		[ -e /media/${i}/images/config/plugins ] && plugins=1
+		# noplugins means restore settings but no plugins
+		[ -e /media/${i}/images/config/noplugins ] && settings=1
+		# in order to restore plugins we need to restore settings first too
+		[ -e /media/${i}/images/config/plugins ] && plugins=1 && settings=1
+
+		[ -e /media/${i}/images/config/slow ] && slow=1
 		[ -e /media/${i}/images/config/fast ] && fast=1
 		[ -e /media/${i}/images/config/turbo ] && turbo=1
 	done
@@ -72,7 +87,8 @@ get_restore_mode() {
 		[ -e /media/${i}/images/config/noplugins ] && plugins=0
 	done
 
-	fast=$((fast | turbo))
+	# "slow" takes precedence over "fast"/"turbo" if explicitely set
+	fast=$(((fast | turbo) & ! slow))
 }
 
 show_logo() {
@@ -84,6 +100,7 @@ show_logo() {
 lock_device() {
 	DEV=/dev/null
 	[ -e /dev/dbox/oled0 ] && DEV=/dev/dbox/oled0
+	[ -e /proc/stb/lcd/oled_brightness ] && echo 255 > /proc/stb/lcd/oled_brightness || true
 
 	if [ "x$DEV" != "x/dev/null" ]; then
 		exec 200>$DEV
@@ -105,8 +122,11 @@ spinner() {
 	done
 }
 
+[ -e /media/*/panic.update ] && panic
+
 get_restore_mode
 
+# If neither fast nor turbo are set or autorestore settings is disabled exit here
 [ $fast -eq 1 ] || exit 0
 [ $settings -eq 1 ] || exit 0
 
