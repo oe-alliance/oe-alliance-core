@@ -1,5 +1,7 @@
 #!/bin/bash
 
+black=0
+
 sanity_fail () {
 	echo ERROR: Missing tools ...
 	echo
@@ -31,7 +33,8 @@ sanity_check () {
 }
 
 overlay () {
-	composite -gravity center restore_overlay.png bootlogo.jpg restore.jpg
+	[[ $black = 0 ]] && composite -gravity center restore_overlay.png bootlogo.jpg restore.jpg
+	[[ $black = 1 ]] && composite -gravity center restore_overlay_black.png bootlogo.jpg restore.jpg
 }
 
 jpg2mvi () {
@@ -39,6 +42,7 @@ jpg2mvi () {
 }
 
 sanity_check
+[ "$1" = "black" ] && black=1
 pushd ./files >/dev/null
 overlay
 jpg2mvi
