@@ -26,6 +26,8 @@ do_install() {
     install -d ${D}/etc
     echo "box_type=${MACHINEBUILD}" > ${D}/etc/image-version
     echo "build_type=${BUILDTYPE}" >> ${D}/etc/image-version
+    echo "machine_brand=${MACHINE_BRAND}" >> ${D}/etc/image-version
+    echo "machine_name=${MACHINE_NAME}" >> ${D}/etc/image-version
     echo "version=${IMAGE_VERSION}" >> ${D}/etc/image-version
     echo "build=${BUILD_VERSION}" >> ${D}/etc/image-version
     echo "date=${DATETIME}" >> ${D}/etc/image-version
