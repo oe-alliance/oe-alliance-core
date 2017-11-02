@@ -1,4 +1,4 @@
-SUMMARY = "Enigma2 Skin MX_TITANIUM_C"
+SUMMARY = "Enigma2 Skin BlackShadowSE_P"
 MAINTAINER = "BlackHole team"
 SECTION = "base"
 PRIORITY = "required"
@@ -12,11 +12,11 @@ SRCREV = "${AUTOREV}"
 PV = "3.0+git${SRCPV}"
 PKGV = "3.0+git${GITPKGV}"
 VER ="3.0"
-PR = "r1"
+PR = "r2"
 
 SRC_URI="git://github.com/BlackHole/skins.git"
 
-S = "${WORKDIR}/git/MX_Titanium_C"
+S = "${WORKDIR}/git/BlackShadowSE_P"
 
 FILES_${PN} = "/usr/*"
 
