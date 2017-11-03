@@ -25,6 +25,8 @@ S = "${WORKDIR}"
 
 INHIBIT_PACKAGE_STRIP = "1"
 
+INSANE_SKIP_${PN} += "file-rdeps"
+
 FILES_SOLIBSDEV =""
 
 do_install() {
