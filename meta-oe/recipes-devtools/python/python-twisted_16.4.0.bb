@@ -61,7 +61,7 @@ RDEPENDS_${PN} = "\
     ${PN}-words \
 "
 
-RDEPENDS_${PN}-core = "python-core python-zopeinterface python-contextlib python-incremental python-constantly"
+RDEPENDS_${PN}-core = "python-core python-zopeinterface python-contextlib python-incremental python-constantly python-service-identity python-hyperlink"
 RDEPENDS_${PN}-test = "${PN}"
 RDEPENDS_${PN}-conch = "${PN}-core ${PN}-protocols"
 RDEPENDS_${PN}-lore = "${PN}-core"
