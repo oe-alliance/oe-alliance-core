@@ -175,6 +175,7 @@ for i in $mounts; do
 	umount $i >>$LOG 2>>$LOG
 done
 echo "Mounting all ..." >>$LOG
+/etc/init.d/volatile-media.sh
 mount -a >>$LOG 2>>$LOG
 mdev -s
 [ -e "${ROOTFS}etc/init.d/hostname.sh" ] && ${ROOTFS}etc/init.d/hostname.sh

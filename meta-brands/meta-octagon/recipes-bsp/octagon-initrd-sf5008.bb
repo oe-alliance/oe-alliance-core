@@ -1,4 +1,4 @@
-SRCDATE = "20171013"
+SRCDATE = "20171102"
 
 require octagon-initrd.inc
 
@@ -9,5 +9,5 @@ do_deploy() {
     fi
 }
 
-SRC_URI[md5sum] = "0e596a783169efcfbf358e933c7f14d0"
-SRC_URI[sha256sum] = "775f6413544a67c5918ddbda3cf77bf9289b5bbaed6dcc038086ded79b24c826"
+SRC_URI[md5sum] = "4786f96ffd663d5980e96e37d1560700"
+SRC_URI[sha256sum] = "6abcb82847e116dbc4e2906dc6431f4ac1ee17647daf0cebda3fc6fd328509bb"
