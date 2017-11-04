@@ -50,7 +50,7 @@ KERNEL_OBJECT_SUFFIX = "ko"
 
 KERNEL_OUTPUT_mips = "vmlinux"
 KERNEL_IMAGETYPE_mips = "vmlinux"
-KERNEL_IMAGEDEST_mips = "/boot"
+KERNEL_IMAGEDEST_mips = "tmp"
 
 FILES_kernel-image_mips = "${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}*"
 
@@ -64,8 +64,8 @@ kernel_do_install_append_mips() {
 pkg_postinst_kernel-image_mips () {
 	if [ "x$D" == "x" ]; then
 		if [ -f /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz ] ; then
-			flash_erase /dev/mtd1 0 0
-			nandwrite -p /dev/mtd1 /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz
+			flash_erase /dev/${MTD_KERNEL} 0 0
+			nandwrite -p /dev/${MTD_KERNEL} /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz
 		fi
 	fi
 	true
