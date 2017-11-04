@@ -156,8 +156,6 @@ restart_network() {
 	[ -e "${ROOTFS}etc/init.d/hostname.sh" ] && ${ROOTFS}etc/init.d/hostname.sh
 	[ -e "${ROOTFS}etc/init.d/networking" ] && ${ROOTFS}etc/init.d/networking restart >>$LOG
 	sleep 3
-	[ -e "${ROOTFS}etc/init.d/nfscommon" ] && ${ROOTFS}etc/init.d/nfscommon restart >>$LOG
-	[ -e "${ROOTFS}etc/init.d/autofs" ] && ${ROOTFS}etc/init.d/autofs restart >>$LOG
 	echo >>$LOG
 }
 
@@ -172,16 +170,15 @@ restart_services() {
 		echo "Unmounting $i ..." >>$LOG
 		umount $i >>$LOG 2>>$LOG
 	done
+	[ -e "${ROOTFS}etc/init.d/volatile-media.sh" ] && ${ROOTFS}etc/init.d/volatile-media.sh
 	echo >>$LOG
 	echo "Mounting all ..." >>$LOG
-	mount -a >>$LOG 2>>$LOG
+	mount -at nonfs,nosmbfs,noncpfs >>$LOG 2>>$LOG
 	mdev -s
 	echo >>$LOG
-	echo "Backgrounding Samba/NFS server restarts ..." >>$LOG
+	echo "Backgrounding service restarts ..." >>$LOG
 	[ -e "${ROOTFS}etc/init.d/modload.sh" ] && ${ROOTFS}etc/init.d/modload.sh >/dev/null >&1
 	[ -e "${ROOTFS}etc/init.d/softcam" ] && nohup $(${ROOTFS}etc/init.d/softcam restart) >/dev/null >&1 &
-	[ -e "${ROOTFS}etc/init.d/samba" ] && nohup $(${ROOTFS}etc/init.d/samba restart) >/dev/null >&1 &
-	[ -e "${ROOTFS}etc/init.d/nfsserver" ] && nohup $(${ROOTFS}etc/init.d/nfsserver restart) >/dev/null >&1 &
 	echo >>$LOG
 }
 
