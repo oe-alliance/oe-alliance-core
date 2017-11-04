@@ -31,7 +31,7 @@ do_configure_prepend() {
 }
 
 
-require linux-dreambox2.inc
+require linux-dreambox-3.4.inc
 require linux-extra-image.inc
 
 CMDLINE = "${@bb.utils.contains('MACHINE', 'dm520', \

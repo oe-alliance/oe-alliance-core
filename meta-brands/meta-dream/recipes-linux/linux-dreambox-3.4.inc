@@ -1,4 +1,4 @@
-require linux2.inc
+require linux-3.4.inc
 
 # By default, kernel.bbclass modifies package names to allow multiple kernels
 # to be installed in parallel. We revert this change and rprovide the versioned
