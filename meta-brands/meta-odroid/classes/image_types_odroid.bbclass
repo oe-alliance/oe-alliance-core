@@ -39,7 +39,7 @@ SDIMG = "${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.sdcard.img"
 # Boot partition size [in KiB] to get boot partition with size of 128M
 BOOT_SPACE ?= "131000"
 
-IMAGE_DEPENDS_sdcard = "parted-native:do_populate_sysroot \
+do_image_sdcard[depends] += "parted-native:do_populate_sysroot \
                         dosfstools-native:do_populate_sysroot \
                         mtools-native:do_populate_sysroot \
                         virtual/kernel:do_deploy \

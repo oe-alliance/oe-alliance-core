@@ -99,8 +99,8 @@ EXTRA_IMAGECMD_jffs2nfi ?= "-e ${DREAMBOX_ERASE_BLOCK_SIZE} -n -l"
 EXTRA_IMAGECMD_sum.jffs2nfi ?= "-e ${DREAMBOX_ERASE_BLOCK_SIZE} -n -l"
 EXTRA_IMAGECMD_ubinfi ?= "-e ${DREAMBOX_ERASE_BLOCK_SIZE} -n -l"
 
-IMAGE_DEPENDS_jffs2nfi = "${IMAGE_DEPENDS_jffs2} dreambox-buildimage-native"
-IMAGE_DEPENDS_sum.jffs2nfi = "${IMAGE_DEPENDS_sum.jffs2} dreambox-buildimage-native"
-IMAGE_DEPENDS_ubinfi = "${IMAGE_DEPENDS_ubi} ${IMAGE_DEPENDS_ubifs} dreambox-buildimage-native"
+do_image_jffs2nfi[depends] += "dreambox-buildimage-native:do_populate_sysroot"
+do_image_sum.jffs2nfi[depends] += "dreambox-buildimage-native:do_populate_sysroot"
+do_image_ubinfi[depends] += "dreambox-buildimage-native:do_populate_sysroot"
 
 IMAGE_TYPES += "jffs2nfi sum.jffs2nfi ubinfi"
