@@ -1,5 +1,3 @@
-inherit image_types
-
 IMAGE_CMD_jffs2nfi = " \
 	mkfs.jffs2 \
 		--root=${IMAGE_ROOTFS}/boot \
@@ -66,7 +64,6 @@ IMAGE_CMD_ubinfi = " \
 "
 
 EXTRA_IMAGECMD_jffs2nfi ?= "-e ${DREAMBOX_ERASE_BLOCK_SIZE} -n -l"
-EXTRA_IMAGECMD_sum.jffs2nfi ?= "-e ${DREAMBOX_ERASE_BLOCK_SIZE} -n -l"
 EXTRA_IMAGECMD_ubinfi ?= "-e ${DREAMBOX_ERASE_BLOCK_SIZE} -n -l"
 
 do_image_jffs2nfi[depends] += "mtd-utils-native:do_populate_sysroot dreambox-buildimage-native:do_populate_sysroot"
