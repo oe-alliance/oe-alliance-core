@@ -4,36 +4,37 @@
 ROOTFS=/
 LOG=/home/root/FastRestore.log
 
-#ROOTFS=/tmp/
-#LOG=/dev/tty
-
-panic() {
+do_panic() {
 	rm /media/*/images/config/noplugins 2>/dev/null || true
 	rm /media/*/images/config/settings 2>/dev/null || true
 	rm /media/*/images/config/plugins 2>/dev/null || true
 	exit 0
 }
 
-restoreUserDB() {
-	$(python - <<END
-import sys
-sys.path.append('/usr/lib/enigma2/python/Plugins/SystemPlugins/SoftwareManager')
-from ShellCompatibleFunctions import restoreUserDB
-restoreUserDB()
-END
-	)
-}
+get_restoremode() {
+	settings=0
+	plugins=0
+	noplugins=0
 
-get_blacklist() {
-	BLACKLIST=$(python - <<END
-import sys
-sys.path.append('/usr/lib/enigma2/python/Plugins/SystemPlugins/SoftwareManager')
-import ShellCompatibleFunctions
-TMPLIST=ShellCompatibleFunctions.BLACKLISTED
-TMPLIST.insert(0, "")
-print " --exclude=".join(TMPLIST)
-END
-	)
+	slow=0
+	fast=0
+	turbo=1
+
+	for i in hdd usb backup; do
+		[ -e /media/${i}/images/config/settings ] && settings=1
+		[ -e /media/${i}/images/config/noplugins ] && noplugins=1
+		[ -e /media/${i}/images/config/plugins ] && plugins=1
+		[ -e /media/${i}/images/config/slow ] && slow=1
+		[ -e /media/${i}/images/config/fast ] && fast=1 && turbo=0
+	done
+
+	# If "noplugins" and "plugins" is set at the same time, "plugins" wins
+	noplugins=$((noplugins & ! plugins))
+
+
+	# if neither "plugins" nor "noplugins" are set, fall back to "slow", because "ask user" can not be done in a boot script
+	# "slow" takes precedence over "fast"/"turbo" if explicitely set
+	fast=$((settings & (plugins | noplugins) & ! slow))
 }
 
 get_backupset() {
@@ -52,57 +53,36 @@ END
 	)
 }
 
-get_rightset() {
-	RIGHTSET=$(python - <<END
+get_boxtype() {
+	boxtype=$(python - <<END
 import sys
-sys.path.append('/usr/lib/enigma2/python/Plugins/SystemPlugins/SoftwareManager')
-import ShellCompatibleFunctions
-print ShellCompatibleFunctions.MANDATORY_RIGHTS
+sys.path.append('/usr/lib/enigma2/python')
+from boxbranding import getBoxType, getMachineBrand, getMachineName, getImageDistro
+boxtype = getBoxType()
+print boxtype
 END
 	)
-}
-
-get_restore_mode() {
-	settings=0
-	plugins=0
-
-	# Default to turbo
-	slow=0
-	fast=0
-	turbo=1
-
-	for i in hdd usb backup; do
-		[ -e /media/${i}/images/config/settings ] && settings=1
-		# noplugins means restore settings but no plugins
-		[ -e /media/${i}/images/config/noplugins ] && settings=1
-		# in order to restore plugins we need to restore settings first too
-		[ -e /media/${i}/images/config/plugins ] && plugins=1 && settings=1
-
-		[ -e /media/${i}/images/config/slow ] && slow=1
-		[ -e /media/${i}/images/config/fast ] && fast=1
-		[ -e /media/${i}/images/config/turbo ] && turbo=1
-	done
-
-	for i in hdd usb backup; do
-		[ -e /media/${i}/images/config/noplugins ] && plugins=0
-	done
-
-	# "slow" takes precedence over "fast"/"turbo" if explicitely set
-	fast=$(((fast | turbo) & ! slow))
 }
 
 show_logo() {
 	BOOTLOGO=/usr/share/restore.mvi
 	[ ! -e $BOOTLOGO ] && BOOTLOGO=/usr/share/bootlogo.mvi
-	/usr/bin/showiframe ${BOOTLOGO}
+	[ -e $BOOTLOGO ] && nohup $(/usr/bin/showiframe ${BOOTLOGO}) >/dev/null 2>&1 &
 }
 
 lock_device() {
 	DEV=/dev/null
 	[ -e /dev/dbox/oled0 ] && DEV=/dev/dbox/oled0
-	[ -e /proc/stb/lcd/oled_brightness ] && echo 255 > /proc/stb/lcd/oled_brightness || true
+	[ -e /dev/dbox/lcd0 ] && DEV=/dev/dbox/lcd0
+
+	# For some boxes writing to LCD during boot corrupts output for the whole session, avoid ...
+	get_boxtype
+	for bad in dm900 dm920 osmini; do
+		[[ "$boxtype" == "$bad" ]] && DEV=/dev/null
+	done
 
 	if [ "x$DEV" != "x/dev/null" ]; then
+		[ -e /proc/stb/lcd/oled_brightness ] && echo 255 > /proc/stb/lcd/oled_brightness || true
 		exec 200>$DEV
 		flock -n 200
 	fi
@@ -117,38 +97,130 @@ spinner() {
 		local temp=${spinstr#?}
 		spin=$(printf "%c" "$spinstr")
 		local spinstr=$temp${spinstr%"$temp"}
-		echo -n "${task} ${spin}" 1>&200
+		if [ "x$DEV" != "x/dev/null" ]; then
+			echo -n "${task} ${spin}" 1>&200
+		fi
 		sleep $delay
 	done
 }
 
-[ -e /media/*/panic.update ] && panic
+get_rightset() {
+	RIGHTSET=$(python - <<END
+import sys
+sys.path.append('/usr/lib/enigma2/python/Plugins/SystemPlugins/SoftwareManager')
+import ShellCompatibleFunctions
+print ShellCompatibleFunctions.MANDATORY_RIGHTS
+END
+	)
+}
 
-get_restore_mode
+get_blacklist() {
+	BLACKLIST=$(python - <<END
+import sys
+sys.path.append('/usr/lib/enigma2/python/Plugins/SystemPlugins/SoftwareManager')
+import ShellCompatibleFunctions
+TMPLIST=ShellCompatibleFunctions.BLACKLISTED
+TMPLIST.insert(0, "")
+print " --exclude=".join(TMPLIST)
+END
+	)
+}
 
-# If neither fast nor turbo are set or autorestore settings is disabled exit here
+do_restoreUserDB() {
+	$(python - <<END
+import sys
+sys.path.append('/usr/lib/enigma2/python/Plugins/SystemPlugins/SoftwareManager')
+from ShellCompatibleFunctions import restoreUserDB
+restoreUserDB()
+END
+	)
+}
+
+restore_settings() {
+	echo >>$LOG
+	echo "Extracting saved settings from $backuplocation/enigma2settingsbackup.tar.gz" >> $LOG
+	echo >>$LOG
+	get_rightset
+	get_blacklist
+	busybox tar -C $ROOTFS -xzvf $backuplocation/enigma2settingsbackup.tar.gz ${BLACKLIST} >>$LOG 2>>$LOG
+	eval ${RIGHTSET} >>$LOG 2>>$LOG
+	do_restoreUserDB
+	touch /tmp/restore_skins
+	echo >>$LOG
+}
+
+restart_network() {
+	echo >>$LOG
+	echo "Restarting network" >>$LOG
+	echo >>$LOG
+	[ -e "${ROOTFS}etc/init.d/hostname.sh" ] && ${ROOTFS}etc/init.d/hostname.sh
+	[ -e "${ROOTFS}etc/init.d/networking" ] && ${ROOTFS}etc/init.d/networking restart >>$LOG
+	sleep 3
+	[ -e "${ROOTFS}etc/init.d/nfscommon" ] && ${ROOTFS}etc/init.d/nfscommon restart >>$LOG
+	[ -e "${ROOTFS}etc/init.d/autofs" ] && ${ROOTFS}etc/init.d/autofs restart >>$LOG
+	echo >>$LOG
+}
+
+restart_services() {
+	echo >>$LOG
+	echo "Running in turbo mode ... remounting and restarting some services ..." >>$LOG
+	echo >>$LOG
+
+	mounts=$(mount | grep -E '(^/dev/s|\b\cifs\b|\bnfs\b)' | awk '{ print $1 }')
+
+	for i in $mounts; do
+		echo "Unmounting $i ..." >>$LOG
+		umount $i >>$LOG 2>>$LOG
+	done
+	echo >>$LOG
+	echo "Mounting all ..." >>$LOG
+	mount -a >>$LOG 2>>$LOG
+	mdev -s
+	echo >>$LOG
+	echo "Backgrounding Samba/NFS server restarts ..." >>$LOG
+	[ -e "${ROOTFS}etc/init.d/modload.sh" ] && ${ROOTFS}etc/init.d/modload.sh >/dev/null >&1
+	[ -e "${ROOTFS}etc/init.d/softcam" ] && nohup $(${ROOTFS}etc/init.d/softcam restart) >/dev/null >&1 &
+	[ -e "${ROOTFS}etc/init.d/samba" ] && nohup $(${ROOTFS}etc/init.d/samba restart) >/dev/null >&1 &
+	[ -e "${ROOTFS}etc/init.d/nfsserver" ] && nohup $(${ROOTFS}etc/init.d/nfsserver restart) >/dev/null >&1 &
+	echo >>$LOG
+}
+
+[ -e /media/*/panic.update ] && do_panic
+
+get_restoremode
+
+# Only continue in fast mode (includes turbo mode)
 [ $fast -eq 1 ] || exit 0
-[ $settings -eq 1 ] || exit 0
 
-show_logo
-lock_device
 get_backupset
 
+# Exit if there is no backup set
 [ ! -e "$backuplocation/enigma2settingsbackup.tar.gz" ] && exit 0
 
-[ "x$LOG" != "x/dev/tty" ] && rm $LOG
-touch $LOG
-echo "Extracting saved settings from $backuplocation/enigma2settingsbackup.tar.gz" >> $LOG
-(get_rightset ; get_blacklist ; busybox tar -C $ROOTFS -xzvf $backuplocation/enigma2settingsbackup.tar.gz ${BLACKLIST} >>$LOG 2>>$LOG ; eval ${RIGHTSET} >>$LOG 2>>$LOG ; restoreUserDB ; touch /tmp/restore_skins ) &
+# Show "FastRestore in progress ..." boot logo
+show_logo
+
+# Lock LCD
+lock_device
+
+# Begin logging
+echo "FastRestore is restoring settings ..." > $LOG
+echo >> $LOG
+echo >> $LOG
+
+# Restore settings ...
+(restore_settings) &
 spinner $! "Settings "
 echo >>$LOG
 
-echo "Restarting network" >>$LOG
-(/etc/init.d/networking restart >>$LOG ; /etc/init.d/autofs restart >>$LOG ; sleep 3) &
+# Restart network ...
+(restart_network) &
 spinner $! "Network "
 echo >>$LOG
 
 if [ $plugins -eq 1 ] && [ -e ${ROOTFS}tmp/installed-list.txt ]; then
+	# Restore plugins ...
+	echo >>$LOG
 	echo "Re-installing previous plugins" >> $LOG
 	pkgs=$(<${ROOTFS}tmp/installed-list.txt)
 	(opkg update && opkg install $pkgs >>$LOG 2>>$LOG) &
@@ -157,7 +229,9 @@ if [ $plugins -eq 1 ] && [ -e ${ROOTFS}tmp/installed-list.txt ]; then
 fi
 
 for i in hdd usb backup; do
+	# Execute MyRestore ...
 	if [ -e /media/${i}/images/config/myrestore.sh ]; then
+		echo >>$LOG
 		echo "Executing MyRestore script in $i" >> $LOG
 		(. /media/${i}/images/config/myrestore.sh >>$LOG 2>>$LOG) &
 		spinner $! "MyRestore "
@@ -165,24 +239,18 @@ for i in hdd usb backup; do
 	fi
 done
 
+
+# Reboot here if running in "fast" mode ...
 [ $turbo -eq 0 ] && echo "Running in fast mode ... reboot ..." >>$LOG && sync && reboot
 
-echo "Running in turbo mode ... remounting everything ..." >>$LOG
-mounts=$(mount | grep -E '(^/dev|^//)' | awk '{ print $1 }')
 
-for i in $mounts; do
-	echo "Unmounting $i ..." >>$LOG
-	umount $i >>$LOG 2>>$LOG
-done
-echo "Mounting all ..." >>$LOG
-/etc/init.d/volatile-media.sh
-mount -a >>$LOG 2>>$LOG
-mdev -s
-[ -e "${ROOTFS}etc/init.d/hostname.sh" ] && ${ROOTFS}etc/init.d/hostname.sh
-[ -e "${ROOTFS}etc/init.d/modload.sh" ] && ${ROOTFS}etc/init.d/modload.sh
-[ -e "${ROOTFS}etc/init.d/softcam" ] && ${ROOTFS}etc/init.d/softcam restart
-echo >>$LOG
-echo "Done.">>$LOG
+# Restart certain services and remount media in "turbo" mode ...
+(restart_services) &
+spinner $! "Finishing "
+
+
+# Print "OpenATV" in LCD and unlock LCD ...
 echo -n "OpenATV" >&200
 flock -u 200
+
 exit 0
