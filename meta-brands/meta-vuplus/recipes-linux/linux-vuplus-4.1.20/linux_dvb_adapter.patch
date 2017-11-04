@@ -1,0 +1,37 @@
+diff --git a/drivers/media/dvb-core/dvbdev.c b/drivers/media/dvb-core/dvbdev.c
+index 13bb57f..69cc48d 100644
+--- a/drivers/media/dvb-core/dvbdev.c
++++ b/drivers/media/dvb-core/dvbdev.c
+@@ -438,9 +438,9 @@ static int dvbdev_check_free_adapter_num(int num)
+ 	return 1;
+ }
+ 
+-static int dvbdev_get_free_adapter_num (void)
++static int dvbdev_get_free_adapter_num (int start_num)
+ {
+-	int num = 0;
++	int num = start_num;
+ 
+ 	while (num < DVB_MAX_ADAPTERS) {
+ 		if (dvbdev_check_free_adapter_num(num))
+@@ -457,17 +457,18 @@ int dvb_register_adapter(struct dvb_adapter *adap, const char *name,
+ 			 short *adapter_nums)
+ {
+ 	int i, num;
++	char *vu_name = strstr(name, "_vuplus_");
+ 
+ 	mutex_lock(&dvbdev_register_lock);
+ 
+ 	for (i = 0; i < DVB_MAX_ADAPTERS; ++i) {
+ 		num = adapter_nums[i];
+-		if (num >= 0  &&  num < DVB_MAX_ADAPTERS) {
++		if (num >= vu_name? 0:1  &&  num < DVB_MAX_ADAPTERS) {
+ 		/* use the one the driver asked for */
+ 			if (dvbdev_check_free_adapter_num(num))
+ 				break;
+ 		} else {
+-			num = dvbdev_get_free_adapter_num();
++			num = dvbdev_get_free_adapter_num(vu_name? 0:1);
+ 			break;
+ 		}
+ 		num = -1;
