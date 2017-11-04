@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda
 ALLOW_EMPTY_${PN} = "1"
 
 PV = "6.4"
-PR = "r26"
+PR = "r27"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
@@ -28,5 +28,4 @@ RDEPENDS_${PN} = "\
     ${@bb.utils.contains("MACHINE_FEATURES", "dreamboxv1", "", "ofgwrite", d)} \
     ${@bb.utils.contains("TUNE_FEATURES", "armv", "glibc-compat", "", d)} \
     bash \
-    enigma2-plugin-drivers-dvb-usb-af9035 \
     "
