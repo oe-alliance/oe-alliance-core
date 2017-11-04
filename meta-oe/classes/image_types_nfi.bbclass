@@ -22,36 +22,6 @@ IMAGE_CMD_jffs2nfi = " \
 		> ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.nfi; \
 "
 
-IMAGE_CMD_sum.jffs2nfi = " \
-	mkfs.jffs2 \
-		--root=${IMAGE_ROOTFS}/boot \
-		--disable-compressor=lzo \
-		--compression-mode=size \
-		--output=${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.boot.jffs2 \
-		${EXTRA_IMAGECMD}; \
-	sumtool \
-		-i ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.boot.jffs2 \
-		-o ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.boot.sum.jffs2 \
-		${EXTRA_IMAGECMD}; \
-	rm -rf ${IMAGE_ROOTFS}/boot/*; \
-	printf '/dev/mtdblock2\t/boot\t\tjffs2\tro\t\t\t\t0 0\n' >> ${IMAGE_ROOTFS}/etc/fstab; \
-	mkfs.jffs2 \
-		--root=${IMAGE_ROOTFS} \
-		--disable-compressor=lzo \
-		--compression-mode=size \
-		--output=${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.jffs2 \
-		${EXTRA_IMAGECMD}; \
-	sumtool \
-		-i ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.jffs2 \
-		-o ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.sum.jffs2 \
-		${EXTRA_IMAGECMD}; \
-	${DREAMBOX_BUILDIMAGE} \
-		--boot-partition ${DREAMBOX_PART0_SIZE}:${DEPLOY_DIR_IMAGE}/secondstage-${MACHINE}.bin \
-		--data-partition ${DREAMBOX_PART1_SIZE}:${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.boot.sum.jffs2 \
-		--data-partition ${DREAMBOX_PART2_SIZE}:${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.sum.jffs2 \
-		> ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.nfi; \
-"
-
 IMAGE_CMD_ubinfi = " \
 	mkfs.jffs2 \
 		--root=${IMAGE_ROOTFS}/boot \
@@ -99,8 +69,7 @@ EXTRA_IMAGECMD_jffs2nfi ?= "-e ${DREAMBOX_ERASE_BLOCK_SIZE} -n -l"
 EXTRA_IMAGECMD_sum.jffs2nfi ?= "-e ${DREAMBOX_ERASE_BLOCK_SIZE} -n -l"
 EXTRA_IMAGECMD_ubinfi ?= "-e ${DREAMBOX_ERASE_BLOCK_SIZE} -n -l"
 
-do_image_jffs2nfi[depends] += "dreambox-buildimage-native:do_populate_sysroot"
-do_image_sum.jffs2nfi[depends] += "dreambox-buildimage-native:do_populate_sysroot"
-do_image_ubinfi[depends] += "dreambox-buildimage-native:do_populate_sysroot"
+do_image_jffs2nfi[depends] += "mtd-utils-native:do_populate_sysroot dreambox-buildimage-native:do_populate_sysroot"
+do_image_ubinfi[depends] += "mtd-utils-native:do_populate_sysroot dreambox-buildimage-native:do_populate_sysroot"
 
-IMAGE_TYPES += "jffs2nfi sum.jffs2nfi ubinfi"
+IMAGE_TYPES += "jffs2nfi ubinfi"
