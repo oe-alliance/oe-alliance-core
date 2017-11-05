@@ -90,7 +90,7 @@ export OS = "Linux"
 KERNEL_OBJECT_SUFFIX = "ko"
 KERNEL_OUTPUT = "vmlinux"
 KERNEL_IMAGETYPE = "vmlinux"
-KERNEL_IMAGEDEST = "/boot"
+KERNEL_IMAGEDEST = "boot"
 
 FILES_kernel-image = "${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz"
 
@@ -103,7 +103,7 @@ do_install_append() {
         echo "/boot/${KERNEL_IMAGETYPE}-${KERNEL_VERSION}.gz ${CMDLINE}"  >> ${D}/${KERNEL_IMAGEDEST}/autoexec_${MACHINE}.bat
 }
 
-FILES_kernel-image += "${KERNEL_IMAGEDEST}/autoexec*.bat"
+FILES_kernel-image += "/${KERNEL_IMAGEDEST}/autoexec*.bat"
 FILES_kernel-vmlinux = "/boot/vmlinux-${KERNEL_VERSION}*"
 
 do_configure_prepend() {
