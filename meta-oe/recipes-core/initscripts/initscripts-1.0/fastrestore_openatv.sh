@@ -71,14 +71,14 @@ show_logo() {
 }
 
 lock_device() {
-	DEV=/dev/null
-	[ -e /dev/dbox/oled0 ] && DEV=/dev/dbox/oled0
-	[ -e /dev/dbox/lcd0 ] && DEV=/dev/dbox/lcd0
-
-	# For some boxes writing to LCD during boot corrupts output for the whole session, avoid ...
 	get_boxtype
-	for bad in dm900 dm920 osmini; do
-		[[ "$boxtype" == "$bad" ]] && DEV=/dev/null
+
+	DEV=/dev/null
+	for good in vusolo2; do
+		if [ "$boxtype" == "$good" ]; then
+			[ -e /dev/dbox/oled0 ] && DEV=/dev/dbox/oled0
+			[ -e /dev/dbox/lcd0 ] && DEV=/dev/dbox/lcd0
+		fi
 	done
 
 	if [ "x$DEV" != "x/dev/null" ]; then

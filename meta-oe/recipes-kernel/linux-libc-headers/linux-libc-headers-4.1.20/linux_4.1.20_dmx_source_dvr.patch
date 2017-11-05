@@ -1,0 +1,13 @@
+diff --git a/include/uapi/linux/dvb/dmx.h b/include/uapi/linux/dvb/dmx.h
+index b4fb650..1073007 100644
+--- a/include/uapi/linux/dvb/dmx.h
++++ b/include/uapi/linux/dvb/dmx.h
+@@ -127,7 +127,7 @@ typedef enum {
+ 	DMX_SOURCE_FRONT1,
+ 	DMX_SOURCE_FRONT2,
+ 	DMX_SOURCE_FRONT3,
+-	DMX_SOURCE_DVR0   = 16,
++	DMX_SOURCE_DVR0   = 32,
+ 	DMX_SOURCE_DVR1,
+ 	DMX_SOURCE_DVR2,
+ 	DMX_SOURCE_DVR3

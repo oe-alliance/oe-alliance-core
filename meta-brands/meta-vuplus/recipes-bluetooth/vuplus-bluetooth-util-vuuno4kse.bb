@@ -1,0 +1,13 @@
+require vuplus-bluetooth-util.inc
+
+COMPATIBLE_MACHINE = "^(vuuno4kse)$"
+
+FIRMWARE_PATH="bcm20705"
+FIRMWARE_FILE="BCM20705B0.hcd"
+
+SRCDATE = "20170906"
+SRCDATE_PR = "r0"
+
+SRC_URI[md5sum] = "46b552504af419a2485f91060bacc06e"
+SRC_URI[sha256sum] = "e2ce921de7007e7283d4b8c416481c4cb09abdef8a316111b7788e6a11671bf8"
+
