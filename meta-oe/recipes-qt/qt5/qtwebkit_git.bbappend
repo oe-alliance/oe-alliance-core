@@ -12,3 +12,6 @@ SRC_URI_append_dm900 += " \
 FILESEXTRAPATHS_prepend := "${THISDIR}/qtwebkit-git:"
 
 INSANE_SKIP_${PN} += "file-rdeps ldflags"
+
+# Qt packages are machine specific
+QT_PACKAGES_ARCH = "${MACHINE_ARCH}"
