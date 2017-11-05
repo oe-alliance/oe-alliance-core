@@ -145,7 +145,7 @@ restore_settings() {
 	busybox tar -C $ROOTFS -xzvf $backuplocation/enigma2settingsbackup.tar.gz ${BLACKLIST} >>$LOG 2>>$LOG
 	eval ${RIGHTSET} >>$LOG 2>>$LOG
 	do_restoreUserDB
-	touch /tmp/restore_skins
+	touch /etc/.restore_skins
 	echo >>$LOG
 }
 
