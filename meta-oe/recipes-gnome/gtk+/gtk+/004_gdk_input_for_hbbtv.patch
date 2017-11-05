@@ -1,19 +1,23 @@
-diff -urN gtk+-2.24.29.orig/gdk/directfb/gdkdisplay-directfb.c gtk+-2.24.29/gdk/directfb/gdkdisplay-directfb.c
---- gtk+-2.24.29.orig/gdk/directfb/gdkdisplay-directfb.c	2014-09-30 05:02:16.000000000 +0900
-+++ gtk+-2.24.29/gdk/directfb/gdkdisplay-directfb.c	2017-01-11 15:24:43.193245157 +0900
-@@ -99,7 +99,7 @@
-     }
- 
- 
--  ret = directfb->GetInputDevice (directfb, DIDID_KEYBOARD, &keyboard);
-+  ret = directfb->GetInputDevice (directfb, DIDID_REMOTE, &keyboard);
+diff --git a/gdk/directfb/gdkdisplay-directfb.c b/gdk/directfb/gdkdisplay-directfb.c
+index d4dfbef..9e7086c 100644
+--- a/gdk/directfb/gdkdisplay-directfb.c
++++ b/gdk/directfb/gdkdisplay-directfb.c
+@@ -102,6 +102,10 @@ gdk_display_open (const gchar *display_name)
+   ret = directfb->GetInputDevice (directfb, DIDID_KEYBOARD, &keyboard);
    if (ret != DFB_OK)
      {
++      ret = directfb->GetInputDevice (directfb, DIDID_REMOTE, &keyboard);
++    }
++  if (ret != DFB_OK)
++    {
        DirectFBError ("gdk_display_open: GetInputDevice", ret);
-diff -urN gtk+-2.24.29.orig/gdk/directfb/gdkkeys-directfb.c gtk+-2.24.29/gdk/directfb/gdkkeys-directfb.c
---- gtk+-2.24.29.orig/gdk/directfb/gdkkeys-directfb.c	2014-09-30 05:02:16.000000000 +0900
-+++ gtk+-2.24.29/gdk/directfb/gdkkeys-directfb.c	2017-01-11 15:24:09.233243889 +0900
-@@ -1385,6 +1385,22 @@
+       directfb->Release (directfb);
+       _gdk_display->directfb = NULL;
+diff --git a/gdk/directfb/gdkkeys-directfb.c b/gdk/directfb/gdkkeys-directfb.c
+index e775384..7124875 100644
+--- a/gdk/directfb/gdkkeys-directfb.c
++++ b/gdk/directfb/gdkkeys-directfb.c
+@@ -1385,6 +1385,22 @@ static const struct gdk_key
    { GDK_Hyper_L, "Hyper_L" },
    { GDK_Hyper_R, "Hyper_R" },
    { GDK_Delete, "Delete" },
@@ -36,7 +40,7 @@ diff -urN gtk+-2.24.29.orig/gdk/directfb/gdkkeys-directfb.c gtk+-2.24.29/gdk/dir
    { GDK_VoidSymbol, "VoidSymbol" }
  };
  
-@@ -1586,6 +1602,29 @@
+@@ -1586,6 +1602,29 @@ gdk_directfb_translate_key (DFBInputDeviceKeyIdentifier key_id,
              case DIKS_NEXT:          keyval = GDK_Next;      break;
              case DIKS_BEGIN:         keyval = GDK_Begin;     break;
              case DIKS_BREAK:         keyval = GDK_Break;     break;
@@ -66,9 +70,10 @@ diff -urN gtk+-2.24.29.orig/gdk/directfb/gdkkeys-directfb.c gtk+-2.24.29/gdk/dir
              default:
                break;
              }
-diff -urN gtk+-2.24.29.orig/gdk/gdkkeysyms-compat.h gtk+-2.24.29/gdk/gdkkeysyms-compat.h
---- gtk+-2.24.29.orig/gdk/gdkkeysyms-compat.h	2014-09-30 05:02:16.000000000 +0900
-+++ gtk+-2.24.29/gdk/gdkkeysyms-compat.h	2017-01-11 15:23:26.353242287 +0900
+diff --git a/gdk/gdkkeysyms-compat.h b/gdk/gdkkeysyms-compat.h
+index 4dbec9d..aba0347 100644
+--- a/gdk/gdkkeysyms-compat.h
++++ b/gdk/gdkkeysyms-compat.h
 @@ -2204,5 +2204,20 @@
  #define GDK_ClearGrab 0x1008fe21
  #define GDK_Next_VMode 0x1008fe22
@@ -90,9 +95,10 @@ diff -urN gtk+-2.24.29.orig/gdk/gdkkeysyms-compat.h gtk+-2.24.29/gdk/gdkkeysyms-
 +#define GDK_Tv 0x1009000d
  
  #endif /* __GDK_KEYSYMS_COMPAT_H__ */
-diff -urN gtk+-2.24.29.orig/gdk/gdkkeysyms.h gtk+-2.24.29/gdk/gdkkeysyms.h
---- gtk+-2.24.29.orig/gdk/gdkkeysyms.h	2014-09-30 05:02:16.000000000 +0900
-+++ gtk+-2.24.29/gdk/gdkkeysyms.h	2017-01-11 15:23:19.921242047 +0900
+diff --git a/gdk/gdkkeysyms.h b/gdk/gdkkeysyms.h
+index 26fa1c2..8479af7 100644
+--- a/gdk/gdkkeysyms.h
++++ b/gdk/gdkkeysyms.h
 @@ -2217,5 +2217,20 @@
  #define GDK_KEY_ClearGrab 0x1008fe21
  #define GDK_KEY_Next_VMode 0x1008fe22
