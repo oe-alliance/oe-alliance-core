@@ -2,7 +2,7 @@ diff --git a/data/displaytext/skin_display.xml b/data/displaytext/skin_display.x
 index eddccba..ad14cd0 100644
 --- a/data/displaytext/skin_display.xml
 +++ b/data/displaytext/skin_display.xml
-@@ -124,7 +124,7 @@
+@@ -132,7 +132,7 @@
  <!-- standby -->
  	<screen name="StandbySummary" position="0,0" size="132,64">
  		<widget source="global.CurrentTime" render="Label" position="0,0" size="120,64" font="Regular;48" halign="center" valign="center">
