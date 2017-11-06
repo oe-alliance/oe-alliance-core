@@ -61,6 +61,7 @@ SRC_URI += "http://www.et-view.com/img_up/shop_pds/bh190/Img_Xtrend/linux-${PV}.
     file://2-2-stv090x-on-tuning-lock-return-correct-tuned-paramaters-like-freq-sr-fec-rolloff-etc.patch \
     file://0001-Support-TBS-USB-drivers.patch \
     file://genksyms_fix_typeof_handling.patch \
+    file://kernel-add-support-for-gcc7.patch \
     "
 
 S = "${WORKDIR}/linux-${PV}"

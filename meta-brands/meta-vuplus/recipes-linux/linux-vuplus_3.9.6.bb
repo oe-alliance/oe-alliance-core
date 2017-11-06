@@ -45,6 +45,7 @@ SRC_URI = "http://archive.vuplus.com/download/kernel/stblinux-${KV}.tar.bz2 \
     file://0001-stv090x-optimized-TS-sync-control.patch \
     file://blindscan2.patch \
     file://genksyms_fix_typeof_handling.patch \
+    file://kernel-add-support-for-gcc7.patch \
 "
 
 SRC_URI_append_vuultimo = "file://fixed_mtd.patch "

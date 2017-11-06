@@ -48,6 +48,7 @@ SRC_URI = "http://impex-sat.de/gigablue/linux/gigablue-linux-${PV}-${SRCDATE}.tg
     file://0001-stv090x-optimized-TS-sync-control.patch \
     file://blindscan2.patch \
     file://genksyms_fix_typeof_handling.patch \
+    file://kernel-add-support-for-gcc7.patch \
         "
 
 S = "${WORKDIR}/linux-${KV}"

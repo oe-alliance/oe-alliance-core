@@ -27,6 +27,7 @@ SRC_URI += "http://impex-sat.de/gigablue/linux/gigablue-linux-${PV}-20170331.tar
 	file://linux_prevent_usb_dma_from_bmem.patch \
 	file://genksyms_fix_typeof_handling.patch \
 	file://gbfindkerneldevice.py \
+	file://kernel-add-support-for-gcc7.patch \
 "
 
 S = "${WORKDIR}/linux-${PV}"

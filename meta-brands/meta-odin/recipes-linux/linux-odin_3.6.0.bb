@@ -51,6 +51,7 @@ SRC_URI += "http://source.mynonpublic.com/download/linux-${PV}.tar.gz \
     file://dvb_frontend-Multistream-support-3.6.patch \
     file://timeconst_perl5.patch \
     file://genksyms_fix_typeof_handling.patch \
+    file://kernel-add-support-for-gcc7.patch \
     "
 
 S = "${WORKDIR}/linux-${PV}"

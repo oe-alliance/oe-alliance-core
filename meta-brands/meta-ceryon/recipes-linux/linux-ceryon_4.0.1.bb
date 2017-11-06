@@ -32,6 +32,7 @@ SRC_URI += "http://source.mynonpublic.com/ceryon/ceryon-linux-${PV}.tgz \
 	file://blindscan2.patch \
 	file://0001-stv090x-optimized-TS-sync-control.patch \
 	file://0002-add-brcm-chips.patch \
+	file://kernel-add-support-for-gcc7.patch \
 	"
 
 S = "${WORKDIR}/linux-${PV}"

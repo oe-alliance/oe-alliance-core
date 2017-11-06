@@ -196,6 +196,7 @@ SRC_URI = " \
     file://kernel-add-support-for-gcc6.patch \
     file://timeconst_perl5.patch \
     file://0001-dvb_frontend-backport-multistream-support.patch \
+    file://kernel-add-support-for-gcc7.patch \
     "
 
 S = "${WORKDIR}/linux-${PV}"

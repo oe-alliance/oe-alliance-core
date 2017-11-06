@@ -59,6 +59,7 @@ SRC_URI += "http://source.mynonpublic.com/stblinux-3.3.0-20130404.tgz \
     file://dvb_frontend-Multistream-support-3.3.patch \
     file://timeconst_perl5.patch \
     file://genksyms_fix_typeof_handling.patch \
+    file://kernel-add-support-for-gcc7.patch \
     "
 
 S = "${WORKDIR}/linux-${PV}"
