@@ -317,7 +317,7 @@
  	result += execute("ip link set %iface% down", ifd, exec);
  	return ((result == 2) ? 2 : 0);
  # else
-@@ -498,22 +729,6 @@
+@@ -596,25 +596,6 @@
  # endif
  }
  
@@ -325,7 +325,10 @@
 -{
 -	int result;
 -# if ENABLE_FEATURE_IFUPDOWN_IP
--	result = execute("ip addr flush dev %iface%", ifd, exec);
+-	/* Optional "label LBL" is necessary if interface is an alias (eth0:0),
+-	 * otherwise "ip addr flush dev eth0:0" flushes all addresses on eth0.
+-	 */
+-	result = execute("ip addr flush dev %iface%[[ label %label%]]", ifd, exec);
 -	result += execute("ip link set %iface% down", ifd, exec);
 -# else
 -	/* result = execute("[[route del default gw %gateway% %iface%]]", ifd, exec); */
