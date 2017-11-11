@@ -1,6 +1,6 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/${P}:"
 
-PR .= ".17"
+PR .= ".18"
 
 RDEPENDS_${PN}_append = " sdparm"
 
@@ -16,12 +16,11 @@ do_install_append() {
     install -m 0755    ${WORKDIR}/hotplug.sh	${D}${sysconfdir}/init.d
     ln -sf        ../init.d/hotplug.sh      ${D}${sysconfdir}/rcS.d/S06hotplug.sh
 
+    perl -i -pe 's:mount -a.+?$:mount -a -t nonfs,nfs4,smbfs,cifs,ncp,ncpfs,coda,ocfs2,gfs,gfs2,ceph -O no_netdev 2>/dev/null:' ${D}${sysconfdir}/init.d/mountall.sh
+    perl -i -pe 's:(mount -a).*?$:$1:' ${D}${sysconfdir}/init.d/mountnfs.sh
+
     if [ "x${DISTRO}" = "xopenatv" ]; then
         install -m 0755    ${WORKDIR}/fastrestore_openatv.sh	${D}${sysconfdir}/init.d/fastrestore
-        if [ "x${BRAND_OEM}" = "xvuplus" ]; then
-            ln -sf        ../init.d/fastrestore      ${D}${sysconfdir}/rcS.d/S66fastrestore
-	else
-            ln -sf        ../init.d/fastrestore      ${D}${sysconfdir}/rcS.d/S56fastrestore
-	fi
+        ln -sf        ../init.d/fastrestore      ${D}${sysconfdir}/rcS.d/S75fastrestore
     fi
 }
