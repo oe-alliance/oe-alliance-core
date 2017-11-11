@@ -6,7 +6,6 @@ create_point() {
 	if [ ! -d $2 ]
 	then
 		mkdir -p $2
-		touch $2/.fstab
 	fi
 }
 
