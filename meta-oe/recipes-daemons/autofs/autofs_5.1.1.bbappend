@@ -1,7 +1,7 @@
 B = "${S}"
 
-INITSCRIPT_PARAMS = "defaults 11"
-PR .= ".1"
+INITSCRIPT_PARAMS = "defaults 17"
+PR .= ".2"
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
