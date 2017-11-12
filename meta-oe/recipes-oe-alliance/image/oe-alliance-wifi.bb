@@ -10,7 +10,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "${IMAGE_VERSION}"
-PR = "r4"
+PR = "r5"
 
 OPTIONAL_WIFIDRIVERS = "${@bb.utils.contains("MACHINE_FEATURES", "wifiusblegacy", "enigma2-plugin-drivers-network-usb-rt3070", " \
     enigma2-plugin-drivers-network-usb-ath9k-htc \
@@ -47,6 +47,7 @@ RDEPENDS_${PN} = "\
     ${@bb.utils.contains("DISTRO_NAME", "opennfr", "enigma2-plugin-drivers-network-usb-rtl8192cu", "", d)} \
     ${@bb.utils.contains("DISTRO_NAME", "openeight", "enigma2-plugin-drivers-network-usb-rtl8192cu", "", d)} \
     ${@bb.utils.contains("DISTRO_NAME", "egami", "enigma2-plugin-drivers-network-usb-rtl8192cu-rev2", "", d)} \
+    ${@bb.utils.contains("DISTRO_NAME", "opendroid", "enigma2-plugin-drivers-network-usb-rtl8192cu-rev2", "", d)} \
     ${@bb.utils.contains("MACHINEBUILD", "bre2ze", "enigma2-plugin-drivers-network-usb-mt7601u", "", d)} \
     ${@bb.utils.contains("BRAND_OEM", "xcore", "enigma2-plugin-drivers-network-usb-rt8723bs", "", d)} \
     ${@bb.utils.contains("MACHINE", "osnino", "enigma2-plugin-drivers-network-usb-rt8723bs", "", d)} \
