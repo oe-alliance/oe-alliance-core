@@ -172,7 +172,7 @@ restore_plugins() {
 	echo >>$LOG
 	echo "Installing plugins from local media ..." >> $LOG
 	for i in hdd usb backup; do
-		if [ -e /media/${i}/images/ipk/*.ipk ]; then
+		if ls /media/${i}/images/ipk/*.ipk >/dev/null 2>/dev/null; then
 			echo >>$LOG
 			echo "${i}:" >>$LOG
 			opkg install /media/${i}/images/ipk/*.ipk >>$LOG 2>>$LOG
