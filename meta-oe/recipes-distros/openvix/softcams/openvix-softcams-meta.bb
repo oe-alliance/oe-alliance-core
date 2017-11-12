@@ -19,4 +19,4 @@ DEPENDS = "\
     ${@bb.utils.contains("TARGET_ARCH", "mipsel", "openvix-softcams-scam", "", d)} \
     "
 
-PR = "r12"
+PR = "r14"

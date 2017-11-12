@@ -10,13 +10,13 @@ LIC_FILES_CHKSUM = "file://${WORKDIR}/COPYING;md5=751419260aa954499f7abaabaa882b
 RDEPENDS_${PN} = "stinit"
 
 KV = "2.6.32.71-stm24-0217"
-SRCREV = "79e3d756e48915148bf32bc82ed77c9442824df4"
+SRCREV = "e94027065dc756ea41f537d1d3d215a96d549b94"
 
 inherit module
 
 PACKAGES = "${PN} ${PN}-dev"
 
-INC_PR = "r46"
+INC_PR = "r47"
 PV = "${KV}+${SRCDATE}"
 
 PTI_NP_PATH ?= "/data/pti_np"
@@ -24,7 +24,7 @@ PTI_NP_PATH ?= "/data/pti_np"
 FILESEXTRAPATHS_prepend := "${THISDIR}/fulan-dvb-modules:"
 
 SRC_URI = " \
-    git://github.com/Duckbox-Developers/driver-old.git;protocol=git \
+    git://github.com/Duckbox-Developers/driver.git;protocol=git \
     file://aotom_spark_procfs.patch;patch=1 \
     file://ddbootup \
     file://sh4booster \
@@ -40,41 +40,14 @@ S = "${WORKDIR}/git"
 
 EXTRA_OEMAKE = "-e MAKEFLAGS="
 
-do_configure_prepend () {
+CLEANBROKEN = "1"
 
+do_configure_prepend () {
     # if a custom pti source is present, add it to the sources
     if [ -e ${PTI_NP_PATH}/Makefile ]; then
         echo "Found custom pti sources.."
         cp -r ${PTI_NP_PATH} ${S}
     fi
-
-    if [ -L include/stmfb ]; then
-        rm include/stmfb
-    fi
-    if [ -L include/player2 ]; then
-        rm include/player2
-    fi
-    if [ -L include/multicom ]; then
-        rm include/multicom
-    fi
-    if [ -L player2 ]; then
-        rm player2
-    fi
-    if [ -L stgfb/stmfb ]; then
-        rm stgfb/stmfb
-    fi
-    if [ -L multicom ]; then
-        rm multicom 
-    fi
-    ln -s ${S}/include/stmfb-3.1_stm24_0104 ${S}/include/stmfb
-    ln -s ${S}/include/player2_191 ${S}/include/player2
-    ln -s ${S}/multicom-3.2.4/include ${S}/include/multicom
-    ln -s ${S}/player2_191 ${S}/player2
-    ln -s ${S}/multicom-3.2.4 ${S}/multicom
-    ln -s ${S}/stgfb/stmfb-3.1_stm24_0104 ${S}/stgfb/stmfb
-    rm -f .config 
-    printf "export CONFIG_PLAYER_191=y\nexport CONFIG_MULTICOM324=y\n" > .config
-    export KERNEL_LOCATION="${STAGING_KERNEL_DIR}"
 }
 
 do_compile() {
@@ -87,13 +60,11 @@ do_compile() {
         ${@d.getVar('MACHINE',1).upper()}=1 \
         M=${S} V=1 \
         ARCH=sh \
-        PLAYER191=player191 \
         DRIVER_TOPDIR="${S}" \
         KERNEL_LOCATION="${STAGING_KERNEL_DIR}" \
         CONFIG_KERNEL_BUILD="${STAGING_KERNEL_BUILDDIR}" \
         CONFIG_KERNEL_PATH="${STAGING_KERNEL_DIR}" \
         CONFIG_MODULES_PATH="${D}" \
-        CONFIG_PLAYER_191=y \
         CCFLAGSY="-I${STAGING_DIR_HOST}/usr/include" \
         modules 
 }
@@ -108,13 +79,11 @@ do_install() {
         ${@d.getVar('MACHINE',1).upper()}=1 \
         M=${S} V=1 \
         ARCH=sh \
-        PLAYER191=player191 \
         DRIVER_TOPDIR="${S}" \
         KERNEL_LOCATION="${STAGING_KERNEL_DIR}" \
         CONFIG_KERNEL_BUILD="${STAGING_KERNEL_BUILDDIR}" \
         CONFIG_KERNEL_PATH="${STAGING_KERNEL_DIR}" \
         CONFIG_MODULES_PATH="${D}" \
-        CONFIG_PLAYER_191=y \
         CCFLAGSY="-I${STAGING_DIR_HOST}/usr/include" \
         INSTALL_MOD_PATH=${D} modules_install
 

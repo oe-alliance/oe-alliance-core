@@ -74,7 +74,7 @@ lock_device() {
 	get_boxtype
 
 	DEV=/dev/null
-	for good in vusolo2; do
+	for good in vusolo2 sf4008 sf5008; do
 		if [ "$boxtype" == "$good" ]; then
 			[ -e /dev/dbox/oled0 ] && DEV=/dev/dbox/oled0
 			[ -e /dev/dbox/lcd0 ] && DEV=/dev/dbox/lcd0
@@ -155,7 +155,29 @@ restart_network() {
 	echo >>$LOG
 	[ -e "${ROOTFS}etc/init.d/hostname.sh" ] && ${ROOTFS}etc/init.d/hostname.sh
 	[ -e "${ROOTFS}etc/init.d/networking" ] && ${ROOTFS}etc/init.d/networking restart >>$LOG
-	sleep 3
+	echo >>$LOG
+}
+
+restore_plugins() {
+	# Restore plugins ...
+	echo >>$LOG
+	echo "Re-installing previous plugins" >> $LOG
+	echo >>$LOG
+	echo "Updating feeds ..." >> $LOG
+	opkg update >>$LOG 2>>$LOG
+	echo >>$LOG
+	echo "Installing plugins from feeds ..." >> $LOG
+	pkgs=$(<${ROOTFS}tmp/installed-list.txt)
+	opkg install $pkgs >>$LOG 2>>$LOG
+	echo >>$LOG
+	echo "Installing plugins from local media ..." >> $LOG
+	for i in hdd usb backup; do
+		if [ -e /media/${i}/images/ipk/*.ipk ]; then
+			echo >>$LOG
+			echo "${i}:" >>$LOG
+			opkg install /media/${i}/images/ipk/*.ipk >>$LOG 2>>$LOG
+		fi
+	done
 	echo >>$LOG
 }
 
@@ -164,7 +186,12 @@ restart_services() {
 	echo "Running in turbo mode ... remounting and restarting some services ..." >>$LOG
 	echo >>$LOG
 
-	mounts=$(mount | grep -E '(^/dev/s|\b\cifs\b|\bnfs\b)' | awk '{ print $1 }')
+	# Linux might have initialized swap on some devices that we need to unmount ...
+	[ -x /sbin/swapoff ] && swapoff -a -e 2>/dev/null
+	if [ -e /etc/ld.so.conf ] ; then
+		/sbin/ldconfig
+	fi
+	mounts=$(mount | grep -E '(^/dev/s|\b\cifs\b|\bnfs\b|\bnfs4\b)' | awk '{ print $1 }')
 
 	for i in $mounts; do
 		echo "Unmounting $i ..." >>$LOG
@@ -172,11 +199,13 @@ restart_services() {
 	done
 	[ -e "${ROOTFS}etc/init.d/volatile-media.sh" ] && ${ROOTFS}etc/init.d/volatile-media.sh
 	echo >>$LOG
-	echo "Mounting all ..." >>$LOG
-	mount -at nonfs,nosmbfs,noncpfs >>$LOG 2>>$LOG
+	echo "Mounting all local filesystems ..." >>$LOG
+	mount -a -t nonfs,nfs4,smbfs,cifs,ncp,ncpfs,coda,ocfs2,gfs,gfs2,ceph -O no_netdev >>$LOG 2>>$LOG
 	mdev -s
+	[ -x /sbin/swapon ] && swapon -a 2>/dev/null
 	echo >>$LOG
 	echo "Backgrounding service restarts ..." >>$LOG
+	[ -e "${ROOTFS}etc/init.d/modutils.sh" ] && ${ROOTFS}etc/init.d/modutils.sh >/dev/null >&1
 	[ -e "${ROOTFS}etc/init.d/modload.sh" ] && ${ROOTFS}etc/init.d/modload.sh >/dev/null >&1
 	[ -e "${ROOTFS}etc/init.d/softcam" ] && nohup $(${ROOTFS}etc/init.d/softcam restart) >/dev/null >&1 &
 	echo >>$LOG
@@ -216,11 +245,7 @@ spinner $! "Network "
 echo >>$LOG
 
 if [ $plugins -eq 1 ] && [ -e ${ROOTFS}tmp/installed-list.txt ]; then
-	# Restore plugins ...
-	echo >>$LOG
-	echo "Re-installing previous plugins" >> $LOG
-	pkgs=$(<${ROOTFS}tmp/installed-list.txt)
-	(opkg update && opkg install $pkgs >>$LOG 2>>$LOG) &
+	(restore_plugins) &
 	spinner $! "Plugins "
 	echo >>$LOG
 fi
@@ -246,8 +271,10 @@ done
 spinner $! "Finishing "
 
 
-# Print "OpenATV" in LCD and unlock LCD ...
-echo -n "OpenATV" >&200
-flock -u 200
+if [ "x$DEV" != "x/dev/null" ]; then
+	# Print "OpenATV" in LCD and unlock LCD ...
+	echo -n "OpenATV" >&200
+	flock -u 200
+fi
 
 exit 0
