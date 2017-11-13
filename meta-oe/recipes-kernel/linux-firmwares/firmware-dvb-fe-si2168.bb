@@ -1,6 +1,6 @@
 LICENSE = "CLOSED"
 require conf/license/license-close.inc
-PR = "r2"
+PR = "r3"
 SRC_URI = "file://firmware-si2158.zip"
 
 S = "${WORKDIR}"
@@ -18,5 +18,7 @@ do_install() {
     install -m 0644 dvb-demod-si2168-a20-01.fw ${D}${base_libdir}/firmware
     install -m 0644 dvb-demod-si2168-a30-01.fw ${D}${base_libdir}/firmware
     install -m 0644 dvb-demod-si2168-b40-01.fw ${D}${base_libdir}/firmware
+    install -m 0644 dvb-demod-si2168-d60-01.fw ${D}${base_libdir}/firmware
+    install -m 0644 dvb-tuner-si2141-a10-01.fw ${D}${base_libdir}/firmware
     install -m 0644 dvb-tuner-si2158-a20-01.fw ${D}${base_libdir}/firmware
 }
