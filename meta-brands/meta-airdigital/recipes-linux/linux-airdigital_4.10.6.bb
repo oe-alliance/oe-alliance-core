@@ -13,7 +13,7 @@ SRC_URI[arm.sha256sum] = "ec9f9e86aaacd2add09591ff2f83ac7947bfe6265fcb6f24a45d9d
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-MACHINE_KERNEL_PR_append = ".8"
+MACHINE_KERNEL_PR_append = ".9"
 
 # By default, kernel.bbclass modifies package names to allow multiple kernels
 # to be installed in parallel. We revert this change and rprovide the versioned
@@ -33,6 +33,11 @@ SRC_URI += "http://source.mynonpublic.com/zgemma/linux-${PV}-${ARCH}.tar.gz;name
     file://blindscan2.patch \
     file://0001-stv090x-optimized-TS-sync-control.patch \
     file://0001-revert-xhci-plat.patch \
+    file://v3-1-3-media-si2157-Add-support-for-Si2141-A10.patch \
+    file://v3-2-3-media-si2168-add-support-for-Si2168-D60.patch \
+    file://v3-3-3-media-dvbsky-MyGica-T230C-support.patch \
+    file://v3-3-4-media-dvbsky-MyGica-T230C-support.patch \
+    file://v3-3-5-media-dvbsky-MyGica-T230C-support.patch \
     "
 
 SRC_URI_append_mipsel = " \

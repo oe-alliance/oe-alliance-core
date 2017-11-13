@@ -11,7 +11,7 @@ SRC_URI[sha256sum] = "67a3ac98727595a399d5c399d3b66a7fadbe8136ac517e08decba5ea69
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-MACHINE_KERNEL_PR_append = "oea4.1-r0"
+MACHINE_KERNEL_PR_append = "oea4.1-r1"
 
 # By default, kernel.bbclass modifies package names to allow multiple kernels
 # to be installed in parallel. We revert this change and rprovide the versioned
@@ -33,6 +33,11 @@ SRC_URI += "http://source.mynonpublic.com/ceryon/linux-${PV}-${ARCH}.tar.gz \
     file://findkerneldevice.py \
     file://reserve_dvb_adapter_0.patch \
     file://blacklist_mmc0.patch \
+    file://v3-1-3-media-si2157-Add-support-for-Si2141-A10.patch \
+    file://v3-2-3-media-si2168-add-support-for-Si2168-D60.patch \
+    file://v3-3-3-media-dvbsky-MyGica-T230C-support.patch \
+    file://v3-3-4-media-dvbsky-MyGica-T230C-support.patch \
+    file://v3-3-5-media-dvbsky-MyGica-T230C-support.patch \
     "
 
 S = "${WORKDIR}/linux-${PV}"
