@@ -6,7 +6,7 @@ MODULE = "linux-3.14.28"
 
 inherit kernel machine_kernel_pr
 
-MACHINE_KERNEL_PR_append = "r7"
+MACHINE_KERNEL_PR_append = "r8"
 
 SRC_URI[md5sum] = "c1e96f702ca737630f5acb0dce2388e7"
 SRC_URI[sha256sum] = "72928012a7dbacbf95a371d9faa6800a20afd6b106958298cfc41028878aac4e"
@@ -27,6 +27,13 @@ SRC_URI += "http://impex-sat.de/gigablue/linux/gigablue-linux-${PV}-20170331.tar
 	file://linux_prevent_usb_dma_from_bmem.patch \
 	file://genksyms_fix_typeof_handling.patch \
 	file://gbfindkerneldevice.py \
+	file://0001-tuners-tda18273-silicon-tuner-driver.patch \
+	file://01-10-si2157-Silicon-Labs-Si2157-silicon-tuner-driver.patch \
+	file://02-10-si2168-Silicon-Labs-Si2168-DVB-T-T2-C-demod-driver.patch \
+	file://0003-cxusb-Geniatech-T230-support.patch \
+	file://CONFIG_DVB_SP2.patch \
+	file://dvbsky.patch \
+	file://rtl2832u-2.patch \
 "
 
 S = "${WORKDIR}/linux-${PV}"
