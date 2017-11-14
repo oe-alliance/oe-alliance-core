@@ -9,11 +9,14 @@ inherit gitpkgv distutils-openplugins
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "${GITPKGVTAG}"
-PR = "r2"
+PR = "r0"
 
 SRC_URI = "git://github.com/OpenViX/HRTunerProxy.git;protocol=git"
 
 S = "${WORKDIR}/git"
+
+RCONFLICTS_${PN} = "enigma2-plugin-systemplugins-plexdvrapi"
+RREPLACES_${PN} = "enigma2-plugin-systemplugins-plexdvrapi"
 
 RDEPENDS_${PN} = " \
     python-argparse \
