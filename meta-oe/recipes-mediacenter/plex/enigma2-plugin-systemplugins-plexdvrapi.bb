@@ -1,5 +1,5 @@
-SUMMARY = "Setup Enigma2 for link with Plex DVR API"
-DESCRIPTION = "Setup Enigma2 for link with Plex DVR API"
+SUMMARY = "Setup Enigma2 to act as HR-Tuner Proxy"
+DESCRIPTION = "Setup Enigma2 to act as HR-Tuner Proxy"
 MAINTAINER = "OpenViX"
 LICENSE = "Proprietary"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=a23a74b3f4caf9616230789d94217acb"
@@ -9,9 +9,9 @@ inherit gitpkgv distutils-openplugins
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "${GITPKGVTAG}"
-PR = "r1"
+PR = "r2"
 
-SRC_URI = "git://github.com/OpenViX/PlexDVRAPI.git;protocol=git"
+SRC_URI = "git://github.com/OpenViX/HRTunerProxy.git;protocol=git"
 
 S = "${WORKDIR}/git"
 
@@ -20,7 +20,7 @@ RDEPENDS_${PN} = " \
     "
 
 do_install_prepend() {
-    echo ${GITPKGVTAG} | awk -F"-" '{print $1}'> ${S}/build/lib/SystemPlugins/PlexDVRAPI/PLUGIN_VERSION
+    echo ${GITPKGVTAG} | awk -F"-" '{print $1}'> ${S}/build/lib/SystemPlugins/HRTunerProxy/PLUGIN_VERSION
 }
 
 python populate_packages_prepend() {
