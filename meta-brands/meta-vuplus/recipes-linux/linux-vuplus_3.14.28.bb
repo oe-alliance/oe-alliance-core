@@ -4,7 +4,7 @@ SECTION = "kernel"
 
 MODULE = "linux-3.14.28"
 
-MACHINE_KERNEL_PR_append = "oea4.1-r1"
+MACHINE_KERNEL_PR_append = "oea4.1-r2"
 
 inherit kernel machine_kernel_pr
 
@@ -33,6 +33,13 @@ SRC_URI += "http://archive.vuplus.com/download/kernel/${KERNELSRC};name=${MACHIN
 	file://0001-stv090x-optimized-TS-sync-control.patch \
 	file://blindscan2.patch \
     file://genksyms_fix_typeof_handling.patch \
+    file://0001-tuners-tda18273-silicon-tuner-driver.patch \
+    file://01-10-si2157-Silicon-Labs-Si2157-silicon-tuner-driver.patch \
+    file://02-10-si2168-Silicon-Labs-Si2168-DVB-T-T2-C-demod-driver.patch \
+    file://0003-cxusb-Geniatech-T230-support.patch \
+    file://CONFIG_DVB_SP2.patch \
+    file://dvbsky.patch \
+    file://rtl2832u-2.patch \
 	"
 
 SRC_URI_append_vuuno4k = " file://linux_prevent_usb_dma_from_bmem.patch"
