@@ -1,4 +1,4 @@
-#! /bin/sh 
+#! /bin/sh
 #
 # This is an init script for openembedded
 # Copy it to /etc/init.d/samba and type
@@ -21,7 +21,13 @@ case "$1" in
     NMBD_DISABLED=`testparm -s --parameter-name='disable netbios' 2>/dev/null || true`
     if [ "$NMBD_DISABLED" != "Yes" ]; then
       echo -n " nmbd"
-      start-stop-daemon --start --quiet --exec $nmbd
+      NMBOPT=""
+      if WORKGROUP=$(testparm -s --parameter-name='workgroup' 2>/dev/null); then
+          if [ "$WORKGROUP" != "WORKGROUP" ]; then
+              NMBOPT="--option=workgroup=${WORKGROUP}"
+          fi
+      fi
+      start-stop-daemon --start --quiet --exec $nmbd -- $NMBOPT
     fi
     if [ "$WSDD_DISABLED" != "Yes" ]; then
       echo -n " wsdd"
@@ -69,7 +75,13 @@ case "$1" in
     NMBD_DISABLED=`testparm -s --parameter-name='disable netbios' 2>/dev/null || true`
     if [ "$NMBD_DISABLED" != "Yes" ]; then
       echo -n " nmbd"
-      start-stop-daemon --start --quiet --exec $nmbd
+      NMBOPT=""
+      if WORKGROUP=$(testparm -s --parameter-name='workgroup' 2>/dev/null); then
+          if [ "$WORKGROUP" != "WORKGROUP" ]; then
+              NMBOPT="--option=workgroup=${WORKGROUP}"
+          fi
+      fi
+      start-stop-daemon --start --quiet --exec $nmbd -- $NMBOPT
     fi
     if [ "$WSDD_DISABLED" != "Yes" ]; then
       echo -n " wsdd"
@@ -83,4 +95,5 @@ case "$1" in
 esac
 
 exit 0
+
 
