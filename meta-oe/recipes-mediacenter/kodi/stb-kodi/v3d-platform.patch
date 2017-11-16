@@ -1,14 +1,14 @@
-From ceaa7ae04e031bd9205496c11b0c59c793e445de Mon Sep 17 00:00:00 2001
+From 7b659ce0d3fc150ff474a825faa8b4b1023b094d Mon Sep 17 00:00:00 2001
 From: captain <openatv@gmail.com>
-Date: Fri, 15 Sep 2017 16:53:30 +0200
+Date: Thu, 16 Nov 2017 12:45:11 +0100
 Subject: [PATCH] v3d-platform
 
 ---
- Makefile.in                                   |  14 +-
- configure.ac                                  | 143 ++++-
- m4/xbmc_arch.m4                               |  28 +
+ Makefile.in                                   |  20 +-
+ configure.ac                                  | 156 ++++-
+ m4/xbmc_arch.m4                               |  32 ++
  project/cmake/scripts/linux/ArchSetup.cmake   |   6 +-
- tools/depends/configure.ac                    |  72 +++
+ tools/depends/configure.ac                    |  80 +++
  tools/depends/target/ffmpeg/autobuild.sh      |  16 +-
  xbmc/addons/AddonManager.cpp                  |   6 +
  xbmc/platform/xbmc.cpp                        |   9 +
@@ -18,6 +18,8 @@ Subject: [PATCH] v3d-platform
  xbmc/utils/Makefile.in                        |   4 +
  xbmc/windowing/egl/EGLNativeTypeDreambox.cpp  | 191 +++++++
  xbmc/windowing/egl/EGLNativeTypeDreambox.h    |  61 ++
+ xbmc/windowing/egl/EGLNativeTypeGB.cpp        | 189 +++++++
+ xbmc/windowing/egl/EGLNativeTypeGB.h          |  56 ++
  xbmc/windowing/egl/EGLNativeTypeHisilicon.cpp | 783 ++++++++++++++++++++++++++
  xbmc/windowing/egl/EGLNativeTypeHisilicon.h   |  39 ++
  xbmc/windowing/egl/EGLNativeTypeNexTV.cpp     | 229 ++++++++
@@ -28,13 +30,15 @@ Subject: [PATCH] v3d-platform
  xbmc/windowing/egl/EGLNativeTypeV3DNXPL.h     | 129 +++++
  xbmc/windowing/egl/EGLNativeTypeVuplus.cpp    | 180 ++++++
  xbmc/windowing/egl/EGLNativeTypeVuplus.h      |  60 ++
- xbmc/windowing/egl/EGLWrapper.cpp             |  30 +
- xbmc/windowing/egl/Makefile.in                |  18 +
- 26 files changed, 2761 insertions(+), 10 deletions(-)
+ xbmc/windowing/egl/EGLWrapper.cpp             |  35 ++
+ xbmc/windowing/egl/Makefile.in                |  21 +
+ 28 files changed, 3045 insertions(+), 10 deletions(-)
  create mode 100644 xbmc/utils/DreamboxUtils.cpp
  create mode 100644 xbmc/utils/DreamboxUtils.h
  create mode 100644 xbmc/windowing/egl/EGLNativeTypeDreambox.cpp
  create mode 100644 xbmc/windowing/egl/EGLNativeTypeDreambox.h
+ create mode 100644 xbmc/windowing/egl/EGLNativeTypeGB.cpp
+ create mode 100644 xbmc/windowing/egl/EGLNativeTypeGB.h
  create mode 100644 xbmc/windowing/egl/EGLNativeTypeHisilicon.cpp
  create mode 100644 xbmc/windowing/egl/EGLNativeTypeHisilicon.h
  create mode 100644 xbmc/windowing/egl/EGLNativeTypeNexTV.cpp
@@ -47,10 +51,10 @@ Subject: [PATCH] v3d-platform
  create mode 100644 xbmc/windowing/egl/EGLNativeTypeVuplus.h
 
 diff --git a/Makefile.in b/Makefile.in
-index 3c5de7c367..9a50c7fbfd 100644
+index 3c5de7c367..e9473deeb6 100644
 --- a/Makefile.in
 +++ b/Makefile.in
-@@ -423,6 +423,18 @@ MAINOBJS+=xbmc/platform/darwin/osx/sdlmain.a
+@@ -423,6 +423,24 @@ MAINOBJS+=xbmc/platform/darwin/osx/sdlmain.a
  endif
  endif # USE_ANDROID
  
@@ -66,23 +70,29 @@ index 3c5de7c367..9a50c7fbfd 100644
 +else
 +VUPLUS_EXTLIBS=${null}
 +endif
++
++ifeq (@USE_GB@,1)
++GB_EXTLIBS= xbmc/windowing/egl/gles_init.a
++else
++GB_EXTLIBS=${null}
++endif
  
  OBJSXBMC =$(DIRECTORY_ARCHIVES)
  OBJSXBMC:=$(filter-out $(DYNOBJSXBMC), $(OBJSXBMC))
-@@ -450,7 +462,7 @@ endif
+@@ -450,7 +468,7 @@ endif
  ifeq ($(findstring osx,@ARCH@), osx)
  	$(SILENT_LD) $(CXX) $(LDFLAGS) -o @APP_NAME_LC@.bin $(MAINOBJS) -Wl,-all_load,-ObjC $(MAINOBJS) $(DYNOBJSXBMC) $(NWAOBJSXBMC) $(OBJSXBMC) $(LIBS) -rdynamic
  else
 -	$(SILENT_LD) $(CXX) $(CXXFLAGS) $(LDFLAGS) -o @APP_NAME_LC@.bin $(MAINOBJS) -Wl,--start-group $(MAINOBJS) $(DYNOBJSXBMC) $(OBJSXBMC) -Wl,--end-group $(NWAOBJSXBMC) $(LIBS) -rdynamic
-+	$(SILENT_LD) $(CXX) $(CXXFLAGS) $(LDFLAGS) -o @APP_NAME_LC@.bin $(MAINOBJS) -Wl,--start-group $(MAINOBJS) $(DYNOBJSXBMC) $(OBJSXBMC) -Wl,--end-group $(NWAOBJSXBMC) $(LIBS) -rdynamic $(VUPLUS_EXTLIBS)
++	$(SILENT_LD) $(CXX) $(CXXFLAGS) $(LDFLAGS) -o @APP_NAME_LC@.bin $(MAINOBJS) -Wl,--start-group $(MAINOBJS) $(DYNOBJSXBMC) $(OBJSXBMC) -Wl,--end-group $(NWAOBJSXBMC) $(LIBS) -rdynamic $(VUPLUS_EXTLIBS) $(GB_EXTLIBS)
  endif
  
  @APP_NAME_LC@-xrandr: xbmc-xrandr.c
 diff --git a/configure.ac b/configure.ac
-index 5bfd1ea739..b36aebebdf 100644
+index 71e942b1c3..73b65dfbdd 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -681,6 +681,71 @@ case $use_platform in
+@@ -681,6 +681,78 @@ case $use_platform in
       use_neon=yes
       use_cpu=cortex-a7
       ;;
@@ -151,10 +161,17 @@ index 5bfd1ea739..b36aebebdf 100644
 +     target_videoplatform=target_hisilicon
 +     use_cpu=cortex-a15
 +     ;;
++  GB-cortexa15)
++     USE_GB=1
++     target_platform=target_v3d
++     target_videoplatform=target_GB
++     use_cpu=cortex-a15
++     ;;
++
  esac
  
  if test "$target_platform" = "target_raspberry_pi" ; then
-@@ -696,6 +761,13 @@ if test "$target_platform" = "target_raspberry_pi" ; then
+@@ -696,6 +768,13 @@ if test "$target_platform" = "target_raspberry_pi" ; then
       CXXFLAGS="$CXXFLAGS"
  fi
  
@@ -168,7 +185,7 @@ index 5bfd1ea739..b36aebebdf 100644
  if test "$host_vendor" = "apple"; then
    use_avahi=no
    use_alsa=no
-@@ -819,6 +891,15 @@ elif test "$use_arch" = "arm"; then
+@@ -819,6 +898,15 @@ elif test "$use_arch" = "arm"; then
        [ CFLAGS="$SAVE_CFLAGS -Wa,-march=armv6 -mtune=cortex-a8 -mthumb-interwork"
          CXXFLAGS="$CXXFLAGS -Wa,-march=armv6 -mtune=cortex-a8 -mthumb-interwork"
          use_cpu=cortex-a8])
@@ -184,7 +201,7 @@ index 5bfd1ea739..b36aebebdf 100644
    else
      if test "$use_neon" = "yes"; then
        CFLAGS="$CFLAGS -mfpu=neon -mvectorize-with-neon-quad"
-@@ -912,6 +993,9 @@ if test "x$have_builtin_sync_val_compare_and_swap" = "xyes"; then
+@@ -912,6 +1000,9 @@ if test "x$have_builtin_sync_val_compare_and_swap" = "xyes"; then
          [Define to 1 if your compiler supports the __sync_val_compare_and_swap() intrinsic.])
  fi
  
@@ -194,7 +211,7 @@ index 5bfd1ea739..b36aebebdf 100644
  # Check for u16string/u32string declarations
  AC_LANG_PUSH([C++])
  AC_CHECK_TYPES([std::u16string, std::u32string], [], [], [[#include <string>]])
-@@ -944,16 +1028,40 @@ if test "$use_gles" = "yes"; then
+@@ -944,16 +1035,45 @@ if test "$use_gles" = "yes"; then
      AC_DEFINE([HAVE_LIBEGL],[1],["Define to 1 if you have the `EGL' library (-lEGL)."])
      AC_DEFINE([HAVE_LIBGLESV2],[1],["Define to 1 if you have the `GLESv2' library (-lGLESv2)."])
      AC_MSG_RESULT(== WARNING: OpenGLES support is assumed.)
@@ -232,6 +249,11 @@ index 5bfd1ea739..b36aebebdf 100644
 +      AC_DEFINE([HAVE_LIBGLESV2],[1],["Define to 1 if you have the `GLESv2' library (-lGLESv2)."])
 +      AC_MSG_RESULT(== WARNING: OpenGLES nextv support is assumed.)
 +      LIBS="$LIBS -lEGL -lGLESv2 -lMali "
++  elif test "$target_videoplatform" = "target_GB" ; then
++      AC_DEFINE([HAVE_LIBEGL],[1],["Define to 1 if you have the `EGL' library (-lEGL)."])
++      AC_DEFINE([HAVE_LIBGLESV2],[1],["Define to 1 if you have the `GLESv2' library (-lGLESv2)."])
++      AC_MSG_RESULT(== WARNING: OpenGLES GB support is assumed.)
++      LIBS="$LIBS -lEGL -lGLESv2 -lnxpl -lnexus -lnxclient"
 +  else
        AC_CHECK_LIB([EGL],   [main],, AC_MSG_ERROR($missing_library))
        AC_CHECK_LIB([GLESv2],[main],, AC_MSG_ERROR($missing_library))
@@ -239,7 +261,7 @@ index 5bfd1ea739..b36aebebdf 100644
    fi
  else
    if test "$use_gl" = "yes"; then
-@@ -1056,7 +1164,7 @@ int main() {
+@@ -1056,7 +1176,7 @@ int main() {
    )])
  AC_LANG_POP([C++])
  
@@ -248,7 +270,7 @@ index 5bfd1ea739..b36aebebdf 100644
    PKG_CHECK_MODULES([UUID], [uuid],, AC_MSG_ERROR(libuuid not found))
  fi
  
-@@ -1556,7 +1664,14 @@ if test "${USE_STATIC_FFMPEG}" = "1"; then
+@@ -1556,7 +1676,14 @@ if test "${USE_STATIC_FFMPEG}" = "1"; then
        pkg_cfg_prefix=${SYSROOT}
    fi
  
@@ -264,7 +286,7 @@ index 5bfd1ea739..b36aebebdf 100644
      if test "$use_debug" != "yes"; then
        FFMPEG_OPTS="-r"
      fi
-@@ -1611,11 +1726,17 @@ if test "$FFMPEG_FOUND" != "true"; then
+@@ -1611,11 +1738,17 @@ if test "$FFMPEG_FOUND" != "true"; then
    PKG_CHECK_MODULES([FFMPEG], [$FFMPEG_LIBNAMES],
      [INCLUDES="$INCLUDES $FFMPEG_CFLAGS"; LIBS="$LIBS $FFMPEG_LIBS"; FFMPEG_FOUND="true"],
      [AC_MSG_ERROR("ffmpeg not found")])
@@ -283,7 +305,7 @@ index 5bfd1ea739..b36aebebdf 100644
    GNUTLS_ALL_LIBS=$(${PKG_CONFIG} --static --libs-only-l --silence-errors gnutls)
  
    # check if static libs are available
-@@ -2330,6 +2451,14 @@ AC_SUBST(HAVE_SSE4)
+@@ -2330,6 +2463,15 @@ AC_SUBST(HAVE_SSE4)
  AC_SUBST(USE_MMAL)
  AC_SUBST(USE_X11)
  AC_SUBST(USE_OPTICAL_DRIVE)
@@ -295,14 +317,15 @@ index 5bfd1ea739..b36aebebdf 100644
 +AC_SUBST(USE_VUPLUS_MIPSEL_LIB)
 +AC_SUBST(USE_NEXTV)
 +AC_SUBST(USE_HISILICON)
++AC_SUBST(USE_GB)
  
  # pushd and popd are not available in other shells besides bash, so implement
  # our own pushd/popd functions
 diff --git a/m4/xbmc_arch.m4 b/m4/xbmc_arch.m4
-index d28f263002..8c013bfebe 100644
+index d28f263002..9006a59c67 100644
 --- a/m4/xbmc_arch.m4
 +++ b/m4/xbmc_arch.m4
-@@ -80,4 +80,32 @@ fi
+@@ -80,4 +80,36 @@ fi
  if test "$target_platform" = "target_raspberry_pi" ; then
    AC_SUBST(ARCH_DEFINES, "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -D_ARMEL -DTARGET_RASPBERRY_PI")
  fi
@@ -334,6 +357,10 @@ index d28f263002..8c013bfebe 100644
 +if test "$target_videoplatform" = "target_hisilicon" ; then
 +  AC_SUBST(ARCH_DEFINES, "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_V3D -DTARGET_HISILICON")
 +fi
++
++if test "$target_videoplatform" = "target_GB" ; then
++  AC_SUBST(ARCH_DEFINES, "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_V3D -DTARGET_GB")
++fi
  ])
 diff --git a/project/cmake/scripts/linux/ArchSetup.cmake b/project/cmake/scripts/linux/ArchSetup.cmake
 index c0cc1bf283..716c08cf01 100644
@@ -353,10 +380,10 @@ index c0cc1bf283..716c08cf01 100644
      set(NEON True)
      set(NEON_FLAGS "-mfpu=neon -mvectorize-with-neon-quad")
 diff --git a/tools/depends/configure.ac b/tools/depends/configure.ac
-index 3626ea5204..9134c65540 100644
+index 3626ea5204..b9823586e3 100644
 --- a/tools/depends/configure.ac
 +++ b/tools/depends/configure.ac
-@@ -408,6 +408,78 @@ case $use_platform in
+@@ -408,6 +408,86 @@ case $use_platform in
       platform_cxxflags="-fPIC -mcpu=cortex-a7 -mfloat-abi=hard -mfpu=neon-vfpv4"
       platform_ldflags="-lpthread"
       ;;
@@ -432,6 +459,14 @@ index 3626ea5204..9134c65540 100644
 +    platform_cxxflags="-fPIC -mcpu=cortex-a15 -mfloat-abi=hard -mfpu=neon-vfpv4"
 +    platform_ldflags="-lpthread"
 +  ;;
++  GB-cortexa15)
++     target_platform=v3d
++     use_neon=yes
++     use_cpu=cortex-a15
++     platform_cflags="-fPIC -mcpu=cortex-a15 -mfloat-abi=hard -mfpu=neon-vfpv4"
++     platform_cxxflags="-fPIC -mcpu=cortex-a15 -mfloat-abi=hard -mfpu=neon-vfpv4"
++     platform_ldflags="-lpthread"
++     ;;
  esac
  
  if test "$target_platform" = "raspberry-pi" ; then
@@ -950,6 +985,263 @@ index 0000000000..eb032063e7
 +private:
 +  void SetFramebufferResolution(const RESOLUTION_INFO &res) const;
 +  void SetFramebufferResolution(int width, int height) const;
++};
+diff --git a/xbmc/windowing/egl/EGLNativeTypeGB.cpp b/xbmc/windowing/egl/EGLNativeTypeGB.cpp
+new file mode 100644
+index 0000000000..fdaf818423
+--- /dev/null
++++ b/xbmc/windowing/egl/EGLNativeTypeGB.cpp
+@@ -0,0 +1,189 @@
++/*
++ *      Copyright (C) 2011-2012 Team XBMC
++ *      http://www.xbmc.org
++ *
++ *  This Program is free software; you can redistribute it and/or modify
++ *  it under the terms of the GNU General Public License as published by
++ *  the Free Software Foundation; either version 2, or (at your option)
++ *  any later version.
++ *
++ *  This Program is distributed in the hope that it will be useful,
++ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++ *  GNU General Public License for more details.
++ *
++ *  You should have received a copy of the GNU General Public License
++ *  along with XBMC; see the file COPYING.  If not, see
++ *  <http://www.gnu.org/licenses/>.
++ *
++ */
++#include "system.h"
++#include "EGLNativeTypeGB.h"
++#include "utils/StringUtils.h"
++#include "utils/SysfsUtils.h"
++#include "utils/log.h"
++#include "guilib/gui3d.h"
++#include "linux/DllBCM.h"
++
++#include <stdio.h>
++#include <stdlib.h>
++#include <linux/fb.h>
++#include <sys/ioctl.h>
++#include <EGL/egl.h>
++
++#include "gles_init.h"
++
++CEGLNativeTypeGB::CEGLNativeTypeGB()
++{
++  m_nativeDisplay = NULL;
++  m_nativeWindow = NULL;
++}
++
++CEGLNativeTypeGB::~CEGLNativeTypeGB()
++{
++}  
++
++bool CEGLNativeTypeGB::CheckCompatibility()
++{
++  return true;
++}
++
++void CEGLNativeTypeGB::Initialize()
++{
++}
++
++void CEGLNativeTypeGB::Destroy()
++{
++}
++
++bool CEGLNativeTypeGB::CreateNativeDisplay()
++{
++
++  GLES_Native_Init();
++  return GLES_Native_CreateNativeDisplay(&m_nativeDisplay);
++
++}
++
++bool CEGLNativeTypeGB::CreateNativeWindow()
++{
++
++  m_nativeWindow = GLES_Native_CreateNativeWindow();
++   
++  if (!m_nativeWindow)
++    return false;
++  return true;
++}
++
++bool CEGLNativeTypeGB::GetNativeDisplay(XBNativeDisplayType **nativeDisplay) const
++{
++  *nativeDisplay = (XBNativeDisplayType*) &m_nativeDisplay;
++  return true;
++}
++
++bool CEGLNativeTypeGB::GetNativeWindow(XBNativeDisplayType **nativeWindow) const
++{
++  *nativeWindow = (XBNativeWindowType*) &m_nativeWindow;
++  return true;
++}
++
++bool CEGLNativeTypeGB::DestroyNativeDisplay()
++{
++	GLES_Native_DestroyNativeDisplay();
++    m_nativeDisplay = NULL;
++    return true;
++}
++
++bool CEGLNativeTypeGB::DestroyNativeWindow()
++{
++  GLES_Native_DestroyNativeWindow();
++  m_nativeWindow = NULL;
++  return true;
++}
++
++bool CEGLNativeTypeGB::GetNativeResolution(RESOLUTION_INFO *res) const
++{
++  *res = m_desktopRes;
++  return true;
++}
++
++bool CEGLNativeTypeGB::SetNativeResolution(const RESOLUTION_INFO &res)
++{
++  m_desktopRes = res;
++  return true;
++}
++
++bool CEGLNativeTypeGB::ProbeResolutions(std::vector<RESOLUTION_INFO> &resolutions)
++{
++  resolutions.clear();
++
++  m_desktopResAll[0].iScreen      = 0;
++  m_desktopResAll[0].bFullScreen  = true;
++  m_desktopResAll[0].iWidth       = 1280;
++  m_desktopResAll[0].iHeight      = 720;
++  m_desktopResAll[0].iScreenWidth = 1280;
++  m_desktopResAll[0].iScreenHeight= 720;
++  m_desktopResAll[0].dwFlags      =  D3DPRESENTFLAG_PROGRESSIVE;
++  m_desktopResAll[0].fRefreshRate = 50;
++  m_desktopResAll[0].strMode = StringUtils::Format("%dx%d", 1280, 720);
++  m_desktopResAll[0].strMode = StringUtils::Format("%s @ %.2f%s - Full Screen", m_desktopRes.strMode.c_str(), (float)50,m_desktopRes.dwFlags & D3DPRESENTFLAG_INTERLACED ? "i" : "");
++
++  m_desktopResAll[0].iSubtitles   = (int)(0.965 * m_desktopResAll[0].iHeight);
++
++  CLog::Log(LOGDEBUG, "EGL initial desktop resolution %s\n", m_desktopResAll[0].strMode.c_str());
++
++  resolutions.push_back(m_desktopResAll[0]);
++
++  m_desktopResAll[1].iScreen      = 0;
++  m_desktopResAll[1].bFullScreen  = true;
++  m_desktopResAll[1].iWidth       = 1280;
++  m_desktopResAll[1].iHeight      = 720;
++  m_desktopResAll[1].iScreenWidth = 1280;
++  m_desktopResAll[1].iScreenHeight= 720;
++  m_desktopResAll[1].dwFlags      =  D3DPRESENTFLAG_PROGRESSIVE;
++
++  m_desktopResAll[1].dwFlags      |=  D3DPRESENTFLAG_MODE3DSBS;
++  m_desktopResAll[1].fRefreshRate = 50;
++  m_desktopResAll[1].strMode = StringUtils::Format("%dx%d", 1280, 720);
++  m_desktopResAll[1].strMode = StringUtils::Format("%s @ %.2f%s - Full Screen 3DSBS", m_desktopResAll[1].strMode.c_str(), (float)50,m_desktopResAll[1].dwFlags & D3DPRESENTFLAG_INTERLACED ? "i" : "");
++
++  m_desktopResAll[1].iSubtitles   = (int)(0.965 * m_desktopResAll[1].iHeight);
++
++  CLog::Log(LOGDEBUG, "EGL initial desktop resolution %s\n", m_desktopResAll[1].strMode.c_str());
++
++  resolutions.push_back(m_desktopResAll[1]);
++
++  m_desktopResAll[2].iScreen      = 0;
++  m_desktopResAll[2].bFullScreen  = true;
++  m_desktopResAll[2].iWidth       = 1280;
++  m_desktopResAll[2].iHeight      = 720;
++  m_desktopResAll[2].iScreenWidth = 1280;
++  m_desktopResAll[2].iScreenHeight= 720;
++  m_desktopResAll[2].dwFlags      =  D3DPRESENTFLAG_PROGRESSIVE;
++
++  m_desktopResAll[2].dwFlags      |=  D3DPRESENTFLAG_MODE3DTB;
++  m_desktopResAll[2].fRefreshRate = 50;
++  m_desktopResAll[2].strMode = StringUtils::Format("%dx%d", 1280, 720);
++  m_desktopResAll[2].strMode = StringUtils::Format("%s @ %.2f%s - Full Screen 3DTB", m_desktopResAll[2].strMode.c_str(), (float)50,m_desktopResAll[2].dwFlags & D3DPRESENTFLAG_INTERLACED ? "i" : "");
++
++  m_desktopResAll[2].iSubtitles   = (int)(0.965 * m_desktopResAll[2].iHeight);
++
++  CLog::Log(LOGDEBUG, "EGL initial desktop resolution %s\n", m_desktopResAll[2].strMode.c_str());
++
++  resolutions.push_back(m_desktopResAll[2]);
++
++  m_desktopRes = m_desktopResAll[0];
++  
++  return true;
++}
++
++bool CEGLNativeTypeGB::GetPreferredResolution(RESOLUTION_INFO *res) const
++{
++  *res = m_desktopResAll[0];
++  return true;
++}
++
++bool CEGLNativeTypeGB::ShowWindow(bool show)
++{
++  GLES_Native_ShowWindow(m_nativeWindow, show);
++  return true;
++}
+diff --git a/xbmc/windowing/egl/EGLNativeTypeGB.h b/xbmc/windowing/egl/EGLNativeTypeGB.h
+new file mode 100644
+index 0000000000..ecf78813d0
+--- /dev/null
++++ b/xbmc/windowing/egl/EGLNativeTypeGB.h
+@@ -0,0 +1,56 @@
++#pragma once
++
++/*
++ *      Copyright (C) 2011-2012 Team XBMC
++ *      http://www.xbmc.org
++ *
++ *  This Program is free software; you can redistribute it and/or modify
++ *  it under the terms of the GNU General Public License as published by
++ *  the Free Software Foundation; either version 2, or (at your option)
++ *  any later version.
++ *
++ *  This Program is distributed in the hope that it will be useful,
++ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++ *  GNU General Public License for more details.
++ *
++ *  You should have received a copy of the GNU General Public License
++ *  along with XBMC; see the file COPYING.  If not, see
++ *  <http://www.gnu.org/licenses/>.
++ *
++ */
++
++#include "EGLNativeType.h"
++
++#include <vector>
++#include <string>
++
++class CEGLNativeTypeGB : public CEGLNativeType
++{
++public:
++  CEGLNativeTypeGB();
++  virtual ~CEGLNativeTypeGB();
++  virtual std::string GetNativeName() const { return "GB"; };
++  virtual bool  CheckCompatibility();
++  virtual void  Initialize();
++  virtual void  Destroy();
++  virtual int   GetQuirks() { return EGL_QUIRK_NONE; };
++
++  virtual bool  CreateNativeDisplay();
++  virtual bool  CreateNativeWindow();
++  virtual bool  GetNativeDisplay(XBNativeDisplayType **nativeDisplay) const;
++  virtual bool  GetNativeWindow(XBNativeWindowType **nativeWindow) const;
++
++  virtual bool  DestroyNativeWindow();
++  virtual bool  DestroyNativeDisplay();
++
++  virtual bool  GetNativeResolution(RESOLUTION_INFO *res) const;
++  virtual bool  SetNativeResolution(const RESOLUTION_INFO &res);
++  virtual bool  ProbeResolutions(std::vector<RESOLUTION_INFO> &resolutions);
++  virtual bool  GetPreferredResolution(RESOLUTION_INFO *res) const;
++
++  virtual bool  ShowWindow(bool show);
++private:
++  RESOLUTION_INFO m_desktopRes;
++  RESOLUTION_INFO m_desktopResAll[3];
 +};
 diff --git a/xbmc/windowing/egl/EGLNativeTypeHisilicon.cpp b/xbmc/windowing/egl/EGLNativeTypeHisilicon.cpp
 new file mode 100644
@@ -3057,10 +3349,10 @@ index 0000000000..9f0ff93dea
 +  RESOLUTION_INFO m_desktopResAll[3];
 +};
 diff --git a/xbmc/windowing/egl/EGLWrapper.cpp b/xbmc/windowing/egl/EGLWrapper.cpp
-index 30f57577d6..3d0ac172a8 100644
+index 30f57577d6..96b379f56e 100644
 --- a/xbmc/windowing/egl/EGLWrapper.cpp
 +++ b/xbmc/windowing/egl/EGLWrapper.cpp
-@@ -37,6 +37,24 @@
+@@ -37,6 +37,27 @@
  #if defined(TARGET_LINUX) && defined(HAS_LIBAMCODEC)
  #include "EGLNativeTypeAmlogic.h"
  #endif
@@ -3082,10 +3374,13 @@ index 30f57577d6..3d0ac172a8 100644
 +#if defined(TARGET_HISILICON)
 +  #include "EGLNativeTypeHisilicon.h"
 +#endif
++#if defined(TARGET_GB)
++  #include "EGLNativeTypeGB.h"
++#endif
  #include "EGLWrapper.h"
  
  #define CheckError() m_result = eglGetError(); if(m_result != EGL_SUCCESS) CLog::Log(LOGERROR, "EGL error in %s: %x",__FUNCTION__, m_result);
-@@ -101,6 +119,18 @@ bool CEGLWrapper::Initialize(const std::string &implementation)
+@@ -101,6 +122,20 @@ bool CEGLWrapper::Initialize(const std::string &implementation)
        (nativeGuess = CreateEGLNativeType<CEGLNativeTypeIMX>(implementation))
  #elif defined(TARGET_LINUX) && defined(HAS_LIBAMCODEC)
        (nativeGuess = CreateEGLNativeType<CEGLNativeTypeAmlogic>(implementation))
@@ -3101,14 +3396,16 @@ index 30f57577d6..3d0ac172a8 100644
 +      (nativeGuess = CreateEGLNativeType<CEGLNativeTypeNexTV>(implementation))
 +#elif defined(TARGET_HISILICON)
 +      (nativeGuess = CreateEGLNativeType<CEGLNativeTypeHisilicon>(implementation))
++#elif defined(TARGET_GB)
++      (nativeGuess = CreateEGLNativeType<CEGLNativeTypeGB>(implementation))
  #endif
        )
    {
 diff --git a/xbmc/windowing/egl/Makefile.in b/xbmc/windowing/egl/Makefile.in
-index 68f7862dfe..0bf0c09295 100644
+index 68f7862dfe..e0c21ad002 100644
 --- a/xbmc/windowing/egl/Makefile.in
 +++ b/xbmc/windowing/egl/Makefile.in
-@@ -12,6 +12,24 @@ endif
+@@ -12,6 +12,27 @@ endif
  ifeq (@USE_IMXVPU@,1)
  SRCS+= EGLNativeTypeIMX.cpp
  endif
@@ -3129,6 +3426,9 @@ index 68f7862dfe..0bf0c09295 100644
 +endif
 +ifeq (@USE_HISILICON@,1)
 +SRCS+= EGLNativeTypeHisilicon.cpp
++endif
++ifeq (@USE_GB@,1)
++SRCS+= EGLNativeTypeGB.cpp
 +endif
  SRCS+= EGLWrapper.cpp
  
