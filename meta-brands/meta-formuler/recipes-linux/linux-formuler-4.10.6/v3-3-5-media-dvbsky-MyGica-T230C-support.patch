@@ -1,0 +1,31 @@
+--- a/drivers/media/dvb-core/dvb-usb-ids.h
++++ b/drivers/media/dvb-core/dvb-usb-ids.h
+@@ -73,12 +73,14 @@
+ #define USB_VID_GIGABYTE			0x1044
+ #define USB_VID_YUAN				0x1164
+ #define USB_VID_XTENSIONS			0x1ae7
++#define USB_VID_ZYDAS				0x0ace
+ #define USB_VID_HUMAX_COEX			0x10b9
+ #define USB_VID_774				0x7a69
+ #define USB_VID_EVOLUTEPC			0x1e59
+ #define USB_VID_AZUREWAVE			0x13d3
+ #define USB_VID_TECHNISAT			0x14f7
+ #define USB_VID_TENOW				0x734c
++#define USB_VID_HAMA				0x147f
+ 
+ /* Product IDs */
+ #define USB_PID_ADSTECH_USB2_COLD			0xa333
+@@ -382,6 +384,7 @@
+ #define USB_PID_SONY_PLAYTV				0x0003
+ #define USB_PID_MYGICA_D689				0xd811
+ #define USB_PID_MYGICA_T230				0xc688
++#define USB_PID_MYGICA_T230C				0xc689
+ #define USB_PID_ELGATO_EYETV_DIVERSITY			0x0011
+ #define USB_PID_ELGATO_EYETV_DTT			0x0021
+ #define USB_PID_ELGATO_EYETV_DTT_2			0x003f
+@@ -420,4 +423,5 @@
+ #define USB_PID_TENOW_TBS5925				0x5925
+ #define USB_PID_TENOW_TBS5928				0x5928
+ #define USB_PID_TENOW_TBS5980				0x5980
++#define USB_PID_HAMA_DVBT_HYBRID			0x2758
+ #endif

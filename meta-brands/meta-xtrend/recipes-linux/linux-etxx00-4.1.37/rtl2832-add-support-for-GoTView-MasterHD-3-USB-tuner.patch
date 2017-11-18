@@ -1,0 +1,330 @@
+--- a/drivers/media/dvb-frontends/si2168.c
++++ b/drivers/media/dvb-frontends/si2168.c
+@@ -508,6 +508,8 @@ static int si2168_init(struct dvb_frontend *fe)
+ 	/* set ts mode */
+ 	memcpy(cmd.args, "\x14\x00\x01\x10\x10\x00", 6);
+ 	cmd.args[4] |= dev->ts_mode;
++	if (dev->ts_clock_gapped)
++		cmd.args[4] |= 0x40;
+ 	cmd.wlen = 6;
+ 	cmd.rlen = 4;
+ 	ret = si2168_cmd_execute(client, &cmd);
+@@ -688,6 +690,7 @@ static int si2168_probe(struct i2c_client *client,
+ 	*config->fe = &dev->fe;
+ 	dev->ts_mode = config->ts_mode;
+ 	dev->ts_clock_inv = config->ts_clock_inv;
++	dev->ts_clock_gapped = config->ts_clock_gapped;
+ 	dev->fw_loaded = false;
+ 
+ 	i2c_set_clientdata(client, dev);
+--- a/drivers/media/dvb-frontends/si2168.h
++++ b/drivers/media/dvb-frontends/si2168.h
+@@ -42,6 +42,9 @@ struct si2168_config {
+ 
+ 	/* TS clock inverted */
+ 	bool ts_clock_inv;
++
++	/* TS clock gapped */
++	bool ts_clock_gapped;
+ };
+ 
+ #endif
+--- a/drivers/media/dvb-frontends/si2168_priv.h
++++ b/drivers/media/dvb-frontends/si2168_priv.h
+@@ -38,6 +38,7 @@ struct si2168_dev {
+ 	bool fw_loaded;
+ 	u8 ts_mode;
+ 	bool ts_clock_inv;
++	bool ts_clock_gapped;
+ };
+ 
+ /* firmware command struct */
+--- a/drivers/media/dvb-frontends/rtl2832.c
++++ b/drivers/media/dvb-frontends/rtl2832.c
+@@ -376,6 +376,10 @@ static int rtl2832_init(struct dvb_frontend *fe)
+ 		len = ARRAY_SIZE(rtl2832_tuner_init_r820t);
+ 		init = rtl2832_tuner_init_r820t;
+ 		break;
++	case RTL2832_TUNER_SI2157:
++		len = ARRAY_SIZE(rtl2832_tuner_init_si2157);
++		init = rtl2832_tuner_init_si2157;
++		break;
+ 	default:
+ 		ret = -EINVAL;
+ 		goto err;
+diff --git a/drivers/media/dvb-frontends/rtl2832.h b/drivers/media/dvb-frontends/rtl2832.h
+index a8e912e..c6cdcc4 100644
+--- a/drivers/media/dvb-frontends/rtl2832.h
++++ b/drivers/media/dvb-frontends/rtl2832.h
+@@ -47,6 +47,7 @@ struct rtl2832_platform_data {
+ #define RTL2832_TUNER_FC0013    0x29
+ #define RTL2832_TUNER_R820T     0x2a
+ #define RTL2832_TUNER_R828D     0x2b
++#define RTL2832_TUNER_SI2157    0x2c
+ 	u8 tuner;
+ 
+ 	struct dvb_frontend* (*get_dvb_frontend)(struct i2c_client *);
+diff --git a/drivers/media/dvb-frontends/rtl2832_priv.h b/drivers/media/dvb-frontends/rtl2832_priv.h
+index c3a922c..a973b8a 100644
+--- a/drivers/media/dvb-frontends/rtl2832_priv.h
++++ b/drivers/media/dvb-frontends/rtl2832_priv.h
+@@ -377,4 +377,29 @@ static const struct rtl2832_reg_value rtl2832_tuner_init_r820t[] = {
+ 	{DVBT_SPEC_INV,                  0x1},
+ };
+ 
++static const struct rtl2832_reg_value rtl2832_tuner_init_si2157[] = {
++	{DVBT_DAGC_TRG_VAL,             0x39},
++	{DVBT_AGC_TARG_VAL_0,            0x0},
++	{DVBT_AGC_TARG_VAL_8_1,         0x40},
++	{DVBT_AAGC_LOOP_GAIN,           0x16},
++	{DVBT_LOOP_GAIN2_3_0,            0x8},
++	{DVBT_LOOP_GAIN2_4,              0x1},
++	{DVBT_LOOP_GAIN3,               0x18},
++	{DVBT_VTOP1,                    0x35},
++	{DVBT_VTOP2,                    0x21},
++	{DVBT_VTOP3,                    0x21},
++	{DVBT_KRF1,                      0x0},
++	{DVBT_KRF2,                     0x40},
++	{DVBT_KRF3,                     0x10},
++	{DVBT_KRF4,                     0x10},
++	{DVBT_IF_AGC_MIN,               0x80},
++	{DVBT_IF_AGC_MAX,               0x7f},
++	{DVBT_RF_AGC_MIN,               0x80},
++	{DVBT_RF_AGC_MAX,               0x7f},
++	{DVBT_POLAR_RF_AGC,              0x0},
++	{DVBT_POLAR_IF_AGC,              0x0},
++	{DVBT_AD7_SETTING,            0xe9f4},
++	{DVBT_SPEC_INV,                  0x0},
++};
++
+ #endif /* RTL2832_PRIV_H */
+diff --git a/drivers/media/usb/dvb-usb-v2/rtl28xxu.c b/drivers/media/usb/dvb-usb-v2/rtl28xxu.c
+index 54cb109..616be99 100644
+--- a/drivers/media/usb/dvb-usb-v2/rtl28xxu.c
++++ b/drivers/media/usb/dvb-usb-v2/rtl28xxu.c
+@@ -217,7 +217,7 @@ static int rtl28xxu_i2c_xfer(struct i2c_adapter *adap, struct i2c_msg msg[],
+ 				req.data = &msg[0].buf[1];
+ 				ret = rtl28xxu_ctrl_msg(d, &req);
+ 			}
+-		} else if (msg[0].len < 23) {
++		} else if ((msg[0].len < 23) && (!dev->new_i2c_write)) {
+ 			/* method 2 - old I2C */
+ 			req.value = (msg[0].buf[0] << 8) | (msg[0].addr << 1);
+ 			req.index = CMD_I2C_WR;
+@@ -363,6 +363,8 @@ static int rtl2832u_read_config(struct dvb_usb_device *d)
+ 	struct rtl28xxu_req req_r828d = {0x0074, CMD_I2C_RD, 1, buf};
+ 	struct rtl28xxu_req req_mn88472 = {0xff38, CMD_I2C_RD, 1, buf};
+ 	struct rtl28xxu_req req_mn88473 = {0xff38, CMD_I2C_RD, 1, buf};
++	struct rtl28xxu_req req_si2157 = {0x00c0, CMD_I2C_RD, 1, buf};
++	struct rtl28xxu_req req_si2168 = {0x00c8, CMD_I2C_RD, 1, buf};
+ 
+ 	dev_dbg(&d->intf->dev, "\n");
+ 
+@@ -483,6 +485,35 @@ static int rtl2832u_read_config(struct dvb_usb_device *d)
+ 		goto tuner_found;
+ 	}
+ 
++	/* GPIO0 and GPIO5 to reset Si2157/Si2168 tuner and demod */
++	ret = rtl28xxu_wr_reg_mask(d, SYS_GPIO_OUT_VAL, 0x00, 0x21);
++	if (ret)
++		goto err;
++
++	ret = rtl28xxu_wr_reg_mask(d, SYS_GPIO_OUT_EN, 0x00, 0x21);
++	if (ret)
++		goto err;
++
++	msleep(50);
++
++	ret = rtl28xxu_wr_reg_mask(d, SYS_GPIO_OUT_VAL, 0x21, 0x21);
++	if (ret)
++		goto err;
++
++	ret = rtl28xxu_wr_reg_mask(d, SYS_GPIO_OUT_EN, 0x21, 0x21);
++	if (ret)
++		goto err;
++
++	msleep(50);
++
++	/* check Si2157 ID register; reg=c0 val=80 */
++	ret = rtl28xxu_ctrl_msg(d, &req_si2157);
++	if (ret == 0 && ((buf[0] & 0x80) == 0x80)) {
++		dev->tuner = TUNER_RTL2832_SI2157;
++		dev->tuner_name = "SI2157";
++		goto tuner_found;
++	}
++
+ tuner_found:
+ 	dev_dbg(&d->intf->dev, "tuner=%s\n", dev->tuner_name);
+ 
+@@ -516,6 +547,15 @@ tuner_found:
+ 			goto demod_found;
+ 		}
+ 	}
++	if (dev->tuner == TUNER_RTL2832_SI2157) {
++		/* check Si2168 ID register; reg=c8 val=80 */
++		ret = rtl28xxu_ctrl_msg(d, &req_si2168);
++		if (ret == 0 && ((buf[0] & 0x80) == 0x80)) {
++			dev_dbg(&d->intf->dev, "Si2168 found\n");
++			dev->slave_demod = SLAVE_DEMOD_SI2168;
++			goto demod_found;
++		}
++	}
+ 
+ demod_found:
+ 	/* close demod I2C gate */
+@@ -674,6 +714,11 @@ static const struct rtl2832_platform_data rtl2832_r820t_platform_data = {
+ 	.tuner = TUNER_RTL2832_R820T,
+ };
+ 
++static const struct rtl2832_platform_data rtl2832_si2157_platform_data = {
++	.clk = 28800000,
++	.tuner = TUNER_RTL2832_SI2157,
++};
++
+ static int rtl2832u_fc0012_tuner_callback(struct dvb_usb_device *d,
+ 		int cmd, int arg)
+ {
+@@ -823,6 +868,9 @@ static int rtl2832u_frontend_attach(struct dvb_usb_adapter *adap)
+ 	case TUNER_RTL2832_R828D:
+ 		*pdata = rtl2832_r820t_platform_data;
+ 		break;
++	case TUNER_RTL2832_SI2157:
++		*pdata = rtl2832_si2157_platform_data;
++		break;
+ 	default:
+ 		dev_err(&d->intf->dev, "unknown tuner %s\n", dev->tuner_name);
+ 		ret = -ENODEV;
+@@ -890,7 +938,7 @@ static int rtl2832u_frontend_attach(struct dvb_usb_adapter *adap)
+ 			}
+ 
+ 			dev->i2c_client_slave_demod = client;
+-		} else {
++		} else if (dev->slave_demod == SLAVE_DEMOD_MN88473) {
+ 			struct mn88473_config mn88473_config = {};
+ 
+ 			mn88473_config.fe = &adap->fe[1];
+@@ -912,9 +960,37 @@ static int rtl2832u_frontend_attach(struct dvb_usb_adapter *adap)
+ 			}
+ 
+ 			dev->i2c_client_slave_demod = client;
++		} else {
++			struct si2168_config si2168_config = {};
++			struct i2c_adapter *adapter;
++
++			si2168_config.i2c_adapter = &adapter;
++			si2168_config.fe = &adap->fe[1];
++			si2168_config.ts_mode = SI2168_TS_SERIAL;
++			si2168_config.ts_clock_inv = false;
++			si2168_config.ts_clock_gapped = true;
++			strlcpy(info.type, "si2168", I2C_NAME_SIZE);
++			info.addr = 0x64;
++			info.platform_data = &si2168_config;
++			request_module(info.type);
++			client = i2c_new_device(&d->i2c_adap, &info);
++			if (client == NULL || client->dev.driver == NULL) {
++				dev->slave_demod = SLAVE_DEMOD_NONE;
++				goto err_slave_demod_failed;
++			}
++
++			if (!try_module_get(client->dev.driver->owner)) {
++				i2c_unregister_device(client);
++				dev->slave_demod = SLAVE_DEMOD_NONE;
++				goto err_slave_demod_failed;
++			}
++
++			dev->i2c_client_slave_demod = client;
++
++			/* for Si2168 devices use only new I2C write method */
++			dev->new_i2c_write = true;
+ 		}
+ 	}
+-
+ 	return 0;
+ err_slave_demod_failed:
+ err:
+@@ -1154,6 +1230,39 @@ static int rtl2832u_tuner_attach(struct dvb_usb_adapter *adap)
+ 					adap->fe[1]->ops.tuner_ops.get_rf_strength;
+ 		}
+ 		break;
++	case TUNER_RTL2832_SI2157: {
++			struct si2157_config si2157_config = {
++				.fe = adap->fe[0],
++				.if_port = 0,
++				.inversion = false,
++			};
++
++			strlcpy(info.type, "si2157", I2C_NAME_SIZE);
++			info.addr = 0x60;
++			info.platform_data = &si2157_config;
++			request_module(info.type);
++			client = i2c_new_device(&d->i2c_adap, &info);
++			if (client == NULL || client->dev.driver == NULL)
++				break;
++
++			if (!try_module_get(client->dev.driver->owner)) {
++				i2c_unregister_device(client);
++				break;
++			}
++
++			dev->i2c_client_tuner = client;
++			subdev = i2c_get_clientdata(client);
++
++			/* copy tuner ops for 2nd FE as tuner is shared */
++			if (adap->fe[1]) {
++				adap->fe[1]->tuner_priv =
++						adap->fe[0]->tuner_priv;
++				memcpy(&adap->fe[1]->ops.tuner_ops,
++						&adap->fe[0]->ops.tuner_ops,
++						sizeof(struct dvb_tuner_ops));
++			}
++		}
++		break;
+ 	default:
+ 		dev_err(&d->intf->dev, "unknown tuner %d\n", dev->tuner);
+ 	}
+@@ -1770,6 +1879,8 @@ static const struct usb_device_id rtl28xxu_id_table[] = {
+ 	/* RTL2832P devices: */
+ 	{ DVB_USB_DEVICE(USB_VID_HANFTEK, 0x0131,
+ 		&rtl28xxu_props, "Astrometa DVB-T2", NULL) },
++	{ DVB_USB_DEVICE(0x5654, 0xca42,
++		&rtl28xxu_props, "GoTView MasterHD 3", NULL) },
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(usb, rtl28xxu_id_table);
+diff --git a/drivers/media/usb/dvb-usb-v2/rtl28xxu.h b/drivers/media/usb/dvb-usb-v2/rtl28xxu.h
+index 1b5d7ff..9f6115a 100644
+--- a/drivers/media/usb/dvb-usb-v2/rtl28xxu.h
++++ b/drivers/media/usb/dvb-usb-v2/rtl28xxu.h
+@@ -41,6 +41,8 @@
+ #include "fc2580.h"
+ #include "tua9001.h"
+ #include "r820t.h"
++#include "si2168.h"
++#include "si2157.h"
+ 
+ /*
+  * USB commands
+@@ -76,6 +78,7 @@ struct rtl28xxu_dev {
+ 	u8 page; /* integrated demod active register page */
+ 	struct i2c_adapter *demod_i2c_adapter;
+ 	bool rc_active;
++	bool new_i2c_write;
+ 	struct i2c_client *i2c_client_demod;
+ 	struct i2c_client *i2c_client_tuner;
+ 	struct i2c_client *i2c_client_slave_demod;
+@@ -83,6 +86,7 @@ struct rtl28xxu_dev {
+ 	#define SLAVE_DEMOD_NONE           0
+ 	#define SLAVE_DEMOD_MN88472        1
+ 	#define SLAVE_DEMOD_MN88473        2
++	#define SLAVE_DEMOD_SI2168         3
+ 	unsigned int slave_demod:2;
+ 	union {
+ 		struct rtl2830_platform_data rtl2830_platform_data;
+@@ -116,6 +120,7 @@ enum rtl28xxu_tuner {
+ 	TUNER_RTL2832_FC0013,
+ 	TUNER_RTL2832_R820T,
+ 	TUNER_RTL2832_R828D,
++	TUNER_RTL2832_SI2157,
+ };
+ 
+ struct rtl28xxu_req {

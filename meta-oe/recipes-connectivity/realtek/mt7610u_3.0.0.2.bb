@@ -16,6 +16,7 @@ SRC_URI = "file://mt7610u_wifi_sta_v3002_dpo_20130916.tar.bz2 \
 	"
 
 SRC_URI_append_dm900 = " file://fix_build_arm.patch;patch=1"
+SRC_URI_append_dm920 = " file://fix_build_arm.patch;patch=1"
 
 S = "${WORKDIR}/mt7610u_wifi_sta_v3002_dpo_20130916"
 

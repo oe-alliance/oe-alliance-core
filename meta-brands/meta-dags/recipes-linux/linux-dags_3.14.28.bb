@@ -3,7 +3,7 @@ LICENSE = "GPLv2"
 SECTION = "kernel"
 
 KV = "3.14.28"
-MACHINE_KERNEL_PR_append = ".9"
+MACHINE_KERNEL_PR_append = "10"
 
 inherit kernel machine_kernel_pr
 
@@ -22,7 +22,14 @@ SRC_URI += "http://en3homeftp.net/pub/src/linux-3.14.28.tar.xz \
 	file://0001-STV-Add-SNR-Signal-report-parameters.patch \
 	file://0001-stv090x-optimized-TS-sync-control.patch \
 	file://blindscan2.patch \
-    file://genksyms_fix_typeof_handling.patch \
+	file://genksyms_fix_typeof_handling.patch \
+	file://0001-tuners-tda18273-silicon-tuner-driver.patch \
+	file://01-10-si2157-Silicon-Labs-Si2157-silicon-tuner-driver.patch \
+	file://02-10-si2168-Silicon-Labs-Si2168-DVB-T-T2-C-demod-driver.patch \
+	file://0003-cxusb-Geniatech-T230-support.patch \
+	file://CONFIG_DVB_SP2.patch \
+	file://dvbsky.patch \
+	file://rtl2832u-2.patch \
 	"
 
 S = "${WORKDIR}/linux"

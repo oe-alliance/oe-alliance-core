@@ -8,6 +8,7 @@ SRCREV = "ff57e585c47fd62b484d0a8f96fe4f020f5840e3"
 
 SRC_URI = "git://git.opendreambox.org/git/obi/libdvbsi++.git \
 	file://fix_section_len_check.patch \
+	file://ac3.patch \
 	"
 
 SRC_URI_append_sh4 = " \

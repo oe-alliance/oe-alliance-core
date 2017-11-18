@@ -1,6 +1,6 @@
 inherit kernel machine_kernel_pr
 
-MACHINE_KERNEL_PR_append = ".24"
+MACHINE_KERNEL_PR_append = ".25"
 
 PATCHREV = "6fa88d2001194cbff63ad94cb713b6cd5ea02739"
 PATCHLEVEL = "79"
@@ -16,6 +16,13 @@ SRC_URI = " \
     file://0001-stv090x-optimized-TS-sync-control.patch \
     file://genksyms_fix_typeof_handling.patch \
     file://blindscan2.patch \
+    file://0001-tuners-tda18273-silicon-tuner-driver.patch \
+    file://01-10-si2157-Silicon-Labs-Si2157-silicon-tuner-driver.patch \
+    file://02-10-si2168-Silicon-Labs-Si2168-DVB-T-T2-C-demod-driver.patch \
+    file://0003-cxusb-Geniatech-T230-support.patch \
+    file://CONFIG_DVB_SP2.patch \
+    file://dvbsky.patch \
+    file://rtl2832u-2.patch \
 "
 
 SRC_URI[kernel.md5sum] = "b621207b3f6ecbb67db18b13258f8ea8"
