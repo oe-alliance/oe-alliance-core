@@ -11,7 +11,7 @@ DEPENDS = "tslib mpfr gmp"
 SRCREV = "${AUTOREV}"
 PV = "${IMAGE_VERSION}+gitr${SRCPV}"
 PKGV = "${IMAGE_VERSION}+gitr${GITPKGV}"
-PR = "r23"
+PR = "r24"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -92,7 +92,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-vhannibalautosettings_1.1_mips32el.ipk \
     enigma2-plugin-extensions-vuplusforum_0.8rc2_all.ipk \
     enigma2-plugin-extensions-webmedia_14.0_r0_all.ipk \
-    enigma2-plugin-extensions-webradiofs_15.92_all.ipk \
+    enigma2-plugin-extensions-webradiofs_15.95_all.ipk \
     enigma2-plugin-extensions-wikipedia_2.3rc1_all.ipk \
     enigma2-plugin-extensions-wwech_1.03_all.ipk \
     enigma2-plugin-extensions-xbmcaddons_8.1_r0_all.ipk \
