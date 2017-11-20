@@ -9,8 +9,8 @@ RDEPENDS_${PN} += "libcurl enigma2 python-compression python-lzma xz"
 inherit gitpkgv
 
 SRCREV = "${AUTOREV}"
-PV = "0.8.4+gitr${SRCPV}"
-PKGV = "0.8.4+gitr${GITPKGV}"
+PV = "0.8.5+gitr${SRCPV}"
+PKGV = "0.8.5+gitr${GITPKGV}"
 PR = "r0"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
