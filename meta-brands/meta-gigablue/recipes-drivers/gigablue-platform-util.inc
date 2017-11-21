@@ -34,7 +34,7 @@ FILES_${PN}="/home/root/platform /etc/init.d"
 
 inherit update-rc.d
 
-INITSCRIPT_PARAMS = "start 38 S . stop 90 0 ."
+INITSCRIPT_PARAMS = "start 04 S . stop 90 0 ."
 INITSCRIPT_NAME = "gigablue-platform-util"
 
 INSANE_SKIP_${PN} += "already-stripped"
