@@ -56,6 +56,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-kino_1.7rc1_all.ipk \
     enigma2-plugin-extensions-livefootball_6.1_all.ipk \
     enigma2-plugin-extensions-mediainfo_3.0.2_all.ipk \
+    enigma2-plugin-extensions-mediaportal_all.ipk \
     enigma2-plugin-extensions-moviebrowser_3.7rc1_all.ipk \
     enigma2-plugin-extensions-mp3browser_2.0rc1_all.ipk \
     enigma2-plugin-extensions-netspeedtest_1.0rc1_all.ipk \
@@ -92,7 +93,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-vhannibalautosettings_1.1_mips32el.ipk \
     enigma2-plugin-extensions-vuplusforum_0.8rc2_all.ipk \
     enigma2-plugin-extensions-webmedia_14.0_r0_all.ipk \
-    enigma2-plugin-extensions-webradiofs_15.92_all.ipk \
+    enigma2-plugin-extensions-webradiofs_15.95_all.ipk \
     enigma2-plugin-extensions-wikipedia_2.3rc1_all.ipk \
     enigma2-plugin-extensions-wwech_1.03_all.ipk \
     enigma2-plugin-extensions-xbmcaddons_8.1_r0_all.ipk \
