@@ -9,8 +9,8 @@ SRC_URI = " \
     file://cross_compile.patch \
 "
 LIC_FILES_CHKSUM = "file://COPYING;md5=9109f5fc16cf963fb3cdd32781b3ce04"
-SRC_URI[md5sum] = "5b6a829b2ac94efcd5fa3c223ed6d3ae"
-SRC_URI[sha256sum] = "81aa238d9d4a010afa73a9d2a704fc3221c731e1e06577c2ab3496bdef67859e"
+SRC_URI[md5sum] = "4ea6fd64603536406166600bcc296fc8"
+SRC_URI[sha256sum] = "ca5218fade0204d59947126c38439f432853543b0818d9d728c589dfe7f3a421"
 
 PR = "r1"
 
