@@ -13,6 +13,10 @@ inherit packagegroup
 
 DEPENDS = "enigma2-pliplugins openatv-feeds"
 
+RDEPENDS_${PN} = "\
+    virtual/cron \
+    "
+
 RRECOMMENDS_${PN} = " \
     enigma2-skindefault \
     openatv-version-info \

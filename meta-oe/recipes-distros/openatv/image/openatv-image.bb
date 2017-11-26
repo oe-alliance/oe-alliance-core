@@ -12,11 +12,30 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 do_rootfs[deptask] = "do_rm_work"
 
-IMAGE_INSTALL = "openatv-base \
+IMAGE_INSTALL = " \
+    bash \
+    ca-certificates \
+    flip \
+    hddtemp \
+    oe-alliance-base \
+    openatv-bootlogo \
+    openatv-enigma2 \
+    openatv-spinner \
+    openssh-sftp-server \
+    packagegroup-base-smbfs-client \
+    python-imaging \
+    python-service-identity \
+    rtmpdump \
+    ${@bb.utils.contains("TUNE_FEATURES", "armv", "glibc-compat", "", d)} \
+    ${@bb.utils.contains("MACHINE_FEATURES", "dreamboxv1", "", "ofgwrite", d)} \
+    ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "", " \
+        iproute2 \
+        ntfs-3g \
+    ", d)} \
+    \
     ${@bb.utils.contains("MACHINE_FEATURES", "dvbc-only", "", "enigma2-plugin-settings-defaultsat", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "no-cl-svr", "", \
     " \
-    packagegroup-base-smbfs-client \
     packagegroup-base-smbfs-server \
     packagegroup-base-nfs \
     ", d)} \
