@@ -25,6 +25,6 @@ do_install() {
 PACKAGES = "${PN}"
 FILES_${PN} = "/usr/include /usr/lib"
 
-COMPATIBLE_MACHINE = "^(vusolose|vusolo2|vuduo2|vusolo4k|vuuno4k|vuuno4kse|vuultimo4k)$"
+COMPATIBLE_MACHINE = "^(vusolose|vusolo2|vuduo2|vusolo4k|vuuno4k|vuuno4kse|vuultimo4k|vuzero4k)$"
 
 INSANE_SKIP_${PN} += "already-stripped dev-so"

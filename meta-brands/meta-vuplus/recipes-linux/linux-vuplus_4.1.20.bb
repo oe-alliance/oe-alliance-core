@@ -19,6 +19,7 @@ SRC_URI += "http://archive.vuplus.com/download/kernel/stblinux-4.1-${KERNEL_SRC_
     file://defconfig \
     file://linux_dvb-core.patch \
     file://bcmgenet-recovery-fix.patch \
+    file://linux_4_1_1_9_dvbs2x.patch \
     file://kernel-add-support-for-gcc6.patch \
     file://0001-Support-TBS-USB-drivers-for-4.1-kernel.patch \
     file://0001-TBS-fixes-for-4.1-kernel.patch \
@@ -56,7 +57,7 @@ kernel_do_compile() {
 
 pkg_postinst_kernel-image () {
         if [ -d /proc/stb ] ; then
-                dd if=/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE} of=/dev/mmcblk0p1
+                dd if=/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE} of=/dev/${MTD_KERNEL}
         fi
         rm -f /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}
         true
