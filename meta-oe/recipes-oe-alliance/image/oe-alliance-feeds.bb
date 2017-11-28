@@ -69,6 +69,7 @@ RDEPENDS_${PN} = " \
     exfat-utils \
     fuse-exfat \
     gptfdisk \
+    graphviz \
     hddtemp \
     hdparm \
     htop \
