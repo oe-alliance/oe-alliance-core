@@ -1,0 +1,44 @@
+# ~/.bashrc: executed by bash(1) for non-login shells.
+[ -z "$PS1" ] && return
+
+HISTCONTROL=ignoreboth
+HISTSIZE=1000
+HISTFILESIZE=2000
+
+shopt -s histappend
+shopt -s checkwinsize
+
+case "$TERM" in
+    xterm-color|xterm-256color)	PS1='\[\033[01;32m\]\u@\h\[\033[00m\] \[\033[01;34m\]\w \$\[\033[00m\] ';;
+    *)				PS1='\u@\h:\w\$ ';;
+esac
+
+# ps without parameters is totally useless on E2 boxes, but some scripts might be using parameters contradicting -Af
+tasklist () {
+	if [ -n "$@" ];
+	then
+		ps -Af
+	else
+		ps $@
+	fi
+}	
+
+# some aliases
+alias ls='ls -lah'
+alias lsw='ls -xa'
+alias diff='diff -Nurw'
+alias ps=tasklist
+
+# Alias the most common commands to their DOS/Windows counterpart
+alias cls='clear'
+alias del='rm'
+alias dir='ls'
+alias copy='cp'
+alias move='mv'
+
+# DOS/Windows cd doesn't need a whitespace ...
+alias cd..='cd ..'
+alias cd.='cd .'
+
+#export PATH=$PATH:.
+

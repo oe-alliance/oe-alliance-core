@@ -1,0 +1,17 @@
+set show-all-if-ambiguous off
+set completion-ignore-case on
+TAB: menu-complete			# Tab -> Normal completion
+"\e[Z": "\e-1\C-i"			# Shift-Tab -> Reverse completion
+"\e[1~": beginning-of-line              # home (ok)
+"\e[2~": paste-from-clipboard           # insert (ok)
+#"\e[3~": delete-char                    # delete (PROBLEM)
+"\e[4~": end-of-line                    # end (ok)
+"\e[5~": history-search-backward        # pageup (ok)
+"\e[6~": history-search-forward         # pagedown (ok)
+
+"\e[1;5D": backward-word
+"\e[1;5C": forward-word
+"\e[1;6D": backward-word
+"\e[1;6C": forward-word
+#Escape: unix-line-discard		# Escape -> Clear line
+
