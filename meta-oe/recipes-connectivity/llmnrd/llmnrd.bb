@@ -8,7 +8,6 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r2"
 
 SRC_URI = "git://github.com/tklauser/llmnrd.git \
     file://llmnrd.sh \
