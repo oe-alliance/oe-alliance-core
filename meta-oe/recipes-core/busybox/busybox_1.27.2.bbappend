@@ -7,6 +7,8 @@ SRC_URI += " \
             file://telnetd \
             file://inetd \
             file://inetd.conf \
+            file://busybox-telnet.service.in \
+            file://busybox-inetd.service.in \
             file://vi.sh \
             file://0001-Prevent-telnet-connections-from-the-internet-to-the-.patch \
             file://0002-Extended-network-interfaces-support.patch \
