@@ -19,7 +19,7 @@ IMAGE_INSTALL = " \
     hddtemp \
     nano \
     mc \
-    virtual+cron \
+    cronie \
     wget \
     oe-alliance-base \
     openatv-bootlogo \

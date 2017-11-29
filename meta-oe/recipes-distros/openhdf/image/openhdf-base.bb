@@ -18,7 +18,7 @@ RDEPENDS_${PN} = "\
     openhdf-spinner \
     curl \
     hddtemp \
-    virtual+cron \
+    cronie \
     python-gdata \
     python-requests \
     python-mutagen \

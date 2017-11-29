@@ -21,7 +21,7 @@ RDEPENDS_${PN} = " \
     ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "", "iproute2", d)} \
     ntfs-3g \
     hddtemp \
-    virtual+cron \
+    cronie \
     python-imaging \
     python-service-identity \
     streamproxy \
