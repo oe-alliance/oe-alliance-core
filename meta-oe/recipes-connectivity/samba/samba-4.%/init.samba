@@ -1,9 +1,14 @@
-#! /bin/sh 
-#
-# This is an init script for openembedded
-# Copy it to /etc/init.d/samba and type
-# > update-rc.d samba defaults 60
-#
+#! /bin/sh
+### BEGIN INIT INFO
+# Provides:          Samba
+# Required-Start:    $network $local_fs $remote_fs
+# Required-Stop:     $network $local_fs $remote_fs
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Should-Start:      slapd cups
+# Should-Stop:       slapd cups
+# Short-Description: start Samba SMB daemons (smbd/wsdd/nmbd)
+### END INIT INFO
 
 WSDD_DISABLED="Yes"
 smbd=/usr/sbin/smbd

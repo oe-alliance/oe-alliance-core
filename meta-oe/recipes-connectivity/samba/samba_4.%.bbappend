@@ -69,6 +69,17 @@ do_install_append() {
 	install -m 644 ${WORKDIR}/users.map ${D}${sysconfdir}/samba/private
 	install -d ${D}${sysconfdir}/init.d
 	install -m 755 ${WORKDIR}/init.samba ${D}${sysconfdir}/init.d/samba
+
+	if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
+		perl -i -pe 's:(PIDFile=)/run/(.*?\.pid):${1}${localstatedir}/run/${2}:' ${D}${systemd_system_unitdir}/*.service
+		if ${@bb.utils.contains('DISTRO_FEATURES_BACKFILL_CONSIDERED','sysvinit','true','false',d)}; then
+			:
+		else
+			rm ${D}${systemd_system_unitdir}/smb.service
+			rm ${D}${systemd_system_unitdir}/nmb.service
+			rm ${D}${systemd_system_unitdir}/samba.service
+		fi
+	fi
 }
 
 inherit update-rc.d
@@ -76,6 +87,7 @@ INITSCRIPT_PACKAGES = "${PN}-base"
 INITSCRIPT_NAME_${PN}-base = "samba"
 INITSCRIPT_PARAMS_${PN}-base = "defaults"
 
+SYSTEMD_SERVICE_${PN}-base = "${@bb.utils.contains('DISTRO_FEATURES_BACKFILL_CONSIDERED', 'sysvinit', 'nmb.service smb.service', '', d)}"
 # workaround to get rid of perl dependency
 DEPENDS_remove = "perl"
 RDEPENDS_${PN}_remove = "perl"
