@@ -14,8 +14,7 @@ SRC_URI[azbox-blind-azboxme.sha256sum] = "574f3622d83c04faeb1587f19a64e4b1235341
 SRC_URI[azbox-blind-azboxminime.md5sum] = "0f536da981f694d821ea4f9c18e660c2"
 SRC_URI[azbox-blind-azboxminime.sha256sum] = "574f3622d83c04faeb1587f19a64e4b1235341915707c83fd18c3f8102b390c0"
 
-PROVIDES += "virtual+blindscan-dvbs"
-RPROVIDES_${PN} += "virtual+blindscan-dvbs"
+PROVIDES += "virtual/blindscan-dvbs"
 
 RREPLACES_${PN} += "azbox-blindscan-utils"
 RCONFLICTS_${PN} += "azbox-blindscan-utils"

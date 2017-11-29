@@ -1,8 +1,7 @@
 
-FILESEXTRAPATHS_prepend := "${THISDIR}/cronie:"
+FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
 PROVIDES += "virtual/cron"
-RPROVIDES_${PN} += "virtual/cron"
 RCONFLICTS_${PN} += "busybox-cron"
 
 CONFFILES_${PN} += "/etc/cron.deny /etc/crontab /etc/default/crond"
@@ -65,3 +64,5 @@ do_install_append() {
 
 	chmod 600 ${D}${sysconfdir}/crontab
 }
+
+FILES_${PN} += "/usr /lib /etc /var"

@@ -8,8 +8,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 SRC_URI = "file://avl_xtrend_blindscan"
 
-PROVIDES += "virtual+blindscan-dvbs"
-RPROVIDES_${PN} += "virtual+blindscan-dvbs"
+PROVIDES += "virtual/blindscan-dvbs"
 
 PV = "1.1"
 PR = "r5"
