@@ -17,6 +17,10 @@ IMAGE_INSTALL = " \
     ca-certificates \
     flip \
     hddtemp \
+    nano \
+    mc \
+    virtual+cron \
+    wget \
     oe-alliance-base \
     openatv-bootlogo \
     openatv-enigma2 \
