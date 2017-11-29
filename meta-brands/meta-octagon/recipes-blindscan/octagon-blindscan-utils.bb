@@ -10,8 +10,8 @@ require conf/license/license-close.inc
 
 PACKAGES = "octagon-blindscan-dvbc-utils"
 
-PROVIDES += "virtual/blindscan-dvbc"
-RPROVIDES_octagon-blindscan-dvbc-utils += "virtual/blindscan-dvbc"
+PROVIDES += "virtual+blindscan-dvbc"
+RPROVIDES_octagon-blindscan-dvbc-utils += "virtual+blindscan-dvbc"
 
 SRC_URI = "http://source.mynonpublic.com/octagon/octagon-dvbc-blindscan-1.1.zip"
 

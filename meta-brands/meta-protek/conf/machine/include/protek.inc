@@ -33,8 +33,8 @@ TARGET_ARCH = "mipsel"
 DEFAULTTUNE = "mips32el"
 
 PREFERRED_PROVIDER_virtual/kernel = "linux-protek"
-PREFERRED_PROVIDER_virtual/blindscan-dvbc = "protek-blindscan-utils-dvbc"
-PREFERRED_PROVIDER_virtual/blindscan-dvbs = "protek-blindscan-utils-dvbs"
+PREFERRED_PROVIDER_virtual+blindscan-dvbc = "protek-blindscan-utils-dvbc"
+PREFERRED_PROVIDER_virtual+blindscan-dvbs = "protek-blindscan-utils-dvbs"
 
 
 

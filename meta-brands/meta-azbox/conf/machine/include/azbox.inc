@@ -27,7 +27,7 @@ PREFERRED_VERSION_linux-libc-headers = "3.3"
 GLIBC_EXTRA_OECONF = "--with-tls --with-__thread"
 
 PREFERRED_PROVIDER_virtual/kernel = "linux-azbox"
-PREFERRED_PROVIDER_virtual/blindscan-dvbs = "azbox-blindscan-dvbs-utils"
+PREFERRED_PROVIDER_virtual+blindscan-dvbs = "azbox-blindscan-dvbs-utils"
 
 require conf/machine/include/tune-mips32.inc
 require conf/machine/include/soc-family.inc

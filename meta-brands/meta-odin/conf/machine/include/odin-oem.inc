@@ -118,8 +118,8 @@ TARGET_ARCH = "mipsel"
 DEFAULTTUNE = "mips32el"
 
 PREFERRED_PROVIDER_virtual/kernel = "linux-odin"
-PREFERRED_PROVIDER_virtual/blindscan-dvbc = "odin-blindscan-utils-${MACHINE}"
-PREFERRED_PROVIDER_virtual/blindscan-dvbs = "odin-blindscan-utils-${MACHINE}"
+PREFERRED_PROVIDER_virtual+blindscan-dvbc = "odin-blindscan-utils-${MACHINE}"
+PREFERRED_PROVIDER_virtual+blindscan-dvbs = "odin-blindscan-utils-${MACHINE}"
 
 
 

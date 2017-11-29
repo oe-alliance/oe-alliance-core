@@ -8,8 +8,8 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 SRC_URI = "http://www.et-view.com/img_up/shop_pds/bh190/Img_Xtrend/${MACHINE}-dvbc-blindscan-${PV}.zip"
 
-PROVIDES += "virtual/blindscan-dvbc"
-RPROVIDES_${PN} += "virtual/blindscan-dvbc"
+PROVIDES += "virtual+blindscan-dvbc"
+RPROVIDES_${PN} += "virtual+blindscan-dvbc"
 
 PV = "1.6"
 PR = "r1"

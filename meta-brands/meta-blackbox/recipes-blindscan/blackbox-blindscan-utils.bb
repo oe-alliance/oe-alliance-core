@@ -10,9 +10,9 @@ require conf/license/license-close.inc
 
 PACKAGES = "blackbox-blindscan-dvbs-utils blackbox-blindscan-dvbc-utils"
 
-PROVIDES += "virtual/blindscan-dvbs virtual/blindscan-dvbc"
-RPROVIDES_blackbox-blindscan-dvbs-utils += "virtual/blindscan-dvbs"
-RPROVIDES_blackbox-blindscan-dvbc-utils += "virtual/blindscan-dvbc"
+PROVIDES += "virtual+blindscan-dvbs virtual+blindscan-dvbc"
+RPROVIDES_blackbox-blindscan-dvbs-utils += "virtual+blindscan-dvbs"
+RPROVIDES_blackbox-blindscan-dvbc-utils += "virtual+blindscan-dvbc"
 
 SRC_URI = "file://tda1002x file://blackbox_blindscan"
 
