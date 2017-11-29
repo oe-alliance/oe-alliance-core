@@ -1,0 +1,12 @@
+[Unit]
+Description=Internet superserver
+Documentation=man:inetd(8)
+ConditionPathExists=/etc/inetd.conf
+
+[Service]
+ExecStart=@sbindir@/inetd -f
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+

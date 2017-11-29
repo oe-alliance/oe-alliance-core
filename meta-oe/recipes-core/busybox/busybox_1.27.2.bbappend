@@ -36,6 +36,8 @@ RCONFLICTS_${PN}-cron += "cronie"
 PACKAGES =+ "${PN}-inetd"
 INITSCRIPT_PACKAGES += "${PN}-inetd"
 INITSCRIPT_NAME_${PN}-inetd = "inetd.${BPN}" 
+SYSTEMD_PACKAGES =+ "${PN}-inetd"
+SYSTEMD_SERVICE_${PN}-inetd = "busybox-inetd.service"
 CONFFILES_${PN}-inetd = "${sysconfdir}/inetd.conf"
 FILES_${PN}-inetd = "${sysconfdir}/init.d/inetd.${BPN} ${sysconfdir}/inetd.conf"
 RDEPENDS_${PN}-inetd += "${PN}"
@@ -46,6 +48,8 @@ RCONFLICTS_${PN}-inetd += "xinetd"
 PACKAGES =+ "${PN}-telnetd"
 INITSCRIPT_PACKAGES += "${PN}-telnetd"
 INITSCRIPT_NAME_${PN}-telnetd = "telnetd.${BPN}" 
+SYSTEMD_PACKAGES =+ "${PN}-telnetd"
+SYSTEMD_SERVICE_${PN}-telnetd = "busybox-telnet.service"
 FILES_${PN}-telnetd = "${sysconfdir}/init.d/telnetd.${BPN}"
 RDEPENDS_${PN}-telnetd += "${PN}"
 PROVIDES += "virtual+telnetd"
@@ -59,8 +63,22 @@ do_install_append() {
         install -d ${D}${sysconfdir}/cron/crontabs
     fi
     if grep "CONFIG_FEATURE_TELNETD_STANDALONE=y" ${B}/.config; then
-	install -m 0755 ${WORKDIR}/telnetd ${D}${sysconfdir}/init.d/telnetd.${BPN}
-	sed -i "s:/usr/sbin/:${sbindir}/:" ${D}${sysconfdir}/init.d/telnetd.${BPN}
+        if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
+            install -d ${D}${systemd_unitdir}/system
+            sed 's,@sbindir@,${sbindir},g' < ${WORKDIR}/busybox-telnet.service.in \
+                > ${D}${systemd_unitdir}/system/busybox-telnet.service
+        else
+            install -m 0755 ${WORKDIR}/telnetd ${D}${sysconfdir}/init.d/telnetd.${BPN}
+            sed -i "s:/usr/sbin/:${sbindir}/:" ${D}${sysconfdir}/init.d/telnetd.${BPN}
+        fi
+    fi
+    if grep "CONFIG_INETD=y" ${B}/.config; then
+        if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
+            install -d ${D}${systemd_unitdir}/system
+            sed 's,@sbindir@,${sbindir},g' < ${WORKDIR}/busybox-inetd.service.in \
+                > ${D}${systemd_unitdir}/system/busybox-inetd.service
+            rm ${D}${sysconfdir}/init.d/inetd.${BPN} || true
+        fi
     fi
     install -d ${D}${sysconfdir}/mdev
     install -m 0755 ${WORKDIR}/mdev-mount.sh ${D}${sysconfdir}/mdev

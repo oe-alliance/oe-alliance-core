@@ -1,0 +1,9 @@
+[Unit]
+Description=Telnet Service
+
+[Service]
+ExecStart=@sbindir@/telnetd -F
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
