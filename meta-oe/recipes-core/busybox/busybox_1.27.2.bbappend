@@ -1,3 +1,4 @@
+pwd
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 SRC_URI += " \
@@ -95,11 +96,4 @@ pkg_postinst_${PN}_append () {
 
 pkg_postrm_${PN}_append () {
 	update-alternatives --remove editor /bin/vi.sh
-}
-
-pkg_preinst_${PN}-telnetd_prepend () {
-if [ -e $D/etc/inetd.conf ]; then
-	grep -vE '^#*\s*(23|telnet)' $D/etc/inetd.conf > $D/tmp/inetd.tmp
-	mv $D/tmp/inetd.tmp $D/etc/inetd.conf
-fi
 }
