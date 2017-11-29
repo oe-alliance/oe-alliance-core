@@ -16,6 +16,9 @@ do_install_append() {
 	grep -v 'pam_shells.so' ${D}${sysconfdir}/pam.d/vsftpd > $D/tmp/vsftpd
 	mv $D/tmp/vsftpd ${D}${sysconfdir}/pam.d/vsftpd
     fi
+    if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
+        rm ${D}/etc/init.d/vsftpd || true
+    fi
 }
 
 pkg_postinst_${PN}_prepend() {
