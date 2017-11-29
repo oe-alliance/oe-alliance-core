@@ -35,8 +35,8 @@ DEFAULTTUNE = "mips32el"
 
 PREFERRED_PROVIDER_virtual/kernel = "linux-edision"
 
-PREFERRED_PROVIDER_virtual+blindscan-dvbs = "edision-blindscan-utils"
-PREFERRED_PROVIDER_virtual+blindscan-dvbc = "edision-blindscan-utils"
+PREFERRED_PROVIDER_virtual/blindscan-dvbs = "edision-blindscan-utils"
+PREFERRED_PROVIDER_virtual/blindscan-dvbc = "edision-blindscan-utils"
 
 KERNEL_IMAGETYPE = "vmlinux"
 KERNEL_OUTPUT = "${KERNEL_IMAGETYPE}"

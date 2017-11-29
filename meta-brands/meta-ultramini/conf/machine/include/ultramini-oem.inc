@@ -67,8 +67,8 @@ TARGET_ARCH = "mipsel"
 DEFAULTTUNE = "mips32el"
 
 PREFERRED_PROVIDER_virtual/kernel = "linux-ultramini"
-PREFERRED_PROVIDER_virtual+blindscan-dvbc = "ultramini-blindscan-utils-dvbc"
-PREFERRED_PROVIDER_virtual+blindscan-dvbs = "ultramini-blindscan-utils-dvbs"
+PREFERRED_PROVIDER_virtual/blindscan-dvbc = "ultramini-blindscan-utils-dvbc"
+PREFERRED_PROVIDER_virtual/blindscan-dvbs = "ultramini-blindscan-utils-dvbs"
 
 
 

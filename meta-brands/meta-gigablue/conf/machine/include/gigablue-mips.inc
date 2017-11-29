@@ -7,8 +7,8 @@ KERNEL_IMAGETYPE = "vmlinux"
 
 MACHINE_FEATURES += " boxmodel feature1 feature2"
 
-PREFERRED_PROVIDER_virtual+blindscan-dvbc = "gigablue-blindscan-utils-mips"
-PREFERRED_PROVIDER_virtual+blindscan-dvbs = "gigablue-blindscan-utils-mips"
+PREFERRED_PROVIDER_virtual/blindscan-dvbc = "gigablue-blindscan-utils-mips"
+PREFERRED_PROVIDER_virtual/blindscan-dvbs = "gigablue-blindscan-utils-mips"
 
 DVBMEDIASINK_CONFIG = "--with-wmv \
     ${@bb.utils.contains('MACHINE', 'gb7356', '--with-wma --with-pcm --with-dts --with-eac3 --with-amr' , '', d)} \

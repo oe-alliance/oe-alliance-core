@@ -187,8 +187,8 @@ PREFERRED_PROVIDER_virtual/egl = "ceryon-v3ddriver-${MACHINE}"
 PREFERRED_PROVIDER_virtual/libgles2 = "ceryon-v3ddriver-${MACHINE}"
 PREFERRED_PROVIDER_virtual/kodi = "stb-kodi-${MACHINE}"
 
-PREFERRED_PROVIDER_virtual+blindscan-dvbs = "ceryon-blindscan-utils"
-PREFERRED_PROVIDER_virtual+blindscan-dvbc = "ceryon-blindscan-utils"
+PREFERRED_PROVIDER_virtual/blindscan-dvbs = "ceryon-blindscan-utils"
+PREFERRED_PROVIDER_virtual/blindscan-dvbc = "ceryon-blindscan-utils"
 
 MACHINE_FEATURES += "3dtv alsa hdmicec switchoff videoenhancement skins1080 blindscan-tbs \
     ${@bb.utils.contains('MACHINEBUILD', 'e4hdhybrid', 'dvb-c dvbc-only' , '', d)} \

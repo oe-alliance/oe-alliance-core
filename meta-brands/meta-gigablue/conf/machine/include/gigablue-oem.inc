@@ -203,7 +203,7 @@ MACHINE_EXTRA_RDEPENDS = "\
 
 include conf/machine/include/autoload-filesystems.inc
 
-PREFERRED_PROVIDER_virtual+transtreamproxy = "gb-transtreamproxy"
+PREFERRED_PROVIDER_virtual/transtreamproxy = "gb-transtreamproxy"
 
 PREFERRED_PROVIDER_virtual/kernel = "linux-gigablue"
 

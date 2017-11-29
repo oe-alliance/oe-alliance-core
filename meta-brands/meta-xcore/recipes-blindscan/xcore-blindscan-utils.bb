@@ -10,9 +10,9 @@ require conf/license/license-close.inc
 
 PACKAGES = "xcore-blindscan-dvbs-utils xcore-blindscan-dvbc-utils"
 
-PROVIDES += "virtual+blindscan-dvbs virtual+blindscan-dvbc"
-RPROVIDES_xcore-blindscan-dvbs-utils += "virtual+blindscan-dvbs"
-RPROVIDES_xcore-blindscan-dvbc-utils += "virtual+blindscan-dvbc"
+PROVIDES += "virtual/blindscan-dvbs virtual/blindscan-dvbc"
+RPROVIDES_xcore-blindscan-dvbs-utils += "virtual/blindscan-dvbs"
+RPROVIDES_xcore-blindscan-dvbc-utils += "virtual/blindscan-dvbc"
 
 SRC_URI = "file://blindscan file://tda1002x"
 

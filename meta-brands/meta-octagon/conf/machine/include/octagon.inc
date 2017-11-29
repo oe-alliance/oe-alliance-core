@@ -36,8 +36,8 @@ IMAGE_FSTYPES =+ "tar.bz2"
 
 PREFERRED_PROVIDER_virtual/kernel = "linux-octagon"
 
-PREFERRED_PROVIDER_virtual+blindscan-dvbs = "octagon-blindscan-utils"
-PREFERRED_PROVIDER_virtual+blindscan-dvbc = "octagon-blindscan-utils"
+PREFERRED_PROVIDER_virtual/blindscan-dvbs = "octagon-blindscan-utils"
+PREFERRED_PROVIDER_virtual/blindscan-dvbc = "octagon-blindscan-utils"
 
 PREFERRED_PROVIDER_virtual/egl = "nextv-v3ddriver-${MACHINE}"
 PREFERRED_PROVIDER_virtual/libgles2 = "nextv-v3ddriver-${MACHINE}"

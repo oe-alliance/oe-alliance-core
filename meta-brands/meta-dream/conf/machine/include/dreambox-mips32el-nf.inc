@@ -54,8 +54,8 @@ MACHINE_FEATURES += "dreambox alsa usbhost tpm kernel26-legacy"
 PREFERRED_PROVIDER_virtual/bootloader = "dreambox-secondstage-${MACHINE}"
 PREFERRED_PROVIDER_virtual/kernel = "linux-dreambox"
 
-PREFERRED_PROVIDER_virtual+blindscan-dvbs = "dreambox-blindscan-utils"
-PREFERRED_PROVIDER_virtual+blindscan-dvbc = "dreambox-blindscan-utils"
+PREFERRED_PROVIDER_virtual/blindscan-dvbs = "dreambox-blindscan-utils"
+PREFERRED_PROVIDER_virtual/blindscan-dvbc = "dreambox-blindscan-utils"
 
 PREFERRED_VERSION_linux-dreambox = "2.6.18"
 PREFERRED_VERSION_linux-libc-headers = "2.6.18"
