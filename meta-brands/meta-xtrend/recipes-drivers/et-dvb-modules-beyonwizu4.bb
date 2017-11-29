@@ -7,12 +7,12 @@ require conf/license/license-close.inc
 PV = "${KV}+${SRCDATE}"
 PR = "r0"
 
-KV = "4.9.9"
+KV = "4.9.51"
 GCCREV = "6.3.0"
-SRCDATE = "20171123"
+SRCDATE = "20171127"
 
-SRC_URI[md5sum] = "37e9504a1b7a9492bf3f2ae2f0cbfd47"
-SRC_URI[sha256sum] = "a34de2ec2ef8dea0851fa8d5dccd31b79c6700d1c3d086bec6a87379114c4beb"
+SRC_URI[md5sum] = "e89ce556261a74aaf2f35f45d7c6ba29"
+SRC_URI[sha256sum] = "6b9a6ad3d0cdad10b118603c28d267bb935b781259329cbabad1b0f13526905e"
 
 SRC_URI = "http://source.mynonpublic.com/xtrend/${MACHINE_DRIVER}-drivers-${KV}-${GCCREV}-${SRCDATE}.zip"
 

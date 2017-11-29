@@ -9,9 +9,9 @@ require conf/license/license-gplv2.inc
 
 inherit gitpkgv
 SRCREV = "${AUTOREV}"
-PV = "2.2+git${SRCPV}"
-PKGV = "2.2+git${GITPKGV}"
-VER ="2.2"
+PV = "3.0+git${SRCPV}"
+PKGV = "3.0+git${GITPKGV}"
+VER ="3.0"
 PR = "r1"
 
 SRC_URI="git://github.com/stein17/Mediaportal-AX-Blue-Skin.git"

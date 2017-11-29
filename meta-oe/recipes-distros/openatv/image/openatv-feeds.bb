@@ -7,7 +7,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PV = "1.0"
-PR = "r31"
+PR = "r32"
 
 inherit packagegroup
 
@@ -34,7 +34,8 @@ RRECOMMENDS_${PN} = "\
     enigma2-plugin-skins-blue-line-oe-4atv \
     enigma2-plugin-skincomponents-bmediacenter-ax-blue-skin \
     enigma2-plugin-skincomponents-mediaportal-ax-blue-skin \
-    enigma2-plugin-skincomponents-mediaportal-blue-line-skin \ 
+    enigma2-plugin-skincomponents-mediaportal-blue-line-skin \
+    enigma2-plugin-skincomponents-mediaportal-atv-metrix-style \
     enigma2-plugin-settings-defaultsat \
     enigma2-plugin-extensions-specialjump \
     enigma2-plugin-skins-pli-hd \
