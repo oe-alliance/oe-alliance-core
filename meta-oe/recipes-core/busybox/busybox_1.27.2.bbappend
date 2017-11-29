@@ -39,8 +39,8 @@ INITSCRIPT_NAME_${PN}-inetd = "inetd.${BPN}"
 CONFFILES_${PN}-inetd = "${sysconfdir}/inetd.conf"
 FILES_${PN}-inetd = "${sysconfdir}/init.d/inetd.${BPN} ${sysconfdir}/inetd.conf"
 RDEPENDS_${PN}-inetd += "${PN}"
-PROVIDES += "virtual/inetd"
-RPROVIDES_${PN}-inetd += "virtual/inetd"
+PROVIDES += "virtual+inetd"
+RPROVIDES_${PN}-inetd += "virtual+inetd"
 RCONFLICTS_${PN}-inetd += "xinetd"
 
 PACKAGES =+ "${PN}-telnetd"
@@ -48,8 +48,8 @@ INITSCRIPT_PACKAGES += "${PN}-telnetd"
 INITSCRIPT_NAME_${PN}-telnetd = "telnetd.${BPN}" 
 FILES_${PN}-telnetd = "${sysconfdir}/init.d/telnetd.${BPN}"
 RDEPENDS_${PN}-telnetd += "${PN}"
-PROVIDES += "virtual/telnetd"
-RPROVIDES_${PN}-telnetd += "virtual/telnetd"
+PROVIDES += "virtual+telnetd"
+RPROVIDES_${PN}-telnetd += "virtual+telnetd"
 
 do_install_append() {
     if grep "CONFIG_CROND=y" ${B}/.config; then
