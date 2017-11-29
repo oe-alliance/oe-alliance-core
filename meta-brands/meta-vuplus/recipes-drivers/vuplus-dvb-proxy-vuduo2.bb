@@ -1,6 +1,6 @@
 KV = "3.13.5"
 PV = "${KV}"
-SRCDATE = "20171121"
+SRCDATE = "20171128"
 SRCDATE_PR = "r0"
 
 require vuplus-dvb-proxy.inc
@@ -11,5 +11,5 @@ RDEPENDS_${PN}_openvix = "driver-fix"
 DEPENDS_openbh = "driver-fix"
 RDEPENDS_${PN}_openbh = "driver-fix"
 
-SRC_URI[md5sum] = "14fd3c5caa88ac75a7b5d6e202a11968"
-SRC_URI[sha256sum] = "cd516a0ba9f74a0106fc6e6ec7a81e2c24dbfa810073b6ecc7c073487c86f8c0"
+SRC_URI[md5sum] = "47392629f063e9c7d295b0763b3cefb6"
+SRC_URI[sha256sum] = "798c77122cc98704336a59d4fb7ae19b7a42f61268194c8d6d9632566f6838e9"

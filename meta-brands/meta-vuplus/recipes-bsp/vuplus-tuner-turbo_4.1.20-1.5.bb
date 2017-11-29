@@ -1,6 +1,6 @@
 require vuplus-tuner-turbo.inc
 
-COMPATIBLE_MACHINE = "^(vuuno4kse)$"
+COMPATIBLE_MACHINE = "^(vuuno4kse|vuzero4k)$"
 
 KV = "4.1.20-1.5"
 

@@ -1,0 +1,12 @@
+--- graphviz-2.32.0/lib/gvpr/Makefile.am~	2013-08-14 15:13:03.000000000 +0200
++++ graphviz-2.32.0git/lib/gvpr/Makefile.am	2013-08-14 15:17:26.039087759 +0200
+@@ -46,6 +46,9 @@
+ 
+ mkdefs_SOURCES = mkdefs.c
+ 
++mkdefs: $(mkdefs_SOURCES)
++	$(BUILD_CC) -o $@ $<
++
+ gdefs.h: $(top_srcdir)/lib/gvpr/gprdata mkdefs
+ 	./mkdefs gdefs.h < $(top_srcdir)/lib/gvpr/gprdata
+ 
