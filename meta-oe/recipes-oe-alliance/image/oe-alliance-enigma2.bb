@@ -18,7 +18,7 @@ DEPENDS = "enigma2 enigma2-locale-meta enigma2-plugins enigma2-oe-alliance-plugi
 
 RDEPENDS_${PN} = "\
     enigma2-locale-meta \
-    oe-alliance-feeds-configs \
+    ${@bb.utils.contains("DISTRO_FEATURES", "systemd", "oe-alliance-feeds-configs-deb" , "oe-alliance-feeds-configs", d)} \
     aio-grab \
     enigma2 \
     tuxbox-links \
