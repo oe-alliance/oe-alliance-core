@@ -9,6 +9,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 SRC_URI = "http://xpeedlx.info/xpeedc-dvbc-blindscan-${PV}.zip"
 
 PROVIDES += "virtual/blindscan-dvbc"
+RPROVIDES_${PN} += "blindscan-dvbc"
 
 PV = "1.5"
 PR = "r2"

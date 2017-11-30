@@ -5,6 +5,7 @@ require conf/license/license-close.inc
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PROVIDES += "virtual/blindscan-dvbs virtual/blindscan-dvbc"
+RPROVIDES_${PN} += "blindscan-dvbs blindscan-dvbc"
 
 DEPENDS = "ncurses"
 
