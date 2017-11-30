@@ -8,6 +8,7 @@ require conf/license/license-close.inc
 PR="${SRCDATE}.${SRCDATE_PR}"
 
 PROVIDES = "virtual/libgles2 virtual/egl"
+RPROVIDES_${PN} = "libgles2 egl"
 
 SRC_URI = "http://en3homeftp.net/pub/src/libgles-arm-${PV}-${PR}.tar.gz"
 
@@ -38,8 +39,6 @@ do_install() {
 
 FILES_${PN} = "/usr/lib/*"
 FILES_${PN}-dev = "/usr/include/*"
-
-RPROVIDES_${PN} = "virtual/libgles2 virtual/egl libnxpl.so libnexus.so libv3ddriver.so libGLESv2.so libEGL.so"
 
 INSANE_SKIP_${PN} += "already-stripped dev-so"
 

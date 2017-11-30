@@ -2,7 +2,7 @@ SUMMARY = "Dreambox EGL and GLES2 libraries"
 LICENSE = "CLOSED"
 DEPENDS = "${LIBEGLDEP}"
 PROVIDES = "virtual/egl virtual/libgles2"
-RPROVIDES_${PN} = "virtual/egl virtual/libgles2"
+RPROVIDES_${PN} = "egl libgles2"
 
 LIBEGLDEP = ""
 LIBEGLDEP_bcm73625 = "libv3ddriver"

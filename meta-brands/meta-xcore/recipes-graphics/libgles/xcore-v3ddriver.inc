@@ -8,6 +8,7 @@ require conf/license/license-close.inc
 PR = "r0-${SRCDATE}"
 
 PROVIDES = "virtual/libgles2 virtual/egl"
+RPROVIDES_${PN} = "libgles2 egl"
 
 SRC_URI = "http://source.mynonpublic.com/xcore/xcore-libgles-${MACHINE}-${SRCDATE}.tar.gz"
 
@@ -37,8 +38,6 @@ do_install_append() {
 
 FILES_${PN} = "/usr/lib/*"
 FILES_${PN}-dev = "/usr/include/*"
-
-RPROVIDES_${PN} = "virtual/libgles2 virtual/egl libv3dplatform.so libv3ddriver.so libGLESv2.so libEGL.so"
 
 INSANE_SKIP_${PN} += "already-stripped dev-so"
 

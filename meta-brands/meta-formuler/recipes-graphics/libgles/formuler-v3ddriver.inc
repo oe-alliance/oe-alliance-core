@@ -5,6 +5,7 @@ LICENSE = "CLOSED"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PROVIDES = "virtual/libgles2 virtual/egl"
+RPROVIDES_${PN} = "libgles2 egl"
 DEPENDS = "formuler-v3ddriver-headers"
 
 PV = "${SRCDATE}"
@@ -31,7 +32,5 @@ do_install_append() {
 
 FILES_${PN} = "/usr/lib/*"
 FILES_${PN}-dev = "/usr/include/*"
-
-RPROVIDES_${PN} = "virtual/libgles2 virtual/egl libnxpl.so libnexus.so libv3ddriver.so libGLESv2.so libEGL.so"
 
 INSANE_SKIP_${PN} += "already-stripped dev-so"
