@@ -50,9 +50,9 @@ PROVIDES += " \
      "
 
 DEPENDS = "\
-    ${@bb.utils.contains('MACHINE_FEATURES', 'blindscan-dvbc', 'virtual/blindscan-dvbc' , '', d)} \
-    ${@bb.utils.contains('MACHINE_FEATURES', 'blindscan-dvbs', 'virtual/blindscan-dvbs' , '', d)} \
-    ${@bb.utils.contains('MACHINE_FEATURES', 'transcoding', 'virtual/transtreamproxy' , '', d)} \
+    ${@bb.utils.contains('MACHINE_FEATURES', 'blindscan-dvbc', 'blindscan-dvbc' , '', d)} \
+    ${@bb.utils.contains('MACHINE_FEATURES', 'blindscan-dvbs', 'blindscan-dvbs' , '', d)} \
+    ${@bb.utils.contains('MACHINE_FEATURES', 'transcoding', 'transtreamproxy' , '', d)} \
     python-dnspython python-beautifulsoup python-lxml python-simplejson python-pyamf python-icalendar python-pyusb \
     djmount \
     librtmp \
@@ -104,7 +104,7 @@ DESCRIPTION_enigma2-plugin-extensions-hbbtv = "HbbTV player"
 RDEPENDS_enigma2-plugin-extensions-hbbtv = "vuplus-opera-browser-util"
 DEPENDS_enigma2-plugin-extensions-hbbtv = "vuplus-opera-browser-util"
 DESCRIPTION_enigma2-plugin-systemplugins-transcodingsetup = "Setup transcoding of your VU+"
-RDEPENDS_enigma2-plugin-systemplugins-transcodingsetup = "virtual/transtreamproxy"
+RDEPENDS_enigma2-plugin-systemplugins-transcodingsetup = "transtreamproxy"
 DESCRIPTION_enigma2-plugin-systemplugins-multitranscodingsetup = "Setup multitranscoding"
 DESCRIPTION_enigma2-plugin-systemplugins-micomupgrade = "micomupgrade"
 RDEPENDS_enigma2-plugin-extensions-ondemand = "python-dnspython python-beautifulsoup python-lxml python-simplejson python-pyamf"

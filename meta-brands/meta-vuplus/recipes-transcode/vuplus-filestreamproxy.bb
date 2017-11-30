@@ -11,7 +11,8 @@ PKGV = "1.0+git${GITPKGV}"
 PR = "r4"
 
 PROVIDES += "virtual/filestreamproxy"
-RDEPENDS_${PN} = "busybox-inetd"
+RPROVIDES_${PN} += "filestreamproxy"
+RDEPENDS_${PN} = "inetd"
 
 SRC_URI = "git://code.vuplus.com/git/filestreamproxy.git;protocol=http;branch=master"
 

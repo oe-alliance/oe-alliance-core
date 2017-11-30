@@ -12,8 +12,9 @@ PKGV = "1.0+git${GITPKGV}"
 PR = "r2"
 
 PROVIDES += "virtual/transtreamproxy"
+RPROVIDES_${PN} += "transtreamproxy"
 DEPENDS += "virtual/inetd"
-RDEPENDS_${PN} += "virtual/inetd"
+RDEPENDS_${PN} += "inetd"
 
 SRC_URI = "git://github.com/openmips/gb-transtreamproxy.git;protocol=git \
     file://gcc6.patch \
