@@ -50,8 +50,8 @@ PROVIDES += " \
      "
 
 DEPENDS = "\
-    ${@bb.utils.contains('MACHINE_FEATURES', 'blindscan-dvbc', 'blindscan-dvbc' , '', d)} \
-    ${@bb.utils.contains('MACHINE_FEATURES', 'blindscan-dvbs', 'blindscan-dvbs' , '', d)} \
+    ${@bb.utils.contains('MACHINE_FEATURES', 'blindscan-dvbc', 'virtual/blindscan-dvbc' , '', d)} \
+    ${@bb.utils.contains('MACHINE_FEATURES', 'blindscan-dvbs', 'virtual/blindscan-dvbs' , '', d)} \
     ${@bb.utils.contains('MACHINE_FEATURES', 'transcoding', 'transtreamproxy' , '', d)} \
     python-dnspython python-beautifulsoup python-lxml python-simplejson python-pyamf python-icalendar python-pyusb \
     djmount \
