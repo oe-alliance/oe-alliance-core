@@ -38,7 +38,7 @@ RDEPENDS_${PN} = "\
     llmnrd \
     modutils-loadscript \
     ntpdate \
-    opkg \
+    ${@bb.utils.contains("DISTRO_FEATURES", "systemd", "" , "opkg", d)} \
     rc-local \
     sdparm \
     packagegroup-base \
