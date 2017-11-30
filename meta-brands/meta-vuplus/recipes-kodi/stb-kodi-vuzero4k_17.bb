@@ -11,3 +11,5 @@ EXTRA_OECONF += " \
     --with-platform=vuplus-cortexa15 \
     --with-ffmpeg=v3d \
 "
+
+INSANE_SKIP_${PN} += "file-rdeps"

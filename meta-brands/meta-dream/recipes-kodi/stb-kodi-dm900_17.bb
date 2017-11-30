@@ -8,3 +8,5 @@ EXTRA_OECONF += " \
     --with-platform=dreambox-cortexa15 \
     --with-ffmpeg=v3d \
 "
+
+INSANE_SKIP_${PN} += "file-rdeps"

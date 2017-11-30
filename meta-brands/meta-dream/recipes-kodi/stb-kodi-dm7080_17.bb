@@ -8,3 +8,5 @@ EXTRA_OECONF += " \
     --with-platform=dreambox-mipsel \
     --with-ffmpeg=v3d \
 "
+
+INSANE_SKIP_${PN} += "file-rdeps"
