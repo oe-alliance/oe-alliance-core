@@ -9,7 +9,7 @@ require conf/license/license-gplv2.inc
 RDEPENDS_${PN} += "showiframe"
 
 PV = "${IMAGE_VERSION}"
-PR = "r9"
+PR = "r7"
 
 S = "${WORKDIR}"
 
@@ -26,7 +26,7 @@ INITSCRIPT_PARAMS_vuzero4k = "start 70 S ."
 
 inherit update-rc.d
 
-SRC_URI = "file://bootlogo.mvi file://radio.mvi file://bootlogo.sh file://splash576.bmp file://splash480.bmp \
+SRC_URI = "file://bootlogo.mvi file://radio.mvi file://bootlogo.sh ${@bb.utils.contains("MACHINE_FEATURES", "bootsplash", "file://splash.bin " , "", d)} \
 "
 
 SRC_URI_append_vuduo2 = "file://lcdbootlogo.png file://bootlogo.py"
@@ -46,6 +46,36 @@ do_install_append_vuduo2() {
     install -d ${D}/usr/share
     install -m 0644 lcdbootlogo.png ${D}/usr/share/lcdbootlogo.png
     install -m 0644 bootlogo.py ${D}/${sysconfdir}/init.d/bootlogo.py
+}
+
+inherit deploy
+do_deploy() {
+    TEST=${MACHINEBUILD}
+    if [[ ${TEST:0:2} == "tm" ]]; then
+        install -m 0644 tm-splash.bmp ${DEPLOYDIR}/${BOOTLOGO_FILENAME}
+    elif [[ ${TEST:0:2} == "iq" ]]; then
+        install -m 0644 iqon-splash.bmp ${DEPLOYDIR}/${BOOTLOGO_FILENAME}
+    elif [ -e splash.bin ]; then
+        install -m 0644 splash.bin ${DEPLOYDIR}/${BOOTLOGO_FILENAME}
+    fi
+    if [ -e lcdsplash220.bin ]; then
+        install -m 0644 lcdsplash220.bin ${DEPLOYDIR}/lcdsplash220.bin
+    fi
+    if [ -e lcdsplash400.bin ]; then
+        install -m 0644 lcdsplash400.bin ${DEPLOYDIR}/lcdsplash400.bin
+    fi
+    if [ -e splash1.bmp ]; then
+        install -m 0644 splash1.bmp ${DEPLOYDIR}/splash1.bmp
+    fi
+    if [ -e splash1_power.bmp ]; then
+        install -m 0644 splash1_power.bmp ${DEPLOYDIR}/splash1_power.bmp
+    fi
+    if [ -e splash2.bmp ]; then
+        install -m 0644 splash2.bmp ${DEPLOYDIR}/splash2.bmp
+    fi
+    if [ -e splash3.bmp ]; then
+        install -m 0644 splash3.bmp ${DEPLOYDIR}/splash3.bmp
+    fi
 }
 
 addtask deploy before do_build after do_install
