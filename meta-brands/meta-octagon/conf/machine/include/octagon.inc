@@ -45,7 +45,7 @@ PREFERRED_PROVIDER_virtual/kodi = "stb-kodi-${MACHINE}"
 
 PREFERRED_VERSION_icu = "58.2"
 
-MACHINE_FEATURES += "alsa 3dtv switchoff hdmicec omb blindscan-tbs blindscan-dvbc"
+MACHINE_FEATURES += "alsa 3dtv switchoff hdmicec omb blindscan-tbs blindscan-dvbc modversion"
 
 BOOTLOGO_FILENAME = "splash.bin"
 

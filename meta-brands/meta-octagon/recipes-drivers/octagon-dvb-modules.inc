@@ -24,6 +24,11 @@ do_install() {
     install -d ${D}/${sysconfdir}/modules-load.d
     install -m 0755 ${WORKDIR}/linuxtv.ko ${D}/lib/modules/${KV}/extra/linuxtv.ko
     echo linuxtv >> ${D}/${sysconfdir}/modules-load.d/_${MACHINE}.conf
+
+    if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
+        install -d ${D}/${sysconfdir}/modprobe.d
+        echo blacklist linuxtv > ${D}/${sysconfdir}/modprobe.d/_${MACHINE}.conf
+    fi
 }
 
-FILES_${PN} += "${sysconfdir}/modules-load.d/_${MACHINE}.conf"
+FILES_${PN} += "${sysconfdir}/modules-load.d/_${MACHINE}.conf ${sysconfdir}/modprobe.d/_${MACHINE}.conf"
