@@ -15,11 +15,11 @@ esac
 
 # ps without parameters is totally useless on E2 boxes, but some scripts might be using parameters contradicting -Af
 tasklist () {
-	if [ -n "$@" ];
+	if [[ -n "$@" ]]
 	then
-		ps -Af
-	else
 		ps $@
+	else
+		ps -Af
 	fi
 }	
 
