@@ -1,19 +1,22 @@
-diff --git a/src/ePreDefine.h b/src/ePreDefine.h
-index 390431d..83aaa3d 100644
---- a/src/ePreDefine.h
-+++ b/src/ePreDefine.h
-@@ -11,10 +11,10 @@
- #define BUFFER_SIZE		(188*256)
- #define MAX_LINE_LENGTH	(1024)
+diff --git a/src/main.cpp b/src/main.cpp
+index 9996ac2..2853aeb 100644
+--- a/src/main.cpp
++++ b/src/main.cpp
+@@ -114,7 +114,7 @@ inline int streaming_write(const char *buffer, size_t buffer_len, bool enable_lo
  
--#define RETURN_ERR_400(FMT,...) { printf("HTTP/1.0 400 Bad Request\r\n"FMT"\r\n\r\n", ##__VA_ARGS__); return 1; }
--#define RETURN_ERR_401(FMT,...) { printf("HTTP/1.0 401 Unauthorized\r\n"FMT"\r\n\r\n",##__VA_ARGS__); return 1; }
--#define RETURN_ERR_502(FMT,...) { printf("HTTP/1.0 502 Bad Gateway\r\n"FMT"\r\n\r\n", ##__VA_ARGS__); return 1; }
--#define RETURN_ERR_503(FMT,...) { printf("HTTP/1.0 503 Service Unavailable\r\n"FMT"\r\n\r\n", ##__VA_ARGS__); return 1; }
-+#define RETURN_ERR_400(FMT,...) { printf("HTTP/1.0 400 Bad Request\r\n" FMT "\r\n\r\n", ##__VA_ARGS__); return 1; }
-+#define RETURN_ERR_401(FMT,...) { printf("HTTP/1.0 401 Unauthorized\r\n" FMT "\r\n\r\n", ##__VA_ARGS__); return 1; }
-+#define RETURN_ERR_502(FMT,...) { printf("HTTP/1.0 502 Bad Gateway\r\n" FMT "\r\n\r\n", ##__VA_ARGS__); return 1; }
-+#define RETURN_ERR_503(FMT,...) { printf("HTTP/1.0 503 Service Unavailable\r\n" FMT "\r\n\r\n", ##__VA_ARGS__); return 1; }
- //-------------------------------------------------------------------------------
+ #define DD_LOG(X,...) { \
+ 		char log_message[128] = {0};\
+-		sprintf(log_message, "echo \""X"\" > /tmp/tsp_checker.log", ##__VA_ARGS__);\
++		sprintf(log_message, "echo \"" X "\" > /tmp/tsp_checker.log", ##__VA_ARGS__);\
+ 		system(log_message);\
+ 	}
+ //----------------------------------------------------------------------
+@@ -272,7 +272,7 @@ int main(int argc, char **argv)
+ 					exit(0);
+ 				}
  
- char* ReadRequest(char* aRequest);
+-				sprintf(update_status_command, "touch "TSP_CHECKER_TEMPLETE, tsp_pid);
++				sprintf(update_status_command, "touch " TSP_CHECKER_TEMPLETE, tsp_pid);
+ 				system(update_status_command);
+ 
+ 				encoder = new Encoder();

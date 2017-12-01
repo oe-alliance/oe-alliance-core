@@ -9,18 +9,20 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"
-PR = "r2"
+PR = "r3"
 
 PROVIDES += "virtual/transtreamproxy"
 RPROVIDES_${PN} += "transtreamproxy"
 DEPENDS += "virtual/inetd"
 RDEPENDS_${PN} += "inetd"
 
-SRC_URI = "git://github.com/openmips/gb-transtreamproxy.git;protocol=git \
+SRC_URI = "git://code.vuplus.com/git/filestreamproxy.git;protocol=http;branch=transtreamproxy \
     file://gcc6.patch \
     "
 
 inherit autotools
+
+EXTRA_OECONF_gb7252 += " --enable-ext-pid "
 
 S = "${WORKDIR}/git"
 
