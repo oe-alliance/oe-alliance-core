@@ -8,8 +8,8 @@ SRC_URI = " \
     file://whitespace.patch \
     "
 
-SRC_URI[md5sum] = "d8da85311492a5f9e3a1fecc979f879b"
-SRC_URI[sha256sum] = "893f1cf1580c8f0048a4d328474cb81d1a9bf9844410d2fd99f518ca41141007"
+SRC_URI[md5sum] = "19e898edc41bde3f21e997d237156731"
+SRC_URI[sha256sum] = "81ef72cdac7d8ccda66c2c1ab14f4cd54225e9e7b10cd40dd54be348dbf25621"
 SRC_URI[lzma.md5sum] = "29d5ffd03a5a3e51aef6a74e9eafb759"
 SRC_URI[lzma.sha256sum] = "c935fd04dd8e0e8c688a3078f3675d699679a90be81c12686837e0880aa0fa1e"
 
