@@ -4,6 +4,8 @@ require conf/license/license-close.inc
 
 PR = "r2"
 
+RDEPENDS_enigma2-plugin-softcams-evocamd = "libcrypto-compat-0.9.7"
+
 PACKAGES = "enigma2-plugin-softcams-evocamd"
 
 PROVIDES += "openvix-softcams-evocamd"
