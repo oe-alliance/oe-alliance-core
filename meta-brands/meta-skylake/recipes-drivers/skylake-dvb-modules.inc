@@ -25,6 +25,14 @@ do_install() {
         install -m 0755 ${WORKDIR}/$i.ko ${D}/lib/modules/${KV}/extra
         echo $i >> ${D}/${sysconfdir}/modules-load.d/_${MACHINE}.conf
     done
+    if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
+        install -d ${D}/${sysconfdir}/modprobe.d
+        rm ${D}/${sysconfdir}/modprobe.d/_${MACHINE_DRIVER}.conf 2>/dev/null || true
+        touch ${D}/${sysconfdir}/modprobe.d/_${MACHINE_DRIVER}.conf
+        for i in ${MACHINE_DRIVER}_1 ${MACHINE_DRIVER}_2 ${MACHINE_DRIVER}_3 ${MACHINE_DRIVER}_4; do
+            echo blacklist $i >> ${D}/${sysconfdir}/modprobe.d/_${MACHINE_DRIVER}.conf
+        done
+    fi
 }
 
-FILES_${PN} += "${sysconfdir}/modules-load.d/_${MACHINE}.conf /lib/modules/${KV}/extra"
+FILES_${PN} += "${sysconfdir}/modules-load.d/_${MACHINE}.conf ${sysconfdir}/modprobe.d/_${MACHINE_DRIVER}.conf /lib/modules/${KV}/extra"
