@@ -1,7 +1,7 @@
-SUMMARY = "OpenBH bootlogo"
+SUMMARY = "OpenBH Bootlogo"
+MAINTAINER = "BlackHole Team"
 SECTION = "base"
 PRIORITY = "required"
-MAINTAINER = "BlackHole Team"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 require conf/license/license-gplv2.inc
@@ -9,7 +9,7 @@ require conf/license/license-gplv2.inc
 RDEPENDS_${PN} += "showiframe"
 
 PV = "${IMAGE_VERSION}"
-PR = "r12"
+PR = "r13"
 
 S = "${WORKDIR}"
 
@@ -26,7 +26,8 @@ INITSCRIPT_PARAMS_vuzero4k = "start 70 S ."
 
 inherit update-rc.d
 
-SRC_URI = "file://bootlogo.mvi file://radio.mvi file://bootlogo.sh file://splash576.bmp file://splash480.bmp"
+SRC_URI = "file://bootlogo.mvi file://radio.mvi file://bootlogo.sh file://splash576.bmp file://splash480.bmp \
+"
 
 SRC_URI_append_vuduo2 = "file://lcdbootlogo.png file://bootlogo.py"
 
