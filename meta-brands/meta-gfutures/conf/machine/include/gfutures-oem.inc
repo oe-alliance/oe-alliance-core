@@ -108,7 +108,7 @@ PREFERRED_PROVIDER_virtual/egl = "hd-v3ddriver-${MACHINE}"
 PREFERRED_PROVIDER_virtual/libgles2 = "hd-v3ddriver-${MACHINE}"
 PREFERRED_PROVIDER_virtual/kodi = "stb-kodi-${MACHINE}"
 
-MACHINE_FEATURES += "3dtv alsa hdmicec switchoff blindscan-tbs"
+MACHINE_FEATURES += "3dtv alsa hdmicec switchoff blindscan-tbs modversion"
 
 EXTRA_IMAGEDEPENDS += " \
     enigma2-plugin-systemplugins-remotecontrolcode \
