@@ -16,3 +16,7 @@ do_install () {
 }
 
 FILES_${PN} = "/usr/lib"
+
+# Set these explicitly
+#
+RPROVIDES_${PN} += "libcrypto.so.0.9.7 libssl.so.0.9.7"
