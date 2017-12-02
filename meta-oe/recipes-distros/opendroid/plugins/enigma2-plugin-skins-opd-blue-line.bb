@@ -5,10 +5,10 @@ require conf/license/license-gplv2.inc
 
 inherit gitpkgv allarch
 SRCREV = "${AUTOREV}"
-PV = "1.3+git${SRCPV}"
-PKGV = "1.3+git${GITPKGV}"
-VER="1.3"
-PR = "r1"
+PV = "1.4+git${SRCPV}"
+PKGV = "1.4+git${GITPKGV}"
+VER="1.4"
+PR = "r2"
 
 SRC_URI="git://github.com/stein17/OPD-Blue-Line.git;protocol=git"
 FILES_${PN} = "/usr/*"

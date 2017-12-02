@@ -1,15 +1,15 @@
 SUMMARY = "OpenBH Bootlogo"
-MAINTAINER = "BH Team"
+MAINTAINER = "BlackHole Team"
 SECTION = "base"
 PRIORITY = "required"
-PACKAGE_ARCH = "${MACHINEBUILD}"
+PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 require conf/license/license-gplv2.inc
 
 RDEPENDS_${PN} += "showiframe"
 
 PV = "${IMAGE_VERSION}"
-PR = "r7"
+PR = "r13"
 
 S = "${WORKDIR}"
 
@@ -26,56 +26,34 @@ INITSCRIPT_PARAMS_vuzero4k = "start 70 S ."
 
 inherit update-rc.d
 
-SRC_URI = "file://bootlogo.mvi file://backdrop.mvi file://radio.mvi file://bootlogo.sh ${@bb.utils.contains("MACHINE_FEATURES", "bootsplash", "file://splash.bin " , "", d)} \
+SRC_URI = "file://bootlogo.mvi file://radio.mvi file://bootlogo.sh file://splash576.bmp file://splash480.bmp \
 "
 
 SRC_URI_append_vuduo2 = "file://lcdbootlogo.png file://bootlogo.py"
 
-FILES_${PN} = "/usr/share /usr/share/enigma2 /etc/init.d"
+FILES_${PN} = "/boot /usr/share /etc/init.d"
 
 do_install() {
-    install -d ${D}/${sysconfdir}/init.d
-    install -m 0755 bootlogo.sh ${D}/${sysconfdir}/init.d/bootlogo
     install -d ${D}/usr/share
     install -m 0644 bootlogo.mvi ${D}/usr/share/bootlogo.mvi
-    install -m 0644 backdrop.mvi ${D}/usr/share/backdrop.mvi
+    ln -sf /usr/share/bootlogo.mvi ${D}/usr/share/backdrop.mvi
     install -d ${D}/usr/share/enigma2
     install -m 0644 radio.mvi ${D}/usr/share/enigma2/radio.mvi
+    install -d ${D}/${sysconfdir}/init.d
+    install -m 0755 bootlogo.sh ${D}/${sysconfdir}/init.d/bootlogo
 }
 
 do_install_append_vuduo2() {
-    install -d ${D}/usr/share
     install -m 0644 lcdbootlogo.png ${D}/usr/share/lcdbootlogo.png
     install -m 0644 bootlogo.py ${D}/${sysconfdir}/init.d/bootlogo.py
 }
 
 inherit deploy
 do_deploy() {
-    TEST=${MACHINEBUILD}
-    if [[ ${TEST:0:2} == "tm" ]]; then
-        install -m 0644 tm-splash.bmp ${DEPLOYDIR}/${BOOTLOGO_FILENAME}
-    elif [[ ${TEST:0:2} == "iq" ]]; then
-        install -m 0644 iqon-splash.bmp ${DEPLOYDIR}/${BOOTLOGO_FILENAME}
-    elif [ -e splash.bin ]; then
-        install -m 0644 splash.bin ${DEPLOYDIR}/${BOOTLOGO_FILENAME}
-    fi
-    if [ -e lcdsplash220.bin ]; then
-        install -m 0644 lcdsplash220.bin ${DEPLOYDIR}/lcdsplash220.bin
-    fi
-    if [ -e lcdsplash400.bin ]; then
-        install -m 0644 lcdsplash400.bin ${DEPLOYDIR}/lcdsplash400.bin
-    fi
-    if [ -e splash1.bmp ]; then
-        install -m 0644 splash1.bmp ${DEPLOYDIR}/splash1.bmp
-    fi
-    if [ -e splash1_power.bmp ]; then
-        install -m 0644 splash1_power.bmp ${DEPLOYDIR}/splash1_power.bmp
-    fi
-    if [ -e splash2.bmp ]; then
-        install -m 0644 splash2.bmp ${DEPLOYDIR}/splash2.bmp
-    fi
-    if [ -e splash3.bmp ]; then
-        install -m 0644 splash3.bmp ${DEPLOYDIR}/splash3.bmp
+    if [ "${MACHINE}" = "vuduo" ] || [ "${MACHINE}" = "vuduo2" ] || [ "${MACHINE}" = "vuuno" ] || [ "${MACHINE}" = "vusolo" ] || [ "${MACHINE}" = "vusolose" ] || [ "${MACHINE}" = "vuultimo" ] || [ "${MACHINE}" = "vuzero" ] || [ "${MACHINE}" = "vuzero4k" ] || [ "${MACHINE}" = "vusolo4k" ] || [ "${MACHINE}" = "vuuno4k" ] || [ "${MACHINE}" = "vuuno4kse" ] || [ "${MACHINE}" = "vuultimo4k" ] || [ "${BRAND_OEM}" = "dags" ]; then
+        install -m 0644 splash480.bmp ${DEPLOYDIR}/${BOOTLOGO_FILENAME}
+    else
+        install -m 0644 splash576.bmp ${DEPLOYDIR}/${BOOTLOGO_FILENAME}
     fi
 }
 
