@@ -1,9 +1,6 @@
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
-PROVIDES += "virtual/cron"
-RCONFLICTS_${PN} += "busybox-cron"
-
 INITSCRIPT_NAME = "cron"
 SYSTEMD_SERVICE_${PN} = "cron.service"
 

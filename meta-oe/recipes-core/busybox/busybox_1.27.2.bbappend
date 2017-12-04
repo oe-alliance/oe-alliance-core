@@ -3,7 +3,6 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 SRC_URI += " \
             file://mount_single_uuid.patch \
             file://use_ipv6_when_ipv4_unroutable.patch \
-            file://mdev-mount.sh \
             file://telnetd \
             file://inetd \
             file://inetd.conf \
@@ -18,22 +17,13 @@ SRC_URI += " \
 # include/mtd/* we cannot build in parallel with mtd-utils
 DEPENDS += "mtd-utils"
 
-INITSCRIPT_PARAMS_${PN}-mdev = "start 04 S ."
+PACKAGES_remove = "${PN}-mdev"
+INITSCRIPT_PACKAGES_remove = "${PN}-mdev"
 
 RDEPENDS_${PN} += "odhcp6c"
 
 RRECOMMENDS_${PN} += "${PN}-inetd"
 RRECOMMENDS_${PN} += "${PN}-telnetd"
-
-PACKAGES =+ "${PN}-cron"
-INITSCRIPT_PACKAGES += "${PN}-cron"
-INITSCRIPT_NAME_${PN}-cron = "crond.${BPN}"
-CONFFILES_${PN}-cron = "${sysconfdir}/cron"
-FILES_${PN}-cron = "${sysconfdir}/cron ${sysconfdir}/init.d/crond.${BPN}"
-RDEPENDS_${PN}-cron += "${PN}"
-PROVIDES_${PN}-cron += "virtual/cron"
-RPROVIDES_${PN}-cron += "cron"
-RCONFLICTS_${PN}-cron += "cronie"
 
 PACKAGES =+ "${PN}-inetd"
 INITSCRIPT_PACKAGES += "${PN}-inetd"
@@ -82,9 +72,8 @@ do_install_append() {
             rm ${D}${sysconfdir}/init.d/inetd.${BPN} || true
         fi
     fi
-    install -d ${D}${sysconfdir}/mdev
-    install -m 0755 ${WORKDIR}/mdev-mount.sh ${D}${sysconfdir}/mdev
     install -m 0755 ${WORKDIR}/vi.sh ${D}${base_bindir}/vi.sh
+    rm -rf ${D}${sysconfdir}/mdev 2>/dev/null || true
 }
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/${P}:"
