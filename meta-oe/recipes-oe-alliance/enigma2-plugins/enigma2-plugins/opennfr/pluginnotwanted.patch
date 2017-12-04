@@ -18,7 +18,7 @@ index d0f54e5..e535329 100644
 	videocolorspace \
 -	vlcplayer \
 	vps \
-  	weatherplugin \
+	weatherplugin \
  	weathercomponent \
  	weathercomponenthandler \
 -	webadmin \
@@ -34,7 +34,7 @@ index d0f54e5..e535329 100644
  	advancedmovieselection
  
  if DREAMBOX
-@@ -130,9 +127,7 @@ if TPM
+@@ -130,9 +126,7 @@ if TPM
  SUBDIRS += \
  	mytube \
  	yttrailer \
