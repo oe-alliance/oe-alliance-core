@@ -10,6 +10,8 @@ FILESEXTRAPATHS_prepend := "${THISDIR}/${MACHINEBUILD}:"
 SRC_URI += "file://editor.sh"
 SRC_URI += "file://locale.sh"
 SRC_URI += "file://terminfo.sh"
+SRC_URI += "file://udev-mount"
+SRC_URI += "file://90-media.rules"
 
 hostname = "${MACHINEBUILD}"
 
@@ -22,10 +24,29 @@ do_install_append() {
     rm -rf ${D}/media/*
     rm -fr ${D}/tmp
     mkdir ${D}/media/net
+    install -d ${D}${sysconfdir}/udev/rules.d
+    install -m 0644 ${WORKDIR}/90-media.rules   ${D}${sysconfdir}/udev/rules.d
+    install -m 0755 ${WORKDIR}/udev-mount       ${D}${sysconfdir}/udev
     install -d ${D}${sysconfdir}/profile.d
     install -m 0644 ${WORKDIR}/editor.sh   ${D}${sysconfdir}/profile.d/editor.sh
     install -m 0644 ${WORKDIR}/locale.sh   ${D}${sysconfdir}/profile.d/locale.sh
     install -m 0644 ${WORKDIR}/terminfo.sh ${D}${sysconfdir}/profile.d/terminfo.sh
+
+    if ${@bb.utils.contains('MACHINE_FEATURES','mountboot','true','false',d)}; then
+        export BOOTFS_BLOCK=$(echo -e ${MTD_BOOTFS} | perl -pe 's:(mtd)(\d):${1}block$2:') ; perl -i -pe 's:(\@rootfs\@):/dev/'${BOOTFS_BLOCK}'\t\t/boot\t\tauto\t\tdefaults\t\t\t\t1  1\n${1}:s' ${D}${sysconfdir}/fstab
+    fi
+
+    export ROOTFS_BLOCK=$(echo -e ${MTD_ROOTFS} | perl -pe 's:(mtd)(\d):${1}block$2:') ; perl -i -pe 's:\@rootfs\@:/dev/'${ROOTFS_BLOCK}':' ${D}${sysconfdir}/fstab
+
+    if [ "${MACHINEBUILD}" = "azboxhd" ]; then
+        printf "/dev/hda3\t\tswap\t\tswap\t\tdefaults\t\t\t\t0  0\n" >> ${D}${sysconfdir}/fstab
+    fi
+    if [ "${MACHINEBUILD}" = "sf4008" -o "${MACHINEBUILD}" = "sf5008" ]; then
+        printf "/dev/mmcblk0p5\t\tnone\t\tswap\t\tsw\t\t\t\t\t0  0\n" >> ${D}${sysconfdir}/fstab
+    fi
+    if [ "${DISTRO}" = "egami" ]; then
+        printf "/dev/sda1\t\t/media/hdd\tauto\t\tdefaults\t\t\t\t0  0\n" >> ${D}${sysconfdir}/fstab
+    fi
 }
 
 # For Classic Dreambox Inject the /boot partition into /etc/fstab. At image creation time,

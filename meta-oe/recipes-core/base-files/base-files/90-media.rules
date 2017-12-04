@@ -1,0 +1,2 @@
+ACTION=="add", SUBSYSTEM=="block", KERNEL=="[hs]d[a-z][0-9]?", RUN+="/etc/udev/udev-mount"
+ACTION=="add", SUBSYSTEM=="block", KERNEL=="mmcblk[0-9]p[0-9]", RUN+="/etc/udev/udev-mount"
