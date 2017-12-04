@@ -13,8 +13,12 @@ index d0f54e5..e535329 100644
  	podcast \
  	porncenter \
  	pushservice \
-@@ -90,8 +91,6 @@ SUBDIRS = \
- 	weatherplugin \
+@@ -86,12 +86,9 @@ SUBDIRS = \
+  valixdcontrol \
+	 videocolorspace \
+- vlcplayer \
+  vps \
+  weatherplugin \
  	weathercomponent \
  	weathercomponenthandler \
 -	webadmin \
@@ -22,7 +26,7 @@ index d0f54e5..e535329 100644
  	webcamviewer \
  	werbezapper \
  	zaphistorybrowser \
-@@ -102,7 +101,6 @@ SUBDIRS = \
+@@ -102,7 +99,6 @@ SUBDIRS = \
  	schiffe \
  	sudoku \
  	vierg \
