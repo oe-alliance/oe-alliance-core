@@ -30,7 +30,7 @@ do_install() {
         rm ${D}/${sysconfdir}/modprobe.d/_${MACHINE_DRIVER}.conf 2>/dev/null || true
         touch ${D}/${sysconfdir}/modprobe.d/_${MACHINE_DRIVER}.conf
         for i in ${MACHINE_DRIVER}_1 ${MACHINE_DRIVER}_2 ${MACHINE_DRIVER}_3 ${MACHINE_DRIVER}_4; do
-            echo blacklist $i >> ${D}/${sysconfdir}/modprobe.d/_${MACHINE_DRIVER}.conf
+            echo install $i /sbin/modprobe --ignore-install --force $i >> ${D}/${sysconfdir}/modprobe.d/_${MACHINE_DRIVER}.conf
         done
     fi
 }

@@ -27,7 +27,7 @@ do_install() {
 
     if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
         install -d ${D}/${sysconfdir}/modprobe.d
-        echo blacklist linuxtv > ${D}/${sysconfdir}/modprobe.d/_${MACHINE}.conf
+        echo install linuxtv /sbin/modprobe --ignore-install --force linuxtv > ${D}/${sysconfdir}/modprobe.d/_${MACHINE}.conf
     fi
 }
 
