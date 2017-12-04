@@ -2,8 +2,11 @@ diff --git a/Makefile.am b/Makefile.am
 index d0f54e5..e535329 100644
 --- a/Makefile.am
 +++ b/Makefile.am
-@@ -63,6 +63,7 @@ SUBDIRS = \
- 	partnerbox \
+@@ -60,9 +60,9 @@ SUBDIRS = \
+ 	ofdb \
+ 	orfat \
+ 	orfteletext \
+-	partnerbox \
  	permanentclock \
  	pipservicerelation \
 +	pluginhider \
