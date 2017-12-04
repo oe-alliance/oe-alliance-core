@@ -44,11 +44,13 @@ RDEPENDS_${PN} = "\
     packagegroup-base \
     packagegroup-core-boot \
     tzdata tzdata-europe tzdata-australia tzdata-asia tzdata-pacific tzdata-africa tzdata-americas \
-    util-linux-sfdisk \
     util-linux-blkid \
     util-linux-flock \
+    util-linux-sfdisk \
+    util-linux-swaponoff \
     volatile-media \
     vsftpd \
+    wget \
     python-twisted-protocols python-numbers python-argparse \
     "
 
