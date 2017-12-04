@@ -20,7 +20,6 @@ RDEPENDS_${PN} = "\
     bash \
     blackhole-base \
     blackholesocker \
-    cronie \
     ca-certificates \    
     dvbsnoop \
     hddtemp \

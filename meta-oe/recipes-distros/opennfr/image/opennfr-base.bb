@@ -22,7 +22,6 @@ RDEPENDS_${PN} = "\
     packagegroup-base-smbfs-client \
     packagegroup-base-smbfs-server \
     hddtemp \
-    cronie \
     exteplayer3 \
     gstplayer \
     ffmpeg \

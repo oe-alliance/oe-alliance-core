@@ -27,6 +27,7 @@ RDEPENDS_${PN} = "\
     ${@bb.utils.contains("MACHINE_FEATURES", "recovery", "recovery" , "", d)} \
     ${@bb.utils.contains("DEFAULTTUNE", "sh4", "alsa-utils-amixer-conf" , "", d)} \
     avahi-daemon \
+    cronie \
     dropbear \
     early-configure \
     e2fsprogs-mke2fs \
@@ -38,7 +39,7 @@ RDEPENDS_${PN} = "\
     llmnrd \
     modutils-loadscript \
     ntpdate \
-    ${@bb.utils.contains("DISTRO_FEATURES", "systemd", "" , "opkg", d)} \
+    opkg \
     rc-local \
     sdparm \
     packagegroup-base \

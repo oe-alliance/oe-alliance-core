@@ -23,7 +23,6 @@ RDEPENDS_${PN} = "\
     ntfs-3g \
     ntfsprogs \
     hddtemp \
-    cronie \
     python-imaging \
     python-service-identity \
     rtmpdump \

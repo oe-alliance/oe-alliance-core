@@ -19,8 +19,6 @@ IMAGE_INSTALL = " \
     hddtemp \
     nano \
     mc \
-    cronie \
-    wget \
     oe-alliance-base \
     openatv-bootlogo \
     openatv-enigma2 \

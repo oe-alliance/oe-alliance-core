@@ -20,7 +20,6 @@ RDEPENDS_${PN} = "\
     opendroid-spinner \
     ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "", "ntfs-3g ", d)} \
     hddtemp \
-    cronie \
     python-imaging \
     python-service-identity \
     rtmpdump \
