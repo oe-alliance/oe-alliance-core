@@ -73,6 +73,11 @@ ${@bb.utils.contains('MACHINEBUILD', 'osminiplus', 'mtd2' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'osmega', 'mtd2' , '', d)}\
 "
 
+MTD_BOOTFS = "\
+${@bb.utils.contains('MACHINEBUILD', 'spycat4k', 'mmcblk1p1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'spycat4kcombo', 'mmcblk1p1' , '', d)}\
+"
+
 MACHINE_DRIVER = "\
 ${@bb.utils.contains('MACHINEBUILD', 'spycat', 'spycat' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'spycatmini', 'spycatmini' , '', d)}\
@@ -150,7 +155,10 @@ PREFERRED_PROVIDER_virtual/egl = "xcore-v3ddriver-${MACHINE}"
 PREFERRED_PROVIDER_virtual/libgles2 = "xcore-v3ddriver-${MACHINE}"
 PREFERRED_PROVIDER_virtual/kodi = "stb-kodi-${MACHINE}"
 
-MACHINE_FEATURES += "alsa 3dtv switchoff hdmicec bootsplash omb boxmodel"
+MACHINE_FEATURES += "alsa 3dtv switchoff hdmicec bootsplash omb boxmodel \
+                     ${@bb.utils.contains('MACHINEBUILD', 'spycat4k', 'mountboot' , '', d)}\
+                     ${@bb.utils.contains('MACHINEBUILD', 'spycat4kcombo', 'mountboot' , '', d)}\
+                    "
 
 BOOTLOGO_FILENAME = "splash.bin"
 

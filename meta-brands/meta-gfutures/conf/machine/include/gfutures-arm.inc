@@ -1,7 +1,9 @@
 #IMAGE_CLASSES += "hdemmc_image_single"
 IMAGE_CLASSES += "hdemmc_image_multi"
 
-MACHINE_FEATURES += "qthbbtv"
+MTD_BOOTFS = "mmcblk0p1"
+
+MACHINE_FEATURES += "qthbbtv mountboot"
 DISTRO_FEATURES_remove = "directfb gtk-directfb"
 
 IMAGE_FSTYPES += "hdemmc"
