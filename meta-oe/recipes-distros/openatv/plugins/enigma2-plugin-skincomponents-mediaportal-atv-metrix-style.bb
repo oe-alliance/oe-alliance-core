@@ -1,4 +1,4 @@
-SUMMARY = "Skinpart for Mediaportal Metrix Style"
+SUMMARY = "HD Skinpart for Mediaportal Metrix Style"
 MAINTAINER = "nettraxx"
 SECTION = "base"
 PRIORITY = "required"
