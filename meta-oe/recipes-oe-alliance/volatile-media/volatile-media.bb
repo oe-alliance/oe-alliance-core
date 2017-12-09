@@ -9,6 +9,7 @@ PR = "r0"
 
 SRC_URI = "file://volatile-media.sh \
            file://media.mount \
+           file://media.service \
           "
 
 S = "${WORKDIR}"
@@ -25,7 +26,7 @@ do_compile() {
 do_install() {
 	if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
 		install -d ${D}${systemd_unitdir}/system
-		install -m 0644 ${WORKDIR}/media.mount ${D}${systemd_unitdir}/system/volatile-media.service
+		install -m 0644 ${WORKDIR}/media.service ${D}${systemd_unitdir}/system/volatile-media.service
 	else
 		install -d ${D}${sysconfdir}/init.d
 		install -m 0755 ${WORKDIR}/volatile-media.sh ${D}${sysconfdir}/init.d
