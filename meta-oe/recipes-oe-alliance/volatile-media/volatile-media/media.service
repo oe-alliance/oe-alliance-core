@@ -1,0 +1,15 @@
+[Unit]
+Description=Mounts and populates /media
+DefaultDependencies=false
+Before=local-fs.target
+ConditionPathIsReadWrite=/
+
+[Service]
+Type=oneshot
+ExecStart=/bin/mount -t tmpfs -o size=64k tmpfs /media
+ExecStart=/bin/bash -c 'grep -v "^#" /etc/fstab | grep "\s/media/" | awk '"'"'{print $2}'"'"' | while read LINE; do mkdir -p $LINE; done'
+ExecStop=/bin/umount /media
+RemainAfterExit=true
+
+[Install]
+RequiredBy=local-fs.target

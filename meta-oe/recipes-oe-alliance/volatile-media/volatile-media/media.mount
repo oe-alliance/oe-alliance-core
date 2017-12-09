@@ -1,0 +1,17 @@
+[Unit]
+Description=Mounts and populates /media
+
+[Mount]
+What=tmpfs
+Where=/media
+Type=tmpfs
+Options=size=64k
+
+[Service]
+Type=oneshot
+ExecStart=/bin/bash -c 'grep -v "^#" /etc/fstab | grep "\s/media/" | awk '"'"'{print $2}'"'"' | while read LINE; do mkdir -p $LINE; done'
+
+[Install]
+RequiredBy=local-fs-pre.target
+
+
