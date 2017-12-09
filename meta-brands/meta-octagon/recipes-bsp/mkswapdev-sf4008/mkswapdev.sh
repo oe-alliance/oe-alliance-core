@@ -1,4 +1,16 @@
 #!/bin/sh
+#
+### BEGIN INIT INFO
+# Provides:          dphys-swapfile
+# Required-Start:    $syslog $remote_fs
+# Required-Stop:     $syslog $remote_fs
+# Should-Start:      $local_fs
+# Should-Stop:       $local_fs
+# Default-Start:     2 3 4 5
+# Default-Stop:
+# Short-Description: Autogenerate and use a swap file
+# Description:       Autogenerate and use a swap file
+### END INIT INFO
 
 SWAPDEVS="/dev/mmcblk0p*"
 swap_device=$(blkid -t PARTLABEL="swap" -o device ${SWAPDEVS} | head -n1)

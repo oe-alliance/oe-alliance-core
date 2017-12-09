@@ -1,4 +1,15 @@
-#!/bin/sh
+#!/bin/sh -e
+### BEGIN INIT INFO
+# Provides:          platform-util
+# Required-Start:    kmod
+# Required-Stop:     
+# Should-Start:      checkroot
+# Should-Stop:
+# Default-Start:     S
+# Default-Stop:
+# Short-Description: Load the Broadcam platform-util.
+# Description:       Load the Broadcam platform-util.
+### END INIT INFO
 
 if [ -e /sys/class/net/sys0 ]; then
   ifconfig sys0 up
