@@ -1,7 +1,13 @@
-#!/bin/sh
-#
-# umountnfs.sh Unmount all network filesystems.
-#
+#! /bin/sh
+### BEGIN INIT INFO
+# Provides:          umountnfs
+# Required-Start:
+# Required-Stop:     umountfs
+# Should-Stop:       $network $portmap nfs-common
+# Default-Start:
+# Default-Stop:      0 6
+# Short-Description: Unmount all network filesystems
+### END INIT INFO
 
 echo "Unmounting remote filesystems..."
 

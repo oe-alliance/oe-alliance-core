@@ -1,4 +1,16 @@
 #!/bin/bash
+### BEGIN INIT INFO
+# Provides:          fastrestore
+# Required-Start:    bootmisc kmod
+# Required-Stop:     
+# Should-Start:      platform-util
+# Should-stop:
+# Default-Start:     S
+# Default-Stop:
+# X-Interactive:     true
+# Short-Description: Restore settings after flash upgrade.
+### END INIT INFO
+
 [ -e /etc/enigma2/settings ] && exit 0
 
 ROOTFS=/
