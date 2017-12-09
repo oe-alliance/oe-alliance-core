@@ -13,7 +13,7 @@ PR = "r3"
 
 PROVIDES += "virtual/transtreamproxy"
 RPROVIDES_${PN} += "transtreamproxy"
-DEPENDS += "virtual/inetd"
+DEPENDS += "virtual/inetd boost"
 RDEPENDS_${PN} += "inetd"
 
 SRC_URI = "git://code.vuplus.com/git/filestreamproxy.git;protocol=http;branch=transtreamproxy \
