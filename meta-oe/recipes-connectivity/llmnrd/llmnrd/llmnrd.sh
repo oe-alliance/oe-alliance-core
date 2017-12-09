@@ -1,6 +1,15 @@
 #!/bin/sh
-#
-# start/stop llmnrd
+
+### BEGIN INIT INFO
+# Provides:          llmnrd
+# Required-Start:    $network $local_fs
+# Required-Stop:     $network $local_fs
+# X-Start-Before:    smbd
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: start Link Local Multicast Name Resolution (LLMNR) daemon
+### END INIT INFO
+
 DAEMON=/usr/bin/llmnrd
 NAME=llmnrd
 ARGS="-6 -d"
