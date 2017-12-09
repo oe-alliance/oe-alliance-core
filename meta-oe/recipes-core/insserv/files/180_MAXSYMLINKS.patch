@@ -1,0 +1,13 @@
+--- insserv-1.14.0.orig/insserv.c
++++ insserv-1.14.0/insserv.c
+@@ -71,6 +71,10 @@
+ # endif
+ #endif
+ 
++#ifndef MAXSYMLINKS
++# define MAXSYMLINKS 20
++#endif
++
+ #ifdef SUSE
+ # define DEFAULT_START_LVL	"3 5"
+ # define DEFAULT_STOP_LVL	"3 5"

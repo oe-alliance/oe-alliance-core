@@ -1,0 +1,19 @@
+Description: fix FTBFS with gcc-5 and clang.
+Author: Mohit Bhakkad <mohit.bhakkad@gmail.com>
+Bug-Debian: https://bugs.debian.org/777914
+
+--- insserv-1.14.0.orig/listing.h
++++ insserv-1.14.0/listing.h
+@@ -47,9 +47,9 @@ typedef unsigned int uint;
+ # ifndef  asm
+ #  define asm			__asm__
+ # endif
+-# ifndef  extension
+-#  define extension		__extension__
+-# endif
++#endif
++#ifndef  extension
++# define extension             __extension__
+ #endif
+ #ifndef  attribute
+ # define attribute(attr)	__attribute__(attr)
