@@ -1,11 +1,14 @@
 #!/bin/sh
+
 ### BEGIN INIT INFO
-# Provides: vsftpd
-# Default-Start:  2345
-# Default-Stop:   016
-# Short-Description: Very Secure Ftp Daemon
-# Description: vsftpd is a Very Secure FTP daemon. It was written completely from
-#              scratch
+# Provides:             vsftpd
+# Required-Start:       $network $remote_fs $syslog
+# Required-Stop:        $network $remote_fs $syslog
+# Default-Start:        2 3 4 5
+# Default-Stop:         0 1 6
+# Short-Description:    Very secure FTP server
+# Description:          Provides a lightweight, efficient FTP server written
+#                       for security.
 ### END INIT INFO
 
 DAEMON=/usr/sbin/vsftpd
