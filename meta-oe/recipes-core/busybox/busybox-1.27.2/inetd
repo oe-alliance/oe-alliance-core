@@ -1,6 +1,14 @@
-#!/bin/sh
-#
-# start/stop inetd super server.
+#!/bin/sh -e
+### BEGIN INIT INFO
+# Provides:          inetd
+# Required-Start:    $local_fs $remote_fs
+# Required-Stop:     $local_fs $remote_fs
+# Should-Start:      $syslog
+# Should-Stop:       $syslog
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Start or stop the inetd daemon.
+### END INIT INFO
 
 if ! [ -x /usr/sbin/inetd ]; then
 	exit 0

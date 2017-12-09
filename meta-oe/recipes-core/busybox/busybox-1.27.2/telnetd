@@ -1,6 +1,14 @@
-#!/bin/sh
-#
-# start/stop telnetd server.
+#!/bin/sh -e
+### BEGIN INIT INFO
+# Provides:          telnetd
+# Required-Start:    $local_fs $remote_fs
+# Required-Stop:     $local_fs $remote_fs
+# Should-Start:      $syslog
+# Should-Stop:       $syslog
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Start or stop the inetd daemon.
+### END INIT INFO
 
 if ! [ -x /usr/sbin/telnetd ]; then
 	exit 0
