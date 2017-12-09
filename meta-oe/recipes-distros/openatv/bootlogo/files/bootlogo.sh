@@ -1,3 +1,12 @@
+### BEGIN INIT INFO
+# Provides:          bootlogo
+# Required-Start:    bootmisc kmod
+# Required-Stop:     
+# Should-Start:      platform-util
+# Should-Stop:       
+# Default-Start:     S
+# Default-Stop:
+### END INIT INFO
 # avoid the console messages clobbering our logo
 [ -f /sys/class/vtconsole/vtcon1/bind ] && echo 0 > /sys/class/vtconsole/vtcon1/bind
 # and set the correct videomode before showing the bootlogo
