@@ -1,6 +1,6 @@
 #!/bin/sh -e
 ### BEGIN INIT INFO
-# Provides:          $network networking ifupdown
+# Provides:          networking ifupdown
 # Required-Start:    mountkernfs $local_fs urandom
 # Required-Stop:     $local_fs
 # Default-Start:     S
