@@ -175,7 +175,9 @@ sub insserv_updatercd {
         usage("unknown option");
     }
 
-    usage("not enough arguments") if ($#args < 1);
+    # Use "enable" as default action, rather than to bail out
+    push(@args, "enable") if ($#args == 0);
+    usage("not enough arguments: @orig_argv") if ($#args < 1);
 
     $scriptname = shift @args;
     $action = shift @args;
@@ -186,6 +188,8 @@ sub insserv_updatercd {
     @params = ("-p", "$root/etc/init.d", "-o", "$root/etc/insserv/overrides", "-c", "$root/etc/insserv.conf") unless ($root eq "");
     my @tempopts=@opts;
     push(@tempopts, @params);
+    # For the moment inject "-f" to force, as we don't have a fully sanitized env yet
+    push(@tempopts, "-f");
     
     if ("remove" eq $action) {
         if ( -f "$root/etc/init.d/$scriptname" ) {
