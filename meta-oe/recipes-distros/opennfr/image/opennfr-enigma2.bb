@@ -35,6 +35,7 @@ RDEPENDS_${PN} = "\
     ${@bb.utils.contains("MACHINE_FEATURES", "osdanimation", "enigma2-plugin-systemplugins-animationsetup" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "webkithbbtv", "enigma2-plugin-extensions-webkithbbtv", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "chromiumos", "enigma2-plugin-extensions-chromium", "", d)} \        
+    ${@bb.utils.contains("MACHINE_FEATURES", "quadpip", "enigma2-plugin-extensions-quadpip", "", d)} \
     \
     enigma2-plugin-opennfrskins-utopia-hd \
     opennfr-base-files \

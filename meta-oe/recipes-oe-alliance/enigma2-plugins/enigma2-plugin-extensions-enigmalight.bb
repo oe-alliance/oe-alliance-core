@@ -5,12 +5,12 @@ LIC_FILES_CHKSUM = "file://README;md5=93285fcad54271879db50c1fbf22d98b"
 
 inherit autotools gitpkgv
 SRCREV = "${AUTOREV}"
-PV = "0.3+git${SRCPV}"
-PKGV = "0.3+git${GITPKGV}"
+PV = "0.4+git${SRCPV}"
+PKGV = "0.4+git${GITPKGV}"
 PR = "r0"
 
 DEPENDS = "libusb1"
-RRECOMMENDS_${PN} = "kernel-module-cdc-acm kernel-module-ftdi-sio"
+RRECOMMENDS_${PN} = "python-cheetah libusb1 kernel-module-cdc-acm kernel-module-ftdi-sio kernel-module-usbserial kernel-module-ch341"
 
 do_populate_sysroot[noexec] = "1"
 

@@ -83,6 +83,7 @@ RDEPENDS_${PN} = " \
     mc \
     mergerfs \
     minidlna \
+    minisatip \
     mpd \
     mtd-utils \
     nano \
