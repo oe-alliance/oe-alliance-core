@@ -1,0 +1,89 @@
+#!/bin/sh
+### BEGIN INIT INFO
+# Provides:		sshd
+# Required-Start:	$remote_fs $syslog
+# Required-Stop:	$remote_fs $syslog
+# Default-Start:	2 3 4 5
+# Default-Stop:		
+# Short-Description:	Dropbear Secure Shell server
+### END INIT INFO
+#
+# Do not configure this file. Edit /etc/default/dropbear instead!
+#
+
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+DAEMON=/usr/sbin/dropbear
+NAME=dropbear
+DESC="Dropbear SSH server"
+PIDFILE=/var/run/dropbear.pid
+
+DROPBEAR_PORT=22
+DROPBEAR_EXTRA_ARGS=
+NO_START=0
+
+set -e
+
+test ! -r /etc/default/dropbear || . /etc/default/dropbear
+test "$NO_START" = "0" || exit 0
+test -x "$DAEMON" || exit 0
+test ! -h /var/service/dropbear || exit 0
+
+readonly_rootfs=0
+for flag in `awk '{ if ($2 == "/") { split($4,FLAGS,",") } }; END { for (f in FLAGS) print FLAGS[f] }' </proc/mounts`; do
+  case $flag in
+   ro)
+     readonly_rootfs=1
+     ;;
+  esac
+done
+
+if [ $readonly_rootfs = "1" ]; then
+  mkdir -p /var/lib/dropbear
+  DROPBEAR_RSAKEY_DEFAULT="/var/lib/dropbear/dropbear_rsa_host_key"
+else
+  DROPBEAR_RSAKEY_DEFAULT="/etc/dropbear/dropbear_rsa_host_key"
+fi
+
+test -z "$DROPBEAR_BANNER" || \
+  DROPBEAR_EXTRA_ARGS="$DROPBEAR_EXTRA_ARGS -b $DROPBEAR_BANNER"
+test -n "$DROPBEAR_RSAKEY" || \
+  DROPBEAR_RSAKEY=$DROPBEAR_RSAKEY_DEFAULT
+
+gen_keys() {
+    if [ -f "$DROPBEAR_RSAKEY" -a ! -s "$DROPBEAR_RSAKEY" ]; then
+        rm $DROPBEAR_RSAKEY || true
+    fi
+    test -f $DROPBEAR_RSAKEY || dropbearkey -t rsa -f $DROPBEAR_RSAKEY $DROPBEAR_RSAKEY_ARGS
+}
+
+case "$1" in
+  start)
+	echo -n "Starting $DESC: "
+	gen_keys
+	start-stop-daemon -S -p $PIDFILE \
+	  -x "$DAEMON" -- -r $DROPBEAR_RSAKEY \
+	    -p "$DROPBEAR_PORT" $DROPBEAR_EXTRA_ARGS
+	echo "$NAME."
+	;;
+  stop)
+	echo -n "Stopping $DESC: "
+	start-stop-daemon -K -x "$DAEMON" -p $PIDFILE
+	echo "$NAME."
+	;;
+  restart|force-reload)
+	echo -n "Restarting $DESC: "
+	start-stop-daemon -K -x "$DAEMON" -p $PIDFILE
+	sleep 1
+	start-stop-daemon -S -p $PIDFILE \
+	  -x "$DAEMON" -- -r $DROPBEAR_RSAKEY \
+	    -p "$DROPBEAR_PORT" $DROPBEAR_EXTRA_ARGS
+	echo "$NAME."
+	;;
+  *)
+	N=/etc/init.d/$NAME
+	echo "Usage: $N {start|stop|restart|force-reload}" >&2
+	exit 1
+	;;
+esac
+
+exit 0
