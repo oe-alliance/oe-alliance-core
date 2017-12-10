@@ -2,25 +2,198 @@ FILESEXTRAPATHS_prepend := "${THISDIR}/${P}:"
 
 INSANE_SKIP_${PN} = "file-rdeps"
 
-RDEPENDS_${PN}_append = " sdparm"
 
 SRC_URI += "file://hotplug.sh \
             file://fastrestore_openatv.sh \
 "
 
-do_install_append() {
-    # umountnfs should run before network stops (which is at K40)
-    ln -sf        ../init.d/umountnfs.sh    ${D}${sysconfdir}/rc6.d/K31umountnfs.sh
-    ln -sf        ../init.d/umountnfs.sh    ${D}${sysconfdir}/rc0.d/K31umountnfs.sh
+DEPENDS += "insserv-native insserv update-rc.d update-rc.d-native"
+RDEPENDS_${PN} += "sdparm sysvinit insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv"
 
-    install -m 0755    ${WORKDIR}/hotplug.sh	${D}${sysconfdir}/init.d
-    ln -sf        ../init.d/hotplug.sh      ${D}${sysconfdir}/rcS.d/S06hotplug.sh
+inherit insserv
+inherit insserv
+inherit insserv
+inherit insserv
+inherit insserv
+inherit insserv
+inherit insserv
+inherit insserv
+inherit insserv
+inherit insserv
+inherit insserv
+inherit insserv
+inherit insserv
+inherit insserv
+inherit insserv
+inherit insserv
+inherit insserv
+inherit insserv
+inherit insserv
+inherit insserv
+inherit insserv
+inherit insserv
+inherit insserv
+inherit insserv
+inherit insserv
+inherit insserv
+inherit insserv
+inherit insserv
+inherit insserv
+inherit insserv
+inherit insserv
+inherit insserv
+inherit insserv
+inherit insserv
+inherit insserv
+inherit insserv
+inherit insserv
+inherit insserv
+inherit insserv
+inherit insserv
+inherit insserv
+inherit insserv
+inherit insserv
+inherit insserv
+inherit insserv
+inherit insserv
+inherit insserv
+inherit insserv
+inherit insserv
+inherit insserv
+inherit insserv
+inherit insserv
+inherit insserv
+inherit insserv
+inherit insserv
+inherit insserv
+inherit insserv
+inherit insserv
+inherit insserv
+inherit insserv
+inherit insserv
+inherit insserv
+inherit insserv
+inherit insserv
+inherit insserv
+inherit insserv
+inherit insserv
+inherit insserv
+inherit insserv
+inherit insserv
+inherit insserv
+inherit insserv
+inherit insserv
+inherit insserv
+inherit insserv
+inherit insserv
+inherit insserv
+inherit insserv
+inherit insserv
+inherit insserv
+inherit insserv
+inherit insserv
+inherit insserv
+inherit insserv
+inherit insserv
+inherit insserv
+inherit insserv
+inherit insserv
+inherit insserv
+inherit insserv
+inherit insserv
+inherit insserv
+inherit insserv
+inherit insserv
+inherit insserv
+inherit insserv
+inherit insserv
+inherit insserv
+inherit insserv
+inherit insserv
+inherit insserv
+inherit insserv
+inherit insserv
+inherit insserv
+inherit insserv
+inherit insserv
 
-    perl -i -pe 's:mount -a.+?$:mount -a -t nonfs,nfs4,smbfs,cifs,ncp,ncpfs,coda,ocfs2,gfs,gfs2,ceph -O no_netdev 2>/dev/null:' ${D}${sysconfdir}/init.d/mountall.sh
-    perl -i -pe 's:(mount -a).*?$:$1:' ${D}${sysconfdir}/init.d/mountnfs.sh
+INITSCRIPT_NAMES_${PN} = "${@bb.utils.contains('TARGET_ARCH','arm','alignment.sh','',d)} \
+banner.sh sysfs.sh mountall.sh checkroot.sh devpts.sh hotplug.sh read-only-rootfs-hook.sh \
+populate-volatile.sh dmesg.sh urandom hostname.sh bootmisc.sh \
+${@bb.utils.contains('DISTRO','openatv','fastrestore','',d)} \
+sendsigs save-rtc.sh umountnfs.sh umountfs halt reboot mountnfs.sh rmnologin.sh"
 
-    if [ "x${DISTRO}" = "xopenatv" ]; then
-        install -m 0755    ${WORKDIR}/fastrestore_openatv.sh	${D}${sysconfdir}/init.d/fastrestore
-        ln -sf        ../init.d/fastrestore      ${D}${sysconfdir}/rcS.d/S75fastrestore
-    fi
+do_install () {
+#
+# Create directories and install device independent scripts
+#
+	install -d ${D}${sysconfdir}/init.d
+	install -d ${D}${sysconfdir}/rcS.d
+	install -d ${D}${sysconfdir}/rc0.d
+	install -d ${D}${sysconfdir}/rc1.d
+	install -d ${D}${sysconfdir}/rc2.d
+	install -d ${D}${sysconfdir}/rc3.d
+	install -d ${D}${sysconfdir}/rc4.d
+	install -d ${D}${sysconfdir}/rc5.d
+	install -d ${D}${sysconfdir}/rc6.d
+	install -d ${D}${sysconfdir}/default
+	install -d ${D}${sysconfdir}/default/volatiles
+	# Holds state information pertaining to urandom
+	install -d ${D}${localstatedir}/lib/urandom
+
+	install -m 0644    ${WORKDIR}/functions		${D}${sysconfdir}/init.d
+	install -m 0755    ${WORKDIR}/bootmisc.sh	${D}${sysconfdir}/init.d
+	install -m 0755    ${WORKDIR}/checkroot.sh	${D}${sysconfdir}/init.d
+	install -m 0755    ${WORKDIR}/halt		${D}${sysconfdir}/init.d
+	install -m 0755    ${WORKDIR}/hostname.sh	${D}${sysconfdir}/init.d
+	install -m 0755    ${WORKDIR}/mountall.sh	${D}${sysconfdir}/init.d
+	install -m 0755    ${WORKDIR}/mountnfs.sh	${D}${sysconfdir}/init.d
+	install -m 0755    ${WORKDIR}/reboot		${D}${sysconfdir}/init.d
+	install -m 0755    ${WORKDIR}/rmnologin.sh	${D}${sysconfdir}/init.d
+	install -m 0755    ${WORKDIR}/sendsigs		${D}${sysconfdir}/init.d
+	install -m 0755    ${WORKDIR}/single		${D}${sysconfdir}/init.d
+	install -m 0755    ${WORKDIR}/umountnfs.sh	${D}${sysconfdir}/init.d
+	install -m 0755    ${WORKDIR}/urandom		${D}${sysconfdir}/init.d
+	sed -i ${D}${sysconfdir}/init.d/urandom -e 's,/var/,${localstatedir}/,g;s,/etc/,${sysconfdir}/,g'
+	install -m 0755    ${WORKDIR}/devpts.sh	${D}${sysconfdir}/init.d
+	install -m 0755    ${WORKDIR}/devpts		${D}${sysconfdir}/default
+	install -m 0755    ${WORKDIR}/sysfs.sh		${D}${sysconfdir}/init.d
+	install -m 0755    ${WORKDIR}/populate-volatile.sh ${D}${sysconfdir}/init.d
+	install -m 0755    ${WORKDIR}/read-only-rootfs-hook.sh ${D}${sysconfdir}/init.d
+	install -m 0755    ${WORKDIR}/save-rtc.sh	${D}${sysconfdir}/init.d
+	install -m 0644    ${WORKDIR}/volatiles		${D}${sysconfdir}/default/volatiles/00_core
+	if [ ${@ oe.types.boolean('${VOLATILE_LOG_DIR}') } = True ]; then
+		echo "l root root 0755 /var/log /var/volatile/log" >> ${D}${sysconfdir}/default/volatiles/00_core
+	fi
+	install -m 0755    ${WORKDIR}/dmesg.sh		${D}${sysconfdir}/init.d
+	install -m 0644    ${WORKDIR}/logrotate-dmesg.conf ${D}${sysconfdir}/
+
+	if [ "${TARGET_ARCH}" = "arm" ]; then
+		install -m 0755 ${WORKDIR}/alignment.sh	${D}${sysconfdir}/init.d
+	fi
+
+	if ${@bb.utils.contains('DISTRO_FEATURES','selinux','true','false',d)}; then
+		install -d ${D}/${base_sbindir}
+		install -m 0755 ${WORKDIR}/sushell ${D}/${base_sbindir}
+	fi
+#
+# Install device dependent scripts
+#
+	install -m 0755 ${WORKDIR}/banner.sh	${D}${sysconfdir}/init.d/banner.sh
+	install -m 0755 ${WORKDIR}/umountfs	${D}${sysconfdir}/init.d/umountfs
+
+	# umountnfs should run before network stops (which is at K40)
+	#ln -sf        ../init.d/umountnfs.sh    ${D}${sysconfdir}/rc6.d/K31umountnfs.sh
+	#ln -sf        ../init.d/umountnfs.sh    ${D}${sysconfdir}/rc0.d/K31umountnfs.sh
+
+	install -m 0755    ${WORKDIR}/hotplug.sh	${D}${sysconfdir}/init.d
+
+	perl -i -pe 's:mount -a.+?$:mount -a -t nonfs,nfs4,smbfs,cifs,ncp,ncpfs,coda,ocfs2,gfs,gfs2,ceph -O no_netdev 2>/dev/null:' ${D}${sysconfdir}/init.d/mountall.sh
+	perl -i -pe 's:(mount -a).*?$:$1:' ${D}${sysconfdir}/init.d/mountnfs.sh
+
+	if [ "x${DISTRO}" = "xopenatv" ]; then
+		install -m 0755    ${WORKDIR}/fastrestore_openatv.sh	${D}${sysconfdir}/init.d/fastrestore
+	fi
 }
+
+#[[ -z "$D" ]] && D=/.

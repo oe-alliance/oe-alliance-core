@@ -1,8 +1,10 @@
 #!/bin/sh
 ### BEGIN INIT INFO
 # Provides:             dmesg
-# Required-Start:
+# Required-Start:       $local_fs
 # Required-Stop:
+# Should-Start:         volatile
+# Should-Stop:
 # Default-Start:        S
 # Default-Stop:
 ### END INIT INFO
