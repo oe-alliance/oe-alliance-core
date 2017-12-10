@@ -1,0 +1,22 @@
+diff --git a/src/Makefile b/src/Makefile
+index eccf578..c17924d 100644
+--- a/src/Makefile
++++ b/src/Makefile
+@@ -87,6 +87,9 @@ endif
+ 
+ LIBDIR=/usr/lib
+ # Additional libs for GNU libc.
++ifneq ($(LCRYPT),)
++  SULOGINLIBS  += $(LCRYPT)
++else
+ ifneq ($(wildcard /usr/lib*/libcrypt.a),)
+   SULOGINLIBS   += -lcrypt
+ else
+@@ -94,6 +97,7 @@ ifneq ($(wildcard $(LIBDIR)*/libcrypt.a),)
+   SULOGINLIBS	+= -lcrypt
+ endif
+ endif
++endif
+ 
+ all:		$(BIN) $(SBIN) $(USRBIN)
+ 
