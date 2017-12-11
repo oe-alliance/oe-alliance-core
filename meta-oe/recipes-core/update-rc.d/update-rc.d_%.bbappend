@@ -8,9 +8,13 @@ SRC_URI += " \
 
 inherit allarch
 
-DEPENDS_${PN} += "perl insserv"
-DEPENDS_${PN}_class-native += "perl insserv"
+DEPENDS += "perl insserv"
+DEPENDS_class-native += "perl insserv"
 RDEPENDS_${PN} += "perl insserv"
+
+DEPENDS_append_class-target = " perl insserv"
+PACKAGE_WRITE_DEPS_append = " ${@bb.utils.contains('DISTRO_FEATURES','systemd','systemd-systemctl-native','',d)}"
+PACKAGE_WRITE_DEPS_append = " perl insserv"
 
 do_patch() {
 }
@@ -19,8 +23,6 @@ do_compile() {
 }
 
 do_install_append_class-native() {
-	# The initscripts recipe requires the stupid yocto link-rc.d to build
-	mv ${D}${sbindir}/update-rc.d ${D}${sbindir}/link-rc.d
 	install -m 0755 ${WORKDIR}/update-rc.d.pl ${D}${sbindir}/update-rc.d
 }
 
