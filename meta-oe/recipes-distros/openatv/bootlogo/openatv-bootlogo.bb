@@ -26,7 +26,8 @@ INITSCRIPT_PARAMS_vuzero4k = "start 70 S ."
 PRECOMPILED_ARCH = "${MACHINE}"
 PRECOMPILED_ARCH_dm7020hdv2 = "dm7020hd"
 
-inherit update-rc.d
+inherit insserv
+INITSCRIPT_PARAMS = ""
 
 SRC_URI = "file://bootlogo.mvi file://restore.mvi file://radio.mvi file://bootlogo.sh file://splash576.bmp file://splash480.bmp file://splash1280.jpg \
     ${@bb.utils.contains("MACHINE_FEATURES", "gigabluelcd220", "file://lcdsplash220.bin file://lcdwaitkey220.bin file://lcdwarning220.bin" , "", d)} \
