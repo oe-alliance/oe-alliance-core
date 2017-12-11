@@ -1,4 +1,15 @@
 #!/bin/sh
+### BEGIN INIT INFO
+# Provides:          checkroot-volatile
+# Required-Start:    checkroot
+# Required-Stop:
+# Default-Start:     S
+# Default-Stop:
+# X-Start-Before:    bootmisc
+# Short-Description: Volatile /var/lib on r/o rootfs.
+# Description:       Make sure that /var/lib is writable
+#                    even on r/o root filesystems.
+### END INIT INFO
 
 . /etc/default/rcS
 

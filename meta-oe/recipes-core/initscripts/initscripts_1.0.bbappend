@@ -2,119 +2,16 @@ FILESEXTRAPATHS_prepend := "${THISDIR}/${P}:"
 
 INSANE_SKIP_${PN} = "file-rdeps"
 
+RDEPENDS_${PN}_append = " sdparm"
+
+DEPENDS_append_class-target = " sysvinit update-rc.d insserv"
+PACKAGE_WRITE_DEPS_append = " ${@bb.utils.contains('DISTRO_FEATURES','systemd','systemd-systemctl-native','',d)}"
+PACKAGE_WRITE_DEPS_append = " sysvinit update-rc.d insserv"
 
 SRC_URI += "file://hotplug.sh \
             file://fastrestore_openatv.sh \
 "
 
-DEPENDS += "insserv-native insserv update-rc.d update-rc.d-native"
-RDEPENDS_${PN} += "sdparm sysvinit insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv insserv"
-
-inherit insserv
-inherit insserv
-inherit insserv
-inherit insserv
-inherit insserv
-inherit insserv
-inherit insserv
-inherit insserv
-inherit insserv
-inherit insserv
-inherit insserv
-inherit insserv
-inherit insserv
-inherit insserv
-inherit insserv
-inherit insserv
-inherit insserv
-inherit insserv
-inherit insserv
-inherit insserv
-inherit insserv
-inherit insserv
-inherit insserv
-inherit insserv
-inherit insserv
-inherit insserv
-inherit insserv
-inherit insserv
-inherit insserv
-inherit insserv
-inherit insserv
-inherit insserv
-inherit insserv
-inherit insserv
-inherit insserv
-inherit insserv
-inherit insserv
-inherit insserv
-inherit insserv
-inherit insserv
-inherit insserv
-inherit insserv
-inherit insserv
-inherit insserv
-inherit insserv
-inherit insserv
-inherit insserv
-inherit insserv
-inherit insserv
-inherit insserv
-inherit insserv
-inherit insserv
-inherit insserv
-inherit insserv
-inherit insserv
-inherit insserv
-inherit insserv
-inherit insserv
-inherit insserv
-inherit insserv
-inherit insserv
-inherit insserv
-inherit insserv
-inherit insserv
-inherit insserv
-inherit insserv
-inherit insserv
-inherit insserv
-inherit insserv
-inherit insserv
-inherit insserv
-inherit insserv
-inherit insserv
-inherit insserv
-inherit insserv
-inherit insserv
-inherit insserv
-inherit insserv
-inherit insserv
-inherit insserv
-inherit insserv
-inherit insserv
-inherit insserv
-inherit insserv
-inherit insserv
-inherit insserv
-inherit insserv
-inherit insserv
-inherit insserv
-inherit insserv
-inherit insserv
-inherit insserv
-inherit insserv
-inherit insserv
-inherit insserv
-inherit insserv
-inherit insserv
-inherit insserv
-inherit insserv
-inherit insserv
-inherit insserv
-inherit insserv
-inherit insserv
-inherit insserv
-inherit insserv
 inherit insserv
 
 INITSCRIPT_NAMES_${PN} = "${@bb.utils.contains('TARGET_ARCH','arm','alignment.sh','',d)} \
@@ -123,7 +20,7 @@ populate-volatile.sh dmesg.sh urandom hostname.sh bootmisc.sh \
 ${@bb.utils.contains('DISTRO','openatv','fastrestore','',d)} \
 sendsigs save-rtc.sh umountnfs.sh umountfs halt reboot mountnfs.sh rmnologin.sh"
 
-do_install () {
+do_install() {
 #
 # Create directories and install device independent scripts
 #
@@ -182,11 +79,8 @@ do_install () {
 	install -m 0755 ${WORKDIR}/banner.sh	${D}${sysconfdir}/init.d/banner.sh
 	install -m 0755 ${WORKDIR}/umountfs	${D}${sysconfdir}/init.d/umountfs
 
-	# umountnfs should run before network stops (which is at K40)
-	#ln -sf        ../init.d/umountnfs.sh    ${D}${sysconfdir}/rc6.d/K31umountnfs.sh
-	#ln -sf        ../init.d/umountnfs.sh    ${D}${sysconfdir}/rc0.d/K31umountnfs.sh
 
-	install -m 0755    ${WORKDIR}/hotplug.sh	${D}${sysconfdir}/init.d
+	install -m 0755    ${WORKDIR}/hotplug.sh    ${D}${sysconfdir}/init.d
 
 	perl -i -pe 's:mount -a.+?$:mount -a -t nonfs,nfs4,smbfs,cifs,ncp,ncpfs,coda,ocfs2,gfs,gfs2,ceph -O no_netdev 2>/dev/null:' ${D}${sysconfdir}/init.d/mountall.sh
 	perl -i -pe 's:(mount -a).*?$:$1:' ${D}${sysconfdir}/init.d/mountnfs.sh
@@ -195,5 +89,3 @@ do_install () {
 		install -m 0755    ${WORKDIR}/fastrestore_openatv.sh	${D}${sysconfdir}/init.d/fastrestore
 	fi
 }
-
-#[[ -z "$D" ]] && D=/.
