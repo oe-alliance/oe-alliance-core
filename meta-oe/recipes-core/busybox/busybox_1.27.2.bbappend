@@ -17,6 +17,9 @@ SRC_URI += " \
 # include/mtd/* we cannot build in parallel with mtd-utils
 DEPENDS += "mtd-utils"
 
+DEPENDS_append_class-target = "${@bb.utils.contains('DISTRO_FEATURES','systemd','',' sysvinit update-rc.d insserv',d)}"
+PACKAGE_WRITE_DEPS_append = "${@bb.utils.contains('DISTRO_FEATURES','systemd','',' sysvinit update-rc.d insserv',d)}"
+
 PACKAGES_remove = "${PN}-mdev"
 INITSCRIPT_PACKAGES_remove = "${PN}-mdev"
 
@@ -25,12 +28,9 @@ RDEPENDS_${PN} += "odhcp6c"
 RRECOMMENDS_${PN} += "${PN}-inetd"
 RRECOMMENDS_${PN} += "${PN}-telnetd"
 
-inherit insserv
-
 PACKAGES =+ "${PN}-inetd"
 INITSCRIPT_PACKAGES += "${PN}-inetd"
 INITSCRIPT_NAME_${PN}-inetd = "inetd.${BPN}" 
-INITSCRIPT_NAMES_${PN}-inetd = "inetd.${BPN}"
 SYSTEMD_PACKAGES =+ "${PN}-inetd"
 SYSTEMD_SERVICE_${PN}-inetd = "busybox-inetd.service"
 CONFFILES_${PN}-inetd = "${sysconfdir}/inetd.conf"
@@ -43,8 +43,6 @@ RCONFLICTS_${PN}-inetd += "xinetd"
 PACKAGES =+ "${PN}-telnetd"
 INITSCRIPT_PACKAGES += "${PN}-telnetd"
 INITSCRIPT_NAME_${PN}-telnetd = "telnetd.${BPN}" 
-INITSCRIPT_NAMES_${PN}-telnetd = "telnetd.${BPN}"
-INITSCRIPT_PARAMS_${PN}-telnetd = ""
 SYSTEMD_PACKAGES =+ "${PN}-telnetd"
 SYSTEMD_SERVICE_${PN}-telnetd = "busybox-telnet.service"
 FILES_${PN}-telnetd = "${sysconfdir}/init.d/telnetd.${BPN}"
