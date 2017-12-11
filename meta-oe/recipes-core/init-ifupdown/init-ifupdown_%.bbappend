@@ -1,2 +1,6 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
-INITSCRIPT_PARAMS = "start 10 2 3 4 5 . stop 80 0 6 1 ."
+
+inherit insserv
+
+INITSCRIPT_NAMES_${PN} = "networking"
+INITSCRIPT_PARAMS = ""
