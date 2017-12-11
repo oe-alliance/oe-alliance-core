@@ -21,10 +21,14 @@ INIT_D_DIR = "${sysconfdir}/init.d"
 insserv_postinst() {
 # Enable service on boot
 if [ "${INITSCRIPT_NAMES}" != "" ]; then
+  if [ "x$D" = "x" ]; then
+    OPTS=""
+  else
+    OPTS="-p $D${INIT_D_DIR} -c $D${STAGING_DIR_NATIVE}/etc/insserv.conf -o $D${STAGING_DIR_NATIVE}/etc/insserv/overrides"
+  fi
   for script in ${INITSCRIPT_NAMES}; do
     if [ -f "$D${INIT_D_DIR}/${script}" ]; then
-      insserv -p $D${INIT_D_DIR} -f ${script}${INITSCRIPT_PARAMS}
-      #insserv -p $D${INIT_D_DIR} -c $D${sysconfdir}/insserv.conf -o $D${sysconfdir}/insserv/overrides
+      insserv $OPTS -f ${script}${INITSCRIPT_PARAMS}
     fi
   done
 fi
