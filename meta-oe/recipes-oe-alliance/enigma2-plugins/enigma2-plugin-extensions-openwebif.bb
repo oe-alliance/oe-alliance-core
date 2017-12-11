@@ -8,6 +8,7 @@ FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
 BRANCH="master"
 BRANCH_openatv="responsive"
+BRANCH_openhdf="responsive"
 
 DEPENDS = "python-cheetah-native"
 RDEPENDS_${PN} = "\
