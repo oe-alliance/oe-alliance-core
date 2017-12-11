@@ -4,9 +4,10 @@ LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://README;firstline=10;lastline=12;md5=9c14f792d0aeb54e15490a28c89087f7"
 PACKAGE_ARCH = "all"
 
-# BRANCH="branding"
+FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
-BRANCH="Theme"
+BRANCH="master"
+BRANCH_openatv="responsive"
 
 DEPENDS = "python-cheetah-native"
 RDEPENDS_${PN} = "\
@@ -30,14 +31,19 @@ DISTUTILS_INSTALL_ARGS = "--root=${D} --install-lib=/usr/lib/enigma2/python/Plug
 SRCREV = "${AUTOREV}"
 PV = "1+git${SRCPV}"
 PKGV = "1+git${GITPKGV}"
-PR = "r0"
 
-SRC_URI = "git://github.com/oe-alliance/e2openplugin-${MODULE}.git;protocol=git;branch=${BRANCH}"
+SRC_URI = "git://github.com/E2OpenPlugins/e2openplugin-${MODULE}.git;protocol=git;branch=${BRANCH} \
+           file://transcoding.py"
 
 S="${WORKDIR}/git"
 
 # Just a quick hack to "compile" it
 do_compile() {
+	cp ${WORKDIR}/transcoding.py ${S}/plugin/controllers/transcoding.py
+	rm -rf ${S}/plugin/public/static/remotes >/dev/null 2>&1 || true
+	find ${S}/plugin/public/ -empty -type d -delete >/dev/null 2>&1 || true
+	find ${S}/plugin/public/images/boxes/ ! -name 'unknown.png' -type f -exec rm -f {} +
+	find ${S}/plugin/public/images/remotes/ ! -name 'ow_remote.png' -type f -exec rm -f {} +
 	cheetah-compile -R --nobackup ${S}/plugin
 	python -O -m compileall ${S}
 }

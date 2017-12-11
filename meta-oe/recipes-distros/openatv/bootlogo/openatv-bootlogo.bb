@@ -37,6 +37,7 @@ SRC_URI = "file://bootlogo.mvi file://restore.mvi file://radio.mvi file://bootlo
 SRC_URI_append_vuduo2 = "file://lcdbootlogo.png file://bootlogo.py"
 SRC_URI_append_dags7356 = "file://splash1.bmp file://splash1_os1.bmp file://splash1_os2.bmp file://splash2.bmp file://splash3.bmp"
 SRC_URI_append_dags7362 = "file://splash1_power.bmp file://splash1_os1.bmp file://splash1_os2.bmp file://splash2.bmp file://splash3.bmp"
+SRC_URI_append_dags73625 = "file://splash1_power.bmp file://splash1_os1.bmp file://splash1_os2.bmp file://splash2.bmp file://splash3.bmp"
 SRC_URI_append_dags7252 = "file://atv_splash.bmp"
 SRC_URI_append_7100s = "file://lcdsplash220.bin file://7100s/lcdwaitkey220.bin file://7100s/lcdwarning220.bin file://7100s/lcdcomplete220.bin"
 SRC_URI_append_7210s = "file://lcdsplash220.bin file://7100s/lcdwaitkey220.bin file://7100s/lcdwarning220.bin file://7100s/lcdcomplete220.bin"
