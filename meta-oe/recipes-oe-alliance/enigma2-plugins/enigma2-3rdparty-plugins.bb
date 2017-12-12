@@ -11,7 +11,7 @@ DEPENDS = "tslib mpfr gmp"
 SRCREV = "${AUTOREV}"
 PV = "${IMAGE_VERSION}+gitr${SRCPV}"
 PKGV = "${IMAGE_VERSION}+gitr${GITPKGV}"
-PR = "r29"
+PR = "r30"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -158,7 +158,13 @@ THIRDPARTY_MACHINE_PLUGINS_g300 = " \
     ${@bb.utils.contains('MACHINEBUILD', 'mbtwinplus', 'enigma2-plugin-extensions-hbbtv-miracle_1.0_mips32el.ipk' , '', d)} \
     "
 
-do_install[noexec] = "1"
+do_install() {
+    [[ -e ${WORKDIR}/enigma2-plugin-extensions-mediaportal_all.ipk ]] && rm ${WORKDIR}/enigma2-plugin-extensions-mediaportal_all.ipk
+    wget --unlink -q http://master.dl.sourceforge.net/project/e2-mediaportal/enigma2-plugin-extensions-mediaportal_all.ipk -P ${WORKDIR}/ \
+    && cp --preserve=timestamps ${WORKDIR}/enigma2-plugin-extensions-mediaportal_all.ipk ${S}/ \
+    || true
+}
+
 do_package_write_ipk[noexec] = "1"
 
 python populate_packages_prepend () {
