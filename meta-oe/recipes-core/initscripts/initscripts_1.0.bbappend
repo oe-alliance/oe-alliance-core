@@ -9,13 +9,14 @@ PACKAGE_WRITE_DEPS_append = " ${@bb.utils.contains('DISTRO_FEATURES','systemd','
 PACKAGE_WRITE_DEPS_append = " sysvinit update-rc.d insserv"
 
 SRC_URI += "file://hotplug.sh \
+            file://procps \
             file://fastrestore_openatv.sh \
 "
 
 inherit insserv
 
 INITSCRIPT_NAMES_${PN} = "${@bb.utils.contains('TARGET_ARCH','arm','alignment.sh','',d)} \
-banner.sh sysfs.sh mountall.sh checkroot.sh devpts.sh hotplug.sh read-only-rootfs-hook.sh \
+banner.sh sysfs.sh procps mountall.sh checkroot.sh devpts.sh hotplug.sh read-only-rootfs-hook.sh \
 populate-volatile.sh dmesg.sh urandom hostname.sh bootmisc.sh \
 ${@bb.utils.contains('DISTRO','openatv','fastrestore','',d)} \
 sendsigs save-rtc.sh umountnfs.sh umountfs halt reboot mountnfs.sh rmnologin.sh"
@@ -52,7 +53,8 @@ do_install() {
 	install -m 0755    ${WORKDIR}/umountnfs.sh	${D}${sysconfdir}/init.d
 	install -m 0755    ${WORKDIR}/urandom		${D}${sysconfdir}/init.d
 	sed -i ${D}${sysconfdir}/init.d/urandom -e 's,/var/,${localstatedir}/,g;s,/etc/,${sysconfdir}/,g'
-	install -m 0755    ${WORKDIR}/devpts.sh	${D}${sysconfdir}/init.d
+	install -m 0755    ${WORKDIR}/devpts.sh		${D}${sysconfdir}/init.d
+	install -m 0755    ${WORKDIR}/procps		${D}${sysconfdir}/init.d
 	install -m 0755    ${WORKDIR}/devpts		${D}${sysconfdir}/default
 	install -m 0755    ${WORKDIR}/sysfs.sh		${D}${sysconfdir}/init.d
 	install -m 0755    ${WORKDIR}/populate-volatile.sh ${D}${sysconfdir}/init.d
