@@ -82,7 +82,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-sundtekcontrolcenter_20161213-2_all.ipk \
     enigma2-plugin-extensions-tectimetv_3.1_all.ipk \
     enigma2-plugin-extensions-thetvdb_0.7-20120607-r2_mips32el.ipk \
-    enigma2-plugin-extensions-tmbd_7.8_all.ipk \
+    enigma2-plugin-extensions-tmbd_8.2rc1_all.ipk \
     enigma2-plugin-extensions-translator_1.1rc1_all.ipk \
     enigma2-plugin-extensions-transmission_2.92_all.ipk \
     enigma2-plugin-extensions-tsmedia_11.6_all.ipk \
@@ -158,7 +158,13 @@ THIRDPARTY_MACHINE_PLUGINS_g300 = " \
     ${@bb.utils.contains('MACHINEBUILD', 'mbtwinplus', 'enigma2-plugin-extensions-hbbtv-miracle_1.0_mips32el.ipk' , '', d)} \
     "
 
-do_install[noexec] = "1"
+do_install() {
+    [[ -e ${WORKDIR}/enigma2-plugin-extensions-mediaportal_all.ipk ]] && rm ${WORKDIR}/enigma2-plugin-extensions-mediaportal_all.ipk
+    wget --unlink -q http://master.dl.sourceforge.net/project/e2-mediaportal/enigma2-plugin-extensions-mediaportal_all.ipk -P ${WORKDIR}/ \
+    && cp --preserve=timestamps ${WORKDIR}/enigma2-plugin-extensions-mediaportal_all.ipk ${S}/ \
+    || true
+}
+
 do_package_write_ipk[noexec] = "1"
 
 python populate_packages_prepend () {

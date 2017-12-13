@@ -8,7 +8,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "${IMAGE_VERSION}"
-PR = "r15"
+PR = "r16"
 
 inherit packagegroup
 
@@ -35,4 +35,4 @@ RRECOMMENDS_${PN} = "\
 RRECOMMENDS_${PN}_append_et8500 = " enigma2-plugin-extensions-yahooweather"
 RRECOMMENDS_${PN}_append_formuler4turbo = " enigma2-plugin-systemplugins-vfdcontrol"
 RRECOMMENDS_${PN}_append_osmini = " enigma2-plugin-systemplugins-vfdcontrol"
-
+RRECOMMENDS_${PN}_append_osnino = " enigma2-plugin-systemplugins-vfdcontrol"
