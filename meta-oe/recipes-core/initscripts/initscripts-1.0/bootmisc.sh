@@ -31,20 +31,6 @@ then
 fi
 
 #
-# Apply /proc settings if defined
-#
-SYSCTL_CONF="/etc/sysctl.conf"
-if [ -f "${SYSCTL_CONF}" ]
-then
-	if [ -x "/sbin/sysctl" ]
-	then
-		/sbin/sysctl -p "${SYSCTL_CONF}"
-	else
-		echo "To have ${SYSCTL_CONF} applied during boot, install package <procps>."
-	fi
-fi
-
-#
 # Update /etc/motd.
 #
 if test "$EDITMOTD" != no
