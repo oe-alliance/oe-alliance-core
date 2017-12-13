@@ -1,4 +1,4 @@
-include oscam-atv-smod.inc
+include oscam-smod.inc
 
 EXTRA_OECMAKE += "\
 	-DIPV6SUPPORT=1 \

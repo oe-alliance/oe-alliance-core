@@ -9,17 +9,15 @@ DESCRIPTION = "Combining the benefits of\n \
 inherit cmake gitpkgv
 
 SRCREV = "${AUTOREV}"
-BINFILE = "oscam-atv-smod"
+BINFILE = "oscam-smod"
 
-require conf/license/license-gplv2.inc
-
-LICENSE = "GPLv3"
+LICENSE="GPLv3"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 
 PV = "1.20+git${SRCPV}"
 PKGV = "1.20+git${GITPKGV}"
 
-SRC_URI="git://github.com/Schimmelreiter/oscam-schimmelreiter.git;protocol=git"
+SRC_URI="git://github.com/oe-alliance/oscam-smod.git;protocol=git"
 
 S = "${WORKDIR}/git"
 F = "${WORKDIR}/git/files"
@@ -54,7 +52,7 @@ do_compile_prepend() {
     perl -i -pe 's:(OFS\(dvbapi_read_sdt\)[ \t]*?,[ \t]*?)0\),:${1}1\),:g' ${S}/oscam-config-global.c
     perl -i -pe 's:(OFS\(http_hide_idle_clients\)[ \t]*?,[ \t]*?)1\),:${1}0\),:g' ${S}/oscam-config-global.c
 
-    perl -i -pe 's:Schimmelreiter:atv-smod:g' ${S}/globals.h
+    perl -i -pe 's:Schimmelreiter:smod:g' ${S}/globals.h
 
     LDFLAGS="${LDFLAGS} -Wl,--format=binary -Wl,SoftCam.Key -Wl,--format=default"
 }

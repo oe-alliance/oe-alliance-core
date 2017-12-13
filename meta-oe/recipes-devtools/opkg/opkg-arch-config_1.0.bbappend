@@ -46,6 +46,13 @@ do_compile_append_bcm7252s() {
     echo "arch armv7ahf-neon $priority" >> $archconf
 }
 
+do_compile_append_bcm72604() {
+    echo "arch mips32el $priority" >> $archconf
+    echo "arch mipsel $priority" >> $archconf
+    echo "arch armv7ahf-vfp-neon $priority" >> $archconf
+    echo "arch armv7ahf-neon $priority" >> $archconf
+}
+
 do_compile_append_bcm7444() {
     echo "arch mips32el $priority" >> $archconf
     echo "arch mipsel $priority" >> $archconf
@@ -54,6 +61,14 @@ do_compile_append_bcm7444() {
 }
 
 do_compile_append_hisi3798mv200() {
+    echo "arch mips32el $priority" >> $archconf
+    echo "arch mipsel $priority" >> $archconf
+    echo "arch armv7ahf-vfp-neon $priority" >> $archconf
+    echo "arch armv7ahf-neon $priority" >> $archconf
+    echo "arch cortexa15hf-neon-vfpv4 $priority" >> $archconf
+}
+
+do_compile_append_hisi3798cv200() {
     echo "arch mips32el $priority" >> $archconf
     echo "arch mipsel $priority" >> $archconf
     echo "arch armv7ahf-vfp-neon $priority" >> $archconf

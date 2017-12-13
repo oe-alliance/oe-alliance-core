@@ -11,6 +11,8 @@ BRANCH_openatv="responsive"
 BRANCH_openhdf="responsive"
 BRANCH_openspa="responsive"
 BRANCH_opendroid="responsive"
+BRANCH_openvix="responsive"
+BRANCH_openbh="responsive"
 
 DEPENDS = "python-cheetah-native"
 RDEPENDS_${PN} = "\
