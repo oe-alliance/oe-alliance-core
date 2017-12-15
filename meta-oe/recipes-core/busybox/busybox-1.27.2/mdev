@@ -1,4 +1,5 @@
-#!/bin/sh -e
+#!/bin/sh
+
 ### BEGIN INIT INFO
 # Provides:          udev
 # Required-Start:    mountkernfs

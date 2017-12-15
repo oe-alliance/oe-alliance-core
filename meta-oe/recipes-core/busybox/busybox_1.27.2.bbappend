@@ -20,9 +20,6 @@ DEPENDS += "mtd-utils"
 DEPENDS_append_class-target = "${@bb.utils.contains('DISTRO_FEATURES','systemd','',' sysvinit update-rc.d insserv',d)}"
 PACKAGE_WRITE_DEPS_append = "${@bb.utils.contains('DISTRO_FEATURES','systemd','',' sysvinit update-rc.d insserv',d)}"
 
-PACKAGES_remove = "${PN}-mdev"
-INITSCRIPT_PACKAGES_remove = "${PN}-mdev"
-
 RDEPENDS_${PN} += "odhcp6c"
 
 RRECOMMENDS_${PN} += "${PN}-inetd"
