@@ -105,31 +105,10 @@ else
     esac
     test `uname -m` = s390 && spinner="" # This should go away
     test "$VERBOSE" != no && echo "Checking root filesystem..."
-    fsck $spinner $force $fix /
+    fsck $spinner $force $fix / || true
     #
-    # If there was a failure, drop into single-user mode.
+    # Ignore the outcome of fsck as there is nothing we let alone the user could do.
     #
-    # NOTE: "failure" is defined as exiting with a return code of
-    # 2 or larger.  A return code of 1 indicates that filesystem
-    # errors were corrected but that the boot may proceed.
-    #
-    if test "$?" -gt 1
-    then
-      # Surprise! Re-directing from a HERE document (as in
-      # "cat << EOF") won't work, because the root is read-only.
-      echo
-      echo "fsck failed.  Please repair manually and reboot.  Please note"
-      echo "that the root filesystem is currently mounted read-only.  To"
-      echo "remount it read-write:"
-      echo
-      echo "   # mount -n -o remount,rw /"
-      echo
-      echo "CONTROL-D will exit from this shell and REBOOT the system."
-      echo
-      # Start a single user shell on the console
-      /sbin/sulogin $CONSOLE
-      reboot -f
-    fi
   else
     echo "*** ERROR!  Cannot fsck root fs because it is not mounted read-only!"
     echo
