@@ -8,13 +8,13 @@ SRC_URI += " \
 
 inherit allarch
 
-DEPENDS += "perl insserv"
-DEPENDS_class-native += "perl insserv"
-RDEPENDS_${PN} += "perl insserv"
+DEPENDS += "insserv perl"
+DEPENDS_class-native += "insserv perl"
+RDEPENDS_${PN} += "insserv perl perl-module-file-glob"
 
-DEPENDS_append_class-target = " perl insserv"
+DEPENDS_append_class-target = " insserv perl"
 PACKAGE_WRITE_DEPS_append = " ${@bb.utils.contains('DISTRO_FEATURES','systemd','systemd-systemctl-native','',d)}"
-PACKAGE_WRITE_DEPS_append = " perl insserv"
+PACKAGE_WRITE_DEPS_append = " insserv perl"
 
 do_patch() {
 }

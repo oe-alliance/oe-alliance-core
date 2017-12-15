@@ -2,6 +2,9 @@ RPROVIDES_${PN} += "${BPN}-inittab"
 RCONFLICTS_${PN} += "${BPN}-inittab"
 RREPLACES_${PN} += "${BPN}-inittab"
 
+DEPENDS += "startpar"
+RDEPENDS_${PN} += "startpar ${BPN}-utils ${BPN}-core"
+
 RDEPENDS_sysv-rc += "perl"
 
 #FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
