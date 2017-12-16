@@ -48,6 +48,7 @@ PROVIDES += "virtual/telnetd"
 RPROVIDES_${PN}-telnetd += "telnetd"
 
 do_install_append() {
+    ln -s /sbin/ip ${D}/bin/ip
     if grep "CONFIG_CROND=y" ${B}/.config; then
        mv ${D}${sysconfdir}/init.d/${BPN}-cron ${D}${sysconfdir}/init.d/crond.${BPN}
     fi
