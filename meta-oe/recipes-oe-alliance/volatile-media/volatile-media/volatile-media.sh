@@ -1,12 +1,12 @@
 #! /bin/sh
 ### BEGIN INIT INFO
 # Provides:          media
-# Required-Start:    checkfs checkroot-bootclean
+# Required-Start:    
 # Required-Stop:
 # Default-Start:     S
 # Default-Stop:
-# X-Start-Before:    mountall
-# Short-Description: Mounts and populates /media
+# X-Start-Before:    udev mountall
+# Short-Description: Mounts and populates /media.
 # Description:       Mounts a tmpfs over /media and
 #                    creates mount points according
 #                    to /etc/fstab entries.
