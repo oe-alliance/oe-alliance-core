@@ -1,6 +1,8 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
-inherit insserv
+RDEPENDS_${PN} += "ifupdown"
 
-INITSCRIPT_NAMES_${PN} = "networking"
-INITSCRIPT_PARAMS = ""
+do_install_append() {
+	install -d ${D}${base_bindir}
+	ln -s /bin/false ${D}/bin/init_is_upstart
+}
