@@ -43,9 +43,16 @@ IMAGE_INSTALL = " \
     ", d)} \
     "
 
+rootfs_timestamp() {
+    date -u '+%Y-%m-%d %H:%M:%S' > ${IMAGE_ROOTFS}/etc/fake-hwclock.data
+}
+
 export IMAGE_BASENAME = "openatv-image"
+IMAGE_LINGUAS = "de-de es-es fr-fr it-it nl-nl pt-pt"
 IMAGE_LINGUAS = ""
 
 IMAGE_FEATURES += "package-management"
 
 inherit image
+
+ROOTFS_POSTPROCESS_COMMAND += "rootfs_timestamp; "
