@@ -3,6 +3,11 @@
 mkdir -p /tmp
 #LOG='/etc/mdev/mdev-mount.log'
 
+# (e)udev compatibility
+[[ -z $MDEV ]] && MDEV=$(basename $DEVNAME)
+
+BLACKLISTED="@BLACKLISTED@"
+FIRST_MEDIA="hdd"
 
 ## device information log
 #echo  >> $LOG
@@ -44,10 +49,12 @@ case $ACTION in
 			exit 0
 		fi
 		DEVCHECK=`expr substr $MDEV 1 7`
-		# blacklisted sf4008
-		if [ $DEVCHECK == "mmcblk0" ] ; then
-			exit 0
-		fi
+		# blacklisted devices
+		for black in $BLACKLISTED; do
+			if [ "$DEVCHECK" == "$black" ] ; then
+				exit 0
+			fi
+		done
 		DEVCHECK=`expr substr $MDEV 1 6`
 		if [ "${DEVCHECK}" == "mmcblk" ] ; then
 			DEVBASE=`expr substr $MDEV 1 7`
@@ -168,6 +175,10 @@ case $ACTION in
 				elif [ "$MODEL" == "MS/MS-Pro       " ]; then
 					DEVICETYPE="mmc1"
 				elif [ "$MODEL1" == "SD	            " ]; then
+					DEVICETYPE="mmc1"
+				elif [ "$MODEL1" == "SD              " ]; then
+					DEVICETYPE="mmc1"
+				elif [ "$MODEL1" == "SD" ]; then
 					DEVICETYPE="mmc1"
 				else
 					#echo "[mdev-mount.sh] USB device found" >> $LOG

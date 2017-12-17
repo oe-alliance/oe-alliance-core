@@ -1,0 +1,3 @@
+# Uncomment to set clock even if saved value appears to be in the past
+#FORCE=force
+

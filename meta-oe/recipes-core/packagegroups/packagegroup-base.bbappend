@@ -48,3 +48,7 @@ RDEPENDS_packagegroup-base-nfs += "\
 
 RDEPENDS_packagegroup-base-zeroconf += "\
     libnss-llmnr"
+
+RDEPENDS_packagegroup-base += "\
+    coreutils-truefalse \
+    fake-hwclock"
