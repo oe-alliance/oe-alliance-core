@@ -9,6 +9,7 @@ SRC_URI += "file://editor.sh"
 SRC_URI += "file://locale.sh"
 SRC_URI += "file://terminfo.sh"
 SRC_URI += "file://mount-helper.sh"
+SRC_URI += "file://00-media.rules"
 
 hostname = "${MACHINEBUILD}"
 
@@ -21,7 +22,8 @@ do_install_append() {
     rm -rf ${D}/media/*
     rm -fr ${D}/tmp
     mkdir ${D}/media/net
-    install -d ${D}${sysconfdir}/udev
+    install -d ${D}${sysconfdir}/udev/rules.d
+    install -m 0644 ${WORKDIR}/00-media.rules        ${D}${sysconfdir}/udev/rules.d
     install -m 0755 ${WORKDIR}/mount-helper.sh       ${D}${sysconfdir}/udev
     install -d ${D}${sysconfdir}/profile.d
     install -m 0644 ${WORKDIR}/editor.sh   ${D}${sysconfdir}/profile.d/editor.sh
