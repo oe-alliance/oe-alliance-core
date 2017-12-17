@@ -1,5 +1,4 @@
-PR .= ".36"
-PACKAGE_ARCH = "${MACHINE_ARCH}"
+PR .= ".37"
 
 SRC_URI += " \
             file://mount_single_uuid.patch \
@@ -7,7 +6,6 @@ SRC_URI += " \
             file://more_BUILD_BUG_ON.patch \
             file://add_ip_neigh.patch \
             file://use_ipv6_when_ipv4_unroutable.patch \
-            file://mdev-mount.sh \
             file://telnetd \
             file://inetd \
             file://inetd.conf \
@@ -66,8 +64,7 @@ do_install_append() {
 	install -m 0755 ${WORKDIR}/telnetd ${D}${sysconfdir}/init.d/telnetd.${BPN}
 	sed -i "s:/usr/sbin/:${sbindir}/:" ${D}${sysconfdir}/init.d/telnetd.${BPN}
     fi
-    install -d ${D}${sysconfdir}/mdev
-    install -m 0755 ${WORKDIR}/mdev-mount.sh ${D}${sysconfdir}/mdev
+    rm -rf ${D}${sysconfdir}/mdev
     install -m 0755 ${WORKDIR}/vi.sh ${D}${base_bindir}/vi.sh
 }
 
