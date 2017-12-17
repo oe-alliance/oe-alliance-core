@@ -1,0 +1,11 @@
+### BEGIN INIT INFO
+# Provides:          umountroot
+# Required-Start:
+# Required-Stop:
+# Should-Stop:       halt reboot kexec
+# Default-Start:
+# Default-Stop:      0 6
+# Short-Description: Mount the root filesystem read-only.
+### END INIT INFO
+
+exit 0

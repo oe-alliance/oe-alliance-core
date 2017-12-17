@@ -1,7 +1,7 @@
 #!/bin/bash
 ### BEGIN INIT INFO
 # Provides:          fastrestore
-# Required-Start:    bootmisc kmod
+# Required-Start:    bootmisc kmod bootlogo
 # Required-Stop:     
 # Should-Start:      platform-util
 # Should-stop:
@@ -20,6 +20,7 @@ do_panic() {
 	rm /media/*/images/config/noplugins 2>/dev/null || true
 	rm /media/*/images/config/settings 2>/dev/null || true
 	rm /media/*/images/config/plugins 2>/dev/null || true
+	echo "PANIC mode ... disabled settings restore and exitting."
 	exit 0
 }
 
@@ -47,6 +48,18 @@ get_restoremode() {
 	# if neither "plugins" nor "noplugins" are set, fall back to "slow", because "ask user" can not be done in a boot script
 	# "slow" takes precedence over "fast"/"turbo" if explicitely set
 	fast=$((settings & (plugins | noplugins) & ! slow))
+
+	text="Restoring "
+	if test $settings == 1; then text="$text settings"; fi
+	if test $plugins == 1; then text="$text and plugins"; fi
+	if test $fast == 0; then
+		text="$text after GUI start. Exit."
+	elif test $turbo == 1; then
+		text="$text in TURBO mode."
+	else
+		text="$text in FAST mode."
+	fi
+	echo "$text"
 }
 
 get_backupset() {
@@ -150,8 +163,10 @@ END
 
 restore_settings() {
 	echo >>$LOG
+	echo "Extracting saved settings from $backuplocation/enigma2settingsbackup.tar.gz"
 	echo "Extracting saved settings from $backuplocation/enigma2settingsbackup.tar.gz" >> $LOG
 	echo >>$LOG
+	[ $turbo -eq 1 ] && [ -e "${ROOTFS}etc/init.d/softcam" ] && ${ROOTFS}etc/init.d/softcam stop >/dev/null >&1
 	get_rightset
 	get_blacklist
 	busybox tar -C $ROOTFS -xzvf $backuplocation/enigma2settingsbackup.tar.gz ${BLACKLIST} >>$LOG 2>>$LOG
@@ -163,6 +178,7 @@ restore_settings() {
 
 restart_network() {
 	echo >>$LOG
+	echo "Restarting network"
 	echo "Restarting network" >>$LOG
 	echo >>$LOG
 	[ -e "${ROOTFS}etc/init.d/hostname.sh" ] && ${ROOTFS}etc/init.d/hostname.sh
@@ -173,28 +189,35 @@ restart_network() {
 restore_plugins() {
 	# Restore plugins ...
 	echo >>$LOG
+	echo "Re-installing previous plugins"
 	echo "Re-installing previous plugins" >> $LOG
 	echo >>$LOG
+	echo "Updating feeds ..."
 	echo "Updating feeds ..." >> $LOG
 	opkg update >>$LOG 2>>$LOG
 	echo >>$LOG
+	echo "Installing plugins from feeds ..."
 	echo "Installing plugins from feeds ..." >> $LOG
 	pkgs=$(<${ROOTFS}tmp/installed-list.txt)
 	opkg install $pkgs >>$LOG 2>>$LOG
 	echo >>$LOG
+	echo -n "Installing plugins from local media ..."
 	echo "Installing plugins from local media ..." >> $LOG
 	for i in hdd usb backup; do
 		if ls /media/${i}/images/ipk/*.ipk >/dev/null 2>/dev/null; then
 			echo >>$LOG
+			echo -n " ${i}"
 			echo "${i}:" >>$LOG
 			opkg install /media/${i}/images/ipk/*.ipk >>$LOG 2>>$LOG
 		fi
 	done
+	echo
 	echo >>$LOG
 }
 
 restart_services() {
 	echo >>$LOG
+	echo "Remounting media and restarting some services ..."
 	echo "Running in turbo mode ... remounting and restarting some services ..." >>$LOG
 	echo >>$LOG
 
@@ -211,8 +234,10 @@ restart_services() {
 	done
 	[ -e "${ROOTFS}etc/init.d/volatile-media.sh" ] && ${ROOTFS}etc/init.d/volatile-media.sh
 	echo >>$LOG
-	echo "Mounting all local filesystems ..." >>$LOG
-	mount -a -t nonfs,nfs4,smbfs,cifs,ncp,ncpfs,coda,ocfs2,gfs,gfs2,ceph -O no_netdev >>$LOG 2>>$LOG
+	#echo "Mounting all local filesystems ..." >>$LOG
+	#mount -a -t nonfs,nfs4,smbfs,cifs,ncp,ncpfs,coda,ocfs2,gfs,gfs2,ceph -O no_netdev >>$LOG 2>>$LOG
+	echo "Mounting all filesystems ..." >>$LOG
+	mount -a >>$LOG 2>>$LOG
 	mdev -s
 	[ -x /sbin/swapon ] && swapon -a 2>/dev/null
 	echo >>$LOG
@@ -222,6 +247,8 @@ restart_services() {
 	[ -e "${ROOTFS}etc/init.d/softcam" ] && nohup $(${ROOTFS}etc/init.d/softcam restart) >/dev/null >&1 &
 	echo >>$LOG
 }
+
+echo -n "Fastrestore started ... "
 
 [ -e /media/*/panic.update ] && do_panic
 

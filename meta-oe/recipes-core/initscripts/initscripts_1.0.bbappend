@@ -2,7 +2,7 @@ FILESEXTRAPATHS_prepend := "${THISDIR}/${P}:"
 
 INSANE_SKIP_${PN} = "file-rdeps"
 
-RDEPENDS_${PN}_append = " sdparm"
+RDEPENDS_${PN} += "sdparm"
 
 DEPENDS_append_class-target = " sysvinit update-rc.d insserv"
 PACKAGE_WRITE_DEPS_append = " ${@bb.utils.contains('DISTRO_FEATURES','systemd','systemd-systemctl-native','',d)}"
@@ -17,15 +17,16 @@ SRC_URI += "file://hotplug.sh \
             file://halt.default \
             file://rcS.default \
             file://tmpfs.default \
+            file://umountroot \
 "
 
 inherit insserv
 
 INITSCRIPT_NAMES_${PN} = "${@bb.utils.contains('TARGET_ARCH','arm','alignment.sh','',d)} \
-banner.sh sysfs.sh procps mountall.sh checkroot.sh devpts.sh hotplug.sh read-only-rootfs-hook.sh \
+banner.sh mountkernfs.sh procps mountall.sh checkroot.sh devpts.sh hotplug.sh read-only-rootfs-hook.sh \
 populate-volatile.sh dmesg.sh urandom hostname.sh bootmisc.sh \
 ${@bb.utils.contains('DISTRO','openatv','fastrestore','',d)} \
-sendsigs save-rtc.sh umountnfs.sh umountfs halt reboot mountnfs.sh rmnologin.sh"
+sendsigs umountnfs.sh umountfs umountroot halt reboot mountnfs.sh rmnologin.sh"
 
 do_install() {
 #
@@ -64,15 +65,15 @@ do_install() {
 	install -m 0755    ${WORKDIR}/sendsigs		${D}${sysconfdir}/init.d
 	install -m 0755    ${WORKDIR}/single		${D}${sysconfdir}/init.d
 	install -m 0755    ${WORKDIR}/umountnfs.sh	${D}${sysconfdir}/init.d
+	install -m 0755    ${WORKDIR}/umountroot	${D}${sysconfdir}/init.d
 	install -m 0755    ${WORKDIR}/urandom		${D}${sysconfdir}/init.d
 	sed -i ${D}${sysconfdir}/init.d/urandom -e 's,/var/,${localstatedir}/,g;s,/etc/,${sysconfdir}/,g'
 	install -m 0755    ${WORKDIR}/devpts.sh		${D}${sysconfdir}/init.d
 	install -m 0755    ${WORKDIR}/procps		${D}${sysconfdir}/init.d
 	install -m 0755    ${WORKDIR}/devpts		${D}${sysconfdir}/default
-	install -m 0755    ${WORKDIR}/sysfs.sh		${D}${sysconfdir}/init.d
+	install -m 0755    ${WORKDIR}/sysfs.sh		${D}${sysconfdir}/init.d/mountkernfs.sh
 	install -m 0755    ${WORKDIR}/populate-volatile.sh ${D}${sysconfdir}/init.d
 	install -m 0755    ${WORKDIR}/read-only-rootfs-hook.sh ${D}${sysconfdir}/init.d
-	install -m 0755    ${WORKDIR}/save-rtc.sh	${D}${sysconfdir}/init.d
 	install -m 0644    ${WORKDIR}/volatiles		${D}${sysconfdir}/default/volatiles/00_core
 	if [ ${@ oe.types.boolean('${VOLATILE_LOG_DIR}') } = True ]; then
 		echo "l root root 0755 /var/log /var/volatile/log" >> ${D}${sysconfdir}/default/volatiles/00_core

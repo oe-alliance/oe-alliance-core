@@ -1,9 +1,10 @@
-#!/bin/sh
+#! /bin/sh
 ### BEGIN INIT INFO
-# Provides:             volatile
-# Required-Start:       $local_fs
-# Required-Stop:      $local_fs
-# Default-Start:        S
+# Provides:          volatile
+# Required-Start:    checkroot
+# Required-Stop:
+# X-Start-Before:    urandom networking ifupdown
+# Default-Start:     S
 # Default-Stop:
 # Short-Description:  Populate the volatile filesystem
 ### END INIT INFO

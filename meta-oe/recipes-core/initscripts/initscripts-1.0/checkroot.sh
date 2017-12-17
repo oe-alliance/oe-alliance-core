@@ -26,6 +26,7 @@ exec 9< /etc/fstab
 rootmode=rw
 rootopts=rw
 rootcheck=$ENABLE_ROOTFS_FSCK
+[[ -z "$rootcheck" ]] && rootcheck=no
 swap_on_md=no
 devfs=
 while read fs mnt type opts dump pass junk <&9

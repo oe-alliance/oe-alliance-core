@@ -3,6 +3,7 @@
 # Provides:          urandom
 # Required-Start:    $local_fs $time
 # Required-Stop:     $local_fs
+# Should-Start:      volatile
 # Default-Start:     S
 # Default-Stop:      0 6
 # Short-Description: Save and restore random seed between restarts.
