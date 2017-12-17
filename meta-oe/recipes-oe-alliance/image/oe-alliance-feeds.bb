@@ -106,6 +106,7 @@ RDEPENDS_${PN} = " \
     pyload \
     python-attr \
     python-attrs \
+    python-bluetool \
     python-circuits \
     python-circuits-bricks \
     python-cfscrape \

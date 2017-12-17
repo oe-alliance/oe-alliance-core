@@ -3,7 +3,6 @@ FILESEXTRAPATHS_prepend := "${THISDIR}/${P}:"
 # Remove acl, cups etc. support.
 PACKAGECONFIG_remove = "acl cups"
 
-
 SAMBA4_AUTH_MODULES="auth_wbc,auth_server,auth_netlogond,auth_script,auth_samba4"
 SAMBA4_IDMAP_MODULES="idmap_ad,idmap_rid,idmap_adex,idmap_hash,idmap_tdb2"
 SAMBA4_PDB_MODULES="${@bb.utils.contains('PACKAGECONFIG', 'ldap', 'pdb_ldap,', '', d)}pdb_ads,pdb_wbc_sam,pdb_samba4"
@@ -17,15 +16,13 @@ SAMBA4_VFS_MODULES_STATIC="vfs_default,vfs_aio_pthread"
 SAMBA4_MODULES_STATIC="${SAMBA4_AUTH_MODULES_STATIC},${SAMBA4_PDB_MODULES_STATIC},${SAMBA4_VFS_MODULES_STATIC}"
 
 EXTRA_OECONF += " \
-                 --without-profiling-data \
-                 --with-sockets-dir=${localstatedir}/run \
-                 --with-logfilebase=${localstatedir}/log \
                  --nopyc \
                  --with-static-modules=${SAMBA4_MODULES_STATIC} \
                 "
-#EXTRA_OECONF_remove = "--with-cluster-support"
-EXTRA_OECONF_remove = "--with-profiling-data"
-EXTRA_OECONF_remove = "--with-sockets-dir=${localstatedir}/run/samba"
+EXTRA_OECONF_remove = "--with-piddir=/run"
+EXTRA_OECONF_remove = "--with-sockets-dir=/run/samba"
+EXTRA_OECONF_remove = "--with-privatedir=/run/samba"
+EXTRA_OECONF_remove = "--with-logfilebase=/run/samba"
 
 # Remove unused, add own config, init script
 SRC_URI += " \
@@ -45,6 +42,10 @@ SRC_URI += " \
 
 do_install_prepend() {
 	mkdir -p ${D}${sysconfdir}/sudoers.d
+}
+
+do_configure_prepend() {
+	perl -i -pe 's#lp_private_dir#lp_pid_directory#' ${S}/source3/lib/messages.c
 }
 
 do_install_append() {

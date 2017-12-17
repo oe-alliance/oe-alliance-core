@@ -1,5 +1,3 @@
-PACKAGE_ARCH = "${MACHINE_ARCH}"
-
 SRC_URI += " \
             file://mount_single_uuid.patch \
             file://use_ipv6_when_ipv4_unroutable.patch \
@@ -73,6 +71,7 @@ do_install_append() {
             rm ${D}${sysconfdir}/init.d/inetd.${BPN} || true
         fi
     fi
+    rm -rf ${D}${sysconfdir}/mdev
     install -m 0755 ${WORKDIR}/vi.sh ${D}${base_bindir}/vi.sh
     rm -rf ${D}${sysconfdir}/mdev 2>/dev/null || true
 }
