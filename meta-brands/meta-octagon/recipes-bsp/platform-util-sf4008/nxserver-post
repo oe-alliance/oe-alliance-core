@@ -1,0 +1,6 @@
+#!/bin/sh
+
+while [ ! -c /dev/fb0 ]; do
+   usleep 100000
+done
+usleep 2000000
