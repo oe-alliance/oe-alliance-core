@@ -11,7 +11,7 @@ DEPENDS = "tslib mpfr gmp"
 SRCREV = "${AUTOREV}"
 PV = "${IMAGE_VERSION}+gitr${SRCPV}"
 PKGV = "${IMAGE_VERSION}+gitr${GITPKGV}"
-PR = "r30"
+PR = "r31"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -54,7 +54,7 @@ THIRDPARTY_PLUGINS = " \
     ${@bb.utils.contains("TARGET_ARCH", "arm", "enigma2-plugin-extensions-isettinge2-3.3.9-oe2.0-all-arm.ipk" , "", d)} \
     enigma2-plugin-extensions-kicker_3.5rc10_all.ipk \
     enigma2-plugin-extensions-kino_1.7rc4_all.ipk \
-    enigma2-plugin-extensions-livefootball_6.1_all.ipk \
+    enigma2-plugin-extensions-livefootball_7.1_all.ipk \
     enigma2-plugin-extensions-mediainfo_3.0.2_all.ipk \
     enigma2-plugin-extensions-mediaportal_all.ipk \
     enigma2-plugin-extensions-moviebrowser_3.7rc1_all.ipk \
@@ -64,7 +64,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-opkg-tools_1.3_mipsel.ipk \
     enigma2-plugin-extensions-oscamstatusview_1.0rc1_all.ipk \
     enigma2-plugin-extensions-piconmanager_2.2-20150329-r0_all.ipk \
-    enigma2-plugin-extensions-piconsupdater_0.3.6_mips32el.ipk \
+    enigma2-plugin-extensions-piconsupdater_0.3.7_mips32el.ipk \
     enigma2-plugin-extensions-picturecenterfs_8.16_all.ipk \
     enigma2-plugin-extensions-planerfs_7.19_all.ipk \
     enigma2-plugin-extensions-pluginspanel_1.0_r01_all.ipk \
@@ -85,7 +85,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-tmbd_8.2rc1_all.ipk \
     enigma2-plugin-extensions-translator_1.1rc1_all.ipk \
     enigma2-plugin-extensions-transmission_2.92_all.ipk \
-    enigma2-plugin-extensions-tsmedia_11.6_all.ipk \
+    enigma2-plugin-extensions-tsmedia_12.1_all.ipk \
     enigma2-plugin-extensions-tstube_1.2_all.ipk \
     enigma2-plugin-extensions-tvspielfilm_6.5rc3_all.ipk \
     enigma2-plugin-extensions-verkehrsinfo_1.2rc1_all.ipk \
@@ -93,7 +93,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-vhannibalautosettings_1.1_mips32el.ipk \
     enigma2-plugin-extensions-vuplusforum_0.8rc2_all.ipk \
     enigma2-plugin-extensions-webmedia_14.0_r0_all.ipk \
-    enigma2-plugin-extensions-webradiofs_16.00_all.ipk \
+    enigma2-plugin-extensions-webradiofs_16.02_all.ipk \
     enigma2-plugin-extensions-wikipedia_2.3rc2_all.ipk \
     enigma2-plugin-extensions-wwech_1.03_all.ipk \
     enigma2-plugin-extensions-xbmcaddons_8.1_r0_all.ipk \
