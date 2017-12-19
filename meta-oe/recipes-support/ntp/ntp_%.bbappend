@@ -1,6 +1,6 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
-PR .= ".1"
+PR .= ".2"
 
 do_install_append() {
 	# Only invoke hwclock if it is executable ...
@@ -10,3 +10,10 @@ do_install_append() {
 	#perl -i -pe 's:(^\($|^\)\s+?\&$)::g' ${D}/usr/bin/ntpdate-sync
 }
 
+pkg_postinst_ntpdate() {
+    if ! grep -q -s ntpdate $D/var/spool/cron/crontabs/root; then
+        echo "adding crontab"
+        test -d $D/var/spool/cron/crontabs || mkdir -p $D/var/spool/cron/crontabs
+        echo "30 * * * *    ${bindir}/ntpdate-sync silent" >> $D/var/spool/cron/crontabs/root
+    fi
+}
