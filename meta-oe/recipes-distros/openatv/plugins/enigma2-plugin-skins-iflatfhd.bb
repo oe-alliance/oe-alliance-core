@@ -6,9 +6,9 @@ require conf/license/license-gplv2.inc
 inherit gitpkgv allarch
 
 SRCREV = "${AUTOREV}"
-PV = "5.3+git${SRCPV}"
-PKGV = "5.3+git${GITPKGV}"
-VER="5.3"
+PV = "5.6+git${SRCPV}"
+PKGV = "5.6+git${GITPKGV}"
+VER="5.6"
 
 SRC_URI="git://github.com/openatv/iflat.git;protocol=git"
 
