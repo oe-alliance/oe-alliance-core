@@ -2,11 +2,11 @@ inherit image_types
 
 IMAGE_TYPEDEP_dinobotemmc = "ext4"
 
-IMAGE_DEPENDS_dinobotemmc = " \
-    parted-native \
-    dosfstools-native \
-    mtools-native \
-    virtual/kernel \
+do_image_dinobotemmc[depends]  = " \
+    parted-native:do_populate_sysroot \
+    dosfstools-native:do_populate_sysroot \
+    mtools-native:do_populate_sysroot \
+    virtual/kernel:do_populate_sysroot \
     "
 
 GPT_OFFSET = "0"
