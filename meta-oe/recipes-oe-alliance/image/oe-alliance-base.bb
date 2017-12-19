@@ -35,6 +35,7 @@ RDEPENDS_${PN} = "\
     fakelocale \
     libavahi-client \
     libcrypto-compat-0.9.7 \
+    libcrypto-compat-1.0.0 \
     llmnrd \
     modutils-loadscript \
     ntpdate \
