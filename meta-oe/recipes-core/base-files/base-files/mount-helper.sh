@@ -70,7 +70,7 @@ case $ACTION in
 		fi
 		# check for full-disk partition
 		if [ "${DEVBASE}" == "${MDEV}" ] ; then
-			if [ -d /sys/block/${DEVBASE}/${DEVBASE}1 ] ; then
+			if [ -d /sys/block/${DEVBASE}/${DEVBASE}1 -o -d /sys/block/${DEVBASE}/${DEVBASE}p1 ] ; then
 				# Partition detected, just tell and quit
 				notify
 				exit 0
