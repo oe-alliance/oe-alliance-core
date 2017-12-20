@@ -365,7 +365,7 @@ MACHINE_FEATURES += "3dtv alsa hdmicec switchoff textlcd ci skins1080 \
     ${@bb.utils.contains('MACHINEBUILD', 'fusionhdse', 'fastscan dvb-c' , '', d)} \
     ${@bb.utils.contains('MACHINEBUILD', 'purehd', 'fastscan dvb-c' , '', d)} \
     ${@bb.utils.contains('MACHINEBUILD', 'purehdse', 'fastscan dvb-c' , '', d)} \
-    ${@bb.utils.contains('MACHINEBUILD', 'tmnanom3', 'fan fastscan dvb-c' , '', d)} \
+    ${@bb.utils.contains('MACHINEBUILD', 'tmnanom3', 'fastscan dvb-c' , '', d)} \
     ${@bb.utils.contains('MACHINEBUILD', 'tmnanose', 'fan' , '', d)} \
     ${@bb.utils.contains('MACHINEBUILD', 'tmnanoseplus', 'fan' , '', d)} \
     ${@bb.utils.contains('MACHINEBUILD', 'tmnanose', 'fan' , '', d)} \
