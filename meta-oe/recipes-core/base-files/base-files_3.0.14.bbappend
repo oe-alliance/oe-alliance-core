@@ -29,7 +29,7 @@ do_install_append() {
     install -m 0644 ${WORKDIR}/terminfo.sh ${D}${sysconfdir}/profile.d/terminfo.sh
 
     # Inject machine specific blacklists into mount-helper:
-    export BLACKLISTED=$(echo -e ${MTD_BLACK}) ; perl -i -pe 's:(\@BLACKLISTED\@):'${BLACKLISTED}':s' ${D}${sysconfdir}/udev/mount-helper.sh
+    perl -i -pe 's:(\@BLACKLISTED\@):${MTD_BLACK}:s' ${D}${sysconfdir}/udev/mount-helper.sh
 
     # For machines that should mount their boot partition, inject it (Set MTD_BOOTFS and MACHINE_FEATURES+="mountboot" in machine config!
     if ${@bb.utils.contains('MACHINE_FEATURES','mountboot','true','false',d)}; then
