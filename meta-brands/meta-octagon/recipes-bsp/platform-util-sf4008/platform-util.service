@@ -1,0 +1,13 @@
+[Unit]
+Description=Starting  platform-util
+Requires=systemd-modules-load.service
+After=systemd-modules-load.service
+
+[Service]
+ExecStart=/usr/bin/nxserver
+ExecStartPost=/usr/bin/nxserver-post
+Type=oneshot
+
+[Install]
+WantedBy=multi-user.target
+

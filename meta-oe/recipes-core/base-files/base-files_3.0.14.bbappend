@@ -1,5 +1,7 @@
 PACKAGE_ARCH = "${MACHINEBUILD}"
 
+RDEPENDS_${PN} += " update-rc.d initscripts"
+
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 FILESEXTRAPATHS_prepend := "${THISDIR}/${DISTRO_NAME}:"
 FILESEXTRAPATHS_prepend := "${THISDIR}/${MACHINE}:"
