@@ -116,6 +116,7 @@ RDEPENDS_${PN} = " \
     python-ipaddress \
     python-js2py \
     python-mechanize \
+    python-netifaces \
     python-pyasn1-modules \
     python-requests \
     python-service-identity \

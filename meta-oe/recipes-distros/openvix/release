@@ -45,8 +45,7 @@ openvix: release 5.0.015
 openvix: release 5.0.016
 openvix: release 5.0.017
 openvix: release 5.1.002
-<<<<<<< HEAD
-=======
 openvix: release 5.1.003
 openvix: release 5.1.004
->>>>>>> 609d53d3df24e564847b4992606d6143d93fd1e9
+openvix: release 5.1.005
+openvix: release 5.1.006

@@ -1,0 +1,26 @@
+#!/bin/sh
+
+### BEGIN INIT INFO
+# Provides:          hwclock
+# Required-Start:    kmod bootmisc
+# Required-Stop:     
+# Should-Start:      platform-util
+# Should-Stop:       
+# Default-Start:     S
+# Default-Stop:      
+# Short-Description: Restore the front panel pseudo RTC time
+# Description:       
+### END INIT INFO
+
+set -e
+
+case "${1:-}" in
+  start)
+        echo "Starting stb hwclock: loading system time."
+        stb-hwclock load ;;
+
+  *)
+        echo "Usage: ${0:-} {start}" >&2
+        exit 1
+        ;;
+esac
