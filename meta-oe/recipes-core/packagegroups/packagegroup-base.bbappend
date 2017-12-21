@@ -1,4 +1,4 @@
-PR .= ".5"
+PR .= ".6"
 
 PACKAGES += " \
             ${@bb.utils.contains("DISTRO_FEATURES", "appletalk", "packagegroup-base-appletalk", "", d)} \
@@ -52,4 +52,5 @@ RDEPENDS_packagegroup-base-zeroconf += "\
 
 RDEPENDS_packagegroup-base += "\
     coreutils-truefalse \
+    stb-hwclock \
     fake-hwclock"

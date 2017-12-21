@@ -1,0 +1,44 @@
+#!/bin/sh
+#
+# Trivial script to load/save current contents of the kernel clock
+# from/to the pseudo RTC in STB front panel.
+#
+# License: GPLv2, see COPYING
+
+COMMAND=$1
+if [ "$COMMAND"x = ""x ] ; then
+    COMMAND="load"
+fi
+
+FORCE=false
+case $COMMAND in
+    -s|--hctosys)
+        # Running as "hwclock" replacement
+        FORCE=true
+        ;;
+esac
+
+case $COMMAND in
+    save|-w|--systohc)
+        NTP_SEC=$(date -u '+%s')
+        if echo $NTP_SEC > /proc/stb/fp/rtc 2>/dev/null; then
+            echo "Current system time has been written into FP pseudo RTC."
+        fi
+        ;;
+    load|-s|--hctosys)
+        NOW_SEC=$(date -u '+%s')
+        if RTC_SEC=$(cat /proc/stb/fp/rtc 2>/dev/null); then
+            if $FORCE || [ $NOW_SEC -le $RTC_SEC ]; then
+                echo "FP pseudo RTC is ahead of current time or using force, advancing to front panel time."
+                RTCTIME="$(date -u '+%Y-%m-%d %H:%M:%S' -d @$RTC_SEC)"
+                date -u -s "$RTCTIME"
+            fi
+        fi
+        ;;
+    *)
+        echo $0: Unknown command $COMMAND
+        exit 1
+        ;;
+esac
+
+
