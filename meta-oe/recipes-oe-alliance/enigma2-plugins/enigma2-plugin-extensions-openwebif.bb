@@ -6,13 +6,10 @@ PACKAGE_ARCH = "all"
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
-BRANCH="master"
-BRANCH_openatv="responsive"
-BRANCH_openhdf="responsive"
-BRANCH_openspa="responsive"
-BRANCH_opendroid="responsive"
-BRANCH_openvix="responsive"
-BRANCH_openbh="responsive"
+BRANCH="responsive"
+BRANCH_egami="master"
+BRANCH_openeight="master"
+BRANCH_opennfr="master"
 
 DEPENDS = "python-cheetah-native"
 RDEPENDS_${PN} = "\

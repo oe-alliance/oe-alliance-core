@@ -366,12 +366,11 @@ MACHINE_FEATURES += "3dtv alsa hdmicec switchoff textlcd ci skins1080 \
     ${@bb.utils.contains('MACHINEBUILD', 'purehd', 'fastscan dvb-c' , '', d)} \
     ${@bb.utils.contains('MACHINEBUILD', 'purehdse', 'fastscan dvb-c' , '', d)} \
     ${@bb.utils.contains('MACHINEBUILD', 'tmnanom3', 'fastscan dvb-c' , '', d)} \
-    ${@bb.utils.contains('MACHINEBUILD', 'tmnanose', 'fan' , '', d)} \
-    ${@bb.utils.contains('MACHINEBUILD', 'tmnanoseplus', 'fan' , '', d)} \
-    ${@bb.utils.contains('MACHINEBUILD', 'tmnanose', 'fan' , '', d)} \
-    ${@bb.utils.contains('MACHINEBUILD', 'tmnanosecombo', 'fan' , '', d)} \
+    ${@bb.utils.contains('MACHINEBUILD', 'tmnanoseplus', 'fan fastscan dvb-c' , '', d)} \
+    ${@bb.utils.contains('MACHINEBUILD', 'tmnanosecombo', 'fastscan dvb-c' , '', d)} \
     ${@bb.utils.contains('MACHINEBUILD', 'force2plushv', 'fastscan dvb-c' , '', d)} \
     ${@bb.utils.contains('MACHINEBUILD', 'tmnanosem2plus', 'fan fastscan dvb-c' , '', d)} \
+    ${@bb.utils.contains('MACHINEBUILD', 'tmnanosem2', 'fan fastscan dvb-c' , '', d)} \   
     ${@bb.utils.contains('MACHINEBUILD', 'tmtwin4k', 'fan fastscan dvb-c' , '', d)} \
     ${@bb.utils.contains('MACHINEBUILD', 'revo4k', 'fastscan dvb-c' , '', d)} \
     ${@bb.utils.contains('MACHINEBUILD', 'galaxy4k', 'fastscan dvb-c' , '', d)} \
