@@ -1,6 +1,5 @@
 #!/bin/sh
 
-mkdir -p /tmp
 #LOG='/etc/mdev/mdev-mount.log'
 
 # (e)udev compatibility
@@ -131,7 +130,7 @@ case $ACTION in
 							# Remove mountpoint not being used
 							if [ -z "`grep $MOUNTPOINT /proc/mounts`" ] ; then
 								find $MOUNTPOINT -type d -delete
-								rmdir $MOUNTPOINT
+								[ -d $MOUNTPOINT ] && rmdir $MOUNTPOINT
 							fi
 							if ! mkdir $MOUNTPOINT ; then
 								MOUNTPOINT="/media/$TEMPDEV1"
@@ -141,7 +140,7 @@ case $ACTION in
 								if ! mount.exfat ${TEMPDEV} "${MOUNTPOINT}" ; then
 									#echo "[mdev-mount.sh] mount failed 1" >> $LOG
 									find "${MOUNTPOINT}" -type d -delete
-									rmdir "${MOUNTPOINT}"
+									[ -d $MOUNTPOINT ] && rmdir "${MOUNTPOINT}"
 								fi
 							fi
 							#echo "[mdev-mount.sh] mounted $MDEV on $MOUNTPOINT (swap complete)" >> $LOG
@@ -221,7 +220,7 @@ case $ACTION in
 			if [ -z "`grep $MOUNTPOINT /proc/mounts`" ] ; then
 				#echo "[mdev-mount.sh] rmdir $MOUNTPOINT" >> $LOG
 				find $MOUNTPOINT  -type d -delete
-				rmdir $MOUNTPOINT
+				[ -d $MOUNTPOINT ] && rmdir $MOUNTPOINT
 			fi
 			if ! mkdir $MOUNTPOINT ; then
 				#echo "[mdev-mount.sh] mkdir $MOUNTPOINT failed, using /media/$MDEV" >> $LOG
@@ -232,7 +231,7 @@ case $ACTION in
 				if ! mount.exfat /dev/$MDEV "${MOUNTPOINT}" ; then
 					#echo "[mdev-mount.sh] mount failed 2" >> $LOG
 					find "${MOUNTPOINT}" -type d -delete
-					rmdir "${MOUNTPOINT}"
+					[ -d $MOUNTPOINT ] && rmdir "${MOUNTPOINT}"
 				fi
 			fi
 			#echo "[mdev-mount.sh] mounted $MDEV on $MOUNTPOINT" >> $LOG
@@ -245,7 +244,7 @@ case $ACTION in
 		fi
 		umount $MOUNTPOINT || umount /dev/$MDEV
 		find $MOUNTPOINT  -type d -delete
-		rmdir $MOUNTPOINT
+		[ -d $MOUNTPOINT ] && rmdir $MOUNTPOINT
 		#echo "[mdev-mount.sh] umounted $MOUNTPOINT" >> $LOG
 		;;
 	*)
@@ -255,3 +254,4 @@ case $ACTION in
 esac
 
 notify
+
