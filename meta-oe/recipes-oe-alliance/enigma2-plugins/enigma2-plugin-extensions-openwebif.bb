@@ -10,6 +10,7 @@ BRANCH="responsive"
 BRANCH_egami="master"
 BRANCH_openeight="master"
 BRANCH_opennfr="master"
+BRANCH_openhdf="master"
 
 DEPENDS = "python-cheetah-native"
 RDEPENDS_${PN} = "\
