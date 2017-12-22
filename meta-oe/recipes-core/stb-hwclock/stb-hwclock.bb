@@ -3,7 +3,7 @@ HOMEPAGE = ""
 LICENSE = "GPLv2"
 require conf/license/license-gplv2.inc
 
-PV = "1.0"
+PV = "1.1"
 
 SRC_URI = "file://stb-hwclock \
            file://stb-hwclock.init \
