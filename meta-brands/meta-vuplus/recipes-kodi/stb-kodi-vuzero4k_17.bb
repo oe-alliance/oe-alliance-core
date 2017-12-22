@@ -8,6 +8,8 @@ RPROVIDES_${PN} += "virtual/kodi"
 PROVIDES += "kodi"
 RPROVIDES_${PN} += "kodi"
 
+INSANE_SKIP_${PN} += "file-rdeps"
+
 EXTRA_OECONF += " \
     --with-platform=vuplus-cortexa15 \
     --with-ffmpeg=v3d \
