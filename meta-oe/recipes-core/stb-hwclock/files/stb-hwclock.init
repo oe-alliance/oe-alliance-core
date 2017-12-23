@@ -17,7 +17,8 @@ set -e
 case "${1:-}" in
   start)
         echo "Starting stb hwclock: loading system time."
-        stb-hwclock load ;;
+        stb-hwclock load & 
+        ;;
 
   *)
         echo "Usage: ${0:-} {start}" >&2
