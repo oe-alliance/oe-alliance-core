@@ -1,8 +1,13 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/${P}:"
 
-INSANE_SKIP_${PN} = "file-rdeps"
+CONFFILES_${PN}_remove = "${sysconfdir}/init.d/checkroot.sh"
 
-RDEPENDS_${PN} += "sdparm"
+# Build initscript-functions as dummy package only as shitquake refuses to fulfill the RDEPENDS for it.
+FILES_${PN}-functions = ""
+ALLOW_EMPTY_${PN}-functions = "1"
+
+# Try to convince shitquake to fulfill the dependency, but now it's non-fatal if shitquake doesn't
+RDEPENDS_${PN} += "sdparm initd-functions initscripts-functions"
 
 DEPENDS_append_class-target = " sysvinit update-rc.d insserv"
 PACKAGE_WRITE_DEPS_append = " ${@bb.utils.contains('DISTRO_FEATURES','systemd','systemd-systemctl-native','',d)}"
@@ -18,6 +23,12 @@ SRC_URI += "file://hotplug.sh \
             file://rcS.default \
             file://tmpfs.default \
             file://umountroot \
+"
+
+MASKED_SCRIPTS += " \
+            procps \
+            hotplug \
+            mountkernfs \
 "
 
 inherit insserv
