@@ -1,7 +1,7 @@
 #!/bin/bash
 ### BEGIN INIT INFO
 # Provides:          fastrestore
-# Required-Start:    bootmisc kmod bootlogo
+# Required-Start:    bootmisc kmod bootlogo $time
 # Required-Stop:     
 # Should-Start:      platform-util
 # Should-stop:
