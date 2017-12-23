@@ -1,7 +1,7 @@
 #!/bin/sh
 ### BEGIN INIT INFO
 # Provides:          bootmisc
-# Required-Start:    $remote_fs
+# Required-Start:    procps
 # Required-Stop:
 # Should-Start:      udev
 # Default-Start:     S
