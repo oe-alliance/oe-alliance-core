@@ -1,6 +1,6 @@
 IMAGE_CLASSES += "ceryon-emmc_image_multi"
 
-MACHINE_FEATURES += "qthbbtv"
+MACHINE_FEATURES += "qthbbtv qtstalker"
 DISTRO_FEATURES_remove = "directfb gtk-directfb"
 
 IMAGE_FSTYPES += "ceryon-emmc"
