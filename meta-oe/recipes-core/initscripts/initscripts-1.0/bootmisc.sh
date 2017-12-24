@@ -50,6 +50,11 @@ then
 	ln -sf /var/tmp/ /tmp
 fi
 
+# Debian networking doesn't bring up lo (as it never takes it down in the first place).
+# lo is brought up somewhere else on boot but not properly, so we need to forcibly bring it up.
+# This place is for the moment as good as any other for this.
+ifup --force lo
+
 #
 # Update dynamic library cache, but only if ld.so.conf is present
 #
