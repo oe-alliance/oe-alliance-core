@@ -1,0 +1,370 @@
+address_family inet6
+architecture linux
+
+method auto
+  description
+    This method may be used to define interfaces with automatically assigned
+    IPv6 addresses. Using this method on its own doesn't mean that RDNSS options
+    will be applied, too. To make this happen, *rdnssd* daemon must be installed,
+    properly configured and running.
+    If stateless DHCPv6 support is turned on, then additional network
+    configuration parameters such as DNS and NTP servers will be retrieved
+    from a DHCP server. Please note that on ifdown, the lease is not currently
+    released (a known bug).
+
+  options
+    privext int            -- Privacy extensions (RFC4941) (0=off, 1=assign, 2=prefer)
+    accept_ra int          -- Accept router advertisements (0=off, 1=on, 2=on+forwarding) [2]
+    dhcp int               -- Use stateless DHCPv6 (0=off, 1=on)
+  up
+    modprobe -q net-pf-10 > /dev/null 2>&1 || true # ignore failure.
+    -[[sysctl -q -e -w net.ipv6.conf.%iface/.//%.use_tempaddr=%privext%]]
+    -sysctl -q -e -w net.ipv6.conf.%iface/.//%.accept_ra=%accept_ra%
+    -sysctl -q -e -w net.ipv6.conf.%iface/.//%.autoconf=1
+    ip link set dev %iface% up
+    odhcp6c -Nnone -d -p /var/run/odhcp6c.%iface%.pid %iface% \
+        if (var_true("dhcp", ifd) && execable("/usr/bin/odhcp6c"))
+    dhclient -6 -S -pf /var/run/dhclient6.%iface%.pid -lf /var/lib/dhcp/dhclient6.%iface%.leases %iface% \
+        elsif (var_true("dhcp", ifd) && execable("/sbin/dhclient"))
+  down
+    kill -USR2 $(cat /var/run/odhcp6c.%iface%.pid) 2>/dev/null; kill -TERM $(cat /var/run/odhcp6c.%iface%.pid) 2>/dev/null \
+        if (execable("/usr/bin/odhcp6c"))
+    ip -6 addr flush dev %iface% scope global
+    ip link set dev %iface% down \
+		if (iface_is_link())
+
+method loopback
+  description
+    This method may be used to define the IPv6 loopback interface.
+  up
+    -ip link set dev %iface% up 2>/dev/null if (!iface_is_lo())
+    -ip addr add dev %iface% ::1 2>/dev/null if (!iface_is_lo())
+  down
+    -ip addr del dev %iface% ::1 2>/dev/null if (!iface_is_lo())
+    -ip link set dev %iface% down 2>/dev/null if (!iface_is_lo())
+
+method static
+  description
+    This method may be used to define interfaces with statically assigned
+    IPv6 addresses. By default, stateless autoconfiguration is disabled for
+    this interface.
+
+  options
+    address address        -- Address (colon delimited/netmask) *required*
+    netmask mask           -- Netmask (number of bits, eg 64)
+    gateway address        -- Default gateway (colon delimited)
+    media type             -- Medium type, driver dependent
+    hwaddress address      -- Hardware address
+    mtu size               -- MTU size
+    accept_ra int          -- Accept router advertisements (0=off, 1=on, 2=on+forwarding)
+    autoconf int           -- Perform stateless autoconfiguration (0=off, 1=on) [0]
+    privext int            -- Privacy extensions (RFC3041) (0=off, 1=assign, 2=prefer)
+    scope                  -- Address validity scope. Possible values: \
+                              global, site, link, host
+    preferred-lifetime int -- Time that address remains preferred []
+    dad-attempts           -- Number of attempts to settle DAD (0 to disable) [60]
+    dad-interval           -- DAD state polling interval in seconds [0.1]
+
+  conversion
+    hwaddress cleanup_hwaddress
+    preferred-lifetime set_preferred_lft
+    address (get_token / 1 "") =netmask?
+    address (get_token / 0 "")
+    gateway (if_set 0) =accept_ra?
+
+  up
+    modprobe -q net-pf-10 > /dev/null 2>&1 || true # ignore failure.
+    -[[sysctl -q -e -w net.ipv6.conf.%iface/.//%.use_tempaddr=%privext%]]
+    -[[sysctl -q -e -w net.ipv6.conf.%iface/.//%.accept_ra=%accept_ra%]]
+    -[[sysctl -q -e -w net.ipv6.conf.%iface/.//%.autoconf=%autoconf%]]
+    ip link set dev %iface% [[mtu %mtu%]] [[address %hwaddress%]] up
+    ip -6 addr add %address%[[/%netmask%]] [[scope %scope%]] dev %iface% [[preferred_lft %preferred-lifetime%]]
+    [[ ip -6 route add default via %gateway% dev %iface% ]]
+    /lib/ifupdown/settle-dad.sh if (execable("/lib/ifupdown/settle-dad.sh") && (var_true("dad-attempts", ifd)))
+
+  down
+    ip -6 addr flush dev %iface% scope global
+    ip link set dev %iface% down \
+		if (iface_is_link())
+
+method manual
+  description
+    This method may be used to define interfaces for which no configuration
+    is done by default.  Such interfaces can be configured manually by
+    means of *up* and *down* commands or /etc/network/if-*.d scripts.
+
+  up
+
+  down
+
+method dhcp
+  description
+    This method may be used to obtain network interface configuration via
+    stateful DHCPv6 with dhclient.  In stateful DHCPv6, the DHCP server is
+    responsible for assigning addresses to clients.
+
+  options
+    hwaddress address      -- Hardware address
+    accept_ra int          -- Accept router advertisements (0=off, 1=on, 2=on+forwarding) [1]
+    autoconf int           -- Perform stateless autoconfiguration (0=off, 1=on)
+
+  conversion
+    hwaddress cleanup_hwaddress
+
+  up
+    modprobe -q net-pf-10 > /dev/null 2>&1 || true # ignore failure.
+    -[[sysctl -q -e -w net.ipv6.conf.%iface/.//%.accept_ra=%accept_ra%]]
+    -[[sysctl -q -e -w net.ipv6.conf.%iface/.//%.autoconf=%autoconf%]]
+    ip link set dev %iface% [[address %hwaddress%]] up
+    odhcp6c -Ntry -t120 -d -p /var/run/odhcp6c.%iface%.pid %iface% \
+        if (execable("/usr/bin/odhcp6c"))
+    dhclient -6 -pf /var/run/dhclient6.%iface%.pid -lf /var/lib/dhcp/dhclient6.%iface%.leases %iface% \
+        elsif (execable("/sbin/dhclient"))
+
+  down
+    kill -USR2 $(cat /var/run/odhcp6c.%iface%.pid) 2>/dev/null; kill -TERM $(cat /var/run/odhcp6c.%iface%.pid) 2>/dev/null \
+        if (execable("/usr/bin/odhcp6c"))
+    dhclient -6 -r -pf /var/run/dhclient6.%iface%.pid -lf /var/lib/dhcp/dhclient6.%iface%.leases %iface% \
+        elsif (execable("/sbin/dhclient"))
+    ip link set dev %iface% down \
+		if (iface_is_link())
+
+method v4tunnel
+  description
+    This method may be used to setup an IPv6-over-IPv4 tunnel. It requires
+    the *ip* command from the *iproute* package.
+
+  options
+    address address       -- Address (colon delimited) *required*
+    netmask mask          -- Netmask (number of bits, eg 64) 
+    endpoint address      -- Address of other tunnel endpoint (IPv4 \
+                             dotted quad) *required*
+    local address         -- Address of the local endpoint (IPv4 \
+                             dotted quad)
+    gateway address       -- Default gateway (colon delimited)
+    ttl time              -- TTL setting
+    mtu size              -- MTU size
+    preferred-lifetime int -- Time that address remains preferred []
+
+  conversion
+    preferred-lifetime set_preferred_lft
+
+  up
+    modprobe -q net-pf-10 > /dev/null 2>&1 || true # ignore failure.
+    ip tunnel add %iface% mode sit remote %endpoint% [[local %local%]] \
+       [[ttl %ttl%]]
+    ip link set %iface% up [[mtu %mtu%]]
+    [[ ip addr add %address%[[/%netmask%]] dev %iface% [[preferred_lft %preferred-lifetime%]] ]]
+    [[ ip route add %gateway% dev %iface% ]]
+    [[ ip route add ::/0 via %gateway% dev %iface% ]]
+
+  down
+    ip tunnel del %iface%
+
+method 6to4
+  description
+    This method may be used to setup an 6to4 tunnel. It requires
+    the *ip* command from the *iproute* package.
+
+  options
+    local address         -- Address of the local endpoint (IPv4 \
+                             dotted quad) *required*
+    ttl time              -- TTL setting
+    mtu size              -- MTU size
+    preferred-lifetime int -- Time that address remains preferred []
+
+  conversion
+    local make_hex_address =hexaddress
+    preferred-lifetime set_preferred_lft
+
+  up
+    modprobe -q net-pf-10 > /dev/null 2>&1 || true # ignore failure.
+    ip tunnel add %iface% mode sit remote any local %local% \
+       [[ttl %ttl%]]
+    ip link set %iface% up [[mtu %mtu%]]
+    ip addr add 2002:%hexaddress%::1/16 dev %iface% [[preferred_lft %preferred-lifetime%]]
+    ip route add 2000::/3 via ::192.88.99.1 dev %iface%
+
+  down
+    ip -6 route flush dev %iface%
+    ip link set dev %iface% down
+    ip tunnel del %iface%
+
+
+architecture kfreebsd
+
+method loopback
+  description
+    This method may be used to define the IPv6 loopback interface.
+  up
+    ifconfig %iface% inet6 ::1 \
+	if (!iface_is_lo())
+  down
+    ifconfig %iface% down \
+	if (!iface_is_lo())
+
+method static
+  description
+    This method may be used to define interfaces with statically assigned
+    IPv6 addresses.
+
+  options
+    address address        -- Address (colon delimited) *required*
+    netmask mask           -- Netmask (number of bits, eg 64) *required*
+    gateway address        -- Default gateway (colon delimited)
+    media type             -- Medium type, driver dependent
+    hwaddress address      -- Hardware address
+    mtu size               -- MTU size
+
+  conversion
+    hwaddress cleanup_hwaddress
+
+  up
+    ifconfig %iface% [[media %media%]] [[link %hwaddress%]] [[mtu %mtu%]] up
+    ifconfig %iface% inet6 %address%/%netmask% alias
+    [[ route add -inet6 ::/0 %gateway% ]]
+
+  down
+    [[ route -n del -inet6 ::/0 2>&1 1>/dev/null || true ]]
+    [[ ifconfig %iface% inet6 %address% -alias ]]
+    ifconfig %iface% down
+
+method manual
+  description
+    This method may be used to define interfaces for which no configuration
+    is done by default.  Such interfaces can be configured manually by
+    means of *up* and *down* commands or /etc/network/if-*.d scripts.
+
+  up
+
+  down
+
+method auto
+  description
+    This method may be used to define interfaces with automatically assigned
+    IPv6 addresses. Using this method on its own doesn't mean that RDNSS options
+    will be applied, too. To make this happen, *rdnssd* daemon must be installed,
+    properly configured and running.
+    If stateless DHCPv6 support is turned on, then additional network
+    configuration parameters such as DNS and NTP servers will be retrieved
+    from a DHCP server. Please note that on ifdown, the lease is not currently
+    released (a known bug).
+
+  options
+    dhcp int               -- Use stateless DHCPv6 (0=off, 1=on)
+
+  conversion
+    hwaddress cleanup_hwaddress
+
+  up
+    ifconfig %iface% inet6 accept_rtadv up
+    odhcp6c -Nnone -d -p /var/run/odhcp6c.%iface%.pid %iface% \
+        if (var_true("dhcp", ifd) && execable("/usr/bin/odhcp6c"))
+    dhclient -6 -S -pf /var/run/dhclient6.%iface%.pid -lf /var/lib/dhcp/dhclient6.%iface%.leases %iface% \
+        elsif (var_true("dhcp", ifd) && execable("/sbin/dhclient"))
+
+  down
+    kill -USR2 $(cat /var/run/odhcp6c.%iface%.pid) 2>/dev/null; kill -TERM $(cat /var/run/odhcp6c.%iface%.pid) 2>/dev/null \
+        if (execable("/usr/bin/odhcp6c"))
+    ifconfig %iface% down
+
+
+
+method dhcp
+  description
+    This method may be used to obtain network interface configuration via
+    stateful DHCPv6 with dhclient.  In stateful DHCPv6, the DHCP server is
+    responsible for assigning addresses to clients.
+
+  options
+    hwaddress address      -- Hardware address
+
+  conversion
+    hwaddress cleanup_hwaddress
+
+  up
+    ifconfig %iface% [[link %hwaddress%]] up
+    odhcp6c -Ntry -t120 -d -p /var/run/odhcp6c.%iface%.pid %iface% \
+        if (execable("/usr/bin/odhcp6c"))
+    dhclient -6 -pf /var/run/dhclient6.%iface%.pid -lf /var/lib/dhcp/dhclient6.%iface%.leases %iface% \
+        elsif (execable("/sbin/dhclient"))
+
+  down
+    kill -USR2 $(cat /var/run/odhcp6c.%iface%.pid) 2>/dev/null; kill -TERM $(cat /var/run/odhcp6c.%iface%.pid) 2>/dev/null \
+        if (execable("/usr/bin/odhcp6c"))
+    dhclient -6 -r -pf /var/run/dhclient6.%iface%.pid -lf /var/lib/dhcp/dhclient6.%iface%.leases %iface% \
+        elsif (execable("/sbin/dhclient"))
+    ifconfig %iface% down
+
+architecture hurd
+
+method loopback
+  description
+    This method may be used to define the IPv6 loopback interface.
+  up
+    [[FIXME: Add proper commands here for ipv6]]
+  down
+    [[FIXME: Add proper commands here for ipv6]]
+
+method static
+  description
+    This method may be used to define interfaces with statically assigned
+    IPv6 addresses.
+
+  options
+    address address        -- Address (colon delimited) *required*
+    netmask mask           -- Netmask (number of bits, eg 64) *required*
+    gateway address        -- Default gateway (colon delimited)
+    media type             -- Medium type, driver dependent
+    hwaddress address      -- Hardware address  (Not yet supported)
+    mtu size               -- MTU size
+
+  conversion
+    hwaddress cleanup_hwaddress
+
+  up
+    [[FIXME: Add proper commands here for ipv6]]
+    [[Warning: Option media: %media% not yet supported]]
+    [[Warning: Option hwaddress: %hwaddress% not yet supported]]
+
+  down
+    [[FIXME: Add proper commands here for ipv6]]
+
+method manual
+  description
+    This method may be used to define interfaces for which no configuration
+    is done by default.  Such interfaces can be configured manually by
+    means of *up* and *down* commands or /etc/network/if-*.d scripts.
+
+  up
+
+  down
+
+method dhcp
+  description
+    This method may be used to obtain network interface configuration via
+    stateful DHCPv6 with dhclient.  In stateful DHCPv6, the DHCP server is
+    responsible for assigning addresses to clients.
+
+  options
+    hwaddress address      -- Hardware address (Not yet supported)
+
+  conversion
+    hwaddress cleanup_hwaddress
+
+  up
+    [[Warning: Option hwaddress: %hwaddress% not yet supported]]
+    inetutils-ifconfig --interface %iface% --up
+    odhcp6c -Ntry -t120 -d -p /var/run/odhcp6c.%iface%.pid %iface% \
+        if (execable("/usr/bin/odhcp6c"))
+    dhclient -6 -pf /var/run/dhclient6.%iface///.%.pid -lf /var/lib/dhcp/dhclient6.%iface///.%.leases %iface% \
+        elsif (execable("/sbin/dhclient"))
+
+  down
+    kill -USR2 $(cat /var/run/odhcp6c.%iface%.pid) 2>/dev/null; kill -TERM $(cat /var/run/odhcp6c.%iface%.pid) 2>/dev/null \
+        if (execable("/usr/bin/odhcp6c"))
+    dhclient -6 -r -pf /var/run/dhclient6.%iface///.%.pid -lf /var/lib/dhcp/dhclient6.%iface///.%.leases %iface% \
+        elsif (execable("/sbin/dhclient"))
+    inetutils-ifconfig --interface %iface% --down
+
+

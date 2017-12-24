@@ -1,0 +1,76 @@
+diff --git a/inet.defn b/inet.defn
+--- a/inet.defn	2017-12-24 13:00:19.532675164 +0100
++++ b/inet.defn	2017-12-24 13:57:43.465051598 +0100
+@@ -6,10 +6,10 @@
+     This method may be used to define the IPv4 loopback interface.
+ 
+   up
+-    ip link set dev %iface% up if (!iface_is_lo())
++    ip link set dev %iface% up if (iface_is_lo())
+ 
+   down
+-    ip link set dev %iface% down if (!iface_is_lo())
++    ip link set dev %iface% down if (iface_is_lo())
+ 
+ method static
+   description
+@@ -201,11 +201,11 @@
+ 
+   up
+     ifconfig %iface% 127.0.0.1 up \
+-	if (!iface_is_lo())
++	if (iface_is_lo())
+ 
+   down
+     ifconfig %iface% down \
+-	if (!iface_is_lo())
++	if (iface_is_lo())
+ 
+ method static
+   description
+@@ -360,11 +360,11 @@
+ 
+   up
+     inetutils-ifconfig --interface %iface% --address 127.0.0.1 --up \
+-	if (!iface_is_lo())
++	if (iface_is_lo())
+ 
+   down
+     inetutils-ifconfig --interface %iface% --down \
+-	if (!iface_is_lo())
++	if (iface_is_lo())
+ 
+ method static
+   description
+diff --git a/inet6.defn b/inet6.defn
+--- a/inet6.defn	2017-12-24 13:44:34.636410689 +0100
++++ b/inet6.defn	2017-12-24 13:57:16.001704617 +0100
+@@ -37,11 +37,11 @@
+   description
+     This method may be used to define the IPv6 loopback interface.
+   up
+-    -ip link set dev %iface% up 2>/dev/null if (!iface_is_lo())
+-    -ip addr add dev %iface% ::1 2>/dev/null if (!iface_is_lo())
++    -ip link set dev %iface% up 2>/dev/null if (iface_is_lo())
++    -ip addr add dev %iface% ::1 2>/dev/null if (iface_is_lo())
+   down
+-    -ip addr del dev %iface% ::1 2>/dev/null if (!iface_is_lo())
+-    -ip link set dev %iface% down 2>/dev/null if (!iface_is_lo())
++    -ip addr del dev %iface% ::1 2>/dev/null if (iface_is_lo())
++    -ip link set dev %iface% down 2>/dev/null if (iface_is_lo())
+ 
+ method static
+   description
+@@ -198,10 +198,10 @@
+     This method may be used to define the IPv6 loopback interface.
+   up
+     ifconfig %iface% inet6 ::1 \
+-	if (!iface_is_lo())
++	if (iface_is_lo())
+   down
+     ifconfig %iface% down \
+-	if (!iface_is_lo())
++	if (iface_is_lo())
+ 
+ method static
+   description

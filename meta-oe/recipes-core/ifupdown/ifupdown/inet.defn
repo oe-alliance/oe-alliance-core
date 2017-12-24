@@ -1,0 +1,505 @@
+address_family inet
+architecture linux
+
+method loopback
+  description
+    This method may be used to define the IPv4 loopback interface.
+
+  up
+    ip link set dev %iface% up if (!iface_is_lo())
+
+  down
+    ip link set dev %iface% down if (!iface_is_lo())
+
+method static
+  description
+    This method may be used to define Ethernet interfaces with statically
+    allocated IPv4 addresses.
+      
+  options
+    address address             -- Address (dotted quad/netmask) *required*
+    netmask mask                -- Netmask (dotted quad or CIDR)
+    broadcast broadcast_address -- Broadcast address (dotted quad, + or -) [+]
+    metric metric               -- Routing metric for default gateway (integer)
+    gateway address             -- Default gateway (dotted quad)
+    pointopoint address         -- Address of other end point (dotted quad). \
+                                   Note the spelling of "point-to".
+    hwaddress address           -- Link local address.
+    mtu size                    -- MTU size
+    scope                       -- Address validity scope. Possible values: \
+                                   global, link, host
+
+  conversion
+    hwaddress cleanup_hwaddress
+    address compute_v4_mask =netmask?
+    address compute_v4_addr
+    broadcast compute_v4_broadcast
+
+  up
+    ip addr add %address%[[/%netmask%]] [[broadcast %broadcast%]] \
+	[[peer %pointopoint%]] [[scope %scope%]] dev %iface% label %iface%
+    ip link set dev %iface% [[mtu %mtu%]] [[address %hwaddress%]] up
+
+    [[ ip route add default via %gateway% [[metric %metric%]] dev %iface% ]]
+
+  down
+    [[ ip route del default via %gateway% [[metric %metric%]] dev %iface% 2>&1 1>/dev/null || true ]]
+    ip -4 addr flush dev %iface% label %iface%
+    ip link set dev %iface% down \
+		if (iface_is_link())
+
+method manual
+  description
+    This method may be used to define interfaces for which no configuration
+    is done by default.  Such interfaces can be configured manually by
+    means of *up* and *down* commands or /etc/network/if-*.d scripts.
+
+  up
+
+  down
+
+method dhcp
+  description
+    This method may be used to obtain an address via DHCP with any of
+    the tools: dhclient, pump, udhcpc, dhcpcd.
+    (They have been listed in their order of precedence.)
+    If you have a complicated DHCP setup you should
+    note that some of these clients use their own configuration files
+    and do not obtain their configuration information via *ifup*.
+
+  options
+    hostname hostname       -- Hostname to be requested (pump, dhcpcd, udhcpc)
+    metric metric           -- Metric for added routes (dhclient)
+    leasehours leasehours   -- Preferred lease time in hours (pump)
+    leasetime leasetime     -- Preferred lease time in seconds (dhcpcd)
+    vendor vendor           -- Vendor class identifier (dhcpcd)
+    client client           -- Client identifier (dhcpcd)
+    hwaddress address       -- Hardware address.
+
+  conversion
+    hwaddress cleanup_hwaddress
+
+  up
+    [[ip link set dev %iface% address %hwaddress%]]
+    dhclient -v -pf /var/run/dhclient.%iface%.pid -lf /var/lib/dhcp/dhclient.%iface%.leases %iface% \
+	[[-e IF_METRIC=%metric%]] \
+        if (execable("/sbin/dhclient"))
+    dhclient3 -pf /var/run/dhclient.%iface%.pid -lf /var/lib/dhcp3/dhclient.%iface%.leases %iface% \
+	[[-e IF_METRIC=%metric%]] \
+        elsif (execable("/sbin/dhclient3"))
+    pump -i %iface% [[-h %hostname%]] [[-l %leasehours%]] \
+        elsif (execable("/sbin/pump") && mylinuxver() >= mylinux(2,1,100))
+    udhcpc -n -p /var/run/udhcpc.%iface%.pid -i %iface% [[-x hostname:%hostname%]] \
+        elsif (execable("/sbin/udhcpc") && mylinuxver() >= mylinux(2,2,0))
+    dhcpcd [[-h %hostname%]] [[-i %vendor%]] [[-I %client%]] \
+           [[-l %leasetime%]] %iface% \
+        elsif (execable("/sbin/dhcpcd"))
+
+  down
+    dhclient -v -r -pf /var/run/dhclient.%iface%.pid -lf /var/lib/dhcp/dhclient.%iface%.leases %iface% \
+        if (execable("/sbin/dhclient"))
+    dhclient3 -r -pf /var/run/dhclient.%iface%.pid -lf /var/lib/dhcp3/dhclient.%iface%.leases %iface% \
+        elsif (execable("/sbin/dhclient3"))
+    pump -i %iface% -r \
+        elsif (execable("/sbin/pump") && mylinuxver() >= mylinux(2,1,100))
+    kill -USR2 $(cat /var/run/udhcpc.%iface%.pid) 2>/dev/null; kill -TERM $(cat /var/run/udhcpc.%iface%.pid) 2>/dev/null \
+        elsif (execable("/sbin/udhcpc"))
+    dhcpcd -k %iface% \
+        elsif (execable("/sbin/dhcpcd"))
+
+    ip link set dev %iface% down \
+		if (iface_is_link())
+
+method bootp
+  description
+    This method may be used to obtain an address via bootp.
+
+  options
+    bootfile file  -- Tell the server to use /file/ as the bootfile.
+    server address -- Use the IP address /address/ to communicate with \
+                      the server.
+    hwaddr addr    -- Use /addr/ as the hardware address instead of \
+                      whatever it really is.
+
+  up
+    bootpc [[--bootfile %bootfile%]] --dev %iface% [[--server %server%]] \
+           [[--hwaddr %hwaddr%]] --returniffail --serverbcast
+
+  down
+    ip link set dev %iface% down \
+        if (execable("/sbin/ip") && iface_is_link())
+    ifconfig %iface% down \
+        elsif (1)
+
+method tunnel
+  description
+    This method is used to create GRE or IPIP tunnels. You need to have
+    the *ip* binary from the *iproute* package. For GRE tunnels, you
+    will need to load the ip_gre module and the ipip module for
+    IPIP tunnels.
+  options
+    address address       -- Local address (dotted quad) *required*
+    mode type             -- Tunnel type (either GRE or IPIP) *required*
+    endpoint address      -- Address of other tunnel endpoint *required*
+    dstaddr address       -- Remote address (remote address inside tunnel)
+    local address         -- Address of the local endpoint
+    gateway address       -- Default gateway
+    ttl time              -- TTL setting
+    mtu size              -- MTU size
+  up
+    ip tunnel add %iface% mode %mode% remote %endpoint% [[local %local%]] \
+       [[ttl %ttl%]]
+    ip link set %iface% up [[mtu %mtu%]]
+    ip addr add %address%/%netmask% dev %iface% [[peer %dstaddr%]]
+    [[ ip route add default via %gateway% ]]
+  down
+    ip tunnel del %iface%
+
+method ppp
+  description
+    This method uses pon/poff to configure a PPP interface. See those
+    commands for details.
+  options
+    provider name  -- Use /name/ as the provider (from /etc/ppp/peers).
+    unit number    -- Use /number/ as the ppp unit number.
+    options string -- Pass /string/ as additional options to pon.
+  up
+    pon [[%provider%]] [[unit %unit%]] [[%options%]]
+  down
+    poff [[%provider%]]
+
+method wvdial
+  description
+    This method uses wvdial to configure a PPP interface. See that command
+    for more details.
+  options
+    provider name  -- Use /name/ as the provider (from /etc/wvdial.conf).
+  up
+    /sbin/start-stop-daemon --start -x /usr/bin/wvdial \
+                      -p /var/run/wvdial.%iface%.pid -b -m -- [[ %provider% ]]
+  down
+    /sbin/start-stop-daemon --stop -x /usr/bin/wvdial \
+                      -p /var/run/wvdial.%iface%.pid -s 2
+
+
+method ipv4ll
+  description
+    This method uses avahi-autoipd to configure an interface with an
+    IPv4 Link-Layer address (169.254.0.0/16 family). This method is also
+    known as APIPA or IPAC, and often colloquially referred to
+    as "Zeroconf address".
+  up
+    /usr/sbin/avahi-autoipd -D %iface%
+  down
+    /usr/sbin/avahi-autoipd --kill %iface%
+
+architecture kfreebsd
+
+method loopback
+  description
+    This method may be used to define the IPv4 loopback interface.
+
+  up
+    ifconfig %iface% 127.0.0.1 up \
+	if (!iface_is_lo())
+
+  down
+    ifconfig %iface% down \
+	if (!iface_is_lo())
+
+method static
+  description
+    This method may be used to define Ethernet interfaces with statically
+    allocated IPv4 addresses.
+      
+  options
+    address address             -- Address (dotted quad/netmask) *required*
+    netmask mask                -- Netmask (dotted quad or CIDR)
+    broadcast broadcast_address -- Broadcast address (dotted quad)
+    metric metric               -- Routing metric for default gateway (integer)
+    gateway address             -- Default gateway (dotted quad)
+    pointopoint address         -- Address of other end point (dotted quad). \
+                                   Note the spelling of "point-to".
+    hwaddress address           -- Link local address.
+    mtu size                    -- MTU size
+
+  conversion
+    hwaddress cleanup_hwaddress
+
+  up
+    [[ ifconfig %iface% link %hwaddress%]]
+    ifconfig %iface% %address% [[netmask %netmask%]] [[broadcast %broadcast%]] \
+	[[pointopoint %pointopoint%]] [[media %media%]] [[mtu %mtu%]] \
+	up
+    [[ route add default %gateway% ]]
+
+  down
+    [[ route del default %gateway% 2>&1 1>/dev/null || true ]]
+    ifconfig %iface% down
+
+method manual
+  description
+    This method may be used to define interfaces for which no configuration
+    is done by default.  Such interfaces can be configured manually by
+    means of *up* and *down* commands or /etc/network/if-*.d scripts.
+
+  up
+
+  down
+
+method dhcp
+  description
+    This method may be used to obtain an address via DHCP with any of
+    the tools: dhclient, udhcpc, dhcpcd.
+    (They have been listed in their order of precedence.)
+    If you have a complicated DHCP setup you should
+    note that some of these clients use their own configuration files
+    and do not obtain their configuration information via *ifup*.
+
+  options
+    hostname hostname       -- Hostname to be requested (dhcpcd, udhcpc)
+    metric metric           -- Metric for added routes (dhclient)
+    leasetime leasetime     -- Preferred lease time in seconds (dhcpcd)
+    vendor vendor           -- Vendor class identifier (dhcpcd)
+    client client           -- Client identifier (dhcpcd, udhcpc)
+    hwaddress address       -- Hardware Address.
+
+  conversion
+    hwaddress cleanup_hwaddress
+
+  up
+    [[ifconfig %iface% link %hwaddress%]]
+    dhclient -v -pf /var/run/dhclient.%iface%.pid -lf /var/lib/dhcp/dhclient.%iface%.leases %iface% \
+	[[-e IF_METRIC=%metric%]] \
+        if (execable("/sbin/dhclient"))
+    dhclient3 -pf /var/run/dhclient.%iface%.pid -lf /var/lib/dhcp3/dhclient.%iface%.leases %iface% \
+	[[-e IF_METRIC=%metric%]] \
+        elsif (execable("/sbin/dhclient3"))
+    udhcpc -n -p /var/run/udhcpc.%iface%.pid -i %iface% [[-H %hostname%]] \
+           [[-c %client%]] \
+        elsif (execable("/sbin/udhcpc"))
+    dhcpcd [[-h %hostname%]] [[-i %vendor%]] [[-I %client%]] \
+           [[-l %leasetime%]] %iface% \
+        elsif (execable("/sbin/dhcpcd"))
+
+  down
+    dhclient -v -r -pf /var/run/dhclient.%iface%.pid -lf /var/lib/dhcp/dhclient.%iface%.leases %iface% \
+        if (execable("/sbin/dhclient"))
+    dhclient3 -r -pf /var/run/dhclient.%iface%.pid -lf /var/lib/dhcp3/dhclient.%iface%.leases %iface% \
+        elsif (execable("/sbin/dhclient3"))
+    kill -USR2 $(cat /var/run/udhcpc.%iface%.pid) 2>/dev/null; kill -TERM $(cat /var/run/udhcpc.%iface%.pid) 2>/dev/null \
+        elsif (execable("/sbin/udhcpc"))
+    dhcpcd -k %iface% \
+        elsif (execable("/sbin/dhcpcd"))
+
+    ifconfig %iface% down
+
+method bootp
+  description
+    This method may be used to obtain an address via bootp.
+
+  options
+    bootfile file  -- Tell the server to use /file/ as the bootfile.
+    server address -- Use the IP address /address/ to communicate with \
+                      the server.
+    hwaddr addr    -- Use /addr/ as the hardware address instead of \
+                      whatever it really is.
+
+  up
+    bootpc [[--bootfile %bootfile%]] --dev %iface% [[--server %server%]] \
+           [[--hwaddr %hwaddr%]] --returniffail --serverbcast
+
+  down
+    ip link set dev %iface% down \
+        if (execable("/sbin/ip") && iface_is_link())
+    ifconfig %iface% down \
+        elsif (1)
+
+method ppp
+  description
+    This method uses pon/poff to configure a PPP interface. See those
+    commands for details.
+  options
+    provider name  -- Use /name/ as the provider (from /etc/ppp/peers).
+    unit number    -- Use /number/ as the ppp unit number.
+    options string -- Pass /string/ as additional options to pon.
+  up
+    pon [[%provider%]] [[unit %unit%]] [[%options%]]
+  down
+    poff [[%provider%]]
+
+method wvdial
+  description
+    This method uses wvdial to configure a PPP interface. See that command
+    for more details.
+  options
+    provider name  -- Use /name/ as the provider (from /etc/wvdial.conf).
+  up
+    /sbin/start-stop-daemon --start -x /usr/bin/wvdial \
+                      -p /var/run/wvdial.%iface%.pid -b -m -- [[ %provider% ]]
+  down
+    /sbin/start-stop-daemon --stop -x /usr/bin/wvdial \
+                      -p /var/run/wvdial.%iface%.pid -s 2
+
+
+method ipv4ll
+  description
+    This method uses avahi-autoipd to configure an interface with an
+    IPv4 Link-Layer address (169.254.0.0/16 family). This method is also
+    known as APIPA or IPAC, and often colloquially referred to
+    as "Zeroconf address".
+  up
+    /usr/sbin/avahi-autoipd -D %iface%
+  down
+    /usr/sbin/avahi-autoipd --kill %iface%
+architecture hurd
+
+method loopback
+  description
+    This method may be used to define the IPv4 loopback interface.
+
+  up
+    inetutils-ifconfig --interface %iface% --address 127.0.0.1 --up \
+	if (!iface_is_lo())
+
+  down
+    inetutils-ifconfig --interface %iface% --down \
+	if (!iface_is_lo())
+
+method static
+  description
+    This method may be used to define Ethernet interfaces with statically
+    allocated IPv4 addresses.
+      
+  options
+    address address             -- Address (dotted quad/netmask) *required*
+    netmask mask                -- Netmask (dotted quad or CIDR)
+    broadcast broadcast_address -- Broadcast address (dotted quad)
+    metric metric               -- Routing metric for default gateway (integer)
+    gateway address             -- Default gateway (dotted quad)
+    pointopoint address         -- Address of other end point (dotted quad). \
+                                   Note the spelling of "point-to".
+    hwaddress address           -- Link local address (Not yet supported)
+    mtu size                    -- MTU size
+
+  conversion
+    hwaddress cleanup_hwaddress
+
+  up
+    [[Warning: Option hwaddress: %hwaddress% not yet supported]]
+    inetutils-ifconfig --interface %iface% --address %address% [[--netmask %netmask%]] \
+    [[--broadcast %broadcast%]] [[--mtu %mtu%]] --up
+    [[fsysopts /servers/socket/2 $(fsysopts /servers/socket/2) --gateway %gateway% ]]
+
+  down
+    inetutils-ifconfig --interface %iface% --down
+
+method manual
+  description
+    This method may be used to define interfaces for which no configuration
+    is done by default.  Such interfaces can be configured manually by
+    means of *up* and *down* commands or /etc/network/if-*.d scripts.
+
+  up
+
+  down
+
+method dhcp
+  description
+    This method may be used to obtain an address via DHCP with any of
+    the tools: dhclient, udhcpc, dhcpcd.
+    (They have been listed in their order of precedence.)
+    If you have a complicated DHCP setup you should
+    note that some of these clients use their own configuration files
+    and do not obtain their configuration information via *ifup*.
+
+  options
+    hostname hostname       -- Hostname to be requested (dhcpcd, udhcpc)
+    leasetime leasetime     -- Preferred lease time in seconds (dhcpcd)
+    vendor vendor           -- Vendor class identifier (dhcpcd)
+    client client           -- Client identifier (dhcpcd, udhcpc)
+    hwaddress address       -- Hardware Address (Not yet supported)
+
+  conversion
+    hwaddress cleanup_hwaddress
+
+  up
+    [[Warning: Option hwaddress: %hwaddress% not yet supported]]
+    dhclient -v -pf /var/run/dhclient.%iface///.%.pid -lf /var/lib/dhcp/dhclient.%iface///.%.leases %iface% \
+        if (execable("/sbin/dhclient"))
+    udhcpc -n -p /var/run/udhcpc.%iface///.%.pid -i %iface% [[-H %hostname%]] \
+           [[-c %client%]] \
+        elsif (execable("/sbin/udhcpc"))
+    dhcpcd [[-h %hostname%]] [[-i %vendor%]] [[-I %client%]] \
+           [[-l %leasetime%]] %iface% \
+        elsif (execable("/sbin/dhcpcd"))
+
+  down
+    dhclient -v -r -pf /var/run/dhclient.%iface///.%.pid -lf /var/lib/dhcp/dhclient.%iface///.%.leases %iface% \
+        if (execable("/sbin/dhclient"))
+    kill -USR2 $(cat /var/run/udhcpc.%iface///.%.pid) 2>/dev/null; kill -TERM $(cat /var/run/udhcpc.%iface///.%.pid) 2>/dev/null \
+        elsif (execable("/sbin/udhcpc"))
+    dhcpcd -k %iface% \
+        elsif (execable("/sbin/dhcpcd"))
+
+    inetutils-ifconfig --interface %iface% --down
+
+method bootp
+  description
+    This method may be used to obtain an address via bootp.
+
+  options
+    bootfile file  -- Tell the server to use /file/ as the bootfile.
+    server address -- Use the IP address /address/ to communicate with \
+                      the server.
+    hwaddr addr    -- Use /addr/ as the hardware address instead of \
+                      whatever it really is.
+
+  up
+    bootpc [[--bootfile %bootfile%]] --dev %iface% [[--server %server%]] \
+           [[--hwaddr %hwaddr%]] --returniffail --serverbcast
+
+  down
+    ip link set dev %iface% down \
+        if (execable("/sbin/ip") && iface_is_link())
+    inetutils-ifconfig --interface %iface% --down \
+        elsif (1)
+
+method ppp
+  description
+    This method uses pon/poff to configure a PPP interface. See those
+    commands for details.
+  options
+    provider name  -- Use /name/ as the provider (from /etc/ppp/peers).
+    unit number    -- Use /number/ as the ppp unit number.
+    options string -- Pass /string/ as additional options to pon.
+  up
+    pon [[%provider%]] [[unit %unit%]] [[%options%]]
+  down
+    poff [[%provider%]]
+
+method wvdial
+  description
+    This method uses wvdial to configure a PPP interface. See that command
+    for more details.
+  options
+    provider name  -- Use /name/ as the provider (from /etc/wvdial.conf).
+  up
+    /sbin/start-stop-daemon --start -x /usr/bin/wvdial \
+                      -p /var/run/wvdial.%iface///.%.pid -b -m -- [[ %provider% ]]
+  down
+    /sbin/start-stop-daemon --stop -x /usr/bin/wvdial \
+                      -p /var/run/wvdial.%iface///.%.pid -s 2
+
+
+method ipv4ll
+  description
+    This method uses avahi-autoipd to configure an interface with an
+    IPv4 Link-Layer address (169.254.0.0/16 family). This method is also
+    known as APIPA or IPAC, and often colloquially referred to
+    as "Zeroconf address".
+  up
+    /usr/sbin/avahi-autoipd -D %iface%
+  down
+    /usr/sbin/avahi-autoipd --kill %iface%
+
