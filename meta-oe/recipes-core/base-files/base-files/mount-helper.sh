@@ -129,7 +129,7 @@ case $ACTION in
 							fi
 							# Remove mountpoint not being used
 							if [ -z "`grep $MOUNTPOINT /proc/mounts`" ] ; then
-								find $MOUNTPOINT -type d -delete
+								find $MOUNTPOINT -type d -delete 2>/dev/null
 								[ -d $MOUNTPOINT ] && rmdir $MOUNTPOINT
 							fi
 							if ! mkdir $MOUNTPOINT ; then
@@ -139,7 +139,7 @@ case $ACTION in
 							if ! mount -t auto ${TEMPDEV} "${MOUNTPOINT}" ; then
 								if ! mount.exfat ${TEMPDEV} "${MOUNTPOINT}" ; then
 									#echo "[mdev-mount.sh] mount failed 1" >> $LOG
-									find "${MOUNTPOINT}" -type d -delete
+									find "${MOUNTPOINT}" -type d -delete 2>/dev/null
 									[ -d $MOUNTPOINT ] && rmdir "${MOUNTPOINT}"
 								fi
 							fi
@@ -219,7 +219,7 @@ case $ACTION in
 			# Remove mountpoint not being used
 			if [ -z "`grep $MOUNTPOINT /proc/mounts`" ] ; then
 				#echo "[mdev-mount.sh] rmdir $MOUNTPOINT" >> $LOG
-				find $MOUNTPOINT  -type d -delete
+				find $MOUNTPOINT  -type d -delete 2>/dev/null
 				[ -d $MOUNTPOINT ] && rmdir $MOUNTPOINT
 			fi
 			if ! mkdir $MOUNTPOINT ; then
@@ -230,7 +230,7 @@ case $ACTION in
 			if ! mount -t auto /dev/$MDEV "${MOUNTPOINT}" ; then
 				if ! mount.exfat /dev/$MDEV "${MOUNTPOINT}" ; then
 					#echo "[mdev-mount.sh] mount failed 2" >> $LOG
-					find "${MOUNTPOINT}" -type d -delete
+					find "${MOUNTPOINT}" -type d -delete 2>/dev/null
 					[ -d $MOUNTPOINT ] && rmdir "${MOUNTPOINT}"
 				fi
 			fi
@@ -243,7 +243,7 @@ case $ACTION in
 			MOUNTPOINT="/media/$MDEV"
 		fi
 		umount $MOUNTPOINT || umount /dev/$MDEV
-		find $MOUNTPOINT  -type d -delete
+		find $MOUNTPOINT  -type d -delete 2>/dev/null
 		[ -d $MOUNTPOINT ] && rmdir $MOUNTPOINT
 		#echo "[mdev-mount.sh] umounted $MOUNTPOINT" >> $LOG
 		;;
