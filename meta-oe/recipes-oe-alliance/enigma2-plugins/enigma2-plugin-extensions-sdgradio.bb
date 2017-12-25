@@ -1,5 +1,5 @@
 SUMMARY = "Enigma2 Software Defined Radio"
-DESCRIPTION = "SDR for Enigma2 using rtl_fm command line tool"
+DESCRIPTION = "SDR for Enigma2 using rtl_fm and dab-cmdline command line tools"
 SECTION = "multimedia"
 MAINTAINER = "SatDreamGR"
 HOMEPAGE = "http://satdreamgr.com"
@@ -13,11 +13,11 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "1+git${SRCPV}"
 PKGV = "1+git${GITPKGV}"
-PR = "r1"
+PR = "r2"
 
 inherit allarch distutils-openplugins
 
-RDEPENDS_${PN} = "python-core rtl-sdr redsea"
+RDEPENDS_${PN} = "python-core rtl-sdr redsea dab-cmdline-sdgradio"
 
 PACKAGES =+ "${PN}-src"
 RDEPENDS_{PN}-src = "${PN}"
