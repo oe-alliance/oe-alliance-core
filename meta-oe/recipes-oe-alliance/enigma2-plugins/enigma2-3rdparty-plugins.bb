@@ -32,7 +32,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-bluray_1.6rc1_all.ipk \
     enigma2-plugin-extensions-boblight-enigma2_0.8r8_mips32el.ipk \
     enigma2-plugin-extensions-camofs_9.19_all.ipk \
-    enigma2-plugin-extensions-chefkoch_1.5rc4_all.ipk \
+    enigma2-plugin-extensions-chefkoch_1.5rc5_all.ipk \
     enigma2-plugin-extensions-clevertanken_0.8rc1_all.ipk \
     enigma2-plugin-extensions-csfd_11-55-20160929_all.ipk \
     enigma2-plugin-extensions-customsubservices_0.1.2_all.ipk \
@@ -72,6 +72,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-pzyemail_0.8-20150614_all.ipk \
     enigma2-plugin-extensions-screengrabber_2.5_all.ipk \
     enigma2-plugin-extensions-screensaver_5.7.1_all.ipk \
+    enigma2-plugin-extensions-serienrecorder_3.6.0_all.ipk \
     enigma2-plugin-extensions-sherlock_5.01r1_mipsel.ipk \
     enigma2-plugin-extensions-skyrecorder_1.7.1_all.ipk \
     enigma2-plugin-extensions-songs-to_0.1_mips32el.ipk \
