@@ -1,0 +1,45 @@
+From 5031b30ea9b982665045829af252fcf9ab363374 Mon Sep 17 00:00:00 2001
+From: captain <openatv@gmail.com>
+Date: Mon, 25 Dec 2017 15:29:56 +0100
+Subject: [PATCH] revert use macports include paths
+
+---
+ configure.ac    | 8 --------
+ src/Makefile.am | 2 +-
+ 2 files changed, 1 insertion(+), 9 deletions(-)
+
+diff --git a/configure.ac b/configure.ac
+index 8fbae3c..696b4b6 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -35,14 +35,6 @@ AS_IF([test "x$with_liquid" != xno],
+     [AC_MSG_FAILURE(
+        [Could not find liquid-dsp (use --without-liquid to disable)])])])
+ 
+-MACPORTS_LD=
+-AC_CHECK_FILE(/opt/local/lib,
+-  [AC_SUBST([MACPORTS_LD], ["-L/opt/local/lib"])])
+-
+-MACPORTS_CF=
+-AC_CHECK_FILE(/opt/local/lib,
+-  [AC_SUBST([MACPORTS_CF], ["-I/opt/local/include"])])
+-
+ SNDFILE=
+ AS_IF([test "x$with_sndfile" != xno],
+   [AC_CHECK_LIB([sndfile], [main],
+diff --git a/src/Makefile.am b/src/Makefile.am
+index 502f2cc..74e0677 100644
+--- a/src/Makefile.am
++++ b/src/Makefile.am
+@@ -2,7 +2,7 @@ bin_PROGRAMS = redsea
+ redsea_CPPFLAGS = -std=c++11 -Wall -Wextra -Wstrict-overflow -Wshadow \
+ 									$(MACPORTS_CF) \
+ 									-Wuninitialized -pedantic $(RFLAGS)
+-redsea_LDADD = $(MACPORTS_LD) -lc $(LIQUID) $(ICONV) $(SNDFILE)
++redsea_LDADD = -lc $(LIQUID) $(ICONV) $(SNDFILE)
+ redsea_SOURCES = redsea.cc input.cc subcarrier.cc block_sync.cc groups.cc \
+ 								 tables.cc rdsstring.cc tmc/tmc.cc tmc/locationdb.cc util.cc \
+ 								 liquid_wrappers.cc jsoncpp.cpp
+-- 
+2.12.0.windows.1
+

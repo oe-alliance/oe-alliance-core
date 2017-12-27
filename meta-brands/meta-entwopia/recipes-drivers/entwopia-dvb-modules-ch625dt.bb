@@ -1,7 +1,7 @@
 KV = "4.10.6"
-SRCDATE = "20170917"
+SRCDATE = "20171226"
 
 require entwopia-dvb-modules.inc
 
-SRC_URI[md5sum] = "1c2aaaa87bddf7201de41c3f88d886e5"
-SRC_URI[sha256sum] = "2ceadabc8328d58199b44a91deb4b8f339b1055d9a8c3576715d65d44caee591"
+SRC_URI[md5sum] = "e0d82a7df7ecd62f086ef57713f10d5c"
+SRC_URI[sha256sum] = "5f15e3bd519ebbedc5486589fa312d1c18f268a99f0eac33451dd775c26436e4"
