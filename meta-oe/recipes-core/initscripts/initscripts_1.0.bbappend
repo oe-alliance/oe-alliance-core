@@ -16,11 +16,8 @@ PACKAGE_WRITE_DEPS_append = " sysvinit update-rc.d insserv"
 SRC_URI += "file://hotplug.sh \
             file://procps \
             file://fastrestore_openatv.sh \
-            file://rc \
-            file://rcS \
             file://skeleton \
             file://halt.default \
-            file://rcS.default \
             file://tmpfs.default \
             file://umountroot \
 "
@@ -59,11 +56,8 @@ do_install() {
 	install -d ${D}${localstatedir}/lib/urandom
 
 	install -m 0644    ${WORKDIR}/halt.default	${D}${sysconfdir}/default/halt
-	install -m 0644    ${WORKDIR}/rcS.default	${D}${sysconfdir}/default/rcS
 	install -m 0644    ${WORKDIR}/tmpfs.default	${D}${sysconfdir}/default/tmpfs
 	install -m 0755    ${WORKDIR}/skeleton		${D}${sysconfdir}/init.d
-	install -m 0755    ${WORKDIR}/rc		${D}${sysconfdir}/init.d
-	install -m 0755    ${WORKDIR}/rcS		${D}${sysconfdir}/init.d
 	install -m 0644    ${WORKDIR}/functions		${D}${sysconfdir}/init.d
 	install -m 0755    ${WORKDIR}/bootmisc.sh	${D}${sysconfdir}/init.d
 	install -m 0755    ${WORKDIR}/checkroot.sh	${D}${sysconfdir}/init.d
