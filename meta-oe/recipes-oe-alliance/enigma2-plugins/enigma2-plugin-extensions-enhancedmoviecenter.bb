@@ -2,7 +2,7 @@ SUMMARY = "Filemanager MoviePlayer Extentions"
 MAINTAINER = "Coolman, Betonme & Swiss-MAD"
 SECTION = "extra"
 PRIORITY = "optional"
-RDEPENDS_${PN} = "${@bb.utils.contains("GST_VERSION", "1.0", "gstreamer1.0-plugins-good-flv gstreamer1.0-plugins-bad-rtmp", "gst-plugins-good-flv gst-plugins-bad-rtmp", d)} python-json python-html python-requests librtmp1"
+RDEPENDS_${PN} = "${@bb.utils.contains("GST_VERSION", "1.0", "gstreamer1.0-plugins-good-flv gstreamer1.0-plugins-bad-rtmp", "gst-plugins-good-flv gst-plugins-bad-rtmp", d)} python-json python-html python-requests python-mutagen librtmp1"
 
 require conf/license/license-gplv2.inc
 
