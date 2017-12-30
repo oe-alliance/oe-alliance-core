@@ -4,7 +4,7 @@ MAINTAINER = "OpenViX"
 LICENSE = "Proprietary"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=a23a74b3f4caf9616230789d94217acb"
 
-inherit gitpkgv distutils-openplugins
+inherit gitpkgv distutils-openplugins gettext
 
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
