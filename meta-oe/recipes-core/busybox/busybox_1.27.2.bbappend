@@ -1,3 +1,4 @@
+PR .= ".1"
 SRC_URI += " \
             file://mount_single_uuid.patch \
             file://use_ipv6_when_ipv4_unroutable.patch \
@@ -5,6 +6,7 @@ SRC_URI += " \
             file://inetd \
             file://inetd.conf \
             file://vi.sh \
+            file://ntp.script \
             file://0001-Prevent-telnet-connections-from-the-internet-to-the-.patch \
             file://0002-Extended-network-interfaces-support.patch \
             "
@@ -61,6 +63,7 @@ do_install_append() {
     fi
     rm -rf ${D}${sysconfdir}/mdev
     install -m 0755 ${WORKDIR}/vi.sh ${D}${base_bindir}/vi.sh
+    install -m 0755 ${WORKDIR}/ntp.script ${D}${sysconfdir}/udhcpc.d/55ntp
 }
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/${P}:"

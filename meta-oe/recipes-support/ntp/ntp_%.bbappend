@@ -1,21 +1,24 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
-PR .= ".3"
+PR .= ".4"
 
 do_install_append() {
-	# When invoked from ifup, delay execution to allow DHCP to assign DNS servers
+	perl -0777 -i -pe 's:(\. /etc/default/ntpdate.+?fi):$1\n\nif test -f /var/tmp/ntpv4.local ; then\n. /var/tmp/ntpv4.local\nfi\n\ncheck_online() {\n\tcount=0\n\twhile [ \$count -lt 5 ]; do\n\t\tif ping -4 -c 1 www.google.com >/dev/null 2>&1 \|\| ping -6 -c 1 www.google.com \>/dev/null 2\>&1; then\n\t\t\tbreak\n\t\tfi\n\t\tcount=\$((count+1))\n\tdone\n}\n\nif [ "\$NTPV4" != "" ]; then\n\tNTPSERVERS=\$NTPV4\nfi:s;' \
+                 ${D}/usr/bin/ntpdate-sync
+
+	# When invoked from ifup, step to the time rather than slewing
+	perl -0777 -i -pe 's:# This is a heuristic.*? then:DELAY=""\n\n# This is a heuristic\: Interfaces are usually brought up during boot, so this is\n# the right time to quickly step to the right time, rather than slewing to it.\nif [ "\$0" = "/etc/network/if-up.d/ntpdate-sync" ]; then\n\tDELAY="check_online":s;' \
+                 ${D}/usr/bin/ntpdate-sync
+
+	# When invoked from ifup, wait for network to really be up
 	# Previously execution via ifup ALWAYS failed.
-	perl -i -pe 's:(LOCKFILE=):DELAY=0\n[[ "\$0" == "/etc/network/if-up.d/ntpdate-sync" ]] && DELAY=5\n$1:;' \
-		-pe 's:(if) (/usr/sbin/ntpdate -s):$1 sleep \$DELAY && $2:;' \
+	perl -i -pe 's:(if /usr/sbin/ntpdate -s):\$DELAY\n\n$1:;' \
                  ${D}/usr/bin/ntpdate-sync
 
 	# Only invoke hwclock if it is executable and use stb-hwclock instead ...
 	perl -i -pe 's:(if \[ "\$UPDATE_HWCLOCK" = "yes" \]);:$1 && [ -x /sbin/stb-hwclock ];:;' \
                 -pe 's:(\s)(hwclock --systohc):$1/sbin/stb-$2:;' \
                  ${D}/usr/bin/ntpdate-sync
-
-	# Don't detach the sync ... the missing time is breaking so many things during the 5 seconds this takes
-	#perl -i -pe 's:(^\($|^\)\s+?\&$)::g' ${D}/usr/bin/ntpdate-sync
 }
 
 pkg_postinst_ntpdate() {
