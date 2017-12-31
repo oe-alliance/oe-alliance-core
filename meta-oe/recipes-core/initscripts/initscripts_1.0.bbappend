@@ -1,6 +1,6 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/${P}:"
 
-RDEPENDS_${PN}_append = " sdparm"
+RDEPENDS_${PN}_append = " sdparm bash"
 
 SRC_URI += "file://hotplug.sh \
             file://fastrestore_openatv.sh \
