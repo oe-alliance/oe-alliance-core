@@ -5,12 +5,12 @@ LICENSE = "CLOSED"
 require conf/license/license-close.inc
 PACKAGE_ARCH := "${MACHINE_ARCH}"
 
-SRCDATE = "20171223"
+SRCDATE = "20171231"
 
 PV = "1.0"
 PR = "${SRCDATE}"
 
-SRC_URI = "file://stalker-100.zip"
+SRC_URI = "file://stalker-101.zip"
 
 RDEPENDS_${PN}  = "qtwebkit virtual/libgles2 python-netifaces" 
 
