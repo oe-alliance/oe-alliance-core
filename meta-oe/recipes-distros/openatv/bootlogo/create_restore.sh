@@ -1,6 +1,6 @@
 #!/bin/bash
 
-black=0
+black=1
 
 sanity_fail () {
 	echo ERROR: Missing tools ...
