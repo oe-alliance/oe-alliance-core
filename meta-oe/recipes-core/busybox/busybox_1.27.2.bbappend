@@ -7,6 +7,7 @@ SRC_URI += " \
             file://busybox-telnet.service.in \
             file://busybox-inetd.service.in \
             file://vi.sh \
+            file://ntp.script \
             file://0001-Prevent-telnet-connections-from-the-internet-to-the-.patch \
             file://0002-Extended-network-interfaces-support.patch \
             "
@@ -74,6 +75,7 @@ do_install_append() {
     rm -rf ${D}${sysconfdir}/mdev
     install -m 0755 ${WORKDIR}/vi.sh ${D}${base_bindir}/vi.sh
     rm -rf ${D}${sysconfdir}/mdev 2>/dev/null || true
+    install -m 0755 ${WORKDIR}/ntp.script ${D}${sysconfdir}/udhcpc.d/55ntp
 }
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/${P}:"

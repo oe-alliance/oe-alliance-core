@@ -1,0 +1,20 @@
+#!/bin/sh
+
+[ -z "$1" ] && echo "Error: should be called from udhcpc" && exit 1
+
+NTPSERVER_CONF="/var/tmp/ntpv4.local"
+
+case "$1" in
+	deconfig)
+                rm $NTPSERVER_CONF >/dev/null 2>&1
+		;;
+
+	renew|bound)
+                rm $NTPSERVER_CONF >/dev/null 2>&1
+		if [ -n "$ntpsrv" ]; then
+			echo NTPV4="$ntpsrv" > $NTPSERVER_CONF
+		fi
+		;;
+esac
+
+exit 0

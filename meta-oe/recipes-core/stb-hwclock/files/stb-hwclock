@@ -22,14 +22,14 @@ case $COMMAND in
     save|-w|--systohc)
         NTP_SEC=$(date -u '+%s')
         if echo $NTP_SEC > /proc/stb/fp/rtc 2>/dev/null; then
-            echo "Current system time has been written into FP pseudo RTC."
+            logger -t stb-hwclock -p daemon.notice "Current system time has been written into FP pseudo RTC."
         fi
         ;;
     load|-s|--hctosys)
         NOW_SEC=$(date -u '+%s')
         if RTC_SEC=$(cat /proc/stb/fp/rtc 2>/dev/null); then
             if $FORCE || [ $NOW_SEC -le $RTC_SEC ]; then
-                echo "FP pseudo RTC is ahead of current time or using force, advancing to front panel time."
+                logger -t stb-hwclock -p daemon.notice "FP pseudo RTC is ahead of current time or using force, advancing to front panel time."
                 RTCTIME="$(date -u '+%Y-%m-%d %H:%M:%S' -d @$RTC_SEC)"
                 date -u -s "$RTCTIME"
             fi
@@ -40,5 +40,4 @@ case $COMMAND in
         exit 1
         ;;
 esac
-
 
