@@ -1,7 +1,5 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/${P}:"
 
-INSANE_SKIP_${PN} = "file-rdeps"
-
 RDEPENDS_${PN}_append = " sdparm"
 
 SRC_URI += "file://hotplug.sh \
