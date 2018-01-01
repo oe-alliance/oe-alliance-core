@@ -69,7 +69,6 @@ IMAGE_CMD_imgzip1024 = " \
 
 IMAGE_DEVICE_TABLES = ""
 
-PREFERRED_VERSION_wpa-supplicant = "0.5.8"
 PREFERRED_VERSION_rtl8192cu = "3.3.0"
 
 
