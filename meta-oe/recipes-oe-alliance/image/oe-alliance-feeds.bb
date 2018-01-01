@@ -39,6 +39,7 @@ RDEPENDS_${PN} = " \
     enigma2-plugin-extensions-youtube \
     enigma2-plugin-extensions-autobouquets \
     enigma2-plugin-extensions-iptvplayer \
+    enigma2-plugin-extensions-iptvplayer-deps \
     enigma2-plugin-systemplugins-hrtunerproxy \
     oe-alliance-branding-remote \
     ${@bb.utils.contains("GST_VERSION", "1.0", "eplayer5", "eplayer4", d)} \
