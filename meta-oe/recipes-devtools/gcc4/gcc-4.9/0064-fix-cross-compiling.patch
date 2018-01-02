@@ -1,0 +1,114 @@
+--- a/configure.ac.orig	2017-11-08 11:38:23.986533453 +0100
++++ b/configure.ac	2017-11-08 12:36:57.487440042 +0100
+@@ -2215,28 +2215,36 @@
+ # gcc) are built with "-O2 -g", so include those options when setting
+ # CFLAGS_FOR_TARGET and CXXFLAGS_FOR_TARGET.
+ if test "x$CFLAGS_FOR_TARGET" = x; then
+-  CFLAGS_FOR_TARGET=$CFLAGS
+-  case " $CFLAGS " in
+-    *" -O2 "*) ;;
+-    *) CFLAGS_FOR_TARGET="-O2 $CFLAGS_FOR_TARGET" ;;
+-  esac
+-  case " $CFLAGS " in
+-    *" -g "* | *" -g3 "*) ;;
+-    *) CFLAGS_FOR_TARGET="-g $CFLAGS_FOR_TARGET" ;;
+-  esac
++  if test "x${is_cross_compiler}" = xyes; then
++    CFLAGS_FOR_TARGET="-g -O2"
++  else
++    CFLAGS_FOR_TARGET=$CFLAGS
++    case " $CFLAGS " in
++      *" -O2 "*) ;;
++      *) CFLAGS_FOR_TARGET="-O2 $CFLAGS_FOR_TARGET" ;;
++    esac
++    case " $CFLAGS " in
++      *" -g "* | *" -g3 "*) ;;
++      *) CFLAGS_FOR_TARGET="-g $CFLAGS_FOR_TARGET" ;;
++    esac
++  fi
+ fi
+ AC_SUBST(CFLAGS_FOR_TARGET)
+ 
+ if test "x$CXXFLAGS_FOR_TARGET" = x; then
+-  CXXFLAGS_FOR_TARGET=$CXXFLAGS
+-  case " $CXXFLAGS " in
+-    *" -O2 "*) ;;
+-    *) CXXFLAGS_FOR_TARGET="-O2 $CXXFLAGS_FOR_TARGET" ;;
+-  esac
+-  case " $CXXFLAGS " in
+-    *" -g "* | *" -g3 "*) ;;
+-    *) CXXFLAGS_FOR_TARGET="-g $CXXFLAGS_FOR_TARGET" ;;
+-  esac
++  if test "x${is_cross_compiler}" = xyes; then
++    CXXFLAGS_FOR_TARGET="-g -O2"
++  else
++    CXXFLAGS_FOR_TARGET=$CXXFLAGS
++    case " $CXXFLAGS " in
++      *" -O2 "*) ;;
++      *) CXXFLAGS_FOR_TARGET="-O2 $CXXFLAGS_FOR_TARGET" ;;
++    esac
++    case " $CXXFLAGS " in
++      *" -g "* | *" -g3 "*) ;;
++      *) CXXFLAGS_FOR_TARGET="-g $CXXFLAGS_FOR_TARGET" ;;
++    esac
++  fi
+ fi
+ AC_SUBST(CXXFLAGS_FOR_TARGET)
+ 
+--- a/configure.orig	2017-11-08 12:40:25.195750399 +0100
++++ b/configure	2017-11-08 12:58:18.159293016 +0100
+@@ -6929,28 +6929,36 @@
+ # gcc) are built with "-O2 -g", so include those options when setting
+ # CFLAGS_FOR_TARGET and CXXFLAGS_FOR_TARGET.
+ if test "x$CFLAGS_FOR_TARGET" = x; then
+-  CFLAGS_FOR_TARGET=$CFLAGS
+-  case " $CFLAGS " in
+-    *" -O2 "*) ;;
+-    *) CFLAGS_FOR_TARGET="-O2 $CFLAGS_FOR_TARGET" ;;
+-  esac
+-  case " $CFLAGS " in
+-    *" -g "* | *" -g3 "*) ;;
+-    *) CFLAGS_FOR_TARGET="-g $CFLAGS_FOR_TARGET" ;;
+-  esac
++  if test "x${is_cross_compiler}" = xyes; then
++    CFLAGS_FOR_TARGET="-g -O2"
++  else
++    CFLAGS_FOR_TARGET=$CFLAGS
++    case " $CFLAGS " in
++      *" -O2 "*) ;;
++      *) CFLAGS_FOR_TARGET="-O2 $CFLAGS_FOR_TARGET" ;;
++    esac
++    case " $CFLAGS " in
++      *" -g "* | *" -g3 "*) ;;
++      *) CFLAGS_FOR_TARGET="-g $CFLAGS_FOR_TARGET" ;;
++    esac
++  fi
+ fi
+ 
+ 
+ if test "x$CXXFLAGS_FOR_TARGET" = x; then
+-  CXXFLAGS_FOR_TARGET=$CXXFLAGS
+-  case " $CXXFLAGS " in
+-    *" -O2 "*) ;;
+-    *) CXXFLAGS_FOR_TARGET="-O2 $CXXFLAGS_FOR_TARGET" ;;
+-  esac
+-  case " $CXXFLAGS " in
+-    *" -g "* | *" -g3 "*) ;;
+-    *) CXXFLAGS_FOR_TARGET="-g $CXXFLAGS_FOR_TARGET" ;;
+-  esac
++  if test "x${is_cross_compiler}" = xyes; then
++    CXXFLAGS_FOR_TARGET="-g -O2"
++  else
++    CXXFLAGS_FOR_TARGET=$CXXFLAGS
++    case " $CXXFLAGS " in
++      *" -O2 "*) ;;
++      *) CXXFLAGS_FOR_TARGET="-O2 $CXXFLAGS_FOR_TARGET" ;;
++    esac
++    case " $CXXFLAGS " in
++      *" -g "* | *" -g3 "*) ;;
++      *) CXXFLAGS_FOR_TARGET="-g $CXXFLAGS_FOR_TARGET" ;;
++    esac
++  fi
+ fi
+ 
+ 

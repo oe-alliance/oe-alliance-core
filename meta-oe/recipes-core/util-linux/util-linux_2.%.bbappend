@@ -1,3 +1,12 @@
+FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
+
+SRC_URI_append_sh4 = " \
+    file://util-linux-random.patch \
+"
+
+SRC_URI_append_cube = " \
+    file://util-linux-random.patch \
+"
 
 PACKAGES =+ "util-linux-flock"
 FILES_util-linux-flock = "${base_sbindir}/flock.${BPN}"

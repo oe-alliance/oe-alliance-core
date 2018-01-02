@@ -78,6 +78,7 @@ PREFERRED_PROVIDER_virtual/egl = "opengl"
 PREFERRED_VERSION_linux-cube = "2.6.34"
 PREFERRED_VERSION_linux-libc-headers = "3.1"
 OLDEST_KERNEL = "2.6.34"
+GCCVERSION = "4.9.4"
 GLIBCVERSION = "2.23"
 
 GLIBC_EXTRA_OECONF = "--with-tls --with-__thread"
@@ -91,7 +92,7 @@ TUNE_CCARGS += "-mfpu=vfpv3-d16"
 
 IMAGE_FSTYPES ?= "imgzip256"
 
-MACHINE_FEATURES += "3dtv alsa hdmicec switchoff textlcd dvbapi5 usbhost wifiusblegacy legacykernel"
+MACHINE_FEATURES += "3dtv alsa hdmicec switchoff textlcd dvbapi5 usbhost wifiusblegacy legacykernel smallflash"
 
 OEM_ARCH = "${MACHINEBUILD}"
 
