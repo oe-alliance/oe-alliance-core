@@ -4,14 +4,14 @@ LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 
 DEPENDS = "enigma2 uchardet openssl"
-RDEPENDS_${PN} = "enigma2 uchardet openssl exteplayer3"
+RDEPENDS_${PN} = "enigma2 uchardet openssl exteplayer3 python-json"
 RCONFLICTS_${PN} = "enigma2-plugin-extensions-serviceapp"
 RREPLACES_${PN} = "enigma2-plugin-extensions-serviceapp"
 
 SRCREV = "${AUTOREV}"
-SRC_URI = " \
-    git://github.com/mx3L/serviceapp.git;branch=master \
-    file://0001-serviceapp-add-setQpipMode-function-recently-added-f.patch \
+
+SRC_URI= " \
+    ${@bb.utils.contains('BRAND_OEM', 'fulan', 'git://github.com/mx3L/serviceapp.git;branch=develop', 'git://github.com/mx3L/serviceapp.git;branch=master file://0001-serviceapp-add-setQpipMode-function-recently-added-f.patch', d)} \
     "
 
 S = "${WORKDIR}/git"
