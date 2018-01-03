@@ -61,4 +61,6 @@ require conf/machine/include/soc-family.inc
 MACHINEOVERRIDES =. "${@['', '${MACHINEBUILD}:']['${MACHINEBUILD}' != '']}"
 
 BBMASK = "meta-octagon/"
+BBMASK = "meta-fulan/recipes-graphics/"
+
 
