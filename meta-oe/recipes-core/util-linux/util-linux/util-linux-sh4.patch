@@ -1,0 +1,21 @@
+--- a/sys-utils/rfkill.c	2017-12-26 00:33:40.044623353 +0100
++++ b/sys-utils/rfkill.c	2017-12-25 23:30:03.290546324 +0100
+@@ -44,9 +44,6 @@
+  * NFC supported by kernel since v3.10 (year 2013); FM and another types are from
+  * year 2009 (2.6.33) or older.
+  */
+-#ifndef RFKILL_TYPE_NFC
+-# define RFKILL_TYPE_NFC	RFKILL_TYPE_FM + 1
+-#endif
+ 
+ struct rfkill_type_str {
+ 	enum rfkill_type type;	/* ID */
+@@ -64,8 +61,6 @@
+ 	{ .type = RFKILL_TYPE_WIMAX,     .name = "wimax",        .desc = "WiMAX" },
+ 	{ .type = RFKILL_TYPE_WWAN,      .name = "wwan",         .desc = "Wireless WAN" },
+ 	{ .type = RFKILL_TYPE_GPS,       .name = "gps",          .desc = "GPS" },
+-	{ .type = RFKILL_TYPE_FM,        .name = "fm",           .desc = "FM" },
+-	{ .type = RFKILL_TYPE_NFC,       .name = "nfc",          .desc = "NFC" },
+ 	{ .type = NUM_RFKILL_TYPES,      .name = NULL            }
+ };
+ 

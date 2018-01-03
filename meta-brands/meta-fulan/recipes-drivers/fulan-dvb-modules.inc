@@ -49,6 +49,15 @@ do_configure_prepend () {
         echo "Found custom pti sources.."
         cp -r ${PTI_NP_PATH} ${S}
     fi
+    if [ -L include/multicom ]; then
+        rm include/multicom
+    fi
+    if [ -L multicom ]; then
+        rm multicom 
+    fi
+    ln -sf ${S}/multicom/include ${S}/include/multicom
+    export KERNEL_LOCATION="${STAGING_KERNEL_DIR}"
+    cp -R ${S}/multicom ${STAGING_KERNEL_DIR}/multicom
 }
 
 do_compile() {
@@ -96,7 +105,7 @@ do_install() {
     install -m 644 include/player2/PNGDecode_interface.h ${D}/${includedir}
     install -m 644 include/player2/RLEDecode_interface.h ${D}/${includedir}
     install -m 644 frontcontroller/aotom_spark/aotom_main.h ${D}/${includedir}
- 
+    install -m 644 player2/components/include/stddefs.h ${D}/${includedir}
 
     #install modutils config
     install -d ${D}/${sysconfdir}/modules-load.d
@@ -121,5 +130,11 @@ do_install() {
     find ${D} -name stmcore-display-sti7106.ko | xargs -r rm # we don't have a 7106 chip
 }
 
-FILES_${PN}-dev += "${includedir}"
+PACKAGESPLITFUNCS_append = " handle_driver_rename "
 
+python handle_driver_rename () {
+    d.setVar("RPROVIDES_fulan-dvb-modules-${MACHINE}", "fulan-dvb-modules")
+    d.setVar("RREPLACES_fulan-dvb-modules-${MACHINE}", "fulan-dvb-modules")
+    d.setVar("RCONFLICTS_fulan-dvb-modules-${MACHINE}", "fulan-dvb-modules")
+}
+FILES_${PN}-dev += "${includedir}"
