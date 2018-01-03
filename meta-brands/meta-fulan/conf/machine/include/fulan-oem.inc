@@ -137,6 +137,10 @@ PREFERRED_VERSION_linux-libc-headers = "3.1"
 PREFERRED_VERSION_directfb = "1.7.7"
 PREFERRED_VERSION_rt8812au = "4.3.14"
 PREFERRED_VERSION_samba = "3.%"
+
+PREFERRED_PROVIDER_virtual/egl = "libstgles"
+PREFERRED_PROVIDER_virtual/libgles1 = "libstgles"
+
 SERIAL_CONSOLE = "115200 ttyAS0"
 
 DVBPROVIDER = "kernel"
@@ -203,10 +207,14 @@ MACHINE_EXTRA_RRECOMMENDS = " \
 
 EXTRA_IMAGEDEPENDS += "\
     enigma2-plugin-systemplugins-vfdcontrol \
+    libpcre \
+    libstgles \
+    directfb-stgfx2 \
     "
 
 MACHINE_EXTRA_RDEPENDS = "\
     enigma2-plugin-systemplugins-vfdcontrol \
+    libpcre \
     "
 
 include conf/machine/include/autoload-filesystems.inc
