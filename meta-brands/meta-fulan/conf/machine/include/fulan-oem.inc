@@ -121,7 +121,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'dynaspark7162', 'mtd6' , '', d)}\
 KERNEL_FILE = "uImage"
 ROOTFS_FILE = "e2jffs2.img"
 
-MACHINE_KERNEL_PR = "r14"
+MACHINE_KERNEL_PR = "r15"
 KERNEL_MODULE_PACKAGE_SUFFIX = ""
 
 TARGET_ARCH = "sh4"
@@ -136,6 +136,7 @@ PREFERRED_PROVIDER_virtual/kernel = "linux-fulan"
 PREFERRED_VERSION_linux-libc-headers = "3.1"
 PREFERRED_VERSION_directfb = "1.7.7"
 PREFERRED_VERSION_rt8812au = "4.3.14"
+PREFERRED_VERSION_samba = "3.%"
 SERIAL_CONSOLE = "115200 ttyAS0"
 
 DVBPROVIDER = "kernel"
@@ -156,8 +157,8 @@ MKUBIFS_ARGS = "--pad ${JFFS2_ENDIANNESS} --eraseblock=${JFFS2_ERASEBLOCK} --no-
 IMAGE_FSTYPES ?= "jffs2"
 
 # enable this for debug
-#IMAGE_FSTYPES += "tar.gz "
-#IMAGE_FSTYPES += "spark71xx-usbimg "
+#IMAGE_FSTYPES += "tar.gz"
+#IMAGE_FSTYPES += "spark71xx-usbimg"
 #INHERIT += "usb_image-spark71xx"
 
 IMAGE_CLASSES += "usb_image-spark71xx"
@@ -182,7 +183,8 @@ IMAGE_CMD_jffs2_append = "; \
 	
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS += " \
     stlinux24-sh4-stx7111-fdma-firmware \
-    stlinux24-sh4-stmfb-firmware-stx7111 \
+    libmme-host \
+    libmme-image \
     stslave-fw \
     ustslave \
     stfbcontrol \
