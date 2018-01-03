@@ -6,7 +6,7 @@ LICENSE = "GPLv3"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 
 PV = "1.20+svn${SRCPV}"
-SRCREV = "11394"
+SRCREV = "11397"
 SRC_URI = "svn://www.oscam.cc/svn/oscam-mirror;protocol=http;module=trunk;scmdata=keep;rev=${SRCREV}"
 PR = "r1"
 
@@ -26,6 +26,7 @@ EXTRA_OECMAKE += "\
     -DHAVE_LIBUSB=1 \
     -DSTATIC_LIBUSB=1 \
     -DWITH_SSL=1 \
+    -DCLOCKFIX=0 \
     -DHAVE_PCSC=0"
 
 do_install() {
