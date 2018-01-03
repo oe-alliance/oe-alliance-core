@@ -41,7 +41,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-dvrproviderplayer_1.14_all.ipk \
     enigma2-plugin-extensions-ehue_0.2-r0_all.ipk \
     enigma2-plugin-extensions-filesearchfs_3.0_all.ipk \
-    enigma2-plugin-extensions-focusonline_1.1rc3_all.ipk \
+    enigma2-plugin-extensions-focusonline_1.1rc4_all.ipk \
     enigma2-plugin-extensions-fragmutti_1.0rc2_all.ipk \
     enigma2-plugin-extensions-gmailreader-oe2.0_1.3_all.ipk \
     enigma2-plugin-extensions-googlenewsreader_1.0_mips32el.ipk \
@@ -93,7 +93,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-vhannibalautosettings_1.1_mips32el.ipk \
     enigma2-plugin-extensions-vuplusforum_0.8rc2_all.ipk \
     enigma2-plugin-extensions-webmedia_14.0_r0_all.ipk \
-    enigma2-plugin-extensions-webradiofs_16.02_all.ipk \
+    enigma2-plugin-extensions-webradiofs_16.05_all.ipk \
     enigma2-plugin-extensions-wikipedia_2.3rc2_all.ipk \
     enigma2-plugin-extensions-wwech_1.03_all.ipk \
     enigma2-plugin-extensions-xbmcaddons_8.1_r0_all.ipk \
