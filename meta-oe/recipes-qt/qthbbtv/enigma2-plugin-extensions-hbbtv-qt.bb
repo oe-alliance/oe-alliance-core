@@ -29,10 +29,15 @@ do_install() {
     install -m 0755 ${S}/qthbbtv ${D}${bindir}
     install -d ${D}${libdir}/mozilla/plugins
     install -m 0755 ${S}/libnpapihbbtvplugin.so ${D}${libdir}/mozilla/plugins
-    ln -s /usr/share/fonts ${D}${libdir}/fonts
 }
 
 INHIBIT_PACKAGE_STRIP = "1"
 INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
 
 INSANE_SKIP_${PN} += "already-stripped"
+
+pkg_postinst_${PN}() {
+#!/bin/sh
+ln -sf /usr/share/fonts /usr/lib/fonts
+exit 0
+}

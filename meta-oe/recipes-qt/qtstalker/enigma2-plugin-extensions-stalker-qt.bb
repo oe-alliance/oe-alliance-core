@@ -7,7 +7,7 @@ PACKAGE_ARCH := "${MACHINE_ARCH}"
 
 SRCDATE = "20171231"
 
-PV = "1.0"
+PV = "1.1"
 PR = "${SRCDATE}"
 
 SRC_URI = "file://stalker-101.zip"
@@ -25,10 +25,15 @@ do_install() {
 
 	install -d ${D}/${bindir}
 	install -m 0755 ${S}/stalker ${D}/${bindir}
-    ln -s /usr/share/fonts ${D}${libdir}/fonts
-}
+ }
 
 INHIBIT_PACKAGE_STRIP = "1"
 INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
 
 INSANE_SKIP_${PN} += "already-stripped"
+
+pkg_postinst_${PN}() {
+#!/bin/sh
+ln -sf /usr/share/fonts /usr/lib/fonts
+exit 0
+}
