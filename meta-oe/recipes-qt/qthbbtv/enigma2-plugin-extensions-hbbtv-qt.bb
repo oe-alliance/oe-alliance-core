@@ -9,7 +9,7 @@ SRCDATE = "20170928"
 
 SRC_URI = "file://qthbbtv-106.zip"
 
-PV = "1.1"
+PV = "1.2"
 
 RDEPENDS_${PN}  = "qtwebkit virtual/libgles2"
 

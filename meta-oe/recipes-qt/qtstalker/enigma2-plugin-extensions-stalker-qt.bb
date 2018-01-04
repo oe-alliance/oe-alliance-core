@@ -7,7 +7,7 @@ PACKAGE_ARCH := "${MACHINE_ARCH}"
 
 SRCDATE = "20171231"
 
-PV = "1.1"
+PV = "1.2"
 PR = "${SRCDATE}"
 
 SRC_URI = "file://stalker-101.zip"
