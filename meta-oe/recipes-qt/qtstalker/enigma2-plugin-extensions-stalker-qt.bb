@@ -18,20 +18,20 @@ S = "${WORKDIR}/files"
 
 FILES_${PN} =  "${bindir} ${libdir}"
 
-do_install() {
+do_install(){
 	install -d ${D}${libdir}/enigma2/python/Plugins/Extensions/Stalker
 	install -m 0755 ${S}/*.py ${D}${libdir}/enigma2/python/Plugins/Extensions/Stalker
 	install -m 0755 ${S}/*.png ${D}${libdir}/enigma2/python/Plugins/Extensions/Stalker
 
 	install -d ${D}/${bindir}
 	install -m 0755 ${S}/stalker ${D}/${bindir}
- }
- 
-pkg_postinst_${PN}() {
+}
+
+pkg_postinst_${PN}(){
 #!/bin/sh
 ln -sf /usr/share/fonts /usr/lib/fonts
 exit 0
- }
+}
 
 
 INHIBIT_PACKAGE_STRIP = "1"
