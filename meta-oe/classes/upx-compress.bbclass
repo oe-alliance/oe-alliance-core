@@ -1,6 +1,6 @@
 DEPENDS += " upx-native"
 do_upx() {
-	if echo "${MACHINE_FEATURES}" | grep -q smallflash
+	if [ ${FLASHSIZE} -le ${COMPRESS_UPTO} ]
 	then
 		echo "UPX - Binary compression"
 		if [ "${TARGET_ARCH}" == "sh4" ] || [ "${TARGET_ARCH}" == "arm" ]
