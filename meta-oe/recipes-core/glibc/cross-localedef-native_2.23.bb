@@ -8,6 +8,9 @@ LIC_FILES_CHKSUM = "file://LICENSES;md5=e9a558e243b36d3209f380deb394b213 \
       file://posix/rxspencer/COPYRIGHT;md5=dc5485bb394a13b2332ec1c785f5d83a \
       file://COPYING.LIB;md5=4fbd65380cdd255951079008b364516c"
 
+# Tell autotools that we're working in the localedef directory
+#
+AUTOTOOLS_SCRIPT_PATH = "${S}/localedef"
 
 inherit native
 inherit autotools
@@ -18,12 +21,11 @@ SRCBRANCH ?= "release/${PV}/master"
 GLIBC_GIT_URI ?= "git://sourceware.org/git/glibc.git"
 UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>\d+\.\d+(\.\d+)*)"
 
+SRCREV_glibc ?= "e742928c1592b43db6809db4f39e67be151cdd27"
+SRCREV_localedef ?= "5a81ff9f06a7a808d4c3d37bbf34077a4c5902ed"
+
 SRC_URI = "${GLIBC_GIT_URI};branch=${SRCBRANCH};name=glibc \
            git://github.com/kraj/localedef;branch=master;name=localedef;destsuffix=git/localedef \
-           file://fix_for_centos_5.8.patch \
-           ${EGLIBCPATCHES} \
-"
-EGLIBCPATCHES = "\
            file://0016-timezone-re-written-tzselect-as-posix-sh.patch \
            file://0017-Remove-bash-dependency-for-nscd-init-script.patch \
            file://0018-eglibc-Cross-building-and-testing-instructions.patch \
@@ -33,10 +35,8 @@ EGLIBCPATCHES = "\
            file://0022-eglibc-Resolve-__fpscr_values-on-SH4.patch \
            file://0023-eglibc-Install-PIC-archives.patch \
            file://0025-eglibc-Forward-port-cross-locale-generation-support.patch \
+           file://0025-Define-DUMMY_LOCALE_T-if-not-defined.patch \
 "
-
-SRCREV_glibc ?= "e742928c1592b43db6809db4f39e67be151cdd27"
-SRCREV_localedef ?= "5a81ff9f06a7a808d4c3d37bbf34077a4c5902ed"
 
 # Makes for a rather long rev (22 characters), but...
 #
@@ -46,11 +46,6 @@ S = "${WORKDIR}/git"
 
 EXTRA_OECONF = "--with-glibc=${S}"
 CFLAGS += "-fgnu89-inline -std=gnu99 -DIS_IN\(x\)='0'"
-
-do_configure () {
-	${S}/localedef/configure ${EXTRA_OECONF}
-}
-
 
 do_install() {
 	install -d ${D}${bindir}

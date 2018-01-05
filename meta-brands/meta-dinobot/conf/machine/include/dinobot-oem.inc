@@ -90,4 +90,5 @@ OEM_ARCH = "${MACHINEBUILD}"
 MACHINEOVERRIDES =. "${@['', '${MACHINEBUILD}:']['${MACHINEBUILD}' != '']}"
 
 BBMASK = "meta-vuplus/recipes-graphics/"
+BBMASK += "meta-fulan/recipes-graphics/"
 BBMASK += "meta-vuplus/recipes-webkit/"

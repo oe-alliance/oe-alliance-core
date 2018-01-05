@@ -36,12 +36,15 @@ SRC_URI = "${GLIBC_GIT_URI};branch=${SRCBRANCH};name=glibc \
            file://0023-eglibc-Install-PIC-archives.patch \
            file://0025-eglibc-Forward-port-cross-locale-generation-support.patch \
            file://0026-When-disabling-SSE-make-sure-fpmath-is-not-set-to-us.patch \
+           file://0025-Define-DUMMY_LOCALE_T-if-not-defined.patch \
+           file://0026-build_local_scope.patch \
 "
 
 SRC_URI += "\
            file://etc/ld.so.conf \
            file://generate-supported.mk \
-"
+           file://0001-locale-fix-hard-coded-reference-to-gcc-E.patch \
+           "
 
 SRC_URI_append_class-nativesdk = "\
            file://0001-nativesdk-glibc-Look-for-host-system-ld.so.cache-as-.patch \

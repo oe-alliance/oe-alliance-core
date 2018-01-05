@@ -1,6 +1,6 @@
 SUMMARY = "Linux kernel for ${MACHINE}"
-SECTION = "kernel"
 LICENSE = "GPLv2"
+SECTION = "kernel"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 KV = "2.6.32"
@@ -14,11 +14,11 @@ inherit kernel machine_kernel_pr
 
 DEPENDS_append_spark7162 = " \
   stlinux24-sh4-stx7105-fdma-firmware \
-  "
+"
 
 DEPENDS_append_spark = " \
   stlinux24-sh4-stx7111-fdma-firmware \
-  "
+"
 
 # By default, kernel.bbclass modifies package names to allow multiple kernels
 # to be installed in parallel. We revert this change and rprovide the versioned
@@ -41,6 +41,7 @@ SRC_URI = "git://github.com/Duckbox-Developers/linux-sh4-2.6.32.71.git;protocol=
     file://linux-sh4-init_mm_stm24_${STM_PATCH_STR}.patch;patch=1 \
     file://linux-sh4-copro_stm24_${STM_PATCH_STR}.patch;patch=1 \
     file://linux-sh4-strcpy_stm24_${STM_PATCH_STR}.patch;patch=1 \
+    file://linux-squashfs-lzma_stm24_${STM_PATCH_STR}.patch;patch=1 \
     file://linux-sh4-ext23_as_ext4_stm24_${STM_PATCH_STR}.patch;patch=1 \
     file://linux-sh4-bpa2_procfs_stm24_${STM_PATCH_STR}.patch;patch=1 \
     file://linux-ftdi_sio.c_stm24_${STM_PATCH_STR}.patch;patch=1 \
@@ -53,20 +54,21 @@ SRC_URI = "git://github.com/Duckbox-Developers/linux-sh4-2.6.32.71.git;protocol=
     file://linux-sh4-cpuinfo.patch;patch=1 \
     file://linux-sh4-add_missing_eid.patch;patch=1 \
     file://silence_conv_i2sspdif_warning.patch;patch=1 \
+    file://linux-sh4-linux_yaffs2.patch;patch=1 \
+    file://linux-sh4-fix-crash-usb-reboot.patch;patch=1 \
     file://timeconst_perl5.patch;patch=1 \
+    file://linux-sh4-stmmac_stm24_${STM_PATCH_STR}.patch;patch=1 \
+    file://linux-sh4-lmb_stm24_${STM_PATCH_STR}.patch;patch=1 \
     file://defconfig \
     file://st-coprocessor.h \
+    file://linux-net_stm24.patch;patch=1 \
 "
 
 SRC_URI_append_spark7162 = " \
-    file://linux-sh4-stmmac_stm24_${STM_PATCH_STR}.patch;patch=1 \
-    file://linux-sh4-lmb_stm24_${STM_PATCH_STR}.patch;patch=1 \
     file://linux-sh4-spark7162_setup_stm24_${STM_PATCH_STR}.patch;patch=1 \
 "
 
 SRC_URI_append_spark = " \
-    file://linux-sh4-stmmac_stm24_${STM_PATCH_STR}.patch;patch=1 \
-    file://linux-sh4-lmb_stm24_${STM_PATCH_STR}.patch;patch=1 \
     file://linux-sh4-spark_setup_stm24_${STM_PATCH_STR}.patch;patch=1 \
     file://linux-sh4-lirc_stm_stm24_${STM_PATCH_STR}.patch;patch=1 \
     file://linux-sh4-spark-af901x-NXP-TDA18218.patch;patch=1 \
@@ -107,19 +109,16 @@ do_shared_workdir_append() {
     kerneldir=${STAGING_KERNEL_BUILDDIR}
     if [ -f include/linux/bounds.h ]; then
         mkdir -p $kerneldir/include/linux
-        cp include/linux/bounds.h $kerneldir/include/linux/bounds.h
+        cp -f include/linux/bounds.h $kerneldir/include/linux/bounds.h
     fi
     if [ -f include/asm-sh/machtypes.h ]; then
         mkdir -p $kerneldir/include/asm-sh
-	if [ -L $kerneldir/include/asm ]; then
-		rm $kerneldir/include/asm
-	fi
-        ln -s $kerneldir/include/asm-sh $kerneldir/include/asm
-        cp include/asm-sh/machtypes.h $kerneldir/include/asm-sh
+        ln -sf $kerneldir/include/asm-sh $kerneldir/include/asm
+        cp -f include/asm-sh/machtypes.h $kerneldir/include/asm-sh
     fi
     if [ -e include/linux/utsrelease.h ]; then
         mkdir -p $kerneldir/include/linux
-        cp include/linux/utsrelease.h $kerneldir/include/linux/utsrelease.h
+        cp -f include/linux/utsrelease.h $kerneldir/include/linux/utsrelease.h
     fi
 }
 
@@ -139,9 +138,14 @@ do_uboot_mkimage() {
 pkg_postinst_kernel-image() {
     if [ "x$D" == "x" ]; then
         if [ -f /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE} ] ; then
-            flash_erase /dev/${MTD_KERNEL} 0 0
+            if grep -q root=/dev/mtdblock6 /proc/cmdline; then
+                flash_eraseall /dev/${MTD_KERNEL}
             nandwrite -p /dev/${MTD_KERNEL} /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}
             rm -f /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}
+            else
+                flash_erase /dev/${MTD_KERNEL} 0x400000 0x20
+                nandwrite -s 0x400000 -p /dev/${MTD_KERNEL} /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}
+            fi
         fi
     fi
     true

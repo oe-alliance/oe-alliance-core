@@ -76,6 +76,7 @@ SRC_URI = "\
     file://0060-Only-allow-e500-double-in-SPE_SIMD_REGNO_P-registers.patch \
     file://0061-target-gcc-includedir.patch \
     file://0063-Use-SYSTEMLIBS_DIR-replacement-instead-of-hardcoding.patch \
+    file://0064-fix-cross-compiling.patch \
 "
 SRC_URI[md5sum] = "87c24a4090c1577ba817ec6882602491"
 SRC_URI[sha256sum] = "6c11d292cd01b294f9f84c9a59c230d80e9e4a47e5c6355f046bb36d4f358092"

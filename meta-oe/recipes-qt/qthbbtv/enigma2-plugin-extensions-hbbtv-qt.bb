@@ -9,7 +9,8 @@ SRCDATE = "20170928"
 
 SRC_URI = "file://qthbbtv-106.zip"
 
-PV = "1.1"
+PV = "1.2"
+PR = "${SRCDATE}"
 
 RDEPENDS_${PN}  = "qtwebkit libgles2"
 
@@ -17,7 +18,7 @@ S = "${WORKDIR}/files"
 
 FILES_${PN} =  "${bindir} ${libdir}"
 
-do_install() {
+do_install(){
     install -d ${D}${libdir}/enigma2/python/Plugins/Extensions/QtHbbtv
     install -m 0755 ${S}/__init__.py ${D}${libdir}/enigma2/python/Plugins/Extensions/QtHbbtv
     install -m 0755 ${S}/browser.py ${D}${libdir}/enigma2/python/Plugins/Extensions/QtHbbtv
@@ -28,10 +29,17 @@ do_install() {
     install -m 0755 ${S}/qthbbtv ${D}${bindir}
     install -d ${D}${libdir}/mozilla/plugins
     install -m 0755 ${S}/libnpapihbbtvplugin.so ${D}${libdir}/mozilla/plugins
-    ln -s /usr/share/fonts ${D}${libdir}/fonts
 }
+
+pkg_postinst_${PN}(){
+#!/bin/sh
+ln -sf /usr/share/fonts /usr/lib/fonts
+exit 0
+}
+
 
 INHIBIT_PACKAGE_STRIP = "1"
 INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
 
 INSANE_SKIP_${PN} += "already-stripped"
+

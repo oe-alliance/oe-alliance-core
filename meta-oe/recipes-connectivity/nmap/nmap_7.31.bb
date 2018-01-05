@@ -11,7 +11,7 @@ SRC_URI[md5sum] = "f2f6660142a777862342a58cc54258ea"
 SRC_URI[sha256sum] = "cb9f4e03c0771c709cd47dc8fc6ac3421eadbdd313f0aae52276829290583842"
 
 
-inherit autotools-brokensep pkgconfig python-dir distro_features_check
+inherit autotools-brokensep pkgconfig python-dir distro_features_check upx-compress
 DEPENDS = "libpcap"
 
 #PACKAGECONFIG ?= "ncat nping ndiff pcap lua"
@@ -56,8 +56,3 @@ do_install_append () {
 
 RDEPENDS_${PN} = "python"
 RDEPENDS_${PN}-db = "nmap"
-
-
-inherit binary-compress
-
-FILES_COMPRESS = "${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "${bindir}/nmap", "", d)}"

@@ -216,7 +216,7 @@ RDEPENDS_enigma2-plugin-extensions-dvdburn = "dvd+rw-tools dvdauthor mjpegtools 
 RDEPENDS_enigma2-plugin-systemplugins-hotplug = "hotplug-e2-helper"
 RDEPENDS_enigma2-plugin-systemplugins-fsblupdater = "python-distutils"
 
-inherit autotools-brokensep gitpkgv pkgconfig pythonnative
+inherit autotools-brokensep gitpkgv pkgconfig pythonnative upx-compress
 
 PV = "${IMAGE_VERSION}+git${SRCPV}"
 PKGV = "${IMAGE_VERSION}+git${GITPKGV}"
@@ -380,7 +380,3 @@ python populate_packages_prepend() {
     enigma2_podir = bb.data.expand('${datadir}/enigma2/po', d)
     do_split_packages(d, enigma2_podir, '^(\w+)/[a-zA-Z0-9_/]+.*$', 'enigma2-locale-%s', '%s', recursive=True, match_path=True, prepend=True, extra_depends="enigma2")
 }
-
-inherit binary-compress
-
-FILES_COMPRESS_openatv = "${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "${bindir}/enigma2", "", d)}"

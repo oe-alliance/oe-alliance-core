@@ -1,7 +1,6 @@
 require samba36.inc
 
-
-inherit update-rc.d
+inherit update-rc.d upx-compress
 
 SRC_URI += "file://smb.conf \
            file://smb-user.conf \
@@ -148,15 +147,3 @@ else
         ln -s smb-vmc.samba $D/etc/samba/distro/smb-vmc.conf
 fi
 }
-
-inherit binary-compress
-
-FILES_COMPRESS_dm800se = "${bindir}/smbclient ${bindir}/testparm \
-                          ${bindir}/smbcontrol ${bindir}/smbstatus \
-                          ${sbindir}/samba_multicall \
-                         "
-FILES_COMPRESS_dm500hd = "${bindir}/smbclient ${bindir}/testparm \
-                          ${bindir}/smbcontrol ${bindir}/smbstatus \
-                          ${sbindir}/samba_multicall \
-                         "
-

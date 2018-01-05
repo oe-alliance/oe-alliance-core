@@ -9,6 +9,4 @@ DEPENDS_append = " openssl"
 EXTRA_OECONF_remove = "--with-ssl=gnutls"
 EXTRA_OECONF_append = " --with-ssl=openssl"
 
-inherit binary-compress
-
-FILES_COMPRESS = "${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "${bindir}/wget ${bindir}/wget.wget", "", d)}"
+inherit upx-compress
