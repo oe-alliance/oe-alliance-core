@@ -12,9 +12,9 @@ SRCREV = "${AUTOREV}"
 PV = "${IMAGE_VERSION}+git${SRCPV}"
 PKGV = "${IMAGE_VERSION}+git${GITPKGV}"
 VER ="${IMAGE_VERSION}"
-PR = "r2"
+PR = "r3"
 
-SRC_URI="git://gitlab.com/teamblue/skin.git;protocol=http"
+SRC_URI="git://github.com/teamblue-e2/enigma2.git;protocol=git;branch=master"
 
 S = "${WORKDIR}/git"
 
