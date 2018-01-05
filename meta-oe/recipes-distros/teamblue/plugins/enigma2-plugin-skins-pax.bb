@@ -14,7 +14,7 @@ PKGV = "${IMAGE_VERSION}+git${GITPKGV}"
 VER ="${IMAGE_VERSION}"
 PR = "r3"
 
-SRC_URI="git://github.com/teamblue-e2/enigma2.git;protocol=git;branch=master"
+SRC_URI="git://github.com/teamblue-e2/skin.git;protocol=git;branch=master"
 
 S = "${WORKDIR}/git"
 
