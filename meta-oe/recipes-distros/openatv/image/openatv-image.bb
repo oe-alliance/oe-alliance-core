@@ -21,6 +21,11 @@ IMAGE_INSTALL = "openatv-base \
     packagegroup-base-nfs \
     ", d)} \
     "
+# Some additional comfort on the shell: Pre-install nano on boxes with 128 MB or more:
+IMAGE_INSTALL += "${@bb.utils.contains_any("FLASHSIZE", "64", "", "nano", d)}"
+
+# ... plus mc and helpers on 256 MB or more:
+IMAGE_INSTALL += "${@bb.utils.contains_any("FLASHSIZE", "64 128", "", "mc mc-fish mc-helpers", d)}"
 
 export IMAGE_BASENAME = "openatv-image"
 # 64 or 128MB of flash: No language files, above: German and French
