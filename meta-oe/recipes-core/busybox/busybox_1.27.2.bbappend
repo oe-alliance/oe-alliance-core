@@ -48,12 +48,6 @@ RPROVIDES_${PN}-telnetd += "telnetd"
 
 do_install_append() {
     ln -s /sbin/ip ${D}/bin/ip
-    if grep "CONFIG_CROND=y" ${B}/.config; then
-       mv ${D}${sysconfdir}/init.d/${BPN}-cron ${D}${sysconfdir}/init.d/crond.${BPN}
-    fi
-    if grep -q "CONFIG_CRONTAB=y" ${WORKDIR}/defconfig; then
-        install -d ${D}${sysconfdir}/cron/crontabs
-    fi
     if grep "CONFIG_FEATURE_TELNETD_STANDALONE=y" ${B}/.config; then
         if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
             install -d ${D}${systemd_unitdir}/system

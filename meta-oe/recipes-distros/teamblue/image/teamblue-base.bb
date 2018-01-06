@@ -42,5 +42,4 @@ RDEPENDS_${PN} = "\
     ", d)} \
     packagegroup-base-smbfs-client \
     ofgwrite \
-    bash \
     "

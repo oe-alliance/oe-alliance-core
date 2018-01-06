@@ -35,7 +35,6 @@ RDEPENDS_${PN} = "\
     python-service-identity \
     libshowiframe \
     dvbsnoop \
-    bash \
     enigma2-plugin-drivers-usbserial \ 
     "
 

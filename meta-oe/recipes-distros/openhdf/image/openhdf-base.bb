@@ -49,5 +49,4 @@ RDEPENDS_${PN} = "\
     packagegroup-base-nfs \
     ", d)} \
     packagegroup-base-smbfs-client \
-    bash \
     "

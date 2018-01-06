@@ -5,12 +5,12 @@ LICENSE = "CLOSED"
 require conf/license/license-close.inc
 PACKAGE_ARCH := "${MACHINE_ARCH}"
 
-SRCDATE = "20171231"
+SRCDATE = "20180106"
 
 PV = "1.2"
 PR = "${SRCDATE}"
 
-SRC_URI = "file://stalker-101.zip"
+SRC_URI = "file://stalker-102.zip"
 
 RDEPENDS_${PN}  = "qtwebkit virtual/libgles2 python-netifaces" 
 
@@ -23,8 +23,12 @@ do_install(){
 	install -m 0755 ${S}/*.py ${D}${libdir}/enigma2/python/Plugins/Extensions/Stalker
 	install -m 0755 ${S}/*.png ${D}${libdir}/enigma2/python/Plugins/Extensions/Stalker
 
+
 	install -d ${D}/${bindir}
 	install -m 0755 ${S}/stalker ${D}/${bindir}
+
+	install -d ${D}/locale
+	cp -rp ${S}/locale ${D}${libdir}/enigma2/python/Plugins/Extensions/Stalker
 }
 
 pkg_postinst_${PN}(){

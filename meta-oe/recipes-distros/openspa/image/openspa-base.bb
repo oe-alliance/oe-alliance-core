@@ -29,6 +29,5 @@ RDEPENDS_${PN} = " \
     ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "", "enigma2-plugin-extensions-openwebif-vxg", d)} \
     ${@bb.utils.contains("MACHINE_NAME", "PLAY", "packagegroup-base-smbfs-client packagegroup-base-smbfs-server packagegroup-base-smbfs-utils packagegroup-base-nfs", "" , d)} \
     ${@bb.utils.contains("TUNE_FEATURES", "armv", "glibc-compat", "", d)} \
-    ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "", "bash", d)} \
     ofgwrite \
     "
