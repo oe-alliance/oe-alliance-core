@@ -23,7 +23,11 @@ IMAGE_INSTALL = "openatv-base \
     "
 
 export IMAGE_BASENAME = "openatv-image"
-IMAGE_LINGUAS = ""
+# 64 or 128MB of flash: No language files, above: German and French
+IMAGE_LINGUAS  = "${@bb.utils.contains_any("FLASHSIZE", "64 128", "", "de-de fr-fr", d)}"
+
+# Add more languages for 512 or more MB of flash:
+IMAGE_LINGUAS += "${@bb.utils.contains_any("FLASHSIZE", "64 128 256", "", "es-es it-it nl-nl pt-pt", d)}"
 
 IMAGE_FEATURES += "package-management"
 
