@@ -7,7 +7,7 @@ PR = "r0"
 require conf/license/license-close.inc
 inherit allarch
 
-SRC_URI = "file://lctimelocales.tar.gz file://locale.alias file://SYS_LC_MESSAGES file://LC_CTYPE"
+SRC_URI = "file://lctimelocales.tar.gz file://locale.alias file://SYS_LC_MESSAGES file://LC_CTYPE file://locale.sh"
 
 S = "${WORKDIR}/locales"
 
@@ -28,6 +28,9 @@ RPROVIDES_${PN} = "virtual-locale-ar virtual-locale-bg virtual-locale-ca virtual
 	virtual-locale-uk"
 
 do_install() {
+    install -d ${D}${sysconfdir}/profile.d
+    install -m 0644 ${WORKDIR}/locale.sh ${D}${sysconfdir}/profile.d/locale.sh
+
     install -d ${D}${LOCALEDIR2}
     install ${WORKDIR}/locale.alias ${D}${LOCALEDIR2}
 
@@ -45,6 +48,6 @@ do_install() {
     done
 }
 
-FILES_${PN} = "${LOCALEDIR} ${LOCALEDIR2}"
+FILES_${PN} = "${LOCALEDIR} ${LOCALEDIR2} ${sysconfdir}/profile.d"
 
 do_package_qa[noexec] = "1"

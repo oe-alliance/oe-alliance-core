@@ -6,7 +6,6 @@ FILESEXTRAPATHS_prepend := "${THISDIR}/${MACHINE}:"
 FILESEXTRAPATHS_prepend := "${THISDIR}/${MACHINEBUILD}:"
 
 SRC_URI += "file://editor.sh"
-SRC_URI += "file://locale.sh"
 SRC_URI += "file://terminfo.sh"
 SRC_URI += "file://mount-helper.sh"
 
@@ -25,7 +24,6 @@ do_install_append() {
     install -m 0755 ${WORKDIR}/mount-helper.sh       ${D}${sysconfdir}/udev
     install -d ${D}${sysconfdir}/profile.d
     install -m 0644 ${WORKDIR}/editor.sh   ${D}${sysconfdir}/profile.d/editor.sh
-    install -m 0644 ${WORKDIR}/locale.sh   ${D}${sysconfdir}/profile.d/locale.sh
     install -m 0644 ${WORKDIR}/terminfo.sh ${D}${sysconfdir}/profile.d/terminfo.sh
 
     # Inject machine specific blacklists into mount-helper:
@@ -68,5 +66,3 @@ if [ -z "$D" ]; then
 	fi
 fi
 }
-
-CONFFILES_${PN} += "${sysconfdir}/profile.d/locale.sh"
