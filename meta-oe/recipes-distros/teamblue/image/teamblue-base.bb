@@ -23,7 +23,6 @@ RDEPENDS_${PN} = "\
     ntfs-3g \
     ntfsprogs \
     hddtemp \
-    virtual/cron \
     python-imaging \
     python-service-identity \
     rtmpdump \
@@ -43,5 +42,4 @@ RDEPENDS_${PN} = "\
     ", d)} \
     packagegroup-base-smbfs-client \
     ofgwrite \
-    bash \
     "

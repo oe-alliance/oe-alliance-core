@@ -13,9 +13,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 inherit packagegroup
 
 RDEPENDS_${PN} = "\
-    bash \
     ca-certificates \
-    virtual/cron \
     flip \
     hddtemp \
     oe-alliance-base \
@@ -29,7 +27,7 @@ RDEPENDS_${PN} = "\
     rtmpdump \
     ${@bb.utils.contains("TUNE_FEATURES", "armv", "glibc-compat", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "dreamboxv1", "", "ofgwrite", d)} \
-    ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "", " \
+    ${@bb.utils.contains_any("FLASHSIZE", "64", "", " \
         iproute2 \
         ntfs-3g \
     ", d)} \

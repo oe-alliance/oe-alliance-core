@@ -19,8 +19,6 @@ RDEPENDS_${PN} = "\
 	egami-version-info \
 	egami-base-files \
 	\
-	virtual/cron \
-	bash \
 	ntfs-3g \
 	dosfstools \
 "

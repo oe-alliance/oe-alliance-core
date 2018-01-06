@@ -20,12 +20,10 @@ RDEPENDS_${PN} = "\
     opendroid-spinner \
     ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "", "ntfs-3g ", d)} \
     hddtemp \
-    virtual/cron \
     python-imaging \
     python-service-identity \
     rtmpdump \
     packagegroup-base-smbfs-client \
     ${@bb.utils.contains("MACHINE_FEATURES", "dreamboxv1", "", "ofgwrite", d)} \
     ${@bb.utils.contains("TUNE_FEATURES", "armv", "glibc-compat", "", d)} \
-    bash \
     "

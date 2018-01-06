@@ -27,12 +27,14 @@ RDEPENDS_${PN} = "\
     ${@bb.utils.contains("MACHINE_FEATURES", "recovery", "recovery" , "", d)} \
     ${@bb.utils.contains("DEFAULTTUNE", "sh4", "alsa-utils-amixer-conf" , "", d)} \
     avahi-daemon \
+    bash \
+    cronie \
     dropbear \
     early-configure \
     e2fsprogs-mke2fs \
     e2fsprogs-e2fsck \
     e2fsprogs-tune2fs \
-    fakelocale \
+    minilocale \
     libavahi-client \
     libcrypto-compat-0.9.7 \
     libcrypto-compat-1.0.0 \
@@ -50,6 +52,7 @@ RDEPENDS_${PN} = "\
     util-linux-flock \
     volatile-media \
     vsftpd \
+    wget \
     python-twisted-protocols python-numbers python-argparse \
     "
 
