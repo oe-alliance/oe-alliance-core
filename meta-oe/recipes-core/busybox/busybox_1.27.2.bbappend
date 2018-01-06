@@ -22,16 +22,6 @@ RDEPENDS_${PN} += "odhcp6c"
 RRECOMMENDS_${PN} += "${PN}-inetd"
 RRECOMMENDS_${PN} += "${PN}-telnetd"
 
-PACKAGES =+ "${PN}-cron"
-INITSCRIPT_PACKAGES += "${PN}-cron"
-INITSCRIPT_NAME_${PN}-cron = "crond.${BPN}"
-CONFFILES_${PN}-cron = "${sysconfdir}/cron"
-FILES_${PN}-cron = "${sysconfdir}/cron ${sysconfdir}/init.d/crond.${BPN}"
-RDEPENDS_${PN}-cron += "${PN}"
-PROVIDES_${PN}-cron += "virtual/cron"
-RPROVIDES_${PN}-cron += "virtual/cron"
-RCONFLICTS_${PN}-cron += "cronie"
-
 PACKAGES =+ "${PN}-inetd"
 INITSCRIPT_PACKAGES += "${PN}-inetd"
 INITSCRIPT_NAME_${PN}-inetd = "inetd.${BPN}" 
@@ -51,12 +41,6 @@ PROVIDES += "virtual/telnetd"
 RPROVIDES_${PN}-telnetd += "virtual/telnetd"
 
 do_install_append() {
-    if grep "CONFIG_CROND=y" ${B}/.config; then
-       mv ${D}${sysconfdir}/init.d/${BPN}-cron ${D}${sysconfdir}/init.d/crond.${BPN}
-    fi
-    if grep -q "CONFIG_CRONTAB=y" ${WORKDIR}/defconfig; then
-        install -d ${D}${sysconfdir}/cron/crontabs
-    fi
     if grep "CONFIG_FEATURE_TELNETD_STANDALONE=y" ${B}/.config; then
 	install -m 0755 ${WORKDIR}/telnetd ${D}${sysconfdir}/init.d/telnetd.${BPN}
 	sed -i "s:/usr/sbin/:${sbindir}/:" ${D}${sysconfdir}/init.d/telnetd.${BPN}
