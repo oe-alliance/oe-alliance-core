@@ -28,13 +28,13 @@ RDEPENDS_${PN} = "\
     rtmpdump \
     zip \
     ${@bb.utils.contains("TUNE_FEATURES", "armv", "glibc-compat", "", d)} \
-    ${@bb.utils.contains("FLASHSIZE", "64 96", "enigma2-plugin-extensions-openwebif-webtv", \
+    ${@bb.utils.contains_any("FLASHSIZE", "64 96", "enigma2-plugin-extensions-openwebif-webtv", \
     " \
     enigma2-plugin-extensions-openwebif-terminal \
     enigma2-plugin-extensions-openwebif-themes \
     enigma2-plugin-extensions-openwebif-vxg \
     ", d)} \
-    ${@bb.utils.contains("FLASHSIZE", "64", "", \
+    ${@bb.utils.contains_any("FLASHSIZE", "64", "", \
     " \
     packagegroup-base-smbfs-server \
     packagegroup-base-nfs \
