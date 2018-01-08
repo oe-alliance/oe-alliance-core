@@ -2,6 +2,9 @@ FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}-${PV}:"
 
 DEPENDS += " ${@bb.utils.contains("MACHINE_FEATURES", "sdl", "libsdl", "", d)} ${@bb.utils.contains("TARGET_ARCH", "sh4", "fulan-dvb-modules-${MACHINE} stlirc", "", d)}"
 
+SRC_URI_append_sh4 = " \
+    file://DirectFB-1.7.7.stm.fixed.patch;patch=1 \
+"
 
 EXTRA_OECONF = " \
   --enable-freetype=yes \
