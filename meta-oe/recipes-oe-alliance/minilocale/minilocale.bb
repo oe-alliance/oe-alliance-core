@@ -6,7 +6,7 @@ PRIORITY = "required"
 
 # Use machine architecture to avoid "prefer arch over version" to do anything bad
 PACKAGE_ARCH = "${DEFAULTTUNE}"
-PKGV = "0.1"
+PKGV = "0.11"
 #PR = "r0"
 
 require conf/license/license-gplv2.inc
@@ -51,7 +51,7 @@ do_install() {
 	done
 
 	# For machines with only 64 MB of flash delete all LC_COLLATE and use POSIX LC_COLLATE instead
-	if [ ${FLASHSIZE} -le 64 ]; then
+	if [ ${FLASHSIZE} -le 96 ]; then
 		find ${D}${LOCALEDIR}/ -name 'LC_COLLATE' -type f -exec rm -f {} +
 	fi
 

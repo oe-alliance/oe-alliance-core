@@ -22,17 +22,17 @@ IMAGE_INSTALL = "openatv-base \
     ", d)} \
     "
 # Some additional comfort on the shell: Pre-install nano on boxes with 128 MB or more:
-IMAGE_INSTALL += "${@bb.utils.contains_any("FLASHSIZE", "64", "", "nano", d)}"
+IMAGE_INSTALL += "${@bb.utils.contains_any("FLASHSIZE", "64 96", "", "nano", d)}"
 
 # ... plus mc and helpers on 256 MB or more:
-IMAGE_INSTALL += "${@bb.utils.contains_any("FLASHSIZE", "64 128", "", "mc mc-fish mc-helpers", d)}"
+IMAGE_INSTALL += "${@bb.utils.contains_any("FLASHSIZE", "64 96 128", "", "mc mc-fish mc-helpers", d)}"
 
 export IMAGE_BASENAME = "openatv-image"
 # 64 or 128MB of flash: No language files, above: German and French
-IMAGE_LINGUAS  = "${@bb.utils.contains_any("FLASHSIZE", "64 128", "", "de-de fr-fr", d)}"
+IMAGE_LINGUAS  = "${@bb.utils.contains_any("FLASHSIZE", "64 96 128", "", "de-de fr-fr", d)}"
 
 # Add more languages for 512 or more MB of flash:
-IMAGE_LINGUAS += "${@bb.utils.contains_any("FLASHSIZE", "64 128 256", "", "es-es it-it nl-nl pt-pt", d)}"
+IMAGE_LINGUAS += "${@bb.utils.contains_any("FLASHSIZE", "64 96 128 256", "", "es-es it-it nl-nl pt-pt", d)}"
 
 IMAGE_FEATURES += "package-management"
 
