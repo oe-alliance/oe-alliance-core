@@ -109,4 +109,9 @@ do_install() {
 	if [ "x${DISTRO}" = "xopenatv" ]; then
 		install -m 0755    ${WORKDIR}/fastrestore_openatv.sh	${D}${sysconfdir}/init.d/fastrestore
 	fi
+
+	# run bootmisc.sh after S37populate-volatile.sh  to fix /tmp issue
+	update-rc.d -f -r ${D} bootmisc.sh remove
+	update-rc.d -r ${D} bootmisc.sh start 55 S .
+
 }

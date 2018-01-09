@@ -160,25 +160,25 @@ case $ACTION in
 				elif [ "$MODEL" == "Compact Flash   " ]; then
 					DEVICETYPE="cf"
 				elif [ "$MODEL" == "USB SD Reader   " ]; then
-					DEVICETYPE="mmc1"
+					DEVICETYPE="mmc"
 				elif [ "$MODEL" == "USB SD  Reader  " ]; then
-					DEVICETYPE="mmc1"
+					DEVICETYPE="mmc"
 				elif [ "$MODEL" == "SD/MMC          " ]; then
-					DEVICETYPE="mmc1"
+					DEVICETYPE="mmc"
 				elif [ "$MODEL" == "USB MS Reader   " ]; then
-					DEVICETYPE="mmc1"
+					DEVICETYPE="mmc"
 				elif [ "$MODEL" == "SM/xD-Picture   " ]; then
-					DEVICETYPE="mmc1"
+					DEVICETYPE="mmc"
 				elif [ "$MODEL" == "USB SM Reader   " ]; then
-					DEVICETYPE="mmc1"
+					DEVICETYPE="mmc"
 				elif [ "$MODEL" == "MS/MS-Pro       " ]; then
-					DEVICETYPE="mmc1"
+					DEVICETYPE="mmc"
 				elif [ "$MODEL1" == "SD	            " ]; then
-					DEVICETYPE="mmc1"
+					DEVICETYPE="mmc"
 				elif [ "$MODEL1" == "SD              " ]; then
-					DEVICETYPE="mmc1"
+					DEVICETYPE="mmc"
 				elif [ "$MODEL1" == "SD" ]; then
-					DEVICETYPE="mmc1"
+					DEVICETYPE="mmc"
 				else
 					#echo "[mdev-mount.sh] USB device found" >> $LOG
 					if [ $PARTNUM -eq "1" -o $PARTNUM -eq "5" ] ; then
