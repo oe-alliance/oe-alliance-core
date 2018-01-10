@@ -1,0 +1,14 @@
+--- a/libopkg/opkg_install.c	2018-01-10 04:51:25.000000000 +0100
++++ b/libopkg/opkg_install.c	2018-01-10 05:01:00.829598878 +0100
+@@ -451,9 +451,10 @@
+             pkg_t *owner;
+             pkg_t *obs;
+             int existing_is_dir = file_is_dir(filename);
++            int existing_is_lnk = file_is_symlink(filename);
+ 
+             /* OK if both the existing file and new file are directories. */
+-            if (existing_is_dir && S_ISDIR(file_info->mode)) {
++            if (existing_is_lnk || (existing_is_dir && S_ISDIR(file_info->mode))) {
+                 continue;
+             } else if (existing_is_dir || S_ISDIR(file_info->mode)) {
+                 /* Can't mix directory and non-directory.  For normal files,
