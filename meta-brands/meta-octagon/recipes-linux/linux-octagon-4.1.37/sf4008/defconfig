@@ -602,7 +602,7 @@ CONFIG_BINFMT_ELF=y
 CONFIG_BINFMT_SCRIPT=y
 # CONFIG_HAVE_AOUT is not set
 # CONFIG_BINFMT_MISC is not set
-# CONFIG_COREDUMP is not set
+CONFIG_COREDUMP=y
 
 #
 # Power management options
