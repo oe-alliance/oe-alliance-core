@@ -7,12 +7,14 @@ IMAGEDIR = "dinobot/${MACHINE}"
 
 MACHINE_NAME = "\
 ${@bb.utils.contains('MACHINEBUILD', 'dinobot4k', 'DINOBOT 4K' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mediabox4k', 'mediabox 4k M7L' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'dinobot4kse', 'DINOBOT 4KSE' , '', d)}\
 "
 
 MACHINE_BRAND = "\
-${@bb.utils.contains('MACHINEBUILD', 'dinobot4k', ' Vivant' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'dinobot4kse', ' Vivant' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'dinobot4k', 'Vivant' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mediabox4k', 'JEPSSEN' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'dinobot4kse', 'Vivant' , '', d)}\
 "
 
 MTD_KERNEL = "mmcblk0p10"
