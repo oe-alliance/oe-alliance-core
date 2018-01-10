@@ -10,9 +10,8 @@ PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"
 PR = "r0"
 
-SRC_URI = "git://github.com/windytan/redsea.git;protocol=http \
-    file://0001-revert-use-macports-include-paths.patch \
-"
+SRC_URI = "git://github.com/windytan/redsea.git;protocol=http"
+
 SRCREV = "${AUTOREV}"
 
 S = "${WORKDIR}/git"
@@ -21,4 +20,4 @@ DEPENDS = "liquid-dsp"
 
 inherit autotools-brokensep
 
-EXTRA_OECONF += "--disable-tmc --without-sndfile"
+EXTRA_OECONF += "--disable-tmc --without-sndfile --without-macports"
