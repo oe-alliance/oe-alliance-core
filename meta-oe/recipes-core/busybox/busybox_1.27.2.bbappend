@@ -1,4 +1,4 @@
-PR .= ".1"
+PR .= ".2"
 SRC_URI += " \
             file://mount_single_uuid.patch \
             file://use_ipv6_when_ipv4_unroutable.patch \
@@ -9,6 +9,7 @@ SRC_URI += " \
             file://ntp.script \
             file://0001-Prevent-telnet-connections-from-the-internet-to-the-.patch \
             file://0002-Extended-network-interfaces-support.patch \
+            file://0003-Invert-a-newly-invented-setting-in-tar-breaking-extraction.patch \
             "
 
 # we do not really depend on mtd-utils, but as mtd-utils replaces 
