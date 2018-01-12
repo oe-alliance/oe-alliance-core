@@ -8,8 +8,7 @@ DEPENDS = " \
     gettext-native \
     ${@bb.utils.contains("GST_VERSION", "1.0", "gstreamer1.0-plugins-base gstreamer1.0", "gst-plugins-base gstreamer", d)} \
     jpeg \
-    libdreamdvd libdvbsi++ libfribidi libmad libpng giflib libxml2 libxmlccwrap \
-    ${@bb.utils.contains('DISTRO_FEATURES', 'libsigc2', 'libsigc++-2.0', 'libsigc++-1.2', d)} \
+    libdreamdvd libdvbsi++ libfribidi libmad libpng giflib libxml2 libxmlccwrap libsigc++-2.0 \
     openssl avahi libudfread \
     python python-imaging python-twisted python-wifi \
     swig-native \
