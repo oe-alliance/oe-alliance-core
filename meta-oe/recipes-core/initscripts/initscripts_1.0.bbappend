@@ -2,19 +2,20 @@ FILESEXTRAPATHS_prepend := "${THISDIR}/${P}:"
 
 CONFFILES_${PN}_remove = "${sysconfdir}/init.d/checkroot.sh"
 
-# Build initscript-functions as dummy package only as shitquake refuses to fulfill the RDEPENDS for it.
-FILES_${PN}-functions = ""
-ALLOW_EMPTY_${PN}-functions = "1"
-
-# Try to convince shitquake to fulfill the dependency, but now it's non-fatal if shitquake doesn't
-RDEPENDS_${PN} += "sdparm initd-functions initscripts-functions"
+RDEPENDS_${PN} += "bash sdparm"
 
 DEPENDS_append_class-target = " sysvinit update-rc.d insserv"
 PACKAGE_WRITE_DEPS_append = " ${@bb.utils.contains('DISTRO_FEATURES','systemd','systemd-systemctl-native','',d)}"
 PACKAGE_WRITE_DEPS_append = " sysvinit update-rc.d insserv"
 
+RPROVIDES_${BPN} += "softcam-support cardserver-support"
+RREPLACES_${BPN} += "softcam-support cardserver-support"
+RCONFLICTS_${BPN} += "softcam-support cardserver-support"
+
 SRC_URI += "file://hotplug.sh \
             file://procps \
+            file://nocam.sh \
+            file://nocard.sh \
             file://fastrestore_openatv.sh \
             file://skeleton \
             file://halt.default \
@@ -114,4 +115,33 @@ do_install() {
 	update-rc.d -f -r ${D} bootmisc.sh remove
 	update-rc.d -r ${D} bootmisc.sh start 55 S .
 
+	install -m 0755    ${WORKDIR}/nocard.sh	${D}${sysconfdir}/init.d/cardserver.None
+
+	# Create the startup links for /etc/init.d/cardserver ...
+	ln -sf cardserver.None ${D}/etc/init.d/cardserver
+	update-rc.d -r ${D} cardserver start 90 S .
+
+	# ... but avoid the link /etc/init.d/cardserver becoming a file of this package
+	rm ${D}/etc/init.d/cardserver
+
+	install -m 0755    ${WORKDIR}/nocam.sh	${D}${sysconfdir}/init.d/softcam.None
+
+	# Create the startup links for /etc/init.d/softcam ...
+	ln -sf softcam.None ${D}/etc/init.d/softcam
+	update-rc.d -r ${D} softcam start 95 S .
+
+	# ... but avoid the link /etc/init.d/softcam becoming a file of this package
+	rm ${D}/etc/init.d/softcam
+}
+
+
+pkg_postinst_${PN}_append() {
+	if [ ! -e "$D/etc/init.d/cardserver" ]
+	then
+		ln -s cardserver.None $D/etc/init.d/cardserver
+	fi
+	if [ ! -e "$D/etc/init.d/softcam" ]
+	then
+		ln -s softcam.None $D/etc/init.d/softcam
+	fi
 }

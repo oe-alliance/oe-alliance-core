@@ -62,14 +62,4 @@ if [ -e /etc/ld.so.conf ] ; then
 	/sbin/ldconfig
 fi
 
-#
-# Autostart Softcams (PLi Softcam Manager)
-#
-if [ -e /etc/init.d/softcam ] ; then
-	/etc/init.d/softcam restart
-fi
-if [ -e /etc/init.d/cardserver ] ; then
-	/etc/init.d/cardserver restart
-fi
-
 : exit 0
