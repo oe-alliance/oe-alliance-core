@@ -50,3 +50,5 @@ kernel_do_install_append() {
         install -m 0755 ${KERNEL_OUTPUT} ${D}/${KERNEL_IMAGEDEST}
 }
 
+do_rm_work() {
+}
