@@ -1,0 +1,35 @@
+--- a/archival/libarchive/unsafe_symlink_target.c	2018-01-12 18:58:59.000000000 +0100
++++ b/archival/libarchive/unsafe_symlink_target.c	2018-01-12 19:03:41.757028328 +0100
+@@ -14,18 +14,15 @@
+ unsafe:
+ 		var = getenv("EXTRACT_UNSAFE_SYMLINKS");
+ 		if (var) {
+-			if (LONE_CHAR(var, '1'))
+-				return 0; /* pretend it's safe */
+-			return 1; /* "UNSAFE!" */
++			if (LONE_CHAR(var, '0')) {
++				return 1;
++			} else {
++				return 0;
++			}
+ 		}
+-		bb_error_msg("skipping unsafe symlink to '%s' in archive,"
+-			" set %s=1 to extract",
+-			target,
+-			"EXTRACT_UNSAFE_SYMLINKS"
+-		);
+ 		/* Prevent further messages */
+-		setenv("EXTRACT_UNSAFE_SYMLINKS", "0", 0);
+-		return 1; /* "UNSAFE!" */
++		setenv("EXTRACT_UNSAFE_SYMLINKS", "1", 0);
++		return 0;
+ 	}
+ 
+ 	dot = target;
+@@ -45,4 +42,4 @@
+ 			/* NB: it can even be trailing ".", should only add 1 */
+ 			dot += 1;
+ 	}
+-}
+\ Kein Zeilenumbruch am Dateiende.
++}
