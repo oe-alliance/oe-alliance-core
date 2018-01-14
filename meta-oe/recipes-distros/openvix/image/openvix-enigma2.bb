@@ -8,7 +8,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "${IMAGE_VERSION}"
-PR = "r16"
+PR = "r17"
 
 inherit packagegroup
 
@@ -27,6 +27,7 @@ RRECOMMENDS_${PN} = "\
     enigma2-plugin-extensions-epgimport \
     enigma2-plugin-extensions-epgsearch \
     enigma2-plugin-extensions-imdb \
+    enigma2-plugin-skins-openvix-youvix-blue \
     enigma2-plugin-systemplugins-crossepg \
     ${@bb.utils.contains("MACHINE_FEATURES", "uianimation", "enigma2-plugin-systemplugins-animationsetup" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "osdanimation", "enigma2-plugin-systemplugins-animationsetup" , "", d)} \
