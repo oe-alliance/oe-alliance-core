@@ -6,19 +6,37 @@ BRAND_OEM = "dinobot"
 IMAGEDIR = "dinobot/${MACHINE}"
 
 MACHINE_NAME = "\
+${@bb.utils.contains('MACHINEBUILD', 'anadol4k', 'ECO 4K' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'dinobot4kl', 'DINOBOT 4KL' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'dinobot4k', 'DINOBOT 4K' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'mediabox4k', 'mediabox 4k M7L' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'dinobot4kse', 'DINOBOT 4KSE' , '', d)}\
 "
 
 MACHINE_BRAND = "\
+${@bb.utils.contains('MACHINEBUILD', 'anadol4k', 'ANADOL' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'dinobot4kl', 'Vivant' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'dinobot4k', 'Vivant' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'mediabox4k', 'JEPSSEN' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'dinobot4kse', 'Vivant' , '', d)}\
 "
 
-MTD_KERNEL = "mmcblk0p10"
-MTD_ROOTFS = "mmcblk1p1"
+MTD_KERNEL = "\
+${@bb.utils.contains('MACHINEBUILD', 'anadol4k', 'mmcblk0p9' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'dinobot4kl', 'mmcblk0p9' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'dinobot4k', 'mmcblk0p10' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mediabox4k', 'mmcblk0p10' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'dinobot4kse', 'mmcblk0p10' , '', d)}\
+"
+
+MTD_ROOTFS = "\
+${@bb.utils.contains('MACHINEBUILD', 'anadol4k', 'mmcblk0p10' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'dinobot4kl', 'mmcblk0p10' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'dinobot4k', 'mmcblk1p1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mediabox4k', 'mmcblk1p1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'dinobot4kse', 'mmcblk1p1' , '', d)}\
+"
+
 KERNEL_FILE = "kernel.bin"
 ROOTFS_FILE = "rootfs.tar.bz2"
 MTD_BLACK  = "mmcblk0 mmcblk1"
@@ -31,7 +49,9 @@ MACHINE_ESSENTIAL_EXTRA_RDEPENDS = "\
     dinobot-hihalt-${MACHINE} \
 "
 
-MACHINE_FEATURES += "videoenhancement switchoff  hdmicec linuxwifi 7segment textlcd dvb-c skins1080 blindscan-tbs emmc mmc"
+MACHINE_FEATURES += "videoenhancement switchoff  hdmicec linuxwifi 7segment textlcd skins1080 blindscan-tbs emmc mmc \
+    ${@bb.utils.contains('MACHINEBUILD', 'anadol4k', '' , ' dvb-c', d)} \
+    "
 
 IMAGE_CLASSES  += "dinobot-emmc_image"
 IMAGE_FSTYPES += "dinobotemmc"

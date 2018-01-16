@@ -5,9 +5,10 @@ LICENSE = "CLOSED"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
+RDEPENDS_${PN} = "curl"
 
 PV = "${SRCDATE}"
-PR = "r0"
+PR = "r1"
 
 inherit lib_package
 
