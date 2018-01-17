@@ -21,6 +21,11 @@ RDEPENDS_${PN} = "\
     ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "", "ntfs-3g ", d)} \
     hddtemp \
     virtual/cron \
+    exteplayer3 \
+    gstplayer \
+    ffmpeg \
+    enigma2-plugin-systemplugins-serviceapp \
+    libshowiframe \
     python-imaging \
     python-service-identity \
     rtmpdump \
