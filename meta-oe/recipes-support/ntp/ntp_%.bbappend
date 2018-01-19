@@ -1,9 +1,11 @@
+RDEPENDS_ntpdate += "lockfile-progs"
+
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
-PR .= ".4"
+PR .= ".5"
 
 do_install_append() {
-	perl -0777 -i -pe 's:(\. /etc/default/ntpdate.+?fi):$1\n\nif test -f /var/tmp/ntpv4.local ; then\n. /var/tmp/ntpv4.local\nfi\n\ncheck_online() {\n\tcount=0\n\twhile [ \$count -lt 5 ]; do\n\t\tif ping -4 -c 1 www.google.com >/dev/null 2>&1 \|\| ping -6 -c 1 www.google.com \>/dev/null 2\>&1; then\n\t\t\tbreak\n\t\tfi\n\t\tcount=\$((count+1))\n\tdone\n}\n\nif [ "\$NTPV4" != "" ]; then\n\tNTPSERVERS=\$NTPV4\nfi:s;' \
+	perl -0777 -i -pe 's:(\. /etc/default/ntpdate.+?fi):$1\n\nif test -f /var/tmp/ntpv4.local ; then\n. /var/tmp/ntpv4.local\nfi\n\ncheck_online() {\n\tcount=0\n\twhile [ \$count -lt 5 ]; do\n\t\tsleep 0.5\n\t\tif ping -4 -c 1 www.google.com >/dev/null 2>&1 \|\| ping -6 -c 1 www.google.com \>/dev/null 2\>&1; then\n\t\t\tbreak\n\t\tfi\n\t\tcount=\$((count+1))\n\tdone\n}\n\nif [ "\$NTPV4" != "" ]; then\n\tNTPSERVERS=\$NTPV4\nfi:s;' \
                  ${D}/usr/bin/ntpdate-sync
 
 	# When invoked from ifup, step to the time rather than slewing
