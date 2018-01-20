@@ -6,7 +6,7 @@ MODULE = "linux-3.14.28"
 
 inherit kernel machine_kernel_pr
 
-MACHINE_KERNEL_PR_append = "r7"
+MACHINE_KERNEL_PR_append = "r8"
 
 SRC_URI[md5sum] = "c1e96f702ca737630f5acb0dce2388e7"
 SRC_URI[sha256sum] = "72928012a7dbacbf95a371d9faa6800a20afd6b106958298cfc41028878aac4e"
