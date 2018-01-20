@@ -3,7 +3,7 @@ LICENSE = "GPLv2"
 SECTION = "kernel"
 
 KV = "3.14.28"
-MACHINE_KERNEL_PR_append = "10"
+MACHINE_KERNEL_PR_append = "11"
 
 inherit kernel machine_kernel_pr
 
