@@ -7,7 +7,9 @@ inherit allarch
 
 require conf/license/license-gplv2.inc
 
-inherit gitpkgv
+inherit gitpkgv gettext
+DEPENDS += "gettext-native"
+
 SRCREV = "${AUTOREV}"
 PV = "2.1+git${SRCPV}"
 PKGV = "2.1+git${GITPKGV}"
@@ -28,21 +30,22 @@ FILES_${PN}-src = "\
     /usr/lib/enigma2/python/Components/Converter/*.py \
     /usr/lib/enigma2/python/Components/Renderer/*.py \
     /usr/lib/enigma2/python/Plugins/Extensions/MyMetrixLite/*.py \
-    /usr/lib/enigma2/python/Plugins/Extensions/MyMetrixLite/locale/MyMetrixLite.pot \
-    /usr/lib/enigma2/python/Plugins/Extensions/MyMetrixLite/locale/*/LC_MESSAGES/MyMetrixLite.po \
     "
+
 FILES_${PN} = "/usr"
 
 do_compile() {
-    python -O -m compileall ${S}/usr/lib
+	python -O -m compileall ${S}
+	for f in $(find ${S}/locale -name *.po ); do
+		l=$(echo ${f%} | sed 's/\.po//' | sed 's/.*locale\///')
+		mkdir -p ${S}${libdir}/enigma2/python/Plugins/Extensions/MyMetrixLite/locale/${l%}/LC_MESSAGES
+		msgfmt -o ${S}${libdir}/enigma2/python/Plugins/Extensions/MyMetrixLite/locale/${l%}/LC_MESSAGES/MyMetrixLite.mo ${S}/locale/$l.po
+	done
 }
 
 do_install() {
-    cp -r --preserve=mode,links ${S}/usr ${D}/
+	cp -r --preserve=mode,links ${S}/usr ${D}/
 }
-
-do_populate_sysroot[noexec] = "1"
-#do_package_qa[noexec] = "1"
 
 pkg_preinst_${PN}() {
 #!/bin/sh
