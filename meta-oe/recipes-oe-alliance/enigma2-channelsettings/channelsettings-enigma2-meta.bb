@@ -68,4 +68,14 @@ DEPENDS = " \
     enigma2-plugin-settings-gigablue-unity-media \
     enigma2-plugin-settings-gigablue-kabel-bw \
     enigma2-plugin-settings-gigablue-kabeldeutschland \
+    \
+    enigma2-plugin-settings-ciefp-19e \
+    enigma2-plugin-settings-ciefp-19e.16e \
+    enigma2-plugin-settings-ciefp-19e.16e.13e \
+    enigma2-plugin-settings-ciefp-19e.16e.13e.0.8w \
+    enigma2-plugin-settings-ciefp-19e.16e.13e.1.9e.0.8w \
+    enigma2-plugin-settings-ciefp-23e.19e.16e.13e.1.9e.0.8w \
+    enigma2-plugin-settings-ciefp-23e.19e.16e.13e.4.8e.1.9e.0.8w \
+    enigma2-plugin-settings-ciefp-39e.23e.19e.16e.13e.4.8e.1.9e.0.8w \
+    enigma2-plugin-settings-ciefp-motor.68e.30w.vod \
     "
