@@ -202,7 +202,6 @@ RRECOMMENDS_${PN}_append = " \
    python-profile \
    python-mmap \
    libcurl \
-   lsb \
    os-release \
    ${@bb.utils.contains('PACKAGECONFIG', 'x11', 'xrandr xdpyinfo', '', d)} \
 "
