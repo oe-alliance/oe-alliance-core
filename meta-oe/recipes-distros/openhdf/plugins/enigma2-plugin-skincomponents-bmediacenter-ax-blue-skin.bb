@@ -1,4 +1,4 @@
-SUMMARY = "Skinpart for BMediacenter on OpenHDF Images by stein17"
+SUMMARY = "Skinpart for BMediacenter on OpenATV Images by stein17"
 MAINTAINER = "stein17"
 SECTION = "base"
 PRIORITY = "required"
@@ -12,11 +12,11 @@ SRCREV = "${AUTOREV}"
 PV = "2.5+git${SRCPV}"
 PKGV = "2.5+git${GITPKGV}"
 VER ="2.5"
-PR = "r1"
+PR = "r2"
 
-SRC_URI="git://github.com/stein17/BMediacenter-AX--Blue-Skin.git"
+SRC_URI="git://github.com/stein17/Skins-for-Plugins-by-stein17.git"
 
-S = "${WORKDIR}/git"
+S = "${WORKDIR}/git/BMediacenter-AX-Blue-Skin"
 
 FILES_${PN} = "/usr/*"
 
