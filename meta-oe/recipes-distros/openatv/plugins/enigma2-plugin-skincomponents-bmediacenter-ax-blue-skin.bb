@@ -12,11 +12,11 @@ SRCREV = "${AUTOREV}"
 PV = "2.5+git${SRCPV}"
 PKGV = "2.5+git${GITPKGV}"
 VER ="2.5"
-PR = "r2"
+PR = "r1"
 
-SRC_URI="git://github.com/stein17/Skins-for-Plugins-by-stein17.git"
+SRC_URI="git://github.com/stein17/BMediacenter-AX--Blue-Skin.git"
 
-S = "${WORKDIR}/git/BMediacenter-AX-Blue-Skin"
+S = "${WORKDIR}/git"
 
 FILES_${PN} = "/usr/*"
 
