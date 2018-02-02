@@ -1,4 +1,4 @@
-SUMMARY = "Full HD Skinpart for MediaPortal on OpenATV Images by stein17"
+SUMMARY = "Full HD Skinpart for MediaPortal by stein17"
 MAINTAINER = "stein17"
 SECTION = "base"
 PRIORITY = "required"
