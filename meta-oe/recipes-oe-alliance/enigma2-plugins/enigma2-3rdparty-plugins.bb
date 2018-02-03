@@ -65,7 +65,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-oscamstatusview_1.0rc1_all.ipk \
     enigma2-plugin-extensions-piconmanager_2.2-20150329-r0_all.ipk \
     enigma2-plugin-extensions-piconsupdater_0.3.7_mips32el.ipk \
-    enigma2-plugin-extensions-picturecenterfs_8.21_all.ipk \
+    enigma2-plugin-extensions-picturecenterfs_8.23_all.ipk \
     enigma2-plugin-extensions-planerfs_7.20_all.ipk \
     enigma2-plugin-extensions-pluginspanel_1.0_r01_all.ipk \
     enigma2-plugin-extensions-pluginupdater_0.1r2_all.ipk \
