@@ -41,5 +41,6 @@ RRECOMMENDS_${PN} = "\
     enigma2-plugin-opennfrskins-bundesliga-hd-opennfr-mod \
     enigma2-plugin-opennfrskins-prime-nfrstyle \
     enigma2-plugin-opennfrskins-smoke-light-hd \
+    enigma2-plugin-opennfrskins-sphere-fhd-4nfr \
     enigma2-plugin-extensions-vmc \
 " 
