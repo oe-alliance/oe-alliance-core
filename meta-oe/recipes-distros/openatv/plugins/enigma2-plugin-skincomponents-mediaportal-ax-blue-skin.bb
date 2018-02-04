@@ -12,11 +12,11 @@ SRCREV = "${AUTOREV}"
 PV = "3.0+git${SRCPV}"
 PKGV = "3.0+git${GITPKGV}"
 VER ="3.0"
-PR = "r1"
+PR = "r2"
 
-SRC_URI="git://github.com/stein17/Mediaportal-AX-Blue-Skin.git"
+SRC_URI="git://github.com/stein17/Skins-for-Plugins-by-stein17.git"
 
-S = "${WORKDIR}/git"
+S = "${WORKDIR}/git/Mediaportal-AX-Blue-Skin"
 
 FILES_${PN} = "/usr/*"
 
