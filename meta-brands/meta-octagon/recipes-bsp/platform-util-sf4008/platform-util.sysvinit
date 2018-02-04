@@ -11,7 +11,9 @@
 # Description:       Load the Broadcam platform-util.
 ### END INIT INFO
 
-exit 0
+if [ ! -e /etc/sf4008-kodi ]; then
+    exit 0
+fi
 
 case "$1" in
   start)

@@ -22,8 +22,16 @@ do_populate_sysroot() {
 do_install() {
     install -d ${D}/lib/modules/${KV}/extra
     install -d ${D}/${sysconfdir}/modules-load.d
-    install -m 0755 ${WORKDIR}/linuxtv.ko ${D}/lib/modules/${KV}/extra/linuxtv.ko
-    echo linuxtv >> ${D}/${sysconfdir}/modules-load.d/_${MACHINE}.conf
+    install -m 0755 ${WORKDIR}/linuxtv.ko ${D}/lib/modules/${KV}/extra/linuxtv-kodi.ko
+    touch ${D}/${sysconfdir}/${MACHINE}-kodi
 }
 
-FILES_${PN} += "${sysconfdir}/modules-load.d/_${MACHINE}.conf /lib/modules/${KV}/extra"
+pkg_postinst_${PN}() {
+#!/bin/sh
+if [ -e /lib/modules/${KV}/extra/linuxtv-kodi.ko ]; then
+ mv -f /lib/modules/${KV}/extra/linuxtv-kodi.ko /lib/modules/${KV}/extra/linuxtv.ko
+fi
+exit 0
+}
+
+FILES_${PN} += "${sysconfdir}/${MACHINE}-kodi /lib/modules/${KV}/extra"
