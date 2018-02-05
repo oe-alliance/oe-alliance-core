@@ -1,6 +1,8 @@
 # We know about rtc
 include conf/machine/include/build-extras.inc
 
+DISTRO_FEATURES_remove = "x11 wayland directfb gtk-directfb"
+
 BRAND_OEM = "dinobot"
 
 IMAGEDIR = "dinobot/${MACHINE}"
