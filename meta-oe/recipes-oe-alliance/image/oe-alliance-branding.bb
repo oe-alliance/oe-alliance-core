@@ -122,11 +122,11 @@ do_configure_prepend() {
         DRIVERSDATE=`grep "SRCDATE = " ${OEA-META-EDISION-BASE}/recipes-drivers/edision-dvb-modules-${MACHINE}.bb | cut -b 12-19`
     elif [ "${BRAND_OEM}" = "dreambox" ]; then
         if [ "${MACHINE}" = "dm7080" ]; then
-            DRIVERSDATE="20171115"
+            DRIVERSDATE="20180130"
         elif [ "${MACHINE}" = "dm820" ]; then
-            DRIVERSDATE="20171115"
+            DRIVERSDATE="20180130"
         elif [ "${MACHINE}" = "dm520" ]; then
-            DRIVERSDATE="20171021"
+            DRIVERSDATE="20180130"
         elif [ "${MACHINE}" = "dm8000" ]; then
             DRIVERSDATE="20140604"
         elif [ "${MACHINE}" = "dm7020hd" -o "${MACHINE}" = "dm7020hdv2" ]; then
@@ -136,9 +136,9 @@ do_configure_prepend() {
         elif [ "${MACHINE}" = "dm800sev2" ]; then
             DRIVERSDATE="20151201"
         elif [ "${MACHINE}" = "dm900" ]; then
-            DRIVERSDATE="20171216"
+            DRIVERSDATE="20180130"
         elif [ "${MACHINE}" = "dm920" ]; then
-            DRIVERSDATE="20171216"
+            DRIVERSDATE="20180130"
         else
             DRIVERSDATE="20150618"
         fi

@@ -4,7 +4,7 @@ PRIORITY = "optional"
 LICENSE = "CLOSED"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-SRCDATE = "20171101"
+SRCDATE = "20180206"
 
 PV = "${SRCDATE}"
 PR = "r0"
@@ -16,6 +16,7 @@ S = "${WORKDIR}"
 do_install() {
     install -d ${D}${bindir}
     install -m 0755 ${S}/hihalt ${D}/${bindir}
+    install -m 0755 ${S}/hipmoc ${D}/${bindir}
     install -m 0755 ${S}/timerTask.py ${D}/${bindir}
 }
 
@@ -23,9 +24,10 @@ do_package_qa() {
 }
 
 FILES_${PN}  = "${bindir}/hihalt"
+FILES_${PN} += "${bindir}/hipmoc"
 FILES_${PN} += "${bindir}/timerTask.py"
 
-SRC_URI[md5sum] = "48372fbc7436ae2df7b3c51810a5b2c6"
-SRC_URI[sha256sum] = "854f82fc7c8e77ce1faf8b4305f4330bb358a7d6c144dfc9f7f7363d12ee4613"
+SRC_URI[md5sum] = "30c04477a8ded74fcb30aba6edb0bbf2"
+SRC_URI[sha256sum] = "9b7490144c318adae66b57e515c934563107d75f7585936c2f5bb5925d8ee7ff"
 
 

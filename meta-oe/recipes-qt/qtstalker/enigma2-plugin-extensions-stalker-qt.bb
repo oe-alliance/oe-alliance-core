@@ -7,10 +7,10 @@ PACKAGE_ARCH := "${MACHINE_ARCH}"
 
 SRCDATE = "20180106"
 
-PV = "1.2"
+PV = "1.3"
 PR = "${SRCDATE}"
 
-SRC_URI = "file://stalker-102.zip"
+SRC_URI = "file://stalker-103.zip"
 
 RDEPENDS_${PN}  = "qtwebkit virtual/libgles2 python-netifaces" 
 

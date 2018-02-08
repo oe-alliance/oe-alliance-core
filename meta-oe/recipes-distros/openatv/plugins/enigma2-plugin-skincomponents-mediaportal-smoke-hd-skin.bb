@@ -1,4 +1,4 @@
-SUMMARY = "HD Skinpart for Mediaportal on OpenATV Images by stein17"
+SUMMARY = "HD Skinpart for Mediaportal by stein17"
 MAINTAINER = "stein17"
 SECTION = "base"
 PRIORITY = "required"
@@ -12,11 +12,11 @@ SRCREV = "${AUTOREV}"
 PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"
 VER ="1.0"
-PR = "r1"
+PR = "r2"
 
-SRC_URI="git://github.com/stein17/Mediaportal-Smoke-HD-Skin.git"
+SRC_URI="git://github.com/stein17/Skins-for-Plugins-by-stein17.git"
 
-S = "${WORKDIR}/git"
+S = "${WORKDIR}/git/Mediaportal-Smoke-HD-Skin"
 
 FILES_${PN} = "/usr/*"
 

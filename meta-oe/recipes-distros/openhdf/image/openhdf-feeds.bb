@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda
 ALLOW_EMPTY_${PN} = "1"
 
 PV = "1.0"
-PR = "r25"
+PR = "r27"
 
 inherit packagegroup
 
@@ -26,7 +26,4 @@ RRECOMMENDS_${PN} = "\
     enigma2-plugin-skins-nblack51-hdfmod \
     enigma2-plugin-skins-ax-blue-fhd-4hdf \
     enigma2-plugin-skins-blue-line-oct-4hdf \
-    enigma2-plugin-skincomponents-bmediacenter-ax-blue-skin \
-    enigma2-plugin-skincomponents-mediaportal-ax-blue-skin \
-    enigma2-plugin-skincomponents-mediaportal-blue-line-skin \
     "
