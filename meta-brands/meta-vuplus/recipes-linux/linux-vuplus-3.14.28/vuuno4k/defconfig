@@ -539,7 +539,7 @@ CONFIG_ARM_APPENDED_DTB=y
 CONFIG_ARM_ATAG_DTB_COMPAT=y
 CONFIG_ARM_ATAG_DTB_COMPAT_CMDLINE_FROM_BOOTLOADER=y
 # CONFIG_ARM_ATAG_DTB_COMPAT_CMDLINE_EXTEND is not set
-CONFIG_CMDLINE="root=/dev/mmcblk0p4 rootfstype=ext4 rootflags=data=journal rootwait rw coherent_pool=2M vmalloc=696m bmem=688m@320m bmem=612m@2444m"
+CONFIG_CMDLINE="root=/dev/mmcblk0p4 rootfstype=ext4 rootflags=data=journal rootwait rw coherent_pool=2M vmalloc=633m bmem=637m@383m bmem=637m@2431m"
 # CONFIG_CMDLINE_FROM_BOOTLOADER is not set
 # CONFIG_CMDLINE_EXTEND is not set
 CONFIG_CMDLINE_FORCE=y
