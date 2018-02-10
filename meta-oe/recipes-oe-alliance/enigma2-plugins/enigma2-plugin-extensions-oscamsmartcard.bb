@@ -9,9 +9,9 @@ require conf/license/license-gplv2.inc
 inherit gitpkgv pythonnative
 
 SRCREV = "${AUTOREV}"
-PV = "2.0+git${SRCPV}"
-PKGV = "2.0+git${GITPKGV}"
-VER ="2.0"
+PV = "2.3+git${SRCPV}"
+PKGV = "2.3+git${GITPKGV}"
+VER ="2.3"
 PR = "r0"
 
 SRC_URI="git://github.com/gigablue-support-org/oscamsmartcard.git"
