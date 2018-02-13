@@ -29,9 +29,11 @@ RRECOMMENDS_${PN} = "\
     enigma2-plugin-extensions-bmediacenter \
     enigma2-plugin-extensions-mainmenu2 \
     enigma2-plugin-skincomponents-bmediacenter-ax-blue-skin \
-    enigma2-plugin-skincomponents-mediaportal-ax-bluee-skin \
-    enigma2-plugin-opennfrskins-ax-blue-fhd-4nfr \
+    enigma2-plugin-skincomponents-mediaportal-ax-blue-skin \
     enigma2-plugin-skincomponents-mediaportal-blue-line-skin \
+    enigma2-plugin-skincomponents-mediaportal-smoke-hd-skin \
+    enigma2-plugin-skincomponents-skyrecorder-fhd-skin \   
+    enigma2-plugin-opennfrskins-ax-blue-fhd-4nfr \
     enigma2-plugin-opennfrskins-blue-line-oct-4nfr \
     enigma2-plugin-opennfrskins-skallihd-fullhd \
     enigma2-plugin-opennfrskins-iflat-blassermod \
@@ -39,5 +41,6 @@ RRECOMMENDS_${PN} = "\
     enigma2-plugin-opennfrskins-bundesliga-hd-opennfr-mod \
     enigma2-plugin-opennfrskins-prime-nfrstyle \
     enigma2-plugin-opennfrskins-smoke-light-hd \
+    enigma2-plugin-opennfrskins-sphere-fhd-4nfr \
     enigma2-plugin-extensions-vmc \
 " 

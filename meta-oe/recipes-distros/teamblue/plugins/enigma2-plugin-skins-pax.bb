@@ -12,9 +12,9 @@ SRCREV = "${AUTOREV}"
 PV = "${IMAGE_VERSION}+git${SRCPV}"
 PKGV = "${IMAGE_VERSION}+git${GITPKGV}"
 VER ="${IMAGE_VERSION}"
-PR = "r3"
+PR = "r4"
 
-SRC_URI="git://github.com/teamblue-e2/skin.git;protocol=git;branch=master"
+SRC_URI="${@bb.utils.contains("DISTRO_TYPE", "release", "git://github.com/teamblue-e2/skin.git;protocol=git;branch=master" , "git://github.com/teamblue-e2/skin.git;protocol=git;branch=DEV", d)}"
 
 S = "${WORKDIR}/git"
 

@@ -7,9 +7,9 @@ PACKAGE_ARCH := "${MACHINE_ARCH}"
 
 SRCDATE = "20170928"
 
-SRC_URI = "file://qthbbtv-106.zip"
+SRC_URI = "file://qthbbtv-107.zip"
 
-PV = "1.2"
+PV = "1.3"
 PR = "${SRCDATE}"
 
 RDEPENDS_${PN}  = "qtwebkit libgles2"

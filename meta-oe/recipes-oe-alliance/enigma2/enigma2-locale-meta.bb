@@ -23,6 +23,7 @@ RRECOMMENDS_${PN} = "\
     enigma2-locale-hk \
     enigma2-locale-hr \
     enigma2-locale-hu \
+    enigma2-locale-id \
     enigma2-locale-is \
     enigma2-locale-it \
     enigma2-locale-ku \
