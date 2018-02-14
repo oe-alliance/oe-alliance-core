@@ -9,7 +9,7 @@ PR = "r1"
 SRC_URI[md5sum] = "7b5ac1226b360ddc366c286e62b3c3a4"
 SRC_URI[sha256sum] = "b3213a460837bd52dad6c8675eda348347f65a034da53a1eaebdaeabf17e2137"
 
-SRC_URI +=" http://pkgs.fedoraproject.org/repo/pkgs/usb_modeswitch-data/usb-modeswitch-data-20131113.tar.bz2/7b5ac1226b360ddc366c286e62b3c3a4/usb-modeswitch-data-20131113.tar.bz2 \
+SRC_URI +=" https://src.fedoraproject.org/repo/pkgs/usb_modeswitch-data/usb-modeswitch-data-20131113.tar.bz2/7b5ac1226b360ddc366c286e62b3c3a4/usb-modeswitch-data-20131113.tar.bz2 \
     file://usb-modeswitch-data_20120215.patch \
     file://usbmodeswitch-data_20131214.patch \
     file://usbmodeswitch-data_20131217.patch \
