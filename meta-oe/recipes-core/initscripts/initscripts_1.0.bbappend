@@ -23,4 +23,5 @@ do_install_append() {
         install -m 0755    ${WORKDIR}/fastrestore_openatv.sh	${D}${sysconfdir}/init.d/fastrestore
         ln -sf        ../init.d/fastrestore      ${D}${sysconfdir}/rcS.d/S75fastrestore
     fi
+    chmod 755 ${D}${sysconfdir}/init.d/functions
 }
