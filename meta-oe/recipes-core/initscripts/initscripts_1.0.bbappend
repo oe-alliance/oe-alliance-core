@@ -49,7 +49,7 @@ do_install_append() {
 
     # ... but avoid the link /etc/init.d/softcam becoming a file of this package
     rm ${D}/etc/init.d/softcam
-    chmod 755 ${D}${sysconfdir}/init.d/functions
+
 }
 
 
