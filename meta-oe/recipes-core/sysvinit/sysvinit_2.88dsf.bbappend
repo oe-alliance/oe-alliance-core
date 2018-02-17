@@ -1,5 +1,5 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
-
+PR .= ".1"
 
 PACKAGE_ARCH := "${MACHINE_ARCH}"
 
