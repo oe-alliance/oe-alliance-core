@@ -1,4 +1,4 @@
-PR .= ".1"
+PR .= ".2"
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/${P}:"
 
@@ -12,6 +12,10 @@ SRC_URI += "file://hotplug.sh \
             file://nocard.sh \
             file://fastrestore_openatv.sh \
 "
+
+# fix build issue with initd-functions
+RRECOMMENDS_${PN}_remove = "${PN}-functions"
+
 
 do_install_append() {
     # umountnfs should run before network stops (which is at K40)
