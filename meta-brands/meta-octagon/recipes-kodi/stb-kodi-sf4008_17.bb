@@ -8,5 +8,5 @@ RDEPENDS_${PN}_append = "nextv-v3ddriver-${MACHINE} platform-util-${MACHINE} oct
 
 EXTRA_OECONF += " \
     --with-platform=nextv-cortexa15 \
-    --with-ffmpeg=v3d \
+    --with-ffmpeg=stb \
 "

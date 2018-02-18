@@ -8,5 +8,5 @@ RDEPENDS_${PN} += "hd-v3ddriver-${MACHINE}"
 
 EXTRA_OECONF += " \
     --with-platform=v3d-cortexa15 \
-    --with-ffmpeg=v3d \
+    --with-ffmpeg=stb \
 "

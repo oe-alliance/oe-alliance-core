@@ -7,5 +7,5 @@ RPROVIDES_${PN} += "kodi"
 
 EXTRA_OECONF += " \
     --with-platform=v3d-mipsel \
-    --with-ffmpeg=v3d \
+    --with-ffmpeg=stb \
 "
