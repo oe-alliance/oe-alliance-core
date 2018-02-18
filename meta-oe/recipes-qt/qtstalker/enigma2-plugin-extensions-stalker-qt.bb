@@ -11,6 +11,7 @@ PV = "1.3"
 PR = "${SRCDATE}"
 
 SRC_URI = "file://stalker-103.zip"
+SRC_URI_h9 = "file://stalker2-103.zip"
 
 RDEPENDS_${PN}  = "qtwebkit virtual/libgles2 python-netifaces" 
 
