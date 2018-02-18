@@ -14,17 +14,17 @@ diff --git a/ext/hls/gsthlsdemux.c b/ext/hls/gsthlsdemux.c
 index a4eaacd..ba5fac5 100644
 --- a/ext/hls/gsthlsdemux.c
 +++ b/ext/hls/gsthlsdemux.c
-@@ -587,6 +587,10 @@ gst_hls_demux_process_manifest (GstAdaptiveDemux * demux, GstBuffer * buf)
+@@ -631,6 +631,10 @@
+     GST_M3U8_CLIENT_UNLOCK (self);
      return FALSE;
    }
- 
++  
 +  /* use max playlist quality if connection speed not set */
 +  if (demux->connection_speed == 0)
 +    demux->connection_speed = 4294967;
-+
+ 
    /* select the initial variant stream */
    if (demux->connection_speed == 0) {
-     variant = hlsdemux->master->default_variant;
 -- 
 2.7.4
 

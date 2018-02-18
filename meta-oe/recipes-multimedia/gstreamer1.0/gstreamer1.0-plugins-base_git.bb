@@ -8,29 +8,30 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=c54ce9345727175ff66d17b67ff51f58 \
 
 UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>(\d+(\.\d+)+))"
 
-SRCREV_base = "7b1056b9467673d004ea7dd63ad91461b8f616fa"
-SRCREV_common = "3f4aa969cbe39584a649d98d4cf321d78bd73092"
+SRCREV_base = "a009168b0ea7871c9e29d96bbcb4d9564f27b042"
+SRCREV_common = "76b68df121dfce7c44a25738711c47fb0d034e24"
 SRCREV_FORMAT = "base"
 
 SRC_URI = "git://anongit.freedesktop.org/gstreamer/gst-plugins-base;branch=master;name=base \
            git://anongit.freedesktop.org/gstreamer/common;destsuffix=git/common;name=common \
-"
-
-SRC_URI_append = "\
-	file://0001-Makefile.am-don-t-hardcode-libtool-name-when-running.patch \
-    file://0002-Makefile.am-prefix-calls-to-pkg-config-with-PKG_CONF.patch \
-    file://0003-riff-media-added-fourcc-to-all-ffmpeg-mpeg4-video-caps.patch \
-    file://0004-rtsp-drop-incorrect-reference-to-gstreamer-sdp-in-Ma.patch \
+           file://get-caps-from-src-pad-when-query-caps.patch \
+           file://0004-subparse-set-need_segment-after-sink-pad-received-GS.patch \
+           file://make-gio_unix_2_0-dependency-configurable.patch \
+           file://0001-introspection.m4-prefix-pkgconfig-paths-with-PKG_CON.patch \
+           file://0003-riff-media-added-fourcc-to-all-ffmpeg-mpeg4-video-caps.patch \
 "
 
 S = "${WORKDIR}/git"
 
-GST_VERSION_FULL ="1.13.0.2"
+GST_VERSION_FULL ="1.13.1"
 inherit gitpkgv
 PV = "${GST_VERSION_FULL}+git${SRCPV}"
 PKGV = "${GST_VERSION_FULL}+git${GITPKGV}"
 
-do_configure_prepend() {
-	${S}/autogen.sh --noconfigure
-}
+CFLAGS_append += " -Wno-maybe-uninitialized -Wno-uninitialized "
 
+do_configure_prepend() {
+	cd ${S}
+	./autogen.sh --noconfigure
+	cd ${B}
+}

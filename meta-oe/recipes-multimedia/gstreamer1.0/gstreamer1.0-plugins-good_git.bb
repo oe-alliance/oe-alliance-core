@@ -8,39 +8,32 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=a6f89e2100d9b6cdffcea4f398e37343 \
 
 UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>(\d+(\.\d+)+))"
 
-SRCREV_base = "a802f5df424685f7af9471c650cc0cd5ef196c0c"
-SRCREV_common = "3f4aa969cbe39584a649d98d4cf321d78bd73092"
+SRCREV_base = "9087406edec5f7c64a75e09309690742a915c755"
+SRCREV_common = "76b68df121dfce7c44a25738711c47fb0d034e24"
 SRCREV_FORMAT = "base"
 
 SRC_URI = "git://anongit.freedesktop.org/gstreamer/gst-plugins-good;branch=master;name=base \
            git://anongit.freedesktop.org/gstreamer/common;destsuffix=git/common;name=common \
-"
-
-SRC_URI += "file://0001-gstrtpmp4gpay-set-dafault-value-for-MPEG4-without-co.patch \
+           file://0001-gstrtpmp4gpay-set-dafault-value-for-MPEG4-without-co.patch \
+           file://avoid-including-sys-poll.h-directly.patch \
+           file://ensure-valid-sentinel-for-gst_structure_get.patch \
+           file://0001-introspection.m4-prefix-pkgconfig-paths-with-PKG_CON.patch \
 "
 
 S = "${WORKDIR}/git"
 
-GST_VERSION_FULL ="1.13.0.2"
+GST_VERSION_FULL ="1.13.1"
 inherit gitpkgv
 PV = "${GST_VERSION_FULL}+git${SRCPV}"
 PKGV = "${GST_VERSION_FULL}+git${GITPKGV}"
 
-CFLAGS_append += " -Wno-maybe-uninitialized -Wno-uninitialized "
+CFLAGS_append += " -Wno-maybe-uninitialized -Wno-uninitialized -Wno-incompatible-pointer-types"
+
+RPROVIDES_${PN}-pulseaudio += "${PN}-pulse"
+RPROVIDES_${PN}-soup += "${PN}-souphttpsrc"
 
 do_configure_prepend() {
-	${S}/autogen.sh --noconfigure
-}
-
-
-PACKAGESPLITFUNCS_append = " handle_mpg_rename "
-
-python handle_mpg_rename () {
-    d.setVar('RPROVIDES_gstreamer1.0-plugins-good-lame', 'gstreamer1.0-plugins-ugly-lame')
-    d.setVar('RREPLACES_gstreamer1.0-plugins-good-lame', 'gstreamer1.0-plugins-ugly-lame')
-    d.setVar('RCONFLICTS_gstreamer1.0-plugins-good-lame', 'gstreamer1.0-plugins-ugly-lame')
-
-    d.setVar('RPROVIDES_gstreamer1.0-plugins-good-mpg123', 'gstreamer1.0-plugins-ugly-mpg123')
-    d.setVar('RREPLACES_gstreamer1.0-plugins-good-mpg123', 'gstreamer1.0-plugins-ugly-mpg123')
-    d.setVar('RCONFLICTS_gstreamer1.0-plugins-good-mpg123', 'gstreamer1.0-plugins-ugly-mpg123')
+	cd ${S}
+	./autogen.sh --noconfigure
+	cd ${B}
 }

@@ -20,17 +20,18 @@ diff --git a/ext/hls/m3u8.c b/ext/hls/m3u8.c
 index e85592e..5feef75 100644
 --- a/ext/hls/m3u8.c
 +++ b/ext/hls/m3u8.c
-@@ -365,8 +365,8 @@ gst_m3u8_update_check_consistent_media_seqnums (GstM3U8 * self,
-           }
-         } else if (g_str_equal (f1->uri, f2->uri)) {
-           /* Same URIs but different sequences, this is bad! */
--          GST_ERROR ("Media sequences inconsistent, ignoring");
--          return FALSE;
-+          GST_ERROR ("Media sequences inconsistent, ignoring, but try anyway");
-+          //return FALSE;
-         } else {
-           /* Not same URI, not same sequence but by construction sequence
-            * must be higher in the new one. All good in that case, if it
+@@ -358,9 +358,9 @@
+ 
+     if (f1->sequence == f2->sequence && !g_str_equal (f1->uri, f2->uri)) {
+       /* Same sequence, different URI. This is bad! */
+-      GST_ERROR ("Media URIs inconsistent (sequence %" G_GINT64_FORMAT
++      GST_ERROR ("Media URIs inconsistent, but try anyway (sequence %" G_GINT64_FORMAT
+           "): had '%s', got '%s'", f1->sequence, f2->uri, f1->uri);
+-      return FALSE;
++      //return FALSE;
+     } else if (f1->sequence < f2->sequence) {
+       /* Not same sequence but by construction sequence must be higher in the
+        * new one. All good in that case, if it isn't then this means that
 -- 
 2.7.4
 

@@ -8,23 +8,30 @@ LICENSE = "LGPLv2+"
 
 DEPENDS = "glib-2.0 glib-2.0-native libcap libxml2 bison-native flex-native"
 
-inherit autotools pkgconfig gettext upstream-version-is-even gobject-introspection
+inherit autotools pkgconfig gettext upstream-version-is-even gobject-introspection gtk-doc
 
 # This way common/m4/introspection.m4 will come first
 # (it has a custom INTROSPECTION_INIT macro, and so must be used instead of our common introspection.m4 file)
 acpaths = "-I ${S}/common/m4 -I ${S}/m4"
 
+SRC_URI_append = " \
+    file://0001-introspection.m4-prefix-pkgconfig-paths-with-PKG_CON.patch \
+    file://gtk-doc-tweaks.patch \
+    file://0001-gst-gstpluginloader.c-when-env-var-is-set-do-not-fal.patch \
+"
+
 PACKAGECONFIG ??= ""
 
-PACKAGECONFIG[check] = "--enable-check,--disable-check"
 PACKAGECONFIG[debug] = "--enable-debug,--disable-debug"
 PACKAGECONFIG[tests] = "--enable-tests,--disable-tests"
 PACKAGECONFIG[valgrind] = "--enable-valgrind,--disable-valgrind,valgrind,"
+PACKAGECONFIG[gst-tracer-hooks] = "--enable-gst-tracer-hooks,--disable-gst-tracer-hooks,"
+PACKAGECONFIG[unwind] = "--with-unwind,--without-unwind,libunwind"
+PACKAGECONFIG[dw] = "--with-dw,--without-dw,elfutils"
 
 EXTRA_OECONF = " \
     --disable-dependency-tracking \
     --disable-examples \
-    --disable-gtk-doc \
 "
 
 CACHED_CONFIGUREVARS += "ac_cv_header_valgrind_valgrind_h=no"
@@ -44,9 +51,10 @@ RRECOMMENDS_${PN}_qemux86-64 += "kernel-module-snd-ens1370 kernel-module-snd-raw
 delete_pkg_m4_file() {
         # This m4 file is out of date and is missing PKG_CONFIG_SYSROOT_PATH tweaks which we need for introspection
         rm "${S}/common/m4/pkg.m4" || true
+        rm -f "${S}/common/m4/gtk-doc.m4"
 }
 
-do_configure[prefuncs] += " delete_pkg_m4_file"
+do_configure[prefuncs] += "delete_pkg_m4_file"
 
 do_compile_prepend() {
         export GIR_EXTRA_LIBS_PATH="${B}/gst/.libs:${B}/libs/gst/base/.libs"
