@@ -1,46 +1,46 @@
-From 7b659ce0d3fc150ff474a825faa8b4b1023b094d Mon Sep 17 00:00:00 2001
+From e921eac45fddb0bd3106568f3d91b8b7682e2298 Mon Sep 17 00:00:00 2001
 From: captain <openatv@gmail.com>
 Date: Thu, 16 Nov 2017 12:45:11 +0100
-Subject: [PATCH] v3d-platform
+Subject: [PATCH] stb-platform
 
 ---
- Makefile.in                                   |  20 +-
- configure.ac                                  | 156 ++++-
- m4/xbmc_arch.m4                               |  32 ++
- project/cmake/scripts/linux/ArchSetup.cmake   |   6 +-
- tools/depends/configure.ac                    |  80 +++
- tools/depends/target/ffmpeg/autobuild.sh      |  16 +-
- xbmc/addons/AddonManager.cpp                  |   6 +
- xbmc/platform/xbmc.cpp                        |   9 +
- xbmc/system_gl.h                              |   3 +
- xbmc/utils/DreamboxUtils.cpp                  | 102 ++++
- xbmc/utils/DreamboxUtils.h                    |  24 +
- xbmc/utils/Makefile.in                        |   4 +
- xbmc/windowing/egl/EGLNativeTypeDreambox.cpp  | 191 +++++++
- xbmc/windowing/egl/EGLNativeTypeDreambox.h    |  61 ++
- xbmc/windowing/egl/EGLNativeTypeGB.cpp        | 189 +++++++
- xbmc/windowing/egl/EGLNativeTypeGB.h          |  56 ++
- xbmc/windowing/egl/EGLNativeTypeHisilicon.cpp | 783 ++++++++++++++++++++++++++
- xbmc/windowing/egl/EGLNativeTypeHisilicon.h   |  39 ++
- xbmc/windowing/egl/EGLNativeTypeNexTV.cpp     | 229 ++++++++
- xbmc/windowing/egl/EGLNativeTypeNexTV.h       | 196 +++++++
- xbmc/windowing/egl/EGLNativeTypeV3D.cpp       | 161 ++++++
- xbmc/windowing/egl/EGLNativeTypeV3D.h         |  59 ++
- xbmc/windowing/egl/EGLNativeTypeV3DNXPL.cpp   | 208 +++++++
- xbmc/windowing/egl/EGLNativeTypeV3DNXPL.h     | 129 +++++
- xbmc/windowing/egl/EGLNativeTypeVuplus.cpp    | 180 ++++++
- xbmc/windowing/egl/EGLNativeTypeVuplus.h      |  60 ++
- xbmc/windowing/egl/EGLWrapper.cpp             |  35 ++
- xbmc/windowing/egl/Makefile.in                |  21 +
- 28 files changed, 3045 insertions(+), 10 deletions(-)
+ Makefile.in                                  |  20 ++-
+ configure.ac                                 | 163 ++++++++++++++++++-
+ m4/xbmc_arch.m4                              |  33 ++++
+ project/cmake/scripts/linux/ArchSetup.cmake  |   6 +-
+ tools/depends/configure.ac                   |  80 ++++++++++
+ tools/depends/target/ffmpeg/autobuild.sh     |  16 +-
+ xbmc/addons/AddonManager.cpp                 |  12 ++
+ xbmc/platform/xbmc.cpp                       |   9 ++
+ xbmc/system_gl.h                             |   3 +
+ xbmc/utils/DreamboxUtils.cpp                 | 102 ++++++++++++
+ xbmc/utils/DreamboxUtils.h                   |  24 +++
+ xbmc/utils/Makefile.in                       |   4 +
+ xbmc/windowing/egl/EGLNativeTypeDreambox.cpp | 191 ++++++++++++++++++++++
+ xbmc/windowing/egl/EGLNativeTypeDreambox.h   |  61 +++++++
+ xbmc/windowing/egl/EGLNativeTypeGB.cpp       | 189 ++++++++++++++++++++++
+ xbmc/windowing/egl/EGLNativeTypeGB.h         |  56 +++++++
+ xbmc/windowing/egl/EGLNativeTypeMali.cpp     | 149 +++++++++++++++++
+ xbmc/windowing/egl/EGLNativeTypeMali.h       |  53 +++++++
+ xbmc/windowing/egl/EGLNativeTypeNexTV.cpp    | 229 +++++++++++++++++++++++++++
+ xbmc/windowing/egl/EGLNativeTypeNexTV.h      | 196 +++++++++++++++++++++++
+ xbmc/windowing/egl/EGLNativeTypeV3D.cpp      | 161 +++++++++++++++++++
+ xbmc/windowing/egl/EGLNativeTypeV3D.h        |  59 +++++++
+ xbmc/windowing/egl/EGLNativeTypeV3DNXPL.cpp  | 208 ++++++++++++++++++++++++
+ xbmc/windowing/egl/EGLNativeTypeV3DNXPL.h    | 129 +++++++++++++++
+ xbmc/windowing/egl/EGLNativeTypeVuplus.cpp   | 180 +++++++++++++++++++++
+ xbmc/windowing/egl/EGLNativeTypeVuplus.h     |  60 +++++++
+ xbmc/windowing/egl/EGLWrapper.cpp            |  35 ++++
+ xbmc/windowing/egl/Makefile.in               |  21 +++
+ 28 files changed, 2439 insertions(+), 10 deletions(-)
  create mode 100644 xbmc/utils/DreamboxUtils.cpp
  create mode 100644 xbmc/utils/DreamboxUtils.h
  create mode 100644 xbmc/windowing/egl/EGLNativeTypeDreambox.cpp
  create mode 100644 xbmc/windowing/egl/EGLNativeTypeDreambox.h
  create mode 100644 xbmc/windowing/egl/EGLNativeTypeGB.cpp
  create mode 100644 xbmc/windowing/egl/EGLNativeTypeGB.h
- create mode 100644 xbmc/windowing/egl/EGLNativeTypeHisilicon.cpp
- create mode 100644 xbmc/windowing/egl/EGLNativeTypeHisilicon.h
+ create mode 100644 xbmc/windowing/egl/EGLNativeTypeMali.cpp
+ create mode 100644 xbmc/windowing/egl/EGLNativeTypeMali.h
  create mode 100644 xbmc/windowing/egl/EGLNativeTypeNexTV.cpp
  create mode 100644 xbmc/windowing/egl/EGLNativeTypeNexTV.h
  create mode 100644 xbmc/windowing/egl/EGLNativeTypeV3D.cpp
@@ -89,7 +89,7 @@ index 3c5de7c367..e9473deeb6 100644
  
  @APP_NAME_LC@-xrandr: xbmc-xrandr.c
 diff --git a/configure.ac b/configure.ac
-index 71e942b1c3..73b65dfbdd 100644
+index 71e942b1c3..9812d1f923 100644
 --- a/configure.ac
 +++ b/configure.ac
 @@ -681,6 +681,78 @@ case $use_platform in
@@ -155,23 +155,23 @@ index 71e942b1c3..73b65dfbdd 100644
 +     target_videoplatform=target_nextv
 +     use_cpu=cortex-a15
 +     ;;
-+  hisilicon-cortexa15)
-+     USE_HISILICON=1
-+     target_platform=target_v3d
-+     target_videoplatform=target_hisilicon
-+     use_cpu=cortex-a15
-+     ;;
 +  GB-cortexa15)
 +     USE_GB=1
 +     target_platform=target_v3d
 +     target_videoplatform=target_GB
 +     use_cpu=cortex-a15
 +     ;;
++  mali-cortexa15)
++     USE_MALI=1
++     target_platform=target_mali
++     target_videoplatform=target_mali
++     use_cpu=cortex-a15
++     ;;
 +
  esac
  
  if test "$target_platform" = "target_raspberry_pi" ; then
-@@ -696,6 +768,13 @@ if test "$target_platform" = "target_raspberry_pi" ; then
+@@ -696,6 +768,20 @@ if test "$target_platform" = "target_raspberry_pi" ; then
       CXXFLAGS="$CXXFLAGS"
  fi
  
@@ -182,10 +182,17 @@ index 71e942b1c3..73b65dfbdd 100644
 +     CXXFLAGS="$CXXFLAGS"
 +fi
 +
++if test "$target_platform" = "target_mali" ; then
++     use_openmax=no
++     CORE_SYSTEM_NAME=linux
++     CFLAGS="$CFLAGS"
++     CXXFLAGS="$CXXFLAGS"
++fi
++
  if test "$host_vendor" = "apple"; then
    use_avahi=no
    use_alsa=no
-@@ -819,6 +898,15 @@ elif test "$use_arch" = "arm"; then
+@@ -819,6 +905,15 @@ elif test "$use_arch" = "arm"; then
        [ CFLAGS="$SAVE_CFLAGS -Wa,-march=armv6 -mtune=cortex-a8 -mthumb-interwork"
          CXXFLAGS="$CXXFLAGS -Wa,-march=armv6 -mtune=cortex-a8 -mthumb-interwork"
          use_cpu=cortex-a8])
@@ -201,7 +208,7 @@ index 71e942b1c3..73b65dfbdd 100644
    else
      if test "$use_neon" = "yes"; then
        CFLAGS="$CFLAGS -mfpu=neon -mvectorize-with-neon-quad"
-@@ -912,6 +1000,9 @@ if test "x$have_builtin_sync_val_compare_and_swap" = "xyes"; then
+@@ -912,6 +1007,9 @@ if test "x$have_builtin_sync_val_compare_and_swap" = "xyes"; then
          [Define to 1 if your compiler supports the __sync_val_compare_and_swap() intrinsic.])
  fi
  
@@ -211,7 +218,7 @@ index 71e942b1c3..73b65dfbdd 100644
  # Check for u16string/u32string declarations
  AC_LANG_PUSH([C++])
  AC_CHECK_TYPES([std::u16string, std::u32string], [], [], [[#include <string>]])
-@@ -944,16 +1035,45 @@ if test "$use_gles" = "yes"; then
+@@ -944,16 +1042,45 @@ if test "$use_gles" = "yes"; then
      AC_DEFINE([HAVE_LIBEGL],[1],["Define to 1 if you have the `EGL' library (-lEGL)."])
      AC_DEFINE([HAVE_LIBGLESV2],[1],["Define to 1 if you have the `GLESv2' library (-lGLESv2)."])
      AC_MSG_RESULT(== WARNING: OpenGLES support is assumed.)
@@ -244,16 +251,16 @@ index 71e942b1c3..73b65dfbdd 100644
 +      AC_DEFINE([HAVE_LIBGLESV2],[1],["Define to 1 if you have the `GLESv2' library (-lGLESv2)."])
 +      AC_MSG_RESULT(== WARNING: OpenGLES nextv support is assumed.)
 +      LIBS="$LIBS -lEGL -lGLESv2 -lnexus -lnxpl -lnxclient"
-+  elif test "$target_videoplatform" = "target_hisilicon" ; then
-+      AC_DEFINE([HAVE_LIBEGL],[1],["Define to 1 if you have the `EGL' library (-lEGL)."])
-+      AC_DEFINE([HAVE_LIBGLESV2],[1],["Define to 1 if you have the `GLESv2' library (-lGLESv2)."])
-+      AC_MSG_RESULT(== WARNING: OpenGLES nextv support is assumed.)
-+      LIBS="$LIBS -lEGL -lGLESv2 -lMali "
 +  elif test "$target_videoplatform" = "target_GB" ; then
 +      AC_DEFINE([HAVE_LIBEGL],[1],["Define to 1 if you have the `EGL' library (-lEGL)."])
 +      AC_DEFINE([HAVE_LIBGLESV2],[1],["Define to 1 if you have the `GLESv2' library (-lGLESv2)."])
 +      AC_MSG_RESULT(== WARNING: OpenGLES GB support is assumed.)
 +      LIBS="$LIBS -lEGL -lGLESv2 -lnxpl -lnexus -lnxclient"
++  elif test "$target_videoplatform" = "target_mali" ; then
++      AC_DEFINE([HAVE_LIBEGL],[1],["Define to 1 if you have the `EGL' library (-lEGL)."])
++      AC_DEFINE([HAVE_LIBGLESV2],[1],["Define to 1 if you have the `GLESv2' library (-lGLESv2)."])
++      AC_MSG_RESULT(== WARNING: OpenGLES mali support is assumed.)
++      LIBS="$LIBS -lEGL -lGLESv2 -lmali"
 +  else
        AC_CHECK_LIB([EGL],   [main],, AC_MSG_ERROR($missing_library))
        AC_CHECK_LIB([GLESv2],[main],, AC_MSG_ERROR($missing_library))
@@ -261,21 +268,21 @@ index 71e942b1c3..73b65dfbdd 100644
    fi
  else
    if test "$use_gl" = "yes"; then
-@@ -1056,7 +1176,7 @@ int main() {
+@@ -1056,7 +1183,7 @@ int main() {
    )])
  AC_LANG_POP([C++])
  
 -if test "${target_platform}" = "target_linux" || test "${target_platform}" = "target_raspberry_pi" || test "${target_platform}" = "target_android"; then
-+if test "${target_platform}" = "target_linux" || test "${target_platform}" = "target_raspberry_pi" || test "${target_platform}" = "target_android" || test "${target_platform}" = "target_v3d"; then
++if test "${target_platform}" = "target_linux" || test "${target_platform}" = "target_raspberry_pi" || test "${target_platform}" = "target_android" || test "${target_platform}" = "target_v3d" || test "${target_platform}" = "target_mali"; then
    PKG_CHECK_MODULES([UUID], [uuid],, AC_MSG_ERROR(libuuid not found))
  fi
  
-@@ -1556,7 +1676,14 @@ if test "${USE_STATIC_FFMPEG}" = "1"; then
+@@ -1556,7 +1683,14 @@ if test "${USE_STATIC_FFMPEG}" = "1"; then
        pkg_cfg_prefix=${SYSROOT}
    fi
  
 -  if test "$cross_compiling" != "yes"; then
-+  if test "$with_ffmpeg" = "v3d"; then
++  if test "$with_ffmpeg" = "stb"; then
 +    AC_MSG_NOTICE("FFmpeg installation forced by user - installing our version")
 +    CFLAGS="$CFLAGS" CXXFLAGS="$CXXFLAGS" LDFLAGS="$LDFLAGS" NM="$NM" AR="$AR" \
 +    AS="$AS" STRIP="$STRIP" CC="$CC" CXX="$CXX" LD="$CCLD" RANLIB="$RANLIB" \
@@ -286,11 +293,11 @@ index 71e942b1c3..73b65dfbdd 100644
      if test "$use_debug" != "yes"; then
        FFMPEG_OPTS="-r"
      fi
-@@ -1611,11 +1738,17 @@ if test "$FFMPEG_FOUND" != "true"; then
+@@ -1611,11 +1745,17 @@ if test "$FFMPEG_FOUND" != "true"; then
    PKG_CHECK_MODULES([FFMPEG], [$FFMPEG_LIBNAMES],
      [INCLUDES="$INCLUDES $FFMPEG_CFLAGS"; LIBS="$LIBS $FFMPEG_LIBS"; FFMPEG_FOUND="true"],
      [AC_MSG_ERROR("ffmpeg not found")])
-+    if test "$with_ffmpeg" = "v3d"; then
++    if test "$with_ffmpeg" = "stb"; then
 +      FFMPEG_LIBS=$(PKG_CONFIG_SYSROOT_DIR="" ${PKG_CONFIG} --libs libavcodec 2>/dev/null)
 +      FFMPEG_CFLAGS=$(PKG_CONFIG_SYSROOT_DIR="" ${PKG_CONFIG} --cflags libavcodec 2>/dev/null)
 +      INCLUDES="$INCLUDES $FFMPEG_CFLAGS"
@@ -305,7 +312,7 @@ index 71e942b1c3..73b65dfbdd 100644
    GNUTLS_ALL_LIBS=$(${PKG_CONFIG} --static --libs-only-l --silence-errors gnutls)
  
    # check if static libs are available
-@@ -2330,6 +2463,15 @@ AC_SUBST(HAVE_SSE4)
+@@ -2330,6 +2470,15 @@ AC_SUBST(HAVE_SSE4)
  AC_SUBST(USE_MMAL)
  AC_SUBST(USE_X11)
  AC_SUBST(USE_OPTICAL_DRIVE)
@@ -316,50 +323,51 @@ index 71e942b1c3..73b65dfbdd 100644
 +AC_SUBST(USE_VUPLUS_ARM_LIB)
 +AC_SUBST(USE_VUPLUS_MIPSEL_LIB)
 +AC_SUBST(USE_NEXTV)
-+AC_SUBST(USE_HISILICON)
 +AC_SUBST(USE_GB)
++AC_SUBST(USE_MALI)
  
  # pushd and popd are not available in other shells besides bash, so implement
  # our own pushd/popd functions
 diff --git a/m4/xbmc_arch.m4 b/m4/xbmc_arch.m4
-index d28f263002..9006a59c67 100644
+index d28f263002..876a876a2d 100644
 --- a/m4/xbmc_arch.m4
 +++ b/m4/xbmc_arch.m4
-@@ -80,4 +80,36 @@ fi
+@@ -80,4 +80,37 @@ fi
  if test "$target_platform" = "target_raspberry_pi" ; then
    AC_SUBST(ARCH_DEFINES, "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -D_ARMEL -DTARGET_RASPBERRY_PI")
  fi
 +
 +if test "$target_videoplatform" = "target_xcore" ; then
-+  AC_SUBST(ARCH_DEFINES, "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_V3D -DTARGET_XCORE")
++  AC_SUBST(ARCH_DEFINES, "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_STB -DTARGET_V3D -DTARGET_XCORE")
 +fi
 +
 +if test "$target_videoplatform" = "target_v3dnxpl" ; then
-+  AC_SUBST(ARCH_DEFINES, "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_V3D -DTARGET_V3DNXPL")
++  AC_SUBST(ARCH_DEFINES, "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_STB -DTARGET_V3D -DTARGET_V3DNXPL")
 +fi
 +
 +if test "$target_videoplatform" = "target_dreambox" ; then
-+  AC_SUBST(ARCH_DEFINES, "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_V3D -DTARGET_DREAMBOX")
++  AC_SUBST(ARCH_DEFINES, "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_STB -DTARGET_V3D -DTARGET_DREAMBOX")
 +fi
 +
 +if test "$target_videoplatform_arch" = "target_vuplus_arm" ; then
-+  AC_SUBST(ARCH_DEFINES, "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_V3D -DTARGET_VUPLUS -DTARGET_VUPLUS_ARM")
++  AC_SUBST(ARCH_DEFINES, "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_STB -DTARGET_V3D -DTARGET_VUPLUS -DTARGET_VUPLUS_ARM")
 +fi
 +
 +if test "$target_videoplatform_arch" = "target_vuplus_mipsel" ; then
-+  AC_SUBST(ARCH_DEFINES, "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_V3D -DTARGET_VUPLUS -DTARGET_VUPLUS_MIPSEL")
++  AC_SUBST(ARCH_DEFINES, "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_STB -DTARGET_V3D -DTARGET_VUPLUS -DTARGET_VUPLUS_MIPSEL")
 +fi
 +
 +if test "$target_videoplatform" = "target_nextv" ; then
-+  AC_SUBST(ARCH_DEFINES, "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_V3D -DTARGET_NEXTV")
++  AC_SUBST(ARCH_DEFINES, "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_STB -DTARGET_V3D -DTARGET_NEXTV")
 +fi
 +
-+if test "$target_videoplatform" = "target_hisilicon" ; then
-+  AC_SUBST(ARCH_DEFINES, "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_V3D -DTARGET_HISILICON")
-+fi
 +
 +if test "$target_videoplatform" = "target_GB" ; then
-+  AC_SUBST(ARCH_DEFINES, "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_V3D -DTARGET_GB")
++  AC_SUBST(ARCH_DEFINES, "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_STB -DTARGET_V3D -DTARGET_GB")
++fi
++
++if test "$target_videoplatform" = "target_mali" ; then
++  AC_SUBST(ARCH_DEFINES, "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_STB -DTARGET_MALI")
 +fi
  ])
 diff --git a/project/cmake/scripts/linux/ArchSetup.cmake b/project/cmake/scripts/linux/ArchSetup.cmake
@@ -380,7 +388,7 @@ index c0cc1bf283..716c08cf01 100644
      set(NEON True)
      set(NEON_FLAGS "-mfpu=neon -mvectorize-with-neon-quad")
 diff --git a/tools/depends/configure.ac b/tools/depends/configure.ac
-index 3626ea5204..b9823586e3 100644
+index 3626ea5204..01cd44f917 100644
 --- a/tools/depends/configure.ac
 +++ b/tools/depends/configure.ac
 @@ -408,6 +408,86 @@ case $use_platform in
@@ -451,16 +459,16 @@ index 3626ea5204..b9823586e3 100644
 +    platform_cxxflags="-fPIC -mcpu=cortex-a15 -mfloat-abi=hard -mfpu=neon-vfpv4"
 +    platform_ldflags="-lpthread"
 +  ;;
-+  hisilicon-cortexa15)
-+    target_platform=v3d
-+    use_neon=yes
-+    use_cpu=cortex-a15
-+    platform_cflags="-fPIC -mcpu=cortex-a15 -mfloat-abi=hard -mfpu=neon-vfpv4"
-+    platform_cxxflags="-fPIC -mcpu=cortex-a15 -mfloat-abi=hard -mfpu=neon-vfpv4"
-+    platform_ldflags="-lpthread"
-+  ;;
 +  GB-cortexa15)
 +     target_platform=v3d
++     use_neon=yes
++     use_cpu=cortex-a15
++     platform_cflags="-fPIC -mcpu=cortex-a15 -mfloat-abi=hard -mfpu=neon-vfpv4"
++     platform_cxxflags="-fPIC -mcpu=cortex-a15 -mfloat-abi=hard -mfpu=neon-vfpv4"
++     platform_ldflags="-lpthread"
++     ;;
++  mali-cortexa15)
++     target_platform=mali
 +     use_neon=yes
 +     use_cpu=cortex-a15
 +     platform_cflags="-fPIC -mcpu=cortex-a15 -mfloat-abi=hard -mfpu=neon-vfpv4"
@@ -505,25 +513,31 @@ index 5c2976278e..3ba3526c33 100755
  	--disable-devices \
  	--disable-ffplay \
 diff --git a/xbmc/addons/AddonManager.cpp b/xbmc/addons/AddonManager.cpp
-index 0f0da4f917..90e59549cf 100644
+index 0f0da4f917..11a61e4fdf 100644
 --- a/xbmc/addons/AddonManager.cpp
 +++ b/xbmc/addons/AddonManager.cpp
-@@ -924,6 +924,9 @@ bool CAddonMgr::PlatformSupportsAddon(const cp_plugin_info_t *plugin)
+@@ -924,6 +924,12 @@ bool CAddonMgr::PlatformSupportsAddon(const cp_plugin_info_t *plugin)
  #elif defined(TARGET_RASPBERRY_PI)
      "rbpi",
      "linux",
++#elif defined(TARGET_MALI)
++    "mali",
++    "linux",
 +#elif defined(TARGET_V3D)
 +    "v3d",
 +    "linux",
  #elif defined(TARGET_FREEBSD)
      "freebsd",
      "linux",
-@@ -1016,6 +1019,9 @@ std::string CAddonMgr::GetPlatformLibraryName(cp_cfg_element_t *base) const
+@@ -1016,6 +1022,12 @@ std::string CAddonMgr::GetPlatformLibraryName(cp_cfg_element_t *base) const
  #elif defined(TARGET_RASPBERRY_PI)
    libraryName = GetExtValue(base, "@library_rbpi");
    if (libraryName.empty())
 +#elif defined(TARGET_V3D)
 +  libraryName = GetExtValue(base, "@library_v3d");
++  if (libraryName.empty())
++#elif defined(TARGET_MALI)
++  libraryName = GetExtValue(base, "@library_mali");
 +  if (libraryName.empty())
  #endif
    libraryName = GetExtValue(base, "@library_linux");
@@ -1243,815 +1257,202 @@ index 0000000000..ecf78813d0
 +  RESOLUTION_INFO m_desktopRes;
 +  RESOLUTION_INFO m_desktopResAll[3];
 +};
-diff --git a/xbmc/windowing/egl/EGLNativeTypeHisilicon.cpp b/xbmc/windowing/egl/EGLNativeTypeHisilicon.cpp
+diff --git a/xbmc/windowing/egl/EGLNativeTypeMali.cpp b/xbmc/windowing/egl/EGLNativeTypeMali.cpp
 new file mode 100644
-index 0000000000..db15ed8de0
+index 0000000000..7de98e121c
 --- /dev/null
-+++ b/xbmc/windowing/egl/EGLNativeTypeHisilicon.cpp
-@@ -0,0 +1,783 @@
-+
-+#include "EGLNativeTypeHisilicon.h"
++++ b/xbmc/windowing/egl/EGLNativeTypeMali.cpp
+@@ -0,0 +1,149 @@
++/*
++ *      Copyright (C) 2011-2015 Team XBMC
++ *      http://xbmc.org
++ *
++ *  This Program is free software; you can redistribute it and/or modify
++ *  it under the terms of the GNU General Public License as published by
++ *  the Free Software Foundation; either version 2, or (at your option)
++ *  any later version.
++ *
++ *  This Program is distributed in the hope that it will be useful,
++ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++ *  GNU General Public License for more details.
++ *
++ *  You should have received a copy of the GNU General Public License
++ *  along with XBMC; see the file COPYING.  If not, see
++ *  <http://www.gnu.org/licenses/>.
++ *
++ */
++#include "EGLNativeTypeMali.h"
 +#include <EGL/egl.h>
-+#include <sys/ioctl.h>
 +#include "utils/log.h"
-+#include "utils/StringUtils.h"
-+#include "utils/SysfsUtils.h"
-+#include "threads/Event.h"
-+#include "guilib/gui3d.h"
 +
-+#include "hifb.h"
++#include <linux/fb.h>
++#include <fcntl.h>
++#include <sys/ioctl.h>
++#include <unistd.h>
 +
-+//#define USE_HI_ADP
-+
-+#ifdef USE_HI_ADP
-+extern "C" {
-+#include "hi_adp_mpi.h"
-+}
-+#else
-+#include "hi_unf_vo.h"
-+
-+//TODO: Move to BoardConfig
-+#define HI_DAC_YPBPR_Y	0
-+#define HI_DAC_YPBPR_PB 1
-+#define HI_DAC_YPBPR_PR 3
-+#define HI_DAC_CVBS		2
-+//#define HI_HDCP_SUPPORT
-+
-+class CEGLNativeTypeHisilicon::HIADP_Disp
-+{
-+public:
-+	bool Initialize(HI_UNF_ENC_FMT_E enFormat);
-+	void Destroy();
-+};
-+
-+class CEGLNativeTypeHisilicon::HIADP_HDMI
-+{
-+public:
-+	HIADP_HDMI(HI_UNF_HDMI_ID_E enHDMIId)
-+		: m_enHDMIId(enHDMIId)
-+    {
-+		g_enDefaultMode = HI_UNF_HDMI_DEFAULT_ACTION_HDMI;
-+    }
-+
-+	bool Initialize();
-+	void Destroy();
-+	HI_UNF_ENC_FMT_E GetNativeFormat();
-+	bool ProbeResolutions(std::vector<RESOLUTION_INFO> &resolutions);
-+	bool GetNativeResolution(RESOLUTION_INFO *res);
-+
-+private:
-+	HIADP_HDMI();
-+	static HI_VOID HandleEvent(HI_UNF_HDMI_EVENT_TYPE_E event, HI_VOID *pPrivateData);
-+	static void HotPlug(HIADP_HDMI *pPrivateData);
-+	static void UnPlug(HIADP_HDMI *pPrivateData);
-+	bool FormatToResolution(HI_UNF_ENC_FMT_E fmt, RESOLUTION_INFO *res);
-+
-+	HI_UNF_HDMI_CALLBACK_FUNC_S  m_stCallbackFunc;
-+	HI_UNF_HDMI_ID_E             m_enHDMIId;
-+	HI_UNF_HDMI_DEFAULT_ACTION_E g_enDefaultMode;
-+	CEvent						 m_sinkEvent;
-+};
-+
-+bool CEGLNativeTypeHisilicon::HIADP_Disp::Initialize(HI_UNF_ENC_FMT_E enFormat)
-+{
-+  HI_S32                      Ret;
-+  HI_UNF_DISP_INTF_S          stIntf[2];
-+  HI_UNF_DISP_BG_COLOR_S      BgColor;
-+  HI_UNF_DISP_OFFSET_S        offset;
-+
-+  Ret = HI_UNF_DISP_Init();
-+  if (Ret != HI_SUCCESS)
-+  {
-+	  CLog::Log(LOGERROR, "HIADP_Disp::Initialize: HI_UNF_DISP_Init failed, Ret=%#x.\n", Ret);
-+	  return false;
++bool CEGLNativeTypeMali::_GetNativeResolution(RESOLUTION_INFO *res) const {
++  struct fb_var_screeninfo vinfo;
++  int fd;
++  
++  fd = open("/dev/fb0", O_RDWR, 0);
++  if (fd < 0) {
++    return false;
 +  }
++  
++  if (ioctl(fd, FBIOGET_VSCREENINFO, &vinfo) < 0) {
++    return false;
++  }
++  close(fd);
 +
-+  /* set display1 interface */
-+  stIntf[0].enIntfType                = HI_UNF_DISP_INTF_TYPE_YPBPR;
-+  stIntf[0].unIntf.stYPbPr.u8DacY     = HI_DAC_YPBPR_Y;
-+  stIntf[0].unIntf.stYPbPr.u8DacPb    = HI_DAC_YPBPR_PB;
-+  stIntf[0].unIntf.stYPbPr.u8DacPr    = HI_DAC_YPBPR_PR;
-+  stIntf[1].enIntfType                = HI_UNF_DISP_INTF_TYPE_HDMI;
-+  stIntf[1].unIntf.enHdmi             = HI_UNF_HDMI_ID_0;
-+  Ret = HI_UNF_DISP_AttachIntf(HI_UNF_DISPLAY1, &stIntf[0], 2);
-+  if (Ret != HI_SUCCESS)
-+  {
-+	  CLog::Log(LOGERROR, "HIADP_Disp::Initialize: HI_UNF_DISP_AttachIntf failed, Ret=%#x.\n", Ret);
-+	  HI_UNF_DISP_DeInit();
-+	  return false;
-+  }
-+
-+  /* set display0 interface */
-+  stIntf[0].enIntfType            = HI_UNF_DISP_INTF_TYPE_CVBS;
-+  stIntf[0].unIntf.stCVBS.u8Dac   = HI_DAC_CVBS;
-+  Ret = HI_UNF_DISP_AttachIntf(HI_UNF_DISPLAY0, &stIntf[0], 1);
-+  if (Ret != HI_SUCCESS)
-+  {
-+	  CLog::Log(LOGERROR, "HIADP_Disp::Initialize: HI_UNF_DISP_AttachIntf failed, Ret=%#x.\n", Ret);
-+	  HI_UNF_DISP_DeInit();
-+	  return false;
-+  }
-+
-+  Ret = HI_UNF_DISP_Attach(HI_UNF_DISPLAY0, HI_UNF_DISPLAY1);
-+  if (Ret != HI_SUCCESS)
-+  {
-+	  CLog::Log(LOGERROR, "HIADP_Disp::Initialize: HI_UNF_DISP_Attach failed, Ret=%#x.\n", Ret);
-+	  HI_UNF_DISP_DeInit();
-+	  return false;
-+  }
-+
-+  /* set display1 format*/
-+  Ret = HI_UNF_DISP_SetFormat(HI_UNF_DISPLAY1, enFormat);
-+  if (Ret != HI_SUCCESS)
-+  {
-+	  CLog::Log(LOGERROR, "HIADP_Disp::Initialize: HI_UNF_DISP_SetFormat failed, Ret=%#x.\n", Ret);
-+	  HI_UNF_DISP_Detach(HI_UNF_DISPLAY0, HI_UNF_DISPLAY1);
-+	  HI_UNF_DISP_DeInit();
-+	  return false;
-+  }
-+  if ((HI_UNF_ENC_FMT_1080P_60 == enFormat)
-+	  ||(HI_UNF_ENC_FMT_1080i_60 == enFormat)
-+	  ||(HI_UNF_ENC_FMT_720P_60 == enFormat)
-+	  ||(HI_UNF_ENC_FMT_480P_60 == enFormat)
-+	  ||(HI_UNF_ENC_FMT_NTSC == enFormat)
-+#if 1
-+	  ||(HI_UNF_ENC_FMT_3840X2160_30 == enFormat)
-+	  ||(HI_UNF_ENC_FMT_3840X2160_24 == enFormat)
-+#endif
-+	  )
-+  {
-+	  Ret = HI_UNF_DISP_SetFormat(HI_UNF_DISPLAY0, HI_UNF_ENC_FMT_NTSC);
-+	  if (HI_SUCCESS != Ret)
-+	  {
-+		  CLog::Log(LOGERROR, "HIADP_Disp::Initialize: HI_UNF_DISP_SetFormat failed, Ret=%#x.\n", Ret);
-+		  HI_UNF_DISP_Detach(HI_UNF_DISPLAY0, HI_UNF_DISPLAY1);
-+		  HI_UNF_DISP_DeInit();
-+		  return false;
-+	  }
-+  }
-+
-+  if ((HI_UNF_ENC_FMT_1080P_50 == enFormat)
-+	  ||(HI_UNF_ENC_FMT_1080i_50 == enFormat)
-+	  ||(HI_UNF_ENC_FMT_720P_50 == enFormat)
-+	  ||(HI_UNF_ENC_FMT_576P_50 == enFormat)
-+	  ||(HI_UNF_ENC_FMT_PAL == enFormat)
-+#if 0
-+	  ||(HI_UNF_ENC_FMT_3840X2160_25 == enFormat)
-+#endif
-+	  )
-+  {
-+	  Ret = HI_UNF_DISP_SetFormat(HI_UNF_DISPLAY0, HI_UNF_ENC_FMT_PAL);
-+	  if (HI_SUCCESS != Ret)
-+	  {
-+		  CLog::Log(LOGERROR, "HIADP_Disp::Initialize: HI_UNF_DISP_SetFormat failed, Ret=%#x.\n", Ret);
-+		  HI_UNF_DISP_Detach(HI_UNF_DISPLAY0, HI_UNF_DISPLAY1);
-+		  HI_UNF_DISP_DeInit();
-+		  return false;
-+	  }
-+  }
-+
-+  Ret = HI_UNF_DISP_SetVirtualScreen(HI_UNF_DISPLAY1, 1920, 1080); //1280, 720);
-+  if (Ret != HI_SUCCESS)
-+  {
-+	  CLog::Log(LOGERROR, "HIADP_Disp::Initialize: HI_UNF_DISP_SetVirtualScreen failed, Ret=%#x.\n", Ret);
-+	  HI_UNF_DISP_Detach(HI_UNF_DISPLAY0, HI_UNF_DISPLAY1);
-+	  HI_UNF_DISP_DeInit();
-+	  return false;
-+  }
-+
-+  offset.u32Left      = 0;
-+  offset.u32Top       = 0;
-+  offset.u32Right     = 0;
-+  offset.u32Bottom    = 0;
-+  /*set display1 screen offset*/
-+  Ret = HI_UNF_DISP_SetScreenOffset(HI_UNF_DISPLAY1, &offset);
-+  if (Ret != HI_SUCCESS)
-+  {
-+	  CLog::Log(LOGERROR, "HIADP_Disp::Initialize: HI_UNF_DISP_SetBgColor failed, Ret=%#x.\n", Ret);
-+	  HI_UNF_DISP_Detach(HI_UNF_DISPLAY0, HI_UNF_DISPLAY1);
-+	  HI_UNF_DISP_DeInit();
-+	  return false;
-+  }
-+
-+  /*set display0 screen offset*/
-+  Ret = HI_UNF_DISP_SetScreenOffset(HI_UNF_DISPLAY0, &offset);
-+  if (Ret != HI_SUCCESS)
-+  {
-+	  CLog::Log(LOGERROR, "HIADP_Disp::Initialize: HI_UNF_DISP_SetBgColor failed, Ret=%#x.\n", Ret);
-+	  HI_UNF_DISP_Detach(HI_UNF_DISPLAY0, HI_UNF_DISPLAY1);
-+	  HI_UNF_DISP_DeInit();
-+	  return false;
-+  }
-+
-+  BgColor.u8Red   = 0;
-+  BgColor.u8Green = 0;
-+  BgColor.u8Blue  = 0;
-+  Ret = HI_UNF_DISP_SetBgColor(HI_UNF_DISPLAY1, &BgColor);
-+  if (Ret != HI_SUCCESS)
-+  {
-+	  CLog::Log(LOGERROR, "HIADP_Disp::Initialize: HI_UNF_DISP_SetBgColor failed, Ret=%#x.\n", Ret);
-+	  HI_UNF_DISP_Detach(HI_UNF_DISPLAY0, HI_UNF_DISPLAY1);
-+	  HI_UNF_DISP_DeInit();
-+	  return false;
-+  }
-+
-+  Ret = HI_UNF_DISP_Open(HI_UNF_DISPLAY1);
-+  if (Ret != HI_SUCCESS)
-+  {
-+	  CLog::Log(LOGERROR, "HIADP_Disp::Initialize: HI_UNF_DISP_Open DISPLAY1 failed, Ret=%#x.\n", Ret);
-+	  HI_UNF_DISP_Detach(HI_UNF_DISPLAY0, HI_UNF_DISPLAY1);
-+	  HI_UNF_DISP_DeInit();
-+	  return false;
-+  }
-+
-+  Ret = HI_UNF_DISP_Open(HI_UNF_DISPLAY0);
-+  if (Ret != HI_SUCCESS)
-+  {
-+	  CLog::Log(LOGERROR, "HIADP_Disp::Initialize: HI_UNF_DISP_Open DISPLAY0 failed, Ret=%#x.\n", Ret);
-+	  HI_UNF_DISP_Close(HI_UNF_DISPLAY1);
-+	  HI_UNF_DISP_Detach(HI_UNF_DISPLAY0, HI_UNF_DISPLAY1);
-+	  HI_UNF_DISP_DeInit();
-+	  return false;
-+  }
++  res->iScreen       = 0;
++  res->bFullScreen   = false;
++  res->dwFlags       = 0;
++  res->fRefreshRate  = 60;
++  res->iWidth        = vinfo.xres;
++  res->iHeight       = vinfo.yres;
++  res->iScreenWidth  = vinfo.xres;
++  res->iScreenHeight = vinfo.yres;
++  res->fPixelRatio   = 1;
++  res->iSubtitles    = (int)(0.965 * res->iHeight);
 +
 +  return true;
 +}
 +
-+void CEGLNativeTypeHisilicon::HIADP_Disp::Destroy()
-+{
-+  HI_UNF_DISP_Close(HI_UNF_DISPLAY0);
-+  HI_UNF_DISP_Close(HI_UNF_DISPLAY1);
-+  HI_UNF_DISP_Detach(HI_UNF_DISPLAY0, HI_UNF_DISPLAY1);
-+  HI_UNF_DISP_DeInit();
++CEGLNativeTypeMali::CEGLNativeTypeMali() {
++  CLog::Log(LOGDEBUG, "CEGLNativeTypeMali::CEGLNativeTypeMali()\n");
 +}
 +
-+bool CEGLNativeTypeHisilicon::HIADP_HDMI::Initialize()
-+{
-+    HI_S32 Ret = HI_FAILURE;
-+    HI_UNF_HDMI_OPEN_PARA_S stOpenParam;
-+    HI_UNF_HDMI_DELAY_S  stDelay;
++CEGLNativeTypeMali::~CEGLNativeTypeMali() {
++  CLog::Log(LOGDEBUG, "CEGLNativeTypeMali::~CEGLNativeTypeMali()\n");
++}
 +
-+    Ret = HI_UNF_HDMI_Init();
-+    if (HI_SUCCESS != Ret)
-+    {
-+    	CLog::Log(LOGERROR, "HIADP_HDMI::Initialize: HI_UNF_HDMI_Init failed:%#x\n",Ret);
-+        return false;
-+    }
-+#ifdef HI_HDCP_SUPPORT
-+	Ret = HIADP_HDMI_SetHDCPKey(m_enHDMIId);
-+	if (HI_SUCCESS != Ret)
-+    {
-+		CLog::Log(LOGERROR, "HIADP_HDMI::Initialize: Set hdcp erro:%#x\n",Ret);
-+		//return false;
-+    }
-+#endif
-+
-+    HI_UNF_HDMI_GetDelay(m_enHDMIId, &stDelay);
-+    stDelay.bForceFmtDelay = HI_TRUE;
-+    stDelay.bForceMuteDelay = HI_TRUE;
-+    stDelay.u32FmtDelay = 500;
-+    stDelay.u32MuteDelay = 120;
-+    HI_UNF_HDMI_SetDelay(m_enHDMIId, &stDelay);
-+
-+	m_stCallbackFunc.pfnHdmiEventCallback = HandleEvent;
-+	m_stCallbackFunc.pPrivateData = this;
-+
-+	m_sinkEvent.Reset();
-+
-+	Ret = HI_UNF_HDMI_RegCallbackFunc(m_enHDMIId, &m_stCallbackFunc);
-+	if (Ret != HI_SUCCESS)
-+    {
-+		CLog::Log(LOGERROR, "HIADP_HDMI::Initialize: hdmi reg failed:%#x\n",Ret);
-+        HI_UNF_HDMI_DeInit();
-+        return false;
-+    }
-+
-+	stOpenParam.enDefaultMode = g_enDefaultMode;
-+    Ret = HI_UNF_HDMI_Open(m_enHDMIId, &stOpenParam);
-+    if (Ret != HI_SUCCESS)
-+    {
-+    	CLog::Log(LOGERROR, "HIADP_HDMI::Initialize: HI_UNF_HDMI_Open failed:%#x\n",Ret);
-+        HI_UNF_HDMI_DeInit();
-+        return false;
-+    }
-+
-+	CLog::Log(LOGERROR, "HIADP_HDMI::Initialize: Waiting for Sink...\n");
-+    m_sinkEvent.WaitMSec(1000);
-+
++bool CEGLNativeTypeMali::CheckCompatibility() {
++  CLog::Log(LOGDEBUG, "CEGLNativeTypeMali::CheckCompatibility()\n");
 +  return true;
 +}
 +
-+HI_VOID CEGLNativeTypeHisilicon::HIADP_HDMI::HandleEvent(HI_UNF_HDMI_EVENT_TYPE_E event, HI_VOID *pPrivateData)
-+{
-+    switch ( event )
-+    {
-+        case HI_UNF_HDMI_EVENT_HOTPLUG:
-+            HotPlug((CEGLNativeTypeHisilicon::HIADP_HDMI*) pPrivateData);
-+            break;
-+        case HI_UNF_HDMI_EVENT_NO_PLUG:
-+            UnPlug((CEGLNativeTypeHisilicon::HIADP_HDMI*) pPrivateData);
-+            break;
-+        case HI_UNF_HDMI_EVENT_EDID_FAIL:
-+    		CLog::Log(LOGERROR, "HIADP_HDMI::HandleEvent: HI_UNF_HDMI_EVENT_EDID_FAIL\n");
-+            break;
-+        case HI_UNF_HDMI_EVENT_HDCP_FAIL:
-+    		CLog::Log(LOGERROR, "HIADP_HDMI::HandleEvent: HI_UNF_HDMI_EVENT_HDCP_FAIL\n");
-+            break;
-+        case HI_UNF_HDMI_EVENT_HDCP_SUCCESS:
-+    		CLog::Log(LOGERROR, "HIADP_HDMI::HandleEvent: HI_UNF_HDMI_EVENT_HDCP_SUCCESS\n");
-+            break;
-+        case HI_UNF_HDMI_EVENT_RSEN_CONNECT:
-+    		CLog::Log(LOGERROR, "HIADP_HDMI::HandleEvent: HI_UNF_HDMI_EVENT_RSEN_CONNECT\n");
-+            break;
-+        case HI_UNF_HDMI_EVENT_RSEN_DISCONNECT:
-+    		CLog::Log(LOGERROR, "HIADP_HDMI::HandleEvent: HI_UNF_HDMI_EVENT_RSEN_DISCONNECT\n");
-+            break;
-+        default:
-+            break;
-+    }
++void CEGLNativeTypeMali::Initialize() {
++  CLog::Log(LOGDEBUG, "CEGLNativeTypeMali::Initialize()\n");
 +}
 +
-+void CEGLNativeTypeHisilicon::HIADP_HDMI::HotPlug(HIADP_HDMI *pPrivateData)
-+{
-+    HI_UNF_HDMI_ID_E       hHdmi   =  pPrivateData->m_enHDMIId;
-+    HI_S32          ret = HI_SUCCESS;
-+    HI_UNF_HDMI_STATUS_S           stHdmiStatus;
-+    HI_UNF_HDMI_ATTR_S             stHdmiAttr;
-+    HI_UNF_EDID_BASE_INFO_S        stSinkCap;
-+#ifdef HI_HDCP_SUPPORT
-+    static HI_U8 u8FirstTimeSetting = HI_TRUE;
-+#endif
-+
-+    printf("\n --- Get HDMI event: HOTPLUG. --- \n");
-+	CLog::Log(LOGERROR, "HIADP_HDMI::HotPlug");
-+
-+    HI_UNF_HDMI_GetStatus(hHdmi, &stHdmiStatus);
-+    if (HI_FALSE == stHdmiStatus.bConnected)
-+    {
-+    	CLog::Log(LOGERROR, "HIADP_HDMI::HotPlug: No Connect\n");
-+        return;
-+    }
-+
-+    HI_UNF_HDMI_GetAttr(hHdmi, &stHdmiAttr);
-+    ret = HI_UNF_HDMI_GetSinkCapability(hHdmi, &stSinkCap);
-+    if(ret == HI_SUCCESS)
-+    {
-+        //stHdmiAttr.enVidOutMode = HI_UNF_HDMI_VIDEO_MODE_YCBCR444;
-+        if(HI_TRUE == stSinkCap.bSupportHdmi)
-+        {
-+            stHdmiAttr.bEnableHdmi = HI_TRUE;
-+            if(HI_TRUE != stSinkCap.stColorSpace.bYCbCr444)
-+            {
-+                stHdmiAttr.enVidOutMode = HI_UNF_HDMI_VIDEO_MODE_RGB444;
-+            }
-+        }
-+        else
-+        {
-+            stHdmiAttr.enVidOutMode = HI_UNF_HDMI_VIDEO_MODE_RGB444;
-+            //¶ÁÈ¡µ½ÁËedid£¬²¢ÇÒ²»Ö§³ÖhdmiÔò½øÈëdviÄ£Ê½
-+            //read real edid ok && sink not support hdmi,then we run in dvi mode
-+            stHdmiAttr.bEnableHdmi = HI_FALSE;
-+        }
-+    }
-+    else
-+    {
-+        //when get capability fail,use default mode
-+        if(pPrivateData->g_enDefaultMode != HI_UNF_HDMI_DEFAULT_ACTION_DVI)
-+            stHdmiAttr.bEnableHdmi = HI_TRUE;
-+        else
-+            stHdmiAttr.bEnableHdmi = HI_FALSE;
-+    }
-+
-+    if(HI_TRUE == stHdmiAttr.bEnableHdmi)
-+    {
-+        stHdmiAttr.bEnableAudio = HI_TRUE;
-+        stHdmiAttr.bEnableVideo = HI_TRUE;
-+        stHdmiAttr.bEnableAudInfoFrame = HI_TRUE;
-+        stHdmiAttr.bEnableAviInfoFrame = HI_TRUE;
-+    }
-+    else
-+    {
-+        stHdmiAttr.bEnableAudio = HI_FALSE;
-+        stHdmiAttr.bEnableVideo = HI_TRUE;
-+        stHdmiAttr.bEnableAudInfoFrame = HI_FALSE;
-+        stHdmiAttr.bEnableAviInfoFrame = HI_FALSE;
-+        stHdmiAttr.enVidOutMode = HI_UNF_HDMI_VIDEO_MODE_RGB444;
-+    }
-+
-+#ifdef HI_HDCP_SUPPORT
-+    if (u8FirstTimeSetting == HI_TRUE)
-+    {
-+        u8FirstTimeSetting = HI_FALSE;
-+        if (g_HDCPFlag == HI_TRUE)
-+        {
-+            stHdmiAttr.bHDCPEnable = HI_TRUE;//Enable HDCP
-+        }
-+        else
-+        {
-+            stHdmiAttr.bHDCPEnable= HI_FALSE;
-+        }
-+    }
-+    else
-+    {
-+        //HDCP Enable use default setting!!
-+    }
-+#endif
-+
-+    ret = HI_UNF_HDMI_SetAttr(hHdmi, &stHdmiAttr);
-+
-+    /* HI_UNF_HDMI_SetAttr must before HI_UNF_HDMI_Start! */
-+    ret = HI_UNF_HDMI_Start(hHdmi);
-+    if (ret == HI_SUCCESS)
-+    {
-+    	CLog::Log(LOGERROR, "HIADP_HDMI::HotPlug: Sink available\n");
-+    	pPrivateData->m_sinkEvent.Set();
-+    }
++void CEGLNativeTypeMali::Destroy() {
++  CLog::Log(LOGDEBUG, "CEGLNativeTypeMali::Destroy()\n");
 +}
 +
-+void CEGLNativeTypeHisilicon::HIADP_HDMI::UnPlug(HIADP_HDMI *pPrivateData)
-+{
-+    HI_UNF_HDMI_ID_E       hHdmi   =  pPrivateData->m_enHDMIId;
-+
-+    printf("\n --- Get HDMI event: UnPlug. --- \n");
-+	CLog::Log(LOGERROR, "HIADP_HDMI::UnPlug");
-+
-+    HI_UNF_HDMI_Stop(hHdmi);
++bool CEGLNativeTypeMali::CreateNativeDisplay() {
++  CLog::Log(LOGDEBUG, "CEGLNativeTypeMali::CreateNativeDisplay()\n");
++  m_nativeDisplay = EGL_DEFAULT_DISPLAY;
++  return true;
 +}
 +
-+void CEGLNativeTypeHisilicon::HIADP_HDMI::Destroy()
-+{
-+    HI_UNF_HDMI_Stop(m_enHDMIId);
-+    HI_UNF_HDMI_Close(m_enHDMIId);
-+	HI_UNF_HDMI_UnRegCallbackFunc(m_enHDMIId, &m_stCallbackFunc);
-+    HI_UNF_HDMI_DeInit();
++bool CEGLNativeTypeMali::CreateNativeWindow() {
++  CLog::Log(LOGDEBUG, "CEGLNativeTypeMali::CreateNativeWindow()\n");
++  m_nativeWindow = EGL_DEFAULT_DISPLAY;
++  return true;
 +}
 +
-+bool CEGLNativeTypeHisilicon::HIADP_HDMI::FormatToResolution(HI_UNF_ENC_FMT_E fmt, RESOLUTION_INFO *res)
-+{
-+	int w, h, r, i = 0;
-+	std::string mode;
-+
-+	switch (fmt)
-+	{
-+	case HI_UNF_ENC_FMT_1080P_60:
-+		w = 1920; h = 1080; r = 60;
-+		mode = "HI_UNF_ENC_FMT_1080P_60";
-+		break;
-+	case HI_UNF_ENC_FMT_1080P_50:
-+		w = 1920; h = 1080; r = 50;
-+		mode = "HI_UNF_ENC_FMT_1080P_50";
-+		break;
-+	case HI_UNF_ENC_FMT_1080P_30:
-+		w = 1920; h = 1080; r = 30;
-+		mode = "HI_UNF_ENC_FMT_1080P_30";
-+		break;
-+	case HI_UNF_ENC_FMT_1080P_25:
-+		w = 1920; h = 1080; r = 25;
-+		mode = "HI_UNF_ENC_FMT_1080P_25";
-+		break;
-+	case HI_UNF_ENC_FMT_1080P_24:
-+		w = 1920; h = 1080; r = 24;
-+		mode = "HI_UNF_ENC_FMT_1080P_24";
-+		break;
-+	case HI_UNF_ENC_FMT_1080i_60:
-+		w = 1920; h = 1080; r = 60; i = 1;
-+		mode = "HI_UNF_ENC_FMT_1080i_60";
-+		break;
-+	case HI_UNF_ENC_FMT_1080i_50:
-+		w = 1920; h = 1080; r = 50; i = 1;
-+		mode = "HI_UNF_ENC_FMT_1080i_50";
-+		break;
-+	case HI_UNF_ENC_FMT_720P_60:
-+		w = 1280; h = 720;  r = 60;
-+		mode = "HI_UNF_ENC_FMT_720P_60";
-+		break;
-+	case HI_UNF_ENC_FMT_720P_50:
-+		w = 1280; h = 720;  r = 50;
-+		mode = "HI_UNF_ENC_FMT_720P_50";
-+		break;
-+	case HI_UNF_ENC_FMT_576P_50:
-+		w = 720;  h = 576;  r = 50;
-+		mode = "HI_UNF_ENC_FMT_576P_50";
-+		break;
-+	case HI_UNF_ENC_FMT_PAL:
-+		w = 720;  h = 576;  r = 50;
-+		mode = "HI_UNF_ENC_FMT_PAL";
-+		break;
-+	case HI_UNF_ENC_FMT_480P_60:
-+		w = 720;  h = 480;  r = 60;
-+		mode = "HI_UNF_ENC_FMT_480P_60";
-+		break;
-+	case HI_UNF_ENC_FMT_NTSC:
-+		w = 720;  h = 480;  r = 60;
-+		mode = "HI_UNF_ENC_FMT_NTSC";
-+		break;
-+	default:
-+		return false;
-+		break;
-+	}
-+
-+	res->iWidth = w;
-+	res->iHeight= h;
-+	res->iScreenWidth = w;
-+	res->iScreenHeight= h;
-+	res->fRefreshRate = r;
-+	res->dwFlags = (i == 0) ? D3DPRESENTFLAG_PROGRESSIVE : D3DPRESENTFLAG_INTERLACED;
-+
-+	res->iScreen       = 0;
-+	res->bFullScreen   = true;
-+	res->iSubtitles    = (int)(0.965 * res->iHeight);
-+
-+	res->fPixelRatio   = 1.0f;
-+	res->strMode       = StringUtils::Format("%dx%d @ %.2f%s - Full Screen", res->iScreenWidth, res->iScreenHeight, res->fRefreshRate,
-+										   res->dwFlags & D3DPRESENTFLAG_INTERLACED ? "i" : "");
-+	res->strId         = mode;
-+
-+	CLog::Log(LOGERROR, "HIADP_HDMI::FormatToResolution: fmt=%d(%s)", fmt, res->strId.c_str());
-+
-+	return true;
++bool CEGLNativeTypeMali::GetNativeDisplay(XBNativeDisplayType **nativeDisplay) const {
++  CLog::Log(LOGDEBUG, "CEGLNativeTypeMali::GetNativeDisplay()\n");
++  if (!nativeDisplay)
++    return false;
++  *nativeDisplay = (XBNativeDisplayType*) &m_nativeDisplay;
++  return true;
 +}
 +
-+bool CEGLNativeTypeHisilicon::HIADP_HDMI::ProbeResolutions(std::vector<RESOLUTION_INFO> &resolutions)
-+{
-+    HI_UNF_EDID_BASE_INFO_S stSinkCap;
-+
-+	resolutions.clear();
-+
-+    if (HI_SUCCESS == HI_UNF_HDMI_GetSinkCapability(m_enHDMIId, &stSinkCap))
-+    {
-+    	/*HI_UNF_ENC_FMT_E*/int fmt;
-+    	for (fmt = 0/*HI_UNF_ENC_FMT_1080P_60*/; fmt < HI_UNF_ENC_FMT_BUTT; fmt++)
-+    	{
-+    		if (stSinkCap.bSupportFormat[fmt] == HI_TRUE)
-+    		{
-+    			RESOLUTION_INFO res;
-+    			if (FormatToResolution((HI_UNF_ENC_FMT_E) fmt, &res))
-+    				resolutions.push_back(res);
-+    		}
-+    	}
-+    }
-+	else
-+	{
-+		RESOLUTION_INFO res;
-+		FormatToResolution(HI_UNF_ENC_FMT_1080P_60, &res);
-+		resolutions.push_back(res);
-+		FormatToResolution(HI_UNF_ENC_FMT_720P_60, &res);
-+		resolutions.push_back(res);
-+               FormatToResolution(HI_UNF_ENC_FMT_3840X2160_30, &res);
-+               resolutions.push_back(res);
-+
-+	}
-+
-+	return resolutions.size() > 0;
++bool CEGLNativeTypeMali::GetNativeWindow(XBNativeWindowType **nativeWindow) const {
++  CLog::Log(LOGDEBUG, "CEGLNativeTypeMali::GetNativeWindow()\n");
++  if (!nativeWindow)
++    return false;
++  *nativeWindow = (XBNativeWindowType*) &m_nativeWindow;
++  return true;
 +}
 +
-+HI_UNF_ENC_FMT_E CEGLNativeTypeHisilicon::HIADP_HDMI::GetNativeFormat()
-+{
-+	HI_UNF_ENC_FMT_E fmt = HI_UNF_ENC_FMT_1080P_60; //Fallback for No Sink
-+    HI_UNF_EDID_BASE_INFO_S stSinkCap;
-+
-+    if (HI_SUCCESS == HI_UNF_HDMI_GetSinkCapability(m_enHDMIId, &stSinkCap))
-+    	fmt = stSinkCap.enNativeFormat;
-+
-+    return fmt;
++bool CEGLNativeTypeMali::DestroyNativeWindow() {
++  CLog::Log(LOGDEBUG, "CEGLNativeTypeMali::DestroyNativeWindow()\n");
++  m_nativeWindow = NULL;
++  return true;
 +}
 +
-+bool CEGLNativeTypeHisilicon::HIADP_HDMI::GetNativeResolution(RESOLUTION_INFO *res)
-+{
-+    return FormatToResolution(GetNativeFormat(), res);
++bool CEGLNativeTypeMali::DestroyNativeDisplay() {
++  CLog::Log(LOGDEBUG, "CEGLNativeTypeMali::DestroyNativeDisplay()\n");
++  m_nativeDisplay = NULL;
++  return true;
 +}
 +
-+
-+#endif /* USE_HI_ADP */
-+
-+CEGLNativeTypeHisilicon::CEGLNativeTypeHisilicon()
-+	: m_pDisp(new HIADP_Disp),
-+	  m_pHDMI(new HIADP_HDMI(HI_UNF_HDMI_ID_0))
-+{
++bool CEGLNativeTypeMali::GetNativeResolution(RESOLUTION_INFO *res) const {
++  CLog::Log(LOGDEBUG, "CEGLNativeTypeMali::GetNativeResolution()\n");
++  return _GetNativeResolution(res);
 +}
 +
-+CEGLNativeTypeHisilicon::~CEGLNativeTypeHisilicon()
-+{
++bool CEGLNativeTypeMali::SetNativeResolution(const RESOLUTION_INFO &res) {
++  CLog::Log(LOGDEBUG, "CEGLNativeTypeMali::SetNativeResolution()\n");
++  return true;
 +}
 +
-+bool CEGLNativeTypeHisilicon::CheckCompatibility()
-+{
-+  std::string sysfsName = "/sys/class/graphics/fb0/name";
-+  std::string name;
-+  SysfsUtils::GetString(sysfsName, name);
-+  StringUtils::Trim(name);
++bool CEGLNativeTypeMali::ProbeResolutions(std::vector<RESOLUTION_INFO> &resolutions) {
++  CLog::Log(LOGDEBUG, "CEGLNativeTypeMali::ProbeResolutions()\n");
++  resolutions.clear();
 +
-+  CLog::Log(LOGDEBUG, "%s: %s = '%s'", __FUNCTION__, sysfsName.c_str(), name.c_str());
-+
-+  if (name == "hifb")
++  RESOLUTION_INFO res;
++  if(_GetNativeResolution(&res)) {
++    resolutions.push_back(res);
 +    return true;
++  }
++  return true;
++}
 +
++bool CEGLNativeTypeMali::GetPreferredResolution(RESOLUTION_INFO *res) const {
++  CLog::Log(LOGDEBUG, "CEGLNativeTypeMali::GetPreferredResolution()\n");
++  _GetNativeResolution(res);
 +  return false;
 +}
 +
-+void CEGLNativeTypeHisilicon::Initialize()
-+{
-+  CLog::Log(LOGERROR, "CEGLNativeTypeHisilicon::Initialize");
-+
-+  return;
++bool CEGLNativeTypeMali::ShowWindow(bool show) {
++  CLog::Log(LOGDEBUG, "CEGLNativeTypeMali::ShowWindow()\n");
++  return false;
 +}
-+
-+void CEGLNativeTypeHisilicon::Destroy()
-+{
-+  CLog::Log(LOGERROR, "CEGLNativeTypeHisilicon::Destroy");
-+
-+  return;
-+}
-+
-+bool CEGLNativeTypeHisilicon::CreateNativeDisplay()
-+{
-+#ifdef USE_HI_ADP
-+  HIADP_Disp_Init(HI_UNF_ENC_FMT_720P_50);
-+#else
-+  if (!m_pHDMI->Initialize())
-+	  return false;
-+
-+  if (!m_pDisp->Initialize(m_pHDMI->GetNativeFormat()))
-+	  return false;
-+#endif
-+
-+  m_nativeDisplay = EGL_DEFAULT_DISPLAY;
-+
-+  return true;
-+}
-+
-+bool CEGLNativeTypeHisilicon::CreateNativeWindow()
-+{
-+  CLog::Log(LOGERROR, "CEGLNativeTypeHisilicon::CreateNativeWindow");
-+
-+  fbdev_window *nativeWindow = new fbdev_window;
-+  if (!nativeWindow)
-+  {
-+    return false;
-+  }
-+  nativeWindow->width = 1920; //1280;
-+  nativeWindow->height = 1080; //720;
-+  m_nativeWindow = nativeWindow;
-+
-+  /* disable layer alpha */
-+  int err;
-+  /*HIFB_SIZE_S screenSize;*/
-+  HIFB_ALPHA_S stAlpha; // = {0};
-+  struct fb_var_screeninfo vinfo;
-+
-+#if 1
-+  /**
-+  ** Òª×¢ÒâÊÓÆµ²ãºÍÍ¼ÐÎ²ãµÄÓÅÏÈ¼¶£¬Ò»°ãÍ¼ÐÎ²ãÔÚÊÓÆµ²ãÉÏÃæ,
-+  ** ÉèÖÃÍ¸Ã÷¿ÉÒÔÊ¹ÊÓÆµ²ãÉÏÏÔÊ¾Í¼ÐÎ£¬HIADP_Disp_InitÔÚÕâ¸öº¯ÊýÀïÃæ
-+  **/
-+  memset(&stAlpha, 0, sizeof(stAlpha));
-+  stAlpha.bAlphaEnable  = HI_TRUE;
-+  stAlpha.bAlphaChannel = HI_TRUE;
-+  stAlpha.u8Alpha0 = 0xff;
-+  stAlpha.u8Alpha1 = 0xff;
-+  stAlpha.u8GlobalAlpha = 0xff;
-+#endif
-+
-+  m_fb = open("/dev/fb0", O_RDWR, 0);
-+
-+  if (ioctl(m_fb, FBIOPUT_ALPHA_HIFB, &stAlpha) < 0)
-+  {
-+  	CLog::Log(LOGERROR, "CEGLNativeTypeHisilicon::CreateNativeWindow: Unable to set alpha!");
-+  }
-+
-+  if ((err = ioctl(m_fb, FBIOGET_VSCREENINFO, &vinfo)) < 0)
-+  {
-+  	CLog::Log(LOGERROR, "CEGLNativeTypeHisilicon::CreateNativeWindow: Unable to FBIOGET_VSCREENINFO!, err=0x%x\n", err);
-+    return false;
-+  }
-+
-+  vinfo.bits_per_pixel = 32;
-+  vinfo.red.length    = 8;
-+  vinfo.green.length  = 8;
-+  vinfo.blue.length   = 8;
-+  vinfo.transp.length = 8;
-+
-+  vinfo.blue.offset  = 0;
-+  vinfo.green.offset = 8;
-+  vinfo.red.offset = 16;
-+  vinfo.transp.offset = 24;
-+
-+  vinfo.xres = vinfo.xres_virtual = nativeWindow->width;
-+  vinfo.yres = nativeWindow->height;
-+  vinfo.yres_virtual = 2 * vinfo.yres;
-+
-+  if ((err = ioctl(m_fb, FBIOPUT_VSCREENINFO, &vinfo)) < 0)
-+  {
-+  	CLog::Log(LOGERROR, "CEGLNativeTypeHisilicon::CreateNativeWindow: Unable to set double buffer mode!, err=0x%x\n", err);
-+	vinfo.yres_virtual = vinfo.yres;
-+	if ((err = ioctl(m_fb, FBIOPUT_VSCREENINFO, &vinfo)) < 0)
-+	{
-+	  CLog::Log(LOGERROR, "CEGLNativeTypeHisilicon::CreateNativeWindow: Unable to FBIOPUT_VSCREENINFO!, err=0x%x\n", err);
-+	  return false;
-+	}
-+  }
-+
-+  return true;
-+}
-+
-+bool CEGLNativeTypeHisilicon::GetNativeDisplay(XBNativeDisplayType **nativeDisplay) const
-+{
-+  CLog::Log(LOGERROR, "CEGLNativeTypeHisilicon::GetNativeDisplay");
-+
-+  if (!nativeDisplay)
-+  {
-+    return false;
-+  }
-+  *nativeDisplay = (XBNativeDisplayType*) &m_nativeDisplay;
-+
-+  return true;
-+}
-+
-+bool CEGLNativeTypeHisilicon::GetNativeWindow(XBNativeWindowType **nativeWindow) const
-+{
-+  CLog::Log(LOGERROR, "CEGLNativeTypeHisilicon::GetNativeWindow");
-+
-+  if (!nativeWindow)
-+  {
-+    return false;
-+  }
-+  *nativeWindow = (XBNativeWindowType*) &m_nativeWindow;
-+
-+  return true;
-+}
-+
-+bool CEGLNativeTypeHisilicon::DestroyNativeDisplay()
-+{
-+  CLog::Log(LOGERROR, "CEGLNativeTypeHisilicon::DestroyNativeDisplay");
-+
-+#ifdef USE_HI_ADP
-+  HIADP_Disp_DeInit();
-+#else
-+#warning TODO: replace HIADP_Disp_DeInit
-+#endif
-+
-+  return true;
-+}
-+
-+bool CEGLNativeTypeHisilicon::DestroyNativeWindow()
-+{
-+  CLog::Log(LOGERROR, "CEGLNativeTypeHisilicon::DestroyNativeWindow");
-+
-+  delete (fbdev_window*)m_nativeWindow, m_nativeWindow = NULL;
-+
-+  return true;
-+}
-+
-+bool CEGLNativeTypeHisilicon::GetNativeResolution(RESOLUTION_INFO *res) const
-+{
-+  CLog::Log(LOGERROR, "CEGLNativeTypeHisilicon::GetNativeResolution");
-+  return m_pHDMI->GetNativeResolution(res);
-+}
-+
-+bool CEGLNativeTypeHisilicon::SetNativeResolution(const RESOLUTION_INFO &res)
-+{
-+  CLog::Log(LOGERROR, "CEGLNativeTypeHisilicon::SetNativeResolution");
-+  return true;
-+}
-+
-+bool CEGLNativeTypeHisilicon::ProbeResolutions(std::vector<RESOLUTION_INFO> &resolutions)
-+{
-+  CLog::Log(LOGERROR, "CEGLNativeTypeHisilicon::ProbeResolutions");
-+  return m_pHDMI->ProbeResolutions(resolutions);
-+}
-+
-+bool CEGLNativeTypeHisilicon::GetPreferredResolution(RESOLUTION_INFO *res) const
-+{
-+  CLog::Log(LOGERROR, "CEGLNativeTypeHisilicon::GetPreferredResolution");
-+  return true;
-+}
-+
-+bool CEGLNativeTypeHisilicon::ShowWindow(bool show)
-+{
-+  CLog::Log(LOGERROR, "CEGLNativeTypeHisilicon::ShowWindow");
-+  return true;
-+}
-+
-diff --git a/xbmc/windowing/egl/EGLNativeTypeHisilicon.h b/xbmc/windowing/egl/EGLNativeTypeHisilicon.h
+\ No newline at end of file
+diff --git a/xbmc/windowing/egl/EGLNativeTypeMali.h b/xbmc/windowing/egl/EGLNativeTypeMali.h
 new file mode 100644
-index 0000000000..9b42704485
+index 0000000000..35c7ce9f6f
 --- /dev/null
-+++ b/xbmc/windowing/egl/EGLNativeTypeHisilicon.h
-@@ -0,0 +1,39 @@
++++ b/xbmc/windowing/egl/EGLNativeTypeMali.h
+@@ -0,0 +1,53 @@
 +#pragma once
++
++/*
++ *      Copyright (C) 2011-2013 Team XBMC
++ *      http://xbmc.org
++ *
++ *  This Program is free software; you can redistribute it and/or modify
++ *  it under the terms of the GNU General Public License as published by
++ *  the Free Software Foundation; either version 2, or (at your option)
++ *  any later version.
++ *
++ *  This Program is distributed in the hope that it will be useful,
++ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++ *  GNU General Public License for more details.
++ *
++ *  You should have received a copy of the GNU General Public License
++ *  along with XBMC; see the file COPYING.  If not, see
++ *  <http://www.gnu.org/licenses/>.
++ *
++ */
 +
 +#include "EGLNativeType.h"
 +
-+class CEGLNativeTypeHisilicon : public CEGLNativeType
++class CEGLNativeTypeMali : public CEGLNativeType
 +{
 +public:
-+  CEGLNativeTypeHisilicon();
-+  virtual ~CEGLNativeTypeHisilicon();
-+  virtual std::string GetNativeName() const { return "Hisilicon"; }
++  CEGLNativeTypeMali();
++  virtual ~CEGLNativeTypeMali();
++  virtual std::string GetNativeName() const { return "mali"; };
 +  virtual bool  CheckCompatibility();
 +  virtual void  Initialize();
 +  virtual void  Destroy();
-+  virtual int   GetQuirks() { return EGL_QUIRK_NONE; }
++  virtual int   GetQuirks() { return EGL_QUIRK_NONE; };
 +
 +  virtual bool  CreateNativeDisplay();
 +  virtual bool  CreateNativeWindow();
@@ -2068,15 +1469,10 @@ index 0000000000..9b42704485
 +
 +  virtual bool  ShowWindow(bool show);
 +
-+private:
-+  int m_fb;
-+
-+  class HIADP_Disp;
-+  class HIADP_HDMI;
-+
-+  HIADP_Disp* m_pDisp;
-+  HIADP_HDMI* m_pHDMI;
++ private:
++  bool _GetNativeResolution(RESOLUTION_INFO *res) const;
 +};
+\ No newline at end of file
 diff --git a/xbmc/windowing/egl/EGLNativeTypeNexTV.cpp b/xbmc/windowing/egl/EGLNativeTypeNexTV.cpp
 new file mode 100644
 index 0000000000..da975a7359
@@ -3349,7 +2745,7 @@ index 0000000000..9f0ff93dea
 +  RESOLUTION_INFO m_desktopResAll[3];
 +};
 diff --git a/xbmc/windowing/egl/EGLWrapper.cpp b/xbmc/windowing/egl/EGLWrapper.cpp
-index 30f57577d6..96b379f56e 100644
+index 30f57577d6..5510257df2 100644
 --- a/xbmc/windowing/egl/EGLWrapper.cpp
 +++ b/xbmc/windowing/egl/EGLWrapper.cpp
 @@ -37,6 +37,27 @@
@@ -3371,11 +2767,11 @@ index 30f57577d6..96b379f56e 100644
 +#if defined(TARGET_NEXTV)
 +  #include "EGLNativeTypeNexTV.h"
 +#endif
-+#if defined(TARGET_HISILICON)
-+  #include "EGLNativeTypeHisilicon.h"
-+#endif
 +#if defined(TARGET_GB)
 +  #include "EGLNativeTypeGB.h"
++#endif
++#if defined(TARGET_MALI)
++  #include "EGLNativeTypeMali.h"
 +#endif
  #include "EGLWrapper.h"
  
@@ -3394,15 +2790,15 @@ index 30f57577d6..96b379f56e 100644
 +      (nativeGuess = CreateEGLNativeType<CEGLNativeTypeVuplus>(implementation))
 +#elif defined(TARGET_NEXTV)
 +      (nativeGuess = CreateEGLNativeType<CEGLNativeTypeNexTV>(implementation))
-+#elif defined(TARGET_HISILICON)
-+      (nativeGuess = CreateEGLNativeType<CEGLNativeTypeHisilicon>(implementation))
 +#elif defined(TARGET_GB)
 +      (nativeGuess = CreateEGLNativeType<CEGLNativeTypeGB>(implementation))
++#elif defined(TARGET_MALI)
++      (nativeGuess = CreateEGLNativeType<CEGLNativeTypeMali>(implementation))
  #endif
        )
    {
 diff --git a/xbmc/windowing/egl/Makefile.in b/xbmc/windowing/egl/Makefile.in
-index 68f7862dfe..e0c21ad002 100644
+index 68f7862dfe..dbfaa9ffac 100644
 --- a/xbmc/windowing/egl/Makefile.in
 +++ b/xbmc/windowing/egl/Makefile.in
 @@ -12,6 +12,27 @@ endif
@@ -3424,11 +2820,11 @@ index 68f7862dfe..e0c21ad002 100644
 +ifeq (@USE_NEXTV@,1)
 +SRCS+= EGLNativeTypeNexTV.cpp
 +endif
-+ifeq (@USE_HISILICON@,1)
-+SRCS+= EGLNativeTypeHisilicon.cpp
-+endif
 +ifeq (@USE_GB@,1)
 +SRCS+= EGLNativeTypeGB.cpp
++endif
++ifeq (@USE_MALI@,1)
++SRCS+= EGLNativeTypeMali.cpp
 +endif
  SRCS+= EGLWrapper.cpp
  

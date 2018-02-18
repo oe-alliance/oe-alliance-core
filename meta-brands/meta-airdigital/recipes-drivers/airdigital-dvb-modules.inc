@@ -23,8 +23,8 @@ do_populate_sysroot() {
 do_install() {
 	install -d ${D}/lib/modules/${KV}/extra
 	install -d ${D}/${sysconfdir}/modules-load.d
+	install -m 0755 ${S}/*.ko ${D}${base_libdir}/modules/${KV}/extra
 	for i in ${MACHINE_DRIVER}_1 ${MACHINE_DRIVER}_2 ${MACHINE_DRIVER}_3 ${MACHINE_DRIVER}_4; do
-		install -m 0755 ${WORKDIR}/$i.ko ${D}/lib/modules/${KV}/extra
 		echo $i >> ${D}/${sysconfdir}/modules-load.d/_${MACHINEBUILD}.conf
 	done
 }

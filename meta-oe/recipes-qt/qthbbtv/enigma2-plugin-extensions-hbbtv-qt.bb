@@ -8,6 +8,7 @@ PACKAGE_ARCH := "${MACHINE_ARCH}"
 SRCDATE = "20170928"
 
 SRC_URI = "file://qthbbtv-107.zip"
+SRC_URI_h9 = "file://qthbbtv2-107.zip"
 
 PV = "1.3"
 PR = "${SRCDATE}"
