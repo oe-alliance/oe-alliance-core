@@ -251,7 +251,7 @@ index d683351e48..ed345865e9 100644
      m_lastSysHeatInfoTime = CTimeUtils::GetFrameTime();
  #if defined(TARGET_POSIX)
      g_cpuInfo.getTemperature(m_cpuTemp);
-+#if defined(TARGET_V3D)
++#if defined(TARGET_STB)
 +    m_gpuTemp = m_cpuTemp;
 +#else
      m_gpuTemp = GetGPUTemperature();
@@ -268,7 +268,7 @@ index 80c89f0283..3fa4066ce2 100644
            useKeyboard = true;
        }
      }
-+#if defined(TARGET_V3D)
++#if defined(TARGET_STB)
 +    switch(key.GetVKey()) {
 +      case 0x0d:
 +      case 0x80:
@@ -301,7 +301,7 @@ index ef0d4941f1..54c8118bef 100644
    { 378               , XBMCK_RIGHT       }, // Green
    { 381               , XBMCK_UP          }, // Yellow
    { 366               , XBMCK_DOWN        }, // Blue
-+#if defined(TARGET_V3D)
++#if defined(TARGET_STB)
 +  { KEY_OK            , XBMCK_RETURN      }, // Ok
 +  { KEY_EXIT          , XBMCK_ESCAPE      }, // EXIT
 +  { 139               , XBMCK_MENU        }, // Menu
@@ -330,7 +330,7 @@ index ef0d4941f1..54c8118bef 100644
      entry.code = code;
 +
 +    int keyMapValue;
-+#if defined(TARGET_V3D)
++#if defined(TARGET_STB)
 +    if (devt.key.keysym.mod & (XBMCKMOD_SHIFT | XBMCKMOD_CAPS)) keyMapValue = entry.shift;
 +    else if (devt.key.keysym.mod & XBMCKMOD_ALT) keyMapValue = entry.alt;
 +    else if (devt.key.keysym.mod & XBMCKMOD_META) keyMapValue = entry.altShift;
@@ -355,7 +355,7 @@ index ef0d4941f1..54c8118bef 100644
          break;
        }
  
-+#if defined(TARGET_V3D)
++#if defined(TARGET_STB)
 +      if (access("/tmp/playing.lock", F_OK) == 0) {
 +        break;
 +      }
@@ -368,7 +368,7 @@ index ef0d4941f1..54c8118bef 100644
      return false;
    }
  
-+#if !defined(TARGET_V3D)
++#if !defined(TARGET_STB)
    if (ioctl(fd, EVIOCGRAB, 1) && errno != EINVAL)
    {
      close(fd);
@@ -384,7 +384,7 @@ index ef0d4941f1..54c8118bef 100644
      return false;
    }
  
-+#if !defined(TARGET_V3D)
++#if !defined(TARGET_STB)
    /* grab device */
    ret = ioctl(fd, EVIOCGRAB, 1);
    if (ret && errno != EINVAL)
@@ -400,7 +400,7 @@ index ef0d4941f1..54c8118bef 100644
  
  driver_open_device_error:
  
-+#if !defined(TARGET_V3D)
++#if !defined(TARGET_STB)
    ioctl(fd, EVIOCGRAB, 0);
 +#endif
    if (m_vt_fd >= 0)
@@ -410,7 +410,7 @@ index ef0d4941f1..54c8118bef 100644
   */
  void CLinuxInputDevice::Close()
  {
-+#if !defined(TARGET_V3D)
++#if !defined(TARGET_STB)
    /* release device */
    ioctl(m_fd, EVIOCGRAB, 0);
 +#endif
@@ -438,7 +438,7 @@ index 5e2ebbd18d..56cfcbe021 100644
            }
          }
        }
-+#ifdef TARGET_V3D
++#ifdef TARGET_STB
 +      else if (strncmp(buffer, "system type", strlen("system type"))==0)
 +      {
 +        char *needle = strchr(buffer, ':');
