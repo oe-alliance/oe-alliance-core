@@ -9,5 +9,5 @@ INSANE_SKIP_${PN} += "file-rdeps"
 
 EXTRA_OECONF += " \
     --with-platform=xcore-mipsel \
-    --with-ffmpeg=v3d \
+    --with-ffmpeg=stb \
 "
