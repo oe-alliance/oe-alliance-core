@@ -83,8 +83,8 @@ ${@bb.utils.contains('MACHINEBUILD', 'zgemmah32tc', 'zgemma/h3' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah7', 'zgemma/h7' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah52splus', 'zgemma/h5' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah2splus', 'zgemma/h3' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'zgemmah9s', 'copy2root' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'zgemmah9t', 'copy2root' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'zgemmah9s', 'h9' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'zgemmah9t', 'h9' , '', d)}\
 "
 
 MACHINE_DRIVER = "\
@@ -117,7 +117,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'zgemmah9t', 'h9' , '', d)}\
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS = "\
     airdigital-dvb-modules-${MACHINE_DRIVER} \
-    ${@bb.utils.contains('MACHINE_FEATURES', 'hisil', 'airdigital-libs-${MACHINE}' , '', d)} \
+    ${@bb.utils.contains('MACHINE_FEATURES', 'hisil', 'airdigital-libs-${MACHINE} airdigital-partitions-${MACHINE}' , '', d)} \
     "
 
 DVBPROVIDER = "kernel"
