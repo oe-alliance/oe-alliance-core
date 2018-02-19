@@ -32,4 +32,4 @@ pkg_prerm_${PN}() {
 
 FILES_${PN} += " ${bindir} ${sysconfdir}/init.d"
 
-INSANE_SKIP_${PN} += "already-stripped"
+INSANE_SKIP_${PN} += "already-stripped ldflags file-rdeps"
