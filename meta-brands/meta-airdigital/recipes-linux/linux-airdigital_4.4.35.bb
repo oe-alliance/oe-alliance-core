@@ -9,14 +9,10 @@ SRCDATE = "20180214"
 
 inherit kernel machine_kernel_pr
 
-SRC_URI[arm.md5sum] = "bb368255800be3d3d7cfa2710928fe9c"
-SRC_URI[arm.sha256sum] = "3dd7e7a99f70f0be8b725e4628f243c3aa1d42072a32e4a4b5268f69b535fc1d"
-SRC_URI[part.md5sum] = "850782d98b18406fed30a7b592a45a21"
-SRC_URI[part.sha256sum] = "2e632ce9817eab5c7977f8a259bf5b854045ff189ebef3a6641968c946ba83cc"
+SRC_URI[md5sum] = "bb368255800be3d3d7cfa2710928fe9c"
+SRC_URI[sha256sum] = "3dd7e7a99f70f0be8b725e4628f243c3aa1d42072a32e4a4b5268f69b535fc1d"
 
-
-SRC_URI = "http://source.mynonpublic.com/zgemma/linux-${PV}-${SRCDATE}-${ARCH}.tar.gz;name=${ARCH} \
-	http://source.mynonpublic.com/zgemma/${MACHINE}-partitions_20180120.zip;name=part \
+SRC_URI = "http://source.mynonpublic.com/zgemma/linux-${PV}-${SRCDATE}-${ARCH}.tar.gz \
 	file://defconfig \
 	"
 
@@ -43,17 +39,6 @@ kernel_do_install_append() {
 	install -d ${D}${KERNEL_IMAGEDEST}
 	install -m 0755 ${KERNEL_OUTPUT} ${D}${KERNEL_IMAGEDEST}
 }
-
-kernel_do_install_append() {
-        install -d ${DEPLOY_DIR_IMAGE}
-        install -m 0755 ${WORKDIR}/fastboot.bin ${DEPLOY_DIR_IMAGE}
-        install -m 0755 ${WORKDIR}/pq_param.bin ${DEPLOY_DIR_IMAGE}
-        install -m 0755 ${WORKDIR}/bootargs.bin ${DEPLOY_DIR_IMAGE}
-        install -m 0755 ${WORKDIR}/bootargs_flash.bin ${DEPLOY_DIR_IMAGE}
-        install -m 0755 ${WORKDIR}/baseparam.img ${DEPLOY_DIR_IMAGE}
-        install -m 0755 ${WORKDIR}/logo.img ${DEPLOY_DIR_IMAGE}
-}
-
 
 pkg_postinst_kernel-image() {
 	if [ "x$D" == "x" ]; then
