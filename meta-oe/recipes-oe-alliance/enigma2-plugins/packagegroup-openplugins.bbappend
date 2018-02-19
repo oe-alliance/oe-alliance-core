@@ -18,6 +18,7 @@ DEPENDS = " \
     enigma2-plugin-extensions-shootyourscreen \
     enigma2-plugin-extensions-simpleumount \
     enigma2-plugin-extensions-streaminterface \
+    enigma2-plugin-extensions-telekomsport \
     enigma2-plugin-extensions-wakeonlan \
     enigma2-plugin-systemplugins-crossepg \
     enigma2-plugin-extensions-setpicon \
