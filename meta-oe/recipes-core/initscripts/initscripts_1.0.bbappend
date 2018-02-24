@@ -13,10 +13,6 @@ SRC_URI += "file://hotplug.sh \
             file://fastrestore_openatv.sh \
 "
 
-# fix build issue with initd-functions
-RRECOMMENDS_${PN}_remove = "${PN}-functions"
-
-
 do_install_append() {
     # umountnfs should run before network stops (which is at K40)
     ln -sf        ../init.d/umountnfs.sh    ${D}${sysconfdir}/rc6.d/K31umountnfs.sh
