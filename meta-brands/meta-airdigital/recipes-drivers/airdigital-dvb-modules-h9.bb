@@ -1,6 +1,7 @@
 KV = "4.4.35"
 SRCDATE = "20180227"
 
+RDEPENDS_${PN} = "libjpeg-turbo pulseaudio-lib-rtp"
 PROVIDES += " virtual/blindscan-dvbc virtual/blindscan-dvbs"
 
 require airdigital-dvb-modules.inc
@@ -30,6 +31,10 @@ pkg_prerm_${PN}() {
 	fi
 } 
 
+do_package_qa() {
+}
+
+
 FILES_${PN} += " ${bindir} ${sysconfdir}/init.d"
 
-INSANE_SKIP_${PN} += "already-stripped ldflags file-rdeps"
+INSANE_SKIP_${PN} += "already-stripped ldflags"
