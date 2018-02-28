@@ -5,7 +5,7 @@ LICENSE = "CLOSED"
 DEPENDS = "zlib libpng freetype curl libxml2 libjpeg-turbo harfbuzz"
 RDEPENDS_${PN} = "libbluray"
 
-SRC_URI = "http://source.mynonpublic.com/zgemma/${MACHINE}-libs-${SRCDATE}.tar.gz"
+SRC_URI = "http://source.mynonpublic.com/zgemma/${MACHINE}-libs-${SRCDATE}.zip"
 
 S = "${WORKDIR}"
 

@@ -1,12 +1,12 @@
 KV = "4.4.35"
-SRCDATE = "20180214"
+SRCDATE = "20180227"
 
 PROVIDES += " virtual/blindscan-dvbc virtual/blindscan-dvbs"
 
 require airdigital-dvb-modules.inc
 
-SRC_URI[md5sum] = "6f845fb36b1e6603f3d54e8650ef2061"
-SRC_URI[sha256sum] = "dd409f8cb9588f9b403c56d040e4bd65c064737ba1b7b339ca7961aedba1e15a"
+SRC_URI[md5sum] = "f0683b09062b30c9efd6c639c26939d2"
+SRC_URI[sha256sum] = "99768ee6107bb6fab6fa504620aff6175d2bd9d94b42dc3da8713191598b7245"
 
 INITSCRIPT_NAME = "suspend"
 INITSCRIPT_PARAMS = "start 89 0 ."
