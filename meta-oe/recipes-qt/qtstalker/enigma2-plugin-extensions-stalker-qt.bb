@@ -38,6 +38,11 @@ ln -sf /usr/share/fonts /usr/lib/fonts
 exit 0
 }
 
+pkg_postrm_${PN} () {
+#!/bin/sh
+rm -rf /usr/lib/enigma2/python/Plugins/Extensions/Stalker
+exit 0
+}
 
 INHIBIT_PACKAGE_STRIP = "1"
 INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
