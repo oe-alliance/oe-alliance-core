@@ -32,7 +32,7 @@ PKGV = "${GST_VERSION_FULL}+git${GITPKGV}"
 
 UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>(\d+(\.\d+)+))"
 
-SRCREV_base = "2eabdb63c8aa5562abbcfae0ffda70c2dac9e102"
+SRCREV_base = "4db38efef509444b675a9605670817efeae7a3f7"
 SRCREV_common = "76b68df121dfce7c44a25738711c47fb0d034e24"
 SRCREV_ffmpeg = "09419de21620f1ef3af91e2c591a08c36b8c7ba3"
 SRCREV_FORMAT = "base"
