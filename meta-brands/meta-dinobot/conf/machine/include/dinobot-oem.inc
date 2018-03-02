@@ -45,7 +45,7 @@ MTD_BLACK  = "mmcblk0"
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS = "\
     dinobot-dvb-modules-${MACHINE} \
-    ${@bb.utils.contains('MACHINE', 'u5pvr', 'dinobot-loadmodules-${MACHINE}' , 'kernel-module-ahci-platform kernel-module-ehci-platform kernel-module-ohci-platform', d)} \
+    ${@bb.utils.contains('MACHINE', 'u5pvr', 'dinobot-loadmodules-${MACHINE}' , 'kernel-module-xhci-plat-hcd kernel-module-ehci-platform kernel-module-ohci-platform', d)} \
     dinobot-opengl-${MACHINE} \
     dinobot-libs-${MACHINE} \
     dinobot-hihalt-${MACHINE} \
