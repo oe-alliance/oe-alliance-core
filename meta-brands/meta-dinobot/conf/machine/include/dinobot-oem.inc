@@ -45,13 +45,13 @@ MTD_BLACK  = "mmcblk0"
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS = "\
     dinobot-dvb-modules-${MACHINE} \
-    dinobot-loadmodules-${MACHINE} \ 
+    ${@bb.utils.contains('MACHINE', 'u5pvr', 'dinobot-loadmodules-${MACHINE}' , 'kernel-module-ahci-platform kernel-module-ehci-platform kernel-module-ohci-platform', d)} \
     dinobot-opengl-${MACHINE} \
     dinobot-libs-${MACHINE} \
     dinobot-hihalt-${MACHINE} \
 "
 
-MACHINE_FEATURES += "videoenhancement switchoff  hdmicec linuxwifi 7segment textlcd skins1080 blindscan-tbs emmc mmc \
+MACHINE_FEATURES += "videoenhancement switchoff  hdmicec 7segment textlcd skins1080 blindscan-tbs emmc mmc \
     ${@bb.utils.contains('MACHINEBUILD', 'anadol4k', '' , ' dvb-c', d)} \
     "
 
