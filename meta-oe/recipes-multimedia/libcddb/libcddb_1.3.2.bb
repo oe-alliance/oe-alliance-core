@@ -9,7 +9,7 @@ PR = "r1"
 
 DEPENDS = "libcdio virtual/gettext"
 
-SRC_URI = "http://sourceforge.mirrorservice.org/l/li/libcddb/libcddb/${PN}/${P}.tar.bz2"
+SRC_URI = "http://sourceforge.mirrorservice.org/l/li/libcddb/libcddb/${PV}/${P}.tar.bz2"
 
 SRC_URI[md5sum] = "8bb4a6f542197e8e9648ae597cd6bc8a"
 SRC_URI[sha256sum] = "35ce0ee1741ea38def304ddfe84a958901413aa829698357f0bee5bb8f0a223b"
