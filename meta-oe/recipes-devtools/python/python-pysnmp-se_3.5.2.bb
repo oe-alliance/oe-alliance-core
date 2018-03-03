@@ -8,7 +8,7 @@ LIC_FILES_CHKSUM = "file://README;beginline=13;endline=14;md5=fe0c3d0cab1e25fcec
 PR = "r1"
 
 SRCNAME = "pysnmp-se"
-SRC_URI = "http://downloads.sourceforge.net/twistedsnmp/${SRCNAME}-${PV}.tar.gz"
+SRC_URI = "https://pypi.python.org/packages/f0/f3/4c0e4e1aef2972076333295f90d3651a01d18b0f6f7a6804d9ca6cdc1cc5/pysnmp-se-3.5.2.tar.gz"
 
 S = "${WORKDIR}/${SRCNAME}-${PV}"
 
