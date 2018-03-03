@@ -11,7 +11,7 @@ RREPLACES_${PN} = "lirc"
 
 PR = "r7"
 
-SRC_URI = "http://prdownloads.sourceforge.net/lirc/lirc-${PV}.tar.bz2 \
+SRC_URI = "http://sourceforge.mirrorservice.org/l/li/lirc/LIRC/0.9.0/lirc-${PV}.tar.bz2 \
     file://lirc-0.9.0-neutrino-uinput-hack.diff;patch=1 \
     file://lirc-0.9.0-try_first_last_remote.diff;patch=1 \
     file://lirc-0.9.0-uinput-repeat-fix.diff;patch=1 \
