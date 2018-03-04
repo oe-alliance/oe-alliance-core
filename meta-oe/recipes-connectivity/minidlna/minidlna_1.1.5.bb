@@ -10,7 +10,7 @@ EXTRA_OECONF_append = " --disable-nls "
 
 PR = "r1"
 
-SRC_URI = "http://sourceforge.mirrorservice.org/m/mi/minidlna/minidlna/${PV}/minidlna-${PV}.tar.gz  \
+SRC_URI = "https://pkgs.rpmfusion.org/repo/pkgs/free/minidlna/minidlna-1.1.5.tar.gz/1970e553a1eb8a3e7e302e2ce292cbc4/minidlna-1.1.5.tar.gz  \
 		file://0001_default_sqlite_caches.diff \
 		file://minidlna.conf \
 		file://init \
