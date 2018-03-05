@@ -1,35 +1,39 @@
-SUMMARY = "QT Stalker"
+SUMMARY = "Stalker for QT browser"
 SECTION = "base"
 PRIORITY = "optional"
 LICENSE = "CLOSED"
 require conf/license/license-close.inc
 PACKAGE_ARCH := "${MACHINE_ARCH}"
 
-SRCDATE = "20180227"
+inherit gitpkgv
 
-PV = "1.4"
-PR = "${SRCDATE}"
+PV = "1.0+git${SRCPV}"
+PKGV = "1.0+git${GITPKGV}"
+SRCREV = "${AUTOREV}"
+VER ?= "${@bb.utils.contains('MACHINE_FEATURES', 'hisil', '-v2', '', d)}"
 
-SRC_URI = "file://stalker-103.zip"
-SRC_URI_h9 = "file://stalker2-104.zip"
+SRC_URI = "git://github.com/oe-alliance/e2plugins.git;protocol=git"
 
 RDEPENDS_${PN}  = "qtwebkit virtual/libgles2 python-netifaces" 
 
-S = "${WORKDIR}/files"
+S = "${WORKDIR}/git/qtstalker${VER}"
 
-FILES_${PN} =  "${bindir} ${libdir}"
+FILES_${PN} =  "${bindir} ${libdir} /usr/share/stalker"
 
 do_install(){
 	install -d ${D}${libdir}/enigma2/python/Plugins/Extensions/Stalker
-	install -m 0755 ${S}/*.py ${D}${libdir}/enigma2/python/Plugins/Extensions/Stalker
-	install -m 0755 ${S}/*.png ${D}${libdir}/enigma2/python/Plugins/Extensions/Stalker
-
+	install -m 0755 ${S}/plugin/*.py ${D}${libdir}/enigma2/python/Plugins/Extensions/Stalker
+	install -m 0755 ${S}/plugin/*.png ${D}${libdir}/enigma2/python/Plugins/Extensions/Stalker
 
 	install -d ${D}/${bindir}
 	install -m 0755 ${S}/stalker ${D}/${bindir}
 
 	install -d ${D}/locale
-	cp -rp ${S}/locale ${D}${libdir}/enigma2/python/Plugins/Extensions/Stalker
+	cp -rp ${S}/plugin/locale ${D}${libdir}/enigma2/python/Plugins/Extensions/Stalker
+
+	install -d ${D}/usr/share/stalker
+	cp -rp ${S}/usr/share/stalker/* ${D}/usr/share/stalker/
+	chmod -R a+rX ${D}/usr/share/stalker/
 }
 
 pkg_postinst_${PN}(){
