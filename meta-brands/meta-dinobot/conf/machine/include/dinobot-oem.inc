@@ -8,7 +8,7 @@ BRAND_OEM = "dinobot"
 IMAGEDIR = "dinobot/${MACHINE}"
 
 MACHINE_NAME = "\
-${@bb.utils.contains('MACHINEBUILD', 'anadol4k', 'ECO 4K' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'anadol4k', '4K ECO' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'dinobot4kl', 'DINOBOT 4KL' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'dinobot4k', 'DINOBOT 4K' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'mediabox4k', 'mediabox 4k M7L' , '', d)}\
