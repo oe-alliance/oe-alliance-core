@@ -1,0 +1,1 @@
+inherit upx_compress
