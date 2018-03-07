@@ -9,7 +9,7 @@ RCONFLICTS_${PN} = "rt73-k2wrlz"
 
 MACHINE_KERNEL_PR_append = ".2"
 
-SRC_URI = "http://impex-sat.de/gigablue/wlan/RT73.tar.gz \
+SRC_URI = "http://opensat.de/gigablue/wlan/RT73.tar.gz \
            file://COPYING"
 
 inherit module
