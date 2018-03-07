@@ -9,7 +9,7 @@ RDEPENDS_${PN} = "ffmpeg"
 
 inherit gitpkgv
 
-inherit upx_compress
+inherit upx-compress
 
 PV = "35+gitr${SRCPV}"
 PKGV = "35+gitr${GITPKGV}"

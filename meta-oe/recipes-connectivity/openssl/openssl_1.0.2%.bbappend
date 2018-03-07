@@ -1,4 +1,4 @@
-inherit upx_compress
+inherit upx-compress
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 

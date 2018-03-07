@@ -3,7 +3,7 @@
 # exponentially by key size, the default is 2k which takes several
 # seconds on most boxes.
 
-inherit upx_compress
+inherit upx-compress
 
 do_install_append() {
     echo 'DROPBEAR_EXTRA_ARGS="-B"' > ${WORKDIR}/dropbeardefaults

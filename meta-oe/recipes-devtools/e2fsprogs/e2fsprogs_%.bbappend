@@ -1,4 +1,4 @@
-inherit upx_compress
+inherit upx-compress
 
 EXTRA_OECONF += "--enable-defrag"
 

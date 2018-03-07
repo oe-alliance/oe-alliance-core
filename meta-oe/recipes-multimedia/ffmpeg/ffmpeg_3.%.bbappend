@@ -1,4 +1,4 @@
-inherit upx_compress
+inherit upx-compress
 
 RSUGGESTS_${PN} = ""
 
