@@ -13,7 +13,7 @@ SRC_URI[sha256sum] = "eff7eecf55dd75ecb44bd8b8fe16f588d19c1eac92125eaed2b6834348
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-SRC_URI += "http://impex-sat.de/gigablue/linux/gigablue-linux-${PV}-20180206.tar.gz \
+SRC_URI += "http://opensat.de/gigablue/linux/gigablue-linux-${PV}-20180206.tar.gz \
 	file://defconfig \
 	file://gbfindkerneldevice.py \
 	file://linux_dvb-core.patch \
