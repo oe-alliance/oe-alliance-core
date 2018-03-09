@@ -1,6 +1,6 @@
-SRCDATE="20180205_r0"
-SRC_URI[md5sum]="2911ab2c04ef03b48ef2dcc876c241ec"
-SRC_URI[sha256sum]="f81a9926bb98045af3576be4435dedec56818197d1d6bb54a94d921bca61d8ec"
+SRCDATE="20180305_r0"
+SRC_URI[md5sum]="c9e56ea66b13a73c9dd923e927e2a88c"
+SRC_URI[sha256sum]="8190d285bd7481f8b1cef948b58cbf7d3f7a5e08e0d3e5288517bb3ed763f0e5"
 
 require chromium-browser.inc
 

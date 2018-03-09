@@ -11,7 +11,7 @@ DEPENDS = "tslib mpfr gmp"
 SRCREV = "${AUTOREV}"
 PV = "${IMAGE_VERSION}+gitr${SRCPV}"
 PKGV = "${IMAGE_VERSION}+gitr${GITPKGV}"
-PR = "r83"
+PR = "r85"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -48,14 +48,14 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-hdmitest_0.4_mipsel.ipk \
     enigma2-plugin-extensions-hetweer_4.2r9_all.ipk \
     ${@bb.utils.contains("TARGET_ARCH", "sh4", "enigma2-plugin-extensions-isettinge2-3.3.9-oe2.0-all-sh4.ipk" , "", d)} \
-    ${@bb.utils.contains("TARGET_ARCH", "mipsel", "enigma2-plugin-extensions-isettinge2-3.4.1-oe2.0-all-mips.ipk" , "", d)} \
+    ${@bb.utils.contains("TARGET_ARCH", "mipsel", "enigma2-plugin-extensions-isettinge2_3.4.1-oe2.0-all-mips_all.ipk" , "", d)} \
     ${@bb.utils.contains("TARGET_ARCH", "arm", "enigma2-plugin-extensions-isettinge2-3.3.9-oe2.0-all-arm.ipk" , "", d)} \
     enigma2-plugin-extensions-kicker_3.5rc13_all.ipk \
     enigma2-plugin-extensions-kino_1.7rc4_all.ipk \
     enigma2-plugin-extensions-livefootball_7.1_all.ipk \
     enigma2-plugin-extensions-mediainfo_3.0.5_all.ipk \
     enigma2-plugin-extensions-mediaportal_all.ipk \
-    enigma2-plugin-extensions-moviebrowser_3.7rc1_all.ipk \
+    enigma2-plugin-extensions-moviebrowser_3.7rc2_all.ipk \
     enigma2-plugin-extensions-mp3browser_2.0rc1_all.ipk \
     enigma2-plugin-extensions-mspfs_1.06_all.ipk \
     enigma2-plugin-extensions-netspeedtest_1.0rc1_all.ipk \
