@@ -6,8 +6,8 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=4d92cd373abda3937c2bc47fbc49d
 ALLOW_EMPTY_${PN} = "1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-PV = "6.4"
-PR = "r34"
+PV = "6.5"
+PR = "r35"
 
 inherit packagegroup
 
@@ -23,7 +23,6 @@ RRECOMMENDS_${PN} = " \
     enigma2-plugin-extensions-epgsearch \
     enigma2-plugin-extensions-graphmultiepg \
     enigma2-plugin-extensions-epgimport \
-    enigma2-plugin-extensions-vhannibal-autosettings \
     enigma2-plugin-extensions-cutlisteditor \
     enigma2-plugin-systemplugins-videotune \
     ${@bb.utils.contains("MACHINE_FEATURES", "videoenhancement", "", "enigma2-plugin-systemplugins-videoenhancement", d)} \
