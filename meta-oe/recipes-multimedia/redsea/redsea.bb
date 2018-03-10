@@ -12,7 +12,7 @@ PR = "r0"
 
 SRC_URI = "git://github.com/windytan/redsea.git;protocol=http"
 
-SRCREV = "${AUTOREV}"
+SRCREV = "aeed25e6eccd1da1924bbbb4af0c5fb49cfc962a"
 
 S = "${WORKDIR}/git"
 
