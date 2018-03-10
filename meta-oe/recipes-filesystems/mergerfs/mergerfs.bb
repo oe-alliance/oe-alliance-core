@@ -10,7 +10,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=27b6424853cee7f70464df20783b2658"
 
 inherit autotools gitpkgv
 
-SRCREV = "${AUTOREV}"
+SRCREV = "6418b00ac310fbde5c68d33903a244b6f4b9f8b5"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
 PR = "r0"
