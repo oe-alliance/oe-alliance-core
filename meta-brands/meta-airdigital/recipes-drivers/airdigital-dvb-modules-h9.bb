@@ -7,7 +7,7 @@ PROVIDES += " virtual/blindscan-dvbc virtual/blindscan-dvbs"
 
 require airdigital-dvb-modules.inc
 
-SRC_URI_append = "file://suspend.sh"
+SRC_URI_append = " file://suspend.sh"
 
 SRC_URI[md5sum] = "22a4ce312c4e42ba4eec88befbe337c9"
 SRC_URI[sha256sum] = "868dd12f1092e5f6e47f36a689f0ac4649482594e0db78281920b54f1a08424c"
