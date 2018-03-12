@@ -17,24 +17,23 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
 SRC_URI = " \
     git://anongit.freedesktop.org/gstreamer/gst-libav;name=base \
     git://anongit.freedesktop.org/gstreamer/common;destsuffix=git/common;name=common \
-    git://github.com/FFmpeg/FFmpeg;destsuffix=git/gst-libs/ext/libav;name=ffmpeg;branch=release/3.3 \
+    git://github.com/FFmpeg/FFmpeg;destsuffix=git/gst-libs/ext/libav;name=ffmpeg;branch=release/3.4 \
     file://0001-Disable-yasm-for-libav-when-disable-yasm.patch \
     file://workaround-to-build-gst-libav-for-i586-with-gcc.patch \
     file://mips64_cpu_detection.patch \
     file://0001-configure-check-for-armv7ve-variant.patch \
-    file://0001-hevcpred_msa.c-Fix-build-by-Including-libavcodec-hev.patch \
  "
 
-GST_VERSION_FULL ="1.13.1"
+GST_VERSION_FULL ="1.13.90"
 inherit gitpkgv
 PV = "${GST_VERSION_FULL}+git${SRCPV}"
 PKGV = "${GST_VERSION_FULL}+git${GITPKGV}"
 
 UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>(\d+(\.\d+)+))"
 
-SRCREV_base = "4db38efef509444b675a9605670817efeae7a3f7"
+SRCREV_base = "2e23201c84a74a5da849215261b3acab3e43062e"
 SRCREV_common = "76b68df121dfce7c44a25738711c47fb0d034e24"
-SRCREV_ffmpeg = "09419de21620f1ef3af91e2c591a08c36b8c7ba3"
+SRCREV_ffmpeg = "c289f4b6c9390d5b2b6388b0d82d40af62ea7ce2"
 SRCREV_FORMAT = "base"
 
 LIBAV_INCLUDED_EXLUCED = "--disable-everything \
