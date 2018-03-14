@@ -1,5 +1,5 @@
 KV = "4.4.35"
-SRCDATE = "20180312"
+SRCDATE = "20180314"
 
 RDEPENDS_${PN} = "libjpeg-turbo pulseaudio-lib-rtp"
 
@@ -9,8 +9,8 @@ require airdigital-dvb-modules.inc
 
 SRC_URI_append = " file://suspend.sh"
 
-SRC_URI[md5sum] = "8ed8ec29f7215ea9a17af8e988f80558"
-SRC_URI[sha256sum] = "17013ef5592622dd2818a9cd5d5cd550812677ed66626c19e2bfa94f9dc0501d"
+SRC_URI[md5sum] = "d19c1c78353064c4e3e07067113f9cc3"
+SRC_URI[sha256sum] = "fa57aa7b6495a29609a92b682955f3417583c2511a567b2e9e67f7863c1a7cdf"
 
 INITSCRIPT_NAME = "suspend"
 INITSCRIPT_PARAMS = "start 89 0 ."
