@@ -1,8 +1,8 @@
 diff --git a/Makefile.am b/Makefile.am
-index b9687fc..92d17af 100644
+index 3f62601..b3a2916 100644
 --- a/Makefile.am
 +++ b/Makefile.am
-@@ -1,112 +1,60 @@
+@@ -1,111 +1,59 @@
  ACLOCAL_AMFLAGS = -I m4
  
  SUBDIRS = \
@@ -46,7 +46,6 @@ index b9687fc..92d17af 100644
 -	growlee \
  	imdb \
  	infobartunerstate \
- 	internetradio \
  	kiddytimer \
 -	letterbox \
  	mediadownloader \
