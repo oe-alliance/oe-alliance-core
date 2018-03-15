@@ -5,7 +5,7 @@ LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=751419260aa954499f7abaabaa882bbe"
 
 DEPENDS = "libvorbis libogg libao zlib libmikmod flac audiofile virtual/libiconv faad2 curl icu boost \
-           ${@base_conditional('ENTERPRISE_DISTRO', '1', '', 'libmad libid3tag lame', d)}"
+           ${@oe.utils.conditional('ENTERPRISE_DISTRO', '1', '', 'libmad libid3tag lame', d)}"
 
 inherit gitpkgv
 SRCREV = "5761800197a86ba6de70af026546e678cbda4b91"
