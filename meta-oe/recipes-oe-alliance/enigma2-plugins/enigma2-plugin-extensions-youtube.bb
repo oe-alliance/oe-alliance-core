@@ -4,8 +4,8 @@ MAINTAINER = "Taapat"
 
 require conf/license/license-gplv2.inc
 
-DEPENDS = "enigma2 python-core python-codecs python-json python-netclient python-zlib python-twisted"
-RDEPENDS_${PN} = "python-core python-codecs python-json python-netclient python-zlib python-twisted-web"
+DEPENDS = "enigma2"
+RDEPENDS_${PN} = "python-core python-codecs python-json python-netclient python-zlib python-twisted python-twisted-web"
 
 inherit gitpkgv pythonnative gettext
 

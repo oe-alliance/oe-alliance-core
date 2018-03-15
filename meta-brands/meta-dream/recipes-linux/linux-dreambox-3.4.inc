@@ -3,9 +3,9 @@ require linux-3.4.inc
 # By default, kernel.bbclass modifies package names to allow multiple kernels
 # to be installed in parallel. We revert this change and rprovide the versioned
 # package names instead, to allow only one kernel to be installed.
-PKG_kernel-base = "kernel-base"
-PKG_kernel-image = "kernel-image"
-RPROVIDES_kernel-base = "kernel-${LINUX_VERSION}"
+PKG_${KERNEL_PACKAGE_NAME}-base = "kernel-base"
+PKG_${KERNEL_PACKAGE_NAME}-image = "kernel-image"
+RPROVIDES_${KERNEL_PACKAGE_NAME}-base = "kernel-${LINUX_VERSION}"
 RPROVIDES_kernel-image = "kernel-image-${LINUX_VERSION}"
 
 do_install_append() {
@@ -24,8 +24,8 @@ do_install_append() {
 
 PACKAGES += "kernel-image-dbg"
 
-FILES_kernel-image-dbg = "/${KERNEL_IMAGEDEST}/.debug"
-FILES_kernel-vmlinux = "/boot/vmlinux-${LINUX_VERSION}"
+FILES_${KERNEL_PACKAGE_NAME}-image-dbg = "/${KERNEL_IMAGEDEST}/.debug"
+FILES_${KERNEL_PACKAGE_NAME}-vmlinux = "/boot/vmlinux-${LINUX_VERSION}"
 
 python populate_packages_prepend() {
     import shutil

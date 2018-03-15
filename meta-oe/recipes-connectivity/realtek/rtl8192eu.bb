@@ -18,7 +18,7 @@ inherit module siteinfo
 EXTRA_OEMAKE = "CONFIG_RTL8192EU=m"
 
 do_configure() {
-        sed -e "s/^CONFIG_PLATFORM_I386_PC.*=.*y/EXTRA_CFLAGS += -Wno-date-time -DCONFIG_${@base_conditional('SITEINFO_ENDIANNESS', 'le', 'LITTLE', 'BIG', d)}_ENDIAN/" -i Makefile
+        sed -e "s/^CONFIG_PLATFORM_I386_PC.*=.*y/EXTRA_CFLAGS += -Wno-date-time -DCONFIG_${@oe.utils.conditional('SITEINFO_ENDIANNESS', 'le', 'LITTLE', 'BIG', d)}_ENDIAN/" -i Makefile
 }
 do_compile() {
         unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS

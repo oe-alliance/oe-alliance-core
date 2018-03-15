@@ -10,14 +10,14 @@ KERNEL_ENABLE_CGROUPS = "1"
 # to be installed in parallel. We revert this change and rprovide the versioned
 # package names instead, to allow only one kernel to be installed.
 PKG_kernel = "kernel"
-PKG_kernel-base = "kernel-base"
-PKG_kernel-image = "kernel-image"
-PKG_kernel-image-zimage = "kernel-image"
+PKG_${KERNEL_PACKAGE_NAME}-base = "kernel-base"
+PKG_${KERNEL_PACKAGE_NAME}-image = "kernel-image"
+PKG_${KERNEL_PACKAGE_NAME}-image-zimage = "kernel-image"
 RPROVIDES_kernel = "kernel-${LINUX_VERSION}"
-RPROVIDES_kernel-base = "kernel-${KERNEL_VERSION}"
+RPROVIDES_${KERNEL_PACKAGE_NAME}-base = "kernel-${KERNEL_VERSION}"
 RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
 RPROVIDES_kernel-image-zimage = "kernel-image"
-RDEPENDS_kernel-image = "kernel-devicetree flash-scripts"
+RDEPENDS_${KERNEL_PACKAGE_NAME}-image = "kernel-devicetree flash-scripts"
 
 
 pkg_postinst_kernel-image () {
