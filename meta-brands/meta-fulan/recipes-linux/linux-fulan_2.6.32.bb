@@ -23,9 +23,9 @@ DEPENDS_append_spark = " \
 # By default, kernel.bbclass modifies package names to allow multiple kernels
 # to be installed in parallel. We revert this change and rprovide the versioned
 # package names instead, to allow only one kernel to be installed.
-PKG_kernel-base = "kernel-base"
-PKG_kernel-image = "kernel-image"
-RPROVIDES_kernel-base = "kernel-${KERNEL_VERSION}"
+PKG_${KERNEL_PACKAGE_NAME}-base = "kernel-base"
+PKG_${KERNEL_PACKAGE_NAME}-image = "kernel-image"
+RPROVIDES_${KERNEL_PACKAGE_NAME}-base = "kernel-${KERNEL_VERSION}"
 RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
 
 STM_PATCH_STR = "0217"
@@ -91,8 +91,8 @@ EXTRA_OEMAKE_prepend = " ${PARALLEL_MAKE} "
 
 PACKAGES =+ "kernel-headers"
 FILES_kernel-headers = "${exec_prefix}/src/linux*"
-FILES_kernel-dev += "${includedir}/linux"
-FILES_kernel-image = "/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}"
+FILES_${KERNEL_PACKAGE_NAME}-dev += "${includedir}/linux"
+FILES_${KERNEL_PACKAGE_NAME}-image = "/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}"
 
 do_configure_prepend() {
     oe_machinstall -m 0644 ${WORKDIR}/defconfig ${B}/.config

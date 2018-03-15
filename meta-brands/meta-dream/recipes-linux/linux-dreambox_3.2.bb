@@ -70,9 +70,9 @@ KERNEL_BUILTIN_MODULES_dm8000 = "\
 # By default, kernel.bbclass modifies package names to allow multiple kernels
 # to be installed in parallel. We revert this change and rprovide the versioned
 # package names instead, to allow only one kernel to be installed.
-PKG_kernel-base = "kernel-base"
-PKG_kernel-image = "kernel-image"
-RPROVIDES_kernel-base = "kernel-${KERNEL_VERSION}"
+PKG_${KERNEL_PACKAGE_NAME}-base = "kernel-base"
+PKG_${KERNEL_PACKAGE_NAME}-image = "kernel-image"
+RPROVIDES_${KERNEL_PACKAGE_NAME}-base = "kernel-${KERNEL_VERSION}"
 RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION} ${KERNEL_BUILTIN_MODULES}"
 
 SRC_URI[kernel.md5sum] = "364066fa18767ec0ae5f4e4abcf9dc51"
@@ -93,7 +93,7 @@ KERNEL_OUTPUT = "vmlinux"
 KERNEL_IMAGETYPE = "vmlinux"
 KERNEL_IMAGEDEST = "boot"
 
-FILES_kernel-image = "${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz"
+FILES_${KERNEL_PACKAGE_NAME}-image = "${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz"
 
 do_install_append() {
         ${STRIP} ${D}/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION}
@@ -104,8 +104,8 @@ do_install_append() {
         echo "/boot/${KERNEL_IMAGETYPE}-${KERNEL_VERSION}.gz ${CMDLINE}"  >> ${D}/${KERNEL_IMAGEDEST}/autoexec_${MACHINE}.bat
 }
 
-FILES_kernel-image += "/${KERNEL_IMAGEDEST}/autoexec*.bat"
-FILES_kernel-vmlinux = "/boot/vmlinux-${KERNEL_VERSION}*"
+FILES_${KERNEL_PACKAGE_NAME}-image += "/${KERNEL_IMAGEDEST}/autoexec*.bat"
+FILES_${KERNEL_PACKAGE_NAME}-vmlinux = "/boot/vmlinux-${KERNEL_VERSION}*"
 
 do_configure_prepend() {
         sed -e "/^SUBLEVEL = /d" -i ${S}/Makefile

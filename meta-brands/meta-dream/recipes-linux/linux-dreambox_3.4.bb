@@ -48,7 +48,7 @@ KERNEL_IMAGETYPES = "${@bb.utils.contains('MACHINE', 'dm520', '', 'vmlinux.gz', 
 
 KERNEL_ENABLE_CGROUPS = "1"
 
-RDEPENDS_kernel-image = "flash-scripts"
+RDEPENDS_${KERNEL_PACKAGE_NAME}-image = "flash-scripts"
 
 pkg_postinst_kernel-image () {
 #!/bin/sh
