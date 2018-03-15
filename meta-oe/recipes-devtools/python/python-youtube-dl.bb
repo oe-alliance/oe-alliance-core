@@ -6,7 +6,7 @@ HOMEPAGE = "http://rg3.github.io/youtube-dl/"
 SECTION = "devel/python"
 LICENSE = "LGPLv2.1"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=7246f848faa4e9c9fc0ea91122d6e680"
-DEPENDS = "libxml2 python-html bash-completion"
+DEPENDS = "libxml2 bash-completion"
 SRCREV = "6e5eacb7705b68c108160780b4ded3b7abd9ebb6"
 PV = "2018.01.21"
 
@@ -35,6 +35,7 @@ RDEPENDS_${PN} = " \
     python-unixadmin \
     python-ctypes \
     python-argparse \
+    python-html \
     "
 
 PACKAGES =+ " ${PN}-src"
