@@ -66,13 +66,14 @@ DEPENDS = "enigma2 \
     python-google-api-client \
     python-httplib2 \
     python-youtube-dl \
-    python-ctypes \
     dvdbackup \
     libcddb \
     nmap \
     libshowiframe \
     libav \
     "
+
+RDEPENDS_${PN} = "python-ctypes"
 
 python populate_packages_prepend() {
     enigma2_plugindir = bb.data.expand('${libdir}/enigma2/python/Plugins', d)
