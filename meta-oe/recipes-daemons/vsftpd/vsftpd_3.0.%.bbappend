@@ -1,3 +1,5 @@
+inherit upx-compress
+
 FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
 SRC_URI += "file://vsftpd.chroot_list \
             file://ftp.service \

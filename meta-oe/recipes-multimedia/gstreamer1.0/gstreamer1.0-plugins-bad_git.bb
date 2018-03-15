@@ -8,50 +8,42 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=73a5855a8119deb017f5f13cf327095d \
 
 UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>(\d+(\.\d+)+))"
 
-SRCREV_base = "b7387745669cfd294a5823dd7018f619d131cf5c"
-SRCREV_common = "3f4aa969cbe39584a649d98d4cf321d78bd73092"
+SRCREV_base = "84da104b06c67ab625cbb9b024f5ffb64b3cce5f"
+SRCREV_common = "f0c2dc9aadfa05bb5274c40da750104ecbb88cba"
 SRCREV_FORMAT = "base"
 
 SRC_URI = "git://anongit.freedesktop.org/gstreamer/gst-plugins-bad;branch=master;name=base \
            git://anongit.freedesktop.org/gstreamer/common;destsuffix=git/common;name=common \
 "
 
-
-SRC_URI += "file://configure-allow-to-disable-libssh2.patch \
-			file://0001-Makefile.am-don-t-hardcode-libtool-name-when-running-pbad.patch \
+SRC_URI += " \
+			file://configure-allow-to-disable-libssh2.patch \
+			file://fix-maybe-uninitialized-warnings-when-compiling-with-Os.patch \
+			file://avoid-including-sys-poll.h-directly.patch \
+			file://ensure-valid-sentinels-for-gst_structure_get-etc.patch \
+			file://0001-gstreamer-gl.pc.in-don-t-append-GL_CFLAGS-to-CFLAGS.patch \
+			file://0001-introspection.m4-prefix-pkgconfig-paths-with-PKG_CON.patch \
+			\
 			file://0001-rtmp-fix-seeking-and-potential-segfault.patch \
 			file://0004-rtmp-hls-tsdemux-fix.patch \
-			file://fix-maybe-uninitialized-warnings-when-compiling-with-Os.patch \
 			file://dvbapi5-fix-old-kernel.patch \
 			file://hls-main-thread-block.patch \
 			"
 S = "${WORKDIR}/git"
 
-GST_VERSION_FULL ="1.13.0.2"
+GST_VERSION_FULL ="1.13.91"
 inherit gitpkgv
 PV = "${GST_VERSION_FULL}+git${SRCPV}"
 PKGV = "${GST_VERSION_FULL}+git${GITPKGV}"
-
 
 EXTRA_OECONF += " \
     --disable-openjpeg \
     "
 
-do_configure_prepend() {
-	${S}/autogen.sh --noconfigure
-}
-
 TARGET_CFLAGS_append = " -Wno-error=maybe-uninitialized -Wno-error=redundant-decls"
 
-# In 1.6.2, the "--enable-hls" configure option generated an installable package
-# called "gstreamer1.0-plugins-bad-fragmented". In 1.7.1 that HLS plugin package
-# has become "gstreamer1.0-plugins-bad-hls". See:
-# http://cgit.freedesktop.org/gstreamer/gst-plugins-bad/commit/?id=efe62292a3d045126654d93239fdf4cc8e48ae08
-
-PACKAGESPLITFUNCS_append = " handle_hls_rename "
-
-python handle_hls_rename () {
-    d.setVar('RPROVIDES_gstreamer1.0-plugins-bad-hls', 'gstreamer1.0-plugins-bad-fragmented')
-    d.setVar('RREPLACES_gstreamer1.0-plugins-bad-hls', 'gstreamer1.0-plugins-bad-fragmented')
-    d.setVar('RCONFLICTS_gstreamer1.0-plugins-bad-hls', 'gstreamer1.0-plugins-bad-fragmented')
+do_configure_prepend() {
+	cd ${S}
+	./autogen.sh --noconfigure
+	cd ${B}
 }

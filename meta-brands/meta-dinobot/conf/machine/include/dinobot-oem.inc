@@ -8,7 +8,7 @@ BRAND_OEM = "dinobot"
 IMAGEDIR = "dinobot/${MACHINE}"
 
 MACHINE_NAME = "\
-${@bb.utils.contains('MACHINEBUILD', 'anadol4k', 'ECO 4K' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'anadol4k', '4K ECO' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'dinobot4kl', 'DINOBOT 4KL' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'dinobot4k', 'DINOBOT 4K' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'mediabox4k', 'mediabox 4k M7L' , '', d)}\
@@ -45,13 +45,13 @@ MTD_BLACK  = "mmcblk0 mmcblk1"
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS = "\
     dinobot-dvb-modules-${MACHINE} \
-    dinobot-loadmodules-${MACHINE} \ 
+    ${@bb.utils.contains('MACHINE', 'u5pvr', 'dinobot-loadmodules-${MACHINE}' , 'kernel-module-xhci-plat-hcd kernel-module-ehci-platform kernel-module-ohci-platform', d)} \
     dinobot-opengl-${MACHINE} \
     dinobot-libs-${MACHINE} \
     dinobot-hihalt-${MACHINE} \
 "
 
-MACHINE_FEATURES += "videoenhancement switchoff  hdmicec linuxwifi 7segment textlcd skins1080 blindscan-tbs emmc mmc \
+MACHINE_FEATURES += "videoenhancement switchoff  hdmicec 7segment textlcd skins1080 blindscan-tbs emmc mmc \
     ${@bb.utils.contains('MACHINEBUILD', 'anadol4k', '' , ' dvb-c', d)} \
     "
 

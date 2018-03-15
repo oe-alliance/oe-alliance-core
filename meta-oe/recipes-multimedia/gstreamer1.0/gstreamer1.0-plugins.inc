@@ -5,7 +5,9 @@ SECTION = "multimedia"
 
 DEPENDS = "gstreamer1.0 glib-2.0-native"
 
-inherit autotools pkgconfig upstream-version-is-even gobject-introspection
+SRC_URI_append = " file://gtk-doc-tweaks.patch"
+
+inherit autotools pkgconfig upstream-version-is-even gobject-introspection gtk-doc
 
 acpaths = "-I ${S}/common/m4 -I ${S}/m4"
 
@@ -28,11 +30,10 @@ EXTRA_OECONF = " \
     --disable-examples \
 "
 
-SRC_URI_append = " file://0001-introspection.m4-prefix-pkgconfig-paths-with-PKG_CON.patch"
-
 delete_pkg_m4_file() {
 	# This m4 file is out of date and is missing PKG_CONFIG_SYSROOT_PATH tweaks which we need for introspection
 	rm "${S}/common/m4/pkg.m4" || true
+	rm -f "${S}/common/m4/gtk-doc.m4"
 }
 
 do_configure[prefuncs] += " delete_pkg_m4_file"

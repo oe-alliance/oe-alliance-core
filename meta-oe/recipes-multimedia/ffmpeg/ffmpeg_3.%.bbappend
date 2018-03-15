@@ -1,3 +1,5 @@
+inherit upx-compress
+
 RSUGGESTS_${PN} = ""
 
 PROVIDES =+ " libavcodec53 libavformat53 libav"

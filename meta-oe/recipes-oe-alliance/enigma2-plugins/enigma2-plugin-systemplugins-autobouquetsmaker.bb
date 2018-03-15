@@ -9,7 +9,7 @@ inherit autotools-brokensep gitpkgv pythonnative gettext
 SRCREV = "${AUTOREV}"
 PV = "2.9+git${SRCPV}"
 PKGV = "2.9+git${GITPKGV}"
-PR = "r1"
+PR = "r2"
 
 SRC_URI = "git://github.com/oe-alliance/AutoBouquetsMaker.git;protocol=git"
 
@@ -46,20 +46,4 @@ if [ -f /usr/lib/enigma2/python/Plugins/SystemPlugins/AutoBouquetsMaker/provider
 else
 	echo "No cache file found, continuing."
 fi
-}
-
-pkg_postrm_${PN}_prepend() {
-#!/bin/sh
-
-echo "Remove ABM providers folder recursive if exists"
-rm -rf /usr/lib/enigma2/python/Plugins/SystemPlugins/AutoBouquetsMaker/providers > /dev/null 2>&1
-
-echo "Remove ABM EXAMPLE files."
-rm -f /usr/lib/enigma2/python/Plugins/SystemPlugins/AutoBouquetsMaker/custom/EXAMPLE* > /dev/null 2>&1
-
-echo "Remove ABM custom folder if empty."
-rm -f /usr/lib/enigma2/python/Plugins/SystemPlugins/AutoBouquetsMaker/custom > /dev/null 2>&1
-
-echo "Remove ABM folder if empty."
-rm -f /usr/lib/enigma2/python/Plugins/SystemPlugins/AutoBouquetsMaker > /dev/null 2>&1
 }

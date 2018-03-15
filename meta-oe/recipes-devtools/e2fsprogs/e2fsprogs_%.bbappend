@@ -1,3 +1,5 @@
+inherit upx-compress
+
 EXTRA_OECONF += "--enable-defrag"
 
 do_install_append() {

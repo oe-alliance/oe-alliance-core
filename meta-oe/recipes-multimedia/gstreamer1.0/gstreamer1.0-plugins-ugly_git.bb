@@ -8,21 +8,24 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=a6f89e2100d9b6cdffcea4f398e37343 \
 
 UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>(\d+(\.\d+)+))"
 
-SRCREV_base = "9213d690a8e36e359ce8314db5d0e4fe83b822dd"
-SRCREV_common = "3f4aa969cbe39584a649d98d4cf321d78bd73092"
+SRCREV_base = "f16550f6cb104cab762c2ec2e594c619f7bf3c72"
+SRCREV_common = "f0c2dc9aadfa05bb5274c40da750104ecbb88cba"
 SRCREV_FORMAT = "base"
 
 SRC_URI = "git://anongit.freedesktop.org/gstreamer/gst-plugins-ugly;branch=master;name=base \
-		   git://anongit.freedesktop.org/gstreamer/common;destsuffix=git/common;name=common \
+           git://anongit.freedesktop.org/gstreamer/common;destsuffix=git/common;name=common \
+           file://0001-introspection.m4-prefix-pkgconfig-paths-with-PKG_CON.patch \
 "
 
 S = "${WORKDIR}/git"
 
-GST_VERSION_FULL ="1.13.0.2"
+GST_VERSION_FULL ="1.13.91"
 inherit gitpkgv
 PV = "${GST_VERSION_FULL}+git${SRCPV}"
 PKGV = "${GST_VERSION_FULL}+git${GITPKGV}"
 
 do_configure_prepend() {
-	${S}/autogen.sh --noconfigure
+	cd ${S}
+	./autogen.sh --noconfigure
+	cd ${B}
 }

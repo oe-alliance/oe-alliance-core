@@ -125,6 +125,7 @@ RDEPENDS_${PN} = " \
     python-ujson \
     python-singledispatch \
     python-levenshtein \
+    python-soco \
     python-pyexecjs \
     ${@bb.utils.contains("DEFAULTTUNE", "sh4", "" , "rclone", d)} \
     rsync \

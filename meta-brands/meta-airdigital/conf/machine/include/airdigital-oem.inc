@@ -27,6 +27,9 @@ ${@bb.utils.contains('MACHINEBUILD', 'zgemmah32tc', 'H3.2TC' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah7', 'H7' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah52splus', 'H5.2S PLUS' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah2splus', 'H.2S PLUS' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'zgemmah9s', 'H9S' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'zgemmah9t', 'H9T' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'zgemmah9splus', 'H9S PLUS' , '', d)}\
 "
 
 MACHINE_BRAND = "\
@@ -53,6 +56,9 @@ ${@bb.utils.contains('MACHINEBUILD', 'zgemmah32tc', 'Zgemma' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah7', 'Zgemma' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah52splus', 'Zgemma' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah2splus', 'Zgemma' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'zgemmah9s', 'Zgemma' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'zgemmah9t', 'Zgemma' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'zgemmah9splus', 'Zgemma' , '', d)}\
 "
 
 IMAGEDIR ?= "\
@@ -79,6 +85,9 @@ ${@bb.utils.contains('MACHINEBUILD', 'zgemmah32tc', 'zgemma/h3' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah7', 'zgemma/h7' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah52splus', 'zgemma/h5' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah2splus', 'zgemma/h3' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'zgemmah9s', 'h9' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'zgemmah9t', 'h9' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'zgemmah9splus', 'h9' , '', d)}\
 "
 
 MACHINE_DRIVER = "\
@@ -105,10 +114,14 @@ ${@bb.utils.contains('MACHINEBUILD', 'zgemmah32tc', 'h3' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah7', 'h7' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah52splus', 'h5' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah2splus', 'h3' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'zgemmah9s', 'h9' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'zgemmah9t', 'h9' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'zgemmah9splus', 'h9' , '', d)}\
 "
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS = "\
     airdigital-dvb-modules-${MACHINE_DRIVER} \
+    ${@bb.utils.contains('MACHINE_FEATURES', 'hisil', 'airdigital-libs-${MACHINE} airdigital-partitions-${MACHINE}' , '', d)} \
     "
 
 DVBPROVIDER = "kernel"
@@ -118,6 +131,7 @@ MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS = "\
     kernel-module-cdfs \
     ${@bb.utils.contains('MACHINE_FEATURES', 'qtegls', 'airdigital-qteglfs-platform', '',d)} \
     ${@bb.utils.contains('MACHINE_FEATURES', 'swap', 'airdigital-swapcreate', '',d)} \
+    ${@bb.utils.contains('MACHINE_FEATURES', 'mali', 'airdigital-mali-${MACHINE}' , '', d)} \
     "
 
 MACHINE_EXTRA_RRECOMMENDS = " \
@@ -132,11 +146,12 @@ DVBMEDIASINK_CONFIG = "--with-wma --with-wmv --with-pcm --with-dts --with-eac3 \
     ${@bb.utils.contains('MACHINE', 'h5', '--with-h265 --with-vb6 --with-vb8 --with-spark' , '', d)} \
     ${@bb.utils.contains('MACHINE', 'h6', '--with-h265 --with-vb6 --with-vb8 --with-spark' , '', d)} \
     ${@bb.utils.contains('MACHINE', 'h7', '--with-h265 --with-vb6 --with-vb8 --with-vb9 --with-spark' , '', d)} \
+    ${@bb.utils.contains('MACHINE', 'h9', '--with-h265 --with-vb6 --with-vb8 --with-vb9 --with-spark' , '', d)} \
     "
 
 PREFERRED_PROVIDER_virtual/kernel = "linux-airdigital"
-PREFERRED_PROVIDER_virtual/egl = "airdigital-v3ddriver-${MACHINE}" 
-PREFERRED_PROVIDER_virtual/libgles2 = "airdigital-v3ddriver-${MACHINE}"
+PREFERRED_PROVIDER_virtual/egl ?= "airdigital-v3ddriver-${MACHINE}" 
+PREFERRED_PROVIDER_virtual/libgles2 ?= "airdigital-v3ddriver-${MACHINE}"
 PREFERRED_PROVIDER_virtual/kodi = "stb-kodi-${MACHINE}"
 
 MACHINE_FEATURES += "3dtv alsa hdmicec switchoff blindscan-tbs linuxwifi"

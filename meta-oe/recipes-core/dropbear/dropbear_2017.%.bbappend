@@ -3,6 +3,8 @@
 # exponentially by key size, the default is 2k which takes several
 # seconds on most boxes.
 
+inherit upx-compress
+
 do_install_append() {
     echo 'DROPBEAR_EXTRA_ARGS="-B"' > ${WORKDIR}/dropbeardefaults
     echo 'DROPBEAR_RSAKEY_ARGS="-s 1024"' >> ${WORKDIR}/dropbeardefaults

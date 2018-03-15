@@ -6,8 +6,8 @@ LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda
 ALLOW_EMPTY_${PN} = "1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-PV = "6.4"
-PR = "r34"
+PV = "6.5"
+PR = "r36"
 
 inherit packagegroup
 
@@ -20,10 +20,10 @@ RRECOMMENDS_${PN} = " \
     enigma2-plugin-extensions-atilehd \
     enigma2-plugin-extensions-autotimer \
     enigma2-plugin-extensions-weatherplugin-opd \
+    enigma2-plugin-extensions-gioppygio \
     enigma2-plugin-extensions-epgsearch \
     enigma2-plugin-extensions-graphmultiepg \
     enigma2-plugin-extensions-epgimport \
-    enigma2-plugin-extensions-vhannibal-autosettings \
     enigma2-plugin-extensions-cutlisteditor \
     enigma2-plugin-systemplugins-videotune \
     ${@bb.utils.contains("MACHINE_FEATURES", "videoenhancement", "", "enigma2-plugin-systemplugins-videoenhancement", d)} \

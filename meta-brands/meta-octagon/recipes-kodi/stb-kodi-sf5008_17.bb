@@ -7,7 +7,7 @@ RPROVIDES_${PN} += "kodi"
 
 EXTRA_OECONF += " \
     --with-platform=nextv-cortexa15 \
-    --with-ffmpeg=v3d \
+    --with-ffmpeg=stb \
 "
 
 INSANE_SKIP_${PN} += "file-rdeps"
