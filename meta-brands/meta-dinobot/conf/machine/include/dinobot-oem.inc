@@ -64,6 +64,9 @@ DEFAULTTUNE = "armv7ahf-neon"
 
 PREFERRED_VERSION_linux-dinobot = "4.4.35"
 PREFERRED_VERSION_linux-libc-headers = "4.4"
+PREFERRED_PROVIDER_virtual/egl = "dinobot-opengl-${MACHINE}" 
+PREFERRED_PROVIDER_virtual/libgles2 = "dinobot-opengl-${MACHINE}"
+PREFERRED_PROVIDER_virtual/kodi = "stb-kodi-${MACHINE}"
 
 require conf/machine/include/tune-cortexa15.inc
 
