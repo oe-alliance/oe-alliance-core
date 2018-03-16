@@ -8,7 +8,7 @@ SRCDATE_u5 = "20180301"
 
 inherit kernel machine_kernel_pr
 
-MACHINE_KERNEL_PR_append = ".9"
+MACHINE_KERNEL_PR_append = ".10"
 
 SRC_URI[u5pvr.md5sum] = "5b78e7c0fb860f2a707de6a437a097e9"
 SRC_URI[u5pvr.sha256sum] = "16d4841a6ab678fdf60162b41466675ca6e2e9af38b4722bdd9571b36969f9d2"
@@ -34,6 +34,8 @@ SRC_URI += "http://source.mynonpublic.com/dinobot/dinobot-linux-${PV}-${SRCDATE}
     file://blindscan2.patch \
     file://0001-stv090x-optimized-TS-sync-control.patch \
 "
+
+SRC_URI_append_u5 = " file://base.patch"
 
 S = "${WORKDIR}/linux-${PV}"
 B = "${WORKDIR}/build"

@@ -4,7 +4,7 @@ PRIORITY = "required"
 LICENSE = "CLOSED"
 PACKAGE_ARCH := "${MACHINE_ARCH}"
 
-PR = "r1-${SRCDATE}"
+PR = "r2-${SRCDATE}"
 
 PROVIDES = "virtual/libgles1 virtual/libgles2 virtual/egl"
 RPROVIDES_${PN} = "virtual/libgles1 virtual/libgles2 virtual/egl"
@@ -21,7 +21,8 @@ do_compile() {
 
 do_install() {
     install -d ${D}${libdir}
-    install -m 0755 ${S}/lib/libMali.so ${D}${libdir}/
+    install -m 0755 ${S}/lib/libMali.so ${D}${libdir}
+    ln -s libMali.so ${D}${libdir}/libmali.so
     ln -s libMali.so ${D}${libdir}/libGLESv2.so.2.0
     ln -s libGLESv2.so.2.0 ${D}${libdir}/libGLESv2.so.2
     ln -s libGLESv2.so.2 ${D}${libdir}/libGLESv2.so

@@ -39,7 +39,7 @@ do_install() {
 	install -m 0644 ${S}/dvbmodule ${D}/lib/modules/${KV}/extra
 	install -m 0755 ${S}/komession ${D}/usr/bin
 	install -d ${D}/${sysconfdir}/modules-load.d
-	for i in hi_tuner hi_sci hi_pmoc tntfs; do
+	for i in mali hi_dbe hi_tuner hi_sci hi_pmoc tntfs; do
 		install -m 0644 ${S}/$i.ko ${D}/lib/modules/${KV}/extra
 		echo $i >> ${D}/${sysconfdir}/modules-load.d/_${MACHINE}.conf
 	done
