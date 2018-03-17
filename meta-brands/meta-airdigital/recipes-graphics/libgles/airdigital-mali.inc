@@ -5,7 +5,7 @@ LICENSE = "CLOSED"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PROVIDES += " virtual/libgles2 virtual/libgles1 virtual/egl virtual/libopencl"
-RPROVIDES_${PN} = "virtual/libgles2 virtual/libgles1 virtual/egl virtual/libopencl"
+RPROVIDES_${PN} = "virtual/libgles2 virtual/libgles1 virtual/egl virtual/libopencl libEGL.so libGLESv2.so libmali.so"
 DEPENDS = "airdigital-mali-headers"
 
 SRC_URI = "http://source.mynonpublic.com/zgemma/${MACHINE}-mali-${SRCDATE}.zip"

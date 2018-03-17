@@ -4,10 +4,10 @@ PRIORITY = "required"
 LICENSE = "CLOSED"
 PACKAGE_ARCH := "${MACHINE_ARCH}"
 
-PR = "r2-${SRCDATE}"
+PR = "r3-${SRCDATE}"
 
 PROVIDES = "virtual/libgles1 virtual/libgles2 virtual/egl"
-RPROVIDES_${PN} = "virtual/libgles1 virtual/libgles2 virtual/egl"
+RPROVIDES_${PN} = "virtual/libgles1 virtual/libgles2 virtual/egl libEGL.so libGLESv2.so libmali.so"
 
 SRC_URI = "http://source.mynonpublic.com/dinobot/${MACHINE}-opengl-armhf-${SRCDATE}.tar.gz"
 
