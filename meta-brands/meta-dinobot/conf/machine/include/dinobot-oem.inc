@@ -60,7 +60,7 @@ IMAGE_FSTYPES += "dinobotemmc"
 IMAGE_ROOTFS_SIZE ?= "294912"
 
 TARGET_ARCH = "arm"
-DEFAULTTUNE = "armv7ahf-neon"
+DEFAULTTUNE = "cortexa15hf-neon-vfpv4"
 
 PREFERRED_VERSION_linux-dinobot = "4.4.35"
 PREFERRED_VERSION_linux-libc-headers = "4.4"
