@@ -22,6 +22,8 @@ inherit cmake pkgconfig gettext gitpkgv
 
 S = "${WORKDIR}/pvr.${KODIADDONPLUGIN}"
 
+OECMAKE_GENERATOR = "Unix Makefiles"
+
 EXTRA_OECMAKE = " \
     -DADDONS_TO_BUILD=pvr.${KODIADDONPLUGIN} \
     -DADDON_SRC_PREFIX=${WORKDIR}/git \

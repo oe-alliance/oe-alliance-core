@@ -14,9 +14,9 @@ LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad
 # By default, kernel.bbclass modifies package names to allow multiple kernels
 # to be installed in parallel. We revert this change and rprovide the versioned
 # package names instead, to allow only one kernel to be installed.
-PKG_kernel-base = "kernel-base"
-PKG_kernel-image = "kernel-image"
-RPROVIDES_kernel-base = "kernel-${KERNEL_VERSION}"
+PKG_${KERNEL_PACKAGE_NAME}-base = "kernel-base"
+PKG_${KERNEL_PACKAGE_NAME}-image = "kernel-image"
+RPROVIDES_${KERNEL_PACKAGE_NAME}-base = "kernel-${KERNEL_VERSION}"
 RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
 
 SRC_URI += "http://source.mynonpublic.com/stblinux-3.3.0-20130404.tgz \
@@ -71,7 +71,7 @@ KERNEL_OUTPUT = "vmlinux"
 KERNEL_IMAGETYPE = "vmlinux"
 KERNEL_IMAGEDEST = "tmp"
 
-FILES_kernel-image = "/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz"
+FILES_${KERNEL_PACKAGE_NAME}-image = "/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz"
 
 do_configure_prepend() {
     rm -rf ${STAGING_KERNEL_DIR}/.cofig

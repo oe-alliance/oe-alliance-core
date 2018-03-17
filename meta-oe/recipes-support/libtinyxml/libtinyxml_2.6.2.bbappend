@@ -1,7 +1,6 @@
 PR_append = "-vuplus0"
 
-THISDIR := "${@os.path.dirname(d.getVar('FILE', True))}"
-FILESPATH =. "${@base_set_filespath(["${THISDIR}/${PN}"], d)}:"
+FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
 SRC_URI += " file://tinyxml.pc "
 

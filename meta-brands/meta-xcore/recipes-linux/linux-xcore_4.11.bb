@@ -19,9 +19,9 @@ MACHINE_KERNEL_PR_append = ".6"
 # By default, kernel.bbclass modifies package names to allow multiple kernels
 # to be installed in parallel. We revert this change and rprovide the versioned
 # package names instead, to allow only one kernel to be installed.
-PKG_kernel-base = "kernel-base"
-PKG_kernel-image = "kernel-image"
-RPROVIDES_kernel-base = "kernel-${KERNEL_VERSION}"
+PKG_${KERNEL_PACKAGE_NAME}-base = "kernel-base"
+PKG_${KERNEL_PACKAGE_NAME}-image = "kernel-image"
+RPROVIDES_${KERNEL_PACKAGE_NAME}-base = "kernel-${KERNEL_VERSION}"
 RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
 
 SRC_URI += "http://source.mynonpublic.com/xcore/xcore-linux-${PV}-${SRC}.tar.gz \
@@ -44,7 +44,7 @@ export OS = "Linux"
 KERNEL_OBJECT_SUFFIX = "ko"
 KERNEL_IMAGEDEST = "tmp"
 
-FILES_kernel-image = "${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}*  ${@bb.utils.contains('MACHINE_FEATURES', 'emmc', '${KERNEL_IMAGEDEST}/findkerneldevice.py', '', d)}"
+FILES_${KERNEL_PACKAGE_NAME}-image = "${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}*  ${@bb.utils.contains('MACHINE_FEATURES', 'emmc', '${KERNEL_IMAGEDEST}/findkerneldevice.py', '', d)}"
 
 pkg_postinst_kernel-image () {
     if [ "x$D" == "x" ]; then

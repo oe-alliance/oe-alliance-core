@@ -13,9 +13,9 @@ DEPENDS = "genromfs-native virtual/${TARGET_PREFIX}gcc"
 
 inherit kernel machine_kernel_pr
 
-PKG_kernel-base = "kernel-base"
-PKG_kernel-image = "kernel-image"
-RPROVIDES_kernel-base = "kernel-${KERNEL_VERSION}"
+PKG_${KERNEL_PACKAGE_NAME}-base = "kernel-base"
+PKG_${KERNEL_PACKAGE_NAME}-image = "kernel-image"
+RPROVIDES_${KERNEL_PACKAGE_NAME}-base = "kernel-${KERNEL_VERSION}"
 RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
 ALLOW_EMPTY_kernel-dev = "1"
 
