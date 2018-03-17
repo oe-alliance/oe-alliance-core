@@ -92,6 +92,9 @@ SRC_URI = "git://github.com/xbmc/xbmc.git;branch=Krypton \
            file://e2player.patch \
 "
 
+SRC_URI_append_u5 = " file://eglwrapper.patch"
+SRC_URI_append_u5pvr = " file://eglwrapper.patch"
+
 SRC_URI_append_libc-musl = " \
            file://0001-Fix-file_Emu-on-musl.patch \
            file://0002-Remove-FILEWRAP.patch \
