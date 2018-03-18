@@ -17,7 +17,7 @@ PR = "r0"
 
 inherit allarch distutils-openplugins
 
-RDEPENDS_${PN} = "python-core rtl-sdr redsea dab-cmdline-sdgradio"
+RDEPENDS_${PN} = "python-core rtl-sdr redsea dab-cmdline-sdgradio dab-cmdline-sdgradio-pcm"
 
 PACKAGES =+ "${PN}-src"
 RDEPENDS_{PN}-src = "${PN}"
