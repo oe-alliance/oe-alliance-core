@@ -13,11 +13,20 @@ RRECOMMENDS_${PN} = "enigma2-plugin-extensions-subssupport"
 SRCREV = "241a5aabf50aa21ed06c8180e854a65ebec47790"
 SRC_URI = "git://github.com/mx3L/kodiext;protocol=git;branch=master \
         file://0001-add-subtitleSelection-option.patch \
+        file://advancedsettings.xml \
         "
 
 S = "${WORKDIR}/git"
 
-FILES_${PN} = "${libdir}/enigma2/python/Plugins/Extensions/Kodi \
-    ${bindir}/kodiext"
+do_install_append() {
+	install -d ${D}/usr/share/kodi/system
+	install -m 0755 ${WORKDIR}/advancedsettings.xml ${D}/usr/share/kodi/system
+}
+
+FILES_${PN} = " \
+    ${libdir}/enigma2/python/Plugins/Extensions/Kodi \
+    ${bindir}/kodiext \
+    /usr/share/kodi/system \
+    "
 
 inherit autotools

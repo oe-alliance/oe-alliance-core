@@ -13,7 +13,6 @@ RDEPENDS_${PN} = " \
     kodi-addon-pvr-nextpvr \
     kodi-addon-pvr-mythtv \
     kodi-addon-pvr-dvblink \
-    kodi-addon-pvr-mediaportal.tvserver \
     kodi-addon-pvr-vbox \
     kodi-addon-pvr-demo \
     kodi-addon-pvr-njoy \

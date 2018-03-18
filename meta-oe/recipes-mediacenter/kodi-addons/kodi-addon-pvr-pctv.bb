@@ -1,10 +1,7 @@
 SUMMARY = "Kodi Media Center PVR plugins"
 
-LICENSE = "GPLv2+"
-LIC_FILES_CHKSUM = "file://src/client.cpp;md5=8223d7f46aa9cc27a40c885269102dce"
-
 KODIADDONPLUGIN = "pctv"
 
-SRCREV_pvr${KODIADDONPLUGIN} = "e3b2b8450c01cd936ebd86acfd9cfa6aeccbf89d"
+SRCREV_pvr${KODIADDONPLUGIN} = "89438d2972fd9eb7e3290272a07b722fbc73ae42"
 
 require kodi-addon-pvr.inc
