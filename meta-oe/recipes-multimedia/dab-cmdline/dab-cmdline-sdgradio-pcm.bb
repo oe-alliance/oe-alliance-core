@@ -16,7 +16,8 @@ PR = "r0"
 
 SRC_URI = "git://github.com/satdreamgr/dab-cmdline.git;branch=sdgradio"
 
-EXTRA_OECMAKE = "-DAAC_OUT=ON -DRTLSDR=ON -DCMAKE_INSTALL_PREFIX=/usr/bin"
+EXTRA_OECMAKE ?= "-DRTLSDR=ON -DCMAKE_INSTALL_PREFIX=/usr/bin"
+EXTRA_OECMAKE_arm = "-DRTLSDR=ON -DNEON_AVAILABLE=ON -DCMAKE_INSTALL_PREFIX=/usr/bin"
 
 S = "${WORKDIR}/git/sdgradio"
 
@@ -24,4 +25,8 @@ inherit cmake pkgconfig
 
 do_configure_prepend() {
 	sed -i -e 's:librtlsdr.so:librtlsdr.so.0:g' ${WORKDIR}/git/devices/rtlsdr-handler/rtlsdr-handler.cpp
+}
+
+do_install_append() {
+	mv ${D}/usr/bin/dab-rtlsdr-sdgradio ${D}/usr/bin/dab-rtlsdr-sdgradio-pcm
 }
