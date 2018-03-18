@@ -7,7 +7,7 @@ inherit allarch
 LICENSE = "GPLv2+"
 require conf/license/license-gplv2.inc
 
-RDEPENDS_${PN} = "livestreamer"
+RDEPENDS_${PN} = "livestreamer streamlink"
 
 SRC_URI = "git://github.com/athoik/livestreamersrv.git"
 S = "${WORKDIR}/git/"
