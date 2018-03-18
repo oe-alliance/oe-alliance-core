@@ -5,8 +5,8 @@ LICENSE = "CLOSED"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PROVIDES += " virtual/libgles2 virtual/libgles1 virtual/egl virtual/libopencl"
-RPROVIDES_${PN} = "virtual/libgles2 virtual/libgles1 virtual/egl virtual/libopencl"
-DEPENDS = "airdigital-mali-headers"
+RPROVIDES_${PN} = "virtual/libgles2 virtual/libgles1 virtual/egl virtual/libopencl libmali.so libEGL.so libGLESv1_CM.so libGLESv2.so"
+DEPENDS = "airdigital-mali-utgard-headers"
 
 SRC_URI = "http://source.mynonpublic.com/zgemma/${MACHINE}-mali-${SRCDATE}.zip"
 
@@ -23,10 +23,10 @@ do_install_append() {
 	install -d ${D}${sysconfdir}/udev/rules.d
 	echo 'KERNEL=="mali0", MODE="0660", GROUP="video"' > ${S}/50-mali.rules
 	install -m 0755 ${S}/libMali.so ${D}${libdir}
-	ln -s libMali.so ${D}${libdir}/libmali.so
-	ln -s libMali.so ${D}${libdir}/libEGL.so
-	ln -s libMali.so ${D}${libdir}/libGLESv1_CM.so
-	ln -s libMali.so ${D}${libdir}/libGLESv2.so
+	ln -sf libMali.so ${D}${libdir}/libmali.so
+	ln -sf libMali.so ${D}${libdir}/libEGL.so
+	ln -sf libMali.so ${D}${libdir}/libGLESv1_CM.so
+	ln -sf libMali.so ${D}${libdir}/libGLESv2.so
 	install -m 0644 ${S}/50-mali.rules ${D}${sysconfdir}/udev/rules.d/50-mali.rules
 }
 
