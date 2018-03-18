@@ -131,7 +131,7 @@ MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS = "\
     kernel-module-cdfs \
     ${@bb.utils.contains('MACHINE_FEATURES', 'qtegls', 'airdigital-qteglfs-platform', '',d)} \
     ${@bb.utils.contains('MACHINE_FEATURES', 'swap', 'airdigital-swapcreate', '',d)} \
-    ${@bb.utils.contains('MACHINE_FEATURES', 'mali', 'airdigital-mali-${MACHINE}' , '', d)} \
+    ${@bb.utils.contains('MACHINE_FEATURES', 'mali', 'airdigital-mali-${MACHINE} kernel-module-mali-${MACHINE} ffmpeg' , '', d)} \
     "
 
 MACHINE_EXTRA_RRECOMMENDS = " \

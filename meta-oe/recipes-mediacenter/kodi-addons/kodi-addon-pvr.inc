@@ -1,3 +1,6 @@
+LICENSE = "GPLv2+"
+require conf/license/license-gplv2.inc
+
 DEPENDS += " \
             zip-native \
             p8platform \
@@ -12,9 +15,9 @@ PACKAGE_ARCH = "${MACHINE}"
 
 SRCREV_FORMAT = "pvr${KODIADDONPLUGIN}"
 
-PV = "2.2.20+git${SRCPV}"
-PKGV = "2.2.20+git${GITPKGV}"
-KODIADDONBRANCH ?= "master"
+PV = "2.4.9+git${SRCPV}"
+PKGV = "2.4.9+git${GITPKGV}"
+KODIADDONBRANCH ?= "Krypton"
 
 SRC_URI = "git://github.com/kodi-pvr/pvr.${KODIADDONPLUGIN}.git;destsuffix=pvr.${KODIADDONPLUGIN};name=pvr${KODIADDONPLUGIN};branch=${KODIADDONBRANCH}"
 
@@ -27,7 +30,8 @@ EXTRA_OECMAKE = " \
     -DADDON_SRC_PREFIX=${WORKDIR}/git \
     -DCMAKE_BUILD_TYPE=Debug -DVMTRACE=1 -DPARANOIA=1 \
     -DCMAKE_INSTALL_PREFIX=${datadir}/kodi/addons \
-    -DCMAKE_MODULE_PATH=${STAGING_DIR_HOST}${libdir}/kodi \
+    -DKODI_INCLUDE_DIR=${STAGING_INCDIR}/kodi \
+    -DCMAKE_MODULE_PATH='${STAGING_DIR_HOST}${libdir}/kodi;${STAGING_DIR_HOST}${datadir}/kodi/cmake' \
     -DCMAKE_PREFIX_PATH=${STAGING_DIR_HOST}${prefix} \
     -DJSONCPP_INCLUDE_DIRS=${STAGING_INCDIR}/json \
     -DPACKAGE_ZIP=1 \

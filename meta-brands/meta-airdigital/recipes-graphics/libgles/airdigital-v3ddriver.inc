@@ -25,8 +25,8 @@ do_install_append() {
 	install -m 0755 ${S}/libnxpl.so ${D}${libdir}/
 	install -m 0755 ${S}/libnexus.so ${D}${libdir}/
 	install -m 0755 ${S}/libv3ddriver.so ${D}${libdir}/
-	ln -s libv3ddriver.so ${D}${libdir}/libEGL.so
-	ln -s libv3ddriver.so ${D}${libdir}/libGLESv2.so
+	ln -sf libv3ddriver.so ${D}${libdir}/libEGL.so
+	ln -sf libv3ddriver.so ${D}${libdir}/libGLESv2.so
 }
 
 FILES_${PN} = "/usr/lib/*"
