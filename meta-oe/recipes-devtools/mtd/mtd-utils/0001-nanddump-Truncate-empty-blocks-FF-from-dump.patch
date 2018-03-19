@@ -1,22 +1,24 @@
---- a/nand-utils/nanddump.c	2017-01-10 20:44:46.407606067 +0100
-+++ b/nand-utils/nanddump.c	2017-01-10 20:54:52.209794976 +0100
-@@ -52,6 +52,7 @@
+diff --git a/nand-utils/nanddump.c b/nand-utils/nanddump.c
+index 2f167bb..624aef1 100644
+--- a/nand-utils/nanddump.c
++++ b/nand-utils/nanddump.c
+@@ -51,6 +51,7 @@ static void display_help(int status)
+ "-o         --oob                Dump OOB data\n"
  "-p         --prettyprint        Print nice (hexdump)\n"
  "-q         --quiet              Don't display progress and status messages\n"
- "-s addr    --startaddress=addr  Start address\n"
 +"-t         --truncate           Truncate empty blocks (FF) from dump\n"
- "\n"
- "--bb=METHOD, where METHOD can be `padbad', `dumpbad', or `skipbad':\n"
- "    padbad:  dump flash data, substituting 0xFF for any bad blocks\n"
-@@ -86,6 +87,7 @@
- static bool			quiet = false;		// suppress diagnostic output
+ "-s addr    --startaddress=addr  Start address\n"
+ "           --skip-bad-blocks-to-start\n"
+ "                                Skip bad blocks when seeking to the start address\n"
+@@ -89,6 +90,7 @@ static bool			quiet = false;		// suppress diagnostic output
  static bool			canonical = false;	// print nice + ascii
  static bool			forcebinary = false;	// force printing binary to tty
+ static bool			skip_bad_blocks_to_start = false;
 +static bool			cutoff = false;
  
  static enum {
  	padbad,   // dump flash data, substituting 0xFF for any bad blocks
-@@ -100,7 +102,7 @@
+@@ -103,7 +105,7 @@ static void process_options(int argc, char * const argv[])
  
  	for (;;) {
  		int option_index = 0;
@@ -25,7 +27,7 @@
  		static const struct option long_options[] = {
  			{"version", no_argument, 0, 'V'},
  			{"bb", required_argument, 0, 0},
-@@ -110,6 +112,7 @@
+@@ -114,6 +116,7 @@ static void process_options(int argc, char * const argv[])
  			{"canonicalprint", no_argument, 0, 'c'},
  			{"file", required_argument, 0, 'f'},
  			{"oob", no_argument, 0, 'o'},
@@ -33,7 +35,7 @@
  			{"prettyprint", no_argument, 0, 'p'},
  			{"startaddress", required_argument, 0, 's'},
  			{"length", required_argument, 0, 'l'},
-@@ -171,8 +174,12 @@
+@@ -178,9 +181,13 @@ static void process_options(int argc, char * const argv[])
  			case 'a':
  				forcebinary = true;
  				break;
@@ -42,11 +44,12 @@
 +				break;
  			case 'c':
  				canonical = true;
+ 				/* fall-through */
 +				break;
  			case 'p':
  				pretty_print = true;
  				break;
-@@ -204,6 +211,12 @@
+@@ -212,6 +219,12 @@ static void process_options(int argc, char * const argv[])
  		exit(EXIT_FAILURE);
  	}
  
@@ -59,20 +62,20 @@
  	if (forcebinary && pretty_print) {
  		fprintf(stderr, "The forcebinary and pretty print options are\n"
  				"mutually-exclusive. Choose one or the "
-@@ -464,13 +477,28 @@
+@@ -488,13 +501,28 @@ int main(int argc, char * const argv[])
  		}
  
  		/* Write out page data */
 -		if (pretty_print) {
-+		if (pretty_print || cutoff) {
++	if (pretty_print || cutoff) {
  			for (i = 0; i < bs; i += PRETTY_ROW_SIZE) {
 -				pretty_dump_to_buffer(readbuf + i, PRETTY_ROW_SIZE,
 -						pretty_buf, PRETTY_BUF_LEN, true, canonical, ofs + i);
 -				err = ofd_write(ofd, pretty_buf, strlen(pretty_buf));
 -				if (err)
 -					goto closeall;
-+				if (pretty_print) {
-+					pretty_dump_to_buffer(readbuf + i, 
++		if (pretty_print) {
++					pretty_dump_to_buffer(readbuf + i,
 +						PRETTY_ROW_SIZE, pretty_buf, PRETTY_BUF_LEN, true,  canonical, ofs + i);
 +					err = ofd_write(ofd, pretty_buf, strlen(pretty_buf));
 +					if (err)
