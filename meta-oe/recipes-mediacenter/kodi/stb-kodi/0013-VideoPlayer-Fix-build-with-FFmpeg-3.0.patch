@@ -1,0 +1,36 @@
+From 1ed8235081aece5b2ffe1861b1568a1e31d65de6 Mon Sep 17 00:00:00 2001
+From: Andreas Oberritter <obi@opendreambox.org>
+Date: Thu, 16 Feb 2017 12:18:01 +0100
+Subject: [PATCH] VideoPlayer: Fix build with FFmpeg 3.0
+
+---
+ xbmc/cores/VideoPlayer/DVDDemuxers/DVDDemuxFFmpeg.cpp | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/xbmc/cores/VideoPlayer/DVDDemuxers/DVDDemuxFFmpeg.cpp b/xbmc/cores/VideoPlayer/DVDDemuxers/DVDDemuxFFmpeg.cpp
+index 33d1e5a..579f65b 100644
+--- a/xbmc/cores/VideoPlayer/DVDDemuxers/DVDDemuxFFmpeg.cpp
++++ b/xbmc/cores/VideoPlayer/DVDDemuxers/DVDDemuxFFmpeg.cpp
+@@ -1513,7 +1513,7 @@ CDemuxStream* CDVDDemuxFFmpeg::AddStream(int streamIdx)
+     if (!langTag)
+     {
+       // only for avi audio streams
+-      if ((strcmp(m_pFormatContext->iformat->name, "avi") == 0) && (pStream->codecpar->codec_type == AVMEDIA_TYPE_AUDIO))
++      if ((strcmp(m_pFormatContext->iformat->name, "avi") == 0) && (pStream->codec->codec_type == AVMEDIA_TYPE_AUDIO))
+       {
+         // only defined for streams 1 to 9
+         if((streamIdx > 0) && (streamIdx < 10))
+@@ -1791,10 +1791,10 @@ unsigned int CDVDDemuxFFmpeg::HLSSelectProgram()
+     {
+       int idx = m_pFormatContext->programs[i]->stream_index[j];
+       AVStream* pStream = m_pFormatContext->streams[idx];
+-      if (pStream && pStream->codecpar &&
+-          pStream->codecpar->codec_type == AVMEDIA_TYPE_VIDEO)
++      if (pStream && pStream->codec &&
++          pStream->codec->codec_type == AVMEDIA_TYPE_VIDEO)
+       {
+-        strRes = pStream->codecpar->width * pStream->codecpar->height;
++        strRes = pStream->codec->width * pStream->codec->height;
+       }
+     }
+ 

@@ -14,9 +14,9 @@ PV = "1.2+git${SRCPV}"
 PKGV = "1.2+git${GITPKGV}"
 PR = "r0"
 
-SRC_URI = "git://github.com/openatv/dab-cmdline.git;branch=sdgradio"
+SRC_URI = "git://github.com/satdreamgr/dab-cmdline.git;branch=sdgradio"
 
-EXTRA_OECMAKE = "-DRTLSDR=ON -DCMAKE_INSTALL_PREFIX=/usr/bin"
+EXTRA_OECMAKE = "-DAAC_OUT=ON -DRTLSDR=ON -DCMAKE_INSTALL_PREFIX=/usr/bin"
 
 S = "${WORKDIR}/git/sdgradio"
 
