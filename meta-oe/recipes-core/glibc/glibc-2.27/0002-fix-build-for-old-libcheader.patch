@@ -1,0 +1,20 @@
+--- libc/sysdeps/unix/sysv/linux/configure	2013-11-15 21:00:52.197435355 +0100
++++ libc/sysdeps/unix/sysv/linux/configure	2013-11-15 21:02:05.985436648 +0100
+@@ -28,7 +28,7 @@
+ if ac_fn_c_try_compile "$LINENO"; then :
+   libc_cv_linux320='3.2.0 or later'
+ else
+-  libc_cv_linux320='missing or too old!'
++  libc_cv_linux320='3.2.0 or later'
+ fi
+ rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+ fi
+@@ -87,7 +87,7 @@
+ if ac_fn_c_try_compile "$LINENO"; then :
+   libc_minimum_kernel=ok
+ else
+-  libc_minimum_kernel='too old!'
++  libc_minimum_kernel=ok
+ fi
+ rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+ { $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_minimum_kernel" >&5
