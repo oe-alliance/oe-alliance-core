@@ -1,4 +1,4 @@
-PR .= ".3"
+PR .= ".2"
 SRC_URI += " \
             file://mount_single_uuid.patch \
             file://use_ipv6_when_ipv4_unroutable.patch \
@@ -63,7 +63,7 @@ pkg_postrm_${PN}_append () {
 
 pkg_preinst_${PN}-telnetd_prepend () {
 if [ -e $D/etc/inetd.conf ]; then
-	grep -vE '^#*\s*(23|telnet)' $D/etc/inetd.conf > $D/var/volatile/tmp/inetd.tmp
-	mv $D/var/volatile/tmp/inetd.tmp $D/etc/inetd.conf
+	grep -vE '^#*\s*(23|telnet)' $D/etc/inetd.conf > $D/tmp/inetd.tmp
+	mv $D/tmp/inetd.tmp $D/etc/inetd.conf
 fi
 }

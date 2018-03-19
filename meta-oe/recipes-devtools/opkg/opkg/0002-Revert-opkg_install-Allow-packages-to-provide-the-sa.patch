@@ -1,0 +1,284 @@
+From 3636d007a5621434e91a6145f195a7c11efafbf0 Mon Sep 17 00:00:00 2001
+From: captain <openatv@gmail.com>
+Date: Wed, 27 Dec 2017 21:44:35 +0100
+Subject: [PATCH 2/2] Revert "opkg_install: Allow packages to provide the same
+ symlink if it is identical"
+
+This reverts commit c3c03df8c539b99f3f6f33d8dc04d927e29dcc2e.
+
+# Conflicts:
+#	tests/Makefile
+---
+ libopkg/file_list.c          | 10 +++-------
+ libopkg/file_list.h          |  3 +--
+ libopkg/file_util.c          | 22 ----------------------
+ libopkg/file_util.h          |  1 -
+ libopkg/opkg_archive.c       |  7 +------
+ libopkg/opkg_install.c       | 14 --------------
+ libopkg/pkg.c                | 15 +++------------
+ tests/Makefile               |  1 -
+ tests/regress/issue11033b.py | 44 --------------------------------------------
+ 9 files changed, 8 insertions(+), 109 deletions(-)
+ delete mode 100644 tests/regress/issue11033b.py
+
+diff --git a/libopkg/file_list.c b/libopkg/file_list.c
+index 26ba6c7..c781a21 100644
+--- a/libopkg/file_list.c
++++ b/libopkg/file_list.c
+@@ -24,11 +24,10 @@
+ #include "file_list.h"
+ #include "xfuncs.h"
+ 
+-static int file_info_init(file_info_t *info, char *path, mode_t mode, char *link_target)
++static int file_info_init(file_info_t *info, char *path, mode_t mode)
+ {
+     info->path = xstrdup(path);
+     info->mode = mode;
+-    info->link_target = xstrdup(link_target);
+ 
+     return 0;
+ }
+@@ -37,9 +36,6 @@ static void file_info_deinit(file_info_t *info)
+ {
+     free(info->path);
+     info->path = NULL;
+-
+-    free(info->link_target);
+-    info->link_target = NULL;
+ }
+ 
+ file_list_t *file_list_alloc()
+@@ -70,11 +66,11 @@ void file_list_deinit(file_list_t *list)
+     void_list_deinit((void_list_t *)list);
+ }
+ 
+-file_info_t *file_list_append(file_list_t *list, char *name, mode_t mode, char *link_target)
++file_info_t *file_list_append(file_list_t *list, char *name, mode_t mode)
+ {
+     /* freed in file_list_deinit */
+     file_info_t *info = xcalloc(1, sizeof(file_info_t));
+-    file_info_init(info, name, mode, link_target);
++    file_info_init(info, name, mode);
+ 
+     void_list_append((void_list_t *)list, info);
+ 
+diff --git a/libopkg/file_list.h b/libopkg/file_list.h
+index f4ece18..f41da79 100644
+--- a/libopkg/file_list.h
++++ b/libopkg/file_list.h
+@@ -27,7 +27,6 @@ extern "C" {
+ typedef struct {
+     char *path;
+     mode_t mode;
+-    char *link_target;
+ } file_info_t;
+ 
+ typedef struct void_list_elt file_list_elt_t;
+@@ -43,7 +42,7 @@ file_list_t *file_list_alloc(void);
+ void file_list_init(file_list_t *list);
+ void file_list_deinit(file_list_t *list);
+ 
+-file_info_t *file_list_append(file_list_t *list, char *name, mode_t mode, char *link_target);
++file_info_t *file_list_append(file_list_t *list, char *name, mode_t mode);
+ void file_list_remove_elt(file_list_t * list, const char *path);
+ 
+ file_list_elt_t *file_list_first(file_list_t *list);
+diff --git a/libopkg/file_util.c b/libopkg/file_util.c
+index ee8e15e..57cbc21 100644
+--- a/libopkg/file_util.c
++++ b/libopkg/file_util.c
+@@ -94,28 +94,6 @@ int file_is_symlink(const char *file_name)
+     return S_ISLNK(st.st_mode);
+ }
+ 
+-char *file_readlink_alloc(const char *file_name)
+-{
+-    struct stat st;
+-    char *target;
+-    ssize_t link_len;
+-    int r;
+-
+-    r = xlstat(file_name, &st);
+-    if (r == -1)
+-        return NULL;
+-
+-    target = malloc(st.st_size + 1);
+-    link_len = readlink(file_name, target, st.st_size);
+-    if (link_len == -1) {
+-        free(target);
+-        return NULL;
+-    }
+-    target[link_len] = 0;
+-
+-    return target;
+-}
+-
+ /* read a single line from a file, stopping at a newline or EOF.
+    If a newline is read, it will appear in the resulting string.
+    Return value is a malloc'ed char * which should be freed at
+diff --git a/libopkg/file_util.h b/libopkg/file_util.h
+index 41dcb3b..ca194ba 100644
+--- a/libopkg/file_util.h
++++ b/libopkg/file_util.h
+@@ -29,7 +29,6 @@ int xlstat(const char *file_name, struct stat *st);
+ int file_exists(const char *file_name);
+ int file_is_dir(const char *file_name);
+ int file_is_symlink(const char *file_name);
+-char *file_readlink_alloc(const char *file_name);
+ char *file_read_line_alloc(FILE * file);
+ int file_link(const char *src, const char *dest);
+ int file_copy(const char *src, const char *dest);
+diff --git a/libopkg/opkg_archive.c b/libopkg/opkg_archive.c
+index 67bcab4..45f7199 100644
+--- a/libopkg/opkg_archive.c
++++ b/libopkg/opkg_archive.c
+@@ -342,12 +342,7 @@ static int extract_paths_to_stream(struct archive *a, FILE * stream)
+ 
+         path = archive_entry_pathname(entry);
+         entry_stat = archive_entry_stat(entry);
+-        if (S_ISLNK(entry_stat->st_mode)) {
+-            r = fprintf(stream, "%s\t0%03o\t%s\n", path, (unsigned int)entry_stat->st_mode,
+-                        archive_entry_symlink(entry));
+-        } else {
+-            r = fprintf(stream, "%s\t0%03o\n", path, (unsigned int)entry_stat->st_mode);
+-        }
++        r = fprintf(stream, "%s\t0%03o\n", path, (unsigned int)entry_stat->st_mode);
+         if (r <= 0) {
+             opkg_msg(ERROR, "Failed to path to stream: %s\n", strerror(errno));
+             return -1;
+diff --git a/libopkg/opkg_install.c b/libopkg/opkg_install.c
+index edbf099..38da2af 100644
+--- a/libopkg/opkg_install.c
++++ b/libopkg/opkg_install.c
+@@ -461,20 +461,6 @@ static int check_data_file_clashes(pkg_t * pkg, pkg_t * old_pkg)
+                 continue;
+             }
+ 
+-            /* OK if both the existing and new are a symlink and point to
+-             * the same location */
+-            if (S_ISLNK(file_info->mode) && file_is_symlink(filename)) {
+-                char *link_target;
+-                int r;
+-
+-                link_target = file_readlink_alloc(filename);
+-                r = strcmp(link_target, file_info->link_target);
+-                free(link_target);
+-
+-                if (r == 0)
+-                    continue;
+-            }
+-
+             if (backup_exists_for(filename)) {
+                 continue;
+             }
+diff --git a/libopkg/pkg.c b/libopkg/pkg.c
+index e54b953..83d8b64 100644
+--- a/libopkg/pkg.c
++++ b/libopkg/pkg.c
+@@ -1169,22 +1169,17 @@ file_list_t *pkg_get_installed_files(pkg_t * pkg)
+         char *file_name;
+         char *mode_str;
+         mode_t mode = 0;
+-        char *link_target = NULL;
+-        char *readlink_buf = NULL;
+ 
+         line = file_read_line_alloc(list_file);
+         if (line == NULL) {
+             break;
+         }
+ 
+-        // <filename>\t<mode>\t<link_target> -- all fields except filename are optional
++        // <filename>\t<mode> -- all fields except filename are optional
+         file_name = line;
+         mode_str = strchr(line, '\t');
+         if (mode_str) {
+             *mode_str++ = 0;
+-            link_target = strchr(mode_str, '\t');
+-            if (link_target)
+-                *link_target++ = 0;
+             mode = (mode_t)strtoul(mode_str, NULL, 0);
+         }
+ 
+@@ -1208,15 +1203,11 @@ file_list_t *pkg_get_installed_files(pkg_t * pkg)
+                 // already contains root_dir as header -> ABSOLUTE
+                 sprintf_alloc(&installed_file_name, "%s", file_name);
+             }
+-            if (xlstat(installed_file_name, &file_stat) == 0) {
++            if (xlstat(installed_file_name, &file_stat) == 0)
+                 mode = file_stat.st_mode;
+-                if (S_ISLNK(mode))
+-                    link_target = readlink_buf = file_readlink_alloc(installed_file_name);
+-            }
+         }
+-        file_list_append(pkg->installed_files, installed_file_name, mode, link_target);
++        file_list_append(pkg->installed_files, installed_file_name, mode);
+         free(installed_file_name);
+-        free(readlink_buf);
+         free(line);
+     }
+ 
+diff --git a/tests/Makefile b/tests/Makefile
+index 0379103..751290c 100644
+--- a/tests/Makefile
++++ b/tests/Makefile
+@@ -81,7 +81,6 @@ REGRESSION_TESTS := core/01_install.py \
+ 		    regress/issue10777.py \
+ 		    regress/issue10781.py \
+ 		    regress/issue11033.py \
+-		    regress/issue11033b.py \
+ 		    misc/filehash.py \
+ 		    misc/update_loses_autoinstalled_flag.py \
+ 		    misc/version_comparisons.py
+diff --git a/tests/regress/issue11033b.py b/tests/regress/issue11033b.py
+deleted file mode 100644
+index 85bb017..0000000
+--- a/tests/regress/issue11033b.py
++++ /dev/null
+@@ -1,44 +0,0 @@
+-#!/usr/bin/env python3
+-
+-import os
+-import opk, cfg, opkgcl
+-
+-opk.regress_init()
+-
+-o = opk.OpkGroup()
+-
+-# Package A creates a symlink
+-os.mkdir('lib64')
+-os.symlink('lib64', 'lib')
+-pkg = opk.Opk(Package='a')
+-pkg.write(data_files=['lib', 'lib64'])
+-o.addOpk(pkg)
+-
+-# Package B creates the same symlink
+-pkg = opk.Opk(Package='b')
+-pkg.write(data_files=['lib', 'lib64'])
+-o.addOpk(pkg)
+-os.remove('lib')
+-os.rmdir('lib64')
+-
+-# Package C creates a different symlink
+-os.mkdir('lib32')
+-os.symlink('lib32', 'lib')
+-pkg = opk.Opk(Package='c')
+-pkg.write(data_files=['lib', 'lib32'])
+-o.addOpk(pkg)
+-os.remove('lib')
+-os.rmdir('lib32')
+-
+-o.write_list()
+-
+-opkgcl.update()
+-
+-opkgcl.install('a')
+-opkgcl.install('b')
+-if not opkgcl.is_installed('b'):
+-    opk.fail("Package 'b' could not be installed")
+-
+-opkgcl.install('c')
+-if opkgcl.is_installed('c'):
+-    opk.fail("Package 'c' installed despite symlink conflict")
+-- 
+2.12.0.windows.1
+

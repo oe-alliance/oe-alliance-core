@@ -1,0 +1,73 @@
+diff -Nurw wget-1.18/src/main.c wget-1.18-patched/src/main.c
+--- wget-1.18/src/main.c	2016-06-06 17:36:04.000000000 +0200
++++ wget-1.18-patched/src/main.c	2016-09-06 16:12:05.502959500 +0200
+@@ -1085,8 +1085,6 @@
+ {
+   const char *wgetrc_title  = _("Wgetrc: ");
+   const char *locale_title  = _("Locale: ");
+-  const char *compile_title = _("Compile: ");
+-  const char *link_title    = _("Link: ");
+   char *env_wgetrc, *user_wgetrc;
+   int i;
+ 
+@@ -1140,18 +1138,6 @@
+     exit (WGET_EXIT_IO_FAIL);
+ #endif /* def ENABLE_NLS */
+ 
+-  if (compilation_string != NULL)
+-    if (format_and_print_line (compile_title,
+-                               compilation_string,
+-                               MAX_CHARS_PER_LINE) < 0)
+-      exit (WGET_EXIT_IO_FAIL);
+-
+-  if (link_string != NULL)
+-    if (format_and_print_line (link_title,
+-                               link_string,
+-                               MAX_CHARS_PER_LINE) < 0)
+-      exit (WGET_EXIT_IO_FAIL);
+-
+   if (printf ("\n") < 0)
+     exit (WGET_EXIT_IO_FAIL);
+ 
+diff -Nurw wget-1.18/src/Makefile.am wget-1.18-patched/src/Makefile.am
+--- wget-1.18/src/Makefile.am	2016-01-19 10:26:55.000000000 +0100
++++ wget-1.18-patched/src/Makefile.am	2016-09-06 16:13:37.654240900 +0200
+@@ -80,11 +80,6 @@
+ 	echo '' >> $@
+ 	echo '#include "version.h"' >> $@
+ 	echo 'const char *version_string = "@VERSION@";' >> $@
+-	echo 'const char *compilation_string = "'$(COMPILE)'";' \
+-	    | $(ESCAPEQUOTE) >> $@
+-	echo 'const char *link_string = "'$(CCLD) $(AM_CFLAGS) $(CFLAGS) \
+-	$(AM_LDFLAGS) $(LDFLAGS) $(LIBS) $(wget_LDADD)'";' \
+-	    | $(ESCAPEQUOTE) >> $@
+ 
+ css.c: $(srcdir)/css.l
+ 	$(LEX) $(LFLAGS) -o$@ $^
+diff -Nurw wget-1.18/src/Makefile.in wget-1.18-patched/src/Makefile.in
+--- wget-1.18/src/Makefile.in	2016-06-06 17:13:19.000000000 +0200
++++ wget-1.18-patched/src/Makefile.in	2016-09-06 16:13:28.767732600 +0200
+@@ -2278,11 +2278,6 @@
+ 	echo '' >> $@
+ 	echo '#include "version.h"' >> $@
+ 	echo 'const char *version_string = "@VERSION@";' >> $@
+-	echo 'const char *compilation_string = "'$(COMPILE)'";' \
+-	    | $(ESCAPEQUOTE) >> $@
+-	echo 'const char *link_string = "'$(CCLD) $(AM_CFLAGS) $(CFLAGS) \
+-	$(AM_LDFLAGS) $(LDFLAGS) $(LIBS) $(wget_LDADD)'";' \
+-	    | $(ESCAPEQUOTE) >> $@
+ 
+ css.c: $(srcdir)/css.l
+ 	$(LEX) $(LFLAGS) -o$@ $^
+diff -Nurw wget-1.18/src/version.h wget-1.18-patched/src/version.h
+--- wget-1.18/src/version.h	2016-01-19 10:26:57.000000000 +0100
++++ wget-1.18-patched/src/version.h	2016-09-06 16:12:59.348049900 +0200
+@@ -29,8 +29,6 @@
+ 
+ /* Extern declarations for strings in version.c */
+ extern const char *version_string;
+-extern const char *compilation_string;
+-extern const char *link_string;
+ 
+ /* Extern declaration for string in build_info.c */
+ extern const char *compiled_features[];
