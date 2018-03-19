@@ -1,7 +1,44 @@
-diff -Nurw wget-1.18/src/main.c wget-1.18-patched/src/main.c
---- wget-1.18/src/main.c	2016-06-06 17:36:04.000000000 +0200
-+++ wget-1.18-patched/src/main.c	2016-09-06 16:12:05.502959500 +0200
-@@ -1085,8 +1085,6 @@
+diff --git a/src/Makefile.am b/src/Makefile.am
+index 23c4f46..5f3c9f0 100644
+--- a/src/Makefile.am
++++ b/src/Makefile.am
+@@ -84,15 +84,6 @@ version.c:  $(wget_SOURCES) ../lib/libgnu.a
+ 	echo '' >> $@
+ 	echo '#include "version.h"' >> $@
+ 	echo 'const char *version_string = "@VERSION@";' >> $@
+-	echo 'const char *compilation_string = "'$(COMPILE)'";' \
+-	    | sed -e "s,$(TOOLCHAIN_OPTIONS),,g" \
+-	          -e "s,$(DEBUG_PREFIX_MAP),,g" \
+-	    | $(ESCAPEQUOTE) >> $@
+-	echo 'const char *link_string = "'$(CCLD) $(AM_CFLAGS) $(CFLAGS) \
+-	$(AM_LDFLAGS) $(LDFLAGS) $(LIBS) $(wget_LDADD)'";' \
+-	    | sed -e "s,$(TOOLCHAIN_OPTIONS),,g" \
+-	          -e "s,$(DEBUG_PREFIX_MAP),,g" \
+-	    | $(ESCAPEQUOTE) >> $@
+ 
+ css.c: $(srcdir)/css.l
+ 	$(LEX) $(LFLAGS) -o$@ $^
+diff --git a/src/Makefile.in b/src/Makefile.in
+index d7a66b7..ef1a002 100644
+--- a/src/Makefile.in
++++ b/src/Makefile.in
+@@ -2398,11 +2398,6 @@ version.c:  $(wget_SOURCES) ../lib/libgnu.a
+ 	echo '' >> $@
+ 	echo '#include "version.h"' >> $@
+ 	echo 'const char *version_string = "@VERSION@";' >> $@
+-	echo 'const char *compilation_string = "'$(COMPILE)'";' \
+-	    | $(ESCAPEQUOTE) >> $@
+-	echo 'const char *link_string = "'$(CCLD) $(AM_CFLAGS) $(CFLAGS) \
+-	$(AM_LDFLAGS) $(LDFLAGS) $(LIBS) $(wget_LDADD)'";' \
+-	    | $(ESCAPEQUOTE) >> $@
+ 
+ css.c: $(srcdir)/css.l
+ 	$(LEX) $(LFLAGS) -o$@ $^
+diff --git a/src/main.c b/src/main.c
+index d19437e..9b154f3 100644
+--- a/src/main.c
++++ b/src/main.c
+@@ -1222,8 +1222,6 @@ print_version (void)
  {
    const char *wgetrc_title  = _("Wgetrc: ");
    const char *locale_title  = _("Locale: ");
@@ -10,7 +47,7 @@ diff -Nurw wget-1.18/src/main.c wget-1.18-patched/src/main.c
    char *env_wgetrc, *user_wgetrc;
    int i;
  
-@@ -1140,18 +1138,6 @@
+@@ -1277,18 +1275,6 @@ print_version (void)
      exit (WGET_EXIT_IO_FAIL);
  #endif /* def ENABLE_NLS */
  
@@ -29,40 +66,11 @@ diff -Nurw wget-1.18/src/main.c wget-1.18-patched/src/main.c
    if (printf ("\n") < 0)
      exit (WGET_EXIT_IO_FAIL);
  
-diff -Nurw wget-1.18/src/Makefile.am wget-1.18-patched/src/Makefile.am
---- wget-1.18/src/Makefile.am	2016-01-19 10:26:55.000000000 +0100
-+++ wget-1.18-patched/src/Makefile.am	2016-09-06 16:13:37.654240900 +0200
-@@ -80,11 +80,6 @@
- 	echo '' >> $@
- 	echo '#include "version.h"' >> $@
- 	echo 'const char *version_string = "@VERSION@";' >> $@
--	echo 'const char *compilation_string = "'$(COMPILE)'";' \
--	    | $(ESCAPEQUOTE) >> $@
--	echo 'const char *link_string = "'$(CCLD) $(AM_CFLAGS) $(CFLAGS) \
--	$(AM_LDFLAGS) $(LDFLAGS) $(LIBS) $(wget_LDADD)'";' \
--	    | $(ESCAPEQUOTE) >> $@
- 
- css.c: $(srcdir)/css.l
- 	$(LEX) $(LFLAGS) -o$@ $^
-diff -Nurw wget-1.18/src/Makefile.in wget-1.18-patched/src/Makefile.in
---- wget-1.18/src/Makefile.in	2016-06-06 17:13:19.000000000 +0200
-+++ wget-1.18-patched/src/Makefile.in	2016-09-06 16:13:28.767732600 +0200
-@@ -2278,11 +2278,6 @@
- 	echo '' >> $@
- 	echo '#include "version.h"' >> $@
- 	echo 'const char *version_string = "@VERSION@";' >> $@
--	echo 'const char *compilation_string = "'$(COMPILE)'";' \
--	    | $(ESCAPEQUOTE) >> $@
--	echo 'const char *link_string = "'$(CCLD) $(AM_CFLAGS) $(CFLAGS) \
--	$(AM_LDFLAGS) $(LDFLAGS) $(LIBS) $(wget_LDADD)'";' \
--	    | $(ESCAPEQUOTE) >> $@
- 
- css.c: $(srcdir)/css.l
- 	$(LEX) $(LFLAGS) -o$@ $^
-diff -Nurw wget-1.18/src/version.h wget-1.18-patched/src/version.h
---- wget-1.18/src/version.h	2016-01-19 10:26:57.000000000 +0100
-+++ wget-1.18-patched/src/version.h	2016-09-06 16:12:59.348049900 +0200
-@@ -29,8 +29,6 @@
+diff --git a/src/version.h b/src/version.h
+index aeae086..7e10850 100644
+--- a/src/version.h
++++ b/src/version.h
+@@ -29,8 +29,6 @@ as that of the covered work.  */
  
  /* Extern declarations for strings in version.c */
  extern const char *version_string;
