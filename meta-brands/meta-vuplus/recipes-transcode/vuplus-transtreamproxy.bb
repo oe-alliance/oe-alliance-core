@@ -9,7 +9,7 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"
-PR = "r17"
+PR = "r18"
 
 PROVIDES += "virtual/transtreamproxy"
 RPROVIDES_${PN} += "virtual/transtreamproxy"
@@ -37,9 +37,8 @@ do_install() {
 }
 
 pkg_prerm_${PN}() {
-#!/bin/sh
-grep -vE '^#*\s*8002' $D/etc/inetd.conf > $D/tmp/inetd.tmp
-mv $D/tmp/inetd.tmp $D/etc/inetd.conf
+grep -vE '^#*\s*8002' $D/etc/inetd.conf > $D/var/volatile/tmp/inetd.tmp
+mv $D/var/volatile/tmp/inetd.tmp $D/etc/inetd.conf
 
 if [ -z "$D" -a -f "/etc/init.d/inetd.busybox" ]; then
 	/etc/init.d/inetd.busybox restart
@@ -47,9 +46,8 @@ fi
 }
 
 pkg_preinst_${PN}() {
-#!/bin/sh
-grep -vE '^#*\s*8002' $D/etc/inetd.conf > $D/tmp/inetd.tmp
-mv $D/tmp/inetd.tmp $D/etc/inetd.conf
+grep -vE '^#*\s*8002' $D/etc/inetd.conf > $D/var/volatile/tmp/inetd.tmp
+mv $D/var/volatile/tmp/inetd.tmp $D/etc/inetd.conf
 
 if [ -z "$D" -a -f "/etc/init.d/inetd.busybox" ]; then
 	/etc/init.d/inetd.busybox restart
@@ -57,7 +55,6 @@ fi
 }
 
 pkg_postinst_${PN}() {
-#!/bin/sh
 if grep -qE "^#*\s*8003" $D/etc/inetd.conf; then
 	sed -i "s#^\(\#*\s*8003\)#8002\t\tstream\ttcp6\tnowait\troot\t/usr/bin/transtreamproxy\ttranstreamproxy\n\1#" $D/etc/inetd.conf
 else
