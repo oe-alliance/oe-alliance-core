@@ -6,9 +6,9 @@ require conf/license/license-gplv2.inc
 inherit gitpkgv allarch
 
 SRCREV = "${AUTOREV}"
-PV = "3.5+git${SRCPV}"
-PKGV = "3.5+git${GITPKGV}"
-VER="3.5"
+PV = "3.6+git${SRCPV}"
+PKGV = "3.6+git${GITPKGV}"
+VER="3.6"
 
 RDEPENDS_${PN} = "python-imaging python-subprocess python-requests python-lxml enigma2-plugin-systemplugins-mphelp"
 
