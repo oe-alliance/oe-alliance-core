@@ -23,7 +23,9 @@ do_install() {
 
 pkg_preinst_${PN}_prepend() {
 #!/bin/sh
-chmod -x $D/etc/init.d/vuplus-shutdown
+if [ -z "$D" ]; then
+    chmod -x $D/etc/init.d/vuplus-shutdown
+fi
 }
 
 pkg_postinst_${PN}_append() {

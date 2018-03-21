@@ -54,16 +54,18 @@ do_install_append() {
 FILESEXTRAPATHS_prepend := "${THISDIR}/${P}:"
 
 pkg_postinst_${PN}_append () {
-	update-alternatives --install /bin/editor editor /bin/vi.sh 50
+    update-alternatives --install /bin/editor editor /bin/vi.sh 50
 }
 
 pkg_postrm_${PN}_append () {
-	update-alternatives --remove editor /bin/vi.sh
+    update-alternatives --remove editor /bin/vi.sh
 }
 
 pkg_preinst_${PN}-telnetd_prepend () {
-if [ -e $D/etc/inetd.conf ]; then
-	grep -vE '^#*\s*(23|telnet)' $D/etc/inetd.conf > $D/tmp/inetd.tmp
-	mv $D/tmp/inetd.tmp $D/etc/inetd.conf
+if [ -z "$D" ]; then
+    if [ -e $D/etc/inetd.conf ]; then
+        grep -vE '^#*\s*(23|telnet)' $D/etc/inetd.conf > $D/tmp/inetd.tmp
+        mv $D/tmp/inetd.tmp $D/etc/inetd.conf
+    fi
 fi
 }
