@@ -225,6 +225,8 @@ PKGV = "${IMAGE_VERSION}+git${GITPKGV}"
 
 SRC_URI = "${ENIGMA2_URI}"
 
+INSANE_SKIP_${PN} = "dev-deps"
+
 SRC_URI_append_azboxhd = " \
     file://azboxe2.patch \
     file://lcdchar.patch \
