@@ -63,4 +63,4 @@ do_package_qa() {
 
 FILES_${PN} += "${libdir}/*"
 
-INSANE_SKIP_${PN} = "already-stripped dev-so ldflags"
+INSANE_SKIP_${PN} = "already-stripped dev-so ldflags dev-deps"
