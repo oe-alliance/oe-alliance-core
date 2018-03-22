@@ -14,6 +14,7 @@ DEPENDS = " \
     swig-native \
     tuxtxt-enigma2 \
     ${@bb.utils.contains("MACHINE_FEATURES", "uianimation", "vuplus-libgles-${MACHINE} libvugles2" , "", d)} \
+    ${@bb.utils.contains("MACHINE_FEATURES", "hiaccel", "dinobot-libs-${MACHINE}" , "", d)} \
     "
 
 RDEPENDS_${PN} = " \
@@ -25,6 +26,7 @@ RDEPENDS_${PN} = " \
     hotplug-e2-helper \
     ${PYTHON_RDEPS} \
     ${@bb.utils.contains("MACHINE_FEATURES", "uianimation", "vuplus-libgles-${MACHINE} libvugles2" , "", d)} \
+    ${@bb.utils.contains("MACHINE_FEATURES", "hiaccel", "dinobot-libs-${MACHINE}" , "", d)} \
     oe-alliance-branding \
     "
 
@@ -222,6 +224,8 @@ PKGV = "${IMAGE_VERSION}+git${GITPKGV}"
 
 SRC_URI = "${ENIGMA2_URI}"
 
+INSANE_SKIP_${PN} = "dev-deps"
+
 SRC_URI_append_azboxhd = " \
     file://azboxe2.patch \
     file://lcdchar.patch \
@@ -313,6 +317,7 @@ EXTRA_OECONF = " \
     ${@bb.utils.contains("MACHINE_FEATURES", "7segment", "--with-7segment" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "uianimation", "--with-libvugles2" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "osdanimation", "--with-osdanimation" , "", d)} \
+    ${@bb.utils.contains("MACHINE_FEATURES", "hiaccel", "--with-libhiaccel" , "", d)} \
     "
 
 LDFLAGS_prepend = "${@bb.utils.contains('GST_VERSION', '1.0', ' -lxml2 ', '', d)}"
