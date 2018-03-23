@@ -12,7 +12,7 @@ PR = "r1"
 
 inherit lib_package
 
-SRC_URI = "http://source.mynonpublic.com/dinobot/${MACHINE}-libs-${SRCDATE}.tar.gz"
+SRC_URI = "http://source.mynonpublic.com/dinobot/${MACHINE}-libs-${SRCDATE}.zip"
 
 S = "${WORKDIR}/hilib"
 
@@ -55,9 +55,12 @@ do_install() {
 	ln -sf libchipid.so.0.0.0 libchipid.so 
 }
 
+INHIBIT_PACKAGE_STRIP = "1"
+INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
+
 do_package_qa() {
 }
 
 FILES_${PN} += "${libdir}/*"
 
-INSANE_SKIP_${PN} = "already-stripped dev-so"
+INSANE_SKIP_${PN} = "already-stripped dev-so ldflags dev-deps"
