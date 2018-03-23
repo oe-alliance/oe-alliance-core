@@ -137,6 +137,7 @@ MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS = "\
 MACHINE_EXTRA_RRECOMMENDS = " \
     gstreamer1.0-plugin-dvbmediasink \
     gstreamer1.0-libav \
+    ${@bb.utils.contains('MACHINE_FEATURES', 'hisil', 'enigma2-plugin-systemplugins-servicehisilicon' , '', d)} \
     "
 
 include conf/machine/include/autoload-filesystems.inc
