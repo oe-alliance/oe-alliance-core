@@ -1,0 +1,8 @@
+SRCDATE = "20180324"
+
+require airdigital-libs.inc
+
+SRC_URI[md5sum] = "6b9bf52b36e2cca88ec38e1315849827"
+SRC_URI[sha256sum] = "cabce990e91c414e21b8a056d25b79c190f9b6269fca85bd48423552f65c5a12"
+
+COMPATIBLE_MACHINE = "h9"
