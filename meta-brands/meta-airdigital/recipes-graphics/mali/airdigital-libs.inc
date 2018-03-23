@@ -5,9 +5,9 @@ LICENSE = "CLOSED"
 DEPENDS = "zlib libpng freetype curl libxml2 libjpeg-turbo harfbuzz"
 RDEPENDS_${PN} = "libbluray"
 
-SRC_URI = "http://source.mynonpublic.com/zgemma/${MACHINE}-libs-${SRCDATE}.zip"
+SRC_URI = "http://source.mynonpublic.com/zgemma/zgemma-libs-${MACHINE}-${SRCDATE}.zip"
 
-S = "${WORKDIR}"
+S = "${WORKDIR}/hisilicon"
 
 INHIBIT_PACKAGE_STRIP = "1"
 do_configure[noexec] = "1"
