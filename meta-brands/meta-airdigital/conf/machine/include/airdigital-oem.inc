@@ -136,7 +136,7 @@ MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS = "\
 
 MACHINE_EXTRA_RRECOMMENDS = " \
     gstreamer1.0-plugin-dvbmediasink \
-    gstreamer1.0-libav \
+    ${@bb.utils.contains('MACHINE', 'h9', '' , 'gstreamer1.0-libav ', d)} \
     "
 
 include conf/machine/include/autoload-filesystems.inc

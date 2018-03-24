@@ -5,7 +5,7 @@ LICENSE = "CLOSED"
 DEPENDS = "zlib libpng freetype curl libxml2 libjpeg-turbo harfbuzz"
 RDEPENDS_${PN} = "libbluray"
 
-SRC_URI = "http://source.mynonpublic.com/zgemma/${MACHINE}-libs-${SRCDATE}.zip"
+SRC_URI = "http://source.mynonpublic.com/zgemma/zgemma-libs-${MACHINE}-${SRCDATE}.zip"
 
 S = "${WORKDIR}"
 
@@ -15,7 +15,7 @@ do_compile[noexec] = "1"
 
 do_install() {
 	install -d ${D}${libdir}/hisilicon
-	install -m 0755 ${S}/*.so ${D}${libdir}/hisilicon
+	install -m 0755 ${S}/hisilicon/* ${D}${libdir}/hisilicon
 }
 
 do_package_qa() {

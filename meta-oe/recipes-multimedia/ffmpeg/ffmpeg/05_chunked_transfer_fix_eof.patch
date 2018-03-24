@@ -1,0 +1,16 @@
+diff -uNr ffmpeg-3.4.2/libavformat/http.c ffmpeg-3.4.2_chunked_transfer_fix_eof/libavformat/http.c
+--- ffmpeg-3.4.2/libavformat/http.c	2018-02-12 01:29:06.000000000 +0100
++++ ffmpeg-3.4.2_chunked_transfer_fix_eof/libavformat/http.c	2018-02-14 19:56:02.371892777 +0100
+@@ -1296,8 +1296,11 @@
+                    "Chunked encoding data size: %"PRIu64"'\n",
+                     s->chunksize);
+ 
+-            if (!s->chunksize)
++            if (!s->chunksize) {
++                /* we need to remember endof*/
++                s->chunksize = UINT64_MAX;
+                 return 0;
++            }
+             else if (s->chunksize == UINT64_MAX) {
+                 av_log(h, AV_LOG_ERROR, "Invalid chunk size %"PRIu64"\n",
+                        s->chunksize);
