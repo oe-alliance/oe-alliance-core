@@ -7,7 +7,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PV = "1.0"
-PR = "r02"
+PR = "r03"
 
 inherit packagegroup
 
@@ -42,5 +42,6 @@ RRECOMMENDS_${PN} = "\
     enigma2-plugin-opennfrskins-prime-nfrstyle \
     enigma2-plugin-opennfrskins-smoke-light-hd \
     enigma2-plugin-opennfrskins-sphere-fhd-4nfr \
+    enigma2-plugin-skins-anadol \
     enigma2-plugin-extensions-vmc \
 " 

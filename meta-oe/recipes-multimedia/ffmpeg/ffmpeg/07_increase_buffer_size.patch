@@ -14,8 +14,8 @@
       * Threshold to favor readahead over seek.
       * This is current internal only, do not use from outside.
       */
---- a/libavformat/aviobuf.c	2015-12-20 04:07:49.000000000 +0200
-+++ b/libavformat/aviobuf.c	2016-01-16 14:03:01.233037056 +0200
+--- a/libavformat/aviobuf.c	2018-02-16 10:06:44.742974662 +0100
++++ b/libavformat/aviobuf.c	2018-02-16 10:10:04.735765704 +0100
 @@ -33,7 +33,7 @@
  #include "url.h"
  #include <stdarg.h>
@@ -25,21 +25,21 @@
  
  /**
   * Do seeks within this distance ahead of the current buffer by skipping
-@@ -79,7 +79,6 @@
+@@ -88,7 +88,6 @@
                    int64_t (*seek)(void *opaque, int64_t offset, int whence))
  {
      s->buffer      = buffer;
 -    s->orig_buffer_size =
      s->buffer_size = buffer_size;
      s->buf_ptr     = buffer;
-     s->opaque      = opaque;
-@@ -464,16 +463,16 @@
+     s->buf_ptr_max = buffer;
+@@ -557,16 +556,16 @@
      }
  
      /* make buffer smaller in case it ended up large after probing */
 -    if (s->read_packet && s->orig_buffer_size && s->buffer_size > s->orig_buffer_size) {
 +    if (s->read_packet && s->buffer_size > max_buffer_size) {
-         if (dst == s->buffer) {
+         if (dst == s->buffer && s->buf_ptr != dst) {
 -            int ret = ffio_set_buf_size(s, s->orig_buffer_size);
 +            int ret = ffio_set_buf_size(s, max_buffer_size);
              if (ret < 0)
@@ -54,11 +54,11 @@
      }
  
      if (s->read_packet)
-@@ -845,7 +844,6 @@
+@@ -1009,7 +1008,6 @@
  
      av_free(s->buffer);
      s->buffer = buffer;
 -    s->orig_buffer_size =
      s->buffer_size = buf_size;
-     s->buf_ptr = buffer;
+     s->buf_ptr = s->buf_ptr_max = buffer;
      url_resetbuf(s, s->write_flag ? AVIO_FLAG_WRITE : AVIO_FLAG_READ);
