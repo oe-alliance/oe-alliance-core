@@ -1,0 +1,118 @@
+diff -uNr ffmpeg-3.4.2/configure ffmpeg-3.4.2_allow_to_choose_rtmp_impl_at_runtime/configure
+--- ffmpeg-3.4.2/configure	2018-02-12 01:29:18.000000000 +0100
++++ ffmpeg-3.4.2_allow_to_choose_rtmp_impl_at_runtime/configure	2018-02-14 21:07:28.278640757 +0100
+@@ -3128,10 +3128,8 @@
+ # protocols
+ async_protocol_deps="threads"
+ bluray_protocol_deps="libbluray"
+-ffrtmpcrypt_protocol_conflict="librtmp_protocol"
+ ffrtmpcrypt_protocol_deps_any="gcrypt gmp openssl"
+ ffrtmpcrypt_protocol_select="tcp_protocol"
+-ffrtmphttp_protocol_conflict="librtmp_protocol"
+ ffrtmphttp_protocol_select="http_protocol"
+ ftp_protocol_select="tcp_protocol"
+ gopher_protocol_select="network"
+@@ -3148,14 +3146,12 @@
+ libssh_protocol_deps="libssh"
+ mmsh_protocol_select="http_protocol"
+ mmst_protocol_select="network"
+-rtmp_protocol_conflict="librtmp_protocol"
+-rtmp_protocol_select="tcp_protocol"
+-rtmpe_protocol_select="ffrtmpcrypt_protocol"
+-rtmps_protocol_conflict="librtmp_protocol"
+-rtmps_protocol_select="tls_protocol"
+-rtmpt_protocol_select="ffrtmphttp_protocol"
+-rtmpte_protocol_select="ffrtmpcrypt_protocol ffrtmphttp_protocol"
+-rtmpts_protocol_select="ffrtmphttp_protocol https_protocol"
++ffrtmp_protocol_select="tcp_protocol"
++ffrtmpe_protocol_select="ffrtmpcrypt_protocol"
++ffrtmps_protocol_select="tls_protocol"
++ffrtmpt_protocol_select="ffrtmphttp_protocol"
++ffrtmpte_protocol_select="ffrtmpcrypt_protocol ffrtmphttp_protocol"
++ffrtmpts_protocol_select="ffrtmphttp_protocol https_protocol"
+ rtp_protocol_select="udp_protocol"
+ sctp_protocol_deps="struct_sctp_event_subscribe struct_msghdr_msg_flags"
+ sctp_protocol_select="network"
+diff -uNr ffmpeg-3.4.2/libavformat/Makefile ffmpeg-3.4.2_allow_to_choose_rtmp_impl_at_runtime/libavformat/Makefile
+--- ffmpeg-3.4.2/libavformat/Makefile	2018-02-12 01:29:06.000000000 +0100
++++ ffmpeg-3.4.2_allow_to_choose_rtmp_impl_at_runtime/libavformat/Makefile	2018-02-14 20:10:19.763205912 +0100
+@@ -575,12 +575,12 @@
+ OBJS-$(CONFIG_MMST_PROTOCOL)             += mmst.o mms.o asf.o
+ OBJS-$(CONFIG_PIPE_PROTOCOL)             += file.o
+ OBJS-$(CONFIG_PROMPEG_PROTOCOL)          += prompeg.o
+-OBJS-$(CONFIG_RTMP_PROTOCOL)             += rtmpproto.o rtmppkt.o
+-OBJS-$(CONFIG_RTMPE_PROTOCOL)            += rtmpproto.o rtmppkt.o
+-OBJS-$(CONFIG_RTMPS_PROTOCOL)            += rtmpproto.o rtmppkt.o
+-OBJS-$(CONFIG_RTMPT_PROTOCOL)            += rtmpproto.o rtmppkt.o
+-OBJS-$(CONFIG_RTMPTE_PROTOCOL)           += rtmpproto.o rtmppkt.o
+-OBJS-$(CONFIG_RTMPTS_PROTOCOL)           += rtmpproto.o rtmppkt.o
++OBJS-$(CONFIG_FFRTMP_PROTOCOL)           += rtmpproto.o rtmppkt.o
++OBJS-$(CONFIG_FFRTMPE_PROTOCOL)          += rtmpproto.o rtmppkt.o
++OBJS-$(CONFIG_FFRTMPS_PROTOCOL)          += rtmpproto.o rtmppkt.o
++OBJS-$(CONFIG_FFRTMPT_PROTOCOL)          += rtmpproto.o rtmppkt.o
++OBJS-$(CONFIG_FFRTMPTE_PROTOCOL)         += rtmpproto.o rtmppkt.o
++OBJS-$(CONFIG_FFRTMPTS_PROTOCOL)         += rtmpproto.o rtmppkt.o
+ OBJS-$(CONFIG_RTP_PROTOCOL)              += rtpproto.o
+ OBJS-$(CONFIG_SCTP_PROTOCOL)             += sctp.o
+ OBJS-$(CONFIG_SRTP_PROTOCOL)             += srtpproto.o srtp.o
+diff -uNr ffmpeg-3.4.2/libavformat/protocols.c ffmpeg-3.4.2_allow_to_choose_rtmp_impl_at_runtime/libavformat/protocols.c
+--- ffmpeg-3.4.2/libavformat/protocols.c	2018-02-12 01:29:06.000000000 +0100
++++ ffmpeg-3.4.2_allow_to_choose_rtmp_impl_at_runtime/libavformat/protocols.c	2018-02-14 20:12:01.235570344 +0100
+@@ -44,12 +44,12 @@
+ extern const URLProtocol ff_md5_protocol;
+ extern const URLProtocol ff_pipe_protocol;
+ extern const URLProtocol ff_prompeg_protocol;
+-extern const URLProtocol ff_rtmp_protocol;
+-extern const URLProtocol ff_rtmpe_protocol;
+-extern const URLProtocol ff_rtmps_protocol;
+-extern const URLProtocol ff_rtmpt_protocol;
+-extern const URLProtocol ff_rtmpte_protocol;
+-extern const URLProtocol ff_rtmpts_protocol;
++extern const URLProtocol ff_ffrtmp_protocol;
++extern const URLProtocol ff_ffrtmpe_protocol;
++extern const URLProtocol ff_ffrtmps_protocol;
++extern const URLProtocol ff_ffrtmpt_protocol;
++extern const URLProtocol ff_ffrtmpte_protocol;
++extern const URLProtocol ff_ffrtmpts_protocol;
+ extern const URLProtocol ff_rtp_protocol;
+ extern const URLProtocol ff_sctp_protocol;
+ extern const URLProtocol ff_srtp_protocol;
+diff -uNr ffmpeg-3.4.2/libavformat/rtmpproto.c ffmpeg-3.4.2_allow_to_choose_rtmp_impl_at_runtime/libavformat/rtmpproto.c
+--- ffmpeg-3.4.2/libavformat/rtmpproto.c	2018-02-12 01:29:06.000000000 +0100
++++ ffmpeg-3.4.2_allow_to_choose_rtmp_impl_at_runtime/libavformat/rtmpproto.c	2018-02-14 20:21:41.701280041 +0100
+@@ -2626,7 +2626,7 @@
+ static int rtmp_open(URLContext *s, const char *uri, int flags, AVDictionary **opts)
+ {
+     RTMPContext *rt = s->priv_data;
+-    char proto[8], hostname[256], path[1024], auth[100], *fname;
++    char *proto, tmpProto[10], hostname[256], path[1024], auth[100], *fname;
+     char *old_app, *qmark, *n, fname_buffer[1024];
+     uint8_t buf[2048];
+     int port;
+@@ -2637,7 +2637,9 @@
+ 
+     rt->is_input = !(flags & AVIO_FLAG_WRITE);
+ 
+-    av_url_split(proto, sizeof(proto), auth, sizeof(auth),
++    memset(tmpProto, 0, sizeof(tmpProto)); 
++    proto = &tmpProto[2];
++    av_url_split(tmpProto, sizeof(tmpProto), auth, sizeof(auth),
+                  hostname, sizeof(hostname), &port,
+                  path, sizeof(path), s->filename);
+ 
+@@ -3171,9 +3173,9 @@
+ };
+ 
+ 
+-RTMP_PROTOCOL(rtmp)
+-RTMP_PROTOCOL(rtmpe)
+-RTMP_PROTOCOL(rtmps)
+-RTMP_PROTOCOL(rtmpt)
+-RTMP_PROTOCOL(rtmpte)
+-RTMP_PROTOCOL(rtmpts)
++RTMP_PROTOCOL(ffrtmp)
++RTMP_PROTOCOL(ffrtmpe)
++RTMP_PROTOCOL(ffrtmps)
++RTMP_PROTOCOL(ffrtmpt)
++RTMP_PROTOCOL(ffrtmpte)
++RTMP_PROTOCOL(ffrtmpts)

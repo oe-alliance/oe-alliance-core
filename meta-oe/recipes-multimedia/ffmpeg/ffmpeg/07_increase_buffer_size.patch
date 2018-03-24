@@ -1,34 +1,21 @@
-From f669f70eac7a511597ad5091a4ff081491762865 Mon Sep 17 00:00:00 2001
-From: captain <openatv@gmail.com>
-Date: Wed, 18 May 2016 06:37:07 +0200
-
----
- libavformat/avio.h    |  7 -------
- libavformat/aviobuf.c | 12 +++++-------
- 2 files changed, 5 insertions(+), 14 deletions(-)
-
-diff --git a/libavformat/avio.h b/libavformat/avio.h
-index 6f4ed84..a94595b 100644
---- a/libavformat/avio.h
-+++ b/libavformat/avio.h
-@@ -281,13 +281,6 @@ typedef struct AVIOContext {
-      */
+--- a/libavformat/avio.h	2016-01-16 13:54:30.822506061 +0200
++++ b/libavformat/avio.h	2016-01-16 13:56:34.175117736 +0200
+@@ -191,13 +191,6 @@
      int writeout_count;
  
--    /**
+     /**
 -     * Original buffer size
 -     * used internally after probing and ensure seekback to reset the buffer size
 -     * This field is internal to libavformat and access from outside is not allowed.
 -     */
 -    int orig_buffer_size;
 -
-     /**
+-    /**
       * Threshold to favor readahead over seek.
       * This is current internal only, do not use from outside.
-diff --git a/libavformat/aviobuf.c b/libavformat/aviobuf.c
-index ef6a0d4..6e898f5 100644
---- a/libavformat/aviobuf.c
-+++ b/libavformat/aviobuf.c
+      */
+--- a/libavformat/aviobuf.c	2018-02-16 10:06:44.742974662 +0100
++++ b/libavformat/aviobuf.c	2018-02-16 10:10:04.735765704 +0100
 @@ -33,7 +33,7 @@
  #include "url.h"
  #include <stdarg.h>
@@ -38,15 +25,15 @@ index ef6a0d4..6e898f5 100644
  
  /**
   * Do seeks within this distance ahead of the current buffer by skipping
-@@ -88,7 +88,6 @@ int ffio_init_context(AVIOContext *s,
+@@ -88,7 +88,6 @@
                    int64_t (*seek)(void *opaque, int64_t offset, int whence))
  {
      s->buffer      = buffer;
 -    s->orig_buffer_size =
      s->buffer_size = buffer_size;
      s->buf_ptr     = buffer;
-     s->opaque      = opaque;
-@@ -534,16 +533,16 @@ static void fill_buffer(AVIOContext *s)
+     s->buf_ptr_max = buffer;
+@@ -557,16 +556,16 @@
      }
  
      /* make buffer smaller in case it ended up large after probing */
@@ -67,7 +54,7 @@ index ef6a0d4..6e898f5 100644
      }
  
      if (s->read_packet)
-@@ -985,7 +984,6 @@ int ffio_set_buf_size(AVIOContext *s, int buf_size)
+@@ -1009,7 +1008,6 @@
  
      av_free(s->buffer);
      s->buffer = buffer;

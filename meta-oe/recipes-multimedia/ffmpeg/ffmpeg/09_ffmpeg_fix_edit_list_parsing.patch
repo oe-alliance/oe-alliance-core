@@ -1,20 +1,9 @@
-From cab76d88c6887eaac4ac3da1c2e528feb528c3db Mon Sep 17 00:00:00 2001
-From: kueken <ohnemailadresse@arcor.de>
-Date: Thu, 19 Jan 2017 13:16:33 +0100
-Subject: [PATCH] Update ffmpeg
-
 Taapat: disable log to fix freezing on edit list parsing intruduced in:
 http://git.videolan.org/gitweb.cgi/ffmpeg.git/?p=ffmpeg.git;a=commitdiff;h=ca6cae73db207f17a0d5507609de12842d8f0ca3
 
----
- libavformat/mov.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/libavformat/mov.c b/libavformat/mov.c
-index 036693a..781100c 100644
---- a/libavformat/mov.c
-+++ b/libavformat/mov.c
-@@ -3177,8 +3177,10 @@ static void mov_fix_index(MOVContext *mov, AVStream *st)
+--- a/libavformat/mov.c	2016-11-14 20:09:13.779085246 +0200
++++ b/libavformat/mov.c	2016-11-14 20:09:30.715351822 +0200
+@@ -3067,8 +3067,10 @@
              curr_cts = current->timestamp + msc->dts_shift;
  
              if (ctts_data_old && ctts_index_old < ctts_count_old) {

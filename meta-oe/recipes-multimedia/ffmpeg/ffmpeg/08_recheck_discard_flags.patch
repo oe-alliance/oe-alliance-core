@@ -1,16 +1,6 @@
-From 30d3f86808a2466e04f6202c52fb36a7359d5a85 Mon Sep 17 00:00:00 2001
-From: captain <openatv@gmail.com>
-Date: Wed, 18 May 2016 06:37:07 +0200
-
----
- libavformat/hls.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/libavformat/hls.c b/libavformat/hls.c
-index 73d3ee4..f31a609 100644
---- a/libavformat/hls.c
-+++ b/libavformat/hls.c
-@@ -1919,8 +1919,10 @@ static int hls_read_packet(AVFormatContext *s, AVPacket *pkt)
+--- a/libavformat/hls.c	2015-10-15 22:48:16.312638807 +0300
++++ b/libavformat/hls.c	2015-10-15 22:48:30.812710713 +0300
+@@ -1834,8 +1834,10 @@
      HLSContext *c = s->priv_data;
      int ret, i, minplaylist = -1;
  
