@@ -3,7 +3,8 @@ require recipes-kernel/linux-libc-headers/linux-libc-headers.inc
 SRC_URI[md5sum] = "f9c782399f1609c67bb78405a8d6e021"
 SRC_URI[sha256sum] = "723106c298c5ba8733bb51ecc106b05e332a18490edc5f61cc6e57dbb36dcc46"
 
-SRC_URI += "file://linuxdvb.patch \
+SRC_URI += "\
+    file://linuxdvb.patch \
     file://ppp.patch \
     file://types.patch \
 "
@@ -21,5 +22,6 @@ do_install_append_sh4() {
     install -m 644 ${WORKDIR}/stm_ioctls.h ${D}/${includedir}/linux/dvb
     install -m 644 ${WORKDIR}/stmfb.h ${D}/${includedir}/linux
     install -m 644 ${WORKDIR}/bpamem.h ${D}/${includedir}
+    install -m 644 ${S}/include/linux/usb/video.h ${D}${includedir}/linux/usb/video.h
 }
 
