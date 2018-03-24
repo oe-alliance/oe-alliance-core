@@ -1,42 +1,68 @@
-diff -uNr ffmpeg-3.3_orig/configure ffmpeg-3.3_dash_demux/configure
---- ffmpeg-3.3_orig/configure	2016-12-06 00:28:58.000000000 +0100
-+++ ffmpeg-3.3_dash_demux/configure	2017-10-22 14:30:41.170550486 +0200
-@@ -294,6 +294,7 @@
+From ed9e62b6cb09fcb67dd8b36f639de4c66facf969 Mon Sep 17 00:00:00 2001
+From: kueken <ohnemailadresse@arcor.de>
+Date: Sun, 25 Jun 2017 00:11:00 +0200
+
+---
+ configure                |    4 +
+ libavformat/Makefile     |    1 +
+ libavformat/allformats.c |    2 +-
+ libavformat/dashdec.c    | 2065 ++++++++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 2071 insertions(+), 1 deletion(-)
+ create mode 100644 libavformat/dashdec.c
+
+diff --git a/configure b/configure
+index 1041088..2942c8f 100755
+--- a/configure
++++ b/configure
+@@ -292,6 +292,7 @@ External library support:
+   --disable-securetransport disable Secure Transport, needed for TLS support
                             on OSX if openssl and gnutls are not used [autodetect]
-   --enable-x11grab         enable X11 grabbing (legacy) [no]
    --disable-xlib           disable xlib [autodetect]
 +  --disable-xml2           disable XML parsing using the C library libxml2 [autodetect]
    --disable-zlib           disable zlib [autodetect]
  
    The following libraries provide various hardware acceleration features:
-@@ -1557,6 +1558,7 @@
-     videotoolbox
-     x11grab
+@@ -1497,6 +1498,7 @@ EXTERNAL_AUTODETECT_LIBRARY_LIST="
+     sdl2
+     securetransport
      xlib
 +    xml2
      zlib
  "
  
-@@ -2853,6 +2855,7 @@
- avisynth_demuxer_select="riffdec"
+@@ -2916,6 +2918,7 @@ avi_muxer_select="riffenc"
  caf_demuxer_select="iso_media riffdec"
+ caf_muxer_select="iso_media"
  dash_muxer_select="mp4_muxer"
 +dash_demuxer_select="xml2"
  dirac_demuxer_select="dirac_parser"
  dts_demuxer_select="dca_parser"
  dtshd_demuxer_select="dca_parser"
-@@ -5637,6 +5640,7 @@
+@@ -5731,6 +5734,7 @@ enabled pthreads &&
  disabled  zlib || check_lib  zlib.h      zlibVersion    -lz    || disable  zlib
  disabled bzlib || check_lib bzlib.h BZ2_bzlibVersion    -lbz2  || disable bzlib
  disabled  lzma || check_lib  lzma.h lzma_version_number -llzma || disable lzma
 +disabled  xml2 || check_lib libxml/xmlversion.h xmlCheckVersion -lxml2 || disable xml2
-
+ 
  check_lib math.h sin -lm && LIBM="-lm"
  disabled crystalhd || check_lib "stdint.h libcrystalhd/libcrystalhd_if.h" DtsCrystalHDVersion -lcrystalhd || disable crystalhd
-diff -uNr ffmpeg-3.3_orig/libavformat/allformats.c ffmpeg-3.3_dash_demux/libavformat/allformats.c
---- ffmpeg-3.3_orig/libavformat/allformats.c	2016-12-06 00:28:54.000000000 +0100
-+++ ffmpeg-3.3_dash_demux/libavformat/allformats.c	2017-10-22 14:30:41.170550486 +0200
-@@ -100,7 +100,7 @@
+diff --git a/libavformat/Makefile b/libavformat/Makefile
+index f56ef16..d77ffaa 100644
+--- a/libavformat/Makefile
++++ b/libavformat/Makefile
+@@ -134,6 +134,7 @@ OBJS-$(CONFIG_CRC_MUXER)                 += crcenc.o
+ OBJS-$(CONFIG_DATA_DEMUXER)              += rawdec.o
+ OBJS-$(CONFIG_DATA_MUXER)                += rawenc.o
+ OBJS-$(CONFIG_DASH_MUXER)                += dashenc.o
++OBJS-$(CONFIG_DASH_DEMUXER)              += dashdec.o
+ OBJS-$(CONFIG_DAUD_DEMUXER)              += dauddec.o
+ OBJS-$(CONFIG_DAUD_MUXER)                += daudenc.o
+ OBJS-$(CONFIG_DCSTR_DEMUXER)             += dcstr.o
+diff --git a/libavformat/allformats.c b/libavformat/allformats.c
+index 3e014c6..d846c09 100644
+--- a/libavformat/allformats.c
++++ b/libavformat/allformats.c
+@@ -96,7 +96,7 @@ static void register_all(void)
      REGISTER_DEMUXER (CINE,             cine);
      REGISTER_DEMUXER (CONCAT,           concat);
      REGISTER_MUXER   (CRC,              crc);
@@ -45,9 +71,11 @@ diff -uNr ffmpeg-3.3_orig/libavformat/allformats.c ffmpeg-3.3_dash_demux/libavfo
      REGISTER_MUXDEMUX(DATA,             data);
      REGISTER_MUXDEMUX(DAUD,             daud);
      REGISTER_DEMUXER (DCSTR,            dcstr);
-diff -uNr ffmpeg-3.3_orig/libavformat/dashdec.c ffmpeg-3.3_dash_demux/libavformat/dashdec.c
---- ffmpeg-3.3_orig/libavformat/dashdec.c	1970-01-01 01:00:00.000000000 +0100
-+++ ffmpeg-3.3_dash_demux/libavformat/dashdec.c	2017-10-22 16:09:40.837356820 +0200
+diff --git a/libavformat/dashdec.c b/libavformat/dashdec.c
+new file mode 100644
+index 0000000..b1edca0
+--- /dev/null
++++ b/libavformat/dashdec.c
 @@ -0,0 +1,2065 @@
 +/*
 + * Dynamic Adaptive Streaming over HTTP demux
@@ -2114,14 +2142,3 @@ diff -uNr ffmpeg-3.3_orig/libavformat/dashdec.c ffmpeg-3.3_dash_demux/libavforma
 +    .read_seek      = dash_read_seek,
 +    .flags          = AVFMT_NO_BYTE_SEEK,
 +};
-diff -uNr ffmpeg-3.3_orig/libavformat/Makefile ffmpeg-3.3_dash_demux/libavformat/Makefile
---- ffmpeg-3.3_orig/libavformat/Makefile	2016-12-06 00:28:54.000000000 +0100
-+++ ffmpeg-3.3_dash_demux/libavformat/Makefile	2017-10-22 14:30:41.170550487 +0200
-@@ -134,6 +134,7 @@
- OBJS-$(CONFIG_DATA_DEMUXER)              += rawdec.o
- OBJS-$(CONFIG_DATA_MUXER)                += rawdec.o
- OBJS-$(CONFIG_DASH_MUXER)                += dashenc.o
-+OBJS-$(CONFIG_DASH_DEMUXER)              += dashdec.o
- OBJS-$(CONFIG_DAUD_DEMUXER)              += dauddec.o
- OBJS-$(CONFIG_DAUD_MUXER)                += daudenc.o
- OBJS-$(CONFIG_DCSTR_DEMUXER)             += dcstr.o

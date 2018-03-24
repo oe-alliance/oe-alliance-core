@@ -1,9 +1,20 @@
+From 7ac080a47fe9af0a6ed8a5650746dbe6b6c8420d Mon Sep 17 00:00:00 2001
+From: kueken <ohnemailadresse@arcor.de>
+Date: Thu, 19 Jan 2017 13:16:33 +0100
+Subject: [PATCH] Update ffmpeg
+
 Fix VIDEO_GET_PTS error in libeplayer3 intruduced in:
 http://git.videolan.org/gitweb.cgi/ffmpeg.git/?p=ffmpeg.git;a=commitdiff;h=14f7a3d55a43c1082ee1186a1990a431c641052d
 
---- a/libavformat/mpegts.c	2016-06-27 02:54:30.000000000 +0300
-+++ b/libavformat/mpegts.c	2016-08-20 01:39:36.668873256 +0300
-@@ -904,10 +904,10 @@
+---
+ libavformat/mpegts.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/libavformat/mpegts.c b/libavformat/mpegts.c
+index 3eff152..51cc980 100644
+--- a/libavformat/mpegts.c
++++ b/libavformat/mpegts.c
+@@ -917,10 +917,10 @@ static int new_pes_packet(PESContext *pes, AVPacket *pkt)
      pes->buffer = NULL;
      reset_pes_packet_state(pes);
  

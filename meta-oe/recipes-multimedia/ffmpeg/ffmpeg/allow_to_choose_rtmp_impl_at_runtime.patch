@@ -1,7 +1,19 @@
-diff -uNr ffmpeg-3.2.2/configure ffmpeg-3.2.2_both_rtmp/configure
---- ffmpeg-3.2.2/configure    2016-10-01 03:12:41.000000000 +0200
-+++ ffmpeg-3.2.2_both_rtmp/configure    2016-10-13 10:55:16.843636047 +0200
-@@ -3036,10 +3036,8 @@
+From 65de63cae1813a981965e2fb293dcf0436a5b63f Mon Sep 17 00:00:00 2001
+From: kueken <ohnemailadresse@arcor.de>
+Date: Sun, 25 Jun 2017 00:11:00 +0200
+
+---
+ configure               | 16 ++++++----------
+ libavformat/Makefile    | 12 ++++++------
+ libavformat/protocols.c | 12 ++++++------
+ libavformat/rtmpproto.c | 16 ++++++++--------
+ 4 files changed, 26 insertions(+), 30 deletions(-)
+
+diff --git a/configure b/configure
+index 2942c8f..04d361f 100755
+--- a/configure
++++ b/configure
+@@ -3036,10 +3036,8 @@ xv_outdev_extralibs="-lXv -lX11 -lXext"
  # protocols
  async_protocol_deps="threads"
  bluray_protocol_deps="libbluray"
@@ -12,7 +24,7 @@ diff -uNr ffmpeg-3.2.2/configure ffmpeg-3.2.2_both_rtmp/configure
  ffrtmphttp_protocol_select="http_protocol"
  ftp_protocol_select="tcp_protocol"
  gopher_protocol_select="network"
-@@ -3054,14 +3052,12 @@
+@@ -3056,14 +3054,12 @@ libsmbclient_protocol_deps="libsmbclient gplv3"
  libssh_protocol_deps="libssh"
  mmsh_protocol_select="http_protocol"
  mmst_protocol_select="network"
@@ -33,10 +45,11 @@ diff -uNr ffmpeg-3.2.2/configure ffmpeg-3.2.2_both_rtmp/configure
  rtp_protocol_select="udp_protocol"
  sctp_protocol_deps="struct_sctp_event_subscribe struct_msghdr_msg_flags"
  sctp_protocol_select="network"
-diff -Naur ffmpeg-3.2.2/libavformat/Makefile ffmpeg-3.2.2_both_rtmp/libavformat/Makefile
---- ffmpeg-3.2.2/libavformat/Makefile    2016-10-01 03:12:42.000000000 +0200
-+++ ffmpeg-3.2.2_both_rtmp/libavformat/Makefile    2016-10-13 10:59:38.558442671 +0200
-@@ -567,12 +567,12 @@
+diff --git a/libavformat/Makefile b/libavformat/Makefile
+index d77ffaa..6a8e32d 100644
+--- a/libavformat/Makefile
++++ b/libavformat/Makefile
+@@ -567,12 +567,12 @@ OBJS-$(CONFIG_MMSH_PROTOCOL)             += mmsh.o mms.o asf.o
  OBJS-$(CONFIG_MMST_PROTOCOL)             += mmst.o mms.o asf.o
  OBJS-$(CONFIG_PIPE_PROTOCOL)             += file.o
  OBJS-$(CONFIG_PROMPEG_PROTOCOL)          += prompeg.o
@@ -55,10 +68,11 @@ diff -Naur ffmpeg-3.2.2/libavformat/Makefile ffmpeg-3.2.2_both_rtmp/libavformat/
  OBJS-$(CONFIG_RTP_PROTOCOL)              += rtpproto.o
  OBJS-$(CONFIG_SCTP_PROTOCOL)             += sctp.o
  OBJS-$(CONFIG_SRTP_PROTOCOL)             += srtpproto.o srtp.o
-diff -Naur ffmpeg-3.2.2/libavformat/protocols.c ffmpeg-3.2.2_both_rtmp/libavformat/protocols.c
---- ffmpeg-3.2.2/libavformat/protocols.c    2016-10-01 03:12:42.000000000 +0200
-+++ ffmpeg-3.2.2_both_rtmp/libavformat/protocols.c    2016-10-13 10:57:56.663243319 +0200
-@@ -44,12 +44,12 @@
+diff --git a/libavformat/protocols.c b/libavformat/protocols.c
+index 8d3555e..1c989be 100644
+--- a/libavformat/protocols.c
++++ b/libavformat/protocols.c
+@@ -44,12 +44,12 @@ extern const URLProtocol ff_mmst_protocol;
  extern const URLProtocol ff_md5_protocol;
  extern const URLProtocol ff_pipe_protocol;
  extern const URLProtocol ff_prompeg_protocol;
@@ -77,11 +91,12 @@ diff -Naur ffmpeg-3.2.2/libavformat/protocols.c ffmpeg-3.2.2_both_rtmp/libavform
  extern const URLProtocol ff_rtp_protocol;
  extern const URLProtocol ff_sctp_protocol;
  extern const URLProtocol ff_srtp_protocol;
-diff -Naur ffmpeg-3.2.2/libavformat/rtmpproto.c ffmpeg-3.2.2_both_rtmp/libavformat/rtmpproto.c
---- ffmpeg-3.2.2/libavformat/rtmpproto.c    2016-10-01 03:12:42.000000000 +0200
-+++ ffmpeg-3.2.2_both_rtmp/libavformat/rtmpproto.c    2016-10-13 10:55:16.862635525 +0200
-@@ -2612,7 +2612,7 @@
- static int rtmp_open(URLContext *s, const char *uri, int flags)
+diff --git a/libavformat/rtmpproto.c b/libavformat/rtmpproto.c
+index d415f0f..568e335 100644
+--- a/libavformat/rtmpproto.c
++++ b/libavformat/rtmpproto.c
+@@ -2612,7 +2612,7 @@ static int inject_fake_duration_metadata(RTMPContext *rt)
+ static int rtmp_open(URLContext *s, const char *uri, int flags, AVDictionary **opts)
  {
      RTMPContext *rt = s->priv_data;
 -    char proto[8], hostname[256], path[1024], auth[100], *fname;
@@ -89,7 +104,7 @@ diff -Naur ffmpeg-3.2.2/libavformat/rtmpproto.c ffmpeg-3.2.2_both_rtmp/libavform
      char *old_app, *qmark, *n, fname_buffer[1024];
      uint8_t buf[2048];
      int port;
-@@ -2623,7 +2623,7 @@
+@@ -2623,7 +2623,7 @@ static int rtmp_open(URLContext *s, const char *uri, int flags, AVDictionary **o
  
      rt->is_input = !(flags & AVIO_FLAG_WRITE);
  
@@ -98,7 +113,7 @@ diff -Naur ffmpeg-3.2.2/libavformat/rtmpproto.c ffmpeg-3.2.2_both_rtmp/libavform
                   hostname, sizeof(hostname), &port,
                   path, sizeof(path), s->filename);
  
-@@ -3157,9 +3157,9 @@
+@@ -3157,9 +3157,9 @@ const URLProtocol ff_##flavor##_protocol = {     \
  };
  
  
