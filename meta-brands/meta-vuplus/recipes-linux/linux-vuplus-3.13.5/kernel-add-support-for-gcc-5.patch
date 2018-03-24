@@ -1,6 +1,15 @@
+From 70be2ac11bbc26997cc01d3898047f19ccbd8e15 Mon Sep 17 00:00:00 2001
+From: captain <openatv@gmail.com>
+Date: Tue, 26 Jan 2016 07:27:38 +0100
+
+---
+ include/linux/compiler-gcc5.h | 66 +++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 66 insertions(+)
+ create mode 100644 include/linux/compiler-gcc5.h
+
 diff --git a/include/linux/compiler-gcc5.h b/include/linux/compiler-gcc5.h
 new file mode 100644
-index 0000000..cdd1cc2
+index 00000000..cdd1cc20
 --- /dev/null
 +++ b/include/linux/compiler-gcc5.h
 @@ -0,0 +1,66 @@

@@ -1,19 +1,23 @@
+From a05d125dd512d68d7967bd7bbe76e54888949b75 Mon Sep 17 00:00:00 2001
+From: Gianluca Gennari <gennarone@gmail.com>
+Date: Sun, 1 Jul 2012 18:31:43 +0100
+Subject: [PATCH] linux-etxx00: fix build
+
 af9015: fix SNR report in Enigma2/Kaffeine; SNR is now scaled in the full
 0-65536 range; the snrdb module parameter of the af9013 demodulator enables
 the SNR output in dBx10 as before.
 
-From: Gianluca Gennari <gennarone@gmail.com>
 ---
- drivers/media/dvb-frontends/af9013.c |    7 +++++++
+ drivers/media/dvb-frontends/af9013.c | 7 +++++++
  1 file changed, 7 insertions(+)
 
 diff --git a/drivers/media/dvb-frontends/af9013.c b/drivers/media/dvb-frontends/af9013.c
-index a204f28..1295487 100644
+index fb504f1e..9b1feba9 100644
 --- a/drivers/media/dvb-frontends/af9013.c
 +++ b/drivers/media/dvb-frontends/af9013.c
-@@ -24,6 +24,10 @@
- 
- #include "af9013_priv.h"
+@@ -27,6 +27,10 @@
+ /* Max transfer size done by I2C transfer functions */
+ #define MAX_XFER_SIZE  64
  
 +int af9013_snrdb;
 +module_param_named(snrdb, af9013_snrdb, int, 0644);
@@ -22,7 +26,7 @@ index a204f28..1295487 100644
  struct af9013_state {
  	struct i2c_adapter *i2c;
  	struct dvb_frontend fe;
-@@ -471,6 +475,9 @@ static int af9013_statistics_snr_result(struct dvb_frontend *fe)
+@@ -481,6 +485,9 @@ static int af9013_statistics_snr_result(struct dvb_frontend *fe)
  	}
  	state->snr = tmp * 10; /* dB/10 */
  
@@ -32,6 +36,3 @@ index a204f28..1295487 100644
  	return ret;
  err:
  	dev_dbg(&state->i2c->dev, "%s: failed=%d\n", __func__, ret);
--- 
-1.7.9.5
-

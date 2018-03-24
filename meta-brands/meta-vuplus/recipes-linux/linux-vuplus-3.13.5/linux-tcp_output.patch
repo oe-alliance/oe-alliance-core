@@ -1,5 +1,13 @@
+From ad895a91f886f72f45adb2eb5cb9d9cd9bd9bd1b Mon Sep 17 00:00:00 2001
+From: atvcaptain <captain@web.de>
+Date: Wed, 6 Aug 2014 22:40:38 +0200
+
+---
+ net/ipv4/tcp_output.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
 diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
-index 7820f3a..fb6b332 100644
+index 7820f3a7..fb6b3326 100644
 --- a/net/ipv4/tcp_output.c
 +++ b/net/ipv4/tcp_output.c
 @@ -51,7 +51,7 @@ int sysctl_tcp_retrans_collapse __read_mostly = 1;

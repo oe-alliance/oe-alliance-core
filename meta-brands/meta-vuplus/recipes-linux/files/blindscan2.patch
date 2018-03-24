@@ -1,8 +1,17 @@
+From ec656237d412f779865cb315e65cd33e7f40db10 Mon Sep 17 00:00:00 2001
+From: betacentauri <betacentauri@arcor.de>
+Date: Mon, 16 May 2016 18:02:28 +0200
+
+---
+ drivers/media/dvb-frontends/stv090x.c     | 182 ++++++++++++++++++++++++++++--
+ drivers/media/dvb-frontends/stv090x_reg.h |   2 +
+ 2 files changed, 172 insertions(+), 12 deletions(-)
+
 diff --git a/drivers/media/dvb-frontends/stv090x.c b/drivers/media/dvb-frontends/stv090x.c
-index ce99b9d..0b59a1f 100644
+index 2d735a82..f2cc8ed7 100644
 --- a/drivers/media/dvb-frontends/stv090x.c
 +++ b/drivers/media/dvb-frontends/stv090x.c
-@@ -1688,6 +1688,7 @@ static u32 stv090x_get_srate(struct stv090x_state *state, u32 clk)
+@@ -1700,6 +1700,7 @@ static u32 stv090x_get_srate(struct stv090x_state *state, u32 clk)
  		((int_1 * tmp_2) >> 16) +
  		((int_2 * tmp_1) >> 16);
  
@@ -10,7 +19,7 @@ index ce99b9d..0b59a1f 100644
  	return srate;
  }
  
-@@ -2600,6 +2601,94 @@ static int stv090x_get_viterbi(struct stv090x_state *state)
+@@ -2614,6 +2615,94 @@ static int stv090x_get_viterbi(struct stv090x_state *state)
  static enum stv090x_signal_state stv090x_get_sig_params(struct stv090x_state *state)
  {
  	struct dvb_frontend *fe = &state->frontend;
@@ -105,7 +114,7 @@ index ce99b9d..0b59a1f 100644
  
  	u8 tmg;
  	u32 reg;
-@@ -2639,10 +2728,71 @@ static enum stv090x_signal_state stv090x_get_sig_params(struct stv090x_state *st
+@@ -2653,10 +2742,71 @@ static enum stv090x_signal_state stv090x_get_sig_params(struct stv090x_state *st
  	state->modcod = STV090x_GETFIELD_Px(reg, DEMOD_MODCOD_FIELD);
  	state->pilots = STV090x_GETFIELD_Px(reg, DEMOD_TYPE_FIELD) & 0x01;
  	state->frame_len = STV090x_GETFIELD_Px(reg, DEMOD_TYPE_FIELD) >> 1;
@@ -181,7 +190,7 @@ index ce99b9d..0b59a1f 100644
  
  	if ((state->algo == STV090x_BLIND_SEARCH) || (state->srate < 10000000)) {
  
-@@ -2852,6 +3002,7 @@ static int stv090x_optimize_track(struct stv090x_state *state)
+@@ -2864,6 +3014,7 @@ static int stv090x_optimize_track(struct stv090x_state *state)
  {
  	struct dvb_frontend *fe = &state->frontend;
  
@@ -189,7 +198,7 @@ index ce99b9d..0b59a1f 100644
  	enum stv090x_modcod modcod;
  
  	s32 srate, pilots, aclc, f_1, f_0, i = 0, blind_tune = 0;
-@@ -2975,6 +3126,7 @@ static int stv090x_optimize_track(struct stv090x_state *state)
+@@ -3009,6 +3160,7 @@ static int stv090x_optimize_track(struct stv090x_state *state)
  	f_1 = STV090x_READ_DEMOD(state, CFR2);
  	f_0 = STV090x_READ_DEMOD(state, CFR1);
  	reg = STV090x_READ_DEMOD(state, TMGOBS);
@@ -197,7 +206,7 @@ index ce99b9d..0b59a1f 100644
  
  	if (state->algo == STV090x_BLIND_SEARCH) {
  		STV090x_WRITE_DEMOD(state, SFRSTEP, 0x00);
-@@ -3487,20 +3639,24 @@ static enum dvbfe_search stv090x_search(struct dvb_frontend *fe)
+@@ -3530,20 +3682,24 @@ static enum dvbfe_search stv090x_search(struct dvb_frontend *fe)
  	state->frequency = props->frequency;
  	state->srate = props->symbol_rate;
  	state->search_mode = STV090x_SEARCH_AUTO;
@@ -230,7 +239,7 @@ index ce99b9d..0b59a1f 100644
  		return DVBFE_ALGO_SEARCH_SUCCESS;
  	} else {
  		dprintk(FE_DEBUG, 1, "Search failed!");
-@@ -3543,6 +3699,7 @@ static int stv090x_read_status(struct dvb_frontend *fe, enum fe_status *status)
+@@ -3586,6 +3742,7 @@ static int stv090x_read_status(struct dvb_frontend *fe, enum fe_status *status)
  					*status |= FE_HAS_SYNC | FE_HAS_LOCK;
  			}
  		}
@@ -238,7 +247,7 @@ index ce99b9d..0b59a1f 100644
  		break;
  
  	case 3: /* DVB-S1/legacy mode */
-@@ -3556,6 +3713,7 @@ static int stv090x_read_status(struct dvb_frontend *fe, enum fe_status *status)
+@@ -3599,6 +3756,7 @@ static int stv090x_read_status(struct dvb_frontend *fe, enum fe_status *status)
  					*status |= FE_HAS_SYNC | FE_HAS_LOCK;
  			}
  		}
@@ -247,7 +256,7 @@ index ce99b9d..0b59a1f 100644
  	}
  
 diff --git a/drivers/media/dvb-frontends/stv090x_reg.h b/drivers/media/dvb-frontends/stv090x_reg.h
-index 93741ee..ac6bc30 100644
+index c1dac9c0..82b976fc 100644
 --- a/drivers/media/dvb-frontends/stv090x_reg.h
 +++ b/drivers/media/dvb-frontends/stv090x_reg.h
 @@ -1927,6 +1927,8 @@

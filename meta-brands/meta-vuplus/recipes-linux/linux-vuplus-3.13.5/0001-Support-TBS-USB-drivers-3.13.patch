@@ -1,4 +1,4 @@
-From 01b96c3d050952b5c3d746c280ed04e08e769807 Mon Sep 17 00:00:00 2001
+From 4bb1ca677ead5e407bc0db791648c2d73373cbc7 Mon Sep 17 00:00:00 2001
 From: Athanasios Oikonomou <athoik@gmail.com>
 Date: Thu, 11 Feb 2016 21:58:20 +0200
 Subject: [PATCH] Support TBS USB drivers 3.13
@@ -9,8 +9,26 @@ https://patchwork.linuxtv.org/patch/23244/
 https://patchwork.linuxtv.org/patch/23243/
 https://patchwork.linuxtv.org/patch/23242/
 
+---
+ drivers/media/dvb-core/dvb-usb-ids.h   |    7 +
+ drivers/media/dvb-frontends/cx24116.c  |    8 +
+ drivers/media/dvb-frontends/cx24116.h  |    3 +
+ drivers/media/dvb-frontends/stv0288.c  |    8 +
+ drivers/media/dvb-frontends/stv0288.h  |    3 +
+ drivers/media/dvb-frontends/stv090x.c  |    9 +
+ drivers/media/dvb-frontends/stv090x.h  |    3 +
+ drivers/media/dvb-frontends/tda10071.c |    8 +
+ drivers/media/dvb-frontends/tda10071.h |    3 +
+ drivers/media/usb/dvb-usb/Kconfig      |   20 +
+ drivers/media/usb/dvb-usb/Makefile     |    3 +
+ drivers/media/usb/dvb-usb/tbs-usb.c    | 1075 ++++++++++++++++++++++++++++++++
+ drivers/media/usb/dvb-usb/tbs-usb.h    |    9 +
+ 13 files changed, 1159 insertions(+)
+ create mode 100644 drivers/media/usb/dvb-usb/tbs-usb.c
+ create mode 100644 drivers/media/usb/dvb-usb/tbs-usb.h
+
 diff --git a/drivers/media/dvb-core/dvb-usb-ids.h b/drivers/media/dvb-core/dvb-usb-ids.h
-index 7e0f619..bd624fa 100644
+index 7e0f6193..bd624fa6 100644
 --- a/drivers/media/dvb-core/dvb-usb-ids.h
 +++ b/drivers/media/dvb-core/dvb-usb-ids.h
 @@ -70,6 +70,7 @@
@@ -33,7 +51,7 @@ index 7e0f619..bd624fa 100644
 +#define USB_PID_TENOW_TBS5980                           0x5980
  #endif
 diff --git a/drivers/media/dvb-frontends/cx24116.c b/drivers/media/dvb-frontends/cx24116.c
-index 2916d7c..462265c 100644
+index 2916d7c7..462265c8 100644
 --- a/drivers/media/dvb-frontends/cx24116.c
 +++ b/drivers/media/dvb-frontends/cx24116.c
 @@ -703,6 +703,9 @@ static int cx24116_read_status(struct dvb_frontend *fe, fe_status_t *status)
@@ -66,7 +84,7 @@ index 2916d7c..462265c 100644
  	cmd.args[0x00] = CMD_TUNERSLEEP;
  	cmd.args[0x01] = 1;
 diff --git a/drivers/media/dvb-frontends/cx24116.h b/drivers/media/dvb-frontends/cx24116.h
-index 2ec84fa..4ed3b39 100644
+index 2ec84fae..4ed3b393 100644
 --- a/drivers/media/dvb-frontends/cx24116.h
 +++ b/drivers/media/dvb-frontends/cx24116.h
 @@ -34,6 +34,9 @@ struct cx24116_config {
@@ -80,7 +98,7 @@ index 2ec84fa..4ed3b39 100644
  	u8 mpg_clk_pos_pol:0x02;
  
 diff --git a/drivers/media/dvb-frontends/stv0288.c b/drivers/media/dvb-frontends/stv0288.c
-index 632b251..8ffd6d1 100644
+index 632b2515..8ffd6d18 100644
 --- a/drivers/media/dvb-frontends/stv0288.c
 +++ b/drivers/media/dvb-frontends/stv0288.c
 @@ -381,6 +381,9 @@ static int stv0288_read_status(struct dvb_frontend *fe, fe_status_t *status)
@@ -113,7 +131,7 @@ index 632b251..8ffd6d1 100644
  }
  
 diff --git a/drivers/media/dvb-frontends/stv0288.h b/drivers/media/dvb-frontends/stv0288.h
-index a0bd931..5be0886 100644
+index a0bd9310..5be08865 100644
 --- a/drivers/media/dvb-frontends/stv0288.h
 +++ b/drivers/media/dvb-frontends/stv0288.h
 @@ -41,6 +41,9 @@ struct stv0288_config {
@@ -127,7 +145,7 @@ index a0bd931..5be0886 100644
  
  #if IS_ENABLED(CONFIG_DVB_STV0288)
 diff --git a/drivers/media/dvb-frontends/stv090x.c b/drivers/media/dvb-frontends/stv090x.c
-index 23e872f..f3452a8 100644
+index 23e872f8..f3452a8e 100644
 --- a/drivers/media/dvb-frontends/stv090x.c
 +++ b/drivers/media/dvb-frontends/stv090x.c
 @@ -3546,6 +3546,9 @@ static int stv090x_read_status(struct dvb_frontend *fe, enum fe_status *status)
@@ -161,7 +179,7 @@ index 23e872f..f3452a8 100644
  	if (state->internal->num_used <= 0) {
  
 diff --git a/drivers/media/dvb-frontends/stv090x.h b/drivers/media/dvb-frontends/stv090x.h
-index 0bd6adc..7842487 100644
+index 0bd6adcf..7842487c 100644
 --- a/drivers/media/dvb-frontends/stv090x.h
 +++ b/drivers/media/dvb-frontends/stv090x.h
 @@ -101,6 +101,9 @@ struct stv090x_config {
@@ -175,7 +193,7 @@ index 0bd6adc..7842487 100644
  
  #if IS_ENABLED(CONFIG_DVB_STV090x)
 diff --git a/drivers/media/dvb-frontends/tda10071.c b/drivers/media/dvb-frontends/tda10071.c
-index 8ad3a57..e8ea38f 100644
+index 8ad3a57c..e8ea38f1 100644
 --- a/drivers/media/dvb-frontends/tda10071.c
 +++ b/drivers/media/dvb-frontends/tda10071.c
 @@ -500,6 +500,9 @@ static int tda10071_read_status(struct dvb_frontend *fe, fe_status_t *status)
@@ -208,7 +226,7 @@ index 8ad3a57..e8ea38f 100644
  }
  
 diff --git a/drivers/media/dvb-frontends/tda10071.h b/drivers/media/dvb-frontends/tda10071.h
-index f9542f6..56a7a2e 100644
+index f9542f68..56a7a2ee 100644
 --- a/drivers/media/dvb-frontends/tda10071.h
 +++ b/drivers/media/dvb-frontends/tda10071.h
 @@ -69,6 +69,9 @@ struct tda10071_config {
@@ -222,7 +240,7 @@ index f9542f6..56a7a2e 100644
  
  
 diff --git a/drivers/media/usb/dvb-usb/Kconfig b/drivers/media/usb/dvb-usb/Kconfig
-index c5d9566..9a327fb 100644
+index c5d95662..9a327fbb 100644
 --- a/drivers/media/usb/dvb-usb/Kconfig
 +++ b/drivers/media/usb/dvb-usb/Kconfig
 @@ -317,3 +317,23 @@ config DVB_USB_TECHNISAT_USB2
@@ -250,7 +268,7 @@ index c5d9566..9a327fb 100644
 +	  Supported devices are:
 +	  TBS5980 TBS5928 TBS5925 TBS5921 TBS5920 TBS5910
 diff --git a/drivers/media/usb/dvb-usb/Makefile b/drivers/media/usb/dvb-usb/Makefile
-index acdd1ef..cb00137 100644
+index acdd1efd..cb001373 100644
 --- a/drivers/media/usb/dvb-usb/Makefile
 +++ b/drivers/media/usb/dvb-usb/Makefile
 @@ -76,6 +76,9 @@ obj-$(CONFIG_DVB_USB_AZ6027) += dvb-usb-az6027.o
@@ -265,7 +283,7 @@ index acdd1ef..cb00137 100644
  # due to tuner-xc3028
 diff --git a/drivers/media/usb/dvb-usb/tbs-usb.c b/drivers/media/usb/dvb-usb/tbs-usb.c
 new file mode 100644
-index 0000000..f142be3
+index 00000000..f142be3b
 --- /dev/null
 +++ b/drivers/media/usb/dvb-usb/tbs-usb.c
 @@ -0,0 +1,1075 @@
@@ -1346,7 +1364,7 @@ index 0000000..f142be3
 +MODULE_LICENSE("GPL");
 diff --git a/drivers/media/usb/dvb-usb/tbs-usb.h b/drivers/media/usb/dvb-usb/tbs-usb.h
 new file mode 100644
-index 0000000..2a0a112
+index 00000000..2a0a1125
 --- /dev/null
 +++ b/drivers/media/usb/dvb-usb/tbs-usb.h
 @@ -0,0 +1,9 @@
@@ -1359,6 +1377,3 @@ index 0000000..2a0a112
 +#define deb_xfer(args...) dprintk(dvb_usb_tbsusb_debug, 0x02, args)
 +#define deb_info(args...) dprintk(dvb_usb_tbsusb_debug, 0x01, args)
 +#endif
--- 
-2.1.4
-

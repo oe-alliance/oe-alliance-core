@@ -1,14 +1,18 @@
+From 4ef7c9a4a17720474954e6c28f6aae98b20e42d4 Mon Sep 17 00:00:00 2001
+From: Gianluca Gennari <gennarone@gmail.com>
+Date: Sun, 1 Jul 2012 18:31:43 +0100
+Subject: [PATCH] linux-etxx00: fix build
+
 BER/MER is converted in dB and scaled to the full range 0-65536 for output;
 added a module parameter to select SNR/MER output in dBx10;
 
-From: Gianluca Gennari <gennarone@gmail.com>
 ---
- drivers/staging/media/as102/as102_drv.c |    4 ++++
- drivers/staging/media/as102/as102_fe.c  |   16 ++++++++++++++++
+ drivers/staging/media/as102/as102_drv.c |  4 ++++
+ drivers/staging/media/as102/as102_fe.c  | 16 ++++++++++++++++
  2 files changed, 20 insertions(+)
 
 diff --git a/drivers/staging/media/as102/as102_drv.c b/drivers/staging/media/as102/as102_drv.c
-index ac92eaf..a87107f 100644
+index ac92eaf6..a87107fa 100644
 --- a/drivers/staging/media/as102/as102_drv.c
 +++ b/drivers/staging/media/as102/as102_drv.c
 @@ -56,6 +56,10 @@ int elna_enable = 1;
@@ -23,7 +27,7 @@ index ac92eaf..a87107f 100644
  
  static void as102_stop_stream(struct as102_dev_t *dev)
 diff --git a/drivers/staging/media/as102/as102_fe.c b/drivers/staging/media/as102/as102_fe.c
-index d188818..a4c5d89 100644
+index d1888185..a4c5d890 100644
 --- a/drivers/staging/media/as102/as102_fe.c
 +++ b/drivers/staging/media/as102/as102_fe.c
 @@ -20,6 +20,9 @@
@@ -63,6 +67,3 @@ index d188818..a4c5d89 100644
  	LEAVE();
  	return 0;
  }
--- 
-1.7.9.5
-

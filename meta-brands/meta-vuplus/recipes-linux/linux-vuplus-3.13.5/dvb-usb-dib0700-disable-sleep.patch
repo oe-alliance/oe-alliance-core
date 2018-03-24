@@ -1,4 +1,9 @@
-Putting the dib7000p device in and out of sleep can trigger a race, 
+From d674b80d58ec986d935f683b79a1b10aea55a0d7 Mon Sep 17 00:00:00 2001
+From: Andy Blackburn <andyblac@o2.co.uk>
+Date: Sun, 1 Jul 2012 18:31:43 +0100
+Subject: [PATCH] linux-etxx00: fix build
+
+Putting the dib7000p device in and out of sleep can trigger a race,
 causing the usb device to stall (-EPIPE), resulting in i2c errors:
 
 DiB0070 I2C write failed
@@ -9,11 +14,11 @@ As a workaround, do not put the device to sleep
 Perhaps the dib8000/9000 need the same workaround
 
 ---
- drivers/media/usb/dvb-usb/dib0700_devices.c |    1 +
+ drivers/media/usb/dvb-usb/dib0700_devices.c | 1 +
  1 file changed, 1 insertion(+)
 
 diff --git a/drivers/media/usb/dvb-usb/dib0700_devices.c b/drivers/media/usb/dvb-usb/dib0700_devices.c
-index 1179842..2a3093e 100644
+index 829323e4..5ce10fbc 100644
 --- a/drivers/media/usb/dvb-usb/dib0700_devices.c
 +++ b/drivers/media/usb/dvb-usb/dib0700_devices.c
 @@ -774,6 +774,7 @@ static int dib7070_tuner_reset(struct dvb_frontend *fe, int onoff)
@@ -24,5 +29,3 @@ index 1179842..2a3093e 100644
  	return dib7000p_set_gpio(fe, 9, 0, onoff);
  }
  
--- 
-1.7.9.5

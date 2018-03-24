@@ -1,5 +1,13 @@
+From 6fd41608add360c9d611f5bffad8edbc69751b01 Mon Sep 17 00:00:00 2001
+From: Andy Blackburn <andyblac@o2.co.uk>
+Date: Sun, 1 Jul 2012 18:31:43 +0100
+
+---
+ drivers/media/usb/dvb-usb/dvb-usb-init.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
 diff --git a/drivers/media/usb/dvb-usb/dvb-usb-init.c b/drivers/media/usb/dvb-usb/dvb-usb-init.c
-index 169196e..c741973 100644
+index 1adf3250..3f842dde 100644
 --- a/drivers/media/usb/dvb-usb/dvb-usb-init.c
 +++ b/drivers/media/usb/dvb-usb/dvb-usb-init.c
 @@ -18,7 +18,7 @@ int dvb_usb_debug;
