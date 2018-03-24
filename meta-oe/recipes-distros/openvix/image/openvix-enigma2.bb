@@ -28,7 +28,7 @@ RRECOMMENDS_${PN} = "\
     enigma2-plugin-extensions-epgsearch \
     enigma2-plugin-extensions-imdb \
     enigma2-plugin-skins-openvix-magic-fhd \
-    enigma2-plugin-skins-openvix-simple_ten_eighty \	
+    enigma2-plugin-skins-openvix-simple-ten-eighty \	
     enigma2-plugin-skins-openvix-vix-day-hd \
     enigma2-plugin-skins-openvix-youvix-blue \
     enigma2-plugin-systemplugins-crossepg \
