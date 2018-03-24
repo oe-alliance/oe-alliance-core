@@ -1,762 +1,1047 @@
-Upstream-Status: Backport [debian]
-
+From 03e91f1c873c68f42dd09e7fa133e6ca41495c44 Mon Sep 17 00:00:00 2001
 From: Kurt Roeckx <kurt@roeckx.be>
-Subject: Change the perl path's to /usr/bin/perl
+Date: Sat, 24 Mar 2018 21:10:36 +0100
+Subject: [PATCH] Change the perl path's to /usr/bin/perl
 
 This is the result of running:
 perl util/perlpath.pl /usr/bin
 
 The upstream sources have this set to various different paths.
 
---- openssl-0.9.8m.orig/Configure
-+++ openssl-0.9.8m/Configure
+---
+ Configure                       | 2 +-
+ Netware/do_tests.pl             | 2 +-
+ VMS/VMSify-conf.pl              | 2 +-
+ apps/progs.pl                   | 2 +-
+ crypto/aes/asm/aes-586.pl       | 2 +-
+ crypto/aes/asm/aes-x86_64.pl    | 2 +-
+ crypto/asn1/charmap.pl          | 2 +-
+ crypto/bf/asm/bf-586.pl         | 2 +-
+ crypto/bf/asm/bf-686.pl         | 2 +-
+ crypto/bn/asm/bn-586.pl         | 2 +-
+ crypto/bn/asm/co-586.pl         | 2 +-
+ crypto/bn/asm/mo-586.pl         | 2 +-
+ crypto/bn/asm/ppc.pl            | 2 +-
+ crypto/bn/asm/x86.pl            | 2 +-
+ crypto/bn/asm/x86/add.pl        | 2 +-
+ crypto/bn/asm/x86/comba.pl      | 2 +-
+ crypto/bn/asm/x86/div.pl        | 2 +-
+ crypto/bn/asm/x86/mul.pl        | 2 +-
+ crypto/bn/asm/x86/mul_add.pl    | 2 +-
+ crypto/bn/asm/x86/sqr.pl        | 2 +-
+ crypto/bn/asm/x86/sub.pl        | 2 +-
+ crypto/bn/asm/x86_64-mont.pl    | 2 +-
+ crypto/bn/bn_prime.pl           | 2 +-
+ crypto/cast/asm/cast-586.pl     | 2 +-
+ crypto/conf/keysets.pl          | 2 +-
+ crypto/des/asm/crypt586.pl      | 2 +-
+ crypto/des/asm/des-586.pl       | 2 +-
+ crypto/des/asm/des686.pl        | 2 +-
+ crypto/des/asm/desboth.pl       | 2 +-
+ crypto/lhash/num.pl             | 2 +-
+ crypto/md5/asm/md5-586.pl       | 2 +-
+ crypto/md5/asm/md5-x86_64.pl    | 2 +-
+ crypto/objects/obj_dat.pl       | 2 +-
+ crypto/objects/objects.pl       | 2 +-
+ crypto/perlasm/cbc.pl           | 2 +-
+ crypto/perlasm/x86_64-xlate.pl  | 2 +-
+ crypto/perlasm/x86asm.pl        | 2 +-
+ crypto/perlasm/x86ms.pl         | 2 +-
+ crypto/perlasm/x86nasm.pl       | 2 +-
+ crypto/perlasm/x86unix.pl       | 2 +-
+ crypto/rc4/asm/rc4-586.pl       | 2 +-
+ crypto/rc4/asm/rc4-x86_64.pl    | 2 +-
+ crypto/rc5/asm/rc5-586.pl       | 2 +-
+ crypto/ripemd/asm/rmd-586.pl    | 2 +-
+ crypto/sha/asm/sha1-586.pl      | 2 +-
+ crypto/sha/asm/sha1-ia64.pl     | 2 +-
+ crypto/sha/asm/sha1-x86_64.pl   | 2 +-
+ crypto/sha/asm/sha512-ia64.pl   | 2 +-
+ crypto/sha/asm/sha512-sse2.pl   | 2 +-
+ crypto/sha/asm/sha512-x86_64.pl | 2 +-
+ crypto/x86_64cpuid.pl           | 2 +-
+ crypto/x86cpuid.pl              | 2 +-
+ demos/b64.pl                    | 2 +-
+ demos/tunala/configure.in       | 2 +-
+ fips/fipsalgtest.pl             | 2 +-
+ fips/mkfipsscr.pl               | 2 +-
+ ms/cmp.pl                       | 2 +-
+ ms/segrenam.pl                  | 2 +-
+ ms/uplink.pl                    | 2 +-
+ os2/backwardify.pl              | 2 +-
+ test/cms-examples.pl            | 2 +-
+ test/cms-test.pl                | 2 +-
+ times/091/mips-rel.pl           | 2 +-
+ util/add_cr.pl                  | 2 +-
+ util/arx.pl                     | 2 +-
+ util/ck_errf.pl                 | 2 +-
+ util/clean-depend.pl            | 2 +-
+ util/copy.pl                    | 2 +-
+ util/deleof.pl                  | 2 +-
+ util/dirname.pl                 | 2 +-
+ util/err-ins.pl                 | 2 +-
+ util/files.pl                   | 2 +-
+ util/mk1mf.pl                   | 2 +-
+ util/mkdef.pl                   | 2 +-
+ util/mkdir-p.pl                 | 2 +-
+ util/mkerr.pl                   | 2 +-
+ util/mkfiles.pl                 | 2 +-
+ util/mklink.pl                  | 2 +-
+ util/mksdef.pl                  | 2 +-
+ util/mkstack.pl                 | 2 +-
+ util/perlpath.pl                | 2 +-
+ util/pl/BC-32.pl                | 2 +-
+ util/pl/Mingw32.pl              | 2 +-
+ util/pl/OS2-EMX.pl              | 2 +-
+ util/pl/VC-32.pl                | 2 +-
+ util/pl/linux.pl                | 2 +-
+ util/pl/netware.pl              | 2 +-
+ util/pl/ultrix.pl               | 2 +-
+ util/pl/unix.pl                 | 2 +-
+ util/pod2man.pl                 | 2 +-
+ util/selftest.pl                | 2 +-
+ util/sp-diff.pl                 | 2 +-
+ util/src-dep.pl                 | 2 +-
+ util/tab_num.pl                 | 2 +-
+ 94 files changed, 94 insertions(+), 94 deletions(-)
+
+diff --git a/Configure b/Configure
+index 9dc82ef..d5a700f 100755
+--- a/Configure
++++ b/Configure
 @@ -1,4 +1,4 @@
 -:
 +#!/usr/bin/perl
  eval 'exec perl -S $0 ${1+"$@"}'
      if $running_under_some_shell;
  ##
---- openssl-0.9.8m.orig/VMS/VMSify-conf.pl
-+++ openssl-0.9.8m/VMS/VMSify-conf.pl
-@@ -1,4 +1,4 @@
--#! /usr/bin/perl
-+#!/usr/bin/perl
- 
- use strict;
- use warnings;
---- openssl-0.9.8m.orig/Netware/do_tests.pl
-+++ openssl-0.9.8m/Netware/do_tests.pl
+diff --git a/Netware/do_tests.pl b/Netware/do_tests.pl
+index ac482db..1ab55ba 100644
+--- a/Netware/do_tests.pl
++++ b/Netware/do_tests.pl
 @@ -1,4 +1,4 @@
 -# perl script to run OpenSSL tests
 +#!/usr/bin/perl
  
  
  my $base_path      = "\\openssl";
---- openssl-0.9.8m.orig/apps/progs.pl
-+++ openssl-0.9.8m/apps/progs.pl
+diff --git a/VMS/VMSify-conf.pl b/VMS/VMSify-conf.pl
+index d3be6a2..cde4b37 100644
+--- a/VMS/VMSify-conf.pl
++++ b/VMS/VMSify-conf.pl
+@@ -1,4 +1,4 @@
+-#! /usr/bin/perl
++#!/usr/bin/perl
+ 
+ use strict;
+ use warnings;
+diff --git a/apps/progs.pl b/apps/progs.pl
+index 645432c..d807627 100644
+--- a/apps/progs.pl
++++ b/apps/progs.pl
 @@ -1,4 +1,4 @@
 -#!/usr/local/bin/perl
 +#!/usr/bin/perl
  
  print "/* apps/progs.h */\n";
  print "/* automatically generated by progs.pl for openssl.c */\n\n";
---- openssl-0.9.8m.orig/os2/backwardify.pl
-+++ openssl-0.9.8m/os2/backwardify.pl
+diff --git a/crypto/aes/asm/aes-586.pl b/crypto/aes/asm/aes-586.pl
+index 52f863c..1635e0f 100755
+--- a/crypto/aes/asm/aes-586.pl
++++ b/crypto/aes/asm/aes-586.pl
 @@ -1,4 +1,4 @@
--#!/usr/bin/perl -w
+-#!/usr/bin/env perl
 +#!/usr/bin/perl
- use strict;
- 
- # Use as $0
---- openssl-0.9.8m.orig/times/091/mips-rel.pl
-+++ openssl-0.9.8m/times/091/mips-rel.pl
+ #
+ # ====================================================================
+ # Written by Andy Polyakov <appro@fy.chalmers.se> for the OpenSSL
+diff --git a/crypto/aes/asm/aes-x86_64.pl b/crypto/aes/asm/aes-x86_64.pl
+index b510057..3fec858 100755
+--- a/crypto/aes/asm/aes-x86_64.pl
++++ b/crypto/aes/asm/aes-x86_64.pl
 @@ -1,4 +1,4 @@
--#!/usr/local/bin/perl
+-#!/usr/bin/env perl
 +#!/usr/bin/perl
- 
- &doit(100,"Pentium   100 32",0.0195,0.1000,0.6406,4.6100);	# pentium-100
- &doit(200,"PPro      200 32",0.0070,0.0340,0.2087,1.4700);	# pentium-100
---- openssl-0.9.8m.orig/fips/mkfipsscr.pl
-+++ openssl-0.9.8m/fips/mkfipsscr.pl
+ #
+ # ====================================================================
+ # Written by Andy Polyakov <appro@fy.chalmers.se> for the OpenSSL
+diff --git a/crypto/asn1/charmap.pl b/crypto/asn1/charmap.pl
+index 2875c59..a2a7aa0 100644
+--- a/crypto/asn1/charmap.pl
++++ b/crypto/asn1/charmap.pl
 @@ -1,4 +1,4 @@
 -#!/usr/local/bin/perl -w
 +#!/usr/bin/perl
- # Quick & dirty utility to generate a script for executing the
- # FIPS 140-2 CMVP algorithm tests based on the pathnames of
- # input algorithm test files actually present (the unqualified
---- openssl-0.9.8m.orig/fips/fipsalgtest.pl
-+++ openssl-0.9.8m/fips/fipsalgtest.pl
-@@ -1,4 +1,4 @@
--#!/usr/bin/perl -w
-+#!/usr/bin/perl
- # Perl utility to run or verify FIPS 140-2 CMVP algorithm tests based on the
- # pathnames of input algorithm test files actually present (the unqualified
- # file names are consistent but the pathnames are not).
---- openssl-0.9.8m.orig/ms/uplink.pl
-+++ openssl-0.9.8m/ms/uplink.pl
-@@ -1,4 +1,4 @@
--#!/usr/bin/env perl
-+#!/usr/bin/perl
- #
- # For Microsoft CL this is implemented as inline assembler. So that
- # even though this script can generate even Win32 code, we'll be
---- openssl-0.9.8m.orig/ms/segrenam.pl
-+++ openssl-0.9.8m/ms/segrenam.pl
-@@ -1,4 +1,4 @@
--#!/usr/bin/env perl
-+#!/usr/bin/perl
  
- my $quiet = 1;
+ use strict;
  
---- openssl-0.9.8m.orig/ms/cmp.pl
-+++ openssl-0.9.8m/ms/cmp.pl
-@@ -1,4 +1,4 @@
--#!/usr/local/bin/perl
-+#!/usr/bin/perl
- 
- ($#ARGV == 1) || die "usage: cmp.pl <file1> <file2>\n";
- 
---- openssl-0.9.8m.orig/test/cms-test.pl
-+++ openssl-0.9.8m/test/cms-test.pl
-@@ -1,4 +1,4 @@
--# test/cms-test.pl
-+#!/usr/bin/perl
- # Written by Dr Stephen N Henson (steve@openssl.org) for the OpenSSL
- # project.
- #
---- openssl-0.9.8m.orig/test/cms-examples.pl
-+++ openssl-0.9.8m/test/cms-examples.pl
-@@ -1,4 +1,4 @@
--# test/cms-examples.pl
-+#!/usr/bin/perl
- # Written by Dr Stephen N Henson (steve@openssl.org) for the OpenSSL
- # project.
- #
---- openssl-0.9.8m.orig/demos/b64.pl
-+++ openssl-0.9.8m/demos/b64.pl
-@@ -1,4 +1,4 @@
--#!/usr/local/bin/perl
-+#!/usr/bin/perl
- 
- #
- # Make PEM encoded data have lines of 64 bytes of data
---- openssl-0.9.8m.orig/demos/tunala/configure.in
-+++ openssl-0.9.8m/demos/tunala/configure.in
-@@ -1,4 +1,4 @@
--dnl Process this file with autoconf to produce a configure script.
-+#!/usr/bin/perl
- AC_INIT(tunala.c)
- AM_CONFIG_HEADER(config.h)
- AM_INIT_AUTOMAKE(tunala, 0.0.1-dev)
---- openssl-0.9.8m.orig/crypto/x86cpuid.pl
-+++ openssl-0.9.8m/crypto/x86cpuid.pl
-@@ -1,4 +1,4 @@
--#!/usr/bin/env perl
-+#!/usr/bin/perl
- 
- push(@INC,"perlasm");
- require "x86asm.pl";
---- openssl-0.9.8m.orig/crypto/x86_64cpuid.pl
-+++ openssl-0.9.8m/crypto/x86_64cpuid.pl
-@@ -1,4 +1,4 @@
--#!/usr/bin/env perl
-+#!/usr/bin/perl
- 
- $output=shift;
- $masm=1 if ($output =~ /\.asm/);
---- openssl-0.9.8m.orig/crypto/md5/asm/md5-586.pl
-+++ openssl-0.9.8m/crypto/md5/asm/md5-586.pl
-@@ -1,4 +1,4 @@
--#!/usr/local/bin/perl
-+#!/usr/bin/perl
- 
- # Normal is the
- # md5_block_x86(MD5_CTX *c, ULONG *X);
---- openssl-0.9.8m.orig/crypto/md5/asm/md5-x86_64.pl
-+++ openssl-0.9.8m/crypto/md5/asm/md5-x86_64.pl
-@@ -1,4 +1,4 @@
--#!/usr/bin/perl -w
-+#!/usr/bin/perl
- #
- # MD5 optimized for AMD64.
- #
---- openssl-0.9.8m.orig/crypto/sha/asm/sha1-ia64.pl
-+++ openssl-0.9.8m/crypto/sha/asm/sha1-ia64.pl
-@@ -1,4 +1,4 @@
--#!/usr/bin/env perl
-+#!/usr/bin/perl
- #
- # ====================================================================
- # Written by Andy Polyakov <appro@fy.chalmers.se> for the OpenSSL
---- openssl-0.9.8m.orig/crypto/sha/asm/sha1-x86_64.pl
-+++ openssl-0.9.8m/crypto/sha/asm/sha1-x86_64.pl
-@@ -1,4 +1,4 @@
--#!/usr/bin/env perl
-+#!/usr/bin/perl
- #
- # ====================================================================
- # Written by Andy Polyakov <appro@fy.chalmers.se> for the OpenSSL
---- openssl-0.9.8m.orig/crypto/sha/asm/sha512-sse2.pl
-+++ openssl-0.9.8m/crypto/sha/asm/sha512-sse2.pl
-@@ -1,4 +1,4 @@
--#!/usr/bin/env perl
-+#!/usr/bin/perl
- #
- # ====================================================================
- # Written by Andy Polyakov <appro@fy.chalmers.se> for the OpenSSL
---- openssl-0.9.8m.orig/crypto/sha/asm/sha512-ia64.pl
-+++ openssl-0.9.8m/crypto/sha/asm/sha512-ia64.pl
-@@ -1,4 +1,4 @@
--#!/usr/bin/env perl
-+#!/usr/bin/perl
- #
- # ====================================================================
- # Written by Andy Polyakov <appro@fy.chalmers.se> for the OpenSSL
---- openssl-0.9.8m.orig/crypto/sha/asm/sha512-x86_64.pl
-+++ openssl-0.9.8m/crypto/sha/asm/sha512-x86_64.pl
-@@ -1,4 +1,4 @@
--#!/usr/bin/env perl
-+#!/usr/bin/perl
- #
- # ====================================================================
- # Written by Andy Polyakov <appro@fy.chalmers.se> for the OpenSSL
---- openssl-0.9.8m.orig/crypto/sha/asm/sha1-586.pl
-+++ openssl-0.9.8m/crypto/sha/asm/sha1-586.pl
-@@ -1,4 +1,4 @@
--#!/usr/bin/env perl
-+#!/usr/bin/perl
- 
- # ====================================================================
- # [Re]written by Andy Polyakov <appro@fy.chalmers.se> for the OpenSSL
---- openssl-0.9.8m.orig/crypto/des/asm/des-586.pl
-+++ openssl-0.9.8m/crypto/des/asm/des-586.pl
-@@ -1,4 +1,4 @@
--#!/usr/local/bin/perl
-+#!/usr/bin/perl
- #
- # The inner loop instruction sequence and the IP/FP modifications are from
- # Svend Olaf Mikkelsen <svolaf@inet.uni-c.dk>
---- openssl-0.9.8m.orig/crypto/des/asm/desboth.pl
-+++ openssl-0.9.8m/crypto/des/asm/desboth.pl
-@@ -1,4 +1,4 @@
--#!/usr/local/bin/perl
-+#!/usr/bin/perl
- 
- $L="edi";
- $R="esi";
---- openssl-0.9.8m.orig/crypto/des/asm/des686.pl
-+++ openssl-0.9.8m/crypto/des/asm/des686.pl
-@@ -1,4 +1,4 @@
--#!/usr/local/bin/perl
-+#!/usr/bin/perl
- 
- $prog="des686.pl";
- 
---- openssl-0.9.8m.orig/crypto/des/asm/crypt586.pl
-+++ openssl-0.9.8m/crypto/des/asm/crypt586.pl
-@@ -1,4 +1,4 @@
--#!/usr/local/bin/perl
-+#!/usr/bin/perl
- #
- # The inner loop instruction sequence and the IP/FP modifications are from
- # Svend Olaf Mikkelsen <svolaf@inet.uni-c.dk>
---- openssl-0.9.8m.orig/crypto/lhash/num.pl
-+++ openssl-0.9.8m/crypto/lhash/num.pl
-@@ -1,4 +1,4 @@
--#!/usr/local/bin/perl
-+#!/usr/bin/perl
- 
- #node     10 ->   4
- 
---- openssl-0.9.8m.orig/crypto/ripemd/asm/rmd-586.pl
-+++ openssl-0.9.8m/crypto/ripemd/asm/rmd-586.pl
-@@ -1,4 +1,4 @@
--#!/usr/local/bin/perl
-+#!/usr/bin/perl
- 
- # Normal is the
- # ripemd160_block_asm_data_order(RIPEMD160_CTX *c, ULONG *X,int blocks);
---- openssl-0.9.8m.orig/crypto/rc4/asm/rc4-586.pl
-+++ openssl-0.9.8m/crypto/rc4/asm/rc4-586.pl
-@@ -1,4 +1,4 @@
--#!/usr/local/bin/perl
-+#!/usr/bin/perl
- 
- # At some point it became apparent that the original SSLeay RC4
- # assembler implementation performs suboptimaly on latest IA-32
---- openssl-0.9.8m.orig/crypto/rc4/asm/rc4-x86_64.pl
-+++ openssl-0.9.8m/crypto/rc4/asm/rc4-x86_64.pl
-@@ -1,4 +1,4 @@
--#!/usr/bin/env perl
-+#!/usr/bin/perl
- #
- # ====================================================================
- # Written by Andy Polyakov <appro@fy.chalmers.se> for the OpenSSL
---- openssl-0.9.8m.orig/crypto/cast/asm/cast-586.pl
-+++ openssl-0.9.8m/crypto/cast/asm/cast-586.pl
-@@ -1,4 +1,4 @@
--#!/usr/local/bin/perl
-+#!/usr/bin/perl
- 
- # define for pentium pro friendly version
- $ppro=1;
---- openssl-0.9.8m.orig/crypto/rc5/asm/rc5-586.pl
-+++ openssl-0.9.8m/crypto/rc5/asm/rc5-586.pl
+diff --git a/crypto/bf/asm/bf-586.pl b/crypto/bf/asm/bf-586.pl
+index b556642..f00f3f4 100644
+--- a/crypto/bf/asm/bf-586.pl
++++ b/crypto/bf/asm/bf-586.pl
 @@ -1,4 +1,4 @@
 -#!/usr/local/bin/perl
 +#!/usr/bin/perl
  
  push(@INC,"perlasm","../../perlasm");
  require "x86asm.pl";
---- openssl-0.9.8m.orig/crypto/perlasm/x86ms.pl
-+++ openssl-0.9.8m/crypto/perlasm/x86ms.pl
-@@ -1,4 +1,4 @@
--#!/usr/local/bin/perl
-+#!/usr/bin/perl
- 
- package x86ms;
- 
---- openssl-0.9.8m.orig/crypto/perlasm/x86asm.pl
-+++ openssl-0.9.8m/crypto/perlasm/x86asm.pl
-@@ -1,4 +1,4 @@
--#!/usr/local/bin/perl
-+#!/usr/bin/perl
- 
- # require 'x86asm.pl';
- # &asm_init("cpp","des-586.pl");
---- openssl-0.9.8m.orig/crypto/perlasm/x86nasm.pl
-+++ openssl-0.9.8m/crypto/perlasm/x86nasm.pl
-@@ -1,4 +1,4 @@
--#!/usr/local/bin/perl
-+#!/usr/bin/perl
- 
- package x86nasm;
- 
---- openssl-0.9.8m.orig/crypto/perlasm/x86unix.pl
-+++ openssl-0.9.8m/crypto/perlasm/x86unix.pl
-@@ -1,4 +1,4 @@
--#!/usr/local/bin/perl
-+#!/usr/bin/perl
- 
- package x86unix;	# GAS actually...
- 
---- openssl-0.9.8m.orig/crypto/perlasm/cbc.pl
-+++ openssl-0.9.8m/crypto/perlasm/cbc.pl
-@@ -1,4 +1,4 @@
--#!/usr/local/bin/perl
-+#!/usr/bin/perl
- 
- # void des_ncbc_encrypt(input, output, length, schedule, ivec, enc)
- # des_cblock (*input);
---- openssl-0.9.8m.orig/crypto/perlasm/x86_64-xlate.pl
-+++ openssl-0.9.8m/crypto/perlasm/x86_64-xlate.pl
-@@ -1,4 +1,4 @@
--#!/usr/bin/env perl
-+#!/usr/bin/perl
- 
- # Ascetic x86_64 AT&T to MASM assembler translator by <appro>.
- #
---- openssl-0.9.8m.orig/crypto/bf/asm/bf-686.pl
-+++ openssl-0.9.8m/crypto/bf/asm/bf-686.pl
+diff --git a/crypto/bf/asm/bf-686.pl b/crypto/bf/asm/bf-686.pl
+index 8e4c25f..9222f5e 100644
+--- a/crypto/bf/asm/bf-686.pl
++++ b/crypto/bf/asm/bf-686.pl
 @@ -1,4 +1,4 @@
 -#!/usr/local/bin/perl
 +#!/usr/bin/perl
  
  push(@INC,"perlasm","../../perlasm");
  require "x86asm.pl";
---- openssl-0.9.8m.orig/crypto/bf/asm/bf-586.pl
-+++ openssl-0.9.8m/crypto/bf/asm/bf-586.pl
+diff --git a/crypto/bn/asm/bn-586.pl b/crypto/bn/asm/bn-586.pl
+index 26c2685..b6304b5 100644
+--- a/crypto/bn/asm/bn-586.pl
++++ b/crypto/bn/asm/bn-586.pl
 @@ -1,4 +1,4 @@
 -#!/usr/local/bin/perl
 +#!/usr/bin/perl
  
  push(@INC,"perlasm","../../perlasm");
  require "x86asm.pl";
---- openssl-0.9.8m.orig/crypto/objects/objects.pl
-+++ openssl-0.9.8m/crypto/objects/objects.pl
-@@ -1,4 +1,4 @@
--#!/usr/local/bin/perl
-+#!/usr/bin/perl
- 
- open (NUMIN,"$ARGV[1]") || die "Can't open number file $ARGV[1]";
- $max_nid=0;
---- openssl-0.9.8m.orig/crypto/objects/obj_dat.pl
-+++ openssl-0.9.8m/crypto/objects/obj_dat.pl
-@@ -1,4 +1,4 @@
--#!/usr/local/bin/perl
-+#!/usr/bin/perl
- 
- # fixes bug in floating point emulation on sparc64 when
- # this script produces off-by-one output on sparc64
---- openssl-0.9.8m.orig/crypto/conf/keysets.pl
-+++ openssl-0.9.8m/crypto/conf/keysets.pl
-@@ -1,4 +1,4 @@
--#!/usr/local/bin/perl
-+#!/usr/bin/perl
- 
- $NUMBER=0x01;
- $UPPER=0x02;
---- openssl-0.9.8m.orig/crypto/bn/bn_prime.pl
-+++ openssl-0.9.8m/crypto/bn/bn_prime.pl
-@@ -1,4 +1,4 @@
--#!/usr/local/bin/perl
-+#!/usr/bin/perl
- # bn_prime.pl
- 
- $num=2048;
---- openssl-0.9.8m.orig/crypto/bn/asm/x86.pl
-+++ openssl-0.9.8m/crypto/bn/asm/x86.pl
+diff --git a/crypto/bn/asm/co-586.pl b/crypto/bn/asm/co-586.pl
+index 5d962cb..179cc78 100644
+--- a/crypto/bn/asm/co-586.pl
++++ b/crypto/bn/asm/co-586.pl
 @@ -1,4 +1,4 @@
 -#!/usr/local/bin/perl
 +#!/usr/bin/perl
  
  push(@INC,"perlasm","../../perlasm");
  require "x86asm.pl";
---- openssl-0.9.8m.orig/crypto/bn/asm/ppc.pl
-+++ openssl-0.9.8m/crypto/bn/asm/ppc.pl
-@@ -1,4 +1,4 @@
--#!/usr/bin/env perl
-+#!/usr/bin/perl
- #
- # Implemented as a Perl wrapper as we want to support several different
- # architectures with single file. We pick up the target based on the
---- openssl-0.9.8m.orig/crypto/bn/asm/co-586.pl
-+++ openssl-0.9.8m/crypto/bn/asm/co-586.pl
-@@ -1,4 +1,4 @@
--#!/usr/local/bin/perl
-+#!/usr/bin/perl
- 
- push(@INC,"perlasm","../../perlasm");
- require "x86asm.pl";
---- openssl-0.9.8m.orig/crypto/bn/asm/bn-586.pl
-+++ openssl-0.9.8m/crypto/bn/asm/bn-586.pl
-@@ -1,4 +1,4 @@
--#!/usr/local/bin/perl
-+#!/usr/bin/perl
- 
- push(@INC,"perlasm","../../perlasm");
- require "x86asm.pl";
---- openssl-0.9.8m.orig/crypto/bn/asm/mo-586.pl
-+++ openssl-0.9.8m/crypto/bn/asm/mo-586.pl
+diff --git a/crypto/bn/asm/mo-586.pl b/crypto/bn/asm/mo-586.pl
+index 061127e..7f7f186 100644
+--- a/crypto/bn/asm/mo-586.pl
++++ b/crypto/bn/asm/mo-586.pl
 @@ -1,4 +1,4 @@
 -#!/usr/bin/env perl
 +#!/usr/bin/perl
  
  # This is crypto/bn/asm/x86-mont.pl (with asciz from crypto/perlasm/x86asm.pl)
  # from OpenSSL 0.9.9-dev 
---- openssl-0.9.8m.orig/crypto/bn/asm/x86_64-mont.pl
-+++ openssl-0.9.8m/crypto/bn/asm/x86_64-mont.pl
+diff --git a/crypto/bn/asm/ppc.pl b/crypto/bn/asm/ppc.pl
+index 8444883..3f7b66f 100644
+--- a/crypto/bn/asm/ppc.pl
++++ b/crypto/bn/asm/ppc.pl
 @@ -1,4 +1,4 @@
 -#!/usr/bin/env perl
 +#!/usr/bin/perl
- 
- # ====================================================================
- # Written by Andy Polyakov <appro@fy.chalmers.se> for the OpenSSL
---- openssl-0.9.8m.orig/crypto/bn/asm/x86/comba.pl
-+++ openssl-0.9.8m/crypto/bn/asm/x86/comba.pl
+ #
+ # Implemented as a Perl wrapper as we want to support several different
+ # architectures with single file. We pick up the target based on the
+diff --git a/crypto/bn/asm/x86.pl b/crypto/bn/asm/x86.pl
+index 1bc4f1b..a511311 100644
+--- a/crypto/bn/asm/x86.pl
++++ b/crypto/bn/asm/x86.pl
 @@ -1,4 +1,4 @@
 -#!/usr/local/bin/perl
 +#!/usr/bin/perl
- # x86 assember
  
- sub mul_add_c
---- openssl-0.9.8m.orig/crypto/bn/asm/x86/add.pl
-+++ openssl-0.9.8m/crypto/bn/asm/x86/add.pl
+ push(@INC,"perlasm","../../perlasm");
+ require "x86asm.pl";
+diff --git a/crypto/bn/asm/x86/add.pl b/crypto/bn/asm/x86/add.pl
+index 0b5cf58..02bae7b 100644
+--- a/crypto/bn/asm/x86/add.pl
++++ b/crypto/bn/asm/x86/add.pl
 @@ -1,4 +1,4 @@
 -#!/usr/local/bin/perl
 +#!/usr/bin/perl
  # x86 assember
  
  sub bn_add_words
---- openssl-0.9.8m.orig/crypto/bn/asm/x86/mul.pl
-+++ openssl-0.9.8m/crypto/bn/asm/x86/mul.pl
+diff --git a/crypto/bn/asm/x86/comba.pl b/crypto/bn/asm/x86/comba.pl
+index 2291253..7dd6696 100644
+--- a/crypto/bn/asm/x86/comba.pl
++++ b/crypto/bn/asm/x86/comba.pl
 @@ -1,4 +1,4 @@
 -#!/usr/local/bin/perl
 +#!/usr/bin/perl
  # x86 assember
  
- sub bn_mul_words
---- openssl-0.9.8m.orig/crypto/bn/asm/x86/mul_add.pl
-+++ openssl-0.9.8m/crypto/bn/asm/x86/mul_add.pl
-@@ -1,4 +1,4 @@
--#!/usr/local/bin/perl
-+#!/usr/bin/perl
- # x86 assember
- 
- sub bn_mul_add_words
---- openssl-0.9.8m.orig/crypto/bn/asm/x86/sqr.pl
-+++ openssl-0.9.8m/crypto/bn/asm/x86/sqr.pl
-@@ -1,4 +1,4 @@
--#!/usr/local/bin/perl
-+#!/usr/bin/perl
- # x86 assember
- 
- sub bn_sqr_words
---- openssl-0.9.8m.orig/crypto/bn/asm/x86/sub.pl
-+++ openssl-0.9.8m/crypto/bn/asm/x86/sub.pl
-@@ -1,4 +1,4 @@
--#!/usr/local/bin/perl
-+#!/usr/bin/perl
- # x86 assember
- 
- sub bn_sub_words
---- openssl-0.9.8m.orig/crypto/bn/asm/x86/div.pl
-+++ openssl-0.9.8m/crypto/bn/asm/x86/div.pl
+ sub mul_add_c
+diff --git a/crypto/bn/asm/x86/div.pl b/crypto/bn/asm/x86/div.pl
+index 0e90152..8b337a5 100644
+--- a/crypto/bn/asm/x86/div.pl
++++ b/crypto/bn/asm/x86/div.pl
 @@ -1,4 +1,4 @@
 -#!/usr/local/bin/perl
 +#!/usr/bin/perl
  # x86 assember
  
  sub bn_div_words
---- openssl-0.9.8m.orig/crypto/aes/asm/aes-586.pl
-+++ openssl-0.9.8m/crypto/aes/asm/aes-586.pl
+diff --git a/crypto/bn/asm/x86/mul.pl b/crypto/bn/asm/x86/mul.pl
+index 674cb9b..73ce0dc 100644
+--- a/crypto/bn/asm/x86/mul.pl
++++ b/crypto/bn/asm/x86/mul.pl
+@@ -1,4 +1,4 @@
+-#!/usr/local/bin/perl
++#!/usr/bin/perl
+ # x86 assember
+ 
+ sub bn_mul_words
+diff --git a/crypto/bn/asm/x86/mul_add.pl b/crypto/bn/asm/x86/mul_add.pl
+index 61830d3..300e9cd 100644
+--- a/crypto/bn/asm/x86/mul_add.pl
++++ b/crypto/bn/asm/x86/mul_add.pl
+@@ -1,4 +1,4 @@
+-#!/usr/local/bin/perl
++#!/usr/bin/perl
+ # x86 assember
+ 
+ sub bn_mul_add_words
+diff --git a/crypto/bn/asm/x86/sqr.pl b/crypto/bn/asm/x86/sqr.pl
+index 1f90993..d1dc173 100644
+--- a/crypto/bn/asm/x86/sqr.pl
++++ b/crypto/bn/asm/x86/sqr.pl
+@@ -1,4 +1,4 @@
+-#!/usr/local/bin/perl
++#!/usr/bin/perl
+ # x86 assember
+ 
+ sub bn_sqr_words
+diff --git a/crypto/bn/asm/x86/sub.pl b/crypto/bn/asm/x86/sub.pl
+index 837b0e1..d49588b 100644
+--- a/crypto/bn/asm/x86/sub.pl
++++ b/crypto/bn/asm/x86/sub.pl
+@@ -1,4 +1,4 @@
+-#!/usr/local/bin/perl
++#!/usr/bin/perl
+ # x86 assember
+ 
+ sub bn_sub_words
+diff --git a/crypto/bn/asm/x86_64-mont.pl b/crypto/bn/asm/x86_64-mont.pl
+index c43b695..1511f71 100755
+--- a/crypto/bn/asm/x86_64-mont.pl
++++ b/crypto/bn/asm/x86_64-mont.pl
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env perl
++#!/usr/bin/perl
+ 
+ # ====================================================================
+ # Written by Andy Polyakov <appro@fy.chalmers.se> for the OpenSSL
+diff --git a/crypto/bn/bn_prime.pl b/crypto/bn/bn_prime.pl
+index 3fafb6f..193fdd2 100644
+--- a/crypto/bn/bn_prime.pl
++++ b/crypto/bn/bn_prime.pl
+@@ -1,4 +1,4 @@
+-#!/usr/local/bin/perl
++#!/usr/bin/perl
+ # bn_prime.pl
+ 
+ $num=2048;
+diff --git a/crypto/cast/asm/cast-586.pl b/crypto/cast/asm/cast-586.pl
+index 6be0bfe..0df0e63 100644
+--- a/crypto/cast/asm/cast-586.pl
++++ b/crypto/cast/asm/cast-586.pl
+@@ -1,4 +1,4 @@
+-#!/usr/local/bin/perl
++#!/usr/bin/perl
+ 
+ # define for pentium pro friendly version
+ $ppro=1;
+diff --git a/crypto/conf/keysets.pl b/crypto/conf/keysets.pl
+index 50ed67f..da0b955 100644
+--- a/crypto/conf/keysets.pl
++++ b/crypto/conf/keysets.pl
+@@ -1,4 +1,4 @@
+-#!/usr/local/bin/perl
++#!/usr/bin/perl
+ 
+ $NUMBER=0x01;
+ $UPPER=0x02;
+diff --git a/crypto/des/asm/crypt586.pl b/crypto/des/asm/crypt586.pl
+index 1d04ed6..bdeb371 100644
+--- a/crypto/des/asm/crypt586.pl
++++ b/crypto/des/asm/crypt586.pl
+@@ -1,4 +1,4 @@
+-#!/usr/local/bin/perl
++#!/usr/bin/perl
+ #
+ # The inner loop instruction sequence and the IP/FP modifications are from
+ # Svend Olaf Mikkelsen <svolaf@inet.uni-c.dk>
+diff --git a/crypto/des/asm/des-586.pl b/crypto/des/asm/des-586.pl
+index b75d3c6..e212a6d 100644
+--- a/crypto/des/asm/des-586.pl
++++ b/crypto/des/asm/des-586.pl
+@@ -1,4 +1,4 @@
+-#!/usr/local/bin/perl
++#!/usr/bin/perl
+ #
+ # The inner loop instruction sequence and the IP/FP modifications are from
+ # Svend Olaf Mikkelsen <svolaf@inet.uni-c.dk>
+diff --git a/crypto/des/asm/des686.pl b/crypto/des/asm/des686.pl
+index d3ad5d5..89864c0 100644
+--- a/crypto/des/asm/des686.pl
++++ b/crypto/des/asm/des686.pl
+@@ -1,4 +1,4 @@
+-#!/usr/local/bin/perl
++#!/usr/bin/perl
+ 
+ $prog="des686.pl";
+ 
+diff --git a/crypto/des/asm/desboth.pl b/crypto/des/asm/desboth.pl
+index ab6f524..da23e74 100644
+--- a/crypto/des/asm/desboth.pl
++++ b/crypto/des/asm/desboth.pl
+@@ -1,4 +1,4 @@
+-#!/usr/local/bin/perl
++#!/usr/bin/perl
+ 
+ $L="edi";
+ $R="esi";
+diff --git a/crypto/lhash/num.pl b/crypto/lhash/num.pl
+index 30fedf9..4d937c1 100644
+--- a/crypto/lhash/num.pl
++++ b/crypto/lhash/num.pl
+@@ -1,4 +1,4 @@
+-#!/usr/local/bin/perl
++#!/usr/bin/perl
+ 
+ #node     10 ->   4
+ 
+diff --git a/crypto/md5/asm/md5-586.pl b/crypto/md5/asm/md5-586.pl
+index 76ac235..9980024 100644
+--- a/crypto/md5/asm/md5-586.pl
++++ b/crypto/md5/asm/md5-586.pl
+@@ -1,4 +1,4 @@
+-#!/usr/local/bin/perl
++#!/usr/bin/perl
+ 
+ # Normal is the
+ # md5_block_x86(MD5_CTX *c, ULONG *X);
+diff --git a/crypto/md5/asm/md5-x86_64.pl b/crypto/md5/asm/md5-x86_64.pl
+index 05d040f..eb0b9a6 100755
+--- a/crypto/md5/asm/md5-x86_64.pl
++++ b/crypto/md5/asm/md5-x86_64.pl
+@@ -1,4 +1,4 @@
+-#!/usr/bin/perl -w
++#!/usr/bin/perl
+ #
+ # MD5 optimized for AMD64.
+ #
+diff --git a/crypto/objects/obj_dat.pl b/crypto/objects/obj_dat.pl
+index 7de2f77..3f49782 100644
+--- a/crypto/objects/obj_dat.pl
++++ b/crypto/objects/obj_dat.pl
+@@ -1,4 +1,4 @@
+-#!/usr/local/bin/perl
++#!/usr/bin/perl
+ 
+ # fixes bug in floating point emulation on sparc64 when
+ # this script produces off-by-one output on sparc64
+diff --git a/crypto/objects/objects.pl b/crypto/objects/objects.pl
+index 76c06cc..71bbed2 100644
+--- a/crypto/objects/objects.pl
++++ b/crypto/objects/objects.pl
+@@ -1,4 +1,4 @@
+-#!/usr/local/bin/perl
++#!/usr/bin/perl
+ 
+ open (NUMIN,"$ARGV[1]") || die "Can't open number file $ARGV[1]";
+ $max_nid=0;
+diff --git a/crypto/perlasm/cbc.pl b/crypto/perlasm/cbc.pl
+index f2c8139..11fdf47 100644
+--- a/crypto/perlasm/cbc.pl
++++ b/crypto/perlasm/cbc.pl
+@@ -1,4 +1,4 @@
+-#!/usr/local/bin/perl
++#!/usr/bin/perl
+ 
+ # void des_ncbc_encrypt(input, output, length, schedule, ivec, enc)
+ # des_cblock (*input);
+diff --git a/crypto/perlasm/x86_64-xlate.pl b/crypto/perlasm/x86_64-xlate.pl
+index 4abb2fa..dd4d4d7 100755
+--- a/crypto/perlasm/x86_64-xlate.pl
++++ b/crypto/perlasm/x86_64-xlate.pl
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env perl
++#!/usr/bin/perl
+ 
+ # Ascetic x86_64 AT&T to MASM assembler translator by <appro>.
+ #
+diff --git a/crypto/perlasm/x86asm.pl b/crypto/perlasm/x86asm.pl
+index 5979122..06eb524 100644
+--- a/crypto/perlasm/x86asm.pl
++++ b/crypto/perlasm/x86asm.pl
+@@ -1,4 +1,4 @@
+-#!/usr/local/bin/perl
++#!/usr/bin/perl
+ 
+ # require 'x86asm.pl';
+ # &asm_init("cpp","des-586.pl");
+diff --git a/crypto/perlasm/x86ms.pl b/crypto/perlasm/x86ms.pl
+index a0be293..19afa0b 100644
+--- a/crypto/perlasm/x86ms.pl
++++ b/crypto/perlasm/x86ms.pl
+@@ -1,4 +1,4 @@
+-#!/usr/local/bin/perl
++#!/usr/bin/perl
+ 
+ package x86ms;
+ 
+diff --git a/crypto/perlasm/x86nasm.pl b/crypto/perlasm/x86nasm.pl
+index fa38f89..56e3122 100644
+--- a/crypto/perlasm/x86nasm.pl
++++ b/crypto/perlasm/x86nasm.pl
+@@ -1,4 +1,4 @@
+-#!/usr/local/bin/perl
++#!/usr/bin/perl
+ 
+ package x86nasm;
+ 
+diff --git a/crypto/perlasm/x86unix.pl b/crypto/perlasm/x86unix.pl
+index 9cc089d..42df574 100644
+--- a/crypto/perlasm/x86unix.pl
++++ b/crypto/perlasm/x86unix.pl
+@@ -1,4 +1,4 @@
+-#!/usr/local/bin/perl
++#!/usr/bin/perl
+ 
+ package x86unix;	# GAS actually...
+ 
+diff --git a/crypto/rc4/asm/rc4-586.pl b/crypto/rc4/asm/rc4-586.pl
+index ef7eee7..a988f49 100644
+--- a/crypto/rc4/asm/rc4-586.pl
++++ b/crypto/rc4/asm/rc4-586.pl
+@@ -1,4 +1,4 @@
+-#!/usr/local/bin/perl
++#!/usr/bin/perl
+ 
+ # At some point it became apparent that the original SSLeay RC4
+ # assembler implementation performs suboptimaly on latest IA-32
+diff --git a/crypto/rc4/asm/rc4-x86_64.pl b/crypto/rc4/asm/rc4-x86_64.pl
+index eb849f2..5e212e5 100755
+--- a/crypto/rc4/asm/rc4-x86_64.pl
++++ b/crypto/rc4/asm/rc4-x86_64.pl
 @@ -1,4 +1,4 @@
 -#!/usr/bin/env perl
 +#!/usr/bin/perl
  #
  # ====================================================================
  # Written by Andy Polyakov <appro@fy.chalmers.se> for the OpenSSL
---- openssl-0.9.8m.orig/crypto/aes/asm/aes-x86_64.pl
-+++ openssl-0.9.8m/crypto/aes/asm/aes-x86_64.pl
+diff --git a/crypto/rc5/asm/rc5-586.pl b/crypto/rc5/asm/rc5-586.pl
+index edff1d1..172bd9e 100644
+--- a/crypto/rc5/asm/rc5-586.pl
++++ b/crypto/rc5/asm/rc5-586.pl
+@@ -1,4 +1,4 @@
+-#!/usr/local/bin/perl
++#!/usr/bin/perl
+ 
+ push(@INC,"perlasm","../../perlasm");
+ require "x86asm.pl";
+diff --git a/crypto/ripemd/asm/rmd-586.pl b/crypto/ripemd/asm/rmd-586.pl
+index 4f3c4c9..41430aa 100644
+--- a/crypto/ripemd/asm/rmd-586.pl
++++ b/crypto/ripemd/asm/rmd-586.pl
+@@ -1,4 +1,4 @@
+-#!/usr/local/bin/perl
++#!/usr/bin/perl
+ 
+ # Normal is the
+ # ripemd160_block_asm_data_order(RIPEMD160_CTX *c, ULONG *X,int blocks);
+diff --git a/crypto/sha/asm/sha1-586.pl b/crypto/sha/asm/sha1-586.pl
+index a787dd3..25017a7 100644
+--- a/crypto/sha/asm/sha1-586.pl
++++ b/crypto/sha/asm/sha1-586.pl
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env perl
++#!/usr/bin/perl
+ 
+ # ====================================================================
+ # [Re]written by Andy Polyakov <appro@fy.chalmers.se> for the OpenSSL
+diff --git a/crypto/sha/asm/sha1-ia64.pl b/crypto/sha/asm/sha1-ia64.pl
+index 51c4f47..c5d0675 100644
+--- a/crypto/sha/asm/sha1-ia64.pl
++++ b/crypto/sha/asm/sha1-ia64.pl
 @@ -1,4 +1,4 @@
 -#!/usr/bin/env perl
 +#!/usr/bin/perl
  #
  # ====================================================================
  # Written by Andy Polyakov <appro@fy.chalmers.se> for the OpenSSL
---- openssl-0.9.8m.orig/crypto/asn1/charmap.pl
-+++ openssl-0.9.8m/crypto/asn1/charmap.pl
+diff --git a/crypto/sha/asm/sha1-x86_64.pl b/crypto/sha/asm/sha1-x86_64.pl
+index f7ed67a..d90d594 100755
+--- a/crypto/sha/asm/sha1-x86_64.pl
++++ b/crypto/sha/asm/sha1-x86_64.pl
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env perl
++#!/usr/bin/perl
+ #
+ # ====================================================================
+ # Written by Andy Polyakov <appro@fy.chalmers.se> for the OpenSSL
+diff --git a/crypto/sha/asm/sha512-ia64.pl b/crypto/sha/asm/sha512-ia64.pl
+index 1c6ce56..ccf198e 100755
+--- a/crypto/sha/asm/sha512-ia64.pl
++++ b/crypto/sha/asm/sha512-ia64.pl
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env perl
++#!/usr/bin/perl
+ #
+ # ====================================================================
+ # Written by Andy Polyakov <appro@fy.chalmers.se> for the OpenSSL
+diff --git a/crypto/sha/asm/sha512-sse2.pl b/crypto/sha/asm/sha512-sse2.pl
+index 10902bf..1b44153 100644
+--- a/crypto/sha/asm/sha512-sse2.pl
++++ b/crypto/sha/asm/sha512-sse2.pl
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env perl
++#!/usr/bin/perl
+ #
+ # ====================================================================
+ # Written by Andy Polyakov <appro@fy.chalmers.se> for the OpenSSL
+diff --git a/crypto/sha/asm/sha512-x86_64.pl b/crypto/sha/asm/sha512-x86_64.pl
+index b6252d3..fc7a40e 100755
+--- a/crypto/sha/asm/sha512-x86_64.pl
++++ b/crypto/sha/asm/sha512-x86_64.pl
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env perl
++#!/usr/bin/perl
+ #
+ # ====================================================================
+ # Written by Andy Polyakov <appro@fy.chalmers.se> for the OpenSSL
+diff --git a/crypto/x86_64cpuid.pl b/crypto/x86_64cpuid.pl
+index c274275..cb87eb5 100644
+--- a/crypto/x86_64cpuid.pl
++++ b/crypto/x86_64cpuid.pl
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env perl
++#!/usr/bin/perl
+ 
+ $output=shift;
+ $masm=1 if ($output =~ /\.asm/);
+diff --git a/crypto/x86cpuid.pl b/crypto/x86cpuid.pl
+index 4408ef2..f87c5bc 100644
+--- a/crypto/x86cpuid.pl
++++ b/crypto/x86cpuid.pl
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env perl
++#!/usr/bin/perl
+ 
+ push(@INC,"perlasm");
+ require "x86asm.pl";
+diff --git a/demos/b64.pl b/demos/b64.pl
+index 8aa5fb4..dc5d983 100644
+--- a/demos/b64.pl
++++ b/demos/b64.pl
+@@ -1,4 +1,4 @@
+-#!/usr/local/bin/perl
++#!/usr/bin/perl
+ 
+ #
+ # Make PEM encoded data have lines of 64 bytes of data
+diff --git a/demos/tunala/configure.in b/demos/tunala/configure.in
+index 590cdbf..8b50f8c 100644
+--- a/demos/tunala/configure.in
++++ b/demos/tunala/configure.in
+@@ -1,4 +1,4 @@
+-dnl Process this file with autoconf to produce a configure script.
++#!/usr/bin/perl
+ AC_INIT(tunala.c)
+ AM_CONFIG_HEADER(config.h)
+ AM_INIT_AUTOMAKE(tunala, 0.0.1-dev)
+diff --git a/fips/fipsalgtest.pl b/fips/fipsalgtest.pl
+index 851cc98..08e1ce1 100644
+--- a/fips/fipsalgtest.pl
++++ b/fips/fipsalgtest.pl
+@@ -1,4 +1,4 @@
+-#!/usr/bin/perl -w
++#!/usr/bin/perl
+ # Perl utility to run or verify FIPS 140-2 CMVP algorithm tests based on the
+ # pathnames of input algorithm test files actually present (the unqualified
+ # file names are consistent but the pathnames are not).
+diff --git a/fips/mkfipsscr.pl b/fips/mkfipsscr.pl
+index 361641d..de0c3a7 100644
+--- a/fips/mkfipsscr.pl
++++ b/fips/mkfipsscr.pl
 @@ -1,4 +1,4 @@
 -#!/usr/local/bin/perl -w
 +#!/usr/bin/perl
+ # Quick & dirty utility to generate a script for executing the
+ # FIPS 140-2 CMVP algorithm tests based on the pathnames of
+ # input algorithm test files actually present (the unqualified
+diff --git a/ms/cmp.pl b/ms/cmp.pl
+index 95b257f..c6bfcae 100644
+--- a/ms/cmp.pl
++++ b/ms/cmp.pl
+@@ -1,4 +1,4 @@
+-#!/usr/local/bin/perl
++#!/usr/bin/perl
  
+ ($#ARGV == 1) || die "usage: cmp.pl <file1> <file2>\n";
+ 
+diff --git a/ms/segrenam.pl b/ms/segrenam.pl
+index 2ab22a0..6ef48a9 100644
+--- a/ms/segrenam.pl
++++ b/ms/segrenam.pl
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env perl
++#!/usr/bin/perl
+ 
+ my $quiet = 1;
+ 
+diff --git a/ms/uplink.pl b/ms/uplink.pl
+index 102400e..e2be5d8 100755
+--- a/ms/uplink.pl
++++ b/ms/uplink.pl
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env perl
++#!/usr/bin/perl
+ #
+ # For Microsoft CL this is implemented as inline assembler. So that
+ # even though this script can generate even Win32 code, we'll be
+diff --git a/os2/backwardify.pl b/os2/backwardify.pl
+index 272423c..13aa153 100644
+--- a/os2/backwardify.pl
++++ b/os2/backwardify.pl
+@@ -1,4 +1,4 @@
+-#!/usr/bin/perl -w
++#!/usr/bin/perl
  use strict;
  
---- openssl-0.9.8m.orig/util/mksdef.pl
-+++ openssl-0.9.8m/util/mksdef.pl
+ # Use as $0
+diff --git a/test/cms-examples.pl b/test/cms-examples.pl
+index 2e95b48..ea77574 100644
+--- a/test/cms-examples.pl
++++ b/test/cms-examples.pl
 @@ -1,4 +1,4 @@
--
+-# test/cms-examples.pl
 +#!/usr/bin/perl
- # Perl script to split libeay32.def into two distinct DEF files for use in
- # fipdso mode. It works out symbols in each case by running "link" command and
- # parsing the output to find the list of missing symbols then splitting
---- openssl-0.9.8m.orig/util/dirname.pl
-+++ openssl-0.9.8m/util/dirname.pl
-@@ -1,4 +1,4 @@
--#!/usr/local/bin/perl
-+#!/usr/bin/perl
- 
- if ($#ARGV < 0) {
-     die "dirname.pl: too few arguments\n";
---- openssl-0.9.8m.orig/util/tab_num.pl
-+++ openssl-0.9.8m/util/tab_num.pl
-@@ -1,4 +1,4 @@
--#!/usr/local/bin/perl
-+#!/usr/bin/perl
- 
- $num=1;
- $width=40;
---- openssl-0.9.8m.orig/util/sp-diff.pl
-+++ openssl-0.9.8m/util/sp-diff.pl
-@@ -1,4 +1,4 @@
--#!/usr/local/bin/perl
-+#!/usr/bin/perl
+ # Written by Dr Stephen N Henson (steve@openssl.org) for the OpenSSL
+ # project.
  #
- # This file takes as input, the files that have been output from
- # ssleay speed.
---- openssl-0.9.8m.orig/util/mkerr.pl
-+++ openssl-0.9.8m/util/mkerr.pl
+diff --git a/test/cms-test.pl b/test/cms-test.pl
+index 9c50dff..5ea580b 100644
+--- a/test/cms-test.pl
++++ b/test/cms-test.pl
 @@ -1,4 +1,4 @@
--#!/usr/local/bin/perl -w
+-# test/cms-test.pl
++#!/usr/bin/perl
+ # Written by Dr Stephen N Henson (steve@openssl.org) for the OpenSSL
+ # project.
+ #
+diff --git a/times/091/mips-rel.pl b/times/091/mips-rel.pl
+index 4b25093..93f73d8 100644
+--- a/times/091/mips-rel.pl
++++ b/times/091/mips-rel.pl
+@@ -1,4 +1,4 @@
+-#!/usr/local/bin/perl
 +#!/usr/bin/perl
  
- my $config = "crypto/err/openssl.ec";
- my $debug = 0;
---- openssl-0.9.8m.orig/util/clean-depend.pl
-+++ openssl-0.9.8m/util/clean-depend.pl
-@@ -1,4 +1,4 @@
--#!/usr/local/bin/perl -w
-+#!/usr/bin/perl
- # Clean the dependency list in a makefile of standard includes...
- # Written by Ben Laurie <ben@algroup.co.uk> 19 Jan 1999
- 
---- openssl-0.9.8m.orig/util/add_cr.pl
-+++ openssl-0.9.8m/util/add_cr.pl
+ &doit(100,"Pentium   100 32",0.0195,0.1000,0.6406,4.6100);	# pentium-100
+ &doit(200,"PPro      200 32",0.0070,0.0340,0.2087,1.4700);	# pentium-100
+diff --git a/util/add_cr.pl b/util/add_cr.pl
+index c7b62c1..ddd6d61 100755
+--- a/util/add_cr.pl
++++ b/util/add_cr.pl
 @@ -1,4 +1,4 @@
 -#!/usr/local/bin/perl
 +#!/usr/bin/perl
  #
  # This adds a copyright message to a souce code file.
  # It also gets the file name correct.
---- openssl-0.9.8m.orig/util/pod2man.pl
-+++ openssl-0.9.8m/util/pod2man.pl
-@@ -1,4 +1,4 @@
--: #!/usr/bin/perl-5.005
-+#!/usr/bin/perl
-     eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
- 	if $running_under_some_shell;
- 
---- openssl-0.9.8m.orig/util/mkstack.pl
-+++ openssl-0.9.8m/util/mkstack.pl
-@@ -1,4 +1,4 @@
--#!/usr/local/bin/perl -w
-+#!/usr/bin/perl
- 
- # This is a utility that searches out "DECLARE_STACK_OF()"
- # declarations in .h and .c files, and updates/creates/replaces
---- openssl-0.9.8m.orig/util/selftest.pl
-+++ openssl-0.9.8m/util/selftest.pl
-@@ -1,4 +1,4 @@
--#!/usr/local/bin/perl -w
-+#!/usr/bin/perl
- #
- # Run the test suite and generate a report
- #
---- openssl-0.9.8m.orig/util/ck_errf.pl
-+++ openssl-0.9.8m/util/ck_errf.pl
-@@ -1,4 +1,4 @@
--#!/usr/local/bin/perl
-+#!/usr/bin/perl
- #
- # This is just a quick script to scan for cases where the 'error'
- # function name in a XXXerr() macro is wrong.
---- openssl-0.9.8m.orig/util/mklink.pl
-+++ openssl-0.9.8m/util/mklink.pl
-@@ -1,4 +1,4 @@
--#!/usr/local/bin/perl
-+#!/usr/bin/perl
- 
- # mklink.pl
- 
---- openssl-0.9.8m.orig/util/src-dep.pl
-+++ openssl-0.9.8m/util/src-dep.pl
-@@ -1,4 +1,4 @@
--#!/usr/local/bin/perl
-+#!/usr/bin/perl
- 
- # we make up an array of
- # $file{function_name}=filename;
---- openssl-0.9.8m.orig/util/deleof.pl
-+++ openssl-0.9.8m/util/deleof.pl
-@@ -1,4 +1,4 @@
--#!/usr/local/bin/perl
-+#!/usr/bin/perl
- 
- while (<>)
- 	{
---- openssl-0.9.8m.orig/util/arx.pl
-+++ openssl-0.9.8m/util/arx.pl
+diff --git a/util/arx.pl b/util/arx.pl
+index ce62625..7da71c9 100644
+--- a/util/arx.pl
++++ b/util/arx.pl
 @@ -1,4 +1,4 @@
 -#!/bin/perl
 +#!/usr/bin/perl
  
  # Simple perl script to wrap round "ar" program and exclude any
  # object files in the environment variable EXCL_OBJ
---- openssl-0.9.8m.orig/util/copy.pl
-+++ openssl-0.9.8m/util/copy.pl
+diff --git a/util/ck_errf.pl b/util/ck_errf.pl
+index 344b422..8999684 100755
+--- a/util/ck_errf.pl
++++ b/util/ck_errf.pl
+@@ -1,4 +1,4 @@
+-#!/usr/local/bin/perl
++#!/usr/bin/perl
+ #
+ # This is just a quick script to scan for cases where the 'error'
+ # function name in a XXXerr() macro is wrong.
+diff --git a/util/clean-depend.pl b/util/clean-depend.pl
+index 2b2bdb4..7c2a628 100755
+--- a/util/clean-depend.pl
++++ b/util/clean-depend.pl
+@@ -1,4 +1,4 @@
+-#!/usr/local/bin/perl -w
++#!/usr/bin/perl
+ # Clean the dependency list in a makefile of standard includes...
+ # Written by Ben Laurie <ben@algroup.co.uk> 19 Jan 1999
+ 
+diff --git a/util/copy.pl b/util/copy.pl
+index eba6d58..01356ca 100644
+--- a/util/copy.pl
++++ b/util/copy.pl
 @@ -1,4 +1,4 @@
 -#!/usr/local/bin/perl
 +#!/usr/bin/perl
  
  use Fcntl;
  
---- openssl-0.9.8m.orig/util/mkdir-p.pl
-+++ openssl-0.9.8m/util/mkdir-p.pl
+diff --git a/util/deleof.pl b/util/deleof.pl
+index 155acd8..04f30f0 100755
+--- a/util/deleof.pl
++++ b/util/deleof.pl
 @@ -1,4 +1,4 @@
 -#!/usr/local/bin/perl
 +#!/usr/bin/perl
  
- # mkdir-p.pl
+ while (<>)
+ 	{
+diff --git a/util/dirname.pl b/util/dirname.pl
+index d7a66d9..4693a74 100644
+--- a/util/dirname.pl
++++ b/util/dirname.pl
+@@ -1,4 +1,4 @@
+-#!/usr/local/bin/perl
++#!/usr/bin/perl
  
---- openssl-0.9.8m.orig/util/mkdef.pl
-+++ openssl-0.9.8m/util/mkdef.pl
-@@ -1,4 +1,4 @@
--#!/usr/local/bin/perl -w
-+#!/usr/bin/perl
- #
- # generate a .def file
- #
---- openssl-0.9.8m.orig/util/files.pl
-+++ openssl-0.9.8m/util/files.pl
-@@ -1,4 +1,4 @@
--#!/usr/local/bin/perl
-+#!/usr/bin/perl
- #
- # used to generate the file MINFO for use by util/mk1mf.pl
- # It is basically a list of all variables from the passed makefile
---- openssl-0.9.8m.orig/util/mkfiles.pl
-+++ openssl-0.9.8m/util/mkfiles.pl
-@@ -1,4 +1,4 @@
--#!/usr/local/bin/perl
-+#!/usr/bin/perl
- #
- # This is a hacked version of files.pl for systems that can't do a 'make files'.
- # Do a perl util/mkminfo.pl >MINFO to build MINFO
---- openssl-0.9.8m.orig/util/perlpath.pl
-+++ openssl-0.9.8m/util/perlpath.pl
-@@ -1,4 +1,4 @@
--#!/usr/local/bin/perl
-+#!/usr/bin/perl
- #
- # modify the '#!/usr/local/bin/perl'
- # line in all scripts that rely on perl.
---- openssl-0.9.8m.orig/util/mk1mf.pl
-+++ openssl-0.9.8m/util/mk1mf.pl
-@@ -1,4 +1,4 @@
--#!/usr/local/bin/perl
-+#!/usr/bin/perl
- # A bit of an evil hack but it post processes the file ../MINFO which
- # is generated by `make files` in the top directory.
- # This script outputs one mega makefile that has no shell stuff or any
---- openssl-0.9.8m.orig/util/err-ins.pl
-+++ openssl-0.9.8m/util/err-ins.pl
+ if ($#ARGV < 0) {
+     die "dirname.pl: too few arguments\n";
+diff --git a/util/err-ins.pl b/util/err-ins.pl
+index 31b70df..db1bb48 100755
+--- a/util/err-ins.pl
++++ b/util/err-ins.pl
 @@ -1,4 +1,4 @@
 -#!/usr/local/bin/perl
 +#!/usr/bin/perl
  #
  # tack error codes onto the end of a file
  #
---- openssl-0.9.8m.orig/util/pl/Mingw32.pl
-+++ openssl-0.9.8m/util/pl/Mingw32.pl
+diff --git a/util/files.pl b/util/files.pl
+index 41f033e..bf3b7ef 100755
+--- a/util/files.pl
++++ b/util/files.pl
 @@ -1,4 +1,4 @@
 -#!/usr/local/bin/perl
 +#!/usr/bin/perl
  #
- # Mingw32.pl -- Mingw
- #
---- openssl-0.9.8m.orig/util/pl/unix.pl
-+++ openssl-0.9.8m/util/pl/unix.pl
+ # used to generate the file MINFO for use by util/mk1mf.pl
+ # It is basically a list of all variables from the passed makefile
+diff --git a/util/mk1mf.pl b/util/mk1mf.pl
+index a21f6f4..0bf11a1 100755
+--- a/util/mk1mf.pl
++++ b/util/mk1mf.pl
 @@ -1,4 +1,4 @@
 -#!/usr/local/bin/perl
 +#!/usr/bin/perl
- #
- # unix.pl - the standard unix makefile stuff.
- #
---- openssl-0.9.8m.orig/util/pl/netware.pl
-+++ openssl-0.9.8m/util/pl/netware.pl
+ # A bit of an evil hack but it post processes the file ../MINFO which
+ # is generated by `make files` in the top directory.
+ # This script outputs one mega makefile that has no shell stuff or any
+diff --git a/util/mkdef.pl b/util/mkdef.pl
+index 8533771..2be4e98 100755
+--- a/util/mkdef.pl
++++ b/util/mkdef.pl
 @@ -1,4 +1,4 @@
--# Metrowerks Codewarrior or gcc / nlmconv for NetWare
+-#!/usr/local/bin/perl -w
 +#!/usr/bin/perl
  #
+ # generate a .def file
+ #
+diff --git a/util/mkdir-p.pl b/util/mkdir-p.pl
+index e73d02b..b8e29d4 100755
+--- a/util/mkdir-p.pl
++++ b/util/mkdir-p.pl
+@@ -1,4 +1,4 @@
+-#!/usr/local/bin/perl
++#!/usr/bin/perl
  
- $version_header = "crypto/opensslv.h";
---- openssl-0.9.8m.orig/util/pl/VC-32.pl
-+++ openssl-0.9.8m/util/pl/VC-32.pl
+ # mkdir-p.pl
+ 
+diff --git a/util/mkerr.pl b/util/mkerr.pl
+index 5775b86..fe09ff0 100644
+--- a/util/mkerr.pl
++++ b/util/mkerr.pl
 @@ -1,4 +1,4 @@
--#!/usr/local/bin/perl
+-#!/usr/local/bin/perl -w
 +#!/usr/bin/perl
- # VC-32.pl - unified script for Microsoft Visual C++, covering Win32,
- # Win64 and WinCE [follow $FLAVOR variable to trace the differences].
- #
---- openssl-0.9.8m.orig/util/pl/OS2-EMX.pl
-+++ openssl-0.9.8m/util/pl/OS2-EMX.pl
-@@ -1,4 +1,4 @@
--#!/usr/local/bin/perl
-+#!/usr/bin/perl
- #
- # OS2-EMX.pl - for EMX GCC on OS/2
- #
---- openssl-0.9.8m.orig/util/pl/ultrix.pl
-+++ openssl-0.9.8m/util/pl/ultrix.pl
-@@ -1,4 +1,4 @@
--#!/usr/local/bin/perl
-+#!/usr/bin/perl
- #
- # linux.pl - the standard unix makefile stuff.
- #
---- openssl-0.9.8m.orig/util/pl/linux.pl
-+++ openssl-0.9.8m/util/pl/linux.pl
+ 
+ my $config = "crypto/err/openssl.ec";
+ my $debug = 0;
+diff --git a/util/mkfiles.pl b/util/mkfiles.pl
+index 67fb869..37e7614 100755
+--- a/util/mkfiles.pl
++++ b/util/mkfiles.pl
 @@ -1,4 +1,4 @@
 -#!/usr/local/bin/perl
 +#!/usr/bin/perl
  #
- # linux.pl - the standard unix makefile stuff.
+ # This is a hacked version of files.pl for systems that can't do a 'make files'.
+ # Do a perl util/mkminfo.pl >MINFO to build MINFO
+diff --git a/util/mklink.pl b/util/mklink.pl
+index eacc327..30bd449 100755
+--- a/util/mklink.pl
++++ b/util/mklink.pl
+@@ -1,4 +1,4 @@
+-#!/usr/local/bin/perl
++#!/usr/bin/perl
+ 
+ # mklink.pl
+ 
+diff --git a/util/mksdef.pl b/util/mksdef.pl
+index 065dc67..fc35ac1 100644
+--- a/util/mksdef.pl
++++ b/util/mksdef.pl
+@@ -1,4 +1,4 @@
+-
++#!/usr/bin/perl
+ # Perl script to split libeay32.def into two distinct DEF files for use in
+ # fipdso mode. It works out symbols in each case by running "link" command and
+ # parsing the output to find the list of missing symbols then splitting
+diff --git a/util/mkstack.pl b/util/mkstack.pl
+index 2a968f3..eb7a1e7 100755
+--- a/util/mkstack.pl
++++ b/util/mkstack.pl
+@@ -1,4 +1,4 @@
+-#!/usr/local/bin/perl -w
++#!/usr/bin/perl
+ 
+ # This is a utility that searches out "DECLARE_STACK_OF()"
+ # declarations in .h and .c files, and updates/creates/replaces
+diff --git a/util/perlpath.pl b/util/perlpath.pl
+index a1f236b..faff575 100755
+--- a/util/perlpath.pl
++++ b/util/perlpath.pl
+@@ -1,4 +1,4 @@
+-#!/usr/local/bin/perl
++#!/usr/bin/perl
  #
---- openssl-0.9.8m.orig/util/pl/BC-32.pl
-+++ openssl-0.9.8m/util/pl/BC-32.pl
+ # modify the '#!/usr/local/bin/perl'
+ # line in all scripts that rely on perl.
+diff --git a/util/pl/BC-32.pl b/util/pl/BC-32.pl
+index 99b8c05..24a0b48 100644
+--- a/util/pl/BC-32.pl
++++ b/util/pl/BC-32.pl
 @@ -1,4 +1,4 @@
 -#!/usr/local/bin/perl
 +#!/usr/bin/perl
  # Borland C++ builder 3 and 4 -- Janez Jere <jj@void.si>
  #
  
+diff --git a/util/pl/Mingw32.pl b/util/pl/Mingw32.pl
+index 8f0483f..f14e6c9 100644
+--- a/util/pl/Mingw32.pl
++++ b/util/pl/Mingw32.pl
+@@ -1,4 +1,4 @@
+-#!/usr/local/bin/perl
++#!/usr/bin/perl
+ #
+ # Mingw32.pl -- Mingw
+ #
+diff --git a/util/pl/OS2-EMX.pl b/util/pl/OS2-EMX.pl
+index 28cd116..8f5c26a 100644
+--- a/util/pl/OS2-EMX.pl
++++ b/util/pl/OS2-EMX.pl
+@@ -1,4 +1,4 @@
+-#!/usr/local/bin/perl
++#!/usr/bin/perl
+ #
+ # OS2-EMX.pl - for EMX GCC on OS/2
+ #
+diff --git a/util/pl/VC-32.pl b/util/pl/VC-32.pl
+index 5001557..3cbcb17 100644
+--- a/util/pl/VC-32.pl
++++ b/util/pl/VC-32.pl
+@@ -1,4 +1,4 @@
+-#!/usr/local/bin/perl
++#!/usr/bin/perl
+ # VC-32.pl - unified script for Microsoft Visual C++, covering Win32,
+ # Win64 and WinCE [follow $FLAVOR variable to trace the differences].
+ #
+diff --git a/util/pl/linux.pl b/util/pl/linux.pl
+index d24f7b7..e29f1f2 100644
+--- a/util/pl/linux.pl
++++ b/util/pl/linux.pl
+@@ -1,4 +1,4 @@
+-#!/usr/local/bin/perl
++#!/usr/bin/perl
+ #
+ # linux.pl - the standard unix makefile stuff.
+ #
+diff --git a/util/pl/netware.pl b/util/pl/netware.pl
+index 173c991..992f82a 100644
+--- a/util/pl/netware.pl
++++ b/util/pl/netware.pl
+@@ -1,4 +1,4 @@
+-# Metrowerks Codewarrior or gcc / nlmconv for NetWare
++#!/usr/bin/perl
+ #
+ 
+ $version_header = "crypto/opensslv.h";
+diff --git a/util/pl/ultrix.pl b/util/pl/ultrix.pl
+index ea370c7..a329929 100644
+--- a/util/pl/ultrix.pl
++++ b/util/pl/ultrix.pl
+@@ -1,4 +1,4 @@
+-#!/usr/local/bin/perl
++#!/usr/bin/perl
+ #
+ # linux.pl - the standard unix makefile stuff.
+ #
+diff --git a/util/pl/unix.pl b/util/pl/unix.pl
+index 146611a..65c7ef3 100644
+--- a/util/pl/unix.pl
++++ b/util/pl/unix.pl
+@@ -1,4 +1,4 @@
+-#!/usr/local/bin/perl
++#!/usr/bin/perl
+ #
+ # unix.pl - the standard unix makefile stuff.
+ #
+diff --git a/util/pod2man.pl b/util/pod2man.pl
+index 025d914..90c291b 100755
+--- a/util/pod2man.pl
++++ b/util/pod2man.pl
+@@ -1,4 +1,4 @@
+-: #!/usr/bin/perl-5.005
++#!/usr/bin/perl
+     eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
+ 	if $running_under_some_shell;
+ 
+diff --git a/util/selftest.pl b/util/selftest.pl
+index 4778c5a..070e3a9 100644
+--- a/util/selftest.pl
++++ b/util/selftest.pl
+@@ -1,4 +1,4 @@
+-#!/usr/local/bin/perl -w
++#!/usr/bin/perl
+ #
+ # Run the test suite and generate a report
+ #
+diff --git a/util/sp-diff.pl b/util/sp-diff.pl
+index 9d6c603..c0a64fe 100755
+--- a/util/sp-diff.pl
++++ b/util/sp-diff.pl
+@@ -1,4 +1,4 @@
+-#!/usr/local/bin/perl
++#!/usr/bin/perl
+ #
+ # This file takes as input, the files that have been output from
+ # ssleay speed.
+diff --git a/util/src-dep.pl b/util/src-dep.pl
+index ad997e4..91242f7 100755
+--- a/util/src-dep.pl
++++ b/util/src-dep.pl
+@@ -1,4 +1,4 @@
+-#!/usr/local/bin/perl
++#!/usr/bin/perl
+ 
+ # we make up an array of
+ # $file{function_name}=filename;
+diff --git a/util/tab_num.pl b/util/tab_num.pl
+index a81ed0e..77b591d 100755
+--- a/util/tab_num.pl
++++ b/util/tab_num.pl
+@@ -1,4 +1,4 @@
+-#!/usr/local/bin/perl
++#!/usr/bin/perl
+ 
+ $num=1;
+ $width=40;

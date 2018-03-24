@@ -1,5 +1,26 @@
+From f778a3c97feb0f3a69b31fcea7bbb51dec1439f4 Mon Sep 17 00:00:00 2001
+From: captain <openatv@gmail.com>
+Date: Tue, 26 Jan 2016 07:44:41 +0100
+ linux-3.13-gcc-4.9.3-build-error-fixed.patch
+
+---
+ arch/mips/Makefile                  |  9 ++++++
+ arch/mips/include/asm/asmmacro-32.h | 36 ++++++++++++++++++++++++
+ arch/mips/include/asm/asmmacro-64.h | 32 +++++++++++++++++++++
+ arch/mips/include/asm/fpregdef.h    | 19 +++++++++++++
+ arch/mips/include/asm/mipsregs.h    | 11 +++++++-
+ arch/mips/kernel/branch.c           | 10 +++++++
+ arch/mips/kernel/genex.S            |  4 +++
+ arch/mips/kernel/r2300_fpu.S        | 18 ++++++++++++
+ arch/mips/kernel/r2300_switch.S     | 11 ++++++++
+ arch/mips/kernel/r4k_fpu.S          | 56 +++++++++++++++++++++++++++++++++++++
+ arch/mips/kernel/r4k_switch.S       | 18 ++++++++++++
+ arch/mips/kernel/r6000_fpu.S        | 10 +++++++
+ arch/mips/math-emu/cp1emu.c         | 14 ++++++++++
+ 13 files changed, 247 insertions(+), 1 deletion(-)
+
 diff --git a/arch/mips/Makefile b/arch/mips/Makefile
-index de300b9..6ba647b 100644
+index de300b99..6ba647b1 100644
 --- a/arch/mips/Makefile
 +++ b/arch/mips/Makefile
 @@ -57,6 +57,15 @@ ifdef CONFIG_FUNCTION_GRAPH_TRACER
@@ -19,7 +40,7 @@ index de300b9..6ba647b 100644
  ld-emul			= $(32bit-emul)
  vmlinux-32		= vmlinux
 diff --git a/arch/mips/include/asm/asmmacro-32.h b/arch/mips/include/asm/asmmacro-32.h
-index 2413afe..cac8d1f 100644
+index 2413afe2..cac8d1fe 100644
 --- a/arch/mips/include/asm/asmmacro-32.h
 +++ b/arch/mips/include/asm/asmmacro-32.h
 @@ -13,6 +13,11 @@
@@ -103,7 +124,7 @@ index 2413afe..cac8d1f 100644
  
  	.macro	cpu_save_nonscratch thread
 diff --git a/arch/mips/include/asm/asmmacro-64.h b/arch/mips/include/asm/asmmacro-64.h
-index 08a527d..79fae87 100644
+index 08a527df..79fae873 100644
 --- a/arch/mips/include/asm/asmmacro-64.h
 +++ b/arch/mips/include/asm/asmmacro-64.h
 @@ -14,6 +14,11 @@
@@ -184,7 +205,7 @@ index 08a527d..79fae87 100644
  
  	.macro	fpu_restore_double thread status tmp
 diff --git a/arch/mips/include/asm/fpregdef.h b/arch/mips/include/asm/fpregdef.h
-index 429481f..6396e21 100644
+index 429481f9..6396e214 100644
 --- a/arch/mips/include/asm/fpregdef.h
 +++ b/arch/mips/include/asm/fpregdef.h
 @@ -14,6 +14,25 @@
@@ -214,7 +235,7 @@ index 429481f..6396e21 100644
  
  /*
 diff --git a/arch/mips/include/asm/mipsregs.h b/arch/mips/include/asm/mipsregs.h
-index e033141..3c7e064 100644
+index e0331414..3c7e0648 100644
 --- a/arch/mips/include/asm/mipsregs.h
 +++ b/arch/mips/include/asm/mipsregs.h
 @@ -1170,7 +1170,7 @@ do {									\
@@ -249,7 +270,7 @@ index e033141..3c7e064 100644
  #define rddsp(mask)							\
  ({									\
 diff --git a/arch/mips/kernel/branch.c b/arch/mips/kernel/branch.c
-index 4d78bf4..7cbd9a3 100644
+index 4d78bf44..7cbd9a39 100644
 --- a/arch/mips/kernel/branch.c
 +++ b/arch/mips/kernel/branch.c
 @@ -19,6 +19,10 @@
@@ -278,7 +299,7 @@ index 4d78bf4..7cbd9a3 100644
  			fcr31 = current->thread.fpu.fcr31;
  		preempt_enable();
 diff --git a/arch/mips/kernel/genex.S b/arch/mips/kernel/genex.S
-index 47d7583..9995e1f 100644
+index 47d7583c..9995e1f6 100644
 --- a/arch/mips/kernel/genex.S
 +++ b/arch/mips/kernel/genex.S
 @@ -408,6 +408,10 @@ NESTED(nmi_handler, PT_SIZE, sp)
@@ -293,7 +314,7 @@ index 47d7583..9995e1f 100644
  	li	a2, ~(0x3f << 12)
  	and	a2, a1
 diff --git a/arch/mips/kernel/r2300_fpu.S b/arch/mips/kernel/r2300_fpu.S
-index f31063d..d2520ca 100644
+index f31063db..d2520cab 100644
 --- a/arch/mips/kernel/r2300_fpu.S
 +++ b/arch/mips/kernel/r2300_fpu.S
 @@ -28,6 +28,11 @@
@@ -343,7 +364,7 @@ index f31063d..d2520ca 100644
  	.set	reorder
  
 diff --git a/arch/mips/kernel/r2300_switch.S b/arch/mips/kernel/r2300_switch.S
-index 20b7b04..3bbe313 100644
+index 20b7b040..3bbe3134 100644
 --- a/arch/mips/kernel/r2300_switch.S
 +++ b/arch/mips/kernel/r2300_switch.S
 @@ -120,6 +120,12 @@ LEAF(_restore_fp)
@@ -369,7 +390,7 @@ index 20b7b04..3bbe313 100644
 +#endif
 +
 diff --git a/arch/mips/kernel/r4k_fpu.S b/arch/mips/kernel/r4k_fpu.S
-index 55ffe14..38bed9a 100644
+index 55ffe149..38bed9ac 100644
 --- a/arch/mips/kernel/r4k_fpu.S
 +++ b/arch/mips/kernel/r4k_fpu.S
 @@ -19,8 +19,18 @@
@@ -500,7 +521,7 @@ index 55ffe14..38bed9a 100644
  #endif
  
 diff --git a/arch/mips/kernel/r4k_switch.S b/arch/mips/kernel/r4k_switch.S
-index 078de5e..bcf37b8 100644
+index 078de5ea..bcf37b85 100644
 --- a/arch/mips/kernel/r4k_switch.S
 +++ b/arch/mips/kernel/r4k_switch.S
 @@ -22,6 +22,12 @@
@@ -540,7 +561,7 @@ index 078de5e..bcf37b8 100644
 +#endif
 +
 diff --git a/arch/mips/kernel/r6000_fpu.S b/arch/mips/kernel/r6000_fpu.S
-index da0fbe4..cad51f8 100644
+index da0fbe46..cad51f82 100644
 --- a/arch/mips/kernel/r6000_fpu.S
 +++ b/arch/mips/kernel/r6000_fpu.S
 @@ -18,6 +18,11 @@
@@ -568,7 +589,7 @@ index da0fbe4..cad51f8 100644
   *  - fp gp registers
   *  - cp1 status/control register
 diff --git a/arch/mips/math-emu/cp1emu.c b/arch/mips/math-emu/cp1emu.c
-index efe0088..2b69a61 100644
+index efe00884..2b69a613 100644
 --- a/arch/mips/math-emu/cp1emu.c
 +++ b/arch/mips/math-emu/cp1emu.c
 @@ -51,6 +51,10 @@

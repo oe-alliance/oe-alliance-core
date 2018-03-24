@@ -1,5 +1,13 @@
+From 1c5ddf76d25362fd5a1ffca65373a718df9b26a3 Mon Sep 17 00:00:00 2001
+From: OpenEmbedded <oe.patch@oe>
+Date: Fri, 23 Mar 2018 14:01:51 +0100
+
+---
+ drivers/media/tuners/tda18271-fe.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
 diff --git a/drivers/media/tuners/tda18271-fe.c b/drivers/media/tuners/tda18271-fe.c
-index 4995b89..c9149f9 100644
+index 4995b890..c9149f9b 100644
 --- a/drivers/media/tuners/tda18271-fe.c
 +++ b/drivers/media/tuners/tda18271-fe.c
 @@ -1340,6 +1340,16 @@ struct dvb_frontend *tda18271_attach(struct dvb_frontend *fe, u8 addr,

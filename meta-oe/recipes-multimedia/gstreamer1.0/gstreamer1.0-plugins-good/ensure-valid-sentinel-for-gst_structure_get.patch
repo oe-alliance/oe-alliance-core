@@ -1,4 +1,4 @@
-From 2169f2205c0205a220d826d7573e5a863bd36e0a Mon Sep 17 00:00:00 2001
+From f0522f1ba2a76eff027a939cc6f65f012d5d71b8 Mon Sep 17 00:00:00 2001
 From: Andre McCurdy <armccurdy@gmail.com>
 Date: Tue, 9 Feb 2016 14:00:00 -0800
 Subject: [PATCH] ensure valid sentinal for gst_structure_get()
@@ -18,15 +18,16 @@ is not a valid sentinel without an explicit cast to a pointer type.
 Upstream-Status: Pending
 
 Signed-off-by: Andre McCurdy <armccurdy@gmail.com>
+
 ---
  ext/taglib/gstid3v2mux.cc | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/ext/taglib/gstid3v2mux.cc b/ext/taglib/gstid3v2mux.cc
-index 8651e77..a87234f 100644
+index 3ec9116..634c6ef 100644
 --- a/ext/taglib/gstid3v2mux.cc
 +++ b/ext/taglib/gstid3v2mux.cc
-@@ -465,7 +465,7 @@ add_image_tag (ID3v2::Tag * id3v2tag, const GstTagList * list,
+@@ -463,7 +463,7 @@ add_image_tag (ID3v2::Tag * id3v2tag, const GstTagList * list,
  
            if (info_struct) {
              if (gst_structure_get (info_struct, "image-type",
@@ -35,6 +36,3 @@ index 8651e77..a87234f 100644
                if (image_type > 0 && image_type <= 18) {
                  image_type += 2;
                } else {
--- 
-1.9.1
-

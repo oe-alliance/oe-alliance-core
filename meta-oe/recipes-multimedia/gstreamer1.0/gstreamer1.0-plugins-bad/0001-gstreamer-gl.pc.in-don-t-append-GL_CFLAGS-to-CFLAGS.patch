@@ -1,4 +1,4 @@
-From 5622ca3b61603dc316a0f1fbede3f9aa353a5e48 Mon Sep 17 00:00:00 2001
+From 36fadaf36f599a35d4e495479835abf8082fbc5b Mon Sep 17 00:00:00 2001
 From: Alexander Kanavin <alex.kanavin@gmail.com>
 Date: Fri, 12 May 2017 16:47:12 +0300
 Subject: [PATCH] gstreamer-gl.pc.in: don't append GL_CFLAGS to CFLAGS
@@ -10,6 +10,7 @@ Upstream-Status: Pending
 
 Signed-off-by: Alexander Kanavin <alex.kanavin@gmail.com>
 Signed-off-by: Maxin B. John <maxin.john@intel.com>
+
 ---
  pkgconfig/gstreamer-gl.pc.in | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
@@ -24,6 +25,3 @@ index 8e7a303..d167be1 100644
  Libs: -L${libdir} -lgstgl-@GST_API_VERSION@
 -Cflags: -I${includedir} -I${libdir}/gstreamer-@GST_API_VERSION@/include @GL_CFLAGS@
 +Cflags: -I${includedir} -I${libdir}/gstreamer-@GST_API_VERSION@/include
--- 
-2.4.0
-

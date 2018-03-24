@@ -1,3 +1,8 @@
+From ed227b06b7dfd6a3cefebc0f25cf8b2cf9d3c850 Mon Sep 17 00:00:00 2001
+From: arn354 <arn354@email.de>
+Date: Fri, 2 Dec 2016 14:52:02 +0100
+Subject: [PATCH] ffmpeg - fix build
+
 It will add -mips64r6 and -mips64r2 to cmdline which will
 cause conflicts
 
@@ -13,11 +18,15 @@ failed to merge target specific data of file
 -Khem
 Upstream-Status: Inappropriate [OE-Specific]
 
-Index: ffmpeg-3.1.1/configure
-===================================================================
---- ffmpeg-3.1.1.orig/configure
-+++ ffmpeg-3.1.1/configure
-@@ -5220,12 +5220,9 @@ elif enabled mips; then
+---
+ configure | 3 ---
+ 1 file changed, 3 deletions(-)
+
+diff --git a/configure b/configure
+index 23823e3..1041088 100755
+--- a/configure
++++ b/configure
+@@ -5361,12 +5361,9 @@ elif enabled mips; then
  
      # Enable minimum ISA based on selected options
      if enabled mips64; then

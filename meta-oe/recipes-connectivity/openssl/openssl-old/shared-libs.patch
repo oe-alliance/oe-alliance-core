@@ -1,10 +1,21 @@
+From ee5698e169c180013a65e1370ccc4f62a596f991 Mon Sep 17 00:00:00 2001
+From: atvcaptain <captain@web.de>
+Date: Sun, 10 Nov 2013 11:57:29 +0100
+Subject: [PATCH] * Create openssl-old that provides obsolete 0.9.8 versions
+
 Upstream-Status: Inappropriate [configuration]
 
+---
+ Makefile.org    | 4 ++--
+ crypto/Makefile | 2 +-
+ ssl/Makefile    | 2 +-
+ 3 files changed, 4 insertions(+), 4 deletions(-)
+
 diff --git a/Makefile.org b/Makefile.org
-index e87d623..25ff367 100644
+index f94a850..3fb6eda 100644
 --- a/Makefile.org
 +++ b/Makefile.org
-@@ -355,7 +355,7 @@ libcrypto$(SHLIB_EXT): libcrypto.a $(SHARED_FIPS)
+@@ -356,7 +356,7 @@ libcrypto$(SHLIB_EXT): libcrypto.a $(SHARED_FIPS)
  	@if [ "$(SHLIB_TARGET)" != "" ]; then \
  		if [ "$(FIPSCANLIB)" = "libfips" ]; then \
  			$(ARD) libcrypto.a fipscanister.o ; \
@@ -13,7 +24,7 @@ index e87d623..25ff367 100644
  			$(AR) libcrypto.a fips/fipscanister.o ; \
  		else \
  			if [ "$(FIPSCANLIB)" = "libcrypto" ]; then \
-@@ -373,7 +373,7 @@ libssl$(SHLIB_EXT): libcrypto$(SHLIB_EXT) libssl.a
+@@ -374,7 +374,7 @@ libssl$(SHLIB_EXT): libcrypto$(SHLIB_EXT) libssl.a
  	@if [ "$(SHLIB_TARGET)" != "" ]; then \
  		shlibdeps=-lcrypto; \
  		[ "$(FIPSCANLIB)" = "libfips" ] && shlibdeps="$$shlibdeps -lfips"; \
@@ -23,7 +34,7 @@ index e87d623..25ff367 100644
  		echo "There's no support for shared libraries on this platform" >&2 ; \
  		exit 1; \
 diff --git a/crypto/Makefile b/crypto/Makefile
-index 6557f2b..a69bf7c 100644
+index 71ac792..0990a35 100644
 --- a/crypto/Makefile
 +++ b/crypto/Makefile
 @@ -103,7 +103,7 @@ $(LIB):	$(LIBOBJ)

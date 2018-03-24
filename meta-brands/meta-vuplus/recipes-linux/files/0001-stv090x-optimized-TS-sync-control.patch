@@ -1,4 +1,4 @@
-From 8cc2e0072bc2dfc9a64b569e2b7bb804bf82bc55 Mon Sep 17 00:00:00 2001
+From 703a5fb79678c3b87d8fa54c262ca78fa4c9aad7 Mon Sep 17 00:00:00 2001
 From: Athanasios Oikonomou <athoik@gmail.com>
 Date: Thu, 17 Mar 2016 06:53:34 +0200
 Subject: [PATCH] stv090x: optimized TS sync control
@@ -9,8 +9,13 @@ https://github.com/Taapat/driver/commit/b831c1a22b96ece05d0af1cc1e55d5e34d2ca13b
 stv090x: optimized TS sync control.
 https://github.com/Taapat/driver/commit/f2cacf05651efe48bb5abb02df94646a0d712362
 
+---
+ drivers/media/dvb-frontends/stv090x.c     | 26 ++++++++++++++++++++++----
+ drivers/media/dvb-frontends/stv090x_reg.h | 16 ++++++++++++++++
+ 2 files changed, 38 insertions(+), 4 deletions(-)
+
 diff --git a/drivers/media/dvb-frontends/stv090x.c b/drivers/media/dvb-frontends/stv090x.c
-index 12fd3d0..396e0ab 100644
+index 651342da..2d735a82 100644
 --- a/drivers/media/dvb-frontends/stv090x.c
 +++ b/drivers/media/dvb-frontends/stv090x.c
 @@ -2872,6 +2872,28 @@ static int stv090x_optimize_track(struct stv090x_state *state)
@@ -42,7 +47,7 @@ index 12fd3d0..396e0ab 100644
  	switch (state->delsys) {
  	case STV090x_DVBS1:
  	case STV090x_DSS:
-@@ -4365,10 +4387,6 @@ static int stv0900_set_tspath(struct stv090x_state *state)
+@@ -4351,10 +4373,6 @@ static int stv0900_set_tspath(struct stv090x_state *state)
  			case STV090x_TSMODE_DVBCI:
  				if (stv090x_write_reg(state, STV090x_TSGENERAL, 0x06) < 0) /* Mux'd stream mode */
  					goto err;
@@ -54,7 +59,7 @@ index 12fd3d0..396e0ab 100644
  				STV090x_SETFIELD_Px(reg, TSFIFO_MANSPEED_FIELD, 3);
  				if (stv090x_write_reg(state, STV090x_P2_TSCFGM, reg) < 0)
 diff --git a/drivers/media/dvb-frontends/stv090x_reg.h b/drivers/media/dvb-frontends/stv090x_reg.h
-index 93741ee..c1dac9c 100644
+index 93741ee1..c1dac9c0 100644
 --- a/drivers/media/dvb-frontends/stv090x_reg.h
 +++ b/drivers/media/dvb-frontends/stv090x_reg.h
 @@ -2104,6 +2104,14 @@
@@ -87,6 +92,3 @@ index 93741ee..c1dac9c 100644
  #define STV090x_Px_TSINSDELH(__x)			(0xF576 - (__x - 1) * 0x200)
  #define STV090x_P1_TSINSDELH				STV090x_Px_TSINSDELH(1)
  #define STV090x_P2_TSINSDELH				STV090x_Px_TSINSDELH(2)
--- 
-2.1.4
-

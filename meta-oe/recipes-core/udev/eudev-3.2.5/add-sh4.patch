@@ -1,6 +1,16 @@
---- a/src/shared/missing.h	2016-03-09 16:59:01.609087098 +0100
-+++ b/src/shared/missing.h	2016-03-09 17:12:48.733071372 +0100
-@@ -55,6 +55,8 @@
+From e9142650006db8740df676397377fac31a5bf4bb Mon Sep 17 00:00:00 2001
+From: captain <openatv@gmail.com>
+Date: Wed, 9 Mar 2016 18:35:47 +0100
+
+---
+ src/shared/missing.h | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/src/shared/missing.h b/src/shared/missing.h
+index bebbb42..b87258f 100644
+--- a/src/shared/missing.h
++++ b/src/shared/missing.h
+@@ -57,6 +57,8 @@
  #    define __NR_getrandom 352
  #  elif defined(__s390x__)
  #    define __NR_getrandom 349
@@ -9,7 +19,7 @@
  #  else
  #    warning "__NR_getrandom unknown for your architecture"
  #    define __NR_getrandom 0xffffffff
-@@ -126,6 +128,8 @@
+@@ -128,6 +130,8 @@ static inline pid_t gettid(void) {
  #    define __NR_name_to_handle_at 370
  #  elif defined(__powerpc__)
  #    define __NR_name_to_handle_at 345
