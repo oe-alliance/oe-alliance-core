@@ -1,7 +1,7 @@
-From ed09c8fd2c9c2b5384b72cc70af3728be6694e64 Mon Sep 17 00:00:00 2001
+From 8a2404f78282bdbc16e8f0afac10cf83f24517ba Mon Sep 17 00:00:00 2001
 From: Mingke Wang <mingke.wang@freescale.com>
 Date: Thu, 19 Mar 2015 14:20:26 +0800
-Subject: [PATCH 4/4] subparse: set need_segment after sink pad received
+Subject: [PATCH] subparse: set need_segment after sink pad received
  GST_EVENT_SEGMENT
 
 subparse works in push mode, chain funciton will be called once
@@ -14,13 +14,18 @@ Upstream-Status: Submitted [https://bugzilla.gnome.org/show_bug.cgi?id=747498]
 
 Signed-off-by: Mingke Wang <mingke.wang@freescale.com>
 
+---
+ gst/subparse/gstsubparse.c | 26 ++++++++++++--------------
+ 1 file changed, 12 insertions(+), 14 deletions(-)
+ mode change 100644 => 100755 gst/subparse/gstsubparse.c
+
 diff --git a/gst/subparse/gstsubparse.c b/gst/subparse/gstsubparse.c
 old mode 100644
 new mode 100755
-index b565e93..7741ccc
+index cf29a56..98c43fc
 --- a/gst/subparse/gstsubparse.c
 +++ b/gst/subparse/gstsubparse.c
-@@ -270,24 +270,20 @@
+@@ -270,24 +270,20 @@ gst_sub_parse_src_event (GstPad * pad, GstObject * parent, GstEvent * event)
          goto beach;
        }
  
@@ -53,7 +58,7 @@ index b565e93..7741ccc
          GST_WARNING_OBJECT (self, "seek to 0 bytes failed");
        }
  
-@@ -1873,8 +1869,10 @@
+@@ -1873,8 +1869,10 @@ gst_sub_parse_sink_event (GstPad * pad, GstObject * parent, GstEvent * event)
        gst_event_parse_segment (event, &s);
        if (s->format == GST_FORMAT_TIME)
          gst_event_copy_segment (event, &self->segment);
@@ -66,6 +71,3 @@ index b565e93..7741ccc
  
        /* if not time format, we'll either start with a 0 timestamp anyway or
         * it's following a seek in which case we'll have saved the requested
--- 
-1.7.9.5
-
