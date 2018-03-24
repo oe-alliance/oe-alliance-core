@@ -1,5 +1,13 @@
+From f48fd58a5c696cd1ac685387dab080e58852d890 Mon Sep 17 00:00:00 2001
+From: atvcaptain <captain@web.de>
+Date: Mon, 29 Dec 2014 18:05:54 +0100
+
+---
+ drivers/media/dvb-core/dvbdev.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
+
 diff --git a/drivers/media/dvb-core/dvbdev.c b/drivers/media/dvb-core/dvbdev.c
-index 983db75..1a7aa58 100644
+index 983db75d..1a7aa580 100644
 --- a/drivers/media/dvb-core/dvbdev.c
 +++ b/drivers/media/dvb-core/dvbdev.c
 @@ -296,9 +296,9 @@ static int dvbdev_check_free_adapter_num(int num)

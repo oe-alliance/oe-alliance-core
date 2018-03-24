@@ -1,8 +1,18 @@
---- a/src/udev/udev-builtin-input_id.c	2016-03-09 18:19:57.048994784 +0100
-+++ a/src/udev/udev-builtin-input_id.c	2016-03-09 18:20:29.472994168 +0100
-@@ -33,6 +33,14 @@
- #include "udev.h"
+From 5958bb9d570d0e79882c3de39c172c714b89d59f Mon Sep 17 00:00:00 2001
+From: captain <openatv@gmail.com>
+Date: Wed, 9 Mar 2016 18:35:47 +0100
+
+---
+ src/udev/udev-builtin-input_id.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/src/udev/udev-builtin-input_id.c b/src/udev/udev-builtin-input_id.c
+index ca545be..fc49f5a 100644
+--- a/src/udev/udev-builtin-input_id.c
++++ b/src/udev/udev-builtin-input_id.c
+@@ -34,6 +34,14 @@
  #include "util.h"
+ #include "missing.h"
  
 +#ifndef BTN_TRIGGER_HAPPY
 +#define BTN_TRIGGER_HAPPY               0x2c0

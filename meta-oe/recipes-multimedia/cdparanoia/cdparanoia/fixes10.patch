@@ -1,7 +1,19 @@
---- cdparanoia-III-alpha9.8/configure.in	2000-03-26 00:33:22.000000000 -0700
-+++ cdparanoia-III-alpha9.8.new/configure.in	2004-12-23 16:34:04.072846728 -0700
-@@ -1,7 +1,7 @@
- AC_INIT(interface/interface.c)
+From effd7d72b17ab3610e7ccbe460b7d8344a1c48c0 Mon Sep 17 00:00:00 2001
+From: Andy Blackburn <andrew.blackburn644@btinternet.com>
+Date: Sun, 4 Aug 2013 14:11:26 +0100
+
+---
+ configure.in             | 4 ++--
+ interface/scan_devices.c | 4 ++++
+ 2 files changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/configure.in b/configure.in
+index 3ae6989..235a985 100644
+--- a/configure.in
++++ b/configure.in
+@@ -3,8 +3,8 @@ AC_INIT(interface/interface.c)
+ VERSION="10.3pre" 
+ AC_SUBST(VERSION) 
  
 -cp $srcdir/configure.guess $srcdir/config.guess
 -cp $srcdir/configure.sub $srcdir/config.sub
@@ -10,9 +22,11 @@
  
  AC_CANONICAL_HOST
  
---- cdparanoia-III-alpha9.8/interface/scan_devices.c	2001-03-25 22:44:01.000000000 -0700
-+++ cdparanoia-III-alpha9.8.new/interface/scan_devices.c	2004-12-23 16:38:47.128815680 -0700
-@@ -19,6 +19,10 @@
+diff --git a/interface/scan_devices.c b/interface/scan_devices.c
+index fd3355d..b5e0f9f 100644
+--- a/interface/scan_devices.c
++++ b/interface/scan_devices.c
+@@ -22,6 +22,10 @@
  #include "common_interface.h"
  #include "utils.h"
  

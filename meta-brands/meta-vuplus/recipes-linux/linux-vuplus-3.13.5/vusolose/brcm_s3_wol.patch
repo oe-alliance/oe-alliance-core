@@ -1,5 +1,14 @@
+From 51ea79ea902dcb002ad3e6ec46c428c4ffdae43e Mon Sep 17 00:00:00 2001
+From: atvcaptain <captain@web.de>
+Date: Wed, 6 Aug 2014 22:40:38 +0200
+
+---
+ drivers/net/ethernet/broadcom/genet/bcmgenet.c | 28 ++++++++++++++++++++++++++
+ kernel/power/suspend.c                         | 10 +++++++++
+ 2 files changed, 38 insertions(+)
+
 diff --git a/drivers/net/ethernet/broadcom/genet/bcmgenet.c b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-index c23156a..9ae22a9 100644
+index c23156a6..9ae22a96 100644
 --- a/drivers/net/ethernet/broadcom/genet/bcmgenet.c
 +++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
 @@ -3115,6 +3115,34 @@ static int bcmgenet_set_wol(struct net_device *dev,
@@ -38,7 +47,7 @@ index c23156a..9ae22a9 100644
  	device_set_wakeup_enable(&dev->dev, wol->wolopts);
  	pDevCtrl->wolopts = wol->wolopts;
 diff --git a/kernel/power/suspend.c b/kernel/power/suspend.c
-index 62ee437..ffd0bb5 100644
+index 62ee437b..ffd0bb5e 100644
 --- a/kernel/power/suspend.c
 +++ b/kernel/power/suspend.c
 @@ -167,6 +167,15 @@ void __attribute__ ((weak)) arch_suspend_enable_irqs(void)

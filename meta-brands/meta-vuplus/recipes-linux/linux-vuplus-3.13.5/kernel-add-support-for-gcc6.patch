@@ -1,6 +1,15 @@
+From 4d002e7eb1c7c7a6e085d296a539d675e7b99e40 Mon Sep 17 00:00:00 2001
+From: captain <openatv@gmail.com>
+Date: Tue, 26 Jan 2016 07:27:38 +0100
+
+---
+ include/linux/compiler-gcc6.h | 59 +++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 59 insertions(+)
+ create mode 100644 include/linux/compiler-gcc6.h
+
 diff --git a/include/linux/compiler-gcc6.h b/include/linux/compiler-gcc6.h
 new file mode 100644
-index 0000000..ba064fa
+index 00000000..ba064fa6
 --- /dev/null
 +++ b/include/linux/compiler-gcc6.h
 @@ -0,0 +1,59 @@
@@ -63,5 +72,3 @@ index 0000000..ba064fa
 +#endif /* CONFIG_ARCH_USE_BUILTIN_BSWAP */
 +
 +#define KASAN_ABI_VERSION 4
--- 
-2.1.0

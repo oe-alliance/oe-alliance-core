@@ -1,3 +1,4 @@
+From b4bdd79dabbc5aa9a75f8f5125f3965a92b799f5 Mon Sep 17 00:00:00 2001
 From: Giovanni Campagna <gcampagna-cNUdlRotFMnNLxjTenLetw@public.gmane.org>
 Date: Sat, 12 Oct 2013 17:45:25 +0200
 Subject: [PATCH] Allow using obexd without systemd in the user session
@@ -14,16 +15,15 @@ configuration. See thread:
 http://thread.gmane.org/gmane.linux.bluez.kernel/38725/focus=38843
 
 Signed-off-by: Javier Viguera <javier.viguera@digi.com>
+
 ---
- Makefile.obexd                      | 4 ++--
- obexd/src/org.bluez.obex.service    | 4 ----
- obexd/src/org.bluez.obex.service.in | 4 ++++
- 3 files changed, 6 insertions(+), 6 deletions(-)
- delete mode 100644 obexd/src/org.bluez.obex.service
- create mode 100644 obexd/src/org.bluez.obex.service.in
+ Makefile.obexd                                                  | 4 ++--
+ obexd/src/{org.bluez.obex.service => org.bluez.obex.service.in} | 2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+ rename obexd/src/{org.bluez.obex.service => org.bluez.obex.service.in} (76%)
 
 diff --git a/Makefile.obexd b/Makefile.obexd
-index 2e33cbc72f2b..d5d858c857b4 100644
+index c8286f0..8263e3e 100644
 --- a/Makefile.obexd
 +++ b/Makefile.obexd
 @@ -2,12 +2,12 @@
@@ -41,23 +41,16 @@ index 2e33cbc72f2b..d5d858c857b4 100644
  
  obex_plugindir = $(libdir)/obex/plugins
  
-diff --git a/obexd/src/org.bluez.obex.service b/obexd/src/org.bluez.obex.service
-deleted file mode 100644
-index a53808884554..000000000000
+diff --git a/obexd/src/org.bluez.obex.service b/obexd/src/org.bluez.obex.service.in
+similarity index 76%
+rename from obexd/src/org.bluez.obex.service
+rename to obexd/src/org.bluez.obex.service.in
+index a538088..9c815f2 100644
 --- a/obexd/src/org.bluez.obex.service
-+++ /dev/null
-@@ -1,4 +0,0 @@
--[D-BUS Service]
--Name=org.bluez.obex
--Exec=/bin/false
--SystemdService=dbus-org.bluez.obex.service
-diff --git a/obexd/src/org.bluez.obex.service.in b/obexd/src/org.bluez.obex.service.in
-new file mode 100644
-index 000000000000..9c815f246b77
---- /dev/null
 +++ b/obexd/src/org.bluez.obex.service.in
-@@ -0,0 +1,4 @@
-+[D-BUS Service]
-+Name=org.bluez.obex
+@@ -1,4 +1,4 @@
+ [D-BUS Service]
+ Name=org.bluez.obex
+-Exec=/bin/false
 +Exec=@libexecdir@/obexd
-+SystemdService=dbus-org.bluez.obex.service
+ SystemdService=dbus-org.bluez.obex.service

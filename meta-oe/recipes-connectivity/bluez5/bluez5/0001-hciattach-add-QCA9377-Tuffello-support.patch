@@ -1,4 +1,4 @@
-From ebe15e8f085c80f42951a10bad2f738c123e5493 Mon Sep 17 00:00:00 2001
+From 3b82e3f378f983dc62af39c006c8c9d2c7aa9e77 Mon Sep 17 00:00:00 2001
 From: Gary Bisson <gary.bisson@boundarydevices.com>
 Date: Wed, 17 Aug 2016 11:36:28 +0200
 Subject: [PATCH] hciattach: add QCA9377 Tuffello support
@@ -12,6 +12,7 @@ Modifications:
 - use H4 protocol instead of IBS
 
 Signed-off-by: Gary Bisson <gary.bisson@boundarydevices.com>
+
 ---
  Makefile.tools         |    1 +
  android/Android.mk     |    1 +
@@ -24,37 +25,37 @@ Signed-off-by: Gary Bisson <gary.bisson@boundarydevices.com>
  create mode 100644 tools/hciattach_rome.h
 
 diff --git a/Makefile.tools b/Makefile.tools
-index e79b53b..cbda6d5 100644
+index 72af82f..fa24215 100644
 --- a/Makefile.tools
 +++ b/Makefile.tools
-@@ -161,6 +161,7 @@ tools_hciattach_SOURCES = tools/hciattach.c tools/hciattach.h \
-						tools/hciattach_ti.c \
-						tools/hciattach_tialt.c \
-						tools/hciattach_ath3k.c \
+@@ -164,6 +164,7 @@ tools_hciattach_SOURCES = tools/hciattach.c tools/hciattach.h \
+ 						tools/hciattach_ti.c \
+ 						tools/hciattach_tialt.c \
+ 						tools/hciattach_ath3k.c \
 +						tools/hciattach_rome.c \
-						tools/hciattach_qualcomm.c \
-						tools/hciattach_intel.c \
-						tools/hciattach_bcm43xx.c
+ 						tools/hciattach_qualcomm.c \
+ 						tools/hciattach_intel.c \
+ 						tools/hciattach_bcm43xx.c \
 diff --git a/android/Android.mk b/android/Android.mk
-index 38ef4aa..d5045da 100644
+index 2f71897..0c3db0c 100644
 --- a/android/Android.mk
 +++ b/android/Android.mk
 @@ -695,6 +695,7 @@ LOCAL_SRC_FILES := \
-	bluez/tools/hciattach_ti.c \
-	bluez/tools/hciattach_tialt.c \
-	bluez/tools/hciattach_ath3k.c \
+ 	bluez/tools/hciattach_ti.c \
+ 	bluez/tools/hciattach_tialt.c \
+ 	bluez/tools/hciattach_ath3k.c \
 +	bluez/tools/hciattach_rome.c \
-	bluez/tools/hciattach_qualcomm.c \
-	bluez/tools/hciattach_intel.c \
-	bluez/tools/hciattach_bcm43xx.c \
+ 	bluez/tools/hciattach_qualcomm.c \
+ 	bluez/tools/hciattach_intel.c \
+ 	bluez/tools/hciattach_bcm43xx.c \
 diff --git a/tools/hciattach.c b/tools/hciattach.c
-index 59a76a7..68f60ae 100644
+index 8041156..0b98ab5 100644
 --- a/tools/hciattach.c
 +++ b/tools/hciattach.c
-@@ -317,6 +317,11 @@ static int ath3k_pm(int fd, struct uart_t *u, struct termios *ti)
-	return ath3k_post(fd, u->pm);
+@@ -263,6 +263,11 @@ static int ath3k_pm(int fd, struct uart_t *u, struct termios *ti)
+ 	return ath3k_post(fd, u->pm);
  }
-
+ 
 +static int qca(int fd, struct uart_t *u, struct termios *ti)
 +{
 +	return qca_soc_init(fd, u->speed, u->bdaddr);
@@ -62,35 +63,35 @@ index 59a76a7..68f60ae 100644
 +
  static int qualcomm(int fd, struct uart_t *u, struct termios *ti)
  {
-	return qualcomm_init(fd, u->speed, ti, u->bdaddr);
-@@ -1147,6 +1152,10 @@ struct uart_t uart[] = {
-	{ "ath3k",    0x0000, 0x0000, HCI_UART_ATH3K, 115200, 115200,
-			FLOW_CTL, DISABLE_PM, NULL, ath3k_ps, ath3k_pm  },
-
+ 	return qualcomm_init(fd, u->speed, ti, u->bdaddr);
+@@ -1103,6 +1108,10 @@ struct uart_t uart[] = {
+ 	{ "ath3k",    0x0000, 0x0000, HCI_UART_ATH3K, 115200, 115200,
+ 			FLOW_CTL, DISABLE_PM, NULL, ath3k_ps, ath3k_pm  },
+ 
 +	/* QCA ROME */
 +	{ "qca",    0x0000, 0x0000, HCI_UART_H4, 115200, 115200,
 +			FLOW_CTL, DISABLE_PM, NULL, qca, NULL },
 +
-	/* QUALCOMM BTS */
-	{ "qualcomm",   0x0000, 0x0000, HCI_UART_H4,   115200, 115200,
-			FLOW_CTL, DISABLE_PM, NULL, qualcomm, NULL },
-@@ -1199,6 +1208,9 @@ static int init_uart(char *dev, struct uart_t *u, int send_break, int raw)
-	if (u->flags & AMP_DEV)
-		flags |= 1 << HCI_UART_CREATE_AMP;
-
+ 	/* QUALCOMM BTS */
+ 	{ "qualcomm",   0x0000, 0x0000, HCI_UART_H4,   115200, 115200,
+ 			FLOW_CTL, DISABLE_PM, NULL, qualcomm, NULL },
+@@ -1159,6 +1168,9 @@ static int init_uart(char *dev, struct uart_t *u, int send_break, int raw)
+ 	if (u->flags & AMP_DEV)
+ 		flags |= 1 << HCI_UART_CREATE_AMP;
+ 
 +	if (!strncmp(u->type, "qca", 3))
 +		flags |= 1 << HCI_UART_RESET_ON_INIT;
 +
-	fd = open(dev, O_RDWR | O_NOCTTY);
-	if (fd < 0) {
-		perror("Can't open serial port");
+ 	fd = open(dev, O_RDWR | O_NOCTTY);
+ 	if (fd < 0) {
+ 		perror("Can't open serial port");
 diff --git a/tools/hciattach.h b/tools/hciattach.h
-index 4279a33..c2f6e40 100644
+index 249aab4..85c801c 100644
 --- a/tools/hciattach.h
 +++ b/tools/hciattach.h
-@@ -62,6 +62,7 @@ int bgb2xx_init(int dd, bdaddr_t *bdaddr);
+@@ -65,6 +65,7 @@ int bgb2xx_init(int dd, bdaddr_t *bdaddr);
  int ath3k_init(int fd, int speed, int init_speed, char *bdaddr,
-						struct termios *ti);
+ 						struct termios *ti);
  int ath3k_post(int fd, int pm);
 +int qca_soc_init(int fd, int speed, char *bdaddr);
  int qualcomm_init(int fd, int speed, struct termios *ti, const char *bdaddr);
@@ -2394,5 +2395,3 @@ index 0000000..a356cc2
 +    TUFELLO_VER_1_1 = ((ROME_PATCH_VER_0302 << 16 ) | ROME_SOC_ID_23 )
 +};
 +#endif /* HW_ROME_H */
---
-2.8.1

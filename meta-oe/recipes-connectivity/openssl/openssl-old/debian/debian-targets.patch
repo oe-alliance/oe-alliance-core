@@ -1,10 +1,19 @@
+From 7e0ba43c17704655fa9c0cd26ff3428fb51a414b Mon Sep 17 00:00:00 2001
+From: atvcaptain <captain@web.de>
+Date: Sun, 10 Nov 2013 11:57:29 +0100
+Subject: [PATCH] * Create openssl-old that provides obsolete 0.9.8 versions
+
 Upstream-Status: Backport [debian]
 
-Index: openssl-0.9.8k/Configure
-===================================================================
---- openssl-0.9.8k.orig/Configure	2009-12-09 16:09:41.000000000 +0000
-+++ openssl-0.9.8k/Configure	2009-12-09 16:09:55.000000000 +0000
-@@ -320,6 +320,49 @@
+---
+ Configure | 43 +++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 43 insertions(+)
+
+diff --git a/Configure b/Configure
+index ec87f24..b56e108 100755
+--- a/Configure
++++ b/Configure
+@@ -326,6 +326,49 @@ my %table=(
  "osf1-alpha-cc",  "cc:-std1 -tune host -O4 -readonly_strings::(unknown):::SIXTY_FOUR_BIT_LONG RC4_CHUNK:${no_asm}:dlfcn:alpha-osf1-shared:::.so",
  "tru64-alpha-cc", "cc:-std1 -tune host -fast -readonly_strings::-pthread:::SIXTY_FOUR_BIT_LONG RC4_CHUNK:${no_asm}:dlfcn:alpha-osf1-shared::-msym:.so",
  

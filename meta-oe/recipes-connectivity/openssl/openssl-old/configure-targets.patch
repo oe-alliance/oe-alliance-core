@@ -1,14 +1,23 @@
+From 0d00b525849040b1217189413961d201e7b4b23c Mon Sep 17 00:00:00 2001
+From: atvcaptain <captain@web.de>
+Date: Sun, 10 Nov 2013 11:57:29 +0100
+Subject: [PATCH] * Create openssl-old that provides obsolete 0.9.8 versions
+
 Upstream-Status: Inappropriate [embedded specific]
 
 The number of colons are important :)
 
-Index: openssl-0.9.8g/Configure
-===================================================================
---- openssl-0.9.8g.orig/Configure	2008-04-12 04:27:22.000000000 +0200
-+++ openssl-0.9.8g/Configure	2008-04-12 04:38:56.000000000 +0200
-@@ -395,6 +395,16 @@
- "linux-alpha-ccc","ccc:-fast -readonly_strings -DL_ENDIAN -DTERMIO::-D_REENTRANT:::SIXTY_FOUR_BIT_LONG RC4_CHUNK DES_INT DES_PTR DES_RISC1 DES_UNROLL:${no_asm}",
- "linux-alpha+bwx-ccc","ccc:-fast -readonly_strings -DL_ENDIAN -DTERMIO::-D_REENTRANT:::SIXTY_FOUR_BIT_LONG RC4_CHAR RC4_CHUNK DES_INT DES_PTR DES_RISC1 DES_UNROLL:${no_asm}",
+---
+ Configure | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/Configure b/Configure
+index d5a700f..33e224e 100755
+--- a/Configure
++++ b/Configure
+@@ -420,6 +420,16 @@ my %table=(
+ # Android: Linux but without -DTERMIO and pointers to headers and libs.
+ "android","gcc:-mandroid -I\$(ANDROID_DEV)/include -B\$(ANDROID_DEV)/lib -O3 -fomit-frame-pointer -Wall::-D_REENTRANT::-ldl:BN_LLONG RC4_CHAR RC4_CHUNK DES_INT DES_UNROLL BF_PTR:${no_asm}:dlfcn:linux-shared:-fPIC::.so.\$(SHLIB_MAJOR).\$(SHLIB_MINOR)",
  
 + # Linux on ARM
 +"linux-elf-arm","$ENV{'CC'}:-DL_ENDIAN -DTERMIO -O3 -fomit-frame-pointer -Wall::-D_REENTRANT::-ldl:BN_LLONG DES_RISC1::::::::::::dlfcn:linux-shared:-fPIC::.so.\$(SHLIB_MAJOR).\$(SHLIB_MINOR)",

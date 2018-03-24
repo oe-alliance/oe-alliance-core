@@ -1,4 +1,4 @@
-From f59c5269f92d59a5296cbfeeb682d42095cd88ad Mon Sep 17 00:00:00 2001
+From 21a14e481621598ce2c44239f634017b1562c482 Mon Sep 17 00:00:00 2001
 From: Wenzong Fan <wenzong.fan@windriver.com>
 Date: Thu, 18 Sep 2014 02:24:07 -0400
 Subject: [PATCH] gstreamer1.0-plugins-bad: allow to disable libssh2
@@ -14,15 +14,16 @@ configure.
 Upstream-Status: Pending
 
 Signed-off-by: Wenzong Fan <wenzong.fan@windriver.com>
+
 ---
- configure.ac |   23 +++++++++++++++++------
+ configure.ac | 23 +++++++++++++++++------
  1 file changed, 17 insertions(+), 6 deletions(-)
 
 diff --git a/configure.ac b/configure.ac
-index 0e95c5c..12153b4 100644
+index 5fe28fa..072e073 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -1901,6 +1901,15 @@ AG_GST_CHECK_FEATURE(CHROMAPRINT, [chromaprint], chromaprint, [
+@@ -1197,6 +1197,15 @@ AG_GST_CHECK_FEATURE(CHROMAPRINT, [chromaprint], chromaprint, [
  ])
  
  dnl *** Curl ***
@@ -37,8 +38,8 @@ index 0e95c5c..12153b4 100644
 +
  translit(dnm, m, l) AM_CONDITIONAL(USE_CURL, true)
  AG_GST_CHECK_FEATURE(CURL, [Curl plugin], curl, [
-   PKG_CHECK_MODULES(CURL, libcurl >= 7.21.0, [
-@@ -1915,12 +1924,14 @@ AG_GST_CHECK_FEATURE(CURL, [Curl plugin], curl, [
+   PKG_CHECK_MODULES(CURL, libcurl >= 7.35.0, [
+@@ -1219,12 +1228,14 @@ AG_GST_CHECK_FEATURE(CURL, [Curl plugin], curl, [
    ])
    AC_SUBST(CURL_CFLAGS)
    AC_SUBST(CURL_LIBS)
@@ -59,6 +60,3 @@ index 0e95c5c..12153b4 100644
    AM_CONDITIONAL(USE_SSH2, test "x$HAVE_SSH2" = "xyes")
    AC_SUBST(SSH2_CFLAGS)
    AC_SUBST(SSH2_LIBS)
--- 
-1.7.9.5
-

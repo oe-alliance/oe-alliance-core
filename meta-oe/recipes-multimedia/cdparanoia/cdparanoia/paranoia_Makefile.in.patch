@@ -1,6 +1,16 @@
---- cdparanoia-III-10.2/paranoia/Makefile.in.orig	2009-01-27 23:54:45.000000000 +0100
-+++ cdparanoia-III-10.2/paranoia/Makefile.in	2009-01-27 23:55:05.000000000 +0100
-@@ -44,7 +44,7 @@
+From 618404469a741484ea6581f7edd7b2f672fcf602 Mon Sep 17 00:00:00 2001
+From: Andy Blackburn <andrew.blackburn644@btinternet.com>
+Date: Sun, 4 Aug 2013 14:11:26 +0100
+
+---
+ paranoia/Makefile.in | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/paranoia/Makefile.in b/paranoia/Makefile.in
+index 89d0328..1a2aa07 100644
+--- a/paranoia/Makefile.in
++++ b/paranoia/Makefile.in
+@@ -44,7 +44,7 @@ libcdda_paranoia.a: 	$(OFILES)
  	$(RANLIB) libcdda_paranoia.a
  
  libcdda_paranoia.so: 	$(OFILES)	

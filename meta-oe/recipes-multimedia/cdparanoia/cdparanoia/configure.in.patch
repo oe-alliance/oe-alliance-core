@@ -1,6 +1,16 @@
---- cdparanoia-III-10.2.old/configure.in	2009-12-02 22:44:37.000000000 +0100
-+++ cdparanoia-III-10.2/configure.in	2009-12-02 22:45:04.000000000 +0100
-@@ -5,9 +5,7 @@
+From 42506af5003f9e8331da51ce989cd347258a85f5 Mon Sep 17 00:00:00 2001
+From: Andy Blackburn <andrew.blackburn644@btinternet.com>
+Date: Sun, 4 Aug 2013 14:11:26 +0100
+
+---
+ configure.in | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
+
+diff --git a/configure.in b/configure.in
+index 235a985..49336af 100644
+--- a/configure.in
++++ b/configure.in
+@@ -8,9 +8,7 @@ AC_SUBST(VERSION)
  
  AC_CANONICAL_HOST
  

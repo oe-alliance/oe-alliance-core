@@ -1,6 +1,16 @@
---- cdparanoia-III-10.2/interface/Makefile.in.orig	2009-01-27 23:52:42.000000000 +0100
-+++ cdparanoia-III-10.2/interface/Makefile.in	2009-01-27 23:53:27.000000000 +0100
-@@ -46,7 +46,7 @@
+From 26838001b36061355af31898768852a637bc594b Mon Sep 17 00:00:00 2001
+From: Andy Blackburn <andrew.blackburn644@btinternet.com>
+Date: Sun, 4 Aug 2013 14:11:26 +0100
+
+---
+ interface/Makefile.in | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/interface/Makefile.in b/interface/Makefile.in
+index 40c6098..7be3231 100644
+--- a/interface/Makefile.in
++++ b/interface/Makefile.in
+@@ -46,7 +46,7 @@ libcdda_interface.a: 	$(OFILES)
  	$(RANLIB) libcdda_interface.a
  
  libcdda_interface.so: 	$(OFILES)	
