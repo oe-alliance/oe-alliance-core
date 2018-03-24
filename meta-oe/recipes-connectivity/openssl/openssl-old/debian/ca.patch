@@ -1,10 +1,19 @@
+From 0068949a3a72f00dd2e7ba7d4d1cfa77423e4c72 Mon Sep 17 00:00:00 2001
+From: atvcaptain <captain@web.de>
+Date: Sun, 10 Nov 2013 11:57:29 +0100
+Subject: [PATCH] * Create openssl-old that provides obsolete 0.9.8 versions
+
 Upstream-Status: Backport [debian]
 
-Index: openssl-0.9.8m/apps/CA.pl.in
-===================================================================
---- openssl-0.9.8m.orig/apps/CA.pl.in	2006-04-28 00:28:51.000000000 +0000
-+++ openssl-0.9.8m/apps/CA.pl.in	2010-02-27 00:36:51.000000000 +0000
-@@ -65,6 +65,7 @@
+---
+ apps/CA.pl.in | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/apps/CA.pl.in b/apps/CA.pl.in
+index c783a6e..fa665b7 100644
+--- a/apps/CA.pl.in
++++ b/apps/CA.pl.in
+@@ -65,6 +65,7 @@ $RET = 0;
  foreach (@ARGV) {
  	if ( /^(-\?|-h|-help)$/ ) {
  	    print STDERR "usage: CA -newcert|-newreq|-newreq-nodes|-newca|-sign|-verify\n";
@@ -12,7 +21,7 @@ Index: openssl-0.9.8m/apps/CA.pl.in
  	    exit 0;
  	} elsif (/^-newcert$/) {
  	    # create a certificate
-@@ -165,6 +166,7 @@
+@@ -165,6 +166,7 @@ foreach (@ARGV) {
  	} else {
  	    print STDERR "Unknown arg $_\n";
  	    print STDERR "usage: CA -newcert|-newreq|-newreq-nodes|-newca|-sign|-verify\n";

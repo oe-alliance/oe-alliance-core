@@ -1,10 +1,19 @@
+From 8b7f6a6b5f503548f8834e3e95aff028a006c450 Mon Sep 17 00:00:00 2001
+From: atvcaptain <captain@web.de>
+Date: Sun, 10 Nov 2013 11:57:29 +0100
+Subject: [PATCH] * Create openssl-old that provides obsolete 0.9.8 versions
+
 Upstream-Status: Backport [debian]
 
-Index: openssl-0.9.8k/Configure
-===================================================================
---- openssl-0.9.8k.orig/Configure	2009-07-19 11:36:24.000000000 +0200
-+++ openssl-0.9.8k/Configure	2009-07-19 11:37:03.000000000 +0200
-@@ -1568,7 +1568,8 @@
+---
+ Configure | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/Configure b/Configure
+index 621eae3..31a9f6f 100755
+--- a/Configure
++++ b/Configure
+@@ -1615,7 +1615,8 @@ while (<IN>)
  	elsif ($shared_extension ne "" && $shared_extension =~ /^\.s([ol])\.[^\.]*\.[^\.]*$/)
  		{
  		my $sotmp = $1;

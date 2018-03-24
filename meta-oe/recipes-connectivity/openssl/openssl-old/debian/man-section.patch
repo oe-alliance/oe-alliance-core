@@ -1,10 +1,19 @@
+From 801a7183d7dec2ef185b44c92744eacb16c32465 Mon Sep 17 00:00:00 2001
+From: atvcaptain <captain@web.de>
+Date: Sun, 10 Nov 2013 11:57:29 +0100
+Subject: [PATCH] * Create openssl-old that provides obsolete 0.9.8 versions
+
 Upstream-Status: Backport [debian]
 
-Index: openssl-0.9.8k/Makefile.org
-===================================================================
---- openssl-0.9.8k.orig/Makefile.org	2009-07-19 11:34:06.000000000 +0200
-+++ openssl-0.9.8k/Makefile.org	2009-07-19 11:37:21.000000000 +0200
-@@ -155,7 +155,8 @@
+---
+ Makefile.org | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/Makefile.org b/Makefile.org
+index 035c03a..a043225 100644
+--- a/Makefile.org
++++ b/Makefile.org
+@@ -156,7 +156,8 @@ MAKEFILE= Makefile
  MANDIR=/usr/share/man
  MAN1=1
  MAN3=3
@@ -14,7 +23,7 @@ Index: openssl-0.9.8k/Makefile.org
  SHELL=/bin/sh
  
  TOP=    .
-@@ -694,7 +695,7 @@
+@@ -698,7 +699,7 @@ install_docs:
  		echo "installing man$$sec/$$fn.$${sec}$(MANSUFFIX)"; \
  		(cd `$(PERL) util/dirname.pl $$i`; \
  		sh -c "$$pod2man \
@@ -23,7 +32,7 @@ Index: openssl-0.9.8k/Makefile.org
  			--release=$(VERSION) `basename $$i`") \
  			>  $(INSTALL_PREFIX)$(MANDIR)/man$$sec/$$fn.$${sec}$(MANSUFFIX); \
  		$(PERL) util/extract-names.pl < $$i | \
-@@ -711,7 +712,7 @@
+@@ -715,7 +716,7 @@ install_docs:
  		echo "installing man$$sec/$$fn.$${sec}$(MANSUFFIX)"; \
  		(cd `$(PERL) util/dirname.pl $$i`; \
  		sh -c "$$pod2man \
