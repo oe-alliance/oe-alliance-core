@@ -1,4 +1,4 @@
-From 7018ca1c4bf26c8317e7fcd2e7e4e648195f42ca Mon Sep 17 00:00:00 2001
+From 230bdd731a17382e93d01e19e921e141f650832f Mon Sep 17 00:00:00 2001
 From: Ross Burton <ross.burton@intel.com>
 Date: Wed, 20 Dec 2017 13:03:03 +0000
 Subject: [PATCH] gstreamer: use a patch instead of sed to fix gtk-doc
@@ -42,6 +42,3 @@ index 3f83491..e5cb0d1 100644
  	    CC="$(GTKDOC_CC)" LD="$(GTKDOC_LD)" RUN="$(GTKDOC_RUN)"	\
  	    CFLAGS="$(GTKDOC_CFLAGS) $(CFLAGS)"				\
  	    LDFLAGS="$(GTKDOC_LIBS) $(LDFLAGS)"				\
--- 
-2.15.1
-
