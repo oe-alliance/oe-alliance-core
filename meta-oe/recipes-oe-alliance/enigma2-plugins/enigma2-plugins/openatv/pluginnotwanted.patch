@@ -1,5 +1,13 @@
+From b8b52ac137fda5f5e1dbdf13434629431120ea05 Mon Sep 17 00:00:00 2001
+From: Andy Blackburn <andrew.blackburn644@btinternet.com>
+Date: Fri, 12 Apr 2013 19:34:25 +0100
+
+---
+ Makefile.am | 4 ----
+ 1 file changed, 4 deletions(-)
+
 diff --git a/Makefile.am b/Makefile.am
-index b9687fc..a30c8b3 100644
+index 3f62601e..4e67b8c1 100644
 --- a/Makefile.am
 +++ b/Makefile.am
 @@ -21,7 +21,6 @@ SUBDIRS = \
@@ -10,7 +18,7 @@ index b9687fc..a30c8b3 100644
  	easymedia \
  	ecasa \
  	eibox \
-@@ -60,13 +59,11 @@ SUBDIRS = \
+@@ -59,13 +58,11 @@ SUBDIRS = \
  	ofdb \
  	orfat \
  	orfteletext \
@@ -24,7 +32,7 @@ index b9687fc..a30c8b3 100644
  	reconstructapsc \
  	reftopiconname \
  	remotetimer \
-@@ -131,7 +128,6 @@ SUBDIRS += \
+@@ -130,7 +127,6 @@ SUBDIRS += \
  	mytube \
  	yttrailer \
  	webinterface \

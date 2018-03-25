@@ -1,10 +1,18 @@
+From 786488ce550dd42c3329a3e2887381c083d58c38 Mon Sep 17 00:00:00 2001
+From: OpenEmbedded <oe.patch@oe>
+Date: Sun, 25 Mar 2018 00:10:59 +0100
+
+---
+ epgsearch/src/EPGSearch.py | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
+
 diff --git a/epgsearch/src/EPGSearch.py b/epgsearch/src/EPGSearch.py
-index c614a15..6461ac4 100644
+index 7c60d70a..724b7eaa 100644
 --- a/epgsearch/src/EPGSearch.py
 +++ b/epgsearch/src/EPGSearch.py
-@@ -56,6 +56,32 @@ except ImportError:
- service_types_tv = '1:7:1:0:0:0:0:0:0:0:(type == 1) || (type == 17) || (type == 22) || (type == 25) || (type == 134) || (type == 195)'
+@@ -52,6 +52,32 @@ except ImportError:
  rootbouquet_tv = '1:7:1:0:0:0:0:0:0:0:FROM BOUQUET "bouquets.tv" ORDER BY bouquet'
+ rootbouquet_radio = '1:7:1:0:0:0:0:0:0:0:FROM BOUQUET "bouquets.radio" ORDER BY bouquet'
  
 +# Overwrite EPGSelection.__init__ with our modified one
 +baseEPGSelection__init__ = None
