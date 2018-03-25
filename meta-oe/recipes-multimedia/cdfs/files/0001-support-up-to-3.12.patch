@@ -1,4 +1,4 @@
-From 83a0a0c04b8b6e5fb54d22d68927b9700b9d4bd4 Mon Sep 17 00:00:00 2001
+From 5c5e9e73cb3e83616968eeafe2c5a5ae5fa9e884 Mon Sep 17 00:00:00 2001
 From: pieterg <pieterg@users.sourceforge.net>
 Date: Wed, 8 Jan 2014 21:00:26 +0100
 Subject: [PATCH] support up to 3.12
@@ -6,10 +6,11 @@ Subject: [PATCH] support up to 3.12
 follow 3.10 and 3.12 changes,
 fix kthread stopping bug introduced with 3.8,
 fix 3.6 compiler warnings
+
 ---
- cdfs.h   |    4 ++++
- daemon.c |    8 ++++++++
- root.c   |   22 +++++++++++++++++++++-
+ cdfs.h   |  4 ++++
+ daemon.c |  8 ++++++++
+ root.c   | 22 +++++++++++++++++++++-
  3 files changed, 33 insertions(+), 1 deletion(-)
 
 diff --git a/cdfs.h b/cdfs.h
@@ -85,7 +86,7 @@ index c800851..a6c5064 100644
        return 0;
      filp->f_pos++;
    }
-@@ -471,8 +479,12 @@ static int cdfs_readdir(struct file *filp, void *dirent, filldir_t filldir) {
+@@ -471,7 +479,11 @@ static int cdfs_readdir(struct file *filp, void *dirent, filldir_t filldir) {
  #ifdef OLD_KERNEL
  static struct dentry * cdfs_lookup(struct inode *dir, struct dentry *dentry){
  #else
@@ -93,11 +94,10 @@ index c800851..a6c5064 100644
 +static struct dentry * cdfs_lookup(struct inode *dir, struct dentry *dentry, unsigned int flags){
 +#else
  static struct dentry * cdfs_lookup(struct inode *dir, struct dentry *dentry, struct nameidata *nd){
- #endif
 +#endif
+ #endif
    struct inode * inode;
    int i;
-   cd * this_cd = cdfs_info(dir->i_sb);
 @@ -506,7 +518,11 @@ return NULL;
  
  static struct file_operations cdfs_dir_operations = {
@@ -123,6 +123,3 @@ index c800851..a6c5064 100644
    cdfs_proc_cd=NULL;
  
    // start kernel thread
--- 
-1.7.9.5
-

@@ -1,6 +1,8 @@
---- a/libopkg/pkg.c	2015-09-26 20:45:51.820124636 +0200
-+++ b/libopkg/pkg.c	2015-09-26 20:47:49.272122623 +0200
-@@ -704,6 +704,7 @@
+diff --git a/libopkg/pkg.c b/libopkg/pkg.c
+index 11a9cf6..89b4ce7 100644
+--- a/libopkg/pkg.c
++++ b/libopkg/pkg.c
+@@ -689,6 +689,7 @@ static void pkg_formatted_field(FILE * fp, pkg_t * pkg, const char *field)
              if (pkg->provides_count > 1) {
                  fprintf(fp, "Provides:");
                  for (i = 1; i < pkg->provides_count; i++) {

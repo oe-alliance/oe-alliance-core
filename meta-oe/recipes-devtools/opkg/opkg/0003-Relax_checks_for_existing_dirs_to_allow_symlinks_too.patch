@@ -1,6 +1,8 @@
---- a/libopkg/opkg_install.c	2018-01-10 04:51:25.000000000 +0100
-+++ b/libopkg/opkg_install.c	2018-01-10 05:01:00.829598878 +0100
-@@ -451,9 +451,10 @@
+diff --git a/libopkg/opkg_install.c b/libopkg/opkg_install.c
+index 703f29c..6540249 100644
+--- a/libopkg/opkg_install.c
++++ b/libopkg/opkg_install.c
+@@ -450,9 +450,10 @@ static int check_data_file_clashes(pkg_t * pkg, pkg_t * old_pkg)
              pkg_t *owner;
              pkg_t *obs;
              int existing_is_dir = file_is_dir(filename);

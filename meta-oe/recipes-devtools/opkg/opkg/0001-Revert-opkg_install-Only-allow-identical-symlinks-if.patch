@@ -1,20 +1,21 @@
-From 233f406db279a1e7ca3254d8c91cfd9d67bad282 Mon Sep 17 00:00:00 2001
+From 123e64187d822f6c371aeb0ca152968260a729c3 Mon Sep 17 00:00:00 2001
 From: captain <openatv@gmail.com>
 Date: Wed, 27 Dec 2017 21:36:51 +0100
-Subject: [PATCH 1/2] Revert "opkg_install: Only allow identical symlinks if
- the target is a directory"
+Subject: [PATCH] Revert "opkg_install: Only allow identical symlinks if the
+ target is a directory"
 
 This reverts commit a9e32aae67026399d5883007abd89e0bbb429351.
+
 ---
  libopkg/opkg_install.c       | 18 +++---------------
  tests/regress/issue11033b.py | 22 +---------------------
  2 files changed, 4 insertions(+), 36 deletions(-)
 
 diff --git a/libopkg/opkg_install.c b/libopkg/opkg_install.c
-index 9a564a9..edbf099 100644
+index 769c67f..39678d4 100644
 --- a/libopkg/opkg_install.c
 +++ b/libopkg/opkg_install.c
-@@ -462,28 +462,16 @@ static int check_data_file_clashes(pkg_t * pkg, pkg_t * old_pkg)
+@@ -469,28 +469,16 @@ static int check_data_file_clashes(pkg_t * pkg, pkg_t * old_pkg)
              }
  
              /* OK if both the existing and new are a symlink and point to
@@ -92,6 +93,3 @@ index f2ae9f7..85bb017 100644
 -opkgcl.install('e')
 -if opkgcl.is_installed('e'):
 -    opk.fail("Package 'e' installed despite symlink conflict")
--- 
-2.12.0.windows.1
-

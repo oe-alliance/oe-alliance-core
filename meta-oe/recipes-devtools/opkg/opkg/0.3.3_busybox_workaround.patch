@@ -1,7 +1,8 @@
-diff -Nur a/libopkg/opkg_install.c b/libopkg/opkg_install.c
---- a/libopkg/opkg_install.c	2015-12-02 22:56:43.000000000 +0100
-+++ b/libopkg/opkg_install.c	2016-09-18 05:05:09.264411200 +0200
-@@ -237,7 +237,15 @@
+diff --git a/libopkg/opkg_install.c b/libopkg/opkg_install.c
+index 70b6710..769c67f 100644
+--- a/libopkg/opkg_install.c
++++ b/libopkg/opkg_install.c
+@@ -226,7 +226,15 @@ static int prerm_upgrade_old_pkg(pkg_t * pkg, pkg_t * old_pkg)
  
      sprintf_alloc(&script_args, "upgrade %s", new_version);
      free(new_version);
@@ -18,7 +19,7 @@ diff -Nur a/libopkg/opkg_install.c b/libopkg/opkg_install.c
      free(script_args);
      if (err != 0) {
          opkg_msg(NOTICE, "prerm script for package \"%s\" failed\n",
-@@ -610,7 +617,15 @@
+@@ -637,7 +645,15 @@ static int postrm_upgrade_old_pkg(pkg_t * pkg, pkg_t * old_pkg)
  
      sprintf_alloc(&script_args, "upgrade %s", new_version);
      free(new_version);

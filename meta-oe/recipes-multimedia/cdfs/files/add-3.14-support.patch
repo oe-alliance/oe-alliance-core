@@ -1,7 +1,8 @@
 diff --git a/root.c b/root.c
+index a6c5064..353d191 100644
 --- a/root.c
 +++ b/root.c
-@@ -543,8 +543,13 @@ static void cdfs_read_inode(struct inode *i) {
+@@ -539,8 +539,13 @@ static void cdfs_read_inode(struct inode *i) {
  
    PRINT("read inode %ld\n", i->i_ino);
    

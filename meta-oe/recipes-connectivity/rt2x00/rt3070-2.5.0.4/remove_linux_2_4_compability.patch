@@ -1,6 +1,8 @@
---- 2011_0719_RT3070_RT3370_RT5370_RT5372_Linux_STA_V2.5.0.4_DPO/Makefile	2014-12-01 20:12:58.317803513 +0100
-+++ 2011_0719_RT3070_RT3370_RT5370_RT5372_Linux_STA_V2.5.0.4_DPO/Makefile	2014-12-01 20:16:31.137794802 +0100
-@@ -307,47 +307,6 @@
+diff --git a/Makefile b/Makefile
+index 9e1511a..e428dfc 100644
+--- a/Makefile
++++ b/Makefile
+@@ -307,47 +307,6 @@ THREADX:
  	$(MAKE) -C $(RT28xx_DIR)/os/Threadx -f $(RT28xx_DIR)/os/ThreadX/Makefile
  
  LINUX:
@@ -48,7 +50,7 @@
  ifeq ($(OSABL),YES)
  	cp -f os/linux/Makefile.6.util $(RT28xx_DIR)/os/linux/Makefile
  	$(MAKE) -C $(LINUX_SRC) SUBDIRS=$(RT28xx_DIR)/os/linux modules
-@@ -392,7 +351,6 @@
+@@ -392,7 +351,6 @@ ifeq ($(OSABL),YES)
  endif
  endif
  endif
@@ -56,7 +58,7 @@
  
  
  release:
-@@ -434,61 +392,33 @@
+@@ -434,61 +392,33 @@ endif
  
  uninstall:
  ifeq ($(TARGET), LINUX)
@@ -118,9 +120,11 @@
  
  # Declare the contents of the .PHONY variable as phony.  We keep that information in a variable
  .PHONY: $(PHONY)
---- 2011_0719_RT3070_RT3370_RT5370_RT5372_Linux_STA_V2.5.0.4_DPO/os/linux/config.mk	2014-12-01 20:12:54.005803689 +0100
-+++ 2011_0719_RT3070_RT3370_RT5370_RT5372_Linux_STA_V2.5.0.4_DPO/os/linux/config.mk	2014-12-01 20:14:27.317799870 +0100
-@@ -591,14 +591,9 @@
+diff --git a/os/linux/config.mk b/os/linux/config.mk
+index 4943e38..8d6651d 100644
+--- a/os/linux/config.mk
++++ b/os/linux/config.mk
+@@ -591,14 +591,9 @@ WFLAGS += -DRT_BIG_ENDIAN -DINF_TWINPASS
  endif
  
  ifeq ($(PLATFORM),INF_DANUBE)
@@ -135,7 +139,7 @@
  
  ifeq ($(PLATFORM),INF_AR9)
  WFLAGS += -DRT_BIG_ENDIAN -DINF_AR9
-@@ -690,11 +685,7 @@
+@@ -690,11 +685,7 @@ export CFLAGS
  endif
  
  ifeq ($(PLATFORM),INF_DANUBE)
@@ -147,7 +151,7 @@
  export CFLAGS
  endif
  
-@@ -724,14 +715,8 @@
+@@ -724,14 +715,8 @@ export CFLAGS
  endif
  
  ifeq ($(PLATFORM),PC)
@@ -162,7 +166,7 @@
  endif
  
  #If the kernel version of RMI is newer than 2.6.27, please change "CFLAGS" to "EXTRA_FLAGS"
-@@ -782,11 +767,6 @@
+@@ -782,11 +767,6 @@ export CFLAGS
  endif
  
  ifeq ($(PLATFORM),MT85XX)
@@ -174,7 +178,7 @@
  	# Linux 2.6
  	EXTRA_CFLAGS += $(WFLAGS) -I$(RT28xx_DIR)/include
  	EXTRA_CFLAGS += -D _NO_TYPEDEF_BOOL_ \
-@@ -799,18 +779,11 @@
+@@ -799,18 +779,11 @@ ifeq ($(PLATFORM),MT85XX)
  	                -D _NO_TYPEDEF_INT32_ \
  	                -D _NO_TYPEDEF_INT64_ \
  	                
