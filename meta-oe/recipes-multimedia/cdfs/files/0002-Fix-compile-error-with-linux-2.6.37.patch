@@ -1,6 +1,8 @@
---- a/root.c	2011-11-24 11:45:32.000000000 +0100
-+++ b/root.c	2011-11-24 13:00:53.524700465 +0100
-@@ -598,7 +598,11 @@
+diff --git a/root.c b/root.c
+index 0801051..59f7702 100644
+--- a/root.c
++++ b/root.c
+@@ -598,7 +598,11 @@ static struct super_operations cdfs_ops = {
  #ifdef OLD_KERNEL
  static DECLARE_FSTYPE_DEV(cdfs_fs_type, FSNAME, cdfs_mount);
  #else
@@ -13,7 +15,7 @@
  static int cdfs_get_sb(struct file_system_type *fs_type, int flags, const char *dev_name, void *data, struct vfsmount *mnt) {
    return get_sb_bdev(fs_type, flags, dev_name, data, cdfs_fill_super, mnt);
  #else
-@@ -610,7 +614,11 @@
+@@ -610,7 +614,11 @@ static struct super_block *cdfs_get_sb(struct file_system_type *fs_type, int fla
  static struct file_system_type cdfs_fs_type = {
    .owner    = THIS_MODULE,
    .name     = "cdfs",

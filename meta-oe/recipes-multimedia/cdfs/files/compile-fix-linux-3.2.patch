@@ -1,7 +1,8 @@
-diff -Naur cdfs-2.6.27-org/root.c cdfs-2.6.27/root.c
---- cdfs-2.6.27-org/root.c	2012-01-29 01:46:36.000000000 +0100
-+++ cdfs-2.6.27/root.c	2012-01-29 02:09:30.793696801 +0100
-@@ -518,7 +518,11 @@
+diff --git a/root.c b/root.c
+index 86bb1d8..1647c7f 100644
+--- a/root.c
++++ b/root.c
+@@ -518,7 +518,11 @@ static void cdfs_read_inode(struct inode *i) {
    
    i->i_uid        = this_cd->uid;
    i->i_gid        = this_cd->gid;

@@ -1,10 +1,11 @@
-From 7c8b2cf585d07d1fbf8ed7305f4d0d5dc0fd66ba Mon Sep 17 00:00:00 2001
+From 80ba432d74d05c9f51d5ac2e28e7149e63e6f131 Mon Sep 17 00:00:00 2001
 From: pieterg <pieterg@users.sourceforge.net>
 Date: Thu, 27 Nov 2014 13:20:17 +0100
 Subject: [PATCH] add 3.16 support
 
 -generic_aio_read has been dropped
 -avoid racy interruptible_sleep_on (dropped in 3.15)
+
 ---
  audio.c  | 13 +++++++++++++
  cdfs.h   |  8 ++++++++
@@ -82,6 +83,3 @@ index dcd0e16..b512fc6 100644
    } while (!signal_pending(current));
  
    kcdfsd_running = 0;
--- 
-1.9.1
-

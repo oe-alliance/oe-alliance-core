@@ -1,24 +1,8 @@
-Index: cdfs-2.6.27/root.c
-===================================================================
---- cdfs-2.6.27.orig/root.c	2015-04-17 21:47:45.913480810 +0200
-+++ cdfs-2.6.27/root.c	2015-04-17 21:47:46.041480805 +0200
-@@ -456,7 +456,11 @@
- #else
- static int cdfs_readdir(struct file *filp, void *dirent, filldir_t filldir) {
- #endif
-+#if LINUX_VERSION_CODE >= KERNEL_VERSION(3, 19, 0)
-+  struct inode *inode = filp->f_path.dentry->d_inode;
-+#else
-   struct inode *inode = filp->f_dentry->d_inode;
-+#endif
-   int i;
-   cd * this_cd = cdfs_info(inode->i_sb);
- 
-Index: cdfs-2.6.27/audio.c
-===================================================================
---- cdfs-2.6.27.orig/audio.c	2015-04-17 21:47:45.973480808 +0200
-+++ cdfs-2.6.27/audio.c	2015-04-17 21:47:46.041480805 +0200
-@@ -187,12 +187,20 @@
+diff --git a/audio.c b/audio.c
+index 67f1664..98f4fd1 100644
+--- a/audio.c
++++ b/audio.c
+@@ -187,12 +187,20 @@ struct file_operations cdfs_cdda_file_operations = {
  
  int kcdfsd_add_cdda_request(struct file * file, struct page *page){
    PRINT("kcdfsd_add_cdda_request(%x, %x)\n", file, page);
@@ -39,11 +23,11 @@ Index: cdfs-2.6.27/audio.c
  }
  
  struct address_space_operations cdfs_cdda_aops = {
-Index: cdfs-2.6.27/cdXA.c
-===================================================================
---- cdfs-2.6.27.orig/cdXA.c	2015-04-17 21:47:44.561480865 +0200
-+++ cdfs-2.6.27/cdXA.c	2015-04-17 21:47:46.041480805 +0200
-@@ -38,7 +38,11 @@
+diff --git a/cdXA.c b/cdXA.c
+index 09da159..3649fde 100644
+--- a/cdXA.c
++++ b/cdXA.c
+@@ -38,7 +38,11 @@ struct address_space_operations cdfs_cdXA_aops = {
  /************************************************************/
  
  int kcdfsd_add_cdXA_request(struct file * file, struct page *page){
@@ -55,11 +39,11 @@ Index: cdfs-2.6.27/cdXA.c
  }
  
  /***********************************************************/            
-Index: cdfs-2.6.27/cddata.c
-===================================================================
---- cdfs-2.6.27.orig/cddata.c	2009-12-21 15:04:03.000000000 +0100
-+++ cdfs-2.6.27/cddata.c	2015-04-17 21:53:20.069467131 +0200
-@@ -97,7 +97,11 @@
+diff --git a/cddata.c b/cddata.c
+index 4a985a7..0d21062 100644
+--- a/cddata.c
++++ b/cddata.c
+@@ -97,7 +97,11 @@ struct address_space_operations cdfs_cddata_aops = {
  /************************************************************/
  
  int kcdfsd_add_cddata_request(struct file * file, struct page *page){
@@ -71,11 +55,11 @@ Index: cdfs-2.6.27/cddata.c
  }
  
  /***********************************************************/            
-Index: cdfs-2.6.27/hfs.c
-===================================================================
---- cdfs-2.6.27.orig/hfs.c	2009-12-21 14:54:06.000000000 +0100
-+++ cdfs-2.6.27/hfs.c	2015-04-17 21:54:42.085463773 +0200
-@@ -201,7 +201,12 @@
+diff --git a/hfs.c b/hfs.c
+index dcb852b..9513059 100644
+--- a/hfs.c
++++ b/hfs.c
+@@ -201,7 +201,12 @@ struct file_operations cdfs_cdhfs_file_operations = {
  
  
  int kcdfsd_add_cdhfs_request(struct file * file, struct page *page){
@@ -88,3 +72,19 @@ Index: cdfs-2.6.27/hfs.c
  }
  
  struct address_space_operations cdfs_cdhfs_aops = {
+diff --git a/root.c b/root.c
+index 353d191..941ac3e 100644
+--- a/root.c
++++ b/root.c
+@@ -456,7 +456,11 @@ static int cdfs_readdir(struct file *filp, struct dir_context *ctx) {
+ #else
+ static int cdfs_readdir(struct file *filp, void *dirent, filldir_t filldir) {
+ #endif
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(3, 19, 0)
++  struct inode *inode = filp->f_path.dentry->d_inode;
++#else
+   struct inode *inode = filp->f_dentry->d_inode;
++#endif
+   int i;
+   cd * this_cd = cdfs_info(inode->i_sb);
+ 

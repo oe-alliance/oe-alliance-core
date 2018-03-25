@@ -1,6 +1,8 @@
---- ~/daemon.c.orig	2013-02-23 00:43:03.889478340 +0100
-+++ ~/daemon.c	2013-02-23 00:43:08.485478340 +0100
-@@ -157,7 +157,7 @@
+diff --git a/daemon.c b/daemon.c
+index d5747aa..694d61c 100644
+--- a/daemon.c
++++ b/daemon.c
+@@ -157,7 +157,7 @@ int kcdfsd_thread(void *unused){
  #ifdef OLD_KERNEL
    exit_files(current);  /* daemonize doesn't do exit_files */
    daemonize();
@@ -9,11 +11,11 @@
    daemonize("k"FSNAME"d");
  
    /* Allow SIGTERM to quit properly when removing module */
-diff -upr a/root.c b/root.c
---- a/root.c	2009-12-21 15:38:31.000000000 +0200
-+++ b/root.c	2013-02-21 06:15:20.000000000 +0200
-@@ -25,7 +25,10 @@
- #include "cdfs.h"
+diff --git a/root.c b/root.c
+index 6a923e2..c800851 100644
+--- a/root.c
++++ b/root.c
+@@ -26,6 +26,9 @@
  
  #include <linux/module.h>
  #include <linux/sched.h>
@@ -23,7 +25,7 @@ diff -upr a/root.c b/root.c
  
  
  /*++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*
-@@ -643,14 +644,22 @@ static int __init cdfs_init(void) {
+@@ -661,14 +664,22 @@ static int __init cdfs_init(void) {
    cdfs_proc_cd=NULL;
  
    // start kernel thread

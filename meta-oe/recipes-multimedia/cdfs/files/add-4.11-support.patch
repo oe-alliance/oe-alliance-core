@@ -1,5 +1,5 @@
 diff --git a/daemon.c b/daemon.c
-index dfe31f9f12a4..27035dd95e6d 100644
+index dfe31f9..27035dd 100644
 --- a/daemon.c
 +++ b/daemon.c
 @@ -29,6 +29,9 @@
