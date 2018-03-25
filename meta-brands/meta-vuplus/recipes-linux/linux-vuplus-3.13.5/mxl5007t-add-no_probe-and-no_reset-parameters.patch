@@ -1,19 +1,21 @@
-mxl5007t: add no_probe and no_reset parameters
+From d89108700c294ea6f3f7bc4cd6ff0374b43d1901 Mon Sep 17 00:00:00 2001
+From: Gianluca Gennari <gennarone@gmail.com>
+Date: Fri, 23 Mar 2018 14:01:54 +0100
+Subject: [PATCH] mxl5007t: add no_probe and no_reset parameters
 
 partial backport of this patch by Jose Alberto Reguero:
 https://patchwork.kernel.org/patch/1386131/
 
 it should fix the problems with a particular revision of the a867 stick.
 
-From: Gianluca Gennari <gennarone@gmail.com>
 ---
- drivers/media/tuners/mxl5007t.c       |   15 +++++++++++----
- drivers/media/tuners/mxl5007t.h       |    4 +++-
- drivers/media/usb/dvb-usb-v2/af9035.c |    2 ++
- 3 files changed, 16 insertions(+), 5 deletions(-)
+ drivers/media/tuners/mxl5007t.c       | 15 +++++++++++----
+ drivers/media/tuners/mxl5007t.h       |  4 +++-
+ drivers/media/usb/dvb-usb-v2/af9035.c |  4 ++++
+ 3 files changed, 18 insertions(+), 5 deletions(-)
 
 diff --git a/drivers/media/tuners/mxl5007t.c b/drivers/media/tuners/mxl5007t.c
-index 69e453e..7886a5a 100644
+index 69e453ef..7886a5ab 100644
 --- a/drivers/media/tuners/mxl5007t.c
 +++ b/drivers/media/tuners/mxl5007t.c
 @@ -374,7 +374,6 @@ static struct reg_pair_t *mxl5007t_calc_init_regs(struct mxl5007t_state *state,
@@ -54,7 +56,7 @@ index 69e453e..7886a5a 100644
  		if (fe->ops.i2c_gate_ctrl)
  			fe->ops.i2c_gate_ctrl(fe, 0);
 diff --git a/drivers/media/tuners/mxl5007t.h b/drivers/media/tuners/mxl5007t.h
-index 37b0942..f47bb27 100644
+index 37b0942e..f47bb275 100644
 --- a/drivers/media/tuners/mxl5007t.h
 +++ b/drivers/media/tuners/mxl5007t.h
 @@ -73,8 +73,10 @@ struct mxl5007t_config {
@@ -70,10 +72,10 @@ index 37b0942..f47bb27 100644
  
  #if IS_ENABLED(CONFIG_MEDIA_TUNER_MXL5007T)
 diff --git a/drivers/media/usb/dvb-usb-v2/af9035.c b/drivers/media/usb/dvb-usb-v2/af9035.c
-index 1ea17dc..12e913f 100644
+index 8ede8ea7..503e8c12 100644
 --- a/drivers/media/usb/dvb-usb-v2/af9035.c
 +++ b/drivers/media/usb/dvb-usb-v2/af9035.c
-@@ -969,6 +969,8 @@ static struct mxl5007t_config af9035_mxl5007t_config[] = {
+@@ -995,6 +995,8 @@ static struct mxl5007t_config af9035_mxl5007t_config[] = {
  		.loop_thru_enable = 0,
  		.clk_out_enable = 0,
  		.clk_out_amp = MxL_CLKOUT_AMP_0_94V,
@@ -82,7 +84,7 @@ index 1ea17dc..12e913f 100644
  	}, {
  		.xtal_freq_hz = MxL_XTAL_24_MHZ,
  		.if_freq_hz = MxL_IF_4_57_MHZ,
-@@ -976,6 +978,8 @@ static struct mxl5007t_config af9035_mxl5007t_config[] = {
+@@ -1002,6 +1004,8 @@ static struct mxl5007t_config af9035_mxl5007t_config[] = {
  		.loop_thru_enable = 1,
  		.clk_out_enable = 1,
  		.clk_out_amp = MxL_CLKOUT_AMP_0_94V,
@@ -91,6 +93,3 @@ index 1ea17dc..12e913f 100644
  	}
  };
  
--- 
-1.7.9.5
-

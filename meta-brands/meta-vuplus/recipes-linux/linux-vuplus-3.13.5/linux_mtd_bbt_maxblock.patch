@@ -1,5 +1,13 @@
+From 0f94981ad9324487468984ccf788ad5c51c47402 Mon Sep 17 00:00:00 2001
+From: Captain <captain.onboard@web.de>
+Date: Sat, 7 Nov 2015 11:02:40 +0100
+
+---
+ include/linux/mtd/bbm.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
 diff --git a/include/linux/mtd/bbm.h b/include/linux/mtd/bbm.h
-index 36bb6a5..0380293 100644
+index 36bb6a50..03802935 100644
 --- a/include/linux/mtd/bbm.h
 +++ b/include/linux/mtd/bbm.h
 @@ -123,7 +123,7 @@ struct nand_bbt_descr {

@@ -1,10 +1,20 @@
+From c16897e52a90e997ba6c445b4a46fdfc7b8c91f6 Mon Sep 17 00:00:00 2001
+From: captain <openatv@gmail.com>
+Date: Wed, 1 Jun 2016 22:53:16 +0200
+Subject: [PATCH] revert 36e9ed899506f5864d8981a751b3b4068d1510db
+
 Upstream-Status: Pending
 
+---
+ initscript/debian/avahi-daemon.in   | 14 +++++++++++++-
+ initscript/debian/avahi-dnsconfd.in | 13 +++++++++++++
+ 2 files changed, 26 insertions(+), 1 deletion(-)
+
 diff --git a/initscript/debian/avahi-daemon.in b/initscript/debian/avahi-daemon.in
-index 30a2c2f..b5848a8 100755
+index f846f19..49ec358 100755
 --- a/initscript/debian/avahi-daemon.in
 +++ b/initscript/debian/avahi-daemon.in
-@@ -1,2 +1,14 @@
+@@ -1,5 +1,17 @@
  #!/bin/sh
 -
 +### BEGIN INIT INFO
@@ -20,11 +30,14 @@ index 30a2c2f..b5848a8 100755
 +#                    automatically
 +### END INIT INFO
 +#
+ # This file is part of avahi.
+ #
+ # avahi is free software; you can redistribute it and/or modify it
 diff --git a/initscript/debian/avahi-dnsconfd.in b/initscript/debian/avahi-dnsconfd.in
-index ac34804..f95c340 100755
+index 67c2873..e45ce05 100755
 --- a/initscript/debian/avahi-dnsconfd.in
 +++ b/initscript/debian/avahi-dnsconfd.in
-@@ -1,1 +1,14 @@
+@@ -1,4 +1,17 @@
  #!/bin/sh
 +### BEGIN INIT INFO
 +# Provides:          avahi-dnsconfd
@@ -39,3 +52,6 @@ index ac34804..f95c340 100755
 +#                    automatically
 +### END INIT INFO
 +#
+ 
+ # This file is part of avahi.
+ #

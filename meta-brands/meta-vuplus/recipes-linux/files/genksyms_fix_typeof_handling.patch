@@ -1,7 +1,7 @@
-From dc53324060f324e8af6867f57bf4891c13c6ef18 Mon Sep 17 00:00:00 2001
+From ad9373ad3f24f4856d8673fa1d9f080c660d5308 Mon Sep 17 00:00:00 2001
 From: Jan Beulich <JBeulich@suse.com>
 Date: Thu, 3 Apr 2014 14:46:37 -0700
-Subject: genksyms: fix typeof() handling
+Subject: [PATCH] genksyms: fix typeof() handling
 
 Recent increased use of typeof() throughout the tree resulted in a
 number of symbols (25 in a typical distro config of ours) not getting a
@@ -25,6 +25,7 @@ Signed-off-by: Jan Beulich <jbeulich@suse.com>
 Cc: Michal Marek <mmarek@suse.cz>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+
 ---
  scripts/genksyms/keywords.gperf          |   5 +-
  scripts/genksyms/keywords.hash.c_shipped | 133 +++----
@@ -35,10 +36,8 @@ Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
  scripts/genksyms/parse.y                 |   5 +-
  7 files changed, 498 insertions(+), 384 deletions(-)
 
-(limited to 'scripts/genksyms')
-
 diff --git a/scripts/genksyms/keywords.gperf b/scripts/genksyms/keywords.gperf
-index 3e77a94..a9096d9 100644
+index 3e77a943..a9096d99 100644
 --- a/scripts/genksyms/keywords.gperf
 +++ b/scripts/genksyms/keywords.gperf
 @@ -23,6 +23,8 @@ __inline, INLINE_KEYW
@@ -62,7 +61,7 @@ index 3e77a94..a9096d9 100644
 -typeof, TYPEOF_KEYW
 -__typeof__, TYPEOF_KEYW
 diff --git a/scripts/genksyms/keywords.hash.c_shipped b/scripts/genksyms/keywords.hash.c_shipped
-index 8206260..e9452482 100644
+index 82062607..e9452482 100644
 --- a/scripts/genksyms/keywords.hash.c_shipped
 +++ b/scripts/genksyms/keywords.hash.c_shipped
 @@ -34,7 +34,7 @@ struct resword;
@@ -293,7 +292,7 @@ index 8206260..e9452482 100644
  
    if (len <= MAX_WORD_LENGTH && len >= MIN_WORD_LENGTH)
 diff --git a/scripts/genksyms/lex.l b/scripts/genksyms/lex.l
-index f770071..e583565 100644
+index f7700717..e583565f 100644
 --- a/scripts/genksyms/lex.l
 +++ b/scripts/genksyms/lex.l
 @@ -129,8 +129,9 @@ int
@@ -369,7 +368,7 @@ index f770071..e583565 100644
        APP;
        switch (token)
 diff --git a/scripts/genksyms/lex.lex.c_shipped b/scripts/genksyms/lex.lex.c_shipped
-index 0bf4157..f82740a 100644
+index 0bf4157e..f82740a6 100644
 --- a/scripts/genksyms/lex.lex.c_shipped
 +++ b/scripts/genksyms/lex.lex.c_shipped
 @@ -1938,8 +1938,9 @@ int
@@ -445,7 +444,7 @@ index 0bf4157..f82740a 100644
        APP;
        switch (token)
 diff --git a/scripts/genksyms/parse.tab.c_shipped b/scripts/genksyms/parse.tab.c_shipped
-index ece53c7..c9f0f0ce 100644
+index ece53c79..c9f0f0ce 100644
 --- a/scripts/genksyms/parse.tab.c_shipped
 +++ b/scripts/genksyms/parse.tab.c_shipped
 @@ -1,8 +1,8 @@
@@ -1288,7 +1287,7 @@ index ece53c7..c9f0f0ce 100644
  | yyexhaustedlab -- memory exhaustion comes here.  |
  `-------------------------------------------------*/
 diff --git a/scripts/genksyms/parse.tab.h_shipped b/scripts/genksyms/parse.tab.h_shipped
-index 93240a3..a4737de 100644
+index 93240a3c..a4737dec 100644
 --- a/scripts/genksyms/parse.tab.h_shipped
 +++ b/scripts/genksyms/parse.tab.h_shipped
 @@ -1,8 +1,8 @@
@@ -1335,7 +1334,7 @@ index 93240a3..a4737de 100644
  #endif
  
 diff --git a/scripts/genksyms/parse.y b/scripts/genksyms/parse.y
-index 23c3999..b9f4cf2 100644
+index 23c39998..b9f4cf20 100644
 --- a/scripts/genksyms/parse.y
 +++ b/scripts/genksyms/parse.y
 @@ -103,6 +103,7 @@ static void record_compound(struct string_list **keyw,
@@ -1357,6 +1356,3 @@ index 23c3999..b9f4cf2 100644
  
  	/* References to s/u/e's defined elsewhere.  Rearrange things
  	   so that it is easier to expand the definition fully later.  */
--- 
-cgit v1.1
-

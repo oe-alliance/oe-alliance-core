@@ -1,11 +1,15 @@
-From fc48f556f87d99f628cb96fa4c432392ec13d217 Mon Sep 17 00:00:00 2001
+From 8ad03c5f3158ee9c793bab4e0f3fe059673f3752 Mon Sep 17 00:00:00 2001
 From: Athanasios Oikonomou <athoik@gmail.com>
 Date: Mon, 8 Feb 2016 21:58:24 +0200
 Subject: [PATCH] STV: Add PLS support
 
+---
+ drivers/media/dvb-frontends/stv0900_core.c | 16 +++++++++++++++-
+ drivers/media/dvb-frontends/stv090x.c      | 24 +++++++++++++++++++++++-
+ 2 files changed, 38 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/media/dvb-frontends/stv0900_core.c b/drivers/media/dvb-frontends/stv0900_core.c
-index e5a87b5..805da45 100644
+index e5a87b57..805da456 100644
 --- a/drivers/media/dvb-frontends/stv0900_core.c
 +++ b/drivers/media/dvb-frontends/stv0900_core.c
 @@ -1552,6 +1552,19 @@ static int stv0900_status(struct stv0900_internal *intp,
@@ -46,10 +50,10 @@ index e5a87b5..805da45 100644
  
  	p_result.locked = FALSE;
 diff --git a/drivers/media/dvb-frontends/stv090x.c b/drivers/media/dvb-frontends/stv090x.c
-index 970375a..416b749 100644
+index f3452a8e..ca86c319 100644
 --- a/drivers/media/dvb-frontends/stv090x.c
 +++ b/drivers/media/dvb-frontends/stv090x.c
-@@ -3425,18 +3425,40 @@ err:
+@@ -3435,18 +3435,40 @@ err:
  	return -1;
  }
  
@@ -91,6 +95,3 @@ index 970375a..416b749 100644
  		reg = STV090x_READ_DEMOD(state, PDELCTRL1);
  		STV090x_SETFIELD_Px(reg, FILTER_EN_FIELD, 0x01);
  		if (STV090x_WRITE_DEMOD(state, PDELCTRL1, reg) < 0)
--- 
-2.1.4
-

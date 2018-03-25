@@ -1,7 +1,9 @@
-From e744d9d745010dd4ea421595bf938b0690de56fe Mon Sep 17 00:00:00 2001
-From: slartibartfast
+From 1c5ee52bea09b6235aea0832e66f67c69c323ed7 Mon Sep 17 00:00:00 2001
+From: OpenEmbedded <oe.patch@oe>
 Date: Fri, 25 Nov 2016 10:55:41 +0900
 Subject: [PATCH] tools: Add support for rtk_h5 type
+
+From: slartibartfast
 
 ---
  Makefile.in           |  11 +-
@@ -13,10 +15,10 @@ Subject: [PATCH] tools: Add support for rtk_h5 type
  create mode 100644 tools/hciattach_rtk.c
 
 diff --git a/Makefile.in b/Makefile.in
-index 13ddebe80569..6f49d655dae2 100644
+index e9f6dbe..3bf9ed3 100644
 --- a/Makefile.in
 +++ b/Makefile.in
-@@ -1235,7 +1235,7 @@ am__tools_hciattach_SOURCES_DIST = tools/hciattach.c tools/hciattach.h \
+@@ -1196,7 +1196,7 @@ am__tools_hciattach_SOURCES_DIST = tools/hciattach.c tools/hciattach.h \
  	tools/hciattach_st.c tools/hciattach_ti.c \
  	tools/hciattach_tialt.c tools/hciattach_ath3k.c \
  	tools/hciattach_qualcomm.c tools/hciattach_intel.c \
@@ -25,7 +27,7 @@ index 13ddebe80569..6f49d655dae2 100644
  @TOOLS_TRUE@am_tools_hciattach_OBJECTS = tools/hciattach.$(OBJEXT) \
  @TOOLS_TRUE@	tools/hciattach_st.$(OBJEXT) \
  @TOOLS_TRUE@	tools/hciattach_ti.$(OBJEXT) \
-@@ -1243,7 +1243,8 @@ am__tools_hciattach_SOURCES_DIST = tools/hciattach.c tools/hciattach.h \
+@@ -1204,7 +1204,8 @@ am__tools_hciattach_SOURCES_DIST = tools/hciattach.c tools/hciattach.h \
  @TOOLS_TRUE@	tools/hciattach_ath3k.$(OBJEXT) \
  @TOOLS_TRUE@	tools/hciattach_qualcomm.$(OBJEXT) \
  @TOOLS_TRUE@	tools/hciattach_intel.$(OBJEXT) \
@@ -35,7 +37,7 @@ index 13ddebe80569..6f49d655dae2 100644
  tools_hciattach_OBJECTS = $(am_tools_hciattach_OBJECTS)
  @TOOLS_TRUE@tools_hciattach_DEPENDENCIES =  \
  @TOOLS_TRUE@	lib/libbluetooth-internal.la
-@@ -2581,7 +2582,8 @@ unit_tests = $(am__append_35) unit/test-eir unit/test-uuid \
+@@ -2547,7 +2548,8 @@ unit_tests = $(am__append_33) unit/test-eir unit/test-uuid \
  @TOOLS_TRUE@						tools/hciattach_ath3k.c \
  @TOOLS_TRUE@						tools/hciattach_qualcomm.c \
  @TOOLS_TRUE@						tools/hciattach_intel.c \
@@ -45,7 +47,7 @@ index 13ddebe80569..6f49d655dae2 100644
  
  @TOOLS_TRUE@tools_hciattach_LDADD = lib/libbluetooth-internal.la
  @TOOLS_TRUE@tools_hciconfig_SOURCES = tools/hciconfig.c tools/csr.h tools/csr.c
-@@ -4702,6 +4704,8 @@ tools/hciattach_intel.$(OBJEXT): tools/$(am__dirstamp) \
+@@ -4601,6 +4603,8 @@ tools/hciattach_intel.$(OBJEXT): tools/$(am__dirstamp) \
  	tools/$(DEPDIR)/$(am__dirstamp)
  tools/hciattach_bcm43xx.$(OBJEXT): tools/$(am__dirstamp) \
  	tools/$(DEPDIR)/$(am__dirstamp)
@@ -54,7 +56,7 @@ index 13ddebe80569..6f49d655dae2 100644
  
  tools/hciattach$(EXEEXT): $(tools_hciattach_OBJECTS) $(tools_hciattach_DEPENDENCIES) $(EXTRA_tools_hciattach_DEPENDENCIES) tools/$(am__dirstamp)
  	@rm -f tools/hciattach$(EXEEXT)
-@@ -5569,6 +5573,7 @@ distclean-compile:
+@@ -5452,6 +5456,7 @@ distclean-compile:
  @AMDEP_TRUE@@am__include@ @am__quote@tools/$(DEPDIR)/hciattach.Po@am__quote@
  @AMDEP_TRUE@@am__include@ @am__quote@tools/$(DEPDIR)/hciattach_ath3k.Po@am__quote@
  @AMDEP_TRUE@@am__include@ @am__quote@tools/$(DEPDIR)/hciattach_bcm43xx.Po@am__quote@
@@ -63,10 +65,10 @@ index 13ddebe80569..6f49d655dae2 100644
  @AMDEP_TRUE@@am__include@ @am__quote@tools/$(DEPDIR)/hciattach_qualcomm.Po@am__quote@
  @AMDEP_TRUE@@am__include@ @am__quote@tools/$(DEPDIR)/hciattach_st.Po@am__quote@
 diff --git a/Makefile.tools b/Makefile.tools
-index e79b53ba3bfa..5c756da7efdf 100644
+index 7706dc7..72af82f 100644
 --- a/Makefile.tools
 +++ b/Makefile.tools
-@@ -163,7 +163,8 @@ tools_hciattach_SOURCES = tools/hciattach.c tools/hciattach.h \
+@@ -166,7 +166,8 @@ tools_hciattach_SOURCES = tools/hciattach.c tools/hciattach.h \
  						tools/hciattach_ath3k.c \
  						tools/hciattach_qualcomm.c \
  						tools/hciattach_intel.c \
@@ -77,7 +79,7 @@ index e79b53ba3bfa..5c756da7efdf 100644
  
  tools_hciconfig_SOURCES = tools/hciconfig.c tools/csr.h tools/csr.c
 diff --git a/android/Android.mk b/android/Android.mk
-index 38ef4aa97a41..2f71897cd40f 100644
+index 38ef4aa..2f71897 100644
 --- a/android/Android.mk
 +++ b/android/Android.mk
 @@ -698,6 +698,7 @@ LOCAL_SRC_FILES := \
@@ -89,10 +91,10 @@ index 38ef4aa97a41..2f71897cd40f 100644
  	bluez/lib/hci.c \
  
 diff --git a/tools/hciattach.c b/tools/hciattach.c
-index 59a76a7a100b..da1eba7016bb 100644
+index fad176c..8041156 100644
 --- a/tools/hciattach.c
 +++ b/tools/hciattach.c
-@@ -332,6 +332,16 @@ static int bcm43xx(int fd, struct uart_t *u, struct termios *ti)
+@@ -278,6 +278,16 @@ static int bcm43xx(int fd, struct uart_t *u, struct termios *ti)
  	return bcm43xx_init(fd, u->init_speed, u->speed, ti, u->bdaddr);
  }
  
@@ -109,7 +111,7 @@ index 59a76a7a100b..da1eba7016bb 100644
  static int read_check(int fd, void *buf, int count)
  {
  	int res;
-@@ -1163,6 +1173,10 @@ struct uart_t uart[] = {
+@@ -1109,6 +1119,10 @@ struct uart_t uart[] = {
  	{ "amp",	0x0000, 0x0000, HCI_UART_H4, 115200, 115200,
  			AMP_DEV, DISABLE_PM, NULL, NULL, NULL },
  
@@ -122,7 +124,7 @@ index 59a76a7a100b..da1eba7016bb 100644
  
 diff --git a/tools/hciattach_rtk.c b/tools/hciattach_rtk.c
 new file mode 100644
-index 000000000000..6ad6c225d1c4
+index 0000000..6ad6c22
 --- /dev/null
 +++ b/tools/hciattach_rtk.c
 @@ -0,0 +1,389 @@
@@ -515,6 +517,3 @@ index 000000000000..6ad6c225d1c4
 +
 +	return ret;
 +}
--- 
-2.10.2
-

@@ -1,6 +1,15 @@
+From 7739367b93af53ba10106008455333e6681cc91a Mon Sep 17 00:00:00 2001
+From: captain <openatv@gmail.com>
+Date: Tue, 26 Jan 2016 07:27:38 +0100
+
+---
+ include/linux/compiler-gcc7.h | 59 +++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 59 insertions(+)
+ create mode 100644 include/linux/compiler-gcc7.h
+
 diff --git a/include/linux/compiler-gcc7.h b/include/linux/compiler-gcc7.h
 new file mode 100644
-index 0000000..ba064fa
+index 00000000..9c2d16d7
 --- /dev/null
 +++ b/include/linux/compiler-gcc7.h
 @@ -0,0 +1,59 @@
@@ -63,5 +72,3 @@ index 0000000..ba064fa
 +#endif /* CONFIG_ARCH_USE_BUILTIN_BSWAP */
 +
 +#define KASAN_ABI_VERSION 4
--- 
-2.1.0

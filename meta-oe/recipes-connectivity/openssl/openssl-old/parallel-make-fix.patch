@@ -1,14 +1,23 @@
+From 7d064fa12419dec0b162680ef2ea32d7c1bad3e0 Mon Sep 17 00:00:00 2001
+From: Qing He <qing.he@intel.com>
+Date: Sun, 10 Nov 2013 11:57:29 +0100
+Subject: [PATCH] * Create openssl-old that provides obsolete 0.9.8 versions
+
 Upstream-Status: Submitted
 
 fix the parallel build regarding shared libraries.
 
 Signed-off-by: Qing He <qing.he@intel.com>
 
+---
+ Makefile.org | 3 +++
+ 1 file changed, 3 insertions(+)
+
 diff --git a/Makefile.org b/Makefile.org
-index 2fb0309..8bec3d0 100644
+index 3fb6eda..1eb93ba 100644
 --- a/Makefile.org
 +++ b/Makefile.org
-@@ -352,6 +352,9 @@ all_testapps: build_libs build_testapps
+@@ -351,6 +351,9 @@ all_testapps: build_libs build_testapps
  build_testapps:
  	@dir=crypto; target=testapps; $(BUILD_ONE_CMD)
  

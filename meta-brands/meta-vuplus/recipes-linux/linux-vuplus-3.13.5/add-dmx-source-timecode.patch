@@ -1,5 +1,13 @@
+From 7718abb11995ab984db6f33b5921fefa172062e4 Mon Sep 17 00:00:00 2001
+From: Captain <captain.onboard@web.de>
+Date: Wed, 27 Jun 2012 18:41:06 +0200
+
+---
+ include/uapi/linux/dvb/dmx.h | 3 +++
+ 1 file changed, 3 insertions(+)
+
 diff --git a/include/uapi/linux/dvb/dmx.h b/include/uapi/linux/dvb/dmx.h
-index b2a9ad8..e791d4c 100644
+index b4fb650d..78a1bf0c 100644
 --- a/include/uapi/linux/dvb/dmx.h
 +++ b/include/uapi/linux/dvb/dmx.h
 @@ -133,6 +133,9 @@ typedef enum {

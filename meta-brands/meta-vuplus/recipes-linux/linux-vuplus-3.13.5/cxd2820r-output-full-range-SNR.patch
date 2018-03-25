@@ -1,21 +1,25 @@
-cxd2820r: by default SNR output is scaled to full 0-65535 range;
-output in dBx10 can be enabled through a module parameter;
+From 37594c185366c86ec8a11418fa9b5c55e64de376 Mon Sep 17 00:00:00 2001
+From: Gianluca Gennari <gennarone@gmail.com>
+Date: Fri, 23 Mar 2018 14:01:44 +0100
+Subject: [PATCH] cxd2820r: by default SNR output is scaled to full 0-65535
+ range; output in dBx10 can be enabled through a module parameter;
 
 Signed-off-by: Gianluca Gennari <gennarone@gmail.com>
+
 ---
- drivers/media/dvb-frontends/cxd2820r_core.c |    4 ++++
- drivers/media/dvb-frontends/cxd2820r_priv.h |    1 +
- drivers/media/dvb-frontends/cxd2820r_t.c    |   27 ++++++++++++++++++++++-
- drivers/media/dvb-frontends/cxd2820r_t2.c   |   31 ++++++++++++++++++++++++++-
- 4 files changed, 61 insertions(+), 2 deletions(-)
+ drivers/media/dvb-frontends/cxd2820r_core.c |  4 ++++
+ drivers/media/dvb-frontends/cxd2820r_priv.h |  1 +
+ drivers/media/dvb-frontends/cxd2820r_t.c    | 27 +++++++++++++++++++++++-
+ drivers/media/dvb-frontends/cxd2820r_t2.c   | 32 ++++++++++++++++++++++++++++-
+ 4 files changed, 62 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/media/dvb-frontends/cxd2820r_core.c b/drivers/media/dvb-frontends/cxd2820r_core.c
-index 9b658c1..35477aa 100644
+index 03930d5e..21025f71 100644
 --- a/drivers/media/dvb-frontends/cxd2820r_core.c
 +++ b/drivers/media/dvb-frontends/cxd2820r_core.c
-@@ -21,6 +21,10 @@
- 
- #include "cxd2820r_priv.h"
+@@ -24,6 +24,10 @@
+ /* Max transfer size done by I2C transfer functions */
+ #define MAX_XFER_SIZE  64
  
 +int cxd2820r_snrdb;
 +module_param_named(snrdb,cxd2820r_snrdb, int, 0644);
@@ -25,7 +29,7 @@ index 9b658c1..35477aa 100644
  static int cxd2820r_wr_regs_i2c(struct cxd2820r_priv *priv, u8 i2c, u8 reg,
  	u8 *val, int len)
 diff --git a/drivers/media/dvb-frontends/cxd2820r_priv.h b/drivers/media/dvb-frontends/cxd2820r_priv.h
-index 7ff5f60..f742169 100644
+index 7ff5f60c..f742169e 100644
 --- a/drivers/media/dvb-frontends/cxd2820r_priv.h
 +++ b/drivers/media/dvb-frontends/cxd2820r_priv.h
 @@ -55,6 +55,7 @@ struct cxd2820r_priv {
@@ -37,7 +41,7 @@ index 7ff5f60..f742169 100644
  int cxd2820r_gpio(struct dvb_frontend *fe, u8 *gpio);
  
 diff --git a/drivers/media/dvb-frontends/cxd2820r_t.c b/drivers/media/dvb-frontends/cxd2820r_t.c
-index fa184ca..4268c53 100644
+index fa184ca2..4268c53b 100644
 --- a/drivers/media/dvb-frontends/cxd2820r_t.c
 +++ b/drivers/media/dvb-frontends/cxd2820r_t.c
 @@ -317,7 +317,7 @@ int cxd2820r_read_snr_t(struct dvb_frontend *fe, u16 *snr)
@@ -82,7 +86,7 @@ index fa184ca..4268c53 100644
  			tmp);
  
 diff --git a/drivers/media/dvb-frontends/cxd2820r_t2.c b/drivers/media/dvb-frontends/cxd2820r_t2.c
-index 2ba130e..bfa8441 100644
+index 2ba130e2..bfa84410 100644
 --- a/drivers/media/dvb-frontends/cxd2820r_t2.c
 +++ b/drivers/media/dvb-frontends/cxd2820r_t2.c
 @@ -368,7 +368,7 @@ int cxd2820r_read_snr_t2(struct dvb_frontend *fe, u16 *snr)
@@ -130,7 +134,4 @@ index 2ba130e..bfa8441 100644
 +
  	dev_dbg(&priv->i2c->dev, "%s: dBx10=%d val=%04x\n", __func__, *snr,
  			tmp);
-
--- 
-1.7.9.5
-
+ 

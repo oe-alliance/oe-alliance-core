@@ -1,10 +1,19 @@
+From 7c8ca2db3e875a426b3e6c4a6558da23b7b431b1 Mon Sep 17 00:00:00 2001
+From: atvcaptain <captain@web.de>
+Date: Sun, 10 Nov 2013 11:57:29 +0100
+Subject: [PATCH] * Create openssl-old that provides obsolete 0.9.8 versions
+
 Upstream-Status: Backport [debian]
 
-Index: openssl-0.9.8k/Makefile.org
-===================================================================
---- openssl-0.9.8k.orig/Makefile.org	2009-07-19 11:32:41.000000000 +0200
-+++ openssl-0.9.8k/Makefile.org	2009-07-19 11:37:31.000000000 +0200
-@@ -131,7 +131,7 @@
+---
+ Makefile.org | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Makefile.org b/Makefile.org
+index 960cfec..761461d 100644
+--- a/Makefile.org
++++ b/Makefile.org
+@@ -132,7 +132,7 @@ FIPSCANLIB=
  
  BASEADDR=
  
