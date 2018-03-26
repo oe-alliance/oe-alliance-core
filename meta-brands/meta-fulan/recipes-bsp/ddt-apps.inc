@@ -17,6 +17,8 @@ S = "${WORKDIR}/git/tools/${@d.getVar('PN',1).replace('-', '_')}"
 
 EXTRA_OECONF = "--enable-silent-rules --prefix="
 LDFLAGS += "-lpthread -lrt"
+EXTRA_OEMAKE = " DRIVER_TOPDIR=${STAGING_KERNEL_DIR}"
+CFLAGS_append = " -I${STAGING_KERNEL_DIR}/multicom/include"
 
 do_configure_prepend() {
     touch ${S}/NEWS
