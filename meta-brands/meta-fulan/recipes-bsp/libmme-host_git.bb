@@ -1,10 +1,6 @@
 DESCRIPTION = "MME image library"
 
-require MastaG-apps.inc
-
-EXTRA_OECONF_append = " \
-	 --with-multicom=${STAGING_KERNEL_DIR}/multicom \
-	"
+require ddt-apps.inc
 
 DEPENDS += " fulan-dvb-modules-${MACHINE}"
 
