@@ -5,6 +5,7 @@ LICENSE = "GPLv2"
 KERNEL_RELEASE = "4.4.35"
 SRCDATE_u5pvr = "20171018"
 SRCDATE_u5 = "20180301"
+SRCDATE_u52 = "20180301"
 
 inherit kernel machine_kernel_pr
 
@@ -14,6 +15,8 @@ SRC_URI[u5pvr.md5sum] = "5b78e7c0fb860f2a707de6a437a097e9"
 SRC_URI[u5pvr.sha256sum] = "16d4841a6ab678fdf60162b41466675ca6e2e9af38b4722bdd9571b36969f9d2"
 SRC_URI[u5.md5sum] = "6c1550bdbcb8fda764fdfd558a8b276e"
 SRC_URI[u5.sha256sum] = "eec7fa5e2238abee68b323b38894a2f9e9bad8dfbec6e8de9500b18a244a42cf"
+SRC_URI[u52.md5sum] = "6c1550bdbcb8fda764fdfd558a8b276e"
+SRC_URI[u52.sha256sum] = "eec7fa5e2238abee68b323b38894a2f9e9bad8dfbec6e8de9500b18a244a42cf"
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
@@ -36,6 +39,12 @@ SRC_URI += "http://source.mynonpublic.com/dinobot/dinobot-linux-${PV}-${SRCDATE}
 "
 
 SRC_URI_append_u5 = " \
+    file://base.patch \
+    file://accelmem.patch \
+    file://alsa.patch \
+    "
+
+SRC_URI_append_u52 = " \
     file://base.patch \
     file://accelmem.patch \
     file://alsa.patch \
