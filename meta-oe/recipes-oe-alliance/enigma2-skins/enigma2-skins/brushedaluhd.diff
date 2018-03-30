@@ -1,7 +1,9 @@
---- ~/skins/BrushedAlu-HD/skin.xml	2009-10-17 16:35:55.000000000 +0200
-+++ ~/skins/BrushedAlu-HD/skin.xml.new	2009-10-21 20:05:08.000000000 +0200
-@@ -96,6 +96,11 @@
- 		<widget source="global.CurrentTime" render="Label" position="65,3" size="80,25" font="Regular;23" valign="top" halign="right" foregroundColor="#e5b243" backgroundColor="darkgrey" transparent="1">
+diff --git a/skins/BrushedAlu-HD/skin.xml b/skins/BrushedAlu-HD/skin.xml
+index 870f659..473386d 100755
+--- a/skins/BrushedAlu-HD/skin.xml
++++ b/skins/BrushedAlu-HD/skin.xml
+@@ -97,6 +97,11 @@
+ 		<widget source="global.CurrentTime" render="Label" position="147,5" size="30,25" font="Regular;17" valign="top" halign="left" foregroundColor="#e5b243" backgroundColor="darkgrey" transparent="1">
  			<convert type="ClockToText">Format::%S</convert>
  		</widget>
 +		<widget source="session.CurrentService" render="Label" position="550,7"   size="600,26" 	font="Regular;18" backgroundColor="transpBlack" foregroundColor="#ffffff" transparent="1" >

@@ -1,5 +1,7 @@
---- ~/skins/dTV-HD/skin.xml.orig	2009-10-04 16:33:47.000000000 +0200
-+++ ~/skins/dTV-HD/skin.xml	2009-10-04 16:38:49.000000000 +0200
+diff --git a/skins/dTV-HD/skin.xml b/skins/dTV-HD/skin.xml
+index 574c24f..a1bcb57 100755
+--- a/skins/dTV-HD/skin.xml
++++ b/skins/dTV-HD/skin.xml
 @@ -86,9 +86,17 @@
  		<widget source="session.CurrentService" render="Label" position="20,6" size="600,28" font="Regular;24" backgroundColor="black" transparent="1">
  			<convert type="ServiceName">Name</convert>
@@ -21,7 +23,7 @@
  		</widget>
 @@ -233,7 +241,7 @@
  			<convert type="ServiceInfo">VideoHeight</convert>
- 		</widget>		
+ 		</widget>
  	</screen>
 -	<screen name="Volume" position="78,50" size="72,202" title="Volume" zPosition="1" backgroundColor="transparent2" flags="wfNoBorder">
 +	<screen name="Volume"   position="78,250"  size="72,202"   title="Volume"  zPosition="1" backgroundColor="transparent2" flags="wfNoBorder">

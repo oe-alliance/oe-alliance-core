@@ -1,5 +1,7 @@
---- ~/skins/Nemesis.BlackbBox/skin.xml.orig	2009-10-04 16:49:25.000000000 +0200
-+++ ~/skins/Nemesis.BlackBox/skin.xml	2009-10-04 17:12:42.000000000 +0200
+diff --git a/skins/Nemesis.BlackBox/skin.xml b/skins/Nemesis.BlackBox/skin.xml
+index 33dbd99..be9d26c 100644
+--- a/skins/Nemesis.BlackBox/skin.xml
++++ b/skins/Nemesis.BlackBox/skin.xml
 @@ -183,7 +183,10 @@
  		</widget>
  		<ePixmap position="5,100" pixmap="Nemesis.BlackBox/separator.png" size="560,4" />
