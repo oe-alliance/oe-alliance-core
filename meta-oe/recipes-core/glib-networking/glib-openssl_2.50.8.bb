@@ -9,10 +9,12 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=5f30f0716dfdd0d91eb439ebec522ec2"
 SECTION = "libs"
 DEPENDS = "glib-2.0 intltool-native openssl"
 
-SRC_URI[archive.md5sum] = "bd4746fcd00bf338af538bd765413a5b"
-SRC_URI[archive.sha256sum] = "0211c118b86aec228d2b7d2606bba9637d5bb5d60694cc7ccb6d2920f02866bc"
+SRC_URI[archive.md5sum] = "db7ae779bbd45c2043186fdba08764b0"
+SRC_URI[archive.sha256sum] = "869f08e4e9a719c1df411c2fb5554400f6b24a9db0cb94c4359db8dad18d185f"
 
 inherit gnomebase gettext upstream-version-is-even gio-module-cache
+
+EXTRA_OECONF = " --with-ca-certificates=/etc/ssl/certs/ca-certificates.crt "
 
 FILES_${PN} += "${libdir}/gio/modules/libgio*.so ${datadir}/dbus-1/services/"
 FILES_${PN}-dev += "${libdir}/gio/modules/libgio*.la"
