@@ -6,13 +6,13 @@ PACKAGE_ARCH = "${MACHINEBUILD}"
 require conf/license/license-close.inc
 
 KV = "3.6.0"
-SRCDATE = "20160125"
+SRCDATE = "20160406"
 
 PV = "${KV}+${SRCDATE}"
 PR = "r1"
 
-SRC_URI[md5sum] = "b26afc5dcf01cae27db27bc9f0ab02ce"
-SRC_URI[sha256sum] = "5736bec09ef68014c94837f3ebabb96d2d0a492d58e3d6e58c747610a5084411"
+SRC_URI[md5sum] = "35c14df7d4fefdae315fb9bc64a8b006"
+SRC_URI[sha256sum] = "df587ae3e817cb07f4303c4bac9b0ad58a25cd362f2392ddb19776e629e3703e"
 
 SRC_URI = "http://source.mynonpublic.com/ini/ini-x000-drivers-${KV}-${SRCDATE}.zip"
 
