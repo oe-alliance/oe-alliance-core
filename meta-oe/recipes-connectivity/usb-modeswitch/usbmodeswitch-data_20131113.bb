@@ -3,6 +3,8 @@ require conf/license/license-gplv2.inc
 
 LICENSE = "GPLv3"
 
+DEPENDS += "tcl-native"
+
 PV="20131113"
 
 SRC_URI[md5sum] = "7b5ac1226b360ddc366c286e62b3c3a4"
