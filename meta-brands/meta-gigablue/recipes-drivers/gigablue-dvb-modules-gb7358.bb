@@ -1,9 +1,9 @@
-SRCDATE = "20180330"
+SRCDATE = "20180403"
 
 KV = "4.8.3"
 
-SRC_URI[md5sum] = "f300c5b6de98bde84044ca09905b43cc"
-SRC_URI[sha256sum] = "3f02f21bbcff5550accefb64d9008da310ca3393bc99d08b058a36e1370d523b"
+SRC_URI[md5sum] = "74b4624bfaa155e47b73b964c936f656"
+SRC_URI[sha256sum] = "2b15c05456565a50b01a9ac281f8701d0ed5e4f3e5ffd5110c3d6df75d434fbc"
 
 SRC_URI = "http://opensat.de/gigablue/drivers/gigablue-drivers-${KV}-BCM7358-${SRCDATE}.zip"
 
