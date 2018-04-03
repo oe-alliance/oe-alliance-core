@@ -5,12 +5,12 @@ LICENSE = "CLOSED"
 PACKAGE_ARCH = "${MACHINEBUILD}"
 
 KV = "3.14.2"
-SRCDATE = "20160122"
+SRCDATE = "20180324"
 
 PV = "${KV}+${SRCDATE}"
 
-SRC_URI[md5sum] = "5a95aef9199e78f1e89ee40a6c352f09"
-SRC_URI[sha256sum] = "e9d9c4ebf2c8a360ad0d271801c819edb919f96d7f3f809c192c7339d10966ea"
+SRC_URI[md5sum] = "9d99aeed41f43aafa027d5769be26536"
+SRC_URI[sha256sum] = "7e488fc0f99d8e458d7bb07d84df56fec50023c5bafee0b1a394c42044b9ed5b"
 
 SRC_URI = "http://source.mynonpublic.com/ini/ini-442dt-drivers-${KV}-${SRCDATE}.zip"
 
