@@ -9,7 +9,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "${IMAGE_VERSION}"
-PR = "r31"
+PR = "r32"
 
 DEPENDS = "enigma2-plugin-drivers-usbserial enigma2-plugin-systemplugins-hrtunerproxy"
 RECOMMENDS = "enigma2-plugin-extensions-et-livestream"
@@ -35,6 +35,7 @@ RDEPENDS_${PN} = " \
     enigma2-plugin-extensions-dreamplex \
     enigma2-plugin-extensions-et-portal \
     enigma2-plugin-extensions-moviearchiver \
+    enigma2-plugin-extensions-moviemanager \
     enigma2-plugin-extensions-yahooweather \
     enigma2-plugin-extensions-youtube \
     enigma2-plugin-extensions-autobouquets \
