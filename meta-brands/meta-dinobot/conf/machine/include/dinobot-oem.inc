@@ -49,7 +49,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'dinobot4kmini', 'mmcblk0p13' , '', d)}\
 
 KERNEL_FILE = "kernel.bin"
 ROOTFS_FILE = "rootfs.tar.bz2"
-MTD_BLACK  = "mmcblk0 mmcblk1"
+MTD_BLACK  = "mmcblk0"
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS = "\
     dinobot-dvb-modules-${MACHINE} \
