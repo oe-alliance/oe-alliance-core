@@ -15,6 +15,8 @@ ${@bb.utils.contains('MACHINEBUILD', 'mediabox4k', 'mediabox 4k M7L' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'dinobot4kse', 'DINOBOT 4KSE' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'dinobot4kplus', 'DINOBOT 4K Plus' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'dinobot4kmini', 'DINOBOT 4K mini' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'axashis4kcombo', 'HIS4K Combo' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'axashis4kcomboplus', 'HIS4K Combo Plus' , '', d)}\
 "
 
 MACHINE_BRAND = "\
@@ -25,6 +27,8 @@ ${@bb.utils.contains('MACHINEBUILD', 'mediabox4k', 'JEPSSEN' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'dinobot4kse', 'Vivant' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'dinobot4kplus', 'Vivant' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'dinobot4kmini', 'Vivant' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'axashis4kcombo', 'AXAS' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'axashis4kcomboplus', 'AXAS' , '', d)}\
 "
 
 MTD_KERNEL = "\
@@ -35,6 +39,8 @@ ${@bb.utils.contains('MACHINEBUILD', 'mediabox4k', 'mmcblk0p10' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'dinobot4kse', 'mmcblk0p10' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'dinobot4kplus', 'mmcblk0p10' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'dinobot4kmini', 'mmcblk0p10' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'axashis4kcombo', 'mmcblk0p9' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'axashis4kcomboplus', 'mmcblk0p10' , '', d)}\
 "
 
 MTD_ROOTFS = "\
@@ -45,6 +51,20 @@ ${@bb.utils.contains('MACHINEBUILD', 'mediabox4k', 'mmcblk1p1' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'dinobot4kse', 'mmcblk1p1' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'dinobot4kplus', 'mmcblk0p13' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'dinobot4kmini', 'mmcblk0p13' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'axashis4kcombo', 'mmcblk0p10' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'axashis4kcomboplus', 'mmcblk0p13' , '', d)}\
+"
+
+SDCARDIMG = "\
+${@bb.utils.contains('MACHINEBUILD', 'anadol4k', 'no' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'dinobot4kl', 'yes' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'dinobot4k', 'yes' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mediabox4k', 'yes' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'dinobot4kse', 'yes' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'dinobot4kplus', 'no' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'dinobot4kmini', 'no' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'axashis4kcombo', 'no' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'axashis4kcomboplus', 'no' , '', d)}\
 "
 
 KERNEL_FILE = "kernel.bin"
@@ -101,7 +121,7 @@ PREFERRED_RPROVIDER_aio-grab = "dinobot-grab-${MACHINE}"
 
 IMAGE_CMD_dinobotemmc_append = "\
     mkdir -p ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}; \
-    if [ "${SDCARD}" = "yes" ]; then \
+    if [ "${SDCARDIMG}" = "yes" ]; then \
         mv ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.emmc.img ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/${IMAGE_NAME}.sdcard.img; \
     else \
         rm -f  ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.emmc.img; \
