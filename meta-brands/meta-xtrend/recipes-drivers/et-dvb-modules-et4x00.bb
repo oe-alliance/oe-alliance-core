@@ -1,9 +1,9 @@
 KV = "4.10.6"
-SRCDATE = "20170413"
+SRCDATE = "20180412"
 
 SRC_URI = "http://source.mynonpublic.com/xtrend/${MACHINE}-drivers-${KV}-${SRCDATE}.zip"
 
 require et-dvb-modules.inc
 
-SRC_URI[md5sum] = "3db7497610be9bf52bd8bc81a9a87cc7"
-SRC_URI[sha256sum] = "55a7abfabfef7f9ca7d7b91f156a3cd7735d9703ad12f6aa8a37c9b0fd97d506"
+SRC_URI[md5sum] = "40def55b6fcf589c3a121f716ac1795f"
+SRC_URI[sha256sum] = "cb67e2d6c8c23691577d007df821f8b17ab9a1b7ac18308a1320b591db44b889"
