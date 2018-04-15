@@ -10,14 +10,14 @@ RDEPENDS_${PN} = "nextv-dumpait nextv-hbbtv-browser"
 inherit gitpkgv
 
 SRCREV = "${AUTOREV}"
-PKGVERSION = "1.0-r0"
+PKGVERSION = "2.0-r0"
 PV = "${PKGVERSION}-${SRCPV}"
 PKGV = "${PKGVERSION}-${GITPKGV}"
 PR = "r0"
 
 INSANE_SKIP_${PN} += "already-stripped"
 
-SRC_URI = "git://github.com/NexTVTeam/hbbtv-plugin.git;protocol=https;branch=4.0 \
+SRC_URI = "git://github.com/atvcaptain/hbbtv-plugin.git;protocol=https;branch=4.0 \
     file://0001-add-extra-check-for-dst_apply.patch \
 "
 
