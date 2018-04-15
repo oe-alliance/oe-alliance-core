@@ -80,11 +80,13 @@ do_configure_append() {
 
 do_install_append() {
         rmdir ${D}${libexecdir}
+        install -d ${D}/usr/bin
+        install -m 0755 ${WORKDIR}/build/Programs/GtkLauncher ${D}/usr/bin/webkit.launcher
 }
 
-FILES_${PN} = "${libdir}/lib*.so.*"
-FILES_${PN}-dev = "${datadir} \
-                   ${includedir} \
-                   ${libdir}/*.la \
-                   ${libdir}/*.so \
-                   ${libdir}/pkgconfig"
+PACKAGES =+ "${PN}-webinspector bjavascriptcore"
+FILES_libjavascriptcore = "${libdir}/libjavascriptcoregtk-1.0.so.*"
+FILES_${PN}-webinspector = "${datadir}/webkitgtk-*/webinspector/"
+FILES_${PN} += "${datadir}/webkitgtk-*/resources/error.html \
+                ${datadir}/webkitgtk-*/images \
+                ${datadir}/glib-2.0/schemas"
