@@ -1,7 +1,7 @@
 # We know about rtc
 include conf/machine/include/build-extras.inc
 
-DISTRO_FEATURES_remove = "x11 wayland directfb gtk-directfb"
+DISTRO_FEATURES_remove = "x11 wayland"
 
 BRAND_OEM = "dinobot"
 
@@ -70,6 +70,9 @@ ${@bb.utils.contains('MACHINEBUILD', 'axashis4kcomboplus', 'no' , '', d)}\
 KERNEL_FILE = "kernel.bin"
 ROOTFS_FILE = "rootfs.tar.bz2"
 MTD_BLACK  = "mmcblk0"
+
+#ver for qtplugins -v3 = dinobot
+VER = "-v3"
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS = "\
     dinobot-dvb-modules-${MACHINE} \
