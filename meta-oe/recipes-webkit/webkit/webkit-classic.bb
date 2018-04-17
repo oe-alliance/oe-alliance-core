@@ -1,6 +1,7 @@
 SUMMARY = "WebKit web rendering engine for the GTK+ platform"
 HOMEPAGE = "http://www.webkitgtk.org/"
 BUGTRACKER = "http://bugs.webkit.org/"
+PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 LICENSE = "BSD & LGPLv2+"
 LIC_FILES_CHKSUM = "\
