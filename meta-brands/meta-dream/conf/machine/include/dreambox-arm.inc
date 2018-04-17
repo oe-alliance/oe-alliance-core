@@ -35,8 +35,6 @@ MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "\
     dreambox-dvb-modules-${MACHINE} \
     "
 
-DISTRO_FEATURES_remove = "directfb gtk-directfb"
-    
 MACHINE_FEATURES += "dreambox alsa usbhost 3dtv switchoff blindscan-dvbs boxmodel"
 # Add "dreambox" override for recipes
 MACHINEOVERRIDES .= ":dreambox"

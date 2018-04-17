@@ -1,25 +1,22 @@
-DESCRIPTION = "E2 HbbTV Plugin"
+DESCRIPTION = "E2 Webkit HbbTV Plugin"
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "CLOSED"
 require conf/license/license-close.inc
 
-DEPENDS = "nextv-dumpait nextv-hbbtv-browser"
-RDEPENDS_${PN} = "nextv-dumpait nextv-hbbtv-browser"
+RDEPENDS_${PN} = "dumpait-legacy webkit-classic webkit-classic-browser"
 
 inherit gitpkgv
 
 SRCREV = "${AUTOREV}"
-PKGVERSION = "1.0-r0"
+PKGVERSION = "2.0-r0"
 PV = "${PKGVERSION}-${SRCPV}"
 PKGV = "${PKGVERSION}-${GITPKGV}"
 PR = "r0"
 
 INSANE_SKIP_${PN} += "already-stripped"
 
-SRC_URI = "git://github.com/NexTVTeam/hbbtv-plugin.git;protocol=https;branch=4.0 \
-    file://0001-add-extra-check-for-dst_apply.patch \
-"
+SRC_URI = "git://github.com/oe-alliance/enigma2-plugin-extensions-hbbtv-webkit.git;protocol=https"
 
 S = "${WORKDIR}/git"
 
@@ -40,8 +37,8 @@ do_install_append() {
     
     # browser
     install -m 0755 ${S}/run.sh ${D}/usr/bin
-    install -m 0755 ${S}/browser ${D}/usr/bin/
-    install -m 0755 ${S}/directfbrc ${D}/etc/
+    install -m 0755 ${S}/${MACHINE}/directfbrc ${D}/etc/
+    install -m 0755 ${S}/${MACHINE}/fb.modes ${D}/etc/
     install -m 0755 ${S}/cert.pem ${D}/etc/pki/tls/
     install -m 0755 ${S}/none.html ${D}/home/root
     install -m 0755 ${S}/libhbbtvplugin.so ${D}/usr/lib/mozilla/plugins/

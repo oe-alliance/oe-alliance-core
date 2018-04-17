@@ -9,8 +9,8 @@ RDEPENDS_${PN} = "ffmpeg"
 
 inherit gitpkgv upx-compress
 
-PV = "36+gitr${SRCPV}"
-PKGV = "36+gitr${GITPKGV}"
+PV = "49+gitr${SRCPV}"
+PKGV = "49+gitr${GITPKGV}"
 
 PR = "r0"
 
@@ -30,6 +30,7 @@ SOURCE_FILES =+ "output/output_subtitle.c"
 SOURCE_FILES =+ "output/output.c"
 SOURCE_FILES =+ "output/writer/common/pes.c"
 SOURCE_FILES =+ "output/writer/common/misc.c"
+SOURCE_FILES =+ "output/writer/common/writer.c"
 SOURCE_FILES =+ "playback/playback.c"
 SOURCE_FILES =+ "external/ffmpeg/src/bitstream.c"
 SOURCE_FILES =+ "external/ffmpeg/src/latmenc.c"

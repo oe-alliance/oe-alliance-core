@@ -6,6 +6,7 @@ KERNEL_RELEASE = "4.4.35"
 SRCDATE_u5pvr = "20171018"
 SRCDATE_u5 = "20180301"
 SRCDATE_u52 = "20180301"
+SRCDATE_u51 = "20180301"
 
 inherit kernel machine_kernel_pr
 
@@ -17,6 +18,8 @@ SRC_URI[u5.md5sum] = "6c1550bdbcb8fda764fdfd558a8b276e"
 SRC_URI[u5.sha256sum] = "eec7fa5e2238abee68b323b38894a2f9e9bad8dfbec6e8de9500b18a244a42cf"
 SRC_URI[u52.md5sum] = "6c1550bdbcb8fda764fdfd558a8b276e"
 SRC_URI[u52.sha256sum] = "eec7fa5e2238abee68b323b38894a2f9e9bad8dfbec6e8de9500b18a244a42cf"
+SRC_URI[u51.md5sum] = "6c1550bdbcb8fda764fdfd558a8b276e"
+SRC_URI[u51.sha256sum] = "eec7fa5e2238abee68b323b38894a2f9e9bad8dfbec6e8de9500b18a244a42cf"
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
@@ -45,6 +48,12 @@ SRC_URI_append_u5 = " \
     "
 
 SRC_URI_append_u52 = " \
+    file://base.patch \
+    file://accelmem.patch \
+    file://alsa.patch \
+    "
+
+SRC_URI_append_u51 = " \
     file://base.patch \
     file://accelmem.patch \
     file://alsa.patch \
