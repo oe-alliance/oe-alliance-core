@@ -1,6 +1,7 @@
 SUMMARY = "WebKit web rendering engine for the GTK+ platform"
 HOMEPAGE = "http://www.webkitgtk.org/"
 BUGTRACKER = "http://bugs.webkit.org/"
+PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 LICENSE = "BSD & LGPLv2+"
 LIC_FILES_CHKSUM = "\
@@ -17,13 +18,7 @@ PR = "r0"
 
 SRCREV = "${AUTOREV}"
 
-SRC_URI = "git://github.com/NexTVTeam/hbbtv-browser.git;protocol=https; \
-    file://0001-bison-3.patch \
-    file://0001-fix-build-with-gcc-6.20.patch \
-    file://0001-fix-build-issue-with-cglib-2.2.4.patch \
-    file://webkit-gtk_fixed_crash_error.patch \
-    file://maketokenizer.patch \
-"
+SRC_URI = "git://github.com/oe-alliance/webkit.org.git;protocol=https;"
 
 inherit autotools lib_package gtk-doc pkgconfig perlnative pythonnative
 
@@ -81,12 +76,13 @@ do_configure_append() {
 do_install_append() {
         rmdir ${D}${libexecdir}
         install -d ${D}/usr/bin
-        install -m 0755 ${WORKDIR}/build/Programs/GtkLauncher ${D}/usr/bin/webkit.launcher
+        install -m 0755 ${WORKDIR}/build/Programs/GtkLauncher ${D}/usr/bin/browser
 }
 
-PACKAGES =+ "${PN}-webinspector bjavascriptcore"
+PACKAGES =+ "${PN}-webinspector ${PN}-browser bjavascriptcore"
 FILES_libjavascriptcore = "${libdir}/libjavascriptcoregtk-1.0.so.*"
 FILES_${PN}-webinspector = "${datadir}/webkitgtk-*/webinspector/"
+FILES_${PN}-browser = "/usr/bin/browser"
 FILES_${PN} += "${datadir}/webkitgtk-*/resources/error.html \
                 ${datadir}/webkitgtk-*/images \
                 ${datadir}/glib-2.0/schemas"
