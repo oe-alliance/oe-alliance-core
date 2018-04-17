@@ -9,22 +9,15 @@ LIC_FILES_CHKSUM = "\
 	file://Source/JavaScriptCore/parser/Parser.h;endline=23;md5=2f3cff0ad0a9c486da5a376928973a90 \
 	"
 
-ICU_LIB = "icu"
-
-DEPENDS = "zlib enchant libsoup-2.4 curl libxml2 cairo libidn gnutls gtk+ \
-           gstreamer1.0 gstreamer1.0-plugins-base flex-native gperf-native sqlite3 ${ICU_LIB}"
+DEPENDS = "glib-2.0 zlib enchant libsoup-2.4 curl libxml2 cairo libidn gnutls gtk+ \
+           gstreamer1.0 gstreamer1.0-plugins-base flex-native bison-native gperf-native sqlite3 icu"
 
 PR = "r0"
 
 
 SRCREV = "${AUTOREV}"
 
-SRC_URI = "git://github.com/NexTVTeam/hbbtv-browser.git;protocol=https; \
-    file://0001-bison-3.patch \
-    file://0001-fix-build-with-gcc-6.20.patch \
-    file://0001-fix-build-issue-with-cglib-2.2.4.patch \
-    file://webkit-gtk_fixed_crash_error.patch \
-"
+SRC_URI = "git://github.com/oe-alliance/webkit.org.git;protocol=https;"
 
 inherit autotools lib_package gtk-doc pkgconfig perlnative pythonnative
 
@@ -73,17 +66,22 @@ do_configure_append() {
 	for makefile in $(find ${B} -name "GNUmakefile") ; do
 		sed -i s:-I/usr/include::g $makefile
 	done
+	# remove hardcoded path to /usr/bin/glib-mkenums
+	for makefile in $(find ${B} -name "GNUmakefile") ; do
+		sed -i s:/usr/bin/glib-mkenums:glib-mkenums:g $makefile
+	done
 }
 
 do_install_append() {
         rmdir ${D}${libexecdir}
         install -d ${D}/usr/bin
-        install -m 0755 ${WORKDIR}/build/Programs/GtkLauncher ${D}/usr/bin/webkit.launcher
+        install -m 0755 ${WORKDIR}/build/Programs/GtkLauncher ${D}/usr/bin/browser
 }
 
-PACKAGES =+ "${PN}-webinspector bjavascriptcore"
+PACKAGES =+ "${PN}-webinspector ${PN}-browser bjavascriptcore"
 FILES_libjavascriptcore = "${libdir}/libjavascriptcoregtk-1.0.so.*"
 FILES_${PN}-webinspector = "${datadir}/webkitgtk-*/webinspector/"
+FILES_${PN}-browser = "/usr/bin/browser"
 FILES_${PN} += "${datadir}/webkitgtk-*/resources/error.html \
                 ${datadir}/webkitgtk-*/images \
                 ${datadir}/glib-2.0/schemas"
