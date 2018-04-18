@@ -1,31 +1,34 @@
 SUMMARY = "Skin Full HD for NFR Images by stein17"
-MAINTAINER = "opennfr"
-SECTION = "base"
-PRIORITY = "required"
-LICENSE = "proprietary"
-PACKAGE_ARCH = "all"
+MAINTAINER = "stein17"
 
 require conf/license/license-gplv2.inc
 
-inherit gitpkgv
+inherit gitpkgv allarch
+
 SRCREV = "${AUTOREV}"
-PV = "2.1+git${SRCPV}"
-PKGV = "2.1+git${GITPKGV}"
-VER ="2.1"
-PR = "r2"
+PV = "1.6+git${SRCPV}"
+PKGV = "1.6+git${GITPKGV}"
+VER="1.6"
 
-SRC_URI="git://github.com/stein17/Blue-Line-OCT-4NFR.git"
+RDEPENDS_${PN} = "enigma2-plugin-systemplugins-weathercomponenthandler, enigma2-plugin-skincomponents-weathercomponent"
 
-S = "${WORKDIR}/git"
+SRC_URI="git://github.com/stein17/Skins-for-openNFR.git;protocol=git"
 
-FILES_${PN} = "/tmp /usr/*"
+FILES_${PN} = "/"
+
+
+
+S = "${WORKDIR}/git/Blue-Line-OCT-4NFR"
+
+do_compile_append() {
+python -O -m compileall ${S}
+}
 
 do_install() {
-	install -d ${D}/tmp/nfr/
-	install -d ${D}/tmp/octagon/
-	cp -rp ${S}/tmp/nfr/* ${D}/tmp/nfr/
-	cp -rp ${S}/tmp/octagon/* ${D}/tmp/octagon/
-	cp -rp ${S}/usr ${D}/
+    install -d ${D}/usr/share/enigma2
+    cp -rp ${S}/usr ${D}/
+    chmod -R a+rX ${D}/usr/share/enigma2/
+    cp -rp ${S}/tmp ${D}/
 }
 
 pkg_postinst_${PN} () {
@@ -43,39 +46,34 @@ else
 	echo "No Octagon Box found!"
 	echo "*********************************"
 	echo "                                 "
-       	cp /tmp/nfr/*.png /usr/share/enigma2/Blue-Line-OCT-4NFR/menu
+	cp /tmp/atv/*.png /usr/share/enigma2/Blue-Line-OCT-4NFR/menu
 fi
 
-echo " Skin Blue-Line-OCT-4NFR installed "
-
+echo " Skin Blue-Line-OE-4NFR installed "
 exit 0
 }
 
 pkg_postrm_${PN} () {
 #!/bin/sh
-rm -rf /usr/share/enigma2/Blue-Line-OCT-4NFR/
-echo ""
-echo ""
-echo "Skin removed! You should restart GUI now!"
-echo ""
+rm -rf /usr/share/enigma2/Blue-Line-OCT-4NFR
+echo "                                                           "
+echo "               ...Skin successful removed.                 "
 exit 0
 }
 
 pkg_preinst_${PN} () {
 #!/bin/sh
-
 python /usr/lib/enigma2/python/BoxBrandingTest.pyo | sed 's/<$//' | sed 's/ /_/g' > /tmp/boxbranding.cfg
-
+echo "        Skin Blue-Line-OCT-4NFR will be now installed...            "
 exit 0
 }
 
 pkg_prerm_${PN} () {
 #!/bin/sh
 echo "                                                           "
-echo "              AX-Blue-FHD is now being removed...          "
+echo "              Skin is now being removed...                 "
 echo "                                                           "
 exit 0
 }
 
-do_populate_sysroot[noexec] = "1"
 do_package_qa[noexec] = "1"
