@@ -1,4 +1,4 @@
-SRCDATE = "20180329"
+SRCDATE = "20180418"
 
 inherit pkgconfig
 
@@ -9,5 +9,5 @@ do_install_append() {
 
 require dinobot-libs.inc
 
-SRC_URI[md5sum] = "eafd368b3b9d54d69fb0648712fac046"
-SRC_URI[sha256sum] = "f4d105b4fa55314fe84a376764dac5eff88b78eb7edca7e6a937e09b1b98ce30"
+SRC_URI[md5sum] = "0530281e594ce03cfc2f6d54d919cfce"
+SRC_URI[sha256sum] = "bc477e224592a0e5d1a951138ebd6997e7ae987e62fe91c635320f0275214249"
