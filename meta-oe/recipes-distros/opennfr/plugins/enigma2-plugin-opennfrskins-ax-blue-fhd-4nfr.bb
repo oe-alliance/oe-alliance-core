@@ -36,7 +36,7 @@ exit 0
 
 pkg_postrm_${PN} () {
 #!/bin/sh
-rm -rf /usr/share/enigma2/AX_Blue_FHD_4ATV
+rm -rf /usr/share/enigma2/AX_Blue_FHD_4NFR
 rm -rf /usr/share/enigma2/Spinner/AX_Blue
 echo "                                                           "
 echo "               ...Skin successful removed.                 "
