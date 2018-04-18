@@ -54,7 +54,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'e4hdcombo', 'e4hdcombo' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'singleboxlcd', 'redeagle/singleboxlcd' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'sf208', 'sf208' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'sf228', 'sf228' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'sf238', 'sf228' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'sf238', 'sf238' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', '9910lx', '9910lx' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', '9911lx', '9911lx' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'e4hdultra', 'e4hd' , '', d)}\
