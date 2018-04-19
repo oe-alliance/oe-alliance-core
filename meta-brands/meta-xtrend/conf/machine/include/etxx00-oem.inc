@@ -59,6 +59,7 @@ PREFERRED_PROVIDER_virtual/kernel = "linux-etxx00"
 
 PREFERRED_PROVIDER_virtual/blindscan-dvbs = "et-blindscan-utils-${MACHINE}"
 PREFERRED_PROVIDER_virtual/blindscan-dvbc = "et-blindscan-utils-${MACHINE}"
+PREFERRED_VERSION_directfb = "1.7.7"
 
 MACHINE_FEATURES += "alsa 3dtv switchoff hdmicec omb  \
     ${@bb.utils.contains('MACHINEBUILD', 'beyonwizu4', 'dvbc-only' , 'blindscan-tbs', d)} \
