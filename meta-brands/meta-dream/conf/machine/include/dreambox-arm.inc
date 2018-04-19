@@ -51,6 +51,7 @@ PREFERRED_VERSION_nfs-utils ?= "1.2.8"
 TARGET_ARCH = "arm"
 DEFAULTTUNE = "cortexa15hf-neon-vfpv4"
 OLDEST_KERNEL = "3.14"
+PREFERRED_VERSION_directfb = "1.7.7"
 
 MACHINE_FEATURES_BACKFILL_CONSIDERED = "rtc gobject-introspection-data"
 

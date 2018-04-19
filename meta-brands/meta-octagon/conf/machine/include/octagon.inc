@@ -42,6 +42,7 @@ PREFERRED_PROVIDER_virtual/blindscan-dvbc = "octagon-blindscan-utils"
 PREFERRED_PROVIDER_virtual/egl = "nextv-v3ddriver-${MACHINE}"
 PREFERRED_PROVIDER_virtual/libgles2 = "nextv-v3ddriver-${MACHINE}"
 PREFERRED_PROVIDER_virtual/kodi = "stb-kodi-${MACHINE}"
+PREFERRED_VERSION_directfb = "1.7.7"
 
 MACHINE_FEATURES += "alsa 3dtv switchoff hdmicec omb blindscan-tbs blindscan-dvbc"
 

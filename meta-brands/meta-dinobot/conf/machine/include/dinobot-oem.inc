@@ -112,6 +112,8 @@ DVBSKYPROVIDER = "kernel"
 include conf/machine/include/autoload-filesystems.inc
 require conf/machine/include/soc-family.inc
 
+PREFERRED_VERSION_directfb = "1.7.7"
+
 DVBMEDIASINK_CONFIG = "--with-h265 --with-vb8 --with-vb9 --with-spark --with-opus --with-wma --with-wmv --with-pcm --with-dts --with-eac3"
 
 PREFERRED_PROVIDER_virtual/libgles1 = "dinobot-opengl-${MACHINE}"
