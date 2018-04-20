@@ -13,7 +13,7 @@ SRC_URI[sha256sum] = "a13bc69ec376b568235964103ccb9217efe559b2ebca859f69985f89b9
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-MACHINE_KERNEL_PR_append = ".1"
+MACHINE_KERNEL_PR_append = ".2"
 
 # By default, kernel.bbclass modifies package names to allow multiple kernels
 # to be installed in parallel. We revert this change and rprovide the versioned
@@ -33,7 +33,8 @@ SRC_URI += "http://gi-et.info/et1x000/linux-${PV}-${SRC}.tar.xz \
     file://0001-stv090x-optimized-TS-sync-control.patch \
     file://rtl2832-add-support-for-GoTView-MasterHD-3-USB-tuner.patch \
     file://if_port.patch \
-    file://t230c.patch \
+    file://t230c2.patch \
+    file://T230resync.patch \
     "
 
 S = "${WORKDIR}/linux-${PV}"
