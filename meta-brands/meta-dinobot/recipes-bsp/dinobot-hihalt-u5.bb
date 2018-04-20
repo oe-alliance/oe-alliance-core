@@ -4,7 +4,7 @@ PRIORITY = "optional"
 LICENSE = "CLOSED"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-SRCDATE = "20180206"
+SRCDATE = "20180420"
 
 PV = "${SRCDATE}"
 PR = "r0"
@@ -27,7 +27,7 @@ FILES_${PN}  = "${bindir}/hihalt"
 FILES_${PN} += "${bindir}/hipmoc"
 FILES_${PN} += "${bindir}/timerTask.py"
 
-SRC_URI[md5sum] = "30c04477a8ded74fcb30aba6edb0bbf2"
-SRC_URI[sha256sum] = "9b7490144c318adae66b57e515c934563107d75f7585936c2f5bb5925d8ee7ff"
+SRC_URI[md5sum] = "343a3aa09cdf0b3411de6b6bc9b1810d"
+SRC_URI[sha256sum] = "bbf1162d6f600a1f8df9035539bb6687f527aeb788f24ef5c8f193551456a326"
 
 
