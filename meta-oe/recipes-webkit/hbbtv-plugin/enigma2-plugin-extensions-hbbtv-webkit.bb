@@ -20,6 +20,9 @@ SRC_URI = "git://github.com/oe-alliance/enigma2-plugin-extensions-hbbtv-webkit.g
 
 S = "${WORKDIR}/git"
 
+do_package_qa() {
+}
+
 DESTDIR = "enigma2/python/Plugins/Extensions/HbbTV"
 
 do_install_append() {
