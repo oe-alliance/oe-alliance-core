@@ -1,29 +1,60 @@
 SUMMARY = "Skin Full HD for NFR Images by stein17"
-MAINTAINER = "opennfr"
-SECTION = "base"
-PRIORITY = "required"
-LICENSE = "proprietary"
-PACKAGE_ARCH = "all"
+MAINTAINER = "stein17"
 
 require conf/license/license-gplv2.inc
 
-inherit gitpkgv
+inherit gitpkgv allarch
+
 SRCREV = "${AUTOREV}"
-PV = "2.1+git${SRCPV}"
-PKGV = "2.1+git${GITPKGV}"
-VER ="2.1"
-PR = "r1"
+PV = "3.2+git${SRCPV}"
+PKGV = "3.2+git${GITPKGV}"
+VER="3.2"
 
-SRC_URI="git://github.com/stein17/AX-Blue-FHD-4NFR.git"
+RDEPENDS_${PN} = "enigma2-plugin-systemplugins-weathercomponenthandler, enigma2-plugin-skincomponents-weathercomponent"
 
-S = "${WORKDIR}/git"
+SRC_URI="git://github.com/stein17/Skins-for-openNFR.git;protocol=git"
 
 FILES_${PN} = "/usr/*"
 
-do_install() {
-    cp -rp ${S}/usr ${D}/
+S = "${WORKDIR}/git/AX-Blue-FHD-4NFR"
+
+do_compile_append() {
+python -O -m compileall ${S}
 }
 
+do_install() {
+    install -d ${D}/usr/share/enigma2
+    cp -rp ${S}/usr ${D}/
+    chmod -R a+rX ${D}/usr/share/enigma2/
+}
 
-do_populate_sysroot[noexec] = "1"
+pkg_postinst_${PN} () {
+#!/bin/sh
+echo "              ...Skin successful installed.                "
+exit 0
+}
+
+pkg_postrm_${PN} () {
+#!/bin/sh
+rm -rf /usr/share/enigma2/AX_Blue_FHD_4NFR
+rm -rf /usr/share/enigma2/Spinner/AX_Blue
+echo "                                                           "
+echo "               ...Skin successful removed.                 "
+exit 0
+}
+
+pkg_preinst_${PN} () {
+#!/bin/sh
+echo "        AX-Blue-FHD Skin will be now installed...            "
+exit 0
+}
+
+pkg_prerm_${PN} () {
+#!/bin/sh
+echo "                                                           "
+echo "              AX-Blue-FHD is now being removed...          "
+echo "                                                           "
+exit 0
+}
+
 do_package_qa[noexec] = "1"

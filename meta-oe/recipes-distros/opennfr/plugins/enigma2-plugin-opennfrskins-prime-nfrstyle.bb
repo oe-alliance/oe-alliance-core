@@ -12,13 +12,13 @@ SRCREV = "${AUTOREV}"
 PV = "2.1+git${SRCPV}"
 PKGV = "2.1+git${GITPKGV}"
 VER ="2.1"
-PR = "r1"
+PR = "r2"
 
 RDEPENDS_${PN} = "enigma2-plugin-skincomponents-weathercomponent, enigma2-plugin-systemplugins-weathercomponenthandler"
 
-SRC_URI="git://github.com/stein17/Prime-NFR-Style.git"
+SRC_URI="git://github.com/stein17/Skins-for-openNFR.git"
 
-S = "${WORKDIR}/git"
+S = "${WORKDIR}/git/Prime-NFR-Style"
 
 FILES_${PN} = "/usr/*"
 

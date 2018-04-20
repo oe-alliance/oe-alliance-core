@@ -8,6 +8,8 @@ TARGET_ARCH = "arm"
 DEFAULTTUNE = "cortexa15hf-neon-vfpv4"
 IMAGE_FSTYPES =+ "tar.bz2"
 
+PREFERRED_VERSION_directfb = "1.7.7"
+
 require conf/machine/include/tune-cortexa15.inc
 
 IMAGE_CMD_tar_prepend = "\
