@@ -14,7 +14,7 @@ ICU_LIB = "icu"
 DEPENDS = "zlib enchant libsoup-2.4 curl libxml2 cairo libidn gnutls \
            gtk+ gstreamer1.0 gstreamer1.0-plugins-base flex-native gperf-native  sqlite3 ${ICU_LIB}"
 
-PR = "r4"
+PR = "r5"
 PV = "r95199"
 
 BRANCH="vuplus-webkit"
