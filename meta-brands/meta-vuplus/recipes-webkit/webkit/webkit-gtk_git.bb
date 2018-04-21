@@ -13,7 +13,7 @@ DEPENDS = "glib-2.0 icu zlib enchant libsoup-2.4 curl libxml2 cairo libidn gnutl
            gtk+ gstreamer1.0 gstreamer1.0-plugins-base flex-native bison-native gperf-native sqlite3 \
            libxslt zlib libpcre harfbuzz pango atk udev"
 
-PR = "r4"
+PR = "r5"
 PV = "r95199"
 
 BRANCH="vuplus-webkit"
