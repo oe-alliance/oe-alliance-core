@@ -18,7 +18,6 @@ DEPENDS = "\
     enigma2-plugin-drivers-network-usb-mt7601u \
     enigma2-plugin-drivers-network-usb-mt7610u \
     enigma2-plugin-drivers-network-usb-rtl8192eu \
-    enigma2-plugin-drivers-network-usb-rtl8822bu \
     ${WLAN_EXTRA} \
     ", d)} \
     enigma2-plugin-drivers-network-usb-asix \
@@ -36,7 +35,7 @@ DEPENDS = "\
 
 
 WLAN_EXTRA = " \
-    ${@bb.utils.contains("DEFAULTTUNE", "sh4", "" , "enigma2-plugin-drivers-network-usb-rtl8814au", d)} \
+    ${@bb.utils.contains("DEFAULTTUNE", "sh4", "" , "enigma2-plugin-drivers-network-usb-rtl8814au enigma2-plugin-drivers-network-usb-rtl8822bu", d)} \
 "
 
 PR = "r23"
