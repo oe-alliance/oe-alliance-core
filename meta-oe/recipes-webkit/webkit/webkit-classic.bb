@@ -13,14 +13,15 @@ LIC_FILES_CHKSUM = "\
 DEPENDS = "glib-2.0 zlib enchant libsoup-2.4 curl libxml2 cairo libidn gnutls gtk+ \
            gstreamer1.0 gstreamer1.0-plugins-base flex-native bison-native gperf-native sqlite3 icu"
 
-PR = "r0"
-
-
 SRCREV = "${AUTOREV}"
+PV = "1.1+git${SRCPV}"
+PKGV = "1.1+git${GITPKGV}"
+VER ="1.1"
+PR = "r0"
 
 SRC_URI = "git://github.com/oe-alliance/webkit.org.git;protocol=https;"
 
-inherit autotools lib_package gtk-doc pkgconfig perlnative pythonnative
+inherit autotools lib_package gtk-doc pkgconfig perlnative pythonnative gitpkgv
 
 S = "${WORKDIR}/git"
 
