@@ -80,11 +80,14 @@ PREFERRED_VERSION_linux-libc-headers = "3.1"
 OLDEST_KERNEL = "2.6.34"
 GCCVERSION = "4.9.4"
 GLIBCVERSION = "2.23"
+PREFERRED_VERSION_samba = "3.%"
+PREFERRED_VERSION_directfb = "1.7.7"
 
 GLIBC_EXTRA_OECONF = "--with-tls --with-__thread"
 
 SOC_FAMILY = "pnx8471"
 TARGET_ARCH = "arm"
+DEFAULTTUNE = "armv7a"
 TUNE_FEATURES = "cortexa9 vfp"
 include conf/machine/include/tune-cortexa9.inc
 require conf/machine/include/soc-family.inc
@@ -92,9 +95,9 @@ TUNE_CCARGS += "-mfpu=vfpv3-d16"
 
 IMAGE_FSTYPES ?= "imgzip256"
 
-MACHINE_FEATURES += "3dtv alsa hdmicec switchoff textlcd dvbapi5 usbhost wifiusblegacy legacykernel smallflash"
+MACHINE_FEATURES += "3dtv alsa hdmicec switchoff textlcd dvbapi5 usbhost wifiusblegacy legacykernel smallflash singlecore"
 
-OEM_ARCH = "${MACHINEBUILD}"
+OEM_ARCH = "${MACHINEBUILD} ${DEFAULTTUNE}"
 
 # Add "MACHINEBUILD" override for recipes
 MACHINEOVERRIDES =. "${@['', '${MACHINEBUILD}:']['${MACHINEBUILD}' != '']}"
