@@ -14,7 +14,6 @@ DEPENDS = " \
     enigma2-plugin-extensions-oroscopoitalia \
     enigma2-plugin-extensions-permanentvfdclock \
     enigma2-plugin-extensions-ppanel \
-    enigma2-plugin-extensions-remotecontrolchannel \
     enigma2-plugin-extensions-shootyourscreen \
     enigma2-plugin-extensions-simpleumount \
     enigma2-plugin-extensions-streaminterface \
