@@ -1,6 +1,6 @@
 KV = "4.10.6"
-SRCDATE = "20170413"
+SRCDATE = "20180408"
 
 require ax-dvb-modules.inc
-SRC_URI[md5sum] = "0380998cb1cc4ef2678425f454e18a5b"
-SRC_URI[sha256sum] = "adf56e929f46435110e2944c7033e4be89eed1e654b2bb08caeca303b4e0dac7"
+SRC_URI[md5sum] = "7224cd51de5a9e5f87382febcf90e19b"
+SRC_URI[sha256sum] = "9c3a11a0ba24fb760ec27a6a68a91978f06ff8d266301a28418f956fe1274435"
