@@ -3,23 +3,14 @@ SECTION = "kernel"
 LICENSE = "GPLv2"
 
 KERNEL_RELEASE = "4.4.35"
-SRCDATE_u5pvr = "20171018"
-SRCDATE_u5 = "20180301"
-SRCDATE_u52 = "20180301"
-SRCDATE_u51 = "20180301"
+SRCDATE_u5pvr = "20180427"
 
 inherit kernel machine_kernel_pr
 
-MACHINE_KERNEL_PR_append = ".11"
+MACHINE_KERNEL_PR_append = ".12"
 
-SRC_URI[u5pvr.md5sum] = "5b78e7c0fb860f2a707de6a437a097e9"
-SRC_URI[u5pvr.sha256sum] = "16d4841a6ab678fdf60162b41466675ca6e2e9af38b4722bdd9571b36969f9d2"
-SRC_URI[u5.md5sum] = "6c1550bdbcb8fda764fdfd558a8b276e"
-SRC_URI[u5.sha256sum] = "eec7fa5e2238abee68b323b38894a2f9e9bad8dfbec6e8de9500b18a244a42cf"
-SRC_URI[u52.md5sum] = "6c1550bdbcb8fda764fdfd558a8b276e"
-SRC_URI[u52.sha256sum] = "eec7fa5e2238abee68b323b38894a2f9e9bad8dfbec6e8de9500b18a244a42cf"
-SRC_URI[u51.md5sum] = "6c1550bdbcb8fda764fdfd558a8b276e"
-SRC_URI[u51.sha256sum] = "eec7fa5e2238abee68b323b38894a2f9e9bad8dfbec6e8de9500b18a244a42cf"
+SRC_URI[md5sum] = "d74a4128a995cafeefeb914ab3e4d288"
+SRC_URI[sha256sum] = "4fd42687c02c8ba5ffee967c31ba3eec0ddef57a417c5503c41543a2dbe3b640"
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
@@ -31,33 +22,9 @@ PKG_${KERNEL_PACKAGE_NAME}-image = "kernel-image"
 RPROVIDES_${KERNEL_PACKAGE_NAME}-base = "kernel-${KERNEL_VERSION}"
 RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
 
-SRC_URI += "http://source.mynonpublic.com/dinobot/dinobot-linux-${PV}-${SRCDATE}.tar.gz;name=${MACHINE} \
+SRC_URI += "http://source.mynonpublic.com/dinobot/dinobot-linux-${PV}-${SRCDATE}.tar.gz \
     file://defconfig \
-    file://0001-Support-TBS-USB-drivers-for-4.3-kernel.patch \
-    file://0001-TBS-fixes-for-4.3-kernel.patch \
-    file://0001-STV-Add-PLS-support.patch \
-    file://0001-STV-Add-SNR-Signal-report-parameters.patch \
-    file://blindscan2.patch \
-    file://0001-stv090x-optimized-TS-sync-control.patch \
 "
-
-SRC_URI_append_u5 = " \
-    file://base.patch \
-    file://accelmem.patch \
-    file://alsa.patch \
-    "
-
-SRC_URI_append_u52 = " \
-    file://base.patch \
-    file://accelmem.patch \
-    file://alsa.patch \
-    "
-
-SRC_URI_append_u51 = " \
-    file://base.patch \
-    file://accelmem.patch \
-    file://alsa.patch \
-    "
 
 S = "${WORKDIR}/linux-${PV}"
 B = "${WORKDIR}/build"

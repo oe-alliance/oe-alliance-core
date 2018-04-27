@@ -4,9 +4,9 @@ PRIORITY = "optional"
 LICENSE = "CLOSED"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-COMPATIBLE_MACHINE = "^(u5)$"
+COMPATIBLE_MACHINE = "^(u53)$"
 
-SRCDATE = "20180425"
+SRCDATE = "20180427"
 
 PV = "${SRCDATE}"
 PR = "r0"
@@ -29,5 +29,5 @@ do_package_qa() {
 
 FILES_${PN}  = "${bindir}/showiframe"
 
-SRC_URI[md5sum] = "66dc4bb52c93a406464930c71de6b9b9"
-SRC_URI[sha256sum] = "bafbd7fe5101543dcbf7c4dfc0f9807955c7f28a368d8ce85d22ad02f88d56d9"
+SRC_URI[md5sum] = "ceb7e5ff9a5624e664ff7ba532ac2f0f"
+SRC_URI[sha256sum] = "268cdf5a05c6cbbb8264aa186e96d63fe66ed3423c3b0424adcbe4c7ed597155"

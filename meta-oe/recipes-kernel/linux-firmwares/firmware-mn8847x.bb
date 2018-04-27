@@ -15,4 +15,5 @@ do_install() {
     install -m 0644 mn88472.fw ${D}${base_libdir}/firmware/mn88472.fw
     install -m 0644 dvb-demod-mn88472-02.fw ${D}${base_libdir}/firmware/dvb-demod-mn88472-02.fw
     install -m 0644 mn88473.fw ${D}${base_libdir}/firmware/mn88473.fw
+    install -m 0644 mn88473.fw ${D}${base_libdir}/firmware/dvb-demod-mn88473-01.fw
 }

@@ -6,9 +6,9 @@ LIC_FILES_CHKSUM = "file://ifcfg-wlan0;md5=a84acae65af4b2d44d5035aa9f63cd85"
 
 inherit module
 
-PR = "r0"
+PR = "r1"
 
-SRC_URI = "http://source.mynonpublic.com/rtl8822bu-driver-1.0.0.9-20180424.zip"
+SRC_URI = "http://source.mynonpublic.com/rtl8822bu-driver-1.0.0.9-20180425.zip"
 
 SRC_URI_append_sh4 = " file://fix_sh4_build.patch"
 
@@ -40,5 +40,5 @@ do_install() {
 do_package_qa() {
 }
 
-SRC_URI[md5sum] = "91e3482bd4cd5ecef1132a5acef324ea"
-SRC_URI[sha256sum] = "47d3f029e460ecfed483175a6702d9fbbc87bc4d82d6dd51ef582fe240081660"
+SRC_URI[md5sum] = "a1e4314a186f526c6463c520bd40a223"
+SRC_URI[sha256sum] = "f87b640cd14c8036ef74f1ee428ffa8fea6963209f858626478aaab6bf373ea8"
