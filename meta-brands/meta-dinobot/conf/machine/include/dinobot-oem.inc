@@ -74,15 +74,22 @@ MTD_BLACK  = "mmcblk0"
 #ver for qtplugins -v3 = dinobot
 VER = "-v3"
 
+KERNEL_MODULE_AUTOLOAD += "xhci-plat-hcd"
+KERNEL_MODULE_AUTOLOAD += "ehci-platform"
+KERNEL_MODULE_AUTOLOAD += "ohci-platform"
+KERNEL_MODULE_AUTOLOAD += "cfg80211"
+
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS = "\
     dinobot-dvb-modules-${MACHINE} \
-    ${@bb.utils.contains('MACHINE', 'u5pvr', 'dinobot-loadmodules-${MACHINE}' , 'kernel-module-xhci-plat-hcd kernel-module-ehci-platform kernel-module-ohci-platform', d)} \
+    kernel-module-xhci-plat-hcd \
+    kernel-module-ehci-platform \
+    kernel-module-ohci-platform \
     dinobot-opengl-${MACHINE} \
     dinobot-libs-${MACHINE} \
     dinobot-hihalt-${MACHINE} \
 "
 
-MACHINE_FEATURES += "videoenhancement switchoff  hdmicec 7segment textlcd skins1080 blindscan-tbs emmc mmc \
+MACHINE_FEATURES += "videoenhancement switchoff  hdmicec 7segment textlcd skins1080 blindscan-tbs emmc mmc kodi alsa hbbtv-browser-webkit qtstalker\
     ${@bb.utils.contains('MACHINEBUILD', 'anadol4k', '' , ' dvb-c', d)} \
     "
 

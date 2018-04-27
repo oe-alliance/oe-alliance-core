@@ -25,8 +25,8 @@ do_package_qa() {
 FILES_${PN}  = "${bindir}/hihalt"
 FILES_${PN} += "${bindir}/timerTask.py"
 
-SRC_URI[md5sum] = "653485b3534b86886903417aedb4e014"
-SRC_URI[sha256sum] = "80e98f459af5afa4b7fba4c1b2570c970da61f40ef0af0e2f1d160c7d98caa80"
+SRC_URI[md5sum] = "4dc054815e8ceefcecca587175e00684"
+SRC_URI[sha256sum] = "6a3d60ef68e969d8469887b454ad5869333258a6411729133a4ce44421d04226"
 
 
 
