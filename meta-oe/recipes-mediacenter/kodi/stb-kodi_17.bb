@@ -94,9 +94,14 @@ SRC_URI = "git://github.com/xbmc/xbmc.git;branch=Krypton \
            file://stb-settings.patch \
            file://e2player.patch \
            file://add-gstplayer-support.patch \
+           file://visualization.patch \
+           file://visualizations.zip \
 "
 
 SRC_URI_append_u5 = " file://eglwrapper.patch"
+SRC_URI_append_u51 = " file://eglwrapper.patch"
+SRC_URI_append_u52 = " file://eglwrapper.patch"
+SRC_URI_append_u53 = " file://eglwrapper.patch"
 SRC_URI_append_u5pvr = " file://eglwrapper.patch"
 
 SRC_URI_append_libc-musl = " \
@@ -161,6 +166,11 @@ def enable_glew(bb, d):
     return ""
 
 do_configure() {
+    cp -a ${WORKDIR}/visualization.glspectrum ${WORKDIR}/git/addons/
+    cp -a ${WORKDIR}/visualization.shadertoy ${WORKDIR}/git/addons/
+    cp -a ${WORKDIR}/visualization.waveform ${WORKDIR}/git/addons/
+    cp -a ${WORKDIR}/visualizations ${WORKDIR}/git/xbmc/
+    cp -a ${WORKDIR}/include ${WORKDIR}/git/xbmc/addons/
     ( for i in $(find ${S} -name "configure.*" ) ; do
        cd $(dirname $i) && gnu-configize --force || true
     done )

@@ -1,26 +1,25 @@
-From 76add40723e45d0d9ecc8ff40e63848e4baef645 Mon Sep 17 00:00:00 2001
+From 2040d08fe587afa33b1d24bfc1c02dc66579f1c1 Mon Sep 17 00:00:00 2001
 From: captain <openatv@gmail.com>
 Date: Sat, 25 Mar 2017 22:35:09 +0100
-Subject: [PATCH] fix
+Subject: [PATCH] stb-settings
 
-brcmstb-settings
 ---
  addons/skin.estouchy/xml/Home.xml        |  2 +-
  addons/skin.estuary/xml/Home.xml         |  2 +-
- lib/libdvd/Makefile.in                   | 14 +++++-----
- system/settings/settings.xml             | 12 +++-----
- tools/Linux/kodi.sh.in                   | 38 +++++++++++++++++++------
- tools/depends/target/libdvdcss/Makefile  |  4 +--
- tools/depends/target/libdvdnav/Makefile  |  4 +--
- tools/depends/target/libdvdread/Makefile |  4 +--
- xbmc/GUIInfoManager.cpp                  |  4 +++
- xbmc/input/InputManager.cpp              | 12 ++++++++
- xbmc/input/linux/LinuxInputDevices.cpp   | 48 +++++++++++++++++++++++++++++++-
- xbmc/utils/CPUInfo.cpp                   | 39 ++++++++++++++++++++++++++
- 12 files changed, 150 insertions(+), 33 deletions(-)
+ lib/libdvd/Makefile.in                   | 14 +++---
+ system/settings/settings.xml             | 12 ++---
+ tools/Linux/kodi.sh.in                   | 38 ++++++++++++----
+ tools/depends/target/libdvdcss/Makefile  |  4 +-
+ tools/depends/target/libdvdnav/Makefile  |  4 +-
+ tools/depends/target/libdvdread/Makefile |  4 +-
+ xbmc/GUIInfoManager.cpp                  |  4 ++
+ xbmc/input/InputManager.cpp              | 12 +++++
+ xbmc/input/linux/LinuxInputDevices.cpp   | 56 +++++++++++++++++++++++-
+ xbmc/utils/CPUInfo.cpp                   | 39 +++++++++++++++++
+ 12 files changed, 158 insertions(+), 33 deletions(-)
 
 diff --git a/addons/skin.estouchy/xml/Home.xml b/addons/skin.estouchy/xml/Home.xml
-index 971f04b64d..4d96119e73 100644
+index 971f04b64d..466af7e23f 100644
 --- a/addons/skin.estouchy/xml/Home.xml
 +++ b/addons/skin.estouchy/xml/Home.xml
 @@ -181,7 +181,7 @@
@@ -33,7 +32,7 @@ index 971f04b64d..4d96119e73 100644
  					</item>
  					<item>
 diff --git a/addons/skin.estuary/xml/Home.xml b/addons/skin.estuary/xml/Home.xml
-index 248b4ae389..520b627979 100644
+index 248b4ae389..3e25e18e5b 100644
 --- a/addons/skin.estuary/xml/Home.xml
 +++ b/addons/skin.estuary/xml/Home.xml
 @@ -915,7 +915,7 @@
@@ -46,7 +45,7 @@ index 248b4ae389..520b627979 100644
  						<param name="label" value="$LOCALIZE[33060]" />
  					</include>
 diff --git a/lib/libdvd/Makefile.in b/lib/libdvd/Makefile.in
-index 5a4508bfff..8897532d7a 100644
+index 5a4508bfff..359082febc 100644
 --- a/lib/libdvd/Makefile.in
 +++ b/lib/libdvd/Makefile.in
 @@ -4,16 +4,16 @@ ARCH=@ARCH@
@@ -74,7 +73,7 @@ index 5a4508bfff..8897532d7a 100644
  SYSDIR = @abs_top_srcdir@/system/players/VideoPlayer
  SOS = libdvdnav-$(ARCH).so
 diff --git a/system/settings/settings.xml b/system/settings/settings.xml
-index 301e7276e5..2e9e5ce5d6 100644
+index 5ff71b9741..03c761ae76 100644
 --- a/system/settings/settings.xml
 +++ b/system/settings/settings.xml
 @@ -670,7 +670,7 @@
@@ -95,7 +94,7 @@ index 301e7276e5..2e9e5ce5d6 100644
            <default>DEFAULT</default>
            <constraints>
              <options>charsets</options>
-@@ -2361,7 +2361,7 @@
+@@ -2377,7 +2377,7 @@
          <setting id="audiooutput.processquality" type="integer" label="13505" help="36169">
            <requirement>HAS_AE_QUALITY_LEVELS</requirement>
            <level>2</level>
@@ -104,7 +103,7 @@ index 301e7276e5..2e9e5ce5d6 100644
            <constraints>
              <options>aequalitylevels</options>
            </constraints>
-@@ -2379,7 +2379,7 @@
+@@ -2395,7 +2395,7 @@
          </setting>
          <setting id="audiooutput.samplerate" type="integer" label="458" help="36523">
            <level>2</level>
@@ -113,7 +112,7 @@ index 301e7276e5..2e9e5ce5d6 100644
            <dependencies>
              <dependency type="visible">
                <and>
-@@ -2391,10 +2391,6 @@
+@@ -2407,10 +2407,6 @@
            <constraints>
              <options>
                <option label="34124">44100</option>
@@ -125,7 +124,7 @@ index 301e7276e5..2e9e5ce5d6 100644
            </constraints>
            <control type="list" format="integer" />
 diff --git a/tools/Linux/kodi.sh.in b/tools/Linux/kodi.sh.in
-index 0a00a32034..235f3a6073 100644
+index 0a00a32034..ea46ec79b1 100644
 --- a/tools/Linux/kodi.sh.in
 +++ b/tools/Linux/kodi.sh.in
 @@ -25,13 +25,33 @@ prefix="@prefix@"
@@ -186,7 +185,7 @@ index 0a00a32034..235f3a6073 100644
  
  exit $RET
 diff --git a/tools/depends/target/libdvdcss/Makefile b/tools/depends/target/libdvdcss/Makefile
-index 518ce2b101..7e51e7974d 100644
+index 518ce2b101..feeee33b6d 100644
 --- a/tools/depends/target/libdvdcss/Makefile
 +++ b/tools/depends/target/libdvdcss/Makefile
 @@ -3,7 +3,7 @@ include DVDCSS-VERSION
@@ -208,7 +207,7 @@ index 518ce2b101..7e51e7974d 100644
  CLEAN_FILES=$(ARCHIVE) $(PLATFORM)
  
 diff --git a/tools/depends/target/libdvdnav/Makefile b/tools/depends/target/libdvdnav/Makefile
-index cd44351f0c..2dd443c716 100644
+index cd44351f0c..c8d09a3033 100644
 --- a/tools/depends/target/libdvdnav/Makefile
 +++ b/tools/depends/target/libdvdnav/Makefile
 @@ -3,11 +3,11 @@ include DVDNAV-VERSION
@@ -226,7 +225,7 @@ index cd44351f0c..2dd443c716 100644
    ROOT_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
    PREFIX := $(ROOT_DIR)/dvdnav-install
 diff --git a/tools/depends/target/libdvdread/Makefile b/tools/depends/target/libdvdread/Makefile
-index 3652f1b1f2..a1c36f3f8a 100644
+index 3652f1b1f2..5b0dc93bf3 100644
 --- a/tools/depends/target/libdvdread/Makefile
 +++ b/tools/depends/target/libdvdread/Makefile
 @@ -3,11 +3,11 @@ include DVDREAD-VERSION
@@ -244,7 +243,7 @@ index 3652f1b1f2..a1c36f3f8a 100644
    ROOT_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
    PREFIX := $(ROOT_DIR)/dvdread-install
 diff --git a/xbmc/GUIInfoManager.cpp b/xbmc/GUIInfoManager.cpp
-index d683351e48..ed345865e9 100644
+index d683351e48..2b99335dbf 100644
 --- a/xbmc/GUIInfoManager.cpp
 +++ b/xbmc/GUIInfoManager.cpp
 @@ -9376,8 +9376,12 @@ std::string CGUIInfoManager::GetSystemHeatInfo(int info)
@@ -261,7 +260,7 @@ index d683351e48..ed345865e9 100644
  
    std::string text;
 diff --git a/xbmc/input/InputManager.cpp b/xbmc/input/InputManager.cpp
-index 80c89f0283..3fa4066ce2 100644
+index 80c89f0283..d1e2d477ca 100644
 --- a/xbmc/input/InputManager.cpp
 +++ b/xbmc/input/InputManager.cpp
 @@ -511,6 +511,18 @@ bool CInputManager::OnKey(const CKey& key)
@@ -284,7 +283,7 @@ index 80c89f0283..3fa4066ce2 100644
      {
        // use the virtualkeyboard section of the keymap, and send keyboard-specific or navigation
 diff --git a/xbmc/input/linux/LinuxInputDevices.cpp b/xbmc/input/linux/LinuxInputDevices.cpp
-index ef0d4941f1..54c8118bef 100644
+index ef0d4941f1..dd30185fc4 100644
 --- a/xbmc/input/linux/LinuxInputDevices.cpp
 +++ b/xbmc/input/linux/LinuxInputDevices.cpp
 @@ -27,6 +27,9 @@
@@ -297,34 +296,42 @@ index ef0d4941f1..54c8118bef 100644
  #include "system.h"
  #if defined(HAS_LINUX_EVENTS)
  
-@@ -276,6 +279,26 @@ KeyMap keyMap[] = {
+@@ -276,6 +279,34 @@ KeyMap keyMap[] = {
    { 378               , XBMCK_RIGHT       }, // Green
    { 381               , XBMCK_UP          }, // Yellow
    { 366               , XBMCK_DOWN        }, // Blue
 +#if defined(TARGET_STB)
 +  { KEY_OK            , XBMCK_RETURN      }, // Ok
 +  { KEY_EXIT          , XBMCK_ESCAPE      }, // EXIT
++  { KEY_INFO          , XBMCK_i           }, // Info
++  { KEY_SUBTITLE      , XBMCK_l           }, // Subtitle
++  { KEY_TV            , XBMCK_z           }, // TV
++  { KEY_TV2           , XBMCK_z           }, // TV/RADIO
++  { KEY_RADIO         , XBMCK_j           }, // Radio
++  { KEY_AUDIO         , XBMCK_a           }, // Audio
 +  { 139               , XBMCK_MENU        }, // Menu
 +  { 358               , XBMCK_e           }, // EPG
-+  { 370               , XBMCK_l           }, // Subtitle
-+  { 377               , XBMCK_z           }, // TV
-+  { 385               , XBMCK_j           }, // Radio
 +  { 388               , XBMCK_y           }, // Teletext
-+  { 392               , XBMCK_o           }, // Audio
 +  { 393               , XBMCK_x           }, // Unknown
++  { KEY_CHANNELUP     , XBMCK_PAGEUP      }, // PageUp
++  { KEY_CHANNELDOWN   , XBMCK_PAGEDOWN    }, // PageDown
++  { KEY_NEXT          , XBMCK_MEDIA_NEXT_TRACK }, // Next
++  { KEY_PREVIOUS      , XBMCK_MEDIA_PREV_TRACK }, // Prev
++  { KEY_VIDEO         , XBMCK_c           }, // Playlist
++  { KEY_LIST          , XBMCK_c           }, // Playlist
++  { 438               , XBMCK_TAB         }, // Context
++  { KEY_BOOKMARKS     , XBMCK_TAB         }, // Portal
++  { 227               , XBMCK_z           }, // Aspectratio
++  { KEY_PROGRAM       , XBMCK_o           }, // Timer
 +  { 398               , XBMCK_F1          }, // Red
 +  { 399               , XBMCK_F2          }, // Green
 +  { 400               , XBMCK_F3          }, // Yellow
 +  { 401               , XBMCK_F4          }, // Blue
-+  { 402               , XBMCK_PAGEUP      }, // PageUP
-+  { 403               , XBMCK_PAGEDOWN    }, // PageDown
-+  { 407               , XBMCK_MEDIA_NEXT_TRACK }, // Next
-+  { 412               , XBMCK_MEDIA_PREV_TRACK }, // Prev
 +#endif
  };
  
  typedef enum
-@@ -553,9 +576,17 @@ bool CLinuxInputDevice::KeyEvent(const struct input_event& levt, XBMC_Event& dev
+@@ -553,9 +584,17 @@ bool CLinuxInputDevice::KeyEvent(const struct input_event& levt, XBMC_Event& dev
  
      KeymapEntry entry;
      entry.code = code;
@@ -343,7 +350,7 @@ index ef0d4941f1..54c8118bef 100644
        if (devt.key.keysym.mod & (XBMCKMOD_SHIFT | XBMCKMOD_CAPS)) keyMapValue = entry.shift;
        else if (devt.key.keysym.mod & XBMCKMOD_ALT) keyMapValue = entry.alt;
        else if (devt.key.keysym.mod & XBMCKMOD_META) keyMapValue = entry.altShift;
-@@ -570,6 +601,7 @@ bool CLinuxInputDevice::KeyEvent(const struct input_event& levt, XBMC_Event& dev
+@@ -570,6 +609,7 @@ bool CLinuxInputDevice::KeyEvent(const struct input_event& levt, XBMC_Event& dev
          }
        }
      }
@@ -351,7 +358,7 @@ index ef0d4941f1..54c8118bef 100644
    }
  
    return true;
-@@ -858,6 +890,12 @@ XBMC_Event CLinuxInputDevice::ReadEvent()
+@@ -858,6 +898,12 @@ XBMC_Event CLinuxInputDevice::ReadEvent()
          break;
        }
  
@@ -364,7 +371,7 @@ index ef0d4941f1..54c8118bef 100644
        //printf("read event readlen = %d device name %s m_fileName %s\n", readlen, m_deviceName, m_fileName.c_str());
  
        // sanity check if we realy read the event
-@@ -1195,6 +1233,7 @@ bool CLinuxInputDevices::CheckDevice(const char *device)
+@@ -1195,6 +1241,7 @@ bool CLinuxInputDevices::CheckDevice(const char *device)
      return false;
    }
  
@@ -372,7 +379,7 @@ index ef0d4941f1..54c8118bef 100644
    if (ioctl(fd, EVIOCGRAB, 1) && errno != EINVAL)
    {
      close(fd);
-@@ -1202,6 +1241,7 @@ bool CLinuxInputDevices::CheckDevice(const char *device)
+@@ -1202,6 +1249,7 @@ bool CLinuxInputDevices::CheckDevice(const char *device)
    }
  
    ioctl(fd, EVIOCGRAB, 0);
@@ -380,7 +387,7 @@ index ef0d4941f1..54c8118bef 100644
  
    close(fd);
  
-@@ -1294,6 +1334,7 @@ bool CLinuxInputDevice::Open()
+@@ -1294,6 +1342,7 @@ bool CLinuxInputDevice::Open()
      return false;
    }
  
@@ -388,7 +395,7 @@ index ef0d4941f1..54c8118bef 100644
    /* grab device */
    ret = ioctl(fd, EVIOCGRAB, 1);
    if (ret && errno != EINVAL)
-@@ -1302,6 +1343,7 @@ bool CLinuxInputDevice::Open()
+@@ -1302,6 +1351,7 @@ bool CLinuxInputDevice::Open()
      close(fd);
      return false;
    }
@@ -396,7 +403,7 @@ index ef0d4941f1..54c8118bef 100644
  
    // Set the socket to non-blocking
    int opts = 0;
-@@ -1369,7 +1411,9 @@ bool CLinuxInputDevice::Open()
+@@ -1369,7 +1419,9 @@ bool CLinuxInputDevice::Open()
  
  driver_open_device_error:
  
@@ -406,7 +413,7 @@ index ef0d4941f1..54c8118bef 100644
    if (m_vt_fd >= 0)
    {
      close(m_vt_fd);
-@@ -1443,8 +1487,10 @@ bool CLinuxInputDevice::GetKeymapEntry(KeymapEntry& entry)
+@@ -1443,8 +1495,10 @@ bool CLinuxInputDevice::GetKeymapEntry(KeymapEntry& entry)
   */
  void CLinuxInputDevice::Close()
  {
@@ -418,7 +425,7 @@ index ef0d4941f1..54c8118bef 100644
    if (m_vt_fd >= 0)
      close(m_vt_fd);
 diff --git a/xbmc/utils/CPUInfo.cpp b/xbmc/utils/CPUInfo.cpp
-index 5e2ebbd18d..56cfcbe021 100644
+index 5e2ebbd18d..a878af9dcb 100644
 --- a/xbmc/utils/CPUInfo.cpp
 +++ b/xbmc/utils/CPUInfo.cpp
 @@ -274,6 +274,12 @@ CCPUInfo::CCPUInfo(void)
@@ -482,5 +489,5 @@ index 5e2ebbd18d..56cfcbe021 100644
    int         ret   = 0;
    FILE        *p    = NULL;
 -- 
-2.12.0.windows.1
+2.17.0.windows.1
 

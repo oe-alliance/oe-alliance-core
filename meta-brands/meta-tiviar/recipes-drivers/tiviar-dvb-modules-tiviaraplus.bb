@@ -1,6 +1,6 @@
 KV = "4.10.6"
-SRCDATE = "20180313"
+SRCDATE = "20180427"
 
 require tiviar-dvb-modules-al.inc
-SRC_URI[md5sum] = "19faec01d3716300aedb62bf721f6b15"
-SRC_URI[sha256sum] = "674bce19098f4ae4572dc0294432bdc706925c7a3be0eea903cf80eb6ca704d5"
+SRC_URI[md5sum] = "cb8b3bf323d73844f8825bd909d211bb"
+SRC_URI[sha256sum] = "8402f8289e8408c0f619aa8b67115e74e1919f5759453edf042e028e31c57e16"
