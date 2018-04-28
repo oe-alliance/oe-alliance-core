@@ -1,6 +1,6 @@
-SRCDATE = "20170818"
+SRCDATE = "20180428"
 
-SRC_URI[md5sum] = "faf96419cc542a5fe0df49fd2914a7ad"
-SRC_URI[sha256sum] = "7614f03c1db3641ea8793c28fcfdaa74cf45a31f89a7df14114b522fb5576d6e"
+SRC_URI[md5sum] = "19fce77a2885f2aa164270b7255d53bb"
+SRC_URI[sha256sum] = "0fd363bf66f4c3a9823c53f70692f9f6d73f37a7f29f9c939b3c8704f1798b3b"
 
 require dinobot-opengl.inc

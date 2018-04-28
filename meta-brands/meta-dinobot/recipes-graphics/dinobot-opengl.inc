@@ -9,7 +9,7 @@ PR = "r2-${SRCDATE}"
 PROVIDES = "virtual/libgles1 virtual/libgles2 virtual/egl"
 RPROVIDES_${PN} = "virtual/libgles1 virtual/libgles2 virtual/egl"
 
-SRC_URI = "http://source.mynonpublic.com/dinobot/${MACHINE}-opengl-armhf-${SRCDATE}.tar.gz"
+SRC_URI = "http://source.mynonpublic.com/dinobot/${MACHINE}-opengl-armhf-${SRCDATE}.zip"
 
 S = "${WORKDIR}/usr"
 
