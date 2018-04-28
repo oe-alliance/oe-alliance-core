@@ -97,6 +97,9 @@ SRC_URI = "git://github.com/xbmc/xbmc.git;branch=Krypton \
 "
 
 SRC_URI_append_u5 = " file://eglwrapper.patch"
+SRC_URI_append_u51 = " file://eglwrapper.patch"
+SRC_URI_append_u52 = " file://eglwrapper.patch"
+SRC_URI_append_u53 = " file://eglwrapper.patch"
 SRC_URI_append_u5pvr = " file://eglwrapper.patch"
 
 SRC_URI_append_libc-musl = " \
