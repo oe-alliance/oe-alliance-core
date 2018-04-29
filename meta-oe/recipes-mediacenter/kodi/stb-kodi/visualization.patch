@@ -1,12 +1,11 @@
 --- a/system/addon-manifest.xml
 +++ b/system/addon-manifest.xml
-@@ -42,5 +42,8 @@
+@@ -42,5 +42,7 @@
    <addon>xbmc.pvr</addon>
    <addon>xbmc.python</addon>
    <addon>xbmc.webinterface</addon>
 +  <addon>visualization.glspectrum</addon>
-+  <addon>visualization.waveform</addon>
-+  <addon>visualization.shadertoy</addon> 
++  <addon>visualization.waveform</addon> 
    <addon optional="true">peripheral.joystick</addon>
  </addons>
 --- a/configure.ac	2017-09-23 22:38:26.000000000 +0300
