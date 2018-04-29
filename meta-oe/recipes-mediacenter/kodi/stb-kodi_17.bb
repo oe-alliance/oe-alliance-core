@@ -167,7 +167,6 @@ def enable_glew(bb, d):
 
 do_configure() {
     cp -a ${WORKDIR}/visualization.glspectrum ${WORKDIR}/git/addons/
-    cp -a ${WORKDIR}/visualization.shadertoy ${WORKDIR}/git/addons/
     cp -a ${WORKDIR}/visualization.waveform ${WORKDIR}/git/addons/
     cp -a ${WORKDIR}/visualizations ${WORKDIR}/git/xbmc/
     cp -a ${WORKDIR}/include ${WORKDIR}/git/xbmc/addons/
