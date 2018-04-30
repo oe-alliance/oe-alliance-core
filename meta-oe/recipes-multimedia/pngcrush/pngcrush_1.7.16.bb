@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://pngcrush.c;beginline=66;endline=107;md5=61856b3db001e
 
 PR = "r1"
 
-SRC_URI = "http://sourceforge.mirrorservice.org/p/pm/pmt/pngcrush/old-versions/1.7/1.7.16/pngcrush-${PV}.tar.gz;name=src"
+SRC_URI = "http://source.mynonpublic.com/mirror/pngcrush-${PV}.tar.gz;name=src"
 
 SRC_URI[src.md5sum] = "3dcf459201254300e463c2f29a304978"
 SRC_URI[src.sha256sum] = "291cad915ed4643996815fef2c08c90e30471cf3937b8bf8f9d969f7a06b8e20"
