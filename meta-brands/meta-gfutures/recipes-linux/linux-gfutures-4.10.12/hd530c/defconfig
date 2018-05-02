@@ -3299,7 +3299,7 @@ CONFIG_HAVE_ARCH_KGDB=y
 # CONFIG_UBSAN is not set
 # CONFIG_EARLY_PRINTK is not set
 CONFIG_CMDLINE_BOOL=y
-CONFIG_CMDLINE="ubi.mtd=rootfs rootfstype=ubifs root=ubi0:rootfs bmem=128M@128M bmem=228M@512M console=null"
+CONFIG_CMDLINE="ubi.mtd=rootfs rootfstype=ubifs root=ubi0:rootfs bmem=104M@152M bmem=174M@512M console=null"
 # CONFIG_CMDLINE_OVERRIDE is not set
 # CONFIG_SPINLOCK_TEST is not set
 # CONFIG_SCACHE_DEBUGFS is not set
