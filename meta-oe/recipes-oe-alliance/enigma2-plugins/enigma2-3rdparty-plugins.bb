@@ -89,7 +89,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-tmdb_0.7-r2_all.ipk \
     enigma2-plugin-extensions-translator_1.1rc1_all.ipk \
     enigma2-plugin-extensions-transmission_2.92-r1_all.ipk \
-    enigma2-plugin-extensions-tsmedia_12.1_all.ipk \
+    enigma2-plugin-extensions-tsmedia_12.2_all.ipk \
     enigma2-plugin-extensions-tstube_1.2_all.ipk \
     enigma2-plugin-extensions-tvspielfilm_6.6rc1_all.ipk \
     enigma2-plugin-extensions-verkehrsinfo_1.2rc1_all.ipk \
