@@ -1,5 +1,7 @@
 require vuplus-libgles.inc
 
+COMPATIBLE_MACHINE = "^(vusolo4k)$"
+
 SRCDATE = "20180424"
 SRCDATE_PR = "r0"
 PV="17.1"

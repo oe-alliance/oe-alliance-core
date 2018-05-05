@@ -1,12 +1,5 @@
 SRCDATE = "20180425"
 
-inherit pkgconfig
-
-do_install_append() {
-	install -d ${D}${libdir}/pkgconfig
-	cp -r ${WORKDIR}/pkgconfig/*.pc ${D}${libdir}/pkgconfig/
-}
-
 require dinobot-libs.inc
 
 SRC_URI[md5sum] = "898871b5634a3ba1e1e3640f1f808d04"
