@@ -1,6 +1,8 @@
 SRCDATE = "20180319"
 SRCDATE_PR = "r0"
 
+COMPATIBLE_MACHINE = "^(vusolose)$"
+
 require vuplus-libgles.inc
 
 SRC_URI[md5sum] = "b9ae993c32cfd83961e204af9278f461"

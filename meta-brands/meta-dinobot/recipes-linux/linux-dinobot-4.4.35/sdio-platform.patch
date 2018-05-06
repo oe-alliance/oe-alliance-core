@@ -1,0 +1,282 @@
+diff -Nur a/drivers/net/wireless/brcm80211/brcmfmac/bus.h b/drivers/net/wireless/brcm80211/brcmfmac/bus.h
+--- a/drivers/net/wireless/brcm80211/brcmfmac/bus.h	2018-05-02 18:43:06.000000000 +0200
++++ b/drivers/net/wireless/brcm80211/brcmfmac/bus.h	2018-05-03 11:32:12.000000000 +0200
+@@ -235,6 +235,10 @@
+ s32 brcmf_iovar_data_set(struct device *dev, char *name, void *data, u32 len);
+ void brcmf_bus_add_txhdrlen(struct device *dev, uint len);
+ 
++#ifdef CONFIG_BRCMFMAC_PLATFORM_U5PVR
++void brcmfmac_pdata_init(void);
++void brcmfmac_pdata_exit(void);
++#endif
+ #ifdef CONFIG_BRCMFMAC_SDIO
+ void brcmf_sdio_exit(void);
+ void brcmf_sdio_init(void);
+diff -Nur a/drivers/net/wireless/brcm80211/brcmfmac/cfg80211.c b/drivers/net/wireless/brcm80211/brcmfmac/cfg80211.c
+--- a/drivers/net/wireless/brcm80211/brcmfmac/cfg80211.c	2018-05-02 18:43:12.000000000 +0200
++++ b/drivers/net/wireless/brcm80211/brcmfmac/cfg80211.c	2018-05-03 10:19:34.000000000 +0200
+@@ -6164,7 +6164,7 @@
+ 		  req->alpha2[0], req->alpha2[1]);
+ 
+ 	/* ignore non-ISO3166 country codes */
+-	for (i = 0; i < sizeof(req->alpha2); i++)
++	for (i = 0; i < 2; i++)
+ 		if (req->alpha2[i] < 'A' || req->alpha2[i] > 'Z') {
+ 			brcmf_err("not a ISO3166 code\n");
+ 			return;
+diff -Nur a/drivers/net/wireless/brcm80211/brcmfmac/common.c b/drivers/net/wireless/brcm80211/brcmfmac/common.c
+--- a/drivers/net/wireless/brcm80211/brcmfmac/common.c	2018-05-02 18:43:10.000000000 +0200
++++ b/drivers/net/wireless/brcm80211/brcmfmac/common.c	2018-05-02 20:39:46.000000000 +0200
+@@ -190,8 +190,10 @@
+ 
+ 	va_start(args, fmt);
+ 	vaf.va = &args;
+-	if (brcmf_msg_level & level)
++	if (brcmf_msg_level & level) {
+ 		pr_debug("%s %pV", func, &vaf);
++		printk("%s %pV", func, &vaf);
++	}
+ 	trace_brcmf_dbg(level, func, &vaf);
+ 	va_end(args);
+ }
+diff -Nur a/drivers/net/wireless/brcm80211/brcmfmac/core.c b/drivers/net/wireless/brcm80211/brcmfmac/core.c
+--- a/drivers/net/wireless/brcm80211/brcmfmac/core.c	2018-05-02 18:43:10.000000000 +0200
++++ b/drivers/net/wireless/brcm80211/brcmfmac/core.c	2018-05-03 11:33:22.000000000 +0200
+@@ -1231,6 +1231,9 @@
+ static int __init brcmfmac_module_init(void)
+ {
+ 	brcmf_debugfs_init();
++#ifdef CONFIG_BRCMFMAC_PLATFORM_U5PVR
++	brcmfmac_pdata_init();
++#endif
+ #ifdef CONFIG_BRCMFMAC_SDIO
+ 	brcmf_sdio_init();
+ #endif
+@@ -1244,6 +1247,9 @@
+ {
+ 	cancel_work_sync(&brcmf_driver_work);
+ 
++#ifdef CONFIG_BRCMFMAC_PLATFORM_U5PVR
++	brcmfmac_pdata_exit();
++#endif
+ #ifdef CONFIG_BRCMFMAC_SDIO
+ 	brcmf_sdio_exit();
+ #endif
+diff -Nur a/drivers/net/wireless/brcm80211/brcmfmac/Makefile b/drivers/net/wireless/brcm80211/brcmfmac/Makefile
+--- a/drivers/net/wireless/brcm80211/brcmfmac/Makefile	2018-05-02 18:43:06.000000000 +0200
++++ b/drivers/net/wireless/brcm80211/brcmfmac/Makefile	2018-05-03 00:33:52.000000000 +0200
+@@ -15,11 +15,27 @@
+ # OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN
+ # CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+ 
++ifeq ($(CFG_HI_EXPORT_FLAG),)
++    ifneq ($(srctree),)
++    KERNEL_DIR := $(srctree)
++
++    SDK_DIR := $(shell cd $(KERNEL_DIR) && /bin/pwd)
++    else
++    SDK_DIR := $(shell cd $(CURDIR) && /bin/pwd)
++    endif
++
++    include $(SDK_DIR)/base.mak
++endif
++
+ ccflags-y += \
+ 	-Idrivers/net/wireless/brcm80211/brcmfmac	\
+-	-Idrivers/net/wireless/brcm80211/include
++	-Idrivers/net/wireless/brcm80211/include \
++	-I$(COMMON_UNF_INCLUDE) \
++	-I$(MSP_UNF_INCLUDE) \
++	-I$(MSP_DRV_INCLUDE)
+ 
+ ccflags-y += -D__CHECK_ENDIAN__
++ccflags-y += -DCHIP_TYPE_$(CFG_HI_CHIP_TYPE)
+ 
+ obj-$(CONFIG_BRCMFMAC) += brcmfmac.o
+ brcmfmac-objs += \
+@@ -45,6 +61,8 @@
+ brcmfmac-$(CONFIG_BRCMFMAC_SDIO) += \
+ 		sdio.o \
+ 		bcmsdh.o
++brcmfmac-$(CONFIG_BRCMFMAC_PLATFORM_U5PVR) += \
++		u5pvr_pdata.o
+ brcmfmac-$(CONFIG_BRCMFMAC_USB) += \
+ 		usb.o
+ brcmfmac-$(CONFIG_BRCMFMAC_PCIE) += \
+diff -Nur a/drivers/net/wireless/brcm80211/brcmfmac/sdio.c b/drivers/net/wireless/brcm80211/brcmfmac/sdio.c
+--- a/drivers/net/wireless/brcm80211/brcmfmac/sdio.c	2018-05-02 18:43:04.000000000 +0200
++++ b/drivers/net/wireless/brcm80211/brcmfmac/sdio.c	2018-05-02 20:39:32.000000000 +0200
+@@ -45,8 +45,8 @@
+ #include "chip.h"
+ #include "firmware.h"
+ 
+-#define DCMD_RESP_TIMEOUT	2000	/* In milli second */
+-#define CTL_DONE_TIMEOUT	2000	/* In milli second */
++#define DCMD_RESP_TIMEOUT	4500	/* In milli second */
++#define CTL_DONE_TIMEOUT	4500	/* In milli second */
+ 
+ #ifdef DEBUG
+ 
+diff -Nur a/drivers/net/wireless/brcm80211/brcmfmac/u5pvr_pdata.c b/drivers/net/wireless/brcm80211/brcmfmac/u5pvr_pdata.c
+--- a/drivers/net/wireless/brcm80211/brcmfmac/u5pvr_pdata.c	1970-01-01 01:00:00.000000000 +0100
++++ b/drivers/net/wireless/brcm80211/brcmfmac/u5pvr_pdata.c	2018-05-03 11:32:24.000000000 +0200
+@@ -0,0 +1,143 @@
++/**
++ * Platform device config for Dinobot U5PVR.
++ *
++ * The power-up logic was copied from Android's bmcdhd module for AMPAK chips.
++ * The main parameters (gpio pins) were also taken from Android.
++ */
++#include <linux/init.h>
++#include <linux/of_gpio.h>
++#include <linux/platform_device.h>
++#include <linux/platform_data/brcmfmac-sdio.h>
++
++#include <mach/io.h>
++#include "hi_drv_gpio.h"
++#include <mach/hardware.h>
++
++#define REG_BASE_LDO               __io_address(0xf8a2011c)
++#define REG_BASE_CTRL              __io_address(0xf8a20008)
++
++#define SD_LDO_MASK                        (0x70)
++#define SD_LDO_ENABLE                      BIT(5)
++
++#define GPIO_WL_REG_ON     37  // From Android log
++#define GPIO_WL_HOST_WAKE  36  // From Android log
++
++uint gpio_reg_on = GPIO_WL_REG_ON;
++module_param(gpio_reg_on, uint, 0644);
++MODULE_PARM_DESC(gpio_reg_on, "gpio num for WL_REG_ON pin (default: 37))");
++
++uint gpio_host_wake = GPIO_WL_HOST_WAKE;
++module_param(gpio_host_wake, uint, 0644);
++MODULE_PARM_DESC(gpio_host_wake, "gpio num for WL_HOST_WAKE pin (default: 36))");
++
++typedef enum hi_GPIO_DIR_E
++{
++		HI_DIR_OUT = 0,
++		HI_DIR_IN  = 1,
++} HI_GPIO_DIR_E;
++
++static HI_S32 hi_gpio_set_value(HI_U32 gpio, HI_U32 value)
++{
++	HI_S32  s32Status;
++	printk("dinobot_pdata: gpio(%d) set %d\n", gpio, value);
++	s32Status = HI_DRV_GPIO_SetDirBit(gpio, HI_DIR_OUT);
++
++	if ( s32Status!= HI_SUCCESS )
++	{
++		printk("BCMDHD:gpio(%d) HI_DRV_GPIO_SetDirBit HI_DIR_OUT failed \n", gpio);
++		return s32Status;
++	}
++
++	s32Status = HI_DRV_GPIO_WriteBit(gpio, value);
++	if ( s32Status!= HI_SUCCESS )
++	{
++		printk("BCMDHD:gpio(%d) HI_DRV_GPIO_WriteBit value(%d) failed \n", gpio, value);
++		return s32Status;
++	}
++
++	return HI_SUCCESS;
++}
++
++static HI_S32 hi_gpio_init_input(HI_U32 gpio)
++{
++	HI_S32  s32Status;
++
++	printk("dinobot_pdata: gpio(%d) init input\n", gpio);
++	s32Status = HI_DRV_GPIO_SetDirBit(gpio, HI_DIR_IN);
++	if ( s32Status!= HI_SUCCESS )
++	{
++		printk("BCMDHD:gpio(%d) HI_DRV_GPIO_SetDirBit HI_DIR_IN failed \n", gpio);
++		return s32Status;
++	}
++
++	s32Status  = HI_DRV_GPIO_SetIntType(gpio, 3);
++	if ( s32Status!= HI_SUCCESS )
++	{
++		printk("BCMDHD:gpio(%d) DRV_GPIO_SetIntType HI_UNF_GPIO_INTTYPE_HIGH failed \n", gpio);
++		return s32Status;
++	}
++	return HI_SUCCESS;
++}
++
++static void brcmfmac_power_on(void)
++{
++	u32 regval;
++	printk("dinobot_pdata: %s\n", __FUNCTION__);
++
++	hi_gpio_init_input(gpio_host_wake);
++
++	/* step 1: config ldo 1.8V */
++	regval = readl(REG_BASE_LDO);
++	regval &= ~(SD_LDO_MASK<<16);
++	regval |= SD_LDO_ENABLE<<16;
++	writel(regval, REG_BASE_LDO);
++
++	/* step 2: set reg_on high */
++	hi_gpio_set_value(gpio_reg_on, 1);
++
++	/*set card_detect low to detect card*/
++	regval = readl(REG_BASE_CTRL);
++	regval &= ~(0x1);
++	writel(regval, REG_BASE_CTRL);	
++}
++
++static void brcmfmac_power_off(void)
++{
++	printk("dinobot_pdata: %s\n", __FUNCTION__);
++	hi_gpio_set_value(gpio_reg_on, 0);
++}
++
++static void brcmfmac_reset(void)
++{
++	printk("dinobot_pdata: %s -- not implemented\n", __FUNCTION__);
++}
++
++static struct brcmfmac_sdio_platform_data brcmfmac_sdio_pdata = {
++	.power_on		= brcmfmac_power_on,
++	.power_off		= brcmfmac_power_off,
++	.reset			= brcmfmac_reset
++};
++
++static struct platform_device brcmfmac_device = {
++	.name			= BRCMFMAC_SDIO_PDATA_NAME,
++	.id			= PLATFORM_DEVID_NONE,
++	.dev.platform_data	= &brcmfmac_sdio_pdata
++};
++
++void brcmfmac_pdata_init(void)
++{
++	int irqno;
++	printk("dinobot_pdata: %s\n", __FUNCTION__);
++	irqno = gpio_to_irq(gpio_host_wake);
++	printk("dinobot_pdata: oob_irq_nr: %d\n", irqno);
++	brcmfmac_sdio_pdata.oob_irq_supported = true;
++	brcmfmac_sdio_pdata.oob_irq_nr = irqno;
++	//  From Android log: 0x411
++	brcmfmac_sdio_pdata.oob_irq_flags = IORESOURCE_IRQ | IORESOURCE_IRQ_HIGHEDGE | IORESOURCE_IRQ_SHAREABLE;
++	platform_device_register(&brcmfmac_device);
++}
++
++void brcmfmac_pdata_exit(void)
++{
++	platform_device_unregister(&brcmfmac_device);
++}
+diff -Nur a/drivers/net/wireless/brcm80211/Kconfig b/drivers/net/wireless/brcm80211/Kconfig
+--- a/drivers/net/wireless/brcm80211/Kconfig	2018-05-02 20:40:58.000000000 +0200
++++ b/drivers/net/wireless/brcm80211/Kconfig	2018-05-02 21:58:04.000000000 +0200
+@@ -45,6 +45,12 @@
+ 	  IEEE802.11n embedded FullMAC WLAN driver. Say Y if you want to
+ 	  use the driver for a SDIO wireless card.
+ 
++config BRCMFMAC_PLATFORM_U5PVR
++	bool "BRCMFMAC Platform config for U5PVR"
++	depends on BRCMFMAC_SDIO
++	---help---
++	  This option enables the SDIO Platform config for U5PVR.
++
+ config BRCMFMAC_USB
+ 	bool "USB bus interface support for FullMAC driver"
+ 	depends on (USB = y || USB = BRCMFMAC)
