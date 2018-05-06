@@ -6,13 +6,13 @@ require conf/license/license-close.inc
 
 PACKAGE_ARCH = "${MACHINEBUILD}"
 
-SRCDATE = "20180420"
+SRCDATE = "20180504"
 KV = "4.2.1"
 PV = "${KV}+${SRCDATE}"
 PR = "r0"
 
-SRC_URI[md5sum] = "907d59d9084613b16e939226a14a4580"
-SRC_URI[sha256sum] = "8b2b0f73b0b9dc8d45a0697cb4823fe99b9be6f44201690fb2ca916a83fe5316"
+SRC_URI[md5sum] = "7c976e2e95458c9c39ce7a972522176f"
+SRC_URI[sha256sum] = "8ada4554e1d97fccd2cb79ef651dfe4733f79004ecc9bdc23638bce3be53cb9f"
 
 SRC_URI = "http://en3homeftp.net/release/images/oedrivers/bcmlinuxdvb_73625-${KV}-${SRCDATE}.tar.gz"
 

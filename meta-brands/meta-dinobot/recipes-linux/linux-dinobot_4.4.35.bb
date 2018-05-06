@@ -3,14 +3,14 @@ SECTION = "kernel"
 LICENSE = "GPLv2"
 
 KERNEL_RELEASE = "4.4.35"
-SRCDATE = "20180427"
+SRCDATE = "20180502"
 
 inherit kernel machine_kernel_pr
 
 MACHINE_KERNEL_PR_append = ".12"
 
-SRC_URI[md5sum] = "d74a4128a995cafeefeb914ab3e4d288"
-SRC_URI[sha256sum] = "4fd42687c02c8ba5ffee967c31ba3eec0ddef57a417c5503c41543a2dbe3b640"
+SRC_URI[md5sum] = "bd22f82d08a5feb4f1360d5739919ee0"
+SRC_URI[sha256sum] = "df83207ddfe34ac41a55e5e42eaae9c3ac3c4ef0750c786886719a33bf08b617"
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
@@ -24,6 +24,7 @@ RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
 
 SRC_URI += "http://source.mynonpublic.com/dinobot/dinobot-linux-${PV}-${SRCDATE}.tar.gz \
     file://defconfig \
+    file://sdio-platform.patch \
 "
 
 S = "${WORKDIR}/linux-${PV}"

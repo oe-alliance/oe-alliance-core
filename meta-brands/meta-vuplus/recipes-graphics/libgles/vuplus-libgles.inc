@@ -9,6 +9,8 @@ PV="15.1"
 PR="${SRCDATE}.${SRCDATE_PR}"
 
 PROVIDES = "virtual/libgles2 virtual/egl"
+PROVIDES += "libgles"
+RPROVIDES_${PN} += "libgles"
 
 SRC_URI = "http://archive.vuplus.com/download/build_support/vuplus/libgles-${MACHINE}-${PV}-${PR}.tar.gz"
 
