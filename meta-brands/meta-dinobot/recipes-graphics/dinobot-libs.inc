@@ -10,7 +10,7 @@ RDEPENDS_${PN} = "curl"
 PV = "${SRCDATE}"
 PR = "r1"
 
-inherit lib_package
+inherit lib_package pkgconfig
 
 SRC_URI = "http://source.mynonpublic.com/dinobot/${MACHINE}-libs-${SRCDATE}.zip"
 
@@ -30,6 +30,9 @@ do_install() {
 	install -m 0755 ${S}/libhi_common.so ${D}${libdir}/
 	install -m 0755 ${S}/libhi_msp.so ${D}${libdir}/
 	install -m 0755 ${S}/libjpeg9b.so ${D}${libdir}/
+
+	install -d ${D}${libdir}/pkgconfig
+	cp -r ${WORKDIR}/pkgconfig/*.pc ${D}${libdir}/pkgconfig/
 
 	cd ${D}${libdir}
 
