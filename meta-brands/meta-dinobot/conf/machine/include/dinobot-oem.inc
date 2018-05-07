@@ -103,6 +103,7 @@ DEFAULTTUNE = "cortexa15hf-neon-vfpv4"
 PREFERRED_VERSION_linux-dinobot = "4.4.35"
 PREFERRED_VERSION_linux-libc-headers = "4.4"
 PREFERRED_PROVIDER_virtual/egl = "dinobot-opengl-${MACHINE}" 
+PREFERRED_PROVIDER_virtual/libgles1 = "dinobot-opengl-${MACHINE}"
 PREFERRED_PROVIDER_virtual/libgles2 = "dinobot-opengl-${MACHINE}"
 PREFERRED_PROVIDER_virtual/kodi = "stb-kodi-${MACHINE}"
 
@@ -122,10 +123,6 @@ require conf/machine/include/soc-family.inc
 PREFERRED_VERSION_directfb = "1.7.7"
 
 DVBMEDIASINK_CONFIG = "--with-h265 --with-vb8 --with-vb9 --with-spark --with-opus --with-wma --with-wmv --with-pcm --with-dts --with-eac3"
-
-PREFERRED_PROVIDER_virtual/libgles1 = "dinobot-opengl-${MACHINE}"
-PREFERRED_PROVIDER_virtual/libgles2 = "dinobot-opengl-${MACHINE}"
-PREFERRED_PROVIDER_virtual/egl = "dinobot-opengl-${MACHINE}"
 
 PREFERRED_PROVIDER_virtual/kernel = "linux-dinobot"
 PREFERRED_RPROVIDER_showiframe = "dinobot-showiframe-${MACHINE}"
