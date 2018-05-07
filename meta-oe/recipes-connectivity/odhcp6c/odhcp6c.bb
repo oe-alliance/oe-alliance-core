@@ -11,7 +11,7 @@ PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
 PR = "r3"
 
-SRC_URI = "git://git.lede-project.org/project/odhcp6c.git;protocol=https \
+SRC_URI = "git://github.com/openwrt/odhcp6c.git;protocol=https \
            file://ifup \
            file://ifdown \
            file://odhcp6c-update \
