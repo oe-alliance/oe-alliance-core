@@ -3,16 +3,15 @@ SECTION = "base"
 PRIORITY = "required"
 LICENSE = "CLOSED"
 require conf/license/license-close.inc
+PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 KV = "3.9.2-opensat"
-
 
 SRCDATE = "20130917"
 SRCGET = "17092013"
 
 SRCDATE_azboxhd = "20131022"
 SRCGET_azboxhd = "22102013"
-
 
 PV = "${KV}+${SRCDATE}"
 PR = "r7"
