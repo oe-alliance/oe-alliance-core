@@ -1,0 +1,43 @@
+From 414a509d210e723c257990c4b5185bd1d626f580 Mon Sep 17 00:00:00 2001
+From: Nicker <nickersk@gmail.com>
+Date: Thu, 3 May 2018 17:09:14 +0000
+Subject: [PATCH] add missing defs
+
+
+diff --git a/src/common/dvb/dvb.h b/src/common/dvb/dvb.h
+index ec470d4..db5733e 100644
+--- a/src/common/dvb/dvb.h
++++ b/src/common/dvb/dvb.h
+@@ -19,6 +19,29 @@ typedef struct dvb_s
+ 	unsigned char	mask;
+ } dvb_t;
+ 
++typedef enum dmx_source {
++        DMX_SOURCE_FRONT0 = 0,
++        DMX_SOURCE_FRONT1,
++        DMX_SOURCE_FRONT2,
++        DMX_SOURCE_FRONT3,
++        DMX_SOURCE_DVR0   = 16,
++        DMX_SOURCE_DVR1,
++        DMX_SOURCE_DVR2,
++        DMX_SOURCE_DVR3
++} dmx_source_t;
++
++#define DMX_START                _IO('o', 41)
++#define DMX_STOP                 _IO('o', 42)
++#define DMX_SET_FILTER           _IOW('o', 43, struct dmx_sct_filter_params)
++#define DMX_SET_PES_FILTER       _IOW('o', 44, struct dmx_pes_filter_params)
++#define DMX_SET_BUFFER_SIZE      _IO('o', 45)
++#define DMX_GET_PES_PIDS         _IOR('o', 47, __u16[5])
++#define DMX_GET_CAPS             _IOR('o', 48, dmx_caps_t)
++#define DMX_SET_SOURCE           _IOW('o', 49, dmx_source_t)
++#define DMX_GET_STC              _IOWR('o', 50, struct dmx_stc)
++#define DMX_ADD_PID              _IOW('o', 51, __u16)
++#define DMX_REMOVE_PID           _IOW('o', 52, __u16)
++
+ void dvb_read (dvb_t *settings, bool(*data_callback)(int, unsigned char*));
+ //void dvb_read (int *pids, int pids_count);
+ //bool log_open (char *file, char *plugin_name);
+-- 
+2.17.0
+
