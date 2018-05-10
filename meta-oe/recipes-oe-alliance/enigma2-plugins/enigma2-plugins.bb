@@ -32,6 +32,9 @@ EXTRA_OECONF = " \
     ${@bb.utils.contains('DISTRO_FEATURES', 'pli', '--with-pli' , '', d)} \
 "
 
+CFLAGS += "-I${STAGING_INCDIR}/tirpc"
+LDFLAGS += "-ltirpc"
+
 RREPLACES_enigma2-plugin-skincomponents-eventlist = "enigma2-plugin-components-eventlist"
 RCONFLICTS_enigma2-plugin-skincomponents-eventlist = "enigma2-plugin-components-eventlist"
 
@@ -67,10 +70,11 @@ DEPENDS = "enigma2 \
     python-httplib2 \
     python-youtube-dl \
     dvdbackup \
-    libcddb \
-    nmap \
-    libshowiframe \
     libav \
+    libshowiframe \
+    libcddb \
+    libtirpc \
+    nmap \
     "
 
 RDEPENDS_${PN} = "python-ctypes"
