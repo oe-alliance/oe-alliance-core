@@ -4,7 +4,7 @@ PRIORITY = "optional"
 LICENSE = "CLOSED"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-SRCDATE = "20180427"
+SRCDATE = "20180510"
 
 PV = "${SRCDATE}"
 PR = "r0"
@@ -25,8 +25,8 @@ do_package_qa() {
 FILES_${PN}  = "${bindir}/hihalt"
 FILES_${PN} += "${bindir}/timerTask.py"
 
-SRC_URI[md5sum] = "4dc054815e8ceefcecca587175e00684"
-SRC_URI[sha256sum] = "6a3d60ef68e969d8469887b454ad5869333258a6411729133a4ce44421d04226"
+SRC_URI[md5sum] = "193d9c22536939a52ff89b7376f4cab5"
+SRC_URI[sha256sum] = "9d6a35f8f3e66e74a3bea93c55d4193b4caeeb3b77856c107ab165da189a987e"
 
 
 

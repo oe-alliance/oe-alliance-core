@@ -20,6 +20,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'sf238', 'SF228 E2 HD LCD TWIN' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', '9910lx', '9910LX' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', '9911lx', '9911LX' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'e4hdultra', 'E4HD Ultra 4k' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'protek4k', '4K UHD' , '', d)}\
 "
 
 MACHINE_BRAND = "\
@@ -39,6 +40,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'sf238', 'OCTAGON' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', '9910lx', 'Protek' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', '9911lx', 'Protek' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'e4hdultra', 'AXAS' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'protek4k', 'PROTEK' , '', d)}\
 "
 
 IMAGEDIR ?= "\
@@ -58,6 +60,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'sf238', 'sf228' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', '9910lx', '9910lx' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', '9911lx', '9911lx' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'e4hdultra', 'e4hd' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'protek4k', 'protek4k' , '', d)}\
 "
 
 MTD_KERNEL ?= "\
@@ -77,6 +80,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'sf238', 'mtd1' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', '9910lx', 'mtd1' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', '9911lx', 'mtd1' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'e4hdultra', 'mmcblk0p2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'protek4k', 'mmcblk0p2' , '', d)}\
 "
 
 MTD_ROOTFS ?= "\
@@ -96,6 +100,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'sf238', 'mtd2' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', '9910lx', 'mtd2' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', '9911lx', 'mtd2' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'e4hdultra', 'mmcblk0p3' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'protek4k', 'mmcblk0p3' , '', d)}\
 "
 
 KERNEL_FILE ?= "\
@@ -115,6 +120,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'sf238', 'kernel.bin' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', '9910lx', 'kernel.bin' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', '9911lx', 'kernel.bin' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'e4hdultra', 'kernel.bin' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'protek4k', 'kernel.bin' , '', d)}\
 "
 
 ROOTFS_FILE ?= "\
@@ -134,6 +140,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'sf238', 'rootfs.bin' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', '9910lx', 'rootfs.bin' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', '9911lx', 'rootfs.bin' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'e4hdultra', 'rootfs.tar.bz2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'protek4k', 'rootfs.tar.bz2' , '', d)}\
 "
 
 MACHINE_DRIVER ?= "\
@@ -153,6 +160,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'sf238', '7215s' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', '9910lx', '7220s' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', '9911lx', '7225s' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'e4hdultra', 'e4hd' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'protek4k', 'protek4k' , '', d)}\
 "
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS = "\
