@@ -19,5 +19,3 @@ DEPENDS = "libusb1"
 inherit cmake
 
 EXTRA_OECONF = "--enable-driver-detach"
-
-CFLAGS += "-fgnu89-inline"

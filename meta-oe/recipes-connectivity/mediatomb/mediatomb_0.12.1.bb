@@ -52,8 +52,6 @@ EXTRA_OECONF = "--disable-mysql \
                 --with-search=${STAGING_DIR_HOST}${prefix}/local \
                 ac_cv_header_sys_inotify_h=yes"
 
-CFLAGS += "-fgnu89-inline"
-
 do_install() {
     oe_runmake 'DESTDIR=${D}' install
     install -d ${D}${sysconfdir}/mediatomb/
