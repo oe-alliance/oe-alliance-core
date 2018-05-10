@@ -105,7 +105,7 @@ CONFFILES_${BPN}-common = "${sysconfdir}/pam.d/samba ${sysconfdir}/samba/smb-use
 RRECOMMENDS_${PN}-base+= "pam-smbpass wsdd"
 
 
-pkg_postinst_ontarget_${BPN}-common_prepend() {
+pkg_postinst_${BPN}-common_prepend() {
 #!/bin/sh
 
 if [ -n "$D" ]; then

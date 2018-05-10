@@ -38,48 +38,6 @@ SRC_URI = "http://archive.vuplus.com/download/kernel/stblinux-${KV}.tar.bz2 \
     file://0001-STV-Add-PLS-support.patch \
     file://0001-STV-Add-SNR-Signal-report-parameters.patch \
     file://0001-stv090x-optimized-TS-sync-control.patch \
-    file://0002-cp1emu-boolean-expression.patch \
-    file://0003-log2-stop-text-relocations.patch \
-    file://0004-page_alloc-free_area_init_nodes.patch \
-    file://0005-bmpis_vec-assembler.patch \
-    file://0006-libata-core-ata_timing_quantize.patch \
-    file://0007-namespace.patch \
-    file://0008-rmap.patch \
-    file://0009-em28xx-Kconfig.patch \
-    file://0010-netmisc.patch \
-    file://0011-rtnetlink.patch \
-    file://0012-fscache-object.patch \
-    file://0013-xattr.patch \
-    file://0014-net-sysfs.patch \
-    file://0015-mtd_blkdevs.patch \
-    file://0016-fuse-uninitialized-var.patch \
-    file://0017-arp.patch \
-    file://0018-af_packet.patch \
-    file://0019-ping-ping_v4_seq_ops.patch \
-    file://0020-ehci-ohci-brcm-usb_hcd_brcm_match.patch \
-    file://0021-extents_status.patch \
-    file://0022-rtlwifi-efuse.patch \
-    file://0023-xfs_bmap_util.patch \
-    file://0024-ac97_codec.patch \
-    file://0026-sortextable-define-relocs_size.patch \
-    file://0027-menu-jump-declaration.patch \
-    file://0028-drxd_hard.patch \
-    file://0029-stb6100.patch \
-    file://0030-brcm80211-brcmfmac.patch \
-    file://0031-prism2fw.patch \
-    file://0032-mac80211_hwsim.patch \
-    file://0033-r815x.patch \
-    file://0034-dib0090.patch \
-    file://0035-rtl8225.patch \
-    file://0036-garmin_gps.patch \
-    file://0038-r820t.patch \
-    file://0039-libertas_tf-main.patch \
-    file://0040-tbs-usb.patch \
-    file://0041-ov519.patch \
-    file://0042-usbnet.patch \
-    file://0043-usbvision-core.patch \
-    file://0044-ath9k-eeprom.patch \
-    file://0045-ieee80211.patch \
     file://blindscan2.patch \
     ${@bb.utils.contains("MACHINE_FEATURES", "dvbproxy", "file://linux_dvb_adapter.patch;patch=1;pnum=1", "", d)} \
     file://kernel-add-support-for-gcc6.patch \
