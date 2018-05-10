@@ -1,0 +1,27 @@
+From 2fb817bb3046b91c5d5ffdfc95dcd5622c2da970 Mon Sep 17 00:00:00 2001
+From: Nicker <nickersk@gmail.com>
+Date: Fri, 4 May 2018 10:40:35 +0200
+Subject: [PATCH] bmpis_vec assembler
+
+
+diff --git a/arch/mips/kernel/bmips_vec.S b/arch/mips/kernel/bmips_vec.S
+index e1e463c4..e07a0e7a 100644
+--- a/arch/mips/kernel/bmips_vec.S
++++ b/arch/mips/kernel/bmips_vec.S
+@@ -230,7 +230,6 @@ bmips_reset_nmi_vec_end:
+ END(bmips_reset_nmi_vec)
+ 
+ 	.set	pop
+-	.previous
+ 
+ /***********************************************************************
+  * CPU1 warm restart vector (used for second and subsequent boots).
+@@ -291,5 +290,3 @@ LEAF(bmips_enable_xks01)
+ 	jr	ra
+ 
+ END(bmips_enable_xks01)
+-
+-	.previous
+-- 
+2.17.0
+

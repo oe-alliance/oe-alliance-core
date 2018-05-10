@@ -1,0 +1,27 @@
+From 0bf67ba6cec9cb0a4d34dc71c78885d353ed2cb5 Mon Sep 17 00:00:00 2001
+From: Nicker <nickersk@gmail.com>
+Date: Sun, 6 May 2018 07:50:23 +0200
+Subject: [PATCH] rtlwifi efuse
+
+
+diff --git a/drivers/net/wireless/rtlwifi/efuse.c b/drivers/net/wireless/rtlwifi/efuse.c
+index 2ffc7298..3db1dc2b 100644
+--- a/drivers/net/wireless/rtlwifi/efuse.c
++++ b/drivers/net/wireless/rtlwifi/efuse.c
+@@ -31,11 +31,11 @@
+ #include "wifi.h"
+ #include "efuse.h"
+ 
+-static const u8 MAX_PGPKT_SIZE = 9;
++const u8 MAX_PGPKT_SIZE = 9;
+ static const u8 PGPKT_DATA_SIZE = 8;
+ static const int EFUSE_MAX_SIZE = 512;
+ 
+-static const struct efuse_map RTL8712_SDIO_EFUSE_TABLE[] = {
++const struct efuse_map RTL8712_SDIO_EFUSE_TABLE[] = {
+ 	{0, 0, 0, 2},
+ 	{0, 1, 0, 2},
+ 	{0, 2, 0, 2},
+-- 
+2.17.0
+
