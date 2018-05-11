@@ -2,13 +2,13 @@ SUMMARY = "Ralink 88x2BU v1.0.0.9"
 HOMEPAGE = "http://www.realtek.com.tw"
 SECTION = "kernel/modules"
 LICENSE = "GPLv2"
-LIC_FILES_CHKSUM = "file://ifcfg-wlan0;md5=a84acae65af4b2d44d5035aa9f63cd85"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=ffa10f40b98be2c2bc9608f56827ed23"
 
 inherit module
 
-PR = "r1"
+PR = "r3"
 
-SRC_URI = "http://source.mynonpublic.com/rtl8822bu-driver-1.0.0.9-20180425.zip"
+SRC_URI = "http://source.mynonpublic.com/rtl8822bu-driver-1.0.0.9-20180511a.zip"
 
 SRC_URI_append_sh4 = " file://fix_sh4_build.patch"
 
@@ -40,5 +40,5 @@ do_install() {
 do_package_qa() {
 }
 
-SRC_URI[md5sum] = "a1e4314a186f526c6463c520bd40a223"
-SRC_URI[sha256sum] = "f87b640cd14c8036ef74f1ee428ffa8fea6963209f858626478aaab6bf373ea8"
+SRC_URI[md5sum] = "b5c5427f41422f0195b4947f28e877f8"
+SRC_URI[sha256sum] = "09e600076691d792c2827886972c509996007c5f6dc1afe92dd66fb9ee798864"
