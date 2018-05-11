@@ -1,0 +1,22 @@
+From 0050f1305cba78b55c57491c220693eeef424da8 Mon Sep 17 00:00:00 2001
+From: Nicker <nickersk@gmail.com>
+Date: Sat, 5 May 2018 15:38:45 +0200
+Subject: [PATCH] af_packet
+
+
+diff --git a/net/packet/af_packet.c b/net/packet/af_packet.c
+index 88cfbc18..0391aa9b 100644
+--- a/net/packet/af_packet.c
++++ b/net/packet/af_packet.c
+@@ -3635,7 +3635,7 @@ static int packet_set_ring(struct sock *sk, union tpacket_req_u *req_u,
+ 		 */
+ 			if (!tx_ring)
+ 				init_prb_bdqc(po, rb, pg_vec, req_u, tx_ring);
+-				break;
++			break;
+ 		default:
+ 			break;
+ 		}
+-- 
+2.17.0
+

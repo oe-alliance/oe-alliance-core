@@ -1,0 +1,22 @@
+From 8c1f20dd89699abd720104d2675ea2e93538deaf Mon Sep 17 00:00:00 2001
+From: Nicker <nickersk@gmail.com>
+Date: Sat, 5 May 2018 14:43:24 +0200
+Subject: [PATCH] fuse uninitialized var
+
+
+diff --git a/fs/fuse/file.c b/fs/fuse/file.c
+index 7e705062..fda07078 100644
+--- a/fs/fuse/file.c
++++ b/fs/fuse/file.c
+@@ -2589,7 +2589,7 @@ static void fuse_register_polled_file(struct fuse_conn *fc,
+ {
+ 	spin_lock(&fc->lock);
+ 	if (RB_EMPTY_NODE(&ff->polled_node)) {
+-		struct rb_node **link, *parent;
++		struct rb_node **link, *uninitialized_var(parent);
+ 
+ 		link = fuse_find_polled_node(fc, ff->kh, &parent);
+ 		BUG_ON(*link);
+-- 
+2.17.0
+

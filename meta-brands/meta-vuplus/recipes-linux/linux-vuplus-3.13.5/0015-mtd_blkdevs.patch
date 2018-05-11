@@ -1,0 +1,94 @@
+From e6a7f0f212297395905395d5190f506e0c6d65e1 Mon Sep 17 00:00:00 2001
+From: Nicker <nickersk@gmail.com>
+Date: Sat, 5 May 2018 12:41:26 +0200
+Subject: [PATCH] mtd_blkdevs
+
+
+diff --git a/drivers/mtd/mtd_blkdevs.c b/drivers/mtd/mtd_blkdevs.c
+index 5073cbc7..60d8c64a 100644
+--- a/drivers/mtd/mtd_blkdevs.c
++++ b/drivers/mtd/mtd_blkdevs.c
+@@ -73,49 +73,46 @@ static void blktrans_dev_put(struct mtd_blktrans_dev *dev)
+ 	mutex_unlock(&blktrans_ref_mutex);
+ }
+ 
+-
+ static int do_blktrans_request(struct mtd_blktrans_ops *tr,
+-			       struct mtd_blktrans_dev *dev,
+-			       struct request *req)
++	           struct mtd_blktrans_dev *dev,
++	           struct request *req)
+ {
+-	unsigned long block, nsect;
+-	char *buf;
++    unsigned long block, nsect;
++    char *buf;
+ 
+-	block = blk_rq_pos(req) << 9 >> tr->blkshift;
+-	nsect = blk_rq_cur_bytes(req) >> tr->blkshift;
++    block = blk_rq_pos(req) << 9 >> tr->blkshift;
++    nsect = blk_rq_cur_bytes(req) >> tr->blkshift;
++    buf = bio_data(req->bio);
+ 
+-	buf = req->buffer;
++    if (req->cmd_type != REQ_TYPE_FS)
++	return -EIO;
+ 
+-	if (req->cmd_type != REQ_TYPE_FS)
+-		return -EIO;
++    if (req->cmd_flags & REQ_FLUSH)
++	return tr->flush(dev);
++
++    if (blk_rq_pos(req) + blk_rq_cur_sectors(req) >
++        get_capacity(req->rq_disk))
++	return -EIO;
+ 
+-	if (blk_rq_pos(req) + blk_rq_cur_sectors(req) >
+-	    get_capacity(req->rq_disk))
++    if (req->cmd_flags & REQ_DISCARD)
++	return tr->discard(dev, block, nsect);
++
++    if (rq_data_dir(req) == READ) {
++	for (; nsect > 0; nsect--, block++, buf += tr->blksize)
++	    if (tr->readsect(dev, block, buf))
+ 		return -EIO;
++	rq_flush_dcache_pages(req);
++	return 0;
++    } else {
++	if (!tr->writesect)
++	    return -EIO;
+ 
+-	if (req->cmd_flags & REQ_DISCARD)
+-		return tr->discard(dev, block, nsect);
+-
+-	switch(rq_data_dir(req)) {
+-	case READ:
+-		for (; nsect > 0; nsect--, block++, buf += tr->blksize)
+-			if (tr->readsect(dev, block, buf))
+-				return -EIO;
+-		rq_flush_dcache_pages(req);
+-		return 0;
+-	case WRITE:
+-		if (!tr->writesect)
+-			return -EIO;
+-
+-		rq_flush_dcache_pages(req);
+-		for (; nsect > 0; nsect--, block++, buf += tr->blksize)
+-			if (tr->writesect(dev, block, buf))
+-				return -EIO;
+-		return 0;
+-	default:
+-		printk(KERN_NOTICE "Unknown request %u\n", rq_data_dir(req));
++	rq_flush_dcache_pages(req);
++	for (; nsect > 0; nsect--, block++, buf += tr->blksize)
++	    if (tr->writesect(dev, block, buf))
+ 		return -EIO;
+-	}
++	return 0;
++    }
+ }
+ 
+ int mtd_blktrans_cease_background(struct mtd_blktrans_dev *dev)
+-- 
+2.17.0
+

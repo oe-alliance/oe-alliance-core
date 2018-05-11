@@ -12,6 +12,8 @@ EXTRA_OECONF = " \
     --without-x\
 "
 
+CFLAGS += "-fgnu89-inline"
+
 SRC_URI = "svn://ssl.bulix.org/svn/lcd4linux/;module=trunk;protocol=https;rev=1200 \
     file://lcd4linux.init"
 

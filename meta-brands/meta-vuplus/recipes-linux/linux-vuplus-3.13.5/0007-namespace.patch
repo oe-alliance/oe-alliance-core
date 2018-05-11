@@ -1,0 +1,102 @@
+From fc8c805f02f29fb746ab787002f0ecf99639ea11 Mon Sep 17 00:00:00 2001
+From: Nicker <nickersk@gmail.com>
+Date: Sat, 5 May 2018 06:30:01 +0200
+Subject: [PATCH] namespace
+
+
+diff --git a/fs/compat.c b/fs/compat.c
+index 6af20de2..e1258be2 100644
+--- a/fs/compat.c
++++ b/fs/compat.c
+@@ -781,8 +781,9 @@ asmlinkage long compat_sys_mount(const char __user * dev_name,
+ 	struct filename *dir;
+ 	int retval;
+ 
+-	retval = copy_mount_string(type, &kernel_type);
+-	if (retval < 0)
++	kernel_type = copy_mount_string(type);
++	retval = PTR_ERR(kernel_type);
++	if (IS_ERR(kernel_type))
+ 		goto out;
+ 
+ 	dir = getname(dir_name);
+@@ -790,8 +791,9 @@ asmlinkage long compat_sys_mount(const char __user * dev_name,
+ 	if (IS_ERR(dir))
+ 		goto out1;
+ 
+-	retval = copy_mount_string(dev_name, &kernel_dev);
+-	if (retval < 0)
++	kernel_dev = copy_mount_string(dev_name);
++	retval = PTR_ERR(kernel_dev);
++	if (IS_ERR(kernel_dev))
+ 		goto out2;
+ 
+ 	retval = copy_mount_options(data, &data_page);
+diff --git a/fs/internal.h b/fs/internal.h
+index 46574240..3ce29c92 100644
+--- a/fs/internal.h
++++ b/fs/internal.h
+@@ -51,7 +51,7 @@ extern int vfs_path_lookup(struct dentry *, struct vfsmount *,
+  * namespace.c
+  */
+ extern int copy_mount_options(const void __user *, unsigned long *);
+-extern int copy_mount_string(const void __user *, char **);
++extern char *copy_mount_string(const void __user *);
+ 
+ extern struct vfsmount *lookup_mnt(struct path *);
+ extern int finish_automount(struct vfsmount *, struct path *);
+diff --git a/fs/namespace.c b/fs/namespace.c
+index be32ebcc..e50575cc 100644
+--- a/fs/namespace.c
++++ b/fs/namespace.c
+@@ -2293,21 +2293,9 @@ int copy_mount_options(const void __user * data, unsigned long *where)
+ 	return 0;
+ }
+ 
+-int copy_mount_string(const void __user *data, char **where)
++char *copy_mount_string(const void __user *data)
+ {
+-	char *tmp;
+-
+-	if (!data) {
+-		*where = NULL;
+-		return 0;
+-	}
+-
+-	tmp = strndup_user(data, PAGE_SIZE);
+-	if (IS_ERR(tmp))
+-		return PTR_ERR(tmp);
+-
+-	*where = tmp;
+-	return 0;
++	return data ? strndup_user(data, PAGE_SIZE) : NULL;
+ }
+ 
+ /*
+@@ -2565,8 +2553,9 @@ SYSCALL_DEFINE5(mount, char __user *, dev_name, char __user *, dir_name,
+ 	char *kernel_dev;
+ 	unsigned long data_page;
+ 
+-	ret = copy_mount_string(type, &kernel_type);
+-	if (ret < 0)
++	kernel_type = copy_mount_string(type);
++	ret = PTR_ERR(kernel_type);
++	if (IS_ERR(kernel_type))
+ 		goto out_type;
+ 
+ 	kernel_dir = getname(dir_name);
+@@ -2575,8 +2564,9 @@ SYSCALL_DEFINE5(mount, char __user *, dev_name, char __user *, dir_name,
+ 		goto out_dir;
+ 	}
+ 
+-	ret = copy_mount_string(dev_name, &kernel_dev);
+-	if (ret < 0)
++	kernel_dev = copy_mount_string(dev_name);
++	ret = PTR_ERR(kernel_dev);
++	if (IS_ERR(kernel_dev))
+ 		goto out_dev;
+ 
+ 	ret = copy_mount_options(data, &data_page);
+-- 
+2.17.0
+
