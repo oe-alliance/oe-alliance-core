@@ -1,3 +1,5 @@
+DISTRO_FEATURES_remove = "x11 wayland"
+
 include conf/machine/include/dags-oem.inc
 
 KERNEL_FILE = "oe_kernel.bin"
@@ -7,8 +9,6 @@ MTD_BLACK  = "mmcblk0"
 TARGET_ARCH = "arm"
 DEFAULTTUNE = "cortexa15hf-neon-vfpv4"
 IMAGE_FSTYPES =+ "tar.bz2"
-
-PREFERRED_VERSION_directfb = "1.7.7"
 
 require conf/machine/include/tune-cortexa15.inc
 
