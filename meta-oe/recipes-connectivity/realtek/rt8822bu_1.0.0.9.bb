@@ -6,9 +6,9 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=ffa10f40b98be2c2bc9608f56827ed23"
 
 inherit module
 
-PR = "r2"
+PR = "r3"
 
-SRC_URI = "http://source.mynonpublic.com/rtl8822bu-driver-1.0.0.9-20180511.zip"
+SRC_URI = "http://source.mynonpublic.com/rtl8822bu-driver-1.0.0.9-20180511a.zip"
 
 SRC_URI_append_sh4 = " file://fix_sh4_build.patch"
 
@@ -40,5 +40,5 @@ do_install() {
 do_package_qa() {
 }
 
-SRC_URI[md5sum] = "8b9ed40ef61ed8e1c037dfe4c337c880"
-SRC_URI[sha256sum] = "db3ac4674662793aae511dcd53ed1628edc48de18d8e3ff854f59d1342ad6b7d"
+SRC_URI[md5sum] = "b5c5427f41422f0195b4947f28e877f8"
+SRC_URI[sha256sum] = "09e600076691d792c2827886972c509996007c5f6dc1afe92dd66fb9ee798864"
