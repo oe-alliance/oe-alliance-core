@@ -1,0 +1,86 @@
+From c4fe271705cbaedf7525033b1b1c0a3f3acc9f86 Mon Sep 17 00:00:00 2001
+From: Nicker <nickersk@gmail.com>
+Date: Sun, 6 May 2018 12:09:06 +0200
+Subject: [PATCH] drxd_hard
+
+
+diff --git a/drivers/media/dvb-frontends/drxd_hard.c b/drivers/media/dvb-frontends/drxd_hard.c
+index 959ae364..a0ca886d 100644
+--- a/drivers/media/dvb-frontends/drxd_hard.c
++++ b/drivers/media/dvb-frontends/drxd_hard.c
+@@ -2200,7 +2200,6 @@ static int DRX_Start(struct drxd_state *state, s32 off)
+ 				status = Write16(state, EC_SB_REG_SCALE_LSB__A, 0x0000, 0x0000);
+ 				if (status < 0)
+ 					break;
+-
+ 				status = Write16(state, EQ_REG_TD_TPS_PWR_OFS__A, qpskTdTpsPwr, 0x0000);
+ 				if (status < 0)
+ 					break;
+@@ -2234,7 +2233,6 @@ static int DRX_Start(struct drxd_state *state, s32 off)
+ 				status = Write16(state, EC_SB_REG_SCALE_LSB__A, 0x0000, 0x0000);
+ 				if (status < 0)
+ 					break;
+-
+ 				status = Write16(state, EQ_REG_TD_TPS_PWR_OFS__A, qam16TdTpsPwr, 0x0000);
+ 				if (status < 0)
+ 					break;
+@@ -2249,9 +2247,7 @@ static int DRX_Start(struct drxd_state *state, s32 off)
+ 					break;
+ 			}
+ 			break;
+-
+ 		}
+-		status = status;
+ 		if (status < 0)
+ 			break;
+ 
+@@ -2270,7 +2266,6 @@ static int DRX_Start(struct drxd_state *state, s32 off)
+ 			if (status < 0)
+ 				break;
+ 			break;
+-
+ 		}
+ 
+ 		switch (p->code_rate_HP) {
+@@ -2628,10 +2623,11 @@ static int DRXD_init(struct drxd_state *state, const u8 *fw, u32 fw_size)
+ 			break;
+ 
+ 		/* Apply I2c address patch to B1 */
+-		if (!state->type_A && state->m_HiI2cPatch != NULL)
++		if (!state->type_A && state->m_HiI2cPatch) {
+ 			status = WriteTable(state, state->m_HiI2cPatch);
+ 			if (status < 0)
+ 				break;
++		}
+ 
+ 		if (state->type_A) {
+ 			/* HI firmware patch for UIO readout,
+@@ -2690,8 +2686,8 @@ static int DRXD_init(struct drxd_state *state, const u8 *fw, u32 fw_size)
+ 			break;
+ 		if (state->type_A)
+ 			status = ResetCEFR(state);
+-			if (status < 0)
+-				break;
++				if (status < 0)
++					break;
+ 
+ 		if (fw) {
+ 			status = DownloadMicrocode(state, fw, fw_size);
+diff --git a/drivers/media/dvb-frontends/drxk_hard.c b/drivers/media/dvb-frontends/drxk_hard.c
+index bf29a3f0..222e7af5 100644
+--- a/drivers/media/dvb-frontends/drxk_hard.c
++++ b/drivers/media/dvb-frontends/drxk_hard.c
+@@ -2224,8 +2224,8 @@ static int set_agc_rf(struct drxk_state *state,
+ 			status = write16(state,
+ 					 SCU_RAM_AGC_IF_IACCU_HI_TGT_MAX__A,
+ 					 p_agc_cfg->top);
+-			if (status < 0)
+-				goto error;
++		if (status < 0)
++			goto error;
+ 
+ 		/* Cut-Off current */
+ 		status = write16(state, SCU_RAM_AGC_RF_IACCU_HI_CO__A,
+-- 
+2.17.0
+

@@ -1,0 +1,43 @@
+From 03f05d81bbff757941e03ad1580d5826898921d6 Mon Sep 17 00:00:00 2001
+From: Nicker <nickersk@gmail.com>
+Date: Fri, 4 May 2018 12:37:38 +0200
+Subject: [PATCH] libata-core ata_timing_quantize
+
+
+diff --git a/drivers/ata/libata-core.c b/drivers/ata/libata-core.c
+index 1a3dbd1b..d866e721 100644
+--- a/drivers/ata/libata-core.c
++++ b/drivers/ata/libata-core.c
+@@ -2954,19 +2954,19 @@ static const struct ata_timing ata_timing[] = {
+ };
+ 
+ #define ENOUGH(v, unit)		(((v)-1)/(unit)+1)
+-#define EZ(v, unit)		((v)?ENOUGH(v, unit):0)
++#define EZ(v, unit)		((v)?ENOUGH((v * 1000), unit):0)
+ 
+ static void ata_timing_quantize(const struct ata_timing *t, struct ata_timing *q, int T, int UT)
+ {
+-	q->setup	= EZ(t->setup      * 1000,  T);
+-	q->act8b	= EZ(t->act8b      * 1000,  T);
+-	q->rec8b	= EZ(t->rec8b      * 1000,  T);
+-	q->cyc8b	= EZ(t->cyc8b      * 1000,  T);
+-	q->active	= EZ(t->active     * 1000,  T);
+-	q->recover	= EZ(t->recover    * 1000,  T);
+-	q->dmack_hold	= EZ(t->dmack_hold * 1000,  T);
+-	q->cycle	= EZ(t->cycle      * 1000,  T);
+-	q->udma		= EZ(t->udma       * 1000, UT);
++	q->setup	= EZ(t->setup,       T);
++	q->act8b	= EZ(t->act8b,       T);
++	q->rec8b	= EZ(t->rec8b,       T);
++	q->cyc8b	= EZ(t->cyc8b,       T);
++	q->active	= EZ(t->active,      T);
++	q->recover	= EZ(t->recover,     T);
++	q->dmack_hold	= EZ(t->dmack_hold,  T);
++	q->cycle	= EZ(t->cycle,       T);
++	q->udma		= EZ(t->udma,       UT);
+ }
+ 
+ void ata_timing_merge(const struct ata_timing *a, const struct ata_timing *b,
+-- 
+2.17.0
+

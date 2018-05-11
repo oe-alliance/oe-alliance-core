@@ -23,7 +23,7 @@ do_install_append() {
     fi
 }
 
-pkg_postinst_${PN}_prepend() {
+pkg_postinst_ontarget_${PN}_prepend() {
 #!/bin/sh
 
 if [ -n "$D" ]; then

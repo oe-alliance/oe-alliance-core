@@ -1,0 +1,58 @@
+From 0287cb4284d6edc59df1ae9670648d0be0136c72 Mon Sep 17 00:00:00 2001
+From: Nicker <nickersk@gmail.com>
+Date: Sun, 6 May 2018 01:47:49 +0200
+Subject: [PATCH] extents_status
+
+
+diff --git a/fs/ext4/extents_status.c b/fs/ext4/extents_status.c
+index 3981ff78..f853686e 100644
+--- a/fs/ext4/extents_status.c
++++ b/fs/ext4/extents_status.c
+@@ -658,10 +658,9 @@ int ext4_es_insert_extent(struct inode *inode, ext4_lblk_t lblk,
+ 
+ 	newes.es_lblk = lblk;
+ 	newes.es_len = len;
+-	ext4_es_store_pblock(&newes, pblk);
+-	ext4_es_store_status(&newes, status);
++	ext4_es_store_pblock_status(&newes, pblk, status);
+ 	trace_ext4_es_insert_extent(inode, &newes);
+-
++	
+ 	ext4_es_insert_extent_check(inode, &newes);
+ 
+ 	write_lock(&EXT4_I(inode)->i_es_lock);
+@@ -699,10 +698,8 @@ void ext4_es_cache_extent(struct inode *inode, ext4_lblk_t lblk,
+ 
+ 	newes.es_lblk = lblk;
+ 	newes.es_len = len;
+-	ext4_es_store_pblock(&newes, pblk);
+-	ext4_es_store_status(&newes, status);
++	ext4_es_store_pblock_status(&newes, pblk, status);
+ 	trace_ext4_es_cache_extent(inode, &newes);
+-
+ 	if (!len)
+ 		return;
+ 
+diff --git a/fs/ext4/extents_status.h b/fs/ext4/extents_status.h
+index 167f4ab8..41323c3d 100644
+--- a/fs/ext4/extents_status.h
++++ b/fs/ext4/extents_status.h
+@@ -129,6 +129,15 @@ static inline void ext4_es_store_status(struct extent_status *es,
+ 		       (es->es_pblk & ~ES_MASK));
+ }
+ 
++static inline void ext4_es_store_pblock_status(struct extent_status *es,
++						ext4_fsblk_t pb,
++						unsigned int status)
++{
++	es->es_pblk = (((ext4_fsblk_t)
++			(status & EXTENT_STATUS_FLAGS) << ES_SHIFT) |
++			(pb & ~ES_MASK));
++}
++
+ extern void ext4_es_register_shrinker(struct ext4_sb_info *sbi);
+ extern void ext4_es_unregister_shrinker(struct ext4_sb_info *sbi);
+ extern void ext4_es_lru_add(struct inode *inode);
+-- 
+2.17.0
+

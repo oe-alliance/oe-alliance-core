@@ -1,0 +1,22 @@
+From 1af49850dbb4b4c51965c5eba89768bf8cd20c89 Mon Sep 17 00:00:00 2001
+From: Nicker <nickersk@gmail.com>
+Date: Sat, 5 May 2018 10:48:47 +0200
+Subject: [PATCH] netmisc
+
+
+diff --git a/fs/cifs/netmisc.c b/fs/cifs/netmisc.c
+index 04988455..43580448 100644
+--- a/fs/cifs/netmisc.c
++++ b/fs/cifs/netmisc.c
+@@ -130,7 +130,7 @@ static const struct smb_to_posix_error mapping_table_ERRSRV[] = {
+ 	{0, 0}
+ };
+ 
+-static const struct smb_to_posix_error mapping_table_ERRHRD[] = {
++const struct smb_to_posix_error mapping_table_ERRHRD[] = {
+ 	{0, 0}
+ };
+ 
+-- 
+2.17.0
+

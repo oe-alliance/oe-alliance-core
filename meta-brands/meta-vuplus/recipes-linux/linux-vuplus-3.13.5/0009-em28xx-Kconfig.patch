@@ -1,0 +1,41 @@
+From d26308721bddddeace2e34124567a5aa4b987446 Mon Sep 17 00:00:00 2001
+From: Nicker <nickersk@gmail.com>
+Date: Sat, 5 May 2018 08:46:23 +0200
+Subject: [PATCH] em28xx Kconfig
+
+
+diff --git a/drivers/media/usb/em28xx/Kconfig b/drivers/media/usb/em28xx/Kconfig
+index ca5ee6ac..edfcf494 100644
+--- a/drivers/media/usb/em28xx/Kconfig
++++ b/drivers/media/usb/em28xx/Kconfig
+@@ -1,19 +1,21 @@
+ config VIDEO_EM28XX
+-	tristate "Empia EM28xx USB video capture support"
++	tristate "Empia EM28xx USB devices support"
+ 	depends on VIDEO_DEV && I2C
+ 	select VIDEO_TUNER
+ 	select VIDEO_TVEEPROM
++
++config VIDEO_EM28XX_V4L2
++	tristate "Empia EM28xx analog TV, video capture and/or webcam support"
++	depends on VIDEO_EM28XX
+ 	select VIDEOBUF2_VMALLOC
+ 	select VIDEO_SAA711X if MEDIA_SUBDRV_AUTOSELECT
+ 	select VIDEO_TVP5150 if MEDIA_SUBDRV_AUTOSELECT
+ 	select VIDEO_MSP3400 if MEDIA_SUBDRV_AUTOSELECT
+ 	select VIDEO_MT9V011 if MEDIA_SUBDRV_AUTOSELECT
+-
+ 	---help---
+-	  This is a video4linux driver for Empia 28xx based TV cards.
+-
+-	  To compile this driver as a module, choose M here: the
+-	  module will be called em28xx
++	This is a video4linux driver for Empia 28xx based TV cards.
++	To compile this driver as a module, choose M here: the
++	module will be called em28xx
+ 
+ config VIDEO_EM28XX_ALSA
+ 	depends on VIDEO_EM28XX && SND
+-- 
+2.17.0
+

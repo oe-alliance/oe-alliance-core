@@ -1,0 +1,22 @@
+From 8a822606d86a11fbb2ec5405f1cdb97392d2d713 Mon Sep 17 00:00:00 2001
+From: Nicker <nickersk@gmail.com>
+Date: Sun, 6 May 2018 08:27:00 +0200
+Subject: [PATCH 1/2] ac97_codec
+
+
+diff --git a/sound/pci/ac97/ac97_codec.c b/sound/pci/ac97/ac97_codec.c
+index bf578ba2..a78f98a5 100644
+--- a/sound/pci/ac97/ac97_codec.c
++++ b/sound/pci/ac97/ac97_codec.c
+@@ -610,7 +610,7 @@ static int snd_ac97_put_volsw(struct snd_kcontrol *kcontrol,
+ 	return err;
+ }
+ 
+-static const struct snd_kcontrol_new snd_ac97_controls_master_mono[2] = {
++const struct snd_kcontrol_new snd_ac97_controls_master_mono[2] = {
+ AC97_SINGLE("Master Mono Playback Switch", AC97_MASTER_MONO, 15, 1, 1),
+ AC97_SINGLE("Master Mono Playback Volume", AC97_MASTER_MONO, 0, 31, 1)
+ };
+-- 
+2.17.0
+
