@@ -27,9 +27,9 @@ OPTIONAL_WIFIDRIVERS = "${@bb.utils.contains("MACHINE_FEATURES", "wifiusblegacy"
 
 DEPENDS = "enigma2 enigma2-plugins enigma2-oe-alliance-plugins network-usb-drivers-meta"
 
-DEPENDS_remove_wetekplay = "network-usb-drivers-meta"
-DEPENDS_remove_wetekplay2 = "network-usb-drivers-meta"
-DEPENDS_remove_odroidc2 = "network-usb-drivers-meta"
+DEPENDS_remove_AML8726 = "network-usb-drivers-meta"
+DEPENDS_remove_AMLS905 = "network-usb-drivers-meta"
+DEPENDS_remove_AML905D = "network-usb-drivers-meta"
 
 RDEPENDS_${PN} = "\
     enigma2-plugin-systemplugins-wirelesslan \
