@@ -1,0 +1,173 @@
+From 6e08cc628f776b902c7a052e18735e226bb32793 Mon Sep 17 00:00:00 2001
+From: Alex Deryskyba <alex@codesnake.com>
+Date: Wed, 16 Apr 2014 22:02:01 +0300
+Subject: [PATCH] amlogic codec krypton fixes
+
+---
+ .../Engines/ActiveAE/ActiveAEBuffer.cpp       |  4 ++
+ xbmc/cores/AudioEngine/Sinks/AESinkALSA.cpp   | 51 +++++++++++++++++++
+ .../VideoPlayer/DVDCodecs/Video/AMLCodec.cpp  |  5 ++
+ xbmc/settings/Settings.cpp                    | 12 +++++
+ 4 files changed, 72 insertions(+)
+
+diff --git a/xbmc/cores/AudioEngine/Engines/ActiveAE/ActiveAEBuffer.cpp b/xbmc/cores/AudioEngine/Engines/ActiveAE/ActiveAEBuffer.cpp
+index d38afea2b5..a0c0b72fbe 100644
+--- a/xbmc/cores/AudioEngine/Engines/ActiveAE/ActiveAEBuffer.cpp
++++ b/xbmc/cores/AudioEngine/Engines/ActiveAE/ActiveAEBuffer.cpp
+@@ -162,7 +162,11 @@ CActiveAEBufferPoolResample::CActiveAEBufferPoolResample(AEAudioFormat inputForm
+     m_inputFormat.m_channelLayout += AE_CH_FC;
+   }
+   m_resampler = NULL;
++#ifdef HAS_LIBAMCODEC
++  m_fillPackets = true;
++#else
+   m_fillPackets = false;
++#endif
+   m_drain = false;
+   m_empty = true;
+   m_procSample = NULL;
+diff --git a/xbmc/cores/AudioEngine/Sinks/AESinkALSA.cpp b/xbmc/cores/AudioEngine/Sinks/AESinkALSA.cpp
+index 4d87afa2c9..efe88e7a8f 100644
+--- a/xbmc/cores/AudioEngine/Sinks/AESinkALSA.cpp
++++ b/xbmc/cores/AudioEngine/Sinks/AESinkALSA.cpp
+@@ -88,6 +88,17 @@ static unsigned int ALSASampleRateList[] =
+   0
+ };
+ 
++static int CheckNP2(unsigned x)
++{
++    --x;
++    x |= x >> 1;
++    x |= x >> 2;
++    x |= x >> 4;
++    x |= x >> 8;
++    x |= x >> 16;
++    return ++x;
++}
++
+ CAESinkALSA::CAESinkALSA() :
+   m_bufferSize(0),
+   m_formatSampleRateMul(0.0),
+@@ -670,6 +681,26 @@ bool CAESinkALSA::InitializeHW(const ALSAConfig &inconfig, ALSAConfig &outconfig
+   snd_pcm_hw_params_set_access(m_pcm, hw_params, SND_PCM_ACCESS_RW_INTERLEAVED);
+ 
+   unsigned int sampleRate   = inconfig.sampleRate;
++#ifdef HAS_LIBAMCODEC
++  // Change the sample rates that are supported by ALSA but unsupported by HDMI to the closest supported value
++  switch (sampleRate)
++  {
++  case 5512:
++  case 8000:
++  case 11025:
++  case 16000:
++  case 22050:
++    sampleRate = 44100;
++    break;
++  case 64000:
++    sampleRate = 88200;
++    break;
++  case 384000:
++    sampleRate = 192000;
++    break;
++  }
++#endif
++
+   snd_pcm_hw_params_set_rate_near    (m_pcm, hw_params, &sampleRate, NULL);
+ 
+   unsigned int channelCount = inconfig.channels;
+@@ -756,12 +787,20 @@ bool CAESinkALSA::InitializeHW(const ALSAConfig &inconfig, ALSAConfig &outconfig
+   */
+   periodSize  = std::min(periodSize, (snd_pcm_uframes_t) sampleRate / 20);
+   bufferSize  = std::min(bufferSize, (snd_pcm_uframes_t) sampleRate / 5);
++#if defined(HAS_LIBAMCODEC)
++  // must be pot for pivos.
++  bufferSize  = CheckNP2(bufferSize);
++#endif
+   
+   /* 
+    According to upstream we should set buffer size first - so make sure it is always at least
+    4x period size to not get underruns (some systems seem to have issues with only 2 periods)
+   */
+   periodSize = std::min(periodSize, bufferSize / 4);
++#if defined(HAS_LIBAMCODEC)
++  // must be pot for pivos.
++  periodSize = CheckNP2(periodSize);
++#endif
+ 
+   CLog::Log(LOGDEBUG, "CAESinkALSA::InitializeHW - Request: periodSize %lu, bufferSize %lu", periodSize, bufferSize);
+ 
+@@ -1305,6 +1344,12 @@ void CAESinkALSA::EnumerateDevicesEx(AEDeviceInfoList &list, bool force)
+ 
+ AEDeviceType CAESinkALSA::AEDeviceTypeFromName(const std::string &name)
+ {
++#ifdef HAS_LIBAMCODEC
++  // ugly workaround to show DTS / AC3 caps
++  // but don't run into multi channel issues
++  // as we can only open 2 pcm channels
++  return AE_DEVTYPE_IEC958;
++#endif
+   if (name.substr(0, 4) == "hdmi")
+     return AE_DEVTYPE_HDMI;
+   else if (name.substr(0, 6) == "iec958" || name.substr(0, 5) == "spdif")
+@@ -1356,6 +1401,12 @@ void CAESinkALSA::EnumerateDevice(AEDeviceInfoList &list, const std::string &dev
+     if (snd_card_get_name(cardNr, &cardName) == 0)
+       info.m_displayName = cardName;
+ 
++    // ugly workaround to show DTS / AC3 caps
++    // but don't run into multi channel issues
++    // as we can only open 2 pcm channels
++    if (info.m_displayName == "AML-DUMMY-CODEC")
++      info.m_deviceType = AE_DEVTYPE_IEC958;
++
+     if (info.m_deviceType == AE_DEVTYPE_HDMI && info.m_displayName.size() > 5 &&
+         info.m_displayName.substr(info.m_displayName.size()-5) == " HDMI")
+     {
+diff --git a/xbmc/cores/VideoPlayer/DVDCodecs/Video/AMLCodec.cpp b/xbmc/cores/VideoPlayer/DVDCodecs/Video/AMLCodec.cpp
+index f67f17194a..5cbebe94cd 100644
+--- a/xbmc/cores/VideoPlayer/DVDCodecs/Video/AMLCodec.cpp
++++ b/xbmc/cores/VideoPlayer/DVDCodecs/Video/AMLCodec.cpp
+@@ -2295,6 +2295,11 @@ void CAMLCodec::SetVideoRect(const CRect &SrcRect, const CRect &DestRect)
+   CLog::Log(LOGDEBUG, "CAMLCodec::SetVideoRect:m_stereo_view(%d)", m_stereo_view);
+ #endif
+ 
++  if (dst_rect.Width() < display.Width() || dst_rect.Height() < display.Height())
++    SysfsUtils::SetInt("/sys/module/di/parameters/bypass_hd", 1);
++  else
++    SysfsUtils::SetInt("/sys/module/di/parameters/bypass_hd", 0);
++
+   // goofy 0/1 based difference in aml axis coordinates.
+   // fix them.
+   dst_rect.x2--;
+diff --git a/xbmc/settings/Settings.cpp b/xbmc/settings/Settings.cpp
+index f76c152b4d..cd16f54b9b 100644
+--- a/xbmc/settings/Settings.cpp
++++ b/xbmc/settings/Settings.cpp
+@@ -75,6 +75,7 @@
+ #include "threads/SingleLock.h"
+ #include "utils/CharsetConverter.h"
+ #include "utils/log.h"
++#include "utils/md5.h"
+ #include "utils/RssManager.h"
+ #include "utils/StringUtils.h"
+ #include "utils/SystemInfo.h"
+@@ -545,6 +546,17 @@ bool CSettings::Save(const std::string &file)
+   if (!m_settingsManager->Save(root))
+     return false;
+ 
++  // Avoid saving if the settings saved earlier are indetical to the current ones
++  if (CFile::Exists(file))
++  {
++    std::string fileMD5 = CUtil::GetFileMD5(file);
++    TiXmlPrinter xmlPrinter;
++    xmlDoc.Accept(&xmlPrinter);
++    std::string settingsMD5 = XBMC::XBMC_MD5::GetMD5(xmlPrinter.CStr());
++    if (fileMD5 == settingsMD5)
++      return true;
++  }
++
+   return xmlDoc.SaveFile(file);
+ }
+ 
+-- 
+2.17.0.windows.1
+

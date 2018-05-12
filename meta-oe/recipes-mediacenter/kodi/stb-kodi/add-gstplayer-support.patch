@@ -1,33 +1,33 @@
-From 731a29d55c3ebd7fb8b198188cc0d3a5963d0277 Mon Sep 17 00:00:00 2001
-From: emanuel@ihad.de
+From b66416461d1445251c1d6b03ab0dbc43e97590c5 Mon Sep 17 00:00:00 2001
+From: "emanuel@ihad.de" <emanuel@ihad.de>
 Date: Sat, 17 Mar 2018 19:48:17 +0100
-Subject: [PATCH] add gstplayer support
+Subject: [PATCH 3/5] add gstplayer support
 
 ---
- Makefile.in                                        |    1 +
- configure.ac                                       |   56 +
- system/keymaps/gen.xml                             |   73 ++
- system/playercorefactory.xml                       |   38 +-
- xbmc/Application.cpp                               |   40 +-
- xbmc/ApplicationPlayer.cpp                         |    9 +-
- xbmc/cores/GstPlayer/CMakeLists.txt                |    9 +
- xbmc/cores/GstPlayer/GstPlayer.cpp                 |  769 +++++++++++++
- xbmc/cores/GstPlayer/GstPlayer.h                   |  170 +++
- xbmc/cores/GstPlayer/GstPlayerAudio.cpp            |  120 ++
- xbmc/cores/GstPlayer/GstPlayerAudio.h              |   43 +
- xbmc/cores/GstPlayer/GstPlayerVideo.cpp            | 1176 ++++++++++++++++++++
- xbmc/cores/GstPlayer/GstPlayerVideo.h              |  170 +++
- xbmc/cores/GstPlayer/Makefile                      |    8 +
- .../DVDInputStreams/DVDInputStreamMemory.h         |    1 +
- .../DVDInputStreams/DVDInputStreamPVRManager.cpp   |   30 +-
- .../DVDInputStreams/DVDInputStreamPVRManager.h     |    6 +
- xbmc/cores/playercorefactory/PlayerCoreConfig.h    |   10 +
- xbmc/cores/playercorefactory/PlayerCoreFactory.cpp |   15 +
- xbmc/dialogs/GUIDialogBusy.cpp                     |    9 +-
- xbmc/pvr/PVRManager.cpp                            |    6 +-
- xbmc/settings/AdvancedSettings.cpp                 |    2 +-
- xbmc/video/windows/GUIWindowFullScreen.cpp         |   38 +-
- 23 files changed, 2763 insertions(+), 36 deletions(-)
+ Makefile.in                                   |    1 +
+ configure.ac                                  |   56 +
+ system/keymaps/gen.xml                        |   73 +
+ system/playercorefactory.xml                  |   22 +-
+ xbmc/Application.cpp                          |   40 +-
+ xbmc/ApplicationPlayer.cpp                    |    9 +-
+ xbmc/cores/GstPlayer/CMakeLists.txt           |    9 +
+ xbmc/cores/GstPlayer/GstPlayer.cpp            |  769 +++++++++++
+ xbmc/cores/GstPlayer/GstPlayer.h              |  170 +++
+ xbmc/cores/GstPlayer/GstPlayerAudio.cpp       |  120 ++
+ xbmc/cores/GstPlayer/GstPlayerAudio.h         |   43 +
+ xbmc/cores/GstPlayer/GstPlayerVideo.cpp       | 1176 +++++++++++++++++
+ xbmc/cores/GstPlayer/GstPlayerVideo.h         |  170 +++
+ xbmc/cores/GstPlayer/Makefile                 |    8 +
+ .../DVDInputStreams/DVDInputStreamMemory.h    |    1 +
+ .../DVDInputStreamPVRManager.cpp              |   30 +-
+ .../DVDInputStreamPVRManager.h                |    6 +
+ .../playercorefactory/PlayerCoreConfig.h      |   10 +
+ .../playercorefactory/PlayerCoreFactory.cpp   |   15 +
+ xbmc/dialogs/GUIDialogBusy.cpp                |    9 +-
+ xbmc/pvr/PVRManager.cpp                       |    6 +-
+ xbmc/settings/AdvancedSettings.cpp            |    2 +-
+ xbmc/video/windows/GUIWindowFullScreen.cpp    |   38 +-
+ 23 files changed, 2755 insertions(+), 28 deletions(-)
  create mode 100644 system/keymaps/gen.xml
  create mode 100644 xbmc/cores/GstPlayer/CMakeLists.txt
  create mode 100644 xbmc/cores/GstPlayer/GstPlayer.cpp
@@ -39,7 +39,7 @@ Subject: [PATCH] add gstplayer support
  create mode 100644 xbmc/cores/GstPlayer/Makefile
 
 diff --git a/Makefile.in b/Makefile.in
-index e9473deeb6..ccd3f86f0c 100644
+index 984fd00091..955890f0ea 100644
 --- a/Makefile.in
 +++ b/Makefile.in
 @@ -40,6 +40,7 @@ DIRECTORY_ARCHIVES=$(VideoPlayer_ARCHIVES) \
@@ -51,7 +51,7 @@ index e9473deeb6..ccd3f86f0c 100644
                     xbmc/cores/VideoPlayer/VideoRenderers/VideoShaders/VideoShaders.a \
                     xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/HwDecRender.a \
 diff --git a/configure.ac b/configure.ac
-index 9812d1f923..447ebc279c 100644
+index 629929aafa..91b2481cd6 100644
 --- a/configure.ac
 +++ b/configure.ac
 @@ -198,6 +198,8 @@ libcap_disabled="== Capabilities detection support disabled. =="
@@ -76,7 +76,7 @@ index 9812d1f923..447ebc279c 100644
  AC_ARG_ENABLE([tegra],
    [AS_HELP_STRING([--enable-tegra],
    [enable Tegra2 arm (default is no)])],
-@@ -1770,6 +1778,53 @@ if test "${USE_STATIC_FFMPEG}" = "1"; then
+@@ -1774,6 +1782,53 @@ if test "${USE_STATIC_FFMPEG}" = "1"; then
    LIBS=$(${ECHO} ${LIBS} | ${SED} ':a;N;$!ba;s/\n/ /g')
  fi
  
@@ -130,7 +130,7 @@ index 9812d1f923..447ebc279c 100644
  echo "Checking for SWIG installation"
  AC_PATH_PROG(SWIG_EXE, swig, "none")
  if test "$SWIG_EXE" = "none"; then
-@@ -2446,6 +2501,7 @@ AC_SUBST(USE_LIBSMBCLIENT)
+@@ -2450,6 +2505,7 @@ AC_SUBST(USE_LIBSMBCLIENT)
  AC_SUBST(USE_LIBNFS)
  AC_SUBST(USE_AIRPLAY)
  AC_SUBST(USE_OPENMAX)
@@ -140,7 +140,7 @@ index 9812d1f923..447ebc279c 100644
  AC_SUBST(USE_ALSA)
 diff --git a/system/keymaps/gen.xml b/system/keymaps/gen.xml
 new file mode 100644
-index 0000000000..4b4d071088
+index 0000000000..6f32a755fa
 --- /dev/null
 +++ b/system/keymaps/gen.xml
 @@ -0,0 +1,73 @@
@@ -218,29 +218,10 @@ index 0000000000..4b4d071088
 +  </fullscreenvideo>
 +</keymap>
 diff --git a/system/playercorefactory.xml b/system/playercorefactory.xml
-index 8fcc56922a..084d52da73 100644
+index be6b7219ab..1bebba4a54 100644
 --- a/system/playercorefactory.xml
 +++ b/system/playercorefactory.xml
-@@ -8,41 +8,41 @@
-     <player name="VideoPlayer" /> placeholder for MPlayer
-     <player name="PAPlayer" audio="true" />
-     -->
--    <player name="E2Player" type="ExternalPlayer" audio="false" video="true">
--      <filename>kodiext</filename>
--      <args>-U "{1}" -S "{3}" -P "$PPID"</args>
--      <filenamemeta>/tmp/kodiextin.json</filenamemeta>
--      <hidexbmc>true</hidexbmc>
--      <hideconsole>true</hideconsole>
--      <warpcursor>none</warpcursor>
--    </player>
-+    <player name="E2Player" type="ExternalPlayer" audio="false" video="true">
-+      <filename>kodiext</filename>
-+      <args>-U "{1}" -S "{3}" -P "$PPID"</args>
-+      <filenamemeta>/tmp/kodiextin.json</filenamemeta>
-+      <hidexbmc>true</hidexbmc>
-+      <hideconsole>true</hideconsole>
-+      <warpcursor>none</warpcursor>
-+    </player>
+@@ -11,30 +11,30 @@
    </players>
  
    <rules name="system rules">
@@ -283,7 +264,7 @@ index 8fcc56922a..084d52da73 100644
    </rules>
  </playercorefactory>
 diff --git a/xbmc/Application.cpp b/xbmc/Application.cpp
-index a2448dc49e..f7db67114b 100644
+index a2448dc49e..054acd53bb 100644
 --- a/xbmc/Application.cpp
 +++ b/xbmc/Application.cpp
 @@ -3297,13 +3297,16 @@ PlayBackRet CApplication::PlayFile(CFileItem item, const std::string& player, bo
@@ -439,7 +420,7 @@ index a2448dc49e..f7db67114b 100644
    {
      if (!m_pPlayer->CanSeek()) return;
 diff --git a/xbmc/ApplicationPlayer.cpp b/xbmc/ApplicationPlayer.cpp
-index 9163bae34b..675005690e 100644
+index 9163bae34b..03bdec6f82 100644
 --- a/xbmc/ApplicationPlayer.cpp
 +++ b/xbmc/ApplicationPlayer.cpp
 @@ -25,6 +25,8 @@
@@ -474,7 +455,7 @@ index 9163bae34b..675005690e 100644
  
 diff --git a/xbmc/cores/GstPlayer/CMakeLists.txt b/xbmc/cores/GstPlayer/CMakeLists.txt
 new file mode 100644
-index 0000000000..1b8adfab36
+index 0000000000..a40d69bb34
 --- /dev/null
 +++ b/xbmc/cores/GstPlayer/CMakeLists.txt
 @@ -0,0 +1,9 @@
@@ -489,7 +470,7 @@ index 0000000000..1b8adfab36
 +core_add_library(gstplayer)
 diff --git a/xbmc/cores/GstPlayer/GstPlayer.cpp b/xbmc/cores/GstPlayer/GstPlayer.cpp
 new file mode 100644
-index 0000000000..71b7303ad3
+index 0000000000..c5add8dc02
 --- /dev/null
 +++ b/xbmc/cores/GstPlayer/GstPlayer.cpp
 @@ -0,0 +1,769 @@
@@ -1264,7 +1245,7 @@ index 0000000000..71b7303ad3
 +}
 diff --git a/xbmc/cores/GstPlayer/GstPlayer.h b/xbmc/cores/GstPlayer/GstPlayer.h
 new file mode 100644
-index 0000000000..4eb79688b1
+index 0000000000..aa18720864
 --- /dev/null
 +++ b/xbmc/cores/GstPlayer/GstPlayer.h
 @@ -0,0 +1,170 @@
@@ -1440,7 +1421,7 @@ index 0000000000..4eb79688b1
 +};
 diff --git a/xbmc/cores/GstPlayer/GstPlayerAudio.cpp b/xbmc/cores/GstPlayer/GstPlayerAudio.cpp
 new file mode 100644
-index 0000000000..d8f5fad5f7
+index 0000000000..673dec733b
 --- /dev/null
 +++ b/xbmc/cores/GstPlayer/GstPlayerAudio.cpp
 @@ -0,0 +1,120 @@
@@ -1566,7 +1547,7 @@ index 0000000000..d8f5fad5f7
 +}
 diff --git a/xbmc/cores/GstPlayer/GstPlayerAudio.h b/xbmc/cores/GstPlayer/GstPlayerAudio.h
 new file mode 100644
-index 0000000000..130607b811
+index 0000000000..0a350976bd
 --- /dev/null
 +++ b/xbmc/cores/GstPlayer/GstPlayerAudio.h
 @@ -0,0 +1,43 @@
@@ -1615,7 +1596,7 @@ index 0000000000..130607b811
 +};
 diff --git a/xbmc/cores/GstPlayer/GstPlayerVideo.cpp b/xbmc/cores/GstPlayer/GstPlayerVideo.cpp
 new file mode 100644
-index 0000000000..52055573a1
+index 0000000000..2a173fcb82
 --- /dev/null
 +++ b/xbmc/cores/GstPlayer/GstPlayerVideo.cpp
 @@ -0,0 +1,1176 @@
@@ -2797,7 +2778,7 @@ index 0000000000..52055573a1
 +}
 diff --git a/xbmc/cores/GstPlayer/GstPlayerVideo.h b/xbmc/cores/GstPlayer/GstPlayerVideo.h
 new file mode 100644
-index 0000000000..6750406dc3
+index 0000000000..5e0ade3050
 --- /dev/null
 +++ b/xbmc/cores/GstPlayer/GstPlayerVideo.h
 @@ -0,0 +1,170 @@
@@ -2973,7 +2954,7 @@ index 0000000000..6750406dc3
 +};
 diff --git a/xbmc/cores/GstPlayer/Makefile b/xbmc/cores/GstPlayer/Makefile
 new file mode 100644
-index 0000000000..d1aad2e2cc
+index 0000000000..6d19c36d24
 --- /dev/null
 +++ b/xbmc/cores/GstPlayer/Makefile
 @@ -0,0 +1,8 @@
@@ -2986,7 +2967,7 @@ index 0000000000..d1aad2e2cc
 +include ../../../Makefile.include
 +-include $(patsubst %.cpp,%.P,$(patsubst %.c,%.P,$(SRCS)))
 diff --git a/xbmc/cores/VideoPlayer/DVDInputStreams/DVDInputStreamMemory.h b/xbmc/cores/VideoPlayer/DVDInputStreams/DVDInputStreamMemory.h
-index 4f07647109..114fc31454 100644
+index 4f07647109..8498ec077d 100644
 --- a/xbmc/cores/VideoPlayer/DVDInputStreams/DVDInputStreamMemory.h
 +++ b/xbmc/cores/VideoPlayer/DVDInputStreams/DVDInputStreamMemory.h
 @@ -33,6 +33,7 @@ public:
@@ -2998,7 +2979,7 @@ index 4f07647109..114fc31454 100644
  protected:
    uint8_t* m_pData;
 diff --git a/xbmc/cores/VideoPlayer/DVDInputStreams/DVDInputStreamPVRManager.cpp b/xbmc/cores/VideoPlayer/DVDInputStreams/DVDInputStreamPVRManager.cpp
-index f310338fe1..8554bfe164 100644
+index f310338fe1..6ada073a72 100644
 --- a/xbmc/cores/VideoPlayer/DVDInputStreams/DVDInputStreamPVRManager.cpp
 +++ b/xbmc/cores/VideoPlayer/DVDInputStreams/DVDInputStreamPVRManager.cpp
 @@ -51,6 +51,9 @@ CDVDInputStreamPVRManager::CDVDInputStreamPVRManager(IVideoPlayer* pPlayer, cons
@@ -3068,7 +3049,7 @@ index f310338fe1..8554bfe164 100644
  {
    if (m_demuxActive)
 diff --git a/xbmc/cores/VideoPlayer/DVDInputStreams/DVDInputStreamPVRManager.h b/xbmc/cores/VideoPlayer/DVDInputStreams/DVDInputStreamPVRManager.h
-index baf819f149..24b5528dc7 100644
+index baf819f149..f1c4b9c7f0 100644
 --- a/xbmc/cores/VideoPlayer/DVDInputStreams/DVDInputStreamPVRManager.h
 +++ b/xbmc/cores/VideoPlayer/DVDInputStreams/DVDInputStreamPVRManager.h
 @@ -70,6 +70,9 @@ public:
@@ -3092,7 +3073,7 @@ index baf819f149..24b5528dc7 100644
  
  
 diff --git a/xbmc/cores/playercorefactory/PlayerCoreConfig.h b/xbmc/cores/playercorefactory/PlayerCoreConfig.h
-index 15a6570a27..254a15ebbf 100644
+index 15a6570a27..22cc2465c4 100644
 --- a/xbmc/cores/playercorefactory/PlayerCoreConfig.h
 +++ b/xbmc/cores/playercorefactory/PlayerCoreConfig.h
 @@ -30,6 +30,10 @@
@@ -3120,7 +3101,7 @@ index 15a6570a27..254a15ebbf 100644
      {
        pPlayer = new CExternalPlayer(callback);
 diff --git a/xbmc/cores/playercorefactory/PlayerCoreFactory.cpp b/xbmc/cores/playercorefactory/PlayerCoreFactory.cpp
-index 896b865895..4d12844303 100644
+index 896b865895..1e41a59a0e 100644
 --- a/xbmc/cores/playercorefactory/PlayerCoreFactory.cpp
 +++ b/xbmc/cores/playercorefactory/PlayerCoreFactory.cpp
 @@ -34,6 +34,10 @@
@@ -3167,7 +3148,7 @@ index 896b865895..4d12844303 100644
          internaltype = "external";
  
 diff --git a/xbmc/dialogs/GUIDialogBusy.cpp b/xbmc/dialogs/GUIDialogBusy.cpp
-index c8fe0706d1..a9b2d1d62c 100644
+index c8fe0706d1..2efaae47e3 100644
 --- a/xbmc/dialogs/GUIDialogBusy.cpp
 +++ b/xbmc/dialogs/GUIDialogBusy.cpp
 @@ -22,6 +22,7 @@
@@ -3212,7 +3193,7 @@ index c8fe0706d1..a9b2d1d62c 100644
      }
    }
 diff --git a/xbmc/pvr/PVRManager.cpp b/xbmc/pvr/PVRManager.cpp
-index 18f8fbdd32..4a4e046cc1 100644
+index 18f8fbdd32..4a8791aacd 100644
 --- a/xbmc/pvr/PVRManager.cpp
 +++ b/xbmc/pvr/PVRManager.cpp
 @@ -1407,8 +1407,12 @@ bool CPVRManager::PlayMedia(const CFileItem& item)
@@ -3230,7 +3211,7 @@ index 18f8fbdd32..4a4e046cc1 100644
  
  void CPVRManager::UpdateCurrentChannel(void)
 diff --git a/xbmc/settings/AdvancedSettings.cpp b/xbmc/settings/AdvancedSettings.cpp
-index aa802635ba..4306d321af 100644
+index aa802635ba..1a97840edd 100644
 --- a/xbmc/settings/AdvancedSettings.cpp
 +++ b/xbmc/settings/AdvancedSettings.cpp
 @@ -140,7 +140,7 @@ void CAdvancedSettings::Initialize()
@@ -3243,7 +3224,7 @@ index aa802635ba..4306d321af 100644
    m_videoIgnorePercentAtEnd   = 8.0f;
    m_videoPlayCountMinimumPercent = 90.0f;
 diff --git a/xbmc/video/windows/GUIWindowFullScreen.cpp b/xbmc/video/windows/GUIWindowFullScreen.cpp
-index 4d2a37edeb..b7f918716a 100644
+index 4d2a37edeb..dc7e666848 100644
 --- a/xbmc/video/windows/GUIWindowFullScreen.cpp
 +++ b/xbmc/video/windows/GUIWindowFullScreen.cpp
 @@ -45,6 +45,8 @@
@@ -3444,5 +3425,5 @@ index 4d2a37edeb..b7f918716a 100644
    if (pOSD && !pOSD->IsDialogRunning())
    {
 -- 
-2.16.2.windows.1
+2.17.0.windows.1
 
