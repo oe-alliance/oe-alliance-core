@@ -1,4 +1,4 @@
-FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}/AMLS905:"
+FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}/AML905D:"
 
 SRC_URI_append = " \
   file://SOC-Audio.conf  \
