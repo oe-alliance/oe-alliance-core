@@ -18,9 +18,9 @@ SRC_URI = "git://github.com/OpenPLi/tuxtxt.git;protocol=git \
            ', '', d)} \
 "
 
-SRC_URI_append_wetekplay = " file://0001-add-HBGIC-for-wetek.patch"
-SRC_URI_append_wetekplay2 = " file://0001-add-HBGIC-for-wetek.patch"
-SRC_URI_append_odroidc2 = " file://0001-add-HBGIC-for-wetek.patch"
+SRC_URI_append_AML8726 = " file://0001-add-HBGIC-for-wetek.patch"
+SRC_URI_append_AMLS905 = " file://0001-add-HBGIC-for-wetek.patch"
+SRC_URI_append_AML905D = " file://0001-add-HBGIC-for-wetek.patch"
 
 SRC_URI_append = " \
     ${@bb.utils.contains('DISTRO_FEATURES', 'tuxtxtfhd', 'file://tuxtxt_FHD.patch', '', d)} \
