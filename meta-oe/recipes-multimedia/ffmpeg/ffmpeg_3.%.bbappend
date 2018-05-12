@@ -291,7 +291,9 @@ EXTRA_FFCONF = " \
     --disable-filters \
     --enable-filter=scale \
     --enable-filter=drawtext \
-    ${@bb.utils.contains("TARGET_ARCH", "arm", "", "${MIPSFPU}", d)} \
+    ${@bb.utils.contains("TARGET_ARCH", "mipsel", "${MIPSFPU} --disable-vfp --disable-neon --disable-mipsdsp --disable-mipsdspr2", "", d)} \
+    ${@bb.utils.contains("TARGET_ARCH", "arm", "--enable-armv6 --enable-armv6t2 --enable-vfp --enable-neon", "", d)} \
+    ${@bb.utils.contains("TUNE_FEATURES", "aarch64", "--enable-armv8 --enable-vfp --enable-neon", "", d)} \
     --disable-debug \
     --pkg-config="pkg-config" \
     --enable-zlib \

@@ -12,19 +12,12 @@ PARALLEL_MAKE = ""
 
 inherit autotools pkgconfig
 
-### TODO: code check!
-### QA Issue: gst-amlavout: The compile log indicates that host include and/or library paths were used.
-### -libplayer issue  warning: library search path "/usr/lib/libplayer" need to add it to DEPENDES
-### *.la probably not needed as these are gst-plugins
-
-DEPENDS = "gstreamer gst-amlavsink libamcodec libamavutils libamplayer"
-RDEPENDS_{PN} = "libamavutils"
+DEPENDS = "gstreamer wetek-gst-amlavsink wetek-libamcodec-${MACHINE} wetek-libamavutils-${MACHINE} wetek-libamplayer-${MACHINE}"
+RDEPENDS_{PN} = "wetek-libamavutils-${MACHINE}"
 
 SRC_URI = " file://gst-aml-plugins-0.10.0.zip "
 
 S = "${WORKDIR}/gst-aml-plugins-0.10.0"
-
-
 
 CFLAGS =+ " -O2 -fPIC -I${STAGING_INCDIR} -I${S}/include  -I${S}/include/amports  -I${S}/common/include/ppmgr \
 -I${S}/amlaudio -I${S}/amlvideo "

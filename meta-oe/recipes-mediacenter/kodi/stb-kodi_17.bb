@@ -74,10 +74,6 @@ DEPENDS = " \
             gstreamer1.0-plugins-base \
           "
 
-DEPENDS_append_AML8726 = " libamadec libamcodec libamavutils"
-DEPENDS_append_AMLS905 = " libamadec libamcodec libamavutils"
-DEPENDS_append_AML905D = " libamadec libamcodec libamavutils"
-
 PROVIDES = "xbmc"
 
 SRCREV = "7e52c1d94d0cbc3f8ace57b1fc74ae1582c5a869"

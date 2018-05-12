@@ -10,7 +10,7 @@ PR = "r1"
 
 inherit autotools pkgconfig
 
-DEPENDS = "gstreamer libamcodec libamavutils"
+DEPENDS = "gstreamer wetek-libamcodec-${MACHINE} wetek-libamavutils-${MACHINE}"
 
 SRC_URI = "file://gst-aml-plugins-0.11.0.zip \
            file://osd_fix.patch \

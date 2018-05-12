@@ -10,8 +10,12 @@ SRC_URI[sha256sum] = "6bc4cf8e0884a7955c6e0b6a4293525664631546f19b9222e4bf472120
 inherit kernel machine_kernel_pr
 MACHINE_KERNEL_PR_append = ".0"
 
-DEPENDS = "xz-native bc-native u-boot-mkimage-native gcc"
+DEPENDS = "xz-native bc-native u-boot-mkimage-native virtual/${TARGET_PREFIX}gcc"
 
+# Avoid issues with Amlogic kernel binary components
+INSANE_SKIP_${PN} += "already-stripped"
+INHIBIT_PACKAGE_STRIP = "1"
+INHIBIT_PACKAGE_DEBUG_STRIP = "1"
 LINUX_VERSION ?= "3.14.29"
 LINUX_VERSION_EXTENSION ?= "amlogic"
 

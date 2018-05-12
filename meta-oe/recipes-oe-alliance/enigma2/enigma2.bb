@@ -253,15 +253,14 @@ SRC_URI_append_vuduo = " \
     file://duo_VFD.patch \
     "
 
-SRC_URI_append_wetekplay2 = " \
+SRC_URI_append_AMLS905 = " \
     ${@bb.utils.contains("DISTRO_NAME", "openatv", "file://0001-have-64-bit-action-long-int-update.patch", "", d)} \
+    ${@bb.utils.contains("DISTRO_NAME", "openvix", "file://0001-have-64-bit-action-long-int-update.patch", "", d)} \
     "
 
-SRC_URI_append_odroidc2 = " \
+SRC_URI_append_AML905D = " \
     ${@bb.utils.contains("DISTRO_NAME", "openatv", "file://0001-have-64-bit-action-long-int-update.patch", "", d)} \
-    "
-SRC_URI_append_aarch64 = " \
-  ${@bb.utils.contains("DISTRO_NAME", "openvix", "file://0001-have-64-bit-action-long-int-update.patch", "", d)} \
+    ${@bb.utils.contains("DISTRO_NAME", "openvix", "file://0001-have-64-bit-action-long-int-update.patch", "", d)} \
     "
 
 SRC_URI_append_openhdf = " \
