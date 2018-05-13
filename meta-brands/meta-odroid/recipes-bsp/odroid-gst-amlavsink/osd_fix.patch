@@ -1,0 +1,30 @@
+diff -Naur gst-aml-plugins-0.11.0.org/amlvideo/AMLVDEC/gstamlvdec.c gst-aml-plugins-0.11.0/amlvideo/AMLVDEC/gstamlvdec.c
+--- a/amlvideo/AMLVDEC/gstamlvdec.c	2015-09-14 21:29:03.000000000 +0200
++++ b/amlvideo/AMLVDEC/gstamlvdec.c	2015-09-14 21:22:37.000000000 +0200
+@@ -228,10 +228,10 @@
+                  GST_ERROR("codec init failed, ret=-0x%x", -ret);
+                  return FALSE;
+             }
+-            set_fb0_blank(1);
+-            set_fb1_blank(1);
++//            set_fb0_blank(1);
++//            set_fb1_blank(1);
+             set_tsync_enable(1);
+-            set_display_axis(0);
++//            set_display_axis(0);
+             amlvdec->codec_init_ok=1;
+             if(amlvdec->trickRate > 0){
+                 if(amlvdec->pcodec && amlvdec->pcodec->cntl_handle){
+@@ -647,9 +647,9 @@
+     }
+     amlvdec->codec_init_ok=0;
+     amlvdec->is_headerfeed=FALSE;
+-    set_fb0_blank(0);
+-    set_fb1_blank(0);
+-    set_display_axis(1);
++//    set_fb0_blank(0);
++//    set_fb1_blank(0);
++//    set_display_axis(1);
+  //   set_ppscaler_enable("1");
+     return TRUE;
+ }
