@@ -139,7 +139,7 @@ EXTRA_OECONF = " \
     STAGING_LIBDIR=${STAGING_LIBDIR} \
     --with-boxtype=${MACHINE} \
     --with-arch=${TARGET_ARCH} \
-    ${@bb.utils.contains("MACHINE_FEATURES", "aml-plugins", "--with-amlplugins=True" , "", d)} \
+    ${@bb.utils.contains("MACHINE_FEATURES", "aml-plugins", "--with-amlplugins" , "", d)} \
     "
 
 ALLOW_EMPTY_${PN} = "1"
