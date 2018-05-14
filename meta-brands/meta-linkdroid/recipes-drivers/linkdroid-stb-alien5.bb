@@ -4,6 +4,8 @@ PRIORITY = "required"
 LICENSE = "CLOSED"
 require conf/license/license-close.inc
 
+DEPENDS = "virtual/${TARGET_PREFIX}gcc"
+
 SRCDATE = "20180418"
 
 PV = "${KERNEL_VERSION}+${SRCDATE}"
