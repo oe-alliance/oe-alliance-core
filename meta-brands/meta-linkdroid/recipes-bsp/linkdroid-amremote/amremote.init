@@ -1,0 +1,29 @@
+#! /bin/sh
+#
+
+
+test -f /etc/amremote/remote.conf || exit 0
+
+case "$1" in
+  start)
+    echo -n "Starting amremote "
+    remotecfg  /etc/amremote/remote.conf >/dev/null 2>&1 
+    echo "."
+    ;;
+  stop)
+    echo -n "Stopping amremote"
+    echo "."
+    ;;
+  restart|force-restart)
+    echo -n "Stopping amremote daemon: irexec"
+    sleep 1
+    echo -n "Starting amremote daemon: irexec"
+    remotecfg  /etc/amremote/remote.conf >/dev/null 2>&1 
+    echo "."
+    ;;
+  *)
+    echo "Usage: /etc/init.d/amremote {start|stop|reload|restart|force-restart}"
+    exit 1
+esac
+
+exit 0

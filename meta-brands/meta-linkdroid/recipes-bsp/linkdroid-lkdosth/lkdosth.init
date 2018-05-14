@@ -1,0 +1,29 @@
+#!/bin/sh
+
+
+case "$1" in
+  start)
+    echo -n "Starting lkdosth... "
+    /usr/bin/lkdosth
+    busybox ifconfig
+    echo "."
+    ;;
+  stop)
+    echo -n "Stopping lkdosth"
+    echo "."
+    ;;
+  restart|force-restart)
+    echo -n "Stopping lkdosth"
+    sleep 1
+    echo -n "Starting lkdosth"
+    /usr/bin/lkdosth
+    busybox ifconfig
+    echo "."
+    ;;
+  *)
+    echo "Usage: /etc/init.d/lkdosth {start|stop|reload|restart|force-restart}"
+    exit 1
+esac
+
+exit 0
+
