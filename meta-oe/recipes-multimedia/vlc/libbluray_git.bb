@@ -6,7 +6,7 @@ SRCREV = "3b9a9f044644a6abe9cb09377f714ded9fdd6c87"
 PV = "0.2.1+git${SRCPV}"
 PR = "r1"
 
-SRC_URI = "git://git.videolan.org/${PN}.git;protocol=git"
+SRC_URI = "git://git.videolan.org/${BPN}.git;protocol=git"
 
 S = "${WORKDIR}/git"
 
