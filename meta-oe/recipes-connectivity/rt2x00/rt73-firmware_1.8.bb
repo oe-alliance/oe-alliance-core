@@ -13,6 +13,8 @@ do_install() {
 }
 
 FILES_${PN} = "${base_libdir}/firmware/"
+FILES_${PN} += "${base_libdir}"
+
 inherit allarch
 
 SRC_URI[md5sum] = "1e7a5dc574e0268574fcda3fd5cf52f7"

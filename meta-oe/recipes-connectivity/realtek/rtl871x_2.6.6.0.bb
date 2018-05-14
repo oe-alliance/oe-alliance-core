@@ -42,3 +42,5 @@ do_install() {
     install -d ${D}/etc/modutils
     echo 8712u > ${D}/etc/modutils/wlan8712u
 }
+
+FILES_${PN} += "${base_libdir}"

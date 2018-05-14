@@ -37,3 +37,5 @@ do_install() {
         unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS
         oe_runmake -C "${STAGING_KERNEL_BUILDDIR}" SUBDIRS="${S}" DEPMOD=echo INSTALL_MOD_PATH="${D}" modules_install
 }
+
+FILES_${PN} += "${base_libdir}"

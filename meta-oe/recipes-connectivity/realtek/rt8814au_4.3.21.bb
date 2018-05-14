@@ -40,3 +40,5 @@ do_package_qa() {
 
 SRC_URI[md5sum] = "538691f32b98a62c99c32ad80d2d8430"
 SRC_URI[sha256sum] = "e7414ed9495f72ece75435f23f79468a00a8e2697c95916a09a140c5148027c2"
+
+FILES_${PN} += "${base_libdir}"

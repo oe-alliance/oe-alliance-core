@@ -33,5 +33,6 @@ do_compile () {
 do_install() {
     install -d ${D}${base_libdir}/modules/${KERNEL_VERSION}/kernel/drivers/net/wireless
     install -m 0644 ${S}/8189es.ko ${D}${base_libdir}/modules/${KERNEL_VERSION}/kernel/drivers/net/wireless
-
 }
+
+FILES_${PN} += "${base_libdir}"

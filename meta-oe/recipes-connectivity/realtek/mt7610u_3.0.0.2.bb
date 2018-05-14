@@ -38,3 +38,4 @@ SRC_URI[md5sum] = "2b552aff1bbd4effe94185e222eb761e"
 SRC_URI[sha256sum] = "c0061b9010b80c1fc09d78786317957044bde43e2a127ecefd66d4faa12d2906"
 
 FILES_${PN} += "${sysconfdir}/Wireless/mt7610uSTA/mt7610uSTACard.dat ${sysconfdir}/Wireless/mt7610uSTA/mt7610uSTA.dat ${sysconfdir}/Wireless/mt7610uSTA/SingleSKU.dat"
+FILES_${PN} += "${base_libdir}"

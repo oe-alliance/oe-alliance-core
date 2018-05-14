@@ -31,3 +31,4 @@ do_install() {
         install -m 0644 ${S}/8192eu.ko ${D}${base_libdir}/modules/${KERNEL_VERSION}/kernel/drivers/net/wireless
 }
 
+FILES_${PN} += "${base_libdir}"
