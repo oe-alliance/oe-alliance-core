@@ -32,7 +32,7 @@ do_compile () {
 }
 
 do_install() {
-    install -d ${D}/lib/modules/${KERNEL_VERSION}/kernel/drivers/net/wireless
+    install -d ${D}${base_libdir}/modules/${KERNEL_VERSION}/kernel/drivers/net/wireless
     install -m 0644 ${S}/88x2bu.ko ${D}${base_libdir}/modules/${KERNEL_VERSION}/kernel/drivers/net/wireless
 
 }

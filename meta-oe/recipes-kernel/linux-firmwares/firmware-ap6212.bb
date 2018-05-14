@@ -25,19 +25,19 @@ do_compile() {
 }
 
 FILES_${PN} = " \
-                /lib \
+                ${base_libdir} \
                 /etc \
 "
 
 do_install() {
     install -d  ${D}/etc/firmware/ap6212
-    install -d  ${D}/lib/firmware/ap6212
-    install -m 0655 nvram.txt ${D}/lib/firmware/ap6212
-    install -m 0655 ${WORKDIR}/config.txt ${D}/lib/firmware/ap6212
-    install -m 0655 fw_bcm43438a0.bin ${D}/lib/firmware/ap6212
-    install -m 0655 fw_bcm43438a0_apsta.bin ${D}/lib/firmware/ap6212
-    install -m 0655 fw_bcm43438a0_p2p.bin ${D}/lib/firmware/ap6212
-    install -m 0655 bcm43438a0.hcd ${D}/lib/firmware/ap6212/4343A0.hcd
+    install -d  ${D}${base_libdir}/firmware/ap6212
+    install -m 0655 nvram.txt ${D}${base_libdir}/firmware/ap6212
+    install -m 0655 ${WORKDIR}/config.txt ${D}${base_libdir}/firmware/ap6212
+    install -m 0655 fw_bcm43438a0.bin ${D}${base_libdir}/firmware/ap6212
+    install -m 0655 fw_bcm43438a0_apsta.bin ${D}${base_libdir}/firmware/ap6212
+    install -m 0655 fw_bcm43438a0_p2p.bin ${D}${base_libdir}/firmware/ap6212
+    install -m 0655 bcm43438a0.hcd ${D}${base_libdir}/firmware/ap6212/4343A0.hcd
     
     # Bluetooth
     install -m 0655 bcm43438a0.hcd ${D}/etc/firmware/ap6212/4343A0.hcd

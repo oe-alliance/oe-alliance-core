@@ -20,7 +20,7 @@ S = "${WORKDIR}/8723AE_8723AU_Linux_BT_20140623"
 FILES_${PN} = "${base_libdir}/firmware/"
 
 do_install() {
-    install -d ${D}/lib/modules/${KERNEL_VERSION}/kernel/drivers/bluetooth
+    install -d ${D}${base_libdir}/modules/${KERNEL_VERSION}/kernel/drivers/bluetooth
     install -m 0644 ${S}/rtk_btusb.ko ${D}${base_libdir}/modules/${KERNEL_VERSION}/kernel/drivers/bluetooth
     
     install -d ${D}/${base_libdir}/firmware
