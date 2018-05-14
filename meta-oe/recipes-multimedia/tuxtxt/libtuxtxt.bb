@@ -41,5 +41,5 @@ do_configure_prepend() {
     touch ${S}/ChangeLog
 }
 
-FILES_${PN} = "/usr/lib/libtuxtxt.so.*"
-FILES_${PN}-dev = "/usr/include/ /usr/lib/libtuxtxt.la /usr/lib/libtuxtxt.so /usr/lib/pkgconfig/tuxbox-tuxtxt.pc"
+FILES_${PN} = "${libdir}/libtuxtxt.so.*"
+FILES_${PN}-dev = "/usr/include/ ${libdir}/libtuxtxt.la ${libdir}/libtuxtxt.so ${libdir}/pkgconfig/tuxbox-tuxtxt.pc"
