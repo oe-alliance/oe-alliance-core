@@ -17,6 +17,10 @@ S = "${WORKDIR}/git"
 
 DEPENDS = "libusb1"
 
+EXTRA_OECMAKE += " -DLIB_INSTALL_DIR=${libdir}" 
+
 inherit cmake
 
 EXTRA_OECONF = "--enable-driver-detach"
+
+
