@@ -18,11 +18,11 @@ SRC_URI = "file://ldconfig-native-2.12.1.tar.bz2 \
 
 PR = "r2"
 
-FILESEXTRAPATHS =. "${FILE_DIRNAME}/${BP}:"
+FILESEXTRAPATHS =. "${FILE_DIRNAME}/${P}:"
 
 inherit native
 
-S = "${WORKDIR}/${BPN}-${PV}"
+S = "${WORKDIR}/${PN}-${PV}"
 
 do_compile () {
 	$CC ldconfig.c -std=gnu99 chroot_canon.c xmalloc.c xstrdup.c cache.c readlib.c  -I. dl-cache.c -o ldconfig
