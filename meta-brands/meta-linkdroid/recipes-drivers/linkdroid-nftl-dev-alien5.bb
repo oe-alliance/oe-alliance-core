@@ -2,6 +2,8 @@ SUMMARY = "AMLogic 905 nftl_dev driver from LE"
 SECTION = "base"
 PRIORITY = "required"
 
+DEPENDS = "virtual/${TARGET_PREFIX}gcc"
+
 require conf/license/license-gplv2.inc
 
 SRCDATE = "20180513"
