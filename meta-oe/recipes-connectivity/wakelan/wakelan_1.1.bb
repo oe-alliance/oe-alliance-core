@@ -3,13 +3,13 @@ LICENSE = "GPLv2+"
 PR = "r3"
 LIC_FILES_CHKSUM = "file://COPYING;md5=0636e73ff0215e8d672dc4c32c317bb3"
 
-SRC_URI = "http://www.ibiblio.org/pub/Linux/system/network/misc/${PN}-${PV}.tar.gz"
+SRC_URI = "http://www.ibiblio.org/pub/Linux/system/network/misc/${BPN}-${PV}.tar.gz"
 
 inherit autotools-brokensep
 
 do_install () {
         install -d ${D}${bindir}
-        install -m 0755 ${WORKDIR}/${PN}-${PV}/wakelan ${D}${bindir}/wakelan
+        install -m 0755 ${WORKDIR}/${BPN}-${PV}/wakelan ${D}${bindir}/wakelan
 }
 
 FILES_${PN} = "${bindir}/wakelan"

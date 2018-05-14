@@ -9,7 +9,7 @@ PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"
 PR = "r2"
 
-SRC_URI = "git://github.com/OpenPLi/${PN}.git;protocol=git"
+SRC_URI = "git://github.com/OpenPLi/${BPN}.git;protocol=git"
 
 S = "${WORKDIR}/git"
 

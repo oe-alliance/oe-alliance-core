@@ -12,7 +12,7 @@ inherit lib_package
 SRC_URI[md5sum] = "66a3d254b25d6bf0e7b05a4af030bc38"
 SRC_URI[sha256sum] = "530cbe8d545fdb76fba44cf9830e063a7217868078e02f7207bf5a3b9f299b2b"
 
-SRC_URI = "http://source.mynonpublic.com/linkdroid/${PN}-${SRCDATE}.zip"
+SRC_URI = "http://source.mynonpublic.com/linkdroid/${BPN}-${SRCDATE}.zip"
 
 S = "${WORKDIR}"
 

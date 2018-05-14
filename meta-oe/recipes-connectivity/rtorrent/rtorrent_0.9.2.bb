@@ -7,7 +7,7 @@ SECTION = "libs/network"
 DEPENDS = "cppunit libtorrent curl ncurses gnutls libgpg-error"
 PR = "r0"
 
-SRC_URI = "http://rtorrent.net/downloads/${PN}-${PV}.tar.gz \
+SRC_URI = "http://rtorrent.net/downloads/${BPN}-${PV}.tar.gz \
     file://autoconf-cross-fix.patch"
 
 inherit autotools pkgconfig

@@ -19,7 +19,7 @@ SRC_URI = "http://sourceforge.mirrorservice.org/m/mi/minidlna/minidlna/${PV}/min
 SRC_URI[md5sum] = "1970e553a1eb8a3e7e302e2ce292cbc4"
 SRC_URI[sha256sum] = "8477ad0416bb2af5cd8da6dde6c07ffe1a413492b7fe40a362bc8587be15ab9b"
 
-S = "${WORKDIR}/${PN}-${PV}"
+S = "${WORKDIR}/${BPN}-${PV}"
 
 inherit autotools-brokensep gettext update-rc.d
 

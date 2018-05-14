@@ -4,11 +4,11 @@ PR = "r1"
 
 LIC_FILES_CHKSUM = "file://autossh.c;beginline=1;endline=24;md5=755a81ffe573faf6c18d1f1061d097c4"
 
-SRC_URI = "http://www.harding.motd.ca/autossh/${PN}-${PV}.tgz"
+SRC_URI = "http://www.harding.motd.ca/autossh/${BPN}-${PV}.tgz"
 
 inherit autotools-brokensep
 
-S = "${WORKDIR}/${PN}-${PV}"
+S = "${WORKDIR}/${BPN}-${PV}"
 
 do_compile() {
     oe_runmake

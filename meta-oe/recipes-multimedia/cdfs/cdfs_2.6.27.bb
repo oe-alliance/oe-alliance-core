@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=8ca43cbc842c2336e835926c2166c28b"
 MACHINE_KERNEL_PR_append = ".6"
 
 SRC_URI = " \
-        http://users.elis.ugent.be/~mronsse/cdfs/download/${P}.tar.bz2 \
+        http://users.elis.ugent.be/~mronsse/cdfs/download/${BP}.tar.bz2 \
         file://0001-Fix-compile-error-with-linux-2.6.32.patch \
         file://0002-Fix-compile-error-with-linux-2.6.37.patch \
         file://fix-strange-errors.patch \

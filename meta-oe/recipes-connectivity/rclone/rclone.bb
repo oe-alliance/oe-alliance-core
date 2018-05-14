@@ -29,7 +29,7 @@ SRCREV="d6eb62581578e5b689ece20fc2901c361d4535ef"
 
 GO_IMPORT = "github.com/ncw/rclone"
 
-SRC_URI = "git://${GO_IMPORT}.git;protocol=https;destsuffix=${PN}-${PV}/src/${GO_IMPORT} \
+SRC_URI = "git://${GO_IMPORT}.git;protocol=https;destsuffix=${BPN}-${PV}/src/${GO_IMPORT} \
            file://rclonefs \
            file://COPYING"
 

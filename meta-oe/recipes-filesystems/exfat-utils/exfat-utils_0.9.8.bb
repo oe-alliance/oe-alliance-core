@@ -7,7 +7,7 @@ inherit scons
 
 require conf/license/license-gplv2.inc
 
-SRC_URI = "http://www.jabawok.net/gentoo/distfiles/${PN}-${PV}.tar.gz file://exfat-utils-sconstruct.patch"
+SRC_URI = "http://www.jabawok.net/gentoo/distfiles/${BPN}-${PV}.tar.gz file://exfat-utils-sconstruct.patch"
 
 PACKAGES =+ "exfat-mkfs exfat-label exfat-fsck exfat-dump"
 

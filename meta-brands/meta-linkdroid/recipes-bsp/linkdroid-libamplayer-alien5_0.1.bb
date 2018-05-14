@@ -15,7 +15,7 @@ inherit lib_package pkgconfig
 SRC_URI[md5sum] = "2400f6d95423b12c2f9996ba4dd2cd1c"
 SRC_URI[sha256sum] = "5768fb5bc4e0ef5a7324f5b2fe0ab378224d29c2013848ff2e4447ce777569f5"
 
-SRC_URI = "http://source.mynonpublic.com/linkdroid/${PN}-${SRCDATE}.zip"
+SRC_URI = "http://source.mynonpublic.com/linkdroid/${BPN}-${SRCDATE}.zip"
 
 S = "${WORKDIR}"
 
