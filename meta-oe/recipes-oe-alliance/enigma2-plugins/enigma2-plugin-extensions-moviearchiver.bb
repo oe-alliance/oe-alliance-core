@@ -18,9 +18,9 @@ S = "${WORKDIR}/git"
 
 PACKAGES =+ "${PN}-src"
 PACKAGES =+ "${PN}-po"
-FILES_${PN} = "/etc /usr/lib"
-FILES_${PN}-src = "/usr/lib/enigma2/python/Plugins/Extensions/MovieArchiver/*.py"
-FILES_${PN}-po = "/usr/lib/enigma2/python/Plugins/Extensions/MovieArchiver/locale/*/*/*.po"
+FILES_${PN} = "/etc ${libdir}"
+FILES_${PN}-src = "${libdir}/enigma2/python/Plugins/Extensions/MovieArchiver/*.py"
+FILES_${PN}-po = "${libdir}/enigma2/python/Plugins/Extensions/MovieArchiver/locale/*/*/*.po"
 
 inherit autotools-brokensep
 
@@ -52,7 +52,7 @@ exit 0
 
 pkg_postrm_${PN}() {
 #!/bin/sh
-rm -rf /usr/lib/enigma2/python/Plugins/Extensions/MovieArchiver
+rm -rf ${libdir}/enigma2/python/Plugins/Extensions/MovieArchiver
 echo "                                                          "
 echo "        ...MovieArchiver successful removed.              "
 echo "             Please restart enigma2 now.		            "
@@ -71,7 +71,7 @@ echo "                                                          "
 
 pkg_preinst_${PN}() {
 #!/bin/sh
-rm -rf /usr/lib/enigma2/python/Plugins/Extensions/MovieArchiver
+rm -rf ${libdir}/enigma2/python/Plugins/Extensions/MovieArchiver
 echo "                                                    "
 echo "	             MovieArchiver                        "
 echo "                    by                              "
