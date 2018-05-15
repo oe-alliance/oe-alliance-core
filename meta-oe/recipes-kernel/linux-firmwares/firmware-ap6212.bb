@@ -33,7 +33,7 @@ do_install() {
     install -d  ${D}/etc/firmware/ap6212
     install -d  ${D}${nonarch_base_libdir}/firmware/ap6212
     install -m 0655 nvram.txt ${D}${nonarch_base_libdir}/firmware/ap6212
-    install -m 0655 ${WORKDIR}/config.txt ${D${nonarch_base_libdir}/firmware/ap6212
+    install -m 0655 ${WORKDIR}/config.txt ${D}${nonarch_base_libdir}/firmware/ap6212
     install -m 0655 fw_bcm43438a0.bin ${D}${nonarch_base_libdir}/firmware/ap6212
     install -m 0655 fw_bcm43438a0_apsta.bin ${D}${nonarch_base_libdir}/firmware/ap6212
     install -m 0655 fw_bcm43438a0_p2p.bin ${D}${nonarch_base_libdir}/firmware/ap6212
