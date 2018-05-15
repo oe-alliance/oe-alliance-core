@@ -6,9 +6,10 @@ DEPENDS = "virtual/${TARGET_PREFIX}gcc"
 
 require conf/license/license-gplv2.inc
 
+KV = "3.14.29"
 SRCDATE = "20180513"
 
-PV = "${KERNEL_VERSION}+${SRCDATE}"
+PV = "${KV}+${SRCDATE}"
 PR = "r1"
 
 SRC_URI = "file://${MACHINE}-nftl_dev-${SRCDATE}.zip"
@@ -23,8 +24,8 @@ do_compile() {
 }
 
 do_install () {
-    install -d ${D}${nonarch_base_libdir}/modules/${KERNEL_VERSION}/kernel/drivers/extra
-    install -m 0644 ${S}/aml_nftl_dev.ko ${D}${nonarch_base_libdir}/modules/${KERNEL_VERSION}/kernel/drivers/extra/
+    install -d ${D}${nonarch_base_libdir}/modules/${KV}/kernel/drivers/extra
+    install -m 0644 ${S}/aml_nftl_dev.ko ${D}${nonarch_base_libdir}/modules/${KV}/kernel/drivers/extra/
     install -d ${D}/${sysconfdir}/modules-load.d
     echo aml_nftl_dev > ${D}/${sysconfdir}/modules-load.d/amlnftldev.conf
 }

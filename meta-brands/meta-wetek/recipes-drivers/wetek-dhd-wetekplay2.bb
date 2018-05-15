@@ -4,6 +4,7 @@ PRIORITY = "required"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://Makefile;md5=10b273937357934b8f2e2d60d645e23b"
 
+KV = "3.14.29"
 PR = "r0"
 
 SRC_URI[brcm.md5sum] = "751bc7b516f83c1541b84a11438ec976"
@@ -26,7 +27,7 @@ do_compile() {
 }
 
 do_install() {
-	install -d ${D}${nonarch_base_libdir}/modules/${KERNEL_VERSION}/bcmdhd
+	install -d ${D}${nonarch_base_libdir}/modules/${KV}/bcmdhd
 	install -m 0644 ${S}/dhd.ko ${D}${nonarch_base_libdir}/modules/${KERNEL_VERSION}/bcmdhd
 
 	install -d ${D}${nonarch_base_libdir}/firmware/brcm

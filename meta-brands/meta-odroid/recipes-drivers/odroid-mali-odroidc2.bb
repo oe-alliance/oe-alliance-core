@@ -5,6 +5,7 @@ LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://Makefile;md5=d0d2f45bce10dd67cca4a749d12e535e"
 
 PR = "r0"
+KV = "3.14.79"
 
 SRC_URI[md5sum] = "b849349480679ca6253cf2660e366ec6"
 
@@ -22,7 +23,7 @@ do_compile() {
 }
 
 do_install() {
-	install -d ${D}${nonarch_base_libdir}/modules/${KERNEL_VERSION}/drivers/gpu/mali
-	install -m 0644 ${S}/mali.ko ${D}${nonarch_base_libdir}/modules/${KERNEL_VERSION}/drivers/gpu/mali
+	install -d ${D}${nonarch_base_libdir}/modules/${KV}/drivers/gpu/mali
+	install -m 0644 ${S}/mali.ko ${D}${nonarch_base_libdir}/modules/${KV}/drivers/gpu/mali
 }
 

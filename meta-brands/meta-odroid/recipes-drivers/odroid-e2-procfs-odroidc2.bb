@@ -21,8 +21,8 @@ do_compile() {
 }
 
 do_install() {
-    install -d ${D}${nonarch_base_libdir}/modules/${KERNEL_VERSION}/extra
-    install -m 0755 ${WORKDIR}/e2-procfs.ko ${D}${nonarch_base_libdir}/modules/${KERNEL_VERSION}/extra/
+    install -d ${D}${nonarch_base_libdir}/modules/${KV}/extra
+    install -m 0755 ${WORKDIR}/e2-procfs.ko ${D}${nonarch_base_libdir}/modules/${KV}/extra/
 }
 
 do_package_qa() {
