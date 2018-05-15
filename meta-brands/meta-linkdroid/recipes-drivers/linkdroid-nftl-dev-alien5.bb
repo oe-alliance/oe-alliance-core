@@ -29,7 +29,7 @@ do_install () {
     echo aml_nftl_dev > ${D}/${sysconfdir}/modules-load.d/amlnftldev.conf
 }
 
-FILES_${PN} += "${sysconfdir}/modules-load.d/amlnftldev.conf ${base_libdir}"
+FILES_${PN} += "${sysconfdir}/modules-load.d/amlnftldev.conf "
 
 do_package_qa() {
 }

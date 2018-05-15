@@ -28,4 +28,3 @@ do_install() {
 do_package_qa() {
 }
 
-FILES_${PN} = "${base_libdir}"

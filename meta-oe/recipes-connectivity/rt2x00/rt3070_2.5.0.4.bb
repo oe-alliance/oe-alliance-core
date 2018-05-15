@@ -30,4 +30,3 @@ do_install() {
 }
 
 FILES_${PN}_append = "${sysconfdir}/Wireless"
-FILES_${PN} += "${base_libdir}"

@@ -29,4 +29,4 @@ SRC_URI[md5sum] = "0b6d799d007de1594d8ae5bd34165341"
 SRC_URI[sha256sum] = "43b3814b318d8baeab5138bbdb586461f94a52151135f55185a4b3b4c0ff2fe3"
 
 FILES_${PN}_append = "${sysconfdir}/Wireless"
-FILES_${PN} += "${base_libdir}"
+

@@ -33,4 +33,3 @@ do_install() {
 }
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
-FILES_${PN} += "${base_libdir}"

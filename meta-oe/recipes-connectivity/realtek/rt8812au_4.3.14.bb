@@ -44,4 +44,4 @@ do_install() {
 SRC_URI[md5sum] = "0f36c65f154971c3b305a1705f9e500f"
 SRC_URI[sha256sum] = "e1ab86b4aca9ee599141d2d23dd5c989e0a6d004c8b87a487b370e80a4aba7e2"
 
-FILES_${PN} += "${base_libdir}"
+

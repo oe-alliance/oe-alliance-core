@@ -24,7 +24,6 @@ do_install() {
 
 PACKAGES =+ "${PN}-firmware"
 FILES_${PN}-firmware = "/etc/Wireless"
-FILES_${PN} += "${base_libdir}"
 
 RDEPENDS_${PN} = "${PN}-firmware"
 

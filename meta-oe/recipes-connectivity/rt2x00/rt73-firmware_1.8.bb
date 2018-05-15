@@ -13,7 +13,6 @@ do_install() {
 }
 
 FILES_${PN} = "${base_libdir}/firmware/"
-FILES_${PN} += "${base_libdir}"
 
 inherit allarch
 
