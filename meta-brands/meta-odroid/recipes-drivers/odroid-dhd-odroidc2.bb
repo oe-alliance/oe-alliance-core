@@ -26,18 +26,18 @@ do_compile() {
 }
 
 do_install() {
-	install -d ${D}${base_libdir}/modules/${KERNEL_VERSION}/bcmdhd
-	install -m 0644 ${S}/dhd.ko ${D}${base_libdir}/modules/${KERNEL_VERSION}/bcmdhd
+	install -d ${D}${nonarch_base_libdir}/modules/${KERNEL_VERSION}/bcmdhd
+	install -m 0644 ${S}/dhd.ko ${D}${nonarch_base_libdir}/modules/${KERNEL_VERSION}/bcmdhd
 
-	install -d ${D}${base_libdir}/firmware/brcm
-	install -m 0644 ${WORKDIR}/config.txt ${D}${base_libdir}/firmware/brcm
-	install -m 0644 ${WORKDIR}/wlan-firmware-aml-b74369c/bcm_ampak/config/AP6330/Wi-Fi/fw_bcm40183b2*.bin ${D}${base_libdir}/firmware/brcm
-	install -m 0644 ${WORKDIR}/wlan-firmware-aml-b74369c/bcm_ampak/config/AP6330/Wi-Fi/nvram_ap6330.txt ${D}${base_libdir}/firmware/brcm
-	install -m 0644 ${WORKDIR}/wlan-firmware-aml-b74369c/bcm_ampak/config/AP6330/BT/bcm40183b2.hcd ${D}${base_libdir}/firmware/brcm
-	install -m 0644 ${WORKDIR}/wlan-firmware-aml-b74369c/bcm_ampak/config/6335/fw_bcm4339a0_*.bin ${D}${base_libdir}/firmware/brcm
-	install -m 0644 ${WORKDIR}/wlan-firmware-aml-b74369c/bcm_ampak/config/6335/nvram.txt ${D}${base_libdir}/firmware/brcm/nvram_ap6335.txt
-	install -m 0644 ${WORKDIR}/wlan-firmware-aml-b74369c/bcm_ampak/config/6335/BT/bcm4335c0.hcd ${D}${base_libdir}/firmware/brcm
+	install -d ${D}${nonarch_base_libdir}/firmware/brcm
+	install -m 0644 ${WORKDIR}/config.txt ${D}${nonarch_base_libdir}/firmware/brcm
+	install -m 0644 ${WORKDIR}/wlan-firmware-aml-b74369c/bcm_ampak/config/AP6330/Wi-Fi/fw_bcm40183b2*.bin ${D}${nonarch_base_libdir}/firmware/brcm
+	install -m 0644 ${WORKDIR}/wlan-firmware-aml-b74369c/bcm_ampak/config/AP6330/Wi-Fi/nvram_ap6330.txt ${D}${nonarch_base_libdir}/firmware/brcm
+	install -m 0644 ${WORKDIR}/wlan-firmware-aml-b74369c/bcm_ampak/config/AP6330/BT/bcm40183b2.hcd ${D}${nonarch_base_libdir}/firmware/brcm
+	install -m 0644 ${WORKDIR}/wlan-firmware-aml-b74369c/bcm_ampak/config/6335/fw_bcm4339a0_*.bin ${D}${nonarch_base_libdir}/firmware/brcm
+	install -m 0644 ${WORKDIR}/wlan-firmware-aml-b74369c/bcm_ampak/config/6335/nvram.txt ${D}${nonarch_base_libdir}/firmware/brcm/nvram_ap6335.txt
+	install -m 0644 ${WORKDIR}/wlan-firmware-aml-b74369c/bcm_ampak/config/6335/BT/bcm4335c0.hcd ${D}${nonarch_base_libdir}/firmware/brcm
 }
 
-FILES_${PN} += "${base_libdir}/firmware/brcm/*"
+FILES_${PN} += "${nonarch_base_libdir}/firmware/brcm/*"
 

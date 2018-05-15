@@ -21,9 +21,9 @@ do_compile() {
 }
 
 do_install() {
-    install -d ${D}${base_libdir}/modules/${KERNEL_VERSION}/kernel/drivers/a5/
-    install -m 0755 ${WORKDIR}/ampanel.ko ${D}${base_libdir}/modules/${KERNEL_VERSION}/kernel/drivers/a5/
-    install -m 0755 ${WORKDIR}/se2io_se.ko ${D}${base_libdir}/modules/${KERNEL_VERSION}/kernel/drivers/a5/
+    install -d ${D}${nonarch_base_libdir}/modules/${KERNEL_VERSION}/kernel/drivers/a5/
+    install -m 0755 ${WORKDIR}/ampanel.ko ${D}${nonarch_base_libdir}/modules/${KERNEL_VERSION}/kernel/drivers/a5/
+    install -m 0755 ${WORKDIR}/se2io_se.ko ${D}${nonarch_base_libdir}/modules/${KERNEL_VERSION}/kernel/drivers/a5/
 }
 
 do_package_qa() {

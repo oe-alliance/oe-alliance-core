@@ -19,10 +19,10 @@ S = "${WORKDIR}"
 inherit module-base
 
 do_install() {
-    install -d ${D}/lib/modules/${KERNEL_VERSION}/kernel/drivers/media/usb/edision
-    install -m 0644 ${S}/dvb-usb-edicombo.ko ${D}/lib/modules/${KERNEL_VERSION}/kernel/drivers/media/usb/edision/dvb-usb-edicombo.ko
-    install -d ${D}/lib/firmware/
-    install -m 0644 ${S}/edicombo_usb_dvb.fw ${D}/lib/firmware/edicombo_usb_dvb.fw
+    install -d ${D}${nonarch_base_libdir}/modules/${KERNEL_VERSION}/kernel/drivers/media/usb/edision
+    install -m 0644 ${S}/dvb-usb-edicombo.ko ${D}${nonarch_base_libdir}/modules/${KERNEL_VERSION}/kernel/drivers/media/usb/edision/dvb-usb-edicombo.ko
+    install -d ${D}${nonarch_base_libdir}/firmware/
+    install -m 0644 ${S}/edicombo_usb_dvb.fw ${D}${nonarch_base_libdir}/firmware/edicombo_usb_dvb.fw
 }
 
 pkg_postinst_${PN} () {

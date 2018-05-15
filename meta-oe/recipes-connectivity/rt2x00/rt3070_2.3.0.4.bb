@@ -27,8 +27,8 @@ do_unpack() {
 }
 
 do_install() {
-    install -d ${D}${base_libdir}/modules/${KERNEL_VERSION}/kernel/drivers/net/wireless
-    install -m 0644 ${S}/os/linux/rt3070sta.ko ${D}${base_libdir}/modules/${KERNEL_VERSION}/kernel/drivers/net/wireless
+    install -d ${D}${nonarch_base_libdir}/modules/${KERNEL_VERSION}/kernel/drivers/net/wireless
+    install -m 0644 ${S}/os/linux/rt3070sta.ko ${D}${nonarch_base_libdir}/modules/${KERNEL_VERSION}/kernel/drivers/net/wireless
     install -d ${D}/etc/Wireless/RT2870STA
     install -m 0644 ${S}/RT2870STA.dat ${D}/etc/Wireless/RT2870STA
     install -d ${D}${base_libdir}/firmware

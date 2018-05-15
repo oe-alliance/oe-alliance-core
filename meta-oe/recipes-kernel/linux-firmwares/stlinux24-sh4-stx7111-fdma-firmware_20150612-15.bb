@@ -9,6 +9,6 @@ SRC_URI[sha256sum] = "d94521bfceeb132a1e2eed898c457b678c9ef6c08f0922b2bdf67861ad
 PR = "${INC_PR}.0"
 
 do_install() {
-	install -d ${D}${base_libdir}/firmware
-	install -m 0644 ${S}/lib/firmware/fdma_STx7111_* ${D}${base_libdir}/firmware
+	install -d ${D}${nonarch_base_libdir}/firmware
+	install -m 0644 ${S}/lib/firmware/fdma_STx7111_* ${D}${nonarch_base_libdir}/firmware
 }

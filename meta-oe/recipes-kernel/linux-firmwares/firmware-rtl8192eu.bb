@@ -15,7 +15,7 @@ inherit allarch
 SUMMARY = "Firmware for rtl8192eu"
 
 do_install() {
-    install -d ${D}${base_libdir}/firmware
-    install -d ${D}${base_libdir}/firmware/rtlwifi
-    install -m 0644 rtl8192eu_nic.bin ${D}${base_libdir}/firmware/rtlwifi
+    install -d ${D}${nonarch_base_libdir}/firmware
+    install -d ${D}${nonarch_base_libdir}/firmware/rtlwifi
+    install -m 0644 rtl8192eu_nic.bin ${D}${nonarch_base_libdir}/firmware/rtlwifi
 }

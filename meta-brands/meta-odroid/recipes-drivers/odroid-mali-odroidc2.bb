@@ -22,7 +22,7 @@ do_compile() {
 }
 
 do_install() {
-	install -d ${D}${base_libdir}/modules/${KERNEL_VERSION}/drivers/gpu/mali
-	install -m 0644 ${S}/mali.ko ${D}${base_libdir}/modules/${KERNEL_VERSION}/drivers/gpu/mali
+	install -d ${D}${nonarch_base_libdir}/modules/${KERNEL_VERSION}/drivers/gpu/mali
+	install -m 0644 ${S}/mali.ko ${D}${nonarch_base_libdir}/modules/${KERNEL_VERSION}/drivers/gpu/mali
 }
 

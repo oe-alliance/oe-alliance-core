@@ -23,8 +23,8 @@ do_compile() {
 }
 
 do_install () {
-    install -d ${D}${base_libdir}/modules/${KERNEL_VERSION}/kernel/drivers/extra
-    install -m 0644 ${S}/aml_nftl_dev.ko ${D}${base_libdir}/modules/${KERNEL_VERSION}/kernel/drivers/extra/
+    install -d ${D}${nonarch_base_libdir}/modules/${KERNEL_VERSION}/kernel/drivers/extra
+    install -m 0644 ${S}/aml_nftl_dev.ko ${D}${nonarch_base_libdir}/modules/${KERNEL_VERSION}/kernel/drivers/extra/
     install -d ${D}/${sysconfdir}/modules-load.d
     echo aml_nftl_dev > ${D}/${sysconfdir}/modules-load.d/amlnftldev.conf
 }

@@ -8,11 +8,11 @@ SRC_URI = "http://www.ralinktech.com.tw/data/RT71W_Firmware_V${PV}.zip"
 S = "${WORKDIR}/RT71W_Firmware_V${PV}"
 
 do_install() {
-    install -d ${D}/${base_libdir}/firmware
-    install -m 0644 rt73.bin ${D}/${base_libdir}/firmware/
+    install -d ${D}${nonarch_base_libdir}/firmware
+    install -m 0644 rt73.bin ${D}${nonarch_base_libdir}/firmware/
 }
 
-FILES_${PN} = "${base_libdir}/firmware/"
+FILES_${PN} = "${nonarch_base_libdir}/firmware/"
 
 inherit allarch
 

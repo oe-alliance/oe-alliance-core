@@ -7,6 +7,6 @@ SRC_URI = "git://github.com/BjornLee/linux-firmware.git;protocol=git"
 S = "${WORKDIR}/git"
 
 PACKAGES = "${PN}"
-FILES_${PN} += "${base_libdir}/firmware"
+FILES_${PN} += "${nonarch_base_libdir}/firmware"
 
 inherit allarch

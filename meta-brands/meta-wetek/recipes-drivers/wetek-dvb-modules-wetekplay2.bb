@@ -22,10 +22,10 @@ do_compile() {
 }
 
 do_install() {
-    install -d ${D}${base_libdir}/modules/${KV}/extra
+    install -d ${D}${nonarch_base_libdir}/modules/${KV}/extra
     install -d ${D}/${sysconfdir}/modules-load.d
     echo "wetekdvb" > ${D}/${sysconfdir}/modules-load.d/_${MACHINE}.conf
-    install -m 0755 ${WORKDIR}/wetekdvb.ko ${D}${base_libdir}/modules/${KV}/extra/
+    install -m 0755 ${WORKDIR}/wetekdvb.ko ${D}${nonarch_base_libdir}/modules/${KV}/extra/
 }
 
 
