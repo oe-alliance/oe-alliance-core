@@ -45,7 +45,7 @@ do_install() {
 }
 
 pkg_postrm_${PN}() {
-rm -fr /usr/lib/enigma2/python/Plugins/SystemPlugins/CrossEPG > /dev/null 2>&1
+rm -fr ${libdir}/enigma2/python/Plugins/SystemPlugins/CrossEPG > /dev/null 2>&1
 }
 
 # Just a quick hack to "compile" the python parts.
