@@ -81,7 +81,6 @@ RDEPENDS_${PN} = " \
     iperf3 \
     joe \
     lighttpd \
-    livestreamer \
     livestreamersrv \
     streamlink \
     llmnr-query \
