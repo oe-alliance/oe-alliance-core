@@ -202,6 +202,7 @@ FILES_${PN}-ctdb-tests = "${bindir}/ctdb_run_tests \
                           ${libdir}/ctdb-tests \
                           ${datadir}/ctdb-tests \
                           /run/ctdb \
+                          /usr/share/ctdb/tests \
                          "
 
 FILES_${BPN}-common = "${sysconfdir}/default \
