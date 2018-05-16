@@ -3,7 +3,6 @@ MAINTAINER = "nettraxx"
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "proprietary"
-inherit allarch
 
 require conf/license/license-gplv2.inc
 
@@ -18,10 +17,11 @@ SRC_URI="git://github.com/pixbox-hdf/MediaPortalSkins.git"
 
 S = "${WORKDIR}/git/MetrixHD"
 
-FILES_${PN} = "/usr/*"
+FILES_${PN} = "${libdir}"
 
 do_install() {
-    cp -rp ${S}/usr ${D}/
+    install -d ${D}${libdir}
+    cp -rp ${S}/usr/lib/* ${D}${libdir}/
 }
 
 do_populate_sysroot[noexec] = "1"

@@ -3,7 +3,7 @@ MAINTAINER = "stein17"
 
 require conf/license/license-gplv2.inc
 
-inherit gitpkgv allarch
+inherit gitpkgv 
 
 SRCREV = "${AUTOREV}"
 PV = "1.5+git${SRCPV}"
@@ -25,8 +25,10 @@ python -O -m compileall ${S}
 }
 
 do_install() {
-    install -d ${D}/usr/share/enigma2
-    cp -rp ${S}/usr ${D}/
+    install -d ${D}${libdir}
+    install -d ${D}/usr/share
+    cp -rp ${S}/usr/lib/* ${D}${libdir}/
+    cp -rp ${S}/usr/share/* ${D}/usr/share/
     chmod -R a+rX ${D}/usr/share/enigma2/
     cp -rp ${S}/tmp ${D}/
 }
@@ -63,7 +65,7 @@ exit 0
 
 pkg_preinst_${PN} () {
 #!/bin/sh
-python /usr/lib/enigma2/python/BoxBrandingTest.pyo | sed 's/<$//' | sed 's/ /_/g' > /tmp/boxbranding.cfg
+python ${libdir}/enigma2/python/BoxBrandingTest.pyo | sed 's/<$//' | sed 's/ /_/g' > /tmp/boxbranding.cfg
 echo "        Skin Blue-Line-OE-4ATV will be now installed...            "
 exit 0
 }

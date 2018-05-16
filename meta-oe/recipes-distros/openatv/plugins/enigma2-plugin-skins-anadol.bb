@@ -3,7 +3,7 @@ MAINTAINER = "stein17"
 
 require conf/license/license-gplv2.inc
 
-inherit gitpkgv allarch
+inherit gitpkgv
 
 SRCREV = "${AUTOREV}"
 PV = "1.0+git${SRCPV}"
@@ -25,8 +25,10 @@ python -O -m compileall ${S}
 }
 
 do_install() {
-    install -d ${D}/usr/share/enigma2
-    cp -rp ${S}/usr ${D}/
+    install -d ${D}${libdir}
+    install -d ${D}/usr/share
+    cp -rp ${S}/usr/lib/* ${D}${libdir}/
+    cp -rp ${S}/usr/share/* ${D}/usr/share/
     chmod -R a+rX ${D}/usr/share/enigma2/
 }
 
@@ -41,8 +43,8 @@ exit 0
 pkg_postrm_${PN} () {
 #!/bin/sh
 rm -rf /usr/share/enigma2/Anadol
-rm -rf /usr/lib/enigma2/python/Components/Converter/AND*
-rm -rf /usr/lib/enigma2/python/Components/Renderer/AND*
+rm -rf ${libdir}/enigma2/python/Components/Converter/AND*
+rm -rf ${libdir}/enigma2/python/Components/Renderer/AND*
 echo "                                                          "
 echo "              ...Skin successful removed.                 "
 echo "                                                          "
@@ -52,8 +54,8 @@ exit 0
 pkg_preinst_${PN} () {
 #!/bin/sh                                                       
 rm -rf /usr/share/enigma2/Anadol
-rm -rf /usr/lib/enigma2/python/Components/Converter/AND*
-rm -rf /usr/lib/enigma2/python/Components/Renderer/AND*
+rm -rf ${libdir}/enigma2/python/Components/Converter/AND*
+rm -rf ${libdir}/enigma2/python/Components/Renderer/AND*
 echo "                                                                           "
 echo "  Anadol Skin Full HD by stein17 is now being installed...                 "
 echo "                                                                           "

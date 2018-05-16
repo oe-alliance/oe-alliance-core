@@ -17,23 +17,25 @@ SRC_URI="git://github.com/openatv/enigma2-plugin-extensions-dbackup.git"
 
 S = "${WORKDIR}/git"
 
-FILES_${PN} = "/usr/*"
+FILES_${PN} = "${libdir}"
 
 do_install_mipsel() {
-    cp -rp ${S}/usr ${D}/
-    cp -rp ${S}/mipsel/* ${D}/usr/lib/enigma2/python/Plugins/Extensions/dBackup/
-    chmod -R 777 ${D}/usr/lib/enigma2/python/Plugins/Extensions/dBackup
+    install -d ${D}${libdir}
+    cp -rp ${S}/usr/lib/* ${D}${libdir}/
+    cp -rp ${S}/mipsel/* ${D}${libdir}/enigma2/python/Plugins/Extensions/dBackup/
+    chmod -R 777 ${D}${libdir}/enigma2/python/Plugins/Extensions/dBackup
 }
 
 do_install_arm() {
+    install -d ${D}${libdir}
     cp -rp ${S}/usr ${D}/
-    cp -rp ${S}/arm/* ${D}/usr/lib/enigma2/python/Plugins/Extensions/dBackup/
-    chmod -R 777 ${D}/usr/lib/enigma2/python/Plugins/Extensions/dBackup
+    cp -rp ${S}/arm/* ${D}${libdir}/enigma2/python/Plugins/Extensions/dBackup/
+    chmod -R 777 ${D}${libdir}/enigma2/python/Plugins/Extensions/dBackup
 }
 
 pkg_postrm_${PN}() {
 #!/bin/sh
-rm /usr/lib/enigma2/python/Plugins/Extensions/dBackup/*.pyo > /dev/null 2>&1
+rm ${libdir}/enigma2/python/Plugins/Extensions/dBackup/*.pyo > /dev/null 2>&1
 exit 0
 }
 
