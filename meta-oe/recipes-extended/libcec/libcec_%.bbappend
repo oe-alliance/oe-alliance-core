@@ -7,3 +7,5 @@ SRC_URI = "git://github.com/Pulse-Eight/libcec.git \
            file://0001-multilib.patch"
 
 EXTRA_OECMAKE += " -DBASE_LIB=${libdir}"
+
+RDEPENDS_${PN} += "python"
