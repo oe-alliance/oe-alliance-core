@@ -19,10 +19,11 @@ SRC_URI="git://github.com/openatv/enigma2-plugin-extensions-dflash.git"
 
 S = "${WORKDIR}/git"
 
-FILES_${PN} = "/usr/*"
+FILES_${PN} = "${libdir} /usr/sbin"
 
 do_install() {
-    cp -rp ${S}/usr ${D}/
+    install -d ${D}${libdir}
+    cp -rp ${S}/usr/lib/* ${D}${libdir}/
     install -d ${D}/usr/sbin
     install -m 0755 ${S}/bin/nand_check ${D}/usr/sbin/nand_check
     install -m 0755 ${S}/bin/nfiwrite ${D}/usr/sbin/nfiwrite
@@ -30,9 +31,9 @@ do_install() {
 
 pkg_postrm_${PN}() {
 #!/bin/sh
-rm /usr/lib/enigma2/python/Plugins/Extensions/WebInterface/web-data/img/dflash.png > /dev/null 2>&1
-rm /usr/lib/enigma2/python/Plugins/Extensions/WebInterface/web-data/img/ring.png > /dev/null 2>&1
-rm -r /usr/lib/enigma2/python/Plugins/Extensions/dFlash > /dev/null 2>&1
+rm ${libdir}/enigma2/python/Plugins/Extensions/WebInterface/web-data/img/dflash.png > /dev/null 2>&1
+rm ${libdir}/enigma2/python/Plugins/Extensions/WebInterface/web-data/img/ring.png > /dev/null 2>&1
+rm -r ${libdir}/enigma2/python/Plugins/Extensions/dFlash > /dev/null 2>&1
 exit 0
 }
 

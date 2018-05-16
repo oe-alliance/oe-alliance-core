@@ -1,18 +1,7 @@
-From 43a62764f8658ff89c866914b667b812967fc4a4 Mon Sep 17 00:00:00 2001
-From: captain <openatv@gmail.com>
-Date: Sun, 27 Nov 2016 19:16:33 +0100
-Subject: [PATCH] have 64 bit action long int update
-
----
- lib/actions/action.cpp | 14 +++++++-------
- lib/actions/action.h   |  6 +++---
- 2 files changed, 10 insertions(+), 10 deletions(-)
-
-diff --git a/lib/actions/action.cpp b/lib/actions/action.cpp
-index e0aeacb..8229a15 100644
---- a/lib/actions/action.cpp
-+++ b/lib/actions/action.cpp
-@@ -42,17 +42,17 @@ RESULT eActionMap::getInstance(ePtr<eActionMap> &ptr)
+diff -Naur a/lib/actions/action.cpp b/lib/actions/action.cpp
+--- a/lib/actions/action.cpp	2017-09-25 06:01:57.000000000 +0200
++++ b/lib/actions/action.cpp	2017-09-25 06:32:32.000000000 +0200
+@@ -42,7 +42,7 @@
  	return 0;
  }
  
@@ -21,6 +10,7 @@ index e0aeacb..8229a15 100644
  {
  	eActionBinding bnd;
  
+@@ -50,10 +50,10 @@
  	bnd.m_context = context;
  	bnd.m_widget = widget;
  	bnd.m_id = id;
@@ -33,7 +23,7 @@ index e0aeacb..8229a15 100644
  {
  	eActionBinding bnd;
  
-@@ -60,12 +60,12 @@ void eActionMap::bindAction(const std::string &context, int priority, ePyObject
+@@ -62,13 +62,13 @@
  	bnd.m_widget = 0;
  	Py_INCREF(function);
  	bnd.m_fnc = function;
@@ -43,34 +33,34 @@ index e0aeacb..8229a15 100644
  
  void eActionMap::unbindAction(eWidget *widget, int id)
  {
+ 	//eDebug("[eActionMap] unbind widget id=%d", id);
 -	for (std::multimap<int, eActionBinding>::iterator i(m_bindings.begin()); i != m_bindings.end(); ++i)
 +	for (std::multimap<long long int, eActionBinding>::iterator i(m_bindings.begin()); i != m_bindings.end(); ++i)
- 		if ((i->second.m_widget == widget) && (i->second.m_id == id))
+ 		if (i->second.m_widget == widget && i->second.m_id == id)
  		{
  			m_bindings.erase(i);
-@@ -75,7 +75,7 @@ void eActionMap::unbindAction(eWidget *widget, int id)
- 
+@@ -79,7 +79,7 @@
  void eActionMap::unbindAction(const std::string &context, ePyObject function)
  {
+ 	//eDebug("[eActionMap] unbind function from %s", context.c_str());
 -	for (std::multimap<int, eActionBinding>::iterator i(m_bindings.begin()); i != m_bindings.end(); ++i)
 +	for (std::multimap<long long int, eActionBinding>::iterator i(m_bindings.begin()); i != m_bindings.end(); ++i)
  	{
  		if (i->second.m_fnc && (PyObject_Compare(i->second.m_fnc, function) == 0))
  		{
-@@ -162,7 +162,7 @@ void eActionMap::keyPressed(const std::string &device, int key, int flags)
- 	std::list<call_entry> call_list;
+@@ -249,7 +249,7 @@
  
- 		/* iterate active contexts. */
+ 	std::vector<call_entry> call_list;
+ 	// iterate active contexts
 -	for (std::multimap<int,eActionBinding>::iterator c(m_bindings.begin());
 +	for (std::multimap<long long int,eActionBinding>::iterator c(m_bindings.begin());
  		c != m_bindings.end(); ++c)
  	{
  		if (flags == eRCKey::flagMake)
-diff --git a/lib/actions/action.h b/lib/actions/action.h
-index e1fdd61..a47e1b3 100644
---- a/lib/actions/action.h
-+++ b/lib/actions/action.h
-@@ -21,11 +21,11 @@ public:
+diff -Naur a/action.h b/action.h
+--- a/lib/actions/action.h	2017-05-08 06:05:56.000000000 +0200
++++ b/lib/actions/action.h	2017-09-25 06:34:31.000000000 +0200
+@@ -22,11 +22,11 @@
  #ifndef SWIG
  	eActionMap();
  	~eActionMap();
@@ -84,15 +74,12 @@ index e1fdd61..a47e1b3 100644
  	void unbindAction(const std::string &context, SWIG_PYOBJECT(ePyObject) function);
  
  	void bindKey(const std::string &domain, const std::string &device, int key, int flags, const std::string &context, const std::string &action);
-@@ -54,7 +54,7 @@ private:
+@@ -58,7 +58,7 @@
  		int m_prev_seen_make_key;
  	};
  
 -	std::multimap<int, eActionBinding> m_bindings;
 +	std::multimap<long long int, eActionBinding> m_bindings;
  
- 	friend struct compare_string_keybind_native;
- 	struct eNativeKeyBinding
--- 
-2.10.0.windows.1
-
+ 	struct eTranslationBinding
+ 	{

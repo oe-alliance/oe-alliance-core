@@ -16,8 +16,8 @@ do_compile() {
 }
 
 do_install() {
-    install -d  ${D}/lib/firmware/
-    cp -a * ${D}/lib/firmware/
+    install -d  ${D}${nonarch_base_libdir}/firmware/
+    cp -a * ${D}${nonarch_base_libdir}/firmware/
 }
 
-FILES_${PN} += "/lib/firmware/*"
+FILES_${PN} += "${nonarch_base_libdir}/firmware/*"

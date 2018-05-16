@@ -3,7 +3,6 @@ MAINTAINER = "stein17"
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "proprietary"
-inherit allarch
 
 require conf/license/license-gplv2.inc
 
@@ -22,24 +21,24 @@ FILES_${PN} = "/"
 
 
 do_install() {
-    install -d ${D}/usr/lib/enigma2
-    cp -rp ${S}/usr ${D}/
-    chmod -R a+rX ${D}/usr/lib/enigma2/
+    install -d ${D}${libdir}
+    cp -rp ${S}/usr/lib/* ${D}${libdir}/
+    chmod -R a+rX ${D}${libdir}/enigma2/
     cp -rp ${S}/tmp ${D}/
 }
 
 pkg_postinst_${PN} () {
 #!/bin/sh
 
-mv /tmp/stein/SkyAddedEdit.py /usr/lib/enigma2/python/Plugins/Extensions/skyrecorder/SkyAddedEdit.py
-mv /tmp/stein/SkyChannelEditor.py /usr/lib/enigma2/python/Plugins/Extensions/skyrecorder/SkyChannelEditor.py
-mv /tmp/stein/SkyChannelSelect.py /usr/lib/enigma2/python/Plugins/Extensions/skyrecorder/SkyChannelSelect.py
-mv /tmp/stein/SkyGenreSelect.py /usr/lib/enigma2/python/Plugins/Extensions/skyrecorder/SkyGenreSelect.py
-mv /tmp/stein/SkyRecorderArchiv.py /usr/lib/enigma2/python/Plugins/Extensions/skyrecorder/SkyRecorderArchiv.py
-mv /tmp/stein/SkyRecorderMainScreen.py /usr/lib/enigma2/python/Plugins/Extensions/skyrecorder/SkyRecorderMainScreen.py
-mv /tmp/stein/SkyRecorderSettings.py /usr/lib/enigma2/python/Plugins/Extensions/skyrecorder/SkyRecorderSettings.py
-mv /tmp/stein/SkySkipWordsSelect.py /usr/lib/enigma2/python/Plugins/Extensions/skyrecorder/SkySkipWordsSelect.py
-mv /tmp/stein/SkyWhitelist.py /usr/lib/enigma2/python/Plugins/Extensions/skyrecorder/SkyWhitelist.py
+mv /tmp/stein/SkyAddedEdit.py ${libdir}/enigma2/python/Plugins/Extensions/skyrecorder/SkyAddedEdit.py
+mv /tmp/stein/SkyChannelEditor.py ${libdir}/enigma2/python/Plugins/Extensions/skyrecorder/SkyChannelEditor.py
+mv /tmp/stein/SkyChannelSelect.py ${libdir}/enigma2/python/Plugins/Extensions/skyrecorder/SkyChannelSelect.py
+mv /tmp/stein/SkyGenreSelect.py ${libdir}/enigma2/python/Plugins/Extensions/skyrecorder/SkyGenreSelect.py
+mv /tmp/stein/SkyRecorderArchiv.py ${libdir}/enigma2/python/Plugins/Extensions/skyrecorder/SkyRecorderArchiv.py
+mv /tmp/stein/SkyRecorderMainScreen.py ${libdir}/enigma2/python/Plugins/Extensions/skyrecorder/SkyRecorderMainScreen.py
+mv /tmp/stein/SkyRecorderSettings.py ${libdir}/enigma2/python/Plugins/Extensions/skyrecorder/SkyRecorderSettings.py
+mv /tmp/stein/SkySkipWordsSelect.py ${libdir}/enigma2/python/Plugins/Extensions/skyrecorder/SkySkipWordsSelect.py
+mv /tmp/stein/SkyWhitelist.py ${libdir}/enigma2/python/Plugins/Extensions/skyrecorder/SkyWhitelist.py
 
 echo "                                                                           "
 echo "  The Skyrecorder-FHD-Skins-by-stein17 is now being installed...           "
@@ -51,15 +50,15 @@ exit 0
 pkg_postrm_${PN} () {
 #!/bin/sh
 
-mv /usr/lib/enigma2/python/Plugins/Extensions/skyrecorder/SkyAddedEdit.py_orig /usr/lib/enigma2/python/Plugins/Extensions/skyrecorder/SkyAddedEdit.py
-mv /usr/lib/enigma2/python/Plugins/Extensions/skyrecorder/SkyChannelEditor.py_orig /usr/lib/enigma2/python/Plugins/Extensions/skyrecorder/SkyChannelEditor.py
-mv /usr/lib/enigma2/python/Plugins/Extensions/skyrecorder/SkyChannelSelect.py_orig /usr/lib/enigma2/python/Plugins/Extensions/skyrecorder/SkyChannelSelect.py
-mv /usr/lib/enigma2/python/Plugins/Extensions/skyrecorder/SkyGenreSelect.py_orig /usr/lib/enigma2/python/Plugins/Extensions/skyrecorder/SkyGenreSelect.py
-mv /usr/lib/enigma2/python/Plugins/Extensions/skyrecorder/SkyRecorderArchiv.py_orig /usr/lib/enigma2/python/Plugins/Extensions/skyrecorder/SkyRecorderArchiv.py
-mv /usr/lib/enigma2/python/Plugins/Extensions/skyrecorder/SkyRecorderMainScreen.py_orig /usr/lib/enigma2/python/Plugins/Extensions/skyrecorder/SkyRecorderMainScreen.py
-mv /usr/lib/enigma2/python/Plugins/Extensions/skyrecorder/SkyRecorderSettings.py_orig /usr/lib/enigma2/python/Plugins/Extensions/skyrecorder/SkyRecorderSettings.py
-mv /usr/lib/enigma2/python/Plugins/Extensions/skyrecorder/SkySkipWordsSelect.py_orig /usr/lib/enigma2/python/Plugins/Extensions/skyrecorder/SkySkipWordsSelect.py
-mv /usr/lib/enigma2/python/Plugins/Extensions/skyrecorder/SkyWhitelist.py_orig /usr/lib/enigma2/python/Plugins/Extensions/skyrecorder/SkyWhitelist.py
+mv ${libdir}/enigma2/python/Plugins/Extensions/skyrecorder/SkyAddedEdit.py_orig ${libdir}/enigma2/python/Plugins/Extensions/skyrecorder/SkyAddedEdit.py
+mv ${libdir}/enigma2/python/Plugins/Extensions/skyrecorder/SkyChannelEditor.py_orig ${libdir}/enigma2/python/Plugins/Extensions/skyrecorder/SkyChannelEditor.py
+mv ${libdir}/enigma2/python/Plugins/Extensions/skyrecorder/SkyChannelSelect.py_orig ${libdir}/enigma2/python/Plugins/Extensions/skyrecorder/SkyChannelSelect.py
+mv ${libdir}/enigma2/python/Plugins/Extensions/skyrecorder/SkyGenreSelect.py_orig ${libdir}enigma2/python/Plugins/Extensions/skyrecorder/SkyGenreSelect.py
+mv ${libdir}/enigma2/python/Plugins/Extensions/skyrecorder/SkyRecorderArchiv.py_orig ${libdir}/enigma2/python/Plugins/Extensions/skyrecorder/SkyRecorderArchiv.py
+mv ${libdir}/enigma2/python/Plugins/Extensions/skyrecorder/SkyRecorderMainScreen.py_orig ${libdir}/enigma2/python/Plugins/Extensions/skyrecorder/SkyRecorderMainScreen.py
+mv ${libdir}/enigma2/python/Plugins/Extensions/skyrecorder/SkyRecorderSettings.py_orig ${libdir}/enigma2/python/Plugins/Extensions/skyrecorder/SkyRecorderSettings.py
+mv ${libdir}/enigma2/python/Plugins/Extensions/skyrecorder/SkySkipWordsSelect.py_orig ${libdir}/enigma2/python/Plugins/Extensions/skyrecorder/SkySkipWordsSelect.py
+mv ${libdir}/enigma2/python/Plugins/Extensions/skyrecorder/SkyWhitelist.py_orig ${libdir}/enigma2/python/Plugins/Extensions/skyrecorder/SkyWhitelist.py
 
 echo "syncing disk"
 sync
@@ -83,19 +82,19 @@ exit 0
 
 pkg_preinst_${PN} () {
 #!/bin/sh
-rm -rf /usr/lib/enigma2/python/Plugins/Extensions/skyrecorder/skins/ax_blue_fhd
-rm -rf /usr/lib/enigma2/python/Plugins/Extensions/skyrecorder/skins/blue_line_fhd
-rm -rf /usr/lib/enigma2/python/Plugins/Extensions/skyrecorder/skins/universal_fhd
+rm -rf ${libdir}/enigma2/python/Plugins/Extensions/skyrecorder/skins/ax_blue_fhd
+rm -rf ${libdir}/enigma2/python/Plugins/Extensions/skyrecorder/skins/blue_line_fhd
+rm -rf ${libdir}/enigma2/python/Plugins/Extensions/skyrecorder/skins/universal_fhd
 
-mv /usr/lib/enigma2/python/Plugins/Extensions/skyrecorder/SkyAddedEdit.py /usr/lib/enigma2/python/Plugins/Extensions/skyrecorder/SkyAddedEdit.py_orig
-mv /usr/lib/enigma2/python/Plugins/Extensions/skyrecorder/SkyChannelEditor.py /usr/lib/enigma2/python/Plugins/Extensions/skyrecorder/SkyChannelEditor.py_orig
-mv /usr/lib/enigma2/python/Plugins/Extensions/skyrecorder/SkyChannelSelect.py /usr/lib/enigma2/python/Plugins/Extensions/skyrecorder/SkyChannelSelect.py_orig
-mv /usr/lib/enigma2/python/Plugins/Extensions/skyrecorder/SkyGenreSelect.py /usr/lib/enigma2/python/Plugins/Extensions/skyrecorder/SkyGenreSelect.py_orig
-mv /usr/lib/enigma2/python/Plugins/Extensions/skyrecorder/SkyRecorderArchiv.py /usr/lib/enigma2/python/Plugins/Extensions/skyrecorder/SkyRecorderArchiv.py_orig
-mv /usr/lib/enigma2/python/Plugins/Extensions/skyrecorder/SkyRecorderMainScreen.py /usr/lib/enigma2/python/Plugins/Extensions/skyrecorder/SkyRecorderMainScreen.py_orig
-mv /usr/lib/enigma2/python/Plugins/Extensions/skyrecorder/SkyRecorderSettings.py /usr/lib/enigma2/python/Plugins/Extensions/skyrecorder/SkyRecorderSettings.py_orig
-mv /usr/lib/enigma2/python/Plugins/Extensions/skyrecorder/SkySkipWordsSelect.py /usr/lib/enigma2/python/Plugins/Extensions/skyrecorder/SkySkipWordsSelect.py_orig
-mv /usr/lib/enigma2/python/Plugins/Extensions/skyrecorder/SkyWhitelist.py /usr/lib/enigma2/python/Plugins/Extensions/skyrecorder/SkyWhitelist.py_orig
+mv ${libdir}/enigma2/python/Plugins/Extensions/skyrecorder/SkyAddedEdit.py ${libdir}/enigma2/python/Plugins/Extensions/skyrecorder/SkyAddedEdit.py_orig
+mv ${libdir}/enigma2/python/Plugins/Extensions/skyrecorder/SkyChannelEditor.py ${libdir}/enigma2/python/Plugins/Extensions/skyrecorder/SkyChannelEditor.py_orig
+mv ${libdir}/enigma2/python/Plugins/Extensions/skyrecorder/SkyChannelSelect.py ${libdir}enigma2/python/Plugins/Extensions/skyrecorder/SkyChannelSelect.py_orig
+mv ${libdir}/enigma2/python/Plugins/Extensions/skyrecorder/SkyGenreSelect.py ${libdir}/enigma2/python/Plugins/Extensions/skyrecorder/SkyGenreSelect.py_orig
+mv ${libdir}/enigma2/python/Plugins/Extensions/skyrecorder/SkyRecorderArchiv.py ${libdir}/enigma2/python/Plugins/Extensions/skyrecorder/SkyRecorderArchiv.py_orig
+mv ${libdir}/enigma2/python/Plugins/Extensions/skyrecorder/SkyRecorderMainScreen.py ${libdir}/enigma2/python/Plugins/Extensions/skyrecorder/SkyRecorderMainScreen.py_orig
+mv ${libdir}/enigma2/python/Plugins/Extensions/skyrecorder/SkyRecorderSettings.py ${libdir}/enigma2/python/Plugins/Extensions/skyrecorder/SkyRecorderSettings.py_orig
+mv ${libdir}/enigma2/python/Plugins/Extensions/skyrecorder/SkySkipWordsSelect.py ${libdir}/enigma2/python/Plugins/Extensions/skyrecorder/SkySkipWordsSelect.py_orig
+mv ${libdir}/enigma2/python/Plugins/Extensions/skyrecorder/SkyWhitelist.py ${libdir}/enigma2/python/Plugins/Extensions/skyrecorder/SkyWhitelist.py_orig
 
 echo "                                                                           "
 echo "  The Skyrecorder-FHD-Skins-by-stein17 is now being installed...           "

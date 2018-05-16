@@ -14,6 +14,7 @@ DEPENDS = "hostperl-runtime-native"
 
 SRC_URI = "http://www.openssl.org/source/openssl-${PV}.tar.gz \
            file://find.pl \
+		   file://multilib.patch \
           "
 
 S = "${WORKDIR}/openssl-${PV}"

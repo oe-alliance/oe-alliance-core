@@ -9,9 +9,9 @@ RDEPENDS_${PN} += " libcurl "
 
 require conf/license/license-gplv2.inc
 
-SRC_URI = "${SOURCEFORGE_MIRROR}/curlftpfs/${P}.tar.gz"
+SRC_URI = "${SOURCEFORGE_MIRROR}/curlftpfs/${BP}.tar.gz"
 
-S = "${WORKDIR}/${P}"
+S = "${WORKDIR}/${BP}"
 
 inherit autotools pkgconfig
 

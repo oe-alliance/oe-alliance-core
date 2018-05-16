@@ -2,7 +2,6 @@ SUMMARY = "SpecialJump - Fast manual skipping of commercials, and more..."
 MAINTAINER = "www.opena.tv Fischreiher"
 SECTION = "base"
 LICENSE = "proprietary"
-inherit allarch
 
 require conf/license/license-gplv2.inc
 
@@ -17,12 +16,13 @@ SRC_URI="git://github.com/openatv/SpecialJump.git"
 
 S = "${WORKDIR}/git"
 
-FILES_${PN} = "/usr/*"
+FILES_${PN} = "${libdir}"
 
 CONFFILES_${PN} = "/usr/lib/enigma2/python/Plugins/Extensions/SpecialJump/keymap_user.xml"
 
 do_install() {
-    cp -rp ${S}/usr ${D}/
+    install -d ${D}${libdir}
+    cp -rp ${S}/usr/lib/* ${D}${libdir}/
 }
 
 pkg_postrm_${PN}() {
@@ -31,7 +31,7 @@ pkg_postrm_${PN}() {
 # cleanup script, executed after removing plugin
 #
 
-rm -rf /usr/lib/enigma2/python/Plugins/Extensions/SpecialJump/ > /dev/null 2>&1
+rm -rf ${libdir}/enigma2/python/Plugins/Extensions/SpecialJump/ > /dev/null 2>&1
 echo "Plugin SpecialJump removed! You should restart enigma2 now!"
 exit 0
 }

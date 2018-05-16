@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=7fbc338309ac38fefcd64b04bb903e34"
 
 DEPENDS = "gstreamer gst-plugins-base libdca"
 
-SRC_URI = "git://github.com/athoik/${PN}.git"
+SRC_URI = "git://github.com/athoik/${BPN}.git"
 
 S = "${WORKDIR}/git"
 

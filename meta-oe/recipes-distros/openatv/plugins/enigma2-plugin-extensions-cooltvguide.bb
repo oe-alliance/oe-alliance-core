@@ -2,7 +2,6 @@ SUMMARY = "CoolTVGuide MultiEPG"
 MAINTAINER = "Coolman <coolman@uni.de>"
 SECTION = "base"
 LICENSE = "proprietary"
-inherit allarch
 
 require conf/license/license-gplv2.inc
 
@@ -18,11 +17,12 @@ SRC_URI="git://github.com/openatv/enigma2-plugin-extensions-cooltvguide.git"
 
 S = "${WORKDIR}/git"
 
-FILES_${PN} = "/usr/*"
+FILES_${PN} = "${libdir}"
 
 
 do_install() {
-    cp -rp ${S}/usr ${D}/
+    install -d ${D}${libdir}
+    cp -rp ${S}/usr/lib/* ${D}${libdir}/
 }
 
 do_package_qa[noexec] = "1"

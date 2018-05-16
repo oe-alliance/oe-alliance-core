@@ -19,9 +19,10 @@ S = "${WORKDIR}/rtl8188C_8192C_usb_linux_v3.4.4_4749.20140602"
 EXTRA_OEMAKE = "KSRC=${STAGING_KERNEL_DIR} KDIR=${STAGING_KERNEL_DIR}"
 
 do_install() {
-    install -d ${D}/lib/modules/${KERNEL_VERSION}/kernel/drivers/net/wireless
-    install -m 0644 ${S}/8192cu.ko ${D}${base_libdir}/modules/${KERNEL_VERSION}/kernel/drivers/net/wireless
+    install -d ${D}${nonarch_base_libdir}/modules/${KERNEL_VERSION}/kernel/drivers/net/wireless
+    install -m 0644 ${S}/8192cu.ko ${D}${nonarch_base_libdir}/modules/${KERNEL_VERSION}/kernel/drivers/net/wireless
 }
 
 SRC_URI[md5sum] = "4de401958e154b60227fe3b7b4ad85d5"
 SRC_URI[sha256sum] = "a2d10a56781bf81a720119bd5abc2ef53c0c3bc6b666b2bc846cc4b1b26bfae8"
+

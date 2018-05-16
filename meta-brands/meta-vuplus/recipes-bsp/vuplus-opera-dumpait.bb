@@ -20,8 +20,8 @@ S = "${WORKDIR}/git"
 DESTDIR = "enigma2/python/Plugins/Extensions/HbbTV"
 
 do_install() {
-    install -d ${D}/usr/lib/${DESTDIR}
-    install -m 0755 ${S}/src/dumpait ${D}/usr/lib/${DESTDIR}
+    install -d ${D}${libdir}/${DESTDIR}
+    install -m 0755 ${S}/src/dumpait ${D}${libdir}/${DESTDIR}
 }
 
 FILES_${PN} = "${libdir}/${DESTDIR}/dumpait"

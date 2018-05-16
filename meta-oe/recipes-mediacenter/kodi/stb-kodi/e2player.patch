@@ -1,14 +1,14 @@
-From a50a243111f06e10ff30070094ec1bea9bb3e97d Mon Sep 17 00:00:00 2001
+From b59cb81f605ed252093b2f427d7a1a23faf7c5b3 Mon Sep 17 00:00:00 2001
 From: captain <openatv@gmail.com>
 Date: Fri, 15 Sep 2017 17:00:37 +0200
-Subject: [PATCH] e2player
+Subject: [PATCH 4/5] e2player
 
 ---
  system/playercorefactory.xml | 8 ++++++++
  1 file changed, 8 insertions(+)
 
 diff --git a/system/playercorefactory.xml b/system/playercorefactory.xml
-index be6b7219ab..8fcc56922a 100644
+index 1bebba4a54..a81f8c09b9 100644
 --- a/system/playercorefactory.xml
 +++ b/system/playercorefactory.xml
 @@ -8,6 +8,14 @@
@@ -27,5 +27,5 @@ index be6b7219ab..8fcc56922a 100644
  
    <rules name="system rules">
 -- 
-2.16.2.windows.1
+2.17.0.windows.1
 

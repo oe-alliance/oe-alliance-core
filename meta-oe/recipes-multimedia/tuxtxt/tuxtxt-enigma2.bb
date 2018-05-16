@@ -18,9 +18,9 @@ SRC_URI = "git://github.com/OpenPLi/tuxtxt.git;protocol=git \
            ', '', d)} \
 "
 
-SRC_URI_append_wetekplay = " file://0001-add-HBGIC-for-wetek.patch"
-SRC_URI_append_wetekplay2 = " file://0001-add-HBGIC-for-wetek.patch"
-SRC_URI_append_odroidc2 = " file://0001-add-HBGIC-for-wetek.patch"
+SRC_URI_append_AML8726 = " file://0001-add-HBGIC-for-wetek.patch"
+SRC_URI_append_AMLS905 = " file://0001-add-HBGIC-for-wetek.patch"
+SRC_URI_append_AML905D = " file://0001-add-HBGIC-for-wetek.patch"
 
 SRC_URI_append = " \
     ${@bb.utils.contains('DISTRO_FEATURES', 'tuxtxtfhd', 'file://tuxtxt_FHD.patch', '', d)} \
@@ -66,8 +66,8 @@ do_install_append() {
 }
 
 PACKAGES = "${PN}-src ${PN}-dbg ${PN}-dev ${PN}"
-FILES_${PN}-src = "/usr/src /usr/lib/enigma2/python/Plugins/Extensions/Tuxtxt/*.py"
-FILES_${PN} = "/usr/lib/libtuxtxt32bpp.so.* /usr/share/fonts /usr/lib/enigma2/python/Plugins/Extensions/Tuxtxt/*.pyo /etc/tuxtxt"
+FILES_${PN}-src = "/usr/src ${libdir}/enigma2/python/Plugins/Extensions/Tuxtxt/*.py"
+FILES_${PN} = "${libdir}/libtuxtxt32bpp.so.* /usr/share/fonts ${libdir}/enigma2/python/Plugins/Extensions/Tuxtxt/*.pyo /etc/tuxtxt"
 CONFFILES_${PN} = "/etc/tuxtxt/tuxtxt2.conf"
 
 inherit autotools pkgconfig

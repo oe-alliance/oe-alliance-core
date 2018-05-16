@@ -17,14 +17,14 @@ S = "${WORKDIR}/git"
 
 PACKAGES =+ "${PN}-src"
 PACKAGES =+ "${PN}-po"
-FILES_${PN} = "/etc /usr/lib"
+FILES_${PN} = "/etc ${libdir}"
 FILES_${PN}-src = "\
-	/usr/lib/enigma2/python/Components/Converter/*.py \
-	/usr/lib/enigma2/python/Components/Renderer/*.py \
-	/usr/lib/enigma2/python/Components/Sources/*.py \
-	/usr/lib/enigma2/python/Plugins/Extensions/EnhancedMovieCenter/*.py \
+	${libdir}/enigma2/python/Components/Converter/*.py \
+	${libdir}/enigma2/python/Components/Renderer/*.py \
+	${libdir}/enigma2/python/Components/Sources/*.py \
+	${libdir}/enigma2/python/Plugins/Extensions/EnhancedMovieCenter/*.py \
 	"
-FILES_${PN}-po = "/usr/lib/enigma2/python/Plugins/Extensions/EnhancedMovieCenter/locale/*/*/*.po"
+FILES_${PN}-po = "${libdir}/enigma2/python/Plugins/Extensions/EnhancedMovieCenter/locale/*/*/*.po"
 
 inherit autotools-brokensep
 
@@ -67,7 +67,7 @@ exit 0
 
 pkg_postrm_${PN}() {
 #!/bin/sh
-rm -rf /usr/lib/enigma2/python/Plugins/Extensions/EnhancedMovieCenter/
+rm -rf ${libdir}/enigma2/python/Plugins/Extensions/EnhancedMovieCenter/
 echo "Plugin removed! You should restart enigma2 now!"
 exit 0
 }

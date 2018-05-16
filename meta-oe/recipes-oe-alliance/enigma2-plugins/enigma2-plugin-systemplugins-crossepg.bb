@@ -46,7 +46,7 @@ do_install() {
 }
 
 pkg_postrm_${PN}() {
-rm -fr /usr/lib/enigma2/python/Plugins/SystemPlugins/CrossEPG > /dev/null 2>&1
+rm -fr ${libdir}/enigma2/python/Plugins/SystemPlugins/CrossEPG > /dev/null 2>&1
 }
 
 # Just a quick hack to "compile" the python parts.
@@ -64,7 +64,7 @@ python populate_packages_prepend() {
     do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/.*\/.*\.po$', 'enigma2-plugin-%s-po', '%s (translations)', recursive=True, match_path=True, prepend=True)
 }
 
-FILES_${PN}_append = " /usr/crossepg /usr/lib/python2.7"
-FILES_${PN}-src_append = " /usr/lib/python2.7/crossepg.py"
+FILES_${PN}_append = " /usr/crossepg ${libdir}/python2.7"
+FILES_${PN}-src_append = " ${libdir}/python2.7/crossepg.py"
 FILES_${PN}-dbg_append = " /usr/crossepg/scripts/mhw2epgdownloader/.debug"
 FILES_${PN}-dbg += "/usr/crossepg/scripts/mhw2epgdownloader/.debug"

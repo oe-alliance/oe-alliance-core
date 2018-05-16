@@ -140,12 +140,14 @@ do_configure_prepend() {
         elif [ "${MACHINE}" = "dm900" ]; then
             DRIVERSDATE="20180425"
         elif [ "${MACHINE}" = "dm920" ]; then
-            DRIVERSDATE="20180425"
+            DRIVERSDATE="20180514"
         else
             DRIVERSDATE="20150618"
         fi
     elif [ "${BRAND_OEM}" = "fulan" ]; then
         DRIVERSDATE=`grep "SRCDATE = " ${OEA-META-FULAN-BASE}/recipes-drivers/fulan-dvb-modules-${MACHINE}.bb | cut -b 12-19`
+    elif [ "${BRAND_OEM}" = "LinkDroid" ]; then
+        DRIVERSDATE=`grep "SRCDATE = " ${OEA-META-LINKDROID-BASE}/recipes-drivers/linkdroid-stb-${MACHINE}.bb | cut -b 12-19`
     else
         DRIVERSDATE='N/A'
     fi
@@ -153,69 +155,69 @@ do_configure_prepend() {
 
 do_install_append() {
     install -d ${D}/usr/share/enigma2
-    install -d ${D}/usr/lib/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes
-    install -d ${D}/usr/lib/enigma2/python/Plugins/Extensions/OpenWebif/public/static
+    install -d ${D}${libdir}/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes
+    install -d ${D}${libdir}/enigma2/python/Plugins/Extensions/OpenWebif/public/static
     if [ ${MACHINEBUILD} = "ventonhdx" ]; then
         install -m 0644 ${S}/BoxBranding/boxes/uniboxhd1.png ${D}/usr/share/enigma2/uniboxhd1.png
-        ln -sf /usr/share/enigma2/uniboxhd1.png ${D}/usr/lib/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes/uniboxhd1.png
+        ln -sf /usr/share/enigma2/uniboxhd1.png ${D}${libdir}/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes/uniboxhd1.png
         install -m 0644 ${S}/BoxBranding/boxes/uniboxhd2.png ${D}/usr/share/enigma2/uniboxhd2.png
-        ln -sf /usr/share/enigma2/uniboxhd2.png ${D}/usr/lib/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes/uniboxhd2.png
+        ln -sf /usr/share/enigma2/uniboxhd2.png ${D}${libdir}/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes/uniboxhd2.png
         install -m 0644 ${S}/BoxBranding/boxes/uniboxhd3.png ${D}/usr/share/enigma2/uniboxhd3.png
-        ln -sf /usr/share/enigma2/uniboxhd3.png ${D}/usr/lib/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes/uniboxhd3.png
+        ln -sf /usr/share/enigma2/uniboxhd3.png ${D}${libdir}/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes/uniboxhd3.png
     elif [ ${MACHINE} = "et6x00" ]; then
         for f in ${S}/BoxBranding/boxes/et6*; do
             filename=$(basename "$f")
             extension="${filename##*.}"
             filename="${filename%.*}"
             install -m 0644 $f ${D}/usr/share/enigma2;
-            ln -sf /usr/share/enigma2/$filename ${D}/usr/lib/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes/$filename;
+            ln -sf /usr/share/enigma2/$filename ${D}${libdir}/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes/$filename;
         done
     elif [ ${MACHINEBUILD} = "azboxhd" ]; then
         install -m 0644 ${S}/BoxBranding/boxes/elite.png ${D}/usr/share/enigma2/elite.png
-        ln -sf /usr/share/enigma2/elite.png ${D}/usr/lib/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes/elite.png
+        ln -sf /usr/share/enigma2/elite.png ${D}${libdir}/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes/elite.png
         install -m 0644 ${S}/BoxBranding/boxes/premium.png ${D}/usr/share/enigma2/premium.png
-        ln -sf /usr/share/enigma2/premium.png ${D}/usr/lib/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes/premium.png
+        ln -sf /usr/share/enigma2/premium.png ${D}${libdir}/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes/premium.png
         install -m 0644 ${S}/BoxBranding/boxes/premium+.png ${D}/usr/share/enigma2/premium+.png
-        ln -sf /usr/share/enigma2/premium+.png ${D}/usr/lib/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes/premium+.png
+        ln -sf /usr/share/enigma2/premium+.png ${D}${libdir}/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes/premium+.png
         install -m 0644 ${S}/BoxBranding/boxes/ultra.png ${D}/usr/share/enigma2/ultra.png
-        ln -sf /usr/share/enigma2/ultra.png ${D}/usr/lib/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes/ultra.png
+        ln -sf /usr/share/enigma2/ultra.png ${D}${libdir}/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes/ultra.png
     elif [ ${MACHINEBUILD} = "xpeedlx" ]; then
         install -m 0644 ${S}/BoxBranding/boxes/xpeedlx1.png ${D}/usr/share/enigma2/xpeedlx1.png
-        ln -sf /usr/share/enigma2/xpeedlx1.png ${D}/usr/lib/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes/xpeedlx1.png
+        ln -sf /usr/share/enigma2/xpeedlx1.png ${D}${libdir}/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes/xpeedlx1.png
         install -m 0644 ${S}/BoxBranding/boxes/xpeedlx2.png ${D}/usr/share/enigma2/xpeedlx2.png
-        ln -sf /usr/share/enigma2/xpeedlx2.png ${D}/usr/lib/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes/xpeedlx2.png
+        ln -sf /usr/share/enigma2/xpeedlx2.png ${D}${libdir}/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes/xpeedlx2.png
     elif [ ${MACHINEBUILD} = "atemio6x00" ]; then
         install -m 0644 ${S}/BoxBranding/boxes/atemio6100.png ${D}/usr/share/enigma2/atemio6100.png
-        ln -sf /usr/share/enigma2/atemio6100.png ${D}/usr/lib/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes/atemio6100.png
+        ln -sf /usr/share/enigma2/atemio6100.png ${D}${libdir}/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes/atemio6100.png
         install -m 0644 ${S}/BoxBranding/boxes/atemio6200.png ${D}/usr/share/enigma2/atemio6200.png
-        ln -sf /usr/share/enigma2/atemio6200.png ${D}/usr/lib/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes/atemio6200.png
+        ln -sf /usr/share/enigma2/atemio6200.png ${D}${libdir}/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes/atemio6200.png
     elif [ ${MACHINEBUILD} = "et7x00" ]; then
         install -m 0644 ${S}/BoxBranding/boxes/et7000.png ${D}/usr/share/enigma2/et7000.png
-        ln -sf /usr/share/enigma2/et7000.png ${D}/usr/lib/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes/et7000.png
+        ln -sf /usr/share/enigma2/et7000.png ${D}${libdir}/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes/et7000.png
         install -m 0644 ${S}/BoxBranding/boxes/et7100.png ${D}/usr/share/enigma2/et7100.png
-        ln -sf /usr/share/enigma2/et7100.png ${D}/usr/lib/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes/et7100.png
+        ln -sf /usr/share/enigma2/et7100.png ${D}${libdir}/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes/et7100.png
         install -m 0644 ${S}/BoxBranding/boxes/et7500.png ${D}/usr/share/enigma2/et7500.png
-        ln -sf /usr/share/enigma2/et7500.png ${D}/usr/lib/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes/et7500.png 
+        ln -sf /usr/share/enigma2/et7500.png ${D}${libdir}/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes/et7500.png 
     elif [ ${MACHINEBUILD} = "twinboxlcd" ]; then
         install -m 0644 ${S}/BoxBranding/boxes/twinboxlcdci.png ${D}/usr/share/enigma2/twinboxlcdci.png
-        ln -sf /usr/share/enigma2/twinboxlcdci.png ${D}/usr/lib/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes/twinboxlcdci.png
+        ln -sf /usr/share/enigma2/twinboxlcdci.png ${D}${libdir}/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes/twinboxlcdci.png
         install -m 0644 ${S}/BoxBranding/boxes/twinboxlcd.png ${D}/usr/share/enigma2/twinboxlcd.png
-        ln -sf /usr/share/enigma2/twinboxlcd.png ${D}/usr/lib/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes/twinboxlcd.png 
+        ln -sf /usr/share/enigma2/twinboxlcd.png ${D}${libdir}/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes/twinboxlcd.png 
     elif [ ${MACHINEBUILD} = "dm520" ]; then
         install -m 0644 ${S}/BoxBranding/boxes/dm520.png ${D}/usr/share/enigma2/dm520.png
-        ln -sf /usr/share/enigma2/dm520.png ${D}/usr/lib/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes/dm520.png
+        ln -sf /usr/share/enigma2/dm520.png ${D}${libdir}/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes/dm520.png
         install -m 0644 ${S}/BoxBranding/boxes/dm525.png ${D}/usr/share/enigma2/dm525.png
-        ln -sf /usr/share/enigma2/dm525.png ${D}/usr/lib/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes/dm525.png
+        ln -sf /usr/share/enigma2/dm525.png ${D}${libdir}/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes/dm525.png
     elif [ ${MACHINEBUILD} = "dm900" ]; then
         install -m 0644 ${S}/BoxBranding/boxes/dm900.png ${D}/usr/share/enigma2/dm900.png
-        ln -sf /usr/share/enigma2/dm900.png ${D}/usr/lib/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes/dm900.png
+        ln -sf /usr/share/enigma2/dm900.png ${D}${libdir}/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes/dm900.png
         install -m 0644 ${S}/BoxBranding/boxes/dm920.png ${D}/usr/share/enigma2/dm920.png
-        ln -sf /usr/share/enigma2/dm920.png ${D}/usr/lib/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes/dm920.png
+        ln -sf /usr/share/enigma2/dm920.png ${D}${libdir}/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes/dm920.png
     else
         install -m 0644 ${S}/BoxBranding/boxes/${MACHINEBUILD}.png ${D}/usr/share/enigma2/${MACHINEBUILD}.png
-        ln -sf /usr/share/enigma2/${MACHINEBUILD}.png ${D}/usr/lib/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes/${MACHINEBUILD}.png
+        ln -sf /usr/share/enigma2/${MACHINEBUILD}.png ${D}${libdir}/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes/${MACHINEBUILD}.png
     fi
-    ln -sf /usr/share/enigma2/rc_models ${D}/usr/lib/enigma2/python/Plugins/Extensions/OpenWebif/public/static/remotes
+    ln -sf /usr/share/enigma2/rc_models ${D}${libdir}/enigma2/python/Plugins/Extensions/OpenWebif/public/static/remotes
 }
 
 FILES_${PN}-src = "${libdir}/enigma2/python/Components/*.py"

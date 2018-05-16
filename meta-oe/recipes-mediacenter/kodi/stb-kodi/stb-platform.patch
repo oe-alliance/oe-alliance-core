@@ -1,38 +1,38 @@
-From e921eac45fddb0bd3106568f3d91b8b7682e2298 Mon Sep 17 00:00:00 2001
+From a01405f76d7bf21e2f68b96512a256e390c47faf Mon Sep 17 00:00:00 2001
 From: captain <openatv@gmail.com>
-Date: Thu, 16 Nov 2017 12:45:11 +0100
-Subject: [PATCH] stb-platform
+Date: Wed, 16 May 2018 12:45:11 +0200
+Subject: [PATCH 1/5] stb-platform
 
 ---
- Makefile.in                                  |  20 ++-
- configure.ac                                 | 163 ++++++++++++++++++-
- m4/xbmc_arch.m4                              |  33 ++++
+ Makefile.in                                  |  20 +-
+ configure.ac                                 | 167 +++++++++++++-
+ m4/xbmc_arch.m4                              |  36 +++
  project/cmake/scripts/linux/ArchSetup.cmake  |   6 +-
- tools/depends/configure.ac                   |  80 ++++++++++
+ tools/depends/configure.ac                   |  80 +++++++
  tools/depends/target/ffmpeg/autobuild.sh     |  16 +-
- xbmc/addons/AddonManager.cpp                 |  12 ++
- xbmc/platform/xbmc.cpp                       |   9 ++
+ xbmc/addons/AddonManager.cpp                 |  12 +
+ xbmc/platform/xbmc.cpp                       |   9 +
  xbmc/system_gl.h                             |   3 +
- xbmc/utils/DreamboxUtils.cpp                 | 102 ++++++++++++
- xbmc/utils/DreamboxUtils.h                   |  24 +++
+ xbmc/utils/DreamboxUtils.cpp                 | 102 +++++++++
+ xbmc/utils/DreamboxUtils.h                   |  24 ++
  xbmc/utils/Makefile.in                       |   4 +
- xbmc/windowing/egl/EGLNativeTypeDreambox.cpp | 191 ++++++++++++++++++++++
- xbmc/windowing/egl/EGLNativeTypeDreambox.h   |  61 +++++++
- xbmc/windowing/egl/EGLNativeTypeGB.cpp       | 189 ++++++++++++++++++++++
- xbmc/windowing/egl/EGLNativeTypeGB.h         |  56 +++++++
- xbmc/windowing/egl/EGLNativeTypeMali.cpp     | 149 +++++++++++++++++
- xbmc/windowing/egl/EGLNativeTypeMali.h       |  53 +++++++
- xbmc/windowing/egl/EGLNativeTypeNexTV.cpp    | 229 +++++++++++++++++++++++++++
- xbmc/windowing/egl/EGLNativeTypeNexTV.h      | 196 +++++++++++++++++++++++
- xbmc/windowing/egl/EGLNativeTypeV3D.cpp      | 161 +++++++++++++++++++
- xbmc/windowing/egl/EGLNativeTypeV3D.h        |  59 +++++++
- xbmc/windowing/egl/EGLNativeTypeV3DNXPL.cpp  | 208 ++++++++++++++++++++++++
- xbmc/windowing/egl/EGLNativeTypeV3DNXPL.h    | 129 +++++++++++++++
- xbmc/windowing/egl/EGLNativeTypeVuplus.cpp   | 180 +++++++++++++++++++++
- xbmc/windowing/egl/EGLNativeTypeVuplus.h     |  60 +++++++
- xbmc/windowing/egl/EGLWrapper.cpp            |  35 ++++
- xbmc/windowing/egl/Makefile.in               |  21 +++
- 28 files changed, 2439 insertions(+), 10 deletions(-)
+ xbmc/windowing/egl/EGLNativeTypeDreambox.cpp | 191 ++++++++++++++++
+ xbmc/windowing/egl/EGLNativeTypeDreambox.h   |  61 +++++
+ xbmc/windowing/egl/EGLNativeTypeGB.cpp       | 189 +++++++++++++++
+ xbmc/windowing/egl/EGLNativeTypeGB.h         |  56 +++++
+ xbmc/windowing/egl/EGLNativeTypeMali.cpp     | 149 ++++++++++++
+ xbmc/windowing/egl/EGLNativeTypeMali.h       |  53 +++++
+ xbmc/windowing/egl/EGLNativeTypeNexTV.cpp    | 229 +++++++++++++++++++
+ xbmc/windowing/egl/EGLNativeTypeNexTV.h      | 196 ++++++++++++++++
+ xbmc/windowing/egl/EGLNativeTypeV3D.cpp      | 161 +++++++++++++
+ xbmc/windowing/egl/EGLNativeTypeV3D.h        |  59 +++++
+ xbmc/windowing/egl/EGLNativeTypeV3DNXPL.cpp  | 208 +++++++++++++++++
+ xbmc/windowing/egl/EGLNativeTypeV3DNXPL.h    | 129 +++++++++++
+ xbmc/windowing/egl/EGLNativeTypeVuplus.cpp   | 180 +++++++++++++++
+ xbmc/windowing/egl/EGLNativeTypeVuplus.h     |  60 +++++
+ xbmc/windowing/egl/EGLWrapper.cpp            |  35 +++
+ xbmc/windowing/egl/Makefile.in               |  21 ++
+ 28 files changed, 2446 insertions(+), 10 deletions(-)
  create mode 100644 xbmc/utils/DreamboxUtils.cpp
  create mode 100644 xbmc/utils/DreamboxUtils.h
  create mode 100644 xbmc/windowing/egl/EGLNativeTypeDreambox.cpp
@@ -51,7 +51,7 @@ Subject: [PATCH] stb-platform
  create mode 100644 xbmc/windowing/egl/EGLNativeTypeVuplus.h
 
 diff --git a/Makefile.in b/Makefile.in
-index 3c5de7c367..e9473deeb6 100644
+index 3c5de7c367..984fd00091 100644
 --- a/Makefile.in
 +++ b/Makefile.in
 @@ -423,6 +423,24 @@ MAINOBJS+=xbmc/platform/darwin/osx/sdlmain.a
@@ -89,10 +89,10 @@ index 3c5de7c367..e9473deeb6 100644
  
  @APP_NAME_LC@-xrandr: xbmc-xrandr.c
 diff --git a/configure.ac b/configure.ac
-index 71e942b1c3..9812d1f923 100644
+index 71e942b1c3..629929aafa 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -681,6 +681,78 @@ case $use_platform in
+@@ -681,6 +681,82 @@ case $use_platform in
       use_neon=yes
       use_cpu=cortex-a7
       ;;
@@ -167,11 +167,15 @@ index 71e942b1c3..9812d1f923 100644
 +     target_videoplatform=target_mali
 +     use_cpu=cortex-a15
 +     ;;
++  aml-aarch64)
++     add_codecs=amcodec
++     target_videoplatform=target_aml
++     ;;
 +
  esac
  
  if test "$target_platform" = "target_raspberry_pi" ; then
-@@ -696,6 +768,20 @@ if test "$target_platform" = "target_raspberry_pi" ; then
+@@ -696,6 +772,20 @@ if test "$target_platform" = "target_raspberry_pi" ; then
       CXXFLAGS="$CXXFLAGS"
  fi
  
@@ -192,7 +196,7 @@ index 71e942b1c3..9812d1f923 100644
  if test "$host_vendor" = "apple"; then
    use_avahi=no
    use_alsa=no
-@@ -819,6 +905,15 @@ elif test "$use_arch" = "arm"; then
+@@ -819,6 +909,15 @@ elif test "$use_arch" = "arm"; then
        [ CFLAGS="$SAVE_CFLAGS -Wa,-march=armv6 -mtune=cortex-a8 -mthumb-interwork"
          CXXFLAGS="$CXXFLAGS -Wa,-march=armv6 -mtune=cortex-a8 -mthumb-interwork"
          use_cpu=cortex-a8])
@@ -208,7 +212,7 @@ index 71e942b1c3..9812d1f923 100644
    else
      if test "$use_neon" = "yes"; then
        CFLAGS="$CFLAGS -mfpu=neon -mvectorize-with-neon-quad"
-@@ -912,6 +1007,9 @@ if test "x$have_builtin_sync_val_compare_and_swap" = "xyes"; then
+@@ -912,6 +1011,9 @@ if test "x$have_builtin_sync_val_compare_and_swap" = "xyes"; then
          [Define to 1 if your compiler supports the __sync_val_compare_and_swap() intrinsic.])
  fi
  
@@ -218,7 +222,7 @@ index 71e942b1c3..9812d1f923 100644
  # Check for u16string/u32string declarations
  AC_LANG_PUSH([C++])
  AC_CHECK_TYPES([std::u16string, std::u32string], [], [], [[#include <string>]])
-@@ -944,16 +1042,45 @@ if test "$use_gles" = "yes"; then
+@@ -944,16 +1046,45 @@ if test "$use_gles" = "yes"; then
      AC_DEFINE([HAVE_LIBEGL],[1],["Define to 1 if you have the `EGL' library (-lEGL)."])
      AC_DEFINE([HAVE_LIBGLESV2],[1],["Define to 1 if you have the `GLESv2' library (-lGLESv2)."])
      AC_MSG_RESULT(== WARNING: OpenGLES support is assumed.)
@@ -268,7 +272,7 @@ index 71e942b1c3..9812d1f923 100644
    fi
  else
    if test "$use_gl" = "yes"; then
-@@ -1056,7 +1183,7 @@ int main() {
+@@ -1056,7 +1187,7 @@ int main() {
    )])
  AC_LANG_POP([C++])
  
@@ -277,7 +281,7 @@ index 71e942b1c3..9812d1f923 100644
    PKG_CHECK_MODULES([UUID], [uuid],, AC_MSG_ERROR(libuuid not found))
  fi
  
-@@ -1556,7 +1683,14 @@ if test "${USE_STATIC_FFMPEG}" = "1"; then
+@@ -1556,7 +1687,14 @@ if test "${USE_STATIC_FFMPEG}" = "1"; then
        pkg_cfg_prefix=${SYSROOT}
    fi
  
@@ -293,7 +297,7 @@ index 71e942b1c3..9812d1f923 100644
      if test "$use_debug" != "yes"; then
        FFMPEG_OPTS="-r"
      fi
-@@ -1611,11 +1745,17 @@ if test "$FFMPEG_FOUND" != "true"; then
+@@ -1611,11 +1749,17 @@ if test "$FFMPEG_FOUND" != "true"; then
    PKG_CHECK_MODULES([FFMPEG], [$FFMPEG_LIBNAMES],
      [INCLUDES="$INCLUDES $FFMPEG_CFLAGS"; LIBS="$LIBS $FFMPEG_LIBS"; FFMPEG_FOUND="true"],
      [AC_MSG_ERROR("ffmpeg not found")])
@@ -312,7 +316,7 @@ index 71e942b1c3..9812d1f923 100644
    GNUTLS_ALL_LIBS=$(${PKG_CONFIG} --static --libs-only-l --silence-errors gnutls)
  
    # check if static libs are available
-@@ -2330,6 +2470,15 @@ AC_SUBST(HAVE_SSE4)
+@@ -2330,6 +2474,15 @@ AC_SUBST(HAVE_SSE4)
  AC_SUBST(USE_MMAL)
  AC_SUBST(USE_X11)
  AC_SUBST(USE_OPTICAL_DRIVE)
@@ -329,49 +333,52 @@ index 71e942b1c3..9812d1f923 100644
  # pushd and popd are not available in other shells besides bash, so implement
  # our own pushd/popd functions
 diff --git a/m4/xbmc_arch.m4 b/m4/xbmc_arch.m4
-index d28f263002..876a876a2d 100644
+index d28f263002..f3f5387e28 100644
 --- a/m4/xbmc_arch.m4
 +++ b/m4/xbmc_arch.m4
-@@ -80,4 +80,37 @@ fi
+@@ -80,4 +80,40 @@ fi
  if test "$target_platform" = "target_raspberry_pi" ; then
    AC_SUBST(ARCH_DEFINES, "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -D_ARMEL -DTARGET_RASPBERRY_PI")
  fi
 +
 +if test "$target_videoplatform" = "target_xcore" ; then
-+  AC_SUBST(ARCH_DEFINES, "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_STB -DTARGET_V3D -DTARGET_XCORE")
++  AC_SUBST(ARCH_DEFINES, "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_STB -DTARGET_STB_EXTEND -DTARGET_V3D -DTARGET_XCORE")
 +fi
 +
 +if test "$target_videoplatform" = "target_v3dnxpl" ; then
-+  AC_SUBST(ARCH_DEFINES, "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_STB -DTARGET_V3D -DTARGET_V3DNXPL")
++  AC_SUBST(ARCH_DEFINES, "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_STB -DTARGET_STB_EXTEND -DTARGET_V3D -DTARGET_V3DNXPL")
 +fi
 +
 +if test "$target_videoplatform" = "target_dreambox" ; then
-+  AC_SUBST(ARCH_DEFINES, "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_STB -DTARGET_V3D -DTARGET_DREAMBOX")
++  AC_SUBST(ARCH_DEFINES, "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_STB -DTARGET_STB_EXTEND -DTARGET_V3D -DTARGET_DREAMBOX")
 +fi
 +
 +if test "$target_videoplatform_arch" = "target_vuplus_arm" ; then
-+  AC_SUBST(ARCH_DEFINES, "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_STB -DTARGET_V3D -DTARGET_VUPLUS -DTARGET_VUPLUS_ARM")
++  AC_SUBST(ARCH_DEFINES, "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_STB -DTARGET_STB_EXTEND -DTARGET_V3D -DTARGET_VUPLUS -DTARGET_VUPLUS_ARM")
 +fi
 +
 +if test "$target_videoplatform_arch" = "target_vuplus_mipsel" ; then
-+  AC_SUBST(ARCH_DEFINES, "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_STB -DTARGET_V3D -DTARGET_VUPLUS -DTARGET_VUPLUS_MIPSEL")
++  AC_SUBST(ARCH_DEFINES, "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_STB -DTARGET_STB_EXTEND -DTARGET_V3D -DTARGET_VUPLUS -DTARGET_VUPLUS_MIPSEL")
 +fi
 +
 +if test "$target_videoplatform" = "target_nextv" ; then
-+  AC_SUBST(ARCH_DEFINES, "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_STB -DTARGET_V3D -DTARGET_NEXTV")
++  AC_SUBST(ARCH_DEFINES, "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_STB -DTARGET_STB_EXTEND -DTARGET_V3D -DTARGET_NEXTV")
 +fi
 +
 +
 +if test "$target_videoplatform" = "target_GB" ; then
-+  AC_SUBST(ARCH_DEFINES, "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_STB -DTARGET_V3D -DTARGET_GB")
++  AC_SUBST(ARCH_DEFINES, "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_STB -DTARGET_STB_EXTEND -DTARGET_V3D -DTARGET_GB")
 +fi
 +
 +if test "$target_videoplatform" = "target_mali" ; then
-+  AC_SUBST(ARCH_DEFINES, "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_STB -DTARGET_MALI")
++  AC_SUBST(ARCH_DEFINES, "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_STB -DTARGET_STB_EXTEND -DTARGET_MALI")
++fi
++if test "$target_videoplatform" = "target_aml" ; then
++  AC_SUBST(ARCH_DEFINES, "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_STB -DTARGET_AML")
 +fi
  ])
 diff --git a/project/cmake/scripts/linux/ArchSetup.cmake b/project/cmake/scripts/linux/ArchSetup.cmake
-index c0cc1bf283..716c08cf01 100644
+index c0cc1bf283..dd20f6141c 100644
 --- a/project/cmake/scripts/linux/ArchSetup.cmake
 +++ b/project/cmake/scripts/linux/ArchSetup.cmake
 @@ -13,7 +13,11 @@ else()
@@ -388,7 +395,7 @@ index c0cc1bf283..716c08cf01 100644
      set(NEON True)
      set(NEON_FLAGS "-mfpu=neon -mvectorize-with-neon-quad")
 diff --git a/tools/depends/configure.ac b/tools/depends/configure.ac
-index 3626ea5204..01cd44f917 100644
+index 3626ea5204..1bcb590adb 100644
 --- a/tools/depends/configure.ac
 +++ b/tools/depends/configure.ac
 @@ -408,6 +408,86 @@ case $use_platform in
@@ -479,7 +486,7 @@ index 3626ea5204..01cd44f917 100644
  
  if test "$target_platform" = "raspberry-pi" ; then
 diff --git a/tools/depends/target/ffmpeg/autobuild.sh b/tools/depends/target/ffmpeg/autobuild.sh
-index 5c2976278e..3ba3526c33 100755
+index 5c2976278e..db8897cb42 100755
 --- a/tools/depends/target/ffmpeg/autobuild.sh
 +++ b/tools/depends/target/ffmpeg/autobuild.sh
 @@ -116,7 +116,7 @@ then
@@ -513,7 +520,7 @@ index 5c2976278e..3ba3526c33 100755
  	--disable-devices \
  	--disable-ffplay \
 diff --git a/xbmc/addons/AddonManager.cpp b/xbmc/addons/AddonManager.cpp
-index 0f0da4f917..11a61e4fdf 100644
+index 0f0da4f917..1b672bc996 100644
 --- a/xbmc/addons/AddonManager.cpp
 +++ b/xbmc/addons/AddonManager.cpp
 @@ -924,6 +924,12 @@ bool CAddonMgr::PlatformSupportsAddon(const cp_plugin_info_t *plugin)
@@ -543,7 +550,7 @@ index 0f0da4f917..11a61e4fdf 100644
    libraryName = GetExtValue(base, "@library_linux");
  #elif defined(TARGET_WINDOWS) && defined(HAS_DX)
 diff --git a/xbmc/platform/xbmc.cpp b/xbmc/platform/xbmc.cpp
-index 34e5ea67d4..2d8ab010ec 100644
+index 34e5ea67d4..94a6ee22cd 100644
 --- a/xbmc/platform/xbmc.cpp
 +++ b/xbmc/platform/xbmc.cpp
 @@ -21,6 +21,11 @@
@@ -570,7 +577,7 @@ index 34e5ea67d4..2d8ab010ec 100644
  #ifdef TARGET_RASPBERRY_PI
    if(!g_RBP.Initialize())
 diff --git a/xbmc/system_gl.h b/xbmc/system_gl.h
-index 0eae1af4da..cbe2efcc52 100644
+index 0eae1af4da..44369f86d8 100644
 --- a/xbmc/system_gl.h
 +++ b/xbmc/system_gl.h
 @@ -45,6 +45,9 @@
@@ -585,7 +592,7 @@ index 0eae1af4da..cbe2efcc52 100644
      #include <GLES2/gl2ext.h>
 diff --git a/xbmc/utils/DreamboxUtils.cpp b/xbmc/utils/DreamboxUtils.cpp
 new file mode 100644
-index 0000000000..0395201c39
+index 0000000000..52c4c2fbe5
 --- /dev/null
 +++ b/xbmc/utils/DreamboxUtils.cpp
 @@ -0,0 +1,102 @@
@@ -693,7 +700,7 @@ index 0000000000..0395201c39
 +}
 diff --git a/xbmc/utils/DreamboxUtils.h b/xbmc/utils/DreamboxUtils.h
 new file mode 100644
-index 0000000000..2f50360e57
+index 0000000000..99fe568801
 --- /dev/null
 +++ b/xbmc/utils/DreamboxUtils.h
 @@ -0,0 +1,24 @@
@@ -722,7 +729,7 @@ index 0000000000..2f50360e57
 +
 +bool dreambox_mode_to_resolution(const char *mode, RESOLUTION_INFO *res);
 diff --git a/xbmc/utils/Makefile.in b/xbmc/utils/Makefile.in
-index 7ec1b21f1d..5a445a3965 100644
+index 7ec1b21f1d..55de71a98b 100644
 --- a/xbmc/utils/Makefile.in
 +++ b/xbmc/utils/Makefile.in
 @@ -83,6 +83,10 @@ ifeq (@USE_OPENGLES@,1)
@@ -738,7 +745,7 @@ index 7ec1b21f1d..5a445a3965 100644
  endif
 diff --git a/xbmc/windowing/egl/EGLNativeTypeDreambox.cpp b/xbmc/windowing/egl/EGLNativeTypeDreambox.cpp
 new file mode 100644
-index 0000000000..b720df3674
+index 0000000000..f43320a564
 --- /dev/null
 +++ b/xbmc/windowing/egl/EGLNativeTypeDreambox.cpp
 @@ -0,0 +1,191 @@
@@ -935,7 +942,7 @@ index 0000000000..b720df3674
 +}
 diff --git a/xbmc/windowing/egl/EGLNativeTypeDreambox.h b/xbmc/windowing/egl/EGLNativeTypeDreambox.h
 new file mode 100644
-index 0000000000..eb032063e7
+index 0000000000..d5410a1131
 --- /dev/null
 +++ b/xbmc/windowing/egl/EGLNativeTypeDreambox.h
 @@ -0,0 +1,61 @@
@@ -1002,7 +1009,7 @@ index 0000000000..eb032063e7
 +};
 diff --git a/xbmc/windowing/egl/EGLNativeTypeGB.cpp b/xbmc/windowing/egl/EGLNativeTypeGB.cpp
 new file mode 100644
-index 0000000000..fdaf818423
+index 0000000000..b70e870bac
 --- /dev/null
 +++ b/xbmc/windowing/egl/EGLNativeTypeGB.cpp
 @@ -0,0 +1,189 @@
@@ -1197,7 +1204,7 @@ index 0000000000..fdaf818423
 +}
 diff --git a/xbmc/windowing/egl/EGLNativeTypeGB.h b/xbmc/windowing/egl/EGLNativeTypeGB.h
 new file mode 100644
-index 0000000000..ecf78813d0
+index 0000000000..9cf0839bfd
 --- /dev/null
 +++ b/xbmc/windowing/egl/EGLNativeTypeGB.h
 @@ -0,0 +1,56 @@
@@ -1259,7 +1266,7 @@ index 0000000000..ecf78813d0
 +};
 diff --git a/xbmc/windowing/egl/EGLNativeTypeMali.cpp b/xbmc/windowing/egl/EGLNativeTypeMali.cpp
 new file mode 100644
-index 0000000000..7de98e121c
+index 0000000000..20535004ab
 --- /dev/null
 +++ b/xbmc/windowing/egl/EGLNativeTypeMali.cpp
 @@ -0,0 +1,149 @@
@@ -1415,7 +1422,7 @@ index 0000000000..7de98e121c
 \ No newline at end of file
 diff --git a/xbmc/windowing/egl/EGLNativeTypeMali.h b/xbmc/windowing/egl/EGLNativeTypeMali.h
 new file mode 100644
-index 0000000000..35c7ce9f6f
+index 0000000000..d11125a17e
 --- /dev/null
 +++ b/xbmc/windowing/egl/EGLNativeTypeMali.h
 @@ -0,0 +1,53 @@
@@ -1475,7 +1482,7 @@ index 0000000000..35c7ce9f6f
 \ No newline at end of file
 diff --git a/xbmc/windowing/egl/EGLNativeTypeNexTV.cpp b/xbmc/windowing/egl/EGLNativeTypeNexTV.cpp
 new file mode 100644
-index 0000000000..da975a7359
+index 0000000000..6f4338d523
 --- /dev/null
 +++ b/xbmc/windowing/egl/EGLNativeTypeNexTV.cpp
 @@ -0,0 +1,229 @@
@@ -1710,7 +1717,7 @@ index 0000000000..da975a7359
 +}
 diff --git a/xbmc/windowing/egl/EGLNativeTypeNexTV.h b/xbmc/windowing/egl/EGLNativeTypeNexTV.h
 new file mode 100644
-index 0000000000..4151347862
+index 0000000000..ae4c5baf74
 --- /dev/null
 +++ b/xbmc/windowing/egl/EGLNativeTypeNexTV.h
 @@ -0,0 +1,196 @@
@@ -1912,7 +1919,7 @@ index 0000000000..4151347862
 +};
 diff --git a/xbmc/windowing/egl/EGLNativeTypeV3D.cpp b/xbmc/windowing/egl/EGLNativeTypeV3D.cpp
 new file mode 100644
-index 0000000000..c42eadd507
+index 0000000000..227e24a604
 --- /dev/null
 +++ b/xbmc/windowing/egl/EGLNativeTypeV3D.cpp
 @@ -0,0 +1,161 @@
@@ -2079,7 +2086,7 @@ index 0000000000..c42eadd507
 +}
 diff --git a/xbmc/windowing/egl/EGLNativeTypeV3D.h b/xbmc/windowing/egl/EGLNativeTypeV3D.h
 new file mode 100644
-index 0000000000..2dfee7b870
+index 0000000000..c0ee8f93aa
 --- /dev/null
 +++ b/xbmc/windowing/egl/EGLNativeTypeV3D.h
 @@ -0,0 +1,59 @@
@@ -2144,7 +2151,7 @@ index 0000000000..2dfee7b870
 +};
 diff --git a/xbmc/windowing/egl/EGLNativeTypeV3DNXPL.cpp b/xbmc/windowing/egl/EGLNativeTypeV3DNXPL.cpp
 new file mode 100644
-index 0000000000..aa7d76f650
+index 0000000000..14249a9537
 --- /dev/null
 +++ b/xbmc/windowing/egl/EGLNativeTypeV3DNXPL.cpp
 @@ -0,0 +1,208 @@
@@ -2359,7 +2366,7 @@ index 0000000000..aa7d76f650
 \ No newline at end of file
 diff --git a/xbmc/windowing/egl/EGLNativeTypeV3DNXPL.h b/xbmc/windowing/egl/EGLNativeTypeV3DNXPL.h
 new file mode 100644
-index 0000000000..a174510724
+index 0000000000..1d253f4bb4
 --- /dev/null
 +++ b/xbmc/windowing/egl/EGLNativeTypeV3DNXPL.h
 @@ -0,0 +1,129 @@
@@ -2494,7 +2501,7 @@ index 0000000000..a174510724
 +};
 diff --git a/xbmc/windowing/egl/EGLNativeTypeVuplus.cpp b/xbmc/windowing/egl/EGLNativeTypeVuplus.cpp
 new file mode 100644
-index 0000000000..7efa07fa78
+index 0000000000..d0894b0a0a
 --- /dev/null
 +++ b/xbmc/windowing/egl/EGLNativeTypeVuplus.cpp
 @@ -0,0 +1,180 @@
@@ -2680,7 +2687,7 @@ index 0000000000..7efa07fa78
 +
 diff --git a/xbmc/windowing/egl/EGLNativeTypeVuplus.h b/xbmc/windowing/egl/EGLNativeTypeVuplus.h
 new file mode 100644
-index 0000000000..9f0ff93dea
+index 0000000000..40dfe978f9
 --- /dev/null
 +++ b/xbmc/windowing/egl/EGLNativeTypeVuplus.h
 @@ -0,0 +1,60 @@
@@ -2745,7 +2752,7 @@ index 0000000000..9f0ff93dea
 +  RESOLUTION_INFO m_desktopResAll[3];
 +};
 diff --git a/xbmc/windowing/egl/EGLWrapper.cpp b/xbmc/windowing/egl/EGLWrapper.cpp
-index 30f57577d6..5510257df2 100644
+index 30f57577d6..6c2fd2b458 100644
 --- a/xbmc/windowing/egl/EGLWrapper.cpp
 +++ b/xbmc/windowing/egl/EGLWrapper.cpp
 @@ -37,6 +37,27 @@
@@ -2798,7 +2805,7 @@ index 30f57577d6..5510257df2 100644
        )
    {
 diff --git a/xbmc/windowing/egl/Makefile.in b/xbmc/windowing/egl/Makefile.in
-index 68f7862dfe..dbfaa9ffac 100644
+index 68f7862dfe..a720645da8 100644
 --- a/xbmc/windowing/egl/Makefile.in
 +++ b/xbmc/windowing/egl/Makefile.in
 @@ -12,6 +12,27 @@ endif
@@ -2830,5 +2837,5 @@ index 68f7862dfe..dbfaa9ffac 100644
  
  LIB = windowing_egl.a
 -- 
-2.12.0.windows.1
+2.17.0.windows.1
 

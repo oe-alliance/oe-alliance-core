@@ -1,0 +1,47 @@
+From 576aeffccd2261b4ca1985c43a3bb6dfca464a93 Mon Sep 17 00:00:00 2001
+From: Captain <captain.onboard@web.de>
+Date: Tue, 15 May 2018 23:37:53 +0200
+Subject: [PATCH] fix multilib build
+
+---
+ tools/depends/target/crossguid/Makefile | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/tools/depends/target/crossguid/Makefile b/tools/depends/target/crossguid/Makefile
+index 487ab2a617..c46d621330 100644
+--- a/tools/depends/target/crossguid/Makefile
++++ b/tools/depends/target/crossguid/Makefile
+@@ -6,6 +6,7 @@ LIBNAME=crossguid
+ VERSION=8f399e8bd4
+ SOURCE=$(LIBNAME)-$(VERSION)
+ ARCHIVE=$(SOURCE).tar.gz
++BASE_LIBDIR = ${base_libdir}
+ 
+ 
+ ifeq ($(CROSS_COMPILING), yes)
+@@ -37,8 +38,8 @@ LIBDYLIB=$(PLATFORM)/lib$(LIBNAME).a
+ 
+ .PHONY: .installed-$(PLATFORM)
+ 
+-all: .installed-$(PLATFORM) $(PREFIX)/lib/lib$(LIBNAME).a
+-$(PREFIX)/lib/lib$(LIBNAME).a:
++all: .installed-$(PLATFORM) $(PREFIX)/$(BASE_LIBDIR)/lib$(LIBNAME).a
++$(PREFIX)/$(BASE_LIBDIR)/lib$(LIBNAME).a:
+ 	@make .installed-$(PLATFORM)
+ 
+ $(TARBALLS_LOCATION)/$(ARCHIVE):
+@@ -59,9 +60,9 @@ $(LIBDYLIB): $(PLATFORM)
+ 
+ .installed-$(PLATFORM): $(LIBDYLIB)
+ 	@[ -d $(PREFIX)/include ] || mkdir -p $(PREFIX)/include
+-	@[ -d $(PREFIX)/lib ] || mkdir $(PREFIX)/lib
++	@[ -d $(PREFIX)/$(BASE_LIBDIR) ] || mkdir $(PREFIX)/$(BASE_LIBDIR)
+ 	cp $(PLATFORM)/guid.h $(PREFIX)/include/
+-	cp $(LIBDYLIB) $(PREFIX)/lib/
++	cp $(LIBDYLIB) $(PREFIX)/$(BASE_LIBDIR)/
+ 	touch $@
+ 
+ clean:
+-- 
+2.17.0.windows.1
+
