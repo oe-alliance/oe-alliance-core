@@ -10,3 +10,5 @@ EXTRA_OECONF += " \
     --with-platform=aml-aarch64 \
     --with-ffmpeg=stb\
 "
+
+INSANE_SKIP_${PN} += "file-rdeps"
