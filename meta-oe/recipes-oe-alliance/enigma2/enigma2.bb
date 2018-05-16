@@ -252,15 +252,14 @@ SRC_URI_append_vuduo = " \
     file://duo_VFD.patch \
     "
 
-SRC_URI_append_wetekplay2 = " \
+SRC_URI_append_AMLS905 = " \
     ${@bb.utils.contains("DISTRO_NAME", "openatv", "file://0001-have-64-bit-action-long-int-update.patch", "", d)} \
+    ${@bb.utils.contains("DISTRO_NAME", "openvix", "file://0001-have-64-bit-action-long-int-update.patch", "", d)} \
     "
 
-SRC_URI_append_odroidc2 = " \
+SRC_URI_append_AML905D = " \
     ${@bb.utils.contains("DISTRO_NAME", "openatv", "file://0001-have-64-bit-action-long-int-update.patch", "", d)} \
-    "
-SRC_URI_append_aarch64 = " \
-  ${@bb.utils.contains("DISTRO_NAME", "openvix", "file://0001-have-64-bit-action-long-int-update.patch", "", d)} \
+    ${@bb.utils.contains("DISTRO_NAME", "openvix", "file://0001-have-64-bit-action-long-int-update.patch", "", d)} \
     "
 
 SRC_URI_append_openhdf = " \
@@ -324,40 +323,40 @@ LDFLAGS_prepend = "${@bb.utils.contains('GST_VERSION', '1.0', ' -lxml2 ', '', d)
 
 # Swig generated 200k enigma.py file has no purpose for end users
 FILES_${PN}-dbg += "\
-    /usr/lib/enigma2/python/enigma.py \
+    ${libdir}/enigma2/python/enigma.py \
     "
 
 # some plugins contain so's, their stripped symbols should not end up in the enigma2 package
 FILES_${PN}-dbg += "\
-    /usr/lib/enigma2/python/*/.debug \
-    /usr/lib/enigma2/python/*/*/*.debug \
-    /usr/lib/enigma2/python/*/*/*/.debug \
-    /usr/lib/enigma2/python/*/*/*/*/.debug \
-    /usr/lib/enigma2/python/Plugins/*/*/.debug \
+    ${libdir}/enigma2/python/*/.debug \
+    ${libdir}/enigma2/python/*/*/*.debug \
+    ${libdir}/enigma2/python/*/*/*/.debug \
+    ${libdir}/enigma2/python/*/*/*/*/.debug \
+    ${libdir}/enigma2/python/Plugins/*/*/.debug \
     "
 
 # Save some space by not installing sources (mytest.py must remain)
 FILES_${PN}-src = "\
-    /usr/lib/enigma2/python/GlobalActions.py \
-    /usr/lib/enigma2/python/Navigation.py \
-    /usr/lib/enigma2/python/NavigationInstance.py \
-    /usr/lib/enigma2/python/RecordTimer.py \
-    /usr/lib/enigma2/python/ServiceReference.py \
-    /usr/lib/enigma2/python/SleepTimer.py \
-    /usr/lib/enigma2/python/e2reactor.py \
-    /usr/lib/enigma2/python/keyids.py \
-    /usr/lib/enigma2/python/keymapparser.py \
-    /usr/lib/enigma2/python/skin.py \
-    /usr/lib/enigma2/python/timer.py \
-    /usr/lib/enigma2/python/upgrade.py \
-    /usr/lib/enigma2/python/PowerTimer.py \
-    /usr/lib/enigma2/python/*/*.py \
-    /usr/lib/enigma2/python/*/*/*.py \
-    /usr/lib/enigma2/python/*/*/*/*.py \
+    ${libdir}/enigma2/python/GlobalActions.py \
+    ${libdir}/enigma2/python/Navigation.py \
+    ${libdir}/enigma2/python/NavigationInstance.py \
+    ${libdir}/enigma2/python/RecordTimer.py \
+    ${libdir}/enigma2/python/ServiceReference.py \
+    ${libdir}/enigma2/python/SleepTimer.py \
+    ${libdir}/enigma2/python/e2reactor.py \
+    ${libdir}/enigma2/python/keyids.py \
+    ${libdir}/enigma2/python/keymapparser.py \
+    ${libdir}/enigma2/python/skin.py \
+    ${libdir}/enigma2/python/timer.py \
+    ${libdir}/enigma2/python/upgrade.py \
+    ${libdir}/enigma2/python/PowerTimer.py \
+    ${libdir}/enigma2/python/*/*.py \
+    ${libdir}/enigma2/python/*/*/*.py \
+    ${libdir}/enigma2/python/*/*/*/*.py \
     "
 
 FILES_${PN} += " \
-    ${bindir} ${sysconfdir}/e2-git.log"
+    ${bindir} ${sysconfdir}/e2-git.log /usr/lib"
 
 # Save po files
 PACKAGES =+ "${PN}-po"
@@ -365,12 +364,17 @@ FILES_${PN}-po = "${datadir}/enigma2/po/*.po ${datadir}/enigma2/po/*.pot"
 
 do_install_append() {
     install -d ${D}/usr/share/keymaps
-    find ${D}/usr/lib/enigma2/python/ -name '*.pyc' -exec rm {} \;
-    ln -s /usr/lib/enigma2/python/Tools/StbHardware.pyo ${D}/usr/lib/enigma2/python/Tools/DreamboxHardware.pyo
-    ln -s /usr/lib/enigma2/python/Components/PackageInfo.pyo ${D}/usr/lib/enigma2/python/Components/DreamboxInfoHandler.pyo
+    find ${D}${libdir}/enigma2/python/ -name '*.pyc' -exec rm {} \;
+    ln -s ${libdir}/enigma2/python/Tools/StbHardware.pyo ${D}${libdir}/enigma2/python/Tools/DreamboxHardware.pyo
+    ln -s ${libdir}/enigma2/python/Components/PackageInfo.pyo ${D}${libdir}/enigma2/python/Components/DreamboxInfoHandler.pyo
     install -d ${D}${sysconfdir}
     git --git-dir=${S}/.git log --since=10.weeks --pretty=format:"%s" > ${D}${sysconfdir}/e2-git.log
     git --git-dir=${OE-ALLIANCE_BASE}/.git log --since=10.weeks --pretty=format:"%s" > ${D}${sysconfdir}/oe-git.log
+    if [ "${base_libdir}" = "/lib64" ] ; then
+        install -d ${D}/usr/lib
+        ln -s ${libdir}/enigma2 ${D}/usr/lib/enigma2
+        ln -s ${libdir}/python2.7 ${D}/usr/lib/python2.7
+    fi
 }
 
 python populate_packages_prepend() {

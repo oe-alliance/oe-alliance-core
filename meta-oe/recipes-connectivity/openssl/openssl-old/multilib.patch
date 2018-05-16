@@ -1,0 +1,11 @@
+--- a/engines/Makefile	2018-05-15 21:06:39.886647642 +0200
++++ b/engines/Makefile	2018-05-15 21:07:04.478542838 +0200
+@@ -92,7 +92,7 @@
+ 	@[ -n "$(INSTALLTOP)" ] # should be set by top Makefile...
+ 	@if [ -n "$(SHARED_LIBS)" ]; then \
+ 		set -e; \
+-		$(PERL) $(TOP)/util/mkdir-p.pl $(INSTALL_PREFIX)$(INSTALLTOP)/lib/engines; \
++		$(PERL) $(TOP)/util/mkdir-p.pl $(INSTALL_PREFIX)$(INSTALLTOP)/$(LIBDIR)/engines; \
+ 		for l in $(LIBNAMES); do \
+ 			( echo installing $$l; \
+ 			  if [ "$(PLATFORM)" != "Cygwin" ]; then \

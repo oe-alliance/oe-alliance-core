@@ -3,7 +3,7 @@ MAINTAINER = "Nathanael and gordon55"
 
 require conf/license/license-gplv2.inc
 
-inherit gitpkgv allarch
+inherit gitpkgv
 
 SRCREV = "${AUTOREV}"
 PV = "5.8+git${SRCPV}"
@@ -12,7 +12,7 @@ VER="5.8"
 
 SRC_URI="git://github.com/openatv/iflat.git;protocol=git"
 
-FILES_${PN} = "/usr/*"
+FILES_${PN} = "${libdir} /usr/share"
 
 S = "${WORKDIR}/git"
 
@@ -21,8 +21,10 @@ python -O -m compileall ${S}
 }
 
 do_install() {
-    install -d ${D}/usr/share/enigma2
-    cp -rp ${S}/usr ${D}/
+    install -d ${D}${libdir}
+    install -d ${D}/usr/share
+    cp -rp ${S}/usr/lib/* ${D}${libdir}/
+    cp -rp ${S}/usr/share/* ${D}/usr/share/
     chmod -R a+rX ${D}/usr/share/enigma2/
 }
 
@@ -62,7 +64,7 @@ done
 
 echo
 
-if [ -e "/usr/lib/enigma2/python/Plugins/Extensions/MediaPortal/plugin.pyo" ]
+if [ -e "${libdir}/enigma2/python/Plugins/Extensions/MediaPortal/plugin.pyo" ]
   then
 		echo -e "... install iFlatFHD for Mediaportal"
 		[ -d "$MPDir/skins_1080/iFlatFHD" ] && rm -rf "$MPDir/skins_1080/iFlatFHD"
@@ -88,7 +90,7 @@ echo ""
 
 # --- check if Mediaportal is installed. if yes, remove iFlatFHD skin for Mediaportal
 
-MPDir="/usr/lib/enigma2/python/Plugins/Extensions/MediaPortal"
+MPDir="${libdir}/enigma2/python/Plugins/Extensions/MediaPortal"
 
 if [ -d "$MPDir/skins_1080/iFlatFHD" ]
   then

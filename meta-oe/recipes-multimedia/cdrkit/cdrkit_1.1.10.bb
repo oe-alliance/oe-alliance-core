@@ -5,7 +5,7 @@ LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=b30d3b2750b668133fc17b401e1b98f8"
 
 SRC_URI = " \
-    http://cdrkit.org/releases/${P}.tar.gz;name=archive \
+    http://cdrkit.org/releases/${BP}.tar.gz;name=archive \
     file://xconfig.patch \
 "
 

@@ -15,8 +15,8 @@ EXTRA_OEMAKE = "LINUX_SRC=${STAGING_KERNEL_DIR} KDIR=${STAGING_KERNEL_DIR}"
 S = "${WORKDIR}/RT5572/"
 
 do_install() {
-    install -d ${D}/lib/modules/${KERNEL_VERSION}/kernel/drivers/net/wireless
-    install -m 0644 ${S}/os/linux/rt5572sta.ko ${D}${base_libdir}/modules/${KERNEL_VERSION}/kernel/drivers/net/wireless
+    install -d ${D}${nonarch_base_libdir}/modules/${KERNEL_VERSION}/kernel/drivers/net/wireless
+    install -m 0644 ${S}/os/linux/rt5572sta.ko ${D}${nonarch_base_libdir}/modules/${KERNEL_VERSION}/kernel/drivers/net/wireless
     install -d ${D}${sysconfdir}/Wireless/RT5572STA
     install -m 0644 ${S}/RT2870STA.dat ${D}${sysconfdir}/Wireless/RT5572STA/RT5572STA.dat
     install -m 0644 ${S}/RT2870STACard.dat ${D}${sysconfdir}/Wireless/RT5572STA/RT5572STACard.dat
@@ -26,3 +26,4 @@ SRC_URI[md5sum] = "88d11654985e8da2101bc92d4fa00340"
 SRC_URI[sha256sum] = "50bc80038a1a691bdcce426e95e9480f1d424fbc99690dac91a51c67b49090ea"
 
 FILES_${PN}_append = "${sysconfdir}/Wireless"
+

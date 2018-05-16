@@ -6,7 +6,7 @@ LICENSE = "GPLv2"
 SECTION = "libs/network"
 DEPENDS = "cppunit libsigc++-2.0 openssl"
 
-SRC_URI = "http://rtorrent.net/downloads/${PN}-${PV}.tar.gz" 
+SRC_URI = "http://rtorrent.net/downloads/${BPN}-${PV}.tar.gz" 
 
 EXTRA_OECONF = " --enable-aligned --without-kqueue"
 

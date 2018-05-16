@@ -1,0 +1,29 @@
+#!/bin/sh
+
+
+case "$1" in
+  start)
+    echo -n "Starting cnim... "
+    /usr/bin/cnim
+    cat /tmp/NIMS > /proc/bus/nim_sockets
+    echo "."
+    ;;
+  stop)
+    echo -n "Stopping cnim"
+    echo "."
+    ;;
+  restart|force-restart)
+    echo -n "Stopping cnim"
+    sleep 1
+    echo -n "Starting cnim"
+    /usr/bin/cnim
+    cat /tmp/NIMS > /proc/bus/nim_sockets
+    echo "."
+    ;;
+  *)
+    echo "Usage: /etc/init.d/cnim {start|stop|reload|restart|force-restart}"
+    exit 1
+esac
+
+exit 0
+

@@ -21,9 +21,9 @@ S = "${WORKDIR}/git"
 
 PACKAGES =+ "${PN}-src"
 PACKAGES =+ "${PN}-po"
-FILES_${PN} = "/tmp /etc /usr/lib"
-FILES_${PN}-src = "/usr/lib/enigma2/python/Plugins/Extensions/MultiQuickButton/*.py"
-FILES_${PN}-po = "/usr/lib/enigma2/python/Plugins/Extensions/MultiQuickButton/locale/*.po"
+FILES_${PN} = "/tmp /etc ${libdir}"
+FILES_${PN}-src = "${libdir}/enigma2/python/Plugins/Extensions/MultiQuickButton/*.py"
+FILES_${PN}-po = "${libdir}/enigma2/python/Plugins/Extensions/MultiQuickButton/locale/*.po"
 
 inherit autotools-brokensep
 

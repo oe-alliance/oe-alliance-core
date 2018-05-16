@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f"
 HOMEPAGE = "http://parchive.sourceforge.net/"
 DEPENDS = "libsigc++-2.0"
 
-SRC_URI = "${SOURCEFORGE_MIRROR}/parchive/${PN}/${PN}-${PV}.tar.gz \
+SRC_URI = "${SOURCEFORGE_MIRROR}/parchive/${BPN}/${BPN}-${PV}.tar.gz \
     file://par2cmdline-0.4-gcc4.patch \
     file://par2-softlink.patch \
     "

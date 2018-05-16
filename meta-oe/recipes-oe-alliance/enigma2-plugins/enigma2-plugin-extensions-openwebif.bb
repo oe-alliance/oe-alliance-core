@@ -25,7 +25,7 @@ RDEPENDS_${PN} = "\
 
 inherit gitpkgv distutils-openplugins gettext
 
-DISTUTILS_INSTALL_ARGS = "--root=${D} --install-lib=/usr/lib/enigma2/python/Plugins"
+DISTUTILS_INSTALL_ARGS = "--root=${D} --install-lib=${libdir}/enigma2/python/Plugins"
 
 SRCREV = "${AUTOREV}"
 PV = "1.3.0+git${SRCPV}"
@@ -47,7 +47,7 @@ do_compile() {
 	python -O -m compileall ${S}
 }
 
-PLUGINPATH = "/usr/lib/enigma2/python/Plugins/Extensions/${MODULE}"
+PLUGINPATH = "${libdir}/enigma2/python/Plugins/Extensions/${MODULE}"
 do_install_append() {
 	install -d ${D}${PLUGINPATH}
 	cp -r ${S}/plugin/* ${D}${PLUGINPATH}

@@ -1,0 +1,28 @@
+diff -Naur a/video/amlvdec/gstamlvdec.c b/video/amlvdec/gstamlvdec.c
+--- a/video/amlvdec/gstamlvdec.c	2016-05-04 08:57:00.000000000 +0200
++++ b/video/amlvdec/gstamlvdec.c	2016-07-06 16:36:42.848260638 +0200
+@@ -354,8 +354,8 @@
+ 			amlvdec->input_state = NULL;
+ 		}
+ 		
+-		set_fb0_blank(0);
+-		set_fb1_blank(0);
++//		set_fb0_blank(0);
++//		set_fb1_blank(0);
+ //T?		set_display_axis(1);
+ 	}
+ 	if (amlvdec->info) {
+@@ -641,10 +641,10 @@
+ 				GST_ERROR("codec init failed, ret=-0x%x", -ret);
+ 				return FALSE;
+ 			}
+-			set_fb0_blank(1);
+-			set_fb1_blank(1);
++//			set_fb0_blank(1);
++//			set_fb1_blank(1);
+ 			set_tsync_enable(1);
+-			set_display_axis(coordinate);
++//			set_display_axis(coordinate);
+ 			//set_video_axis(coordinate);
+ 			amlvdec->codec_init_ok = 1;
+ 			if (amlvdec->trickRate > 0) {

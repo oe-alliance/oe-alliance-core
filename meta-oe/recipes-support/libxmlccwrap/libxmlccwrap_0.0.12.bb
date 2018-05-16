@@ -6,7 +6,7 @@ LICENSE = "LGPLv2.1+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=fad9b3332be894bab9bc501572864b29"
 DEPENDS = "libxml2"
 
-SRC_URI = "http://www.ant.uni-bremen.de/whomes/rinas/libxmlccwrap/download/${P}.tar.gz \
+SRC_URI = "http://www.ant.uni-bremen.de/whomes/rinas/libxmlccwrap/download/${BP}.tar.gz \
        file://dont_build_unneeded.patch \
        file://disable_libxslt.patch \
        file://fix_assignment_operator.patch \

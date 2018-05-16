@@ -1,0 +1,32 @@
+From db209481d8097a4073a8a4a4f7f65818623daaa1 Mon Sep 17 00:00:00 2001
+From: Captain <captain.onboard@web.de>
+Date: Mon, 14 May 2018 18:32:15 +0200
+Subject: [PATCH] multilib libdir
+
+---
+ Makefile | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/Makefile b/Makefile
+index 1c01f89..bb4603a 100644
+--- a/Makefile
++++ b/Makefile
+@@ -11,12 +11,12 @@ all : $(LIB) squish.pc
+ 
+ install : $(LIB) squish.pc
+ 	install squish.h $(INSTALL_DIR)/include 
+-	install libsquish.a $(INSTALL_DIR)/lib
+-	install squish.pc $(INSTALL_DIR)/lib/pkgconfig
++	install libsquish.a $(INSTALL_DIR)$(base_libdir)
++	install squish.pc $(INSTALL_DIR)$(base_libdir)/pkgconfig
+ 
+ uninstall:
+ 	$(RM) $(INSTALL_DIR)/include/squish.h
+-	$(RM) $(INSTALL_DIR)/lib/libsquish.a
++	$(RM) $(INSTALL_DIR)$(base_libdir)/libsquish.a
+ 
+ $(LIB) : $(OBJ)
+ 	$(AR) cr $@ $?
+-- 
+2.17.0.windows.1
+

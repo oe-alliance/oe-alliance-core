@@ -4,7 +4,7 @@ HOMEPAGE = "http://xbmc.org/"
 DEPENDS = "openssl"
 LICENSE = "GPLv2"
 INC_PR = "r5"
-S="${WORKDIR}/${PN}-${PV}_lib"
+S="${WORKDIR}/${BPN}-${PV}_lib"
 SRC_URI = "http://sources.openelec.tv/mirror/libshairport/libshairport-1.2.0.20310_lib.tar.gz;name=archive \
            file://001_add_ao.patch;apply=yes;striplevel=0 \
            file://002_fix_install_header.patch;apply=yes;striplevel=0 \

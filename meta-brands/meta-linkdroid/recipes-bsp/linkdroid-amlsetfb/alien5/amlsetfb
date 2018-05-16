@@ -1,0 +1,78 @@
+#!/bin/sh
+
+echo heartbeat > /sys/class/leds/led-sys/trigger
+HPD_STATE=/sys/class/amhdmitx/amhdmitx0/hpd_state
+DISP_CAP=/sys/class/amhdmitx/amhdmitx0/disp_cap
+DISP_MODE=/sys/class/display/mode
+
+
+bpp=32
+mode=720p60hz
+hdmi=`cat $HPD_STATE`
+if [ $hdmi -eq 1 ]; then
+    echo $mode > $DISP_MODE
+fi
+
+outputmode=$mode
+
+common_display_setup() {
+#    fbset -fb /dev/fb1 -g 32 32 32 32 32
+    echo $outputmode > /sys/class/display/mode
+    sleep 1
+    echo 0 > /sys/class/ppmgr/ppscaler
+    echo 0 > /sys/class/graphics/fb0/free_scale
+    echo 1 > /sys/class/graphics/fb0/freescale_mode
+
+    case $outputmode in
+            480*) M="0 0 719 479" ;;
+            576*) M="0 0 719 575" ;;
+            720*) M="0 0 1279 719" ;;
+            800*) M="0 0 1279 799" ;;
+            1080*) M="0 0 1919 1079" ;;
+    esac
+
+#    echo $M > /sys/class/graphics/fb0/free_scale_axis
+#    echo $M > /sys/class/graphics/fb0/window_axis
+
+    echo "0 0 1280 720 0 0 18 18" > /sys/class/display/axis
+#    echo "0 0 1279 719" > /sys/class/video/axis
+#    echo "0 0 1279 719 0" > /sys/class/ppmgr/ppscaler_rect
+#    echo 0 > /sys/class/graphics/fb0/free_scale
+
+#   echo 0x10001 > /sys/class/graphics/fb0/free_scale
+#   echo 0x10001 > /sys/class/graphics/fb1/free_scale
+
+}
+
+case $mode in
+    720*)       fbset -fb /dev/fb0 -g 1280 720 1280 1440 $bpp;  common_display_setup ;;
+    1080*)      fbset -fb /dev/fb0 -g 1920 1080 1920 2160 $bpp; common_display_setup ;;
+esac
+
+
+# Console unblack
+echo 0 > /sys/class/graphics/fb0/blank
+echo 1 > /sys/class/graphics/fb1/blank
+
+pbsplash
+
+#remote.conf for a4 has problems with custom_begin/end !!!
+/usr/bin/remotecfg /etc/amremote/remote.conf
+
+#echo rm default > /sys/class/vfm/map
+###echo add default decoder ppmgr deinterlace amvideo > /sys/class/vfm/map
+#echo add default decoder ppmgr amvideo deinterlace > /sys/class/vfm/map
+###echo 912000 >   /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
+###echo conservative > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
+echo 1488000 >  /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
+
+
+#if [ ! -e /etc/.aml ]; then
+#	touch /etc/.aml
+#		if [ ! -e /etc/.aml ]; then
+#			cp /etc/asound.conf.aml /etc/asound.conf
+#		fi
+#fi
+
+echo default-on > /sys/class/leds/led-sys/trigger
+

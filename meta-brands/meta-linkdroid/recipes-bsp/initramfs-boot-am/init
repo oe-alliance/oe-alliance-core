@@ -1,0 +1,233 @@
+#!/bin/sh
+
+# Variables shared amoung modules
+ROOTFS_DIR="/mnt" # where to do the switch root
+
+# make mount stop complaining about missing /etc/fstab
+touch /etc/fstab
+
+# initialize /proc, /sys and /var/lock
+mkdir -p /proc /sys /var/lock
+mount -t proc proc /proc
+mount -t sysfs sysfs /sys
+
+# use /dev with devtmpfs
+if grep -q devtmpfs /proc/filesystems; then
+    mkdir -p /dev
+    mount -t devtmpfs devtmpfs /dev
+else
+    if [ ! -d /dev ]; then
+        fatal "ERROR: /dev doesn't exist and kernel doesn't has devtmpfs enabled."
+    fi
+fi
+
+# create mountpoint for root
+mkdir $ROOTFS_DIR
+
+#insert our precious NFTL
+depmod -a 
+modprobe aml_nftl_dev
+
+# Force 720p50hz display mode at startup
+##echo 720p50hz > /sys/class/display/mode
+#
+
+# disable vendor bootlogo on framebuffer 1
+##echo 1 > /sys/class/graphics/fb1/blank
+
+# Enable framebuffer device
+##echo 0 > /sys/class/graphics/fb0/blank
+
+# Disable framebuffer scaling
+##echo 0 > /sys/class/graphics/fb0/free_scale
+
+# Set framebuffer geometry
+##fbset -fb /dev/fb0 -g 1280 720 1280 1440 32
+
+# pbspalsh be careful fopr png(s) to mach startup Resolution
+##pbsplash
+
+# Set framebuffer size in CVBS mode to match the resolution,
+# for splash screen to be shown correctly
+#hpd_state=$(cat /sys/class/amhdmitx/amhdmitx0/hpd_state)
+#if [ "$hpd_state" != "1" ]; then # HDMI is not connected
+#  display_height=480
+#  display_mode=$(cat /sys/class/display/mode)
+#  if [ "$display_mode" = "576cvbs" ]; then
+#    display_height=576
+#  fi
+#  fbset -fb /dev/fb0 -g 720 "$display_height" 720 "$display_height" 32
+#  fbset -fb /dev/fb1 -g 720 "$display_height" 720 "$display_height" 32
+#fi
+
+# Include deinterlacer into default VFM map
+echo "rm default" > /sys/class/vfm/map
+echo "add default decoder ppmgr deinterlace amvideo" > /sys/class/vfm/map
+
+# Set 500MHz minimum CPU speed for both clusters
+echo 500000 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
+echo 500000 > /sys/devices/system/cpu/cpu3/cpufreq/scaling_min_freq
+
+#write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor performance
+#write /sys/class/freq_limit/limit 0
+#write /sys/devices/system/cpu/cpu0/cpufreq/scaling_dflt_freq 2016000
+echo "performance" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
+echo 0 > /sys/class/freq_limit/limit
+echo 2016000 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_dflt_freq
+
+#write /sys/module/amvdec_h265/parameters/mmu_enable 0
+echo 0 > /sys/module/amvdec_h265/parameters/mmu_enable
+
+#write /sys/module/amports/parameters/def_vstreambuf_sizeM 10
+#write /sys/module/amports/parameters/def_4k_vstreambuf_sizeM 30
+
+echo 10 > /sys/module/amports/parameters/def_vstreambuf_sizeM
+echo 30 > /sys/module/amports/parameters/def_4k_vstreambuf_sizeM
+
+#write /sys/class/graphics/fb0/osd_afbcd 1
+echo 1 > /sys/class/graphics/fb0/osd_afbcd
+
+# set smp_affinity
+#            Binary       Hex
+#    CPU 0    0001         1
+#    CPU 1    0010         2
+#    CPU 2    0100         4
+#    CPU 3    1000         8
+echo 2 > /proc/irq/231/smp_affinity  # hdmi_aocec
+echo 4 > /proc/irq/63/smp_affinity   # dwc_otg, dwc_otg_hcd:usb1
+echo 8 > /proc/irq/62/smp_affinity   # dwc_otg, dwc_otg_hcd:usb2, dwc_otg_pcd
+
+
+# DEC_CONTROL_FLAG_DISABLE_FAST_POC
+#echo 4 > /sys/module/amvdec_h264/parameters/dec_control
+
+
+
+#Function for parsing command line options with "=" in them
+# get_opt("init=/sbin/init") will return "/sbin/init"
+get_opt() {
+    echo "$@" | cut -d "=" -f 2
+}
+
+#Defaults
+init="/sbin/init.sysvinit"
+root="/dev/mmcblk1p2"
+firmware=""
+rootfstype=
+
+#Process command line options
+for i in $(cat /proc/cmdline); do
+    case $i in
+        root\=*)
+            root=$(get_opt $i)
+            ;;
+        firmware\=*)
+            firmware=$(get_opt $i)
+            ;;
+        rootfstype\=*)
+            rootfstype=$(get_opt $i)
+            ;;
+    esac
+done
+
+# FIXME-ce dirty hack to overwrite commandline....
+# need to check for init as well not only device
+#if [ ! -d /dev/mmcblk1p2 ]; then
+if [ "$(blkid | grep ROOTFS | cut -d ':' -f 1)" == "/dev/mmcblk1p2"  ]; then 
+  root="/dev/mmcblk1p2"
+else
+  root="/dev/mmcblk0p2"
+fi
+rootfstype="ext4"
+init="/sbin/init.sysvinit"
+
+#Mount the root device
+if [ "${rootfstype}" != "" ]; then
+    mount -t ${rootfstype} "${root}" /mnt
+else
+    mount "${root}" /mnt
+fi
+
+get_boot() {
+    echo `awk '
+    BEGIN{
+       mtd = -1
+    }
+    /"boot"/ {mtd = $1; len = length(mtd); mtd=substr(mtd, 4, len - 4);
+    }
+    END{
+        if (mtd != -1) print "/dev/mtdblock"mtd
+    }' /proc/mtd`
+}
+
+if [ -n "${firmware}" ]; then
+    if [ -f "/mnt/${firmware}" ] ; then
+        echo "formating file system"
+        mkfs.ext4 /dev/system
+        mkdir -p system
+        mount -t ext4 /dev/system /system
+        echo "extracting file system ..."
+        gunzip -c /mnt/rootfs.tar.gz  | tar -xf - -C /system
+        if [ $? -ne 0 ]; then
+           echo "Error: untar failed."
+        else
+           echo "Done"
+        fi
+        device=$(get_boot)
+        if [ "$device" == "" ]; then
+            device=/dev/boot
+        fi
+        if [ -f "/mnt/boot.img" ]; then
+           echo "Writing boot.img into boot partition(${device})..."
+           dd if=/mnt/boot.img of=${device}
+           echo "Done"
+        elif [ -f "/mnt/uImage" ]; then
+           echo "Writing uImage into boot partition(${device})..."
+           dd if=/mnt/uImage of=${device}
+           echo "Done"
+        fi
+        sync
+        echo "update complete"
+        umount /sys /proc /dev
+        exec chroot /system ${init}
+    else
+        echo "cannot locate ${firmware}"
+        echo "boot normally..."
+    fi
+fi
+echo "ts0" > /sys/class/stb/source
+echo "ts0" > /sys/class/stb/demux0_source
+echo "ts0" > /sys/class/stb/demux1_source
+echo "ts0" > /sys/class/stb/demux2_source
+
+busybox ln -s /dev/dvb/adapter0/dsc0 /dev/dvb/adapter0/ca0
+busybox ln -s /dev/dvb/adapter0/dsc1 /dev/dvb/adapter0/ca1
+busybox ln -s /dev/dvb/adapter0/dsc2 /dev/dvb/adapter0/ca2
+busybox ln -s /dev/smc0 /dev/sci0
+echo dmx0 > /sys/class/stb/dsc0_source
+
+echo "interactive" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor 
+
+echo "Check if ${ROOTFS_DIR}/${init} exists and is executable"
+#Check if $init exists and is executable
+if [[ -x "/mnt/${init}" ]] ; then
+    echo "Unmount all other mounts so that the ram used by the initramfs can be cleared after switch_root"
+    #Unmount all other mounts so that the ram used by
+    #the initramfs can be cleared after switch_root
+    umount /sys /proc /dev
+
+    #Switch to the new root and execute init
+    /bin/mount -t devtmpfs devtmpfs /mnt/dev
+    exec 0</mnt/dev/console
+    exec 1>/mnt/dev/console
+    exec 2>/mnt/dev/console
+    exec switch_root -c /dev/console /mnt "${init}"
+fi
+
+
+
+
+
+#This will only be run if the exec above failed
+echo "Failed to switch root, dropping to a shell"
+exec sh

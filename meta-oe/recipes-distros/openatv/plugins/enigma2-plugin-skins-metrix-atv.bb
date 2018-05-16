@@ -3,7 +3,6 @@ MAINTAINER = "http://open-store.net "
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "proprietary"
-inherit allarch
 
 require conf/license/license-gplv2.inc
 
@@ -27,24 +26,27 @@ S = "${WORKDIR}/git"
 FILES_enigma2-plugin-skins-metrix-atv-fhd-icons = "/usr/share/enigma2/MetrixHD/FHD"
 FILES_enigma2-plugin-skins-metrix-atv-uhd-icons = "/usr/share/enigma2/MetrixHD/UHD"
 FILES_${PN}-src = "\
-    /usr/lib/enigma2/python/Components/Converter/*.py \
-    /usr/lib/enigma2/python/Components/Renderer/*.py \
-    /usr/lib/enigma2/python/Plugins/Extensions/MyMetrixLite/*.py \
+    ${libdir}/enigma2/python/Components/Converter/*.py \
+    ${libdir}/enigma2/python/Components/Renderer/*.py \
+    ${libdir}/enigma2/python/Plugins/Extensions/MyMetrixLite/*.py \
     "
 
-FILES_${PN} = "/usr"
+FILES_${PN} = "${libdir} /usr/share"
 
 do_compile() {
-	python -O -m compileall ${S}
+	python -O -m compileall ${S}/usr
 	for f in $(find ${S}/locale -name *.po ); do
 		l=$(echo ${f%} | sed 's/\.po//' | sed 's/.*locale\///')
-		mkdir -p ${S}${libdir}/enigma2/python/Plugins/Extensions/MyMetrixLite/locale/${l%}/LC_MESSAGES
-		msgfmt -o ${S}${libdir}/enigma2/python/Plugins/Extensions/MyMetrixLite/locale/${l%}/LC_MESSAGES/MyMetrixLite.mo ${S}/locale/$l.po
+		mkdir -p ${S}/usr/lib/enigma2/python/Plugins/Extensions/MyMetrixLite/locale/${l%}/LC_MESSAGES
+		msgfmt -o ${S}/usr/lib/enigma2/python/Plugins/Extensions/MyMetrixLite/locale/${l%}/LC_MESSAGES/MyMetrixLite.mo ${S}/locale/$l.po
 	done
 }
 
 do_install() {
-	cp -r --preserve=mode,links ${S}/usr ${D}/
+    install -d ${D}${libdir}
+    install -d ${D}/usr/share
+    cp -r --preserve=mode,links ${S}/usr/lib/* ${D}${libdir}/
+    cp -r --preserve=mode,links ${S}/usr/share/* ${D}/usr/share/
 }
 
 pkg_preinst_${PN}() {
@@ -98,8 +100,8 @@ exit 0
 pkg_postinst_${PN} () {
 #!/bin/sh
 echo "Checking for obsolete MyMetrixLiteColors"
-if [ -d /usr/lib/enigma2/python/Plugins/Extensions/MyMetrixLiteColors ]; then
-    rm -rf /usr/lib/enigma2/python/Plugins/Extensions/MyMetrixLiteColors 2>/dev/null
+if [ -d ${libdir}/enigma2/python/Plugins/Extensions/MyMetrixLiteColors ]; then
+    rm -rf ${libdir}/enigma2/python/Plugins/Extensions/MyMetrixLiteColors 2>/dev/null
     echo "MyMetrixLiteColors was found and removed"
 else
     echo "MyMetrixLiteColors was not found"

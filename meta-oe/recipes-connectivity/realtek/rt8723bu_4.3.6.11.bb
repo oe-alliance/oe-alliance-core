@@ -32,11 +32,12 @@ do_compile () {
 }
 
 do_install() {
-    install -d ${D}/lib/modules/${KERNEL_VERSION}/kernel/drivers/net/wireless
-    install -m 0644 ${S}/8723bu.ko ${D}${base_libdir}/modules/${KERNEL_VERSION}/kernel/drivers/net/wireless
+    install -d ${D}${nonarch_base_libdir}/modules/${KERNEL_VERSION}/kernel/drivers/net/wireless
+    install -m 0644 ${S}/8723bu.ko ${D}${nonarch_base_libdir}/modules/${KERNEL_VERSION}/kernel/drivers/net/wireless
 
 }
 
 SRC_URI[md5sum] = "dee476779b809962be52dc884a8947db"
 SRC_URI[sha256sum] = "8948749f706cb1937511a0b6af0d1d656e182146b66fc6758e5d522643dea630"
+
 

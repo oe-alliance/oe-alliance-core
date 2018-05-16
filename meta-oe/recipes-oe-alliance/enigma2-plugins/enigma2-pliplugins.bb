@@ -46,6 +46,6 @@ python populate_packages_prepend () {
 }
 
 do_install_append() {
-    find ${D}/usr/lib/enigma2/python/ -name '*.pyc' -exec rm {} \;
+    find ${D}${libdir}/enigma2/python/ -name '*.pyc' -exec rm {} \;
 }
 

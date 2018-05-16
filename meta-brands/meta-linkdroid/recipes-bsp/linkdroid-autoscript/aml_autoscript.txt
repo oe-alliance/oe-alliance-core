@@ -1,0 +1,5 @@
+setenv linux_start_mmc "if fatload mmc 0 1080000 kernel.itb;then echo  E2 mmc ;; bootm 1080000;fi;"
+setenv user_start "if mmcinfo; then run linux_start_mmc;fi;"
+setenv preboot "run factory_reset_poweroff_protect;run upgrade_check;run bootmode_check;run init_display;run storeargs;run upgrade_key;run user_start;run switch_bootmode;"
+saveenv
+run preboot

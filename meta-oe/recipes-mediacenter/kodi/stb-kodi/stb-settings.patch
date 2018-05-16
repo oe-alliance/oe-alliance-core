@@ -1,22 +1,24 @@
-From 2040d08fe587afa33b1d24bfc1c02dc66579f1c1 Mon Sep 17 00:00:00 2001
+From 07f87addfed770dc3fe36036f0d6c58b64603e02 Mon Sep 17 00:00:00 2001
 From: captain <openatv@gmail.com>
-Date: Sat, 25 Mar 2017 22:35:09 +0100
-Subject: [PATCH] stb-settings
+Date: Sat, 12 May 2018 22:35:09 +0200
+Subject: [PATCH 2/5] stb-settings
 
 ---
  addons/skin.estouchy/xml/Home.xml        |  2 +-
  addons/skin.estuary/xml/Home.xml         |  2 +-
  lib/libdvd/Makefile.in                   | 14 +++---
- system/settings/settings.xml             | 12 ++---
+ system/settings/settings.xml             | 14 +++---
  tools/Linux/kodi.sh.in                   | 38 ++++++++++++----
  tools/depends/target/libdvdcss/Makefile  |  4 +-
  tools/depends/target/libdvdnav/Makefile  |  4 +-
  tools/depends/target/libdvdread/Makefile |  4 +-
  xbmc/GUIInfoManager.cpp                  |  4 ++
+ xbmc/gen-compileinfo.mk                  |  2 +-
  xbmc/input/InputManager.cpp              | 12 +++++
  xbmc/input/linux/LinuxInputDevices.cpp   | 56 +++++++++++++++++++++++-
  xbmc/utils/CPUInfo.cpp                   | 39 +++++++++++++++++
- 12 files changed, 158 insertions(+), 33 deletions(-)
+ xbmc/view/ViewStateSettings.cpp          |  2 +-
+ 14 files changed, 161 insertions(+), 36 deletions(-)
 
 diff --git a/addons/skin.estouchy/xml/Home.xml b/addons/skin.estouchy/xml/Home.xml
 index 971f04b64d..466af7e23f 100644
@@ -73,7 +75,7 @@ index 5a4508bfff..359082febc 100644
  SYSDIR = @abs_top_srcdir@/system/players/VideoPlayer
  SOS = libdvdnav-$(ARCH).so
 diff --git a/system/settings/settings.xml b/system/settings/settings.xml
-index 5ff71b9741..03c761ae76 100644
+index 5ff71b9741..66741adf59 100644
 --- a/system/settings/settings.xml
 +++ b/system/settings/settings.xml
 @@ -670,7 +670,7 @@
@@ -123,6 +125,15 @@ index 5ff71b9741..03c761ae76 100644
              </options>
            </constraints>
            <control type="list" format="integer" />
+@@ -3172,7 +3168,7 @@
+       <group id="2" label="14270">
+         <setting id="locale.country" type="string" label="14271" help="36115">
+           <level>0</level>
+-          <default>USA (12h)</default>
++          <default>Central Europe</default>
+           <constraints>
+             <options>regions</options>
+           </constraints>
 diff --git a/tools/Linux/kodi.sh.in b/tools/Linux/kodi.sh.in
 index 0a00a32034..ea46ec79b1 100644
 --- a/tools/Linux/kodi.sh.in
@@ -243,14 +254,14 @@ index 3652f1b1f2..5b0dc93bf3 100644
    ROOT_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
    PREFIX := $(ROOT_DIR)/dvdread-install
 diff --git a/xbmc/GUIInfoManager.cpp b/xbmc/GUIInfoManager.cpp
-index d683351e48..2b99335dbf 100644
+index 5411959fc7..5b7dd43d04 100644
 --- a/xbmc/GUIInfoManager.cpp
 +++ b/xbmc/GUIInfoManager.cpp
-@@ -9376,8 +9376,12 @@ std::string CGUIInfoManager::GetSystemHeatInfo(int info)
+@@ -9386,8 +9386,12 @@ std::string CGUIInfoManager::GetSystemHeatInfo(int info)
      m_lastSysHeatInfoTime = CTimeUtils::GetFrameTime();
  #if defined(TARGET_POSIX)
      g_cpuInfo.getTemperature(m_cpuTemp);
-+#if defined(TARGET_STB)
++#if defined(TARGET_STB_EXTEND)
 +    m_gpuTemp = m_cpuTemp;
 +#else
      m_gpuTemp = GetGPUTemperature();
@@ -259,6 +270,19 @@ index d683351e48..2b99335dbf 100644
    }
  
    std::string text;
+diff --git a/xbmc/gen-compileinfo.mk b/xbmc/gen-compileinfo.mk
+index 11ded2a142..a9af10423d 100644
+--- a/xbmc/gen-compileinfo.mk
++++ b/xbmc/gen-compileinfo.mk
+@@ -15,7 +15,7 @@ $(FILEPATH)/.GitRevision:
+         elif test "$(GIT)" = "git" && test -d $(FILEPATH)/../.git ; then \
+           if ! git diff-files --ignore-submodules --quiet -- || ! git diff-index --cached --ignore-submodules --quiet HEAD --; then \
+             BUILD_DATE=$$(date -u "+%F"); \
+-            BUILD_SCMID=$$(git --no-pager log --abbrev=7 -n 1 --pretty=format:"%h-dirty"); \
++            BUILD_SCMID=$$(git --no-pager log --abbrev=4 -n 1 --pretty=format:"%h-stb"); \
+             GITREV="$${BUILD_DATE}-$${BUILD_SCMID}" ;\
+           else \
+             BUILD_DATE=$$(git --no-pager log -n 1 --date=short --pretty=format:"%cd"); \
 diff --git a/xbmc/input/InputManager.cpp b/xbmc/input/InputManager.cpp
 index 80c89f0283..d1e2d477ca 100644
 --- a/xbmc/input/InputManager.cpp
@@ -283,7 +307,7 @@ index 80c89f0283..d1e2d477ca 100644
      {
        // use the virtualkeyboard section of the keymap, and send keyboard-specific or navigation
 diff --git a/xbmc/input/linux/LinuxInputDevices.cpp b/xbmc/input/linux/LinuxInputDevices.cpp
-index ef0d4941f1..dd30185fc4 100644
+index ef0d4941f1..083b52784c 100644
 --- a/xbmc/input/linux/LinuxInputDevices.cpp
 +++ b/xbmc/input/linux/LinuxInputDevices.cpp
 @@ -27,6 +27,9 @@
@@ -375,7 +399,7 @@ index ef0d4941f1..dd30185fc4 100644
      return false;
    }
  
-+#if !defined(TARGET_STB)
++#if !defined(TARGET_STB_EXTEND)
    if (ioctl(fd, EVIOCGRAB, 1) && errno != EINVAL)
    {
      close(fd);
@@ -391,7 +415,7 @@ index ef0d4941f1..dd30185fc4 100644
      return false;
    }
  
-+#if !defined(TARGET_STB)
++#if !defined(TARGET_STB_EXTEND)
    /* grab device */
    ret = ioctl(fd, EVIOCGRAB, 1);
    if (ret && errno != EINVAL)
@@ -407,7 +431,7 @@ index ef0d4941f1..dd30185fc4 100644
  
  driver_open_device_error:
  
-+#if !defined(TARGET_STB)
++#if !defined(TARGET_STB_EXTEND)
    ioctl(fd, EVIOCGRAB, 0);
 +#endif
    if (m_vt_fd >= 0)
@@ -417,7 +441,7 @@ index ef0d4941f1..dd30185fc4 100644
   */
  void CLinuxInputDevice::Close()
  {
-+#if !defined(TARGET_STB)
++#if !defined(TARGET_STB_EXTEND)
    /* release device */
    ioctl(m_fd, EVIOCGRAB, 0);
 +#endif
@@ -425,7 +449,7 @@ index ef0d4941f1..dd30185fc4 100644
    if (m_vt_fd >= 0)
      close(m_vt_fd);
 diff --git a/xbmc/utils/CPUInfo.cpp b/xbmc/utils/CPUInfo.cpp
-index 5e2ebbd18d..a878af9dcb 100644
+index 5e2ebbd18d..347957c535 100644
 --- a/xbmc/utils/CPUInfo.cpp
 +++ b/xbmc/utils/CPUInfo.cpp
 @@ -274,6 +274,12 @@ CCPUInfo::CCPUInfo(void)
@@ -445,7 +469,7 @@ index 5e2ebbd18d..a878af9dcb 100644
            }
          }
        }
-+#ifdef TARGET_STB
++#ifdef TARGET_STB_EXTEND
 +      else if (strncmp(buffer, "system type", strlen("system type"))==0)
 +      {
 +        char *needle = strchr(buffer, ':');
@@ -488,6 +512,19 @@ index 5e2ebbd18d..a878af9dcb 100644
  #else
    int         ret   = 0;
    FILE        *p    = NULL;
+diff --git a/xbmc/view/ViewStateSettings.cpp b/xbmc/view/ViewStateSettings.cpp
+index a608a82140..9ec76f8e27 100644
+--- a/xbmc/view/ViewStateSettings.cpp
++++ b/xbmc/view/ViewStateSettings.cpp
+@@ -128,7 +128,7 @@ bool CViewStateSettings::Load(const TiXmlNode *settings)
+     if (XMLUtils::GetInt(pElement, XML_SETTINGLEVEL, settingLevel, (const int)SettingLevelBasic, (const int)SettingLevelExpert))
+       m_settingLevel = (SettingLevel)settingLevel;
+     else
+-      m_settingLevel = SettingLevelStandard;
++      m_settingLevel = SettingLevelExpert;
+ 
+     const TiXmlNode* pEventLogNode = pElement->FirstChild(XML_EVENTLOG);
+     if (pEventLogNode != NULL)
 -- 
 2.17.0.windows.1
 
