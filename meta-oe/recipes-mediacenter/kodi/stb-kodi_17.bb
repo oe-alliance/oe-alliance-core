@@ -94,6 +94,7 @@ SRC_URI = "git://github.com/xbmc/xbmc.git;branch=Krypton \
            file://stb-settings.patch \
            file://e2player.patch \
            file://add-gstplayer-support.patch \
+           file://0001-fix-multilib-build.patch \
            file://visualization.patch \
            file://visualizations.zip \
 "
