@@ -357,7 +357,7 @@ FILES_${PN}-src = "\
     "
 
 FILES_${PN} += " \
-    ${bindir} ${sysconfdir}/e2-git.log"
+    ${bindir} ${sysconfdir}/e2-git.log /usr/lib"
 
 # Save po files
 PACKAGES =+ "${PN}-po"
@@ -371,6 +371,11 @@ do_install_append() {
     install -d ${D}${sysconfdir}
     git --git-dir=${S}/.git log --since=10.weeks --pretty=format:"%s" > ${D}${sysconfdir}/e2-git.log
     git --git-dir=${OE-ALLIANCE_BASE}/.git log --since=10.weeks --pretty=format:"%s" > ${D}${sysconfdir}/oe-git.log
+    if [ "${base_libdir}" = "/lib64" ] ; then
+        install -d ${D}/usr/lib
+        ln -s ${libdir}/enigma2 ${D}/usr/lib/enigma2
+        ln -s ${libdir}/python2.7 ${D}/usr/lib/python2.7
+    fi
 }
 
 python populate_packages_prepend() {
