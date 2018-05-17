@@ -4,15 +4,15 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda2f7b4f302"
 
-SRCDATE = "20180513"
+SRCDATE = "20180516"
 
 PV = "0"
 PR = "${SRCDATE}"
 
 inherit lib_package
 
-SRC_URI[md5sum] = "11f1c21749716cb05d6a77fd326bfc15"
-SRC_URI[sha256sum] = "95115c31891d4ed2234a4a6b70ef587ced28c3d943ad093c1a4d0d2b568d4b5e"
+SRC_URI[md5sum] = "a1809717024cc0095e7f42ad658b71d2"
+SRC_URI[sha256sum] = "0c66f77ea32ee0cffb610a916aac85dd80cf0f1799a03987ae4308f5a6f55f28"
 
 SRC_URI = "http://source.mynonpublic.com/linkdroid/${BPN}-${SRCDATE}.zip"
 

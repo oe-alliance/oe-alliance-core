@@ -9,12 +9,12 @@ inherit kernel machine_kernel_pr
 
 LOCALVERSION ?= ""
 MACHINE_KERNEL_PR_append = ".0"
-SRCDATE = "20180513"
+SRCDATE = "20180516"
 
-SRC_URI[md5sum] = "feb69ff3381eed09f6442bc2a42f9146"
-SRC_URI[sha256sum] = "cf7bfbcb7caa451d270f7b80b283af69787428ad16f78ecc8c8395f7cdc3904b"
+SRC_URI[md5sum] = "d01f563056fe6b206057dbeea400a25a"
+SRC_URI[sha256sum] = "73e46868361581be383e9f0e707a10aad07c47ef179b6ced490051afe4b25729"
 
-SRC_URI += "http://source.mynonpublic.com/linkdroid/linux-${PV}-${SRCDATE}.tar.xz \
+SRC_URI += "http://source.mynonpublic.com/linkdroid/linux-${PV}-${SRCDATE}.tar.gz \
     file://defconfig \
     file://${MACHINE}.dts \
 "
