@@ -154,7 +154,7 @@ PREFERRED_PROVIDER_virtual/egl ?= "airdigital-v3ddriver-${MACHINE}"
 PREFERRED_PROVIDER_virtual/libgles2 ?= "airdigital-v3ddriver-${MACHINE}"
 PREFERRED_PROVIDER_virtual/kodi = "stb-kodi-${MACHINE}"
 
-MACHINE_FEATURES += "3dtv alsa hdmicec switchoff blindscan-tbs linuxwifi"
+MACHINE_FEATURES += "3dtv alsa hdmicec switchoff blindscan-tbs"
 
 OEM_ARCH = "${MACHINEBUILD}"
 
