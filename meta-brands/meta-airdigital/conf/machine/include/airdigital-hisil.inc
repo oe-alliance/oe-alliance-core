@@ -1,4 +1,4 @@
-MACHINE_FEATURES += "qthbbtv qtstalker wifiusblegacy"
+MACHINE_FEATURES += "qthbbtv qtstalker"
 DISTRO_FEATURES_remove = "x11 wayland directfb"
 
 PREFERRED_PROVIDER_virtual/egl = "airdigital-mali-${MACHINE}"
