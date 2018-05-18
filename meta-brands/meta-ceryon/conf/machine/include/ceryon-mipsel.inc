@@ -3,9 +3,6 @@ require conf/machine/include/ceryon-oem.inc
 TARGET_ARCH = "mipsel"
 DEFAULTTUNE = "mips32el"
 
-PREFERRED_VERSION_linux-ceryon = "4.0.1"
-PREFERRED_VERSION_linux-libc-headers = "4.0"
-
 KERNEL_IMAGETYPE = "vmlinux"
 KERNEL_OUTPUT = "${KERNEL_IMAGETYPE}"
 KERNEL_CONSOLE = "ttyS0,115200n8"
