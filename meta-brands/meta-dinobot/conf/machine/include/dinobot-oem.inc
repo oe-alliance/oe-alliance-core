@@ -89,7 +89,7 @@ MACHINE_ESSENTIAL_EXTRA_RDEPENDS = "\
     dinobot-hihalt-${MACHINE} \
 "
 
-MACHINE_FEATURES += "videoenhancement switchoff  hdmicec 7segment textlcd skins1080 blindscan-tbs emmc mmc kodi alsa hbbtv-browser-webkit qtstalker wifiusblegacy \
+MACHINE_FEATURES += "videoenhancement switchoff  hdmicec 7segment textlcd skins1080 blindscan-tbs emmc mmc kodi alsa hbbtv-browser-webkit qtstalker\
     ${@bb.utils.contains('MACHINEBUILD', 'anadol4k', '' , ' dvb-c', d)} \
     "
 
