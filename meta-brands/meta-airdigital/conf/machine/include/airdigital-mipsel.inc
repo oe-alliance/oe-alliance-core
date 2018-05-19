@@ -40,7 +40,7 @@ IMAGE_CMD_ubi_append = "\
     "
 
 
-MACHINE_FEATURES += " bootsplash omb boxmodel feature1"
+MACHINE_FEATURES += " bootsplash omb boxmodel feature1 linuxwifi"
 
 BOOTLOGO_FILENAME = "splash.bin"
 

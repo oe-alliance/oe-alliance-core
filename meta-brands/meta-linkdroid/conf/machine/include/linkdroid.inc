@@ -21,15 +21,12 @@ IMAGEDIR ?= "${MACHINE}"
 IMAGE_CMD_alien5sdimg_append = " \
     mkdir -p ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}; \
     mv ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}-sd.img ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/${IMAGE_NAME}-sd.img; \
-    echo ${IMAGE_VER_STRING} > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/imageversion; \
+    echo ${DISTRO_NAME}-${DISTRO_VERSION}.${BUILD_VERSION} > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/imageversion; \
     cd ${DEPLOY_DIR_IMAGE}; \
     zip ${IMAGE_NAME}_sdcard.zip ${IMAGEDIR}/*; \
     rm -f ${DEPLOY_DIR_IMAGE}/*.ext4; \
     rm -f ${DEPLOY_DIR_IMAGE}/*.manifest; \
     rm -f ${DEPLOY_DIR_IMAGE}/*.json; \
-    rm -f ${DEPLOY_DIR_IMAGE}/.ext4; \
-    rm -f ${DEPLOY_DIR_IMAGE}/*.rootfs.ext4; \
-    rm -f ${DEPLOY_DIR_IMAGE}/.manifest; \
     rm -f ${DEPLOY_DIR_IMAGE}/*-sd.img; \
     rm -Rf ${IMAGEDIR}; \
     "

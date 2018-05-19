@@ -41,7 +41,7 @@ IMAGE_FSTYPES ?= "ext4 sdcard"
 IMAGE_CMD_sdcard_append  = " \
     mkdir -p ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}; \
     mv ${SDIMG} ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}; \
-    echo ${IMAGE_VER_STRING} > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/imageversion; \
+    echo ${DISTRO_NAME}-${DISTRO_VERSION}.${BUILD_VERSION} > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/imageversion; \
     cd ${DEPLOY_DIR_IMAGE}; \
     zip ${SDIMG}.zip ${IMAGEDIR}/*; \
     rm -f ${DEPLOY_DIR_IMAGE}/*.ext4; \
