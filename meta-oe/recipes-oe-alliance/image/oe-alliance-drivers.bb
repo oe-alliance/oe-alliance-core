@@ -15,7 +15,6 @@ DEPENDS = "enigma2 network-usb-drivers-meta"
 
 DEPENDS_remove_AML8726 = "network-usb-drivers-meta"
 DEPENDS_remove_AMLS905 = "network-usb-drivers-meta"
-DEPENDS_remove_AML905D = "network-usb-drivers-meta"
 
 RDEPENDS_${PN}_gbquad = "enigma2-plugin-drivers-network-usb-smsc75xx"
 RDEPENDS_${PN}_gbquadplus = "enigma2-plugin-drivers-network-usb-smsc75xx"
