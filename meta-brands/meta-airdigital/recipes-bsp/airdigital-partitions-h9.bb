@@ -8,7 +8,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 require conf/license/license-gplv2.inc
 inherit deploy
 
-SRCDATE = "20180219"
+SRCDATE = "20180521"
 PR = "${SRCDATE}"
 
 S = "${WORKDIR}"
@@ -38,7 +38,7 @@ do_deploy() {
 
 addtask deploy before do_build after do_install
 
-SRC_URI[md5sum] = "8eacdc923f6031aa3886eb9a5fe1e15a"
-SRC_URI[sha256sum] = "f7b730d2c16bc80560089ed410c6b5ce76a336041c92e467f994828d8d5e697b"
+SRC_URI[md5sum] = "5f466ee171294707bb08af94afdf886a"
+SRC_URI[sha256sum] = "d5ab832126b7f57f2256240a67044d4b411ea86464355ca0dc5e0d05f6a5a637"
 
 INSANE_SKIP_${PN} += "already-stripped"
