@@ -15,9 +15,9 @@ inherit gitpkgv
 
 AUTOBOUQUETS_BRANCH ?= "release"
 SRCREV = "${AUTOREV}"
-PV = "1.0+git${SRCPV}"
-PKGV = "1.0+git${GITPKGV}"
-PR = "r2"
+PV = "2.0+git${SRCPV}"
+PKGV = "2.0+git${GITPKGV}"
+PR = "r0"
 
 INSANE_SKIP_${PN} += "already-stripped ldflags"
 
