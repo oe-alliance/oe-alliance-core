@@ -20,11 +20,9 @@ RDEPENDS_${PN} = "\
     opendroid-spinner \
     ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "", "ntfs-3g ", d)} \
     hddtemp \
-    virtual/cron \
     exteplayer3 \
     gstplayer \
     ffmpeg \
-    bash \
     enigma2-plugin-systemplugins-serviceapp \
     python-imaging \
     python-service-identity \
