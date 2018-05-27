@@ -1,22 +1,22 @@
 diff --git a/lib/service/servicedvb.cpp b/lib/service/servicedvb.cpp
-index 0b138ee..8216c91 100644
+index 272d38a4e..3601e2977 100644
 --- a/lib/service/servicedvb.cpp
 +++ b/lib/service/servicedvb.cpp
-@@ -2901,14 +2901,7 @@ void eDVBServicePlay::updateDecoder(bool sendSeekableStateChanged)
- 		if (!m_noaudio)
- 		{
+@@ -2967,14 +2967,7 @@ void eDVBServicePlay::updateDecoder(bool sendSeekableStateChanged)
  			selectAudioStream();
--#if HAVE_AMLOGIC
- 			m_decoder->setSyncPCR(pcrpid);
--#else
--			if (!(m_is_pvr || m_is_stream || m_timeshift_active))
--				m_decoder->setSyncPCR(pcrpid);
--			else
--				m_decoder->setSyncPCR(-1);
--#endif
  		}
  
+-#if HAVE_AMLOGIC
+ 		m_decoder->setSyncPCR(pcrpid);
+-#else
+-		if (!(m_is_pvr || m_is_stream || m_timeshift_active))
+-			m_decoder->setSyncPCR(pcrpid);
+-		else
+-			m_decoder->setSyncPCR(-1);
+-#endif
+ 
  		if (m_decoder_index == 0)
+ 		{
 -- 
-2.10.0.windows.1
+2.17.0.windows.1
 
