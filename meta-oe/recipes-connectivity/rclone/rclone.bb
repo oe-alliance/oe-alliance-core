@@ -35,7 +35,7 @@ SRC_URI = "git://${GO_IMPORT}.git;protocol=https;destsuffix=${BPN}-${PV}/src/${G
            file://COPYING"
 
 do_install_append() {
-    rm -rf ${D}/usr/lib
+    rm -rf ${D}${libdir}
     install -m 755 ${WORKDIR}/rclonefs ${D}${bindir}
     ln -s rclone ${D}${bindir}/mount.rclone
 }

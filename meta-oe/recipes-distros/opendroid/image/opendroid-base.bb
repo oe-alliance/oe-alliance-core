@@ -5,8 +5,8 @@ LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda
 
 ALLOW_EMPTY_${PN} = "1"
 
-PV = "6.4"
-PR = "r28"
+PV = "6.6"
+PR = "r31"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
@@ -20,6 +20,10 @@ RDEPENDS_${PN} = "\
     opendroid-spinner \
     ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "", "ntfs-3g ", d)} \
     hddtemp \
+    exteplayer3 \
+    gstplayer \
+    ffmpeg \
+    enigma2-plugin-systemplugins-serviceapp \
     python-imaging \
     python-service-identity \
     rtmpdump \
