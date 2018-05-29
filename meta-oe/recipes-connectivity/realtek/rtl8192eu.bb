@@ -8,6 +8,7 @@ SRC_URI = "git://github.com/Mange/rtl8192eu-linux-driver.git \
     file://rtl8192eu-makefile.patch \
     file://rtl8192eu-autoconf.patch \
     file://rtl8192eu-gcc5.patch \
+    file://CHECKSM_IPV6_H.patch \
     "
 
 SRCREV = "0c80da7f67607bf5916a9def05cfc4099c098057"

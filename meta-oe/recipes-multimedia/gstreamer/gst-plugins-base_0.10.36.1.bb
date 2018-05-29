@@ -70,6 +70,9 @@ do_configure_prepend() {
     touch ${S}/ABOUT-NLS
 }
 
+do_package_qa() {
+}
+
 require mips-only.inc
 FILES_${PN} += "${datadir}/${BPN}"
 PACKAGE_ARCH = "${MACHINE_ARCH}"

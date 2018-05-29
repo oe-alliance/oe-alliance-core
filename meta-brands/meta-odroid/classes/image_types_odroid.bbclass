@@ -39,11 +39,14 @@ SDIMG = "${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.sdcard.img"
 # Boot partition size [in KiB] to get boot partition with size of 128M
 BOOT_SPACE ?= "131000"
 
-IMAGE_DEPENDS_sdcard = "parted-native:do_populate_sysroot \
-                        dosfstools-native:do_populate_sysroot \
-                        mtools-native:do_populate_sysroot \
-                        virtual/kernel:do_deploy \
-                        ${@d.getVar('IMAGE_BOOTLOADER', True) and d.getVar('IMAGE_BOOTLOADER', True) + ':do_deploy' or ''}"
+do_image_sdcard[depends] += " \
+    parted-native:do_populate_sysroot \
+    dosfstools-native:do_populate_sysroot \
+    mtools-native:do_populate_sysroot \
+    e2fsprogs-native:do_populate_sysroot \
+    virtual/kernel:do_populate_sysroot \
+    ${@base_contains("KERNEL_IMAGETYPE", "uImage", "u-boot:do_populate_sysroot", "",d)} \
+    "
 
 SDCARD = "${IMGDEPLOYDIR}/${IMAGE_NAME}.rootfs.sdcard"
 SDCARD_ROOTFS ?= "${IMGDEPLOYDIR}/${IMAGE_NAME}.rootfs.ext4"

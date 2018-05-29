@@ -48,12 +48,15 @@ diff --git a/os_dep/linux/ioctl_linux.c b/os_dep/linux/ioctl_linux.c
 index 22bb5c2439b8..46323aedf4a2 100644
 --- a/os_dep/linux/ioctl_linux.c
 +++ b/os_dep/linux/ioctl_linux.c
-@@ -13855,7 +13855,7 @@ static int rtw_ioctl_standard_wext_private(struct net_device *dev, struct ifreq
+@@ -13855,7 +13855,11 @@
  static int rtw_ioctl_wext_private(struct net_device *dev, struct ifreq *rq)
  {
  #ifdef CONFIG_COMPAT
--	if(is_compat_task())
-+	if(is_compat_syscall())
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(4,6,0)
++	if(in_compat_syscall())
++#else
+ 	if(is_compat_task())
++#endif
  		return rtw_ioctl_compat_wext_private( dev, rq );
  	else
  #endif // CONFIG_COMPAT
@@ -61,12 +64,15 @@ diff --git a/os_dep/linux/rtw_android.c b/os_dep/linux/rtw_android.c
 index 8de7ff72ff36..64fd137a8273 100644
 --- a/os_dep/linux/rtw_android.c
 +++ b/os_dep/linux/rtw_android.c
-@@ -592,7 +592,7 @@ int rtw_android_priv_cmd(struct net_device *net, struct ifreq *ifr, int cmd)
+@@ -592,7 +592,11 @@
  			goto exit;
  	}
  #ifdef CONFIG_COMPAT
--	if (is_compat_task()) {
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(4,6,0)
 +	if (is_compat_syscall()) {
++#else
+ 	if (is_compat_task()) {
++#endif
  		/* User space is 32-bit, use compat ioctl */
  		compat_android_wifi_priv_cmd compat_priv_cmd;
  

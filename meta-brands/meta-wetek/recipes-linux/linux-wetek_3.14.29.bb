@@ -8,7 +8,7 @@ SRC_URI[md5sum] = "a046dea5803c0f935e6ad62f39138857"
 SRC_URI[sha256sum] = "6bc4cf8e0884a7955c6e0b6a4293525664631546f19b9222e4bf472120bd3d85"
 
 inherit kernel machine_kernel_pr
-MACHINE_KERNEL_PR_append = ".0"
+MACHINE_KERNEL_PR_append = ".1"
 
 DEPENDS = "xz-native bc-native u-boot-mkimage-native virtual/${TARGET_PREFIX}gcc"
 
@@ -43,14 +43,17 @@ do_compile_prepend () {
     mkdir -p ${B}/arch/arm64/boot/dts/amlogic/
     fi
 }
-do_compile_append() {
+
+do_compile_append () {
     install -d ${DEPLOY_DIR_IMAGE}
     install -m 0644 ${B}/arch/arm64/boot/dts/amlogic/${KERNEL_DEVICETREE} ${DEPLOY_DIR_IMAGE}/meson64_wetekplay2.dtb
     install -m 0644 ${WORKDIR}/boot.ini ${DEPLOY_DIR_IMAGE}/boot.ini
     install -m 0644 ${WORKDIR}/uInitrd ${DEPLOY_DIR_IMAGE}/uInitrd
+    cp ${B}/arch/arm64/boot/dts/amlogic/${KERNEL_DEVICETREE} ${B}/arch/arm64/boot/
 }
 
 do_rm_work() {
 }
+
 do_package_qa() {
 }

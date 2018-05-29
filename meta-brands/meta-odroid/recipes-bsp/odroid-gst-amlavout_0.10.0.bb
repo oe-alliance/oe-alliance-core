@@ -30,5 +30,5 @@ FILES_${PN}-dev += "${S}/include/* "
 do_rm_work(){
 }
 
-
-
+do_package_qa() {
+}

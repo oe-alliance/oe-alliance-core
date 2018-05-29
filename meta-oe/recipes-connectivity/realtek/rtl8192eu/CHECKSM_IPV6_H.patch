@@ -1,0 +1,12 @@
+--- a/core/rtw_br_ext.c	2018-05-27 23:41:30.000000000 +0200
++++ b/core/rtw_br_ext.c	2018-05-27 23:42:14.000000000 +0200
+@@ -23,6 +23,9 @@
+ #include <linux/if_arp.h>
+ #include <net/ip.h>
+ #include <net/ipx.h>
++#ifndef _CHECKSM_IPV6_H
++#include <net/ip6_checksum.h>
++#endif
+ #include <linux/atalk.h>
+ #include <linux/udp.h>
+ #include <linux/if_pppox.h>

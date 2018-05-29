@@ -11,7 +11,7 @@ SRC_URI = "file://firmware-avl6211.zip"
 S = "${WORKDIR}"
 
 PACKAGES = "${PN}"
-FILES_${PN} += "${nonarch_base_libdir}}/firmware"
+FILES_${PN} += "${nonarch_base_libdir}/firmware"
 
 do_install() {
     install -d ${D}${nonarch_base_libdir}/firmware
