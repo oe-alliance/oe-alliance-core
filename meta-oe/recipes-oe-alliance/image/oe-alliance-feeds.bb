@@ -156,9 +156,6 @@ GST_BASE_DVD = "${@bb.utils.contains('GST_VERSION', '1.0', ' \
     gst-plugins-bad-mpegtsmux \
     ', d)}"
 
-DEPENDS_remove_AML8726 = "network-usb-drivers-meta"
-DEPENDS_remove_AMLS905 = "network-usb-drivers-meta"
-
 RRECOMMENDS_${PN}_append_vuuno = "enigma2-plugin-extensions-hbbtv"
 RRECOMMENDS_${PN}_append_vuultimo = "enigma2-plugin-extensions-hbbtv"
 RRECOMMENDS_${PN}_append_vusolo = "enigma2-plugin-extensions-hbbtv"

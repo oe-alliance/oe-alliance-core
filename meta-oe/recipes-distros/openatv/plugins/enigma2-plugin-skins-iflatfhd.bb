@@ -6,9 +6,11 @@ require conf/license/license-gplv2.inc
 inherit gitpkgv
 
 SRCREV = "${AUTOREV}"
-PV = "5.8+git${SRCPV}"
-PKGV = "5.8+git${GITPKGV}"
-VER="5.8"
+PV = "5.9+git${SRCPV}"
+PKGV = "5.9+git${GITPKGV}"
+VER="5.9"
+
+RDEPENDS_${PN} = "enigma2-plugin-systemplugins-weathercomponenthandler, enigma2-plugin-skincomponents-weathercomponent"
 
 SRC_URI="git://github.com/openatv/iflat.git;protocol=git"
 

@@ -9,7 +9,7 @@ PR = "r2"
 DEPENDS = "odroid-libamadec-${MACHINE}"
 RDEPENDS_${PN} = "odroid-libamadec-${MACHINE}"
 
-inherit lib_package
+inherit lib_package pkgconfig
 
 EXTRA_OEMAKE = " \
     'CC=${CC}' \
@@ -28,4 +28,7 @@ do_install() {
     install -m 0755  ${S}/libamcodec.so.0.0  ${D}${libdir}
     cd ${D}${libdir}
     ln -sf libamcodec.so.0.0 libamcodec.so
+}
+
+do_package_qa() {
 }

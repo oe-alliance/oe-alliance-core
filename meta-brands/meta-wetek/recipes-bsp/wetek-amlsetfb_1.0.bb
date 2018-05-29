@@ -16,12 +16,12 @@ RDEPENDS_${PN} = "initscripts fbset fbset-modes"
 S = "${WORKDIR}"
 
 SRC_URI = " \
-    file://amlsetfb.sh \
-    file://aaa.sh \
+    file://amlsetfb \
+    file://aaa \
 "
 
 do_install() {
     install -d ${D}${sysconfdir}/init.d
-    install -m 0755 ${WORKDIR}/amlsetfb.sh  ${D}${sysconfdir}/init.d/amlsetfb.sh
-    install -m 0755 ${WORKDIR}/aaa.sh  ${D}${sysconfdir}/init.d/aaa.sh
+    install -m 0755 ${WORKDIR}/amlsetfb  ${D}${sysconfdir}/init.d/amlsetfb
+    install -m 0755 ${WORKDIR}/aaa  ${D}${sysconfdir}/init.d/aaa
 }

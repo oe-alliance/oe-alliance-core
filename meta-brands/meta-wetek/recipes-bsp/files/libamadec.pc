@@ -1,5 +1,5 @@
 prefix=/usr
-libdir=${prefix}${base_libdir}
+libdir=${prefix}/lib
 includedir=${prefix}/include
 
 Name: LibAmPlayer

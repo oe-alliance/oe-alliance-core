@@ -11,6 +11,7 @@ PR = "r1"
 inherit autotools pkgconfig
 
 DEPENDS = "gstreamer wetek-libamcodec-${MACHINE} wetek-libamavutils-${MACHINE}"
+RDEPENDS_{PN} = "wetek-libamavutils-${MACHINE}"
 
 SRC_URI = "file://gst-aml-plugins-0.11.0.zip \
            file://osd_fix.patch \
@@ -25,3 +26,6 @@ LDFLAGS =+ " -L${STAGING_LIBDIR} -L${STAGING_BASELIBDIR} "
 FILES_${PN} += "${libdir}/* ${libdir}/libcommon.a"
 FILES_${PN}-dbg += "${libdir}/gstreamer-0.10/.debug $"
 FILES_${PN}-dev += "${S}/include/* "
+
+do_package_qa() {
+}
