@@ -25,3 +25,6 @@ LDFLAGS =+ " -L${STAGING_LIBDIR} -L${STAGING_BASELIBDIR} "
 FILES_${PN} += "${libdir}/* ${libdir}/libcommon.a"
 FILES_${PN}-dbg += "${libdir}/gstreamer-0.10/.debug $"
 FILES_${PN}-dev += "${S}/include/* "
+
+do_package_qa() {
+}

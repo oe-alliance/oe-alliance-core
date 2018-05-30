@@ -10,6 +10,7 @@ SRC_URI = " \
     file://rtl8192cu-makefile.patch \
     file://rtl8192cu-gcc5.patch \
     file://rtl8192cu-fix_ndo_select_queue.patch \
+    file://CHECKSM_IPV6_H.patch \
     "
 
 S = "${WORKDIR}/rtl8188C_8192C_usb_linux_v4.0.2_9000.20130911"

@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda
 
 PR = "r0"
 
-inherit lib_package
+inherit lib_package pkgconfig
 
 EXTRA_OEMAKE = "\
     'CC=${CC}' \
@@ -24,3 +24,6 @@ do_install() {
 FILES_${PN} = "${includedir}/* ${libdir}/* "
 FILES_${PN}-dev = "/usr/include/*"
 FILES_${PN}-src = ""
+
+do_package_qa() {
+}
