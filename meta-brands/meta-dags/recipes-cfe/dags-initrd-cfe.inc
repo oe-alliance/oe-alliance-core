@@ -11,11 +11,12 @@ PR = "r1"
 ALLOW_EMPTY_${PN} = "1"
 
 DOWNLOADNAME ?= "${MACHINEBUILD}"
+CHIPNAME ?= "7439b0"
 
 inherit deploy
 do_deploy() {
-    if [ -e vmlinuz-initrd-7439b0  ]; then
-    install -m 0644 vmlinuz-initrd-7439b0  ${DEPLOYDIR}/${MACHINEBUILD}_initrd_run.bin
+    if [ -e vmlinuz-initrd-${CHIPNAME}  ]; then
+    install -m 0644 vmlinuz-initrd-${CHIPNAME}  ${DEPLOYDIR}/${MACHINEBUILD}_initrd_run.bin
     fi
 }
 

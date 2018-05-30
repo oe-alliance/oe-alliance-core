@@ -1,0 +1,7 @@
+SRCDATE = "20180320"
+CHIPNAME = "7260a0"
+
+require dags-initrd-cfe.inc
+
+SRC_URI[md5sum] = "9a925042e609eab9de2c2809b616d9e5"
+SRC_URI[sha256sum] = "0e7876eccd0132163810110b76441a4650e0dda33609819fd2ddcebe2c561f34"
