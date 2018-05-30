@@ -8,21 +8,19 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=a6f89e2100d9b6cdffcea4f398e37343 \
 
 UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>(\d+(\.\d+)+))"
 
-SRCREV_base = "6854a23b5497543db3c8c8f26cb9762cc7aa0750"
-SRCREV_common = "f0c2dc9aadfa05bb5274c40da750104ecbb88cba"
+SRCREV_base = "0fbde2a07928ba79b7a4ddb4585f6b1de36a74bb"
+SRCREV_common = "46d420818ed8172022caf4503894076b18b1e153"
 SRCREV_FORMAT = "base"
 
 SRC_URI = "git://anongit.freedesktop.org/gstreamer/gst-plugins-good;branch=master;name=base \
            git://anongit.freedesktop.org/gstreamer/common;destsuffix=git/common;name=common \
            file://0001-gstrtpmp4gpay-set-dafault-value-for-MPEG4-without-co.patch \
-           file://avoid-including-sys-poll.h-directly.patch \
-           file://ensure-valid-sentinel-for-gst_structure_get.patch \
            file://0001-introspection.m4-prefix-pkgconfig-paths-with-PKG_CON.patch \
 "
 
 S = "${WORKDIR}/git"
 
-GST_VERSION_FULL ="1.14.0"
+GST_VERSION_FULL ="1.14.1"
 inherit gitpkgv
 PV = "${GST_VERSION_FULL}+git${SRCPV}"
 PKGV = "${GST_VERSION_FULL}+git${GITPKGV}"
