@@ -2,9 +2,7 @@ DEFAULT_PREFERENCE = "-1"
 
 include gstreamer1.0-plugins-base.inc
 
-LIC_FILES_CHKSUM = "file://COPYING;md5=6762ed442b3822387a51c92d928ead0d \
-					file://COPYING.LIB;md5=6762ed442b3822387a51c92d928ead0d \
-"
+LIC_FILES_CHKSUM = "file://COPYING;md5=6762ed442b3822387a51c92d928ead0d"
 
 UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>(\d+(\.\d+)+))"
 
