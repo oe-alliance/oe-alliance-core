@@ -6,7 +6,7 @@ MODULE = "linux-4.1.20"
 
 inherit kernel machine_kernel_pr
 
-MACHINE_KERNEL_PR_append = "r1"
+MACHINE_KERNEL_PR_append = "r2"
 
 SRC_URI[md5sum] = "6036c5d722071e72d5d66dbf7ee74992"
 SRC_URI[sha256sum] = "eff7eecf55dd75ecb44bd8b8fe16f588d19c1eac92125eaed2b6834348d12def"
