@@ -9,13 +9,14 @@ SRCDATE = "20180214"
 
 inherit kernel machine_kernel_pr
 
-MACHINE_KERNEL_PR_append = ".5"
+MACHINE_KERNEL_PR_append = ".6"
 
 SRC_URI[md5sum] = "bb368255800be3d3d7cfa2710928fe9c"
 SRC_URI[sha256sum] = "3dd7e7a99f70f0be8b725e4628f243c3aa1d42072a32e4a4b5268f69b535fc1d"
 
 SRC_URI = "http://source.mynonpublic.com/zgemma/linux-${PV}-${SRCDATE}-${ARCH}.tar.gz \
 	file://defconfig \
+	file://0002-ieee80211-increase-scan-result-expire-time.patch \
 	"
 
 SRC_URI_append_h9 = "file://0001-mmc-switch-1.8V.patch"
