@@ -9,6 +9,10 @@ SRC_URI_append_dm900 += " \
         file://0006-ANGLE-remove-EGL-GLES2-KHR-headers.patch \
 "
 
+SRC_URI_append_dm920 += " \
+        file://0006-ANGLE-remove-EGL-GLES2-KHR-headers.patch \
+"
+
 FILESEXTRAPATHS_prepend := "${THISDIR}/qtwebkit-git:"
 
 INSANE_SKIP_${PN} += "file-rdeps ldflags"
