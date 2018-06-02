@@ -2,14 +2,12 @@ DEFAULT_PREFERENCE = "-1"
 
 include gstreamer1.0-plugins-base.inc
 
-LIC_FILES_CHKSUM = "file://COPYING;md5=c54ce9345727175ff66d17b67ff51f58 \
-					file://COPYING.LIB;md5=6762ed442b3822387a51c92d928ead0d \
-"
+LIC_FILES_CHKSUM = "file://COPYING;md5=6762ed442b3822387a51c92d928ead0d"
 
 UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>(\d+(\.\d+)+))"
 
-SRCREV_base = "46fc41f1a8378639f2982b777035bbcddd4e5000"
-SRCREV_common = "f0c2dc9aadfa05bb5274c40da750104ecbb88cba"
+SRCREV_base = "3ac37bbe67e44fd73aa4499c8041f7a97ed8d1fb"
+SRCREV_common = "46d420818ed8172022caf4503894076b18b1e153"
 SRCREV_FORMAT = "base"
 
 SRC_URI = "git://anongit.freedesktop.org/gstreamer/gst-plugins-base;branch=master;name=base \
@@ -23,7 +21,7 @@ SRC_URI = "git://anongit.freedesktop.org/gstreamer/gst-plugins-base;branch=maste
 
 S = "${WORKDIR}/git"
 
-GST_VERSION_FULL ="1.14.0"
+GST_VERSION_FULL ="1.14.1"
 inherit gitpkgv
 PV = "${GST_VERSION_FULL}+git${SRCPV}"
 PKGV = "${GST_VERSION_FULL}+git${GITPKGV}"

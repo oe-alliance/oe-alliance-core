@@ -8,8 +8,8 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=73a5855a8119deb017f5f13cf327095d \
 
 UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>(\d+(\.\d+)+))"
 
-SRCREV_base = "48cde372d6f5b9feff464bffb734686e0cbf0ca1"
-SRCREV_common = "f0c2dc9aadfa05bb5274c40da750104ecbb88cba"
+SRCREV_base = "33c7af8845c9f53c21c0c3f8ca20e26b58346317"
+SRCREV_common = "46d420818ed8172022caf4503894076b18b1e153"
 SRCREV_FORMAT = "base"
 
 SRC_URI = "git://anongit.freedesktop.org/gstreamer/gst-plugins-bad;branch=master;name=base \
@@ -21,7 +21,6 @@ SRC_URI += " \
 			file://fix-maybe-uninitialized-warnings-when-compiling-with-Os.patch \
 			file://avoid-including-sys-poll.h-directly.patch \
 			file://ensure-valid-sentinels-for-gst_structure_get-etc.patch \
-			file://0001-gstreamer-gl.pc.in-don-t-append-GL_CFLAGS-to-CFLAGS.patch \
 			file://0001-introspection.m4-prefix-pkgconfig-paths-with-PKG_CON.patch \
 			\
 			file://0001-rtmp-fix-seeking-and-potential-segfault.patch \
@@ -31,7 +30,7 @@ SRC_URI += " \
 			"
 S = "${WORKDIR}/git"
 
-GST_VERSION_FULL ="1.14.0"
+GST_VERSION_FULL ="1.14.1"
 inherit gitpkgv
 PV = "${GST_VERSION_FULL}+git${SRCPV}"
 PKGV = "${GST_VERSION_FULL}+git${GITPKGV}"
