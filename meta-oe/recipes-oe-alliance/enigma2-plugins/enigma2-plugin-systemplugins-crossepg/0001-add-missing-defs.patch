@@ -1,17 +1,21 @@
-From 414a509d210e723c257990c4b5185bd1d626f580 Mon Sep 17 00:00:00 2001
+From 816aa3cef4eddfb5eaa037768901141047bc95f2 Mon Sep 17 00:00:00 2001
 From: Nicker <nickersk@gmail.com>
-Date: Thu, 3 May 2018 17:09:14 +0000
+Date: Thu, 3 May 2018 19:09:14 +0200
 Subject: [PATCH] add missing defs
 
+---
+ src/common/dvb/dvb.h | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
 
 diff --git a/src/common/dvb/dvb.h b/src/common/dvb/dvb.h
-index ec470d4..db5733e 100644
+index ec470d4..ed27047 100644
 --- a/src/common/dvb/dvb.h
 +++ b/src/common/dvb/dvb.h
-@@ -19,6 +19,29 @@ typedef struct dvb_s
+@@ -19,6 +19,31 @@ typedef struct dvb_s
  	unsigned char	mask;
  } dvb_t;
  
++#ifndef DMX_SET_SOURCE
 +typedef enum dmx_source {
 +        DMX_SOURCE_FRONT0 = 0,
 +        DMX_SOURCE_FRONT1,
@@ -22,6 +26,7 @@ index ec470d4..db5733e 100644
 +        DMX_SOURCE_DVR2,
 +        DMX_SOURCE_DVR3
 +} dmx_source_t;
++#endif
 +
 +#define DMX_START                _IO('o', 41)
 +#define DMX_STOP                 _IO('o', 42)
@@ -39,5 +44,5 @@ index ec470d4..db5733e 100644
  //void dvb_read (int *pids, int pids_count);
  //bool log_open (char *file, char *plugin_name);
 -- 
-2.17.0
+2.17.1.windows.2
 
