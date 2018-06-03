@@ -1,0 +1,87 @@
+From e2425bfaf8829a96eb5b65ad5644df6c056c03d7 Mon Sep 17 00:00:00 2001
+From: NickerSK <nickersk@gmail.com>
+Date: Tue, 29 May 2018 07:54:50 +0200
+Subject: [PATCH] create correct version header
+
+
+diff --git a/utils/cec-compliance/Makefile.am b/utils/cec-compliance/Makefile.am
+index f05fe6c..44c22a8 100644
+--- a/utils/cec-compliance/Makefile.am
++++ b/utils/cec-compliance/Makefile.am
+@@ -14,7 +14,7 @@ cec-compliance.cpp: version.h
+ version.h:
+ 	@if git show-ref -s HEAD >/dev/null 2>&1; then \
+ 		echo -n "#define SHA " >$@ ; \
+-		git show-ref -s HEAD >>$@ ; \
++		git show-ref -s HEAD | head -n 1 >>$@ ; \
+ 	else \
+ 		touch $@ ; \
+ 	fi
+diff --git a/utils/cec-compliance/Makefile.in b/utils/cec-compliance/Makefile.in
+index a0a1fac..dbf70e4 100644
+--- a/utils/cec-compliance/Makefile.in
++++ b/utils/cec-compliance/Makefile.in
+@@ -853,7 +853,7 @@ cec-compliance.cpp: version.h
+ version.h:
+ 	@if git show-ref -s HEAD >/dev/null 2>&1; then \
+ 		echo -n "#define SHA " >$@ ; \
+-		git show-ref -s HEAD >>$@ ; \
++		git show-ref -s HEAD | head -n 1 >>$@ ; \
+ 	else \
+ 		touch $@ ; \
+ 	fi
+diff --git a/utils/cec-follower/Makefile.am b/utils/cec-follower/Makefile.am
+index d8ad292..5986192 100644
+--- a/utils/cec-follower/Makefile.am
++++ b/utils/cec-follower/Makefile.am
+@@ -17,7 +17,7 @@ cec-table.h: ../cec-ctl/msg2ctl.pl ../../include/linux/cec.h ../../include/linux
+ version.h:
+ 	@if git show-ref -s HEAD >/dev/null 2>&1; then \
+ 		echo -n "#define SHA " >$@ ; \
+-		git show-ref -s HEAD >>$@ ; \
++		git show-ref -s HEAD | head -n 1 >>$@ ; \
+ 	else \
+ 		touch $@ ; \
+ 	fi
+diff --git a/utils/cec-follower/Makefile.in b/utils/cec-follower/Makefile.in
+index 9bfe363..26d03ae 100644
+--- a/utils/cec-follower/Makefile.in
++++ b/utils/cec-follower/Makefile.in
+@@ -852,7 +852,7 @@ cec-table.h: ../cec-ctl/msg2ctl.pl ../../include/linux/cec.h ../../include/linux
+ version.h:
+ 	@if git show-ref -s HEAD >/dev/null 2>&1; then \
+ 		echo -n "#define SHA " >$@ ; \
+-		git show-ref -s HEAD >>$@ ; \
++		git show-ref -s HEAD | head -n 1 >>$@ ; \
+ 	else \
+ 		touch $@ ; \
+ 	fi
+diff --git a/utils/v4l2-compliance/Makefile.am b/utils/v4l2-compliance/Makefile.am
+index c2b5919..08ff4de 100644
+--- a/utils/v4l2-compliance/Makefile.am
++++ b/utils/v4l2-compliance/Makefile.am
+@@ -21,7 +21,7 @@ v4l2-compliance.cpp: version.h
+ version.h:
+ 	@if git show-ref -s HEAD >/dev/null 2>&1; then \
+ 		echo -n "#define SHA " >$@ ; \
+-		git show-ref -s HEAD >>$@ ; \
++		git show-ref -s HEAD | head -n 1 >>$@ ; \
+ 	else \
+ 		touch $@ ; \
+ 	fi
+diff --git a/utils/v4l2-compliance/Makefile.in b/utils/v4l2-compliance/Makefile.in
+index bbd2adc..0495dfc 100644
+--- a/utils/v4l2-compliance/Makefile.in
++++ b/utils/v4l2-compliance/Makefile.in
+@@ -988,7 +988,7 @@ v4l2-compliance.cpp: version.h
+ version.h:
+ 	@if git show-ref -s HEAD >/dev/null 2>&1; then \
+ 		echo -n "#define SHA " >$@ ; \
+-		git show-ref -s HEAD >>$@ ; \
++		git show-ref -s HEAD | head -n 1 >>$@ ; \
+ 	else \
+ 		touch $@ ; \
+ 	fi
+-- 
+2.17.0.252.gfe0a9eaf3
+

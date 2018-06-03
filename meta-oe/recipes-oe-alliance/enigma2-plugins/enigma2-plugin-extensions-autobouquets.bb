@@ -22,6 +22,7 @@ PR = "r0"
 INSANE_SKIP_${PN} += "already-stripped ldflags"
 
 SRC_URI="git://github.com/LraiZer/AutoBouquets.git;branch=${AUTOBOUQUETS_BRANCH}"
+#        file://0001-add-missing-defs.patch"
 
 S = "${WORKDIR}/git"
 

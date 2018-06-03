@@ -1,0 +1,45 @@
+From 84cdf70e227a58f7816a4eba937a58e2b0c5881c Mon Sep 17 00:00:00 2001
+From: Nicker <nickersk@gmail.com>
+Date: Sun, 3 Jun 2018 15:41:08 +0200
+Subject: [PATCH] add missing defs
+
+
+diff --git a/AutoBouquetsMaker/lib/dvbreader.c b/AutoBouquetsMaker/lib/dvbreader.c
+index 034dd7f..676505e 100644
+--- a/AutoBouquetsMaker/lib/dvbreader.c
++++ b/AutoBouquetsMaker/lib/dvbreader.c
+@@ -8,6 +8,31 @@
+ 
+ #include <Python.h>
+ 
++#ifndef DMX_SET_SOURCE
++typedef enum dmx_source {
++        DMX_SOURCE_FRONT0 = 0,
++        DMX_SOURCE_FRONT1,
++        DMX_SOURCE_FRONT2,
++        DMX_SOURCE_FRONT3,
++        DMX_SOURCE_DVR0   = 16,
++        DMX_SOURCE_DVR1,
++        DMX_SOURCE_DVR2,
++        DMX_SOURCE_DVR3
++} dmx_source_t;
++#endif
++
++#define DMX_START                _IO('o', 41)
++#define DMX_STOP                 _IO('o', 42)
++#define DMX_SET_FILTER           _IOW('o', 43, struct dmx_sct_filter_params)
++#define DMX_SET_PES_FILTER       _IOW('o', 44, struct dmx_pes_filter_params)
++#define DMX_SET_BUFFER_SIZE      _IO('o', 45)
++#define DMX_GET_PES_PIDS         _IOR('o', 47, __u16[5])
++#define DMX_GET_CAPS             _IOR('o', 48, dmx_caps_t)
++#define DMX_SET_SOURCE           _IOW('o', 49, dmx_source_t)
++#define DMX_GET_STC              _IOWR('o', 50, struct dmx_stc)
++#define DMX_ADD_PID              _IOW('o', 51, __u16)
++#define DMX_REMOVE_PID           _IOW('o', 52, __u16)
++
+ PyObject *ss_open(PyObject *self, PyObject *args) {
+ 	int fd, pid;
+ 	const char *demuxer;
+-- 
+2.17.0
+
