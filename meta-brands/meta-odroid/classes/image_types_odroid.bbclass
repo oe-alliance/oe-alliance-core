@@ -45,7 +45,7 @@ do_image_sdcard[depends] += " \
     mtools-native:do_populate_sysroot \
     e2fsprogs-native:do_populate_sysroot \
     virtual/kernel:do_populate_sysroot \
-    ${@base_contains("KERNEL_IMAGETYPE", "uImage", "u-boot:do_populate_sysroot", "",d)} \
+    ${@bb.utils.contains("KERNEL_IMAGETYPE", "uImage", "u-boot:do_populate_sysroot", "",d)} \
     "
 
 SDCARD = "${IMGDEPLOYDIR}/${IMAGE_NAME}.rootfs.sdcard"

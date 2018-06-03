@@ -41,7 +41,7 @@ IMAGE_ROOTFS_ALIGNMENT = "4096"
 SDIMG_ROOTFS_TYPE ?= "ext4"
 SDIMG_ROOTFS = "${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.${SDIMG_ROOTFS_TYPE}"
 
-do_image_odroidcsdimg[depends] += "parted-native:do_populate_sysroot dosfstools-native:do_populate_sysroot mtools-native:do_populate_sysroot virtual/kernel:do_populate_sysroot ${@base_contains("KERNEL_IMAGETYPE", "uImage:do_populate_sysroot", "u-boot:do_populate_sysroot", "",d)}"
+do_image_odroidcsdimg[depends] += "parted-native:do_populate_sysroot dosfstools-native:do_populate_sysroot mtools-native:do_populate_sysroot virtual/kernel:do_populate_sysroot ${@bb.utils.contains("KERNEL_IMAGETYPE", "uImage:do_populate_sysroot", "u-boot:do_populate_sysroot", "",d)}"
 
 
 # Amlogic Boot magic
