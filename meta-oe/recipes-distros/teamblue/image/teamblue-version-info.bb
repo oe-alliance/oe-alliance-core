@@ -8,7 +8,7 @@ require conf/license/license-gplv2.inc
 
 PV = "${IMAGE_VERSION}"
 PR = "${BUILD_VERSION}"
-PACKAGE_ARCH = "${MACHINE_ARCH}"
+PACKAGE_ARCH = "${MACHINEBUILD}"
 
 URL = "http://www.teamblue.tech"
 
