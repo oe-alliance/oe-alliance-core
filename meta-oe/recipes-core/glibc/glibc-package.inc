@@ -133,10 +133,10 @@ do_install_append_aarch64 () {
 		# The aarch64 ABI says the dynamic linker -must- be /lib/ld-linux-aarch64[_be].so.1
 		install -d ${D}/lib
 		if [ -e ${D}${base_libdir}/ld-linux-aarch64.so.1 ]; then
-			ln -s ${@base_path_relative('/lib', '${base_libdir}')}/ld-linux-aarch64.so.1 \
+			ln -s ${@oe.path.relative('/lib', '${base_libdir}')}/ld-linux-aarch64.so.1 \
 				${D}/lib/ld-linux-aarch64.so.1
 		elif [ -e ${D}${base_libdir}/ld-linux-aarch64_be.so.1 ]; then
-			ln -s ${@base_path_relative('/lib', '${base_libdir}')}/ld-linux-aarch64_be.so.1 \
+			ln -s ${@oe.path.relative('/lib', '${base_libdir}')}/ld-linux-aarch64_be.so.1 \
 				${D}/lib/ld-linux-aarch64_be.so.1
 		fi
 	fi
