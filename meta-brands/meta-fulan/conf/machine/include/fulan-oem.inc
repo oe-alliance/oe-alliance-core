@@ -155,7 +155,7 @@ KERNEL_IMAGETYPE = "uImage"
 
 
 JFFS2_ERASEBLOCK = "0x20000"
-JFFS2_ENDIANNESS = "${@base_conditional('SITEINFO_ENDIANNESS', 'le', '--little-endian', '--big-endian', d)}"
+JFFS2_ENDIANNESS = "${@oe.utils.conditional('SITEINFO_ENDIANNESS', 'le', '--little-endian', '--big-endian', d)}"
 EXTRA_IMAGECMD_jffs2 = "--pad ${JFFS2_ENDIANNESS} --eraseblock=${JFFS2_ERASEBLOCK} --no-cleanmarkers"
 MKUBIFS_ARGS = "--pad ${JFFS2_ENDIANNESS} --eraseblock=${JFFS2_ERASEBLOCK} --no-cleanmarkers"
 
