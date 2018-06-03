@@ -23,7 +23,7 @@ do_install_append() {
                  ${D}/usr/bin/ntpdate-sync
 }
 
-pkg_postinst_ntpdate() {
+pkg_postinst_ontarget_ntpdate() {
     if ! grep -q -s ntpdate $D/var/spool/cron/crontabs/root; then
         echo "adding crontab"
         test -d $D/var/spool/cron/crontabs || mkdir -p $D/var/spool/cron/crontabs
