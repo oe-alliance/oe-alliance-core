@@ -145,6 +145,7 @@ RDEPENDS_${PN} = " \
     ushare \
     vim \
     wakelan \
+    wireless-tools \
     zeroconf \
     "
 
