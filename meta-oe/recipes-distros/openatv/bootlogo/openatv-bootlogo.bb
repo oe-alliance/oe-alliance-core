@@ -2,7 +2,7 @@ SUMMARY = "openATV bootlogo"
 SECTION = "base"
 PRIORITY = "required"
 MAINTAINER = "openATV Team"
-PACKAGE_ARCH = "${MACHINE_ARCH}"
+PACKAGE_ARCH = "${MACHINEBUILD}"
 
 require conf/license/license-gplv2.inc
 
