@@ -28,7 +28,6 @@ do_install(){
 	install -d ${D}/${bindir}
 	install -m 0755 ${S}/stalker* ${D}/${bindir}
 
-	install -d ${D}/locale
 	cp -rp ${S}/plugin/locale ${D}${libdir}/enigma2/python/Plugins/Extensions/Stalker
 
 	install -d ${D}/usr/share/stalker
