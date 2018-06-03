@@ -12,7 +12,7 @@ PKGV = "3.0+git${GITPKGV}"
 PR = "r0"
 
 SRC_URI = "git://github.com/oe-alliance/AutoBouquetsMaker.git;protocol=git \
-            file://0001-add-dmx-header.patch"
+            file://0001-add-missing-defs.patch"
 
 EXTRA_OECONF = " \
     BUILD_SYS=${BUILD_SYS} \
