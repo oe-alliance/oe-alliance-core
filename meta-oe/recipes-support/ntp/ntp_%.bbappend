@@ -5,7 +5,7 @@ FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 PR .= ".5"
 
 do_install_append() {
-	perl -0777 -i -pe 's:(\. /etc/default/ntpdate.+?fi):$1\n\nif test -f /var/tmp/ntpv4.local ; then\n. /var/tmp/ntpv4.local\nfi\n\ncheck_online() {\n\tcount=0\n\twhile [ \$count -lt 5 ]; do\n\t\tsleep 0.5\n\t\tif ping -4 -c 1 www.google.com >/dev/null 2>&1 \|\| ping -6 -c 1 www.google.com \>/dev/null 2\>&1; then\n\t\t\tbreak\n\t\tfi\n\t\tcount=\$((count+1))\n\tdone\n}\n\nif [ "\$NTPV4" != "" ]; then\n\tNTPSERVERS=\$NTPV4\nfi:s;' \
+    perl -0777 -i -pe 's:(\. /etc/default/ntpdate.+?fi):$1\n\nif test -f /var/tmp/ntpv4.local ; then\n. /var/tmp/ntpv4.local\nfi\n\ncheck_online() {\n\tcount=0\n\twhile [ \$count -lt 5 ]; do\n\t\tsleep 0.5\n\t\tif ping -4 -c 1 www.google.com >/dev/null 2>&1 \|\| ping -6 -c 1 www.google.com \>/dev/null 2\>&1; then\n\t\t\tbreak\n\t\tfi\n\t\tcount=\$((count+1))\n\tdone\n}\n\nif [ "\$NTPV4" != "" ]; then\n\tNTPSERVERS=\$NTPV4\nfi:s;' \
                  ${D}/usr/bin/ntpdate-sync
 
 	# When invoked from ifup, step to the time rather than slewing
@@ -23,10 +23,18 @@ do_install_append() {
                  ${D}/usr/bin/ntpdate-sync
 }
 
-pkg_postinst_ontarget_ntpdate() {
-    if ! grep -q -s ntpdate $D/var/spool/cron/crontabs/root; then
-        echo "adding crontab"
-        test -d $D/var/spool/cron/crontabs || mkdir -p $D/var/spool/cron/crontabs
-        echo "30 * * * *    ${bindir}/ntpdate-sync silent" >> $D/var/spool/cron/crontabs/root
-    fi
+pkg_postinst_ntpdate() {
+#!/bin/sh
+
+if [ -n "$D" ]; then
+    $INTERCEPT_DIR/postinst_intercept delay_to_first_boot ntpdate mlprefix=
+    exit 0
+fi
+set +e
+if ! grep -q -s ntpdate /var/spool/cron/crontabs/root; then
+    echo "adding crontab"
+    test -d $D/var/spool/cron/crontabs || mkdir -p /var/spool/cron/crontabs
+    echo "30 * * * *    ${bindir}/ntpdate-sync silent" >> /var/spool/cron/crontabs/root
+fi
 }
+

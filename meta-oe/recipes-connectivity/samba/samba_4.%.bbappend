@@ -54,18 +54,18 @@ do_install_append() {
 	rm -fR ${D}${libdir}/tmpfiles.d
 	rm -fR ${D}${sysconfdir}/sysconfig
 	install -d ${D}${sysconfdir}/pam.d
-        install -m 644 ${WORKDIR}/pam.samba ${D}${sysconfdir}/pam.d/samba
+	install -m 644 ${WORKDIR}/pam.samba ${D}${sysconfdir}/pam.d/samba
 	install -d ${D}${sysconfdir}/samba
-        install -d ${D}${sysconfdir}/samba/distro
+	install -d ${D}${sysconfdir}/samba/distro
 	install -d ${D}${sysconfdir}/samba/private
 	install -m 644 ${WORKDIR}/smb.conf ${D}${sysconfdir}/samba
-        install -m 644 ${WORKDIR}/smb-user.conf ${D}${sysconfdir}/samba
-        install -m 644 ${WORKDIR}/smb-branding.conf ${D}${sysconfdir}/samba/distro
-        install -m 644 ${WORKDIR}/smb-global.conf ${D}${sysconfdir}/samba/distro
-        install -m 644 ${WORKDIR}/smb-insecure.conf ${D}${sysconfdir}/samba/distro
-        install -m 644 ${WORKDIR}/smb-secure.conf ${D}${sysconfdir}/samba/distro
-        install -m 644 ${WORKDIR}/smb-shares.conf ${D}${sysconfdir}/samba/distro
-        install -m 644 ${WORKDIR}/smb-vmc.samba ${D}${sysconfdir}/samba/distro
+	install -m 644 ${WORKDIR}/smb-user.conf ${D}${sysconfdir}/samba
+	install -m 644 ${WORKDIR}/smb-branding.conf ${D}${sysconfdir}/samba/distro
+	install -m 644 ${WORKDIR}/smb-global.conf ${D}${sysconfdir}/samba/distro
+	install -m 644 ${WORKDIR}/smb-insecure.conf ${D}${sysconfdir}/samba/distro
+	install -m 644 ${WORKDIR}/smb-secure.conf ${D}${sysconfdir}/samba/distro
+	install -m 644 ${WORKDIR}/smb-shares.conf ${D}${sysconfdir}/samba/distro
+	install -m 644 ${WORKDIR}/smb-vmc.samba ${D}${sysconfdir}/samba/distro
 	install -m 644 ${WORKDIR}/smbpasswd ${D}${sysconfdir}/samba/private
 	install -m 644 ${WORKDIR}/users.map ${D}${sysconfdir}/samba/private
 	install -d ${D}${sysconfdir}/init.d
@@ -104,17 +104,31 @@ CONFFILES_${BPN}-common = "${sysconfdir}/pam.d/samba ${sysconfdir}/samba/smb-use
 
 RRECOMMENDS_${PN}-base+= "pam-smbpass wsdd"
 
-
-pkg_postinst_ontarget_${BPN}-common_prepend() {
+pkg_postinst_${BPN}-common_prepend() {
 #!/bin/sh
 
 if [ -n "$D" ]; then
+        set +e
         grep -qE '^kids:' $D/etc/passwd
         if [[ $? -ne 0 ]] ; then
                 echo 'kids:x:500:500:Linux User,,,:/media:/bin/false' >> $D/etc/passwd
                 echo 'kids:!:16560:0:99999:7:::' >> $D/etc/shadow
         fi
 fi
+
+if [ -e $D/etc/samba/distro/smb-vmc.vmc ]; then
+	rm $D/etc/samba/distro/smb-vmc.conf 2>/dev/null || true
+	ln -s smb-vmc.vmc $D/etc/samba/distro/smb-vmc.conf
+else
+	rm $D/etc/samba/distro/smb-vmc.conf 2>/dev/null || true
+	ln -s smb-vmc.samba $D/etc/samba/distro/smb-vmc.conf
+fi
+
+if [ -n "$D" ]; then
+    $INTERCEPT_DIR/postinst_intercept delay_to_first_boot ntpdate mlprefix=
+    exit 0
+fi
+set +e
 
 if [ -z "$D" ]; then
         [ -e /etc/samba/private/smbpasswd ] || touch /etc/samba/private/smbpasswd
@@ -133,14 +147,6 @@ if [ -z "$D" ]; then
         if [[ $? -ne 0 ]] ; then
                 smbpasswd -Ln kids >/dev/null
         fi
-fi
-
-if [ -e $D/etc/samba/distro/smb-vmc.vmc ]; then
-	rm $D/etc/samba/distro/smb-vmc.conf 2>/dev/null || true
-	ln -s smb-vmc.vmc $D/etc/samba/distro/smb-vmc.conf
-else
-	rm $D/etc/samba/distro/smb-vmc.conf 2>/dev/null || true
-	ln -s smb-vmc.samba $D/etc/samba/distro/smb-vmc.conf
 fi
 }
 
