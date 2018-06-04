@@ -9,7 +9,7 @@ LIC_FILES_CHKSUM = "\
 	file://Source/JavaScriptCore/parser/Parser.h;endline=23;md5=2f3cff0ad0a9c486da5a376928973a90 \
 	"
 
-DEPENDS = "glib-2.0 icu zlib enchant libsoup-2.4 curl libxml2 cairo libidn gnutls \
+DEPENDS = "glib-2.0 glib-2.0-native gettext-native zlib enchant libsoup-2.4 curl libxml2 cairo libidn gnutls \
            gtk+ gstreamer1.0 gstreamer1.0-plugins-base flex-native bison-native gperf-native sqlite3 \
            libxslt zlib libpcre harfbuzz pango atk udev"
 
@@ -60,6 +60,8 @@ EXTRA_OECONF = "\
 LDFLAGS += "-Wl,--no-keep-memory -lgthread-2.0"
 
 CXXFLAGS += " -std=gnu++98"
+
+OECMAKE_GENERATOR = "Unix Makefiles"
 
 EXTRA_AUTORECONF = " -I Source/autotools "
 
