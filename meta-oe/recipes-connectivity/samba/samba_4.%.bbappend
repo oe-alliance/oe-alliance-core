@@ -104,7 +104,7 @@ CONFFILES_${BPN}-common = "${sysconfdir}/pam.d/samba ${sysconfdir}/samba/smb-use
 
 RRECOMMENDS_${PN}-base+= "pam-smbpass wsdd"
 
-pkg_postinst_${BPN}-common_prepend() {
+pkg_postinst_${BPN}-common_append() {
 #!/bin/sh
 
 if [ -n "$D" ]; then
@@ -124,13 +124,8 @@ else
 	ln -s smb-vmc.samba $D/etc/samba/distro/smb-vmc.conf
 fi
 
-if [ -n "$D" ]; then
-    $INTERCEPT_DIR/postinst_intercept delay_to_first_boot ntpdate mlprefix=
-    exit 0
-fi
-set +e
-
 if [ -z "$D" ]; then
+        set +e
         [ -e /etc/samba/private/smbpasswd ] || touch /etc/samba/private/smbpasswd
 
         grep -qE '^root:' /etc/samba/private/smbpasswd

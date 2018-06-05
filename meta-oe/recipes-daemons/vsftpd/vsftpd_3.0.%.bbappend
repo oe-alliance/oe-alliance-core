@@ -24,11 +24,11 @@ do_install_append() {
 }
 
 
-pkg_postinst_${PN}_prepend() {
+pkg_postinst_${PN}_append() {
 #!/bin/sh
 
 if [ -n "$D" ]; then
-    set +e
+	set +e
 	grep -qE '^kids:' $D/etc/passwd
 	if [[ $? -ne 0 ]] ; then
 		echo 'kids:x:500:500:Linux User,,,:/media:/bin/false' >> $D/etc/passwd
@@ -36,13 +36,9 @@ if [ -n "$D" ]; then
 	fi
 fi
 
-if [ -n "$D" ]; then
-    $INTERCEPT_DIR/postinst_intercept delay_to_first_boot ntpdate mlprefix=
-    exit 0
-fi
-set +e
 
 if [ -z "$D" ]; then
+	set +e
 	grep -qE '^kids:' /etc/passwd
 	if [[ $? -ne 0 ]] ; then
 		adduser -h /media -s /bin/false -H -D -u 500 kids 2>/dev/null || adduser -h /media -s /bin/false -H -D kids
