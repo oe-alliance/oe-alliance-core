@@ -1,11 +1,9 @@
-Using @PYTHON@ for this path would result in the build system python being 
-referred to. Instead we want to locate python from the environment.
-
 Upstream-Status: Inappropriate [configuration]
 
-diff -ruN libglade-2.6.4-orig//libglade-convert.in libglade-2.6.4/libglade-convert.in
---- libglade-2.6.4-orig//libglade-convert.in	2011-09-22 10:18:28.991164003 +0800
-+++ libglade-2.6.4/libglade-convert.in	2011-09-22 10:18:55.431164003 +0800
+diff --git a/libglade-convert.in b/libglade-convert.in
+index e3214a5..3e70514 100644
+--- a/libglade-convert.in
++++ b/libglade-convert.in
 @@ -1,4 +1,4 @@
 -#!@PYTHON@
 +#!/usr/bin/env python

@@ -1,10 +1,11 @@
 Upstream-Status: Inappropriate [configuration]
 
-diff -urN libglade-2.4.2.orig/configure.in libglade-2.4.2/configure.in
---- libglade-2.4.2.orig/configure.in	2005-02-11 12:42:58.000000000 +0100
-+++ libglade-2.4.2/configure.in	2005-03-22 01:22:00.000000000 +0100
-@@ -52,11 +52,33 @@
- AC_PATH_PROG(PKG_CONFIG, pkg-config, no)
+diff --git a/configure.in b/configure.in
+index 580ca31..8905f1c 100644
+--- a/configure.in
++++ b/configure.in
+@@ -43,11 +43,33 @@ LIBS=$save_LIBS
+ PKG_PROG_PKG_CONFIG
  
  PKG_CHECK_MODULES(LIBGLADE, [dnl
 -  libxml-2.0 >= required_libxml_version dnl
@@ -38,7 +39,7 @@ diff -urN libglade-2.4.2.orig/configure.in libglade-2.4.2/configure.in
  AC_MSG_CHECKING([for native Win32])
  case "$host" in
    *-*-mingw*)
-@@ -116,6 +138,21 @@
+@@ -107,6 +129,21 @@ if test x"$native_win32" = xyes; then
    fi
  fi
  
@@ -60,9 +61,10 @@ diff -urN libglade-2.4.2.orig/configure.in libglade-2.4.2/configure.in
  GTK_DOC_CHECK(1.0)
  
  dnl gettext stuff ... there is no message catalog for libglade -- libglade
-diff -urN libglade-2.4.2.orig/glade/glade-parser.c libglade-2.4.2/glade/glade-parser.c
---- libglade-2.4.2.orig/glade/glade-parser.c	2004-11-11 11:56:13.000000000 +0100
-+++ libglade-2.4.2/glade/glade-parser.c	2005-03-22 01:20:00.000000000 +0100
+diff --git a/glade/glade-parser.c b/glade/glade-parser.c
+index 35f47a2..fd20410 100644
+--- a/glade/glade-parser.c
++++ b/glade/glade-parser.c
 @@ -34,7 +34,15 @@
  #  define dgettext(Domain, String) (String)
  #endif
@@ -80,7 +82,7 @@ diff -urN libglade-2.4.2.orig/glade/glade-parser.c libglade-2.4.2/glade/glade-pa
  
  #include "glade-parser.h"
  #include "glade-private.h"
-@@ -508,7 +516,9 @@
+@@ -508,7 +516,9 @@ glade_parser_start_element(GladeParseState *state,
      case PARSER_START:
  	if (!strcmp(name, "glade-interface")) {
  	    state->state = PARSER_GLADE_INTERFACE;
@@ -91,7 +93,7 @@ diff -urN libglade-2.4.2.orig/glade/glade-parser.c libglade-2.4.2/glade/glade-pa
  	    /* check for correct XML namespace */
  	    for (i = 0; attrs && attrs[i] != NULL; i += 2) {
  		if (!strcmp(attrs[i], "xmlns") &&
-@@ -518,7 +528,9 @@
+@@ -518,7 +528,9 @@ glade_parser_start_element(GladeParseState *state,
  		    g_warning("unknown attribute `%s' for <glade-interface>",
  			      attrs[i]);
  	    }
@@ -101,7 +103,7 @@ diff -urN libglade-2.4.2.orig/glade/glade-parser.c libglade-2.4.2/glade/glade-pa
  	} else {
  	    g_warning("Expected <glade-interface>.  Got <%s>.", name);
  	    state->prev_state = state->state;
-@@ -1063,12 +1075,18 @@
+@@ -1063,12 +1075,18 @@ glade_parser_characters(GladeParseState *state, const xmlChar *chars, int len)
      }
  }
  
@@ -120,7 +122,7 @@ diff -urN libglade-2.4.2.orig/glade/glade-parser.c libglade-2.4.2/glade/glade-pa
  static void
  glade_parser_warning(GladeParseState *state, const char *msg, ...)
  {
-@@ -1079,6 +1097,10 @@
+@@ -1079,6 +1097,10 @@ glade_parser_warning(GladeParseState *state, const char *msg, ...)
      va_end(args);
  }
  
@@ -131,7 +133,7 @@ diff -urN libglade-2.4.2.orig/glade/glade-parser.c libglade-2.4.2/glade/glade-pa
  static void
  glade_parser_error(GladeParseState *state, const char *msg, ...)
  {
-@@ -1089,6 +1111,10 @@
+@@ -1089,6 +1111,10 @@ glade_parser_error(GladeParseState *state, const char *msg, ...)
      va_end(args);
  }
  
@@ -142,7 +144,7 @@ diff -urN libglade-2.4.2.orig/glade/glade-parser.c libglade-2.4.2/glade/glade-pa
  static void
  glade_parser_fatal_error(GladeParseState *state, const char *msg, ...)
  {
-@@ -1099,6 +1125,10 @@
+@@ -1099,6 +1125,10 @@ glade_parser_fatal_error(GladeParseState *state, const char *msg, ...)
      va_end(args);
  }
  
@@ -153,7 +155,7 @@ diff -urN libglade-2.4.2.orig/glade/glade-parser.c libglade-2.4.2/glade/glade-pa
  static xmlSAXHandler glade_parser = {
      (internalSubsetSAXFunc)NULL,                       /* internalSubset */
      (isStandaloneSAXFunc)NULL,                         /* isStandalone */
-@@ -1126,6 +1156,82 @@
+@@ -1126,6 +1156,82 @@ static xmlSAXHandler glade_parser = {
      (fatalErrorSAXFunc)glade_parser_fatal_error,       /* fatalError */
  };
  
@@ -236,7 +238,7 @@ diff -urN libglade-2.4.2.orig/glade/glade-parser.c libglade-2.4.2/glade/glade-pa
  static void
  widget_info_free(GladeWidgetInfo *info)
  {
-@@ -1191,6 +1297,9 @@
+@@ -1191,6 +1297,9 @@ glade_interface_destroy(GladeInterface *interface)
   *
   * Returns: the GladeInterface structure for the XML file.
   */
@@ -246,7 +248,7 @@ diff -urN libglade-2.4.2.orig/glade/glade-parser.c libglade-2.4.2/glade/glade-pa
  GladeInterface *
  glade_parser_parse_file(const gchar *file, const gchar *domain)
  {
-@@ -1222,6 +1331,31 @@
+@@ -1241,6 +1350,31 @@ glade_parser_parse_file(const gchar *file, const gchar *domain)
      return state.interface;
  }
  
@@ -278,7 +280,7 @@ diff -urN libglade-2.4.2.orig/glade/glade-parser.c libglade-2.4.2/glade/glade-pa
  /**
   * glade_parser_parse_buffer
   * @buffer: a buffer in memory containing XML data.
-@@ -1237,6 +1371,9 @@
+@@ -1256,6 +1390,9 @@ glade_parser_parse_file(const gchar *file, const gchar *domain)
   *
   * Returns: the GladeInterface structure for the XML buffer.
   */
@@ -288,7 +290,7 @@ diff -urN libglade-2.4.2.orig/glade/glade-parser.c libglade-2.4.2/glade/glade-pa
  GladeInterface *
  glade_parser_parse_buffer(const gchar *buffer, gint len, const gchar *domain)
  {
-@@ -1263,6 +1400,161 @@
+@@ -1282,6 +1419,161 @@ glade_parser_parse_buffer(const gchar *buffer, gint len, const gchar *domain)
      return state.interface;
  }
  
@@ -450,7 +452,7 @@ diff -urN libglade-2.4.2.orig/glade/glade-parser.c libglade-2.4.2/glade/glade-pa
  static void
  dump_widget(xmlNode *parent, GladeWidgetInfo *info, gint indent)
  {
-@@ -1382,6 +1674,8 @@
+@@ -1401,6 +1693,8 @@ dump_widget(xmlNode *parent, GladeWidgetInfo *info, gint indent)
  	xmlNodeAddContent(widget, "  ");
  }
  
@@ -459,7 +461,7 @@ diff -urN libglade-2.4.2.orig/glade/glade-parser.c libglade-2.4.2/glade/glade-pa
  /**
   * glade_interface_dump
   * @interface: the GladeInterface
-@@ -1390,6 +1684,9 @@
+@@ -1409,6 +1703,9 @@ dump_widget(xmlNode *parent, GladeWidgetInfo *info, gint indent)
   * This function dumps the contents of a GladeInterface into a file as
   * XML.  It is intended mainly as a debugging tool.
   */
@@ -469,7 +471,7 @@ diff -urN libglade-2.4.2.orig/glade/glade-parser.c libglade-2.4.2/glade/glade-pa
  void
  glade_interface_dump(GladeInterface *interface, const gchar *filename)
  {
-@@ -1428,6 +1725,17 @@
+@@ -1447,6 +1744,17 @@ glade_interface_dump(GladeInterface *interface, const gchar *filename)
      xmlFreeDoc(doc);
  }
  
@@ -487,10 +489,11 @@ diff -urN libglade-2.4.2.orig/glade/glade-parser.c libglade-2.4.2/glade/glade-pa
  #if 0
  int
  main(int argc, char **argv) {
-diff -urN libglade-2.4.2.orig/libglade-2.0.pc.in libglade-2.4.2/libglade-2.0.pc.in
---- libglade-2.4.2.orig/libglade-2.0.pc.in	2001-12-12 15:28:23.000000000 +0100
-+++ libglade-2.4.2/libglade-2.0.pc.in	2005-03-22 01:20:00.000000000 +0100
-@@ -11,7 +11,7 @@
+diff --git a/libglade-2.0.pc.in b/libglade-2.0.pc.in
+index f58ff16..a64aed1 100644
+--- a/libglade-2.0.pc.in
++++ b/libglade-2.0.pc.in
+@@ -11,7 +11,7 @@ moduledir=${libdir}/libglade/2.0
  Name: Libglade
  Description: a library for dynamically loading GLADE interface files
  Version: @VERSION@
