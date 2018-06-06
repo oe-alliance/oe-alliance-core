@@ -9,7 +9,7 @@ SRCDATE = "20180214"
 
 inherit kernel machine_kernel_pr
 
-MACHINE_KERNEL_PR_append = ".7"
+MACHINE_KERNEL_PR_append = ".8"
 
 SRC_URI[md5sum] = "bb368255800be3d3d7cfa2710928fe9c"
 SRC_URI[sha256sum] = "3dd7e7a99f70f0be8b725e4628f243c3aa1d42072a32e4a4b5268f69b535fc1d"
