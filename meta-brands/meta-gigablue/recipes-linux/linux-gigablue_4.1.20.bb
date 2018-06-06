@@ -20,6 +20,7 @@ SRC_URI += "http://opensat.de/gigablue/linux/gigablue-linux-${PV}-20180206.tar.g
 	file://bcmgenet-recovery-fix.patch \
 	file://linux_4_1_1_9_dvbs2x.patch \
 	file://kernel-add-support-for-gcc6.patch \
+	file://kernel-add-support-for-gcc7.patch \
 	file://0001-Support-TBS-USB-drivers-for-4.1-kernel.patch \
 	file://0001-TBS-fixes-for-4.1-kernel.patch \
 	file://0001-STV-Add-PLS-support.patch \
