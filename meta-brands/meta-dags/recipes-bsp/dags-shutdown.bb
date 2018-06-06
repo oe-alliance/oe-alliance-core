@@ -3,9 +3,6 @@ require conf/license/license-gplv2.inc
 PV = "1.0"
 PR = "r5"
 
-RREPLACES_${PN} += "vuplus-shutdown"
-RCONFLICTS_${PN} += "vuplus-shutdown"
-
 SRC_URI = " \
     file://turnoff_power \
     file://dags-shutdown.sh "
@@ -26,7 +23,9 @@ do_install() {
 
 pkg_preinst_${PN}_prepend() {
 #!/bin/sh
-chmod -x $D/etc/init.d/dags-shutdown
+if [ -z "$D" ]; then
+    chmod -x $D/etc/init.d/dags-shutdown
+fi
 }
 
 pkg_postinst_${PN}_append() {
