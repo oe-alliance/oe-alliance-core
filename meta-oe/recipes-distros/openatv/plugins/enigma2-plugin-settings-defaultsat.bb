@@ -2,7 +2,6 @@ SUMMARY = "openATV default SAT Settings Archiv"
 MAINTAINER = "openATV Team"
 SECTION = "base"
 LICENSE = "proprietary"
-inherit allarch
 
 require conf/license/license-gplv2.inc
 
