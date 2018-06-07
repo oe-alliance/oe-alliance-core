@@ -15,6 +15,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
 SRC_URI += "http://en3homeftp.net/pub/src/linux-3.14.28.tar.xz \
 	file://defconfig \
+	file://kernel-add-support-for-gcc7.patch \
 	file://date-time.patch \
 	file://0001.remove_vtuner_index_check.patch \
 	file://0001-Support-TBS-USB-drivers.patch \
