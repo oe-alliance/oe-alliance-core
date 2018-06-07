@@ -1,5 +1,5 @@
 SUMMARY = "WiFi devices for Realtek 802.11a/bg chipsets."
-inherit allarch
+
 
 require conf/license/license-gplv2.inc
 

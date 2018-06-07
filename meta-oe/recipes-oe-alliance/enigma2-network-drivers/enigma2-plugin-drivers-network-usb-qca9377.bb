@@ -1,5 +1,5 @@
 SUMMARY = "WiFi devices for QCA9377 chipsets."
-inherit allarch
+
 
 require conf/license/license-gplv2.inc
 

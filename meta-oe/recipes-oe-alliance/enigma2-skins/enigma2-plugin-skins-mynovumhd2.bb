@@ -1,6 +1,6 @@
 SUMMARY = "myNOVUM_HD2 by Nashu"
 MAINTAINER = "rossi2000"
-inherit allarch
+
 
 require conf/license/license-gplv2.inc
 

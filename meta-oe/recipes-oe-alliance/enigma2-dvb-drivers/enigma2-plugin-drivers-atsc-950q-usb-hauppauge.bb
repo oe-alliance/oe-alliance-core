@@ -1,5 +1,5 @@
 SUMMARY = "USB ATSC driver for Hauppauge 950Q WinTV-HVR Tuners"
-inherit allarch
+
 
 require conf/license/license-gplv2.inc
 

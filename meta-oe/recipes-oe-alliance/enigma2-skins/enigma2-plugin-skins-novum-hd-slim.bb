@@ -1,6 +1,6 @@
 SUMMARY = "NOVUM_HD_Slim by Nashu"
 MAINTAINER = "rossi2000"
-inherit allarch
+
 
 require conf/license/license-gplv2.inc
 

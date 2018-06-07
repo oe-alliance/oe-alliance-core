@@ -1,5 +1,5 @@
 SUMMARY = "Driver for Ralink USB devices R8712U"
-inherit allarch
+
 
 require conf/license/license-gplv2.inc
 

@@ -1,5 +1,5 @@
 SUMMARY = "WiFi devices for Realtek 8723bu chipsets."
-inherit allarch
+
 
 require conf/license/license-gplv2.inc
 

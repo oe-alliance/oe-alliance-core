@@ -1,6 +1,6 @@
 SUMMARY = "KravenHD Skin for Enigma2 by Kraven"
 MAINTAINER = "Kraven"
-inherit allarch
+
 
 require conf/license/license-gplv2.inc
 

@@ -1,5 +1,5 @@
 SUMMARY = "USB DVB driver for DVB-SKY Family"
-inherit allarch
+
 
 require conf/license/license-gplv2.inc
 

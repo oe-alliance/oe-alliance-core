@@ -1,5 +1,5 @@
 SUMMARY = "USB geniatech driver for T230"
-inherit allarch
+
 
 require conf/license/license-gplv2.inc
 

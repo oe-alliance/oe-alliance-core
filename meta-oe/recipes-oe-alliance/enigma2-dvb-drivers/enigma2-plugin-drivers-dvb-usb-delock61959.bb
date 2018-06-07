@@ -1,5 +1,5 @@
 SUMMARY = "USB DVB driver for Delock61959 USB DVB-C/T based on EM28xx chipset"
-inherit allarch
+
 
 require conf/license/license-gplv2.inc
 
