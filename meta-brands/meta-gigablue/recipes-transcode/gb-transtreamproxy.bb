@@ -37,30 +37,32 @@ grep -vE '^#*\s*8002' $D/etc/inetd.conf > $D/tmp/inetd.tmp
 mv $D/tmp/inetd.tmp $D/etc/inetd.conf
 
 if [ -z "$D" -a -f "/etc/init.d/inetd.busybox" ]; then
-	/etc/init.d/inetd.busybox restart
+    /etc/init.d/inetd.busybox restart
 fi
 }
 
 pkg_preinst_${PN}() {
 #!/bin/sh
-grep -vE '^#*\s*8002' $D/etc/inetd.conf > $D/tmp/inetd.tmp
-mv $D/tmp/inetd.tmp $D/etc/inetd.conf
+if [ -z "$D" ]; then
+    grep -vE '^#*\s*8002' $D/etc/inetd.conf > $D/tmp/inetd.tmp
+    mv $D/tmp/inetd.tmp $D/etc/inetd.conf
+fi
 
 if [ -z "$D" -a -f "/etc/init.d/inetd.busybox" ]; then
-	/etc/init.d/inetd.busybox restart
+    /etc/init.d/inetd.busybox restart
 fi
 }
 
 pkg_postinst_${PN}() {
 #!/bin/sh
 if ! grep -qE '^#*\s*8002' $D/etc/inetd.conf; then
-	if grep -qE "^#*\s*8003" $D/etc/inetd.conf; then
-		sed -i "s#^\(\#*\s*8003\)#8002\t\tstream\ttcp6\tnowait\troot\t/usr/bin/transtreamproxy\ttranstreamproxy\n\1#" $D/etc/inetd.conf
-	else
-	        echo -e "8002\t\tstream\ttcp6\tnowait\troot\t/usr/bin/transtreamproxy\ttranstreamproxy" >> $D/etc/inetd.conf
-	fi
-	if [ -z "$D" -a -f "/etc/init.d/inetd.busybox" ]; then
-		/etc/init.d/inetd.busybox restart
-	fi
+    if grep -qE "^#*\s*8003" $D/etc/inetd.conf; then
+        sed -i "s#^\(\#*\s*8003\)#8002\t\tstream\ttcp6\tnowait\troot\t/usr/bin/transtreamproxy\ttranstreamproxy\n\1#" $D/etc/inetd.conf
+    else
+        echo -e "8002\t\tstream\ttcp6\tnowait\troot\t/usr/bin/transtreamproxy\ttranstreamproxy" >> $D/etc/inetd.conf
+    fi
+    if [ -z "$D" -a -f "/etc/init.d/inetd.busybox" ]; then
+        /etc/init.d/inetd.busybox restart
+    fi
 fi
 }
