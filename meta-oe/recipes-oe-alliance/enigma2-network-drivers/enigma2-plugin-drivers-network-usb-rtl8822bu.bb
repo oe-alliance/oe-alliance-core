@@ -1,5 +1,5 @@
 SUMMARY = "WiFi devices for Realtek 88x2BU chipsets."
-
+inherit allarch
 
 require conf/license/license-gplv2.inc
 

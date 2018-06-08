@@ -1,5 +1,5 @@
 SUMMARY = "USB DVB driver for AS102 chipset"
-
+inherit allarch
 
 require conf/license/license-gplv2.inc
 

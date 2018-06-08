@@ -1,5 +1,5 @@
 SUMMARY = "802.11a/b/g/n 2T2R 2.4/5 GHz USB Single Chip"
-
+inherit allarch
 
 require conf/license/license-gplv2.inc
 

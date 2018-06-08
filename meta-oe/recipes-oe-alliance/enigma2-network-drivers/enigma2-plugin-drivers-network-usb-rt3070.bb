@@ -1,5 +1,5 @@
 SUMMARY = "Driver for Ralink RT8070/3070/3370/5370/5372 USB 802.11abgn WiFi sticks"
-
+inherit allarch
 
 require conf/license/license-gplv2.inc
 

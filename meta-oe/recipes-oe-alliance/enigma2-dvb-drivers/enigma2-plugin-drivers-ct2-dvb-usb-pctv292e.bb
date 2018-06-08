@@ -1,5 +1,5 @@
 SUMMARY = "pctv 292e tripleStick"
-
+inherit allarch
 
 require conf/license/license-gplv2.inc
 

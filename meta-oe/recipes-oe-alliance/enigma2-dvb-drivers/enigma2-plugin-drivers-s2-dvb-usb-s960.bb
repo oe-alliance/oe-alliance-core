@@ -1,5 +1,5 @@
 SUMMARY = "OPTI-Combo DVB-T2/C USB Stick"
-
+inherit allarch
 
 require conf/license/license-gplv2.inc
 

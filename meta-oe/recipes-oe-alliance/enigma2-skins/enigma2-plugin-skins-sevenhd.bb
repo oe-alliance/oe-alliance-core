@@ -1,6 +1,6 @@
 SUMMARY = "Skin for Enigma2 (HD, FHD, UHD, 4K)"
 MAINTAINER = "Team Kraven"
-
+inherit allarch
 
 require conf/license/license-gplv2.inc
 

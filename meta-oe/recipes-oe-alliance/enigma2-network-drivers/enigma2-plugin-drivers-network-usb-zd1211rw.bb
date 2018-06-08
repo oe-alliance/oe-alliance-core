@@ -1,5 +1,5 @@
 SUMMARY = "Driver for ZyDAS ZD1211, ZyDAS ZD1211B, Atheros AR5007UG"
-
+inherit allarch
 
 require conf/license/license-gplv2.inc
 

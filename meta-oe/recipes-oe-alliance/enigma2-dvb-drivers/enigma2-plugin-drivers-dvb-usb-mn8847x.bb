@@ -1,5 +1,5 @@
 SUMMARY = "USB DVB driver for Panasonic mn88472/3 chipsets"
-
+inherit allarch
 
 require conf/license/license-gplv2.inc
 

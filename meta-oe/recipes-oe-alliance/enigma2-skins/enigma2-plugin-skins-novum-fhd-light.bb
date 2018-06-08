@@ -1,6 +1,6 @@
 SUMMARY = "NOVUM_FHD_Light by Nashu"
 MAINTAINER = "Nashu"
-
+inherit allarch
 
 require conf/license/license-gplv2.inc
 

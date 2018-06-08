@@ -1,5 +1,5 @@
 SUMMARY = "WiFi devices for Atheros AR9170 devices."
-
+inherit allarch
 
 require conf/license/license-gplv2.inc
 

@@ -1,4 +1,5 @@
-
+SUMMARY = "USB DVB driver for dtt200u chipsets"
+inherit allarch
 
 require conf/license/license-gplv2.inc
 

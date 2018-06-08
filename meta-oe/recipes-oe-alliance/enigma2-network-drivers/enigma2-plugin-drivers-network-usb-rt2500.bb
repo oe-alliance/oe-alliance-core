@@ -1,5 +1,5 @@
 SUMMARY = "WiFi devices for Ralink RT2500USB/RT2571 devices."
-
+inherit allarch
 
 require conf/license/license-gplv2.inc
 

@@ -1,6 +1,6 @@
 SUMMARY = "Modification is based on open-source skin from Army. It is adapted to work on OpenPLi, OpenViX, OpenATV images."
 MAINTAINER = "Taykun345/OldSkulRide from OpenPLi/ViX forums"
-
+inherit allarch
 
 require conf/license/license-gplv2.inc
 

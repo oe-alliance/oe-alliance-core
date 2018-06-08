@@ -1,5 +1,5 @@
 SUMMARY = "USB DVB driver for it913x chipsets"
-
+inherit allarch
 
 require conf/license/license-gplv2.inc
 

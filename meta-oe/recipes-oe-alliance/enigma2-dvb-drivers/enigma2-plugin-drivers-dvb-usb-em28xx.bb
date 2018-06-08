@@ -1,5 +1,5 @@
 SUMMARY = "USB DVB driver for EM28xx chipset"
-
+inherit allarch
 
 require conf/license/license-gplv2.inc
 
