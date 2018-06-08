@@ -3,7 +3,7 @@ MAINTAINER = "Kraven Team"
 
 require conf/license/license-gplv2.inc
 
-inherit gitpkgv
+inherit gitpkgv allarch
 
 SRCREV = "${AUTOREV}"
 PV = "6.6+git${SRCPV}"

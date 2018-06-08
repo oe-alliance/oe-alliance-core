@@ -1,5 +1,5 @@
 SUMMARY = "meta file for enigma2 locales"
-inherit packagegroup
+PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 require conf/license/license-gplv2.inc
 
