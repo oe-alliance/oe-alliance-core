@@ -25,10 +25,12 @@ grep -v 'pam_smbpass.so' $D/etc/pam.d/common-password > $D/tmp/common-password
 mv $D/tmp/common-password $D/etc/pam.d/common-password
 }
 
-pkg_postinst_${PN}_prepend() {
+pkg_postinst_${PN}_append() {
 #!/bin/sh
-
+if [ -n "$D" ]; then
+set +e
 grep -v 'pam_smbpass.so' $D/etc/pam.d/common-password > $D/tmp/common-password
 mv $D/tmp/common-password $D/etc/pam.d/common-password
 echo -e "password\toptional\t\t\tpam_smbpass.so nullok use_authtok use_first_pass" >> $D/etc/pam.d/common-password
+fi
 }
