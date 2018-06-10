@@ -1,11 +1,5 @@
-From 462c20067587c413aaf3cc644de36578b479a8de Mon Sep 17 00:00:00 2001
-From: Nicker <nickersk@gmail.com>
-Date: Thu, 3 May 2018 12:05:17 +0200
-Subject: [PATCH] cp1emu boolean expression
-
-
 diff --git a/arch/mips/math-emu/cp1emu.c b/arch/mips/math-emu/cp1emu.c
-index efe00884..19615479 100644
+index efe00884..c766f795 100644
 --- a/arch/mips/math-emu/cp1emu.c
 +++ b/arch/mips/math-emu/cp1emu.c
 @@ -873,13 +873,13 @@ static inline int cop1_64bit(struct pt_regs *xcp)
@@ -20,11 +14,11 @@ index efe00884..19615479 100644
  
 -#define DIFROMREG(di, x) ((di) = ctx->fpr[x & ~(cop1_64bit(xcp) == 0)])
 -#define DITOREG(di, x)	(ctx->fpr[x & ~(cop1_64bit(xcp) == 0)] = (di))
-+#define DIFROMREG(di, x) ((di) = ctx->fpr[x & ~(cop1_64bit(xcp) ^ 0)])
++#define DIFROMREG(di, x) ((di) = ctx->fpr[x & ~(cop1_64bit(xcp) ^ 1)])
 +#define DITOREG(di, x)	(ctx->fpr[x & ~(cop1_64bit(xcp) ^ 1)] = (di))
  
  #define SPFROMREG(sp, x) SIFROMREG((sp).bits, x)
  #define SPTOREG(sp, x)	SITOREG((sp).bits, x)
 -- 
-2.17.0
+2.17.1
 
