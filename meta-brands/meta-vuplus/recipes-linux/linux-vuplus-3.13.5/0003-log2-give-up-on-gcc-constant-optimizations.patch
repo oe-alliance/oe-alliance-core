@@ -1,11 +1,5 @@
-From 0a3822641543c1ba0eb9f7e1af21a4c7078bc7bb Mon Sep 17 00:00:00 2001
-From: Nicker <nickersk@gmail.com>
-Date: Thu, 3 May 2018 13:45:47 +0200
-Subject: [PATCH 3/3] log2 stop text relocations
-
-
 diff --git a/include/linux/log2.h b/include/linux/log2.h
-index fd7ff3d9..ab688577 100644
+index fd7ff3d9..f38fae23 100644
 --- a/include/linux/log2.h
 +++ b/include/linux/log2.h
 @@ -15,12 +15,6 @@
@@ -38,10 +32,10 @@ index fd7ff3d9..ab688577 100644
 -		(n) & (1ULL <<  0) ?  0 :	\
 -		____ilog2_NaN()			\
 -				   ) :		\
-+		+ 1 ) :				\
++		1 ) :				\
  	(sizeof(n) <= 4) ?			\
  	__ilog2_u32(n) :			\
  	__ilog2_u64(n)				\
 -- 
-2.17.0
+2.17.1
 
