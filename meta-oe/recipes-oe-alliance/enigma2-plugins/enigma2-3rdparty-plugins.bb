@@ -11,7 +11,7 @@ DEPENDS = "tslib mpfr gmp"
 SRCREV = "${AUTOREV}"
 PV = "${IMAGE_VERSION}+gitr${SRCPV}"
 PKGV = "${IMAGE_VERSION}+gitr${GITPKGV}"
-PR = "r128"
+PR = "r132"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -67,7 +67,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-piconmanager_2.2-20150329-r0_all.ipk \
     enigma2-plugin-extensions-piconsupdater_0.3.7_mips32el.ipk \
     enigma2-plugin-extensions-picturecenterfs_8.32_all.ipk \
-    enigma2-plugin-extensions-planerfs_8.27_all.ipk \
+    enigma2-plugin-extensions-planerfs_8.33_all.ipk \
     enigma2-plugin-extensions-pluginspanel_1.0_r01_all.ipk \
     enigma2-plugin-extensions-pluginupdater_0.1r2_all.ipk \
     enigma2-plugin-extensions-pravoslavietv_0.2_all.ipk \
@@ -81,7 +81,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-spiegelonline_2.8rc12_all.ipk \
     enigma2-plugin-extensions-spinnerselector_2.2rc1_all.ipk \
     enigma2-plugin-extensions-sport1ticker_1.3_all.ipk \
-    enigma2-plugin-extensions-sundtekcontrolcenter_20180210_all.ipk \
+    enigma2-plugin-extensions-sundtekcontrolcenter_20180605-2_all.ipk \
     enigma2-plugin-extensions-tectimetv_3.1_all.ipk \
     enigma2-plugin-extensions-thetvdb_0.7-20120607-r3_mips32el.ipk \
     enigma2-plugin-extensions-timfs_2.32_all.ipk \
