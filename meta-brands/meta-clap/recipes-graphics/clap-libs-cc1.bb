@@ -1,0 +1,6 @@
+SRCDATE = "20180605"
+
+require clap-libs.inc
+
+SRC_URI[md5sum] = "7820158d4d9777d864e85451bc36a8f3"
+SRC_URI[sha256sum] = "a2d2675ce041201cd0d9bf1255804b2b419253c45224e243ef043a25eaf94eeb"
