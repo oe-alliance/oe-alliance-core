@@ -24,7 +24,7 @@ RPROVIDES_${PN} = "virtual-locale-ar virtual-locale-bg virtual-locale-ca virtual
     virtual-locale-it virtual-locale-lt virtual-locale-lv virtual-locale-nb virtual-locale-nl \
     virtual-locale-no virtual-locale-pl virtual-locale-pt virtual-locale-ru virtual-locale-sk \
     virtual-locale-sl virtual-locale-sr virtual-locale-sv virtual-locale-th virtual-locale-tr \
-	virtual-locale-uk"
+    virtual-locale-uk"
 
 do_install() {
     install -d ${D}${sysconfdir}/profile.d
