@@ -1,5 +1,5 @@
 
-CFLAGS = -Wall -Werror -O2
+CFLAGS = -Wall -O2
 
 TARGET = wsdd
 
