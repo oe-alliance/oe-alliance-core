@@ -11,7 +11,7 @@ DEPENDS = "tslib mpfr gmp"
 SRCREV = "${AUTOREV}"
 PV = "${IMAGE_VERSION}+gitr${SRCPV}"
 PKGV = "${IMAGE_VERSION}+gitr${GITPKGV}"
-PR = "r141"
+PR = "r142"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -91,7 +91,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-transmission_2.92-r1_all.ipk \
     enigma2-plugin-extensions-tsmedia_12.3_all.ipk \
     enigma2-plugin-extensions-tstube_1.2_all.ipk \
-    enigma2-plugin-extensions-tvspielfilm_6.6rc1_all.ipk \
+    enigma2-plugin-extensions-tvspielfilm_6.6rc2_all.ipk \
     enigma2-plugin-extensions-verkehrsinfo_1.2rc2_all.ipk \
     enigma2-plugin-extensions-vcs_2.7_all.ipk \
     enigma2-plugin-extensions-vhannibalautosettings_1.1_mips32el.ipk \
