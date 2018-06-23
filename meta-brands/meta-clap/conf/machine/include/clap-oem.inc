@@ -40,7 +40,7 @@ MACHINE_ESSENTIAL_EXTRA_RDEPENDS = "\
     clap-libreader-${MACHINE} \
 "
 
-MACHINE_FEATURES += "switchoff 7segment textlcd skins1080 emmc mmc blindscan-dvbs kodi alsa hbbtv-browser-webkit qtstalker"
+MACHINE_FEATURES += "videoenhancement switchoff 7segment textlcd skins1080 emmc mmc blindscan-dvbs kodi alsa hbbtv-browser-webkit qtstalker"
 
 IMAGE_CLASSES  += "clap-emmc_image"
 IMAGE_FSTYPES += "clapemmc"
