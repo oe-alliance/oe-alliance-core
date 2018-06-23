@@ -6,7 +6,7 @@ SECTION = "kernel/modules"
 
 inherit module
 
-SRC_URI = "http://opensat.de/gigablue/wlan/RT3070_RT3370_RT5370_RT5372.tar.gz"
+SRC_URI = "http://source.mynonpublic.com/gigablue/wlan/RT3070_RT3370_RT5370_RT5372.tar.gz"
 
 EXTRA_OEMAKE = "LINUX_SRC=${STAGING_KERNEL_DIR} KDIR=${STAGING_KERNEL_DIR}"
 

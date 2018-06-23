@@ -21,7 +21,7 @@ PKG_${KERNEL_PACKAGE_NAME}-image = "kernel-image"
 RPROVIDES_${KERNEL_PACKAGE_NAME}-base = "kernel-${KERNEL_VERSION}"
 RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
 
-SRC_URI += "http://opensat.de/gigablue/linux/gigablue-linux-${PV}-mips-20170302.tgz \
+SRC_URI += "http://source.mynonpublic.com/gigablue/linux/gigablue-linux-${PV}-mips-20170302.tgz \
     file://defconfig \
     file://0001-genet1-1000mbit.patch \
     file://bcmgenet_phyaddr.patch \
