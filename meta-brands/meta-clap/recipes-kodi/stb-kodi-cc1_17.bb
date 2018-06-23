@@ -12,8 +12,8 @@ SRC_URI_append = "http://source.mynonpublic.com/clap/hiplayer_${SRCDATE}.tar.gz 
     file://hiplayer.patch \
 "
 
-SRC_URI[md5sum] = "adddbd785bd1553a42fd0cd0ad739f61"
-SRC_URI[sha256sum] = "b9e4bd080cadc4f76b5ebd9be93a9ecf75576d3025e2ae85126b6f0597046670"
+SRC_URI[md5sum] = "8794244be0f4772e9ab88bf1f174d5ea"
+SRC_URI[sha256sum] = "6b558d522d45a6fa5cd30bcb43ee7567ff628f223a30ac2023df86efa6f873b3"
 
 DEPENDS += "clap-libs-${MACHINE}"
 PROVIDES += "virtual/kodi"
