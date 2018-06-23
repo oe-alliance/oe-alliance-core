@@ -30,7 +30,7 @@ do_deploy() {
     fi
 }
 
-SRC_URI = "http://opensat.de/gigablue/initrd/initrd_${MACHINE}_${SRCDATE}.zip"
+SRC_URI = "http://source.mynonpublic.com/gigablue/initrd/initrd_${MACHINE}_${SRCDATE}.zip"
 
 S = "${WORKDIR}"
 
