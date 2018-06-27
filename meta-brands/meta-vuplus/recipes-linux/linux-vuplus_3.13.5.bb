@@ -5,9 +5,7 @@ KV = "3.13.5"
 
 inherit kernel machine_kernel_pr
 
-MACHINE_KERNEL_PR_append = "oea4.1-r1"
-
-SRCREV = ""
+MACHINE_KERNEL_PR_append = "oea4.3-r1"
 
 SRC_URI[md5sum] = "19e9956653437b99b4fa6ec3e16a3e99"
 SRC_URI[sha256sum] = "ef7fb307582ff243aacff8a13025fe028634aaf650ada309991ae03622962f61"
@@ -18,6 +16,10 @@ KERNEL_CONFIG = "${@bb.utils.contains("MACHINE_FEATURES", "dvbproxy", "defconfig
 
 SRC_URI = "http://archive.vuplus.com/download/kernel/stblinux-${KV}.tar.bz2 \
     file://${KERNEL_CONFIG} \
+    file://kernel-add-support-for-gcc5.patch \
+    file://kernel-add-support-for-gcc6.patch \
+    file://kernel-add-support-for-gcc7.patch \
+    file://kernel-add-support-for-gcc8.patch \
     file://rt2800usb_fix_warn_tx_status_timeout_to_dbg.patch \
     file://add-dmx-source-timecode.patch \
     file://af9015-output-full-range-SNR.patch \
@@ -32,7 +34,6 @@ SRC_URI = "http://archive.vuplus.com/download/kernel/stblinux-${KV}.tar.bz2 \
     file://mxl5007t-add-no_probe-and-no_reset-parameters.patch \
     file://linux-tcp_output.patch \
     file://linux-3.13-gcc-4.9.3-build-error-fixed.patch \
-    file://kernel-add-support-for-gcc-5.patch \
     file://rtl8712-fix-warnings.patch \
     file://0001-Support-TBS-USB-drivers-3.13.patch \
     file://0001-STV-Add-PLS-support.patch \
@@ -42,17 +43,15 @@ SRC_URI = "http://archive.vuplus.com/download/kernel/stblinux-${KV}.tar.bz2 \
     file://0003-log2-give-up-on-gcc-constant-optimizations.patch \
     file://blindscan2.patch \
     ${@bb.utils.contains("MACHINE_FEATURES", "dvbproxy", "file://linux_dvb_adapter.patch;patch=1;pnum=1", "", d)} \
-    file://kernel-add-support-for-gcc6.patch \
     file://genksyms_fix_typeof_handling.patch \
-    file://kernel-add-support-for-gcc7.patch \
     "
 
 SRC_URI_append_vuduo2 = "file://brcm_s3_wol.patch;patch=1;pnum=1 "
 SRC_URI_append_vusolose = "file://brcm_s3_wol.patch;patch=1;pnum=1 \
-                          file://linux_mtd_bbt_maxblock.patch \
-"
+                          file://linux_mtd_bbt_maxblock.patch"
+
 SRC_URI_append_vusolo2 = "file://linux-bcm_ethernet.patch;patch=1;pnum=1 "
- 
+
 S = "${WORKDIR}/linux"
 B = "${WORKDIR}/build"
 
@@ -61,6 +60,8 @@ KERNEL_OBJECT_SUFFIX = "ko"
 KERNEL_OUTPUT = "vmlinux"
 KERNEL_IMAGETYPE = "vmlinux"
 KERNEL_IMAGEDEST = "tmp"
+
+KERNEL_EXTRA_ARGS = "EXTRA_CFLAGS=-Wno-attribute-alias"
 
 FILES_${KERNEL_PACKAGE_NAME}-image = "/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz"
 
