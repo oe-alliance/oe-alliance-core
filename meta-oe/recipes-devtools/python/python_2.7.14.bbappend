@@ -9,6 +9,7 @@ SRC_URI += " \
             file://pgettext.patch \
             file://create_unverified_context.patch \
             file://random.patch \
+            file://0001-enable-locale-aware-default-string-encodings.patch \
 "
 
 EXTRA_OECONF += " \

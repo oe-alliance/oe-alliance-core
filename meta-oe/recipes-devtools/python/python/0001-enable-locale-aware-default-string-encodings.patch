@@ -1,0 +1,22 @@
+From 9c4e3f0c82fb37ec83c921a107176329dbda2a15 Mon Sep 17 00:00:00 2001
+From: NickerSK <nickersk@gmail.com>
+Date: Thu, 28 Jun 2018 08:30:10 +0200
+Subject: [PATCH] enable locale aware default string encodings
+
+
+diff --git a/Lib/site.py b/Lib/site.py
+index 3b51e81..19df596 100644
+--- a/Lib/site.py
++++ b/Lib/site.py
+@@ -468,7 +468,7 @@ def setencoding():
+     default is 'ascii', but if you're willing to experiment, you can
+     change this."""
+     encoding = "ascii" # Default value set by _PyUnicode_Init()
+-    if 0:
++    if 1:
+         # Enable to support locale aware default string encodings.
+         import locale
+         loc = locale.getdefaultlocale()
+-- 
+2.17.1
+
