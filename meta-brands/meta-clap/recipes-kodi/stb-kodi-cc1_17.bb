@@ -2,7 +2,7 @@ require recipes-mediacenter/kodi/stb-kodi_${PV}.bb
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
 
-SRCDATE = "20180622"
+SRCDATE = "20180629"
 
 SRC_URI_remove = "file://e2player.patch \
            file://add-gstplayer-support.patch \
@@ -12,8 +12,8 @@ SRC_URI_append = "http://source.mynonpublic.com/clap/hiplayer_${SRCDATE}.tar.gz 
     file://hiplayer.patch \
 "
 
-SRC_URI[md5sum] = "8794244be0f4772e9ab88bf1f174d5ea"
-SRC_URI[sha256sum] = "6b558d522d45a6fa5cd30bcb43ee7567ff628f223a30ac2023df86efa6f873b3"
+SRC_URI[md5sum] = "849d597bc4c65eac0bc30641ba267434"
+SRC_URI[sha256sum] = "abee6c9c52748ca4410c6610df7b7d7c731995b6cab294d2c554d71127a17940"
 
 DEPENDS += "clap-libs-${MACHINE}"
 PROVIDES += "virtual/kodi"
