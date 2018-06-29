@@ -9,5 +9,6 @@ EXTRA_DIRECTFB_vuultimo4k = "vuplus"
 EXTRA_DIRECTFB_vuuno4k = "vuplus"
 EXTRA_DIRECTFB_vuuno4kse = "vuplus"
 EXTRA_DIRECTFB_vuzero4k = "vuplus"
+EXTRA_DIRECTFB_cc1 = "clap"
 
 require directfb-${EXTRA_DIRECTFB}_1.7.7.inc
