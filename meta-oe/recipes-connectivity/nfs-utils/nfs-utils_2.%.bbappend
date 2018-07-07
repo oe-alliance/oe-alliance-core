@@ -15,4 +15,4 @@ do_install_append() {
 	fi
 }
 
-SRC_URI_append = " file://fix_build_with_glibc_header.patch"
+
