@@ -16,7 +16,7 @@ S = "${WORKDIR}"
 
 INITSCRIPT_NAME = "bootlogo"
 INITSCRIPT_PARAMS = "start 06 S ."
-INITSCRIPT_PARAMS_gb7252 = "start 66 S ."
+INITSCRIPT_PARAMS_gb7252 = "start 70 S ."
 
 inherit update-rc.d
 
