@@ -5,7 +5,6 @@ DISTRO_FEATURES_remove = "x11 wayland"
 
 BRAND_OEM = "dinobot"
 
-IMAGEDIR = "dinobot/${MACHINE}"
 
 MACHINE_NAME = "\
 ${@bb.utils.contains('MACHINEBUILD', 'anadol4k', '4K ECO' , '', d)}\
@@ -67,6 +66,18 @@ ${@bb.utils.contains('MACHINEBUILD', 'axashis4kcombo', 'no' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'axashis4kcomboplus', 'no' , '', d)}\
 "
 
+IMAGEDIR = "\
+${@bb.utils.contains('MACHINEBUILD', 'anadol4k', 'dinobot/${MACHINE}' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'dinobot4kl', 'dinobot/${MACHINE}' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'dinobot4k', 'dinobot/${MACHINE}' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mediabox4k', 'dinobot/${MACHINE}' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'dinobot4kse', 'dinobot/${MACHINE}' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'dinobot4kplus', 'dinobot/${MACHINE}' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'dinobot4kmini', 'dinobot/${MACHINE}' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'axashis4kcombo', 'axas/axascombo' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'axashis4kcomboplus', 'axas/axascomboplus' , '', d)}\
+"
+
 KERNEL_FILE = "kernel.bin"
 ROOTFS_FILE = "rootfs.tar.bz2"
 MTD_BLACK  = "mmcblk0"
@@ -87,6 +98,7 @@ MACHINE_ESSENTIAL_EXTRA_RDEPENDS = "\
     dinobot-opengl-${MACHINE} \
     dinobot-libs-${MACHINE} \
     dinobot-hihalt-${MACHINE} \
+    dinobot-pvr \
 "
 
 MACHINE_FEATURES += "videoenhancement switchoff  hdmicec 7segment textlcd skins1080 blindscan-tbs emmc mmc kodi alsa hbbtv-browser-webkit qtstalker\
