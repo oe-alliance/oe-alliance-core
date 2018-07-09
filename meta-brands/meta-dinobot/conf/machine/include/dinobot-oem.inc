@@ -98,6 +98,7 @@ MACHINE_ESSENTIAL_EXTRA_RDEPENDS = "\
     dinobot-opengl-${MACHINE} \
     dinobot-libs-${MACHINE} \
     dinobot-hihalt-${MACHINE} \
+    dinobot-pvr \
 "
 
 MACHINE_FEATURES += "videoenhancement switchoff  hdmicec 7segment textlcd skins1080 blindscan-tbs emmc mmc kodi alsa hbbtv-browser-webkit qtstalker\
