@@ -220,7 +220,8 @@ inherit autotools-brokensep gitpkgv pkgconfig pythonnative upx-compress
 PV = "${IMAGE_VERSION}+git${SRCPV}"
 PKGV = "${IMAGE_VERSION}+git${GITPKGV}"
 
-SRC_URI = "${ENIGMA2_URI}"
+SRC_URI = "${ENIGMA2_URI} \
+            file://0001-use-functional-depout-macro.patch"
 
 INSANE_SKIP_${PN} = "dev-deps"
 
