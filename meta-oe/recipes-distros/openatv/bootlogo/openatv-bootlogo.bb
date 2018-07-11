@@ -9,7 +9,7 @@ require conf/license/license-gplv2.inc
 RDEPENDS_${PN} += "showiframe"
 
 PV = "${IMAGE_VERSION}"
-PR = "r1.2"
+PR = "r1.3"
 
 S = "${WORKDIR}"
 
@@ -23,6 +23,7 @@ INITSCRIPT_PARAMS_vuuno4k = "start 70 S ."
 INITSCRIPT_PARAMS_vuuno4kse = "start 70 S ."
 INITSCRIPT_PARAMS_vuultimo4k = "start 70 S ."
 INITSCRIPT_PARAMS_vuzero4k = "start 70 S ."
+INITSCRIPT_PARAMS_gb7252 = "start 70 S ."
 PRECOMPILED_ARCH = "${MACHINE}"
 PRECOMPILED_ARCH_dm7020hdv2 = "dm7020hd"
 
