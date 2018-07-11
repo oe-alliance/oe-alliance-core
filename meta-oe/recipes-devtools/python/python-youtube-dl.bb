@@ -7,8 +7,8 @@ SECTION = "devel/python"
 LICENSE = "LGPLv2.1"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=7246f848faa4e9c9fc0ea91122d6e680"
 DEPENDS = "libxml2 bash-completion"
-SRCREV = "6e5eacb7705b68c108160780b4ded3b7abd9ebb6"
-PV = "2018.01.21"
+SRCREV = "40a051fa9f48000f311f243c40e3cae588420738"
+PV = "2018.07.10"
 
 SRC_URI = "git://github.com/rg3/youtube-dl.git;branch=master"
 
