@@ -7,12 +7,12 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 inherit deploy
 
-SRCDATE = "20180709"
+SRCDATE = "20180712"
 PR = "${SRCDATE}"
 
 S = "${WORKDIR}/patitions"
 
-SRC_URI = "http://source.mynonpublic.com/clap/${MACHINE}-partitions-${SRCDATE}.tar.gz"
+SRC_URI = "http://source.mynonpublic.com/clap/${MACHINE}-partitions-${SRCDATE}.zip"
 
 ALLOW_EMPTY_${PN} = "1"
 
@@ -38,7 +38,7 @@ do_deploy() {
 
 addtask deploy before do_build after do_install
 
-SRC_URI[md5sum] = "b6476bf98f4d9c738ac661594edcc1d3"
-SRC_URI[sha256sum] = "12c083af1c30e88a682177319c0b7b3c6b41c4c4a9558c611cb3cbe3ab348273"
+SRC_URI[md5sum] = "47ee202a3aa96600b9efa6856c4e9c85"
+SRC_URI[sha256sum] = "9436f2526bb8e12f2ad5172a891887dbf6c3ab386756454fe2e060d2cd4c1140"
 
 INSANE_SKIP_${PN} += "already-stripped"
