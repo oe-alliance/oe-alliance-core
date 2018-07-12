@@ -16,7 +16,7 @@ LIC_FILES_CHKSUM = "file://${WORKDIR}/linux/COPYING;md5=d7810fab7487fb0aad327b76
 SRC_URI = "http://en3homeftp.net/pub/down/linux-${KV}-${DATETIME}.tar.xz \
     file://defconfig \
     file://kernel-add-support-for-gcc8.patch \
-        "
+"
 
 S = "${WORKDIR}/linux"
 B = "${WORKDIR}/build"
