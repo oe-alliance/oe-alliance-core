@@ -30,11 +30,12 @@ SRC_URI += "${KERNELORG_MIRROR}/linux/kernel/v3.x/linux-${KV}.tar.bz2;name=azbox
     file://0001-rt2800usb-add-support-for-rt55xx.patch \
     file://0001-Revert-MIPS-Fix-potencial-corruption.patch \
     file://linux-3.9.7-gcc-4.9.3-build-error-fixed.patch \
-    file://kernel-add-support-for-gcc-5.patch \
     file://rtl8712-fix-warnings.patch \
     file://rtl8187se-fix-warnings.patch \
+    file://kernel-add-support-for-gcc-5.patch \
     file://kernel-add-support-for-gcc6.patch \
     file://kernel-add-support-for-gcc7.patch \
+    file://kernel-add-support-for-gcc8.patch \
     "
 
 SRC_URI_append_azboxhd = "http://source.mynonpublic.com/azbox/initramfs-${MACHINE}-oe-core-${KV}-${SRCDATE}.tar.bz2;name=azbox-initrd-${MACHINE}"

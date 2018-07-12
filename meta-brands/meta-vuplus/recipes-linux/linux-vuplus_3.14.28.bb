@@ -27,13 +27,14 @@ SRC_URI += "http://archive.vuplus.com/download/kernel/${KERNELSRC};name=${MACHIN
 	file://usb_core_hub_msleep.patch \
 	file://rtl8712_fix_build_error.patch \
 	file://kernel-add-support-for-gcc6.patch \
+	file://kernel-add-support-for-gcc7.patch \
+	file://kernel-add-support-for-gcc8.patch \
 	file://0001-Support-TBS-USB-drivers.patch \
 	file://0001-STV-Add-PLS-support.patch \
 	file://0001-STV-Add-SNR-Signal-report-parameters.patch \
 	file://0001-stv090x-optimized-TS-sync-control.patch \
 	file://blindscan2.patch \
 	file://genksyms_fix_typeof_handling.patch \
-	file://kernel-add-support-for-gcc7.patch \
     file://0001-tuners-tda18273-silicon-tuner-driver.patch \
     file://01-10-si2157-Silicon-Labs-Si2157-silicon-tuner-driver.patch \
     file://02-10-si2168-Silicon-Labs-Si2168-DVB-T-T2-C-demod-driver.patch \

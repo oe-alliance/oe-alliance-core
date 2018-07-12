@@ -23,12 +23,13 @@ RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
 SRC_URI += "http://source.mynonpublic.com/download/odin-linux-${PV}.tar.xz \
     file://defconfig \
     file://kernel-add-support-for-gcc6.patch \
+    file://kernel-add-support-for-gcc7.patch \
+    file://kernel-add-support-for-gcc8.patch \
     file://0001-Support-TBS-USB-drivers.patch \
     file://0001-STV-Add-PLS-support.patch \
     file://0001-STV-Add-SNR-Signal-report-parameters.patch \
     file://0001-stv090x-optimized-TS-sync-control.patch \
     file://blindscan2.patch \
-    file://kernel-add-support-for-gcc7.patch \
     "
 
 S = "${WORKDIR}/linux-${PV}"

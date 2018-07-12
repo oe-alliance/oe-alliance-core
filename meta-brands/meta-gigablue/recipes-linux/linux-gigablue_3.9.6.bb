@@ -38,17 +38,18 @@ SRC_URI = "http://source.mynonpublic.com/gigablue/linux/gigablue-linux-${PV}-${S
     file://fix_fuse_for_linux_mips_3-9.patch \
     file://rt2800usb_fix_warn_tx_status_timeout_to_dbg.patch \
     file://linux-3.9-gcc-4.9.3-build-error-fixed.patch \
-    file://kernel-add-support-for-gcc-5.patch \
     file://rtl8712-fix-warnings.patch \
     file://rtl8187se-fix-warnings.patch \
+    file://kernel-add-support-for-gcc-5.patch \
     file://kernel-add-support-for-gcc6.patch \
+    file://kernel-add-support-for-gcc7.patch \
+    file://kernel-add-support-for-gcc8.patch \
     file://0001-Support-TBS-USB-drivers-3.9.patch \
     file://0001-STV-Add-PLS-support.patch \
     file://0001-STV-Add-SNR-Signal-report-parameters.patch \
     file://0001-stv090x-optimized-TS-sync-control.patch \
     file://blindscan2.patch \
     file://genksyms_fix_typeof_handling.patch \
-    file://kernel-add-support-for-gcc7.patch \
         "
 
 S = "${WORKDIR}/linux-${KV}"

@@ -24,6 +24,9 @@ SRC_URI += "http://source.mynonpublic.com/ini/bcm7413-linux-${KV}-${SRCDATE}.tar
     file://defconfig \
     file://mtd_nor_nand.patch \
     file://0001-kernel-add-support-for-gcc-5.patch \
+    file://kernel-add-support-for-gcc6.patch \
+    file://kernel-add-support-for-gcc7.patch \
+    file://kernel-add-support-for-gcc8.patch \
     file://0001-Revert-MIPS-mm-Add-compound-tail-page-_mapcount-when.patch \
     file://0001-Revert-MIPS-Add-fast-get_user_pages.patch \
     file://add-dmx-source-timecode.patch \
@@ -48,11 +51,9 @@ SRC_URI += "http://source.mynonpublic.com/ini/bcm7413-linux-${KV}-${SRCDATE}.tar
     file://nfs-max-rwsize-8k.patch \
     file://rtl8712-fix-warnings.patch \
     file://rtl8187se-fix-warnings.patch \
-    file://kernel-add-support-for-gcc6.patch \
     file://dvb_frontend-Multistream-support-3.6.patch \
     file://timeconst_perl5.patch \
     file://genksyms_fix_typeof_handling.patch \
-    file://kernel-add-support-for-gcc7.patch \
     "
 
 S = "${WORKDIR}/linux-${PV}"

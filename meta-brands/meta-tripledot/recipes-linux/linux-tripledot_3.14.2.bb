@@ -55,15 +55,16 @@ SRC_URI += "http://source.mynonpublic.com/tripledot/${MACHINE}-linux-${PV}-base-
 	file://timedate.patch \
 	file://linux-3.14.2-gcc-4.9.3-build-error-fixed.patch \
 	file://kernel-add-support-for-gcc-5.patch \
-	file://rtl8712-fix-warnings.patch \
 	file://kernel-add-support-for-gcc6.patch \
+	file://kernel-add-support-for-gcc7.patch \
+	file://kernel-add-support-for-gcc8.patch \
+	file://rtl8712-fix-warnings.patch \
 	file://0001-Support-TBS-USB-drivers.patch \
 	file://0001-STV-Add-PLS-support.patch \
 	file://0001-STV-Add-SNR-Signal-report-parameters.patch \
 	file://0001-stv090x-optimized-TS-sync-control.patch \
 	file://blindscan2.patch \
 	file://genksyms_fix_typeof_handling.patch \
-	file://kernel-add-support-for-gcc7.patch \
 	"
 
 S = "${WORKDIR}/linux-${PV}-base"

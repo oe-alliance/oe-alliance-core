@@ -43,10 +43,11 @@ SRC_URI = " \
     file://0001-it913x-backport-changes-to-3.2-kernel.patch \
     file://defconfig \
     file://kernel-add-support-for-gcc6.patch \
+    file://kernel-add-support-for-gcc7.patch \
+    file://kernel-add-support-for-gcc8.patch \
     file://misc_latin1_to_utf8_conversions.patch \
     file://0001-dvb_frontend-backport-multistream-support.patch \
     file://genksyms_fix_typeof_handling.patch \
-    file://kernel-add-support-for-gcc7.patch \
 "
 
 PACKAGES_DYNAMIC = "kernel-*"

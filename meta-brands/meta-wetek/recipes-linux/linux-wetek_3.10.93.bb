@@ -25,6 +25,7 @@ SRC_URI = "http://source.mynonpublic.com/wetek/linux-wetek-3.10.y-master.tar.gz 
     file://defconfig \
     file://kernel-add-support-for-gcc6.patch \
     file://kernel-add-support-for-gcc7.patch \
+    file://kernel-add-support-for-gcc8.patch \
 "
 
 S = "${WORKDIR}/linux-wetek-3.10.y-master"

@@ -54,6 +54,8 @@ SRC_URI += "http://www.et-view.com/img_up/shop_pds/bh190/Img_Xtrend/linux-${PV}.
     file://em28xx-dvb-enable-LNA-by-default-for-PCTV290e.patch \
     file://zl10353-output-full-range-SNR.patch \
     file://kernel-add-support-for-gcc6.patch \
+    file://kernel-add-support-for-gcc7.patch \
+    file://kernel-add-support-for-gcc8.patch \
     file://stv0900-Multistream-support.patch \
     file://0001-STV-Add-PLS-support.patch \
     file://0001-STV-Add-SNR-Signal-report-parameters.patch \
@@ -61,7 +63,6 @@ SRC_URI += "http://www.et-view.com/img_up/shop_pds/bh190/Img_Xtrend/linux-${PV}.
     file://2-2-stv090x-on-tuning-lock-return-correct-tuned-paramaters-like-freq-sr-fec-rolloff-etc.patch \
     file://0001-Support-TBS-USB-drivers.patch \
     file://genksyms_fix_typeof_handling.patch \
-    file://kernel-add-support-for-gcc7.patch \
     "
 
 S = "${WORKDIR}/linux-${PV}"

@@ -13,15 +13,16 @@ SRC_URI += "http://source.mynonpublic.com/linux-azbox-${KV}-new-2.tar.bz2;name=a
     file://zboot.h \
     file://emhwlib_registers_tango2.h \
     file://sata.patch \
-    file://0001-kernel-add-support-for-gcc-5.patch \
     file://fixme-hardfloat.patch \
     file://rtl8712-fix-warnings.patch \
     file://rtl8187se-fix-warnings.patch \
+    file://0001-kernel-add-support-for-gcc-5.patch \
     file://kernel-add-support-for-gcc6.patch \
+    file://kernel-add-support-for-gcc7.patch \
+    file://kernel-add-support-for-gcc8.patch \
     file://dvb_frontend-Multistream-support-3.3.patch \
     file://timeconst_perl5.patch \
     file://genksyms_fix_typeof_handling.patch \
-    file://kernel-add-support-for-gcc7.patch \
     "
 
 SRC_URI_append_azboxhd += "http://source.mynonpublic.com/azbox/initramfs-${MACHINE}-oe-core-${KV}-${SRCDATE}.tar.bz2;name=azbox-initrd-${MACHINE} \

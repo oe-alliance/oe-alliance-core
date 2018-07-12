@@ -28,6 +28,7 @@ SRC_URI += "http://source.mynonpublic.com/xcore/${MACHINE}-linux-${PV}-${SRC}.ta
     file://defconfig \
     file://kernel-add-support-for-gcc6.patch \
     file://kernel-add-support-for-gcc7.patch \
+    file://kernel-add-support-for-gcc8.patch \
     "
 
 S = "${WORKDIR}/linux-brcmstb-${PV}"
