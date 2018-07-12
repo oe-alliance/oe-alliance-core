@@ -92,14 +92,16 @@ IMAGE_CMD_clapemmc_append = "\
     fi; \
     echo ${IMAGE_VER_STRING} > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/imageversion; \
     cd ${DEPLOY_DIR_IMAGE}/${MACHINE}-partitions; \
-    mkupdate -s 00000003-00000001-01010101 -f ${DEPLOY_DIR_IMAGE}/${MACHINE}-partitions/emmc_partitions.xml -d ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/usb_update.bin; \ 
+    mkupdate -s 00000003-00000001-01010101 -f ${DEPLOY_DIR_IMAGE}/${MACHINE}-partitions/emmc_partitions.xml -d ${DEPLOY_DIR_IMAGE}/usb_update.bin; \ 
     cd ${DEPLOY_DIR_IMAGE}; \
     zip ${IMAGE_NAME}_mmc.zip ${IMAGEDIR}/*; \
+    zip -j ${IMAGE_NAME}_mmc.zip ${DEPLOY_DIR_IMAGE}/usb_update.bin; \
     rm -f ${DEPLOY_DIR_IMAGE}/*.ext4; \
     rm -f ${DEPLOY_DIR_IMAGE}/*.manifest; \
     rm -f ${DEPLOY_DIR_IMAGE}/.ext4; \
     rm -f ${DEPLOY_DIR_IMAGE}/.manifest; \
     rm -f -f ${DEPLOY_DIR_IMAGE}/*.json; \
+    rm -Rf ${DEPLOY_DIR_IMAGE}/usb_update.bin; \
     rm -Rf ${IMAGEDIR}; \
     "
 
