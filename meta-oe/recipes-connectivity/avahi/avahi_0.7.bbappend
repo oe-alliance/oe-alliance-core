@@ -1,5 +1,7 @@
 inherit upx-compress
 
+ANY_OF_DISTRO_FEATURES += "${GTK2DISTROFEATURES}"
+
 AVAHI_GTK = "gtk"
 
 do_install_append () {
