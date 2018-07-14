@@ -49,21 +49,23 @@ EXTRA_OECONF = " \
     "
 
 do_configure_prepend() {
-    cp ${S}/BoxBranding/remotes/Makefile.am ${S}/BoxBranding/remotes/Makefile.1
-    cp ${S}/BoxBranding/remotes/Makefile.am ${S}/BoxBranding/remotes/Makefile.2
-    cat ${S}/BoxBranding/remotes/Makefile.1 | grep -v ^if | grep -v ^endif | sed -e 's#SUBDIRS#INDIRS#' > ${S}/BoxBranding/remotes/Makefile.prepend
-    cat ${S}/BoxBranding/remotes/Makefile.2 | sed -e 's#SUBDIRS#OUTDIRS#' > ${S}/BoxBranding/remotes/Makefile.append
-    mv ${S}/BoxBranding/remotes/Makefile.prepend ${S}/BoxBranding/remotes/Makefile.am
-    cat ${S}/BoxBranding/remotes/Makefile.append >> ${S}/BoxBranding/remotes/Makefile.am
+    if [ ! -e ${S}/BoxBranding/remotes/Makefile.in ]; then
+        cp ${S}/BoxBranding/remotes/Makefile.am ${S}/BoxBranding/remotes/Makefile.1
+        cp ${S}/BoxBranding/remotes/Makefile.am ${S}/BoxBranding/remotes/Makefile.2
+        cat ${S}/BoxBranding/remotes/Makefile.1 | grep -v ^if | grep -v ^endif | sed -e 's#SUBDIRS#INDIRS#' > ${S}/BoxBranding/remotes/Makefile.prepend
+        cat ${S}/BoxBranding/remotes/Makefile.2 | sed -e 's#SUBDIRS#OUTDIRS#' > ${S}/BoxBranding/remotes/Makefile.append
+        mv ${S}/BoxBranding/remotes/Makefile.prepend ${S}/BoxBranding/remotes/Makefile.am
+        cat ${S}/BoxBranding/remotes/Makefile.append >> ${S}/BoxBranding/remotes/Makefile.am
 
-    echo 'SUBDIRS = @remove_dirs@' >> ${S}/BoxBranding/remotes/Makefile.am
+        echo 'SUBDIRS = @remove_dirs@' >> ${S}/BoxBranding/remotes/Makefile.am
 
-    rm ${S}/BoxBranding/remotes/Makefile.append ${S}/BoxBranding/remotes/Makefile.1 ${S}/BoxBranding/remotes/Makefile.2
+        rm ${S}/BoxBranding/remotes/Makefile.append ${S}/BoxBranding/remotes/Makefile.1 ${S}/BoxBranding/remotes/Makefile.2
 
-    echo 'AC_SUBST([remove_dirs], ['"'"'$(filter-out $(OUTDIRS),$(INDIRS))'"'"'])' >> ${S}/configure.ac
-    cat ${S}/configure.ac | grep -v AC_OUTPUT > ${S}/configure.new
-    mv ${S}/configure.new ${S}/configure.ac
-    echo 'AC_OUTPUT' >> ${S}/configure.ac
+        echo 'AC_SUBST([remove_dirs], ['"'"'$(filter-out $(OUTDIRS),$(INDIRS))'"'"'])' >> ${S}/configure.ac
+        cat ${S}/configure.ac | grep -v AC_OUTPUT > ${S}/configure.new
+        mv ${S}/configure.new ${S}/configure.ac
+        echo 'AC_OUTPUT' >> ${S}/configure.ac
+    fi
 }
 
 do_install_append() {
