@@ -1,8 +1,6 @@
 # We know about rtc
 include conf/machine/include/build-extras.inc
 
-DISTRO_FEATURES_remove = "x11 wayland"
-
 BRAND_OEM = "dinobot"
 
 

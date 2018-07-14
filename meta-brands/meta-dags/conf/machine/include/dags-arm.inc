@@ -1,5 +1,3 @@
-DISTRO_FEATURES_remove = "x11 wayland"
-
 include conf/machine/include/dags-oem.inc
 
 KERNEL_FILE = "oe_kernel.bin"
