@@ -10,6 +10,8 @@ DEPENDS = "libxml2 python-html bash-completion"
 SRCREV = "40a051fa9f48000f311f243c40e3cae588420738"
 PV = "2018.07.10"
 
+PR = "r1"
+
 SRC_URI = "git://github.com/rg3/youtube-dl.git;branch=master"
 
 S = "${WORKDIR}/git"
@@ -44,7 +46,7 @@ FILES_${PN}-src = " \
     ${libdir}/${PYTHON_DIR}/site-packages/*/*/*.py \
     ${libdir}/${PYTHON_DIR}/site-packages/*/*/*/*.py \
     ${libdir}/${PYTHON_DIR}/site-packages/*/*/*/*/*.py \
-    ${libdir}/${PYTHON_DIR}/site-packages/youtube_dl-*-py2.7.egg-info/* \
     ${datadir}/etc/* \
-    ${sysconfdir} \
     "
+
+FILES_${PN} += "${sysconfdir}"
