@@ -7,9 +7,9 @@ require conf/license/license-gplv2.inc
 inherit gitpkgv
 
 SRCREV = "${AUTOREV}"
-PV = "1.3+git${SRCPV}"
-PKGV = "1.3+git${GITPKGV}"
-VER="1.3"
+PV = "8.x+git${SRCPV}"
+PKGV = "8.x+git${GITPKGV}"
+VER="8.x"
 
 RDEPENDS_${PN} = "enigma2-plugin-extensions-weather_msn"
 
