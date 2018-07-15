@@ -20,7 +20,7 @@ FILES_${PN} = "/usr/*"
 S = "${WORKDIR}/git"
 
 do_compile_append() {
-python -O -m compileall ${S}
+python -O -m compileall ${S}/usr
 }
 
 do_install() {
