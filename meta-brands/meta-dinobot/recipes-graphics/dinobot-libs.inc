@@ -16,6 +16,9 @@ SRC_URI = "http://source.mynonpublic.com/dinobot/${MACHINE}-libs-${SRCDATE}.zip"
 
 S = "${WORKDIR}/hilib"
 
+SOLIBS = ".so"
+FILES_SOLIBSDEV = ""
+
 do_configure() {
 }
 
