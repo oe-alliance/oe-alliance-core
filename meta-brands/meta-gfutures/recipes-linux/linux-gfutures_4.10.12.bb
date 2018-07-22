@@ -58,8 +58,9 @@ KERNEL_OUTPUT_mips = "vmlinux"
 KERNEL_IMAGETYPE_mips = "vmlinux"
 KERNEL_IMAGEDEST_mips = "tmp"
 
-FILES_${KERNEL_PACKAGE_NAME}-image_mips = "${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}*"
+KERNEL_EXTRA_ARGS = "EXTRA_CFLAGS=-Wno-attribute-alias"
 
+FILES_${KERNEL_PACKAGE_NAME}-image_mips = "${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}*"
 
 kernel_do_install_append_mips() {
 	${STRIP} ${D}/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION}
