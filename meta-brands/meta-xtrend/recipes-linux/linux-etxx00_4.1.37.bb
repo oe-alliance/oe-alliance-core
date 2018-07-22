@@ -35,6 +35,8 @@ SRC_URI += "http://gi-et.info/et1x000/linux-${PV}-${SRC}.tar.xz \
     file://if_port.patch \
     file://t230c2.patch \
     file://T230resync.patch \
+    file://0002-log2-give-up-on-gcc-constant-optimizations.patch \
+    file://0003-uaccess-dont-mark-register-as-const.patch \
     "
 
 S = "${WORKDIR}/linux-${PV}"
@@ -55,7 +57,7 @@ kernel_do_install_append() {
 
 kernel_do_compile() {
         unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS MACHINE
-        oe_runmake ${KERNEL_IMAGETYPE_FOR_MAKE} ${KERNEL_ALT_IMAGETYPE} CC="${KERNEL_CC}" LD="${KERNEL_LD}"
+        oe_runmake ${KERNEL_IMAGETYPE_FOR_MAKE} ${KERNEL_ALT_IMAGETYPE} CC="${KERNEL_CC}" LD="${KERNEL_LD}" EXTRA_CFLAGS="-Wno-attribute-alias"
         if test "${KERNEL_IMAGETYPE_FOR_MAKE}.gz" = "${KERNEL_IMAGETYPE}"; then
                 gzip -9c < "${KERNEL_IMAGETYPE_FOR_MAKE}" > "${KERNEL_OUTPUT}"
         fi
