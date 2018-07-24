@@ -11,7 +11,6 @@ TARGET_ARCH = "mipsel"
 DEFAULTTUNE = "mips32el"
 
 PREFERRED_VERSION_linux-airdigital = "4.10.12"
-PREFERRED_VERSION_linux-libc-headers = "4.10"
 
 IMAGE_FSTYPES ?= "ubi"
 
