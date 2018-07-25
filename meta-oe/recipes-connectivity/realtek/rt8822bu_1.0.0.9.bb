@@ -8,7 +8,8 @@ inherit module
 
 PR = "r3"
 
-SRC_URI = "http://source.mynonpublic.com/rtl8822bu-driver-1.0.0.9-20180511a.zip"
+SRC_URI = "http://source.mynonpublic.com/rtl8822bu-driver-1.0.0.9-20180511a.zip \
+        file://0001-fix-compile-with-4-7-x-kernel.patch"
 
 SRC_URI_append_sh4 = " file://fix_sh4_build.patch"
 

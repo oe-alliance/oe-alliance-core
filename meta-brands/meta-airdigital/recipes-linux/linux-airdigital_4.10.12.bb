@@ -58,6 +58,8 @@ B = "${WORKDIR}/build"
 export OS = "Linux"
 KERNEL_OBJECT_SUFFIX = "ko"
 
+KERNEL_EXTRA_ARGS = "EXTRA_CFLAGS=-Wno-attribute-alias"
+
 # Linux MIPS Models
 
 KERNEL_OUTPUT_mips = "vmlinux"
