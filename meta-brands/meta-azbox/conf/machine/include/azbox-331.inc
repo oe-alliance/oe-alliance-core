@@ -21,7 +21,6 @@ DVBMEDIASINK_CONFIG = "--with-wma --with-wmv --with-pcm --with-dtsdownmix --with
 MACHINE_FEATURES += " kernel26 alsa usbhost wifi nl80211 3dtv switchoff lpcm textlcd 32bpp hdtv dvbapi5 dvb-c blindscan-dvbs boxmodel"
 
 PREFERRED_VERSION_linux-azbox = "3.3.1"
-PREFERRED_VERSION_linux-libc-headers = "3.3"
 
 PREFERRED_VERSION_rt8812au = "4.3.14"
 
