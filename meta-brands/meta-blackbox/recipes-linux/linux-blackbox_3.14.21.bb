@@ -37,6 +37,8 @@ SRC_URI += "http://source.mynonpublic.com/unibox/linux-${KV}-${SRCDATE}.tar.gz \
     file://0001-stv090x-optimized-TS-sync-control.patch \
     file://blindscan2.patch \
     file://genksyms_fix_typeof_handling.patch \
+    file://0002-cp1emu-do-not-use-bools-for-arithmetic.patch \
+    file://0003-log2-give-up-on-gcc-constant-optimizations.patch \
     "
 
 S = "${WORKDIR}/linux-${PV}"
@@ -47,6 +49,8 @@ KERNEL_OBJECT_SUFFIX = "ko"
 KERNEL_OUTPUT = "vmlinux"
 KERNEL_IMAGETYPE = "vmlinux"
 KERNEL_IMAGEDEST = "tmp"
+
+KERNEL_EXTRA_ARGS = "EXTRA_CFLAGS=-Wno-attribute-alias"
 
 FILES_${KERNEL_PACKAGE_NAME}-image = "/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz"
 
