@@ -34,6 +34,7 @@ SRC_URI += "http://source.mynonpublic.com/ceryon/ceryon-linux-${PV}.tgz \
 	file://blindscan2.patch \
 	file://0001-stv090x-optimized-TS-sync-control.patch \
 	file://0002-add-brcm-chips.patch \
+	file://0003-cp1emu-do-not-use-bools-for-arithmetic.patch \
 	"
 
 S = "${WORKDIR}/linux-${PV}"
@@ -44,6 +45,8 @@ KERNEL_OBJECT_SUFFIX = "ko"
 KERNEL_OUTPUT = "vmlinux"
 KERNEL_IMAGETYPE = "vmlinux"
 KERNEL_IMAGEDEST = "tmp"
+
+KERNEL_EXTRA_ARGS = "EXTRA_CFLAGS=-Wno-attribute-alias"
 
 FILES_${KERNEL_PACKAGE_NAME}-image = "/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}*"
 
