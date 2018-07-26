@@ -38,6 +38,7 @@ SRC_URI += "http://source.mynonpublic.com/ceryon/ceryon-linux-${PV}-${ARCH}.tar.
     file://v3-3-3-media-dvbsky-MyGica-T230C-support.patch \
     file://v3-3-4-media-dvbsky-MyGica-T230C-support.patch \
     file://v3-3-5-media-dvbsky-MyGica-T230C-support.patch \
+    file://0002-cp1emu-do-not-use-bools-for-arithmetic.patch \
     "
 
 SRC_URI_append_arm = " \
@@ -57,6 +58,8 @@ KERNEL_OBJECT_SUFFIX = "ko"
 KERNEL_OUTPUT_mips = "vmlinux"
 KERNEL_IMAGETYPE_mips = "vmlinux"
 KERNEL_IMAGEDEST_mips = "boot"
+
+KERNEL_EXTRA_ARGS = "EXTRA_CFLAGS=-Wno-attribute-alias"
 
 FILES_${KERNEL_PACKAGE_NAME}-image_mips = "/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}*"
 

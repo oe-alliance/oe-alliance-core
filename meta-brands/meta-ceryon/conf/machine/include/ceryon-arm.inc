@@ -9,7 +9,6 @@ TARGET_ARCH = "arm"
 DEFAULTTUNE = "cortexa15hf-neon-vfpv4"
 
 PREFERRED_VERSION_linux-ceryon= "4.10.12"
-PREFERRED_VERSION_linux-libc-headers = "4.10"
 
 IMAGE_CMD_ceryonemmc_append = "\
     mkdir -p ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}; \
