@@ -16,6 +16,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 SRC_URI += "http://en3homeftp.net/pub/src/linux-3.14.28.tar.xz \
 	file://defconfig \
 	file://kernel-add-support-for-gcc7.patch \
+	file://kernel-add-support-for-gcc8.patch \
 	file://date-time.patch \
 	file://0001.remove_vtuner_index_check.patch \
 	file://0001-Support-TBS-USB-drivers.patch \
@@ -31,6 +32,8 @@ SRC_URI += "http://en3homeftp.net/pub/src/linux-3.14.28.tar.xz \
 	file://CONFIG_DVB_SP2.patch \
 	file://dvbsky.patch \
 	file://rtl2832u-2.patch \
+	file://0002-log2-give-up-on-gcc-constant-optimizations.patch \
+	file://0003-uaccess-dont-mark-register-as-const.patch \
 	"
 
 S = "${WORKDIR}/linux"
@@ -42,6 +45,7 @@ KERNEL_OBJECT_SUFFIX = "ko"
 KERNEL_IMAGEDEST = "tmp"
 KERNEL_OUTPUT = "arch/${ARCH}/boot/${KERNEL_IMAGETYPE}"
 
+KERNEL_EXTRA_ARGS = "EXTRA_CFLAGS=-Wno-attribute-alias"
 
 FILES_${KERNEL_PACKAGE_NAME}-image = "/${KERNEL_IMAGEDEST}/zImage"
 
