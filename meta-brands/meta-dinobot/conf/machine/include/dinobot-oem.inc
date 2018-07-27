@@ -111,11 +111,12 @@ TARGET_ARCH = "arm"
 DEFAULTTUNE = "cortexa15hf-neon-vfpv4"
 
 PREFERRED_VERSION_linux-dinobot = "4.4.35"
-PREFERRED_VERSION_linux-libc-headers = "4.4"
 PREFERRED_PROVIDER_virtual/egl = "dinobot-opengl-${MACHINE}" 
 PREFERRED_PROVIDER_virtual/libgles1 = "dinobot-opengl-${MACHINE}"
 PREFERRED_PROVIDER_virtual/libgles2 = "dinobot-opengl-${MACHINE}"
 PREFERRED_PROVIDER_virtual/kodi = "stb-kodi-${MACHINE}"
+
+GCCVERSION = "8.%"
 
 require conf/machine/include/tune-cortexa15.inc
 
