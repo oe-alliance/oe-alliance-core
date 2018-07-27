@@ -25,6 +25,8 @@ SRC_URI += "http://en3homeftp.net/pub/src/dags-linux-${PV}-${SRCDATE}.tar.gz \
     file://0001-STV-Add-SNR-Signal-report-parameters.patch \
     file://blindscan2.patch \
     file://0001-stv090x-optimized-TS-sync-control.patch \
+    file://0003-log2-give-up-on-gcc-constant-optimizations.patch \
+    file://0004-cp1emu-do-not-use-bools-for-arithmetic.patch \
     "
 
 S = "${WORKDIR}/linux-${PV}"
@@ -35,6 +37,8 @@ KERNEL_OBJECT_SUFFIX = "ko"
 KERNEL_OUTPUT = "vmlinux"
 KERNEL_IMAGETYPE = "vmlinux"
 KERNEL_IMAGEDEST = "tmp"
+
+KERNEL_EXTRA_ARGS = "EXTRA_CFLAGS=-Wno-attribute-alias"
 
 FILES_${KERNEL_PACKAGE_NAME}-image = "/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz"
 
@@ -60,4 +64,3 @@ do_rm_work() {
 
 # extra tasks
 addtask kernel_link_images after do_compile before do_install
-

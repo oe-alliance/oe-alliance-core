@@ -16,6 +16,8 @@ LIC_FILES_CHKSUM = "file://${WORKDIR}/linux/COPYING;md5=d7810fab7487fb0aad327b76
 SRC_URI = "http://en3homeftp.net/pub/down/linux-${KV}-${DATETIME}.tar.xz \
     file://defconfig \
     file://kernel-add-support-for-gcc8.patch \
+    file://0002-log2-give-up-on-gcc-constant-optimizations.patch \
+    file://0003-uaccess-dont-mark-register-as-const.patch \
 "
 
 S = "${WORKDIR}/linux"
@@ -27,7 +29,7 @@ KERNEL_OUTPUT = "arch/${ARCH}/boot/${KERNEL_IMAGETYPE}"
 KERNEL_OBJECT_SUFFIX = "ko"
 KERNEL_IMAGEDEST = "tmp"
 
-FILES_kernel-image = "/${KERNEL_IMAGEDEST}/zImage"
+FILES_${KERNEL_PACKAGE_NAME}-image = "/${KERNEL_IMAGEDEST}/zImage"
 
 kernel_do_install_append() {
         install -d ${D}/${KERNEL_IMAGEDEST}
@@ -36,7 +38,7 @@ kernel_do_install_append() {
 
 kernel_do_compile() {
         unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS MACHINE
-        oe_runmake ${KERNEL_IMAGETYPE_FOR_MAKE} ${KERNEL_ALT_IMAGETYPE} CC="${KERNEL_CC}" LD="${KERNEL_LD}"
+        oe_runmake ${KERNEL_IMAGETYPE_FOR_MAKE} ${KERNEL_ALT_IMAGETYPE} CC="${KERNEL_CC}" LD="${KERNEL_LD}" EXTRA_CFLAGS=-Wno-attribute-alias
 }
 
 pkg_postinst_kernel-image () {
