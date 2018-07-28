@@ -7,7 +7,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PV = "6.6"
-PR = "r01"
+PR = "r1"
 
 inherit packagegroup
 
