@@ -11,7 +11,7 @@ SRCDATE = "20180728"
 PV = "${SRCDATE}"
 PR = "r0"
 
-SRC_URI  = "http://source.mynonpublic.com/clap/cc1-hihalt-${SRCDATE}.zip"
+SRC_URI  = "http://source.mynonpublic.com/clap/${MACHINE}-hihalt-${SRCDATE}.tar.gz"
 
 S = "${WORKDIR}"
 
