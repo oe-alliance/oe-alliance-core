@@ -31,8 +31,7 @@ CFLAGS_append = " ${@bb.utils.contains('BRAND_OEM', 'airdigital', ' -DNO_DVB_POL
 
 INSANE_SKIP_${PN} += "already-stripped ldflags"
 
-SRC_URI = "git://github.com/oe-alliance/e2openplugin-CrossEPG.git;protocol=git \
-            file://0001-add-missing-defs.patch"
+SRC_URI = "git://github.com/oe-alliance/e2openplugin-CrossEPG.git;protocol=git"
 
 S = "${WORKDIR}/git"
 
