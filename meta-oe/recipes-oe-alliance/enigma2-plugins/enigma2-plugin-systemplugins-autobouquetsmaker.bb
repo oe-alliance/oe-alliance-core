@@ -11,8 +11,7 @@ PV = "3.0+git${SRCPV}"
 PKGV = "3.0+git${GITPKGV}"
 PR = "r1"
 
-SRC_URI = "git://github.com/oe-alliance/AutoBouquetsMaker.git;protocol=git \
-            file://0001-add-missing-defs.patch"
+SRC_URI = "git://github.com/oe-alliance/AutoBouquetsMaker.git;protocol=git"
 
 EXTRA_OECONF = " \
     BUILD_SYS=${BUILD_SYS} \
