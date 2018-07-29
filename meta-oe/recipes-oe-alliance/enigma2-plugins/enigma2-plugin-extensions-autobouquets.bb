@@ -67,9 +67,6 @@ exit 0
 pkg_postinst_${PN}() {
 #!/bin/sh
 
-echo "updating time"
-rdate -s time.mit.edu
-sleep 2
 echo "*                               *"
 echo "* plugin installed successfully *"
 echo "*                               *"
