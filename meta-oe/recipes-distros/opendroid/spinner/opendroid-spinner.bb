@@ -6,8 +6,8 @@ inherit allarch
 
 require conf/license/license-gplv2.inc
 
-PV = "6.5"
-PR = "r23"
+PV = "6.6"
+PR = "r1"
 
 SRC_URI="file://wait*.png" 
         

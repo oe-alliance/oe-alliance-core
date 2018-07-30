@@ -9,7 +9,6 @@ require conf/license/license-gplv2.inc
 PV = "${IMAGE_VERSION}"
 PR = "${BUILD_VERSION}"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
-
 do_rootfs[deptask] = "do_rm_work"
 
 IMAGE_INSTALL = "opendroid-base \

@@ -6,8 +6,8 @@ LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda
 ALLOW_EMPTY_${PN} = "1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-PV = "6.5"
-PR = "r37"
+PV = "6.6"
+PR = "r1"
 
 inherit packagegroup
 
@@ -18,6 +18,7 @@ RRECOMMENDS_${PN} = " \
     enigma2-skindefault \
     enigma2-plugin-skins-opd-blue-line \
     enigma2-plugin-extensions-atilehd \
+    enigma2-plugin-extensions-opdboot \
     enigma2-plugin-extensions-autotimer \
     enigma2-plugin-extensions-weatherplugin-opd \
     enigma2-plugin-extensions-gioppygio \
