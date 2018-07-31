@@ -16,11 +16,11 @@ ${@bb.utils.contains('MACHINEBUILD', 'clap4k', 'CLAP' , '', d)}\
 "
 
 MTD_KERNEL = "\
-${@bb.utils.contains('MACHINEBUILD', 'clap4k', 'mmcblk0p11' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'clap4k', 'mmcblk0p12' , '', d)}\
 "
 
 MTD_ROOTFS = "\
-${@bb.utils.contains('MACHINEBUILD', 'clap4k', 'mmcblk0p12' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'clap4k', 'mmcblk0p13' , '', d)}\
 "
 
 KERNEL_FILE = "kernel.bin"
