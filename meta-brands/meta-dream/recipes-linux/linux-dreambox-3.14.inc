@@ -13,10 +13,10 @@ PKG_kernel = "kernel"
 PKG_${KERNEL_PACKAGE_NAME}-base = "kernel-base"
 PKG_${KERNEL_PACKAGE_NAME}-image = "kernel-image"
 PKG_${KERNEL_PACKAGE_NAME}-image-zimage = "kernel-image"
-RPROVIDES_kernel = "kernel-${LINUX_VERSION}"
+RPROVIDES_${KERNEL_PACKAGE_NAME} = "kernel-${LINUX_VERSION}"
 RPROVIDES_${KERNEL_PACKAGE_NAME}-base = "kernel-${KERNEL_VERSION}"
-RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
-RPROVIDES_kernel-image-zimage = "kernel-image"
+RPROVIDES_${KERNEL_PACKAGE_NAME}-image = "kernel-image-${KERNEL_VERSION}"
+RPROVIDES_${KERNEL_PACKAGE_NAME}-image-zimage = "kernel-image"
 RDEPENDS_${KERNEL_PACKAGE_NAME}-image = "kernel-devicetree flash-scripts"
 
 
@@ -26,4 +26,3 @@ if [ -z "$D" ]; then
     flash-kernel /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${LINUX_VERSION}
 fi
 }
-

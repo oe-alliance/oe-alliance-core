@@ -15,7 +15,12 @@ SRC_URI = " \
     file://kernel-add-support-for-gcc8.patch \
     file://genksyms_fix_typeof_handling.patch \
     file://defconfig \
+    file://0001-log2-give-up-on-gcc-constant-optimizations.patch \
+    file://0002-cp1emu-do-not-use-bools-for-arithmetic.patch \
+    file://0003-makefile-silence-packed-not-aligned-warn.patch \
+    file://0004-fcrypt-fix-bitoperation-for-gcc.patch \
 "
+
 SRC_URI[kernel.md5sum] = "967f72983655e2479f951195953e8480"
 SRC_URI[kernel.sha256sum] = "ff3dee6a855873d12487a6f4070ec2f7996d073019171361c955639664baa0c6"
 SRC_URI[stable-patch.md5sum] = "cbd978b714f37b648fbcf92482372223"

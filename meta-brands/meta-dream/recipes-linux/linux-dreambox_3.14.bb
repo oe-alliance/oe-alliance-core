@@ -23,6 +23,9 @@ SRC_URI = " \
     file://CONFIG_DVB_SP2.patch \
     file://dvbsky.patch \
     file://rtl2832u-2.patch \
+    file://0004-log2-give-up-on-gcc-constant-optimizations.patch \
+    file://0005-uaccess-dont-mark-register-as-const.patch \
+    file://0006-makefile-silence-packed-not-aligned-warn.patch \
 "
 
 SRC_URI[kernel.md5sum] = "b621207b3f6ecbb67db18b13258f8ea8"
@@ -33,7 +36,6 @@ SRC_URI[dream-patch.md5sum] = "b8e267850e54a1d13be41456be5ec4b5"
 SRC_URI[dream-patch.sha256sum] = "85a18df9f07e221c0fd305cc213e5557d9006a40b3229bf9d13e5bc9ba8e2371"
 
 require linux-dreambox-3.14.inc
-require recipes-kernel/linux/linux-dtb.inc
 
 S = "${WORKDIR}/linux-${PV}"
 B = "${WORKDIR}/build"
@@ -47,6 +49,8 @@ BRCM_PATCHLEVEL = "1.17"
 LINUX_VERSION = "${PV}-${BRCM_PATCHLEVEL}-${MACHINE}"
 KERNEL_IMAGETYPE = "zImage"
 KERNEL_DEVICETREE = "dreambox-dm900.dtb"
+
+KERNEL_EXTRA_ARGS = "EXTRA_CFLAGS=-Wno-attribute-alias"
 
 do_rm_work() {
 }

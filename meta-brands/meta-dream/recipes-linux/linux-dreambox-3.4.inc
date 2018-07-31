@@ -6,7 +6,7 @@ require linux-3.4.inc
 PKG_${KERNEL_PACKAGE_NAME}-base = "kernel-base"
 PKG_${KERNEL_PACKAGE_NAME}-image = "kernel-image"
 RPROVIDES_${KERNEL_PACKAGE_NAME}-base = "kernel-${LINUX_VERSION}"
-RPROVIDES_kernel-image = "kernel-image-${LINUX_VERSION}"
+RPROVIDES_${KERNEL_PACKAGE_NAME}-image = "kernel-image-${LINUX_VERSION}"
 
 do_install_append() {
         if [ "${KERNEL_IMAGETYPE}" = "vmlinux" ]; then

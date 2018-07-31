@@ -1,0 +1,22 @@
+From d6f4d10dc0c8a977c67908ba770c868bc096f029 Mon Sep 17 00:00:00 2001
+From: Nicker <nickersk@gmail.com>
+Date: Tue, 31 Jul 2018 10:52:49 +0200
+Subject: [PATCH 4/4] fcrypt fix bitoperation for gcc
+
+
+diff --git a/crypto/fcrypt.c b/crypto/fcrypt.c
+index c33107e3..6338e029 100644
+--- a/crypto/fcrypt.c
++++ b/crypto/fcrypt.c
+@@ -110,7 +110,7 @@ static const __be32 sbox0[256] = {
+ };
+ 
+ #undef Z
+-#define Z(x) cpu_to_be32((x << 27) | (x >> 5))
++#define Z(x) cpu_to_be32(((x & 0x1f) << 27) | (x >> 5))
+ static const __be32 sbox1[256] = {
+ 	Z(0x77), Z(0x14), Z(0xa6), Z(0xfe), Z(0xb2), Z(0x5e), Z(0x8c), Z(0x3e),
+ 	Z(0x67), Z(0x6c), Z(0xa1), Z(0x0d), Z(0xc2), Z(0xa2), Z(0xc1), Z(0x85),
+-- 
+2.17.1
+
