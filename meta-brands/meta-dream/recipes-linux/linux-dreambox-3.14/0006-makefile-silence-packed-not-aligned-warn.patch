@@ -1,0 +1,21 @@
+From 696a6a0cf05ac3446582d1c097a8a26fd001573f Mon Sep 17 00:00:00 2001
+From: Nicker <nickersk@gmail.com>
+Date: Tue, 31 Jul 2018 13:42:34 +0200
+Subject: [PATCH] makefile silence packed not aligned warn
+
+
+diff --git a/Makefile b/Makefile
+index f99c3b41..61d6a791 100644
+--- a/Makefile
++++ b/Makefile
+@@ -627,6 +627,7 @@ KBUILD_CFLAGS += $(stackp-flag)
+ # This warning generated too much noise in a regular build.
+ # Use make W=1 to enable this warning (see scripts/Makefile.build)
+ KBUILD_CFLAGS += $(call cc-disable-warning, unused-but-set-variable)
++KBUILD_CFLAGS += $(call cc-disable-warning, packed-not-aligned)
+ 
+ ifdef CONFIG_FRAME_POINTER
+ KBUILD_CFLAGS	+= -fno-omit-frame-pointer -fno-optimize-sibling-calls
+-- 
+2.17.1
+

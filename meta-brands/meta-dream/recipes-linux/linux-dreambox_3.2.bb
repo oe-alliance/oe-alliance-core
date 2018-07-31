@@ -48,6 +48,10 @@ SRC_URI = " \
     file://misc_latin1_to_utf8_conversions.patch \
     file://0001-dvb_frontend-backport-multistream-support.patch \
     file://genksyms_fix_typeof_handling.patch \
+    file://0012-log2-give-up-on-gcc-constant-optimizations.patch \
+    file://0013-cp1emu-do-not-use-bools-for-arithmetic.patch \
+    file://0014-makefile-silence-packed-not-aligned-warn.patch \
+    file://0015-fcrypt-fix-bitoperation-for-gcc.patch \
 "
 
 PACKAGES_DYNAMIC = "kernel-*"
@@ -74,7 +78,7 @@ KERNEL_BUILTIN_MODULES_dm8000 = "\
 PKG_${KERNEL_PACKAGE_NAME}-base = "kernel-base"
 PKG_${KERNEL_PACKAGE_NAME}-image = "kernel-image"
 RPROVIDES_${KERNEL_PACKAGE_NAME}-base = "kernel-${KERNEL_VERSION}"
-RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION} ${KERNEL_BUILTIN_MODULES}"
+RPROVIDES_${KERNEL_PACKAGE_NAME}-image = "kernel-image-${KERNEL_VERSION} ${KERNEL_BUILTIN_MODULES}"
 
 SRC_URI[kernel.md5sum] = "364066fa18767ec0ae5f4e4abcf9dc51"
 SRC_URI[kernel.sha256sum] = "dd96ed02b53fb5d57762e4b1f573460909de472ca588f81ec6660e4a172e7ba7"
