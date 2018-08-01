@@ -1,0 +1,23 @@
+From 0424192be15157bb5db512c42b3eb4535252d3a5 Mon Sep 17 00:00:00 2001
+From: Nicker <nickersk@gmail.com>
+Date: Tue, 31 Jul 2018 22:12:38 +0200
+Subject: [PATCH] makefile allow date-time macros
+
+
+diff --git a/Makefile b/Makefile
+index b2f7de81..068b9dad 100644
+--- a/Makefile
++++ b/Makefile
+@@ -690,9 +690,6 @@ KBUILD_CFLAGS   += $(call cc-option,-Werror=implicit-int)
+ # require functions to have arguments in prototypes, not empty 'int foo()'
+ KBUILD_CFLAGS   += $(call cc-option,-Werror=strict-prototypes)
+ 
+-# Prohibit date/time macros, which would make the build non-deterministic
+-KBUILD_CFLAGS   += $(call cc-option,-Werror=date-time)
+-
+ # use the deterministic mode of AR if available
+ KBUILD_ARFLAGS := $(call ar-option,D)
+ 
+-- 
+2.17.1
+

@@ -102,6 +102,8 @@ GLIBC_EXTRA_OECONF = "--with-tls --with-__thread"
 
 PREFERRED_PROVIDER_virtual/kernel = "linux-entwopia"
 
+GCCVERSION = "8.%"
+
 KERNEL_IMAGETYPE = "vmlinux"
 KERNEL_OUTPUT = "${KERNEL_IMAGETYPE}"
 KERNEL_CONSOLE = "ttyS0,115200n8"
