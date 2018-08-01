@@ -12,10 +12,14 @@ SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
 DST = "/usr/lib/enigma2/python/Plugins/SystemPlugins/QuadPiP"
-PR = "r2"
+PR = "r4"
 
 FILES_${PN} = "${DST}/*"
 PACKAGES = "${PN}"
+
+do_install_prepend() {
+	rm -f ${S}/po/updateallpo.sh
+}
 
 do_install() {
 	install -d "${D}/${DST}"
