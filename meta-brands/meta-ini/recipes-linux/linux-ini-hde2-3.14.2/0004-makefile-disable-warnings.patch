@@ -1,0 +1,37 @@
+From ad7ba73b3aa88dd51b745b47accb2321d2596fc9 Mon Sep 17 00:00:00 2001
+From: Nicker <nickersk@gmail.com>
+Date: Wed, 1 Aug 2018 15:22:07 +0200
+Subject: [PATCH 4/4] makefile disable warnings
+
+
+diff --git a/Makefile b/Makefile
+index b2f7de81..7c58af76 100644
+--- a/Makefile
++++ b/Makefile
+@@ -597,9 +597,9 @@ KBUILD_CFLAGS += $(call cc-option,-fno-reorder-blocks,) \
+                  $(call cc-option,-fno-partial-inlining)
+ endif
+ 
+-ifneq ($(CONFIG_FRAME_WARN),0)
+-KBUILD_CFLAGS += $(call cc-option,-Wframe-larger-than=${CONFIG_FRAME_WARN})
+-endif
++#ifneq ($(CONFIG_FRAME_WARN),0)
++#KBUILD_CFLAGS += $(call cc-option,-Wframe-larger-than=${CONFIG_FRAME_WARN})
++#endif
+ 
+ # Handle stack protector mode.
+ ifdef CONFIG_CC_STACKPROTECTOR_REGULAR
+@@ -625,6 +625,10 @@ KBUILD_CFLAGS += $(stackp-flag)
+ # This warning generated too much noise in a regular build.
+ # Use make W=1 to enable this warning (see scripts/Makefile.build)
+ KBUILD_CFLAGS += $(call cc-disable-warning, unused-but-set-variable)
++KBUILD_CFLAGS	+= $(call cc-disable-warning,attribute-alias)
++KBUILD_CFLAGS	+= $(call cc-disable-warning,stringop-truncation)
++KBUILD_CFLAGS	+= $(call cc-disable-warning,format-truncation)
++KBUILD_CFLAGS	+= $(call cc-disable-warning,duplicate-decl-specifier)
+ 
+ ifdef CONFIG_FRAME_POINTER
+ KBUILD_CFLAGS	+= -fno-omit-frame-pointer -fno-optimize-sibling-calls
+-- 
+2.17.1
+

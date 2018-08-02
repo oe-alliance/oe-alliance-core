@@ -54,6 +54,9 @@ SRC_URI += "http://source.mynonpublic.com/ini/bcm7413-linux-${KV}-${SRCDATE}.tar
     file://dvb_frontend-Multistream-support-3.6.patch \
     file://timeconst_perl5.patch \
     file://genksyms_fix_typeof_handling.patch \
+    file://0002-log2-give-up-on-gcc-constant-optimizations.patch \
+    file://0003-cp1emu-do-not-use-bools-for-arithmetic.patch \
+    file://0004-makefile-disable-warnings.patch \
     "
 
 S = "${WORKDIR}/linux-${PV}"
