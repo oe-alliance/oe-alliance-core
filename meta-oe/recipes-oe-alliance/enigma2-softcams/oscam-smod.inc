@@ -27,6 +27,13 @@ PACKAGE_ARCH = "${DEFAULTTUNE}"
 
 DEPENDS = "libusb openssl"
 
+EXTRA_CC_OPTS += "\
+	-lm \
+"
+
+CFLAGS_append = " -lm"
+LDFLAGS_append = " -lm"
+
 EXTRA_OECMAKE += "\
 	-DWEBIF=1 \
 	-DWEBIF_LIVELOG=1 \
@@ -36,8 +43,9 @@ EXTRA_OECMAKE += "\
 	-DWITH_STAPI=0 \
 	-DHAVE_LIBUSB=1 \
 	-DSTATIC_LIBUSB=0 \
+	-DREADER_NAGRA_MERLIN=1 \
 	-DHAVE_PCSC=0 \
-	"
+"
 
 do_configure_prepend() {
     cp ${F}/SoftCam.Key ${S}/SoftCam.Key
@@ -54,7 +62,7 @@ do_compile_prepend() {
 
     perl -i -pe 's:Schimmelreiter:smod:g' ${S}/globals.h
 
-    LDFLAGS="${LDFLAGS} -Wl,--format=binary -Wl,SoftCam.Key -Wl,--format=default"
+    LDFLAGS="-lm ${LDFLAGS} -Wl,--format=binary -Wl,SoftCam.Key -Wl,--format=default"
 }
 
 do_install() {
