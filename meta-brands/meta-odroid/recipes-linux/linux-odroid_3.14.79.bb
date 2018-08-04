@@ -13,18 +13,21 @@ SRCREV_odroidc2 = "424ef5d5da4ca7a46b810ad91be13592efae3ebf"
 SRC_URI = "git://github.com/hardkernel/linux.git;branch=${KBRANCH}"
 
 SRC_URI += " \
-	file://add_uboot.patch \
-	file://defconfig"
+        file://add_uboot.patch \
+        file://defconfig \
+        file://0001-log2-give-up-on-gcc-constant-optimizations.patch \
+        file://0002-makefile-disable-warnings.patch \
+"
 
 KCONF_BSP_AUDIT_LEVEL = "0"
 
 do_compile_append() {
-	oe_runmake dtbs 
+        oe_runmake dtbs
 }
 
 inherit deploy
 
 do_deploy_append() {
-	install -d ${DEPLOYDIR}
-	install ${B}/arch/arm64/boot/dts/meson64_odroidc2.dtb ${DEPLOYDIR}/.
+        install -d ${DEPLOYDIR}
+        install ${B}/arch/arm64/boot/dts/meson64_odroidc2.dtb ${DEPLOYDIR}/.
 }
