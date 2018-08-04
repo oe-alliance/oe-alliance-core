@@ -21,7 +21,7 @@ MACHINE_KERNEL_PR_append = "oea4.1-r2"
 PKG_${KERNEL_PACKAGE_NAME}-base = "kernel-base"
 PKG_${KERNEL_PACKAGE_NAME}-image = "kernel-image"
 RPROVIDES_${KERNEL_PACKAGE_NAME}-base = "kernel-${KERNEL_VERSION}"
-RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
+RPROVIDES_${KERNEL_PACKAGE_NAME}-image = "kernel-image-${KERNEL_VERSION}"
 
 SRC_URI += "http://source.mynonpublic.com/octagon/octagon-linux-${PV}-${SRC}.tar.xz \
     file://defconfig \
@@ -35,6 +35,8 @@ SRC_URI += "http://source.mynonpublic.com/octagon/octagon-linux-${PV}-${SRC}.tar
     file://rtl2832-add-support-for-GoTView-MasterHD-3-USB-tuner.patch \
     file://if_port.patch \
     file://t230c.patch \
+    file://0002-makefile-disable-warnings.patch \
+    file://0003-uaccess-dont-mark-register-as-const.patch \
     "
 
 S = "${WORKDIR}/linux-${PV}"
