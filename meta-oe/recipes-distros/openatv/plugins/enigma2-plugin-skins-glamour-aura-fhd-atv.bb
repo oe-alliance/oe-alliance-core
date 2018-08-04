@@ -13,8 +13,7 @@ VER="8.x"
 
 RDEPENDS_${PN} = "enigma2-plugin-extensions-weather_msn"
 
-#SRC_URI="git://github.com/MCelliotG/GlamourAuraFHD-ATV-skin.git;protocol=git"
-SRC_URI="git://github.com/atvcaptain/GlamourAuraFHD-ATV-skin.git;protocol=git"
+SRC_URI="git://github.com/MCelliotG/GlamourAuraFHD-ATV-skin.git;protocol=git"
 
 FILES_${PN} = "/usr/*"
 

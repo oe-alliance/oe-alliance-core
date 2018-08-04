@@ -1,6 +1,6 @@
 #!/bin/sh
 
-#LOG='/etc/mdev/mdev-mount.log'
+#LOG='/etc/udev/mdev-mount.log'
 
 # (e)udev compatibility
 [[ -z $MDEV ]] && MDEV=$(basename $DEVNAME)
@@ -45,6 +45,12 @@ case $ACTION in
 		# check if already mounted
 		if grep -q "^/dev/${MDEV} " /proc/mounts ; then
 			# Already mounted
+			exit 0
+		fi
+		# check if multiboot stick
+		LABEL=`blkid -s PARTLABEL -o value /dev/${MDEV}`
+		LABELCHECK=`expr substr $LABEL 1 6`
+		if [ "$LABELCHECK" == "kernel" ] || [ "$LABELCHECK" == "rootfs" ]; then
 			exit 0
 		fi
 		DEVCHECK=`expr substr $MDEV 1 7`
