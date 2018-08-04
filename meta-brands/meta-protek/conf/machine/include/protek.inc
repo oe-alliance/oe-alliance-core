@@ -34,11 +34,10 @@ DEFAULTTUNE = "mips32el"
 
 PREFERRED_PROVIDER_virtual/kernel = "linux-protek"
 PREFERRED_VERSION_linux-protek = "4.1.21"
-#PREFERRED_VERSION_linux-libc-headers = "4.1"
 PREFERRED_PROVIDER_virtual/blindscan-dvbc = "protek-blindscan-utils-dvbc"
 PREFERRED_PROVIDER_virtual/blindscan-dvbs = "protek-blindscan-utils-dvbs"
 
-
+GCCVERSION = "8.%"
 
 KERNEL_IMAGETYPE = "vmlinux"
 KERNEL_OUTPUT = "${KERNEL_IMAGETYPE}"
