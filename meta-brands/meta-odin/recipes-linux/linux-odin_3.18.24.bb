@@ -30,6 +30,8 @@ SRC_URI += "http://source.mynonpublic.com/download/odin-linux-${PV}.tar.xz \
     file://0001-STV-Add-SNR-Signal-report-parameters.patch \
     file://0001-stv090x-optimized-TS-sync-control.patch \
     file://blindscan2.patch \
+    file://0002-makefile-disable-warnings.patch \
+    file://0003-cp1emu-do-not-use-bools-for-arithmetic.patch \
     "
 
 S = "${WORKDIR}/linux-${PV}"

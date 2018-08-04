@@ -17,7 +17,7 @@ LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad
 PKG_${KERNEL_PACKAGE_NAME}-base = "kernel-base"
 PKG_${KERNEL_PACKAGE_NAME}-image = "kernel-image"
 RPROVIDES_${KERNEL_PACKAGE_NAME}-base = "kernel-${KERNEL_VERSION}"
-RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
+RPROVIDES_${KERNEL_PACKAGE_NAME}-image = "kernel-image-${KERNEL_VERSION}"
 
 SRC_URI += "http://source.mynonpublic.com/download/linux-${PV}.tar.gz \
     file://defconfig \
@@ -53,6 +53,8 @@ SRC_URI += "http://source.mynonpublic.com/download/linux-${PV}.tar.gz \
     file://dvb_frontend-Multistream-support-3.6.patch \
     file://timeconst_perl5.patch \
     file://genksyms_fix_typeof_handling.patch \
+    file://0002-makefile-disable-warnings.patch \
+    file://0003-cp1emu-do-not-use-bools-for-arithmetic.patch \
     "
 
 S = "${WORKDIR}/linux-${PV}"
