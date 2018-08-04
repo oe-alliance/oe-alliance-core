@@ -33,3 +33,4 @@ INITSCRIPT_PARAMS = "defaults 88"
 do_rm_work() {
 }
 
+CLEANBROKEN = "1"
