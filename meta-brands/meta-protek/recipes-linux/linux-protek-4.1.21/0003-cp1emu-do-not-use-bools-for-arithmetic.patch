@@ -1,0 +1,28 @@
+From 3427952850cc888b277de162dd1c25c12afe3ee6 Mon Sep 17 00:00:00 2001
+From: Nicker <nickersk@gmail.com>
+Date: Sat, 4 Aug 2018 18:12:20 +0200
+Subject: [PATCH 3/4] cp1emu do not use bools for arithmetic
+
+
+diff --git a/arch/mips/math-emu/cp1emu.c b/arch/mips/math-emu/cp1emu.c
+index 2b95e34f..c756c6d2 100644
+--- a/arch/mips/math-emu/cp1emu.c
++++ b/arch/mips/math-emu/cp1emu.c
+@@ -827,12 +827,12 @@ do {									\
+ } while (0)
+ 
+ #define DIFROMREG(di, x)						\
+-	((di) = get_fpr64(&ctx->fpr[(x) & ~(cop1_64bit(xcp) == 0)], 0))
++	((di) = get_fpr64(&ctx->fpr[(x) & ~(cop1_64bit(xcp) ^ 1)], 0))
+ 
+ #define DITOREG(di, x)							\
+ do {									\
+ 	unsigned fpr, i;						\
+-	fpr = (x) & ~(cop1_64bit(xcp) == 0);				\
++	fpr = (x) & ~(cop1_64bit(xcp) ^ 1);				\
+ 	set_fpr64(&ctx->fpr[fpr], 0, di);				\
+ 	for (i = 1; i < ARRAY_SIZE(ctx->fpr[x].val64); i++)		\
+ 		set_fpr64(&ctx->fpr[fpr], i, 0);			\
+-- 
+2.17.1
+
