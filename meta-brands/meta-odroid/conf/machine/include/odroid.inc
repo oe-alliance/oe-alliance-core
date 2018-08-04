@@ -57,4 +57,3 @@ MACHINEOVERRIDES =. "${@['', '${MACHINEBUILD}:']['${MACHINEBUILD}' != '']}"
 
 BBMASK .= "meta-vuplus/recipes-webkit/"
 BBMASK += "meta-vuplus/recipes-webkit/"
-
