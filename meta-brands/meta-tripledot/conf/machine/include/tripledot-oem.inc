@@ -94,6 +94,8 @@ DEFAULTTUNE = "mips32el"
 
 PREFERRED_PROVIDER_virtual/kernel = "linux-tripledot"
 
+GCCVERSION = "8.%"
+
 KERNEL_IMAGETYPE = "vmlinux"
 KERNEL_OUTPUT = "${KERNEL_IMAGETYPE}"
 KERNEL_CONSOLE = "ttyS0,115200n8"
@@ -129,7 +131,6 @@ IMAGE_CMD_ubi_append = "\
     rm -f ${DEPLOY_DIR_IMAGE}/.manifest; \
     rm -Rf ${IMAGEDIR}; \
     "
-
 
 MACHINE_FEATURES += "3dtv alsa hdmicec switchoff bootsplash omb feature1 feature2 blindscan-tbs"
 
