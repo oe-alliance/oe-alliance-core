@@ -19,7 +19,7 @@ MACHINE_KERNEL_PR_append = ".2"
 PKG_${KERNEL_PACKAGE_NAME}-base = "kernel-base"
 PKG_${KERNEL_PACKAGE_NAME}-image = "kernel-image"
 RPROVIDES_${KERNEL_PACKAGE_NAME}-base = "kernel-${KERNEL_VERSION}"
-RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
+RPROVIDES_${KERNEL_PACKAGE_NAME}-image = "kernel-image-${KERNEL_VERSION}"
 
 SRC_URI += "http://source.mynonpublic.com/tiviar/linux-${PV}-${ARCH}.tar.gz \
     file://defconfig \
@@ -38,6 +38,8 @@ SRC_URI += "http://source.mynonpublic.com/tiviar/linux-${PV}-${ARCH}.tar.gz \
     file://v3-3-3-media-dvbsky-MyGica-T230C3-support.patch \
     file://v3-3-4-media-dvbsky-MyGica-T230C-support.patch \
     file://v3-3-5-media-dvbsky-MyGica-T230C-support.patch \
+    file://0002-makefile-disable-warnings.patch \
+    file://0003-cp1emu-do-not-use-bools-for-arithmetic.patch \
     "
 
 S = "${WORKDIR}/linux-${PV}"
