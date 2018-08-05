@@ -31,6 +31,9 @@ SRC_URI += "http://xpeedlx.info/linux-${PV}.tar.xz \
     file://0001-STV-Add-SNR-Signal-report-parameters.patch \
     file://blindscan2.patch \
     file://0001-stv090x-optimized-TS-sync-control.patch \
+    file://0002-log2-give-up-on-gcc-constant-optimizations.patch \
+    file://0003-makefile-disable-warnings.patch \
+    file://0004-cp1emu-do-not-use-bools-for-arithmetic.patch \
 "
 
 S = "${WORKDIR}/linux-${PV}"
