@@ -9,7 +9,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "${IMAGE_VERSION}"
-PR = "r1"
+PR = "r2"
 
 DEPENDS = "enigma2-plugin-drivers-usbserial enigma2-plugin-systemplugins-hrtunerproxy"
 RECOMMENDS = "enigma2-plugin-extensions-et-livestream"
@@ -30,7 +30,6 @@ RDEPENDS_${PN} = " \
     enigma2-plugin-extensions-tuxcom \
     enigma2-plugin-security-firewall \
     enigma2-plugin-extensions-enigmalight \
-    ${@bb.utils.contains("DISTRO_FEATURES", "directfb", "enigma2-plugin-extensions-openairplay", "", d)} \
     enigma2-plugin-extensions-mediatomb \
     enigma2-plugin-extensions-dreamplex \
     enigma2-plugin-extensions-et-portal \
