@@ -20,21 +20,21 @@ SRC_URI[vuultimo4k.sha256sum] = "8284670c28a4dad9e94752b38d37a4368f27ce15e671653
 LIC_FILES_CHKSUM = "file://COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
 SRC_URI += "http://archive.vuplus.com/download/kernel/${KERNELSRC};name=${MACHINE} \
-	file://defconfig \
-	file://bcm_genet_disable_warn.patch \
-	file://linux_dvb-core.patch \
-	file://rt2800usb_fix_warn_tx_status_timeout_to_dbg.patch \
-	file://usb_core_hub_msleep.patch \
-	file://rtl8712_fix_build_error.patch \
-	file://kernel-add-support-for-gcc6.patch \
-	file://kernel-add-support-for-gcc7.patch \
-	file://kernel-add-support-for-gcc8.patch \
-	file://0001-Support-TBS-USB-drivers.patch \
-	file://0001-STV-Add-PLS-support.patch \
-	file://0001-STV-Add-SNR-Signal-report-parameters.patch \
-	file://0001-stv090x-optimized-TS-sync-control.patch \
-	file://blindscan2.patch \
-	file://genksyms_fix_typeof_handling.patch \
+    file://defconfig \
+    file://bcm_genet_disable_warn.patch \
+    file://linux_dvb-core.patch \
+    file://rt2800usb_fix_warn_tx_status_timeout_to_dbg.patch \
+    file://usb_core_hub_msleep.patch \
+    file://rtl8712_fix_build_error.patch \
+    file://kernel-add-support-for-gcc6.patch \
+    file://kernel-add-support-for-gcc7.patch \
+    file://kernel-add-support-for-gcc8.patch \
+    file://0001-Support-TBS-USB-drivers.patch \
+    file://0001-STV-Add-PLS-support.patch \
+    file://0001-STV-Add-SNR-Signal-report-parameters.patch \
+    file://0001-stv090x-optimized-TS-sync-control.patch \
+    file://blindscan2.patch \
+    file://genksyms_fix_typeof_handling.patch \
     file://0001-tuners-tda18273-silicon-tuner-driver.patch \
     file://01-10-si2157-Silicon-Labs-Si2157-silicon-tuner-driver.patch \
     file://02-10-si2168-Silicon-Labs-Si2168-DVB-T-T2-C-demod-driver.patch \
@@ -42,7 +42,10 @@ SRC_URI += "http://archive.vuplus.com/download/kernel/${KERNELSRC};name=${MACHIN
     file://CONFIG_DVB_SP2.patch \
     file://dvbsky.patch \
     file://rtl2832u-2.patch \
-	"
+    file://0004-log2-give-up-on-gcc-constant-optimizations.patch \
+    file://0005-uaccess-dont-mark-register-as-const.patch \
+    file://0006-makefile-disable-warnings.patch \
+    "
 
 SRC_URI_append_vuuno4k = " file://linux_prevent_usb_dma_from_bmem.patch"
 SRC_URI_append_vusolo4k = " file://linux_rpmb_not_alloc.patch"
@@ -92,4 +95,3 @@ do_rm_work() {
 
 # extra tasks
 addtask kernel_link_images after do_compile before do_install
-

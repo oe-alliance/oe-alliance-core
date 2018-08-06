@@ -34,6 +34,8 @@ PREFERRED_PROVIDER_virtual/egl = "vuplus-libgles-${MACHINE}"
 PREFERRED_PROVIDER_virtual/libgles2 = "vuplus-libgles-${MACHINE}"
 PREFERRED_PROVIDER_virtual/kodi = "stb-kodi-${MACHINE}"
 
+GCCVERSION = "8.%"
+
 KERNEL_IMAGETYPE = "vmlinux"
 KERNEL_OUTPUT = "${KERNEL_IMAGETYPE}"
 KERNEL_CONSOLE = "ttyS0,115200n8"
