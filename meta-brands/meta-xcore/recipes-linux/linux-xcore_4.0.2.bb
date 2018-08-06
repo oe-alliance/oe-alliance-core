@@ -2,7 +2,6 @@ SUMMARY = "Linux kernel for ${MACHINE}"
 SECTION = "kernel"
 LICENSE = "GPLv2"
 
-
 MACHINE_KERNEL_PR_append = ".0"
 
 inherit kernel machine_kernel_pr
@@ -14,20 +13,21 @@ SRC_URI[sha256sum] = "b53fb490a8e23bacb6f2b9a9528cb5785004be2b5854c3b55c0a5b68fc
 
 LIC_FILES_CHKSUM = "file://${S}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-
 # By default, kernel.bbclass modifies package names to allow multiple kernels
 # to be installed in parallel. We revert this change and rprovide the versioned
 # package names instead, to allow only one kernel to be installed.
 PKG_${KERNEL_PACKAGE_NAME}-base = "kernel-base"
 PKG_${KERNEL_PACKAGE_NAME}-image = "kernel-image"
 RPROVIDES_${KERNEL_PACKAGE_NAME}-base = "kernel-${KERNEL_VERSION}"
-RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
+RPROVIDES_${KERNEL_PACKAGE_NAME}-image = "kernel-image-${KERNEL_VERSION}"
 
 SRC_URI += "http://source.mynonpublic.com/xcore/linux-brcmstb-${PV}-${SRCDATE}.tar.gz \
     file://defconfig \
     file://kernel-add-support-for-gcc6.patch \
     file://kernel-add-support-for-gcc7.patch \
     file://kernel-add-support-for-gcc8.patch \
+    file://0001-cp1emu-do-not-use-bools-for-arithmetic.patch \
+    file://0002-makefile-disable-warnings.patch \
     "
 
 S = "${WORKDIR}/linux-brcmstb-${PV}"

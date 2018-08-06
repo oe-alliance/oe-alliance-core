@@ -22,7 +22,7 @@ MACHINE_KERNEL_PR_append = ".6"
 PKG_${KERNEL_PACKAGE_NAME}-base = "kernel-base"
 PKG_${KERNEL_PACKAGE_NAME}-image = "kernel-image"
 RPROVIDES_${KERNEL_PACKAGE_NAME}-base = "kernel-${KERNEL_VERSION}"
-RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
+RPROVIDES_${KERNEL_PACKAGE_NAME}-image = "kernel-image-${KERNEL_VERSION}"
 
 SRC_URI += "http://source.mynonpublic.com/xcore/xcore-linux-${PV}-${SRC}.tar.gz \
     file://defconfig \
@@ -35,6 +35,8 @@ SRC_URI += "http://source.mynonpublic.com/xcore/xcore-linux-${PV}-${SRC}.tar.gz 
     file://blindscan2.patch \
     file://0001-stv090x-optimized-TS-sync-control.patch \
     ${@bb.utils.contains('MACHINE_FEATURES', 'emmc', 'file://findkerneldevice.py', '', d)} \
+    file://0001-cp1emu-do-not-use-bools-for-arithmetic.patch \
+    file://0002-makefile-disable-warnings.patch \
     "
 
 S = "${WORKDIR}/linux-brcmstb-${PV}"
