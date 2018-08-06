@@ -10,6 +10,8 @@ PREFERRED_PROVIDER_virtual/libgles2 = "wetek-opengl-amlogic"
 PREFERRED_PROVIDER_virtual/egl = "wetek-opengl-amlogic"
 PREFERRED_PROVIDER_virtual/kodi = "stb-kodi-${MACHINE}"
 
+GCCVERSION = "8.%"
+
 PREFERRED_PROVIDER_jpeg = "libjpeg-turbo"
 PREFERRED_PROVIDER_jpeg-native = "libjpeg-turbo-native"
 
@@ -63,4 +65,3 @@ MACHINEOVERRIDES =. "${@['', '${MACHINEBUILD}:']['${MACHINEBUILD}' != '']}"
 
 BBMASK = "meta-vuplus/recipes-graphics/"
 BBMASK += "meta-vuplus/recipes-webkit/"
-
