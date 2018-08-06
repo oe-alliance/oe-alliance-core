@@ -25,6 +25,9 @@ SRC_URI = "https://github.com/wetek-enigma/linux-amlogic/archive/amlogic-3.14.y.
    file://defconfig \
    file://boot.ini \
    file://uInitrd \
+   file://0001-log2-give-up-on-gcc-constant-optimizations.patch \
+   file://0002-uaccess-dont-mark-register-as-const.patch \
+   file://0003-makefile-disable-warnings.patch \
 "
 
 S = "${WORKDIR}/linux-amlogic-amlogic-3.14.y"

@@ -26,11 +26,13 @@ SRC_URI = "http://source.mynonpublic.com/wetek/linux-wetek-3.10.y-master.tar.gz 
     file://kernel-add-support-for-gcc6.patch \
     file://kernel-add-support-for-gcc7.patch \
     file://kernel-add-support-for-gcc8.patch \
+    file://0001-log2-give-up-on-gcc-constant-optimizations.patch \
+    file://0002-uaccess-dont-mark-register-as-const.patch \
+    file://0003-makefile-disable-warnings.patch \
 "
 
 S = "${WORKDIR}/linux-wetek-3.10.y-master"
 B = "${WORKDIR}/build"
-
 
 do_configure_prepend () {
     cd ${STAGING_KERNEL_DIR}
@@ -52,9 +54,12 @@ do_compile_prepend () {
     fi
 }
 
-# Put debugging files into dbg package
-FILES_kernel-dbg += "/usr/src/kernel/drivers/amlogic/input/touchscreen/gslx680/.debug"
+do_compile_append () {
+    cp ${STAGING_KERNEL_DIR}/arch/arm/boot/dts/amlogic/${KERNEL_DEVICETREE} ${B}/arch/arm/boot/
+}
 
+# Put debugging files into dbg package
+FILES_${KERNEL_PACKAGE_NAME}-dbg += "/usr/src/kernel/drivers/amlogic/input/touchscreen/gslx680/.debug"
 
 do_install_append () {
     ln -s ${STAGING_KERNEL_DIR}/arch/arm/mach-meson6 ${STAGING_KERNEL_DIR}/include/mach
