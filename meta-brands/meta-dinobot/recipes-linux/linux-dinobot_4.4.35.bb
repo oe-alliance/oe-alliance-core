@@ -7,7 +7,7 @@ SRCDATE = "20180502"
 
 inherit kernel machine_kernel_pr
 
-MACHINE_KERNEL_PR_append = ".13"
+MACHINE_KERNEL_PR_append = ".15"
 
 SRC_URI[md5sum] = "bd22f82d08a5feb4f1360d5739919ee0"
 SRC_URI[sha256sum] = "df83207ddfe34ac41a55e5e42eaae9c3ac3c4ef0750c786886719a33bf08b617"
@@ -25,6 +25,9 @@ RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
 SRC_URI += "http://source.mynonpublic.com/dinobot/dinobot-linux-${PV}-${SRCDATE}.tar.gz \
     file://defconfig \
     file://sdio-platform.patch \
+    file://accelmem.patch \
+    file://cma.patch \
+    ${@bb.utils.contains('SOC_FAMILY', 'hisi3798mv200', 'file://led.patch' , '', d)} \
 "
 
 S = "${WORKDIR}/linux-${PV}"
