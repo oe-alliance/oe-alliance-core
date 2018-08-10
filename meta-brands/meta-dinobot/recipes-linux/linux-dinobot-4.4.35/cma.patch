@@ -1,0 +1,19 @@
+diff -Nur a/drivers/hisilicon/cma/hi_cma.c b/drivers/hisilicon/cma/hi_cma.c
+--- a/drivers/hisilicon/cma/hi_cma.c	2018-08-10 19:08:16.000000000 +0200
++++ b/drivers/hisilicon/cma/hi_cma.c	2018-08-10 18:55:24.000000000 +0200
+@@ -66,6 +66,7 @@
+ 			hisi_zone[num_zones].gfp = memparse(argv[2], NULL);
+ 			hisi_zone[num_zones].phys_start = memparse(argv[2], NULL);
+ 			hisi_zone[num_zones].nbytes = memparse(argv[3], NULL);
++			hisi_zone[num_zones].nbytes = 100663296;
+ 		}
+ 
+ 		else if (i == 6) {
+@@ -75,6 +76,7 @@
+ 			hisi_zone[num_zones].nbytes = memparse(argv[3], NULL);
+ 			hisi_zone[num_zones].alloc_type = memparse(argv[4], NULL);
+ 			hisi_zone[num_zones].block_align = memparse(argv[5], NULL);
++			hisi_zone[num_zones].nbytes = 100663296;
+ 		} else {
+ 			pr_err("hisi ion parameter is not correct\n");
+ 			continue;
