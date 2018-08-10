@@ -1,0 +1,17 @@
+diff -Nur a/drivers/msp/drv/keyled/keyled_fd650/drv_keyled_fd650.c b/drivers/msp/drv/keyled/keyled_fd650/drv_keyled_fd650.c
+--- a/drivers/msp/drv/keyled/keyled_fd650/drv_keyled_fd650.c	2018-08-10 05:43:14.000000000 +0200
++++ b/drivers/msp/drv/keyled/keyled_fd650/drv_keyled_fd650.c	2018-08-10 05:18:26.000000000 +0200
+@@ -712,10 +712,13 @@
+ 
+     if (HI_TRUE == bLockFlag)
+     {
++        disp_buf_arr[4] &= 0x7f;
+         disp_buf_arr[6] |= 0x80;
++
+     }
+     else
+     {
++        disp_buf_arr[4] |= 0x80;
+         disp_buf_arr[6] &= 0x7f;
+     }
+ 
