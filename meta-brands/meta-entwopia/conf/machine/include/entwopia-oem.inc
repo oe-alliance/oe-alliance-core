@@ -141,7 +141,7 @@ IMAGE_CMD_ubi_append = "\
     "
 
 
-MACHINE_FEATURES += "3dtv alsa hdmicec switchoff bootsplash omb skins1080 feature1 feature2 blindscan-tbs "
+MACHINE_FEATURES += "3dtv alsa hdmicec switchoff bootsplash omb skins1080 feature1 feature2 blindscan-tbs HDMI "
 
 BOOTLOGO_FILENAME = "splash.bin"
 
