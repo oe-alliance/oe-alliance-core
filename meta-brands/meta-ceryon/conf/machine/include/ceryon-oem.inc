@@ -200,7 +200,7 @@ PREFERRED_PROVIDER_virtual/kodi = "stb-kodi-${MACHINE}"
 PREFERRED_PROVIDER_virtual/blindscan-dvbs = "ceryon-blindscan-utils"
 PREFERRED_PROVIDER_virtual/blindscan-dvbc = "ceryon-blindscan-utils"
 
-MACHINE_FEATURES += "3dtv alsa hdmicec switchoff videoenhancement skins1080 blindscan-tbs \
+MACHINE_FEATURES += "3dtv alsa hdmicec switchoff videoenhancement skins1080 blindscan-tbs HDMI \
     ${@bb.utils.contains('MACHINEBUILD', 'e4hdhybrid', 'dvb-c dvbc-only' , '', d)} \
     ${@bb.utils.contains('MACHINEBUILD', 'e4hdcombo', 'dvb-c' , '', d)} \
     ${@bb.utils.contains('MACHINEBUILD', '9911lx', 'dvb-c' , '', d)} \
