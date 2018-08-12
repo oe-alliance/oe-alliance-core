@@ -215,6 +215,7 @@ MACHINE_FEATURES += "3dtv alsa hdmicec switchoff bootsplash skins1080 blindscan-
 BOOTLOGO_FILENAME = "splash.bin"
 
 require conf/machine/include/soc-family.inc
+require conf/machine/box-hardware.inc
 
 # Add "MACHINEBUILD" override for recipes
 MACHINEOVERRIDES =. "${@['', '${MACHINEBUILD}:']['${MACHINEBUILD}' != '']}"

@@ -141,6 +141,7 @@ MACHINE_EXTRA_RRECOMMENDS = " \
 
 include conf/machine/include/autoload-filesystems.inc
 require conf/machine/include/soc-family.inc
+require conf/machine/box-hardware.inc
 
 DVBMEDIASINK_CONFIG = "--with-wma --with-wmv --with-pcm --with-dts --with-eac3 \
     ${@bb.utils.contains('MACHINE', 'h5', '--with-h265 --with-vb6 --with-vb8 --with-spark' , '', d)} \
@@ -154,7 +155,7 @@ PREFERRED_PROVIDER_virtual/egl ?= "airdigital-v3ddriver-${MACHINE}"
 PREFERRED_PROVIDER_virtual/libgles2 ?= "airdigital-v3ddriver-${MACHINE}"
 PREFERRED_PROVIDER_virtual/kodi = "stb-kodi-${MACHINE}"
 
-MACHINE_FEATURES += "3dtv alsa hdmicec switchoff blindscan-tbs"
+MACHINE_FEATURES += "3dtv alsa hdmicec switchoff blindscan-tbs HDMI"
 
 OEM_ARCH = "${MACHINEBUILD}"
 

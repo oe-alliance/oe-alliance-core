@@ -31,6 +31,8 @@ IMAGE_CMD_alien5sdimg_append = " \
     rm -Rf ${IMAGEDIR}; \
     "
 
+require conf/machine/box-hardware.inc
+
 BBMASK += "meta-vuplus/recipes-graphics/"
 BBMASK += "meta-fulan/recipes-graphics/"
 BBMASK += "meta-vuplus/recipes-webkit/"

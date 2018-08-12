@@ -33,6 +33,7 @@ PREFERRED_PROVIDER_virtual/blindscan-dvbs = "azbox-blindscan-dvbs-utils"
 require conf/machine/include/tune-mips32.inc
 require conf/machine/include/soc-family.inc
 include conf/machine/include/autoload-filesystems.inc
+require conf/machine/box-hardware.inc
 
 SYSVINIT_ENABLED_GETTYS = ""
 

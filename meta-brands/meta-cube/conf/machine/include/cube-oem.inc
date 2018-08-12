@@ -91,6 +91,8 @@ DEFAULTTUNE = "armv7a"
 TUNE_FEATURES = "cortexa9 vfp"
 include conf/machine/include/tune-cortexa9.inc
 require conf/machine/include/soc-family.inc
+require conf/machine/box-hardware.inc
+
 TUNE_CCARGS += "-mfpu=vfpv3-d16"
 
 IMAGE_FSTYPES ?= "imgzip256"
