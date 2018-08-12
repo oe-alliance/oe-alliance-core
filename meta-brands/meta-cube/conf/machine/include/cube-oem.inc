@@ -97,7 +97,7 @@ TUNE_CCARGS += "-mfpu=vfpv3-d16"
 
 IMAGE_FSTYPES ?= "imgzip256"
 
-MACHINE_FEATURES += "3dtv alsa hdmicec switchoff textlcd dvbapi5 usbhost wifiusblegacy legacykernel smallflash singlecore"
+MACHINE_FEATURES += "3dtv alsa hdmicec switchoff textlcd dvbapi5 usbhost wifiusblegacy legacykernel smallflash singlecore HDMI SCART RCA"
 
 OEM_ARCH = "${MACHINEBUILD} ${DEFAULTTUNE}"
 
