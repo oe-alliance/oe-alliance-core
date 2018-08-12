@@ -27,13 +27,6 @@ PACKAGE_ARCH = "${DEFAULTTUNE}"
 
 DEPENDS = "libusb openssl"
 
-EXTRA_CC_OPTS += "\
-	-lm \
-"
-
-CFLAGS_append = " -lm"
-LDFLAGS_append = " -lm"
-
 EXTRA_OECMAKE += "\
 	-DWEBIF=1 \
 	-DWEBIF_LIVELOG=1 \
@@ -49,6 +42,8 @@ EXTRA_OECMAKE += "\
 
 do_configure_prepend() {
     cp ${F}/SoftCam.Key ${S}/SoftCam.Key
+    perl -i -pe 's:Schimmelreiter:smod:g' ${S}/globals.h
+    perl -i -pe 's:Schimmelreiter:oe-alliance:g' ${S}/webif/status/status.html
 }
 
 do_compile_prepend() {
@@ -60,9 +55,7 @@ do_compile_prepend() {
     perl -i -pe 's:(OFS\(dvbapi_read_sdt\)[ \t]*?,[ \t]*?)0\),:${1}1\),:g' ${S}/oscam-config-global.c
     perl -i -pe 's:(OFS\(http_hide_idle_clients\)[ \t]*?,[ \t]*?)1\),:${1}0\),:g' ${S}/oscam-config-global.c
 
-    perl -i -pe 's:Schimmelreiter:smod:g' ${S}/globals.h
-
-    LDFLAGS="-lm ${LDFLAGS} -Wl,--format=binary -Wl,SoftCam.Key -Wl,--format=default"
+    LDFLAGS="${LDFLAGS} -Wl,--format=binary -Wl,SoftCam.Key -Wl,--format=default"
 }
 
 do_install() {
@@ -110,3 +103,6 @@ pkg_postinst_${PN} () {
 }
 
 INSANE_SKIP_${PN} += "already-stripped"
+
+do_rm_work() {
+}
