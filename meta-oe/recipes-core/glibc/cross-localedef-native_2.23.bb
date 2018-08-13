@@ -26,6 +26,10 @@ SRCREV_localedef ?= "5a81ff9f06a7a808d4c3d37bbf34077a4c5902ed"
 
 SRC_URI = "${GLIBC_GIT_URI};branch=${SRCBRANCH};name=glibc \
            git://github.com/kraj/localedef;branch=master;name=localedef;destsuffix=git/localedef \
+           file://fix_for_centos_5.8.patch \
+           ${EGLIBCPATCHES} \
+"
+EGLIBCPATCHES = "\
            file://0016-timezone-re-written-tzselect-as-posix-sh.patch \
            file://0017-Remove-bash-dependency-for-nscd-init-script.patch \
            file://0018-eglibc-Cross-building-and-testing-instructions.patch \
@@ -33,7 +37,6 @@ SRC_URI = "${GLIBC_GIT_URI};branch=${SRCBRANCH};name=glibc \
            file://0020-eglibc-cherry-picked-from.patch \
            file://0021-eglibc-Clear-cache-lines-on-ppc8xx.patch \
            file://0022-eglibc-Resolve-__fpscr_values-on-SH4.patch \
-           file://0023-eglibc-Install-PIC-archives.patch \
            file://0025-eglibc-Forward-port-cross-locale-generation-support.patch \
            file://0025-Define-DUMMY_LOCALE_T-if-not-defined.patch \
 "
@@ -48,6 +51,6 @@ EXTRA_OECONF = "--with-glibc=${S}"
 CFLAGS += "-fgnu89-inline -std=gnu99 -DIS_IN\(x\)='0'"
 
 do_install() {
-	install -d ${D}${bindir}
-	install -m 0755 ${B}/localedef ${D}${bindir}/cross-localedef
+        install -d ${D}${bindir}
+        install -m 0755 ${B}/localedef ${D}${bindir}/cross-localedef
 }

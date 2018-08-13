@@ -12,8 +12,8 @@ ARM_INSTRUCTION_SET = "arm"
 deltask do_fetch
 deltask do_unpack
 deltask do_patch
-do_configure[noexec] = "1"
-do_compile[noexec] = "1"
+deltask do_configure
+deltask do_compile
 
 do_install[depends] += "virtual/${MLPREFIX}libc:do_stash_locale"
 
