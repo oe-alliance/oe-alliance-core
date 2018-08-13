@@ -155,15 +155,23 @@ IMAGE_CMD_ubi_append = "\
     rm -Rf ${IMAGEDIR}; \
     "
 
-MACHINE_FEATURES += "3dtv alsa hdmicec switchoff bootsplash blindscan-dvbs blindscan-dvbc omb boxmodel feature1 feature2 \
-    ${@bb.utils.contains('MACHINEBUILD', 'axodinc', 'dvb-c dvbc-only' , '', d)} \
-    ${@bb.utils.contains('MACHINEBUILD', 'axase3c', 'dvb-c dvbc-only' , '', d)} \
-    "
+MACHINE_FEATURES += "3dtv alsa hdmicec switchoff bootsplash blindscan-dvbs blindscan-dvbc omb boxmodel feature1 feature2 HDMI \
+${@bb.utils.contains('MACHINEBUILD', 'axodinc', 'dvb-c dvbc-only' , '', d)} \
+${@bb.utils.contains('MACHINEBUILD', 'axase3c', 'dvb-c dvbc-only' , '', d)} \
+${@bb.utils.contains('MACHINEBUILD', 'classm', 'SCART' , '', d)} \
+${@bb.utils.contains('MACHINEBUILD', 'axodin', 'RCA' , '', d)} \
+${@bb.utils.contains('MACHINEBUILD', 'axodinc', 'RCA' , '', d)} \
+${@bb.utils.contains('MACHINEBUILD', 'starsatlx', 'RCA' , '', d)} \
+${@bb.utils.contains('MACHINEBUILD', 'genius', 'SCART RCA' , '', d)} \
+${@bb.utils.contains('MACHINEBUILD', 'evo', 'SCART RCA' , '', d)} \
+${@bb.utils.contains('MACHINEBUILD', 'galaxym6', 'SCART RCA' , '', d)} \
+"
 
 BOOTLOGO_FILENAME = "splash.bin"
 
 require conf/machine/include/tune-mips32.inc
 require conf/machine/include/soc-family.inc
+require conf/machine/box-hardware.inc
 
 OEM_ARCH = "${MACHINEBUILD}"
 

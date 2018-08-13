@@ -40,7 +40,7 @@ EXTRA_OECONF = " \
     --with-imagebuild="${BUILD_VERSION}" \
     --with-imagedevbuild="${DEVELOPER_BUILD_VERSION}" \
     --with-imagetype="${DISTRO_TYPE}" \
-    --with-feedsurl=${DISTRO_FEED_URI} \
+    --with-feedsurl="${DISTRO_FEED_URI}" \
     --with-imagedir="${IMAGEDIR}" \
     --with-imagefs="${IMAGE_FSTYPES}" \
     --with-mtdrootfs="${MTD_ROOTFS}" \
@@ -51,6 +51,21 @@ EXTRA_OECONF = " \
     --with-ubinize="${UBINIZE_ARGS}" \
     --with-driverdate="${DRIVERSDATE}" \
     --with-arch="${DEFAULTTUNE}" \
+    --with-display-type="${DISPLAY_TYPE}" \
+    --with-hdmi="${HAVE_HDMI}" \
+    --with-yuv="${HAVE_YUV}" \
+    --with-rca="${HAVE_RCA}" \
+    --with-av-jack="${HAVE_AV_JACK}" \
+    --with-scart="${HAVE_SCART}" \
+    --with-scart-yuv="${HAVE_SCART_YUV}" \
+    --with-dvi="${HAVE_DVI}" \
+    --with-minitv="${HAVE_MINITV}" \
+    --with-hdmi-in-hd="${HAVE_HDMI_IN_HD}" \
+    --with-hdmi-in-fhd="${HAVE_HDMI_IN_FHD}" \
+    --with-wol="${HAVE_WOL}" \
+    --with-wwol="${HAVE_WWOL}" \
+    --with-ci="${HAVE_CI}" \
+    --with-transcoding="${TRANSCODING}" \
     "
 
 do_configure_prepend() {

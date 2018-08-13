@@ -146,7 +146,26 @@ SERIAL_CONSOLE = "115200 ttyAS0"
 
 DVBPROVIDER = "kernel"
 
-MACHINE_FEATURES = "3dtv alsa switchoff kernel26 ext2 usbhost serial dvb-c singlecore no-cl-svr textlcd sh4booster no-nmap omb skins1080 directfb"
+MACHINE_FEATURES = "3dtv alsa switchoff kernel26 ext2 usbhost serial dvb-c singlecore no-cl-svr textlcd sh4booster no-nmap omb skins1080 directfb HDMI \
+${@bb.utils.contains('MACHINEBUILD', 'amiko8900', 'SCART RCA' , '', d)} \
+${@bb.utils.contains('MACHINEBUILD', 'sognorevolution', 'SCART RCA' , '', d)} \
+${@bb.utils.contains('MACHINEBUILD', 'arguspingulux', 'RCA' , '', d)} \
+${@bb.utils.contains('MACHINEBUILD', 'arguspinguluxmini', 'AV_JACK' , '', d)} \
+${@bb.utils.contains('MACHINEBUILD', 'arguspinguluxplus', 'RCA' , '', d)} \
+${@bb.utils.contains('MACHINEBUILD', 'sparktriplex', 'SCART RCA'  , '', d)} \
+${@bb.utils.contains('MACHINEBUILD', 'sparkreloaded', 'SCART RCA'  , '', d)} \
+${@bb.utils.contains('MACHINEBUILD', 'sparklx', 'SCART RCA'  , '', d)} \
+${@bb.utils.contains('MACHINEBUILD', 'sparkone', 'SCART RCA'  , '', d)} \
+${@bb.utils.contains('MACHINEBUILD', 'amikoalien', 'SCART RCA' , '', d)} \
+${@bb.utils.contains('MACHINEBUILD', 'sognotriple', 'SCART RCA' , '', d)} \
+${@bb.utils.contains('MACHINEBUILD', 'sabsolo', 'SCART RCA' , '', d)} \
+${@bb.utils.contains('MACHINEBUILD', 'fulanspark1', 'SCART RCA' , '', d)} \
+${@bb.utils.contains('MACHINEBUILD', 'giavatar', 'SCART RCA' , '', d)} \
+${@bb.utils.contains('MACHINEBUILD', 'gis8120', 'SCART RCA' , '', d)} \
+${@bb.utils.contains('MACHINEBUILD', 'dynaspark', 'SCART RCA' , '', d)} \
+${@bb.utils.contains('MACHINEBUILD', 'dynasparkplus', 'SCART RCA' , '', d)} \
+${@bb.utils.contains('MACHINEBUILD', 'dynaspark7162', 'SCART RCA' , '', d)} \
+"
 
 DVBMEDIASINK_CONFIG = "--with-wma --with-wmv --with-pcm --with-dtsdownmix --with-eac3"
 
@@ -222,6 +241,7 @@ include conf/machine/include/autoload-filesystems.inc
 
 require conf/machine/include/tune-sh4.inc
 require conf/machine/include/soc-family.inc
+require conf/machine/box-hardware.inc
 
 OEM_ARCH = "${MACHINEBUILD}"
 

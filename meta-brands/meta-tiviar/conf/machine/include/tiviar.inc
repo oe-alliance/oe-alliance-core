@@ -25,6 +25,7 @@ MACHINE_EXTRA_RRECOMMENDS = " \
     "
 
 include conf/machine/include/autoload-filesystems.inc
+require conf/machine/box-hardware.inc
 
 DVBMEDIASINK_CONFIG = "--with-wma --with-wmv --with-pcm --with-dts --with-eac3"
 
@@ -63,7 +64,7 @@ IMAGE_CMD_ubi_append = "\
     rm -Rf ${IMAGEDIR}; \
     "
 
-MACHINE_FEATURES += "ci 3dtv alsa hdmicec switchoff omb boxmodel feature1 blindscan-tbs skins1080 linuxwifi"
+MACHINE_FEATURES += "ci 3dtv alsa hdmicec switchoff omb boxmodel feature1 blindscan-tbs skins1080 linuxwifi HDMI"
 
 BOOTLOGO_FILENAME = "splash.bin"
 

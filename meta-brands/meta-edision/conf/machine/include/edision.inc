@@ -66,9 +66,11 @@ IMAGE_CMD_ubi_append = "\
     rm -Rf ${IMAGEDIR}; \
     "
 
-MACHINE_FEATURES += "alsa 3dtv switchoff hdmicec bootsplash omb blindscan-tbs linuxwifi boxmodel feature1 feature2"
+MACHINE_FEATURES += "alsa 3dtv switchoff hdmicec bootsplash omb blindscan-tbs linuxwifi boxmodel feature1 feature2 HDMI"
 
 BOOTLOGO_FILENAME = "splash.bin"
 
 require conf/machine/include/tune-mips32.inc
 require conf/machine/include/soc-family.inc
+require conf/machine/box-hardware.inc
+

@@ -47,12 +47,13 @@ GCCVERSION = "8.%"
 
 PREFERRED_VERSION_icu = "58.2"
 
-MACHINE_FEATURES += "alsa 3dtv switchoff hdmicec omb blindscan-tbs blindscan-dvbc"
+MACHINE_FEATURES += "alsa 3dtv switchoff hdmicec omb blindscan-tbs blindscan-dvbc HDMI"
 
 BOOTLOGO_FILENAME = "splash.bin"
 
 require conf/machine/include/tune-cortexa15.inc
 require conf/machine/include/soc-family.inc
+require conf/machine/box-hardware.inc
 
 # Add "MACHINEBUILD" override for recipes
 MACHINEOVERRIDES =. "${@['', '${MACHINEBUILD}:']['${MACHINEBUILD}' != '']}"

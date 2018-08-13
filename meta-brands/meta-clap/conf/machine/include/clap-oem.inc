@@ -39,7 +39,7 @@ MACHINE_ESSENTIAL_EXTRA_RDEPENDS = "\
     clap-partitions-${MACHINE} \
 "
 
-MACHINE_FEATURES += "videoenhancement switchoff 7segment textlcd skins1080 emmc mmc blindscan-dvbs kodi alsa hbbtv-browser-webkit qtstalker"
+MACHINE_FEATURES += "videoenhancement switchoff 7segment textlcd skins1080 emmc mmc blindscan-dvbs kodi alsa hbbtv-browser-webkit qtstalker HDMI AV_JACK"
 
 IMAGE_CLASSES  += "clap-emmc_image"
 IMAGE_FSTYPES += "clapemmc"
@@ -72,6 +72,7 @@ DVBSKYPROVIDER = "kernel"
 
 include conf/machine/include/autoload-filesystems.inc
 require conf/machine/include/soc-family.inc
+require conf/machine/box-hardware.inc
 
 DVBMEDIASINK_CONFIG = "--with-h265 --with-vb8 --with-vb9 --with-spark --with-opus --with-wma --with-wmv --with-pcm --with-dts --with-eac3"
 

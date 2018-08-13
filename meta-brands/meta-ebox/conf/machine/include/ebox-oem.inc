@@ -107,6 +107,7 @@ MACHINE_FEATURES += "alsa dvbapi5 usbhost switchoff wifi 3dtv hdmicec singlecore
 
 require conf/machine/include/tune-mips32.inc
 require conf/machine/include/soc-family.inc
+require conf/machine/box-hardware.inc
 
 OEM_ARCH = "${MACHINEBUILD}"
 

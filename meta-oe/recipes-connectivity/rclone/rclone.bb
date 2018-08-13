@@ -1,19 +1,27 @@
 SUMMARY = "rsync for cloud storage"
 DESCRIPTION = "Rclone is a command line program to sync files and directories to and from \
  \
-Google Drive \
-Amazon S3 \
-Openstack Swift / Rackspace cloud files / Memset Memstore \
-Dropbox \
-Google Cloud Storage \
 Amazon Drive \
-Microsoft OneDrive \
-Hubic \
+Amazon S3 / Dreamhost / Ceph / Minio / Wasabi \
 Backblaze B2 \
-Yandex Disk \
-SFTP \
+Box \
+Dropbox \
 FTP \
+Google Cloud Storage \
+Google Drive \
 HTTP \
+Hubic \
+Jottacloud \
+Mega \
+Microsoft Azure Blob Storage \
+Microsoft OneDrive \
+OpenDrive \
+Openstack Swift / Rackspace cloud files / Memset Memstore / OVH / Oracle Cloud Storage \
+pCloud \
+QingStor \
+SFTP \
+Webdav / Owncloud / Nextcloud \
+Yandex Disk \
 The local filesystem"
 HOMEPAGE = "https://rclone.org/"
 
@@ -25,8 +33,8 @@ inherit go
 
 # ... because shitquake fails to eval nested variables like PV="git${PKGV}" later ...
 # ... so keep PV updated manually (git rev-list --count <revision>)
-PV = "1.38-git1575+d96e45b"
-SRCREV = "d96e45ba5b060c472cb5f8a4769060f14eadf63a"
+PV = "1.42-DEV-git2446+751bfd4"
+SRCREV = "751bfd456f459cb2046af249d91e20be8fbc8ea2"
 
 GO_IMPORT = "github.com/ncw/rclone"
 

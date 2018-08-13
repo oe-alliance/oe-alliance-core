@@ -60,6 +60,8 @@ IMAGE_CMD_sdcard_append = " \
     rm -Rf ${IMAGEDIR}; \
     "
 
+require conf/machine/box-hardware.inc
+
 # Add "MACHINEBUILD" override for recipes
 MACHINEOVERRIDES =. "${@['', '${MACHINEBUILD}:']['${MACHINEBUILD}' != '']}"
 

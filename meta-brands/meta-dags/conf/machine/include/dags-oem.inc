@@ -374,26 +374,56 @@ ${@bb.utils.contains('MACHINEBUILD', 'force4', 'dags72604' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'lunix24k', 'dags72604' , '', d)}\
 "
 
-MACHINE_FEATURES += "3dtv alsa hdmicec switchoff textlcd ci skins1080 \
-    ${@bb.utils.contains('MACHINEBUILD', 'fusionhd', 'fastscan dvb-c' , '', d)} \
-    ${@bb.utils.contains('MACHINEBUILD', 'fusionhdse', 'fastscan dvb-c' , '', d)} \
-    ${@bb.utils.contains('MACHINEBUILD', 'purehd', 'fastscan dvb-c' , '', d)} \
-    ${@bb.utils.contains('MACHINEBUILD', 'purehdse', 'fastscan dvb-c' , '', d)} \
-    ${@bb.utils.contains('MACHINEBUILD', 'tmnanom3', 'fastscan dvb-c' , '', d)} \
-    ${@bb.utils.contains('MACHINEBUILD', 'tmnanoseplus', 'fan fastscan dvb-c' , '', d)} \
-    ${@bb.utils.contains('MACHINEBUILD', 'tmnanosecombo', 'fastscan dvb-c' , '', d)} \
-    ${@bb.utils.contains('MACHINEBUILD', 'force2plushv', 'fastscan dvb-c' , '', d)} \
-    ${@bb.utils.contains('MACHINEBUILD', 'tmnanosem2plus', 'fan fastscan dvb-c' , '', d)} \
-    ${@bb.utils.contains('MACHINEBUILD', 'tmnanosem2', 'fan fastscan dvb-c' , '', d)} \   
-    ${@bb.utils.contains('MACHINEBUILD', 'tmtwin4k', 'fan fastscan dvb-c' , '', d)} \
-    ${@bb.utils.contains('MACHINEBUILD', 'revo4k', 'fastscan dvb-c' , '', d)} \
-    ${@bb.utils.contains('MACHINEBUILD', 'galaxy4k', 'fastscan dvb-c' , '', d)} \
-    ${@bb.utils.contains('MACHINEBUILD', 'tm4ksuper', 'fastscan dvb-c' , '', d)} \
-    ${@bb.utils.contains('MACHINEBUILD', 'valalinux', 'fastscan dvb-c' , '', d)} \
-    ${@bb.utils.contains('MACHINEBUILD', 'lunix34k', 'fastscan dvb-c' , '', d)} \
-    ${@bb.utils.contains('MACHINEBUILD', 'lunix', 'fastscan dvb-c' , '', d)} \
-    ${@bb.utils.contains('MACHINEBUILD', 'force4', 'fastscan dvb-c' , '', d)} \
-    ${@bb.utils.contains('MACHINEBUILD', 'lunix24k', 'fastscan dvb-c' , '', d)} \
+MACHINE_FEATURES += "3dtv alsa hdmicec switchoff textlcd ci skins1080 HDMI \
+${@bb.utils.contains('MACHINEBUILD', 'fusionhd', 'fastscan dvb-c' , '', d)} \
+${@bb.utils.contains('MACHINEBUILD', 'fusionhdse', 'fastscan dvb-c' , '', d)} \
+${@bb.utils.contains('MACHINEBUILD', 'purehd', 'fastscan dvb-c' , '', d)} \
+${@bb.utils.contains('MACHINEBUILD', 'purehdse', 'fastscan dvb-c' , '', d)} \
+${@bb.utils.contains('MACHINEBUILD', 'tmnanom3', 'fastscan dvb-c' , '', d)} \
+${@bb.utils.contains('MACHINEBUILD', 'tmnanoseplus', 'fan fastscan dvb-c' , '', d)} \
+${@bb.utils.contains('MACHINEBUILD', 'tmnanosecombo', 'fastscan dvb-c AV_JACK' , '', d)} \
+${@bb.utils.contains('MACHINEBUILD', 'force2plushv', 'fastscan dvb-c' , '', d)} \
+${@bb.utils.contains('MACHINEBUILD', 'tmnanosem2plus', 'fan fastscan dvb-c AV_JACK' , '', d)} \
+${@bb.utils.contains('MACHINEBUILD', 'tmnanosem2', 'fan fastscan dvb-c AV_JACK' , '', d)} \
+${@bb.utils.contains('MACHINEBUILD', 'tmtwin4k', 'fan fastscan dvb-c' , '', d)} \
+${@bb.utils.contains('MACHINEBUILD', 'revo4k', 'fastscan dvb-c' , '', d)} \
+${@bb.utils.contains('MACHINEBUILD', 'galaxy4k', 'fastscan dvb-c RCA' , '', d)} \
+${@bb.utils.contains('MACHINEBUILD', 'tm4ksuper', 'fastscan dvb-c RCA' , '', d)} \
+${@bb.utils.contains('MACHINEBUILD', 'valalinux', 'fastscan dvb-c' , '', d)} \
+${@bb.utils.contains('MACHINEBUILD', 'lunix34k', 'fastscan dvb-c RCA' , '', d)} \
+${@bb.utils.contains('MACHINEBUILD', 'lunix', 'fastscan dvb-c' , '', d)} \
+${@bb.utils.contains('MACHINEBUILD', 'force4', 'fastscan dvb-c' , '', d)} \
+${@bb.utils.contains('MACHINEBUILD', 'lunix24k', 'fastscan dvb-c' , '', d)} \
+${@bb.utils.contains('MACHINEBUILD', 'tm2t', 'SCART RCA' , '', d)} \
+${@bb.utils.contains('MACHINEBUILD', 'tmnano', 'RCA' , '', d)} \
+${@bb.utils.contains('MACHINEBUILD', 'tmnano2t', 'YUV RCA' , '', d)} \
+${@bb.utils.contains('MACHINEBUILD', 'tmnano3t', 'RCA' , '', d)} \
+${@bb.utils.contains('MACHINEBUILD', 'tmnano2super', 'RCA' , '', d)} \
+${@bb.utils.contains('MACHINEBUILD', 'tmsingle', 'SCART' , '', d)} \
+${@bb.utils.contains('MACHINEBUILD', 'tmtwin', 'SCART RCA YUV' , '', d)} \
+${@bb.utils.contains('MACHINEBUILD', 'tmnanose', 'AV_JACK' , '', d)} \
+${@bb.utils.contains('MACHINEBUILD', 'iqonios100hd', 'SCART RCA YUV' , '', d)} \
+${@bb.utils.contains('MACHINEBUILD', 'iqonios200hd', 'RCA YUV' , '', d)} \
+${@bb.utils.contains('MACHINEBUILD', 'iqonios300hd', 'RCA' , '', d)} \
+${@bb.utils.contains('MACHINEBUILD', 'iqonios300hdv2', 'RCA' , '', d)} \
+${@bb.utils.contains('MACHINEBUILD', 'force1', 'YUV RCA' , '', d)} \
+${@bb.utils.contains('MACHINEBUILD', 'force1plus', 'RCA' , '', d)} \
+${@bb.utils.contains('MACHINEBUILD', 'megaforce1plus', 'RCA' , '', d)} \
+${@bb.utils.contains('MACHINEBUILD', 'force2', 'AV_JACK' , '', d)} \
+${@bb.utils.contains('MACHINEBUILD', 'force2plus', 'AV_JACK' , '', d)} \
+${@bb.utils.contains('MACHINEBUILD', 'force2se', 'AV_JACK' , '', d)} \
+${@bb.utils.contains('MACHINEBUILD', 'megaforce2', 'AV_JACK' , '', d)} \
+${@bb.utils.contains('MACHINEBUILD', 'worldvisionf1', 'YUV RCA' , '', d)} \
+${@bb.utils.contains('MACHINEBUILD', 'worldvisionf1plus', 'RCA' , '', d)} \
+${@bb.utils.contains('MACHINEBUILD', 'roxxs200hd', 'YUV RCA' , '', d)} \
+${@bb.utils.contains('MACHINEBUILD', 'mediaart200hd', 'YUV RCA' , '', d)} \
+${@bb.utils.contains('MACHINEBUILD', 'optimussos1plus', 'RCA' , '', d)} \
+${@bb.utils.contains('MACHINEBUILD', 'optimussos2plus', 'YUV RCA' , '', d)} \
+${@bb.utils.contains('MACHINEBUILD', 'optimussos3plus', 'RCA' , '', d)} \
+${@bb.utils.contains('MACHINEBUILD', 'optimussos1', 'RCA' , '', d)} \
+${@bb.utils.contains('MACHINEBUILD', 'optimussos2', 'YUV RCA' , '', d)} \
+${@bb.utils.contains('MACHINEBUILD', 'optimussos', 'AV_JACK' , '', d)} \
+${@bb.utils.contains('MACHINEBUILD', 'mediabox', 'YUV RCA' , '', d)} \
 "
 
 BOOTLOGO_FILENAME = "splash.bmp"
@@ -435,6 +465,7 @@ PREFERRED_PROVIDER_virtual/libgles2 = "v3d-libgles-${MACHINE}"
 PREFERRED_PROVIDER_virtual/kodi = "stb-kodi-${MACHINE}"
 
 require conf/machine/include/soc-family.inc
+require conf/machine/box-hardware.inc
 
 OEM_ARCH = "${MACHINEBUILD}"
 

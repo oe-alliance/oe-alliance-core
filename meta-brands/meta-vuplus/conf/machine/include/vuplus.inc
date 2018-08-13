@@ -55,9 +55,10 @@ IMAGE_CMD_ubi_prepend = " \
 
 BOOTLOGO_FILENAME = "splash_cfe_auto.bin"
 
-MACHINE_FEATURES += "3dtv alsa hdmicec switchoff bootsplash blindscan-tbs"
+MACHINE_FEATURES += "3dtv alsa hdmicec switchoff bootsplash blindscan-tbs HDMI"
 
 require conf/machine/include/soc-family.inc
+require conf/machine/box-hardware.inc
 
 # Add "MACHINEBUILD" override for recipes
 MACHINEOVERRIDES =. "${@['', '${MACHINEBUILD}:']['${MACHINEBUILD}' != '']}"

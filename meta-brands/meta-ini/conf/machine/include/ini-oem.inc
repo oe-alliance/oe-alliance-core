@@ -233,12 +233,13 @@ IMAGE_CMD_ubi_append = "\
     rm -rf opticum; \
     "
 
-MACHINE_FEATURES += "3dtv alsa hdmicec switchoff wifi bootsplash omb feature1 feature2"
+MACHINE_FEATURES += "3dtv alsa hdmicec switchoff wifi bootsplash omb feature1 feature2 HDMI"
 
 BOOTLOGO_FILENAME = "splash.bin"
 
 require conf/machine/include/tune-mips32.inc
 require conf/machine/include/soc-family.inc
+require conf/machine/box-hardware.inc
 
 OEM_ARCH = "${MACHINEBUILD}"
 

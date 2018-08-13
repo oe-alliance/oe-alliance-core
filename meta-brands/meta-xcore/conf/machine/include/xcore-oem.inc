@@ -134,6 +134,7 @@ MACHINE_EXTRA_RRECOMMENDS += " \
     "
 
 include conf/machine/include/autoload-filesystems.inc
+require conf/machine/box-hardware.inc
 
 DVBMEDIASINK_CONFIG = "--with-wma --with-wmv --with-pcm --with-dts --with-eac3  \
     ${@bb.utils.contains('MACHINEBUILD', 'osminiplus', '--with-h265 --with-vb6 --with-vb8 --with-spark' , '', d)} \
@@ -152,7 +153,7 @@ PREFERRED_PROVIDER_virtual/kodi = "stb-kodi-${MACHINE}"
 
 GCCVERSION = "8.%"
 
-MACHINE_FEATURES += "alsa 3dtv switchoff hdmicec bootsplash omb boxmodel"
+MACHINE_FEATURES += "alsa 3dtv switchoff hdmicec bootsplash omb boxmodel HDMI"
 
 BOOTLOGO_FILENAME = "splash.bin"
 

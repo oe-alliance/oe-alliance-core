@@ -7,7 +7,6 @@ MACHINE_NAME = "\
 ${@bb.utils.contains('MACHINEBUILD', 'mutant1100', 'HD1100' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'mutant1265', 'HD1265' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'mutant1500', 'HD1500' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'mutant1100', 'HD1100' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'mutant500c', 'HD500C' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'mutant530c', 'HD530C' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'mutant1200', 'HD1200' , '', d)}\
@@ -92,6 +91,7 @@ MACHINE_EXTRA_RRECOMMENDS = " \
 
 include conf/machine/include/autoload-filesystems.inc
 require conf/machine/include/soc-family.inc
+require conf/machine/box-hardware.inc
 
 DVBMEDIASINK_CONFIG = "--with-wma --with-wmv --with-pcm --with-dts --with-eac3 \
     ${@bb.utils.contains('MACHINEBUILD', 'mutant1265', '--with-h265 --with-vb6 --with-vb8 --with-spark' , '', d)} \
@@ -108,7 +108,7 @@ PREFERRED_PROVIDER_virtual/egl = "hd-v3ddriver-${MACHINE}"
 PREFERRED_PROVIDER_virtual/libgles2 = "hd-v3ddriver-${MACHINE}"
 PREFERRED_PROVIDER_virtual/kodi = "stb-kodi-${MACHINE}"
 
-MACHINE_FEATURES += "3dtv alsa hdmicec switchoff blindscan-tbs"
+MACHINE_FEATURES += "3dtv alsa hdmicec switchoff blindscan-tbs HDMI"
 
 EXTRA_IMAGEDEPENDS += " \
     enigma2-plugin-systemplugins-remotecontrolcode \

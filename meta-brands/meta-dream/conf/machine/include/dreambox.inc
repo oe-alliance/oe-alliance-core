@@ -16,6 +16,7 @@ DVBMEDIASINK_CONFIG_dm520 = "--with-dreambox --with-pcm --with-wma --with-wmv --
 
 include conf/machine/include/autoload-filesystems.inc
 require conf/machine/include/soc-family.inc
+require conf/machine/box-hardware.inc
 
 MACHINE_EXTRA_RRECOMMENDS = " \
     gstreamer1.0-plugin-dvbmediasink \
