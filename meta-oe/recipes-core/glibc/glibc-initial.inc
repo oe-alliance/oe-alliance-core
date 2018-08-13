@@ -13,9 +13,9 @@ do_configure () {
 	cfgscript=`python3 -c "import os; print(os.path.relpath('${S}', '.'))"`/configure
 	$cfgscript --host=${TARGET_SYS} --build=${BUILD_SYS} \
 		--prefix=/usr \
-		--without-cvs --disable-sanity-checks \
+		--disable-sanity-checks \
 		--with-headers=${STAGING_DIR_TARGET}${includedir} \
-		--enable-hacker-mode --enable-addons
+		--enable-hacker-mode
 }
 
 do_compile () {
@@ -52,3 +52,6 @@ do_siteconfig () {
 }
 
 inherit nopackages
+
+# We really only want this built by things that need it, not any recrdeptask
+deltask do_build
