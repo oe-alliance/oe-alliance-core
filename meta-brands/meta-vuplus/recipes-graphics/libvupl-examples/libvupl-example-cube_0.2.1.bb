@@ -22,5 +22,5 @@ do_install() {
 	install -m 0755 ${WORKDIR}/build/Simple_VertexShader/Simple_VertexShader ${D}/usr/bin/cube
 }
 
-SRC_URI[md5sum] = "fe812abfc9c52ed26c4aa7192f94fe03"
-SRC_URI[sha256sum] = "0cc58ec3d6d0d1be358e805268fa29704dde6fceeace8bc60d001bb63dac26ee"
+SRC_URI[md5sum] = "a904074c39b7d37293e1ff2cfe990b77"
+SRC_URI[sha256sum] = "eeda739794d85a79e0beaafd836136367ff50d85a7adf8bba5b40874c3377c9f"
