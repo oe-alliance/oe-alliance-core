@@ -4,7 +4,7 @@ LICENSE = "CLOSED"
 require conf/license/license-close.inc
 
 PV = "1.0"
-PR = "r3"
+PR = "r4"
 
 SRC_URI = " \
     file://update_systemconfig_arm \
@@ -23,6 +23,6 @@ do_install() {
 inherit update-rc.d
 
 INITSCRIPT_NAME = "update_systemconfig.sh"
-INITSCRIPT_PARAMS = "start 90 3"
+INITSCRIPT_PARAMS = "start 90 3 ."
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
