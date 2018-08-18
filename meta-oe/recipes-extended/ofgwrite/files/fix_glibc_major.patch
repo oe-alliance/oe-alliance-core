@@ -1,0 +1,36 @@
+--- a/libubi.c	2018-08-18 12:13:05.231195602 +0200
++++ b/libubi.c	2018-08-18 12:14:30.229126873 +0200
+@@ -32,6 +32,9 @@
+ #include <sys/ioctl.h>
+ #include <sys/stat.h>
+ #include <sys/types.h>
++#ifdef __GLIBC__
++#include <sys/sysmacros.h>
++#endif
+ #include <libubi.h>
+ #include "libubi_int.h"
+ #include "common.h"
+--- a/lib/libmtd.c	2018-08-18 13:20:53.456887400 +0200
++++ b/lib/libmtd.c	2018-08-18 13:21:18.700276059 +0200
+@@ -29,6 +29,9 @@
+ #include <fcntl.h>
+ #include <dirent.h>
+ #include <sys/types.h>
++#ifdef __GLIBC__
++#include <sys/sysmacros.h>
++#endif
+ #include <sys/stat.h>
+ #include <sys/ioctl.h>
+ #include <inttypes.h>
+--- a/lib/libmtd_legacy.c	2018-08-18 13:25:53.841638484 +0200
++++ b/lib/libmtd_legacy.c	2018-08-18 13:26:27.668825122 +0200
+@@ -29,6 +29,9 @@
+ #include <stdlib.h>
+ #include <errno.h>
+ #include <sys/types.h>
++#ifdef __GLIBC__
++#include <sys/sysmacros.h>
++#endif
+ #include <sys/stat.h>
+ #include <sys/ioctl.h>
+ #include <mtd/mtd-user.h>
