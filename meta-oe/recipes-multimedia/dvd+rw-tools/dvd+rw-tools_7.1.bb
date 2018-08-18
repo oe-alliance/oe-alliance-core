@@ -12,6 +12,7 @@ SRC_URI = "http://fy.chalmers.se/~appro/linux/DVD+RW/tools/dvd+rw-tools-${PV}.ta
            file://08-cdrkit-code.dpatch;apply=yes \
            file://09-cdrkit-doc.dpatch;apply=yes \
            file://10-includes.dpatch;apply=yes \
+           file://fix-glibc2.28_major.patch \
           "
 
 do_configure() {

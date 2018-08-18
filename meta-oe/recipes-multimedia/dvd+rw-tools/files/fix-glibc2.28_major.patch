@@ -1,0 +1,12 @@
+--- a/growisofs.c	2018-08-17 23:10:21.389101104 +0200
++++ b/growisofs.c	2018-08-17 23:11:10.307819704 +0200
+@@ -440,6 +440,9 @@
+ #include <string.h>
+ #include <fcntl.h>
+ #include <sys/types.h>
++#ifdef __GLIBC__
++#include <sys/sysmacros.h>
++#endif
+ #include <sys/stat.h>
+ #include <assert.h>
+ #include "mp.h"
