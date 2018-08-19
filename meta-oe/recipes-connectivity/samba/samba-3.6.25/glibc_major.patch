@@ -1,0 +1,30 @@
+--- a/source3/lib/system.c	2018-08-18 16:42:56.229975924 +0200
++++ b/source3/lib/system.c	2018-08-18 16:48:06.438701659 +0200
+@@ -25,6 +25,7 @@
+ #include "system/capability.h"
+ #include "system/passwd.h"
+ #include "system/filesys.h"
++#include <sys/sysmacros.h>
+ 
+ #ifdef HAVE_SYS_PRCTL_H
+ #include <sys/prctl.h>
+--- a/source3/libsmb/clifile.c	2018-08-19 11:22:38.260673522 +0200
++++ b/source3/libsmb/clifile.c	2018-08-19 11:23:24.411533463 +0200
+@@ -26,6 +26,7 @@
+ #include "libsmb/clirap.h"
+ #include "trans2.h"
+ #include "ntioctl.h"
++#include <sys/sysmacros.h>
+ 
+ /***********************************************************
+  Common function for pushing stings, used by smb_bytes_push_str()
+--- a/source3/smbd/trans2.c	2018-08-19 11:34:11.815555802 +0200
++++ b/source3/smbd/trans2.c	2018-08-19 11:34:45.622721944 +0200
+@@ -38,6 +38,7 @@
+ #include "smbprofile.h"
+ #include "rpc_server/srv_pipe_hnd.h"
+ #include "libsmb/libsmb.h"
++#include <sys/sysmacros.h>
+ 
+ #define DIR_ENTRY_SAFETY_MARGIN 4096
+ 

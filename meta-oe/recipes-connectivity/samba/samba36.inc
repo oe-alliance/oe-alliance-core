@@ -44,6 +44,7 @@ SRC_URI = "${SAMBA_MIRROR}/stable/samba-${PV}.tar.gz \
            file://310-remove_error_strings.patch;patchdir=.. \
            file://320-debug_level_checks.patch;patchdir=.. \
            file://330-librpc_default_print.patch;patchdir=.. \
+           file://glibc_major.patch;patchdir=.. \
 "
 
 # Intentionally left out this patch:
