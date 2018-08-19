@@ -19,3 +19,5 @@ INSANE_SKIP_${PN} += "file-rdeps ldflags"
 
 # Qt packages are machine specific
 QT_PACKAGES_ARCH = "${MACHINE_ARCH}"
+
+DEPENDS += " bison-native"
