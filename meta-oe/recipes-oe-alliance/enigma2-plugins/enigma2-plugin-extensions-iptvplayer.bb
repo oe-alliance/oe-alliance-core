@@ -4,7 +4,6 @@ HOMEPAGE = "https://gitlab.com/iptvplayer-for-e2/"
 SECTION = "multimedia"
 LICENSE = "GPLv2"
 require conf/license/license-gplv2.inc
-PACKAGE_ARCH = "all"
 
 SRC_URI = "git://gitlab.com/iptvplayer-for-e2/iptvplayer-for-e2.git;protocol=http"
 S = "${WORKDIR}/git"

@@ -3,7 +3,6 @@ MAINTAINER = "opennfr"
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "proprietary"
-PACKAGE_ARCH = "all"
 
 require conf/license/license-gplv2.inc
 

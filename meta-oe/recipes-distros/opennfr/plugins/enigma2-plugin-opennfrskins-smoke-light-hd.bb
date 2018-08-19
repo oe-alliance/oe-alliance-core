@@ -3,7 +3,6 @@ MAINTAINER = "opennfr-stein17"
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "proprietary"
-PACKAGE_ARCH = "all"
 
 require conf/license/license-gplv2.inc
 

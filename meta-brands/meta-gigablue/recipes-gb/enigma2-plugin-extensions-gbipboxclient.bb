@@ -2,7 +2,6 @@ SUMMARY = "GigaBlue IPBox Client"
 MAINTAINER = "GigaBlue"
 SECTION = "base"
 LICENSE = "GPLv2"
-PACKAGE_ARCH = "all"
 
 require conf/license/license-gplv2.inc
 
