@@ -1,7 +1,7 @@
 KV = "4.4.35"
-SRCDATE = "20180816"
+SRCDATE = "20180820"
 
 require clap-dvb-modules.inc
 
-SRC_URI[md5sum] = "74c090bb7a4a88a19cb5dc86accb28af"
-SRC_URI[sha256sum] = "c18b694f1247bab1ff28a3158422605b39dfd3c0756180217727960c21d96a83"
+SRC_URI[md5sum] = "4c496b15f7542052de03aebcc2939dca"
+SRC_URI[sha256sum] = "c5e695b2c9473fcde54367eec479a428bd3866525b6611d0bec16e2682ef5584"
