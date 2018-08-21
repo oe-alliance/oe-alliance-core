@@ -12,7 +12,7 @@ SRCDATE = "20180714"
 PV = "${SRCDATE}"
 PR = "r0"
 
-SRC_URI  = "http://source.mynonpublic.com/clap/cc1-blindscan-${SRCDATE}.tar.gz"
+SRC_URI  = "http://source.mynonpublic.com/clap/${MACHINE}-blindscan-${SRCDATE}.tar.gz"
 
 S = "${WORKDIR}"
 
