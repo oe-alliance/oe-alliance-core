@@ -1,12 +1,12 @@
-SUMMARY = "grab for dinobot Model ${MACHINE}"
+SUMMARY = "grab for Octagon Model ${MACHINE}"
 SECTION = "base"
 PRIORITY = "optional"
 LICENSE = "CLOSED"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-COMPATIBLE_MACHINE = "^(u52)$"
+COMPATIBLE_MACHINE = "^(sf8008)$"
 
-SRCDATE = "20180821"
+SRCDATE = "20180301"
 
 PV = "${SRCDATE}"
 PR = "r0"
@@ -15,7 +15,7 @@ RPROVIDES_${PN}  = "aio-grab"
 RREPLACES_${PN}  = "aio-grab"
 RCONFLICTS_${PN} = "aio-grab"
 
-SRC_URI = "http://source.mynonpublic.com/dinobot/${MACHINE}-grab-${SRCDATE}.tar.gz"
+SRC_URI = "http://source.mynonpublic.com/octagon/${MACHINE}-grab-${SRCDATE}.tar.gz"
 
 S = "${WORKDIR}"
 
@@ -29,5 +29,5 @@ do_package_qa() {
 
 FILES_${PN}  = "${bindir}/grab"
 
-SRC_URI[md5sum] = "f94ed16a5c9ace693b67e5076283734d"
-SRC_URI[sha256sum] = "3b32d874506d09bf3dbc5e6de4e3780b3b6ac8bf93fae10a98da9a2a5cc119dd"
+SRC_URI[md5sum] = "4617805f460607e15a0f322ee25113c7"
+SRC_URI[sha256sum] = "a20b6a814f262c4cd2d18bdb74f2b718d921ff24fc07e66a032fec553072374e"

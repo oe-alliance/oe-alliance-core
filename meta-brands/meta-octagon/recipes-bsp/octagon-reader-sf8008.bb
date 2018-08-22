@@ -1,4 +1,4 @@
-SUMMARY = "libreader for clap Model ${MACHINE}"
+SUMMARY = "libreader for Octagon Model ${MACHINE}"
 SECTION = "base"
 PRIORITY = "optional"
 LICENSE = "CLOSED"
@@ -6,14 +6,14 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 RDEPENDS_${PN} = "libsdl"
 
-COMPATIBLE_MACHINE = "^(cc1)$"
+COMPATIBLE_MACHINE = "^(sf8008)$"
 
 SRCDATE = "20180822"
 
 PV = "${SRCDATE}"
 PR = "r0"
 
-SRC_URI = "http://source.mynonpublic.com/clap/${MACHINE}-libreader-${SRCDATE}.tar.gz"
+SRC_URI = "http://source.mynonpublic.com/octagon/${MACHINE}-libreader-${SRCDATE}.tar.gz"
 
 S = "${WORKDIR}"
 

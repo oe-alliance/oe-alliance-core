@@ -1,12 +1,12 @@
-SUMMARY = "showiframe for dinobot Model ${MACHINE}"
+SUMMARY = "showiframe for Octagon Model ${MACHINE}"
 SECTION = "base"
 PRIORITY = "optional"
 LICENSE = "CLOSED"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-COMPATIBLE_MACHINE = "^(u52)$"
+COMPATIBLE_MACHINE = "^(sf8008)$"
 
-SRCDATE = "20180821"
+SRCDATE = "20180301"
 
 PV = "${SRCDATE}"
 PR = "r0"
@@ -15,7 +15,7 @@ RPROVIDES_${PN}  = "showiframe"
 RREPLACES_${PN}  = "showiframe"
 RCONFLICTS_${PN} = "showiframe"
 
-SRC_URI = "http://source.mynonpublic.com/dinobot/${MACHINE}-showiframe-${SRCDATE}.tar.gz"
+SRC_URI = "http://source.mynonpublic.com/octagon/${MACHINE}-showiframe-${SRCDATE}.tar.gz"
 
 S = "${WORKDIR}"
 
@@ -29,5 +29,5 @@ do_package_qa() {
 
 FILES_${PN}  = "${bindir}/showiframe"
 
-SRC_URI[md5sum] = "d27db16d5bb2f8c20e0fb3dcfe6637b0"
-SRC_URI[sha256sum] = "8d440ce1f198428eef459571a7aa7301057988070c3572726a35201b2db7193c"
+SRC_URI[md5sum] = "898ccb22efbcc90123fdc9c1d794b078"
+SRC_URI[sha256sum] = "8c691126d8d505c3943ebbcf55a50adfef6a38787d2d255863c4a43362f527a3"
