@@ -13,7 +13,7 @@ PACKAGES += " ${PN}-src"
 SRCREV = "${AUTOREV}"
 PV = "${IMAGE_VERSION}+git${SRCPV}"
 PKGV = "${IMAGE_VERSION}+git${GITPKGV}"
-PR = "r${DATE}-${MACHINEBUILD}"
+PR = "${@bb.utils.contains("DISTRO_NAME", "openvix", "${IMAGE_BUILD}-${MACHINEBUILD}" , "r${DATE}-${MACHINEBUILD}", d)}"
 
 PR[vardepsexclude] += "DATE"
 
