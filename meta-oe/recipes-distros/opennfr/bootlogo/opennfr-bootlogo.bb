@@ -18,6 +18,7 @@ INITSCRIPT_PARAMS = "start 07 S ."
 INITSCRIPT_PARAMS_vuduo2 = "start 70 S . stop 89 0 ."
 INITSCRIPT_PARAMS_vusolo2 = "start 70 S . stop 89 0 ."
 INITSCRIPT_PARAMS_vusolose = "start 70 S . stop 89 0 ."
+INITSCRIPT_PARAMS_vusolo4k = "start 70 S . stop 89 0 ."
 
 inherit update-rc.d
 
@@ -30,16 +31,19 @@ SRC_URI_append_gb800ue = "file://lcdsplash220.bin file://lcdwaitkey220.bin file:
 #SRC_URI_append_gb7358 = "file://lcdsplash220.bin file://lcdwaitkey220.bin file://lcdwarning220.bin"
 #SRC_URI_append_gbquadplus = "file://lcdsplash400.bin file://lcdwaitkey400.bin file://lcdwarning400.bin"
 SRC_URI_append_vuduo2 = "file://lcdbootlogo.png file://bootlogo.py"
+SRC_URI_append_vusolo4k = "file://lcdbootlogo.png file://bootlogo.py"
 SRC_URI_append_7100s = "file://lcdsplash220.bin file://lcdwaitkey220.bin file://lcdwarning220.bin file://lcdcomplete220.bin"
 SRC_URI_append_7210s = "file://lcdsplash220.bin file://lcdwaitkey220.bin file://lcdwarning220.bin file://lcdcomplete220.bin"
 SRC_URI_append_dags7356 = "file://splash1.bmp file://splash1_os1.bmp file://splash1_os2.bmp file://splash2.bmp file://splash3.bmp"
 SRC_URI_append_dags7362 = "file://splash1_power.bmp file://splash1_os1.bmp file://splash1_os2.bmp file://splash2.bmp file://splash3.bmp"
-SRC_URI_append_dags73625 = "file://splash1_power.bmp file://splash1_os1.bmp file://splash1_os2.bmp file://splash2.bmp file://splash3.bmp"
+SRC_URI_append_dags73625 = "file://splash1_rc.bmp file://splash1_power.bmp file://splash1_os1.bmp file://splash1_os2.bmp file://splash2.bmp file://splash3.bmp"
 
 BINARY_VERSION = "1.3"
 
 SRC_URI += "${@bb.utils.contains("MACHINE_FEATURES", "dreambox", "http://dreamboxupdate.com/download/opendreambox/2.0.0/dreambox-bootlogo/dreambox-bootlogo_${BINARY_VERSION}_${MACHINE_ARCH}.tar.bz2;name=${MACHINE_ARCH}" , "", d)}"
 
+SRC_URI[dm800.md5sum] = "0aacd07cc4d19b388c6441b007e3525a"
+SRC_URI[dm800.sha256sum] = "978a7c50fd0c963013477b5ba08462b35597ea130ae428c828bfcbb5c7cf4cac"
 SRC_URI[dm8000.md5sum] = "1b63ac7e2bd5c0db0748606acc310d47"
 SRC_URI[dm8000.sha256sum] = "91e4402190fe88cf394ae780141d968a1ebecd8db7b23c1f0ca3f4bfa9c9512a"
 SRC_URI[dm800se.md5sum] = "3413a894a3d77e02cae34b96d302817d"
@@ -72,6 +76,11 @@ do_install_append_vuduo2() {
     install -m 0644 bootlogo.py ${D}/${sysconfdir}/init.d/bootlogo.py
 }
 
+do_install_append_vusolo4k() {
+    install -m 0644 lcdbootlogo.png ${D}/usr/share/lcdbootlogo.png
+    install -m 0644 bootlogo.py ${D}/${sysconfdir}/init.d/bootlogo.py
+}
+
 do_install_append_7100s() {
     install -d ${D}/usr/share
     install -m 0644 lcdwaitkey220.bin ${D}/usr/share/lcdwaitkey.bin
@@ -88,7 +97,7 @@ do_install_append_7210s() {
 
 inherit deploy
 do_deploy() {
-    if [ "${MACHINE}" = "vuduo" ] || [ "${MACHINE}" = "vuduo2" ] || [ "${MACHINE}" = "vuuno" ] || [ "${MACHINE}" = "vusolo4k" ] || [ "${MACHINE}" = "vuuno4k" ] || [ "${MACHINE}" = "vuultimo4k" ] || [ "${MACHINE}" = "vusolo" ] || [ "${MACHINE}" = "vusolose" ] || [ "${MACHINE}" = "vuultimo" ] || [ "${MACHINE}" = "vuzero" ] || [ "${BRAND_OEM}" = "dags" ]; then
+    if [ "${MACHINE}" = "vuduo" ] || [ "${MACHINE}" = "vuultimo4k" ] || [ "${MACHINE}" = "vuduo2" ] || [ "${MACHINE}" = "vuuno" ] || [ "${MACHINE}" = "vusolo4k" ] || [ "${MACHINE}" = "vusolo" ] || [ "${MACHINE}" = "vusolose" ] || [ "${MACHINE}" = "vuultimo" ] || [ "${MACHINE}" = "vuzero" ] || [ "${BRAND_OEM}" = "dags" ]; then
         install -m 0644 splash480.bmp ${DEPLOYDIR}/${BOOTLOGO_FILENAME}
     else
         install -m 0644 splash576.bmp ${DEPLOYDIR}/${BOOTLOGO_FILENAME}
@@ -108,6 +117,9 @@ do_deploy() {
     if [ -e splash1_power.bmp ]; then
         install -m 0644 splash1_power.bmp ${DEPLOYDIR}/splash1_power.bmp
     fi
+    if [ -e splash1_rc.bmp ]; then
+        install -m 0644 splash1_rc.bmp ${DEPLOYDIR}/splash1_rc.bmp
+    fi
     if [ -e splash1.bmp ]; then
         install -m 0644 splash1.bmp ${DEPLOYDIR}/splash1.bmp
     fi
@@ -119,6 +131,10 @@ do_deploy() {
     fi
 }
 
+do_deploy_append_lunix() {
+	rm ${DEPLOYDIR}/splash1_power.bmp
+	mv ${DEPLOYDIR}/splash1_rc.bmp ${DEPLOYDIR}/splash1_power.bmp
+}	
 addtask deploy before do_build after do_install
 
 pkg_preinst_${PN}() {
@@ -169,3 +185,4 @@ pkg_postrm_${PN}() {
 
 PACKAGE_ARCH := "${MACHINE_ARCH}"
 FILES_${PN} = "/boot /usr/share /etc/init.d"
+
