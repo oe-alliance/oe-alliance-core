@@ -17,7 +17,7 @@ MTD_ROOTFS = "mmcblk0p13"
 
 KERNEL_FILE = "kernel.bin"
 ROOTFS_FILE = "rootfs.tar.bz2"
-MTD_BLACK  = "mmcblk0"
+MTD_BLACK  = "sda"
 
 VER = "-sf8008"
 
@@ -30,13 +30,15 @@ MACHINE_ESSENTIAL_EXTRA_RDEPENDS = "\
     octagon-reader-${MACHINE} \
     octagon-libreader-${MACHINE} \
     octagon-partitions-${MACHINE} \
+    e2fsprogs-resize2fs \
+    gptfdisk \
 "
 
 MACHINE_FEATURES += "videoenhancement switchoff 7segment textlcd skins1080 emmc mmc blindscan-dvbs kodi alsa hbbtv-browser-webkit qtstalker"
 
 IMAGE_CLASSES  += "octagon-emmc_image"
 IMAGE_FSTYPES += "octagonemmc"
-IMAGE_ROOTFS_SIZE ?= "8192000"
+IMAGE_ROOTFS_SIZE ?= "524288"
 
 TARGET_ARCH = "arm"
 DEFAULTTUNE = "cortexa15hf-neon-vfpv4"

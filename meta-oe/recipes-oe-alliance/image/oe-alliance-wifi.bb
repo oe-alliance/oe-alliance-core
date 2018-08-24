@@ -38,7 +38,7 @@ RDEPENDS_${PN} = "\
     ${@bb.utils.contains("BRAND_OEM", "ini", "enigma2-plugin-drivers-network-usb-rtl8192cu", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "wifi61", "rt61", "", d)} \
     ${@bb.utils.contains("DISTRO_FEATURES", "wifi-extra", "${OPTIONAL_WIFIDRIVERS}", "", d)} \
-    ${@bb.utils.contains("DISTRO_NAME", "openatv", "enigma2-plugin-drivers-network-usb-rtl8192cu-rev2", "", d)} \
+    ${@bb.utils.contains("DISTRO_NAME", "openatv", "enigma2-plugin-drivers-network-usb-rtl8192cu-rev2 enigma2-plugin-drivers-network-usb-rtl8812au", "", d)} \
     ${@bb.utils.contains("DISTRO_NAME", "openvix", "enigma2-plugin-drivers-network-usb-rtl8192cu-rev2", "", d)} \
     ${@bb.utils.contains("DISTRO_NAME", "opennfr", "enigma2-plugin-drivers-network-usb-rtl8192cu", "", d)} \
     ${@bb.utils.contains("DISTRO_NAME", "openeight", "enigma2-plugin-drivers-network-usb-rtl8192cu", "", d)} \
@@ -56,6 +56,7 @@ RDEPENDS_${PN} = "\
     ${@bb.utils.contains("BRAND_OEM", "dinobot", "enigma2-plugin-drivers-network-usb-rtl8192eu enigma2-plugin-drivers-network-usb-rtl8822bu", "", d)} \
     ${@bb.utils.contains("MACHINE", "alien5", "rtl8189es", "", d)} \
     ${@bb.utils.contains("MACHINE", "cc1", "enigma2-plugin-drivers-network-usb-rtl8192eu", "", d)} \
+    ${@bb.utils.contains("MACHINE", "sf8008", "enigma2-plugin-drivers-network-usb-rtl8192eu", "", d)} \
     "
 
 RDEPENDS_${PN}_remove_odroidc2 = "enigma2-plugin-drivers-network-usb-rtl8192cu"
