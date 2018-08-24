@@ -37,7 +37,6 @@ def glibc_dl_info(d):
         localdata = bb.data.createCopy(d)
         overrides = localdata.getVar("OVERRIDES", False) + ":virtclass-multilib-" + item
         localdata.setVar("OVERRIDES", overrides)
-        bb.data.update_data(localdata)
         ld_append_if_tune_exists(localdata, infos, ld_info_all)
     infos['ldconfig'] = ','.join(infos['ldconfig'])
     infos['lddrewrite'] = ' '.join(infos['lddrewrite'])
@@ -45,4 +44,5 @@ def glibc_dl_info(d):
 
 EGLIBC_KNOWN_INTERPRETER_NAMES = "${@glibc_dl_info(d)['ldconfig']}"
 RTLDLIST = "${@glibc_dl_info(d)['lddrewrite']}"
+RTLDLIST_class-nativesdk = "${base_libdir}/${@bb.utils.contains('SDK_ARCH', 'x86_64', 'ld-linux-x86-64.so.2', 'ld-linux.so.2', d)}"
 glibc_dl_info[vardepsexclude] = "OVERRIDES"
