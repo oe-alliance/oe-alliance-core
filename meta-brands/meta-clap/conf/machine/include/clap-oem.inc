@@ -39,13 +39,14 @@ MACHINE_ESSENTIAL_EXTRA_RDEPENDS = "\
     clap-reader-${MACHINE} \
     clap-libreader-${MACHINE} \
     clap-partitions-${MACHINE} \
+    e2fsprogs-resize2fs \
 "
 
 MACHINE_FEATURES += "videoenhancement switchoff 7segment textlcd skins1080 emmc mmc blindscan-dvbs kodi alsa hbbtv-browser-webkit qtstalker"
 
 IMAGE_CLASSES  += "clap-emmc_image"
 IMAGE_FSTYPES += "clapemmc"
-IMAGE_ROOTFS_SIZE ?= "1048576"
+IMAGE_ROOTFS_SIZE ?= "524288"
 
 TARGET_ARCH = "arm"
 DEFAULTTUNE = "cortexa15hf-neon-vfpv4"
