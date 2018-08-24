@@ -44,7 +44,7 @@ FILES_sln = "${base_sbindir}/sln"
 FILES_${PN}-pic = "${libdir}/*_pic.a ${libdir}/*_pic.map ${libdir}/libc_pic/*.o"
 FILES_libsotruss = "${libdir}/audit/sotruss-lib.so"
 FILES_SOLIBSDEV = "${libdir}/lib*${SOLIBSDEV}"
-FILES_${PN}-dev += "${bindir}/rpcgen ${libdir}/*_nonshared.a ${base_libdir}/*_nonshared.a ${base_libdir}/*.o ${datadir}/aclocal"
+FILES_${PN}-dev += "${libdir}/*_nonshared.a ${base_libdir}/*_nonshared.a ${base_libdir}/*.o ${datadir}/aclocal"
 FILES_${PN}-staticdev += "${libdir}/*.a ${base_libdir}/*.a"
 FILES_nscd = "${sbindir}/nscd* ${sysconfdir}/init.d/nscd ${systemd_unitdir}/system/nscd* ${sysconfdir}/tmpfiles.d/nscd.conf \
               ${sysconfdir}/nscd.conf ${sysconfdir}/default/volatiles/98_nscd ${localstatedir}/db/nscd"
@@ -67,7 +67,7 @@ DESCRIPTION_glibc-extra-nss = "glibc: nis, nisplus and hesiod search services."
 SUMMARY_ldd = "print shared library dependencies"
 DESCRIPTION_ldd = "${bindir}/ldd prints shared library dependencies for each program or shared library specified on the command line."
 SUMMARY_${PN}-utils = "Miscellaneous utilities provided by glibc"
-DESCRIPTION_${PN}-utils = "Miscellaneous utilities including getconf, iconv, locale, gencat, rpcgen, ..."
+DESCRIPTION_${PN}-utils = "Miscellaneous utilities including getconf, iconv, locale, gencat, ..."
 DESCRIPTION_libsotruss = "Library to support sotruss which traces calls through PLTs"
 DESCRIPTION_tzcode = "tzcode, timezone zoneinfo utils -- zic, zdump, tzselect"
 
@@ -129,17 +129,17 @@ do_install_append () {
 }
 
 do_install_append_aarch64 () {
-	if [ "${base_libdir}" != "/lib" ] ; then
-		# The aarch64 ABI says the dynamic linker -must- be /lib/ld-linux-aarch64[_be].so.1
-		install -d ${D}/lib
-		if [ -e ${D}${base_libdir}/ld-linux-aarch64.so.1 ]; then
-			ln -s ${@oe.path.relative('/lib', '${base_libdir}')}/ld-linux-aarch64.so.1 \
-				${D}/lib/ld-linux-aarch64.so.1
-		elif [ -e ${D}${base_libdir}/ld-linux-aarch64_be.so.1 ]; then
-			ln -s ${@oe.path.relative('/lib', '${base_libdir}')}/ld-linux-aarch64_be.so.1 \
-				${D}/lib/ld-linux-aarch64_be.so.1
-		fi
-	fi
+        if [ "${base_libdir}" != "${nonarch_base_libdir}" ]; then
+                # The aarch64 ABI says the dynamic linker -must- be /lib/ld-linux-aarch64[_be].so.1
+                install -d ${D}${nonarch_base_libdir}
+                if [ -e ${D}${base_libdir}/ld-linux-aarch64.so.1 ]; then
+                        ln -s ${@oe.path.relative('${nonarch_base_libdir}', '${base_libdir}')}/ld-linux-aarch64.so.1 \
+                                ${D}${nonarch_base_libdir}/ld-linux-aarch64.so.1
+                elif [ -e ${D}${base_libdir}/ld-linux-aarch64_be.so.1 ]; then
+                        ln -s ${@oe.path.relative('${nonarch_base_libdir}', '${base_libdir}')}/ld-linux-aarch64_be.so.1 \
+                                ${D}${nonarch_base_libdir}/ld-linux-aarch64_be.so.1
+                fi
+        fi
 }
 
 LOCALESTASH = "${WORKDIR}/stashed-locale"
@@ -181,30 +181,32 @@ do_stash_locale[dirs] = "${B}"
 do_stash_locale[cleandirs] = "${LOCALESTASH}"
 SSTATETASKS += "do_stash_locale"
 do_stash_locale[sstate-inputdirs] = "${LOCALESTASH}"
-do_stash_locale[sstate-outputdirs] = "${STAGING_DIR}-components/${PACKAGE_ARCH}/glibc-stash-locale"
-do_stash_locale[sstate-fixmedir] = "${STAGING_DIR}-components/${PACKAGE_ARCH}/glibc-stash-locale"
+do_stash_locale[sstate-outputdirs] = "${COMPONENTS_DIR}/${PACKAGE_ARCH}/glibc-stash-locale"
+do_stash_locale[sstate-fixmedir] = "${COMPONENTS_DIR}/${PACKAGE_ARCH}/glibc-stash-locale"
 
 python do_stash_locale_setscene () {
     sstate_setscene(d)
 }
 addtask do_stash_locale_setscene
- 
-do_poststash_install_cleanup () {
-	# Remove all files which do_stash_locale would remove (mv)
-	# since that task could have come from sstate and not get run.
 
-	for i in ${bashscripts}; do
-		rm -f ${D}${bindir}/$i
-	done
-	rm -f ${D}${bindir}/localedef
-	rm -rf ${D}${datadir}/i18n
-	rm -rf ${D}${libdir}/gconv
-	rm -rf ${D}/${localedir}
-	rm -rf ${D}${datadir}/locale
-	if [ "${libdir}" != "${exec_prefix}/lib" ]; then
-		# This dir only exists to hold locales
-		rm -rf ${D}${exec_prefix}/lib
-	fi
+do_poststash_install_cleanup () {
+        # Remove all files which do_stash_locale would remove (mv)
+        # since that task could have come from sstate and not get run.
+        for i in ${bashscripts}; do
+            rm -f ${D}${bindir}/$i
+        done
+        rm -f ${D}${bindir}/localedef
+        rm -rf ${D}${datadir}/i18n
+        rm -rf ${D}${libdir}/gconv
+        rm -rf ${D}/${localedir}
+        rm -rf ${D}${datadir}/locale
+        if [ "${libdir}" != "${exec_prefix}/lib" ]; then
+                if [ -d ${D}${exec_prefix}/lib/locale ] ; then
+                        rm -rf ${D}${exec_prefix}/lib/locale
+                        # error out if directory isn't empty
+                        rm -f ${D}${exec_prefix}/lib
+                fi
+        fi
 }
 addtask do_poststash_install_cleanup after do_stash_locale do_install before do_populate_sysroot do_package
 
