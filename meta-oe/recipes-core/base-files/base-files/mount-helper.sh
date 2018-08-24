@@ -47,16 +47,11 @@ case $ACTION in
 			# Already mounted
 			exit 0
 		fi
-		# check if multiboot stick
-		LABEL=`blkid -s PARTLABEL -o value /dev/${MDEV}`
-		LABELCHECK=`expr substr $LABEL 1 6`
-		if [ "$LABELCHECK" == "kernel" ] || [ "$LABELCHECK" == "rootfs" ]; then
-			exit 0
-		fi
 		DEVCHECK=`expr substr $MDEV 1 7`
+		DEVCHECK2=`expr substr $MDEV 1 3`
 		# blacklisted devices
 		for black in $BLACKLISTED; do
-			if [ "$DEVCHECK" == "$black" ] ; then
+			if [ "$DEVCHECK" == "$black" ] || [ "$DEVCHECK2" == "$black" ] ; then
 				exit 0
 			fi
 		done
