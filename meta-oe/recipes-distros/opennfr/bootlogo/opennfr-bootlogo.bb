@@ -8,8 +8,8 @@ require conf/license/license-gplv2.inc
 
 RDEPENDS_${PN} += "showiframe"
 
-PV = "5.2"
-PR = "r4"
+PV = "${IMAGE_VERSION}"
+PR = "r5"
 
 S = "${WORKDIR}"
 
@@ -34,9 +34,12 @@ SRC_URI_append_vuduo2 = "file://lcdbootlogo.png file://bootlogo.py"
 SRC_URI_append_vusolo4k = "file://lcdbootlogo.png file://bootlogo.py"
 SRC_URI_append_7100s = "file://lcdsplash220.bin file://lcdwaitkey220.bin file://lcdwarning220.bin file://lcdcomplete220.bin"
 SRC_URI_append_7210s = "file://lcdsplash220.bin file://lcdwaitkey220.bin file://lcdwarning220.bin file://lcdcomplete220.bin"
+SRC_URI_append_7105s = "file://lcdsplash220.bin file://lcdwaitkey220.bin file://lcdwarning220.bin file://lcdcomplete220.bin"
+SRC_URI_append_7215s = "file://lcdsplash220.bin file://lcdwaitkey220.bin file://lcdwarning220.bin file://lcdcomplete220.bin"
 SRC_URI_append_dags7356 = "file://splash1.bmp file://splash1_os1.bmp file://splash1_os2.bmp file://splash2.bmp file://splash3.bmp"
 SRC_URI_append_dags7362 = "file://splash1_power.bmp file://splash1_os1.bmp file://splash1_os2.bmp file://splash2.bmp file://splash3.bmp"
 SRC_URI_append_dags73625 = "file://splash1_rc.bmp file://splash1_power.bmp file://splash1_os1.bmp file://splash1_os2.bmp file://splash2.bmp file://splash3.bmp"
+
 
 BINARY_VERSION = "1.3"
 
@@ -89,6 +92,20 @@ do_install_append_7100s() {
 }
 
 do_install_append_7210s() {
+    install -d ${D}/usr/share
+    install -m 0644 lcdwaitkey220.bin ${D}/usr/share/lcdwaitkey.bin
+    install -m 0644 lcdwarning220.bin ${D}/usr/share/lcdwarning.bin
+    install -m 0644 lcdcomplete220.bin ${D}/usr/share/lcdcomplete.bin
+}
+
+do_install_append_7105s() {
+    install -d ${D}/usr/share
+    install -m 0644 lcdwaitkey220.bin ${D}/usr/share/lcdwaitkey.bin
+    install -m 0644 lcdwarning220.bin ${D}/usr/share/lcdwarning.bin
+    install -m 0644 lcdcomplete220.bin ${D}/usr/share/lcdcomplete.bin
+}
+
+do_install_append_7215s() {
     install -d ${D}/usr/share
     install -m 0644 lcdwaitkey220.bin ${D}/usr/share/lcdwaitkey.bin
     install -m 0644 lcdwarning220.bin ${D}/usr/share/lcdwarning.bin
