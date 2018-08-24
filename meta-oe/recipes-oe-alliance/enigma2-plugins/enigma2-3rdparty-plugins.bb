@@ -146,8 +146,6 @@ do_install() {
     || true
 }
 
-do_package_write_ipk[noexec] = "1"
-
 python populate_packages_prepend () {
     pkg  = ""
     pkgs = ""
@@ -194,6 +192,10 @@ do_deploy() {
     if [ -e $pkgdir ]; then
         chmod 0755 $pkgdir
     fi
+}
+
+do_package_write_ipk() {
+    :
 }
 
 addtask do_deploy before do_package_write after do_package_write_ipk
