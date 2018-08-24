@@ -30,13 +30,14 @@ MACHINE_ESSENTIAL_EXTRA_RDEPENDS = "\
     octagon-reader-${MACHINE} \
     octagon-libreader-${MACHINE} \
     octagon-partitions-${MACHINE} \
+    e2fsprogs-resize2fs \
 "
 
 MACHINE_FEATURES += "videoenhancement switchoff 7segment textlcd skins1080 emmc mmc blindscan-dvbs kodi alsa hbbtv-browser-webkit qtstalker"
 
 IMAGE_CLASSES  += "octagon-emmc_image"
 IMAGE_FSTYPES += "octagonemmc"
-IMAGE_ROOTFS_SIZE ?= "8192000"
+IMAGE_ROOTFS_SIZE ?= "524288"
 
 TARGET_ARCH = "arm"
 DEFAULTTUNE = "cortexa15hf-neon-vfpv4"
