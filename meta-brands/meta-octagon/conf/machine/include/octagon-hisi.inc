@@ -36,7 +36,7 @@ MACHINE_FEATURES += "videoenhancement switchoff 7segment textlcd skins1080 emmc 
 
 IMAGE_CLASSES  += "octagon-emmc_image"
 IMAGE_FSTYPES += "octagonemmc"
-IMAGE_ROOTFS_SIZE ?= "8192000"
+IMAGE_ROOTFS_SIZE ?= "1048576"
 
 TARGET_ARCH = "arm"
 DEFAULTTUNE = "cortexa15hf-neon-vfpv4"
