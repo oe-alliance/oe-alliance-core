@@ -2,7 +2,7 @@ LICENSE = "GPLv3"
 LIC_FILES_CHKSUM = "file://../COPYING;md5=d32239bcb673463ab874e80d47fae504"
 
 SECTION = "console/network"
-DEPENDS = "readline virtual/libiconv zlib popt libpam libtalloc attr avahi"
+DEPENDS = "readline virtual/libiconv zlib popt libpam libtalloc attr avahi libtirpc"
 
 inherit autotools-brokensep
 
@@ -156,8 +156,8 @@ EXTRA_OECONF="--exec-prefix=/usr \
               vfsfileid_cv_statfs=yes \
 "
 
-CFLAGS      += '-fPIC -DHAVE_IPV6=1 -DMAX_DEBUG_LEVEL=-1 -ffunction-sections -fdata-sections -ltalloc'
-LDFLAGS     += "-Wl,--gc-sections"
+CFLAGS      += '-fPIC -DHAVE_IPV6=1 -DMAX_DEBUG_LEVEL=-1 -ffunction-sections -fdata-sections -ltalloc -I${STAGING_INCDIR}/tirpc'
+LDFLAGS     += "-Wl,--gc-sections -ltirpc"
 EXTRA_OEMAKE+= "DYNEXP= PICFLAG= MODULES="
 
 S = "${WORKDIR}/samba-${PV}/source3"
