@@ -107,10 +107,12 @@ rm $D/etc/samba/distro/smb-vmc.conf 2/dev/null || true
 
 pkg_postinst_${PN}-base_prepend() {
 #!/bin/sh
-
+if [ -n "$D" ]; then
+set +e
 grep -v 'pam_smbpass.so' $D/etc/pam.d/common-password > $D/tmp/common-password
 mv $D/tmp/common-password $D/etc/pam.d/common-password
 echo -e "password\toptional\t\t\tpam_smbpass.so nullok use_authtok use_first_pass" >> $D/etc/pam.d/common-password
+fi
 
 if [ -n "$D" ]; then
 	grep -qE '^kids:' $D/etc/passwd
