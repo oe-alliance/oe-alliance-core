@@ -1,3 +1,6 @@
+FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
+
+SRC_URI += "file://CVE-2018-15473.patch"
 
 do_install_append () {
 	install -d ${D}${libdir}/openssh

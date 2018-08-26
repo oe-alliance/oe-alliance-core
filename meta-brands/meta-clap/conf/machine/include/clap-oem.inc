@@ -37,6 +37,7 @@ MACHINE_ESSENTIAL_EXTRA_RDEPENDS = "\
     clap-reader-${MACHINE} \
     clap-libreader-${MACHINE} \
     clap-partitions-${MACHINE} \
+    clap-buildimage \
     e2fsprogs-resize2fs \
     gptfdisk \
 "
