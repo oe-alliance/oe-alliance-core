@@ -30,6 +30,7 @@ MACHINE_ESSENTIAL_EXTRA_RDEPENDS = "\
     octagon-reader-${MACHINE} \
     octagon-libreader-${MACHINE} \
     octagon-partitions-${MACHINE} \
+    octagon-buildimage \
     e2fsprogs-resize2fs \
     gptfdisk \
 "
