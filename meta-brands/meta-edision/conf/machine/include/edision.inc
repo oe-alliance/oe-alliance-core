@@ -33,8 +33,8 @@ DEFAULTTUNE = "mips32el"
 
 PREFERRED_PROVIDER_virtual/kernel = "linux-edision"
 
-PREFERRED_PROVIDER_virtual/blindscan-dvbs = "edision-blindscan-utils"
-PREFERRED_PROVIDER_virtual/blindscan-dvbc = "edision-blindscan-utils"
+PREFERRED_PROVIDER_virtual/blindscan-dvbs = "edision-blindscan-utils-${MACHINE}"
+PREFERRED_PROVIDER_virtual/blindscan-dvbc = "edision-blindscan-utils-${MACHINE}"
 
 GCCVERSION = "8.%"
 
