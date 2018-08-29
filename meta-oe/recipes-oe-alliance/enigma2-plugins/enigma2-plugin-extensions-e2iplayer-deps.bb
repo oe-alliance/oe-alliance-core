@@ -1,4 +1,4 @@
-SUMMARY = "Meta package for installing all dependencies for SSS' IPTV Player"
+SUMMARY = "Meta package for installing all dependencies for SSS' E2iPlayer"
 inherit allarch
 
 require conf/license/license-gplv2.inc
