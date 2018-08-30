@@ -3,15 +3,15 @@ SECTION = "kernel"
 LICENSE = "GPLv2"
 
 KERNEL_RELEASE = "4.4.35"
-SRCDATE = "20180816"
+SRCDATE = "20180830"
 
 inherit kernel machine_kernel_pr
 
-MACHINE_KERNEL_PR_append = ".11"
+MACHINE_KERNEL_PR_append = ".12"
 
 
-SRC_URI[md5sum] = "f954aef80601901e5a7e9d96077cf25e"
-SRC_URI[sha256sum] = "c876a2a1de952d35c918f6b80275bbeda6f7cfdc2b68a3a2893b3009b2dbcb9c"
+SRC_URI[md5sum] = "9aa3305104807a5bdc0e0b53dcccc45b"
+SRC_URI[sha256sum] = "b543c8a7655ef588ca2f6ffb0bda7e496e5b909bae04443f01ea309381f6655c"
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
