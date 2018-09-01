@@ -5,7 +5,7 @@ LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda
 
 ALLOW_EMPTY_${PN} = "1"
 
-PV = "7.2"
+PV = "7.3"
 PR = "r0"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
@@ -17,17 +17,16 @@ RDEPENDS_${PN} = " \
     oe-alliance-base \
     openspa-enigma2 \
     openspa-bootlogo \
-    openssh-sftp-server \
-    ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "", "iproute2", d)} \
+    ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "", "openssh-sftp-server ", d)} \
+    ${@bb.utils.contains_any("FLASHSIZE", "64", "", "iproute2 ", d)} \
     ntfs-3g \
+    flip \
     hddtemp \
     python-imaging \
     python-service-identity \
     streamproxy \
     rtmpdump \
-    packagegroup-base-smbfs-client \
-    ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "", "enigma2-plugin-extensions-openwebif-vxg", d)} \
-    ${@bb.utils.contains("MACHINE_NAME", "PLAY", "packagegroup-base-smbfs-client packagegroup-base-smbfs-server packagegroup-base-smbfs-utils packagegroup-base-nfs", "" , d)} \
+    ${@bb.utils.contains("MACHINE_FEATURES", "dreamboxv1", "", "ofgwrite", d)} \
     ${@bb.utils.contains("TUNE_FEATURES", "armv", "glibc-compat", "", d)} \
-    ofgwrite \
+    openvpn-script \
     "
