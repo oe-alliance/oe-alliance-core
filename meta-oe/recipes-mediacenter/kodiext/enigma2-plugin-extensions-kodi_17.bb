@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 DEPENDS += "enigma2 virtual/kodi"
 RDEPENDS_${PN} += "virtual/kodi"
 
-RRECOMMENDS_${PN} = "enigma2-plugin-extensions-subssupport"
+RRECOMMENDS_${PN} = "${@bb.utils.contains("MACHINE_FEATURES", "no-subssupport", "" , "enigma2-plugin-extensions-subssupport", d)}"
 
 SRCREV = "241a5aabf50aa21ed06c8180e854a65ebec47790"
 SRC_URI = "git://github.com/mx3L/kodiext;protocol=git;branch=master \
