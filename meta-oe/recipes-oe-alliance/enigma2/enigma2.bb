@@ -13,6 +13,7 @@ DEPENDS = " \
     python python-imaging python-twisted python-wifi \
     swig-native \
     tuxtxt-enigma2 \
+    ${@bb.utils.contains("DISTRO_NAME", "openspa", "uchardet" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "uianimation", "vuplus-libgles-${MACHINE} libvugles2" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "hiaccel", "dinobot-libs-${MACHINE}" , "", d)} \
     "
@@ -258,10 +259,6 @@ SRC_URI_append_opennfr = " \
     "
 SRC_URI_append_egami = " \
     file://tuxbox_fix_DVB_API_VERSION_check_for_gcc5.patch \
-    "
-
-SRC_URI_append_openspa = " \
-    file://skin_default.patch \
     "
 
 S = "${WORKDIR}/git"

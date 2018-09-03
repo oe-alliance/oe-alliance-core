@@ -1,5 +1,6 @@
 require recipes-kernel/linux-libc-headers/linux-libc-headers.inc
 
+LIC_FILES_CHKSUM = "file://COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 SRC_URI = "${KERNELORG_MIRROR}/linux/kernel/v4.x/linux-${PV}.tar.xz"
 
 SRC_URI[md5sum] = "9a78fa2eb6c68ca5a40ed5af08142599"
