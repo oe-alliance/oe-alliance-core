@@ -18,7 +18,7 @@ PR = "r1"
 
 SRC_URI = "git://github.com/openatv/skin-parts.git;protocol=git"
 
-# note that enigma2-plugi-skincomponentsn-skinparts is just an empty package to satisfy silly dependencies.
+# note that enigma2-plugin-skincomponents-skinparts is just an empty package to satisfy silly dependencies.
 ALLOW_EMPTY_${PN} = "1"
 
 FILES_${PN} = "/usr/share/enigma2/skinparts"
