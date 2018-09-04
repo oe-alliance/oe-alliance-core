@@ -1,0 +1,22 @@
+From e81f2f8df5b357bd27ed37a4ce7a0a4d24726316 Mon Sep 17 00:00:00 2001
+From: Nicker <nickersk@gmail.com>
+Date: Sun, 29 Jul 2018 15:24:24 +0200
+Subject: [PATCH 5/5] kallsyms allow bigger KSYM_NAME_LEN
+
+
+diff --git a/scripts/kallsyms.c b/scripts/kallsyms.c
+index 8fa81e84..a6b98755 100644
+--- a/scripts/kallsyms.c
++++ b/scripts/kallsyms.c
+@@ -27,7 +27,7 @@
+ #define ARRAY_SIZE(arr) (sizeof(arr) / sizeof(arr[0]))
+ #endif
+ 
+-#define KSYM_NAME_LEN		128
++#define KSYM_NAME_LEN		256
+ 
+ struct sym_entry {
+ 	unsigned long long addr;
+-- 
+2.17.1
+

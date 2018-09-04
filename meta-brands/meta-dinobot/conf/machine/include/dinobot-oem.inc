@@ -1,10 +1,7 @@
 # We know about rtc
 include conf/machine/include/build-extras.inc
 
-DISTRO_FEATURES_remove = "x11 wayland"
-
 BRAND_OEM = "dinobot"
-
 
 MACHINE_NAME = "\
 ${@bb.utils.contains('MACHINEBUILD', 'anadol4k', '4K ECO' , '', d)}\
