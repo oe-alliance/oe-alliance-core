@@ -3,9 +3,9 @@ LICENSE = "CLOSED"
 require conf/license/license-close.inc
 
 RDEPENDS_enigma2-plugin-softcams-mgcamd135a = "libcrypto-compat-0.9.7"
-DEPENDS = "libcrypto-compat-0.9.7"
+DEPENDS = "libcrypto-compat-0.9.7 zlib"
 
-PR = "r6"
+PR = "r7"
 
 RREPLACES_enigma2-plugin-softcams-mgcamd135a += "enigma2-plugin-softcams-mgcamd"
 RCONFLICTS_enigma2-plugin-softcams-mgcamd135a += "enigma2-plugin-softcams-mgcamd"
