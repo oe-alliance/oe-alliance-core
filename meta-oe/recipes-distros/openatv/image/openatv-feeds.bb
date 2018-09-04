@@ -7,7 +7,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PV = "1.0"
-PR = "r39"
+PR = "r40"
 
 inherit packagegroup
 
@@ -38,12 +38,12 @@ RRECOMMENDS_${PN} = "\
     enigma2-plugin-skincomponents-mediaportal-blue-line-skin \
     enigma2-plugin-skincomponents-mediaportal-atv-metrix-style \
     enigma2-plugin-skincomponents-mediaportal-smoke-hd-skin \
+    enigma2-plugin-skincomponents-skinparts \
     enigma2-plugin-skincomponents-skyrecorder-fhd-skin \
     enigma2-plugin-settings-defaultsat \
     enigma2-plugin-extensions-specialjump \
     enigma2-plugin-extensions-blurayplayer \
     enigma2-plugin-systemplugins-autobouquetsmaker \
-    enigma2-plugin-skinparts \
     ${@bb.utils.contains("MACHINE_BRAND", "AZBOX", "enigma2-plugin-extensions-azplay enigma2-plugin-extensions-aziptv", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "skins1080", "hd-skins-meta", "", d)} \
     "
