@@ -4,7 +4,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda2f7b4f302"
 
-SRCDATE = "20180730"
+SRCDATE = "20180905"
 PR = "${SRCDATE}"
 
 DEPENDS = "linkdroid-libamavutils-${MACHINE} alsa-lib rtmpdump "
@@ -13,8 +13,8 @@ RDEPENDS_${PN} = "ffmpeg linkdroid-libamavutils-${MACHINE}"
 
 inherit lib_package
 
-SRC_URI[md5sum] = "48c5a9acf0d8a66d03dbbfbf40d1f9e2"
-SRC_URI[sha256sum] = "62b130c98502d2f3d5f62f8939c707918caa69c4c2f8864ccd390d6e82c4fdd2"
+SRC_URI[md5sum] = "cdfbaaf67bfa803526219f3b492012bf"
+SRC_URI[sha256sum] = "ab41d06abaeff8d2489a57e7e83022955aeddd5ade7bb448c0fcd79e3a38fabb"
 
 SRC_URI = "http://source.mynonpublic.com/linkdroid/${BPN}-${SRCDATE}.zip"
 
@@ -44,3 +44,6 @@ do_package_qa() {
 }
 
 INSANE_SKIP_${PN} = "already-stripped dev-so ldflags dev-deps textrel"
+
+SOLIBS = ".so"
+FILES_SOLIBSDEV = ""

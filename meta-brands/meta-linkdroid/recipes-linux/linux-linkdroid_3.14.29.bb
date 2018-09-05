@@ -8,11 +8,11 @@ DEPENDS = "lzop-native virtual/${TARGET_PREFIX}gcc"
 inherit kernel machine_kernel_pr
 
 LOCALVERSION ?= ""
-MACHINE_KERNEL_PR_append = ".3"
-SRCDATE = "20180823"
+MACHINE_KERNEL_PR_append = ".4"
+SRCDATE = "20180905"
 
-SRC_URI[md5sum] = "7c00d6d099749a04aaeb23844a8b2e45"
-SRC_URI[sha256sum] = "398bf1f5877169ebb4d0facbef1d7b0a51c9280576d5b8906be94e584a57d5c7"
+SRC_URI[md5sum] = "ad277a2c6fd275154796fd6daab44b2c"
+SRC_URI[sha256sum] = "f97813d003662705c6f631f794239b80055c469aacf8b2b9183cc34262562685"
 
 SRC_URI += "http://source.mynonpublic.com/linkdroid/linux-${PV}-${SRCDATE}.tar.gz \
     file://defconfig \
