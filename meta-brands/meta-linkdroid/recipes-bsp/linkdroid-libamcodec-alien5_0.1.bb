@@ -4,7 +4,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda2f7b4f302"
 
-SRCDATE = "20180730"
+SRCDATE = "20180905"
 PR = "${SRCDATE}"
 
 DEPENDS = "linkdroid-libamadec-${MACHINE}"
@@ -12,8 +12,8 @@ RDEPENDS_${PN} = "linkdroid-libamadec-${MACHINE}"
 
 inherit lib_package pkgconfig
 
-SRC_URI[md5sum] = "79b1af103a6589ae54e9af3eb8d289c5"
-SRC_URI[sha256sum] = "afd65c8754805247e40c5639330cc39fc4752f1e9128e57e756eac47dd97f106"
+SRC_URI[md5sum] = "384aaad50fc89516a2563294413af013"
+SRC_URI[sha256sum] = "0b8f6a3b9b011661e85411fc8baa3360d625c49673db217760f52e85e3d43736"
 
 SRC_URI = "http://source.mynonpublic.com/linkdroid/${BPN}-${SRCDATE}.zip"
 

@@ -19,9 +19,8 @@ SRC_URI = "http://source.mynonpublic.com/zgemma/linux-${PV}-${SRCDATE}-${ARCH}.t
         file://0002-ieee80211-increase-scan-result-expire-time.patch \
         file://0002-log2-give-up-on-gcc-constant-optimizations.patch \
         file://0003-dont-mark-register-as-const.patch \
+        file://0001-mmc-switch-1.8V.patch \
         "
-
-SRC_URI_append_h9 = "file://0001-mmc-switch-1.8V.patch"
 
 # By default, kernel.bbclass modifies package names to allow multiple kernels
 # to be installed in parallel. We revert this change and rprovide the versioned
@@ -29,7 +28,7 @@ SRC_URI_append_h9 = "file://0001-mmc-switch-1.8V.patch"
 PKG_${KERNEL_PACKAGE_NAME}-base = "kernel-base"
 PKG_${KERNEL_PACKAGE_NAME}-image = "kernel-image"
 RPROVIDES_${KERNEL_PACKAGE_NAME}-base = "kernel-${KERNEL_VERSION}"
-RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"	
+RPROVIDES_${KERNEL_PACKAGE_NAME}-image = "kernel-image-${KERNEL_VERSION}"
 
 S = "${WORKDIR}/linux-${PV}"
 B = "${WORKDIR}/build"

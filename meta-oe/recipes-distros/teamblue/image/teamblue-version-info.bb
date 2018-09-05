@@ -12,6 +12,8 @@ PACKAGE_ARCH = "${MACHINEBUILD}"
 
 URL = "http://www.teamblue.tech"
 
+do_configure[nostamp] = "1"
+
 S = "${WORKDIR}"
 
 PACKAGES = "${PN}"

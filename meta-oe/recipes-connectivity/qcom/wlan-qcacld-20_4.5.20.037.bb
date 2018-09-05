@@ -5,6 +5,7 @@ CAF_MIRROR = "https://www.codeaurora.org/cgit/external/wlan"
 
 inherit module
 
+COMPATIBLE_MACHINE = "^(xc7439)$"
 
 SRC_URI = "${CAF_MIRROR}/qcacld-2.0/snapshot/qcacld-2.0-${PV}.tar.gz \
     file://qcacld-2.0-add-4.11-support.patch \
@@ -16,11 +17,9 @@ SRC_URI = "${CAF_MIRROR}/qcacld-2.0/snapshot/qcacld-2.0-${PV}.tar.gz \
 
 S = "${WORKDIR}/qcacld-2.0-${PV}"
 
-inherit module
-
 do_install() {
-    install -d ${D}${base_libdir}/modules/${KERNEL_VERSION}/extra
-    install -m 0644 ${S}/wlan.ko ${D}${base_libdir}/modules/${KERNEL_VERSION}/extra
+    install -d ${D}${nonarch_base_libdir}/modules/${KERNEL_VERSION}/extra
+    install -m 0644 ${S}/wlan.ko ${D}${nonarch_base_libdir}/modules/${KERNEL_VERSION}/extra
 }
 
 python do_package_prepend() {

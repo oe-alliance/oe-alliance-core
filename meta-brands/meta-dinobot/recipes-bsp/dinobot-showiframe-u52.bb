@@ -6,7 +6,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 COMPATIBLE_MACHINE = "^(u52)$"
 
-SRCDATE = "20180821"
+SRCDATE = "20180905"
 
 PV = "${SRCDATE}"
 PR = "r0"
@@ -29,5 +29,5 @@ do_package_qa() {
 
 FILES_${PN}  = "${bindir}/showiframe"
 
-SRC_URI[md5sum] = "d27db16d5bb2f8c20e0fb3dcfe6637b0"
-SRC_URI[sha256sum] = "8d440ce1f198428eef459571a7aa7301057988070c3572726a35201b2db7193c"
+SRC_URI[md5sum] = "8347e9230938865e624852fae1b2acda"
+SRC_URI[sha256sum] = "9578f8e24ceac473539c5730b16b95599e07ce985517e93557ac4b100469c1af"

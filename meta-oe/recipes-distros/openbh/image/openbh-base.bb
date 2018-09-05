@@ -8,7 +8,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "${IMAGE_VERSION}"
-PR = "r6"
+PR = "r7"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
@@ -19,7 +19,8 @@ DEPENDS = "openbh-version-info"
 RDEPENDS_${PN} = "\
     blackhole-base \
     blackholesocker \
-    ca-certificates \    
+    ca-certificates \  
+    curl \  
     dvbsnoop \
     hddtemp \
     inadyn-mt \

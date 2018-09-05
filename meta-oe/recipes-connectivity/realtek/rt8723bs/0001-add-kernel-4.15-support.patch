@@ -1,0 +1,15 @@
+--- a/include/osdep_service_linux.h	2018-09-05 09:10:22.425499934 +0200
++++ b/include/osdep_service_linux.h	2018-09-05 09:12:02.094044218 +0200
+@@ -273,8 +273,12 @@
+ {
+ 	//setup_timer(ptimer, pfunc,(u32)cntx);	
+ 	ptimer->function = pfunc;
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(4, 15, 0))
+ 	ptimer->data = (unsigned long)cntx;
+ 	init_timer(ptimer);
++#else
++	timer_setup(ptimer, pfunc, 0);
++#endif
+ }
+ 
+ __inline static void _set_timer(_timer *ptimer,u32 delay_time)

@@ -6,8 +6,9 @@ LIC_FILES_CHKSUM = "file://ifcfg-wlan0;md5=a84acae65af4b2d44d5035aa9f63cd85"
 
 inherit module
 
-
-SRC_URI = "http://source.mynonpublic.com/rtl8812AU-driver-5.1.5-20170914.zip"
+SRC_URI = "http://source.mynonpublic.com/rtl8812AU-driver-5.1.5-20170914.zip \
+    file://0001-add-linux-kernel-4.15-support.patch \
+"
 
 EXTRA_OEMAKE = "LINUX_SRC=${STAGING_KERNEL_DIR} KDIR=${STAGING_KERNEL_DIR}"
 

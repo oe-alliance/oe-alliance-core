@@ -3,7 +3,6 @@ include conf/machine/include/build-extras.inc
 
 BRAND_OEM = "dinobot"
 
-
 MACHINE_NAME = "\
 ${@bb.utils.contains('MACHINEBUILD', 'anadol4k', '4K ECO' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'dinobot4kl', 'DINOBOT 4KL' , '', d)}\
