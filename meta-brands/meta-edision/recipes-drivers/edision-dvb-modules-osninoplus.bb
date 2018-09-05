@@ -1,5 +1,6 @@
 KV = "4.8.17"
 SRCDATE = "20180719"
+KOFILES = "linuxdvb"
 
 require edision-dvb-modules.inc
 SRC_URI[md5sum] = "2235d5a9df77c2d550eb5ee5200e66b1"

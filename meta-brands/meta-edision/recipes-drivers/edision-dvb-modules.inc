@@ -22,8 +22,10 @@ do_populate_sysroot() {
 do_install() {
     install -d ${D}/lib/modules/${KV}/extra
     install -d ${D}/${sysconfdir}/modules-load.d
-    install -m 0755 ${WORKDIR}/linuxdvb.ko ${D}/lib/modules/${KV}/extra/linuxdvb.ko
-    echo linuxdvb >> ${D}/${sysconfdir}/modules-load.d/_${MACHINE}.conf
+    for i in ${KOFILES} ; do
+        install -m 0755 ${WORKDIR}/${i}.ko ${D}/lib/modules/${KV}/extra/${i}.ko
+        echo ${i} >> ${D}/${sysconfdir}/modules-load.d/_${MACHINE}.conf
+    done
 }
 
 FILES_${PN} += "${sysconfdir}/modules-load.d/_${MACHINE}.conf /lib/modules/${KV}/extra"
