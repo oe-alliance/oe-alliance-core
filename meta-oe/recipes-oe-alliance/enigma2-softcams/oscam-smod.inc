@@ -14,16 +14,19 @@ BINFILE = "oscam-smod"
 LICENSE="GPLv3"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 
+FILESEXTRAPATHS_prepend := "${THISDIR}/enigma2-plugin-softcams-oscam:"
+
 PV = "1.20+git${SRCPV}"
 PKGV = "1.20+git${GITPKGV}"
 
-SRC_URI="git://github.com/oe-alliance/oscam-smod.git;protocol=git"
+SRC_URI = "git://github.com/oe-alliance/oscam-smod.git;protocol=git \
+            file://fix_glibc_major.patch \
+"
 
 S = "${WORKDIR}/git"
 F = "${WORKDIR}/git/files"
 
 PACKAGE_ARCH = "${DEFAULTTUNE}"
-#
 
 DEPENDS = "libusb openssl"
 

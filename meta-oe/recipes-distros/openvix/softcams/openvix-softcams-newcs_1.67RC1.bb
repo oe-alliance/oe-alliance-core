@@ -4,7 +4,7 @@ require conf/license/license-close.inc
 
 PR = "r2"
 
-RDEPENDS_enigma2-plugin-softcams-newcs = "libcrypto-compat-0.9.7"
+RDEPENDS_enigma2-plugin-softcams-newcs = "libcrypto-compat-0.9.7 libxcrypt"
 
 PACKAGES = "enigma2-plugin-softcams-newcs"
 
