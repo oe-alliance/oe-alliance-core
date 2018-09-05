@@ -4,8 +4,10 @@ PRIORITY = "required"
 LICENSE = "CLOSED"
 DEPENDS = "zlib libpng freetype curl libxml2 libjpeg-turbo harfbuzz"
 RDEPENDS_${PN} = "libbluray"
+PR = "${SRCDATE}"
+VER ?= "${@bb.utils.contains('TARGET_ARCH', 'aarch64', '64' , '', d)}"
 
-SRC_URI = "http://source.mynonpublic.com/zgemma/zgemma-libs-${MACHINE}-${SRCDATE}.zip"
+SRC_URI = "http://source.mynonpublic.com/zgemma/zgemma-libs${VER}-3798mv200-${SRCDATE}.zip"
 
 S = "${WORKDIR}"
 

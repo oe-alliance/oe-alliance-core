@@ -3,11 +3,12 @@ SECTION = "base"
 PRIORITY = "required"
 LICENSE = "CLOSED"
 require conf/license/license-close.inc
+VER ?= "${@bb.utils.contains('TARGET_ARCH', 'aarch64', '64' , '', d)}"
 
 PV = "${KV}+${SRCDATE}"
 PR = "r0"
 
-SRC_URI = "http://source.mynonpublic.com/zgemma/${MACHINE_DRIVER}-drivers-${KV}-${SRCDATE}.zip"
+SRC_URI = "http://source.mynonpublic.com/zgemma/${MACHINE_DRIVER}-drivers${VER}-${KV}-${SRCDATE}.zip"
 
 S = "${WORKDIR}"
 
@@ -27,4 +28,12 @@ do_install() {
 	for i in ${MACHINE_DRIVER}_1 ${MACHINE_DRIVER}_2 ${MACHINE_DRIVER}_3 ${MACHINE_DRIVER}_4; do
 		echo $i >> ${D}/${sysconfdir}/modules-load.d/_${MACHINEBUILD}.conf
 	done
+}
+
+pkg_prerm_${PN}() {
+	if [ "x$D" == "x" ]; then
+		if [ -f /lib/modules/${KV}/extra/hi_play.ko ] ; then
+			rm -f /lib/modules/${KV}/extra/hi_play.ko;
+		fi
+	fi
 }

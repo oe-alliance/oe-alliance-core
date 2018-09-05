@@ -14,6 +14,8 @@ PKGV = "${IMAGE_VERSION}+git${GITPKGV}"
 
 BRANCH="master"
 
+do_configure[nostamp] = "1"
+
 SRC_URI="git://github.com/oe-alliance/branding-module.git;protocol=git;branch=${BRANCH}"
 
 S = "${WORKDIR}/git"

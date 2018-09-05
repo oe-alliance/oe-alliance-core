@@ -17,6 +17,8 @@ PR = "${@bb.utils.contains("DISTRO_NAME", "openvix", "${IMAGE_BUILD}-${MACHINEBU
 
 PR[vardepsexclude] += "DATE"
 
+do_configure[nostamp] = "1"
+
 BRANCH="master"
 
 SRC_URI="git://github.com/oe-alliance/branding-module.git;protocol=git;branch=${BRANCH}"
