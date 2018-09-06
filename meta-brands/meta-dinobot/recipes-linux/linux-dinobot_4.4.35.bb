@@ -3,14 +3,12 @@ SECTION = "kernel"
 LICENSE = "GPLv2"
 
 KERNEL_RELEASE = "4.4.35"
-SRCDATE = "20180502"
-SRCDATE_u52 = "20180828"
-SRCDATE_u51 = "20180828"
-SRCDATE_u5 = "20180828"
+SRCDATE_u5pvr = "20180502"
+SRCDATE = "20180828"
 
 inherit kernel machine_kernel_pr
 
-MACHINE_KERNEL_PR_append = ".17"
+MACHINE_KERNEL_PR_append = ".18"
 
 SRC_URI[md5sum] = "bd22f82d08a5feb4f1360d5739919ee0"
 SRC_URI[sha256sum] = "df83207ddfe34ac41a55e5e42eaae9c3ac3c4ef0750c786886719a33bf08b617"
@@ -28,7 +26,7 @@ PKG_${KERNEL_PACKAGE_NAME}-image = "kernel-image"
 RPROVIDES_${KERNEL_PACKAGE_NAME}-base = "kernel-${KERNEL_VERSION}"
 RPROVIDES_${KERNEL_PACKAGE_NAME}-image = "kernel-image-${KERNEL_VERSION}"
 
-SRC_URI += "http://source.mynonpublic.com/dinobot/dinobot-linux-${PV}-${SRCDATE}.tar.gz \
+SRC_URI_u5pvr += "http://source.mynonpublic.com/dinobot/dinobot-linux-${PV}-${SRCDATE}.tar.gz \
     file://defconfig \
     file://sdio-platform.patch \
     file://accelmem.patch \
@@ -40,23 +38,7 @@ SRC_URI += "http://source.mynonpublic.com/dinobot/dinobot-linux-${PV}-${SRCDATE}
     file://0005-kallsyms-allow-bigger-ksym_name_len.patch \
 "
 
-SRC_URI_u52 = "http://source.mynonpublic.com/dinobot/dinobot-linux-${PV}-${SRCDATE}.tar.gz;name=new \
-    file://defconfig \
-    file://0002-log2-give-up-on-gcc-constant-optimizations.patch \
-    file://0003-uaccess-dont-mark-register-as-const.patch \
-    file://0004-makefile-disable-warnings.patch \
-    file://0005-kallsyms-allow-bigger-ksym_name_len.patch \
-"
-
-SRC_URI_u51 = "http://source.mynonpublic.com/dinobot/dinobot-linux-${PV}-${SRCDATE}.tar.gz;name=new \
-    file://defconfig \
-    file://0002-log2-give-up-on-gcc-constant-optimizations.patch \
-    file://0003-uaccess-dont-mark-register-as-const.patch \
-    file://0004-makefile-disable-warnings.patch \
-    file://0005-kallsyms-allow-bigger-ksym_name_len.patch \
-"
-
-SRC_URI_u5 = "http://source.mynonpublic.com/dinobot/dinobot-linux-${PV}-${SRCDATE}.tar.gz;name=new \
+SRC_URI = "http://source.mynonpublic.com/dinobot/dinobot-linux-${PV}-${SRCDATE}.tar.gz;name=new \
     file://defconfig \
     file://0002-log2-give-up-on-gcc-constant-optimizations.patch \
     file://0003-uaccess-dont-mark-register-as-const.patch \
