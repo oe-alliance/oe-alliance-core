@@ -1,11 +1,7 @@
 KV = "4.4.35"
-SRCDATE = "20180813"
+SRCDATE = "20180906"
 
-KOFILES = "kds mali_kbase hi_dbe hi_tuner hi_sci hi_pmoc tntfs"
+require dinobot-dvb-modules2.inc
 
-require dinobot-dvb-modules.inc
-
-SRC_URI[md5sum] = "50fadc7686d86edf7d107f35a8505fe6"
-SRC_URI[sha256sum] = "ddbcff503d80bf4811ac912ecd4e18f0c4976448c078800529f640287f885a93"
-
-
+SRC_URI[md5sum] = "ff80e7dc68b8c244bdfdeb05afb77315"
+SRC_URI[sha256sum] = "d74407bb3adf703b8173e4971e3d075ce865afba8abc8a70f2168dd7fb27a430"
