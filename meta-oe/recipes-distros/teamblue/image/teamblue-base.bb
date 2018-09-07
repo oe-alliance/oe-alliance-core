@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda
 ALLOW_EMPTY_${PN} = "1"
 
 PV = "${IMAGE_VERSION}"
-PR = "r1"
+PR = "r2"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
@@ -14,6 +14,10 @@ inherit packagegroup
 
 RDEPENDS_${PN} = "\
     ca-certificates \
+    ${@bb.utils.contains_any("FLASHSIZE", "64 96 128", "", \
+    " \
+    enigma2-plugin-skins-pli-hd \
+    ", d)} \
     oe-alliance-base \
     teamblue-enigma2 \
     teamblue-bootlogo \
