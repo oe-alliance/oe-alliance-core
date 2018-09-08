@@ -10,6 +10,9 @@ MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS += " \
     kernel-module-hci-uart \
     "
 
+# eMMC has 4 GB in total, but one image gets only 1 GB of that (Partitioned eMMC)
+FLASHSIZE = "1024"
+
 DVBMEDIASINK_CONFIG = "--with-wma --with-wmv --with-pcm --with-dts=no --with-dtsdownmix --with-eac3 --with-h265 --with-vb6 --with-vb8 --with-vb9 --with-spark"
 
 # We know about rtc
@@ -46,7 +49,7 @@ KERNEL_OUTPUT = "${KERNEL_IMAGETYPE}"
 KERNEL_CONSOLE = "ttyS0,115200n8"
 
 IMAGE_CLASSES += "osmio4k-emmcimg"
-IMAGE_ROOTFS_SIZE ?= "294912"
+IMAGE_ROOTFS_SIZE ?= "589824"
 IMAGE_FSTYPES ?= "emmcimg"
 
 IMAGE_CMD_emmcimg_append = "\
