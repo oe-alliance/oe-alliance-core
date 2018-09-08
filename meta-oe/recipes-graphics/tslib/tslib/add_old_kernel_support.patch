@@ -1,0 +1,30 @@
+commit e97a5081c62719563f8e098e4c3191384a18db65
+Author: Martin Kepplinger <martin.kepplinger@ginzinger.com>
+Date:   Mon Aug 27 09:05:07 2018 +0200
+
+    ts_setup: support old kernel headers for Linux
+    
+    just like in our linux-specific plugins/input_raw we need to include
+    potentially unavailable definitions for Linux' version of ts_setup().
+    
+    Fixes #136
+
+diff --git a/src/ts_setup.c b/src/ts_setup.c
+index 352cbc5..3610fcd 100644
+--- a/src/ts_setup.c
++++ b/src/ts_setup.c
+@@ -32,6 +32,14 @@
+ #define DEV_INPUT_EVENT "/dev/input"
+ #define EVENT_DEV_NAME "event"
+ 
++/* for old kernel headers */
++#ifndef INPUT_PROP_MAX
++# define INPUT_PROP_MAX			0x1f
++#endif
++#ifndef INPUT_PROP_DIRECT
++# define INPUT_PROP_DIRECT		0x01
++#endif
++
+ #define DIV_ROUND_UP(n, d) (((n) + (d) - 1) / (d))
+ #define BIT(nr)                 (1UL << (nr))
+ #define BIT_MASK(nr)            (1UL << ((nr) % BITS_PER_LONG))

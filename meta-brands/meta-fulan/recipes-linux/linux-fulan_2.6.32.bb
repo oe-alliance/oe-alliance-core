@@ -8,7 +8,7 @@ SRCDATE = "20160701"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-MACHINE_KERNEL_PR_append = ".8"
+MACHINE_KERNEL_PR_append = ".9"
 
 inherit kernel machine_kernel_pr
 
@@ -62,6 +62,7 @@ SRC_URI = "git://github.com/Duckbox-Developers/linux-sh4-2.6.32.71.git;protocol=
     file://defconfig \
     file://st-coprocessor.h \
     file://linux-net_stm24.patch;patch=1 \
+    file://taskstats.patch;patch=1 \
 "
 
 SRC_URI_append_spark7162 = " \
@@ -94,6 +95,8 @@ FILES_kernel-headers = "${exec_prefix}/src/linux*"
 FILES_${KERNEL_PACKAGE_NAME}-dev += "${includedir}/linux"
 FILES_${KERNEL_PACKAGE_NAME}-image = "/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}"
 
+KERNEL_CONFIG_COMMAND = "oe_runmake -C ${S} O=${B} oldconfig"
+
 do_configure_prepend() {
     oe_machinstall -m 0644 ${WORKDIR}/defconfig ${B}/.config
     sed -i "s#^\(CONFIG_EXTRA_FIRMWARE_DIR=\).*#\1\"${STAGING_DIR_HOST}/lib/firmware\"#" ${B}/.config;
@@ -113,7 +116,7 @@ do_shared_workdir_append() {
     fi
     if [ -f include/asm-sh/machtypes.h ]; then
         mkdir -p $kerneldir/include/asm-sh
-        ln -sf $kerneldir/include/asm-sh $kerneldir/include/asm
+        # ln -sf $kerneldir/include/asm-sh $kerneldir/include/asm
         cp -f include/asm-sh/machtypes.h $kerneldir/include/asm-sh
     fi
     if [ -e include/linux/utsrelease.h ]; then

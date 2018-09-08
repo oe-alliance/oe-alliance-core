@@ -9,13 +9,14 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 RCONFLICTS_${PN} = "lirc"
 RREPLACES_${PN} = "lirc"
 
-PR = "r7"
+PR = "r8"
 
 SRC_URI = "http://sourceforge.mirrorservice.org/l/li/lirc/LIRC/0.9.0/lirc-${PV}.tar.bz2 \
     file://lirc-0.9.0-neutrino-uinput-hack.diff;patch=1 \
     file://lirc-0.9.0-try_first_last_remote.diff;patch=1 \
     file://lirc-0.9.0-uinput-repeat-fix.diff;patch=1 \
     file://fix-libusb-config.patch;patch=1 \
+    file://fix_irrecord_deps.patch;patch=1 \
     file://lirc-0.9.0-repeat_and_delay_hack.patch \
     file://lirc-0.9.0-rename_input_device.patch \
     file://lircd.init \

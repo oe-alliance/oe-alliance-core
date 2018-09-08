@@ -1,0 +1,20 @@
+diff --git a/src/atomic64.c b/src/atomic64.c
+index f841b39b..35c7c9d8 100644
+--- a/src/atomic64.c
++++ b/src/atomic64.c
+@@ -18,10 +18,10 @@
+ #include <stdbool.h>
+ 
+ /*
+- * only need these on MIPS & PPC32, since it lacks hardware 64-bit atomics,
++ * only need these on MIPS & PPC32 & SH4, since it lacks hardware 64-bit atomics,
+  * unlike x86 and ARM.
+  */
+-#if defined(__mips__) || defined(__mipsel__) || defined(__powerpc__)
++#if defined(__mips__) || defined(__mipsel__) || defined(__powerpc__) || defined(__sh__)
+ 
+ static void __spin_lock(volatile int *lock) {
+   while (__sync_lock_test_and_set(lock, 1))
+-- 
+2.13.2
+
