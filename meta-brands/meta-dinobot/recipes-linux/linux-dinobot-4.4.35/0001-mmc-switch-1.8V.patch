@@ -1,0 +1,26 @@
+---
+ drivers/mmc/core/sd.c | 8 --------
+ 1 file changed, 8 deletions(-)
+
+diff --git a/drivers/mmc/core/sd.c b/drivers/mmc/core/sd.c
+index ee145d4..70bcff4 100644
+--- a/drivers/mmc/core/sd.c
++++ b/drivers/mmc/core/sd.c
+@@ -723,14 +723,6 @@ try_again:
+ 		ocr |= SD_OCR_CCS;
+ 
+ 	/*
+-	 * If the host supports one of UHS-I modes, request the card
+-	 * to switch to 1.8V signaling level. If the card has failed
+-	 * repeatedly to switch however, skip this.
+-	 */
+-	if (retries && mmc_host_uhs(host))
+-		ocr |= SD_OCR_S18R;
+-
+-	/*
+ 	 * If the host can supply more than 150mA at current voltage,
+ 	 * XPC should be set to 1.
+ 	 */
+-- 
+2.7.4
+

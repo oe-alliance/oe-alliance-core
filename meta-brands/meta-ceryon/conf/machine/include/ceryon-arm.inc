@@ -4,7 +4,7 @@ MACHINE_FEATURES += "qthbbtv qtstalker"
 DISTRO_FEATURES_remove = "directfb gtk-directfb"
 
 IMAGE_FSTYPES += "ceryonemmc"
-IMAGE_ROOTFS_SIZE ?= "294912"
+IMAGE_ROOTFS_SIZE ?= "589824"
 
 TARGET_ARCH = "arm"
 DEFAULTTUNE = "cortexa15hf-neon-vfpv4"
