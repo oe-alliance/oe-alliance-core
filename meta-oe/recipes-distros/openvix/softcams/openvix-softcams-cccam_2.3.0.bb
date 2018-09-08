@@ -4,6 +4,8 @@ require conf/license/license-close.inc
 
 PR = "r4"
 
+RDEPENDS_enigma2-plugin-softcams-cccam = "libxcrypt"
+
 PACKAGES = "enigma2-plugin-softcams-cccam"
 
 PROVIDES += "openvix-softcams-cccam"

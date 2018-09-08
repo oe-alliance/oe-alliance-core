@@ -2,7 +2,7 @@ SUMMARY = "scam ${PV} softcam"
 LICENSE = "CLOSED"
 require conf/license/license-close.inc
 
-RDEPENDS_enigma2-plugin-softcams-scam = "libcrypto-compat-0.9.7"
+RDEPENDS_enigma2-plugin-softcams-scam = "libcrypto-compat-0.9.7 libxcrypt"
 
 PR = "r2"
 
@@ -27,3 +27,4 @@ SRC_URI[sha256sum] = "c8d328d6f4623a70970902cc417416236cccb60dd5c0e5808ae43b77e9
 
 FILES_enigma2-plugin-softcams-scam = "/usr"
 
+INSANE_SKIP_enigma2-plugin-softcams-scam = "already-stripped"

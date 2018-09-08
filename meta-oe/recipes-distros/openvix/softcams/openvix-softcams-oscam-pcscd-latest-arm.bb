@@ -5,9 +5,14 @@ SUMMARY = "OScam ${PV} Open Source Softcam, with OMNIKEY support."
 LICENSE = "GPLv3"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 
+FILESEXTRAPATHS_prepend := "${THISDIR}/openvix-softcams-oscam:"
+
 PV = "1.20+svn${SRCPV}"
-SRCREV = "11420"
-SRC_URI = "svn://www.streamboard.tv/svn/oscam;protocol=http;module=trunk;scmdata=keep;rev=${SRCREV}"
+SRCREV = "11432"
+SRC_URI = "svn://www.streamboard.tv/svn/oscam;protocol=http;module=trunk;scmdata=keep;rev=${SRCREV} \
+            file://fix_glibc_major.patch \
+"
+
 PR = "r1"
 
 PACKAGES = "enigma2-plugin-softcams-oscam-pcscd-latest"
