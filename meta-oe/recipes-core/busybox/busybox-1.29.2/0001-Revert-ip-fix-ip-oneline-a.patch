@@ -1,0 +1,29 @@
+From 3ae7ac852e548ca9409962705cee021ddb4bf60d Mon Sep 17 00:00:00 2001
+From: Captain <captain.onboard@web.de>
+Date: Sun, 9 Sep 2018 00:07:15 +0200
+Subject: [PATCH] Revert "ip: fix "ip -oneline a""
+
+This reverts commit db169f253854db572c0c2b7e3d74ebbe6afdb97f.
+---
+ networking/libiproute/ipaddress.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
+
+diff --git a/networking/libiproute/ipaddress.c b/networking/libiproute/ipaddress.c
+index 9ec665b69..d7f888176 100644
+--- a/networking/libiproute/ipaddress.c
++++ b/networking/libiproute/ipaddress.c
+@@ -570,10 +570,7 @@ int FAST_FUNC ipaddr_list_or_flush(char **argv, int flush)
+ 	}
+ 
+ 	for (l = linfo; l; l = l->next) {
+-		if (no_link
+-		 || (oneline || print_linkinfo(&l->h) == 0)
+-		/* ^^^^^^^^^ "ip -oneline a" does not print link info */
+-		) {
++		if (no_link || print_linkinfo(&l->h) == 0) {
+ 			struct ifinfomsg *ifi = NLMSG_DATA(&l->h);
+ 			if (G_filter.family != AF_PACKET)
+ 				print_selected_addrinfo(ifi->ifi_index, ainfo);
+-- 
+2.18.0.windows.1
+
