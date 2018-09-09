@@ -20,21 +20,21 @@ ${@bb.utils.contains('MACHINE_FEATURES', 'colorlcd800', 'colorlcd800' , '', d)}\
 "
 
 # Connectors
-HAVE_HDMI = "${@bb.utils.contains('MACHINE_FEATURES', 'HDMI', 'true' , 'false', d)}"
-HAVE_YUV = "${@bb.utils.contains('MACHINE_FEATURES', 'YUV', 'true' , 'false', d)}"
-HAVE_RCA = "${@bb.utils.contains('MACHINE_FEATURES', 'RCA', 'true' , 'false', d)}"
-HAVE_AV_JACK = "${@bb.utils.contains('MACHINE_FEATURES', 'AV_JACK', 'true' , 'false', d)}"
-HAVE_SCART = "${@bb.utils.contains('MACHINE_FEATURES', 'SCART', 'true' , 'false', d)}"
-HAVE_SCART_YUV = "${@bb.utils.contains('MACHINE_FEATURES', 'SCART-YUV', 'true' , 'false', d)}"
-HAVE_DVI = "${@bb.utils.contains('MACHINE_FEATURES', 'DVI', 'true' , 'false', d)}"
+HAVE_HDMI = "${@bb.utils.contains('MACHINE_FEATURES', 'HDMI', 'True' , 'False', d)}"
+HAVE_YUV = "${@bb.utils.contains('MACHINE_FEATURES', 'YUV', 'True' , 'False', d)}"
+HAVE_RCA = "${@bb.utils.contains('MACHINE_FEATURES', 'RCA', 'True' , 'False', d)}"
+HAVE_AV_JACK = "${@bb.utils.contains('MACHINE_FEATURES', 'AV_JACK', 'True' , 'False', d)}"
+HAVE_SCART = "${@bb.utils.contains('MACHINE_FEATURES', 'SCART', 'True' , 'False', d)}"
+HAVE_SCART_YUV = "${@bb.utils.contains('MACHINE_FEATURES', 'SCART-YUV', 'True' , 'False', d)}"
+HAVE_DVI = "${@bb.utils.contains('MACHINE_FEATURES', 'DVI', 'True' , 'False', d)}"
 
 #Extra Features
-HAVE_MINITV = "${@bb.utils.contains('MACHINE_FEATURES', 'MINITV', 'true' , 'false', d)}"
-HAVE_HDMI_IN_HD = "${@bb.utils.contains('MACHINE_FEATURES', 'HDMI-IN-HD', 'true' , 'false', d)}"
-HAVE_HDMI_IN_FHD = "${@bb.utils.contains('MACHINE_FEATURES', 'HDMI-IN-FHD', 'true' , 'false', d)}"
-HAVE_WOL = "${@bb.utils.contains('MACHINE_FEATURES', 'WOL', 'true' , 'false', d)}"
-HAVE_WWOL = "${@bb.utils.contains('MACHINE_FEATURES', 'WWOL', 'true' , 'false', d)}"
-HAVE_CI = "${@bb.utils.contains('MACHINE_FEATURES', 'ci', 'true' , 'false', d)}"
+HAVE_MINITV = "${@bb.utils.contains('MACHINE_FEATURES', 'MINITV', 'True' , 'False', d)}"
+HAVE_HDMI_IN_HD = "${@bb.utils.contains('MACHINE_FEATURES', 'HDMI-IN-HD', 'True' , 'False', d)}"
+HAVE_HDMI_IN_FHD = "${@bb.utils.contains('MACHINE_FEATURES', 'HDMI-IN-FHD', 'True' , 'False', d)}"
+HAVE_WOL = "${@bb.utils.contains('MACHINE_FEATURES', 'WOL', 'True' , 'False', d)}"
+HAVE_WWOL = "${@bb.utils.contains('MACHINE_FEATURES', 'WWOL', 'True' , 'False', d)}"
+HAVE_CI = "${@bb.utils.contains('MACHINE_FEATURES', 'ci', 'True' , 'False', d)}"
 
 TRANSCODING = "\
 ${@bb.utils.contains('MACHINE_FEATURES', 'transcoding', 'transcoding' , '', d)}\
