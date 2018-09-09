@@ -7,7 +7,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PV = "1.0"
-PR = "r40"
+PR = "r41"
 
 inherit packagegroup
 
@@ -15,6 +15,7 @@ RRECOMMENDS_${PN} = "\
     oe-alliance-skins \
     enigma2-display-skins \
     openatv-picons-meta \
+    openatv-skinparts \
     enigma2-skins \
     enigma2-pliplugins \
     enigma2-plugin-extensions-project-valerie \
@@ -38,7 +39,6 @@ RRECOMMENDS_${PN} = "\
     enigma2-plugin-skincomponents-mediaportal-blue-line-skin \
     enigma2-plugin-skincomponents-mediaportal-atv-metrix-style \
     enigma2-plugin-skincomponents-mediaportal-smoke-hd-skin \
-    enigma2-plugin-skincomponents-skinparts \
     enigma2-plugin-skincomponents-skyrecorder-fhd-skin \
     enigma2-plugin-settings-defaultsat \
     enigma2-plugin-extensions-specialjump \
