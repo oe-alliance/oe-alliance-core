@@ -104,7 +104,7 @@ MACHINE_FEATURES += "videoenhancement switchoff  hdmicec 7segment textlcd skins1
 
 IMAGE_CLASSES  += "dinobot-emmc_image"
 IMAGE_FSTYPES += "dinobotemmc"
-IMAGE_ROOTFS_SIZE ?= "294912"
+IMAGE_ROOTFS_SIZE ?= "589824"
 
 TARGET_ARCH = "arm"
 DEFAULTTUNE = "cortexa15hf-neon-vfpv4"
