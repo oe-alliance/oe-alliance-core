@@ -452,7 +452,7 @@ GLIBC_EXTRA_OECONF = "--with-tls"
 DVBMEDIASINK_CONFIG = "--with-dags --with-pcm --with-eac3 --with-amr --with-wmv \
     ${@bb.utils.contains('MACHINE', 'dags73625', '--with-h265 --with-vb6 --with-vb8 --with-spark' , '', d)} \
     ${@bb.utils.contains('MACHINE', 'dags7252', '--with-h265 --with-vb6 --with-vb8 --with-vb9 --with-spark' , '', d)} \
-    ${@bb.utils.contains('MACHINE', 'dags72604', '--with-h265 --with-vb6 --with-vb8 --with-vb9 --with-spark' , '', d)} \
+    ${@bb.utils.contains('MACHINE', 'dags72604', '--with-h265 --with-vb9' , '', d)} \
 "
 
 PREFERRED_PROVIDER_virtual/kernel = "linux-dags"
