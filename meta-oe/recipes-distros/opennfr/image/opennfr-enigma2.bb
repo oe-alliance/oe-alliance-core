@@ -19,10 +19,10 @@ RDEPENDS_${PN} = "\
     enigma2-plugin-extensions-mediaplayer \
     enigma2-plugin-extensions-cutlisteditor \
     enigma2-plugin-extensions-menusort \
-    enigma2-plugin-extensions-customsubservices \
     enigma2-plugin-extensions-infopanel \
     enigma2-plugin-extensions-nfr4xboot \
     enigma2-plugin-extensions-imdb \
+    enigma2-plugin-extensions-customsubservices \    
     \
     enigma2-plugin-systemplugins-fastscan \
     enigma2-plugin-systemplugins-softwaremanager \
@@ -34,11 +34,13 @@ RDEPENDS_${PN} = "\
     ${@bb.utils.contains("MACHINE_FEATURES", "nextv-hbbtv-browser", " enigma2-plugin-extensions-hbbtv-nextv", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "osdanimation", "enigma2-plugin-systemplugins-animationsetup" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "webkithbbtv", "enigma2-plugin-extensions-webkithbbtv", "", d)} \
-    ${@bb.utils.contains("MACHINE_FEATURES", "chromiumos", "enigma2-plugin-extensions-chromium", "", d)} \        
+    ${@bb.utils.contains("MACHINE_FEATURES", "chromiumos", "enigma2-plugin-extensions-chromium", "", d)} \ 
     ${@bb.utils.contains("MACHINE_FEATURES", "quadpip", "enigma2-plugin-extensions-quadpip", "", d)} \
     \
+    enigma2-plugin-opennfrskins-smokedefault-hd \
     enigma2-plugin-opennfrskins-utopia-hd \
     opennfr-base-files \
+	nfr4xmultiboot \
     \
     ${@bb.utils.contains("MACHINE_FEATURES", "boxmodel", "boxmodel" , "", d)} \
 "
