@@ -13,7 +13,7 @@ MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS += " \
 # eMMC has 4 GB in total, but one image gets only 1 GB of that (Partitioned eMMC)
 FLASHSIZE = "1024"
 
-DVBMEDIASINK_CONFIG = "--with-wma --with-wmv --with-pcm --with-dts=no --with-dtsdownmix --with-eac3 --with-h265 --with-vb6 --with-vb8 --with-vb9 --with-spark"
+DVBMEDIASINK_CONFIG = "--with-wma --with-wmv --with-pcm --with-dts=no --with-dtsdownmix --with-eac3 --with-h265 --with-vb9"
 
 # We know about rtc
 include conf/machine/include/build-extras.inc
