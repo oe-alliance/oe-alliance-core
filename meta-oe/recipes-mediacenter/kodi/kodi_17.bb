@@ -13,7 +13,7 @@ DEPENDS = " \
     nasm-native \
     swig-native \
     unzip-native \
-    yasm-native \
+    nasm-native \
     zip-native \
     avahi \
     boost \

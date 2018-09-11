@@ -18,7 +18,7 @@ DEPENDS = " \
             jsonschemabuilder-native \
             nasm-native \
             swig-native \
-            yasm-native \
+            nasm-native \
             zip-native \
             avahi \
             boost \
