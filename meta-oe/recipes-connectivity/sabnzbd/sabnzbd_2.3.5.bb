@@ -10,14 +10,14 @@ RDEPENDS_${PN} = "\
     "
 RRECOMMENDS_${PN} = "par2cmdline unrar"
 
-SRC_URI = "http://github.com/sabnzbd/sabnzbd/archive/${PV}.tar.gz \
+SRC_URI = "http://github.com/sabnzbd/sabnzbd/archive/2.3.5.tar.gz \
     file://sabnzbd \
     file://sabnzbd.conf \
     file://init-functions \
     "
 
-SRC_URI[md5sum] = "4001fabd4eccc6782620d1148ffaec7b"
-SRC_URI[sha256sum] = "fa6ee0dba3d4402906b7cc5881745931a1848c6be9317a4eea151bdfad608bbe"
+SRC_URI[md5sum] = "3f4de3cc1d9cd566d050221b7548d18e"
+SRC_URI[sha256sum] = "96dd1c7694b59f37d379150a6b652dc3fd58e2e487a92ece009e292db3c07e64"
 
 S = "${WORKDIR}/sabnzbd-${PV}"
 
