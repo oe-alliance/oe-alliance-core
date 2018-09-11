@@ -39,7 +39,7 @@ EXTRA_OECONF += " \
     --disable-openjpeg \
     "
 
-TARGET_CFLAGS_append = " -Wno-error=maybe-uninitialized -Wno-error=redundant-decls"
+TARGET_CFLAGS_append = " -Wno-error=maybe-uninitialized -Wno-error=redundant-decls -Wno-error=deprecated-declarations"
 
 do_configure_prepend() {
 	cd ${S}
