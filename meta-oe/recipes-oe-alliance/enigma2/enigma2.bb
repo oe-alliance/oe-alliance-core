@@ -8,7 +8,7 @@ DEPENDS = " \
     gettext-native \
     ${@bb.utils.contains("GST_VERSION", "1.0", "gstreamer1.0-plugins-base gstreamer1.0", "gst-plugins-base gstreamer", d)} \
     jpeg \
-    libdreamdvd libdvbsi++ libfribidi libmad libpng giflib libxml2 libxmlccwrap libsigc++-2.0 \
+    libdreamdvd libdvbsi++ fribidi libmad libpng giflib libxml2 libxmlccwrap libsigc++-2.0 \
     openssl avahi libudfread \
     python python-imaging python-twisted python-wifi \
     swig-native \
@@ -373,3 +373,5 @@ python populate_packages_prepend() {
     enigma2_podir = bb.data.expand('${datadir}/enigma2/po', d)
     do_split_packages(d, enigma2_podir, '^(\w+)/[a-zA-Z0-9_/]+.*$', 'enigma2-locale-%s', '%s', recursive=True, match_path=True, prepend=True, extra_depends="enigma2")
 }
+
+PACKAGES_DYNAMIC = "enigma2-plugin-* enigma2-locale-*"

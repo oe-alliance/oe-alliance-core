@@ -1,10 +1,12 @@
---- a/mesonbuild/environment.py	2018-08-29 06:54:59.024048679 +0200
-+++ b/mesonbuild/environment.py	2018-08-29 06:55:13.335537274 +0200
-@@ -86,6 +86,7 @@
-     'ppc64le',
+diff --git a/mesonbuild/environment.py b/mesonbuild/environment.py
+index 44e3fb0..c6cb760 100644
+--- a/mesonbuild/environment.py
++++ b/mesonbuild/environment.py
+@@ -88,6 +88,7 @@ known_cpu_families = (
      'riscv32',
      'riscv64',
+     's390x',
 +    'sh4',
+     'sparc',
      'sparc64',
      'x86',
-     'x86_64'
