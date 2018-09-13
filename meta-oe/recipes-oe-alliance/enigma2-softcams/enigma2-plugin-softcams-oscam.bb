@@ -57,3 +57,5 @@ do_install() {
     install -d ${D}/usr/bin
     install -m 0755 ${B}/oscam ${D}/usr/bin
 }
+
+INSANE_SKIP_${PN} = "already-stripped"

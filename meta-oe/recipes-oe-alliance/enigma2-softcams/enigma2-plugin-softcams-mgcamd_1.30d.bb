@@ -1,7 +1,8 @@
 SUMMARY = "mgcamd ${PV} softcam"
 CAMNAME = "mgcamd"
 
-RDEPENDS_${PN} = "libcrypto-compat-0.9.7"
+DEPENDS = "libcrypto-compat-0.9.7 libxcrypt zlib"
+RDEPENDS_${PN} = "libcrypto-compat-0.9.7 libxcrypt zlib"
 
 PR = "r0"
 
@@ -47,3 +48,5 @@ SRC_URI[sha256sum] = "5c55dd75aa5bdc254f12d55f73db48b1b855b02a89d13e905eee3f8529
 
 SRC_URI[conf.md5sum] = "823254ebbdb6c73057cbb985be2dd3a2"
 SRC_URI[conf.sha256sum] = "c955648c69f2c89369b8de7be6c47f225e814649e7d516adb42a58b12209eefa"
+
+INSANE_SKIP_${PN} = "already-stripped"
