@@ -30,6 +30,7 @@ IMAGE_CMD_alien5sdimg_append = " \
     "
 
 require conf/machine/box-hardware.inc
+require conf/machine/multilib.inc
 
 BBMASK += "meta-vuplus/recipes-graphics/"
 BBMASK += "meta-fulan/recipes-graphics/"
