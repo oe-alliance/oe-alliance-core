@@ -24,6 +24,7 @@ IMAGEDIR = "${MACHINE}"
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "\
     edision-dvb-modules-${MACHINE} \
+    resizerootfs \
     "
 
 DVBPROVIDER = "kernel"
@@ -49,7 +50,6 @@ KERNEL_OUTPUT = "${KERNEL_IMAGETYPE}"
 KERNEL_CONSOLE = "ttyS0,115200n8"
 
 IMAGE_CLASSES += "osmio4k-emmcimg"
-IMAGE_ROOTFS_SIZE ?= "589824"
 IMAGE_FSTYPES ?= "emmcimg"
 
 IMAGE_CMD_emmcimg_append = "\
