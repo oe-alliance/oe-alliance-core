@@ -2,6 +2,9 @@ SUMMARY = "CCcam ${PV} softcam"
 
 PR = "r0"
 
+DEPENDS = "libxcrypt"
+RDEPENDS_${PN} = "libxcrypt"
+
 SRC_URI = "http://downloads.pli-images.org/softcams/CCcam-${PV}.zip \
     file://CCcam.xml"
 
@@ -15,8 +18,6 @@ INHIBIT_PACKAGE_STRIP = "1"
 
 CONFFILES = "/etc/CCcam.cfg /etc/ppanels/CCcam.xml"
 
-deltask do_configure do_compile
-
 do_install() {
     install -d ${D}/usr/bin
     install -m 0755 ${S}/CCcam.${TARGET_ARCH} ${D}/usr/bin/${CAMNAME}
@@ -29,4 +30,4 @@ do_install() {
 SRC_URI[md5sum] = "2f76eacbd286255a505dbc983df9cb6c"
 SRC_URI[sha256sum] = "3c46de7a17357ebcde8ff31276ede67d0e05358b2eaf3b206d3e0242176f1de6"
 
-addtask do_install after do_fetch before do_package
+INSANE_SKIP_${PN} = "already-stripped"

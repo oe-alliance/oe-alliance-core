@@ -26,7 +26,7 @@ CAMSTOP  ?= "exec start-stop-daemon -K -R 2 -x /usr/bin/${CAMNAME}"
 
 # Generate a simplistic standard init script
 # (sorry for the sleep 1, but start-stop-daemon -R does not work as advertised)
-do_compile_append () {
+do_install_prepend () {
     if [ ! -f init.${CAMNAME} ]
     then
         cat > init.${CAMNAME} << EOF
@@ -64,11 +64,12 @@ EOF
 # Install routine, should be ok for most cams.
 do_install_append () {
     install -d ${D}/etc/init.d
-    install -m 755 ${S}/init.${CAMNAME} ${D}/etc/init.d/softcam.${CAMNAME}
+    install -m 755 ${B}/init.${CAMNAME} ${D}/etc/init.d/softcam.${CAMNAME}
 }
 
 # If no cam selected yet, install and start this cam (and don't start it on the build host).
 pkg_postinst_${PN}_append () {
+    set +e
     if [ ! -e "${CAMLINK}" ] || [ "/etc/init.d/softcam.None" == "`readlink -f ${CAMLINK}`" ]
     then
         rm -f "${CAMLINK}"

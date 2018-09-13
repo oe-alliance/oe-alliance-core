@@ -2,6 +2,9 @@ SUMMARY = "newcs ${PV} cardserver"
 
 PR = "r0"
 
+DEPENDS = "libxcrypt"
+RDEPENDS_${PN} = "libcrypto-compat-0.9.7 libxcrypt"
+
 SRC_URI = "http://downloads.pli-images.org/softcams/newcs-${PV}.zip\
     http://downloads.pli-images.org/softcams/newcs.xml;name=xml"
 
@@ -30,3 +33,5 @@ SRC_URI[sha256sum] = "db4d4f24479c5429e363c359baac1111d673b93f8971056bb4c5243fbb
 
 SRC_URI[xml.md5sum] = "08539a72f32816a0b69d5c39611d734e"
 SRC_URI[xml.sha256sum] = "8b699264bb94dc2f2b640dd30c37aa2cbaf969b04774ec4df606af99bb56fa90"
+
+INSANE_SKIP_${PN} = "already-stripped"

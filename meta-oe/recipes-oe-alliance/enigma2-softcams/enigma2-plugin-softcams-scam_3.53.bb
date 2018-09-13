@@ -1,5 +1,7 @@
 CAMNAME = "scam"
 SUMMARY = "${CAMNAME} ${PV} softcam"
+
+DEPENDS = "libxcrypt"
 RDEPENDS_${PN} = "libcrypto-compat-0.9.7"
 
 PR = "r0"
@@ -23,3 +25,5 @@ do_install() {
 
 SRC_URI[md5sum] = "89086f28a5b048512b76c8c24af4f77a"
 SRC_URI[sha256sum] = "6e24a46a9c5a34037c036901271cc2a6ce7d29c49f4e120ad6dbd96b8097bff8"
+
+INSANE_SKIP_${PN} = "already-stripped"

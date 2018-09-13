@@ -1,6 +1,9 @@
 CAMNAME = "evocamd"
 SUMMARY = "evocamd ${PV} softcam"
 
+DEPENDS = "libcrypto-compat-0.9.7 zlib"
+RDEPENDS_${PN} = "libcrypto-compat-0.9.7 zlib"
+
 PR = "r0"
 
 SRC_URI = "http://downloads.pli-images.org/softcams/evocamd-${PV}.zip"
@@ -28,3 +31,5 @@ FILES_${PN} += "/usr/keys"
 
 SRC_URI[md5sum] = "74972fae77137f91b014b9cf4b8da137"
 SRC_URI[sha256sum] = "cc4b190afc8ecbb4664cf297c6298638e28c55e92b381e631dc3729c45bdada6"
+
+INSANE_SKIP_${PN} = "already-stripped"
