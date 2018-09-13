@@ -53,6 +53,7 @@ IMAGE_CMD_sdcard_append  = " \
 "
 
 require conf/machine/box-hardware.inc
+require conf/machine/multilib.inc
 
 # Add "MACHINEBUILD" override for recipes
 MACHINEOVERRIDES =. "${@['', '${MACHINEBUILD}:']['${MACHINEBUILD}' != '']}"
