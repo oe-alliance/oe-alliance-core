@@ -6,7 +6,7 @@ require conf/license/license-close.inc
 PACKAGE_ARCH = "${MACHINEBUILD}"
 
 PV = "1.0"
-PR = "r0"
+PR = "r1"
 
 S = "${WORKDIR}"
 
@@ -21,7 +21,7 @@ do_install() {
     echo 'touch /dev/dbox/lcd0' >> ${WORKDIR}/ddbootup
     echo 'echo "${MACHINEBUILD}" > /proc/stb/info/gbmodel' >> ${WORKDIR}/ddbootup
     install -m 0755 ${WORKDIR}/ddbootup ${D}${sysconfdir}/init.d
-    ln -sf ../init.d/ddbootup ${D}${sysconfdir}/rcS.d/S39ddbootup
+    ${@bb.utils.contains("MACHINE", "gb7252", "ln -sf ../init.d/ddbootup ${D}${sysconfdir}/rcS.d/S66ddbootup" , "ln -sf ../init.d/ddbootup ${D}${sysconfdir}/rcS.d/S39ddbootup", d)}
 }
 
 FILES_${PN} += "${sysconfdir}"

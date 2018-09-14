@@ -1,39 +1,54 @@
 #!/bin/sh
+### BEGIN INIT INFO
+# Provides:             gbplattform
+# Required-Start:       $volatile
+# Required-Stop:      $volatile
+# Default-Start:        S
+# Default-Stop:        0 6
+# Short-Description:  Start nxServer
+### END INIT INFO
 
 if [ -e /sys/class/net/sys0 ]; then
   ifconfig sys0 up
 fi
 
 if [ -d /home/root/platform ]; then
+  echo -n "Updating gigablue-platform-util..."
   if [ -d /usr/share/platform ]; then
     rm -rf /usr/share/platform
   fi
   mv -f /home/root/platform /usr/share/
   chmod +x /usr/share/platform/*
+  mv -f /usr/share/platform/*.so /usr/lib
+  mv -f /usr/share/platform/config /usr/bin
   sync
+  echo -n "gigablue-platform-util updated!"
 fi
 
 case "$1" in
   start)
     # first boot?
     [ -f /etc/dropbear/dropbear_rsa_host_key ]
-    echo -n "Starting  gigablue-platform-util"
-    if [ ! -e /dev/brcm0 ]; then
-	DRV_PATH=/lib/modules/3.14.28-1.12/extra
-
-	mknod -m a=rw /dev/brcm0 c 30 0
-
-	export PATH=.:$PATH
-	export B_REFSW_BOXMODE=5
-	cd /usr/share/platform
-	nexus dvb_init &
-    fi 
+    echo -n "Starting gigablue-platform-util..."
+    if [ ! -e /dev/bcm_enc0 ]; then
+      export PATH=.:$PATH
+      export B_REFSW_BOXMODE=5
+      insmod /usr/share/platform/nexus.ko
+      cd /usr/share/platform/
+      usleep 1000
+      ./nxserver -maxDataRate 108 -remux -fbsize 1920,1080  &
+      while [ ! -e /tmp/nxserver_is_running ]; do
+        usleep 1000
+      done
+      insmod /usr/share/platform/dvb.ko
+      ./dvb_init.bin &
+    fi
 
     while [ ! -e /proc/stb/info/chipset ]; do
-        usleep 100000
+      usleep 1000
     done
 
-    echo "."
+    echo -n "gigablue-platform-util is started"
     ;;
   stop)
     ;;

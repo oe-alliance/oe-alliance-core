@@ -180,6 +180,7 @@ MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS = " \
     kernel-module-autofs4 \
     ${@bb.utils.contains('MACHINEBUILD', 'gbquad', 'kernel-module-smsc75xx' , '', d)} \
     ${@bb.utils.contains('MACHINE_FEATURES', 'swap', 'gigablue-swapcreate', '',d)} \
+    ${@bb.utils.contains('MACHINE_FEATURES', 'qtegls', 'gb-qteglfs-platform', '',d)} \
     "
 
 MACHINE_EXTRA_RRECOMMENDS = " \
@@ -206,6 +207,10 @@ include conf/machine/include/autoload-filesystems.inc
 PREFERRED_PROVIDER_virtual/transtreamproxy = "gb-transtreamproxy"
 
 PREFERRED_PROVIDER_virtual/kernel = "linux-gigablue"
+PREFERRED_PROVIDER_virtual/egl = "gb-v3ddriver-${MACHINE}"
+PREFERRED_PROVIDER_virtual/libgles2 = "gb-v3ddriver-${MACHINE}"
+PREFERRED_PROVIDER_virtual/kodi = "stb-kodi-${MACHINE}"
+
 
 KERNEL_OUTPUT = "${KERNEL_IMAGETYPE}"
 KERNEL_CONSOLE = "ttyS0,115200n8"
