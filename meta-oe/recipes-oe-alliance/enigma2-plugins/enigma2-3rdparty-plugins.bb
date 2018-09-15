@@ -39,7 +39,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-cyrussettings_1.0.0_all.ipk \
     enigma2-plugin-extensions-digitalfernsehen_1.2rc1_all.ipk \
     enigma2-plugin-extensions-dvrproviderplayer_2.06_all.ipk \
-    enigma2-plugin-extensions-e2m3u2bouquet_0.7.5_all.ipk \
+    enigma2-plugin-extensions-e2m3u2bouquet_0.7.6_all.ipk \
     enigma2-plugin-extensions-ehue_0.2-r0_all.ipk \
     enigma2-plugin-extensions-filesearchfs_3.0_all.ipk \
     enigma2-plugin-extensions-focusonline_1.1rc4_all.ipk \
