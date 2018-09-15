@@ -4,6 +4,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 require conf/license/license-gplv2.inc
 
 RRECOMMENDS_${PN} = "\
+    ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "enigma2-locale-de enigma2-locale-en", " \
     enigma2-locale-ar \
     enigma2-locale-bg \
     enigma2-locale-ca \
@@ -45,7 +46,7 @@ RRECOMMENDS_${PN} = "\
     enigma2-locale-tr \
     enigma2-locale-uk \
     enigma2-locale-zh \
-    "
+    ", d)}"
 
 PR = "r0"
 
