@@ -13,11 +13,6 @@ SRC_URI = " \
 
 S="${WORKDIR}/gb-bluetooth-util-${MACHINE}"
 
-do_install() {
-	install -d ${D}/usr/local/bin
-	install -m 0755 ${S}/* ${D}/usr/local/bin
-}
-
 do_package_qa() {
 }
 
