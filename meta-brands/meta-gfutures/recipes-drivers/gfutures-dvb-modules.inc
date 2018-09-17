@@ -28,3 +28,11 @@ do_install() {
 }
 
 FILES_${PN} += "${sysconfdir}/modules-load.d/_${MACHINE_DRIVER}.conf /lib/modules/${KV}/extra"
+
+pkg_prerm_${PN}() {
+	if [ "x$D" == "x" ]; then
+		if [ -f /lib/modules/${KV}/extra/hi_play.ko ] ; then
+			rm -f /lib/modules/${KV}/extra/hi_play.ko;
+		fi
+	fi
+}

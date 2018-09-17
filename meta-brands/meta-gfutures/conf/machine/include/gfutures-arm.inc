@@ -9,6 +9,9 @@ IMAGE_ROOTFS_SIZE ?= "589824"
 TARGET_ARCH = "arm"
 DEFAULTTUNE = "cortexa15hf-neon-vfpv4"
 
+PREFERRED_PROVIDER_virtual/egl = "hd-v3ddriver-${MACHINE}" 
+PREFERRED_PROVIDER_virtual/libgles2 = "hd-v3ddriver-${MACHINE}"
+
 PREFERRED_VERSION_linux-gfutures = "4.10.12"
 
 IMAGE_CMD_hdemmc_append = "\

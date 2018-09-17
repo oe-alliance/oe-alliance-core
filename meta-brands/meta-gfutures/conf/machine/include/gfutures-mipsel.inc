@@ -10,6 +10,9 @@ KERNEL_CONSOLE = "ttyS0,115200n8"
 TARGET_ARCH = "mipsel"
 DEFAULTTUNE = "mips32el"
 
+PREFERRED_PROVIDER_virtual/egl = "hd-v3ddriver-${MACHINE}" 
+PREFERRED_PROVIDER_virtual/libgles2 = "hd-v3ddriver-${MACHINE}"
+
 PREFERRED_VERSION_linux-gfutures = "4.10.12"
 
 IMAGE_FSTYPES ?= "ubi"
