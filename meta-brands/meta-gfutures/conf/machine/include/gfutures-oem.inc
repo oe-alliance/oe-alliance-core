@@ -13,6 +13,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'mutant1200', 'HD1200' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'vizyonvita', 'Vita' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'mutant11', 'HD11' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'mutant51', 'HD51' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mutant60', 'HD60' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'ax51', 'HD51' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'bre2ze4k', 'BRE2ZE 4K' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'axultra', 'HD51 ultra' , '', d)}\
@@ -30,6 +31,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'mutant1200', 'Mut@nt' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'vizyonvita', 'Vizyon' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'mutant11', 'Mut@nt' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'mutant51', 'Mut@nt' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mutant60', 'Mut@nt' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'ax51', 'AX 4K' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'bre2ze4k', 'WWIO' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'axultra', 'AX 4K' , '', d)}\
@@ -47,6 +49,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'mutant1200', 'hd1200' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'vizyonvita', 'hd1100' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'mutant11', 'hd11' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'mutant51', 'hd51' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mutant60', 'hd60' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'ax51', 'hd51' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'bre2ze4k', 'bre2ze4k' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'axultra', 'axultra' , '', d)}\
@@ -64,6 +67,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'mutant1200', 'hd1200' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'vizyonvita', 'hd1100' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'mutant11', 'hd11' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'mutant51', 'hd51' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mutant60', 'hd60' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'ax51', 'hd51' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'bre2ze4k', 'bre2ze4k' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'axultra', 'axultra' , '', d)}\
@@ -73,6 +77,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'vimastec1500', 'vs1500' , '', d)}\
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "\
     gfutures-dvb-modules-${MACHINE_DRIVER} \
+    ${@bb.utils.contains('MACHINE_FEATURES', 'hisil', 'gfutures-libs-${MACHINE} gfutures-partitions-${MACHINE} gfutures-bootargs-${MACHINE}' , '', d)} \
     "
 
 DVBPROVIDER = "kernel"
@@ -82,11 +87,12 @@ MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS = "\
     kernel-module-cdfs \
     ${@bb.utils.contains('MACHINE_FEATURES', 'qtegls', 'hd-qteglfs-platform', '',d)} \
     ${@bb.utils.contains('MACHINE_FEATURES', 'swap', 'hd-swapcreate', '',d)} \
+    ${@bb.utils.contains('MACHINE_FEATURES', 'mali', 'gfutures-mali-${MACHINE} kernel-module-mali-${MACHINE}' , '', d)} \
     "
 
 MACHINE_EXTRA_RRECOMMENDS = " \
     gstreamer1.0-plugin-dvbmediasink \
-    gstreamer1.0-libav \
+    ${@bb.utils.contains('MACHINE', 'hisil', 'ffmpeg' , 'gstreamer1.0-libav ', d)} \
     "
 
 include conf/machine/include/autoload-filesystems.inc
@@ -101,11 +107,10 @@ DVBMEDIASINK_CONFIG = "--with-wma --with-wmv --with-pcm --with-dts --with-eac3 \
     ${@bb.utils.contains('MACHINE', 'hd51', '--with-h265 --with-vb6 --with-vb8 --with-vb9 --with-spark' , '', d)} \
     ${@bb.utils.contains('MACHINE', 'vs1500', '--with-h265 --with-vb6 --with-vb8 --with-vb9 --with-spark' , '', d)} \
     ${@bb.utils.contains('MACHINE', 'vs1000', '--with-h265 --with-vb6 --with-vb8  --with-spark' , '', d)} \
+    ${@bb.utils.contains('MACHINE', 'hd50', '--with-h265 --with-vb6 --with-vb8 --with-vb9 --with-spark' , '', d)} \
 "
 
 PREFERRED_PROVIDER_virtual/kernel = "linux-gfutures"
-PREFERRED_PROVIDER_virtual/egl = "hd-v3ddriver-${MACHINE}" 
-PREFERRED_PROVIDER_virtual/libgles2 = "hd-v3ddriver-${MACHINE}"
 PREFERRED_PROVIDER_virtual/kodi = "stb-kodi-${MACHINE}"
 
 MACHINE_FEATURES += "3dtv alsa hdmicec switchoff blindscan-tbs HDMI"
