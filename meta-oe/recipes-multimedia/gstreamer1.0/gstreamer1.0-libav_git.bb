@@ -24,16 +24,16 @@ SRC_URI = " \
     file://0001-configure-check-for-armv7ve-variant.patch \
  "
 
-GST_VERSION_FULL ="1.14.2"
+GST_VERSION_FULL ="1.14.3"
 inherit gitpkgv
 PV = "${GST_VERSION_FULL}+git${SRCPV}"
 PKGV = "${GST_VERSION_FULL}+git${GITPKGV}"
 
 UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>(\d+(\.\d+)+))"
 
-SRCREV_base = "ff3a8f6627811c95c51acf7a07c62b78bb02d0a0"
+SRCREV_base = "5e4f6cadb06deec16e30de14f66f1ba5e9dc7e99"
 SRCREV_common = "46d420818ed8172022caf4503894076b18b1e153"
-SRCREV_ffmpeg = "fab3418cb9e4661405e669b07498fdfdded39ce3"
+SRCREV_ffmpeg = "2be51cbeea352ea5fdfd3a4751f1960ba522174d"
 SRCREV_FORMAT = "base"
 
 LIBAV_INCLUDED_EXLUCED = "--disable-everything \
