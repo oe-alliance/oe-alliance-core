@@ -9,7 +9,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 PACKAGES = "${PN}"
 
 PV = "${IMAGE_VERSION}"
-PR = "r4"
+PR = "r5"
 
 inherit packagegroup
 
@@ -20,6 +20,7 @@ RRECOMMENDS_${PN} = "\
     enigma2-pliplugins \
     enigma2-plugin-extensions-blurayplayer \
     enigma2-plugin-extensions-epgimport \
+    enigma2-plugin-extensions-enhancedmoviecenter \
     enigma2-plugin-systemplugins-crossepg \
     enigma2-skins \
     enigma2-skins-openvix \
