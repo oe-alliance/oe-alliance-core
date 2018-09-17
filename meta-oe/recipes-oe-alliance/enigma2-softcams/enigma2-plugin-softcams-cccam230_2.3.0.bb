@@ -1,5 +1,7 @@
 SUMMARY = "CCcam ${PV} softcam"
 
+FILESEXTRAPATHS_prepend := "${THISDIR}/enigma2-plugin-softcams-cccam:"
+
 PR = "r0"
 
 DEPENDS = "libxcrypt"

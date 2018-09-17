@@ -9,6 +9,7 @@ DEPENDS = "\
     enigma2-plugin-softcams-cccam \
     enigma2-plugin-softcams-cccam209 \
     enigma2-plugin-softcams-cccam221 \
+    enigma2-plugin-softcams-cccam230 \
     enigma2-plugin-softcams-mgcamd \
     enigma2-plugin-softcams-evocamd \
     enigma2-plugin-softcams-newcs \
