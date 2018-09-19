@@ -2,7 +2,6 @@ SUMMARY = "Compatibility for packages that link to libcrypto or libssl 0.9.7"
 
 require conf/license/license-gplv2.inc
 
-inherit allarch
 RDEPENDS_${PN} = "libcrypto libssl"
 PV = "1.0"
 
@@ -10,12 +9,12 @@ RREPLACES_${PN} = "libcrypto-compat"
 RCONFLICTS_${PN} = "libcrypto-compat"
 
 do_install () {
-    install -d ${D}/usr/lib
-    ln -sf libcrypto.so.1.0.2 ${D}/usr/lib/libcrypto.so.0.9.7
-    ln -sf libssl.so.1.0.2 ${D}/usr/lib/libssl.so.0.9.7
+    install -d ${D}${libdir}
+    ln -sf libcrypto.so.1.0.2 ${D}${libdir}/libcrypto.so.0.9.7
+    ln -sf libssl.so.1.0.2 ${D}${libdir}/libssl.so.0.9.7
 }
 
-FILES_${PN} = "/usr/lib"
+FILES_${PN} = "${libdir}"
 
 # Set these explicitly
 #
