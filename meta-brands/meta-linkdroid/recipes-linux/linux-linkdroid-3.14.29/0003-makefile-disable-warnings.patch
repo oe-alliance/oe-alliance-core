@@ -1,0 +1,26 @@
+From 8b5d478acb6cbc1beae8507a8b9d1a586edaedfa Mon Sep 17 00:00:00 2001
+From: Nicker <nickersk@gmail.com>
+Date: Mon, 6 Aug 2018 11:38:20 +0200
+Subject: [PATCH] makefile disable warnings
+
+
+diff --git a/Makefile b/Makefile
+index 7a0b85fb..40d99dd0 100644
+--- a/Makefile
++++ b/Makefile
+@@ -637,6 +637,12 @@ KBUILD_CFLAGS += $(stackp-flag)
+ # Use make W=1 to enable this warning (see scripts/Makefile.build)
+ KBUILD_CFLAGS += $(call cc-disable-warning, unused-but-set-variable)
+ 
++KBUILD_CFLAGS += $(call cc-disable-warning, attribute-alias)
++KBUILD_CFLAGS += $(call cc-disable-warning, packed-not-aligned)
++KBUILD_CFLAGS += $(call cc-disable-warning, stringop-truncation)
++KBUILD_CFLAGS += $(call cc-disable-warning, stringop-truncation=)
++KBUILD_CFLAGS += $(call cc-disable-warning, format-truncation)
++
+ ifdef CONFIG_FRAME_POINTER
+ KBUILD_CFLAGS	+= -fno-omit-frame-pointer -fno-optimize-sibling-calls
+ else
+-- 
+2.17.1
+
