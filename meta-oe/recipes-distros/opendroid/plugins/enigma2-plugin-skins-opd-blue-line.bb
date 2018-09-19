@@ -8,9 +8,9 @@ SRCREV = "${AUTOREV}"
 PV = "1.4+git${SRCPV}"
 PKGV = "1.4+git${GITPKGV}"
 VER="1.4"
-PR = "r2"
+PR = "r3"
 
-SRC_URI="git://github.com/stein17/OPD-Blue-Line.git;protocol=git"
+SRC_URI="git://github.com/opendroid-Team/OPD-Blue-Line.git;protocol=git"
 FILES_${PN} = "/usr/*"
 
 S = "${WORKDIR}/git"

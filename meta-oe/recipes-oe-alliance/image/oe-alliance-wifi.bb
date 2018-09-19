@@ -34,7 +34,7 @@ RDEPENDS_${PN} = "\
     ${@bb.utils.contains("MACHINE_BRAND", "Vu+", "enigma2-plugin-drivers-network-usb-rtl8192cu", "", d)} \
     ${@bb.utils.contains("MACHINE_BRAND", "GigaBlue", "enigma2-plugin-drivers-network-usb-rtl8192cu-rev2", "", d)} \
     ${@bb.utils.contains("MACHINE_BRAND", "GigaBlue", "enigma2-plugin-drivers-network-usb-rtl8192eu", "", d)} \
-    ${@bb.utils.contains("MACHINE_BRAND", "GigaBlue", "enigma2-plugin-drivers-network-usb-rtl8812au", "", d)} \
+    ${@bb.utils.contains("MACHINE_BRAND", "GigaBlue", "enigma2-plugin-drivers-network-usb-rtl8812au enigma2-plugin-drivers-network-usb-rtl8822bu", "", d)} \
     ${@bb.utils.contains("BRAND_OEM", "ini", "enigma2-plugin-drivers-network-usb-rtl8192cu", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "wifi61", "rt61", "", d)} \
     ${@bb.utils.contains("DISTRO_FEATURES", "wifi-extra", "${OPTIONAL_WIFIDRIVERS}", "", d)} \
