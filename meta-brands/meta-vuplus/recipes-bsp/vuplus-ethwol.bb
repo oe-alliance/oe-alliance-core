@@ -21,7 +21,9 @@ do_install() {
 
 pkg_preinst_${PN}_prepend() {
 #!/bin/sh
-chmod -x /etc/init.d/ethwol
+if [ -z "$D" ]; then
+	chmod -x /etc/init.d/ethwol
+fi
 }
 
 pkg_postinst_${PN}_append() {
