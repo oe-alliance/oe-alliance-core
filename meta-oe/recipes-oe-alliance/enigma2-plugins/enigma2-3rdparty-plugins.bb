@@ -11,7 +11,7 @@ DEPENDS = "tslib mpfr gmp"
 SRCREV = "${AUTOREV}"
 PV = "${IMAGE_VERSION}+gitr${SRCPV}"
 PKGV = "${IMAGE_VERSION}+gitr${GITPKGV}"
-PR = "r174"
+PR = "r175"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -29,7 +29,7 @@ S = "${WORKDIR}/git"
 
 THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-atmolightd_0.7-pre22_all.ipk \
-    enigma2-plugin-extensions-bluray_1.6rc1_all.ipk \
+    enigma2-plugin-extensions-bluray_2.0rc1_all.ipk \
     enigma2-plugin-extensions-boblight-enigma2_0.8r8_mips32el.ipk \
     enigma2-plugin-extensions-camofs_9.19_all.ipk \
     enigma2-plugin-extensions-chefkoch_1.5rc5_all.ipk \
@@ -101,7 +101,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-wikipedia_2.3rc3_all.ipk \
     enigma2-plugin-extensions-wwech_1.03_all.ipk \
     enigma2-plugin-extensions-xbmcwetter_1.4rc1_all.ipk \
-    enigma2-plugin-extensions-zdfnewmediathek_2.1rc14_all.ipk \
+    enigma2-plugin-extensions-zdfnewmediathek_2.1rc15_all.ipk \
     enigma2-plugin-systemplugins-bouquetsprotection_0.2-rc1_all.ipk \
     enigma2-plugin-systemplugins-channelselectionnavigator_1.5_mipsel.ipk \
     enigma2-plugin-systemplugins-extnumberzap_1.20_all.ipk \
