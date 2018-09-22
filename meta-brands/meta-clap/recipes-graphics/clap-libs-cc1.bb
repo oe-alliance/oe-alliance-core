@@ -1,6 +1,6 @@
-SRCDATE = "20180910"
+SRCDATE = "20180922"
 
 require clap-libs.inc
 
-SRC_URI[md5sum] = "318f6d353f55131ba8bbadf4d25a0c70"
-SRC_URI[sha256sum] = "062a8447ae0df19e738f75746bce5aa2d90ace8a28aee1444b77478025c006fe"
+SRC_URI[md5sum] = "4b3043db34a932f36b348660fabfef7a"
+SRC_URI[sha256sum] = "768babaf1ac0ab91e16e575c420a7a101b7b3056162fd1ecdfa43b382a475a7c"
