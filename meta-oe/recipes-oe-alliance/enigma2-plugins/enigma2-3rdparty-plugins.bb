@@ -11,7 +11,7 @@ DEPENDS = "tslib mpfr gmp"
 SRCREV = "${AUTOREV}"
 PV = "${IMAGE_VERSION}+gitr${SRCPV}"
 PKGV = "${IMAGE_VERSION}+gitr${GITPKGV}"
-PR = "r176"
+PR = "r177"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -146,10 +146,10 @@ THIRDPARTY_MACHINE_PLUGINS_vusolose = " \
     "
 THIRDPARTY_MACHINE_PLUGINS_vuzero = " \
     enigma2-plugin-extensions-sdg-imagedownloader-v0.7-oe-2.0-vu-all.ipk \
-	enigma2-plugin-extensions-stalkerclient_0.3-20180810.r1_vuzero.ipk \
+    enigma2-plugin-extensions-stalkerclient_0.3-20180810.r1_vuzero.ipk \
     "
 THIRDPARTY_MACHINE_PLUGINS_vuzero4k = " \
-	enigma2-plugin-extensions-stalkerclient_0.3-20180727.r1_vuzero4k.ipk \
+    enigma2-plugin-extensions-stalkerclient_0.3-20180727.r1_vuzero4k.ipk \
     "	
 
 THIRDPARTY_MACHINE_PLUGINS_et8000 = " \
