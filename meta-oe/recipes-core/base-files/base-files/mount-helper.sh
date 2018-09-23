@@ -47,6 +47,19 @@ case $ACTION in
 			# Already mounted
 			exit 0
 		fi
+		if [ -e /proc/stb/info/boxtype ]; then
+			stbcheck=`cat /proc/stb/info/boxtype`
+			# detected multiboot sdcard
+			if [ $stbcheck == "sf8008" ] || [ $stbcheck == "cc1" ] ; then
+				DEVCHECK=`expr substr $MDEV 1 3`
+				if [ "${DEVCHECK}" == "sda" ] ; then
+					DEVSIZE=`cat /sys/block/sda/sda1/size`
+					if [ $DEVSIZE == "16384" ] ; then
+						BLACKLISTED=`echo ${BLACKLISTED} sda`
+					fi
+				fi
+			fi
+		fi
 		DEVCHECK=`expr substr $MDEV 1 7`
 		DEVCHECK2=`expr substr $MDEV 1 3`
 		# blacklisted devices
