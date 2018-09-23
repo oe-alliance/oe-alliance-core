@@ -11,7 +11,7 @@ DEPENDS = "tslib mpfr gmp"
 SRCREV = "${AUTOREV}"
 PV = "${IMAGE_VERSION}+gitr${SRCPV}"
 PKGV = "${IMAGE_VERSION}+gitr${GITPKGV}"
-PR = "r179"
+PR = "r180"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -33,7 +33,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-boblight-enigma2_0.8r8_mips32el.ipk \
     enigma2-plugin-extensions-camofs_9.19_all.ipk \
     enigma2-plugin-extensions-chefkoch_1.5rc5_all.ipk \
-    enigma2-plugin-extensions-clevertanken_0.8rc1_all.ipk \
+    enigma2-plugin-extensions-clevertanken_0.8rc2_all.ipk \
     enigma2-plugin-extensions-csfd_11-55-20160929_all.ipk \
     enigma2-plugin-extensions-customsubservices_0.1.2_all.ipk \
     enigma2-plugin-extensions-cyrussettings_1.0.0_all.ipk \
@@ -93,7 +93,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-tsmedia_13.0_all.ipk \
     enigma2-plugin-extensions-tstube_1.2_all.ipk \
     enigma2-plugin-extensions-tvspielfilm_6.6rc4_all.ipk \
-    enigma2-plugin-extensions-verkehrsinfo_1.2rc2_all.ipk \
+    enigma2-plugin-extensions-verkehrsinfo_1.2rc3_all.ipk \
     enigma2-plugin-extensions-vcs_2.7_all.ipk \
     enigma2-plugin-extensions-vhannibalautosettings_1.1_mips32el.ipk \
     enigma2-plugin-extensions-vuplusforum_0.8rc2_all.ipk \
