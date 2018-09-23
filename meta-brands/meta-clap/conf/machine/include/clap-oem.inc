@@ -23,7 +23,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'clap4k', 'mmcblk0p13' , '', d)}\
 
 KERNEL_FILE = "kernel.bin"
 ROOTFS_FILE = "rootfs.tar.bz2"
-MTD_BLACK  = "sda"
+MTD_BLACK  = "mmcblk0"
 
 #ver for qtplugins -clap = clap
 VER = "-clap"
