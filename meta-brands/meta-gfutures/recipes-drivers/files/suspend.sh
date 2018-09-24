@@ -1,6 +1,6 @@
 #!/bin/sh
 
-if [ "x" == "stopx" ]
+if [ "$1x" == "stopx" ]
 then
 	exit 0
 fi
