@@ -30,10 +30,10 @@ do_install() {
 
 do_install_append() {
 	install -d ${D}${sysconfdir}/modules-load.d
-	echo mali > ${D}${sysconfdir}/modules-load.d/_mali.conf
+	echo mali > ${D}${sysconfdir}/modules-load.d/mali.conf
 }
 
-FILES_${PN} += "${sysconfdir}/modules-load.d/_mali.conf"
+FILES_${PN} += "${sysconfdir}/modules-load.d/mali.conf"
 
 python() {
 	platform = d.getVar('MALI_DRIVER_PLATFORM', True)
