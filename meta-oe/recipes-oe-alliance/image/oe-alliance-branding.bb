@@ -91,6 +91,8 @@ do_configure_prepend() {
         DRIVERSDATE=`grep "SRCDATE = " ${OEA-META-ODIN-BASE}/recipes-drivers/odin-dvb-modules-${MACHINE_DRIVER}.bb | cut -b 12-19`
     elif [ "${BRAND_OEM}" = "octagon" ]; then
         DRIVERSDATE=`grep "SRCDATE = " ${OEA-META-OCTAGON-BASE}/recipes-drivers/octagon-dvb-modules-${MACHINE}.bb | cut -b 12-19`
+    elif [ "${BRAND_OEM}" = "uclan" ]; then
+        DRIVERSDATE=`grep "SRCDATE = " ${OEA-META-UCLAN-BASE}/recipes-drivers/uclan-dvb-modules-${MACHINE}.bb | cut -b 12-19`
     elif [ "${BRAND_OEM}" = "ini" ]; then
         DRIVERSDATE=`grep "SRCDATE = " ${OEA-META-INI-BASE}/recipes-drivers/ini-dvb-modules-${MACHINE_DRIVER}.bb | cut -b 12-19`
     elif [ "${BRAND_OEM}" = "xp" ]; then
