@@ -1,6 +1,6 @@
-SRCDATE = "20180923"
+SRCDATE = "20180927"
 
 require uclan-libs.inc
 
-SRC_URI[md5sum] = "8056ea8d4fd4f32ccaec0333a9492a0a"
-SRC_URI[sha256sum] = "4823b2d3b9738cdd212af7ff4cb74cc3d6755bab2152f80cedee1f640803f39a"
+SRC_URI[md5sum] = "dc849fc7152e17910cd59975d0d8b736"
+SRC_URI[sha256sum] = "2639fc72f4048e273b12fc0d5665a64772baa36ef384c547f368812f52d10c2b"
