@@ -18,7 +18,6 @@ RRECOMMENDS_${PN} = " \
     openspa-version-info \
     ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "", "enigma2-plugin-drivers-usbserial", d)} \
     enigma2-plugin-extensions-autotimer \
-    enigma2-plugin-extensions-epgsearch \
     enigma2-plugin-extensions-spateam \
     enigma2-plugin-systemplugins-videotune \
     ${@bb.utils.contains("MACHINE_FEATURES", "videoenhancement", "", "enigma2-plugin-systemplugins-videoenhancement", d)} \

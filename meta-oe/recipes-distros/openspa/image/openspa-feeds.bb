@@ -13,6 +13,7 @@ inherit packagegroup
 
 RRECOMMENDS_${PN} = "\
     openspa-skins \
+    openspa-display-skins \
     enigma2-skins \
     enigma2-plugin-extensions-epgimport \
     enigma2-plugin-systemplugins-crossepg \
