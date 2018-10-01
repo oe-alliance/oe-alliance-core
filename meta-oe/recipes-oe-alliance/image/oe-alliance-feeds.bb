@@ -9,7 +9,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "${IMAGE_VERSION}"
-PR = "r3"
+PR = "r4"
 
 DEPENDS = "enigma2-plugin-drivers-usbserial enigma2-plugin-systemplugins-hrtunerproxy"
 RECOMMENDS = "enigma2-plugin-extensions-et-livestream"
@@ -40,6 +40,7 @@ RDEPENDS_${PN} = " \
     enigma2-plugin-extensions-autobouquets \
     enigma2-plugin-extensions-e2iplayer \
     enigma2-plugin-extensions-e2iplayer-deps \
+    enigma2-plugin-extensions-e2m3u2bouquet \
     enigma2-plugin-systemplugins-hrtunerproxy \
     oe-alliance-branding-remote \
     ${@bb.utils.contains("GST_VERSION", "1.0", "eplayer5", "eplayer4", d)} \
