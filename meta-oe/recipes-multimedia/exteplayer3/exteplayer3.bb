@@ -4,15 +4,15 @@ SECTION = "multimedia"
 LICENSE = "GPL-2.0"
 LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/GPL-2.0;md5=801f80980d171dd6425610833a22dbe6"
 
-DEPENDS = "ffmpeg"
-RDEPENDS_${PN} = "ffmpeg"
+DEPENDS = "ffmpeg libbluray"
+RDEPENDS_${PN} = "ffmpeg libbluray"
 
 inherit gitpkgv upx-compress
 
 PV = "49+gitr${SRCPV}"
 PKGV = "49+gitr${GITPKGV}"
 
-PR = "r0"
+PR = "r1"
 
 SRCREV = "${AUTOREV}"
 SRC_URI = "git://github.com/samsamsam-iptvplayer/exteplayer3.git;branch=master"
