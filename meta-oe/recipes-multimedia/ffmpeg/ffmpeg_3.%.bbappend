@@ -1,3 +1,5 @@
+PR .= ".1"
+
 RSUGGESTS_${PN} = ""
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
