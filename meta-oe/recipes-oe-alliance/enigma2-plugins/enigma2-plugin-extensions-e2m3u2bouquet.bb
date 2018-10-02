@@ -6,7 +6,6 @@ SECTION = "extra"
 PRIORITY = "optional"
 LICENSE = "GPLv2"
 require conf/license/license-gplv2.inc
-PACKAGE_ARCH = "all"
 
 inherit gitpkgv
 
@@ -26,7 +25,6 @@ FILES_${PN} = "/usr/lib/enigma2/python/Plugins/Extensions/E2m3u2bouquet"
 D_FILES_PN = "${D}${FILES_${PN}}"
 
 EXTRA_OECONF = ""
-
 
 do_install() {
     install -d ${D_FILES_PN}
