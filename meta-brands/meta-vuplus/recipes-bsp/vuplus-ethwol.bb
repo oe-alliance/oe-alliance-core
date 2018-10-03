@@ -26,7 +26,7 @@ if [ -z "$D" ]; then
 fi
 }
 
-pkg_postinst_${PN}_append() {
+pkg_postinst_ontarget_${PN}_append() {
 #!/bin/sh
 chmod 755 /etc/init.d/ethwol
 }
