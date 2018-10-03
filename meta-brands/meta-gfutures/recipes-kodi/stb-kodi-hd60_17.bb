@@ -13,5 +13,4 @@ RDEPENDS_${PN} += "gfutures-mali-${MACHINE}"
 EXTRA_OECONF += " \
     --with-platform=mali-cortexa15 \
     --with-ffmpeg=stb \
-    --with-gpu=mali \
 "
