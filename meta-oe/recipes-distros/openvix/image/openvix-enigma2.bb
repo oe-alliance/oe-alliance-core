@@ -8,7 +8,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "${IMAGE_VERSION}"
-PR = "r19"
+PR = "r20"
 
 inherit packagegroup
 
@@ -41,6 +41,7 @@ RRECOMMENDS_${PN}_append_formuler4turbo = " enigma2-plugin-systemplugins-vfdcont
 RRECOMMENDS_${PN}_append_osmini = " enigma2-plugin-systemplugins-vfdcontrol"
 RRECOMMENDS_${PN}_append_osnino = " enigma2-plugin-systemplugins-vfdcontrol"
 RRECOMMENDS_${PN}_append_osninoplus = " enigma2-plugin-systemplugins-vfdcontrol"
+RRECOMMENDS_${PN}_append_sf8008 = " enigma2-plugin-systemplugins-vfdcontrol"
 RRECOMMENDS_${PN}_append_tmnanoseplus = " enigma2-plugin-systemplugins-tempfancontrol"
 RRECOMMENDS_${PN}_append_tmnanosem2 = " enigma2-plugin-systemplugins-tempfancontrol"
 RRECOMMENDS_${PN}_append_tmnanosem2plus = " enigma2-plugin-systemplugins-tempfancontrol"
