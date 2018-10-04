@@ -2,13 +2,13 @@ require recipes-mediacenter/kodi/stb-kodi_${PV}.bb
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
 
-SRCDATE = "20180718"
+SRCDATE = "20180808"
 
 SRC_URI_remove = "file://e2player.patch \
            file://add-gstplayer-support.patch \
 "
 
-SRC_URI_append = "http://source.mynonpublic.com/clap/hiplayer_gcc8_${SRCDATE}.tar.gz \
+SRC_URI_append = "http://source.mynonpublic.com/octagon/hiplayer_gcc8_${SRCDATE}.tar.gz \
     file://hiplayer.patch \
 "
 
