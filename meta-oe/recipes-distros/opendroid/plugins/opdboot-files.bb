@@ -3,7 +3,7 @@ LICENSE = "GPL2"
 require conf/license/license-gplv2.inc
 PACKAGE_ARCH := "${MACHINE_ARCH}"
 
-PR = "r0"
+PR = "r1"
 
 SRCREV = "${AUTOREV}"
 
