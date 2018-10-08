@@ -10,6 +10,7 @@ SRCREV = "${AUTOREV}"
 PV = "1+git${SRCPV}"
 PKGV = "1+git${GITPKGV}"
 BRANCH = "master"
+PR = "r1"
 
 SRC_URI = "git://github.com/Taapat/enigma2-plugin-blurayplayer.git;branch=${BRANCH}"
 
@@ -18,5 +19,6 @@ S = "${WORKDIR}/git"
 inherit distutils-openplugins
 
 DEPENDS = "python libbluray libudfread"
+RDEPENDS_${PN} = "libbluray"
 
 FILES_${PN}-dbg += "/usr/lib/enigma2/python/Plugins/Extensions/BlurayPlayer/.debug"
