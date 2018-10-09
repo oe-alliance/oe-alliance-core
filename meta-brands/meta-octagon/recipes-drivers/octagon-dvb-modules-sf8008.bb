@@ -1,5 +1,5 @@
 KV = "4.4.35"
-SRCDATE = "20181006"
+SRCDATE = "20181009"
 
 require octagon-dvb-modules-hisi.inc
 
