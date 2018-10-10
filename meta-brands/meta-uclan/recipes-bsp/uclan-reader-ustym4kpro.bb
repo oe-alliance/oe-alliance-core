@@ -8,12 +8,12 @@ RDEPENDS_${PN} = "libsdl"
 
 COMPATIBLE_MACHINE = "^(ustym4kpro)$"
 
-SRCDATE = "20180927"
+SRCDATE = "20181010"
 
 PV = "${SRCDATE}"
 PR = "r0"
 
-SRC_URI = "http://source.mynonpublic.com/uclan/${MACHINE}-libreader-${SRCDATE}.tar.gz"
+SRC_URI = "http://source.mynonpublic.com/uclan/${MACHINE}-libreader-${SRCDATE}.zip"
 
 S = "${WORKDIR}"
 
@@ -27,5 +27,5 @@ do_package_qa() {
 
 FILES_${PN}  = "${bindir}/libreader"
 
-SRC_URI[md5sum] = "d0d4afc6745939b7183faa69b6a97a9c"
-SRC_URI[sha256sum] = "3a17917ed045bf0fc5b9003e849ad38e288c5de8f3232db49f3ae256b9d7c65a"
+SRC_URI[md5sum] = "34bda384b7aeb84a7dc0d6d7f97e4d24"
+SRC_URI[sha256sum] = "9a9df9dfc9bc2b434e0865fb8936c8b9bbc832dffacf0e044c9839bc898f0a50"
