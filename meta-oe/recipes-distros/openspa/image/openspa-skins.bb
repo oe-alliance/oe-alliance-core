@@ -15,4 +15,5 @@ DEPENDS = "enigma2"
 
 RDEPENDS_${PN} = "\
 	enigma2-plugin-skins-spa24hd \
+	enigma2-plugin-skins-metrix-spa \
 	"
