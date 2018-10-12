@@ -7,14 +7,18 @@ require conf/license/license-close.inc
 PACKAGE_ARCH = "${MACHINEBUILD}"
 
 SRCDATE = "20180808"
+SRCDATE_openspa = "20181001"
 KV = "4.2.1"
 PV = "${KV}+${SRCDATE}"
 PR = "r0"
 
 SRC_URI[md5sum] = "e7ba43bf9147a4aed5cf5628c10db5c3"
 SRC_URI[sha256sum] = "0e86c66a838b6592c024ec5662e76d77a1ba54315936fe8412852efee8ed0713"
+SRC_URI[openspa.md5sum] = "834f6e6a7ba01edd596cd07db7ca154b"
+SRC_URI[openspa.sha256sum] = "8d04837bc5f9b0366c4bd20c6fde9c0abee380d68d33033c01311d05faabde38"
 
 SRC_URI = "http://en3homeftp.net/release/images/oedrivers/bcmlinuxdvb_73625-${KV}-${SRCDATE}.tar.gz"
+SRC_URI_openspa = "https://openspa.webhop.info/drivers/qviart/openspa_bcmlinuxdvb_73625-${KV}-${SRCDATE_openspa}.tar.gz;name=openspa"
 
 S = "${WORKDIR}"
 

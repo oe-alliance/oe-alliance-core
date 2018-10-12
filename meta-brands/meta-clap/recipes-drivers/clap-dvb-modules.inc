@@ -8,7 +8,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 PV = "${KV}+${SRCDATE}"
 PR = "r1"
 
-SRC_URI = "http://source.mynonpublic.com/clap/${MACHINE}-hiko-${SRCDATE}.tar.gz \
+SRC_URI = "http://source.mynonpublic.com/clap/${MACHINE}-hiko-${SRCDATE}.zip \
     file://modules \
 "
 
