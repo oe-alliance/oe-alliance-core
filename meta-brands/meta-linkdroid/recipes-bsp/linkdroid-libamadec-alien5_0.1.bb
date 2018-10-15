@@ -13,8 +13,8 @@ RDEPENDS_${PN} = "ffmpeg linkdroid-libamavutils-${MACHINE}"
 
 inherit lib_package
 
-SRC_URI[md5sum] = "03bb75fb253bc59dc28aeeda1485d079"
-SRC_URI[sha256sum] = "2530e6b44bc328502a709d0f9d69af98eb85827687a9a473bc4dc7e56b3a1992"
+SRC_URI[md5sum] = "8ea5a7f870c67170b120e2d5c7e485da"
+SRC_URI[sha256sum] = "76120ee5c9ec5b71b1bc5dd3335402586fcb34d9b4ad89acdbb10c4228b4e5a3"
 
 SRC_URI = "http://source.mynonpublic.com/linkdroid/${BPN}-${SRCDATE}.zip"
 
