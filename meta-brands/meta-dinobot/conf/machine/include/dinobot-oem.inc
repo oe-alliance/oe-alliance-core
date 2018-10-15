@@ -122,7 +122,7 @@ PREFERRED_PROVIDER_virtual/egl = "dinobot-opengl-${MACHINE}"
 PREFERRED_PROVIDER_virtual/libgles1 = "dinobot-opengl-${MACHINE}"
 PREFERRED_PROVIDER_virtual/libgles2 = "dinobot-opengl-${MACHINE}"
 PREFERRED_PROVIDER_virtual/kodi = "stb-kodi-${MACHINE}"
-PREFERRED_PROVIDER_virtual/blindscan-dvbs = "dinobot-blindscan"
+PREFERRED_PROVIDER_virtual/blindscan-dvbs = "dinobot-blindscan-${MACHINE}"
 
 require conf/machine/include/tune-cortexa15.inc
 
