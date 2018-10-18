@@ -11,7 +11,7 @@ DEPENDS = "tslib mpfr gmp"
 SRCREV = "${AUTOREV}"
 PV = "3.4+gitr${SRCPV}"
 PKGV = "3.4+gitr${GITPKGV}"
-PR = "r24"
+PR = "r25"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
