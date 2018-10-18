@@ -22,6 +22,7 @@ SOURCE_FILES =+ "src/curl.c"
 SOURCE_FILES =+ "src/hls.c"
 SOURCE_FILES =+ "src/misc.c"
 SOURCE_FILES =+ "src/msg.c"
+SOURCE_FILES =+ "src/mpegts.c"
 
 do_compile() {
     ${CC} ${SOURCE_FILES} -D_FILE_OFFSET_BITS=64 -D_LARGEFILE64_SOURCE -D_LARGEFILE_SOURCE -D_GNU_SOURCE=1 -DWITH_FFMPEG -Wall -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations -Wshadow -Wpointer-arith -Wcast-qual -Wsign-compare -DPREFIX="/usr" -std=gnu99 -I${S}/src -I${D}/${libdir} -I${D}/${includedir} -lrt -lpthread -lz -lssl -lcrypto -lcurl -lavcodec -lavformat -lavutil -o hlsdl ${LDFLAGS}
