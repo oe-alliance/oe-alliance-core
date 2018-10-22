@@ -64,4 +64,5 @@ RDEPENDS_${PN} = "\
 
 RDEPENDS_${PN}_remove_odroidc2 = "enigma2-plugin-drivers-network-usb-rtl8192cu"
 RDEPENDS_${PN}_remove_odroidc2 = "enigma2-plugin-drivers-network-usb-rtl8192cu-rev2"
+RDEPENDS_${PN}_remove_cube = "enigma2-plugin-drivers-network-usb-rtl8812au"
 
