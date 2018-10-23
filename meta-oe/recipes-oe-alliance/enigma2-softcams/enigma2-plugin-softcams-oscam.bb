@@ -10,9 +10,9 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 FILESEXTRAPATHS_prepend := "${THISDIR}/enigma2-plugin-softcams-oscam:"
 
 BRANCH = "master"
-SRCREV = "ef02a34c30b27e5b7c9fa703c3e1ff9b23dde85c"
-PV = "svn11432"
-PKGV = "svn11432"
+SRCREV = "9f0716eca5400b9c3b3daa1c059ae3a014038cd6"
+PV = "svn11437"
+PKGV = "svn11437"
 SRC_URI = "git://git.cuci.nl/oscam;protocol=git;branch=${BRANCH};tag=${SRCREV} \
             file://fix_glibc_major.patch \
 "
