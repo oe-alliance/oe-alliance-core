@@ -29,6 +29,8 @@ ${@bb.utils.contains('MACHINEBUILD', 'zgemmah52splus', 'H5.2S PLUS' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah2splus', 'H.2S PLUS' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah9s', 'H9S' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah9t', 'H9T' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'zgemmah92s', 'H92S' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'zgemmah92h', 'H92H' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah9splus', 'H9S PLUS' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmai55plus', 'I55 Plus' , '', d)}\
 "
@@ -59,6 +61,8 @@ ${@bb.utils.contains('MACHINEBUILD', 'zgemmah52splus', 'Zgemma' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah2splus', 'Zgemma' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah9s', 'Zgemma' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah9t', 'Zgemma' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'zgemmah92s', 'Zgemma' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'zgemmah92h', 'Zgemma' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah9splus', 'Zgemma' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmai55plus', 'Zgemma' , '', d)}\
 "
@@ -89,6 +93,8 @@ ${@bb.utils.contains('MACHINEBUILD', 'zgemmah52splus', 'zgemma/h5' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah2splus', 'zgemma/h3' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah9s', 'h9' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah9t', 'h9' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'zgemmah92s', 'h9' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'zgemmah92h', 'h9' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah9splus', 'h9' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmai55plus', 'i55plus' , '', d)}\
 "
@@ -119,6 +125,8 @@ ${@bb.utils.contains('MACHINEBUILD', 'zgemmah52splus', 'h5' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah2splus', 'h3' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah9s', 'h9' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah9t', 'h9' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'zgemmah92s', 'h9' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'zgemmah92h', 'h9' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah9splus', 'h9' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmai55plus', 'i55plus' , '', d)}\
 "
