@@ -1,0 +1,23 @@
+--- a/os_dep/linux/os_intfs.c	2018-10-23 21:11:56.009471377 +0200
++++ b/os_dep/linux/os_intfs.c	2018-10-23 21:12:40.189684185 +0200
+@@ -1190,7 +1190,11 @@
+ 	return dscp >> 5;
+ }
+ 
+-
++#if (LINUX_VERSION_CODE>=KERNEL_VERSION(4,19,0))
++static u16 rtw_select_queue(struct net_device *dev, struct sk_buff *skb,
++				struct net_device *sb_dev,
++				select_queue_fallback_t fallback
++#else
+ static u16 rtw_select_queue(struct net_device *dev, struct sk_buff *skb
+ #if LINUX_VERSION_CODE >= KERNEL_VERSION(3, 13, 0)
+ 	, void *accel_priv
+@@ -1198,6 +1202,7 @@
+ 	, select_queue_fallback_t fallback
+ 	#endif
+ #endif
++#endif
+ )
+ {
+ 	_adapter	*padapter = rtw_netdev_priv(dev);
