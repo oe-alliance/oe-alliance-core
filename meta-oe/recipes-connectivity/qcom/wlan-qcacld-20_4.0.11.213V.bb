@@ -9,6 +9,7 @@ COMPATIBLE_MACHINE = "^(osmio4k)$"
 
 SRC_URI = "${CAF_MIRROR}/qcacld-2.0/snapshot/qcacld-2.0-${PV}.tar.gz \
     file://qcacld-2.0-add-4.18-support.patch \
+    file://qcacld-2.0-add-4.19-support.patch \
 "
 
 S = "${WORKDIR}/qcacld-2.0-${PV}"
