@@ -45,6 +45,8 @@ PREFERRED_PROVIDER_virtual/kernel = "linux-edision"
 PREFERRED_PROVIDER_virtual/blindscan-dvbs = "edision-blindscan-utils-${MACHINE}"
 PREFERRED_PROVIDER_virtual/blindscan-dvbc = "edision-blindscan-utils-${MACHINE}"
 
+GCCVERSION = "8.%"
+
 KERNEL_IMAGETYPE = "Image.gz"
 KERNEL_OUTPUT = "${KERNEL_IMAGETYPE}"
 KERNEL_CONSOLE = "ttyS0,115200n8"
