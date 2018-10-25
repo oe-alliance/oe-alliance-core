@@ -5,7 +5,7 @@ KV = "3.13.5"
 
 inherit kernel machine_kernel_pr
 
-MACHINE_KERNEL_PR_append = "oea4.1-r1"
+MACHINE_KERNEL_PR_append = "oea4.1-r2"
 
 SRCREV = ""
 
@@ -43,6 +43,13 @@ SRC_URI = "http://archive.vuplus.com/download/kernel/stblinux-${KV}.tar.bz2 \
     file://kernel-add-support-for-gcc6.patch \
     file://genksyms_fix_typeof_handling.patch \
     file://kernel-add-support-for-gcc7.patch \
+    file://test.patch \
+    file://0001-tuners-tda18273-silicon-tuner-driver.patch \
+    file://T220-kern-13.patch \
+    file://01-10-si2157-Silicon-Labs-Si2157-silicon-tuner-driver.patch \
+    file://02-10-si2168-Silicon-Labs-Si2168-DVB-T-T2-C-demod-driver.patch \
+    file://CONFIG_DVB_SP2.patch \
+    file://dvbsky.patch \
     "
 
 SRC_URI_append_vuduo2 = "file://brcm_s3_wol.patch;patch=1;pnum=1 "
