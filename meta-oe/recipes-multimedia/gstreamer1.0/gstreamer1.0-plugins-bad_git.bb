@@ -46,6 +46,3 @@ do_configure_prepend() {
 	./autogen.sh --noconfigure
 	cd ${B}
 }
-
-do_package_qa() {
-}
