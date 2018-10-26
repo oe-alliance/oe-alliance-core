@@ -9,7 +9,7 @@ SRC_URI[sha256sum] = "2a6843b68142835e81f6e73f4b9e0c3bb1c11e59029a866ab5691c95c6
 
 inherit kernel machine_kernel_pr
 
-MACHINE_KERNEL_PR_append = ".1"
+MACHINE_KERNEL_PR_append = ".2"
 DEPENDS = "xz-native bc-native u-boot-mkimage-native virtual/${TARGET_PREFIX}gcc"
 
 # Avoid issues with Amlogic kernel binary components
@@ -51,9 +51,12 @@ do_compile_prepend () {
     fi
 }
 
+do_compile_append () {
+    cp ${STAGING_KERNEL_DIR}/arch/arm/boot/dts/amlogic/${KERNEL_DEVICETREE} ${B}/arch/arm/boot/
+}
+
 # Put debugging files into dbg package
 FILES_kernel-dbg += "/usr/src/kernel/drivers/amlogic/input/touchscreen/gslx680/.debug"
-
 
 do_install_append () {
     ln -s ${STAGING_KERNEL_DIR}/arch/arm/mach-meson6 ${STAGING_KERNEL_DIR}/include/mach
