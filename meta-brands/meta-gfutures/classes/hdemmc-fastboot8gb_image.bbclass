@@ -17,9 +17,9 @@ IMAGE_CMD_hdfastboot8gb () {
     echo "bootcmd=mmc read 0 0x1000000 0x53D000 0x8000; bootm 0x1000000 bootargs=console=ttyAMA0,115200 root=/dev/mmcblk0p21 rootfstype=ext4" > ${WORKDIR}/STARTUP
     echo "bootcmd=mmc read 0 0x3F000000 0x70000 0x4000; bootm 0x3F000000; mmc read 0 0x1FFBFC0 0x52000 0xC800; bootargs=androidboot.selinux=enforcing androidboot.serialno=0123456789 console=ttyAMA0,115200" > ${WORKDIR}/STARTUP_1
     echo "bootcmd=mmc read 0 0x1000000 0x53D000 0x8000; bootm 0x1000000 bootargs=console=ttyAMA0,115200 root=/dev/mmcblk0p21 rootfstype=ext4" > ${WORKDIR}/STARTUP_2
-    mcopy -i ${WORKDIR}/boot.img -v ${WORKDIR}/STARTUP ::
-    mcopy -i ${WORKDIR}/boot.img -v ${WORKDIR}/STARTUP_1 ::
-    mcopy -i ${WORKDIR}/boot.img -v ${WORKDIR}/STARTUP_2 ::
+    mcopy -i ${WORKDIR}/bootoptions.img -v ${WORKDIR}/STARTUP ::
+    mcopy -i ${WORKDIR}/bootoptions.img -v ${WORKDIR}/STARTUP_1 ::
+    mcopy -i ${WORKDIR}/bootoptions.img -v ${WORKDIR}/STARTUP_2 ::
     cp ${WORKDIR}/bootoptions.img ${IMGDEPLOYDIR}/bootoptions.img
     ext2simg -zv ${IMGDEPLOYDIR}/${IMAGE_NAME}${IMAGE_NAME_SUFFIX}.ext4 ${IMGDEPLOYDIR}/${IMAGE_NAME}${IMAGE_NAME_SUFFIX}.hdfastboot8gb.gz
 }
