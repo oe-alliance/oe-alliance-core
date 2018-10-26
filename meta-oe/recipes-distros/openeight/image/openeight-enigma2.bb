@@ -27,8 +27,8 @@ RRECOMMENDS_${PN} = "\
     enigma2-plugin-systemplugins-videotune \
     enigma2-plugin-systemplugins-softwaremanager \
     enigma2-plugin-systemplugins-skinselector \
-	enigma2-plugin-skins-smartlitefhd \
-	enigma2-plugin-skins-smartlitesd \
+    enigma2-plugin-skins-smartlitefhd \
+    enigma2-plugin-skins-smartlitesd \
     enigma2-plugin-skins-octagoneightfhd \
     enigma2-plugin-skins-octagoneightsd \
     ${@bb.utils.contains("MACHINE_FEATURES", "3dtv", "enigma2-plugin-systemplugins-osd3dsetup" , "", d)} \
