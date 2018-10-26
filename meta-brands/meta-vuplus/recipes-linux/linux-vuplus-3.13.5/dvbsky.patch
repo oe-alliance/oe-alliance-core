@@ -1,0 +1,3791 @@
+--- a/drivers/media/usb/dvb-usb-v2/Kconfig
++++ b/drivers/media/usb/dvb-usb-v2/Kconfig
+@@ -141,3 +141,10 @@ config DVB_USB_RTL28XXU
+ 	help
+ 	  Say Y here to support the Realtek RTL28xxU DVB USB receiver.
+ 
++config DVB_USB_DVBSKY
++	tristate "DVBSky USB support"
++	depends on DVB_USB_V2
++	select DVB_M88DS3103 if MEDIA_SUBDRV_AUTOSELECT
++	select MEDIA_TUNER_M88TS2022 if MEDIA_SUBDRV_AUTOSELECT
++	help
++	  Say Y here to support the USB receivers from DVBSky.
+--- a/drivers/media/dvb-frontends/Kconfig
++++ b/drivers/media/dvb-frontends/Kconfig
+@@ -35,6 +35,13 @@
+ 	help
+ 	  A Silicon tuner that supports DVB-S and DVB-S2 modes
+ 
++config DVB_M88DS3103
++	tristate "Montage M88DS3103"
++	depends on DVB_CORE && I2C && I2C_MUX
++	default m if !MEDIA_SUBDRV_AUTOSELECT
++	help
++	  Say Y when you want to support this frontend.
++
+ comment "Multistandard (cable + terrestrial) frontends"
+ 	depends on DVB_CORE
+ 
+--- a/drivers/media/dvb-frontends/Makefile	2018-10-24 18:10:37.169295870 +0300
++++ b/drivers/media/dvb-frontends/Makefile	2018-10-24 18:10:49.605295418 +0300
+@@ -86,6 +86,7 @@
+ obj-$(CONFIG_DVB_STV0900) += stv0900.o
+ obj-$(CONFIG_DVB_STV090x) += stv090x.o
+ obj-$(CONFIG_DVB_STV6110x) += stv6110x.o
++obj-$(CONFIG_DVB_M88DS3103) += m88ds3103.o
+ obj-$(CONFIG_DVB_ISL6423) += isl6423.o
+ obj-$(CONFIG_DVB_EC100) += ec100.o
+ obj-$(CONFIG_DVB_HD29L2) += hd29l2.o
+--- a/drivers/media/usb/dvb-usb-v2/Makefile
++++ b/drivers/media/usb/dvb-usb-v2/Makefile
+@@ -37,6 +37,9 @@ obj-$(CONFIG_DVB_USB_MXL111SF) += mxl111sf-tuner.o
+ dvb-usb-rtl28xxu-objs := rtl28xxu.o
+ obj-$(CONFIG_DVB_USB_RTL28XXU) += dvb-usb-rtl28xxu.o
+ 
++dvb-usb-dvbsky-objs := dvbsky.o
++obj-$(CONFIG_DVB_USB_DVBSKY) += dvb-usb-dvbsky.o
++
+ ccflags-y += -I$(srctree)/drivers/media/dvb-core
+ ccflags-y += -I$(srctree)/drivers/media/dvb-frontends
+ ccflags-y += -I$(srctree)/drivers/media/tuners
+--- a/drivers/media/usb/dvb-usb-v2/dvbsky.c
++++ b/drivers/media/usb/dvb-usb-v2/dvbsky.c
+@@ -0,0 +1,1135 @@
++/*
++ * Driver for DVBSky USB2.0 receiver
++ * Mod nikolasi for openatv
++ * Copyright (C) 2013 Max nibble <nibble.max@gmail.com>
++ *
++ *    This program is free software; you can redistribute it and/or modify
++ *    it under the terms of the GNU General Public License as published by
++ *    the Free Software Foundation; either version 2 of the License, or
++ *    (at your option) any later version.
++ *
++ *    This program is distributed in the hope that it will be useful,
++ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *    GNU General Public License for more details.
++ *
++ *    You should have received a copy of the GNU General Public License
++ *    along with this program; if not, write to the Free Software
++ *    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
++ */
++
++#include "dvb_usb.h"
++#include "m88ds3103.h"
++#include "ts2020.h"
++#include "sp2.h"
++#include "si2168.h"
++#include "si2157.h"
++
++#define DVBSKY_MSG_DELAY	0/*2000*/
++#define DVBSKY_BUF_LEN	64
++
++static int dvb_usb_dvbsky_disable_rc;
++module_param_named(disable_rc, dvb_usb_dvbsky_disable_rc, int, 0644);
++MODULE_PARM_DESC(disable_rc, "Disable inbuilt IR receiver.");
++
++DVB_DEFINE_MOD_OPT_ADAPTER_NR(adapter_nr);
++
++struct dvbsky_state {
++	struct mutex stream_mutex;
++	u8 ibuf[DVBSKY_BUF_LEN];
++	u8 obuf[DVBSKY_BUF_LEN];
++	u8 last_lock;
++	struct i2c_client *i2c_client_demod;
++	struct i2c_client *i2c_client_tuner;
++	struct i2c_client *i2c_client_ci;
++
++	/* fe hook functions*/
++	int (*fe_set_voltage)(struct dvb_frontend *fe,
++		fe_sec_voltage_t voltage);
++	int (*fe_read_status)(struct dvb_frontend *fe,
++		fe_status_t *status);
++};
++
++static int dvbsky_usb_generic_rw(struct dvb_usb_device *d,
++		u8 *wbuf, u16 wlen, u8 *rbuf, u16 rlen)
++{
++	int ret;
++	struct dvbsky_state *state = d_to_priv(d);
++
++	mutex_lock(&d->usb_mutex);
++	if (wlen != 0)
++		memcpy(state->obuf, wbuf, wlen);
++
++	ret = dvb_usbv2_generic_rw_locked(d, state->obuf, wlen,
++			state->ibuf, rlen);
++
++	if (!ret && (rlen != 0))
++		memcpy(rbuf, state->ibuf, rlen);
++
++	mutex_unlock(&d->usb_mutex);
++	return ret;
++}
++
++static int dvbsky_stream_ctrl(struct dvb_usb_device *d, u8 onoff)
++{
++	struct dvbsky_state *state = d_to_priv(d);
++	int ret;
++	u8 obuf_pre[3] = { 0x37, 0, 0 };
++	u8 obuf_post[3] = { 0x36, 3, 0 };
++
++	mutex_lock(&state->stream_mutex);
++	ret = dvbsky_usb_generic_rw(d, obuf_pre, 3, NULL, 0);
++	if (!ret && onoff) {
++		msleep(20);
++		ret = dvbsky_usb_generic_rw(d, obuf_post, 3, NULL, 0);
++	}
++	mutex_unlock(&state->stream_mutex);
++	return ret;
++}
++
++static int dvbsky_streaming_ctrl(struct dvb_frontend *fe, int onoff)
++{
++	struct dvb_usb_device *d = fe_to_d(fe);
++
++	return dvbsky_stream_ctrl(d, (onoff == 0) ? 0 : 1);
++}
++
++/* GPIO */
++static int dvbsky_gpio_ctrl(struct dvb_usb_device *d, u8 gport, u8 value)
++{
++	int ret;
++	u8 obuf[3], ibuf[2];
++
++	obuf[0] = 0x0e;
++	obuf[1] = gport;
++	obuf[2] = value;
++	ret = dvbsky_usb_generic_rw(d, obuf, 3, ibuf, 1);
++	if (ret)
++		dev_err(&d->udev->dev, "failed=%d\n", ret);
++	return ret;
++}
++
++/* I2C */
++static int dvbsky_i2c_xfer(struct i2c_adapter *adap, struct i2c_msg msg[],
++	int num)
++{
++	struct dvb_usb_device *d = i2c_get_adapdata(adap);
++	int ret = 0;
++	u8 ibuf[64], obuf[64];
++
++	if (mutex_lock_interruptible(&d->i2c_mutex) < 0)
++		return -EAGAIN;
++
++	if (num > 2) {
++		dev_err(&d->udev->dev,
++		"too many i2c messages[%d], max 2.", num);
++		ret = -EOPNOTSUPP;
++		goto i2c_error;
++	}
++
++	if (num == 1) {
++		if (msg[0].len > 60) {
++			dev_err(&d->udev->dev,
++			"too many i2c bytes[%d], max 60.",
++			msg[0].len);
++			ret = -EOPNOTSUPP;
++			goto i2c_error;
++		}
++		if (msg[0].flags & I2C_M_RD) {
++			/* single read */
++			obuf[0] = 0x09;
++			obuf[1] = 0;
++			obuf[2] = msg[0].len;
++			obuf[3] = msg[0].addr;
++			ret = dvbsky_usb_generic_rw(d, obuf, 4,
++					ibuf, msg[0].len + 1);
++			if (ret)
++				dev_err(&d->udev->dev, "failed=%d\n", ret);
++			if (!ret)
++				memcpy(msg[0].buf, &ibuf[1], msg[0].len);
++		} else {
++			/* write */
++			obuf[0] = 0x08;
++			obuf[1] = msg[0].addr;
++			obuf[2] = msg[0].len;
++			memcpy(&obuf[3], msg[0].buf, msg[0].len);
++			ret = dvbsky_usb_generic_rw(d, obuf,
++					msg[0].len + 3, ibuf, 1);
++			if (ret)
++				dev_err(&d->udev->dev, "failed=%d\n", ret);
++		}
++	} else {
++		if ((msg[0].len > 60) || (msg[1].len > 60)) {
++			dev_err(&d->udev->dev,
++			"too many i2c bytes[w-%d][r-%d], max 60.",
++			msg[0].len, msg[1].len);
++			ret = -EOPNOTSUPP;
++			goto i2c_error;
++		}
++		/* write then read */
++		obuf[0] = 0x09;
++		obuf[1] = msg[0].len;
++		obuf[2] = msg[1].len;
++		obuf[3] = msg[0].addr;
++		memcpy(&obuf[4], msg[0].buf, msg[0].len);
++		ret = dvbsky_usb_generic_rw(d, obuf,
++			msg[0].len + 4, ibuf, msg[1].len + 1);
++		if (ret)
++			dev_err(&d->udev->dev, "failed=%d\n", ret);
++
++		if (!ret)
++			memcpy(msg[1].buf, &ibuf[1], msg[1].len);
++	}
++i2c_error:
++	mutex_unlock(&d->i2c_mutex);
++	return (ret) ? ret : num;
++}
++
++static u32 dvbsky_i2c_func(struct i2c_adapter *adapter)
++{
++	return I2C_FUNC_I2C;
++}
++
++static struct i2c_algorithm dvbsky_i2c_algo = {
++	.master_xfer   = dvbsky_i2c_xfer,
++	.functionality = dvbsky_i2c_func,
++};
++
++#if IS_ENABLED(CONFIG_RC_CORE)
++static int dvbsky_rc_query(struct dvb_usb_device *d)
++{
++	u32 code = 0xffff, scancode;
++	u8 rc5_command, rc5_system;
++	u8 obuf[2], ibuf[2], toggle;
++	int ret;
++
++	obuf[0] = 0x10;
++	ret = dvbsky_usb_generic_rw(d, obuf, 1, ibuf, 2);
++	if (ret)
++		dev_err(&d->udev->dev, "failed=%d\n", ret);
++	if (ret == 0)
++		code = (ibuf[0] << 8) | ibuf[1];
++	if (code != 0xffff) {
++		dev_dbg(&d->udev->dev, "rc code: %x\n", code);
++		rc5_command = code & 0x3F;
++		rc5_system = (code & 0x7C0) >> 6;
++		toggle = (code & 0x800) ? 1 : 0;
++		scancode = rc5_system << 8 | rc5_command;
++		rc_keydown(d->rc_dev, scancode, toggle);
++	}
++	return 0;
++}
++
++static int dvbsky_get_rc_config(struct dvb_usb_device *d, struct dvb_usb_rc *rc)
++{
++	if (dvb_usb_dvbsky_disable_rc) {
++		rc->map_name = NULL;
++		return 0;
++	}
++
++	rc->allowed_protos = RC_BIT_RC5;
++	rc->query          = dvbsky_rc_query;
++	rc->interval       = 300;
++	return 0;
++}
++#else
++	#define dvbsky_get_rc_config NULL
++#endif
++
++static int dvbsky_usb_set_voltage(struct dvb_frontend *fe,
++	fe_sec_voltage_t voltage)
++{
++	struct dvb_usb_device *d = fe_to_d(fe);
++	struct dvbsky_state *state = d_to_priv(d);
++	u8 value;
++
++	if (voltage == SEC_VOLTAGE_OFF)
++		value = 0;
++	else
++		value = 1;
++	dvbsky_gpio_ctrl(d, 0x80, value);
++
++	return state->fe_set_voltage(fe, voltage);
++}
++
++static int dvbsky_read_mac_addr(struct dvb_usb_adapter *adap, u8 mac[6])
++{
++	struct dvb_usb_device *d = adap_to_d(adap);
++	u8 obuf[] = { 0x1e, 0x00 };
++	u8 ibuf[6] = { 0 };
++	struct i2c_msg msg[] = {
++		{
++			.addr = 0x51,
++			.flags = 0,
++			.buf = obuf,
++			.len = 2,
++		}, {
++			.addr = 0x51,
++			.flags = I2C_M_RD,
++			.buf = ibuf,
++			.len = 6,
++		}
++	};
++
++	if (i2c_transfer(&d->i2c_adap, msg, 2) == 2)
++		memcpy(mac, ibuf, 6);
++
++	return 0;
++}
++
++static int dvbsky_usb_read_status(struct dvb_frontend *fe, fe_status_t *status)
++{
++	struct dvb_usb_device *d = fe_to_d(fe);
++	struct dvbsky_state *state = d_to_priv(d);
++	int ret;
++
++	ret = state->fe_read_status(fe, status);
++
++	/* it need resync slave fifo when signal change from unlock to lock.*/
++	if ((*status & FE_HAS_LOCK) && (!state->last_lock))
++		dvbsky_stream_ctrl(d, 1);
++
++	state->last_lock = (*status & FE_HAS_LOCK) ? 1 : 0;
++	return ret;
++}
++
++static const struct m88ds3103_config dvbsky_s960_m88ds3103_config = {
++	.i2c_addr = 0x68,
++	.clock = 27000000,
++	.i2c_wr_max = 33,
++	.clock_out = 0,
++	.ts_mode = M88DS3103_TS_CI,
++	.ts_clk = 16000,
++	.ts_clk_pol = 0,
++	.agc = 0x99,
++	.lnb_hv_pol = 1,
++	.lnb_en_pol = 1,
++};
++
++static int dvbsky_s960_attach(struct dvb_usb_adapter *adap)
++{
++	struct dvbsky_state *state = adap_to_priv(adap);
++	struct dvb_usb_device *d = adap_to_d(adap);
++	int ret = 0;
++	/* demod I2C adapter */
++	struct i2c_adapter *i2c_adapter;
++	struct i2c_client *client;
++	struct i2c_board_info info;
++	struct ts2020_config ts2020_config = {};
++	memset(&info, 0, sizeof(struct i2c_board_info));
++
++	/* attach demod */
++	adap->fe[0] = dvb_attach(m88ds3103_attach,
++			&dvbsky_s960_m88ds3103_config,
++			&d->i2c_adap,
++			&i2c_adapter);
++	if (!adap->fe[0]) {
++		dev_err(&d->udev->dev, "dvbsky_s960_attach fail.\n");
++		ret = -ENODEV;
++		goto fail_attach;
++	}
++
++	/* attach tuner */
++	ts2020_config.fe = adap->fe[0];
++	strlcpy(info.type, "ts2020", I2C_NAME_SIZE);
++	info.addr = 0x60;
++	info.platform_data = &ts2020_config;
++	request_module("ts2020");
++	client = i2c_new_device(i2c_adapter, &info);
++	if (client == NULL || client->dev.driver == NULL) {
++		dvb_frontend_detach(adap->fe[0]);
++		ret = -ENODEV;
++		goto fail_attach;
++	}
++
++	if (!try_module_get(client->dev.driver->owner)) {
++		i2c_unregister_device(client);
++		dvb_frontend_detach(adap->fe[0]);
++		ret = -ENODEV;
++		goto fail_attach;
++	}
++
++	/* delegate signal strength measurement to tuner */
++	adap->fe[0]->ops.read_signal_strength =
++			adap->fe[0]->ops.tuner_ops.get_rf_strength;
++
++	/* hook fe: need to resync the slave fifo when signal locks. */
++	state->fe_read_status = adap->fe[0]->ops.read_status;
++	adap->fe[0]->ops.read_status = dvbsky_usb_read_status;
++
++	/* hook fe: LNB off/on is control by Cypress usb chip. */
++	state->fe_set_voltage = adap->fe[0]->ops.set_voltage;
++	adap->fe[0]->ops.set_voltage = dvbsky_usb_set_voltage;
++
++	state->i2c_client_tuner = client;
++
++fail_attach:
++	return ret;
++}
++
++static int dvbsky_usb_ci_set_voltage(struct dvb_frontend *fe,
++	fe_sec_voltage_t voltage)
++{
++	struct dvb_usb_device *d = fe_to_d(fe);
++	struct dvbsky_state *state = d_to_priv(d);
++	u8 value;
++
++	if (voltage == SEC_VOLTAGE_OFF)
++		value = 0;
++	else
++		value = 1;
++	dvbsky_gpio_ctrl(d, 0x00, value);
++
++	return state->fe_set_voltage(fe, voltage);
++}
++
++static int dvbsky_ci_ctrl(void *priv, u8 read, int addr,
++					u8 data, int *mem)
++{
++	struct dvb_usb_device *d = priv;
++	int ret = 0;
++	u8 command[4], respond[2], command_size, respond_size;
++
++	command[1] = (u8)((addr >> 8) & 0xff); /*high part of address*/
++	command[2] = (u8)(addr & 0xff); /*low part of address*/
++	if (read) {
++		command[0] = 0x71;
++		command_size = 3;
++		respond_size = 2;
++	} else {
++		command[0] = 0x70;
++		command[3] = data;
++		command_size = 4;
++		respond_size = 1;
++	}
++	ret = dvbsky_usb_generic_rw(d, command, command_size,
++			respond, respond_size);
++	if (ret)
++		goto err;
++	if (read)
++		*mem = respond[1];
++	return ret;
++err:
++	dev_err(&d->udev->dev, "ci control failed=%d\n", ret);
++	return ret;
++}
++
++static const struct m88ds3103_config dvbsky_s960c_m88ds3103_config = {
++	.i2c_addr = 0x68,
++	.clock = 27000000,
++	.i2c_wr_max = 33,
++	.clock_out = 0,
++	.ts_mode = M88DS3103_TS_CI,
++	.ts_clk = 10000,
++	.ts_clk_pol = 1,
++	.agc = 0x99,
++	.lnb_hv_pol = 0,
++	.lnb_en_pol = 1,
++};
++
++static int dvbsky_s960c_attach(struct dvb_usb_adapter *adap)
++{
++	struct dvbsky_state *state = adap_to_priv(adap);
++	struct dvb_usb_device *d = adap_to_d(adap);
++	int ret = 0;
++	/* demod I2C adapter */
++	struct i2c_adapter *i2c_adapter;
++	struct i2c_client *client_tuner, *client_ci;
++	struct i2c_board_info info;
++	struct sp2_config sp2_config;
++	struct ts2020_config ts2020_config = {};
++	memset(&info, 0, sizeof(struct i2c_board_info));
++
++	/* attach demod */
++	adap->fe[0] = dvb_attach(m88ds3103_attach,
++			&dvbsky_s960c_m88ds3103_config,
++			&d->i2c_adap,
++			&i2c_adapter);
++	if (!adap->fe[0]) {
++		dev_err(&d->udev->dev, "dvbsky_s960ci_attach fail.\n");
++		ret = -ENODEV;
++		goto fail_attach;
++	}
++
++	/* attach tuner */
++	ts2020_config.fe = adap->fe[0];
++	strlcpy(info.type, "ts2020", I2C_NAME_SIZE);
++	info.addr = 0x60;
++	info.platform_data = &ts2020_config;
++	request_module("ts2020");
++	client_tuner = i2c_new_device(i2c_adapter, &info);
++	if (client_tuner == NULL || client_tuner->dev.driver == NULL) {
++		ret = -ENODEV;
++		goto fail_tuner_device;
++	}
++
++	if (!try_module_get(client_tuner->dev.driver->owner)) {
++		ret = -ENODEV;
++		goto fail_tuner_module;
++	}
++
++	/* attach ci controller */
++	memset(&sp2_config, 0, sizeof(sp2_config));
++	sp2_config.dvb_adap = &adap->dvb_adap;
++	sp2_config.priv = d;
++	sp2_config.ci_control = dvbsky_ci_ctrl;
++	memset(&info, 0, sizeof(struct i2c_board_info));
++	strlcpy(info.type, "sp2", I2C_NAME_SIZE);
++	info.addr = 0x40;
++	info.platform_data = &sp2_config;
++	request_module("sp2");
++	client_ci = i2c_new_device(&d->i2c_adap, &info);
++	if (client_ci == NULL || client_ci->dev.driver == NULL) {
++		ret = -ENODEV;
++		goto fail_ci_device;
++	}
++
++	if (!try_module_get(client_ci->dev.driver->owner)) {
++		ret = -ENODEV;
++		goto fail_ci_module;
++	}
++
++	/* delegate signal strength measurement to tuner */
++	adap->fe[0]->ops.read_signal_strength =
++			adap->fe[0]->ops.tuner_ops.get_rf_strength;
++
++	/* hook fe: need to resync the slave fifo when signal locks. */
++	state->fe_read_status = adap->fe[0]->ops.read_status;
++	adap->fe[0]->ops.read_status = dvbsky_usb_read_status;
++
++	/* hook fe: LNB off/on is control by Cypress usb chip. */
++	state->fe_set_voltage = adap->fe[0]->ops.set_voltage;
++	adap->fe[0]->ops.set_voltage = dvbsky_usb_ci_set_voltage;
++
++	state->i2c_client_tuner = client_tuner;
++	state->i2c_client_ci = client_ci;
++	return ret;
++fail_ci_module:
++	i2c_unregister_device(client_ci);
++fail_ci_device:
++	module_put(client_tuner->dev.driver->owner);
++fail_tuner_module:
++	i2c_unregister_device(client_tuner);
++fail_tuner_device:
++	dvb_frontend_detach(adap->fe[0]);
++fail_attach:
++	return ret;
++}
++
++static int dvbsky_t680c_attach(struct dvb_usb_adapter *adap)
++{
++	struct dvbsky_state *state = adap_to_priv(adap);
++	struct dvb_usb_device *d = adap_to_d(adap);
++	int ret = 0;
++	struct i2c_adapter *i2c_adapter;
++	struct i2c_client *client_demod, *client_tuner, *client_ci;
++	struct i2c_board_info info;
++	struct si2168_config si2168_config;
++	struct si2157_config si2157_config;
++	struct sp2_config sp2_config;
++
++	/* attach demod */
++	memset(&si2168_config, 0, sizeof(si2168_config));
++	si2168_config.i2c_adapter = &i2c_adapter;
++	si2168_config.fe = &adap->fe[0];
++	si2168_config.ts_mode = SI2168_TS_PARALLEL;
++	memset(&info, 0, sizeof(struct i2c_board_info));
++	strlcpy(info.type, "si2168", I2C_NAME_SIZE);
++	info.addr = 0x64;
++	info.platform_data = &si2168_config;
++
++	request_module(info.type);
++	client_demod = i2c_new_device(&d->i2c_adap, &info);
++	if (client_demod == NULL ||
++			client_demod->dev.driver == NULL)
++		goto fail_demod_device;
++	if (!try_module_get(client_demod->dev.driver->owner))
++		goto fail_demod_module;
++
++	/* attach tuner */
++	memset(&si2157_config, 0, sizeof(si2157_config));
++	si2157_config.fe = adap->fe[0];
++	memset(&info, 0, sizeof(struct i2c_board_info));
++	strlcpy(info.type, "si2157", I2C_NAME_SIZE);
++	info.addr = 0x60;
++	info.platform_data = &si2157_config;
++
++	request_module(info.type);
++	client_tuner = i2c_new_device(i2c_adapter, &info);
++	if (client_tuner == NULL ||
++			client_tuner->dev.driver == NULL)
++		goto fail_tuner_device;
++	if (!try_module_get(client_tuner->dev.driver->owner))
++		goto fail_tuner_module;
++
++	/* attach ci controller */
++	memset(&sp2_config, 0, sizeof(sp2_config));
++	sp2_config.dvb_adap = &adap->dvb_adap;
++	sp2_config.priv = d;
++	sp2_config.ci_control = dvbsky_ci_ctrl;
++	memset(&info, 0, sizeof(struct i2c_board_info));
++	strlcpy(info.type, "sp2", I2C_NAME_SIZE);
++	info.addr = 0x40;
++	info.platform_data = &sp2_config;
++
++	request_module(info.type);
++	client_ci = i2c_new_device(&d->i2c_adap, &info);
++
++	if (client_ci == NULL || client_ci->dev.driver == NULL)
++		goto fail_ci_device;
++
++	if (!try_module_get(client_ci->dev.driver->owner))
++		goto fail_ci_module;
++
++	state->i2c_client_demod = client_demod;
++	state->i2c_client_tuner = client_tuner;
++	state->i2c_client_ci = client_ci;
++	return ret;
++fail_ci_module:
++	i2c_unregister_device(client_ci);
++fail_ci_device:
++	module_put(client_tuner->dev.driver->owner);
++fail_tuner_module:
++	i2c_unregister_device(client_tuner);
++fail_tuner_device:
++	module_put(client_demod->dev.driver->owner);
++fail_demod_module:
++	i2c_unregister_device(client_demod);
++fail_demod_device:
++	ret = -ENODEV;
++	return ret;
++}
++
++static int dvbsky_t330_attach(struct dvb_usb_adapter *adap)
++{
++	struct dvbsky_state *state = adap_to_priv(adap);
++	struct dvb_usb_device *d = adap_to_d(adap);
++	int ret = 0;
++	struct i2c_adapter *i2c_adapter;
++	struct i2c_client *client_demod, *client_tuner;
++	struct i2c_board_info info;
++	struct si2168_config si2168_config;
++	struct si2157_config si2157_config;
++
++	/* attach demod */
++	memset(&si2168_config, 0, sizeof(si2168_config));
++	si2168_config.i2c_adapter = &i2c_adapter;
++	si2168_config.fe = &adap->fe[0];
++	si2168_config.ts_mode = SI2168_TS_PARALLEL | 0x40;
++	memset(&info, 0, sizeof(struct i2c_board_info));
++	strlcpy(info.type, "si2168", I2C_NAME_SIZE);
++	info.addr = 0x64;
++	info.platform_data = &si2168_config;
++
++	request_module(info.type);
++	client_demod = i2c_new_device(&d->i2c_adap, &info);
++	if (client_demod == NULL ||
++			client_demod->dev.driver == NULL)
++		goto fail_demod_device;
++	if (!try_module_get(client_demod->dev.driver->owner))
++		goto fail_demod_module;
++
++	/* attach tuner */
++	memset(&si2157_config, 0, sizeof(si2157_config));
++	si2157_config.fe = adap->fe[0];
++	memset(&info, 0, sizeof(struct i2c_board_info));
++	strlcpy(info.type, "si2157", I2C_NAME_SIZE);
++	info.addr = 0x60;
++	info.platform_data = &si2157_config;
++
++	request_module(info.type);
++	client_tuner = i2c_new_device(i2c_adapter, &info);
++	if (client_tuner == NULL ||
++			client_tuner->dev.driver == NULL)
++		goto fail_tuner_device;
++	if (!try_module_get(client_tuner->dev.driver->owner))
++		goto fail_tuner_module;
++
++	state->i2c_client_demod = client_demod;
++	state->i2c_client_tuner = client_tuner;
++	return ret;
++fail_tuner_module:
++	i2c_unregister_device(client_tuner);
++fail_tuner_device:
++	module_put(client_demod->dev.driver->owner);
++fail_demod_module:
++	i2c_unregister_device(client_demod);
++fail_demod_device:
++	ret = -ENODEV;
++	return ret;
++}
++
++static int dvbsky_t230_attach(struct dvb_usb_adapter *adap)
++{
++	struct dvbsky_state *state = adap_to_priv(adap);
++	struct dvb_usb_device *d = adap_to_d(adap);
++	int ret = 0;
++	struct i2c_adapter *i2c_adapter;
++	struct i2c_client *client_demod, *client_tuner;
++	struct i2c_board_info info;
++	struct si2168_config si2168_config;
++	struct si2157_config si2157_config;
++
++	/* attach demod */
++	memset(&si2168_config, 0, sizeof(si2168_config));
++	si2168_config.i2c_adapter = &i2c_adapter;
++	si2168_config.fe = &adap->fe[0];
++	si2168_config.ts_mode = SI2168_TS_PARALLEL;
++	si2168_config.ts_clock_inv = true;
++	memset(&info, 0, sizeof(struct i2c_board_info));
++	strlcpy(info.type, "si2168", I2C_NAME_SIZE);
++	info.addr = 0x64;
++	info.platform_data = &si2168_config;
++
++	request_module(info.type);
++	client_demod = i2c_new_device(&d->i2c_adap, &info);
++	if (client_demod == NULL ||
++			client_demod->dev.driver == NULL)
++		goto fail_demod_device;
++	if (!try_module_get(client_demod->dev.driver->owner))
++		goto fail_demod_module;
++
++	/* attach tuner */
++	memset(&si2157_config, 0, sizeof(si2157_config));
++	si2157_config.fe = adap->fe[0];
++	si2157_config.if_port = 1;
++	memset(&info, 0, sizeof(struct i2c_board_info));
++	strlcpy(info.type, "si2157", I2C_NAME_SIZE);
++	info.addr = 0x60;
++	info.platform_data = &si2157_config;
++
++	request_module(info.type);
++	client_tuner = i2c_new_device(i2c_adapter, &info);
++	if (client_tuner == NULL ||
++			client_tuner->dev.driver == NULL)
++		goto fail_tuner_device;
++	if (!try_module_get(client_tuner->dev.driver->owner))
++		goto fail_tuner_module;
++
++	state->i2c_client_demod = client_demod;
++	state->i2c_client_tuner = client_tuner;
++	return ret;
++fail_tuner_module:
++	i2c_unregister_device(client_tuner);
++fail_tuner_device:
++	module_put(client_demod->dev.driver->owner);
++fail_demod_module:
++	i2c_unregister_device(client_demod);
++fail_demod_device:
++	ret = -ENODEV;
++	return ret;
++}
++
++static int dvbsky_mygica_t230c_attach(struct dvb_usb_adapter *adap)
++{
++	struct dvbsky_state *state = adap_to_priv(adap);
++	struct dvb_usb_device *d = adap_to_d(adap);
++	int ret = 0;
++	struct i2c_adapter *i2c_adapter;
++	struct i2c_client *client_demod, *client_tuner;
++	struct i2c_board_info info;
++	struct si2168_config si2168_config;
++	struct si2157_config si2157_config;
++
++	/* attach demod */
++	memset(&si2168_config, 0, sizeof(si2168_config));
++	si2168_config.i2c_adapter = &i2c_adapter;
++	si2168_config.fe = &adap->fe[0];
++	si2168_config.ts_mode = SI2168_TS_PARALLEL;
++	si2168_config.ts_clock_inv = 1;
++	memset(&info, 0, sizeof(struct i2c_board_info));
++	strlcpy(info.type, "si2168", I2C_NAME_SIZE);
++	info.addr = 0x64;
++	info.platform_data = &si2168_config;
++
++	request_module(info.type);
++	client_demod = i2c_new_device(&d->i2c_adap, &info);
++	if (client_demod == NULL ||
++			client_demod->dev.driver == NULL)
++		goto fail_demod_device;
++	if (!try_module_get(client_demod->dev.driver->owner))
++		goto fail_demod_module;
++
++	/* attach tuner */
++	memset(&si2157_config, 0, sizeof(si2157_config));
++	si2157_config.fe = adap->fe[0];
++	si2157_config.if_port = 0;
++	memset(&info, 0, sizeof(struct i2c_board_info));
++	strlcpy(info.type, "si2141", I2C_NAME_SIZE);
++	info.addr = 0x60;
++	info.platform_data = &si2157_config;
++
++	request_module("si2157");
++	client_tuner = i2c_new_device(i2c_adapter, &info);
++	if (client_tuner == NULL ||
++			client_tuner->dev.driver == NULL)
++		goto fail_tuner_device;
++	if (!try_module_get(client_tuner->dev.driver->owner))
++		goto fail_tuner_module;
++
++	state->i2c_client_demod = client_demod;
++	state->i2c_client_tuner = client_tuner;
++	return ret;
++fail_tuner_module:
++	i2c_unregister_device(client_tuner);
++fail_tuner_device:
++	module_put(client_demod->dev.driver->owner);
++fail_demod_module:
++	i2c_unregister_device(client_demod);
++fail_demod_device:
++	ret = -ENODEV;
++	return ret;
++}
++
++static int dvbsky_mygica_t230c2_attach(struct dvb_usb_adapter *adap)
++{
++	struct dvbsky_state *state = adap_to_priv(adap);
++	struct dvb_usb_device *d = adap_to_d(adap);
++	int ret = 0;
++	struct i2c_adapter *i2c_adapter;
++	struct i2c_client *client_demod, *client_tuner;
++	struct i2c_board_info info;
++	struct si2168_config si2168_config;
++	struct si2157_config si2157_config;
++
++	/* attach demod */
++	memset(&si2168_config, 0, sizeof(si2168_config));
++	si2168_config.i2c_adapter = &i2c_adapter;
++	si2168_config.fe = &adap->fe[0];
++	si2168_config.ts_mode = SI2168_TS_PARALLEL;
++	si2168_config.ts_clock_inv = 1;
++	memset(&info, 0, sizeof(struct i2c_board_info));
++	strlcpy(info.type, "si2168", I2C_NAME_SIZE);
++	info.addr = 0x64;
++	info.platform_data = &si2168_config;
++
++	request_module(info.type);
++	client_demod = i2c_new_device(&d->i2c_adap, &info);
++	if (client_demod == NULL ||
++			client_demod->dev.driver == NULL)
++		goto fail_demod_device;
++	if (!try_module_get(client_demod->dev.driver->owner))
++		goto fail_demod_module;
++
++	/* attach tuner */
++	memset(&si2157_config, 0, sizeof(si2157_config));
++	si2157_config.fe = adap->fe[0];
++	si2157_config.if_port = 0;
++	memset(&info, 0, sizeof(struct i2c_board_info));
++	strlcpy(info.type, "si2141", I2C_NAME_SIZE);
++	info.addr = 0x60;
++	info.platform_data = &si2157_config;
++
++	request_module("si2157");
++	client_tuner = i2c_new_device(i2c_adapter, &info);
++	if (client_tuner == NULL ||
++			client_tuner->dev.driver == NULL)
++		goto fail_tuner_device;
++	if (!try_module_get(client_tuner->dev.driver->owner))
++		goto fail_tuner_module;
++
++	state->i2c_client_demod = client_demod;
++	state->i2c_client_tuner = client_tuner;
++	return ret;
++fail_tuner_module:
++	i2c_unregister_device(client_tuner);
++fail_tuner_device:
++	module_put(client_demod->dev.driver->owner);
++fail_demod_module:
++	i2c_unregister_device(client_demod);
++fail_demod_device:
++	ret = -ENODEV;
++	return ret;
++}
++
++static int dvbsky_identify_state(struct dvb_usb_device *d, const char **name)
++{
++	dvbsky_gpio_ctrl(d, 0x04, 1);
++	msleep(20);
++	dvbsky_gpio_ctrl(d, 0x83, 0);
++	dvbsky_gpio_ctrl(d, 0xc0, 1);
++	msleep(100);
++	dvbsky_gpio_ctrl(d, 0x83, 1);
++	dvbsky_gpio_ctrl(d, 0xc0, 0);
++	msleep(50);
++
++	return WARM;
++}
++
++static int dvbsky_init(struct dvb_usb_device *d)
++{
++	struct dvbsky_state *state = d_to_priv(d);
++
++	/* use default interface */
++	/*
++	ret = usb_set_interface(d->udev, 0, 0);
++	if (ret)
++		return ret;
++	*/
++	mutex_init(&state->stream_mutex);
++
++	state->last_lock = 0;
++
++	return 0;
++}
++
++static void dvbsky_exit(struct dvb_usb_device *d)
++{
++	struct dvbsky_state *state = d_to_priv(d);
++	struct i2c_client *client;
++
++	client = state->i2c_client_tuner;
++	/* remove I2C tuner */
++	if (client) {
++		module_put(client->dev.driver->owner);
++		i2c_unregister_device(client);
++	}
++	client = state->i2c_client_demod;
++	/* remove I2C demod */
++	if (client) {
++		module_put(client->dev.driver->owner);
++		i2c_unregister_device(client);
++	}
++	client = state->i2c_client_ci;
++	/* remove I2C ci */
++	if (client) {
++		module_put(client->dev.driver->owner);
++		i2c_unregister_device(client);
++	}
++}
++
++/* DVB USB Driver stuff */
++static struct dvb_usb_device_properties dvbsky_s960_props = {
++	.driver_name = KBUILD_MODNAME,
++	.owner = THIS_MODULE,
++	.adapter_nr = adapter_nr,
++	.size_of_priv = sizeof(struct dvbsky_state),
++
++	.generic_bulk_ctrl_endpoint = 0x01,
++	.generic_bulk_ctrl_endpoint_response = 0x81,
++	.generic_bulk_ctrl_delay = DVBSKY_MSG_DELAY,
++
++	.i2c_algo         = &dvbsky_i2c_algo,
++	.frontend_attach  = dvbsky_s960_attach,
++	.init             = dvbsky_init,
++	.get_rc_config    = dvbsky_get_rc_config,
++	.streaming_ctrl   = dvbsky_streaming_ctrl,
++	.identify_state	  = dvbsky_identify_state,
++	.exit             = dvbsky_exit,
++	.read_mac_address = dvbsky_read_mac_addr,
++
++	.num_adapters = 1,
++	.adapter = {
++		{
++			.stream = DVB_USB_STREAM_BULK(0x82, 8, 4096),
++		}
++	}
++};
++
++static struct dvb_usb_device_properties dvbsky_s960c_props = {
++	.driver_name = KBUILD_MODNAME,
++	.owner = THIS_MODULE,
++	.adapter_nr = adapter_nr,
++	.size_of_priv = sizeof(struct dvbsky_state),
++
++	.generic_bulk_ctrl_endpoint = 0x01,
++	.generic_bulk_ctrl_endpoint_response = 0x81,
++	.generic_bulk_ctrl_delay = DVBSKY_MSG_DELAY,
++
++	.i2c_algo         = &dvbsky_i2c_algo,
++	.frontend_attach  = dvbsky_s960c_attach,
++	.init             = dvbsky_init,
++	.get_rc_config    = dvbsky_get_rc_config,
++	.streaming_ctrl   = dvbsky_streaming_ctrl,
++	.identify_state	  = dvbsky_identify_state,
++	.exit             = dvbsky_exit,
++	.read_mac_address = dvbsky_read_mac_addr,
++
++	.num_adapters = 1,
++	.adapter = {
++		{
++			.stream = DVB_USB_STREAM_BULK(0x82, 8, 4096),
++		}
++	}
++};
++
++static struct dvb_usb_device_properties dvbsky_t680c_props = {
++	.driver_name = KBUILD_MODNAME,
++	.owner = THIS_MODULE,
++	.adapter_nr = adapter_nr,
++	.size_of_priv = sizeof(struct dvbsky_state),
++
++	.generic_bulk_ctrl_endpoint = 0x01,
++	.generic_bulk_ctrl_endpoint_response = 0x81,
++	.generic_bulk_ctrl_delay = DVBSKY_MSG_DELAY,
++
++	.i2c_algo         = &dvbsky_i2c_algo,
++	.frontend_attach  = dvbsky_t680c_attach,
++	.init             = dvbsky_init,
++	.get_rc_config    = dvbsky_get_rc_config,
++	.streaming_ctrl   = dvbsky_streaming_ctrl,
++	.identify_state	  = dvbsky_identify_state,
++	.exit             = dvbsky_exit,
++	.read_mac_address = dvbsky_read_mac_addr,
++
++	.num_adapters = 1,
++	.adapter = {
++		{
++			.stream = DVB_USB_STREAM_BULK(0x82, 8, 4096),
++		}
++	}
++};
++
++static struct dvb_usb_device_properties dvbsky_t330_props = {
++	.driver_name = KBUILD_MODNAME,
++	.owner = THIS_MODULE,
++	.adapter_nr = adapter_nr,
++	.size_of_priv = sizeof(struct dvbsky_state),
++
++	.generic_bulk_ctrl_endpoint = 0x01,
++	.generic_bulk_ctrl_endpoint_response = 0x81,
++	.generic_bulk_ctrl_delay = DVBSKY_MSG_DELAY,
++
++	.i2c_algo         = &dvbsky_i2c_algo,
++	.frontend_attach  = dvbsky_t330_attach,
++	.init             = dvbsky_init,
++	.get_rc_config    = dvbsky_get_rc_config,
++	.streaming_ctrl   = dvbsky_streaming_ctrl,
++	.identify_state	  = dvbsky_identify_state,
++	.exit             = dvbsky_exit,
++	.read_mac_address = dvbsky_read_mac_addr,
++
++	.num_adapters = 1,
++	.adapter = {
++		{
++			.stream = DVB_USB_STREAM_BULK(0x82, 8, 4096),
++		}
++	}
++};
++
++static struct dvb_usb_device_properties mygica_t230_props = {
++	.driver_name = KBUILD_MODNAME,
++	.owner = THIS_MODULE,
++	.adapter_nr = adapter_nr,
++	.size_of_priv = sizeof(struct dvbsky_state),
++
++	.generic_bulk_ctrl_endpoint = 0x01,
++	.generic_bulk_ctrl_endpoint_response = 0x81,
++	.generic_bulk_ctrl_delay = DVBSKY_MSG_DELAY,
++
++	.i2c_algo         = &dvbsky_i2c_algo,
++	.frontend_attach  = dvbsky_t230_attach,
++	.init             = dvbsky_init,
++	.get_rc_config    = dvbsky_get_rc_config,
++	.streaming_ctrl   = dvbsky_streaming_ctrl,
++	.identify_state	  = dvbsky_identify_state,
++	.exit             = dvbsky_exit,
++	.read_mac_address = dvbsky_read_mac_addr,
++
++	.num_adapters = 1,
++	.adapter = {
++		{
++			.stream = DVB_USB_STREAM_BULK(0x02, 5, 8192),
++		}
++	}
++};
++
++static struct dvb_usb_device_properties mygica_t230c_props = {
++	.driver_name = KBUILD_MODNAME,
++	.owner = THIS_MODULE,
++	.adapter_nr = adapter_nr,
++	.size_of_priv = sizeof(struct dvbsky_state),
++
++	.generic_bulk_ctrl_endpoint = 0x01,
++	.generic_bulk_ctrl_endpoint_response = 0x81,
++	.generic_bulk_ctrl_delay = DVBSKY_MSG_DELAY,
++
++	.i2c_algo         = &dvbsky_i2c_algo,
++	.frontend_attach  = dvbsky_mygica_t230c_attach,
++	.init             = dvbsky_init,
++	.get_rc_config    = dvbsky_get_rc_config,
++	.streaming_ctrl   = dvbsky_streaming_ctrl,
++	.identify_state	  = dvbsky_identify_state,
++	.exit             = dvbsky_exit,
++
++	.num_adapters = 1,
++	.adapter = {
++		{
++			.stream = DVB_USB_STREAM_BULK(0x82, 8, 4096),
++		}
++	}
++};
++
++static struct dvb_usb_device_properties mygica_t230c2_props = {
++	.driver_name = KBUILD_MODNAME,
++	.owner = THIS_MODULE,
++	.adapter_nr = adapter_nr,
++	.size_of_priv = sizeof(struct dvbsky_state),
++
++	.generic_bulk_ctrl_endpoint = 0x01,
++	.generic_bulk_ctrl_endpoint_response = 0x81,
++	.generic_bulk_ctrl_delay = DVBSKY_MSG_DELAY,
++
++	.i2c_algo         = &dvbsky_i2c_algo,
++	.frontend_attach  = dvbsky_mygica_t230c2_attach,
++	.init             = dvbsky_init,
++	.get_rc_config    = dvbsky_get_rc_config,
++	.streaming_ctrl   = dvbsky_streaming_ctrl,
++	.identify_state	  = dvbsky_identify_state,
++	.exit             = dvbsky_exit,
++
++	.num_adapters = 1,
++	.adapter = {
++		{
++			.stream = DVB_USB_STREAM_BULK(0x82, 8, 4096),
++		}
++	}
++};
++
++static const struct usb_device_id dvbsky_id_table[] = {
++	{ DVB_USB_DEVICE(0x0572, 0x6831,
++		&dvbsky_s960_props, "DVBSky S960/S860", RC_MAP_DVBSKY) },
++	{ DVB_USB_DEVICE(0x0572, 0x960c,
++		&dvbsky_s960c_props, "DVBSky S960CI", RC_MAP_DVBSKY) },
++	{ DVB_USB_DEVICE(0x0572, 0x680c,
++		&dvbsky_t680c_props, "DVBSky T680CI", RC_MAP_DVBSKY) },
++	{ DVB_USB_DEVICE(0x0572, 0x0320,
++		&dvbsky_t330_props, "DVBSky T330", RC_MAP_DVBSKY) },
++	{ DVB_USB_DEVICE(USB_VID_TECHNOTREND,
++		USB_PID_TECHNOTREND_TVSTICK_CT2_4400,
++		&dvbsky_t330_props, "TechnoTrend TVStick CT2-4400",
++		RC_MAP_TT_1500) },
++	{ DVB_USB_DEVICE(USB_VID_TECHNOTREND,
++		USB_PID_TECHNOTREND_CONNECT_CT2_4650_CI,
++		&dvbsky_t680c_props, "TechnoTrend TT-connect CT2-4650 CI",
++		RC_MAP_TT_1500) },
++	{ DVB_USB_DEVICE(0x0572, 0xc68a,
++		&mygica_t230c2_props, "MyGica Mini DVB-T2 USB Stick T230C2",
++		RC_MAP_TOTAL_MEDIA_IN_HAND_02) },
++	{ DVB_USB_DEVICE(0x0572, 0xc689,
++		&mygica_t230c_props, "MyGica Mini DVB-T2 USB Stick T230C",
++		RC_MAP_TOTAL_MEDIA_IN_HAND_02) },
++	{ DVB_USB_DEVICE(0x0572, 0xc688,
++		&mygica_t230_props, "MyGica Mini DVB-T2 USB Stick T230",
++		RC_MAP_EMPTY) },
++	{ }
++};
++MODULE_DEVICE_TABLE(usb, dvbsky_id_table);
++
++static struct usb_driver dvbsky_usb_driver = {
++	.name = KBUILD_MODNAME,
++	.id_table = dvbsky_id_table,
++	.probe = dvb_usbv2_probe,
++	.disconnect = dvb_usbv2_disconnect,
++	.suspend = dvb_usbv2_suspend,
++	.resume = dvb_usbv2_resume,
++	.reset_resume = dvb_usbv2_reset_resume,
++	.no_dynamic_id = 1,
++	.soft_unbind = 1,
++};
++
++module_usb_driver(dvbsky_usb_driver);
++
++MODULE_AUTHOR("Max nibble <nibble.max@gmail.com>");
++MODULE_DESCRIPTION("Driver for DVBSky USB");
++MODULE_LICENSE("GPL");
+--- a/drivers/media/rc/keymaps/Makefile	2013-12-12 14:38:07.000000000 +0800
++++ b/drivers/media/rc/keymaps/Makefile	2013-12-18 20:02:46.202844414 +0800
+@@ -28,6 +28,7 @@
+ 			rc-dm1105-nec.o \
+ 			rc-dntv-live-dvb-t.o \
+ 			rc-dntv-live-dvbt-pro.o \
++			rc-dvbsky.o \
+ 			rc-em-terratec.o \
+ 			rc-encore-enltv2.o \
+ 			rc-encore-enltv.o \
+diff -urN a/drivers/media/rc/keymaps/rc-dvbsky.c b/drivers/media/rc/keymaps/rc-dvbsky.c
+--- a/drivers/media/rc/keymaps/rc-dvbsky.c	1970-01-01 08:00:00.000000000 +0800
++++ b/drivers/media/rc/keymaps/rc-dvbsky.c	2013-12-18 20:02:49.870844372 +0800
+@@ -0,0 +1,78 @@
++/* rc-dvbsky.c - Keytable for Dvbsky Remote Controllers
++ *
++ * keymap imported from ir-keymaps.c
++ *
++ *
++ * Copyright (c) 2010-2012 by Nibble Max <nibble.max@gmail.com>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ */
++
++#include <media/rc-map.h>
++#include <linux/module.h>
++/*
++ * This table contains the complete RC5 code, instead of just the data part
++ */
++
++static struct rc_map_table rc5_dvbsky[] = {
++	{ 0x0000, KEY_0 },
++	{ 0x0001, KEY_1 },
++	{ 0x0002, KEY_2 },
++	{ 0x0003, KEY_3 },
++	{ 0x0004, KEY_4 },
++	{ 0x0005, KEY_5 },
++	{ 0x0006, KEY_6 },
++	{ 0x0007, KEY_7 },
++	{ 0x0008, KEY_8 },
++	{ 0x0009, KEY_9 },
++	{ 0x000a, KEY_MUTE },
++	{ 0x000d, KEY_OK },
++	{ 0x000b, KEY_STOP },
++	{ 0x000c, KEY_EXIT },
++	{ 0x000e, KEY_CAMERA }, /*Snap shot*/
++	{ 0x000f, KEY_SUBTITLE }, /*PIP*/
++	{ 0x0010, KEY_VOLUMEUP },
++	{ 0x0011, KEY_VOLUMEDOWN },
++	{ 0x0012, KEY_FAVORITES },
++	{ 0x0013, KEY_LIST }, /*Info*/
++	{ 0x0016, KEY_PAUSE },
++	{ 0x0017, KEY_PLAY },
++	{ 0x001f, KEY_RECORD },
++	{ 0x0020, KEY_CHANNELDOWN },
++	{ 0x0021, KEY_CHANNELUP },
++	{ 0x0025, KEY_POWER2 },
++	{ 0x0026, KEY_REWIND },
++	{ 0x0027, KEY_FASTFORWARD },
++	{ 0x0029, KEY_LAST },
++	{ 0x002b, KEY_MENU },
++	{ 0x002c, KEY_EPG },
++	{ 0x002d, KEY_ZOOM },
++};
++
++static struct rc_map_list rc5_dvbsky_map = {
++	.map = {
++		.scan    = rc5_dvbsky,
++		.size    = ARRAY_SIZE(rc5_dvbsky),
++		.rc_type = RC_TYPE_RC5,
++		.name    = RC_MAP_DVBSKY,
++	}
++};
++
++static int __init init_rc_map_rc5_dvbsky(void)
++{
++	return rc_map_register(&rc5_dvbsky_map);
++}
++
++static void __exit exit_rc_map_rc5_dvbsky(void)
++{
++	rc_map_unregister(&rc5_dvbsky_map);
++}
++
++module_init(init_rc_map_rc5_dvbsky)
++module_exit(exit_rc_map_rc5_dvbsky)
++
++MODULE_LICENSE("GPL");
++MODULE_AUTHOR("Nibble Max <nibble.max@gmail.com>");
+--- a/include/media/rc-map.h	2013-12-12 14:38:07.000000000 +0800
++++ b/include/media/rc-map.h	2013-12-18 19:59:03.122846921 +0800
+@@ -119,6 +119,7 @@
+ #define RC_MAP_DM1105_NEC                "rc-dm1105-nec"
+ #define RC_MAP_DNTV_LIVE_DVBT_PRO        "rc-dntv-live-dvbt-pro"
+ #define RC_MAP_DNTV_LIVE_DVB_T           "rc-dntv-live-dvb-t"
++#define RC_MAP_DVBSKY                    "rc-dvbsky"
+ #define RC_MAP_EMPTY                     "rc-empty"
+ #define RC_MAP_EM_TERRATEC               "rc-em-terratec"
+ #define RC_MAP_ENCORE_ENLTV2             "rc-encore-enltv2"
+--- a/drivers/media/dvb-frontends/ts2020.c
++++ b/drivers/media/dvb-frontends/ts2020.c
+@@ -26,12 +26,23 @@
+ #define FREQ_OFFSET_LOW_SYM_RATE 3000
+ 
+ struct ts2020_priv {
++	struct dvb_frontend *fe;
+ 	/* i2c details */
+ 	int i2c_address;
+ 	struct i2c_adapter *i2c;
+-	u8 clk_out_div;
++	u8 clk_out:2;
++	u8 clk_out_div:5;
+ 	u32 frequency;
+ 	u32 frequency_div;
++#define TS2020_M88TS2020 0
++#define TS2020_M88TS2022 1
++	u8 tuner;
++	u8 loop_through:1;
++};
++
++struct ts2020_reg_val {
++	u8 reg;
++	u8 val;
+ };
+ 
+ static int ts2020_release(struct dvb_frontend *fe)
+@@ -112,40 +123,77 @@
+ static int ts2020_sleep(struct dvb_frontend *fe)
+ {
+ 	struct ts2020_priv *priv = fe->tuner_priv;
+-	int ret;
+-	u8 buf[] = { 10, 0 };
+-	struct i2c_msg msg = {
+-		.addr = priv->i2c_address,
+-		.flags = 0,
+-		.buf = buf,
+-		.len = 2
+-	};
++	u8 u8tmp;
+ 
+-	if (fe->ops.i2c_gate_ctrl)
+-		fe->ops.i2c_gate_ctrl(fe, 1);
+-
+-	ret = i2c_transfer(priv->i2c, &msg, 1);
+-	if (ret != 1)
+-		printk(KERN_ERR "%s: i2c error\n", __func__);
+-
+-	if (fe->ops.i2c_gate_ctrl)
+-		fe->ops.i2c_gate_ctrl(fe, 0);
++	if (priv->tuner == TS2020_M88TS2020)
++		u8tmp = 0x0a; /* XXX: probably wrong */
++	else
++		u8tmp = 0x00;
+ 
+-	return (ret == 1) ? 0 : ret;
++	return ts2020_writereg(fe, u8tmp, 0x00);
+ }
+ 
+ static int ts2020_init(struct dvb_frontend *fe)
+ {
+ 	struct ts2020_priv *priv = fe->tuner_priv;
++	int i;
++	u8 u8tmp;
++
++	if (priv->tuner == TS2020_M88TS2020) {
++		ts2020_writereg(fe, 0x42, 0x73);
++		ts2020_writereg(fe, 0x05, priv->clk_out_div);
++		ts2020_writereg(fe, 0x20, 0x27);
++		ts2020_writereg(fe, 0x07, 0x02);
++		ts2020_writereg(fe, 0x11, 0xff);
++		ts2020_writereg(fe, 0x60, 0xf9);
++		ts2020_writereg(fe, 0x08, 0x01);
++		ts2020_writereg(fe, 0x00, 0x41);
++	} else {
++		static const struct ts2020_reg_val reg_vals[] = {
++			{0x7d, 0x9d},
++			{0x7c, 0x9a},
++			{0x7a, 0x76},
++			{0x3b, 0x01},
++			{0x63, 0x88},
++			{0x61, 0x85},
++			{0x22, 0x30},
++			{0x30, 0x40},
++			{0x20, 0x23},
++			{0x24, 0x02},
++			{0x12, 0xa0},
++		};
++
++		ts2020_writereg(fe, 0x00, 0x01);
++		ts2020_writereg(fe, 0x00, 0x03);
++
++		switch (priv->clk_out) {
++		case TS2020_CLK_OUT_DISABLED:
++			u8tmp = 0x60;
++			break;
++		case TS2020_CLK_OUT_ENABLED:
++			u8tmp = 0x70;
++			ts2020_writereg(fe, 0x05, priv->clk_out_div);
++			break;
++		case TS2020_CLK_OUT_ENABLED_XTALOUT:
++			u8tmp = 0x6c;
++			break;
++		default:
++			u8tmp = 0x60;
++			break;
++		}
++
++		ts2020_writereg(fe, 0x42, u8tmp);
++
++		if (priv->loop_through)
++			u8tmp = 0xec;
++		else
++			u8tmp = 0x6c;
+ 
+-	ts2020_writereg(fe, 0x42, 0x73);
+-	ts2020_writereg(fe, 0x05, priv->clk_out_div);
+-	ts2020_writereg(fe, 0x20, 0x27);
+-	ts2020_writereg(fe, 0x07, 0x02);
+-	ts2020_writereg(fe, 0x11, 0xff);
+-	ts2020_writereg(fe, 0x60, 0xf9);
+-	ts2020_writereg(fe, 0x08, 0x01);
+-	ts2020_writereg(fe, 0x00, 0x41);
++		ts2020_writereg(fe, 0x62, u8tmp);
++
++		for (i = 0; i < ARRAY_SIZE(reg_vals); i++)
++			ts2020_writereg(fe, reg_vals[i].reg, reg_vals[i].val);
++	}
+ 
+ 	return 0;
+ }
+@@ -203,7 +251,14 @@
+ 	ndiv = ndiv + ndiv % 2;
+ 	ndiv = ndiv - 1024;
+ 
+-	ret = ts2020_writereg(fe, 0x10, 0x80 | lo);
++	if (priv->tuner == TS2020_M88TS2020) {
++		lpf_coeff = 2766;
++		ret = ts2020_writereg(fe, 0x10, 0x80 | lo);
++	} else {
++		lpf_coeff = 3200;
++		ret = ts2020_writereg(fe, 0x10, 0x0b);
++		ret |= ts2020_writereg(fe, 0x11, 0x40);
++	}
+ 
+ 	/* Set frequency divider */
+ 	ret |= ts2020_writereg(fe, 0x01, (ndiv >> 8) & 0xf);
+@@ -220,7 +275,8 @@
+ 	ret |= ts2020_tuner_gate_ctrl(fe, 0x08);
+ 
+ 	/* Tuner RF */
+-	ret |= ts2020_set_tuner_rf(fe);
++	if (priv->tuner == TS2020_M88TS2020)
++		ret |= ts2020_set_tuner_rf(fe);
+ 
+ 	gdiv28 = (TS2020_XTAL_FREQ / 1000 * 1694 + 500) / 1000;
+ 	ret |= ts2020_writereg(fe, 0x04, gdiv28 & 0xff);
+@@ -228,6 +284,15 @@
+ 	if (ret < 0)
+ 		return -ENODEV;
+ 
++	if (priv->tuner == TS2020_M88TS2022) {
++		ret = ts2020_writereg(fe, 0x25, 0x00);
++		ret |= ts2020_writereg(fe, 0x27, 0x70);
++		ret |= ts2020_writereg(fe, 0x41, 0x09);
++		ret |= ts2020_writereg(fe, 0x08, 0x0b);
++		if (ret < 0)
++			return -ENODEV;
++	}
++
+ 	value = ts2020_readreg(fe, 0x26);
+ 
+ 	f3db = (symbol_rate * 135) / 200 + 2000;
+@@ -243,8 +308,6 @@
+ 	if (mlpf_max > 63)
+ 		mlpf_max = 63;
+ 
+-	lpf_coeff = 2766;
+-
+ 	nlpf = (f3db * gdiv28 * 2 / lpf_coeff /
+ 		(TS2020_XTAL_FREQ / 1000)  + 1) / 2;
+ 	if (nlpf > 23)
+@@ -285,6 +348,13 @@
+ {
+ 	struct ts2020_priv *priv = fe->tuner_priv;
+ 	*frequency = priv->frequency;
++
++	return 0;
++}
++
++static int ts2020_get_if_frequency(struct dvb_frontend *fe, u32 *frequency)
++{
++	*frequency = 0; /* Zero-IF */
+ 	return 0;
+ }
+ 
+@@ -324,6 +394,7 @@
+ 	.sleep = ts2020_sleep,
+ 	.set_params = ts2020_set_params,
+ 	.get_frequency = ts2020_get_frequency,
++	.get_if_frequency = ts2020_get_if_frequency,
+ 	.get_rf_strength = ts2020_read_signal_strength,
+ };
+ 
+@@ -340,8 +411,10 @@
+ 
+ 	priv->i2c_address = config->tuner_address;
+ 	priv->i2c = i2c;
++	priv->clk_out = config->clk_out;
+ 	priv->clk_out_div = config->clk_out_div;
+ 	priv->frequency_div = config->frequency_div;
++	priv->fe = fe;
+ 	fe->tuner_priv = priv;
+ 
+ 	if (!priv->frequency_div)
+@@ -358,9 +431,13 @@
+ 
+ 	/* Check the tuner version */
+ 	buf = ts2020_readreg(fe, 0x00);
+-	if ((buf == 0x01) || (buf == 0x41) || (buf == 0x81))
++	if ((buf == 0x01) || (buf == 0x41) || (buf == 0x81)) {
+ 		printk(KERN_INFO "%s: Find tuner TS2020!\n", __func__);
+-	else {
++		priv->tuner = TS2020_M88TS2020;
++	} else if ((buf == 0x83) || (buf == 0xc3)) {
++		printk(KERN_INFO "%s: Find tuner TS2022!\n", __func__);
++		priv->tuner = TS2020_M88TS2022;
++	} else {
+ 		printk(KERN_ERR "%s: Read tuner reg[0] = %d\n", __func__, buf);
+ 		kfree(priv);
+ 		return NULL;
+@@ -373,6 +450,165 @@
+ }
+ EXPORT_SYMBOL(ts2020_attach);
+ 
++static int ts2020_probe(struct i2c_client *client,
++		const struct i2c_device_id *id)
++{
++	struct ts2020_config *pdata = client->dev.platform_data;
++	struct dvb_frontend *fe = pdata->fe;
++	struct ts2020_priv *dev;
++	int ret;
++	u8 u8tmp;
++	unsigned int utmp;
++	char *chip_str;
++
++	dev = kzalloc(sizeof(*dev), GFP_KERNEL);
++	if (!dev) {
++		ret = -ENOMEM;
++		goto err;
++	}
++
++	dev->i2c = client->adapter;
++	dev->i2c_address = client->addr;
++	dev->clk_out = pdata->clk_out;
++	dev->clk_out_div = pdata->clk_out_div;
++	dev->frequency_div = pdata->frequency_div;
++	dev->fe = fe;
++	fe->tuner_priv = dev;
++
++	/* check if the tuner is there */
++	ret = ts2020_readreg(fe, 0x00);
++	if (ret < 0)
++		goto err;
++	utmp = ret;
++
++	if ((utmp & 0x03) == 0x00) {
++		ret = ts2020_writereg(fe, 0x00, 0x01);
++		if (ret)
++			goto err;
++
++		usleep_range(2000, 50000);
++	}
++
++	ret = ts2020_writereg(fe, 0x00, 0x03);
++	if (ret)
++		goto err;
++
++	usleep_range(2000, 50000);
++
++	ret = ts2020_readreg(fe, 0x00);
++	if (ret < 0)
++		goto err;
++	utmp = ret;
++
++	dev_dbg(&client->dev, "chip_id=%02x\n", utmp);
++
++	switch (utmp) {
++	case 0x01:
++	case 0x41:
++	case 0x81:
++		dev->tuner = TS2020_M88TS2020;
++		chip_str = "TS2020";
++		if (!dev->frequency_div)
++			dev->frequency_div = 1060000;
++		break;
++	case 0xc3:
++	case 0x83:
++		dev->tuner = TS2020_M88TS2022;
++		chip_str = "TS2022";
++		if (!dev->frequency_div)
++			dev->frequency_div = 1103000;
++		break;
++	default:
++		ret = -ENODEV;
++		goto err;
++	}
++
++	if (dev->tuner == TS2020_M88TS2022) {
++		switch (dev->clk_out) {
++		case TS2020_CLK_OUT_DISABLED:
++			u8tmp = 0x60;
++			break;
++		case TS2020_CLK_OUT_ENABLED:
++			u8tmp = 0x70;
++			ret = ts2020_writereg(fe, 0x05, dev->clk_out_div);
++			if (ret)
++				goto err;
++			break;
++		case TS2020_CLK_OUT_ENABLED_XTALOUT:
++			u8tmp = 0x6c;
++			break;
++		default:
++			ret = -EINVAL;
++			goto err;
++		}
++
++		ret = ts2020_writereg(fe, 0x42, u8tmp);
++		if (ret)
++			goto err;
++
++		if (dev->loop_through)
++			u8tmp = 0xec;
++		else
++			u8tmp = 0x6c;
++
++		ret = ts2020_writereg(fe, 0x62, u8tmp);
++		if (ret)
++			goto err;
++	}
++
++	/* sleep */
++	ret = ts2020_writereg(fe, 0x00, 0x00);
++	if (ret)
++		goto err;
++
++	dev_info(&client->dev,
++		 "Montage Technology %s successfully identified\n", chip_str);
++
++	memcpy(&fe->ops.tuner_ops, &ts2020_tuner_ops,
++			sizeof(struct dvb_tuner_ops));
++	fe->ops.tuner_ops.release = NULL;
++
++	i2c_set_clientdata(client, dev);
++	return 0;
++err:
++	dev_dbg(&client->dev, "failed=%d\n", ret);
++	kfree(dev);
++	return ret;
++}
++
++static int ts2020_remove(struct i2c_client *client)
++{
++	struct ts2020_priv *dev = i2c_get_clientdata(client);
++	struct dvb_frontend *fe = dev->fe;
++
++	dev_dbg(&client->dev, "\n");
++
++	memset(&fe->ops.tuner_ops, 0, sizeof(struct dvb_tuner_ops));
++	fe->tuner_priv = NULL;
++	kfree(dev);
++
++	return 0;
++}
++
++static const struct i2c_device_id ts2020_id_table[] = {
++	{"ts2020", 0},
++	{"ts2022", 0},
++	{}
++};
++MODULE_DEVICE_TABLE(i2c, ts2020_id_table);
++
++static struct i2c_driver ts2020_driver = {
++	.driver = {
++		.owner	= THIS_MODULE,
++		.name	= "ts2020",
++	},
++	.probe		= ts2020_probe,
++	.remove		= ts2020_remove,
++	.id_table	= ts2020_id_table,
++};
++
++module_i2c_driver(ts2020_driver);
++
+ MODULE_AUTHOR("Konstantin Dimitrov <kosio.dimitrov@gmail.com>");
+ MODULE_DESCRIPTION("Montage Technology TS2020 - Silicon tuner driver module");
+ MODULE_LICENSE("GPL");
+--- a/drivers/media/dvb-frontends/ts2020.h
++++ b/drivers/media/dvb-frontends/ts2020.h
+@@ -27,11 +27,34 @@
+ 
+ struct ts2020_config {
+ 	u8 tuner_address;
+-	u8 clk_out_div;
+ 	u32 frequency_div;
++
++	/*
++	 * RF loop-through
++	 */
++	u8 loop_through:1;
++
++	/*
++	 * clock output
++	 */
++#define TS2020_CLK_OUT_DISABLED        0
++#define TS2020_CLK_OUT_ENABLED         1
++#define TS2020_CLK_OUT_ENABLED_XTALOUT 2
++	u8 clk_out:2;
++
++	/*
++	 * clock output divider
++	 * 1 - 31
++	 */
++	u8 clk_out_div:5;
++
++	/*
++	 * pointer to DVB frontend
++	 */
++	struct dvb_frontend *fe;
+ };
+ 
+-#if IS_ENABLED(CONFIG_DVB_TS2020)
++#if IS_ENABLED(CONFIG_DVB_TS2020)
+ 
+ extern struct dvb_frontend *ts2020_attach(
+ 	struct dvb_frontend *fe,
+--- a/drivers/media/dvb-frontends/m88ds3103.h	2018-10-24 18:10:37.169295870 +0300
++++ b/drivers/media/dvb-frontends/m88ds3103.h	2018-10-24 18:10:49.605295418 +0300
+@@ -0,0 +1,139 @@
++/*
++ * Montage M88DS3103 demodulator driver
++ *
++ * Copyright (C) 2013 Antti Palosaari <crope@iki.fi>
++ *
++ *    This program is free software; you can redistribute it and/or modify
++ *    it under the terms of the GNU General Public License as published by
++ *    the Free Software Foundation; either version 2 of the License, or
++ *    (at your option) any later version.
++ *
++ *    This program is distributed in the hope that it will be useful,
++ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *    GNU General Public License for more details.
++ */
++
++#ifndef M88DS3103_H
++#define M88DS3103_H
++
++#include <linux/dvb/frontend.h>
++
++struct m88ds3103_config {
++	/*
++	 * I2C address
++	 * Default: none, must set
++	 * 0x68, ...
++	 */
++	u8 i2c_addr;
++
++	/*
++	 * clock
++	 * Default: none, must set
++	 * 27000000
++	 */
++	u32 clock;
++
++	/*
++	 * max bytes I2C provider is asked to write at once
++	 * Default: none, must set
++	 * 33, 65, ...
++	 */
++	u16 i2c_wr_max;
++
++	/*
++	 * TS output mode
++	 * Default: M88DS3103_TS_SERIAL
++	 */
++#define M88DS3103_TS_SERIAL             0 /* TS output pin D0, normal */
++#define M88DS3103_TS_SERIAL_D7          1 /* TS output pin D7 */
++#define M88DS3103_TS_PARALLEL           2 /* TS Parallel mode */
++#define M88DS3103_TS_CI                 3 /* TS CI Mode */
++	u8 ts_mode;
++
++	/*
++	 * TS clk in KHz
++	 * Default: 0.
++	 */
++	u32 ts_clk;
++
++	/*
++	 * TS clk polarity.
++	 * Default: 0. 1-active at falling edge; 0-active at rising edge.
++	 */
++	u8 ts_clk_pol:1;
++
++	/*
++	 * spectrum inversion
++	 * Default: 0
++	 */
++	u8 spec_inv:1;
++
++	/*
++	 * AGC polarity
++	 * Default: 0
++	 */
++	u8 agc_inv:1;
++
++	/*
++	 * clock output
++	 * Default: M88DS3103_CLOCK_OUT_DISABLED
++	 */
++#define M88DS3103_CLOCK_OUT_DISABLED        0
++#define M88DS3103_CLOCK_OUT_ENABLED         1
++#define M88DS3103_CLOCK_OUT_ENABLED_DIV2    2
++	u8 clock_out;
++
++	/*
++	 * DiSEqC envelope mode
++	 * Default: 0
++	 */
++	u8 envelope_mode:1;
++
++	/*
++	 * AGC configuration
++	 * Default: none, must set
++	 */
++	u8 agc;
++
++	/*
++	 * LNB H/V pin polarity
++	 * Default: 0.
++	 * 1: pin high set to VOLTAGE_13, pin low to set VOLTAGE_18.
++	 * 0: pin high set to VOLTAGE_18, pin low to set VOLTAGE_13.
++	 */
++	u8 lnb_hv_pol:1;
++
++	/*
++	 * LNB enable pin polarity
++	 * Default: 0.
++	 * 1: pin high to enable, pin low to disable.
++	 * 0: pin high to disable, pin low to enable.
++	 */
++	u8 lnb_en_pol:1;
++};
++
++/*
++ * Driver implements own I2C-adapter for tuner I2C access. That's since chip
++ * has I2C-gate control which closes gate automatically after I2C transfer.
++ * Using own I2C adapter we can workaround that.
++ */
++
++#if defined(CONFIG_DVB_M88DS3103) || \
++		(defined(CONFIG_DVB_M88DS3103_MODULE) && defined(MODULE))
++extern struct dvb_frontend *m88ds3103_attach(
++		const struct m88ds3103_config *config,
++		struct i2c_adapter *i2c,
++		struct i2c_adapter **tuner_i2c);
++#else
++static inline struct dvb_frontend *m88ds3103_attach(
++		const struct m88ds3103_config *config,
++		struct i2c_adapter *i2c,
++		struct i2c_adapter **tuner_i2c)
++{
++	pr_warn("%s: driver disabled by Kconfig\n", __func__);
++	return NULL;
++}
++#endif
++
++#endif
+--- a/drivers/media/dvb-frontends/m88ds3103.c	2018-10-24 18:10:37.169295870 +0300
++++ b/drivers/media/dvb-frontends/m88ds3103.c	2018-10-24 18:10:49.605295418 +0300
+@@ -0,0 +1,1506 @@
++/*
++ * Montage M88DS3103/M88RS6000 demodulator driver
++ *
++ * Copyright (C) 2013 Antti Palosaari <crope@iki.fi>
++ *
++ *    This program is free software; you can redistribute it and/or modify
++ *    it under the terms of the GNU General Public License as published by
++ *    the Free Software Foundation; either version 2 of the License, or
++ *    (at your option) any later version.
++ *
++ *    This program is distributed in the hope that it will be useful,
++ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *    GNU General Public License for more details.
++ */
++
++#include "m88ds3103_priv.h"
++
++static struct dvb_frontend_ops m88ds3103_ops;
++
++/* write multiple registers */
++static int m88ds3103_wr_regs(struct m88ds3103_priv *priv,
++		u8 reg, const u8 *val, int len)
++{
++#define MAX_WR_LEN 32
++#define MAX_WR_XFER_LEN (MAX_WR_LEN + 1)
++	int ret;
++	u8 buf[MAX_WR_XFER_LEN];
++	struct i2c_msg msg[1] = {
++		{
++			.addr = priv->cfg->i2c_addr,
++			.flags = 0,
++			.len = 1 + len,
++			.buf = buf,
++		}
++	};
++
++	if (WARN_ON(len > MAX_WR_LEN))
++		return -EINVAL;
++
++	buf[0] = reg;
++	memcpy(&buf[1], val, len);
++
++	mutex_lock(&priv->i2c_mutex);
++	ret = i2c_transfer(priv->i2c, msg, 1);
++	mutex_unlock(&priv->i2c_mutex);
++	if (ret == 1) {
++		ret = 0;
++	} else {
++		dev_warn(&priv->i2c->dev,
++				"%s: i2c wr failed=%d reg=%02x len=%d\n",
++				KBUILD_MODNAME, ret, reg, len);
++		ret = -EREMOTEIO;
++	}
++
++	return ret;
++}
++
++/* read multiple registers */
++static int m88ds3103_rd_regs(struct m88ds3103_priv *priv,
++		u8 reg, u8 *val, int len)
++{
++#define MAX_RD_LEN 3
++#define MAX_RD_XFER_LEN (MAX_RD_LEN)
++	int ret;
++	u8 buf[MAX_RD_XFER_LEN];
++	struct i2c_msg msg[2] = {
++		{
++			.addr = priv->cfg->i2c_addr,
++			.flags = 0,
++			.len = 1,
++			.buf = &reg,
++		}, {
++			.addr = priv->cfg->i2c_addr,
++			.flags = I2C_M_RD,
++			.len = len,
++			.buf = buf,
++		}
++	};
++
++	if (WARN_ON(len > MAX_RD_LEN))
++		return -EINVAL;
++
++	mutex_lock(&priv->i2c_mutex);
++	ret = i2c_transfer(priv->i2c, msg, 2);
++	mutex_unlock(&priv->i2c_mutex);
++	if (ret == 2) {
++		memcpy(val, buf, len);
++		ret = 0;
++	} else {
++		dev_warn(&priv->i2c->dev,
++				"%s: i2c rd failed=%d reg=%02x len=%d\n",
++				KBUILD_MODNAME, ret, reg, len);
++		ret = -EREMOTEIO;
++	}
++
++	return ret;
++}
++
++/* write single register */
++static int m88ds3103_wr_reg(struct m88ds3103_priv *priv, u8 reg, u8 val)
++{
++	return m88ds3103_wr_regs(priv, reg, &val, 1);
++}
++
++/* read single register */
++static int m88ds3103_rd_reg(struct m88ds3103_priv *priv, u8 reg, u8 *val)
++{
++	return m88ds3103_rd_regs(priv, reg, val, 1);
++}
++
++/* write single register with mask */
++static int m88ds3103_wr_reg_mask(struct m88ds3103_priv *priv,
++		u8 reg, u8 val, u8 mask)
++{
++	int ret;
++	u8 u8tmp;
++
++	/* no need for read if whole reg is written */
++	if (mask != 0xff) {
++		ret = m88ds3103_rd_regs(priv, reg, &u8tmp, 1);
++		if (ret)
++			return ret;
++
++		val &= mask;
++		u8tmp &= ~mask;
++		val |= u8tmp;
++	}
++
++	return m88ds3103_wr_regs(priv, reg, &val, 1);
++}
++
++/* read single register with mask */
++static int m88ds3103_rd_reg_mask(struct m88ds3103_priv *priv,
++		u8 reg, u8 *val, u8 mask)
++{
++	int ret, i;
++	u8 u8tmp;
++
++	ret = m88ds3103_rd_regs(priv, reg, &u8tmp, 1);
++	if (ret)
++		return ret;
++
++	u8tmp &= mask;
++
++	/* find position of the first bit */
++	for (i = 0; i < 8; i++) {
++		if ((mask >> i) & 0x01)
++			break;
++	}
++	*val = u8tmp >> i;
++
++	return 0;
++}
++
++/* write reg val table using reg addr auto increment */
++static int m88ds3103_wr_reg_val_tab(struct m88ds3103_priv *priv,
++		const struct m88ds3103_reg_val *tab, int tab_len)
++{
++	int ret, i, j;
++	u8 buf[83];
++
++	dev_dbg(&priv->i2c->dev, "%s: tab_len=%d\n", __func__, tab_len);
++
++	if (tab_len > 86) {
++		ret = -EINVAL;
++		goto err;
++	}
++
++	for (i = 0, j = 0; i < tab_len; i++, j++) {
++		buf[j] = tab[i].val;
++
++		if (i == tab_len - 1 || tab[i].reg != tab[i + 1].reg - 1 ||
++				!((j + 1) % (priv->cfg->i2c_wr_max - 1))) {
++			ret = m88ds3103_wr_regs(priv, tab[i].reg - j, buf, j + 1);
++			if (ret)
++				goto err;
++
++			j = -1;
++		}
++	}
++
++	return 0;
++err:
++	dev_dbg(&priv->i2c->dev, "%s: failed=%d\n", __func__, ret);
++	return ret;
++}
++
++static int m88ds3103_read_status(struct dvb_frontend *fe, fe_status_t *status)
++{
++	struct m88ds3103_priv *priv = fe->demodulator_priv;
++	struct dtv_frontend_properties *c = &fe->dtv_property_cache;
++	int ret;
++	u8 u8tmp;
++
++	*status = 0;
++
++	if (!priv->warm) {
++		ret = -EAGAIN;
++		goto err;
++	}
++
++	switch (c->delivery_system) {
++	case SYS_DVBS:
++		ret = m88ds3103_rd_reg_mask(priv, 0xd1, &u8tmp, 0x07);
++		if (ret)
++			goto err;
++
++		if (u8tmp == 0x07)
++			*status = FE_HAS_SIGNAL | FE_HAS_CARRIER |
++					FE_HAS_VITERBI | FE_HAS_SYNC |
++					FE_HAS_LOCK;
++		break;
++	case SYS_DVBS2:
++		ret = m88ds3103_rd_reg_mask(priv, 0x0d, &u8tmp, 0x8f);
++		if (ret)
++			goto err;
++
++		if (u8tmp == 0x8f)
++			*status = FE_HAS_SIGNAL | FE_HAS_CARRIER |
++					FE_HAS_VITERBI | FE_HAS_SYNC |
++					FE_HAS_LOCK;
++		break;
++	default:
++		dev_dbg(&priv->i2c->dev, "%s: invalid delivery_system\n",
++				__func__);
++		ret = -EINVAL;
++		goto err;
++	}
++
++	priv->fe_status = *status;
++
++	dev_dbg(&priv->i2c->dev, "%s: lock=%02x status=%02x\n",
++			__func__, u8tmp, *status);
++
++	return 0;
++err:
++	dev_dbg(&priv->i2c->dev, "%s: failed=%d\n", __func__, ret);
++	return ret;
++}
++
++static int m88ds3103_set_frontend(struct dvb_frontend *fe)
++{
++	struct m88ds3103_priv *priv = fe->demodulator_priv;
++	struct dtv_frontend_properties *c = &fe->dtv_property_cache;
++	int ret, len;
++	const struct m88ds3103_reg_val *init;
++	u8 u8tmp, u8tmp1 = 0, u8tmp2 = 0; /* silence compiler warning */
++	u8 buf[3];
++	u16 u16tmp, divide_ratio = 0;
++	u32 tuner_frequency, target_mclk;
++	s32 s32tmp;
++
++	dev_dbg(&priv->i2c->dev,
++			"%s: delivery_system=%d modulation=%d frequency=%d symbol_rate=%d inversion=%d pilot=%d rolloff=%d\n",
++			__func__, c->delivery_system,
++			c->modulation, c->frequency, c->symbol_rate,
++			c->inversion, c->pilot, c->rolloff);
++
++	if (!priv->warm) {
++		ret = -EAGAIN;
++		goto err;
++	}
++
++	/* reset */
++	ret = m88ds3103_wr_reg(priv, 0x07, 0x80);
++	if (ret)
++		goto err;
++
++	ret = m88ds3103_wr_reg(priv, 0x07, 0x00);
++	if (ret)
++		goto err;
++
++	/* Disable demod clock path */
++	if (priv->chip_id == M88RS6000_CHIP_ID) {
++		ret = m88ds3103_wr_reg(priv, 0x06, 0xe0);
++		if (ret)
++			goto err;
++	}
++
++	/* program tuner */
++	if (fe->ops.tuner_ops.set_params) {
++		ret = fe->ops.tuner_ops.set_params(fe);
++		if (ret)
++			goto err;
++	}
++
++	if (fe->ops.tuner_ops.get_frequency) {
++		ret = fe->ops.tuner_ops.get_frequency(fe, &tuner_frequency);
++		if (ret)
++			goto err;
++	} else {
++		/*
++		 * Use nominal target frequency as tuner driver does not provide
++		 * actual frequency used. Carrier offset calculation is not
++		 * valid.
++		 */
++		tuner_frequency = c->frequency;
++	}
++
++	/* select M88RS6000 demod main mclk and ts mclk from tuner die. */
++	if (priv->chip_id == M88RS6000_CHIP_ID) {
++		if (c->symbol_rate > 45010000)
++			priv->mclk_khz = 110250;
++		else
++			priv->mclk_khz = 96000;
++
++		if (c->delivery_system == SYS_DVBS)
++			target_mclk = 96000;
++		else
++			target_mclk = 144000;
++
++		/* Enable demod clock path */
++		ret = m88ds3103_wr_reg(priv, 0x06, 0x00);
++		if (ret)
++			goto err;
++		usleep_range(10000, 20000);
++	} else {
++	/* set M88DS3103 mclk and ts mclk. */
++		priv->mclk_khz = 96000;
++
++		switch (priv->cfg->ts_mode) {
++		case M88DS3103_TS_SERIAL:
++		case M88DS3103_TS_SERIAL_D7:
++			target_mclk = priv->cfg->ts_clk;
++			break;
++		case M88DS3103_TS_PARALLEL:
++		case M88DS3103_TS_CI:
++			if (c->delivery_system == SYS_DVBS)
++				target_mclk = 96000;
++			else {
++				if (c->symbol_rate < 18000000)
++					target_mclk = 96000;
++				else if (c->symbol_rate < 28000000)
++					target_mclk = 144000;
++				else
++					target_mclk = 192000;
++			}
++			break;
++		default:
++			dev_dbg(&priv->i2c->dev, "%s: invalid ts_mode\n",
++					__func__);
++			ret = -EINVAL;
++			goto err;
++		}
++
++		switch (target_mclk) {
++		case 96000:
++			u8tmp1 = 0x02; /* 0b10 */
++			u8tmp2 = 0x01; /* 0b01 */
++			break;
++		case 144000:
++			u8tmp1 = 0x00; /* 0b00 */
++			u8tmp2 = 0x01; /* 0b01 */
++			break;
++		case 192000:
++			u8tmp1 = 0x03; /* 0b11 */
++			u8tmp2 = 0x00; /* 0b00 */
++			break;
++		}
++		ret = m88ds3103_wr_reg_mask(priv, 0x22, u8tmp1 << 6, 0xc0);
++		if (ret)
++			goto err;
++		ret = m88ds3103_wr_reg_mask(priv, 0x24, u8tmp2 << 6, 0xc0);
++		if (ret)
++			goto err;
++	}
++
++	ret = m88ds3103_wr_reg(priv, 0xb2, 0x01);
++	if (ret)
++		goto err;
++
++	ret = m88ds3103_wr_reg(priv, 0x00, 0x01);
++	if (ret)
++		goto err;
++
++	switch (c->delivery_system) {
++	case SYS_DVBS:
++		if (priv->chip_id == M88RS6000_CHIP_ID) {
++			len = ARRAY_SIZE(m88rs6000_dvbs_init_reg_vals);
++			init = m88rs6000_dvbs_init_reg_vals;
++		} else {
++			len = ARRAY_SIZE(m88ds3103_dvbs_init_reg_vals);
++			init = m88ds3103_dvbs_init_reg_vals;
++		}
++		break;
++	case SYS_DVBS2:
++		if (priv->chip_id == M88RS6000_CHIP_ID) {
++			len = ARRAY_SIZE(m88rs6000_dvbs2_init_reg_vals);
++			init = m88rs6000_dvbs2_init_reg_vals;
++		} else {
++			len = ARRAY_SIZE(m88ds3103_dvbs2_init_reg_vals);
++			init = m88ds3103_dvbs2_init_reg_vals;
++		}
++		break;
++	default:
++		dev_dbg(&priv->i2c->dev, "%s: invalid delivery_system\n",
++				__func__);
++		ret = -EINVAL;
++		goto err;
++	}
++
++	/* program init table */
++	if (c->delivery_system != priv->delivery_system) {
++		ret = m88ds3103_wr_reg_val_tab(priv, init, len);
++		if (ret)
++			goto err;
++	}
++
++	if (priv->chip_id == M88RS6000_CHIP_ID) {
++		if ((c->delivery_system == SYS_DVBS2)
++			&& ((c->symbol_rate / 1000) <= 5000)) {
++			ret = m88ds3103_wr_reg(priv, 0xc0, 0x04);
++			if (ret)
++				goto err;
++			buf[0] = 0x09;
++			buf[1] = 0x22;
++			buf[2] = 0x88;
++			ret = m88ds3103_wr_regs(priv, 0x8a, buf, 3);
++			if (ret)
++				goto err;
++		}
++		ret = m88ds3103_wr_reg_mask(priv, 0x9d, 0x08, 0x08);
++		if (ret)
++			goto err;
++		ret = m88ds3103_wr_reg(priv, 0xf1, 0x01);
++		if (ret)
++			goto err;
++		ret = m88ds3103_wr_reg_mask(priv, 0x30, 0x80, 0x80);
++		if (ret)
++			goto err;
++	}
++
++	switch (priv->cfg->ts_mode) {
++	case M88DS3103_TS_SERIAL:
++		u8tmp1 = 0x00;
++		u8tmp = 0x06;
++		break;
++	case M88DS3103_TS_SERIAL_D7:
++		u8tmp1 = 0x20;
++		u8tmp = 0x06;
++		break;
++	case M88DS3103_TS_PARALLEL:
++		u8tmp = 0x02;
++		break;
++	case M88DS3103_TS_CI:
++		u8tmp = 0x03;
++		break;
++	default:
++		dev_dbg(&priv->i2c->dev, "%s: invalid ts_mode\n", __func__);
++		ret = -EINVAL;
++		goto err;
++	}
++
++	if (priv->cfg->ts_clk_pol)
++		u8tmp |= 0x40;
++
++	/* TS mode */
++	ret = m88ds3103_wr_reg(priv, 0xfd, u8tmp);
++	if (ret)
++		goto err;
++
++	switch (priv->cfg->ts_mode) {
++	case M88DS3103_TS_SERIAL:
++	case M88DS3103_TS_SERIAL_D7:
++		ret = m88ds3103_wr_reg_mask(priv, 0x29, u8tmp1, 0x20);
++		if (ret)
++			goto err;
++		u8tmp1 = 0;
++		u8tmp2 = 0;
++		break;
++	default:
++		if (priv->cfg->ts_clk) {
++			divide_ratio = DIV_ROUND_UP(target_mclk, priv->cfg->ts_clk);
++			u8tmp1 = divide_ratio / 2;
++			u8tmp2 = DIV_ROUND_UP(divide_ratio, 2);
++		}
++	}
++
++	dev_dbg(&priv->i2c->dev,
++			"%s: target_mclk=%d ts_clk=%d divide_ratio=%d\n",
++			__func__, target_mclk, priv->cfg->ts_clk, divide_ratio);
++
++	u8tmp1--;
++	u8tmp2--;
++	/* u8tmp1[5:2] => fe[3:0], u8tmp1[1:0] => ea[7:6] */
++	u8tmp1 &= 0x3f;
++	/* u8tmp2[5:0] => ea[5:0] */
++	u8tmp2 &= 0x3f;
++
++	ret = m88ds3103_rd_reg(priv, 0xfe, &u8tmp);
++	if (ret)
++		goto err;
++
++	u8tmp = ((u8tmp  & 0xf0) << 0) | u8tmp1 >> 2;
++	ret = m88ds3103_wr_reg(priv, 0xfe, u8tmp);
++	if (ret)
++		goto err;
++
++	u8tmp = ((u8tmp1 & 0x03) << 6) | u8tmp2 >> 0;
++	ret = m88ds3103_wr_reg(priv, 0xea, u8tmp);
++	if (ret)
++		goto err;
++
++	if (c->symbol_rate <= 3000000)
++		u8tmp = 0x20;
++	else if (c->symbol_rate <= 10000000)
++		u8tmp = 0x10;
++	else
++		u8tmp = 0x06;
++
++	ret = m88ds3103_wr_reg(priv, 0xc3, 0x08);
++	if (ret)
++		goto err;
++
++	ret = m88ds3103_wr_reg(priv, 0xc8, u8tmp);
++	if (ret)
++		goto err;
++
++	ret = m88ds3103_wr_reg(priv, 0xc4, 0x08);
++	if (ret)
++		goto err;
++
++	ret = m88ds3103_wr_reg(priv, 0xc7, 0x00);
++	if (ret)
++		goto err;
++
++	u16tmp = DIV_ROUND_CLOSEST((c->symbol_rate / 1000) << 15, priv->mclk_khz / 2);
++	buf[0] = (u16tmp >> 0) & 0xff;
++	buf[1] = (u16tmp >> 8) & 0xff;
++	ret = m88ds3103_wr_regs(priv, 0x61, buf, 2);
++	if (ret)
++		goto err;
++
++	ret = m88ds3103_wr_reg_mask(priv, 0x4d, priv->cfg->spec_inv << 1, 0x02);
++	if (ret)
++		goto err;
++
++	ret = m88ds3103_wr_reg_mask(priv, 0x30, priv->cfg->agc_inv << 4, 0x10);
++	if (ret)
++		goto err;
++
++	ret = m88ds3103_wr_reg(priv, 0x33, priv->cfg->agc);
++	if (ret)
++		goto err;
++
++	dev_dbg(&priv->i2c->dev, "%s: carrier offset=%d\n", __func__,
++			(tuner_frequency - c->frequency));
++
++	s32tmp = 0x10000 * (tuner_frequency - c->frequency);
++	s32tmp = DIV_ROUND_CLOSEST(s32tmp, priv->mclk_khz);
++	if (s32tmp < 0)
++		s32tmp += 0x10000;
++
++	buf[0] = (s32tmp >> 0) & 0xff;
++	buf[1] = (s32tmp >> 8) & 0xff;
++	ret = m88ds3103_wr_regs(priv, 0x5e, buf, 2);
++	if (ret)
++		goto err;
++
++	ret = m88ds3103_wr_reg(priv, 0x00, 0x00);
++	if (ret)
++		goto err;
++
++	ret = m88ds3103_wr_reg(priv, 0xb2, 0x00);
++	if (ret)
++		goto err;
++
++	priv->delivery_system = c->delivery_system;
++
++	return 0;
++err:
++	dev_dbg(&priv->i2c->dev, "%s: failed=%d\n", __func__, ret);
++	return ret;
++}
++
++static int m88ds3103_init(struct dvb_frontend *fe)
++{
++	struct m88ds3103_priv *priv = fe->demodulator_priv;
++	int ret, len, remaining;
++	const struct firmware *fw = NULL;
++	u8 *fw_file;
++	u8 u8tmp;
++
++	dev_dbg(&priv->i2c->dev, "%s:\n", __func__);
++
++	/* set cold state by default */
++	priv->warm = false;
++
++	/* wake up device from sleep */
++	ret = m88ds3103_wr_reg_mask(priv, 0x08, 0x01, 0x01);
++	if (ret)
++		goto err;
++
++	ret = m88ds3103_wr_reg_mask(priv, 0x04, 0x00, 0x01);
++	if (ret)
++		goto err;
++
++	ret = m88ds3103_wr_reg_mask(priv, 0x23, 0x00, 0x10);
++	if (ret)
++		goto err;
++
++	/* firmware status */
++	ret = m88ds3103_rd_reg(priv, 0xb9, &u8tmp);
++	if (ret)
++		goto err;
++
++	dev_dbg(&priv->i2c->dev, "%s: firmware=%02x\n", __func__, u8tmp);
++
++	if (u8tmp)
++		goto skip_fw_download;
++
++	/* global reset, global diseqc reset, golbal fec reset */
++	ret = m88ds3103_wr_reg(priv, 0x07, 0xe0);
++	if (ret)
++		goto err;
++
++	ret = m88ds3103_wr_reg(priv, 0x07, 0x00);
++	if (ret)
++		goto err;
++
++	/* cold state - try to download firmware */
++	dev_info(&priv->i2c->dev, "%s: found a '%s' in cold state\n",
++			KBUILD_MODNAME, m88ds3103_ops.info.name);
++
++	if (priv->chip_id == M88RS6000_CHIP_ID)
++		fw_file = M88RS6000_FIRMWARE;
++	else
++		fw_file = M88DS3103_FIRMWARE;
++	/* request the firmware, this will block and timeout */
++	ret = request_firmware(&fw, fw_file, priv->i2c->dev.parent);
++	if (ret) {
++		dev_err(&priv->i2c->dev, "%s: firmware file '%s' not found\n",
++				KBUILD_MODNAME, fw_file);
++		goto err;
++	}
++
++	dev_info(&priv->i2c->dev, "%s: downloading firmware from file '%s'\n",
++			KBUILD_MODNAME, fw_file);
++
++	ret = m88ds3103_wr_reg(priv, 0xb2, 0x01);
++	if (ret)
++		goto error_fw_release;
++
++	for (remaining = fw->size; remaining > 0;
++			remaining -= (priv->cfg->i2c_wr_max - 1)) {
++		len = remaining;
++		if (len > (priv->cfg->i2c_wr_max - 1))
++			len = (priv->cfg->i2c_wr_max - 1);
++
++		ret = m88ds3103_wr_regs(priv, 0xb0,
++				&fw->data[fw->size - remaining], len);
++		if (ret) {
++			dev_err(&priv->i2c->dev,
++					"%s: firmware download failed=%d\n",
++					KBUILD_MODNAME, ret);
++			goto error_fw_release;
++		}
++	}
++
++	ret = m88ds3103_wr_reg(priv, 0xb2, 0x00);
++	if (ret)
++		goto error_fw_release;
++
++	release_firmware(fw);
++	fw = NULL;
++
++	ret = m88ds3103_rd_reg(priv, 0xb9, &u8tmp);
++	if (ret)
++		goto err;
++
++	if (!u8tmp) {
++		dev_info(&priv->i2c->dev, "%s: firmware did not run\n",
++				KBUILD_MODNAME);
++		ret = -EFAULT;
++		goto err;
++	}
++
++	dev_info(&priv->i2c->dev, "%s: found a '%s' in warm state\n",
++			KBUILD_MODNAME, m88ds3103_ops.info.name);
++	dev_info(&priv->i2c->dev, "%s: firmware version %X.%X\n",
++			KBUILD_MODNAME, (u8tmp >> 4) & 0xf, (u8tmp >> 0 & 0xf));
++
++skip_fw_download:
++	/* warm state */
++	priv->warm = true;
++
++	return 0;
++
++error_fw_release:
++	release_firmware(fw);
++err:
++	dev_dbg(&priv->i2c->dev, "%s: failed=%d\n", __func__, ret);
++	return ret;
++}
++
++static int m88ds3103_sleep(struct dvb_frontend *fe)
++{
++	struct m88ds3103_priv *priv = fe->demodulator_priv;
++	int ret;
++	u8 u8tmp;
++
++	dev_dbg(&priv->i2c->dev, "%s:\n", __func__);
++
++	priv->delivery_system = SYS_UNDEFINED;
++
++	/* TS Hi-Z */
++	if (priv->chip_id == M88RS6000_CHIP_ID)
++		u8tmp = 0x29;
++	else
++		u8tmp = 0x27;
++	ret = m88ds3103_wr_reg_mask(priv, u8tmp, 0x00, 0x01);
++	if (ret)
++		goto err;
++
++	/* sleep */
++	ret = m88ds3103_wr_reg_mask(priv, 0x08, 0x00, 0x01);
++	if (ret)
++		goto err;
++
++	ret = m88ds3103_wr_reg_mask(priv, 0x04, 0x01, 0x01);
++	if (ret)
++		goto err;
++
++	ret = m88ds3103_wr_reg_mask(priv, 0x23, 0x10, 0x10);
++	if (ret)
++		goto err;
++
++	return 0;
++err:
++	dev_dbg(&priv->i2c->dev, "%s: failed=%d\n", __func__, ret);
++	return ret;
++}
++
++static int m88ds3103_get_frontend(struct dvb_frontend *fe)
++{
++	struct m88ds3103_priv *priv = fe->demodulator_priv;
++	struct dtv_frontend_properties *c = &fe->dtv_property_cache;
++	int ret;
++	u8 buf[3];
++
++	dev_dbg(&priv->i2c->dev, "%s:\n", __func__);
++
++	if (!priv->warm || !(priv->fe_status & FE_HAS_LOCK)) {
++		ret = -EAGAIN;
++		goto err;
++	}
++
++	switch (c->delivery_system) {
++	case SYS_DVBS:
++		ret = m88ds3103_rd_reg(priv, 0xe0, &buf[0]);
++		if (ret)
++			goto err;
++
++		ret = m88ds3103_rd_reg(priv, 0xe6, &buf[1]);
++		if (ret)
++			goto err;
++
++		switch ((buf[0] >> 2) & 0x01) {
++		case 0:
++			c->inversion = INVERSION_OFF;
++			break;
++		case 1:
++			c->inversion = INVERSION_ON;
++			break;
++		}
++
++		switch ((buf[1] >> 5) & 0x07) {
++		case 0:
++			c->fec_inner = FEC_7_8;
++			break;
++		case 1:
++			c->fec_inner = FEC_5_6;
++			break;
++		case 2:
++			c->fec_inner = FEC_3_4;
++			break;
++		case 3:
++			c->fec_inner = FEC_2_3;
++			break;
++		case 4:
++			c->fec_inner = FEC_1_2;
++			break;
++		default:
++			dev_dbg(&priv->i2c->dev, "%s: invalid fec_inner\n",
++					__func__);
++		}
++
++		c->modulation = QPSK;
++
++		break;
++	case SYS_DVBS2:
++		ret = m88ds3103_rd_reg(priv, 0x7e, &buf[0]);
++		if (ret)
++			goto err;
++
++		ret = m88ds3103_rd_reg(priv, 0x89, &buf[1]);
++		if (ret)
++			goto err;
++
++		ret = m88ds3103_rd_reg(priv, 0xf2, &buf[2]);
++		if (ret)
++			goto err;
++
++		switch ((buf[0] >> 0) & 0x0f) {
++		case 2:
++			c->fec_inner = FEC_2_5;
++			break;
++		case 3:
++			c->fec_inner = FEC_1_2;
++			break;
++		case 4:
++			c->fec_inner = FEC_3_5;
++			break;
++		case 5:
++			c->fec_inner = FEC_2_3;
++			break;
++		case 6:
++			c->fec_inner = FEC_3_4;
++			break;
++		case 7:
++			c->fec_inner = FEC_4_5;
++			break;
++		case 8:
++			c->fec_inner = FEC_5_6;
++			break;
++		case 9:
++			c->fec_inner = FEC_8_9;
++			break;
++		case 10:
++			c->fec_inner = FEC_9_10;
++			break;
++		default:
++			dev_dbg(&priv->i2c->dev, "%s: invalid fec_inner\n",
++					__func__);
++		}
++
++		switch ((buf[0] >> 5) & 0x01) {
++		case 0:
++			c->pilot = PILOT_OFF;
++			break;
++		case 1:
++			c->pilot = PILOT_ON;
++			break;
++		}
++
++		switch ((buf[0] >> 6) & 0x07) {
++		case 0:
++			c->modulation = QPSK;
++			break;
++		case 1:
++			c->modulation = PSK_8;
++			break;
++		case 2:
++			c->modulation = APSK_16;
++			break;
++		case 3:
++			c->modulation = APSK_32;
++			break;
++		default:
++			dev_dbg(&priv->i2c->dev, "%s: invalid modulation\n",
++					__func__);
++		}
++
++		switch ((buf[1] >> 7) & 0x01) {
++		case 0:
++			c->inversion = INVERSION_OFF;
++			break;
++		case 1:
++			c->inversion = INVERSION_ON;
++			break;
++		}
++
++		switch ((buf[2] >> 0) & 0x03) {
++		case 0:
++			c->rolloff = ROLLOFF_35;
++			break;
++		case 1:
++			c->rolloff = ROLLOFF_25;
++			break;
++		case 2:
++			c->rolloff = ROLLOFF_20;
++			break;
++		default:
++			dev_dbg(&priv->i2c->dev, "%s: invalid rolloff\n",
++					__func__);
++		}
++		break;
++	default:
++		dev_dbg(&priv->i2c->dev, "%s: invalid delivery_system\n",
++				__func__);
++		ret = -EINVAL;
++		goto err;
++	}
++
++	ret = m88ds3103_rd_regs(priv, 0x6d, buf, 2);
++	if (ret)
++		goto err;
++
++	c->symbol_rate = 1ull * ((buf[1] << 8) | (buf[0] << 0)) *
++			priv->mclk_khz * 1000 / 0x10000;
++
++	return 0;
++err:
++	dev_dbg(&priv->i2c->dev, "%s: failed=%d\n", __func__, ret);
++	return ret;
++}
++
++static int m88ds3103_read_snr(struct dvb_frontend *fe, u16 *snr)
++{
++	struct m88ds3103_priv *priv = fe->demodulator_priv;
++	struct dtv_frontend_properties *c = &fe->dtv_property_cache;
++	int ret, i, tmp;
++	u8 buf[3];
++	u16 noise, signal;
++	u32 noise_tot, signal_tot;
++
++	dev_dbg(&priv->i2c->dev, "%s:\n", __func__);
++	/* reports SNR in resolution of 0.1 dB */
++
++	/* more iterations for more accurate estimation */
++	#define M88DS3103_SNR_ITERATIONS 3
++
++	switch (c->delivery_system) {
++	case SYS_DVBS:
++		tmp = 0;
++
++		for (i = 0; i < M88DS3103_SNR_ITERATIONS; i++) {
++			ret = m88ds3103_rd_reg(priv, 0xff, &buf[0]);
++			if (ret)
++				goto err;
++
++			tmp += buf[0];
++		}
++
++		/* use of one register limits max value to 15 dB */
++		/* SNR(X) dB = 10 * ln(X) / ln(10) dB */
++		tmp = DIV_ROUND_CLOSEST(tmp, 8 * M88DS3103_SNR_ITERATIONS);
++		if (tmp)
++			*snr = div_u64((u64) 100 * intlog2(tmp), intlog2(10));
++		else
++			*snr = 0;
++		break;
++	case SYS_DVBS2:
++		noise_tot = 0;
++		signal_tot = 0;
++
++		for (i = 0; i < M88DS3103_SNR_ITERATIONS; i++) {
++			ret = m88ds3103_rd_regs(priv, 0x8c, buf, 3);
++			if (ret)
++				goto err;
++
++			noise = buf[1] << 6;    /* [13:6] */
++			noise |= buf[0] & 0x3f; /*  [5:0] */
++			noise >>= 2;
++			signal = buf[2] * buf[2];
++			signal >>= 1;
++
++			noise_tot += noise;
++			signal_tot += signal;
++		}
++
++		noise = noise_tot / M88DS3103_SNR_ITERATIONS;
++		signal = signal_tot / M88DS3103_SNR_ITERATIONS;
++
++		/* SNR(X) dB = 10 * log10(X) dB */
++		if (signal > noise) {
++			tmp = signal / noise;
++			*snr = div_u64((u64) 100 * intlog10(tmp), (1 << 24));
++		} else {
++			*snr = 0;
++		}
++		break;
++	default:
++		dev_dbg(&priv->i2c->dev, "%s: invalid delivery_system\n",
++				__func__);
++		ret = -EINVAL;
++		goto err;
++	}
++
++	return 0;
++err:
++	dev_dbg(&priv->i2c->dev, "%s: failed=%d\n", __func__, ret);
++	return ret;
++}
++
++static int m88ds3103_read_ber(struct dvb_frontend *fe, u32 *ber)
++{
++	struct m88ds3103_priv *priv = fe->demodulator_priv;
++	struct dtv_frontend_properties *c = &fe->dtv_property_cache;
++	int ret;
++	unsigned int utmp;
++	u8 buf[3], u8tmp;
++
++	dev_dbg(&priv->i2c->dev, "%s:\n", __func__);
++
++	switch (c->delivery_system) {
++	case SYS_DVBS:
++		ret = m88ds3103_wr_reg(priv, 0xf9, 0x04);
++		if (ret)
++			goto err;
++
++		ret = m88ds3103_rd_reg(priv, 0xf8, &u8tmp);
++		if (ret)
++			goto err;
++
++		if (!(u8tmp & 0x10)) {
++			u8tmp |= 0x10;
++
++			ret = m88ds3103_rd_regs(priv, 0xf6, buf, 2);
++			if (ret)
++				goto err;
++
++			priv->ber = (buf[1] << 8) | (buf[0] << 0);
++
++			/* restart counters */
++			ret = m88ds3103_wr_reg(priv, 0xf8, u8tmp);
++			if (ret)
++				goto err;
++		}
++		break;
++	case SYS_DVBS2:
++		ret = m88ds3103_rd_regs(priv, 0xd5, buf, 3);
++		if (ret)
++			goto err;
++
++		utmp = (buf[2] << 16) | (buf[1] << 8) | (buf[0] << 0);
++
++		if (utmp > 3000) {
++			ret = m88ds3103_rd_regs(priv, 0xf7, buf, 2);
++			if (ret)
++				goto err;
++
++			priv->ber = (buf[1] << 8) | (buf[0] << 0);
++
++			/* restart counters */
++			ret = m88ds3103_wr_reg(priv, 0xd1, 0x01);
++			if (ret)
++				goto err;
++
++			ret = m88ds3103_wr_reg(priv, 0xf9, 0x01);
++			if (ret)
++				goto err;
++
++			ret = m88ds3103_wr_reg(priv, 0xf9, 0x00);
++			if (ret)
++				goto err;
++
++			ret = m88ds3103_wr_reg(priv, 0xd1, 0x00);
++			if (ret)
++				goto err;
++		}
++		break;
++	default:
++		dev_dbg(&priv->i2c->dev, "%s: invalid delivery_system\n",
++				__func__);
++		ret = -EINVAL;
++		goto err;
++	}
++
++	*ber = priv->ber;
++
++	return 0;
++err:
++	dev_dbg(&priv->i2c->dev, "%s: failed=%d\n", __func__, ret);
++	return ret;
++}
++
++static int m88ds3103_set_tone(struct dvb_frontend *fe,
++	fe_sec_tone_mode_t fe_sec_tone_mode)
++{
++	struct m88ds3103_priv *priv = fe->demodulator_priv;
++	int ret;
++	u8 u8tmp, tone, reg_a1_mask;
++
++	dev_dbg(&priv->i2c->dev, "%s: fe_sec_tone_mode=%d\n", __func__,
++			fe_sec_tone_mode);
++
++	if (!priv->warm) {
++		ret = -EAGAIN;
++		goto err;
++	}
++
++	switch (fe_sec_tone_mode) {
++	case SEC_TONE_ON:
++		tone = 0;
++		reg_a1_mask = 0x47;
++		break;
++	case SEC_TONE_OFF:
++		tone = 1;
++		reg_a1_mask = 0x00;
++		break;
++	default:
++		dev_dbg(&priv->i2c->dev, "%s: invalid fe_sec_tone_mode\n",
++				__func__);
++		ret = -EINVAL;
++		goto err;
++	}
++
++	u8tmp = tone << 7 | priv->cfg->envelope_mode << 5;
++	ret = m88ds3103_wr_reg_mask(priv, 0xa2, u8tmp, 0xe0);
++	if (ret)
++		goto err;
++
++	u8tmp = 1 << 2;
++	ret = m88ds3103_wr_reg_mask(priv, 0xa1, u8tmp, reg_a1_mask);
++	if (ret)
++		goto err;
++
++	return 0;
++err:
++	dev_dbg(&priv->i2c->dev, "%s: failed=%d\n", __func__, ret);
++	return ret;
++}
++
++static int m88ds3103_set_voltage(struct dvb_frontend *fe,
++	fe_sec_voltage_t fe_sec_voltage)
++{
++	struct m88ds3103_priv *priv = fe->demodulator_priv;
++	int ret;
++	u8 u8tmp;
++	bool voltage_sel, voltage_dis;
++
++	dev_dbg(&priv->i2c->dev, "%s: fe_sec_voltage=%d\n", __func__,
++			fe_sec_voltage);
++
++	if (!priv->warm) {
++		ret = -EAGAIN;
++		goto err;
++	}
++
++	switch (fe_sec_voltage) {
++	case SEC_VOLTAGE_18:
++		voltage_sel = true;
++		voltage_dis = false;
++		break;
++	case SEC_VOLTAGE_13:
++		voltage_sel = false;
++		voltage_dis = false;
++		break;
++	case SEC_VOLTAGE_OFF:
++		voltage_sel = false;
++		voltage_dis = true;
++		break;
++	default:
++		dev_dbg(&priv->i2c->dev, "%s: invalid fe_sec_voltage\n",
++				__func__);
++		ret = -EINVAL;
++		goto err;
++	}
++
++	/* output pin polarity */
++	voltage_sel ^= priv->cfg->lnb_hv_pol;
++	voltage_dis ^= priv->cfg->lnb_en_pol;
++
++	u8tmp = voltage_dis << 1 | voltage_sel << 0;
++	ret = m88ds3103_wr_reg_mask(priv, 0xa2, u8tmp, 0x03);
++	if (ret)
++		goto err;
++
++	return 0;
++err:
++	dev_dbg(&priv->i2c->dev, "%s: failed=%d\n", __func__, ret);
++	return ret;
++}
++
++static int m88ds3103_diseqc_send_master_cmd(struct dvb_frontend *fe,
++		struct dvb_diseqc_master_cmd *diseqc_cmd)
++{
++	struct m88ds3103_priv *priv = fe->demodulator_priv;
++	int ret, i;
++	u8 u8tmp;
++
++	dev_dbg(&priv->i2c->dev, "%s: msg=%*ph\n", __func__,
++			diseqc_cmd->msg_len, diseqc_cmd->msg);
++
++	if (!priv->warm) {
++		ret = -EAGAIN;
++		goto err;
++	}
++
++	if (diseqc_cmd->msg_len < 3 || diseqc_cmd->msg_len > 6) {
++		ret = -EINVAL;
++		goto err;
++	}
++
++	u8tmp = priv->cfg->envelope_mode << 5;
++	ret = m88ds3103_wr_reg_mask(priv, 0xa2, u8tmp, 0xe0);
++	if (ret)
++		goto err;
++
++	ret = m88ds3103_wr_regs(priv, 0xa3, diseqc_cmd->msg,
++			diseqc_cmd->msg_len);
++	if (ret)
++		goto err;
++
++	ret = m88ds3103_wr_reg(priv, 0xa1,
++			(diseqc_cmd->msg_len - 1) << 3 | 0x07);
++	if (ret)
++		goto err;
++
++	/* DiSEqC message typical period is 54 ms */
++	usleep_range(40000, 60000);
++
++	/* wait DiSEqC TX ready */
++	for (i = 20, u8tmp = 1; i && u8tmp; i--) {
++		usleep_range(5000, 10000);
++
++		ret = m88ds3103_rd_reg_mask(priv, 0xa1, &u8tmp, 0x40);
++		if (ret)
++			goto err;
++	}
++
++	dev_dbg(&priv->i2c->dev, "%s: loop=%d\n", __func__, i);
++
++	if (i == 0) {
++		dev_dbg(&priv->i2c->dev, "%s: diseqc tx timeout\n", __func__);
++
++		ret = m88ds3103_wr_reg_mask(priv, 0xa1, 0x40, 0xc0);
++		if (ret)
++			goto err;
++	}
++
++	ret = m88ds3103_wr_reg_mask(priv, 0xa2, 0x80, 0xc0);
++	if (ret)
++		goto err;
++
++	if (i == 0) {
++		ret = -ETIMEDOUT;
++		goto err;
++	}
++
++	return 0;
++err:
++	dev_dbg(&priv->i2c->dev, "%s: failed=%d\n", __func__, ret);
++	return ret;
++}
++
++static int m88ds3103_diseqc_send_burst(struct dvb_frontend *fe,
++	fe_sec_mini_cmd_t fe_sec_mini_cmd)
++{
++	struct m88ds3103_priv *priv = fe->demodulator_priv;
++	int ret, i;
++	u8 u8tmp, burst;
++
++	dev_dbg(&priv->i2c->dev, "%s: fe_sec_mini_cmd=%d\n", __func__,
++			fe_sec_mini_cmd);
++
++	if (!priv->warm) {
++		ret = -EAGAIN;
++		goto err;
++	}
++
++	u8tmp = priv->cfg->envelope_mode << 5;
++	ret = m88ds3103_wr_reg_mask(priv, 0xa2, u8tmp, 0xe0);
++	if (ret)
++		goto err;
++
++	switch (fe_sec_mini_cmd) {
++	case SEC_MINI_A:
++		burst = 0x02;
++		break;
++	case SEC_MINI_B:
++		burst = 0x01;
++		break;
++	default:
++		dev_dbg(&priv->i2c->dev, "%s: invalid fe_sec_mini_cmd\n",
++				__func__);
++		ret = -EINVAL;
++		goto err;
++	}
++
++	ret = m88ds3103_wr_reg(priv, 0xa1, burst);
++	if (ret)
++		goto err;
++
++	/* DiSEqC ToneBurst period is 12.5 ms */
++	usleep_range(11000, 20000);
++
++	/* wait DiSEqC TX ready */
++	for (i = 5, u8tmp = 1; i && u8tmp; i--) {
++		usleep_range(800, 2000);
++
++		ret = m88ds3103_rd_reg_mask(priv, 0xa1, &u8tmp, 0x40);
++		if (ret)
++			goto err;
++	}
++
++	dev_dbg(&priv->i2c->dev, "%s: loop=%d\n", __func__, i);
++
++	ret = m88ds3103_wr_reg_mask(priv, 0xa2, 0x80, 0xc0);
++	if (ret)
++		goto err;
++
++	if (i == 0) {
++		dev_dbg(&priv->i2c->dev, "%s: diseqc tx timeout\n", __func__);
++		ret = -ETIMEDOUT;
++		goto err;
++	}
++
++	return 0;
++err:
++	dev_dbg(&priv->i2c->dev, "%s: failed=%d\n", __func__, ret);
++	return ret;
++}
++
++static int m88ds3103_get_tune_settings(struct dvb_frontend *fe,
++	struct dvb_frontend_tune_settings *s)
++{
++	s->min_delay_ms = 3000;
++
++	return 0;
++}
++
++static void m88ds3103_release(struct dvb_frontend *fe)
++{
++	struct m88ds3103_priv *priv = fe->demodulator_priv;
++
++	i2c_del_mux_adapter(priv->i2c_adapter);
++	kfree(priv);
++}
++
++static int m88ds3103_select(struct i2c_adapter *adap, void *mux_priv, u32 chan)
++{
++	struct m88ds3103_priv *priv = mux_priv;
++	int ret;
++	struct i2c_msg gate_open_msg[1] = {
++		{
++			.addr = priv->cfg->i2c_addr,
++			.flags = 0,
++			.len = 2,
++			.buf = "\x03\x11",
++		}
++	};
++
++	mutex_lock(&priv->i2c_mutex);
++
++	/* open tuner I2C repeater for 1 xfer, closes automatically */
++	ret = __i2c_transfer(priv->i2c, gate_open_msg, 1);
++	if (ret != 1) {
++		dev_warn(&priv->i2c->dev, "%s: i2c wr failed=%d\n",
++				KBUILD_MODNAME, ret);
++		if (ret >= 0)
++			ret = -EREMOTEIO;
++
++		return ret;
++	}
++
++	return 0;
++}
++
++static int m88ds3103_deselect(struct i2c_adapter *adap, void *mux_priv,
++		u32 chan)
++{
++	struct m88ds3103_priv *priv = mux_priv;
++
++	mutex_unlock(&priv->i2c_mutex);
++
++	return 0;
++}
++
++struct dvb_frontend *m88ds3103_attach(const struct m88ds3103_config *cfg,
++		struct i2c_adapter *i2c, struct i2c_adapter **tuner_i2c_adapter)
++{
++	int ret;
++	struct m88ds3103_priv *priv;
++	u8 chip_id, u8tmp;
++
++	/* allocate memory for the internal priv */
++	priv = kzalloc(sizeof(*priv), GFP_KERNEL);
++	if (!priv) {
++		ret = -ENOMEM;
++		dev_err(&i2c->dev, "%s: kzalloc() failed\n", KBUILD_MODNAME);
++		goto err;
++	}
++
++	priv->cfg = cfg;
++	priv->i2c = i2c;
++	mutex_init(&priv->i2c_mutex);
++
++	/* 0x00: chip id[6:0], 0x01: chip ver[7:0], 0x02: chip ver[15:8] */
++	ret = m88ds3103_rd_reg(priv, 0x00, &chip_id);
++	if (ret)
++		goto err;
++
++	chip_id >>= 1;
++	dev_info(&priv->i2c->dev, "%s: chip_id=%02x\n", __func__, chip_id);
++
++	switch (chip_id) {
++	case M88RS6000_CHIP_ID:
++	case M88DS3103_CHIP_ID:
++		break;
++	default:
++		goto err;
++	}
++	priv->chip_id = chip_id;
++
++	switch (priv->cfg->clock_out) {
++	case M88DS3103_CLOCK_OUT_DISABLED:
++		u8tmp = 0x80;
++		break;
++	case M88DS3103_CLOCK_OUT_ENABLED:
++		u8tmp = 0x00;
++		break;
++	case M88DS3103_CLOCK_OUT_ENABLED_DIV2:
++		u8tmp = 0x10;
++		break;
++	default:
++		goto err;
++	}
++
++	/* 0x29 register is defined differently for m88rs6000. */
++	/* set internal tuner address to 0x21 */
++	if (chip_id == M88RS6000_CHIP_ID)
++		u8tmp = 0x00;
++
++	ret = m88ds3103_wr_reg(priv, 0x29, u8tmp);
++	if (ret)
++		goto err;
++
++	/* sleep */
++	ret = m88ds3103_wr_reg_mask(priv, 0x08, 0x00, 0x01);
++	if (ret)
++		goto err;
++
++	ret = m88ds3103_wr_reg_mask(priv, 0x04, 0x01, 0x01);
++	if (ret)
++		goto err;
++
++	ret = m88ds3103_wr_reg_mask(priv, 0x23, 0x10, 0x10);
++	if (ret)
++		goto err;
++
++	/* create mux i2c adapter for tuner */
++	priv->i2c_adapter = i2c_add_mux_adapter(i2c, &i2c->dev, priv, 0, 0, 0,
++			m88ds3103_select, m88ds3103_deselect);
++	if (priv->i2c_adapter == NULL)
++		goto err;
++
++	*tuner_i2c_adapter = priv->i2c_adapter;
++
++	/* create dvb_frontend */
++	memcpy(&priv->fe.ops, &m88ds3103_ops, sizeof(struct dvb_frontend_ops));
++	if (priv->chip_id == M88RS6000_CHIP_ID)
++		strncpy(priv->fe.ops.info.name,
++			"Montage M88RS6000", sizeof(priv->fe.ops.info.name));
++	priv->fe.demodulator_priv = priv;
++
++	return &priv->fe;
++err:
++	dev_dbg(&i2c->dev, "%s: failed=%d\n", __func__, ret);
++	kfree(priv);
++	return NULL;
++}
++EXPORT_SYMBOL(m88ds3103_attach);
++
++static struct dvb_frontend_ops m88ds3103_ops = {
++	.delsys = { SYS_DVBS, SYS_DVBS2 },
++	.info = {
++		.name = "Montage M88DS3103",
++		.frequency_min =  950000,
++		.frequency_max = 2150000,
++		.frequency_tolerance = 5000,
++		.symbol_rate_min =  1000000,
++		.symbol_rate_max = 45000000,
++		.caps = FE_CAN_INVERSION_AUTO |
++			FE_CAN_FEC_1_2 |
++			FE_CAN_FEC_2_3 |
++			FE_CAN_FEC_3_4 |
++			FE_CAN_FEC_4_5 |
++			FE_CAN_FEC_5_6 |
++			FE_CAN_FEC_6_7 |
++			FE_CAN_FEC_7_8 |
++			FE_CAN_FEC_8_9 |
++			FE_CAN_FEC_AUTO |
++			FE_CAN_QPSK |
++			FE_CAN_RECOVER |
++			FE_CAN_2G_MODULATION
++	},
++
++	.release = m88ds3103_release,
++
++	.get_tune_settings = m88ds3103_get_tune_settings,
++
++	.init = m88ds3103_init,
++	.sleep = m88ds3103_sleep,
++
++	.set_frontend = m88ds3103_set_frontend,
++	.get_frontend = m88ds3103_get_frontend,
++
++	.read_status = m88ds3103_read_status,
++	.read_snr = m88ds3103_read_snr,
++	.read_ber = m88ds3103_read_ber,
++
++	.diseqc_send_master_cmd = m88ds3103_diseqc_send_master_cmd,
++	.diseqc_send_burst = m88ds3103_diseqc_send_burst,
++
++	.set_tone = m88ds3103_set_tone,
++	.set_voltage = m88ds3103_set_voltage,
++};
++
++MODULE_AUTHOR("Antti Palosaari <crope@iki.fi>");
++MODULE_DESCRIPTION("Montage M88DS3103 DVB-S/S2 demodulator driver");
++MODULE_LICENSE("GPL");
++MODULE_FIRMWARE(M88DS3103_FIRMWARE);
++MODULE_FIRMWARE(M88RS6000_FIRMWARE);
+--- a/drivers/media/dvb-frontends/m88ds3103_priv.h
++++ b/drivers/media/dvb-frontends/m88ds3103_priv.h
+@@ -0,0 +1,398 @@
++/*
++ * Montage M88DS3103 demodulator driver
++ *
++ * Copyright (C) 2013 Antti Palosaari <crope@iki.fi>
++ *
++ *    This program is free software; you can redistribute it and/or modify
++ *    it under the terms of the GNU General Public License as published by
++ *    the Free Software Foundation; either version 2 of the License, or
++ *    (at your option) any later version.
++ *
++ *    This program is distributed in the hope that it will be useful,
++ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *    GNU General Public License for more details.
++ */
++
++#ifndef M88DS3103_PRIV_H
++#define M88DS3103_PRIV_H
++
++#include "dvb_frontend.h"
++#include "m88ds3103.h"
++#include "dvb_math.h"
++#include <linux/firmware.h>
++#include <linux/i2c-mux.h>
++#include <linux/math64.h>
++
++#define M88DS3103_FIRMWARE "dvb-demod-m88ds3103.fw"
++#define M88RS6000_FIRMWARE "dvb-demod-m88rs6000.fw"
++#define M88DS3103_MCLK_KHZ 96000
++#define M88RS6000_CHIP_ID 0x74
++#define M88DS3103_CHIP_ID 0x70
++
++struct m88ds3103_priv {
++	struct i2c_adapter *i2c;
++	/* mutex needed due to own tuner I2C adapter */
++	struct mutex i2c_mutex;
++	const struct m88ds3103_config *cfg;
++	struct dvb_frontend fe;
++	fe_delivery_system_t delivery_system;
++	fe_status_t fe_status;
++	u32 ber;
++	bool warm; /* FW running */
++	struct i2c_adapter *i2c_adapter;
++	/* auto detect chip id to do different config */
++	u8 chip_id;
++	/* main mclk is calculated for M88RS6000 dynamically */
++	u32 mclk_khz;
++};
++
++struct m88ds3103_reg_val {
++	u8 reg;
++	u8 val;
++};
++
++static const struct m88ds3103_reg_val m88ds3103_dvbs_init_reg_vals[] = {
++	{0x23, 0x07},
++	{0x08, 0x03},
++	{0x0c, 0x02},
++	{0x21, 0x54},
++	{0x25, 0x8a},
++	{0x27, 0x31},
++	{0x30, 0x08},
++	{0x31, 0x40},
++	{0x32, 0x32},
++	{0x35, 0xff},
++	{0x3a, 0x00},
++	{0x37, 0x10},
++	{0x38, 0x10},
++	{0x39, 0x02},
++	{0x42, 0x60},
++	{0x4a, 0x80},
++	{0x4b, 0x04},
++	{0x4d, 0x91},
++	{0x5d, 0xc8},
++	{0x50, 0x36},
++	{0x51, 0x36},
++	{0x52, 0x36},
++	{0x53, 0x36},
++	{0x56, 0x01},
++	{0x63, 0x0f},
++	{0x64, 0x30},
++	{0x65, 0x40},
++	{0x68, 0x26},
++	{0x69, 0x4c},
++	{0x70, 0x20},
++	{0x71, 0x70},
++	{0x72, 0x04},
++	{0x73, 0x00},
++	{0x70, 0x40},
++	{0x71, 0x70},
++	{0x72, 0x04},
++	{0x73, 0x00},
++	{0x70, 0x60},
++	{0x71, 0x70},
++	{0x72, 0x04},
++	{0x73, 0x00},
++	{0x70, 0x80},
++	{0x71, 0x70},
++	{0x72, 0x04},
++	{0x73, 0x00},
++	{0x70, 0xa0},
++	{0x71, 0x70},
++	{0x72, 0x04},
++	{0x73, 0x00},
++	{0x70, 0x1f},
++	{0x76, 0x38},
++	{0x77, 0xa6},
++	{0x78, 0x0c},
++	{0x79, 0x80},
++	{0x7f, 0x14},
++	{0x7c, 0x00},
++	{0xae, 0x82},
++	{0x80, 0x64},
++	{0x81, 0x66},
++	{0x82, 0x44},
++	{0x85, 0x04},
++	{0xcd, 0xf4},
++	{0x90, 0x33},
++	{0xa0, 0x44},
++	{0xc0, 0x08},
++	{0xc3, 0x10},
++	{0xc4, 0x08},
++	{0xc5, 0xf0},
++	{0xc6, 0xff},
++	{0xc7, 0x00},
++	{0xc8, 0x1a},
++	{0xc9, 0x80},
++	{0xe0, 0xf8},
++	{0xe6, 0x8b},
++	{0xd0, 0x40},
++	{0xf8, 0x20},
++	{0xfa, 0x0f},
++	{0x00, 0x00},
++	{0xbd, 0x01},
++	{0xb8, 0x00},
++};
++
++static const struct m88ds3103_reg_val m88ds3103_dvbs2_init_reg_vals[] = {
++	{0x23, 0x07},
++	{0x08, 0x07},
++	{0x0c, 0x02},
++	{0x21, 0x54},
++	{0x25, 0x8a},
++	{0x27, 0x31},
++	{0x30, 0x08},
++	{0x32, 0x32},
++	{0x35, 0xff},
++	{0x3a, 0x00},
++	{0x37, 0x10},
++	{0x38, 0x10},
++	{0x39, 0x02},
++	{0x42, 0x60},
++	{0x4a, 0x80},
++	{0x4b, 0x04},
++	{0x4d, 0x91},
++	{0x5d, 0xc8},
++	{0x50, 0x36},
++	{0x51, 0x36},
++	{0x52, 0x36},
++	{0x53, 0x36},
++	{0x56, 0x01},
++	{0x63, 0x0f},
++	{0x64, 0x10},
++	{0x65, 0x20},
++	{0x68, 0x46},
++	{0x69, 0xcd},
++	{0x70, 0x20},
++	{0x71, 0x70},
++	{0x72, 0x04},
++	{0x73, 0x00},
++	{0x70, 0x40},
++	{0x71, 0x70},
++	{0x72, 0x04},
++	{0x73, 0x00},
++	{0x70, 0x60},
++	{0x71, 0x70},
++	{0x72, 0x04},
++	{0x73, 0x00},
++	{0x70, 0x80},
++	{0x71, 0x70},
++	{0x72, 0x04},
++	{0x73, 0x00},
++	{0x70, 0xa0},
++	{0x71, 0x70},
++	{0x72, 0x04},
++	{0x73, 0x00},
++	{0x70, 0x1f},
++	{0x76, 0x38},
++	{0x77, 0xa6},
++	{0x78, 0x0c},
++	{0x79, 0x80},
++	{0x7f, 0x14},
++	{0x85, 0x08},
++	{0xcd, 0xf4},
++	{0x90, 0x33},
++	{0x86, 0x00},
++	{0x87, 0x0f},
++	{0x89, 0x00},
++	{0x8b, 0x44},
++	{0x8c, 0x66},
++	{0x9d, 0xc1},
++	{0x8a, 0x10},
++	{0xad, 0x40},
++	{0xa0, 0x44},
++	{0xc0, 0x08},
++	{0xc1, 0x10},
++	{0xc2, 0x08},
++	{0xc3, 0x10},
++	{0xc4, 0x08},
++	{0xc5, 0xf0},
++	{0xc6, 0xff},
++	{0xc7, 0x00},
++	{0xc8, 0x1a},
++	{0xc9, 0x80},
++	{0xca, 0x23},
++	{0xcb, 0x24},
++	{0xcc, 0xf4},
++	{0xce, 0x74},
++	{0x00, 0x00},
++	{0xbd, 0x01},
++	{0xb8, 0x00},
++};
++
++static const struct m88ds3103_reg_val m88rs6000_dvbs_init_reg_vals[] = {
++	{0x23, 0x07},
++	{0x08, 0x03},
++	{0x0c, 0x02},
++	{0x20, 0x00},
++	{0x21, 0x54},
++	{0x25, 0x82},
++	{0x27, 0x31},
++	{0x30, 0x08},
++	{0x31, 0x40},
++	{0x32, 0x32},
++	{0x33, 0x35},
++	{0x35, 0xff},
++	{0x3a, 0x00},
++	{0x37, 0x10},
++	{0x38, 0x10},
++	{0x39, 0x02},
++	{0x42, 0x60},
++	{0x4a, 0x80},
++	{0x4b, 0x04},
++	{0x4d, 0x91},
++	{0x5d, 0xc8},
++	{0x50, 0x36},
++	{0x51, 0x36},
++	{0x52, 0x36},
++	{0x53, 0x36},
++	{0x63, 0x0f},
++	{0x64, 0x30},
++	{0x65, 0x40},
++	{0x68, 0x26},
++	{0x69, 0x4c},
++	{0x70, 0x20},
++	{0x71, 0x70},
++	{0x72, 0x04},
++	{0x73, 0x00},
++	{0x70, 0x40},
++	{0x71, 0x70},
++	{0x72, 0x04},
++	{0x73, 0x00},
++	{0x70, 0x60},
++	{0x71, 0x70},
++	{0x72, 0x04},
++	{0x73, 0x00},
++	{0x70, 0x80},
++	{0x71, 0x70},
++	{0x72, 0x04},
++	{0x73, 0x00},
++	{0x70, 0xa0},
++	{0x71, 0x70},
++	{0x72, 0x04},
++	{0x73, 0x00},
++	{0x70, 0x1f},
++	{0x76, 0x38},
++	{0x77, 0xa6},
++	{0x78, 0x0c},
++	{0x79, 0x80},
++	{0x7f, 0x14},
++	{0x7c, 0x00},
++	{0xae, 0x82},
++	{0x80, 0x64},
++	{0x81, 0x66},
++	{0x82, 0x44},
++	{0x85, 0x04},
++	{0xcd, 0xf4},
++	{0x90, 0x33},
++	{0xa0, 0x44},
++	{0xbe, 0x00},
++	{0xc0, 0x08},
++	{0xc3, 0x10},
++	{0xc4, 0x08},
++	{0xc5, 0xf0},
++	{0xc6, 0xff},
++	{0xc7, 0x00},
++	{0xc8, 0x1a},
++	{0xc9, 0x80},
++	{0xe0, 0xf8},
++	{0xe6, 0x8b},
++	{0xd0, 0x40},
++	{0xf8, 0x20},
++	{0xfa, 0x0f},
++	{0x00, 0x00},
++	{0xbd, 0x01},
++	{0xb8, 0x00},
++	{0x29, 0x11},
++};
++
++static const struct m88ds3103_reg_val m88rs6000_dvbs2_init_reg_vals[] = {
++	{0x23, 0x07},
++	{0x08, 0x07},
++	{0x0c, 0x02},
++	{0x20, 0x00},
++	{0x21, 0x54},
++	{0x25, 0x82},
++	{0x27, 0x31},
++	{0x30, 0x08},
++	{0x32, 0x32},
++	{0x33, 0x35},
++	{0x35, 0xff},
++	{0x3a, 0x00},
++	{0x37, 0x10},
++	{0x38, 0x10},
++	{0x39, 0x02},
++	{0x42, 0x60},
++	{0x4a, 0x80},
++	{0x4b, 0x04},
++	{0x4d, 0x91},
++	{0x5d, 0xc8},
++	{0x50, 0x36},
++	{0x51, 0x36},
++	{0x52, 0x36},
++	{0x53, 0x36},
++	{0x63, 0x0f},
++	{0x64, 0x10},
++	{0x65, 0x20},
++	{0x68, 0x46},
++	{0x69, 0xcd},
++	{0x70, 0x20},
++	{0x71, 0x70},
++	{0x72, 0x04},
++	{0x73, 0x00},
++	{0x70, 0x40},
++	{0x71, 0x70},
++	{0x72, 0x04},
++	{0x73, 0x00},
++	{0x70, 0x60},
++	{0x71, 0x70},
++	{0x72, 0x04},
++	{0x73, 0x00},
++	{0x70, 0x80},
++	{0x71, 0x70},
++	{0x72, 0x04},
++	{0x73, 0x00},
++	{0x70, 0xa0},
++	{0x71, 0x70},
++	{0x72, 0x04},
++	{0x73, 0x00},
++	{0x70, 0x1f},
++	{0x76, 0x38},
++	{0x77, 0xa6},
++	{0x78, 0x0c},
++	{0x79, 0x80},
++	{0x7f, 0x14},
++	{0x85, 0x08},
++	{0xcd, 0xf4},
++	{0x90, 0x33},
++	{0x86, 0x00},
++	{0x87, 0x0f},
++	{0x89, 0x00},
++	{0x8b, 0x44},
++	{0x8c, 0x66},
++	{0x9d, 0xc1},
++	{0x8a, 0x10},
++	{0xad, 0x40},
++	{0xa0, 0x44},
++	{0xbe, 0x00},
++	{0xc0, 0x08},
++	{0xc1, 0x10},
++	{0xc2, 0x08},
++	{0xc3, 0x10},
++	{0xc4, 0x08},
++	{0xc5, 0xf0},
++	{0xc6, 0xff},
++	{0xc7, 0x00},
++	{0xc8, 0x1a},
++	{0xc9, 0x80},
++	{0xca, 0x23},
++	{0xcb, 0x24},
++	{0xcc, 0xf4},
++	{0xce, 0x74},
++	{0x00, 0x00},
++	{0xbd, 0x01},
++	{0xb8, 0x00},
++	{0x29, 0x01},
++};
++#endif
+--- a/drivers/media/dvb-core/dvb-usb-ids.h
++++ b/drivers/media/dvb-core/dvb-usb-ids.h
+@@ -244,6 +245,9 @@
+ #define USB_PID_TECHNOTREND_CONNECT_S2400               0x3006
+ #define USB_PID_TECHNOTREND_CONNECT_S2400_8KEEPROM	0x3009
+ #define USB_PID_TECHNOTREND_CONNECT_CT3650		0x300d
++#define USB_PID_TECHNOTREND_CONNECT_S2_4600             0x3011
++#define USB_PID_TECHNOTREND_CONNECT_CT2_4650_CI		0x3012
++#define USB_PID_TECHNOTREND_TVSTICK_CT2_4400		0x3014
+ #define USB_PID_TERRATEC_CINERGY_DT_XS_DIVERSITY	0x005a
+ #define USB_PID_TERRATEC_CINERGY_DT_XS_DIVERSITY_2	0x0081
+ #define USB_PID_TERRATEC_CINERGY_HT_USB_XE		0x0058
