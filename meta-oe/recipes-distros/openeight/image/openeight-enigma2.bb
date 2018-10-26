@@ -7,7 +7,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 ALLOW_EMPTY_${PN} = "1"
 
 PV = "1.0"
-PR = "r0"
+PR = "r2"
 
 inherit packagegroup
 
@@ -27,8 +27,8 @@ RRECOMMENDS_${PN} = "\
     enigma2-plugin-systemplugins-videotune \
     enigma2-plugin-systemplugins-softwaremanager \
     enigma2-plugin-systemplugins-skinselector \
-    enigma2-plugin-skins-octagoneightfhd \
-    enigma2-plugin-skins-octagoneightsd \
+    enigma2-plugin-skins-smartlitefhd \
+    enigma2-plugin-skins-smartlitesd \
     ${@bb.utils.contains("MACHINE_FEATURES", "3dtv", "enigma2-plugin-systemplugins-osd3dsetup" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "boxmodel", "boxmodel", "", d)} \
     "
