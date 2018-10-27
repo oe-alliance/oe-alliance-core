@@ -7,12 +7,14 @@ PRIORITY = "optional"
 LICENSE = "GPLv2"
 require conf/license/license-gplv2.inc
 
+RDEPENDS_${PN} = "python-image python-imaging python-argparse"
+
 inherit gitpkgv
 
 e2m3u2bouquet_BRANCH ?= "release"
 SRCREV = "${AUTOREV}"
-PV = "0.7.6+git${SRCPV}"
-PKGV = "0.7.6+git${GITPKGV}"
+PV = "0.7.7+git${SRCPV}"
+PKGV = "0.7.7+git${GITPKGV}"
 PR = "r0"
 
 INSANE_SKIP_${PN} += "already-stripped ldflags"
@@ -32,7 +34,6 @@ do_install() {
     install -m 644 ${S}/images/*.png ${D_FILES_PN}/images
     install -m 644 ${S}/*.py ${D_FILES_PN}
     install -m 644 ${S}/LICENSE ${D_FILES_PN}
-
 }
 
 pkg_preinst_${PN}() {
@@ -49,27 +50,21 @@ fi
 if [ ! -d "/etc/enigma2/e2m3u2bouquet/" ]; then
   mkdir -p /etc/enigma2/e2m3u2bouquet/ 2>&1
 fi
-if [ -f "/var/tmp/config.xml" -a ! -f "/etc/enigma2/e2m3u2bouquet/config.xml" ]; then    
+if [ -f "/var/tmp/config.xml" -a ! -f "/etc/enigma2/e2m3u2bouquet/config.xml" ]; then
   mv  /var/tmp/config.xml /etc/enigma2/e2m3u2bouquet/ 2>&1
 fi
 exit 0
-
 }
 
 pkg_postinst_${PN}() {
 #!/bin/sh
 
-echo "updating time"
-rdate -s time.mit.edu
-sleep 2
 echo "*                               *"
 echo "* plugin installed successfully *"
 echo "*                               *"
 echo "* Enigma2 restart is required!  *"
 echo "*                               *"
-
 exit 0
-
 }
 
 pkg_postrm_${PN}() {
@@ -104,5 +99,4 @@ echo "********************************************"
 echo "Restart box to complete uninstall"
 echo "********************************************"
 exit 0
-
 }
