@@ -17,7 +17,7 @@ SRCREV = "5508fd65b651adb32ec54a8c7168220bbe1ff777"
 S = "${WORKDIR}/git/"
 
 SOURCE_FILES = "src/main.c"
-SOURCE_FILES =+ "src/aes.c"
+SOURCE_FILES =+ "src/aes_openssl.c
 SOURCE_FILES =+ "src/curl.c"
 SOURCE_FILES =+ "src/hls.c"
 SOURCE_FILES =+ "src/misc.c"
