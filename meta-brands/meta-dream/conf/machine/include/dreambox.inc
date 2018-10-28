@@ -20,6 +20,7 @@ require conf/machine/box-hardware.inc
 
 MACHINE_EXTRA_RRECOMMENDS = " \
     gstreamer1.0-plugin-dvbmediasink \
+    gstreamer1.0-libav \
     kernel-module-cifs \
     kernel-module-autofs4 \
     kernel-module-hmac \
