@@ -7,8 +7,8 @@ SECTION = "devel/python"
 LICENSE = "LGPLv2.1"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=7246f848faa4e9c9fc0ea91122d6e680"
 DEPENDS = "libxml2 python-html bash-completion"
-SRCREV = "d96f976b0c36f65894380d3d831b0520d6260c20"
-PV = "2018.10.05"
+SRCREV = "9ff558f67f2285a17d2a4214b5f74aeb6ce4d9b6"
+PV = "2018.10.29"
 
 PR = "r1"
 
