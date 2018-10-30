@@ -30,5 +30,5 @@ do_package_qa() {
 
 FILES_${PN}  = "${bindir}/showiframe"
 
-SRC_URI[md5sum] = "d8eb03fa59b0f21084a9bb620e06053f"
-SRC_URI[sha256sum] = "31f6705eee55072201d742d784f1d88a1450b3ada2ad2639da61aa3d03f5fca8"
+SRC_URI[md5sum] = "73a791828d5ea8e1e40a659231d33790"
+SRC_URI[sha256sum] = "903711c5f5e704e30380778063cdabe860f439f012599eaa8bd99ef540034780"
