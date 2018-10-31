@@ -1,3 +1,24 @@
+diff -uNr git/addons/resource.language.en_gb/resources/strings.po unlib/addons/resource.language.en_gb/resources/strings.po
+--- git/addons/resource.language.en_gb/resources/strings.po	2018-03-30 11:39:25.291652533 +0800
++++ unlib/addons/resource.language.en_gb/resources/strings.po	2018-10-31 15:02:00.404559449 +0800
+@@ -6760,6 +6760,17 @@
+ msgid "Use OMXPlayer for decoding of video files."
+ msgstr ""
+ 
++#: system/settings/settings.xml
++msgctxt "#13460"
++msgid "Allow hardware acceleration - HiPlayer"
++msgstr ""
++
++#. Description of setting with label #13457 "Allow hardware acceleration (HiPlayer)"
++#: system/settings/settings.xml
++msgctxt "#13461"
++msgid "Use HiPlayer for decoding of video files."
++msgstr ""
++
+ #empty strings from id 13460 to 13504
+ 
+ #: system/settings/settings.xml
 diff -uNr git/configure.ac unlib/configure.ac
 --- git/configure.ac	2018-03-30 11:39:25.387652148 +0800
 +++ unlib/configure.ac	2018-04-11 16:55:21.911318400 +0800
@@ -97,6 +118,22 @@ diff -uNr git/Makefile.in unlib/Makefile.in
  endif
  
  @APP_NAME_LC@-xrandr: xbmc-xrandr.c
+diff -uNr git/system/settings/settings.xml unlib/system/settings/settings.xml
+--- git/system/settings/settings.xml	2018-03-30 11:39:25.459651859 +0800
++++ unlib/system/settings/settings.xml	2018-10-31 15:01:52.316767413 +0800
+@@ -311,6 +311,12 @@
+           <default>true</default>
+           <control type="toggle" />
+         </setting>
++	<setting id="videoplayer.usehiplayer" type="boolean" label="13460" help="13461">
++          <requirement>USE_HIPLAYER</requirement>
++          <level>2</level>
++          <default>true</default>
++          <control type="toggle" />
++        </setting>
+         <setting id="videoplayer.useomx" type="boolean" label="13430" help="36161">
+           <requirement>HAVE_LIBOPENMAX</requirement>
+           <level>2</level>
 diff -uNr git/xbmc/Application.cpp unlib/xbmc/Application.cpp
 --- git/xbmc/Application.cpp	2018-03-30 11:39:25.331652373 +0800
 +++ unlib/xbmc/Application.cpp	2018-07-18 16:32:18.238432260 +0800
@@ -913,7 +950,7 @@ diff -uNr git/xbmc/cores/hiplayer/HiVdec.h unlib/xbmc/cores/hiplayer/HiVdec.h
 +};
 diff -uNr git/xbmc/cores/VideoPlayer/VideoPlayer.cpp unlib/xbmc/cores/VideoPlayer/VideoPlayer.cpp
 --- git/xbmc/cores/VideoPlayer/VideoPlayer.cpp	2018-03-30 11:39:25.347652309 +0800
-+++ unlib/xbmc/cores/VideoPlayer/VideoPlayer.cpp	2018-07-18 16:53:39.420012330 +0800
++++ unlib/xbmc/cores/VideoPlayer/VideoPlayer.cpp	2018-10-31 15:01:38.338416231 +0800
 @@ -81,6 +81,12 @@
  #include "cores/omxplayer/OMXPlayerVideo.h"
  #include "cores/omxplayer/OMXHelper.h"
@@ -927,21 +964,34 @@ diff -uNr git/xbmc/cores/VideoPlayer/VideoPlayer.cpp unlib/xbmc/cores/VideoPlaye
  #include "VideoPlayerAudio.h"
  #include "cores/DataCacheCore.h"
  #include "windowing/WindowingFactory.h"
-@@ -590,8 +596,13 @@
+@@ -588,6 +594,13 @@
+     m_VideoPlayerAudio = new OMXPlayerAudio(&m_OmxPlayerState.av_clock, m_messenger, *m_processInfo);
+ #endif
    }
-   else
-   {
++  else if(m_hiplayer_mode)
++  {
 +#ifdef USE_HIPLAYER
 +	m_VideoPlayerVideo = new CHiPlayerVideo(&m_clock, &m_overlayContainer, m_messenger, m_renderManager, *m_processInfo);
 +	m_VideoPlayerAudio = new CHiPlayerAudio(&m_clock, m_messenger, *m_processInfo);
-+#else
-     m_VideoPlayerVideo = new CVideoPlayerVideo(&m_clock, &m_overlayContainer, m_messenger, m_renderManager, *m_processInfo);
-     m_VideoPlayerAudio = new CVideoPlayerAudio(&m_clock, m_messenger, *m_processInfo);
 +#endif
-   }
-   m_VideoPlayerSubtitle = new CVideoPlayerSubtitle(&m_overlayContainer, *m_processInfo);
-   m_VideoPlayerTeletext = new CDVDTeletextData(*m_processInfo);
-@@ -2184,7 +2195,7 @@
++  }
+   else
+   {
+     m_VideoPlayerVideo = new CVideoPlayerVideo(&m_clock, &m_overlayContainer, m_messenger, m_renderManager, *m_processInfo);
+@@ -662,6 +675,12 @@
+   m_omxplayer_mode                     = false;
+ #endif
+ 
++#ifdef USE_HIPLAYER
++  m_hiplayer_mode                     = CSettings::GetInstance().GetBool(CSettings::SETTING_VIDEOPLAYER_USEHIPLAYER);
++#else
++  m_hiplayer_mode                     = false;
++#endif
++
+   m_SkipCommercials = true;
+ 
+   m_processInfo.reset(CProcessInfo::CreateInstance());
+@@ -2184,7 +2203,7 @@
  
      if(current.dts < current.startpts)
      {
@@ -950,6 +1000,17 @@ diff -uNr git/xbmc/cores/VideoPlayer/VideoPlayer.cpp unlib/xbmc/cores/VideoPlaye
        return true;
      }
    }
+diff -uNr git/xbmc/cores/VideoPlayer/VideoPlayer.h unlib/xbmc/cores/VideoPlayer/VideoPlayer.h
+--- git/xbmc/cores/VideoPlayer/VideoPlayer.h	2018-03-30 11:39:25.347652309 +0800
++++ unlib/xbmc/cores/VideoPlayer/VideoPlayer.h	2018-10-31 15:01:43.871773687 +0800
+@@ -594,6 +594,6 @@
+   // omxplayer variables
+   struct SOmxPlayerState m_OmxPlayerState;
+   bool m_omxplayer_mode;            // using omxplayer acceleration
+-
++  bool m_hiplayer_mode;				// using hiplayer acceleration
+   XbmcThreads::EndTime m_player_status_timer;
+ };
 diff -uNr git/xbmc/linux/hisi/HA.AUDIO.PCM.decode.h unlib/xbmc/linux/hisi/HA.AUDIO.PCM.decode.h
 --- git/xbmc/linux/hisi/HA.AUDIO.PCM.decode.h	1970-01-01 08:00:00.000000000 +0800
 +++ unlib/xbmc/linux/hisi/HA.AUDIO.PCM.decode.h	2018-07-18 17:35:28.520490000 +0800
@@ -20595,3 +20656,38 @@ diff -uNr git/xbmc/linux/hisi/hi_unf_vo.h unlib/xbmc/linux/hisi/hi_unf_vo.h
 +
 +#endif
 +/************************************** The End Of File **************************************/
+diff -uNr git/xbmc/settings/SettingConditions.cpp unlib/xbmc/settings/SettingConditions.cpp
+--- git/xbmc/settings/SettingConditions.cpp	2018-03-30 11:39:25.383652164 +0800
++++ unlib/xbmc/settings/SettingConditions.cpp	2018-10-31 15:02:09.630132138 +0800
+@@ -315,6 +315,9 @@
+ #ifdef HAS_OMXPLAYER
+   m_simpleConditions.insert("has_omxplayer");
+ #endif
++#ifdef USE_HIPLAYER
++  m_simpleConditions.insert("use_hiplayer");
++#endif
+ #ifdef HAVE_LIBVA
+   m_simpleConditions.insert("have_libva");
+ #endif
+diff -uNr git/xbmc/settings/Settings.cpp unlib/xbmc/settings/Settings.cpp
+--- git/xbmc/settings/Settings.cpp	2018-03-30 11:39:25.383652164 +0800
++++ unlib/xbmc/settings/Settings.cpp	2018-10-31 15:02:14.064277994 +0800
+@@ -175,6 +175,7 @@
+ const std::string CSettings::SETTING_VIDEOPLAYER_PREFERVAAPIRENDER = "videoplayer.prefervaapirender";
+ const std::string CSettings::SETTING_VIDEOPLAYER_USEDXVA2 = "videoplayer.usedxva2";
+ const std::string CSettings::SETTING_VIDEOPLAYER_USEOMXPLAYER = "videoplayer.useomxplayer";
++const std::string CSettings::SETTING_VIDEOPLAYER_USEHIPLAYER = "videoplayer.usehiplayer";
+ const std::string CSettings::SETTING_VIDEOPLAYER_USEOMX = "videoplayer.useomx";
+ const std::string CSettings::SETTING_VIDEOPLAYER_USEVTB = "videoplayer.usevtb";
+ const std::string CSettings::SETTING_VIDEOPLAYER_USEMMAL = "videoplayer.usemmal";
+diff -uNr git/xbmc/settings/Settings.h unlib/xbmc/settings/Settings.h
+--- git/xbmc/settings/Settings.h	2018-10-30 16:30:35.677063406 +0800
++++ unlib/xbmc/settings/Settings.h	2018-10-31 15:02:18.375255039 +0800
+@@ -132,6 +132,7 @@
+   static const std::string SETTING_VIDEOPLAYER_PREFERVAAPIRENDER;
+   static const std::string SETTING_VIDEOPLAYER_USEDXVA2;
+   static const std::string SETTING_VIDEOPLAYER_USEOMXPLAYER;
++  static const std::string SETTING_VIDEOPLAYER_USEHIPLAYER;
+   static const std::string SETTING_VIDEOPLAYER_USEOMX;
+   static const std::string SETTING_VIDEOPLAYER_USEVTB;
+   static const std::string SETTING_VIDEOPLAYER_USEMMAL;
