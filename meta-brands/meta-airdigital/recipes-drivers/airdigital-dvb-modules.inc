@@ -3,12 +3,12 @@ SECTION = "base"
 PRIORITY = "required"
 LICENSE = "CLOSED"
 require conf/license/license-close.inc
-VER ?= "${@bb.utils.contains('TARGET_ARCH', 'aarch64', '64' , '', d)}"
+MODULESVER ?= "${@bb.utils.contains('TARGET_ARCH', 'aarch64', '64' , '', d)}"
 
 PV = "${KV}+${SRCDATE}"
 PR = "r0"
 
-SRC_URI = "http://source.mynonpublic.com/zgemma/${MACHINE_DRIVER}-drivers${VER}-${KV}-${SRCDATE}.zip"
+SRC_URI = "http://source.mynonpublic.com/zgemma/${MACHINE_DRIVER}-drivers${MODULESVER}-${KV}-${SRCDATE}.zip"
 
 S = "${WORKDIR}"
 
