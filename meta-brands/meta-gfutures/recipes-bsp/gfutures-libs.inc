@@ -6,9 +6,9 @@ DEPENDS = "zlib libpng freetype curl libxml2 libjpeg-turbo harfbuzz"
 RDEPENDS_${PN} = "libbluray"
 PR = "${SRCDATE}"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
-VER ?= "${@bb.utils.contains('TARGET_ARCH', 'aarch64', '64' , '', d)}"
+LIBSVER ?= "${@bb.utils.contains('TARGET_ARCH', 'aarch64', '64' , '', d)}"
 
-SRC_URI = "http://source.mynonpublic.com/gfutures/${MACHINE}-libs${VER}-${SRCDATE}.zip"
+SRC_URI = "http://source.mynonpublic.com/gfutures/${MACHINE}-libs${LIBSVER}-${SRCDATE}.zip"
 
 S = "${WORKDIR}"
 
