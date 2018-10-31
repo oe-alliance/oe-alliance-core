@@ -10,7 +10,8 @@ inherit gitpkgv
 PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"
 SRCREV = "${AUTOREV}"
-VER ?= "${@bb.utils.contains('MACHINE_FEATURES', 'hisil', '-v2', '', d)}"
+PR = "r1"
+VER ?= ""
 
 SRC_URI = "git://github.com/oe-alliance/e2plugins.git;protocol=git"
 
