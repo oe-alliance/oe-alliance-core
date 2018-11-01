@@ -38,4 +38,4 @@ INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
 do_compile[noexec] = "1"
 deltask do_populate_sysroot
 INSANE_SKIP_edision-blindscan-dvbs-utils-${MACHINE} = "file-rdeps already-stripped"
-INSANE_SKIP_edision-blindscan-dvbs-utils-${MACHINE} = "file-rdeps already-stripped"
+INSANE_SKIP_edision-blindscan-dvbc-utils-${MACHINE} = "file-rdeps already-stripped"
