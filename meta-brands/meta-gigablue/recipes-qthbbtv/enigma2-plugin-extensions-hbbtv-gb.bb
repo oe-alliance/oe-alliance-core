@@ -5,14 +5,14 @@ LICENSE = "CLOSED"
 require conf/license/license-close.inc
 PACKAGE_ARCH := "${MACHINE_ARCH}"
 
-SRCDATE = "20180628_r0"
+SRCDATE = "20181019_r0"
 
 inherit gitpkgv
 
 SRC_URI = "http://source.mynonpublic.com/gigablue/hbbtv/gb-hbbtv-qt-${SRCDATE}.tar.gz"
 
-SRC_URI[md5sum] = "e80fcfd71fb3a4fd45759798b207d97e"
-SRC_URI[sha256sum] = "5cdbab3a6ae5336bca40fdc5fe52cccd3a8a9b98f2dad365ac258246d67677b3"
+SRC_URI[md5sum] = "4608df53d3fa0aecf190a8db6e26e0df"
+SRC_URI[sha256sum] = "4ef50f0d78c2bb3778c28d8432705310b77c96183c549fa436d42196acc29824"
 
 RDEPENDS_${PN}  = "qtwebkit virtual/libgles2"
 RDEPENDS_${PN} += "gb-v3ddriver-${MACHINE}"
