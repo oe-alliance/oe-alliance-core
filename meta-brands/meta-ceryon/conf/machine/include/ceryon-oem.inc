@@ -61,7 +61,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'sf228', 'sf228' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'sf238', 'sf228' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', '9910lx', '9910lx' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', '9911lx', '9911lx' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', '9920lx', '9911lx' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', '9920lx', '9920lx' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'e4hdultra', 'e4hd' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'protek4k', 'protek4k' , '', d)}\
 "

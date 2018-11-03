@@ -13,7 +13,7 @@ PKGV = "1.2.+git${GITPKGV}"
 PR = "r0"
 
 
-SRC_URI="git://github.com/XTAv2/YahooWeather.git"
+SRC_URI="git://github.com/oe-alliance/YahooWeather.git"
 
 S = "${WORKDIR}/git"
 
