@@ -45,4 +45,28 @@ do_install() {
     install -m 0755 ${WORKDIR}/firewall.sh ${D}/etc/init.d/firewall
     install -d ${D}/etc
     install -m 0755 ${WORKDIR}/firewall.users ${D}/etc/firewall.users
+    install -d ${D}/${sysconfdir}/modules-load.d
+    echo nf_nat_masquerade_ipv4 >> ${D}/${sysconfdir}/modules-load.d/firewall.conf
+    echo nf_nat_ipv4 >> ${D}/${sysconfdir}/modules-load.d/firewall.conf
+    echo nf_nat >> ${D}/${sysconfdir}/modules-load.d/firewall.conf
+    echo nf_log_ipv4 >> ${D}/${sysconfdir}/modules-load.d/firewall.conf
+    echo nf_log_common >> ${D}/${sysconfdir}/modules-load.d/firewall.conf
+    echo iptable_mangle >> ${D}/${sysconfdir}/modules-load.d/firewall.conf
+    echo ipt_REJECT >> ${D}/${sysconfdir}/modules-load.d/firewall.conf
+    echo ipt_ECN >> ${D}/${sysconfdir}/modules-load.d/firewall.conf
+    echo ipt_ah >> ${D}/${sysconfdir}/modules-load.d/firewall.conf
+    echo xt_connmark >> ${D}/${sysconfdir}/modules-load.d/firewall.conf
+    echo xt_connlimit >> ${D}/${sysconfdir}/modules-load.d/firewall.conf
+    echo xt_connbytes >> ${D}/${sysconfdir}/modules-load.d/firewall.conf
+    echo xt_comment >> ${D}/${sysconfdir}/modules-load.d/firewall.conf
+    echo nf_conntrack_ipv4 >> ${D}/${sysconfdir}/modules-load.d/firewall.conf
+    echo iptable_filter >> ${D}/${sysconfdir}/modules-load.d/firewall.conf
+    echo xt_conntrack >> ${D}/${sysconfdir}/modules-load.d/firewall.conf
+    echo nf_conntrack >> ${D}/${sysconfdir}/modules-load.d/firewall.conf
+    echo ip_tables >> ${D}/${sysconfdir}/modules-load.d/firewall.conf
+    echo x_tables >> ${D}/${sysconfdir}/modules-load.d/firewall.conf
+    echo nf_reject_ipv4 >> ${D}/${sysconfdir}/modules-load.d/firewall.conf
+    echo nf_defrag_ipv4 >> ${D}/${sysconfdir}/modules-load.d/firewall.conf
 }
+
+FILES_${PN} += "${sysconfdir}/modules-load.d/firewall.conf
