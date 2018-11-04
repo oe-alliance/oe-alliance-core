@@ -1,4 +1,4 @@
-SUMMARY = "Firewall"
+SUMMARY = "linux iptables firewall"
 
 require conf/license/license-gplv2.inc
 
@@ -69,4 +69,4 @@ do_install() {
     echo nf_defrag_ipv4 >> ${D}/${sysconfdir}/modules-load.d/firewall.conf
 }
 
-FILES_${PN} += "${sysconfdir}/modules-load.d/firewall.conf
+FILES_${PN} += "${sysconfdir}/modules-load.d/firewall.conf"
