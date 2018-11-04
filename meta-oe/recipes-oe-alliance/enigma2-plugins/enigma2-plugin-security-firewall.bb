@@ -69,4 +69,4 @@ do_install() {
     echo nf_defrag_ipv4 >> ${D}/${sysconfdir}/modules-load.d/firewall.conf
 }
 
-FILES_${PN} += "${sysconfdir}/modules-load.d/firewall.conf
+FILES_${PN} += "${sysconfdir}/modules-load.d/firewall.conf"
