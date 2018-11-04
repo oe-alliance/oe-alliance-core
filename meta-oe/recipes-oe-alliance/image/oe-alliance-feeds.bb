@@ -28,7 +28,7 @@ RDEPENDS_${PN} = " \
     enigma2-plugin-drivers-exfat \
     enigma2-plugin-drivers-usbserial \
     enigma2-plugin-extensions-tuxcom \
-    enigma2-plugin-security-firewall \
+    enigma2-plugin-drivers-iptables \
     enigma2-plugin-extensions-enigmalight \
     enigma2-plugin-extensions-mediatomb \
     enigma2-plugin-extensions-dreamplex \

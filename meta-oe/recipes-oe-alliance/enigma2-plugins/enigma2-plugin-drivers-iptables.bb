@@ -1,4 +1,4 @@
-SUMMARY = "Firewall"
+SUMMARY = "linux iptables firewall"
 
 require conf/license/license-gplv2.inc
 
