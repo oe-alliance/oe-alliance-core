@@ -1,3 +1,4 @@
+# Just a comment line to avoid PAK archive (application/x-pak)
 PACKAGES =+ "${PN}-realpath ${PN}-stdbuf ${PN}-truefalse"
 
 FILES_${PN}-truefalse = "${base_bindir}/true.${PN} ${base_bindir}/false.${PN}"
