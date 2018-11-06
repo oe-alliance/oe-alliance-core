@@ -1,3 +1,4 @@
+# Just a comment line to avoid PAK archive (application/x-pak)
 PACKAGE_ARCH = "${MACHINEBUILD}"
 
 PR_append = ".1"
