@@ -1,3 +1,4 @@
+# Just a comment line to avoid PAK archive (application/x-pak)
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 SRC_URI_prepend_sh4 = " \
@@ -22,4 +23,3 @@ FILES_${PN}_append_sh4 += "\
 FILES_${PN}-dev_append_sh4 += "\
   ${libdir}/directfb-${RV}/gfxdrivers/*.la \
 "
-
