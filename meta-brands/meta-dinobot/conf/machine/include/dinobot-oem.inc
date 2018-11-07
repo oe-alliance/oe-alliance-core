@@ -55,7 +55,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'anadol4k', 'mmcblk0p10' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'dinobot4kl', 'mmcblk0p10' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'dinobot4k', 'mmcblk1p1' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'mediabox4k', 'mmcblk1p1' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'dinobot4kse', 'mmcblk1p1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'dinobot4kse', 'mmcblk0p13' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'dinobot4kplus', 'mmcblk0p13' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'dinobot4kmini', 'mmcblk0p13' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'axashis4kcombo', 'mmcblk0p10' , '', d)}\
@@ -70,7 +70,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'anadol4k', 'no' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'dinobot4kl', 'yes' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'dinobot4k', 'yes' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'mediabox4k', 'yes' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'dinobot4kse', 'yes' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'dinobot4kse', 'no' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'dinobot4kplus', 'no' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'dinobot4kmini', 'no' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'axashis4kcombo', 'no' , '', d)}\
