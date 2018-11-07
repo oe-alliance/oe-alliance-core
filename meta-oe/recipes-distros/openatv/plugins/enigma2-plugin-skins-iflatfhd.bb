@@ -40,7 +40,13 @@ echo "*                  support by gordon55                 *"
 echo "********************************************************"
 
 iFlatDir="/usr/share/enigma2/iFlatFHD"
-widgetSP="skin_0ld-widgets.xml"						# file name of the skinpart
+widgetSP="skin_0ld-widgets.xml"                                                    # file name of the skinpart
+MPDir="/usr/lib/enigma2/python/Plugins/Extensions/MediaPortal"						
+
+if [ ! -d "$iFlatDir/mySkin_off" ]
+	then
+		mkdir "$iFlatDir/mySkin_off"
+fi
 
 if [ -L "$iFlatDir/mySkin_off/$widgetSP" ]
   then
