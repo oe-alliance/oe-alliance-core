@@ -110,7 +110,7 @@ IMAGE_INSTALL = "\
 	wpa-supplicant \
 	\
 	\	
-	${@base_conditional('MACHINE', 'dm800', '', 'mtd-utils-ubifs', d)} \
+	${@oe.utils.conditional('MACHINE', 'dm800', '', 'mtd-utils-ubifs', d)} \
 	${@bb.utils.contains("MACHINE_FEATURES", "dvbc-only", "", "", d)} \
 	${@bb.utils.contains("MACHINE_FEATURES", "iniwol", "ini-coldboot ini-ethwol", "", d)} \
 	${@bb.utils.contains("MACHINE_FEATURES", "libpassthrough", "libpassthrough libdlsym", "", d)} \
@@ -164,7 +164,7 @@ IMAGE_INSTALL = "\
 #    libavahi-client
 #    minidlna
 #    ${@bb.utils.contains('MACHINEBUILD', 'atemionemesis', '', 'titan-xbmc', d)} \
-#    ${@base_conditional('MACHINE', 'inihdp', '', 'titan-xbmc', d)} \
+#    ${@oe.utils.conditional('MACHINE', 'inihdp', '', 'titan-xbmc', d)} \
 #    ${@bb.utils.contains('MACHINEBUILD', 'atemionemesis', '', 'titan-xbmc', d)} \
 #    titan-bin
 #    ${@bb.utils.contains("TARGET_ARCH", "mipsel", "gst-plugin-libxt" , "", d)} \
