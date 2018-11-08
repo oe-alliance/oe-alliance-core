@@ -1,0 +1,240 @@
+--- a/src/output_gstreamer.c	2015-01-21 21:20:01.000000000 +0100
++++ a/src/output_gstreamer.c.patched	2015-01-22 19:50:08.000000000 +0100
+@@ -34,6 +34,7 @@
+ #include <stdlib.h>
+ #include <string.h>
+ #include <unistd.h>
++#include <fcntl.h>
+ 
+ #include "logging.h"
+ #include "upnp_connmgr.h"
+@@ -180,7 +181,59 @@
+ 	SongMetaData_clear(&song_meta_);
+ }
+ 
++int ostrcasecmp(char* value1, char* value2)
++{
++	int ret = 1;
++
++	if(value1 != NULL && value2 != NULL)
++		ret = strcasecmp(value1, value2);
++
++	return ret;
++}
++
++int cmpfilenameext(char* filename, char* ext)
++{
++	char* zeichen = NULL;
++
++	if(filename == NULL) return 1;
++
++	zeichen = strrchr(filename, '.');
++	if(zeichen != NULL)
++	{
++		if(ostrcasecmp(zeichen, ext) == 0) return 0;
++	}
++
++	return 1;
++}
++
++int output_picture(char* pic)
++{
++	int fifo = -1;
++
++	if(pic == NULL) return -1;
++
++	fifo = open("/tmp/gmediarender", O_WRONLY);
++
++	if(fifo > -1)
++		write(fifo, pic, strlen(pic) + 1);
++
++	close(fifo);
++	return 0;
++}
++
+ static int output_gstreamer_play(output_transition_cb_t callback) {
++
++	//send pic to titan
++	if(gsuri_ != NULL && (cmpfilenameext(gsuri_, ".jpg") == 0 || cmpfilenameext(gsuri_, ".png") == 0))
++	{
++		output_picture(gsuri_);
++		return 0;
++	}
++	else if(gsuri_ != NULL && (cmpfilenameext(gsuri_, ".mp3") == 0 || cmpfilenameext(gsuri_, ".wma") == 0 || cmpfilenameext(gsuri_, ".ogg") == 0 || cmpfilenameext(gsuri_, ".flac") == 0 || cmpfilenameext(gsuri_, ".wav") == 0))
++		output_picture("saver.png");
++	else
++		output_picture("clear.png");
++
+ 	play_trans_callback_ = callback;
+ 	if (get_current_player_state() != GST_STATE_PAUSED) {
+ 		if (gst_element_set_state(player_, GST_STATE_READY) ==
+
+--- a/src/output_gstreamer.h	2015-01-22 19:10:04.000000000 +0100
++++ a/src/output_gstreamer.h.patched	2015-01-22 19:13:00.000000000 +0100
+@@ -26,4 +26,8 @@
+ 
+ extern struct output_module gstreamer_output;
+ 
++int ostrcasecmp(char* value1, char* value2);
++int cmpfilenameext(char* filename, char* ext);
++int output_picture(char* pic);
++
+ #endif /*  _OUTPUT_GSTREAMER_H */
+
+--- a/src/output.h	2015-01-26 23:37:01.000000000 +0100
++++ b/src/output.h.patched	2015-01-27 00:49:47.000000000 +0100
+@@ -27,6 +27,11 @@
+ #include <glib.h>
+ #include "song-meta-data.h"
+ 
++int writesys(const char *filename, char *value, int flag);
++char* ostrcat(char* value1, char* value2, int free1, int free2);
++char* oitoa(int value);
++char* ostrshrink(char* value);
++
+ // Feedback for the controlling part what is happening with the
+ // output.
+ enum PlayFeedback {
+
+--- a/src/output.c	2015-01-26 23:49:09.000000000 +0100
++++ b/src/output.c.patched	2015-01-26 23:48:38.000000000 +0100
+@@ -192,13 +192,20 @@
+ }
+ 
+ int output_get_volume(float *value) {
++//	printf("1output_get_volume: %f\n",*value);
+ 	if (output_module && output_module->get_volume) {
++//		printf("2output_get_volume: %f\n",*value);		
+ 		return output_module->get_volume(value);
+ 	}
+ 	return -1;
+ }
+ int output_set_volume(float value) {
++//	printf("1output_set_volume: %f\n",value);
++	int ret = 63 - (int)ceil((float)(value * 100)) * 63 / 100;
++//	printf("2output_set_volume ret: %d\n",ret);
++	writesys("/proc/stb/avs/0/volume", oitoa(ret), 0);
+ 	if (output_module && output_module->set_volume) {
++//		printf("9output_set_volume: %f\n",value);
+ 		return output_module->set_volume(value);
+ 	}
+ 	return -1;
+@@ -215,3 +222,118 @@
+ 	}
+ 	return -1;
+ }
++
++char* ostrcat(char* value1, char* value2, int free1, int free2)
++{
++	int len = 0, len1 = 0, len2 = 0;
++	char* buf = NULL;
++
++	if(value1 == NULL && value2 == NULL) return NULL;
++
++	if(value1 != NULL) len1 = strlen(value1);
++	if(value2 != NULL) len2 = strlen(value2);
++
++	len = len1 + len2 + 1;
++
++	if(free1 == 1)
++		buf = realloc(value1, len);
++	else
++		buf = malloc(len);
++	if(buf == NULL)
++	{
++		if(free1 == 1) free(value1);
++		if(free2 == 1) free(value2);
++		return NULL;
++	}
++
++	if(free1 == 0 && len1 > 0) memcpy(buf, value1, len1);
++	if(len2 > 0) memcpy(buf + len1, value2, len2);
++	buf[len - 1] = '\0';
++
++	if(free2 == 1) free(value2);
++
++	//helpfull for memleak detect
++	//if(buf != NULL && strlen(buf) == 0x0b - 0x01)
++	//	printf("******** memleak string (%s) (%p) ********\n", buf, buf);
++
++	return buf;
++}
++
++int writesys(const char *filename, char *value, int flag)
++{
++	FILE *fd = NULL;
++	char* tmpstr = NULL;
++	int ret;
++
++	if(value == NULL)
++	{
++//		err("NULL detect");
++		return 1;
++	}
++
++	if(flag == 2 || flag == 3)
++		fd = fopen(filename, "a");
++	else
++		fd = fopen(filename, "w");
++	if(fd == NULL)
++	{
++//		perr("can't open %s", filename);
++		return 1;
++	}
++
++	if(flag == 1 || flag == 3)
++		tmpstr = ostrcat(value, "\n", 0, 0);
++	else
++		tmpstr = ostrcat(value, NULL, 0, 0);
++
++	ret = fwrite(tmpstr, strlen(tmpstr), 1, fd);
++	if(ret != 1)
++	{
++//		perr("writting to %s", filename);
++		free(tmpstr);
++		fclose(fd);
++		return 1;
++	}
++
++	free(tmpstr);
++	fclose(fd);
++	return 0;
++}
++
++char* oitoa(int value)
++{
++	char *buf = NULL;
++
++	buf = malloc(4096);
++	if(buf == NULL)
++	{
++//		err("no mem");
++		return NULL;
++	}
++
++	sprintf(buf, "%d", value);
++	buf = ostrshrink(buf);
++
++	return buf;
++}
++
++char* ostrshrink(char* value)
++{
++	int len = 0;
++	char* buf = NULL;
++
++	if(value == NULL) return NULL;
++
++	len = strlen(value);
++	if(len == 0) return value;
++
++	buf = malloc(len + 1);
++	if(buf == NULL)
++		return value;
++
++	memcpy(buf, value, len);
++	free(value);
++	buf[len] = '\0';
++
++	return buf;
++}

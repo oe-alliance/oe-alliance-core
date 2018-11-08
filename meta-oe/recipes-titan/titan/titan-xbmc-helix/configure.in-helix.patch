@@ -1,0 +1,939 @@
+--- a/tools/depends/configure.in	2015-05-08 09:45:28.000000000 +0200
++++ a/tools/depends/configure.in.patched	2015-05-08 10:05:26.000000000 +0200
+@@ -146,6 +146,14 @@
+     use_toolchain="${use_toolchain:-/usr}"
+     platform_os="linux"
+   ;;
++  mipsel-*-linux*)
++    use_cpu=$host_cpu
++    use_toolchain="${use_toolchain:-/usr}"
++    platform_cflags="-Os -fPIC -DPIC"
++    platform_ldflags="-Wl,-rpath-link=$prefix/$deps_dir/lib"
++    platform_cxxflags="$platform_cflags"
++    platform_os="linux"
++  ;;
+   x86_64*-linux-gnu*|x86_64-*-linux-uclibc*)
+     use_cpu=$host_cpu
+     use_toolchain="${use_toolchain:-/usr}"
+
+--- a/configure.in	2015-05-05 13:00:57.000000000 +0200
++++ a/configure.in.patched	2015-05-05 13:39:23.000000000 +0200
+@@ -184,6 +184,9 @@
+ wayland_disabled="== Wayland disabled. =="
+ x11_enabled="== X11 enabled. =="
+ x11_disabled="== X11 disabled. =="
++directfb_enabled="== directfb enabled. =="
++directfb_disabled="== directfb disabled. =="
++windowing_error="Could not enable directfb and X11 support"
+ pulse_not_found="== Could not find libpulse. PulseAudio support disabled. =="
+ pulse_disabled="== PulseAudio support disabled. =="
+ dvdcss_enabled="== DVDCSS support enabled. =="
+@@ -393,6 +396,12 @@
+   [use_dbus=$enableval],
+   [use_dbus=yes])
+ 
++AC_ARG_ENABLE([directfb],
++  [AS_HELP_STRING([--enable-directfb],
++  [enable directfb (default is no) 'Linux Only'])],
++  [use_directfb=$enableval],
++  [use_directfb=no])
++
+ AC_ARG_ENABLE([pulse],
+   [AS_HELP_STRING([--enable-pulse],
+   [enable PulseAudio support (default is auto)])],
+@@ -698,6 +707,17 @@
+      use_wayland=no
+      build_shared_lib=yes
+      ;;
++  mipsel-*-linux*|mipsel*linux)
++     target_platform=target_dvbbox
++     ARCH="mips"
++     use_arch="mips"
++     use_joystick=no
++     use_gles=yes
++     use_gl=no
++     use_sdl=no
++     use_wayland=no
++     USE_STATIC_FFMPEG=1
++     ;;
+   *)
+      AC_MSG_ERROR(unsupported host ($host))
+ esac
+@@ -734,6 +754,23 @@
+      CFLAGS="$CFLAGS"
+      CXXFLAGS="$CXXFLAGS"
+      ;;
++  dvbbox)
++     target_platform=target_dvbbox
++     ARCH="mips"
++     use_arch="mips"
++     ffmpeg_target_os=linux
++     use_joystick=no
++     use_gles=yes
++     use_sdl=no
++     use_x11=no
++     use_alsa="no"
++     use_wayland=no
++     USE_STATIC_FFMPEG=1
++     AC_DEFINE(HAS_EGLGLES, [1], [Define if supporting EGL based GLES Framebuffer])
++     USE_DVBBOX_EGL=1
++     CFLAGS="$CFLAGS"
++     CXXFLAGS="$CXXFLAGS"
++     ;;
+ esac
+ 
+ XBMC_SETUP_ARCH_DEFINES()
+@@ -1042,6 +1079,22 @@
+   fi
+ fi
+ 
++if test "$use_directfb" = "yes" && test "$host_vendor" != "apple"; then
++  if test "x$use_gles" != "xyes"; then
++    AC_MSG_ERROR($directfb_gles)
++  fi
++  AC_MSG_NOTICE($directfb_enabled)
++  PKG_CHECK_MODULES([DIRECTFB],    [directfb],
++    [INCLUDES="$INCLUDES $DIRECTFB_CFLAGS"; LIBS="$LIBS $DIRECTFB_LIBS"],
++    AC_MSG_ERROR($missing_library))
++  AC_DEFINE([HAVE_DIRECTFB], [1], [Define to 1 if you have directfb libs installed.])
++  USE_DIRECTFB=1
++  use_sdl=no;use_joystick=no
++else
++  AC_MSG_RESULT($directfb_disabled)
++  USE_DIRECTFB=0
++fi
++
+ # platform common libraries
+ if test "$use_mysql" = "yes"; then
+   AC_PATH_PROG(MYSQL_CONFIG, mysql_config,"no")
+@@ -1335,6 +1388,9 @@
+ 
+ # X11
+ if test "$use_x11" = "yes" && test "$host_vendor" != "apple"; then
++  if test "$use_directfb" = "yes"; then
++    AC_MSG_ERROR($windowing_error)
++  fi
+   AC_MSG_NOTICE($x11_enabled)
+   PKG_CHECK_MODULES([X11],    [x11],
+     [INCLUDES="$INCLUDES $X11_CFLAGS"; LIBS="$LIBS $X11_LIBS"],
+@@ -2481,6 +2537,7 @@
+     xbmc/visualizations/WaveForm/Makefile \
+     xbmc/windowing/Makefile \
+     xbmc/windowing/egl/Makefile \
++    xbmc/windowing/dfb/Makefile \
+     lib/addons/library.xbmc.addon/Makefile \
+     lib/addons/library.xbmc.codec/Makefile \
+     lib/addons/library.xbmc.gui/Makefile \
+@@ -2597,6 +2654,7 @@
+ AC_SUBST(HAVE_LIBPULSE)
+ AC_SUBST(USE_XRANDR)
+ AC_SUBST(USE_ALSA)
++AC_SUBST(USE_DIRECTFB)
+ AC_SUBST(USE_TEXTUREPACKER)
+ AC_SUBST(USE_AIRTUNES)
+ AC_SUBST(USE_LIBUDEV)
+
+--- a/m4/xbmc_arch.m4	2015-05-07 17:12:51.000000000 +0200
++++ a/m4/xbmc_arch.m4.patched	2015-05-07 17:35:48.000000000 +0200
+@@ -32,6 +32,9 @@
+   arm*-*-linux-gnu*|arm*-*-linux-uclibc*)
+      AC_SUBST(ARCH_DEFINES, "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX")
+      ;;
++  mipsel-*-linux*|mipsel*linux)
++     AC_SUBST(ARCH_DEFINES, "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -D_MIPSEL -DTARGET_DVBBOX")
++     ;;
+   *-*linux-android*)
+      AC_SUBST(ARCH_DEFINES, "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_ANDROID")
+      ;;
+
+--- a/addons/library.xbmc.addon/libXBMC_addon.h
++++ b/addons/library.xbmc.addon/libXBMC_addon.h
+@@ -55,8 +55,8 @@ typedef intptr_t      ssize_t;
+ #define ADDON_HELPER_ARCH       "powerpc64-linux"
+ #elif defined(__ARMEL__)
+ #define ADDON_HELPER_ARCH       "arm"
+-#elif defined(_MIPSEL)
+-#define ADDON_HELPER_ARCH       "mipsel-linux"
++#elif defined(__mips__)
++#define ADDON_HELPER_ARCH       "mipsel-oe-linux"
+ #else
+ #define ADDON_HELPER_ARCH       "i486-linux"
+ #endif
+
+--- a/Makefile.in	2015-05-07 17:47:04.000000000 +0200
++++ a/Makefile.in.patched	2015-05-07 17:49:24.000000000 +0200
+@@ -125,6 +125,10 @@
+ DIRECTORY_ARCHIVES += xbmc/visualizations/EGLHelpers/eglhelpers.a
+ endif
+ 
++ifeq (@USE_DIRECTFB@,1)
++DIRECTORY_ARCHIVES += xbmc/windowing/dfb/windowing_dfb.a
++endif
++
+ ifeq (@USE_UPNP@,1)
+ DIRECTORY_ARCHIVES += lib/libUPnP/libupnp.a \
+                       xbmc/network/upnp/upnp.a
+@@ -441,7 +445,7 @@
+   endif
+ endif
+ 	$(MAKE) -C lib/stsound/StSoundLibrary
+-ifeq ($(or $(findstring powerpc,@ARCH@),$(findstring x86_64-linux,@ARCH@),$(findstring arm, @ARCH@),$(findstring freebsd,@ARCH@)),)
++ifeq ($(or $(findstring powerpc,@ARCH@),$(findstring x86_64-linux,@ARCH@),$(findstring arm, @ARCH@),$(findstring freebsd,@ARCH@),$(findstring mips,@ARCH@)),)
+ 	$(MAKE) -C lib/snesapu/SNES/SNESAPU
+ endif
+ imagelib: dllloader
+@@ -528,6 +532,8 @@
+ 
+ ifeq ($(findstring osx,@ARCH@), osx)
+ 	$(SILENT_LD) $(CXX) $(LDFLAGS) -o @APP_NAME_LC@.bin $(MAINOBJS) -Wl,-all_load,-ObjC $(MAINOBJS) $(DYNOBJSXBMC) $(NWAOBJSXBMC) $(OBJSXBMC) $(LIBS) -rdynamic
++#else ifeq ($(findstring mips,@ARCH@), mips) # oskwon
++#	$(SILENT_LD) $(CXX) $(LDFLAGS) -o @APP_NAME_LC@.bin $(MAINOBJS) -Wl,-all_load,-ObjC $(MAINOBJS) $(DYNOBJSXBMC) $(NWAOBJSXBMC) $(OBJSXBMC) $(LIBS) -rdynamic xbmc/windowing/egl/gles_init.a -ldvb_base -lnxpl -ldvb_client
+ else
+ 	$(SILENT_LD) $(CXX) $(CXXFLAGS) $(LDFLAGS) -o @APP_NAME_LC@.bin $(MAINOBJS) -Wl,--start-group $(MAINOBJS) $(DYNOBJSXBMC) $(OBJSXBMC) -Wl,--end-group $(NWAOBJSXBMC) $(LIBS) -rdynamic
+ endif
+
+--- a/xbmc/cores/DllLoader/DllLoader.h	2015-05-07 17:47:06.000000000 +0200
++++ a/xbmc/cores/DllLoader/DllLoader.h.patched	2015-05-07 17:51:35.000000000 +0200
+@@ -23,7 +23,7 @@
+ #include "coffldr.h"
+ #include "LibraryLoader.h"
+ 
+-#if defined(__linux__) && !defined(__powerpc__) && !defined(__arm__)
++#if defined(__linux__) && !defined(__powerpc__) && !defined(__arm__) && !defined(__mips__)
+ #define USE_LDT_KEEPER
+ #include "ldt_keeper.h"
+ #endif
+
+--- a/xbmc/cores/DllLoader/ldt_keeper.c	2015-05-07 17:47:06.000000000 +0200
++++ a/xbmc/cores/DllLoader/ldt_keeper.c.patched	2015-05-07 17:53:51.000000000 +0200
+@@ -19,7 +19,7 @@
+  */
+ 
+ //#ifndef __powerpc__
+-#if !defined(__powerpc__) && !defined(__ppc__) && !defined(__arm__)
++#if !defined(__powerpc__) && !defined(__ppc__) && !defined(__arm__) && !defined(__mips__)
+ 
+ #include "ldt_keeper.h"
+ 
+--- a/xbmc/linux/PlatformDefs.h	2015-05-07 17:47:06.000000000 +0200
++++ a/xbmc/linux/PlatformDefs.h.patched	2015-05-07 17:55:29.000000000 +0200
+@@ -161,7 +161,7 @@
+ #define __int64   long long
+ #define __uint64  unsigned long long
+ 
+-#if defined(__x86_64__) || defined(__powerpc__) || defined(__ppc__) || defined (__arm__) // should this be powerpc64 only?
++#if defined(__x86_64__) || defined(__powerpc__) || defined(__ppc__) || defined (__arm__) || defined(__mips__) // should this be powerpc64 only?
+ #define __stdcall
+ #else /* !__x86_64__ */
+ #define __stdcall   __attribute__((__stdcall__))
+
+--- a/xbmc/utils/fastmemcpy.c	2015-05-07 17:47:06.000000000 +0200
++++ a/xbmc/utils/fastmemcpy.c.patched	2015-05-07 17:56:37.000000000 +0200
+@@ -25,7 +25,7 @@
+  *  <http://www.gnu.org/licenses/>.
+  *
+  */
+-#if !defined(TARGET_WINDOWS) && !defined(__ppc__) && !defined(__powerpc__) && !defined(__arm__) 
++#if !defined(TARGET_WINDOWS) && !defined(__ppc__) && !defined(__powerpc__) && !defined(__arm__) && !defined(__mips__) 
+ #define HAVE_MMX2
+ #define HAVE_SSE
+ 
+--- a/xbmc/utils/fastmemcpy.h	2015-05-07 17:47:06.000000000 +0200
++++ a/xbmc/utils/fastmemcpy.h.patched	2015-05-07 17:57:32.000000000 +0200
+@@ -23,8 +23,8 @@
+ extern "C" {
+ #endif
+ 
+-#if !defined(TARGET_WINDOWS) && !defined(__ppc__) && !defined(__powerpc__) && !defined(TARGET_ANDROID) && !defined(TARGET_DARWIN_IOS)
+-void * fast_memcpy(void * to, const void * from, size_t len);
++#if !defined(TARGET_WINDOWS) && !defined(__ppc__) && !defined(__powerpc__) && !defined(__mips__) && !defined(TARGET_ANDROID) && !defined(TARGET_DARWIN_IOS)
++void * fast_memcpy(void * to, const void * from, size_t len);
+ //#define fast_memcpy memcpy
+ #else
+ #define fast_memcpy memcpy
+
+--- a/tools/depends/target/ffmpeg/Makefile	2015-05-07 18:06:13.000000000 +0200
++++ a/tools/depends/target/ffmpeg/Makefile.patched	2015-05-07 18:09:39.000000000 +0200
+@@ -47,6 +47,9 @@
+ ifeq ($(findstring arm, $(CPU)), arm)
+   ffmpg_config += --enable-pic --disable-armv5te --disable-armv6t2
+ endif
++ifeq ($(findstring mips, $(CPU)), mips)
++  ffmpg_config += --disable-mips32r2 --disable-mipsdspr1 --disable-mipsdspr2
++endif
+ ifeq ($(Configuration), Release)
+   ffmpg_config += --disable-debug
+ endif
+
+--- a/tools/depends/target/ffmpeg/autobuild.sh	2015-05-07 18:06:13.000000000 +0200
++++ a/tools/depends/target/ffmpeg/autobuild.sh.patched	2015-05-07 18:10:53.000000000 +0200
+@@ -155,6 +155,9 @@
+ 	--enable-nonfree \
+ 	--enable-pthreads \
+ 	--enable-zlib \
++	--disable-mips32r2 \
++	--disable-mipsdspr1 \
++	--disable-mipsdspr2 \
+         ${FLAGS}
+ 
+ make -j ${BUILDTHREADS} 
+
+--- a/xbmc/utils/MathUtils.h	2015-05-07 18:24:38.000000000 +0200
++++ a/xbmc/utils/MathUtils.h.patched	2015-05-07 18:28:48.000000000 +0200
+@@ -34,6 +34,7 @@
+ 
+ #if defined(__ppc__) || \
+     defined(__powerpc__) || \
++    defined(__mips__) || \
+     defined(__arm__)
+   #define DISABLE_MATHUTILS_ASM_ROUND_INT
+ #endif
+
+--- a/xbmc/cores/VideoRenderers/LinuxRendererGL.h	2015-05-07 18:24:38.000000000 +0200
++++ a/xbmc/cores/VideoRenderers/LinuxRendererGL.h.patched	2015-05-07 18:32:26.000000000 +0200
+@@ -325,8 +325,7 @@
+ 
+ 
+ inline int NP2( unsigned x ) {
+-#if defined(TARGET_POSIX) && !defined(__POWERPC__) && !defined(__PPC__) && !defined(__arm__)
+-  // If there are any issues compiling this, just append a ' && 0'
++#if defined(TARGET_POSIX) && !defined(__POWERPC__) && !defined(__PPC__) && !defined(__arm__) && !defined(__mips__)  // If there are any issues compiling this, just append a ' && 0'
+   // to the above to make it '#if defined(TARGET_POSIX) && 0'
+ 
+   // Linux assembly is AT&T Unix style, not Intel style
+
+--- a/xbmc/Application.cpp	2015-05-20 09:29:26.000000000 +0200
++++ a/xbmc/Application.cpp.patched	2015-05-20 18:10:24.000000000 +0200
+@@ -2420,6 +2420,20 @@
+           useKeyboard = true;
+       }
+     }
++    printf("----->> %x\n", key.GetVKey());
++    switch(key.GetVKey())
++    {
++      case 0x0d:
++      case 0x80:
++      case 0x81:
++      case 0x82:
++      case 0x83:
++	  	if (iWin == WINDOW_DIALOG_KEYBOARD) {
++	  	  useKeyboard = false;
++        }
++	  	break;
++    }
++
+     if (useKeyboard)
+     {
+       // use the virtualkeyboard section of the keymap, and send keyboard-specific or navigation
+
+--- a/xbmc/cores/AudioEngine/AEFactory.cpp	2015-05-20 09:29:26.000000000 +0200
++++ a/xbmc/cores/AudioEngine/AEFactory.cpp.patched	2015-05-22 18:35:35.000000000 +0200
+@@ -40,7 +40,12 @@
+ 
+ bool CAEFactory::LoadEngine()
+ {
++// oskwon
++#if defined(TARGET_DVBBOX)
++  return true;
++#else
+   return CAEFactory::LoadEngine(AE_ENGINE_ACTIVE);
++#endif /*TARGET_DVBBOX*/
+ }
+ 
+ bool CAEFactory::LoadEngine(enum AEEngine engine)
+@@ -78,6 +83,10 @@
+ 
+ bool CAEFactory::StartEngine()
+ {
++// oskwon
++#if defined(TARGET_DVBBOX)
++  return true;
++#else
+   if (!AE)
+     return false;
+ 
+@@ -87,6 +96,7 @@
+   delete AE;
+   AE = NULL;
+   return false;
++#endif /*TARGET_DVBBOX*/
+ }
+ 
+ bool CAEFactory::Suspend()
+
+--- a/xbmc/utils/CPUInfo.cpp	2015-05-21 12:19:08.000000000 +0200
++++ a/xbmc/utils/CPUInfo.cpp.patched	2015-05-22 18:14:37.000000000 +0200
+@@ -266,7 +266,11 @@
+   if (m_fProcTemperature == NULL)   
+     m_fProcTemperature = fopen("/sys/class/thermal/thermal_zone0/temp", "r");  // On Raspberry PIs
+ 
++#ifdef TARGET_DVBBOX // oskwon
++  m_fCPUFreq = fopen ("/sys/devices/platform/brcmstb/cpu_khz", "r");
++#else
+   m_fCPUFreq = fopen ("/sys/devices/system/cpu/cpu0/cpufreq/scaling_cur_freq", "r");
++#endif
+   if (!m_fCPUFreq)
+   {
+     m_cpuInfoForFreq = true;
+@@ -318,6 +322,29 @@
+           StringUtils::Trim(m_cores[nCurrId].m_strModel);
+         }
+       }
++#ifdef TARGET_DVBBOX // oskwon
++      else if (strncmp(buffer, "system type", strlen("system type"))==0)
++      {
++        char *needle = strstr(buffer, ":");
++        if (needle && strlen(needle)>3)
++        {
++          needle+=2;
++          m_cpuModel = needle;
++          m_cores[nCurrId].m_strModel = m_cpuModel;
++          StringUtils::Trim(m_cores[nCurrId].m_strModel);
++        }
++      }
++      else if (strncmp(buffer, "cpu model", strlen("cpu model"))==0)
++      {
++        char *needle = strstr(buffer, ":");
++        if (needle && strlen(needle)>3)
++        {
++          needle+=2;
++          m_cores[nCurrId].m_strVendor = needle;
++          StringUtils::Trim(m_cores[nCurrId].m_strVendor);
++        }
++      }
++#endif /*TARGET_DVBBOX*/
+       else if (strncmp(buffer, "BogoMIPS", strlen("BogoMIPS"))==0)
+       {
+         char *needle = strstr(buffer, ":");
+
+--- a/xbmc/windowing/egl/EGLWrapper.cpp	2015-05-21 12:19:09.000000000 +0200
++++ a/xbmc/windowing/egl/EGLWrapper.cpp.patched	2015-05-22 18:05:00.000000000 +0200
+@@ -28,6 +28,10 @@
+ #include "EGLNativeTypeIMX.h"
+ #include "EGLWrapper.h"
+ 
++//#if defined(TARGET_DVBBOX) // oskwon
++//#include "EGLNativeTypeDvbBox.h"
++//#endif
++
+ #define CheckError() m_result = eglGetError(); if(m_result != EGL_SUCCESS) CLog::Log(LOGERROR, "EGL error in %s: %x",__FUNCTION__, m_result);
+ 
+ CEGLWrapper::CEGLWrapper()
+@@ -83,6 +87,9 @@
+       (nativeGuess = CreateEGLNativeType<CEGLNativeTypeAndroid>(implementation)) ||
+       (nativeGuess = CreateEGLNativeType<CEGLNativeTypeAmlogic>(implementation)) ||
+       (nativeGuess = CreateEGLNativeType<CEGLNativeTypeRaspberryPI>(implementation)) ||
++//#if defined(TARGET_DVBBOX) // oskwon
++//      (nativeGuess = CreateEGLNativeType<CEGLNativeTypeDvbBox>(implementation)) ||
++//#endif
+       (nativeGuess = CreateEGLNativeType<CEGLNativeTypeIMX>(implementation))
+       )
+   {
+
+--- a/tools/Linux/kodi.sh.in	2015-05-21 12:19:08.000000000 +0200
++++ a/tools/Linux/kodi.sh.in.patched	2015-05-22 18:39:07.000000000 +0200
+@@ -138,11 +138,11 @@
+ }
+ 
+ migrate_home
+-python @datadir@/${bin_name}/FEH.py $SAVED_ARGS
+-RET=$?
+-if [ $RET -ne 0 ]; then
+-  exit $RET
+-fi
++#python @datadir@/${bin_name}/FEH.py $SAVED_ARGS
++#RET=$?
++#if [ $RET -ne 0 ]; then
++#  exit $RET
++#fi
+ 
+ if command_exists gdb; then
+   # Output warning in case ulimit is unsupported by shell
+
+--- a/xbmc/input/linux/LinuxInputDevices.cpp	2015-05-22 18:29:30.000000000 +0200
++++ a/xbmc/input/linux/LinuxInputDevices.cpp.patched	2015-05-22 18:29:03.000000000 +0200
+@@ -255,6 +255,10 @@
+   { 378               , XBMCK_RIGHT       }, // Green
+   { 381               , XBMCK_UP          }, // Yellow
+   { 366               , XBMCK_DOWN        }, // Blue
++#ifdef TARGET_DVBBOX // oskwon
++  { KEY_OK            , XBMCK_RETURN      }, // Ok
++  { KEY_EXIT          , XBMCK_ESCAPE      }, // EXIT
++#endif /*TARGET_DVBBOX*/
+ };
+ 
+ typedef enum
+@@ -527,9 +531,17 @@
+ 
+     KeymapEntry entry;
+     entry.code = code;
++
++    int keyMapValue;
++#if defined(TARGET_DVBBOX) // oskwon
++	if (devt.key.keysym.mod & (XBMCKMOD_SHIFT | XBMCKMOD_CAPS)) keyMapValue = entry.shift;
++	else if (devt.key.keysym.mod & XBMCKMOD_ALT) keyMapValue = entry.alt;
++	else if (devt.key.keysym.mod & XBMCKMOD_META) keyMapValue = entry.altShift;
++	else keyMapValue = entry.base;
++	devt.key.keysym.unicode = devt.key.keysym.sym;
++#else
+     if (GetKeymapEntry(entry))
+     {
+-      int keyMapValue;
+       if (devt.key.keysym.mod & (XBMCKMOD_SHIFT | XBMCKMOD_CAPS)) keyMapValue = entry.shift;
+       else if (devt.key.keysym.mod & XBMCKMOD_ALT) keyMapValue = entry.alt;
+       else if (devt.key.keysym.mod & XBMCKMOD_META) keyMapValue = entry.altShift;
+@@ -544,6 +556,7 @@
+         }
+       }
+     }
++#endif /*defined(TARGET_DVBBOX)*/
+   }
+ 
+   return true;
+@@ -712,6 +725,12 @@
+       break;
+     }
+ 
++#ifdef TARGET_DVBBOX // oskwon
++    if (access("/tmp/playing.lock", F_OK) == 0) {
++    	break;
++    }
++#endif /*TARGET_DVBBOX*/
++
+     //printf("read event readlen = %d device name %s m_fileName %s\n", readlen, m_deviceName, m_fileName.c_str());
+ 
+     // sanity check if we realy read the event
+@@ -956,6 +975,7 @@
+   if (fd < 0)
+     return false;
+ 
++#if !defined(TARGET_DVBBOX) && !VKEY_ENABLE // oskwon
+   if (ioctl(fd, EVIOCGRAB, 1) && errno != EINVAL)
+   {
+     close(fd);
+@@ -963,6 +983,7 @@
+   }
+ 
+   ioctl(fd, EVIOCGRAB, 0);
++#endif /*TARGET_DVBBOX*/
+ 
+   close(fd);
+ 
+@@ -1055,6 +1076,7 @@
+     return false;
+   }
+ 
++#if !defined(TARGET_DVBBOX) && !VKEY_ENABLE // oskwon
+   /* grab device */
+   ret = ioctl(fd, EVIOCGRAB, 1);
+   if (ret && errno != EINVAL)
+@@ -1063,6 +1085,7 @@
+     close(fd);
+     return false;
+   }
++#endif /*TARGET_DVBBOX*/
+ 
+   // Set the socket to non-blocking
+   int opts = 0;
+@@ -1130,7 +1153,9 @@
+ 
+ driver_open_device_error:
+ 
++#if !defined(TARGET_DVBBOX) && !VKEY_ENABLE // oskwon
+   ioctl(fd, EVIOCGRAB, 0);
++#endif /*TARGET_DVBBOX*/
+   if (m_vt_fd >= 0)
+   {
+     close(m_vt_fd);
+@@ -1204,9 +1229,10 @@
+  */
+ void CLinuxInputDevice::Close()
+ {
++#if !defined(TARGET_DVBBOX) && !VKEY_ENABLE // oskwon
+   /* release device */
+   ioctl(m_fd, EVIOCGRAB, 0);
+-
++#endif /*TARGET_DVBBOX*/
+   if (m_vt_fd >= 0)
+     close(m_vt_fd);
+ 
+--- a/xbmc/pvr/addons/PVRClients.cpp	2015-05-22 18:21:46.000000000 +0200
++++ a/xbmc/pvr/addons/PVRClients.cpp.patched	2015-05-22 18:21:14.000000000 +0200
+@@ -1061,7 +1061,7 @@
+     // Please visit http://kodi.wiki/view/PVR to learn more.
+     m_bNoAddonWarningDisplayed = true;
+     CGUIDialogOK::ShowAndGetInput(19271, 19272, 19273, 19274);
+-    CSettings::Get().SetBool("pvrmanager.enabled", false);
++    //CSettings::Get().SetBool("pvrmanager.enabled", false); // oskwon
+     CGUIMessage msg(GUI_MSG_UPDATE, WINDOW_SETTINGS_MYPVR, 0);
+     g_windowManager.SendThreadMessage(msg, WINDOW_SETTINGS_MYPVR);
+   }
+
+--- a/xbmc/utils/StdString.h	2015-05-21 12:19:08.000000000 +0200
++++ a/xbmc/utils/StdString.h.patched	2015-05-22 18:09:17.000000000 +0200
+@@ -1540,6 +1540,12 @@
+ // -----------------------------------------------------------------------------
+ // ssicmp: comparison (case INsensitive, not affected by locale)
+ // -----------------------------------------------------------------------------
++#define NOT_USE_STD (1) /*oskwon*/
++#ifdef NOT_USE_STD
++inline char sstoupper(char ch)    { return (ch >= 'a' && ch <= 'z')? char(ch + 'A' - 'a'): ch; }
++inline char sstolower(char ch)    { return (ch >= 'A' && ch <= 'Z')? char(ch + 'a' - 'A'): ch; }
++#endif
++
+ template<typename CT>
+ inline int ssicmp(const CT* pA1, const CT* pA2)
+ {
+
+--- a/xbmc/system.h	2015-05-21 12:19:08.000000000 +0200
++++ a/xbmc/system.h.patched	2015-05-22 18:19:21.000000000 +0200
+@@ -183,7 +183,9 @@
+ #endif
+ #endif
+ #define HAS_LINUX_NETWORK
++#if !defined(TARGET_DVBBOX) // oskwon
+ #define HAS_LIRC
++#endif /*TARGET_DVBBOX*/
+ #ifdef HAVE_LIBPULSE
+ #define HAS_PULSEAUDIO
+ #endif
+@@ -247,6 +249,10 @@
+ #ifdef HAVE_LIBGLESV2
+ #undef HAS_GL
+ #define HAS_GLES 2
++#if defined(HAVE_DIRECTFB)
++#define HAS_DIRECTFB
++#define HAS_LINUX_EVENTS
++#endif
+ #endif
+ 
+ // GLES1.0 detected. Dont use GL!
+
+--- a/xbmc/windowing/dfb/WinSystemDFB.cpp	2015-05-22 23:03:28.000000000 +0200
++++ a/xbmc/windowing/dfb/WinSystemDFB.cpp.patched	2015-05-22 23:01:13.000000000 +0200
+@@ -0,0 +1,184 @@
++/*
++ *      Copyright (C) 2005-2011 Team XBMC
++ *      http://www.xbmc.org
++ *
++ *  This Program is free software; you can redistribute it and/or modify
++ *  it under the terms of the GNU General Public License as published by
++ *  the Free Software Foundation; either version 2, or (at your option)
++ *  any later version.
++ *
++ *  This Program is distributed in the hope that it will be useful,
++ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++ *  GNU General Public License for more details.
++ *
++ *  You should have received a copy of the GNU General Public License
++ *  along with XBMC; see the file COPYING.  If not, write to
++ *  the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
++ *  http://www.gnu.org/copyleft/gpl.html
++ *
++ */
++#include "system.h"
++
++#ifdef HAS_DIRECTFB
++
++#include "WinSystemDFB.h"
++#include "utils/log.h"
++#include "filesystem/SpecialProtocol.h"
++#include "settings/Settings.h"
++#include "guilib/Texture.h"
++
++#include <vector>
++#include <directfb/directfb.h>
++#include <directfb/directfbgl2.h>
++
++CWinSystemDFB::CWinSystemDFB() : CWinSystemBase()
++{
++  m_dfb           = NULL;
++  m_dfb_layer     = NULL;
++  m_dfb_surface   = NULL;
++  m_flipflags     = DFBSurfaceFlipFlags(DSFLIP_BLIT);
++  m_buffermode    = DSCAPS_TRIPLE;
++  m_eWindowSystem = WINDOW_SYSTEM_DFB;
++}
++
++CWinSystemDFB::~CWinSystemDFB()
++{
++  DestroyWindowSystem();
++}
++
++bool CWinSystemDFB::InitWindowSystem()
++{
++  CLog::Log(LOGINFO, "CWinSystemDFB: Creating DirectFB WindowSystem");
++  int ret;
++  DFBSurfaceDescription dsc;
++
++  DirectFBInit(NULL, NULL);
++  DirectFBCreate(&m_dfb);
++
++  ret = m_dfb->GetInterface(m_dfb, "IDirectFBGL2", NULL, m_dfb, (void**) &m_gl2);
++  if (ret)
++  {
++    CLog::Log(LOGERROR, "CWinSystemDFB: Unable to get IDirectFBGL2 interface");
++    return ret;
++  }
++
++  m_dfb->SetCooperativeLevel(m_dfb, DFSCL_FULLSCREEN );
++
++  dsc.flags = DSDESC_CAPS;
++  dsc.caps  = (DFBSurfaceCapabilities)(DSCAPS_PRIMARY | m_buffermode);
++
++  m_dfb->CreateSurface( m_dfb, &dsc, &m_dfb_surface );
++
++  m_dfb_surface->Clear(m_dfb_surface, 0, 0, 0, 0);
++  m_dfb_surface->Flip(m_dfb_surface, NULL, DFBSurfaceFlipFlags(m_flipflags));
++
++  ret = m_gl2->CreateContext( m_gl2, NULL, &m_gl2context );
++  if (ret)
++  {
++    CLog::Log(LOGERROR, "CWinSystemDFB: Unable to create DirectFBGL2 context");
++  }
++
++  ret = m_gl2context->Bind( m_gl2context, m_dfb_surface, m_dfb_surface );
++  if (ret)
++  {
++    CLog::Log(LOGERROR, "CWinSystemDFB: Unable to bind DirectFBGL2 context");
++  }
++
++  if (!CWinSystemBase::InitWindowSystem())
++    return false;
++
++  return true;
++}
++
++bool CWinSystemDFB::DestroyWindowSystem()
++{
++  if (m_gl2context)
++  {
++    m_gl2context->Unbind(m_gl2context);
++    m_gl2context->Release(m_gl2context);
++  }
++  m_gl2context = NULL;
++
++  if (m_gl2)
++    m_gl2->Release(m_gl2);
++  m_gl2 = NULL;
++
++  if (m_dfb_surface)
++    m_dfb_surface->Release(m_dfb_surface);
++  m_dfb_surface = NULL;
++
++  if (m_dfb_layer)
++    m_dfb_layer->Release(m_dfb_layer);
++  m_dfb_layer  = NULL;
++
++  if (m_dfb)
++    m_dfb->Release(m_dfb);
++  m_dfb = NULL;
++
++  return true;
++}
++
++bool CWinSystemDFB::CreateNewWindow(const CStdString& name, bool fullScreen, RESOLUTION_INFO& res, PHANDLE_EVENT_FUNC userFunction)
++{
++  m_bWindowCreated = true;
++  return true;
++}
++
++bool CWinSystemDFB::DestroyWindow()
++{
++  m_bWindowCreated = false;
++
++  return true;
++}
++
++bool CWinSystemDFB::ResizeWindow(int newWidth, int newHeight, int newLeft, int newTop)
++{
++  CRenderSystemGLES::ResetRenderSystem(newWidth, newHeight, true, 0);
++  return true;
++}
++
++bool CWinSystemDFB::SetFullScreen(bool fullScreen, RESOLUTION_INFO& res, bool blankOtherDisplays)
++{
++  CLog::Log(LOGDEBUG, "CWinSystemDFB::SetFullScreen");
++  m_nWidth  = res.iWidth;
++  m_nHeight = res.iHeight;
++  m_bFullScreen = fullScreen;
++
++  CreateNewWindow("", fullScreen, res, NULL);
++
++  CRenderSystemGLES::ResetRenderSystem(res.iWidth, res.iHeight, true, 0);
++
++  return true;
++}
++
++void CWinSystemDFB::UpdateResolutions()
++{
++  int width = 0;
++  int height = 0;
++  CWinSystemBase::UpdateResolutions();
++
++  m_dfb_surface->GetSize(m_dfb_surface, &width, &height);
++  //UpdateDesktopResolution(g_settings.m_ResInfo[RES_DESKTOP], 0, width, height, 0.0);
++}
++
++bool CWinSystemDFB::PresentRenderImpl(const CDirtyRegionList &dirty)
++{
++  int ret;
++  m_gl2context->Unbind(m_gl2context);
++  m_dfb_surface->Flip(m_dfb_surface, NULL, (m_flipflags));
++  ret = m_gl2context->Bind(m_gl2context, m_dfb_surface, m_dfb_surface);
++  if (ret)
++  {
++    return false;
++  }
++
++  return true;
++}
++
++void CWinSystemDFB::SetVSyncImpl(bool enable)
++{
++  m_flipflags = enable ? (DFBSurfaceFlipFlags)(m_flipflags | DSFLIP_ONSYNC) : (DFBSurfaceFlipFlags)(m_flipflags & ~DSFLIP_ONSYNC);
++}
++
++#endif
+
+--- a/xbmc/windowing/dfb/WinSystemDFB.h	2015-05-22 23:03:28.000000000 +0200
++++ a/xbmc/windowing/dfb/WinSystemDFB.h.patched	2015-05-22 23:02:33.000000000 +0200
+@@ -0,0 +1,77 @@
++#ifndef WINDOW_SYSTEM_DFB_H
++#define WINDOW_SYSTEM_DFB_H
++
++#pragma once
++
++/*
++ *      Copyright (C) 2011 Team XBMC
++ *      http://www.xbmc.org
++ *
++ *  This Program is free software; you can redistribute it and/or modify
++ *  it under the terms of the GNU General Public License as published by
++ *  the Free Software Foundation; either version 2, or (at your option)
++ *  any later version.
++ *
++ *  This Program is distributed in the hope that it will be useful,
++ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++ *  GNU General Public License for more details.
++ *
++ *  You should have received a copy of the GNU General Public License
++ *  along with XBMC; see the file COPYING.  If not, write to
++ *  the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
++ *  http://www.gnu.org/copyleft/gpl.html
++ *
++ */
++
++#include "rendering/gles/RenderSystemGLES.h"
++#include "utils/GlobalsHandling.h"
++#include "windowing/WinSystem.h"
++#include <directfb/directfbgl2.h>
++
++typedef struct _IDirectFB IDirectFB;
++typedef struct _IDirectFBSurface IDirectFBSurface;
++typedef struct _IDirectFBDisplayLayer IDirectFBDisplayLayer;
++
++class CWinSystemDFB : public CWinSystemBase, public CRenderSystemGLES
++{
++public:
++  CWinSystemDFB();
++  virtual ~CWinSystemDFB();
++
++  virtual bool  InitWindowSystem();
++  virtual bool  DestroyWindowSystem();
++  virtual bool  CreateNewWindow(const CStdString& name, bool fullScreen, RESOLUTION_INFO& res, PHANDLE_EVENT_FUNC userFunction);
++  virtual bool  DestroyWindow();
++  virtual bool  ResizeWindow(int newWidth, int newHeight, int newLeft, int newTop);
++  virtual bool  SetFullScreen(bool fullScreen, RESOLUTION_INFO& res, bool blankOtherDisplays);
++  virtual void  UpdateResolutions();
++
++  virtual void  NotifyAppActiveChange(bool bActivated) {return;}
++  virtual void  ShowOSMouse(bool show)  {return;};
++  virtual bool  Minimize()              {return false;};
++  virtual bool  Restore()               {return false;};
++  virtual bool  Hide()                  {return false;};
++  virtual bool  Show(bool raise = true) {return false;};
++
++  IDirectFB*              GetIDirectFB() const   {return m_dfb;};
++  IDirectFBGL2Context*    GetGLContext() const   {return m_gl2context;};
++  IDirectFBSurface*       GetSurface() const     {return m_dfb_surface;};
++
++protected:
++  virtual bool  PresentRenderImpl(const CDirtyRegionList &dirty);
++  virtual void  SetVSyncImpl(bool enable);
++
++  IDirectFB             *m_dfb;
++  IDirectFBDisplayLayer *m_dfb_layer;
++  IDirectFBSurface      *m_dfb_surface;
++  IDirectFBGL2          *m_gl2;
++  IDirectFBGL2Context   *m_gl2context;
++  DFBSurfaceFlipFlags    m_flipflags;
++  DFBSurfaceCapabilities m_buffermode;
++};
++
++XBMC_GLOBAL_REF(CWinSystemDFB,g_Windowing);
++#define g_Windowing XBMC_GLOBAL_USE(CWinSystemDFB)
++
++#endif // WINDOW_SYSTEM_DFB_H
+
+--- a/xbmc/windowing/WindowingFactory.h	2015-05-22 22:58:28.000000000 +0200
++++ a/xbmc/windowing/WindowingFactory.h.patched	2015-05-22 22:58:09.000000000 +0200
+@@ -35,6 +35,9 @@
+ #elif defined(TARGET_LINUX)   && defined(HAS_GL)   && defined(HAVE_X11)
+ #include "X11/WinSystemX11GL.h"
+ 
++#elif defined(TARGET_LINUX)   && defined(HAS_GLES) && defined(HAS_DIRECTFB)
++#include "dfb/WinSystemDFB.h"
++
+ #elif defined(TARGET_LINUX)   && defined(HAS_GLES) && defined(HAS_EGL) && !defined(HAVE_X11)
+ #include "egl/WinSystemEGL.h"
+ 
+--- a/xbmc/windowing/dfb/Makefile.in	2015-05-22 23:07:23.000000000 +0200
++++ a/xbmc/windowing/dfb/Makefile.in.patched	2015-05-22 23:00:07.000000000 +0200
+@@ -0,0 +1,13 @@
++INCLUDES= -I. \
++	-I@abs_top_srcdir@/xbmc/linux \
++	-I@abs_top_srcdir@/xbmc/windowing
++
++CXXFLAGS+= @DIRECTFB_CFLAGS@
++
++SRCS= \
++     WinSystemDFB.cpp \
++
++LIB=windowing_dfb.a
++
++include @abs_top_srcdir@/Makefile.include
++-include $(patsubst %.cpp,%.P,$(patsubst %.c,%.P,$(SRCS)))
+
+--- a/xbmc/windowing/WinSystem.h	2015-05-22 23:27:12.000000000 +0200
++++ a/xbmc/windowing/WinSystem.h.patched	2015-05-22 23:26:47.000000000 +0200
+@@ -33,6 +33,7 @@
+   WINDOW_SYSTEM_X11,
+   WINDOW_SYSTEM_SDL,
+   WINDOW_SYSTEM_EGL,
++  WINDOW_SYSTEM_DFB,
+   WINDOW_SYSTEM_ANDROID
+ } WindowSystemType;
+ 
+--- a/xbmc/windowing/egl/EGLNativeTypeIMX.cpp	2015-05-23 01:34:27.000000000 +0200
++++ a/xbmc/windowing/egl/EGLNativeTypeIMX.cpp.patched	2015-05-23 01:48:40.000000000 +0200
+@@ -248,13 +248,15 @@
+ 
+ bool CEGLNativeTypeIMX::ShowWindow(bool show)
+ {
++  printf("CEGLNativeTypeIMX::ShowWindow\n");
+   // Force vsync by default
+-  eglSwapInterval(g_Windowing.GetEGLDisplay(), 1);
++  //eglSwapInterval(g_Windowing.GetEGLDisplay(), 1);
+   EGLint result = eglGetError();
+   if(result != EGL_SUCCESS)
+     CLog::Log(LOGERROR, "EGL error in %s: %x",__FUNCTION__, result);
+ 
+   return false;
++  //
+ }
+ 
+ int CEGLNativeTypeIMX::get_sysfs_str(std::string path, std::string& valstr) const
+
