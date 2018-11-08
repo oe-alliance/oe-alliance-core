@@ -7,7 +7,7 @@ DEPENDS = " \
 	libupnp \
 	glib-2.0 \
 	rtmpdump \
-    ${@base_contains("GST_VERSION", "1.0", "gstreamer1.0-plugins-base gstreamer1.0", "gst-plugins-base gstreamer", d)} \
+    ${@bb.utils.contains("GST_VERSION", "1.0", "gstreamer1.0-plugins-base gstreamer1.0", "gst-plugins-base gstreamer", d)} \
 	"
 
 RDEPENDS_${PN} = " \
@@ -16,14 +16,14 @@ RDEPENDS_${PN} = " \
 
 RRECOMMENDS_${PN} = " \
     glib-networking \
-    ${@base_contains("GST_VERSION", "1.0", "gstreamer1.0-plugin-subsink", "gst-plugin-subsink", d)} \
+    ${@bb.utils.contains("GST_VERSION", "1.0", "gstreamer1.0-plugin-subsink", "gst-plugin-subsink", d)} \
     ${GST_BASE_RDEPS} \
     ${GST_GOOD_RDEPS} \
     ${GST_BAD_RDEPS} \
     ${GST_UGLY_RDEPS} \
     "
 
-GST_BASE_RDEPS = "${@base_contains('GST_VERSION', '1.0', ' \
+GST_BASE_RDEPS = "${@bb.utils.contains('GST_VERSION', '1.0', ' \
     gstreamer1.0-plugins-base-alsa \
     gstreamer1.0-plugins-base-app \
     gstreamer1.0-plugins-base-audioconvert \
@@ -50,7 +50,7 @@ GST_BASE_RDEPS = "${@base_contains('GST_VERSION', '1.0', ' \
     gst-plugins-base-vorbis \
     ', d)}"
 
-GST_GOOD_RDEPS = "${@base_contains('GST_VERSION', '1.0', ' \
+GST_GOOD_RDEPS = "${@bb.utils.contains('GST_VERSION', '1.0', ' \
     gstreamer1.0-plugins-good-apetag \
     gstreamer1.0-plugins-good-audioparsers \
     gstreamer1.0-plugins-good-autodetect \
@@ -87,7 +87,7 @@ GST_GOOD_RDEPS = "${@base_contains('GST_VERSION', '1.0', ' \
     gst-plugins-good-wavparse \
     ', d)}"
 
-GST_BAD_RDEPS = "${@base_contains('GST_VERSION', '1.0', ' \
+GST_BAD_RDEPS = "${@bb.utils.contains('GST_VERSION', '1.0', ' \
     gstreamer1.0-plugins-bad-dashdemux \
     gstreamer1.0-plugins-bad-mms \
     gstreamer1.0-plugins-bad-mpegpsdemux \
@@ -108,7 +108,7 @@ GST_BAD_RDEPS = "${@base_contains('GST_VERSION', '1.0', ' \
     gst-plugins-bad-faad \
     ', d)}"
 
-GST_UGLY_RDEPS = "${@base_contains('GST_VERSION', '1.0', ' \
+GST_UGLY_RDEPS = "${@bb.utils.contains('GST_VERSION', '1.0', ' \
     gstreamer1.0-plugins-ugly-amrnb \
     gstreamer1.0-plugins-ugly-amrwbdec \
     gstreamer1.0-plugins-ugly-asf \
