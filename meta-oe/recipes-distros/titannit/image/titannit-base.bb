@@ -26,15 +26,15 @@ DEPENDS = "\
     titan-gmediarender \
     glib-networking \
     ethtool \
-    ${@base_contains("TARGET_ARCH", "mipsel", "gst-plugin-libxt" , "", d)} \
+    ${@bb.utils.contains("TARGET_ARCH", "mipsel", "gst-plugin-libxt" , "", d)} \
     libdreamdvd \
     openssl \
     tuxtxt-enigma2 \
-    ${@base_contains("TARGET_ARCH", "sh4", "libmmeimage " , "", d)} \
+    ${@bb.utils.contains("TARGET_ARCH", "sh4", "libmmeimage " , "", d)} \
     ethtool \
     rtmpdump \
     packagegroup-base-smbfs-client \
-    ${@base_contains("MACHINE_FEATURES", "dreambox", "", "ofgwrite", d)} \	
+    ${@bb.utils.contains("MACHINE_FEATURES", "dreambox", "", "ofgwrite", d)} \	
     bash \
     libcrypto-compat-0.9.7 \
     libcrypto-compat-0.9.8 \

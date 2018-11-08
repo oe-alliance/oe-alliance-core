@@ -31,9 +31,9 @@ RDEPENDS_${PN} = " \
 
 RRECOMMENDS_append_mipsel_${PN} = " \
     glib-networking \
-    ${@base_contains("GST_VERSION", "1.0", "gstreamer1.0-plugins-base gstreamer1.0", "gst-plugins-base gstreamer", d)} \
-    ${@base_contains("GST_VERSION", "1.0", "gstreamer1.0-plugin-subsink", "gst-plugin-subsink", d)} \
-    ${@base_contains("GST_VERSION", "1.0", "gstreamer1.0-plugin-dvbmediasink", "gst-plugin-dvbmediasink", d)} \
+    ${@bb.utils.contains("GST_VERSION", "1.0", "gstreamer1.0-plugins-base gstreamer1.0", "gst-plugins-base gstreamer", d)} \
+    ${@bb.utils.contains("GST_VERSION", "1.0", "gstreamer1.0-plugin-subsink", "gst-plugin-subsink", d)} \
+    ${@bb.utils.contains("GST_VERSION", "1.0", "gstreamer1.0-plugin-dvbmediasink", "gst-plugin-dvbmediasink", d)} \
     ${GST_BASE_RDEPS} \
     ${GST_GOOD_RDEPS} \
     ${GST_BAD_RDEPS} \
@@ -47,7 +47,7 @@ RRECOMMENDS_append_sh4_${PN} = " \
 	libmmehost \
 	"
 
-GST_BASE_RDEPS = "${@base_contains('GST_VERSION', '1.0', ' \
+GST_BASE_RDEPS = "${@bb.utils.contains('GST_VERSION', '1.0', ' \
     gstreamer1.0-plugins-base-alsa \
     gstreamer1.0-plugins-base-app \
     gstreamer1.0-plugins-base-audioconvert \
@@ -74,7 +74,7 @@ GST_BASE_RDEPS = "${@base_contains('GST_VERSION', '1.0', ' \
     gst-plugins-base-vorbis \
     ', d)}"
 
-GST_GOOD_RDEPS = "${@base_contains('GST_VERSION', '1.0', ' \
+GST_GOOD_RDEPS = "${@bb.utils.contains('GST_VERSION', '1.0', ' \
     gstreamer1.0-plugins-good-apetag \
     gstreamer1.0-plugins-good-audioparsers \
     gstreamer1.0-plugins-good-autodetect \
@@ -111,7 +111,7 @@ GST_GOOD_RDEPS = "${@base_contains('GST_VERSION', '1.0', ' \
     gst-plugins-good-wavparse \
     ', d)}"
 
-GST_BAD_RDEPS = "${@base_contains('GST_VERSION', '1.0', ' \
+GST_BAD_RDEPS = "${@bb.utils.contains('GST_VERSION', '1.0', ' \
     gstreamer1.0-plugins-bad-dashdemux \
     gstreamer1.0-plugins-bad-mms \
     gstreamer1.0-plugins-bad-mpegpsdemux \
@@ -132,7 +132,7 @@ GST_BAD_RDEPS = "${@base_contains('GST_VERSION', '1.0', ' \
     gst-plugins-bad-faad \
     ', d)}"
 
-GST_UGLY_RDEPS = "${@base_contains('GST_VERSION', '1.0', ' \
+GST_UGLY_RDEPS = "${@bb.utils.contains('GST_VERSION', '1.0', ' \
     gstreamer1.0-plugins-ugly-amrnb \
     gstreamer1.0-plugins-ugly-amrwbdec \
     gstreamer1.0-plugins-ugly-asf \
@@ -150,7 +150,7 @@ GST_UGLY_RDEPS = "${@base_contains('GST_VERSION', '1.0', ' \
     gst-plugins-ugly-mpegstream \
     ', d)}"
 
-GST_BASE_DVD = "${@base_contains('GST_VERSION', '1.0', ' \
+GST_BASE_DVD = "${@bb.utils.contains('GST_VERSION', '1.0', ' \
     gstreamer1.0-plugins-bad-videoparsersbad \
     gstreamer1.0-plugins-bad-mpegtsmux \
     ', ' \
@@ -160,7 +160,7 @@ GST_BASE_DVD = "${@base_contains('GST_VERSION', '1.0', ' \
 
 S = "${WORKDIR}/titan"
 
-CFLAGS_append_mipsel = "${@base_contains('GST_VERSION', '1.0', ' \
+CFLAGS_append_mipsel = "${@bb.utils.contains('GST_VERSION', '1.0', ' \
 	-I${STAGING_DIR_TARGET}/usr/include \
 	-I${STAGING_DIR_TARGET}/usr/lib/gstreamer-1.0/include \
 	-I${STAGING_DIR_TARGET}/usr/include/gstreamer-1.0 \
