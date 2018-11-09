@@ -6,11 +6,16 @@ MAINTAINER = "TitanNit team"
 
 require conf/license/license-gplv2.inc
 
+#PV = "${IMAGE_VERSION}"
+#PR = "r${DATETIME}"
+#PACKAGE_ARCH = "${MACHINE_ARCH}"
 PV = "${IMAGE_VERSION}"
-PR = "r${DATETIME}"
+PR = "${BUILD_VERSION}"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 inherit packagegroup
+
+do_rootfs[deptask] = "do_rm_work"
 
 IMAGE_INSTALL = "\
 	aio-grab \
@@ -43,12 +48,10 @@ IMAGE_INSTALL = "\
 	fuse-exfat \
 	glibc-gconv-iso8859-15 \
 	glib-networking \
-	kernel-module-usbserial \
 	kernel-module-ftdi-sio \
 	kernel-module-pl2303 \
 	kernel-module-belkin-sa \
 	kernel-module-keyspan \
-	${@bb.utils.contains('MACHINE', 'disabled-ipv6', '', 'kernel-module-ipv6', d)} \
 	kernel-module-tun \
 	kernel-module-ath9k \
 	kernel-module-carl9170 \
@@ -83,21 +86,16 @@ IMAGE_INSTALL = "\
     packagegroup-base-smbfs-server \
     packagegroup-base-smbfs-utils \
     packagegroup-base-nfs \    
-	parted \
 	pngquant \
 	procps \
-	portmap \
-	portmap-utils \
 	rtmpdump \
 	samba \
-	sambaserver \
 	sdparm \
 	smbclient \
 	smbnetfs \
 	strace \
 	titannit-bootlogo \
 	titannit-version-info \
-	titan-gmediarender \
 	titan-rarfs \
 	tuxtxt-enigma2 \
 	tzdata tzdata-europe tzdata-australia tzdata-asia tzdata-pacific tzdata-africa tzdata-americas \
@@ -121,10 +119,16 @@ IMAGE_INSTALL = "\
 	${@bb.utils.contains("TARGET_ARCH", "sh4", "alsa-utils-amixer-conf" , "", d)} \
 	${@bb.utils.contains("TARGET_ARCH", "sh4", "libmmeimage " , "", d)} \
 	titan-libeplayer3 \
-	titan-bin \
     "
 
-
+#	kernel-module-usbserial
+#	${@bb.utils.contains('MACHINE', 'disabled-ipv6', '', 'kernel-module-ipv6', d)}
+#	parted
+#	titan-bin
+#	titan-gmediarender
+#	portmap
+#	portmap-utils
+#	sambaserver
 #
 #    python
 #    python-codecs
@@ -171,42 +175,43 @@ IMAGE_INSTALL = "\
 #    titan-plugins
 #    enigma2-locale-meta test fpr glibc only
 
-export IMAGE_BASENAME = "titannit-image"
-IMAGE_LINGUAS = ""
+
+
+
+IMAGE_INSTALL1 = "openatv-base \
+    ${@bb.utils.contains("MACHINE_FEATURES", "dvbc-only", "", "enigma2-plugin-settings-defaultsat", d)} \
+    ${@bb.utils.contains("MACHINE_FEATURES", "no-cl-svr", "", \
+    " \
+    packagegroup-base-smbfs-client \
+    packagegroup-base-smbfs-server \
+    packagegroup-base-nfs \
+    ", d)} \
+    "
+# Some additional comfort on the shell: Pre-install nano on boxes with 128 MB or more:
+IMAGE_INSTALL += "${@bb.utils.contains_any("FLASHSIZE", "64 96", "", "nano", d)}"
+
+# ... plus mc and helpers on 256 MB or more:
+IMAGE_INSTALL += "${@bb.utils.contains_any("FLASHSIZE", "64 96 128", "", "mc mc-fish mc-helpers", d)}"
+
+export IMAGE_BASENAME = "openatv-image"
+# 64 or 128MB of flash: No language files, above: German and French
+IMAGE_LINGUAS  = "${@bb.utils.contains_any("FLASHSIZE", "64 96 128", "", "de-de fr-fr", d)}"
+
+# Add more languages for 512 or more MB of flash:
+IMAGE_LINGUAS += "${@bb.utils.contains_any("FLASHSIZE", "64 96 128 256", "", "es-es it-it nl-nl pt-pt", d)}"
 
 IMAGE_FEATURES += "package-management"
 
+INHIBIT_DEFAULT_DEPS = "1"
+
 inherit image
 
-rootfs_postprocess() {
-    curdir=$PWD
-    cd ${IMAGE_ROOTFS}
+do_package_index[nostamp] = "1"
+do_package_index[depends] += "${PACKAGEINDEXDEPS}"
 
-    # because we're so used to it
-    ln -s opkg usr/bin/ipkg || true
-    ln -s opkg-cl usr/bin/ipkg-cl || true
-
-    cd $curdir
+python do_package_index() {
+    from oe.rootfs import generate_index_files
+    generate_index_files(d)
 }
+addtask do_package_index after do_rootfs before do_image_complete
 
-ROOTFS_POSTPROCESS_COMMAND += "rootfs_postprocess; "
-
-export NFO = '${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.nfo'
-
-do_generate_nfo() {
-    VER=`grep Version: "${IMAGE_ROOTFS}/etc/version"`
-    echo "TitanNit: ${VER}" > ${NFO}
-    echo "Machine: ${MACHINE}" >> ${NFO}
-    DATE=`date +%Y-%m-%d' '%H':'%M`
-    echo "Date: ${DATE}" >> ${NFO}
-    echo "Issuer: openATV" >> ${NFO}
-    echo "Link: ${DISTRO_FEED_URI}" >> ${NFO}
-    if [ "${DESC}" != "" ]; then
-            echo "Description: ${DESC}" >> ${NFO}
-            echo "${DESC}" >> ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.desc
-    fi
-    MD5SUM=`md5sum ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.nfi | cut -b 1-32`
-    echo "MD5: ${MD5SUM}" >> ${NFO}
-}
-
-addtask generate_nfo after do_rootfs
