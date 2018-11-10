@@ -9,8 +9,8 @@ RDEPENDS_${PN} = "ffmpeg libbluray"
 
 inherit gitpkgv upx-compress
 
-PV = "49+gitr${SRCPV}"
-PKGV = "49+gitr${GITPKGV}"
+PV = "50+gitr${SRCPV}"
+PKGV = "50+gitr${GITPKGV}"
 
 PR = "r1"
 
