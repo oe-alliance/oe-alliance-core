@@ -1,12 +1,12 @@
 SUMMARY  = "JavaScript to Python Translator & JavaScript interpreter written in 100% pure Python."
 DESCRIPTION = "Translates JavaScript to Python code. Js2Py is able to translate and execute virtually any JavaScript code."
-HOMEPAGE = "https://pypi.python.org/pypi/Js2Py"
+HOMEPAGE = "https://pypi.org/project/Js2Py"
 
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://PKG-INFO;md5=0e657c467f9c43e1e317b1ff5bef6c80"
 
 
-SRC_URI = "https://pypi.python.org/packages/52/f8/e0d81d2a1db4025fa6dfa2e0a63f7234d958e11a0497e58c2ff15394c5cb/Js2Py-${PV}.tar.gz"
+SRC_URI = "https://files.pythonhosted.org/packages/52/f8/e0d81d2a1db4025fa6dfa2e0a63f7234d958e11a0497e58c2ff15394c5cb/Js2Py-${PV}.tar.gz"
 
 S = "${WORKDIR}/Js2Py-${PV}"
 

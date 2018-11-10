@@ -10,7 +10,7 @@ SRC_URI = "https://files.pythonhosted.org/packages/source/c/constantly/constantl
 SRC_URI[md5sum] = "f0762f083d83039758e53f8cf0086eef"
 SRC_URI[sha256sum] = "586372eb92059873e29eba4f9dec8381541b4d3834660707faf8ba59146dfc35"
 
-UPSTREAM_CHECK_URI = "https://pypi.python.org/pypi/constantly/"
+UPSTREAM_CHECK_URI = "https://pypi.org/project/constantly/"
 UPSTREAM_CHECK_REGEX = "/constantly/(?P<pver>(\d+[\.\-_]*)+)"
 
 S = "${WORKDIR}/constantly-${PV}"

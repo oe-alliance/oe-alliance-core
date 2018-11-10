@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://PKG-INFO;md5=9f9c26dff09368a1c71a3dbfb70703f0"
 DEPENDS = "xz"
 
 SRC_URI = "\
-	https://pypi.python.org/packages/ab/dc/6adfe7271ca096f24c25817cf3f68f7d2df9e8b3f54c03f82caf7388f103/backports.lzma-${PV}.tar.gz \
+	https://files.pythonhosted.org/packages/ab/dc/6adfe7271ca096f24c25817cf3f68f7d2df9e8b3f54c03f82caf7388f103/backports.lzma-${PV}.tar.gz \
 	file://0001-setup.py-Remove-usr-local-references-for-cross-compi.patch"
 
 S = "${WORKDIR}/backports.lzma-${PV}"
