@@ -31,7 +31,6 @@ RDEPENDS_${PN} = "\
 	fuse-exfat \
 	glibc-gconv-iso8859-15 \
 	glib-networking \
-	kernel-module-usbserial \
 	kernel-module-ftdi-sio \
 	kernel-module-pl2303 \
 	kernel-module-belkin-sa \
@@ -92,6 +91,7 @@ RDEPENDS_${PN} = "\
 	titan-libeplayer3 \
     "
 
+#	kernel-module-usbserial
 #	parted
 #	fakelocale
 #	portmap
