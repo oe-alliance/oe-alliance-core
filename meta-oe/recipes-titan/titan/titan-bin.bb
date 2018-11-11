@@ -9,9 +9,10 @@ require conf/license/license-gplv2.inc
 inherit gitpkgv
 
 SRCREV = "${AUTOREV}"
-PKGV = "2.0+git${GITPKGV}"
+PKGV = "2.0+svnr${GITPKGV}"
 PV = "2.0+svnr${SRCPV}"
 PR = "r3"
+
 
 SRC_URI = "svn://sbnc.dyndns.tv/svn/;module=titan;protocol=http"
 
@@ -22,6 +23,10 @@ DEPENDS = " \
 	libdreamdvd \
 	exteplayer3 \
 	titan-libeplayer3 \
+    "
+
+DEPENDS_append_sh4 = " \
+	libmmeimage \
     "
 
 RDEPENDS_${PN} = " \
@@ -43,8 +48,7 @@ RRECOMMENDS_append_mipsel_${PN} = " \
 
 RRECOMMENDS_append_sh4_${PN} = " \
     glib-networking \
-	libmmeimage \
-	libmmehost \
+	libmme-host \
 	"
 
 GST_BASE_RDEPS = "${@bb.utils.contains('GST_VERSION', '1.0', ' \
@@ -189,7 +193,7 @@ CFLAGS_append_sh4 = " \
 	-I${STAGING_DIR_TARGET}/usr/include \
 	-I${STAGING_DIR_TARGET}/usr/include/freetype2 \
 	-I${STAGING_DIR_TARGET}/usr/include/openssl \
-	-I${STAGING_DIR_TARGET}/usr/include/libmmeimage \
+	-I${STAGING_DIR_TARGET}/usr/include/libmme_image \
 	-I${STAGING_DIR_TARGET}/usr/include/libeplayer3/include \
 	-I${STAGING_KERNEL_DIR}/extra/bpamem \
 	-I${WORKDIR}/titan/libdreamdvd \
@@ -207,7 +211,7 @@ do_compile() {
 	if [ ${HOST_SYS} = "sh4-oe-linux" ];then
 		cp Makefile.am.sh4 Makefile.am
 	elif [ ${HOST_SYS} = "arm-oe-linux-gnueabi" ];then
-		cp Makefile.am.arm Makefile.am
+		cp Makefile.am.arm.${MACHINE} Makefile.am
 	else
 		cp Makefile.am.mipsel Makefile.am
 	fi
@@ -222,9 +226,13 @@ do_compile() {
     ${STRIP} titan
 }
 
-FILES_${PN} = "/usr/local/bin"
+FILES_${PN} = "oealliance/* /usr/local/bin"
 
-do_install_append() {
+do_install() {
     install -d ${D}/usr/local/bin
-    install -m 0755 titan/titan ${D}/usr/local/bin/titan   
+    install -m 0755 titan/titan ${D}/usr/local/bin/titan
+    cp -a oealliance/* ${D}
 }
+do_install[vardepsexclude] += "DATETIME"
+
+

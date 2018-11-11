@@ -10,39 +10,89 @@ PR = "r16"
 
 inherit packagegroup
 
-DEPENDS = "\
-    curl \
+RDEPENDS_${PN} = "\
+	aio-grab \
+	alsa-conf \
+	alsa-utils \
+	autofs \
+	avahi-daemon \
+	bash \
+	curl \
+	curlftpfs \
+	djmount \
+	dropbear \
+	dvbsnoop \
+	e2fsprogs-e2fsck \
+	e2fsprogs-mke2fs \
+	e2fsprogs-tune2fs \
+	early-configure \
+	ethtool \
+	exteplayer3 \
+	fakelocale \
+	fuse-exfat \
+	glibc-gconv-iso8859-15 \
+	glib-networking \
+	kernel-module-usbserial \
+	kernel-module-ftdi-sio \
+	kernel-module-pl2303 \
+	kernel-module-belkin-sa \
+	kernel-module-keyspan \
+	kernel-module-tun \
+	libdreamdvd \
+	libdvdcss \
+	libusb1 \
+	mc \
+	minidlna \
+	mjpegtools \
+	module-init-tools-depmod \
+	modutils-loadscript \
+	mtd-utils \
+	nfs-utils \
+	nfs-utils-client \
+	ntfs-3g \
+	ntpdate \
+	ofgwrite \
+	openssl \
+	openvpn \
+	opkg \
+	packagegroup-core-boot \
+	packagegroup-base-smbfs-client \
+    	packagegroup-base-smbfs-server \
+   	packagegroup-base-smbfs-utils \
+   	packagegroup-base-nfs \    
+	parted \
+	pngquant \
+	procps \
+	rtmpdump \
+	samba \
+	sdparm \
+	smbclient \
+	smbnetfs \
+	strace \
 	titannit-bootlogo \
-    freetype \
-    libpng \
-    jpeg \
-    rtmpdump \
-    gstreamer \
-    gst-plugins-base \
-    gst-plugins-good \
-    gst-plugins-bad \
-    gst-plugins-ugly \
-    gst-plugin-subsink \
-    titan-gmediarender \
-    glib-networking \
-    ethtool \
-    ${@bb.utils.contains("TARGET_ARCH", "mipsel", "gst-plugin-libxt" , "", d)} \
-    libdreamdvd \
-    openssl \
-    tuxtxt-enigma2 \
-    ${@bb.utils.contains("TARGET_ARCH", "sh4", "libmmeimage " , "", d)} \
-    ethtool \
-    rtmpdump \
-    packagegroup-base-smbfs-client \
-    ${@bb.utils.contains("MACHINE_FEATURES", "dreambox", "", "ofgwrite", d)} \	
-    bash \
-    libcrypto-compat-0.9.7 \
-    libcrypto-compat-0.9.8 \
-    zip \
-    procps \
-    ntfs-3g \
-    hddtemp \
-    rtmpdump \
-    minidlna \
-    titan-base \
-    "    
+	titan-rarfs \
+	tuxtxt-enigma2 \
+	tzdata tzdata-europe tzdata-australia tzdata-asia tzdata-pacific tzdata-africa tzdata-americas \
+	util-linux-blkid \
+	util-linux-sfdisk \
+	volatile-media \
+	vsftpd \
+	wakelan \
+	wireless-tools \
+	wpa-supplicant \
+	\
+	\	
+	${@oe.utils.conditional('MACHINE', 'dm800', '', 'mtd-utils-ubifs', d)} \
+	${@bb.utils.contains("MACHINE_FEATURES", "dvbc-only", "", "", d)} \
+	${@bb.utils.contains("MACHINE_FEATURES", "iniwol", "ini-coldboot ini-ethwol", "", d)} \
+	${@bb.utils.contains("MACHINE_FEATURES", "libpassthrough", "libpassthrough libdlsym", "", d)} \
+	${@bb.utils.contains("MACHINE_FEATURES", "no-nmap", "" , "nmap", d)} \
+	${@bb.utils.contains("MACHINE_FEATURES", "singlecore", "", \
+	" \
+	", d)} \
+	${@bb.utils.contains("TARGET_ARCH", "sh4", "alsa-utils-amixer-conf" , "", d)} \
+	titan-libeplayer3 \
+    "
+
+#	portmap
+#	portmap-utils
