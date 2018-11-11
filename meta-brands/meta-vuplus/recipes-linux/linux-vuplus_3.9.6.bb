@@ -12,7 +12,7 @@ SRC_URI[sha256sum] = "47799db9e2658906e532981ec8111a915426b8453762561029733f2406
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-MACHINE_KERNEL_PR_append = "oea4.1-r1"
+MACHINE_KERNEL_PR_append = "oea4.1-r2"
 
 SRC_URI = "http://archive.vuplus.com/download/kernel/stblinux-${KV}.tar.bz2 \
     file://defconfig \
@@ -46,6 +46,11 @@ SRC_URI = "http://archive.vuplus.com/download/kernel/stblinux-${KV}.tar.bz2 \
     file://blindscan2.patch \
     file://genksyms_fix_typeof_handling.patch \
     file://kernel-add-support-for-gcc7.patch \
+    file://test.patch \
+    file://01-10-si2157-Silicon-Labs-Si2157-silicon-tuner-driver.patch \
+    file://02-10-si2168-Silicon-Labs-Si2168-DVB-T-T2-C-demod-driver.patch \
+    file://CONFIG_DVB_SP2.patch \
+    file://dvbsky-t330.patch \
 "
 
 SRC_URI_append_vuultimo = "file://fixed_mtd.patch "
