@@ -38,20 +38,20 @@ IMAGE_INSTALL_append_mipsel = "\
 	firmware-htc7010 \
 	firmware-rtl8712u \
 	firmware-rtl8192eu \
-	${@bb.utils.contains('MACHINE', 'disabled-ipv6', '', 'kernel-module-ipv6', d)} \
 	kernel-module-ath9k \
 	kernel-module-carl9170 \
-	${@bb.utils.contains('MACHINE', 'disabled-ath9k', '', 'kernel-module-ath9k-htc', d)} \
 	kernel-module-rt2800usb \
-	${@bb.utils.contains('MACHINE', 'disabled-wlanbuild', '', 'kernel-module-rtl8192cu', d)} \
-	${@bb.utils.contains("MACHINE_FEATURES", "linuxwifi", "kernel-module-rtl8xxxu", "rtl8192eu", d)} \
 	rt3070 \
 	rt8812au \
 	rt8723a \
-	${@bb.utils.contains("MACHINE_FEATURES", "wifiusblegacy", "rtl871x", "kernel-module-r8712u", d)} \
-	${@bb.utils.contains('MACHINE', 'disabled-build', '', 'packagegroup-base', d)} \
     "
 #	titan-gmediarender
+#	${@bb.utils.contains('MACHINE', 'disabled-ipv6', '', 'kernel-module-ipv6', d)}
+#	${@bb.utils.contains('MACHINE', 'disabled-ath9k', '', 'kernel-module-ath9k-htc', d)}
+#	${@bb.utils.contains('MACHINE', 'disabled-wlanbuild', '', 'kernel-module-rtl8192cu', d)}
+#	${@bb.utils.contains("MACHINE_FEATURES", "linuxwifi", "kernel-module-rtl8xxxu", "rtl8192eu", d)}
+#	${@bb.utils.contains("MACHINE_FEATURES", "wifiusblegacy", "rtl871x", "kernel-module-r8712u", d)}
+#	${@bb.utils.contains('MACHINE', 'disabled-build', '', 'packagegroup-base', d)}
 
 IMAGE_INSTALL_append_arm = "\
 	firmware-rtl8192cu \
@@ -68,8 +68,6 @@ IMAGE_INSTALL_append_arm = "\
 	kernel-module-rt2800usb \
 	rt8812au \
 	rt8723a \
-	${@bb.utils.contains("MACHINE_FEATURES", "wifiusblegacy", "rtl871x", "kernel-module-r8712u", d)} \
-	${@bb.utils.contains('MACHINE', 'disabled-build', '', 'packagegroup-base', d)} \
     "
 #	titan-gmediarender
 #	${@bb.utils.contains('MACHINE', 'disabled-ipv6', '', 'kernel-module-ipv6', d)}
@@ -77,6 +75,8 @@ IMAGE_INSTALL_append_arm = "\
 #	${@bb.utils.contains('MACHINE', 'disabled-wlanbuild', '', 'kernel-module-rtl8192cu', d)}
 #	${@bb.utils.contains("MACHINE_FEATURES", "linuxwifi", "kernel-module-rtl8xxxu", "rtl8192eu", d)}
 #	${@bb.utils.contains('MACHINE', 'disabled-rt3070', '', 'rt3070', d)}
+#	${@bb.utils.contains("MACHINE_FEATURES", "wifiusblegacy", "rtl871x", "kernel-module-r8712u", d)}
+#	${@bb.utils.contains('MACHINE', 'disabled-build', '', 'packagegroup-base', d)}
 
 IMAGE_INSTALL_append_sh4 = "\
 	firmware-rtl8192cu \
@@ -89,12 +89,12 @@ IMAGE_INSTALL_append_sh4 = "\
 	firmware-rtl8712u \
 	firmware-rtl8192eu \
 	kernel-module-rt2800usb \
-	${@bb.utils.contains("MACHINE_FEATURES", "linuxwifi", "kernel-module-rtl8xxxu", "rtl8192eu", d)} \
 	rt3070 \
 	rt8812au \
 	rt8723a \
     "
 #	titannit-version-info
+#	${@bb.utils.contains("MACHINE_FEATURES", "linuxwifi", "kernel-module-rtl8xxxu", "rtl8192eu", d)}
 
 #
 #    python
