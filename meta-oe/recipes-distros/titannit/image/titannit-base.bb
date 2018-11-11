@@ -59,7 +59,6 @@ RDEPENDS_${PN} = "\
     	packagegroup-base-smbfs-server \
    	packagegroup-base-smbfs-utils \
    	packagegroup-base-nfs \    
-	parted \
 	pngquant \
 	procps \
 	rtmpdump \
@@ -92,6 +91,8 @@ RDEPENDS_${PN} = "\
 	${@bb.utils.contains("TARGET_ARCH", "sh4", "alsa-utils-amixer-conf" , "", d)} \
 	titan-libeplayer3 \
     "
+
+#	parted
 #	fakelocale
 #	portmap
 #	portmap-utils
