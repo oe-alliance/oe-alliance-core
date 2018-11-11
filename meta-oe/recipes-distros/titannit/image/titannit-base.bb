@@ -28,7 +28,6 @@ RDEPENDS_${PN} = "\
 	early-configure \
 	ethtool \
 	exteplayer3 \
-	fakelocale \
 	fuse-exfat \
 	glibc-gconv-iso8859-15 \
 	glib-networking \
@@ -93,6 +92,6 @@ RDEPENDS_${PN} = "\
 	${@bb.utils.contains("TARGET_ARCH", "sh4", "alsa-utils-amixer-conf" , "", d)} \
 	titan-libeplayer3 \
     "
-
+#	fakelocale
 #	portmap
 #	portmap-utils
