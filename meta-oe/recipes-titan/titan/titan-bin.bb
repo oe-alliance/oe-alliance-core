@@ -47,7 +47,7 @@ RRECOMMENDS_append_mipsel_${PN} = " \
     "
 
 RRECOMMENDS_append_sh4_${PN} = " \
-    glib-networking \
+    	glib-networking \
 	libmme-host \
 	"
 
@@ -164,42 +164,32 @@ GST_BASE_DVD = "${@bb.utils.contains('GST_VERSION', '1.0', ' \
 
 S = "${WORKDIR}/titan"
 
-CFLAGS_append_mipsel = "${@bb.utils.contains('GST_VERSION', '1.0', ' \
-	-I${STAGING_DIR_TARGET}/usr/include \
-	-I${STAGING_DIR_TARGET}/usr/lib/gstreamer-1.0/include \
-	-I${STAGING_DIR_TARGET}/usr/include/gstreamer-1.0 \
-	-I${STAGING_DIR_TARGET}/usr/include/glib-2.0 \
-	-I${STAGING_DIR_TARGET}/usr/include/libxml2 \
-	-I${STAGING_DIR_TARGET}/usr/lib/glib-2.0/include \
-	-I${STAGING_DIR_TARGET}/usr/include/freetype2 \
-	-I${STAGING_DIR_TARGET}/usr/include/dreamdvd \
-	-I${STAGING_DIR_TARGET}/usr/include/libdreamdvd \	
-	-I${WORKDIR}/titan/libdreamdvd \
-	-I${WORKDIR}/titan/titan \
-    ', ' \
-	-I${STAGING_DIR_TARGET}/usr/include \
-	-I${STAGING_DIR_TARGET}/usr/include/gstreamer-0.10 \
-	-I${STAGING_DIR_TARGET}/usr/include/glib-2.0 \
-	-I${STAGING_DIR_TARGET}/usr/include/libxml2 \
-	-I${STAGING_DIR_TARGET}/usr/lib/glib-2.0/include \
-	-I${STAGING_DIR_TARGET}/usr/include/freetype2 \
-	-I${STAGING_DIR_TARGET}/usr/include/dreamdvd \
-	-I${STAGING_DIR_TARGET}/usr/include/libdreamdvd \	
-	-I${WORKDIR}/titan/libdreamdvd \
-	-I${WORKDIR}/titan/titan \
-    ', d)}"
-
-CFLAGS_append_sh4 = " \
+CFLAGS_append = " \
 	-I${STAGING_DIR_TARGET}/usr/include \
 	-I${STAGING_DIR_TARGET}/usr/include/freetype2 \
 	-I${STAGING_DIR_TARGET}/usr/include/openssl \
-	-I${STAGING_DIR_TARGET}/usr/include/libmme_image \
-	-I${STAGING_DIR_TARGET}/usr/include/libeplayer3/include \
-	-I${STAGING_KERNEL_DIR}/extra/bpamem \
+	-I${STAGING_DIR_TARGET}/usr/include/dreamdvd \
+	-I${STAGING_DIR_TARGET}/usr/include/libdreamdvd \
 	-I${WORKDIR}/titan/libdreamdvd \
 	-I${WORKDIR}/titan/titan \
-	-I${WORKDIR}/libeplayer3/include \
+	-I${WORKDIR}/titan/libeplayer3/include \
 	"
+CFLAGS_append_sh4 = " \
+	-I${STAGING_DIR_TARGET}/usr/include/libmme_image \
+	-I${STAGING_KERNEL_DIR}/extra/bpamem \
+	"
+
+CFLAGS_append_arm = " -DARM -DDREAMBOX -DMIPSEL"
+CFLAGS_append_arm_dm900 = " -DCONFIG_ION"
+CFLAGS_append_arm_dm920 = " -DCONFIG_ION"
+CFLAGS_append_mipsel = " -DMIPSEL"
+CFLAGS_append_mipsel_dm7020hd = " -DDREAMBOX"
+CFLAGS_append_mipsel_dm520 = " -DDREAMBOX -DCONFIG_ION"
+CFLAGS_append_mipsel_dm525 = " -DDREAMBOX -DCONFIG_ION"
+
+CFLAGS_append_sh4 = " -DEXTEPLAYER3 -DEPLAYER3 -DSH4 -DSH4NEW -DCAMSUPP -Os -export-dynamic -Wall -Wno-unused-but-set-variable -Wno-implicit-function-declaration"
+CFLAGS_append_mipsel = " -DEXTEPLAYER3 -DEPLAYER3 -DCAMSUPP -Os -mhard-float -export-dynamic -Wall -Wno-unused-but-set-variable -Wno-implicit-function-declaration -Wno-unused-variable -Wno-format-overflow -Wno-format-truncation -Wno-nonnull -Wno-restrict"
+CFLAGS_append_arm = " -DEXTEPLAYER3 -DEPLAYER3 -DCAMSUPP -Os -mhard-float -export-dynamic -Wall -Wno-unused-but-set-variable -Wno-implicit-function-declaration -Wno-unused-variable -Wno-format-overflow -Wno-format-truncation -Wno-nonnull -Wno-restrict"
 
 do_compile() {
 	cd ${WORKDIR}/titan/titan
@@ -207,14 +197,14 @@ do_compile() {
 	SVNVERSION=`svn info http://sbnc.dyndns.tv/svn/titan | grep Revision | sed s/'Revision: '//g`
 	echo SVNVERSION: ${SVNVERSION}
 
-#    svn update
+#    	svn update
 
 	if [ ${HOST_SYS} = "sh4-oe-linux" ];then
-		cp Makefile.am.sh4 Makefile.am
+		cp Makefile.am.sh4.4.3 Makefile.am
 	elif [ ${HOST_SYS} = "arm-oe-linux-gnueabi" ];then
-		cp Makefile.am.arm.${MACHINE} Makefile.am
+		cp Makefile.am.arm.4.3 Makefile.am
 	else
-		cp Makefile.am.mipsel Makefile.am
+		cp Makefile.am.mipsel.4.3 Makefile.am
 	fi
 
 	libtoolize --force
@@ -224,7 +214,7 @@ do_compile() {
 	./configure --host=${HOST_SYS} --build=${BUILD_SYS}
 
 	make -f Makefile titan
-    ${STRIP} titan
+	${STRIP} titan
 }
 
 FILES_${PN} = "oealliance/* /usr/local/bin"
