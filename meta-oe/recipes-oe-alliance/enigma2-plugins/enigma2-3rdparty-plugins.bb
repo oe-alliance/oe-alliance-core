@@ -11,7 +11,7 @@ DEPENDS = "tslib mpfr gmp"
 SRCREV = "${AUTOREV}"
 PV = "${IMAGE_VERSION}+gitr${SRCPV}"
 PKGV = "${IMAGE_VERSION}+gitr${GITPKGV}"
-PR = "r195"
+PR = "r196"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -26,6 +26,9 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 S = "${WORKDIR}/git"
+
+
+# Info: enigma2-plugin-extensions-transmission_2.92-r2_all.ipk  have update depends dont merge to old oe-a versions
 
 THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-atmolightd_0.7-pre22_all.ipk \
@@ -89,7 +92,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-tmbd_8.3_all.ipk \
     enigma2-plugin-extensions-tmdb_0.7-r2_all.ipk \
     enigma2-plugin-extensions-translator_1.1rc1_all.ipk \
-    enigma2-plugin-extensions-transmission_2.92-r1_all.ipk \
+    enigma2-plugin-extensions-transmission_2.92-r2_all.ipk \
     enigma2-plugin-extensions-tsmedia_13.1-r1_all.ipk \
     enigma2-plugin-extensions-tstube_1.2_all.ipk \
     enigma2-plugin-extensions-tvspielfilm_6.6rc4_all.ipk \
@@ -147,8 +150,6 @@ do_install() {
     || true
 }
 
-do_package_write_ipk[noexec] = "1"
-
 python populate_packages_prepend () {
     pkg  = ""
     pkgs = ""
@@ -195,6 +196,10 @@ do_deploy() {
     if [ -e $pkgdir ]; then
         chmod 0755 $pkgdir
     fi
+}
+
+do_package_write_ipk() {
+    :
 }
 
 addtask do_deploy before do_package_write after do_package_write_ipk
