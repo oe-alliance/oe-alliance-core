@@ -6,11 +6,11 @@ DEPENDS += "jpeg"
 PR = "r2"
 
 do_install_append () {
-	install -d ${D}${includedir}/libmme_image
-	install -m 644 ${S}/*.h ${D}${includedir}/libmme_image
+	install -d ${D}${includedir}/libmmeimage
+	install -m 644 ${S}/*.h ${D}${includedir}/libmmeimage
 }
 
 FILES_${PN} += "${libdir}/libmmeimage.so"
-FILES_${PN}-dev = "${includedir}/libmme_image ${libdir}/libmmeimage.la"
+FILES_${PN}-dev = "${includedir}/libmmeimage ${libdir}/libmmeimage.la"
 
 INSANE_SKIP_${PN} += "dev-so"
