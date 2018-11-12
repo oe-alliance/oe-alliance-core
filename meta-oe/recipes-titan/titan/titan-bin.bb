@@ -175,7 +175,7 @@ CFLAGS_append = " \
 	-I${WORKDIR}/titan/libeplayer3/include \
 	"
 CFLAGS_append_sh4 = " \
-	-I${STAGING_DIR_TARGET}/usr/include/libmme_image \
+	-I${STAGING_DIR_TARGET}/usr/include/libmmeimage \
 	-I${STAGING_KERNEL_DIR}/extra/bpamem \
 	"
 
