@@ -11,7 +11,7 @@ require conf/license/license-gplv2.inc
 #inherit autotools pkgconfig
 inherit pkgconfig
 
-SRCREV = "${AUTOREV}"
+SRCREV = "42991"
 PKGV = "2.0+git${GITPKGV}"
 PV = "2.0+svnr${SRCPV}"
 PR = "r3"
@@ -45,8 +45,8 @@ do_compile() {
 	./configure --host=${HOST_SYS} --build=${BUILD_SYS}
 
 	make -f Makefile
-    ${STRIP} .libs/eplayer3
-    ${STRIP} .libs/libeplayer3.so.0.0.0
+    	${STRIP} .libs/eplayer3
+    	${STRIP} .libs/libeplayer3.so.0.0.0
 
 	cp -a ${WORKDIR}/libeplayer3/.libs/* ${STAGING_DIR_TARGET}/usr/lib/
 #	cp -a ${WORKDIR}/libeplayer3/include ${STAGING_DIR_TARGET}/usr/include/eplayer3
@@ -59,5 +59,7 @@ do_install_append() {
     install -d ${D}/usr/bin
     install -d ${D}/usr/lib
     install -m 0755 .libs/eplayer3 ${D}/usr/bin
+    install -m 0755 .libs/libeplayer3.so ${D}/usr/lib
+    install -m 0755 .libs/libeplayer3.so.0 ${D}/usr/lib
     install -m 0755 .libs/libeplayer3.so.0.0.0 ${D}/usr/lib 
 }

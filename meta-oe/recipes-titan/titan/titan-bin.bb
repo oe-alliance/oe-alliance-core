@@ -26,7 +26,7 @@ DEPENDS = " \
     "
 
 DEPENDS_append_sh4 = " \
-	libmmeimage \
+	libmme-image \
     "
 
 RDEPENDS_${PN} = " \
@@ -198,6 +198,7 @@ CFLAGS_append_sh4 = " \
 	-I${STAGING_KERNEL_DIR}/extra/bpamem \
 	-I${WORKDIR}/titan/libdreamdvd \
 	-I${WORKDIR}/titan/titan \
+	-I${WORKDIR}/libeplayer3/include \
 	"
 
 do_compile() {
