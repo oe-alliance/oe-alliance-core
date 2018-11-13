@@ -172,6 +172,7 @@ CFLAGS_append = " \
 	-I${STAGING_DIR_TARGET}/usr/include/libdreamdvd \
 	-I${WORKDIR}/titan/libdreamdvd \
 	-I${WORKDIR}/titan/titan \
+	-I${WORKDIR}/titan/titan/include \
 	-I${WORKDIR}/titan/libeplayer3/include \
 	"
 CFLAGS_append_sh4 = " \
