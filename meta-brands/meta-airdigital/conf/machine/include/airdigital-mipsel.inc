@@ -13,6 +13,9 @@ DEFAULTTUNE = "mips32el"
 PREFERRED_VERSION_linux-airdigital = "4.10.12"
 PREFERRED_VERSION_linux-libc-headers = "4.10"
 
+PREFERRED_PROVIDER_virtual/egl ?= "airdigital-v3ddriver-${MACHINE}" 
+PREFERRED_PROVIDER_virtual/libgles2 ?= "airdigital-v3ddriver-${MACHINE}"
+
 IMAGE_FSTYPES ?= "ubi"
 
 IMAGE_CMD_ubi_prepend = " \
