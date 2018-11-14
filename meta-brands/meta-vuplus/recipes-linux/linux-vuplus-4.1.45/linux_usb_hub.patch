@@ -1,0 +1,29 @@
+diff --git a/drivers/usb/core/hub.c b/drivers/usb/core/hub.c
+index 137276f..7a68c58 100644
+--- a/drivers/usb/core/hub.c
++++ b/drivers/usb/core/hub.c
+@@ -1043,6 +1043,12 @@ static void hub_activate(struct usb_hub *hub, enum hub_activation_type type)
+ 			unsigned delay = hub_power_on_good_delay(hub);
+ 
+ 			hub_power_on(hub, false);
++
++			if( hdev->devnum == 1 && hdev->bus->busnum ==2 ){
++				//dev_dbg(hub->hdev, "Found USB 3.0 RootHub");
++				delay = 10000;
++			}
++
+ 			INIT_DELAYED_WORK(&hub->init_work, hub_init_func2);
+ 			queue_delayed_work(system_power_efficient_wq,
+ 					&hub->init_work,
+@@ -5057,8 +5063,10 @@ static void hub_event(struct work_struct *work)
+ 		hub->error = 0;
+ 	}
+ 
++	msleep(1000);
+ 	/* deal with port status changes */
+-	for (i = 1; i <= hdev->maxchild; i++) {
++	//for (i = 1; i <= hdev->maxchild; i++) {
++	for (i = hdev->maxchild ; i >= 1; i--) {
+ 		struct usb_port *port_dev = hub->ports[i - 1];
+ 
+ 		if (test_bit(i, hub->event_bits)
