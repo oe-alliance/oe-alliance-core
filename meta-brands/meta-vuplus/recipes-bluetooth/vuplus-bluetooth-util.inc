@@ -32,8 +32,10 @@ do_install() {
 	install -m 0644 ${S}/btusb.ko ${D}/usr/local/modules/btusb.ko
 	install -m 0644 ${S}/bthid.ko ${D}/usr/local/modules/bthid.ko
 
-	install -d ${D}/lib/firmware/${FIRMWARE_PATH}
-	install -m 0644 ${S}/${FIRMWARE_FILE} ${D}/lib/firmware/${FIRMWARE_PATH}
+	if [ -n "${FIRMWARE_FILE}" ]; then
+		install -d ${D}/lib/firmware/${FIRMWARE_PATH}
+		install -m 0644 ${S}/${FIRMWARE_FILE} ${D}/lib/firmware/${FIRMWARE_PATH}
+	fi
 }
 
 INSANE_SKIP_${PN} = "already-stripped"
