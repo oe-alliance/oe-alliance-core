@@ -5,6 +5,8 @@ LICENSE = "CLOSED"
 PACKAGE_ARCH := "${MACHINE_ARCH}"
 require conf/license/license-close.inc
 
+RDEPENDS_${PN} += "gptfdisk"
+
 PR="${SRCDATE}.${SRCDATE_PR}"
 
 SRC_URI = " \

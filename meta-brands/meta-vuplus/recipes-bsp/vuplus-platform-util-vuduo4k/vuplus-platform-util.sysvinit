@@ -21,6 +21,7 @@ case "$1" in
     echo -n "Starting  vuplus-platform-util"
     if [ ! -e /dev/brcm0 ]; then
         DRV_PATH=/lib/modules/4.1.45-1.17/extra
+        bp3flash.py 2>/dev/null
         insmod $DRV_PATH/procmk.ko
         insmod $DRV_PATH/bcm_event.ko
         insmod $DRV_PATH/dvb_base.ko
