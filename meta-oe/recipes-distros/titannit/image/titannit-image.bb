@@ -18,7 +18,6 @@ inherit packagegroup
 # FIX distro-image.bb ERROR: Taskhash mismatch - part 1 add packages to build dependencies of distro-image.bb which run on end of build process
 DEPENDS = " \
     ${DISTRO}-base \
-    titan-bin \
     "
 
 # FIX distro-image.bb ERROR: Taskhash mismatch - part 2  make sure all do_rm_work tasks of build dependencies are finished before starting do_rootfs of distro-image.bb
@@ -26,6 +25,7 @@ do_rootfs[deptask] = "do_rm_work"
 
 IMAGE_INSTALL = "\
 	${DISTRO}-base \
+        titan-bin \
     "
 
 IMAGE_INSTALL_append_mipsel = "\

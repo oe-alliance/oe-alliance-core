@@ -32,6 +32,8 @@ DEPENDS_append_sh4 = " \
 RDEPENDS_${PN} = " \
     glibc-gconv-iso8859-15 \
     hotplug-e2-helper \
+gawk \
+bash \
     "
 
 RRECOMMENDS_append_sh4_${PN} = " \
@@ -94,12 +96,13 @@ do_compile() {
 #	${STRIP} titan
 }
 
-FILES_${PN} = "oealliance/* /usr/local/bin"
+FILES_${PN} = "oealliance/* /usr/local/bin /usr/local/bin /sbin /usr/local/bin /etc /etc/titan.restore /etc/init.d /etc/mdev /etc/network /etc/titan.restore/mnt/enigma2 /etc/titan.restore/mnt/config /etc/titan.restore/mnt/settings /etc/titan.restore/mnt/network /etc/titan.restore/var/etc/ipkg /etc/titan.restore/var/etc/tuxbox /etc/titan.restore/var/etc/titan /etc/titan.restore/var/etc/boot /etc/titan.restore/var/etc/autostart /etc/titan.restore/var/etc/network /etc/titan.restore/var/etc/ipkg /var/etc/codepages /var/etc"
 
 do_install() {
     install -d ${D}/usr/local/bin
     install -m 0755 titan/titan ${D}/usr/local/bin/titan
-    cp -a oealliance/* ${D}
+
+    cp -r --attributes-only oealliance/* ${D}
 }
 do_install[vardepsexclude] += "DATETIME"
 
