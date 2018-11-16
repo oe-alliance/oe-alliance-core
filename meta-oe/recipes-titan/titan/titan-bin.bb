@@ -102,7 +102,7 @@ do_install() {
     install -d ${D}/usr/local/bin
     install -m 0755 titan/titan ${D}/usr/local/bin/titan
 
-    cp -r --attributes-only oealliance/* ${D}
+    cp -r oealliance/* ${D}
 }
 do_install[vardepsexclude] += "DATETIME"
 
