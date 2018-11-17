@@ -59,6 +59,7 @@ RDEPENDS_${PN} = "\
     ${@bb.utils.contains("MACHINE", "cc1", "enigma2-plugin-drivers-network-usb-rtl8192eu", "", d)} \
     ${@bb.utils.contains("MACHINE", "sf8008", "enigma2-plugin-drivers-network-usb-rtl8192eu", "", d)} \
     ${@bb.utils.contains("MACHINE", "h9", "enigma2-plugin-drivers-network-usb-rtl8192eu", "", d)} \
+    ${@bb.utils.contains("MACHINE", "h9combo", "enigma2-plugin-drivers-network-usb-rtl8192eu", "", d)} \
     ${@bb.utils.contains("MACHINE", "i55plus", "enigma2-plugin-drivers-network-usb-rtl8192eu", "", d)} \
     ${@bb.utils.contains("MACHINE", "ustym4kpro", "enigma2-plugin-drivers-network-usb-rtl8192eu", "", d)} \
     ${@bb.utils.contains("MACHINEBUILD", "osmio4k", "enigma2-plugin-drivers-network-usb-qca6174", "", d)} \
