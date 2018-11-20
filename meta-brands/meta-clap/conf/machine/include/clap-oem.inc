@@ -30,7 +30,7 @@ MTD_BLACK  = "mmcblk0"
 #ver for qtplugins -clap = clap
 VER = "-clap"
 
-MACHINE_ESSENTIAL_EXTRA_RDEPENDS = "\
+MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "\
     clap-dvb-modules-${MACHINE} \
     clap-loadmodules-${MACHINE} \ 
     clap-opengl-${MACHINE} \
@@ -68,7 +68,7 @@ PREFERRED_RPROVIDER_aio-grab = "clap-grab-${MACHINE}"
 
 require conf/machine/include/tune-cortexa15.inc
 
-MACHINE_EXTRA_RRECOMMENDS = " \
+MACHINE_EXTRA_RRECOMMENDS += " \
     gstreamer1.0-plugin-dvbmediasink \
     gstreamer1.0-libav \
     "

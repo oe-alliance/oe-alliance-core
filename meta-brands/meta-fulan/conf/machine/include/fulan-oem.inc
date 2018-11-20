@@ -219,7 +219,7 @@ MACHINE_ESSENTIAL_EXTRA_RDEPENDS += " \
     mtd-utils-jffs2 \
     "
 
-MACHINE_EXTRA_RRECOMMENDS = " \
+MACHINE_EXTRA_RRECOMMENDS += " \
     gstreamer1.0-plugin-dvbmediasink \
     enigma2-plugin-systemplugins-sh4boostercontrol \
     enigma2-plugin-systemplugins-sh4osdadjustment \
@@ -232,7 +232,7 @@ EXTRA_IMAGEDEPENDS += "\
     directfb-stgfx2 \
     "
 
-MACHINE_EXTRA_RDEPENDS = "\
+MACHINE_EXTRA_RDEPENDS += "\
     enigma2-plugin-systemplugins-vfdcontrol \
     libpcre \
     "

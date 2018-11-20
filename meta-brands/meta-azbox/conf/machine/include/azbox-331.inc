@@ -4,13 +4,13 @@ include conf/machine/include/build-extras.inc
 BRAND_OEM = "azbox"
 MACHINE_BRAND = "AZBOX"
 
-MACHINE_ESSENTIAL_EXTRA_RDEPENDS = " \
+MACHINE_ESSENTIAL_EXTRA_RDEPENDS += " \
     azbox-dvb-modules-331 \
     "
 
 DVBPROVIDER = "kernel"
 
-MACHINE_EXTRA_RRECOMMENDS = " \
+MACHINE_EXTRA_RRECOMMENDS += " \
     gstreamer1.0-plugin-azbox-dvbmediasink \
     azbox-compat \
     kernel-module-cifs \
@@ -43,7 +43,7 @@ EXTRA_IMAGEDEPENDS += " \
     kmod \
     "
 
-MACHINE_EXTRA_RDEPENDS = " \
+MACHINE_EXTRA_RDEPENDS += " \
     enigma2-plugin-systemplugins-rtisys \
     enigma2-plugin-systemplugins-videosettingssetup \
     "

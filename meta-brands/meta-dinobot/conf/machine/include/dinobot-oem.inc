@@ -105,7 +105,7 @@ KERNEL_MODULE_AUTOLOAD += "ehci-platform"
 KERNEL_MODULE_AUTOLOAD += "ohci-platform"
 KERNEL_MODULE_AUTOLOAD += "cfg80211"
 
-MACHINE_ESSENTIAL_EXTRA_RDEPENDS = "\
+MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "\
     dinobot-dvb-modules-${MACHINE} \
     kernel-module-xhci-plat-hcd \
     kernel-module-ehci-platform \
@@ -139,7 +139,7 @@ PREFERRED_PROVIDER_virtual/blindscan-dvbs = "dinobot-blindscan-${MACHINE}"
 
 require conf/machine/include/tune-cortexa15.inc
 
-MACHINE_EXTRA_RRECOMMENDS = " \
+MACHINE_EXTRA_RRECOMMENDS += " \
     gstreamer1.0-plugin-dvbmediasink \
     gstreamer1.0-libav \
     "

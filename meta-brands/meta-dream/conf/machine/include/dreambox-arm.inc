@@ -16,7 +16,7 @@ require conf/machine/include/soc-family.inc
 require conf/machine/box-hardware.inc
 require conf/machine/include/tune-cortexa15.inc
 
-MACHINE_EXTRA_RRECOMMENDS = " \
+MACHINE_EXTRA_RRECOMMENDS += " \
     gstreamer1.0-plugin-dvbmediasink \
     gstreamer1.0-libav \
     kernel-module-cifs \

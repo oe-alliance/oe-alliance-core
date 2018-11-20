@@ -19,7 +19,7 @@ EXTRA_OECONF_append_pn-tuxtxt-enigma2 = " --with-fbdev=/dev/fb2"
 CC_append_pn-showiframe = " -DHAVE_AMLOGIC -I${STAGING_INCDIR}/amlogic/amcodec -lamcodec"
 DEPENDS_append_pn-showiframe = " wetek-libamcodec-${MACHINE}"
 
-MACHINE_EXTRA_RRECOMMENDS = " \
+MACHINE_EXTRA_RRECOMMENDS += " \
     wetek-libamplayer-${MACHINE} \
     wetek-libamavutils-${MACHINE} \
     wetek-libamadec-${MACHINE} \
