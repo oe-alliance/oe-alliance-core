@@ -3,7 +3,7 @@ require vuplus-platform-util.inc
 COMPATIBLE_MACHINE = "^(vuduo4k)$"
 
 PV="18.1"
-SRCDATE = "20181119"
+SRCDATE = "20181120"
 SRCDATE_PR = "r1"
 
 SRC_URI += "\
@@ -16,5 +16,5 @@ do_install_append() {
 
 S="${WORKDIR}/platform-util-vuduo4k"
 
-SRC_URI[md5sum] = "d2e9b603d22bc9461b3d77bd7a0e305e"
-SRC_URI[sha256sum] = "458bf0bd9221ec686200d964e69e0b669fde37dca526fbcc7d69f52f0b1edd0a"
+SRC_URI[md5sum] = "22296d452f0b4a7d7b6401a2afc09d0e"
+SRC_URI[sha256sum] = "1cb755a65877fbcfb0a46b2a4fb49512e3b543cc1f2d51b3dc7a56aa78b34fd0"
