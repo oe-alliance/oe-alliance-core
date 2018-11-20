@@ -5,7 +5,7 @@ KV = "3.13.5"
 
 inherit kernel machine_kernel_pr
 
-MACHINE_KERNEL_PR_append = "oea4.1-r2"
+MACHINE_KERNEL_PR_append = "oea4.1-r3"
 
 SRCREV = ""
 
