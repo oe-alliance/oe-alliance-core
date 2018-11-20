@@ -54,7 +54,7 @@ RDEPENDS_${PN} = "\
 	openssl \
 	openvpn \
 	opkg \
-	packagegroup-core \
+	packagegroup-base \
 	packagegroup-core-boot \
 	packagegroup-base-smbfs-client \
     	packagegroup-base-smbfs-server \
