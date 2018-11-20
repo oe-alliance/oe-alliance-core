@@ -40,6 +40,7 @@ RDEPENDS_${PN} = "\
 	libdvdcss \
 	libusb1 \
 	mc \
+	minilocale \
 	minidlna \
 	mjpegtools \
 	module-init-tools-depmod \
@@ -53,6 +54,7 @@ RDEPENDS_${PN} = "\
 	openssl \
 	openvpn \
 	opkg \
+	packagegroup-core \
 	packagegroup-core-boot \
 	packagegroup-base-smbfs-client \
     	packagegroup-base-smbfs-server \

@@ -200,10 +200,16 @@ FILES_${PN} = " \
 
 
 do_install() {
-    install -d ${D}/usr/local/bin
-    install -m 0755 titan/titan ${D}/usr/local/bin/titan
+	install -d ${D}/usr/local/bin
+	install -m 0755 titan/titan ${D}/usr/local/bin/titan
 
-    cp -r oealliance/* ${D}
+	cp -r oealliance/* ${D}
+	if [ -e ${D}/etc/titan.restore/mnt/config/titan.${MACHINE}.cfg ];then
+		cp ${D}/etc/titan.restore/mnt/config/titan.${MACHINE}.cfg ${D}/etc/titan.restore/mnt/config/titan.cfg
+	fi
+	if [ -e ${D}/etc/titan.restore/mnt/config/rcconfig.${MACHINE} ];then
+		cp ${D}/etc/titan.restore/mnt/config/rcconfig.${MACHINE} ${D}/etc/titan.restore/mnt/config/rcconfig
+	fi
 }
 do_install[vardepsexclude] += "DATETIME"
 
