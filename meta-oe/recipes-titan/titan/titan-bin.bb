@@ -118,6 +118,7 @@ FILES_${PN} = " \
 	/etc/mdev \
 	/etc/network \
 	/sbin \
+	/usr/bin \
 	/usr/local/bin \
 	/var/etc \
 	/var/etc/codepages \
