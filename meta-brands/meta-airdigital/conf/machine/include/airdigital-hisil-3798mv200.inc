@@ -19,7 +19,7 @@ MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS += "\
     "
 
 MACHINE_EXTRA_RRECOMMENDS += " \
-    ${@bb.utils.contains('MACHINE', 'hisil-3798mv200', 'ffmpeg' , 'gstreamer1.0-libav ', d)} \
+    ${@bb.utils.contains('MACHINE_FEATURES', 'hisil-3798mv200', 'ffmpeg gstreamer1.0-libav' , 'gstreamer1.0-libav ', d)} \
     "
 
 TARGET_ARCH = "arm"
