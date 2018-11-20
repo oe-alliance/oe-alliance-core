@@ -149,7 +149,7 @@ MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS += "\
     ${@bb.utils.contains('MACHINE_FEATURES', 'emmc', 'resizerootfs' , '', d)} \
     "
 
-MACHINE_EXTRA_RRECOMMENDS = " \
+MACHINE_EXTRA_RRECOMMENDS += " \
     gstreamer1.0-plugin-dvbmediasink \
     "
 

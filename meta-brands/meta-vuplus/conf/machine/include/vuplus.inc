@@ -4,18 +4,18 @@ include conf/machine/include/build-extras.inc
 BRAND_OEM = "vuplus"
 MACHINE_BRAND = "Vu+"
 
-MACHINE_ESSENTIAL_EXTRA_RDEPENDS = " \
+MACHINE_ESSENTIAL_EXTRA_RDEPENDS += " \
     ${@bb.utils.contains("MACHINE_FEATURES", "dvbproxy", "vuplus-dvb-proxy-${MACHINE} vuplus-libgles-${MACHINE} vuplus-platform-util-${MACHINE}", "vuplus-dvb-modules-${MACHINE}", d)} \
     "
 
 DVBPROVIDER = "kernel"
 DVB_CYPRESS ?= "kernel-module"
 
-MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS = "\
+MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS += "\
     kernel-module-cdfs \
     "
 
-MACHINE_EXTRA_RRECOMMENDS = " \
+MACHINE_EXTRA_RRECOMMENDS += " \
     vuplus-shutdown \
     gstreamer1.0-plugin-dvbmediasink \
     gstreamer1.0-libav \

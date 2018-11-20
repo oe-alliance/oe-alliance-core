@@ -21,13 +21,13 @@ ${@bb.utils.contains('MACHINEBUILD', 'ultima', 'flash-image-256' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'mkcube', 'flash-image-256' , '', d)}\
 "
 
-MACHINE_ESSENTIAL_EXTRA_RDEPENDS = "\
+MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "\
     e2bmc-dvb-modules-${MACHINE} \
     "
 
 DVBPROVIDER = "kernel"
 
-MACHINE_EXTRA_RRECOMMENDS = " \
+MACHINE_EXTRA_RRECOMMENDS += " \
     gstreamer1.0-plugin-dvbmediasink \
     "
 

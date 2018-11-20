@@ -21,7 +21,7 @@ MTD_BLACK  = "mmcblk0"
 
 VER = "-ustym4kpro"
 
-MACHINE_ESSENTIAL_EXTRA_RDEPENDS = "\
+MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "\
     uclan-dvb-modules-${MACHINE} \
     uclan-loadmodules-${MACHINE} \ 
     uclan-opengl-${MACHINE} \
@@ -59,7 +59,7 @@ PREFERRED_RPROVIDER_aio-grab = "uclan-grab-${MACHINE}"
 
 require conf/machine/include/tune-cortexa15.inc
 
-MACHINE_EXTRA_RRECOMMENDS = " \
+MACHINE_EXTRA_RRECOMMENDS += " \
     gstreamer1.0-plugin-dvbmediasink \
     gstreamer1.0-libav \
     "
