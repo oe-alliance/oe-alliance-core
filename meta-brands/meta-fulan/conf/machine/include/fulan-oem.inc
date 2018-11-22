@@ -121,7 +121,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'dynaspark7162', 'mtd6' , '', d)}\
 KERNEL_FILE = "uImage"
 ROOTFS_FILE = "e2jffs2.img"
 
-MACHINE_KERNEL_PR = "r1"
+MACHINE_KERNEL_PR = "r2"
 KERNEL_MODULE_PACKAGE_SUFFIX = ""
 
 TARGET_ARCH = "sh4"
@@ -166,7 +166,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'dynaspark', 'SCART RCA' , '', d)} \
 ${@bb.utils.contains('MACHINEBUILD', 'dynasparkplus', 'SCART RCA' , '', d)} \
 ${@bb.utils.contains('MACHINEBUILD', 'dynaspark7162', 'SCART RCA' , '', d)} \
 "
-
+DISTRO_FEATURES_append += "gtk-directfb libsigc2"
 DVBMEDIASINK_CONFIG = "--with-wma --with-wmv --with-pcm --with-dtsdownmix --with-eac3"
 
 KERNEL_IMAGETYPE = "uImage"
@@ -216,6 +216,7 @@ MACHINE_ESSENTIAL_EXTRA_RDEPENDS += " \
     stlirc \
     stinit \
     fulan-dvb-modules-${MACHINE} \
+    mountspark \
     mtd-utils-jffs2 \
     "
 

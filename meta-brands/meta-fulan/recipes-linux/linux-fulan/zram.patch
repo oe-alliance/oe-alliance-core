@@ -1,0 +1,2017 @@
+diff -u -r -N 1/drivers/staging/Kconfig 2/drivers/staging/Kconfig
+--- 1/drivers/staging/Kconfig	2016-07-01 14:50:40.000000000 +0200
++++ 2/drivers/staging/Kconfig	2018-05-16 01:04:58.410685580 +0200
+@@ -123,5 +123,7 @@
+ 
+ source "drivers/staging/iio/Kconfig"
+ 
++source "drivers/staging/zram/Kconfig"
++
+ endif # !STAGING_EXCLUDE_BUILD
+ endif # STAGING
+diff -u -r -N 1/drivers/staging/Makefile 2/drivers/staging/Makefile
+--- 1/drivers/staging/Makefile	2016-07-01 14:50:40.000000000 +0200
++++ 2/drivers/staging/Makefile	2018-05-16 01:05:35.791007566 +0200
+@@ -43,3 +43,4 @@
+ obj-$(CONFIG_RAR_REGISTER)	+= rar/
+ obj-$(CONFIG_DX_SEP)		+= sep/
+ obj-$(CONFIG_IIO)		+= iio/
++obj-$(CONFIG_ZRAM)		+= zram/
+diff -u -r -N 1/drivers/staging/zram/Kconfig 2/drivers/staging/zram/Kconfig
+--- 1/drivers/staging/zram/Kconfig	1970-01-01 01:00:00.000000000 +0100
++++ 2/drivers/staging/zram/Kconfig	2017-02-20 22:46:38.000000000 +0100
+@@ -0,0 +1,25 @@
++config ZRAM
++	tristate "Compressed RAM block device support"
++	depends on BLOCK && SYSFS
++	select LZO_COMPRESS
++	select LZO_DECOMPRESS
++	default n
++	help
++	  Creates virtual block devices called /dev/zramX (X = 0, 1, ...).
++	  Pages written to these disks are compressed and stored in memory
++	  itself. These disks allow very fast I/O and compression provides
++	  good amounts of memory savings.
++
++	  It has several use cases, for example: /tmp storage, use as swap
++	  disks and maybe many more.
++
++	  See zram.txt for more information.
++	  Project home: http://compcache.googlecode.com/
++
++config ZRAM_DEBUG
++	bool "Compressed RAM block device debug support"
++	depends on ZRAM
++	default n
++	help
++	  This option adds additional debugging code to the compressed
++	  RAM block device driver.
+diff -u -r -N 1/drivers/staging/zram/Makefile 2/drivers/staging/zram/Makefile
+--- 1/drivers/staging/zram/Makefile	1970-01-01 01:00:00.000000000 +0100
++++ 2/drivers/staging/zram/Makefile	2017-02-20 22:46:31.000000000 +0100
+@@ -0,0 +1,3 @@
++zram-y	:=	zram_drv.o zram_sysfs.o xvmalloc.o
++
++obj-$(CONFIG_ZRAM)	+=	zram.o
+diff -u -r -N 1/drivers/staging/zram/xvmalloc.c 2/drivers/staging/zram/xvmalloc.c
+--- 1/drivers/staging/zram/xvmalloc.c	1970-01-01 01:00:00.000000000 +0100
++++ 2/drivers/staging/zram/xvmalloc.c	2017-02-20 22:46:38.000000000 +0100
+@@ -0,0 +1,502 @@
++/*
++ * xvmalloc memory allocator
++ *
++ * Copyright (C) 2008, 2009, 2010  Nitin Gupta
++ *
++ * This code is released using a dual license strategy: BSD/GPL
++ * You can choose the licence that better fits your requirements.
++ *
++ * Released under the terms of 3-clause BSD License
++ * Released under the terms of GNU General Public License Version 2.0
++ */
++
++#ifdef CONFIG_ZRAM_DEBUG
++#define DEBUG
++#endif
++
++#include <linux/bitops.h>
++#include <linux/errno.h>
++#include <linux/highmem.h>
++#include <linux/init.h>
++#include <linux/string.h>
++#include <linux/slab.h>
++
++#include "xvmalloc.h"
++#include "xvmalloc_int.h"
++
++static void stat_inc(u64 *value)
++{
++	*value = *value + 1;
++}
++
++static void stat_dec(u64 *value)
++{
++	*value = *value - 1;
++}
++
++static int test_flag(struct block_header *block, enum blockflags flag)
++{
++	return block->prev & BIT(flag);
++}
++
++static void set_flag(struct block_header *block, enum blockflags flag)
++{
++	block->prev |= BIT(flag);
++}
++
++static void clear_flag(struct block_header *block, enum blockflags flag)
++{
++	block->prev &= ~BIT(flag);
++}
++
++/*
++ * Given <page, offset> pair, provide a dereferencable pointer.
++ * This is called from xv_malloc/xv_free path, so it
++ * needs to be fast.
++ */
++static void *get_ptr_atomic(struct page *page, u16 offset, enum km_type type)
++{
++	unsigned char *base;
++
++	base = kmap_atomic(page, type);
++	return base + offset;
++}
++
++static void put_ptr_atomic(void *ptr, enum km_type type)
++{
++	kunmap_atomic(ptr, type);
++}
++
++static u32 get_blockprev(struct block_header *block)
++{
++	return block->prev & PREV_MASK;
++}
++
++static void set_blockprev(struct block_header *block, u16 new_offset)
++{
++	block->prev = new_offset | (block->prev & FLAGS_MASK);
++}
++
++static struct block_header *BLOCK_NEXT(struct block_header *block)
++{
++	return (struct block_header *)
++		((char *)block + block->size + XV_ALIGN);
++}
++
++/*
++ * Get index of free list containing blocks of maximum size
++ * which is less than or equal to given size.
++ */
++static u32 get_index_for_insert(u32 size)
++{
++	if (unlikely(size > XV_MAX_ALLOC_SIZE))
++		size = XV_MAX_ALLOC_SIZE;
++	size &= ~FL_DELTA_MASK;
++	return (size - XV_MIN_ALLOC_SIZE) >> FL_DELTA_SHIFT;
++}
++
++/*
++ * Get index of free list having blocks of size greater than
++ * or equal to requested size.
++ */
++static u32 get_index(u32 size)
++{
++	if (unlikely(size < XV_MIN_ALLOC_SIZE))
++		size = XV_MIN_ALLOC_SIZE;
++	size = ALIGN(size, FL_DELTA);
++	return (size - XV_MIN_ALLOC_SIZE) >> FL_DELTA_SHIFT;
++}
++
++/**
++ * find_block - find block of at least given size
++ * @pool: memory pool to search from
++ * @size: size of block required
++ * @page: page containing required block
++ * @offset: offset within the page where block is located.
++ *
++ * Searches two level bitmap to locate block of at least
++ * the given size. If such a block is found, it provides
++ * <page, offset> to identify this block and returns index
++ * in freelist where we found this block.
++ * Otherwise, returns 0 and <page, offset> params are not touched.
++ */
++static u32 find_block(struct xv_pool *pool, u32 size,
++			struct page **page, u32 *offset)
++{
++	ulong flbitmap, slbitmap;
++	u32 flindex, slindex, slbitstart;
++
++	/* There are no free blocks in this pool */
++	if (!pool->flbitmap)
++		return 0;
++
++	/* Get freelist index correspoding to this size */
++	slindex = get_index(size);
++	slbitmap = pool->slbitmap[slindex / BITS_PER_LONG];
++	slbitstart = slindex % BITS_PER_LONG;
++
++	/*
++	 * If freelist is not empty at this index, we found the
++	 * block - head of this list. This is approximate best-fit match.
++	 */
++	if (test_bit(slbitstart, &slbitmap)) {
++		*page = pool->freelist[slindex].page;
++		*offset = pool->freelist[slindex].offset;
++		return slindex;
++	}
++
++	/*
++	 * No best-fit found. Search a bit further in bitmap for a free block.
++	 * Second level bitmap consists of series of 32-bit chunks. Search
++	 * further in the chunk where we expected a best-fit, starting from
++	 * index location found above.
++	 */
++	slbitstart++;
++	slbitmap >>= slbitstart;
++
++	/* Skip this search if we were already at end of this bitmap chunk */
++	if ((slbitstart != BITS_PER_LONG) && slbitmap) {
++		slindex += __ffs(slbitmap) + 1;
++		*page = pool->freelist[slindex].page;
++		*offset = pool->freelist[slindex].offset;
++		return slindex;
++	}
++
++	/* Now do a full two-level bitmap search to find next nearest fit */
++	flindex = slindex / BITS_PER_LONG;
++
++	flbitmap = (pool->flbitmap) >> (flindex + 1);
++	if (!flbitmap)
++		return 0;
++
++	flindex += __ffs(flbitmap) + 1;
++	slbitmap = pool->slbitmap[flindex];
++	slindex = (flindex * BITS_PER_LONG) + __ffs(slbitmap);
++	*page = pool->freelist[slindex].page;
++	*offset = pool->freelist[slindex].offset;
++
++	return slindex;
++}
++
++/*
++ * Insert block at <page, offset> in freelist of given pool.
++ * freelist used depends on block size.
++ */
++static void insert_block(struct xv_pool *pool, struct page *page, u32 offset,
++			struct block_header *block)
++{
++	u32 flindex, slindex;
++	struct block_header *nextblock;
++
++	slindex = get_index_for_insert(block->size);
++	flindex = slindex / BITS_PER_LONG;
++
++	block->link.prev_page = NULL;
++	block->link.prev_offset = 0;
++	block->link.next_page = pool->freelist[slindex].page;
++	block->link.next_offset = pool->freelist[slindex].offset;
++	pool->freelist[slindex].page = page;
++	pool->freelist[slindex].offset = offset;
++
++	if (block->link.next_page) {
++		nextblock = get_ptr_atomic(block->link.next_page,
++					block->link.next_offset, KM_USER1);
++		nextblock->link.prev_page = page;
++		nextblock->link.prev_offset = offset;
++		put_ptr_atomic(nextblock, KM_USER1);
++		/* If there was a next page then the free bits are set. */
++		return;
++	}
++
++	__set_bit(slindex % BITS_PER_LONG, &pool->slbitmap[flindex]);
++	__set_bit(flindex, &pool->flbitmap);
++}
++
++/*
++ * Remove block from freelist. Index 'slindex' identifies the freelist.
++ */
++static void remove_block(struct xv_pool *pool, struct page *page, u32 offset,
++			struct block_header *block, u32 slindex)
++{
++	u32 flindex = slindex / BITS_PER_LONG;
++	struct block_header *tmpblock;
++
++	if (block->link.prev_page) {
++		tmpblock = get_ptr_atomic(block->link.prev_page,
++				block->link.prev_offset, KM_USER1);
++		tmpblock->link.next_page = block->link.next_page;
++		tmpblock->link.next_offset = block->link.next_offset;
++		put_ptr_atomic(tmpblock, KM_USER1);
++	}
++
++	if (block->link.next_page) {
++		tmpblock = get_ptr_atomic(block->link.next_page,
++				block->link.next_offset, KM_USER1);
++		tmpblock->link.prev_page = block->link.prev_page;
++		tmpblock->link.prev_offset = block->link.prev_offset;
++		put_ptr_atomic(tmpblock, KM_USER1);
++	}
++
++	/* Is this block is at the head of the freelist? */
++	if (pool->freelist[slindex].page == page
++	   && pool->freelist[slindex].offset == offset) {
++
++		pool->freelist[slindex].page = block->link.next_page;
++		pool->freelist[slindex].offset = block->link.next_offset;
++
++		if (pool->freelist[slindex].page) {
++			struct block_header *tmpblock;
++			tmpblock = get_ptr_atomic(pool->freelist[slindex].page,
++					pool->freelist[slindex].offset,
++					KM_USER1);
++			tmpblock->link.prev_page = NULL;
++			tmpblock->link.prev_offset = 0;
++			put_ptr_atomic(tmpblock, KM_USER1);
++		} else {
++			/* This freelist bucket is empty */
++			__clear_bit(slindex % BITS_PER_LONG,
++				    &pool->slbitmap[flindex]);
++			if (!pool->slbitmap[flindex])
++				__clear_bit(flindex, &pool->flbitmap);
++		}
++	}
++
++	block->link.prev_page = NULL;
++	block->link.prev_offset = 0;
++	block->link.next_page = NULL;
++	block->link.next_offset = 0;
++}
++
++/*
++ * Allocate a page and add it to freelist of given pool.
++ */
++static int grow_pool(struct xv_pool *pool, gfp_t flags)
++{
++	struct page *page;
++	struct block_header *block;
++
++	page = alloc_page(flags);
++	if (unlikely(!page))
++		return -ENOMEM;
++
++	stat_inc(&pool->total_pages);
++
++	spin_lock(&pool->lock);
++	block = get_ptr_atomic(page, 0, KM_USER0);
++
++	block->size = PAGE_SIZE - XV_ALIGN;
++	set_flag(block, BLOCK_FREE);
++	clear_flag(block, PREV_FREE);
++	set_blockprev(block, 0);
++
++	insert_block(pool, page, 0, block);
++
++	put_ptr_atomic(block, KM_USER0);
++	spin_unlock(&pool->lock);
++
++	return 0;
++}
++
++/*
++ * Create a memory pool. Allocates freelist, bitmaps and other
++ * per-pool metadata.
++ */
++struct xv_pool *xv_create_pool(void)
++{
++	u32 ovhd_size;
++	struct xv_pool *pool;
++
++	ovhd_size = roundup(sizeof(*pool), PAGE_SIZE);
++	pool = kzalloc(ovhd_size, GFP_KERNEL);
++	if (!pool)
++		return NULL;
++
++	spin_lock_init(&pool->lock);
++
++	return pool;
++}
++
++void xv_destroy_pool(struct xv_pool *pool)
++{
++	kfree(pool);
++}
++
++/**
++ * xv_malloc - Allocate block of given size from pool.
++ * @pool: pool to allocate from
++ * @size: size of block to allocate
++ * @page: page no. that holds the object
++ * @offset: location of object within page
++ *
++ * On success, <page, offset> identifies block allocated
++ * and 0 is returned. On failure, <page, offset> is set to
++ * 0 and -ENOMEM is returned.
++ *
++ * Allocation requests with size > XV_MAX_ALLOC_SIZE will fail.
++ */
++int xv_malloc(struct xv_pool *pool, u32 size, struct page **page,
++		u32 *offset, gfp_t flags)
++{
++	int error;
++	u32 index, tmpsize, origsize, tmpoffset;
++	struct block_header *block, *tmpblock;
++
++	*page = NULL;
++	*offset = 0;
++	origsize = size;
++
++	if (unlikely(!size || size > XV_MAX_ALLOC_SIZE))
++		return -ENOMEM;
++
++	size = ALIGN(size, XV_ALIGN);
++
++	spin_lock(&pool->lock);
++
++	index = find_block(pool, size, page, offset);
++
++	if (!*page) {
++		spin_unlock(&pool->lock);
++		if (flags & GFP_NOWAIT)
++			return -ENOMEM;
++		error = grow_pool(pool, flags);
++		if (unlikely(error))
++			return error;
++
++		spin_lock(&pool->lock);
++		index = find_block(pool, size, page, offset);
++	}
++
++	if (!*page) {
++		spin_unlock(&pool->lock);
++		return -ENOMEM;
++	}
++
++	block = get_ptr_atomic(*page, *offset, KM_USER0);
++
++	remove_block(pool, *page, *offset, block, index);
++
++	/* Split the block if required */
++	tmpoffset = *offset + size + XV_ALIGN;
++	tmpsize = block->size - size;
++	tmpblock = (struct block_header *)((char *)block + size + XV_ALIGN);
++	if (tmpsize) {
++		tmpblock->size = tmpsize - XV_ALIGN;
++		set_flag(tmpblock, BLOCK_FREE);
++		clear_flag(tmpblock, PREV_FREE);
++
++		set_blockprev(tmpblock, *offset);
++		if (tmpblock->size >= XV_MIN_ALLOC_SIZE)
++			insert_block(pool, *page, tmpoffset, tmpblock);
++
++		if (tmpoffset + XV_ALIGN + tmpblock->size != PAGE_SIZE) {
++			tmpblock = BLOCK_NEXT(tmpblock);
++			set_blockprev(tmpblock, tmpoffset);
++		}
++	} else {
++		/* This block is exact fit */
++		if (tmpoffset != PAGE_SIZE)
++			clear_flag(tmpblock, PREV_FREE);
++	}
++
++	block->size = origsize;
++	clear_flag(block, BLOCK_FREE);
++
++	put_ptr_atomic(block, KM_USER0);
++	spin_unlock(&pool->lock);
++
++	*offset += XV_ALIGN;
++
++	return 0;
++}
++
++/*
++ * Free block identified with <page, offset>
++ */
++void xv_free(struct xv_pool *pool, struct page *page, u32 offset)
++{
++	void *page_start;
++	struct block_header *block, *tmpblock;
++
++	offset -= XV_ALIGN;
++
++	spin_lock(&pool->lock);
++
++	page_start = get_ptr_atomic(page, 0, KM_USER0);
++	block = (struct block_header *)((char *)page_start + offset);
++
++	/* Catch double free bugs */
++	BUG_ON(test_flag(block, BLOCK_FREE));
++
++	block->size = ALIGN(block->size, XV_ALIGN);
++
++	tmpblock = BLOCK_NEXT(block);
++	if (offset + block->size + XV_ALIGN == PAGE_SIZE)
++		tmpblock = NULL;
++
++	/* Merge next block if its free */
++	if (tmpblock && test_flag(tmpblock, BLOCK_FREE)) {
++		/*
++		 * Blocks smaller than XV_MIN_ALLOC_SIZE
++		 * are not inserted in any free list.
++		 */
++		if (tmpblock->size >= XV_MIN_ALLOC_SIZE) {
++			remove_block(pool, page,
++				    offset + block->size + XV_ALIGN, tmpblock,
++				    get_index_for_insert(tmpblock->size));
++		}
++		block->size += tmpblock->size + XV_ALIGN;
++	}
++
++	/* Merge previous block if its free */
++	if (test_flag(block, PREV_FREE)) {
++		tmpblock = (struct block_header *)((char *)(page_start) +
++						get_blockprev(block));
++		offset = offset - tmpblock->size - XV_ALIGN;
++
++		if (tmpblock->size >= XV_MIN_ALLOC_SIZE)
++			remove_block(pool, page, offset, tmpblock,
++				    get_index_for_insert(tmpblock->size));
++
++		tmpblock->size += block->size + XV_ALIGN;
++		block = tmpblock;
++	}
++
++	/* No used objects in this page. Free it. */
++	if (block->size == PAGE_SIZE - XV_ALIGN) {
++		put_ptr_atomic(page_start, KM_USER0);
++		spin_unlock(&pool->lock);
++
++		__free_page(page);
++		stat_dec(&pool->total_pages);
++		return;
++	}
++
++	set_flag(block, BLOCK_FREE);
++	if (block->size >= XV_MIN_ALLOC_SIZE)
++		insert_block(pool, page, offset, block);
++
++	if (offset + block->size + XV_ALIGN != PAGE_SIZE) {
++		tmpblock = BLOCK_NEXT(block);
++		set_flag(tmpblock, PREV_FREE);
++		set_blockprev(tmpblock, offset);
++	}
++
++	put_ptr_atomic(page_start, KM_USER0);
++	spin_unlock(&pool->lock);
++}
++
++u32 xv_get_object_size(void *obj)
++{
++	struct block_header *blk;
++
++	blk = (struct block_header *)((char *)(obj) - XV_ALIGN);
++	return blk->size;
++}
++
++/*
++ * Returns total memory used by allocator (userdata + metadata)
++ */
++u64 xv_get_total_size_bytes(struct xv_pool *pool)
++{
++	return pool->total_pages << PAGE_SHIFT;
++}
+diff -u -r -N 1/drivers/staging/zram/xvmalloc.h 2/drivers/staging/zram/xvmalloc.h
+--- 1/drivers/staging/zram/xvmalloc.h	1970-01-01 01:00:00.000000000 +0100
++++ 2/drivers/staging/zram/xvmalloc.h	2017-02-20 22:45:53.000000000 +0100
+@@ -0,0 +1,30 @@
++/*
++ * xvmalloc memory allocator
++ *
++ * Copyright (C) 2008, 2009, 2010  Nitin Gupta
++ *
++ * This code is released using a dual license strategy: BSD/GPL
++ * You can choose the licence that better fits your requirements.
++ *
++ * Released under the terms of 3-clause BSD License
++ * Released under the terms of GNU General Public License Version 2.0
++ */
++
++#ifndef _XV_MALLOC_H_
++#define _XV_MALLOC_H_
++
++#include <linux/types.h>
++
++struct xv_pool;
++
++struct xv_pool *xv_create_pool(void);
++void xv_destroy_pool(struct xv_pool *pool);
++
++int xv_malloc(struct xv_pool *pool, u32 size, struct page **page,
++			u32 *offset, gfp_t flags);
++void xv_free(struct xv_pool *pool, struct page *page, u32 offset);
++
++u32 xv_get_object_size(void *obj);
++u64 xv_get_total_size_bytes(struct xv_pool *pool);
++
++#endif
+diff -u -r -N 1/drivers/staging/zram/xvmalloc_int.h 2/drivers/staging/zram/xvmalloc_int.h
+--- 1/drivers/staging/zram/xvmalloc_int.h	1970-01-01 01:00:00.000000000 +0100
++++ 2/drivers/staging/zram/xvmalloc_int.h	2017-02-20 22:46:38.000000000 +0100
+@@ -0,0 +1,95 @@
++/*
++ * xvmalloc memory allocator
++ *
++ * Copyright (C) 2008, 2009, 2010  Nitin Gupta
++ *
++ * This code is released using a dual license strategy: BSD/GPL
++ * You can choose the licence that better fits your requirements.
++ *
++ * Released under the terms of 3-clause BSD License
++ * Released under the terms of GNU General Public License Version 2.0
++ */
++
++#ifndef _XV_MALLOC_INT_H_
++#define _XV_MALLOC_INT_H_
++
++#include <linux/kernel.h>
++#include <linux/types.h>
++
++/* User configurable params */
++
++/* Must be power of two */
++#ifdef CONFIG_64BIT
++#define XV_ALIGN_SHIFT 3
++#else
++#define XV_ALIGN_SHIFT	2
++#endif
++#define XV_ALIGN	(1 << XV_ALIGN_SHIFT)
++#define XV_ALIGN_MASK	(XV_ALIGN - 1)
++
++/* This must be greater than sizeof(link_free) */
++#define XV_MIN_ALLOC_SIZE	32
++#define XV_MAX_ALLOC_SIZE	(PAGE_SIZE - XV_ALIGN)
++
++/*
++ * Free lists are separated by FL_DELTA bytes
++ * This value is 3 for 4k pages and 4 for 64k pages, for any
++ * other page size, a conservative (PAGE_SHIFT - 9) is used.
++ */
++#if PAGE_SHIFT == 16
++#define FL_DELTA_SHIFT 4
++#else
++#define FL_DELTA_SHIFT (PAGE_SHIFT - 9)
++#endif
++#define FL_DELTA	(1 << FL_DELTA_SHIFT)
++#define FL_DELTA_MASK	(FL_DELTA - 1)
++#define NUM_FREE_LISTS	((XV_MAX_ALLOC_SIZE - XV_MIN_ALLOC_SIZE) \
++				/ FL_DELTA + 1)
++
++#define MAX_FLI		DIV_ROUND_UP(NUM_FREE_LISTS, BITS_PER_LONG)
++
++/* End of user params */
++
++enum blockflags {
++	BLOCK_FREE,
++	PREV_FREE,
++	__NR_BLOCKFLAGS,
++};
++
++#define FLAGS_MASK	XV_ALIGN_MASK
++#define PREV_MASK	(~FLAGS_MASK)
++
++struct freelist_entry {
++	struct page *page;
++	u16 offset;
++	u16 pad;
++};
++
++struct link_free {
++	struct page *prev_page;
++	struct page *next_page;
++	u16 prev_offset;
++	u16 next_offset;
++};
++
++struct block_header {
++	union {
++		/* This common header must be XV_ALIGN bytes */
++		u8 common[XV_ALIGN];
++		struct {
++			u16 size;
++			u16 prev;
++		};
++	};
++	struct link_free link;
++};
++
++struct xv_pool {
++	ulong flbitmap;
++	ulong slbitmap[MAX_FLI];
++	u64 total_pages;	/* stats */
++	struct freelist_entry freelist[NUM_FREE_LISTS];
++	spinlock_t lock;
++};
++
++#endif
+diff -u -r -N 1/drivers/staging/zram/zram_drv.c 2/drivers/staging/zram/zram_drv.c
+--- 1/drivers/staging/zram/zram_drv.c	1970-01-01 01:00:00.000000000 +0100
++++ 2/drivers/staging/zram/zram_drv.c	2017-02-20 22:47:13.000000000 +0100
+@@ -0,0 +1,869 @@
++/*
++ * Compressed RAM block device
++ *
++ * Copyright (C) 2008, 2009, 2010  Nitin Gupta
++ *
++ * This code is released using a dual license strategy: BSD/GPL
++ * You can choose the licence that better fits your requirements.
++ *
++ * Released under the terms of 3-clause BSD License
++ * Released under the terms of GNU General Public License Version 2.0
++ *
++ * Project home: http://compcache.googlecode.com
++ */
++
++#define KMSG_COMPONENT "zram"
++#define pr_fmt(fmt) KMSG_COMPONENT ": " fmt
++
++#ifdef CONFIG_ZRAM_DEBUG
++#define DEBUG
++#endif
++
++#include <linux/module.h>
++#include <linux/kernel.h>
++#include <linux/bio.h>
++#include <linux/bitops.h>
++#include <linux/blkdev.h>
++#include <linux/buffer_head.h>
++#include <linux/device.h>
++#include <linux/genhd.h>
++#include <linux/highmem.h>
++#include <linux/slab.h>
++#include <linux/lzo.h>
++#include <linux/string.h>
++#include <linux/vmalloc.h>
++
++#include "zram_drv.h"
++
++/* Globals */
++static int zram_major;
++struct zram *devices;
++
++/* Module params (documentation at end) */
++unsigned int num_devices;
++
++static void zram_stat_inc(u32 *v)
++{
++	*v = *v + 1;
++}
++
++static void zram_stat_dec(u32 *v)
++{
++	*v = *v - 1;
++}
++
++static void zram_stat64_add(struct zram *zram, u64 *v, u64 inc)
++{
++	spin_lock(&zram->stat64_lock);
++	*v = *v + inc;
++	spin_unlock(&zram->stat64_lock);
++}
++
++static void zram_stat64_sub(struct zram *zram, u64 *v, u64 dec)
++{
++	spin_lock(&zram->stat64_lock);
++	*v = *v - dec;
++	spin_unlock(&zram->stat64_lock);
++}
++
++static void zram_stat64_inc(struct zram *zram, u64 *v)
++{
++	zram_stat64_add(zram, v, 1);
++}
++
++static int zram_test_flag(struct zram *zram, u32 index,
++			enum zram_pageflags flag)
++{
++	return zram->table[index].flags & BIT(flag);
++}
++
++static void zram_set_flag(struct zram *zram, u32 index,
++			enum zram_pageflags flag)
++{
++	zram->table[index].flags |= BIT(flag);
++}
++
++static void zram_clear_flag(struct zram *zram, u32 index,
++			enum zram_pageflags flag)
++{
++	zram->table[index].flags &= ~BIT(flag);
++}
++
++static int page_zero_filled(void *ptr)
++{
++	unsigned int pos;
++	unsigned long *page;
++
++	page = (unsigned long *)ptr;
++
++	for (pos = 0; pos != PAGE_SIZE / sizeof(*page); pos++) {
++		if (page[pos])
++			return 0;
++	}
++
++	return 1;
++}
++
++static void zram_set_disksize(struct zram *zram, size_t totalram_bytes)
++{
++	if (!zram->disksize) {
++		pr_info(
++		"disk size not provided. You can use disksize_kb module "
++		"param to specify size.\nUsing default: (%u%% of RAM).\n",
++		default_disksize_perc_ram
++		);
++		zram->disksize = default_disksize_perc_ram *
++					(totalram_bytes / 100);
++	}
++
++	if (zram->disksize > 2 * (totalram_bytes)) {
++		pr_info(
++		"There is little point creating a zram of greater than "
++		"twice the size of memory since we expect a 2:1 compression "
++		"ratio. Note that zram uses about 0.1%% of the size of "
++		"the disk when not in use so a huge zram is "
++		"wasteful.\n"
++		"\tMemory Size: %zu kB\n"
++		"\tSize you selected: %llu kB\n"
++		"Continuing anyway ...\n",
++		totalram_bytes >> 10, zram->disksize
++		);
++	}
++
++	zram->disksize &= PAGE_MASK;
++}
++
++static void zram_free_page(struct zram *zram, size_t index)
++{
++	u32 clen;
++	void *obj;
++
++	struct page *page = zram->table[index].page;
++	u32 offset = zram->table[index].offset;
++
++	if (unlikely(!page)) {
++		/*
++		 * No memory is allocated for zero filled pages.
++		 * Simply clear zero page flag.
++		 */
++		if (zram_test_flag(zram, index, ZRAM_ZERO)) {
++			zram_clear_flag(zram, index, ZRAM_ZERO);
++			zram_stat_dec(&zram->stats.pages_zero);
++		}
++		return;
++	}
++
++	if (unlikely(zram_test_flag(zram, index, ZRAM_UNCOMPRESSED))) {
++		clen = PAGE_SIZE;
++		__free_page(page);
++		zram_clear_flag(zram, index, ZRAM_UNCOMPRESSED);
++		zram_stat_dec(&zram->stats.pages_expand);
++		goto out;
++	}
++
++	obj = kmap_atomic(page, KM_USER0) + offset;
++	clen = xv_get_object_size(obj) - sizeof(struct zobj_header);
++	kunmap_atomic(obj, KM_USER0);
++
++	xv_free(zram->mem_pool, page, offset);
++	if (clen <= PAGE_SIZE / 2)
++		zram_stat_dec(&zram->stats.good_compress);
++
++out:
++	zram_stat64_sub(zram, &zram->stats.compr_size, clen);
++	zram_stat_dec(&zram->stats.pages_stored);
++
++	zram->table[index].page = NULL;
++	zram->table[index].offset = 0;
++}
++
++static void handle_zero_page(struct bio_vec *bvec)
++{
++	struct page *page = bvec->bv_page;
++	void *user_mem;
++
++	user_mem = kmap_atomic(page, KM_USER0);
++	memset(user_mem + bvec->bv_offset, 0, bvec->bv_len);
++	kunmap_atomic(user_mem, KM_USER0);
++
++	flush_dcache_page(page);
++}
++
++static void handle_uncompressed_page(struct zram *zram, struct bio_vec *bvec,
++				     u32 index, int offset)
++{
++	struct page *page = bvec->bv_page;
++	unsigned char *user_mem, *cmem;
++
++	user_mem = kmap_atomic(page, KM_USER0);
++	cmem = kmap_atomic(zram->table[index].page, KM_USER1);
++
++	memcpy(user_mem + bvec->bv_offset, cmem + offset, bvec->bv_len);
++	kunmap_atomic(cmem, KM_USER1);
++	kunmap_atomic(user_mem, KM_USER0);
++
++	flush_dcache_page(page);
++}
++
++static inline int is_partial_io(struct bio_vec *bvec)
++{
++	return bvec->bv_len != PAGE_SIZE;
++}
++
++static int zram_bvec_read(struct zram *zram, struct bio_vec *bvec,
++			  u32 index, int offset, struct bio *bio)
++{
++	int ret;
++	size_t clen;
++	struct page *page;
++	struct zobj_header *zheader;
++	unsigned char *user_mem, *cmem, *uncmem = NULL;
++
++	page = bvec->bv_page;
++
++	if (zram_test_flag(zram, index, ZRAM_ZERO)) {
++		handle_zero_page(bvec);
++		return 0;
++	}
++
++	/* Requested page is not present in compressed area */
++	if (unlikely(!zram->table[index].page)) {
++		pr_debug("Read before write: sector=%lu, size=%u",
++			 (ulong)(bio->bi_sector), bio->bi_size);
++		handle_zero_page(bvec);
++		return 0;
++	}
++
++	/* Page is stored uncompressed since it's incompressible */
++	if (unlikely(zram_test_flag(zram, index, ZRAM_UNCOMPRESSED))) {
++		handle_uncompressed_page(zram, bvec, index, offset);
++		return 0;
++	}
++
++	if (is_partial_io(bvec)) {
++		/* Use  a temporary buffer to decompress the page */
++		uncmem = kmalloc(PAGE_SIZE, GFP_KERNEL);
++		if (!uncmem) {
++			pr_info("Error allocating temp memory!\n");
++			return -ENOMEM;
++		}
++	}
++
++	user_mem = kmap_atomic(page, KM_USER0);
++	if (!is_partial_io(bvec))
++		uncmem = user_mem;
++	clen = PAGE_SIZE;
++
++	cmem = kmap_atomic(zram->table[index].page, KM_USER1) +
++		zram->table[index].offset;
++
++	ret = lzo1x_decompress_safe(cmem + sizeof(*zheader),
++				    xv_get_object_size(cmem) - sizeof(*zheader),
++				    uncmem, &clen);
++
++	if (is_partial_io(bvec)) {
++		memcpy(user_mem + bvec->bv_offset, uncmem + offset,
++		       bvec->bv_len);
++		kfree(uncmem);
++	}
++
++	kunmap_atomic(cmem, KM_USER1);
++	kunmap_atomic(user_mem, KM_USER0);
++
++	/* Should NEVER happen. Return bio error if it does. */
++	if (unlikely(ret != LZO_E_OK)) {
++		pr_err("Decompression failed! err=%d, page=%u\n", ret, index);
++		zram_stat64_inc(zram, &zram->stats.failed_reads);
++		return ret;
++	}
++
++	flush_dcache_page(page);
++
++	return 0;
++}
++
++static int zram_read_before_write(struct zram *zram, char *mem, u32 index)
++{
++	int ret;
++	size_t clen = PAGE_SIZE;
++	struct zobj_header *zheader;
++	unsigned char *cmem;
++
++	if (zram_test_flag(zram, index, ZRAM_ZERO) ||
++	    !zram->table[index].page) {
++		memset(mem, 0, PAGE_SIZE);
++		return 0;
++	}
++
++	cmem = kmap_atomic(zram->table[index].page, KM_USER0) +
++		zram->table[index].offset;
++
++	/* Page is stored uncompressed since it's incompressible */
++	if (unlikely(zram_test_flag(zram, index, ZRAM_UNCOMPRESSED))) {
++		memcpy(mem, cmem, PAGE_SIZE);
++		kunmap_atomic(cmem, KM_USER0);
++		return 0;
++	}
++
++	ret = lzo1x_decompress_safe(cmem + sizeof(*zheader),
++				    xv_get_object_size(cmem) - sizeof(*zheader),
++				    mem, &clen);
++	kunmap_atomic(cmem, KM_USER0);
++
++	/* Should NEVER happen. Return bio error if it does. */
++	if (unlikely(ret != LZO_E_OK)) {
++		pr_err("Decompression failed! err=%d, page=%u\n", ret, index);
++		zram_stat64_inc(zram, &zram->stats.failed_reads);
++		return ret;
++	}
++
++	return 0;
++}
++
++static int zram_bvec_write(struct zram *zram, struct bio_vec *bvec, u32 index,
++			   int offset)
++{
++	int ret;
++	u32 store_offset;
++	size_t clen;
++	struct zobj_header *zheader;
++	struct page *page, *page_store;
++	unsigned char *user_mem, *cmem, *src, *uncmem = NULL;
++
++	page = bvec->bv_page;
++	src = zram->compress_buffer;
++
++	if (is_partial_io(bvec)) {
++		/*
++		 * This is a partial IO. We need to read the full page
++		 * before to write the changes.
++		 */
++		uncmem = kmalloc(PAGE_SIZE, GFP_KERNEL);
++		if (!uncmem) {
++			pr_info("Error allocating temp memory!\n");
++			ret = -ENOMEM;
++			goto out;
++		}
++		ret = zram_read_before_write(zram, uncmem, index);
++		if (ret) {
++			kfree(uncmem);
++			goto out;
++		}
++	}
++
++	/*
++	 * System overwrites unused sectors. Free memory associated
++	 * with this sector now.
++	 */
++	if (zram->table[index].page ||
++	    zram_test_flag(zram, index, ZRAM_ZERO))
++		zram_free_page(zram, index);
++
++	user_mem = kmap_atomic(page, KM_USER0);
++
++	if (is_partial_io(bvec))
++		memcpy(uncmem + offset, user_mem + bvec->bv_offset,
++		       bvec->bv_len);
++	else
++		uncmem = user_mem;
++
++	if (page_zero_filled(uncmem)) {
++		kunmap_atomic(user_mem, KM_USER0);
++		if (is_partial_io(bvec))
++			kfree(uncmem);
++		zram_stat_inc(&zram->stats.pages_zero);
++		zram_set_flag(zram, index, ZRAM_ZERO);
++		ret = 0;
++		goto out;
++	}
++
++	ret = lzo1x_1_compress(uncmem, PAGE_SIZE, src, &clen,
++			       zram->compress_workmem);
++
++	kunmap_atomic(user_mem, KM_USER0);
++	if (is_partial_io(bvec))
++			kfree(uncmem);
++
++	if (unlikely(ret != LZO_E_OK)) {
++		pr_err("Compression failed! err=%d\n", ret);
++		goto out;
++	}
++
++	/*
++	 * Page is incompressible. Store it as-is (uncompressed)
++	 * since we do not want to return too many disk write
++	 * errors which has side effect of hanging the system.
++	 */
++	if (unlikely(clen > max_zpage_size)) {
++		clen = PAGE_SIZE;
++		page_store = alloc_page(GFP_NOIO | __GFP_HIGHMEM);
++		if (unlikely(!page_store)) {
++			pr_info("Error allocating memory for "
++				"incompressible page: %u\n", index);
++			ret = -ENOMEM;
++			goto out;
++		}
++
++		store_offset = 0;
++		zram_set_flag(zram, index, ZRAM_UNCOMPRESSED);
++		zram_stat_inc(&zram->stats.pages_expand);
++		zram->table[index].page = page_store;
++		src = kmap_atomic(page, KM_USER0);
++		goto memstore;
++	}
++
++	if (xv_malloc(zram->mem_pool, clen + sizeof(*zheader),
++		      &zram->table[index].page, &store_offset,
++		      GFP_NOIO | __GFP_HIGHMEM)) {
++		pr_info("Error allocating memory for compressed "
++			"page: %u, size=%zu\n", index, clen);
++		ret = -ENOMEM;
++		goto out;
++	}
++
++memstore:
++	zram->table[index].offset = store_offset;
++
++	cmem = kmap_atomic(zram->table[index].page, KM_USER1) +
++		zram->table[index].offset;
++
++#if 0
++	/* Back-reference needed for memory defragmentation */
++	if (!zram_test_flag(zram, index, ZRAM_UNCOMPRESSED)) {
++		zheader = (struct zobj_header *)cmem;
++		zheader->table_idx = index;
++		cmem += sizeof(*zheader);
++	}
++#endif
++
++	memcpy(cmem, src, clen);
++
++	kunmap_atomic(cmem, KM_USER1);
++	if (unlikely(zram_test_flag(zram, index, ZRAM_UNCOMPRESSED)))
++		kunmap_atomic(src, KM_USER0);
++
++	/* Update stats */
++	zram_stat64_add(zram, &zram->stats.compr_size, clen);
++	zram_stat_inc(&zram->stats.pages_stored);
++	if (clen <= PAGE_SIZE / 2)
++		zram_stat_inc(&zram->stats.good_compress);
++
++	return 0;
++
++out:
++	if (ret)
++		zram_stat64_inc(zram, &zram->stats.failed_writes);
++	return ret;
++}
++
++static int zram_bvec_rw(struct zram *zram, struct bio_vec *bvec, u32 index,
++			int offset, struct bio *bio, int rw)
++{
++	int ret;
++
++	if (rw == READ) {
++		down_read(&zram->lock);
++		ret = zram_bvec_read(zram, bvec, index, offset, bio);
++		up_read(&zram->lock);
++	} else {
++		down_write(&zram->lock);
++		ret = zram_bvec_write(zram, bvec, index, offset);
++		up_write(&zram->lock);
++	}
++
++	return ret;
++}
++
++static void update_position(u32 *index, int *offset, struct bio_vec *bvec)
++{
++	if (*offset + bvec->bv_len >= PAGE_SIZE)
++		(*index)++;
++	*offset = (*offset + bvec->bv_len) % PAGE_SIZE;
++}
++
++static void __zram_make_request(struct zram *zram, struct bio *bio, int rw)
++{
++	int i, offset;
++	u32 index;
++	struct bio_vec *bvec;
++
++	switch (rw) {
++	case READ:
++		zram_stat64_inc(zram, &zram->stats.num_reads);
++		break;
++	case WRITE:
++		zram_stat64_inc(zram, &zram->stats.num_writes);
++		break;
++	}
++
++	index = bio->bi_sector >> SECTORS_PER_PAGE_SHIFT;
++	offset = (bio->bi_sector & (SECTORS_PER_PAGE - 1)) << SECTOR_SHIFT;
++
++	bio_for_each_segment(bvec, bio, i) {
++		int max_transfer_size = PAGE_SIZE - offset;
++
++		if (bvec->bv_len > max_transfer_size) {
++			/*
++			 * zram_bvec_rw() can only make operation on a single
++			 * zram page. Split the bio vector.
++			 */
++			struct bio_vec bv;
++
++			bv.bv_page = bvec->bv_page;
++			bv.bv_len = max_transfer_size;
++			bv.bv_offset = bvec->bv_offset;
++
++			if (zram_bvec_rw(zram, &bv, index, offset, bio, rw) < 0)
++				goto out;
++
++			bv.bv_len = bvec->bv_len - max_transfer_size;
++			bv.bv_offset += max_transfer_size;
++			if (zram_bvec_rw(zram, &bv, index+1, 0, bio, rw) < 0)
++				goto out;
++		} else
++			if (zram_bvec_rw(zram, bvec, index, offset, bio, rw)
++			    < 0)
++				goto out;
++
++		update_position(&index, &offset, bvec);
++	}
++
++	set_bit(BIO_UPTODATE, &bio->bi_flags);
++	bio_endio(bio, 0);
++	return;
++
++out:
++	bio_io_error(bio);
++}
++
++/*
++ * Check if request is within bounds and aligned on zram logical blocks.
++ */
++static inline int valid_io_request(struct zram *zram, struct bio *bio)
++{
++	if (unlikely(
++		(bio->bi_sector >= (zram->disksize >> SECTOR_SHIFT)) ||
++		(bio->bi_sector & (ZRAM_SECTOR_PER_LOGICAL_BLOCK - 1)) ||
++		(bio->bi_size & (ZRAM_LOGICAL_BLOCK_SIZE - 1)))) {
++
++		return 0;
++	}
++
++	/* I/O request is valid */
++	return 1;
++}
++
++/*
++ * Handler function for all zram I/O requests.
++ */
++static int zram_make_request(struct request_queue *queue, struct bio *bio)
++{
++	struct zram *zram = queue->queuedata;
++
++	if (unlikely(!zram->init_done) && zram_init_device(zram))
++		goto error;
++
++	down_read(&zram->init_lock);
++	if (unlikely(!zram->init_done))
++		goto error_unlock;
++
++	if (!valid_io_request(zram, bio)) {
++		zram_stat64_inc(zram, &zram->stats.invalid_io);
++		goto error_unlock;
++	}
++
++	__zram_make_request(zram, bio, bio_data_dir(bio));
++	up_read(&zram->init_lock);
++
++	return 0;
++
++error_unlock:
++	up_read(&zram->init_lock);
++error:
++	bio_io_error(bio);
++	return 0;
++}
++
++void __zram_reset_device(struct zram *zram)
++{
++	size_t index;
++
++	zram->init_done = 0;
++
++	/* Free various per-device buffers */
++	kfree(zram->compress_workmem);
++	free_pages((unsigned long)zram->compress_buffer, 1);
++
++	zram->compress_workmem = NULL;
++	zram->compress_buffer = NULL;
++
++	/* Free all pages that are still in this zram device */
++	for (index = 0; index < zram->disksize >> PAGE_SHIFT; index++) {
++		struct page *page;
++		u16 offset;
++
++		page = zram->table[index].page;
++		offset = zram->table[index].offset;
++
++		if (!page)
++			continue;
++
++		if (unlikely(zram_test_flag(zram, index, ZRAM_UNCOMPRESSED)))
++			__free_page(page);
++		else
++			xv_free(zram->mem_pool, page, offset);
++	}
++
++	vfree(zram->table);
++	zram->table = NULL;
++
++	xv_destroy_pool(zram->mem_pool);
++	zram->mem_pool = NULL;
++
++	/* Reset stats */
++	memset(&zram->stats, 0, sizeof(zram->stats));
++
++	zram->disksize = 0;
++}
++
++void zram_reset_device(struct zram *zram)
++{
++	down_write(&zram->init_lock);
++	__zram_reset_device(zram);
++	up_write(&zram->init_lock);
++}
++
++int zram_init_device(struct zram *zram)
++{
++	int ret;
++	size_t num_pages;
++
++	down_write(&zram->init_lock);
++
++	if (zram->init_done) {
++		up_write(&zram->init_lock);
++		return 0;
++	}
++
++	zram_set_disksize(zram, totalram_pages << PAGE_SHIFT);
++
++	zram->compress_workmem = kzalloc(LZO1X_MEM_COMPRESS, GFP_KERNEL);
++	if (!zram->compress_workmem) {
++		pr_err("Error allocating compressor working memory!\n");
++		ret = -ENOMEM;
++		goto fail_no_table;
++	}
++
++	zram->compress_buffer = (void *)__get_free_pages(__GFP_ZERO, 1);
++	if (!zram->compress_buffer) {
++		pr_err("Error allocating compressor buffer space\n");
++		ret = -ENOMEM;
++		goto fail_no_table;
++	}
++
++	num_pages = zram->disksize >> PAGE_SHIFT;
++	zram->table = vmalloc(num_pages * sizeof(*zram->table));
++	if (!zram->table) {
++		pr_err("Error allocating zram address table\n");
++		ret = -ENOMEM;
++		goto fail_no_table;
++	}
++	memset(zram->table, 0, num_pages * sizeof(*zram->table));
++
++	set_capacity(zram->disk, zram->disksize >> SECTOR_SHIFT);
++
++	/* zram devices sort of resembles non-rotational disks */
++	queue_flag_set_unlocked(QUEUE_FLAG_NONROT, zram->disk->queue);
++
++	zram->mem_pool = xv_create_pool();
++	if (!zram->mem_pool) {
++		pr_err("Error creating memory pool\n");
++		ret = -ENOMEM;
++		goto fail;
++	}
++
++	zram->init_done = 1;
++	up_write(&zram->init_lock);
++
++	pr_debug("Initialization done!\n");
++	return 0;
++
++fail_no_table:
++	/* To prevent accessing table entries during cleanup */
++	zram->disksize = 0;
++fail:
++	__zram_reset_device(zram);
++	up_write(&zram->init_lock);
++	pr_err("Initialization failed: err=%d\n", ret);
++	return ret;
++}
++
++void zram_slot_free_notify(struct block_device *bdev, unsigned long index)
++{
++	struct zram *zram;
++
++	zram = bdev->bd_disk->private_data;
++	zram_free_page(zram, index);
++	zram_stat64_inc(zram, &zram->stats.notify_free);
++}
++
++static const struct block_device_operations zram_devops = {
++	.swap_slot_free_notify = zram_slot_free_notify,
++	.owner = THIS_MODULE
++};
++
++static int create_device(struct zram *zram, int device_id)
++{
++	int ret = 0;
++
++	init_rwsem(&zram->lock);
++	init_rwsem(&zram->init_lock);
++	spin_lock_init(&zram->stat64_lock);
++
++	zram->queue = blk_alloc_queue(GFP_KERNEL);
++	if (!zram->queue) {
++		pr_err("Error allocating disk queue for device %d\n",
++			device_id);
++		ret = -ENOMEM;
++		goto out;
++	}
++
++	blk_queue_make_request(zram->queue, zram_make_request);
++	zram->queue->queuedata = zram;
++
++	 /* gendisk structure */
++	zram->disk = alloc_disk(1);
++	if (!zram->disk) {
++		blk_cleanup_queue(zram->queue);
++		pr_warning("Error allocating disk structure for device %d\n",
++			device_id);
++		ret = -ENOMEM;
++		goto out;
++	}
++
++	zram->disk->major = zram_major;
++	zram->disk->first_minor = device_id;
++	zram->disk->fops = &zram_devops;
++	zram->disk->queue = zram->queue;
++	zram->disk->private_data = zram;
++	snprintf(zram->disk->disk_name, 16, "zram%d", device_id);
++
++	/* Actual capacity set using syfs (/sys/block/zram<id>/disksize */
++	set_capacity(zram->disk, 0);
++
++	/*
++	 * To ensure that we always get PAGE_SIZE aligned
++	 * and n*PAGE_SIZED sized I/O requests.
++	 */
++	blk_queue_physical_block_size(zram->disk->queue, PAGE_SIZE);
++	blk_queue_logical_block_size(zram->disk->queue,
++					ZRAM_LOGICAL_BLOCK_SIZE);
++	blk_queue_io_min(zram->disk->queue, PAGE_SIZE);
++	blk_queue_io_opt(zram->disk->queue, PAGE_SIZE);
++
++	add_disk(zram->disk);
++
++	ret = sysfs_create_group(&disk_to_dev(zram->disk)->kobj,
++				&zram_disk_attr_group);
++	if (ret < 0) {
++		pr_warning("Error creating sysfs group");
++		goto out;
++	}
++
++	zram->init_done = 0;
++
++out:
++	return ret;
++}
++
++static void destroy_device(struct zram *zram)
++{
++	sysfs_remove_group(&disk_to_dev(zram->disk)->kobj,
++			&zram_disk_attr_group);
++
++	if (zram->disk) {
++		del_gendisk(zram->disk);
++		put_disk(zram->disk);
++	}
++
++	if (zram->queue)
++		blk_cleanup_queue(zram->queue);
++}
++
++static int __init zram_init(void)
++{
++	int ret, dev_id;
++
++	if (num_devices > max_num_devices) {
++		pr_warning("Invalid value for num_devices: %u\n",
++				num_devices);
++		ret = -EINVAL;
++		goto out;
++	}
++
++	zram_major = register_blkdev(0, "zram");
++	if (zram_major <= 0) {
++		pr_warning("Unable to get major number\n");
++		ret = -EBUSY;
++		goto out;
++	}
++
++	if (!num_devices) {
++		pr_info("num_devices not specified. Using default: 1\n");
++		num_devices = 1;
++	}
++
++	/* Allocate the device array and initialize each one */
++	pr_info("Creating %u devices ...\n", num_devices);
++	devices = kzalloc(num_devices * sizeof(struct zram), GFP_KERNEL);
++	if (!devices) {
++		ret = -ENOMEM;
++		goto unregister;
++	}
++
++	for (dev_id = 0; dev_id < num_devices; dev_id++) {
++		ret = create_device(&devices[dev_id], dev_id);
++		if (ret)
++			goto free_devices;
++	}
++
++	return 0;
++
++free_devices:
++	while (dev_id)
++		destroy_device(&devices[--dev_id]);
++	kfree(devices);
++unregister:
++	unregister_blkdev(zram_major, "zram");
++out:
++	return ret;
++}
++
++static void __exit zram_exit(void)
++{
++	int i;
++	struct zram *zram;
++
++	for (i = 0; i < num_devices; i++) {
++		zram = &devices[i];
++
++		destroy_device(zram);
++		if (zram->init_done)
++			zram_reset_device(zram);
++	}
++
++	unregister_blkdev(zram_major, "zram");
++
++	kfree(devices);
++	pr_debug("Cleanup done!\n");
++}
++
++module_param(num_devices, uint, 0);
++MODULE_PARM_DESC(num_devices, "Number of zram devices");
++
++module_init(zram_init);
++module_exit(zram_exit);
++
++MODULE_LICENSE("Dual BSD/GPL");
++MODULE_AUTHOR("Nitin Gupta <ngupta@vflare.org>");
++MODULE_DESCRIPTION("Compressed RAM Block Device");
+diff -u -r -N 1/drivers/staging/zram/zram_drv.h 2/drivers/staging/zram/zram_drv.h
+--- 1/drivers/staging/zram/zram_drv.h	1970-01-01 01:00:00.000000000 +0100
++++ 2/drivers/staging/zram/zram_drv.h	2017-02-20 22:47:13.000000000 +0100
+@@ -0,0 +1,135 @@
++/*
++ * Compressed RAM block device
++ *
++ * Copyright (C) 2008, 2009, 2010  Nitin Gupta
++ *
++ * This code is released using a dual license strategy: BSD/GPL
++ * You can choose the licence that better fits your requirements.
++ *
++ * Released under the terms of 3-clause BSD License
++ * Released under the terms of GNU General Public License Version 2.0
++ *
++ * Project home: http://compcache.googlecode.com
++ */
++
++#ifndef _ZRAM_DRV_H_
++#define _ZRAM_DRV_H_
++
++#include <linux/spinlock.h>
++#include <linux/mutex.h>
++
++#include "xvmalloc.h"
++
++/*
++ * Some arbitrary value. This is just to catch
++ * invalid value for num_devices module parameter.
++ */
++static const unsigned max_num_devices = 32;
++
++/*
++ * Stored at beginning of each compressed object.
++ *
++ * It stores back-reference to table entry which points to this
++ * object. This is required to support memory defragmentation.
++ */
++struct zobj_header {
++#if 0
++	u32 table_idx;
++#endif
++};
++
++/*-- Configurable parameters */
++
++/* Default zram disk size: 25% of total RAM */
++static const unsigned default_disksize_perc_ram = 25;
++
++/*
++ * Pages that compress to size greater than this are stored
++ * uncompressed in memory.
++ */
++static const unsigned max_zpage_size = PAGE_SIZE / 4 * 3;
++
++/*
++ * NOTE: max_zpage_size must be less than or equal to:
++ *   XV_MAX_ALLOC_SIZE - sizeof(struct zobj_header)
++ * otherwise, xv_malloc() would always return failure.
++ */
++
++/*-- End of configurable params */
++
++#define SECTOR_SHIFT		9
++#define SECTOR_SIZE		(1 << SECTOR_SHIFT)
++#define SECTORS_PER_PAGE_SHIFT	(PAGE_SHIFT - SECTOR_SHIFT)
++#define SECTORS_PER_PAGE	(1 << SECTORS_PER_PAGE_SHIFT)
++#define ZRAM_LOGICAL_BLOCK_SHIFT 12
++#define ZRAM_LOGICAL_BLOCK_SIZE	(1 << ZRAM_LOGICAL_BLOCK_SHIFT)
++#define ZRAM_SECTOR_PER_LOGICAL_BLOCK	\
++	(1 << (ZRAM_LOGICAL_BLOCK_SHIFT - SECTOR_SHIFT))
++
++/* Flags for zram pages (table[page_no].flags) */
++enum zram_pageflags {
++	/* Page is stored uncompressed */
++	ZRAM_UNCOMPRESSED,
++
++	/* Page consists entirely of zeros */
++	ZRAM_ZERO,
++
++	__NR_ZRAM_PAGEFLAGS,
++};
++
++/*-- Data structures */
++
++/* Allocated for each disk page */
++struct table {
++	struct page *page;
++	u16 offset;
++	u8 count;	/* object ref count (not yet used) */
++	u8 flags;
++} __attribute__((aligned(4)));
++
++struct zram_stats {
++	u64 compr_size;		/* compressed size of pages stored */
++	u64 num_reads;		/* failed + successful */
++	u64 num_writes;		/* --do-- */
++	u64 failed_reads;	/* should NEVER! happen */
++	u64 failed_writes;	/* can happen when memory is too low */
++	u64 invalid_io;		/* non-page-aligned I/O requests */
++	u64 notify_free;	/* no. of swap slot free notifications */
++	u32 pages_zero;		/* no. of zero filled pages */
++	u32 pages_stored;	/* no. of pages currently stored */
++	u32 good_compress;	/* % of pages with compression ratio<=50% */
++	u32 pages_expand;	/* % of incompressible pages */
++};
++
++struct zram {
++	struct xv_pool *mem_pool;
++	void *compress_workmem;
++	void *compress_buffer;
++	struct table *table;
++	spinlock_t stat64_lock;	/* protect 64-bit stats */
++	struct rw_semaphore lock; /* protect compression buffers and table
++				   * against concurrent read and writes */
++	struct request_queue *queue;
++	struct gendisk *disk;
++	int init_done;
++	/* Prevent concurrent execution of device init, reset and R/W request */
++	struct rw_semaphore init_lock;
++	/*
++	 * This is the limit on amount of *uncompressed* worth of data
++	 * we can store in a disk.
++	 */
++	u64 disksize;	/* bytes */
++
++	struct zram_stats stats;
++};
++
++extern struct zram *devices;
++extern unsigned int num_devices;
++#ifdef CONFIG_SYSFS
++extern struct attribute_group zram_disk_attr_group;
++#endif
++
++extern int zram_init_device(struct zram *zram);
++extern void __zram_reset_device(struct zram *zram);
++
++#endif
+diff -u -r -N 1/drivers/staging/zram/zram_sysfs.c 2/drivers/staging/zram/zram_sysfs.c
+--- 1/drivers/staging/zram/zram_sysfs.c	1970-01-01 01:00:00.000000000 +0100
++++ 2/drivers/staging/zram/zram_sysfs.c	2017-02-20 22:47:13.000000000 +0100
+@@ -0,0 +1,227 @@
++/*
++ * Compressed RAM block device
++ *
++ * Copyright (C) 2008, 2009, 2010  Nitin Gupta
++ *
++ * This code is released using a dual license strategy: BSD/GPL
++ * You can choose the licence that better fits your requirements.
++ *
++ * Released under the terms of 3-clause BSD License
++ * Released under the terms of GNU General Public License Version 2.0
++ *
++ * Project home: http://compcache.googlecode.com/
++ */
++
++#include <linux/device.h>
++#include <linux/genhd.h>
++#include <linux/mm.h>
++
++#include "zram_drv.h"
++
++static u64 zram_stat64_read(struct zram *zram, u64 *v)
++{
++	u64 val;
++
++	spin_lock(&zram->stat64_lock);
++	val = *v;
++	spin_unlock(&zram->stat64_lock);
++
++	return val;
++}
++
++static struct zram *dev_to_zram(struct device *dev)
++{
++	int i;
++	struct zram *zram = NULL;
++
++	for (i = 0; i < num_devices; i++) {
++		zram = &devices[i];
++		if (disk_to_dev(zram->disk) == dev)
++			break;
++	}
++
++	return zram;
++}
++
++static ssize_t disksize_show(struct device *dev,
++		struct device_attribute *attr, char *buf)
++{
++	struct zram *zram = dev_to_zram(dev);
++
++	return sprintf(buf, "%llu\n", zram->disksize);
++}
++
++static ssize_t disksize_store(struct device *dev,
++		struct device_attribute *attr, const char *buf, size_t len)
++{
++	int ret;
++	u64 disksize;
++	struct zram *zram = dev_to_zram(dev);
++
++	ret = strict_strtoull(buf, 10, &disksize);
++	if (ret)
++		return ret;
++
++	down_write(&zram->init_lock);
++	if (zram->init_done) {
++		up_write(&zram->init_lock);
++		pr_info("Cannot change disksize for initialized device\n");
++		return -EBUSY;
++	}
++
++	zram->disksize = PAGE_ALIGN(disksize);
++	set_capacity(zram->disk, zram->disksize >> SECTOR_SHIFT);
++	up_write(&zram->init_lock);
++
++	return len;
++}
++
++static ssize_t initstate_show(struct device *dev,
++		struct device_attribute *attr, char *buf)
++{
++	struct zram *zram = dev_to_zram(dev);
++
++	return sprintf(buf, "%u\n", zram->init_done);
++}
++
++static ssize_t reset_store(struct device *dev,
++		struct device_attribute *attr, const char *buf, size_t len)
++{
++	int ret;
++	unsigned long do_reset;
++	struct zram *zram;
++	struct block_device *bdev;
++
++	zram = dev_to_zram(dev);
++	bdev = bdget_disk(zram->disk, 0);
++
++	/* Do not reset an active device! */
++	if (bdev->bd_holders)
++		return -EBUSY;
++
++	ret = strict_strtoul(buf, 10, &do_reset);
++	if (ret)
++		return ret;
++
++	if (!do_reset)
++		return -EINVAL;
++
++	/* Make sure all pending I/O is finished */
++	if (bdev)
++		fsync_bdev(bdev);
++
++	down_write(&zram->init_lock);
++	if (zram->init_done)
++		__zram_reset_device(zram);
++	up_write(&zram->init_lock);
++
++	return len;
++}
++
++static ssize_t num_reads_show(struct device *dev,
++		struct device_attribute *attr, char *buf)
++{
++	struct zram *zram = dev_to_zram(dev);
++
++	return sprintf(buf, "%llu\n",
++		zram_stat64_read(zram, &zram->stats.num_reads));
++}
++
++static ssize_t num_writes_show(struct device *dev,
++		struct device_attribute *attr, char *buf)
++{
++	struct zram *zram = dev_to_zram(dev);
++
++	return sprintf(buf, "%llu\n",
++		zram_stat64_read(zram, &zram->stats.num_writes));
++}
++
++static ssize_t invalid_io_show(struct device *dev,
++		struct device_attribute *attr, char *buf)
++{
++	struct zram *zram = dev_to_zram(dev);
++
++	return sprintf(buf, "%llu\n",
++		zram_stat64_read(zram, &zram->stats.invalid_io));
++}
++
++static ssize_t notify_free_show(struct device *dev,
++		struct device_attribute *attr, char *buf)
++{
++	struct zram *zram = dev_to_zram(dev);
++
++	return sprintf(buf, "%llu\n",
++		zram_stat64_read(zram, &zram->stats.notify_free));
++}
++
++static ssize_t zero_pages_show(struct device *dev,
++		struct device_attribute *attr, char *buf)
++{
++	struct zram *zram = dev_to_zram(dev);
++
++	return sprintf(buf, "%u\n", zram->stats.pages_zero);
++}
++
++static ssize_t orig_data_size_show(struct device *dev,
++		struct device_attribute *attr, char *buf)
++{
++	struct zram *zram = dev_to_zram(dev);
++
++	return sprintf(buf, "%llu\n",
++		(u64)(zram->stats.pages_stored) << PAGE_SHIFT);
++}
++
++static ssize_t compr_data_size_show(struct device *dev,
++		struct device_attribute *attr, char *buf)
++{
++	struct zram *zram = dev_to_zram(dev);
++
++	return sprintf(buf, "%llu\n",
++		zram_stat64_read(zram, &zram->stats.compr_size));
++}
++
++static ssize_t mem_used_total_show(struct device *dev,
++		struct device_attribute *attr, char *buf)
++{
++	u64 val = 0;
++	struct zram *zram = dev_to_zram(dev);
++
++	if (zram->init_done) {
++		val = xv_get_total_size_bytes(zram->mem_pool) +
++			((u64)(zram->stats.pages_expand) << PAGE_SHIFT);
++	}
++
++	return sprintf(buf, "%llu\n", val);
++}
++
++static DEVICE_ATTR(disksize, S_IRUGO | S_IWUSR,
++		disksize_show, disksize_store);
++static DEVICE_ATTR(initstate, S_IRUGO, initstate_show, NULL);
++static DEVICE_ATTR(reset, S_IWUSR, NULL, reset_store);
++static DEVICE_ATTR(num_reads, S_IRUGO, num_reads_show, NULL);
++static DEVICE_ATTR(num_writes, S_IRUGO, num_writes_show, NULL);
++static DEVICE_ATTR(invalid_io, S_IRUGO, invalid_io_show, NULL);
++static DEVICE_ATTR(notify_free, S_IRUGO, notify_free_show, NULL);
++static DEVICE_ATTR(zero_pages, S_IRUGO, zero_pages_show, NULL);
++static DEVICE_ATTR(orig_data_size, S_IRUGO, orig_data_size_show, NULL);
++static DEVICE_ATTR(compr_data_size, S_IRUGO, compr_data_size_show, NULL);
++static DEVICE_ATTR(mem_used_total, S_IRUGO, mem_used_total_show, NULL);
++
++static struct attribute *zram_disk_attrs[] = {
++	&dev_attr_disksize.attr,
++	&dev_attr_initstate.attr,
++	&dev_attr_reset.attr,
++	&dev_attr_num_reads.attr,
++	&dev_attr_num_writes.attr,
++	&dev_attr_invalid_io.attr,
++	&dev_attr_notify_free.attr,
++	&dev_attr_zero_pages.attr,
++	&dev_attr_orig_data_size.attr,
++	&dev_attr_compr_data_size.attr,
++	&dev_attr_mem_used_total.attr,
++	NULL,
++};
++
++struct attribute_group zram_disk_attr_group = {
++	.attrs = zram_disk_attrs,
++};
+diff -u -r -N 1/drivers/staging/zram/zram.txt 2/drivers/staging/zram/zram.txt
+--- 1/drivers/staging/zram/zram.txt	1970-01-01 01:00:00.000000000 +0100
++++ 2/drivers/staging/zram/zram.txt	2017-02-20 22:46:31.000000000 +0100
+@@ -0,0 +1,76 @@
++zram: Compressed RAM based block devices
++----------------------------------------
++
++Project home: http://compcache.googlecode.com/
++
++* Introduction
++
++The zram module creates RAM based block devices named /dev/zram<id>
++(<id> = 0, 1, ...). Pages written to these disks are compressed and stored
++in memory itself. These disks allow very fast I/O and compression provides
++good amounts of memory savings. Some of the usecases include /tmp storage,
++use as swap disks, various caches under /var and maybe many more :)
++
++Statistics for individual zram devices are exported through sysfs nodes at
++/sys/block/zram<id>/
++
++* Usage
++
++Following shows a typical sequence of steps for using zram.
++
++1) Load Module:
++	modprobe zram num_devices=4
++	This creates 4 devices: /dev/zram{0,1,2,3}
++	(num_devices parameter is optional. Default: 1)
++
++2) Set Disksize (Optional):
++	Set disk size by writing the value to sysfs node 'disksize'
++	(in bytes). If disksize is not given, default value of 25%
++	of RAM is used.
++
++	# Initialize /dev/zram0 with 50MB disksize
++	echo $((50*1024*1024)) > /sys/block/zram0/disksize
++
++	NOTE: disksize cannot be changed if the disk contains any
++	data. So, for such a disk, you need to issue 'reset' (see below)
++	before you can change its disksize.
++
++3) Activate:
++	mkswap /dev/zram0
++	swapon /dev/zram0
++
++	mkfs.ext4 /dev/zram1
++	mount /dev/zram1 /tmp
++
++4) Stats:
++	Per-device statistics are exported as various nodes under
++	/sys/block/zram<id>/
++		disksize
++		num_reads
++		num_writes
++		invalid_io
++		notify_free
++		discard
++		zero_pages
++		orig_data_size
++		compr_data_size
++		mem_used_total
++
++5) Deactivate:
++	swapoff /dev/zram0
++	umount /dev/zram1
++
++6) Reset:
++	Write any positive value to 'reset' sysfs node
++	echo 1 > /sys/block/zram0/reset
++	echo 1 > /sys/block/zram1/reset
++
++	(This frees all the memory allocated for the given device).
++
++
++Please report any problems at:
++ - Mailing list: linux-mm-cc at laptop dot org
++ - Issue tracker: http://code.google.com/p/compcache/issues/list
++
++Nitin Gupta
++ngupta@vflare.org

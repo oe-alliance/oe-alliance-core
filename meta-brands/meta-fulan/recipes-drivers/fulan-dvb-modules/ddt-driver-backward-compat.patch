@@ -1,0 +1,33 @@
+Index: b/player2/linux/drivers/media/dvb/stm/dvb/dvb_module.h
+===================================================================
+--- a/player2/linux/drivers/media/dvb/stm/dvb/dvb_module.h
++++ b/player2/linux/drivers/media/dvb/stm/dvb/dvb_module.h
+@@ -75,7 +76,7 @@ struct DeviceContext_s;
+ #define DVB_TRACE(fmt, args...) (printk(KERN_NOTICE "%s: " fmt, __FUNCTION__, ##args))
+ /* Output errors, should never be output in 'normal' operation */
+ //#define DVB_ERROR(fmt, args...) (printk(KERN_CRIT "ERROR in %s: " fmt, __FUNCTION__, ##args))
+-#define DVB_ERROR(fmt, args...) (printk_ratelimit() && printk(KERN_CRIT "ERROR in %s: " fmt, __FUNCTION__, ##args))
++#define DVB_ERROR(fmt, args...) do if (printk_ratelimit()) printk(KERN_CRIT "ERROR in %s: " fmt, __FUNCTION__, ##args); while(0)
+ 
+ #define DVB_ASSERT(x) do if(!(x)) printk(KERN_CRIT "%s: Assertion '%s' failed at %s:%d\n", \
+ 												 __FUNCTION__, #x, __FILE__, __LINE__); while(0)
+Index: b/player2/linux/drivers/media/dvb/stm/dvb/dvb_ca.c
+===================================================================
+--- a/player2/linux/drivers/media/dvb/stm/dvb/dvb_ca.c
++++ b/player2/linux/drivers/media/dvb/stm/dvb/dvb_ca.c
+@@ -251,6 +251,7 @@ static int CaIoctl(struct inode *Inode,
+ 			return 0;
+ 			break;
+ 		}
++#if 0
+ 		case CA_SET_DESCR_DATA:
+ 		{
+ 			int altDescr = 40000, sess = 10000;
+@@ -302,6 +303,7 @@ static int CaIoctl(struct inode *Inode,
+ 			return 0;
+ 			break;
+ 		}
++#endif
+ 		default:
+ 			printk("%s: Error - invalid ioctl %08x\n", __FUNCTION__, IoctlCode);
+ 	}

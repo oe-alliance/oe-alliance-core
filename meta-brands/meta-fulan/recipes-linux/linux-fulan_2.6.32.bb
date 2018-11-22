@@ -63,6 +63,7 @@ SRC_URI = "git://github.com/Duckbox-Developers/linux-sh4-2.6.32.71.git;protocol=
     file://st-coprocessor.h \
     file://linux-net_stm24.patch;patch=1 \
     file://taskstats.patch;patch=1 \
+    file://zram.patch;patch=1 \
 "
 
 SRC_URI_append_spark7162 = " \
@@ -91,6 +92,7 @@ PARALLEL_MAKEINST = ""
 EXTRA_OEMAKE_prepend = " ${PARALLEL_MAKE} "
 
 PACKAGES =+ "kernel-headers"
+INSANE_SKIP_${PN} += "installed-vs-shipped"
 FILES_kernel-headers = "${exec_prefix}/src/linux*"
 FILES_${KERNEL_PACKAGE_NAME}-dev += "${includedir}/linux"
 FILES_${KERNEL_PACKAGE_NAME}-image = "/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}"

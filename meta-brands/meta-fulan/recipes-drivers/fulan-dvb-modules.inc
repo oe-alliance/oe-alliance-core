@@ -16,7 +16,7 @@ inherit module
 
 PACKAGES = "${PN} ${PN}-dev"
 
-INC_PR = "r47"
+INC_PR = "r48"
 PV = "${KV}+${SRCDATE}"
 
 PTI_NP_PATH ?= "/data/pti_np"
@@ -26,12 +26,21 @@ FILESEXTRAPATHS_prepend := "${THISDIR}/fulan-dvb-modules:"
 SRC_URI = " \
     git://github.com/Duckbox-Developers/driver.git;protocol=git \
     file://aotom_spark_procfs.patch;patch=1 \
+    file://silence_stmerger_printk.patch;patch=1 \
+    file://ddt-driver-avoid-buildtime.patch \
+    file://ddt-driver-bpamem-auto-deallocate.patch \
+    file://ddt-driver-backward-compat.patch;patch=1 \
+    file://ddt-driver-silence-dvbdemux.patch;patch=1 \
+    file://ddt-driver-silence-misc-drivers.patch;patch=1 \
+    file://spark_dvbapi5-stv090x-fix-up-GM990-ix7306-tuning.patch;patch=1 \
+    file://bpamem-new-toolchain-workaround.diff \
     file://ddbootup \
     file://sh4booster \
     file://modules.conf \
     file://modules-conf.conf \
     file://COPYING \
-    file://Compcache.patch \
+    file://compcache.patch;patch=1 \
+    file://Compcache.patch;patch=1 \
 " 
 
 FILES_${PN} = "${sysconfdir}/init.d ${sysconfdir}/rcS.d ${sysconfdir}/modules-load.d ${sysconfdir}/modprobe.d"

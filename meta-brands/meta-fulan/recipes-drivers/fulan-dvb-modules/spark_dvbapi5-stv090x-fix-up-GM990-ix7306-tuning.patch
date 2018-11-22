@@ -1,0 +1,51 @@
+From b478e402ccbcdb9e49f4b4258d9563852faa4be2 Mon Sep 17 00:00:00 2001
+From: Stefan Seyfried <seife@tuxbox-git.slipkontur.de>
+Date: Sun, 17 Jun 2018 21:33:35 +0200
+Subject: [PATCH] spark_dvbapi5/stv090x: fix up GM990 (ix7306) tuning
+
+This combo needs the 2V AGC mode or some channels will not tune
+---
+ frontends/spark_dvbapi5/core.c    |  1 +
+ frontends/spark_dvbapi5/stv090x.c | 14 ++++++++++++++
+ 2 files changed, 15 insertions(+)
+
+diff --git a/frontends/spark_dvbapi5/core.c b/frontends/spark_dvbapi5/core.c
+index 06eac1a4..c407bb4d 100644
+--- a/frontends/spark_dvbapi5/core.c
++++ b/frontends/spark_dvbapi5/core.c
+@@ -104,6 +104,7 @@ static struct dvb_frontend *frontend_init(struct core_config *cfg, int i)
+ 				{
+ 					printk("%s: IX7306 attached\n", __FUNCTION__);
+ 					//stv090x_config.xtal = 4000000;
++					stv090x_config.adc1_range = STV090x_ADC_2Vpp,
+ 					stv090x_config.agc_rf1_inv = 1;
+ 					stv090x_config.tuner_set_frequency = ix7306_set_frequency;
+ 					stv090x_config.tuner_get_frequency = ix7306_get_frequency;
+diff --git a/frontends/spark_dvbapi5/stv090x.c b/frontends/spark_dvbapi5/stv090x.c
+index cb286b01..e3e3952e 100644
+--- a/frontends/spark_dvbapi5/stv090x.c
++++ b/frontends/spark_dvbapi5/stv090x.c
+@@ -5732,6 +5732,20 @@ static int stv090x_init(struct dvb_frontend *fe)
+ 	if (stv090x_write_reg(state, STV090x_AGCRF2CFG, reg) < 0)
+ 		goto err;
+ 	printk("stv090x_init: AGCRF2CFG = 0x%02X\n", reg);
++	/* ADC1 range */
++	reg = stv090x_read_reg(state, STV090x_TSTTNR1);
++	STV090x_SETFIELD(reg, ADC1_INMODE_FIELD,
++					 (config->adc1_range == STV090x_ADC_1Vpp) ? 0 : 1);
++	if (stv090x_write_reg(state, STV090x_TSTTNR1, reg) < 0)
++		goto err;
++	printk("stv090x_init: TSTTNR1 = 0x%02X (range %d)\n", reg, config->adc1_range);
++	/* ADC2 range */
++	reg = stv090x_read_reg(state, STV090x_TSTTNR3);
++	STV090x_SETFIELD(reg, ADC2_INMODE_FIELD,
++					 (config->adc2_range == STV090x_ADC_1Vpp) ? 0 : 1);
++	if (stv090x_write_reg(state, STV090x_TSTTNR3, reg) < 0)
++		goto err;
++	printk("stv090x_init: TSTTNR3 = 0x%02X (range %d)\n", reg, config->adc2_range);
+ 	if (config->tuner_set_mode)
+ 	{
+ 		if (config->tuner_set_mode(fe, TUNER_WAKE) < 0)
+-- 
+2.16.4
+
