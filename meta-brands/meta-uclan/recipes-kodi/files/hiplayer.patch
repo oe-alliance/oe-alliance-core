@@ -136,8 +136,18 @@ diff -uNr git/system/settings/settings.xml unlib/system/settings/settings.xml
            <level>2</level>
 diff -uNr git/xbmc/Application.cpp unlib/xbmc/Application.cpp
 --- git/xbmc/Application.cpp	2018-03-30 11:39:25.331652373 +0800
-+++ unlib/xbmc/Application.cpp	2018-07-18 16:32:18.238432260 +0800
-@@ -4788,6 +4788,16 @@
++++ unlib/xbmc/Application.cpp	2018-11-12 12:11:51.099832522 +0800
+@@ -560,6 +560,9 @@
+   CLog::Log(LOGNOTICE, "External storage path = %s; status = %s", extstorage.c_str(), extready ? "ok" : "nok");
+ #endif
+ 
++  std::string cmd("echo \"0\" > /proc/stb/vmpeg/0/enable");
++  system(cmd.c_str());
++  CLog::Log(LOGNOTICE,  "Hisi Clear Video backgroud: %s",cmd.c_str());
+ #if defined(__arm__) || defined(__aarch64__)
+   if (g_cpuInfo.GetCPUFeatures() & CPU_FEATURE_NEON)
+     CLog::Log(LOGNOTICE, "ARM Features: Neon enabled");
+@@ -4788,6 +4791,16 @@
    // if player has volume control, set it.
    m_pPlayer->SetVolume(m_volumeLevel);
    m_pPlayer->SetMute(m_muted);

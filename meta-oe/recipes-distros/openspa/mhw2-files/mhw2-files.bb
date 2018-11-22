@@ -8,7 +8,7 @@ inherit allarch
 require conf/license/license-gplv2.inc
 
 PV = "1.0"
-PR = "r0"
+PR = "r1"
 
 SRC_URI = " \
     file://mhw_Chann.epg \

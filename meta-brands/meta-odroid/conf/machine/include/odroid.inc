@@ -19,7 +19,7 @@ CC_append_pn-showiframe = " -DHAVE_AMLOGIC -I${STAGING_INCDIR}/amlogic/amcodec -
 DEPENDS_append_pn-showiframe = " odroid-libamcodec-${MACHINE}"
 
 
-MACHINE_EXTRA_RRECOMMENDS = " \
+MACHINE_EXTRA_RRECOMMENDS += " \
     odroid-libamplayer-${MACHINE} \
     odroid-libamavutils-${MACHINE} \
     odroid-libamadec-${MACHINE} \

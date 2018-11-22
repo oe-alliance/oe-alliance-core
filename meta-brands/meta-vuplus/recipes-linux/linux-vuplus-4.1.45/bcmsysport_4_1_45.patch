@@ -1,0 +1,45 @@
+diff --git a/drivers/net/ethernet/broadcom/bcmsysport.c b/drivers/net/ethernet/broadcom/bcmsysport.c
+index 6fc9b29..0aec0c5 100644
+--- a/drivers/net/ethernet/broadcom/bcmsysport.c
++++ b/drivers/net/ethernet/broadcom/bcmsysport.c
+@@ -2146,7 +2146,7 @@ static int bcm_sysport_probe(struct platform_device *pdev)
+ 	if (!txq || txq > TDMA_NUM_RINGS)
+ 		return -EINVAL;
+ 
+-	dev = alloc_etherdev_mqs(sizeof(*priv), txq, rxq);
++	dev = alloc_etherdev_mqs_sys(sizeof(*priv), txq, rxq);
+ 	if (!dev)
+ 		return -ENOMEM;
+ 
+diff --git a/include/linux/etherdevice.h b/include/linux/etherdevice.h
+index 606563e..6871f20 100644
+--- a/include/linux/etherdevice.h
++++ b/include/linux/etherdevice.h
+@@ -48,6 +48,8 @@ int eth_validate_addr(struct net_device *dev);
+ 
+ struct net_device *alloc_etherdev_mqs(int sizeof_priv, unsigned int txqs,
+ 					    unsigned int rxqs);
++struct net_device *alloc_etherdev_mqs_sys(int sizeof_priv, unsigned int txqs,
++					    unsigned int rxqs);
+ #define alloc_etherdev(sizeof_priv) alloc_etherdev_mq(sizeof_priv, 1)
+ #define alloc_etherdev_mq(sizeof_priv, count) alloc_etherdev_mqs(sizeof_priv, count, count)
+ 
+diff --git a/net/ethernet/eth.c b/net/ethernet/eth.c
+index 76f8389..43c8b72 100644
+--- a/net/ethernet/eth.c
++++ b/net/ethernet/eth.c
+@@ -385,6 +385,14 @@ struct net_device *alloc_etherdev_mqs(int sizeof_priv, unsigned int txqs,
+ }
+ EXPORT_SYMBOL(alloc_etherdev_mqs);
+ 
++struct net_device *alloc_etherdev_mqs_sys(int sizeof_priv, unsigned int txqs,
++				      unsigned int rxqs)
++{
++	return alloc_netdev_mqs(sizeof_priv, "sys%d", NET_NAME_UNKNOWN,
++				ether_setup, txqs, rxqs);
++}
++EXPORT_SYMBOL(alloc_etherdev_mqs_sys);
++
+ ssize_t sysfs_format_mac(char *buf, const unsigned char *addr, int len)
+ {
+ 	return scnprintf(buf, PAGE_SIZE, "%*phC\n", len, addr);

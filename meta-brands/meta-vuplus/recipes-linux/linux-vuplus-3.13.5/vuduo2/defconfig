@@ -1873,7 +1873,7 @@ CONFIG_SMS_SIANO_RC=y
 #
 # Media ancillary drivers (tuners, sensors, i2c, frontends)
 #
-CONFIG_MEDIA_SUBDRV_AUTOSELECT=y
+# CONFIG_MEDIA_SUBDRV_AUTOSELECT is not set
 CONFIG_MEDIA_ATTACH=y
 CONFIG_VIDEO_IR_I2C=y
 

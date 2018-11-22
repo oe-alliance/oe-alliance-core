@@ -33,6 +33,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'zgemmah92s', 'H92S' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah92h', 'H92H' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah9splus', 'H9S PLUS' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmai55plus', 'I55 Plus' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'zgemmah9combo', 'H9 COMBO' , '', d)}\
 "
 
 MACHINE_BRAND = "\
@@ -65,6 +66,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'zgemmah92s', 'Zgemma' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah92h', 'Zgemma' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah9splus', 'Zgemma' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmai55plus', 'Zgemma' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'zgemmah9combo', 'Zgemma' , '', d)}\
 "
 
 IMAGEDIR ?= "\
@@ -97,6 +99,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'zgemmah92s', 'h9' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah92h', 'h9' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah9splus', 'h9' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmai55plus', 'i55plus' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'zgemmah9combo', 'h9combo' , '', d)}\
 "
 
 MACHINE_DRIVER = "\
@@ -129,26 +132,25 @@ ${@bb.utils.contains('MACHINEBUILD', 'zgemmah92s', 'h9' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah92h', 'h9' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah9splus', 'h9' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmai55plus', 'i55plus' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'zgemmah9combo', 'h9combo' , '', d)}\
 "
 
-MACHINE_ESSENTIAL_EXTRA_RDEPENDS = "\
+MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "\
     airdigital-dvb-modules-${MACHINE_DRIVER} \
-    ${@bb.utils.contains('MACHINE_FEATURES', 'hisil-3798mv200', 'airdigital-libs-3798mv200 airdigital-partitions-3798mv200 airdigital-bootargs-${MACHINE}' , '', d)} \
     "
 
 DVBPROVIDER = "kernel"
 DVBSKYPROVIDER = "kernel"
 
-MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS = "\
+MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS += "\
     kernel-module-cdfs \
     ${@bb.utils.contains('MACHINE_FEATURES', 'qtegls', 'airdigital-qteglfs-platform', '',d)} \
     ${@bb.utils.contains('MACHINE_FEATURES', 'swap', 'airdigital-swapcreate', '',d)} \
-    ${@bb.utils.contains('MACHINE_FEATURES', 'mali', 'airdigital-mali-${MACHINE} kernel-module-mali-${MACHINE}' , '', d)} \
+    ${@bb.utils.contains('MACHINE_FEATURES', 'emmc', 'resizerootfs' , '', d)} \
     "
 
-MACHINE_EXTRA_RRECOMMENDS = " \
+MACHINE_EXTRA_RRECOMMENDS += " \
     gstreamer1.0-plugin-dvbmediasink \
-    ${@bb.utils.contains('MACHINE', 'hisil-3798mv200', 'ffmpeg' , 'gstreamer1.0-libav ', d)} \
     "
 
 include conf/machine/include/autoload-filesystems.inc
@@ -160,12 +162,11 @@ DVBMEDIASINK_CONFIG = "--with-wma --with-wmv --with-pcm --with-dts --with-eac3 \
     ${@bb.utils.contains('MACHINE', 'h6', '--with-h265 --with-vb6 --with-vb8 --with-spark' , '', d)} \
     ${@bb.utils.contains('MACHINE', 'h7', '--with-h265 --with-vb6 --with-vb8 --with-vb9 --with-spark' , '', d)} \
     ${@bb.utils.contains('MACHINE', 'h9', '--with-h265 --with-vb6 --with-vb8 --with-vb9 --with-spark' , '', d)} \
+    ${@bb.utils.contains('MACHINE', 'h9combo', '--with-h265 --with-vb6 --with-vb8 --with-vb9 --with-spark' , '', d)} \
     ${@bb.utils.contains('MACHINE', 'i55plus', '--with-h265 --with-vb6 --with-vb8 --with-vb9 --with-spark' , '', d)} \
     "
 
 PREFERRED_PROVIDER_virtual/kernel = "linux-airdigital"
-PREFERRED_PROVIDER_virtual/egl ?= "airdigital-v3ddriver-${MACHINE}" 
-PREFERRED_PROVIDER_virtual/libgles2 ?= "airdigital-v3ddriver-${MACHINE}"
 PREFERRED_PROVIDER_virtual/kodi = "stb-kodi-${MACHINE}"
 
 MACHINE_FEATURES += "3dtv alsa hdmicec switchoff blindscan-tbs HDMI"

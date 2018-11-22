@@ -1,0 +1,13 @@
+#!/bin/sh
+
+if ! test -e /.resizerootfs
+then
+    if grep -q mmcblk1p3 /proc/cmdline
+    then
+        echo "Resizing /dev/mmcblkp3, Do not unplug power!..."
+        resize2fs /dev/mmcblk1p3
+        touch /.resizerootfs
+    fi
+fi
+
+: exit 0

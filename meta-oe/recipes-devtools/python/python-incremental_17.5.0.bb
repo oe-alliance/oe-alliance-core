@@ -10,7 +10,7 @@ SRC_URI = "https://files.pythonhosted.org/packages/source/i/incremental/incremen
 SRC_URI[md5sum] = "602746e0d438e075a5a9e0678140bba2"
 SRC_URI[sha256sum] = "7b751696aaf36eebfab537e458929e194460051ccad279c72b755a167eebd4b3"
 
-UPSTREAM_CHECK_URI = "https://pypi.python.org/pypi/incremental/"
+UPSTREAM_CHECK_URI = "https://pypi.org/project/incremental/"
 UPSTREAM_CHECK_REGEX = "/incremental/(?P<pver>(\d+[\.\-_]*)+)"
 
 S = "${WORKDIR}/incremental-${PV}"

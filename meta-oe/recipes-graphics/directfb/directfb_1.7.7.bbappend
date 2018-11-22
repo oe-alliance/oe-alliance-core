@@ -9,6 +9,9 @@ EXTRA_DIRECTFB_vuultimo4k = "vuplus"
 EXTRA_DIRECTFB_vuuno4k = "vuplus"
 EXTRA_DIRECTFB_vuuno4kse = "vuplus"
 EXTRA_DIRECTFB_vuzero4k = "vuplus"
-EXTRA_DIRECTFB_cc1 = "clap"
+EXTRA_DIRECTFB_vuduo4k = "vuplus"
+EXTRA_DIRECTFB_cc1 = "hisi"
+EXTRA_DIRECTFB_sf8008 = "hisi"
+EXTRA_DIRECTFB_ustym4kpro = "hisi"
 
 require directfb-${EXTRA_DIRECTFB}_1.7.7.inc
