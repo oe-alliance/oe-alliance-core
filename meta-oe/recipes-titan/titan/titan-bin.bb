@@ -151,7 +151,7 @@ GST_BAD_OPUS = " \
 	"
 
 GST_UGLY_RDEPS = "${@bb.utils.contains('GST_VERSION', '1.0', ' \
-	gstreamer1.0-plugins-ugly-amrnb \
+	gstreamer1.0-plugins-ugl42938y-amrnb \
 	gstreamer1.0-plugins-ugly-amrwbdec \
 	gstreamer1.0-plugins-ugly-asf \
 	gstreamer1.0-plugins-ugly-cdio \
@@ -249,6 +249,8 @@ do_compile() {
 	SVNVERSION=`svn info http://sbnc.dyndns.tv/svn/titan | grep Revision | sed s/'Revision: '//g`
 	echo SVNVERSION: ${SVNVERSION}
 
+	echo HOST_SYS ${HOST_SYS}
+	echo ./oealliance.sh $KERNELDIR $ROOTDIR $TYPE $SRCDIR $CPU $STM $BOXNAME $SVNVERSION
 	./oealliance.sh $KERNELDIR $ROOTDIR $TYPE $SRCDIR $CPU $STM $BOXNAME $SVNVERSION
 
 	cd ${WORKDIR}/titan/titan
