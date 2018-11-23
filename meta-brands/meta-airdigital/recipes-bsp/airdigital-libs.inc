@@ -7,7 +7,7 @@ RDEPENDS_${PN} = "libbluray"
 PR = "${SRCDATE}"
 LIBSVER ?= "${@bb.utils.contains('TARGET_ARCH', 'aarch64', '64' , '', d)}"
 
-SRC_URI = "http://source.mynonpublic.com/zgemma/zgemma-libs${LIBSVER}-3798mv200-${SRCDATE}.zip"
+SRC_URI = "http://source.mynonpublic.com/zgemma/zgemma-libs${LIBSVER}-${HICHIPSET}-${SRCDATE}.zip"
 
 S = "${WORKDIR}"
 
@@ -22,7 +22,10 @@ FILES_SOLIBSDEV = ""
 do_install() {
 	install -d ${D}${libdir}/hisilicon
 	install -m 0755 ${S}/hisilicon/* ${D}${libdir}/hisilicon
+	install -m 0755 ${S}/ffmpeg/* ${D}${libdir}/hisilicon
+	install -m 0755 ${S}/glibc/* ${D}${libdir}/hisilicon
 }
+
 
 do_package_qa() {
 }
