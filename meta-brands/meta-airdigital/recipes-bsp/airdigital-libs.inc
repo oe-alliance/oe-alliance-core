@@ -24,13 +24,12 @@ do_install() {
 	install -m 0755 ${S}/hisilicon/* ${D}${libdir}/hisilicon
 	install -m 0755 ${S}/ffmpeg/* ${D}${libdir}/hisilicon
 	install -m 0755 ${S}/glibc/* ${D}${libdir}/hisilicon
-	ln -sf /lib/ld-linux-armhf.so.3 ${D}${libdir}/hisilicon/ld-linux.so
 }
 
 
 do_package_qa() {
 }
 
-FILES_${PN} = "${libdir}/hisilicon/* /lib"
+FILES_${PN} = "${libdir}/hisilicon/*"
 
 INSANE_SKIP_${PN} += "ldflags already-stripped dev-so"
