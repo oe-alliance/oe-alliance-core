@@ -31,6 +31,7 @@ do_install() {
 	install -m 0755 ${S}/wl ${D}${bindir}
 	install -m 0755 ${S}/wl-config.sh ${D}${bindir}
 	install -m 0755 ${S}/wl-down.sh ${D}${bindir}
+	sed  's!wl ssid $SSID!wl ssid "$SSID"!' -i ${D}${bindir}/wl-config.sh
 
 	install -d ${D}/usr/local/modules
 	install -m 0644 ${S}/dhd.ko ${D}/usr/local/modules/dhd.ko
