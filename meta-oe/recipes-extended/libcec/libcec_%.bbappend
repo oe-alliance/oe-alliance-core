@@ -10,3 +10,4 @@ EXTRA_OECMAKE += " -DBASE_LIB=${libdir}"
 
 RDEPENDS_${PN} += "python"
 RDEPENDS_${PN}-tools += "python"
+RDEPENDS_${PN}_remove = "python3-core"
