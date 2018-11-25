@@ -20,7 +20,9 @@ if [ -d /home/root/platform ]; then
   mv -f /home/root/platform /usr/share/
   chmod +x /usr/share/platform/*
   mv -f /usr/share/platform/*.so /usr/lib
-  mv -f /usr/share/platform/config /usr/bin
+  if [ -e /usr/share/platform/config ]; then
+    mv -f /usr/share/platform/config /usr/bin
+  fi
   sync
   echo -n "gigablue-platform-util updated!"
 fi
@@ -30,7 +32,8 @@ case "$1" in
     # first boot?
     [ -f /etc/dropbear/dropbear_rsa_host_key ]
     echo -n "Starting gigablue-platform-util..."
-    if [ ! -e /dev/bcm_enc0 ]; then
+
+    if [ ! -e /tmp/nxserver_is_running ]; then
       export PATH=.:$PATH
       export B_REFSW_BOXMODE=5
       insmod /usr/share/platform/nexus.ko
@@ -40,8 +43,14 @@ case "$1" in
       while [ ! -e /tmp/nxserver_is_running ]; do
         usleep 1000
       done
+    fi
+
+    if [ ! -e /tmp/dvb_init_is_running ]; then
       insmod /usr/share/platform/dvb.ko
       ./dvb_init.bin &
+      while [ ! -e /tmp/dvb_init_is_running ]; do
+        usleep 1000
+      done
     fi
 
     while [ ! -e /proc/stb/info/chipset ]; do

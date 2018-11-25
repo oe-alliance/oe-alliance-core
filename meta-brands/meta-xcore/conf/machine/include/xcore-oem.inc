@@ -115,7 +115,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'osminiplus', 'rootfs.bin' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'osmega', 'rootfs.bin' , '', d)}\
 "
 
-MACHINE_ESSENTIAL_EXTRA_RDEPENDS = "\
+MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "\
     xcore-dvb-modules-${MACHINE_DRIVER} \
     "
 

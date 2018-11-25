@@ -65,6 +65,7 @@ PYTHON_RDEPS = " \
     python-subprocess \
     python-process \
     python-imaging \
+    python-smtpd \
     "
 
 GST_BASE_RDEPS = "${@bb.utils.contains('GST_VERSION', '1.0', ' \

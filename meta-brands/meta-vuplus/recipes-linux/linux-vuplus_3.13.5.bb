@@ -5,7 +5,7 @@ KV = "3.13.5"
 
 inherit kernel machine_kernel_pr
 
-MACHINE_KERNEL_PR_append = "oea4.3-r1"
+MACHINE_KERNEL_PR_append = "oea4.3-r3"
 
 SRC_URI[md5sum] = "19e9956653437b99b4fa6ec3e16a3e99"
 SRC_URI[sha256sum] = "ef7fb307582ff243aacff8a13025fe028634aaf650ada309991ae03622962f61"
@@ -44,6 +44,13 @@ SRC_URI = "http://archive.vuplus.com/download/kernel/stblinux-${KV}.tar.bz2 \
     file://blindscan2.patch \
     ${@bb.utils.contains("MACHINE_FEATURES", "dvbproxy", "file://linux_dvb_adapter.patch;patch=1;pnum=1", "", d)} \
     file://genksyms_fix_typeof_handling.patch \
+    file://test.patch \
+    file://0001-tuners-tda18273-silicon-tuner-driver.patch \
+    file://T220-kern-13.patch \
+    file://01-10-si2157-Silicon-Labs-Si2157-silicon-tuner-driver.patch \
+    file://02-10-si2168-Silicon-Labs-Si2168-DVB-T-T2-C-demod-driver.patch \
+    file://CONFIG_DVB_SP2.patch \
+    file://dvbsky.patch \
     "
 
 SRC_URI_append_vuduo2 = "file://brcm_s3_wol.patch;patch=1;pnum=1 "

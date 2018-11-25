@@ -1,0 +1,83 @@
+From 25200ab0703d1b91214908c090115e32687b39a7 Mon Sep 17 00:00:00 2001
+From: Azat Kurbanov <cordalace@gmail.com>
+Date: Mon, 13 Nov 2017 03:19:57 +0300
+Subject: [PATCH 1/7] Fixes for sort_keys bug and a typo.
+
+    - Fixed segfault when using sort_keys=True on dict with unorderable keys (GH247)
+
+    - Fixed refcount becoming negative when using sort_keys=True (GH243)
+
+    - Fixed compile error when defining JSON_NO_EXTRA_WHITESPACE
+      caused by a wrongly named variable. (GH245)
+
+Patch info:
+    Author: Joakim Hamren <joakim.hamren@gmail.com>
+    Date:   Sat Feb 4 01:07:52 2017 +0100
+---
+ lib/ultrajsonenc.c | 14 +++++++++++---
+ python/objToJSON.c |  2 +-
+ 2 files changed, 12 insertions(+), 4 deletions(-)
+
+diff --git a/lib/ultrajsonenc.c b/lib/ultrajsonenc.c
+index 6c1b120..15fbddb 100644
+--- a/lib/ultrajsonenc.c
++++ b/lib/ultrajsonenc.c
+@@ -718,7 +718,7 @@ void encode(JSOBJ obj, JSONObjectEncoder *enc, const char *name, size_t cbName)
+ {
+   const char *value;
+   char *objName;
+-  int count;
++  int count, res;
+   JSOBJ iterObj;
+   size_t szlen;
+   JSONTypeContext tc;
+@@ -792,7 +792,7 @@ void encode(JSOBJ obj, JSONObjectEncoder *enc, const char *name, size_t cbName)
+           {
+             Buffer_AppendCharUnchecked (enc, ',');
+ #ifndef JSON_NO_EXTRA_WHITESPACE
+-            Buffer_AppendCharUnchecked (buffer, ' ');
++            Buffer_AppendCharUnchecked (enc, ' ');
+ #endif
+             Buffer_AppendIndentNewlineUnchecked (enc);
+           }
+@@ -819,8 +819,16 @@ void encode(JSOBJ obj, JSONObjectEncoder *enc, const char *name, size_t cbName)
+     Buffer_AppendCharUnchecked (enc, '{');
+     Buffer_AppendIndentNewlineUnchecked (enc);
+ 
+-    while (enc->iterNext(obj, &tc))
++    while ((res = enc->iterNext(obj, &tc)))
+     {
++      if(res < 0)
++      {
++        enc->iterEnd(obj, &tc);
++        enc->endTypeContext(obj, &tc);
++        enc->level--;
++        return;
++      }
++
+       if (count > 0)
+       {
+         Buffer_AppendCharUnchecked (enc, ',');
+diff --git a/python/objToJSON.c b/python/objToJSON.c
+index 04a4575..4ec9964 100644
+--- a/python/objToJSON.c
++++ b/python/objToJSON.c
+@@ -537,6 +537,7 @@ int SortedDict_iterNext(JSOBJ obj, JSONTypeContext *tc)
+     // Sort the list.
+     if (PyList_Sort(items) < 0)
+     {
++      PyErr_SetString(PyExc_ValueError, "unorderable keys");
+       goto error;
+     }
+ 
+@@ -607,7 +608,6 @@ void SortedDict_iterEnd(JSOBJ obj, JSONTypeContext *tc)
+ {
+   GET_TC(tc)->itemName = NULL;
+   GET_TC(tc)->itemValue = NULL;
+-  Py_DECREF(GET_TC(tc)->newObj);
+   Py_DECREF(GET_TC(tc)->dictObj);
+   PRINTMARK();
+ }
+-- 
+2.19.1.windows.1
+

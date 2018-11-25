@@ -21,5 +21,7 @@ RRECOMMENDS_${PN} = "\
     enigma2-plugin-skins-octagonhdstyleblack \
     enigma2-plugin-skins-pli-hd \
     enigma2-plugin-skins-octagon-blue-line \
+    enigma2-plugin-skins-octagoneightfhd \
+    enigma2-plugin-skins-octagoneightsd \
     enigma2-plugin-skincomponents-mediaportal-blue-line-skin \
     "

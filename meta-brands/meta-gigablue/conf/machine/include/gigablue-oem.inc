@@ -163,14 +163,14 @@ ${@bb.utils.contains('MACHINEBUILD', 'gbquad4k', 'rootfs.tar.bz2' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbue4k', 'rootfs.tar.bz2' , '', d)}\
 "
 
-MACHINE_ESSENTIAL_EXTRA_RDEPENDS = " \
+MACHINE_ESSENTIAL_EXTRA_RDEPENDS += " \
     ${@bb.utils.contains("MACHINE_FEATURES", "nexusplatform", "gigablue-platform-util-${MACHINE_DRIVER}", "gigablue-dvb-modules-${MACHINE_DRIVER}", d)} \
     gigablue-ddbootup \
     "
 
 DVBPROVIDER = "kernel"
 
-MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS = " \
+MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS += " \
     kernel-module-cdfs \
     kernel-module-zram \
     kernel-module-ext2 \
@@ -183,19 +183,19 @@ MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS = " \
     ${@bb.utils.contains('MACHINE_FEATURES', 'qtegls', 'gb-qteglfs-platform', '',d)} \
     "
 
-MACHINE_EXTRA_RRECOMMENDS = " \
+MACHINE_EXTRA_RRECOMMENDS += " \
     gstreamer1.0-plugin-dvbmediasink \
     gstreamer1.0-libav \
     gigablue-cfe \
     ${@bb.utils.contains('DISTRO_FEATURES', 'audioeffect', 'enigma2-plugin-systemplugins-audioeffect' , '', d)} \
-	${@bb.utils.contains('MACHINE', 'gb7252', 'gigablue-initrd-cfe-${MACHINE_DRIVER}' , '', d)} \
+	${@bb.utils.contains('MACHINE', 'gb7252', 'gigablue-initrd-cfe-${MACHINEBUILD}' , '', d)} \
     "
 
 EXTRA_IMAGEDEPENDS += "\
     enigma2-plugin-systemplugins-vfdcontrol \
     "
 
-MACHINE_EXTRA_RDEPENDS = "\
+MACHINE_EXTRA_RDEPENDS += "\
     enigma2-plugin-systemplugins-vfdcontrol \
     ${@bb.utils.contains('MACHINE', 'gb7252', 'enigma2-plugin-systemplugins-remotecontrolcode' , '', d)} \
     ${@bb.utils.contains('MACHINEBUILD', 'gb800solo', 'mtd-utils-jffs2' , '', d)} \
@@ -219,7 +219,7 @@ MACHINE_FEATURES += "3dtv alsa hdmicec switchoff bootsplash skins1080 blindscan-
 ${@bb.utils.contains('MACHINEBUILD', 'gb800se', 'SCART YUV RCA' , '', d)} \
 ${@bb.utils.contains('MACHINEBUILD', 'gb800seplus', 'YUV RCA' , '', d)} \
 ${@bb.utils.contains('MACHINEBUILD', 'gb800solo', 'SCART YUV RCA' , '', d)} \
-${@bb.utils.contains('MACHINEBUILD', 'gb800ue', 'YUV RCA' , '', d)} \
+${@bb.utils.contains('MACHINEBUILD', 'gb800ue', 'SCART YUV RCA' , '', d)} \
 ${@bb.utils.contains('MACHINEBUILD', 'gb800ueplus', 'YUV RCA' , '', d)} \
 ${@bb.utils.contains('MACHINEBUILD', 'gbquad', 'YUV RCA' , '', d)} \
 ${@bb.utils.contains('MACHINEBUILD', 'gbquadplus', 'YUV RCA' , '', d)} \

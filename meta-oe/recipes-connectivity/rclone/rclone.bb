@@ -25,7 +25,7 @@ Yandex Disk \
 The local filesystem"
 HOMEPAGE = "https://rclone.org/"
 
-DEPENDS = "go-cross-${TARGET_ARCH}"
+DEPENDS = "go-cross-${TUNE_PKGARCH}"
 RDEPENDS_${PN} += "bash"
 
 # Don't use gitpkgv here ...

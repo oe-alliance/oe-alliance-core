@@ -23,7 +23,7 @@ MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "\
 
 include conf/machine/include/autoload-usbserial.inc
 
-MACHINE_EXTRA_RRECOMMENDS = " \
+MACHINE_EXTRA_RRECOMMENDS += " \
     gstreamer1.0-plugin-dvbmediasink \
     ntfs-3g \
     kernel-module-hmac \
@@ -31,7 +31,7 @@ MACHINE_EXTRA_RRECOMMENDS = " \
     tpmd \
 "
 
-MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS = "\
+MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS += "\
     kernel-module-cifs \
     kernel-module-ntfs \
     kernel-module-iso9660 \

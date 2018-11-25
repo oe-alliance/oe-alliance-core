@@ -80,6 +80,7 @@ do_compile_append_sh4() {
 do_compile_append_cube() {
     echo "arch mips32el $priority" >> $archconf
     echo "arch mipsel $priority" >> $archconf
+    echo "arch armv7a $priority" >> $archconf
 }
 
 do_compile_append_AML8726() {

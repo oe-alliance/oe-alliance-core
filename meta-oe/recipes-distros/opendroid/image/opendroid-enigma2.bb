@@ -7,7 +7,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PV = "6.7"
-PR = "r4"
+PR = "r5"
 
 inherit packagegroup
 
@@ -26,6 +26,7 @@ RRECOMMENDS_${PN} = " \
     enigma2-plugin-extensions-graphmultiepg \
     enigma2-plugin-extensions-epgimport \
     enigma2-plugin-extensions-cutlisteditor \
+    enigma2-plugin-extensions-volume-adjust \
     enigma2-plugin-systemplugins-videotune \
     ${@bb.utils.contains("MACHINE_FEATURES", "videoenhancement", "", "enigma2-plugin-systemplugins-videoenhancement", d)} \
     enigma2-plugin-systemplugins-softwaremanager \

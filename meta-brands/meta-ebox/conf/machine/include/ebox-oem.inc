@@ -51,12 +51,12 @@ ${@bb.utils.contains('MACHINEBUILD', 'gi9196m', 'mtd2' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gi9196lite', 'mtd2' , '', d)}\
 "
 
-MACHINE_ESSENTIAL_EXTRA_RDEPENDS = "\
+MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "\
     ebox-dvb-modules-${MACHINE} \
     ebox-shutdown \
     "
     
-MACHINE_EXTRA_RRECOMMENDS = " \
+MACHINE_EXTRA_RRECOMMENDS += " \
     gstreamer1.0-plugin-dvbmediasink \
     "
 

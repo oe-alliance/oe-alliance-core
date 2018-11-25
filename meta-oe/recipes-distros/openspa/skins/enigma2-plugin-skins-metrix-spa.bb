@@ -32,7 +32,7 @@ FILES_${PN}-src = "\
     ${libdir}/enigma2/python/Plugins/Extensions/MyMetrixLite/*.py \
     "
 
-FILES_${PN} = "${libdir} /usr/share"
+FILES_${PN} = "${libdir} /usr/share ${sysconfdir}"
 
 do_compile() {
 	python -O -m compileall ${S}/usr

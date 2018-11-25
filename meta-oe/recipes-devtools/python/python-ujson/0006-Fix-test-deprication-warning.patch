@@ -1,0 +1,25 @@
+From 2c34064c37e8e105ff81d82988162d53a392ebe6 Mon Sep 17 00:00:00 2001
+From: Azat Kurbanov <cordalace@gmail.com>
+Date: Mon, 13 Nov 2017 03:29:35 +0300
+Subject: [PATCH 6/7] Fix: test: deprication warning
+
+---
+ tests/tests.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tests/tests.py b/tests/tests.py
+index 841dd10..61176a6 100644
+--- a/tests/tests.py
++++ b/tests/tests.py
+@@ -702,7 +702,7 @@ class UltraJSONTests(unittest.TestCase):
+ 
+         output = ujson.encode(ObjectTest())
+         dec = ujson.decode(output)
+-        self.assertEquals(dec, {})
++        self.assertEqual(dec, {})
+ 
+     def test_toDict(self):
+         d = {"key": 31337}
+-- 
+2.19.1.windows.1
+

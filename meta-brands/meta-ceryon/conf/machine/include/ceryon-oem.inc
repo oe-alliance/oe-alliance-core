@@ -19,6 +19,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'sf228', 'SF228 E2 HD LCD TWIN' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'sf238', 'SF228 E2 HD LCD TWIN' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', '9910lx', '9910LX' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', '9911lx', '9911LX' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', '9920lx', '9920LX' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'e4hdultra', 'E4HD Ultra 4k' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'protek4k', '4K UHD' , '', d)}\
 "
@@ -39,6 +40,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'sf228', 'OCTAGON' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'sf238', 'OCTAGON' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', '9910lx', 'Protek' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', '9911lx', 'Protek' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', '9920lx', 'Protek' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'e4hdultra', 'AXAS' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'protek4k', 'PROTEK' , '', d)}\
 "
@@ -59,6 +61,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'sf228', 'sf228' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'sf238', 'sf228' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', '9910lx', '9910lx' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', '9911lx', '9911lx' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', '9920lx', '9920lx' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'e4hdultra', 'e4hd' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'protek4k', 'protek4k' , '', d)}\
 "
@@ -79,6 +82,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'sf228', 'mtd1' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'sf238', 'mtd1' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', '9910lx', 'mtd1' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', '9911lx', 'mtd1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', '9920lx', 'mtd1' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'e4hdultra', 'mmcblk0p2' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'protek4k', 'mmcblk0p2' , '', d)}\
 "
@@ -99,6 +103,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'sf228', 'mtd2' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'sf238', 'mtd2' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', '9910lx', 'mtd2' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', '9911lx', 'mtd2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', '9920lx', 'mtd2' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'e4hdultra', 'mmcblk0p3' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'protek4k', 'mmcblk0p3' , '', d)}\
 "
@@ -119,6 +124,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'sf228', 'kernel.bin' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'sf238', 'kernel.bin' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', '9910lx', 'kernel.bin' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', '9911lx', 'kernel.bin' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', '9920lx', 'kernel.bin' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'e4hdultra', 'kernel.bin' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'protek4k', 'kernel.bin' , '', d)}\
 "
@@ -139,6 +145,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'sf228', 'rootfs.bin' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'sf238', 'rootfs.bin' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', '9910lx', 'rootfs.bin' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', '9911lx', 'rootfs.bin' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', '9920lx', 'rootfs.bin' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'e4hdultra', 'rootfs.tar.bz2' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'protek4k', 'rootfs.tar.bz2' , '', d)}\
 "
@@ -159,6 +166,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'sf228', '7210s' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'sf238', '7215s' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', '9910lx', '7220s' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', '9911lx', '7225s' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', '9920lx', '7225s' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'e4hdultra', 'e4hd' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'protek4k', 'protek4k' , '', d)}\
 "
@@ -204,6 +212,7 @@ MACHINE_FEATURES += "3dtv alsa hdmicec switchoff videoenhancement skins1080 blin
     ${@bb.utils.contains('MACHINEBUILD', 'e4hdhybrid', 'dvb-c dvbc-only' , '', d)} \
     ${@bb.utils.contains('MACHINEBUILD', 'e4hdcombo', 'dvb-c' , '', d)} \
     ${@bb.utils.contains('MACHINEBUILD', '9911lx', 'dvb-c' , '', d)} \
+    ${@bb.utils.contains('MACHINEBUILD', '9920lx', 'dvb-c' , '', d)} \
 "
 
 BOOTLOGO_FILENAME = "splash.bin"

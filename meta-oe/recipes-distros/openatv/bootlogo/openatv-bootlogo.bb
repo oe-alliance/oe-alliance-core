@@ -23,6 +23,7 @@ INITSCRIPT_PARAMS_vuuno4k = "start 70 S ."
 INITSCRIPT_PARAMS_vuuno4kse = "start 70 S ."
 INITSCRIPT_PARAMS_vuultimo4k = "start 70 S ."
 INITSCRIPT_PARAMS_vuzero4k = "start 70 S ."
+INITSCRIPT_PARAMS_vuduo4k = "start 70 S ."
 INITSCRIPT_PARAMS_gb7252 = "start 70 S ."
 PRECOMPILED_ARCH = "${MACHINE}"
 PRECOMPILED_ARCH_dm7020hdv2 = "dm7020hd"
@@ -45,6 +46,8 @@ SRC_URI_append_7105s = "file://lcdsplash220.bin file://7100s/lcdwaitkey220.bin f
 SRC_URI_append_7215s = "file://lcdsplash220.bin file://7100s/lcdwaitkey220.bin file://7100s/lcdwarning220.bin file://7100s/lcdcomplete220.bin"
 SRC_URI_append_8100s = "file://7100s/lcdwarning220.bin"
 SRC_URI_append_h9 = "file://logo.img"
+SRC_URI_append_h9combo = "file://logo.img"
+SRC_URI_append_i55plus = "file://logo.img"
 SRC_URI_append_hd60 = "file://logo.img"
 SRC_URI_append_cc1 = "file://logo.img"
 SRC_URI_append_sf8008 = "file://logo.img"
@@ -128,7 +131,7 @@ inherit deploy
 do_deploy() {
     if [ "${MACHINE}" = "dags7252" ]; then
         install -m 0644 atv_splash.bmp ${DEPLOYDIR}/${BOOTLOGO_FILENAME}
-    elif [ "${MACHINE}" = "vuduo" ] || [ "${MACHINE}" = "vuduo2" ] || [ "${MACHINE}" = "vuuno" ] || [ "${MACHINE}" = "vusolo" ] || [ "${MACHINE}" = "vusolose" ] || [ "${MACHINE}" = "vuultimo" ] || [ "${MACHINE}" = "vuzero" ] || [ "${MACHINE}" = "vusolo4k" ] || [ "${MACHINE}" = "vuuno4k" ] || [ "${MACHINE}" = "vuuno4kse" ] || [ "${MACHINE}" = "vuultimo4k" ] || [ "${MACHINE}" = "vuzero4k" ] || [ "${BRAND_OEM}" = "dags" ]; then
+    elif [ "${MACHINE}" = "vuduo" ] || [ "${MACHINE}" = "vuduo2" ] || [ "${MACHINE}" = "vuuno" ] || [ "${MACHINE}" = "vusolo" ] || [ "${MACHINE}" = "vusolose" ] || [ "${MACHINE}" = "vuultimo" ] || [ "${MACHINE}" = "vuzero" ] || [ "${MACHINE}" = "vusolo4k" ] || [ "${MACHINE}" = "vuuno4k" ] || [ "${MACHINE}" = "vuuno4kse" ] || [ "${MACHINE}" = "vuultimo4k" ] || [ "${MACHINE}" = "vuzero4k" ] || [ "${MACHINE}" = "vuduo4k" ] || [ "${BRAND_OEM}" = "dags" ]; then
         install -m 0644 splash480.bmp ${DEPLOYDIR}/${BOOTLOGO_FILENAME}
     else
         install -m 0644 splash576.bmp ${DEPLOYDIR}/${BOOTLOGO_FILENAME}

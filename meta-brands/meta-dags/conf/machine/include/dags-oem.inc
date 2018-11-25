@@ -431,12 +431,12 @@ BOOTLOGO_FILENAME = "splash.bmp"
 DVBPROVIDER = "kernel"
 DVBSKYPROVIDER = "kernel"
 
-MACHINE_ESSENTIAL_EXTRA_RDEPENDS = " \
+MACHINE_ESSENTIAL_EXTRA_RDEPENDS += " \
     dags-dvb-modules-${MACHINE_DRIVER} \
     dags-shutdown \
     "
 
-MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS = "\
+MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS += "\
     kernel-module-cdfs \
     ${@bb.utils.contains('MACHINE_FEATURES', 'v3d', 'v3d-libgles-${MACHINE}', '',d)} \
     "

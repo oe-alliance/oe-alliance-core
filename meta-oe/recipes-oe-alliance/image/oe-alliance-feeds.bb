@@ -28,7 +28,7 @@ RDEPENDS_${PN} = " \
     enigma2-plugin-drivers-exfat \
     enigma2-plugin-drivers-usbserial \
     enigma2-plugin-extensions-tuxcom \
-    enigma2-plugin-security-firewall \
+    enigma2-plugin-drivers-iptables \
     enigma2-plugin-extensions-enigmalight \
     enigma2-plugin-extensions-mediatomb \
     enigma2-plugin-extensions-dreamplex \
@@ -47,7 +47,7 @@ RDEPENDS_${PN} = " \
     ${@bb.utils.contains("TARGET_ARCH", "arm", "exteplayer3 enigma2-plugin-systemplugins-serviceapp" , "", d)} \
     ${@bb.utils.contains("TARGET_ARCH", "mipsel", "exteplayer3 enigma2-plugin-systemplugins-serviceapp" , "", d)} \
     ${@bb.utils.contains("DEFAULTTUNE", "sh4", "exteplayer3 enigma2-plugin-systemplugins-serviceapp" , "gdb v4l-utils", d)} \
-    ${@bb.utils.contains("MACHINE_FEATURES", "legacykernel", "" , "evtest strace", d)} \
+    ${@bb.utils.contains("MACHINE_FEATURES", "legacykernel", "" , "evtest ${TEMP_REMOVE}", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "omb", "enigma2-plugin-extensions-openmultiboot openmultiboot", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "kodi", "kodi-addons-meta enigma2-plugin-extensions-kodi", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "webkithbbtv", "enigma2-plugin-extensions-webkithbbtv", "", d)} \
@@ -158,6 +158,8 @@ GST_BASE_DVD = "${@bb.utils.contains('GST_VERSION', '1.0', ' \
     gst-plugins-bad-videoparsersbad \
     gst-plugins-bad-mpegtsmux \
     ', d)}"
+
+TEMP_REMOVE = " ${@bb.utils.contains('MACHINE', 'osmio4k', '', 'strace', d)}"
 
 RRECOMMENDS_${PN}_append_vuuno = "enigma2-plugin-extensions-hbbtv"
 RRECOMMENDS_${PN}_append_vuultimo = "enigma2-plugin-extensions-hbbtv"

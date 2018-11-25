@@ -6,7 +6,7 @@ PACKAGE_ARCH := "${MACHINE}"
 require conf/license/license-close.inc
 
 PV = "${KV}+${SRCDATE}"
-PR = "r5"
+PR = "r6"
 
 INHIBIT_PACKAGE_STRIP = "1"
 INHIBIT_PACKAGE_DEBUG_SPLIT = "1"

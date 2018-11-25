@@ -87,16 +87,16 @@ MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "\
 DVBPROVIDER = "kernel"
 DVBSKYPROVIDER = "kernel"
 
-MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS = "\
+MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS += "\
     kernel-module-cdfs \
     ${@bb.utils.contains('MACHINE_FEATURES', 'qtegls', 'hd-qteglfs-platform', '',d)} \
     ${@bb.utils.contains('MACHINE_FEATURES', 'swap', 'hd-swapcreate', '',d)} \
     ${@bb.utils.contains('MACHINE_FEATURES', 'mali', 'gfutures-mali-${MACHINE} kernel-module-mali-${MACHINE}' , '', d)} \
     "
 
-MACHINE_EXTRA_RRECOMMENDS = " \
+MACHINE_EXTRA_RRECOMMENDS += " \
     gstreamer1.0-plugin-dvbmediasink \
-    ${@bb.utils.contains('MACHINE', 'hisil', 'ffmpeg' , 'gstreamer1.0-libav ', d)} \
+    ${@bb.utils.contains('MACHINE_FEATURES', 'hisil', 'ffmpeg gstreamer1.0-libav' , 'gstreamer1.0-libav ', d)} \
     "
 
 include conf/machine/include/autoload-filesystems.inc

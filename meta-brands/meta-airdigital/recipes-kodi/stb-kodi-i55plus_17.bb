@@ -8,7 +8,7 @@ PROVIDES += "virtual/kodi"
 RPROVIDES_${PN} += "virtual/kodi"
 PROVIDES += "kodi"
 RPROVIDES_${PN} += "kodi"
-RDEPENDS_${PN} += "airdigital-mali-${MACHINE}"
+RDEPENDS_${PN} += "airdigital-mali-${HICHIPSET}"
 
 EXTRA_OECONF += " \
     --with-platform=mali-cortexa15 \

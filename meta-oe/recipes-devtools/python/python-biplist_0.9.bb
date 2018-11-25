@@ -4,7 +4,7 @@ SUMMARY = "Binary Property List (plist) files provide a faster and smaller\
            iOS, or other clients."
 SECTION = "devel/python"
 PRIORITY = "optional"
-HOMEPAGE = "https://pypi.python.org/pypi/biplist"
+HOMEPAGE = "https://pypi.org/project/biplist"
 SRCNAME = "biplist"
 DEPENDS = "python"
 LICENSE = "BSD"

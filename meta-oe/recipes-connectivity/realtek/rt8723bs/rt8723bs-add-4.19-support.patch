@@ -1,0 +1,22 @@
+--- a/os_dep/linux/os_intfs.c	2018-10-23 20:50:41.993463813 +0200
++++ b/os_dep/linux/os_intfs.c	2018-10-23 20:51:45.825875665 +0200
+@@ -894,6 +894,11 @@
+ }
+ 
+  
++#if (LINUX_VERSION_CODE>=KERNEL_VERSION(4,19,0))
++static u16 rtw_select_queue(struct net_device *dev, struct sk_buff *skb,
++				struct net_device *sb_dev,
++				select_queue_fallback_t fallback
++#else
+ static u16 rtw_select_queue(struct net_device *dev, struct sk_buff *skb
+ #if LINUX_VERSION_CODE >= KERNEL_VERSION(3, 13, 0) 	
+ 				, void *accel_priv
+@@ -902,6 +907,7 @@
+ #endif
+ 
+ #endif
++#endif
+ )
+ {
+ 	_adapter	*padapter = rtw_netdev_priv(dev);

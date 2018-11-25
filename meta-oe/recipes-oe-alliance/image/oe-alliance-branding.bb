@@ -71,7 +71,7 @@ EXTRA_OECONF = " \
     "
 
 do_configure_prepend() {
-    if [ "${MACHINE}" = "vusolo4k" -o "${MACHINE}" = "vusolo2" -o "${MACHINE}" = "vusolose" -o "${MACHINE}" = "vuduo2" -o "${MACHINE}" = "vuuno4k" -o "${MACHINE}" = "vuuno4kse" -o "${MACHINE}" = "vuultimo4k" -o "${MACHINE}" = "vuzero4k" ]; then
+    if [ "${MACHINE}" = "vusolo4k" -o "${MACHINE}" = "vusolo2" -o "${MACHINE}" = "vusolose" -o "${MACHINE}" = "vuduo2" -o "${MACHINE}" = "vuuno4k" -o "${MACHINE}" = "vuuno4kse" -o "${MACHINE}" = "vuultimo4k" -o "${MACHINE}" = "vuzero4k" -o "${MACHINE}" = "vuduo4k"]; then
         DRIVERSDATE=`grep "SRCDATE = " ${OEA-META-VUPLUS-BASE}/recipes-drivers/vuplus-dvb-proxy-${MACHINE}.bb | cut -b 12-19`
     elif [ "${BRAND_OEM}" = "vuplus" ]; then
         DRIVERSDATE=`grep "SRCDATE = " ${OEA-META-VUPLUS-BASE}/recipes-drivers/vuplus-dvb-modules-${MACHINE}.bb | cut -b 12-19`
@@ -141,9 +141,9 @@ do_configure_prepend() {
         DRIVERSDATE=`grep "SRCDATE = " ${OEA-META-EDISION-BASE}/recipes-drivers/edision-dvb-modules-${MACHINE}.bb | cut -b 12-19`
     elif [ "${BRAND_OEM}" = "dreambox" ]; then
         if [ "${MACHINE}" = "dm7080" ]; then
-            DRIVERSDATE="20180222"
+            DRIVERSDATE="20181002"
         elif [ "${MACHINE}" = "dm820" ]; then
-            DRIVERSDATE="20180222"
+            DRIVERSDATE="20181018"
         elif [ "${MACHINE}" = "dm520" ]; then
             DRIVERSDATE="20180222"
         elif [ "${MACHINE}" = "dm800" ]; then
@@ -157,9 +157,9 @@ do_configure_prepend() {
         elif [ "${MACHINE}" = "dm800sev2" ]; then
             DRIVERSDATE="20151201"
         elif [ "${MACHINE}" = "dm900" ]; then
-            DRIVERSDATE="20180425"
+            DRIVERSDATE="20181002"
         elif [ "${MACHINE}" = "dm920" ]; then
-            DRIVERSDATE="20180514"
+            DRIVERSDATE="20181002"
         else
             DRIVERSDATE="20150618"
         fi
