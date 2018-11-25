@@ -9,3 +9,4 @@ SRC_URI = "git://github.com/Pulse-Eight/libcec.git \
 EXTRA_OECMAKE += " -DBASE_LIB=${libdir}"
 
 RDEPENDS_${PN} += "python"
+RDEPENDS_${PN}_remove = "python3-core"
