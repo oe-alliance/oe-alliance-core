@@ -8,6 +8,8 @@ PV = "1.0"
 PR = "20180628_r0"
 SRC_URI = "http://source.mynonpublic.com/gigablue/chromium/e2plugin-chromium-gigablue_${PR}.tar.gz"
 
+COMPATIBLE_MACHINE = "^(gb7252)$"
+
 DEPENDS = "chromium-browser"
 RDEPENDS_${PN} = "chromium-browser"
 
