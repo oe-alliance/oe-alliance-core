@@ -4,18 +4,18 @@ LICENSE = "GPLv2"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 PR = "r0"
 
-KERNEL_RELEASE = "4.19"
+KERNEL_RELEASE = "4.19.4"
 
 inherit kernel machine_kernel_pr
 
-SRC_URI[md5sum] = "988d62a9ce6d2b9d9db4c4368753efb6"
-SRC_URI[sha256sum] = "32cac77e3dcf210e71cfe5f6a1c141e96f4660de54535f3b164bef94d1cc8031"
+SRC_URI[md5sum] = "1d097d2b9cb3c0bfe5dd917a9530780e"
+SRC_URI[sha256sum] = "983dbd622ae0de7afac9d97cc5bd47e58088f2c2162859b11d936023a1bc651a"
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-brcmstb-${PV}/COPYING;md5=bbea815ee2795b2f4230826c0c6b8814"
 
 DEPENDS += "flex-native bison-native openssl-native"
 
-MACHINE_KERNEL_PR_append = ".0"
+MACHINE_KERNEL_PR_append = ".1"
 
 # By default, kernel.bbclass modifies package names to allow multiple kernels
 # to be installed in parallel. We revert this change and rprovide the versioned
