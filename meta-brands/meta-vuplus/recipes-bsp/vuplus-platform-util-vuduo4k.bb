@@ -3,8 +3,8 @@ require vuplus-platform-util.inc
 COMPATIBLE_MACHINE = "^(vuduo4k)$"
 
 PV="18.1"
-SRCDATE = "20181121"
-SRCDATE_PR = "r4"
+SRCDATE = "20181126"
+SRCDATE_PR = "r0"
 
 SRC_URI += "\
 	file://bp3flash.zip \
@@ -17,5 +17,5 @@ do_install_append() {
 
 S="${WORKDIR}/platform-util-vuduo4k"
 
-SRC_URI[md5sum] = "25702f2aff0297293feb99f39988edeb"
-SRC_URI[sha256sum] = "d73b028321a794df433c87c42b54f95161d5fc1a0b264e7f18e7ada911e55bca"
+SRC_URI[md5sum] = "2cce64917051e6c9aaffe4ac0c511a83"
+SRC_URI[sha256sum] = "f94eca89949acccb42e0843d2033bebdd8a9218d5433fe54f2edbd13e23b09ae"
