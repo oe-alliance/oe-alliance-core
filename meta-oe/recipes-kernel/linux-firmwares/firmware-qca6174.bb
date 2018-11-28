@@ -7,6 +7,7 @@ inherit allarch
 SRC_URI = "http://source.mynonpublic.com/edision/firmware-qca6174.zip"
 
 S = "${WORKDIR}"
+PR = "r1"
 
 PACKAGES = "${PN}"
 FILES_${PN} += "${nonarch_base_libdir}/firmware"
@@ -28,5 +29,5 @@ do_install() {
     install -m 0644 wlan/qcom_cfg.ini ${D}${nonarch_base_libdir}/firmware/wlan/qcom_cfg.ini
 }
 
-SRC_URI[md5sum] = "47997f7990c208077993c77c8685a4fd"
-SRC_URI[sha256sum] = "8462eb74c766573969e30febaa505307bf9fc2308647d0bbb55bd18ab728f8f1"
+SRC_URI[md5sum] = "f193e6b80752e37234d0a70d56c72ed6"
+SRC_URI[sha256sum] = "b86d0160a7b84c3a1da251fd3b591d2828b66b8d050afd9d06327f2768f5ce4d"
