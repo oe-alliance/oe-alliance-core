@@ -24,6 +24,8 @@ INITSCRIPT_PARAMS_vuuno4kse = "start 70 S ."
 INITSCRIPT_PARAMS_vuultimo4k = "start 70 S ."
 INITSCRIPT_PARAMS_vuzero4k = "start 70 S ."
 INITSCRIPT_PARAMS_vuduo4k = "start 70 S ."
+INITSCRIPT_PARAMS_gbquad4k = "start 70 S ."
+INITSCRIPT_PARAMS_gbue4k = "start 70 S ."
 PRECOMPILED_ARCH = "${MACHINE}"
 PRECOMPILED_ARCH_dm7020hdv2 = "dm7020hd"
 
