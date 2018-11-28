@@ -45,6 +45,7 @@ do_install() {
            install -m 0644 $f ${D}${includedir}/$d/
         done
     done
+    install -d ${D}/lib
     install -m 0755 ${WORKDIR}/libm-2.27.so ${D}/lib
     ln -s /lib/libm.so-2.27.so  ${D}/lib/lim.so
 }
