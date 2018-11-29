@@ -2,12 +2,15 @@ require vuplus-platform-util.inc
 
 COMPATIBLE_MACHINE = "^(vuduo4k)$"
 
+RDEPENDS_${PN} += "mmc-utils"
+
 PV="18.1"
 SRCDATE = "20181128"
 SRCDATE_PR = "r0"
+PR_append = ".1"
 
 SRC_URI += "\
-	file://bp3flash.zip \
+	file://bp3flash.tar.gz \
 "
 
 do_install_append() {
