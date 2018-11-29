@@ -26,6 +26,7 @@ do_rootfs[deptask] = "do_rm_work"
 IMAGE_INSTALL = "\
 	${DISTRO}-base \
         titan-bin \
+		enigma2 \
     "
 
 IMAGE_INSTALL_append_mipsel = "\
