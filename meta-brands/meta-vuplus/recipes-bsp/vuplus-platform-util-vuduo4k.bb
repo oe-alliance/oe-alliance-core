@@ -15,7 +15,6 @@ SRC_URI += "\
 
 do_install_append() {
 	install -m 0755 ${WORKDIR}/bp3flash.py ${D}${bindir}
-	install -m 0755 ${WORKDIR}/bp3flash.sh ${D}${bindir}
 }
 
 S="${WORKDIR}/platform-util-vuduo4k"
