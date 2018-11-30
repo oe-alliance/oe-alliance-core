@@ -46,6 +46,8 @@ RRECOMMENDS_${PN} = "\
     enigma2-locale-tr \
     enigma2-locale-uk \
     enigma2-locale-zh \
+    enigma2-locale-zh_CN \
+    enigma2-locale-zh_HK \
     ", d)}"
 
 PR = "r0"
