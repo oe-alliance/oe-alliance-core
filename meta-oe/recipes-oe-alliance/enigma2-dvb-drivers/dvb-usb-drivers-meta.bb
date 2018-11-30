@@ -41,6 +41,7 @@ DEPENDS = "\
     ${@bb.utils.contains("MACHINE", "vuuno4kse", "enigma2-plugin-drivers-dvb-usb-turbo", "", d)} \
     ${@bb.utils.contains("MACHINE", "vuultimo4k", "enigma2-plugin-drivers-dvb-usb-turbo", "", d)} \
     ${@bb.utils.contains("MACHINE", "vuzero4k", "enigma2-plugin-drivers-dvb-usb-turbo", "", d)} \
+    ${@bb.utils.contains("MACHINE", "vuduo4k", "enigma2-plugin-drivers-dvb-usb-turbo", "", d)} \
     ${@bb.utils.contains("MACHINE", "xc7346", "enigma2-plugin-drivers-dvb-edicombo", "", d)} \
     ${@bb.utils.contains("MACHINE", "xc7362", "enigma2-plugin-drivers-dvb-edicombo", "", d)} \
     ${@bb.utils.contains("MACHINE", "dags7335", "enigma2-plugin-drivers-dvb-edicombo", "", d)} \
