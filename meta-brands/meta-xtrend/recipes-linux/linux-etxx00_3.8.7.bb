@@ -20,7 +20,7 @@ PKG_kernel-image = "kernel-image"
 RPROVIDES_kernel-base = "kernel-${KERNEL_VERSION}"
 RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
 
-SRC_URI += "http://www.et-view.com/img_up/shop_pds/bh190/Img_Xtrend/linux-${PV}.tar.gz \
+SRC_URI += "http://source.mynonpublic.com/xtrend/xtrend-linux-${PV}.tar.gz \
     file://defconfig \
     file://0001-kernel-add-support-for-gcc-5.patch \
     file://0001-Revert-default-authentication-needs-to-be-at-least-n.patch \

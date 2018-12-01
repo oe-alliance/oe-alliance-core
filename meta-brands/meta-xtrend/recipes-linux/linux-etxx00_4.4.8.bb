@@ -22,7 +22,7 @@ PKG_kernel-image = "kernel-image"
 RPROVIDES_kernel-base = "kernel-${KERNEL_VERSION}"
 RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
 
-SRC_URI += "http://www.et-view.com/img_up/shop_pds/bh190/Img_Xtrend/xtrend-linux-${PV}-${SRCDATE}.tar.xz \
+SRC_URI += "http://source.mynonpublic.com/xtrend/xtrend-linux-${PV}-${SRCDATE}.tar.xz \
     file://defconfig \
     file://add-dmx-source-timecode.patch \
     file://iosched-slice_idle-1.patch \
