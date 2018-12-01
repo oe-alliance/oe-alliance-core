@@ -1,3 +1,7 @@
 <advancedsettings>
-
+  <video>
+    <defaultplayer>hiplayer</defaultplayer>
+    <defaultdvdplayer>hiplayer</defaultdvdplayer>
+    <audiodefaultplayer>hiplayer</audiodefaultplayer>
+  </video>
 </advancedsettings>
