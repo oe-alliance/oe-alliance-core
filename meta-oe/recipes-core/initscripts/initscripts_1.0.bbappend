@@ -53,6 +53,10 @@ do_install_append() {
 
 }
 
+do_install_append_u53() {
+    ln -sf        ../init.d/networking      ${D}${sysconfdir}/rcS.d/S90networking
+
+}
 
 pkg_postinst_${PN}_append() {
 	if [ ! -e "$D/etc/init.d/cardserver" ]
