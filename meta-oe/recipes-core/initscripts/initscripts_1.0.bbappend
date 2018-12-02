@@ -54,7 +54,7 @@ do_install_append() {
 }
 
 do_install_append_u53() {
-    ln -sf        ../init.d/networking      ${D}${sysconfdir}/rcS.d/S90networking
+    ln -sf        ../init.d/networking      ${D}${sysconfdir}/rc3.d/S90networking
 
 }
 
