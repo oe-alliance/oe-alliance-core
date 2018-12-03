@@ -39,6 +39,13 @@ SRC_URI_append_7215s = "file://lcdsplash220.bin file://lcdwaitkey220.bin file://
 SRC_URI_append_dags7356 = "file://splash1.bmp file://splash1_os1.bmp file://splash1_os2.bmp file://splash2.bmp file://splash3.bmp"
 SRC_URI_append_dags7362 = "file://splash1_power.bmp file://splash1_os1.bmp file://splash1_os2.bmp file://splash2.bmp file://splash3.bmp"
 SRC_URI_append_dags73625 = "file://splash1_rc.bmp file://splash1_power.bmp file://splash1_os1.bmp file://splash1_os2.bmp file://splash2.bmp file://splash3.bmp"
+SRC_URI_append_h9 = "file://logo.img"
+SRC_URI_append_h9combo = "file://logo.img"
+SRC_URI_append_i55plus = "file://logo.img"
+SRC_URI_append_hd60 = "file://logo.img"
+SRC_URI_append_cc1 = "file://logo.img"
+SRC_URI_append_sf8008 = "file://logo.img"
+SRC_URI_append_ustym4kpro = "file://logo.img"
 
 
 BINARY_VERSION = "1.3"
