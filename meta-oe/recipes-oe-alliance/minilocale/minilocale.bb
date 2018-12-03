@@ -20,7 +20,7 @@ LOCALEDIR2 = "/usr/share/locale"
 
 LANGUAGES = "ar_AE bg_BG ca_AD cs_CZ da_DK de_DE el_GR en_GB en_US es_ES et_EE fa_IR fi_FI fr_FR \
              fy_NL he_IL hr_HR hu_HU id_ID is_IS it_IT lt_LT lv_LV nb_NO nl_NL pl_PL pt_BR pt_PT \
-             ru_RU sk_SK sl_SI sr_RS sv_SE th_TH tr_TR uk_UA"
+             ru_RU sk_SK sl_SI sr_RS sv_SE th_TH tr_TR uk_UA zh_CN zh_HK"
 
 RPROVIDES_${PN}  = "${@" ".join(map(lambda s: "virtual-locale-%s" % s, d.getVar('LANGUAGES').split())).lower().replace('_','-')}"
 RPROVIDES_${PN} += "${@" ".join("virtual-locale-%s" % p.split('_')[0] for p in d.getVar('LANGUAGES').split())}"
