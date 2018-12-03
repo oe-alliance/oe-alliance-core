@@ -153,6 +153,9 @@ do_deploy() {
     if [ -e splash3.bmp ]; then
         install -m 0644 splash3.bmp ${DEPLOYDIR}/splash3.bmp
     fi
+    if [ -e logo.img ]; then
+        install -m 0644 logo.img ${DEPLOYDIR}/logo-${DISTRO_NAME}.img
+    fi
 }
 
 do_deploy_append_lunix() {
