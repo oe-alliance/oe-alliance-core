@@ -10,4 +10,6 @@ PV = "1+git${SRCPV}"
 PKGV = "1+git${GITPKGV}"
 PR = "r0"
 
+SRCREV="8ce31b693e0f07870bd7c91ad070c5ff91d9ff81"
+
 inherit distutils-openplugins
