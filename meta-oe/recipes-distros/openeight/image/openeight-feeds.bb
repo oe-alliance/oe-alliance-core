@@ -15,7 +15,8 @@ RRECOMMENDS_${PN} = "\
     enigma2-pliplugins \
     enigma2-plugin-extensions-cooltvguide \
     enigma2-plugin-extensions-epgimport \
-    cdfs \
+    cdfs \  
+    enigma2-plugin-extensions-historyzapselector \
     enigma2-plugin-extensions-enhancedmoviecenter \
     enigma2-plugin-skins-octagonhdstyledark \
     enigma2-plugin-skins-octagonhdstyleblack \
