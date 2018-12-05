@@ -2,11 +2,11 @@ require vuplus-libgles.inc
 
 COMPATIBLE_MACHINE = "^(vuduo4k)$"
 
-SRCDATE = "20181204"
+SRCDATE = "20181205"
 SRCDATE_PR = "r0"
 PV="18.1"
 
 S = "${WORKDIR}/libgles-vuduo4k"
 
-SRC_URI[md5sum] = "34981842d0435ff5edfff93a21a3a005"
-SRC_URI[sha256sum] = "76931e18832c6661f199bf4b4728421af0871c5d3d6db4677ffe7d0cd2b7984b"
+SRC_URI[md5sum] = "c2b7d7144c11ec041ebd1c119f83d182"
+SRC_URI[sha256sum] = "859e2baa560176f371b05528b506d319dad3320078c61da7feb740e93e48ad1e"
