@@ -179,6 +179,7 @@ MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS += " \
     kernel-module-cifs \
     kernel-module-autofs4 \
     ${@bb.utils.contains('MACHINEBUILD', 'gbquad', 'kernel-module-smsc75xx' , '', d)} \
+    ${@bb.utils.contains('MACHINE', 'gb7252', 'enigma2-plugin-drivers-network-usb-rtl8822bu' , '', d)} \
     ${@bb.utils.contains('MACHINE_FEATURES', 'swap', 'gigablue-swapcreate', '',d)} \
     ${@bb.utils.contains('MACHINE_FEATURES', 'qtegls', 'gb-qteglfs-platform', '',d)} \
     "
@@ -188,7 +189,7 @@ MACHINE_EXTRA_RRECOMMENDS += " \
     gstreamer1.0-libav \
     gigablue-cfe \
     ${@bb.utils.contains('DISTRO_FEATURES', 'audioeffect', 'enigma2-plugin-systemplugins-audioeffect' , '', d)} \
-	${@bb.utils.contains('MACHINE', 'gb7252', 'gigablue-initrd-cfe-${MACHINEBUILD}' , '', d)} \
+    ${@bb.utils.contains('MACHINE', 'gb7252', 'gigablue-initrd-cfe-${MACHINEBUILD}' , '', d)} \
     "
 
 EXTRA_IMAGEDEPENDS += "\
