@@ -3,7 +3,7 @@ inherit packagegroup
 
 require conf/license/license-gplv2.inc
 
-PV = "2.0"
+PV = "${IMAGE_VERSION}"
 PR = "r0"
 
 DEPENDS = " \
@@ -62,7 +62,7 @@ DEPENDS = " \
     enigma2-plugin-settings-gigablue-19e-13e-5e-75e \
     enigma2-plugin-settings-gigablue-19e-16e-13e \
     enigma2-plugin-settings-gigablue-42e-19e-13e-7e \
-    enigma2-plugin-settings-gigablue-hepsidijital \
+    enigma2-plugin-settings-gigablue-42e-28e-23e-19e-16e-13e-7e-08w-30w \
     \
     enigma2-plugin-settings-gigablue-wilhelmtel \
     enigma2-plugin-settings-gigablue-unity-media \
