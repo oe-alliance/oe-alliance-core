@@ -1,0 +1,19 @@
+diff -Nur python-wifi-0.6.1.orig/pythonwifi/iwlibs.py python-wifi-0.6.1/pythonwifi/iwlibs.py
+--- python-wifi-0.6.1.orig/pythonwifi/iwlibs.py	2015-03-22 03:45:50.000000000 +0900
++++ python-wifi-0.6.1/pythonwifi/iwlibs.py	2018-12-05 14:41:30.000000000 +0900
+@@ -1471,13 +1471,13 @@
+                 if scanresult:
+                     aplist.append(scanresult)
+                 scanresult = Iwscanresult(
+-                        data[pythonwifi.flags.IW_EV_LCP_PK_LEN:length],
++                        data[pythonwifi.flags.IW_EV_LCP_PK_LEN+4:length],
+                         self.range)
+             elif scanresult is None:
+                 raise RuntimeError("Attempting to add an event without AP data.")
+             else:
+                 scanresult.addEvent(cmd,
+-                        data[pythonwifi.flags.IW_EV_LCP_PK_LEN:length])
++                        data[pythonwifi.flags.IW_EV_LCP_PK_LEN+4:length])
+             # We're finished with the previous event
+             data = data[length:]
+ 
