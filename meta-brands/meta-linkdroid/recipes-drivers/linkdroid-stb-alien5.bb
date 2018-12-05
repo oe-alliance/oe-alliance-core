@@ -7,7 +7,7 @@ require conf/license/license-close.inc
 DEPENDS = "virtual/${TARGET_PREFIX}gcc"
 
 KV = "3.14.29"
-SRCDATE = "20180905"
+SRCDATE = "20181205"
 
 PV = "${KV}+${SRCDATE}"
 PR = "r1"
