@@ -5,7 +5,7 @@ COMPATIBLE_MACHINE = "^(vuduo4k)$"
 RDEPENDS_${PN} += "mmc-utils"
 
 PV="18.1"
-SRCDATE = "20181205"
+SRCDATE = "20181206"
 SRCDATE_PR = "r0"
 PR_append = ".1"
 
@@ -19,5 +19,5 @@ do_install_append() {
 
 S="${WORKDIR}/platform-util-vuduo4k"
 
-SRC_URI[md5sum] = "d624cc6b35b88c6e221d589e95342abc"
-SRC_URI[sha256sum] = "c8ff6058622f8e6cbb904463f25e169caaa39278ffb38046ed7126aa888e304a"
+SRC_URI[md5sum] = "3d265c848956aaa76c18ce5e72f77c28"
+SRC_URI[sha256sum] = "378f437ce455b4de2108cec0e283c432918b6dcdbcfc3d4d6b516827ef4c63bd"
