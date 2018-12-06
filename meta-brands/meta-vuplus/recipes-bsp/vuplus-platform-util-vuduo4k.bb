@@ -7,7 +7,7 @@ RDEPENDS_${PN} += "mmc-utils"
 PV="18.1"
 SRCDATE = "20181206"
 SRCDATE_PR = "r0"
-PR_append = ".1"
+PR_append = ".2"
 
 SRC_URI += "\
 	file://bp3flash.tar.gz \
