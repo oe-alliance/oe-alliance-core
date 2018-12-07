@@ -9,10 +9,10 @@ require conf/license/license-gplv2.inc
 
 inherit gitpkgv
 SRCREV = "${AUTOREV}"
-PV = "1.3+git${SRCPV}"
-PKGV = "1.3+git${GITPKGV}"
-VER ="1.3"
-PR = "r2"
+PV = "1.4+git${SRCPV}"
+PKGV = "1.4+git${GITPKGV}"
+VER ="1.4"
+PR = "r3"
 
 SRC_URI="git://github.com/opendroid-Team/vhannibal-autosettings.git"
 
