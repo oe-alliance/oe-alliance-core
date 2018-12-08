@@ -8,7 +8,7 @@ RRECOMMENDS_${PN} = "ccid"
 
 PACKAGES =+ "${PN}-lib"
 
-SRC_URI = "http://sources.openelec.tv/mirror/pcsc-lite/pcsc-lite-1.8.8.tar.bz2 \
+SRC_URI = "https://alioth-archive.debian.org/releases/pcsclite/pcsclite/1.8.8/pcsc-lite-1.8.8.tar.bz2 \
     file://pcscd.init"
 
 SRC_URI[md5sum] = "069dc875a2ae2d85a2ebceac73252c0a"
