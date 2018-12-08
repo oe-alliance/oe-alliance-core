@@ -1,7 +1,7 @@
 KV = "4.4.35"
-SRCDATE = "20181205"
+SRCDATE = "20181208"
 
 require octagon-dvb-modules-hisi.inc
 
-SRC_URI[md5sum] = "e5bac396d92f0ffa444622860795ced3"
-SRC_URI[sha256sum] = "2e7380f73ae4278d918bef5be0525fbf596e24e7798ea1147ea115b42a24a10a"
+SRC_URI[md5sum] = "0a63925be592a0f09ef67ed03c9424ea"
+SRC_URI[sha256sum] = "c75754e20b48fcd541b69bf2e1c7476d7d6e9951d47efac1d23ae43258d7c505"
