@@ -20,15 +20,17 @@ RDEPENDS_${PN} = "\
 "
 RRECOMMENDS_${PN} = "unrar"
 
-PV = "0.4.9"
+inherit gitpkgv
+SRCREV = "c8f2177a5c38d5289f35bd2c26c2502e9d0ff30d"
+PV = "0.4.9+git${SRCPV}"
+PKGV = "0.4.9+git${GITPKGV}"
 
 inherit update-rc.d
 
-SRC_URI = "http://sources.openelec.tv/mirror/pyload/pyload-src-v${PV}.zip \
+SRC_URI = "git://github.com/pyload/pyload.git;protocol=https;branch=master \
   file://pyload.init \
   file://pyload.tar.gz.defaults"
-SRC_URI[md5sum] = "28876150af22999b6f539c8579d3b415"
-SRC_URI[sha256sum] = "f937631d376216bc830d6ffcd5b4ecb1806afd4012a184849da1a333a7ba0016"
+
 
 S = "${WORKDIR}/pyload"
 

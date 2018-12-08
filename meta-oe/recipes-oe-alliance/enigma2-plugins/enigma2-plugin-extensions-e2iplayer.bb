@@ -5,7 +5,7 @@ SECTION = "multimedia"
 LICENSE = "GPLv2"
 require conf/license/license-gplv2.inc
 
-SRC_URI = "git://gitlab.com/iptvplayer-for-e2/iptvplayer-for-e2.git;protocol=http"
+SRC_URI = "git://gitlab.com/e2i/e2iplayer.git;protocol=http"
 S = "${WORKDIR}/git"
 
 inherit gitpkgv
