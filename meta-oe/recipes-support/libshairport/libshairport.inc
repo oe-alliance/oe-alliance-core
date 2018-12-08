@@ -5,7 +5,7 @@ DEPENDS = "openssl"
 LICENSE = "GPLv2"
 INC_PR = "r5"
 S="${WORKDIR}/${BPN}-${PV}_lib"
-SRC_URI = "https://ftp.fau.de/xbmc/build-deps/sources/libshairport-1.2.0.20310.tar.bz2;name=archive \
+SRC_URI = "http://source.mynonpublic.com/libshairport-1.2.0.20310_lib.tar.gz;name=archive \
            file://001_add_ao.patch;apply=yes;striplevel=0 \
            file://002_fix_install_header.patch;apply=yes;striplevel=0 \
            file://003_fix_deadlock.patch;apply=yes;striplevel=0 \
