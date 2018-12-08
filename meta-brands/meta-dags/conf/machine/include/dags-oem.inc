@@ -55,7 +55,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'valalinux', 'Linux' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'lunix34k', 'LUNIX3 4K' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'lunix', 'LUNIX' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'force4', 'FORCE 4' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'lunix24k', 'LUNIX2 4K' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'lunix4k', 'LUNIX 4K' , '', d)}\
 "
 
 MACHINE_BRAND = "\
@@ -110,7 +110,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'valalinux', 'VALA' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'lunix34k', 'qviart' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'lunix', 'qviart' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'force4', 'Iqon' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'lunix24k', 'qviart' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'lunix4k', 'qviart' , '', d)}\
 "
 
 IMAGEDIR ?= "\
@@ -165,7 +165,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'valalinux', 'update/valalinux/cfe' , '', d
 ${@bb.utils.contains('MACHINEBUILD', 'lunix34k', 'update/lunix3-4k' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'lunix', 'update/lunix/cfe' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'force4', 'update/force4' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'lunix24k', 'update/lunix24k' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'lunix4k', 'update/lunix4k' , '', d)}\
 "
 
 MTD_KERNEL = "\
@@ -220,7 +220,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'valalinux', 'mtd2' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'lunix34k', 'mmcblk0p1' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'lunix', 'mtd2' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'force4', 'mmcblk0p1' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'lunix24k', 'mmcblk0p1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'lunix4k', 'mmcblk0p1' , '', d)}\
 "
 
 MTD_ROOTFS = "\
@@ -275,7 +275,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'valalinux', 'mtd0' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'lunix34k', 'mmcblk0p4' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'lunix', 'mtd0' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'force4', 'mmcblk0p4' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'lunix24k', 'mmcblk0p4' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'lunix4k', 'mmcblk0p4' , '', d)}\
 "
 
 SPLASH1_BMP = "\
@@ -316,7 +316,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'valalinux', 'splash1_power.bmp' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'lunix34k', 'splash1_power.bmp' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'lunix', 'splash1_power.bmp' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'force4', 'splash1_power.bmp' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'lunix24k', 'splash1_power.bmp' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'lunix4k', 'splash1_power.bmp' , '', d)}\
 "
 
 MACHINE_DRIVER = "\
@@ -371,7 +371,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'valalinux', 'dags7362' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'lunix34k', 'dags7252-300' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'lunix', 'dags73625' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'force4', 'dags72604' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'lunix24k', 'dags72604' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'lunix4k', 'dags72604' , '', d)}\
 "
 
 MACHINE_FEATURES += "3dtv alsa hdmicec switchoff textlcd ci skins1080 HDMI \
@@ -393,7 +393,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'valalinux', 'fastscan dvb-c' , '', d)} \
 ${@bb.utils.contains('MACHINEBUILD', 'lunix34k', 'fastscan dvb-c RCA' , '', d)} \
 ${@bb.utils.contains('MACHINEBUILD', 'lunix', 'fastscan dvb-c' , '', d)} \
 ${@bb.utils.contains('MACHINEBUILD', 'force4', 'fastscan dvb-c' , '', d)} \
-${@bb.utils.contains('MACHINEBUILD', 'lunix24k', 'fastscan dvb-c' , '', d)} \
+${@bb.utils.contains('MACHINEBUILD', 'lunix4k', 'fastscan dvb-c' , '', d)} \
 ${@bb.utils.contains('MACHINEBUILD', 'tm2t', 'SCART RCA' , '', d)} \
 ${@bb.utils.contains('MACHINEBUILD', 'tmnano', 'RCA' , '', d)} \
 ${@bb.utils.contains('MACHINEBUILD', 'tmnano2t', 'YUV RCA' , '', d)} \
