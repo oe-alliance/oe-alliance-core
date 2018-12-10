@@ -123,6 +123,7 @@ RDEPENDS_${PN} = " \
     python-js2py \
     python-mechanize \
     python-netifaces \
+    python-pexpect \
     python-pyasn1-modules \
     python-requests \
     python-service-identity \
