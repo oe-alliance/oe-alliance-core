@@ -19,6 +19,19 @@ test -f /etc/default/rcS && . /etc/default/rcS
 
 set -e
 
+start_uarts() {
+	[ -r /etc/bluetooth/uart.conf ] || return
+	grep -v '^[[:space:]]*(#|$)' /etc/bluetooth/uart.conf | while read i; do
+		hciattach $i > /dev/null 2>&1
+	done
+
+	hciconfig hci0 reset
+}
+
+stop_uarts() {
+	killall hciattach > /dev/null 2>&1
+}
+
 case $1 in
   start)
 	echo "Starting $DESC"
@@ -31,6 +44,7 @@ case $1 in
 	start-stop-daemon --start --background $SSD_OPTIONS
 	echo "${DAEMON##*/}"
 
+	start_uarts
   ;;
   stop)
 	echo "Stopping $DESC"
@@ -40,6 +54,8 @@ case $1 in
 	fi
 	start-stop-daemon --stop $SSD_OPTIONS
 	echo "${DAEMON}"
+
+	stop_uarts
   ;;
   restart|force-reload)
 	$0 stop
