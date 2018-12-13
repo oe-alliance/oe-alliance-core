@@ -11,7 +11,7 @@ DEPENDS = "tslib mpfr gmp"
 SRCREV = "${AUTOREV}"
 PV = "${IMAGE_VERSION}+gitr${SRCPV}"
 PKGV = "${IMAGE_VERSION}+gitr${GITPKGV}"
-PR = "r199"
+PR = "r200"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -77,7 +77,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-screensaver_5.7.1_all.ipk \
     enigma2-plugin-extensions-serienrecorder_3.8.0_all.ipk \
     enigma2-plugin-extensions-sherlock_5.01r1_mipsel.ipk \
-    enigma2-plugin-extensions-skyrecorder_1.7.1_all.ipk \
+    enigma2-plugin-extensions-skyrecorder_1.7.2_all.ipk \
     enigma2-plugin-extensions-songs-to_0.1_mips32el.ipk \
     enigma2-plugin-extensions-spiegelonline_2.8rc15_all.ipk \
     enigma2-plugin-extensions-spinnerselector_2.2rc1_all.ipk \
