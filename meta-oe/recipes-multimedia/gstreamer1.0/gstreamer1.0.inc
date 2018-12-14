@@ -32,6 +32,7 @@ PACKAGECONFIG[dw] = "--with-dw,--without-dw,elfutils"
 EXTRA_OECONF = " \
     --disable-dependency-tracking \
     --disable-examples \
+    --libexecdir=${libdir} \
 "
 
 CACHED_CONFIGUREVARS += "ac_cv_header_valgrind_valgrind_h=no"
@@ -41,7 +42,7 @@ CACHED_CONFIGUREVARS += "ac_cv_header_sys_poll_h=no"
 
 PACKAGES += "${PN}-bash-completion"
 
-FILES_${PN} += "${libdir}/gstreamer-1.0/*.so"
+FILES_${PN} += "${libdir}/gstreamer-1.0/*.so ${libdir}/gstreamer-1.0/gst-*"
 FILES_${PN}-dev += "${libdir}/gstreamer-1.0/*.la ${libdir}/gstreamer-1.0/*.a ${libdir}/gstreamer-1.0/include"
 FILES_${PN}-bash-completion += "${datadir}/bash-completion/completions/ ${datadir}/bash-completion/helpers/gst*"
 
