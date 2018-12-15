@@ -15,12 +15,13 @@ do_install_append() {
     mkdir -p ${D}${sysconfdir}/avahi/services
     install -m 644 ${WORKDIR}/ftp.service ${D}${sysconfdir}/avahi/services
     if ! test -z ${PAMLIB} ; then
-	grep -v 'pam_shells.so' ${D}${sysconfdir}/pam.d/vsftpd > $D/tmp/vsftpd
-	mv $D/tmp/vsftpd ${D}${sysconfdir}/pam.d/vsftpd
+    grep -v 'pam_shells.so' ${D}${sysconfdir}/pam.d/vsftpd > $D/tmp/vsftpd
+    mv $D/tmp/vsftpd ${D}${sysconfdir}/pam.d/vsftpd
     fi
     if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
         rm ${D}/etc/init.d/vsftpd || true
     fi
+    chown root ${D}${sysconfdir}/vsftpd.conf
 }
 
 pkg_postinst_${PN}_prepend() {
