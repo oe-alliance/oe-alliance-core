@@ -103,6 +103,7 @@ SRC_URI_append_u5 = " file://eglwrapper.patch"
 SRC_URI_append_u51 = " file://eglwrapper.patch"
 SRC_URI_append_u52 = " file://eglwrapper.patch"
 SRC_URI_append_u53 = " file://eglwrapper.patch"
+SRC_URI_append_u54 = " file://eglwrapper.patch"
 SRC_URI_append_u5pvr = " file://eglwrapper.patch"
 
 SRC_URI_append_AML8726 = " file://amlogic-codec-krypton-fixes.patch"
