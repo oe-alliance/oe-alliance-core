@@ -49,6 +49,7 @@ SRC_URI += "http://source.mynonpublic.com/ini/bcm7362-linux-${KV}-${SRCDATE}.tgz
 	file://blindscan2.patch \
 	file://genksyms_fix_typeof_handling.patch \
 	file://kernel-add-support-for-gcc7.patch \
+	file://af9035.patch \
 	"
 
 S = "${WORKDIR}/linux-${PV}"

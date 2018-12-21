@@ -33,6 +33,7 @@ SRC_URI += "http://downloads.mutant-digital.net/linux-${PV}.tar.gz \
 	file://blindscan2.patch \
 	file://0001-stv090x-optimized-TS-sync-control.patch \
 	file://kernel-add-support-for-gcc7.patch \
+	file://af9035.patch \
 	"
 
 S = "${WORKDIR}/linux-${PV}"

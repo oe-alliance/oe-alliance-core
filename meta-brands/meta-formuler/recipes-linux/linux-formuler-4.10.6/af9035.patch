@@ -1,0 +1,11 @@
+--- a/drivers/media/usb/dvb-usb-v2/af9035.c	2016-04-30 11:30:33.540469329 +0200
++++ b/drivers/media/usb/dvb-usb-v2/af9035.c	2016-04-30 11:45:34.987258376 +0200
+@@ -2015,6 +2015,8 @@
+ 		&af9035_props, "AVerMedia HD Volar (A867)", NULL) },
+ 	{ DVB_USB_DEVICE(USB_VID_AVERMEDIA, USB_PID_AVERMEDIA_A867,
+ 		&af9035_props, "AVerMedia HD Volar (A867)", NULL) },
++	{ DVB_USB_DEVICE(USB_VID_AVERMEDIA, 0x0337,
++		&af9035_props, "AVerMedia HD Volar (A867)", NULL) },
+ 	{ DVB_USB_DEVICE(USB_VID_AVERMEDIA, USB_PID_AVERMEDIA_TWINSTAR,
+ 		&af9035_props, "AVerMedia Twinstar (A825)", NULL) },
+ 	{ DVB_USB_DEVICE(USB_VID_ASUS, USB_PID_ASUS_U3100MINI_PLUS,
