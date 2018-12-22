@@ -24,6 +24,7 @@ S = "${WORKDIR}/git"
 FILES_${PN} = "${libdir}"
 
 do_install() {
+    install -d ${D}/usr
     install -d {D}${libdir}
     cp -rp ${S}/usr/lib/* ${D}${libdir}
 }
