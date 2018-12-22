@@ -23,6 +23,6 @@ FILES_${PN} = "${libdir} /etc/*"
 
 do_install() {
 	install -d ${D}${libdir}
-	cp -rp ${S}/usr/lib/* ${D}${libdir}
+	cp -rp ${S}/usr/lib/* ${D}${libdir}/
 	cp -rp ${S}/etc ${D}/
 }

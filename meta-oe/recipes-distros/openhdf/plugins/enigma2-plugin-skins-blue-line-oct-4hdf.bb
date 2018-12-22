@@ -27,7 +27,7 @@ do_install() {
 	install -d ${D}${libdir}
 	install -d ${D}/share
 	cp -rp ${S}/tmp/octagon/* ${D}/tmp/octagon/
-	cp -rp ${S}/usr/lib/* ${D}${libdir}
+	cp -rp ${S}/usr/lib/* ${D}${libdir}/
 	cp -rp ${S}/usr/share/* ${D}/share/
 }
 

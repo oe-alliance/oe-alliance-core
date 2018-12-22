@@ -20,7 +20,7 @@ do_install() {
 	install -d ${D}/usr/share
 	install -d ${D}${libdir}
 	cp -rp ${S}/usr/share/* ${D}/usr/share/
-	cp -rp ${S}/usr/lib/* ${D}${libdir}
+	cp -rp ${S}/usr/lib/* ${D}${libdir}/
 	chmod -R a+rX ${D}/usr/share/enigma2/
 }
 
