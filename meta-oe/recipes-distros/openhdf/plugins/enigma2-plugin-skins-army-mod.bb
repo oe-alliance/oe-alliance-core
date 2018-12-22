@@ -13,17 +13,15 @@ SRCREV = "${AUTOREV}"
 PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"
 VER ="1.0"
-PR = "r3"
+PR = "r4"
 
 SRC_URI="git://github.com/openhdf/army-mod-skin.git"
 
 S = "${WORKDIR}/git"
 
-FILES_${PN} = "/usr/share ${libdir}"
+FILES_${PN} = "/usr/share"
 
 do_install() {
-	install -d ${D}${libdir}
 	install -d ${D}/usr/share
-        cp -rp ${S}/usr/lib/* ${D}${libdir}
 	cp -rp ${S}/usr/share/* ${D}/usr/share/
 }
