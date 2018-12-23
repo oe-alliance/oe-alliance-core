@@ -7,7 +7,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PV = "6.7"
-PR = "r5"
+PR = "r6"
 
 inherit packagegroup
 
@@ -51,3 +51,4 @@ GST_BASE_DVD = "${@bb.utils.contains('GST_VERSION', '1.0', ' \
     ', d)}"
     
 RRECOMMENDS_${PN}_append_dm900 = " enigma2-plugin-systemplugins-fsblupdater"
+RRECOMMENDS_${PN}_append_osmio4k = " enigma2-plugin-extensions-hbbtv-webkit enigma2-plugin-systemplugins-satipclient enigma2-plugin-extensions-simpleumount"
