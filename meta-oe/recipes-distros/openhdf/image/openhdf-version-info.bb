@@ -28,7 +28,7 @@ do_install() {
     echo "build_type=${BUILDTYPE}" >> ${D}/etc/image-version
     echo "machine_brand=${MACHINE_BRAND}" >> ${D}/etc/image-version
     echo "machine_name=${MACHINE_NAME}" >> ${D}/etc/image-version
-    echo "version=${IMAGE_VERSION}" >> ${D}/etc/image-version
+    echo "version=${DISTRO_VERSION}" >> ${D}/etc/image-version
     echo "build=${BUILD_VERSION}" >> ${D}/etc/image-version
     echo "date=${DATETIME}" >> ${D}/etc/image-version
     echo "comment=openHDF" >> ${D}/etc/image-version
