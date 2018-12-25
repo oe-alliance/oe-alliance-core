@@ -1,0 +1,171 @@
+From e2de8d2260974c258ff13a722731336fd81bbf0d Mon Sep 17 00:00:00 2001
+From: Captain <captain.onboard@web.de>
+Date: Sun, 28 Oct 2018 16:22:52 +0100
+Subject: [PATCH] azbox e2 atv
+
+---
+ lib/dvb/dvb.cpp     | 15 +++++++++++++--
+ lib/dvb/dvbtime.cpp | 14 ++++++++++++++
+ main/bsod.cpp       | 35 +++++++++++++++++++++++++++++++++++
+ main/enigma.cpp     | 30 ++++++++++++++++++++++++++++++
+ 4 files changed, 92 insertions(+), 2 deletions(-)
+
+diff --git a/lib/dvb/dvb.cpp b/lib/dvb/dvb.cpp
+index 30e685485..82a9ad0db 100644
+--- a/lib/dvb/dvb.cpp
++++ b/lib/dvb/dvb.cpp
+@@ -1182,6 +1182,8 @@ RESULT eDVBResourceManager::allocateDemux(eDVBRegisteredFrontend *fe, ePtr<eDVBA
+ 		iDVBAdapter *adapter = fe ? fe->m_adapter : m_adapter.begin(); /* look for a demux on the same adapter as the frontend, or the first adapter for dvr playback */
+ 		int source = fe ? fe->m_frontend->getDVBID() : -1;
+ 		cap |= capHoldDecodeReference; // this is checked in eDVBChannel::getDemux
++		int n = 0;
++
+ 		if (!fe)
+ 		{
+ 			/*
+@@ -1199,8 +1201,16 @@ RESULT eDVBResourceManager::allocateDemux(eDVBRegisteredFrontend *fe, ePtr<eDVBA
+ 			{
+ 				if (!i->m_inuse)
+ 				{
+-					/* mark the first unused demux, we'll use that when we do not find a better match */
+-					if (!unused) unused = i;
++					if(fe)
++					{
++						if (source >= 0 && n == source)
++							if (!unused) unused = i;
++					}
++					else
++					{
++						/* mark the first unused demux, we'll use that when we do not find a better match */
++						if (!unused) unused = i;
++					}
+ 				}
+ 				else
+ 				{
+@@ -1218,6 +1228,7 @@ RESULT eDVBResourceManager::allocateDemux(eDVBRegisteredFrontend *fe, ePtr<eDVBA
+ 			if (fe)
+ 			{
+ 				++i;
++				++n;
+ 			}
+ 			else
+ 			{
+diff --git a/lib/dvb/dvbtime.cpp b/lib/dvb/dvbtime.cpp
+index 83b6d7cc0..d3c8081d9 100644
+--- a/lib/dvb/dvbtime.cpp
++++ b/lib/dvb/dvbtime.cpp
+@@ -404,6 +404,20 @@ void eDVBLocalTimeHandler::updateTime( time_t tp_time, eDVBChannel *chan, int up
+ {
+ 	int time_difference;
+ 	bool restart_tdt = false;
++
++	/* Azbox Sigma mode check, leave update time checking while we are in exclusive player mode */
++	int val=0;
++	FILE *f = fopen("/proc/player_status", "r");
++	if (f)
++	{		
++		fscanf(f, "%d", &val);
++		fclose(f);	
++	}
++	if(val)
++		return;
++	/* */
++
++
+ 	if (!tp_time)
+ 		restart_tdt = true;
+ 	else if (tp_time == -1)
+diff --git a/main/bsod.cpp b/main/bsod.cpp
+index 046f5b65a..14f044f66 100644
+--- a/main/bsod.cpp
++++ b/main/bsod.cpp
+@@ -1,3 +1,6 @@
++#include <sys/types.h>
++#include <sys/stat.h>
++#include <fcntl.h>
+ #include <sys/klog.h>
+ #include <vector>
+ #include <csignal>
+@@ -120,6 +123,38 @@ bool bsodRestart()
+ 
+ void bsodFatal(const char *component)
+ {
++
++	if (!component)
++	{
++		/* Azbox Sigma mode check, switch back from player mode to normal mode if player Python code crashed and enigma2 restart */		
++		int val=0;
++		FILE *f = fopen("/proc/player_status", "r");
++		if (f)
++		{		
++			fscanf(f, "%d", &val);
++			fclose(f);
++		}
++		if(val)
++		{
++			int rmfp_fd = open("/tmp/rmfp.kill", O_CREAT);
++			if(rmfp_fd > 0) 
++			{
++				int t = 50;
++				close(rmfp_fd);
++				while(access("/tmp/rmfp.kill", F_OK) >= 0 && t--) {
++				usleep(10000);
++				}
++			}		
++			f = fopen("/proc/player", "w");
++			if (f)
++			{		
++				fprintf(f, "%d", 1);
++				fclose(f);
++			}
++
++		}
++	}
++
+ 	//handle python crashes	
+ 	bool bsodpython = (eConfigManager::getConfigBoolValue("config.crash.bsodpython", false) && eConfigManager::getConfigBoolValue("config.crash.bsodpython_ready", false));
+ 	//hide bs after x bs counts and no more write crash log	-> setting values 0-10 (always write the first crashlog)
+diff --git a/main/enigma.cpp b/main/enigma.cpp
+index 570c64c5b..d9ad6848b 100644
+--- a/main/enigma.cpp
++++ b/main/enigma.cpp
+@@ -259,6 +259,36 @@ void catchTermSignal()
+ 
+ int main(int argc, char **argv)
+ {
++
++	/* Azbox Sigma mode check, switch back from player mode to normal mode if player crashed and enigma2 restart */		
++	int val=0;
++	FILE *f = fopen("/proc/player_status", "r");
++	if (f)
++	{		
++		fscanf(f, "%d", &val);
++		fclose(f);
++	}
++	if(val)
++	{
++		int rmfp_fd = open("/tmp/rmfp.kill", O_CREAT);
++		if(rmfp_fd > 0) 
++		{
++			int t = 50;
++			close(rmfp_fd);
++			while(access("/tmp/rmfp.kill", F_OK) >= 0 && t--) {
++			usleep(10000);
++			}
++		}	
++		f = fopen("/proc/player", "w");
++		if (f)
++		{		
++			fprintf(f, "%d", 1);
++			fclose(f);
++		}
++
++	}
++	/* */
++	
+ #ifdef MEMLEAK_CHECK
+ 	atexit(DumpUnfreed);
+ #endif
+-- 
+2.19.1.windows.1
+
