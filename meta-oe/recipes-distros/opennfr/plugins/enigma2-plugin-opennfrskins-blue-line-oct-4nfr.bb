@@ -25,7 +25,9 @@ do_install() {
 	cp -rp ${S}/tmp/nfr/* ${D}/tmp/nfr/
 	cp -rp ${S}/tmp/octagon/* ${D}/tmp/octagon/
 	install -d ${D}${libdir}
-	cp -rp ${S}/usr/lib/* ${D}${libdir}/
+    	install -d ${D}/usr/share
+    	cp -rp ${S}/usr/lib/* ${D}${libdir}/
+    	cp -rp ${S}/usr/share/* ${D}/usr/share/
 }
 
 pkg_postinst_${PN} () {
