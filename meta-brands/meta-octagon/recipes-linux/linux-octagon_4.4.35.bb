@@ -25,6 +25,7 @@ RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
 
 SRC_URI += "http://source.mynonpublic.com/octagon/octagon-linux-${PV}-${SRCDATE}.tar.gz \
     file://defconfig \
+    file://findkerneldevice.py \
 "
 
 S = "${WORKDIR}/linux-${PV}"
@@ -34,7 +35,7 @@ export OS = "Linux"
 KERNEL_OBJECT_SUFFIX = "ko"
 KERNEL_IMAGEDEST = "tmp"
 
-FILES_kernel-image = "${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}"
+FILES_kernel-image = "${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE} /${KERNEL_IMAGEDEST}/findkerneldevice.py"
 
 KERNEL_IMAGETYPE = "uImage"
 KERNEL_OUTPUT = "arch/${ARCH}/boot/${KERNEL_IMAGETYPE}"
@@ -42,6 +43,16 @@ KERNEL_OUTPUT = "arch/${ARCH}/boot/${KERNEL_IMAGETYPE}"
 kernel_do_install_append() {
 	install -d ${D}/${KERNEL_IMAGEDEST}
 	install -m 0755 ${KERNEL_OUTPUT} ${D}/${KERNEL_IMAGEDEST}
+}
+
+ppkg_postinst_kernel-image () {
+    if [ "x$D" == "x" ]; then
+        if [ -f /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE} ] ; then
+            python /${KERNEL_IMAGEDEST}/findkerneldevice.py
+            dd if=/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE} of=/dev/kernel
+        fi
+    fi
+    true
 }
 
 do_rm_work() {
