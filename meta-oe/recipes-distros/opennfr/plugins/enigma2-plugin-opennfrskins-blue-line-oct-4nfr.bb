@@ -17,14 +17,15 @@ SRC_URI="git://github.com/stein17/Skins-for-openNFR.git"
 
 S = "${WORKDIR}/git/Blue-Line-OCT-4NFR"
 
-FILES_${PN} = "/tmp /usr/*"
+FILES_${PN} = "/tmp ${libdir} /usr/share"
 
 do_install() {
 	install -d ${D}/tmp/nfr/
 	install -d ${D}/tmp/octagon/
 	cp -rp ${S}/tmp/nfr/* ${D}/tmp/nfr/
 	cp -rp ${S}/tmp/octagon/* ${D}/tmp/octagon/
-	cp -rp ${S}/usr ${D}/
+	install -d ${D}${libdir}
+	cp -rp ${S}/usr/lib/* ${D}${libdir}/
 }
 
 pkg_postinst_${PN} () {
@@ -63,7 +64,7 @@ exit 0
 pkg_preinst_${PN} () {
 #!/bin/sh
 
-python /usr/lib/enigma2/python/BoxBrandingTest.pyo | sed 's/<$//' | sed 's/ /_/g' > /tmp/boxbranding.cfg
+python ${libdir}/enigma2/python/BoxBrandingTest.pyo | sed 's/<$//' | sed 's/ /_/g' > /tmp/boxbranding.cfg
 
 exit 0
 }
