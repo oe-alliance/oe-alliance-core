@@ -219,9 +219,11 @@ CFLAGS_append_sh4 = " \
 	-I${STAGING_KERNEL_DIR}/extra/bpamem \
 	"
 
-CFLAGS_append_arm = " -DARM -DDREAMBOX -DMIPSEL"
-CFLAGS_append_arm_dm900 = " -DCONFIG_ION"
-CFLAGS_append_arm_dm920 = " -DCONFIG_ION"
+CFLAGS_append_arm = " -DARM -DMIPSEL"
+CFLAGS_append_arm_dm900 = " -DDREAMBOX -DCONFIG_ION"
+CFLAGS_append_arm_dm920 = " -DDREAMBOX -DCONFIG_ION"
+CFLAGS_append_arm_mutant51 = " -DDREAMBOX -DCONFIG_ION"
+
 CFLAGS_append_mipsel = " -DMIPSEL"
 CFLAGS_append_mipsel_dm7020hd = " -DDREAMBOX"
 CFLAGS_append_mipsel_dm520 = " -DDREAMBOX -DCONFIG_ION"
