@@ -1,5 +1,5 @@
 
-PREFERRED_VERSION_linux-edision = "4.19"
+PREFERRED_VERSION_linux-edision = "4.19.4"
 PREFERRED_VERSION_linux-libc-headers = "4.19"
 
 KERNEL_MODULE_AUTOLOAD += "hci_uart"

@@ -64,6 +64,7 @@ PYTHON_RDEPS = " \
     python-pyusb \
     python-subprocess \
     python-process \
+    python-image \
     python-imaging \
     python-smtpd \
     "

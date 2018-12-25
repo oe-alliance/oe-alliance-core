@@ -29,13 +29,13 @@ EXTRA_OECONF = "\
 
 PACKAGES =+ "${PN}-src"
 CONFFILES_${PN} += "${sysconfdir}/exports"
-FILES_${PN} = "/usr/lib"
-FILES_${PN}-dbg = "/usr/lib/enigma2/python/Plugins/Extensions/WebInterface/.debug/"
-FILES_${PN}-src = "/usr/lib/enigma2/python/Plugins/Extensions/WebInterface/*.py"
-FILES_${PN}-dbg = "/usr/lib/enigma2/python/Plugins/Extensions/WebBouquetEditor/.debug/"
-FILES_${PN}-src = "/usr/lib/enigma2/python/Plugins/Extensions/WebBouquetEditor/*.py"
-FILES_${PN}-dbg = "/usr/lib/enigma2/python/Plugins/Extensions/WebAdmin/.debug/"
-FILES_${PN}-src = "/usr/lib/enigma2/python/Plugins/Extensions/WebAdmin/*.py"
+FILES_${PN} = "${libdir}"
+FILES_${PN}-dbg = "${libdir}/enigma2/python/Plugins/Extensions/WebInterface/.debug/"
+FILES_${PN}-src = "${libdir}/enigma2/python/Plugins/Extensions/WebInterface/*.py"
+FILES_${PN}-dbg = "${libdir}/enigma2/python/Plugins/Extensions/WebBouquetEditor/.debug/"
+FILES_${PN}-src = "${libdir}/enigma2/python/Plugins/Extensions/WebBouquetEditor/*.py"
+FILES_${PN}-dbg = "${libdir}/enigma2/python/Plugins/Extensions/WebAdmin/.debug/"
+FILES_${PN}-src = "${libdir}/enigma2/python/Plugins/Extensions/WebAdmin/*.py"
 FILES_${PN}-doc = "/usr/share/enigma2/README*"
 
 pkg_postinst_${PN}() {

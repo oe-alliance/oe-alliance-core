@@ -8,7 +8,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 FILESEXTRAPATHS_prepend := "${THISDIR}/openvix-softcams-oscam:"
 
 PV = "1.20+svn${SRCPV}"
-SRCREV = "11438"
+SRCREV = "11443"
 SRC_URI = "svn://www.streamboard.tv/svn/oscam;protocol=http;module=trunk \
             file://fix_glibc_major.patch \
 "

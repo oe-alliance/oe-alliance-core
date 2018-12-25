@@ -60,6 +60,7 @@ IMAGE_CMD_ubi_append = " \
     rm -f ${DEPLOY_DIR_IMAGE}/.manifest; \
     cd ..; \
     rm -Rf ${DEPLOY_DIR_IMAGE}/${MACHINE}; \
+    rm -Rf ${DEPLOY_DIR_IMAGE}/zgemma-partitions-${MACHINE}; \
     "
 
 IMAGE_CMD_fastboot4gb_append = " \
@@ -89,6 +90,7 @@ IMAGE_CMD_fastboot4gb_append = " \
     rm -f ${DEPLOY_DIR_IMAGE}/.manifest; \
     cd ..; \
     rm -Rf ${DEPLOY_DIR_IMAGE}/${MACHINE}; \
+    rm -Rf ${DEPLOY_DIR_IMAGE}/zgemma-partitions-${MACHINE}; \
     "
 
 IMAGE_CMD_fastboot8gb_append = " \
@@ -115,6 +117,7 @@ IMAGE_CMD_fastboot8gb_append = " \
     rm -f ${DEPLOY_DIR_IMAGE}/.manifest; \
     cd ..; \
     rm -Rf ${DEPLOY_DIR_IMAGE}/${MACHINE}; \
+    rm -Rf ${DEPLOY_DIR_IMAGE}/zgemma-partitions-${MACHINE}; \
     "
 
 

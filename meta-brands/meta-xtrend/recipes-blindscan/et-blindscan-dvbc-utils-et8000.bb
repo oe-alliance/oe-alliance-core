@@ -6,7 +6,7 @@ require conf/license/license-close.inc
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-SRC_URI = "http://www.et-view.com/img_up/shop_pds/bh190/Img_Xtrend/${MACHINE}-dvbc-blindscan-${PV}.zip"
+SRC_URI = "http://source.mynonpublic.com/xtrend/${MACHINE}-dvbc-blindscan-${PV}.zip"
 
 PROVIDES += "virtual/blindscan-dvbc"
 RPROVIDES_${PN} += "virtual/blindscan-dvbc"
@@ -21,8 +21,8 @@ do_install() {
 	install -m 0755 "${S}/tda1002x" "${D}/${bindir}"
 }
 
-SRC_URI[md5sum] = "459be6d6e8336d182de1ada4a8dfd3c0"
-SRC_URI[sha256sum] = "8f67c7f79d8a4b9d7eea5a1574d1945e8c7c6eea5560cadb0566c4533e01bb12"
+SRC_URI[md5sum] = "8834f4f4809445ff58213293fbb3c852"
+SRC_URI[sha256sum] = "77d7612748d93ca822d125fdd9e5eb44eee626e759f911163176f11250a565c7"
 
 do_prepare_recipe_sysroot[noexec] = "1"
 INHIBIT_PACKAGE_STRIP = "1"

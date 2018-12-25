@@ -5,11 +5,11 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
 KERNEL_RELEASE = "4.4.35"
 
-SRCDATE = "20181117"
+SRCDATE = "20181121"
 
 inherit kernel machine_kernel_pr
 
-MACHINE_KERNEL_PR_append = ".10"
+MACHINE_KERNEL_PR_append = ".12"
 
 SRC_URI[md5sum] = "ede25f1c2c060f1059529a2896cee5a9"
 SRC_URI[sha256sum] = "ea4ba0433d252c18f38ff2f4dce4b70880e447e1cffdc2066d5a9b5f8098ae7e"

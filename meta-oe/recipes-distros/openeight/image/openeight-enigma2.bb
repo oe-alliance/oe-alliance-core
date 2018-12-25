@@ -32,3 +32,5 @@ RRECOMMENDS_${PN} = "\
     ${@bb.utils.contains("MACHINE_FEATURES", "3dtv", "enigma2-plugin-systemplugins-osd3dsetup" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "boxmodel", "boxmodel", "", d)} \
     "
+
+RRECOMMENDS_${PN}_append_sf8008 = " enigma2-plugin-systemplugins-vfdcontrol"

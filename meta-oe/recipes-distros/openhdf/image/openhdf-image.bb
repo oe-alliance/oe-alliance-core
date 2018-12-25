@@ -46,7 +46,7 @@ rootfs_postprocess() {
         rm -rf parser.sh
     fi
     cd ${IMAGE_ROOTFS}
-    ln -s usr/lib/enigma2/spinner usr/lib/enigma2/skin_default/spinner || true
+    ln -s usr/share/enigma2/spinner usr/share/enigma2/skin_default/spinner || true
 
     echo ${DEPLOY_DIR_IMAGE} > /tmp/DEPLOY_DIR_IMAGE
 }
@@ -56,7 +56,7 @@ ROOTFS_POSTPROCESS_COMMAND += "rootfs_postprocess; "
 export NFO = '${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.nfo'
 
 do_generate_nfo() {
-    VER=`grep Version: "${IMAGE_ROOTFS}/usr/lib/ipkg/info/enigma2.control" | cut -b 10-26`
+    VER=`grep Version: "${IMAGE_ROOTFS}/usr/${libdir}/ipkg/info/enigma2.control" | cut -b 10-26`
     echo "Enigma2: ${VER}" > ${NFO}
     echo "Machine: ${MACHINE}" >> ${NFO}
     DATE=`date +%Y-%m-%d' '%H':'%M`

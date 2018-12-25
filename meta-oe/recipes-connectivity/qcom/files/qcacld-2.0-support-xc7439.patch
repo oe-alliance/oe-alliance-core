@@ -1,0 +1,91 @@
+diff --git a/CORE/HDD/src/wlan_hdd_cfg80211.c b/CORE/HDD/src/wlan_hdd_cfg80211.c
+index cbfa922d3eca..255733fa8521 100644
+--- a/CORE/HDD/src/wlan_hdd_cfg80211.c
++++ b/CORE/HDD/src/wlan_hdd_cfg80211.c
+@@ -1586,6 +1586,8 @@ static const struct nl80211_vendor_cmd_info wlan_hdd_cfg80211_vendor_events[] =
+     }
+ };
+ 
++#define WIPHY_FLAG_DFS_OFFLOAD BIT(25)
++
+ /**
+  * __is_driver_dfs_capable() - get driver DFS capability
+  * @wiphy:   pointer to wireless wiphy structure.
+diff --git a/CORE/HDD/src/wlan_hdd_tx_rx.c b/CORE/HDD/src/wlan_hdd_tx_rx.c
+index f84a6d8efda2..e734a350305b 100644
+--- a/CORE/HDD/src/wlan_hdd_tx_rx.c
++++ b/CORE/HDD/src/wlan_hdd_tx_rx.c
+@@ -1383,6 +1383,56 @@ static inline void hdd_tsf_timestamp_rx(hdd_context_t *hdd_ctx,
+ }
+ #endif
+ 
++bool cfg80211_is_gratuitous_arp_unsolicited_na(struct sk_buff *skb)
++{
++    const struct ethhdr *eth = (void *)skb->data;
++    const struct {
++        struct arphdr hdr;
++        u8 ar_sha[ETH_ALEN];
++        u8 ar_sip[4];
++        u8 ar_tha[ETH_ALEN];
++        u8 ar_tip[4];
++    } __packed *arp;
++    const struct ipv6hdr *ipv6;
++    const struct icmp6hdr *icmpv6;
++
++    switch (eth->h_proto) {
++    case cpu_to_be16(ETH_P_ARP):
++        /* can't say - but will probably be dropped later anyway */
++        if (!pskb_may_pull(skb, sizeof(*eth) + sizeof(*arp)))
++            return false;
++
++        arp = (void *)(eth + 1);
++
++        if ((arp->hdr.ar_op == cpu_to_be16(ARPOP_REPLY) ||
++             arp->hdr.ar_op == cpu_to_be16(ARPOP_REQUEST)) &&
++            !memcmp(arp->ar_sip, arp->ar_tip, sizeof(arp->ar_sip)))
++            return true;
++        break;
++    case cpu_to_be16(ETH_P_IPV6):
++        /* can't say - but will probably be dropped later anyway */
++        if (!pskb_may_pull(skb, sizeof(*eth) + sizeof(*ipv6) +
++                    sizeof(*icmpv6)))
++            return false;
++
++        ipv6 = (void *)(eth + 1);
++        icmpv6 = (void *)(ipv6 + 1);
++
++        if (icmpv6->icmp6_type == NDISC_NEIGHBOUR_ADVERTISEMENT &&
++            !memcmp(&ipv6->saddr, &ipv6->daddr, sizeof(ipv6->saddr)))
++            return true;
++        break;
++    default:
++        /*
++         * no need to support other protocols, proxy service isn't
++         * specified for any others
++         */
++        break;
++    }
++
++    return false;
++}
++
+ /**============================================================================
+   @brief hdd_rx_packet_cbk() - Receive callback registered with TL.
+   TL will call this to notify the HDD when one or more packets were
+diff --git a/CORE/VOSS/src/vos_nvitem.c b/CORE/VOSS/src/vos_nvitem.c
+index e4e2a73c6697..86d73c7c8bf6 100644
+--- a/CORE/VOSS/src/vos_nvitem.c
++++ b/CORE/VOSS/src/vos_nvitem.c
+@@ -1676,10 +1676,12 @@ VOS_STATUS vos_nv_getRegDomainFromCountryCode( v_REGDOMAIN_t *pRegDomain,
+             vos_set_cc_source(CNSS_SOURCE_11D);
+ 
+         INIT_COMPLETION(pHddCtx->reg_init);
++#if 0
+ #if (LINUX_VERSION_CODE >= KERNEL_VERSION(3,9,0)) || defined(WITH_BACKPORTS)
+         regulatory_hint_user(country_code, NL80211_USER_REG_HINT_USER);
+ #else
+         regulatory_hint_user(country_code);
++#endif
+ #endif
+         wait_result = wait_for_completion_interruptible_timeout(
+                                &pHddCtx->reg_init,
