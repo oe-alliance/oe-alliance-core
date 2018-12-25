@@ -1,0 +1,45 @@
+From 786488ce550dd42c3329a3e2887381c083d58c38 Mon Sep 17 00:00:00 2001
+From: OpenEmbedded <oe.patch@oe>
+Date: Sun, 25 Mar 2018 00:10:59 +0100
+
+---
+ epgsearch/src/EPGSearch.py | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
+
+diff --git a/epgsearch/src/EPGSearch.py b/epgsearch/src/EPGSearch.py
+index 7c60d70a..724b7eaa 100644
+--- a/epgsearch/src/EPGSearch.py
++++ b/epgsearch/src/EPGSearch.py
+@@ -52,6 +52,32 @@ except ImportError:
+ rootbouquet_tv = '1:7:1:0:0:0:0:0:0:0:FROM BOUQUET "bouquets.tv" ORDER BY bouquet'
+ rootbouquet_radio = '1:7:1:0:0:0:0:0:0:0:FROM BOUQUET "bouquets.radio" ORDER BY bouquet'
+ 
++# Overwrite EPGSelection.__init__ with our modified one
++baseEPGSelection__init__ = None
++def EPGSelectionInit():
++	global baseEPGSelection__init__
++	if baseEPGSelection__init__ is None:
++		baseEPGSelection__init__ = EPGSelection.__init__
++	EPGSelection.__init__ = EPGSelection__init__
++
++# Modified EPGSelection __init__
++def EPGSelection__init__(self, session, service, zapFunc=None, eventid=None, bouquetChangeCB=None, serviceChangeCB=None, isEPGBar=None, switchBouquet=None, EPGNumberZap=None, togglePiP=None):
++	baseEPGSelection__init__(self, session, service, zapFunc, eventid, bouquetChangeCB, serviceChangeCB, isEPGBar, switchBouquet, EPGNumberZap, togglePiP)
++	if self.type != EPG_TYPE_MULTI and config.plugins.epgsearch.add_search_to_epg.value:
++		def bluePressed():
++			cur = self["list"].getCurrent()
++			if cur[0] is not None:
++				name = cur[0].getEventName()
++			else:
++				name = ''
++			self.session.open(EPGSearch, name, False)
++
++		self["epgsearch_actions"] = ActionMap(["EPGSelectActions"],
++				{
++					"blue": bluePressed,
++				})
++		self["key_blue"].text = _("Search")
++
+ # Modified EPGSearchList with support for PartnerBox
+ class EPGSearchList(EPGList):
+ 	def __init__(self, type=EPG_TYPE_SINGLE, selChangedCB=None, timer=None):
