@@ -21,7 +21,7 @@ EXTRA_OECONF += " \
 "
 
 python(){
-    import json
+    import collections, json
 
     filename = os.path.join(d.getVar('THISDIR'), 'python', 'python2-manifest.json')
     # This python changes the datastore based on the contents of a file, so mark
@@ -29,7 +29,11 @@ python(){
     bb.parse.mark_dependency(d, filename)
 
     with open(filename) as manifest_file:
-        python_manifest=json.load(manifest_file)
+        manifest_str =  manifest_file.read()
+        json_start = manifest_str.find('# EOC') + 6
+        manifest_file.seek(json_start)
+        manifest_str = manifest_file.read()
+        python_manifest = json.loads(manifest_str, object_pairs_hook=collections.OrderedDict)
 
     include_pycs = d.getVar('INCLUDE_PYCS')
 
