@@ -1,0 +1,161 @@
+From 6e442ef9fe332fcd4c834af73ebae7ac17b1e215 Mon Sep 17 00:00:00 2001
+From: Captain <captain.onboard@web.de>
+Date: Sat, 1 Dec 2018 13:41:05 +0100
+Subject: [PATCH] add MALI_HIPLAYER
+
+---
+ Makefile.in                                   | 42 ++++++++++---------
+ configure.ac                                  |  3 ++
+ .../playercorefactory/PlayerCoreConfig.h      |  9 ++++
+ .../playercorefactory/PlayerCoreFactory.cpp   |  8 ++++
+ xbmc/guilib/GUIWindowManager.cpp              |  9 ++++
+ xbmc/windows/Makefile                         |  4 ++
+ 6 files changed, 56 insertions(+), 19 deletions(-)
+
+diff --git a/Makefile.in b/Makefile.in
+index 984fd00091..7eb4b0a7f1 100644
+--- a/Makefile.in
++++ b/Makefile.in
+@@ -212,6 +212,10 @@ ifeq (@USE_OMXPLAYER@,1)
+ DIRECTORY_ARCHIVES += xbmc/cores/omxplayer/omxplayer.a
+ endif
+ 
++ifeq (@USE_MALI_HIPLAYER@,1)
++DIRECTORY_ARCHIVES += xbmc/cores/HiPlayer/HiPlayer.a
++endif
++
+ LIB_DIRS=\
+ 	lib/libexif \
+ 	lib/cpluff \
+diff --git a/configure.ac b/configure.ac
+index 629929aafa..3deb799237 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -748,6 +748,7 @@ case $use_platform in
+      ;;
+   mali-cortexa15)
+      USE_MALI=1
++     USE_MALI_HIPLAYER=1
+      target_platform=target_mali
+      target_videoplatform=target_mali
+      use_cpu=cortex-a15
+@@ -1080,6 +1081,7 @@ if test "$use_gles" = "yes"; then
+   elif test "$target_videoplatform" = "target_mali" ; then
+       AC_DEFINE([HAVE_LIBEGL],[1],["Define to 1 if you have the `EGL' library (-lEGL)."])
+       AC_DEFINE([HAVE_LIBGLESV2],[1],["Define to 1 if you have the `GLESv2' library (-lGLESv2)."])
++      AC_DEFINE([HAS_HIPLAYER],[1],["Define to 1 if Hiplayer is available"])
+       AC_MSG_RESULT(== WARNING: OpenGLES mali support is assumed.)
+       LIBS="$LIBS -lEGL -lGLESv2 -lmali"
+   else
+@@ -2483,6 +2485,7 @@ AC_SUBST(USE_VUPLUS_MIPSEL_LIB)
+ AC_SUBST(USE_NEXTV)
+ AC_SUBST(USE_GB)
+ AC_SUBST(USE_MALI)
++AC_SUBST(USE_MALI_HIPLAYER)
+ 
+ # pushd and popd are not available in other shells besides bash, so implement
+ # our own pushd/popd functions
+diff --git a/xbmc/cores/playercorefactory/PlayerCoreConfig.h b/xbmc/cores/playercorefactory/PlayerCoreConfig.h
+index 15a6570a27..3171c857ba 100644
+--- a/xbmc/cores/playercorefactory/PlayerCoreConfig.h
++++ b/xbmc/cores/playercorefactory/PlayerCoreConfig.h
+@@ -28,6 +28,9 @@
+ #ifdef HAS_UPNP
+ #include "network/upnp/UPnPPlayer.h"
+ #endif
++#ifdef HAS_HIPLAYER
++#include "cores/HiPlayer/HiPlayer.h"
++#endif
+ #include "utils/log.h"
+ 
+ class CPlayerCoreConfig
+@@ -93,6 +96,12 @@ public:
+     {
+       pPlayer = new PAPlayer(callback);
+     }
++#if defined(HAS_HIPLAYER)
++    else if (m_type.compare("hiplayer") == 0)
++    {
++      pPlayer = new CHiPlayer(callback);
++    }
++#endif
+     else if (m_type.compare("external") == 0)
+     {
+       pPlayer = new CExternalPlayer(callback);
+diff --git a/xbmc/cores/playercorefactory/PlayerCoreFactory.cpp b/xbmc/cores/playercorefactory/PlayerCoreFactory.cpp
+index 896b865895..993226ce81 100644
+--- a/xbmc/cores/playercorefactory/PlayerCoreFactory.cpp
++++ b/xbmc/cores/playercorefactory/PlayerCoreFactory.cpp
+@@ -315,6 +315,12 @@ bool CPlayerCoreFactory::LoadConfiguration(const std::string &file, bool clear)
+     m_vecCoreSelectionRules.clear();
+ 
+     // Builtin players
++#if defined(HAS_HIPLAYER)
++    CPlayerCoreConfig* HiPlayer = new CPlayerCoreConfig("HiPlayer", "hiplayer", nullptr);
++    HiPlayer->m_bPlaysAudio = true;
++    HiPlayer->m_bPlaysVideo = true;
++    m_vecPlayerConfigs.push_back(HiPlayer);
++#endif
+     CPlayerCoreConfig* VideoPlayer = new CPlayerCoreConfig("VideoPlayer", "video", nullptr);
+     VideoPlayer->m_bPlaysAudio = true;
+     VideoPlayer->m_bPlaysVideo = true;
+@@ -347,6 +353,8 @@ bool CPlayerCoreFactory::LoadConfiguration(const std::string &file, bool clear)
+         internaltype = "video";
+       else if (type == "paplayer")
+         internaltype = "music";
++      else if (type == "hiplayer")
++        internaltype = "hiplayer";
+       else if (type == "externalplayer")
+         internaltype = "external";
+ 
+diff --git a/xbmc/guilib/GUIWindowManager.cpp b/xbmc/guilib/GUIWindowManager.cpp
+index 5808f7ed1e..6080dd1e45 100644
+--- a/xbmc/guilib/GUIWindowManager.cpp
++++ b/xbmc/guilib/GUIWindowManager.cpp
+@@ -73,6 +73,9 @@
+ #include "windows/GUIWindowStartup.h"
+ #include "video/windows/GUIWindowFullScreen.h"
+ #include "video/dialogs/GUIDialogVideoOSD.h"
++#ifdef HAS_HIPLAYER
++#include "windows/GUIWindowSubtitles.h"
++#endif
+ 
+ // Dialog includes
+ #include "music/dialogs/GUIDialogMusicOSD.h"
+@@ -299,6 +302,9 @@ void CGUIWindowManager::CreateWindows()
+   Add(new CGUIWindowSplash);
+ 
+   Add(new CGUIWindowEventLog);
++#ifdef HAS_HIPLAYER
++  Add(new CGUIWindowSubtitles); /* subtitle renderer */
++#endif
+ 
+   Add(new GAME::CGUIControllerWindow);
+ }
+@@ -415,6 +421,9 @@ bool CGUIWindowManager::DestroyWindows()
+ 
+     Remove(WINDOW_DIALOG_SEEK_BAR);
+     Remove(WINDOW_DIALOG_VOLUME_BAR);
++#ifdef HAS_HIPLAYER
++    Remove(12666); /* subtitle renderer */
++#endif
+ 
+     Delete(WINDOW_EVENT_LOG);
+   }
+diff --git a/xbmc/windows/Makefile b/xbmc/windows/Makefile
+index a328db2761..7790dff078 100644
+--- a/xbmc/windows/Makefile
++++ b/xbmc/windows/Makefile
+@@ -13,5 +13,9 @@ SRCS=GUIMediaWindow.cpp \
+ 
+ LIB=windows.a
+ 
++#ifdef HAS_HIPLAYER
++SRCS+= GUIWindowSubtitles.cpp
++#endif
++
+ include ../../Makefile.include
+ -include $(patsubst %.cpp,%.P,$(patsubst %.c,%.P,$(SRCS)))
+-- 
+2.19.1.windows.1
+

@@ -1,8 +1,8 @@
 COMPATIBLE_MACHINE = "^(vuuno4kse)$"
 
-SRCDATE = "20180820.r2"
+SRCDATE = "20181010.r1"
 
-SRC_URI[md5sum] = "950ed0295488a1ba1a7af6f67873abb4"
-SRC_URI[sha256sum] = "a24de6eeb99903ad9013c6a28afb6c198c2bde7b16c7cc2effae94d93bf3885f"
+SRC_URI[md5sum] = "e8c9de28816de892e5d9216adeb6e59c"
+SRC_URI[sha256sum] = "7ee7f9bc670168509a414eff3def0b19b7b0a51bd2959379bbca802a14de62e7"
 
 require vuplus-stalkerclient.inc

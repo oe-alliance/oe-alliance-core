@@ -35,7 +35,7 @@ MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "\
     gptfdisk \
 "
 
-MACHINE_FEATURES += "videoenhancement switchoff 7segment textlcd skins1080 emmc mmc blindscan-dvbs kodi alsa hbbtv-browser-webkit qtstalker"
+MACHINE_FEATURES += "switchoff 7segment hdmicec textlcd skins1080 emmc mmc blindscan-dvbs kodi alsa hbbtv-browser-webkit qtstalker"
 
 IMAGE_CLASSES  += "octagon-emmc_image"
 IMAGE_FSTYPES += "octagonemmc"

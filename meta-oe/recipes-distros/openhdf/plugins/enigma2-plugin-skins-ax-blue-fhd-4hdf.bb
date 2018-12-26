@@ -12,14 +12,16 @@ VER="3.0"
 
 SRC_URI="git://github.com/stein17/AX-Blue-FHD-4HDF.git;protocol=git"
 
-FILES_${PN} = "/usr/*"
+FILES_${PN} = "/usr/share ${libdir}"
 
 S = "${WORKDIR}/git"
 
 do_install() {
-    install -d ${D}/usr/share/enigma2
-    cp -rp ${S}/usr ${D}/
-    chmod -R a+rX ${D}/usr/share/enigma2/
+	install -d ${D}/usr/share
+	install -d ${D}${libdir}
+	cp -rp ${S}/usr/share/* ${D}/usr/share/
+	cp -rp ${S}/usr/lib/* ${D}${libdir}/
+	chmod -R a+rX ${D}/usr/share/enigma2/
 }
 
 pkg_postinst_${PN} () {

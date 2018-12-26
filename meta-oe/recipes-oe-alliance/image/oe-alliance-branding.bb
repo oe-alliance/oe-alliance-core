@@ -71,7 +71,7 @@ EXTRA_OECONF = " \
     "
 
 do_configure_prepend() {
-    if [ "${MACHINE}" = "vusolo4k" -o "${MACHINE}" = "vusolo2" -o "${MACHINE}" = "vusolose" -o "${MACHINE}" = "vuduo2" -o "${MACHINE}" = "vuuno4k" -o "${MACHINE}" = "vuuno4kse" -o "${MACHINE}" = "vuultimo4k" -o "${MACHINE}" = "vuzero4k" -o "${MACHINE}" = "vuduo4k"]; then
+    if [ "${MACHINE}" = "vusolo4k" -o "${MACHINE}" = "vusolo2" -o "${MACHINE}" = "vusolose" -o "${MACHINE}" = "vuduo2" -o "${MACHINE}" = "vuuno4k" -o "${MACHINE}" = "vuuno4kse" -o "${MACHINE}" = "vuultimo4k" -o "${MACHINE}" = "vuzero4k" -o "${MACHINE}" = "vuduo4k" ]; then
         DRIVERSDATE=`grep "SRCDATE = " ${OEA-META-VUPLUS-BASE}/recipes-drivers/vuplus-dvb-proxy-${MACHINE}.bb | cut -b 12-19`
     elif [ "${BRAND_OEM}" = "vuplus" ]; then
         DRIVERSDATE=`grep "SRCDATE = " ${OEA-META-VUPLUS-BASE}/recipes-drivers/vuplus-dvb-modules-${MACHINE}.bb | cut -b 12-19`
@@ -157,9 +157,9 @@ do_configure_prepend() {
         elif [ "${MACHINE}" = "dm800sev2" ]; then
             DRIVERSDATE="20151201"
         elif [ "${MACHINE}" = "dm900" ]; then
-            DRIVERSDATE="20181002"
+            DRIVERSDATE="20181127"
         elif [ "${MACHINE}" = "dm920" ]; then
-            DRIVERSDATE="20181002"
+            DRIVERSDATE="20181127"
         else
             DRIVERSDATE="20150618"
         fi
@@ -234,6 +234,11 @@ do_install_append() {
         ln -sf /usr/share/enigma2/dm900.png ${D}${libdir}/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes/dm900.png
         install -m 0644 ${S}/BoxBranding/boxes/dm920.png ${D}/usr/share/enigma2/dm920.png
         ln -sf /usr/share/enigma2/dm920.png ${D}${libdir}/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes/dm920.png
+    elif [ ${MACHINEBUILD} = "sf8008" ]; then
+        install -m 0644 ${S}/BoxBranding/boxes/sf8008.png ${D}/usr/share/enigma2/sf8008.png
+        ln -sf /usr/share/enigma2/sf8008.png ${D}${libdir}/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes/sf8008.png
+        install -m 0644 ${S}/BoxBranding/boxes/sf8008s.png ${D}/usr/share/enigma2/sf8008s.png
+        ln -sf /usr/share/enigma2/sf8008s.png ${D}${libdir}/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes/sf8008s.png
     else
         install -m 0644 ${S}/BoxBranding/boxes/${MACHINEBUILD}.png ${D}/usr/share/enigma2/${MACHINEBUILD}.png
         ln -sf /usr/share/enigma2/${MACHINEBUILD}.png ${D}${libdir}/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes/${MACHINEBUILD}.png

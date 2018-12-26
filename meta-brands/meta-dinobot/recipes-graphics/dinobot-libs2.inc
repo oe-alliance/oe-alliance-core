@@ -8,7 +8,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 RDEPENDS_${PN} = "curl"
 
 PV = "${SRCDATE}"
-PR = "r1"
+PR = "r2"
 
 inherit lib_package pkgconfig
 
@@ -47,14 +47,17 @@ do_install() {
 	ln -sf libHA.AUDIO.AMRWB.codec.so libHA.AUDIO.AMRWB.codec.so.0.0
 	ln -sf libHA.AUDIO.BLURAYLPCM.decode.so libHA.AUDIO.BLURAYLPCM.decode.so.0.0
 	ln -sf libHA.AUDIO.COOK.decode.so libHA.AUDIO.COOK.decode.so.0.0
+	ln -sf libHA.AUDIO.DRA.decode.so libHA.AUDIO.DRA.decode.so.0.0
 	ln -sf libHA.AUDIO.DTSPASSTHROUGH.decode.so libHA.AUDIO.DTSPASSTHROUGH.decode.so.0.0
 	ln -sf libHA.AUDIO.G711.codec.so libHA.AUDIO.G711.codec.so.0.0
 	ln -sf libHA.AUDIO.G722.codec.so libHA.AUDIO.G722.codec.so.0.0
 	ln -sf libHA.AUDIO.MP2.decode.so libHA.AUDIO.MP2.decode.so.0.0
 	ln -sf libHA.AUDIO.MP3.decode.so libHA.AUDIO.MP3.decode.so.0.0
+	ln -sf libHA.AUDIO.OPUS.codec.so libHA.AUDIO.OPUS.codec.so.0.0
 	ln -sf libHA.AUDIO.PCM.decode.so libHA.AUDIO.PCM.decode.so.0.0
 	ln -sf libHA.AUDIO.TRUEHDPASSTHROUGH.decode.so libHA.AUDIO.TRUEHDPASSTHROUGH.decode.so.0.0
 	ln -sf libHA.AUDIO.VOICE.codec.so libHA.AUDIO.VOICE.codec.so.0.0
+	ln -sf libHA.AUDIO.VORBIS.codec.so libHA.AUDIO.VORBIS.codec.so.0.0
 
 	ln -sf libhi_common.so libhi_common.so.0.0
 	ln -sf libhi_msp.so libhi_msp.so.0.0

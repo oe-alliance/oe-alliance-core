@@ -4,15 +4,16 @@ include conf/machine/include/build-extras.inc
 BRAND_OEM = "dinobot"
 
 MACHINE_NAME = "\
-${@bb.utils.contains('MACHINEBUILD', 'anadol4kcombo', '4K Combo' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'anadol4kv2', '4K ECO V2' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'anadol4k', '4K ECO' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'anadol4kcombo', 'Combo 4K UHD' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'anadol4kv2', 'ECO 4K UHD V2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'anadol4k', 'ECO´4K UHD' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'dinobot4kl', 'DINOBOT 4KL' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'dinobot4k', 'DINOBOT 4K' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'mediabox4k', 'mediabox 4k M7L' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'dinobot4kse', 'DINOBOT 4KSE' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'dinobot4kplus', 'DINOBOT 4K Plus' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'dinobot4kmini', 'DINOBOT 4K mini' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'dinobot4kpro', 'DINOBOT 4K Pro' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'axashis4kcombo', 'HIS4K Combo' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'axashis4kcomboplus', 'HIS4K Combo Plus' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'ferguson4k', 'U5 PVR' , '', d)}\
@@ -28,6 +29,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'mediabox4k', 'JEPSSEN' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'dinobot4kse', 'Vivant' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'dinobot4kplus', 'Vivant' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'dinobot4kmini', 'Vivant' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'dinobot4kpro', 'Vivant' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'axashis4kcombo', 'AXAS' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'axashis4kcomboplus', 'AXAS' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'ferguson4k', 'Ferguson' , '', d)}\
@@ -43,6 +45,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'mediabox4k', 'mmcblk0p10' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'dinobot4kse', 'mmcblk0p10' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'dinobot4kplus', 'mmcblk0p10' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'dinobot4kmini', 'mmcblk0p10' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'dinobot4kpro', 'mmcblk0p10' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'axashis4kcombo', 'mmcblk0p9' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'axashis4kcomboplus', 'mmcblk0p10' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'ferguson4k', 'mmcblk0p10' , '', d)}\
@@ -58,6 +61,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'mediabox4k', 'mmcblk1p1' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'dinobot4kse', 'mmcblk0p13' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'dinobot4kplus', 'mmcblk0p13' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'dinobot4kmini', 'mmcblk0p13' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'dinobot4kpro', 'mmcblk0p13' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'axashis4kcombo', 'mmcblk0p10' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'axashis4kcomboplus', 'mmcblk0p13' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'ferguson4k', 'mmcblk0p13' , '', d)}\
@@ -73,6 +77,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'mediabox4k', 'yes' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'dinobot4kse', 'no' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'dinobot4kplus', 'no' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'dinobot4kmini', 'no' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'dinobot4kpro', 'no' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'axashis4kcombo', 'no' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'axashis4kcomboplus', 'no' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'ferguson4k', 'no' , '', d)}\
@@ -88,6 +93,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'mediabox4k', 'dinobot/${MACHINE}' , '', d)
 ${@bb.utils.contains('MACHINEBUILD', 'dinobot4kse', 'dinobot/${MACHINE}' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'dinobot4kplus', 'dinobot/${MACHINE}' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'dinobot4kmini', 'dinobot/${MACHINE}' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'dinobot4kpro', 'dinobot/${MACHINE}' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'axashis4kcombo', 'axas/axascombo' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'axashis4kcomboplus', 'axas/axascomboplus' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'ferguson4k', 'dinobot/${MACHINE}' , '', d)}\
@@ -117,7 +123,7 @@ MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "\
     dinobot-lib-helper \
 "
 
-MACHINE_FEATURES += "videoenhancement switchoff  hdmicec 7segment textlcd skins1080 blindscan-tbs emmc mmc kodi alsa hbbtv-browser-webkit qtstalker HDMI \
+MACHINE_FEATURES += "switchoff  hdmicec 7segment textlcd skins1080 blindscan-tbs emmc mmc kodi alsa hbbtv-browser-webkit qtstalker HDMI \
     ${@bb.utils.contains('MACHINEBUILD', 'anadol4k', '' , ' dvb-c', d)} \
     ${@bb.utils.contains('MACHINEBUILD', 'anadol4kcombo', '' , ' dvb-c', d)} \
     "

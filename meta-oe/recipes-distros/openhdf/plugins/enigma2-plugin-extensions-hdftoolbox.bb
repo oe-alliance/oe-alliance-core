@@ -15,14 +15,15 @@ SRCREV = "${AUTOREV}"
 PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"
 VER ="1.0"
-PR = "r1"
+PR = "r3"
 
 SRC_URI="git://github.com/openhdf/hdftoolbox.git"
 
 S = "${WORKDIR}/git"
 
-FILES_${PN} = "/usr/*"
+FILES_${PN} = "${libdir}"
 
 do_install() {
-    cp -rp ${S}/usr ${D}/
+    install -d ${D}${libdir}
+    cp -rp ${S}/usr/lib/* ${D}${libdir}/
 }

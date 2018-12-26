@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda
 ALLOW_EMPTY_${PN} = "1"
 
 PV = "1.0"
-PR = "r5"
+PR = "r6"
 
 inherit packagegroup
 
@@ -15,7 +15,8 @@ RRECOMMENDS_${PN} = "\
     enigma2-pliplugins \
     enigma2-plugin-extensions-cooltvguide \
     enigma2-plugin-extensions-epgimport \
-    cdfs \
+    cdfs \  
+    enigma2-plugin-extensions-historyzapselector \
     enigma2-plugin-extensions-enhancedmoviecenter \
     enigma2-plugin-skins-octagonhdstyledark \
     enigma2-plugin-skins-octagonhdstyleblack \
