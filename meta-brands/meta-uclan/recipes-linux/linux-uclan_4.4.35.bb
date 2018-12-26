@@ -45,7 +45,7 @@ kernel_do_install_append() {
 	install -m 0755 ${KERNEL_OUTPUT} ${D}/${KERNEL_IMAGEDEST}
 }
 
-ppkg_postinst_kernel-image () {
+pkg_postinst_kernel-image () {
     if [ "x$D" == "x" ]; then
         if [ -f /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE} ] ; then
             python /${KERNEL_IMAGEDEST}/findkerneldevice.py
