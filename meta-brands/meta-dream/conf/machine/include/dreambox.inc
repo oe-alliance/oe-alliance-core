@@ -48,7 +48,7 @@ PREFERRED_PROVIDER_virtual/blindscan-dvbc = "dreambox-blindscan-utils"
 
 PREFERRED_VERSION_linux-dreambox ?= "3.2"
 
-GCCVERSION = "8.%"
+
 
 PREFERRED_VERSION_rt8812au = "4.3.14"
 

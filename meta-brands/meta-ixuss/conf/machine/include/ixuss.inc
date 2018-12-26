@@ -36,7 +36,7 @@ PREFERRED_PROVIDER_virtual/kernel = "linux-ixuss"
 
 PREFERRED_VERSION_linux-ixuss = "3.3.0"
 
-GCCVERSION = "8.%"
+
 
 PREFERRED_VERSION_rt8812au = "4.3.14"
 
