@@ -15,7 +15,7 @@ SRCREV = "${AUTOREV}"
 
 S = "${WORKDIR}/git"
 
-DEPENDS = "gstreamer1.0"
+DEPENDS = "gstreamer1.0 bison-native"
 RDEPENDS_${PN} = "wpa-supplicant connman"
 
 do_install_append() {

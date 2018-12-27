@@ -12,7 +12,7 @@ PKGV = "1.0+git${GITPKGV}"
 PR = "r0"
 
 SRC_URI = "git://github.com/samsamsam-iptvplayer/hlsdl.git;protocol=git"
-SRCREV = "5508fd65b651adb32ec54a8c7168220bbe1ff777"
+SRCREV = "a0aa96f228396c2c05bb82bd53435a2675d9c982"
 
 S = "${WORKDIR}/git/"
 
