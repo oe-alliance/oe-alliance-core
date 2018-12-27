@@ -10,6 +10,18 @@ PR = "r16"
 
 inherit packagegroup
 
+DEPENDS = " \
+	ca-certificates \
+	flip \
+	hddtemp \
+	openatv-enigma2 \
+	openatv-spinner \
+	oe-alliance-base \
+	packagegroup-base-smbfs-client \
+	python-imaging \
+	python-service-identity \
+	rtmpdump \
+
 RDEPENDS_${PN} = "\
 	aio-grab \
 	alsa-conf \
@@ -57,7 +69,7 @@ RDEPENDS_${PN} = "\
 	packagegroup-base \
 	packagegroup-core-boot \
 	packagegroup-base-smbfs-client \
-    	packagegroup-base-smbfs-server \
+    packagegroup-base-smbfs-server \
    	packagegroup-base-smbfs-utils \
    	packagegroup-base-nfs \    
 	pngquant \
@@ -91,6 +103,8 @@ RDEPENDS_${PN} = "\
 	", d)} \
 	${@bb.utils.contains("TARGET_ARCH", "sh4", "alsa-utils-amixer-conf" , "", d)} \
 	titan-libeplayer3 \
+	titan-infobox \
+	oe-alliance-feeds-configs \
     "
 
 #	kernel-module-usbserial
