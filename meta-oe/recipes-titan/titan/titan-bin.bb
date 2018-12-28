@@ -250,10 +250,10 @@ do_compile() {
 	BOXNAME=${MACHINE}
 	SVNVERSION=`svn info http://sbnc.dyndns.tv/svn/titan | grep Revision | sed s/'Revision: '//g`
 	echo SVNVERSION: ${SVNVERSION}
+	SWTYPE=titan
 
-	echo HOST_SYS ${HOST_SYS}
-	echo ./oealliance.sh $KERNELDIR $ROOTDIR $TYPE $SRCDIR $CPU $STM $BOXNAME ${DISTRO_NAME} $SVNVERSION
-	./oealliance.sh $KERNELDIR $ROOTDIR $TYPE $SRCDIR $CPU $STM $BOXNAME $DISTRO_NAME $DISTRO_TYPE $SVNVERSION
+	echo ./oealliance.sh $KERNELDIR $ROOTDIR $TYPE $SRCDIR $CPU $STM $BOXNAME $DISTRO_NAME $DISTRO_TYPE titan $SVNVERSION
+	./oealliance.sh $KERNELDIR $ROOTDIR $TYPE $SRCDIR $CPU $STM $BOXNAME $DISTRO_NAME $DISTRO_TYPE titan $SVNVERSION
 
 	cd ${WORKDIR}/titan/titan
 
