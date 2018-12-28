@@ -21,6 +21,7 @@ DEPENDS = " \
 	python-imaging \
 	python-service-identity \
 	rtmpdump \
+	"
 
 RDEPENDS_${PN} = "\
 	aio-grab \
