@@ -29,5 +29,5 @@ l6:6:wait:/etc/init.d/rc 6
 # Normally not reached, but fallthrough in case of emergency.
 z6:6:respawn:/sbin/sulogin
 
-gui:3:respawn:/usr/bin/titan.sh
+gui:3:respawn:/var/etc/autostart/start.sh first
 x:1:once:/tmp/image_restore.sh
