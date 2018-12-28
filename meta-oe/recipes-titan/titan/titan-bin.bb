@@ -253,7 +253,7 @@ do_compile() {
 	SWTYPE=titan
 
 	echo ./oealliance.sh ${KERNELDIR} ${ROOTDIR} ${TYPE} ${SRCDIR} ${CPU} ${STM} ${BOXNAME} ${DISTRO_NAME} ${DISTRO_TYPE} ${SWTYPE} ${SVNVERSION}
-	./oealliance.sh ${KERNELDIR} ${ROOTDIR} ${TYPE} ${SRCDIR} ${CPU} ${STM} ${BOXNAME} ${DISTRO_NAME} ${DISTRO_TYPE} ${titan} ${SVNVERSION}
+	./oealliance.sh ${KERNELDIR} ${ROOTDIR} ${TYPE} ${SRCDIR} ${CPU} ${STM} ${BOXNAME} ${DISTRO_NAME} ${DISTRO_TYPE} ${SWTYPE} ${SVNVERSION}
 
 	cd ${WORKDIR}/titan/titan
 
