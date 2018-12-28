@@ -1,0 +1,33 @@
+--- ./libopkg/opkg_install.c-ems	2018-11-02 13:01:19.796149001 +0100
++++ ./libopkg/opkg_install.c	2018-11-02 13:34:18.506149001 +0100
+@@ -429,6 +429,7 @@
+     file_info_t *file_info;
+     char *filename;
+     int clashes = 0;
++    struct stat target_stat;
+ 
+     files_list = pkg_get_installed_files(pkg);
+     if (files_list == NULL)
+@@ -441,7 +442,12 @@
+         if (file_exists(filename)) {
+             pkg_t *owner;
+             pkg_t *obs;
+-            int existing_is_dir = file_is_dir(filename);
++            int existing_is_dir = 0;
++
++            /* Don't use (x)lstat() here, the target may be */
++            /* a symlink that points to a directory */
++            if(!stat(filename, &target_stat))
++                existing_is_dir = S_ISDIR(target_stat.st_mode);
+ 
+             /* OK if both the existing file and new file are directories. */
+             if (existing_is_dir && S_ISDIR(file_info->mode)) {
+@@ -465,7 +471,6 @@
+             if (S_ISLNK(file_info->mode) && file_is_symlink(filename)) {
+                 char *link_target;
+                 int r, target_is_same_directory = 0;
+-                struct stat target_stat;
+ 
+                 link_target = file_readlink_alloc(filename);
+                 r = strcmp(link_target, file_info->link_target);
+

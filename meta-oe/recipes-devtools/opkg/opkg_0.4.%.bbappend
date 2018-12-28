@@ -6,9 +6,7 @@ SRC_URI += "file://sanity-check-provides.patch \
     file://0.3.3_make_insane_checks_nonfatal.patch \
     file://0.3.3_busybox_workaround.patch \
     file://modprobe \
-    file://0001-Revert-opkg_install-Only-allow-identical-symlinks-if.patch \
-    file://0002-Revert-opkg_install-Allow-packages-to-provide-the-sa.patch \
-    file://0003-Relax_checks_for_existing_dirs_to_allow_symlinks_too.patch \
+    file://0002-symlinks-can-be-valid-directories-too.patch \
     "
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
