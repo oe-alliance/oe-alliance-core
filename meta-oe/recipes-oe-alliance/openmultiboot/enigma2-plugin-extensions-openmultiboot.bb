@@ -36,10 +36,10 @@ EXTRA_OECONF = "\
 
 do_install_append() {
     # remove unused .pyc files
-    find ${D}/usr/lib/enigma2/python/Plugins/Extensions/${PLUGIN}/ -name '*.pyc' -exec rm {} \;
+    find ${D}${libdir}/enigma2/python/Plugins/Extensions/${PLUGIN}/ -name '*.pyc' -exec rm {} \;
     
     # remove helper .pyo file
-    find ${D}/usr/lib/enigma2/python/Plugins/Extensions/${PLUGIN}/ -name '*helper.pyo' -exec rm {} \;
+    find ${D}${libdir}/enigma2/python/Plugins/Extensions/${PLUGIN}/ -name '*helper.pyo' -exec rm {} \;
 }
 
 # skip this!
@@ -55,7 +55,7 @@ do_configure_prepend() {
 
 pkg_preinst_${PN}() {
 #!/bin/sh
-if mountpoint -q /usr/lib/enigma2/python/Plugins/Extensions/OpenMultiboot; then
+if mountpoint -q ${libdir}/enigma2/python/Plugins/Extensions/OpenMultiboot; then
     echo "openMultiBoot will only install on main image."
     echo "Child image is running - canceling installation!"
     sleep 3
