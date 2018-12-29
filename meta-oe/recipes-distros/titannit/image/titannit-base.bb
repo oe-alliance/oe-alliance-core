@@ -90,6 +90,7 @@ RDEPENDS_${PN} = "\
 	volatile-media \
 	vsftpd \
 	wakelan \
+	wget \
 	wireless-tools \
 	wpa-supplicant \
 	\
