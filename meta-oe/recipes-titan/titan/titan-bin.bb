@@ -242,24 +242,34 @@ do_compile() {
 	cd ${WORKDIR}/titan/titan/tools
 	KERNELDIR=$HOME/flashimg/BUILDGIT/checkout_mips360/builds/titannit/release/${MACHINE}/tmp/deploy/images/${MACHINE}/uImage
 	echo KERNELDIR: ${KERNELDIR}
+
 	ROOTDIR=/home/obi/flashimg/BUILDGIT/checkout_mips360/builds/titannit/release/${MACHINE}/tmp/rootfs/${MACHINE}
 	echo ROOTDIR: ${ROOTDIR}
+
 	TYPE=${MACHINEBUILD}
 	echo TYPE: ${TYPE}
+
 	BOX=${MACHINEBUILD}
 	echo BOX: ${BOX}
+
 	SRCDIR=dummy
 	echo SRCDIR: ${SRCDIR}
+
 	CPU=${TARGET_ARCH}
 	echo CPU: ${CPU}
+
 	STM=mips360
 	echo STM: ${STM}
+
 	BOXNAME=${MACHINE}
-	echo SVNVERSION: ${SVNVERSION}
+	echo BOXNAME: ${BOXNAME}
+
 	SWTYPE=titan
 	echo SWTYPE: ${SWTYPE}
+
 	SVNVERSION=`svn info http://sbnc.dyndns.tv/svn/titan | grep Revision | sed s/'Revision: '//g`
 	echo SVNVERSION: ${SVNVERSION}
+
 	GITVERSION=`git --git-dir=${OE-ALLIANCE_BASE}/.git log  --pretty=format:"%s" | wc -l`
 	echo GITVERSION: ${GITVERSION}
 
