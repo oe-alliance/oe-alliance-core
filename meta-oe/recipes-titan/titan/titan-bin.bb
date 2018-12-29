@@ -250,10 +250,11 @@ do_compile() {
 	BOXNAME=${MACHINE}
 	SVNVERSION=`svn info http://sbnc.dyndns.tv/svn/titan | grep Revision | sed s/'Revision: '//g`
 	echo SVNVERSION: ${SVNVERSION}
+	GITVERSION=`git --git-dir=${OE-ALLIANCE_BASE}/.git log  --pretty=format:"%s" | wc -l`
 	SWTYPE=titan
 
-	echo ./oealliance.sh ${KERNELDIR} ${ROOTDIR} ${TYPE} ${SRCDIR} ${CPU} ${STM} ${BOXNAME} ${DISTRO_NAME} ${DISTRO_TYPE} ${SWTYPE} ${SVNVERSION}
-	./oealliance.sh ${KERNELDIR} ${ROOTDIR} ${TYPE} ${SRCDIR} ${CPU} ${STM} ${BOXNAME} ${DISTRO_NAME} ${DISTRO_TYPE} ${SWTYPE} ${SVNVERSION}
+	echo ./oealliance.sh ${KERNELDIR} ${ROOTDIR} ${TYPE} ${SRCDIR} ${CPU} ${STM} ${BOXNAME} ${DISTRO_NAME} ${DISTRO_TYPE} ${SWTYPE} ${GITVERSION} ${SVNVERSION}
+	./oealliance.sh ${KERNELDIR} ${ROOTDIR} ${TYPE} ${SRCDIR} ${CPU} ${STM} ${BOXNAME} ${DISTRO_NAME} ${DISTRO_TYPE} ${SWTYPE} ${GITVERSION} ${SVNVERSION}
 
 	cd ${WORKDIR}/titan/titan
 
