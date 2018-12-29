@@ -241,17 +241,27 @@ LDFLAGS_prepend_sh4 = " -lmmeimage "
 do_compile() {
 	cd ${WORKDIR}/titan/titan/tools
 	KERNELDIR=$HOME/flashimg/BUILDGIT/checkout_mips360/builds/titannit/release/${MACHINE}/tmp/deploy/images/${MACHINE}/uImage
+	echo KERNELDIR: ${KERNELDIR}
 	ROOTDIR=/home/obi/flashimg/BUILDGIT/checkout_mips360/builds/titannit/release/${MACHINE}/tmp/rootfs/${MACHINE}
+	echo ROOTDIR: ${ROOTDIR}
 	TYPE=${MACHINEBUILD}
+	echo TYPE: ${TYPE}
 	BOX=${MACHINEBUILD}
+	echo BOX: ${BOX}
 	SRCDIR=dummy
+	echo SRCDIR: ${SRCDIR}
 	CPU=${TARGET_ARCH}
+	echo CPU: ${CPU}
 	STM=mips360
+	echo STM: ${STM}
 	BOXNAME=${MACHINE}
+	echo SVNVERSION: ${SVNVERSION}
+	SWTYPE=titan
+	echo SWTYPE: ${SWTYPE}
 	SVNVERSION=`svn info http://sbnc.dyndns.tv/svn/titan | grep Revision | sed s/'Revision: '//g`
 	echo SVNVERSION: ${SVNVERSION}
 	GITVERSION=`git --git-dir=${OE-ALLIANCE_BASE}/.git log  --pretty=format:"%s" | wc -l`
-	SWTYPE=titan
+	echo GITVERSION: ${GITVERSION}
 
 	echo ./oealliance.sh ${KERNELDIR} ${ROOTDIR} ${TYPE} ${SRCDIR} ${CPU} ${STM} ${BOXNAME} ${DISTRO_NAME} ${DISTRO_TYPE} ${SWTYPE} ${GITVERSION} ${SVNVERSION}
 	./oealliance.sh ${KERNELDIR} ${ROOTDIR} ${TYPE} ${SRCDIR} ${CPU} ${STM} ${BOXNAME} ${DISTRO_NAME} ${DISTRO_TYPE} ${SWTYPE} ${GITVERSION} ${SVNVERSION}
