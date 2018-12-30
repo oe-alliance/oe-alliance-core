@@ -109,6 +109,7 @@ RDEPENDS_${PN} = " \
     parted \
     pngquant \
     pcsc-lite \
+    pcsc-tools \
     procps \
     pyload \
     python-attr \
