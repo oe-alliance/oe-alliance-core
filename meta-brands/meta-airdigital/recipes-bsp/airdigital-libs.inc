@@ -19,6 +19,9 @@ do_compile[noexec] = "1"
 SOLIBS = ".so"
 FILES_SOLIBSDEV = ""
 
+# Disable anything auto depending
+EXCLUDE_FROM_SHLIBS = "1"
+
 do_install() {
 	install -d ${D}${libdir}/hisilicon
 	install -m 0755 ${S}/hisilicon/* ${D}${libdir}/hisilicon
