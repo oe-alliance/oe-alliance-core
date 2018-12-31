@@ -11,8 +11,8 @@ FILESEXTRAPATHS_prepend := "${THISDIR}/enigma2-plugin-softcams-oscam:"
 
 BRANCH = "master"
 SRCREV = "840fb6ca8e794b189bb90a1fd8c1b29950c6b880"
-PV = "svn11443"
-PKGV = "svn11443"
+PV = "svn11444"
+PKGV = "svn11444"
 SRC_URI = "git://git.cuci.nl/oscam;protocol=git;branch=${BRANCH};tag=${SRCREV} \
             file://fix_glibc_major.patch \
 "
