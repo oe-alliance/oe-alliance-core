@@ -28,6 +28,7 @@ RDEPENDS_${PN} = " \
     ${PYTHON_RDEPS} \
     ${@bb.utils.contains("MACHINE_FEATURES", "uianimation", "vuplus-libgles-${MACHINE} libvugles2" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "hiaccel", "dinobot-libs-${MACHINE}" , "", d)} \
+    ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "", "enigma2-plugin-font-wqy-microhei", d)} \
     oe-alliance-branding \
     "
 
@@ -82,7 +83,7 @@ GST_BASE_RDEPS = "${@bb.utils.contains('GST_VERSION', '1.0', ' \
     gstreamer1.0-plugins-base-subparse \
     gstreamer1.0-plugins-base-typefindfunctions \
     gstreamer1.0-plugins-base-vorbis \
-	gstreamer1.0-plugins-base-rawparse \
+    gstreamer1.0-plugins-base-rawparse \
     ', ' \
     gst-plugins-base-alsa \
     gst-plugins-base-app \
@@ -217,6 +218,7 @@ DESCRIPTION_append_enigma2-plugin-systemplugins-networkwizard = "provides easy s
 RDEPENDS_enigma2-plugin-extensions-dvdburn = "dvd+rw-tools dvdauthor mjpegtools cdrkit python-imaging ${DEMUXTOOL}"
 RDEPENDS_enigma2-plugin-systemplugins-hotplug = "hotplug-e2-helper"
 RDEPENDS_enigma2-plugin-systemplugins-fsblupdater = "python-distutils"
+DESCRIPTION_enigma2-plugin-font-wqy-microhei = "Font wqy-microhei add support for China EPG"
 
 inherit autotools-brokensep gitpkgv pkgconfig pythonnative upx-compress
 
@@ -268,8 +270,11 @@ PACKAGES =+ "${PN}-src"
 PACKAGES += "${PN}-meta"
 PACKAGE_ARCH = "${MACHINEBUILD}"
 
-PACKAGES =+ "enigma2-fonts"
+PACKAGES =+ "enigma2-plugin-font-wqy-microhei enigma2-fonts"
+FILES_enigma2-plugin-font-wqy-microhei = "${datadir}/fonts/wqy-microhei.ttc ${datadir}/fonts/fallback.font"
 FILES_enigma2-fonts = "${datadir}/fonts"
+
+ALLOW_EMPTY_enigma2-plugin-font-wqy-microhei = "1"
 
 EXTRA_OECONF = " \
     BUILD_SYS=${BUILD_SYS} \
