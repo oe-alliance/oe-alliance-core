@@ -16,7 +16,7 @@ SRCREV = "${AUTOREV}"
 S = "${WORKDIR}/git"
 
 DEPENDS = "gstreamer1.0 bison-native"
-RDEPENDS_${PN} = "wpa-supplicant connman connman-client connman-tools libwds-bin"
+RDEPENDS_${PN} = "wpa-supplicant connman"
 
 do_install_append() {
 	install -d ${D}${bindir}
