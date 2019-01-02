@@ -1,0 +1,34 @@
+diff --git a/include/wifi.h b/include/wifi.h
+index 9d21a5afdbac..4cbeb196eacc 100644
+--- a/include/wifi.h
++++ b/include/wifi.h
+@@ -1006,7 +1006,11 @@ typedef enum _HT_CAP_AMPDU_DENSITY {
+  * According to IEEE802.11n spec size varies from 8K to 64K (in powers of 2)
+  */
+ #define IEEE80211_MIN_AMPDU_BUF 0x8
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4,20,0))
++#define IEEE80211_MAX_AMPDU_BUF 0x100
++#else
+ #define IEEE80211_MAX_AMPDU_BUF 0x40
++#endif
+ 
+ 
+ /* Spatial Multiplexing Power Save Modes */
+diff --git a/os_dep/linux/ioctl_cfg80211.c b/os_dep/linux/ioctl_cfg80211.c
+index 5b180b6055db..0a95fbd4fc9b 100644
+--- a/os_dep/linux/ioctl_cfg80211.c
++++ b/os_dep/linux/ioctl_cfg80211.c
+@@ -345,6 +345,13 @@ rtw_cfg80211_default_mgmt_stypes[NUM_NL80211_IFTYPES] = {
+ };
+ #endif
+ 
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4,20,0))
++static inline void get_monotonic_boottime(struct timespec *ts)
++{
++	*ts = ktime_to_timespec(ktime_get_boottime());
++}
++#endif
++
+ static u64 rtw_get_systime_us(void)
+ {
+ #if (LINUX_VERSION_CODE >= KERNEL_VERSION(2,6,39))

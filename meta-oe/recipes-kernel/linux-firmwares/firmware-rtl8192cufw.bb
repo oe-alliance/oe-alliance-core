@@ -7,7 +7,7 @@ SRC_URI = " \
 S = "${WORKDIR}"
 
 PACKAGES = "${PN}"
-FILES_${PN} += "${base_libdir}/firmware"
+FILES_${PN} += "${nonarch_base_libdir}/firmware"
 
 inherit allarch
 
