@@ -1,6 +1,6 @@
 
-PREFERRED_VERSION_linux-edision = "4.19.4"
-PREFERRED_VERSION_linux-libc-headers = "4.19"
+PREFERRED_VERSION_linux-edision = "4.20"
+PREFERRED_VERSION_linux-libc-headers = "4.20"
 
 KERNEL_MODULE_AUTOLOAD += "hci_uart"
 KERNEL_MODULE_AUTOLOAD += "wlan"
@@ -75,7 +75,7 @@ IMAGE_CMD_emmcimg_append = "\
     rm -Rf ${IMAGEDIR}; \
     "
 
-MACHINE_FEATURES += "alsa 3dtv switchoff hdmicec bootsplash omb blindscan-tbs linuxwifi linux4extra mmc emmc"
+MACHINE_FEATURES += "alsa 3dtv switchoff hdmicec bootsplash omb blindscan-tbs linuxwifi linux4extra wifiusbmodule mmc emmc"
 
 BOOTLOGO_FILENAME = "splash.bin"
 

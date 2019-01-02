@@ -1,4 +1,4 @@
-From b7e9bbc20fa8178c96619cbb43fbf114a02b0e8b Mon Sep 17 00:00:00 2001
+From 519c468b2d6403e8b24f2342e0c9c80e648fa336 Mon Sep 17 00:00:00 2001
 From: Jaedon Shin <jaedon.shin@gmail.com>
 Date: Tue, 27 Nov 2018 14:21:30 +0900
 Subject: [PATCH] qcacld-2.0: Make driver compatiable with mainline kernel
@@ -29,10 +29,11 @@ Signed-off-by: Jaedon Shin <jaedon.shin@gmail.com>
  .../HIF/sdio/linux/native_sdio/src/hif.c      |   6 +-
  CORE/SERVICES/HTC/htc_internal.h              |   2 +-
  CORE/SERVICES/HTC/htc_send.c                  |   6 +-
+ CORE/VOSS/inc/vos_cnss.h                      |   7 +
  CORE/VOSS/src/vos_timer.c                     |  13 +-
  Kbuild                                        |   3 +-
  Makefile                                      |   6 +
- 27 files changed, 296 insertions(+), 93 deletions(-)
+ 28 files changed, 303 insertions(+), 93 deletions(-)
 
 diff --git a/CORE/CLD_TXRX/HTT/htt_rx.c b/CORE/CLD_TXRX/HTT/htt_rx.c
 index adbdeb759383..dc0659bb99b8 100644
@@ -1281,6 +1282,24 @@ index d231ce509bc1..e36ec7cf202e 100644
      HTCSendCompleteCheck(pEndpoint, 1);
  }
  
+diff --git a/CORE/VOSS/inc/vos_cnss.h b/CORE/VOSS/inc/vos_cnss.h
+index 8bfae8619cb4..38768cfc4ad6 100644
+--- a/CORE/VOSS/inc/vos_cnss.h
++++ b/CORE/VOSS/inc/vos_cnss.h
+@@ -118,6 +118,13 @@ static inline int vos_wlan_pm_control(bool vote)
+ static inline void vos_lock_pm_sem(void) { return; }
+ static inline void vos_release_pm_sem(void) { return; }
+ 
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4,20,0))
++static inline void get_monotonic_boottime(struct timespec *ts)
++{
++	*ts = ktime_to_timespec(ktime_get_boottime());
++}
++#endif
++
+ static inline void vos_get_monotonic_bootime_ts(struct timespec *ts)
+ {
+ 	get_monotonic_boottime(ts);
 diff --git a/CORE/VOSS/src/vos_timer.c b/CORE/VOSS/src/vos_timer.c
 index f17539abcb55..052360c213f7 100644
 --- a/CORE/VOSS/src/vos_timer.c
@@ -1356,5 +1375,5 @@ index f78d774f595d..87d69b13f90d 100644
  
  KBUILD_OPTIONS := WLAN_ROOT=$(PWD)
 -- 
-2.19.1
+2.20.1
 
