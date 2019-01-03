@@ -26,7 +26,7 @@ RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
 
 SRC_URI += "http://source.mynonpublic.com/edision/linux-edision-${PV}.tar.gz \
     file://defconfig \
-    ${@bb.utils.contains('MACHINE_FEATURES', 'emmc', 'file://findkerneldevice.py', '', d)} \
+    file://findkerneldevice.py \
     "
 
 S = "${WORKDIR}/linux-brcmstb-${PV}"
@@ -36,7 +36,13 @@ export OS = "Linux"
 KERNEL_OBJECT_SUFFIX = "ko"
 KERNEL_IMAGEDEST = "tmp"
 
-FILES_kernel-image = "${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}*  ${@bb.utils.contains('MACHINE_FEATURES', 'emmc', '${KERNEL_IMAGEDEST}/findkerneldevice.py', '', d)}"
+FILES_kernel-image = "${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}* ${KERNEL_IMAGEDEST}/findkerneldevice.py"
+
+kernel_do_install_append () {
+    install -d ${D}/${KERNEL_IMAGEDEST}
+    install -m 0644 ${KERNEL_OUTPUT_DIR}/${KERNEL_IMAGETYPE} ${D}/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION}
+    install -m 0644 ${WORKDIR}/findkerneldevice.py ${D}/${KERNEL_IMAGEDEST}
+}
 
 pkg_postinst_kernel-image () {
     if [ "x$D" == "x" ]; then
