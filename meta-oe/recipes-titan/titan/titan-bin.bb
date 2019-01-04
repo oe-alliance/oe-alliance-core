@@ -267,14 +267,19 @@ do_compile() {
 	SWTYPE=titan
 	echo SWTYPE: ${SWTYPE}
 
-	SVNVERSION=`svn info http://sbnc.dyndns.tv/svn/titan | grep Revision | sed s/'Revision: '//g`
+	echo IMAGE_NAME: ${IMAGE_NAME}
+
+	SVNVERSION=`echo ${WORKDIR} | sed -nr 's/.*svnr([^.*]+)-.*/\1/p'`
 	echo SVNVERSION: ${SVNVERSION}
+
+	SVNVERSIONHTTP=`svn info http://sbnc.dyndns.tv/svn/titan | grep Revision | sed s/'Revision: '//g`
+	echo SVNVERSIONHTTP: ${SVNVERSIONHTTP}
 
 	GITVERSION=`git --git-dir=${OE-ALLIANCE_BASE}/.git log  --pretty=format:"%s" | wc -l`
 	echo GITVERSION: ${GITVERSION}
 
-	echo ./oealliance.sh ${KERNELDIR} ${ROOTDIR} ${TYPE} ${SRCDIR} ${CPU} ${STM} ${BOXNAME} ${DISTRO_NAME} ${DISTRO_TYPE} ${SWTYPE} ${GITVERSION} ${SVNVERSION}
-	./oealliance.sh ${KERNELDIR} ${ROOTDIR} ${TYPE} ${SRCDIR} ${CPU} ${STM} ${BOXNAME} ${DISTRO_NAME} ${DISTRO_TYPE} ${SWTYPE} ${GITVERSION} ${SVNVERSION}
+	echo ./oealliance.sh ${KERNELDIR} ${ROOTDIR} ${TYPE} ${SRCDIR} ${CPU} ${STM} ${BOXNAME} ${DISTRO_NAME} ${DISTRO_TYPE} ${SWTYPE} ${IMAGE_NAME} ${GITVERSION} ${SVNVERSION}
+	./oealliance.sh ${KERNELDIR} ${ROOTDIR} ${TYPE} ${SRCDIR} ${CPU} ${STM} ${BOXNAME} ${DISTRO_NAME} ${DISTRO_TYPE} ${SWTYPE} ${IMAGE_NAME} ${GITVERSION} ${SVNVERSION}
 
 	cd ${WORKDIR}/titan/titan
 
