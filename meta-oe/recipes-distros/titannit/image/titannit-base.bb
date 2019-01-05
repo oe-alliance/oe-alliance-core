@@ -107,6 +107,8 @@ RDEPENDS_${PN} = "\
 	titan-libeplayer3 \
 	titan-infobox \
 	oe-alliance-feeds-configs \
+	titan-sys-utils \
+	titannit-version-info \
     "
 
 #	kernel-module-usbserial
