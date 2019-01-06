@@ -26,5 +26,4 @@ SRC_URI[md5sum] = "186ade5145fdaeec1a8b0699b5dead6a"
 SRC_URI[sha256sum] = "c8d328d6f4623a70970902cc417416236cccb60dd5c0e5808ae43b77e9e30110"
 
 FILES_enigma2-plugin-softcams-scam = "/usr"
-
-INSANE_SKIP_enigma2-plugin-softcams-scam = "already-stripped"
+INSANE_SKIP_${PN} = "already-stripped"

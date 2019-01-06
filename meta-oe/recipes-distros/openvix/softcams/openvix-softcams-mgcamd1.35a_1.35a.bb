@@ -29,3 +29,4 @@ SRC_URI[md5sum] = "f444b9aa84d71cf7ca0d4397b92c091f"
 SRC_URI[sha256sum] = "d49d9b40f4eba029a88068813b799966ca0b862f49c29b79960aa06d0c8570e9"
 
 FILES_enigma2-plugin-softcams-mgcamd135a = "/usr"
+INSANE_SKIP_${PN} = "already-stripped"
