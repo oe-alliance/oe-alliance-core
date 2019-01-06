@@ -2,7 +2,12 @@ inherit image_types
 
 IMAGE_TYPEDEP_hdemmc = "ext4"
 
-do_image_hdemmc[depends] += "parted-native:do_populate_sysroot dosfstools-native:do_populate_sysroot mtools-native:do_populate_sysroot virtual/kernel:do_populate_sysroot"
+do_image_hdemmc[depends] += "\
+	parted-native:do_populate_sysroot \
+	dosfstools-native:do_populate_sysroot \
+	mtools-native:do_populate_sysroot \
+	virtual/kernel:do_populate_sysroot \
+"
 
 BLOCK_SIZE = "512"
 BLOCK_SECTOR = "2"
@@ -59,7 +64,5 @@ IMAGE_CMD_hdemmc () {
     mcopy -i ${WORKDIR}/boot.img -v ${WORKDIR}/STARTUP_4 ::
     dd conv=notrunc if=${WORKDIR}/boot.img of=${EMMC_IMAGE} bs=${BLOCK_SIZE} seek=$(expr ${IMAGE_ROOTFS_ALIGNMENT} \* ${BLOCK_SECTOR})
     dd conv=notrunc if=${DEPLOY_DIR_IMAGE}/zImage of=${EMMC_IMAGE} bs=${BLOCK_SIZE} seek=$(expr ${KERNEL_PARTITION_OFFSET} \* ${BLOCK_SECTOR})
-    resize2fs ${IMGDEPLOYDIR}/${IMAGE_NAME}.rootfs.ext4 ${ROOTFS_PARTITION_SIZE}k
-    # Truncate on purpose
-    dd if=${IMGDEPLOYDIR}/${IMAGE_NAME}.rootfs.ext4 of=${EMMC_IMAGE} bs=${BLOCK_SIZE} seek=$(expr ${ROOTFS_PARTITION_OFFSET} \* ${BLOCK_SECTOR}) count=$(expr ${IMAGE_ROOTFS_SIZE} \* ${BLOCK_SECTOR})
+    dd if=${IMGDEPLOYDIR}/${IMAGE_NAME}.rootfs.ext4 of=${EMMC_IMAGE} bs=${BLOCK_SIZE} seek=$(expr ${ROOTFS_PARTITION_OFFSET} \* ${BLOCK_SECTOR})
 }

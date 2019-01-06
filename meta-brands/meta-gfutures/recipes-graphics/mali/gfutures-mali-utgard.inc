@@ -7,15 +7,14 @@ MALIVER ?= "${@bb.utils.contains('TARGET_ARCH', 'aarch64', '64' , '', d)}"
 
 PROVIDES += " virtual/libgles2 virtual/libgles1 virtual/egl virtual/libopencl"
 RPROVIDES_${PN} = "virtual/libgles2 virtual/libgles1 virtual/egl virtual/libopencl libmali.so libEGL.so libGLESv1_CM.so libGLESv2.so"
-DEPENDS = "gfutures-mali-utgard-headers"
+DEPENDS = "airdigital-mali-utgard-headers"
 
-SRC_URI = "http://source.mynonpublic.com/gfutures/${MACHINE}-mali${MALIVER}-${SRCDATE}.zip"
+SRC_URI = "http://source.mynonpublic.com/gfutures/gfutures-mali${MALIVER}-3798mv200-${SRCDATE}.zip"
 
 S = "${WORKDIR}"
 
 do_configure() {
 }
-
 
 do_compile() {
 }
