@@ -42,3 +42,4 @@ do_install() {
 }
 
 FILES_enigma2-plugin-softcams-oscam-pcscd = "/usr"
+INSANE_SKIP_${PN} = "already-stripped"
