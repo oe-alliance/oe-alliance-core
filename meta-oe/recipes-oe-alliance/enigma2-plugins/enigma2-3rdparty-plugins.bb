@@ -53,7 +53,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-hetweer_4.3r1_all.ipk \
     enigma2-plugin-extensions-ipchecker_003_all.ipk \
     ${@bb.utils.contains("TARGET_ARCH", "sh4", "enigma2-plugin-extensions-isettinge2-3.4.4-oe2.0-all-sh4.ipk" , "", d)} \
-    ${@bb.utils.contains("TARGET_ARCH", "mipsel", "enigma2-plugin-extensions-isettinge2_3.4.4-oe2.0-all-mips_all.ipk" , "", d)} \
+    ${@bb.utils.contains("TARGET_ARCH", "mipsel", "enigma2-plugin-extensions-isettinge2-3.4.4-oe2.0-all-mips.ipk" , "", d)} \
     ${@bb.utils.contains("TARGET_ARCH", "arm", "enigma2-plugin-extensions-isettinge2-3.4.4-oe2.0-all-arm.ipk" , "", d)} \
     enigma2-plugin-extensions-kicker_3.6rc5_all.ipk \
     enigma2-plugin-extensions-kino_1.8rc1_all.ipk \
