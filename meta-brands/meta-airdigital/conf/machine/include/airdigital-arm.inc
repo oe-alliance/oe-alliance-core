@@ -12,7 +12,11 @@ DEFAULTTUNE = "cortexa15hf-neon-vfpv4"
 PREFERRED_VERSION_linux-airdigital = "4.10.12"
 
 PREFERRED_PROVIDER_virtual/egl ?= "airdigital-v3ddriver-${MACHINE}" 
+PREFERRED_PROVIDER_virtual/libgles1 ?= "airdigital-v3ddriver-${MACHINE}"
 PREFERRED_PROVIDER_virtual/libgles2 ?= "airdigital-v3ddriver-${MACHINE}"
+PREFERRED_PROVIDER_virtual/libgbm ?= "airdigital-v3ddriver-${MACHINE}"
+PREFERRED_PROVIDER_virtual/libgl ?= "mesa"
+PREFERRED_PROVIDER_virtual/mesa ?= "mesa"
 
 IMAGE_CMD_airdigitalemmc_append = "\
     mkdir -p ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}; \

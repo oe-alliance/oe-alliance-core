@@ -5,11 +5,10 @@ index 2c4843f..a1d944b 100644
 @@ -11,6 +11,10 @@
  #define MULTICAM_GET_PCDAT 10
  #define MULTICAM_SET_PCDAT 13
- 
+
 +#ifdef __GLIBC__
 +#include <sys/sysmacros.h>
 +#endif
 +
  #define OK 0
  #define ERROR 1
- 

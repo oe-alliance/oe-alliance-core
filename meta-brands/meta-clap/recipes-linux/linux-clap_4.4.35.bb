@@ -7,7 +7,7 @@ SRCDATE = "20180830"
 
 inherit kernel machine_kernel_pr
 
-MACHINE_KERNEL_PR_append = ".13"
+MACHINE_KERNEL_PR_append = ".12"
 
 
 SRC_URI[md5sum] = "9aa3305104807a5bdc0e0b53dcccc45b"
@@ -47,6 +47,7 @@ KERNEL_OUTPUT = "arch/${ARCH}/boot/${KERNEL_IMAGETYPE}"
 kernel_do_install_append() {
 	install -d ${D}/${KERNEL_IMAGEDEST}
 	install -m 0755 ${KERNEL_OUTPUT} ${D}/${KERNEL_IMAGEDEST}
+	install -m 0755 ${WORKDIR}/findkerneldevice.py ${D}/${KERNEL_IMAGEDEST}
 }
 
 ppkg_postinst_kernel-image () {

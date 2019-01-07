@@ -4,9 +4,9 @@ include conf/machine/include/build-extras.inc
 BRAND_OEM = "dinobot"
 
 MACHINE_NAME = "\
-${@bb.utils.contains('MACHINEBUILD', 'anadol4kcombo', '4K Combo' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'anadol4kv2', '4K ECO V2' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'anadol4k', '4K ECO' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'anadol4kcombo', 'Combo 4K UHD' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'anadol4kv2', 'ECO 4K UHD V2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'anadol4k', 'ECO´4K UHD' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'dinobot4kl', 'DINOBOT 4KL' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'dinobot4k', 'DINOBOT 4K' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'mediabox4k', 'mediabox 4k M7L' , '', d)}\

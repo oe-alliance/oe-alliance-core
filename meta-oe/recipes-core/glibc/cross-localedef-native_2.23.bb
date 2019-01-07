@@ -36,7 +36,9 @@ SRC_URI = "${GLIBC_GIT_URI};branch=${SRCBRANCH};name=glibc \
            file://0023-eglibc-Install-PIC-archives.patch \
            file://0025-eglibc-Forward-port-cross-locale-generation-support.patch \
            file://0025-Define-DUMMY_LOCALE_T-if-not-defined.patch \
+           file://0026-xlocale-locale_t-fix.patch \
            file://0029-localedef-add-to-archive-uses-a-hard-coded-locale-pa.patch \
+           file://add_missing_IOfwide.patch \
 "
 
 # Makes for a rather long rev (22 characters), but...

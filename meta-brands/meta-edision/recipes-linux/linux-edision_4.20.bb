@@ -2,20 +2,19 @@ SUMMARY = "Linux kernel for ${MACHINE}"
 SECTION = "kernel"
 LICENSE = "GPLv2"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
-PR = "r0"
 
-KERNEL_RELEASE = "4.19.4"
+KERNEL_RELEASE = "4.20"
 
 inherit kernel machine_kernel_pr
 
-SRC_URI[md5sum] = "1d097d2b9cb3c0bfe5dd917a9530780e"
-SRC_URI[sha256sum] = "983dbd622ae0de7afac9d97cc5bd47e58088f2c2162859b11d936023a1bc651a"
+SRC_URI[md5sum] = "a8ad894efc418017afb81a4f280cdb17"
+SRC_URI[sha256sum] = "8a00501e49859270d456cce2cb3fde37b503050004a6a2d8418ba672e45ba6c0"
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-brcmstb-${PV}/COPYING;md5=bbea815ee2795b2f4230826c0c6b8814"
 
 DEPENDS += "flex-native bison-native openssl-native"
 
-MACHINE_KERNEL_PR_append = ".2"
+MACHINE_KERNEL_PR_append = ".3"
 
 # By default, kernel.bbclass modifies package names to allow multiple kernels
 # to be installed in parallel. We revert this change and rprovide the versioned
@@ -27,7 +26,7 @@ RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
 
 SRC_URI += "http://source.mynonpublic.com/edision/linux-edision-${PV}.tar.gz \
     file://defconfig \
-    ${@bb.utils.contains('MACHINE_FEATURES', 'emmc', 'file://findkerneldevice.py', '', d)} \
+    file://findkerneldevice.py \
     "
 
 S = "${WORKDIR}/linux-brcmstb-${PV}"
@@ -37,7 +36,13 @@ export OS = "Linux"
 KERNEL_OBJECT_SUFFIX = "ko"
 KERNEL_IMAGEDEST = "tmp"
 
-FILES_${KERNEL_PACKAGE_NAME}-image = "${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}*  ${@bb.utils.contains('MACHINE_FEATURES', 'emmc', '${KERNEL_IMAGEDEST}/findkerneldevice.py', '', d)}"
+FILES_${KERNEL_PACKAGE_NAME}-image = "${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}* ${KERNEL_IMAGEDEST}/findkerneldevice.py"
+
+kernel_do_install_append () {
+    install -d ${D}/${KERNEL_IMAGEDEST}
+    install -m 0644 ${KERNEL_OUTPUT_DIR}/${KERNEL_IMAGETYPE} ${D}/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION}
+    install -m 0644 ${WORKDIR}/findkerneldevice.py ${D}/${KERNEL_IMAGEDEST}
+}
 
 pkg_postinst_kernel-image () {
     if [ "x$D" == "x" ]; then
