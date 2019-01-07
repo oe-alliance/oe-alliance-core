@@ -1,0 +1,22 @@
+#!/bin/sh
+### BEGIN INIT INFO
+# Provides:           resize2fs mmcblk0p3
+# Required-Start:     $local_fs
+# Required-Stop:      $local_fs
+# Default-Start:      S
+# Default-Stop:
+# Short-Description:  Resizes once /dev/mmcblk0p3 to full partition size
+### END INIT INFO
+
+if [ ! -f "/.resizerootfs" ]
+then
+  rootdevice=$(readlink /dev/root)
+  if [ "$rootdevice" = "mmcblk0p3" ]
+  then
+    echo "Resizing /dev/mmcblk0p3, Do not unplug power!..."
+    resize2fs /dev/mmcblk0p3
+    touch "/.resizerootfs"
+  fi
+fi
+
+: exit 0

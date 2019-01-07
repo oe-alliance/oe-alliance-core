@@ -1,0 +1,8 @@
+SRCDATE = "20181228"
+
+require gfutures-partitions.inc
+
+SRC_URI[md5sum] = "6881ecab7f4d53c4f1007cac5a99714a"
+SRC_URI[sha256sum] = "54661765d7e3542c74b90f8a9873e7d85fcec02224b0a1e9f24ba919e278337a"
+
+COMPATIBLE_MACHINE = "hd61"
