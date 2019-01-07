@@ -1,6 +1,8 @@
 #IMAGE_CLASSES += "airdigitalemmc_image_single"
 IMAGE_CLASSES += "airdigitalemmc_image_multi"
 
+DISTRO_FEATURES_EXTRA = "opengl"
+
 MACHINE_FEATURES += "qthbbtv qtstalker linuxwifi"
 
 IMAGE_FSTYPES += "airdigitalemmc"

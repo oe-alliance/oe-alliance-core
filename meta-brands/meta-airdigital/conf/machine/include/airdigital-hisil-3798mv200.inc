@@ -1,3 +1,5 @@
+DISTRO_FEATURES_EXTRA = "opengl"
+
 MACHINE_FEATURES += "qthbbtv qtstalker"
 
 PREFERRED_PROVIDER_virtual/egl ?= "airdigital-mali-${HICHIPSET}"
