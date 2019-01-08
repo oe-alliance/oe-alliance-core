@@ -1,8 +1,6 @@
 # We know about rtc
 include conf/machine/include/build-extras.inc
 
-DISTRO_FEATURES_EXTRA = "opengl"
-
 BRAND_OEM = "airdigital"
 
 MACHINE_NAME = "\
