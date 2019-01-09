@@ -85,7 +85,6 @@ ${@bb.utils.contains('MACHINEBUILD', 'vimastec1500', 'vs1500' , '', d)}\
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "\
     gfutures-dvb-modules-${MACHINE_DRIVER} \
-    ${@bb.utils.contains('MACHINE_FEATURES', 'hisil', 'gfutures-libs-${HICHIPSET} gfutures-partitions-${MACHINE} gfutures-bootargs-${MACHINE}' , '', d)} \
     "
 
 DVBPROVIDER = "kernel"
@@ -95,7 +94,6 @@ MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS += "\
     kernel-module-cdfs \
     ${@bb.utils.contains('MACHINE_FEATURES', 'qtegls', 'hd-qteglfs-platform', '',d)} \
     ${@bb.utils.contains('MACHINE_FEATURES', 'swap', 'hd-swapcreate', '',d)} \
-    ${@bb.utils.contains('MACHINE_FEATURES', 'mali', 'gfutures-mali-${HICHIPSET} kernel-module-mali-${HICHIPSET}' , '', d)} \
     ${@bb.utils.contains('MACHINE_FEATURES', 'gfwol', 'gfutures-ethwol' , '', d)} \
     ${@bb.utils.contains('MACHINE_FEATURES', 'emmc', 'resizerootfs' , '', d)} \
     "

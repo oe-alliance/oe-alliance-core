@@ -12,6 +12,14 @@ PREFERRED_PROVIDER_virtual/blindscan-dvbs ?= "gfutures-dvb-modules-${MACHINE}"
 TARGET_ARCH = "arm"
 DEFAULTTUNE = "cortexa15hf-neon-vfpv4"
 
+MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "\
+    ${@bb.utils.contains('MACHINE_FEATURES', 'hisil', 'gfutures-libs-${HICHIPSET} gfutures-partitions-${MACHINE} gfutures-bootargs-${MACHINE}' , '', d)} \
+    "
+
+MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS += "\
+    ${@bb.utils.contains('MACHINE_FEATURES', 'mali', 'gfutures-mali-${HICHIPSET} kernel-module-mali-${HICHIPSET}' , '', d)} \
+    "
+
 CMDLINE ?= "console=ttyAMA0,115200n8"
 
 KERNEL_MODULE_AUTOLOAD += "mali"

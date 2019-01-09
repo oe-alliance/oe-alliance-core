@@ -1,6 +1,8 @@
 #IMAGE_CLASSES += "airdigitalemmc_image_single"
 IMAGE_CLASSES += "airdigitalemmc_image_multi"
 
+DISTRO_FEATURES_EXTRA = "opengl"
+
 MACHINE_FEATURES += "qthbbtv qtstalker linuxwifi"
 DISTRO_FEATURES_remove = "directfb gtk-directfb"
 
@@ -14,7 +16,11 @@ PREFERRED_VERSION_linux-airdigital = "4.10.12"
 PREFERRED_VERSION_linux-libc-headers = "4.10"
 
 PREFERRED_PROVIDER_virtual/egl ?= "airdigital-v3ddriver-${MACHINE}" 
+PREFERRED_PROVIDER_virtual/libgles1 ?= "airdigital-v3ddriver-${MACHINE}"
 PREFERRED_PROVIDER_virtual/libgles2 ?= "airdigital-v3ddriver-${MACHINE}"
+PREFERRED_PROVIDER_virtual/libgbm ?= "airdigital-v3ddriver-${MACHINE}"
+PREFERRED_PROVIDER_virtual/libgl ?= "mesa"
+PREFERRED_PROVIDER_virtual/mesa ?= "mesa"
 
 IMAGE_CMD_airdigitalemmc_append = "\
     mkdir -p ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}; \

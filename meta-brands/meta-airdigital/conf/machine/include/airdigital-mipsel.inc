@@ -13,8 +13,12 @@ DEFAULTTUNE = "mips32el"
 PREFERRED_VERSION_linux-airdigital = "4.10.12"
 PREFERRED_VERSION_linux-libc-headers = "4.10"
 
-PREFERRED_PROVIDER_virtual/egl ?= "airdigital-v3ddriver-${MACHINE}" 
+PREFERRED_PROVIDER_virtual/egl ?= "airdigital-v3ddriver-${MACHINE}"
+PREFERRED_PROVIDER_virtual/libgles1 ?= "airdigital-v3ddriver-${MACHINE}"
 PREFERRED_PROVIDER_virtual/libgles2 ?= "airdigital-v3ddriver-${MACHINE}"
+PREFERRED_PROVIDER_virtual/libgbm ?= "airdigital-v3ddriver-${MACHINE}"
+PREFERRED_PROVIDER_virtual/libgl ?= "mesa"
+PREFERRED_PROVIDER_virtual/mesa ?= "mesa"
 
 IMAGE_FSTYPES ?= "ubi"
 
