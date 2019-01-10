@@ -11,7 +11,7 @@ VER="1.6"
 PR = "r4"
 
 SRC_URI="git://github.com/opendroid-Team/OPD-Blue-Line.git;protocol=git"
-FILES_${PN} = "/usr/*"
+FILES_${PN} = "${libdir} /usr/share"
 
 S = "${WORKDIR}/git"
 
@@ -20,8 +20,10 @@ python -O -m compileall ${S}
 }
 
 do_install() {
-    install -d ${D}/usr/share/enigma2
-    cp -rp ${S}/usr ${D}/
+    install -d ${D}${libdir}
+    install -d ${D}/usr/share
+    cp -rp ${S}/usr/lib/* ${D}${libdir}/
+    cp -rp ${S}/usr/share/* ${D}/usr/share/
     chmod -R a+rX ${D}/usr/share/enigma2/
 }
 pkg_postinst_${PN} () {

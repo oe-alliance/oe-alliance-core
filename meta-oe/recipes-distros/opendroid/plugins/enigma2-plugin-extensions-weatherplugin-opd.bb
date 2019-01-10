@@ -18,8 +18,10 @@ SRC_URI="git://github.com/opendroid-Team/enigma2-plugin-extensions-weatherplugin
 
 S = "${WORKDIR}/git"
 
-FILES_${PN} = "/usr/*"
+FILES_${PN} = "${libdir}"
+
 
 do_install() {
-	cp -rp ${S}/usr ${D}/
+    install -d ${D}${libdir}
+    cp -rp ${S}/usr/lib/* ${D}${libdir}/
 }
