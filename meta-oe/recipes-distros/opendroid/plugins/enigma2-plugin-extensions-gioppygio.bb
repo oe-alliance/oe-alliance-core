@@ -12,16 +12,17 @@ SRCREV = "${AUTOREV}"
 PV = "2.0+git${SRCPV}"
 PKGV = "2.0+git${GITPKGV}"
 VER ="2.0"
-PR = "r0"
+PR = "r1"
 
 SRC_URI="git://github.com/opendroid-Team/gioppygio-settings-and-picons.git"
 
 S = "${WORKDIR}/git"
 
-FILES_${PN} = "/usr/*"
+FILES_${PN} = "${libdir}"
 
 do_install() {
-	cp -rp ${S}/usr ${D}/
+    install -d ${D}${libdir}
+    cp -rp ${S}/usr/lib/* ${D}${libdir}/
 }
 
 pkg_postinst_${PN}() {
@@ -46,7 +47,7 @@ exit 0
 
 pkg_postrm_${PN}() {
 #!/bin/sh
-rm -rf /usr/lib/enigma2/python/Plugins/Extensions/GioppyGio/
+rm ${libdir}/lib/enigma2/python/Plugins/Extensions/GioppyGio/
 echo "Plugin removed! You should restart enigma2 now!"
 exit 0
 }
