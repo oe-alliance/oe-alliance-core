@@ -9,6 +9,9 @@ PREFERRED_PROVIDER_virtual/mesa ?= "mesa"
 PREFERRED_PROVIDER_virtual/blindscan-dvbc ?= "gfutures-dvb-modules-${MACHINE}"
 PREFERRED_PROVIDER_virtual/blindscan-dvbs ?= "gfutures-dvb-modules-${MACHINE}"
 
+# Qt
+PACKAGECONFIG_GL_pn-qtbase = "no-opengl linuxfb"
+
 TARGET_ARCH = "arm"
 DEFAULTTUNE = "cortexa15hf-neon-vfpv4"
 

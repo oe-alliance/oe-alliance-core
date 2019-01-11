@@ -13,6 +13,9 @@ DEFAULTTUNE = "cortexa15hf-neon-vfpv4"
 PREFERRED_PROVIDER_virtual/egl = "hd-v3ddriver-${MACHINE}" 
 PREFERRED_PROVIDER_virtual/libgles2 = "hd-v3ddriver-${MACHINE}"
 
+# Qt
+PACKAGECONFIG_GL_pn-qtbase = "no-opengl linuxfb"
+
 PREFERRED_VERSION_linux-gfutures = "4.10.12"
 PREFERRED_VERSION_linux-libc-headers = "4.10"
 

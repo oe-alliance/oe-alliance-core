@@ -1,7 +1,5 @@
 MACHINE_FEATURES += "qthbbtv qtstalker"
 
-DISTRO_FEATURES_EXTRA = "opengl"
-
 PREFERRED_PROVIDER_virtual/egl ?= "airdigital-mali-${HICHIPSET}"
 PREFERRED_PROVIDER_virtual/libgles1 ?= "airdigital-mali-${HICHIPSET}"
 PREFERRED_PROVIDER_virtual/libgles2 ?= "airdigital-mali-${HICHIPSET}"
@@ -9,6 +7,9 @@ PREFERRED_PROVIDER_virtual/libopencl ?= "airdigital-mali-${HICHIPSET}"
 PREFERRED_PROVIDER_virtual/libgbm ?= "airdigital-mali-${HICHIPSET}"
 PREFERRED_PROVIDER_virtual/libgl ?= "mesa"
 PREFERRED_PROVIDER_virtual/mesa ?= "mesa"
+
+# Qt
+PACKAGECONFIG_GL_pn-qtbase = "no-opengl linuxfb"
 
 PREFERRED_PROVIDER_virtual/blindscan-dvbc = "airdigital-dvb-modules-${MACHINE}"
 PREFERRED_PROVIDER_virtual/blindscan-dvbs = "airdigital-dvb-modules-${MACHINE}"
