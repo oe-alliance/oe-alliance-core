@@ -10,7 +10,7 @@ PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"
 PR = "r0"
 
-SRC_URI = "git://github.com/samsamsam-iptvplayer/iptvsubparser.git;protocol=git"
+SRC_URI = "git://github.com/e2iplayer/e2isubparser.git;protocol=git"
 SRCREV = "${AUTOREV}"
 
 S = "${WORKDIR}/git/"

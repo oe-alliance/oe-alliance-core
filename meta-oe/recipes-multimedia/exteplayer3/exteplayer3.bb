@@ -15,7 +15,7 @@ PKGV = "50+gitr${GITPKGV}"
 PR = "r1"
 
 SRCREV = "${AUTOREV}"
-SRC_URI = "git://github.com/samsamsam-iptvplayer/exteplayer3.git;branch=master"
+SRC_URI = "git://github.com/e2iplayer/exteplayer3.git;branch=master"
 
 S = "${WORKDIR}/git/"
 
