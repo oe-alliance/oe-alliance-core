@@ -1,0 +1,8 @@
+SRCDATE = "20190104"
+
+require maxytec-fastboot.inc
+
+SRC_URI[md5sum] = "2d096ee4a0958d77793eb12554e588c8"
+SRC_URI[sha256sum] = "55d4b3a5772383be72b32f386358c06247bcf38e4a000f4d0465951f6e44581f"
+
+COMPATIBLE_MACHINE = "v8plus"

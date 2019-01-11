@@ -5,10 +5,9 @@ LICENSE = "CLOSED"
 DEPENDS = "zlib libpng freetype curl libxml2 libjpeg-turbo harfbuzz"
 RDEPENDS_${PN} = "libbluray"
 PR = "${SRCDATE}"
-PACKAGE_ARCH = "${MACHINE_ARCH}"
 LIBSVER ?= "${@bb.utils.contains('TARGET_ARCH', 'aarch64', '64' , '', d)}"
 
-SRC_URI = "http://source.mynonpublic.com/gfutures/${MACHINE}-libs${LIBSVER}-${SRCDATE}.zip"
+SRC_URI = "http://source.mynonpublic.com/gfutures/gfutures-libs${LIBSVER}-${HICHIPSET}-${SRCDATE}.zip"
 
 S = "${WORKDIR}"
 
@@ -20,10 +19,16 @@ do_compile[noexec] = "1"
 SOLIBS = ".so"
 FILES_SOLIBSDEV = ""
 
+# Disable anything auto depending
+EXCLUDE_FROM_SHLIBS = "1"
+
 do_install() {
 	install -d ${D}${libdir}/hisilicon
 	install -m 0755 ${S}/hisilicon/* ${D}${libdir}/hisilicon
+	install -m 0755 ${S}/ffmpeg/* ${D}${libdir}/hisilicon
+	install -m 0755 ${S}/glibc/* ${D}${libdir}/hisilicon
 }
+
 
 do_package_qa() {
 }

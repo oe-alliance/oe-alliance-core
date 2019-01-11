@@ -14,6 +14,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'vizyonvita', 'Vita' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'mutant11', 'HD11' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'mutant51', 'HD51' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'mutant60', 'HD60' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mutant61', 'HD61' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'ax51', 'HD51' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'ax60', 'HD60' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'bre2ze4k', 'BRE2ZE 4K' , '', d)}\
@@ -33,6 +34,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'vizyonvita', 'Vizyon' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'mutant11', 'Mut@nt' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'mutant51', 'Mut@nt' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'mutant60', 'Mut@nt' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mutant61', 'Mut@nt' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'ax51', 'AX 4K' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'ax60', 'AX 4KBOX' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'bre2ze4k', 'WWIO' , '', d)}\
@@ -51,9 +53,10 @@ ${@bb.utils.contains('MACHINEBUILD', 'mutant1200', 'hd1200' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'vizyonvita', 'hd1100' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'mutant11', 'hd11' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'mutant51', 'hd51' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'mutant60', 'hd60' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mutant60', 'hd' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mutant61', 'hd' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'ax51', 'hd51' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'ax60', 'hd60' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'ax60', 'hd' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'bre2ze4k', 'bre2ze4k' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'axultra', 'axultra' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'vimastec1000', 'vs1000' , '', d)}\
@@ -71,6 +74,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'vizyonvita', 'hd1100' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'mutant11', 'hd11' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'mutant51', 'hd51' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'mutant60', 'hd60' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mutant61', 'hd61' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'ax51', 'hd51' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'ax60', 'hd60' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'bre2ze4k', 'bre2ze4k' , '', d)}\
@@ -81,7 +85,6 @@ ${@bb.utils.contains('MACHINEBUILD', 'vimastec1500', 'vs1500' , '', d)}\
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "\
     gfutures-dvb-modules-${MACHINE_DRIVER} \
-    ${@bb.utils.contains('MACHINE_FEATURES', 'hisil', 'gfutures-libs-${MACHINE} gfutures-partitions-${MACHINE} gfutures-bootargs-${MACHINE}' , '', d)} \
     "
 
 DVBPROVIDER = "kernel"
@@ -91,8 +94,8 @@ MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS += "\
     kernel-module-cdfs \
     ${@bb.utils.contains('MACHINE_FEATURES', 'qtegls', 'hd-qteglfs-platform', '',d)} \
     ${@bb.utils.contains('MACHINE_FEATURES', 'swap', 'hd-swapcreate', '',d)} \
-    ${@bb.utils.contains('MACHINE_FEATURES', 'mali', 'gfutures-mali-${MACHINE} kernel-module-mali-${MACHINE}' , '', d)} \
     ${@bb.utils.contains('MACHINE_FEATURES', 'gfwol', 'gfutures-ethwol' , '', d)} \
+    ${@bb.utils.contains('MACHINE_FEATURES', 'emmc', 'resizerootfs' , '', d)} \
     "
 
 MACHINE_EXTRA_RRECOMMENDS += " \
@@ -113,6 +116,7 @@ DVBMEDIASINK_CONFIG = "--with-wma --with-wmv --with-pcm --with-dts --with-eac3 \
     ${@bb.utils.contains('MACHINE', 'vs1500', '--with-h265 --with-vb6 --with-vb8 --with-vb9 --with-spark' , '', d)} \
     ${@bb.utils.contains('MACHINE', 'vs1000', '--with-h265 --with-vb6 --with-vb8  --with-spark' , '', d)} \
     ${@bb.utils.contains('MACHINE', 'hd60', '--with-h265 --with-vb6 --with-vb8 --with-vb9 --with-spark' , '', d)} \
+    ${@bb.utils.contains('MACHINE', 'hd61', '--with-h265 --with-vb6 --with-vb8 --with-vb9 --with-spark' , '', d)} \
 "
 
 PREFERRED_PROVIDER_virtual/kernel = "linux-gfutures"
