@@ -1,0 +1,1 @@
+KERNEL_MODULE_AUTOLOAD += "xfs"

@@ -3,7 +3,8 @@ ROOTFS_FILE = "rootfs.ubi"
 
 
 IMAGE_FSTYPES += "ubi"
-MKUBIFS_ARGS = "-m 2048 -e 126976 -c 3840"
+UBI_VOLNAME = "rootfs"
+MKUBIFS_ARGS = "-F -m 2048 -e 126976 -c 3840"
 UBINIZE_ARGS = "-m 2048 -p 128KiB"
 
 IMAGE_CMD_ubi_append = " \
