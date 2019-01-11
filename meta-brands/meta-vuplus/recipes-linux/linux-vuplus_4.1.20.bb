@@ -4,7 +4,7 @@ SECTION = "kernel"
 
 MODULE = "linux-4.1.20"
 
-MACHINE_KERNEL_PR_append = "oea4.1-r4"
+MACHINE_KERNEL_PR_append = "oea4.1-r5"
 
 inherit kernel machine_kernel_pr
 
@@ -28,6 +28,7 @@ SRC_URI += "http://archive.vuplus.com/download/kernel/stblinux-4.1-${KERNEL_SRC_
     file://blindscan2.patch \
     file://0001-stv090x-optimized-TS-sync-control.patch \
     file://kernel-add-support-for-gcc7.patch \
+    file://0001-dvb-usb-fix-a867.patch \
     "
 
 SRC_URI_append = "${@bb.utils.contains("MACHINE_FEATURES", "dvbproxy", " file://linux_dvb_adapter.patch;patch=1;pnum=1", "", d)}"
