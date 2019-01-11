@@ -36,7 +36,6 @@ CMDLINE ?= "console=ttyAMA0,115200n8"
 KERNEL_MODULE_AUTOLOAD += "mali"
 
 PREFERRED_VERSION_linux-maxytec = "4.4.35"
-PREFERRED_VERSION_linux-libc-headers = "4.4"
 
 IMAGE_CMD_maxytecfastboot8gb_append = " \
     mkdir -p ${DEPLOY_DIR_IMAGE}/${MACHINE}/${IMAGEDIR}; \
