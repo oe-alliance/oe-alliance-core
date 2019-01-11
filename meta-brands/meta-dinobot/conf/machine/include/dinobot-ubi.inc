@@ -1,5 +1,5 @@
 KERNEL_FILE = "uImage"
-ROOTFS_FILE = "rootfs.ubi"
+ROOTFS_FILE = "rootfs.bin"
 
 
 IMAGE_FSTYPES += "ubi"
