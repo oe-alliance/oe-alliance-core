@@ -1,0 +1,113 @@
+From 5789e2f66a408864653296a69767e9e2f22b26a0 Mon Sep 17 00:00:00 2001
+From: Janani Ravichandran <janani.rvchndrn@gmail.com>
+Date: Thu, 11 Feb 2016 17:52:30 -0500
+Subject: [PATCH 14/17] staging: media: Remove unneeded parentheses
+
+Remove unneeded parentheses in assignment statements.
+Semantic patch:
+
+@@
+expression a, b, c;
+@@
+
+(
+  a = (b == c)
+|
+  a =
+- (
+  b
+- )
+)
+
+Signed-off-by: Janani Ravichandran <janani.rvchndrn@gmail.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ drivers/staging/media/davinci_vpfe/dm365_isif.c    | 2 +-
+ drivers/staging/media/davinci_vpfe/dm365_resizer.c | 8 ++++----
+ drivers/staging/media/mn88472/mn88472.c            | 6 +++---
+ drivers/staging/media/mn88473/mn88473.c            | 6 +++---
+ 4 files changed, 11 insertions(+), 11 deletions(-)
+
+diff --git a/drivers/staging/media/davinci_vpfe/dm365_isif.c b/drivers/staging/media/davinci_vpfe/dm365_isif.c
+index 80907b4..c01436f 100644
+--- a/drivers/staging/media/davinci_vpfe/dm365_isif.c
++++ b/drivers/staging/media/davinci_vpfe/dm365_isif.c
+@@ -1570,7 +1570,7 @@ isif_pad_set_selection(struct v4l2_subdev *sd,
+ 		sel->r.height = format->height;
+ 	}
+ 	/* adjust the width to 16 pixel boundary */
+-	sel->r.width = ((sel->r.width + 15) & ~0xf);
++	sel->r.width = (sel->r.width + 15) & ~0xf;
+ 	vpfe_isif->crop = sel->r;
+ 	if (sel->which == V4L2_SUBDEV_FORMAT_ACTIVE) {
+ 		isif_set_image_window(vpfe_isif);
+diff --git a/drivers/staging/media/davinci_vpfe/dm365_resizer.c b/drivers/staging/media/davinci_vpfe/dm365_resizer.c
+index b649813..a77b08b 100644
+--- a/drivers/staging/media/davinci_vpfe/dm365_resizer.c
++++ b/drivers/staging/media/davinci_vpfe/dm365_resizer.c
+@@ -408,7 +408,7 @@ resizer_calculate_down_scale_f_div_param(struct device *dev,
+ 	param->f_div.pass[0].src_hsz = upper_h1 + o;
+ 	param->f_div.pass[1].o_hsz = h2 - 1;
+ 	param->f_div.pass[1].i_hps = 10 + (val1 * two_power);
+-	param->f_div.pass[1].h_phs = (val - (val1 << 8));
++	param->f_div.pass[1].h_phs = val - (val1 << 8);
+ 	param->f_div.pass[1].src_hps = upper_h1 - o;
+ 	param->f_div.pass[1].src_hsz = upper_h2 + o;
+ 
+@@ -429,8 +429,8 @@ resizer_configure_common_in_params(struct vpfe_resizer_device *resizer)
+ 	param->rsz_common.hps = param->user_config.hst;
+ 
+ 	if (vpfe_ipipeif_decimation_enabled(vpfe_dev))
+-		param->rsz_common.hsz = (((informat->width - 1) *
+-			IPIPEIF_RSZ_CONST) / vpfe_ipipeif_get_rsz(vpfe_dev));
++		param->rsz_common.hsz = ((informat->width - 1) *
++			IPIPEIF_RSZ_CONST) / vpfe_ipipeif_get_rsz(vpfe_dev);
+ 	else
+ 		param->rsz_common.hsz = informat->width - 1;
+ 
+@@ -654,7 +654,7 @@ resizer_calculate_normal_f_div_param(struct device *dev, int input_width,
+ 	param->f_div.pass[0].src_hsz = (input_width >> 2) + o;
+ 	param->f_div.pass[1].o_hsz = h2 - 1;
+ 	param->f_div.pass[1].i_hps = val1;
+-	param->f_div.pass[1].h_phs = (val - (val1 << 8));
++	param->f_div.pass[1].h_phs = val - (val1 << 8);
+ 	param->f_div.pass[1].src_hps = (input_width >> 2) - o;
+ 	param->f_div.pass[1].src_hsz = (input_width >> 2) + o;
+ 
+diff --git a/drivers/staging/media/mn88472/mn88472.c b/drivers/staging/media/mn88472/mn88472.c
+index 6863c43..daed047 100644
+--- a/drivers/staging/media/mn88472/mn88472.c
++++ b/drivers/staging/media/mn88472/mn88472.c
+@@ -96,9 +96,9 @@ static int mn88472_set_frontend(struct dvb_frontend *fe)
+ 	/* Calculate IF registers ( (1<<24)*IF / Xtal ) */
+ 	tmp =  div_u64(if_frequency * (u64)(1<<24) + (dev->xtal / 2),
+ 				   dev->xtal);
+-	if_val[0] = ((tmp >> 16) & 0xff);
+-	if_val[1] = ((tmp >>  8) & 0xff);
+-	if_val[2] = ((tmp >>  0) & 0xff);
++	if_val[0] = (tmp >> 16) & 0xff;
++	if_val[1] = (tmp >>  8) & 0xff;
++	if_val[2] = (tmp >>  0) & 0xff;
+ 
+ 	ret = regmap_write(dev->regmap[2], 0xfb, 0x13);
+ 	ret = regmap_write(dev->regmap[2], 0xef, 0x13);
+diff --git a/drivers/staging/media/mn88473/mn88473.c b/drivers/staging/media/mn88473/mn88473.c
+index 8b6736c..2e0a641 100644
+--- a/drivers/staging/media/mn88473/mn88473.c
++++ b/drivers/staging/media/mn88473/mn88473.c
+@@ -94,9 +94,9 @@ static int mn88473_set_frontend(struct dvb_frontend *fe)
+ 	/* Calculate IF registers ( (1<<24)*IF / Xtal ) */
+ 	tmp =  div_u64(if_frequency * (u64)(1<<24) + (dev->xtal / 2),
+ 				   dev->xtal);
+-	if_val[0] = ((tmp >> 16) & 0xff);
+-	if_val[1] = ((tmp >>  8) & 0xff);
+-	if_val[2] = ((tmp >>  0) & 0xff);
++	if_val[0] = (tmp >> 16) & 0xff;
++	if_val[1] = (tmp >>  8) & 0xff;
++	if_val[2] = (tmp >>  0) & 0xff;
+ 
+ 	ret = regmap_write(dev->regmap[2], 0x05, 0x00);
+ 	ret = regmap_write(dev->regmap[2], 0xfb, 0x13);
+-- 
+2.1.4
+
