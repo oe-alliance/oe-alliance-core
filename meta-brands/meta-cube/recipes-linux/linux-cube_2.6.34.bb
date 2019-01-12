@@ -198,6 +198,9 @@ SRC_URI = " \
     file://kernel-add-support-for-gcc8.patch \
     file://timeconst_perl5.patch \
     file://0001-dvb_frontend-backport-multistream-support.patch \
+    file://log2.patch \
+    file://makefile-remove-wall.patch \
+    file://uaccess-dont-mark-register-as-const.patch \
     "
 
 S = "${WORKDIR}/linux-${PV}"

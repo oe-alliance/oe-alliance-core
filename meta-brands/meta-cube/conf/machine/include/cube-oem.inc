@@ -76,10 +76,7 @@ PREFERRED_PROVIDER_virtual/kernel = "linux-cube"
 PREFERRED_PROVIDER_virtual/egl = "opengl"
 
 PREFERRED_VERSION_linux-cube = "2.6.34"
-PREFERRED_VERSION_linux-libc-headers = "3.1"
 OLDEST_KERNEL = "2.6.34"
-GCCVERSION = "4.9.4"
-GLIBCVERSION = "2.23"
 PREFERRED_VERSION_samba = "3.%"
 PREFERRED_VERSION_directfb = "1.7.7"
 

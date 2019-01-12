@@ -1,0 +1,15 @@
+diff --git a/Makefile b/Makefile
+index dc809c09..16052820 100644
+--- a/Makefile
++++ b/Makefile
+@@ -346,9 +346,8 @@ LINUXINCLUDE    := -I$(srctree)/arch/$(hdr-arch)/include -Iinclude \
+ 
+ KBUILD_CPPFLAGS := -D__KERNEL__
+ 
+-KBUILD_CFLAGS   := -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs \
++KBUILD_CFLAGS   := -Wstrict-prototypes -Wno-trigraphs \
+ 		   -fno-strict-aliasing -fno-common \
+-		   -Werror-implicit-function-declaration \
+ 		   -Wno-format-security \
+ 		   -fno-delete-null-pointer-checks
+ KBUILD_AFLAGS   := -D__ASSEMBLY__
