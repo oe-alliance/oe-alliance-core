@@ -1,0 +1,70 @@
+From 800f4ee2219bfcb8eb79b5f1166ea4b2594037f3 Mon Sep 17 00:00:00 2001
+From: Piotr Oleszczyk <piotr.oleszczyk@gmail.com>
+Date: Wed, 1 Feb 2017 18:26:42 -0200
+Subject: [PATCH 07/11] add Hama Hybrid DVB-T Stick support
+
+Adding Hama Hybrid DVB-T Stick support. Technically it's the same
+device what Terratec Cinergy HT USB XE is.
+
+Signed-off-by: Piotr Oleszczyk <piotr.oleszczyk@gmail.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab@s-opensource.com>
+---
+ drivers/media/dvb-core/dvb-usb-ids.h        | 4 +++-
+ drivers/media/usb/dvb-usb/dib0700_devices.c | 7 ++++++-
+ 2 files changed, 9 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/media/dvb-core/dvb-usb-ids.h b/drivers/media/dvb-core/dvb-usb-ids.h
+index b4ae119..9e91c5e 100644
+--- a/drivers/media/dvb-core/dvb-usb-ids.h
++++ b/drivers/media/dvb-core/dvb-usb-ids.h
+@@ -70,6 +70,7 @@
+ #define USB_VID_EVOLUTEPC			0x1e59
+ #define USB_VID_AZUREWAVE			0x13d3
+ #define USB_VID_TECHNISAT			0x14f7
++#define USB_VID_HAMA				0x147f
+ 
+ /* Product IDs */
+ #define USB_PID_ADSTECH_USB2_COLD			0xa333
+@@ -390,5 +391,6 @@
+ #define USB_PID_SVEON_STV27                             0xd3af
+ #define USB_PID_TURBOX_DTT_2000                         0xd3a4
+ #define USB_PID_WINTV_SOLOHD                            0x0264
+-#define USB_PID_EVOLVEO_XTRATV_STICK                   0xa115
++#define USB_PID_EVOLVEO_XTRATV_STICK			0xa115
++#define USB_PID_HAMA_DVBT_HYBRID			0x2758
+ #endif
+diff --git a/drivers/media/usb/dvb-usb/dib0700_devices.c b/drivers/media/usb/dvb-usb/dib0700_devices.c
+index a7317d7..2fb3412 100644
+--- a/drivers/media/usb/dvb-usb/dib0700_devices.c
++++ b/drivers/media/usb/dvb-usb/dib0700_devices.c
+@@ -3815,6 +3815,7 @@ struct usb_device_id dib0700_usb_id_table[] = {
+ 	{ USB_DEVICE(USB_VID_PCTV,      USB_PID_PCTV_2002E_SE) },
+ 	{ USB_DEVICE(USB_VID_PCTV,      USB_PID_DIBCOM_STK8096PVR) },
+ 	{ USB_DEVICE(USB_VID_DIBCOM,    USB_PID_DIBCOM_STK8096PVR) },
++	{ USB_DEVICE(USB_VID_HAMA,	USB_PID_HAMA_DVBT_HYBRID) },
+ 	{ 0 }		/* Terminating entry */
+ };
+ MODULE_DEVICE_TABLE(usb, dib0700_usb_id_table);
+@@ -4392,7 +4393,7 @@ struct dvb_usb_device_properties dib0700_devices[] = {
+ 			},
+ 		},
+ 
+-		.num_device_descs = 9,
++		.num_device_descs = 10,
+ 		.devices = {
+ 			{   "Terratec Cinergy HT USB XE",
+ 				{ &dib0700_usb_id_table[27], NULL },
+@@ -4430,6 +4431,10 @@ struct dvb_usb_device_properties dib0700_devices[] = {
+ 				{ &dib0700_usb_id_table[54], NULL },
+ 				{ NULL },
+ 			},
++			{   "Hama DVB=T Hybrid USB Stick",
++				{ &dib0700_usb_id_table[85], NULL },
++				{ NULL },
++			},
+ 		},
+ 
+ 		.rc.core = {
+-- 
+2.17.1
+
