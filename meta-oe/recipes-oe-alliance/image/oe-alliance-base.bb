@@ -23,6 +23,7 @@ RDEPENDS_${PN} = "\
     ${@bb.utils.contains("MACHINE_FEATURES", "gbsoftwol", "gigablue-ethsoftwol", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "no-nmap", "" , "nmap", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "emmc", "dosfstools mtools e2fsprogs-resize2fs" , "", d)} \
+    ${@bb.utils.contains("MACHINE_FEATURES", "fastboot", "dosfstools mtools android-tools" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "vubluetooth", "bluetoothsetup-${MACHINE} enigma2-plugin-extensions-witaispeechtotext", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "gbbluetooth", "bluetoothsetup-${MACHINE}", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "recovery", "recovery" , "", d)} \
