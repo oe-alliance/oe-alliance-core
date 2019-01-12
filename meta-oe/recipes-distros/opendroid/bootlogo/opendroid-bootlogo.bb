@@ -9,7 +9,7 @@ require conf/license/license-gplv2.inc
 RDEPENDS_${PN} += "showiframe"
 
 PV = "6.7"
-PR = "r6"
+PR = "r7"
 
 S = "${WORKDIR}"
 
@@ -22,6 +22,9 @@ INITSCRIPT_PARAMS_vusolo4k = "start 70 S ."
 INITSCRIPT_PARAMS_vuuno4k = "start 70 S ."
 INITSCRIPT_PARAMS_vuuno4kse = "start 70 S ."
 INITSCRIPT_PARAMS_vuultimo4k = "start 70 S ."
+INITSCRIPT_PARAMS_vuzero4k = "start 70 S ."
+INITSCRIPT_PARAMS_vuduo4k = "start 70 S ."
+INITSCRIPT_PARAMS_gb7252 = "start 70 S ."
 PRECOMPILED_ARCH = "${MACHINE}"
 PRECOMPILED_ARCH_dm7020hdv2 = "dm7020hd"
 
@@ -40,6 +43,7 @@ SRC_URI_append_7210s = "file://lcdsplash220.bin file://7100s/lcdwaitkey220.bin f
 SRC_URI_append_7105s = "file://lcdsplash220.bin file://7100s/lcdwaitkey220.bin file://7100s/lcdwarning220.bin file://7100s/lcdcomplete220.bin"
 SRC_URI_append_7215s = "file://lcdsplash220.bin file://7100s/lcdwaitkey220.bin file://7100s/lcdwarning220.bin file://7100s/lcdcomplete220.bin"
 SRC_URI_append_h9 = "file://logo.img"
+SRC_URI_append_h9combo = "file://logo.img"
 SRC_URI_append_i55plus = "file://logo.img"
 SRC_URI_append_sf8008 = "file://logo.img"
 
