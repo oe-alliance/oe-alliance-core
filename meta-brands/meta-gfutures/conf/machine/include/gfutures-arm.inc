@@ -12,6 +12,10 @@ DEFAULTTUNE = "cortexa15hf-neon-vfpv4"
 PREFERRED_PROVIDER_virtual/egl = "hd-v3ddriver-${MACHINE}" 
 PREFERRED_PROVIDER_virtual/libgles2 = "hd-v3ddriver-${MACHINE}"
 
+MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS += "\
+    ${@bb.utils.contains('MACHINE_FEATURES', 'emmc', 'resizerootfs' , '', d)} \
+    "
+
 # Qt
 PACKAGECONFIG_GL_pn-qtbase = "no-opengl linuxfb"
 
