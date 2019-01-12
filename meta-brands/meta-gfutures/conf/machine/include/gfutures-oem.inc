@@ -53,10 +53,10 @@ ${@bb.utils.contains('MACHINEBUILD', 'mutant1200', 'hd1200' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'vizyonvita', 'hd1100' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'mutant11', 'hd11' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'mutant51', 'hd51' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'mutant60', 'hd' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'mutant61', 'hd' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mutant60', 'hd60' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mutant61', 'hd61' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'ax51', 'hd51' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'ax60', 'hd' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'ax60', 'hd60' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'bre2ze4k', 'bre2ze4k' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'axultra', 'axultra' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'vimastec1000', 'vs1000' , '', d)}\
