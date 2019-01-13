@@ -147,3 +147,17 @@ do_install_append() {
 
 #	cp -a skins/* ${D}/var/usr/local/share/titan/plugins/
 }
+
+python populate_packages_prepend() {
+    titan_plugindir = bb.data.expand('/var/usr/local/share/titan/plugins', d)
+    do_split_packages(d, titan_plugindir, '^(\w+)/[a-zA-Z0-9_]+.*$', 'titan-plugin-%s', '%s', recursive=True, match_path=True, prepend=True, extra_depends="titan")
+    do_split_packages(d, titan_plugindir, '^(\w+)/.*\.h$', 'titan-plugin-%s-src', '%s (source files)', recursive=True, match_path=True, prepend=True)
+    do_split_packages(d, titan_plugindir, '^(\w+)/.*\.la$', 'titan-plugin-%s-dev', '%s (development)', recursive=True, match_path=True, prepend=True)
+    do_split_packages(d, titan_plugindir, '^(\w+)/.*\.a$', 'titan-plugin-%s-staticdev', '%s (static development)', recursive=True, match_path=True, prepend=True)
+    do_split_packages(d, titan_plugindir, '^(\w+)/(.*/)?\.debug/.*$', 'titan-plugin-%s-dbg', '%s (debug)', recursive=True, match_path=True, prepend=True)
+
+    titan_podir = bb.data.expand('/var/usr/local/share/titan/po', d)
+    do_split_packages(d, titan_podir, '^(\w+)/[a-zA-Z0-9_/]+.*$', 'titan-locale-%s', '%s', recursive=True, match_path=True, prepend=True, extra_depends="titan")
+}
+
+PACKAGES_DYNAMIC = "titan-plugin-* titan-locale-*"
