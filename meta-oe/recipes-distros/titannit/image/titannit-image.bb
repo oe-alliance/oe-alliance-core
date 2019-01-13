@@ -35,6 +35,7 @@ IMAGE_INSTALL = "\
 	${@bb.utils.contains("MACHINE_FEATURES", "chromiumos", "enigma2-plugin-extensions-chromium", "", d)} \
 	${DISTRO}-base \
     titan-bin \
+    titan-plugins \
     "
 
 IMAGE_INSTALL_append_mipsel = "\
