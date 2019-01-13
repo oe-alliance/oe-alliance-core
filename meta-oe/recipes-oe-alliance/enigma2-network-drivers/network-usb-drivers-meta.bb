@@ -35,7 +35,10 @@ DEPENDS = "\
 
 
 WLAN_EXTRA = " \
-    ${@bb.utils.contains("DEFAULTTUNE", "sh4", "" , "enigma2-plugin-drivers-network-usb-rtl8814au enigma2-plugin-drivers-network-usb-rtl8822bu", d)} \
+    ${@bb.utils.contains("DEFAULTTUNE", "sh4", "" , "\
+    enigma2-plugin-drivers-network-usb-rtl8814au \
+    enigma2-plugin-drivers-network-usb-rtl8822bu \
+    enigma2-plugin-drivers-network-usb-rtl8821cu", d)} \
 "
 
 PR = "r0"
