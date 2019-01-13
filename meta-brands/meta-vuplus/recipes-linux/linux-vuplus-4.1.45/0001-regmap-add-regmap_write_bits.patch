@@ -1,0 +1,77 @@
+From fd4b7286ccc469bf5dde22db6b8fcc455c3c4a66 Mon Sep 17 00:00:00 2001
+From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Date: Tue, 16 Jun 2015 08:52:39 +0000
+Subject: [PATCH] regmap: add regmap_write_bits()
+
+regmap_write_bits() is similar to regmap_update_bits(),
+but regmap_write_bits() write data to register even though
+it is same value.
+
+Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ drivers/base/regmap/regmap.c | 23 +++++++++++++++++++++++
+ include/linux/regmap.h       |  9 +++++++++
+ 2 files changed, 32 insertions(+)
+
+diff --git a/drivers/base/regmap/regmap.c b/drivers/base/regmap/regmap.c
+index 69ec411ce7224..d93bb9a8ab98c 100644
+--- a/drivers/base/regmap/regmap.c
++++ b/drivers/base/regmap/regmap.c
+@@ -2374,6 +2374,29 @@ int regmap_update_bits(struct regmap *map, unsigned int reg,
+ }
+ EXPORT_SYMBOL_GPL(regmap_update_bits);
+ 
++/**
++ * regmap_write_bits: Perform a read/modify/write cycle on the register map
++ *
++ * @map: Register map to update
++ * @reg: Register to update
++ * @mask: Bitmask to change
++ * @val: New value for bitmask
++ *
++ * Returns zero for success, a negative number on error.
++ */
++int regmap_write_bits(struct regmap *map, unsigned int reg,
++		      unsigned int mask, unsigned int val)
++{
++	int ret;
++
++	map->lock(map->lock_arg);
++	ret = _regmap_update_bits(map, reg, mask, val, NULL);
++	map->unlock(map->lock_arg);
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(regmap_write_bits);
++
+ /**
+  * regmap_update_bits_async: Perform a read/modify/write cycle on the register
+  *                           map asynchronously
+diff --git a/include/linux/regmap.h b/include/linux/regmap.h
+index 59c55ea0f0b50..e4b9ad4f05ef3 100644
+--- a/include/linux/regmap.h
++++ b/include/linux/regmap.h
+@@ -424,6 +424,8 @@ int regmap_bulk_read(struct regmap *map, unsigned int reg, void *val,
+ 		     size_t val_count);
+ int regmap_update_bits(struct regmap *map, unsigned int reg,
+ 		       unsigned int mask, unsigned int val);
++int regmap_write_bits(struct regmap *map, unsigned int reg,
++		       unsigned int mask, unsigned int val);
+ int regmap_update_bits_async(struct regmap *map, unsigned int reg,
+ 			     unsigned int mask, unsigned int val);
+ int regmap_update_bits_check(struct regmap *map, unsigned int reg,
+@@ -645,6 +647,13 @@ static inline int regmap_update_bits(struct regmap *map, unsigned int reg,
+ 	return -EINVAL;
+ }
+ 
++static inline int regmap_write_bits(struct regmap *map, unsigned int reg,
++				     unsigned int mask, unsigned int val)
++{
++	WARN_ONCE(1, "regmap API is disabled");
++	return -EINVAL;
++}
++
+ static inline int regmap_update_bits_async(struct regmap *map,
+ 					   unsigned int reg,
+ 					   unsigned int mask, unsigned int val)
