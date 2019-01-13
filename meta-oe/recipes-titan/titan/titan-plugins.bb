@@ -1,6 +1,6 @@
-SUMMARY = "titan a simple gst videoplayer"
-MAINTAINER = "Duckbox Team"
-SECTION = "multimedia"
+SUMMARY = "TitanNit is a fast Linux Framebuffer Gui"
+MAINTAINER = "TitanNit Team"
+SECTION = "plugins"
 #PRIORITY = "optional"
 LICENSE = "GPLv2"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
@@ -31,11 +31,63 @@ CFLAGS = "\
 	-I${WORKDIR}/titan/libdreamdvd \
 	-I${WORKDIR}/titan/titan"
 
-LDADD = "-lpthread -ldl -lpng -lfreetype -lgstreamer-0.10 -ldreamdvd -ljpeg"
+CFLAGS_append = " \
+	-I${STAGING_DIR_TARGET}/usr/include \
+	-I${STAGING_DIR_TARGET}/usr/include/freetype2 \
+	-I${STAGING_DIR_TARGET}/usr/include/openssl \
+	-I${STAGING_DIR_TARGET}/usr/include/dreamdvd \
+	-I${STAGING_DIR_TARGET}/usr/include/libdreamdvd \
+	-I${WORKDIR}/titan/libdreamdvd \
+	-I${WORKDIR}/titan/titan \
+	-I${WORKDIR}/titan/titan/include \
+	-I${WORKDIR}/titan/libeplayer3/include \
+	"
+CFLAGS_append_arm = "${@bb.utils.contains('GST_VERSION', '1.0', ' \
+	-I${STAGING_DIR_TARGET}/usr/include \
+	-I${STAGING_DIR_TARGET}/usr/lib/gstreamer-1.0/include \
+	-I${STAGING_DIR_TARGET}/usr/include/gstreamer-1.0 \
+	-I${STAGING_DIR_TARGET}/usr/include/glib-2.0 \
+	-I${STAGING_DIR_TARGET}/usr/include/libxml2 \
+	-I${STAGING_DIR_TARGET}/usr/lib/glib-2.0/include \
+	-I${STAGING_DIR_TARGET}/usr/include/freetype2 \
+	-I${STAGING_DIR_TARGET}/usr/include/dreamdvd \
+	-I${STAGING_DIR_TARGET}/usr/include/libdreamdvd \	
+	-I${WORKDIR}/titan/libdreamdvd \
+	-I${WORKDIR}/titan/titan \
+    ', ' \
+	-I${STAGING_DIR_TARGET}/usr/include \
+	-I${STAGING_DIR_TARGET}/usr/include/gstreamer-0.10 \
+	-I${STAGING_DIR_TARGET}/usr/include/glib-2.0 \
+	-I${STAGING_DIR_TARGET}/usr/include/libxml2 \
+	-I${STAGING_DIR_TARGET}/usr/lib/glib-2.0/include \
+	-I${STAGING_DIR_TARGET}/usr/include/freetype2 \
+	-I${STAGING_DIR_TARGET}/usr/include/dreamdvd \
+	-I${STAGING_DIR_TARGET}/usr/include/libdreamdvd \	
+	-I${WORKDIR}/titan/libdreamdvd \
+	-I${WORKDIR}/titan/titan \
+', d)}"
 
-do_configure_prepend() {
+CFLAGS_append_sh4 = " \
+	-I${STAGING_DIR_TARGET}/usr/include/libmmeimage \
+	-I${STAGING_KERNEL_DIR}/extra/bpamem \
+	"
+
+
+#ALL_CFLAGS= -DMIPSEL -DCAMSUPP -DEPLAYER4 -Os -mhard-float -export-dynamic -Wall -Wno-unused-but-set-variable -Wno-implicit-function-declaration
+
+#LDFLAGS_prepend = " -leplayer3 -lpthread -ldl -lm -lz -lpng -lfreetype -ldreamdvd -ljpeg -lssl -lcrypto "
+#LDFLAGS_prepend_sh4 = " -lmmeimage "
+
+CFLAGS_append_sh4 = " -DOEBUILD -DEXTEPLAYER3 -DEPLAYER3 -DSH4 -DSH4NEW -DCAMSUPP -Os -export-dynamic -Wall -Wno-unused-but-set-variable -Wno-implicit-function-declaration"
+CFLAGS_append_mipsel = " -DOEBUILD -DEXTEPLAYER3 -DEPLAYER3 -DCAMSUPP -Os -mhard-float -export-dynamic -Wall -Wno-unused-but-set-variable -Wno-implicit-function-declaration -Wno-unused-variable -Wno-format-overflow -Wno-format-truncation -Wno-nonnull -Wno-restrict"
+CFLAGS_append_arm = " -DOEBUILD -DEXTEPLAYER3 -DEPLAYER3 -DCAMSUPP -Os -mhard-float -export-dynamic -Wall -Wno-unused-but-set-variable -Wno-implicit-function-declaration -Wno-unused-variable -Wno-format-overflow -Wno-format-truncation -Wno-nonnull -Wno-restrict"
+
+#LDADD = "-lpthread -ldl -lpng -lfreetype -lgstreamer-0.10 -ldreamdvd -ljpeg"
+
+do_configure_prepend2() {
     cd ${S}
-
+pwd
+ls -al
 	if test -e titan/Makefile.am.mipsel;then
 		LIST="`ls */Makefile.am.mipsel`"
 		LIST="$LIST `ls */*/Makefile.am.mipsel`"
@@ -49,10 +101,12 @@ do_configure_prepend() {
 			fi
 		done
 	fi
+
+#sed 's/callmonitor1 \\/\\/' -i ${S}/plugins/Makefile.am
 }
 
 do_configure() {
-	svn up
+#	svn up
     cd ${S}/plugins
 	libtoolize --force
 	aclocal -I ${STAGING_DIR_TARGET}/usr/share/aclocal
