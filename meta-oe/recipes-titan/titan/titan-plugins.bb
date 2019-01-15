@@ -13,7 +13,7 @@ PR = "r1"
 
 SRC_URI = "svn://sbnc.dyndns.tv/svn/;module=titan;protocol=http"
 
-DEPENDS = "libpng jpeg rtmpdump gstreamer gst-plugins-base gst-plugins-good gst-plugins-bad gst-plugins-ugly gst-plugin-subsink libdreamdvd"
+DEPENDS = "titan"
 
 S = "${WORKDIR}/titan"
 

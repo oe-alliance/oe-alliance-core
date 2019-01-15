@@ -34,7 +34,7 @@ IMAGE_INSTALL = "\
 	${@bb.utils.contains("MACHINE_FEATURES", "grautec", "enigma2-plugin-extensions-grautec", "", d)} \
 	${@bb.utils.contains("MACHINE_FEATURES", "chromiumos", "enigma2-plugin-extensions-chromium", "", d)} \
 	${DISTRO}-base \
-    titan-bin \
+    titan \
     titan-plugins \
     "
 
