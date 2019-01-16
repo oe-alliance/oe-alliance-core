@@ -7,7 +7,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 PROVIDES += "virtual/blindscan-dvbs"
 RPROVIDES_${PN} += "virtual/blindscan-dvbs"
 
-SRCDATE = "20190110"
+SRCDATE = "20190116"
 
 PV = "${SRCDATE}"
 PR = "r0"
@@ -26,8 +26,8 @@ do_package_qa() {
 
 FILES_${PN}  = "${bindir}/uclan-blindscan"
 
-SRC_URI[md5sum] = "9e41d8f995744a1fecabed0aa2e9f8a9"
-SRC_URI[sha256sum] = "a158199d69ec3fa9316524b370a15ac3ef558ae01f356babad8ce3b67541a288"
+SRC_URI[md5sum] = "899430e3f4e4e69d5652e7584bce86fc"
+SRC_URI[sha256sum] = "8ff56061ef69ca5a9bcfdecde2d68e66dcac0bc625f89732b435f580efc6172d"
 
 do_prepare_recipe_sysroot[noexec] = "1"
 INHIBIT_PACKAGE_STRIP = "1"
