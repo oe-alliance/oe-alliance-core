@@ -1,5 +1,5 @@
 KV = "4.4.35"
-SRCDATE = "20190116"
+SRCDATE = "20190117"
 
 RDEPENDS_${PN} = "libjpeg-turbo pulseaudio-lib-rtp"
 PROVIDES += " virtual/blindscan-dvbc virtual/blindscan-dvbs"
@@ -8,8 +8,8 @@ require maxytec-dvb-modules.inc
 
 SRC_URI_append = " file://suspend.sh"
 
-SRC_URI[md5sum] = "60dcaa482ebadb899c015b48961edfcd"
-SRC_URI[sha256sum] = "a8ef36cd9aefe73862009cbf5e533ab08980ad980a0d99f7e4b6c345ad2bb275"
+SRC_URI[md5sum] = "c79059e8e89c1d1026ae94bf86e39fc8"
+SRC_URI[sha256sum] = "e5f57629ead22eb5830b95d2fafc0d3e44b88124b892aa9a2c326d7be4019eb5"
 
 INITSCRIPT_NAME = "suspend"
 INITSCRIPT_PARAMS = "start 89 0 ."
