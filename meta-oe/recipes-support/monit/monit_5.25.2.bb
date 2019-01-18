@@ -8,8 +8,8 @@ SRC_URI = "\
 	file://init \
 	"
 
-SRC_URI[md5sum] = "c6873b0828f872676f9e7fe1476a8dc2"
-SRC_URI[sha256sum] = "0c00573ebc0156c534a5952f392c2a7bedde194f8261c05497322055938847f5"
+SRC_URI[md5sum] = "890df599d6c1e9cfbbdd3edbacb7db81"
+SRC_URI[sha256sum] = "aa0ce6361d1155e43e30a86dcff00b2003d434f221c360981ced830275abc64a"
 
 INITSCRIPT_NAME = "monit"
 INITSCRIPT_PARAMS = "defaults 99"
