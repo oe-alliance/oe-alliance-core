@@ -316,6 +316,7 @@ FILES_${PN} = " \
 	/usr/local/bin \
 	/var/etc \
 	/var/etc/codepages \
+	/var/etc/ipkg \
 	/var/usr \
 	/var/usr/local \
 	/var/usr/share \
