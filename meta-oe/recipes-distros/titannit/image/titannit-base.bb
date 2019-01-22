@@ -107,9 +107,10 @@ RDEPENDS_${PN} = "\
 	titan-libeplayer3 \
 	titan-infobox \
 	oe-alliance-feeds-configs \
-	titannit-version-info \
+	openatv-version-info \
     "
 
+#	titannit-version-info
 #	kernel-module-usbserial
 #	parted
 #	fakelocale
