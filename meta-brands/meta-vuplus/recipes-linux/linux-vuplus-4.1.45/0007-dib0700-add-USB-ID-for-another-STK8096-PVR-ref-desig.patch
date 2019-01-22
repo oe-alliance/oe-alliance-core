@@ -1,0 +1,39 @@
+From b9f04b31510e36e6b83fb0e392249161038d4cc5 Mon Sep 17 00:00:00 2001
+From: Alejandro Torrado <aletorrado@gmail.com>
+Date: Mon, 18 Apr 2016 13:37:00 -0300
+Subject: [PATCH 06/11] dib0700: add USB ID for another STK8096-PVR ref design
+ based card
+
+USB_PID_DIBCOM_STK8096GP also comes with USB_VID_DIBCOM vendor ID.
+
+Signed-off-by: Alejandro Torrado <aletorrado@gmail.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab@osg.samsung.com>
+---
+ drivers/media/usb/dvb-usb/dib0700_devices.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/media/usb/dvb-usb/dib0700_devices.c b/drivers/media/usb/dvb-usb/dib0700_devices.c
+index cb36dc0..a7317d7 100644
+--- a/drivers/media/usb/dvb-usb/dib0700_devices.c
++++ b/drivers/media/usb/dvb-usb/dib0700_devices.c
+@@ -3814,6 +3814,7 @@ struct usb_device_id dib0700_usb_id_table[] = {
+ 	{ USB_DEVICE(USB_VID_PCTV,      USB_PID_PCTV_2002E) },
+ 	{ USB_DEVICE(USB_VID_PCTV,      USB_PID_PCTV_2002E_SE) },
+ 	{ USB_DEVICE(USB_VID_PCTV,      USB_PID_DIBCOM_STK8096PVR) },
++	{ USB_DEVICE(USB_VID_DIBCOM,    USB_PID_DIBCOM_STK8096PVR) },
+ 	{ 0 }		/* Terminating entry */
+ };
+ MODULE_DEVICE_TABLE(usb, dib0700_usb_id_table);
+@@ -5064,7 +5065,8 @@ struct dvb_usb_device_properties dib0700_devices[] = {
+ 		.num_device_descs = 1,
+ 		.devices = {
+ 			{   "DiBcom STK8096-PVR reference design",
+-				{ &dib0700_usb_id_table[83], NULL },
++				{ &dib0700_usb_id_table[83],
++					&dib0700_usb_id_table[84], NULL},
+ 				{ NULL },
+ 			},
+ 		},
+-- 
+2.17.1
+

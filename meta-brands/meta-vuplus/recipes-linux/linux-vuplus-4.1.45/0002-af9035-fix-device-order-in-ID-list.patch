@@ -1,0 +1,51 @@
+From 57d05e0b286011bc816438d4fc85253dc93ff641 Mon Sep 17 00:00:00 2001
+From: Antti Palosaari <crope@iki.fi>
+Date: Wed, 15 Apr 2015 15:01:22 -0300
+Subject: [PATCH 01/11] af9035: fix device order in ID list
+
+Driver supports multiple chipset versions. Devices are ordered to
+ID table per used chipset type. "ITE 9303 Generic" device uses IT9303
+chipset and was added mistakenly between IT9135 IDs.
+
+Signed-off-by: Antti Palosaari <crope@iki.fi>
+Signed-off-by: Mauro Carvalho Chehab <mchehab@osg.samsung.com>
+---
+ drivers/media/usb/dvb-usb-v2/af9035.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/media/usb/dvb-usb-v2/af9035.c b/drivers/media/usb/dvb-usb-v2/af9035.c
+index 80a29f5..9899fa7 100644
+--- a/drivers/media/usb/dvb-usb-v2/af9035.c
++++ b/drivers/media/usb/dvb-usb-v2/af9035.c
+@@ -2021,6 +2021,7 @@ static const struct usb_device_id af9035_id_table[] = {
+ 		&af9035_props, "Asus U3100Mini Plus", NULL) },
+ 	{ DVB_USB_DEVICE(USB_VID_TERRATEC, 0x00aa,
+ 		&af9035_props, "TerraTec Cinergy T Stick (rev. 2)", NULL) },
++
+ 	/* IT9135 devices */
+ 	{ DVB_USB_DEVICE(USB_VID_ITETECH, USB_PID_ITETECH_IT9135,
+ 		&af9035_props, "ITE 9135 Generic", RC_MAP_IT913X_V1) },
+@@ -2046,9 +2047,6 @@ static const struct usb_device_id af9035_id_table[] = {
+ 	{ DVB_USB_DEVICE(USB_VID_KWORLD_2, USB_PID_CTVDIGDUAL_V2,
+ 		&af9035_props, "Digital Dual TV Receiver CTVDIGDUAL_V2",
+ 							RC_MAP_IT913X_V1) },
+-	/* IT930x devices */
+-	{ DVB_USB_DEVICE(USB_VID_ITETECH, USB_PID_ITETECH_IT9303,
+-		&it930x_props, "ITE 9303 Generic", NULL) },
+ 	/* XXX: that same ID [0ccd:0099] is used by af9015 driver too */
+ 	{ DVB_USB_DEVICE(USB_VID_TERRATEC, 0x0099,
+ 		&af9035_props, "TerraTec Cinergy T Stick Dual RC (rev. 2)",
+@@ -2061,6 +2059,10 @@ static const struct usb_device_id af9035_id_table[] = {
+ 		&af9035_props, "PCTV AndroiDTV (78e)", RC_MAP_IT913X_V1) },
+ 	{ DVB_USB_DEVICE(USB_VID_PCTV, USB_PID_PCTV_79E,
+ 		&af9035_props, "PCTV microStick (79e)", RC_MAP_IT913X_V2) },
++
++	/* IT930x devices */
++	{ DVB_USB_DEVICE(USB_VID_ITETECH, USB_PID_ITETECH_IT9303,
++		&it930x_props, "ITE 9303 Generic", NULL) },
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(usb, af9035_id_table);
+-- 
+2.17.1
+

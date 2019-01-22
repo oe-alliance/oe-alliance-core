@@ -5,6 +5,8 @@ LICENSE = "CLOSED"
 require conf/license/license-close.inc
 PACKAGE_ARCH := "${MACHINE_ARCH}"
 
+DEPENDS = "freetype"
+
 inherit gitpkgv
 
 SRC_URI = "git://github.com/oe-alliance/e2plugins.git;protocol=git"

@@ -33,7 +33,7 @@ do_install_append() {
 	echo mali > ${D}${sysconfdir}/modules-load.d/mali.conf
 }
 
-FILES_${PN} += "${sysconfdir}/modules-load.d/_mali.conf"
+FILES_${PN} += "${sysconfdir}/modules-load.d/mali.conf"
 
 python() {
     platform = d.getVar('MALI_DRIVER_PLATFORM', True)
