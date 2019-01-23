@@ -107,6 +107,13 @@ ls -al
 
 do_configure() {
 #	svn up
+
+	SVNVERSION=`echo ${WORKDIR} | sed -nr 's/.*svnr([^.*]+)-.*/\1/p'`
+	echo SVNVERSION: ${SVNVERSION}
+
+	sed "s/^#define PLUGINVERSION .*/#define PLUGINVERSION $SVNVERSION/" -i  ../../titan/struct.h
+	cat ../../titan/struct.h | grep "define PLUGINVERSION"
+
     cd ${S}/plugins
 	libtoolize --force
 	aclocal -I ${STAGING_DIR_TARGET}/usr/share/aclocal
