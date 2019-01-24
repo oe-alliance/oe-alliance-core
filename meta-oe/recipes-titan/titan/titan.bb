@@ -308,6 +308,16 @@ FILES_${PN} = " \
 	/etc/titan.restore/var/etc/autostart \
 	/etc/titan.restore/var/etc/network \
 	/etc/titan.restore/var/etc/ipkg \
+	/etc/tpk.restore \
+	/etc/tpk.restore/titan-plugin-infos-imdb \
+	/etc/tpk.restore/titan-plugin-infos-imdbapi \
+	/etc/tpk.restore/titan-plugin-infos-streaminfo \
+	/etc/tpk.restore/titan-plugin-infos-tmdb \
+	/etc/tpk.restore/titan-plugin-infos-weather \
+	/etc/tpk.restore/titan-plugin-network-networkbrowser \
+	/etc/tpk.restore/titan-plugin-player-mediacenter \
+	/etc/tpk.restore/titan-plugin-player-tithek \
+	/etc/tpk.restore/titan-plugin-tools-filemanager \
 	/etc/init.d \
 	/etc/mdev \
 	/etc/network \
