@@ -1,0 +1,103 @@
+diff -Nur b/arch/arm/boot/dts/hi3716mv410.dts a/arch/arm/boot/dts/hi3716mv410.dts
+--- b/arch/arm/boot/dts/hi3716mv410.dts	2018-08-29 14:08:08.000000000 +0200
++++ a/arch/arm/boot/dts/hi3716mv410.dts	2019-01-24 13:04:42.000000000 +0100
+@@ -11,7 +11,7 @@
+ 
+ 	aliases {
+ 		net_phy0 = &hieth_phy0;
+-		net_phy1 = &hieth_phy1;
++		/*net_phy1 = &hieth_phy1;*/
+ 		spi0=&spi;
+ 		/* spi1=&spi_gpio; */
+ 		i2c0=&hii2c0;
+@@ -430,7 +430,8 @@
+ 			clock-names = "clk";
+ 			reg = <0xf9840000 0x4000>;
+ 			interrupts = <0 71 4>;
+-			phy-handle = <&hieth_phy0 &hieth_phy1>;
++			/*phy-handle = <&hieth_phy0 &hieth_phy1>;*/
++			phy-handle = <&hieth_phy0>;
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+ 
+@@ -443,13 +444,13 @@
+ 				phy-gpio-bit = <0>;
+ 			};
+ 
+-			hieth_phy1: hieth_phy@1{
++			/*hieth_phy1: hieth_phy@1{
+ 				reg = <31>;
+ 				mac-address = [00 00 00 00 00 00];
+ 				phy-mode = "rmii";
+ 				phy-gpio-base = <0>;
+ 				phy-gpio-bit = <0>;
+-			};
++			};*/
+ 		};
+ 
+ 		/* hiahci@0xF9900000 and pcie@f9860000 , select 1 of 2 */
+diff -Nur b/arch/arm/mach-hi3716mv420n/hi_cma.c a/arch/arm/mach-hi3716mv420n/hi_cma.c
+--- b/arch/arm/mach-hi3716mv420n/hi_cma.c	2018-08-29 14:08:08.000000000 +0200
++++ a/arch/arm/mach-hi3716mv420n/hi_cma.c	2019-01-24 22:35:37.223311100 +0100
+@@ -63,6 +63,8 @@
+ 			hisi_zone[num_zones].gfp = memparse(argv[2], NULL);
+ 			hisi_zone[num_zones].phys_start = memparse(argv[2], NULL);
+ 			hisi_zone[num_zones].nbytes = memparse(argv[3], NULL);
++			if(hisi_zone[num_zones].nbytes<100663296)
++				hisi_zone[num_zones].nbytes = 100663296;  //zhaobaoren
+ 		}
+ 
+ 		else if (i == 6) {
+@@ -72,6 +74,8 @@
+ 			hisi_zone[num_zones].nbytes = memparse(argv[3], NULL);
+ 			hisi_zone[num_zones].alloc_type = memparse(argv[4], NULL);
+ 			hisi_zone[num_zones].block_align = memparse(argv[5], NULL);
++			if(hisi_zone[num_zones].nbytes<100663296)
++				hisi_zone[num_zones].nbytes = 100663296;  //zhaobaoren
+ 		} else {
+ 			pr_err("hisi ion parameter is not correct\n");
+ 			continue;
+diff -Nur b/arch/arm/mach-s40/hi_cma.c a/arch/arm/mach-s40/hi_cma.c
+--- b/arch/arm/mach-s40/hi_cma.c	2018-08-29 14:08:08.000000000 +0200
++++ a/arch/arm/mach-s40/hi_cma.c	2019-01-24 22:35:39.694374100 +0100
+@@ -63,6 +63,8 @@
+ 			hisi_zone[num_zones].gfp = memparse(argv[2], NULL);
+ 			hisi_zone[num_zones].phys_start = memparse(argv[2], NULL);
+ 			hisi_zone[num_zones].nbytes = memparse(argv[3], NULL);
++			if(hisi_zone[num_zones].nbytes<100663296)
++				hisi_zone[num_zones].nbytes = 100663296;  //zhaobaoren
+ 		}
+ 
+ 		else if (i == 6) {
+@@ -72,6 +74,8 @@
+ 			hisi_zone[num_zones].nbytes = memparse(argv[3], NULL);
+ 			hisi_zone[num_zones].alloc_type = memparse(argv[4], NULL);
+ 			hisi_zone[num_zones].block_align = memparse(argv[5], NULL);
++			if(hisi_zone[num_zones].nbytes<100663296)
++				hisi_zone[num_zones].nbytes = 100663296;  //zhaobaoren
+ 		} else {
+ 			pr_err("hisi ion parameter is not correct\n");
+ 			continue;
+diff -Nur b/drivers/hisilicon/cma/hi_cma.c a/drivers/hisilicon/cma/hi_cma.c
+--- b/drivers/hisilicon/cma/hi_cma.c	2018-08-29 14:08:08.000000000 +0200
++++ a/drivers/hisilicon/cma/hi_cma.c	2019-01-24 22:31:56.810319300 +0100
+@@ -66,7 +66,8 @@
+ 			hisi_zone[num_zones].gfp = memparse(argv[2], NULL);
+ 			hisi_zone[num_zones].phys_start = memparse(argv[2], NULL);
+ 			hisi_zone[num_zones].nbytes = memparse(argv[3], NULL);
+-			hisi_zone[num_zones].nbytes = 100663296;  //zhaobaoren
++			if(hisi_zone[num_zones].nbytes<100663296)
++				hisi_zone[num_zones].nbytes = 100663296;  //zhaobaoren
+ 		}
+ 
+ 		else if (i == 6) {
+@@ -76,7 +77,8 @@
+ 			hisi_zone[num_zones].nbytes = memparse(argv[3], NULL);
+ 			hisi_zone[num_zones].alloc_type = memparse(argv[4], NULL);
+ 			hisi_zone[num_zones].block_align = memparse(argv[5], NULL);
+-			hisi_zone[num_zones].nbytes = 100663296; //zhaobaoren
++			if(hisi_zone[num_zones].nbytes<100663296)
++				hisi_zone[num_zones].nbytes = 100663296;  //zhaobaoren
+ 		} else {
+ 			pr_err("hisi ion parameter is not correct\n");
+ 			continue;
