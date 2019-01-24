@@ -380,11 +380,11 @@ FILES_${PN} = " \
 	/var/usr/local/share/titan/plugins/tithek \
 	/var/usr/local/share/titan/plugins/readerconfig \
 	/var/usr/local/share/titan/plugins/browser \
-	/var/usr/local/share/titan/plugins/networkbrowser \
+	/var/usr/local/share/titan/plugins/networkbrowser/skin \
 	/var/usr/local/share/titan/plugins/imdbapi \
 	/var/usr/local/share/titan/plugins/streaminfo \
-	/var/usr/local/share/titan/plugins/mc \
-	/var/usr/local/share/titan/plugins/weather \
+	/var/usr/local/share/titan/plugins/mc/skin \
+	/var/usr/local/share/titan/plugins/weather/skin \
 	/var/usr/local/share/titan/plugins/tmdb \
 	/var/usr/local/share/titan/plugins/gmediarender \
 	/var/usr/local/share/titan/plugins/filemanager \
