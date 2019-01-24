@@ -36,6 +36,16 @@ IMAGE_INSTALL = "\
 	${DISTRO}-base \
     titan \
     titan-plugins \
+	titan-plugin-filemanager \
+	titan-plugin-imdb \
+	titan-plugin-imdbapi \
+	titan-plugin-mc \
+	titan-plugin-networkbrowser \
+	titan-plugin-readerconfig \
+	titan-plugin-streaminfo \
+	titan-plugin-tithek \
+	titan-plugin-tmdb \
+	titan-plugin-weather \
     "
 
 IMAGE_INSTALL_append_mipsel = "\
