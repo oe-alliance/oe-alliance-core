@@ -12,10 +12,11 @@ PKGV = "1.0+git${GITPKGV}"
 SRCREV = "${AUTOREV}"
 PR = "r1"
 VER ?= ""
+HAVE_GLES ?= "virtual/libgles2"
 
 SRC_URI = "git://github.com/oe-alliance/e2plugins.git;protocol=git"
 
-RDEPENDS_${PN}  = "qtwebkit virtual/libgles2 python-netifaces" 
+RDEPENDS_${PN}  = "qtwebkit ${HAVE_GLES} python-netifaces" 
 
 S = "${WORKDIR}/git/qtstalker${VER}"
 
