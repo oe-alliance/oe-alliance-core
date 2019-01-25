@@ -124,48 +124,48 @@ do_configure() {
 }
 
 do_compile() {
-	cd ${S}/plugins
-	make clean
+    cd ${S}/plugins
+    make clean
 	make -f Makefile
 	${STRIP} ${S}/plugins/*/.libs/*.so
 }
 
-FILES_${PN} = "/usr/local/share/titan/plugins"
+FILES_${PN} = "/var/usr/local/share/titan/plugins"
 
 do_install_append() {
-	install -d ${D}/usr/local/share/titan/plugins
+	install -d ${D}/var/usr/local/share/titan/plugins
 	
 	LIST="`cat plugins/Makefile.am | sed 's/\\t\+/ /g' | sed 's/ \\+//g' | sed 's/\\\//g' | grep -v =`"
 	echo LIST $LIST
 	for ROUND in $LIST;do
 		echo ROUND $ROUND
-		install -d ${D}/usr/local/share/titan/plugins/$ROUND
-		install -m 0644 plugins/$ROUND/.libs/*.so ${D}/usr/local/share/titan/plugins/$ROUND
+		install -d ${D}/var/usr/local/share/titan/plugins/$ROUND
+	    install -m 0644 plugins/$ROUND/.libs/*.so ${D}/var/usr/local/share/titan/plugins/$ROUND
 
-		if test -e skins/$ROUND/skin;then
-			cp -a skins/$ROUND/skin ${D}/usr/local/share/titan/plugins/$ROUND/
+	    if test -e skins/$ROUND/skin;then
+			cp -a skins/$ROUND/skin ${D}/var/usr/local/share/titan/plugins/$ROUND/
 		fi
-		if test -e skins/$ROUND/skin.xml;then
-			install -m 0644 skins/$ROUND/skin.xml ${D}/usr/local/share/titan/plugins/$ROUND/
+	    if test -e skins/$ROUND/skin.xml;then
+			install -m 0644 skins/$ROUND/skin.xml ${D}/var/usr/local/share/titan/plugins/$ROUND/
 		fi
-		if test -e skins/$ROUND/plugin.png;then
-			install -m 0644 skins/$ROUND/plugin.png ${D}/usr/local/share/titan/plugins/$ROUND/
+	    if test -e skins/$ROUND/plugin.png;then
+			install -m 0644 skins/$ROUND/plugin.png ${D}/var/usr/local/share/titan/plugins/$ROUND/
 		fi
 	done
 
-#	cp -a skins/* ${D}/usr/local/share/titan/plugins/
+#	cp -a skins/* ${D}/var/usr/local/share/titan/plugins/
 }
 
 python populate_packages_prepend() {
-	titan_plugindir = bb.data.expand('/usr/local/share/titan/plugins', d)
-	do_split_packages(d, titan_plugindir, '^(\w+)/[a-zA-Z0-9_]+.*$', 'titan-plugin-%s', '%s', recursive=True, match_path=True, prepend=True, extra_depends="titan")
-	do_split_packages(d, titan_plugindir, '^(\w+)/.*\.h$', 'titan-plugin-%s-src', '%s (source files)', recursive=True, match_path=True, prepend=True)
-	do_split_packages(d, titan_plugindir, '^(\w+)/.*\.la$', 'titan-plugin-%s-dev', '%s (development)', recursive=True, match_path=True, prepend=True)
-	do_split_packages(d, titan_plugindir, '^(\w+)/.*\.a$', 'titan-plugin-%s-staticdev', '%s (static development)', recursive=True, match_path=True, prepend=True)
-	do_split_packages(d, titan_plugindir, '^(\w+)/(.*/)?\.debug/.*$', 'titan-plugin-%s-dbg', '%s (debug)', recursive=True, match_path=True, prepend=True)
+    titan_plugindir = bb.data.expand('/usr/local/share/titan/plugins', d)
+    do_split_packages(d, titan_plugindir, '^(\w+)/[a-zA-Z0-9_]+.*$', 'titan-plugin-%s', '%s', recursive=True, match_path=True, prepend=True, extra_depends="titan")
+    do_split_packages(d, titan_plugindir, '^(\w+)/.*\.h$', 'titan-plugin-%s-src', '%s (source files)', recursive=True, match_path=True, prepend=True)
+    do_split_packages(d, titan_plugindir, '^(\w+)/.*\.la$', 'titan-plugin-%s-dev', '%s (development)', recursive=True, match_path=True, prepend=True)
+    do_split_packages(d, titan_plugindir, '^(\w+)/.*\.a$', 'titan-plugin-%s-staticdev', '%s (static development)', recursive=True, match_path=True, prepend=True)
+    do_split_packages(d, titan_plugindir, '^(\w+)/(.*/)?\.debug/.*$', 'titan-plugin-%s-dbg', '%s (debug)', recursive=True, match_path=True, prepend=True)
 
-	titan_podir = bb.data.expand('/usr/local/share/titan/po', d)
-	do_split_packages(d, titan_podir, '^(\w+)/[a-zA-Z0-9_/]+.*$', 'titan-locale-%s', '%s', recursive=True, match_path=True, prepend=True, extra_depends="titan")
+    titan_podir = bb.data.expand('/usr/local/share/titan/po', d)
+    do_split_packages(d, titan_podir, '^(\w+)/[a-zA-Z0-9_/]+.*$', 'titan-locale-%s', '%s', recursive=True, match_path=True, prepend=True, extra_depends="titan")
 }
 
 PACKAGES_DYNAMIC = "titan-plugin-* titan-locale-*"
