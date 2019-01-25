@@ -16,7 +16,7 @@ do_configure[nostamp] = "1"
 
 do_install() {
     install -d ${D}/usr/share
-    install -m 0755 ${WORKDIR}/rescue_fastboot.bin ${D}/usr/share/fastboot.bin
+    install -m 0755 ${WORKDIR}/rescue_fastboot_${MACHINE}.bin ${D}/usr/share/fastboot.bin
 }
 
 do_deploy() {
