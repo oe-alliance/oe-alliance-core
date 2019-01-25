@@ -130,30 +130,30 @@ do_compile() {
 	${STRIP} ${S}/plugins/*/.libs/*.so
 }
 
-FILES_${PN} = "/var/usr/local/share/titan/plugins"
+FILES_${PN} = "/usr/local/share/titan/plugins"
 
 do_install_append() {
-	install -d ${D}/var/usr/local/share/titan/plugins
+	install -d ${D}/usr/local/share/titan/plugins
 	
 	LIST="`cat plugins/Makefile.am | sed 's/\\t\+/ /g' | sed 's/ \\+//g' | sed 's/\\\//g' | grep -v =`"
 	echo LIST $LIST
 	for ROUND in $LIST;do
 		echo ROUND $ROUND
-		install -d ${D}/var/usr/local/share/titan/plugins/$ROUND
-	    install -m 0644 plugins/$ROUND/.libs/*.so ${D}/var/usr/local/share/titan/plugins/$ROUND
+		install -d ${D}/usr/local/share/titan/plugins/$ROUND
+	    install -m 0644 plugins/$ROUND/.libs/*.so ${D}/usr/local/share/titan/plugins/$ROUND
 
 	    if test -e skins/$ROUND/skin;then
-			cp -a skins/$ROUND/skin ${D}/var/usr/local/share/titan/plugins/$ROUND/
+			cp -a skins/$ROUND/skin ${D}/usr/local/share/titan/plugins/$ROUND/
 		fi
 	    if test -e skins/$ROUND/skin.xml;then
-			install -m 0644 skins/$ROUND/skin.xml ${D}/var/usr/local/share/titan/plugins/$ROUND/
+			install -m 0644 skins/$ROUND/skin.xml ${D}/usr/local/share/titan/plugins/$ROUND/
 		fi
 	    if test -e skins/$ROUND/plugin.png;then
-			install -m 0644 skins/$ROUND/plugin.png ${D}/var/usr/local/share/titan/plugins/$ROUND/
+			install -m 0644 skins/$ROUND/plugin.png ${D}/usr/local/share/titan/plugins/$ROUND/
 		fi
 	done
 
-#	cp -a skins/* ${D}/var/usr/local/share/titan/plugins/
+#	cp -a skins/* ${D}/usr/local/share/titan/plugins/
 }
 
 python populate_packages_prepend() {
