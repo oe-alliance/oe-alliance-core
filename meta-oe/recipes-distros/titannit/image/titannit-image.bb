@@ -34,18 +34,6 @@ IMAGE_INSTALL = "\
 	${@bb.utils.contains("MACHINE_FEATURES", "grautec", "enigma2-plugin-extensions-grautec", "", d)} \
 	${@bb.utils.contains("MACHINE_FEATURES", "chromiumos", "enigma2-plugin-extensions-chromium", "", d)} \
 	${DISTRO}-base \
-    	titan \
-    	titan-plugins \
-	titan-plugin-filemanager \
-	titan-plugin-imdb \
-	titan-plugin-imdbapi \
-	titan-plugin-mc \
-	titan-plugin-networkbrowser \
-	titan-plugin-readerconfig \
-	titan-plugin-streaminfo \
-	titan-plugin-tithek \
-	titan-plugin-tmdb \
-	titan-plugin-weather \
     "
 
 IMAGE_INSTALL_append_mipsel = "\
@@ -65,13 +53,6 @@ IMAGE_INSTALL_append_mipsel = "\
 	rt8812au \
 	rt8723a \
     "
-#	titan-gmediarender
-#	${@bb.utils.contains('MACHINE', 'disabled-ipv6', '', 'kernel-module-ipv6', d)}
-#	${@bb.utils.contains('MACHINE', 'disabled-ath9k', '', 'kernel-module-ath9k-htc', d)}
-#	${@bb.utils.contains('MACHINE', 'disabled-wlanbuild', '', 'kernel-module-rtl8192cu', d)}
-#	${@bb.utils.contains("MACHINE_FEATURES", "linuxwifi", "kernel-module-rtl8xxxu", "rtl8192eu", d)}
-#	${@bb.utils.contains("MACHINE_FEATURES", "wifiusblegacy", "rtl871x", "kernel-module-r8712u", d)}
-#	${@bb.utils.contains('MACHINE', 'disabled-build', '', 'packagegroup-base', d)}
 
 IMAGE_INSTALL_append_arm = "\
 	firmware-rtl8192cu \
@@ -89,14 +70,6 @@ IMAGE_INSTALL_append_arm = "\
 	rt8812au \
 	rt8723a \
     "
-#	titan-gmediarender
-#	${@bb.utils.contains('MACHINE', 'disabled-ipv6', '', 'kernel-module-ipv6', d)}
-#	${@bb.utils.contains('MACHINE', 'disabled-ath9k', '', 'kernel-module-ath9k-htc', d)}
-#	${@bb.utils.contains('MACHINE', 'disabled-wlanbuild', '', 'kernel-module-rtl8192cu', d)}
-#	${@bb.utils.contains("MACHINE_FEATURES", "linuxwifi", "kernel-module-rtl8xxxu", "rtl8192eu", d)}
-#	${@bb.utils.contains('MACHINE', 'disabled-rt3070', '', 'rt3070', d)}
-#	${@bb.utils.contains("MACHINE_FEATURES", "wifiusblegacy", "rtl871x", "kernel-module-r8712u", d)}
-#	${@bb.utils.contains('MACHINE', 'disabled-build', '', 'packagegroup-base', d)}
 
 IMAGE_INSTALL_append_sh4 = "\
 	firmware-rtl8192cu \
@@ -113,54 +86,6 @@ IMAGE_INSTALL_append_sh4 = "\
 	rt8812au \
 	rt8723a \
     "
-#	titannit-version-info
-#	${@bb.utils.contains("MACHINE_FEATURES", "linuxwifi", "kernel-module-rtl8xxxu", "rtl8192eu", d)}
-
-#
-#    python
-#    python-codecs
-#    python-compression
-#    python-core
-#    python-crypt
-#    python-fcntl
-#    python-lang
-#    python-netclient
-#    python-netserver
-#    python-pickle
-#    python-re
-#    python-shell
-#    python-threading
-#    python-twisted-core
-#    python-twisted-web
-#    python-utf8-hack
-#    python-xml
-#    python-zlib
-#    python-zopeinterface
-#    python-email
-#    python-mime
-#    python-pyusb
-#    python-subprocess
-#    python-process
-#    python-imaging
-#	${@bb.utils.contains("MACHINE_FEATURES", "dreambox", "", "ofgwrite", d)} \
-# disable for packagegroup-base
-#	libcrypto-compat-0.9.7
-#	libcrypto-compat-0.9.8
-# disable for dm7200hd
-#	kernel-module-rtl8192cu
-# disabled building on svn
-#	${@bb.utils.contains('MACHINE', 'vusolo2', 'titan-xbmc-helix', '', d)} \
-#	${@bb.utils.contains('MACHINE', 'inihdp', 'titan-xbmc-nightly', '', d)} \
-#    snes9x-sdl
-#    libavahi-client
-#    minidlna
-#    ${@bb.utils.contains('MACHINEBUILD', 'atemionemesis', '', 'titan-xbmc', d)} \
-#    ${@base_conditional('MACHINE', 'inihdp', '', 'titan-xbmc', d)} \
-#    ${@bb.utils.contains('MACHINEBUILD', 'atemionemesis', '', 'titan-xbmc', d)} \
-#    titan-bin
-#    ${@bb.utils.contains("TARGET_ARCH", "mipsel", "gst-plugin-libxt" , "", d)} \
-#    titan-plugins
-#    enigma2-locale-meta test fpr glibc only
 
 # Some additional comfort on the shell: Pre-install nano on boxes with 128 MB or more:
 IMAGE_INSTALL += "${@bb.utils.contains_any("FLASHSIZE", "64 96", "", "nano", d)}"

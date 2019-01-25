@@ -21,6 +21,12 @@ DEPENDS = " \
 	python-imaging \
 	python-service-identity \
 	rtmpdump \
+	titan \
+	titan-plugins \
+	"
+
+RRECOMMENDS_${PN} = "\
+	titan-plugins \
 	"
 
 RDEPENDS_${PN} = "\
@@ -104,12 +110,26 @@ RDEPENDS_${PN} = "\
 	" \
 	", d)} \
 	${@bb.utils.contains("TARGET_ARCH", "sh4", "alsa-utils-amixer-conf" , "", d)} \
-	titan-libeplayer3 \
-	titan-infobox \
 	oe-alliance-feeds-configs \
 	openatv-version-info \
-    "
+	\
+    	titan \
+	titan-infobox \
+	titan-rarfs \
+    	titan-plugins \
+	titan-plugin-filemanager \
+	titan-plugin-imdb \
+	titan-plugin-imdbapi \
+	titan-plugin-mc \
+	titan-plugin-networkbrowser \
+	titan-plugin-readerconfig \
+	titan-plugin-streaminfo \
+	titan-plugin-tithek \
+	titan-plugin-tmdb \
+	titan-plugin-weather \
+	"
 
+#	titan-gmediarender
 #	titannit-version-info
 #	kernel-module-usbserial
 #	parted
