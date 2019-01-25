@@ -111,9 +111,6 @@ ${@bb.utils.contains('MACHINEBUILD', 'dinobotu55', 'dinobot/${MACHINE}' , '', d)
 ${@bb.utils.contains('MACHINEBUILD', 'dinoboth265', 'dinobot/${MACHINE}' , '', d)}\
 "
 
-#ver for qtplugins -v3 = dinobot
-VER = "-v3"
-
 KERNEL_MODULE_AUTOLOAD += "xhci-plat-hcd"
 KERNEL_MODULE_AUTOLOAD += "ehci-platform"
 KERNEL_MODULE_AUTOLOAD += "ohci-platform"
