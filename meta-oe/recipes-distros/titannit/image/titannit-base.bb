@@ -21,12 +21,6 @@ DEPENDS = " \
 	python-imaging \
 	python-service-identity \
 	rtmpdump \
-	titan \
-	titan-plugins \
-	"
-
-RRECOMMENDS_${PN} = "\
-	titan-plugins \
 	"
 
 RDEPENDS_${PN} = "\
@@ -113,11 +107,9 @@ RDEPENDS_${PN} = "\
 	oe-alliance-feeds-configs \
 	openatv-version-info \
 	\
-    	titan \
-	titan-infobox \
+ 	titan-infobox \
 	titan-rarfs \
-    	titan-plugins \
-	"
+ 	"
 
 #	titan-gmediarender
 #	titannit-version-info
