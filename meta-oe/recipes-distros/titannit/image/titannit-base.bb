@@ -117,16 +117,6 @@ RDEPENDS_${PN} = "\
 	titan-infobox \
 	titan-rarfs \
     	titan-plugins \
-	titan-plugin-filemanager \
-	titan-plugin-imdb \
-	titan-plugin-imdbapi \
-	titan-plugin-mc \
-	titan-plugin-networkbrowser \
-	titan-plugin-readerconfig \
-	titan-plugin-streaminfo \
-	titan-plugin-tithek \
-	titan-plugin-tmdb \
-	titan-plugin-weather \
 	"
 
 #	titan-gmediarender
