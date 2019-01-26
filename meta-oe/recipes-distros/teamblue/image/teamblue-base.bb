@@ -32,7 +32,7 @@ RDEPENDS_${PN} = "\
     rtmpdump \
     zip \
     ${@bb.utils.contains("TUNE_FEATURES", "armv", "glibc-compat", "", d)} \
-    ${@bb.utils.contains_any("FLASHSIZE", "64 96", "enigma2-plugin-extensions-openwebif-webtv", \
+    ${@bb.utils.contains_any("FLASHSIZE", "64 96 128", "enigma2-plugin-extensions-openwebif-webtv", \
     " \
     enigma2-plugin-extensions-openwebif-terminal \
     enigma2-plugin-extensions-openwebif-themes \
