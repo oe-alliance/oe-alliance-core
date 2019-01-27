@@ -85,6 +85,8 @@ CFLAGS_append_arm = " -DOEBUILD -DEXTEPLAYER3 -DEPLAYER3 -DCAMSUPP -Os -mhard-fl
 
 #LDADD = "-lpthread -ldl -lpng -lfreetype -lgstreamer-0.10 -ldreamdvd -ljpeg"
 
+LDFLAGS_prepend = " -lcurl "
+
 do_configure_prepend2() {
     cd ${S}
 pwd
