@@ -15,6 +15,7 @@ S = "${WORKDIR}/patitions"
 SRC_URI = "http://source.mynonpublic.com/octagon/${MACHINE}-partitions-${SRCDATE}.zip"
 
 ALLOW_EMPTY_${PN} = "1"
+do_configure[nostamp] = "1"
 
 do_install() {
     install -d ${D}/usr/share

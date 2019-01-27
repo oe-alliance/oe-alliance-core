@@ -28,6 +28,8 @@ SRC_URI = "file://bootlogo.mvi file://bootlogo.sh \
     ${@bb.utils.contains("MACHINE_FEATURES", "gigabluearmbootvideo", "file://bootvideo.mp4 file://bootvideo-arm" , "", d)} \
 "
 
+SRC_URI_append_gbmv200 = "file://logo.img"
+
 FILES_${PN} = "/boot /usr/share /usr/bin /etc/init.d"
 
 INSANE_SKIP_${PN} = "already-stripped"
@@ -65,6 +67,9 @@ do_deploy() {
 
     if [ -e lcdsplash400.bin ]; then
         install -m 0644 lcdsplash400.bin ${DEPLOYDIR}/lcdsplash400.bin
+    fi
+    if [ -e logo.img ]; then
+        install -m 0644 logo.img ${DEPLOYDIR}/logo-${DISTRO_NAME}.img
     fi
 }
 
