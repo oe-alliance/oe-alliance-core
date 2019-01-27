@@ -12,8 +12,8 @@ inherit gitpkgv
 
 e2m3u2bouquet_BRANCH ?= "release"
 SRCREV = "${AUTOREV}"
-PV = "0.7.6+git${SRCPV}"
-PKGV = "0.7.6+git${GITPKGV}"
+PV = "0.8.2+git${SRCPV}"
+PKGV = "0.8.2+git${GITPKGV}"
 PR = "r0"
 
 INSANE_SKIP_${PN} += "already-stripped ldflags"
