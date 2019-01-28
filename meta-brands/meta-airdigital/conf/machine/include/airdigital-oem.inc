@@ -34,6 +34,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'zgemmah92h', 'H92H' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah9splus', 'H9S PLUS' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmai55plus', 'I55 Plus' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah9combo', 'H9 COMBO' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'zgemmah9twin', 'H9 TWIN' , '', d)}\
 "
 
 MACHINE_BRAND = "\
@@ -67,6 +68,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'zgemmah92h', 'Zgemma' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah9splus', 'Zgemma' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmai55plus', 'Zgemma' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah9combo', 'Zgemma' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'zgemmah9twin', 'Zgemma' , '', d)}\
 "
 
 IMAGEDIR ?= "\
@@ -100,6 +102,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'zgemmah92h', 'h9' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah9splus', 'h9' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmai55plus', 'i55plus' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah9combo', 'h9combo' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'zgemmah9twin', 'h9combo' , '', d)}\
 "
 
 MACHINE_DRIVER = "\
@@ -133,6 +136,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'zgemmah92h', 'h9' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah9splus', 'h9' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmai55plus', 'i55plus' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah9combo', 'h9combo' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'zgemmah9twin', 'h9combo' , '', d)}\
 "
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "\

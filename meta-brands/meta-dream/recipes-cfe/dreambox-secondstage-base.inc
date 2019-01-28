@@ -23,6 +23,8 @@ PACKAGE_ARCH := "${MACHINE_ARCH}"
 
 DEPENDS = "dreambox-buildimage-native"
 
+do_configure[nostamp] = "1"
+
 # busybox nandwrite requires oob patch and is not working in every box
 RDEPENDS_${PN} = "mtd-utils"
 
