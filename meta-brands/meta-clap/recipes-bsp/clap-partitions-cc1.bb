@@ -15,6 +15,7 @@ S = "${WORKDIR}/patitions"
 SRC_URI = "http://source.mynonpublic.com/clap/${MACHINE}-partitions-${SRCDATE}.tar.gz"
 
 ALLOW_EMPTY_${PN} = "1"
+do_configure[nostamp] = "1"
 
 do_install() {
     install -d ${D}/usr/share
