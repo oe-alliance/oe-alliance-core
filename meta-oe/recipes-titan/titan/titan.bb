@@ -294,8 +294,10 @@ do_compile() {
 }
 
 FILES_${PN} = " \
+	/bin \
 	/etc \
 	/etc/titan.restore \
+	/etc/titan.restore/etc/udev \
 	/etc/titan.restore/mnt/enigma2 \
 	/etc/titan.restore/mnt/config \
 	/etc/titan.restore/mnt/settings \
