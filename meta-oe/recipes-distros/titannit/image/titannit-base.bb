@@ -109,6 +109,7 @@ RDEPENDS_${PN} = "\
 	\
  	titan-infobox \
 	titan-rarfs \
+	oe-alliance-wifi \
  	"
 
 #	titan-gmediarender
