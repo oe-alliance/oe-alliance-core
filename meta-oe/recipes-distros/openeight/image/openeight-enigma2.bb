@@ -29,6 +29,7 @@ RRECOMMENDS_${PN} = "\
     enigma2-plugin-systemplugins-skinselector \
     enigma2-plugin-skins-smartlitefhd \
     enigma2-plugin-skins-smartlitesd \
+    enigma2-plugin-systemplugins-servicemp3 \
     ${@bb.utils.contains("MACHINE_FEATURES", "3dtv", "enigma2-plugin-systemplugins-osd3dsetup" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "boxmodel", "boxmodel", "", d)} \
     "
