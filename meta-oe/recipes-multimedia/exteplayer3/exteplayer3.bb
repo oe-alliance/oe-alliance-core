@@ -68,7 +68,6 @@ output/writer/mipsel/amr.c \
 output/writer/mipsel/wma.c \
 output/writer/mipsel/h265.c \
 output/writer/mipsel/h264.c \
-output/writer/mipsel/h263.c \
 output/writer/mipsel/mjpeg.c \
 output/writer/mipsel/mpeg2.c \
 output/writer/mipsel/mpeg4.c \
