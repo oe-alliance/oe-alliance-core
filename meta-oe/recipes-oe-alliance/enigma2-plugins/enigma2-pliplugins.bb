@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=751419260aa954499f7abaabaa882bbe"
 PACKAGES_DYNAMIC = "enigma2-plugin-pli-.*"
 
 # add custom PROVIDES for plugins which do not match PACKAGES_DYNAMIC
-PROVIDES += "enigma2-plugin-extensions-openuitzendinggemist enigma2-plugin-extensions-ushare"
+PROVIDES += "enigma2-plugin-extensions-ushare"
 
 DEPENDS = "nfs-utils ushare"
 
