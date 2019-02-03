@@ -30,7 +30,7 @@ PROVIDES += " \
     enigma2-plugin-systemplugins-fancontrol \
     enigma2-plugin-systemplugins-remotecontrolcode \
     enigma2-plugin-extensions-webbrowser \
-    enigma2-plugin-extensions-ondemand-openuitzendinggemist \
+    enigma2-plugin-extensions-openuitzendinggemist \
     enigma2-plugin-systemplugins-satipclient \
     enigma2-plugin-systemplugins-terrestrialscan \
     enigma2-plugin-extensions-tunerserver \
@@ -95,7 +95,7 @@ FILES_enigma2-plugin-systemplugins-3gmodemmanager_append = "$(sysconfdir)/ppp"
 DESCRIPTION_enigma2-plugin-extensions-webbrowser = "Webbrowser launcher"
 RDEPENDS_enigma2-plugin-extensions-webbrowser = "python-gdata libqtwebkite4 webbrowser-utils qt4-embedded-fonts qt4-embedded-plugin-imageformat-gif qt4-embedded-plugin-imageformat-ico qt4-embedded-plugin-imageformat-jpeg qt4-embedded-plugin-imageformat-mng qt4-embedded-plugin-imageformat-svg qt4-embedded-plugin-imageformat-tiff qt4-embedded-plugin-iconengine-svgicon"
 FILES_enigma2-plugin-extensions-webbrowser_append = "${datadir}/keymaps"
-DESCRIPTION_enigma2-plugin-extensions-ondemand-openuitzendinggemist = "Watch NL-IP TV"
+DESCRIPTION_enigma2-plugin-extensions-openuitzendinggemist = "Watch NL-IP TV"
 DESCRIPTION_enigma2-plugin-systemplugins-satipclient = "Satip Client setup"
 RDEPENDS_enigma2-plugin-systemplugins-satipclient = "satipclient"
 DEPENDS_enigma2-plugin-systemplugins-satipclient = "satipclient"
