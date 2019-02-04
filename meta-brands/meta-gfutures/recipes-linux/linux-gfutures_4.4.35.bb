@@ -10,7 +10,7 @@ SRCDATE = "20181228"
 
 inherit kernel machine_kernel_pr
 
-MACHINE_KERNEL_PR_append = ".5"
+MACHINE_KERNEL_PR_append = ".6"
 
 SRC_URI[md5sum] = "ede25f1c2c060f1059529a2896cee5a9"
 SRC_URI[sha256sum] = "ea4ba0433d252c18f38ff2f4dce4b70880e447e1cffdc2066d5a9b5f8098ae7e"
@@ -18,6 +18,7 @@ SRC_URI[sha256sum] = "ea4ba0433d252c18f38ff2f4dce4b70880e447e1cffdc2066d5a9b5f80
 SRC_URI = "http://source.mynonpublic.com/gfutures/linux-${PV}-${SRCDATE}-${ARCH}.tar.gz \
 	file://defconfig \
 	file://ieee80211-increase-scan-result-expire-time.patch \
+	file://0001-remote.patch \
 	"
 
 # By default, kernel.bbclass modifies package names to allow multiple kernels
