@@ -1,6 +1,5 @@
 require conf/license/license-gplv2.inc
 require softcam.inc
-inherit gitpkgv
 inherit cmake
 
 SUMMARY = "OScam ${PV} Open Source Softcam"
@@ -9,13 +8,11 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/enigma2-plugin-softcams-oscam:"
 
-BRANCH = "master"
-SRCREV = "f02301d7fac3abe2640dc39127174d8474f64d84"
-PV = "svn11451"
-PKGV = "svn11451"
-SRC_URI = "git://git.cuci.nl/oscam;protocol=git;branch=${BRANCH};tag=${SRCREV}"
+SRCREV = "${AUTOREV}"
+PV = "svn${SRCPV}"
+SRC_URI = "svn://www.streamboard.tv/svn/oscam;protocol=http;module=trunk;scmdata=keep"
 
-PR = "r0"
+PR = "r1"
 
 DEPENDS = "libusb openssl"
 RCONFLICTS_${PN} = "oscam oscam-stable oscam-unstable oscam-experimental oscam-util-list-smargo"
@@ -24,7 +21,7 @@ RCONFLICTS_${PN} += "enigma2-plugin-softcams-oscam-stable-cs enigma2-plugin-soft
 RCONFLICTS_${PN} += "enigma2-plugin-softcams-oscam-stable    enigma2-plugin-softcams-oscam-unstable    enigma2-plugin-softcams-oscam-experimental"
 RREPLACES_${PN} = "${RCONFLICTS_${PN}}"
 
-S = "${WORKDIR}/git"
+S = "${WORKDIR}/trunk"
 CAMNAME = "oscam"
 CAMSTART = "/usr/bin/oscam --config-dir /etc/tuxbox/config/oscam --daemon --pidfile /tmp/oscam.pid --restart 2 --utf8"
 CAMSTOP = "kill \`cat /tmp/oscam.pid\` 2> /dev/null"
