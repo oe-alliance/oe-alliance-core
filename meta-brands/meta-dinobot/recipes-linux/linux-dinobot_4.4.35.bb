@@ -31,6 +31,7 @@ SRC_URI_u5pvr += "http://source.mynonpublic.com/dinobot/dinobot-linux-${PV}-${SR
     file://sdio-platform.patch \
     file://accelmem.patch \
     file://cma.patch \
+    file://ahci-clock.patch \
     ${@bb.utils.contains('SOC_FAMILY', 'hisi3798mv200', 'file://led.patch' , '', d)} \
 "
 
