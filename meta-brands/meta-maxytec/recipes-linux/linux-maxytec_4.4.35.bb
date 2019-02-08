@@ -9,7 +9,7 @@ SRCDATE = "20181228"
 
 inherit kernel machine_kernel_pr
 
-MACHINE_KERNEL_PR_append = ".4"
+MACHINE_KERNEL_PR_append = ".5"
 
 SRC_URI[md5sum] = "ede25f1c2c060f1059529a2896cee5a9"
 SRC_URI[sha256sum] = "ea4ba0433d252c18f38ff2f4dce4b70880e447e1cffdc2066d5a9b5f8098ae7e"
@@ -20,6 +20,7 @@ SRC_URI = "http://source.mynonpublic.com/maxytec/linux-${PV}-${SRCDATE}-${ARCH}.
 	file://0002-log2-give-up-on-gcc-constant-optimizations.patch \
 	file://0003-dont-mark-register-as-const.patch \
 	file://0001-mmc-switch-1.8V.patch \
+	file://0001-remote.patch \
 	"
 
 # By default, kernel.bbclass modifies package names to allow multiple kernels
