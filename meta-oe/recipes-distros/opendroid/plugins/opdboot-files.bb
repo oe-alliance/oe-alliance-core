@@ -24,14 +24,14 @@ do_install() {
 
 do_install_append_mipsel() {
 	mkdir -p ${D}/${libdir}/enigma2/python/Plugins/Extensions/OPDBoot/bin/
-	cp -a ${S}/mipsel/fbclear_mipsel ${D}/usr/lib/enigma2/python/Plugins/Extensions/OPDBoot/bin/fbclear
-	cp -a ${S}/mipsel/nfidump_mipsel ${D}/usr/lib/enigma2/python/Plugins/Extensions/OPDBoot/bin/nfidump
+	cp -a ${S}/mipsel/fbclear_mipsel ${D}/${libdir}/enigma2/python/Plugins/Extensions/OPDBoot/bin/fbclear
+	cp -a ${S}/mipsel/nfidump_mipsel ${D}/${libdir}/enigma2/python/Plugins/Extensions/OPDBoot/bin/nfidump
 	
 	mkdir -p ${D}/${libdir}/enigma2/python/Plugins/Extensions/OPDBoot/ubi_reader/ubifs/
-	cp -a ${S}/mipsel/lzo_mipsel.so ${D}/usr/lib/enigma2/python/Plugins/Extensions/OPDBoot/ubi_reader/ubifs/lzo.so
+	cp -a ${S}/mipsel/lzo_mipsel.so ${D}/${libdir}/enigma2/python/Plugins/Extensions/OPDBoot/ubi_reader/ubifs/lzo.so
 }
 
 do_install_append_arm() {
 	mkdir -p ${D}/${libdir}/enigma2/python/Plugins/Extensions/OPDBoot/bin/
-	cp -a ${S}/arm/fbclear_arm ${D}/usr/lib/enigma2/python/Plugins/Extensions/OPDBoot/bin/fbclear
+	cp -a ${S}/arm/fbclear_arm ${D}/${libdir}/enigma2/python/Plugins/Extensions/OPDBoot/bin/fbclear
 }
