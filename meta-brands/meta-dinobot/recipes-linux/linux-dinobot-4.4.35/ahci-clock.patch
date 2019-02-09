@@ -1,0 +1,13 @@
+diff -Nur a/drivers/hisilicon/clk/hi3798cv2x/clk-hi3798cv200.c b/drivers/hisilicon/clk/hi3798cv2x/clk-hi3798cv200.c
+--- a/drivers/hisilicon/clk/hi3798cv2x/clk-hi3798cv200.c	2019-01-27 17:51:55.472000000 +0100
++++ b/drivers/hisilicon/clk/hi3798cv2x/clk-hi3798cv200.c	2019-01-27 17:52:21.024000000 +0100
+@@ -75,7 +75,7 @@
+ 	CLK_SHARED(HIGMAC_MAC_IF0_CLK, PERI_CRG51_GSF, 0x1000000, 0x1000000, 0, 0, NULL),
+ 	CLK_SHARED(HIGMAC_MAC_IF1_CLK, PERI_CRG51_GSF, 0x2000000, 0x2000000, 0, 0, NULL),
+ 	CLK(PERI_CRG99_PCIECTRL, 0x0, 0x0, 0x0, 0, &clk_ops_hipcie),
+-	CLK(PERI_CRG42_SATA3CTRL, 0x0, 0x0, 0x0, 0, &clk_ops_hiahci),
++	CLK(PERI_CRG42_SATA3CTRL, 0xF, 0xF, BIT(8)| BIT(9) | BIT(10) | BIT(11), 0, &clk_ops_hiahci),
+ 	CLK_SHARED(HII2C_I2C0_CLK, PERI_CRG27_I2C, 0x10, 0x10, BIT(5), _100MHz, NULL),
+ 	CLK_SHARED(HII2C_I2C1_CLK, PERI_CRG27_I2C, 0x100, 0x100, BIT(9), _100MHz, NULL),
+ 	CLK_SHARED(HII2C_I2C2_CLK, PERI_CRG27_I2C, 0x1000, 0x1000, BIT(13), _100MHz, NULL),
+

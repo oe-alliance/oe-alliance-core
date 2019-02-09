@@ -31,6 +31,7 @@ SRC_URI_u5pvr += "http://source.mynonpublic.com/dinobot/dinobot-linux-${PV}-${SR
     file://sdio-platform.patch \
     file://accelmem.patch \
     file://cma.patch \
+    file://ahci-clock.patch \
     ${@bb.utils.contains('SOC_FAMILY', 'hisi3798mv200', 'file://led.patch' , '', d)} \
     file://0002-log2-give-up-on-gcc-constant-optimizations.patch \
     file://0003-uaccess-dont-mark-register-as-const.patch \
