@@ -9,8 +9,8 @@ RDEPENDS_${PN} = "ffmpeg libbluray"
 
 inherit gitpkgv upx-compress
 
-PV = "50+gitr${SRCPV}"
-PKGV = "50+gitr${GITPKGV}"
+PV = "57+gitr${SRCPV}"
+PKGV = "57+gitr${GITPKGV}"
 
 PR = "r1"
 
@@ -60,12 +60,12 @@ output/linuxdvb_mipsel.c \
 output/writer/mipsel/writer.c \
 output/writer/mipsel/aac.c \
 output/writer/mipsel/ac3.c \
+output/writer/mipsel/bcma.c \
 output/writer/mipsel/mp3.c \
 output/writer/mipsel/pcm.c \
 output/writer/mipsel/lpcm.c \
 output/writer/mipsel/dts.c \
 output/writer/mipsel/amr.c \
-output/writer/mipsel/wma.c \
 output/writer/mipsel/h265.c \
 output/writer/mipsel/h264.c \
 output/writer/mipsel/mjpeg.c \
