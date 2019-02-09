@@ -109,6 +109,7 @@ RDEPENDS_${PN} = "\
 	\
  	titan-infobox \
 	titan-rarfs \
+	titan-fbread \
 	oe-alliance-wifi \
  	"
 
