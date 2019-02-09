@@ -7,7 +7,7 @@ SRCDATE = "20180830"
 
 inherit kernel machine_kernel_pr
 
-MACHINE_KERNEL_PR_append = ".13"
+MACHINE_KERNEL_PR_append = ".14"
 
 
 SRC_URI[md5sum] = "9aa3305104807a5bdc0e0b53dcccc45b"
@@ -25,6 +25,7 @@ RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
 
 SRC_URI += "http://source.mynonpublic.com/clap/clap-linux-${PV}-${SRCDATE}.tar.gz \
     file://defconfig \
+    file://0001-remote.patch \
     file://findkerneldevice.py \
 "
 
