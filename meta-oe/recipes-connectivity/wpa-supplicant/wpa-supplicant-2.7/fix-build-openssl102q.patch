@@ -1,0 +1,16 @@
+diff --git a/src/crypto/crypto_openssl.c b/src/crypto/crypto_openssl.c
+index f89053a..103152c 100644
+--- a/src/crypto/crypto_openssl.c
++++ b/src/crypto/crypto_openssl.c
+@@ -9,6 +9,11 @@
+ #include "includes.h"
+ #include <openssl/opensslv.h>
+ #include <openssl/err.h>
++#if OPENSSL_VERSION_NUMBER < 0x10100000L
++#ifndef DES_LONG
++#define DES_LONG unsigned long
++#endif
++#endif
+ #include <openssl/des.h>
+ #include <openssl/aes.h>
+ #include <openssl/bn.h>

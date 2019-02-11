@@ -10,6 +10,7 @@ SRC_URI += " \
         file://ifupdown.sh \
         file://wpa_action \
         file://wpa_action.8 \
+        file://fix-build-openssl102q.patch \
 "
 
 do_configure_append() {
