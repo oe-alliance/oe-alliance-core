@@ -16,7 +16,7 @@ PKG_${KERNEL_PACKAGE_NAME}-image-zimage = "kernel-image"
 RPROVIDES_${KERNEL_PACKAGE_NAME} = "kernel-${LINUX_VERSION}"
 RPROVIDES_${KERNEL_PACKAGE_NAME}-base = "kernel-${KERNEL_VERSION}"
 RPROVIDES_${KERNEL_PACKAGE_NAME}-image = "kernel-image-${KERNEL_VERSION}"
-RPROVIDES_${KERNEL_PACKAGE_NAME}-image-zimage = "kernel-image"
+#RPROVIDES_${KERNEL_PACKAGE_NAME}-image-zimage = "kernel-image"
 RDEPENDS_${KERNEL_PACKAGE_NAME}-image = "kernel-devicetree flash-scripts"
 
 
