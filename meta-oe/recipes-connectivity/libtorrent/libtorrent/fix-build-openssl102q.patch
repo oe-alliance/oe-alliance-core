@@ -1,0 +1,16 @@
+diff --git a/src/utils/rc4.h b/src/utils/rc4.h
+index 2ab702e1..39c679e3 100644
+--- a/src/utils/rc4.h
++++ b/src/utils/rc4.h
+@@ -45,6 +45,11 @@ extern "C" {
+ }
+ #else
+ #ifdef USE_OPENSSL
++#if OPENSSL_VERSION_NUMBER < 0x10100000L
++#ifndef RC4_INT
++#define RC4_INT unsigned int
++#endif
++#endif
+ #include <openssl/rc4.h>
+ #endif
+ #endif

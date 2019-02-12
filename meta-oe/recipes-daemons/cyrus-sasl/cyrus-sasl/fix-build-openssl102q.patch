@@ -1,0 +1,16 @@
+diff --git a/plugins/ntlm.c b/plugins/ntlm.c
+index fc0d89f..99c8580 100644
+--- a/plugins/ntlm.c
++++ b/plugins/ntlm.c
+@@ -76,6 +76,11 @@
+ #include <openssl/md4.h>
+ #include <openssl/md5.h>
+ #include <openssl/hmac.h>
++#if OPENSSL_VERSION_NUMBER < 0x10100000L
++#ifndef DES_LONG
++#define DES_LONG unsigned long
++#endif
++#endif
+ #include <openssl/des.h>
+ #include <openssl/opensslv.h>
+ #if (OPENSSL_VERSION_NUMBER >= 0x0090700f) && \

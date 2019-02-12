@@ -1,0 +1,16 @@
+diff --git a/src/openvpn/crypto_openssl.c b/src/openvpn/crypto_openssl.c
+index a55e65c..8fb8ec8 100644
+--- a/src/openvpn/crypto_openssl.c
++++ b/src/openvpn/crypto_openssl.c
+@@ -43,6 +43,11 @@
+ #include "crypto_backend.h"
+ #include "openssl_compat.h"
+ 
++#if OPENSSL_VERSION_NUMBER < 0x10100000L
++#ifndef DES_LONG
++#define DES_LONG unsigned long
++#endif
++#endif
+ #include <openssl/des.h>
+ #include <openssl/err.h>
+ #include <openssl/evp.h>
