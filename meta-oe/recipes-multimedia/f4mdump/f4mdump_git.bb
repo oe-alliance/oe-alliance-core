@@ -1,18 +1,21 @@
 DESCRIPTION = "Simple F4M/HDS (Adobe HTTP Dynamic Streaming) dumper. Intended to be used by IPTVPlayer plugin: https://gitorious.org/iptv-pl-dla-openpli, http://iptvplayer.vline.pl."
 MAINTAINER = "samsamsam"
 
+FILESEXTRAPATHS_prepend := "${THISDIR}/$PN}:"
+
 DEPENDS = "openssl zlib"
 RDEPENDS_${PN} += "wget"
 
 require conf/license/license-gplv2.inc
 inherit gitpkgv
 
+SRCREV = "${AUTOREV}"
 PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"
 PR = "r0"
 
-SRC_URI = "git://gitlab.com/f4mdump/f4mdump.git;protocol=http"
-SRCREV = "${AUTOREV}"
+SRC_URI = "git://gitlab.com/e2i/f4mdump.git;protocol=http \
+        file://fix-build-openssl102q.patch"
 
 S = "${WORKDIR}/git/"
 
