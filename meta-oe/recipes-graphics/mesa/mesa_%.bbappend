@@ -12,6 +12,7 @@ do_install_append() {
 }
 
 PROVIDES_remove = "virtual/libgles1 virtual/libgles2 virtual/egl virtual/libgbm"
+PROVIDES += "virtual/egl-native virtual/nativesdk-egl"
 
 REQUIRED_DISTRO_FEATURES = ""
 ANY_OF_DISTRO_FEATURES = ""
