@@ -15,7 +15,8 @@ PKGV = "1.0+git${GITPKGV}"
 PR = "r0"
 
 SRC_URI = "git://gitlab.com/e2i/f4mdump.git;protocol=http \
-        file://fix-build-openssl102q.patch"
+        file://fix-build-openssl102q.patch \
+        file://fix-build-openssl111a.patch"
 
 S = "${WORKDIR}/git/"
 
@@ -41,13 +42,13 @@ SRCF4M =+ "src/parser.cpp"
 SRCF4M =+ "src/tinyxml2.cpp"
 
 do_compile () {
-	rm -f *.o
-	${CC} ${SRCRTMP} -c -fdata-sections -ffunction-sections -Os -Wall -Wl,--gc-sections -I${D}/${libdir} -I${D}/${includedir} -I${S}/ext/librtmp -lz ${LDFLAGS}
-	${CXX} ${SRCF4M} -Os -Wno-narrowing -lssl -lcrypto -lz -std=c++0x -I${S}/inc -I${S}/ext -I${S}/ext/librtmp *.o -o f4mdump ${LDFLAGS}
-	rm -f *.o
+        rm -f *.o
+        ${CC} ${SRCRTMP} -c -fdata-sections -ffunction-sections -Os -Wall -Wl,--gc-sections -I${D}/${libdir} -I${D}/${includedir} -I${S}/ext/librtmp -lz ${LDFLAGS}
+        ${CXX} ${SRCF4M} -Os -Wno-narrowing -lssl -lcrypto -lz -std=c++0x -I${S}/inc -I${S}/ext -I${S}/ext/librtmp *.o -o f4mdump ${LDFLAGS}
+        rm -f *.o
 }
 
 do_install () {
-	install -d ${D}${bindir}
-	install -m 0755 ${S}/f4mdump ${D}${bindir}
+        install -d ${D}${bindir}
+        install -m 0755 ${S}/f4mdump ${D}${bindir}
 }

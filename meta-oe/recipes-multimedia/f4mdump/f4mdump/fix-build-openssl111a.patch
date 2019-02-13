@@ -1,0 +1,261 @@
+--- a/ext/librtmp/dh.h
++++ b/ext/librtmp/dh.h
+@@ -248,30 +248,39 @@ static MDH *
+ DHInit(int nKeyBits)
+ {
+   size_t res;
++  const BIGNUM *g, *p;
+   MDH *dh = MDH_new();
+ 
++  DH_get0_pqg(dh, &p, NULL, &g);
++
+   if (!dh)
+     goto failed;
+ 
+-  MP_new(dh->g);
++  MP_new(g);
+ 
+-  if (!dh->g)
++  if (!g)
+     goto failed;
+ 
+-  MP_gethex(dh->p, P1024, res);	/* prime P1024, see dhgroups.h */
++  MP_gethex(p, P1024, res);	/* prime P1024, see dhgroups.h */
+   if (!res)
+     {
+       goto failed;
+     }
+ 
+-  MP_set_w(dh->g, 2);	/* base 2 */
++  MP_set_w(g, 2);	/* base 2 */
++
++  DH_set_length(dh, nKeyBits);
++
++  BN_free(g);
++  BN_free(p);
+ 
+-  dh->length = nKeyBits;
+   return dh;
+ 
+ failed:
+   if (dh)
+     MDH_free(dh);
++  BN_free(g);
++  BN_free(p);
+ 
+   return 0;
+ }
+@@ -279,7 +288,12 @@ failed:
+ static int
+ DHGenerateKey(MDH *dh)
+ {
++  const BIGNUM *g, *p, *pub_key, *priv_key;
+   size_t res = 0;
++
++  DH_get0_pqg(dh, &p, NULL, &g);
++  DH_get0_key(dh, &pub_key, &priv_key);
++
+   if (!dh)
+     return 0;
+ 
+@@ -293,16 +307,22 @@ DHGenerateKey(MDH *dh)
+       MP_gethex(q1, Q1024, res);
+       assert(res);
+ 
+-      res = isValidPublicKey(dh->pub_key, dh->p, q1);
++      res = isValidPublicKey(pub_key, p, q1);
+       if (!res)
+ 	{
+-	  MP_free(dh->pub_key);
+-	  MP_free(dh->priv_key);
+-	  dh->pub_key = dh->priv_key = 0;
++	  MP_free(pub_key);
++	  MP_free(priv_key);
++	  pub_key = priv_key = 0;
+ 	}
+ 
+       MP_free(q1);
+     }
++
++  BN_free(g);
++  BN_free(p);
++  BN_free(pub_key);
++  BN_free(priv_key);
++
+   return 1;
+ }
+ 
+@@ -313,16 +333,23 @@ DHGenerateKey(MDH *dh)
+ static int
+ DHGetPublicKey(MDH *dh, uint8_t *pubkey, size_t nPubkeyLen)
+ {
++  const BIGNUM *pub_key;
++
++  DH_get0_key(dh, &pub_key, NULL);
++
+   int len;
+-  if (!dh || !dh->pub_key)
++  if (!dh || !pub_key)
+     return 0;
+ 
+-  len = MP_bytes(dh->pub_key);
++  len = MP_bytes(pub_key);
+   if (len <= 0 || len > (int) nPubkeyLen)
+     return 0;
+ 
+   memset(pubkey, 0, nPubkeyLen);
+-  MP_setbin(dh->pub_key, pubkey + (nPubkeyLen - len), len);
++  MP_setbin(pub_key, pubkey + (nPubkeyLen - len), len);
++
++  BN_free(pub_key);
++
+   return 1;
+ }
+ 
+@@ -351,9 +378,12 @@ DHComputeSharedSecretKey(MDH *dh, uint8_t *pubkey, size_t nPubkeyLen,
+ 			 uint8_t *secret)
+ {
+   MP_t q1 = NULL, pubkeyBn = NULL;
++  const BIGNUM *p;
+   size_t len;
+   int res;
+ 
++  DH_get0_pqg(dh, &p, NULL, NULL);
++
+   if (!dh || !secret || nPubkeyLen >= INT_MAX)
+     return -1;
+ 
+@@ -364,13 +394,14 @@ DHComputeSharedSecretKey(MDH *dh, uint8_t *pubkey, size_t nPubkeyLen,
+   MP_gethex(q1, Q1024, len);
+   assert(len);
+ 
+-  if (isValidPublicKey(pubkeyBn, dh->p, q1))
++  if (isValidPublicKey(pubkeyBn, p, q1))
+     res = MDH_compute_key(secret, nPubkeyLen, pubkeyBn, dh);
+   else
+     res = -1;
+ 
+   MP_free(q1);
+   MP_free(pubkeyBn);
++  BN_free(p);
+ 
+   return res;
+ }
+--- a/ext/librtmp/handshake.h
++++ b/ext/librtmp/handshake.h
+@@ -31,9 +31,9 @@
+ #define SHA256_DIGEST_LENGTH	32
+ #endif
+ #define HMAC_CTX	sha2_context
+-#define HMAC_setup(ctx, key, len)	sha2_hmac_starts(&ctx, (unsigned char *)key, len, 0)
++#define HMAC_setup(ctx, key, len)	sha2_hmac_reset(ctx, (unsigned char *)key, len, 0)
+ #define HMAC_crunch(ctx, buf, len)	sha2_hmac_update(&ctx, buf, len)
+-#define HMAC_finish(ctx, dig, dlen)	dlen = SHA256_DIGEST_LENGTH; sha2_hmac_finish(&ctx, dig)
++#define HMAC_finish(ctx, dig, dlen)	dlen = SHA256_DIGEST_LENGTH; sha2_hmac_finish(ctx, dig)
+ 
+ typedef arc4_context *	RC4_handle;
+ #define RC4_alloc(h)	*h = malloc(sizeof(arc4_context))
+@@ -50,10 +50,9 @@ typedef arc4_context *	RC4_handle;
+ #endif
+ #undef HMAC_CTX
+ #define HMAC_CTX	struct hmac_sha256_ctx
+-#define HMAC_setup(ctx, key, len)	hmac_sha256_set_key(&ctx, len, key)
++#define HMAC_setup(ctx, key, len)	hmac_sha256_set_key(ctx, len, key)
+ #define HMAC_crunch(ctx, buf, len)	hmac_sha256_update(&ctx, len, buf)
+-#define HMAC_finish(ctx, dig, dlen)	dlen = SHA256_DIGEST_LENGTH; hmac_sha256_digest(&ctx, SHA256_DIGEST_LENGTH, dig)
+-#define HMAC_close(ctx)
++#define HMAC_finish(ctx, dig, dlen)	dlen = SHA256_DIGEST_LENGTH; hmac_sha256_digest(ctx, SHA256_DIGEST_LENGTH, dig)
+ 
+ typedef struct arcfour_ctx*	RC4_handle;
+ #define RC4_alloc(h)	*h = malloc(sizeof(struct arcfour_ctx))
+@@ -69,9 +68,9 @@ typedef struct arcfour_ctx*	RC4_handle;
+ #if OPENSSL_VERSION_NUMBER < 0x0090800 || !defined(SHA256_DIGEST_LENGTH)
+ #error Your OpenSSL is too old, need 0.9.8 or newer with SHA256
+ #endif
+-#define HMAC_setup(ctx, key, len)	HMAC_CTX_init(&ctx); HMAC_Init_ex(&ctx, key, len, EVP_sha256(), 0)
++#define HMAC_setup(ctx, key, len)	HMAC_CTX_reset(&ctx); HMAC_Init_ex(&ctx, key, len, EVP_sha256(), 0)
+ #define HMAC_crunch(ctx, buf, len)	HMAC_Update(&ctx, buf, len)
+-#define HMAC_finish(ctx, dig, dlen)	HMAC_Final(&ctx, dig, &dlen); HMAC_CTX_cleanup(&ctx)
++#define HMAC_finish(ctx, dig, dlen)	HMAC_Final(ctx, dig, &dlen)
+ 
+ typedef RC4_KEY *	RC4_handle;
+ #define RC4_alloc(h)	*h = malloc(sizeof(RC4_KEY))
+@@ -117,7 +116,7 @@ static void InitRC4Encryption
+ {
+   uint8_t digest[SHA256_DIGEST_LENGTH];
+   unsigned int digestLen = 0;
+-  HMAC_CTX ctx;
++  HMAC_CTX *ctx;
+ 
+   RC4_alloc(rc4keyIn);
+   RC4_alloc(rc4keyOut);
+@@ -266,7 +265,7 @@ HMACsha256(const uint8_t *message, size_t messageLen, const uint8_t *key,
+ 	   size_t keylen, uint8_t *digest)
+ {
+   unsigned int digestLen;
+-  HMAC_CTX ctx;
++  HMAC_CTX *ctx;
+ 
+   HMAC_setup(ctx, key, keylen);
+   HMAC_crunch(ctx, message, messageLen);
+--- a/ext/librtmp/hashswf.c
++++ b/ext/librtmp/hashswf.c
+@@ -39,7 +39,7 @@
+ #define HMAC_CTX	sha2_context
+ #define HMAC_setup(ctx, key, len)	sha2_hmac_starts(&ctx, (unsigned char *)key, len, 0)
+ #define HMAC_crunch(ctx, buf, len)	sha2_hmac_update(&ctx, buf, len)
+-#define HMAC_finish(ctx, dig, dlen)	dlen = SHA256_DIGEST_LENGTH; sha2_hmac_finish(&ctx, dig)
++#define HMAC_finish(ctx, dig, dlen)	dlen = SHA256_DIGEST_LENGTH; sha2_hmac_finish(ctx, dig)
+ #define HMAC_close(ctx)
+ #elif defined(USE_GNUTLS)
+ #include <nettle/hmac.h>
+@@ -48,9 +48,9 @@
+ #endif
+ #undef HMAC_CTX
+ #define HMAC_CTX	struct hmac_sha256_ctx
+-#define HMAC_setup(ctx, key, len)	hmac_sha256_set_key(&ctx, len, key)
++#define HMAC_setup(ctx, key, len)	hmac_sha256_set_key(ctx, len, key)
+ #define HMAC_crunch(ctx, buf, len)	hmac_sha256_update(&ctx, len, buf)
+-#define HMAC_finish(ctx, dig, dlen)	dlen = SHA256_DIGEST_LENGTH; hmac_sha256_digest(&ctx, SHA256_DIGEST_LENGTH, dig)
++#define HMAC_finish(ctx, dig, dlen)	dlen = SHA256_DIGEST_LENGTH; hmac_sha256_digest(ctx, SHA256_DIGEST_LENGTH, dig)
+ #define HMAC_close(ctx)
+ #else	/* USE_OPENSSL */
+ #include <openssl/ssl.h>
+@@ -62,10 +62,8 @@
+ #endif
+ #endif
+ #include <openssl/rc4.h>
+-#define HMAC_setup(ctx, key, len)	HMAC_CTX_init(&ctx); HMAC_Init_ex(&ctx, (unsigned char *)key, len, EVP_sha256(), 0)
+ #define HMAC_crunch(ctx, buf, len)	HMAC_Update(&ctx, (unsigned char *)buf, len)
+-#define HMAC_finish(ctx, dig, dlen)	HMAC_Final(&ctx, (unsigned char *)dig, &dlen);
+-#define HMAC_close(ctx)	HMAC_CTX_cleanup(&ctx)
++#define HMAC_finish(ctx, dig, dlen)	HMAC_Final(ctx, (unsigned char *)dig, &dlen);
+ #endif
+ 
+ extern void RTMP_TLS_Init();
+@@ -294,7 +292,7 @@ leave:
+ struct info
+ {
+   z_stream *zs;
+-  HMAC_CTX ctx;
++  HMAC_CTX *ctx;
+   int first;
+   int zlib;
+   int size;
+@@ -587,7 +585,6 @@ RTMP_HashSWF(const char *url, unsigned int *size, unsigned char *hash,
+     }
+ 
+   in.first = 1;
+-  HMAC_setup(in.ctx, "Genuine Adobe Flash Player 001", 30);
+   inflateInit(&zs);
+   in.zs = &zs;
+ 
+@@ -653,7 +650,7 @@ RTMP_HashSWF(const char *url, unsigned int *size, unsigned char *hash,
+ 	  fprintf(f, "\n");
+ 	}
+     }
+-  HMAC_close(in.ctx);
++
+ out:
+   free(path);
+   if (f)

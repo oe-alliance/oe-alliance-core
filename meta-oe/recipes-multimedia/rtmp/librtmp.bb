@@ -3,7 +3,7 @@ LICENSE = "LGPLv2"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=e344c8fa836c3a41c4cbd79d7bd3a379"
 
-DEPENDS = "openssl zlib"
+DEPENDS = "openssl zlib rtmpdump"
 
 PROVIDES =+ " librtmp1"
 PACKAGES =+ " librtmp1"
@@ -15,7 +15,8 @@ PKGV = "2.48+git${GITPKGV}"
 PV = "2.48+git${SRCPV}"
 
 SRC_URI = "git://github.com/oe-alliance/rtmpdump.git;protocol=git \
-        file://fix-build-openssl102q.patch"
+        file://fix-build-openssl102q.patch \
+        file://fix-build-openssl111a.patch"
 
 S = "${WORKDIR}/git/librtmp"
 
