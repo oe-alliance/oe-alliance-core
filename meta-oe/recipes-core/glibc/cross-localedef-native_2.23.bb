@@ -53,11 +53,3 @@ do_install() {
 	install -d ${D}${bindir}
 	install -m 0755 ${B}/localedef ${D}${bindir}/cross-localedef
 }
-
-do_configure_prepend() {
-	if [ ! -e ${WORKDIR}/recipe-sysroot-native/usr/lib/locale ];then
-		# sh4 work create missing folder
-		mkdir -p ${WORKDIR}/recipe-sysroot-native/usr/lib/locale
-	fi
-}
-
