@@ -12,3 +12,8 @@ do_install_append() {
     rm ${D}${sysconfdir}/rc*.d/*bootlogd
 }
 
+pkg_postinst_${PN}_prepend() {
+#!/bin/sh
+set -e
+	if [ ! -z "$D" ]; then exit 0; fi
+}
