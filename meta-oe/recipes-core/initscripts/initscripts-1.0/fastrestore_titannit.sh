@@ -70,19 +70,19 @@ startmnt()
 			backuptpk
 		fi
 
-		if [ -e /media/hdd/.update ] && [ -e /var/etc/.firstboot ];then
+		if [ -e /media/hdd/.update/config/titan.cfg ] && [ -e /var/etc/.firstboot ];then
 			BACKUPDIR=/media/hdd/.update
 			echo "[$0] startmnt: cp -a $BACKUPDIR /mnt"
 			cp -a $BACKUPDIR /mnt
 			mv -f $BACKUPDIR/.last $BACKUPDIR/.last.restored
 			sync
-		elif [ -e /var/backup/.update ] && [ -e /var/etc/.firstboot ];then
+		elif [ -e /var/backup/.update/config/titan.cfg ] && [ -e /var/etc/.firstboot ];then
 			BACKUPDIR=/var/backup/.update
 			echo "[$0] startmnt: cp -a $BACKUPDIR /mnt"
 			cp -a $BACKUPDIR /mnt
 			mv -f $BACKUPDIR/.last $BACKUPDIR/.last.restored
 			sync
-		elif [ -e /var/swap/.update ] && [ -e /var/etc/.firstboot ];then
+		elif [ -e /var/swap/.update/config/titan.cfg ] && [ -e /var/etc/.firstboot ];then
 			BACKUPDIR=/var/swap/.update
 			echo "[$0] startmnt: cp -a $BACKUPDIR /mnt"
 			cp -a $BACKUPDIR /mnt
