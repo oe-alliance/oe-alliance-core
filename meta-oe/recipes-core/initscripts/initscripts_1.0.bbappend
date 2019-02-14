@@ -12,6 +12,7 @@ SRC_URI += "file://hotplug.sh \
             file://nocam.sh \
             file://nocard.sh \
             file://fastrestore_openatv.sh \
+			file://fastrestore_titannit.sh \
 "
 
 do_install_append() {
