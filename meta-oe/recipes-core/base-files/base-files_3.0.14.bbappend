@@ -10,6 +10,7 @@ FILESEXTRAPATHS_prepend := "${THISDIR}/${MACHINEBUILD}:"
 SRC_URI += "file://editor.sh"
 SRC_URI += "file://terminfo.sh"
 SRC_URI += "file://mount-helper.sh"
+SRC_URI += "file://mount-helper_titannit.sh"
 
 hostname = "${MACHINEBUILD}"
 
