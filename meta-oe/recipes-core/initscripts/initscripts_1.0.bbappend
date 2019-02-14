@@ -29,6 +29,10 @@ do_install_append() {
         install -m 0755    ${WORKDIR}/fastrestore_openatv.sh	${D}${sysconfdir}/init.d/fastrestore
         ln -sf        ../init.d/fastrestore      ${D}${sysconfdir}/rcS.d/S75fastrestore
     fi
+    if [ "x${DISTRO}" = "xtitannit" ]; then
+        install -m 0755    ${WORKDIR}/fastrestore_titannit.sh	${D}${sysconfdir}/init.d/fastrestore
+        ln -sf        ../init.d/fastrestore      ${D}${sysconfdir}/rcS.d/S75fastrestore
+    fi
     # run bootmisc.sh after S37populate-volatile.sh  to fix /tmp issue
     update-rc.d -f -r ${D} bootmisc.sh remove
     update-rc.d -r ${D} bootmisc.sh start 55 S .
