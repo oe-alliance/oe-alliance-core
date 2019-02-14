@@ -74,8 +74,8 @@ startmnt()
 			BACKUPDIR=/media/hdd/.update
 			BACKUPFILE=$(cat $BACKUPDIR/.last)
 			if [ ! -z "$BACKUPFILE" ];then
-				echo "[$0] startmnt: cp -a $BACKUPFILE/* /mnt"
-				cp -a $BACKUPFILE/* /mnt
+				echo "[$0] startmnt: cp -a $BACKUPFILE /mnt"
+				cp -a $BACKUPFILE /mnt
 				mv -f $BACKUPDIR/.last $BACKUPDIR/.last.restored
 				sync
 			echo
@@ -85,8 +85,8 @@ startmnt()
 			BACKUPDIR=/var/backup/.update
 			BACKUPFILE=$(cat $BACKUPDIR/.last)
 			if [ ! -z "$BACKUPFILE" ];then
-				echo "[$0] startmnt: cp -a $BACKUPFILE/* /mnt"
-				cp -a $BACKUPFILE/* /mnt
+				echo "[$0] startmnt: cp -a $BACKUPFILE /mnt"
+				cp -a $BACKUPFILE /mnt
 				mv -f $BACKUPDIR/.last $BACKUPDIR/.last.restored
 				sync
 			echo
@@ -96,8 +96,8 @@ startmnt()
 			BACKUPDIR=/var/swap/.update
 			BACKUPFILE=$(cat $BACKUPDIR/.last)
 			if [ ! -z "$BACKUPFILE" ];then
-				echo "[$0] startmnt: cp -a $BACKUPFILE/* /mnt"
-				cp -a $BACKUPFILE/* /mnt
+				echo "[$0] startmnt: cp -a $BACKUPFILE /mnt"
+				cp -a $BACKUPFILE /mnt
 				mv -f $BACKUPDIR/.last $BACKUPDIR/.last.restored
 				sync
 			echo
