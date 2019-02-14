@@ -70,39 +70,24 @@ startmnt()
 			backuptpk
 		fi
 
-		if [ -e /media/hdd/.update/.last ];then
+		if [ -e /media/hdd/.update ] && [ -e /var/etc/.firstboot ];then
 			BACKUPDIR=/media/hdd/.update
-			BACKUPFILE=$(cat $BACKUPDIR/.last)
-			if [ ! -z "$BACKUPFILE" ];then
-				echo "[$0] startmnt: cp -a $BACKUPFILE /mnt"
-				cp -a $BACKUPFILE /mnt
-				mv -f $BACKUPDIR/.last $BACKUPDIR/.last.restored
-				sync
-			echo
-				echo "[$0] startmnt: skip cp -a $BACKUPFILE/* /mnt"
-			fi
-		elif [ -e /var/backup/.update/.last ];then
+			echo "[$0] startmnt: cp -a $BACKUPDIR /mnt"
+			cp -a $BACKUPDIR /mnt
+			mv -f $BACKUPDIR/.last $BACKUPDIR/.last.restored
+			sync
+		elif [ -e /var/backup/.update ] && [ -e /var/etc/.firstboot ];then
 			BACKUPDIR=/var/backup/.update
-			BACKUPFILE=$(cat $BACKUPDIR/.last)
-			if [ ! -z "$BACKUPFILE" ];then
-				echo "[$0] startmnt: cp -a $BACKUPFILE /mnt"
-				cp -a $BACKUPFILE /mnt
-				mv -f $BACKUPDIR/.last $BACKUPDIR/.last.restored
-				sync
-			echo
-				echo "[$0] startmnt: skip cp -a $BACKUPFILE/* /mnt"
-			fi
-		elif [ -e /var/swap/.update/.last ];then
+			echo "[$0] startmnt: cp -a $BACKUPDIR /mnt"
+			cp -a $BACKUPDIR /mnt
+			mv -f $BACKUPDIR/.last $BACKUPDIR/.last.restored
+			sync
+		elif [ -e /var/swap/.update ] && [ -e /var/etc/.firstboot ];then
 			BACKUPDIR=/var/swap/.update
-			BACKUPFILE=$(cat $BACKUPDIR/.last)
-			if [ ! -z "$BACKUPFILE" ];then
-				echo "[$0] startmnt: cp -a $BACKUPFILE /mnt"
-				cp -a $BACKUPFILE /mnt
-				mv -f $BACKUPDIR/.last $BACKUPDIR/.last.restored
-				sync
-			echo
-				echo "[$0] startmnt: skip cp -a $BACKUPFILE/* /mnt"
-			fi
+			echo "[$0] startmnt: cp -a $BACKUPDIR /mnt"
+			cp -a $BACKUPDIR /mnt
+			mv -f $BACKUPDIR/.last $BACKUPDIR/.last.restored
+			sync
 		else
 			infobox -pos -1 75% 10015 "MNT" "            Formatiere Laufwerk            " &
 			if [ -e /mnt ];then
@@ -145,6 +130,7 @@ startmnt()
 		fi
 #		startnetwork restart
 	fi
+	rm /var/etc/.firstboot
 }
 
 startopkg()
@@ -158,7 +144,7 @@ startopkg()
 		echo "dest /mnt/swapextensions /mnt/swapextensions" >> /etc/opkg/opkg.conf
 	fi
 	if [ $(cat /etc/opkg/opkg.conf | grep "dest /var/swap /var/swap" | wc -l) -eq 0 ];then
-		echo "[$0] startopkg add /var/swap
+		echo "[$0] startopkg add /var/swap"
 		echo "dest /var/swap /var/swap" >> /etc/opkg/opkg.conf
 	fi
 }
@@ -166,7 +152,7 @@ startopkg()
 startplugins()
 {
 	if [ ! -L /var/usr/local/share/titan/plugins ];then
-		echo "[$0] startplugins link plugins
+		echo "[$0] startplugins link plugins"
 		rm -rf /var/usr/local/share/titan/plugins
 		ln -sf /usr/local/share/titan/plugins /var/usr/local/share/titan/plugins
 	fi
