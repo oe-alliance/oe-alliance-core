@@ -1,0 +1,2 @@
+echo start fastrestore
+exit
