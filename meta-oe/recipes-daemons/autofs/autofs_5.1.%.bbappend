@@ -20,7 +20,11 @@ do_configure_prepend () {
 
 # Remove and change configuration files
 do_install_append() {
+if [ "x${DISTRO}" = "xtitannit" ]; then
+    echo "/media/autofs  /mnt/network/auto.misc  --ghost" > ${D}/etc/auto.master
+else
     echo "/media/autofs  /etc/auto.network  --ghost" > ${D}/etc/auto.master
+fi
     rm -f ${D}/etc/auto.smb ${D}/etc/auto.misc ${D}/etc/autofs_ldap_auth.conf
     if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
         rm ${D}/etc/init.d/autofs || true
