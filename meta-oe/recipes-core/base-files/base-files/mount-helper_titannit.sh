@@ -38,7 +38,7 @@ notify() {
 case $ACTION in
 	add|"")
 		ACTION="add"
-		FSTYPE=`blkid /dev/${MDEV} | grep -v 'TYPE="swap"' | grep ${MDEV} | sed -e "s/.*TYPE=//" -e 's/"//g'`
+		FSTYPE=`blkid /dev/${MDEV} | grep -v 'TYPE="swap"' | grep ${MDEV} | sed -nr 's/.*TYPE="([^"]+)".*/\1/p'`
 		LABEL=`blkid /dev/${MDEV} | grep -v 'TYPE="swap"' | grep ${MDEV} | sed -nr 's/.*LABEL="([^"]+)".*/\1/p'`
 		case $LABEL in
 			"")	LABEL="NONLABEL-$MDEV";;
@@ -162,18 +162,18 @@ case $ACTION in
 									find "${MOUNTPOINT}" -type d -delete
 									[ -d $MOUNTPOINT ] && rmdir "${MOUNTPOINT}"
 								else
-									[ $MOUNTPOINT == "/media/hdd" ] && echo "$MDEV#$FSTYPE#$LABEL" > /etc/udev/.moviedev
+									[ $MOUNTPOINT == "/media/hdd" ] && echo "$MDEV#$FSTYPE#$LABEL" > /media/.moviedev
 									[ -L /var/backup ] && [ ! -e $(readlink /var/backup) ] && rm /var/backup
-									[ -d $MOUNTPOINT/backup ] && ln -fs "${MOUNTPOINT}/backup" /var/backup && echo "$MDEV#$FSTYPE#$LABEL" > /etc/udev/.backupdev
+									[ -d $MOUNTPOINT/backup ] && ln -fs "${MOUNTPOINT}/backup" /var/backup && echo "$MDEV#$FSTYPE#$LABEL" > /media/.backupdev
 									[ -L /var/swap] && [ ! -e $(readlink /var/swap) ] && rm /var/swap
-									[ -d $MOUNTPOINT/swapextensions ] && ln -sf "${MOUNTPOINT}/swapextensions" /var/swap && echo "$MDEV#$FSTYPE#$LABEL" > /etc/udev/.swapextensionsdev
+									[ -d $MOUNTPOINT/swapextensions ] && ln -sf "${MOUNTPOINT}/swapextensions" /var/swap && echo "$MDEV#$FSTYPE#$LABEL" > /media/.swapextensionsdev
 								fi
 							else
-								[ $MOUNTPOINT == "/media/hdd" ] && echo "$MDEV#$FSTYPE#$LABEL" > /etc/udev/.moviedev
+								[ $MOUNTPOINT == "/media/hdd" ] && echo "$MDEV#$FSTYPE#$LABEL" > /media/.moviedev
 								[ -L /var/backup ] && [ ! -e $(readlink /var/backup) ] && rm /var/backup
-								[ -d $MOUNTPOINT/backup ] && ln -fs "${MOUNTPOINT}/backup" /var/backup && echo "$MDEV#$FSTYPE#$LABEL" > /etc/udev/.backupdev
+								[ -d $MOUNTPOINT/backup ] && ln -fs "${MOUNTPOINT}/backup" /var/backup && echo "$MDEV#$FSTYPE#$LABEL" > /media/.backupdev
 								[ -L /var/swap] && [ ! -e $(readlink /var/swap) ] && rm /var/swap
-								[ -d $MOUNTPOINT/swapextensions ] && ln -sf "${MOUNTPOINT}/swapextensions" /var/swap && echo "$MDEV#$FSTYPE#$LABEL" > /etc/udev/.swapextensionsdev
+								[ -d $MOUNTPOINT/swapextensions ] && ln -sf "${MOUNTPOINT}/swapextensions" /var/swap && echo "$MDEV#$FSTYPE#$LABEL" > /media/.swapextensionsdev
 							fi
 							#echo "[mdev-mount.sh] mounted $MDEV on $MOUNTPOINT (swap complete)" >> $LOG
 						fi
@@ -266,19 +266,19 @@ case $ACTION in
 					[ -d $MOUNTPOINT ] && rmdir "${MOUNTPOINT}"
 				else
 					#echo "[mdev-mount.sh] mount ok 2" >> $LOG
-					[ $MOUNTPOINT == "/media/hdd" ] && echo "$MDEV#$FSTYPE#$LABEL" > /etc/udev/.moviedev
+					[ $MOUNTPOINT == "/media/hdd" ] && echo "$MDEV#$FSTYPE#$LABEL" > /media/.moviedev
 					[ -L /var/backup ] && [ ! -e $(readlink /var/backup) ] && rm /var/backup
-					[ -d $MOUNTPOINT/backup ] && ln -fs "${MOUNTPOINT}/backup" /var/backup && echo "$MDEV#$FSTYPE#$LABEL" > /etc/udev/.backupdev
+					[ -d $MOUNTPOINT/backup ] && ln -fs "${MOUNTPOINT}/backup" /var/backup && echo "$MDEV#$FSTYPE#$LABEL" > /media/.backupdev
 					[ -L /var/swap] && [ ! -e $(readlink /var/swap) ] && rm /var/swap
-					[ -d $MOUNTPOINT/swapextensions ] && ln -sf "${MOUNTPOINT}/swapextensions" /var/swap && echo "$MDEV#$FSTYPE#$LABEL" > /etc/udev/.swapextensionsdev
+					[ -d $MOUNTPOINT/swapextensions ] && ln -sf "${MOUNTPOINT}/swapextensions" /var/swap && echo "$MDEV#$FSTYPE#$LABEL" > /media/.swapextensionsdev
 				fi
 			else
 				#echo "[mdev-mount.sh] mount ok 1" >> $LOG
-				[ $MOUNTPOINT == "/media/hdd" ] && echo "$MDEV#$FSTYPE#$LABEL" > /etc/udev/.moviedev
+				[ $MOUNTPOINT == "/media/hdd" ] && echo "$MDEV#$FSTYPE#$LABEL" > /media/.moviedev
 				[ -L /var/backup ] && [ ! -e $(readlink /var/backup) ] && rm /var/backup
-				[ -d $MOUNTPOINT/backup ] && ln -fs "${MOUNTPOINT}/backup" /var/backup && echo "$MDEV#$FSTYPE#$LABEL" > /etc/udev/.backupdev
+				[ -d $MOUNTPOINT/backup ] && ln -fs "${MOUNTPOINT}/backup" /var/backup && echo "$MDEV#$FSTYPE#$LABEL" > /media/.backupdev
 				[ -L /var/swap] && [ ! -e $(readlink /var/swap) ] && rm /var/swap
-				[ -d $MOUNTPOINT/swapextensions ] && ln -sf "${MOUNTPOINT}/swapextensions" /var/swap && echo "$MDEV#$FSTYPE#$LABEL" > /etc/udev/.swapextensionsdev
+				[ -d $MOUNTPOINT/swapextensions ] && ln -sf "${MOUNTPOINT}/swapextensions" /var/swap && echo "$MDEV#$FSTYPE#$LABEL" > /media/.swapextensionsdev
 			fi
 			#echo "[mdev-mount.sh] mounted $MDEV on $MOUNTPOINT" >> $LOG
 		fi
@@ -291,9 +291,9 @@ case $ACTION in
 		umount $MOUNTPOINT || umount /dev/$MDEV
 		find $MOUNTPOINT  -type d -delete
 		[ -d $MOUNTPOINT ] && rmdir $MOUNTPOINT
-		[ $MOUNTPOINT == "/media/hdd" ] && rm /etc/udev/.moviedev
-		[ -L /var/backup ] && [ $(readlink /var/backup) == $MOUNTPOINT/backup ] && rm /var/backup && rm /etc/udev/.backupdev
-		[ -L /var/swap ] && [ $(readlink /var/swap) == $MOUNTPOINT/swapextensions ] && rm /var/swap && rm /etc/udev/.swapextensionsdev
+		[ $MOUNTPOINT == "/media/hdd" ] && rm /media/.moviedev
+		[ -L /var/backup ] && [ $(readlink /var/backup) == $MOUNTPOINT/backup ] && rm /var/backup && rm /media/.backupdev
+		[ -L /var/swap ] && [ $(readlink /var/swap) == $MOUNTPOINT/swapextensions ] && rm /var/swap && rm /media/.swapextensionsdev
 		#echo "[mdev-mount.sh] umounted $MOUNTPOINT" >> $LOG
 		;;
 	*)
