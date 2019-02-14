@@ -6,7 +6,7 @@ MODULE = "linux-4.1.20"
 
 inherit kernel machine_kernel_pr
 
-MACHINE_KERNEL_PR_append = "r2"
+MACHINE_KERNEL_PR_append = "r3"
 
 SRC_URI[md5sum] = "6036c5d722071e72d5d66dbf7ee74992"
 SRC_URI[sha256sum] = "eff7eecf55dd75ecb44bd8b8fe16f588d19c1eac92125eaed2b6834348d12def"
@@ -16,6 +16,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 SRC_URI += "http://source.mynonpublic.com/gigablue/linux/gigablue-linux-${PV}-20180206.tar.gz \
 	file://defconfig \
 	file://gbfindkerneldevice.py \
+	file://linux_dvb_adapter.patch \
 	file://linux_dvb-core.patch \
 	file://bcmgenet-recovery-fix.patch \
 	file://linux_4_1_1_9_dvbs2x.patch \
