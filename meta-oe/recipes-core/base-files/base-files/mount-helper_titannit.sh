@@ -166,6 +166,7 @@ case $ACTION in
 									[ -L /var/backup ] && [ ! -e $(readlink /var/backup) ] && rm /var/backup
 									[ -d $MOUNTPOINT/backup ] && ln -fs "${MOUNTPOINT}/backup" /var/backup && echo "$MDEV#$FSTYPE#$LABEL" > /media/.backupdev
 									[ -L /var/swap] && [ ! -e $(readlink /var/swap) ] && rm /var/swap
+									[ -d $MOUNTPOINT/swapextensions ] && [ -d /var/swap ] && rm -rf /var/swap
 									[ -d $MOUNTPOINT/swapextensions ] && ln -sf "${MOUNTPOINT}/swapextensions" /var/swap && echo "$MDEV#$FSTYPE#$LABEL" > /media/.swapextensionsdev
 								fi
 							else
@@ -173,6 +174,7 @@ case $ACTION in
 								[ -L /var/backup ] && [ ! -e $(readlink /var/backup) ] && rm /var/backup
 								[ -d $MOUNTPOINT/backup ] && ln -fs "${MOUNTPOINT}/backup" /var/backup && echo "$MDEV#$FSTYPE#$LABEL" > /media/.backupdev
 								[ -L /var/swap] && [ ! -e $(readlink /var/swap) ] && rm /var/swap
+								[ -d $MOUNTPOINT/swapextensions ] && [ -d /var/swap ] && rm -rf /var/swap
 								[ -d $MOUNTPOINT/swapextensions ] && ln -sf "${MOUNTPOINT}/swapextensions" /var/swap && echo "$MDEV#$FSTYPE#$LABEL" > /media/.swapextensionsdev
 							fi
 							#echo "[mdev-mount.sh] mounted $MDEV on $MOUNTPOINT (swap complete)" >> $LOG
@@ -270,6 +272,7 @@ case $ACTION in
 					[ -L /var/backup ] && [ ! -e $(readlink /var/backup) ] && rm /var/backup
 					[ -d $MOUNTPOINT/backup ] && ln -fs "${MOUNTPOINT}/backup" /var/backup && echo "$MDEV#$FSTYPE#$LABEL" > /media/.backupdev
 					[ -L /var/swap] && [ ! -e $(readlink /var/swap) ] && rm /var/swap
+					[ -d $MOUNTPOINT/swapextensions ] && [ -d /var/swap ] && rm -rf /var/swap
 					[ -d $MOUNTPOINT/swapextensions ] && ln -sf "${MOUNTPOINT}/swapextensions" /var/swap && echo "$MDEV#$FSTYPE#$LABEL" > /media/.swapextensionsdev
 				fi
 			else
@@ -278,6 +281,7 @@ case $ACTION in
 				[ -L /var/backup ] && [ ! -e $(readlink /var/backup) ] && rm /var/backup
 				[ -d $MOUNTPOINT/backup ] && ln -fs "${MOUNTPOINT}/backup" /var/backup && echo "$MDEV#$FSTYPE#$LABEL" > /media/.backupdev
 				[ -L /var/swap] && [ ! -e $(readlink /var/swap) ] && rm /var/swap
+				[ -d $MOUNTPOINT/swapextensions ] && [ -d /var/swap ] && rm -rf /var/swap
 				[ -d $MOUNTPOINT/swapextensions ] && ln -sf "${MOUNTPOINT}/swapextensions" /var/swap && echo "$MDEV#$FSTYPE#$LABEL" > /media/.swapextensionsdev
 			fi
 			#echo "[mdev-mount.sh] mounted $MDEV on $MOUNTPOINT" >> $LOG
