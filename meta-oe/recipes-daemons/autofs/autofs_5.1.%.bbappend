@@ -21,7 +21,7 @@ do_configure_prepend () {
 # Remove and change configuration files
 do_install_append() {
 if [ "x${DISTRO}" = "xtitannit" ]; then
-    echo "/media/autofs  /mnt/network/auto.misc  --ghost" > ${D}/etc/auto.master
+    echo "/media/autofs  /mnt/network/auto.misc --timeout=120" > ${D}/etc/auto.master
 else
     echo "/media/autofs  /etc/auto.network  --ghost" > ${D}/etc/auto.master
 fi
