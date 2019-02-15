@@ -70,22 +70,22 @@ startmnt()
 			backuptpk
 		fi
 
-		if [ -e /media/hdd/.update/config/titan.cfg ] && [ -e /var/etc/.firstboot ];then
-			BACKUPDIR=/media/hdd/.update
-			echo "[$0] startmnt: cp -a $BACKUPDIR /mnt"
-			cp -a $BACKUPDIR /mnt
+		if [ -e "/media/hdd/.update/$model/config/titan.cfg" ] && [ -e /var/etc/.firstboot ];then
+			BACKUPDIR="/media/hdd/.update"
+			echo "[$0] startmnt: cp -a $BACKUPDIR/$model /mnt"
+			cp -a $BACKUPDIR/$model /mnt
 			mv -f $BACKUPDIR/.last $BACKUPDIR/.last.restored
 			sync
-		elif [ -e /var/backup/.update/config/titan.cfg ] && [ -e /var/etc/.firstboot ];then
-			BACKUPDIR=/var/backup/.update
-			echo "[$0] startmnt: cp -a $BACKUPDIR /mnt"
-			cp -a $BACKUPDIR /mnt
+		elif [ -e "/var/backup/.update/$model/config/titan.cfg" ] && [ -e /var/etc/.firstboot ];then
+			BACKUPDIR="/var/backup/.update"
+			echo "[$0] startmnt: cp -a $BACKUPDIR/$model /mnt"
+			cp -a $BACKUPDIR/$model /mnt
 			mv -f $BACKUPDIR/.last $BACKUPDIR/.last.restored
 			sync
-		elif [ -e /var/swap/.update/config/titan.cfg ] && [ -e /var/etc/.firstboot ];then
-			BACKUPDIR=/var/swap/.update
-			echo "[$0] startmnt: cp -a $BACKUPDIR /mnt"
-			cp -a $BACKUPDIR /mnt
+		elif [ -e "/var/swap/.update/$model/config/titan.cfg" ] && [ -e /var/etc/.firstboot ];then
+			BACKUPDIR="/var/swap/.update"
+			echo "[$0] startmnt: cp -a $BACKUPDIR/$model /mnt"
+			cp -a $BACKUPDIR/$model /mnt
 			mv -f $BACKUPDIR/.last $BACKUPDIR/.last.restored
 			sync
 		else
