@@ -187,7 +187,6 @@ MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS += " \
     kernel-module-cifs \
     kernel-module-autofs4 \
     ${@bb.utils.contains('MACHINEBUILD', 'gbquad', 'kernel-module-smsc75xx' , '', d)} \
-    ${@bb.utils.contains('MACHINE', 'gb7252', 'enigma2-plugin-drivers-network-usb-rtl8822bu' , '', d)} \
     ${@bb.utils.contains('MACHINE_FEATURES', 'swap', 'gigablue-swapcreate', '',d)} \
     ${@bb.utils.contains('MACHINE_FEATURES', 'qtegls', 'gb-qteglfs-platform', '',d)} \
     "
@@ -207,6 +206,7 @@ EXTRA_IMAGEDEPENDS += "\
 MACHINE_EXTRA_RDEPENDS += "\
     ${@bb.utils.contains('MACHINE_FEATURES', 'hisi', '' , 'enigma2-plugin-systemplugins-vfdcontrol', d)} \
     ${@bb.utils.contains('MACHINE', 'gb7252', 'enigma2-plugin-systemplugins-remotecontrolcode' , '', d)} \
+    ${@bb.utils.contains('MACHINE', 'gbmv200', 'enigma2-plugin-systemplugins-remotecontrolcode' , '', d)} \
     ${@bb.utils.contains('MACHINEBUILD', 'gb800solo', 'mtd-utils-jffs2' , '', d)} \
     ${@bb.utils.contains('MACHINEBUILD', 'gbipbox', 'enigma2-plugin-extensions-gbipboxclient' , '', d)} \
 "
