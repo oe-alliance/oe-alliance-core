@@ -88,6 +88,17 @@ startmnt()
 			cp -a $BACKUPDIR/$model /mnt
 			mv -f $BACKUPDIR/.last $BACKUPDIR/.last.restored
 			sync
+		elif [ "$board" = "dm900" ];then
+			mkdir /tmp/backup
+			mount /dev/mmcblk0p3 /tmp/backup
+			if [ -e "/tmp/backup/.update/$model/config/titan.cfg" ] && [ -e /var/etc/.firstboot ];then
+				BACKUPDIR="/tmp/backup/.update"
+				echo "[$0] startmnt: cp -a $BACKUPDIR/$model /mnt"
+				cp -a $BACKUPDIR/$model /mnt
+				mv -f $BACKUPDIR/.last $BACKUPDIR/.last.restored
+				sync
+			fi
+			umount /tmp/backup
 		else
 			infobox -pos -1 75% 10015 "MNT" "            Formatiere Laufwerk            " &
 			if [ -e /mnt ];then
