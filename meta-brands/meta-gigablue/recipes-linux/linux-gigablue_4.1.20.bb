@@ -6,7 +6,7 @@ MODULE = "linux-4.1.20"
 
 inherit kernel machine_kernel_pr
 
-MACHINE_KERNEL_PR_append = "r2"
+MACHINE_KERNEL_PR_append = "r5"
 
 SRC_URI[md5sum] = "6036c5d722071e72d5d66dbf7ee74992"
 SRC_URI[sha256sum] = "eff7eecf55dd75ecb44bd8b8fe16f588d19c1eac92125eaed2b6834348d12def"
@@ -16,20 +16,22 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 SRC_URI += "http://source.mynonpublic.com/gigablue/linux/gigablue-linux-${PV}-20180206.tar.gz \
 	file://defconfig \
 	file://gbfindkerneldevice.py \
-	file://linux_dvb-core.patch \
-	file://bcmgenet-recovery-fix.patch \
-	file://linux_4_1_1_9_dvbs2x.patch \
+	file://0001-stv090x-optimized-TS-sync-control.patch \	
+	file://0001-STV-Add-PLS-support.patch \
+	file://0001-STV-Add-SNR-Signal-report-parameters.patch \
+	file://0001-Support-TBS-USB-drivers-for-4.1-kernel.patch \
+	file://0002-bcmgenet-recovery-fix.patch \
+	file://0002-blindscan2.patch \
+	file://0002-linux_4_1_1_9_dvbs2x.patch \
+	file://0002-linux_dvb_adapter.patch \
+	file://0002-linux_dvb-core.patch \
+	file://0002-linux_rpmb_not_alloc.patch \
+	file://0002-TBS-fixes-for-4.1-kernel.patch \
+	file://0002-log2-give-up-on-gcc-constant-optimizations.patch \
+	file://0003-uaccess-dont-mark-register-as-const.patch \
 	file://kernel-add-support-for-gcc6.patch \
 	file://kernel-add-support-for-gcc7.patch \
 	file://kernel-add-support-for-gcc8.patch \
-	file://0001-Support-TBS-USB-drivers-for-4.1-kernel.patch \
-	file://0001-TBS-fixes-for-4.1-kernel.patch \
-	file://0001-STV-Add-PLS-support.patch \
-	file://0001-STV-Add-SNR-Signal-report-parameters.patch \
-	file://blindscan2.patch \
-	file://0001-stv090x-optimized-TS-sync-control.patch \
-	file://0002-log2-give-up-on-gcc-constant-optimizations.patch \
-	file://0003-uaccess-dont-mark-register-as-const.patch \
 "
 
 S = "${WORKDIR}/linux-${PV}"

@@ -1,11 +1,14 @@
-From 0d3b277d19137c4a0fdadfd1381f1c66515d1b0c Mon Sep 17 00:00:00 2001
+From b05590c1679217b66dfc0567a637f310ce137e9b Mon Sep 17 00:00:00 2001
 From: Athanasios Oikonomou <athoik@gmail.com>
 Date: Mon, 8 Feb 2016 22:14:31 +0200
 Subject: [PATCH] STV: Add SNR/Signal report parameters
 
+---
+ drivers/media/dvb-frontends/stv090x.c | 44 ++++++++++++++++++++-------
+ 1 file changed, 33 insertions(+), 11 deletions(-)
 
 diff --git a/drivers/media/dvb-frontends/stv090x.c b/drivers/media/dvb-frontends/stv090x.c
-index 264c4b8..12fd3d0 100644
+index ffac0420..1da7373b 100644
 --- a/drivers/media/dvb-frontends/stv090x.c
 +++ b/drivers/media/dvb-frontends/stv090x.c
 @@ -41,6 +41,18 @@
@@ -27,7 +30,7 @@ index 264c4b8..12fd3d0 100644
  /* internal params node */
  struct stv090x_dev {
  	/* pointer for internal params, one for each pair of demods */
-@@ -3693,7 +3705,10 @@ static int stv090x_read_signal_strength(struct dvb_frontend *fe, u16 *strength)
+@@ -3712,7 +3724,10 @@ static int stv090x_read_signal_strength(struct dvb_frontend *fe, u16 *strength)
  		str = 0;
  	else if (agc < stv090x_rf_tab[ARRAY_SIZE(stv090x_rf_tab) - 1].read)
  		str = -100;
@@ -39,7 +42,7 @@ index 264c4b8..12fd3d0 100644
  
  	return 0;
  }
-@@ -3704,8 +3719,7 @@ static int stv090x_read_cnr(struct dvb_frontend *fe, u16 *cnr)
+@@ -3723,8 +3738,7 @@ static int stv090x_read_cnr(struct dvb_frontend *fe, u16 *cnr)
  	u32 reg_0, reg_1, reg, i;
  	s32 val_0, val_1, val = 0;
  	u8 lock_f;
@@ -49,7 +52,7 @@ index 264c4b8..12fd3d0 100644
  
  	switch (state->delsys) {
  	case STV090x_DVBS2:
-@@ -3722,10 +3736,14 @@ static int stv090x_read_cnr(struct dvb_frontend *fe, u16 *cnr)
+@@ -3741,10 +3755,14 @@ static int stv090x_read_cnr(struct dvb_frontend *fe, u16 *cnr)
  				msleep(1);
  			}
  			val /= 16;
@@ -68,7 +71,7 @@ index 264c4b8..12fd3d0 100644
  		}
  		break;
  
-@@ -3744,10 +3762,14 @@ static int stv090x_read_cnr(struct dvb_frontend *fe, u16 *cnr)
+@@ -3763,10 +3781,14 @@ static int stv090x_read_cnr(struct dvb_frontend *fe, u16 *cnr)
  				msleep(1);
  			}
  			val /= 16;
@@ -88,5 +91,5 @@ index 264c4b8..12fd3d0 100644
  		break;
  	default:
 -- 
-2.1.4
+2.20.1.windows.1
 

@@ -9,6 +9,8 @@ MACHINE_FEATURES += " boxmodel feature1 feature2"
 
 PREFERRED_PROVIDER_virtual/blindscan-dvbc = "gigablue-blindscan-utils-mips"
 PREFERRED_PROVIDER_virtual/blindscan-dvbs = "gigablue-blindscan-utils-mips"
+PREFERRED_PROVIDER_virtual/egl = "gb-v3ddriver-${MACHINE}"
+PREFERRED_PROVIDER_virtual/libgles2 = "gb-v3ddriver-${MACHINE}"
 
 DVBMEDIASINK_CONFIG = "--with-wmv \
     ${@bb.utils.contains('MACHINE', 'gb7356', '--with-wma --with-pcm --with-dts --with-eac3 --with-amr' , '', d)} \

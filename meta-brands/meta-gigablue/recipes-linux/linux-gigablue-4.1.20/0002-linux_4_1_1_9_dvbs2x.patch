@@ -1,7 +1,15 @@
+From 953f3e913ce4817ea567d945b931d377dafe8348 Mon Sep 17 00:00:00 2001
+From: arn354 <arn354@email.de>
+Date: Fri, 15 Feb 2019 22:01:22 +0100
+Subject: [PATCH] linux_4_1_1_9_dvbs2x.patch
+
+---
+ drivers/media/dvb-core/dvb_frontend.c |  5 +++++
+ include/uapi/linux/dvb/frontend.h     | 20 ++++++++++++++++++++
+ 2 files changed, 25 insertions(+)
+
 diff --git a/drivers/media/dvb-core/dvb_frontend.c b/drivers/media/dvb-core/dvb_frontend.c
-old mode 100644
-new mode 100755
-index 3ab8747..78c1b24
+index 3ab87470..78c1b249 100644
 --- a/drivers/media/dvb-core/dvb_frontend.c
 +++ b/drivers/media/dvb-core/dvb_frontend.c
 @@ -170,6 +170,7 @@ static enum dvbv3_emulation_type dvbv3_type(u32 delivery_system)
@@ -45,9 +53,7 @@ index 3ab8747..78c1b24
  		case SYS_TURBO:
  		case SYS_DVBC_ANNEX_A:
 diff --git a/include/uapi/linux/dvb/frontend.h b/include/uapi/linux/dvb/frontend.h
-old mode 100644
-new mode 100755
-index c56d77c..5aebaa9
+index c56d77c4..5aebaa9b 100644
 --- a/include/uapi/linux/dvb/frontend.h
 +++ b/include/uapi/linux/dvb/frontend.h
 @@ -165,6 +165,24 @@ typedef enum fe_code_rate {
@@ -91,3 +97,6 @@ index c56d77c..5aebaa9
  } fe_delivery_system_t;
  
  /* backward compatibility */
+-- 
+2.20.1.windows.1
+

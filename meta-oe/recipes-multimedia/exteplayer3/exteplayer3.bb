@@ -9,8 +9,8 @@ RDEPENDS_${PN} = "ffmpeg libbluray"
 
 inherit gitpkgv upx-compress
 
-PV = "57+gitr${SRCPV}"
-PKGV = "57+gitr${GITPKGV}"
+PV = "59+gitr${SRCPV}"
+PKGV = "59+gitr${GITPKGV}"
 
 PR = "r1"
 
@@ -36,6 +36,7 @@ SOURCE_FILES =+ "playback/playback.c"
 SOURCE_FILES =+ "external/ffmpeg/src/bitstream.c"
 SOURCE_FILES =+ "external/ffmpeg/src/latmenc.c"
 SOURCE_FILES =+ "external/ffmpeg/src/mpeg4audio.c"
+SOURCE_FILES =+ "external/ffmpeg/src/xiph.c"
 SOURCE_FILES =+ "external/flv2mpeg4/src/m4vencode.c"
 SOURCE_FILES =+ "external/flv2mpeg4/src/flvdecoder.c"
 SOURCE_FILES =+ "external/flv2mpeg4/src/dcprediction.c"
