@@ -70,28 +70,28 @@ startmnt()
 			backuptpk
 		fi
 
-		if [ -e "/media/hdd/.update/$model/config/titan.cfg" ] && [ -e /var/etc/.firstboot ];then
+		if [ -e /var/etc/.firstboot ] && [ -e "/media/hdd/.update/$model/config/titan.cfg" ];then
 			BACKUPDIR="/media/hdd/.update"
 			echo "[$0] startmnt: cp -a $BACKUPDIR/$model /mnt"
 			cp -a $BACKUPDIR/$model /mnt
 			mv -f $BACKUPDIR/.last $BACKUPDIR/.last.restored
 			sync
-		elif [ -e "/var/backup/.update/$model/config/titan.cfg" ] && [ -e /var/etc/.firstboot ];then
+		elif [ -e /var/etc/.firstboot ] && [ -e "/var/backup/.update/$model/config/titan.cfg" ];then
 			BACKUPDIR="/var/backup/.update"
 			echo "[$0] startmnt: cp -a $BACKUPDIR/$model /mnt"
 			cp -a $BACKUPDIR/$model /mnt
 			mv -f $BACKUPDIR/.last $BACKUPDIR/.last.restored
 			sync
-		elif [ -e "/var/swap/.update/$model/config/titan.cfg" ] && [ -e /var/etc/.firstboot ];then
+		elif [ -e /var/etc/.firstboot ] && [ -e "/var/swap/.update/$model/config/titan.cfg" ];then
 			BACKUPDIR="/var/swap/.update"
 			echo "[$0] startmnt: cp -a $BACKUPDIR/$model /mnt"
 			cp -a $BACKUPDIR/$model /mnt
 			mv -f $BACKUPDIR/.last $BACKUPDIR/.last.restored
 			sync
-		elif [ "$board" = "dm900" ];then
+		elif [ -e /var/etc/.firstboot ] && [ "$board" == "dm900" ];then
 			mkdir /tmp/backup
 			mount /dev/mmcblk0p3 /tmp/backup
-			if [ -e "/tmp/backup/.update/$model/config/titan.cfg" ] && [ -e /var/etc/.firstboot ];then
+			if [ -e "/tmp/backup/.update/$model/config/titan.cfg" ];then
 				BACKUPDIR="/tmp/backup/.update"
 				echo "[$0] startmnt: cp -a $BACKUPDIR/$model /mnt"
 				cp -a $BACKUPDIR/$model /mnt
