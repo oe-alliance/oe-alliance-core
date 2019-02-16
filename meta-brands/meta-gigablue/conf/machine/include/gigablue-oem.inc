@@ -21,6 +21,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'gbultraueh', 'Ultra UE H' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbx3h', 'X3 H' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbquad4k', 'UHD QUAD 4K' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbue4k', 'UHD UE 4K' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbtrio4k', 'UHD TRIO 4K' , '', d)}\
 "
 
 MACHINE_BRAND = "\
@@ -41,6 +42,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'gbultraueh', 'GigaBlue' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbx3h', 'GigaBlue' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbquad4k', 'GigaBlue' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbue4k', 'GigaBlue' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbtrio4k', 'GigaBlue' , '', d)}\
 "
 
 IMAGEDIR ?= "\
@@ -61,6 +63,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'gbultraueh', 'gigablue/ultraueh' , '', d)}
 ${@bb.utils.contains('MACHINEBUILD', 'gbx3h', 'gigablue/x3h' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbquad4k', 'gigablue/quad4k' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbue4k', 'gigablue/ue4k' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbtrio4k', 'gigablue/trio4k' , '', d)}\
 "
 
 MTD_KERNEL = "\
@@ -81,6 +84,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'gbultraueh', 'mtd2' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbx3h', 'mtd2' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbquad4k', 'mmcblk0p4' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbue4k', 'mmcblk0p4' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbtrio4k', 'mmcblk0p12' , '', d)}\
 "
 
 MTD_ROOTFS = "\
@@ -101,6 +105,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'gbultraueh', 'mtd0' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbx3h', 'mtd0' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbquad4k', 'mmcblk0p5' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbue4k', 'mmcblk0p5' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbtrio4k', 'mmcblk0p13' , '', d)}\
 "
 
 MACHINE_DRIVER = "\
@@ -121,6 +126,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'gbultraueh', 'gb73625' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbx3h', 'gb73625' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbquad4k', 'gb7252' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbue4k', 'gb7252' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbtrio4k', 'gbmv200' , '', d)}\
 "
 
 KERNEL_FILE = "\
@@ -141,6 +147,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'gbultraueh', 'kernel.bin' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbx3h', 'kernel.bin' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbquad4k', 'kernel.bin' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbue4k', 'kernel.bin' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbtrio4k', 'kernel.bin' , '', d)}\
 "
 
 ROOTFS_FILE = "\
@@ -161,6 +168,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'gbultraueh', 'rootfs.bin' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbx3h', 'rootfs.bin' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbquad4k', 'rootfs.tar.bz2' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbue4k', 'rootfs.tar.bz2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbtrio4k', 'rootfs.tar.bz2' , '', d)}\
 "
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS += " \
@@ -179,7 +187,6 @@ MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS += " \
     kernel-module-cifs \
     kernel-module-autofs4 \
     ${@bb.utils.contains('MACHINEBUILD', 'gbquad', 'kernel-module-smsc75xx' , '', d)} \
-    ${@bb.utils.contains('MACHINE', 'gb7252', 'enigma2-plugin-drivers-network-usb-rtl8822bu' , '', d)} \
     ${@bb.utils.contains('MACHINE_FEATURES', 'swap', 'gigablue-swapcreate', '',d)} \
     ${@bb.utils.contains('MACHINE_FEATURES', 'qtegls', 'gb-qteglfs-platform', '',d)} \
     "
@@ -187,7 +194,7 @@ MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS += " \
 MACHINE_EXTRA_RRECOMMENDS += " \
     gstreamer1.0-plugin-dvbmediasink \
     gstreamer1.0-libav \
-    gigablue-cfe \
+    ${@bb.utils.contains('MACHINE_FEATURES', 'hisi', '' , 'gigablue-cfe', d)} \
     ${@bb.utils.contains('DISTRO_FEATURES', 'audioeffect', 'enigma2-plugin-systemplugins-audioeffect' , '', d)} \
     ${@bb.utils.contains('MACHINE', 'gb7252', 'gigablue-initrd-cfe-${MACHINEBUILD}' , '', d)} \
     "
@@ -199,6 +206,7 @@ EXTRA_IMAGEDEPENDS += "\
 MACHINE_EXTRA_RDEPENDS += "\
     enigma2-plugin-systemplugins-vfdcontrol \
     ${@bb.utils.contains('MACHINE', 'gb7252', 'enigma2-plugin-systemplugins-remotecontrolcode' , '', d)} \
+    ${@bb.utils.contains('MACHINE', 'gbmv200', 'enigma2-plugin-systemplugins-remotecontrolcode' , '', d)} \
     ${@bb.utils.contains('MACHINEBUILD', 'gb800solo', 'mtd-utils-jffs2' , '', d)} \
     ${@bb.utils.contains('MACHINEBUILD', 'gbipbox', 'enigma2-plugin-extensions-gbipboxclient' , '', d)} \
 "
@@ -208,8 +216,6 @@ include conf/machine/include/autoload-filesystems.inc
 PREFERRED_PROVIDER_virtual/transtreamproxy = "gb-transtreamproxy"
 
 PREFERRED_PROVIDER_virtual/kernel = "linux-gigablue"
-PREFERRED_PROVIDER_virtual/egl = "gb-v3ddriver-${MACHINE}"
-PREFERRED_PROVIDER_virtual/libgles2 = "gb-v3ddriver-${MACHINE}"
 PREFERRED_PROVIDER_virtual/kodi = "stb-kodi-${MACHINE}"
 
 
@@ -228,6 +234,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'gbultrase', 'YUV RCA' , '', d)} \
 ${@bb.utils.contains('MACHINEBUILD', 'gbultraue', 'YUV RCA' , '', d)} \
 ${@bb.utils.contains('MACHINEBUILD', 'gbultraueh', 'YUV RCA' , '', d)} \
 ${@bb.utils.contains('MACHINEBUILD', 'gbquad4k', 'HDMI-IN-FHD' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbtrio4k', 'AV_JACK' , '', d)}\
 "
 
 BOOTLOGO_FILENAME = "splash.bin"
