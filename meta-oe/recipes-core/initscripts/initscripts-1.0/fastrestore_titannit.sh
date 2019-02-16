@@ -70,6 +70,11 @@ startmnt()
 			backuptpk
 		fi
 
+		if [ -e /var/etc/.firstboot ] && [ "$board" == "dm900" ];then
+			mkdir /tmp/backup
+			mount /dev/mmcblk0p3 /tmp/backup
+		fi
+
 		if [ -e /var/etc/.firstboot ] && [ -e "/media/hdd/.update/$model/config/titan.cfg" ];then
 			BACKUPDIR="/media/hdd/.update"
 			echo "[$0] startmnt: cp -a $BACKUPDIR/$model /mnt"
@@ -88,17 +93,12 @@ startmnt()
 			cp -a $BACKUPDIR/$model /mnt
 			mv -f $BACKUPDIR/.last $BACKUPDIR/.last.restored
 			sync
-		elif [ -e /var/etc/.firstboot ] && [ "$board" == "dm900" ];then
-			mkdir /tmp/backup
-			mount /dev/mmcblk0p3 /tmp/backup
-			if [ -e "/tmp/backup/.update/$model/config/titan.cfg" ];then
-				BACKUPDIR="/tmp/backup/.update"
-				echo "[$0] startmnt: cp -a $BACKUPDIR/$model /mnt"
-				cp -a $BACKUPDIR/$model /mnt
-				mv -f $BACKUPDIR/.last $BACKUPDIR/.last.restored
-				sync
-			fi
-			umount /tmp/backup
+		elif [ -e /var/etc/.firstboot ] && [ -e "/tmp/backup/.update/$model/config/titan.cfg" ];then
+			BACKUPDIR="/tmp/backup/.update"
+			echo "[$0] startmnt: cp -a $BACKUPDIR/$model /mnt"
+			cp -a $BACKUPDIR/$model /mnt
+			mv -f $BACKUPDIR/.last $BACKUPDIR/.last.restored
+			sync
 		else
 			infobox -pos -1 75% 10015 "MNT" "            Formatiere Laufwerk            " &
 			if [ -e /mnt ];then
@@ -141,6 +141,10 @@ startmnt()
 		fi
 #		startnetwork restart
 	fi
+	if [ -e /var/etc/.firstboot ] && [ "$board" == "dm900" ];then
+		umount /tmp/backup
+	fi
+
 	rm /var/etc/.firstboot
 }
 
