@@ -1,11 +1,17 @@
-commit 900c688fa839fa2b84f99d6024ba46ca178c896e
-Author: gdhan <gdhan@dev3>
-Date:   Thu Feb 23 16:20:47 2017 +0900
+From 58d34e30077b29f63dbe13ef7b90ee5692f923e9 Mon Sep 17 00:00:00 2001
+From: arn354 <arn354@email.de>
+Date: Fri, 15 Feb 2019 21:52:07 +0100
+Subject: [PATCH] linux_dvb-core.patch
 
-    linux_dvb-core.patch
+---
+ drivers/media/dvb-core/dmxdev.c         | 50 +++++++++++++++++++++----
+ drivers/media/dvb-core/dvb_demux.c      | 11 ++++++
+ drivers/media/dvb-core/dvb_ringbuffer.c |  1 +
+ drivers/media/dvb-core/dvb_ringbuffer.h |  1 +
+ 4 files changed, 55 insertions(+), 8 deletions(-)
 
 diff --git a/drivers/media/dvb-core/dmxdev.c b/drivers/media/dvb-core/dmxdev.c
-index d0e3f9d..d060019 100644
+index d0e3f9d8..d060019a 100644
 --- a/drivers/media/dvb-core/dmxdev.c
 +++ b/drivers/media/dvb-core/dmxdev.c
 @@ -82,7 +82,11 @@ static ssize_t dvb_dmxdev_buffer_read(struct dvb_ringbuffer *src,
@@ -143,7 +149,7 @@ index d0e3f9d..d060019 100644
  	if (dmxdev->dvbdev->users > 1) {
  		wait_event(dmxdev->dvbdev->wait_queue,
 diff --git a/drivers/media/dvb-core/dvb_demux.c b/drivers/media/dvb-core/dvb_demux.c
-index 6c7ff0c..bd2d3c5 100644
+index 6c7ff0cd..bd2d3c5d 100644
 --- a/drivers/media/dvb-core/dvb_demux.c
 +++ b/drivers/media/dvb-core/dvb_demux.c
 @@ -60,6 +60,9 @@ MODULE_PARM_DESC(dvb_demux_feed_err_pkts,
@@ -179,7 +185,7 @@ index 6c7ff0c..bd2d3c5 100644
  }
  EXPORT_SYMBOL(dvb_dmx_swfilter);
 diff --git a/drivers/media/dvb-core/dvb_ringbuffer.c b/drivers/media/dvb-core/dvb_ringbuffer.c
-index 1100e98..64a77fe 100644
+index 1100e98a..64a77fef 100644
 --- a/drivers/media/dvb-core/dvb_ringbuffer.c
 +++ b/drivers/media/dvb-core/dvb_ringbuffer.c
 @@ -45,6 +45,7 @@ void dvb_ringbuffer_init(struct dvb_ringbuffer *rbuf, void *data, size_t len)
@@ -191,7 +197,7 @@ index 1100e98..64a77fe 100644
  	init_waitqueue_head(&rbuf->queue);
  
 diff --git a/drivers/media/dvb-core/dvb_ringbuffer.h b/drivers/media/dvb-core/dvb_ringbuffer.h
-index 9e1e11b..0f876c0 100644
+index 9e1e11b7..0f876c0d 100644
 --- a/drivers/media/dvb-core/dvb_ringbuffer.h
 +++ b/drivers/media/dvb-core/dvb_ringbuffer.h
 @@ -39,6 +39,7 @@ struct dvb_ringbuffer {
@@ -202,3 +208,6 @@ index 9e1e11b..0f876c0 100644
  };
  
  #define DVB_RINGBUFFER_PKTHDRSIZE 3
+-- 
+2.20.1.windows.1
+

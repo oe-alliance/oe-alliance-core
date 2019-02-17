@@ -55,6 +55,8 @@ SRC_URI_append_sf8008 = "file://logo.img"
 SRC_URI_append_ustym4kpro = "file://logo.img"
 SRC_URI_append_v8plus = "file://logo.img"
 SRC_URI_append_multibox = "file://logo.img"
+SRC_URI_append_gbmv200 = "file://logo.img"
+SRC_URI_append_beyonwizv2 = "file://logo.img"
 
 BINARY_VERSION = "1.3"
 

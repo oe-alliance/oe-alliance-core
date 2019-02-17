@@ -9,7 +9,7 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"
-PR = "r2"
+PR = "r3"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 DEPENDS = "freetype"
@@ -41,7 +41,7 @@ do_install() {
 
 pkg_preinst_${PN}() {
 #!/bin/sh
-if mountpoint -q /usr/lib/enigma2/python/Plugins/Extensions/OPDBoot; then
+if mountpoint -q ${libdir}/enigma2/python/Plugins/Extensions/OPDBoot; then
     echo "OPDBoot will only install on main image."
     echo "Child image is running - canceling installation!"
     sleep 3
