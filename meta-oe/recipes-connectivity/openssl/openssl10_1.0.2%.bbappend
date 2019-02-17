@@ -16,3 +16,6 @@ RPROVIDES_${PN} ="openssl"
 
 PROVIDES += "libcrypto libssl openssl-conf openssl"
 
+openssl_package_preprocess () {
+    :
+}
