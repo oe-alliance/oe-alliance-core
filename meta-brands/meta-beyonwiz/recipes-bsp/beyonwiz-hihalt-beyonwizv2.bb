@@ -1,0 +1,39 @@
+SUMMARY = "halt for beyonwiz Model ${MACHINE}"
+SECTION = "base"
+PRIORITY = "optional"
+LICENSE = "CLOSED"
+PACKAGE_ARCH = "${MACHINE_ARCH}"
+
+RDEPENDS_${PN} = "harfbuzz"
+
+SRCDATE = "20190127"
+
+PV = "${SRCDATE}"
+PR = "r1"
+
+INITSCRIPT_NAME = "suspend"
+INITSCRIPT_PARAMS = "start 89 0 ."
+inherit update-rc.d
+
+SRC_URI  = "http://source.mynonpublic.com/beyonwiz/${MACHINE}-hihalt-${SRCDATE}.tar.gz \
+    file://suspend.sh \
+"
+
+S = "${WORKDIR}"
+
+do_install() {
+    install -d ${D}${bindir}
+    install -m 0755 ${S}/hihalt ${D}/${bindir}
+    install -d ${D}${sysconfdir}/init.d
+    install -m 0755 ${S}/suspend.sh ${D}${sysconfdir}/init.d/suspend
+}
+
+do_package_qa() {
+}
+
+FILES_${PN}  = "${bindir}/hihalt ${sysconfdir}/init.d"
+
+SRC_URI[md5sum] = "abead8d9d364c74f788fb3e8c6bda0d3"
+SRC_URI[sha256sum] = "f4ff9ff5deb74598a9255abac5a250d045c55474d52469dc03e5a7c28fae516a"
+
+
