@@ -4,7 +4,7 @@ SECTION = "kernel"
 
 KV = "4.1.20"
 DATETIME = "20180321"
-MACHINE_KERNEL_PR_append = "0"
+MACHINE_KERNEL_PR_append = "1"
 
 inherit kernel machine_kernel_pr
 
