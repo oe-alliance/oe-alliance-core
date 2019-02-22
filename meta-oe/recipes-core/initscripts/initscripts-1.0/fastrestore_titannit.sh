@@ -30,6 +30,9 @@ startautofs()
 			rm /etc/auto.network
 			ln -s /mnt/network/auto.misc /etc/auto.network
 		fi
+		if [ ! -L /autofs ];then
+			ln -s /media/autofs /autofs
+		fi
 }
 
 startnetwork()
@@ -43,19 +46,16 @@ startnetwork()
 			rm /etc/resolv.conf
 			ln -s /mnt/network/resolv.conf /etc/resolv.conf
 		fi
-		if [ "$1" == "restart" ];then /etc/init.d/networking restart;fi
 }
 
 startmnt()
 {
 	echo "[$0] startmnt"
-	if [ -L /mnt ];then
+	if [ -L /mnt ] || [ -e /var/etc/.firstboot ];then
 		rm -f /mnt
-#		startautofs reload
 		startautofs
 		startnetwork
 		startwebif
-#		sleep 10
 	fi
 
 	if [ -e /var/etc/.erasemtd ] || [ ! -e /mnt/swapextensions ]; then
