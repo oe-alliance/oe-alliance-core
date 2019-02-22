@@ -146,7 +146,7 @@ SERIAL_CONSOLE = "115200 ttyAS0"
 
 DVBPROVIDER = "kernel"
 
-MACHINE_FEATURES = "3dtv alsa switchoff kernel26 ext2 usbhost serial dvb-c singlecore no-cl-svr textlcd sh4booster no-nmap omb skins1080 directfb HDMI \
+MACHINE_FEATURES = "3dtv alsa switchoff kernel26 ext2 usbhost serial dvb-c singlecore no-cl-svr textlcd sh4booster no-nmap omb skins1080 directfb HDMI legacykernel \
 ${@bb.utils.contains('MACHINEBUILD', 'amiko8900', 'SCART RCA' , '', d)} \
 ${@bb.utils.contains('MACHINEBUILD', 'sognorevolution', 'SCART RCA' , '', d)} \
 ${@bb.utils.contains('MACHINEBUILD', 'arguspingulux', 'RCA' , '', d)} \
