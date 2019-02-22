@@ -12,8 +12,8 @@ RDEPENDS_${PN} = "linkdroid-libamadec-${MACHINE}"
 
 inherit lib_package pkgconfig
 
-SRC_URI[md5sum] = "3a5208376b3b3a5c5ae80e810cd3924a"
-SRC_URI[sha256sum] = "aea0e41616b119d4e3db50d4067b2e5f2a7d3983cc5865cc6dd33ba730b3e8af"
+SRC_URI[md5sum] = "368caac9602c693731310a90147fa40a"
+SRC_URI[sha256sum] = "95fb014470fb70a5a1367c8aa5d2e8190f0e8c5b6e5e24b5d5bc2c931c3ae94f"
 
 SRC_URI = "http://source.mynonpublic.com/linkdroid/${BPN}-${SRCDATE}.zip"
 
