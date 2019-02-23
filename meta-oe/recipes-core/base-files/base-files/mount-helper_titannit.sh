@@ -33,6 +33,7 @@ notify() {
 	if [ -x /usr/bin/hotplug_e2_helper ] ; then
 		/usr/bin/hotplug_e2_helper $ACTION /dev/$MDEV /block/$DEVBASE/device
 	fi
+	hotplug.sh $ACTION $MDEV $DEVPATH $DEVTYPE
 }
 
 case $ACTION in
