@@ -74,6 +74,11 @@ startmnt()
 			mkdir /tmp/backup
 			mount /dev/mmcblk0p3 /tmp/backup
 		fi
+		
+		if [ -e /var/etc/.firstboot ] && [ "$board" == "hd51" ];then
+			mkdir /tmp/backup
+			mount /dev/mmcblk0p3 /tmp/backup
+		fi
 
 		if [ -e /var/etc/.firstboot ] && [ -e "/media/hdd/.update/$model/config/titan.cfg" ];then
 			BACKUPDIR="/media/hdd/.update"
