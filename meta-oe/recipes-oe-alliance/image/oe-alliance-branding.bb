@@ -171,6 +171,8 @@ do_configure_prepend() {
         DRIVERSDATE=`grep "SRCDATE = " ${OEA-META-LINKDROID-BASE}/recipes-drivers/linkdroid-stb-${MACHINE}.bb | cut -b 12-19`
     elif [ "${BRAND_OEM}" = "clap" ]; then
         DRIVERSDATE=`grep "SRCDATE = " ${OEA-META-CLAP-BASE}/recipes-drivers/clap-dvb-modules-${MACHINE}.bb | cut -b 12-19`
+    elif [ "${BRAND_OEM}" = "beyonwiz" ]; then
+        DRIVERSDATE=`grep "SRCDATE = " ${OEA-META-BEYONWIZ-BASE}/recipes-drivers/beyonwiz-dvb-modules-${MACHINE}.bb | cut -b 12-19`
     else
         DRIVERSDATE='N/A'
     fi

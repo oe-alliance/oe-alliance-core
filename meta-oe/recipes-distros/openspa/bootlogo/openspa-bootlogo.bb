@@ -49,6 +49,7 @@ SRC_URI_append_hd60 = "file://logo.img"
 SRC_URI_append_hd61 = "file://logo.img"
 SRC_URI_append_cc1 = "file://logo.img"
 SRC_URI_append_sf8008 = "file://logo.img"
+SRC_URI_append_gbmv200 = "file://logo.img"
 
 BINARY_VERSION = "1.3"
 

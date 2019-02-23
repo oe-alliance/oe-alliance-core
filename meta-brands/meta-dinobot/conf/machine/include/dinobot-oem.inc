@@ -128,7 +128,7 @@ MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "\
     dinobot-lib-helper \
 "
 
-MACHINE_FEATURES += "switchoff  hdmicec 7segment textlcd skins1080 blindscan-tbs emmc mmc alsa hbbtv-browser-webkit qtstalker HDMI \
+MACHINE_FEATURES += "switchoff  hdmicec textlcd skins1080 blindscan-tbs emmc mmc alsa hbbtv-browser-webkit qtstalker HDMI \
     ${@bb.utils.contains('MACHINEBUILD', 'anadol4k', '' , ' dvb-c', d)} \
     ${@bb.utils.contains('MACHINEBUILD', 'anadol4kcombo', '' , ' dvb-c', d)} \
     "

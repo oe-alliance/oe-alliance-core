@@ -1,15 +1,16 @@
-From 94ad051cee83d06cddb0a82602259e77ea02284f Mon Sep 17 00:00:00 2001
+From 1553b610994b399f4d42772f4a9565a4ce2a1245 Mon Sep 17 00:00:00 2001
 From: Athanasios Oikonomou <athoik@gmail.com>
-Date: Fri, 15 Feb 2019 21:48:19 +0100
+Date: Sat, 5 Mar 2016 01:34:21 +0200
 Subject: [PATCH] TBS: fixes for 4.0.1 kernel
 
 Change fe_sec_voltage_t to enum fe_sec_voltage.
----
- drivers/media/usb/dvb-usb/tbs-usb.c | 16 +---------------
- 1 file changed, 1 insertion(+), 15 deletions(-)
+
+Remove TBS5921 because it uses tda10071_config that is unavailable.
+Driver should use I2C platform data now in order to load tda10071.
+More info: https://patchwork.linuxtv.org/patch/30472/
 
 diff --git a/drivers/media/usb/dvb-usb/tbs-usb.c b/drivers/media/usb/dvb-usb/tbs-usb.c
-index f142be3b..98347c9a 100644
+index f142be3..98347c9 100644
 --- a/drivers/media/usb/dvb-usb/tbs-usb.c
 +++ b/drivers/media/usb/dvb-usb/tbs-usb.c
 @@ -339,7 +339,7 @@ static int tbsusb_set_pin(struct dvb_frontend *fe, u8 *what)
@@ -50,5 +51,5 @@ index f142be3b..98347c9a 100644
  
  	if (!d->fe_adap[0].fe)
 -- 
-2.20.1.windows.1
+2.1.4
 

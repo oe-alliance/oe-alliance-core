@@ -11,7 +11,7 @@ DEPENDS = "tslib mpfr gmp"
 SRCREV = "${AUTOREV}"
 PV = "${IMAGE_VERSION}+gitr${SRCPV}"
 PKGV = "${IMAGE_VERSION}+gitr${GITPKGV}"
-PR = "r208"
+PR = "r210"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -50,7 +50,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-gmailreader-oe2.0_1.3_all.ipk \
     enigma2-plugin-extensions-googlenewsreader_1.0_mips32el.ipk \
     enigma2-plugin-extensions-hdmitest_0.4_mipsel.ipk \
-    enigma2-plugin-extensions-hetweer_4.3r1_all.ipk \
+    enigma2-plugin-extensions-hetweer_4.6_all.ipk \
     enigma2-plugin-extensions-ipchecker_003_all.ipk \
     ${@bb.utils.contains("TARGET_ARCH", "sh4", "enigma2-plugin-extensions-isettinge2-3.4.4-oe2.0-all-sh4.ipk" , "", d)} \
     ${@bb.utils.contains("TARGET_ARCH", "mipsel", "enigma2-plugin-extensions-isettinge2-3.4.4-oe2.0-all-mips.ipk" , "", d)} \

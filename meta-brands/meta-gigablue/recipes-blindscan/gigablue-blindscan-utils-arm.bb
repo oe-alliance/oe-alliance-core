@@ -1,7 +1,7 @@
-SRCDATE = "20170522"
+SRCDATE = "20171115a"
 
-SRC_URI[md5sum] = "8f21335991e83bdbea2d499b6710477a"
-SRC_URI[sha256sum] = "0e5d55a78b9b8b5dbcaa5462f12d1eb9337ecfd7aa36e42cc564170e7947b3fe"
+SRC_URI[md5sum] = "ba5843ab5a6ac0fa634370ad1663c0be"
+SRC_URI[sha256sum] = "805889447809196d91fb657466945e3535938ffb228cea40dde8ed2fcca7eb57"
 
 SRC_URI = "http://source.mynonpublic.com/gigablue/blindscan/gigablue-blindscan-utils-arm-${SRCDATE}.zip"
 

@@ -1,0 +1,35 @@
+From 9fe15229ed276fbab3769c130389da84da81dcaf Mon Sep 17 00:00:00 2001
+From: Antti Palosaari <crope@iki.fi>
+Date: Thu, 21 May 2015 16:47:15 -0300
+Subject: [PATCH 04/17] af9035: add USB ID 07ca:0337 AVerMedia HD Volar (A867)
+
+It is AF9035 + MxL5007T.
+Driver reports:
+prechip_version=00 chip_version=03 chip_type=3802
+
+Not sure if that USB ID is reserved only for HP brand or if it is
+common, but the stick I have is branded as HP part no. 580715-001
+rmn A867.
+
+Signed-off-by: Antti Palosaari <crope@iki.fi>
+Signed-off-by: Mauro Carvalho Chehab <mchehab@osg.samsung.com>
+---
+ drivers/media/usb/dvb-usb-v2/af9035.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/drivers/media/usb/dvb-usb-v2/af9035.c b/drivers/media/usb/dvb-usb-v2/af9035.c
+index 9899fa7..9e0f8b6 100644
+--- a/drivers/media/usb/dvb-usb-v2/af9035.c
++++ b/drivers/media/usb/dvb-usb-v2/af9035.c
+@@ -2021,6 +2021,8 @@ static const struct usb_device_id af9035_id_table[] = {
+ 		&af9035_props, "Asus U3100Mini Plus", NULL) },
+ 	{ DVB_USB_DEVICE(USB_VID_TERRATEC, 0x00aa,
+ 		&af9035_props, "TerraTec Cinergy T Stick (rev. 2)", NULL) },
++	{ DVB_USB_DEVICE(USB_VID_AVERMEDIA, 0x0337,
++		&af9035_props, "AVerMedia HD Volar (A867)", NULL) },
+ 	/* IT9135 devices */
+ 	{ DVB_USB_DEVICE(USB_VID_ITETECH, USB_PID_ITETECH_IT9135,
+ 	{ DVB_USB_DEVICE(USB_VID_ITETECH, USB_PID_ITETECH_IT9135_9005,
+-- 
+2.1.4
+

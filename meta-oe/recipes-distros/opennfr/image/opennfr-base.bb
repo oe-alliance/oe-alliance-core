@@ -6,18 +6,20 @@ LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda
 ALLOW_EMPTY_${PN} = "1"
 
 PV = "1.0"
-PR = "r16"
+PR = "r21"
 
 inherit packagegroup
 
 RDEPENDS_${PN} = "\
+    ca-certificates \
     oe-alliance-base \
     opennfr-enigma2 \
     opennfr-bootlogo \
     opennfr-version-info \
     opennfr-base-files \
-    opennfr-settings \   
+    opennfr-settings \
     openssh-sftp-server \
+    nfr4xmultiboot \
     ntfs-3g \
     packagegroup-base-smbfs-client \
     packagegroup-base-smbfs-server \
@@ -25,7 +27,7 @@ RDEPENDS_${PN} = "\
     exteplayer3 \
     gstplayer \
     ffmpeg \
-    enigma2-plugin-systemplugins-serviceapp \   
+    enigma2-plugin-systemplugins-serviceapp \ 	
     python-imaging \
     python-requests \
     python-cfscrape \
@@ -34,7 +36,9 @@ RDEPENDS_${PN} = "\
     python-gdata \
     python-service-identity \
     libshowiframe \
+    libdw \
+    libelf \
     dvbsnoop \
+    ${@bb.utils.contains("TUNE_FEATURES", "armv", "glibc-compat", "", d)} \
     enigma2-plugin-drivers-usbserial \ 
     "
-

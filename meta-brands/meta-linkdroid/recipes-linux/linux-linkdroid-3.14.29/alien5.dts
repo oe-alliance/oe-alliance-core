@@ -1239,7 +1239,7 @@
 		fe0_dtv_demod = <0>;
 		fe0_ts = <0>;
 		fe0_dev = <0>;
-		dtv_demod1 = "dm60001";
+	  /*dtv_demod1 = "dm60001";
 		dtv_demod1_i2c_adap_id = <2>;
 		dtv_demod1_i2c_addr = <0x38>;
 		dtv_demod1_reset_value = <0>;
@@ -1259,7 +1259,7 @@
 		fe2_dtv_demod = <2>;
 		fe2_ts = <0>;
 		fe2_dev = <2>;
-
+	*/
 	};
     /* SMC */
 	smartcard{

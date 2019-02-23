@@ -5,7 +5,7 @@ KV = "3.13.5"
 
 inherit kernel machine_kernel_pr
 
-MACHINE_KERNEL_PR_append = "oea4.3-r3"
+MACHINE_KERNEL_PR_append = "oea4.3-r4"
 
 SRC_URI[md5sum] = "19e9956653437b99b4fa6ec3e16a3e99"
 SRC_URI[sha256sum] = "ef7fb307582ff243aacff8a13025fe028634aaf650ada309991ae03622962f61"
