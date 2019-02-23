@@ -75,7 +75,7 @@ startmnt()
 			mount /dev/mmcblk0p3 /tmp/backup
 		fi
 		
-		if [ -e /var/etc/.firstboot ] && [ "$board" == "hd51" ];then
+		if [ -e /var/etc/.firstboot ] && [ "$board" == "hd51" ];then 
 			mkdir /tmp/backup
 			mount /dev/mmcblk0p3 /tmp/backup
 		fi
