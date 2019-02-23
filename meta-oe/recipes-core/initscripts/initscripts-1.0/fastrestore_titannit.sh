@@ -80,30 +80,33 @@ startmnt()
 			mount /dev/mmcblk0p3 /tmp/backup
 		fi
 
-		if [ -e /var/etc/.firstboot ] && [ -e "/media/hdd/.update/$model/config/titan.cfg" ];then
-			BACKUPDIR="/media/hdd/.update"
-			echo "[$0] startmnt: cp -a $BACKUPDIR/$model /mnt"
-			cp -a $BACKUPDIR/$model /mnt 
-			mv -f $BACKUPDIR/.last $BACKUPDIR/.last.restored
-			sync
-		elif [ -e /var/etc/.firstboot ] && [ -e "/var/backup/.update/$model/config/titan.cfg" ];then
-			BACKUPDIR="/var/backup/.update"
-			echo "[$0] startmnt: cp -a $BACKUPDIR/$model /mnt"
-			cp -a $BACKUPDIR/$model /mnt
-			mv -f $BACKUPDIR/.last $BACKUPDIR/.last.restored
-			sync
-		elif [ -e /var/etc/.firstboot ] && [ -e "/var/swap/.update/$model/config/titan.cfg" ];then
-			BACKUPDIR="/var/swap/.update"
-			echo "[$0] startmnt: cp -a $BACKUPDIR/$model /mnt"
-			cp -a $BACKUPDIR/$model /mnt
-			mv -f $BACKUPDIR/.last $BACKUPDIR/.last.restored
-			sync
-		elif [ -e /var/etc/.firstboot ] && [ -e "/tmp/backup/.update/$model/config/titan.cfg" ];then
-			BACKUPDIR="/tmp/backup/.update"
-			echo "[$0] startmnt: cp -a $BACKUPDIR/$model /mnt"
-			cp -a $BACKUPDIR/$model /mnt
-			mv -f $BACKUPDIR/.last $BACKUPDIR/.last.restored
-			sync
+		if [ -e /var/etc/.firstboot ] && [ -e "/media/hdd/$model/config/titan.cfg" ];then
+#			BACKUPDIR="/media/hdd/.update"
+#			echo "[$0] startmnt: cp -a $BACKUPDIR/$model /mnt"
+#			cp -a $BACKUPDIR/$model /mnt 
+#			mv -f $BACKUPDIR/.last $BACKUPDIR/.last.restored
+#			sync
+			showiframe /usr/share/restore.mvi &
+			BACKUPDIR="/media/hdd"
+			settings.sh restore $BACKUPDIR
+		elif [ -e /var/etc/.firstboot ] && [ -e "/var/backup/$model/config/titan.cfg" ];then
+#			BACKUPDIR="/var/backup/.update"
+#			echo "[$0] startmnt: cp -a $BACKUPDIR/$model /mnt"
+#			cp -a $BACKUPDIR/$model /mnt
+#			mv -f $BACKUPDIR/.last $BACKUPDIR/.last.restored
+#			sync
+			showiframe /usr/share/restore.mvi &
+			BACKUPDIR="/media/backup"
+			settings.sh restore $BACKUPDIR
+		elif [ -e /var/etc/.firstboot ] && [ -e "/var/swap/$model/config/titan.cfg" ];then
+#			BACKUPDIR="/var/swap/.update"
+#			echo "[$0] startmnt: cp -a $BACKUPDIR/$model /mnt"
+#			cp -a $BACKUPDIR/$model /mnt
+#			mv -f $BACKUPDIR/.last $BACKUPDIR/.last.restored
+#			sync
+			showiframe /usr/share/restore.mvi &
+			BACKUPDIR="/media/swap"
+			settings.sh restore $BACKUPDIR
 		else
 			infobox -pos -1 75% 10015 "MNT" "            Formatiere Laufwerk            " &
 			if [ -e /mnt ];then
