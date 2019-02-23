@@ -83,7 +83,7 @@ startmnt()
 		if [ -e /var/etc/.firstboot ] && [ -e "/media/hdd/.update/$model/config/titan.cfg" ];then
 			BACKUPDIR="/media/hdd/.update"
 			echo "[$0] startmnt: cp -a $BACKUPDIR/$model /mnt"
-			cp -a $BACKUPDIR/$model /mnt
+			cp -a $BACKUPDIR/$model /mnt 
 			mv -f $BACKUPDIR/.last $BACKUPDIR/.last.restored
 			sync
 		elif [ -e /var/etc/.firstboot ] && [ -e "/var/backup/.update/$model/config/titan.cfg" ];then
