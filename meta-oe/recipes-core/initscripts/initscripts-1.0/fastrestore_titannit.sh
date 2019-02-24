@@ -153,6 +153,10 @@ startmnt()
 		umount /tmp/backup
 	fi
 
+	if [ -e /var/etc/.firstboot ] && [ "$board" == "hd51" ];then
+		umount /tmp/backup
+	fi
+
 	chmod -R 644 /mnt/network
 	rm /var/etc/.firstboot
 }
