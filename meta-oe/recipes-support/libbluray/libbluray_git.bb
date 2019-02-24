@@ -11,8 +11,8 @@ SRC_URI = "gitsm://git.videolan.org/libbluray.git"
 inherit gitpkgv autotools-brokensep pkgconfig
 
 SRCREV = "${AUTOREV}"
-PV = "v1.0.2+git${SRCPV}"
-PKGV = "v1.0.2+git${GITPKGV}"
+PV = "v1.1.0+git${SRCPV}"
+PKGV = "v1.1.0+git${GITPKGV}"
 
 S="${WORKDIR}/git"
 
