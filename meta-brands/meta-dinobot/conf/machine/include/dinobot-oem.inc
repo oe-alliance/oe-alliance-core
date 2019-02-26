@@ -60,7 +60,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'ferguson4k', 'mmcblk0p10' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'dinobotu55', 'mtd10' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'dinoboth265', 'mtd8' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'hitube4k', 'mtd10' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'izboxone4k', 'mtd10' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'iziboxone4k', 'mtd10' , '', d)}\
 "
 
 MTD_ROOTFS = "\
@@ -80,7 +80,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'ferguson4k', 'mmcblk0p13' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'dinobotu55', 'mtd11' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'dinoboth265', 'mtd9' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'hitube4k', 'mtd11' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'izboxone4k', 'mtd11' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'iziboxone4k', 'mtd11' , '', d)}\
 "
 
 SDCARDIMG = "\
@@ -100,7 +100,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'ferguson4k', 'no' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'dinobotu55', 'no' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'dinoboth265', 'no' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'hitube4k', 'no' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'izboxone4k', 'no' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'iziboxone4k', 'no' , '', d)}\
 "
 
 IMAGEDIR = "\
@@ -120,7 +120,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'ferguson4k', 'dinobot/${MACHINE}' , '', d)
 ${@bb.utils.contains('MACHINEBUILD', 'dinobotu55', 'dinobot/${MACHINE}' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'dinoboth265', 'dinobot/${MACHINE}' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'hitube4k', 'dinobot/${MACHINE}' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'izboxone4k', 'dinobot/${MACHINE}' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'iziboxone4k', 'dinobot/${MACHINE}' , '', d)}\
 "
 
 KERNEL_MODULE_AUTOLOAD += "xhci-plat-hcd"
