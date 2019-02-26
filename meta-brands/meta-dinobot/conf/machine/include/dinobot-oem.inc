@@ -20,7 +20,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'ferguson4k', 'U5 PVR' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'dinobotu55', 'DINOBOT U55' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'dinoboth265', 'DINOBOT H265' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'hitube4k', '4K' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'izboxone4k', 'ONE 4K' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'iziboxone4k', 'ONE 4K' , '', d)}\
 "
 
 MACHINE_BRAND = "\
@@ -40,7 +40,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'ferguson4k', 'Ferguson' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'dinobotu55', 'Vivant' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'dinoboth265', 'Vivant' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'hitube4k', 'HITUBE' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'izboxone4k', 'IZBOX' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'iziboxone4k', 'IZBOX' , '', d)}\
 "
 
 MTD_KERNEL = "\
