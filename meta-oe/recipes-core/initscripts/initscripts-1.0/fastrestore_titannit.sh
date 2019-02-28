@@ -107,6 +107,10 @@ startmnt()
 			showiframe /usr/share/restore.mvi &
 			BACKUPDIR="/media/swap"
 			settings.sh restore $BACKUPDIR
+		elif [ -e /var/etc/.firstboot ] && [ -e "/tmp/backup/$model/config/titan.cfg" ];then
+			showiframe /usr/share/restore.mvi &
+			BACKUPDIR="/tmp/backup"
+			settings.sh restore $BACKUPDIR
 		else
 			infobox -pos -1 75% 10015 "MNT" "            Formatiere Laufwerk            " &
 			if [ -e /mnt ];then
