@@ -1,15 +1,16 @@
 LICENSE = "CLOSED"
 require conf/license/license-close.inc
-inherit allarch
 
+inherit allarch gitpkgv
+
+SRCREV = "${AUTOREV}"
 PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"
 PR = "r1"
 
 SRC_URI = "git://github.com/haroo/HansSettings.git;protocol=git"
-S = "${WORKDIR}/git"
 
-inherit gitpkgv
+S = "${WORKDIR}/git"
 
 FILES_${PN} = "/etc/enigma2/"
 
