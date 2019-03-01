@@ -66,7 +66,7 @@ exit 0
 pkg_preinst_${PN} () {
 #!/bin/sh
 
-python /usr/${libdir}/enigma2/python/BoxBrandingTest.pyo | sed 's/<$//' | sed 's/ /_/g' > /tmp/boxbranding.cfg
+python ${libdir}/enigma2/python/BoxBrandingTest.pyo | sed 's/<$//' | sed 's/ /_/g' > /tmp/boxbranding.cfg
 
 exit 0
 }
