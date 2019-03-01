@@ -11,11 +11,11 @@ SRCREV = "${AUTOREV}"
 PV = "2.1+git${SRCPV}"
 PKGV = "2.1+git${GITPKGV}"
 VER ="2.1"
-PR = "r2"
+PR = "r3"
 
-SRC_URI="git://github.com/stein17/Blue-Line-OCT-4HDF.git"
+SRC_URI="git://github.com/stein17/Skins-for-openHDF.git"
 
-S = "${WORKDIR}/git"
+S = "${WORKDIR}/git/Blue-Line-OCT-4HDF"
 
 FILES_${PN} = "/tmp ${libdir} /usr/share"
 
@@ -23,9 +23,9 @@ do_install() {
 	install -d ${D}/tmp/hdf/
 	install -d ${D}/tmp/octagon/
 	cp -rp ${S}/tmp/hdf/* ${D}/tmp/hdf/
+	cp -rp ${S}/tmp/octagon/* ${D}/tmp/octagon/
 	install -d ${D}${libdir}
 	install -d ${D}/share
-	cp -rp ${S}/tmp/octagon/* ${D}/tmp/octagon/
 	cp -rp ${S}/usr/lib/* ${D}${libdir}/
 	cp -rp ${S}/usr/share/* ${D}/share/
 }
