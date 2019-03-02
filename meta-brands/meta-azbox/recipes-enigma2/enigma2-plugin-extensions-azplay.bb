@@ -5,6 +5,8 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 LICENSE = "CLOSED"
 require conf/license/license-close.inc
 
+RDEPENDS_${PN} = "curl fuse libupnp djmount libjpeg-turbo libpng"
+
 SRCREV_pn-${PN} ?= "${AUTOREV}"
 
 inherit gitpkgv pkgconfig
@@ -37,14 +39,6 @@ do_install_azboxhd() {
     install -d ${D}/usr/bin/
     install -m 0755 ${S}/bin/rmfp_player-ForHD ${D}/usr/bin/rmfp_player
 
-    install -m 0755 ${S}/bin/djmount ${D}/usr/bin/
-
-    install -d ${D}/etc/init.d
-    install -m 0755 ${S}/bin/init ${D}/etc/init.d/djmount
-
-    install -d ${D}/usr/lib/
-    install -m 0755 ${S}/lib/libpng* ${D}/usr/lib/
-
     install -d ${D}/usr/lib/enigma2/python/Plugins/Extensions/AZPlay/
     install -m 0644 ${S}/plugin/*.pyo ${D}/usr/lib/enigma2/python/Plugins/Extensions/AZPlay/
 
@@ -55,14 +49,6 @@ do_install_azboxhd() {
 do_install() {
     install -d ${D}/usr/bin/
     install -m 0755 ${S}/bin/rmfp_player ${D}/usr/bin/
-
-    install -m 0755 ${S}/bin/djmount ${D}/usr/bin/
-
-    install -d ${D}/etc/init.d
-    install -m 0755 ${S}/bin/init ${D}/etc/init.d/djmount
-
-    install -d ${D}/usr/lib/
-    install -m 0755 ${S}/lib/libpng* ${D}/usr/lib/
 
     install -d ${D}/usr/lib/enigma2/python/Plugins/Extensions/AZPlay/
     install -m 0644 ${S}/plugin/*.pyo ${D}/usr/lib/enigma2/python/Plugins/Extensions/AZPlay/

@@ -1,8 +1,5 @@
 SUMMARY = "Skin Full HD for HDF Images by stein17"
 MAINTAINER = "openhdf"
-SECTION = "base"
-PRIORITY = "required"
-LICENSE = "proprietary"
 
 require conf/license/license-gplv2.inc
 
@@ -11,23 +8,25 @@ SRCREV = "${AUTOREV}"
 PV = "2.1+git${SRCPV}"
 PKGV = "2.1+git${GITPKGV}"
 VER ="2.1"
-PR = "r2"
+PR = "r4"
 
-SRC_URI="git://github.com/stein17/Blue-Line-OCT-4HDF.git"
+SRC_URI="git://github.com/stein17/Skins-for-openHDF.git"
 
-S = "${WORKDIR}/git"
+FILES_${PN} = "/"
 
-FILES_${PN} = "/tmp ${libdir} /usr/share"
+S = "${WORKDIR}/git/Blue-Line-OCT-4HDF"
+
+do_compile_append() {
+python -O -m compileall ${S}
+}
 
 do_install() {
-	install -d ${D}/tmp/hdf/
-	install -d ${D}/tmp/octagon/
-	cp -rp ${S}/tmp/hdf/* ${D}/tmp/hdf/
-	install -d ${D}${libdir}
-	install -d ${D}/share
-	cp -rp ${S}/tmp/octagon/* ${D}/tmp/octagon/
-	cp -rp ${S}/usr/lib/* ${D}${libdir}/
-	cp -rp ${S}/usr/share/* ${D}/share/
+    install -d ${D}${libdir}
+    install -d ${D}/usr/share
+    cp -rp ${S}/usr/lib/* ${D}${libdir}/
+    cp -rp ${S}/usr/share/* ${D}/usr/share/
+    chmod -R a+rX ${D}/usr/share/enigma2/
+    cp -rp ${S}/tmp ${D}/
 }
 
 pkg_postinst_${PN} () {
@@ -45,7 +44,7 @@ else
 	echo "No Octagon Box found!"
 	echo "*********************************"
 	echo "                                 "
-       	cp /tmp/hdf/*.png /usr/share/enigma2/Blue-Line-OCT-4HDF/menu
+	cp /tmp/hdf/*.png /usr/share/enigma2/Blue-Line-OCT-4HDF/menu
 fi
 
 echo " Skin Blue-Line-OCT-4HDF installed "
@@ -65,9 +64,7 @@ exit 0
 
 pkg_preinst_${PN} () {
 #!/bin/sh
-
-python /usr/${libdir}/enigma2/python/BoxBrandingTest.pyo | sed 's/<$//' | sed 's/ /_/g' > /tmp/boxbranding.cfg
-
+python ${libdir}/enigma2/python/BoxBrandingTest.pyo | sed 's/<$//' | sed 's/ /_/g' > /tmp/boxbranding.cfg
 exit 0
 }
 
