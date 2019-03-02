@@ -9,7 +9,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=7246f848faa4e9c9fc0ea91122d6e680"
 DEPENDS = "libxml2 bash-completion"
 
 SRCREV = "${AUTOREV}"
-PV = "2019.02.18+git${SRCPV}"
+PV = "2019.03.01+git${SRCPV}"
 PR = "r1"
 
 SRC_URI = "git://github.com/rg3/youtube-dl.git;branch=master"
