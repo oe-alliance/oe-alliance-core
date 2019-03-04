@@ -3,7 +3,7 @@ include conf/machine/include/build-extras.inc
 
 DISTRO_FEATURES_remove = "x11 wayland"
 
-BRAND_OEM = "beyonwiz"
+BRAND_OEM = "Beyonwiz"
 
 IMAGEDIR = "beyonwiz/v2"
 
