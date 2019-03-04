@@ -16,6 +16,7 @@ SRCREV_FORMAT = "base"
 SRC_URI = "git://anongit.freedesktop.org/gstreamer/gstreamer;branch=master;name=base \
            git://anongit.freedesktop.org/gstreamer/common;destsuffix=git/common;name=common \
            file://0001-revert-use-new-gst-adapter-get-buffer.patch \
+           file://0002-continue-on-nondefined-64bit-atomics.patch \
 "
 
 S = "${WORKDIR}/git"
