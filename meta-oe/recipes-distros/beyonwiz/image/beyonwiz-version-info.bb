@@ -10,7 +10,7 @@ PV = "${IMAGE_VERSION}"
 PR = "${BUILD_VERSION}"
 PACKAGE_ARCH = "${MACHINEBUILD}"
 
-URL = "https://beyonwiz.com.au/
+URL = "https://beyonwiz.com.au/"
 
 do_configure[nostamp] = "1"
 
