@@ -9,7 +9,7 @@ IMAGEDIR = "beyonwiz/v2"
 
 MACHINE_NAME = "V2"
 
-MACHINE_BRAND = "BEYONWIZ"
+MACHINE_BRAND = "Beyonwiz"
 
 MTD_KERNEL = "mmcblk0p12"
 
