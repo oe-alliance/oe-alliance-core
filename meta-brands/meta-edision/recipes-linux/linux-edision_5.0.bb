@@ -3,18 +3,18 @@ SECTION = "kernel"
 LICENSE = "GPLv2"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-KERNEL_RELEASE = "4.20"
+KERNEL_RELEASE = "5.0"
 
 inherit kernel machine_kernel_pr
 
-SRC_URI[md5sum] = "a8ad894efc418017afb81a4f280cdb17"
-SRC_URI[sha256sum] = "8a00501e49859270d456cce2cb3fde37b503050004a6a2d8418ba672e45ba6c0"
+SRC_URI[md5sum] = "05a8943f64866613fb3b1084d93f5bc5"
+SRC_URI[sha256sum] = "f35b5b2283c2eb18d50247b86bc2ec7b1e446687374cd701b634a743ae9a5eee"
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-brcmstb-${PV}/COPYING;md5=bbea815ee2795b2f4230826c0c6b8814"
 
 DEPENDS += "flex-native bison-native openssl-native"
 
-MACHINE_KERNEL_PR_append = ".4"
+MACHINE_KERNEL_PR_append = ".0"
 
 # By default, kernel.bbclass modifies package names to allow multiple kernels
 # to be installed in parallel. We revert this change and rprovide the versioned
@@ -26,7 +26,6 @@ RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
 
 SRC_URI += "http://source.mynonpublic.com/edision/linux-edision-${PV}.tar.gz \
     file://defconfig \
-    file://cpuinfo.patch \
     file://findkerneldevice.py \
     "
 
@@ -38,6 +37,12 @@ KERNEL_OBJECT_SUFFIX = "ko"
 KERNEL_IMAGEDEST = "tmp"
 
 FILES_kernel-image = "${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}* ${KERNEL_IMAGEDEST}/findkerneldevice.py"
+
+do_shared_workdir_append() {
+       unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS
+       make CC="${KERNEL_CC}" LD="${KERNEL_LD}" AR="${KERNEL_AR}" \
+                  -C ${STAGING_KERNEL_DIR} O=${STAGING_KERNEL_BUILDDIR} scripts prepare
+}
 
 kernel_do_install_append () {
     install -d ${D}/${KERNEL_IMAGEDEST}
