@@ -26,11 +26,13 @@ LIC_FILES_CHKSUM = "file://COPYING.GPLv2;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
 SRC_URI = "https://www.ffmpeg.org/releases/${BP}.tar.xz \
            file://mips64_cpu_detection.patch \
            "
-SRC_URI[md5sum] = "cbf4ead227fcedddf54c86013705a988"
-SRC_URI[sha256sum] = "2b92e9578ef8b3e49eeab229e69305f5f4cbc1fdaa22e927fc7fca18acccd740"
+SRC_URI[md5sum] = "720fc84617a2c38aeae79aff3689a567"
+SRC_URI[sha256sum] = "373749824dfd334d84e55dff406729edfd1606575ee44dd485d97d45ea4d2d86"
 
 # Build fails when thumb is enabled: https://bugzilla.yoctoproject.org/show_bug.cgi?id=7717
-ARM_INSTRUCTION_SET = "arm"
+ARM_INSTRUCTION_SET_armv4 = "arm"
+ARM_INSTRUCTION_SET_armv5 = "arm"
+ARM_INSTRUCTION_SET_armv6 = "arm"
 
 # Should be API compatible with libav (which was a fork of ffmpeg)
 # libpostproc was previously packaged from a separate recipe

@@ -14,20 +14,18 @@ PACKAGECONFIG[libbluray] = "--enable-libbluray --enable-protocol=bluray,--disabl
 PACKAGECONFIG[libfreetype] = "--enable-libfreetype,--disable-libfreetype,freetype"
 
 PACKAGECONFIG = "avdevice avfilter avcodec avformat avresample swscale swresample postproc \
-		bzlib gpl x264 openssl libbluray libfreetype librtmp"
-
+		bzlib gpl x264 openssl libbluray libfreetype librtmp mp3lame theora libvorbis lzma vpx"
 
 MIPSFPU = "${@bb.utils.contains('TARGET_FPU', 'soft', '--disable-mipsfpu', '--enable-mipsfpu', d)}"
 
 SRC_URI_append += " \
-	file://01_dashdec_improvements.patch \
 	file://02_fix_mpegts.patch \
 	file://03_allow_to_choose_rtmp_impl_at_runtime.patch \
 	file://04_hls_replace_key_uri.patch \
-	file://05_chunked_transfer_fix_eof.patch \
 	file://06_optimize_aac.patch \
 	file://07_increase_buffer_size.patch \
 	file://08_recheck_discard_flags.patch \
+	file://09_ffmpeg_fix_edit_list_parsing.patch \
 	"
 
 EXTRA_FFCONF = " \
