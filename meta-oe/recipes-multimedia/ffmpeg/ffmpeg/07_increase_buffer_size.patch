@@ -53,7 +53,7 @@
 +        len = max_buffer_size;
      }
  
-     if (s->read_packet)
+    len = read_packet_wrapper(s, dst, len);
 @@ -1009,7 +1008,6 @@
  
      av_free(s->buffer);
@@ -62,3 +62,33 @@
      s->buffer_size = buf_size;
      s->buf_ptr = s->buf_ptr_max = buffer;
      url_resetbuf(s, s->write_flag ? AVIO_FLAG_WRITE : AVIO_FLAG_READ);
+diff --git a/libavformat/utils.c b/libavformat/utils.c
+index c25eab4..02ce5e2 100644
+--- a/libavformat/utils.c
++++ b/libavformat/utils.c
+@@ -138,6 +138,25 @@ FF_ENABLE_DEPRECATION_WARNINGS
+ #endif
+ #endif
+ 
++void *av_fast_realloc(void *ptr, unsigned int *size, size_t min_size)
++{
++    if (min_size < *size)
++        return ptr;
++
++    min_size = FFMAX(17 * min_size / 16 + 32, min_size);
++
++    ptr = av_realloc(ptr, min_size);
++    /* we could set this to the unmodified min_size but this is safer
++     * if the user lost the ptr and uses NULL now
++     */
++    if (!ptr)
++        min_size = 0;
++
++    *size = min_size;
++
++    return ptr;
++}
++
+ int64_t av_stream_get_end_pts(const AVStream *st)
+ {
+     if (st->internal->priv_pts) {

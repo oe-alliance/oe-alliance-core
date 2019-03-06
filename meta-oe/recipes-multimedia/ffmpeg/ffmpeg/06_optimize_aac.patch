@@ -1,6 +1,6 @@
 --- a/libavcodec/mdct_template.c
 +++ b/libavcodec/mdct_template.c
-@@ -101,7 +101,7 @@ av_cold int ff_mdct_init(FFTContext *s, int nbits, int inverse, double scale)
+@@ -102,7 +102,7 @@ av_cold int ff_mdct_init(FFTContext *s, int nbits, int inverse, double scale)
   * @param output N/2 samples
   * @param input N/2 samples
   */
@@ -9,17 +9,9 @@
  {
      int k, n8, n4, n2, n, j;
      const uint16_t *revtab = s->revtab;
-@@ -109,7 +109,6 @@ void ff_imdct_half_c(FFTContext *s, FFTSample *output, const FFTSample *input)
-     const FFTSample *tsin = s->tsin;
-     const FFTSample *in1, *in2;
-     FFTComplex *z = (FFTComplex *)output;
--
-     n = 1 << s->mdct_bits;
-     n2 = n >> 1;
-     n4 = n >> 2;
---- a/libavcodec/aacps.c	2016-01-16 14:08:47.122752224 +0200
-+++ b/libavcodec/aacps.c	2016-01-16 14:15:59.300895278 +0200
-@@ -654,7 +654,7 @@
+--- a/libavcodec/aacps.c
++++ b/libavcodec/aacps.c
+@@ -659,7 +659,7 @@
      par[ 1] = AAC_HALF_SUM(par[ 0], par[ 1]);
  }
  
@@ -30,7 +22,7 @@
      LOCAL_ALIGNED_16(INTFLOAT, transient_gain, [34], [PS_QMF_TIME_SLOTS]);
 --- a/libavcodec/fft_template.c
 +++ b/libavcodec/fft_template.c
-@@ -452,7 +452,7 @@
+@@ -538,7 +538,7 @@
      pass(z,FFT_NAME(ff_cos_##n),n4/2);\
  }
  
@@ -39,7 +31,7 @@
  {
      FFTDouble t1, t2, t3, t4, t5, t6, t7, t8;
  
-@@ -466,7 +466,7 @@
+@@ -552,7 +552,7 @@
      BF(z[2].im, z[0].im, t2, t5);
  }
  
