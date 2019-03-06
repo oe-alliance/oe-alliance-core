@@ -22,7 +22,6 @@ S = "${WORKDIR}/git"
 
 require conf/license/license-gplv2.inc
 
-PACKAGES =+ "${PN}-src"
 PACKAGES =+ "${PN}-po"
 FILES_${PN} = "/tmp /etc /usr/lib"
 FILES_${PN}-src = "/usr/lib/enigma2/python/Plugins/Extensions/MultiQuickButton/*.py"

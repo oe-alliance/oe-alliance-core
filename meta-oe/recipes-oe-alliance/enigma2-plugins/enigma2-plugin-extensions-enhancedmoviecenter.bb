@@ -15,7 +15,6 @@ SRC_URI="git://github.com/betonme/e2openplugin-EnhancedMovieCenter.git"
 
 S = "${WORKDIR}/git"
 
-PACKAGES =+ "${PN}-src"
 PACKAGES =+ "${PN}-po"
 FILES_${PN} = "/etc ${libdir}"
 FILES_${PN}-src = "\

@@ -16,7 +16,6 @@ SRC_URI="git://github.com/MovieArchiver/enigma2-plugin-extensions-moviearchiver.
 
 S = "${WORKDIR}/git"
 
-PACKAGES =+ "${PN}-src"
 PACKAGES =+ "${PN}-po"
 FILES_${PN} = "/etc ${libdir}"
 FILES_${PN}-src = "${libdir}/enigma2/python/Plugins/Extensions/MovieArchiver/*.py"

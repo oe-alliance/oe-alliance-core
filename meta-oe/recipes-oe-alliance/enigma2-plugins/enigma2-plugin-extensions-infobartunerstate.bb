@@ -15,7 +15,6 @@ SRC_URI="git://github.com/betonme/e2openplugin-InfoBarTunerState.git"
 
 S = "${WORKDIR}/git"
 
-PACKAGES =+ "${PN}-src"
 PACKAGES =+ "${PN}-po"
 FILES_${PN} = "/etc /usr/lib"
 FILES_${PN}-src = "/usr/lib/enigma2/python/Plugins/Extensions/InfoBarTunerState/*.py"

@@ -10,8 +10,6 @@ PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
 PR = "r11"
 
-PACKAGES += " ${PN}-src"
-
 DEPENDS = "libdvbsi++"
 
 SRC_URI = "git://code.vuplus.com/git/dumpait.git;protocol=http"
