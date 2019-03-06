@@ -24,4 +24,4 @@ do_install () {
     install -m 0755 ${WORKDIR}/8gb.sh ${D}${bindir}/8gb.sh
 }
 
-FILES = "${bindir} ${sysconfdir}"
+FILES_${PN} = "${bindir} ${sysconfdir}"
