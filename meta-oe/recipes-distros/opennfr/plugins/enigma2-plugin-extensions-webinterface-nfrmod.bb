@@ -27,7 +27,6 @@ EXTRA_OECONF = "\
     --with-libsdl=no \
     "
 
-PACKAGES =+ "${PN}-src"
 CONFFILES_${PN} += "${sysconfdir}/exports"
 FILES_${PN} = "${libdir}"
 FILES_${PN}-dbg = "${libdir}/enigma2/python/Plugins/Extensions/WebInterface/.debug/"

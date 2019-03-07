@@ -19,7 +19,6 @@ SRC_URI = "git://github.com/oe-alliance/e2openplugin-${MODULE}.git;protocol=git 
 
 S = "${WORKDIR}/git"
 
-PACKAGES =+ "${PN}-src"
 PACKAGES =+ "${PN}-po"
 FILES_${PN} = "/tmp /etc ${libdir}"
 FILES_${PN}-src = "${libdir}/enigma2/python/Plugins/Extensions/MultiQuickButton/*.py"

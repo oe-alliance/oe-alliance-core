@@ -24,6 +24,5 @@ do_install_append() {
     python -O -m compileall ${D}
 }
 
-PACKAGES =+ "${PN}-src"
 FILES_${PN} = "${PLUGINPATH}/*.pyo"
 FILES_${PN}-src = "${PLUGINPATH}/*.py"

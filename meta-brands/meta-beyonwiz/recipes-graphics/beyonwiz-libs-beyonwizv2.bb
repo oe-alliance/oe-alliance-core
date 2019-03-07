@@ -1,6 +1,6 @@
-SRCDATE = "20190118"
+SRCDATE = "20190306"
 
 require beyonwiz-libs.inc
 
-SRC_URI[md5sum] = "09dfd0e3a03e836f48c472f6af64f7aa"
-SRC_URI[sha256sum] = "ef0360c951df919003c4a4c59dc9a1bec9639a782ee5136211182285de15fcd7"
+SRC_URI[md5sum] = "50cc6b11bc5bc48620c5a0b7df86a0da"
+SRC_URI[sha256sum] = "c4f31f577cac773965b73d8d035a5e026fea146dfa148f066b8ce0ce7123f3e9"

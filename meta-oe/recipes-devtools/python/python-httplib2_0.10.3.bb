@@ -35,7 +35,6 @@ do_install_append() {
 
 RDEPENDS_${PN} = "ca-certificates"
 
-PACKAGES =+ " ${PN}-src"
 RDEPENDS_{PN}-src = "${PN}"
 
 FILES_${PN}-src = " \

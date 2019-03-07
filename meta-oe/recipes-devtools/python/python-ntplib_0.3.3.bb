@@ -16,10 +16,8 @@ S = "${WORKDIR}/${SRCNAME}-${PV}"
 inherit allarch distutils
 
 RDEPENDS_${PN} = "python-core"
-PACKAGES =+ " ${PN}-src"
 RDEPENDS_{PN}-src = "${PN}"
 FILES_${PN}-src = " \
-	${libdir}/${PYTHON_DIR}/site-packages/*.py \
-	${libdir}/${PYTHON_DIR}/site-packages/*.egg-info \
-	"
-
+    ${libdir}/${PYTHON_DIR}/site-packages/*.py \
+    ${libdir}/${PYTHON_DIR}/site-packages/*.egg-info \
+    "

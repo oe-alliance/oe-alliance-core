@@ -23,7 +23,6 @@ S = "${WORKDIR}"
 
 PLUGINPATH = "${libdir}/enigma2/python/Plugins/Extensions/HbbTV"
 
-PACKAGES =+ "${PN}-src"
 FILES_${PN} = "${bindir} ${libdir}/mozilla/plugins/libhbbtvbrowserplugin.so ${PLUGINPATH}/*.pyo"
 FILES_${PN}-src = "${PLUGINPATH}/*.py"
 

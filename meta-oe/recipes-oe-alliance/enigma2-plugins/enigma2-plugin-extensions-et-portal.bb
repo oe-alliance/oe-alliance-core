@@ -16,7 +16,6 @@ SRC_URI="git://github.com/e2plugins/etportal-inofficial.git"
 
 S = "${WORKDIR}/git"
 
-PACKAGES =+ "${PN}-src"
 PACKAGES =+ "${PN}-po"
 FILES_${PN} = "/usr/lib /tmp"
 FILES_${PN}-src = "/usr/lib/enigma2/python/Plugins/Extensions/EtPortal/*.py"

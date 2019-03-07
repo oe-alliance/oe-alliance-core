@@ -35,7 +35,6 @@ PACKAGES += "\
 "
 
 PACKAGES =+ "\
-    ${PN}-src \
     ${PN}-bin \
 "
 

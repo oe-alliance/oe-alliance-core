@@ -17,7 +17,6 @@ SRC_URI="git://github.com/oe-alliance/YahooWeather.git"
 
 S = "${WORKDIR}/git"
 
-PACKAGES =+ "${PN}-src"
 PACKAGES =+ "${PN}-po"
 FILES_${PN} = "/usr/lib"
 FILES_${PN}-src = "/usr/lib/enigma2/python/Plugins/Extensions/YahooWeather/*.py"
