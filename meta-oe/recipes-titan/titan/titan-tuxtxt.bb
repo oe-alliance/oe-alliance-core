@@ -13,13 +13,10 @@ PKGV = "2.0+svnr${GITPKGV}"
 PV = "2.0+svnr${SRCPV}"
 PR = "r3"
 
-
 SRC_URI = "svn://sbnc.dyndns.tv/svn/tools;module=tuxtxt;protocol=http"
 
 DEPENDS = " \
-	libpng \
-	jpeg \
-	libusb \
+	tuxtxt-enigma2 \
 	"
 
 S = "${WORKDIR}/"
@@ -35,7 +32,7 @@ do_compile() {
 	else
 		${CC} -Os -c tuxtxt.c -o tuxtxt.o -I${STAGING_DIR_TARGET}/usr/include -I${STAGING_DIR_TARGET}/usr -mhard-float -export-dynamic -Wall -Wno-unused-but-set-variable -Wno-implicit-function-declaration -Wno-unused-variable -Wno-format-overflow -Wno-format-truncation -Wno-nonnull -Wno-restrict ${CFLAGS}
 	fi
-	${CC} -Os tuxtxt.o -L${STAGING_DIR_TARGET}/usr/lib -ljpeg -lpng -lusb-1.0 -lz -o fbread
+	${CC} -Os tuxtxt.o -L${STAGING_DIR_TARGET}/usr/lib -lpthread -ltuxtxt32bpp -ltuxtxt -lz -o tuxtxt
 }
 
 FILES_${PN} = "/sbin"
