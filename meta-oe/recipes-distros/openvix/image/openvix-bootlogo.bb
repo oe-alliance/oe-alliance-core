@@ -67,9 +67,9 @@ do_install_append_vuduo2() {
 inherit deploy
 do_deploy() {
     TEST=${MACHINEBUILD}
-    if [[ ${TEST:0:2} == "tm" ]]; then
+    if [ "$( echo $TEST | awk '{ string=substr($0, 1, 2); print string; }' )" = "tm" ]; then
         install -m 0644 tm-splash.bmp ${DEPLOYDIR}/${BOOTLOGO_FILENAME}
-    elif [[ ${TEST:0:2} == "iq" ]]; then
+    elif [ "$( echo $TEST | awk '{ string=substr($0, 1, 2); print string; }' )" = "iq" ]; then
         install -m 0644 iqon-splash.bmp ${DEPLOYDIR}/${BOOTLOGO_FILENAME}
     elif [ -e splash.bin ]; then
         install -m 0644 splash.bin ${DEPLOYDIR}/${BOOTLOGO_FILENAME}
